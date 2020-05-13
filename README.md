@@ -36,7 +36,7 @@ Jargyle is a hobby project and is currently subject to breaking changes. Jargyle
   
 - [3.5. Running Jargyle with a Configuration File](#35-running-jargyle-with-a-configuration-file)
   
-- [3.6. Managing SOCKS5 Users (for Username/Password Authentication)](#36-managing-socks5-users-for-username-password-authentication)
+- [3.6. Managing SOCKS5 Users (for Username/Password Authentication)](#36-managing-socks5-users-for-usernamepassword-authentication)
   
 - [3.6.1. Creating a Users File](#361-creating-a-users-file)
   	
@@ -48,7 +48,7 @@ Jargyle is a hobby project and is currently subject to breaking changes. Jargyle
   
 - [3.7.1. Using No Authentication](#371-using-no-authentication)
     
-- [3.7.2. Using Username/Password Authentication](#372-using-username-password-authentication)
+- [3.7.2. Using Username/Password Authentication](#372-using-usernamepassword-authentication)
     
 - [3.7.3. Using GSS-API Authentication](#373-using-gss-api-authentication)
 
@@ -439,7 +439,7 @@ Also the configuration file can be supplemented with command line options and/or
 
 ### 3.6. Managing SOCKS5 Users (for Username/Password Authentication)
 
-You can manage SOCKS5 users stored in an XML file called a users file. A users file can be used for <a href="#using_socks5_username_password_authentication">username/password authentication</a>.
+You can manage SOCKS5 users stored in an XML file called a users file. A users file can be used for [username/password authentication](#372-using-usernamepassword-authentication).
 
 #### 3.6.1. Creating a Users File
 
@@ -756,7 +756,7 @@ Partial configuration file example:
 
 ```
 
-`jargyle.server.socks5.XmlFileSourceUsernamePasswordAuthenticator`: This class authenticates the username and password based on the <a href="#managing_socks5_users">XML file of users</a> whose file name is provided as a parameter string
+`jargyle.server.socks5.XmlFileSourceUsernamePasswordAuthenticator`: This class authenticates the username and password based on the [XML file of users](#36-managing-socks5-users-for-usernamepassword-authentication) whose file name is provided as a parameter string
 
 Partial command line example:
 

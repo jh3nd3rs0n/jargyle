@@ -28,11 +28,11 @@ Jargyle is a hobby project and is currently subject to breaking changes. Jargyle
 
 - [3.1. Usage](#31-usage)
   
-- [3.2. Creating a Configuration File](32-creating-a-configuration-file)
+- [3.2. Creating a Configuration File](#32-creating-a-configuration-file)
   
-- [3.3. Supplementing a Configuration File with Command Line Options](33-supplementing-a-configuration-file-with-command-line-options)
+- [3.3. Supplementing a Configuration File with Command Line Options](#33-supplementing-a-configuration-file-with-command-line-options)
   
-- [3.4. Combining Configuration Files](34-combining-configuration-files)
+- [3.4. Combining Configuration Files](#34-combining-configuration-files)
   
 - [3.5. Running Jargyle with a Configuration File](#35-running-jargyle-with-a-configuration-file)
   

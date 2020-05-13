@@ -132,7 +132,7 @@ public final class Configuration {
 			.append(this.externalClientSocks5UsernamePassword)
 			.append(", settings=")
 			.append(this.settings)
-			.append(", socks5Users=")
+			.append(", socks5UsernamePasswordAuthenticator=")
 			.append(this.socks5UsernamePasswordAuthenticator)
 			.append("]");
 		return builder.toString();

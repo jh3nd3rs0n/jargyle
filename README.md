@@ -112,9 +112,9 @@ The following is the command line help for Jargyle (displayed when using the com
       --config-file-xsd, -x
           Print the configuration file XSD and exit
       --enter-external-client-socks5-user-pass
-          Enter through an interactive prompt the username/password for the external SOCKS5 server for external connections
+          Enter through an interactive prompt the username password for the external SOCKS5 server for external connections
       --external-client-socks5-user-pass=USERNAME:PASSWORD
-          The username/password for the external SOCKS5 server for external connections
+          The username password for the external SOCKS5 server for external connections
       --help, -h
           Print this help and exit
       --new-config-file=FILE, -n FILE
@@ -124,7 +124,7 @@ The following is the command line help for Jargyle (displayed when using the com
       --settings=[NAME1=VALUE1[,NAME2=VALUE2[...]]], -s [NAME1=VALUE1[,NAME2=VALUE2[...]]]
           The comma-separated list of settings for the SOCKS server
       --socks5-user-pass-authenticator=CLASSNAME[:PARAMETER_STRING]
-          The SOCKS5 username/password authenticator for the SOCKS server
+          The SOCKS5 username password authenticator for the SOCKS server
       --socks5-users
           Mode for managing SOCKS5 users (add --help for more information)
     
@@ -275,7 +275,7 @@ The following is a list of available settings for the SOCKS server (displayed wh
           GSS-API authentication
     
       USERNAME_PASSWORD
-          Username/password authentication
+          Username password authentication
     
     SOCKS5_GSSAPI_PROTECTION_LEVELS:
     
@@ -290,7 +290,7 @@ The following is a list of available settings for the SOCKS server (displayed wh
     
 ```
 
-The following is the command line help for managing SOCKS5 users for username/password authentication (displayed when using the command line options `--socks5-users --help`):
+The following is the command line help for managing SOCKS5 users for username password authentication (displayed when using the command line options `--socks5-users --help`):
 
 ```
 
@@ -664,7 +664,7 @@ Jargyle has the following SOCKS5 authentication methods to choose from:
 
 - `GSSAPI`: GSS-API authentication
 
-- `USERNAME_PASSWORD`: Username/password authentication
+- `USERNAME_PASSWORD`: Username password authentication
 
 You can have one or more of the aforementioned authentication methods set in the setting `socks5.authMethods` as a space separated list.
 
@@ -710,7 +710,7 @@ Partial configuration file example:
 
 #### 3. 7. 2. Using Username Password Authentication
 
-To use username/password authentication, you will need to have the setting `socks5.authMethods` to have `USERNAME_PASSWORD` included.
+To use username password authentication, you will need to have the setting `socks5.authMethods` to have `USERNAME_PASSWORD` included.
 
 Partial command line example:
 

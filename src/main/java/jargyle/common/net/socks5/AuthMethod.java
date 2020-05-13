@@ -32,7 +32,7 @@ public enum AuthMethod implements HelpTextParams {
 	
 	USERNAME_PASSWORD(Method.USERNAME_PASSWORD) {
 		
-		private static final String DOC = "Username/password authentication";
+		private static final String DOC = "Username password authentication";
 		
 		@Override
 		public String getDoc() {

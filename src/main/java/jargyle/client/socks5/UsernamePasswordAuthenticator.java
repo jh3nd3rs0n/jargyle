@@ -54,7 +54,7 @@ enum UsernamePasswordAuthenticator implements Authenticator {
 				UsernamePasswordResponse.newInstanceFrom(inputStream);
 		if (usernamePasswordResp.getStatus() != 
 				UsernamePasswordResponse.STATUS_SUCCESS) {
-			throw new IOException("invalid username/password");
+			throw new IOException("invalid username password");
 		}
 		return socket;
 	}

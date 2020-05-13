@@ -32,14 +32,14 @@ public final class SocksServerCliOptions extends Options {
 	
 	public static final Option ENTER_EXTERNAL_CLIENT_SOCKS5_USER_PASS_OPTION =
 			new GnuLongOption.Builder("enter-external-client-socks5-user-pass")
-			.doc("Enter through an interactive prompt the username/password "
+			.doc("Enter through an interactive prompt the username password "
 					+ "for the external SOCKS5 server for external connections")
 			.ordinal(2)
 			.build();
 	
 	public static final Option EXTERNAL_CLIENT_SOCKS5_USER_PASS_OPTION =
 			new GnuLongOption.Builder("external-client-socks5-user-pass")
-			.doc("The username/password for the external SOCKS5 server for "
+			.doc("The username password for the external SOCKS5 server for "
 					+ "external connections")
 			.optionArgSpec(new OptionArgSpec.Builder()
 					.name("USERNAME_PASSWORD")
@@ -123,7 +123,7 @@ public final class SocksServerCliOptions extends Options {
 	
 	public static final Option SOCKS5_USER_PASS_AUTHENTICATOR_OPTION = 
 			new GnuLongOption.Builder("socks5-user-pass-authenticator")
-			.doc("The SOCKS5 username/password authenticator for the SOCKS server")
+			.doc("The SOCKS5 username password authenticator for the SOCKS server")
 			.optionArgSpec(new OptionArgSpec.Builder()
 					.name("SOCKS5_USER_PASS_AUTHENTICATOR")
 					.type(UsernamePasswordAuthenticator.class)

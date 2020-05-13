@@ -50,7 +50,7 @@ public class Socks5DatagramSocketIT {
 	
 	@Test
 	public void testThroughSocks5DatagramSocketUsingUsernamePasswordAuth01() throws IOException {
-		System.out.println("Testing through Socks5DatagramSocket using username/password authentication...");
+		System.out.println("Testing through Socks5DatagramSocket using username password authentication...");
 		String string = "Hello, World";
 		String returningString = echoThroughDatagramSocket(
 				string, 
@@ -64,7 +64,7 @@ public class Socks5DatagramSocketIT {
 
 	@Test
 	public void testThroughSocks5DatagramSocketUsingUsernamePasswordAuth02() throws IOException {
-		System.out.println("Testing through Socks5DatagramSocket using username/password authentication...");
+		System.out.println("Testing through Socks5DatagramSocket using username password authentication...");
 		String string = "The quick brown fox jumped over the lazy dog";
 		String returningString = echoThroughDatagramSocket(
 				string, 
@@ -78,7 +78,7 @@ public class Socks5DatagramSocketIT {
 	
 	@Test
 	public void testThroughSocks5DatagramSocketUsingUsernamePasswordAuth03() throws IOException {
-		System.out.println("Testing through Socks5DatagramSocket using username/password authentication...");
+		System.out.println("Testing through Socks5DatagramSocket using username password authentication...");
 		String string = "Goodbye, World";
 		String returningString = echoThroughDatagramSocket(
 				string, 

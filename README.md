@@ -26,31 +26,31 @@ Jargyle is a hobby project and is currently subject to breaking changes. Jargyle
 
 - [3. Running Jargyle](#3-running-jargyle)
 
-- [3.1. Usage](#3-1-usage)
+- [3.1. Usage](#31-usage)
   
-- [3.2. Creating a Configuration File](3-2-creating-a-configuration-file)
+- [3.2. Creating a Configuration File](32-creating-a-configuration-file)
   
-- [3.3. Supplementing a Configuration File with Command Line Options](3-3-supplementing-a-configuration-file-with-command-line-options)
+- [3.3. Supplementing a Configuration File with Command Line Options](33-supplementing-a-configuration-file-with-command-line-options)
   
-- [3.4. Combining Configuration Files](3-4-combining-configuration-files)
+- [3.4. Combining Configuration Files](34-combining-configuration-files)
   
-- [3.5. Running Jargyle with a Configuration File](#3-5-running-jargyle-with-a-configuration-file)
+- [3.5. Running Jargyle with a Configuration File](#35-running-jargyle-with-a-configuration-file)
   
-- [3.6. Managing SOCKS5 Users (for Username/Password Authentication)](#3-6-managing-socks5-users-for-username-password-authentication)
+- [3.6. Managing SOCKS5 Users (for Username/Password Authentication)](#36-managing-socks5-users-for-username-password-authentication)
   
-- [3.6.1. Creating a Users File](#3-6-1-creating-a-users-file)
+- [3.6.1. Creating a Users File](#361-creating-a-users-file)
   	
-- [3.6.2. Adding Users to an Existing Users File](#3-6-2-adding-users-to-an-existing-users-file)
+- [3.6.2. Adding Users to an Existing Users File](#362-adding-users-to-an-existing-users-file)
   	
-- [3.6.3. Removing a User from an Existing Users File](#3-6-3-removing-a-user-from-an-existing-users-file)
+- [3.6.3. Removing a User from an Existing Users File](#363-removing-a-user-from-an-existing-users-file)
   	
-- [3.7. Using SOCKS5 Authentication](#3-7-using-socks5-authentication)
+- [3.7. Using SOCKS5 Authentication](#37-using-socks5-authentication)
   
-- [3.7.1. Using No Authentication](#3-7-1-using-no-authentication)
+- [3.7.1. Using No Authentication](#371-using-no-authentication)
     
-- [3.7.2. Using Username/Password Authentication](#3-7-2-using-username-password-authentication)
+- [3.7.2. Using Username/Password Authentication](#372-using-username-password-authentication)
     
-- [3.7.3. Using GSS-API Authentication](#3-7-3-using-gss-api-authentication)
+- [3.7.3. Using GSS-API Authentication](#373-using-gss-api-authentication)
 
 - [4. Integration Testing](#4-integration-testing)
 

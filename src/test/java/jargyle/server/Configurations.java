@@ -40,7 +40,7 @@ public final class Configurations {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Aladdin:opensesame,");
 		sb.append("Jasmine:Ali-Baba,");
-		sb.append("Apu:ooh-ooh-ahh-ahh");
+		sb.append("Abu:ooh-ooh-ahh-ahh");
 		builder.socks5UsernamePasswordAuthenticator(
 				new StringSourceUsernamePasswordAuthenticator(sb.toString()));
 		return builder.build();

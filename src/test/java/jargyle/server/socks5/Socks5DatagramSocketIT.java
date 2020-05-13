@@ -85,7 +85,7 @@ public class Socks5DatagramSocketIT {
 				Socks5Clients.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
-						UsernamePassword.newInstance("Apu", "ooh-ooh-ahh-ahh".toCharArray())),
+						UsernamePassword.newInstance("Abu", "ooh-ooh-ahh-ahh".toCharArray())),
 				Configurations.newConfigurationUsingSocks5UsernamePasswordAuth());
 		assertEquals(string, returningString);
 	}

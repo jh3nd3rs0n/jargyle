@@ -498,10 +498,10 @@ If you want to enter a user, the prompt will ask you for the user's name, passwo
     User 'Jasmine' added.
     Would you like to enter another user? ('Y' for yes): Y
     User
-    Name: Apu
+    Name: Abu
     Password: 
     Re-type password:
-    User 'Apu' added.
+    User 'Abu' added.
     Would you like to enter another user? ('Y' for yes): n
     Writing to 'users.xml'...
 
@@ -528,7 +528,7 @@ If you want to enter a user, the prompt will ask you for the user's name, passwo
             </passwordHash>
         </user>
         <user>
-            <name>Apu</name>
+            <name>Abu</name>
             <passwordHash>
                 <hash>Tl5wqiM//Bp/QI/bZIOvp0LrGl2+feI5dbb3YoVPrTI=</hash>
                 <salt>amDm0iiyKh4=</salt>
@@ -586,7 +586,7 @@ Once you have run the command, an interactive prompt will ask you for the new us
             </passwordHash>
         </user>
         <user>
-            <name>Apu</name>
+            <name>Abu</name>
             <passwordHash>
                 <hash>Tl5wqiM//Bp/QI/bZIOvp0LrGl2+feI5dbb3YoVPrTI=</hash>
                 <salt>amDm0iiyKh4=</salt>
@@ -646,7 +646,7 @@ Once you have run the command, the user of the specified name will be removed fr
             </passwordHash>
         </user>
         <user>
-            <name>Apu</name>
+            <name>Abu</name>
             <passwordHash>
                 <hash>Tl5wqiM//Bp/QI/bZIOvp0LrGl2+feI5dbb3YoVPrTI=</hash>
                 <salt>amDm0iiyKh4=</salt>

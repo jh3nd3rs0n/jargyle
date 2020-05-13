@@ -317,7 +317,7 @@ public enum SettingSpec implements HelpTextParams {
 		@Override
 		public String getDoc() {
 			return String.format(
-					"The object ID for the GSSAPI authentication mechanism to "
+					"The object ID for the GSS-API authentication mechanism to "
 					+ "the external SOCKS5 server for external connections "
 					+ "(default is %s)", 
 					Socks5Client.DEFAULT_GSSAPI_MECHANISM_OID);
@@ -421,7 +421,7 @@ public enum SettingSpec implements HelpTextParams {
 		public String getDoc() {
 			return String.format(
 					"The space separated list of acceptable protection levels "
-					+ "after GSSAPI authentication with the external SOCKS5 "
+					+ "after GSS-API authentication with the external SOCKS5 "
 					+ "server for external connections (The first is "
 					+ "preferred. The remaining are acceptable if the server "
 					+ "does not accept the first.) (default is %s)",
@@ -460,7 +460,7 @@ public enum SettingSpec implements HelpTextParams {
 	},
 	EXTERNAL_CLIENT_SOCKS5_GSSAPI_SERVICE_NAME {
 		
-		private static final String DOC = "The GSSAPI service name for the "
+		private static final String DOC = "The GSS-API service name for the "
 				+ "external SOCKS5 server for external connections";
 		private static final String NAME = 
 				"externalClient.socks5.gssapiServiceName";
@@ -705,7 +705,7 @@ public enum SettingSpec implements HelpTextParams {
 		public String getDoc() {
 			return String.format(
 					"The space separated list of acceptable protection levels "
-					+ "after GSSAPI authentication (The first is preferred "
+					+ "after GSS-API authentication (The first is preferred "
 					+ "if the client does not provide a protection level that "
 					+ "is acceptable.) (default is %s)",
 					GssapiProtectionLevels.DEFAULT_INSTANCE);

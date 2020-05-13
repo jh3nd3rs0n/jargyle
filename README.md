@@ -155,16 +155,16 @@ The following is a list of available settings for the SOCKS server (displayed wh
           The space separated list of acceptable authentication methods to the external SOCKS5 server for external connections (default is NO_AUTHENTICATION_REQUIRED)
     
       externalClient.socks5.gssapiMechanismOid=GSSAPI_MECHANISM_OID
-          The object ID for the GSSAPI authentication mechanism to the external SOCKS5 server for external connections (default is 1.2.840.113554.1.2.2)
+          The object ID for the GSS-API authentication mechanism to the external SOCKS5 server for external connections (default is 1.2.840.113554.1.2.2)
     
       externalClient.socks5.gssapiNecReferenceImpl=true|false
-          The boolean value to indicate if the exchange of the GSSAPI protection level negotiation must be unprotected should the external SOCKS5 server for external connections use the NEC reference implementation (default is false)
+          The boolean value to indicate if the exchange of the GSS-API protection level negotiation must be unprotected should the external SOCKS5 server for external connections use the NEC reference implementation (default is false)
     
       externalClient.socks5.gssapiProtectionLevels=SOCKS5_GSSAPI_PROTECTION_LEVEL1[ SOCKS5_GSSAPI_PROTECTION_LEVEL2[...]]
-          The space separated list of acceptable protection levels after GSSAPI authentication with the external SOCKS5 server for external connections (The first is preferred. The remaining are acceptable if the server does not accept the first.) (default is REQUIRED_INTEG_AND_CONF REQUIRED_INTEG NONE)
+          The space separated list of acceptable protection levels after GSS-API authentication with the external SOCKS5 server for external connections (The first is preferred. The remaining are acceptable if the server does not accept the first.) (default is REQUIRED_INTEG_AND_CONF REQUIRED_INTEG NONE)
     
       externalClient.socks5.gssapiServiceName=GSSAPI_SERVICE_NAME
-          The GSSAPI service name for the external SOCKS5 server for external connections
+          The GSS-API service name for the external SOCKS5 server for external connections
     
       port=INTEGER_BETWEEN_1_AND_65535
           The port for the SOCKS server (default is 1080)
@@ -176,10 +176,10 @@ The following is a list of available settings for the SOCKS server (displayed wh
           The space separated list of acceptable authentication methods in order of preference (default is NO_AUTHENTICATION_REQUIRED)
     
       socks5.gssapiNecReferenceImpl=true|false
-          The boolean value to indicate if the exchange of the GSSAPI protection level negotiation must be unprotected according to the NEC reference implementation (default is false)
+          The boolean value to indicate if the exchange of the GSS-API protection level negotiation must be unprotected according to the NEC reference implementation (default is false)
     
       socks5.gssapiProtectionLevels=SOCKS5_GSSAPI_PROTECTION_LEVEL1[ SOCKS5_GSSAPI_PROTECTION_LEVEL2[...]]
-          The space separated list of acceptable protection levels after GSSAPI authentication (The first is preferred if the client does not provide a protection level that is acceptable.) (default is REQUIRED_INTEG_AND_CONF REQUIRED_INTEG NONE)
+          The space separated list of acceptable protection levels after GSS-API authentication (The first is preferred if the client does not provide a protection level that is acceptable.) (default is REQUIRED_INTEG_AND_CONF REQUIRED_INTEG NONE)
     
       socks5.onBind.incomingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
           The space separated list of socket settings for the incoming socket
@@ -696,7 +696,7 @@ Partial command line example:
 
 ```
 
-    "--settings=socks5.authMethods=NO_AUTHENTICATION_REQUIRED GSSAPI USERNAME_PASSWORD"
+    "--settings=socks5.authMethods=NO_AUTHENTICATION_REQUIRED GSS-API USERNAME_PASSWORD"
 
 ```
 
@@ -704,7 +704,7 @@ Partial configuration file example:
 
 ```xml
 
-    <setting name="socks5.authMethods" value="NO_AUTHENTICATION_REQUIRED GSSAPI USERNAME_PASSWORD"/>
+    <setting name="socks5.authMethods" value="NO_AUTHENTICATION_REQUIRED GSS-API USERNAME_PASSWORD"/>
 
 ```
 

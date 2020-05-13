@@ -804,7 +804,7 @@ The following is a sufficient example of using the Kerberos security mechanism:
 ```
 
     $ java -Djavax.security.auth.useSubjectCredsOnly=false \
-	    -Djava.security.auth.login.configuration=login.conf \
+	    -Djava.security.auth.login.config=login.conf \
 	    -Djava.security.krb5.conf=krb5.conf \
 	    -jar jargyle-1.0-SNAPSHOT.jar \
 	    --settings=socks5.authMethods=GSSAPI 
@@ -813,7 +813,7 @@ The following is a sufficient example of using the Kerberos security mechanism:
 
 The Java system property `-Djavax.security.auth.useSubjectCredsOnly=false` disables JAAS-based authentication to obtain the credentials directly. We will use Kerberos to obtain them instead.
 
-The Java system property `-Djava.security.auth.login.configuration=login.conf` provides a JAAS configuration file to the underlying security mechanism.
+The Java system property `-Djava.security.auth.login.config=login.conf` provides a JAAS configuration file to the underlying security mechanism.
 
 `login.conf`:
 

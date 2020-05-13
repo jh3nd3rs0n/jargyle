@@ -8,6 +8,11 @@
 	<description>A Java SOCKS5 server</description>
 	<dependencies>
 		<dependency>
+			<groupId>javax.xml.bind</groupId>
+			<artifactId>jaxb-api</artifactId>
+			<version>2.3.0</version>
+		</dependency>
+		<dependency>
 			<groupId>org.apache.kerby</groupId>
 			<artifactId>kerb-client-api-all</artifactId>
 			<scope>test</scope>

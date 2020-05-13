@@ -1,4 +1,4 @@
-# Jargyle
+# Jargyle [![Build Status](https://travis-ci.com/jh3nd3rs0n/jargyle.svg?branch=master)](https://travis-ci.com/jh3nd3rs0n/jargyle)
 
 Jargyle is a Java SOCKS5 server. It has the following features:
 

@@ -18,7 +18,7 @@ public class EncryptedPasswordTest {
 
 	@Test
 	public void testGetPassword02() {
-		char[] password = "Ali-Baba".toCharArray();
+		char[] password = "mission%3Aimpossible".toCharArray();
 		EncryptedPassword encryptedPassword = EncryptedPassword.newInstance(
 				password);
 		assertArrayEquals(password, encryptedPassword.getPassword());
@@ -26,7 +26,7 @@ public class EncryptedPasswordTest {
 
 	@Test
 	public void testGetPassword03() {
-		char[] password = "ooh-ooh-ahh-ahh".toCharArray();
+		char[] password = "safeDriversSave40%25".toCharArray();
 		EncryptedPassword encryptedPassword = EncryptedPassword.newInstance(
 				password);
 		assertArrayEquals(password, encryptedPassword.getPassword());

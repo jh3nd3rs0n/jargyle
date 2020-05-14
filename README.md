@@ -753,7 +753,7 @@ Partial command line example:
 
 ```
 
-    --socks5-user-pass-authenticator=jargyle.server.socks5.StringSourceUsernamePasswordAuthenticator:Aladdin:opensesame,Jasmine:Ali-Baba
+    --socks5-user-pass-authenticator=jargyle.server.socks5.StringSourceUsernamePasswordAuthenticator:Aladdin:opensesame,Jasmine:mission%3Aimpossible
 
 ```
 
@@ -763,7 +763,7 @@ Partial configuration file example:
 
     <socks5UsernamePasswordAuthenticator>
 	    <className>jargyle.server.socks5.StringSourceUsernamePasswordAuthenticator</className>	
-	    <parameterString>Aladdin:opensesame,Jasmine:Ali-Baba</parameterString>
+	    <parameterString>Aladdin:opensesame,Jasmine:mission%3Aimpossible</parameterString>
     </socks5UsernamePasswordAuthenticator>
 
 ```

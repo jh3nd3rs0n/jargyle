@@ -39,8 +39,8 @@ public final class Configurations {
 						AuthMethods.newInstance(AuthMethod.USERNAME_PASSWORD))));
 		StringBuilder sb = new StringBuilder();
 		sb.append("Aladdin:opensesame,");
-		sb.append("Jasmine:Ali-Baba,");
-		sb.append("Abu:ooh-ooh-ahh-ahh");
+		sb.append("Jasmine:mission%3Aimpossible,");
+		sb.append("Abu:safeDriversSave40%25");
 		builder.socks5UsernamePasswordAuthenticator(
 				new StringSourceUsernamePasswordAuthenticator(sb.toString()));
 		return builder.build();

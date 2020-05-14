@@ -19,7 +19,7 @@ public class PasswordHashTest {
 
 	@Test
 	public void testNewInstanceCharArrayByteArray02() {
-		char[] password = "Ali-Baba".toCharArray();
+		char[] password = "mission:impossible".toCharArray();
 		PasswordHash passwordHash1 = PasswordHash.newInstance(password);
 		PasswordHash passwordHash2 = PasswordHash.newInstance(
 				password, passwordHash1.getSalt());
@@ -28,7 +28,7 @@ public class PasswordHashTest {
 
 	@Test
 	public void testNewInstanceCharArrayByteArray03() {
-		char[] password = "ooh-ooh-ahh-ahh".toCharArray();
+		char[] password = "safeDriversSave40%".toCharArray();
 		PasswordHash passwordHash1 = PasswordHash.newInstance(password);
 		PasswordHash passwordHash2 = PasswordHash.newInstance(
 				password, passwordHash1.getSalt());

@@ -1016,6 +1016,7 @@ The following is a sufficient example of using the Kerberos security mechanism:
 	    -Djava.security.auth.login.config=login.conf \
 	    -Djava.security.krb5.conf=krb5.conf \
 	    -jar jargyle-1.0-SNAPSHOT.jar \
+	    --settings=externalClient.externalServerUri=socks5://localhost:23456 \
 	    --settings=externalClient.socks5.authMethods=GSSAPI \
 	    --settings=externalClient.socks5.gssapiServiceName=rcmd/localhost 
 

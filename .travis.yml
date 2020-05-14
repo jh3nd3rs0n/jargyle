@@ -3,6 +3,14 @@ language: java
 os: 
   - linux
   - osx
+  - windows
+
+dist:
+  - trusty
+  - precise
+  - xenial
+  - bionic
+  - server-2016
 
 jdk:
   - openjdk11

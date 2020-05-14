@@ -1,4 +1,6 @@
-# Jargyle [![Build Status](https://travis-ci.com/jh3nd3rs0n/jargyle.svg?branch=master)](https://travis-ci.com/jh3nd3rs0n/jargyle)
+# Jargyle 
+
+[![Build Status](https://travis-ci.com/jh3nd3rs0n/jargyle.svg?branch=master)](https://travis-ci.com/jh3nd3rs0n/jargyle)
 
 Jargyle is a Java SOCKS5 server. It has the following features:
 
@@ -14,7 +16,7 @@ Jargyle is a Java SOCKS5 server. It has the following features:
   
 **It can have its external connections be set through another SOCKS5 server**
 
-Disclaimer:
+**Disclaimer:**
 
 Jargyle is a hobby project and is currently subject to breaking changes. Jargyle is currently not production ready but it aims to be.
 
@@ -51,6 +53,16 @@ Jargyle is a hobby project and is currently subject to breaking changes. Jargyle
 - [3. 7. 2. Using Username Password Authentication](#3-7-2-using-username-password-authentication)
     
 - [3. 7. 3. Using GSS-API Authentication](#3-7-3-using-gss-api-authentication)
+
+- [3. 8. With External Connections Set to Another SOCKS Server](#3-8-with-external-connections-set-to-another-socks-server)
+
+- [3. 8. 1. Using SOCKS5 Authentication](#3-8-1-using-socks5-authentication)
+
+- [3. 8. 1. 1. Using No Authentication](#3-8-1-1-using-no-authentication)
+
+- [3. 8. 1. 2. Using Username Password Authentication](#3-8-1-2-using-username-password-authentication)
+
+- [3. 8. 1. 3. Using GSS-API Authentication](#3-8-1-3-using-gss-api-authentication)
 
 - [4. Integration Testing](#4-integration-testing)
 
@@ -756,6 +768,11 @@ Partial configuration file example:
 
 ```
 
+Should any of the usernames or the passwords contain a colon character (`:`), the colon character should be replaced with the URL encoding character `%3A`.
+
+Also, should any of the usernames or the passwords contain a percent sign character (`%`), the percent sign character should be replaced with the URL encoding character `%25`.
+
+
 `jargyle.server.socks5.XmlFileSourceUsernamePasswordAuthenticator`: This class authenticates the username and password based on the [XML file of users](#3-6-managing-socks5-users-for-username-password-authentication) whose file name is provided as a parameter string
 
 Partial command line example:
@@ -797,7 +814,7 @@ Partial configuration file example:
 
 ```
 
-Also, you will need to specify Java system properties to use a security mechanism that implements the GSS-API (for example, Kerberos is a security mechanism that implements the GSS-API)
+Also, you will need to specify Java system properties to use a security mechanism that implements the GSS-API (for example, Kerberos is a security mechanism that implements the GSS-API).
 
 The following is a sufficient example of using the Kerberos security mechanism:
 
@@ -829,7 +846,7 @@ The Java system property `-Djava.security.auth.login.config=login.conf` provides
 
 ``` 
 
-In `login.conf`, `rcmd/localhost` is a service principal that is created by a Kerberos administrator. `localhost` is to be the fully qualified domain name of where the SOCKS server resides but for this example it is left as `localhost`. `rcmd.keytab` is a keytab file also created by a Kerberos administrator that contains the aforementioned service principal and its respective encrypted key.  
+In `login.conf`, `rcmd/localhost` is a service principal that is created by a Kerberos administrator. `localhost` is supposed to be replaced by the fully qualified domain name of where the SOCKS server resides but for this example it is left as `localhost`. `rcmd.keytab` is a keytab file also created by a Kerberos administrator that contains the aforementioned service principal and its respective encrypted key.  
 
 The Java system property `-Djava.security.krb5.conf=krb5.conf` provides the Kerberos configuration file that points to the Kerberos Key Distribution Center (KDC) for authentication.   
 
@@ -850,7 +867,202 @@ The Java system property `-Djava.security.krb5.conf=krb5.conf` provides the Kerb
     
 ```
 
-In `krb5.conf`, a KDC is defined as running on port 12345 with its realm as EXAMPLE.COM.  
+In `krb5.conf`, a KDC is defined as running on port 12345 with its realm as `EXAMPLE.COM`. `EXAMPLE.COM` is supposed to be replaced by an actual realm provided by the Kerberos administrator but for this example it is left as `EXAMPLE.COM`. `localhost` is supposed to be replaced by the fully qualified domain name of where the KDC resides but for this example it is left as `localhost`.  
+
+### 3. 8. With External Connections Set to Another SOCKS Server
+
+You can have Jargyle's external connections set to another SOCKS server. To have its external connections set to another SOCKS server, you will need to specify the other SOCKS server as a URI in the setting `externalClient.externalServerUri`
+
+
+Partial command line example:
+
+```
+
+    --settings=externalClient.externalServerUri=socks5://127.0.0.1:23456
+
+```
+
+Partial configuration file example:
+
+```xml
+
+    <setting name="externalClient.externalServerUri" value="socks5://127.0.0.1:23456"/>
+
+```
+
+Please note that the scheme in the URI specifies the SOCKS protocol to be used when accessing the other SOCKS server (`socks5`), the host or address of the other SOCKS server (`127.0.0.1`), and the port number of the other SOCKS server (`23456`). In the aforementioned examples, the SOCKS protocol version 5 is used. At this time, the only supported scheme for the URI format is `socks5`
+
+#### 3. 8. 1. Using SOCKS5 Authentication
+
+You have the following SOCKS5 authentication methods to choose from for accessing the other SOCKS5 server:
+
+- `NO_AUTHENTICATION_REQUIRED`: No authentication required
+
+- `GSSAPI`: GSS-API authentication
+
+- `USERNAME_PASSWORD`: Username password authentication
+
+You can have one or more of the aforementioned authentication methods set in the setting `externalClient.socks5.authMethods` as a space separated list.
+
+Partial command line example:
+
+```
+
+    "--settings=externalClient.socks5.authMethods=NO_AUTHENTICATION_REQUIRED GSSAPI"
+
+```
+
+Partial configuration file example:
+
+```xml
+
+    <setting name="externalClient.socks5.authMethods" value="GSSAPI USERNAME_PASSWORD"/>
+
+```
+
+If not set, the default value for the setting `externalClient.socks5.authMethods` is set to `NO_AUTHENTICATION_REQUIRED`
+
+##### 3. 8. 1. 1. Using No Authentication
+
+Because the default value for the setting `externalClient.socks5.authMethods` is set to `NO_AUTHENTICATION_REQUIRED`, it is not required for `NO_AUTHENTICATION_REQUIRED` to be included in the setting `externalClient.socks5.authMethods`.
+
+However, if other authentication methods are to be used in addition to `NO_AUTHENTICATION_REQUIRED`, `NO_AUTHENTICATION_REQUIRED` must be included in the setting `externalClient.socks5.authMethods`
+
+Partial command line example:
+
+```
+
+    "--settings=externalClient.socks5.authMethods=NO_AUTHENTICATION_REQUIRED GSS-API USERNAME_PASSWORD"
+
+```
+
+Partial configuration file example:
+
+```xml
+
+    <setting name="externalClient.socks5.authMethods" value="NO_AUTHENTICATION_REQUIRED GSS-API USERNAME_PASSWORD"/>
+
+```
+
+##### 3. 8. 1. 2. Using Username Password Authentication
+
+To use username password authentication, you will need to have the setting `externalClient.socks5.authMethods` to have `USERNAME_PASSWORD` included.
+
+Partial command line example:
+
+```
+
+    --settings=externalClient.socks5.authMethods=USERNAME_PASSWORD
+
+```
+
+Partial configuration file example:
+
+```xml
+
+    <setting name="externalClient.socks5.authMethods" value="USERNAME_PASSWORD"/>
+
+```
+
+To provide a username and password for the other SOCKS5 server, you can use either of the following command line options:
+
+- `--external-client-socks5-user-pass=USERNAME:PASSWORD`
+
+- `--enter-external-client-socks5-user-pass`
+
+The command line option `--external-client-socks5-user-pass` requires that the actual username be followed by a colon character (`:`) followed by the the actual password.
+
+Partial command line example:
+
+```
+
+    --external-client-socks5-user-pass=Aladdin:opensesame
+
+```
+
+Should the username or the password contain a colon character (`:`), the colon character should be replaced with the URL encoding character `%3A`.
+
+Also, should the username or the password contain a percent sign character (`%`), the percent sign character should be replaced with the URL encoding character `%25`.
+
+The command line option `--enter-external-client-socks5-user-pass` provides an interactive prompt for the username and password. This command line option is best when you do not wish to have the username and password appear in the command line history for security reasons.
+
+##### 3. 8. 1. 3. Using GSS-API Authentication
+
+To use GSS-API authentication, you will need to have the setting `externalClient.socks5.authMethods` to have `GSSAPI` included.
+
+Partial command line example:
+
+```
+
+    --settings=externalClient.socks5.authMethods=GSSAPI
+
+```
+
+Partial configuration file example:
+
+```xml
+
+    <setting name="externalClient.socks5.authMethods" value="GSSAPI"/>
+
+```
+
+Also, you will need to specify Java system properties to use a security mechanism that implements the GSS-API (for example, Kerberos is a security mechanism that implements the GSS-API), and you will also need to specify the GSS-API service name of the other SOCKS5 server.
+
+The following is a sufficient example of using the Kerberos security mechanism:
+
+```
+
+    $ java -Djavax.security.auth.useSubjectCredsOnly=false \
+	    -Djava.security.auth.login.config=login.conf \
+	    -Djava.security.krb5.conf=krb5.conf \
+	    -jar jargyle-1.0-SNAPSHOT.jar \
+	    --settings=externalClient.socks5.authMethods=GSSAPI \
+	    --settings=externalClient.socks5.gssapiServiceName=rcmd/localhost 
+
+```
+
+The Java system property `-Djavax.security.auth.useSubjectCredsOnly=false` disables JAAS-based authentication to obtain the credentials directly. We will use Kerberos to obtain them instead.
+
+The Java system property `-Djava.security.auth.login.config=login.conf` provides a JAAS configuration file to the underlying security mechanism.
+
+`login.conf`:
+
+```
+
+    com.sun.security.jgss.initiate  {
+      com.sun.security.auth.module.Krb5LoginModule required
+      useKeyTab=true
+      keyTab="alice.keytab"
+      storeKey=true
+      principal="alice";
+    };
+
+``` 
+
+In `login.conf`, `alice` is a principal that is created by a Kerberos administrator. `alice.keytab` is a keytab file also created by a Kerberos administrator that contains the aforementioned principal and its respective encrypted key.  
+
+The Java system property `-Djava.security.krb5.conf=krb5.conf` provides the Kerberos configuration file that points to the Kerberos Key Distribution Center (KDC) for authentication.   
+
+`krb5.conf`:
+
+```
+
+    [libdefaults]
+        kdc_realm = EXAMPLE.COM
+        default_realm = EXAMPLE.COM
+        kdc_udp_port = 12345
+        kdc_tcp_port = 12345
+    
+    [realms]
+        EXAMPLE.COM = {
+            kdc = localhost:12345
+        }
+    
+```
+
+In `krb5.conf`, a KDC is defined as running on port 12345 with its realm as `EXAMPLE.COM`. `EXAMPLE.COM` is supposed to be replaced by an actual realm provided by the Kerberos administrator but for this example it is left as `EXAMPLE.COM`. `localhost` is supposed to be replaced by the fully qualified domain name of where the KDC resides but for this example it is left as `localhost`.  
+
+The command line option `--settings=externalClient.socks5.gssapiServiceName=rcmd/localhost` is the GSS-API service name (or the Kerberos service principal) of the other SOCKS5 server. `localhost` is supposed to be replaced by the fully qualified domain name of where the other SOCKS5 server resides but for this example it is left as `localhost`.
 
 ## 4. Integration Testing
 
@@ -863,8 +1075,6 @@ To run integration testing, you would run the following command:
 ```
 
 ## 5. TODO
-
-**Documentation in README.md on setting Jargyle's external connections be set through another SOCKS5 server**
 
 **Javadoc documentation on all types**
 

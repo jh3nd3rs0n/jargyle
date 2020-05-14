@@ -10,7 +10,10 @@ jdk:
   - openjdk9
   - openjdk8
   - oraclejdk11
+  - oraclejdk10
+  - oraclejdk9
+  - oraclejdk8
   # oraclejdk10 not supported by Travis CI
-  # oraclejdk9 can't find the Maven plugin maven-failsafe-plugin
+  # oraclejdk9 can't find the Maven plugin maven-failsafe-plugin in linux xenial
 
 

@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import org.ietf.jgss.MessageProp;
+
 import jargyle.common.cli.HelpTextParams;
 
 public enum GssapiProtectionLevel implements HelpTextParams {
@@ -16,6 +18,11 @@ public enum GssapiProtectionLevel implements HelpTextParams {
 		public String getDoc() {
 			return DOC;
 		}
+
+		@Override
+		public MessageProp newMessageProp() {
+			return null;
+		}
 		
 	},
 	
@@ -26,6 +33,11 @@ public enum GssapiProtectionLevel implements HelpTextParams {
 		@Override
 		public String getDoc() {
 			return DOC;
+		}
+
+		@Override
+		public MessageProp newMessageProp() {
+			return new MessageProp(0, false);
 		}
 		
 	},
@@ -38,6 +50,11 @@ public enum GssapiProtectionLevel implements HelpTextParams {
 		@Override
 		public String getDoc() {
 			return DOC;
+		}
+
+		@Override
+		public MessageProp newMessageProp() {
+			return new MessageProp(0, true);
 		}
 		
 	};
@@ -111,5 +128,7 @@ public enum GssapiProtectionLevel implements HelpTextParams {
 	public final String getUsage() {
 		return this.toString();
 	}
+	
+	public abstract MessageProp newMessageProp();
 	
 }

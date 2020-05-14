@@ -150,26 +150,7 @@ enum GssapiAuthenticator implements Authenticator {
 					"server selected %s which is not acceptable by this socket", 
 					protectionLevelSelection));
 		}
-		boolean privacyState = false;
-		switch (protectionLevelSelection) {
-		case NONE:
-			break;
-		case REQUIRED_INTEG:
-			break;
-		case REQUIRED_INTEG_AND_CONF:
-			privacyState = true;
-			break;
-		default:
-			throw new AssertionError(String.format(
-					"unhandled %s: %s", 
-					ProtectionLevel.class.getSimpleName(), 
-					protectionLevelSelection));
-		}
-		ProtectionLevel level = protectionLevelSelection;
-		MessageProp msgProp = null;
-		if (!level.equals(ProtectionLevel.NONE)) {
-			msgProp = new MessageProp(0, privacyState);
-		}
+		MessageProp msgProp = gssapiProtectionLevelSelection.newMessageProp();
 		Socket newSocket = new GssSocket(socket, context, msgProp);
 		return newSocket;
 	}

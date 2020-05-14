@@ -108,16 +108,15 @@ enum GssapiAuthenticator implements Authenticator {
 		}
 		List<GssapiProtectionLevel> gssapiProtectionLevelList =
 				gssapiProtectionLevels.toList();
-		ProtectionLevel protectionLevelChoice = null;
-		if (gssapiProtectionLevelList.contains(gssapiProtectionLevel)) {
-			protectionLevelChoice = 
-					gssapiProtectionLevel.getProtectionLevel();
-		} else {
+		GssapiProtectionLevel gssapiProtectionLevelChoice = 
+				gssapiProtectionLevel; 
+		if (!gssapiProtectionLevelList.contains(gssapiProtectionLevelChoice)) {
 			GssapiProtectionLevel firstGssapiProtectionLevel = 
 					gssapiProtectionLevelList.get(0);
-			protectionLevelChoice = 
-					firstGssapiProtectionLevel.getProtectionLevel();
+			gssapiProtectionLevelChoice = firstGssapiProtectionLevel;			
 		}
+		ProtectionLevel protectionLevelChoice = 
+				gssapiProtectionLevelChoice.getProtectionLevel();
 		token = new byte[] { protectionLevelChoice.byteValue() };
 		if (!necReferenceImpl) {
 			prop = new MessageProp(0, true);
@@ -140,26 +139,7 @@ enum GssapiAuthenticator implements Authenticator {
 			throw new SocketException("client closed due to client " 
 					+ "finding choice of protection level unacceptable");
 		}
-		boolean privacyState = false;
-		switch (protectionLevelChoice) {
-		case NONE:
-			break;
-		case REQUIRED_INTEG:
-			break;
-		case REQUIRED_INTEG_AND_CONF:
-			privacyState = true;
-			break;
-		default:
-			throw new AssertionError(String.format(
-					"unhandled %s: %s", 
-					ProtectionLevel.class.getSimpleName(), 
-					protectionLevelChoice));
-		}
-		ProtectionLevel level = protectionLevelChoice;
-		MessageProp msgProp = null;
-		if (!level.equals(ProtectionLevel.NONE)) {
-			msgProp = new MessageProp(0, privacyState);
-		}
+		MessageProp msgProp = gssapiProtectionLevelChoice.newMessageProp();
 		Socket newSocket = new GssSocket(socket, context, msgProp);
 		return newSocket;
 	}

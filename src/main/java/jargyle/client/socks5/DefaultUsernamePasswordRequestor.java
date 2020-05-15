@@ -22,8 +22,7 @@ public final class DefaultUsernamePasswordRequestor
 				UsernamePassword.validateUsername(username);
 			} catch (IllegalArgumentException e) {
 				console.printf(
-						"Username must be no less than %s byte(s) and no more than %s byte(s).%n", 
-						UsernamePassword.MIN_USERNAME_LENGTH,
+						"Username must be no more than %s byte(s).%n", 
 						UsernamePassword.MAX_USERNAME_LENGTH);
 				continue;
 			}
@@ -36,8 +35,7 @@ public final class DefaultUsernamePasswordRequestor
 				UsernamePassword.validatePassword(password);
 			} catch (IllegalArgumentException e) {
 				console.printf(
-						"Password must be no less than %s byte(s) and no more than %s byte(s).%n", 
-						UsernamePassword.MIN_PASSWORD_LENGTH,
+						"Password must be no more than %s byte(s).%n", 
 						UsernamePassword.MAX_PASSWORD_LENGTH);
 				continue;
 			}

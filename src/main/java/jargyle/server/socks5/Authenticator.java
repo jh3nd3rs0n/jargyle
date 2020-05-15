@@ -29,7 +29,18 @@ import jargyle.server.SettingSpec;
 
 enum Authenticator {
 
-	GSSAPI(Method.GSSAPI) {
+	DEFAULT_AUTHENTICATOR(Method.NO_ACCEPTABLE_METHODS) {
+		
+		@Override
+		public Socket authenticate(
+				final Socket socket, 
+				final Configuration configuration) throws IOException {
+			throw new IOException("no acceptable authentication methods");
+		}
+		
+	},
+	
+	GSSAPI_AUTHENTICATOR(Method.GSSAPI) {
 		
 		@Override
 		public Socket authenticate(
@@ -152,18 +163,7 @@ enum Authenticator {
 		
 	},
 	
-	NO_ACCEPTABLE_METHODS(Method.NO_ACCEPTABLE_METHODS) {
-		
-		@Override
-		public Socket authenticate(
-				final Socket socket, 
-				final Configuration configuration) throws IOException {
-			throw new IOException("no acceptable authentication methods");
-		}
-		
-	},
-	
-	NO_AUTHENTICATION_REQUIRED(Method.NO_AUTHENTICATION_REQUIRED) {
+	NULL_AUTHENTICATOR(Method.NO_AUTHENTICATION_REQUIRED) {
 		
 		@Override
 		public Socket authenticate(
@@ -174,7 +174,7 @@ enum Authenticator {
 		
 	},
 	
-	USERNAME_PASSWORD(Method.USERNAME_PASSWORD) {
+	USERNAME_PASSWORD_AUTHENTICATOR(Method.USERNAME_PASSWORD) {
 		
 		@Override
 		public Socket authenticate(

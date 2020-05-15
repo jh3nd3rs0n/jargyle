@@ -27,7 +27,18 @@ import jargyle.common.net.socks5.usernamepasswordauth.UsernamePasswordResponse;
 
 enum Authenticator {
 
-	GSSAPI(Method.GSSAPI) {
+	DEFAULT_AUTHENTICATOR(Method.NO_ACCEPTABLE_METHODS) {
+		
+		@Override
+		public Socket authenticate(
+				final Socket socket, 
+				final Socks5Client socks5Client) throws IOException {
+			throw new IOException("no acceptable authentication methods");
+		}
+		
+	},
+	
+	GSSAPI_AUTHENTICATOR(Method.GSSAPI) {
 		
 		@Override
 		public Socket authenticate(
@@ -74,6 +85,9 @@ enum Authenticator {
 			OutputStream outStream = socket.getOutputStream();
 			byte[] token = new byte[] { };
 			while (!context.isEstablished()) {
+				if (token == null) {
+					token = new byte[] { };
+				}
 				try {
 					token = context.initSecContext(token, 0, token.length);
 				} catch (GSSException e) {
@@ -164,18 +178,7 @@ enum Authenticator {
 		
 	},
 	
-	NO_ACCEPTABLE_METHODS(Method.NO_ACCEPTABLE_METHODS) {
-		
-		@Override
-		public Socket authenticate(
-				final Socket socket, 
-				final Socks5Client socks5Client) throws IOException {
-			throw new IOException("no acceptable authentication methods");
-		}
-		
-	},
-	
-	NO_AUTHENTICATION_PROVIDED(Method.NO_AUTHENTICATION_REQUIRED) {
+	NULL_AUTHENTICATOR(Method.NO_AUTHENTICATION_REQUIRED) {
 		
 		@Override
 		public Socket authenticate(
@@ -186,7 +189,7 @@ enum Authenticator {
 		
 	},
 	
-	USERNAME_PASSWORD(Method.USERNAME_PASSWORD) {
+	USERNAME_PASSWORD_AUTHENTICATOR(Method.USERNAME_PASSWORD) {
 		
 		@Override
 		public Socket authenticate(

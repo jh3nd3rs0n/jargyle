@@ -159,7 +159,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 		if (address == null) {
 			throw new IllegalArgumentException("inetAddress must not be null");
 		}
-		if (port < 1 && port > 0xffff) {
+		if (port < 1 || port > 0xffff) {
 			throw new IllegalArgumentException("port is out of range");
 		}
 		this.connected = true;
@@ -215,7 +215,8 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 	}
 	
 	@Override
-	public void receive(final DatagramPacket p) throws IOException {
+	public synchronized void receive(
+			final DatagramPacket p) throws IOException {
 		super.receive(p);
 		this.datagramPacketFilter.filterAfterReceive(p);
 		UdpRequestHeader header = null; 

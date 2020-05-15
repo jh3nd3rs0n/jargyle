@@ -46,10 +46,6 @@ public final class User {
 			UsernamePasswordRequest.MAX_UNAME_LENGTH;
 	public static final int MAX_PASSWORD_LENGTH = 
 			UsernamePasswordRequest.MAX_PASSWD_LENGTH;
-	public static final int MIN_NAME_LENGTH = 
-			UsernamePasswordRequest.MIN_UNAME_LENGTH;
-	public static final int MIN_PASSWORD_LENGTH = 
-			UsernamePasswordRequest.MIN_PASSWD_LENGTH;
 	
 	public static User newInstance(final String s) {
 		String[] sElements = s.split(":");

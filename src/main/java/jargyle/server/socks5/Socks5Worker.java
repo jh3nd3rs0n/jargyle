@@ -73,8 +73,6 @@ public final class Socks5Worker implements Runnable {
 	
 	private void doBind(final Socks5Request socks5Req) throws IOException {
 		Socks5Reply socks5Rep = null;
-		String desiredDestinationAddress = 
-				socks5Req.getDesiredDestinationAddress();
 		int desiredDestinationPort = socks5Req.getDesiredDestinationPort();
 		PortRanges listenPortRanges = this.settings.getLastValue(
 				SettingSpec.SOCKS5_ON_BIND_LISTEN_PORT_RANGES, 
@@ -100,7 +98,7 @@ public final class Socks5Worker implements Runnable {
 					SocketSettings.class);
 			socketSettings.applyTo(listenSocket);
 			listenSocket.bind(new InetSocketAddress(
-					InetAddress.getByName(desiredDestinationAddress),
+					(InetAddress) null,
 					desiredDestinationPort));
 		} catch (IOException e) {
 			this.log(
@@ -146,6 +144,7 @@ public final class Socks5Worker implements Runnable {
 					Level.FINE, 
 					String.format("Sending %s", socks5Rep.toString()));
 			this.writeThenFlush(socks5Rep.toByteArray());
+			return;
 		} catch (IOException e) {
 			this.log(
 					Level.WARNING, 
@@ -157,6 +156,7 @@ public final class Socks5Worker implements Runnable {
 					Level.FINE, 
 					String.format("Sending %s", socks5Rep.toString()));
 			this.writeThenFlush(socks5Rep.toByteArray());
+			return;
 		} finally {
 			listenSocket.close();
 			if (socks5Rep != null && socks5Rep.getReply().equals(

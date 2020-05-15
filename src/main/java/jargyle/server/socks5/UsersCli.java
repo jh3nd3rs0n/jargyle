@@ -3,7 +3,6 @@ package jargyle.server.socks5;
 import java.io.Console;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -171,11 +170,17 @@ final class UsersCli {
 			tempFile.createNewFile();
 			out = new FileOutputStream(tempFile);
 		}
-		JAXBContext jaxbContext = JAXBContext.newInstance(
-				Users.UsersXml.class);
-		Marshaller marshaller = jaxbContext.createMarshaller();
-		marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-		marshaller.marshal(users.toUsersXml(), out);
+		try {
+			JAXBContext jaxbContext = JAXBContext.newInstance(
+					Users.UsersXml.class);
+			Marshaller marshaller = jaxbContext.createMarshaller();
+			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+			marshaller.marshal(users.toUsersXml(), out);
+		} finally {
+			if (out instanceof FileOutputStream) {
+				out.close();
+			}
+		}
 		if (!arg.equals("-")) {
 			File file = new File(arg);
 			File tempFile = new File(tempArg);
@@ -187,7 +192,7 @@ final class UsersCli {
 	}
 
 	private static Users readFile(
-			final String arg) throws JAXBException, FileNotFoundException {
+			final String arg) throws JAXBException, IOException {
 		InputStream in = null;
 		if (arg.equals("-")) {
 			in = System.in;
@@ -195,12 +200,18 @@ final class UsersCli {
 			File file = new File(arg);
 			in = new FileInputStream(file);
 		}
-		JAXBContext jaxbContext = JAXBContext.newInstance(
-				Users.UsersXml.class);
-		Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-		unmarshaller.setEventHandler(new DefaultValidationEventHandler());
-		Users.UsersXml usersXml = 
-				(Users.UsersXml) unmarshaller.unmarshal(in);
+		Users.UsersXml usersXml = null;
+		try {
+			JAXBContext jaxbContext = JAXBContext.newInstance(
+					Users.UsersXml.class);
+			Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+			unmarshaller.setEventHandler(new DefaultValidationEventHandler());
+			usersXml = (Users.UsersXml) unmarshaller.unmarshal(in);
+		} finally {
+			if (in instanceof FileInputStream) {
+				in.close();
+			}
+		}
 		return Users.newInstance(usersXml);
 	}
 	
@@ -217,8 +228,7 @@ final class UsersCli {
 					User.validateName(name);
 				} catch (IllegalArgumentException e) {
 					console.printf(
-							"Name must be no less than %s byte(s) and no more than %s byte(s).%n", 
-							User.MIN_NAME_LENGTH,
+							"Name must be no more than %s byte(s).%n", 
 							User.MAX_NAME_LENGTH);
 					continue;
 				}
@@ -231,8 +241,7 @@ final class UsersCli {
 					User.validatePassword(password);
 				} catch (IllegalArgumentException e) {
 					console.printf(
-							"Password must be no less than %s byte(s) and no more than %s byte(s).%n", 
-							User.MIN_PASSWORD_LENGTH,
+							"Password must be no more than %s byte(s).%n",
 							User.MAX_PASSWORD_LENGTH);
 					continue;
 				}

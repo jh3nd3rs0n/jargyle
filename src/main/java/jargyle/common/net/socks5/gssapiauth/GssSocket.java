@@ -144,7 +144,7 @@ public final class GssSocket extends FilterSocket {
 		}
 
 		@Override
-		public void close() throws IOException {
+		public synchronized void close() throws IOException {
 			this.bufferOut = new ByteArrayOutputStream();
 			this.bufferOutLength = 0;
 			this.out.close();
@@ -169,6 +169,40 @@ public final class GssSocket extends FilterSocket {
 			this.out.flush();
 			this.bufferOut = new ByteArrayOutputStream();
 			this.bufferOutLength = 0;
+		}
+		
+		@Override
+		public void write(byte[] b) throws IOException {
+			this.write(b, 0, b.length);
+		}
+		
+		@Override
+		public void write(byte[] b, int off, int len) throws IOException {
+			if (b == null) { 
+				throw new NullPointerException(); 
+			}
+			if (off < 0) {
+				throw new IndexOutOfBoundsException(String.format(
+						"offset is negative: %s", 
+						off));
+			}
+			if (len < 0) {
+				throw new IndexOutOfBoundsException(String.format(
+						"specified length is negative: %s", 
+						len));
+			}
+			if (off + len > b.length) {
+				throw new IndexOutOfBoundsException(String.format(
+						"offset and specified length is greater than "
+						+ "the length of the array: off (%s) + len (%s) > "
+						+ "length of array (%s)", 
+						off,
+						len,
+						b.length));
+			}
+			for (int i = off; i < off + len; i++) {
+				this.write(b[i]);
+			}
 		}
 		
 		@Override

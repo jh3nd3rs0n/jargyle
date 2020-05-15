@@ -21,9 +21,7 @@ public final class UsernamePasswordRequest {
 		private byte[] byteArray;
 	}
 	
-	public static final int MIN_UNAME_LENGTH = 0;
 	public static final int MAX_UNAME_LENGTH = 255;
-	public static final int MIN_PASSWD_LENGTH = 0;
 	public static final int MAX_PASSWD_LENGTH = 255;
 	
 	private static byte[] getValidatedPasswordBytes(final char[] password) {
@@ -43,11 +41,9 @@ public final class UsernamePasswordRequest {
 			throw new AssertionError(e);
 		}
 		byte[] passwordBytes = byteArrayOutputStream.toByteArray();
-		if (passwordBytes.length < MIN_PASSWD_LENGTH 
-				|| passwordBytes.length > MAX_PASSWD_LENGTH) {
+		if (passwordBytes.length > MAX_PASSWD_LENGTH) {
 			throw new IllegalArgumentException(String.format(
-					"password must be no less than %s byte(s) and no more than %s byte(s)", 
-					MIN_PASSWD_LENGTH,
+					"password must be no more than %s byte(s)",
 					MAX_PASSWD_LENGTH));
 		}
 		return passwordBytes;
@@ -55,11 +51,9 @@ public final class UsernamePasswordRequest {
 	
 	private static byte[] getValidatedUsernameBytes(final String username) {
 		byte[] usernameBytes = username.getBytes();
-		if (usernameBytes.length < MIN_UNAME_LENGTH 
-				|| usernameBytes.length > MAX_UNAME_LENGTH) {
+		if (usernameBytes.length > MAX_UNAME_LENGTH) {
 			throw new IllegalArgumentException(String.format(
-					"username must be no less than %s byte(s) and no more than %s byte(s)", 
-					MIN_UNAME_LENGTH,
+					"username must be no more than %s byte(s)",
 					MAX_UNAME_LENGTH));
 		}
 		return usernameBytes;
@@ -124,14 +118,15 @@ public final class UsernamePasswordRequest {
 		} catch (IllegalArgumentException e) {
 			throw new IOException(e);
 		}
-		if (ulen < MIN_UNAME_LENGTH) {
-			throw new IOException(String.format(
-					"username length must be at least %s bytes", 
-					MIN_UNAME_LENGTH));
-		}
 		out.write(b);
 		byte[] bytes = new byte[ulen];
 		int bytesRead = in.read(bytes);
+		if (bytesRead != ulen) {
+			throw new IOException(String.format(
+					"expected username length is %s byte(s). "
+					+ "actual username length is %s byte(s)", 
+					ulen, bytesRead));
+		}
 		bytes = Arrays.copyOf(bytes, bytesRead);
 		String uname = new String(bytes);
 		out.write(bytes);
@@ -142,14 +137,15 @@ public final class UsernamePasswordRequest {
 		} catch (IllegalArgumentException e) {
 			throw new IOException(e);
 		}
-		if (plen < MIN_PASSWD_LENGTH) {
-			throw new IOException(String.format(
-					"password length must be at least %s byte(s)", 
-					MIN_PASSWD_LENGTH));
-		}
 		out.write(b);
 		bytes = new byte[plen];
 		bytesRead = in.read(bytes);
+		if (bytesRead != plen) {
+			throw new IOException(String.format(
+					"expected password length is %s byte(s). "
+					+ "actual password length is %s byte(s)", 
+					ulen, bytesRead));
+		}
 		bytes = Arrays.copyOf(bytes, bytesRead);
 		Reader reader = new InputStreamReader(new ByteArrayInputStream(
 				bytes));

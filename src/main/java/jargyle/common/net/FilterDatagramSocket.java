@@ -43,7 +43,8 @@ public final class FilterDatagramSocket extends DatagramSocket {
 	}
 	
 	@Override
-	public void receive(final DatagramPacket p) throws IOException {
+	public synchronized void receive(
+			final DatagramPacket p) throws IOException {
 		super.receive(p);
 		this.datagramPacketFilter.filterAfterReceive(p);
 	}

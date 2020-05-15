@@ -56,12 +56,6 @@ public final class UsernamePassword {
 	public static final int MAX_USERNAME_LENGTH = 
 			UsernamePasswordRequest.MAX_UNAME_LENGTH;
 	
-	public static final int MIN_PASSWORD_LENGTH = 
-			UsernamePasswordRequest.MIN_PASSWD_LENGTH;
-	
-	public static final int MIN_USERNAME_LENGTH = 
-			UsernamePasswordRequest.MIN_UNAME_LENGTH;
-	
 	public static UsernamePassword getInstance() {
 		return instance;
 	}

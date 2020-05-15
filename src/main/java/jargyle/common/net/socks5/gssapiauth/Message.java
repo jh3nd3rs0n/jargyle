@@ -47,6 +47,9 @@ public final class Message {
 		if (messageType.equals(MessageType.ABORT)) {
 			tknStartIndex++;
 		} else {
+			if (token == null) {
+				throw new NullPointerException("token must not be null");
+			}
 			int tokenLength = token.length;
 			if (tokenLength > MAX_TOKEN_LENGTH) {
 				throw new IllegalArgumentException(String.format(

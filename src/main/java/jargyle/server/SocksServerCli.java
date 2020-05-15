@@ -2,7 +2,6 @@ package jargyle.server;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -121,11 +120,17 @@ final class SocksServerCli {
 			tempFile.createNewFile();
 			out = new FileOutputStream(tempFile);
 		}
-		JAXBContext jaxbContext = JAXBContext.newInstance(
-				Configuration.ConfigurationXml.class);
-		Marshaller marshaller = jaxbContext.createMarshaller();
-		marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-		marshaller.marshal(configuration.toConfigurationXml(), out);
+		try {
+			JAXBContext jaxbContext = JAXBContext.newInstance(
+					Configuration.ConfigurationXml.class);
+			Marshaller marshaller = jaxbContext.createMarshaller();
+			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+			marshaller.marshal(configuration.toConfigurationXml(), out);
+		} finally {
+			if (out instanceof FileOutputStream) {
+				out.close();
+			}
+		}
 		if (!arg.equals("-")) {
 			File file = new File(arg);
 			File tempFile = new File(tempArg);
@@ -253,7 +258,7 @@ final class SocksServerCli {
 				try {
 					configuration = this.readConfiguration(
 							parseResultHolder.getOptionArg().toString());
-				} catch (FileNotFoundException e) {
+				} catch (IOException e) {
 					System.err.printf("%s: %s%n", programName, e.toString());
 					e.printStackTrace();
 					System.exit(-1);
@@ -349,7 +354,7 @@ final class SocksServerCli {
 	}
 	
 	private Configuration readConfiguration(
-			final String arg) throws JAXBException, FileNotFoundException {
+			final String arg) throws JAXBException, IOException {
 		InputStream in = null;
 		if (arg.equals("-")) {
 			in = System.in;
@@ -357,12 +362,19 @@ final class SocksServerCli {
 			File file = new File(arg);
 			in = new FileInputStream(file);
 		}
-		JAXBContext jaxbContext = JAXBContext.newInstance(
-				Configuration.ConfigurationXml.class);
-		Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-		unmarshaller.setEventHandler(new DefaultValidationEventHandler());
-		Configuration.ConfigurationXml configurationXml = 
-				(Configuration.ConfigurationXml) unmarshaller.unmarshal(in);
+		Configuration.ConfigurationXml configurationXml = null;
+		try {
+			JAXBContext jaxbContext = JAXBContext.newInstance(			
+					Configuration.ConfigurationXml.class);
+			Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+			unmarshaller.setEventHandler(new DefaultValidationEventHandler());
+			configurationXml = 
+					(Configuration.ConfigurationXml) unmarshaller.unmarshal(in);
+		} finally {
+			if (in instanceof FileInputStream) {
+				in.close();
+			}
+		}
 		return Configuration.newInstance(configurationXml);
 	}
 		

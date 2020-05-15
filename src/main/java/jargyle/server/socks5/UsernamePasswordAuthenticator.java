@@ -1,11 +1,7 @@
 package jargyle.server.socks5;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.net.Socket;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -14,12 +10,8 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import jargyle.common.net.socks5.usernamepasswordauth.UsernamePasswordRequest;
-import jargyle.common.net.socks5.usernamepasswordauth.UsernamePasswordResponse;
-import jargyle.server.Configuration;
-
 @XmlJavaTypeAdapter(UsernamePasswordAuthenticator.UsernamePasswordAuthenticatorXmlAdapter.class)
-public class UsernamePasswordAuthenticator implements Authenticator {
+public class UsernamePasswordAuthenticator {
 
 	@XmlAccessorType(XmlAccessType.NONE)
 	@XmlType(name = "usernamePasswordAuthenticator", propOrder = { })
@@ -131,35 +123,7 @@ public class UsernamePasswordAuthenticator implements Authenticator {
 		this.parameterString = paramString;
 	}
 	
-	@Override
-	public final Socket authenticate(
-			final Socket socket, 
-			final Configuration configuration) throws IOException {
-		InputStream inputStream = socket.getInputStream();
-		OutputStream outputStream = socket.getOutputStream();
-		UsernamePasswordRequest usernamePasswordReq = 
-				UsernamePasswordRequest.newInstanceFrom(inputStream);
-		UsernamePasswordResponse usernamePasswordResp = null;
-		String username = usernamePasswordReq.getUsername();
-		char[] password = usernamePasswordReq.getPassword();
-		UsernamePasswordAuthenticator authenticator = 
-				configuration.getSocks5UsernamePasswordAuthenticator();
-		if (authenticator == null) { authenticator = this; }
-		if (!authenticator.authenticate(username, password)) {
-			usernamePasswordResp = UsernamePasswordResponse.newInstance(
-					(byte) 0x01);
-			outputStream.write(usernamePasswordResp.toByteArray());
-			outputStream.flush();
-			return null;
-		}
-		usernamePasswordResp = UsernamePasswordResponse.newInstance(
-				UsernamePasswordResponse.STATUS_SUCCESS);
-		outputStream.write(usernamePasswordResp.toByteArray());
-		outputStream.flush();
-		return socket;
-	}
-	
-	protected boolean authenticate(
+	public boolean authenticate(
 			final String username, final char[] password) {
 		return false;
 	}

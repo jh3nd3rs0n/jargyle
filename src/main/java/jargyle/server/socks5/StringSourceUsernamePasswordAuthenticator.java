@@ -12,7 +12,7 @@ public final class StringSourceUsernamePasswordAuthenticator
 	}
 
 	@Override
-	protected boolean authenticate(
+	public boolean authenticate(
 			final String username, final char[] password) {
 		if (this.users.toList().size() == 0) { return false; }
 		User user = this.users.getLast(username);

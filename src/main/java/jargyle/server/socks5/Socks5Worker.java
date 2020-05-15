@@ -528,26 +528,14 @@ public final class Socks5Worker implements Runnable {
 					String.format("Sending %s", smsm.toString()));
 			this.writeThenFlush(smsm.toByteArray());
 			Authenticator authenticator = null;
-			switch (method) {
-			case NO_AUTHENTICATION_REQUIRED:
-				authenticator = DefaultAuthenticator.INSTANCE;
-				break;
-			case GSSAPI:
-				authenticator = GssapiAuthenticator.INSTANCE;
-				break;
-			case USERNAME_PASSWORD:
-				authenticator = UsernamePasswordAuthenticator.INSTANCE;
-				break;
-			case NO_ACCEPTABLE_METHODS:
+			try {
+				authenticator = Authenticator.valueOf(method);
+			} catch (IllegalArgumentException e) {
 				this.log(
 						Level.WARNING, 
-						"No acceptable authentication methods");
+						String.format("Unhandled method: %s", method),
+						e);
 				return;
-			default:
-				throw new AssertionError(String.format(
-						"unhandled %s: %s", 
-						Method.class.getSimpleName(), 
-						method));
 			}
 			Socket socket = null;
 			try {

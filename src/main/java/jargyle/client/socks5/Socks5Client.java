@@ -213,23 +213,10 @@ public final class Socks5Client extends SocksClient {
 				ServerMethodSelectionMessage.newInstanceFrom(inputStream);
 		Method method = smsm.getMethod();
 		Authenticator authenticator = null;
-		switch (method) {
-		case NO_AUTHENTICATION_REQUIRED:
-			authenticator = DefaultAuthenticator.INSTANCE;
-			break;
-		case GSSAPI:
-			authenticator = GssapiAuthenticator.INSTANCE;
-			break;
-		case USERNAME_PASSWORD:
-			authenticator = UsernamePasswordAuthenticator.INSTANCE;
-			break;
-		case NO_ACCEPTABLE_METHODS:
-			throw new IOException("no acceptable authentication methods");
-		default:
-			throw new AssertionError(String.format(
-					"unhandled %s: %s", 
-					Method.class.getSimpleName(), 
-					method));
+		try {
+			authenticator = Authenticator.valueOf(method);
+		} catch (IllegalArgumentException e) {
+			throw new IOException(e);
 		}
 		Socket newSocket = authenticator.authenticate(socket, this);
 		return newSocket;

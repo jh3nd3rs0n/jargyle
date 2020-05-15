@@ -16,7 +16,6 @@ jdk:
   - oraclejdk9
   - oraclejdk8
 
-
 jobs:
   exclude:
   - os: osx

@@ -101,9 +101,11 @@ If you have Jargyle packaged as an executable jar file, you can run the followin
 
 ```
 
-    $ java -jar jargyle-1.0-SNAPSHOT.jar
+    $ java -jar target/jargyle-${VERSION}.jar
 
 ```
+
+Be sure to replace `${VERSION}` with the actual version shown within the name of the executable jar file.
 
 ### 3. 1. Usage
 
@@ -334,7 +336,7 @@ The following command creates an empty configuration file:
 
 ```
 
-    $ java -jar jargyle-1.0-SNAPSHOT.jar --new-config-file=configuration.xml
+    $ java -jar target/jargyle-${VERSION}.jar --new-config-file=configuration.xml
 
 ```
 
@@ -353,7 +355,7 @@ The following command creates a configuration file with the port number, the num
 
 ```
 
-    $ java -jar jargyle-1.0-SNAPSHOT.jar --settings=port=1234,backlog=100,socks5.authMethods=NO_AUTHENTICATION_REQUIRED --new-config-file=configuration.xml
+    $ java -jar target/jargyle-${VERSION}.jar --settings=port=1234,backlog=100,socks5.authMethods=NO_AUTHENTICATION_REQUIRED --new-config-file=configuration.xml
 
 ```
 
@@ -380,7 +382,7 @@ The following command adds one command line options before the existing configur
 
 ```
 
-    $ java -jar jargyle-1.0-SNAPSHOT.jar --settings=clientSocketSettings=SO_TIMEOUT=500 --config-file=configuration.xml --settings=socketSettings=SO_TIMEOUT=0 --new-config-file=new_configuration.xml
+    $ java -jar target/jargyle-${VERSION}.jar --settings=clientSocketSettings=SO_TIMEOUT=500 --config-file=configuration.xml --settings=socketSettings=SO_TIMEOUT=0 --new-config-file=new_configuration.xml
 
 ```
 
@@ -409,7 +411,7 @@ The following command combines the two earlier configuration files into one:
 
 ```
 
-    $ java -jar jargyle-1.0-SNAPSHOT.jar --config-file=configuration.xml --config-file=new_configuration.xml --new-config-file=combined_configuration.xml
+    $ java -jar target/jargyle-${VERSION}.jar --config-file=configuration.xml --config-file=new_configuration.xml --new-config-file=combined_configuration.xml
 
 ```
 
@@ -443,7 +445,7 @@ To run Jargyle with a configuration file, you can use the command line option `-
 
 ```
 
-    $ java -jar jargyle-1.0-SNAPSHOT.jar --config-file=configuration.xml
+    $ java -jar target/jargyle-${VERSION}.jar --config-file=configuration.xml
 
 ```
 
@@ -459,7 +461,7 @@ To create a users file, you would run the following command:
 
 ```
 
-    $ java -jar jargyle-1.0-SNAPSHOT.jar --socks5-users create-new-file FILE
+    $ java -jar target/jargyle-${VERSION}.jar --socks5-users create-new-file FILE
 
 ```
 
@@ -469,7 +471,7 @@ Once you have run the command, an interactive prompt will ask you if you want to
 
 ```
 
-    $ java -jar jargyle-1.0-SNAPSHOT.jar --socks5-users create-new-file users.xml
+    $ java -jar target/jargyle-${VERSION}.jar --socks5-users create-new-file users.xml
     Would you like to enter a user? ('Y' for yes): 
 
 ```
@@ -556,7 +558,7 @@ To add users to an existing users file, you would run the following command:
 
 ```
 
-    $ java -jar jargyle-1.0-SNAPSHOT.jar --socks5-users add-users-to-file FILE
+    $ java -jar target/jargyle-${VERSION}.jar --socks5-users add-users-to-file FILE
 
 ```
 
@@ -566,7 +568,7 @@ Once you have run the command, an interactive prompt will ask you for the new us
 
 ```
 
-    $ java -jar jargyle-1.0-SNAPSHOT.jar --socks5-users add-users-to-file users.xml
+    $ java -jar target/jargyle-${VERSION}.jar --socks5-users add-users-to-file users.xml
     User
     Name: Jafar
     Password: 
@@ -621,7 +623,7 @@ To remove a user from an existing users file, you would run the following comman
 
 ```
 
-    $ java -jar jargyle-1.0-SNAPSHOT.jar --socks5-users remove-user NAME FILE
+    $ java -jar target/jargyle-${VERSION}.jar --socks5-users remove-user NAME FILE
 
 ```
 
@@ -631,7 +633,7 @@ Once you have run the command, the user of the specified name will be removed fr
 
 ```
 
-    $ java -jar jargyle-1.0-SNAPSHOT.jar --socks5-users remove-user Jafar users.xml
+    $ java -jar target/jargyle-${VERSION}.jar --socks5-users remove-user Jafar users.xml
     User 'Jafar' removed
     Writing to 'users.xml'...
 
@@ -823,7 +825,7 @@ The following is a sufficient example of using the Kerberos security mechanism:
     $ java -Djavax.security.auth.useSubjectCredsOnly=false \
 	    -Djava.security.auth.login.config=login.conf \
 	    -Djava.security.krb5.conf=krb5.conf \
-	    -jar jargyle-1.0-SNAPSHOT.jar \
+	    -jar target/jargyle-${VERSION}.jar \
 	    --settings=socks5.authMethods=GSSAPI 
 
 ```
@@ -1015,7 +1017,7 @@ The following is a sufficient example of using the Kerberos security mechanism:
     $ java -Djavax.security.auth.useSubjectCredsOnly=false \
 	    -Djava.security.auth.login.config=login.conf \
 	    -Djava.security.krb5.conf=krb5.conf \
-	    -jar jargyle-1.0-SNAPSHOT.jar \
+	    -jar target/jargyle-${VERSION}.jar \
 	    --settings=externalClient.externalServerUri=socks5://localhost:23456 \
 	    --settings=externalClient.socks5.authMethods=GSSAPI \
 	    --settings=externalClient.socks5.gssapiServiceName=rcmd/localhost 

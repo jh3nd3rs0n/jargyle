@@ -144,7 +144,7 @@ public final class UsernamePasswordRequest {
 			throw new IOException(String.format(
 					"expected password length is %s byte(s). "
 					+ "actual password length is %s byte(s)", 
-					ulen, bytesRead));
+					plen, bytesRead));
 		}
 		bytes = Arrays.copyOf(bytes, bytesRead);
 		Reader reader = new InputStreamReader(new ByteArrayInputStream(

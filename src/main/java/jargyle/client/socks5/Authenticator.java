@@ -178,7 +178,7 @@ enum Authenticator {
 		
 	},
 	
-	NULL_AUTHENTICATOR(Method.NO_AUTHENTICATION_REQUIRED) {
+	PERMISSIVE_AUTHENTICATOR(Method.NO_AUTHENTICATION_REQUIRED) {
 		
 		@Override
 		public Socket authenticate(

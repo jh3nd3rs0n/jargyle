@@ -27,14 +27,15 @@ public class GssapiAuthIT {
 	private static final InetAddress LOOPBACK_ADDRESS = 
 			InetAddress.getLoopbackAddress();
 	
-	private static final String KDC_HOST = "localhost";
+	private static final String KDC_HOST = LOOPBACK_ADDRESS.getHostAddress();
 	private static final String KDC_REALM = "EXAMPLE.COM";
 	
 	private static final int KDC_TCP_PORT = 54321;
 	private static final int KDC_UDP_PORT = 54321;
 	
 	private static final String ALICE_PRINCIPAL = "alice";
-	private static final String RCMD_SERVICE_PRINCIPAL = "rcmd/localhost";
+	private static final String RCMD_SERVICE_PRINCIPAL = String.format(
+			"rcmd/%s", LOOPBACK_ADDRESS.getHostAddress());
 
 	private static final String KRB5_CONF_PROPERTY_NAME = 
 			"java.security.krb5.conf";

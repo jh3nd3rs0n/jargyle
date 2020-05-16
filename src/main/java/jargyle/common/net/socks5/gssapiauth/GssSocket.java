@@ -85,8 +85,27 @@ public final class GssSocket extends FilterSocket {
 		
 		@Override
 		public int read(byte[] b, int off, int len) throws IOException {
-			if (off < 0 || len < 0 || len > b.length - off) {
-				throw new IndexOutOfBoundsException();
+			if (b == null) { 
+				throw new NullPointerException(); 
+			}
+			if (off < 0) {
+				throw new IndexOutOfBoundsException(String.format(
+						"offset is negative: %s", 
+						off));
+			}
+			if (len < 0) {
+				throw new IndexOutOfBoundsException(String.format(
+						"specified length is negative: %s", 
+						len));
+			}
+			if (len > b.length - off) {
+				throw new IndexOutOfBoundsException(String.format(
+						"specified length is greater than "
+						+ "the length of the array minus offset: "
+						+ "len (%s) > length of array (%s) - off (%s)", 
+						len,
+						b.length,
+						off));
 			}
 			if (this.closed == true) { return -1; }
 			int offset = off;
@@ -194,8 +213,8 @@ public final class GssSocket extends FilterSocket {
 			if (off + len > b.length) {
 				throw new IndexOutOfBoundsException(String.format(
 						"offset and specified length is greater than "
-						+ "the length of the array: off (%s) + len (%s) > "
-						+ "length of array (%s)", 
+						+ "the length of the array: "
+						+ "off (%s) + len (%s) > length of array (%s)", 
 						off,
 						len,
 						b.length));

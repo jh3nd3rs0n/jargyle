@@ -205,8 +205,7 @@ public final class Socks5Client extends SocksClient {
 			methods.add(authMethod.methodValue());
 		}
 		ClientMethodSelectionMessage cmsm = 
-				ClientMethodSelectionMessage.newInstance(
-						methods);
+				ClientMethodSelectionMessage.newInstance(methods);
 		outputStream.write(cmsm.toByteArray());
 		outputStream.flush();
 		ServerMethodSelectionMessage smsm =
@@ -214,7 +213,7 @@ public final class Socks5Client extends SocksClient {
 		Method method = smsm.getMethod();
 		Authenticator authenticator = null;
 		try {
-			authenticator = Authenticator.getInstance(method);
+			authenticator = Authenticator.valueOf(method);
 		} catch (IllegalArgumentException e) {
 			throw new IOException(e);
 		}

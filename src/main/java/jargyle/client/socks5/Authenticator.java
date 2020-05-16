@@ -240,9 +240,9 @@ enum Authenticator {
 		
 	};
 	
-	public static Authenticator getInstance(final Method meth) {
+	public static Authenticator valueOf(final Method meth) {
 		for (Authenticator value : Authenticator.values()) {
-			if (value.getMethod().equals(meth)) {
+			if (value.methodValue().equals(meth)) {
 				return value;
 			}
 		}
@@ -251,7 +251,7 @@ enum Authenticator {
 		for (Iterator<Authenticator> iterator = list.iterator();
 				iterator.hasNext();) {
 			Authenticator value = iterator.next();
-			Method method = value.getMethod();
+			Method method = value.methodValue();
 			sb.append(method);
 			if (iterator.hasNext()) {
 				sb.append(", ");
@@ -265,18 +265,18 @@ enum Authenticator {
 						meth));
 	}
 	
-	private final Method method;
+	private final Method methodValue;
 	
-	private Authenticator(final Method meth) {
-		this.method = meth;
+	private Authenticator(final Method methValue) {
+		this.methodValue = methValue;
 	}
 	
 	public abstract Socket authenticate(
 			final Socket socket, 
 			final Socks5Client socks5Client) throws IOException;
 	
-	public Method getMethod() {
-		return this.method;
+	public Method methodValue() {
+		return this.methodValue;
 	}
 	
 }

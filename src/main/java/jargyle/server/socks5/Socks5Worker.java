@@ -529,7 +529,7 @@ public final class Socks5Worker implements Runnable {
 			this.writeThenFlush(smsm.toByteArray());
 			Authenticator authenticator = null;
 			try {
-				authenticator = Authenticator.getInstance(method);
+				authenticator = Authenticator.valueOf(method);
 			} catch (IllegalArgumentException e) {
 				this.log(
 						Level.WARNING, 

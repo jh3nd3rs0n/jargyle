@@ -770,9 +770,9 @@ Partial configuration file example:
 
 ```
 
-Should any of the usernames or the passwords contain a colon character (`:`), the colon character should be replaced with the URL encoding character `%3A`.
+Should any of the usernames or the passwords contain a colon character (`:`), each colon character should be replaced with the URL encoding character `%3A`.
 
-Also, should any of the usernames or the passwords contain a percent sign character (`%`), the percent sign character should be replaced with the URL encoding character `%25`.
+Also, should any of the usernames or the passwords contain a percent sign character (`%`) not used for URL encoding, each percent sign character not used for URL encoding should be replaced with the URL encoding character `%25`.
 
 
 `jargyle.server.socks5.XmlFileSourceUsernamePasswordAuthenticator`: This class authenticates the username and password based on the [XML file of users](#3-6-managing-socks5-users-for-username-password-authentication) whose file name is provided as a parameter string
@@ -848,7 +848,7 @@ The Java system property `-Djava.security.auth.login.config=login.conf` provides
 
 ``` 
 
-In `login.conf`, `rcmd/localhost` is a service principal that is created by a Kerberos administrator. `localhost` is supposed to be replaced by the fully qualified domain name of where the SOCKS server resides but for this example it is left as `localhost`. `rcmd.keytab` is a keytab file also created by a Kerberos administrator that contains the aforementioned service principal and its respective encrypted key.  
+In `login.conf`, `rcmd/localhost` is a service principal that is created by a Kerberos administrator. `localhost` should be replaced by the fully qualified domain name of where the SOCKS server resides but for this example it is left as `localhost`. `rcmd.keytab` is a keytab file also created by a Kerberos administrator that contains the aforementioned service principal and its respective encrypted key.  
 
 The Java system property `-Djava.security.krb5.conf=krb5.conf` provides the Kerberos configuration file that points to the Kerberos Key Distribution Center (KDC) for authentication.   
 
@@ -869,7 +869,7 @@ The Java system property `-Djava.security.krb5.conf=krb5.conf` provides the Kerb
     
 ```
 
-In `krb5.conf`, a KDC is defined as running on port 12345 with its realm as `EXAMPLE.COM`. `EXAMPLE.COM` is supposed to be replaced by an actual realm provided by the Kerberos administrator but for this example it is left as `EXAMPLE.COM`. `localhost` is supposed to be replaced by the fully qualified domain name of where the KDC resides but for this example it is left as `localhost`.  
+In `krb5.conf`, a KDC is defined as running on port 12345 with its realm as `EXAMPLE.COM`. `EXAMPLE.COM` should be replaced by an actual realm provided by the Kerberos administrator but for this example it is left as `EXAMPLE.COM`. `localhost` should be replaced by the fully qualified domain name of where the KDC resides but for this example it is left as `localhost`.  
 
 ### 3. 8. With External Connections Set to Another SOCKS Server
 
@@ -880,7 +880,7 @@ Partial command line example:
 
 ```
 
-    --settings=externalClient.externalServerUri=socks5://127.0.0.1:23456
+    --settings=externalClient.externalServerUri=socks5://localhost:23456
 
 ```
 
@@ -888,11 +888,11 @@ Partial configuration file example:
 
 ```xml
 
-    <setting name="externalClient.externalServerUri" value="socks5://127.0.0.1:23456"/>
+    <setting name="externalClient.externalServerUri" value="socks5://localhost:23456"/>
 
 ```
 
-Please note that the scheme in the URI specifies the SOCKS protocol to be used when accessing the other SOCKS server (`socks5`), the host or address of the other SOCKS server (`127.0.0.1`), and the port number of the other SOCKS server (`23456`). In the aforementioned examples, the SOCKS protocol version 5 is used. At this time, the only supported scheme for the URI format is `socks5`
+Please note that the scheme in the URI specifies the SOCKS protocol to be used when accessing the other SOCKS server (`socks5`), the host or address of the other SOCKS server (`localhost`), and the port number of the other SOCKS server (`23456`). In the aforementioned examples, the SOCKS protocol version 5 is used. At this time, the only supported scheme for the URI format is `socks5`
 
 #### 3. 8. 1. Using SOCKS5 Authentication
 
@@ -982,9 +982,9 @@ Partial command line example:
 
 ```
 
-Should the username or the password contain a colon character (`:`), the colon character should be replaced with the URL encoding character `%3A`.
+Should the username or the password contain a colon character (`:`), each colon character should be replaced with the URL encoding character `%3A`.
 
-Also, should the username or the password contain a percent sign character (`%`), the percent sign character should be replaced with the URL encoding character `%25`.
+Also, should the username or the password contain a percent sign character (`%`) not used for URL encoding, each percent sign character not used for URL encoding should be replaced with the URL encoding character `%25`.
 
 The command line option `--enter-external-client-socks5-user-pass` provides an interactive prompt for the username and password. This command line option is best when you do not wish to have the username and password appear in the command line history for security reasons.
 
@@ -1063,9 +1063,9 @@ The Java system property `-Djava.security.krb5.conf=krb5.conf` provides the Kerb
     
 ```
 
-In `krb5.conf`, a KDC is defined as running on port 12345 with its realm as `EXAMPLE.COM`. `EXAMPLE.COM` is supposed to be replaced by an actual realm provided by the Kerberos administrator but for this example it is left as `EXAMPLE.COM`. `localhost` is supposed to be replaced by the fully qualified domain name of where the KDC resides but for this example it is left as `localhost`.  
+In `krb5.conf`, a KDC is defined as running on port 12345 with its realm as `EXAMPLE.COM`. `EXAMPLE.COM` should be replaced by an actual realm provided by the Kerberos administrator but for this example it is left as `EXAMPLE.COM`. `localhost` should be replaced by the fully qualified domain name of where the KDC resides but for this example it is left as `localhost`.  
 
-The command line option `--settings=externalClient.socks5.gssapiServiceName=rcmd/localhost` is the GSS-API service name (or the Kerberos service principal) of the other SOCKS5 server. `localhost` is supposed to be replaced by the fully qualified domain name of where the other SOCKS5 server resides but for this example it is left as `localhost`.
+The command line option `--settings=externalClient.socks5.gssapiServiceName=rcmd/localhost` is the GSS-API service name (or the Kerberos service principal) of the other SOCKS5 server. `localhost` should be replaced by the fully qualified domain name of where the other SOCKS5 server resides but for this example it is left as `localhost`.
 
 ## 4. Integration Testing
 

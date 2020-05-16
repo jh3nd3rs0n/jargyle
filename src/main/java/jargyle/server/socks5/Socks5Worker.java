@@ -512,7 +512,7 @@ public final class Socks5Worker implements Runnable {
 			AuthMethods authMethods = this.settings.getLastValue(
 					SettingSpec.SOCKS5_AUTH_METHODS, AuthMethods.class);
 			for (AuthMethod authMethod : authMethods.toList()) {
-				Method meth = authMethod.getMethod();
+				Method meth = authMethod.methodValue();
 				if (cmsm.getMethods().contains(meth)) {
 					method = meth;
 					break;
@@ -529,7 +529,7 @@ public final class Socks5Worker implements Runnable {
 			this.writeThenFlush(smsm.toByteArray());
 			Authenticator authenticator = null;
 			try {
-				authenticator = Authenticator.valueOf(method);
+				authenticator = Authenticator.getInstance(method);
 			} catch (IllegalArgumentException e) {
 				this.log(
 						Level.WARNING, 

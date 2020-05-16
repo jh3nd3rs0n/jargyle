@@ -90,7 +90,7 @@ public enum GssapiProtectionLevel implements HelpTextParams {
 			final ProtectionLevel level) {
 		for (GssapiProtectionLevel value 
 				: GssapiProtectionLevel.values()) {
-			if (value.getProtectionLevel().equals(level)) {
+			if (value.protectionLevelValue().equals(level)) {
 				return value;
 			}
 		}
@@ -100,7 +100,7 @@ public enum GssapiProtectionLevel implements HelpTextParams {
 		for (Iterator<GssapiProtectionLevel> iterator = list.iterator();
 				iterator.hasNext();) {
 			GssapiProtectionLevel value = iterator.next();
-			ProtectionLevel protectionLevel = value.getProtectionLevel();
+			ProtectionLevel protectionLevel = value.protectionLevelValue();
 			sb.append(protectionLevel);
 			if (iterator.hasNext()) {
 				sb.append(", ");
@@ -114,14 +114,10 @@ public enum GssapiProtectionLevel implements HelpTextParams {
 						level));
 	}
 	
-	private final ProtectionLevel protectionLevel;
+	private final ProtectionLevel protectionLevelValue;
 	
-	private GssapiProtectionLevel(final ProtectionLevel level) {
-		this.protectionLevel = level;
-	}
-	
-	public ProtectionLevel getProtectionLevel() {
-		return this.protectionLevel;
+	private GssapiProtectionLevel(final ProtectionLevel levelValue) {
+		this.protectionLevelValue = levelValue;
 	}
 	
 	@Override
@@ -130,5 +126,9 @@ public enum GssapiProtectionLevel implements HelpTextParams {
 	}
 	
 	public abstract MessageProp newMessageProp();
+	
+	public ProtectionLevel protectionLevelValue() {
+		return this.protectionLevelValue;
+	}
 	
 }

@@ -202,7 +202,7 @@ public final class Socks5Client extends SocksClient {
 		OutputStream outputStream = socket.getOutputStream();
 		Set<Method> methods = new TreeSet<Method>();
 		for (AuthMethod authMethod : this.authMethods.toList()) {
-			methods.add(authMethod.getMethod());
+			methods.add(authMethod.methodValue());
 		}
 		ClientMethodSelectionMessage cmsm = 
 				ClientMethodSelectionMessage.newInstance(
@@ -214,7 +214,7 @@ public final class Socks5Client extends SocksClient {
 		Method method = smsm.getMethod();
 		Authenticator authenticator = null;
 		try {
-			authenticator = Authenticator.valueOf(method);
+			authenticator = Authenticator.getInstance(method);
 		} catch (IllegalArgumentException e) {
 			throw new IOException(e);
 		}

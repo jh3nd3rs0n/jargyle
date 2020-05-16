@@ -113,7 +113,7 @@ enum Authenticator {
 			GssapiProtectionLevel firstGssapiProtectionLevel = 
 					gssapiProtectionLevelList.get(0);
 			token = new byte[] { 
-					firstGssapiProtectionLevel.getProtectionLevel().byteValue() 
+					firstGssapiProtectionLevel.protectionLevelValue().byteValue() 
 			};
 			MessageProp prop = null;
 			if (!necReferenceImpl) {
@@ -240,7 +240,7 @@ enum Authenticator {
 		
 	};
 	
-	public static Authenticator valueOf(final Method meth) {
+	public static Authenticator getInstance(final Method meth) {
 		for (Authenticator value : Authenticator.values()) {
 			if (value.getMethod().equals(meth)) {
 				return value;
@@ -259,8 +259,8 @@ enum Authenticator {
 		}
 		throw new IllegalArgumentException(
 				String.format(
-						"expected authenticator must be one of "
-						+ "the following values: %s. actual value is %s",
+						"expected method must be one of the following values: "
+						+ "%s. actual value is %s",
 						sb.toString(),
 						meth));
 	}

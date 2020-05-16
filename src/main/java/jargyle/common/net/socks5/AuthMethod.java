@@ -67,18 +67,18 @@ public enum AuthMethod implements HelpTextParams {
 		return authMethod;
 	}
 
-	private final Method method;
+	private final Method methodValue;
 	
-	private AuthMethod(final Method meth) {
-		this.method = meth;
+	private AuthMethod(final Method methValue) {
+		this.methodValue = methValue;
 	}
 
-	public Method getMethod() {
-		return this.method;
-	}
-	
 	@Override
 	public final String getUsage() {
 		return this.toString();
+	}
+	
+	public Method methodValue() {
+		return this.methodValue;
 	}
 }

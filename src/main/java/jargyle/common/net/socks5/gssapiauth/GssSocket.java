@@ -255,7 +255,7 @@ public final class GssSocket extends FilterSocket {
 	}
 
 	@Override
-	public void close() throws IOException {
+	public synchronized void close() throws IOException {
 		try {
 			this.gssContext.dispose();
 		} catch (GSSException e) {

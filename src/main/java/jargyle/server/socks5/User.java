@@ -19,10 +19,10 @@ public final class User {
 	@XmlAccessorType(XmlAccessType.NONE)
 	@XmlType(name = "user", propOrder = { })
 	static class UserXml {
+		@XmlElement(name = "hashedPassword", required = true)
+		protected HashedPassword hashedPassword;
 		@XmlElement(name = "name", required = true)
 		protected String name;
-		@XmlElement(name = "passwordHash", required = true)
-		protected PasswordHash passwordHash;
 	}
 	
 	static final class UserXmlAdapter extends XmlAdapter<UserXml, User> {
@@ -31,13 +31,13 @@ public final class User {
 		public UserXml marshal(final User v) throws Exception {
 			UserXml userXml = new UserXml();
 			userXml.name = v.name;
-			userXml.passwordHash = v.passwordHash;
+			userXml.hashedPassword = v.hashedPassword;
 			return userXml;
 		}
 
 		@Override
 		public User unmarshal(final UserXml v) throws Exception {
-			return new User(v.name, v.passwordHash);
+			return new User(v.name, v.hashedPassword);
 		}
 		
 	}
@@ -74,7 +74,7 @@ public final class User {
 		}
 		validateName(name);
 		validatePassword(password);
-		return new User(name, PasswordHash.newInstance(password));
+		return new User(name, HashedPassword.newInstance(password));
 	}
 	
 	public static void validateName(final String name) {
@@ -86,19 +86,19 @@ public final class User {
 	}
 	
 	private final String name;
-	private final PasswordHash passwordHash;
+	private final HashedPassword hashedPassword;
 	
-	private User(final String n, final PasswordHash psswordHash) {
+	private User(final String n, final HashedPassword hashedPssword) {
 		this.name = n;
-		this.passwordHash = psswordHash;
+		this.hashedPassword = hashedPssword;
+	}
+	
+	public HashedPassword getHashedPassword() {
+		return this.hashedPassword;
 	}
 	
 	public String getName() {
 		return this.name;
-	}
-	
-	public PasswordHash getPasswordHash() {
-		return this.passwordHash;
 	}
 
 	@Override
@@ -111,10 +111,10 @@ public final class User {
 		}
 		StringBuilder builder = new StringBuilder();
 		builder.append(this.getClass().getSimpleName())
-			.append(" [name=")
+			.append(" [hashedPassword=")
+			.append(this.hashedPassword)
+			.append(", name=")
 			.append(encodedName)
-			.append(", passwordHash=")
-			.append(this.passwordHash)
 			.append("]");
 		return builder.toString();
 	}

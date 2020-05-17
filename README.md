@@ -528,27 +528,28 @@ If you want to enter a user, the prompt will ask you for the user's name, passwo
     <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <users>
         <user>
+            <hashedPassword xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="pbkdf2WithHmacSha256HashedPassword">
+                <hash>bTORKdLBo2nUSOSaQXi5tIKFvxeurm+Bzm6F/VwQERo=</hash>
+                <salt>mGvQZmPl/q4=</salt>
+            </hashedPassword>
             <name>Aladdin</name>
-            <passwordHash>
-                <hash>Mm0d/rQ7dJ3O+2xA45OdDtW9RIl0UE89Nv6eOgJdR9Y=</hash>
-                <salt>W+G+W1MzLq8=</salt>
-            </passwordHash>
         </user>
         <user>
+            <hashedPassword xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="pbkdf2WithHmacSha256HashedPassword">
+                <hash>c5/RXb2EC0eqVWP5kAIuS0d78Z7O3K49OfxcerMupuo=</hash>
+                <salt>K+aacLMX4TQ=</salt>
+            </hashedPassword>
             <name>Jasmine</name>
-            <passwordHash>
-                <hash>LSOdudNif0hR7bEEN7yk6/JFC9Qgc84TiX8hnT62+Ec=</hash>
-                <salt>IUuHz9cmLok=</salt>
-            </passwordHash>
         </user>
         <user>
+            <hashedPassword xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="pbkdf2WithHmacSha256HashedPassword">
+                <hash>ycdKuXCehif76Kv4a5TC9tYun5DdibqTOjKmqNv7bJU=</hash>
+                <salt>SaTI6PwS6WE=</salt>
+            </hashedPassword>
             <name>Abu</name>
-            <passwordHash>
-                <hash>Tl5wqiM//Bp/QI/bZIOvp0LrGl2+feI5dbb3YoVPrTI=</hash>
-                <salt>amDm0iiyKh4=</salt>
-            </passwordHash>
         </user>
     </users>
+
 
 ```
 
@@ -586,32 +587,32 @@ Once you have run the command, an interactive prompt will ask you for the new us
     <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <users>
         <user>
+            <hashedPassword xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="pbkdf2WithHmacSha256HashedPassword">
+                <hash>bTORKdLBo2nUSOSaQXi5tIKFvxeurm+Bzm6F/VwQERo=</hash>
+                <salt>mGvQZmPl/q4=</salt>
+            </hashedPassword>
             <name>Aladdin</name>
-            <passwordHash>
-                <hash>Mm0d/rQ7dJ3O+2xA45OdDtW9RIl0UE89Nv6eOgJdR9Y=</hash>
-                <salt>W+G+W1MzLq8=</salt>
-            </passwordHash>
         </user>
         <user>
+            <hashedPassword xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="pbkdf2WithHmacSha256HashedPassword">
+                <hash>c5/RXb2EC0eqVWP5kAIuS0d78Z7O3K49OfxcerMupuo=</hash>
+                <salt>K+aacLMX4TQ=</salt>
+            </hashedPassword>
             <name>Jasmine</name>
-            <passwordHash>
-                <hash>LSOdudNif0hR7bEEN7yk6/JFC9Qgc84TiX8hnT62+Ec=</hash>
-                <salt>IUuHz9cmLok=</salt>
-            </passwordHash>
         </user>
         <user>
+            <hashedPassword xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="pbkdf2WithHmacSha256HashedPassword">
+                <hash>ycdKuXCehif76Kv4a5TC9tYun5DdibqTOjKmqNv7bJU=</hash>
+                <salt>SaTI6PwS6WE=</salt>
+            </hashedPassword>
             <name>Abu</name>
-            <passwordHash>
-                <hash>Tl5wqiM//Bp/QI/bZIOvp0LrGl2+feI5dbb3YoVPrTI=</hash>
-                <salt>amDm0iiyKh4=</salt>
-            </passwordHash>
         </user>
         <user>
+            <hashedPassword xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="pbkdf2WithHmacSha256HashedPassword">
+                <hash>Qaht9FcEqjEtwbBADurB5Swt5eKg6LNQ9Hl9FnUT4kw=</hash>
+                <salt>jIBPXJxqlMk=</salt>
+            </hashedPassword>
             <name>Jafar</name>
-            <passwordHash>
-                <hash>Qw3KXi3cO63Nb9Hb8TmZXyY0TuqVurRt8uhLKE6sYys=</hash>
-                <salt>HXX9G9LYXTg=</salt>
-            </passwordHash>
         </user>
     </users>
 
@@ -646,25 +647,25 @@ Once you have run the command, the user of the specified name will be removed fr
     <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <users>
         <user>
+            <hashedPassword xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="pbkdf2WithHmacSha256HashedPassword">
+                <hash>bTORKdLBo2nUSOSaQXi5tIKFvxeurm+Bzm6F/VwQERo=</hash>
+                <salt>mGvQZmPl/q4=</salt>
+            </hashedPassword>
             <name>Aladdin</name>
-            <passwordHash>
-                <hash>Mm0d/rQ7dJ3O+2xA45OdDtW9RIl0UE89Nv6eOgJdR9Y=</hash>
-                <salt>W+G+W1MzLq8=</salt>
-            </passwordHash>
         </user>
         <user>
+            <hashedPassword xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="pbkdf2WithHmacSha256HashedPassword">
+                <hash>c5/RXb2EC0eqVWP5kAIuS0d78Z7O3K49OfxcerMupuo=</hash>
+                <salt>K+aacLMX4TQ=</salt>
+            </hashedPassword>
             <name>Jasmine</name>
-            <passwordHash>
-                <hash>LSOdudNif0hR7bEEN7yk6/JFC9Qgc84TiX8hnT62+Ec=</hash>
-                <salt>IUuHz9cmLok=</salt>
-            </passwordHash>
         </user>
         <user>
+            <hashedPassword xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="pbkdf2WithHmacSha256HashedPassword">
+                <hash>ycdKuXCehif76Kv4a5TC9tYun5DdibqTOjKmqNv7bJU=</hash>
+                <salt>SaTI6PwS6WE=</salt>
+            </hashedPassword>
             <name>Abu</name>
-            <passwordHash>
-                <hash>Tl5wqiM//Bp/QI/bZIOvp0LrGl2+feI5dbb3YoVPrTI=</hash>
-                <salt>amDm0iiyKh4=</salt>
-            </passwordHash>
         </user>
     </users>
 

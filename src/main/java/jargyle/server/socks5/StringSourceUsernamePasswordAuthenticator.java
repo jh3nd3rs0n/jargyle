@@ -17,10 +17,10 @@ public final class StringSourceUsernamePasswordAuthenticator
 		if (this.users.toList().size() == 0) { return false; }
 		User user = this.users.getLast(username);
 		if (user == null) { return false; }
-		PasswordHash passwordHash = user.getPasswordHash();
-		PasswordHash otherPasswordHash = PasswordHash.newInstance(
-				password, passwordHash.getSalt());
-		if (!passwordHash.equals(otherPasswordHash)) { return false; }
+		HashedPassword hashedPassword = user.getHashedPassword();
+		HashedPassword otherHashedPassword = HashedPassword.newInstance(
+				password, hashedPassword);
+		if (!hashedPassword.equals(otherHashedPassword)) { return false; }
 		return true;
 	}
 	

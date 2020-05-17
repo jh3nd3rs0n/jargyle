@@ -765,7 +765,9 @@ Partial configuration file example:
 
 If any of the usernames or any of the passwords contain a colon character (`:`), then each colon character must be replaced with the URL encoding character `%3A`.
 
-Also, if any of the usernames or any of the passwords contain a percent sign character (`%`) not used for URL encoding, then each percent sign character not used for URL encoding must be replaced with the URL encoding character `%25`.
+If any of the usernames or any of the passwords contain a comma character (`,`), then each comma character must be replaced with the URL encoding character `%2C`.
+
+If any of the usernames or any of the passwords contain a percent sign character (`%`) not used for URL encoding, then each percent sign character not used for URL encoding must be replaced with the URL encoding character `%25`.
 
 
 `jargyle.server.socks5.XmlFileSourceUsernamePasswordAuthenticator`: This class authenticates the username and password based on the [XML file of users](#3-6-managing-socks5-users-for-username-password-authentication) whose file name is provided as a parameter string
@@ -979,7 +981,9 @@ Partial command line example:
 
 If the username or the password contains a colon character (`:`), then each colon character must be replaced with the URL encoding character `%3A`.
 
-Also, if the username or the password contains a percent sign character (`%`) not used for URL encoding, then each percent sign character not used for URL encoding must be replaced with the URL encoding character `%25`.
+If the username or the password contains a comma character (`,`), then each comma character must be replaced with the URL encoding character `%2C`.
+
+If the username or the password contains a percent sign character (`%`) not used for URL encoding, then each percent sign character not used for URL encoding must be replaced with the URL encoding character `%25`.
 
 The command line option `--enter-external-client-socks5-user-pass` provides an interactive prompt for you to enter the username and password. This command line option is best when you do not wish to have the username and password appear in any script or in the command line history for security reasons.
 

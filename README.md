@@ -64,11 +64,9 @@ Jargyle is a hobby project and is currently subject to breaking changes. Jargyle
 
 - [3. 8. 1. 3. Using GSS-API Authentication](#3-8-1-3-using-gss-api-authentication)
 
-- [4. Integration Testing](#4-integration-testing)
+- [4. TODO](#4-todo)
 
-- [5. TODO](#5-todo)
-
-- [6. Contact](#6-contact)
+- [5. Contact](#5-contact)
 
 ## 1. Requirements
 
@@ -89,15 +87,7 @@ To build and package Jargyle as an executable jar file, run the following comman
 
 ## 3. Running Jargyle 
 
-To run Jargyle, you can run the following command:
-
-```
-
-    $ mvn exec:java
-
-```
-
-If you have Jargyle packaged as an executable jar file, you can run the following command:
+To run Jargyle without any command line arguments, you can run the following command:
 
 ```
 
@@ -106,6 +96,8 @@ If you have Jargyle packaged as an executable jar file, you can run the followin
 ```
 
 Be sure to replace `${VERSION}` with the actual version shown within the name of the executable jar file.
+
+The aforementioned command will run Jargyle on port 1080 with no authentication.
 
 ### 3. 1. Usage
 
@@ -1068,17 +1060,7 @@ In `krb5.conf`, a KDC is defined as running at the address `127.0.0.1` on port `
 
 The command line option `--settings=externalClient.socks5.gssapiServiceName=rcmd/127.0.0.1` is the GSS-API service name (or the Kerberos service principal) of the other SOCKS5 server residing at the address `127.0.0.1`. (In a production environment, the address `127.0.0.1` should be replaced by the fully qualified domain name of where the other SOCKS5 server resides.)
 
-## 4. Integration Testing
-
-To run integration testing, you would run the following command:
-
-```
-
-    $ mvn integration-test
-
-```
-
-## 5. TODO
+## 4. TODO
 
 **Javadoc documentation on all types**
 
@@ -1092,6 +1074,6 @@ To run integration testing, you would run the following command:
   
 - Users file reference
   
-## 6. Contact
+## 5. Contact
 
 If you have any questions or comments, you can e-mail me at `j0n4th4n.h3nd3rs0n@gmail.com`

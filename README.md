@@ -4,7 +4,7 @@
 
 Jargyle is a Java SOCKS5 server. It has the following features:
 
-**It is compliant with the [SOCKS5 specification](https://tools.ietf.org/html/rfc1928)**
+**It fully implements the [SOCKS5 specification](https://tools.ietf.org/html/rfc1928)**
 
 **It can have one or more of the following SOCKS5 authentication methods:**
 

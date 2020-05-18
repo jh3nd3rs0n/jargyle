@@ -197,7 +197,7 @@ enum Authenticator {
 						(byte) 0x01);
 				outputStream.write(usernamePasswordResp.toByteArray());
 				outputStream.flush();
-				return null;
+				throw new IOException("invalid username password");
 			}
 			usernamePasswordResp = UsernamePasswordResponse.newInstance(
 					UsernamePasswordResponse.STATUS_SUCCESS);

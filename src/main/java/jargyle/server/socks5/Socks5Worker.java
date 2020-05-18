@@ -548,7 +548,6 @@ public final class Socks5Worker implements Runnable {
 						e);
 				return;
 			}
-			if (socket == null) { return; }
 			this.clientInputStream = socket.getInputStream();
 			this.clientOutputStream = socket.getOutputStream();
 			this.clientSocket = socket;

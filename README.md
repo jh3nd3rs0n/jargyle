@@ -4,7 +4,7 @@
 
 Jargyle is a Java SOCKS5 server. It has the following features:
 
-**It fully implements the [SOCKS5 specification](https://tools.ietf.org/html/rfc1928)**
+**100% implementation of the [SOCKS5 specification](https://tools.ietf.org/html/rfc1928)**
 
 **It can have one or more of the following SOCKS5 authentication methods:**
 
@@ -785,7 +785,7 @@ Partial configuration file example:
 ```xml
 
     <socks5UsernamePasswordAuthenticator>
-	    <className>jargyle.server.socks5.StringSourceUsernamePasswordAuthenticator</className>	
+	    <className>jargyle.server.socks5.XmlFileSourceUsernamePasswordAuthenticator</className>	
 	    <parameterString>users.xml</parameterString>
     </socks5UsernamePasswordAuthenticator>
 

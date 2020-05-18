@@ -23,4 +23,4 @@ jobs:
   - os: osx
     jdk: oraclejdk8 # expected oraclejdk9 and up
 
-
+script: mvn verify -B

@@ -74,9 +74,11 @@ final class AesCbcPkcs5PaddingEncryptedPassword extends EncryptedPassword {
 	private static final String SECRET_KEY_SPEC_ALGORITHM = "AES";
 
 	public static AesCbcPkcs5PaddingEncryptedPassword newInstance(
-			final AesCbcPkcs5PaddingEncryptedPasswordXml xml) {
+			final AesCbcPkcs5PaddingEncryptedPasswordXml encryptedPasswordXml) {
 		return new AesCbcPkcs5PaddingEncryptedPassword(
-				xml.encodedKey, xml.encrypted, xml.initializationVector);
+				encryptedPasswordXml.encodedKey, 
+				encryptedPasswordXml.encrypted, 
+				encryptedPasswordXml.initializationVector);
 	}
 
 	public static AesCbcPkcs5PaddingEncryptedPassword newInstance(
@@ -197,13 +199,15 @@ final class AesCbcPkcs5PaddingEncryptedPassword extends EncryptedPassword {
 	}
 
 	public AesCbcPkcs5PaddingEncryptedPasswordXml toAesCbcPkcs5PaddingEncryptedPasswordXml() {
-		AesCbcPkcs5PaddingEncryptedPasswordXml xml = 
+		AesCbcPkcs5PaddingEncryptedPasswordXml encryptedPasswordXml = 
 				new AesCbcPkcs5PaddingEncryptedPasswordXml();
-		xml.encodedKey = Arrays.copyOf(this.encodedKey, this.encodedKey.length);
-		xml.encrypted = Arrays.copyOf(this.encrypted, this.encrypted.length);
-		xml.initializationVector = Arrays.copyOf(
+		encryptedPasswordXml.encodedKey = Arrays.copyOf(
+				this.encodedKey, this.encodedKey.length);
+		encryptedPasswordXml.encrypted = Arrays.copyOf(
+				this.encrypted, this.encrypted.length);
+		encryptedPasswordXml.initializationVector = Arrays.copyOf(
 				this.initializationVector, this.initializationVector.length);
-		return xml;
+		return encryptedPasswordXml;
 	}
 
 	@Override

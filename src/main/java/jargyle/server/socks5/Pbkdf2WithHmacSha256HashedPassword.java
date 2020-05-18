@@ -32,18 +32,18 @@ final class Pbkdf2WithHmacSha256HashedPassword extends HashedPassword {
 
 		@Override
 		public Pbkdf2WithHmacSha256HashedPasswordXml marshal(
-				final Pbkdf2WithHmacSha256HashedPassword v) throws Exception {
-			Pbkdf2WithHmacSha256HashedPasswordXml xml = 
+				final Pbkdf2WithHmacSha256HashedPassword arg) throws Exception {
+			Pbkdf2WithHmacSha256HashedPasswordXml hashedPasswordXml = 
 					new Pbkdf2WithHmacSha256HashedPasswordXml();
-			xml.hash = Arrays.copyOf(v.hash, v.hash.length);
-			xml.salt = Arrays.copyOf(v.salt, v.salt.length);
-			return xml;
+			hashedPasswordXml.hash = Arrays.copyOf(arg.hash, arg.hash.length);
+			hashedPasswordXml.salt = Arrays.copyOf(arg.salt, arg.salt.length);
+			return hashedPasswordXml;
 		}
 
 		@Override
 		public Pbkdf2WithHmacSha256HashedPassword unmarshal(
-				final Pbkdf2WithHmacSha256HashedPasswordXml v) throws Exception {
-			return new Pbkdf2WithHmacSha256HashedPassword(v.hash, v.salt);
+				final Pbkdf2WithHmacSha256HashedPasswordXml arg) throws Exception {
+			return new Pbkdf2WithHmacSha256HashedPassword(arg.hash, arg.salt);
 		}
 		
 	}
@@ -82,8 +82,9 @@ final class Pbkdf2WithHmacSha256HashedPassword extends HashedPassword {
 	}
 	
 	public static Pbkdf2WithHmacSha256HashedPassword newInstance(
-			final Pbkdf2WithHmacSha256HashedPasswordXml xml) {
-		return new Pbkdf2WithHmacSha256HashedPassword(xml.hash, xml.salt);
+			final Pbkdf2WithHmacSha256HashedPasswordXml hashedPasswordXml) {
+		return new Pbkdf2WithHmacSha256HashedPassword(
+				hashedPasswordXml.hash, hashedPasswordXml.salt);
 	}
 	
 	private static byte[] newSalt() {
@@ -145,11 +146,11 @@ final class Pbkdf2WithHmacSha256HashedPassword extends HashedPassword {
 	}
 
 	public Pbkdf2WithHmacSha256HashedPasswordXml toPbkdf2WithHmacSha256HashedPasswordXml() {
-		Pbkdf2WithHmacSha256HashedPasswordXml xml = 
+		Pbkdf2WithHmacSha256HashedPasswordXml hashedPasswordXml = 
 				new Pbkdf2WithHmacSha256HashedPasswordXml();
-		xml.hash = Arrays.copyOf(this.hash, this.hash.length);
-		xml.salt = Arrays.copyOf(this.salt, this.salt.length);
-		return xml;
+		hashedPasswordXml.hash = Arrays.copyOf(this.hash, this.hash.length);
+		hashedPasswordXml.salt = Arrays.copyOf(this.salt, this.salt.length);
+		return hashedPasswordXml;
 	}
 
 	@Override

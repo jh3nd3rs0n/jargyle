@@ -97,7 +97,7 @@ To run Jargyle without any command line arguments, you can run the following com
 
 Be sure to replace `${VERSION}` with the actual version shown within the name of the executable jar file.
 
-The aforementioned command will run Jargyle on port 1080 with no authentication.
+The aforementioned command will run Jargyle on port 1080 using no authentication.
 
 ### 3. 1. Usage
 

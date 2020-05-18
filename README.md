@@ -4,7 +4,7 @@
 
 Jargyle is a Java SOCKS5 server. It has the following features:
 
-**100% implementation of the [SOCKS5 specification](https://tools.ietf.org/html/rfc1928)**
+**It is a 100% implementation of the [SOCKS5 protocol specification](https://tools.ietf.org/html/rfc1928)**
 
 **It can have one or more of the following SOCKS5 authentication methods:**
 
@@ -486,7 +486,7 @@ If you do not want to enter a user, a new empty users file will be created.
 
 ```
 
-If you want to enter a user, the prompt will ask you for the user's name, password, and re-typed password. It will repeat the process to add another user if you want to continue to enter another user. If you wish not to enter any more users, the new users file will be created.
+If you want to enter a user, the prompt will ask you for the user's name, password, and re-typed password. It will repeat the process to add another user if you want to continue to enter another user. If you do not want to enter any more users, the new users file will be created.
 
 ```
 
@@ -557,7 +557,7 @@ To add users to an existing users file, you would run the following command:
 
 Where `FILE` would be the name for the existing users file.
 
-Once you have run the command, an interactive prompt will ask you for the new user's name, password, and re-typed password. It will repeat the process to add another user if you want to continue to enter another user. If you wish not to enter any more users, the updated users file will be saved.
+Once you have run the command, an interactive prompt will ask you for the new user's name, password, and re-typed password. It will repeat the process to add another user if you want to continue to enter another user. If you do not want to enter any more users, the updated users file will be saved.
 
 ```
 
@@ -827,7 +827,7 @@ The following is a sufficient example of using the Kerberos security mechanism:
 
 The Java system property `-Djavax.security.auth.useSubjectCredsOnly=false` disables JAAS-based authentication to obtain the credentials directly and lets the underlying security mechanism obtain them instead.
 
-The Java system property `-Djava.security.auth.login.config=login.conf` provides a JAAS configuration file to the underlying security mechanism.
+The Java system property `-Djava.security.auth.login.config=login.conf` provides a JAAS configuration file for the underlying security mechanism.
 
 `login.conf`:
 
@@ -843,7 +843,7 @@ The Java system property `-Djava.security.auth.login.config=login.conf` provides
 
 ``` 
 
-In `login.conf`, `rcmd/127.0.0.1` is a service principal that is created by a Kerberos administrator specifically for a SOCKS5 server with the service name `rcmd` residing at the address `127.0.0.1`. (In a production environment, the address `127.0.0.1` should be replaced by the name of the machine where the SOCKS5 server resides.) 
+In `login.conf`, `rcmd/127.0.0.1` is a service principal that is created by a Kerberos administrator specifically for a SOCKS5 server with the service name `rcmd` residing at the address `127.0.0.1`. (In a production environment, the address `127.0.0.1` should be replaced by the name of the machine of where the SOCKS5 server resides.) 
 
 Also in `login.conf`, `rcmd.keytab` is a keytab file also created by a Kerberos administrator that contains the aforementioned service principal and its respective encrypted key.  
 
@@ -866,7 +866,7 @@ The Java system property `-Djava.security.krb5.conf=krb5.conf` provides the Kerb
     
 ```
 
-In `krb5.conf`, a KDC is defined as running at the address `127.0.0.1` on port `12345` with its realm as `EXAMPLE.COM`. (In a production environment, the address `127.0.0.1` should be replaced by the actual address or name of the machine where the KDC resides. Also, in a production environment, the realm `EXAMPLE.COM` should be replaced by an actual realm provided by the Kerberos administrator.)  
+In `krb5.conf`, a KDC is defined as running at the address `127.0.0.1` on port `12345` with its realm as `EXAMPLE.COM`. (In a production environment, the address `127.0.0.1` should be replaced by the actual address or name of the machine of where the KDC resides. Also, in a production environment, the realm `EXAMPLE.COM` should be replaced by an actual realm provided by a Kerberos administrator.)  
 
 ### 3. 8. With External Connections Set to Another SOCKS Server
 
@@ -889,11 +889,11 @@ Partial configuration file example:
 
 ```
 
-Please note that the scheme in the URI specifies the SOCKS protocol to be used when accessing the other SOCKS server (`socks5`), the host or address of the other SOCKS server (`127.0.0.1`), and the port number of the other SOCKS server (`23456`). In the aforementioned examples, the SOCKS protocol version 5 is used. At this time, the only supported scheme for the URI format is `socks5`
+Please note that the scheme in the URI specifies the SOCKS protocol to be used when accessing the other SOCKS server (`socks5`), the address or name of the machine of where the other SOCKS server resides (`127.0.0.1`), and the port number of the other SOCKS server (`23456`). In the aforementioned examples, the SOCKS protocol version 5 is used. At this time, the only supported scheme for the URI format is `socks5`
 
 #### 3. 8. 1. Using SOCKS5 Authentication
 
-You have the following SOCKS5 authentication methods to choose from for accessing the other SOCKS5 server:
+Jargyle has the following SOCKS5 authentication methods to choose from for accessing the other SOCKS5 server:
 
 - `NO_AUTHENTICATION_REQUIRED`: No authentication required
 
@@ -969,7 +969,7 @@ To provide a username and password for the other SOCKS5 server, you can use eith
 
 - `--enter-external-client-socks5-user-pass`
 
-The command line option `--external-client-socks5-user-pass` requires that the actual username be followed by a colon character (`:`) followed by the the actual password.
+The command line option `--external-client-socks5-user-pass` requires an actual username followed by a colon character (`:`) followed by an actual password.
 
 Partial command line example:
 
@@ -983,7 +983,7 @@ If the username or the password contains a colon character (`:`), then each colo
 
 If the username or the password contains a percent sign character (`%`) not used for URL encoding, then each percent sign character not used for URL encoding must be replaced with the URL encoding character `%25`.
 
-The command line option `--enter-external-client-socks5-user-pass` provides an interactive prompt for you to enter the username and password. This command line option is best when you do not wish to have the username and password appear in any script or in the command line history for security reasons.
+The command line option `--enter-external-client-socks5-user-pass` provides an interactive prompt for you to enter the username and password. This command line option is used for when you do not want to have the username and password appear in any script or in any part of the command line history for security reasons.
 
 ##### 3. 8. 1. 3. Using GSS-API Authentication
 
@@ -1005,7 +1005,7 @@ Partial configuration file example:
 
 ```
 
-Also, you will need to specify Java system properties to use a security mechanism that implements the GSS-API (for example, Kerberos is a security mechanism that implements the GSS-API), and you will also need to specify the GSS-API service name of the other SOCKS5 server.
+Also, you will need to specify Java system properties to use a security mechanism that implements the GSS-API (for example, Kerberos is a security mechanism that implements the GSS-API), and you will also need to specify the GSS-API service name for the other SOCKS5 server.
 
 The following is a sufficient example of using the Kerberos security mechanism:
 
@@ -1023,7 +1023,7 @@ The following is a sufficient example of using the Kerberos security mechanism:
 
 The Java system property `-Djavax.security.auth.useSubjectCredsOnly=false` disables JAAS-based authentication to obtain the credentials directly and lets the underlying security mechanism obtain them instead.
 
-The Java system property `-Djava.security.auth.login.config=login.conf` provides a JAAS configuration file to the underlying security mechanism.
+The Java system property `-Djava.security.auth.login.config=login.conf` provides a JAAS configuration file for the underlying security mechanism.
 
 `login.conf`:
 
@@ -1062,9 +1062,9 @@ The Java system property `-Djava.security.krb5.conf=krb5.conf` provides the Kerb
     
 ```
 
-In `krb5.conf`, a KDC is defined as running at the address `127.0.0.1` on port `12345` with its realm as `EXAMPLE.COM`. (In a production environment, the address `127.0.0.1` should be replaced by actual address or name of the machine where the KDC resides. Also, in a production environment, the realm `EXAMPLE.COM` should be replaced by an actual realm provided by the Kerberos administrator.)
+In `krb5.conf`, a KDC is defined as running at the address `127.0.0.1` on port `12345` with its realm as `EXAMPLE.COM`. (In a production environment, the address `127.0.0.1` should be replaced by the actual address or name of the machine of where the KDC resides. Also, in a production environment, the realm `EXAMPLE.COM` should be replaced by an actual realm provided by a Kerberos administrator.)
 
-The command line option `--settings=externalClient.socks5.gssapiServiceName=rcmd/127.0.0.1` is the GSS-API service name (or the Kerberos service principal) of the other SOCKS5 server residing at the address `127.0.0.1`. (In a production environment, the address `127.0.0.1` should be replaced by the name of the machine where the other SOCKS5 server resides.)
+The command line option `--settings=externalClient.socks5.gssapiServiceName=rcmd/127.0.0.1` is the GSS-API service name (or the Kerberos service principal) for the other SOCKS5 server residing at the address `127.0.0.1`. (In a production environment, the address `127.0.0.1` should be replaced by the name of the machine of where the other SOCKS5 server resides.)
 
 ## 4. TODO
 

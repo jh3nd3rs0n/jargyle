@@ -79,21 +79,21 @@ public class GssapiAuthIT {
 		FileWriter w = new FileWriter(loginConf.toFile());
 		w.write("com.sun.security.jgss.initiate {\n");
 		w.write("  com.sun.security.auth.module.Krb5LoginModule required\n");
+		w.write(String.format(
+				"  principal=\"%s\"\n", ALICE_PRINCIPAL));		
 		w.write("  useKeyTab=true\n");
 		w.write(String.format(
 				"  keyTab=\"%s\"\n", aliceKeytab.toAbsolutePath().toString()));
-		w.write("  storeKey=true\n");
-		w.write(String.format(
-				"  principal=\"%s\";\n", ALICE_PRINCIPAL));
+		w.write("  storeKey=true;\n");
 		w.write("};");
 		w.write("com.sun.security.jgss.accept {\n");
 		w.write("  com.sun.security.auth.module.Krb5LoginModule required\n");
+		w.write(String.format(
+				"  principal=\"%s\"\n", RCMD_SERVICE_PRINCIPAL));		
 		w.write("  useKeyTab=true\n");
 		w.write(String.format(
 				"  keyTab=\"%s\"\n", rcmdKeytab.toAbsolutePath().toString()));
-		w.write("  storeKey=true\n");
-		w.write(String.format(
-				"  principal=\"%s\";\n", RCMD_SERVICE_PRINCIPAL));
+		w.write("  storeKey=true;\n");
 		w.write("};\n");
 		w.flush();
 		w.close();

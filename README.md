@@ -703,7 +703,7 @@ Partial command line example:
 
 ```
 
-    "--settings=socks5.authMethods=NO_AUTHENTICATION_REQUIRED GSS-API USERNAME_PASSWORD"
+    "--settings=socks5.authMethods=NO_AUTHENTICATION_REQUIRED GSSAPI USERNAME_PASSWORD"
 
 ```
 
@@ -711,7 +711,7 @@ Partial configuration file example:
 
 ```xml
 
-    <setting name="socks5.authMethods" value="NO_AUTHENTICATION_REQUIRED GSS-API USERNAME_PASSWORD"/>
+    <setting name="socks5.authMethods" value="NO_AUTHENTICATION_REQUIRED GSSAPI USERNAME_PASSWORD"/>
 
 ```
 
@@ -835,10 +835,10 @@ The Java system property `-Djava.security.auth.login.config=login.conf` provides
 
     com.sun.security.jgss.accept  {
       com.sun.security.auth.module.Krb5LoginModule required
+      principal="rcmd/127.0.0.1"
       useKeyTab=true
       keyTab="rcmd.keytab"
-      storeKey=true
-      principal="rcmd/127.0.0.1";
+      storeKey=true;
     };
 
 ``` 
@@ -931,7 +931,7 @@ Partial command line example:
 
 ```
 
-    "--settings=externalClient.socks5.authMethods=NO_AUTHENTICATION_REQUIRED GSS-API USERNAME_PASSWORD"
+    "--settings=externalClient.socks5.authMethods=NO_AUTHENTICATION_REQUIRED GSSAPI USERNAME_PASSWORD"
 
 ```
 
@@ -939,7 +939,7 @@ Partial configuration file example:
 
 ```xml
 
-    <setting name="externalClient.socks5.authMethods" value="NO_AUTHENTICATION_REQUIRED GSS-API USERNAME_PASSWORD"/>
+    <setting name="externalClient.socks5.authMethods" value="NO_AUTHENTICATION_REQUIRED GSSAPI USERNAME_PASSWORD"/>
 
 ```
 
@@ -980,8 +980,6 @@ Partial command line example:
 ```
 
 If the username or the password contains a colon character (`:`), then each colon character must be replaced with the URL encoding character `%3A`.
-
-If the username or the password contains a comma character (`,`), then each comma character must be replaced with the URL encoding character `%2C`.
 
 If the username or the password contains a percent sign character (`%`) not used for URL encoding, then each percent sign character not used for URL encoding must be replaced with the URL encoding character `%25`.
 
@@ -1033,10 +1031,10 @@ The Java system property `-Djava.security.auth.login.config=login.conf` provides
 
     com.sun.security.jgss.initiate  {
       com.sun.security.auth.module.Krb5LoginModule required
+      principal="alice"
       useKeyTab=true
       keyTab="alice.keytab"
-      storeKey=true
-      principal="alice";
+      storeKey=true;
     };
 
 ``` 

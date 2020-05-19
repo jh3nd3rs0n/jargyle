@@ -8,6 +8,7 @@ import java.net.ServerSocket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import jargyle.common.net.SocketSettings;
 import jargyle.common.util.NonnegativeInteger;
@@ -19,7 +20,8 @@ public final class SocksServer {
 		SocksServerCli socksServerCli = new SocksServerCli();
 		ProcessResult processResult = socksServerCli.process(args);
 		Configuration configuration = processResult.getConfiguration();
-		SocksServer socksServer = new SocksServer(configuration);
+		SocksServer socksServer = new SocksServer(
+				configuration, LoggerHolder.LOGGER);
 		try {
 			socksServer.start();
 		} catch (IOException e) {
@@ -44,17 +46,19 @@ public final class SocksServer {
 	private final int backlog;
 	private final Configuration configuration;
 	private ExecutorService executor;
+	private final Logger logger;
 	private final int port;
 	private ServerSocket serverSocket;
 	private final SocketSettings socketSettings;
 	private boolean started;
 	private boolean stopped;
 	
-	public SocksServer(final Configuration config) {
+	public SocksServer(final Configuration config, final Logger lggr) {
 		this.backlog = config.getSettings().getLastValue(
 				SettingSpec.BACKLOG, NonnegativeInteger.class).intValue();
 		this.configuration = config;
 		this.executor = null;
+		this.logger = lggr;
 		this.port = config.getSettings().getLastValue(
 				SettingSpec.PORT, Port.class).intValue();
 		this.serverSocket = null;
@@ -91,7 +95,7 @@ public final class SocksServer {
 				this.backlog);
 		this.executor = Executors.newSingleThreadExecutor();
 		this.executor.execute(new Listener(
-				this.serverSocket, this.configuration));
+				this.serverSocket, this.configuration, this.logger));
 		this.started = true;
 		this.stopped = false;
 	}

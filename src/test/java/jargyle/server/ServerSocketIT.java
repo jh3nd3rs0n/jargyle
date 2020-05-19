@@ -15,6 +15,7 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.Logger;
 
 import javax.net.ServerSocketFactory;
 import javax.net.SocketFactory;
@@ -22,7 +23,6 @@ import javax.net.SocketFactory;
 import org.junit.Test;
 
 import jargyle.client.SocksClient;
-import jargyle.server.Configuration;
 import jargyle.server.SocksServer;
 
 public class ServerSocketIT {
@@ -193,7 +193,8 @@ public class ServerSocketIT {
 		Socket socket = null;
 		try {
 			if (configuration != null) {
-				socksServer = new SocksServer(configuration);
+				socksServer = new SocksServer(
+						configuration, Logger.getAnonymousLogger());
 				socksServer.start();
 			}
 			echoServer = new EchoServer(ECHO_SERVER_PORT, string);

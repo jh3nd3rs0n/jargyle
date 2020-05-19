@@ -2,7 +2,7 @@ package jargyle.server;
 
 import jargyle.common.net.socks5.AuthMethod;
 import jargyle.common.net.socks5.AuthMethods;
-import jargyle.server.Configuration;
+import jargyle.server.UnmodifiableConfiguration;
 import jargyle.server.SettingSpec;
 import jargyle.server.Settings;
 import jargyle.server.socks5.StringSourceUsernamePasswordAuthenticator;
@@ -10,12 +10,12 @@ import jargyle.server.socks5.StringSourceUsernamePasswordAuthenticator;
 public final class Configurations {
 
 	public static Configuration newConfiguration() {
-		Configuration.Builder builder = new Configuration.Builder();
+		UnmodifiableConfiguration.Builder builder = new UnmodifiableConfiguration.Builder();
 		return builder.build();
 	}
 	
 	public static Configuration newConfigurationUsingSocks5GssapiAuth() {
-		Configuration.Builder builder = new Configuration.Builder();
+		UnmodifiableConfiguration.Builder builder = new UnmodifiableConfiguration.Builder();
 		builder.settings(Settings.newInstance(
 				SettingSpec.SOCKS5_AUTH_METHODS.newSetting(
 						AuthMethods.newInstance(AuthMethod.GSSAPI))));
@@ -23,7 +23,7 @@ public final class Configurations {
 	}
 	
 	public static Configuration newConfigurationUsingSocks5GssapiAuthNecReferenceImpl() {
-		Configuration.Builder builder = new Configuration.Builder();
+		UnmodifiableConfiguration.Builder builder = new UnmodifiableConfiguration.Builder();
 		builder.settings(Settings.newInstance(
 				SettingSpec.SOCKS5_AUTH_METHODS.newSetting(
 						AuthMethods.newInstance(AuthMethod.GSSAPI)),
@@ -33,7 +33,7 @@ public final class Configurations {
 	}
 	
 	public static Configuration newConfigurationUsingSocks5UsernamePasswordAuth() {
-		Configuration.Builder builder = new Configuration.Builder();
+		UnmodifiableConfiguration.Builder builder = new UnmodifiableConfiguration.Builder();
 		builder.settings(Settings.newInstance(
 				SettingSpec.SOCKS5_AUTH_METHODS.newSetting(
 						AuthMethods.newInstance(AuthMethod.USERNAME_PASSWORD))));

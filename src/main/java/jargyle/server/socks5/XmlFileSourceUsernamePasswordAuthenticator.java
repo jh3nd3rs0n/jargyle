@@ -5,13 +5,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardWatchEventKinds;
-import java.nio.file.WatchEvent;
-import java.nio.file.WatchKey;
-import java.nio.file.WatchService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
@@ -22,101 +15,13 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.helpers.DefaultValidationEventHandler;
 
+import jargyle.server.FileMonitor;
+import jargyle.server.FileStatusListener;
+
 public final class XmlFileSourceUsernamePasswordAuthenticator 
 	extends UsernamePasswordAuthenticator {
 	
-	private static final class FileMonitor implements Runnable {
-
-		private final File file;
-		private final FileStatusListener fileStatusListener;
-		
-		public FileMonitor(final File f, final FileStatusListener listener) {
-			this.file = f;
-			this.fileStatusListener = listener;
-		}
-		
-		@Override
-		public void run() {
-			File absoluteFile = this.file.getAbsoluteFile();
-			String parent = absoluteFile.getParent();
-			Path dir = Paths.get(parent);
-			WatchService watcher = null;
-			try {
-				watcher = FileSystems.getDefault().newWatchService();
-			} catch (IOException e) {
-				LoggerHolder.LOGGER.log(
-						Level.WARNING, 
-						"Unable to create WatchService", 
-						e);
-				return;
-			}
-			WatchKey key = null;
-			try {
-				key = dir.register(
-						watcher,
-						StandardWatchEventKinds.ENTRY_CREATE,
-						StandardWatchEventKinds.ENTRY_DELETE,
-						StandardWatchEventKinds.ENTRY_MODIFY);
-			} catch (IOException e) {
-				LoggerHolder.LOGGER.log(
-						Level.WARNING, 
-						String.format(
-								"Unable to register '%s' to WatchService", 
-								parent), 
-						e);
-				return;
-			}
-			while (true) {
-				WatchKey k = null;
-				try {
-					k = watcher.take();
-				} catch (InterruptedException e) {
-					return;
-				}
-				if (key != k) {
-					continue;
-				}
-				for (WatchEvent<?> event : k.pollEvents()) {
-					WatchEvent.Kind<?> kind = event.kind();
-					if (kind == StandardWatchEventKinds.OVERFLOW) {
-						continue;
-					}
-					@SuppressWarnings("unchecked")
-					WatchEvent<Path> ev = (WatchEvent<Path>) event;
-					Path filename = ev.context();
-					Path child = dir.resolve(filename);
-					if (absoluteFile.equals(child.toFile())) {
-						if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
-							this.fileStatusListener.fileCreated(absoluteFile);
-						}
-						if (kind == StandardWatchEventKinds.ENTRY_DELETE) {
-							this.fileStatusListener.fileDeleted(absoluteFile);
-						}
-						if (kind == StandardWatchEventKinds.ENTRY_MODIFY) {
-							this.fileStatusListener.fileModfied(absoluteFile);
-						}
-					}
-				}
-				boolean valid = k.reset();
-				if (!valid) {
-					break;
-				}
-			}
-		}
-		
-	}
-	
-	private static interface FileStatusListener {
-		
-		void fileCreated(final File file);
-		
-		void fileDeleted(final File file);
-		
-		void fileModfied(final File file);
-		
-	}
-	
-	private static final class LoggerHolder {
+	static final class LoggerHolder {
 		
 		public static final Logger LOGGER = Logger.getLogger(
 				XmlFileSourceUsernamePasswordAuthenticator.class.getName());
@@ -174,7 +79,7 @@ public final class XmlFileSourceUsernamePasswordAuthenticator
 		private boolean updateFrom(final File file) {
 			Users usrs = null;
 			try {
-				usrs = newUsers(this.authenticator.xmlFile);
+				usrs = newUsers(file);
 			} catch (FileNotFoundException e) {
 				LoggerHolder.LOGGER.log(
 						Level.WARNING, 
@@ -262,7 +167,8 @@ public final class XmlFileSourceUsernamePasswordAuthenticator
 		this.users = usrs;
 		this.xmlFile = file;
 		ExecutorService executor = Executors.newSingleThreadExecutor();
-		executor.execute(new FileMonitor(this.xmlFile, new UsersUpdater(this)));
+		executor.execute(new FileMonitor(
+				this.xmlFile, new UsersUpdater(this), LoggerHolder.LOGGER));
 	}
 	
 	@Override

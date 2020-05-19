@@ -7,16 +7,20 @@ import java.net.SocketException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 final class Listener implements Runnable {
 
 	private final Configuration configuration;
+	private final Logger logger;
 	private final ServerSocket serverSocket;
 	
 	public Listener(
 			final ServerSocket serverSock, 
-			final Configuration config) {
+			final Configuration config,
+			final Logger lggr) {
 		this.configuration = config;
+		this.logger = lggr;
 		this.serverSocket = serverSock;
 	}
 	
@@ -25,12 +29,13 @@ final class Listener implements Runnable {
 		while (true) {
 			try {
 				Socket clientSocket = this.serverSocket.accept();
-				executor.execute(new Worker(clientSocket, this.configuration));
+				executor.execute(new Worker(
+						clientSocket, this.configuration, this.logger));
 			} catch (IOException e) {
 				if (e instanceof SocketException) {
 					break;
 				}
-				LoggerHolder.LOGGER.log(
+				this.logger.log(
 						Level.WARNING, 
 						"Error in waiting for a connection", 
 						e);

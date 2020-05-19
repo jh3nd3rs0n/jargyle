@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import javax.xml.bind.JAXBContext;
@@ -39,30 +40,130 @@ final class SocksServerCli {
 	
 	private static final class Params {
 		
-		public UsernamePassword externalClientSocks5UsernamePassword;
-		public final List<Setting> settings;
-		public UsernamePasswordAuthenticator socks5UsernamePasswordAuthenticator;
+		private final List<Expression> allowedClientAddresses;
+		private final List<Expression> blockedClientAddresses;
+		private UsernamePassword externalClientSocks5UsernamePassword;
+		private boolean modified;
+		private File monitoredConfigurationFile;
+		private final List<Setting> settings;
+		private UsernamePasswordAuthenticator socks5UsernamePasswordAuthenticator;
 		
 		public Params() {
+			this.allowedClientAddresses = new ArrayList<Expression>();
+			this.blockedClientAddresses = new ArrayList<Expression>();
 			this.externalClientSocks5UsernamePassword = null;
+			this.modified = false;
+			this.monitoredConfigurationFile = null;
 			this.settings = new ArrayList<Setting>();
 			this.socks5UsernamePasswordAuthenticator = null;
 		}
 		
+		public Params(final Params other) {
+			this.allowedClientAddresses = new ArrayList<Expression>(
+					other.allowedClientAddresses);
+			this.blockedClientAddresses = new ArrayList<Expression>(
+					other.blockedClientAddresses);
+			this.externalClientSocks5UsernamePassword = 
+					other.externalClientSocks5UsernamePassword;
+			this.modified = false;
+			this.monitoredConfigurationFile = other.monitoredConfigurationFile;			
+			this.settings = new ArrayList<Setting>(other.settings);
+			this.socks5UsernamePasswordAuthenticator = 
+					other.socks5UsernamePasswordAuthenticator;
+		}
+		
 		public void add(final Configuration configuration) {
-			UsernamePassword externalClientSocks5UsrnmPsswrd = 
-					configuration.getExternalClientSocks5UsernamePassword();
-			if (externalClientSocks5UsrnmPsswrd != null) {
-				this.externalClientSocks5UsernamePassword = 
-						configuration.getExternalClientSocks5UsernamePassword();
+			this.addAllowedClientAddresses(
+					configuration.getAllowedClientAddresses().toList());
+			this.addBlockedClientAddresses(
+					configuration.getBlockedClientAddresses().toList());
+			this.setExternalClientSocks5UsernamePassword(
+					configuration.getExternalClientSocks5UsernamePassword());
+			this.addSettings(configuration.getSettings().toList());
+			this.setSocks5UsernamePasswordAuthenticator(
+					configuration.getSocks5UsernamePasswordAuthenticator());
+		}
+
+		public void addAllowedClientAddresses(
+				final List<Expression> allowedClientAddrs) {
+			if (allowedClientAddrs.isEmpty()) {
+				return;
 			}
-			this.settings.addAll(configuration.getSettings().toList());
-			UsernamePasswordAuthenticator socks5UsrnmPsswrdAuthenticator =
-					configuration.getSocks5UsernamePasswordAuthenticator();
-			if (socks5UsrnmPsswrdAuthenticator != null) {
-				this.socks5UsernamePasswordAuthenticator =
-						socks5UsrnmPsswrdAuthenticator;
+			this.allowedClientAddresses.addAll(allowedClientAddrs);
+			this.modified = true;
+		}
+		
+		public void addBlockedClientAddresses(
+				final List<Expression> blockedClientAddrs) {
+			if (blockedClientAddrs.isEmpty()) {
+				return;
 			}
+			this.blockedClientAddresses.addAll(blockedClientAddrs);
+			this.modified = true;
+		}
+		
+		public void addSettings(final List<Setting> sttngs) {
+			if (sttngs.isEmpty()) {
+				return;
+			}
+			this.settings.addAll(sttngs);
+			this.modified = true;
+		}
+
+		public List<Expression> getAllowedClientAddresses() {
+			return Collections.unmodifiableList(this.allowedClientAddresses);
+		}
+
+		public List<Expression> getBlockedClientAddresses() {
+			return Collections.unmodifiableList(this.blockedClientAddresses);
+		}
+		
+		public UsernamePassword getExternalClientSocks5UsernamePassword() {
+			return this.externalClientSocks5UsernamePassword;
+		}
+
+		public File getMonitoredConfigurationFile() {
+			return this.monitoredConfigurationFile;
+		}
+		
+		public List<Setting> getSettings() {
+			return Collections.unmodifiableList(this.settings);
+		}
+
+		public UsernamePasswordAuthenticator getSocks5UsernamePasswordAuthenticator() {
+			return this.socks5UsernamePasswordAuthenticator;
+		}
+		
+		public boolean isModified() {
+			return this.modified;
+		}
+		
+		public void setExternalClientSocks5UsernamePassword(
+				final UsernamePassword externalClientSocks5UsrnmPsswrd) {
+			if (externalClientSocks5UsrnmPsswrd == null) {
+				return;
+			}
+			this.externalClientSocks5UsernamePassword = 
+					externalClientSocks5UsrnmPsswrd;
+			this.modified = true;
+		}
+		
+		public void setMonitoredConfigurationFile(
+				final File monitoredConfigFile) {
+			if (monitoredConfigFile == null) {
+				return;
+			}
+			this.monitoredConfigurationFile = monitoredConfigFile;
+			this.modified = true;
+		}
+
+		public void setSocks5UsernamePasswordAuthenticator(
+				final UsernamePasswordAuthenticator socks5UsrnmPsswrdAuthenticator) {
+			if (socks5UsrnmPsswrdAuthenticator == null) {
+				return;
+			}
+			this.socks5UsernamePasswordAuthenticator = socks5UsrnmPsswrdAuthenticator;
+			this.modified = true;
 		}
 		
 	}
@@ -83,18 +184,28 @@ final class SocksServerCli {
 	
 	public SocksServerCli() { }
 	
-	private Configuration newConfiguration(final SocksServerCli.Params params) {
-		Configuration.Builder builder = new Configuration.Builder();
-		if (params.externalClientSocks5UsernamePassword != null) {
+	private UnmodifiableConfiguration newConfiguration(
+			final SocksServerCli.Params params) {
+		UnmodifiableConfiguration.Builder builder = 
+				new UnmodifiableConfiguration.Builder();
+		if (!params.getAllowedClientAddresses().isEmpty()) {
+			builder.allowedClientAddresses(Expressions.newInstance(
+					params.getAllowedClientAddresses()));
+		}
+		if (!params.getBlockedClientAddresses().isEmpty()) {
+			builder.blockedClientAddresses(Expressions.newInstance(
+					params.getBlockedClientAddresses()));
+		}
+		if (params.getExternalClientSocks5UsernamePassword() != null) {
 			builder.externalClientSocks5UsernamePassword(
-					params.externalClientSocks5UsernamePassword);
+					params.getExternalClientSocks5UsernamePassword());
 		}
-		if (!params.settings.isEmpty()) {
-			builder.settings(Settings.newInstance(params.settings));
+		if (!params.getSettings().isEmpty()) {
+			builder.settings(Settings.newInstance(params.getSettings()));
 		}
-		if (params.socks5UsernamePasswordAuthenticator != null) {
+		if (params.getSocks5UsernamePasswordAuthenticator() != null) {
 			builder.socks5UsernamePasswordAuthenticator(
-					params.socks5UsernamePasswordAuthenticator);
+					params.getSocks5UsernamePasswordAuthenticator());
 		}
 		return builder.build();
 	}
@@ -102,7 +213,8 @@ final class SocksServerCli {
 	private void newConfigurationFile(
 			final SocksServerCli.Params params,
 			final String arg) throws JAXBException, IOException {
-		Configuration configuration = this.newConfiguration(params);
+		UnmodifiableConfiguration unmodifiableConfiguration = 
+				this.newConfiguration(params);
 		String tempArg = arg;
 		System.out.print("Writing to ");
 		OutputStream out = null;
@@ -122,10 +234,10 @@ final class SocksServerCli {
 		}
 		try {
 			JAXBContext jaxbContext = JAXBContext.newInstance(
-					Configuration.ConfigurationXml.class);
+					UnmodifiableConfiguration.ConfigurationXml.class);
 			Marshaller marshaller = jaxbContext.createMarshaller();
 			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-			marshaller.marshal(configuration.toConfigurationXml(), out);
+			marshaller.marshal(unmodifiableConfiguration.toConfigurationXml(), out);
 		} finally {
 			if (out instanceof FileOutputStream) {
 				out.close();
@@ -143,7 +255,7 @@ final class SocksServerCli {
 
 	private void printConfigurationFileXsd() throws JAXBException, IOException {
 		JAXBContext jaxbContext = JAXBContext.newInstance(
-				Configuration.ConfigurationXml.class);
+				UnmodifiableConfiguration.ConfigurationXml.class);
 		jaxbContext.generateSchema(new SchemaOutputResolver() {
 
 			@Override
@@ -253,6 +365,16 @@ final class SocksServerCli {
 				}
 				System.exit(-1);
 			}
+			if (parseResultHolder.hasOptionOf("--allowed-client-addresses")) {
+				params.addAllowedClientAddresses(
+						parseResultHolder.getOptionArg().getTypeValue(
+								Expressions.class).toList());
+			}
+			if (parseResultHolder.hasOptionOf("--blocked-client-addresses")) {
+				params.addBlockedClientAddresses(
+						parseResultHolder.getOptionArg().getTypeValue(
+								Expressions.class).toList());
+			}
 			if (parseResultHolder.hasOptionOfAnyOf("--config-file", "-f")) {
 				Configuration configuration = null;
 				try {
@@ -285,18 +407,45 @@ final class SocksServerCli {
 			}
 			if (parseResultHolder.hasOptionOf(
 					"--enter-external-client-socks5-user-pass")) {
-				params.externalClientSocks5UsernamePassword = 
-						this.readExternalClientSocks5UsernamePassword();
+				params.setExternalClientSocks5UsernamePassword(
+						this.readExternalClientSocks5UsernamePassword());
 			}
 			if (parseResultHolder.hasOptionOf(
 					"--external-client-socks5-user-pass")) {
-				params.externalClientSocks5UsernamePassword =
+				params.setExternalClientSocks5UsernamePassword(
 						parseResultHolder.getOptionArg().getTypeValue(
-								UsernamePassword.class);
+								UsernamePassword.class));
 			}
 			if (parseResultHolder.hasOptionOfAnyOf("--help", "-h")) {
 				this.printHelp(programBeginningUsage, argsParser.getOptions());
 				System.exit(0);
+			}
+			if (parseResultHolder.hasOptionOfAnyOf(
+					"--monitored-config-file", "-m")) {
+				boolean modifiedBefore = params.isModified();
+				boolean nullBefore = 
+						params.getMonitoredConfigurationFile() == null;
+				params.setMonitoredConfigurationFile(new File(
+						parseResultHolder.getOptionArg().toString()));
+				if (params.getMonitoredConfigurationFile().exists()) {
+					Configuration configuration = null;
+					try {
+						configuration = this.readConfiguration(
+								params.getMonitoredConfigurationFile().toString());
+					} catch (IOException e) {
+						System.err.printf("%s: %s%n", programName, e.toString());
+						e.printStackTrace();
+						System.exit(-1);
+					} catch (JAXBException e) {
+						System.err.printf("%s: %s%n", programName, e.toString());
+						e.printStackTrace();
+						System.exit(-1);
+					}
+					params.add(configuration);
+					if (!modifiedBefore && nullBefore) {
+						params = new Params(params);
+					}
+				}
 			}
 			if (parseResultHolder.hasOptionOfAnyOf("--new-config-file", "-n")) {
 				try {
@@ -319,15 +468,15 @@ final class SocksServerCli {
 				System.exit(0);
 			}
 			if (parseResultHolder.hasOptionOfAnyOf("--settings", "-s")) {
-				params.settings.addAll(
+				params.addSettings(
 						parseResultHolder.getOptionArg().getTypeValue(
 								Settings.class).toList());
 			}
 			if (parseResultHolder.hasOptionOf(
 					"--socks5-user-pass-authenticator")) {
-				params.socks5UsernamePasswordAuthenticator =
+				params.setSocks5UsernamePasswordAuthenticator(
 						parseResultHolder.getOptionArg().getTypeValue(
-								UsernamePasswordAuthenticator.class);
+								UsernamePasswordAuthenticator.class));
 			}
 			if (parseResultHolder.hasOptionOf("--socks5-users")) {
 				String newProgramBeginningUsage = String.format("%s %s", 
@@ -349,7 +498,32 @@ final class SocksServerCli {
 				System.exit(0);
 			}
 		}
-		Configuration configuration = this.newConfiguration(params);
+		Configuration configuration = null;
+		if (params.getMonitoredConfigurationFile() == null) {
+			configuration = this.newConfiguration(params);
+		} else {
+			if (params.isModified()) {
+				try {
+					this.newConfigurationFile(
+							params, 
+							params.getMonitoredConfigurationFile().toString());
+				} catch (JAXBException e) {
+					System.err.printf("%s: %s%n", programName, e.toString());
+					e.printStackTrace();
+					System.exit(-1);
+				} catch (IOException e) {
+					System.err.printf("%s: %s%n", programName, e.toString());
+					e.printStackTrace();
+					System.exit(-1);
+				}
+			}
+			UpdatedConfigurationService configurationService =
+					new UpdatedConfigurationService(
+							params.getMonitoredConfigurationFile(),
+							LoggerHolder.LOGGER);
+			configurationService.start();
+			configuration = new ModifiableConfiguration(configurationService);
+		}
 		return new ProcessResult(configuration);
 	}
 	
@@ -362,20 +536,20 @@ final class SocksServerCli {
 			File file = new File(arg);
 			in = new FileInputStream(file);
 		}
-		Configuration.ConfigurationXml configurationXml = null;
+		UnmodifiableConfiguration.ConfigurationXml configurationXml = null;
 		try {
 			JAXBContext jaxbContext = JAXBContext.newInstance(			
-					Configuration.ConfigurationXml.class);
+					UnmodifiableConfiguration.ConfigurationXml.class);
 			Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 			unmarshaller.setEventHandler(new DefaultValidationEventHandler());
 			configurationXml = 
-					(Configuration.ConfigurationXml) unmarshaller.unmarshal(in);
+					(UnmodifiableConfiguration.ConfigurationXml) unmarshaller.unmarshal(in);
 		} finally {
 			if (in instanceof FileInputStream) {
 				in.close();
 			}
 		}
-		return Configuration.newInstance(configurationXml);
+		return UnmodifiableConfiguration.newInstance(configurationXml);
 	}
 		
 	private UsernamePassword readExternalClientSocks5UsernamePassword() {

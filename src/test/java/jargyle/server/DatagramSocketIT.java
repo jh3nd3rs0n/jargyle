@@ -12,12 +12,12 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.Logger;
 
 import org.junit.Test;
 
 import jargyle.client.DatagramSocketFactory;
 import jargyle.client.SocksClient;
-import jargyle.server.Configuration;
 import jargyle.server.SocksServer;
 
 public class DatagramSocketIT {
@@ -126,7 +126,8 @@ public class DatagramSocketIT {
 		String returningString = null;
 		try {
 			if (configuration != null) {
-				socksServer = new SocksServer(configuration);
+				socksServer = new SocksServer(
+						configuration, Logger.getAnonymousLogger());
 				socksServer.start();
 			}
 			echoServer = new EchoServer(ECHO_SERVER_PORT);

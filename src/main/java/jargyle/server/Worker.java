@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import jargyle.common.net.SocketSettings;
 import jargyle.server.socks5.Socks5Worker;
@@ -13,10 +14,15 @@ final class Worker implements Runnable {
 	
 	private final Socket clientSocket;
 	private final Configuration configuration;
+	private final Logger logger;
 	
-	public Worker(final Socket clientSock, final Configuration config) {
+	public Worker(
+			final Socket clientSock, 
+			final Configuration config, 
+			final Logger lggr) {
 		this.clientSocket = clientSock;
 		this.configuration = config;
+		this.logger = lggr;
 	}
 	
 	private void close() {
@@ -33,14 +39,14 @@ final class Worker implements Runnable {
 	}
 	
 	private void log(final Level level, final String message) {
-		LoggerHolder.LOGGER.log(
+		this.logger.log(
 				level, 
 				String.format("%s: %s", this, message));
 	}
 	
 	private void log(
 			final Level level, final String message, final Throwable t) {
-		LoggerHolder.LOGGER.log(
+		this.logger.log(
 				level, 
 				String.format("%s: %s", this, message), 
 				t);
@@ -48,6 +54,50 @@ final class Worker implements Runnable {
 	
 	public void run() {
 		try {
+			String clientName = 
+					this.clientSocket.getLocalAddress().getHostName();
+			String clientAddress = 
+					this.clientSocket.getLocalAddress().getHostAddress();
+			Expressions allowedClientAddresses = 
+					this.configuration.getAllowedClientAddresses();
+			if (allowedClientAddresses.toList().isEmpty()) {
+				allowedClientAddresses = Expressions.newInstance(
+						ExpressionType.REGULAR.newExpression(".*"));
+			}
+			if (!allowedClientAddresses.anyMatches(clientName) 
+					&& !allowedClientAddresses.anyMatches(clientAddress)) {
+				this.log(
+						Level.FINE, 
+						String.format(
+								"Client address not allowed: %s", 
+								clientName));
+				this.close();
+				return;
+			}
+			Expressions blockedClientAddresses =
+					this.configuration.getBlockedClientAddresses();
+			if (blockedClientAddresses.toList().isEmpty()) {
+				blockedClientAddresses = Expressions.newInstance(
+						ExpressionType.REGULAR.newExpression("[^\\w\\W]"));
+			}
+			if (blockedClientAddresses.anyMatches(clientName)) {
+				this.log(
+						Level.FINE, 
+						String.format(
+								"Client address blocked: %s", 
+								clientName));
+				this.close();
+				return;
+			}
+			if (blockedClientAddresses.anyMatches(clientAddress)) {
+				this.log(
+						Level.FINE, 
+						String.format(
+								"Client address blocked: %s", 
+								clientAddress));
+				this.close();
+				return;
+			}
 			try {
 				SocketSettings socketSettings = 
 						this.configuration.getSettings().getLastValue(
@@ -92,7 +142,7 @@ final class Worker implements Runnable {
 				Socks5Worker socks5Worker = new Socks5Worker(
 						this.clientSocket, 
 						this.configuration, 
-						LoggerHolder.LOGGER);
+						this.logger);
 				socks5Worker.run();
 			} else {
 				this.log(

@@ -56,7 +56,7 @@ public final class Expressions {
 	
 	public static Expressions newInstance(final String s) {
 		List<Expression> exprs = new ArrayList<Expression>();
-		String[] sElements = s.split(",");
+		String[] sElements = s.split("\\s");
 		for (String sElement : sElements) {
 			exprs.add(Expression.newInstance(sElement));
 		}
@@ -69,13 +69,13 @@ public final class Expressions {
 		this.expressions = new ArrayList<Expression>(exprs);
 	}
 	
-	public boolean anyMatches(final String str) {
+	public Expression anyMatches(final String str) {
 		for (Expression expression : this.expressions) {
 			if (expression.matches(str)) {
-				return true;
+				return expression;
 			}
 		}
-		return false;
+		return null;
 	}
 	
 	public List<Expression> toList() {
@@ -90,7 +90,7 @@ public final class Expressions {
 			Expression expression = iterator.next();
 			builder.append(expression.toString());
 			if (iterator.hasNext()) {
-				builder.append(',');
+				builder.append(' ');
 			}
 		}
 		return builder.toString();

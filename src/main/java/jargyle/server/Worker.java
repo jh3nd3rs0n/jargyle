@@ -64,8 +64,8 @@ final class Worker implements Runnable {
 				allowedClientAddresses = Expressions.newInstance(
 						ExpressionType.REGULAR.newExpression(".*"));
 			}
-			if (!allowedClientAddresses.anyMatches(clientName) 
-					&& !allowedClientAddresses.anyMatches(clientAddress)) {
+			if (allowedClientAddresses.anyMatches(clientName) == null 
+					&& allowedClientAddresses.anyMatches(clientAddress) == null) {
 				this.log(
 						Level.FINE, 
 						String.format(
@@ -76,11 +76,7 @@ final class Worker implements Runnable {
 			}
 			Expressions blockedClientAddresses =
 					this.configuration.getBlockedClientAddresses();
-			if (blockedClientAddresses.toList().isEmpty()) {
-				blockedClientAddresses = Expressions.newInstance(
-						ExpressionType.REGULAR.newExpression("[^\\w\\W]"));
-			}
-			if (blockedClientAddresses.anyMatches(clientName)) {
+			if (blockedClientAddresses.anyMatches(clientName) != null) {
 				this.log(
 						Level.FINE, 
 						String.format(
@@ -89,7 +85,7 @@ final class Worker implements Runnable {
 				this.close();
 				return;
 			}
-			if (blockedClientAddresses.anyMatches(clientAddress)) {
+			if (blockedClientAddresses.anyMatches(clientAddress) != null) {
 				this.log(
 						Level.FINE, 
 						String.format(

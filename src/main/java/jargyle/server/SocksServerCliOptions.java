@@ -14,7 +14,7 @@ public final class SocksServerCliOptions extends Options {
 	
 	public static final Option ALLOWED_CLIENT_ADDRESSES_OPTION =
 			new GnuLongOption.Builder("allowed-client-addresses")
-			.doc("The comma separated list of allowed client addresses as "
+			.doc("The space separated list of allowed client addresses as "
 					+ "expressions")
 			.optionArgSpec(new OptionArgSpec.Builder()
 					.name("EXPRESSIONS")
@@ -25,7 +25,7 @@ public final class SocksServerCliOptions extends Options {
 				@Override
 				public String getOptionUsage(final OptionUsageParams params) {
 					return String.format(
-							"%1$s=[%2$s:%3$s1[,%2$s:%3$s2[...]]]", 
+							"%1$s=[%2$s:%3$s1[ %2$s:%3$s2[...]]]", 
 							params.getOption(),
 							"lit|regex",
 							"EXPRESSION");
@@ -37,7 +37,7 @@ public final class SocksServerCliOptions extends Options {
 	
 	public static final Option BLOCKED_CLIENT_ADDRESSES_OPTION =
 			new GnuLongOption.Builder("blocked-client-addresses")
-			.doc("The comma separated list of blocked client addresses as "
+			.doc("The space separated list of blocked client addresses as "
 					+ "expressions")
 			.optionArgSpec(new OptionArgSpec.Builder()
 					.name("EXPRESSIONS")
@@ -48,7 +48,7 @@ public final class SocksServerCliOptions extends Options {
 				@Override
 				public String getOptionUsage(final OptionUsageParams params) {
 					return String.format(
-							"%1$s=[%2$s:%3$s1[,%2$s:%3$s2[...]]]", 
+							"%1$s=[%2$s:%3$s1[ %2$s:%3$s2[...]]]", 
 							params.getOption(),
 							"lit|regex",
 							"EXPRESSION");

@@ -184,10 +184,10 @@ final class SocksServerCli {
 	
 	public SocksServerCli() { }
 	
-	private UnmodifiableConfiguration newConfiguration(
+	private ImmutableConfiguration newConfiguration(
 			final SocksServerCli.Params params) {
-		UnmodifiableConfiguration.Builder builder = 
-				new UnmodifiableConfiguration.Builder();
+		ImmutableConfiguration.Builder builder = 
+				new ImmutableConfiguration.Builder();
 		if (!params.getAllowedClientAddresses().isEmpty()) {
 			builder.allowedClientAddresses(Expressions.newInstance(
 					params.getAllowedClientAddresses()));
@@ -213,7 +213,7 @@ final class SocksServerCli {
 	private void newConfigurationFile(
 			final SocksServerCli.Params params,
 			final String arg) throws JAXBException, IOException {
-		UnmodifiableConfiguration unmodifiableConfiguration = 
+		ImmutableConfiguration immutableConfiguration = 
 				this.newConfiguration(params);
 		String tempArg = arg;
 		System.out.print("Writing to ");
@@ -234,10 +234,10 @@ final class SocksServerCli {
 		}
 		try {
 			JAXBContext jaxbContext = JAXBContext.newInstance(
-					UnmodifiableConfiguration.ConfigurationXml.class);
+					ImmutableConfiguration.ConfigurationXml.class);
 			Marshaller marshaller = jaxbContext.createMarshaller();
 			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-			marshaller.marshal(unmodifiableConfiguration.toConfigurationXml(), out);
+			marshaller.marshal(immutableConfiguration.toConfigurationXml(), out);
 		} finally {
 			if (out instanceof FileOutputStream) {
 				out.close();
@@ -255,7 +255,7 @@ final class SocksServerCli {
 
 	private void printConfigurationFileXsd() throws JAXBException, IOException {
 		JAXBContext jaxbContext = JAXBContext.newInstance(
-				UnmodifiableConfiguration.ConfigurationXml.class);
+				ImmutableConfiguration.ConfigurationXml.class);
 		jaxbContext.generateSchema(new SchemaOutputResolver() {
 
 			@Override
@@ -422,8 +422,8 @@ final class SocksServerCli {
 			}
 			if (parseResultHolder.hasOptionOfAnyOf(
 					"--monitored-config-file", "-m")) {
-				boolean modifiedBefore = params.isModified();
-				boolean nullBefore = 
+				boolean paramsModifiedBefore = params.isModified();
+				boolean fileNullBefore = 
 						params.getMonitoredConfigurationFile() == null;
 				params.setMonitoredConfigurationFile(new File(
 						parseResultHolder.getOptionArg().toString()));
@@ -442,7 +442,7 @@ final class SocksServerCli {
 						System.exit(-1);
 					}
 					params.add(configuration);
-					if (!modifiedBefore && nullBefore) {
+					if (!paramsModifiedBefore && fileNullBefore) {
 						params = new Params(params);
 					}
 				}
@@ -517,12 +517,11 @@ final class SocksServerCli {
 					System.exit(-1);
 				}
 			}
-			UpdatedConfigurationService configurationService =
-					new UpdatedConfigurationService(
+			ConfigurationService configurationService =
+					new XmlFileSourceConfigurationService(
 							params.getMonitoredConfigurationFile(),
 							LoggerHolder.LOGGER);
-			configurationService.start();
-			configuration = new ModifiableConfiguration(configurationService);
+			configuration = new MutableConfiguration(configurationService);
 		}
 		return new ProcessResult(configuration);
 	}
@@ -536,20 +535,20 @@ final class SocksServerCli {
 			File file = new File(arg);
 			in = new FileInputStream(file);
 		}
-		UnmodifiableConfiguration.ConfigurationXml configurationXml = null;
+		ImmutableConfiguration.ConfigurationXml configurationXml = null;
 		try {
 			JAXBContext jaxbContext = JAXBContext.newInstance(			
-					UnmodifiableConfiguration.ConfigurationXml.class);
+					ImmutableConfiguration.ConfigurationXml.class);
 			Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 			unmarshaller.setEventHandler(new DefaultValidationEventHandler());
 			configurationXml = 
-					(UnmodifiableConfiguration.ConfigurationXml) unmarshaller.unmarshal(in);
+					(ImmutableConfiguration.ConfigurationXml) unmarshaller.unmarshal(in);
 		} finally {
 			if (in instanceof FileInputStream) {
 				in.close();
 			}
 		}
-		return UnmodifiableConfiguration.newInstance(configurationXml);
+		return ImmutableConfiguration.newInstance(configurationXml);
 	}
 		
 	private UsernamePassword readExternalClientSocks5UsernamePassword() {

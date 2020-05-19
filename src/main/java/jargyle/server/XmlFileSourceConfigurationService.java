@@ -15,16 +15,16 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.helpers.DefaultValidationEventHandler;
 
-public final class UpdatedConfigurationService 
+public final class XmlFileSourceConfigurationService 
 	implements ConfigurationService {
 
 	private static final class ConfigurationUpdater 
 		implements FileStatusListener {
 
-		private final UpdatedConfigurationService configurationService;
+		private final XmlFileSourceConfigurationService configurationService;
 		
 		public ConfigurationUpdater(
-				final UpdatedConfigurationService service) {
+				final XmlFileSourceConfigurationService service) {
 			this.configurationService = service;
 		}
 		
@@ -100,7 +100,7 @@ public final class UpdatedConfigurationService
 			JAXBContext jaxbContext = null;
 			try {
 				jaxbContext = JAXBContext.newInstance(
-						UnmodifiableConfiguration.ConfigurationXml.class);
+						ImmutableConfiguration.ConfigurationXml.class);
 			} catch (JAXBException e) {
 				throw new AssertionError(e);
 			}
@@ -115,9 +115,9 @@ public final class UpdatedConfigurationService
 			} catch (JAXBException e) {
 				throw new AssertionError(e);
 			}
-			UnmodifiableConfiguration.ConfigurationXml configurationXml =
-					(UnmodifiableConfiguration.ConfigurationXml) unmarshaller.unmarshal(in);
-			configuration = UnmodifiableConfiguration.newInstance(configurationXml);
+			ImmutableConfiguration.ConfigurationXml configurationXml =
+					(ImmutableConfiguration.ConfigurationXml) unmarshaller.unmarshal(in);
+			configuration = ImmutableConfiguration.newInstance(configurationXml);
 		} finally {
 			try {
 				in.close();
@@ -129,83 +129,49 @@ public final class UpdatedConfigurationService
 	}
 	
 	private Configuration configuration;
-	private final File configurationFile;
-	private ExecutorService executor;
 	private final Logger logger;
-	private boolean started;
-	private boolean stopped;
+	private final File xmlFile;
 	
-	public UpdatedConfigurationService(
-			final File configFile, final Logger lggr) {
-		if (configFile == null) {
-			throw new NullPointerException("configuration file must not be null");
+	public XmlFileSourceConfigurationService(
+			final File file, final Logger lggr) {
+		if (file == null) {
+			throw new NullPointerException("XML file must not be null");
 		}
 		if (lggr == null) {
 			throw new NullPointerException("logger must not be null");
 		}
-		if (!configFile.exists()) {
+		if (!file.exists()) {
 			throw new IllegalArgumentException(String.format(
-					"'%s' does not exist", configFile));
+					"'%s' does not exist", file));
 		}
-		if (!configFile.isFile()) {
+		if (!file.isFile()) {
 			throw new IllegalArgumentException(String.format(
-					"'%s' is not a file", configFile));
+					"'%s' is not a file", file));
 		}
 		Configuration config = null;
 		try {
-			config = newConfiguration(configFile);
+			config = newConfiguration(file);
 		} catch (FileNotFoundException e) {
 			throw new IllegalArgumentException(String.format(
-					"file '%s' does not exist", configFile));
+					"file '%s' does not exist", file));
 		} catch (JAXBException e) {
 			throw new IllegalArgumentException(String.format(
 					"file '%s' not a valid XML file: %s", 
-					configFile, e.toString()), e);
+					file, e.toString()), e);
 		}
 		this.configuration = config;
-		this.configurationFile = configFile;
-		this.executor = null;
 		this.logger = lggr;
-		this.started = false;
-		this.stopped = true;
+		this.xmlFile = file;
+		ExecutorService executor = Executors.newSingleThreadExecutor();
+		executor.execute(new FileMonitor(
+				this.xmlFile, 
+				new ConfigurationUpdater(this), 
+				this.logger));
 	}
 	
 	@Override
 	public Configuration getConfiguration() {
 		return this.configuration;
-	}
-	
-	public boolean isStarted() {
-		return this.started;
-	}
-	
-	public boolean isStopped() {
-		return this.stopped;
-	}
-	
-	public void start() {
-		if (this.started) {
-			throw new IllegalStateException(
-					"UpdatableConfigurationFileService is already started");
-		}
-		this.executor = Executors.newSingleThreadExecutor();
-		this.executor.execute(new FileMonitor(
-				this.configurationFile, 
-				new ConfigurationUpdater(this), 
-				LoggerHolder.LOGGER));
-		this.started = true;
-		this.stopped = false;
-	}
-	
-	public void stop() {
-		if (this.stopped) {
-			throw new IllegalStateException(
-					"UpdatableConfigurationFileService is already stopped");
-		}
-		this.executor.shutdownNow();
-		this.executor = null;
-		this.started = false;
-		this.stopped = true;
 	}
 
 }

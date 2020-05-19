@@ -33,7 +33,7 @@ public final class Users {
 	
 	public static Users newInstance(final String s) {
 		List<User> users = new ArrayList<User>();
-		String[] sElements = s.split(",");
+		String[] sElements = s.split("\\s");
 		for (String sElement : sElements) {
 			users.add(User.newInstance(sElement));
 		}
@@ -85,7 +85,7 @@ public final class Users {
 			User user = iterator.next();
 			builder.append(user.toString());
 			if (iterator.hasNext()) {
-				builder.append(",");
+				builder.append(" ");
 			}
 		}
 		return builder.toString();

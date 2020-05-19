@@ -3,11 +3,11 @@ package jargyle.server;
 import jargyle.client.socks5.UsernamePassword;
 import jargyle.server.socks5.UsernamePasswordAuthenticator;
 
-public final class ModifiableConfiguration implements Configuration {
+public final class MutableConfiguration implements Configuration {
 	
 	private final ConfigurationService configurationService;
 	
-	public ModifiableConfiguration(final ConfigurationService service) {
+	public MutableConfiguration(final ConfigurationService service) {
 		this.configurationService = service;
 	}
 	

@@ -9,7 +9,7 @@ import javax.xml.bind.annotation.XmlType;
 import jargyle.client.socks5.UsernamePassword;
 import jargyle.server.socks5.UsernamePasswordAuthenticator;
 
-public final class UnmodifiableConfiguration implements Configuration {
+public final class ImmutableConfiguration implements Configuration {
 
 	public static final class Builder {
 		
@@ -39,8 +39,8 @@ public final class UnmodifiableConfiguration implements Configuration {
 			return this;
 		}
 		
-		public UnmodifiableConfiguration build() {
-			return new UnmodifiableConfiguration(this);
+		public ImmutableConfiguration build() {
+			return new ImmutableConfiguration(this);
 		}
 		
 		public Builder externalClientSocks5UsernamePassword(
@@ -81,8 +81,8 @@ public final class UnmodifiableConfiguration implements Configuration {
 	
 	public static Configuration newInstance(
 			final ConfigurationXml configurationXml) {
-		UnmodifiableConfiguration.Builder builder = 
-				new UnmodifiableConfiguration.Builder();
+		ImmutableConfiguration.Builder builder = 
+				new ImmutableConfiguration.Builder();
 		if (configurationXml.allowedClientAddresses != null) {
 			builder.allowedClientAddresses(
 					configurationXml.allowedClientAddresses);
@@ -111,7 +111,7 @@ public final class UnmodifiableConfiguration implements Configuration {
 	private final Settings settings;
 	private final UsernamePasswordAuthenticator socks5UsernamePasswordAuthenticator;
 	
-	private UnmodifiableConfiguration(final Builder builder) {
+	private ImmutableConfiguration(final Builder builder) {
 		Expressions allowedClientAddrs = builder.allowedClientAddresses;
 		Expressions blockedClientAddrs = builder.blockedClientAddresses;
 		UsernamePassword externalClientSocks5UsrnmPsswrd = 

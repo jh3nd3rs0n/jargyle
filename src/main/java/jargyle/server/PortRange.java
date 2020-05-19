@@ -1,7 +1,44 @@
 package jargyle.server;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.adapters.XmlAdapter;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+@XmlJavaTypeAdapter(PortRange.PortRangeXmlAdapter.class)
 public final class PortRange {
 
+	@XmlAccessorType(XmlAccessType.NONE)
+	@XmlType(name = "portRange", propOrder = { })
+	static class PortRangeXml {
+		@XmlAttribute(name = "minValue", required = true)
+		protected int minValue;
+		@XmlAttribute(name = "maxValue", required = true)
+		protected int maxValue;
+	}
+	
+	static final class PortRangeXmlAdapter 
+		extends XmlAdapter<PortRangeXml,PortRange> {
+
+		@Override
+		public PortRangeXml marshal(final PortRange arg) throws Exception {
+			PortRangeXml portRangeXml = new PortRangeXml();
+			portRangeXml.minValue = arg.getMinPort().intValue();
+			portRangeXml.maxValue = arg.getMaxPort().intValue();
+			return portRangeXml;
+		}
+
+		@Override
+		public PortRange unmarshal(final PortRangeXml arg) throws Exception {
+			return newInstance(
+					Port.newInstance(arg.minValue), 
+					Port.newInstance(arg.maxValue));
+		}
+		
+	}
+	
 	public static PortRange newInstance(final Port prt) {
 		return newInstance(prt, prt);
 	}

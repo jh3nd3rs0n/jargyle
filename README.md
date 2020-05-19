@@ -113,6 +113,10 @@ The following is the command line help for Jargyle (displayed when using the com
            jargyle.server.SocksServer --socks5-users ARGS
     
     OPTIONS:
+      --allowed-client-addresses=[lit|regex:EXPRESSION1[ lit|regex:EXPRESSION2[...]]]
+          The space separated list of allowed client addresses as expressions
+      --blocked-client-addresses=[lit|regex:EXPRESSION1[ lit|regex:EXPRESSION2[...]]]
+          The space separated list of blocked client addresses as expressions
       --config-file=FILE, -f FILE
           The configuration file
       --config-file-xsd, -x
@@ -123,6 +127,8 @@ The following is the command line help for Jargyle (displayed when using the com
           The username password for the external SOCKS5 server for external connections
       --help, -h
           Print this help and exit
+      --monitored-config-file=FILE, -m FILE
+          The monitored configuration file
       --new-config-file=FILE, -n FILE
           Create a new configuration file based on the preceding options and exit
       --settings-help, -H
@@ -742,13 +748,13 @@ The following are two provided classes you can use:
 - `jargyle.server.socks5.StringSourceUsernamePasswordAuthenticator`
 - `jargyle.server.socks5.XmlFileSourceUsernamePasswordAuthenticator`
 
-`jargyle.server.socks5.StringSourceUsernamePasswordAuthenticator`: This class authenticates the username and password based on the parameter string of a comma separated list of USERNAME:PASSWORD pairs
+`jargyle.server.socks5.StringSourceUsernamePasswordAuthenticator`: This class authenticates the username and password based on the parameter string of a space separated list of USERNAME:PASSWORD pairs
 
 Partial command line example:
 
 ```
 
-    --socks5-user-pass-authenticator=jargyle.server.socks5.StringSourceUsernamePasswordAuthenticator:Aladdin:opensesame,Jasmine:mission%3Aimpossible
+    "--socks5-user-pass-authenticator=jargyle.server.socks5.StringSourceUsernamePasswordAuthenticator:Aladdin:opensesame Jasmine:mission%3Aimpossible"
 
 ```
 
@@ -758,14 +764,16 @@ Partial configuration file example:
 
     <socks5UsernamePasswordAuthenticator>
 	    <className>jargyle.server.socks5.StringSourceUsernamePasswordAuthenticator</className>	
-	    <parameterString>Aladdin:opensesame,Jasmine:mission%3Aimpossible</parameterString>
+	    <parameterString>Aladdin:opensesame Jasmine:mission%3Aimpossible</parameterString>
     </socks5UsernamePasswordAuthenticator>
 
 ```
 
 If any of the usernames or any of the passwords contain a colon character (`:`), then each colon character must be replaced with the URL encoding character `%3A`.
 
-If any of the usernames or any of the passwords contain a comma character (`,`), then each comma character must be replaced with the URL encoding character `%2C`.
+If any of the usernames or any of the passwords contain a space character, then each space character must be replaced with the URL encoding character `+` or `%20`.
+
+If any of the usernames or any of the passwords contain a plus sign character (`+`) not used for URL encoding, then each plus sign character not used for URL encoding must be replaced with the URL encoding character `%2B`.
 
 If any of the usernames or any of the passwords contain a percent sign character (`%`) not used for URL encoding, then each percent sign character not used for URL encoding must be replaced with the URL encoding character `%25`.
 
@@ -980,6 +988,10 @@ Partial command line example:
 ```
 
 If the username or the password contains a colon character (`:`), then each colon character must be replaced with the URL encoding character `%3A`.
+
+If the username or the password contains a space character, then each space character must be replaced with the URL encoding character `+` or `%20`.
+
+If the username or the password contains a plus sign character (`+`) not used for URL encoding, then each plus sign character not used for URL encoding must be replaced with the URL encoding character `%2B`.
 
 If the username or the password contains a percent sign character (`%`) not used for URL encoding, then each percent sign character not used for URL encoding must be replaced with the URL encoding character `%25`.
 

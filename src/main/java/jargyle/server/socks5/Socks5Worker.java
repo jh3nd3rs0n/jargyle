@@ -73,6 +73,8 @@ public final class Socks5Worker implements Runnable {
 	
 	private void doBind(final Socks5Request socks5Req) throws IOException {
 		Socks5Reply socks5Rep = null;
+		String desiredDestinationAddress = 
+				socks5Req.getDesiredDestinationAddress();
 		int desiredDestinationPort = socks5Req.getDesiredDestinationPort();
 		PortRanges listenPortRanges = this.settings.getLastValue(
 				SettingSpec.SOCKS5_ON_BIND_LISTEN_PORT_RANGES, 
@@ -98,7 +100,7 @@ public final class Socks5Worker implements Runnable {
 					SocketSettings.class);
 			socketSettings.applyTo(listenSocket);
 			listenSocket.bind(new InetSocketAddress(
-					(InetAddress) null,
+					InetAddress.getByName(desiredDestinationAddress),
 					desiredDestinationPort));
 		} catch (IOException e) {
 			this.log(
@@ -589,6 +591,45 @@ public final class Socks5Worker implements Runnable {
 			this.log(
 					Level.FINE, 
 					String.format("Received %s", socks5Req.toString()));
+			Socks5RequestRules allowedSocks5RequestRules = 
+					this.configuration.getAllowedSocks5RequestRules();
+			if (allowedSocks5RequestRules.toList().isEmpty()) {
+				allowedSocks5RequestRules = new Socks5RequestRules(
+						new Socks5RequestRule(
+								Socks5Command.CONNECT, null, null),
+						new Socks5RequestRule(
+								Socks5Command.BIND, null, null),
+						new Socks5RequestRule(
+								Socks5Command.UDP_ASSOCIATE, null, null));
+			}
+			if (allowedSocks5RequestRules.anyAppliesTo(socks5Req) == null) {
+				Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
+						Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
+				this.log(
+						Level.FINE, 
+						String.format(
+								"SOCKS5 request not allowed. SOCKS5 request: %s", 
+								socks5Req.toString()));
+				this.writeThenFlush(socks5Rep.toByteArray());
+				return;
+			}
+			Socks5RequestRules blockedSocks5RequestRules = 
+					this.configuration.getBlockedSocks5RequestRules();
+			Socks5RequestRule socks5RequestRule =
+					blockedSocks5RequestRules.anyAppliesTo(socks5Req);
+			if (socks5RequestRule != null) {
+				Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
+						Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
+				this.log(
+						Level.FINE, 
+						String.format(
+								"SOCKS5 request blocked due to the following "
+								+ "rule: %s. SOCKS5 request: %s",
+								socks5RequestRule.toString(),
+								socks5Req.toString()));
+				this.writeThenFlush(socks5Rep.toByteArray());
+				return;
+			}
 			Command command = socks5Req.getCommand();
 			switch (command) {
 			case BIND:

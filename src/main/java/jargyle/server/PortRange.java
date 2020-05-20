@@ -13,10 +13,10 @@ public final class PortRange {
 	@XmlAccessorType(XmlAccessType.NONE)
 	@XmlType(name = "portRange", propOrder = { })
 	static class PortRangeXml {
-		@XmlAttribute(name = "minValue", required = true)
-		protected int minValue;
-		@XmlAttribute(name = "maxValue", required = true)
-		protected int maxValue;
+		@XmlAttribute(name = "minPort", required = true)
+		protected int minPort;
+		@XmlAttribute(name = "maxPort", required = true)
+		protected int maxPort;
 	}
 	
 	static final class PortRangeXmlAdapter 
@@ -25,19 +25,23 @@ public final class PortRange {
 		@Override
 		public PortRangeXml marshal(final PortRange arg) throws Exception {
 			PortRangeXml portRangeXml = new PortRangeXml();
-			portRangeXml.minValue = arg.getMinPort().intValue();
-			portRangeXml.maxValue = arg.getMaxPort().intValue();
+			portRangeXml.minPort = arg.minPort.intValue();
+			portRangeXml.maxPort = arg.maxPort.intValue();
 			return portRangeXml;
 		}
 
 		@Override
 		public PortRange unmarshal(final PortRangeXml arg) throws Exception {
 			return newInstance(
-					Port.newInstance(arg.minValue), 
-					Port.newInstance(arg.maxValue));
+					Port.newInstance(arg.minPort), 
+					Port.newInstance(arg.maxPort));
 		}
 		
 	}
+	
+	public static final PortRange DEFAULT_INSTANCE = PortRange.newInstance(
+			Port.newInstance(Port.MIN_INT_VALUE), 
+			Port.newInstance(Port.MAX_INT_VALUE));
 	
 	public static PortRange newInstance(final Port prt) {
 		return newInstance(prt, prt);

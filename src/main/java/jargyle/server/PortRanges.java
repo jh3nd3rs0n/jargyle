@@ -6,46 +6,10 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlType;
-import javax.xml.bind.annotation.adapters.XmlAdapter;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-
-@XmlJavaTypeAdapter(PortRanges.PortRangesXmlAdapter.class)
 public final class PortRanges {
-
-	@XmlAccessorType(XmlAccessType.NONE)
-	@XmlType(name = "portRanges", propOrder = { "portRanges" })
-	static class PortRangesXml {
-		@XmlElement(name = "portRange", required = true)
-		protected List<PortRange> portRanges = new ArrayList<PortRange>();
-	}
-	
-	static final class PortRangesXmlAdapter 
-		extends XmlAdapter<PortRangesXml,PortRanges> {
-
-		@Override
-		public PortRangesXml marshal(final PortRanges v) throws Exception {
-			if (v == null) { return null; }
-			PortRangesXml portRangesXml = new PortRangesXml();
-			portRangesXml.portRanges.addAll(v.toList());
-			return portRangesXml;
-		}
-
-		@Override
-		public PortRanges unmarshal(final PortRangesXml v) throws Exception {
-			if (v == null) { return null; }
-			return new PortRanges(v.portRanges);
-		}
-		
-	}
 	
 	public static final PortRanges DEFAULT_INSTANCE = new PortRanges(
-			Arrays.asList(PortRange.newInstance(
-					Port.newInstance(Port.MIN_INT_VALUE), 
-					Port.newInstance(Port.MAX_INT_VALUE))));
+			Arrays.asList(PortRange.DEFAULT_INSTANCE));
 	
 	public static PortRanges newInstance(
 			final PortRange prtRange, final List<PortRange> prtRanges) {

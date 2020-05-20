@@ -12,8 +12,8 @@ import jargyle.server.socks5.UsernamePasswordAuthenticator;
 
 public final class SocksServerCliOptions extends Options {
 	
-	public static final Option ALLOWED_CLIENT_ADDRESSES_OPTION =
-			new GnuLongOption.Builder("allowed-client-addresses")
+	public static final Option ALLOWED_CLIENT_ADDRESS_EXPRS_OPTION =
+			new GnuLongOption.Builder("allowed-client-address-exprs")
 			.doc("The space separated list of allowed client addresses as "
 					+ "expressions")
 			.optionArgSpec(new OptionArgSpec.Builder()
@@ -35,8 +35,8 @@ public final class SocksServerCliOptions extends Options {
 			.ordinal(0)
 			.build();
 	
-	public static final Option BLOCKED_CLIENT_ADDRESSES_OPTION =
-			new GnuLongOption.Builder("blocked-client-addresses")
+	public static final Option BLOCKED_CLIENT_ADDRESS_EXPRS_OPTION =
+			new GnuLongOption.Builder("blocked-client-address-exprs")
 			.doc("The space separated list of blocked client addresses as "
 					+ "expressions")
 			.optionArgSpec(new OptionArgSpec.Builder()
@@ -112,7 +112,7 @@ public final class SocksServerCliOptions extends Options {
 	
 	public static final Option MONITORED_CONFIG_FILE = 
 			new GnuLongOption.Builder("monitored-config-file")
-			.doc("The monitored configuration file")
+			.doc("The configuration file to be monitored for updates")
 			.optionArgSpec(new OptionArgSpec.Builder()
 					.name("FILE")
 					.build())

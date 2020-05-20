@@ -1,5 +1,8 @@
 package jargyle.server;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 import org.ietf.jgss.GSSException;
 import org.ietf.jgss.Oid;
 
@@ -16,6 +19,62 @@ import jargyle.common.util.PositiveInteger;
 
 public enum SettingSpec implements HelpTextParams {
 	
+	ADDRESS {
+
+		private static final String DEFAULT_ADDRESS = "0.0.0.0";
+		private static final String NAME = "address";
+		
+		@Override
+		public String getDoc() {
+			return String.format(
+					"The address for the SOCKS server (default is %s)", 
+					DEFAULT_ADDRESS);
+		}
+
+		@Override
+		public String getUsage() {
+			return String.format("%s=ADDRESS", NAME);
+		}
+
+		@Override
+		public Setting getDefaultSetting() {
+			InetAddress inetAddress = null;
+			try {
+				inetAddress = InetAddress.getByName(DEFAULT_ADDRESS);
+			} catch (UnknownHostException e) {
+				throw new AssertionError(e);
+			}
+			return new Setting(NAME, inetAddress);
+		}
+
+		@Override
+		public String getName() {
+			return NAME;
+		}
+
+		@Override
+		public Setting newSetting(final Object value) {
+			if (!(value instanceof InetAddress)) {
+				throw new ClassCastException(String.format(
+						"unable to cast %s to %s",
+						value.getClass().getName(),
+						InetAddress.class.getName()));
+			}
+			return new Setting(NAME, value);
+		}
+
+		@Override
+		public Setting newSetting(final String value) {
+			InetAddress inetAddress = null;
+			try {
+				inetAddress = InetAddress.getByName(DEFAULT_ADDRESS);
+			} catch (UnknownHostException e) {
+				throw new IllegalArgumentException(e);
+			}
+			return newSetting(inetAddress);
+		}
+		
+	},	
 	BACKLOG {
 
 		private static final int DEFAULT_INT_VALUE = 50;

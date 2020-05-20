@@ -58,39 +58,47 @@ final class Worker implements Runnable {
 					this.clientSocket.getLocalAddress().getHostName();
 			String clientAddress = 
 					this.clientSocket.getLocalAddress().getHostAddress();
-			Expressions allowedClientAddresses = 
-					this.configuration.getAllowedClientAddresses();
-			if (allowedClientAddresses.toList().isEmpty()) {
-				allowedClientAddresses = Expressions.newInstance(
+			Expressions allowedClientAddressExpressions = 
+					this.configuration.getAllowedClientAddressExpressions();
+			if (allowedClientAddressExpressions.toList().isEmpty()) {
+				allowedClientAddressExpressions = Expressions.newInstance(
 						ExpressionType.REGULAR.newExpression(".*"));
 			}
-			if (allowedClientAddresses.anyMatches(clientName) == null 
-					&& allowedClientAddresses.anyMatches(clientAddress) == null) {
+			if (allowedClientAddressExpressions.anyMatches(clientName) == null 
+					&& allowedClientAddressExpressions.anyMatches(clientAddress) == null) {
 				this.log(
 						Level.FINE, 
 						String.format(
-								"Client address not allowed: %s", 
+								"Client address %s not allowed", 
 								clientName));
 				this.close();
 				return;
 			}
-			Expressions blockedClientAddresses =
-					this.configuration.getBlockedClientAddresses();
-			if (blockedClientAddresses.anyMatches(clientName) != null) {
+			Expressions blockedClientAddressExpressions =
+					this.configuration.getBlockedClientAddressExpressions();
+			Expression expression = blockedClientAddressExpressions.anyMatches(
+					clientName);
+			if (expression != null) {
 				this.log(
 						Level.FINE, 
 						String.format(
-								"Client address blocked: %s", 
-								clientName));
+								"Client address %s blocked due to matching the "
+								+ "following expression: %s", 
+								clientName,
+								expression.toString()));
 				this.close();
 				return;
 			}
-			if (blockedClientAddresses.anyMatches(clientAddress) != null) {
+			expression = blockedClientAddressExpressions.anyMatches(
+					clientAddress);
+			if (expression != null) {
 				this.log(
 						Level.FINE, 
 						String.format(
-								"Client address blocked: %s", 
-								clientAddress));
+								"Client address %s blocked due to matching the "
+								+ "following expression: %s", 
+								clientAddress,
+								expression.toString()));
 				this.close();
 				return;
 			}

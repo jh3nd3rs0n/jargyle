@@ -14,7 +14,7 @@ public enum ExpressionType {
 		@Override
 		public boolean matches(
 				final String string, final String expression) {
-			return string.contains(expression);
+			return string.equals(expression);
 		}
 		
 	},

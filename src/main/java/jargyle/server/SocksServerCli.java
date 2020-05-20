@@ -33,6 +33,8 @@ import jargyle.common.cli.HelpTextParams;
 import jargyle.common.net.SocketSettingSpec;
 import jargyle.common.net.socks5.AuthMethod;
 import jargyle.common.net.socks5.gssapiauth.GssapiProtectionLevel;
+import jargyle.server.socks5.Socks5RequestRule;
+import jargyle.server.socks5.Socks5RequestRules;
 import jargyle.server.socks5.UsernamePasswordAuthenticator;
 import jargyle.server.socks5.Users;
 
@@ -40,8 +42,10 @@ final class SocksServerCli {
 	
 	private static final class Params {
 		
-		private final List<Expression> allowedClientAddresses;
-		private final List<Expression> blockedClientAddresses;
+		private final List<Expression> allowedClientAddressExpressions;
+		private final List<Socks5RequestRule> allowedSocks5RequestRules;
+		private final List<Expression> blockedClientAddressExpressions;
+		private final List<Socks5RequestRule> blockedSocks5RequestRules;
 		private UsernamePassword externalClientSocks5UsernamePassword;
 		private boolean modified;
 		private File monitoredConfigurationFile;
@@ -49,8 +53,10 @@ final class SocksServerCli {
 		private UsernamePasswordAuthenticator socks5UsernamePasswordAuthenticator;
 		
 		public Params() {
-			this.allowedClientAddresses = new ArrayList<Expression>();
-			this.blockedClientAddresses = new ArrayList<Expression>();
+			this.allowedClientAddressExpressions = new ArrayList<Expression>();
+			this.allowedSocks5RequestRules = new ArrayList<Socks5RequestRule>();
+			this.blockedClientAddressExpressions = new ArrayList<Expression>();
+			this.blockedSocks5RequestRules = new ArrayList<Socks5RequestRule>();
 			this.externalClientSocks5UsernamePassword = null;
 			this.modified = false;
 			this.monitoredConfigurationFile = null;
@@ -59,10 +65,14 @@ final class SocksServerCli {
 		}
 		
 		public Params(final Params other) {
-			this.allowedClientAddresses = new ArrayList<Expression>(
-					other.allowedClientAddresses);
-			this.blockedClientAddresses = new ArrayList<Expression>(
-					other.blockedClientAddresses);
+			this.allowedClientAddressExpressions = new ArrayList<Expression>(
+					other.allowedClientAddressExpressions);
+			this.allowedSocks5RequestRules = new ArrayList<Socks5RequestRule>(
+					other.allowedSocks5RequestRules);
+			this.blockedClientAddressExpressions = new ArrayList<Expression>(
+					other.blockedClientAddressExpressions);
+			this.blockedSocks5RequestRules = new ArrayList<Socks5RequestRule>(
+					other.blockedSocks5RequestRules);
 			this.externalClientSocks5UsernamePassword = 
 					other.externalClientSocks5UsernamePassword;
 			this.modified = false;
@@ -73,10 +83,14 @@ final class SocksServerCli {
 		}
 		
 		public void add(final Configuration configuration) {
-			this.addAllowedClientAddresses(
-					configuration.getAllowedClientAddresses().toList());
-			this.addBlockedClientAddresses(
-					configuration.getBlockedClientAddresses().toList());
+			this.addAllowedClientAddressExpressions(
+					configuration.getAllowedClientAddressExpressions().toList());
+			this.addAllowedSocks5RequestRules(
+					configuration.getAllowedSocks5RequestRules().toList());
+			this.addBlockedClientAddressExpressions(
+					configuration.getBlockedClientAddressExpressions().toList());
+			this.addBlockedSocks5RequestRules(
+					configuration.getBlockedSocks5RequestRules().toList());
 			this.setExternalClientSocks5UsernamePassword(
 					configuration.getExternalClientSocks5UsernamePassword());
 			this.addSettings(configuration.getSettings().toList());
@@ -84,21 +98,39 @@ final class SocksServerCli {
 					configuration.getSocks5UsernamePasswordAuthenticator());
 		}
 
-		public void addAllowedClientAddresses(
-				final List<Expression> allowedClientAddrs) {
-			if (allowedClientAddrs.isEmpty()) {
+		public void addAllowedClientAddressExpressions(
+				final List<Expression> allowedClientAddressExprs) {
+			if (allowedClientAddressExprs.isEmpty()) {
 				return;
 			}
-			this.allowedClientAddresses.addAll(allowedClientAddrs);
+			this.allowedClientAddressExpressions.addAll(allowedClientAddressExprs);
 			this.modified = true;
 		}
 		
-		public void addBlockedClientAddresses(
-				final List<Expression> blockedClientAddrs) {
-			if (blockedClientAddrs.isEmpty()) {
+		public void addAllowedSocks5RequestRules(
+				final List<Socks5RequestRule> allowedSocks5ReqRules) {
+			if (allowedSocks5ReqRules.isEmpty()) {
 				return;
 			}
-			this.blockedClientAddresses.addAll(blockedClientAddrs);
+			this.allowedSocks5RequestRules.addAll(allowedSocks5ReqRules);
+			this.modified = true;
+		}
+		
+		public void addBlockedClientAddressExpressions(
+				final List<Expression> blockedClientAddressExprs) {
+			if (blockedClientAddressExprs.isEmpty()) {
+				return;
+			}
+			this.blockedClientAddressExpressions.addAll(blockedClientAddressExprs);
+			this.modified = true;
+		}
+		
+		public void addBlockedSocks5RequestRules(
+				final List<Socks5RequestRule> blockedSocks5ReqRules) {
+			if (blockedSocks5ReqRules.isEmpty()) {
+				return;
+			}
+			this.blockedSocks5RequestRules.addAll(blockedSocks5ReqRules);
 			this.modified = true;
 		}
 		
@@ -110,12 +142,20 @@ final class SocksServerCli {
 			this.modified = true;
 		}
 
-		public List<Expression> getAllowedClientAddresses() {
-			return Collections.unmodifiableList(this.allowedClientAddresses);
+		public List<Expression> getAllowedClientAddressExpressions() {
+			return Collections.unmodifiableList(this.allowedClientAddressExpressions);
+		}
+		
+		public List<Socks5RequestRule> getAllowedSocks5RequestRules() {
+			return Collections.unmodifiableList(this.allowedSocks5RequestRules);
 		}
 
-		public List<Expression> getBlockedClientAddresses() {
-			return Collections.unmodifiableList(this.blockedClientAddresses);
+		public List<Expression> getBlockedClientAddressExpressions() {
+			return Collections.unmodifiableList(this.blockedClientAddressExpressions);
+		}
+		
+		public List<Socks5RequestRule> getBlockedSocks5RequestRules() {
+			return Collections.unmodifiableList(this.blockedSocks5RequestRules);
 		}
 		
 		public UsernamePassword getExternalClientSocks5UsernamePassword() {
@@ -188,13 +228,21 @@ final class SocksServerCli {
 			final SocksServerCli.Params params) {
 		ImmutableConfiguration.Builder builder = 
 				new ImmutableConfiguration.Builder();
-		if (!params.getAllowedClientAddresses().isEmpty()) {
-			builder.allowedClientAddresses(Expressions.newInstance(
-					params.getAllowedClientAddresses()));
+		if (!params.getAllowedClientAddressExpressions().isEmpty()) {
+			builder.allowedClientAddressExpressions(Expressions.newInstance(
+					params.getAllowedClientAddressExpressions()));
 		}
-		if (!params.getBlockedClientAddresses().isEmpty()) {
-			builder.blockedClientAddresses(Expressions.newInstance(
-					params.getBlockedClientAddresses()));
+		if (!params.getAllowedSocks5RequestRules().isEmpty()) {
+			builder.allowedSocks5RequestRules(new Socks5RequestRules(
+					params.getAllowedSocks5RequestRules()));
+		}
+		if (!params.getBlockedClientAddressExpressions().isEmpty()) {
+			builder.blockedClientAddressExpressions(Expressions.newInstance(
+					params.getBlockedClientAddressExpressions()));
+		}
+		if (!params.getBlockedSocks5RequestRules().isEmpty()) {
+			builder.allowedSocks5RequestRules(new Socks5RequestRules(
+					params.getBlockedSocks5RequestRules()));
 		}
 		if (params.getExternalClientSocks5UsernamePassword() != null) {
 			builder.externalClientSocks5UsernamePassword(
@@ -365,13 +413,13 @@ final class SocksServerCli {
 				}
 				System.exit(-1);
 			}
-			if (parseResultHolder.hasOptionOf("--allowed-client-addresses")) {
-				params.addAllowedClientAddresses(
+			if (parseResultHolder.hasOptionOf("--allowed-client-address-exprs")) {
+				params.addAllowedClientAddressExpressions(
 						parseResultHolder.getOptionArg().getTypeValue(
 								Expressions.class).toList());
 			}
-			if (parseResultHolder.hasOptionOf("--blocked-client-addresses")) {
-				params.addBlockedClientAddresses(
+			if (parseResultHolder.hasOptionOf("--blocked-client-address-exprs")) {
+				params.addBlockedClientAddressExpressions(
 						parseResultHolder.getOptionArg().getTypeValue(
 								Expressions.class).toList());
 			}

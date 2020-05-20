@@ -97,7 +97,7 @@ To run Jargyle without any command line arguments, you can run the following com
 
 Be sure to replace `${VERSION}` with the actual version shown within the name of the executable jar file.
 
-The aforementioned command will run Jargyle on port 1080 using no authentication.
+The aforementioned command will run Jargyle on port 1080 at address 0.0.0.0 using no authentication.
 
 ### 3. 1. Usage
 
@@ -113,9 +113,9 @@ The following is the command line help for Jargyle (displayed when using the com
            jargyle.server.SocksServer --socks5-users ARGS
     
     OPTIONS:
-      --allowed-client-addresses=[lit|regex:EXPRESSION1[ lit|regex:EXPRESSION2[...]]]
+      --allowed-client-address-exprs=[lit|regex:EXPRESSION1[ lit|regex:EXPRESSION2[...]]]
           The space separated list of allowed client addresses as expressions
-      --blocked-client-addresses=[lit|regex:EXPRESSION1[ lit|regex:EXPRESSION2[...]]]
+      --blocked-client-address-exprs=[lit|regex:EXPRESSION1[ lit|regex:EXPRESSION2[...]]]
           The space separated list of blocked client addresses as expressions
       --config-file=FILE, -f FILE
           The configuration file
@@ -128,7 +128,7 @@ The following is the command line help for Jargyle (displayed when using the com
       --help, -h
           Print this help and exit
       --monitored-config-file=FILE, -m FILE
-          The monitored configuration file
+          The configuration file to be monitored for updates
       --new-config-file=FILE, -n FILE
           Create a new configuration file based on the preceding options and exit
       --settings-help, -H
@@ -147,6 +147,9 @@ The following is a list of available settings for the SOCKS server (displayed wh
 ```
 
     SETTINGS:
+    
+      address=ADDRESS
+          The address for the SOCKS server (default is 0.0.0.0)
     
       backlog=INTEGER_BETWEEN_0_AND_2147483647
           The maximum length of the queue of incoming connections (default is 50)

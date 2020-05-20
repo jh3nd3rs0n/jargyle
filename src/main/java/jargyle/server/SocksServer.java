@@ -39,10 +39,12 @@ public final class SocksServer {
 			System.exit(-1);
 		}
 		LoggerHolder.LOGGER.info(String.format(
-				"Listening on port %s", 
-				socksServer.getPort()));
+				"Listening on port %s at address %s", 
+				socksServer.getPort(),
+				socksServer.getInetAddress()));
 	}
 
+	private InetAddress inetAddress;
 	private final int backlog;
 	private final Configuration configuration;
 	private ExecutorService executor;
@@ -54,6 +56,8 @@ public final class SocksServer {
 	private boolean stopped;
 	
 	public SocksServer(final Configuration config, final Logger lggr) {
+		this.inetAddress = config.getSettings().getLastValue(
+				SettingSpec.ADDRESS, InetAddress.class);
 		this.backlog = config.getSettings().getLastValue(
 				SettingSpec.BACKLOG, NonnegativeInteger.class).intValue();
 		this.configuration = config;
@@ -70,6 +74,10 @@ public final class SocksServer {
 	
 	public Configuration getConfiguration() {
 		return this.configuration;
+	}
+	
+	public InetAddress getInetAddress() {
+		return this.inetAddress;
 	}
 	
 	public int getPort() {
@@ -91,8 +99,9 @@ public final class SocksServer {
 		this.serverSocket = new ServerSocket();
 		this.socketSettings.applyTo(this.serverSocket);
 		this.serverSocket.bind(
-				new InetSocketAddress((InetAddress) null, this.port), 
+				new InetSocketAddress(this.inetAddress, this.port), 
 				this.backlog);
+		this.inetAddress = this.serverSocket.getInetAddress();
 		this.executor = Executors.newSingleThreadExecutor();
 		this.executor.execute(new Listener(
 				this.serverSocket, this.configuration, this.logger));
@@ -108,6 +117,8 @@ public final class SocksServer {
 		this.serverSocket = null;
 		this.executor.shutdownNow();
 		this.executor = null;
+		this.inetAddress = this.configuration.getSettings().getLastValue(
+				SettingSpec.ADDRESS, InetAddress.class);
 		this.started = false;
 		this.stopped = true;
 	}

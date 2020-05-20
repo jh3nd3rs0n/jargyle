@@ -7,35 +7,52 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 import jargyle.client.socks5.UsernamePassword;
+import jargyle.server.socks5.Socks5RequestRules;
 import jargyle.server.socks5.UsernamePasswordAuthenticator;
 
 public final class ImmutableConfiguration implements Configuration {
 
 	public static final class Builder {
 		
-		private Expressions allowedClientAddresses;
-		private Expressions blockedClientAddresses;
+		private Expressions allowedClientAddressExpressions;
+		private Socks5RequestRules allowedSocks5RequestRules;
+		private Expressions blockedClientAddressExpressions;
+		private Socks5RequestRules blockedSocks5RequestRules;
 		private UsernamePassword externalClientSocks5UsernamePassword;
 		private Settings settings;
 		private UsernamePasswordAuthenticator socks5UsernamePasswordAuthenticator;
 				
 		public Builder() {
-			this.allowedClientAddresses = null;
-			this.blockedClientAddresses = null;
+			this.allowedClientAddressExpressions = null;
+			this.allowedSocks5RequestRules = null;
+			this.blockedClientAddressExpressions = null;
+			this.blockedSocks5RequestRules = null;
 			this.externalClientSocks5UsernamePassword = null;
 			this.settings = null;
 			this.socks5UsernamePasswordAuthenticator = null;
 		}
 		
-		public Builder allowedClientAddresses(
-				final Expressions allowedClientAddrs) {
-			this.allowedClientAddresses = allowedClientAddrs;
+		public Builder allowedClientAddressExpressions(
+				final Expressions allowedClientAddressExprs) {
+			this.allowedClientAddressExpressions = allowedClientAddressExprs;
 			return this;
 		}
 		
-		public Builder blockedClientAddresses(
-				final Expressions blockedClientAddrs) {
-			this.blockedClientAddresses = blockedClientAddrs;
+		public Builder allowedSocks5RequestRules(
+				final Socks5RequestRules allowedSocks5ReqRules) {
+			this.allowedSocks5RequestRules = allowedSocks5ReqRules;
+			return this;
+		}
+		
+		public Builder blockedClientAddressExpressions(
+				final Expressions blockedClientAddressExprs) {
+			this.blockedClientAddressExpressions = blockedClientAddressExprs;
+			return this;
+		}
+		
+		public Builder blockedSocks5RequestRules(
+				final Socks5RequestRules blockedSocks5ReqRules) {
+			this.blockedSocks5RequestRules = blockedSocks5ReqRules;
 			return this;
 		}
 		
@@ -67,10 +84,14 @@ public final class ImmutableConfiguration implements Configuration {
 	@XmlType(name = "configuration", propOrder = { })
 	@XmlRootElement(name = "configuration")
 	public static class ConfigurationXml {
-		@XmlElement(name = "allowedClientAddresses")
-		protected Expressions allowedClientAddresses;
-		@XmlElement(name = "blockedClientAddresses")
-		protected Expressions blockedClientAddresses;
+		@XmlElement(name = "allowedClientAddressExpressions")
+		protected Expressions allowedClientAddressExpressions;
+		@XmlElement(name = "allowedSocks5RequestRules")
+		protected Socks5RequestRules allowedSocks5RequestRules;
+		@XmlElement(name = "blockedClientAddressExpressions")
+		protected Expressions blockedClientAddressExpressions;
+		@XmlElement(name = "blockedSocks5RequestRules")
+		protected Socks5RequestRules blockedSocks5RequestRules;
 		@XmlElement(name = "externalClientSocks5UsernamePassword")
 		protected UsernamePassword externalClientSocks5UsernamePassword;
 		@XmlElement(name = "settings")
@@ -83,13 +104,21 @@ public final class ImmutableConfiguration implements Configuration {
 			final ConfigurationXml configurationXml) {
 		ImmutableConfiguration.Builder builder = 
 				new ImmutableConfiguration.Builder();
-		if (configurationXml.allowedClientAddresses != null) {
-			builder.allowedClientAddresses(
-					configurationXml.allowedClientAddresses);
+		if (configurationXml.allowedClientAddressExpressions != null) {
+			builder.allowedClientAddressExpressions(
+					configurationXml.allowedClientAddressExpressions);
 		}
-		if (configurationXml.blockedClientAddresses != null) {
-			builder.blockedClientAddresses(
-					configurationXml.blockedClientAddresses);
+		if (configurationXml.allowedSocks5RequestRules != null) {
+			builder.allowedSocks5RequestRules(
+					configurationXml.allowedSocks5RequestRules);
+		}
+		if (configurationXml.blockedClientAddressExpressions != null) {
+			builder.blockedClientAddressExpressions(
+					configurationXml.blockedClientAddressExpressions);
+		}
+		if (configurationXml.blockedSocks5RequestRules != null) {
+			builder.blockedSocks5RequestRules(
+					configurationXml.blockedSocks5RequestRules);
 		}
 		if (configurationXml.externalClientSocks5UsernamePassword != null) {
 			builder.externalClientSocks5UsernamePassword(
@@ -105,22 +134,30 @@ public final class ImmutableConfiguration implements Configuration {
 		return builder.build();
 	}
 	
-	private final Expressions allowedClientAddresses;
-	private final Expressions blockedClientAddresses;
+	private final Expressions allowedClientAddressExpressions;
+	private final Socks5RequestRules allowedSocks5RequestRules;
+	private final Expressions blockedClientAddressExpressions;
+	private final Socks5RequestRules blockedSocks5RequestRules;
 	private final UsernamePassword externalClientSocks5UsernamePassword;
 	private final Settings settings;
 	private final UsernamePasswordAuthenticator socks5UsernamePasswordAuthenticator;
 	
 	private ImmutableConfiguration(final Builder builder) {
-		Expressions allowedClientAddrs = builder.allowedClientAddresses;
-		Expressions blockedClientAddrs = builder.blockedClientAddresses;
+		Expressions allowedClientAddressExprs = builder.allowedClientAddressExpressions;
+		Socks5RequestRules allowedSocks5ReqRules = 
+				builder.allowedSocks5RequestRules;
+		Expressions blockedClientAddressExprs = builder.blockedClientAddressExpressions;
+		Socks5RequestRules blockedSocks5ReqRules =
+				builder.blockedSocks5RequestRules;
 		UsernamePassword externalClientSocks5UsrnmPsswrd = 
 				builder.externalClientSocks5UsernamePassword;
 		Settings sttngs = builder.settings;
 		UsernamePasswordAuthenticator socks5UsrnmPsswrdAuthenticator = 
 				builder.socks5UsernamePasswordAuthenticator;
-		this.allowedClientAddresses = allowedClientAddrs;
-		this.blockedClientAddresses = blockedClientAddrs;
+		this.allowedClientAddressExpressions = allowedClientAddressExprs;
+		this.allowedSocks5RequestRules = allowedSocks5ReqRules;
+		this.blockedClientAddressExpressions = blockedClientAddressExprs;
+		this.blockedSocks5RequestRules = blockedSocks5ReqRules;
 		this.externalClientSocks5UsernamePassword = 
 				externalClientSocks5UsrnmPsswrd;
 		this.settings = sttngs;
@@ -128,39 +165,43 @@ public final class ImmutableConfiguration implements Configuration {
 				socks5UsrnmPsswrdAuthenticator;
 	}
 	
-	/* (non-Javadoc)
-	 * @see jargyle.server.IConfiguration#getAllowedClientAddresses()
-	 */
 	@Override
-	public Expressions getAllowedClientAddresses() {
-		if (this.allowedClientAddresses == null) {
+	public Expressions getAllowedClientAddressExpressions() {
+		if (this.allowedClientAddressExpressions == null) {
 			return Expressions.EMPTY_INSTANCE;
 		}
-		return this.allowedClientAddresses;
+		return this.allowedClientAddressExpressions;
 	}
 	
-	/* (non-Javadoc)
-	 * @see jargyle.server.IConfiguration#getBlockedClientAddresses()
-	 */
 	@Override
-	public Expressions getBlockedClientAddresses() {
-		if (this.blockedClientAddresses == null) {
+	public Socks5RequestRules getAllowedSocks5RequestRules() {
+		if (this.allowedSocks5RequestRules == null) {
+			return Socks5RequestRules.EMPTY_INSTANCE;
+		}
+		return this.allowedSocks5RequestRules;
+	}
+	
+	@Override
+	public Expressions getBlockedClientAddressExpressions() {
+		if (this.blockedClientAddressExpressions == null) {
 			return Expressions.EMPTY_INSTANCE;
 		}
-		return this.blockedClientAddresses;
+		return this.blockedClientAddressExpressions;
+	}
+
+	@Override
+	public Socks5RequestRules getBlockedSocks5RequestRules() {
+		if (this.blockedSocks5RequestRules == null) {
+			return Socks5RequestRules.EMPTY_INSTANCE;
+		}
+		return this.blockedSocks5RequestRules;
 	}
 	
-	/* (non-Javadoc)
-	 * @see jargyle.server.IConfiguration#getExternalClientSocks5UsernamePassword()
-	 */
 	@Override
 	public UsernamePassword getExternalClientSocks5UsernamePassword() {
 		return this.externalClientSocks5UsernamePassword;
 	}
 	
-	/* (non-Javadoc)
-	 * @see jargyle.server.IConfiguration#getSettings()
-	 */
 	@Override
 	public Settings getSettings() {
 		if (this.settings == null) {
@@ -169,9 +210,6 @@ public final class ImmutableConfiguration implements Configuration {
 		return this.settings;
 	}
 	
-	/* (non-Javadoc)
-	 * @see jargyle.server.IConfiguration#getSocks5UsernamePasswordAuthenticator()
-	 */
 	@Override
 	public UsernamePasswordAuthenticator getSocks5UsernamePasswordAuthenticator() {
 		return this.socks5UsernamePasswordAuthenticator;
@@ -179,13 +217,21 @@ public final class ImmutableConfiguration implements Configuration {
 
 	public ConfigurationXml toConfigurationXml() {
 		ConfigurationXml configurationXml = new ConfigurationXml();
-		if (this.allowedClientAddresses != null) {
-			configurationXml.allowedClientAddresses = 
-					this.allowedClientAddresses;
+		if (this.allowedClientAddressExpressions != null) {
+			configurationXml.allowedClientAddressExpressions = 
+					this.allowedClientAddressExpressions;
 		}
-		if (this.blockedClientAddresses != null) {
-			configurationXml.blockedClientAddresses = 
-					this.blockedClientAddresses;
+		if (this.allowedSocks5RequestRules != null) {
+			configurationXml.allowedSocks5RequestRules =
+					this.allowedSocks5RequestRules;
+		}
+		if (this.blockedClientAddressExpressions != null) {
+			configurationXml.blockedClientAddressExpressions = 
+					this.blockedClientAddressExpressions;
+		}
+		if (this.blockedSocks5RequestRules != null) {
+			configurationXml.blockedSocks5RequestRules = 
+					this.blockedSocks5RequestRules;
 		}
 		if (this.externalClientSocks5UsernamePassword != null) {
 			configurationXml.externalClientSocks5UsernamePassword = 
@@ -205,10 +251,14 @@ public final class ImmutableConfiguration implements Configuration {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append(this.getClass().getSimpleName())
-			.append(" [allowedClientAddresses=")
-			.append(this.allowedClientAddresses)
-			.append(", blockedClientAddresses=")
-			.append(this.blockedClientAddresses)
+			.append(" [allowedClientAddressExpressions=")
+			.append(this.allowedClientAddressExpressions)
+			.append(", allowedSocks5RequestRules=")
+			.append(this.allowedSocks5RequestRules)			
+			.append(", blockedClientAddressExpressions=")
+			.append(this.blockedClientAddressExpressions)
+			.append(", blockedSocks5RequestRules=")
+			.append(this.blockedSocks5RequestRules)
 			.append(", externalClientSocks5UsernamePassword=")
 			.append(this.externalClientSocks5UsernamePassword)
 			.append(", settings=")

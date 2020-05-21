@@ -8,9 +8,17 @@ public interface Configuration {
 
 	Criteria getAllowedClientAddressCriteria();
 
+	Criteria getAllowedIncomingTcpAddressCriteria();
+	
+	Criteria getAllowedIncomingUdpAddressCriteria();
+	
 	Socks5RequestCriteria getAllowedSocks5RequestCriteria();
 	
 	Criteria getBlockedClientAddressCriteria();
+
+	Criteria getBlockedIncomingTcpAddressCriteria();
+	
+	Criteria getBlockedIncomingUdpAddressCriteria();
 	
 	Socks5RequestCriteria getBlockedSocks5RequestCriteria();
 

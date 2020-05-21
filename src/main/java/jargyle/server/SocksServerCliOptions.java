@@ -34,6 +34,52 @@ public final class SocksServerCliOptions extends Options {
 			.ordinal(0)
 			.build();
 	
+	public static final Option ALLOWED_INCOMING_TCP_ADDRESS_CRITERIA_OPTION =
+			new GnuLongOption.Builder("allowed-incoming-tcp-address-criteria")
+			.doc("The space separated list of allowed incoming TCP address "
+					+ "criteria")
+			.optionArgSpec(new OptionArgSpec.Builder()
+					.name("CRITERIA")
+					.type(Criteria.class)
+					.build())
+			.optionUsageProvider(new OptionUsageProvider() {
+
+				@Override
+				public String getOptionUsage(final OptionUsageParams params) {
+					return String.format(
+							"%1$s=[%2$s:%3$s1[ %2$s:%3$s2[...]]]", 
+							params.getOption(),
+							"equals|matches",
+							"OPERAND");
+				}
+				
+			})			
+			.ordinal(1)
+			.build();
+	
+	public static final Option ALLOWED_INCOMING_UDP_ADDRESS_CRITERIA_OPTION =
+			new GnuLongOption.Builder("allowed-incoming-udp-address-criteria")
+			.doc("The space separated list of allowed incoming UDP address "
+					+ "criteria")
+			.optionArgSpec(new OptionArgSpec.Builder()
+					.name("CRITERIA")
+					.type(Criteria.class)
+					.build())
+			.optionUsageProvider(new OptionUsageProvider() {
+
+				@Override
+				public String getOptionUsage(final OptionUsageParams params) {
+					return String.format(
+							"%1$s=[%2$s:%3$s1[ %2$s:%3$s2[...]]]", 
+							params.getOption(),
+							"equals|matches",
+							"OPERAND");
+				}
+				
+			})			
+			.ordinal(2)
+			.build();
+	
 	public static final Option BLOCKED_CLIENT_ADDRESS_CRITERIA_OPTION =
 			new GnuLongOption.Builder("blocked-client-address-criteria")
 			.doc("The space separated list of blocked client address criteria")
@@ -53,7 +99,53 @@ public final class SocksServerCliOptions extends Options {
 				}
 				
 			})
-			.ordinal(1)
+			.ordinal(3)
+			.build();
+	
+	public static final Option BLOCKED_INCOMING_TCP_ADDRESS_CRITERIA_OPTION =
+			new GnuLongOption.Builder("blocked-incoming-tcp-address-criteria")
+			.doc("The space separated list of blocked incoming TCP address "
+					+ "criteria")
+			.optionArgSpec(new OptionArgSpec.Builder()
+					.name("CRITERIA")
+					.type(Criteria.class)
+					.build())
+			.optionUsageProvider(new OptionUsageProvider() {
+
+				@Override
+				public String getOptionUsage(final OptionUsageParams params) {
+					return String.format(
+							"%1$s=[%2$s:%3$s1[ %2$s:%3$s2[...]]]", 
+							params.getOption(),
+							"equals|matches",
+							"OPERAND");
+				}
+				
+			})			
+			.ordinal(4)
+			.build();
+	
+	public static final Option BLOCKED_INCOMING_UDP_ADDRESS_CRITERIA_OPTION =
+			new GnuLongOption.Builder("blocked-incoming-udp-address-criteria")
+			.doc("The space separated list of blocked incoming UDP address "
+					+ "criteria")
+			.optionArgSpec(new OptionArgSpec.Builder()
+					.name("CRITERIA")
+					.type(Criteria.class)
+					.build())
+			.optionUsageProvider(new OptionUsageProvider() {
+
+				@Override
+				public String getOptionUsage(final OptionUsageParams params) {
+					return String.format(
+							"%1$s=[%2$s:%3$s1[ %2$s:%3$s2[...]]]", 
+							params.getOption(),
+							"equals|matches",
+							"OPERAND");
+				}
+				
+			})			
+			.ordinal(5)
 			.build();
 	
 	public static final Option CONFIG_FILE_OPTION = new GnuLongOption.Builder(
@@ -62,14 +154,14 @@ public final class SocksServerCliOptions extends Options {
 			.optionArgSpec(new OptionArgSpec.Builder()
 					.name("FILE")
 					.build())
-			.ordinal(2)
+			.ordinal(6)
 			.otherBuilders(new PosixOption.Builder('f'))
 			.build();
 	
 	public static final Option CONFIG_FILE_XSD_OPTION = 
 			new GnuLongOption.Builder("config-file-xsd")
 			.doc("Print the configuration file XSD and exit")
-			.ordinal(3)
+			.ordinal(7)
 			.otherBuilders(new PosixOption.Builder('x'))
 			.special(true)
 			.build();
@@ -78,7 +170,7 @@ public final class SocksServerCliOptions extends Options {
 			new GnuLongOption.Builder("enter-external-client-socks5-user-pass")
 			.doc("Enter through an interactive prompt the username password "
 					+ "for the external SOCKS5 server for external connections")
-			.ordinal(4)
+			.ordinal(8)
 			.build();
 	
 	public static final Option EXTERNAL_CLIENT_SOCKS5_USER_PASS_OPTION =
@@ -98,12 +190,12 @@ public final class SocksServerCliOptions extends Options {
 				}
 				
 			})
-			.ordinal(5)
+			.ordinal(9)
 			.build();
 	
 	public static final Option HELP_OPTION = new GnuLongOption.Builder("help")
 			.doc("Print this help and exit")
-			.ordinal(6)
+			.ordinal(10)
 			.otherBuilders(new PosixOption.Builder('h'))
 			.special(true)
 			.build();
@@ -115,7 +207,7 @@ public final class SocksServerCliOptions extends Options {
 			.optionArgSpec(new OptionArgSpec.Builder()
 					.name("FILE")
 					.build())
-			.ordinal(8)
+			.ordinal(11)
 			.otherBuilders(new PosixOption.Builder('n'))
 			.special(true)
 			.build();
@@ -124,7 +216,7 @@ public final class SocksServerCliOptions extends Options {
 			"settings-help")
 			.doc("Print the list of available settings for the SOCKS server "
 					+ "and exit")
-			.ordinal(9)
+			.ordinal(12)
 			.otherBuilders(new PosixOption.Builder('H'))
 			.special(true)
 			.build();
@@ -148,7 +240,7 @@ public final class SocksServerCliOptions extends Options {
 				}
 				
 			})
-			.ordinal(10)
+			.ordinal(13)
 			.otherBuilders(new PosixOption.Builder('s')
 					.optionUsageProvider(new OptionUsageProvider() {
 						
@@ -182,7 +274,7 @@ public final class SocksServerCliOptions extends Options {
 				}
 				
 			})
-			.ordinal(11)
+			.ordinal(14)
 			.build();
 	
 	public static final Option SOCKS5_USERS_OPTION = new GnuLongOption.Builder(
@@ -190,7 +282,7 @@ public final class SocksServerCliOptions extends Options {
 			.doc(String.format("Mode for managing SOCKS5 users "
 					+ "(add %s for more information)",
 					jargyle.server.socks5.UsersCliOptions.HELP_OPTION.getUsage()))
-			.ordinal(12)
+			.ordinal(15)
 			.special(true)
 			.build();
 	
@@ -198,7 +290,7 @@ public final class SocksServerCliOptions extends Options {
 			new GnuLongOption.Builder("update-config")
 			.doc("Update current configuration based on any current changes "
 					+ "made to the configuration file")
-			.ordinal(13)
+			.ordinal(16)
 			.otherBuilders(new PosixOption.Builder('u'))
 			.build();
 	

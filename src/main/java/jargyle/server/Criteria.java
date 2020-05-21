@@ -45,12 +45,12 @@ public final class Criteria {
 	public static final Criteria EMPTY_INSTANCE = new Criteria(
 			Collections.emptyList());
 	
-	public static Criteria newInstance(final Criterion... criteria) {
-		return newInstance(Arrays.asList(criteria));
+	public static Criteria newInstance(final Criterion... c) {
+		return newInstance(Arrays.asList(c));
 	}
 	
-	public static Criteria newInstance(final List<Criterion> criteria) {
-		return new Criteria(criteria);
+	public static Criteria newInstance(final List<Criterion> c) {
+		return new Criteria(c);
 	}
 	
 	public static Criteria newInstance(final String s) {

@@ -15,8 +15,12 @@ public final class ImmutableConfiguration implements Configuration {
 	public static final class Builder {
 		
 		private Criteria allowedClientAddressCriteria;
+		private Criteria allowedIncomingTcpAddressCriteria;
+		private Criteria allowedIncomingUdpAddressCriteria;
 		private Socks5RequestCriteria allowedSocks5RequestCriteria;
 		private Criteria blockedClientAddressCriteria;
+		private Criteria blockedIncomingTcpAddressCriteria;
+		private Criteria blockedIncomingUdpAddressCriteria;
 		private Socks5RequestCriteria blockedSocks5RequestCriteria;
 		private UsernamePassword externalClientSocks5UsernamePassword;
 		private Settings settings;
@@ -24,8 +28,12 @@ public final class ImmutableConfiguration implements Configuration {
 				
 		public Builder() {
 			this.allowedClientAddressCriteria = null;
+			this.allowedIncomingTcpAddressCriteria = null;
+			this.allowedIncomingUdpAddressCriteria = null;
 			this.allowedSocks5RequestCriteria = null;
 			this.blockedClientAddressCriteria = null;
+			this.blockedIncomingTcpAddressCriteria = null;
+			this.blockedIncomingUdpAddressCriteria = null;
 			this.blockedSocks5RequestCriteria = null;
 			this.externalClientSocks5UsernamePassword = null;
 			this.settings = null;
@@ -38,6 +46,20 @@ public final class ImmutableConfiguration implements Configuration {
 			return this;
 		}
 		
+		public Builder allowedIncomingTcpAddressCriteria(
+				final Criteria allowedIncomingTcpAddrCriteria) {
+			this.allowedIncomingTcpAddressCriteria = 
+					allowedIncomingTcpAddrCriteria;
+			return this;
+		}
+		
+		public Builder allowedIncomingUdpAddressCriteria(
+				final Criteria allowedIncomingUdpAddrCriteria) {
+			this.allowedIncomingUdpAddressCriteria =
+					allowedIncomingUdpAddrCriteria;
+			return this;
+		}
+		
 		public Builder allowedSocks5RequestCriteria(
 				final Socks5RequestCriteria allowedSocks5ReqCriteria) {
 			this.allowedSocks5RequestCriteria = allowedSocks5ReqCriteria;
@@ -47,6 +69,20 @@ public final class ImmutableConfiguration implements Configuration {
 		public Builder blockedClientAddressCriteria(
 				final Criteria blockedClientAddrCriteria) {
 			this.blockedClientAddressCriteria = blockedClientAddrCriteria;
+			return this;
+		}
+		
+		public Builder blockedIncomingTcpAddressCriteria(
+				final Criteria blockedIncomingTcpAddrCriteria) {
+			this.blockedIncomingTcpAddressCriteria =
+					blockedIncomingTcpAddrCriteria;
+			return this;
+		}
+		
+		public Builder blockedIncomingUdpAddressCriteria(
+				final Criteria blockedIncomingUdpAddrCriteria) {
+			this.blockedIncomingUdpAddressCriteria = 
+					blockedIncomingUdpAddrCriteria;
 			return this;
 		}
 		
@@ -86,10 +122,18 @@ public final class ImmutableConfiguration implements Configuration {
 	public static class ConfigurationXml {
 		@XmlElement(name = "allowedClientAddressCriteria")
 		protected Criteria allowedClientAddressCriteria;
+		@XmlElement(name = "allowedIncomingTcpAddressCriteria")
+		protected Criteria allowedIncomingTcpAddressCriteria;
+		@XmlElement(name = "allowedIncomingUdpAddressCriteria")
+		protected Criteria allowedIncomingUdpAddressCriteria;
 		@XmlElement(name = "allowedSocks5RequestCriteria")
 		protected Socks5RequestCriteria allowedSocks5RequestCriteria;
 		@XmlElement(name = "blockedClientAddressCriteria")
 		protected Criteria blockedClientAddressCriteria;
+		@XmlElement(name = "blockedIncomingTcpAddressCriteria")
+		protected Criteria blockedIncomingTcpAddressCriteria;
+		@XmlElement(name = "blockedIncomingUdpAddressCriteria")
+		protected Criteria blockedIncomingUdpAddressCriteria;		
 		@XmlElement(name = "blockedSocks5RequestCriteria")
 		protected Socks5RequestCriteria blockedSocks5RequestCriteria;
 		@XmlElement(name = "externalClientSocks5UsernamePassword")
@@ -108,6 +152,14 @@ public final class ImmutableConfiguration implements Configuration {
 			builder.allowedClientAddressCriteria(
 					configurationXml.allowedClientAddressCriteria);
 		}
+		if (configurationXml.allowedIncomingTcpAddressCriteria != null) {
+			builder.allowedIncomingTcpAddressCriteria(
+					configurationXml.allowedIncomingTcpAddressCriteria);
+		}
+		if (configurationXml.allowedIncomingUdpAddressCriteria != null) {
+			builder.allowedIncomingUdpAddressCriteria(
+					configurationXml.allowedIncomingUdpAddressCriteria);
+		}
 		if (configurationXml.allowedSocks5RequestCriteria != null) {
 			builder.allowedSocks5RequestCriteria(
 					configurationXml.allowedSocks5RequestCriteria);
@@ -116,6 +168,14 @@ public final class ImmutableConfiguration implements Configuration {
 			builder.blockedClientAddressCriteria(
 					configurationXml.blockedClientAddressCriteria);
 		}
+		if (configurationXml.blockedIncomingTcpAddressCriteria != null) {
+			builder.blockedIncomingTcpAddressCriteria(
+					configurationXml.blockedIncomingTcpAddressCriteria);
+		}
+		if (configurationXml.blockedIncomingUdpAddressCriteria != null) {
+			builder.blockedIncomingUdpAddressCriteria(
+					configurationXml.blockedIncomingUdpAddressCriteria);
+		}		
 		if (configurationXml.blockedSocks5RequestCriteria != null) {
 			builder.blockedSocks5RequestCriteria(
 					configurationXml.blockedSocks5RequestCriteria);
@@ -135,18 +195,32 @@ public final class ImmutableConfiguration implements Configuration {
 	}
 	
 	private final Criteria allowedClientAddressCriteria;
+	private final Criteria allowedIncomingTcpAddressCriteria;
+	private final Criteria allowedIncomingUdpAddressCriteria;
 	private final Socks5RequestCriteria allowedSocks5RequestCriteria;
 	private final Criteria blockedClientAddressCriteria;
+	private final Criteria blockedIncomingTcpAddressCriteria;
+	private final Criteria blockedIncomingUdpAddressCriteria;
 	private final Socks5RequestCriteria blockedSocks5RequestCriteria;
 	private final UsernamePassword externalClientSocks5UsernamePassword;
 	private final Settings settings;
 	private final UsernamePasswordAuthenticator socks5UsernamePasswordAuthenticator;
 	
 	private ImmutableConfiguration(final Builder builder) {
-		Criteria allowedClientAddrCriteria = builder.allowedClientAddressCriteria;
+		Criteria allowedClientAddrCriteria = 
+				builder.allowedClientAddressCriteria;
+		Criteria allowedIncomingTcpAddrCriteria = 
+				builder.allowedIncomingTcpAddressCriteria;
+		Criteria allowedIncomingUdpAddrCriteria =
+				builder.allowedIncomingUdpAddressCriteria;
 		Socks5RequestCriteria allowedSocks5ReqCriteria = 
 				builder.allowedSocks5RequestCriteria;
-		Criteria blockedClientAddrCriteria = builder.blockedClientAddressCriteria;
+		Criteria blockedClientAddrCriteria = 
+				builder.blockedClientAddressCriteria;
+		Criteria blockedIncomingTcpAddrCriteria = 
+				builder.blockedIncomingTcpAddressCriteria;
+		Criteria blockedIncomingUdpAddrCriteria =
+				builder.blockedIncomingUdpAddressCriteria;		
 		Socks5RequestCriteria blockedSocks5ReqCriteria =
 				builder.blockedSocks5RequestCriteria;
 		UsernamePassword externalClientSocks5UsrnmPsswrd = 
@@ -155,8 +229,12 @@ public final class ImmutableConfiguration implements Configuration {
 		UsernamePasswordAuthenticator socks5UsrnmPsswrdAuthenticator = 
 				builder.socks5UsernamePasswordAuthenticator;
 		this.allowedClientAddressCriteria = allowedClientAddrCriteria;
+		this.allowedIncomingTcpAddressCriteria = allowedIncomingTcpAddrCriteria;
+		this.allowedIncomingUdpAddressCriteria = allowedIncomingUdpAddrCriteria;
 		this.allowedSocks5RequestCriteria = allowedSocks5ReqCriteria;
 		this.blockedClientAddressCriteria = blockedClientAddrCriteria;
+		this.blockedIncomingTcpAddressCriteria = blockedIncomingTcpAddrCriteria;
+		this.blockedIncomingUdpAddressCriteria = blockedIncomingUdpAddrCriteria;
 		this.blockedSocks5RequestCriteria = blockedSocks5ReqCriteria;
 		this.externalClientSocks5UsernamePassword = 
 				externalClientSocks5UsrnmPsswrd;
@@ -174,6 +252,22 @@ public final class ImmutableConfiguration implements Configuration {
 	}
 	
 	@Override
+	public Criteria getAllowedIncomingTcpAddressCriteria() {
+		if (this.allowedIncomingTcpAddressCriteria == null) {
+			return Criteria.EMPTY_INSTANCE;
+		}
+		return this.allowedIncomingTcpAddressCriteria;
+	}
+	
+	@Override
+	public Criteria getAllowedIncomingUdpAddressCriteria() {
+		if (this.allowedIncomingUdpAddressCriteria == null) {
+			return Criteria.EMPTY_INSTANCE;
+		}
+		return this.allowedIncomingUdpAddressCriteria;
+	}
+
+	@Override
 	public Socks5RequestCriteria getAllowedSocks5RequestCriteria() {
 		if (this.allowedSocks5RequestCriteria == null) {
 			return Socks5RequestCriteria.EMPTY_INSTANCE;
@@ -188,6 +282,22 @@ public final class ImmutableConfiguration implements Configuration {
 		}
 		return this.blockedClientAddressCriteria;
 	}
+	
+	@Override
+	public Criteria getBlockedIncomingTcpAddressCriteria() {
+		if (this.blockedIncomingTcpAddressCriteria == null) {
+			return Criteria.EMPTY_INSTANCE;
+		}
+		return this.blockedIncomingTcpAddressCriteria;
+	}
+	
+	@Override
+	public Criteria getBlockedIncomingUdpAddressCriteria() {
+		if (this.blockedIncomingUdpAddressCriteria == null) {
+			return Criteria.EMPTY_INSTANCE;
+		}
+		return this.blockedIncomingUdpAddressCriteria;
+	}
 
 	@Override
 	public Socks5RequestCriteria getBlockedSocks5RequestCriteria() {
@@ -196,12 +306,12 @@ public final class ImmutableConfiguration implements Configuration {
 		}
 		return this.blockedSocks5RequestCriteria;
 	}
-	
+
 	@Override
 	public UsernamePassword getExternalClientSocks5UsernamePassword() {
 		return this.externalClientSocks5UsernamePassword;
 	}
-	
+
 	@Override
 	public Settings getSettings() {
 		if (this.settings == null) {
@@ -209,7 +319,7 @@ public final class ImmutableConfiguration implements Configuration {
 		}
 		return this.settings;
 	}
-	
+
 	@Override
 	public UsernamePasswordAuthenticator getSocks5UsernamePasswordAuthenticator() {
 		return this.socks5UsernamePasswordAuthenticator;
@@ -221,6 +331,14 @@ public final class ImmutableConfiguration implements Configuration {
 			configurationXml.allowedClientAddressCriteria = 
 					this.allowedClientAddressCriteria;
 		}
+		if (this.allowedIncomingTcpAddressCriteria != null) {
+			configurationXml.allowedIncomingTcpAddressCriteria =
+					this.allowedIncomingTcpAddressCriteria;
+		}
+		if (this.allowedIncomingUdpAddressCriteria != null) {
+			configurationXml.allowedIncomingUdpAddressCriteria =
+					this.allowedIncomingUdpAddressCriteria;
+		}
 		if (this.allowedSocks5RequestCriteria != null) {
 			configurationXml.allowedSocks5RequestCriteria =
 					this.allowedSocks5RequestCriteria;
@@ -229,6 +347,14 @@ public final class ImmutableConfiguration implements Configuration {
 			configurationXml.blockedClientAddressCriteria = 
 					this.blockedClientAddressCriteria;
 		}
+		if (this.blockedIncomingTcpAddressCriteria != null) {
+			configurationXml.blockedIncomingTcpAddressCriteria =
+					this.blockedIncomingTcpAddressCriteria;
+		}
+		if (this.blockedIncomingUdpAddressCriteria != null) {
+			configurationXml.blockedIncomingUdpAddressCriteria =
+					this.blockedIncomingUdpAddressCriteria;
+		}		
 		if (this.blockedSocks5RequestCriteria != null) {
 			configurationXml.blockedSocks5RequestCriteria = 
 					this.blockedSocks5RequestCriteria;
@@ -253,10 +379,18 @@ public final class ImmutableConfiguration implements Configuration {
 		builder.append(this.getClass().getSimpleName())
 			.append(" [allowedClientAddressCriteria=")
 			.append(this.allowedClientAddressCriteria)
+			.append(", allowedIncomingTcpAddressCriteria=")
+			.append(this.allowedIncomingTcpAddressCriteria)
+			.append(", allowedIncomingUdpAddressCriteria=")
+			.append(this.allowedIncomingUdpAddressCriteria)
 			.append(", allowedSocks5RequestCriteria=")
 			.append(this.allowedSocks5RequestCriteria)			
 			.append(", blockedClientAddressCriteria=")
 			.append(this.blockedClientAddressCriteria)
+			.append(", blockedIncomingTcpAddressCriteria=")
+			.append(this.blockedIncomingTcpAddressCriteria)
+			.append(", blockedIncomingUdpAddressCriteria=")
+			.append(this.blockedIncomingUdpAddressCriteria)			
 			.append(", blockedSocks5RequestCriteria=")
 			.append(this.blockedSocks5RequestCriteria)
 			.append(", externalClientSocks5UsernamePassword=")

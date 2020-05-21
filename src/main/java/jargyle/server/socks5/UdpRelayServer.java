@@ -14,6 +14,9 @@ import java.util.logging.Logger;
 
 import jargyle.common.net.socks5.AddressType;
 import jargyle.common.net.socks5.UdpRequestHeader;
+import jargyle.server.Criteria;
+import jargyle.server.Criterion;
+import jargyle.server.CriterionOperator;
 
 final class UdpRelayServer {
 	
@@ -55,7 +58,48 @@ final class UdpRelayServer {
 							String.format(
 									"Packet data received: %s byte(s)", 
 									packet.getLength()));
+					String name = packet.getAddress().getHostName();
 					String address = packet.getAddress().getHostAddress();
+					Criteria allowedIncomingUdpAddrCriteria =
+							this.getUdpRelayServer().allowedIncomingUdpAddressCriteria;
+					if (allowedIncomingUdpAddrCriteria.toList().isEmpty()) {
+						allowedIncomingUdpAddrCriteria = Criteria.newInstance(
+								CriterionOperator.MATCHES.newCriterion(".*"));
+					}
+					if (allowedIncomingUdpAddrCriteria.anyEvaluatesTrue(name) == null
+							&& allowedIncomingUdpAddrCriteria.anyEvaluatesTrue(address) == null) {
+						this.log(
+								Level.FINE, 
+								String.format(
+										"Incoming UDP address %s not allowed", 
+										address));
+						continue;
+					}
+					Criteria blockedIncomingUdpAddrCriteria =
+							this.getUdpRelayServer().blockedIncomingUdpAddressCriteria;
+					Criterion criterion = 
+							blockedIncomingUdpAddrCriteria.anyEvaluatesTrue(name);
+					if (criterion != null) {
+						this.log(
+								Level.FINE, 
+								String.format(
+										"Incoming UDP address %s blocked based on the "
+										+ "following criterion: %s", 
+										name,
+										criterion));
+						continue;
+					}
+					criterion = blockedIncomingUdpAddrCriteria.anyEvaluatesTrue(address);
+					if (criterion != null) {
+						this.log(
+								Level.FINE, 
+								String.format(
+										"Incoming UDP address %s blocked based on the "
+										+ "following criterion: %s", 
+										name,
+										criterion));
+						continue;
+					}
 					int port = packet.getPort();
 					String desiredDestinationAddr = 
 							this.getUdpRelayServer().desiredDestinationAddress;
@@ -379,7 +423,8 @@ final class UdpRelayServer {
 		
 	}
 	
-
+	private final Criteria allowedIncomingUdpAddressCriteria;
+	private final Criteria blockedIncomingUdpAddressCriteria;
 	private final DatagramSocket clientDatagramSocket;
 	private final int bufferSize;
 	private String desiredDestinationAddress;
@@ -401,12 +446,14 @@ final class UdpRelayServer {
 			final String sourceAddr,
 			final String desiredDestinationAddr,
 			final int desiredDestinationPrt, 
-			final int bffrSize, 
-			final int tmt, 
-			final Logger lggr) {
+			final Criteria allowedIncomingUdpAddrCriteria, 
+			final Criteria blockedIncomingUdpAddrCriteria, 
+			final int bffrSize, final int tmt, final Logger lggr) {
 		if (clientDatagramSock == null 
 				|| serverDatagramSock == null
 				|| desiredDestinationAddr == null
+				|| allowedIncomingUdpAddrCriteria == null
+				|| blockedIncomingUdpAddrCriteria == null
 				|| lggr == null) {
 			throw new NullPointerException();
 		}
@@ -428,6 +475,8 @@ final class UdpRelayServer {
 			desiredDestAddr = null;
 			desiredDestPrt = -1;
 		}
+		this.allowedIncomingUdpAddressCriteria = allowedIncomingUdpAddrCriteria;
+		this.blockedIncomingUdpAddressCriteria = blockedIncomingUdpAddrCriteria;
 		this.clientDatagramSocket = clientDatagramSock;
 		this.bufferSize = bffrSize;
 		this.desiredDestinationAddress = desiredDestAddr;

@@ -43,8 +43,12 @@ final class SocksServerCli {
 	private static final class Params {
 		
 		private final List<Criterion> allowedClientAddressCriteria;
+		private final List<Criterion> allowedIncomingTcpAddressCriteria;
+		private final List<Criterion> allowedIncomingUdpAddressCriteria;
 		private final List<Socks5RequestCriterion> allowedSocks5RequestCriteria;
 		private final List<Criterion> blockedClientAddressCriteria;
+		private final List<Criterion> blockedIncomingTcpAddressCriteria;
+		private final List<Criterion> blockedIncomingUdpAddressCriteria;		
 		private final List<Socks5RequestCriterion> blockedSocks5RequestCriteria;
 		private UsernamePassword externalClientSocks5UsernamePassword;
 		private final List<Setting> settings;
@@ -52,9 +56,15 @@ final class SocksServerCli {
 		
 		public Params() {
 			this.allowedClientAddressCriteria = new ArrayList<Criterion>();
-			this.allowedSocks5RequestCriteria = new ArrayList<Socks5RequestCriterion>();
+			this.allowedIncomingTcpAddressCriteria = new ArrayList<Criterion>();
+			this.allowedIncomingUdpAddressCriteria = new ArrayList<Criterion>();
+			this.allowedSocks5RequestCriteria = 
+					new ArrayList<Socks5RequestCriterion>();
 			this.blockedClientAddressCriteria = new ArrayList<Criterion>();
-			this.blockedSocks5RequestCriteria = new ArrayList<Socks5RequestCriterion>();
+			this.blockedIncomingTcpAddressCriteria = new ArrayList<Criterion>();
+			this.blockedIncomingUdpAddressCriteria = new ArrayList<Criterion>();
+			this.blockedSocks5RequestCriteria = 
+					new ArrayList<Socks5RequestCriterion>();
 			this.externalClientSocks5UsernamePassword = null;
 			this.settings = new ArrayList<Setting>();
 			this.socks5UsernamePasswordAuthenticator = null;
@@ -63,10 +73,18 @@ final class SocksServerCli {
 		public void add(final Configuration configuration) {
 			this.addAllowedClientAddressCriteria(
 					configuration.getAllowedClientAddressCriteria().toList());
+			this.addAllowedIncomingTcpAddressCriteria(
+					configuration.getAllowedIncomingTcpAddressCriteria().toList());
+			this.addAllowedIncomingUdpAddressCriteria(
+					configuration.getAllowedIncomingUdpAddressCriteria().toList());
 			this.addAllowedSocks5RequestCriteria(
 					configuration.getAllowedSocks5RequestCriteria().toList());
 			this.addBlockedClientAddressCriteria(
 					configuration.getBlockedClientAddressCriteria().toList());
+			this.addBlockedIncomingTcpAddressCriteria(
+					configuration.getBlockedIncomingTcpAddressCriteria().toList());
+			this.addBlockedIncomingUdpAddressCriteria(
+					configuration.getBlockedIncomingUdpAddressCriteria().toList());			
 			this.addBlockedSocks5RequestCriteria(
 					configuration.getBlockedSocks5RequestCriteria().toList());
 			this.setExternalClientSocks5UsernamePassword(
@@ -84,6 +102,24 @@ final class SocksServerCli {
 			this.allowedClientAddressCriteria.addAll(allowedClientAddrCriteria);
 		}
 		
+		public void addAllowedIncomingTcpAddressCriteria(
+				final List<Criterion> allowedIncomingTcpAddrCriteria) {
+			if (allowedIncomingTcpAddrCriteria.isEmpty()) {
+				return;
+			}
+			this.allowedIncomingTcpAddressCriteria.addAll(
+					allowedIncomingTcpAddrCriteria);
+		}
+		
+		public void addAllowedIncomingUdpAddressCriteria(
+				final List<Criterion> allowedIncomingUdpAddrCriteria) {
+			if (allowedIncomingUdpAddrCriteria.isEmpty()) {
+				return;
+			}
+			this.allowedIncomingUdpAddressCriteria.addAll(
+					allowedIncomingUdpAddrCriteria);
+		}
+		
 		public void addAllowedSocks5RequestCriteria(
 				final List<Socks5RequestCriterion> allowedSocks5ReqCriteria) {
 			if (allowedSocks5ReqCriteria.isEmpty()) {
@@ -98,6 +134,24 @@ final class SocksServerCli {
 				return;
 			}
 			this.blockedClientAddressCriteria.addAll(blockedClientAddrCriteria);
+		}
+		
+		public void addBlockedIncomingTcpAddressCriteria(
+				final List<Criterion> blockedIncomingTcpAddrCriteria) {
+			if (blockedIncomingTcpAddrCriteria.isEmpty()) {
+				return;
+			}
+			this.blockedIncomingTcpAddressCriteria.addAll(
+					blockedIncomingTcpAddrCriteria);
+		}
+		
+		public void addBlockedIncomingUdpAddressCriteria(
+				final List<Criterion> blockedIncomingUdpAddrCriteria) {
+			if (blockedIncomingUdpAddrCriteria.isEmpty()) {
+				return;
+			}
+			this.blockedIncomingUdpAddressCriteria.addAll(
+					blockedIncomingUdpAddrCriteria);
 		}
 		
 		public void addBlockedSocks5RequestCriteria(
@@ -119,12 +173,28 @@ final class SocksServerCli {
 			return Collections.unmodifiableList(this.allowedClientAddressCriteria);
 		}
 		
+		public List<Criterion> getAllowedIncomingTcpAddressCriteria() {
+			return Collections.unmodifiableList(this.allowedIncomingTcpAddressCriteria);
+		}
+		
+		public List<Criterion> getAllowedIncomingUdpAddressCriteria() {
+			return Collections.unmodifiableList(this.allowedIncomingUdpAddressCriteria);
+		}
+		
 		public List<Socks5RequestCriterion> getAllowedSocks5RequestCriteria() {
 			return Collections.unmodifiableList(this.allowedSocks5RequestCriteria);
 		}
 
 		public List<Criterion> getBlockedClientAddressCriteria() {
 			return Collections.unmodifiableList(this.blockedClientAddressCriteria);
+		}
+		
+		public List<Criterion> getBlockedIncomingTcpAddressCriteria() {
+			return Collections.unmodifiableList(this.blockedIncomingTcpAddressCriteria);
+		}
+		
+		public List<Criterion> getBlockedIncomingUdpAddressCriteria() {
+			return Collections.unmodifiableList(this.blockedIncomingUdpAddressCriteria);
 		}
 		
 		public List<Socks5RequestCriterion> getBlockedSocks5RequestCriteria() {
@@ -186,6 +256,14 @@ final class SocksServerCli {
 			builder.allowedClientAddressCriteria(Criteria.newInstance(
 					params.getAllowedClientAddressCriteria()));
 		}
+		if (!params.getAllowedIncomingTcpAddressCriteria().isEmpty()) {
+			builder.allowedIncomingTcpAddressCriteria(Criteria.newInstance(
+					params.getAllowedIncomingTcpAddressCriteria()));
+		}
+		if (!params.getAllowedIncomingUdpAddressCriteria().isEmpty()) {
+			builder.allowedIncomingUdpAddressCriteria(Criteria.newInstance(
+					params.getAllowedIncomingUdpAddressCriteria()));
+		}
 		if (!params.getAllowedSocks5RequestCriteria().isEmpty()) {
 			builder.allowedSocks5RequestCriteria(new Socks5RequestCriteria(
 					params.getAllowedSocks5RequestCriteria()));
@@ -194,6 +272,14 @@ final class SocksServerCli {
 			builder.blockedClientAddressCriteria(Criteria.newInstance(
 					params.getBlockedClientAddressCriteria()));
 		}
+		if (!params.getBlockedIncomingTcpAddressCriteria().isEmpty()) {
+			builder.blockedIncomingTcpAddressCriteria(Criteria.newInstance(
+					params.getBlockedIncomingTcpAddressCriteria()));
+		}
+		if (!params.getBlockedIncomingUdpAddressCriteria().isEmpty()) {
+			builder.blockedIncomingUdpAddressCriteria(Criteria.newInstance(
+					params.getBlockedIncomingUdpAddressCriteria()));
+		}		
 		if (!params.getBlockedSocks5RequestCriteria().isEmpty()) {
 			builder.allowedSocks5RequestCriteria(new Socks5RequestCriteria(
 					params.getBlockedSocks5RequestCriteria()));
@@ -376,8 +462,32 @@ final class SocksServerCli {
 								Criteria.class).toList());
 			}
 			if (parseResultHolder.hasOptionOf(
+					"--allowed-incoming-tcp-address-criteria")) {
+				params.addAllowedIncomingTcpAddressCriteria(
+						parseResultHolder.getOptionArg().getTypeValue(
+								Criteria.class).toList());
+			}
+			if (parseResultHolder.hasOptionOf(
+					"--allowed-incoming-udp-address-criteria")) {
+				params.addAllowedIncomingUdpAddressCriteria(
+						parseResultHolder.getOptionArg().getTypeValue(
+								Criteria.class).toList());
+			}
+			if (parseResultHolder.hasOptionOf(
 					"--blocked-client-address-criteria")) {
 				params.addBlockedClientAddressCriteria(
+						parseResultHolder.getOptionArg().getTypeValue(
+								Criteria.class).toList());
+			}
+			if (parseResultHolder.hasOptionOf(
+					"--blocked-incoming-tcp-address-criteria")) {
+				params.addBlockedIncomingTcpAddressCriteria(
+						parseResultHolder.getOptionArg().getTypeValue(
+								Criteria.class).toList());
+			}
+			if (parseResultHolder.hasOptionOf(
+					"--blocked-incoming-udp-address-criteria")) {
+				params.addBlockedIncomingUdpAddressCriteria(
 						parseResultHolder.getOptionArg().getTypeValue(
 								Criteria.class).toList());
 			}

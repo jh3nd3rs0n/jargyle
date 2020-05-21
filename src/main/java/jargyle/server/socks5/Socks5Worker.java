@@ -37,6 +37,9 @@ import jargyle.common.net.socks5.gssapiauth.GssDatagramPacketFilter;
 import jargyle.common.net.socks5.gssapiauth.GssSocket;
 import jargyle.common.util.PositiveInteger;
 import jargyle.server.Configuration;
+import jargyle.server.Criteria;
+import jargyle.server.Criterion;
+import jargyle.server.CriterionOperator;
 import jargyle.server.Port;
 import jargyle.server.PortRange;
 import jargyle.server.PortRanges;
@@ -167,9 +170,72 @@ public final class Socks5Worker implements Runnable {
 				return;
 			}
 		}
-		serverBoundAddress = incomingSocket.getInetAddress().getHostAddress();
+		InetAddress incomingTcpInetAddress = incomingSocket.getInetAddress();
+		String incomingTcpName = incomingTcpInetAddress.getHostName();
+		String incomingTcpAddress = incomingTcpInetAddress.getHostAddress();
+		Criteria allowedIncomingTcpAddressCriteria = 
+				this.configuration.getAllowedIncomingTcpAddressCriteria();
+		if (allowedIncomingTcpAddressCriteria.toList().isEmpty()) {
+			allowedIncomingTcpAddressCriteria = Criteria.newInstance(
+					CriterionOperator.MATCHES.newCriterion(".*"));
+		}
+		if (allowedIncomingTcpAddressCriteria.anyEvaluatesTrue(incomingTcpName) == null 
+				&& allowedIncomingTcpAddressCriteria.anyEvaluatesTrue(incomingTcpAddress) == null) {
+			this.log(
+					Level.FINE, 
+					String.format(
+							"Incoming TCP address %s not allowed", 
+							incomingTcpAddress));
+			socks5Rep = Socks5Reply.newErrorInstance(
+					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
+			this.log(
+					Level.FINE, 
+					String.format("Sending %s", socks5Rep.toString()));
+			this.writeThenFlush(socks5Rep.toByteArray());
+			return;
+		}
+		Criteria blockedIncomingTcpAddressCriteria =
+				this.configuration.getBlockedIncomingTcpAddressCriteria();
+		Criterion criterion = 
+				blockedIncomingTcpAddressCriteria.anyEvaluatesTrue(
+						incomingTcpName);
+		if (criterion != null) {
+			this.log(
+					Level.FINE, 
+					String.format(
+							"Incoming TCP address %s blocked based on the "
+							+ "following criterion: %s", 
+							incomingTcpName,
+							criterion));
+			socks5Rep = Socks5Reply.newErrorInstance(
+					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
+			this.log(
+					Level.FINE, 
+					String.format("Sending %s", socks5Rep.toString()));
+			this.writeThenFlush(socks5Rep.toByteArray());
+			return;
+		}
+		criterion = blockedIncomingTcpAddressCriteria.anyEvaluatesTrue(
+				incomingTcpAddress);
+		if (criterion != null) {
+			this.log(
+					Level.FINE, 
+					String.format(
+							"Incoming TCP address %s blocked based on the "
+							+ "following criterion: %s", 
+							incomingTcpAddress,
+							criterion));
+			socks5Rep = Socks5Reply.newErrorInstance(
+					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
+			this.log(
+					Level.FINE, 
+					String.format("Sending %s", socks5Rep.toString()));
+			this.writeThenFlush(socks5Rep.toByteArray());
+			return;
+		}
+		serverBoundAddress = incomingTcpAddress;
 		addressType = AddressType.get(serverBoundAddress);
-		serverBoundPort = incomingSocket.getPort();
+		serverBoundPort = incomingSocket.getLocalPort();
 		socks5Rep = Socks5Reply.newInstance(
 				Reply.SUCCEEDED, 
 				addressType, 
@@ -401,13 +467,14 @@ public final class Socks5Worker implements Runnable {
 				this.clientSocket.getInetAddress().getHostAddress(),
 				desiredDestinationAddress,
 				desiredDestinationPort, 
+				this.configuration.getAllowedIncomingUdpAddressCriteria(), 
+				this.configuration.getBlockedIncomingUdpAddressCriteria(), 
 				this.settings.getLastValue(
 						SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_RELAY_BUFFER_SIZE, 
 						PositiveInteger.class).intValue(), 
 				this.settings.getLastValue(
 						SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_RELAY_TIMEOUT, 
-						PositiveInteger.class).intValue(), 
-				this.logger);
+						PositiveInteger.class).intValue(), this.logger);
 		try {
 			udpRelayServer.start();
 			while (!this.clientSocket.isClosed()

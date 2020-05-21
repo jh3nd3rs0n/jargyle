@@ -115,8 +115,16 @@ The following is the command line help for Jargyle (displayed when using the com
     OPTIONS:
       --allowed-client-address-criteria=[equals|matches:OPERAND1[ equals|matches:OPERAND2[...]]]
           The space separated list of allowed client address criteria
+      --allowed-incoming-tcp-address-criteria=[equals|matches:OPERAND1[ equals|matches:OPERAND2[...]]]
+          The space separated list of allowed incoming TCP address criteria
+      --allowed-incoming-udp-address-criteria=[equals|matches:OPERAND1[ equals|matches:OPERAND2[...]]]
+          The space separated list of allowed incoming UDP address criteria
       --blocked-client-address-criteria=[equals|matches:OPERAND1[ equals|matches:OPERAND2[...]]]
           The space separated list of blocked client address criteria
+      --blocked-incoming-tcp-address-criteria=[equals|matches:OPERAND1[ equals|matches:OPERAND2[...]]]
+          The space separated list of blocked incoming TCP address criteria
+      --blocked-incoming-udp-address-criteria=[equals|matches:OPERAND1[ equals|matches:OPERAND2[...]]]
+          The space separated list of blocked incoming UDP address criteria
       --config-file=FILE, -f FILE
           The configuration file
       --config-file-xsd, -x

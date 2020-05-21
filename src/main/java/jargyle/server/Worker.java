@@ -2,6 +2,7 @@ package jargyle.server;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.logging.Level;
@@ -54,10 +55,9 @@ final class Worker implements Runnable {
 	
 	public void run() {
 		try {
-			String clientName = 
-					this.clientSocket.getLocalAddress().getHostName();
-			String clientAddress = 
-					this.clientSocket.getLocalAddress().getHostAddress();
+			InetAddress clientInetAddress = this.clientSocket.getInetAddress();
+			String clientName = clientInetAddress.getHostName();
+			String clientAddress = clientInetAddress.getHostAddress();
 			Criteria allowedClientAddressCriteria = 
 					this.configuration.getAllowedClientAddressCriteria();
 			if (allowedClientAddressCriteria.toList().isEmpty()) {
@@ -85,7 +85,7 @@ final class Worker implements Runnable {
 								"Client address %s blocked based on the "
 								+ "following criterion: %s", 
 								clientName,
-								criterion.toString()));
+								criterion));
 				this.close();
 				return;
 			}
@@ -98,7 +98,7 @@ final class Worker implements Runnable {
 								"Client address %s blocked based on the "
 								+ "following criterion: %s", 
 								clientAddress,
-								criterion.toString()));
+								criterion));
 				this.close();
 				return;
 			}

@@ -23,13 +23,14 @@ public final class Criterion {
 		protected String operand;
 	}
 	
-	static final class CriterionXmlAdapter extends XmlAdapter<CriterionXml,Criterion> {
+	static final class CriterionXmlAdapter 
+		extends XmlAdapter<CriterionXml, Criterion> {
 
 		@Override
 		public CriterionXml marshal(final Criterion arg) throws Exception {
 			CriterionXml criterionXml = new CriterionXml();
 			criterionXml.operator = arg.criterionOperator;
-			criterionXml.operand = arg.criterionOperand;
+			criterionXml.operand = arg.operand;
 			return criterionXml;
 		}
 
@@ -72,20 +73,28 @@ public final class Criterion {
 	}
 	
 	private final CriterionOperator criterionOperator;
-	private final String criterionOperand;
+	private final String operand;
 	
-	Criterion(final CriterionOperator operator, final String operand) {
+	Criterion(final CriterionOperator operator, final String op) {
 		this.criterionOperator = operator;
-		this.criterionOperand = operand;
+		this.operand = op;
 	}
 	
-	public boolean evaluate(final String operand) {
-		return this.criterionOperator.evaluate(operand, this.criterionOperand);
+	public boolean evaluate(final String op) {
+		return this.criterionOperator.evaluate(op, this.operand);
+	}
+	
+	public CriterionOperator getCriterionOperator() {
+		return this.criterionOperator;
+	}
+	
+	public String getOperand() {
+		return this.operand;
 	}
 	
 	@Override
 	public String toString() {
-		return this.criterionOperator.toString().concat(":").concat(this.criterionOperand);
+		return this.criterionOperator.toString().concat(":").concat(this.operand);
 	}
 	
 }

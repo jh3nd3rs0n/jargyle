@@ -1,5 +1,7 @@
 package jargyle.server;
 
+import java.net.InetAddress;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -153,12 +155,12 @@ public final class PortRange {
 		}
 		return true;
 	}
-
-	public Port firstAvailablePort() {
+	
+	public Port firstAvailablePortAt(final InetAddress bindAddr) {
 		Port port = null;
 		for (int i = this.minPort.intValue(); i <= this.maxPort.intValue(); i++) {
 			Port prt = Port.newInstance(i);
-			if (prt.isAvailable()) {
+			if (prt.isAvailableAt(bindAddr)) {
 				port = prt;
 				break; 
 			}

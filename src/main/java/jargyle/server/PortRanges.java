@@ -1,5 +1,6 @@
 package jargyle.server;
 
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -82,10 +83,10 @@ public final class PortRanges {
 		return false;
 	}
 	
-	public Port firstAvailablePort() {
+	public Port firstAvailablePortAt(final InetAddress bindAddr) {
 		Port port = null;
 		for (PortRange portRange : this.portRanges) {
-			Port prt = portRange.firstAvailablePort();
+			Port prt = portRange.firstAvailablePortAt(bindAddr);
 			if (prt != null) {
 				port = prt;
 				break; 

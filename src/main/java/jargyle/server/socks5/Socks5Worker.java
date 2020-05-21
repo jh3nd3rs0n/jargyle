@@ -38,6 +38,7 @@ import jargyle.common.net.socks5.gssapiauth.GssSocket;
 import jargyle.common.util.PositiveInteger;
 import jargyle.server.Configuration;
 import jargyle.server.Port;
+import jargyle.server.PortRange;
 import jargyle.server.PortRanges;
 import jargyle.server.SettingSpec;
 import jargyle.server.Settings;
@@ -207,6 +208,14 @@ public final class Socks5Worker implements Runnable {
 					SettingSpec.SOCKS5_ON_CONNECT_SERVER_SOCKET_SETTINGS, 
 					SocketSettings.class);
 			socketSettings.applyTo(serverSocket);
+			String bindAddress = this.settings.getLastValue(
+					SettingSpec.ADDRESS, String.class);
+			InetAddress bindInetAddress = InetAddress.getByName(bindAddress);
+			int bindPort = PortRange.DEFAULT_INSTANCE.firstAvailablePortAt(
+					bindInetAddress).intValue();
+			serverSocket.bind(new InetSocketAddress(
+					bindInetAddress, 
+					bindPort));
 			int connectTimeout = this.settings.getLastValue(
 					SettingSpec.SOCKS5_ON_CONNECT_SERVER_CONNECT_TIMEOUT, 
 					PositiveInteger.class).intValue();
@@ -271,10 +280,13 @@ public final class Socks5Worker implements Runnable {
 		Socks5Reply socks5Rep = null;
 		String desiredDestinationAddress = socks5Req.getDesiredDestinationAddress();
 		int desiredDestinationPort = socks5Req.getDesiredDestinationPort();
+		String bindAddress = this.settings.getLastValue(
+				SettingSpec.ADDRESS, String.class);
+		InetAddress bindInetAddress = InetAddress.getByName(bindAddress);
 		PortRanges serverPortRanges = this.settings.getLastValue(
 				SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_SERVER_PORT_RANGES, 
 				PortRanges.class);
-		Port serverPort = serverPortRanges.firstAvailablePort();
+		Port serverPort = serverPortRanges.firstAvailablePortAt(bindInetAddress);
 		if (serverPort == null) {
 			this.log(
 					Level.WARNING, 
@@ -292,7 +304,7 @@ public final class Socks5Worker implements Runnable {
 			DatagramSocketFactory datagramSocketFactory = 
 					DatagramSocketFactory.newInstance(this.socksClient);
 			serverDatagramSock = datagramSocketFactory.newDatagramSocket(
-					serverPort.intValue());
+					new InetSocketAddress(bindInetAddress, serverPort.intValue()));
 			SocketSettings socketSettings = this.settings.getLastValue(
 					SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_SERVER_SOCKET_SETTINGS, 
 					SocketSettings.class);
@@ -313,7 +325,7 @@ public final class Socks5Worker implements Runnable {
 		PortRanges clientPortRanges = this.settings.getLastValue(
 				SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_CLIENT_PORT_RANGES, 
 				PortRanges.class);
-		Port clientPort = clientPortRanges.firstAvailablePort();
+		Port clientPort = clientPortRanges.firstAvailablePortAt(bindInetAddress);
 		if (clientPort == null) {
 			this.log(
 					Level.WARNING, 
@@ -339,14 +351,16 @@ public final class Socks5Worker implements Runnable {
 								gssSocket.getMessageProp());
 				clientDatagramSock = new FilterDatagramSocket(
 						datagramPacketFilter,
-						clientPort.intValue());
+						new InetSocketAddress(
+								bindInetAddress, clientPort.intValue()));
 			} else if (!this.clientSocket.getClass().equals(Socket.class)) {
 				throw new AssertionError(String.format(
 						"unhandled %s: %s", 
 						Socket.class.getSimpleName(), 
 						this.clientSocket.getClass().getSimpleName()));
 			} else {
-				clientDatagramSock = new DatagramSocket(clientPort.intValue());
+				clientDatagramSock = new DatagramSocket(new InetSocketAddress(
+						bindInetAddress, clientPort.intValue()));
 			}
 			SocketSettings socketSettings = this.settings.getLastValue(
 					SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_CLIENT_SOCKET_SETTINGS, 
@@ -597,7 +611,7 @@ public final class Socks5Worker implements Runnable {
 				allowedSocks5RequestCriteria = new Socks5RequestCriteria(
 						new Socks5RequestCriterion(null, null, null));
 			}
-			if (allowedSocks5RequestCriteria.anyEvaluatesToTrue(socks5Req) == null) {
+			if (allowedSocks5RequestCriteria.anyEvaluatesTrue(socks5Req) == null) {
 				Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
 						Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
 				this.log(
@@ -611,7 +625,7 @@ public final class Socks5Worker implements Runnable {
 			Socks5RequestCriteria blockedSocks5RequestCriteria = 
 					this.configuration.getBlockedSocks5RequestCriteria();
 			Socks5RequestCriterion socks5RequestCriterion =
-					blockedSocks5RequestCriteria.anyEvaluatesToTrue(socks5Req);
+					blockedSocks5RequestCriteria.anyEvaluatesTrue(socks5Req);
 			if (socks5RequestCriterion != null) {
 				Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
 						Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);

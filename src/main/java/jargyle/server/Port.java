@@ -2,6 +2,8 @@ package jargyle.server;
 
 import java.io.IOException;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 
 public final class Port implements Comparable<Port> {
@@ -78,13 +80,14 @@ public final class Port implements Comparable<Port> {
 		return this.intValue;
 	}
 	
-	public boolean isAvailable() {
+	public boolean isAvailableAt(final InetAddress bindAddr) {
 		ServerSocket serverSocket = null;
 		DatagramSocket datagramSocket = null;
 		try {
-			serverSocket = new ServerSocket(this.intValue);
+			serverSocket = new ServerSocket(this.intValue, 0, bindAddr);
 			serverSocket.setReuseAddress(true);
-			datagramSocket = new DatagramSocket(this.intValue);
+			datagramSocket = new DatagramSocket(new InetSocketAddress(
+					bindAddr, this.intValue));
 			datagramSocket.setReuseAddress(true);
 			return true;
 		} catch (IOException e) {

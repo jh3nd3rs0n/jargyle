@@ -65,7 +65,7 @@ public final class Socks5RequestCriteria {
 		this(Arrays.asList(socks5ReqCriteria));
 	}
 	
-	public Socks5RequestCriterion anyEvaluatesToTrue(final Socks5Request socks5Req) {
+	public Socks5RequestCriterion anyEvaluatesTrue(final Socks5Request socks5Req) {
 		for (Socks5RequestCriterion socks5RequestCriterion : this.socks5RequestCriteria) {
 			if (socks5RequestCriterion.evaluate(socks5Req)) {
 				return socks5RequestCriterion;

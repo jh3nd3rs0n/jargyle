@@ -64,11 +64,11 @@ public final class Criteria {
 	
 	private final List<Criterion> criteria;
 	
-	private Criteria(final List<Criterion> crit) {
-		this.criteria = new ArrayList<Criterion>(crit);
+	private Criteria(final List<Criterion> c) {
+		this.criteria = new ArrayList<Criterion>(c);
 	}
 	
-	public Criterion anyEvaluatesToTrue(final String str) {
+	public Criterion anyEvaluatesTrue(final String str) {
 		for (Criterion criterion : this.criteria) {
 			if (criterion.evaluate(str)) {
 				return criterion;

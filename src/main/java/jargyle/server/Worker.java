@@ -64,8 +64,8 @@ final class Worker implements Runnable {
 				allowedClientAddressCriteria = Criteria.newInstance(
 						CriterionOperator.MATCHES.newCriterion(".*"));
 			}
-			if (allowedClientAddressCriteria.anyEvaluatesToTrue(clientName) == null 
-					&& allowedClientAddressCriteria.anyEvaluatesToTrue(clientAddress) == null) {
+			if (allowedClientAddressCriteria.anyEvaluatesTrue(clientName) == null 
+					&& allowedClientAddressCriteria.anyEvaluatesTrue(clientAddress) == null) {
 				this.log(
 						Level.FINE, 
 						String.format(
@@ -77,7 +77,7 @@ final class Worker implements Runnable {
 			Criteria blockedClientAddressCriteria =
 					this.configuration.getBlockedClientAddressCriteria();
 			Criterion criterion = 
-					blockedClientAddressCriteria.anyEvaluatesToTrue(clientName);
+					blockedClientAddressCriteria.anyEvaluatesTrue(clientName);
 			if (criterion != null) {
 				this.log(
 						Level.FINE, 
@@ -89,7 +89,7 @@ final class Worker implements Runnable {
 				this.close();
 				return;
 			}
-			criterion = blockedClientAddressCriteria.anyEvaluatesToTrue(
+			criterion = blockedClientAddressCriteria.anyEvaluatesTrue(
 					clientAddress);
 			if (criterion != null) {
 				this.log(

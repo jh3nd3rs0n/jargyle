@@ -1,7 +1,7 @@
 package jargyle.server;
 
 import jargyle.client.socks5.UsernamePassword;
-import jargyle.server.socks5.Socks5RequestRules;
+import jargyle.server.socks5.Socks5RequestCriteria;
 import jargyle.server.socks5.UsernamePasswordAuthenticator;
 
 public final class MutableConfiguration implements Configuration {
@@ -13,23 +13,23 @@ public final class MutableConfiguration implements Configuration {
 	}
 	
 	@Override
-	public Expressions getAllowedClientAddressExpressions() {
-		return this.configurationService.getConfiguration().getAllowedClientAddressExpressions();
+	public Criteria getAllowedClientAddressCriteria() {
+		return this.configurationService.getConfiguration().getAllowedClientAddressCriteria();
 	}
 
 	@Override
-	public Socks5RequestRules getAllowedSocks5RequestRules() {
-		return this.configurationService.getConfiguration().getAllowedSocks5RequestRules();
+	public Socks5RequestCriteria getAllowedSocks5RequestCriteria() {
+		return this.configurationService.getConfiguration().getAllowedSocks5RequestCriteria();
 	}
 
 	@Override
-	public Expressions getBlockedClientAddressExpressions() {
-		return this.configurationService.getConfiguration().getBlockedClientAddressExpressions();
+	public Criteria getBlockedClientAddressCriteria() {
+		return this.configurationService.getConfiguration().getBlockedClientAddressCriteria();
 	}
 
 	@Override
-	public Socks5RequestRules getBlockedSocks5RequestRules() {
-		return this.configurationService.getConfiguration().getBlockedSocks5RequestRules();
+	public Socks5RequestCriteria getBlockedSocks5RequestCriteria() {
+		return this.configurationService.getConfiguration().getBlockedSocks5RequestCriteria();
 	}
 
 	@Override

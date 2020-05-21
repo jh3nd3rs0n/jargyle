@@ -113,10 +113,10 @@ The following is the command line help for Jargyle (displayed when using the com
            jargyle.server.SocksServer --socks5-users ARGS
     
     OPTIONS:
-      --allowed-client-address-exprs=[lit|regex:EXPRESSION1[ lit|regex:EXPRESSION2[...]]]
-          The space separated list of allowed client addresses as expressions
-      --blocked-client-address-exprs=[lit|regex:EXPRESSION1[ lit|regex:EXPRESSION2[...]]]
-          The space separated list of blocked client addresses as expressions
+      --allowed-client-address-criteria=[equals|matches:OPERAND1[ equals|matches:OPERAND2[...]]]
+          The space separated list of allowed client address criteria
+      --blocked-client-address-criteria=[equals|matches:OPERAND1[ equals|matches:OPERAND2[...]]]
+          The space separated list of blocked client address criteria
       --config-file=FILE, -f FILE
           The configuration file
       --config-file-xsd, -x
@@ -127,8 +127,6 @@ The following is the command line help for Jargyle (displayed when using the com
           The username password for the external SOCKS5 server for external connections
       --help, -h
           Print this help and exit
-      --monitored-config-file=FILE, -m FILE
-          The configuration file to be monitored for updates
       --new-config-file=FILE, -n FILE
           Create a new configuration file based on the preceding options and exit
       --settings-help, -H
@@ -139,6 +137,8 @@ The following is the command line help for Jargyle (displayed when using the com
           The SOCKS5 username password authenticator for the SOCKS server
       --socks5-users
           Mode for managing SOCKS5 users (add --help for more information)
+      --update-config, -u
+          Update current configuration based on any current changes made to the configuration file
     
 ```
 

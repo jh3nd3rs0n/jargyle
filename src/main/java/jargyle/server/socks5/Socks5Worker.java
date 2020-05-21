@@ -591,18 +591,13 @@ public final class Socks5Worker implements Runnable {
 			this.log(
 					Level.FINE, 
 					String.format("Received %s", socks5Req.toString()));
-			Socks5RequestRules allowedSocks5RequestRules = 
-					this.configuration.getAllowedSocks5RequestRules();
-			if (allowedSocks5RequestRules.toList().isEmpty()) {
-				allowedSocks5RequestRules = new Socks5RequestRules(
-						new Socks5RequestRule(
-								Socks5Command.CONNECT, null, null),
-						new Socks5RequestRule(
-								Socks5Command.BIND, null, null),
-						new Socks5RequestRule(
-								Socks5Command.UDP_ASSOCIATE, null, null));
+			Socks5RequestCriteria allowedSocks5RequestCriteria = 
+					this.configuration.getAllowedSocks5RequestCriteria();
+			if (allowedSocks5RequestCriteria.toList().isEmpty()) {
+				allowedSocks5RequestCriteria = new Socks5RequestCriteria(
+						new Socks5RequestCriterion(null, null, null));
 			}
-			if (allowedSocks5RequestRules.anyAppliesTo(socks5Req) == null) {
+			if (allowedSocks5RequestCriteria.anyEvaluatesToTrue(socks5Req) == null) {
 				Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
 						Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
 				this.log(
@@ -613,19 +608,19 @@ public final class Socks5Worker implements Runnable {
 				this.writeThenFlush(socks5Rep.toByteArray());
 				return;
 			}
-			Socks5RequestRules blockedSocks5RequestRules = 
-					this.configuration.getBlockedSocks5RequestRules();
-			Socks5RequestRule socks5RequestRule =
-					blockedSocks5RequestRules.anyAppliesTo(socks5Req);
-			if (socks5RequestRule != null) {
+			Socks5RequestCriteria blockedSocks5RequestCriteria = 
+					this.configuration.getBlockedSocks5RequestCriteria();
+			Socks5RequestCriterion socks5RequestCriterion =
+					blockedSocks5RequestCriteria.anyEvaluatesToTrue(socks5Req);
+			if (socks5RequestCriterion != null) {
 				Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
 						Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
 				this.log(
 						Level.FINE, 
 						String.format(
-								"SOCKS5 request blocked due to the following "
-								+ "rule: %s. SOCKS5 request: %s",
-								socks5RequestRule.toString(),
+								"SOCKS5 request blocked based on the following "
+								+ "criterion: %s. SOCKS5 request: %s",
+								socks5RequestCriterion.toString(),
 								socks5Req.toString()));
 				this.writeThenFlush(socks5Rep.toByteArray());
 				return;

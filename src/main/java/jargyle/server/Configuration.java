@@ -1,18 +1,18 @@
 package jargyle.server;
 
 import jargyle.client.socks5.UsernamePassword;
-import jargyle.server.socks5.Socks5RequestRules;
+import jargyle.server.socks5.Socks5RequestCriteria;
 import jargyle.server.socks5.UsernamePasswordAuthenticator;
 
 public interface Configuration {
 
-	Expressions getAllowedClientAddressExpressions();
+	Criteria getAllowedClientAddressCriteria();
 
-	Socks5RequestRules getAllowedSocks5RequestRules();
+	Socks5RequestCriteria getAllowedSocks5RequestCriteria();
 	
-	Expressions getBlockedClientAddressExpressions();
+	Criteria getBlockedClientAddressCriteria();
 	
-	Socks5RequestRules getBlockedSocks5RequestRules();
+	Socks5RequestCriteria getBlockedSocks5RequestCriteria();
 
 	UsernamePassword getExternalClientSocks5UsernamePassword();
 

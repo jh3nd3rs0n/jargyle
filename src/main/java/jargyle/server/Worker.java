@@ -58,47 +58,47 @@ final class Worker implements Runnable {
 					this.clientSocket.getLocalAddress().getHostName();
 			String clientAddress = 
 					this.clientSocket.getLocalAddress().getHostAddress();
-			Expressions allowedClientAddressExpressions = 
-					this.configuration.getAllowedClientAddressExpressions();
-			if (allowedClientAddressExpressions.toList().isEmpty()) {
-				allowedClientAddressExpressions = Expressions.newInstance(
-						ExpressionType.REGULAR.newExpression(".*"));
+			Criteria allowedClientAddressCriteria = 
+					this.configuration.getAllowedClientAddressCriteria();
+			if (allowedClientAddressCriteria.toList().isEmpty()) {
+				allowedClientAddressCriteria = Criteria.newInstance(
+						CriterionOperator.MATCHES.newCriterion(".*"));
 			}
-			if (allowedClientAddressExpressions.anyMatches(clientName) == null 
-					&& allowedClientAddressExpressions.anyMatches(clientAddress) == null) {
+			if (allowedClientAddressCriteria.anyEvaluatesToTrue(clientName) == null 
+					&& allowedClientAddressCriteria.anyEvaluatesToTrue(clientAddress) == null) {
 				this.log(
 						Level.FINE, 
 						String.format(
 								"Client address %s not allowed", 
-								clientName));
+								clientAddress));
 				this.close();
 				return;
 			}
-			Expressions blockedClientAddressExpressions =
-					this.configuration.getBlockedClientAddressExpressions();
-			Expression expression = blockedClientAddressExpressions.anyMatches(
-					clientName);
-			if (expression != null) {
+			Criteria blockedClientAddressCriteria =
+					this.configuration.getBlockedClientAddressCriteria();
+			Criterion criterion = 
+					blockedClientAddressCriteria.anyEvaluatesToTrue(clientName);
+			if (criterion != null) {
 				this.log(
 						Level.FINE, 
 						String.format(
-								"Client address %s blocked due to matching the "
-								+ "following expression: %s", 
+								"Client address %s blocked based on the "
+								+ "following criterion: %s", 
 								clientName,
-								expression.toString()));
+								criterion.toString()));
 				this.close();
 				return;
 			}
-			expression = blockedClientAddressExpressions.anyMatches(
+			criterion = blockedClientAddressCriteria.anyEvaluatesToTrue(
 					clientAddress);
-			if (expression != null) {
+			if (criterion != null) {
 				this.log(
 						Level.FINE, 
 						String.format(
-								"Client address %s blocked due to matching the "
-								+ "following expression: %s", 
+								"Client address %s blocked based on the "
+								+ "following criterion: %s", 
 								clientAddress,
-								expression.toString()));
+								criterion.toString()));
 				this.close();
 				return;
 			}

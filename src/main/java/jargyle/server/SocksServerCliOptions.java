@@ -12,13 +12,12 @@ import jargyle.server.socks5.UsernamePasswordAuthenticator;
 
 public final class SocksServerCliOptions extends Options {
 	
-	public static final Option ALLOWED_CLIENT_ADDRESS_EXPRS_OPTION =
-			new GnuLongOption.Builder("allowed-client-address-exprs")
-			.doc("The space separated list of allowed client addresses as "
-					+ "expressions")
+	public static final Option ALLOWED_CLIENT_ADDRESS_CRITERIA_OPTION =
+			new GnuLongOption.Builder("allowed-client-address-criteria")
+			.doc("The space separated list of allowed client address criteria")
 			.optionArgSpec(new OptionArgSpec.Builder()
-					.name("EXPRESSIONS")
-					.type(Expressions.class)
+					.name("CRITERIA")
+					.type(Criteria.class)
 					.build())
 			.optionUsageProvider(new OptionUsageProvider() {
 
@@ -27,21 +26,20 @@ public final class SocksServerCliOptions extends Options {
 					return String.format(
 							"%1$s=[%2$s:%3$s1[ %2$s:%3$s2[...]]]", 
 							params.getOption(),
-							"lit|regex",
-							"EXPRESSION");
+							"equals|matches",
+							"OPERAND");
 				}
 				
 			})			
 			.ordinal(0)
 			.build();
 	
-	public static final Option BLOCKED_CLIENT_ADDRESS_EXPRS_OPTION =
-			new GnuLongOption.Builder("blocked-client-address-exprs")
-			.doc("The space separated list of blocked client addresses as "
-					+ "expressions")
+	public static final Option BLOCKED_CLIENT_ADDRESS_CRITERIA_OPTION =
+			new GnuLongOption.Builder("blocked-client-address-criteria")
+			.doc("The space separated list of blocked client address criteria")
 			.optionArgSpec(new OptionArgSpec.Builder()
-					.name("EXPRESSIONS")
-					.type(Expressions.class)
+					.name("CRITERIA")
+					.type(Criteria.class)
 					.build())
 			.optionUsageProvider(new OptionUsageProvider() {
 
@@ -50,8 +48,8 @@ public final class SocksServerCliOptions extends Options {
 					return String.format(
 							"%1$s=[%2$s:%3$s1[ %2$s:%3$s2[...]]]", 
 							params.getOption(),
-							"lit|regex",
-							"EXPRESSION");
+							"equals|matches",
+							"OPERAND");
 				}
 				
 			})
@@ -108,16 +106,6 @@ public final class SocksServerCliOptions extends Options {
 			.ordinal(6)
 			.otherBuilders(new PosixOption.Builder('h'))
 			.special(true)
-			.build();
-	
-	public static final Option MONITORED_CONFIG_FILE = 
-			new GnuLongOption.Builder("monitored-config-file")
-			.doc("The configuration file to be monitored for updates")
-			.optionArgSpec(new OptionArgSpec.Builder()
-					.name("FILE")
-					.build())
-			.ordinal(7)
-			.otherBuilders(new PosixOption.Builder('m'))
 			.build();
 	
 	public static final Option NEW_CONFIG_FILE_OPTION = 
@@ -204,6 +192,14 @@ public final class SocksServerCliOptions extends Options {
 					jargyle.server.socks5.UsersCliOptions.HELP_OPTION.getUsage()))
 			.ordinal(12)
 			.special(true)
+			.build();
+	
+	public static final Option UPDATE_CONFIG_OPTION = 
+			new GnuLongOption.Builder("update-config")
+			.doc("Update current configuration based on any current changes "
+					+ "made to the configuration file")
+			.ordinal(13)
+			.otherBuilders(new PosixOption.Builder('u'))
 			.build();
 	
 	public SocksServerCliOptions() { }

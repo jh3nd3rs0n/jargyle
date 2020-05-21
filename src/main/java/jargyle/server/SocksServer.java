@@ -28,9 +28,11 @@ public final class SocksServer {
 			String message = "Error in starting SocksServer";
 			if (e instanceof BindException) {
 				message = String.format(
-						"Unable to listen on port %s", 
+						"Unable to listen on port %s at address %s", 
 						configuration.getSettings().getLastValue(
-								SettingSpec.PORT, Port.class));
+								SettingSpec.PORT, Port.class),
+						configuration.getSettings().getLastValue(
+								SettingSpec.ADDRESS, String.class));
 			}
 			LoggerHolder.LOGGER.log(
 					Level.SEVERE, 
@@ -41,10 +43,10 @@ public final class SocksServer {
 		LoggerHolder.LOGGER.info(String.format(
 				"Listening on port %s at address %s", 
 				socksServer.getPort(),
-				socksServer.getInetAddress()));
+				socksServer.getAddress()));
 	}
 
-	private InetAddress inetAddress;
+	private String address;
 	private final int backlog;
 	private final Configuration configuration;
 	private ExecutorService executor;
@@ -56,8 +58,8 @@ public final class SocksServer {
 	private boolean stopped;
 	
 	public SocksServer(final Configuration config, final Logger lggr) {
-		this.inetAddress = config.getSettings().getLastValue(
-				SettingSpec.ADDRESS, InetAddress.class);
+		this.address = config.getSettings().getLastValue(
+				SettingSpec.ADDRESS, String.class);
 		this.backlog = config.getSettings().getLastValue(
 				SettingSpec.BACKLOG, NonnegativeInteger.class).intValue();
 		this.configuration = config;
@@ -76,8 +78,8 @@ public final class SocksServer {
 		return this.configuration;
 	}
 	
-	public InetAddress getInetAddress() {
-		return this.inetAddress;
+	public String getAddress() {
+		return this.address;
 	}
 	
 	public int getPort() {
@@ -98,10 +100,15 @@ public final class SocksServer {
 		}
 		this.serverSocket = new ServerSocket();
 		this.socketSettings.applyTo(this.serverSocket);
+		InetAddress inetAddress = InetAddress.getByName(this.address);
 		this.serverSocket.bind(
-				new InetSocketAddress(this.inetAddress, this.port), 
+				new InetSocketAddress(inetAddress, this.port), 
 				this.backlog);
-		this.inetAddress = this.serverSocket.getInetAddress();
+		InetAddress newInetAddress = this.serverSocket.getInetAddress();
+		String hostName = newInetAddress.getHostName();
+		String hostAddress = newInetAddress.getHostAddress();
+		this.address = (this.address.equals(hostAddress)) ? 
+				hostAddress : hostName;
 		this.executor = Executors.newSingleThreadExecutor();
 		this.executor.execute(new Listener(
 				this.serverSocket, this.configuration, this.logger));
@@ -117,8 +124,8 @@ public final class SocksServer {
 		this.serverSocket = null;
 		this.executor.shutdownNow();
 		this.executor = null;
-		this.inetAddress = this.configuration.getSettings().getLastValue(
-				SettingSpec.ADDRESS, InetAddress.class);
+		this.address = this.configuration.getSettings().getLastValue(
+				SettingSpec.ADDRESS, String.class);
 		this.started = false;
 		this.stopped = true;
 	}

@@ -1,8 +1,5 @@
 package jargyle.server;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-
 import org.ietf.jgss.GSSException;
 import org.ietf.jgss.Oid;
 
@@ -38,13 +35,7 @@ public enum SettingSpec implements HelpTextParams {
 
 		@Override
 		public Setting getDefaultSetting() {
-			InetAddress inetAddress = null;
-			try {
-				inetAddress = InetAddress.getByName(DEFAULT_ADDRESS);
-			} catch (UnknownHostException e) {
-				throw new AssertionError(e);
-			}
-			return new Setting(NAME, inetAddress);
+			return new Setting(NAME, DEFAULT_ADDRESS);
 		}
 
 		@Override
@@ -54,24 +45,18 @@ public enum SettingSpec implements HelpTextParams {
 
 		@Override
 		public Setting newSetting(final Object value) {
-			if (!(value instanceof InetAddress)) {
+			if (!(value instanceof String)) {
 				throw new ClassCastException(String.format(
 						"unable to cast %s to %s",
 						value.getClass().getName(),
-						InetAddress.class.getName()));
+						String.class.getName()));
 			}
 			return new Setting(NAME, value);
 		}
 
 		@Override
 		public Setting newSetting(final String value) {
-			InetAddress inetAddress = null;
-			try {
-				inetAddress = InetAddress.getByName(DEFAULT_ADDRESS);
-			} catch (UnknownHostException e) {
-				throw new IllegalArgumentException(e);
-			}
-			return newSetting(inetAddress);
+			return new Setting(NAME, value);
 		}
 		
 	},	

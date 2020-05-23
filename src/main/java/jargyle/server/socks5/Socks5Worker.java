@@ -274,25 +274,23 @@ public final class Socks5Worker implements Runnable {
 					SettingSpec.SOCKS5_ON_CONNECT_SERVER_SOCKET_SETTINGS, 
 					SocketSettings.class);
 			socketSettings.applyTo(serverSocket);
-			if (!System.getProperty("os.name").equals("Mac OS X")) {
-				Address bindAddress = this.settings.getLastValue(
-						SettingSpec.ADDRESS, Address.class);
-				InetAddress bindInetAddress = bindAddress.toInetAddress();
-				PortRanges portRanges = PortRanges.DEFAULT_INSTANCE;
-				int bindPort = portRanges.firstAvailableTcpPortAt(
-						bindInetAddress).intValue();
-				serverSocket.bind(new InetSocketAddress(
-						bindInetAddress, 
-						bindPort));
-				this.log(Level.INFO, String.format(
-						"Binding to %s. Connecting to %s", 
-						new InetSocketAddress(
-								bindInetAddress, 
-								bindPort),
-						new InetSocketAddress(
-								InetAddress.getByName(desiredDestinationAddress),
-								desiredDestinationPort)));				
-			}
+			Address bindAddress = this.settings.getLastValue(
+					SettingSpec.ADDRESS, Address.class);
+			InetAddress bindInetAddress = bindAddress.toInetAddress();
+			PortRanges portRanges = PortRanges.DEFAULT_INSTANCE;
+			int bindPort = portRanges.firstAvailableTcpPortAt(
+					bindInetAddress).intValue();
+			serverSocket.bind(new InetSocketAddress(
+					bindInetAddress, 
+					bindPort));
+			this.log(Level.INFO, String.format(
+					"Binding to %s. Connecting to %s", 
+					new InetSocketAddress(
+							bindInetAddress, 
+							bindPort),
+					new InetSocketAddress(
+							InetAddress.getByName(desiredDestinationAddress),
+							desiredDestinationPort)));
 			int connectTimeout = this.settings.getLastValue(
 					SettingSpec.SOCKS5_ON_CONNECT_SERVER_CONNECT_TIMEOUT, 
 					PositiveInteger.class).intValue();

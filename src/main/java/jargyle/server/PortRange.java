@@ -157,7 +157,16 @@ public final class PortRange {
 	}
 	
 	public Port firstAvailableTcpPortAt(final InetAddress bindAddr) {
+/*		
 		for (int i = this.minPort.intValue(); i <= this.maxPort.intValue(); i++) {
+			Port port = Port.newInstance(i);
+			if (port.isAvailableInTcpAt(bindAddr)) {
+				return port; 
+			}
+		}
+		return null;
+*/
+		for (int i = this.maxPort.intValue(); i >= this.minPort.intValue(); i--) {
 			Port port = Port.newInstance(i);
 			if (port.isAvailableInTcpAt(bindAddr)) {
 				return port; 
@@ -167,6 +176,7 @@ public final class PortRange {
 	}
 	
 	public Port firstAvailableUdpPortAt(final InetAddress bindAddr) {
+/*		
 		for (int i = this.minPort.intValue(); i <= this.maxPort.intValue(); i++) {
 			Port port = Port.newInstance(i);
 			if (port.isAvailableInUdpAt(bindAddr)) {
@@ -174,6 +184,14 @@ public final class PortRange {
 			}
 		}
 		return null;
+*/		
+		for (int i = this.maxPort.intValue(); i >= this.minPort.intValue(); i--) {
+			Port port = Port.newInstance(i);
+			if (port.isAvailableInUdpAt(bindAddr)) {
+				return port; 
+			}
+		}
+		return null;		
 	}
 	
 	public Port getMaxPort() {

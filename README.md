@@ -156,9 +156,6 @@ The following is a list of available settings for the SOCKS server (displayed wh
 
     SETTINGS:
     
-      address=ADDRESS
-          The address for the SOCKS server (default is 0.0.0.0)
-    
       backlog=INTEGER_BETWEEN_0_AND_2147483647
           The maximum length of the queue of incoming connections (default is 50)
     
@@ -188,6 +185,9 @@ The following is a list of available settings for the SOCKS server (displayed wh
     
       externalClient.socks5.gssapiServiceName=GSSAPI_SERVICE_NAME
           The GSS-API service name for the external SOCKS5 server for external connections
+    
+      host=HOST
+          The host name or address for the SOCKS server (default is 0.0.0.0)
     
       port=INTEGER_BETWEEN_1_AND_65535
           The port for the SOCKS server (default is 1080)

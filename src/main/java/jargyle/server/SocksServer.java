@@ -27,11 +27,11 @@ public final class SocksServer {
 			String message = "Error in starting SocksServer";
 			if (e instanceof BindException) {
 				message = String.format(
-						"Unable to listen on port %s at address %s", 
+						"Unable to listen on port %s at %s", 
 						configuration.getSettings().getLastValue(
 								SettingSpec.PORT, Port.class),
 						configuration.getSettings().getLastValue(
-								SettingSpec.ADDRESS, Address.class));
+								SettingSpec.HOST, Host.class));
 			}
 			LoggerHolder.LOGGER.log(
 					Level.SEVERE, 
@@ -40,15 +40,15 @@ public final class SocksServer {
 			System.exit(-1);
 		}
 		LoggerHolder.LOGGER.info(String.format(
-				"Listening on port %s at address %s", 
+				"Listening on port %s at %s", 
 				socksServer.getPort(),
-				socksServer.getAddress()));
+				socksServer.getHost()));
 	}
-
-	private final Address address;
+	
 	private final int backlog;
 	private final Configuration configuration;
 	private ExecutorService executor;
+	private final Host host;
 	private final Logger logger;
 	private final Port port;
 	private ServerSocket serverSocket;
@@ -57,12 +57,13 @@ public final class SocksServer {
 	private boolean stopped;
 	
 	public SocksServer(final Configuration config, final Logger lggr) {
-		this.address = config.getSettings().getLastValue(
-				SettingSpec.ADDRESS, Address.class);
+
 		this.backlog = config.getSettings().getLastValue(
 				SettingSpec.BACKLOG, NonnegativeInteger.class).intValue();
 		this.configuration = config;
 		this.executor = null;
+		this.host = config.getSettings().getLastValue(
+				SettingSpec.HOST, Host.class);
 		this.logger = lggr;
 		this.port = config.getSettings().getLastValue(
 				SettingSpec.PORT, Port.class);
@@ -77,8 +78,8 @@ public final class SocksServer {
 		return this.configuration;
 	}
 	
-	public Address getAddress() {
-		return this.address;
+	public Host getHost() {
+		return this.host;
 	}
 	
 	public Port getPort() {
@@ -100,7 +101,7 @@ public final class SocksServer {
 		this.serverSocket = new ServerSocket();
 		this.socketSettings.applyTo(this.serverSocket);
 		this.serverSocket.bind(new InetSocketAddress(
-				this.address.toInetAddress(), this.port.intValue()), 
+				this.host.toInetAddress(), this.port.intValue()), 
 				this.backlog);
 		this.executor = Executors.newSingleThreadExecutor();
 		this.executor.execute(new Listener(

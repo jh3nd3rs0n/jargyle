@@ -36,7 +36,7 @@ import jargyle.common.net.socks5.Version;
 import jargyle.common.net.socks5.gssapiauth.GssDatagramPacketFilter;
 import jargyle.common.net.socks5.gssapiauth.GssSocket;
 import jargyle.common.util.PositiveInteger;
-import jargyle.server.Address;
+import jargyle.server.Host;
 import jargyle.server.Configuration;
 import jargyle.server.Criteria;
 import jargyle.server.Criterion;
@@ -257,9 +257,9 @@ public final class Socks5Worker implements Runnable {
 					SettingSpec.SOCKS5_ON_CONNECT_SERVER_SOCKET_SETTINGS, 
 					SocketSettings.class);
 			socketSettings.applyTo(serverSocket);
-			Address bindAddress = this.settings.getLastValue(
-					SettingSpec.ADDRESS, Address.class);
-			InetAddress bindInetAddress = bindAddress.toInetAddress();
+			Host bindHost = this.settings.getLastValue(
+					SettingSpec.HOST, Host.class);
+			InetAddress bindInetAddress = bindHost.toInetAddress();
 			serverSocket.bind(new InetSocketAddress(bindInetAddress, 0));
 			int connectTimeout = this.settings.getLastValue(
 					SettingSpec.SOCKS5_ON_CONNECT_SERVER_CONNECT_TIMEOUT, 
@@ -325,9 +325,9 @@ public final class Socks5Worker implements Runnable {
 		Socks5Reply socks5Rep = null;
 		String desiredDestinationAddress = socks5Req.getDesiredDestinationAddress();
 		int desiredDestinationPort = socks5Req.getDesiredDestinationPort();
-		Address bindAddress = this.settings.getLastValue(
-				SettingSpec.ADDRESS, Address.class);
-		InetAddress bindInetAddress = bindAddress.toInetAddress();
+		Host bindHost = this.settings.getLastValue(
+				SettingSpec.HOST, Host.class);
+		InetAddress bindInetAddress = bindHost.toInetAddress();
 		DatagramSocket serverDatagramSock = null;
 		try {
 			DatagramSocketFactory datagramSocketFactory = 

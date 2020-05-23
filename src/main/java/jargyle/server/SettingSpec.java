@@ -18,62 +18,6 @@ import jargyle.common.util.PositiveInteger;
 
 public enum SettingSpec implements HelpTextParams {
 	
-	ADDRESS {
-
-		private static final String DEFAULT_ADDRESS = "0.0.0.0";
-		private static final String NAME = "address";
-		
-		@Override
-		public String getDoc() {
-			return String.format(
-					"The address for the SOCKS server (default is %s)", 
-					DEFAULT_ADDRESS);
-		}
-
-		@Override
-		public String getUsage() {
-			return String.format("%s=ADDRESS", NAME);
-		}
-
-		@Override
-		public Setting getDefaultSetting() {
-			Address address = null;
-			try {
-				address = Address.newInstance(DEFAULT_ADDRESS);
-			} catch (UnknownHostException e) {
-				throw new AssertionError(e);
-			}
-			return new Setting(NAME, address);
-		}
-
-		@Override
-		public String getName() {
-			return NAME;
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			if (!(value instanceof Address)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						Address.class.getName()));
-			}
-			return new Setting(NAME, value);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			Address address = null;
-			try {
-				address = Address.newInstance(value);
-			} catch (UnknownHostException e) {
-				throw new IllegalArgumentException(e);
-			}
-			return newSetting(address);
-		}
-		
-	},	
 	BACKLOG {
 
 		private static final int DEFAULT_INT_VALUE = 50;
@@ -123,7 +67,7 @@ public enum SettingSpec implements HelpTextParams {
 			return newSetting(NonnegativeInteger.newInstance(value));
 		}
 		
-	},
+	},	
 	CLIENT_SOCKET_SETTINGS {
 		
 		private static final String DOC = 
@@ -557,6 +501,62 @@ public enum SettingSpec implements HelpTextParams {
 		@Override
 		public Setting newSetting(final String value) {
 			return new Setting(NAME, value);
+		}
+		
+	},
+	HOST {
+
+		private static final String DEFAULT_HOST = "0.0.0.0";
+		private static final String NAME = "host";
+		
+		@Override
+		public Setting getDefaultSetting() {
+			Host host = null;
+			try {
+				host = Host.newInstance(DEFAULT_HOST);
+			} catch (UnknownHostException e) {
+				throw new AssertionError(e);
+			}
+			return new Setting(NAME, host);
+		}
+
+		@Override
+		public String getDoc() {
+			return String.format(
+					"The host name or address for the SOCKS server (default is %s)", 
+					DEFAULT_HOST);
+		}
+
+		@Override
+		public String getName() {
+			return NAME;
+		}
+
+		@Override
+		public String getUsage() {
+			return String.format("%s=HOST", NAME);
+		}
+
+		@Override
+		public Setting newSetting(final Object value) {
+			if (!(value instanceof Host)) {
+				throw new ClassCastException(String.format(
+						"unable to cast %s to %s",
+						value.getClass().getName(),
+						Host.class.getName()));
+			}
+			return new Setting(NAME, value);
+		}
+
+		@Override
+		public Setting newSetting(final String value) {
+			Host host = null;
+			try {
+				host = Host.newInstance(value);
+			} catch (UnknownHostException e) {
+				throw new IllegalArgumentException(e);
+			}
+			return newSetting(host);
 		}
 		
 	},

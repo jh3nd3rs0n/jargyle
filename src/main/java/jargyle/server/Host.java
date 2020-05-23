@@ -3,18 +3,17 @@ package jargyle.server;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-public final class Address {
+public final class Host {
 
-	public static Address newInstance(
-			final String s) throws UnknownHostException {
+	public static Host newInstance(final String s) throws UnknownHostException {
 		InetAddress inetAddress = InetAddress.getByName(s);
-		return new Address(inetAddress, s);
+		return new Host(inetAddress, s);
 	}
 	
 	private final InetAddress inetAddress;
 	private final String string;
 	
-	private Address(final InetAddress inetAddr, final String str) {
+	private Host(final InetAddress inetAddr, final String str) {
 		String hostName = inetAddr.getHostName();
 		String hostAddress = inetAddr.getHostAddress();
 		String s = (str.equals(hostName)) ? hostName : hostAddress;

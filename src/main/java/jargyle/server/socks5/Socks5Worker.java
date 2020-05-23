@@ -275,6 +275,7 @@ public final class Socks5Worker implements Runnable {
 					SettingSpec.SOCKS5_ON_CONNECT_SERVER_SOCKET_SETTINGS, 
 					SocketSettings.class);
 			socketSettings.applyTo(serverSocket);
+/*			
 			Address bindAddress = this.settings.getLastValue(
 					SettingSpec.ADDRESS, Address.class);
 			InetAddress bindInetAddress = bindAddress.toInetAddress();
@@ -283,6 +284,7 @@ public final class Socks5Worker implements Runnable {
 			serverSocket.bind(new InetSocketAddress(
 					bindInetAddress, 
 					bindPort));
+*/			
 			int connectTimeout = this.settings.getLastValue(
 					SettingSpec.SOCKS5_ON_CONNECT_SERVER_CONNECT_TIMEOUT, 
 					PositiveInteger.class).intValue();

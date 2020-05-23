@@ -275,16 +275,36 @@ public final class Socks5Worker implements Runnable {
 					SettingSpec.SOCKS5_ON_CONNECT_SERVER_SOCKET_SETTINGS, 
 					SocketSettings.class);
 			socketSettings.applyTo(serverSocket);
-/*			
 			Address bindAddress = this.settings.getLastValue(
 					SettingSpec.ADDRESS, Address.class);
 			InetAddress bindInetAddress = bindAddress.toInetAddress();
-			int bindPort = PortRange.DEFAULT_INSTANCE.firstAvailableTcpPortAt(
+			PortRanges portRanges = null;
+			// avoid having the destination port picked as an available port
+			// in OSX
+			if (desiredDestinationPort == Port.MIN_INT_VALUE) {
+				portRanges = PortRanges.newInstance(
+						PortRange.newInstance(
+								Port.newInstance(Port.MIN_INT_VALUE + 1), 
+								Port.newInstance(Port.MAX_INT_VALUE)));
+			} else if (desiredDestinationPort == Port.MAX_INT_VALUE) {
+				portRanges = PortRanges.newInstance(
+						PortRange.newInstance(
+								Port.newInstance(Port.MIN_INT_VALUE), 
+								Port.newInstance(Port.MAX_INT_VALUE - 1)));
+			} else {
+				portRanges = PortRanges.newInstance(
+						PortRange.newInstance(
+								Port.newInstance(Port.MIN_INT_VALUE), 
+								Port.newInstance(desiredDestinationPort - 1)), 
+						PortRange.newInstance(
+								Port.newInstance(desiredDestinationPort + 1), 
+								Port.newInstance(Port.MAX_INT_VALUE)));
+			}
+			int bindPort = portRanges.firstAvailableTcpPortAt(
 					bindInetAddress).intValue();
 			serverSocket.bind(new InetSocketAddress(
 					bindInetAddress, 
 					bindPort));
-*/			
 			int connectTimeout = this.settings.getLastValue(
 					SettingSpec.SOCKS5_ON_CONNECT_SERVER_CONNECT_TIMEOUT, 
 					PositiveInteger.class).intValue();

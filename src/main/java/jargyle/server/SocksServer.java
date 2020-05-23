@@ -2,7 +2,6 @@ package jargyle.server;
 
 import java.io.IOException;
 import java.net.BindException;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.util.concurrent.ExecutorService;
@@ -32,7 +31,7 @@ public final class SocksServer {
 						configuration.getSettings().getLastValue(
 								SettingSpec.PORT, Port.class),
 						configuration.getSettings().getLastValue(
-								SettingSpec.ADDRESS, String.class));
+								SettingSpec.ADDRESS, Address.class));
 			}
 			LoggerHolder.LOGGER.log(
 					Level.SEVERE, 
@@ -46,12 +45,12 @@ public final class SocksServer {
 				socksServer.getAddress()));
 	}
 
-	private String address;
+	private final Address address;
 	private final int backlog;
 	private final Configuration configuration;
 	private ExecutorService executor;
 	private final Logger logger;
-	private final int port;
+	private final Port port;
 	private ServerSocket serverSocket;
 	private final SocketSettings socketSettings;
 	private boolean started;
@@ -59,14 +58,14 @@ public final class SocksServer {
 	
 	public SocksServer(final Configuration config, final Logger lggr) {
 		this.address = config.getSettings().getLastValue(
-				SettingSpec.ADDRESS, String.class);
+				SettingSpec.ADDRESS, Address.class);
 		this.backlog = config.getSettings().getLastValue(
 				SettingSpec.BACKLOG, NonnegativeInteger.class).intValue();
 		this.configuration = config;
 		this.executor = null;
 		this.logger = lggr;
 		this.port = config.getSettings().getLastValue(
-				SettingSpec.PORT, Port.class).intValue();
+				SettingSpec.PORT, Port.class);
 		this.serverSocket = null;
 		this.socketSettings = config.getSettings().getLastValue(
 				SettingSpec.SOCKET_SETTINGS, SocketSettings.class);
@@ -78,11 +77,11 @@ public final class SocksServer {
 		return this.configuration;
 	}
 	
-	public String getAddress() {
+	public Address getAddress() {
 		return this.address;
 	}
 	
-	public int getPort() {
+	public Port getPort() {
 		return this.port;
 	}
 	
@@ -100,15 +99,9 @@ public final class SocksServer {
 		}
 		this.serverSocket = new ServerSocket();
 		this.socketSettings.applyTo(this.serverSocket);
-		InetAddress inetAddress = InetAddress.getByName(this.address);
-		this.serverSocket.bind(
-				new InetSocketAddress(inetAddress, this.port), 
+		this.serverSocket.bind(new InetSocketAddress(
+				this.address.toInetAddress(), this.port.intValue()), 
 				this.backlog);
-		InetAddress newInetAddress = this.serverSocket.getInetAddress();
-		String hostName = newInetAddress.getHostName();
-		String hostAddress = newInetAddress.getHostAddress();
-		this.address = (this.address.equals(hostAddress)) ? 
-				hostAddress : hostName;
 		this.executor = Executors.newSingleThreadExecutor();
 		this.executor.execute(new Listener(
 				this.serverSocket, this.configuration, this.logger));
@@ -124,8 +117,6 @@ public final class SocksServer {
 		this.serverSocket = null;
 		this.executor.shutdownNow();
 		this.executor = null;
-		this.address = this.configuration.getSettings().getLastValue(
-				SettingSpec.ADDRESS, String.class);
 		this.started = false;
 		this.stopped = true;
 	}

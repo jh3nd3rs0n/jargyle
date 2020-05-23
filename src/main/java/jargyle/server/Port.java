@@ -5,6 +5,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
+import java.net.SocketException;
 
 public final class Port implements Comparable<Port> {
 
@@ -80,26 +81,37 @@ public final class Port implements Comparable<Port> {
 		return this.intValue;
 	}
 	
-	public boolean isAvailableAt(final InetAddress bindAddr) {
+	public boolean isAvailableInTcpAt(final InetAddress bindAddr) {
 		ServerSocket serverSocket = null;
-		DatagramSocket datagramSocket = null;
 		try {
-			serverSocket = new ServerSocket(this.intValue, 0, bindAddr);
-			serverSocket.setReuseAddress(true);
-			datagramSocket = new DatagramSocket(new InetSocketAddress(
-					bindAddr, this.intValue));
-			datagramSocket.setReuseAddress(true);
+			serverSocket = new ServerSocket();
+			// setReuseAddress(false) is required only on OSX, 
+	        // otherwise the code will not work correctly on that platform 
+			serverSocket.setReuseAddress(false);
+			serverSocket.bind(new InetSocketAddress(bindAddr, this.intValue));
 			return true;
 		} catch (IOException e) {
 		} finally {
-			if (datagramSocket != null) {
-				datagramSocket.close();
-			}
 			if (serverSocket != null) {
 				try {
 					serverSocket.close();
 				} catch (IOException e) {
 				}
+			}
+		}
+		return false;
+	}
+	
+	public boolean isAvailableInUdpAt(final InetAddress bindAddr) {
+		DatagramSocket datagramSocket = null;
+		try {
+			datagramSocket = new DatagramSocket(new InetSocketAddress(
+					bindAddr, this.intValue));
+			return true;
+		} catch (SocketException e) {
+		} finally {
+			if (datagramSocket != null) {
+				datagramSocket.close();
 			}
 		}
 		return false;

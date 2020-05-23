@@ -36,6 +36,7 @@ import jargyle.common.net.socks5.Version;
 import jargyle.common.net.socks5.gssapiauth.GssDatagramPacketFilter;
 import jargyle.common.net.socks5.gssapiauth.GssSocket;
 import jargyle.common.util.PositiveInteger;
+import jargyle.server.Address;
 import jargyle.server.Configuration;
 import jargyle.server.Criteria;
 import jargyle.server.Criterion;
@@ -274,10 +275,10 @@ public final class Socks5Worker implements Runnable {
 					SettingSpec.SOCKS5_ON_CONNECT_SERVER_SOCKET_SETTINGS, 
 					SocketSettings.class);
 			socketSettings.applyTo(serverSocket);
-			String bindAddress = this.settings.getLastValue(
-					SettingSpec.ADDRESS, String.class);
-			InetAddress bindInetAddress = InetAddress.getByName(bindAddress);
-			int bindPort = PortRange.DEFAULT_INSTANCE.firstAvailablePortAt(
+			Address bindAddress = this.settings.getLastValue(
+					SettingSpec.ADDRESS, Address.class);
+			InetAddress bindInetAddress = bindAddress.toInetAddress();
+			int bindPort = PortRange.DEFAULT_INSTANCE.firstAvailableTcpPortAt(
 					bindInetAddress).intValue();
 			serverSocket.bind(new InetSocketAddress(
 					bindInetAddress, 
@@ -346,13 +347,13 @@ public final class Socks5Worker implements Runnable {
 		Socks5Reply socks5Rep = null;
 		String desiredDestinationAddress = socks5Req.getDesiredDestinationAddress();
 		int desiredDestinationPort = socks5Req.getDesiredDestinationPort();
-		String bindAddress = this.settings.getLastValue(
-				SettingSpec.ADDRESS, String.class);
-		InetAddress bindInetAddress = InetAddress.getByName(bindAddress);
+		Address bindAddress = this.settings.getLastValue(
+				SettingSpec.ADDRESS, Address.class);
+		InetAddress bindInetAddress = bindAddress.toInetAddress();
 		PortRanges serverPortRanges = this.settings.getLastValue(
 				SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_SERVER_PORT_RANGES, 
 				PortRanges.class);
-		Port serverPort = serverPortRanges.firstAvailablePortAt(bindInetAddress);
+		Port serverPort = serverPortRanges.firstAvailableUdpPortAt(bindInetAddress);
 		if (serverPort == null) {
 			this.log(
 					Level.WARNING, 
@@ -391,7 +392,7 @@ public final class Socks5Worker implements Runnable {
 		PortRanges clientPortRanges = this.settings.getLastValue(
 				SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_CLIENT_PORT_RANGES, 
 				PortRanges.class);
-		Port clientPort = clientPortRanges.firstAvailablePortAt(bindInetAddress);
+		Port clientPort = clientPortRanges.firstAvailableUdpPortAt(bindInetAddress);
 		if (clientPort == null) {
 			this.log(
 					Level.WARNING, 

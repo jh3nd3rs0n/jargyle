@@ -12,7 +12,7 @@ public enum CriterionOperator {
 	EQUALS("equals") {
 
 		@Override
-		public boolean evaluate(
+		public boolean evaluatesTrue(
 				final String operand1, final String operand2) {
 			return operand1.equals(operand2);
 		}
@@ -23,7 +23,7 @@ public enum CriterionOperator {
 	MATCHES("matches") {
 
 		@Override
-		public boolean evaluate(
+		public boolean evaluatesTrue(
 				final String operand1, final String operand2) {
 			return operand1.matches(operand2);
 		}
@@ -36,7 +36,7 @@ public enum CriterionOperator {
 		this.string = str;
 	}
 	
-	public abstract boolean evaluate(
+	public abstract boolean evaluatesTrue(
 			final String operand1, final String operand2);
 	
 	public Criterion newCriterion(final String operand2) {

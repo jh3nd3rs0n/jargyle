@@ -83,16 +83,24 @@ public final class PortRanges {
 		return false;
 	}
 	
-	public Port firstAvailablePortAt(final InetAddress bindAddr) {
-		Port port = null;
+	public Port firstAvailableTcpPortAt(final InetAddress bindAddr) {
 		for (PortRange portRange : this.portRanges) {
-			Port prt = portRange.firstAvailablePortAt(bindAddr);
-			if (prt != null) {
-				port = prt;
-				break; 
+			Port port = portRange.firstAvailableTcpPortAt(bindAddr);
+			if (port != null) {
+				return port; 
 			} 
 		}
-		return port;
+		return null;
+	}
+	
+	public Port firstAvailableUdpPortAt(final InetAddress bindAddr) {
+		for (PortRange portRange : this.portRanges) {
+			Port port = portRange.firstAvailableUdpPortAt(bindAddr);
+			if (port != null) {
+				return port; 
+			} 
+		}
+		return null;
 	}
 	
 	public List<PortRange> toList() {

@@ -80,8 +80,8 @@ public final class Criterion {
 		this.operand = op;
 	}
 	
-	public boolean evaluate(final String op) {
-		return this.criterionOperator.evaluate(op, this.operand);
+	public boolean evaluatesTrue(final String op) {
+		return this.criterionOperator.evaluatesTrue(op, this.operand);
 	}
 	
 	public CriterionOperator getCriterionOperator() {

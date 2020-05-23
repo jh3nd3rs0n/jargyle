@@ -75,12 +75,12 @@ public final class Socks5RequestCriterion {
 		this.desiredDestinationPortRanges = desiredDestinationPrtRange;
 	}
 
-	public boolean evaluate(final Socks5Request socks5Req) {
-		if (!this.getCommandCriterion().evaluate(
+	public boolean evaluatesTrue(final Socks5Request socks5Req) {
+		if (!this.getCommandCriterion().evaluatesTrue(
 				socks5Req.getCommand().toString())) {
 			return false;
 		}
-		if (!this.getDesiredDestinationAddressCriterion().evaluate(
+		if (!this.getDesiredDestinationAddressCriterion().evaluatesTrue(
 				socks5Req.getDesiredDestinationAddress())) {
 			return false;
 		}

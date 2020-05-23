@@ -70,7 +70,7 @@ public final class Criteria {
 	
 	public Criterion anyEvaluatesTrue(final String str) {
 		for (Criterion criterion : this.criteria) {
-			if (criterion.evaluate(str)) {
+			if (criterion.evaluatesTrue(str)) {
 				return criterion;
 			}
 		}

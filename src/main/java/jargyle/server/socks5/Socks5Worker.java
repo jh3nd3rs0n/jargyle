@@ -41,8 +41,6 @@ import jargyle.server.Configuration;
 import jargyle.server.Criteria;
 import jargyle.server.Criterion;
 import jargyle.server.CriterionOperator;
-import jargyle.server.Port;
-import jargyle.server.PortRanges;
 import jargyle.server.SettingSpec;
 import jargyle.server.Settings;
 import jargyle.server.SocksClients;
@@ -80,21 +78,6 @@ public final class Socks5Worker implements Runnable {
 		String desiredDestinationAddress = 
 				socks5Req.getDesiredDestinationAddress();
 		int desiredDestinationPort = socks5Req.getDesiredDestinationPort();
-		PortRanges listenPortRanges = this.settings.getLastValue(
-				SettingSpec.SOCKS5_ON_BIND_LISTEN_PORT_RANGES, 
-				PortRanges.class);
-		if (!listenPortRanges.contains(Port.newInstance(desiredDestinationPort))) {
-			this.log(
-					Level.WARNING, 
-					"Invalid port for the listen socket");
-			socks5Rep = Socks5Reply.newErrorInstance(
-					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			this.log(
-					Level.FINE, 
-					String.format("Sending: %s", socks5Rep.toString()));
-			this.writeThenFlush(socks5Rep.toByteArray());
-			return;
-		}
 		ServerSocketFactory serverSocketFactory = 
 				ServerSocketFactory.newInstance(this.socksClient);
 		ServerSocket listenSocket = serverSocketFactory.newServerSocket();
@@ -277,17 +260,7 @@ public final class Socks5Worker implements Runnable {
 			Address bindAddress = this.settings.getLastValue(
 					SettingSpec.ADDRESS, Address.class);
 			InetAddress bindInetAddress = bindAddress.toInetAddress();
-			serverSocket.bind(new InetSocketAddress(
-					bindInetAddress, 
-					0));
-			this.log(Level.INFO, String.format(
-					"Binding to %s. Connecting to %s", 
-					new InetSocketAddress(
-							bindInetAddress, 
-							0),
-					new InetSocketAddress(
-							InetAddress.getByName(desiredDestinationAddress),
-							desiredDestinationPort)));
+			serverSocket.bind(new InetSocketAddress(bindInetAddress, 0));
 			int connectTimeout = this.settings.getLastValue(
 					SettingSpec.SOCKS5_ON_CONNECT_SERVER_CONNECT_TIMEOUT, 
 					PositiveInteger.class).intValue();
@@ -295,10 +268,6 @@ public final class Socks5Worker implements Runnable {
 					InetAddress.getByName(desiredDestinationAddress),
 					desiredDestinationPort),
 					connectTimeout);
-			this.log(Level.INFO, String.format(
-					"Bound to %s. Connected to %s", 
-					serverSocket.getLocalSocketAddress(),
-					serverSocket.getRemoteSocketAddress()));
 		} catch (UnknownHostException e) {
 			this.log(
 					Level.WARNING, 
@@ -359,28 +328,12 @@ public final class Socks5Worker implements Runnable {
 		Address bindAddress = this.settings.getLastValue(
 				SettingSpec.ADDRESS, Address.class);
 		InetAddress bindInetAddress = bindAddress.toInetAddress();
-		PortRanges serverPortRanges = this.settings.getLastValue(
-				SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_SERVER_PORT_RANGES, 
-				PortRanges.class);
-		Port serverPort = serverPortRanges.firstAvailableUdpPortAt(bindInetAddress);
-		if (serverPort == null) {
-			this.log(
-					Level.WARNING, 
-					"Unable to find available port for the server-facing UDP socket");
-			socks5Rep = Socks5Reply.newErrorInstance(
-					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			this.log(
-					Level.FINE, 
-					String.format("Sending %s", socks5Rep.toString()));
-			this.writeThenFlush(socks5Rep.toByteArray());
-			return;
-		}
 		DatagramSocket serverDatagramSock = null;
 		try {
 			DatagramSocketFactory datagramSocketFactory = 
 					DatagramSocketFactory.newInstance(this.socksClient);
 			serverDatagramSock = datagramSocketFactory.newDatagramSocket(
-					new InetSocketAddress(bindInetAddress, serverPort.intValue()));
+					new InetSocketAddress(bindInetAddress, 0));
 			SocketSettings socketSettings = this.settings.getLastValue(
 					SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_SERVER_SOCKET_SETTINGS, 
 					SocketSettings.class);
@@ -398,25 +351,6 @@ public final class Socks5Worker implements Runnable {
 			this.writeThenFlush(socks5Rep.toByteArray());
 			return;
 		}
-		PortRanges clientPortRanges = this.settings.getLastValue(
-				SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_CLIENT_PORT_RANGES, 
-				PortRanges.class);
-		Port clientPort = clientPortRanges.firstAvailableUdpPortAt(bindInetAddress);
-		if (clientPort == null) {
-			this.log(
-					Level.WARNING, 
-					"Unable to find available port for the client-facing UDP socket");
-			socks5Rep = Socks5Reply.newErrorInstance(
-					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			this.log(
-					Level.FINE, 
-					String.format("Sending %s", socks5Rep.toString()));
-			this.writeThenFlush(socks5Rep.toByteArray());
-			if (!serverDatagramSock.isClosed()) {
-				serverDatagramSock.close();
-			}
-			return;
-		}
 		DatagramSocket clientDatagramSock = null;
 		try {
 			if (this.clientSocket instanceof GssSocket) {
@@ -427,8 +361,7 @@ public final class Socks5Worker implements Runnable {
 								gssSocket.getMessageProp());
 				clientDatagramSock = new FilterDatagramSocket(
 						datagramPacketFilter,
-						new InetSocketAddress(
-								bindInetAddress, clientPort.intValue()));
+						new InetSocketAddress(bindInetAddress, 0));
 			} else if (!this.clientSocket.getClass().equals(Socket.class)) {
 				throw new AssertionError(String.format(
 						"unhandled %s: %s", 
@@ -436,7 +369,7 @@ public final class Socks5Worker implements Runnable {
 						this.clientSocket.getClass().getSimpleName()));
 			} else {
 				clientDatagramSock = new DatagramSocket(new InetSocketAddress(
-						bindInetAddress, clientPort.intValue()));
+						bindInetAddress, 0));
 			}
 			SocketSettings socketSettings = this.settings.getLastValue(
 					SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_CLIENT_SOCKET_SETTINGS, 

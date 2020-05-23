@@ -1,6 +1,5 @@
 package jargyle.server;
 
-import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -81,46 +80,6 @@ public final class PortRanges {
 			}
 		}
 		return false;
-	}
-	
-	public Port firstAvailableTcpPortAt(final InetAddress bindAddr) {
-/*		
-		for (PortRange portRange : this.portRanges) {
-			Port port = portRange.firstAvailableTcpPortAt(bindAddr);
-			if (port != null) {
-				return port; 
-			} 
-		}
-		return null;
-*/
-		for (int i = this.portRanges.size() - 1; i >= 0; i--) {
-			PortRange portRange = this.portRanges.get(i);
-			Port port = portRange.firstAvailableTcpPortAt(bindAddr);
-			if (port != null) {
-				return port; 
-			} 
-		}
-		return null;
-	}
-	
-	public Port firstAvailableUdpPortAt(final InetAddress bindAddr) {
-/*		
-		for (PortRange portRange : this.portRanges) {
-			Port port = portRange.firstAvailableUdpPortAt(bindAddr);
-			if (port != null) {
-				return port; 
-			} 
-		}
-		return null;
-*/		
-		for (int i = this.portRanges.size() - 1; i >= 0; i--) {
-			PortRange portRange = this.portRanges.get(i);
-			Port port = portRange.firstAvailableUdpPortAt(bindAddr);
-			if (port != null) {
-				return port; 
-			} 
-		}
-		return null;
 	}
 	
 	public List<PortRange> toList() {

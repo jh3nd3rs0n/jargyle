@@ -847,50 +847,6 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
-	SOCKS5_ON_BIND_LISTEN_PORT_RANGES {
-
-		private static final String NAME = "socks5.onBind.listenPortRanges";
-		
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(NAME, PortRanges.DEFAULT_INSTANCE);
-		}
-
-		@Override
-		public String getDoc() {
-			return String.format(
-					"The space separated list of acceptable port ranges for "
-					+ "the listen socket (default is %s)", 
-					PortRanges.DEFAULT_INSTANCE);
-		}
-
-		@Override
-		public String getName() {
-			return NAME;
-		}
-
-		@Override
-		public String getUsage() {
-			return String.format("%1$s=%2$s1[ %2$s2[...]]", NAME, "PORT_RANGE");
-		}
-
-		@Override
-		public Setting newSetting(Object value) {
-			if (!(value instanceof PortRanges)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						PortRanges.class.getName()));
-			}
-			return new Setting(NAME, value);
-		}
-
-		@Override
-		public Setting newSetting(String value) {
-			return newSetting(PortRanges.newInstance(value));
-		}
-		
-	},	
 	SOCKS5_ON_BIND_LISTEN_SOCKET_SETTINGS {
 		
 		private static final String DOC = 
@@ -1237,51 +1193,6 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
-	SOCKS5_ON_UDP_ASSOCIATE_CLIENT_PORT_RANGES {
-
-		private static final String NAME = 
-				"socks5.onUdpAssociate.clientPortRanges";
-		
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(NAME, PortRanges.DEFAULT_INSTANCE);
-		}
-
-		@Override
-		public String getDoc() {
-			return String.format(
-					"The space separated list of acceptable port ranges for "
-					+ "the client-facing UDP socket (default is %s)", 
-					PortRanges.DEFAULT_INSTANCE);
-		}
-
-		@Override
-		public String getName() {
-			return NAME;
-		}
-
-		@Override
-		public String getUsage() {
-			return String.format("%1$s=%2$s1[ %2$s2[...]]", NAME, "PORT_RANGE");
-		}
-
-		@Override
-		public Setting newSetting(Object value) {
-			if (!(value instanceof PortRanges)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						PortRanges.class.getName()));
-			}
-			return new Setting(NAME, value);
-		}
-
-		@Override
-		public Setting newSetting(String value) {
-			return newSetting(PortRanges.newInstance(value));
-		}
-		
-	},
 	SOCKS5_ON_UDP_ASSOCIATE_CLIENT_SOCKET_SETTINGS {
 		
 		private static final String DOC = 
@@ -1428,51 +1339,6 @@ public enum SettingSpec implements HelpTextParams {
 		@Override
 		public Setting newSetting(final String value) {
 			return newSetting(PositiveInteger.newInstance(value));
-		}
-		
-	},
-	SOCKS5_ON_UDP_ASSOCIATE_SERVER_PORT_RANGES {
-
-		private static final String NAME = 
-				"socks5.onUdpAssociate.serverPortRanges";
-		
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(NAME, PortRanges.DEFAULT_INSTANCE);
-		}
-
-		@Override
-		public String getDoc() {
-			return String.format(
-					"The space separated list of acceptable port ranges for "
-					+ "the server-facing UDP socket (default is %s)", 
-					PortRanges.DEFAULT_INSTANCE);
-		}
-
-		@Override
-		public String getName() {
-			return NAME;
-		}
-
-		@Override
-		public String getUsage() {
-			return String.format("%1$s=%2$s1[ %2$s2[...]]", NAME, "PORT_RANGE");
-		}
-
-		@Override
-		public Setting newSetting(Object value) {
-			if (!(value instanceof PortRanges)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						PortRanges.class.getName()));
-			}
-			return new Setting(NAME, value);
-		}
-
-		@Override
-		public Setting newSetting(String value) {
-			return newSetting(PortRanges.newInstance(value));
 		}
 		
 	},

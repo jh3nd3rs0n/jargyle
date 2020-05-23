@@ -1,12 +1,5 @@
 package jargyle.server;
 
-import java.io.IOException;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.ServerSocket;
-import java.net.SocketException;
-
 public final class Port implements Comparable<Port> {
 
 	public static final int MAX_INT_VALUE = 0xffff;
@@ -81,42 +74,6 @@ public final class Port implements Comparable<Port> {
 		return this.intValue;
 	}
 	
-	public boolean isAvailableInTcpAt(final InetAddress bindAddr) {
-		ServerSocket serverSocket = null;
-		try {
-			serverSocket = new ServerSocket();
-			// setReuseAddress(false) is required only on OSX, 
-	        // otherwise the code will not work correctly on that platform 
-			serverSocket.setReuseAddress(false);
-			serverSocket.bind(new InetSocketAddress(bindAddr, this.intValue));
-			return true;
-		} catch (IOException e) {
-		} finally {
-			if (serverSocket != null) {
-				try {
-					serverSocket.close();
-				} catch (IOException e) {
-				}
-			}
-		}
-		return false;
-	}
-	
-	public boolean isAvailableInUdpAt(final InetAddress bindAddr) {
-		DatagramSocket datagramSocket = null;
-		try {
-			datagramSocket = new DatagramSocket(new InetSocketAddress(
-					bindAddr, this.intValue));
-			return true;
-		} catch (SocketException e) {
-		} finally {
-			if (datagramSocket != null) {
-				datagramSocket.close();
-			}
-		}
-		return false;
-	}
-
 	public String toString() {
 		return Integer.toString(this.intValue);
 	}

@@ -207,9 +207,6 @@ The following is a list of available settings for the SOCKS server (displayed wh
       socks5.onBind.incomingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
           The space separated list of socket settings for the incoming socket
     
-      socks5.onBind.listenPortRanges=PORT_RANGE1[ PORT_RANGE2[...]]
-          The space separated list of acceptable port ranges for the listen socket (default is 1-65535)
-    
       socks5.onBind.listenSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
           The space separated list of socket settings for the listen socket
     
@@ -231,9 +228,6 @@ The following is a list of available settings for the SOCKS server (displayed wh
       socks5.onConnect.serverSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
           The space separated list of socket settings for the server-facing socket
     
-      socks5.onUdpAssociate.clientPortRanges=PORT_RANGE1[ PORT_RANGE2[...]]
-          The space separated list of acceptable port ranges for the client-facing UDP socket (default is 1-65535)
-    
       socks5.onUdpAssociate.clientSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
           The space separated list of socket settings for the client-facing UDP socket
     
@@ -242,9 +236,6 @@ The following is a list of available settings for the SOCKS server (displayed wh
     
       socks5.onUdpAssociate.relayTimeout=INTEGER_BETWEEN_1_AND_2147483647
           The timeout in milliseconds on relaying no data (default is 60000)
-    
-      socks5.onUdpAssociate.serverPortRanges=PORT_RANGE1[ PORT_RANGE2[...]]
-          The space separated list of acceptable port ranges for the server-facing UDP socket (default is 1-65535)
     
       socks5.onUdpAssociate.serverSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
           The space separated list of socket settings for the server-facing UDP socket

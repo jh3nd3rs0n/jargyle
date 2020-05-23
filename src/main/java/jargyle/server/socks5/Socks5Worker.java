@@ -277,17 +277,14 @@ public final class Socks5Worker implements Runnable {
 			Address bindAddress = this.settings.getLastValue(
 					SettingSpec.ADDRESS, Address.class);
 			InetAddress bindInetAddress = bindAddress.toInetAddress();
-			PortRanges portRanges = PortRanges.DEFAULT_INSTANCE;
-			int bindPort = portRanges.firstAvailableTcpPortAt(
-					bindInetAddress).intValue();
 			serverSocket.bind(new InetSocketAddress(
 					bindInetAddress, 
-					bindPort));
+					0));
 			this.log(Level.INFO, String.format(
 					"Binding to %s. Connecting to %s", 
 					new InetSocketAddress(
 							bindInetAddress, 
-							bindPort),
+							0),
 					new InetSocketAddress(
 							InetAddress.getByName(desiredDestinationAddress),
 							desiredDestinationPort)));

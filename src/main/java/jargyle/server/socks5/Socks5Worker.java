@@ -42,7 +42,6 @@ import jargyle.server.Criteria;
 import jargyle.server.Criterion;
 import jargyle.server.CriterionOperator;
 import jargyle.server.Port;
-import jargyle.server.PortRange;
 import jargyle.server.PortRanges;
 import jargyle.server.SettingSpec;
 import jargyle.server.Settings;
@@ -275,23 +274,25 @@ public final class Socks5Worker implements Runnable {
 					SettingSpec.SOCKS5_ON_CONNECT_SERVER_SOCKET_SETTINGS, 
 					SocketSettings.class);
 			socketSettings.applyTo(serverSocket);
-			Address bindAddress = this.settings.getLastValue(
-					SettingSpec.ADDRESS, Address.class);
-			InetAddress bindInetAddress = bindAddress.toInetAddress();
-			PortRanges portRanges = PortRanges.DEFAULT_INSTANCE;
-			int bindPort = portRanges.firstAvailableTcpPortAt(
-					bindInetAddress).intValue();
-			serverSocket.bind(new InetSocketAddress(
-					bindInetAddress, 
-					bindPort));
-			this.log(Level.INFO, String.format( // debugging purposes for OS X
-					"Binding to %s. Connecting to %s", 
-					new InetSocketAddress(
-							bindInetAddress, 
-							bindPort),
-					new InetSocketAddress(
-							InetAddress.getByName(desiredDestinationAddress),
-							desiredDestinationPort)));
+			if (!System.getProperty("os.name").equals("Mac OS X")) {
+				Address bindAddress = this.settings.getLastValue(
+						SettingSpec.ADDRESS, Address.class);
+				InetAddress bindInetAddress = bindAddress.toInetAddress();
+				PortRanges portRanges = PortRanges.DEFAULT_INSTANCE;
+				int bindPort = portRanges.firstAvailableTcpPortAt(
+						bindInetAddress).intValue();
+				serverSocket.bind(new InetSocketAddress(
+						bindInetAddress, 
+						bindPort));
+				this.log(Level.INFO, String.format(
+						"Binding to %s. Connecting to %s", 
+						new InetSocketAddress(
+								bindInetAddress, 
+								bindPort),
+						new InetSocketAddress(
+								InetAddress.getByName(desiredDestinationAddress),
+								desiredDestinationPort)));				
+			}
 			int connectTimeout = this.settings.getLastValue(
 					SettingSpec.SOCKS5_ON_CONNECT_SERVER_CONNECT_TIMEOUT, 
 					PositiveInteger.class).intValue();
@@ -299,6 +300,10 @@ public final class Socks5Worker implements Runnable {
 					InetAddress.getByName(desiredDestinationAddress),
 					desiredDestinationPort),
 					connectTimeout);
+			this.log(Level.INFO, String.format(
+					"Bound to %s. Connected to %s", 
+					serverSocket.getLocalSocketAddress(),
+					serverSocket.getRemoteSocketAddress()));
 		} catch (UnknownHostException e) {
 			this.log(
 					Level.WARNING, 

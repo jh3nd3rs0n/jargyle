@@ -74,11 +74,6 @@ public final class SocksClients {
 			if (bindHost != null) {
 				builder.bindHost(bindHost);
 			}
-			Port bindPort = settings.getLastValue(
-					SettingSpec.EXTERNAL_CLIENT_BIND_PORT, Port.class);
-			if (bindPort != null) {
-				builder.bindPort(bindPort.intValue());
-			}
 			int connectTimeout = settings.getLastValue(
 					SettingSpec.EXTERNAL_CLIENT_CONNECT_TIMEOUT, 
 					PositiveInteger.class).intValue();

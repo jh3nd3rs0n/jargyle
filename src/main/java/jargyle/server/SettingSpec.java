@@ -122,9 +122,9 @@ public enum SettingSpec implements HelpTextParams {
 		@Override
 		public String getDoc() {
 			return String.format(
-					"The binding host or address for the socket to connect to "
-					+ "the external SOCKS server for external connections "
-					+ "(default is %s)", 
+					"The binding host name or address for the socket to "
+					+ "connect to the external SOCKS server for external "
+					+ "connections (default is %s)", 
 					SocksClient.DEFAULT_BIND_HOST);
 		}
 
@@ -157,57 +157,6 @@ public enum SettingSpec implements HelpTextParams {
 		@Override
 		public Setting newSetting(final String value) {
 			return new Setting(NAME, value);
-		}
-		
-	},
-	EXTERNAL_CLIENT_BIND_PORT {
-		
-		private static final int DEFAULT_INT_VALUE = 
-				SocksClient.DEFAULT_BIND_PORT;
-		private static final String NAME = "externalClient.bindPort";
-		
-		@Override
-		public String getDoc() {
-			return String.format(
-					"The binding port for the socket to connect to the "
-					+ "external SOCKS server for external connections "
-					+ "(default is %s)", 
-					DEFAULT_INT_VALUE);
-		}
-
-		@Override
-		public String getUsage() {
-			return String.format(
-					"%s=INTEGER_BETWEEN_%s_AND_%s", 
-					NAME, 
-					SocksClient.MIN_BIND_PORT, 
-					SocksClient.MAX_BIND_PORT);
-		}
-
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(NAME, Port.newInstance(DEFAULT_INT_VALUE));
-		}
-
-		@Override
-		public String getName() {
-			return NAME;
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			if (!(value instanceof Port)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						Port.class.getName()));
-			}
-			return new Setting(NAME, value);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return newSetting(Port.newInstance(value));
 		}
 		
 	},

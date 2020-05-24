@@ -155,11 +155,8 @@ The following is a list of available settings for the SOCKS server (displayed wh
           The space separated list of socket settings for the client socket
     
       externalClient.bindHost=HOST
-          The binding host or address for the socket to connect to the external SOCKS server for external connections (default is 0.0.0.0)
+          The binding host name or address for the socket to connect to the external SOCKS server for external connections (default is 0.0.0.0)
     
-      externalClient.bindPort=INTEGER_BETWEEN_0_AND_65535
-          The binding port for the socket to connect to the external SOCKS server for external connections (default is 0)
-        
       externalClient.connectTimeout=INTEGER_BETWEEN_1_AND_2147483647
           The timeout in milliseconds on waiting for the socket to connect to the external SOCKS server for external connections (default is 60000)
     
@@ -187,7 +184,7 @@ The following is a list of available settings for the SOCKS server (displayed wh
       host=HOST
           The host name or address for the SOCKS server (default is 0.0.0.0)
     
-      port=INTEGER_BETWEEN_1_AND_65535
+      port=INTEGER_BETWEEN_0_AND_65535
           The port for the SOCKS server (default is 1080)
     
       socketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]

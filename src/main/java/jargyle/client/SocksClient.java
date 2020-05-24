@@ -65,27 +65,7 @@ public abstract class SocksClient {
 			String bindHostProperty = System.getProperty(
 					"socksClient.bindHost");
 			if (bindHostProperty != null) {
-				if (bindHostProperty != null && bindHostProperty.isEmpty()) {
-					throw new IllegalArgumentException(
-							"bind host must not be empty");
-				}
 				this.bindHost(bindHostProperty);
-			}
-			String bindPortProperty = System.getProperty(
-					"socksClient.bindPort");
-			if (bindPortProperty != null) {
-				String message = String.format(
-						"bind port must be an integer between "
-						+ "%s and %s (inclusive)", 
-						MIN_BIND_PORT,
-						MAX_BIND_PORT);
-				int bindPrt = -1;
-				try {
-					bindPrt = Integer.parseInt(bindPortProperty);
-				} catch (NumberFormatException e) {
-					throw new IllegalArgumentException(message, e);
-				}
-				this.bindPort(bindPrt);
 			}
 			String connectTimeoutProperty = System.getProperty(
 					"socksClient.connectTimeout");

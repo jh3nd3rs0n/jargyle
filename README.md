@@ -46,7 +46,7 @@ Jargyle is a hobby project and is currently subject to breaking changes. Jargyle
     
 - [3. 7. 3. Using GSS-API Authentication](#3-7-3-using-gss-api-authentication)
 
-- [3. 8. With External Connections Set to Another SOCKS Server](#3-8-with-external-connections-set-to-another-socks-server)
+- [3. 8. With External Connections Set through Another SOCKS Server](#3-8-with-external-connections-set-through-another-socks-server)
 
 - [3. 8. 1. Using SOCKS5 Authentication](#3-8-1-using-socks5-authentication)
 
@@ -873,10 +873,9 @@ The Java system property `-Djava.security.krb5.conf=krb5.conf` provides the Kerb
 
 In `krb5.conf`, a KDC is defined as running at the address `127.0.0.1` on port `12345` with its realm as `EXAMPLE.COM`. (In a production environment, the address `127.0.0.1` should be replaced by the actual address or name of the machine of where the KDC resides. Also, in a production environment, the realm `EXAMPLE.COM` should be replaced by an actual realm provided by a Kerberos administrator.)  
 
-### 3. 8. With External Connections Set to Another SOCKS Server
+### 3. 8. With External Connections Set through Another SOCKS Server
 
-You can have Jargyle's external connections set to another SOCKS server. To have its external connections set to another SOCKS server, you will need to specify the other SOCKS server as a URI in the setting `externalClient.externalServerUri`
-
+You can have Jargyle's external connections set through another SOCKS server. To have its external connections set through another SOCKS server, you will need to specify the other SOCKS server as a URI in the setting `externalClient.externalServerUri`
 
 Partial command line example:
 

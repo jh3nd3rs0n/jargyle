@@ -103,6 +103,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			address = this.remoteInetAddress.getHostAddress();
 			port = this.remotePort;
 		}
+		this.socks5Client.bind(this.socket);
 		this.socks5Client.connectToSocksServerWith(this.socket);
 		Socket sock = this.socks5Client.authenticate(this.socket);
 		InputStream inputStream = sock.getInputStream();

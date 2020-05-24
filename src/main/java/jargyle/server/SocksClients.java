@@ -69,6 +69,16 @@ public final class SocksClients {
 			return null;
 		} else {
 			builder = socksServerUri.newSocksClientBuilder();
+			String bindHost = settings.getLastValue(
+					SettingSpec.EXTERNAL_CLIENT_BIND_HOST, String.class);
+			if (bindHost != null) {
+				builder.bindHost(bindHost);
+			}
+			Port bindPort = settings.getLastValue(
+					SettingSpec.EXTERNAL_CLIENT_BIND_PORT, Port.class);
+			if (bindPort != null) {
+				builder.bindPort(bindPort.intValue());
+			}
 			int connectTimeout = settings.getLastValue(
 					SettingSpec.EXTERNAL_CLIENT_CONNECT_TIMEOUT, 
 					PositiveInteger.class).intValue();

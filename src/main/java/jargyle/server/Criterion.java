@@ -75,13 +75,13 @@ public final class Criterion {
 	private final CriterionOperator criterionOperator;
 	private final String operand;
 	
-	Criterion(final CriterionOperator operator, final String op) {
+	Criterion(final CriterionOperator operator, final String oprnd) {
 		this.criterionOperator = operator;
-		this.operand = op;
+		this.operand = oprnd;
 	}
 	
-	public boolean evaluatesTrue(final String op) {
-		return this.criterionOperator.evaluatesTrue(op, this.operand);
+	public boolean evaluatesTrue(final String oprnd) {
+		return this.criterionOperator.evaluatesTrue(oprnd, this.operand);
 	}
 	
 	public CriterionOperator getCriterionOperator() {

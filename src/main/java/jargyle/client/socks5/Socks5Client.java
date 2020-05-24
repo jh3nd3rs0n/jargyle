@@ -46,6 +46,18 @@ public final class Socks5Client extends SocksClient {
 		}
 		
 		@Override
+		public Builder bindHost(final String s) {
+			super.bindHost(s);
+			return this;
+		}
+		
+		@Override
+		public Builder bindPort(final int i) {
+			super.bindPort(i);
+			return this;
+		}
+		
+		@Override
 		public Socks5Client build() {
 			return new Socks5Client(this);
 		}

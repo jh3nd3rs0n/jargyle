@@ -11,6 +11,8 @@ public abstract class SocksClient {
 
 	public static abstract class Builder {
 		
+		private String bindHost;
+		private int bindPort;
 		private int connectTimeout;
 		private SocketSettings socketSettings;
 		private final SocksServerUri socksServerUri;
@@ -20,9 +22,32 @@ public abstract class SocksClient {
 				throw new NullPointerException(
 						"SOCKS server URI must not be null");
 			}
+			this.bindHost = DEFAULT_BIND_HOST;
+			this.bindPort = DEFAULT_BIND_PORT;
 			this.connectTimeout = DEFAULT_CONNECT_TIMEOUT;
 			this.socketSettings = DEFAULT_SOCKET_SETTINGS;
 			this.socksServerUri = serverUri;
+		}
+		
+		public Builder bindHost(final String s) {
+			if (s != null && s.isEmpty()) {
+				throw new IllegalArgumentException(
+						"bind host must not be empty");
+			}
+			this.bindHost = s;
+			return this;
+		}
+		
+		public Builder bindPort(final int i) {
+			if (i < MIN_BIND_PORT || i > MAX_BIND_PORT) {
+				throw new IllegalArgumentException(String.format(
+						"bind port must be an integer between %s and %s "
+						+ "(inclusive).", 
+						MIN_BIND_PORT,
+						MAX_BIND_PORT));
+			}
+			this.bindPort = i;
+			return this;
 		}
 		
 		public abstract SocksClient build();
@@ -37,6 +62,31 @@ public abstract class SocksClient {
 		}
 		
 		public Builder fromSystemProperties() {
+			String bindHostProperty = System.getProperty(
+					"socksClient.bindHost");
+			if (bindHostProperty != null) {
+				if (bindHostProperty != null && bindHostProperty.isEmpty()) {
+					throw new IllegalArgumentException(
+							"bind host must not be empty");
+				}
+				this.bindHost(bindHostProperty);
+			}
+			String bindPortProperty = System.getProperty(
+					"socksClient.bindPort");
+			if (bindPortProperty != null) {
+				String message = String.format(
+						"bind port must be an integer between "
+						+ "%s and %s (inclusive)", 
+						MIN_BIND_PORT,
+						MAX_BIND_PORT);
+				int bindPrt = -1;
+				try {
+					bindPrt = Integer.parseInt(bindPortProperty);
+				} catch (NumberFormatException e) {
+					throw new IllegalArgumentException(message, e);
+				}
+				this.bindPort(bindPrt);
+			}
 			String connectTimeoutProperty = System.getProperty(
 					"socksClient.connectTimeout");
 			if (connectTimeoutProperty != null) {
@@ -45,20 +95,20 @@ public abstract class SocksClient {
 						+ "%s and %s (inclusive)", 
 						0,
 						Integer.MAX_VALUE);
-				int connectTimeout = -1;
+				int connectTmt = -1;
 				try {
-					connectTimeout = Integer.parseInt(connectTimeoutProperty);
+					connectTmt = Integer.parseInt(connectTimeoutProperty);
 				} catch (NumberFormatException e) {
 					throw new IllegalArgumentException(message, e);
 				}
-				this.connectTimeout(connectTimeout);
+				this.connectTimeout(connectTmt);
 			}
 			String socketSettingsProperty = System.getProperty(
 					"socksClient.socketSettings");
 			if (socketSettingsProperty != null) {
-				SocketSettings socketSettings = SocketSettings.newInstance(
+				SocketSettings socketSttngs = SocketSettings.newInstance(
 						socketSettingsProperty);
-				this.socketSettings(socketSettings);
+				this.socketSettings(socketSttngs);
 			}
 			return this;
 		}
@@ -70,9 +120,13 @@ public abstract class SocksClient {
 
 	}
 	
+	public static final String DEFAULT_BIND_HOST = "0.0.0.0";
+	public static final int DEFAULT_BIND_PORT = 0;
 	public static final int DEFAULT_CONNECT_TIMEOUT = 60000; // 1 minute
 	public static final SocketSettings DEFAULT_SOCKET_SETTINGS = 
 			SocketSettings.newInstance();
+	public static final int MAX_BIND_PORT = 0xffff;
+	public static final int MIN_BIND_PORT = 0;
 
 	public static SocksClient newInstance() {
 		SocksServerUri socksServerUri = SocksServerUri.newInstance();
@@ -85,21 +139,35 @@ public abstract class SocksClient {
 		return socksClient;
 	}
 	
+	private final String bindHost;
+	private final int bindPort;
 	private final int connectTimeout;
 	private final SocketSettings socketSettings;
 	private final SocksServerUri socksServerUri;
 	
 	protected SocksClient(final Builder builder) {
+		String bindHst = builder.bindHost;
+		int bindPrt = builder.bindPort;
 		int connectTmt = builder.connectTimeout;
 		SocketSettings socketSttngs = builder.socketSettings;
+		if (bindHst == null) {
+			bindHst = DEFAULT_BIND_HOST;
+		}
 		if (socketSttngs == null) {
 			socketSttngs = DEFAULT_SOCKET_SETTINGS;
 		}
 		socketSttngs = SocketSettings.newInstance(socketSttngs);
 		SocksServerUri serverUri = builder.socksServerUri;
+		this.bindHost = bindHst;
+		this.bindPort = bindPrt;
 		this.connectTimeout = connectTmt;
 		this.socketSettings = socketSttngs;
 		this.socksServerUri = serverUri;
+	}
+	
+	public final void bind(final Socket socket) throws IOException {
+		socket.bind(new InetSocketAddress(
+				InetAddress.getByName(this.bindHost), this.bindPort));
 	}
 	
 	public final void connectToSocksServerWith(
@@ -115,6 +183,14 @@ public abstract class SocksClient {
 		socket.connect(new InetSocketAddress(
 				inetAddress, socksServerUri.getPort()), 
 				timeout);
+	}
+	
+	public final String getBindHost() {
+		return this.bindHost;
+	}
+	
+	public final int getBindPort() {
+		return this.bindPort;
 	}
 	
 	public final int getConnectTimeout() {

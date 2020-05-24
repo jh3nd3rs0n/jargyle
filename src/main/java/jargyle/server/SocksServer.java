@@ -50,14 +50,13 @@ public final class SocksServer {
 	private ExecutorService executor;
 	private final Host host;
 	private final Logger logger;
-	private final Port port;
+	private Port port;
 	private ServerSocket serverSocket;
 	private final SocketSettings socketSettings;
 	private boolean started;
 	private boolean stopped;
 	
 	public SocksServer(final Configuration config, final Logger lggr) {
-
 		this.backlog = config.getSettings().getLastValue(
 				SettingSpec.BACKLOG, NonnegativeInteger.class).intValue();
 		this.configuration = config;
@@ -101,8 +100,8 @@ public final class SocksServer {
 		this.serverSocket = new ServerSocket();
 		this.socketSettings.applyTo(this.serverSocket);
 		this.serverSocket.bind(new InetSocketAddress(
-				this.host.toInetAddress(), this.port.intValue()), 
-				this.backlog);
+				this.host.toInetAddress(), this.port.intValue()), this.backlog);
+		this.port = Port.newInstance(this.serverSocket.getLocalPort());
 		this.executor = Executors.newSingleThreadExecutor();
 		this.executor.execute(new Listener(
 				this.serverSocket, this.configuration, this.logger));
@@ -114,6 +113,8 @@ public final class SocksServer {
 		if (this.stopped) {
 			throw new IllegalStateException("SocksServer already stopped");
 		}
+		this.port = this.configuration.getSettings().getLastValue(
+				SettingSpec.PORT, Port.class);		
 		this.serverSocket.close();
 		this.serverSocket = null;
 		this.executor.shutdownNow();

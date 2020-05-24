@@ -3,7 +3,7 @@ package jargyle.server;
 public final class Port implements Comparable<Port> {
 
 	public static final int MAX_INT_VALUE = 0xffff;
-	public static final int MIN_INT_VALUE = 1;
+	public static final int MIN_INT_VALUE = 0;
 	
 	public static Port newInstance(final int i) {
 		if (i < MIN_INT_VALUE || i > MAX_INT_VALUE) {

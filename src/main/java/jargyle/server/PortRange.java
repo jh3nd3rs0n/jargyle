@@ -17,6 +17,8 @@ public final class PortRange {
 		protected int minPort;
 		@XmlAttribute(name = "maxPort", required = true)
 		protected int maxPort;
+		@XmlAttribute(name = "comment")
+		protected String comment;
 	}
 	
 	static final class PortRangeXmlAdapter 
@@ -25,6 +27,7 @@ public final class PortRange {
 		@Override
 		public PortRangeXml marshal(final PortRange arg) throws Exception {
 			PortRangeXml portRangeXml = new PortRangeXml();
+			portRangeXml.comment = arg.comment;
 			portRangeXml.minPort = arg.minPort.intValue();
 			portRangeXml.maxPort = arg.maxPort.intValue();
 			return portRangeXml;
@@ -32,9 +35,10 @@ public final class PortRange {
 
 		@Override
 		public PortRange unmarshal(final PortRangeXml arg) throws Exception {
-			return newInstance(
-					Port.newInstance(arg.minPort), 
-					Port.newInstance(arg.maxPort));
+			return new PortRange(
+					Port.newInstance(arg.minPort),
+					Port.newInstance(arg.maxPort), 
+					arg.comment);
 		}
 		
 	}
@@ -48,13 +52,7 @@ public final class PortRange {
 	}
 	
 	public static PortRange newInstance(final Port minPrt, final Port maxPrt) {
-		if (minPrt.compareTo(maxPrt) > 0) {
-			throw new IllegalArgumentException(String.format(
-					"minimum port (%s) must not be greater than maximum port (%s)", 
-					minPrt,
-					maxPrt));
-		}
-		return new PortRange(minPrt, maxPrt);
+		return new PortRange(minPrt, maxPrt, null);
 	}
 	
 	public static PortRange newInstance(final String s) {
@@ -113,10 +111,19 @@ public final class PortRange {
 		return newInstance(minPrt, maxPrt);
 	}
 	
+	private final String comment;
 	private final Port minPort;
 	private final Port maxPort;
 	
-	private PortRange(final Port minPrt, final Port maxPrt) {
+	private PortRange(
+			final Port minPrt, final Port maxPrt, final String cmmnt) {
+		if (minPrt.compareTo(maxPrt) > 0) {
+			throw new IllegalArgumentException(String.format(
+					"minimum port (%s) must not be greater than maximum port (%s)", 
+					minPrt,
+					maxPrt));
+		}
+		this.comment = cmmnt;
 		this.minPort = minPrt;
 		this.maxPort = maxPrt;
 	}

@@ -48,17 +48,11 @@ public final class UsernamePassword {
 		
 	}
 	
-	private static UsernamePassword instance;
-	
 	public static final int MAX_PASSWORD_LENGTH = 
 			UsernamePasswordRequest.MAX_PASSWD_LENGTH;
 
 	public static final int MAX_USERNAME_LENGTH = 
 			UsernamePasswordRequest.MAX_UNAME_LENGTH;
-	
-	public static UsernamePassword getInstance() {
-		return instance;
-	}
 	
 	public static UsernamePassword newInstance(final String s) {
 		String[] sElements = s.split(":");
@@ -88,10 +82,6 @@ public final class UsernamePassword {
 		validatePassword(password);
 		return new UsernamePassword(
 				username, EncryptedPassword.newInstance(password));
-	}
-	
-	public static void setInstance(final UsernamePassword usernamePassword) {
-		instance = usernamePassword;
 	}
 	
 	public static void validatePassword(final char[] password) {

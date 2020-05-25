@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
@@ -21,6 +22,8 @@ public final class PortRanges {
 	static class PortRangesXml {
 		@XmlElement(name = "portRange", required = true)
 		protected List<PortRange> portRanges = new ArrayList<PortRange>();
+		@XmlAttribute(name = "comment")
+		protected String comment;		
 	}
 	
 	static final class PortRangesXmlAdapter 
@@ -30,6 +33,7 @@ public final class PortRanges {
 		public PortRangesXml marshal(final PortRanges v) throws Exception {
 			if (v == null) { return null; } 
 			PortRangesXml portRangesXml = new PortRangesXml();
+			portRangesXml.comment = v.comment;
 			portRangesXml.portRanges = new ArrayList<PortRange>(v.portRanges);
 			return portRangesXml;
 		}
@@ -37,20 +41,20 @@ public final class PortRanges {
 		@Override
 		public PortRanges unmarshal(final PortRangesXml v) throws Exception {
 			if (v == null) { return null; } 
-			return new PortRanges(v.portRanges);
+			return new PortRanges(v.portRanges, v.comment);
 		}
 		
 	}
 	
 	public static final PortRanges DEFAULT_INSTANCE = new PortRanges(
-			Arrays.asList(PortRange.DEFAULT_INSTANCE));
+			Arrays.asList(PortRange.DEFAULT_INSTANCE), null);
 	
 	public static PortRanges newInstance(
 			final PortRange prtRange, final List<PortRange> prtRanges) {
 		List<PortRange> list = new ArrayList<PortRange>();
 		list.add(prtRange);
 		list.addAll(prtRanges);
-		return new PortRanges(list);
+		return new PortRanges(list, null);
 	}
 	
 	public static PortRanges newInstance(
@@ -64,12 +68,14 @@ public final class PortRanges {
 		for (String sElement : sElements) {
 			prtRanges.add(PortRange.newInstance(sElement));
 		}
-		return new PortRanges(prtRanges);
+		return new PortRanges(prtRanges, null);
 	}
 	
+	private final String comment;
 	private final List<PortRange> portRanges;
 	
-	private PortRanges(final List<PortRange> prtRanges) {
+	private PortRanges(final List<PortRange> prtRanges, final String cmmnt) {
+		this.comment = cmmnt;
 		this.portRanges = new ArrayList<PortRange>(prtRanges);
 	}
 

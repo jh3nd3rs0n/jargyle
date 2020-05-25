@@ -64,7 +64,9 @@ final class AesCbcPkcs5PaddingEncryptedPassword extends EncryptedPassword {
 		public AesCbcPkcs5PaddingEncryptedPassword unmarshal(
 				final AesCbcPkcs5PaddingEncryptedPasswordXml arg) throws Exception {
 			return new AesCbcPkcs5PaddingEncryptedPassword(
-					arg.encodedKey, arg.encrypted, arg.initializationVector);
+					arg.encodedKey, 
+					arg.encrypted, 
+					arg.initializationVector);
 		}
 
 	}
@@ -136,7 +138,9 @@ final class AesCbcPkcs5PaddingEncryptedPassword extends EncryptedPassword {
 			throw new AssertionError(e);
 		}
 		return new AesCbcPkcs5PaddingEncryptedPassword(
-				secretKey.getEncoded(), encrypted, ivParameterSpec.getIV());
+				secretKey.getEncoded(), 
+				encrypted, 
+				ivParameterSpec.getIV());
 	}
 
 	private final byte[] encodedKey;
@@ -144,12 +148,27 @@ final class AesCbcPkcs5PaddingEncryptedPassword extends EncryptedPassword {
 	private final byte[] initializationVector;
 
 	private AesCbcPkcs5PaddingEncryptedPassword(
-			final byte[] key, final byte[] enc, final byte[] iv) {
+			final byte[] key, 
+			final byte[] enc, 
+			final byte[] iv) {
 		this.encodedKey = Arrays.copyOf(key, key.length);
 		this.encrypted = Arrays.copyOf(enc, enc.length);
 		this.initializationVector = Arrays.copyOf(iv, iv.length);
 	}
-
+	
+	public byte[] getEncodedKey() {
+		return Arrays.copyOf(this.encodedKey, this.encodedKey.length);
+	}
+	
+	public byte[] getEncrypted() {
+		return Arrays.copyOf(this.encrypted, this.encrypted.length);
+	}
+	
+	public byte[] getInitializationVector() {
+		return Arrays.copyOf(
+				this.initializationVector, this.initializationVector.length);
+	}
+	
 	@Override
 	public char[] getPassword() {
 		Cipher cipher = null;

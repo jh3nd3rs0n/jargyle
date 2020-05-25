@@ -17,6 +17,8 @@ public final class Setting {
 		protected String name;
 		@XmlAttribute(name = "value", required = true)
 		protected String value;
+		@XmlAttribute(name = "comment")
+		protected String comment;		
 	}
 	
 	static final class SettingXmlAdapter 
@@ -25,6 +27,7 @@ public final class Setting {
 		@Override
 		public SettingXml marshal(final Setting v) throws Exception {
 			SettingXml settingXml = new SettingXml();
+			settingXml.comment = v.comment;
 			settingXml.name = v.getName();
 			settingXml.value = v.getValue().toString();
 			return settingXml;
@@ -32,7 +35,7 @@ public final class Setting {
 
 		@Override
 		public Setting unmarshal(final SettingXml v) throws Exception {
-			return newInstance(v.name, v.value);
+			return newInstance(v.name, v.value, v.comment);
 		}
 		
 	}
@@ -52,10 +55,22 @@ public final class Setting {
 		return SettingSpec.getInstance(name).newSetting(value);
 	}
 	
+	private static Setting newInstance(
+			final String name, final String value, final String comment) {
+		Setting setting = newInstance(name, value);
+		return new Setting(setting.getName(), setting.getValue(), comment);
+	}
+	
+	private final String comment;
 	private final String name;
 	private final Object value;
 	
 	Setting(final String n, final Object val) {
+		this(n, val, null);
+	}
+	
+	private Setting(final String n, final Object val, final String cmmnt) {
+		this.comment = cmmnt;
 		this.name = n;
 		this.value = val;
 	}

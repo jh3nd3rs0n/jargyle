@@ -21,6 +21,9 @@ public final class Criterion {
 		protected CriterionOperator operator;
 		@XmlAttribute(name = "operand", required = true)
 		protected String operand;
+		@XmlAttribute(name = "comment")
+		protected String comment;
+
 	}
 	
 	static final class CriterionXmlAdapter 
@@ -28,7 +31,9 @@ public final class Criterion {
 
 		@Override
 		public CriterionXml marshal(final Criterion arg) throws Exception {
+			if (arg == null) { return null; }
 			CriterionXml criterionXml = new CriterionXml();
+			criterionXml.comment = arg.comment;
 			criterionXml.operator = arg.criterionOperator;
 			criterionXml.operand = arg.operand;
 			return criterionXml;
@@ -36,7 +41,8 @@ public final class Criterion {
 
 		@Override
 		public Criterion unmarshal(final CriterionXml arg) throws Exception {
-			return arg.operator.newCriterion(arg.operand);
+			if (arg == null) { return null; }
+			return new Criterion(arg.operator, arg.operand, arg.comment);
 		}
 		
 	}
@@ -72,13 +78,22 @@ public final class Criterion {
 		throw new IllegalArgumentException(message);
 	}
 	
+	private final String comment;
 	private final CriterionOperator criterionOperator;
 	private final String operand;
 	
-	Criterion(final CriterionOperator operator, final String oprnd) {
+	Criterion(final CriterionOperator operator,	final String oprnd) {
+		this(operator, oprnd, null);
+	}
+	
+	private Criterion(
+			final CriterionOperator operator,
+			final String oprnd, 
+			final String cmmnt) {
+		this.comment = cmmnt;
 		this.criterionOperator = operator;
 		this.operand = oprnd;
-	}
+	} 
 	
 	public boolean evaluatesTrue(final String oprnd) {
 		return this.criterionOperator.evaluatesTrue(oprnd, this.operand);

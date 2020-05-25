@@ -2,6 +2,7 @@ package jargyle.server.socks5;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
@@ -25,6 +26,8 @@ public final class Socks5RequestCriterion {
 		protected Criterion desiredDestinationAddressCriterion;
 		@XmlElement(name = "desiredDestinationPortRanges")
 		protected PortRanges desiredDestinationPortRanges;
+		@XmlAttribute(name = "comment")
+		protected String comment;		
 	}
 	
 	static final class Socks5RequestCriterionXmlAdapter 
@@ -36,6 +39,7 @@ public final class Socks5RequestCriterion {
 			Socks5RequestCriterionXml socks5RequestCriterionXml = 
 					new Socks5RequestCriterionXml();
 			socks5RequestCriterionXml.commandCriterion = arg.commandCriterion;
+			socks5RequestCriterionXml.comment = arg.comment;
 			socks5RequestCriterionXml.desiredDestinationAddressCriterion = 
 					arg.desiredDestinationAddressCriterion;
 			socks5RequestCriterionXml.desiredDestinationPortRanges = 
@@ -47,9 +51,10 @@ public final class Socks5RequestCriterion {
 		public Socks5RequestCriterion unmarshal(
 				final Socks5RequestCriterionXml arg) throws Exception {
 			return new Socks5RequestCriterion(
-					arg.commandCriterion, 
+					arg.commandCriterion,
 					arg.desiredDestinationAddressCriterion, 
-					arg.desiredDestinationPortRanges);
+					arg.desiredDestinationPortRanges, 
+					arg.comment);
 		}
 		
 	}
@@ -62,6 +67,7 @@ public final class Socks5RequestCriterion {
 			PortRanges.DEFAULT_INSTANCE;
 	
 	private final Criterion commandCriterion;
+	private final String comment;
 	private final Criterion desiredDestinationAddressCriterion;
 	private final PortRanges desiredDestinationPortRanges;
 	
@@ -69,12 +75,25 @@ public final class Socks5RequestCriterion {
 			final Criterion cmdCriterion, 
 			final Criterion desiredDestinationAddrCriterion,
 			final PortRanges desiredDestinationPrtRange) {
+		this(
+				cmdCriterion, 
+				desiredDestinationAddrCriterion, 
+				desiredDestinationPrtRange, 
+				null);
+	}
+
+	private Socks5RequestCriterion(
+			final Criterion cmdCriterion,
+			final Criterion desiredDestinationAddrCriterion,
+			final PortRanges desiredDestinationPrtRange,
+			final String cmmnt) {
 		this.commandCriterion = cmdCriterion;
+		this.comment = cmmnt;		
 		this.desiredDestinationAddressCriterion = 
 				desiredDestinationAddrCriterion;
 		this.desiredDestinationPortRanges = desiredDestinationPrtRange;
 	}
-
+	
 	public boolean evaluatesTrue(final Socks5Request socks5Req) {
 		if (!this.getCommandCriterion().evaluatesTrue(
 				socks5Req.getCommand().toString())) {

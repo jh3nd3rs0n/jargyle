@@ -281,7 +281,7 @@ final class SocksServerCli {
 					params.getBlockedIncomingUdpAddressCriteria()));
 		}		
 		if (!params.getBlockedSocks5RequestCriteria().isEmpty()) {
-			builder.allowedSocks5RequestCriteria(new Socks5RequestCriteria(
+			builder.blockedSocks5RequestCriteria(new Socks5RequestCriteria(
 					params.getBlockedSocks5RequestCriteria()));
 		}
 		if (params.getExternalClientSocks5UsernamePassword() != null) {

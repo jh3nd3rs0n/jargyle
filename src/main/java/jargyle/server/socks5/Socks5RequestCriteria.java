@@ -52,12 +52,13 @@ public final class Socks5RequestCriteria {
 	public static final Socks5RequestCriteria EMPTY_INSTANCE = 
 			new Socks5RequestCriteria(Collections.emptyList());
 	
-	private List<Socks5RequestCriterion> socks5RequestCriteria;
+	private final List<Socks5RequestCriterion> socks5RequestCriteria;
 	
 	public Socks5RequestCriteria(
 			final List<Socks5RequestCriterion> socks5ReqCriteria) {
 		this.socks5RequestCriteria = new ArrayList<Socks5RequestCriterion>(
 				socks5ReqCriteria);
+
 	}
 	
 	public Socks5RequestCriteria(

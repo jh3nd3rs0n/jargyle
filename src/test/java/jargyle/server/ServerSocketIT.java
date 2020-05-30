@@ -23,7 +23,6 @@ import javax.net.SocketFactory;
 import org.junit.Test;
 
 import jargyle.client.SocksClient;
-import jargyle.server.SocksServer;
 
 public class ServerSocketIT {
 

@@ -4,8 +4,6 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import jargyle.server.socks5.HashedPassword;
-
 public class HashedPasswordTest {
 
 	@Test

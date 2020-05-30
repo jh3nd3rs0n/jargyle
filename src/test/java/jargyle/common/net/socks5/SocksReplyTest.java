@@ -4,10 +4,6 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import jargyle.common.net.socks5.AddressType;
-import jargyle.common.net.socks5.Reply;
-import jargyle.common.net.socks5.Socks5Reply;
-
 public class SocksReplyTest {
 
 	@Test

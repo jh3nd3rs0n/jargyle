@@ -20,7 +20,6 @@ import org.junit.Test;
 
 import jargyle.client.SocketFactory;
 import jargyle.client.SocksClient;
-import jargyle.server.SocksServer;
 
 public class SocketIT {
 

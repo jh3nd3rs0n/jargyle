@@ -4,9 +4,6 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import jargyle.common.net.socks5.Method;
-import jargyle.common.net.socks5.ServerMethodSelectionMessage;
-
 public class ServerMethodSelectionMessageTest {
 
 	@Test

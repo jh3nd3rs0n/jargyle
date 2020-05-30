@@ -4,9 +4,6 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import jargyle.common.net.socks5.gssapiauth.Message;
-import jargyle.common.net.socks5.gssapiauth.MessageType;
-
 public class MessageTest {
 
 	@Test

@@ -2,9 +2,6 @@ package jargyle.server;
 
 import jargyle.common.net.socks5.AuthMethod;
 import jargyle.common.net.socks5.AuthMethods;
-import jargyle.server.ImmutableConfiguration;
-import jargyle.server.SettingSpec;
-import jargyle.server.Settings;
 import jargyle.server.socks5.StringSourceUsernamePasswordAuthenticator;
 
 public final class Configurations {

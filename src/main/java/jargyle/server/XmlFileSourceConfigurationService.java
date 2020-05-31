@@ -3,17 +3,12 @@ package jargyle.server;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.helpers.DefaultValidationEventHandler;
 
 public final class XmlFileSourceConfigurationService 
 	implements ConfigurationService {
@@ -68,7 +63,8 @@ public final class XmlFileSourceConfigurationService
 		private boolean updateFrom(final File file) {
 			Configuration config = null;
 			try {
-				config = newConfiguration(file);
+				config = ImmutableConfiguration.newInstanceFrom(
+						new FileInputStream(file));
 			} catch (FileNotFoundException e) {
 				this.configurationService.logger.log(
 						Level.WARNING, 
@@ -76,7 +72,7 @@ public final class XmlFileSourceConfigurationService
 								"File '%s' not found", 
 								file), 
 						e);
-				return false;				
+				return false;
 			} catch (JAXBException e) {
 				this.configurationService.logger.log(
 						Level.WARNING, 
@@ -90,42 +86,6 @@ public final class XmlFileSourceConfigurationService
 			return true;
 		}
 		
-	}
-	
-	private static Configuration newConfiguration(
-			final File file) throws FileNotFoundException, JAXBException {
-		InputStream in = new FileInputStream(file);
-		Configuration configuration = null;
-		try {
-			JAXBContext jaxbContext = null;
-			try {
-				jaxbContext = JAXBContext.newInstance(
-						ImmutableConfiguration.ConfigurationXml.class);
-			} catch (JAXBException e) {
-				throw new AssertionError(e);
-			}
-			Unmarshaller unmarshaller = null;
-			try {
-				unmarshaller = jaxbContext.createUnmarshaller();
-			} catch (JAXBException e) {
-				throw new AssertionError(e);
-			}
-			try {
-				unmarshaller.setEventHandler(new DefaultValidationEventHandler());
-			} catch (JAXBException e) {
-				throw new AssertionError(e);
-			}
-			ImmutableConfiguration.ConfigurationXml configurationXml =
-					(ImmutableConfiguration.ConfigurationXml) unmarshaller.unmarshal(in);
-			configuration = ImmutableConfiguration.newInstance(configurationXml);
-		} finally {
-			try {
-				in.close();
-			} catch (IOException e) {
-				throw new AssertionError(e);
-			}
-		}
-		return configuration;
 	}
 	
 	private Configuration configuration;
@@ -150,7 +110,8 @@ public final class XmlFileSourceConfigurationService
 		}
 		Configuration config = null;
 		try {
-			config = newConfiguration(file);
+			config = ImmutableConfiguration.newInstanceFrom(
+					new FileInputStream(file));
 		} catch (FileNotFoundException e) {
 			throw new IllegalArgumentException(String.format(
 					"file '%s' does not exist", file));

@@ -11,14 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.SchemaOutputResolver;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.helpers.DefaultValidationEventHandler;
-import javax.xml.transform.Result;
-import javax.xml.transform.stream.StreamResult;
 
 import argmatey.ArgMatey.ArgsParser;
 import argmatey.ArgMatey.Options;
@@ -171,11 +164,9 @@ final class UsersCli {
 			out = new FileOutputStream(tempFile);
 		}
 		try {
-			JAXBContext jaxbContext = JAXBContext.newInstance(
-					Users.UsersXml.class);
-			Marshaller marshaller = jaxbContext.createMarshaller();
-			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-			marshaller.marshal(users.toUsersXml(), out);
+			byte[] xml = users.toXml();
+			out.write(xml);
+			out.flush();
 		} finally {
 			if (out instanceof FileOutputStream) {
 				out.close();
@@ -200,19 +191,15 @@ final class UsersCli {
 			File file = new File(arg);
 			in = new FileInputStream(file);
 		}
-		Users.UsersXml usersXml = null;
+		Users users = null;
 		try {
-			JAXBContext jaxbContext = JAXBContext.newInstance(
-					Users.UsersXml.class);
-			Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-			unmarshaller.setEventHandler(new DefaultValidationEventHandler());
-			usersXml = (Users.UsersXml) unmarshaller.unmarshal(in);
+			users = Users.newInstanceFrom(in);
 		} finally {
 			if (in instanceof FileInputStream) {
 				in.close();
 			}
 		}
-		return Users.newInstance(usersXml);
+		return users;
 	}
 	
 	private static List<User> readUsers() {
@@ -290,20 +277,9 @@ final class UsersCli {
 	}
 	
 	private void printXsd() throws JAXBException, IOException {
-		JAXBContext jaxbContext = JAXBContext.newInstance(
-				Users.UsersXml.class);
-		jaxbContext.generateSchema(new SchemaOutputResolver() {
-
-			@Override
-			public Result createOutput(
-					final String namespaceUri, 
-					final String suggestedFileName) throws IOException {
-				StreamResult result = new StreamResult(System.out);
-				result.setSystemId("-");
-				return result;
-			}
-			
-		});
+		byte[] xsd = Users.getXsd();
+		System.out.write(xsd);
+		System.out.flush();
 	}
 	
 	public void process(final String[] args) {

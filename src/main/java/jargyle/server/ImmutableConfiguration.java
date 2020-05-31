@@ -1,10 +1,23 @@
 package jargyle.server;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.SchemaOutputResolver;
+import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.helpers.DefaultValidationEventHandler;
+import javax.xml.transform.Result;
+import javax.xml.transform.stream.StreamResult;
 
 import jargyle.client.socks5.UsernamePassword;
 import jargyle.server.socks5.Socks5RequestCriteria;
@@ -119,7 +132,7 @@ public final class ImmutableConfiguration implements Configuration {
 	@XmlAccessorType(XmlAccessType.NONE)
 	@XmlType(name = "configuration", propOrder = { })
 	@XmlRootElement(name = "configuration")
-	public static class ConfigurationXml {
+	static class ConfigurationXml {
 		@XmlElement(name = "allowedClientAddressCriteria")
 		protected Criteria allowedClientAddressCriteria;
 		@XmlElement(name = "allowedIncomingTcpAddressCriteria")
@@ -144,10 +157,44 @@ public final class ImmutableConfiguration implements Configuration {
 		protected UsernamePasswordAuthenticator socks5UsernamePasswordAuthenticator;
 	}
 	
-	public static Configuration newInstance(
+	private static final class CustomSchemaOutputResolver 
+		extends SchemaOutputResolver {
+
+		private final OutputStream out;
+		private final String systemId;
+		
+		public CustomSchemaOutputResolver(
+				final OutputStream o, final String id) {
+			this.out = o;
+			this.systemId = id;
+		}
+		
+		@Override
+		public Result createOutput(
+				final String namespaceUri, 
+				final String suggestedFileName) throws IOException {
+			StreamResult result = new StreamResult(this.out);
+			result.setSystemId(this.systemId);
+			return result;
+		}
+		
+	}
+	
+	public static byte[] getXsd() throws JAXBException {
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		JAXBContext jaxbContext = JAXBContext.newInstance(
+				ConfigurationXml.class);
+		try {
+			jaxbContext.generateSchema(new CustomSchemaOutputResolver(out, ""));
+		} catch (IOException e) {
+			throw new AssertionError(e);
+		}
+		return out.toByteArray();
+	}
+	
+	private static Configuration newInstance(
 			final ConfigurationXml configurationXml) {
-		ImmutableConfiguration.Builder builder = 
-				new ImmutableConfiguration.Builder();
+		Builder builder = new Builder();
 		if (configurationXml.allowedClientAddressCriteria != null) {
 			builder.allowedClientAddressCriteria(
 					configurationXml.allowedClientAddressCriteria);
@@ -192,6 +239,17 @@ public final class ImmutableConfiguration implements Configuration {
 					configurationXml.socks5UsernamePasswordAuthenticator);
 		}
 		return builder.build();
+	}
+	
+	public static Configuration newInstanceFrom(
+			final InputStream in) throws JAXBException {
+		JAXBContext jaxbContext = JAXBContext.newInstance(
+				ConfigurationXml.class);
+		Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+		unmarshaller.setEventHandler(new DefaultValidationEventHandler());
+		ConfigurationXml configurationXml = 
+				(ConfigurationXml) unmarshaller.unmarshal(in);
+		return newInstance(configurationXml);
 	}
 	
 	private final Criteria allowedClientAddressCriteria;
@@ -258,7 +316,7 @@ public final class ImmutableConfiguration implements Configuration {
 		}
 		return this.allowedIncomingTcpAddressCriteria;
 	}
-	
+
 	@Override
 	public Criteria getAllowedIncomingUdpAddressCriteria() {
 		if (this.allowedIncomingUdpAddressCriteria == null) {
@@ -266,7 +324,7 @@ public final class ImmutableConfiguration implements Configuration {
 		}
 		return this.allowedIncomingUdpAddressCriteria;
 	}
-
+	
 	@Override
 	public Socks5RequestCriteria getAllowedSocks5RequestCriteria() {
 		if (this.allowedSocks5RequestCriteria == null) {
@@ -290,7 +348,7 @@ public final class ImmutableConfiguration implements Configuration {
 		}
 		return this.blockedIncomingTcpAddressCriteria;
 	}
-	
+
 	@Override
 	public Criteria getBlockedIncomingUdpAddressCriteria() {
 		if (this.blockedIncomingUdpAddressCriteria == null) {
@@ -325,7 +383,7 @@ public final class ImmutableConfiguration implements Configuration {
 		return this.socks5UsernamePasswordAuthenticator;
 	}
 
-	public ConfigurationXml toConfigurationXml() {
+	private ConfigurationXml toConfigurationXml() {
 		ConfigurationXml configurationXml = new ConfigurationXml();
 		if (this.allowedClientAddressCriteria != null) {
 			configurationXml.allowedClientAddressCriteria = 
@@ -372,7 +430,7 @@ public final class ImmutableConfiguration implements Configuration {
 		}
 		return configurationXml;
 	}
-
+	
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -403,4 +461,13 @@ public final class ImmutableConfiguration implements Configuration {
 		return builder.toString();
 	}
 	
+	public byte[] toXml() throws JAXBException {
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		JAXBContext jaxbContext = JAXBContext.newInstance(
+				ConfigurationXml.class);
+		Marshaller marshaller = jaxbContext.createMarshaller();
+		marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+		marshaller.marshal(this.toConfigurationXml(), out);
+		return out.toByteArray();
+	}
 }

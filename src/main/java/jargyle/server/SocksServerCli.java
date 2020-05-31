@@ -11,14 +11,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.SchemaOutputResolver;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.helpers.DefaultValidationEventHandler;
-import javax.xml.transform.Result;
-import javax.xml.transform.stream.StreamResult;
 
 import argmatey.ArgMatey.ArgsParser;
 import argmatey.ArgMatey.IllegalOptionArgException;
@@ -33,8 +26,8 @@ import jargyle.common.cli.HelpTextParams;
 import jargyle.common.net.SocketSettingSpec;
 import jargyle.common.net.socks5.AuthMethod;
 import jargyle.common.net.socks5.gssapiauth.GssapiProtectionLevel;
-import jargyle.server.socks5.Socks5RequestCriterion;
 import jargyle.server.socks5.Socks5RequestCriteria;
+import jargyle.server.socks5.Socks5RequestCriterion;
 import jargyle.server.socks5.UsernamePasswordAuthenticator;
 import jargyle.server.socks5.Users;
 
@@ -321,11 +314,9 @@ final class SocksServerCli {
 			out = new FileOutputStream(tempFile);
 		}
 		try {
-			JAXBContext jaxbContext = JAXBContext.newInstance(
-					ImmutableConfiguration.ConfigurationXml.class);
-			Marshaller marshaller = jaxbContext.createMarshaller();
-			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-			marshaller.marshal(immutableConfiguration.toConfigurationXml(), out);
+			byte[] xml = immutableConfiguration.toXml();
+			out.write(xml);
+			out.flush();
 		} finally {
 			if (out instanceof FileOutputStream) {
 				out.close();
@@ -342,20 +333,9 @@ final class SocksServerCli {
 	}
 
 	private void printConfigurationFileXsd() throws JAXBException, IOException {
-		JAXBContext jaxbContext = JAXBContext.newInstance(
-				ImmutableConfiguration.ConfigurationXml.class);
-		jaxbContext.generateSchema(new SchemaOutputResolver() {
-
-			@Override
-			public Result createOutput(
-					final String namespaceUri, 
-					final String suggestedFileName) throws IOException {
-				StreamResult result = new StreamResult(System.out);
-				result.setSystemId("-");
-				return result;
-			}
-			
-		});
+		byte[] xsd = ImmutableConfiguration.getXsd();
+		System.out.write(xsd);
+		System.out.flush();
 	}
 	
 	private void printHelp(
@@ -618,20 +598,15 @@ final class SocksServerCli {
 			File file = new File(arg);
 			in = new FileInputStream(file);
 		}
-		ImmutableConfiguration.ConfigurationXml configurationXml = null;
+		Configuration configuration = null;
 		try {
-			JAXBContext jaxbContext = JAXBContext.newInstance(			
-					ImmutableConfiguration.ConfigurationXml.class);
-			Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-			unmarshaller.setEventHandler(new DefaultValidationEventHandler());
-			configurationXml = 
-					(ImmutableConfiguration.ConfigurationXml) unmarshaller.unmarshal(in);
+			configuration = ImmutableConfiguration.newInstanceFrom(in);
 		} finally {
 			if (in instanceof FileInputStream) {
 				in.close();
 			}
 		}
-		return ImmutableConfiguration.newInstance(configurationXml);
+		return configuration;
 	}
 		
 	private UsernamePassword readExternalClientSocks5UsernamePassword() {

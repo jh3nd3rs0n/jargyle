@@ -3,17 +3,12 @@ package jargyle.server.socks5;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.helpers.DefaultValidationEventHandler;
 
 import jargyle.server.FileMonitor;
 import jargyle.server.FileStatusListener;
@@ -79,7 +74,7 @@ public final class XmlFileSourceUsernamePasswordAuthenticator
 		private boolean updateFrom(final File file) {
 			Users usrs = null;
 			try {
-				usrs = newUsers(file);
+				usrs = Users.newInstanceFrom(new FileInputStream(file));
 			} catch (FileNotFoundException e) {
 				LoggerHolder.LOGGER.log(
 						Level.WARNING, 
@@ -103,41 +98,6 @@ public final class XmlFileSourceUsernamePasswordAuthenticator
 		
 	}
 	
-	private static Users newUsers(
-			final File file) throws FileNotFoundException, JAXBException {
-		InputStream in = new FileInputStream(file);
-		Users users = null;
-		try {
-			JAXBContext jaxbContext = null;
-			try {
-				jaxbContext = JAXBContext.newInstance(Users.UsersXml.class);
-			} catch (JAXBException e) {
-				throw new AssertionError(e);
-			}
-			Unmarshaller unmarshaller = null;
-			try {
-				unmarshaller = jaxbContext.createUnmarshaller();
-			} catch (JAXBException e) {
-				throw new AssertionError(e);
-			}
-			try {
-				unmarshaller.setEventHandler(new DefaultValidationEventHandler());
-			} catch (JAXBException e) {
-				throw new AssertionError(e);
-			}
-			Users.UsersXml usersXml = 
-					(Users.UsersXml) unmarshaller.unmarshal(in);
-			users = Users.newInstance(usersXml);
-		} finally {
-			try {
-				in.close();
-			} catch (IOException e) {
-				throw new AssertionError(e);
-			}
-		}
-		return users;
-	}
-	
 	private Users users;
 	private final File xmlFile;
 	
@@ -155,7 +115,7 @@ public final class XmlFileSourceUsernamePasswordAuthenticator
 		}
 		Users usrs = null;
 		try {
-			usrs = newUsers(file);
+			usrs = Users.newInstanceFrom(new FileInputStream(file));
 		} catch (FileNotFoundException e) {
 			throw new IllegalArgumentException(String.format(
 					"file '%s' does not exist", paramString));

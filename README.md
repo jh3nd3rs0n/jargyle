@@ -846,7 +846,7 @@ The Java system property `-Djava.security.auth.login.config=login.conf` provides
       storeKey=true;
     };
 
-``` 
+```
 
 In `login.conf`, `rcmd/127.0.0.1` is a service principal that is created by a Kerberos administrator specifically for a SOCKS5 server with the service name `rcmd` residing at the address `127.0.0.1`. (In a production environment, the address `127.0.0.1` should be replaced by the name of the machine of where the SOCKS5 server resides.) 
 
@@ -1045,7 +1045,7 @@ The Java system property `-Djava.security.auth.login.config=login.conf` provides
       storeKey=true;
     };
 
-``` 
+```
 
 In `login.conf`, `alice` is a principal that is created by a Kerberos administrator. 
 

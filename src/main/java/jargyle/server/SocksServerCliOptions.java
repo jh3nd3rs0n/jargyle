@@ -200,6 +200,18 @@ public final class SocksServerCliOptions extends Options {
 			.special(true)
 			.build();
 	
+	public static final Option MONITORED_CONFIG_FILE_OPTION = 
+			new GnuLongOption.Builder("monitored-config-file")
+			.doc("The configuration file to be monitored for any changes to "
+					+ "be applied to the running configuration")
+			.optionArgSpec(new OptionArgSpec.Builder()
+					.name("FILE")
+					.build())
+			.ordinal(11)
+			.otherBuilders(new PosixOption.Builder('m'))
+			.special(true)
+			.build();
+	
 	public static final Option NEW_CONFIG_FILE_OPTION = 
 			new GnuLongOption.Builder("new-config-file")
 			.doc("Create a new configuration file based on the preceding "
@@ -207,7 +219,7 @@ public final class SocksServerCliOptions extends Options {
 			.optionArgSpec(new OptionArgSpec.Builder()
 					.name("FILE")
 					.build())
-			.ordinal(11)
+			.ordinal(12)
 			.otherBuilders(new PosixOption.Builder('n'))
 			.special(true)
 			.build();
@@ -216,7 +228,7 @@ public final class SocksServerCliOptions extends Options {
 			"settings-help")
 			.doc("Print the list of available settings for the SOCKS server "
 					+ "and exit")
-			.ordinal(12)
+			.ordinal(13)
 			.otherBuilders(new PosixOption.Builder('H'))
 			.special(true)
 			.build();
@@ -240,7 +252,7 @@ public final class SocksServerCliOptions extends Options {
 				}
 				
 			})
-			.ordinal(13)
+			.ordinal(14)
 			.otherBuilders(new PosixOption.Builder('s')
 					.optionUsageProvider(new OptionUsageProvider() {
 						
@@ -274,7 +286,7 @@ public final class SocksServerCliOptions extends Options {
 				}
 				
 			})
-			.ordinal(14)
+			.ordinal(15)
 			.build();
 	
 	public static final Option SOCKS5_USERS_OPTION = new GnuLongOption.Builder(
@@ -282,16 +294,8 @@ public final class SocksServerCliOptions extends Options {
 			.doc(String.format("Mode for managing SOCKS5 users "
 					+ "(add %s for more information)",
 					jargyle.server.socks5.UsersCliOptions.HELP_OPTION.getUsage()))
-			.ordinal(15)
-			.special(true)
-			.build();
-	
-	public static final Option UPDATE_CONFIG_OPTION = 
-			new GnuLongOption.Builder("update-config")
-			.doc("Update current configuration based on any current changes "
-					+ "made to the configuration file")
 			.ordinal(16)
-			.otherBuilders(new PosixOption.Builder('u'))
+			.special(true)
 			.build();
 	
 	public SocksServerCliOptions() { }

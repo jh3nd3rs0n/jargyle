@@ -135,6 +135,10 @@ public final class XmlFileSourceConfigurationService
 		this.xmlFile = file;
 	}
 	
+	public void dispose() {
+		this.stopMonitoringXmlFile();
+	}
+	
 	@Override
 	public Configuration getConfiguration() {
 		return this.configuration;
@@ -146,6 +150,11 @@ public final class XmlFileSourceConfigurationService
 				this.xmlFile, 
 				new ConfigurationUpdater(this), 
 				this.logger));
+	}
+	
+	private void stopMonitoringXmlFile() {
+		this.executor.shutdownNow();
+		this.executor = null;
 	}
 
 }

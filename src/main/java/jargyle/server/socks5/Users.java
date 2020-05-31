@@ -3,7 +3,6 @@ package jargyle.server.socks5;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -29,22 +28,17 @@ public final class Users {
 	private static final class CustomSchemaOutputResolver 
 		extends SchemaOutputResolver {
 
-		private final OutputStream out;
-		private final String systemId;
+		private final Result result;
 		
-		public CustomSchemaOutputResolver(
-				final OutputStream o, final String id) {
-			this.out = o;
-			this.systemId = id;
+		public CustomSchemaOutputResolver(final Result res) {
+			this.result = res;
 		}
 		
 		@Override
 		public Result createOutput(
 				final String namespaceUri, 
 				final String suggestedFileName) throws IOException {
-			StreamResult result = new StreamResult(this.out);
-			result.setSystemId(this.systemId);
-			return result;
+			return this.result;
 		}
 		
 	}
@@ -60,8 +54,10 @@ public final class Users {
 	public static byte[] getXsd() throws JAXBException {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		JAXBContext jaxbContext = JAXBContext.newInstance(UsersXml.class);
+		StreamResult result = new StreamResult(out);
+		result.setSystemId("");
 		try {
-			jaxbContext.generateSchema(new CustomSchemaOutputResolver(out, ""));
+			jaxbContext.generateSchema(new CustomSchemaOutputResolver(result));
 		} catch (IOException e) {
 			throw new AssertionError(e);
 		}

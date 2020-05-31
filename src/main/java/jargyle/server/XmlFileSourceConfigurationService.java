@@ -88,11 +88,20 @@ public final class XmlFileSourceConfigurationService
 		
 	}
 	
+	public static XmlFileSourceConfigurationService newInstance(
+			final File xmlFile, final Logger logger) {
+		XmlFileSourceConfigurationService configurationService = 
+				new XmlFileSourceConfigurationService(xmlFile, logger);
+		configurationService.startMonitoringXmlFile();
+		return configurationService;
+	}
+	
 	private Configuration configuration;
+	private ExecutorService executor;
 	private final Logger logger;
 	private final File xmlFile;
 	
-	public XmlFileSourceConfigurationService(
+	private XmlFileSourceConfigurationService(
 			final File file, final Logger lggr) {
 		if (file == null) {
 			throw new NullPointerException("XML file must not be null");
@@ -121,18 +130,22 @@ public final class XmlFileSourceConfigurationService
 					file, e.toString()), e);
 		}
 		this.configuration = config;
+		this.executor = null;
 		this.logger = lggr;
 		this.xmlFile = file;
-		ExecutorService executor = Executors.newSingleThreadExecutor();
-		executor.execute(new FileMonitor(
-				this.xmlFile, 
-				new ConfigurationUpdater(this), 
-				this.logger));
 	}
 	
 	@Override
 	public Configuration getConfiguration() {
 		return this.configuration;
+	}
+	
+	private void startMonitoringXmlFile() {
+		this.executor = Executors.newSingleThreadExecutor();
+		this.executor.execute(new FileMonitor(
+				this.xmlFile, 
+				new ConfigurationUpdater(this), 
+				this.logger));
 	}
 
 }

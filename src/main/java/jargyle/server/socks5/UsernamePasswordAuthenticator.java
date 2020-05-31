@@ -2,6 +2,8 @@ package jargyle.server.socks5;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -64,29 +66,61 @@ public class UsernamePasswordAuthenticator {
 		} else if (cls.equals(
 				XmlFileSourceUsernamePasswordAuthenticator.class)) {
 			usernamePasswordAuthenticator = 
-					new XmlFileSourceUsernamePasswordAuthenticator(
+					XmlFileSourceUsernamePasswordAuthenticator.newInstance(
 							parameterString);
 		} else if (UsernamePasswordAuthenticator.class.isAssignableFrom(cls)) {
-			Constructor<?> ctor = null;
-			try {
-				ctor = cls.getConstructor(String.class);
-			} catch (NoSuchMethodException e) {
-				throw new IllegalArgumentException(e);
-			} catch (SecurityException e) {
-				throw new AssertionError(e);
+			Method method = null;
+			for (Method meth : cls.getDeclaredMethods()) {
+				int modifiers = meth.getModifiers();
+				Class<?> returnType = meth.getReturnType();
+				Class<?>[] parameterTypes = meth.getParameterTypes();
+				boolean isPublic = Modifier.isPublic(modifiers);
+				boolean isStatic = Modifier.isStatic(modifiers);
+				boolean isReturnTypeClass = returnType.equals(cls);
+				boolean isParameterTypeString = parameterTypes.length == 1 
+						&& parameterTypes[0].equals(String.class);
+				if (isPublic 
+						&& isStatic 
+						&& isReturnTypeClass 
+						&& isParameterTypeString) {
+					method = meth;
+					break;
+				}
 			}
-			try {
-				usernamePasswordAuthenticator = 
-						(UsernamePasswordAuthenticator) ctor.newInstance(
-								parameterString);
-			} catch (InstantiationException e) {
-				throw new AssertionError(e);
-			} catch (IllegalAccessException e) {
-				throw new AssertionError(e);
-			} catch (IllegalArgumentException e) {
-				throw new AssertionError(e);
-			} catch (InvocationTargetException e) {
-				throw new RuntimeException(e.getCause());
+			if (method != null) {
+				try {
+					usernamePasswordAuthenticator = 
+							(UsernamePasswordAuthenticator) method.invoke(
+									null, parameterString);
+				} catch (IllegalAccessException e) {
+					throw new AssertionError(e);
+				} catch (IllegalArgumentException e) {
+					throw new AssertionError(e);
+				} catch (InvocationTargetException e) {
+					throw new RuntimeException(e.getCause()); 
+				}
+			} else {
+				Constructor<?> ctor = null;
+				try {
+					ctor = cls.getConstructor(String.class);
+				} catch (NoSuchMethodException e) {
+					throw new IllegalArgumentException(e);
+				} catch (SecurityException e) {
+					throw new AssertionError(e);
+				}
+				try {
+					usernamePasswordAuthenticator = 
+							(UsernamePasswordAuthenticator) ctor.newInstance(
+									parameterString);
+				} catch (InstantiationException e) {
+					throw new AssertionError(e);
+				} catch (IllegalAccessException e) {
+					throw new AssertionError(e);
+				} catch (IllegalArgumentException e) {
+					throw new AssertionError(e);
+				} catch (InvocationTargetException e) {
+					throw new RuntimeException(e.getCause());
+				}
 			}
 		} else {
 			throw new IllegalArgumentException(String.format(

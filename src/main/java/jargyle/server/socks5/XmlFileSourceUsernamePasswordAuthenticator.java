@@ -98,10 +98,19 @@ public final class XmlFileSourceUsernamePasswordAuthenticator
 		
 	}
 	
+	public static XmlFileSourceUsernamePasswordAuthenticator newInstance(
+			final String parameterString) {
+		XmlFileSourceUsernamePasswordAuthenticator usernamePasswordAuthenticator =
+				new XmlFileSourceUsernamePasswordAuthenticator(parameterString);
+		usernamePasswordAuthenticator.startMonitoringXmlFile();
+		return usernamePasswordAuthenticator;
+	}
+	
+	private ExecutorService executor;
 	private Users users;
 	private final File xmlFile;
 	
-	public XmlFileSourceUsernamePasswordAuthenticator(
+	private XmlFileSourceUsernamePasswordAuthenticator(
 			final String paramString) {
 		super(paramString);
 		File file = new File(paramString);
@@ -124,11 +133,9 @@ public final class XmlFileSourceUsernamePasswordAuthenticator
 					"file '%s' not a valid XML file: %s", 
 					paramString, e.toString()), e);
 		}
+		this.executor = null;
 		this.users = usrs;
 		this.xmlFile = file;
-		ExecutorService executor = Executors.newSingleThreadExecutor();
-		executor.execute(new FileMonitor(
-				this.xmlFile, new UsersUpdater(this), LoggerHolder.LOGGER));
 	}
 	
 	@Override
@@ -142,6 +149,12 @@ public final class XmlFileSourceUsernamePasswordAuthenticator
 				password, hashedPassword);
 		if (!hashedPassword.equals(otherHashedPassword)) { return false; }
 		return true;
+	}
+	
+	private void startMonitoringXmlFile() {
+		this.executor = Executors.newSingleThreadExecutor();
+		this.executor.execute(new FileMonitor(
+				this.xmlFile, new UsersUpdater(this), LoggerHolder.LOGGER));
 	}
 
 }

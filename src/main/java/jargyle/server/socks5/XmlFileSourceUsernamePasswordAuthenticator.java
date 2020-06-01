@@ -3,6 +3,8 @@ package jargyle.server.socks5;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
@@ -72,9 +74,11 @@ public final class XmlFileSourceUsernamePasswordAuthenticator
 		}
 
 		private boolean updateFrom(final File file) {
+			InputStream in = null;
 			Users usrs = null;
 			try {
-				usrs = Users.newInstanceFrom(new FileInputStream(file));
+				in = new FileInputStream(file);
+				usrs = Users.newInstanceFrom(in);
 			} catch (FileNotFoundException e) {
 				LoggerHolder.LOGGER.log(
 						Level.WARNING, 
@@ -91,6 +95,19 @@ public final class XmlFileSourceUsernamePasswordAuthenticator
 								file), 
 						e);
 				return false;
+			} finally {
+				if (in != null) {
+					try {
+						in.close();
+					} catch (IOException e) {
+						LoggerHolder.LOGGER.log(
+								Level.WARNING, 
+								String.format(
+										"Unable to close input stream of file '%s'", 
+										file), 
+								e);
+					}
+				}
 			}
 			this.authenticator.users = usrs;
 			return true;
@@ -122,9 +139,11 @@ public final class XmlFileSourceUsernamePasswordAuthenticator
 			throw new IllegalArgumentException(String.format(
 					"'%s' is not a file", paramString));
 		}
+		InputStream in = null;
 		Users usrs = null;
 		try {
-			usrs = Users.newInstanceFrom(new FileInputStream(file));
+			in = new FileInputStream(file);
+			usrs = Users.newInstanceFrom(in);
 		} catch (FileNotFoundException e) {
 			throw new IllegalArgumentException(String.format(
 					"file '%s' does not exist", paramString));
@@ -132,6 +151,14 @@ public final class XmlFileSourceUsernamePasswordAuthenticator
 			throw new IllegalArgumentException(String.format(
 					"file '%s' not a valid XML file: %s", 
 					paramString, e.toString()), e);
+		} finally {
+			if (in != null) {
+				try {
+					in.close();
+				} catch (IOException e) {
+					throw new AssertionError(e);
+				}
+			}
 		}
 		this.executor = null;
 		this.users = usrs;

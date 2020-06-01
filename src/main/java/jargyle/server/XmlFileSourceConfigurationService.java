@@ -3,6 +3,8 @@ package jargyle.server;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
@@ -61,10 +63,11 @@ public final class XmlFileSourceConfigurationService
 		}
 		
 		private boolean updateFrom(final File file) {
+			InputStream in = null;
 			Configuration config = null;
 			try {
-				config = ImmutableConfiguration.newInstanceFrom(
-						new FileInputStream(file));
+				in = new FileInputStream(file);
+				config = ImmutableConfiguration.newInstanceFrom(in);
 			} catch (FileNotFoundException e) {
 				this.configurationService.logger.log(
 						Level.WARNING, 
@@ -81,6 +84,19 @@ public final class XmlFileSourceConfigurationService
 								file), 
 						e);
 				return false;
+			} finally {
+				if (in != null) {
+					try {
+						in.close();
+					} catch (IOException e) {
+						this.configurationService.logger.log(
+								Level.WARNING, 
+								String.format(
+										"Unable to close input stream of file '%s'", 
+										file), 
+								e);
+					}
+				}
 			}
 			this.configurationService.configuration = config;
 			return true;
@@ -117,10 +133,11 @@ public final class XmlFileSourceConfigurationService
 			throw new IllegalArgumentException(String.format(
 					"'%s' is not a file", file));
 		}
+		InputStream in = null;
 		Configuration config = null;
 		try {
-			config = ImmutableConfiguration.newInstanceFrom(
-					new FileInputStream(file));
+			in = new FileInputStream(file);
+			config = ImmutableConfiguration.newInstanceFrom(in);
 		} catch (FileNotFoundException e) {
 			throw new IllegalArgumentException(String.format(
 					"file '%s' does not exist", file));
@@ -128,6 +145,14 @@ public final class XmlFileSourceConfigurationService
 			throw new IllegalArgumentException(String.format(
 					"file '%s' not a valid XML file: %s", 
 					file, e.toString()), e);
+		} finally {
+			if (in != null) {
+				try {
+					in.close();
+				} catch (IOException e) {
+					throw new AssertionError(e);
+				}
+			}
 		}
 		this.configuration = config;
 		this.executor = null;

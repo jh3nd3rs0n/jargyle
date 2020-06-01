@@ -16,6 +16,11 @@ import jargyle.server.SocksServerCli.ProcessResult;
 public final class SocksServer {
 	
 	public static void main(final String[] args) {
+		/* 
+		 * https://stackoverflow.com/questions/50237516/proper-fix-for-java-10-complaining-about-illegal-reflection-access-by-jaxb-impl#50251510
+		 */
+		System.setProperty(
+				"com.sun.xml.bind.v2.bytecode.ClassTailor.noOptimize", "true");
 		SocksServerCli socksServerCli = new SocksServerCli();
 		ProcessResult processResult = socksServerCli.process(args);
 		Configuration configuration = processResult.getConfiguration();

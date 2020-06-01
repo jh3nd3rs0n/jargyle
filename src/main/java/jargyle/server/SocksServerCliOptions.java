@@ -200,18 +200,6 @@ public final class SocksServerCliOptions extends Options {
 			.special(true)
 			.build();
 	
-	public static final Option MONITORED_CONFIG_FILE_OPTION = 
-			new GnuLongOption.Builder("monitored-config-file")
-			.doc("The configuration file to be monitored for any changes to "
-					+ "be applied to the running configuration")
-			.optionArgSpec(new OptionArgSpec.Builder()
-					.name("FILE")
-					.build())
-			.ordinal(11)
-			.otherBuilders(new PosixOption.Builder('m'))
-			.special(true)
-			.build();
-	
 	public static final Option NEW_CONFIG_FILE_OPTION = 
 			new GnuLongOption.Builder("new-config-file")
 			.doc("Create a new configuration file based on the preceding "

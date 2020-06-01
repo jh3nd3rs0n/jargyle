@@ -65,6 +65,33 @@ final class SocksServerCli {
 			this.socks5UsernamePasswordAuthenticator = null;
 		}
 		
+		public Params(final Params other) {
+			this.allowedClientAddressCriteria = new ArrayList<Criterion>(
+					other.allowedClientAddressCriteria);
+			this.allowedIncomingTcpAddressCriteria = new ArrayList<Criterion>(
+					other.allowedIncomingTcpAddressCriteria);
+			this.allowedIncomingUdpAddressCriteria = new ArrayList<Criterion>(
+					other.allowedIncomingUdpAddressCriteria);
+			this.allowedSocks5RequestCriteria = 
+					new ArrayList<Socks5RequestCriterion>(
+							other.allowedSocks5RequestCriteria);
+			this.blockedClientAddressCriteria = new ArrayList<Criterion>(
+					other.blockedClientAddressCriteria);
+			this.blockedIncomingTcpAddressCriteria = new ArrayList<Criterion>(
+					other.blockedIncomingTcpAddressCriteria);
+			this.blockedIncomingUdpAddressCriteria = new ArrayList<Criterion>(
+					other.blockedIncomingUdpAddressCriteria);
+			this.blockedSocks5RequestCriteria = 
+					new ArrayList<Socks5RequestCriterion>(
+							other.blockedSocks5RequestCriteria);
+			this.externalClientSocks5UsernamePassword = 
+					other.externalClientSocks5UsernamePassword;
+			this.modified = false;
+			this.settings = new ArrayList<Setting>(other.settings);
+			this.socks5UsernamePasswordAuthenticator = 
+					other.socks5UsernamePasswordAuthenticator;
+		}
+		
 		public void add(final Configuration configuration) {
 			this.addAllowedClientAddressCriteria(
 					configuration.getAllowedClientAddressCriteria().toList());
@@ -174,35 +201,43 @@ final class SocksServerCli {
 		}
 
 		public List<Criterion> getAllowedClientAddressCriteria() {
-			return Collections.unmodifiableList(this.allowedClientAddressCriteria);
+			return Collections.unmodifiableList(
+					this.allowedClientAddressCriteria);
 		}
 		
 		public List<Criterion> getAllowedIncomingTcpAddressCriteria() {
-			return Collections.unmodifiableList(this.allowedIncomingTcpAddressCriteria);
+			return Collections.unmodifiableList(
+					this.allowedIncomingTcpAddressCriteria);
 		}
 		
 		public List<Criterion> getAllowedIncomingUdpAddressCriteria() {
-			return Collections.unmodifiableList(this.allowedIncomingUdpAddressCriteria);
+			return Collections.unmodifiableList(
+					this.allowedIncomingUdpAddressCriteria);
 		}
 		
 		public List<Socks5RequestCriterion> getAllowedSocks5RequestCriteria() {
-			return Collections.unmodifiableList(this.allowedSocks5RequestCriteria);
+			return Collections.unmodifiableList(
+					this.allowedSocks5RequestCriteria);
 		}
 
 		public List<Criterion> getBlockedClientAddressCriteria() {
-			return Collections.unmodifiableList(this.blockedClientAddressCriteria);
+			return Collections.unmodifiableList(
+					this.blockedClientAddressCriteria);
 		}
 		
 		public List<Criterion> getBlockedIncomingTcpAddressCriteria() {
-			return Collections.unmodifiableList(this.blockedIncomingTcpAddressCriteria);
+			return Collections.unmodifiableList(
+					this.blockedIncomingTcpAddressCriteria);
 		}
 		
 		public List<Criterion> getBlockedIncomingUdpAddressCriteria() {
-			return Collections.unmodifiableList(this.blockedIncomingUdpAddressCriteria);
+			return Collections.unmodifiableList(
+					this.blockedIncomingUdpAddressCriteria);
 		}
 		
 		public List<Socks5RequestCriterion> getBlockedSocks5RequestCriteria() {
-			return Collections.unmodifiableList(this.blockedSocks5RequestCriteria);
+			return Collections.unmodifiableList(
+					this.blockedSocks5RequestCriteria);
 		}
 		
 		public UsernamePassword getExternalClientSocks5UsernamePassword() {
@@ -428,7 +463,7 @@ final class SocksServerCli {
 				programBeginningUsage, 
 				SocksServerCliOptions.SETTINGS_HELP_OPTION.getUsage());
 		Params params = new Params();
-		XmlFileSourceConfigurationService configurationService = null;
+		String configurationFileArg = null;
 		while (argsParser.hasNext()) {
 			ParseResultHolder parseResultHolder = null;
 			try {
@@ -488,10 +523,15 @@ final class SocksServerCli {
 								Criteria.class).toList());
 			}
 			if (parseResultHolder.hasOptionOfAnyOf("--config-file", "-f")) {
+				boolean configurationFileArgNullBefore = 
+						configurationFileArg == null;
+				boolean paramsModifiedBefore = params.isModified();
+				configurationFileArg = 
+						parseResultHolder.getOptionArg().toString(); 
 				Configuration configuration = null;
 				try {
 					configuration = this.readConfiguration(
-							parseResultHolder.getOptionArg().toString());
+							configurationFileArg);
 				} catch (IOException e) {
 					System.err.printf("%s: %s%n", programName, e.toString());
 					e.printStackTrace();
@@ -502,6 +542,9 @@ final class SocksServerCli {
 					System.exit(-1);
 				}
 				params.add(configuration);
+				if (configurationFileArgNullBefore && !paramsModifiedBefore) {
+					params = new Params(params);
+				}
 			}
 			if (parseResultHolder.hasOptionOfAnyOf("--config-file-xsd", "-x")) {
 				try {
@@ -532,46 +575,6 @@ final class SocksServerCli {
 				this.printHelp(programBeginningUsage, argsParser.getOptions());
 				System.exit(0);
 			}
-			if (parseResultHolder.hasOptionOfAnyOf(
-					"--monitored-config-file", "-m")) {
-				boolean paramsModifiedBefore = params.isModified();
-				String optionArg = parseResultHolder.getOptionArg().toString();
-				File configurationFile = new File(optionArg);
-				if (configurationFile.exists()) {
-					Configuration configuration = null;
-					try {
-						configuration = this.readConfiguration(optionArg);
-					} catch (IOException e) {
-						System.err.printf("%s: %s%n", programName, e.toString());
-						e.printStackTrace();
-						System.exit(-1);
-					} catch (JAXBException e) {
-						System.err.printf("%s: %s%n", programName, e.toString());
-						e.printStackTrace();
-						System.exit(-1);
-					}
-					params.add(configuration);
-				}
-				if (!configurationFile.exists() || paramsModifiedBefore) {
-					try {
-						this.newConfigurationFile(params, optionArg);
-					} catch (JAXBException e) {
-						System.err.printf("%s: %s%n", programName, e.toString());
-						e.printStackTrace();
-						System.exit(-1);
-					} catch (IOException e) {
-						System.err.printf("%s: %s%n", programName, e.toString());
-						e.printStackTrace();
-						System.exit(-1);
-					}
-				}
-				if (configurationService != null) {
-					configurationService.dispose();
-				}
-				configurationService = 
-						XmlFileSourceConfigurationService.newInstance(
-								configurationFile, LoggerHolder.LOGGER);
-			}			
 			if (parseResultHolder.hasOptionOfAnyOf("--new-config-file", "-n")) {
 				try {
 					this.newConfigurationFile(
@@ -624,9 +627,33 @@ final class SocksServerCli {
 			}
 		}
 		Configuration configuration = null;
-		if (configurationService == null) {
+		if (configurationFileArg == null || configurationFileArg.equals("-")) {
 			configuration = this.newConfiguration(params);
 		} else {
+			if (params.isModified()) {
+				try {
+					this.newConfigurationFile(params, configurationFileArg);
+				} catch (JAXBException e) {
+					System.err.printf("%s: %s%n", programName, e.toString());
+					e.printStackTrace();
+					System.exit(-1);
+				} catch (IOException e) {
+					System.err.printf("%s: %s%n", programName, e.toString());
+					e.printStackTrace();
+					System.exit(-1);
+				}
+			}
+			File configurationFile = new File(configurationFileArg);
+			ConfigurationService configurationService = null;
+			try {
+				configurationService = 
+						XmlFileSourceConfigurationService.newInstance(
+								configurationFile, LoggerHolder.LOGGER);
+			} catch (IllegalArgumentException e) {
+				System.err.printf("%s: %s%n", programName, e.toString());
+				e.printStackTrace();
+				System.exit(-1);
+			}
 			configuration = new MutableConfiguration(configurationService);
 		}
 		return new ProcessResult(configuration);

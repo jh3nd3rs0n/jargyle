@@ -127,8 +127,6 @@ The following is the command line help for Jargyle (displayed when using the com
           The username password for the external SOCKS5 server for external connections
       --help, -h
           Print this help and exit
-      --monitored-config-file=FILE, -m FILE
-          The configuration file to be monitored for any changes to be applied to the running configuration
       --new-config-file=FILE, -n FILE
           Create a new configuration file based on the preceding options and exit
       --settings-help, -H

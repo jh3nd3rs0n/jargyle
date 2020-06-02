@@ -466,7 +466,8 @@ The following are the settings in the monitored configuration file that will hav
 
 - `backlog`
 - `host` (Changing this setting will not change the host name or address the SOCKS server is bound to but it will change the host name or address the outgoing TCP and UDP sockets are bound to)
-- `port` 
+- `port`
+- `socketSettings` 
 
 ### 3. 7. Managing SOCKS5 Users (for Username Password Authentication)
 

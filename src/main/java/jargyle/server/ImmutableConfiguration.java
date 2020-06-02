@@ -188,7 +188,56 @@ public final class ImmutableConfiguration implements Configuration {
 		return out.toByteArray();
 	}
 	
-	private static Configuration newInstance(
+	public static ImmutableConfiguration newInstance(
+			final Configuration config) {
+		Builder builder = new Builder();
+		if (!config.getAllowedClientAddressCriteria().toList().isEmpty()) {
+			builder.allowedClientAddressCriteria(
+					config.getAllowedClientAddressCriteria());
+		}
+		if (!config.getAllowedIncomingTcpAddressCriteria().toList().isEmpty()) {
+			builder.allowedIncomingTcpAddressCriteria(
+					config.getAllowedIncomingTcpAddressCriteria());
+		}
+		if (!config.getAllowedIncomingUdpAddressCriteria().toList().isEmpty()) {
+			builder.allowedIncomingUdpAddressCriteria(
+					config.getAllowedIncomingUdpAddressCriteria());
+		}
+		if (!config.getAllowedSocks5RequestCriteria().toList().isEmpty()) {
+			builder.allowedSocks5RequestCriteria(
+					config.getAllowedSocks5RequestCriteria());
+		}
+		if (!config.getBlockedClientAddressCriteria().toList().isEmpty()) {
+			builder.blockedClientAddressCriteria(
+					config.getBlockedClientAddressCriteria());
+		}
+		if (!config.getBlockedIncomingTcpAddressCriteria().toList().isEmpty()) {
+			builder.blockedIncomingTcpAddressCriteria(
+					config.getBlockedIncomingTcpAddressCriteria());
+		}
+		if (!config.getBlockedIncomingUdpAddressCriteria().toList().isEmpty()) {
+			builder.blockedIncomingUdpAddressCriteria(
+					config.getBlockedIncomingUdpAddressCriteria());
+		}		
+		if (!config.getBlockedSocks5RequestCriteria().toList().isEmpty()) {
+			builder.blockedSocks5RequestCriteria(
+					config.getBlockedSocks5RequestCriteria());
+		}
+		if (config.getExternalClientSocks5UsernamePassword() != null) {
+			builder.externalClientSocks5UsernamePassword(
+					config.getExternalClientSocks5UsernamePassword());
+		}
+		if (!config.getSettings().toList().isEmpty()) {
+			builder.settings(config.getSettings());
+		}
+		if (config.getSocks5UsernamePasswordAuthenticator() != null) {
+			builder.socks5UsernamePasswordAuthenticator(
+					config.getSocks5UsernamePasswordAuthenticator());
+		}
+		return builder.build();
+	}
+	
+	private static ImmutableConfiguration newInstance(
 			final ConfigurationXml configurationXml) {
 		Builder builder = new Builder();
 		if (configurationXml.allowedClientAddressCriteria != null) {
@@ -237,7 +286,7 @@ public final class ImmutableConfiguration implements Configuration {
 		return builder.build();
 	}
 	
-	public static Configuration newInstanceFrom(
+	public static ImmutableConfiguration newInstanceFrom(
 			final InputStream in) throws JAXBException {
 		JAXBContext jaxbContext = JAXBContext.newInstance(
 				ConfigurationXml.class);

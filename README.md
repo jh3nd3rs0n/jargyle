@@ -219,11 +219,17 @@ The following is a list of available settings for the SOCKS server (displayed wh
       socks5.onConnect.relayTimeout=INTEGER_BETWEEN_1_AND_2147483647
           The timeout in milliseconds on relaying no data (default is 60000)
     
+      socks5.onConnect.serverBindHost=HOST
+          The binding host name or address for the server-facing socket (default is 0.0.0.0)
+    
       socks5.onConnect.serverConnectTimeout=INTEGER_BETWEEN_1_AND_2147483647
           The timeout in milliseconds on waiting the server-facing socket to connect (default is 60000)
     
       socks5.onConnect.serverSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
           The space separated list of socket settings for the server-facing socket
+    
+      socks5.onUdpAssociate.clientBindHost=HOST
+          The binding host name or address for the client-facing UDP socket (default is 0.0.0.0)
     
       socks5.onUdpAssociate.clientSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
           The space separated list of socket settings for the client-facing UDP socket
@@ -233,6 +239,9 @@ The following is a list of available settings for the SOCKS server (displayed wh
     
       socks5.onUdpAssociate.relayTimeout=INTEGER_BETWEEN_1_AND_2147483647
           The timeout in milliseconds on relaying no data (default is 60000)
+    
+      socks5.onUdpAssociate.serverBindHost=HOST
+          The binding host name or address for the server-facing UDP socket (default is 0.0.0.0)
     
       socks5.onUdpAssociate.serverSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
           The space separated list of socket settings for the server-facing UDP socket
@@ -465,7 +474,7 @@ Also the monitored configuration file cannot be supplemented with command line o
 The following are the settings in the monitored configuration file that will have no effect if changed during the running configuration:
 
 - `backlog`
-- `host` (Changing this setting will not change the host name or address the SOCKS server is bound to but it will change the host name or address the outgoing TCP and UDP sockets are bound to)
+- `host`
 - `port`
 - `socketSettings` 
 

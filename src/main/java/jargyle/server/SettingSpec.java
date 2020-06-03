@@ -120,6 +120,11 @@ public enum SettingSpec implements HelpTextParams {
 		private static final String NAME = "externalClient.bindHost";
 		
 		@Override
+		public Setting getDefaultSetting() {
+			return new Setting(NAME, SocksClient.DEFAULT_BIND_HOST);
+		}
+
+		@Override
 		public String getDoc() {
 			return String.format(
 					"The binding host name or address for the socket to "
@@ -129,18 +134,13 @@ public enum SettingSpec implements HelpTextParams {
 		}
 
 		@Override
-		public String getUsage() {
-			return String.format("%s=HOST", NAME);
-		}
-
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(NAME, SocksClient.DEFAULT_BIND_HOST);
-		}
-
-		@Override
 		public String getName() {
 			return NAME;
+		}
+
+		@Override
+		public String getUsage() {
+			return String.format("%s=HOST", NAME);
 		}
 
 		@Override
@@ -1140,6 +1140,63 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
+	SOCKS5_ON_CONNECT_SERVER_BIND_HOST {
+		
+		private static final String DEFAULT_BIND_HOST = "0.0.0.0";
+		private static final String NAME = "socks5.onConnect.serverBindHost";
+		
+		@Override
+		public Setting getDefaultSetting() {
+			Host host = null;
+			try {
+				host = Host.newInstance(DEFAULT_BIND_HOST);
+			} catch (UnknownHostException e) {
+				throw new AssertionError(e);
+			}
+			return new Setting(NAME, host);
+		}
+
+		@Override
+		public String getDoc() {
+			return String.format(
+					"The binding host name or address for the server-facing "
+					+ "socket (default is %s)", 
+					DEFAULT_BIND_HOST);
+		}
+
+		@Override
+		public String getName() {
+			return NAME;
+		}
+
+		@Override
+		public String getUsage() {
+			return String.format("%s=HOST", NAME);
+		}
+
+		@Override
+		public Setting newSetting(final Object value) {
+			if (!(value instanceof Host)) {
+				throw new ClassCastException(String.format(
+						"unable to cast %s to %s",
+						value.getClass().getName(),
+						Host.class.getName()));
+			}
+			return new Setting(NAME, value);
+		}
+
+		@Override
+		public Setting newSetting(final String value) {
+			Host host = null;
+			try {
+				host = Host.newInstance(value);
+			} catch (UnknownHostException e) {
+				throw new IllegalArgumentException(e);
+			}
+			return newSetting(host);
+		}
+		
+	},
 	SOCKS5_ON_CONNECT_SERVER_CONNECT_TIMEOUT {
 
 		private static final int DEFAULT_INT_VALUE = 60000; // 1 minute
@@ -1236,6 +1293,64 @@ public enum SettingSpec implements HelpTextParams {
 		@Override
 		public Setting newSetting(final String value) {
 			return newSetting(SocketSettings.newInstance(value));
+		}
+		
+	},
+	SOCKS5_ON_UDP_ASSOCIATE_CLIENT_BIND_HOST {
+		
+		private static final String DEFAULT_BIND_HOST = "0.0.0.0";
+		private static final String NAME = 
+				"socks5.onUdpAssociate.clientBindHost";
+		
+		@Override
+		public Setting getDefaultSetting() {
+			Host host = null;
+			try {
+				host = Host.newInstance(DEFAULT_BIND_HOST);
+			} catch (UnknownHostException e) {
+				throw new AssertionError(e);
+			}
+			return new Setting(NAME, host);
+		}
+
+		@Override
+		public String getDoc() {
+			return String.format(
+					"The binding host name or address for the client-facing "
+					+ "UDP socket (default is %s)", 
+					DEFAULT_BIND_HOST);
+		}
+
+		@Override
+		public String getName() {
+			return NAME;
+		}
+
+		@Override
+		public String getUsage() {
+			return String.format("%s=HOST", NAME);
+		}
+
+		@Override
+		public Setting newSetting(final Object value) {
+			if (!(value instanceof Host)) {
+				throw new ClassCastException(String.format(
+						"unable to cast %s to %s",
+						value.getClass().getName(),
+						Host.class.getName()));
+			}
+			return new Setting(NAME, value);
+		}
+
+		@Override
+		public Setting newSetting(final String value) {
+			Host host = null;
+			try {
+				host = Host.newInstance(value);
+			} catch (UnknownHostException e) {
+				throw new IllegalArgumentException(e);
+			}
+			return newSetting(host);
 		}
 		
 	},
@@ -1385,6 +1500,64 @@ public enum SettingSpec implements HelpTextParams {
 		@Override
 		public Setting newSetting(final String value) {
 			return newSetting(PositiveInteger.newInstance(value));
+		}
+		
+	},
+	SOCKS5_ON_UDP_ASSOCIATE_SERVER_BIND_HOST {
+		
+		private static final String DEFAULT_BIND_HOST = "0.0.0.0";
+		private static final String NAME = 
+				"socks5.onUdpAssociate.serverBindHost";
+		
+		@Override
+		public Setting getDefaultSetting() {
+			Host host = null;
+			try {
+				host = Host.newInstance(DEFAULT_BIND_HOST);
+			} catch (UnknownHostException e) {
+				throw new AssertionError(e);
+			}
+			return new Setting(NAME, host);
+		}
+
+		@Override
+		public String getDoc() {
+			return String.format(
+					"The binding host name or address for the server-facing "
+					+ "UDP socket (default is %s)", 
+					DEFAULT_BIND_HOST);
+		}
+
+		@Override
+		public String getName() {
+			return NAME;
+		}
+
+		@Override
+		public String getUsage() {
+			return String.format("%s=HOST", NAME);
+		}
+
+		@Override
+		public Setting newSetting(final Object value) {
+			if (!(value instanceof Host)) {
+				throw new ClassCastException(String.format(
+						"unable to cast %s to %s",
+						value.getClass().getName(),
+						Host.class.getName()));
+			}
+			return new Setting(NAME, value);
+		}
+
+		@Override
+		public Setting newSetting(final String value) {
+			Host host = null;
+			try {
+				host = Host.newInstance(value);
+			} catch (UnknownHostException e) {
+				throw new IllegalArgumentException(e);
+			}
+			return newSetting(host);
 		}
 		
 	},

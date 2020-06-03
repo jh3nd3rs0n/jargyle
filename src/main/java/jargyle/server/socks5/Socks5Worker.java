@@ -258,7 +258,7 @@ public final class Socks5Worker implements Runnable {
 					SocketSettings.class);
 			socketSettings.applyTo(serverSocket);
 			Host bindHost = this.settings.getLastValue(
-					SettingSpec.HOST, Host.class);
+					SettingSpec.SOCKS5_ON_CONNECT_SERVER_BIND_HOST, Host.class);
 			InetAddress bindInetAddress = bindHost.toInetAddress();
 			serverSocket.bind(new InetSocketAddress(bindInetAddress, 0));
 			int connectTimeout = this.settings.getLastValue(
@@ -325,11 +325,12 @@ public final class Socks5Worker implements Runnable {
 		Socks5Reply socks5Rep = null;
 		String desiredDestinationAddress = socks5Req.getDesiredDestinationAddress();
 		int desiredDestinationPort = socks5Req.getDesiredDestinationPort();
-		Host bindHost = this.settings.getLastValue(
-				SettingSpec.HOST, Host.class);
-		InetAddress bindInetAddress = bindHost.toInetAddress();
 		DatagramSocket serverDatagramSock = null;
 		try {
+			Host bindHost = this.settings.getLastValue(
+					SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_SERVER_BIND_HOST, 
+					Host.class);
+			InetAddress bindInetAddress = bindHost.toInetAddress();
 			DatagramSocketFactory datagramSocketFactory = 
 					DatagramSocketFactory.newInstance(this.socksClient);
 			serverDatagramSock = datagramSocketFactory.newDatagramSocket(
@@ -353,6 +354,10 @@ public final class Socks5Worker implements Runnable {
 		}
 		DatagramSocket clientDatagramSock = null;
 		try {
+			Host bindHost = this.settings.getLastValue(
+					SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_CLIENT_BIND_HOST, 
+					Host.class);
+			InetAddress bindInetAddress = bindHost.toInetAddress();
 			if (this.clientSocket instanceof GssSocket) {
 				GssSocket gssSocket = (GssSocket) this.clientSocket;
 				DatagramPacketFilter datagramPacketFilter =

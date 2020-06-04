@@ -11,12 +11,12 @@ import jargyle.server.socks5.UsernamePasswordAuthenticator;
 final class ModifiableConfiguration implements Configuration {
 	
 	private final List<Criterion> allowedClientAddressCriteria;
-	private final List<Criterion> allowedIncomingTcpAddressCriteria;
-	private final List<Criterion> allowedIncomingUdpAddressCriteria;
+	private final List<Criterion> allowedSocks5IncomingTcpAddressCriteria;
+	private final List<Criterion> allowedSocks5IncomingUdpAddressCriteria;
 	private final List<Socks5RequestCriterion> allowedSocks5RequestCriteria;
 	private final List<Criterion> blockedClientAddressCriteria;
-	private final List<Criterion> blockedIncomingTcpAddressCriteria;
-	private final List<Criterion> blockedIncomingUdpAddressCriteria;		
+	private final List<Criterion> blockedSocks5IncomingTcpAddressCriteria;
+	private final List<Criterion> blockedSocks5IncomingUdpAddressCriteria;		
 	private final List<Socks5RequestCriterion> blockedSocks5RequestCriteria;
 	private UsernamePassword externalClientSocks5UsernamePassword;
 	private final List<Setting> settings;
@@ -24,13 +24,17 @@ final class ModifiableConfiguration implements Configuration {
 	
 	public ModifiableConfiguration() {
 		this.allowedClientAddressCriteria = new ArrayList<Criterion>();
-		this.allowedIncomingTcpAddressCriteria = new ArrayList<Criterion>();
-		this.allowedIncomingUdpAddressCriteria = new ArrayList<Criterion>();
+		this.allowedSocks5IncomingTcpAddressCriteria = 
+				new ArrayList<Criterion>();
+		this.allowedSocks5IncomingUdpAddressCriteria = 
+				new ArrayList<Criterion>();
 		this.allowedSocks5RequestCriteria = 
 				new ArrayList<Socks5RequestCriterion>();
 		this.blockedClientAddressCriteria = new ArrayList<Criterion>();
-		this.blockedIncomingTcpAddressCriteria = new ArrayList<Criterion>();
-		this.blockedIncomingUdpAddressCriteria = new ArrayList<Criterion>();
+		this.blockedSocks5IncomingTcpAddressCriteria = 
+				new ArrayList<Criterion>();
+		this.blockedSocks5IncomingUdpAddressCriteria = 
+				new ArrayList<Criterion>();
 		this.blockedSocks5RequestCriteria = 
 				new ArrayList<Socks5RequestCriterion>();
 		this.externalClientSocks5UsernamePassword = null;
@@ -41,18 +45,18 @@ final class ModifiableConfiguration implements Configuration {
 	public void add(final Configuration configuration) {
 		this.addAllowedClientAddressCriteria(
 				configuration.getAllowedClientAddressCriteria());
-		this.addAllowedIncomingTcpAddressCriteria(
-				configuration.getAllowedIncomingTcpAddressCriteria());
-		this.addAllowedIncomingUdpAddressCriteria(
-				configuration.getAllowedIncomingUdpAddressCriteria());
+		this.addAllowedSocks5IncomingTcpAddressCriteria(
+				configuration.getAllowedSocks5IncomingTcpAddressCriteria());
+		this.addAllowedSocks5IncomingUdpAddressCriteria(
+				configuration.getAllowedSocks5IncomingUdpAddressCriteria());
 		this.addAllowedSocks5RequestCriteria(
 				configuration.getAllowedSocks5RequestCriteria());
 		this.addBlockedClientAddressCriteria(
 				configuration.getBlockedClientAddressCriteria());
-		this.addBlockedIncomingTcpAddressCriteria(
-				configuration.getBlockedIncomingTcpAddressCriteria());
-		this.addBlockedIncomingUdpAddressCriteria(
-				configuration.getBlockedIncomingUdpAddressCriteria());			
+		this.addBlockedSocks5IncomingTcpAddressCriteria(
+				configuration.getBlockedSocks5IncomingTcpAddressCriteria());
+		this.addBlockedSocks5IncomingUdpAddressCriteria(
+				configuration.getBlockedSocks5IncomingUdpAddressCriteria());			
 		this.addBlockedSocks5RequestCriteria(
 				configuration.getBlockedSocks5RequestCriteria());
 		this.setExternalClientSocks5UsernamePassword(
@@ -72,26 +76,26 @@ final class ModifiableConfiguration implements Configuration {
 		this.allowedClientAddressCriteria.addAll(allowedClientAddrCriteriaList);
 	}
 	
-	public void addAllowedIncomingTcpAddressCriteria(
-			final Criteria allowedIncomingTcpAddrCriteria) {
-		List<Criterion> allowedIncomingTcpAddrCriteriaList =
-				allowedIncomingTcpAddrCriteria.toList();
-		if (allowedIncomingTcpAddrCriteriaList.isEmpty()) {
+	public void addAllowedSocks5IncomingTcpAddressCriteria(
+			final Criteria allowedSocks5IncomingTcpAddrCriteria) {
+		List<Criterion> allowedSocks5IncomingTcpAddrCriteriaList =
+				allowedSocks5IncomingTcpAddrCriteria.toList();
+		if (allowedSocks5IncomingTcpAddrCriteriaList.isEmpty()) {
 			return;
 		}
-		this.allowedIncomingTcpAddressCriteria.addAll(
-				allowedIncomingTcpAddrCriteriaList);
+		this.allowedSocks5IncomingTcpAddressCriteria.addAll(
+				allowedSocks5IncomingTcpAddrCriteriaList);
 	}
 	
-	public void addAllowedIncomingUdpAddressCriteria(
-			final Criteria allowedIncomingUdpAddrCriteria) {
-		List<Criterion> allowedIncomingUdpAddrCriteriaList = 
-				allowedIncomingUdpAddrCriteria.toList();
-		if (allowedIncomingUdpAddrCriteriaList.isEmpty()) {
+	public void addAllowedSocks5IncomingUdpAddressCriteria(
+			final Criteria allowedSocks5IncomingUdpAddrCriteria) {
+		List<Criterion> allowedSocks5IncomingUdpAddrCriteriaList = 
+				allowedSocks5IncomingUdpAddrCriteria.toList();
+		if (allowedSocks5IncomingUdpAddrCriteriaList.isEmpty()) {
 			return;
 		}
-		this.allowedIncomingUdpAddressCriteria.addAll(
-				allowedIncomingUdpAddrCriteriaList);
+		this.allowedSocks5IncomingUdpAddressCriteria.addAll(
+				allowedSocks5IncomingUdpAddrCriteriaList);
 	}
 	
 	public void addAllowedSocks5RequestCriteria(
@@ -114,26 +118,26 @@ final class ModifiableConfiguration implements Configuration {
 		this.blockedClientAddressCriteria.addAll(blockedClientAddrCriteriaList);
 	}
 	
-	public void addBlockedIncomingTcpAddressCriteria(
-			final Criteria blockedIncomingTcpAddrCriteria) {
-		List<Criterion> blockedIncomingTcpAddrCriteriaList =
-				blockedIncomingTcpAddrCriteria.toList();
-		if (blockedIncomingTcpAddrCriteriaList.isEmpty()) {
+	public void addBlockedSocks5IncomingTcpAddressCriteria(
+			final Criteria blockedSocks5IncomingTcpAddrCriteria) {
+		List<Criterion> blockedSocks5IncomingTcpAddrCriteriaList =
+				blockedSocks5IncomingTcpAddrCriteria.toList();
+		if (blockedSocks5IncomingTcpAddrCriteriaList.isEmpty()) {
 			return;
 		}
-		this.blockedIncomingTcpAddressCriteria.addAll(
-				blockedIncomingTcpAddrCriteriaList);
+		this.blockedSocks5IncomingTcpAddressCriteria.addAll(
+				blockedSocks5IncomingTcpAddrCriteriaList);
 	}
 	
-	public void addBlockedIncomingUdpAddressCriteria(
-			final Criteria blockedIncomingUdpAddrCriteria) {
-		List<Criterion> blockedIncomingUdpAddrCriteriaList =
-				blockedIncomingUdpAddrCriteria.toList();
-		if (blockedIncomingUdpAddrCriteriaList.isEmpty()) {
+	public void addBlockedSocks5IncomingUdpAddressCriteria(
+			final Criteria blockedSocks5IncomingUdpAddrCriteria) {
+		List<Criterion> blockedSocks5IncomingUdpAddrCriteriaList =
+				blockedSocks5IncomingUdpAddrCriteria.toList();
+		if (blockedSocks5IncomingUdpAddrCriteriaList.isEmpty()) {
 			return;
 		}
-		this.blockedIncomingUdpAddressCriteria.addAll(
-				blockedIncomingUdpAddrCriteriaList);
+		this.blockedSocks5IncomingUdpAddressCriteria.addAll(
+				blockedSocks5IncomingUdpAddrCriteriaList);
 	}
 	
 	public void addBlockedSocks5RequestCriteria(
@@ -160,13 +164,15 @@ final class ModifiableConfiguration implements Configuration {
 	}
 	
 	@Override
-	public Criteria getAllowedIncomingTcpAddressCriteria() {
-		return Criteria.newInstance(this.allowedIncomingTcpAddressCriteria);
+	public Criteria getAllowedSocks5IncomingTcpAddressCriteria() {
+		return Criteria.newInstance(
+				this.allowedSocks5IncomingTcpAddressCriteria);
 	}
 	
 	@Override
-	public Criteria getAllowedIncomingUdpAddressCriteria() {
-		return Criteria.newInstance(this.allowedIncomingUdpAddressCriteria);
+	public Criteria getAllowedSocks5IncomingUdpAddressCriteria() {
+		return Criteria.newInstance(
+				this.allowedSocks5IncomingUdpAddressCriteria);
 	}
 	
 	@Override
@@ -180,13 +186,15 @@ final class ModifiableConfiguration implements Configuration {
 	}
 	
 	@Override
-	public Criteria getBlockedIncomingTcpAddressCriteria() {
-		return Criteria.newInstance(this.blockedIncomingTcpAddressCriteria);
+	public Criteria getBlockedSocks5IncomingTcpAddressCriteria() {
+		return Criteria.newInstance(
+				this.blockedSocks5IncomingTcpAddressCriteria);
 	}
 	
 	@Override
-	public Criteria getBlockedIncomingUdpAddressCriteria() {
-		return Criteria.newInstance(this.blockedIncomingUdpAddressCriteria);
+	public Criteria getBlockedSocks5IncomingUdpAddressCriteria() {
+		return Criteria.newInstance(
+				this.blockedSocks5IncomingUdpAddressCriteria);
 	}
 	
 	@Override
@@ -232,18 +240,18 @@ final class ModifiableConfiguration implements Configuration {
 		builder.append(this.getClass().getSimpleName())
 			.append(" [allowedClientAddressCriteria=")
 			.append(this.allowedClientAddressCriteria)
-			.append(", allowedIncomingTcpAddressCriteria=")
-			.append(this.allowedIncomingTcpAddressCriteria)
-			.append(", allowedIncomingUdpAddressCriteria=")
-			.append(this.allowedIncomingUdpAddressCriteria)
+			.append(", allowedSocks5IncomingTcpAddressCriteria=")
+			.append(this.allowedSocks5IncomingTcpAddressCriteria)
+			.append(", allowedSocks5IncomingUdpAddressCriteria=")
+			.append(this.allowedSocks5IncomingUdpAddressCriteria)
 			.append(", allowedSocks5RequestCriteria=")
 			.append(this.allowedSocks5RequestCriteria)			
 			.append(", blockedClientAddressCriteria=")
 			.append(this.blockedClientAddressCriteria)
-			.append(", blockedIncomingTcpAddressCriteria=")
-			.append(this.blockedIncomingTcpAddressCriteria)
-			.append(", blockedIncomingUdpAddressCriteria=")
-			.append(this.blockedIncomingUdpAddressCriteria)			
+			.append(", blockedSocks5IncomingTcpAddressCriteria=")
+			.append(this.blockedSocks5IncomingTcpAddressCriteria)
+			.append(", blockedSocks5IncomingUdpAddressCriteria=")
+			.append(this.blockedSocks5IncomingUdpAddressCriteria)			
 			.append(", blockedSocks5RequestCriteria=")
 			.append(this.blockedSocks5RequestCriteria)
 			.append(", externalClientSocks5UsernamePassword=")

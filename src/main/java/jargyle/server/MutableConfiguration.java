@@ -18,13 +18,13 @@ public final class MutableConfiguration implements Configuration {
 	}
 
 	@Override
-	public Criteria getAllowedIncomingTcpAddressCriteria() {
-		return this.configurationService.getConfiguration().getAllowedIncomingTcpAddressCriteria();
+	public Criteria getAllowedSocks5IncomingTcpAddressCriteria() {
+		return this.configurationService.getConfiguration().getAllowedSocks5IncomingTcpAddressCriteria();
 	}
 
 	@Override
-	public Criteria getAllowedIncomingUdpAddressCriteria() {
-		return this.configurationService.getConfiguration().getAllowedIncomingUdpAddressCriteria();
+	public Criteria getAllowedSocks5IncomingUdpAddressCriteria() {
+		return this.configurationService.getConfiguration().getAllowedSocks5IncomingUdpAddressCriteria();
 	}
 
 	@Override
@@ -38,13 +38,13 @@ public final class MutableConfiguration implements Configuration {
 	}
 	
 	@Override
-	public Criteria getBlockedIncomingTcpAddressCriteria() {
-		return this.configurationService.getConfiguration().getBlockedIncomingTcpAddressCriteria();
+	public Criteria getBlockedSocks5IncomingTcpAddressCriteria() {
+		return this.configurationService.getConfiguration().getBlockedSocks5IncomingTcpAddressCriteria();
 	}
 
 	@Override
-	public Criteria getBlockedIncomingUdpAddressCriteria() {
-		return this.configurationService.getConfiguration().getBlockedIncomingUdpAddressCriteria();
+	public Criteria getBlockedSocks5IncomingUdpAddressCriteria() {
+		return this.configurationService.getConfiguration().getBlockedSocks5IncomingUdpAddressCriteria();
 	}
 
 	@Override

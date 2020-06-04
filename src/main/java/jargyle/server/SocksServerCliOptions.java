@@ -12,8 +12,8 @@ import jargyle.server.socks5.UsernamePasswordAuthenticator;
 
 public final class SocksServerCliOptions extends Options {
 	
-	public static final Option ALLOWED_CLIENT_ADDRESS_CRITERIA_OPTION =
-			new GnuLongOption.Builder("allowed-client-address-criteria")
+	public static final Option ALLOWED_CLIENT_ADDR_CRITERIA_OPTION =
+			new GnuLongOption.Builder("allowed-client-addr-criteria")
 			.doc("The space separated list of allowed client address criteria")
 			.optionArgSpec(new OptionArgSpec.Builder()
 					.name("CRITERIA")
@@ -34,9 +34,9 @@ public final class SocksServerCliOptions extends Options {
 			.ordinal(0)
 			.build();
 	
-	public static final Option ALLOWED_INCOMING_TCP_ADDRESS_CRITERIA_OPTION =
-			new GnuLongOption.Builder("allowed-incoming-tcp-address-criteria")
-			.doc("The space separated list of allowed incoming TCP address "
+	public static final Option ALLOWED_SOCKS5_INCOMING_TCP_ADDR_CRITERIA_OPTION =
+			new GnuLongOption.Builder("allowed-socks5-incoming-tcp-addr-criteria")
+			.doc("The space separated list of allowed SOCKS5 incoming TCP address "
 					+ "criteria")
 			.optionArgSpec(new OptionArgSpec.Builder()
 					.name("CRITERIA")
@@ -57,9 +57,9 @@ public final class SocksServerCliOptions extends Options {
 			.ordinal(1)
 			.build();
 	
-	public static final Option ALLOWED_INCOMING_UDP_ADDRESS_CRITERIA_OPTION =
-			new GnuLongOption.Builder("allowed-incoming-udp-address-criteria")
-			.doc("The space separated list of allowed incoming UDP address "
+	public static final Option ALLOWED_SOCKS5_INCOMING_UDP_ADDR_CRITERIA_OPTION =
+			new GnuLongOption.Builder("allowed-socks5-incoming-udp-addr-criteria")
+			.doc("The space separated list of allowed SOCKS5 incoming UDP address "
 					+ "criteria")
 			.optionArgSpec(new OptionArgSpec.Builder()
 					.name("CRITERIA")
@@ -80,8 +80,8 @@ public final class SocksServerCliOptions extends Options {
 			.ordinal(2)
 			.build();
 	
-	public static final Option BLOCKED_CLIENT_ADDRESS_CRITERIA_OPTION =
-			new GnuLongOption.Builder("blocked-client-address-criteria")
+	public static final Option BLOCKED_CLIENT_ADDR_CRITERIA_OPTION =
+			new GnuLongOption.Builder("blocked-client-addr-criteria")
 			.doc("The space separated list of blocked client address criteria")
 			.optionArgSpec(new OptionArgSpec.Builder()
 					.name("CRITERIA")
@@ -102,9 +102,9 @@ public final class SocksServerCliOptions extends Options {
 			.ordinal(3)
 			.build();
 	
-	public static final Option BLOCKED_INCOMING_TCP_ADDRESS_CRITERIA_OPTION =
-			new GnuLongOption.Builder("blocked-incoming-tcp-address-criteria")
-			.doc("The space separated list of blocked incoming TCP address "
+	public static final Option BLOCKED_SOCKS5_INCOMING_TCP_ADDR_CRITERIA_OPTION =
+			new GnuLongOption.Builder("blocked-socks5-incoming-tcp-addr-criteria")
+			.doc("The space separated list of blocked SOCKS5 incoming TCP address "
 					+ "criteria")
 			.optionArgSpec(new OptionArgSpec.Builder()
 					.name("CRITERIA")
@@ -125,9 +125,9 @@ public final class SocksServerCliOptions extends Options {
 			.ordinal(4)
 			.build();
 	
-	public static final Option BLOCKED_INCOMING_UDP_ADDRESS_CRITERIA_OPTION =
-			new GnuLongOption.Builder("blocked-incoming-udp-address-criteria")
-			.doc("The space separated list of blocked incoming UDP address "
+	public static final Option BLOCKED_SOCKS5_INCOMING_UDP_ADDR_CRITERIA_OPTION =
+			new GnuLongOption.Builder("blocked-socks5-incoming-udp-addr-criteria")
+			.doc("The space separated list of blocked SOCKS5 incoming UDP address "
 					+ "criteria")
 			.optionArgSpec(new OptionArgSpec.Builder()
 					.name("CRITERIA")
@@ -235,7 +235,7 @@ public final class SocksServerCliOptions extends Options {
 	
 	public static final Option SETTINGS_OPTION = new GnuLongOption.Builder(
 			"settings")
-			.doc("The comma-separated list of settings for the SOCKS server")
+			.doc("The comma separated list of settings for the SOCKS server")
 			.optionArgSpec(new OptionArgSpec.Builder()
 					.name("SETTINGS")
 					.type(Settings.class)

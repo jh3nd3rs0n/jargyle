@@ -154,14 +154,14 @@ public final class Socks5Worker implements Runnable {
 			}
 		}
 		InetAddress incomingTcpInetAddress = incomingSocket.getInetAddress();
-		Criteria allowedIncomingTcpAddressCriteria = 
-				this.configuration.getAllowedIncomingTcpAddressCriteria();
-		if (allowedIncomingTcpAddressCriteria.toList().isEmpty()) {
-			allowedIncomingTcpAddressCriteria = Criteria.newInstance(
+		Criteria allowedSocks5IncomingTcpAddressCriteria = 
+				this.configuration.getAllowedSocks5IncomingTcpAddressCriteria();
+		if (allowedSocks5IncomingTcpAddressCriteria.toList().isEmpty()) {
+			allowedSocks5IncomingTcpAddressCriteria = Criteria.newInstance(
 					CriterionOperator.MATCHES.newCriterion(".*"));
 		}
 		Criterion criterion = 
-				allowedIncomingTcpAddressCriteria.anyEvaluatesTrue(
+				allowedSocks5IncomingTcpAddressCriteria.anyEvaluatesTrue(
 						incomingTcpInetAddress);
 		if (criterion == null) {
 			this.log(
@@ -177,9 +177,9 @@ public final class Socks5Worker implements Runnable {
 			this.writeThenFlush(socks5Rep.toByteArray());
 			return;
 		}
-		Criteria blockedIncomingTcpAddressCriteria =
-				this.configuration.getBlockedIncomingTcpAddressCriteria();
-		criterion = blockedIncomingTcpAddressCriteria.anyEvaluatesTrue(
+		Criteria blockedSocks5IncomingTcpAddressCriteria =
+				this.configuration.getBlockedSocks5IncomingTcpAddressCriteria();
+		criterion = blockedSocks5IncomingTcpAddressCriteria.anyEvaluatesTrue(
 				incomingTcpInetAddress);
 		if (criterion != null) {
 			this.log(
@@ -396,8 +396,8 @@ public final class Socks5Worker implements Runnable {
 				this.clientSocket.getInetAddress().getHostAddress(),
 				desiredDestinationAddress,
 				desiredDestinationPort, 
-				this.configuration.getAllowedIncomingUdpAddressCriteria(), 
-				this.configuration.getBlockedIncomingUdpAddressCriteria(), 
+				this.configuration.getAllowedSocks5IncomingUdpAddressCriteria(), 
+				this.configuration.getBlockedSocks5IncomingUdpAddressCriteria(), 
 				this.settings.getLastValue(
 						SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_RELAY_BUFFER_SIZE, 
 						PositiveInteger.class).intValue(), 

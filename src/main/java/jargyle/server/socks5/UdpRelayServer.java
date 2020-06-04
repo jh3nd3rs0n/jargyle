@@ -58,14 +58,14 @@ final class UdpRelayServer {
 							String.format(
 									"Packet data received: %s byte(s)", 
 									packet.getLength()));
-					Criteria allowedIncomingUdpAddrCriteria =
-							this.getUdpRelayServer().allowedIncomingUdpAddressCriteria;
-					if (allowedIncomingUdpAddrCriteria.toList().isEmpty()) {
-						allowedIncomingUdpAddrCriteria = Criteria.newInstance(
+					Criteria allowedSocks5IncomingUdpAddrCriteria =
+							this.getUdpRelayServer().allowedSocks5IncomingUdpAddressCriteria;
+					if (allowedSocks5IncomingUdpAddrCriteria.toList().isEmpty()) {
+						allowedSocks5IncomingUdpAddrCriteria = Criteria.newInstance(
 								CriterionOperator.MATCHES.newCriterion(".*"));
 					}
 					Criterion criterion = 
-							allowedIncomingUdpAddrCriteria.anyEvaluatesTrue(
+							allowedSocks5IncomingUdpAddrCriteria.anyEvaluatesTrue(
 									packet.getAddress());
 					if (criterion == null) {
 						this.log(
@@ -75,9 +75,9 @@ final class UdpRelayServer {
 										packet.getAddress()));
 						continue;
 					}
-					Criteria blockedIncomingUdpAddrCriteria =
-							this.getUdpRelayServer().blockedIncomingUdpAddressCriteria;
-					criterion = blockedIncomingUdpAddrCriteria.anyEvaluatesTrue(
+					Criteria blockedSocks5IncomingUdpAddrCriteria =
+							this.getUdpRelayServer().blockedSocks5IncomingUdpAddressCriteria;
+					criterion = blockedSocks5IncomingUdpAddrCriteria.anyEvaluatesTrue(
 							packet.getAddress());
 					if (criterion != null) {
 						this.log(
@@ -413,8 +413,8 @@ final class UdpRelayServer {
 		
 	}
 	
-	private final Criteria allowedIncomingUdpAddressCriteria;
-	private final Criteria blockedIncomingUdpAddressCriteria;
+	private final Criteria allowedSocks5IncomingUdpAddressCriteria;
+	private final Criteria blockedSocks5IncomingUdpAddressCriteria;
 	private final DatagramSocket clientDatagramSocket;
 	private final int bufferSize;
 	private String desiredDestinationAddress;
@@ -436,14 +436,14 @@ final class UdpRelayServer {
 			final String sourceAddr,
 			final String desiredDestinationAddr,
 			final int desiredDestinationPrt, 
-			final Criteria allowedIncomingUdpAddrCriteria, 
-			final Criteria blockedIncomingUdpAddrCriteria, 
+			final Criteria allowedSocks5IncomingUdpAddrCriteria, 
+			final Criteria blockedSocks5IncomingUdpAddrCriteria, 
 			final int bffrSize, final int tmt, final Logger lggr) {
 		if (clientDatagramSock == null 
 				|| serverDatagramSock == null
 				|| desiredDestinationAddr == null
-				|| allowedIncomingUdpAddrCriteria == null
-				|| blockedIncomingUdpAddrCriteria == null
+				|| allowedSocks5IncomingUdpAddrCriteria == null
+				|| blockedSocks5IncomingUdpAddrCriteria == null
 				|| lggr == null) {
 			throw new NullPointerException();
 		}
@@ -465,8 +465,8 @@ final class UdpRelayServer {
 			desiredDestAddr = null;
 			desiredDestPrt = -1;
 		}
-		this.allowedIncomingUdpAddressCriteria = allowedIncomingUdpAddrCriteria;
-		this.blockedIncomingUdpAddressCriteria = blockedIncomingUdpAddrCriteria;
+		this.allowedSocks5IncomingUdpAddressCriteria = allowedSocks5IncomingUdpAddrCriteria;
+		this.blockedSocks5IncomingUdpAddressCriteria = blockedSocks5IncomingUdpAddrCriteria;
 		this.clientDatagramSocket = clientDatagramSock;
 		this.bufferSize = bffrSize;
 		this.desiredDestinationAddress = desiredDestAddr;

@@ -191,38 +191,38 @@ final class SocksServerCli {
 				System.exit(-1);
 			}
 			if (parseResultHolder.hasOptionOf(
-					"--allowed-client-address-criteria")) {
+					"--allowed-client-addr-criteria")) {
 				modifiableConfiguration.addAllowedClientAddressCriteria(
 						parseResultHolder.getOptionArg().getTypeValue(
 								Criteria.class));
 			}
 			if (parseResultHolder.hasOptionOf(
-					"--allowed-incoming-tcp-address-criteria")) {
-				modifiableConfiguration.addAllowedIncomingTcpAddressCriteria(
+					"--allowed-socks5-incoming-tcp-addr-criteria")) {
+				modifiableConfiguration.addAllowedSocks5IncomingTcpAddressCriteria(
 						parseResultHolder.getOptionArg().getTypeValue(
 								Criteria.class));
 			}
 			if (parseResultHolder.hasOptionOf(
-					"--allowed-incoming-udp-address-criteria")) {
-				modifiableConfiguration.addAllowedIncomingUdpAddressCriteria(
+					"--allowed-socks5-incoming-udp-addr-criteria")) {
+				modifiableConfiguration.addAllowedSocks5IncomingUdpAddressCriteria(
 						parseResultHolder.getOptionArg().getTypeValue(
 								Criteria.class));
 			}
 			if (parseResultHolder.hasOptionOf(
-					"--blocked-client-address-criteria")) {
+					"--blocked-client-addr-criteria")) {
 				modifiableConfiguration.addBlockedClientAddressCriteria(
 						parseResultHolder.getOptionArg().getTypeValue(
 								Criteria.class));
 			}
 			if (parseResultHolder.hasOptionOf(
-					"--blocked-incoming-tcp-address-criteria")) {
-				modifiableConfiguration.addBlockedIncomingTcpAddressCriteria(
+					"--blocked-socks5-incoming-tcp-addr-criteria")) {
+				modifiableConfiguration.addBlockedSocks5IncomingTcpAddressCriteria(
 						parseResultHolder.getOptionArg().getTypeValue(
 								Criteria.class));
 			}
 			if (parseResultHolder.hasOptionOf(
-					"--blocked-incoming-udp-address-criteria")) {
-				modifiableConfiguration.addBlockedIncomingUdpAddressCriteria(
+					"--blocked-socks5-incoming-udp-addr-criteria")) {
+				modifiableConfiguration.addBlockedSocks5IncomingUdpAddressCriteria(
 						parseResultHolder.getOptionArg().getTypeValue(
 								Criteria.class));
 			}

@@ -154,21 +154,21 @@ public final class Socks5Worker implements Runnable {
 			}
 		}
 		InetAddress incomingTcpInetAddress = incomingSocket.getInetAddress();
-		String incomingTcpName = incomingTcpInetAddress.getHostName();
-		String incomingTcpAddress = incomingTcpInetAddress.getHostAddress();
 		Criteria allowedIncomingTcpAddressCriteria = 
 				this.configuration.getAllowedIncomingTcpAddressCriteria();
 		if (allowedIncomingTcpAddressCriteria.toList().isEmpty()) {
 			allowedIncomingTcpAddressCriteria = Criteria.newInstance(
 					CriterionOperator.MATCHES.newCriterion(".*"));
 		}
-		if (allowedIncomingTcpAddressCriteria.anyEvaluatesTrue(incomingTcpName) == null 
-				&& allowedIncomingTcpAddressCriteria.anyEvaluatesTrue(incomingTcpAddress) == null) {
+		Criterion criterion = 
+				allowedIncomingTcpAddressCriteria.anyEvaluatesTrue(
+						incomingTcpInetAddress);
+		if (criterion == null) {
 			this.log(
 					Level.FINE, 
 					String.format(
 							"Incoming TCP address %s not allowed", 
-							incomingTcpAddress));
+							incomingTcpInetAddress));
 			socks5Rep = Socks5Reply.newErrorInstance(
 					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
 			this.log(
@@ -179,34 +179,15 @@ public final class Socks5Worker implements Runnable {
 		}
 		Criteria blockedIncomingTcpAddressCriteria =
 				this.configuration.getBlockedIncomingTcpAddressCriteria();
-		Criterion criterion = 
-				blockedIncomingTcpAddressCriteria.anyEvaluatesTrue(
-						incomingTcpName);
-		if (criterion != null) {
-			this.log(
-					Level.FINE, 
-					String.format(
-							"Incoming TCP address %s blocked based on the "
-							+ "following criterion: %s", 
-							incomingTcpName,
-							criterion));
-			socks5Rep = Socks5Reply.newErrorInstance(
-					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
-			this.log(
-					Level.FINE, 
-					String.format("Sending %s", socks5Rep.toString()));
-			this.writeThenFlush(socks5Rep.toByteArray());
-			return;
-		}
 		criterion = blockedIncomingTcpAddressCriteria.anyEvaluatesTrue(
-				incomingTcpAddress);
+				incomingTcpInetAddress);
 		if (criterion != null) {
 			this.log(
 					Level.FINE, 
 					String.format(
 							"Incoming TCP address %s blocked based on the "
 							+ "following criterion: %s", 
-							incomingTcpAddress,
+							incomingTcpInetAddress,
 							criterion));
 			socks5Rep = Socks5Reply.newErrorInstance(
 					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
@@ -216,7 +197,7 @@ public final class Socks5Worker implements Runnable {
 			this.writeThenFlush(socks5Rep.toByteArray());
 			return;
 		}
-		serverBoundAddress = incomingTcpAddress;
+		serverBoundAddress = incomingTcpInetAddress.getHostAddress();
 		addressType = AddressType.get(serverBoundAddress);
 		serverBoundPort = incomingSocket.getLocalPort();
 		socks5Rep = Socks5Reply.newInstance(
@@ -620,35 +601,43 @@ public final class Socks5Worker implements Runnable {
 			this.log(
 					Level.FINE, 
 					String.format("Received %s", socks5Req.toString()));
+			InetAddress clientInetAddress = this.clientSocket.getLocalAddress();
 			Socks5RequestCriteria allowedSocks5RequestCriteria = 
 					this.configuration.getAllowedSocks5RequestCriteria();
 			if (allowedSocks5RequestCriteria.toList().isEmpty()) {
 				allowedSocks5RequestCriteria = new Socks5RequestCriteria(
-						new Socks5RequestCriterion(null, null, null));
+						new Socks5RequestCriterion(null, null, null, null));
 			}
-			if (allowedSocks5RequestCriteria.anyEvaluatesTrue(socks5Req) == null) {
+			Socks5RequestCriterion socks5RequestCriterion =
+					allowedSocks5RequestCriteria.anyEvaluatesTrue(
+							clientInetAddress, socks5Req);
+			if (socks5RequestCriterion == null) {
 				Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
 						Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
 				this.log(
 						Level.FINE, 
 						String.format(
-								"SOCKS5 request not allowed. SOCKS5 request: %s", 
+								"SOCKS5 request from %s not allowed. "
+								+ "SOCKS5 request: %s",
+								clientInetAddress.toString(),
 								socks5Req.toString()));
 				this.writeThenFlush(socks5Rep.toByteArray());
 				return;
 			}
 			Socks5RequestCriteria blockedSocks5RequestCriteria = 
 					this.configuration.getBlockedSocks5RequestCriteria();
-			Socks5RequestCriterion socks5RequestCriterion =
-					blockedSocks5RequestCriteria.anyEvaluatesTrue(socks5Req);
+			socks5RequestCriterion =
+					blockedSocks5RequestCriteria.anyEvaluatesTrue(
+							clientInetAddress, socks5Req);
 			if (socks5RequestCriterion != null) {
 				Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
 						Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
 				this.log(
 						Level.FINE, 
 						String.format(
-								"SOCKS5 request blocked based on the following "
-								+ "criterion: %s. SOCKS5 request: %s",
+								"SOCKS5 request from %s blocked based on the "
+								+ "following criterion: %s. SOCKS5 request: %s",
+								clientInetAddress.toString(),
 								socks5RequestCriterion.toString(),
 								socks5Req.toString()));
 				this.writeThenFlush(socks5Rep.toByteArray());

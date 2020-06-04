@@ -64,81 +64,94 @@ final class ModifiableConfiguration implements Configuration {
 
 	public void addAllowedClientAddressCriteria(
 			final Criteria allowedClientAddrCriteria) {
-		if (allowedClientAddrCriteria.toList().isEmpty()) {
+		List<Criterion> allowedClientAddrCriteriaList =
+				allowedClientAddrCriteria.toList();
+		if (allowedClientAddrCriteriaList.isEmpty()) {
 			return;
 		}
-		this.allowedClientAddressCriteria.addAll(
-				allowedClientAddrCriteria.toList());
+		this.allowedClientAddressCriteria.addAll(allowedClientAddrCriteriaList);
 	}
 	
 	public void addAllowedIncomingTcpAddressCriteria(
 			final Criteria allowedIncomingTcpAddrCriteria) {
-		if (allowedIncomingTcpAddrCriteria.toList().isEmpty()) {
+		List<Criterion> allowedIncomingTcpAddrCriteriaList =
+				allowedIncomingTcpAddrCriteria.toList();
+		if (allowedIncomingTcpAddrCriteriaList.isEmpty()) {
 			return;
 		}
 		this.allowedIncomingTcpAddressCriteria.addAll(
-				allowedIncomingTcpAddrCriteria.toList());
+				allowedIncomingTcpAddrCriteriaList);
 	}
 	
 	public void addAllowedIncomingUdpAddressCriteria(
 			final Criteria allowedIncomingUdpAddrCriteria) {
-		if (allowedIncomingUdpAddrCriteria.toList().isEmpty()) {
+		List<Criterion> allowedIncomingUdpAddrCriteriaList = 
+				allowedIncomingUdpAddrCriteria.toList();
+		if (allowedIncomingUdpAddrCriteriaList.isEmpty()) {
 			return;
 		}
 		this.allowedIncomingUdpAddressCriteria.addAll(
-				allowedIncomingUdpAddrCriteria.toList());
+				allowedIncomingUdpAddrCriteriaList);
 	}
 	
 	public void addAllowedSocks5RequestCriteria(
 			final Socks5RequestCriteria allowedSocks5ReqCriteria) {
-		if (allowedSocks5ReqCriteria.toList().isEmpty()) {
+		List<Socks5RequestCriterion> allowedSocks5ReqCriteriaList =
+				allowedSocks5ReqCriteria.toList();
+		if (allowedSocks5ReqCriteriaList.isEmpty()) {
 			return;
 		}
-		this.allowedSocks5RequestCriteria.addAll(
-				allowedSocks5ReqCriteria.toList());
+		this.allowedSocks5RequestCriteria.addAll(allowedSocks5ReqCriteriaList);
 	}
 	
 	public void addBlockedClientAddressCriteria(
 			final Criteria blockedClientAddrCriteria) {
-		if (blockedClientAddrCriteria.toList().isEmpty()) {
+		List<Criterion> blockedClientAddrCriteriaList =
+				blockedClientAddrCriteria.toList();
+		if (blockedClientAddrCriteriaList.isEmpty()) {
 			return;
 		}
-		this.blockedClientAddressCriteria.addAll(
-				blockedClientAddrCriteria.toList());
+		this.blockedClientAddressCriteria.addAll(blockedClientAddrCriteriaList);
 	}
 	
 	public void addBlockedIncomingTcpAddressCriteria(
 			final Criteria blockedIncomingTcpAddrCriteria) {
-		if (blockedIncomingTcpAddrCriteria.toList().isEmpty()) {
+		List<Criterion> blockedIncomingTcpAddrCriteriaList =
+				blockedIncomingTcpAddrCriteria.toList();
+		if (blockedIncomingTcpAddrCriteriaList.isEmpty()) {
 			return;
 		}
 		this.blockedIncomingTcpAddressCriteria.addAll(
-				blockedIncomingTcpAddrCriteria.toList());
+				blockedIncomingTcpAddrCriteriaList);
 	}
 	
 	public void addBlockedIncomingUdpAddressCriteria(
 			final Criteria blockedIncomingUdpAddrCriteria) {
-		if (blockedIncomingUdpAddrCriteria.toList().isEmpty()) {
+		List<Criterion> blockedIncomingUdpAddrCriteriaList =
+				blockedIncomingUdpAddrCriteria.toList();
+		if (blockedIncomingUdpAddrCriteriaList.isEmpty()) {
 			return;
 		}
 		this.blockedIncomingUdpAddressCriteria.addAll(
-				blockedIncomingUdpAddrCriteria.toList());
+				blockedIncomingUdpAddrCriteriaList);
 	}
 	
 	public void addBlockedSocks5RequestCriteria(
 			final Socks5RequestCriteria blockedSocks5ReqCriteria) {
-		if (blockedSocks5ReqCriteria.toList().isEmpty()) {
+		List<Socks5RequestCriterion> blockedSocks5ReqCriteriaList =
+				blockedSocks5ReqCriteria.toList();
+		if (blockedSocks5ReqCriteriaList.isEmpty()) {
 			return;
 		}
-		this.blockedSocks5RequestCriteria.addAll(
-				blockedSocks5ReqCriteria.toList());
+		this.blockedSocks5RequestCriteria.addAll(blockedSocks5ReqCriteriaList);
 	}
 	
 	public void addSettings(final Settings sttngs) {
-		if (sttngs.toList().isEmpty()) {
+		List<Setting> sttngsList = sttngs.toList();
+		if (sttngsList.isEmpty()) {
 			return;
 		}
-		this.settings.addAll(sttngs.toList());
+		this.settings.addAll(sttngsList);
 	}
 
 	@Override

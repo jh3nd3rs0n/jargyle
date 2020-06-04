@@ -56,48 +56,34 @@ final class Worker implements Runnable {
 	public void run() {
 		try {
 			InetAddress clientInetAddress = this.clientSocket.getInetAddress();
-			String clientName = clientInetAddress.getHostName();
-			String clientAddress = clientInetAddress.getHostAddress();
 			Criteria allowedClientAddressCriteria = 
 					this.configuration.getAllowedClientAddressCriteria();
 			if (allowedClientAddressCriteria.toList().isEmpty()) {
 				allowedClientAddressCriteria = Criteria.newInstance(
 						CriterionOperator.MATCHES.newCriterion(".*"));
 			}
-			if (allowedClientAddressCriteria.anyEvaluatesTrue(clientName) == null 
-					&& allowedClientAddressCriteria.anyEvaluatesTrue(clientAddress) == null) {
+			Criterion criterion = allowedClientAddressCriteria.anyEvaluatesTrue(
+					clientInetAddress);
+			if (criterion == null) {
 				this.log(
 						Level.FINE, 
 						String.format(
 								"Client address %s not allowed", 
-								clientAddress));
+								clientInetAddress));
 				this.close();
 				return;
 			}
 			Criteria blockedClientAddressCriteria =
 					this.configuration.getBlockedClientAddressCriteria();
-			Criterion criterion = 
-					blockedClientAddressCriteria.anyEvaluatesTrue(clientName);
-			if (criterion != null) {
-				this.log(
-						Level.FINE, 
-						String.format(
-								"Client address %s blocked based on the "
-								+ "following criterion: %s", 
-								clientName,
-								criterion));
-				this.close();
-				return;
-			}
 			criterion = blockedClientAddressCriteria.anyEvaluatesTrue(
-					clientAddress);
+					clientInetAddress);
 			if (criterion != null) {
 				this.log(
 						Level.FINE, 
 						String.format(
 								"Client address %s blocked based on the "
 								+ "following criterion: %s", 
-								clientAddress,
+								clientInetAddress,
 								criterion));
 				this.close();
 				return;

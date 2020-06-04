@@ -58,48 +58,38 @@ final class UdpRelayServer {
 							String.format(
 									"Packet data received: %s byte(s)", 
 									packet.getLength()));
-					String name = packet.getAddress().getHostName();
-					String address = packet.getAddress().getHostAddress();
 					Criteria allowedIncomingUdpAddrCriteria =
 							this.getUdpRelayServer().allowedIncomingUdpAddressCriteria;
 					if (allowedIncomingUdpAddrCriteria.toList().isEmpty()) {
 						allowedIncomingUdpAddrCriteria = Criteria.newInstance(
 								CriterionOperator.MATCHES.newCriterion(".*"));
 					}
-					if (allowedIncomingUdpAddrCriteria.anyEvaluatesTrue(name) == null
-							&& allowedIncomingUdpAddrCriteria.anyEvaluatesTrue(address) == null) {
+					Criterion criterion = 
+							allowedIncomingUdpAddrCriteria.anyEvaluatesTrue(
+									packet.getAddress());
+					if (criterion == null) {
 						this.log(
 								Level.FINE, 
 								String.format(
 										"Incoming UDP address %s not allowed", 
-										address));
+										packet.getAddress()));
 						continue;
 					}
 					Criteria blockedIncomingUdpAddrCriteria =
 							this.getUdpRelayServer().blockedIncomingUdpAddressCriteria;
-					Criterion criterion = 
-							blockedIncomingUdpAddrCriteria.anyEvaluatesTrue(name);
+					criterion = blockedIncomingUdpAddrCriteria.anyEvaluatesTrue(
+							packet.getAddress());
 					if (criterion != null) {
 						this.log(
 								Level.FINE, 
 								String.format(
 										"Incoming UDP address %s blocked based on the "
 										+ "following criterion: %s", 
-										name,
+										packet.getAddress(),
 										criterion));
 						continue;
 					}
-					criterion = blockedIncomingUdpAddrCriteria.anyEvaluatesTrue(address);
-					if (criterion != null) {
-						this.log(
-								Level.FINE, 
-								String.format(
-										"Incoming UDP address %s blocked based on the "
-										+ "following criterion: %s", 
-										name,
-										criterion));
-						continue;
-					}
+					String address = packet.getAddress().getHostAddress();
 					int port = packet.getPort();
 					String desiredDestinationAddr = 
 							this.getUdpRelayServer().desiredDestinationAddress;

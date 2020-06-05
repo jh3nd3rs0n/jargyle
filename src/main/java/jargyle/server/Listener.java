@@ -11,16 +11,16 @@ import java.util.logging.Logger;
 
 final class Listener implements Runnable {
 
+	private static final Logger LOGGER = Logger.getLogger(
+			Listener.class.getName());
+	
 	private final Configuration configuration;
-	private final Logger logger;
 	private final ServerSocket serverSocket;
 	
 	public Listener(
 			final ServerSocket serverSock, 
-			final Configuration config,
-			final Logger lggr) {
+			final Configuration config) {
 		this.configuration = config;
-		this.logger = lggr;
 		this.serverSocket = serverSock;
 	}
 	
@@ -30,12 +30,12 @@ final class Listener implements Runnable {
 			try {
 				Socket clientSocket = this.serverSocket.accept();
 				executor.execute(new Worker(
-						clientSocket, this.configuration, this.logger));
+						clientSocket, this.configuration));
 			} catch (IOException e) {
 				if (e instanceof SocketException) {
 					break;
 				}
-				this.logger.log(
+				LOGGER.log(
 						Level.WARNING, 
 						"Error in waiting for a connection", 
 						e);

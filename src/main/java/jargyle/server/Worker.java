@@ -13,17 +13,17 @@ import jargyle.server.socks5.Socks5Worker;
 
 final class Worker implements Runnable {
 	
+	private static final Logger LOGGER = Logger.getLogger(
+			Worker.class.getName());
+	
 	private final Socket clientSocket;
 	private final Configuration configuration;
-	private final Logger logger;
 	
 	public Worker(
 			final Socket clientSock, 
-			final Configuration config, 
-			final Logger lggr) {
+			final Configuration config) {
 		this.clientSocket = clientSock;
 		this.configuration = config;
-		this.logger = lggr;
 	}
 	
 	private void close() {
@@ -31,26 +31,12 @@ final class Worker implements Runnable {
 			try {
 				this.clientSocket.close();
 			} catch (IOException e) {
-				this.log(
+				LOGGER.log(
 						Level.WARNING, 
 						"Error upon closing connection to the client", 
 						e);
 			}
 		}
-	}
-	
-	private void log(final Level level, final String message) {
-		this.logger.log(
-				level, 
-				String.format("%s: %s", this, message));
-	}
-	
-	private void log(
-			final Level level, final String message, final Throwable t) {
-		this.logger.log(
-				level, 
-				String.format("%s: %s", this, message), 
-				t);
 	}
 	
 	public void run() {
@@ -65,7 +51,7 @@ final class Worker implements Runnable {
 			Criterion criterion = allowedClientAddressCriteria.anyEvaluatesTrue(
 					clientInetAddress);
 			if (criterion == null) {
-				this.log(
+				LOGGER.log(
 						Level.FINE, 
 						String.format(
 								"Client address %s not allowed", 
@@ -78,7 +64,7 @@ final class Worker implements Runnable {
 			criterion = blockedClientAddressCriteria.anyEvaluatesTrue(
 					clientInetAddress);
 			if (criterion != null) {
-				this.log(
+				LOGGER.log(
 						Level.FINE, 
 						String.format(
 								"Client address %s blocked based on the "
@@ -95,7 +81,7 @@ final class Worker implements Runnable {
 								SocketSettings.class);
 				socketSettings.applyTo(this.clientSocket);
 			} catch (SocketException e) {
-				this.log(
+				LOGGER.log(
 						Level.WARNING, 
 						"Error in setting the client socket", 
 						e);
@@ -106,7 +92,7 @@ final class Worker implements Runnable {
 			try {
 				clientInputStream = this.clientSocket.getInputStream();
 			} catch (IOException e) {
-				this.log(
+				LOGGER.log(
 						Level.WARNING, 
 						"Error in getting the input stream from the client", 
 						e);
@@ -117,7 +103,7 @@ final class Worker implements Runnable {
 			try {
 				version = clientInputStream.read();
 			} catch (IOException e) {
-				this.log(
+				LOGGER.log(
 						Level.WARNING, 
 						"Error in getting the SOCKS version from the client", 
 						e);
@@ -131,11 +117,10 @@ final class Worker implements Runnable {
 			if ((byte) version == jargyle.common.net.socks5.Version.V5.byteValue()) {
 				Socks5Worker socks5Worker = new Socks5Worker(
 						this.clientSocket, 
-						this.configuration, 
-						this.logger);
+						this.configuration);
 				socks5Worker.run();
 			} else {
-				this.log(
+				LOGGER.log(
 						Level.WARNING,
 						String.format(
 								"Unknown SOCKS version: %s", 
@@ -143,7 +128,7 @@ final class Worker implements Runnable {
 				this.close();
 			}
 		} catch (Throwable t) {
-			this.log(
+			LOGGER.log(
 					Level.WARNING, 
 					"Internal server error", 
 					t);

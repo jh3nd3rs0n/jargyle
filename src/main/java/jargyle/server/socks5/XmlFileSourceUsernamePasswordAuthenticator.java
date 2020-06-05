@@ -18,16 +18,10 @@ import jargyle.server.FileStatusListener;
 public final class XmlFileSourceUsernamePasswordAuthenticator 
 	extends UsernamePasswordAuthenticator {
 	
-	static final class LoggerHolder {
+	private static final class UsersUpdater implements FileStatusListener {
 		
 		public static final Logger LOGGER = Logger.getLogger(
-				XmlFileSourceUsernamePasswordAuthenticator.class.getName());
-		
-		private LoggerHolder() { }
-		
-	}
-	
-	private static final class UsersUpdater implements FileStatusListener {
+				UsersUpdater.class.getName());
 
 		private final XmlFileSourceUsernamePasswordAuthenticator authenticator;
 
@@ -38,13 +32,13 @@ public final class XmlFileSourceUsernamePasswordAuthenticator
 		
 		@Override
 		public void fileCreated(final File file) {
-			LoggerHolder.LOGGER.log(
+			LOGGER.log(
 					Level.INFO, 
 					String.format(
 							"File '%s' created. Updating users...", 
 							file));
 			if (this.updateFrom(file)) {
-				LoggerHolder.LOGGER.log(
+				LOGGER.log(
 						Level.INFO, 
 						"Users updated successfully");
 			}
@@ -52,7 +46,7 @@ public final class XmlFileSourceUsernamePasswordAuthenticator
 		
 		@Override
 		public void fileDeleted(final File file) {
-			LoggerHolder.LOGGER.log(
+			LOGGER.log(
 					Level.INFO, 
 					String.format(
 							"File '%s' deleted (using in-memory copy).", 
@@ -61,13 +55,13 @@ public final class XmlFileSourceUsernamePasswordAuthenticator
 
 		@Override
 		public void fileModfied(final File file) {
-			LoggerHolder.LOGGER.log(
+			LOGGER.log(
 					Level.INFO, 
 					String.format(
 							"File '%s' modified. Updating users...", 
 							file));
 			if (this.updateFrom(file)) {
-				LoggerHolder.LOGGER.log(
+				LOGGER.log(
 						Level.INFO, 
 						"Users updated successfully");
 			}
@@ -80,7 +74,7 @@ public final class XmlFileSourceUsernamePasswordAuthenticator
 				in = new FileInputStream(file);
 				usrs = Users.newInstanceFrom(in);
 			} catch (FileNotFoundException e) {
-				LoggerHolder.LOGGER.log(
+				LOGGER.log(
 						Level.WARNING, 
 						String.format(
 								"File '%s' not found", 
@@ -88,7 +82,7 @@ public final class XmlFileSourceUsernamePasswordAuthenticator
 						e);
 				return false;
 			} catch (JAXBException e) {
-				LoggerHolder.LOGGER.log(
+				LOGGER.log(
 						Level.WARNING, 
 						String.format(
 								"File '%s' not valid", 
@@ -100,7 +94,7 @@ public final class XmlFileSourceUsernamePasswordAuthenticator
 					try {
 						in.close();
 					} catch (IOException e) {
-						LoggerHolder.LOGGER.log(
+						LOGGER.log(
 								Level.WARNING, 
 								String.format(
 										"Unable to close input stream of file '%s'", 
@@ -181,7 +175,7 @@ public final class XmlFileSourceUsernamePasswordAuthenticator
 	private void startMonitoringXmlFile() {
 		this.executor = Executors.newSingleThreadExecutor();
 		this.executor.execute(new FileMonitor(
-				this.xmlFile, new UsersUpdater(this), LoggerHolder.LOGGER));
+				this.xmlFile, new UsersUpdater(this)));
 	}
 
 }

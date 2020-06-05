@@ -22,6 +22,9 @@ final class UdpRelayServer {
 	
 	private static final class IncomingPacketsWorker extends PacketsWorker {
 		
+		private static final Logger LOGGER = Logger.getLogger(
+				IncomingPacketsWorker.class.getName());
+		
 		public IncomingPacketsWorker(final UdpRelayServer server) {
 			super(server);
 		}
@@ -47,14 +50,14 @@ final class UdpRelayServer {
 						}
 						continue;
 					} catch (IOException e) {
-						this.log(
+						LOGGER.log(
 								Level.WARNING, 
 								"Error in receiving the packet from the server", 
 								e);
 						continue;
 					}
-					this.log(
-							Level.FINER, 
+					LOGGER.log(
+							Level.FINE, 
 							String.format(
 									"Packet data received: %s byte(s)", 
 									packet.getLength()));
@@ -68,7 +71,7 @@ final class UdpRelayServer {
 							allowedSocks5IncomingUdpAddrCriteria.anyEvaluatesTrue(
 									packet.getAddress());
 					if (criterion == null) {
-						this.log(
+						LOGGER.log(
 								Level.FINE, 
 								String.format(
 										"Incoming UDP address %s not allowed", 
@@ -80,7 +83,7 @@ final class UdpRelayServer {
 					criterion = blockedSocks5IncomingUdpAddrCriteria.anyEvaluatesTrue(
 							packet.getAddress());
 					if (criterion != null) {
-						this.log(
+						LOGGER.log(
 								Level.FINE, 
 								String.format(
 										"Incoming UDP address %s blocked based on the "
@@ -102,7 +105,7 @@ final class UdpRelayServer {
 							desiredDestinationInetAddr = InetAddress.getByName(
 									desiredDestinationAddr);
 						} catch (UnknownHostException e) {
-							this.log(
+							LOGGER.log(
 									Level.WARNING, 
 									"Error in determining the IP address from the server", 
 									e);
@@ -112,7 +115,7 @@ final class UdpRelayServer {
 						try {
 							inetAddr = InetAddress.getByName(address);
 						} catch (UnknownHostException e) {
-							this.log(
+							LOGGER.log(
 									Level.WARNING, 
 									"Error in determining the IP address from the server", 
 									e);
@@ -135,14 +138,14 @@ final class UdpRelayServer {
 							address,
 							port,
 							packet.getData());
-					this.log(Level.FINER, header.toString());
+					LOGGER.log(Level.FINE, header.toString());
 					byte[] headerBytes = header.toByteArray();
 					InetAddress inetAddress = null;
 					try {
 						inetAddress = InetAddress.getByName(
 								this.getUdpRelayServer().sourceAddress);
 					} catch (UnknownHostException e) {
-						this.log(
+						LOGGER.log(
 								Level.WARNING, 
 								"Error in determining the IP address from the client", 
 								e);
@@ -160,13 +163,13 @@ final class UdpRelayServer {
 						// socket closed
 						break;
 					} catch (IOException e) {
-						this.log(
+						LOGGER.log(
 								Level.WARNING, 
 								"Error in sending the packet to the client", 
 								e);
 					}
 				} catch (Throwable t) {
-					this.log(
+					LOGGER.log(
 							Level.WARNING, 
 							"Error occurred in the process of relaying of a "
 							+ "packet from the server to the client", 
@@ -185,6 +188,9 @@ final class UdpRelayServer {
 	}
 	
 	private static final class OutgoingPacketsWorker extends PacketsWorker {
+		
+		private static final Logger LOGGER = Logger.getLogger(
+				OutgoingPacketsWorker.class.getName());
 		
 		public OutgoingPacketsWorker(final UdpRelayServer server) {
 			super(server);
@@ -211,14 +217,14 @@ final class UdpRelayServer {
 						}
 						continue;
 					} catch (IOException e) {
-						this.log(
+						LOGGER.log(
 								Level.WARNING, 
 								"Error in receiving packet from the client", 
 								e);
 						continue;
 					}
-					this.log(
-							Level.FINER, 
+					LOGGER.log(
+							Level.FINE, 
 							String.format(
 									"Packet data received: %s byte(s)", 
 									packet.getLength()));					
@@ -229,7 +235,7 @@ final class UdpRelayServer {
 						sourceInetAddr = InetAddress.getByName(
 								this.getUdpRelayServer().sourceAddress);
 					} catch (UnknownHostException e) {
-						this.log(
+						LOGGER.log(
 								Level.WARNING, 
 								"Error in determining the IP address from the client", 
 								e);
@@ -239,7 +245,7 @@ final class UdpRelayServer {
 					try {
 						inetAddr = InetAddress.getByName(address);
 					} catch (UnknownHostException e) {
-						this.log(
+						LOGGER.log(
 								Level.WARNING, 
 								"Error in determining the IP address from the client", 
 								e);
@@ -258,13 +264,13 @@ final class UdpRelayServer {
 					try {
 						header = UdpRequestHeader.newInstance(packet.getData());
 					} catch (IllegalArgumentException e) {
-						this.log(
+						LOGGER.log(
 								Level.WARNING, 
 								"Error in parsing the UDP header request from the client", 
 								e);
 						continue;
 					}
-					this.log(Level.FINER, header.toString());
+					LOGGER.log(Level.FINE, header.toString());
 					if (header.getCurrentFragmentNumber() != 0) {
 						continue;
 					}
@@ -283,7 +289,7 @@ final class UdpRelayServer {
 							desiredDestinationInetAddr = InetAddress.getByName(
 									desiredDestinationAddr);
 						} catch (UnknownHostException e) {
-							this.log(
+							LOGGER.log(
 									Level.WARNING, 
 									"Error in determining the IP address from the server", 
 									e);
@@ -294,7 +300,7 @@ final class UdpRelayServer {
 							desiredDestInetAddr = InetAddress.getByName(
 									desiredDestAddr);
 						} catch (UnknownHostException e) {
-							this.log(
+							LOGGER.log(
 									Level.WARNING, 
 									"Error in determining the IP address from the server", 
 									e);
@@ -316,7 +322,7 @@ final class UdpRelayServer {
 					try {
 						inetAddress = InetAddress.getByName(desiredDestAddr);
 					} catch (UnknownHostException e) {
-						this.log(
+						LOGGER.log(
 								Level.WARNING, 
 								"Error in determining the IP address from the server", 
 								e);
@@ -334,13 +340,13 @@ final class UdpRelayServer {
 						// socket closed
 						break;
 					} catch (IOException e) {
-						this.log(
+						LOGGER.log(
 								Level.WARNING, 
 								"Error in sending the packet to the server", 
 								e);
 					}
 				} catch (Throwable t) {
-					this.log(
+					LOGGER.log(
 							Level.WARNING, 
 							"Error occurred in the process of relaying of a "
 							+ "packet from the client to the server", 
@@ -382,20 +388,6 @@ final class UdpRelayServer {
 			return this.udpRelayServer;
 		}
 		
-		protected final void log(final Level level, final String message) {
-			this.udpRelayServer.logger.log(
-					level, 
-					String.format("%s: %s",	this, message));
-		}
-		
-		protected final void log(
-				final Level level, final String message, final Throwable t) {
-			this.udpRelayServer.logger.log(
-					level, 
-					String.format("%s: %s",	this, message),
-					t);
-		}
-		
 		@Override
 		public abstract void run();
 
@@ -422,7 +414,6 @@ final class UdpRelayServer {
 	private ExecutorService executor;
 	private boolean firstPacketsWorkerFinished;
 	private long lastReceiveTime;
-	private final Logger logger;
 	private final DatagramSocket serverDatagramSocket;
 	private String sourceAddress;
 	private int sourcePort;
@@ -438,13 +429,13 @@ final class UdpRelayServer {
 			final int desiredDestinationPrt, 
 			final Criteria allowedSocks5IncomingUdpAddrCriteria, 
 			final Criteria blockedSocks5IncomingUdpAddrCriteria, 
-			final int bffrSize, final int tmt, final Logger lggr) {
+			final int bffrSize, 
+			final int tmt) {
 		if (clientDatagramSock == null 
 				|| serverDatagramSock == null
 				|| desiredDestinationAddr == null
 				|| allowedSocks5IncomingUdpAddrCriteria == null
-				|| blockedSocks5IncomingUdpAddrCriteria == null
-				|| lggr == null) {
+				|| blockedSocks5IncomingUdpAddrCriteria == null) {
 			throw new NullPointerException();
 		}
 		UdpRequestHeader.validateDesiredDestinationAddress(
@@ -474,7 +465,6 @@ final class UdpRelayServer {
 		this.executor = null;
 		this.firstPacketsWorkerFinished = false;
 		this.lastReceiveTime = 0L;
-		this.logger = lggr;
 		this.serverDatagramSocket = serverDatagramSock;
 		this.sourceAddress = sourceAddr;
 		this.sourcePort = -1;

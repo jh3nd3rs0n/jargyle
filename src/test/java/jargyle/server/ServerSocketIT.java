@@ -15,7 +15,6 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.logging.Logger;
 
 import javax.net.ServerSocketFactory;
 import javax.net.SocketFactory;
@@ -193,7 +192,7 @@ public class ServerSocketIT {
 		try {
 			if (configuration != null) {
 				socksServer = new SocksServer(
-						configuration, Logger.getAnonymousLogger());
+						configuration);
 				socksServer.start();
 			}
 			echoServer = new EchoServer(ECHO_SERVER_PORT, string);

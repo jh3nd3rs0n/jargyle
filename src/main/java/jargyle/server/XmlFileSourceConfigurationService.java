@@ -17,6 +17,9 @@ public final class XmlFileSourceConfigurationService
 
 	private static final class ConfigurationUpdater 
 		implements FileStatusListener {
+		
+		private static final Logger LOGGER = Logger.getLogger(
+				ConfigurationUpdater.class.getName());
 
 		private final XmlFileSourceConfigurationService configurationService;
 		
@@ -27,13 +30,13 @@ public final class XmlFileSourceConfigurationService
 		
 		@Override
 		public void fileCreated(final File file) {
-			this.configurationService.logger.log(
+			LOGGER.log(
 					Level.INFO, 
 					String.format(
 							"File '%s' created. Updating configuration...", 
 							file));
 			if (this.updateFrom(file)) {
-				this.configurationService.logger.log(
+				LOGGER.log(
 						Level.INFO, 
 						"Configuration updated successfully");
 			}
@@ -41,7 +44,7 @@ public final class XmlFileSourceConfigurationService
 
 		@Override
 		public void fileDeleted(final File file) {
-			this.configurationService.logger.log(
+			LOGGER.log(
 					Level.INFO, 
 					String.format(
 							"File '%s' deleted (using in-memory copy).", 
@@ -50,13 +53,13 @@ public final class XmlFileSourceConfigurationService
 
 		@Override
 		public void fileModfied(final File file) {
-			this.configurationService.logger.log(
+			LOGGER.log(
 					Level.INFO, 
 					String.format(
 							"File '%s' modified. Updating configuration...", 
 							file));
 			if (this.updateFrom(file)) {
-				this.configurationService.logger.log(
+				LOGGER.log(
 						Level.INFO, 
 						"Configuration updated successfully");
 			}
@@ -69,7 +72,7 @@ public final class XmlFileSourceConfigurationService
 				in = new FileInputStream(file);
 				config = ImmutableConfiguration.newInstanceFrom(in);
 			} catch (FileNotFoundException e) {
-				this.configurationService.logger.log(
+				LOGGER.log(
 						Level.WARNING, 
 						String.format(
 								"File '%s' not found", 
@@ -77,7 +80,7 @@ public final class XmlFileSourceConfigurationService
 						e);
 				return false;
 			} catch (JAXBException e) {
-				this.configurationService.logger.log(
+				LOGGER.log(
 						Level.WARNING, 
 						String.format(
 								"File '%s' not valid", 
@@ -89,7 +92,7 @@ public final class XmlFileSourceConfigurationService
 					try {
 						in.close();
 					} catch (IOException e) {
-						this.configurationService.logger.log(
+						LOGGER.log(
 								Level.WARNING, 
 								String.format(
 										"Unable to close input stream of file '%s'", 
@@ -105,25 +108,21 @@ public final class XmlFileSourceConfigurationService
 	}
 	
 	public static XmlFileSourceConfigurationService newInstance(
-			final File xmlFile, final Logger logger) {
+			final File xmlFile) {
 		XmlFileSourceConfigurationService configurationService = 
-				new XmlFileSourceConfigurationService(xmlFile, logger);
+				new XmlFileSourceConfigurationService(xmlFile);
 		configurationService.startMonitoringXmlFile();
 		return configurationService;
 	}
 	
 	private Configuration configuration;
 	private ExecutorService executor;
-	private final Logger logger;
 	private final File xmlFile;
 	
 	private XmlFileSourceConfigurationService(
-			final File file, final Logger lggr) {
+			final File file) {
 		if (file == null) {
 			throw new NullPointerException("XML file must not be null");
-		}
-		if (lggr == null) {
-			throw new NullPointerException("logger must not be null");
 		}
 		if (!file.exists()) {
 			throw new IllegalArgumentException(String.format(
@@ -156,7 +155,6 @@ public final class XmlFileSourceConfigurationService
 		}
 		this.configuration = config;
 		this.executor = null;
-		this.logger = lggr;
 		this.xmlFile = file;
 	}
 	
@@ -169,8 +167,7 @@ public final class XmlFileSourceConfigurationService
 		this.executor = Executors.newSingleThreadExecutor();
 		this.executor.execute(new FileMonitor(
 				this.xmlFile, 
-				new ConfigurationUpdater(this), 
-				this.logger));
+				new ConfigurationUpdater(this)));
 	}
 
 }

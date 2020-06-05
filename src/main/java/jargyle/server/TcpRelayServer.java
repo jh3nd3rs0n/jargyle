@@ -15,6 +15,9 @@ public final class TcpRelayServer {
 
 	private static class DataWorker implements Runnable {
 		
+		private static final Logger LOGGER = Logger.getLogger(
+				DataWorker.class.getName());
+		
 		private final TcpRelayServer tcpRelayServer;
 		private final InputStream input;
 		private final Socket inputSocket;
@@ -32,20 +35,6 @@ public final class TcpRelayServer {
 			this.outputSocket = outSocket;
 		}
 		
-		private void log(final Level level, final String message) {
-			this.tcpRelayServer.logger.log(
-					level, 
-					String.format("%s: %s",	this, message));
-		}
-		
-		private void log(
-				final Level level, final String message, final Throwable t) {
-			this.tcpRelayServer.logger.log(
-					level, 
-					String.format("%s: %s",	this, message),
-					t);
-		}
-		
 		@Override
 		public void run() {
 			this.tcpRelayServer.lastReadTime = System.currentTimeMillis();
@@ -56,8 +45,8 @@ public final class TcpRelayServer {
 					try {
 						bytesRead = this.input.read(buffer);
 						this.tcpRelayServer.lastReadTime = System.currentTimeMillis();
-						this.log(
-								Level.FINER, 
+						LOGGER.log(
+								Level.FINE, 
 								String.format("Bytes read: %s", bytesRead));
 					} catch (SocketException e) {
 						// socket closed
@@ -65,7 +54,7 @@ public final class TcpRelayServer {
 					} catch (InterruptedIOException e) {
 						bytesRead = 0;
 					} catch (IOException e) {
-						this.log(
+						LOGGER.log(
 								Level.WARNING,
 								"Error occurred in the process of reading in data", 
 								e);
@@ -88,7 +77,7 @@ public final class TcpRelayServer {
 						// socket closed
 						break;
 					} catch (IOException e) {
-						this.log(
+						LOGGER.log(
 								Level.WARNING,
 								"Error occurred in the process of writing out data", 
 								e);
@@ -100,14 +89,14 @@ public final class TcpRelayServer {
 						// socket closed
 						break;
 					} catch (IOException e) {
-						this.log(
+						LOGGER.log(
 								Level.WARNING,
 								"Error occurred in the process of flushing out any data", 
 								e);
 						break;
 					}					
 				} catch (Throwable t) {
-					this.log(
+					LOGGER.log(
 							Level.WARNING,
 							"Error occurred in the process of relaying the data", 
 							t);
@@ -166,7 +155,6 @@ public final class TcpRelayServer {
 	private ExecutorService executor;
 	private boolean firstDataWorkerFinished;
 	private long lastReadTime;
-	private final Logger logger;
 	private final Socket serverSocket;
 	private boolean started;
 	private boolean stopped;
@@ -176,9 +164,8 @@ public final class TcpRelayServer {
 			final Socket clientSock, 
 			final Socket serverSock, 
 			final int bffrSize, 
-			final int tmt, 
-			final Logger lggr) {
-		if (clientSock == null || serverSock == null || lggr == null) {
+			final int tmt) {
+		if (clientSock == null || serverSock == null) {
 			throw new NullPointerException();
 		}
 		if (bffrSize < 1) {
@@ -192,7 +179,6 @@ public final class TcpRelayServer {
 		this.executor = null;
 		this.firstDataWorkerFinished = false;
 		this.lastReadTime = 0L;
-		this.logger = lggr;
 		this.serverSocket = serverSock;
 		this.started = false;
 		this.stopped = true;

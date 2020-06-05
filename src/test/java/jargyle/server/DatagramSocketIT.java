@@ -12,7 +12,6 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.logging.Logger;
 
 import org.junit.Test;
 
@@ -126,7 +125,7 @@ public class DatagramSocketIT {
 		try {
 			if (configuration != null) {
 				socksServer = new SocksServer(
-						configuration, Logger.getAnonymousLogger());
+						configuration);
 				socksServer.start();
 			}
 			echoServer = new EchoServer(ECHO_SERVER_PORT);

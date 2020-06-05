@@ -338,8 +338,7 @@ final class SocksServerCli {
 			try {
 				configurationService = 
 						XmlFileSourceConfigurationService.newInstance(
-								monitoredConfigurationFile, 
-								LoggerHolder.LOGGER);
+								monitoredConfigurationFile);
 			} catch (IllegalArgumentException e) {
 				System.err.printf("%s: %s%n", programName, e.toString());
 				e.printStackTrace();

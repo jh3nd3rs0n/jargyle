@@ -14,17 +14,17 @@ import java.util.logging.Logger;
 
 public final class FileMonitor implements Runnable {
 
+	private static final Logger LOGGER = Logger.getLogger(
+			FileMonitor.class.getName());
+	
 	private final File file;
 	private final FileStatusListener fileStatusListener;
-	private final Logger logger;
 	
 	public FileMonitor(
 			final File f, 
-			final FileStatusListener listener, 
-			final Logger lggr) {
+			final FileStatusListener listener) {
 		this.file = f;
 		this.fileStatusListener = listener;
-		this.logger = lggr;
 	}
 	
 	@Override
@@ -36,7 +36,7 @@ public final class FileMonitor implements Runnable {
 		try {
 			watcher = FileSystems.getDefault().newWatchService();
 		} catch (IOException e) {
-			this.logger.log(
+			LOGGER.log(
 					Level.WARNING, 
 					"Unable to create WatchService", 
 					e);
@@ -50,7 +50,7 @@ public final class FileMonitor implements Runnable {
 					StandardWatchEventKinds.ENTRY_DELETE,
 					StandardWatchEventKinds.ENTRY_MODIFY);
 		} catch (IOException e) {
-			this.logger.log(
+			LOGGER.log(
 					Level.WARNING, 
 					String.format(
 							"Unable to register '%s' to WatchService", 

@@ -14,6 +14,9 @@ import jargyle.common.util.NonnegativeInteger;
 import jargyle.server.SocksServerCli.ProcessResult;
 
 public final class SocksServer {
+
+	private static final Logger LOGGER = Logger.getLogger(
+			SocksServer.class.getName());
 	
 	public static void main(final String[] args) {
 		/* 
@@ -24,8 +27,7 @@ public final class SocksServer {
 		SocksServerCli socksServerCli = new SocksServerCli();
 		ProcessResult processResult = socksServerCli.process(args);
 		Configuration configuration = processResult.getConfiguration();
-		SocksServer socksServer = new SocksServer(
-				configuration, LoggerHolder.LOGGER);
+		SocksServer socksServer = new SocksServer(configuration);
 		try {
 			socksServer.start();
 		} catch (IOException e) {
@@ -38,13 +40,13 @@ public final class SocksServer {
 						configuration.getSettings().getLastValue(
 								SettingSpec.HOST, Host.class));
 			}
-			LoggerHolder.LOGGER.log(
+			LOGGER.log(
 					Level.SEVERE, 
 					message, 
 					e);
 			System.exit(-1);
 		}
-		LoggerHolder.LOGGER.info(String.format(
+		LOGGER.info(String.format(
 				"Listening on port %s at %s", 
 				socksServer.getPort(),
 				socksServer.getHost()));
@@ -54,21 +56,19 @@ public final class SocksServer {
 	private final Configuration configuration;
 	private ExecutorService executor;
 	private final Host host;
-	private final Logger logger;
 	private Port port;
 	private ServerSocket serverSocket;
 	private final SocketSettings socketSettings;
 	private boolean started;
 	private boolean stopped;
 	
-	public SocksServer(final Configuration config, final Logger lggr) {
+	public SocksServer(final Configuration config) {
 		this.backlog = config.getSettings().getLastValue(
 				SettingSpec.BACKLOG, NonnegativeInteger.class).intValue();
 		this.configuration = config;
 		this.executor = null;
 		this.host = config.getSettings().getLastValue(
 				SettingSpec.HOST, Host.class);
-		this.logger = lggr;
 		this.port = config.getSettings().getLastValue(
 				SettingSpec.PORT, Port.class);
 		this.serverSocket = null;
@@ -109,7 +109,7 @@ public final class SocksServer {
 		this.port = Port.newInstance(this.serverSocket.getLocalPort());
 		this.executor = Executors.newSingleThreadExecutor();
 		this.executor.execute(new Listener(
-				this.serverSocket, this.configuration, this.logger));
+				this.serverSocket, this.configuration));
 		this.started = true;
 		this.stopped = false;
 	}

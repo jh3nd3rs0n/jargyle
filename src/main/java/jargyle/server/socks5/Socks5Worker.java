@@ -92,13 +92,15 @@ public final class Socks5Worker implements Runnable {
 		} catch (IOException e) {
 			LOGGER.log(
 					Level.WARNING, 
-					"Error in creating the listen socket", 
+					this.format("Error in creating the listen socket"), 
 					e);
 			socks5Rep = Socks5Reply.newErrorInstance(
 					Reply.GENERAL_SOCKS_SERVER_FAILURE);
 			LOGGER.log(
 					Level.FINE, 
-					String.format("Sending %s", socks5Rep.toString()));
+					this.format(String.format(
+							"Sending %s", 
+							socks5Rep.toString())));
 			this.writeThenFlush(socks5Rep.toByteArray());
 			return;
 		}
@@ -113,7 +115,7 @@ public final class Socks5Worker implements Runnable {
 				serverBoundPort);
 		LOGGER.log(
 				Level.FINE, 
-				String.format("Sending %s", socks5Rep.toString()));
+				this.format(String.format("Sending %s", socks5Rep.toString())));
 		this.writeThenFlush(socks5Rep.toByteArray());
 		Socket incomingSocket = null;
 		try {
@@ -125,25 +127,29 @@ public final class Socks5Worker implements Runnable {
 		} catch (SocketException e) {
 			LOGGER.log(
 					Level.WARNING, 
-					"Error in setting the incoming socket", 
+					this.format("Error in setting the incoming socket"), 
 					e);
 			socks5Rep = Socks5Reply.newErrorInstance(
 					Reply.GENERAL_SOCKS_SERVER_FAILURE);
 			LOGGER.log(
 					Level.FINE, 
-					String.format("Sending %s", socks5Rep.toString()));
+					this.format(String.format(
+							"Sending %s", 
+							socks5Rep.toString())));
 			this.writeThenFlush(socks5Rep.toByteArray());
 			return;
 		} catch (IOException e) {
 			LOGGER.log(
 					Level.WARNING, 
-					"Error in waiting for an incoming socket", 
+					this.format("Error in waiting for an incoming socket"), 
 					e);
 			socks5Rep = Socks5Reply.newErrorInstance(
 					Reply.GENERAL_SOCKS_SERVER_FAILURE);
 			LOGGER.log(
 					Level.FINE, 
-					String.format("Sending %s", socks5Rep.toString()));
+					this.format(String.format(
+							"Sending %s", 
+							socks5Rep.toString())));
 			this.writeThenFlush(socks5Rep.toByteArray());
 			return;
 		} finally {
@@ -166,14 +172,16 @@ public final class Socks5Worker implements Runnable {
 		if (criterion == null) {
 			LOGGER.log(
 					Level.FINE, 
-					String.format(
+					this.format(String.format(
 							"Incoming TCP address %s not allowed", 
-							incomingTcpInetAddress));
+							incomingTcpInetAddress)));
 			socks5Rep = Socks5Reply.newErrorInstance(
 					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
 			LOGGER.log(
 					Level.FINE, 
-					String.format("Sending %s", socks5Rep.toString()));
+					this.format(String.format(
+							"Sending %s", 
+							socks5Rep.toString())));
 			this.writeThenFlush(socks5Rep.toByteArray());
 			return;
 		}
@@ -184,16 +192,18 @@ public final class Socks5Worker implements Runnable {
 		if (criterion != null) {
 			LOGGER.log(
 					Level.FINE, 
-					String.format(
+					this.format(String.format(
 							"Incoming TCP address %s blocked based on the "
 							+ "following criterion: %s", 
 							incomingTcpInetAddress,
-							criterion));
+							criterion)));
 			socks5Rep = Socks5Reply.newErrorInstance(
 					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
 			LOGGER.log(
 					Level.FINE, 
-					String.format("Sending %s", socks5Rep.toString()));
+					this.format(String.format(
+							"Sending %s", 
+							socks5Rep.toString())));
 			this.writeThenFlush(socks5Rep.toByteArray());
 			return;
 		}
@@ -207,7 +217,7 @@ public final class Socks5Worker implements Runnable {
 				serverBoundPort);
 		LOGGER.log(
 				Level.FINE, 
-				String.format("Sending %s", socks5Rep.toString()));
+				this.format(String.format("Sending %s", socks5Rep.toString())));
 		this.writeThenFlush(socks5Rep.toByteArray());
 		try {
 			this.passData(
@@ -252,24 +262,28 @@ public final class Socks5Worker implements Runnable {
 		} catch (UnknownHostException e) {
 			LOGGER.log(
 					Level.WARNING, 
-					"Error in creating the server-facing socket", 
+					this.format("Error in creating the server-facing socket"), 
 					e);
 			socks5Rep = Socks5Reply.newErrorInstance(Reply.HOST_UNREACHABLE);
 			LOGGER.log(
 					Level.FINE, 
-					String.format("Sending %s", socks5Rep.toString()));
+					this.format(String.format(
+							"Sending %s", 
+							socks5Rep.toString())));
 			this.writeThenFlush(socks5Rep.toByteArray());
 			return;
 		} catch (IOException e) {
 			LOGGER.log(
 					Level.WARNING, 
-					"Error in creating the server-facing socket", 
+					this.format("Error in creating the server-facing socket"), 
 					e);
 			socks5Rep = Socks5Reply.newErrorInstance(
 					Reply.GENERAL_SOCKS_SERVER_FAILURE);
 			LOGGER.log(
 					Level.FINE, 
-					String.format("Sending %s", socks5Rep.toString()));
+					this.format(String.format(
+							"Sending %s", 
+							socks5Rep.toString())));
 			this.writeThenFlush(socks5Rep.toByteArray());
 			return;
 		}
@@ -284,7 +298,7 @@ public final class Socks5Worker implements Runnable {
 				serverBoundPort);
 		LOGGER.log(
 				Level.FINE, 
-				String.format("Sending %s", socks5Rep.toString()));
+				this.format(String.format("Sending %s", socks5Rep.toString())));
 		this.writeThenFlush(socks5Rep.toByteArray());
 		try {
 			this.passData(
@@ -302,9 +316,11 @@ public final class Socks5Worker implements Runnable {
 		}
 	}
 	
-	private void doUdpAssociate(final Socks5Request socks5Req) throws IOException {
+	private void doUdpAssociate(
+			final Socks5Request socks5Req) throws IOException {
 		Socks5Reply socks5Rep = null;
-		String desiredDestinationAddress = socks5Req.getDesiredDestinationAddress();
+		String desiredDestinationAddress = 
+				socks5Req.getDesiredDestinationAddress();
 		int desiredDestinationPort = socks5Req.getDesiredDestinationPort();
 		DatagramSocket serverDatagramSock = null;
 		try {
@@ -323,13 +339,16 @@ public final class Socks5Worker implements Runnable {
 		} catch (SocketException e) {
 			LOGGER.log(
 					Level.WARNING, 
-					"Error in creating the server-facing UDP socket", 
+					this.format("Error in creating the server-facing UDP "
+							+ "socket"), 
 					e);
 			socks5Rep = Socks5Reply.newErrorInstance(
 					Reply.GENERAL_SOCKS_SERVER_FAILURE);
 			LOGGER.log(
 					Level.FINE, 
-					String.format("Sending %s", socks5Rep.toString()));
+					this.format(String.format(
+							"Sending %s", 
+							socks5Rep.toString())));
 			this.writeThenFlush(socks5Rep.toByteArray());
 			return;
 		}
@@ -364,13 +383,16 @@ public final class Socks5Worker implements Runnable {
 		} catch (SocketException e) {
 			LOGGER.log(
 					Level.WARNING, 
-					"Error in creating the client-facing UDP socket", 
+					this.format("Error in creating the client-facing UDP "
+							+ "socket"), 
 					e);
 			socks5Rep = Socks5Reply.newErrorInstance(
 					Reply.GENERAL_SOCKS_SERVER_FAILURE);
 			LOGGER.log(
 					Level.FINE, 
-					String.format("Sending %s", socks5Rep.toString()));
+					this.format(String.format(
+							"Sending %s", 
+							socks5Rep.toString())));
 			this.writeThenFlush(socks5Rep.toByteArray());
 			if (!serverDatagramSock.isClosed()) {
 				serverDatagramSock.close();
@@ -388,7 +410,7 @@ public final class Socks5Worker implements Runnable {
 				serverBoundPort);
 		LOGGER.log(
 				Level.FINE, 
-				String.format("Sending %s", socks5Rep.toString()));
+				this.format(String.format("Sending %s", socks5Rep.toString())));
 		this.writeThenFlush(socks5Rep.toByteArray());
 		UdpRelayServer udpRelayServer = new UdpRelayServer(
 				clientDatagramSock,
@@ -417,13 +439,15 @@ public final class Socks5Worker implements Runnable {
 		} catch (IOException e) {
 			LOGGER.log(
 					Level.WARNING, 
-					"Error in starting the UDP association", 
+					this.format("Error in starting the UDP association"), 
 					e);
 			socks5Rep = Socks5Reply.newErrorInstance(
 					Reply.GENERAL_SOCKS_SERVER_FAILURE);
 			LOGGER.log(
 					Level.FINE, 
-					String.format("Sending %s", socks5Rep.toString()));
+					this.format(String.format(
+							"Sending %s", 
+							socks5Rep.toString())));
 			this.writeThenFlush(socks5Rep.toByteArray());				
 		} finally {
 			if (!udpRelayServer.isStopped()) {
@@ -436,6 +460,10 @@ public final class Socks5Worker implements Runnable {
 				serverDatagramSock.close();
 			}
 		}
+	}
+	
+	private String format(final String message) {
+		return String.format("%s: %s", this, message);
 	}
 	
 	private void passData(
@@ -459,7 +487,7 @@ public final class Socks5Worker implements Runnable {
 		} catch (IOException e) {
 			LOGGER.log(
 					Level.WARNING, 
-					"Error in starting to pass data", 
+					this.format("Error in starting to pass data"), 
 					e);
 		} finally {
 			if (!tcpRelayServer.isStopped()) {
@@ -476,7 +504,8 @@ public final class Socks5Worker implements Runnable {
 			} catch (IOException e) {
 				LOGGER.log(
 						Level.WARNING, 
-						"Error in getting the input stream from the client", 
+						this.format("Error in getting the input stream from "
+								+ "the client"), 
 						e);
 				return;
 			}
@@ -485,12 +514,13 @@ public final class Socks5Worker implements Runnable {
 			} catch (IOException e) {
 				LOGGER.log(
 						Level.WARNING, 
-						"Error in getting the output stream from the client", 
+						this.format("Error in getting the output stream from "
+								+ "the client"), 
 						e);
 				return;
 			}
-			InputStream in = new SequenceInputStream(
-					new ByteArrayInputStream(new byte[] { Version.V5.byteValue() }),
+			InputStream in = new SequenceInputStream(new ByteArrayInputStream(
+					new byte[] { Version.V5.byteValue() }),
 					this.clientInputStream);
 			ClientMethodSelectionMessage cmsm = null;
 			try {
@@ -498,13 +528,14 @@ public final class Socks5Worker implements Runnable {
 			} catch (IllegalArgumentException e) {
 				LOGGER.log(
 						Level.WARNING, 
-						"Error in parsing the method selection message from the client", 
+						this.format("Error in parsing the method selection "
+								+ "message from the client"), 
 						e);
 				return;
 			}
 			LOGGER.log(
 					Level.FINE, 
-					String.format("Received %s", cmsm.toString()));
+					this.format(String.format("Received %s", cmsm.toString())));
 			Method method = null;
 			AuthMethods authMethods = this.settings.getLastValue(
 					SettingSpec.SOCKS5_AUTH_METHODS, AuthMethods.class);
@@ -522,7 +553,7 @@ public final class Socks5Worker implements Runnable {
 					ServerMethodSelectionMessage.newInstance(method);
 			LOGGER.log(
 					Level.FINE, 
-					String.format("Sending %s", smsm.toString()));
+					this.format(String.format("Sending %s", smsm.toString())));
 			this.writeThenFlush(smsm.toByteArray());
 			Authenticator authenticator = null;
 			try {
@@ -530,7 +561,9 @@ public final class Socks5Worker implements Runnable {
 			} catch (IllegalArgumentException e) {
 				LOGGER.log(
 						Level.WARNING, 
-						String.format("Unhandled method: %s", method),
+						this.format(String.format(
+								"Unhandled method: %s", 
+								method)),
 						e);
 				return;
 			}
@@ -541,10 +574,11 @@ public final class Socks5Worker implements Runnable {
 			} catch (IOException e) {
 				LOGGER.log(
 						Level.WARNING, 
-						"Error in authenticating the client", 
+						this.format("Error in authenticating the client"), 
 						e);
 				return;
 			}
+			if (socket == null) { return; } 
 			this.clientInputStream = socket.getInputStream();
 			this.clientOutputStream = socket.getOutputStream();
 			this.clientSocket = socket;
@@ -557,13 +591,15 @@ public final class Socks5Worker implements Runnable {
 			} catch (SocketException e) {
 				LOGGER.log(
 						Level.WARNING, 
-						"Error in setting the client socket", 
+						this.format("Error in setting the client socket"), 
 						e);
 				Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
 						Reply.GENERAL_SOCKS_SERVER_FAILURE);
 				LOGGER.log(
 						Level.FINE, 
-						String.format("Sending %s", socks5Rep.toString()));
+						this.format(String.format(
+								"Sending %s", 
+								socks5Rep.toString())));
 				this.writeThenFlush(socks5Rep.toByteArray());
 				return;
 			}
@@ -573,19 +609,23 @@ public final class Socks5Worker implements Runnable {
 			} catch (IOException e) {
 				LOGGER.log(
 						Level.WARNING, 
-						"Error in parsing the SOCKS5 request", 
+						this.format("Error in parsing the SOCKS5 request"), 
 						e);
 				Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
 						Reply.GENERAL_SOCKS_SERVER_FAILURE);
 				LOGGER.log(
 						Level.FINE, 
-						String.format("Sending %s", socks5Rep.toString()));
+						this.format(String.format(
+								"Sending %s", 
+								socks5Rep.toString())));
 				this.writeThenFlush(socks5Rep.toByteArray());
 				return;
 			}
 			LOGGER.log(
 					Level.FINE, 
-					String.format("Received %s", socks5Req.toString()));
+					this.format(String.format(
+							"Received %s", 
+							socks5Req.toString())));
 			InetAddress clientInetAddress = this.clientSocket.getLocalAddress();
 			Socks5RequestCriteria allowedSocks5RequestCriteria = 
 					this.configuration.getAllowedSocks5RequestCriteria();
@@ -601,11 +641,11 @@ public final class Socks5Worker implements Runnable {
 						Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
 				LOGGER.log(
 						Level.FINE, 
-						String.format(
+						this.format(String.format(
 								"SOCKS5 request from %s not allowed. "
 								+ "SOCKS5 request: %s",
 								clientInetAddress.toString(),
-								socks5Req.toString()));
+								socks5Req.toString())));
 				this.writeThenFlush(socks5Rep.toByteArray());
 				return;
 			}
@@ -619,12 +659,12 @@ public final class Socks5Worker implements Runnable {
 						Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
 				LOGGER.log(
 						Level.FINE, 
-						String.format(
+						this.format(String.format(
 								"SOCKS5 request from %s blocked based on the "
 								+ "following criterion: %s. SOCKS5 request: %s",
 								clientInetAddress.toString(),
 								socks5RequestCriterion.toString(),
-								socks5Req.toString()));
+								socks5Req.toString())));
 				this.writeThenFlush(socks5Rep.toByteArray());
 				return;
 			}
@@ -648,7 +688,7 @@ public final class Socks5Worker implements Runnable {
 		} catch (Throwable t) {
 			LOGGER.log(
 					Level.WARNING, 
-					"Internal server error", 
+					this.format("Internal server error"), 
 					t);
 		} finally {
 			if (!this.clientSocket.isClosed()) {
@@ -657,7 +697,8 @@ public final class Socks5Worker implements Runnable {
 				} catch (IOException e) {
 					LOGGER.log(
 							Level.WARNING, 
-							"Error upon closing connection to the client", 
+							this.format("Error upon closing connection to the "
+									+ "client"), 
 							e);
 				}
 			}

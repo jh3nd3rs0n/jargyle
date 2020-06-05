@@ -33,10 +33,15 @@ final class Worker implements Runnable {
 			} catch (IOException e) {
 				LOGGER.log(
 						Level.WARNING, 
-						"Error upon closing connection to the client", 
+						this.format("Error upon closing connection to the "
+								+ "client"), 
 						e);
 			}
 		}
+	}
+	
+	private String format(final String message) {
+		return String.format("%s: %s", this, message);
 	}
 	
 	public void run() {
@@ -53,9 +58,9 @@ final class Worker implements Runnable {
 			if (criterion == null) {
 				LOGGER.log(
 						Level.FINE, 
-						String.format(
+						this.format(String.format(
 								"Client address %s not allowed", 
-								clientInetAddress));
+								clientInetAddress)));
 				this.close();
 				return;
 			}
@@ -66,11 +71,11 @@ final class Worker implements Runnable {
 			if (criterion != null) {
 				LOGGER.log(
 						Level.FINE, 
-						String.format(
+						this.format(String.format(
 								"Client address %s blocked based on the "
 								+ "following criterion: %s", 
 								clientInetAddress,
-								criterion));
+								criterion)));
 				this.close();
 				return;
 			}
@@ -83,7 +88,7 @@ final class Worker implements Runnable {
 			} catch (SocketException e) {
 				LOGGER.log(
 						Level.WARNING, 
-						"Error in setting the client socket", 
+						this.format("Error in setting the client socket"), 
 						e);
 				this.close();
 				return;
@@ -94,7 +99,8 @@ final class Worker implements Runnable {
 			} catch (IOException e) {
 				LOGGER.log(
 						Level.WARNING, 
-						"Error in getting the input stream from the client", 
+						this.format("Error in getting the input stream from "
+								+ "the client"), 
 						e);
 				this.close();
 				return;
@@ -105,7 +111,8 @@ final class Worker implements Runnable {
 			} catch (IOException e) {
 				LOGGER.log(
 						Level.WARNING, 
-						"Error in getting the SOCKS version from the client", 
+						this.format("Error in getting the SOCKS version from "
+								+ "the client"), 
 						e);
 				this.close();
 				return;
@@ -122,15 +129,15 @@ final class Worker implements Runnable {
 			} else {
 				LOGGER.log(
 						Level.WARNING,
-						String.format(
+						this.format(String.format(
 								"Unknown SOCKS version: %s", 
-								version));
+								version)));
 				this.close();
 			}
 		} catch (Throwable t) {
 			LOGGER.log(
 					Level.WARNING, 
-					"Internal server error", 
+					this.format("Internal server error"), 
 					t);
 			this.close();
 		}

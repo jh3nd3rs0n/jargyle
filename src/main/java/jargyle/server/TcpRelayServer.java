@@ -35,6 +35,10 @@ public final class TcpRelayServer {
 			this.outputSocket = outSocket;
 		}
 		
+		private String format(final String message) {
+			return String.format("%s: %s", this, message);
+		}
+
 		@Override
 		public void run() {
 			this.tcpRelayServer.lastReadTime = System.currentTimeMillis();
@@ -47,7 +51,9 @@ public final class TcpRelayServer {
 						this.tcpRelayServer.lastReadTime = System.currentTimeMillis();
 						LOGGER.log(
 								Level.FINE, 
-								String.format("Bytes read: %s", bytesRead));
+								this.format(String.format(
+										"Bytes read: %s", 
+										bytesRead)));
 					} catch (SocketException e) {
 						// socket closed
 						break;
@@ -56,7 +62,7 @@ public final class TcpRelayServer {
 					} catch (IOException e) {
 						LOGGER.log(
 								Level.WARNING,
-								"Error occurred in the process of reading in data", 
+								this.format("Error occurred in the process of reading in data"), 
 								e);
 						break;
 					}
@@ -79,7 +85,7 @@ public final class TcpRelayServer {
 					} catch (IOException e) {
 						LOGGER.log(
 								Level.WARNING,
-								"Error occurred in the process of writing out data", 
+								this.format("Error occurred in the process of writing out data"), 
 								e);
 						break;
 					}
@@ -91,14 +97,14 @@ public final class TcpRelayServer {
 					} catch (IOException e) {
 						LOGGER.log(
 								Level.WARNING,
-								"Error occurred in the process of flushing out any data", 
+								this.format("Error occurred in the process of flushing out any data"), 
 								e);
 						break;
 					}					
 				} catch (Throwable t) {
 					LOGGER.log(
 							Level.WARNING,
-							"Error occurred in the process of relaying the data", 
+							this.format("Error occurred in the process of relaying the data"), 
 							t);
 					break;
 				}

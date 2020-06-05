@@ -52,15 +52,15 @@ final class UdpRelayServer {
 					} catch (IOException e) {
 						LOGGER.log(
 								Level.WARNING, 
-								"Error in receiving the packet from the server", 
+								this.format("Error in receiving the packet from the server"), 
 								e);
 						continue;
 					}
 					LOGGER.log(
 							Level.FINE, 
-							String.format(
+							this.format(String.format(
 									"Packet data received: %s byte(s)", 
-									packet.getLength()));
+									packet.getLength())));
 					Criteria allowedSocks5IncomingUdpAddrCriteria =
 							this.getUdpRelayServer().allowedSocks5IncomingUdpAddressCriteria;
 					if (allowedSocks5IncomingUdpAddrCriteria.toList().isEmpty()) {
@@ -73,9 +73,9 @@ final class UdpRelayServer {
 					if (criterion == null) {
 						LOGGER.log(
 								Level.FINE, 
-								String.format(
+								this.format(String.format(
 										"Incoming UDP address %s not allowed", 
-										packet.getAddress()));
+										packet.getAddress())));
 						continue;
 					}
 					Criteria blockedSocks5IncomingUdpAddrCriteria =
@@ -85,11 +85,11 @@ final class UdpRelayServer {
 					if (criterion != null) {
 						LOGGER.log(
 								Level.FINE, 
-								String.format(
+								this.format(String.format(
 										"Incoming UDP address %s blocked based on the "
 										+ "following criterion: %s", 
 										packet.getAddress(),
-										criterion));
+										criterion)));
 						continue;
 					}
 					String address = packet.getAddress().getHostAddress();
@@ -107,7 +107,7 @@ final class UdpRelayServer {
 						} catch (UnknownHostException e) {
 							LOGGER.log(
 									Level.WARNING, 
-									"Error in determining the IP address from the server", 
+									this.format("Error in determining the IP address from the server"), 
 									e);
 							continue;
 						}
@@ -117,7 +117,7 @@ final class UdpRelayServer {
 						} catch (UnknownHostException e) {
 							LOGGER.log(
 									Level.WARNING, 
-									"Error in determining the IP address from the server", 
+									this.format("Error in determining the IP address from the server"), 
 									e);
 							continue;
 						}
@@ -138,7 +138,7 @@ final class UdpRelayServer {
 							address,
 							port,
 							packet.getData());
-					LOGGER.log(Level.FINE, header.toString());
+					LOGGER.log(Level.FINE, this.format(header.toString()));
 					byte[] headerBytes = header.toByteArray();
 					InetAddress inetAddress = null;
 					try {
@@ -147,7 +147,7 @@ final class UdpRelayServer {
 					} catch (UnknownHostException e) {
 						LOGGER.log(
 								Level.WARNING, 
-								"Error in determining the IP address from the client", 
+								this.format("Error in determining the IP address from the client"), 
 								e);
 						continue;
 					}
@@ -165,14 +165,14 @@ final class UdpRelayServer {
 					} catch (IOException e) {
 						LOGGER.log(
 								Level.WARNING, 
-								"Error in sending the packet to the client", 
+								this.format("Error in sending the packet to the client"), 
 								e);
 					}
 				} catch (Throwable t) {
 					LOGGER.log(
 							Level.WARNING, 
-							"Error occurred in the process of relaying of a "
-							+ "packet from the server to the client", 
+							this.format("Error occurred in the process of relaying of "
+									+ "a packet from the server to the client"), 
 							t);
 				}
 			}
@@ -219,15 +219,15 @@ final class UdpRelayServer {
 					} catch (IOException e) {
 						LOGGER.log(
 								Level.WARNING, 
-								"Error in receiving packet from the client", 
+								this.format("Error in receiving packet from the client"), 
 								e);
 						continue;
 					}
 					LOGGER.log(
 							Level.FINE, 
-							String.format(
+							this.format(String.format(
 									"Packet data received: %s byte(s)", 
-									packet.getLength()));					
+									packet.getLength())));					
 					String address = packet.getAddress().getHostAddress();
 					int port = packet.getPort();
 					InetAddress sourceInetAddr = null;
@@ -237,7 +237,7 @@ final class UdpRelayServer {
 					} catch (UnknownHostException e) {
 						LOGGER.log(
 								Level.WARNING, 
-								"Error in determining the IP address from the client", 
+								this.format("Error in determining the IP address from the client"), 
 								e);
 						continue;
 					}
@@ -247,7 +247,7 @@ final class UdpRelayServer {
 					} catch (UnknownHostException e) {
 						LOGGER.log(
 								Level.WARNING, 
-								"Error in determining the IP address from the client", 
+								this.format("Error in determining the IP address from the client"), 
 								e);
 						continue;
 					}
@@ -266,11 +266,11 @@ final class UdpRelayServer {
 					} catch (IllegalArgumentException e) {
 						LOGGER.log(
 								Level.WARNING, 
-								"Error in parsing the UDP header request from the client", 
+								this.format("Error in parsing the UDP header request from the client"), 
 								e);
 						continue;
 					}
-					LOGGER.log(Level.FINE, header.toString());
+					LOGGER.log(Level.FINE, this.format(header.toString()));
 					if (header.getCurrentFragmentNumber() != 0) {
 						continue;
 					}
@@ -291,7 +291,7 @@ final class UdpRelayServer {
 						} catch (UnknownHostException e) {
 							LOGGER.log(
 									Level.WARNING, 
-									"Error in determining the IP address from the server", 
+									this.format("Error in determining the IP address from the server"), 
 									e);
 							continue;
 						}
@@ -302,7 +302,7 @@ final class UdpRelayServer {
 						} catch (UnknownHostException e) {
 							LOGGER.log(
 									Level.WARNING, 
-									"Error in determining the IP address from the server", 
+									this.format("Error in determining the IP address from the server"), 
 									e);
 							continue;
 						}
@@ -324,7 +324,7 @@ final class UdpRelayServer {
 					} catch (UnknownHostException e) {
 						LOGGER.log(
 								Level.WARNING, 
-								"Error in determining the IP address from the server", 
+								this.format("Error in determining the IP address from the server"), 
 								e);
 						continue;
 					}
@@ -342,14 +342,14 @@ final class UdpRelayServer {
 					} catch (IOException e) {
 						LOGGER.log(
 								Level.WARNING, 
-								"Error in sending the packet to the server", 
+								this.format("Error in sending the packet to the server"), 
 								e);
 					}
 				} catch (Throwable t) {
 					LOGGER.log(
 							Level.WARNING, 
-							"Error occurred in the process of relaying of a "
-							+ "packet from the client to the server", 
+							this.format("Error occurred in the process of relaying of "
+									+ "a packet from the client to the server"), 
 							t);
 				}
 			}
@@ -374,6 +374,10 @@ final class UdpRelayServer {
 			this.udpRelayServer = server;
 			this.clientDatagramSocket = server.clientDatagramSocket;
 			this.serverDatagramSocket = server.serverDatagramSocket;
+		}
+		
+		protected String format(final String message) {
+			return String.format("%s: %s", this, message);
 		}
 		
 		protected final DatagramSocket getClientDatagramSocket() {

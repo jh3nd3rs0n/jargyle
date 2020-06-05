@@ -8,6 +8,8 @@ import java.net.SocketException;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.ietf.jgss.GSSContext;
 import org.ietf.jgss.GSSCredential;
@@ -35,7 +37,12 @@ enum Authenticator {
 		public Socket authenticate(
 				final Socket socket, 
 				final Configuration configuration) throws IOException {
-			throw new IOException("no acceptable authentication methods");
+			LOGGER.log(
+					Level.FINE, 
+					String.format(
+							"No acceptable authentication methods from %s", 
+							socket));
+			return null;
 		}
 		
 	},
@@ -197,7 +204,12 @@ enum Authenticator {
 						(byte) 0x01);
 				outputStream.write(usernamePasswordResp.toByteArray());
 				outputStream.flush();
-				throw new IOException("invalid username password");
+				LOGGER.log(
+						Level.FINE, 
+						String.format(
+								"Invalid username password from %s", 
+								socket));
+				return null;
 			}
 			usernamePasswordResp = UsernamePasswordResponse.newInstance(
 					UsernamePasswordResponse.STATUS_SUCCESS);
@@ -207,6 +219,9 @@ enum Authenticator {
 		}
 		
 	};
+
+	private static final Logger LOGGER = Logger.getLogger(
+			Authenticator.class.getName());
 	
 	public static Authenticator valueOf(final Method meth) {
 		for (Authenticator value : Authenticator.values()) {

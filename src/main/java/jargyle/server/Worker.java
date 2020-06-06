@@ -9,6 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import jargyle.common.net.SocketSettings;
+import jargyle.common.net.socks5.Version;
 import jargyle.server.socks5.Socks5Worker;
 
 final class Worker implements Runnable {
@@ -24,20 +25,6 @@ final class Worker implements Runnable {
 			final Configuration config) {
 		this.clientSocket = clientSock;
 		this.configuration = config;
-	}
-	
-	private void close() {
-		if (!this.clientSocket.isClosed()) {
-			try {
-				this.clientSocket.close();
-			} catch (IOException e) {
-				LOGGER.log(
-						Level.WARNING, 
-						this.format("Error upon closing connection to the "
-								+ "client"), 
-						e);
-			}
-		}
 	}
 	
 	private String format(final String message) {
@@ -61,7 +48,6 @@ final class Worker implements Runnable {
 						this.format(String.format(
 								"Client address %s not allowed", 
 								clientInetAddress)));
-				this.close();
 				return;
 			}
 			Criteria blockedClientAddressCriteria =
@@ -76,7 +62,6 @@ final class Worker implements Runnable {
 								+ "following criterion: %s", 
 								clientInetAddress,
 								criterion)));
-				this.close();
 				return;
 			}
 			try {
@@ -90,7 +75,6 @@ final class Worker implements Runnable {
 						Level.WARNING, 
 						this.format("Error in setting the client socket"), 
 						e);
-				this.close();
 				return;
 			}
 			InputStream clientInputStream = null;
@@ -102,7 +86,6 @@ final class Worker implements Runnable {
 						this.format("Error in getting the input stream from "
 								+ "the client"), 
 						e);
-				this.close();
 				return;
 			}
 			int version = -1;
@@ -114,14 +97,10 @@ final class Worker implements Runnable {
 						this.format("Error in getting the SOCKS version from "
 								+ "the client"), 
 						e);
-				this.close();
 				return;
 			}
-			if (version == -1) { 
-				this.close(); 
-				return; 
-			}
-			if ((byte) version == jargyle.common.net.socks5.Version.V5.byteValue()) {
+			if (version == -1) { return; }
+			if ((byte) version == Version.V5.byteValue()) {
 				Socks5Worker socks5Worker = new Socks5Worker(
 						this.clientSocket, 
 						this.configuration);
@@ -132,14 +111,24 @@ final class Worker implements Runnable {
 						this.format(String.format(
 								"Unknown SOCKS version: %s", 
 								version)));
-				this.close();
 			}
 		} catch (Throwable t) {
 			LOGGER.log(
 					Level.WARNING, 
 					this.format("Internal server error"), 
 					t);
-			this.close();
+		} finally {
+			if (!this.clientSocket.isClosed()) {
+				try {
+					this.clientSocket.close();
+				} catch (IOException e) {
+					LOGGER.log(
+							Level.WARNING, 
+							this.format("Error upon closing connection to the "
+									+ "client"), 
+							e);
+				}
+			}
 		}
 	}
 

@@ -240,7 +240,7 @@ enum Authenticator {
 				outputStream.write(usernamePasswordResp.toByteArray());
 				outputStream.flush();
 				LOGGER.log(
-						Level.FINE, 
+						Level.INFO, 
 						String.format(
 								"Invalid username password from %s", 
 								socket));

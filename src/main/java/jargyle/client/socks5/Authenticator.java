@@ -44,6 +44,19 @@ enum Authenticator {
 		public Socket authenticate(
 				final Socket socket, 
 				final Socks5Client socks5Client) throws IOException {
+			GSSContext context = this.establishContext(socket, socks5Client);
+			GssapiProtectionLevel gssapiProtectionLevelSelection =
+					this.negotiateProtectionLevel(
+							socket, context, socks5Client);
+			MessageProp msgProp = 
+					gssapiProtectionLevelSelection.newMessageProp();
+			Socket newSocket = new GssSocket(socket, context, msgProp);
+			return newSocket;
+		}
+		
+		private GSSContext establishContext(
+				final Socket socket, 
+				final Socks5Client socks5Client) throws IOException {
 			String server = socks5Client.getGssapiServiceName();
 			GSSManager manager = GSSManager.getInstance();
 			GSSName serverName = null;
@@ -78,9 +91,6 @@ enum Authenticator {
 			} catch (GSSException e) {
 				throw new IOException(e);
 			}
-			GssapiProtectionLevels gssapiProtectionLevels = 
-					socks5Client.getGssapiProtectionLevels();
-			boolean necReferenceImpl = socks5Client.isGssapiNecReferenceImpl();
 			InputStream inStream = socket.getInputStream();
 			OutputStream outStream = socket.getOutputStream();
 			byte[] token = new byte[] { };
@@ -103,16 +113,28 @@ enum Authenticator {
 					Message message = Message.newInstanceFrom(inStream);
 					if (message.getMessageType().equals(MessageType.ABORT)) {
 						throw new IOException(
-								"server aborted handshake process");
+								"server aborted process of context establishment");
 					}
 					token = message.getToken();
 				}
 			}
+			return context;
+		}
+		
+		private GssapiProtectionLevel negotiateProtectionLevel(
+				final Socket socket,
+				final GSSContext context,
+				final Socks5Client socks5Client) throws IOException {
+			InputStream inStream = socket.getInputStream();
+			OutputStream outStream = socket.getOutputStream();
+			boolean necReferenceImpl = socks5Client.isGssapiNecReferenceImpl();
+			GssapiProtectionLevels gssapiProtectionLevels = 
+					socks5Client.getGssapiProtectionLevels();
 			List<GssapiProtectionLevel> gssapiProtectionLevelList = 
 					gssapiProtectionLevels.toList(); 
 			GssapiProtectionLevel firstGssapiProtectionLevel = 
 					gssapiProtectionLevelList.get(0);
-			token = new byte[] { 
+			byte[] token = new byte[] { 
 					firstGssapiProtectionLevel.protectionLevelValue().byteValue() 
 			};
 			MessageProp prop = null;
@@ -135,7 +157,7 @@ enum Authenticator {
 			outStream.flush();
 			Message message = Message.newInstanceFrom(inStream);
 			if (message.getMessageType().equals(MessageType.ABORT)) {
-				throw new IOException("server aborted handshake process");
+				throw new IOException("server aborted protection level negotiation");
 			}
 			token = message.getToken();
 			if (!necReferenceImpl) {
@@ -170,10 +192,7 @@ enum Authenticator {
 						"server selected %s which is not acceptable by this socket", 
 						protectionLevelSelection));
 			}
-			MessageProp msgProp = 
-					gssapiProtectionLevelSelection.newMessageProp();
-			Socket newSocket = new GssSocket(socket, context, msgProp);
-			return newSocket;
+			return gssapiProtectionLevelSelection;
 		}
 		
 	},

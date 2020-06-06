@@ -73,6 +73,33 @@ public final class Socks5Worker implements Runnable {
 		this.socksClient = client;
 	}
 	
+	private Socket authenticateUsing(final Method method) throws IOException {
+		Authenticator authenticator = null;
+		try {
+			authenticator = Authenticator.valueOf(method);
+		} catch (IllegalArgumentException e) {
+			LOGGER.log(
+					Level.WARNING, 
+					this.format(String.format(
+							"Unhandled method: %s", 
+							method)),
+					e);
+			return null;
+		}
+		Socket socket = null;
+		try {
+			socket = authenticator.authenticate(
+					this.clientSocket, this.configuration);
+		} catch (IOException e) {
+			LOGGER.log(
+					Level.WARNING, 
+					this.format("Error in authenticating the client"), 
+					e);
+			return null;
+		}
+		return socket;
+	}
+	
 	private void doBind(final Socks5Request socks5Req) throws IOException {
 		Socks5Reply socks5Rep = null;
 		String desiredDestinationAddress = 
@@ -466,6 +493,75 @@ public final class Socks5Worker implements Runnable {
 		return String.format("%s: %s", this, message);
 	}
 	
+	private Socks5Request getSocks5Request() throws IOException {
+		Socks5Request socks5Req = null;
+		try {
+			socks5Req = Socks5Request.newInstanceFrom(this.clientInputStream);
+		} catch (IOException e) {
+			LOGGER.log(
+					Level.WARNING, 
+					this.format("Error in parsing the SOCKS5 request"), 
+					e);
+			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
+					Reply.GENERAL_SOCKS_SERVER_FAILURE);
+			LOGGER.log(
+					Level.FINE, 
+					this.format(String.format(
+							"Sending %s", 
+							socks5Rep.toString())));
+			this.writeThenFlush(socks5Rep.toByteArray());
+			return null;
+		}
+		LOGGER.log(
+				Level.FINE, 
+				this.format(String.format(
+						"Received %s", 
+						socks5Req.toString())));
+		InetAddress clientInetAddress = this.clientSocket.getLocalAddress();
+		Socks5RequestCriteria allowedSocks5RequestCriteria = 
+				this.configuration.getAllowedSocks5RequestCriteria();
+		if (allowedSocks5RequestCriteria.toList().isEmpty()) {
+			allowedSocks5RequestCriteria = new Socks5RequestCriteria(
+					new Socks5RequestCriterion(null, null, null, null));
+		}
+		Socks5RequestCriterion socks5RequestCriterion =
+				allowedSocks5RequestCriteria.anyEvaluatesTrue(
+						clientInetAddress, socks5Req);
+		if (socks5RequestCriterion == null) {
+			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
+					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
+			LOGGER.log(
+					Level.FINE, 
+					this.format(String.format(
+							"SOCKS5 request from %s not allowed. "
+							+ "SOCKS5 request: %s",
+							clientInetAddress.toString(),
+							socks5Req.toString())));
+			this.writeThenFlush(socks5Rep.toByteArray());
+			return null;
+		}
+		Socks5RequestCriteria blockedSocks5RequestCriteria = 
+				this.configuration.getBlockedSocks5RequestCriteria();
+		socks5RequestCriterion =
+				blockedSocks5RequestCriteria.anyEvaluatesTrue(
+						clientInetAddress, socks5Req);
+		if (socks5RequestCriterion != null) {
+			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
+					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
+			LOGGER.log(
+					Level.FINE, 
+					this.format(String.format(
+							"SOCKS5 request from %s blocked based on the "
+							+ "following criterion: %s. SOCKS5 request: %s",
+							clientInetAddress.toString(),
+							socks5RequestCriterion.toString(),
+							socks5Req.toString())));
+			this.writeThenFlush(socks5Rep.toByteArray());
+			return null;
+		}
+		return socks5Req;
+	}
+	
 	private void passData(
 			final Socket serverSocket, 
 			final int bufferSize, 
@@ -519,65 +615,9 @@ public final class Socks5Worker implements Runnable {
 						e);
 				return;
 			}
-			InputStream in = new SequenceInputStream(new ByteArrayInputStream(
-					new byte[] { Version.V5.byteValue() }),
-					this.clientInputStream);
-			ClientMethodSelectionMessage cmsm = null;
-			try {
-				cmsm = ClientMethodSelectionMessage.newInstanceFrom(in); 
-			} catch (IllegalArgumentException e) {
-				LOGGER.log(
-						Level.WARNING, 
-						this.format("Error in parsing the method selection "
-								+ "message from the client"), 
-						e);
-				return;
-			}
-			LOGGER.log(
-					Level.FINE, 
-					this.format(String.format("Received %s", cmsm.toString())));
-			Method method = null;
-			AuthMethods authMethods = this.settings.getLastValue(
-					SettingSpec.SOCKS5_AUTH_METHODS, AuthMethods.class);
-			for (AuthMethod authMethod : authMethods.toList()) {
-				Method meth = authMethod.methodValue();
-				if (cmsm.getMethods().contains(meth)) {
-					method = meth;
-					break;
-				}
-			}
-			if (method == null) {
-				method = Method.NO_ACCEPTABLE_METHODS;
-			}
-			ServerMethodSelectionMessage smsm = 
-					ServerMethodSelectionMessage.newInstance(method);
-			LOGGER.log(
-					Level.FINE, 
-					this.format(String.format("Sending %s", smsm.toString())));
-			this.writeThenFlush(smsm.toByteArray());
-			Authenticator authenticator = null;
-			try {
-				authenticator = Authenticator.valueOf(method);
-			} catch (IllegalArgumentException e) {
-				LOGGER.log(
-						Level.WARNING, 
-						this.format(String.format(
-								"Unhandled method: %s", 
-								method)),
-						e);
-				return;
-			}
-			Socket socket = null;
-			try {
-				socket = authenticator.authenticate(
-						this.clientSocket, this.configuration);
-			} catch (IOException e) {
-				LOGGER.log(
-						Level.WARNING, 
-						this.format("Error in authenticating the client"), 
-						e);
-				return;
-			}
+			Method method = this.selectMethod();
+			if (method == null) { return; } 
+			Socket socket = this.authenticateUsing(method);
 			if (socket == null) { return; } 
 			this.clientInputStream = socket.getInputStream();
 			this.clientOutputStream = socket.getOutputStream();
@@ -603,71 +643,8 @@ public final class Socks5Worker implements Runnable {
 				this.writeThenFlush(socks5Rep.toByteArray());
 				return;
 			}
-			Socks5Request socks5Req = null;
-			try {
-				socks5Req = Socks5Request.newInstanceFrom(this.clientInputStream);
-			} catch (IOException e) {
-				LOGGER.log(
-						Level.WARNING, 
-						this.format("Error in parsing the SOCKS5 request"), 
-						e);
-				Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
-						Reply.GENERAL_SOCKS_SERVER_FAILURE);
-				LOGGER.log(
-						Level.FINE, 
-						this.format(String.format(
-								"Sending %s", 
-								socks5Rep.toString())));
-				this.writeThenFlush(socks5Rep.toByteArray());
-				return;
-			}
-			LOGGER.log(
-					Level.FINE, 
-					this.format(String.format(
-							"Received %s", 
-							socks5Req.toString())));
-			InetAddress clientInetAddress = this.clientSocket.getLocalAddress();
-			Socks5RequestCriteria allowedSocks5RequestCriteria = 
-					this.configuration.getAllowedSocks5RequestCriteria();
-			if (allowedSocks5RequestCriteria.toList().isEmpty()) {
-				allowedSocks5RequestCriteria = new Socks5RequestCriteria(
-						new Socks5RequestCriterion(null, null, null, null));
-			}
-			Socks5RequestCriterion socks5RequestCriterion =
-					allowedSocks5RequestCriteria.anyEvaluatesTrue(
-							clientInetAddress, socks5Req);
-			if (socks5RequestCriterion == null) {
-				Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
-						Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
-				LOGGER.log(
-						Level.FINE, 
-						this.format(String.format(
-								"SOCKS5 request from %s not allowed. "
-								+ "SOCKS5 request: %s",
-								clientInetAddress.toString(),
-								socks5Req.toString())));
-				this.writeThenFlush(socks5Rep.toByteArray());
-				return;
-			}
-			Socks5RequestCriteria blockedSocks5RequestCriteria = 
-					this.configuration.getBlockedSocks5RequestCriteria();
-			socks5RequestCriterion =
-					blockedSocks5RequestCriteria.anyEvaluatesTrue(
-							clientInetAddress, socks5Req);
-			if (socks5RequestCriterion != null) {
-				Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
-						Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
-				LOGGER.log(
-						Level.FINE, 
-						this.format(String.format(
-								"SOCKS5 request from %s blocked based on the "
-								+ "following criterion: %s. SOCKS5 request: %s",
-								clientInetAddress.toString(),
-								socks5RequestCriterion.toString(),
-								socks5Req.toString())));
-				this.writeThenFlush(socks5Rep.toByteArray());
-				return;
-			}
+			Socks5Request socks5Req = this.getSocks5Request();
+			if (socks5Req == null) { return; }
 			Command command = socks5Req.getCommand();
 			switch (command) {
 			case BIND:
@@ -703,6 +680,46 @@ public final class Socks5Worker implements Runnable {
 				}
 			}
 		}
+	}
+	
+	private Method selectMethod() throws IOException {
+		InputStream in = new SequenceInputStream(new ByteArrayInputStream(
+				new byte[] { Version.V5.byteValue() }),
+				this.clientInputStream);
+		ClientMethodSelectionMessage cmsm = null;
+		try {
+			cmsm = ClientMethodSelectionMessage.newInstanceFrom(in); 
+		} catch (IllegalArgumentException e) {
+			LOGGER.log(
+					Level.WARNING, 
+					this.format("Error in parsing the method selection "
+							+ "message from the client"), 
+					e);
+			return null;
+		}
+		LOGGER.log(
+				Level.FINE, 
+				this.format(String.format("Received %s", cmsm.toString())));
+		Method method = null;
+		AuthMethods authMethods = this.settings.getLastValue(
+				SettingSpec.SOCKS5_AUTH_METHODS, AuthMethods.class);
+		for (AuthMethod authMethod : authMethods.toList()) {
+			Method meth = authMethod.methodValue();
+			if (cmsm.getMethods().contains(meth)) {
+				method = meth;
+				break;
+			}
+		}
+		if (method == null) {
+			method = Method.NO_ACCEPTABLE_METHODS;
+		}
+		ServerMethodSelectionMessage smsm = 
+				ServerMethodSelectionMessage.newInstance(method);
+		LOGGER.log(
+				Level.FINE, 
+				this.format(String.format("Sending %s", smsm.toString())));
+		this.writeThenFlush(smsm.toByteArray());
+		return method;
 	}
 	
 	@Override

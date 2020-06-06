@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.net.SocketException;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -53,6 +52,20 @@ enum Authenticator {
 		public Socket authenticate(
 				final Socket socket, 
 				final Configuration configuration) throws IOException {
+			GSSContext context = this.establishContext(socket, configuration);
+			if (context == null) { return null; }
+			GssapiProtectionLevel gssapiProtectionLevelChoice =
+					this.negotiateProtectionLevel(
+							socket, context, configuration);
+			if (gssapiProtectionLevelChoice == null) { return null;	}
+			MessageProp msgProp = gssapiProtectionLevelChoice.newMessageProp();
+			Socket newSocket = new GssSocket(socket, context, msgProp);
+			return newSocket;
+		}
+		
+		private GSSContext establishContext(
+				final Socket socket, 
+				final Configuration configuration) throws IOException {
 			GSSManager manager = GSSManager.getInstance();
 			GSSContext context = null;
 			try {
@@ -60,20 +73,18 @@ enum Authenticator {
 			} catch (GSSException e) {
 				throw new IOException(e);
 			}
-			GssapiProtectionLevels gssapiProtectionLevels = 
-					configuration.getSettings().getLastValue(
-							SettingSpec.SOCKS5_GSSAPI_PROTECTION_LEVELS, 
-							GssapiProtectionLevels.class);		
-			boolean necReferenceImpl = configuration.getSettings().getLastValue(
-					SettingSpec.SOCKS5_GSSAPI_NEC_REFERENCE_IMPL, 
-					Boolean.class).booleanValue();
 			InputStream inStream = socket.getInputStream();
 			OutputStream outStream = socket.getOutputStream();
 			byte[] token = null;
 			while (!context.isEstablished()) {
 				Message message = Message.newInstanceFrom(inStream);
 				if (message.getMessageType().equals(MessageType.ABORT)) {
-					throw new IOException("client aborted handshake process");
+					LOGGER.log(
+							Level.FINE, 
+							String.format(
+									"Client %s aborted process of context establishment", 
+									socket));
+					return null;
 				}
 				token = message.getToken();
 				try {
@@ -97,11 +108,28 @@ enum Authenticator {
 					outStream.flush();
 				}
 			}
+			return context;
+		}
+		
+		private GssapiProtectionLevel negotiateProtectionLevel(
+				final Socket socket, 
+				final GSSContext context,
+				final Configuration configuration) throws IOException {
+			InputStream inStream = socket.getInputStream();
+			OutputStream outStream = socket.getOutputStream();
 			Message message = Message.newInstanceFrom(inStream);
 			if (message.getMessageType().equals(MessageType.ABORT)) {
-				throw new IOException("client aborted handshake process");
+				LOGGER.log(
+						Level.FINE, 
+						String.format(
+								"Client %s aborted protection level negotiation", 
+								socket));
+				return null;
 			}
-			token = message.getToken();
+			boolean necReferenceImpl = configuration.getSettings().getLastValue(
+					SettingSpec.SOCKS5_GSSAPI_NEC_REFERENCE_IMPL, 
+					Boolean.class).booleanValue();
+			byte[] token = message.getToken();
 			MessageProp prop = null;
 			if (!necReferenceImpl) {
 				prop = new MessageProp(0, false);
@@ -129,6 +157,10 @@ enum Authenticator {
 			} catch (IllegalArgumentException e) {
 				throw new IOException(e);
 			}
+			GssapiProtectionLevels gssapiProtectionLevels = 
+					configuration.getSettings().getLastValue(
+							SettingSpec.SOCKS5_GSSAPI_PROTECTION_LEVELS, 
+							GssapiProtectionLevels.class);		
 			List<GssapiProtectionLevel> gssapiProtectionLevelList =
 					gssapiProtectionLevels.toList();
 			GssapiProtectionLevel gssapiProtectionLevelChoice = 
@@ -160,12 +192,15 @@ enum Authenticator {
 					token).toByteArray());
 			outStream.flush();
 			if (socket.isClosed()) {
-				throw new SocketException("client closed due to client " 
-						+ "finding choice of protection level unacceptable");
+				LOGGER.log(
+						Level.FINE, 
+						String.format(
+								"Client %s closed due to client finding "
+								+ "choice of protection level unacceptable", 
+								socket));
+				return null;
 			}
-			MessageProp msgProp = gssapiProtectionLevelChoice.newMessageProp();
-			Socket newSocket = new GssSocket(socket, context, msgProp);
-			return newSocket;
+			return gssapiProtectionLevelChoice;
 		}
 		
 	},

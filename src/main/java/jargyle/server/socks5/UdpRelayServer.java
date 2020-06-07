@@ -29,6 +29,117 @@ final class UdpRelayServer {
 			super(server);
 		}
 		
+		private boolean canAcceptIncomingUdpAddress(
+				final InetAddress incomingUdpInetAddress) {
+			Criteria allowedSocks5IncomingUdpAddrCriteria =
+					this.getUdpRelayServer().allowedSocks5IncomingUdpAddressCriteria;
+			if (allowedSocks5IncomingUdpAddrCriteria.toList().isEmpty()) {
+				allowedSocks5IncomingUdpAddrCriteria = Criteria.newInstance(
+						CriterionOperator.MATCHES.newCriterion(".*"));
+			}
+			Criterion criterion = 
+					allowedSocks5IncomingUdpAddrCriteria.anyEvaluatesTrue(
+							incomingUdpInetAddress);
+			if (criterion == null) {
+				LOGGER.log(
+						Level.FINE, 
+						this.format(String.format(
+								"Incoming UDP address %s not allowed", 
+								incomingUdpInetAddress)));
+				return false;
+			}
+			Criteria blockedSocks5IncomingUdpAddrCriteria =
+					this.getUdpRelayServer().blockedSocks5IncomingUdpAddressCriteria;
+			criterion = blockedSocks5IncomingUdpAddrCriteria.anyEvaluatesTrue(
+					incomingUdpInetAddress);
+			if (criterion != null) {
+				LOGGER.log(
+						Level.FINE, 
+						this.format(String.format(
+								"Incoming UDP address %s blocked based on the "
+								+ "following criterion: %s", 
+								incomingUdpInetAddress,
+								criterion)));
+				return false;
+			}
+			return true;
+		}
+		
+		private boolean canForwardDatagramPacket(final DatagramPacket packet) {
+			String address = packet.getAddress().getHostAddress();
+			int port = packet.getPort();
+			String desiredDestinationAddr = 
+					this.getUdpRelayServer().desiredDestinationAddress;
+			int desiredDestinationPrt =
+					this.getUdpRelayServer().desiredDestinationPort;
+			if (desiredDestinationAddr != null 
+					&& desiredDestinationPrt > -1) {
+				InetAddress desiredDestinationInetAddr = null;
+				try {
+					desiredDestinationInetAddr = InetAddress.getByName(
+							desiredDestinationAddr);
+				} catch (UnknownHostException e) {
+					LOGGER.log(
+							Level.WARNING, 
+							this.format("Error in determining the IP address from the server"), 
+							e);
+					return false;
+				}
+				InetAddress inetAddr = null;
+				try {
+					inetAddr = InetAddress.getByName(address);
+				} catch (UnknownHostException e) {
+					LOGGER.log(
+							Level.WARNING, 
+							this.format("Error in determining the IP address from the server"), 
+							e);
+					return false;
+				}
+				if (!desiredDestinationInetAddr.isLoopbackAddress()
+						|| !inetAddr.isLoopbackAddress()) {
+					if (!desiredDestinationInetAddr.equals(inetAddr)) {
+						return false;
+					}
+				}
+				if (desiredDestinationPrt != port) {
+					return false;
+				}
+			}
+			return true;
+		}
+
+		private DatagramPacket newDatagramPacket(final UdpRequestHeader header) {
+			byte[] headerBytes = header.toByteArray();
+			InetAddress inetAddress = null;
+			try {
+				inetAddress = InetAddress.getByName(
+						this.getUdpRelayServer().sourceAddress);
+			} catch (UnknownHostException e) {
+				LOGGER.log(
+						Level.WARNING, 
+						this.format("Error in determining the IP address from the client"), 
+						e);
+				return null;
+			}
+			int inetPort = this.getUdpRelayServer().sourcePort;
+			return new DatagramPacket(
+					headerBytes, headerBytes.length, inetAddress, inetPort);
+		}
+		
+		private UdpRequestHeader newUdpRequestHeader(
+				final DatagramPacket packet) {
+			String address = packet.getAddress().getHostAddress();
+			int port = packet.getPort();
+			AddressType addressType = AddressType.get(address);
+			UdpRequestHeader header = UdpRequestHeader.newInstance(
+					0,
+					addressType,
+					address,
+					port,
+					packet.getData());
+			return header;
+		}
+		
 		@Override
 		public void run() {
 			this.getUdpRelayServer().lastReceiveTime = System.currentTimeMillis();
@@ -61,102 +172,18 @@ final class UdpRelayServer {
 							this.format(String.format(
 									"Packet data received: %s byte(s)", 
 									packet.getLength())));
-					Criteria allowedSocks5IncomingUdpAddrCriteria =
-							this.getUdpRelayServer().allowedSocks5IncomingUdpAddressCriteria;
-					if (allowedSocks5IncomingUdpAddrCriteria.toList().isEmpty()) {
-						allowedSocks5IncomingUdpAddrCriteria = Criteria.newInstance(
-								CriterionOperator.MATCHES.newCriterion(".*"));
-					}
-					Criterion criterion = 
-							allowedSocks5IncomingUdpAddrCriteria.anyEvaluatesTrue(
-									packet.getAddress());
-					if (criterion == null) {
-						LOGGER.log(
-								Level.FINE, 
-								this.format(String.format(
-										"Incoming UDP address %s not allowed", 
-										packet.getAddress())));
+					if (!this.canAcceptIncomingUdpAddress(packet.getAddress())) {
 						continue;
 					}
-					Criteria blockedSocks5IncomingUdpAddrCriteria =
-							this.getUdpRelayServer().blockedSocks5IncomingUdpAddressCriteria;
-					criterion = blockedSocks5IncomingUdpAddrCriteria.anyEvaluatesTrue(
-							packet.getAddress());
-					if (criterion != null) {
-						LOGGER.log(
-								Level.FINE, 
-								this.format(String.format(
-										"Incoming UDP address %s blocked based on the "
-										+ "following criterion: %s", 
-										packet.getAddress(),
-										criterion)));
+					if (!this.canForwardDatagramPacket(packet)) {
 						continue;
 					}
-					String address = packet.getAddress().getHostAddress();
-					int port = packet.getPort();
-					String desiredDestinationAddr = 
-							this.getUdpRelayServer().desiredDestinationAddress;
-					int desiredDestinationPrt =
-							this.getUdpRelayServer().desiredDestinationPort;
-					if (desiredDestinationAddr != null 
-							&& desiredDestinationPrt > -1) {
-						InetAddress desiredDestinationInetAddr = null;
-						try {
-							desiredDestinationInetAddr = InetAddress.getByName(
-									desiredDestinationAddr);
-						} catch (UnknownHostException e) {
-							LOGGER.log(
-									Level.WARNING, 
-									this.format("Error in determining the IP address from the server"), 
-									e);
-							continue;
-						}
-						InetAddress inetAddr = null;
-						try {
-							inetAddr = InetAddress.getByName(address);
-						} catch (UnknownHostException e) {
-							LOGGER.log(
-									Level.WARNING, 
-									this.format("Error in determining the IP address from the server"), 
-									e);
-							continue;
-						}
-						if (!desiredDestinationInetAddr.isLoopbackAddress()
-								|| !inetAddr.isLoopbackAddress()) {
-							if (!desiredDestinationInetAddr.equals(inetAddr)) {
-								continue;
-							}
-						}
-						if (desiredDestinationPrt != port) {
-							continue;
-						}
-					}
-					AddressType addressType = AddressType.get(address);
-					UdpRequestHeader header = UdpRequestHeader.newInstance(
-							0,
-							addressType,
-							address,
-							port,
-							packet.getData());
+					UdpRequestHeader header = this.newUdpRequestHeader(packet);
 					LOGGER.log(Level.FINE, this.format(header.toString()));
-					byte[] headerBytes = header.toByteArray();
-					InetAddress inetAddress = null;
-					try {
-						inetAddress = InetAddress.getByName(
-								this.getUdpRelayServer().sourceAddress);
-					} catch (UnknownHostException e) {
-						LOGGER.log(
-								Level.WARNING, 
-								this.format("Error in determining the IP address from the client"), 
-								e);
+					packet = this.newDatagramPacket(header);
+					if (packet == null) {
 						continue;
 					}
-					int inetPort = this.getUdpRelayServer().sourcePort;
-					packet = new DatagramPacket(
-							headerBytes, 
-							headerBytes.length,
-							inetAddress,
-							inetPort);
 					try {
 						this.getClientDatagramSocket().send(packet);
 					} catch (SocketException e) {
@@ -196,6 +223,125 @@ final class UdpRelayServer {
 			super(server);
 		}
 		
+		private boolean canForwardDatagramPacket(final DatagramPacket packet) {
+			String address = packet.getAddress().getHostAddress();
+			int port = packet.getPort();
+			InetAddress sourceInetAddr = null;
+			try {
+				sourceInetAddr = InetAddress.getByName(
+						this.getUdpRelayServer().sourceAddress);
+			} catch (UnknownHostException e) {
+				LOGGER.log(
+						Level.WARNING, 
+						this.format("Error in determining the IP address from the client"), 
+						e);
+				return false;
+			}
+			InetAddress inetAddr = null;
+			try {
+				inetAddr = InetAddress.getByName(address);
+			} catch (UnknownHostException e) {
+				LOGGER.log(
+						Level.WARNING, 
+						this.format("Error in determining the IP address from the client"), 
+						e);
+				return false;
+			}
+			if (!sourceInetAddr.isLoopbackAddress() 
+					|| !inetAddr.isLoopbackAddress()) {
+				if (!sourceInetAddr.equals(inetAddr)) {
+					return false;
+				}
+			}
+			if (this.getUdpRelayServer().sourcePort == -1) {
+				this.getUdpRelayServer().sourcePort = port;
+			}
+			return true;
+		}
+		
+		private boolean canForwardUdpRequestHeader(
+				final UdpRequestHeader header) {
+			if (header.getCurrentFragmentNumber() != 0) {
+				return false;
+			}
+			String desiredDestinationAddr = 
+					this.getUdpRelayServer().desiredDestinationAddress;
+			int desiredDestinationPrt =
+					this.getUdpRelayServer().desiredDestinationPort;
+			String desiredDestAddr = 
+					header.getDesiredDestinationAddress();
+			int desiredDestPrt =
+					header.getDesiredDestinationPort();
+			if (desiredDestinationAddr != null 
+					&& desiredDestinationPrt > -1) {
+				InetAddress desiredDestinationInetAddr = null;
+				try {
+					desiredDestinationInetAddr = InetAddress.getByName(
+							desiredDestinationAddr);
+				} catch (UnknownHostException e) {
+					LOGGER.log(
+							Level.WARNING, 
+							this.format("Error in determining the IP address from the server"), 
+							e);
+					return false;
+				}
+				InetAddress desiredDestInetAddr = null;
+				try {
+					desiredDestInetAddr = InetAddress.getByName(
+							desiredDestAddr);
+				} catch (UnknownHostException e) {
+					LOGGER.log(
+							Level.WARNING, 
+							this.format("Error in determining the IP address from the server"), 
+							e);
+					return false;
+				}
+				if (!desiredDestinationInetAddr.isLoopbackAddress()
+						|| !desiredDestInetAddr.isLoopbackAddress()) {
+					if (!desiredDestinationInetAddr.equals(
+							desiredDestInetAddr)) {
+						return false;
+					}
+				}
+				if (desiredDestinationPrt != desiredDestPrt) {
+					return false;
+				}
+			}
+			return true;
+		}
+		
+		private DatagramPacket newDatagramPacket(final UdpRequestHeader header) {
+			byte[] userData = header.getUserData();
+			InetAddress inetAddress = null;
+			try {
+				inetAddress = InetAddress.getByName(
+						header.getDesiredDestinationAddress());
+			} catch (UnknownHostException e) {
+				LOGGER.log(
+						Level.WARNING, 
+						this.format("Error in determining the IP address from the server"), 
+						e);
+				return null;
+			}
+			int inetPort = header.getDesiredDestinationPort();
+			return new DatagramPacket(
+					userData, userData.length, inetAddress, inetPort);
+		}
+		
+		private UdpRequestHeader newUdpRequestHeader(final DatagramPacket packet) {
+			UdpRequestHeader header = null; 
+			try {
+				header = UdpRequestHeader.newInstance(packet.getData());
+			} catch (IllegalArgumentException e) {
+				LOGGER.log(
+						Level.WARNING, 
+						this.format("Error in parsing the UDP header request from the client"), 
+						e);
+				return null;
+			}
+			return header;
+		}
+		
 		@Override
 		public void run() {
 			this.getUdpRelayServer().lastReceiveTime = System.currentTimeMillis();
@@ -228,112 +374,21 @@ final class UdpRelayServer {
 							this.format(String.format(
 									"Packet data received: %s byte(s)", 
 									packet.getLength())));					
-					String address = packet.getAddress().getHostAddress();
-					int port = packet.getPort();
-					InetAddress sourceInetAddr = null;
-					try {
-						sourceInetAddr = InetAddress.getByName(
-								this.getUdpRelayServer().sourceAddress);
-					} catch (UnknownHostException e) {
-						LOGGER.log(
-								Level.WARNING, 
-								this.format("Error in determining the IP address from the client"), 
-								e);
+					if (!this.canForwardDatagramPacket(packet)) {
 						continue;
 					}
-					InetAddress inetAddr = null;
-					try {
-						inetAddr = InetAddress.getByName(address);
-					} catch (UnknownHostException e) {
-						LOGGER.log(
-								Level.WARNING, 
-								this.format("Error in determining the IP address from the client"), 
-								e);
-						continue;
-					}
-					if (!sourceInetAddr.isLoopbackAddress() 
-							|| !inetAddr.isLoopbackAddress()) {
-						if (!sourceInetAddr.equals(inetAddr)) {
-							continue;
-						}
-					}
-					if (this.getUdpRelayServer().sourcePort == -1) {
-						this.getUdpRelayServer().sourcePort = port;
-					}
-					UdpRequestHeader header = null; 
-					try {
-						header = UdpRequestHeader.newInstance(packet.getData());
-					} catch (IllegalArgumentException e) {
-						LOGGER.log(
-								Level.WARNING, 
-								this.format("Error in parsing the UDP header request from the client"), 
-								e);
+					UdpRequestHeader header = this.newUdpRequestHeader(packet);
+					if (header == null) {
 						continue;
 					}
 					LOGGER.log(Level.FINE, this.format(header.toString()));
-					if (header.getCurrentFragmentNumber() != 0) {
+					if (!this.canForwardUdpRequestHeader(header)) {
 						continue;
 					}
-					String desiredDestinationAddr = 
-							this.getUdpRelayServer().desiredDestinationAddress;
-					int desiredDestinationPrt =
-							this.getUdpRelayServer().desiredDestinationPort;
-					String desiredDestAddr = 
-							header.getDesiredDestinationAddress();
-					int desiredDestPrt =
-							header.getDesiredDestinationPort();
-					if (desiredDestinationAddr != null 
-							&& desiredDestinationPrt > -1) {
-						InetAddress desiredDestinationInetAddr = null;
-						try {
-							desiredDestinationInetAddr = InetAddress.getByName(
-									desiredDestinationAddr);
-						} catch (UnknownHostException e) {
-							LOGGER.log(
-									Level.WARNING, 
-									this.format("Error in determining the IP address from the server"), 
-									e);
-							continue;
-						}
-						InetAddress desiredDestInetAddr = null;
-						try {
-							desiredDestInetAddr = InetAddress.getByName(
-									desiredDestAddr);
-						} catch (UnknownHostException e) {
-							LOGGER.log(
-									Level.WARNING, 
-									this.format("Error in determining the IP address from the server"), 
-									e);
-							continue;
-						}
-						if (!desiredDestinationInetAddr.isLoopbackAddress()
-								|| !desiredDestInetAddr.isLoopbackAddress()) {
-							if (!desiredDestinationInetAddr.equals(
-									desiredDestInetAddr)) {
-								continue;
-							}
-						}
-						if (desiredDestinationPrt != desiredDestPrt) {
-							continue;
-						}
-					}
-					byte[] userData = header.getUserData();
-					InetAddress inetAddress = null;
-					try {
-						inetAddress = InetAddress.getByName(desiredDestAddr);
-					} catch (UnknownHostException e) {
-						LOGGER.log(
-								Level.WARNING, 
-								this.format("Error in determining the IP address from the server"), 
-								e);
+					packet = this.newDatagramPacket(header);
+					if (packet == null) {
 						continue;
 					}
-					int inetPort = desiredDestPrt;
-					packet = new DatagramPacket(
-							userData,
-							userData.length,
-							inetAddress,
-							inetPort);
 					try {
 						this.getServerDatagramSocket().send(packet);
 					} catch (SocketException e) {

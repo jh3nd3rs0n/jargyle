@@ -44,7 +44,8 @@ enum Authenticator {
 		public Socket authenticate(
 				final Socket socket, 
 				final Socks5Client socks5Client) throws IOException {
-			GSSContext context = this.establishContext(socket, socks5Client);
+			GSSContext context = this.newContext(socks5Client);
+			this.establishContext(socket, context, socks5Client);
 			GssapiProtectionLevel gssapiProtectionLevelSelection =
 					this.negotiateProtectionLevel(
 							socket, context, socks5Client);
@@ -54,43 +55,10 @@ enum Authenticator {
 			return newSocket;
 		}
 		
-		private GSSContext establishContext(
-				final Socket socket, 
+		private void establishContext(
+				final Socket socket,
+				final GSSContext context,
 				final Socks5Client socks5Client) throws IOException {
-			String server = socks5Client.getGssapiServiceName();
-			GSSManager manager = GSSManager.getInstance();
-			GSSName serverName = null;
-			try {
-				serverName = manager.createName(server, null);
-			} catch (GSSException e) {
-				throw new IOException(e);
-			}
-			Oid mechanismOid = socks5Client.getGssapiMechanismOid();
-			GSSContext context = null;
-			try {
-				context = manager.createContext(
-						serverName, 
-						mechanismOid,
-				        null,
-				        GSSContext.DEFAULT_LIFETIME);
-			} catch (GSSException e) {
-				throw new IOException(e);
-			}
-			try {
-				context.requestMutualAuth(true);
-			} catch (GSSException e) {
-				throw new IOException(e);
-			}
-			try {
-				context.requestConf(true);
-			} catch (GSSException e) {
-				throw new IOException(e);
-			}
-			try {
-				context.requestInteg(true);
-			} catch (GSSException e) {
-				throw new IOException(e);
-			}
 			InputStream inStream = socket.getInputStream();
 			OutputStream outStream = socket.getOutputStream();
 			byte[] token = new byte[] { };
@@ -118,7 +86,6 @@ enum Authenticator {
 					token = message.getToken();
 				}
 			}
-			return context;
 		}
 		
 		private GssapiProtectionLevel negotiateProtectionLevel(
@@ -193,6 +160,45 @@ enum Authenticator {
 						protectionLevelSelection));
 			}
 			return gssapiProtectionLevelSelection;
+		}
+		
+		private GSSContext newContext(
+				final Socks5Client socks5Client) throws IOException {
+			String server = socks5Client.getGssapiServiceName();
+			GSSManager manager = GSSManager.getInstance();
+			GSSName serverName = null;
+			try {
+				serverName = manager.createName(server, null);
+			} catch (GSSException e) {
+				throw new IOException(e);
+			}
+			Oid mechanismOid = socks5Client.getGssapiMechanismOid();
+			GSSContext context = null;
+			try {
+				context = manager.createContext(
+						serverName, 
+						mechanismOid,
+				        null,
+				        GSSContext.DEFAULT_LIFETIME);
+			} catch (GSSException e) {
+				throw new IOException(e);
+			}
+			try {
+				context.requestMutualAuth(true);
+			} catch (GSSException e) {
+				throw new IOException(e);
+			}
+			try {
+				context.requestConf(true);
+			} catch (GSSException e) {
+				throw new IOException(e);
+			}
+			try {
+				context.requestInteg(true);
+			} catch (GSSException e) {
+				throw new IOException(e);
+			}
+			return context;
 		}
 		
 	},

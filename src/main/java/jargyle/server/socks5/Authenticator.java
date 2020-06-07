@@ -52,8 +52,10 @@ enum Authenticator {
 		public Socket authenticate(
 				final Socket socket, 
 				final Configuration configuration) throws IOException {
-			GSSContext context = this.establishContext(socket, configuration);
-			if (context == null) { return null; }
+			GSSContext context = this.newContext();
+			if (!this.establishContext(socket, context, configuration)) {
+				return null;
+			}
 			GssapiProtectionLevel gssapiProtectionLevelChoice =
 					this.negotiateProtectionLevel(
 							socket, context, configuration);
@@ -63,16 +65,10 @@ enum Authenticator {
 			return newSocket;
 		}
 		
-		private GSSContext establishContext(
-				final Socket socket, 
+		private boolean establishContext(
+				final Socket socket,
+				final GSSContext context,
 				final Configuration configuration) throws IOException {
-			GSSManager manager = GSSManager.getInstance();
-			GSSContext context = null;
-			try {
-				context = manager.createContext((GSSCredential) null);
-			} catch (GSSException e) {
-				throw new IOException(e);
-			}
 			InputStream inStream = socket.getInputStream();
 			OutputStream outStream = socket.getOutputStream();
 			byte[] token = null;
@@ -84,7 +80,7 @@ enum Authenticator {
 							String.format(
 									"Client %s aborted process of context establishment", 
 									socket));
-					return null;
+					return false;
 				}
 				token = message.getToken();
 				try {
@@ -108,7 +104,7 @@ enum Authenticator {
 					outStream.flush();
 				}
 			}
-			return context;
+			return true;
 		}
 		
 		private GssapiProtectionLevel negotiateProtectionLevel(
@@ -201,6 +197,17 @@ enum Authenticator {
 				return null;
 			}
 			return gssapiProtectionLevelChoice;
+		}
+		
+		private GSSContext newContext() throws IOException {
+			GSSManager manager = GSSManager.getInstance();
+			GSSContext context = null;
+			try {
+				context = manager.createContext((GSSCredential) null);
+			} catch (GSSException e) {
+				throw new IOException(e);
+			}
+			return context;
 		}
 		
 	},

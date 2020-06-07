@@ -27,54 +27,68 @@ final class Worker implements Runnable {
 		this.configuration = config;
 	}
 	
+	private boolean canAcceptClientSocket(final Socket clientSocket) {
+		InetAddress clientInetAddress = clientSocket.getInetAddress();
+		Criteria allowedClientAddressCriteria = 
+				this.configuration.getAllowedClientAddressCriteria();
+		if (allowedClientAddressCriteria.toList().isEmpty()) {
+			allowedClientAddressCriteria = Criteria.newInstance(
+					CriterionOperator.MATCHES.newCriterion(".*"));
+		}
+		Criterion criterion = allowedClientAddressCriteria.anyEvaluatesTrue(
+				clientInetAddress);
+		if (criterion == null) {
+			LOGGER.log(
+					Level.FINE, 
+					this.format(String.format(
+							"Client address %s not allowed", 
+							clientInetAddress)));
+			return false;
+		}
+		Criteria blockedClientAddressCriteria =
+				this.configuration.getBlockedClientAddressCriteria();
+		criterion = blockedClientAddressCriteria.anyEvaluatesTrue(
+				clientInetAddress);
+		if (criterion != null) {
+			LOGGER.log(
+					Level.FINE, 
+					this.format(String.format(
+							"Client address %s blocked based on the "
+							+ "following criterion: %s", 
+							clientInetAddress,
+							criterion)));
+			return false;
+		}
+		return true;
+	}
+	
+	private boolean configureClientSocket(final Socket clientSocket) {
+		try {
+			SocketSettings socketSettings = 
+					this.configuration.getSettings().getLastValue(
+							SettingSpec.CLIENT_SOCKET_SETTINGS,
+							SocketSettings.class);
+			socketSettings.applyTo(clientSocket);
+		} catch (SocketException e) {
+			LOGGER.log(
+					Level.WARNING, 
+					this.format("Error in setting the client socket"), 
+					e);
+			return false;
+		}
+		return true;
+	}
+	
 	private String format(final String message) {
 		return String.format("%s: %s", this, message);
 	}
 	
 	public void run() {
 		try {
-			InetAddress clientInetAddress = this.clientSocket.getInetAddress();
-			Criteria allowedClientAddressCriteria = 
-					this.configuration.getAllowedClientAddressCriteria();
-			if (allowedClientAddressCriteria.toList().isEmpty()) {
-				allowedClientAddressCriteria = Criteria.newInstance(
-						CriterionOperator.MATCHES.newCriterion(".*"));
-			}
-			Criterion criterion = allowedClientAddressCriteria.anyEvaluatesTrue(
-					clientInetAddress);
-			if (criterion == null) {
-				LOGGER.log(
-						Level.FINE, 
-						this.format(String.format(
-								"Client address %s not allowed", 
-								clientInetAddress)));
+			if (!this.canAcceptClientSocket(this.clientSocket)) {
 				return;
 			}
-			Criteria blockedClientAddressCriteria =
-					this.configuration.getBlockedClientAddressCriteria();
-			criterion = blockedClientAddressCriteria.anyEvaluatesTrue(
-					clientInetAddress);
-			if (criterion != null) {
-				LOGGER.log(
-						Level.FINE, 
-						this.format(String.format(
-								"Client address %s blocked based on the "
-								+ "following criterion: %s", 
-								clientInetAddress,
-								criterion)));
-				return;
-			}
-			try {
-				SocketSettings socketSettings = 
-						this.configuration.getSettings().getLastValue(
-								SettingSpec.CLIENT_SOCKET_SETTINGS,
-								SocketSettings.class);
-				socketSettings.applyTo(this.clientSocket);
-			} catch (SocketException e) {
-				LOGGER.log(
-						Level.WARNING, 
-						this.format("Error in setting the client socket"), 
-						e);
+			if (!this.configureClientSocket(this.clientSocket)) {
 				return;
 			}
 			InputStream clientInputStream = null;

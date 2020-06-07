@@ -73,7 +73,7 @@ public final class Socks5Worker implements Runnable {
 		this.socksClient = client;
 	}
 	
-	private Socket authenticateUsing(final Method method) throws IOException {
+	private Socket authenticateUsing(final Method method) {
 		Authenticator authenticator = null;
 		try {
 			authenticator = Authenticator.valueOf(method);
@@ -99,6 +99,314 @@ public final class Socks5Worker implements Runnable {
 		}
 		return socket;
 	}
+
+	private boolean canAcceptIncomingTcpAddress(
+			final InetAddress incomingTcpInetAddress) {
+		Criteria allowedSocks5IncomingTcpAddressCriteria = 
+				this.configuration.getAllowedSocks5IncomingTcpAddressCriteria();
+		if (allowedSocks5IncomingTcpAddressCriteria.toList().isEmpty()) {
+			allowedSocks5IncomingTcpAddressCriteria = Criteria.newInstance(
+					CriterionOperator.MATCHES.newCriterion(".*"));
+		}
+		Criterion criterion = 
+				allowedSocks5IncomingTcpAddressCriteria.anyEvaluatesTrue(
+						incomingTcpInetAddress);
+		if (criterion == null) {
+			LOGGER.log(
+					Level.FINE, 
+					this.format(String.format(
+							"Incoming TCP address %s not allowed", 
+							incomingTcpInetAddress)));
+			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
+					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
+			LOGGER.log(
+					Level.FINE, 
+					this.format(String.format(
+							"Sending %s", 
+							socks5Rep.toString())));
+			try {
+				this.writeThenFlush(socks5Rep.toByteArray());
+			} catch (IOException e) {
+				return false;
+			}
+			return false;
+		}
+		Criteria blockedSocks5IncomingTcpAddressCriteria =
+				this.configuration.getBlockedSocks5IncomingTcpAddressCriteria();
+		criterion = blockedSocks5IncomingTcpAddressCriteria.anyEvaluatesTrue(
+				incomingTcpInetAddress);
+		if (criterion != null) {
+			LOGGER.log(
+					Level.FINE, 
+					this.format(String.format(
+							"Incoming TCP address %s blocked based on the "
+							+ "following criterion: %s", 
+							incomingTcpInetAddress,
+							criterion)));
+			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
+					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
+			LOGGER.log(
+					Level.FINE, 
+					this.format(String.format(
+							"Sending %s", 
+							socks5Rep.toString())));
+			try {
+				this.writeThenFlush(socks5Rep.toByteArray());
+			} catch (IOException e) {
+				return false;
+			}
+			return false;
+		}
+		return true;
+	}
+	
+	private boolean canAcceptSocks5Request(
+			final InetAddress sourceInetAddress,
+			final Socks5Request socks5Req) {
+		Socks5RequestCriteria allowedSocks5RequestCriteria = 
+				this.configuration.getAllowedSocks5RequestCriteria();
+		if (allowedSocks5RequestCriteria.toList().isEmpty()) {
+			allowedSocks5RequestCriteria = new Socks5RequestCriteria(
+					new Socks5RequestCriterion(null, null, null, null));
+		}
+		Socks5RequestCriterion socks5RequestCriterion =
+				allowedSocks5RequestCriteria.anyEvaluatesTrue(
+						sourceInetAddress, socks5Req);
+		if (socks5RequestCriterion == null) {
+			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
+					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
+			LOGGER.log(
+					Level.FINE, 
+					this.format(String.format(
+							"SOCKS5 request from %s not allowed. "
+							+ "SOCKS5 request: %s",
+							sourceInetAddress.toString(),
+							socks5Req.toString())));
+			try {
+				this.writeThenFlush(socks5Rep.toByteArray());
+			} catch (IOException e) {
+				return false;
+			}
+			return false;
+		}
+		Socks5RequestCriteria blockedSocks5RequestCriteria = 
+				this.configuration.getBlockedSocks5RequestCriteria();
+		socks5RequestCriterion =
+				blockedSocks5RequestCriteria.anyEvaluatesTrue(
+						sourceInetAddress, socks5Req);
+		if (socks5RequestCriterion != null) {
+			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
+					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
+			LOGGER.log(
+					Level.FINE, 
+					this.format(String.format(
+							"SOCKS5 request from %s blocked based on the "
+							+ "following criterion: %s. SOCKS5 request: %s",
+							sourceInetAddress.toString(),
+							socks5RequestCriterion.toString(),
+							socks5Req.toString())));
+			try {
+				this.writeThenFlush(socks5Rep.toByteArray());
+			} catch (IOException e) {
+				return false;
+			}
+			return false;
+		}
+		return true;
+	}
+	
+	private boolean configureClientDatagramSocket(
+			final DatagramSocket clientDatagramSock) {
+		try {
+			SocketSettings socketSettings = this.settings.getLastValue(
+					SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_CLIENT_SOCKET_SETTINGS, 
+					SocketSettings.class);
+			socketSettings.applyTo(clientDatagramSock);
+		} catch (SocketException e) {
+			LOGGER.log(
+					Level.WARNING, 
+					this.format("Error in setting the client-facing UDP socket"), 
+					e);
+			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
+					Reply.GENERAL_SOCKS_SERVER_FAILURE);
+			LOGGER.log(
+					Level.FINE, 
+					this.format(String.format(
+							"Sending %s", 
+							socks5Rep.toString())));
+			try {
+				this.writeThenFlush(socks5Rep.toByteArray());
+			} catch (IOException e1) {
+				return false;
+			}
+			return false;
+		}
+		return true;
+	}
+	
+	private boolean configureClientSocket(final Socket clientSocket) {
+		try {
+			SocketSettings socketSettings = 
+					this.settings.getLastValue(
+							SettingSpec.CLIENT_SOCKET_SETTINGS,
+							SocketSettings.class);
+			socketSettings.applyTo(clientSocket);
+		} catch (SocketException e) {
+			LOGGER.log(
+					Level.WARNING, 
+					this.format("Error in setting the client socket"), 
+					e);
+			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
+					Reply.GENERAL_SOCKS_SERVER_FAILURE);
+			LOGGER.log(
+					Level.FINE, 
+					this.format(String.format(
+							"Sending %s", 
+							socks5Rep.toString())));
+			try {
+				this.writeThenFlush(socks5Rep.toByteArray());
+			} catch (IOException e1) {
+				return false;
+			}
+			return false;
+		}
+		return true;
+	}
+	
+	private boolean configureIncomingSocket(final Socket incomingSocket) {
+		try {
+			SocketSettings socketSettings = this.settings.getLastValue(
+					SettingSpec.SOCKS5_ON_BIND_INCOMING_SOCKET_SETTINGS, 
+					SocketSettings.class);
+			socketSettings.applyTo(incomingSocket);
+		} catch (SocketException e) {
+			LOGGER.log(
+					Level.WARNING, 
+					this.format("Error in setting the incoming socket"), 
+					e);
+			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
+					Reply.GENERAL_SOCKS_SERVER_FAILURE);
+			LOGGER.log(
+					Level.FINE, 
+					this.format(String.format(
+							"Sending %s", 
+							socks5Rep.toString())));
+			try {
+				this.writeThenFlush(socks5Rep.toByteArray());
+			} catch (IOException e1) {
+				return false;
+			}
+			return false;
+		}
+		return true;
+	}
+	
+	private boolean configureListenSocket(final ServerSocket listenSocket) {
+		try {
+			SocketSettings socketSettings = this.settings.getLastValue(
+					SettingSpec.SOCKS5_ON_BIND_LISTEN_SOCKET_SETTINGS, 
+					SocketSettings.class);
+			socketSettings.applyTo(listenSocket);
+		} catch (SocketException e) {
+			LOGGER.log(
+					Level.WARNING, 
+					this.format("Error in setting the listen socket"), 
+					e);
+			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
+					Reply.GENERAL_SOCKS_SERVER_FAILURE);
+			LOGGER.log(
+					Level.FINE, 
+					this.format(String.format(
+							"Sending %s", 
+							socks5Rep.toString())));
+			try {
+				this.writeThenFlush(socks5Rep.toByteArray());
+			} catch (IOException e1) {
+				return false;
+			}
+			return false;
+		}
+		return true;
+	}
+	
+	private boolean configureServerDatagramSocket(
+			final DatagramSocket serverDatagramSock) {
+		try {
+			SocketSettings socketSettings = this.settings.getLastValue(
+					SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_SERVER_SOCKET_SETTINGS, 
+					SocketSettings.class);
+			socketSettings.applyTo(serverDatagramSock);
+		} catch (SocketException e) {
+			LOGGER.log(
+					Level.WARNING, 
+					this.format("Error in setting the server-facing UDP socket"), 
+					e);
+			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
+					Reply.GENERAL_SOCKS_SERVER_FAILURE);
+			LOGGER.log(
+					Level.FINE, 
+					this.format(String.format(
+							"Sending %s", 
+							socks5Rep.toString())));
+			try {
+				this.writeThenFlush(socks5Rep.toByteArray());
+			} catch (IOException e1) {
+				return false;
+			}
+			return false;
+		}
+		return true;
+	}
+	
+	private boolean configureServerSocket(final Socket serverSocket) {
+		try {
+			SocketSettings socketSettings = this.settings.getLastValue(
+					SettingSpec.SOCKS5_ON_CONNECT_SERVER_SOCKET_SETTINGS, 
+					SocketSettings.class);
+			socketSettings.applyTo(serverSocket);
+			Host bindHost = this.settings.getLastValue(
+					SettingSpec.SOCKS5_ON_CONNECT_SERVER_BIND_HOST, Host.class);
+			InetAddress bindInetAddress = bindHost.toInetAddress();
+			serverSocket.bind(new InetSocketAddress(bindInetAddress, 0));
+		} catch (SocketException e) {
+			LOGGER.log(
+					Level.WARNING, 
+					this.format("Error in setting the server-facing socket"), 
+					e);
+			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
+					Reply.GENERAL_SOCKS_SERVER_FAILURE);
+			LOGGER.log(
+					Level.FINE, 
+					this.format(String.format(
+							"Sending %s", 
+							socks5Rep.toString())));
+			try {
+				this.writeThenFlush(socks5Rep.toByteArray());
+			} catch (IOException e1) {
+				return false;
+			}
+			return false;
+		} catch (IOException e) {
+			LOGGER.log(
+					Level.WARNING, 
+					this.format("Error in binding the server-facing socket"), 
+					e);
+			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
+					Reply.GENERAL_SOCKS_SERVER_FAILURE);
+			LOGGER.log(
+					Level.FINE, 
+					this.format(String.format(
+							"Sending %s", 
+							socks5Rep.toString())));
+			try {
+				this.writeThenFlush(socks5Rep.toByteArray());
+			} catch (IOException e1) {
+				return false;
+			}
+			return false;
+		}
+		return true;
+	}
 	
 	private void doBind(final Socks5Request socks5Req) throws IOException {
 		Socks5Reply socks5Rep = null;
@@ -108,11 +416,11 @@ public final class Socks5Worker implements Runnable {
 		ServerSocketFactory serverSocketFactory = 
 				ServerSocketFactory.newInstance(this.socksClient);
 		ServerSocket listenSocket = serverSocketFactory.newServerSocket();
+		if (!this.configureListenSocket(listenSocket)) {
+			listenSocket.close();
+			return;
+		}
 		try {
-			SocketSettings socketSettings = this.settings.getLastValue(
-					SettingSpec.SOCKS5_ON_BIND_LISTEN_SOCKET_SETTINGS, 
-					SocketSettings.class);
-			socketSettings.applyTo(listenSocket);
 			listenSocket.bind(new InetSocketAddress(
 					InetAddress.getByName(desiredDestinationAddress),
 					desiredDestinationPort));
@@ -129,6 +437,7 @@ public final class Socks5Worker implements Runnable {
 							"Sending %s", 
 							socks5Rep.toString())));
 			this.writeThenFlush(socks5Rep.toByteArray());
+			listenSocket.close();
 			return;
 		}
 		InetAddress inetAddress = listenSocket.getInetAddress();
@@ -147,24 +456,11 @@ public final class Socks5Worker implements Runnable {
 		Socket incomingSocket = null;
 		try {
 			incomingSocket = listenSocket.accept();
-			SocketSettings socketSettings = this.settings.getLastValue(
-					SettingSpec.SOCKS5_ON_BIND_INCOMING_SOCKET_SETTINGS, 
-					SocketSettings.class);
-			socketSettings.applyTo(incomingSocket);
-		} catch (SocketException e) {
-			LOGGER.log(
-					Level.WARNING, 
-					this.format("Error in setting the incoming socket"), 
-					e);
-			socks5Rep = Socks5Reply.newErrorInstance(
-					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			LOGGER.log(
-					Level.FINE, 
-					this.format(String.format(
-							"Sending %s", 
-							socks5Rep.toString())));
-			this.writeThenFlush(socks5Rep.toByteArray());
-			return;
+			if (!this.configureIncomingSocket(incomingSocket)) {
+				listenSocket.close();
+				incomingSocket.close();
+				return;
+			}
 		} catch (IOException e) {
 			LOGGER.log(
 					Level.WARNING, 
@@ -187,51 +483,8 @@ public final class Socks5Worker implements Runnable {
 			}
 		}
 		InetAddress incomingTcpInetAddress = incomingSocket.getInetAddress();
-		Criteria allowedSocks5IncomingTcpAddressCriteria = 
-				this.configuration.getAllowedSocks5IncomingTcpAddressCriteria();
-		if (allowedSocks5IncomingTcpAddressCriteria.toList().isEmpty()) {
-			allowedSocks5IncomingTcpAddressCriteria = Criteria.newInstance(
-					CriterionOperator.MATCHES.newCriterion(".*"));
-		}
-		Criterion criterion = 
-				allowedSocks5IncomingTcpAddressCriteria.anyEvaluatesTrue(
-						incomingTcpInetAddress);
-		if (criterion == null) {
-			LOGGER.log(
-					Level.FINE, 
-					this.format(String.format(
-							"Incoming TCP address %s not allowed", 
-							incomingTcpInetAddress)));
-			socks5Rep = Socks5Reply.newErrorInstance(
-					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
-			LOGGER.log(
-					Level.FINE, 
-					this.format(String.format(
-							"Sending %s", 
-							socks5Rep.toString())));
-			this.writeThenFlush(socks5Rep.toByteArray());
-			return;
-		}
-		Criteria blockedSocks5IncomingTcpAddressCriteria =
-				this.configuration.getBlockedSocks5IncomingTcpAddressCriteria();
-		criterion = blockedSocks5IncomingTcpAddressCriteria.anyEvaluatesTrue(
-				incomingTcpInetAddress);
-		if (criterion != null) {
-			LOGGER.log(
-					Level.FINE, 
-					this.format(String.format(
-							"Incoming TCP address %s blocked based on the "
-							+ "following criterion: %s", 
-							incomingTcpInetAddress,
-							criterion)));
-			socks5Rep = Socks5Reply.newErrorInstance(
-					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
-			LOGGER.log(
-					Level.FINE, 
-					this.format(String.format(
-							"Sending %s", 
-							socks5Rep.toString())));
-			this.writeThenFlush(socks5Rep.toByteArray());
+		if (!this.canAcceptIncomingTcpAddress(incomingTcpInetAddress)) {
+			incomingSocket.close();
 			return;
 		}
 		serverBoundAddress = incomingTcpInetAddress.getHostAddress();
@@ -270,15 +523,11 @@ public final class Socks5Worker implements Runnable {
 		SocketFactory socketFactory = SocketFactory.newInstance(
 				this.socksClient);
 		Socket serverSocket = socketFactory.newSocket();
+		if (!this.configureServerSocket(serverSocket)) {
+			serverSocket.close();
+			return;
+		}
 		try {
-			SocketSettings socketSettings = this.settings.getLastValue(
-					SettingSpec.SOCKS5_ON_CONNECT_SERVER_SOCKET_SETTINGS, 
-					SocketSettings.class);
-			socketSettings.applyTo(serverSocket);
-			Host bindHost = this.settings.getLastValue(
-					SettingSpec.SOCKS5_ON_CONNECT_SERVER_BIND_HOST, Host.class);
-			InetAddress bindInetAddress = bindHost.toInetAddress();
-			serverSocket.bind(new InetSocketAddress(bindInetAddress, 0));
 			int connectTimeout = this.settings.getLastValue(
 					SettingSpec.SOCKS5_ON_CONNECT_SERVER_CONNECT_TIMEOUT, 
 					PositiveInteger.class).intValue();
@@ -289,7 +538,7 @@ public final class Socks5Worker implements Runnable {
 		} catch (UnknownHostException e) {
 			LOGGER.log(
 					Level.WARNING, 
-					this.format("Error in creating the server-facing socket"), 
+					this.format("Error in connecting the server-facing socket"), 
 					e);
 			socks5Rep = Socks5Reply.newErrorInstance(Reply.HOST_UNREACHABLE);
 			LOGGER.log(
@@ -298,20 +547,7 @@ public final class Socks5Worker implements Runnable {
 							"Sending %s", 
 							socks5Rep.toString())));
 			this.writeThenFlush(socks5Rep.toByteArray());
-			return;
-		} catch (IOException e) {
-			LOGGER.log(
-					Level.WARNING, 
-					this.format("Error in creating the server-facing socket"), 
-					e);
-			socks5Rep = Socks5Reply.newErrorInstance(
-					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			LOGGER.log(
-					Level.FINE, 
-					this.format(String.format(
-							"Sending %s", 
-							socks5Rep.toString())));
-			this.writeThenFlush(socks5Rep.toByteArray());
+			serverSocket.close();
 			return;
 		}
 		String serverBoundAddress = 
@@ -349,81 +585,22 @@ public final class Socks5Worker implements Runnable {
 		String desiredDestinationAddress = 
 				socks5Req.getDesiredDestinationAddress();
 		int desiredDestinationPort = socks5Req.getDesiredDestinationPort();
-		DatagramSocket serverDatagramSock = null;
-		try {
-			Host bindHost = this.settings.getLastValue(
-					SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_SERVER_BIND_HOST, 
-					Host.class);
-			InetAddress bindInetAddress = bindHost.toInetAddress();
-			DatagramSocketFactory datagramSocketFactory = 
-					DatagramSocketFactory.newInstance(this.socksClient);
-			serverDatagramSock = datagramSocketFactory.newDatagramSocket(
-					new InetSocketAddress(bindInetAddress, 0));
-			SocketSettings socketSettings = this.settings.getLastValue(
-					SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_SERVER_SOCKET_SETTINGS, 
-					SocketSettings.class);
-			socketSettings.applyTo(serverDatagramSock);
-		} catch (SocketException e) {
-			LOGGER.log(
-					Level.WARNING, 
-					this.format("Error in creating the server-facing UDP "
-							+ "socket"), 
-					e);
-			socks5Rep = Socks5Reply.newErrorInstance(
-					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			LOGGER.log(
-					Level.FINE, 
-					this.format(String.format(
-							"Sending %s", 
-							socks5Rep.toString())));
-			this.writeThenFlush(socks5Rep.toByteArray());
+		DatagramSocket serverDatagramSock = this.newServerDatagramSocket();
+		if (serverDatagramSock == null) {
 			return;
 		}
-		DatagramSocket clientDatagramSock = null;
-		try {
-			Host bindHost = this.settings.getLastValue(
-					SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_CLIENT_BIND_HOST, 
-					Host.class);
-			InetAddress bindInetAddress = bindHost.toInetAddress();
-			if (this.clientSocket instanceof GssSocket) {
-				GssSocket gssSocket = (GssSocket) this.clientSocket;
-				DatagramPacketFilter datagramPacketFilter =
-						new GssDatagramPacketFilter(
-								gssSocket.getGSSContext(),
-								gssSocket.getMessageProp());
-				clientDatagramSock = new FilterDatagramSocket(
-						datagramPacketFilter,
-						new InetSocketAddress(bindInetAddress, 0));
-			} else if (!this.clientSocket.getClass().equals(Socket.class)) {
-				throw new AssertionError(String.format(
-						"unhandled %s: %s", 
-						Socket.class.getSimpleName(), 
-						this.clientSocket.getClass().getSimpleName()));
-			} else {
-				clientDatagramSock = new DatagramSocket(new InetSocketAddress(
-						bindInetAddress, 0));
-			}
-			SocketSettings socketSettings = this.settings.getLastValue(
-					SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_CLIENT_SOCKET_SETTINGS, 
-					SocketSettings.class);
-			socketSettings.applyTo(clientDatagramSock);
-		} catch (SocketException e) {
-			LOGGER.log(
-					Level.WARNING, 
-					this.format("Error in creating the client-facing UDP "
-							+ "socket"), 
-					e);
-			socks5Rep = Socks5Reply.newErrorInstance(
-					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			LOGGER.log(
-					Level.FINE, 
-					this.format(String.format(
-							"Sending %s", 
-							socks5Rep.toString())));
-			this.writeThenFlush(socks5Rep.toByteArray());
-			if (!serverDatagramSock.isClosed()) {
-				serverDatagramSock.close();
-			}
+		if (!this.configureServerDatagramSocket(serverDatagramSock)) {
+			serverDatagramSock.close();
+			return;
+		}
+		DatagramSocket clientDatagramSock = this.newClientDatagramSocket();
+		if (clientDatagramSock == null) {
+			serverDatagramSock.close();
+			return;
+		}
+		if (!this.configureClientDatagramSocket(clientDatagramSock)) {
+			clientDatagramSock.close();
+			serverDatagramSock.close();
 			return;
 		}
 		InetAddress inetAddress = this.clientSocket.getLocalAddress();
@@ -517,49 +694,89 @@ public final class Socks5Worker implements Runnable {
 				this.format(String.format(
 						"Received %s", 
 						socks5Req.toString())));
-		InetAddress clientInetAddress = this.clientSocket.getLocalAddress();
-		Socks5RequestCriteria allowedSocks5RequestCriteria = 
-				this.configuration.getAllowedSocks5RequestCriteria();
-		if (allowedSocks5RequestCriteria.toList().isEmpty()) {
-			allowedSocks5RequestCriteria = new Socks5RequestCriteria(
-					new Socks5RequestCriterion(null, null, null, null));
-		}
-		Socks5RequestCriterion socks5RequestCriterion =
-				allowedSocks5RequestCriteria.anyEvaluatesTrue(
-						clientInetAddress, socks5Req);
-		if (socks5RequestCriterion == null) {
-			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
-					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
-			LOGGER.log(
-					Level.FINE, 
-					this.format(String.format(
-							"SOCKS5 request from %s not allowed. "
-							+ "SOCKS5 request: %s",
-							clientInetAddress.toString(),
-							socks5Req.toString())));
-			this.writeThenFlush(socks5Rep.toByteArray());
-			return null;
-		}
-		Socks5RequestCriteria blockedSocks5RequestCriteria = 
-				this.configuration.getBlockedSocks5RequestCriteria();
-		socks5RequestCriterion =
-				blockedSocks5RequestCriteria.anyEvaluatesTrue(
-						clientInetAddress, socks5Req);
-		if (socks5RequestCriterion != null) {
-			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
-					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
-			LOGGER.log(
-					Level.FINE, 
-					this.format(String.format(
-							"SOCKS5 request from %s blocked based on the "
-							+ "following criterion: %s. SOCKS5 request: %s",
-							clientInetAddress.toString(),
-							socks5RequestCriterion.toString(),
-							socks5Req.toString())));
-			this.writeThenFlush(socks5Rep.toByteArray());
-			return null;
-		}
 		return socks5Req;
+	}
+	
+	private DatagramSocket newClientDatagramSocket() {
+		DatagramSocket clientDatagramSock = null;
+		try {
+			Host bindHost = this.settings.getLastValue(
+					SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_CLIENT_BIND_HOST, 
+					Host.class);
+			InetAddress bindInetAddress = bindHost.toInetAddress();
+			if (this.clientSocket instanceof GssSocket) {
+				GssSocket gssSocket = (GssSocket) this.clientSocket;
+				DatagramPacketFilter datagramPacketFilter =
+						new GssDatagramPacketFilter(
+								gssSocket.getGSSContext(),
+								gssSocket.getMessageProp());
+				clientDatagramSock = new FilterDatagramSocket(
+						datagramPacketFilter,
+						new InetSocketAddress(bindInetAddress, 0));
+			} else if (!this.clientSocket.getClass().equals(Socket.class)) {
+				throw new AssertionError(String.format(
+						"unhandled %s: %s", 
+						Socket.class.getSimpleName(), 
+						this.clientSocket.getClass().getSimpleName()));
+			} else {
+				clientDatagramSock = new DatagramSocket(new InetSocketAddress(
+						bindInetAddress, 0));
+			}
+		} catch (SocketException e) {
+			LOGGER.log(
+					Level.WARNING, 
+					this.format("Error in creating the client-facing UDP "
+							+ "socket"), 
+					e);
+			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
+					Reply.GENERAL_SOCKS_SERVER_FAILURE);
+			LOGGER.log(
+					Level.FINE, 
+					this.format(String.format(
+							"Sending %s", 
+							socks5Rep.toString())));
+			try {
+				this.writeThenFlush(socks5Rep.toByteArray());
+			} catch (IOException e1) {
+				return null;
+			}
+			return null;
+		}
+		return clientDatagramSock;
+	}
+	
+	private DatagramSocket newServerDatagramSocket() {
+		DatagramSocket serverDatagramSock = null;
+		try {
+			Host bindHost = this.settings.getLastValue(
+					SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_SERVER_BIND_HOST, 
+					Host.class);
+			InetAddress bindInetAddress = bindHost.toInetAddress();
+			DatagramSocketFactory datagramSocketFactory = 
+					DatagramSocketFactory.newInstance(this.socksClient);
+			serverDatagramSock = datagramSocketFactory.newDatagramSocket(
+					new InetSocketAddress(bindInetAddress, 0));
+		} catch (SocketException e) {
+			LOGGER.log(
+					Level.WARNING, 
+					this.format("Error in creating the server-facing UDP "
+							+ "socket"), 
+					e);
+			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
+					Reply.GENERAL_SOCKS_SERVER_FAILURE);
+			LOGGER.log(
+					Level.FINE, 
+					this.format(String.format(
+							"Sending %s", 
+							socks5Rep.toString())));
+			try {
+				this.writeThenFlush(socks5Rep.toByteArray());
+			} catch (IOException e1) {
+				return null;
+			}
+			return null;
+		}
+		return serverDatagramSock;
 	}
 	
 	private void passData(
@@ -622,29 +839,15 @@ public final class Socks5Worker implements Runnable {
 			this.clientInputStream = socket.getInputStream();
 			this.clientOutputStream = socket.getOutputStream();
 			this.clientSocket = socket;
-			try {
-				SocketSettings socketSettings = 
-						this.settings.getLastValue(
-								SettingSpec.CLIENT_SOCKET_SETTINGS,
-								SocketSettings.class);
-				socketSettings.applyTo(this.clientSocket);
-			} catch (SocketException e) {
-				LOGGER.log(
-						Level.WARNING, 
-						this.format("Error in setting the client socket"), 
-						e);
-				Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
-						Reply.GENERAL_SOCKS_SERVER_FAILURE);
-				LOGGER.log(
-						Level.FINE, 
-						this.format(String.format(
-								"Sending %s", 
-								socks5Rep.toString())));
-				this.writeThenFlush(socks5Rep.toByteArray());
+			if (!this.configureClientSocket(this.clientSocket)) {
 				return;
 			}
 			Socks5Request socks5Req = this.getSocks5Request();
 			if (socks5Req == null) { return; }
+			if (!this.canAcceptSocks5Request(
+					this.clientSocket.getInetAddress(), socks5Req)) {
+				return;
+			}
 			Command command = socks5Req.getCommand();
 			switch (command) {
 			case BIND:

@@ -607,6 +607,10 @@ public final class Socks5Worker implements Runnable {
 			}
 			InetAddress inetAddress = clientDatagramSock.getLocalAddress();
 			String serverBoundAddress = inetAddress.getHostAddress();
+			if (!serverBoundAddress.matches("[a-zA-Z1-9]")) {
+				inetAddress = this.clientSocket.getLocalAddress();
+				serverBoundAddress = inetAddress.getHostAddress();
+			}
 			AddressType addressType = AddressType.get(serverBoundAddress);
 			int serverBoundPort = clientDatagramSock.getLocalPort();
 			socks5Rep = Socks5Reply.newInstance(

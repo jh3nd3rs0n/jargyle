@@ -131,7 +131,7 @@ public final class SocksServerCli {
 	
 	private ArgsParser argsParser;
 	private final ModifiableConfiguration modifiableConfiguration;
-	private String monitoredConfigurationFileArg;
+	private String monitoredConfigurationFile;
 	private final Options options;
 	private final String programName;
 	private final String programBeginningUsage;
@@ -150,7 +150,7 @@ public final class SocksServerCli {
 		}
 		this.argsParser = null;
 		this.modifiableConfiguration = new ModifiableConfiguration();
-		this.monitoredConfigurationFileArg = null;
+		this.monitoredConfigurationFile = null;
 		this.options = opts;
 		this.programName = progName;
 		this.programBeginningUsage = progBeginningUsage;
@@ -376,20 +376,18 @@ public final class SocksServerCli {
 	
 	public Configuration newConfiguration() {
 		Configuration configuration = null;
-		if (this.monitoredConfigurationFileArg == null) {
+		if (this.monitoredConfigurationFile == null) {
 			configuration = ImmutableConfiguration.newInstance(
 					this.modifiableConfiguration);
 		} else {
-			File monitoredConfigurationFile = 
-					new File(this.monitoredConfigurationFileArg);
+			File f = new File(this.monitoredConfigurationFile);
 			ConfigurationService configurationService = null;
 			try {
 				configurationService = 
-						XmlFileSourceConfigurationService.newInstance(
-								monitoredConfigurationFile);
+						XmlFileSourceConfigurationService.newInstance(f);
 			} catch (IllegalArgumentException e) {
 				System.err.printf("%s: %s%n", this.programName, e);
-				e.printStackTrace();
+				e.printStackTrace(System.err);
 				System.exit(-1);
 			}
 			configuration = new MutableConfiguration(configurationService);
@@ -587,22 +585,19 @@ public final class SocksServerCli {
 		this.argsParser = ArgsParser.newInstance(args, this.options, false);
 		try {
 			this.argsParser.parseRemainingTo(this);
+		} catch (IllegalOptionArgException e) {
+			String suggest = suggestion;
+			if (settingsOption.getAllOptions().contains(e.getOption())) {
+				suggest = settingsHelpSuggestion;
+			}
+			System.err.printf("%s: %s%n", this.programName, e);
+			System.err.println(suggest);
+			e.printStackTrace(System.err);
+			System.exit(-1);
 		} catch (RuntimeException e) {
 			System.err.printf("%s: %s%n", this.programName, e);
-			Option erringSettingsOption = null;
-			if (e instanceof IllegalOptionArgException) {
-				IllegalOptionArgException ioae = 
-						(IllegalOptionArgException) e;
-				Option option = ioae.getOption();
-				if (settingsOption.getAllOptions().contains(option)) {
-					erringSettingsOption = option;
-				}
-			}
-			if (erringSettingsOption != null) {
-				System.err.println(settingsHelpSuggestion);
-			} else {
-				System.err.println(suggestion);
-			}
+			System.err.println(suggestion);
+			e.printStackTrace(System.err);
 			System.exit(-1);
 		}
 	}
@@ -645,7 +640,7 @@ public final class SocksServerCli {
 			}
 	)
 	public void setMonitoredConfigurationFile(final String file) {
-		this.monitoredConfigurationFileArg = file;
+		this.monitoredConfigurationFile = file;
 	}
 	
 	@OptionSink(

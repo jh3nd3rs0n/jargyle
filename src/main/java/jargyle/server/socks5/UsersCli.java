@@ -377,10 +377,12 @@ public final class UsersCli {
 		} catch (RuntimeException e) {
 			System.err.printf("%s: %s%n", programName, e);
 			System.err.println(suggestion);
+			e.printStackTrace(System.err);
 			System.exit(-1);
 		}
 		if (this.command == null) {
 			System.err.printf("%s: command must be provided%n", programName);
+			System.err.println(suggestion);
 			System.exit(-1);
 		}
 		try {
@@ -388,6 +390,8 @@ public final class UsersCli {
 					new String[this.argList.size()]));
 		} catch (Exception e) {
 			System.err.printf("%s: %s%n", programName, e);
+			System.err.println(suggestion);
+			e.printStackTrace(System.err);
 			System.exit(-1);
 		}
 	}

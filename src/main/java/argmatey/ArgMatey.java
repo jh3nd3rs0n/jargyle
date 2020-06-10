@@ -27,16 +27,24 @@ package argmatey;
 
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -186,7 +194,7 @@ public final class ArgMatey {
 		
 		private static final class ArgHandlerContextProperties {
 			
-			private static final class PropertyNames {
+			private static final class PropertyNameConstants {
 				
 				public static final String OPTION_HANDLING_ENABLED = 
 						"OPTION_HANDLING_ENABLED";
@@ -196,7 +204,7 @@ public final class ArgMatey {
 				public static final String PARSE_RESULT_HOLDER = 
 						"PARSE_RESULT_HOLDER";
 				
-				private PropertyNames() { }
+				private PropertyNameConstants() { }
 
 			}
 			
@@ -212,7 +220,7 @@ public final class ArgMatey {
 				@SuppressWarnings("unchecked")
 				Map<String, Option> value = 
 						(Map<String, Option>) this.argHandlerContext.getProperty(
-								PropertyNames.OPTIONS);
+								PropertyNameConstants.OPTIONS);
 				if (value != null) {
 					options = Collections.unmodifiableMap(
 							new HashMap<String, Option>(value));
@@ -224,7 +232,7 @@ public final class ArgMatey {
 				ParseResultHolder parseResult = null;
 				ParseResultHolder value = 
 						(ParseResultHolder) this.argHandlerContext.getProperty(
-								PropertyNames.PARSE_RESULT_HOLDER);
+								PropertyNameConstants.PARSE_RESULT_HOLDER);
 				if (value != null) {
 					parseResult = value;
 				}
@@ -234,7 +242,7 @@ public final class ArgMatey {
 			public boolean isOptionHandlingEnabled() {
 				boolean optionHandlingEnabled = false;
 				Boolean value = (Boolean) this.argHandlerContext.getProperty(
-						PropertyNames.OPTION_HANDLING_ENABLED);
+						PropertyNameConstants.OPTION_HANDLING_ENABLED);
 				if (value != null) {
 					optionHandlingEnabled = value.booleanValue();
 				}
@@ -244,18 +252,20 @@ public final class ArgMatey {
 			public void setOptionHandlingEnabled(
 					final boolean optHandlingEnabled) {
 				this.argHandlerContext.putProperty(
-						PropertyNames.OPTION_HANDLING_ENABLED, 
+						PropertyNameConstants.OPTION_HANDLING_ENABLED, 
 						Boolean.valueOf(optHandlingEnabled));
 			}
 			
 			public void setOptions(final Map<String, Option> opts) {
-				this.argHandlerContext.putProperty(PropertyNames.OPTIONS, opts);
+				this.argHandlerContext.putProperty(
+						PropertyNameConstants.OPTIONS, opts);
 			}
 			
 			public void setParseResultHolder(
 					final ParseResultHolder parseResultHolder) {
 				this.argHandlerContext.putProperty(
-						PropertyNames.PARSE_RESULT_HOLDER, parseResultHolder);
+						PropertyNameConstants.PARSE_RESULT_HOLDER, 
+						parseResultHolder);
 			}
 		}
 		
@@ -557,6 +567,7 @@ public final class ArgMatey {
 		private final ArgHandler argHandler;
 		private ArgHandlerContext argHandlerContext;
 		private final Options options;
+		private ParseResultHolder parseResultHolder;
 			
 		private ArgsParser(
 				final String[] args, 
@@ -588,6 +599,7 @@ public final class ArgMatey {
 			this.argHandler = handler;
 			this.argHandlerContext = handlerContext;
 			this.options = opts;
+			this.parseResultHolder = null;
 		}
 
 		public int getArgCharIndex() {
@@ -604,6 +616,10 @@ public final class ArgMatey {
 		
 		public Options getOptions() {
 			return this.options;
+		}
+		
+		public ParseResultHolder getParseResultHolder() {
+			return this.parseResultHolder;
 		}
 		
 		public boolean hasNext() {
@@ -665,6 +681,7 @@ public final class ArgMatey {
 					throw new NoSuchElementException();
 				}
 			}
+			this.parseResultHolder = null;
 			return next;
 		}
 		
@@ -691,10 +708,72 @@ public final class ArgMatey {
 			}
 			ArgHandlerContextProperties properties = 
 					new ArgHandlerContextProperties(this.argHandlerContext);
-			ParseResultHolder parseResultHolder = 
-					properties.getParseResultHolder();
+			ParseResultHolder resultHolder = properties.getParseResultHolder();
+			this.parseResultHolder = resultHolder;
 			properties.setParseResultHolder(null);
-			return parseResultHolder;
+			return resultHolder;
+		}
+		
+		public void parseRemainingTo(final Object obj) {
+			Class<?> cls = obj.getClass();
+			while (this.hasNext()) {
+				ParseResultHolder parseResultHolder = this.parseNext();
+				if (parseResultHolder.hasNonparsedArg()) {
+					String nonparsedArg = parseResultHolder.getNonparsedArg();
+					boolean elementFound = false;
+					Field[] fields = cls.getFields();
+					for (Field field : fields) {
+						if (field.isAnnotationPresent(NonparsedArgSink.class)) {
+							NonparsedArgSinkAnnotatedElement element =
+									NonparsedArgSinkAnnotatedElement.newInstance(field);
+							elementFound = true;
+							element.receive(obj, nonparsedArg);
+							break;
+						}
+					}
+					if (elementFound) { continue; }
+					Method[] methods = cls.getMethods();
+					for (Method method : methods) {
+						if (method.isAnnotationPresent(NonparsedArgSink.class)) {
+							NonparsedArgSinkAnnotatedElement element =
+									NonparsedArgSinkAnnotatedElement.newInstance(method);
+							elementFound = true;
+							element.receive(obj, nonparsedArg);
+							break;
+						}
+					}
+				}
+				if (parseResultHolder.hasOption()) {
+					Option option = parseResultHolder.getOption();
+					OptionArg optionArg = parseResultHolder.getOptionArg();
+					boolean elementFound = false;
+					Field[] fields = cls.getFields();
+					for (Field field : fields) {
+						if (field.isAnnotationPresent(OptionSink.class)) {
+							OptionSinkAnnotatedElement element =
+									OptionSinkAnnotatedElement.newInstance(field);
+							if (element.defines(option)) {
+								elementFound = true;
+								element.receive(obj, optionArg);
+								break;
+							}
+						}
+					}
+					if (elementFound) { continue; }
+					Method[] methods = cls.getMethods();
+					for (Method method : methods) {
+						if (method.isAnnotationPresent(OptionSink.class)) {
+							OptionSinkAnnotatedElement element =
+									OptionSinkAnnotatedElement.newInstance(method);
+							if (element.defines(option)) {
+								elementFound = true;
+								element.receive(obj, optionArg);
+								break;
+							}
+						}
+					}
+				}
+			}
 		}
 
 		@Override
@@ -715,10 +794,10 @@ public final class ArgMatey {
 
 	}
 	
-	public static enum DefaultGnuLongOptionUsageProvider 
-		implements OptionUsageProvider {
+	public static final class DefaultGnuLongOptionUsageProvider 
+		extends OptionUsageProvider {
 
-		INSTANCE;
+		public DefaultGnuLongOptionUsageProvider() { }
 		
 		@Override
 		public String getOptionUsage(final OptionUsageParams params) {
@@ -764,10 +843,10 @@ public final class ArgMatey {
 		
 	}
 
-	public static enum DefaultLongOptionUsageProvider 
-		implements OptionUsageProvider {
+	public static final class DefaultLongOptionUsageProvider 
+		extends OptionUsageProvider {
 
-		INSTANCE;
+		public DefaultLongOptionUsageProvider() { }
 		
 		@Override
 		public String getOptionUsage(final OptionUsageParams params) {
@@ -804,59 +883,40 @@ public final class ArgMatey {
 
 	}
 
-	public static enum DefaultOptionComparator implements Comparator<Option> {
+	public static final class DefaultOptionHelpTextProvider 
+		extends OptionHelpTextProvider {
 
-		INSTANCE;
-
-		@Override
-		public int compare(final Option option1, final Option option2) {
-			int diff = option1.getOrdinal() - option2.getOrdinal();
-			if (diff == 0) {
-				return option1.getName().compareTo(option2.getName());
-			}
-			return diff;
-		}
-		
-		public String toString() {
-			return DefaultOptionComparator.class.getSimpleName();
-		}
-		
-	}
-
-	public static enum DefaultOptionHelpTextProvider 
-		implements OptionHelpTextProvider {
-
-		INSTANCE; 
+		public DefaultOptionHelpTextProvider() { }
 		
 		@Override
 		public String getOptionHelpText(final OptionHelpTextParams params) {
 			String helpText = null;
 			StringBuilder sb = null;
-			boolean earlierUsageNotNull = false;
+			boolean earlierUsageNotNullOrEmpty = false;
 			String doc = null;
 			for (OptionHelpTextParams p : params.getAllOptionHelpTextParams()) {
 				if (!p.isHidden()) {
 					String usage = p.getUsage();
-					if (usage != null) {
+					if (usage != null && !usage.isEmpty()) {
 						if (sb == null) {
 							sb = new StringBuilder();
 							sb.append("  ");
 						}
-						if (earlierUsageNotNull) {
+						if (earlierUsageNotNullOrEmpty) {
 							sb.append(", ");
 						}
 						sb.append(usage);
-						if (!earlierUsageNotNull) {
-							earlierUsageNotNull = true;
+						if (!earlierUsageNotNullOrEmpty) {
+							earlierUsageNotNullOrEmpty = true;
 						}
-						if (doc == null) {
+						if (doc == null || doc.isEmpty()) {
 							doc = p.getDoc();
 						}
 					}
 				}
 			}
 			if (sb != null) {
-				if (doc != null) {
+				if (doc != null && !doc.isEmpty()) {
 					sb.append(System.getProperty("line.separator"));
 					sb.append("      ");
 					sb.append(doc);
@@ -870,12 +930,27 @@ public final class ArgMatey {
 		public String toString() {
 			return DefaultOptionHelpTextProvider.class.getSimpleName();
 		}
+		
+	}
+	
+	public static final class DefaultOptionUsageProvider 
+		extends OptionUsageProvider {
+
+		private DefaultOptionUsageProvider() { 
+			throw new AssertionError();
+		}
+		
+		@Override
+		public String getOptionUsage(final OptionUsageParams params) {
+			throw new AssertionError();
+		}
+		
 	}
 
-	public static enum DefaultPosixOptionUsageProvider 
-		implements OptionUsageProvider {
+	public static final class DefaultPosixOptionUsageProvider 
+		extends OptionUsageProvider {
 
-		INSTANCE;
+		public DefaultPosixOptionUsageProvider() { }
 		
 		@Override
 		public String getOptionUsage(final OptionUsageParams params) {
@@ -931,8 +1006,7 @@ public final class ArgMatey {
 	 * parameter of type {@code String}. If the provided type has neither, a 
 	 * {@code IllegalArgumentException} is thrown.
 	 */
-	public static final class DefaultStringConverter 
-		implements StringConverter {
+	public static final class DefaultStringConverter extends StringConverter {
 		
 		/**
 		 * Returns the provided type's {@code Method} that is public and static 
@@ -1221,12 +1295,6 @@ public final class ArgMatey {
 			}
 			
 			@Override
-			public Builder ordinal(final int i) {
-				super.ordinal(i);
-				return this;
-			}
-			
-			@Override
 			public Builder otherBuilders(
 					final ArgMatey.Option.Builder otherBldr) {
 				super.otherBuilders(otherBldr);
@@ -1477,12 +1545,6 @@ public final class ArgMatey {
 			}
 			
 			@Override
-			public Builder ordinal(final int i) {
-				super.ordinal(i);
-				return this;
-			}
-			
-			@Override
 			public Builder otherBuilders(
 					final ArgMatey.Option.Builder otherBldr) {
 				super.otherBuilders(otherBldr);
@@ -1528,10 +1590,125 @@ public final class ArgMatey {
 		
 	}
 
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target({ ElementType.FIELD, ElementType.METHOD })
+	public static @interface NonparsedArgSink { }
+	
+	static final class NonparsedArgSinkAnnotatedElement {
+		
+		public static NonparsedArgSinkAnnotatedElement newInstance(
+				final AnnotatedElement element) {
+			validateAnnotatedElement(element);
+			return new NonparsedArgSinkAnnotatedElement(element);
+		}
+		
+		private static void validateAnnotatedElement(
+				final AnnotatedElement element) {
+			NonparsedArgSink nonparsedArgSink = element.getAnnotation(
+					NonparsedArgSink.class);
+			if (nonparsedArgSink == null) {
+				throw new IllegalArgumentException(String.format(
+						"element '%s' must have the annotation %s", 
+						element,
+						NonparsedArgSink.class.getName()));
+			}
+			if (element instanceof Field) {
+				Field field = (Field) element;
+				int modifiers = field.getModifiers();
+				if (Modifier.isStatic(modifiers)) {
+					throw new IllegalArgumentException(String.format(
+							"element '%s' cannot be static", 
+							element));
+				}
+				if (Modifier.isFinal(modifiers)) {
+					throw new IllegalArgumentException(String.format(
+							"element '%s' cannot be final", 
+							element));
+				}
+				Class<?> type = field.getType();
+				if (!type.equals(String.class)) {
+					throw new IllegalArgumentException(String.format(
+							"element '%s' must be of type %s", 
+							element,
+							String.class.getName()));
+				}
+			}
+			if (element instanceof Method) {
+				Method method = (Method) element;
+				int modifiers = method.getModifiers();
+				if (Modifier.isStatic(modifiers)) {
+					throw new IllegalArgumentException(String.format(
+							"element '%s' cannot be static", 
+							element));
+				}
+				Class<?>[] parameterTypes = method.getParameterTypes();
+				if (parameterTypes.length != 1 
+						&& parameterTypes[0].equals(String.class)) {
+					throw new IllegalArgumentException(String.format(
+							"element '%s' must have only one paramter of type %s", 
+							element,
+							String.class.getName()));
+				}
+			}
+		}
+		
+		private final AnnotatedElement annotatedElement;
+		private final NonparsedArgSink nonparsedArgSink;
+		
+		private NonparsedArgSinkAnnotatedElement(
+				final AnnotatedElement element) {
+			NonparsedArgSink sink = element.getAnnotation(NonparsedArgSink.class);
+			this.annotatedElement = element;
+			this.nonparsedArgSink = sink;
+		}
+		
+		public NonparsedArgSink getNonparsedArgSink() {
+			return this.nonparsedArgSink;
+		}
+		
+		public void receive(final Object obj, final String nonparsedArg) {
+			if (this.annotatedElement instanceof Field) {
+				Field field = (Field) this.annotatedElement;
+				try {
+					field.set(obj, nonparsedArg);
+				} catch (IllegalArgumentException e) {
+					throw new AssertionError(e);
+				} catch (IllegalAccessException e) {
+					throw new AssertionError(e);
+				}
+			}
+			if (this.annotatedElement instanceof Method) {
+				Method method = (Method) this.annotatedElement;
+				try {
+					method.invoke(obj, nonparsedArg);
+				} catch (IllegalAccessException e) {
+					throw new AssertionError(e);
+				} catch (IllegalArgumentException e) {
+					throw new AssertionError(e);
+				} catch (InvocationTargetException e) {
+					Throwable cause = e.getCause();
+					if (cause instanceof Error) {
+						Error err = (Error) cause;
+						throw err;
+					}
+					if (cause instanceof RuntimeException) {
+						RuntimeException rte = (RuntimeException) cause;
+						throw rte;
+					}
+					throw new RuntimeException(cause);
+				}
+			}
+		}
+		
+		public AnnotatedElement toAnnotatedElement() {
+			return this.annotatedElement;
+		}
+	}
+	
 	public static abstract class Option {
 
 		public static abstract class Builder {
-					
+			
 			private String doc;
 			private boolean hidden;
 			private boolean hiddenSet;
@@ -1542,7 +1719,6 @@ public final class ArgMatey {
 			private boolean optionHelpTextProviderSet;
 			private OptionUsageProvider optionUsageProvider;
 			private boolean optionUsageProviderSet;
-			private int ordinal;
 			private final List<Builder> otherBuilders;
 			private boolean special;
 			private boolean specialSet;
@@ -1570,7 +1746,6 @@ public final class ArgMatey {
 				this.optionArgSpecSet = false;
 				this.optionHelpTextProviderSet = false;
 				this.optionUsageProviderSet = false;
-				this.ordinal = 0;
 				this.otherBuilders = new ArrayList<Builder>();
 				this.special = false;
 				this.specialSet = false;
@@ -1607,11 +1782,6 @@ public final class ArgMatey {
 					final OptionUsageProvider optUsageProvider) {
 				this.optionUsageProvider = optUsageProvider;
 				this.optionUsageProviderSet = true;
-				return this;
-			}
-			
-			public Builder ordinal(final int i) {
-				this.ordinal = i;
 				return this;
 			}
 			
@@ -1666,7 +1836,6 @@ public final class ArgMatey {
 		private final OptionArgSpec optionArgSpec;
 		private final OptionHelpTextProvider optionHelpTextProvider;
 		private final OptionUsageProvider optionUsageProvider;
-		private final int ordinal;
 		private final List<Option> otherOptions;
 		private final boolean special;
 		private final String string;
@@ -1679,16 +1848,15 @@ public final class ArgMatey {
 			OptionHelpTextProvider optHelpTextProvider = 
 					builder.optionHelpTextProvider;
 			OptionUsageProvider optUsageProvider = builder.optionUsageProvider;
-			int ord = builder.ordinal;
 			List<Builder> otherBldrs = new ArrayList<Builder>(
 					builder.otherBuilders);
 			boolean spcl = builder.special;
 			String str = builder.string;
 			if (!builder.optionHelpTextProviderSet) {
-				optHelpTextProvider = OptionHelpTextProviders.getDefault();
+				optHelpTextProvider = OptionHelpTextProvider.getDefault();
 			}
 			if (!builder.optionUsageProviderSet) {
-				optUsageProvider = OptionUsageProviders.getDefault(
+				optUsageProvider = OptionUsageProvider.getDefault(
 						this.getClass());
 			}
 			List<Option> otherOpts = new ArrayList<Option>();
@@ -1711,7 +1879,6 @@ public final class ArgMatey {
 			this.optionArgSpec = optArgSpec;
 			this.optionHelpTextProvider = optHelpTextProvider;
 			this.optionUsageProvider = optUsageProvider;
-			this.ordinal = ord;
 			this.otherOptions = otherOpts;
 			this.special = spcl;
 			this.string = str;
@@ -1760,10 +1927,6 @@ public final class ArgMatey {
 		
 		public final OptionUsageProvider getOptionUsageProvider() {
 			return this.optionUsageProvider;
-		}
-
-		public final int getOrdinal() {
-			return this.ordinal;
 		}
 
 		public final List<Option> getOtherOptions() {
@@ -2272,7 +2435,47 @@ public final class ArgMatey {
 		}
 
 	}
-
+	
+	@Retention(RetentionPolicy.RUNTIME)
+	public static @interface OptionArgSpecBuilder {
+		
+		boolean ignored() default false;
+		
+		String name() default OptionArgSpec.DEFAULT_NAME;
+		
+		boolean optional() default false;
+		
+		String separator() default OptionArgSpec.DEFAULT_SEPARATOR;
+		
+		Class<? extends StringConverter> stringConverter() 
+			default DefaultStringConverter.class;
+		
+	}
+	
+	@Retention(RetentionPolicy.RUNTIME)
+	public static @interface OptionBuilder {
+		
+		String doc() default "";
+		
+		boolean hidden() default false;
+		
+		String name();
+		
+		OptionArgSpecBuilder optionArgSpecBuilder() 
+			default @OptionArgSpecBuilder(ignored = true);
+		
+		Class<? extends OptionHelpTextProvider> optionHelpTextProvider()
+			default DefaultOptionHelpTextProvider.class;
+		
+		Class<? extends OptionUsageProvider> optionUsageProvider()
+			default DefaultOptionUsageProvider.class;
+				
+		boolean special() default false;
+		
+		Class<? extends Option> type();
+		
+	}
+	
 	public static final class OptionHelpTextParams {
 
 		private final Option option;
@@ -2335,17 +2538,11 @@ public final class ArgMatey {
 		}
 		
 	}
-	
-	public static interface OptionHelpTextProvider {
 
-		String getOptionHelpText(OptionHelpTextParams params);
-		
-	}
-	
-	public static final class OptionHelpTextProviders {
+	public static abstract class OptionHelpTextProvider {
 		
 		private static OptionHelpTextProvider defaultInstance = 
-				DefaultOptionHelpTextProvider.INSTANCE;
+				new DefaultOptionHelpTextProvider();
 		
 		public static OptionHelpTextProvider getDefault() {
 			return defaultInstance;
@@ -2355,9 +2552,11 @@ public final class ArgMatey {
 				final OptionHelpTextProvider optHelpTextProvider) {
 			defaultInstance = optHelpTextProvider;
 		}
+		
+		public OptionHelpTextProvider() { }
 
-		private OptionHelpTextProviders() {	}
-
+		public abstract String getOptionHelpText(OptionHelpTextParams params);
+		
 	}
 	
 	public static final class OptionOccurrence {
@@ -2457,9 +2656,38 @@ public final class ArgMatey {
 		}
 		
 	}
-
-	public static class Options {
-
+	
+	public static final class Options {
+		
+		public static Options newInstance(final Class<?> cls) {
+			List<OptionSinkAnnotatedElement> optionSinkAnnotatedElements =
+					new ArrayList<OptionSinkAnnotatedElement>();
+			Field[] fields = cls.getFields();
+			for (Field field : fields) {
+				if (field.isAnnotationPresent(OptionSink.class)) {
+					OptionSinkAnnotatedElement element = 
+							OptionSinkAnnotatedElement.newInstance(field);
+					optionSinkAnnotatedElements.add(element);
+				}
+			}
+			Method[] methods = cls.getMethods();
+			for (Method method : methods) {
+				if (method.isAnnotationPresent(OptionSink.class)) {
+					OptionSinkAnnotatedElement element = 
+							OptionSinkAnnotatedElement.newInstance(method);
+					optionSinkAnnotatedElements.add(element);
+				}
+			}
+			Collections.sort(
+					optionSinkAnnotatedElements,
+					new OptionSinkAnnotatedElementComparator());
+			List<Option> options = new ArrayList<Option>();
+			for (OptionSinkAnnotatedElement element : optionSinkAnnotatedElements) {
+				options.add(element.newOption());
+			}
+			return newInstance(options);
+		}
+		
 		public static Options newInstance(final List<Option> opts) {
 			return new Options(opts);
 		}
@@ -2469,47 +2697,6 @@ public final class ArgMatey {
 		}
 		
 		private final List<Option> options;
-		
-		protected Options() {
-			this(DefaultOptionComparator.INSTANCE);
-		}
-		
-		protected Options(final Comparator<Option> comparator) {
-			Class<?> cls = this.getClass();
-			Field[] fields = cls.getFields();
-			List<Option> opts = new ArrayList<Option>();
-			for (Field field : fields) {
-				int modifiers = field.getModifiers();
-				Class<?> type = field.getType();
-				boolean isStatic = Modifier.isStatic(modifiers);
-				boolean isFinal = Modifier.isFinal(modifiers);
-				boolean isTypeOption = Option.class.isAssignableFrom(type);
-				if (isStatic && isFinal && isTypeOption) {
-					Option opt = null;
-					try {
-						opt = (Option) field.get(null);
-					} catch (IllegalArgumentException e) {
-						throw new AssertionError(e);
-					} catch (IllegalAccessException e) {
-						throw new AssertionError(e);
-					}
-					if (opt == null) {
-						throw new NullPointerException(String.format(
-								"Field '%s %s' in class '%s' must not be null",
-								Modifier.toString(modifiers),
-								field.getName(),
-								cls.getName()));
-					}
-					opts.add(opt);
-				}
-			}
-			Comparator<Option> cmprtr = comparator;
-			if (cmprtr == null) {
-				cmprtr = DefaultOptionComparator.INSTANCE;
-			}
-			Collections.sort(opts, cmprtr);
-			this.options = new ArrayList<Option>(opts);
-		}
 		
 		private Options(final List<Option> opts) {
 			for (Option opt : opts) {
@@ -2530,17 +2717,17 @@ public final class ArgMatey {
 		}
 		
 		public final void printHelpText(final PrintWriter w) {
-			boolean earlierHelpTextNotNull = false;
+			boolean earlierHelpTextNotNullOrEmpty = false;
 			for (Option option : this.options) {
 				String helpText = option.getHelpText();
-				if (helpText != null) {
-					if (earlierHelpTextNotNull) {
+				if (helpText != null && !helpText.isEmpty()) {
+					if (earlierHelpTextNotNullOrEmpty) {
 						w.println();
 					}
 					w.print(helpText);
 					w.flush();
-					if (!earlierHelpTextNotNull) {
-						earlierHelpTextNotNull = true;
+					if (!earlierHelpTextNotNullOrEmpty) {
+						earlierHelpTextNotNullOrEmpty = true;
 					}
 				}
 			}
@@ -2555,23 +2742,24 @@ public final class ArgMatey {
 		}
 		
 		public final void printUsage(final PrintWriter w) {
-			boolean earlierUsageNotNull = false;
+			boolean earlierUsageNotNullOrEmpty = false;
 			for (Option option : this.options) {
 				String usage = null;
 				for (Option opt : option.getAllOptions()) {
+					usage = opt.getUsage();
 					if (!opt.isHidden() && !opt.isSpecial() 
-							&& (usage = opt.getUsage()) != null) {
+							&& usage != null && !usage.isEmpty()) {
 						break;
 					}
 				}
-				if (usage != null) {
-					if (earlierUsageNotNull) {
+				if (usage != null && !usage.isEmpty()) {
+					if (earlierUsageNotNullOrEmpty) {
 						w.print(" ");
 					}
 					w.print(String.format("[%s]", usage));
 					w.flush();
-					if (!earlierUsageNotNull) {
-						earlierUsageNotNull = true;
+					if (!earlierUsageNotNullOrEmpty) {
+						earlierUsageNotNullOrEmpty = true;
 					}
 				}
 			}
@@ -2593,6 +2781,709 @@ public final class ArgMatey {
 
 	}
 
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target({ ElementType.FIELD, ElementType.METHOD })
+	public static @interface OptionSink {
+		
+		OptionBuilder optionBuilder();
+		
+		int ordinal() default 0;
+		
+		OptionBuilder[] otherOptionBuilders() default { };
+		
+	}
+	
+	static final class OptionSinkAnnotatedElement {
+		
+		private static enum TargetFieldType implements TargetType {
+			
+			BOOLEAN_PRIMITIVE {
+
+				@Override
+				public Class<?> getTargetClass(final AnnotatedElement element) {
+					return null;
+				}
+				
+				@Override
+				public String getTargetFieldTypeString() {
+					return boolean.class.getName();
+				}
+
+				@Override
+				public boolean isTargetFieldType(Class<?> type) {
+					return type.equals(boolean.class);
+				}
+
+				@Override
+				public void put(
+						final Object obj, 
+						final AnnotatedElement element, 
+						final OptionArg optionArg) {
+					Field field = (Field) element;
+					try {
+						field.set(obj, Boolean.TRUE.booleanValue());
+					} catch (IllegalArgumentException e) {
+						throw new AssertionError(e);
+					} catch (IllegalAccessException e) {
+						throw new AssertionError(e);
+					}
+				}
+				
+			},
+			
+			LIST {
+
+				@Override
+				public Class<?> getTargetClass(final AnnotatedElement element) {
+					Field field = (Field) element;
+					Type genericType = field.getGenericType();
+					if (genericType instanceof ParameterizedType) {
+						ParameterizedType parameterizedType = 
+								(ParameterizedType) genericType;
+						Type[] typeArguments = 
+								parameterizedType.getActualTypeArguments();
+						Type typeArgument = typeArguments[0];
+						if (typeArgument instanceof Class) {
+							return (Class<?>) typeArgument;
+						}
+					}
+					return Object.class;
+				}
+				
+				@Override
+				public String getTargetFieldTypeString() {
+					return List.class.getName();
+				}
+
+				@Override
+				public boolean isTargetFieldType(Class<?> type) {
+					return type.equals(List.class);
+				}
+
+				@Override
+				public void put(
+						final Object obj, 
+						final AnnotatedElement element, 
+						final OptionArg optionArg) {
+					Field field = (Field) element;
+					List<Object> objectValues = Collections.emptyList();
+					if (optionArg != null) {
+						objectValues = optionArg.getObjectValues();
+					}
+					try {
+						field.set(obj, objectValues);
+					} catch (IllegalArgumentException e) {
+						throw new AssertionError(e);
+					} catch (IllegalAccessException e) {
+						throw new AssertionError(e);
+					}
+				}
+				
+			},
+			
+			OBJECT {
+
+				@Override
+				public Class<?> getTargetClass(final AnnotatedElement element) {
+					Field field = (Field) element;
+					return field.getType();
+				}
+				
+				@Override
+				public String getTargetFieldTypeString() {
+					return Object.class.getName();
+				}
+
+				@Override
+				public boolean isTargetFieldType(Class<?> type) {
+					return true;
+				}
+
+				@Override
+				public void put(
+						final Object obj, 
+						final AnnotatedElement element, 
+						final OptionArg optionArg) {
+					Field field = (Field) element;
+					Object objectValue = null;
+					if (optionArg != null) {
+						objectValue = optionArg.getObjectValue();
+					}
+					try {
+						field.set(obj, objectValue);
+					} catch (IllegalArgumentException e) {
+						throw new AssertionError(e);
+					} catch (IllegalAccessException e) {
+						throw new AssertionError(e);
+					}
+				}
+				
+			};
+			
+			public static TargetFieldType get(final Class<?> type) {
+				for (TargetFieldType targetFieldType 
+						: TargetFieldType.values()) {
+					if (targetFieldType.isTargetFieldType(type)) {
+						return targetFieldType;
+					}
+				}
+				return null;
+			}
+			
+			public abstract String getTargetFieldTypeString();
+			
+			public abstract boolean isTargetFieldType(final Class<?> type);
+			
+		}
+		
+		private static enum TargetMethodParameterTypesType 
+			implements TargetType {
+			
+			BOOLEAN_PRIMITIVE {
+
+				@Override
+				public Class<?> getTargetClass(final AnnotatedElement element) {
+					return null;
+				}
+
+				@Override
+				public String getTargetMethodParameterTypesString() {
+					return String.format("(%s)", boolean.class.getName());
+				}
+
+				@Override
+				public boolean isTargetMethodParameterTypes(
+						final Class<?>[] types) {
+					if (types.length != 1) { return false; }
+					Class<?> type = types[0];
+					return type.equals(boolean.class);
+				}
+
+				@Override
+				public void put(
+						final Object obj, 
+						final AnnotatedElement element, 
+						final OptionArg optionArg) {
+					Method method = (Method) element;
+					try {
+						method.invoke(obj, Boolean.TRUE.booleanValue());
+					} catch (IllegalAccessException e) {
+						throw new AssertionError(e);
+					} catch (IllegalArgumentException e) {
+						throw new AssertionError(e);
+					} catch (InvocationTargetException e) {
+						Throwable cause = e.getCause();
+						if (cause instanceof Error) {
+							Error err = (Error) cause;
+							throw err;
+						}
+						if (cause instanceof RuntimeException) {
+							RuntimeException rte = (RuntimeException) cause;
+							throw rte;
+						}
+						throw new RuntimeException(cause);
+					}
+				}
+				
+			},
+			
+			LIST {
+
+				@Override
+				public Class<?> getTargetClass(final AnnotatedElement element) {
+					Method method = (Method) element;
+					Type[] genericParameterTypes = 
+							method.getGenericParameterTypes();
+					Type genericParameterType = genericParameterTypes[0];
+					if (genericParameterType instanceof ParameterizedType) {
+						ParameterizedType parameterizedType = 
+								(ParameterizedType) genericParameterType;
+						Type[] typeArguments = 
+								parameterizedType.getActualTypeArguments();
+						Type typeArgument = typeArguments[0];
+						if (typeArgument instanceof Class) {
+							return (Class<?>) typeArgument;
+						}
+					}
+					return Object.class;
+				}
+
+				@Override
+				public String getTargetMethodParameterTypesString() {
+					return String.format("(%s)", List.class.getName());
+				}
+
+				@Override
+				public boolean isTargetMethodParameterTypes(
+						final Class<?>[] types) {
+					if (types.length != 1) { return false; }
+					Class<?> type = types[0];
+					return type.equals(List.class);
+				}
+
+				@Override
+				public void put(
+						final Object obj, 
+						final AnnotatedElement element, 
+						final OptionArg optionArg) {
+					Method method = (Method) element;
+					List<Object> objectValues = Collections.emptyList();
+					if (optionArg != null) {
+						objectValues = optionArg.getObjectValues();
+					}
+					try {
+						method.invoke(obj, objectValues);
+					} catch (IllegalAccessException e) {
+						throw new AssertionError(e);
+					} catch (IllegalArgumentException e) {
+						throw new AssertionError(e);
+					} catch (InvocationTargetException e) {
+						Throwable cause = e.getCause();
+						if (cause instanceof Error) {
+							Error err = (Error) cause;
+							throw err;
+						}
+						if (cause instanceof RuntimeException) {
+							RuntimeException rte = (RuntimeException) cause;
+							throw rte;
+						}
+						throw new RuntimeException(cause);
+					}
+				}
+				
+			},
+			
+			NONE {
+
+				@Override
+				public Class<?> getTargetClass(final AnnotatedElement element) {
+					return null;
+				}
+
+				@Override
+				public String getTargetMethodParameterTypesString() {
+					return "()";
+				}
+
+				@Override
+				public boolean isTargetMethodParameterTypes(
+						final Class<?>[] types) {
+					return types.length == 0;
+				}
+
+				@Override
+				public void put(
+						final Object obj, 
+						final AnnotatedElement element, 
+						final OptionArg optionArg) {
+					Method method = (Method) element;
+					try {
+						method.invoke(obj);
+					} catch (IllegalAccessException e) {
+						throw new AssertionError(e);
+					} catch (IllegalArgumentException e) {
+						throw new AssertionError(e);
+					} catch (InvocationTargetException e) {
+						Throwable cause = e.getCause();
+						if (cause instanceof Error) {
+							Error err = (Error) cause;
+							throw err;
+						}
+						if (cause instanceof RuntimeException) {
+							RuntimeException rte = (RuntimeException) cause;
+							throw rte;
+						}
+						throw new RuntimeException(cause);
+					}
+				}
+				
+			},
+			
+			OBJECT {
+
+				@Override
+				public Class<?> getTargetClass(final AnnotatedElement element) {
+					Method method = (Method) element;
+					return method.getParameterTypes()[0];
+				}
+
+				@Override
+				public String getTargetMethodParameterTypesString() {
+					return String.format("(%s)", Object.class.getName());
+				}
+
+				@Override
+				public boolean isTargetMethodParameterTypes(
+						final Class<?>[] types) {
+					if (types.length != 1) { return false; }
+					return true;
+				}
+
+				@Override
+				public void put(
+						final Object obj, 
+						final AnnotatedElement element, 
+						final OptionArg optionArg) {
+					Method method = (Method) element;
+					Object objectValue = null;
+					if (optionArg != null) {
+						objectValue = optionArg.getObjectValue();
+					}
+					try {
+						method.invoke(obj, objectValue);
+					} catch (IllegalAccessException e) {
+						throw new AssertionError(e);
+					} catch (IllegalArgumentException e) {
+						throw new AssertionError(e);
+					} catch (InvocationTargetException e) {
+						Throwable cause = e.getCause();
+						if (cause instanceof Error) {
+							Error err = (Error) cause;
+							throw err;
+						}
+						if (cause instanceof RuntimeException) {
+							RuntimeException rte = (RuntimeException) cause;
+							throw rte;
+						}
+						throw new RuntimeException(cause);
+					}
+				}
+				
+			};
+			
+			public static TargetMethodParameterTypesType get(
+					final Class<?>[] types) {
+				for (TargetMethodParameterTypesType targetMethodParameterTypesType 
+						: TargetMethodParameterTypesType.values()) {
+					if (targetMethodParameterTypesType.isTargetMethodParameterTypes(types)) {
+						return targetMethodParameterTypesType;
+					}
+				}
+				return null;
+			}
+			
+			public abstract String getTargetMethodParameterTypesString();
+			
+			public abstract boolean isTargetMethodParameterTypes(
+					final Class<?>[] types);
+			
+		}
+		
+		private static interface TargetType {
+			
+			public Class<?> getTargetClass(final AnnotatedElement element);
+			
+			public void put(
+					final Object obj, 
+					final AnnotatedElement element, 
+					final OptionArg optionArg);
+			
+		}
+		
+		public static OptionSinkAnnotatedElement newInstance(
+				final AnnotatedElement element) {
+			validateAnnotatedElement(element);
+			return new OptionSinkAnnotatedElement(element);
+		}
+		
+		private static void validateAnnotatedElement(
+				final AnnotatedElement element) {
+			OptionSink optionSink = element.getAnnotation(OptionSink.class);
+			if (optionSink == null) {
+				throw new IllegalArgumentException(String.format(
+						"element '%s' must have the annotation %s", 
+						element,
+						OptionSink.class.getName()));
+			}
+			if (element instanceof Field) {
+				Field field = (Field) element;
+				int modifiers = field.getModifiers();
+				if (Modifier.isStatic(modifiers)) {
+					throw new IllegalArgumentException(String.format(
+							"element '%s' cannot be static", 
+							element));
+				}
+				if (Modifier.isFinal(modifiers)) {
+					throw new IllegalArgumentException(String.format(
+							"element '%s' cannot be final", 
+							element));
+				}
+				TargetFieldType targetFieldType = TargetFieldType.get(
+						field.getType());
+				if (targetFieldType == null) {
+					StringBuilder sb = new StringBuilder();
+					List<TargetFieldType> list = Arrays.asList(
+							TargetFieldType.values());
+					for (Iterator<TargetFieldType> iterator = list.iterator();
+							iterator.hasNext();) {
+						sb.append(iterator.next().getTargetFieldTypeString());
+						if (iterator.hasNext()) {
+							sb.append(", ");
+						}
+					}
+					throw new IllegalArgumentException(String.format(
+							"element '%s' must be one the following types: %s", 
+							element,
+							sb.toString()));
+				}
+			}
+			if (element instanceof Method) {
+				Method method = (Method) element;
+				int modifiers = method.getModifiers();
+				if (Modifier.isStatic(modifiers)) {
+					throw new IllegalArgumentException(String.format(
+							"element '%s' cannot be static", 
+							element));
+				}
+				TargetMethodParameterTypesType targetMethodParameterTypesType =
+						TargetMethodParameterTypesType.get(
+								method.getParameterTypes());
+				if (targetMethodParameterTypesType == null) {
+					StringBuilder sb = new StringBuilder();
+					List<TargetMethodParameterTypesType> list = Arrays.asList(
+							TargetMethodParameterTypesType.values());
+					for (Iterator<TargetMethodParameterTypesType> iterator = list.iterator();
+							iterator.hasNext();) {
+						sb.append(iterator.next().getTargetMethodParameterTypesString());
+						if (iterator.hasNext()) {
+							sb.append(", ");
+						}
+					}
+					throw new IllegalArgumentException(String.format(
+							"element '%s' must have one the following parameter types: %s", 
+							element,
+							sb.toString()));
+				}
+			}
+		}
+		
+		private final AnnotatedElement annotatedElement;
+		private final OptionSink optionSink;
+		private final TargetType targetType;
+		
+		private OptionSinkAnnotatedElement(final AnnotatedElement element) {
+			TargetType tType = null;
+			if (element instanceof Field) {
+				Field field = (Field) element;
+				tType = TargetFieldType.get(field.getType());
+			}
+			if (tType == null && element instanceof Method) {
+				Method method = (Method) element;
+				tType = TargetMethodParameterTypesType.get(
+						method.getParameterTypes());
+			}
+			OptionSink optSink = element.getAnnotation(OptionSink.class);
+			this.annotatedElement = element;
+			this.optionSink = optSink;
+			this.targetType = tType;
+		}
+		
+		public boolean defines(final Option option) {
+			List<OptionBuilder> optionBuilders = new ArrayList<OptionBuilder>();
+			optionBuilders.add(this.optionSink.optionBuilder());
+			optionBuilders.addAll(Arrays.asList(
+					this.optionSink.otherOptionBuilders()));
+			for (OptionBuilder optionBuilder : optionBuilders) {
+				Class<?> type = optionBuilder.type();
+				String name = optionBuilder.name();
+				if (type.equals(option.getClass()) 
+						&& name.equals(option.getName())) {
+					return true;
+				}
+			}
+			return false;
+		}
+		
+		public OptionSink getOptionSink() {
+			return this.optionSink;
+		}
+
+		public Option newOption() {
+			OptionBuilder[] otherOptionBuilders = 
+					this.optionSink.otherOptionBuilders();
+			List<Option.Builder> otherBuilders = 
+					new ArrayList<Option.Builder>();
+			for (OptionBuilder otherOptionBuilder : otherOptionBuilders) {
+				otherBuilders.add(this.newOptionBuilder(otherOptionBuilder));
+			}
+			Option.Builder builder = this.newOptionBuilder(
+					this.optionSink.optionBuilder());
+			builder.otherBuilders(otherBuilders);
+			return builder.build();
+		}
+		
+		private OptionArgSpec.Builder newOptionArgSpecBuilder(
+				final OptionArgSpecBuilder optionArgSpecBuilder) {
+			OptionArgSpec.Builder builder = new OptionArgSpec.Builder();
+			builder.name(optionArgSpecBuilder.name());
+			builder.optional(optionArgSpecBuilder.optional());
+			builder.separator(optionArgSpecBuilder.separator());
+			Class<?> stringConverterClass = 
+					optionArgSpecBuilder.stringConverter();
+			if (!stringConverterClass.equals(DefaultStringConverter.class)) {
+				StringConverter stringConverter = this.newStringConverter(
+						stringConverterClass);
+				builder.stringConverter(stringConverter);
+			}
+			builder.type(this.targetType.getTargetClass(this.annotatedElement));
+			return builder;
+		}
+		
+		private Option.Builder newOptionBuilder(
+				final OptionBuilder optionBuilder) {
+			Option.Builder builder = null;
+			Class<?> type = optionBuilder.type();
+			String name = optionBuilder.name();
+			if (type.equals(GnuLongOption.class)) {
+				builder = new GnuLongOption.Builder(name);
+			} else if (type.equals(LongOption.class)) {
+				builder = new LongOption.Builder(name);
+			} else if (type.equals(PosixOption.class)) {
+				if (name.length() == 0) {
+					throw new IllegalArgumentException(String.format(
+							"expected name for %s to be non-empty", 
+							OptionBuilder.class.getName()));
+				}
+				builder = new PosixOption.Builder(name.charAt(0));
+			} else {
+				throw new AssertionError(String.format(
+						"unknown %s: %s", 
+						Option.class.getName(), 
+						type.getName()));
+			}
+			builder.doc(optionBuilder.doc());
+			builder.hidden(optionBuilder.hidden());
+			OptionArgSpecBuilder optionArgSpecBuilder = 
+					optionBuilder.optionArgSpecBuilder();
+			if (!optionArgSpecBuilder.ignored()) {
+				builder.optionArgSpec(this.newOptionArgSpecBuilder(
+						optionArgSpecBuilder).build());
+			}
+			Class<?> optionHelpTextProviderClass = 
+					optionBuilder.optionHelpTextProvider();
+			OptionHelpTextProvider optionHelpTextProvider = 
+					this.newOptionHelpTextProvider(optionHelpTextProviderClass);
+			builder.optionHelpTextProvider(optionHelpTextProvider);
+			Class<?> optionUsageProviderClass = 
+					optionBuilder.optionUsageProvider();
+			if (!optionUsageProviderClass.equals(
+					DefaultOptionUsageProvider.class)) {
+				OptionUsageProvider optionUsageProvider = 
+						this.newOptionUsageProvider(optionUsageProviderClass);
+				builder.optionUsageProvider(optionUsageProvider);
+			}
+			builder.special(optionBuilder.special());
+			return builder;
+		}
+		
+		private OptionHelpTextProvider newOptionHelpTextProvider(
+				final Class<?> optionHelpTextProviderClass) {
+			OptionHelpTextProvider optionHelpTextProvider = null;
+			Constructor<?> ctor = null;
+			try {
+				ctor = optionHelpTextProviderClass.getDeclaredConstructor();
+			} catch (NoSuchMethodException e) {
+				throw new IllegalArgumentException(e);
+			} catch (SecurityException e) {
+				throw new IllegalArgumentException(e);
+			}
+			try {
+				optionHelpTextProvider = 
+						(OptionHelpTextProvider) ctor.newInstance();
+			} catch (InstantiationException e) {
+				throw new IllegalArgumentException(e);
+			} catch (IllegalAccessException e) {
+				throw new IllegalArgumentException(e);
+			} catch (IllegalArgumentException e) {
+				throw new IllegalArgumentException(e);
+			} catch (InvocationTargetException e) {
+				throw new IllegalArgumentException(e);
+			}
+			return optionHelpTextProvider;
+		}
+		
+		private OptionUsageProvider newOptionUsageProvider(
+				final Class<?> optionUsageProviderClass) {
+			OptionUsageProvider optionUsageProvider = null;
+			Constructor<?> ctor = null;
+			try {
+				ctor = optionUsageProviderClass.getDeclaredConstructor();
+			} catch (NoSuchMethodException e) {
+				throw new IllegalArgumentException(e);
+			} catch (SecurityException e) {
+				throw new IllegalArgumentException(e);
+			}
+			try {
+				optionUsageProvider = (OptionUsageProvider) ctor.newInstance();
+			} catch (InstantiationException e) {
+				throw new IllegalArgumentException(e);
+			} catch (IllegalAccessException e) {
+				throw new IllegalArgumentException(e);
+			} catch (IllegalArgumentException e) {
+				throw new IllegalArgumentException(e);
+			} catch (InvocationTargetException e) {
+				throw new IllegalArgumentException(e);
+			}
+			return optionUsageProvider;
+		}
+		
+		private StringConverter newStringConverter(
+				final Class<?> stringConverterClass) {
+			StringConverter stringConverter = null;
+			Constructor<?> ctor = null;
+			try {
+				ctor = stringConverterClass.getDeclaredConstructor();
+			} catch (NoSuchMethodException e) {
+				throw new IllegalArgumentException(e);
+			} catch (SecurityException e) {
+				throw new IllegalArgumentException(e);
+			}
+			try {
+				stringConverter = (StringConverter) ctor.newInstance();
+			} catch (InstantiationException e) {
+				throw new IllegalArgumentException(e);
+			} catch (IllegalAccessException e) {
+				throw new IllegalArgumentException(e);
+			} catch (IllegalArgumentException e) {
+				throw new IllegalArgumentException(e);
+			} catch (InvocationTargetException e) {
+				throw new IllegalArgumentException(e);
+			}
+			return stringConverter;
+		}
+		
+		public void receive(
+				final Object obj, 
+				final OptionArg optionArg) {
+			this.targetType.put(obj, this.annotatedElement, optionArg);
+		}
+		
+		public AnnotatedElement toAnnotatedElement() {
+			return this.annotatedElement;
+		}
+		
+	}
+	
+	static final class OptionSinkAnnotatedElementComparator 
+		implements Comparator<OptionSinkAnnotatedElement> {
+
+		public OptionSinkAnnotatedElementComparator() { }
+		
+		@Override
+		public int compare(
+				final OptionSinkAnnotatedElement arg0, 
+				final OptionSinkAnnotatedElement arg1) {
+			OptionSink optionSink0 = arg0.getOptionSink();
+			OptionSink optionSink1 = arg1.getOptionSink();
+			int diff = optionSink0.ordinal() - optionSink1.ordinal();
+			if (diff != 0) { return diff; }
+			OptionBuilder optionBuilder0 = optionSink0.optionBuilder();
+			OptionBuilder optionBuilder1 = optionSink1.optionBuilder();
+			return optionBuilder0.name().compareTo(optionBuilder1.name());
+		}
+		
+	}
+
 	public static final class OptionUsageParams {
 
 		private final Option option;
@@ -2611,13 +3502,7 @@ public final class ArgMatey {
 				
 	}
 	
-	public static interface OptionUsageProvider {
-
-		String getOptionUsage(OptionUsageParams params);
-		
-	}
-	
-	public static final class OptionUsageProviders {
+	public static abstract class OptionUsageProvider {
 
 		private static final Map<Class<? extends Option>, OptionUsageProvider> DEFAULT_INSTANCES = 
 				new HashMap<Class<? extends Option>, OptionUsageProvider>();
@@ -2625,13 +3510,13 @@ public final class ArgMatey {
 		static {
 			DEFAULT_INSTANCES.put(
 					GnuLongOption.class, 
-					DefaultGnuLongOptionUsageProvider.INSTANCE);
+					new DefaultGnuLongOptionUsageProvider());
 			DEFAULT_INSTANCES.put(
 					LongOption.class, 
-					DefaultLongOptionUsageProvider.INSTANCE);
+					new DefaultLongOptionUsageProvider());
 			DEFAULT_INSTANCES.put(
 					PosixOption.class, 
-					DefaultPosixOptionUsageProvider.INSTANCE);
+					new DefaultPosixOptionUsageProvider());
 		}
 
 		public static OptionUsageProvider getDefault(
@@ -2654,8 +3539,10 @@ public final class ArgMatey {
 			return DEFAULT_INSTANCES.remove(optClass);
 		}
 
-		private OptionUsageProviders() { }
-
+		public OptionUsageProvider() { }
+		
+		public abstract String getOptionUsage(OptionUsageParams params);
+		
 	}
 
 	public static final class ParseResultHolder {
@@ -2862,12 +3749,6 @@ public final class ArgMatey {
 			}
 			
 			@Override
-			public Builder ordinal(final int i) {
-				super.ordinal(i);
-				return this;
-			}
-			
-			@Override
 			public Builder otherBuilders(
 					final ArgMatey.Option.Builder otherBldr) {
 				super.otherBuilders(otherBldr);
@@ -2916,8 +3797,13 @@ public final class ArgMatey {
 	/**
 	 * Converts the provided {@code String} to an {@code Object}.
 	 */
-	public static interface StringConverter {
+	public static abstract class StringConverter {
 
+		/**
+		 * Constructs a {@code StringConverter}.
+		 */
+		public StringConverter() { }
+		
 		/**
 		 * Converts the provided {@code String} to an {@code Object}.
 		 * 
@@ -2928,7 +3814,7 @@ public final class ArgMatey {
 		 * @throws IllegalArgumentException if the provided {@code String} is 
 		 * illegal or inappropriate
 		 */
-		Object convert(String string);
+		public abstract Object convert(String string);
 		
 	}
 

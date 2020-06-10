@@ -23,6 +23,11 @@ import javax.xml.bind.helpers.DefaultValidationEventHandler;
 import javax.xml.transform.Result;
 import javax.xml.transform.stream.StreamResult;
 
+import argmatey.ArgMatey.ArgsParser;
+import argmatey.ArgMatey.Option;
+import argmatey.ArgMatey.Options;
+import jargyle.server.SystemPropertyNameConstants;
+
 public final class Users {
 	
 	private static final class CustomSchemaOutputResolver 
@@ -70,8 +75,37 @@ public final class Users {
 		 */
 		System.setProperty(
 				"com.sun.xml.bind.v2.bytecode.ClassTailor.noOptimize", "true");
-		UsersCli usersCli = new UsersCli();
-		usersCli.process(args);
+		Options options = Options.newInstance(UsersCli.class);
+		ArgsParser argsParser = ArgsParser.newInstance(args, options, false);
+		String programName = System.getProperty(
+				SystemPropertyNameConstants.PROGRAM_NAME_PROPERTY_NAME);
+		if (programName == null) {
+			programName = Users.class.getName();
+		}
+		String programBeginningUsage = System.getProperty(
+				SystemPropertyNameConstants.PROGRAM_BEGINNING_USAGE_PROPERTY_NAME);
+		if (programBeginningUsage == null) {
+			programBeginningUsage = programName;
+		}
+		UsersCli usersCli = new UsersCli(programBeginningUsage, options);
+		Option helpOption = options.toList().get(0);
+		String suggestion = String.format(
+				"Try `%s %s' for more information", 
+				programBeginningUsage, 
+				helpOption.getUsage());
+		try {
+			argsParser.parseRemainingTo(usersCli);
+		} catch (RuntimeException e) {
+			System.err.printf("%s: %s%n", programName, e);
+			System.err.println(suggestion);
+			System.exit(-1);
+		}
+		try {
+			usersCli.execute();
+		} catch (Exception e) {
+			System.err.printf("%s: %s%n", programName, e);
+			System.exit(-1);
+		}
 	}
 	
 	public static Users newInstance(final List<User> usrs) {

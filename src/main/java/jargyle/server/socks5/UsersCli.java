@@ -13,13 +13,16 @@ import java.util.List;
 
 import javax.xml.bind.JAXBException;
 
-import argmatey.ArgMatey.ArgsParser;
+import argmatey.ArgMatey.GnuLongOption;
+import argmatey.ArgMatey.NonparsedArgSink;
+import argmatey.ArgMatey.Option;
+import argmatey.ArgMatey.OptionBuilder;
+import argmatey.ArgMatey.OptionSink;
 import argmatey.ArgMatey.Options;
-import argmatey.ArgMatey.ParseResultHolder;
+import argmatey.ArgMatey.PosixOption;
 import jargyle.common.cli.HelpTextParams;
-import jargyle.server.SystemPropertyNames;
 
-final class UsersCli {
+public final class UsersCli {
 	
 	private enum Command implements HelpTextParams {
 		
@@ -249,17 +252,62 @@ final class UsersCli {
 		return users;
 	}
 	
-	public UsersCli() { }
+	private final List<String> argList;
+	private Command command;
+	private final Options options;
+	private final String programBeginningUsage;
 	
-	private void printHelp(
-			final String programBeginningUsage, final Options options) {
-		System.out.printf("Usage: %s COMMAND%n", programBeginningUsage);
+	UsersCli( 
+			final String progBeginningUsage, 
+			final Options opts) { 
+		this.argList = new ArrayList<String>();
+		this.command = null;
+		this.options = opts;
+		this.programBeginningUsage = progBeginningUsage;
+	}
+	
+	@NonparsedArgSink
+	public void addNonparsedArg(final String nonparsedArg) {
+		if (this.command == null) {
+			this.command = Command.getInstance(nonparsedArg);
+		} else {
+			this.argList.add(nonparsedArg);
+		}
+	}
+	
+	public void execute() throws Exception {
+		if (this.command == null) {
+			throw new IllegalStateException("command must be provided");
+		}
+		this.command.invoke(
+				this.argList.toArray(new String[this.argList.size()]));
+	}
+	
+	@OptionSink(
+			optionBuilder = @OptionBuilder(
+					doc = "Print this help and exit",
+					name = "help",
+					special = true,
+					type = GnuLongOption.class
+			),
+			ordinal = 0,
+			otherOptionBuilders = {
+					@OptionBuilder(
+							name = "h",
+							type = PosixOption.class
+					)
+			}
+	)
+	public void printHelp() {
+		Option helpOption = this.options.toList().get(0);
+		Option xsdOption = this.options.toList().get(1);
+		System.out.printf("Usage: %s COMMAND%n", this.programBeginningUsage);
 		System.out.printf("       %s %s%n", 
-				programBeginningUsage, 
-				UsersCliOptions.HELP_OPTION.getUsage());
+				this.programBeginningUsage, 
+				helpOption.getUsage());
 		System.out.printf("       %s %s", 
-				programBeginningUsage, 
-				UsersCliOptions.XSD_OPTION.getUsage());
+				this.programBeginningUsage, 
+				xsdOption.getUsage());
 		System.out.println();
 		System.out.println();
 		System.out.println("COMMANDS:");
@@ -271,90 +319,32 @@ final class UsersCli {
 		}
 		System.out.println();
 		System.out.println("OPTIONS:");
-		options.printHelpText();
+		this.options.printHelpText();
 		System.out.println();
 		System.out.println();
+		System.exit(0);
 	}
 	
-	private void printXsd() throws JAXBException, IOException {
+	@OptionSink(
+			optionBuilder = @OptionBuilder(
+					doc = "Print the XSD and exit",
+					name = "xsd",
+					special = true,
+					type = GnuLongOption.class
+			),
+			ordinal = 1,
+			otherOptionBuilders = {
+					@OptionBuilder(
+							name = "x",
+							type = PosixOption.class
+					)
+			}
+	)
+	public void printXsd() throws JAXBException, IOException {
 		byte[] xsd = Users.getXsd();
 		System.out.write(xsd);
 		System.out.flush();
-	}
-	
-	public void process(final String[] args) {
-		Options options = new UsersCliOptions();
-		ArgsParser argsParser = ArgsParser.newInstance(
-				args, options, false);
-		String programName = System.getProperty(
-				SystemPropertyNames.PROGRAM_NAME_PROPERTY_NAME);
-		if (programName == null) {
-			programName = Users.class.getName();
-		}
-		String programBeginningUsage = System.getProperty(
-				SystemPropertyNames.PROGRAM_BEGINNING_USAGE_PROPERTY_NAME);
-		if (programBeginningUsage == null) {
-			programBeginningUsage = programName;
-		}
-		String suggestion = String.format(
-				"Try `%s %s' for more information", 
-				programBeginningUsage, 
-				UsersCliOptions.HELP_OPTION.getUsage());
-		Command command = null;
-		List<String> argList = new ArrayList<String>();
-		while (argsParser.hasNext()) {
-			ParseResultHolder parseResultHolder = null;
-			try {
-				parseResultHolder = argsParser.parseNext();
-			} catch (RuntimeException e) {
-				System.err.printf("%s: %s%n", programName, e.toString());
-				System.err.println(suggestion);
-				System.exit(-1);
-			}
-			if (parseResultHolder.hasOptionOfAnyOf("--help", "-h")) {
-				this.printHelp(programBeginningUsage, argsParser.getOptions());
-				System.exit(0);
-			}
-			if (parseResultHolder.hasOptionOfAnyOf("--xsd", "-x")) {
-				try {
-					this.printXsd();
-				} catch (JAXBException e) {
-					System.err.printf("%s: %s%n", programName, e.toString());
-					e.printStackTrace();
-					System.exit(-1);
-				} catch (IOException e) {
-					System.err.printf("%s: %s%n", programName, e.toString());
-					e.printStackTrace();
-					System.exit(-1);
-				}
-				System.exit(0);
-			}
-			if (parseResultHolder.hasNonparsedArg()) {
-				String nonparsedArg = parseResultHolder.getNonparsedArg();
-				if (command == null) {
-					try {
-						command = Command.getInstance(nonparsedArg);
-					} catch (IllegalArgumentException e) {
-						System.err.printf("%s: %s%n", programName, e.toString());
-						System.err.println(suggestion);
-						System.exit(-1);
-					}
-				} else {
-					argList.add(nonparsedArg);
-				}
-			}
-		}
-		if (command == null) {
-			System.err.printf("%s: command must be provided%n", programName);
-			System.err.println(suggestion);
-			System.exit(-1);
-		}
-		try {
-			command.invoke(argList.toArray(new String[argList.size()]));
-		} catch (Exception e) {
-			System.err.printf("%s: %s%n", programName, e.toString());
-			System.exit(-1);
-		}
+		System.exit(0);
 	}
 	
 }

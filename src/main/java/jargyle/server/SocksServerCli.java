@@ -13,10 +13,15 @@ import java.util.List;
 import javax.xml.bind.JAXBException;
 
 import argmatey.ArgMatey.ArgsParser;
-import argmatey.ArgMatey.IllegalOptionArgException;
+import argmatey.ArgMatey.GnuLongOption;
 import argmatey.ArgMatey.Option;
+import argmatey.ArgMatey.OptionArgSpecBuilder;
+import argmatey.ArgMatey.OptionBuilder;
+import argmatey.ArgMatey.OptionSink;
+import argmatey.ArgMatey.OptionUsageParams;
+import argmatey.ArgMatey.OptionUsageProvider;
 import argmatey.ArgMatey.Options;
-import argmatey.ArgMatey.ParseResultHolder;
+import argmatey.ArgMatey.PosixOption;
 import jargyle.client.Scheme;
 import jargyle.client.socks5.DefaultUsernamePasswordRequestor;
 import jargyle.client.socks5.UsernamePassword;
@@ -28,38 +33,418 @@ import jargyle.common.net.socks5.gssapiauth.GssapiProtectionLevel;
 import jargyle.server.socks5.UsernamePasswordAuthenticator;
 import jargyle.server.socks5.Users;
 
-final class SocksServerCli {
-	
-	public static final class ProcessResult {
+public final class SocksServerCli {
+
+	public static final class CriteriaOptionUsageProvider 
+		extends OptionUsageProvider {
 		
-		private final Configuration configuration;
-		
-		private ProcessResult(final Configuration config) {
-			this.configuration = config;
-		}
-		
-		public Configuration getConfiguration() {
-			return this.configuration;
+		public CriteriaOptionUsageProvider() { }
+
+		@Override
+		public String getOptionUsage(final OptionUsageParams params) {
+			return String.format(
+					"%1$s=[%2$s:%3$s1[ %2$s:%3$s2[...]]]", 
+					params.getOption(),
+					"equals|matches",
+					"OPERAND");
 		}
 		
 	}
 	
-	public SocksServerCli() { }
+	public static final class SettingsGnuLongOptionUsageProvider 
+		extends OptionUsageProvider {
+		
+		public SettingsGnuLongOptionUsageProvider() { }
+
+		@Override
+		public String getOptionUsage(final OptionUsageParams params) {
+			return String.format(
+					"%1$s=[%2$s1=%3$s1[,%2$s2=%3$s2[...]]]", 
+					params.getOption(),
+					"NAME",
+					"VALUE");
+		}
+		
+	}
 	
-	private void newConfigurationFile(
-			final Configuration configuration,
-			final String arg) throws JAXBException, IOException {
+	public static final class SettingsPosixOptionUsageProvider 
+		extends OptionUsageProvider {
+		
+		public SettingsPosixOptionUsageProvider() { }
+
+		@Override
+		public String getOptionUsage(final OptionUsageParams params) {
+			return String.format(
+					"%1$s [%2$s1=%3$s1[,%2$s2=%3$s2[...]]]",
+					params.getOption(),
+					"NAME",
+					"VALUE");
+		}
+		
+		
+	}
+	
+	public static final class UsernamePasswordAuthenticatorOptionUsageProvider 
+		extends OptionUsageProvider {
+		
+		public UsernamePasswordAuthenticatorOptionUsageProvider() { }
+
+		@Override
+		public String getOptionUsage(final OptionUsageParams params) {
+			return String.format(
+					"%s=CLASSNAME[:PARAMETER_STRING]", 
+					params.getOption());
+		}
+		
+	}
+	
+	public static final class UsernamePasswordOptionUsageProvider
+		extends OptionUsageProvider {
+				
+		public UsernamePasswordOptionUsageProvider() { }
+
+		@Override
+		public String getOptionUsage(final OptionUsageParams params) {
+			return String.format("%s=USERNAME:PASSWORD", params.getOption());
+		}
+		
+	}
+	
+	private final ArgsParser argsParser;
+	private final ModifiableConfiguration modifiableConfiguration;
+	private String monitoredConfigurationFileArg;
+	private final Options options;
+	private final String programName;
+	private final String programBeginningUsage;
+	
+	SocksServerCli(
+			final String progName, 
+			final String progBeginningUsage, 
+			final ArgsParser parser) {
+		Options opts = parser.getOptions();
+		this.argsParser = parser;
+		this.modifiableConfiguration = new ModifiableConfiguration();
+		this.monitoredConfigurationFileArg = null;
+		this.options = opts;
+		this.programName = progName;
+		this.programBeginningUsage = progBeginningUsage;
+	}
+	
+	@OptionSink(
+			optionBuilder = @OptionBuilder(
+					doc = "The space separated list of allowed client address "
+							+ "criteria",
+					name = "allowed-client-addr-criteria",
+					optionArgSpecBuilder = @OptionArgSpecBuilder(
+							name = "CRITERIA"
+					),
+					optionUsageProvider = CriteriaOptionUsageProvider.class,
+					type = GnuLongOption.class
+			),
+			ordinal = 0
+	)
+	public void addAllowedClientAddressCriteria(
+			final Criteria allowedClientAddrCriteria) {
+		this.modifiableConfiguration.addAllowedClientAddressCriteria(
+				allowedClientAddrCriteria);
+	}
+	
+	@OptionSink(
+			optionBuilder = @OptionBuilder(
+					doc = "The space separated list of allowed SOCKS5 "
+							+ "incoming TCP address criteria",
+					name = "allowed-socks5-incoming-tcp-addr-criteria",
+					optionArgSpecBuilder = @OptionArgSpecBuilder(
+							name = "CRITERIA"
+					),
+					optionUsageProvider = CriteriaOptionUsageProvider.class,
+					type = GnuLongOption.class
+			),
+			ordinal = 1
+	)
+	public void addAllowedSocks5IncomingTcpAddressCriteria(
+			final Criteria allowedSocks5IncomingTcpAddrCriteria) {
+		this.modifiableConfiguration.addAllowedSocks5IncomingTcpAddressCriteria(
+				allowedSocks5IncomingTcpAddrCriteria);
+	}
+	
+	@OptionSink(
+			optionBuilder = @OptionBuilder(
+					doc = "The space separated list of allowed SOCKS5 "
+							+ "incoming UDP address criteria",
+					name = "allowed-socks5-incoming-udp-addr-criteria",
+					optionArgSpecBuilder = @OptionArgSpecBuilder(
+							name = "CRITERIA"
+					),
+					optionUsageProvider = CriteriaOptionUsageProvider.class,
+					type = GnuLongOption.class
+			),
+			ordinal = 2
+	)
+	public void addAllowedSocks5IncomingUdpAddressCriteria(
+			final Criteria allowedSocks5IncomingUdpAddrCriteria) {
+		this.modifiableConfiguration.addAllowedSocks5IncomingUdpAddressCriteria(
+				allowedSocks5IncomingUdpAddrCriteria);
+	}
+
+	@OptionSink(
+			optionBuilder = @OptionBuilder(
+					doc = "The space separated list of blocked client address "
+							+ "criteria",
+					name = "blocked-client-addr-criteria",
+					optionArgSpecBuilder = @OptionArgSpecBuilder(
+							name = "CRITERIA"
+					),
+					optionUsageProvider = CriteriaOptionUsageProvider.class,
+					type = GnuLongOption.class
+			),
+			ordinal = 3
+	)
+	public void addBlockedClientAddressCriteria(
+			final Criteria blockedClientAddrCriteria) {
+		this.modifiableConfiguration.addBlockedClientAddressCriteria(
+				blockedClientAddrCriteria);
+	}
+	
+	@OptionSink(
+			optionBuilder = @OptionBuilder(
+					doc = "The space separated list of blocked SOCKS5 "
+							+ "incoming TCP address criteria",
+					name = "blocked-socks5-incoming-tcp-addr-criteria",
+					optionArgSpecBuilder = @OptionArgSpecBuilder(
+							name = "CRITERIA"
+					),
+					optionUsageProvider = CriteriaOptionUsageProvider.class,
+					type = GnuLongOption.class
+			),
+			ordinal = 4
+	)
+	public void addBlockedSocks5IncomingTcpAddressCriteria(
+			final Criteria blockedSocks5IncomingTcpAddrCriteria) {
+		this.modifiableConfiguration.addBlockedSocks5IncomingTcpAddressCriteria(
+				blockedSocks5IncomingTcpAddrCriteria);
+	}
+	
+	@OptionSink(
+			optionBuilder = @OptionBuilder(
+					doc = "The space separated list of blocked SOCKS5 "
+							+ "incoming UDP address criteria",
+					name = "blocked-socks5-incoming-udp-addr-criteria",
+					optionArgSpecBuilder = @OptionArgSpecBuilder(
+							name = "CRITERIA"
+					),
+					optionUsageProvider = CriteriaOptionUsageProvider.class,
+					type = GnuLongOption.class
+			),
+			ordinal = 5
+	)
+	public void addBlockedSocks5IncomingUdpAddressCriteria(
+			final Criteria blockedSocks5IncomingUdpAddrCriteria) {
+		this.modifiableConfiguration.addBlockedSocks5IncomingUdpAddressCriteria(
+				blockedSocks5IncomingUdpAddrCriteria);
+	}
+	
+	@OptionSink(
+			optionBuilder = @OptionBuilder(
+					doc = "The configuration file",
+					name = "config-file",
+					optionArgSpecBuilder = @OptionArgSpecBuilder(
+							name = "FILE"
+					),
+					type = GnuLongOption.class
+			),
+			ordinal = 6,
+			otherOptionBuilders = {
+					@OptionBuilder(
+							name = "f",
+							type = PosixOption.class
+					)
+			}
+	)
+	public void addConfigurationFile(final String file) 
+			throws JAXBException, IOException {
+		InputStream in = null;
+		if (file.equals("-")) {
+			in = System.in;
+		} else {
+			File f = new File(file);
+			in = new FileInputStream(f);
+		}
+		Configuration configuration = null;
+		try {
+			configuration = ImmutableConfiguration.newInstanceFrom(in);
+		} finally {
+			if (in instanceof FileInputStream) {
+				in.close();
+			}
+		}
+		this.modifiableConfiguration.add(configuration);
+	}
+	
+	@OptionSink(
+			optionBuilder = @OptionBuilder(
+					doc = "Print the configuration file XSD and exit",
+					name = "config-file-xsd",
+					special = true,
+					type = GnuLongOption.class
+			),
+			ordinal = 7,
+			otherOptionBuilders = {
+					@OptionBuilder(
+							name = "x",
+							type = PosixOption.class
+					)
+			}
+	)
+	public void printConfigurationFileXsd() throws JAXBException, IOException {
+		byte[] xsd = ImmutableConfiguration.getXsd();
+		System.out.write(xsd);
+		System.out.flush();
+		System.exit(0);
+	}
+	
+	@OptionSink(
+			optionBuilder = @OptionBuilder(
+					doc = "Enter through an interactive prompt the username "
+							+ "password for the external SOCKS5 server for "
+							+ "external connections",
+					name = "enter-external-client-socks5-user-pass",
+					type = GnuLongOption.class
+			),
+			ordinal = 8
+	)
+	public void enterExternalClientSocks5UsernamePassword() {
+		String prompt = "Please enter username and password for the external "
+				+ "SOCKS5 server for external connections";
+		UsernamePasswordRequestor usernamePasswordRequestor = 
+				new DefaultUsernamePasswordRequestor();
+		UsernamePassword usernamePassword = 
+				usernamePasswordRequestor.requestUsernamePassword(null, prompt);
+		this.modifiableConfiguration.setExternalClientSocks5UsernamePassword(
+				usernamePassword);
+	}
+	
+	@OptionSink(
+			optionBuilder = @OptionBuilder(
+					doc = "The username password for the external SOCKS5 "
+							+ "server for external connections",
+					name = "external-client-socks5-user-pass",
+					optionArgSpecBuilder = @OptionArgSpecBuilder(
+							name = "USERNAME_PASSWORD"
+					),
+					optionUsageProvider = UsernamePasswordOptionUsageProvider.class,
+					type = GnuLongOption.class
+			),
+			ordinal = 9
+	)
+	public void setExternalClientSocks5UsernamePassword(
+			final UsernamePassword usernamePassword) {
+		this.modifiableConfiguration.setExternalClientSocks5UsernamePassword(
+				usernamePassword);
+	}
+	
+	@OptionSink(
+			optionBuilder = @OptionBuilder(
+					doc = "Print this help and exit",
+					name = "help",
+					special = true,
+					type = GnuLongOption.class
+			),
+			ordinal = 10,
+			otherOptionBuilders = {
+					@OptionBuilder(
+							name = "h",
+							type = PosixOption.class
+					)
+			}
+	)
+	public void printHelp() {
+		Option configFileXsdOption = this.options.toList().get(7);
+		Option helpOption = this.options.toList().get(10);
+		Option newConfigFileOption = this.options.toList().get(12);
+		Option settingsHelpOption = this.options.toList().get(13);
+		Option socks5UsersOption = this.options.toList().get(16);
+		System.out.printf("Usage: %s [OPTIONS]%n", this.programBeginningUsage);
+		System.out.printf("       %s %s%n", 
+				this.programBeginningUsage, 
+				configFileXsdOption.getUsage());
+		System.out.printf("       %s %s%n", 
+				this.programBeginningUsage, 
+				helpOption.getUsage());
+		System.out.printf("       %s [OPTIONS] %s%n", 
+				this.programBeginningUsage, 
+				newConfigFileOption.getUsage());
+		System.out.printf("       %s %s%n", 
+				this.programBeginningUsage, 
+				settingsHelpOption.getUsage());
+		System.out.printf("       %s %s ARGS", 
+				this.programBeginningUsage, 
+				socks5UsersOption.getUsage());
+		System.out.println();
+		System.out.println();
+		System.out.println("OPTIONS:");
+		this.options.printHelpText();
+		System.out.println();
+		System.out.println();
+		System.exit(0);
+	}
+	
+	@OptionSink(
+			optionBuilder = @OptionBuilder(
+					doc = "The configuration file to be monitored for any "
+							+ "changes to be applied to the running "
+							+ "configuration",
+					name = "monitored-config-file",
+					optionArgSpecBuilder = @OptionArgSpecBuilder(
+							name = "FILE"
+					),
+					special = true,
+					type = GnuLongOption.class
+			),
+			ordinal = 11,
+			otherOptionBuilders = {
+					@OptionBuilder(
+							name = "m",
+							type = PosixOption.class
+					)
+			}
+	)
+	public void setMonitoredConfigurationFile(final String file) {
+		this.monitoredConfigurationFileArg = file;
+	}
+	
+	@OptionSink(
+			optionBuilder = @OptionBuilder(
+					doc = "Create a new configuration file based on the "
+							+ "preceding options and exit",
+					name = "new-config-file",
+					optionArgSpecBuilder = @OptionArgSpecBuilder(
+							name = "FILE"
+					),
+					type = GnuLongOption.class
+			),
+			ordinal = 12,
+			otherOptionBuilders = {
+					@OptionBuilder(
+							name = "n",
+							type = PosixOption.class
+					)
+			}
+	)
+	public void newConfigurationFile(final String file) 
+			throws JAXBException, IOException {
 		ImmutableConfiguration immutableConfiguration = 
-				ImmutableConfiguration.newInstance(configuration);
-		String tempArg = arg;
+				ImmutableConfiguration.newInstance(
+						this.modifiableConfiguration);
+		String tempArg = file;
 		System.out.print("Writing to ");
 		OutputStream out = null;
-		if (arg.equals("-")) {
+		if (file.equals("-")) {
 			System.out.printf("standard output...%n");
 			out = System.out;
 		} else {
-			File file = new File(arg);
-			System.out.printf("'%s'...%n", file.getAbsolutePath());
+			File f = new File(file);
+			System.out.printf("'%s'...%n", f.getAbsolutePath());
 			File tempFile = null;
 			do {
 				tempArg = tempArg.concat(".tmp");
@@ -77,46 +462,45 @@ final class SocksServerCli {
 				out.close();
 			}
 		}
-		if (!arg.equals("-")) {
-			File file = new File(arg);
+		if (!file.equals("-")) {
+			File f = new File(file);
 			File tempFile = new File(tempArg);
-			if (!tempFile.renameTo(file)) {
+			if (!tempFile.renameTo(f)) {
 				throw new IOException(String.format(
-						"unable to rename '%s' to '%s'", tempFile, file));
+						"unable to rename '%s' to '%s'", tempFile, f));
 			}
 		}
-	}
-
-	private void printConfigurationFileXsd() throws JAXBException, IOException {
-		byte[] xsd = ImmutableConfiguration.getXsd();
-		System.out.write(xsd);
-		System.out.flush();
+		System.exit(0);
 	}
 	
-	private void printHelp(
-			final String programBeginningUsage, final Options options) {
-		System.out.printf("Usage: %s [OPTIONS]%n", programBeginningUsage);
-		System.out.printf("       %s %s%n", 
-				programBeginningUsage, 
-				SocksServerCliOptions.CONFIG_FILE_XSD_OPTION.getUsage());
-		System.out.printf("       %s %s%n", 
-				programBeginningUsage, 
-				SocksServerCliOptions.HELP_OPTION.getUsage());
-		System.out.printf("       %s [OPTIONS] %s%n", 
-				programBeginningUsage, 
-				SocksServerCliOptions.NEW_CONFIG_FILE_OPTION.getUsage());
-		System.out.printf("       %s %s%n", 
-				programBeginningUsage, 
-				SocksServerCliOptions.SETTINGS_HELP_OPTION.getUsage());
-		System.out.printf("       %s %s ARGS", 
-				programBeginningUsage, 
-				SocksServerCliOptions.SOCKS5_USERS_OPTION.getUsage());
-		System.out.println();
-		System.out.println();
-		System.out.println("OPTIONS:");
-		options.printHelpText();
-		System.out.println();
-		System.out.println();
+	@OptionSink(
+			optionBuilder = @OptionBuilder(
+					doc = "Print the list of available settings for the SOCKS "
+							+ "server and exit",
+					name = "settings-help",
+					special = true,
+					type = GnuLongOption.class
+			),
+			ordinal = 13,
+			otherOptionBuilders = {
+					@OptionBuilder(
+							name = "H",
+							type = PosixOption.class
+					)
+			}
+	)
+	public void printSettingsHelp() {
+		System.out.println("SETTINGS:");
+		this.printHelpText(Arrays.asList(SettingSpec.values()));
+		System.out.println("SCHEMES:");
+		this.printHelpText(Arrays.asList(Scheme.values()));
+		System.out.println("SOCKET_SETTINGS:");
+		this.printHelpText(Arrays.asList(SocketSettingSpec.values()));
+		System.out.println("SOCKS5_AUTH_METHODS:");
+		this.printHelpText(Arrays.asList(AuthMethod.values()));
+		System.out.println("SOCKS5_GSSAPI_PROTECTION_LEVELS:");
+		this.printHelpText(Arrays.asList(GssapiProtectionLevel.values()));
+		System.exit(0);
 	}
 	
 	private void printHelpText(final List<HelpTextParams> list) {
@@ -130,251 +514,101 @@ final class SocksServerCli {
 		}
 	}
 	
-	private void printSettingsHelp() {
-		System.out.println("SETTINGS:");
-		this.printHelpText(Arrays.asList(SettingSpec.values()));
-		System.out.println("SCHEMES:");
-		this.printHelpText(Arrays.asList(Scheme.values()));
-		System.out.println("SOCKET_SETTINGS:");
-		this.printHelpText(Arrays.asList(SocketSettingSpec.values()));
-		System.out.println("SOCKS5_AUTH_METHODS:");
-		this.printHelpText(Arrays.asList(AuthMethod.values()));
-		System.out.println("SOCKS5_GSSAPI_PROTECTION_LEVELS:");
-		this.printHelpText(Arrays.asList(GssapiProtectionLevel.values()));
+	@OptionSink(
+			optionBuilder = @OptionBuilder(
+					doc = "The comma separated list of settings for the SOCKS "
+							+ "server",
+					name = "settings",
+					optionArgSpecBuilder = @OptionArgSpecBuilder(
+							name = "SETTINGS"
+					),
+					optionUsageProvider = SettingsGnuLongOptionUsageProvider.class,
+					type = GnuLongOption.class
+			),
+			ordinal = 14,
+			otherOptionBuilders = {
+					@OptionBuilder(
+							name = "s",
+							optionUsageProvider = SettingsPosixOptionUsageProvider.class,
+							type = PosixOption.class
+					)
+			}
+	)
+	public void addSettings(final Settings sttngs) {
+		this.modifiableConfiguration.addSettings(sttngs);
 	}
 	
-	public ProcessResult process(final String[] args) {
-		Options options = new SocksServerCliOptions();
-		ArgsParser argsParser = ArgsParser.newInstance(
-				args, options, false);
-		String programName = System.getProperty(
-				SystemPropertyNames.PROGRAM_NAME_PROPERTY_NAME);
-		if (programName == null) {
-			programName = SocksServer.class.getName();
-		}
-		String programBeginningUsage = System.getProperty(
-				SystemPropertyNames.PROGRAM_BEGINNING_USAGE_PROPERTY_NAME);
-		if (programBeginningUsage == null) {
-			programBeginningUsage = programName;
-		}
-		String suggestion = String.format(
-				"Try `%s %s' for more information", 
-				programBeginningUsage, 
-				SocksServerCliOptions.HELP_OPTION.getUsage());
-		String settingsHelpSuggestion = String.format(
-				"Try `%s %s' for more information", 
-				programBeginningUsage, 
-				SocksServerCliOptions.SETTINGS_HELP_OPTION.getUsage());
-		ModifiableConfiguration modifiableConfiguration = 
-				new ModifiableConfiguration();
-		String monitoredConfigurationFileArg = null;
+	@OptionSink(
+			optionBuilder = @OptionBuilder(
+					doc = "The SOCKS5 username password authenticator for the "
+							+ "SOCKS server",
+					name = "socks5-user-pass-authenticator",
+					optionArgSpecBuilder = @OptionArgSpecBuilder(
+							name = "SOCKS5_USER_PASS_AUTHENTICATOR"
+					),
+					optionUsageProvider = UsernamePasswordAuthenticatorOptionUsageProvider.class,
+					type = GnuLongOption.class
+			),
+			ordinal = 15
+	)
+	public void setSocks5UsernamePasswordAuthenticator(
+			final UsernamePasswordAuthenticator usernamePasswordAuthenticator) {
+		this.modifiableConfiguration.setSocks5UsernamePasswordAuthenticator(
+				usernamePasswordAuthenticator);
+	}
+	
+	@OptionSink(
+			optionBuilder = @OptionBuilder(
+					doc = "Mode for managing SOCKS5 users (add --help for "
+							+ "more information)",
+					name = "socks5-users",
+					special = true,
+					type = GnuLongOption.class
+			),
+			ordinal = 16
+	)
+	public void doSocks5UsersMode() {
+		Option socks5UsersOption = this.options.toList().get(16);
+		String newProgramBeginningUsage = String.format("%s %s", 
+				this.programBeginningUsage, 
+				socks5UsersOption.getUsage());
+		System.setProperty(
+				SystemPropertyNameConstants.PROGRAM_NAME_PROPERTY_NAME, 
+				this.programName);
+		System.setProperty(
+				SystemPropertyNameConstants.PROGRAM_BEGINNING_USAGE_PROPERTY_NAME, 
+				newProgramBeginningUsage);
+		List<String> remainingArgsList = new ArrayList<String>();
 		while (argsParser.hasNext()) {
-			ParseResultHolder parseResultHolder = null;
-			try {
-				parseResultHolder = argsParser.parseNext();
-			} catch (RuntimeException e) {
-				System.err.printf("%s: %s%n", programName, e.toString());
-				Option erringSettingsOption = null;
-				if (e instanceof IllegalOptionArgException) {
-					IllegalOptionArgException ioae = 
-							(IllegalOptionArgException) e;
-					Option option = ioae.getOption();
-					if (option.isOfAnyOf("--settings", "-s")) {
-						erringSettingsOption = option;
-					}
-				}
-				if (erringSettingsOption != null) {
-					System.err.println(settingsHelpSuggestion);
-				} else {
-					System.err.println(suggestion);
-				}
-				System.exit(-1);
-			}
-			if (parseResultHolder.hasOptionOf(
-					"--allowed-client-addr-criteria")) {
-				modifiableConfiguration.addAllowedClientAddressCriteria(
-						parseResultHolder.getOptionArg().getTypeValue(
-								Criteria.class));
-			}
-			if (parseResultHolder.hasOptionOf(
-					"--allowed-socks5-incoming-tcp-addr-criteria")) {
-				modifiableConfiguration.addAllowedSocks5IncomingTcpAddressCriteria(
-						parseResultHolder.getOptionArg().getTypeValue(
-								Criteria.class));
-			}
-			if (parseResultHolder.hasOptionOf(
-					"--allowed-socks5-incoming-udp-addr-criteria")) {
-				modifiableConfiguration.addAllowedSocks5IncomingUdpAddressCriteria(
-						parseResultHolder.getOptionArg().getTypeValue(
-								Criteria.class));
-			}
-			if (parseResultHolder.hasOptionOf(
-					"--blocked-client-addr-criteria")) {
-				modifiableConfiguration.addBlockedClientAddressCriteria(
-						parseResultHolder.getOptionArg().getTypeValue(
-								Criteria.class));
-			}
-			if (parseResultHolder.hasOptionOf(
-					"--blocked-socks5-incoming-tcp-addr-criteria")) {
-				modifiableConfiguration.addBlockedSocks5IncomingTcpAddressCriteria(
-						parseResultHolder.getOptionArg().getTypeValue(
-								Criteria.class));
-			}
-			if (parseResultHolder.hasOptionOf(
-					"--blocked-socks5-incoming-udp-addr-criteria")) {
-				modifiableConfiguration.addBlockedSocks5IncomingUdpAddressCriteria(
-						parseResultHolder.getOptionArg().getTypeValue(
-								Criteria.class));
-			}
-			if (parseResultHolder.hasOptionOfAnyOf("--config-file", "-f")) {
-				Configuration configuration = null;
-				try {
-					configuration = this.readConfiguration(
-							parseResultHolder.getOptionArg().toString());
-				} catch (IOException e) {
-					System.err.printf("%s: %s%n", programName, e.toString());
-					e.printStackTrace();
-					System.exit(-1);
-				} catch (JAXBException e) {
-					System.err.printf("%s: %s%n", programName, e.toString());
-					e.printStackTrace();
-					System.exit(-1);
-				}
-				modifiableConfiguration.add(configuration);
-			}
-			if (parseResultHolder.hasOptionOfAnyOf("--config-file-xsd", "-x")) {
-				try {
-					this.printConfigurationFileXsd();
-				} catch (JAXBException e) {
-					System.err.printf("%s: %s%n", programName, e.toString());
-					e.printStackTrace();
-					System.exit(-1);
-				} catch (IOException e) {
-					System.err.printf("%s: %s%n", programName, e.toString());
-					e.printStackTrace();
-					System.exit(-1);
-				}
-				System.exit(0);
-			}
-			if (parseResultHolder.hasOptionOf(
-					"--enter-external-client-socks5-user-pass")) {
-				modifiableConfiguration.setExternalClientSocks5UsernamePassword(
-						this.readExternalClientSocks5UsernamePassword());
-			}
-			if (parseResultHolder.hasOptionOf(
-					"--external-client-socks5-user-pass")) {
-				modifiableConfiguration.setExternalClientSocks5UsernamePassword(
-						parseResultHolder.getOptionArg().getTypeValue(
-								UsernamePassword.class));
-			}
-			if (parseResultHolder.hasOptionOfAnyOf("--help", "-h")) {
-				this.printHelp(programBeginningUsage, argsParser.getOptions());
-				System.exit(0);
-			}
-			if (parseResultHolder.hasOptionOfAnyOf(
-					"--monitored-config-file", "-m")) {
-				monitoredConfigurationFileArg = 
-						parseResultHolder.getOptionArg().toString();
-			}
-			if (parseResultHolder.hasOptionOfAnyOf("--new-config-file", "-n")) {
-				try {
-					this.newConfigurationFile(
-							modifiableConfiguration, 
-							parseResultHolder.getOptionArg().toString());
-				} catch (JAXBException e) {
-					System.err.printf("%s: %s%n", programName, e.toString());
-					e.printStackTrace();
-					System.exit(-1);
-				} catch (IOException e) {
-					System.err.printf("%s: %s%n", programName, e.toString());
-					e.printStackTrace();
-					System.exit(-1);
-				}
-				System.exit(0);
-			}
-			if (parseResultHolder.hasOptionOfAnyOf("--settings-help", "-H")) {
-				this.printSettingsHelp();
-				System.exit(0);
-			}
-			if (parseResultHolder.hasOptionOfAnyOf("--settings", "-s")) {
-				modifiableConfiguration.addSettings(
-						parseResultHolder.getOptionArg().getTypeValue(
-								Settings.class));
-			}
-			if (parseResultHolder.hasOptionOf(
-					"--socks5-user-pass-authenticator")) {
-				modifiableConfiguration.setSocks5UsernamePasswordAuthenticator(
-						parseResultHolder.getOptionArg().getTypeValue(
-								UsernamePasswordAuthenticator.class));
-			}
-			if (parseResultHolder.hasOptionOf("--socks5-users")) {
-				String newProgramBeginningUsage = String.format("%s %s", 
-						programBeginningUsage, 
-						SocksServerCliOptions.SOCKS5_USERS_OPTION.getUsage());
-				System.setProperty(
-						SystemPropertyNames.PROGRAM_NAME_PROPERTY_NAME, 
-						programName);
-				System.setProperty(
-						SystemPropertyNames.PROGRAM_BEGINNING_USAGE_PROPERTY_NAME, 
-						newProgramBeginningUsage);
-				List<String> remainingArgsList = new ArrayList<String>();
-				while (argsParser.hasNext()) {
-					String arg = argsParser.next();
-					remainingArgsList.add(arg);
-				}
-				Users.main(remainingArgsList.toArray(
-						new String[remainingArgsList.size()]));
-				System.exit(0);
-			}
+			String arg = argsParser.next();
+			remainingArgsList.add(arg);
 		}
+		Users.main(remainingArgsList.toArray(
+				new String[remainingArgsList.size()]));
+		System.exit(0);
+	}
+	
+	public Configuration newConfiguration() {
 		Configuration configuration = null;
-		if (monitoredConfigurationFileArg == null) {
+		if (this.monitoredConfigurationFileArg == null) {
 			configuration = ImmutableConfiguration.newInstance(
-					modifiableConfiguration);
+					this.modifiableConfiguration);
 		} else {
 			File monitoredConfigurationFile = 
-					new File(monitoredConfigurationFileArg);
+					new File(this.monitoredConfigurationFileArg);
 			ConfigurationService configurationService = null;
 			try {
 				configurationService = 
 						XmlFileSourceConfigurationService.newInstance(
 								monitoredConfigurationFile);
 			} catch (IllegalArgumentException e) {
-				System.err.printf("%s: %s%n", programName, e.toString());
+				System.err.printf("%s: %s%n", this.programName, e.toString());
 				e.printStackTrace();
 				System.exit(-1);
 			}
 			configuration = new MutableConfiguration(configurationService);
 		}
-		return new ProcessResult(configuration);
-	}
-	
-	private Configuration readConfiguration(
-			final String arg) throws JAXBException, IOException {
-		InputStream in = null;
-		if (arg.equals("-")) {
-			in = System.in;
-		} else {
-			File file = new File(arg);
-			in = new FileInputStream(file);
-		}
-		Configuration configuration = null;
-		try {
-			configuration = ImmutableConfiguration.newInstanceFrom(in);
-		} finally {
-			if (in instanceof FileInputStream) {
-				in.close();
-			}
-		}
 		return configuration;
-	}
-		
-	private UsernamePassword readExternalClientSocks5UsernamePassword() {
-		String prompt = "Please enter username and password for the external "
-				+ "SOCKS5 server for external connections";
-		UsernamePasswordRequestor usernamePasswordRequestor = 
-				new DefaultUsernamePasswordRequestor();
-		return usernamePasswordRequestor.requestUsernamePassword(null, prompt);
 	}
 
 }

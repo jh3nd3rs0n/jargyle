@@ -72,10 +72,10 @@ Jargyle is a hobby project and is currently subject to breaking changes. Jargyle
 
 To build and package Jargyle as an executable jar file, run the following commands:
 
-```
+```bash
 
-    $ cd jargyle
-    $ mvn package
+    cd jargyle
+    mvn package
 
 ```
 
@@ -83,9 +83,9 @@ To build and package Jargyle as an executable jar file, run the following comman
 
 To run Jargyle without any command line arguments, you can run the following command:
 
-```
+```bash
 
-    $ java -jar target/jargyle-${VERSION}.jar
+    java -jar target/jargyle-${VERSION}.jar
 
 ```
 
@@ -340,9 +340,9 @@ You can create a configuration file by using the command line option `--new-conf
 
 The following command creates an empty configuration file:
 
-```
+```bash
 
-    $ java -jar target/jargyle-${VERSION}.jar --new-config-file=configuration.xml
+    java -jar target/jargyle-${VERSION}.jar --new-config-file=configuration.xml
 
 ```
 
@@ -359,9 +359,9 @@ Any preceding command line options that do not terminate before the command line
 
 The following command creates a configuration file with the port number, the number of allowed backlogged connections, and no authentication required:
 
-```
+```bash
 
-    $ java -jar target/jargyle-${VERSION}.jar --settings=port=1234,backlog=100,socks5.authMethods=NO_AUTHENTICATION_REQUIRED --new-config-file=configuration.xml
+    java -jar target/jargyle-${VERSION}.jar --settings=port=1234,backlog=100,socks5.authMethods=NO_AUTHENTICATION_REQUIRED --new-config-file=configuration.xml
 
 ```
 
@@ -386,9 +386,9 @@ You can supplement an existing configuration file with command line options.
 
 The following command adds one command line options before the existing configuration file and another command line option after the existing configuration file:
 
-```
+```bash
 
-    $ java -jar target/jargyle-${VERSION}.jar --settings=clientSocketSettings=SO_TIMEOUT=500 --config-file=configuration.xml --settings=socketSettings=SO_TIMEOUT=0 --new-config-file=new_configuration.xml
+    java -jar target/jargyle-${VERSION}.jar --settings=clientSocketSettings=SO_TIMEOUT=500 --config-file=configuration.xml --settings=socketSettings=SO_TIMEOUT=0 --new-config-file=new_configuration.xml
 
 ```
 
@@ -415,9 +415,9 @@ You can combine multiple configuration files into one configuration file.
 
 The following command combines the two earlier configuration files into one:
 
-```
+```bash
 
-    $ java -jar target/jargyle-${VERSION}.jar --config-file=configuration.xml --config-file=new_configuration.xml --new-config-file=combined_configuration.xml
+    java -jar target/jargyle-${VERSION}.jar --config-file=configuration.xml --config-file=new_configuration.xml --new-config-file=combined_configuration.xml
 
 ```
 
@@ -449,9 +449,9 @@ Also, if a setting of the same name appears more than once in the configuration 
 
 To run Jargyle with a configuration file, you can use the command line option `--config-file`
 
-```
+```bash
 
-    $ java -jar target/jargyle-${VERSION}.jar --config-file=configuration.xml
+    java -jar target/jargyle-${VERSION}.jar --config-file=configuration.xml
 
 ```
 
@@ -463,13 +463,13 @@ You can run Jargyle with a configuration file to be monitored for any changes to
 
 To run Jargyle with a monitored configuration file, you can use the command line option `--monitored-config-file`
 
+```bash
+
+    java -jar target/jargyle-${VERSION}.jar --monitored-config-file=configuration.xml
+
 ```
 
-    $ java -jar target/jargyle-${VERSION}.jar --monitored-config-file=configuration.xml
-
-```
-
-Also the monitored configuration file cannot be supplemented with command line options and cannot be combined with multiple configuration files.
+Unlike the command line option `--config-file`, the monitored configuration file cannot be supplemented with command line options and cannot be combined with multiple configuration files.
 
 The following are the settings in the monitored configuration file that will have no effect if changed during the running configuration:
 
@@ -486,9 +486,9 @@ You can manage SOCKS5 users stored in an XML file called a users file. A users f
 
 To create a users file, you would run the following command:
 
-```
+```bash
 
-    $ java -jar target/jargyle-${VERSION}.jar --socks5-users create-new-file FILE
+    java -jar target/jargyle-${VERSION}.jar --socks5-users create-new-file FILE
 
 ```
 
@@ -496,16 +496,16 @@ Where `FILE` would be the name for the new users file.
 
 Once you have run the command, an interactive prompt will ask you if you want to enter a user.
 
-```
+```bash
 
-    $ java -jar target/jargyle-${VERSION}.jar --socks5-users create-new-file users.xml
+    java -jar target/jargyle-${VERSION}.jar --socks5-users create-new-file users.xml
     Would you like to enter a user? ('Y' for yes): 
 
 ```
 
 If you do not want to enter a user, a new empty users file will be created. 
 
-```
+```bash
 
     Would you like to enter a user? ('Y' for yes): n
     Writing to 'users.xml'...
@@ -523,7 +523,7 @@ If you do not want to enter a user, a new empty users file will be created.
 
 If you want to enter a user, the prompt will ask you for the user's name, password, and re-typed password. It will repeat the process to add another user if you want to continue to enter another user. If you do not want to enter any more users, the new users file will be created.
 
-```
+```bash
 
     Would you like to enter a user? ('Y' for yes): Y
     User
@@ -584,9 +584,9 @@ If you want to enter a user, the prompt will ask you for the user's name, passwo
 
 To add users to an existing users file, you would run the following command:
 
-```
+```bash
 
-    $ java -jar target/jargyle-${VERSION}.jar --socks5-users add-users-to-file FILE
+    java -jar target/jargyle-${VERSION}.jar --socks5-users add-users-to-file FILE
 
 ```
 
@@ -594,9 +594,9 @@ Where `FILE` would be the name for the existing users file.
 
 Once you have run the command, an interactive prompt will ask you for the new user's name, password, and re-typed password. It will repeat the process to add another user if you want to continue to enter another user. If you do not want to enter any more users, the updated users file will be saved.
 
-```
+```bash
 
-    $ java -jar target/jargyle-${VERSION}.jar --socks5-users add-users-to-file users.xml
+    java -jar target/jargyle-${VERSION}.jar --socks5-users add-users-to-file users.xml
     User
     Name: Jafar
     Password: 
@@ -649,9 +649,9 @@ Once you have run the command, an interactive prompt will ask you for the new us
 
 To remove a user from an existing users file, you would run the following command:
 
-```
+```bash
 
-    $ java -jar target/jargyle-${VERSION}.jar --socks5-users remove-user NAME FILE
+    java -jar target/jargyle-${VERSION}.jar --socks5-users remove-user NAME FILE
 
 ```
 
@@ -661,7 +661,7 @@ Once you have run the command, the user of the specified name will be removed fr
 
 ```
 
-    $ java -jar target/jargyle-${VERSION}.jar --socks5-users remove-user Jafar users.xml
+    java -jar target/jargyle-${VERSION}.jar --socks5-users remove-user Jafar users.xml
     User 'Jafar' removed
     Writing to 'users.xml'...
 
@@ -712,7 +712,7 @@ You can have one or more of the aforementioned authentication methods set in the
 
 Partial command line example:
 
-```
+```bash
 
     "--settings=socks5.authMethods=NO_AUTHENTICATION_REQUIRED GSSAPI"
 
@@ -736,7 +736,7 @@ However, if other authentication methods are to be used in addition to `NO_AUTHE
 
 Partial command line example:
 
-```
+```bash
 
     "--settings=socks5.authMethods=NO_AUTHENTICATION_REQUIRED GSSAPI USERNAME_PASSWORD"
 
@@ -756,7 +756,7 @@ To use username password authentication, you will need to have the setting `sock
 
 Partial command line example:
 
-```
+```bash
 
     --settings=socks5.authMethods=USERNAME_PASSWORD
 
@@ -781,7 +781,7 @@ The following are two provided classes you can use:
 
 Partial command line example:
 
-```
+```bash
 
     "--socks5-user-pass-authenticator=jargyle.server.socks5.StringSourceUsernamePasswordAuthenticator:Aladdin:opensesame Jasmine:mission%3Aimpossible"
 
@@ -811,7 +811,7 @@ If any of the usernames or any of the passwords contain a percent sign character
 
 Partial command line example:
 
-```
+```bash
 
     --socks5-user-pass-authenticator=jargyle.server.socks5.XmlFileSourceUsernamePasswordAuthenticator:users.xml
 
@@ -834,7 +834,7 @@ To use GSS-API authentication, you will need to have the setting `socks5.authMet
 
 Partial command line example:
 
-```
+```bash
 
     --settings=socks5.authMethods=GSSAPI
 
@@ -852,9 +852,9 @@ Also, you will need to specify Java system properties to use a security mechanis
 
 The following is a sufficient example of using the Kerberos security mechanism:
 
-```
+```bash
 
-    $ java -Djavax.security.auth.useSubjectCredsOnly=false \
+    java -Djavax.security.auth.useSubjectCredsOnly=false \
 	    -Djava.security.auth.login.config=login.conf \
 	    -Djava.security.krb5.conf=krb5.conf \
 	    -jar target/jargyle-${VERSION}.jar \
@@ -911,7 +911,7 @@ You can have Jargyle's external connections set through another SOCKS server. To
 
 Partial command line example:
 
-```
+```bash
 
     --settings=externalClient.externalServerUri=socks5://127.0.0.1:23456
 
@@ -941,7 +941,7 @@ You can have one or more of the aforementioned authentication methods set in the
 
 Partial command line example:
 
-```
+```bash
 
     "--settings=externalClient.socks5.authMethods=NO_AUTHENTICATION_REQUIRED GSSAPI"
 
@@ -965,7 +965,7 @@ However, if other authentication methods are to be used in addition to `NO_AUTHE
 
 Partial command line example:
 
-```
+```bash
 
     "--settings=externalClient.socks5.authMethods=NO_AUTHENTICATION_REQUIRED GSSAPI USERNAME_PASSWORD"
 
@@ -985,7 +985,7 @@ To use username password authentication, you will need to have the setting `exte
 
 Partial command line example:
 
-```
+```bash
 
     --settings=externalClient.socks5.authMethods=USERNAME_PASSWORD
 
@@ -1009,7 +1009,7 @@ The command line option `--external-client-socks5-user-pass` requires an actual 
 
 Partial command line example:
 
-```
+```bash
 
     --external-client-socks5-user-pass=Aladdin:opensesame
 
@@ -1031,7 +1031,7 @@ To use GSS-API authentication, you will need to have the setting `externalClient
 
 Partial command line example:
 
-```
+```bash
 
     --settings=externalClient.socks5.authMethods=GSSAPI
 
@@ -1049,9 +1049,9 @@ Also, you will need to specify Java system properties to use a security mechanis
 
 The following is a sufficient example of using the Kerberos security mechanism:
 
-```
+```bash
 
-    $ java -Djavax.security.auth.useSubjectCredsOnly=false \
+    java -Djavax.security.auth.useSubjectCredsOnly=false \
 	    -Djava.security.auth.login.config=login.conf \
 	    -Djava.security.krb5.conf=krb5.conf \
 	    -jar target/jargyle-${VERSION}.jar \

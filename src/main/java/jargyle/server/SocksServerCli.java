@@ -135,9 +135,7 @@ public final class SocksServerCli {
 					doc = "The space separated list of allowed client address "
 							+ "criteria",
 					name = "allowed-client-addr-criteria",
-					optionArgSpecBuilder = @OptionArgSpecBuilder(
-							name = "CRITERIA"
-					),
+					optionArgSpecBuilder = @OptionArgSpecBuilder(),
 					optionUsageProvider = CriteriaOptionUsageProvider.class,
 					type = GnuLongOption.class
 			),
@@ -154,9 +152,7 @@ public final class SocksServerCli {
 					doc = "The space separated list of allowed SOCKS5 "
 							+ "incoming TCP address criteria",
 					name = "allowed-socks5-incoming-tcp-addr-criteria",
-					optionArgSpecBuilder = @OptionArgSpecBuilder(
-							name = "CRITERIA"
-					),
+					optionArgSpecBuilder = @OptionArgSpecBuilder(),
 					optionUsageProvider = CriteriaOptionUsageProvider.class,
 					type = GnuLongOption.class
 			),
@@ -173,9 +169,7 @@ public final class SocksServerCli {
 					doc = "The space separated list of allowed SOCKS5 "
 							+ "incoming UDP address criteria",
 					name = "allowed-socks5-incoming-udp-addr-criteria",
-					optionArgSpecBuilder = @OptionArgSpecBuilder(
-							name = "CRITERIA"
-					),
+					optionArgSpecBuilder = @OptionArgSpecBuilder(),
 					optionUsageProvider = CriteriaOptionUsageProvider.class,
 					type = GnuLongOption.class
 			),
@@ -192,9 +186,7 @@ public final class SocksServerCli {
 					doc = "The space separated list of blocked client address "
 							+ "criteria",
 					name = "blocked-client-addr-criteria",
-					optionArgSpecBuilder = @OptionArgSpecBuilder(
-							name = "CRITERIA"
-					),
+					optionArgSpecBuilder = @OptionArgSpecBuilder(),
 					optionUsageProvider = CriteriaOptionUsageProvider.class,
 					type = GnuLongOption.class
 			),
@@ -211,9 +203,7 @@ public final class SocksServerCli {
 					doc = "The space separated list of blocked SOCKS5 "
 							+ "incoming TCP address criteria",
 					name = "blocked-socks5-incoming-tcp-addr-criteria",
-					optionArgSpecBuilder = @OptionArgSpecBuilder(
-							name = "CRITERIA"
-					),
+					optionArgSpecBuilder = @OptionArgSpecBuilder(),
 					optionUsageProvider = CriteriaOptionUsageProvider.class,
 					type = GnuLongOption.class
 			),
@@ -230,9 +220,7 @@ public final class SocksServerCli {
 					doc = "The space separated list of blocked SOCKS5 "
 							+ "incoming UDP address criteria",
 					name = "blocked-socks5-incoming-udp-addr-criteria",
-					optionArgSpecBuilder = @OptionArgSpecBuilder(
-							name = "CRITERIA"
-					),
+					optionArgSpecBuilder = @OptionArgSpecBuilder(),
 					optionUsageProvider = CriteriaOptionUsageProvider.class,
 					type = GnuLongOption.class
 			),
@@ -329,9 +317,7 @@ public final class SocksServerCli {
 					doc = "The username password for the external SOCKS5 "
 							+ "server for external connections",
 					name = "external-client-socks5-user-pass",
-					optionArgSpecBuilder = @OptionArgSpecBuilder(
-							name = "USERNAME_PASSWORD"
-					),
+					optionArgSpecBuilder = @OptionArgSpecBuilder(),
 					optionUsageProvider = UsernamePasswordOptionUsageProvider.class,
 					type = GnuLongOption.class
 			),
@@ -519,9 +505,7 @@ public final class SocksServerCli {
 					doc = "The comma separated list of settings for the SOCKS "
 							+ "server",
 					name = "settings",
-					optionArgSpecBuilder = @OptionArgSpecBuilder(
-							name = "SETTINGS"
-					),
+					optionArgSpecBuilder = @OptionArgSpecBuilder(),
 					optionUsageProvider = SettingsGnuLongOptionUsageProvider.class,
 					type = GnuLongOption.class
 			),
@@ -543,9 +527,7 @@ public final class SocksServerCli {
 					doc = "The SOCKS5 username password authenticator for the "
 							+ "SOCKS server",
 					name = "socks5-user-pass-authenticator",
-					optionArgSpecBuilder = @OptionArgSpecBuilder(
-							name = "SOCKS5_USER_PASS_AUTHENTICATOR"
-					),
+					optionArgSpecBuilder = @OptionArgSpecBuilder(),
 					optionUsageProvider = UsernamePasswordAuthenticatorOptionUsageProvider.class,
 					type = GnuLongOption.class
 			),
@@ -578,13 +560,13 @@ public final class SocksServerCli {
 		System.setProperty(
 				SystemPropertyNameConstants.PROGRAM_BEGINNING_USAGE_PROPERTY_NAME, 
 				newProgramBeginningUsage);
-		List<String> remainingArgsList = new ArrayList<String>();
-		while (argsParser.hasNext()) {
-			String arg = argsParser.next();
-			remainingArgsList.add(arg);
+		List<String> remainingArgList = new ArrayList<String>();
+		while (this.argsParser.hasNext()) {
+			String arg = this.argsParser.next();
+			remainingArgList.add(arg);
 		}
-		Users.main(remainingArgsList.toArray(
-				new String[remainingArgsList.size()]));
+		Users.main(remainingArgList.toArray(
+				new String[remainingArgList.size()]));
 		System.exit(0);
 	}
 	

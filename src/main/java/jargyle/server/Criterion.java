@@ -97,15 +97,8 @@ public final class Criterion {
 	} 
 
 	public boolean evaluatesTrue(final InetAddress inetAddress) {
-		String hostName = inetAddress.getHostName();
-		if (this.evaluatesTrue(hostName)) {
-			return true;
-		}
-		String hostAddress = inetAddress.getHostAddress();
-		if (this.evaluatesTrue(hostAddress)) {
-			return true;
-		}
-		return false;
+		return this.evaluatesTrue(inetAddress.getHostName())
+				|| this.evaluatesTrue(inetAddress.getHostAddress());
 	}
 	
 	public boolean evaluatesTrue(final String oprnd) {

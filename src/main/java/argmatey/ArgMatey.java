@@ -3115,8 +3115,7 @@ public final class ArgMatey {
 				@Override
 				public boolean isTargetMethodParameterTypes(
 						final Class<?>[] types) {
-					if (types.length != 1) { return false; }
-					return true;
+					return types.length == 1;
 				}
 
 				@Override

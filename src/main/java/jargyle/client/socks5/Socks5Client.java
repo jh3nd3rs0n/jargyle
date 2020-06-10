@@ -195,11 +195,9 @@ public final class Socks5Client extends SocksClient {
 		if (protectionLevels == null) {
 			protectionLevels = DEFAULT_GSSAPI_PROTECTION_LEVELS;
 		}
-		if (serviceName == null) {
-			if (authMthds.toList().contains(AuthMethod.GSSAPI)) {
-				throw new IllegalStateException(
-						"GSS-API service name required");
-			}
+		if (serviceName == null 
+				&& authMthds.toList().contains(AuthMethod.GSSAPI)) {
+			throw new IllegalStateException("GSS-API service name required");
 		}
 		this.authMethods = authMthds;
 		this.gssapiMechanismOid = mechanismOid;

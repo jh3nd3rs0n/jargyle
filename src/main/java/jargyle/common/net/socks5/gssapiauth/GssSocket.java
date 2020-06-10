@@ -53,7 +53,7 @@ public final class GssSocket extends FilterSocket {
 		
 		@Override
 		public int read() throws IOException {
-			if (this.closed == true) { return -1; }
+			if (this.closed) { return -1; }
 			if (this.bufferIn.available() == 0) {
 				int b = this.in.read();
 				if (b == -1) {
@@ -107,7 +107,7 @@ public final class GssSocket extends FilterSocket {
 						b.length,
 						off));
 			}
-			if (this.closed == true) { return -1; }
+			if (this.closed) { return -1; }
 			int offset = off;
 			int bufferInAvailable = this.bufferIn.available();
 			if (bufferInAvailable == 0) {

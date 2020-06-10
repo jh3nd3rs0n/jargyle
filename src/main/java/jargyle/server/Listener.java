@@ -31,10 +31,10 @@ final class Listener implements Runnable {
 				Socket clientSocket = this.serverSocket.accept();
 				executor.execute(new Worker(
 						clientSocket, this.configuration));
+			} catch (SocketException e) {
+				// closed by SocksServer.stop()
+				break;
 			} catch (IOException e) {
-				if (e instanceof SocketException) {
-					break;
-				}
 				LOGGER.log(
 						Level.WARNING, 
 						"Error in waiting for a connection", 

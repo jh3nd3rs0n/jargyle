@@ -81,11 +81,11 @@ public class SocketIT {
 				try {
 					Socket clientSocket = this.serverSocket.accept();
 					executor.execute(new Worker(clientSocket));
+				} catch (SocketException e) {
+					break;
 				} catch (IOException e) {
-					if (e instanceof SocketException) {
-						break;
-					}
 					e.printStackTrace();
+					break;
 				}
 			}
 			executor.shutdownNow();

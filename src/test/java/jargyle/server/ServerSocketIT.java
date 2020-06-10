@@ -102,11 +102,11 @@ public class ServerSocketIT {
 				try {
 					Socket clientSocket = this.serverSocket.accept();
 					executor.execute(new Worker(this.echoServer, clientSocket));
+				} catch (SocketException e) {
+					break;
 				} catch (IOException e) {
-					if (e instanceof SocketException) {
-						break;
-					}
 					e.printStackTrace();
+					break;
 				}
 			}
 			executor.shutdownNow();

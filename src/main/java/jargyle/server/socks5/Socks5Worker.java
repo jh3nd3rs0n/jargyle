@@ -477,10 +477,6 @@ public final class Socks5Worker implements Runnable {
 				return;
 			} finally {
 				listenSocket.close();
-				if (socks5Rep != null && socks5Rep.getReply().equals(
-						Reply.GENERAL_SOCKS_SERVER_FAILURE)) {
-					return;
-				}
 			}
 			InetAddress incomingTcpInetAddress = incomingSocket.getInetAddress();
 			if (!this.canAcceptIncomingTcpAddress(incomingTcpInetAddress)) {

@@ -9,10 +9,6 @@ import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import argmatey.ArgMatey.ArgsParser;
-import argmatey.ArgMatey.IllegalOptionArgException;
-import argmatey.ArgMatey.Option;
-import argmatey.ArgMatey.Options;
 import jargyle.common.net.SocketSettings;
 import jargyle.common.util.NonnegativeInteger;
 
@@ -27,67 +23,27 @@ public final class SocksServer {
 		 */
 		System.setProperty(
 				"com.sun.xml.bind.v2.bytecode.ClassTailor.noOptimize", "true");
-		Options options = Options.newInstance(SocksServerCli.class);
-		ArgsParser argsParser = ArgsParser.newInstance(args, options, false);
-		String programName = System.getProperty(
-				SystemPropertyNameConstants.PROGRAM_NAME_PROPERTY_NAME);
-		if (programName == null) {
-			programName = SocksServer.class.getName();
-		}
-		String programBeginningUsage = System.getProperty(
-				SystemPropertyNameConstants.PROGRAM_BEGINNING_USAGE_PROPERTY_NAME);
-		if (programBeginningUsage == null) {
-			programBeginningUsage = programName;
-		}
-		SocksServerCli socksServerCli = new SocksServerCli(
-				programName, programBeginningUsage, argsParser);
-		Option settingsHelpOption = options.toList().get(13);
-		String settingsHelpSuggestion = String.format(
-				"Try `%s %s' for more information.", 
-				programBeginningUsage, 
-				settingsHelpOption.getUsage());
-		Option helpOption = options.toList().get(10);
-		String suggestion = String.format(
-				"Try `%s %s' for more information.", 
-				programBeginningUsage, 
-				helpOption.getUsage());
-		try {
-			argsParser.parseRemainingTo(socksServerCli);
-		} catch (RuntimeException e) {
-			System.err.printf("%s: %s%n", programName, e);
-			Option erringSettingsOption = null;
-			if (e instanceof IllegalOptionArgException) {
-				IllegalOptionArgException ioae = 
-						(IllegalOptionArgException) e;
-				Option option = ioae.getOption();
-				if (option.isOfAnyOf("--settings", "-s")) {
-					erringSettingsOption = option;
-				}
-			}
-			if (erringSettingsOption != null) {
-				System.err.println(settingsHelpSuggestion);
-			} else {
-				System.err.println(suggestion);
-			}
-			System.exit(-1);
-		}
+		SocksServerCli socksServerCli = new SocksServerCli();
+		socksServerCli.process(args);
 		Configuration configuration = socksServerCli.newConfiguration();
 		SocksServer socksServer = new SocksServer(configuration);
 		try {
 			socksServer.start();
-		} catch (IOException e) {
-			String message = "Error in starting SocksServer";
-			if (e instanceof BindException) {
-				message = String.format(
-						"Unable to listen on port %s at %s", 
-						configuration.getSettings().getLastValue(
-								SettingSpec.PORT, Port.class),
-						configuration.getSettings().getLastValue(
-								SettingSpec.HOST, Host.class));
-			}
+		} catch (BindException e) {
 			LOGGER.log(
 					Level.SEVERE, 
-					message, 
+					String.format(
+							"Unable to listen on port %s at %s", 
+							configuration.getSettings().getLastValue(
+									SettingSpec.PORT, Port.class),
+							configuration.getSettings().getLastValue(
+									SettingSpec.HOST, Host.class)), 
+					e);
+			System.exit(-1);
+		} catch (IOException e) {
+			LOGGER.log(
+					Level.SEVERE, 
+					"Error in starting SocksServer", 
 					e);
 			System.exit(-1);
 		}

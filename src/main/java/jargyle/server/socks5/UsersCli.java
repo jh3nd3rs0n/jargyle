@@ -13,6 +13,7 @@ import java.util.List;
 
 import javax.xml.bind.JAXBException;
 
+import argmatey.ArgMatey.ArgsParser;
 import argmatey.ArgMatey.GnuLongOption;
 import argmatey.ArgMatey.NonparsedArgSink;
 import argmatey.ArgMatey.Option;
@@ -21,6 +22,7 @@ import argmatey.ArgMatey.OptionSink;
 import argmatey.ArgMatey.Options;
 import argmatey.ArgMatey.PosixOption;
 import jargyle.common.cli.HelpTextParams;
+import jargyle.server.SystemPropertyNameConstants;
 
 public final class UsersCli {
 	
@@ -253,16 +255,29 @@ public final class UsersCli {
 	}
 	
 	private final List<String> argList;
+	private ArgsParser argsParser;
 	private Command command;
 	private final Options options;
+	private final String programName;
 	private final String programBeginningUsage;
 	
-	UsersCli( 
-			final String progBeginningUsage, 
-			final Options opts) { 
+	UsersCli() {
+		Options opts = Options.newInstance(this.getClass());
+		String progName = System.getProperty(
+				SystemPropertyNameConstants.PROGRAM_NAME_PROPERTY_NAME);
+		if (progName == null) {
+			progName = Users.class.getName();
+		}
+		String progBeginningUsage = System.getProperty(
+				SystemPropertyNameConstants.PROGRAM_BEGINNING_USAGE_PROPERTY_NAME);
+		if (progBeginningUsage == null) {
+			progBeginningUsage = progName;
+		}
 		this.argList = new ArrayList<String>();
+		this.argsParser = null;
 		this.command = null;
 		this.options = opts;
+		this.programName = progName;
 		this.programBeginningUsage = progBeginningUsage;
 	}
 	
@@ -273,14 +288,6 @@ public final class UsersCli {
 		} else {
 			this.argList.add(nonparsedArg);
 		}
-	}
-	
-	public void execute() throws Exception {
-		if (this.command == null) {
-			throw new IllegalStateException("command must be provided");
-		}
-		this.command.invoke(
-				this.argList.toArray(new String[this.argList.size()]));
 	}
 	
 	@OptionSink(
@@ -345,6 +352,33 @@ public final class UsersCli {
 		System.out.write(xsd);
 		System.out.flush();
 		System.exit(0);
+	}
+	
+	public void process(final String[] args) {
+		Option helpOption = this.options.toList().get(0);
+		String suggestion = String.format(
+				"Try `%s %s' for more information", 
+				this.programBeginningUsage, 
+				helpOption.getUsage());
+		this.argsParser = ArgsParser.newInstance(args, this.options, false);
+		try {
+			this.argsParser.parseRemainingTo(this);
+		} catch (RuntimeException e) {
+			System.err.printf("%s: %s%n", programName, e);
+			System.err.println(suggestion);
+			System.exit(-1);
+		}
+		if (this.command == null) {
+			System.err.printf("%s: command must be provided%n", programName);
+			System.exit(-1);
+		}
+		try {
+			this.command.invoke(this.argList.toArray(
+					new String[this.argList.size()]));
+		} catch (Exception e) {
+			System.err.printf("%s: %s%n", programName, e);
+			System.exit(-1);
+		}
 	}
 	
 }

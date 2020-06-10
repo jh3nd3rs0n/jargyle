@@ -14,6 +14,7 @@ import javax.xml.bind.JAXBException;
 
 import argmatey.ArgMatey.ArgsParser;
 import argmatey.ArgMatey.GnuLongOption;
+import argmatey.ArgMatey.IllegalOptionArgException;
 import argmatey.ArgMatey.Option;
 import argmatey.ArgMatey.OptionArgSpecBuilder;
 import argmatey.ArgMatey.OptionBuilder;
@@ -110,19 +111,26 @@ public final class SocksServerCli {
 		
 	}
 	
-	private final ArgsParser argsParser;
+	private ArgsParser argsParser;
 	private final ModifiableConfiguration modifiableConfiguration;
 	private String monitoredConfigurationFileArg;
 	private final Options options;
 	private final String programName;
 	private final String programBeginningUsage;
 	
-	SocksServerCli(
-			final String progName, 
-			final String progBeginningUsage, 
-			final ArgsParser parser) {
-		Options opts = parser.getOptions();
-		this.argsParser = parser;
+	SocksServerCli() {
+		Options opts = Options.newInstance(this.getClass());
+		String progName = System.getProperty(
+				SystemPropertyNameConstants.PROGRAM_NAME_PROPERTY_NAME);
+		if (progName == null) {
+			progName = SocksServer.class.getName();
+		}
+		String progBeginningUsage = System.getProperty(
+				SystemPropertyNameConstants.PROGRAM_BEGINNING_USAGE_PROPERTY_NAME);
+		if (progBeginningUsage == null) {
+			progBeginningUsage = progName;
+		}
+		this.argsParser = null;
 		this.modifiableConfiguration = new ModifiableConfiguration();
 		this.monitoredConfigurationFileArg = null;
 		this.options = opts;
@@ -550,6 +558,9 @@ public final class SocksServerCli {
 			ordinal = 16
 	)
 	public void doSocks5UsersMode() {
+		if (this.argsParser == null) {
+			throw new IllegalStateException("process must be run first");
+		}
 		Option socks5UsersOption = this.options.toList().get(16);
 		String newProgramBeginningUsage = String.format("%s %s", 
 				this.programBeginningUsage, 
@@ -570,6 +581,40 @@ public final class SocksServerCli {
 		System.exit(0);
 	}
 	
+	public void process(final String[] args) {
+		Option settingsHelpOption = this.options.toList().get(13);
+		String settingsHelpSuggestion = String.format(
+				"Try `%s %s' for more information.", 
+				this.programBeginningUsage, 
+				settingsHelpOption.getUsage());
+		Option helpOption = this.options.toList().get(10);
+		String suggestion = String.format(
+				"Try `%s %s' for more information.", 
+				this.programBeginningUsage, 
+				helpOption.getUsage());
+		this.argsParser = ArgsParser.newInstance(args, this.options, false);
+		try {
+			this.argsParser.parseRemainingTo(this);
+		} catch (RuntimeException e) {
+			System.err.printf("%s: %s%n", this.programName, e);
+			Option erringSettingsOption = null;
+			if (e instanceof IllegalOptionArgException) {
+				IllegalOptionArgException ioae = 
+						(IllegalOptionArgException) e;
+				Option option = ioae.getOption();
+				if (option.isOfAnyOf("--settings", "-s")) {
+					erringSettingsOption = option;
+				}
+			}
+			if (erringSettingsOption != null) {
+				System.err.println(settingsHelpSuggestion);
+			} else {
+				System.err.println(suggestion);
+			}
+			System.exit(-1);
+		}
+	}
+	
 	public Configuration newConfiguration() {
 		Configuration configuration = null;
 		if (this.monitoredConfigurationFileArg == null) {
@@ -584,7 +629,7 @@ public final class SocksServerCli {
 						XmlFileSourceConfigurationService.newInstance(
 								monitoredConfigurationFile);
 			} catch (IllegalArgumentException e) {
-				System.err.printf("%s: %s%n", this.programName, e.toString());
+				System.err.printf("%s: %s%n", this.programName, e);
 				e.printStackTrace();
 				System.exit(-1);
 			}

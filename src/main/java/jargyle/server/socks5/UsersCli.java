@@ -135,6 +135,114 @@ public final class UsersCli {
 					"no command found for %s", s));
 		}
 		
+		private static void newFile(
+				final Users users,
+				final String arg) throws JAXBException, IOException {
+			String tempArg = arg;
+			System.out.print("Writing to ");
+			OutputStream out = null;
+			if (arg.equals("-")) {
+				System.out.printf("standard output...%n");
+				out = System.out;
+			} else {
+				File file = new File(arg);
+				System.out.printf("'%s'...%n", file.getAbsolutePath());
+				File tempFile = null;
+				do {
+					tempArg = tempArg.concat(".tmp");
+					tempFile = new File(tempArg);
+				} while (tempFile.exists());
+				tempFile.createNewFile();
+				out = new FileOutputStream(tempFile);
+			}
+			try {
+				byte[] xml = users.toXml();
+				out.write(xml);
+				out.flush();
+			} finally {
+				if (out instanceof FileOutputStream) {
+					out.close();
+				}
+			}
+			if (!arg.equals("-")) {
+				File file = new File(arg);
+				File tempFile = new File(tempArg);
+				if (!tempFile.renameTo(file)) {
+					throw new IOException(String.format(
+							"unable to rename '%s' to '%s'", tempFile, file));
+				}
+			}
+		}
+
+		private static Users readFile(
+				final String arg) throws JAXBException, IOException {
+			InputStream in = null;
+			if (arg.equals("-")) {
+				in = System.in;
+			} else {
+				File file = new File(arg);
+				in = new FileInputStream(file);
+			}
+			Users users = null;
+			try {
+				users = Users.newInstanceFrom(in);
+			} finally {
+				if (in instanceof FileInputStream) {
+					in.close();
+				}
+			}
+			return users;
+		}
+		
+		private static List<User> readUsers() {
+			List<User> users = new ArrayList<User>();
+			Console console = System.console();
+			boolean addAnotherUser = false;
+			do {
+				console.printf("User%n");
+				String name;
+				while (true) {
+					name = console.readLine("Name: ");
+					try {
+						User.validateName(name);
+					} catch (IllegalArgumentException e) {
+						console.printf(
+								"Name must be no more than %s byte(s).%n", 
+								User.MAX_NAME_LENGTH);
+						continue;
+					}
+					break;
+				}
+				char[] password;
+				while (true) {
+					password = console.readPassword("Password: ");
+					try {
+						User.validatePassword(password);
+					} catch (IllegalArgumentException e) {
+						console.printf(
+								"Password must be no more than %s byte(s).%n",
+								User.MAX_PASSWORD_LENGTH);
+						continue;
+					}
+					char[] retypedPassword = console.readPassword(
+							"Re-type password:");
+					if (!Arrays.equals(password, retypedPassword)) {
+						console.printf(
+								"Password and re-typed password do not match.%n");
+						continue;
+					}
+					break;
+				}
+				users.add(User.newInstance(name, password));
+				Arrays.fill(password, '\0');
+				console.printf("User '%s' added.%n", name);
+				String decision = console.readLine(
+						"Would you like to enter another user? ('Y' for yes): ");
+				addAnotherUser = decision.equals("Y");
+			} while (addAnotherUser);
+			return users;
+		}
+		
 		private final String value;
 		
 		private Command(final String val) {
@@ -146,113 +254,11 @@ public final class UsersCli {
 		public String toString() {
 			return this.value;
 		}
+		
 	}
 	
-	private static void newFile(
-			final Users users,
-			final String arg) throws JAXBException, IOException {
-		String tempArg = arg;
-		System.out.print("Writing to ");
-		OutputStream out = null;
-		if (arg.equals("-")) {
-			System.out.printf("standard output...%n");
-			out = System.out;
-		} else {
-			File file = new File(arg);
-			System.out.printf("'%s'...%n", file.getAbsolutePath());
-			File tempFile = null;
-			do {
-				tempArg = tempArg.concat(".tmp");
-				tempFile = new File(tempArg);
-			} while (tempFile.exists());
-			tempFile.createNewFile();
-			out = new FileOutputStream(tempFile);
-		}
-		try {
-			byte[] xml = users.toXml();
-			out.write(xml);
-			out.flush();
-		} finally {
-			if (out instanceof FileOutputStream) {
-				out.close();
-			}
-		}
-		if (!arg.equals("-")) {
-			File file = new File(arg);
-			File tempFile = new File(tempArg);
-			if (!tempFile.renameTo(file)) {
-				throw new IOException(String.format(
-						"unable to rename '%s' to '%s'", tempFile, file));
-			}
-		}
-	}
-
-	private static Users readFile(
-			final String arg) throws JAXBException, IOException {
-		InputStream in = null;
-		if (arg.equals("-")) {
-			in = System.in;
-		} else {
-			File file = new File(arg);
-			in = new FileInputStream(file);
-		}
-		Users users = null;
-		try {
-			users = Users.newInstanceFrom(in);
-		} finally {
-			if (in instanceof FileInputStream) {
-				in.close();
-			}
-		}
-		return users;
-	}
-	
-	private static List<User> readUsers() {
-		List<User> users = new ArrayList<User>();
-		Console console = System.console();
-		boolean addAnotherUser = false;
-		do {
-			console.printf("User%n");
-			String name;
-			while (true) {
-				name = console.readLine("Name: ");
-				try {
-					User.validateName(name);
-				} catch (IllegalArgumentException e) {
-					console.printf(
-							"Name must be no more than %s byte(s).%n", 
-							User.MAX_NAME_LENGTH);
-					continue;
-				}
-				break;
-			}
-			char[] password;
-			while (true) {
-				password = console.readPassword("Password: ");
-				try {
-					User.validatePassword(password);
-				} catch (IllegalArgumentException e) {
-					console.printf(
-							"Password must be no more than %s byte(s).%n",
-							User.MAX_PASSWORD_LENGTH);
-					continue;
-				}
-				char[] retypedPassword = console.readPassword("Re-type password:");
-				if (!Arrays.equals(password, retypedPassword)) {
-					console.printf("Password and re-typed password do not match.%n");
-					continue;
-				}
-				break;
-			}
-			users.add(User.newInstance(name, password));
-			Arrays.fill(password, '\0');
-			console.printf("User '%s' added.%n", name);
-			String decision = console.readLine(
-					"Would you like to enter another user? ('Y' for yes): ");
-			addAnotherUser = decision.equals("Y");
-		} while (addAnotherUser);
-		return users;
-	}
+	private static final int HELP_OPTION_ORDINAL = 0;
+	private static final int XSD_OPTION_ORDINAL = 1;
 	
 	private final List<String> argList;
 	private ArgsParser argsParser;
@@ -297,7 +303,7 @@ public final class UsersCli {
 					special = true,
 					type = GnuLongOption.class
 			),
-			ordinal = 0,
+			ordinal = HELP_OPTION_ORDINAL,
 			otherOptionBuilders = {
 					@OptionBuilder(
 							name = "h",
@@ -306,8 +312,8 @@ public final class UsersCli {
 			}
 	)
 	public void printHelp() {
-		Option helpOption = this.options.toList().get(0);
-		Option xsdOption = this.options.toList().get(1);
+		Option helpOption = this.options.toList().get(HELP_OPTION_ORDINAL);
+		Option xsdOption = this.options.toList().get(XSD_OPTION_ORDINAL);
 		System.out.printf("Usage: %s COMMAND%n", this.programBeginningUsage);
 		System.out.printf("       %s %s%n", 
 				this.programBeginningUsage, 
@@ -355,7 +361,7 @@ public final class UsersCli {
 	}
 	
 	public void process(final String[] args) {
-		Option helpOption = this.options.toList().get(0);
+		Option helpOption = this.options.toList().get(HELP_OPTION_ORDINAL);
 		String suggestion = String.format(
 				"Try `%s %s' for more information", 
 				this.programBeginningUsage, 

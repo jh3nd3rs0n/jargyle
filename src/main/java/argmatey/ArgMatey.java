@@ -1341,6 +1341,113 @@ public final class ArgMatey {
 	}
 
 	/**
+	 * Thrown to indicate that a provided command line argument is illegal or 
+	 * inappropriate. 
+	 */
+	public static final class IllegalArgException extends RuntimeException {
+		
+		/** The default serial version UID. */
+		private static final long serialVersionUID = 1L;
+		
+		/**
+		 * Returns the detail message based on the provided illegal or 
+		 * inappropriate command line argument, the specified detail message, 
+		 * and the provided cause.
+		 * 
+		 * If the specified detail message is not {@code null}, the specified 
+		 * detail message is returned. Otherwise, a detail message is created. 
+		 * If the provided cause is not {@code null}, its {@code String} 
+		 * representation is appended to that created detail message.  
+		 * 
+		 * @param arg the provided illegal or inappropriate command line 
+		 * argument
+		 * @param message the specified detail message (can be {@code null})
+		 * @param cause the provided cause (can be {@code null})
+		 * @return the specified detail message or a created detail message 
+		 * appended with or without a {@code String} representation of the 
+		 * provided cause 
+		 */
+		private static String getMessage(
+				final String arg,
+				final String message, 
+				final Throwable cause) {
+			if (message != null) {
+				return message;
+			}
+			StringBuilder sb = new StringBuilder(String.format(
+					"illegal argument `%s'", arg));
+			if (cause != null) {
+				sb.append(": ");
+				sb.append(cause.toString());
+			}
+			return sb.toString();
+		}
+		
+		/** The illegal or inappropriate command line argument. */
+		private final String arg;
+
+		/**
+		 * Constructs an {@code IllegalArgException} with the provided illegal 
+		 * or inappropriate command line argument.
+		 * 
+		 * @param a the provided illegal or inappropriate command line argument
+		 */
+		public IllegalArgException(final String a) {
+			this(a, null, null);
+		}
+		
+		/**
+		 * Constructs an {@code IllegalArgException} with the provided illegal 
+		 * or inappropriate command line argument and the specified detail 
+		 * message.
+		 * 
+		 * @param a the provided illegal or inappropriate command line argument
+		 * @param message the specified detail message (can be {@code null})
+		 */
+		public IllegalArgException(final String a, final String message) {
+			this(a, message, null);
+		}
+		
+		/**
+		 * Constructs an {@code IllegalArgException} with the provided illegal 
+		 * or inappropriate command line argument, the specified detail 
+		 * message, and the provided cause.
+		 * 
+		 * @param a the provided illegal or inappropriate command line argument
+		 * @param message the specified detail message (can be {@code null})
+		 * @param cause the provided cause (can be {@code null})
+		 */
+		public IllegalArgException(
+				final String a,
+				final String message,
+				final Throwable cause) {
+			super(getMessage(a, message, cause), cause);
+			this.arg = a;
+		}
+		
+		/**
+		 * Constructs an {@code IllegalArgException} with the provided illegal 
+		 * or inappropriate command line argument and the provided cause.
+		 * 
+		 * @param a the provided illegal or inappropriate command line argument
+		 * @param cause the provided cause (can be {@code null})
+		 */
+		public IllegalArgException(final String a, final Throwable cause) {
+			this(a, null, cause);
+		}
+		
+		/**
+		 * Returns the illegal or inappropriate command line argument.
+		 * 
+		 * @return the illegal or inappropriate command line argument
+		 */
+		public String getArg() {
+			return this.arg;
+		}
+		
+	}
+	
+	/**
 	 * Thrown when an {@code Option} is provided with a command line option 
 	 * argument that is illegal or inappropriate.
 	 */
@@ -3797,7 +3904,7 @@ public final class ArgMatey {
 	 * Converts the provided {@code String} to an {@code Object}.
 	 */
 	public static abstract class StringConverter {
-
+	
 		/**
 		 * Constructs a {@code StringConverter}.
 		 */

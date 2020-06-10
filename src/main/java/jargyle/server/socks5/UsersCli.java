@@ -15,6 +15,7 @@ import javax.xml.bind.JAXBException;
 
 import argmatey.ArgMatey.ArgsParser;
 import argmatey.ArgMatey.GnuLongOption;
+import argmatey.ArgMatey.IllegalArgException;
 import argmatey.ArgMatey.NonparsedArgSink;
 import argmatey.ArgMatey.Option;
 import argmatey.ArgMatey.OptionBuilder;
@@ -290,7 +291,11 @@ public final class UsersCli {
 	@NonparsedArgSink
 	public void addNonparsedArg(final String nonparsedArg) {
 		if (this.command == null) {
-			this.command = Command.getInstance(nonparsedArg);
+			try {
+				this.command = Command.getInstance(nonparsedArg);
+			} catch (IllegalArgumentException e) {
+				throw new IllegalArgException(nonparsedArg, e);
+			}
 		} else {
 			this.argList.add(nonparsedArg);
 		}

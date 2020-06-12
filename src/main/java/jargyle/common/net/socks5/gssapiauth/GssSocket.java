@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.SequenceInputStream;
 import java.net.Socket;
+import java.util.Objects;
 
 import org.ietf.jgss.GSSContext;
 import org.ietf.jgss.GSSException;
@@ -85,9 +86,7 @@ public final class GssSocket extends FilterSocket {
 		
 		@Override
 		public int read(byte[] b, int off, int len) throws IOException {
-			if (b == null) { 
-				throw new NullPointerException(); 
-			}
+			Objects.requireNonNull(b);
 			if (off < 0) {
 				throw new IndexOutOfBoundsException(String.format(
 						"offset is negative: %s", 

@@ -83,24 +83,8 @@ final class AesCbcPkcs5PaddingEncryptedPassword extends EncryptedPassword {
 				encryptedPasswordXml.initializationVector);
 	}
 
-	public static AesCbcPkcs5PaddingEncryptedPassword newInstance(
-			final char[] password) {
-		ByteArrayOutputStream byteArrayOutputStream = 
-				new ByteArrayOutputStream();
-		Writer writer = new OutputStreamWriter(byteArrayOutputStream);
-		for (char ch : password) {
-			try {
-				writer.write(ch);
-			} catch (IOException e) {
-				throw new AssertionError(e);
-			}
-		}
-		try {
-			writer.flush();
-		} catch (IOException e) {
-			throw new AssertionError(e);
-		}
-		byte[] secret = byteArrayOutputStream.toByteArray();
+	private static AesCbcPkcs5PaddingEncryptedPassword newInstance(
+			final byte[] secret) {
 		KeyGenerator keyGenerator = null;
 		try {
 			keyGenerator = KeyGenerator.getInstance(SECRET_KEY_SPEC_ALGORITHM);
@@ -141,6 +125,27 @@ final class AesCbcPkcs5PaddingEncryptedPassword extends EncryptedPassword {
 				secretKey.getEncoded(), 
 				encrypted, 
 				ivParameterSpec.getIV());
+	}
+	
+	public static AesCbcPkcs5PaddingEncryptedPassword newInstance(
+			final char[] password) {
+		ByteArrayOutputStream byteArrayOutputStream = 
+				new ByteArrayOutputStream();
+		Writer writer = new OutputStreamWriter(byteArrayOutputStream);
+		for (char ch : password) {
+			try {
+				writer.write(ch);
+			} catch (IOException e) {
+				throw new AssertionError(e);
+			}
+		}
+		try {
+			writer.flush();
+		} catch (IOException e) {
+			throw new AssertionError(e);
+		}
+		byte[] secret = byteArrayOutputStream.toByteArray();
+		return newInstance(secret);
 	}
 
 	private final byte[] encodedKey;

@@ -48,6 +48,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 /**
  * Provides interfaces and classes for parsing command line arguments and 
@@ -111,10 +112,8 @@ public final class ArgMatey {
 			
 			public ArgHandlerContext(final String[] arguments) {
 				for (String argument : arguments) {
-					if (argument == null) {
-						throw new NullPointerException(
-								"argument(s) must not be null");
-					}
+					Objects.requireNonNull(
+							argument, "argument(s) must not be null");
 				}
 				this.argCharIndex = -1;
 				this.argIndex = -1;
@@ -439,11 +438,8 @@ public final class ArgMatey {
 			protected OptionHandler(final ArgHandler handler, 
 					final Class<? extends Option> optClass) {
 				super(handler);
-				if (optClass == null) {
-					throw new NullPointerException(
-							"Option class must not be null");
-				}
-				this.optionClass = optClass;
+				this.optionClass = Objects.requireNonNull(
+						optClass, "Option class must not be null");
 			}
 			
 			public final Class<?> getOptionClass() {
@@ -574,14 +570,9 @@ public final class ArgMatey {
 				final Options opts, 
 				final ArgHandler handler) {
 			for (String arg : args) {
-				if (arg == null) {
-					throw new NullPointerException(
-							"argument(s) must not be null");
-				}
+				Objects.requireNonNull(arg, "argument(s) must not be null");
 			}
-			if (opts == null) {
-				throw new NullPointerException("Options must not be null");
-			}
+			Objects.requireNonNull(opts, "Options must not be null");
 			ArgHandlerContext handlerContext = new ArgHandlerContext(args);
 			List<Option> optsList = opts.toList();
 			if (optsList.size() > 0) {
@@ -714,65 +705,61 @@ public final class ArgMatey {
 			return resultHolder;
 		}
 		
-		public void parseRemainingTo(final Object obj) {
+		public void parseNextTo(final Object obj) {
+			ParseResultHolder resultHolder = this.parseNext();
 			Class<?> cls = obj.getClass();
+			if (resultHolder.hasNonparsedArg()) {
+				String nonparsedArg = resultHolder.getNonparsedArg();
+				Field[] fields = cls.getFields();
+				for (Field field : fields) {
+					if (field.isAnnotationPresent(NonparsedArgSink.class)) {
+						NonparsedArgSinkAnnotatedElement element =
+								NonparsedArgSinkAnnotatedElement.newInstance(field);
+						element.receive(obj, nonparsedArg);
+						return;
+					}
+				}
+				Method[] methods = cls.getMethods();
+				for (Method method : methods) {
+					if (method.isAnnotationPresent(NonparsedArgSink.class)) {
+						NonparsedArgSinkAnnotatedElement element =
+								NonparsedArgSinkAnnotatedElement.newInstance(method);
+						element.receive(obj, nonparsedArg);
+						return;
+					}
+				}
+			}
+			if (resultHolder.hasOption()) {
+				Option option = resultHolder.getOption();
+				OptionArg optionArg = resultHolder.getOptionArg();
+				Field[] fields = cls.getFields();
+				for (Field field : fields) {
+					if (field.isAnnotationPresent(OptionSink.class)) {
+						OptionSinkAnnotatedElement element =
+								OptionSinkAnnotatedElement.newInstance(field);
+						if (element.defines(option)) {
+							element.receive(obj, optionArg);
+							return;
+						}
+					}
+				}
+				Method[] methods = cls.getMethods();
+				for (Method method : methods) {
+					if (method.isAnnotationPresent(OptionSink.class)) {
+						OptionSinkAnnotatedElement element =
+								OptionSinkAnnotatedElement.newInstance(method);
+						if (element.defines(option)) {
+							element.receive(obj, optionArg);
+							return;
+						}
+					}
+				}
+			}
+		}
+		
+		public void parseRemainingTo(final Object obj) {
 			while (this.hasNext()) {
-				ParseResultHolder parseResultHolder = this.parseNext();
-				if (parseResultHolder.hasNonparsedArg()) {
-					String nonparsedArg = parseResultHolder.getNonparsedArg();
-					boolean elementFound = false;
-					Field[] fields = cls.getFields();
-					for (Field field : fields) {
-						if (field.isAnnotationPresent(NonparsedArgSink.class)) {
-							NonparsedArgSinkAnnotatedElement element =
-									NonparsedArgSinkAnnotatedElement.newInstance(field);
-							elementFound = true;
-							element.receive(obj, nonparsedArg);
-							break;
-						}
-					}
-					if (elementFound) { continue; }
-					Method[] methods = cls.getMethods();
-					for (Method method : methods) {
-						if (method.isAnnotationPresent(NonparsedArgSink.class)) {
-							NonparsedArgSinkAnnotatedElement element =
-									NonparsedArgSinkAnnotatedElement.newInstance(method);
-							elementFound = true;
-							element.receive(obj, nonparsedArg);
-							break;
-						}
-					}
-				}
-				if (parseResultHolder.hasOption()) {
-					Option option = parseResultHolder.getOption();
-					OptionArg optionArg = parseResultHolder.getOptionArg();
-					boolean elementFound = false;
-					Field[] fields = cls.getFields();
-					for (Field field : fields) {
-						if (field.isAnnotationPresent(OptionSink.class)) {
-							OptionSinkAnnotatedElement element =
-									OptionSinkAnnotatedElement.newInstance(field);
-							if (element.defines(option)) {
-								elementFound = true;
-								element.receive(obj, optionArg);
-								break;
-							}
-						}
-					}
-					if (elementFound) { continue; }
-					Method[] methods = cls.getMethods();
-					for (Method method : methods) {
-						if (method.isAnnotationPresent(OptionSink.class)) {
-							OptionSinkAnnotatedElement element =
-									OptionSinkAnnotatedElement.newInstance(method);
-							if (element.defines(option)) {
-								elementFound = true;
-								element.receive(obj, optionArg);
-								break;
-							}
-						}
-					}
-				}
+				this.parseNextTo(obj);
 			}
 		}
 
@@ -1102,6 +1089,7 @@ public final class ArgMatey {
 		 * of type {@code String}
 		 */
 		public DefaultStringConverter(final Class<?> type) {
+			Objects.requireNonNull(type, "type must not be null");
 			Method method = null;
 			Constructor<?> constructor = null;
 			if (!type.equals(String.class)) {
@@ -1832,17 +1820,12 @@ public final class ArgMatey {
 			private String string;
 			
 			Builder(final String optName, final String opt) {
-				if (optName == null) {
-					throw new NullPointerException(
-							"option name must not be null");
-				}
+				Objects.requireNonNull(optName, "option name must not be null");
 				if (optName.isEmpty()) {
 					throw new IllegalArgumentException(
 							"option name must not be empty");
 				}
-				if (opt == null) {
-					throw new NullPointerException("option must not be null");
-				}
+				Objects.requireNonNull(opt, "option must not be null");
 				if (opt.isEmpty()) {
 					throw new IllegalArgumentException(
 							"option must not be empty");
@@ -1920,7 +1903,7 @@ public final class ArgMatey {
 			public Builder otherBuilders(final List<Builder> otherBldrs) {
 				for (Builder otherBldr : otherBldrs) {
 					if (otherBldr == null) {
-						throw new NullPointerException(
+						Objects.requireNonNull(
 								"Builder(s) must not be null");
 					}
 				}
@@ -2502,8 +2485,8 @@ public final class ArgMatey {
 
 		public OptionArg newOptionArg(final String optionArg) {
 			if (!this.optional && optionArg == null) {
-				throw new NullPointerException(
-						"option argument must not be null");
+				Objects.requireNonNull(
+						optionArg, "option argument must not be null");
 			}
 			if (this.optional && optionArg == null) {
 				return null;
@@ -2766,7 +2749,15 @@ public final class ArgMatey {
 	
 	public static final class Options {
 		
-		public static Options newInstance(final Class<?> cls) {
+		public static Options newInstance(final List<Option> opts) {
+			return new Options(opts);
+		}
+		
+		public static Options newInstance(final Option... opts) {
+			return new Options(Arrays.asList(opts));
+		}
+		
+		public static Options newInstanceFrom(final Class<?> cls) {
 			List<OptionSinkAnnotatedElement> optionSinkAnnotatedElements =
 					new ArrayList<OptionSinkAnnotatedElement>();
 			Field[] fields = cls.getFields();
@@ -2795,22 +2786,11 @@ public final class ArgMatey {
 			return newInstance(options);
 		}
 		
-		public static Options newInstance(final List<Option> opts) {
-			return new Options(opts);
-		}
-		
-		public static Options newInstance(final Option... opts) {
-			return new Options(Arrays.asList(opts));
-		}
-		
 		private final List<Option> options;
 		
 		private Options(final List<Option> opts) {
 			for (Option opt : opts) {
-				if (opt == null) {
-					throw new NullPointerException(
-							"Option(s) must not be null");
-				}
+				Objects.requireNonNull(opt, "Option(s) must not be null");
 			}
 			this.options = new ArrayList<Option>(opts);
 		}
@@ -2917,7 +2897,7 @@ public final class ArgMatey {
 				}
 
 				@Override
-				public boolean isTargetFieldType(Class<?> type) {
+				public boolean isTargetFieldType(final Class<?> type) {
 					return type.equals(boolean.class);
 				}
 
@@ -2963,7 +2943,7 @@ public final class ArgMatey {
 				}
 
 				@Override
-				public boolean isTargetFieldType(Class<?> type) {
+				public boolean isTargetFieldType(final Class<?> type) {
 					return type.equals(List.class);
 				}
 
@@ -3002,7 +2982,7 @@ public final class ArgMatey {
 				}
 
 				@Override
-				public boolean isTargetFieldType(Class<?> type) {
+				public boolean isTargetFieldType(final Class<?> type) {
 					return true;
 				}
 
@@ -3302,64 +3282,70 @@ public final class ArgMatey {
 						OptionSink.class.getName()));
 			}
 			if (element instanceof Field) {
-				Field field = (Field) element;
-				int modifiers = field.getModifiers();
-				if (Modifier.isStatic(modifiers)) {
-					throw new IllegalArgumentException(String.format(
-							"element '%s' cannot be static", 
-							element));
-				}
-				if (Modifier.isFinal(modifiers)) {
-					throw new IllegalArgumentException(String.format(
-							"element '%s' cannot be final", 
-							element));
-				}
-				TargetFieldType targetFieldType = TargetFieldType.get(
-						field.getType());
-				if (targetFieldType == null) {
-					StringBuilder sb = new StringBuilder();
-					List<TargetFieldType> list = Arrays.asList(
-							TargetFieldType.values());
-					for (Iterator<TargetFieldType> iterator = list.iterator();
-							iterator.hasNext();) {
-						sb.append(iterator.next().getTargetFieldTypeString());
-						if (iterator.hasNext()) {
-							sb.append(", ");
-						}
-					}
-					throw new IllegalArgumentException(String.format(
-							"element '%s' must be one the following types: %s", 
-							element,
-							sb.toString()));
-				}
+				validateField((Field) element);
 			}
 			if (element instanceof Method) {
-				Method method = (Method) element;
-				int modifiers = method.getModifiers();
-				if (Modifier.isStatic(modifiers)) {
-					throw new IllegalArgumentException(String.format(
-							"element '%s' cannot be static", 
-							element));
-				}
-				TargetMethodParameterTypesType targetMethodParameterTypesType =
-						TargetMethodParameterTypesType.get(
-								method.getParameterTypes());
-				if (targetMethodParameterTypesType == null) {
-					StringBuilder sb = new StringBuilder();
-					List<TargetMethodParameterTypesType> list = Arrays.asList(
-							TargetMethodParameterTypesType.values());
-					for (Iterator<TargetMethodParameterTypesType> iterator = list.iterator();
-							iterator.hasNext();) {
-						sb.append(iterator.next().getTargetMethodParameterTypesString());
-						if (iterator.hasNext()) {
-							sb.append(", ");
-						}
+				validateMethod((Method) element);
+			}
+		}
+		
+		private static void validateField(final Field field) {
+			int modifiers = field.getModifiers();
+			if (Modifier.isStatic(modifiers)) {
+				throw new IllegalArgumentException(String.format(
+						"field '%s' cannot be static", 
+						field));
+			}
+			if (Modifier.isFinal(modifiers)) {
+				throw new IllegalArgumentException(String.format(
+						"field '%s' cannot be final", 
+						field));
+			}
+			TargetFieldType targetFieldType = TargetFieldType.get(
+					field.getType());
+			if (targetFieldType == null) {
+				StringBuilder sb = new StringBuilder();
+				List<TargetFieldType> list = Arrays.asList(
+						TargetFieldType.values());
+				for (Iterator<TargetFieldType> iterator = list.iterator();
+						iterator.hasNext();) {
+					sb.append(iterator.next().getTargetFieldTypeString());
+					if (iterator.hasNext()) {
+						sb.append(", ");
 					}
-					throw new IllegalArgumentException(String.format(
-							"element '%s' must have one the following parameter types: %s", 
-							element,
-							sb.toString()));
 				}
+				throw new IllegalArgumentException(String.format(
+						"field '%s' must be one the following types: %s", 
+						field,
+						sb.toString()));
+			}
+		}
+		
+		private static void validateMethod(final Method method) {
+			int modifiers = method.getModifiers();
+			if (Modifier.isStatic(modifiers)) {
+				throw new IllegalArgumentException(String.format(
+						"method '%s' cannot be static", 
+						method));
+			}
+			TargetMethodParameterTypesType targetMethodParameterTypesType =
+					TargetMethodParameterTypesType.get(
+							method.getParameterTypes());
+			if (targetMethodParameterTypesType == null) {
+				StringBuilder sb = new StringBuilder();
+				List<TargetMethodParameterTypesType> list = Arrays.asList(
+						TargetMethodParameterTypesType.values());
+				for (Iterator<TargetMethodParameterTypesType> iterator = list.iterator();
+						iterator.hasNext();) {
+					sb.append(iterator.next().getTargetMethodParameterTypesString());
+					if (iterator.hasNext()) {
+						sb.append(", ");
+					}
+				}
+				throw new IllegalArgumentException(String.format(
+						"method '%s' must have one the following parameter types: %s", 
+						method,
+						sb.toString()));
 			}
 		}
 		

@@ -6,9 +6,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.BindException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBException;
 
@@ -129,6 +132,9 @@ public final class SocksServerCli {
 	private static final int SOCKS5_USER_PASS_AUTHENTICATOR_OPTION_ORDINAL = 15;
 	private static final int SOCKS5_USERS_OPTION_ORDINAL = 16;
 	
+	private static final Logger LOGGER = Logger.getLogger(
+			SocksServerCli.class.getName());
+	
 	private ArgsParser argsParser;
 	private final ModifiableConfiguration modifiableConfiguration;
 	private String monitoredConfigurationFile;
@@ -137,14 +143,14 @@ public final class SocksServerCli {
 	private final String programBeginningUsage;
 	
 	SocksServerCli() {
-		Options opts = Options.newInstance(this.getClass());
+		Options opts = Options.newInstanceFrom(this.getClass());
 		String progName = System.getProperty(
-				SystemPropertyNameConstants.PROGRAM_NAME_PROPERTY_NAME);
+				SystemPropertyNameConstants.PROGRAM_NAME);
 		if (progName == null) {
 			progName = SocksServer.class.getName();
 		}
 		String progBeginningUsage = System.getProperty(
-				SystemPropertyNameConstants.PROGRAM_BEGINNING_USAGE_PROPERTY_NAME);
+				SystemPropertyNameConstants.PROGRAM_BEGINNING_USAGE);
 		if (progBeginningUsage == null) {
 			progBeginningUsage = progName;
 		}
@@ -338,10 +344,10 @@ public final class SocksServerCli {
 				this.programBeginningUsage, 
 				socks5UsersOption.getUsage());
 		System.setProperty(
-				SystemPropertyNameConstants.PROGRAM_NAME_PROPERTY_NAME, 
+				SystemPropertyNameConstants.PROGRAM_NAME, 
 				this.programName);
 		System.setProperty(
-				SystemPropertyNameConstants.PROGRAM_BEGINNING_USAGE_PROPERTY_NAME, 
+				SystemPropertyNameConstants.PROGRAM_BEGINNING_USAGE, 
 				newProgramBeginningUsage);
 		List<String> remainingArgList = new ArrayList<String>();
 		while (this.argsParser.hasNext()) {
@@ -374,7 +380,7 @@ public final class SocksServerCli {
 				usernamePassword);
 	}
 	
-	public Configuration newConfiguration() {
+	private Configuration newConfiguration() {
 		Configuration configuration = null;
 		if (this.monitoredConfigurationFile == null) {
 			configuration = ImmutableConfiguration.newInstance(
@@ -600,6 +606,8 @@ public final class SocksServerCli {
 			e.printStackTrace(System.err);
 			System.exit(-1);
 		}
+		Configuration configuration = this.newConfiguration();
+		this.startSocksServer(configuration);
 	}
 	
 	@OptionSink(
@@ -658,6 +666,34 @@ public final class SocksServerCli {
 			final UsernamePasswordAuthenticator usernamePasswordAuthenticator) {
 		this.modifiableConfiguration.setSocks5UsernamePasswordAuthenticator(
 				usernamePasswordAuthenticator);
+	}
+	
+	private void startSocksServer(final Configuration configuration) {
+		SocksServer socksServer = new SocksServer(configuration);
+		try {
+			socksServer.start();
+		} catch (BindException e) {
+			LOGGER.log(
+					Level.SEVERE, 
+					String.format(
+							"Unable to listen on port %s at %s", 
+							configuration.getSettings().getLastValue(
+									SettingSpec.PORT, Port.class),
+							configuration.getSettings().getLastValue(
+									SettingSpec.HOST, Host.class)), 
+					e);
+			System.exit(-1);
+		} catch (IOException e) {
+			LOGGER.log(
+					Level.SEVERE, 
+					"Error in starting SocksServer", 
+					e);
+			System.exit(-1);
+		}
+		LOGGER.info(String.format(
+				"Listening on port %s at %s", 
+				socksServer.getPort(),
+				socksServer.getHost()));
 	}
 
 }

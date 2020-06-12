@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.Objects;
 
 import jargyle.common.util.UnsignedByte;
 import jargyle.common.util.UnsignedShort;
@@ -37,6 +38,7 @@ public final class Message {
 	public static Message newInstance(
 			final MessageType messageType,
 			final byte[] token) {
+		Objects.requireNonNull(messageType, "message type must not be null");
 		int tknStartIndex = -1;
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		tknStartIndex++;
@@ -47,9 +49,7 @@ public final class Message {
 		if (messageType.equals(MessageType.ABORT)) {
 			tknStartIndex++;
 		} else {
-			if (token == null) {
-				throw new NullPointerException("token must not be null");
-			}
+			Objects.requireNonNull(token, "token must not be null");
 			int tokenLength = token.length;
 			if (tokenLength > MAX_TOKEN_LENGTH) {
 				throw new IllegalArgumentException(String.format(

@@ -6,6 +6,7 @@ import java.io.InterruptedIOException;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
@@ -171,9 +172,8 @@ public final class TcpRelayServer {
 			final Socket serverSock, 
 			final int bffrSize, 
 			final int tmt) {
-		if (clientSock == null || serverSock == null) {
-			throw new NullPointerException();
-		}
+		Objects.requireNonNull(clientSock, "client socket must not be null");
+		Objects.requireNonNull(serverSock, "server-facing socket must not be null");
 		if (bffrSize < 1) {
 			throw new IllegalArgumentException("buffer size must not be less than 1");
 		}

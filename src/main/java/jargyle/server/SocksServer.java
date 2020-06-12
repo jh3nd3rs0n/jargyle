@@ -1,21 +1,15 @@
 package jargyle.server;
 
 import java.io.IOException;
-import java.net.BindException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import jargyle.common.net.SocketSettings;
 import jargyle.common.util.NonnegativeInteger;
 
 public final class SocksServer {
-
-	private static final Logger LOGGER = Logger.getLogger(
-			SocksServer.class.getName());
 	
 	public static void main(final String[] args) {
 		/* 
@@ -25,32 +19,6 @@ public final class SocksServer {
 				"com.sun.xml.bind.v2.bytecode.ClassTailor.noOptimize", "true");
 		SocksServerCli socksServerCli = new SocksServerCli();
 		socksServerCli.process(args);
-		Configuration configuration = socksServerCli.newConfiguration();
-		SocksServer socksServer = new SocksServer(configuration);
-		try {
-			socksServer.start();
-		} catch (BindException e) {
-			LOGGER.log(
-					Level.SEVERE, 
-					String.format(
-							"Unable to listen on port %s at %s", 
-							configuration.getSettings().getLastValue(
-									SettingSpec.PORT, Port.class),
-							configuration.getSettings().getLastValue(
-									SettingSpec.HOST, Host.class)), 
-					e);
-			System.exit(-1);
-		} catch (IOException e) {
-			LOGGER.log(
-					Level.SEVERE, 
-					"Error in starting SocksServer", 
-					e);
-			System.exit(-1);
-		}
-		LOGGER.info(String.format(
-				"Listening on port %s at %s", 
-				socksServer.getPort(),
-				socksServer.getHost()));
 	}
 	
 	private final int backlog;

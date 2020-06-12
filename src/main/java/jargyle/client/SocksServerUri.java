@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
+import java.util.Objects;
 
 public abstract class SocksServerUri {
 
@@ -78,12 +79,8 @@ public abstract class SocksServerUri {
 	
 	public SocksServerUri(
 			final Scheme schm, final String hst, final Integer prt) {
-		if (schm == null) {
-			throw new NullPointerException("scheme must not be null");
-		}
-		if (hst == null) {
-			throw new NullPointerException("host must not be null or empty");
-		}
+		Objects.requireNonNull(schm, "scheme must not be null");
+		Objects.requireNonNull(hst, "host must not be null or empty");
 		if (hst.isEmpty()) {
 			throw new IllegalArgumentException("host must not be null or empty");
 		}

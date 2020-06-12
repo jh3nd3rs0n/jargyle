@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.util.Objects;
 
 import jargyle.common.net.SocketSettings;
 
@@ -18,10 +19,8 @@ public abstract class SocksClient {
 		private final SocksServerUri socksServerUri;
 		
 		public Builder(final SocksServerUri serverUri) {
-			if (serverUri == null) {
-				throw new NullPointerException(
-						"SOCKS server URI must not be null");
-			}
+			Objects.requireNonNull(
+					serverUri, "SOCKS server URI must not be null");
 			this.bindHost = DEFAULT_BIND_HOST;
 			this.bindPort = DEFAULT_BIND_PORT;
 			this.connectTimeout = DEFAULT_CONNECT_TIMEOUT;

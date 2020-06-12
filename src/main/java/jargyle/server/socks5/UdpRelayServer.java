@@ -7,6 +7,7 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
@@ -490,13 +491,11 @@ final class UdpRelayServer {
 			final Criteria blockedSocks5IncomingUdpAddrCriteria, 
 			final int bffrSize, 
 			final int tmt) {
-		if (clientDatagramSock == null 
-				|| serverDatagramSock == null
-				|| desiredDestinationAddr == null
-				|| allowedSocks5IncomingUdpAddrCriteria == null
-				|| blockedSocks5IncomingUdpAddrCriteria == null) {
-			throw new NullPointerException();
-		}
+		Objects.requireNonNull(clientDatagramSock);
+		Objects.requireNonNull(serverDatagramSock);
+		Objects.requireNonNull(desiredDestinationAddr);
+		Objects.requireNonNull(allowedSocks5IncomingUdpAddrCriteria);
+		Objects.requireNonNull(blockedSocks5IncomingUdpAddrCriteria);
 		UdpRequestHeader.validateDesiredDestinationAddress(
 				desiredDestinationAddr);
 		UdpRequestHeader.validateDesiredDestinationPort(

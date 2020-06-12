@@ -269,14 +269,14 @@ public final class UsersCli {
 	private final String programBeginningUsage;
 	
 	UsersCli() {
-		Options opts = Options.newInstance(this.getClass());
+		Options opts = Options.newInstanceFrom(this.getClass());
 		String progName = System.getProperty(
-				SystemPropertyNameConstants.PROGRAM_NAME_PROPERTY_NAME);
+				SystemPropertyNameConstants.PROGRAM_NAME);
 		if (progName == null) {
 			progName = Users.class.getName();
 		}
 		String progBeginningUsage = System.getProperty(
-				SystemPropertyNameConstants.PROGRAM_BEGINNING_USAGE_PROPERTY_NAME);
+				SystemPropertyNameConstants.PROGRAM_BEGINNING_USAGE);
 		if (progBeginningUsage == null) {
 			progBeginningUsage = progName;
 		}

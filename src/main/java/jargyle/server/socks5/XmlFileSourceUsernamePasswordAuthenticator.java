@@ -168,8 +168,7 @@ public final class XmlFileSourceUsernamePasswordAuthenticator
 		HashedPassword hashedPassword = user.getHashedPassword();
 		HashedPassword otherHashedPassword = HashedPassword.newInstance(
 				password, hashedPassword);
-		if (!hashedPassword.equals(otherHashedPassword)) { return false; }
-		return true;
+		return hashedPassword.equals(otherHashedPassword);
 	}
 	
 	private void startMonitoringXmlFile() {

@@ -93,9 +93,9 @@ public class UsernamePasswordAuthenticator {
 							(UsernamePasswordAuthenticator) method.invoke(
 									null, parameterString);
 				} catch (IllegalAccessException e) {
-					throw new AssertionError(e);
+					throw new IllegalArgumentException(e);
 				} catch (IllegalArgumentException e) {
-					throw new AssertionError(e);
+					throw new IllegalArgumentException(e);
 				} catch (InvocationTargetException e) {
 					throw new RuntimeException(e.getCause()); 
 				}
@@ -106,18 +106,18 @@ public class UsernamePasswordAuthenticator {
 				} catch (NoSuchMethodException e) {
 					throw new IllegalArgumentException(e);
 				} catch (SecurityException e) {
-					throw new AssertionError(e);
+					throw new IllegalArgumentException(e);
 				}
 				try {
 					usernamePasswordAuthenticator = 
 							(UsernamePasswordAuthenticator) ctor.newInstance(
 									parameterString);
 				} catch (InstantiationException e) {
-					throw new AssertionError(e);
+					throw new IllegalArgumentException(e);
 				} catch (IllegalAccessException e) {
-					throw new AssertionError(e);
+					throw new IllegalArgumentException(e);
 				} catch (IllegalArgumentException e) {
-					throw new AssertionError(e);
+					throw new IllegalArgumentException(e);
 				} catch (InvocationTargetException e) {
 					throw new RuntimeException(e.getCause());
 				}

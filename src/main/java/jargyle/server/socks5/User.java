@@ -3,6 +3,7 @@ package jargyle.server.socks5;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.Objects;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -69,9 +70,8 @@ public final class User {
 	}
 	
 	public static User newInstance(final String name, final char[] password) {
-		if (name == null || password == null) {
-			throw new NullPointerException();
-		}
+		Objects.requireNonNull(name, "name must not be null");
+		Objects.requireNonNull(password, "password must not be null");
 		validateName(name);
 		validatePassword(password);
 		return new User(name, HashedPassword.newInstance(password));

@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
@@ -119,11 +120,8 @@ public final class XmlFileSourceConfigurationService
 	private ExecutorService executor;
 	private final File xmlFile;
 	
-	private XmlFileSourceConfigurationService(
-			final File file) {
-		if (file == null) {
-			throw new NullPointerException("XML file must not be null");
-		}
+	private XmlFileSourceConfigurationService(final File file) {
+		Objects.requireNonNull(file, "XML file must not be null");
 		if (!file.exists()) {
 			throw new IllegalArgumentException(String.format(
 					"'%s' does not exist", file));

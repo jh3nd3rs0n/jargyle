@@ -683,19 +683,18 @@ public final class ArgMatey {
 			try {
 				this.argHandler.handle(this.getArgs()[this.getArgIndex()], 
 						this.argHandlerContext);
-			} catch (Throwable t) {
+			} catch (RuntimeException e) {
 				/* 
 				 * failure atomicity (return back to most recent working state) 
 				 */
 				this.argHandlerContext = recentArgHandlerContext;
-				if (t instanceof Error) {
-					Error e = (Error) t;
-					throw e;
-				}
-				if (t instanceof RuntimeException) {
-					RuntimeException rte = (RuntimeException) t;
-					throw rte;
-				}
+				throw e;
+			} catch (Error e) {
+				/* 
+				 * failure atomicity (return back to most recent working state) 
+				 */
+				this.argHandlerContext = recentArgHandlerContext;
+				throw e;
 			}
 			ArgHandlerContextProperties properties = 
 					new ArgHandlerContextProperties(this.argHandlerContext);

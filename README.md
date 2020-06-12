@@ -676,9 +676,7 @@ Once you have run the command, the user of the specified name will be removed fr
 Jargyle has the following SOCKS5 authentication methods to choose from:
 
 -   `NO_AUTHENTICATION_REQUIRED`: No authentication required
-
 -   `GSSAPI`: GSS-API authentication
-
 -   `USERNAME_PASSWORD`: Username password authentication
 
 You can have one or more of the aforementioned authentication methods set in the setting `socks5.authMethods` as a space separated list.
@@ -778,7 +776,6 @@ If any of the usernames or any of the passwords contain a space character, then 
 If any of the usernames or any of the passwords contain a plus sign character (`+`) not used for URL encoding, then each plus sign character not used for URL encoding must be replaced with the URL encoding character `%2B`.
 
 If any of the usernames or any of the passwords contain a percent sign character (`%`) not used for URL encoding, then each percent sign character not used for URL encoding must be replaced with the URL encoding character `%25`.
-
 
 `jargyle.server.socks5.XmlFileSourceUsernamePasswordAuthenticator`: This class authenticates the username and password based on the [XML file of users](#3-7-managing-socks5-users-for-username-password-authentication) whose file name is provided as a parameter string
 
@@ -905,9 +902,7 @@ Please note that the scheme in the URI specifies the SOCKS protocol to be used w
 Jargyle has the following SOCKS5 authentication methods to choose from for accessing the other SOCKS5 server:
 
 -   `NO_AUTHENTICATION_REQUIRED`: No authentication required
-
 -   `GSSAPI`: GSS-API authentication
-
 -   `USERNAME_PASSWORD`: Username password authentication
 
 You can have one or more of the aforementioned authentication methods set in the setting `externalClient.socks5.authMethods` as a space separated list.
@@ -1082,7 +1077,9 @@ The command line option `--settings=externalClient.socks5.gssapiServiceName=rcmd
 ## 4. TODO
 
 -   [ ] Javadoc documentation on all types
+
 -   [ ] Unit testing on other types
+
 -   [ ] Further documentation
     -   [ ] Command line reference
     -   [ ] Configuration file reference

@@ -333,7 +333,7 @@ public final class SocksServerCli {
 			),
 			ordinal = SOCKS5_USERS_OPTION_ORDINAL
 	)
-	public void doSocks5UsersMode() {
+	public void doSocks5UsersManagementMode() {
 		if (this.argsParser == null) {
 			throw new IllegalStateException(
 					"process(java.lang.String[]) must be run first");

@@ -41,7 +41,7 @@ public final class FileMonitor implements Runnable {
 		return watchService;
 	}
 	
-	private final void notify(
+	private final void notifyFileStatusListener(
 			final WatchEvent.Kind<?> kind, final File file) {
 		if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
 			this.fileStatusListener.fileCreated(file);
@@ -104,7 +104,7 @@ public final class FileMonitor implements Runnable {
 				Path filename = event.context();
 				Path child = dir.resolve(filename);
 				if (absoluteFile.equals(child.toFile())) {
-					this.notify(kind, absoluteFile);
+					this.notifyFileStatusListener(kind, absoluteFile);
 				}
 			}
 			if (!key.reset()) {

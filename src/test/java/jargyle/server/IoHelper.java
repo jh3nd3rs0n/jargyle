@@ -5,12 +5,12 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
 
-public final class IO {
+public final class IoHelper {
 	
 	private static final int DEFAULT_READ_TIMEOUT = 60000; // 1 minute
 	
 	private static final String READ_TIMEOUT_PROPERTY_NAME = 
-			"jargyle.server.io.readTimeout";
+			"jargyle.server.ioHelper.readTimeout";
 			
 	private static final int HALF_SECOND = 500;
 	
@@ -77,6 +77,6 @@ public final class IO {
 		out.flush();
 	}
 
-	private IO() { }
+	private IoHelper() { }
 	
 }

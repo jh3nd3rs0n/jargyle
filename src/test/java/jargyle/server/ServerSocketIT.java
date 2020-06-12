@@ -149,8 +149,8 @@ public class ServerSocketIT {
 				}
 				System.out.printf("Sending to client: %s (%s bytes)%n", 
 						string, string.getBytes().length);
-				IO.writeThenFlush(string.getBytes(), socketOut);
-				byte[] b = IO.readFrom(socketIn);
+				IoHelper.writeThenFlush(string.getBytes(), socketOut);
+				byte[] b = IoHelper.readFrom(socketIn);
 				String returningString = new String(b);
 				System.out.printf("Received from client: %s (%s bytes)%n", 
 						returningString, returningString.getBytes().length);
@@ -220,11 +220,11 @@ public class ServerSocketIT {
 			}
 			InputStream socketIn = socket.getInputStream();
 			OutputStream socketOut = socket.getOutputStream();
-			byte[] b = IO.readFrom(socketIn);
+			byte[] b = IoHelper.readFrom(socketIn);
 			String str = new String(b);
 			System.out.printf("Received from server: %s (%s bytes)%n", 
 					str, str.getBytes().length);
-			IO.writeThenFlush(str.getBytes(), socketOut);
+			IoHelper.writeThenFlush(str.getBytes(), socketOut);
 		} finally {
 			if (socket != null) {
 				socket.close();

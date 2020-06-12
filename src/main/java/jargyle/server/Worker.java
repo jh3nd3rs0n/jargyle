@@ -91,17 +91,7 @@ final class Worker implements Runnable {
 			if (!this.configureClientSocket(this.clientSocket)) {
 				return;
 			}
-			InputStream clientInputStream = null;
-			try {
-				clientInputStream = this.clientSocket.getInputStream();
-			} catch (IOException e) {
-				LOGGER.log(
-						Level.WARNING, 
-						this.format("Error in getting the input stream from "
-								+ "the client"), 
-						e);
-				return;
-			}
+			InputStream clientInputStream = this.clientSocket.getInputStream();
 			int version = -1;
 			try {
 				version = clientInputStream.read();
@@ -113,7 +103,6 @@ final class Worker implements Runnable {
 						e);
 				return;
 			}
-			if (version == -1) { return; }
 			if ((byte) version == Version.V5.byteValue()) {
 				Socks5Worker socks5Worker = new Socks5Worker(
 						this.clientSocket, 

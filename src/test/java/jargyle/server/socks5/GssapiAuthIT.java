@@ -17,7 +17,7 @@ import org.junit.Test;
 
 import jargyle.common.net.socks5.gssapiauth.GssapiProtectionLevel;
 import jargyle.common.net.socks5.gssapiauth.GssapiProtectionLevels;
-import jargyle.server.Configurations;
+import jargyle.server.ConfigurationFactory;
 import jargyle.server.DatagramSocketIT;
 import jargyle.server.ServerSocketIT;
 import jargyle.server.SocketIT;
@@ -142,12 +142,12 @@ public class GssapiAuthIT {
 		String string = "Hello, World";
 		String returningString = DatagramSocketIT.echoThroughDatagramSocket(
 				string, 
-				Socks5Clients.newSocks5Client(
+				Socks5ClientFactory.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.NONE), false),
-				Configurations.newConfigurationUsingSocks5GssapiAuth());
+				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuth());
 		assertEquals(string, returningString);
 	}
 
@@ -157,12 +157,12 @@ public class GssapiAuthIT {
 		String string = "The quick brown fox jumped over the lazy dog";
 		String returningString = DatagramSocketIT.echoThroughDatagramSocket(
 				string, 
-				Socks5Clients.newSocks5Client(
+				Socks5ClientFactory.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.NONE), false),
-				Configurations.newConfigurationUsingSocks5GssapiAuth());
+				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuth());
 		assertEquals(string, returningString);
 	}
 
@@ -172,12 +172,12 @@ public class GssapiAuthIT {
 		String string = "Goodbye, World";
 		String returningString = DatagramSocketIT.echoThroughDatagramSocket(
 				string, 
-				Socks5Clients.newSocks5Client(
+				Socks5ClientFactory.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.NONE), false),
-				Configurations.newConfigurationUsingSocks5GssapiAuth());
+				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuth());
 		assertEquals(string, returningString);
 	}
 
@@ -187,12 +187,12 @@ public class GssapiAuthIT {
 		String string = "Hello, World";
 		String returningString = DatagramSocketIT.echoThroughDatagramSocket(
 				string, 
-				Socks5Clients.newSocks5Client(
+				Socks5ClientFactory.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.NONE), true),
-				Configurations.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
+				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
 		assertEquals(string, returningString);
 	}
 
@@ -202,12 +202,12 @@ public class GssapiAuthIT {
 		String string = "The quick brown fox jumped over the lazy dog";
 		String returningString = DatagramSocketIT.echoThroughDatagramSocket(
 				string, 
-				Socks5Clients.newSocks5Client(
+				Socks5ClientFactory.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.NONE), true),
-				Configurations.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
+				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
 		assertEquals(string, returningString);
 	}
 
@@ -217,12 +217,12 @@ public class GssapiAuthIT {
 		String string = "Goodbye, World";
 		String returningString = DatagramSocketIT.echoThroughDatagramSocket(
 				string, 
-				Socks5Clients.newSocks5Client(
+				Socks5ClientFactory.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.NONE), true),
-				Configurations.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
+				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
 		assertEquals(string, returningString);
 	}
 
@@ -233,12 +233,12 @@ public class GssapiAuthIT {
 		String string = "Hello, World";
 		String returningString = DatagramSocketIT.echoThroughDatagramSocket(
 				string, 
-				Socks5Clients.newSocks5Client(
+				Socks5ClientFactory.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG_AND_CONF), true),
-				Configurations.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
+				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
 		assertEquals(string, returningString);
 	}
 
@@ -249,12 +249,12 @@ public class GssapiAuthIT {
 		String string = "The quick brown fox jumped over the lazy dog";
 		String returningString = DatagramSocketIT.echoThroughDatagramSocket(
 				string, 
-				Socks5Clients.newSocks5Client(
+				Socks5ClientFactory.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG_AND_CONF), true),
-				Configurations.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
+				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
 		assertEquals(string, returningString);
 	}
 
@@ -265,12 +265,12 @@ public class GssapiAuthIT {
 		String string = "Goodbye, World";
 		String returningString = DatagramSocketIT.echoThroughDatagramSocket(
 				string, 
-				Socks5Clients.newSocks5Client(
+				Socks5ClientFactory.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG_AND_CONF), true),
-				Configurations.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
+				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
 		assertEquals(string, returningString);
 	}
 
@@ -280,12 +280,12 @@ public class GssapiAuthIT {
 		String string = "Hello, World";
 		String returningString = DatagramSocketIT.echoThroughDatagramSocket(
 				string, 
-				Socks5Clients.newSocks5Client(
+				Socks5ClientFactory.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG), true),
-				Configurations.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
+				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
 		assertEquals(string, returningString);
 	}
 
@@ -295,12 +295,12 @@ public class GssapiAuthIT {
 		String string = "The quick brown fox jumped over the lazy dog";
 		String returningString = DatagramSocketIT.echoThroughDatagramSocket(
 				string, 
-				Socks5Clients.newSocks5Client(
+				Socks5ClientFactory.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG), true),
-				Configurations.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
+				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
 		assertEquals(string, returningString);
 	}
 
@@ -310,12 +310,12 @@ public class GssapiAuthIT {
 		String string = "Goodbye, World";
 		String returningString = DatagramSocketIT.echoThroughDatagramSocket(
 				string, 
-				Socks5Clients.newSocks5Client(
+				Socks5ClientFactory.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG), true),
-				Configurations.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
+				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
 		assertEquals(string, returningString);
 	}
 
@@ -326,12 +326,12 @@ public class GssapiAuthIT {
 		String string = "Hello, World";
 		String returningString = DatagramSocketIT.echoThroughDatagramSocket(
 				string, 
-				Socks5Clients.newSocks5Client(
+				Socks5ClientFactory.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG_AND_CONF), false),
-				Configurations.newConfigurationUsingSocks5GssapiAuth());
+				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuth());
 		assertEquals(string, returningString);
 	}
 
@@ -342,12 +342,12 @@ public class GssapiAuthIT {
 		String string = "The quick brown fox jumped over the lazy dog";
 		String returningString = DatagramSocketIT.echoThroughDatagramSocket(
 				string, 
-				Socks5Clients.newSocks5Client(
+				Socks5ClientFactory.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG_AND_CONF), false),
-				Configurations.newConfigurationUsingSocks5GssapiAuth());
+				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuth());
 		assertEquals(string, returningString);
 	}
 
@@ -358,12 +358,12 @@ public class GssapiAuthIT {
 		String string = "Goodbye, World";
 		String returningString = DatagramSocketIT.echoThroughDatagramSocket(
 				string, 
-				Socks5Clients.newSocks5Client(
+				Socks5ClientFactory.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG_AND_CONF), false),
-				Configurations.newConfigurationUsingSocks5GssapiAuth());
+				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuth());
 		assertEquals(string, returningString);
 	}
 
@@ -373,12 +373,12 @@ public class GssapiAuthIT {
 		String string = "Hello, World";
 		String returningString = DatagramSocketIT.echoThroughDatagramSocket(
 				string, 
-				Socks5Clients.newSocks5Client(
+				Socks5ClientFactory.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG), false),
-				Configurations.newConfigurationUsingSocks5GssapiAuth());
+				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuth());
 		assertEquals(string, returningString);
 	}
 
@@ -388,12 +388,12 @@ public class GssapiAuthIT {
 		String string = "The quick brown fox jumped over the lazy dog";
 		String returningString = DatagramSocketIT.echoThroughDatagramSocket(
 				string, 
-				Socks5Clients.newSocks5Client(
+				Socks5ClientFactory.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG), false),
-				Configurations.newConfigurationUsingSocks5GssapiAuth());
+				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuth());
 		assertEquals(string, returningString);
 	}
 
@@ -403,12 +403,12 @@ public class GssapiAuthIT {
 		String string = "Goodbye, World";
 		String returningString = DatagramSocketIT.echoThroughDatagramSocket(
 				string, 
-				Socks5Clients.newSocks5Client(
+				Socks5ClientFactory.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG), false),
-				Configurations.newConfigurationUsingSocks5GssapiAuth());
+				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuth());
 		assertEquals(string, returningString);
 	}
 
@@ -418,12 +418,12 @@ public class GssapiAuthIT {
 		String string = "Hello, World";
 		String returningString = ServerSocketIT.echoThroughServerSocket(
 				string, 
-				Socks5Clients.newSocks5Client(
+				Socks5ClientFactory.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.NONE), false),
-				Configurations.newConfigurationUsingSocks5GssapiAuth());
+				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuth());
 		assertEquals(string, returningString);
 	}
 
@@ -433,12 +433,12 @@ public class GssapiAuthIT {
 		String string = "The quick brown fox jumped over the lazy dog";
 		String returningString = ServerSocketIT.echoThroughServerSocket(
 				string, 
-				Socks5Clients.newSocks5Client(
+				Socks5ClientFactory.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.NONE), false),
-				Configurations.newConfigurationUsingSocks5GssapiAuth());
+				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuth());
 		assertEquals(string, returningString);
 	}
 
@@ -448,12 +448,12 @@ public class GssapiAuthIT {
 		String string = "Goodbye, World";
 		String returningString = ServerSocketIT.echoThroughServerSocket(
 				string, 
-				Socks5Clients.newSocks5Client(
+				Socks5ClientFactory.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.NONE), false),
-				Configurations.newConfigurationUsingSocks5GssapiAuth());
+				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuth());
 		assertEquals(string, returningString);
 	}
 
@@ -463,12 +463,12 @@ public class GssapiAuthIT {
 		String string = "Hello, World";
 		String returningString = ServerSocketIT.echoThroughServerSocket(
 				string, 
-				Socks5Clients.newSocks5Client(
+				Socks5ClientFactory.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.NONE), true),
-				Configurations.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
+				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
 		assertEquals(string, returningString);
 	}
 
@@ -478,12 +478,12 @@ public class GssapiAuthIT {
 		String string = "The quick brown fox jumped over the lazy dog";
 		String returningString = ServerSocketIT.echoThroughServerSocket(
 				string, 
-				Socks5Clients.newSocks5Client(
+				Socks5ClientFactory.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.NONE), true),
-				Configurations.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
+				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
 		assertEquals(string, returningString);
 	}
 
@@ -493,12 +493,12 @@ public class GssapiAuthIT {
 		String string = "Goodbye, World";
 		String returningString = ServerSocketIT.echoThroughServerSocket(
 				string, 
-				Socks5Clients.newSocks5Client(
+				Socks5ClientFactory.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.NONE), true),
-				Configurations.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
+				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
 		assertEquals(string, returningString);
 	}
 
@@ -509,12 +509,12 @@ public class GssapiAuthIT {
 		String string = "Hello, World";
 		String returningString = ServerSocketIT.echoThroughServerSocket(
 				string, 
-				Socks5Clients.newSocks5Client(
+				Socks5ClientFactory.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG_AND_CONF), true),
-				Configurations.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
+				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
 		assertEquals(string, returningString);
 	}
 
@@ -525,12 +525,12 @@ public class GssapiAuthIT {
 		String string = "The quick brown fox jumped over the lazy dog";
 		String returningString = ServerSocketIT.echoThroughServerSocket(
 				string, 
-				Socks5Clients.newSocks5Client(
+				Socks5ClientFactory.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG_AND_CONF), true),
-				Configurations.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
+				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
 		assertEquals(string, returningString);
 	}
 
@@ -541,12 +541,12 @@ public class GssapiAuthIT {
 		String string = "Goodbye, World";
 		String returningString = ServerSocketIT.echoThroughServerSocket(
 				string, 
-				Socks5Clients.newSocks5Client(
+				Socks5ClientFactory.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG_AND_CONF), true),
-				Configurations.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
+				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
 		assertEquals(string, returningString);
 	}
 	
@@ -556,12 +556,12 @@ public class GssapiAuthIT {
 		String string = "Hello, World";
 		String returningString = ServerSocketIT.echoThroughServerSocket(
 				string, 
-				Socks5Clients.newSocks5Client(
+				Socks5ClientFactory.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG), true),
-				Configurations.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
+				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
 		assertEquals(string, returningString);
 	}
 
@@ -571,12 +571,12 @@ public class GssapiAuthIT {
 		String string = "The quick brown fox jumped over the lazy dog";
 		String returningString = ServerSocketIT.echoThroughServerSocket(
 				string, 
-				Socks5Clients.newSocks5Client(
+				Socks5ClientFactory.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG), true),
-				Configurations.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
+				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
 		assertEquals(string, returningString);
 	}
 
@@ -586,12 +586,12 @@ public class GssapiAuthIT {
 		String string = "Goodbye, World";
 		String returningString = ServerSocketIT.echoThroughServerSocket(
 				string, 
-				Socks5Clients.newSocks5Client(
+				Socks5ClientFactory.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG), true),
-				Configurations.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
+				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
 		assertEquals(string, returningString);
 	}
 
@@ -602,12 +602,12 @@ public class GssapiAuthIT {
 		String string = "Hello, World";
 		String returningString = ServerSocketIT.echoThroughServerSocket(
 				string, 
-				Socks5Clients.newSocks5Client(
+				Socks5ClientFactory.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG_AND_CONF), false),
-				Configurations.newConfigurationUsingSocks5GssapiAuth());
+				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuth());
 		assertEquals(string, returningString);
 	}
 
@@ -618,12 +618,12 @@ public class GssapiAuthIT {
 		String string = "The quick brown fox jumped over the lazy dog";
 		String returningString = ServerSocketIT.echoThroughServerSocket(
 				string, 
-				Socks5Clients.newSocks5Client(
+				Socks5ClientFactory.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG_AND_CONF), false),
-				Configurations.newConfigurationUsingSocks5GssapiAuth());
+				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuth());
 		assertEquals(string, returningString);
 	}
 
@@ -634,12 +634,12 @@ public class GssapiAuthIT {
 		String string = "Goodbye, World";
 		String returningString = ServerSocketIT.echoThroughServerSocket(
 				string, 
-				Socks5Clients.newSocks5Client(
+				Socks5ClientFactory.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG_AND_CONF), false),
-				Configurations.newConfigurationUsingSocks5GssapiAuth());
+				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuth());
 		assertEquals(string, returningString);
 	}
 
@@ -649,12 +649,12 @@ public class GssapiAuthIT {
 		String string = "Hello, World";
 		String returningString = ServerSocketIT.echoThroughServerSocket(
 				string, 
-				Socks5Clients.newSocks5Client(
+				Socks5ClientFactory.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG), false),
-				Configurations.newConfigurationUsingSocks5GssapiAuth());
+				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuth());
 		assertEquals(string, returningString);
 	}
 
@@ -664,12 +664,12 @@ public class GssapiAuthIT {
 		String string = "The quick brown fox jumped over the lazy dog";
 		String returningString = ServerSocketIT.echoThroughServerSocket(
 				string, 
-				Socks5Clients.newSocks5Client(
+				Socks5ClientFactory.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG), false),
-				Configurations.newConfigurationUsingSocks5GssapiAuth());
+				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuth());
 		assertEquals(string, returningString);
 	}
 
@@ -679,12 +679,12 @@ public class GssapiAuthIT {
 		String string = "Goodbye, World";
 		String returningString = ServerSocketIT.echoThroughServerSocket(
 				string, 
-				Socks5Clients.newSocks5Client(
+				Socks5ClientFactory.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG), false),
-				Configurations.newConfigurationUsingSocks5GssapiAuth());
+				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuth());
 		assertEquals(string, returningString);
 	}
 
@@ -694,12 +694,12 @@ public class GssapiAuthIT {
 		String string = "Hello, World";
 		String returningString = SocketIT.echoThroughSocket(
 				string, 
-				Socks5Clients.newSocks5Client(
+				Socks5ClientFactory.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.NONE), false),
-				Configurations.newConfigurationUsingSocks5GssapiAuth());
+				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuth());
 		assertEquals(string, returningString);
 	}
 
@@ -709,12 +709,12 @@ public class GssapiAuthIT {
 		String string = "The quick brown fox jumped over the lazy dog";
 		String returningString = SocketIT.echoThroughSocket(
 				string, 
-				Socks5Clients.newSocks5Client(
+				Socks5ClientFactory.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.NONE), false),
-				Configurations.newConfigurationUsingSocks5GssapiAuth());
+				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuth());
 		assertEquals(string, returningString);
 	}
 
@@ -724,12 +724,12 @@ public class GssapiAuthIT {
 		String string = "Goodbye, World";
 		String returningString = SocketIT.echoThroughSocket(
 				string, 
-				Socks5Clients.newSocks5Client(
+				Socks5ClientFactory.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.NONE), false),
-				Configurations.newConfigurationUsingSocks5GssapiAuth());
+				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuth());
 		assertEquals(string, returningString);
 	}
 
@@ -739,12 +739,12 @@ public class GssapiAuthIT {
 		String string = "Hello, World";
 		String returningString = SocketIT.echoThroughSocket(
 				string, 
-				Socks5Clients.newSocks5Client(
+				Socks5ClientFactory.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.NONE), true),
-				Configurations.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
+				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
 		assertEquals(string, returningString);
 	}
 
@@ -754,12 +754,12 @@ public class GssapiAuthIT {
 		String string = "The quick brown fox jumped over the lazy dog";
 		String returningString = SocketIT.echoThroughSocket(
 				string, 
-				Socks5Clients.newSocks5Client(
+				Socks5ClientFactory.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.NONE), true),
-				Configurations.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
+				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
 		assertEquals(string, returningString);
 	}
 
@@ -769,12 +769,12 @@ public class GssapiAuthIT {
 		String string = "Goodbye, World";
 		String returningString = SocketIT.echoThroughSocket(
 				string, 
-				Socks5Clients.newSocks5Client(
+				Socks5ClientFactory.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.NONE), true),
-				Configurations.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
+				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
 		assertEquals(string, returningString);
 	}
 
@@ -785,12 +785,12 @@ public class GssapiAuthIT {
 		String string = "Hello, World";
 		String returningString = SocketIT.echoThroughSocket(
 				string, 
-				Socks5Clients.newSocks5Client(
+				Socks5ClientFactory.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG_AND_CONF), true),
-				Configurations.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
+				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
 		assertEquals(string, returningString);
 	}
 
@@ -801,12 +801,12 @@ public class GssapiAuthIT {
 		String string = "The quick brown fox jumped over the lazy dog";
 		String returningString = SocketIT.echoThroughSocket(
 				string, 
-				Socks5Clients.newSocks5Client(
+				Socks5ClientFactory.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG_AND_CONF), true),
-				Configurations.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
+				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
 		assertEquals(string, returningString);
 	}
 
@@ -817,12 +817,12 @@ public class GssapiAuthIT {
 		String string = "Goodbye, World";
 		String returningString = SocketIT.echoThroughSocket(
 				string, 
-				Socks5Clients.newSocks5Client(
+				Socks5ClientFactory.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG_AND_CONF), true),
-				Configurations.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
+				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
 		assertEquals(string, returningString);
 	}
 
@@ -832,12 +832,12 @@ public class GssapiAuthIT {
 		String string = "Hello, World";
 		String returningString = SocketIT.echoThroughSocket(
 				string, 
-				Socks5Clients.newSocks5Client(
+				Socks5ClientFactory.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG), true),
-				Configurations.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
+				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
 		assertEquals(string, returningString);
 	}
 
@@ -847,12 +847,12 @@ public class GssapiAuthIT {
 		String string = "The quick brown fox jumped over the lazy dog";
 		String returningString = SocketIT.echoThroughSocket(
 				string, 
-				Socks5Clients.newSocks5Client(
+				Socks5ClientFactory.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG), true),
-				Configurations.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
+				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
 		assertEquals(string, returningString);
 	}
 
@@ -862,12 +862,12 @@ public class GssapiAuthIT {
 		String string = "Goodbye, World";
 		String returningString = SocketIT.echoThroughSocket(
 				string, 
-				Socks5Clients.newSocks5Client(
+				Socks5ClientFactory.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG), true),
-				Configurations.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
+				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
 		assertEquals(string, returningString);
 	}
 
@@ -878,12 +878,12 @@ public class GssapiAuthIT {
 		String string = "Hello, World";
 		String returningString = SocketIT.echoThroughSocket(
 				string, 
-				Socks5Clients.newSocks5Client(
+				Socks5ClientFactory.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG_AND_CONF), false),
-				Configurations.newConfigurationUsingSocks5GssapiAuth());
+				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuth());
 		assertEquals(string, returningString);
 	}
 
@@ -894,12 +894,12 @@ public class GssapiAuthIT {
 		String string = "The quick brown fox jumped over the lazy dog";
 		String returningString = SocketIT.echoThroughSocket(
 				string, 
-				Socks5Clients.newSocks5Client(
+				Socks5ClientFactory.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG_AND_CONF), false),
-				Configurations.newConfigurationUsingSocks5GssapiAuth());
+				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuth());
 		assertEquals(string, returningString);
 	}
 
@@ -910,12 +910,12 @@ public class GssapiAuthIT {
 		String string = "Goodbye, World";
 		String returningString = SocketIT.echoThroughSocket(
 				string, 
-				Socks5Clients.newSocks5Client(
+				Socks5ClientFactory.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG_AND_CONF), false),
-				Configurations.newConfigurationUsingSocks5GssapiAuth());
+				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuth());
 		assertEquals(string, returningString);
 	}
 
@@ -925,12 +925,12 @@ public class GssapiAuthIT {
 		String string = "Hello, World";
 		String returningString = SocketIT.echoThroughSocket(
 				string, 
-				Socks5Clients.newSocks5Client(
+				Socks5ClientFactory.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG), false),
-				Configurations.newConfigurationUsingSocks5GssapiAuth());
+				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuth());
 		assertEquals(string, returningString);
 	}
 
@@ -940,12 +940,12 @@ public class GssapiAuthIT {
 		String string = "The quick brown fox jumped over the lazy dog";
 		String returningString = SocketIT.echoThroughSocket(
 				string, 
-				Socks5Clients.newSocks5Client(
+				Socks5ClientFactory.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG), false),
-				Configurations.newConfigurationUsingSocks5GssapiAuth());
+				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuth());
 		assertEquals(string, returningString);
 	}
 
@@ -955,12 +955,12 @@ public class GssapiAuthIT {
 		String string = "Goodbye, World";
 		String returningString = SocketIT.echoThroughSocket(
 				string, 
-				Socks5Clients.newSocks5Client(
+				Socks5ClientFactory.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG), false),
-				Configurations.newConfigurationUsingSocks5GssapiAuth());
+				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuth());
 		assertEquals(string, returningString);
 	}
 	

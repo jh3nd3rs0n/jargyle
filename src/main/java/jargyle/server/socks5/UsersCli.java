@@ -207,13 +207,13 @@ public final class UsersCli {
 					name = console.readLine("Name: ");
 					try {
 						User.validateName(name);
+						break;
 					} catch (IllegalArgumentException e) {
 						console.printf(
 								"Name must be no more than %s byte(s).%n", 
 								User.MAX_NAME_LENGTH);
 						continue;
 					}
-					break;
 				}
 				char[] password;
 				while (true) {
@@ -228,12 +228,13 @@ public final class UsersCli {
 					}
 					char[] retypedPassword = console.readPassword(
 							"Re-type password:");
-					if (!Arrays.equals(password, retypedPassword)) {
+					if (Arrays.equals(password, retypedPassword)) {
+						break;
+					} else {
 						console.printf(
 								"Password and re-typed password do not match.%n");
 						continue;
 					}
-					break;
 				}
 				users.add(User.newInstance(name, password));
 				Arrays.fill(password, '\0');

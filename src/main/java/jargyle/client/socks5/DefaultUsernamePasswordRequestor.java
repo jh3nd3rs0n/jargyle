@@ -20,26 +20,26 @@ public final class DefaultUsernamePasswordRequestor
 			username = console.readLine("Username: ");
 			try {
 				UsernamePassword.validateUsername(username);
+				break;
 			} catch (IllegalArgumentException e) {
 				console.printf(
 						"Username must be no more than %s byte(s).%n", 
 						UsernamePassword.MAX_USERNAME_LENGTH);
 				continue;
 			}
-			break;
 		}
 		char[] password;
 		while (true) {
 			password = console.readPassword("Password: ");
 			try {
 				UsernamePassword.validatePassword(password);
+				break;
 			} catch (IllegalArgumentException e) {
 				console.printf(
 						"Password must be no more than %s byte(s).%n", 
 						UsernamePassword.MAX_PASSWORD_LENGTH);
 				continue;
 			}
-			break;
 		}
 		return UsernamePassword.newInstance(username, password);
 	}

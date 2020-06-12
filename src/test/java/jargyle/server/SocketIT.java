@@ -104,11 +104,11 @@ public class SocketIT {
 			try {
 				InputStream in = this.clientSocket.getInputStream();
 				OutputStream out = this.clientSocket.getOutputStream();
-				byte[] b = IO.readFrom(in);
+				byte[] b = IoHelper.readFrom(in);
 				String string = new String(b);
 				System.out.printf("Received from client: %s (%s bytes)%n", 
 						string, string.getBytes().length);
-				IO.writeThenFlush(string.getBytes(), out);
+				IoHelper.writeThenFlush(string.getBytes(), out);
 			} catch (IOException e) {
 				e.printStackTrace();
 			} finally {
@@ -151,8 +151,8 @@ public class SocketIT {
 			OutputStream out = echoSocket.getOutputStream();
 			System.out.printf("Sending to server: %s (%s bytes)%n", 
 					string, string.getBytes().length);
-			IO.writeThenFlush(string.getBytes(), out);
-			byte[] b = IO.readFrom(in);
+			IoHelper.writeThenFlush(string.getBytes(), out);
+			byte[] b = IoHelper.readFrom(in);
 			returningString = new String(b);
 			System.out.printf("Received from server: %s (%s bytes)%n", 
 					returningString,

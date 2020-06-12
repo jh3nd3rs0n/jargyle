@@ -43,7 +43,7 @@ import jargyle.server.Criterion;
 import jargyle.server.CriterionOperator;
 import jargyle.server.SettingSpec;
 import jargyle.server.Settings;
-import jargyle.server.SocksClients;
+import jargyle.server.SocksClientFactory;
 import jargyle.server.TcpRelayServer;
 
 public final class Socks5Worker implements Runnable {
@@ -64,7 +64,7 @@ public final class Socks5Worker implements Runnable {
 			final Socket clientSock, 
 			final Configuration config) {
 		Settings sttngs = config.getSettings();
-		SocksClient client = SocksClients.newSocksClient(config);
+		SocksClient client = SocksClientFactory.newSocksClient(config);
 		this.clientInputStream = null;
 		this.clientOutputStream = null;
 		this.clientSocket = clientSock;
@@ -817,26 +817,8 @@ public final class Socks5Worker implements Runnable {
 	@Override
 	public void run() {
 		try {
-			try {
-				this.clientInputStream = this.clientSocket.getInputStream();
-			} catch (IOException e) {
-				LOGGER.log(
-						Level.WARNING, 
-						this.format("Error in getting the input stream from "
-								+ "the client"), 
-						e);
-				return;
-			}
-			try {
-				this.clientOutputStream = this.clientSocket.getOutputStream();
-			} catch (IOException e) {
-				LOGGER.log(
-						Level.WARNING, 
-						this.format("Error in getting the output stream from "
-								+ "the client"), 
-						e);
-				return;
-			}
+			this.clientInputStream = this.clientSocket.getInputStream();
+			this.clientOutputStream = this.clientSocket.getOutputStream();
 			Method method = this.selectMethod();
 			if (method == null) { return; } 
 			Socket socket = this.authenticateUsing(method);

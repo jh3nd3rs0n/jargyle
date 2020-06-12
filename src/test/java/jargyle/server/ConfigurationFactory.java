@@ -4,7 +4,7 @@ import jargyle.common.net.socks5.AuthMethod;
 import jargyle.common.net.socks5.AuthMethods;
 import jargyle.server.socks5.StringSourceUsernamePasswordAuthenticator;
 
-public final class Configurations {
+public final class ConfigurationFactory {
 
 	public static Configuration newConfiguration() {
 		ImmutableConfiguration.Builder builder = new ImmutableConfiguration.Builder();
@@ -43,5 +43,5 @@ public final class Configurations {
 		return builder.build();
 	}
 	
-	private Configurations() { }
+	private ConfigurationFactory() { }
 }

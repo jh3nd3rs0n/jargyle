@@ -4,9 +4,9 @@
 
 Jargyle is a Java SOCKS5 server. It has the following features:
 
-- It is a 100% implementation of the [SOCKS5 protocol specification](https://tools.ietf.org/html/rfc1928) which includes [username password authentication](https://tools.ietf.org/html/rfc1929) and [GSS-API authentication](https://tools.ietf.org/html/rfc1961)
+-   It is a 100% implementation of the [SOCKS5 protocol specification](https://tools.ietf.org/html/rfc1928) which includes [username password authentication](https://tools.ietf.org/html/rfc1929) and [GSS-API authentication](https://tools.ietf.org/html/rfc1961)
 
-- It can have its external connections be set through another SOCKS5 server
+-   It can have its external connections be set through another SOCKS5 server
 
 **Disclaimer:**
 
@@ -14,65 +14,65 @@ Jargyle is a hobby project and is currently subject to breaking changes. Jargyle
 
 ## Contents
 
-- [1. Requirements](#1-requirements)
+-   [1. Requirements](#1-requirements)
 
-- [2. Building](#2-building)
+-   [2. Building](#2-building)
 
-- [3. Running Jargyle](#3-running-jargyle)
+-   [3. Running Jargyle](#3-running-jargyle)
 
-- [3. 1. Usage](#3-1-usage)
+-   [3. 1. Usage](#3-1-usage)
   
-- [3. 2. Creating a Configuration File](#3-2-creating-a-configuration-file)
+-   [3. 2. Creating a Configuration File](#3-2-creating-a-configuration-file)
   
-- [3. 3. Supplementing a Configuration File with Command Line Options](#3-3-supplementing-a-configuration-file-with-command-line-options)
+-   [3. 3. Supplementing a Configuration File with Command Line Options](#3-3-supplementing-a-configuration-file-with-command-line-options)
   
-- [3. 4. Combining Configuration Files](#3-4-combining-configuration-files)
+-   [3. 4. Combining Configuration Files](#3-4-combining-configuration-files)
   
-- [3. 5. Running Jargyle with a Configuration File](#3-5-running-jargyle-with-a-configuration-file)
+-   [3. 5. Running Jargyle with a Configuration File](#3-5-running-jargyle-with-a-configuration-file)
 
-- [3. 6. Running Jargyle with a Monitored Configuration File](#3-6-running-jargyle-with-a-monitored-configuration-file)
+-   [3. 6. Running Jargyle with a Monitored Configuration File](#3-6-running-jargyle-with-a-monitored-configuration-file)
   
-- [3. 7. Managing SOCKS5 Users (for Username Password Authentication)](#3-7-managing-socks5-users-for-username-password-authentication)
+-   [3. 7. Managing SOCKS5 Users (for Username Password Authentication)](#3-7-managing-socks5-users-for-username-password-authentication)
   
-- [3. 7. 1. Creating a Users File](#3-7-1-creating-a-users-file)
+-   [3. 7. 1. Creating a Users File](#3-7-1-creating-a-users-file)
   	
-- [3. 7. 2. Adding Users to an Existing Users File](#3-7-2-adding-users-to-an-existing-users-file)
+-   [3. 7. 2. Adding Users to an Existing Users File](#3-7-2-adding-users-to-an-existing-users-file)
   	
-- [3. 7. 3. Removing a User from an Existing Users File](#3-7-3-removing-a-user-from-an-existing-users-file)
+-   [3. 7. 3. Removing a User from an Existing Users File](#3-7-3-removing-a-user-from-an-existing-users-file)
   	
-- [3. 8. Using SOCKS5 Authentication](#3-8-using-socks5-authentication)
+-   [3. 8. Using SOCKS5 Authentication](#3-8-using-socks5-authentication)
   
-- [3. 8. 1. Using No Authentication](#3-8-1-using-no-authentication)
+-   [3. 8. 1. Using No Authentication](#3-8-1-using-no-authentication)
     
-- [3. 8. 2. Using Username Password Authentication](#3-8-2-using-username-password-authentication)
+-   [3. 8. 2. Using Username Password Authentication](#3-8-2-using-username-password-authentication)
     
-- [3. 8. 3. Using GSS-API Authentication](#3-8-3-using-gss-api-authentication)
+-   [3. 8. 3. Using GSS-API Authentication](#3-8-3-using-gss-api-authentication)
 
-- [3. 9. With External Connections Set Through Another SOCKS Server](#3-9-with-external-connections-set-through-another-socks-server)
+-   [3. 9. With External Connections Set Through Another SOCKS Server](#3-9-with-external-connections-set-through-another-socks-server)
 
-- [3. 9. 1. Using SOCKS5 Authentication](#3-9-1-using-socks5-authentication)
+-   [3. 9. 1. Using SOCKS5 Authentication](#3-9-1-using-socks5-authentication)
 
-- [3. 9. 1. 1. Using No Authentication](#3-9-1-1-using-no-authentication)
+-   [3. 9. 1. 1. Using No Authentication](#3-9-1-1-using-no-authentication)
 
-- [3. 9. 1. 2. Using Username Password Authentication](#3-9-1-2-using-username-password-authentication)
+-   [3. 9. 1. 2. Using Username Password Authentication](#3-9-1-2-using-username-password-authentication)
 
-- [3. 9. 1. 3. Using GSS-API Authentication](#3-9-1-3-using-gss-api-authentication)
+-   [3. 9. 1. 3. Using GSS-API Authentication](#3-9-1-3-using-gss-api-authentication)
 
-- [4. TODO](#4-todo)
+-   [4. TODO](#4-todo)
 
-- [5. Contact](#5-contact)
+-   [5. Contact](#5-contact)
 
 ## 1. Requirements
 
-- Apache Maven&#8482; 3.3.9 or higher 
+-   Apache Maven&#8482; 3.3.9 or higher 
 
-- Java&#8482; SDK 1.8 or higher
+-   Java&#8482; SDK 1.8 or higher
 
 ## 2. Building
 
 To build and package Jargyle as an executable jar file, run the following commands:
 
-```
+```bash
 
     cd jargyle
     mvn package
@@ -83,7 +83,7 @@ To build and package Jargyle as an executable jar file, run the following comman
 
 To run Jargyle without any command line arguments, you can run the following command:
 
-```
+```bash
 
     java -jar target/jargyle-${VERSION}.jar
 
@@ -97,7 +97,7 @@ The aforementioned command will run Jargyle on port 1080 at address 0.0.0.0 usin
 
 The following is the command line help for Jargyle (displayed when using the command line option `--help`):
 
-```
+```text
 
     Usage: jargyle.server.SocksServer [OPTIONS]
            jargyle.server.SocksServer --config-file-xsd
@@ -146,7 +146,7 @@ The following is the command line help for Jargyle (displayed when using the com
 
 The following is a list of available settings for the SOCKS server (displayed when using the command line option `--settings-help`):
 
-```
+```text
 
     SETTINGS:
     
@@ -312,7 +312,7 @@ The following is a list of available settings for the SOCKS server (displayed wh
 
 The following is the command line help for managing SOCKS5 users for username password authentication (displayed when using the command line options `--socks5-users --help`):
 
-```
+```text
 
     Usage: jargyle.server.SocksServer --socks5-users COMMAND
            jargyle.server.SocksServer --socks5-users --help
@@ -340,7 +340,7 @@ You can create a configuration file by using the command line option `--new-conf
 
 The following command creates an empty configuration file:
 
-```
+```bash
 
     java -jar target/jargyle-${VERSION}.jar --new-config-file=configuration.xml
 
@@ -359,7 +359,7 @@ Any preceding command line options that do not terminate before the command line
 
 The following command creates a configuration file with the port number, the number of allowed backlogged connections, and no authentication required:
 
-```
+```bash
 
     java -jar target/jargyle-${VERSION}.jar --settings=port=1234,backlog=100,socks5.authMethods=NO_AUTHENTICATION_REQUIRED --new-config-file=configuration.xml
 
@@ -386,7 +386,7 @@ You can supplement an existing configuration file with command line options.
 
 The following command adds one command line options before the existing configuration file and another command line option after the existing configuration file:
 
-```
+```bash
 
     java -jar target/jargyle-${VERSION}.jar --settings=clientSocketSettings=SO_TIMEOUT=500 --config-file=configuration.xml --settings=socketSettings=SO_TIMEOUT=0 --new-config-file=new_configuration.xml
 
@@ -415,7 +415,7 @@ You can combine multiple configuration files into one configuration file.
 
 The following command combines the two earlier configuration files into one:
 
-```
+```bash
 
     java -jar target/jargyle-${VERSION}.jar --config-file=configuration.xml --config-file=new_configuration.xml --new-config-file=combined_configuration.xml
 
@@ -449,7 +449,7 @@ Also, if a setting of the same name appears more than once in the configuration 
 
 To run Jargyle with a configuration file, you can use the command line option `--config-file`
 
-```
+```bash
 
     java -jar target/jargyle-${VERSION}.jar --config-file=configuration.xml
 
@@ -463,7 +463,7 @@ You can run Jargyle with a configuration file to be monitored for any changes to
 
 To run Jargyle with a monitored configuration file, you can use the command line option `--monitored-config-file`
 
-```
+```bash
 
     java -jar target/jargyle-${VERSION}.jar --monitored-config-file=configuration.xml
 
@@ -473,10 +473,10 @@ Unlike the command line option `--config-file`, the monitored configuration file
 
 The following are the settings in the monitored configuration file that will have no effect if changed during the running configuration:
 
-- `backlog`
-- `host`
-- `port`
-- `socketSettings` 
+-   `backlog`
+-   `host`
+-   `port`
+-   `socketSettings` 
 
 ### 3. 7. Managing SOCKS5 Users (for Username Password Authentication)
 
@@ -486,7 +486,7 @@ You can manage SOCKS5 users stored in an XML file called a users file. A users f
 
 To create a users file, you would run the following command:
 
-```
+```bash
 
     java -jar target/jargyle-${VERSION}.jar --socks5-users create-new-file FILE
 
@@ -496,7 +496,7 @@ Where `FILE` would be the name for the new users file.
 
 Once you have run the command, an interactive prompt will ask you if you want to enter a user.
 
-```
+```text
 
     java -jar target/jargyle-${VERSION}.jar --socks5-users create-new-file users.xml
     Would you like to enter a user? ('Y' for yes): 
@@ -505,7 +505,7 @@ Once you have run the command, an interactive prompt will ask you if you want to
 
 If you do not want to enter a user, a new empty users file will be created. 
 
-```
+```text
 
     Would you like to enter a user? ('Y' for yes): n
     Writing to 'users.xml'...
@@ -523,7 +523,7 @@ If you do not want to enter a user, a new empty users file will be created.
 
 If you want to enter a user, the prompt will ask you for the user's name, password, and re-typed password. It will repeat the process to add another user if you want to continue to enter another user. If you do not want to enter any more users, the new users file will be created.
 
-```
+```text
 
     Would you like to enter a user? ('Y' for yes): Y
     User
@@ -584,7 +584,7 @@ If you want to enter a user, the prompt will ask you for the user's name, passwo
 
 To add users to an existing users file, you would run the following command:
 
-```
+```bash
 
     java -jar target/jargyle-${VERSION}.jar --socks5-users add-users-to-file FILE
 
@@ -594,7 +594,7 @@ Where `FILE` would be the name for the existing users file.
 
 Once you have run the command, an interactive prompt will ask you for the new user's name, password, and re-typed password. It will repeat the process to add another user if you want to continue to enter another user. If you do not want to enter any more users, the updated users file will be saved.
 
-```
+```text
 
     java -jar target/jargyle-${VERSION}.jar --socks5-users add-users-to-file users.xml
     User
@@ -649,7 +649,7 @@ Once you have run the command, an interactive prompt will ask you for the new us
 
 To remove a user from an existing users file, you would run the following command:
 
-```
+```bash
 
     java -jar target/jargyle-${VERSION}.jar --socks5-users remove-user NAME FILE
 
@@ -659,7 +659,7 @@ Where `NAME` would be the name of the user and `FILE` would be the name for the 
 
 Once you have run the command, the user of the specified name will be removed from the existing users file.
 
-```
+```text
 
     java -jar target/jargyle-${VERSION}.jar --socks5-users remove-user Jafar users.xml
     User 'Jafar' removed
@@ -702,17 +702,17 @@ Once you have run the command, the user of the specified name will be removed fr
 
 Jargyle has the following SOCKS5 authentication methods to choose from:
 
-- `NO_AUTHENTICATION_REQUIRED`: No authentication required
+-   `NO_AUTHENTICATION_REQUIRED`: No authentication required
 
-- `GSSAPI`: GSS-API authentication
+-   `GSSAPI`: GSS-API authentication
 
-- `USERNAME_PASSWORD`: Username password authentication
+-   `USERNAME_PASSWORD`: Username password authentication
 
 You can have one or more of the aforementioned authentication methods set in the setting `socks5.authMethods` as a space separated list.
 
 Partial command line example:
 
-```
+```text
 
     "--settings=socks5.authMethods=NO_AUTHENTICATION_REQUIRED GSSAPI"
 
@@ -736,7 +736,7 @@ However, if other authentication methods are to be used in addition to `NO_AUTHE
 
 Partial command line example:
 
-```
+```text
 
     "--settings=socks5.authMethods=NO_AUTHENTICATION_REQUIRED GSSAPI USERNAME_PASSWORD"
 
@@ -756,7 +756,7 @@ To use username password authentication, you will need to have the setting `sock
 
 Partial command line example:
 
-```
+```text
 
     --settings=socks5.authMethods=USERNAME_PASSWORD
 
@@ -774,14 +774,14 @@ Also, you will need to specify the name of the class that extends `jargyle.serve
 
 The following are two provided classes you can use:
 
-- `jargyle.server.socks5.StringSourceUsernamePasswordAuthenticator`
-- `jargyle.server.socks5.XmlFileSourceUsernamePasswordAuthenticator`
+-   `jargyle.server.socks5.StringSourceUsernamePasswordAuthenticator`
+-   `jargyle.server.socks5.XmlFileSourceUsernamePasswordAuthenticator`
 
 `jargyle.server.socks5.StringSourceUsernamePasswordAuthenticator`: This class authenticates the username and password based on the parameter string of a space separated list of USERNAME:PASSWORD pairs
 
 Partial command line example:
 
-```
+```text
 
     "--socks5-user-pass-authenticator=jargyle.server.socks5.StringSourceUsernamePasswordAuthenticator:Aladdin:opensesame Jasmine:mission%3Aimpossible"
 
@@ -811,7 +811,7 @@ If any of the usernames or any of the passwords contain a percent sign character
 
 Partial command line example:
 
-```
+```text
 
     --socks5-user-pass-authenticator=jargyle.server.socks5.XmlFileSourceUsernamePasswordAuthenticator:users.xml
 
@@ -834,7 +834,7 @@ To use GSS-API authentication, you will need to have the setting `socks5.authMet
 
 Partial command line example:
 
-```
+```text
 
     --settings=socks5.authMethods=GSSAPI
 
@@ -852,7 +852,7 @@ Also, you will need to specify Java system properties to use a security mechanis
 
 The following is a sufficient example of using the Kerberos security mechanism:
 
-```
+```bash
 
     java -Djavax.security.auth.useSubjectCredsOnly=false \
 	    -Djava.security.auth.login.config=login.conf \
@@ -868,7 +868,7 @@ The Java system property `-Djava.security.auth.login.config=login.conf` provides
 
 `login.conf`:
 
-```
+```text
 
     com.sun.security.jgss.accept  {
       com.sun.security.auth.module.Krb5LoginModule required
@@ -888,7 +888,7 @@ The Java system property `-Djava.security.krb5.conf=krb5.conf` provides the Kerb
 
 `krb5.conf`:
 
-```
+```text
 
     [libdefaults]
         kdc_realm = EXAMPLE.COM
@@ -911,7 +911,7 @@ You can have Jargyle's external connections set through another SOCKS server. To
 
 Partial command line example:
 
-```
+```text
 
     --settings=externalClient.externalServerUri=socks5://127.0.0.1:23456
 
@@ -931,17 +931,17 @@ Please note that the scheme in the URI specifies the SOCKS protocol to be used w
 
 Jargyle has the following SOCKS5 authentication methods to choose from for accessing the other SOCKS5 server:
 
-- `NO_AUTHENTICATION_REQUIRED`: No authentication required
+-   `NO_AUTHENTICATION_REQUIRED`: No authentication required
 
-- `GSSAPI`: GSS-API authentication
+-   `GSSAPI`: GSS-API authentication
 
-- `USERNAME_PASSWORD`: Username password authentication
+-   `USERNAME_PASSWORD`: Username password authentication
 
 You can have one or more of the aforementioned authentication methods set in the setting `externalClient.socks5.authMethods` as a space separated list.
 
 Partial command line example:
 
-```
+```text
 
     "--settings=externalClient.socks5.authMethods=NO_AUTHENTICATION_REQUIRED GSSAPI"
 
@@ -965,7 +965,7 @@ However, if other authentication methods are to be used in addition to `NO_AUTHE
 
 Partial command line example:
 
-```
+```text
 
     "--settings=externalClient.socks5.authMethods=NO_AUTHENTICATION_REQUIRED GSSAPI USERNAME_PASSWORD"
 
@@ -985,7 +985,7 @@ To use username password authentication, you will need to have the setting `exte
 
 Partial command line example:
 
-```
+```text
 
     --settings=externalClient.socks5.authMethods=USERNAME_PASSWORD
 
@@ -1001,15 +1001,15 @@ Partial configuration file example:
 
 To provide a username and password for the other SOCKS5 server, you can use either of the following command line options:
 
-- `--external-client-socks5-user-pass=USERNAME:PASSWORD`
+-   `--external-client-socks5-user-pass=USERNAME:PASSWORD`
 
-- `--enter-external-client-socks5-user-pass`
+-   `--enter-external-client-socks5-user-pass`
 
 The command line option `--external-client-socks5-user-pass` requires an actual username followed by a colon character (`:`) followed by an actual password.
 
 Partial command line example:
 
-```
+```text
 
     --external-client-socks5-user-pass=Aladdin:opensesame
 
@@ -1031,7 +1031,7 @@ To use GSS-API authentication, you will need to have the setting `externalClient
 
 Partial command line example:
 
-```
+```text
 
     --settings=externalClient.socks5.authMethods=GSSAPI
 
@@ -1049,7 +1049,7 @@ Also, you will need to specify Java system properties to use a security mechanis
 
 The following is a sufficient example of using the Kerberos security mechanism:
 
-```
+```bash
 
     java -Djavax.security.auth.useSubjectCredsOnly=false \
 	    -Djava.security.auth.login.config=login.conf \
@@ -1067,7 +1067,7 @@ The Java system property `-Djava.security.auth.login.config=login.conf` provides
 
 `login.conf`:
 
-```
+```text
 
     com.sun.security.jgss.initiate  {
       com.sun.security.auth.module.Krb5LoginModule required
@@ -1087,7 +1087,7 @@ The Java system property `-Djava.security.krb5.conf=krb5.conf` provides the Kerb
 
 `krb5.conf`:
 
-```
+```text
 
     [libdefaults]
         kdc_realm = EXAMPLE.COM
@@ -1114,11 +1114,11 @@ The command line option `--settings=externalClient.socks5.gssapiServiceName=rcmd
 
 **Further documentation**
 
-- Command line reference
+-   Command line reference
 
-- Configuration file reference
+-   Configuration file reference
   
-- Users file reference
+-   Users file reference
   
 ## 5. Contact
 

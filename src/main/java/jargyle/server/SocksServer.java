@@ -21,13 +21,13 @@ public final class SocksServer {
 		socksServerCli.process(args);
 	}
 	
-	private final int backlog;
+	private int backlog;
 	private final Configuration configuration;
 	private ExecutorService executor;
-	private final Host host;
+	private Host host;
 	private Port port;
 	private ServerSocket serverSocket;
-	private final SocketSettings socketSettings;
+	private SocketSettings socketSettings;
 	private boolean started;
 	private boolean stopped;
 	
@@ -87,8 +87,14 @@ public final class SocksServer {
 		if (this.stopped) {
 			throw new IllegalStateException("SocksServer already stopped");
 		}
+		this.backlog = this.configuration.getSettings().getLastValue(
+				SettingSpec.BACKLOG, NonnegativeInteger.class).intValue();
+		this.host = this.configuration.getSettings().getLastValue(
+				SettingSpec.HOST, Host.class);
 		this.port = this.configuration.getSettings().getLastValue(
-				SettingSpec.PORT, Port.class);		
+				SettingSpec.PORT, Port.class);
+		this.socketSettings = this.configuration.getSettings().getLastValue(
+				SettingSpec.SOCKET_SETTINGS, SocketSettings.class);
 		this.serverSocket.close();
 		this.serverSocket = null;
 		this.executor.shutdownNow();

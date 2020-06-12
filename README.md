@@ -970,7 +970,6 @@ Partial configuration file example:
 To provide a username and password for the other SOCKS5 server, you can use either of the following command line options:
 
 -   `--external-client-socks5-user-pass=USERNAME:PASSWORD`
-
 -   `--enter-external-client-socks5-user-pass`
 
 The command line option `--external-client-socks5-user-pass` requires an actual username followed by a colon character (`:`) followed by an actual password.

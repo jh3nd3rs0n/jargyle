@@ -43,7 +43,7 @@ import jargyle.server.Criterion;
 import jargyle.server.CriterionOperator;
 import jargyle.server.SettingSpec;
 import jargyle.server.Settings;
-import jargyle.server.SocksClientFactory;
+import jargyle.server.SocksClientHelper;
 import jargyle.server.TcpRelayServer;
 
 public final class Socks5Worker implements Runnable {
@@ -64,7 +64,7 @@ public final class Socks5Worker implements Runnable {
 			final Socket clientSock, 
 			final Configuration config) {
 		Settings sttngs = config.getSettings();
-		SocksClient client = SocksClientFactory.newSocksClient(config);
+		SocksClient client = SocksClientHelper.newSocksClient(config);
 		this.clientInputStream = null;
 		this.clientOutputStream = null;
 		this.clientSocket = clientSock;

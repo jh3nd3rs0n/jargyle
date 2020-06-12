@@ -11,7 +11,7 @@ import jargyle.common.net.socks5.AuthMethods;
 import jargyle.common.net.socks5.gssapiauth.GssapiProtectionLevels;
 import jargyle.common.util.PositiveInteger;
 
-public final class SocksClientFactory {
+public final class SocksClientHelper {
 
 	private static void configureSocks5ClientBuilder(
 			final Socks5Client.Builder builder, 
@@ -100,6 +100,6 @@ public final class SocksClientFactory {
 		return builder.build();
 	}
 	
-	private SocksClientFactory() { }
+	private SocksClientHelper() { }
 	
 }

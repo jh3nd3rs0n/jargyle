@@ -8,7 +8,7 @@ import java.io.IOException;
 import org.junit.Test;
 
 import jargyle.client.socks5.UsernamePassword;
-import jargyle.server.ConfigurationFactory;
+import jargyle.server.ConfigurationHelper;
 
 public class Socks5SocketIT {
 	
@@ -18,9 +18,9 @@ public class Socks5SocketIT {
 		String string = "Hello, World";
 		String returningString = echoThroughSocket(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), null), 
-				ConfigurationFactory.newConfiguration());
+				ConfigurationHelper.newConfiguration());
 		assertEquals(string, returningString);
 	}
 	
@@ -30,9 +30,9 @@ public class Socks5SocketIT {
 		String string = "The quick brown fox jumped over the lazy dog";
 		String returningString = echoThroughSocket(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), null), 
-				ConfigurationFactory.newConfiguration());
+				ConfigurationHelper.newConfiguration());
 		assertEquals(string, returningString);
 	}
 
@@ -42,9 +42,9 @@ public class Socks5SocketIT {
 		String string = "Goodbye, World";
 		String returningString = echoThroughSocket(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), null), 
-				ConfigurationFactory.newConfiguration());
+				ConfigurationHelper.newConfiguration());
 		assertEquals(string, returningString);
 	}
 	
@@ -54,11 +54,11 @@ public class Socks5SocketIT {
 		String string = "Hello, World";
 		String returningString = echoThroughSocket(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						UsernamePassword.newInstance("Aladdin", "opensesame".toCharArray())),
-				ConfigurationFactory.newConfigurationUsingSocks5UsernamePasswordAuth());
+				ConfigurationHelper.newConfigurationUsingSocks5UsernamePasswordAuth());
 		assertEquals(string, returningString);
 	}
 
@@ -68,11 +68,11 @@ public class Socks5SocketIT {
 		String string = "The quick brown fox jumped over the lazy dog";
 		String returningString = echoThroughSocket(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						UsernamePassword.newInstance("Jasmine", "mission:impossible".toCharArray())),
-				ConfigurationFactory.newConfigurationUsingSocks5UsernamePasswordAuth());
+				ConfigurationHelper.newConfigurationUsingSocks5UsernamePasswordAuth());
 		assertEquals(string, returningString);
 	}
 	
@@ -82,11 +82,11 @@ public class Socks5SocketIT {
 		String string = "Goodbye, World";
 		String returningString = echoThroughSocket(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						UsernamePassword.newInstance("Abu", "safeDriversSave40%".toCharArray())),
-				ConfigurationFactory.newConfigurationUsingSocks5UsernamePasswordAuth());
+				ConfigurationHelper.newConfigurationUsingSocks5UsernamePasswordAuth());
 		assertEquals(string, returningString);
 	}
 }

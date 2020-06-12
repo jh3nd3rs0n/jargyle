@@ -5,7 +5,6 @@
 Jargyle is a Java SOCKS5 server. It has the following features:
 
 -   It is a 100% implementation of the [SOCKS5 protocol specification](https://tools.ietf.org/html/rfc1928) which includes [username password authentication](https://tools.ietf.org/html/rfc1929) and [GSS-API authentication](https://tools.ietf.org/html/rfc1961)
-
 -   It can have its external connections be set through another SOCKS5 server
 
 **Disclaimer:**
@@ -15,57 +14,33 @@ Jargyle is a hobby project and is currently subject to breaking changes. Jargyle
 ## Contents
 
 -   [1. Requirements](#1-requirements)
-
 -   [2. Building](#2-building)
-
 -   [3. Running Jargyle](#3-running-jargyle)
-
 -   [3. 1. Usage](#3-1-usage)
-  
 -   [3. 2. Creating a Configuration File](#3-2-creating-a-configuration-file)
-  
 -   [3. 3. Supplementing a Configuration File with Command Line Options](#3-3-supplementing-a-configuration-file-with-command-line-options)
-  
 -   [3. 4. Combining Configuration Files](#3-4-combining-configuration-files)
-  
 -   [3. 5. Running Jargyle with a Configuration File](#3-5-running-jargyle-with-a-configuration-file)
-
 -   [3. 6. Running Jargyle with a Monitored Configuration File](#3-6-running-jargyle-with-a-monitored-configuration-file)
-  
 -   [3. 7. Managing SOCKS5 Users (for Username Password Authentication)](#3-7-managing-socks5-users-for-username-password-authentication)
-  
 -   [3. 7. 1. Creating a Users File](#3-7-1-creating-a-users-file)
-  	
 -   [3. 7. 2. Adding Users to an Existing Users File](#3-7-2-adding-users-to-an-existing-users-file)
-  	
 -   [3. 7. 3. Removing a User from an Existing Users File](#3-7-3-removing-a-user-from-an-existing-users-file)
-  	
 -   [3. 8. Using SOCKS5 Authentication](#3-8-using-socks5-authentication)
-  
 -   [3. 8. 1. Using No Authentication](#3-8-1-using-no-authentication)
-    
 -   [3. 8. 2. Using Username Password Authentication](#3-8-2-using-username-password-authentication)
-    
 -   [3. 8. 3. Using GSS-API Authentication](#3-8-3-using-gss-api-authentication)
-
 -   [3. 9. With External Connections Set Through Another SOCKS Server](#3-9-with-external-connections-set-through-another-socks-server)
-
 -   [3. 9. 1. Using SOCKS5 Authentication](#3-9-1-using-socks5-authentication)
-
 -   [3. 9. 1. 1. Using No Authentication](#3-9-1-1-using-no-authentication)
-
 -   [3. 9. 1. 2. Using Username Password Authentication](#3-9-1-2-using-username-password-authentication)
-
 -   [3. 9. 1. 3. Using GSS-API Authentication](#3-9-1-3-using-gss-api-authentication)
-
 -   [4. TODO](#4-todo)
-
 -   [5. Contact](#5-contact)
 
 ## 1. Requirements
 
 -   Apache Maven&#8482; 3.3.9 or higher 
-
 -   Java&#8482; SDK 1.8 or higher
 
 ## 2. Building
@@ -1108,17 +1083,15 @@ The command line option `--settings=externalClient.socks5.gssapiServiceName=rcmd
 
 ## 4. TODO
 
-**Javadoc documentation on all types**
+[ ] Javadoc documentation on all types
 
-**Unit testing on other types**
+[ ] Unit testing on other types
 
-**Further documentation**
+[ ] Further documentation
 
--   Command line reference
-
--   Configuration file reference
-  
--   Users file reference
+-   [ ] Command line reference
+-   [ ] Configuration file reference
+-   [ ] Users file reference
   
 ## 5. Contact
 

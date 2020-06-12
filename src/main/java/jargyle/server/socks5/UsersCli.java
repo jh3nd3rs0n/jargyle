@@ -54,6 +54,7 @@ public final class UsersCli {
 				Users combinedUsers = Users.newInstance(userList);  
 				newFile(combinedUsers, arg);
 			}
+
 		},
 		CREATE_NEW_FILE("create-new-file") {
 			

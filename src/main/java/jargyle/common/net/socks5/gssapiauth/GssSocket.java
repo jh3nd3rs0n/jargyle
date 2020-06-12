@@ -196,9 +196,7 @@ public final class GssSocket extends FilterSocket {
 		
 		@Override
 		public void write(byte[] b, int off, int len) throws IOException {
-			if (b == null) { 
-				throw new NullPointerException(); 
-			}
+			Objects.requireNonNull(b);
 			if (off < 0) {
 				throw new IndexOutOfBoundsException(String.format(
 						"offset is negative: %s", 

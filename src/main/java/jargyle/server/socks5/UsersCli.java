@@ -212,7 +212,6 @@ public final class UsersCli {
 						console.printf(
 								"Name must be no more than %s byte(s).%n", 
 								User.MAX_NAME_LENGTH);
-						continue;
 					}
 				}
 				char[] password;
@@ -224,7 +223,6 @@ public final class UsersCli {
 						console.printf(
 								"Password must be no more than %s byte(s).%n",
 								User.MAX_PASSWORD_LENGTH);
-						continue;
 					}
 					char[] retypedPassword = console.readPassword(
 							"Re-type password:");
@@ -233,7 +231,6 @@ public final class UsersCli {
 					} else {
 						console.printf(
 								"Password and re-typed password do not match.%n");
-						continue;
 					}
 				}
 				users.add(User.newInstance(name, password));
@@ -376,10 +373,10 @@ public final class UsersCli {
 		this.argsParser = ArgsParser.newInstance(args, this.options, false);
 		try {
 			this.argsParser.parseRemainingTo(this);
-		} catch (RuntimeException e) {
-			System.err.printf("%s: %s%n", programName, e);
+		} catch (Throwable t) {
+			System.err.printf("%s: %s%n", programName, t);
 			System.err.println(suggestion);
-			e.printStackTrace(System.err);
+			t.printStackTrace(System.err);
 			System.exit(-1);
 		}
 		if (this.command == null) {

@@ -923,12 +923,16 @@ public final class ArgMatey {
 		extends OptionUsageProvider {
 
 		private DefaultOptionUsageProvider() { 
-			throw new AssertionError();
+			throw new AssertionError(String.format(
+					"%s is not to be constructed", 
+					this.getClass().getName()));
 		}
 		
 		@Override
 		public String getOptionUsage(final OptionUsageParams params) {
-			throw new AssertionError();
+			throw new AssertionError(String.format(
+					"method '%s' is not to be invoked", 
+					this.getClass().getEnclosingMethod()));
 		}
 		
 	}
@@ -1137,16 +1141,9 @@ public final class ArgMatey {
 					} catch (IllegalArgumentException e) {
 						throw new AssertionError(e);
 					} catch (InvocationTargetException e) {
-						Throwable cause = e.getCause();
-						if (cause instanceof Error) {
-							Error err = (Error) cause;
-							throw err;
-						}
-						if (cause instanceof RuntimeException) {
-							RuntimeException rte = (RuntimeException) cause;
-							throw rte;
-						}
-						throw new RuntimeException(cause);
+						throw new AssertionError(
+								InvocationTargetExceptionHelper.toString(e), 
+								e);
 					}
 				} else if (this.stringParameterConstructor != null) {
 					try {
@@ -1159,16 +1156,9 @@ public final class ArgMatey {
 					} catch (IllegalArgumentException e) {
 						throw new AssertionError(e);
 					} catch (InvocationTargetException e) {
-						Throwable cause = e.getCause();
-						if (cause instanceof Error) {
-							Error err = (Error) cause;
-							throw err;
-						}
-						if (cause instanceof RuntimeException) {
-							RuntimeException rte = (RuntimeException) cause;
-							throw rte;
-						}
-						throw new RuntimeException(cause);
+						throw new AssertionError(
+								InvocationTargetExceptionHelper.toString(e), 
+								e);
 					}
 				}
 			}
@@ -1593,6 +1583,23 @@ public final class ArgMatey {
 		
 	}
 	
+	static final class InvocationTargetExceptionHelper {
+		
+		public static String toString(final InvocationTargetException e) {
+			StringBuilder sb = new StringBuilder();
+			sb.append(e.getClass().getName());
+			Throwable cause = e.getCause();
+			if (cause != null) {
+				sb.append(": ");
+				sb.append(cause);
+			}
+			return sb.toString();
+		}
+		
+		private InvocationTargetExceptionHelper() { }
+		
+	}
+	
 	public static final class LongOption extends Option {
 
 		public static final class Builder extends Option.Builder {
@@ -1780,16 +1787,9 @@ public final class ArgMatey {
 				} catch (IllegalArgumentException e) {
 					throw new AssertionError(e);
 				} catch (InvocationTargetException e) {
-					Throwable cause = e.getCause();
-					if (cause instanceof Error) {
-						Error err = (Error) cause;
-						throw err;
-					}
-					if (cause instanceof RuntimeException) {
-						RuntimeException rte = (RuntimeException) cause;
-						throw rte;
-					}
-					throw new RuntimeException(cause);
+					throw new AssertionError(
+							InvocationTargetExceptionHelper.toString(e), 
+							e);
 				}
 			}
 		}
@@ -3058,16 +3058,9 @@ public final class ArgMatey {
 					} catch (IllegalArgumentException e) {
 						throw new AssertionError(e);
 					} catch (InvocationTargetException e) {
-						Throwable cause = e.getCause();
-						if (cause instanceof Error) {
-							Error err = (Error) cause;
-							throw err;
-						}
-						if (cause instanceof RuntimeException) {
-							RuntimeException rte = (RuntimeException) cause;
-							throw rte;
-						}
-						throw new RuntimeException(cause);
+						throw new AssertionError(
+								InvocationTargetExceptionHelper.toString(e), 
+								e);
 					}
 				}
 				
@@ -3124,16 +3117,9 @@ public final class ArgMatey {
 					} catch (IllegalArgumentException e) {
 						throw new AssertionError(e);
 					} catch (InvocationTargetException e) {
-						Throwable cause = e.getCause();
-						if (cause instanceof Error) {
-							Error err = (Error) cause;
-							throw err;
-						}
-						if (cause instanceof RuntimeException) {
-							RuntimeException rte = (RuntimeException) cause;
-							throw rte;
-						}
-						throw new RuntimeException(cause);
+						throw new AssertionError(
+								InvocationTargetExceptionHelper.toString(e), 
+								e);
 					}
 				}
 				
@@ -3170,16 +3156,9 @@ public final class ArgMatey {
 					} catch (IllegalArgumentException e) {
 						throw new AssertionError(e);
 					} catch (InvocationTargetException e) {
-						Throwable cause = e.getCause();
-						if (cause instanceof Error) {
-							Error err = (Error) cause;
-							throw err;
-						}
-						if (cause instanceof RuntimeException) {
-							RuntimeException rte = (RuntimeException) cause;
-							throw rte;
-						}
-						throw new RuntimeException(cause);
+						throw new AssertionError(
+								InvocationTargetExceptionHelper.toString(e), 
+								e);
 					}
 				}
 				
@@ -3221,16 +3200,8 @@ public final class ArgMatey {
 					} catch (IllegalArgumentException e) {
 						throw new AssertionError(e);
 					} catch (InvocationTargetException e) {
-						Throwable cause = e.getCause();
-						if (cause instanceof Error) {
-							Error err = (Error) cause;
-							throw err;
-						}
-						if (cause instanceof RuntimeException) {
-							RuntimeException rte = (RuntimeException) cause;
-							throw rte;
-						}
-						throw new RuntimeException(cause);
+						throw new AssertionError(new InvocationTargetException(
+								e.getCause()));
 					}
 				}
 				
@@ -3430,10 +3401,12 @@ public final class ArgMatey {
 			} else if (type.equals(LongOption.class)) {
 				builder = new LongOption.Builder(name);
 			} else if (type.equals(PosixOption.class)) {
-				if (name.length() == 0) {
-					throw new IllegalArgumentException(String.format(
-							"expected name for %s to be non-empty", 
-							OptionBuilder.class.getName()));
+				if (name.length() != 1) {
+					throw new AssertionError(String.format(
+							"expected name for %s to be only one character. "
+							+ "actual name is '%s'", 
+							OptionBuilder.class.getName(),
+							name));
 				}
 				builder = new PosixOption.Builder(name.charAt(0));
 			} else {
@@ -3474,21 +3447,23 @@ public final class ArgMatey {
 			try {
 				ctor = optionHelpTextProviderClass.getDeclaredConstructor();
 			} catch (NoSuchMethodException e) {
-				throw new IllegalArgumentException(e);
+				throw new AssertionError(e);
 			} catch (SecurityException e) {
-				throw new IllegalArgumentException(e);
+				throw new AssertionError(e);
 			}
 			try {
 				optionHelpTextProvider = 
 						(OptionHelpTextProvider) ctor.newInstance();
 			} catch (InstantiationException e) {
-				throw new IllegalArgumentException(e);
+				throw new AssertionError(e);
 			} catch (IllegalAccessException e) {
-				throw new IllegalArgumentException(e);
+				throw new AssertionError(e);
 			} catch (IllegalArgumentException e) {
-				throw new IllegalArgumentException(e);
+				throw new AssertionError(e);
 			} catch (InvocationTargetException e) {
-				throw new IllegalArgumentException(e);
+				throw new AssertionError(
+						InvocationTargetExceptionHelper.toString(e), 
+						e);
 			}
 			return optionHelpTextProvider;
 		}
@@ -3500,20 +3475,22 @@ public final class ArgMatey {
 			try {
 				ctor = optionUsageProviderClass.getDeclaredConstructor();
 			} catch (NoSuchMethodException e) {
-				throw new IllegalArgumentException(e);
+				throw new AssertionError(e);
 			} catch (SecurityException e) {
-				throw new IllegalArgumentException(e);
+				throw new AssertionError(e);
 			}
 			try {
 				optionUsageProvider = (OptionUsageProvider) ctor.newInstance();
 			} catch (InstantiationException e) {
-				throw new IllegalArgumentException(e);
+				throw new AssertionError(e);
 			} catch (IllegalAccessException e) {
-				throw new IllegalArgumentException(e);
+				throw new AssertionError(e);
 			} catch (IllegalArgumentException e) {
-				throw new IllegalArgumentException(e);
+				throw new AssertionError(e);
 			} catch (InvocationTargetException e) {
-				throw new IllegalArgumentException(e);
+				throw new AssertionError(
+						InvocationTargetExceptionHelper.toString(e), 
+						e);
 			}
 			return optionUsageProvider;
 		}
@@ -3525,20 +3502,22 @@ public final class ArgMatey {
 			try {
 				ctor = stringConverterClass.getDeclaredConstructor();
 			} catch (NoSuchMethodException e) {
-				throw new IllegalArgumentException(e);
+				throw new AssertionError(e);
 			} catch (SecurityException e) {
-				throw new IllegalArgumentException(e);
+				throw new AssertionError(e);
 			}
 			try {
 				stringConverter = (StringConverter) ctor.newInstance();
 			} catch (InstantiationException e) {
-				throw new IllegalArgumentException(e);
+				throw new AssertionError(e);
 			} catch (IllegalAccessException e) {
-				throw new IllegalArgumentException(e);
+				throw new AssertionError(e);
 			} catch (IllegalArgumentException e) {
-				throw new IllegalArgumentException(e);
+				throw new AssertionError(e);
 			} catch (InvocationTargetException e) {
-				throw new IllegalArgumentException(e);
+				throw new AssertionError(
+						InvocationTargetExceptionHelper.toString(e), 
+						e);
 			}
 			return stringConverter;
 		}

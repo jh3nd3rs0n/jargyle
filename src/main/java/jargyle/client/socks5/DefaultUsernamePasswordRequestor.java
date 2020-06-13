@@ -25,7 +25,6 @@ public final class DefaultUsernamePasswordRequestor
 				console.printf(
 						"Username must be no more than %s byte(s).%n", 
 						UsernamePassword.MAX_USERNAME_LENGTH);
-				continue;
 			}
 		}
 		char[] password;
@@ -38,7 +37,6 @@ public final class DefaultUsernamePasswordRequestor
 				console.printf(
 						"Password must be no more than %s byte(s).%n", 
 						UsernamePassword.MAX_PASSWORD_LENGTH);
-				continue;
 			}
 		}
 		return UsernamePassword.newInstance(username, password);

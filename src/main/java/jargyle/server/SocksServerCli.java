@@ -600,10 +600,10 @@ public final class SocksServerCli {
 			System.err.println(suggest);
 			e.printStackTrace(System.err);
 			System.exit(-1);
-		} catch (RuntimeException e) {
-			System.err.printf("%s: %s%n", this.programName, e);
+		} catch (Throwable t) {
+			System.err.printf("%s: %s%n", this.programName, t);
 			System.err.println(suggestion);
-			e.printStackTrace(System.err);
+			t.printStackTrace(System.err);
 			System.exit(-1);
 		}
 		Configuration configuration = this.newConfiguration();

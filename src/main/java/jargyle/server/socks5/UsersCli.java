@@ -212,7 +212,6 @@ public final class UsersCli {
 						console.printf(
 								"Name must be no more than %s byte(s).%n", 
 								User.MAX_NAME_LENGTH);
-                                                continue;
 					}
 				}
 				char[] password;
@@ -224,6 +223,7 @@ public final class UsersCli {
 						console.printf(
 								"Password must be no more than %s byte(s).%n",
 								User.MAX_PASSWORD_LENGTH);
+                                                continue;
 					}
 					char[] retypedPassword = console.readPassword(
 							"Re-type password:");

@@ -212,6 +212,7 @@ public final class UsersCli {
 						console.printf(
 								"Name must be no more than %s byte(s).%n", 
 								User.MAX_NAME_LENGTH);
+                                                continue;
 					}
 				}
 				char[] password;

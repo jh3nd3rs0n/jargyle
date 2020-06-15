@@ -122,26 +122,17 @@ public final class XmlFileSourceConfigurationService
 	
 	private XmlFileSourceConfigurationService(final File file) {
 		Objects.requireNonNull(file, "XML file must not be null");
-		if (!file.exists()) {
-			throw new IllegalArgumentException(String.format(
-					"'%s' does not exist", file));
-		}
-		if (!file.isFile()) {
-			throw new IllegalArgumentException(String.format(
-					"'%s' is not a file", file));
-		}
 		InputStream in = null;
 		Configuration config = null;
 		try {
 			in = new FileInputStream(file);
 			config = ImmutableConfiguration.newInstanceFrom(in);
 		} catch (FileNotFoundException e) {
-			throw new IllegalArgumentException(String.format(
-					"file '%s' does not exist", file));
+			throw new IllegalArgumentException(e);
 		} catch (JAXBException e) {
 			throw new IllegalArgumentException(String.format(
-					"file '%s' not a valid XML file: %s", 
-					file, e.toString()), e);
+					"possible invalid XML file '%s'", file), 
+					e);
 		} finally {
 			if (in != null) {
 				try {

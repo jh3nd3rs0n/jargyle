@@ -704,7 +704,7 @@ public final class ArgMatey {
 			return resultHolder;
 		}
 		
-		public void parseNextTo(final Object obj) {
+		public void parseNextInto(final Object obj) {
 			ParseResultHolder resultHolder = this.parseNext();
 			Class<?> cls = obj.getClass();
 			if (resultHolder.hasNonparsedArg()) {
@@ -737,7 +737,7 @@ public final class ArgMatey {
 						OptionSinkAnnotatedElement element =
 								OptionSinkAnnotatedElement.newInstance(field);
 						if (element.defines(option)) {
-							element.receive(obj, optionArg);
+							element.receive(obj, option, optionArg);
 							return;
 						}
 					}
@@ -748,7 +748,7 @@ public final class ArgMatey {
 						OptionSinkAnnotatedElement element =
 								OptionSinkAnnotatedElement.newInstance(method);
 						if (element.defines(option)) {
-							element.receive(obj, optionArg);
+							element.receive(obj, option, optionArg);
 							return;
 						}
 					}
@@ -756,9 +756,9 @@ public final class ArgMatey {
 			}
 		}
 		
-		public void parseRemainingTo(final Object obj) {
+		public void parseRemainingInto(final Object obj) {
 			while (this.hasNext()) {
-				this.parseNextTo(obj);
+				this.parseNextInto(obj);
 			}
 		}
 
@@ -1141,6 +1141,12 @@ public final class ArgMatey {
 					} catch (IllegalArgumentException e) {
 						throw new AssertionError(e);
 					} catch (InvocationTargetException e) {
+						Throwable cause = e.getCause();
+						if (cause instanceof IllegalArgumentException) {
+							IllegalArgumentException iae = 
+									(IllegalArgumentException) cause;
+							throw iae;
+						}						
 						throw new AssertionError(
 								InvocationTargetExceptionHelper.toString(e), 
 								e);
@@ -1156,6 +1162,12 @@ public final class ArgMatey {
 					} catch (IllegalArgumentException e) {
 						throw new AssertionError(e);
 					} catch (InvocationTargetException e) {
+						Throwable cause = e.getCause();
+						if (cause instanceof IllegalArgumentException) {
+							IllegalArgumentException iae = 
+									(IllegalArgumentException) cause;
+							throw iae;
+						}
 						throw new AssertionError(
 								InvocationTargetExceptionHelper.toString(e), 
 								e);
@@ -1794,6 +1806,10 @@ public final class ArgMatey {
 				} catch (IllegalArgumentException e) {
 					throw new AssertionError(e);
 				} catch (InvocationTargetException e) {
+					Throwable cause = e.getCause();
+					if (cause instanceof IllegalArgumentException) {
+						throw new IllegalArgException(nonparsedArg, cause);
+					}
 					throw new AssertionError(
 							InvocationTargetExceptionHelper.toString(e), 
 							e);
@@ -2911,6 +2927,7 @@ public final class ArgMatey {
 				public void put(
 						final Object obj, 
 						final AnnotatedElement element, 
+						final Option option, 
 						final OptionArg optionArg) {
 					Field field = (Field) element;
 					try {
@@ -2957,6 +2974,7 @@ public final class ArgMatey {
 				public void put(
 						final Object obj, 
 						final AnnotatedElement element, 
+						final Option option, 
 						final OptionArg optionArg) {
 					Field field = (Field) element;
 					List<Object> objectValues = Collections.emptyList();
@@ -2996,6 +3014,7 @@ public final class ArgMatey {
 				public void put(
 						final Object obj, 
 						final AnnotatedElement element, 
+						final Option option, 
 						final OptionArg optionArg) {
 					Field field = (Field) element;
 					Object objectValue = null;
@@ -3056,6 +3075,7 @@ public final class ArgMatey {
 				public void put(
 						final Object obj, 
 						final AnnotatedElement element, 
+						final Option option, 
 						final OptionArg optionArg) {
 					Method method = (Method) element;
 					try {
@@ -3111,11 +3131,14 @@ public final class ArgMatey {
 				public void put(
 						final Object obj, 
 						final AnnotatedElement element, 
+						final Option option, 
 						final OptionArg optionArg) {
 					Method method = (Method) element;
 					List<Object> objectValues = Collections.emptyList();
+					String optArg = null;
 					if (optionArg != null) {
 						objectValues = optionArg.getObjectValues();
+						optArg = optionArg.toString();
 					}
 					try {
 						method.invoke(obj, objectValues);
@@ -3124,6 +3147,11 @@ public final class ArgMatey {
 					} catch (IllegalArgumentException e) {
 						throw new AssertionError(e);
 					} catch (InvocationTargetException e) {
+						Throwable cause = e.getCause();
+						if (cause instanceof IllegalArgumentException) {
+							throw new IllegalOptionArgException(
+									option, optArg, cause);
+						}
 						throw new AssertionError(
 								InvocationTargetExceptionHelper.toString(e), 
 								e);
@@ -3154,6 +3182,7 @@ public final class ArgMatey {
 				public void put(
 						final Object obj, 
 						final AnnotatedElement element, 
+						final Option option, 
 						final OptionArg optionArg) {
 					Method method = (Method) element;
 					try {
@@ -3194,11 +3223,14 @@ public final class ArgMatey {
 				public void put(
 						final Object obj, 
 						final AnnotatedElement element, 
+						final Option option, 
 						final OptionArg optionArg) {
 					Method method = (Method) element;
 					Object objectValue = null;
+					String optArg = null;
 					if (optionArg != null) {
 						objectValue = optionArg.getObjectValue();
+						optArg = optionArg.toString();
 					}
 					try {
 						method.invoke(obj, objectValue);
@@ -3207,8 +3239,14 @@ public final class ArgMatey {
 					} catch (IllegalArgumentException e) {
 						throw new AssertionError(e);
 					} catch (InvocationTargetException e) {
-						throw new AssertionError(new InvocationTargetException(
-								e.getCause()));
+						Throwable cause = e.getCause();
+						if (cause instanceof IllegalArgumentException) {
+							throw new IllegalOptionArgException(
+									option, optArg, cause);
+						}
+						throw new AssertionError(
+								InvocationTargetExceptionHelper.toString(e), 
+								e);
 					}
 				}
 				
@@ -3239,6 +3277,7 @@ public final class ArgMatey {
 			public void put(
 					final Object obj, 
 					final AnnotatedElement element, 
+					final Option option, 
 					final OptionArg optionArg);
 			
 		}
@@ -3531,8 +3570,9 @@ public final class ArgMatey {
 		
 		public void receive(
 				final Object obj, 
+				final Option option, 
 				final OptionArg optionArg) {
-			this.targetType.put(obj, this.annotatedElement, optionArg);
+			this.targetType.put(obj, this.annotatedElement, option, optionArg);
 		}
 		
 		public AnnotatedElement toAnnotatedElement() {

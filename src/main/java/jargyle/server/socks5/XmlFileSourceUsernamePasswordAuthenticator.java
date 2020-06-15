@@ -125,26 +125,17 @@ public final class XmlFileSourceUsernamePasswordAuthenticator
 			final String paramString) {
 		super(paramString);
 		File file = new File(paramString);
-		if (!file.exists()) {
-			throw new IllegalArgumentException(String.format(
-					"'%s' does not exist", paramString));
-		}
-		if (!file.isFile()) {
-			throw new IllegalArgumentException(String.format(
-					"'%s' is not a file", paramString));
-		}
 		InputStream in = null;
 		Users usrs = null;
 		try {
 			in = new FileInputStream(file);
 			usrs = Users.newInstanceFrom(in);
 		} catch (FileNotFoundException e) {
-			throw new IllegalArgumentException(String.format(
-					"file '%s' does not exist", paramString));
+			throw new IllegalArgumentException(e);
 		} catch (JAXBException e) {
 			throw new IllegalArgumentException(String.format(
-					"file '%s' not a valid XML file: %s", 
-					paramString, e.toString()), e);
+					"possible invalid XML file '%s'", paramString), 
+					e);
 		} finally {
 			if (in != null) {
 				try {

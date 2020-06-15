@@ -2,6 +2,7 @@ package jargyle.server;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -281,19 +282,26 @@ public final class SocksServerCli {
 					)
 			}
 	)
-	public void addConfigurationFile(final String file) 
-			throws JAXBException, IOException {
+	public void addConfigurationFile(final String file)	throws IOException {
 		InputStream in = null;
 		if (file.equals("-")) {
 			in = System.in;
 		} else {
 			File f = new File(file);
-			in = new FileInputStream(f);
+			try {
+				in = new FileInputStream(f);
+			} catch (FileNotFoundException e) {
+				throw new IllegalArgumentException(e);
+			}
 		}
 		Configuration configuration = null;
 		try {
 			configuration = ImmutableConfiguration.newInstanceFrom(in);
-		} finally {
+		} catch (JAXBException e) { 
+			throw new IllegalArgumentException(String.format(
+					"possible invalid XML file '%s'", file), 
+					e);
+		}  finally {
 			if (in instanceof FileInputStream) {
 				in.close();
 			}
@@ -590,7 +598,7 @@ public final class SocksServerCli {
 				helpOption.getUsage());
 		this.argsParser = ArgsParser.newInstance(args, this.options, false);
 		try {
-			this.argsParser.parseRemainingTo(this);
+			this.argsParser.parseRemainingInto(this);
 		} catch (IllegalOptionArgException e) {
 			String suggest = suggestion;
 			if (settingsOption.getAllOptions().contains(e.getOption())) {

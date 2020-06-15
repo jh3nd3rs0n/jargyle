@@ -3,6 +3,7 @@ package jargyle.server.socks5;
 import java.io.Console;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,7 +16,6 @@ import javax.xml.bind.JAXBException;
 
 import argmatey.ArgMatey.ArgsParser;
 import argmatey.ArgMatey.GnuLongOption;
-import argmatey.ArgMatey.IllegalArgException;
 import argmatey.ArgMatey.NonparsedArgSink;
 import argmatey.ArgMatey.Option;
 import argmatey.ArgMatey.OptionBuilder;
@@ -176,18 +176,25 @@ public final class UsersCli {
 			}
 		}
 
-		private static Users readFile(
-				final String arg) throws JAXBException, IOException {
+		private static Users readFile(final String arg) throws IOException {
 			InputStream in = null;
 			if (arg.equals("-")) {
 				in = System.in;
 			} else {
 				File file = new File(arg);
-				in = new FileInputStream(file);
+				try {
+					in = new FileInputStream(file);
+				} catch (FileNotFoundException e) {
+					throw new IllegalArgumentException(e);
+				}
 			}
 			Users users = null;
 			try {
 				users = Users.newInstanceFrom(in);
+			} catch (JAXBException e) { 
+				throw new IllegalArgumentException(String.format(
+						"possible invalid XML file '%s'", arg), 
+						e);
 			} finally {
 				if (in instanceof FileInputStream) {
 					in.close();
@@ -291,11 +298,7 @@ public final class UsersCli {
 	@NonparsedArgSink
 	public void addNonparsedArg(final String nonparsedArg) {
 		if (this.command == null) {
-			try {
-				this.command = Command.getInstance(nonparsedArg);
-			} catch (IllegalArgumentException e) {
-				throw new IllegalArgException(nonparsedArg, e);
-			}
+			this.command = Command.getInstance(nonparsedArg);
 		} else {
 			this.argList.add(nonparsedArg);
 		}
@@ -373,7 +376,7 @@ public final class UsersCli {
 				helpOption.getUsage());
 		this.argsParser = ArgsParser.newInstance(args, this.options, false);
 		try {
-			this.argsParser.parseRemainingTo(this);
+			this.argsParser.parseRemainingInto(this);
 		} catch (Throwable t) {
 			System.err.printf("%s: %s%n", programName, t);
 			System.err.println(suggestion);

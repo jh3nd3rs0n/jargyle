@@ -376,7 +376,7 @@ public final class UsersCli {
 				helpOption.getUsage());
 		this.argsParser = ArgsParser.newInstance(args, this.options, false);
 		try {
-			this.argsParser.parseRemainingInto(this);
+			this.argsParser.parseRemainingTo(this);
 		} catch (Throwable t) {
 			System.err.printf("%s: %s%n", programName, t);
 			System.err.println(suggestion);

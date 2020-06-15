@@ -598,7 +598,7 @@ public final class SocksServerCli {
 				helpOption.getUsage());
 		this.argsParser = ArgsParser.newInstance(args, this.options, false);
 		try {
-			this.argsParser.parseRemainingInto(this);
+			this.argsParser.parseRemainingTo(this);
 		} catch (IllegalOptionArgException e) {
 			String suggest = suggestion;
 			if (settingsOption.getAllOptions().contains(e.getOption())) {

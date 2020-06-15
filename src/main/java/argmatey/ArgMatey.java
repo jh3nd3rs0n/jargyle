@@ -704,7 +704,7 @@ public final class ArgMatey {
 			return resultHolder;
 		}
 		
-		public void parseNextInto(final Object obj) {
+		public void parseNextTo(final Object obj) {
 			ParseResultHolder resultHolder = this.parseNext();
 			Class<?> cls = obj.getClass();
 			if (resultHolder.hasNonparsedArg()) {
@@ -756,9 +756,9 @@ public final class ArgMatey {
 			}
 		}
 		
-		public void parseRemainingInto(final Object obj) {
+		public void parseRemainingTo(final Object obj) {
 			while (this.hasNext()) {
-				this.parseNextInto(obj);
+				this.parseNextTo(obj);
 			}
 		}
 

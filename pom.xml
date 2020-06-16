@@ -136,6 +136,7 @@
 				<version>2.9</version>
 				<configuration>
 					<excludePackageNames>argmatey</excludePackageNames>
+					<source>8</source>
 				</configuration>
 			</plugin>
 			<plugin>

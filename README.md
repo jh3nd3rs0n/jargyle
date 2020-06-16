@@ -693,7 +693,9 @@ Partial configuration file example:
 
 ```xml
 
-    <setting name="socks5.authMethods" value="GSSAPI USERNAME_PASSWORD"/>
+    <settings>
+        <setting name="socks5.authMethods" value="GSSAPI USERNAME_PASSWORD"/>
+    </settings>
 
 ```
 
@@ -717,7 +719,9 @@ Partial configuration file example:
 
 ```xml
 
-    <setting name="socks5.authMethods" value="NO_AUTHENTICATION_REQUIRED GSSAPI USERNAME_PASSWORD"/>
+    <settings>
+        <setting name="socks5.authMethods" value="NO_AUTHENTICATION_REQUIRED GSSAPI USERNAME_PASSWORD"/>
+    </settings>
 
 ```
 
@@ -737,7 +741,9 @@ Partial configuration file example:
 
 ```xml
 
-    <setting name="socks5.authMethods" value="USERNAME_PASSWORD"/>
+    <settings>
+        <setting name="socks5.authMethods" value="USERNAME_PASSWORD"/>
+    </settings>
 
 ```
 
@@ -814,7 +820,9 @@ Partial configuration file example:
 
 ```xml
 
-    <setting name="socks5.authMethods" value="GSSAPI"/>
+    <settings>
+        <setting name="socks5.authMethods" value="GSSAPI"/>
+    </settings>
 
 ```
 
@@ -891,7 +899,9 @@ Partial configuration file example:
 
 ```xml
 
-    <setting name="externalClient.externalServerUri" value="socks5://127.0.0.1:23456"/>
+    <settings>
+        <setting name="externalClient.externalServerUri" value="socks5://127.0.0.1:23456"/>
+    </settings>
 
 ```
 
@@ -919,7 +929,9 @@ Partial configuration file example:
 
 ```xml
 
-    <setting name="externalClient.socks5.authMethods" value="GSSAPI USERNAME_PASSWORD"/>
+    <settings>
+        <setting name="externalClient.socks5.authMethods" value="GSSAPI USERNAME_PASSWORD"/>
+    </settings>
 
 ```
 
@@ -943,8 +955,10 @@ Partial configuration file example:
 
 ```xml
 
-    <setting name="externalClient.socks5.authMethods" value="NO_AUTHENTICATION_REQUIRED GSSAPI USERNAME_PASSWORD"/>
-
+    <settings>
+        <setting name="externalClient.socks5.authMethods" value="NO_AUTHENTICATION_REQUIRED GSSAPI USERNAME_PASSWORD"/>
+    </settings>
+    
 ```
 
 ##### 3. 9. 1. 2. Using Username Password Authentication
@@ -963,7 +977,9 @@ Partial configuration file example:
 
 ```xml
 
-    <setting name="externalClient.socks5.authMethods" value="USERNAME_PASSWORD"/>
+    <settings>
+        <setting name="externalClient.socks5.authMethods" value="USERNAME_PASSWORD"/>
+    </settings>
 
 ```
 
@@ -1008,7 +1024,9 @@ Partial configuration file example:
 
 ```xml
 
-    <setting name="externalClient.socks5.authMethods" value="GSSAPI"/>
+    <settings>
+        <setting name="externalClient.socks5.authMethods" value="GSSAPI"/>
+    </settings>
 
 ```
 

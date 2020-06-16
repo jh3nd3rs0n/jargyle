@@ -308,10 +308,10 @@ public final class UsersCli {
 			optionBuilder = @OptionBuilder(
 					doc = "Print this help and exit",
 					name = "help",
+					ordinal = HELP_OPTION_ORDINAL,
 					special = true,
 					type = GnuLongOption.class
 			),
-			ordinal = HELP_OPTION_ORDINAL,
 			otherOptionBuilders = {
 					@OptionBuilder(
 							name = "h",
@@ -350,10 +350,10 @@ public final class UsersCli {
 			optionBuilder = @OptionBuilder(
 					doc = "Print the XSD and exit",
 					name = "xsd",
+					ordinal = XSD_OPTION_ORDINAL,
 					special = true,
 					type = GnuLongOption.class
 			),
-			ordinal = 1,
 			otherOptionBuilders = {
 					@OptionBuilder(
 							name = "x",

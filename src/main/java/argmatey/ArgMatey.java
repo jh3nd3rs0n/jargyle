@@ -2581,6 +2581,8 @@ public final class ArgMatey {
 		
 		Class<? extends OptionUsageProvider> optionUsageProvider()
 			default DefaultOptionUsageProvider.class;
+
+		int ordinal() default 0;
 				
 		boolean special() default false;
 		
@@ -2895,8 +2897,6 @@ public final class ArgMatey {
 	public static @interface OptionSink {
 		
 		OptionBuilder optionBuilder();
-		
-		int ordinal() default 0;
 		
 		OptionBuilder[] otherOptionBuilders() default { };
 		
@@ -3592,10 +3592,10 @@ public final class ArgMatey {
 				final OptionSinkAnnotatedElement arg1) {
 			OptionSink optionSink0 = arg0.getOptionSink();
 			OptionSink optionSink1 = arg1.getOptionSink();
-			int diff = optionSink0.ordinal() - optionSink1.ordinal();
-			if (diff != 0) { return diff; }
 			OptionBuilder optionBuilder0 = optionSink0.optionBuilder();
 			OptionBuilder optionBuilder1 = optionSink1.optionBuilder();
+			int diff = optionBuilder0.ordinal() - optionBuilder1.ordinal();
+			if (diff != 0) { return diff; }
 			return optionBuilder0.name().compareTo(optionBuilder1.name());
 		}
 		

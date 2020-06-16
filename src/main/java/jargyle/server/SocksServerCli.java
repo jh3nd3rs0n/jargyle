@@ -170,9 +170,9 @@ public final class SocksServerCli {
 					name = "allowed-client-addr-criteria",
 					optionArgSpecBuilder = @OptionArgSpecBuilder(),
 					optionUsageProvider = CriteriaOptionUsageProvider.class,
+					ordinal = ALLOWED_CLIENT_ADDR_CRITERIA_OPTION_ORDINAL,
 					type = GnuLongOption.class
-			),
-			ordinal = ALLOWED_CLIENT_ADDR_CRITERIA_OPTION_ORDINAL
+			)
 	)
 	public void addAllowedClientAddressCriteria(
 			final Criteria allowedClientAddrCriteria) {
@@ -187,9 +187,9 @@ public final class SocksServerCli {
 					name = "allowed-socks5-incoming-tcp-addr-criteria",
 					optionArgSpecBuilder = @OptionArgSpecBuilder(),
 					optionUsageProvider = CriteriaOptionUsageProvider.class,
+					ordinal = ALLOWED_SOCKS5_INCOMING_TCP_ADDR_CRITERIA_OPTION_ORDINAL,
 					type = GnuLongOption.class
-			),
-			ordinal = ALLOWED_SOCKS5_INCOMING_TCP_ADDR_CRITERIA_OPTION_ORDINAL
+			)
 	)
 	public void addAllowedSocks5IncomingTcpAddressCriteria(
 			final Criteria allowedSocks5IncomingTcpAddrCriteria) {
@@ -204,9 +204,9 @@ public final class SocksServerCli {
 					name = "allowed-socks5-incoming-udp-addr-criteria",
 					optionArgSpecBuilder = @OptionArgSpecBuilder(),
 					optionUsageProvider = CriteriaOptionUsageProvider.class,
+					ordinal = ALLOWED_SOCKS5_INCOMING_UDP_ADDR_CRITERIA_OPTION_ORDINAL,
 					type = GnuLongOption.class
-			),
-			ordinal = ALLOWED_SOCKS5_INCOMING_UDP_ADDR_CRITERIA_OPTION_ORDINAL
+			)
 	)
 	public void addAllowedSocks5IncomingUdpAddressCriteria(
 			final Criteria allowedSocks5IncomingUdpAddrCriteria) {
@@ -221,9 +221,9 @@ public final class SocksServerCli {
 					name = "blocked-client-addr-criteria",
 					optionArgSpecBuilder = @OptionArgSpecBuilder(),
 					optionUsageProvider = CriteriaOptionUsageProvider.class,
+					ordinal = BLOCKED_CLIENT_ADDR_CRITERIA_OPTION_ORDINAL,
 					type = GnuLongOption.class
-			),
-			ordinal = BLOCKED_CLIENT_ADDR_CRITERIA_OPTION_ORDINAL
+			)
 	)
 	public void addBlockedClientAddressCriteria(
 			final Criteria blockedClientAddrCriteria) {
@@ -238,9 +238,9 @@ public final class SocksServerCli {
 					name = "blocked-socks5-incoming-tcp-addr-criteria",
 					optionArgSpecBuilder = @OptionArgSpecBuilder(),
 					optionUsageProvider = CriteriaOptionUsageProvider.class,
+					ordinal = BLOCKED_SOCKS5_INCOMING_TCP_ADDR_CRITERIA_OPTION_ORDINAL,
 					type = GnuLongOption.class
-			),
-			ordinal = BLOCKED_SOCKS5_INCOMING_TCP_ADDR_CRITERIA_OPTION_ORDINAL
+			)
 	)
 	public void addBlockedSocks5IncomingTcpAddressCriteria(
 			final Criteria blockedSocks5IncomingTcpAddrCriteria) {
@@ -255,9 +255,9 @@ public final class SocksServerCli {
 					name = "blocked-socks5-incoming-udp-addr-criteria",
 					optionArgSpecBuilder = @OptionArgSpecBuilder(),
 					optionUsageProvider = CriteriaOptionUsageProvider.class,
+					ordinal = BLOCKED_SOCKS5_INCOMING_UDP_ADDR_CRITERIA_OPTION_ORDINAL,
 					type = GnuLongOption.class
-			),
-			ordinal = BLOCKED_SOCKS5_INCOMING_UDP_ADDR_CRITERIA_OPTION_ORDINAL
+			)
 	)
 	public void addBlockedSocks5IncomingUdpAddressCriteria(
 			final Criteria blockedSocks5IncomingUdpAddrCriteria) {
@@ -272,9 +272,9 @@ public final class SocksServerCli {
 					optionArgSpecBuilder = @OptionArgSpecBuilder(
 							name = "FILE"
 					),
+					ordinal = CONFIG_FILE_OPTION_ORDINAL,
 					type = GnuLongOption.class
 			),
-			ordinal = CONFIG_FILE_OPTION_ORDINAL,
 			otherOptionBuilders = {
 					@OptionBuilder(
 							name = "f",
@@ -316,9 +316,9 @@ public final class SocksServerCli {
 					name = "settings",
 					optionArgSpecBuilder = @OptionArgSpecBuilder(),
 					optionUsageProvider = SettingsGnuLongOptionUsageProvider.class,
+					ordinal = SETTINGS_OPTION_ORDINAL,
 					type = GnuLongOption.class
 			),
-			ordinal = SETTINGS_OPTION_ORDINAL,
 			otherOptionBuilders = {
 					@OptionBuilder(
 							name = "s",
@@ -336,10 +336,10 @@ public final class SocksServerCli {
 					doc = "Mode for managing SOCKS5 users (add --help for "
 							+ "more information)",
 					name = "socks5-users",
+					ordinal = SOCKS5_USERS_OPTION_ORDINAL,
 					special = true,
 					type = GnuLongOption.class
-			),
-			ordinal = SOCKS5_USERS_OPTION_ORDINAL
+			)
 	)
 	public void doSocks5UsersManagementMode() {
 		if (this.argsParser == null) {
@@ -373,9 +373,9 @@ public final class SocksServerCli {
 							+ "password for the external SOCKS5 server for "
 							+ "external connections",
 					name = "enter-external-client-socks5-user-pass",
+					ordinal = ENTER_EXTERNAL_CLIENT_SOCKS5_USER_PASS_OPTION_ORDINAL,
 					type = GnuLongOption.class
-			),
-			ordinal = ENTER_EXTERNAL_CLIENT_SOCKS5_USER_PASS_OPTION_ORDINAL
+			)
 	)
 	public void enterExternalClientSocks5UsernamePassword() {
 		String prompt = "Please enter username and password for the external "
@@ -417,9 +417,9 @@ public final class SocksServerCli {
 					optionArgSpecBuilder = @OptionArgSpecBuilder(
 							name = "FILE"
 					),
+					ordinal = NEW_CONFIG_FILE_OPTION_ORDINAL,
 					type = GnuLongOption.class
 			),
-			ordinal = NEW_CONFIG_FILE_OPTION_ORDINAL,
 			otherOptionBuilders = {
 					@OptionBuilder(
 							name = "n",
@@ -473,10 +473,10 @@ public final class SocksServerCli {
 			optionBuilder = @OptionBuilder(
 					doc = "Print the configuration file XSD and exit",
 					name = "config-file-xsd",
+					ordinal = CONFIG_FILE_XSD_OPTION_ORDINAL,
 					special = true,
 					type = GnuLongOption.class
 			),
-			ordinal = CONFIG_FILE_XSD_OPTION_ORDINAL,
 			otherOptionBuilders = {
 					@OptionBuilder(
 							name = "x",
@@ -495,10 +495,10 @@ public final class SocksServerCli {
 			optionBuilder = @OptionBuilder(
 					doc = "Print this help and exit",
 					name = "help",
+					ordinal = HELP_OPTION_ORDINAL,
 					special = true,
 					type = GnuLongOption.class
 			),
-			ordinal = HELP_OPTION_ORDINAL,
 			otherOptionBuilders = {
 					@OptionBuilder(
 							name = "h",
@@ -557,10 +557,10 @@ public final class SocksServerCli {
 					doc = "Print the list of available settings for the SOCKS "
 							+ "server and exit",
 					name = "settings-help",
+					ordinal = SETTINGS_HELP_OPTION_ORDINAL,
 					special = true,
 					type = GnuLongOption.class
 			),
-			ordinal = SETTINGS_HELP_OPTION_ORDINAL,
 			otherOptionBuilders = {
 					@OptionBuilder(
 							name = "H",
@@ -625,9 +625,9 @@ public final class SocksServerCli {
 					name = "external-client-socks5-user-pass",
 					optionArgSpecBuilder = @OptionArgSpecBuilder(),
 					optionUsageProvider = UsernamePasswordOptionUsageProvider.class,
+					ordinal = EXTERNAL_CLIENT_SOCKS5_USER_PASS_OPTION_ORDINAL,
 					type = GnuLongOption.class
-			),
-			ordinal = EXTERNAL_CLIENT_SOCKS5_USER_PASS_OPTION_ORDINAL
+			)
 	)
 	public void setExternalClientSocks5UsernamePassword(
 			final UsernamePassword usernamePassword) {
@@ -644,10 +644,10 @@ public final class SocksServerCli {
 					optionArgSpecBuilder = @OptionArgSpecBuilder(
 							name = "FILE"
 					),
+					ordinal = MONITORED_CONFIG_FILE_OPTION_ORDINAL,
 					special = true,
 					type = GnuLongOption.class
 			),
-			ordinal = MONITORED_CONFIG_FILE_OPTION_ORDINAL,
 			otherOptionBuilders = {
 					@OptionBuilder(
 							name = "m",
@@ -666,9 +666,9 @@ public final class SocksServerCli {
 					name = "socks5-user-pass-authenticator",
 					optionArgSpecBuilder = @OptionArgSpecBuilder(),
 					optionUsageProvider = UsernamePasswordAuthenticatorOptionUsageProvider.class,
+					ordinal = SOCKS5_USER_PASS_AUTHENTICATOR_OPTION_ORDINAL,
 					type = GnuLongOption.class
-			),
-			ordinal = SOCKS5_USER_PASS_AUTHENTICATOR_OPTION_ORDINAL
+			)
 	)
 	public void setSocks5UsernamePasswordAuthenticator(
 			final UsernamePasswordAuthenticator usernamePasswordAuthenticator) {

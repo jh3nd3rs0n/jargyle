@@ -22,7 +22,7 @@ import jargyle.client.socks5.UsernamePassword;
 import jargyle.server.socks5.Socks5RequestCriteria;
 import jargyle.server.socks5.UsernamePasswordAuthenticator;
 
-public final class ImmutableConfiguration implements Configuration {
+public final class ImmutableConfiguration extends Configuration {
 
 	public static final class Builder {
 		

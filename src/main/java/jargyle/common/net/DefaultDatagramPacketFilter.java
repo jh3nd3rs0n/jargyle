@@ -3,10 +3,10 @@ package jargyle.common.net;
 import java.io.IOException;
 import java.net.DatagramPacket;
 
-public enum DefaultDatagramPacketFilter implements DatagramPacketFilter {
+public final class DefaultDatagramPacketFilter extends DatagramPacketFilter {
 
-	INSTANCE;
-
+	public DefaultDatagramPacketFilter() { }
+	
 	@Override
 	public void filterAfterReceive(final DatagramPacket p) throws IOException {
 	}

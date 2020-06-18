@@ -9,8 +9,7 @@ import org.ietf.jgss.MessageProp;
 
 import jargyle.common.net.DatagramPacketFilter;
 
-public final class GssDatagramPacketFilter 
-	implements DatagramPacketFilter {
+public final class GssDatagramPacketFilter extends DatagramPacketFilter {
 
 	private final GSSContext gssContext;
 	private final MessageProp messageProp;

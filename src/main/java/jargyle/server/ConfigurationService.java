@@ -1,7 +1,9 @@
 package jargyle.server;
 
-public interface ConfigurationService {
+public abstract class ConfigurationService {
 
-	Configuration getConfiguration();
+	public ConfigurationService() { }
+	
+	public abstract Configuration getConfiguration();
 	
 }

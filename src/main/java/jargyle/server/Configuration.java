@@ -4,28 +4,30 @@ import jargyle.client.socks5.UsernamePassword;
 import jargyle.server.socks5.Socks5RequestCriteria;
 import jargyle.server.socks5.UsernamePasswordAuthenticator;
 
-public interface Configuration {
+public abstract class Configuration {
 
-	Criteria getAllowedClientAddressCriteria();
-
-	Criteria getAllowedSocks5IncomingTcpAddressCriteria();
+	public Configuration() { }
 	
-	Criteria getAllowedSocks5IncomingUdpAddressCriteria();
-	
-	Socks5RequestCriteria getAllowedSocks5RequestCriteria();
-	
-	Criteria getBlockedClientAddressCriteria();
+	public abstract Criteria getAllowedClientAddressCriteria();
 
-	Criteria getBlockedSocks5IncomingTcpAddressCriteria();
+	public abstract Criteria getAllowedSocks5IncomingTcpAddressCriteria();
 	
-	Criteria getBlockedSocks5IncomingUdpAddressCriteria();
+	public abstract Criteria getAllowedSocks5IncomingUdpAddressCriteria();
 	
-	Socks5RequestCriteria getBlockedSocks5RequestCriteria();
+	public abstract Socks5RequestCriteria getAllowedSocks5RequestCriteria();
+	
+	public abstract Criteria getBlockedClientAddressCriteria();
 
-	UsernamePassword getExternalClientSocks5UsernamePassword();
+	public abstract Criteria getBlockedSocks5IncomingTcpAddressCriteria();
+	
+	public abstract Criteria getBlockedSocks5IncomingUdpAddressCriteria();
+	
+	public abstract Socks5RequestCriteria getBlockedSocks5RequestCriteria();
 
-	Settings getSettings();
+	public abstract UsernamePassword getExternalClientSocks5UsernamePassword();
 
-	UsernamePasswordAuthenticator getSocks5UsernamePasswordAuthenticator();
+	public abstract Settings getSettings();
+
+	public abstract UsernamePasswordAuthenticator getSocks5UsernamePasswordAuthenticator();
 
 }

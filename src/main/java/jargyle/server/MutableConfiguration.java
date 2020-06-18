@@ -4,7 +4,7 @@ import jargyle.client.socks5.UsernamePassword;
 import jargyle.server.socks5.Socks5RequestCriteria;
 import jargyle.server.socks5.UsernamePasswordAuthenticator;
 
-public final class MutableConfiguration implements Configuration {
+public final class MutableConfiguration extends Configuration {
 	
 	private final ConfigurationService configurationService;
 	

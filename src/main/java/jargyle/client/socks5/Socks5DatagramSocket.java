@@ -39,7 +39,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			final Socks5DatagramSocket socks5DatagramSocket) throws SocketException {
 		socks5DatagramSocket.associated = false;
 		socks5DatagramSocket.datagramPacketFilter = 
-				DefaultDatagramPacketFilter.INSTANCE;
+				new DefaultDatagramPacketFilter();
 		socks5DatagramSocket.socket = new Socket();
 		SocketSettings socketSettings = 
 				socks5DatagramSocket.socks5Client.getSocketSettings();

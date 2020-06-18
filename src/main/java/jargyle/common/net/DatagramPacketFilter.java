@@ -3,10 +3,10 @@ package jargyle.common.net;
 import java.io.IOException;
 import java.net.DatagramPacket;
 
-public interface DatagramPacketFilter {
+public abstract class DatagramPacketFilter {
 
-	void filterAfterReceive(DatagramPacket p) throws IOException;
+	public abstract void filterAfterReceive(DatagramPacket p) throws IOException;
 	
-	void filterBeforeSend(DatagramPacket p) throws IOException;
+	public abstract void filterBeforeSend(DatagramPacket p) throws IOException;
 	
 }

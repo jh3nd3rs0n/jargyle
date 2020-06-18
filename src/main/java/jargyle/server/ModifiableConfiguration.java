@@ -8,7 +8,7 @@ import jargyle.server.socks5.Socks5RequestCriteria;
 import jargyle.server.socks5.Socks5RequestCriterion;
 import jargyle.server.socks5.UsernamePasswordAuthenticator;
 
-final class ModifiableConfiguration implements Configuration {
+final class ModifiableConfiguration extends Configuration {
 	
 	private final List<Criterion> allowedClientAddressCriteria;
 	private final List<Criterion> allowedSocks5IncomingTcpAddressCriteria;

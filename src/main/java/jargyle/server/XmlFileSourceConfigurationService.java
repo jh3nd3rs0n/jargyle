@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 import javax.xml.bind.JAXBException;
 
 public final class XmlFileSourceConfigurationService 
-	implements ConfigurationService {
+	extends ConfigurationService {
 
 	private static final class ConfigurationUpdater 
 		implements FileStatusListener {

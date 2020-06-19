@@ -5,10 +5,9 @@ public final class StringSourceUsernamePasswordAuthenticator
 
 	private final Users users;
 		
-	public StringSourceUsernamePasswordAuthenticator(
-			final String paramString) {
-		super(paramString);
-		this.users = Users.newInstance(paramString);
+	public StringSourceUsernamePasswordAuthenticator(final String value) {
+		super(value);
+		this.users = Users.newInstance(value);
 	}
 
 	@Override

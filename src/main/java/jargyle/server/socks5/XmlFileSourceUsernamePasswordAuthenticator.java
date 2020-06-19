@@ -110,9 +110,9 @@ public final class XmlFileSourceUsernamePasswordAuthenticator
 	}
 	
 	public static XmlFileSourceUsernamePasswordAuthenticator newInstance(
-			final String parameterString) {
+			final String value) {
 		XmlFileSourceUsernamePasswordAuthenticator usernamePasswordAuthenticator =
-				new XmlFileSourceUsernamePasswordAuthenticator(parameterString);
+				new XmlFileSourceUsernamePasswordAuthenticator(value);
 		usernamePasswordAuthenticator.startMonitoringXmlFile();
 		return usernamePasswordAuthenticator;
 	}
@@ -121,10 +121,9 @@ public final class XmlFileSourceUsernamePasswordAuthenticator
 	private Users users;
 	private final File xmlFile;
 	
-	private XmlFileSourceUsernamePasswordAuthenticator(
-			final String paramString) {
-		super(paramString);
-		File file = new File(paramString);
+	private XmlFileSourceUsernamePasswordAuthenticator(final String value) {
+		super(value);
+		File file = new File(value);
 		InputStream in = null;
 		Users usrs = null;
 		try {
@@ -134,7 +133,7 @@ public final class XmlFileSourceUsernamePasswordAuthenticator
 			throw new IllegalArgumentException(e);
 		} catch (JAXBException e) {
 			throw new IllegalArgumentException(String.format(
-					"possible invalid XML file '%s'", paramString), 
+					"possible invalid XML file '%s'", value), 
 					e);
 		} finally {
 			if (in != null) {

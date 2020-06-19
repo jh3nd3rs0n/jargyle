@@ -20,8 +20,8 @@ public class UsernamePasswordAuthenticator {
 	static class UsernamePasswordAuthenticatorXml {
 		@XmlElement(name = "className", required = true)
 		protected String className;
-		@XmlElement(name = "parameterString")
-		protected String parameterString;
+		@XmlElement(name = "value")
+		protected String value;
 	}
 	
 	static class UsernamePasswordAuthenticatorXmlAdapter extends 
@@ -33,10 +33,8 @@ public class UsernamePasswordAuthenticator {
 			if (v == null) { return null; }
 			UsernamePasswordAuthenticatorXml usernamePasswordAuthenticatorXml =
 					new UsernamePasswordAuthenticatorXml();
-			usernamePasswordAuthenticatorXml.className = 
-					v.getClass().getName();
-			usernamePasswordAuthenticatorXml.parameterString = 
-					v.parameterString;
+			usernamePasswordAuthenticatorXml.className = v.getClass().getName();
+			usernamePasswordAuthenticatorXml.value = v.value;
 			return usernamePasswordAuthenticatorXml;
 		}
 
@@ -45,7 +43,7 @@ public class UsernamePasswordAuthenticator {
 				final UsernamePasswordAuthenticatorXml v) throws Exception {
 			if (v == null) { return null; }
 			return UsernamePasswordAuthenticator.getInstance(
-					v.className, v.parameterString);
+					v.className, v.value);
 		}
 		
 	}
@@ -54,20 +52,19 @@ public class UsernamePasswordAuthenticator {
 			new UsernamePasswordAuthenticator(null);
 	
 	public static UsernamePasswordAuthenticator getInstance(
-			final Class<?> cls, final String parameterString) {
+			final Class<?> cls, final String value) {
 		UsernamePasswordAuthenticator usernamePasswordAuthenticator = null;
 		if (cls.equals(UsernamePasswordAuthenticator.class)) {
 			usernamePasswordAuthenticator = INSTANCE;
 		} else if (cls.equals(
 				StringSourceUsernamePasswordAuthenticator.class)) {
 			usernamePasswordAuthenticator = 
-					new StringSourceUsernamePasswordAuthenticator(
-							parameterString);
+					new StringSourceUsernamePasswordAuthenticator(value);
 		} else if (cls.equals(
 				XmlFileSourceUsernamePasswordAuthenticator.class)) {
 			usernamePasswordAuthenticator = 
 					XmlFileSourceUsernamePasswordAuthenticator.newInstance(
-							parameterString);
+							value);
 		} else if (UsernamePasswordAuthenticator.class.isAssignableFrom(cls)) {
 			Method method = null;
 			for (Method meth : cls.getDeclaredMethods()) {
@@ -91,7 +88,7 @@ public class UsernamePasswordAuthenticator {
 				try {
 					usernamePasswordAuthenticator = 
 							(UsernamePasswordAuthenticator) method.invoke(
-									null, parameterString);
+									null, value);
 				} catch (IllegalAccessException e) {
 					throw new AssertionError(e);
 				} catch (IllegalArgumentException e) {
@@ -112,7 +109,7 @@ public class UsernamePasswordAuthenticator {
 				try {
 					usernamePasswordAuthenticator = 
 							(UsernamePasswordAuthenticator) ctor.newInstance(
-									parameterString);
+									value);
 				} catch (InstantiationException e) {
 					throw new AssertionError(e);
 				} catch (IllegalAccessException e) {
@@ -135,28 +132,28 @@ public class UsernamePasswordAuthenticator {
 	public static UsernamePasswordAuthenticator getInstance(final String s) {
 		String[] sElements = s.split(":", 2);
 		String className = sElements[0];
-		String parameterString = null;
+		String value = null;
 		if (sElements.length == 2) {
-			parameterString = sElements[1];
+			value = sElements[1];
 		}
-		return getInstance(className, parameterString);
+		return getInstance(className, value);
 	}
 	
 	private static UsernamePasswordAuthenticator getInstance(
-			final String className, final String parameterString) {
+			final String className, final String value) {
 		Class<?> cls = null;
 		try {
 			cls = Class.forName(className);
 		} catch (ClassNotFoundException e) {
 			throw new IllegalArgumentException(e);
 		}
-		return getInstance(cls, parameterString);
+		return getInstance(cls, value);
 	}
 	
-	private final String parameterString;
+	private final String value;
 	
-	protected UsernamePasswordAuthenticator(final String paramString) {
-		this.parameterString = paramString;
+	protected UsernamePasswordAuthenticator(final String val) {
+		this.value = val;
 	}
 	
 	public boolean authenticate(
@@ -164,16 +161,16 @@ public class UsernamePasswordAuthenticator {
 		return false;
 	}
 	
-	public final String getParameterString() {
-		return this.parameterString;
+	public final String getValue() {
+		return this.value;
 	}
 
 	@Override
 	public final String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append(this.getClass().getName());
-		if (this.parameterString != null) {
-			builder.append(":").append(this.parameterString);
+		if (this.value != null) {
+			builder.append(":").append(this.value);
 		}
 		return builder.toString();
 	}

@@ -110,7 +110,7 @@ The following is the command line help for Jargyle (displayed when using the com
           Print the list of available settings for the SOCKS server and exit
       --settings=[NAME1=VALUE1[,NAME2=VALUE2[...]]], -s [NAME1=VALUE1[,NAME2=VALUE2[...]]]
           The comma separated list of settings for the SOCKS server
-      --socks5-user-pass-authenticator=CLASSNAME[:PARAMETER_STRING]
+      --socks5-user-pass-authenticator=CLASSNAME[:VALUE]
           The SOCKS5 username password authenticator for the SOCKS server
       --socks5-users
           Mode for managing SOCKS5 users (add --help for more information)
@@ -747,14 +747,14 @@ Partial configuration file example:
 
 ```
 
-Also, you will need to specify the name of the class that extends `jargyle.server.socks5.UsernamePasswordAuthenticator` along with a parameter string
+Also, you will need to specify the name of the class that extends `jargyle.server.socks5.UsernamePasswordAuthenticator` along with a string value
 
 The following are two provided classes you can use:
 
 -   `jargyle.server.socks5.StringSourceUsernamePasswordAuthenticator`
 -   `jargyle.server.socks5.XmlFileSourceUsernamePasswordAuthenticator`
 
-`jargyle.server.socks5.StringSourceUsernamePasswordAuthenticator`: This class authenticates the username and password based on the parameter string of a space separated list of USERNAME:PASSWORD pairs
+`jargyle.server.socks5.StringSourceUsernamePasswordAuthenticator`: This class authenticates the username and password based on the string value of a space separated list of USERNAME:PASSWORD pairs
 
 Partial command line example:
 
@@ -770,7 +770,7 @@ Partial configuration file example:
 
     <socks5UsernamePasswordAuthenticator>
 	    <className>jargyle.server.socks5.StringSourceUsernamePasswordAuthenticator</className>	
-	    <parameterString>Aladdin:opensesame Jasmine:mission%3Aimpossible</parameterString>
+	    <value>Aladdin:opensesame Jasmine:mission%3Aimpossible</value>
     </socks5UsernamePasswordAuthenticator>
 
 ```
@@ -783,7 +783,7 @@ If any of the usernames or any of the passwords contain a plus sign character (`
 
 If any of the usernames or any of the passwords contain a percent sign character (`%`) not used for URL encoding, then each percent sign character not used for URL encoding must be replaced with the URL encoding character `%25`.
 
-`jargyle.server.socks5.XmlFileSourceUsernamePasswordAuthenticator`: This class authenticates the username and password based on the [XML file of users](#3-7-managing-socks5-users-for-username-password-authentication) whose file name is provided as a parameter string
+`jargyle.server.socks5.XmlFileSourceUsernamePasswordAuthenticator`: This class authenticates the username and password based on the [XML file of users](#3-7-managing-socks5-users-for-username-password-authentication) whose file name is provided as a string value
 
 Partial command line example:
 
@@ -799,7 +799,7 @@ Partial configuration file example:
 
     <socks5UsernamePasswordAuthenticator>
 	    <className>jargyle.server.socks5.XmlFileSourceUsernamePasswordAuthenticator</className>	
-	    <parameterString>users.xml</parameterString>
+	    <value>users.xml</value>
     </socks5UsernamePasswordAuthenticator>
 
 ```

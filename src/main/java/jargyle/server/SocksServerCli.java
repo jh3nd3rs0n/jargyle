@@ -96,9 +96,7 @@ public final class SocksServerCli {
 
 		@Override
 		public String getOptionUsage(final OptionUsageParams params) {
-			return String.format(
-					"%s=CLASSNAME[:PARAMETER_STRING]", 
-					params.getOption());
+			return String.format("%s=CLASSNAME[:VALUE]", params.getOption());
 		}
 		
 	}

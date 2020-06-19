@@ -12,7 +12,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import jargyle.common.net.socks5.Socks5Request;
 import jargyle.server.Criterion;
-import jargyle.server.CriterionOperator;
+import jargyle.server.CriterionMethod;
 import jargyle.server.Port;
 import jargyle.server.PortRanges;
 
@@ -67,11 +67,11 @@ public final class Socks5RequestCriterion {
 	}
 	
 	public static final Criterion DEFAULT_SOURCE_ADDRESS_CRITERION =
-			CriterionOperator.MATCHES.newCriterion(".*");
+			Criterion.newInstance(CriterionMethod.MATCHES, ".*");
 	public static final Criterion DEFAULT_COMMAND_CRITERION =
-			CriterionOperator.MATCHES.newCriterion(".*");
+			Criterion.newInstance(CriterionMethod.MATCHES, ".*");
 	public static final Criterion DEFAULT_DESIRED_DESTINATION_ADDRESS_CRITERION =
-			CriterionOperator.MATCHES.newCriterion(".*");
+			Criterion.newInstance(CriterionMethod.MATCHES, ".*");
 	public static final PortRanges DEFAULT_DESIRED_DESTINATION_PORT_RANGES =
 			PortRanges.DEFAULT_INSTANCE;
 	

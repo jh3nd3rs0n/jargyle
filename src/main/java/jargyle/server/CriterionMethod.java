@@ -4,17 +4,17 @@ import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlEnumValue;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlType(name = "criterionOperator")
+@XmlType(name = "criterionMethod")
 @XmlEnum(String.class)
-public enum CriterionOperator {
+public enum CriterionMethod {
 	
 	@XmlEnumValue("equals")
 	EQUALS("equals") {
 
 		@Override
 		public boolean evaluatesTrue(
-				final String operand1, final String operand2) {
-			return operand1.equals(operand2);
+				final String arg0, final String arg1) {
+			return arg0.equals(arg1);
 		}
 		
 	},
@@ -24,24 +24,20 @@ public enum CriterionOperator {
 
 		@Override
 		public boolean evaluatesTrue(
-				final String operand1, final String operand2) {
-			return operand1.matches(operand2);
+				final String arg0, final String arg1) {
+			return arg0.matches(arg1);
 		}
 		
 	};
 	
 	private final String string;
 	
-	private CriterionOperator(final String str) {
+	private CriterionMethod(final String str) {
 		this.string = str;
 	}
 	
 	public abstract boolean evaluatesTrue(
-			final String operand1, final String operand2);
-	
-	public Criterion newCriterion(final String operand2) {
-		return new Criterion(this, operand2);
-	}
+			final String arg0, final String arg1);
 	
 	@Override
 	public String toString() {

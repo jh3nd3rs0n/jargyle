@@ -18,13 +18,12 @@ public final class Criterion {
 	@XmlAccessorType(XmlAccessType.NONE)
 	@XmlType(name = "criterion", propOrder = { })
 	static class CriterionXml {
-		@XmlAttribute(name = "operator", required = true)
-		protected CriterionOperator operator;
-		@XmlAttribute(name = "operand", required = true)
-		protected String operand;
+		@XmlAttribute(name = "method", required = true)
+		protected CriterionMethod method;
+		@XmlAttribute(name = "value", required = true)
+		protected String value;
 		@XmlAttribute(name = "comment")
 		protected String comment;
-
 	}
 	
 	static final class CriterionXmlAdapter 
@@ -35,34 +34,39 @@ public final class Criterion {
 			if (arg == null) { return null; }
 			CriterionXml criterionXml = new CriterionXml();
 			criterionXml.comment = arg.comment;
-			criterionXml.operator = arg.criterionOperator;
-			criterionXml.operand = arg.operand;
+			criterionXml.method = arg.criterionMethod;
+			criterionXml.value = arg.value;
 			return criterionXml;
 		}
 
 		@Override
 		public Criterion unmarshal(final CriterionXml arg) throws Exception {
 			if (arg == null) { return null; }
-			return new Criterion(arg.operator, arg.operand, arg.comment);
+			return new Criterion(arg.method, arg.value, arg.comment);
 		}
 		
 	}
 	
+	public static Criterion newInstance(
+			final CriterionMethod criterionMethod, final String value) {
+		return new Criterion(criterionMethod, value);
+	}
+	
 	public static Criterion newInstance(final String s) {
 		StringBuilder sb = new StringBuilder();
-		List<CriterionOperator> list = Arrays.asList(CriterionOperator.values());
-		for (Iterator<CriterionOperator> iterator = list.iterator();
+		List<CriterionMethod> list = Arrays.asList(CriterionMethod.values());
+		for (Iterator<CriterionMethod> iterator = list.iterator();
 				iterator.hasNext();) {
-			CriterionOperator value = iterator.next();
+			CriterionMethod value = iterator.next();
 			String prefix = value.toString().concat(":");
 			sb.append(prefix);
 			if (iterator.hasNext()) {
-				sb.append(", ");
+				sb.append(" , ");
 			}
 		}
 		String message = String.format(
 				"string is expected to have one of the following "
-				+ "prefixes: %s. actual string is %s",
+				+ "prefixes: %s . actual string is %s",
 				sb.toString(),
 				s);
 		String[] sElements = s.split(":", 2);
@@ -71,7 +75,7 @@ public final class Criterion {
 		}
 		String criterionOperator = sElements[0];
 		String operand = sElements[1];
-		for (CriterionOperator value : CriterionOperator.values()) {
+		for (CriterionMethod value : CriterionMethod.values()) {
 			if (value.toString().equals(criterionOperator)) {
 				return new Criterion(value, operand);
 			}
@@ -80,42 +84,42 @@ public final class Criterion {
 	}
 	
 	private final String comment;
-	private final CriterionOperator criterionOperator;
-	private final String operand;
+	private final CriterionMethod criterionMethod;
+	private final String value;
 	
-	Criterion(final CriterionOperator operator,	final String oprnd) {
-		this(operator, oprnd, null);
+	private Criterion(final CriterionMethod method, final String val) {
+		this(method, val, null);
 	}
 	
 	private Criterion(
-			final CriterionOperator operator,
-			final String oprnd, 
+			final CriterionMethod method,
+			final String val, 
 			final String cmmnt) {
 		this.comment = cmmnt;
-		this.criterionOperator = operator;
-		this.operand = oprnd;
+		this.criterionMethod = method;
+		this.value = val;
 	} 
 
-	public boolean evaluatesTrue(final InetAddress inetAddress) {
-		return this.evaluatesTrue(inetAddress.getHostName())
-				|| this.evaluatesTrue(inetAddress.getHostAddress());
+	public boolean evaluatesTrue(final InetAddress arg) {
+		return this.evaluatesTrue(arg.getHostName())
+				|| this.evaluatesTrue(arg.getHostAddress());
 	}
 	
-	public boolean evaluatesTrue(final String oprnd) {
-		return this.criterionOperator.evaluatesTrue(oprnd, this.operand);
+	public boolean evaluatesTrue(final String arg) {
+		return this.criterionMethod.evaluatesTrue(arg, this.value);
 	}
 	
-	public CriterionOperator getCriterionOperator() {
-		return this.criterionOperator;
+	public CriterionMethod getCriterionMethod() {
+		return this.criterionMethod;
 	}
 	
-	public String getOperand() {
-		return this.operand;
+	public String getValue() {
+		return this.value;
 	}
 	
 	@Override
 	public String toString() {
-		return this.criterionOperator.toString().concat(":").concat(this.operand);
+		return this.criterionMethod.toString().concat(":").concat(this.value);
 	}
 	
 }

@@ -17,7 +17,7 @@ import jargyle.common.net.socks5.AddressType;
 import jargyle.common.net.socks5.UdpRequestHeader;
 import jargyle.server.Criteria;
 import jargyle.server.Criterion;
-import jargyle.server.CriterionOperator;
+import jargyle.server.CriterionMethod;
 
 final class UdpRelayServer {
 	
@@ -36,7 +36,7 @@ final class UdpRelayServer {
 					this.getUdpRelayServer().allowedSocks5IncomingUdpAddressCriteria;
 			if (allowedSocks5IncomingUdpAddrCriteria.toList().isEmpty()) {
 				allowedSocks5IncomingUdpAddrCriteria = Criteria.newInstance(
-						CriterionOperator.MATCHES.newCriterion(".*"));
+						Criterion.newInstance(CriterionMethod.MATCHES, ".*"));
 			}
 			Criterion criterion = 
 					allowedSocks5IncomingUdpAddrCriteria.anyEvaluatesTrue(

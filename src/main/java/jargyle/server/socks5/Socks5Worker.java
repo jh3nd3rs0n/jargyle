@@ -40,7 +40,7 @@ import jargyle.server.Host;
 import jargyle.server.Configuration;
 import jargyle.server.Criteria;
 import jargyle.server.Criterion;
-import jargyle.server.CriterionOperator;
+import jargyle.server.CriterionMethod;
 import jargyle.server.SettingSpec;
 import jargyle.server.Settings;
 import jargyle.server.SocksClientHelper;
@@ -106,7 +106,7 @@ public final class Socks5Worker implements Runnable {
 				this.configuration.getAllowedSocks5IncomingTcpAddressCriteria();
 		if (allowedSocks5IncomingTcpAddressCriteria.toList().isEmpty()) {
 			allowedSocks5IncomingTcpAddressCriteria = Criteria.newInstance(
-					CriterionOperator.MATCHES.newCriterion(".*"));
+					Criterion.newInstance(CriterionMethod.MATCHES, ".*"));
 		}
 		Criterion criterion = 
 				allowedSocks5IncomingTcpAddressCriteria.anyEvaluatesTrue(

@@ -33,7 +33,7 @@ final class Worker implements Runnable {
 				this.configuration.getAllowedClientAddressCriteria();
 		if (allowedClientAddressCriteria.toList().isEmpty()) {
 			allowedClientAddressCriteria = Criteria.newInstance(
-					CriterionOperator.MATCHES.newCriterion(".*"));
+					Criterion.newInstance(CriterionMethod.MATCHES, ".*"));
 		}
 		Criterion criterion = allowedClientAddressCriteria.anyEvaluatesTrue(
 				clientInetAddress);

@@ -51,7 +51,7 @@ public final class SocksServerCli {
 					"%1$s=[%2$s:%3$s1[ %2$s:%3$s2[...]]]", 
 					params.getOption(),
 					"equals|matches",
-					"OPERAND");
+					"VALUE");
 		}
 		
 	}

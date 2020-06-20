@@ -80,17 +80,17 @@ The following is the command line help for Jargyle (displayed when using the com
            jargyle.server.SocksServer --socks5-users ARGS
     
     OPTIONS:
-      --allowed-client-addr-criteria=[equals|matches:OPERAND1[ equals|matches:OPERAND2[...]]]
+      --allowed-client-addr-criteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
           The space separated list of allowed client address criteria
-      --allowed-socks5-incoming-tcp-addr-criteria=[equals|matches:OPERAND1[ equals|matches:OPERAND2[...]]]
+      --allowed-socks5-incoming-tcp-addr-criteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
           The space separated list of allowed SOCKS5 incoming TCP address criteria
-      --allowed-socks5-incoming-udp-addr-criteria=[equals|matches:OPERAND1[ equals|matches:OPERAND2[...]]]
+      --allowed-socks5-incoming-udp-addr-criteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
           The space separated list of allowed SOCKS5 incoming UDP address criteria
-      --blocked-client-addr-criteria=[equals|matches:OPERAND1[ equals|matches:OPERAND2[...]]]
+      --blocked-client-addr-criteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
           The space separated list of blocked client address criteria
-      --blocked-socks5-incoming-tcp-addr-criteria=[equals|matches:OPERAND1[ equals|matches:OPERAND2[...]]]
+      --blocked-socks5-incoming-tcp-addr-criteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
           The space separated list of blocked SOCKS5 incoming TCP address criteria
-      --blocked-socks5-incoming-udp-addr-criteria=[equals|matches:OPERAND1[ equals|matches:OPERAND2[...]]]
+      --blocked-socks5-incoming-udp-addr-criteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
           The space separated list of blocked SOCKS5 incoming UDP address criteria
       --config-file=FILE, -f FILE
           The configuration file

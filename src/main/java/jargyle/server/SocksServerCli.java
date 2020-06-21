@@ -508,6 +508,8 @@ public final class SocksServerCli {
 		Option configFileXsdOption = this.options.toList().get(
 				CONFIG_FILE_XSD_OPTION_ORDINAL);
 		Option helpOption = this.options.toList().get(HELP_OPTION_ORDINAL);
+		Option monitoredConfigFileOption = this.options.toList().get(
+				MONITORED_CONFIG_FILE_OPTION_ORDINAL);
 		Option newConfigFileOption = this.options.toList().get(
 				NEW_CONFIG_FILE_OPTION_ORDINAL);
 		Option settingsHelpOption = this.options.toList().get(
@@ -521,6 +523,9 @@ public final class SocksServerCli {
 		System.out.printf("       %s %s%n", 
 				this.programBeginningUsage, 
 				helpOption.getUsage());
+		System.out.printf("       %s %s%n", 
+				this.programBeginningUsage, 
+				monitoredConfigFileOption.getUsage());		
 		System.out.printf("       %s [OPTIONS] %s%n", 
 				this.programBeginningUsage, 
 				newConfigFileOption.getUsage());

@@ -75,6 +75,7 @@ The following is the command line help for Jargyle (displayed when using the com
     Usage: jargyle.server.SocksServer [OPTIONS]
            jargyle.server.SocksServer --config-file-xsd
            jargyle.server.SocksServer --help
+           jargyle.server.SocksServer --monitored-config-file=FILE
            jargyle.server.SocksServer [OPTIONS] --new-config-file=FILE
            jargyle.server.SocksServer --settings-help
            jargyle.server.SocksServer --socks5-users ARGS

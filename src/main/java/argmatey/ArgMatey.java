@@ -31,9 +31,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -709,21 +707,12 @@ public final class ArgMatey {
 			Class<?> cls = obj.getClass();
 			if (resultHolder.hasNonparsedArg()) {
 				String nonparsedArg = resultHolder.getNonparsedArg();
-				Field[] fields = cls.getFields();
-				for (Field field : fields) {
-					if (field.isAnnotationPresent(NonparsedArgSink.class)) {
-						NonparsedArgSinkAnnotatedElement element =
-								NonparsedArgSinkAnnotatedElement.newInstance(field);
-						element.receive(obj, nonparsedArg);
-						return;
-					}
-				}
 				Method[] methods = cls.getMethods();
 				for (Method method : methods) {
 					if (method.isAnnotationPresent(NonparsedArgSink.class)) {
-						NonparsedArgSinkAnnotatedElement element =
-								NonparsedArgSinkAnnotatedElement.newInstance(method);
-						element.receive(obj, nonparsedArg);
+						NonparsedArgSinkMethod mthd =
+								NonparsedArgSinkMethod.newInstance(method);
+						mthd.invoke(obj, nonparsedArg);
 						return;
 					}
 				}
@@ -731,24 +720,13 @@ public final class ArgMatey {
 			if (resultHolder.hasOption()) {
 				Option option = resultHolder.getOption();
 				OptionArg optionArg = resultHolder.getOptionArg();
-				Field[] fields = cls.getFields();
-				for (Field field : fields) {
-					if (field.isAnnotationPresent(OptionSink.class)) {
-						OptionSinkAnnotatedElement element =
-								OptionSinkAnnotatedElement.newInstance(field);
-						if (element.defines(option)) {
-							element.receive(obj, option, optionArg);
-							return;
-						}
-					}
-				}
 				Method[] methods = cls.getMethods();
 				for (Method method : methods) {
 					if (method.isAnnotationPresent(OptionSink.class)) {
-						OptionSinkAnnotatedElement element =
-								OptionSinkAnnotatedElement.newInstance(method);
-						if (element.defines(option)) {
-							element.receive(obj, option, optionArg);
+						OptionSinkMethod mthd =
+								OptionSinkMethod.newInstance(method);
+						if (mthd.defines(option)) {
+							mthd.invoke(obj, option, optionArg);
 							return;
 						}
 					}
@@ -1711,74 +1689,48 @@ public final class ArgMatey {
 	}
 
 	@Retention(RetentionPolicy.RUNTIME)
-	@Target({ ElementType.FIELD, ElementType.METHOD })
+	@Target({ElementType.METHOD})
 	public static @interface NonparsedArgSink { }
 	
-	static final class NonparsedArgSinkAnnotatedElement {
+	static final class NonparsedArgSinkMethod {
 		
-		public static NonparsedArgSinkAnnotatedElement newInstance(
-				final AnnotatedElement element) {
-			validateAnnotatedElement(element);
-			return new NonparsedArgSinkAnnotatedElement(element);
+		public static NonparsedArgSinkMethod newInstance(
+				final Method method) {
+			validateMethod(method);
+			return new NonparsedArgSinkMethod(method);
 		}
 		
-		private static void validateAnnotatedElement(
-				final AnnotatedElement element) {
-			NonparsedArgSink nonparsedArgSink = element.getAnnotation(
+		private static void validateMethod(final Method method) {
+			NonparsedArgSink nonparsedArgSink = method.getAnnotation(
 					NonparsedArgSink.class);
 			if (nonparsedArgSink == null) {
 				throw new IllegalArgumentException(String.format(
-						"element '%s' must have the annotation %s", 
-						element,
+						"method '%s' must have the annotation %s", 
+						method,
 						NonparsedArgSink.class.getName()));
 			}
-			if (element instanceof Field) {
-				Field field = (Field) element;
-				int modifiers = field.getModifiers();
-				if (Modifier.isStatic(modifiers)) {
-					throw new IllegalArgumentException(String.format(
-							"element '%s' cannot be static", 
-							element));
-				}
-				if (Modifier.isFinal(modifiers)) {
-					throw new IllegalArgumentException(String.format(
-							"element '%s' cannot be final", 
-							element));
-				}
-				Class<?> type = field.getType();
-				if (!type.equals(String.class)) {
-					throw new IllegalArgumentException(String.format(
-							"element '%s' must be of type %s", 
-							element,
-							String.class.getName()));
-				}
+			int modifiers = method.getModifiers();
+			if (Modifier.isStatic(modifiers)) {
+				throw new IllegalArgumentException(String.format(
+						"method '%s' cannot be static", 
+						method));
 			}
-			if (element instanceof Method) {
-				Method method = (Method) element;
-				int modifiers = method.getModifiers();
-				if (Modifier.isStatic(modifiers)) {
-					throw new IllegalArgumentException(String.format(
-							"element '%s' cannot be static", 
-							element));
-				}
-				Class<?>[] parameterTypes = method.getParameterTypes();
-				if (parameterTypes.length != 1 
-						&& parameterTypes[0].equals(String.class)) {
-					throw new IllegalArgumentException(String.format(
-							"element '%s' must have only one paramter of type %s", 
-							element,
-							String.class.getName()));
-				}
+			Class<?>[] parameterTypes = method.getParameterTypes();
+			if (parameterTypes.length != 1 
+					&& parameterTypes[0].equals(String.class)) {
+				throw new IllegalArgumentException(String.format(
+						"method '%s' must have only one paramter of type %s", 
+						method,
+						String.class.getName()));
 			}
 		}
 		
-		private final AnnotatedElement annotatedElement;
+		private final Method method;
 		private final NonparsedArgSink nonparsedArgSink;
 		
-		private NonparsedArgSinkAnnotatedElement(
-				final AnnotatedElement element) {
-			NonparsedArgSink sink = element.getAnnotation(NonparsedArgSink.class);
-			this.annotatedElement = element;
+		private NonparsedArgSinkMethod(final Method mthd) {
+			NonparsedArgSink sink = mthd.getAnnotation(NonparsedArgSink.class);
+			this.method = mthd;
 			this.nonparsedArgSink = sink;
 		}
 		
@@ -1786,39 +1738,26 @@ public final class ArgMatey {
 			return this.nonparsedArgSink;
 		}
 		
-		public void receive(final Object obj, final String nonparsedArg) {
-			if (this.annotatedElement instanceof Field) {
-				Field field = (Field) this.annotatedElement;
-				try {
-					field.set(obj, nonparsedArg);
-				} catch (IllegalArgumentException e) {
-					throw new AssertionError(e);
-				} catch (IllegalAccessException e) {
-					throw new AssertionError(e);
+		public void invoke(final Object obj, final String nonparsedArg) {
+			try {
+				this.method.invoke(obj, nonparsedArg);
+			} catch (IllegalAccessException e) {
+				throw new AssertionError(e);
+			} catch (IllegalArgumentException e) {
+				throw new AssertionError(e);
+			} catch (InvocationTargetException e) {
+				Throwable cause = e.getCause();
+				if (cause instanceof IllegalArgumentException) {
+					throw new IllegalArgException(nonparsedArg, cause);
 				}
-			}
-			if (this.annotatedElement instanceof Method) {
-				Method method = (Method) this.annotatedElement;
-				try {
-					method.invoke(obj, nonparsedArg);
-				} catch (IllegalAccessException e) {
-					throw new AssertionError(e);
-				} catch (IllegalArgumentException e) {
-					throw new AssertionError(e);
-				} catch (InvocationTargetException e) {
-					Throwable cause = e.getCause();
-					if (cause instanceof IllegalArgumentException) {
-						throw new IllegalArgException(nonparsedArg, cause);
-					}
-					throw new AssertionError(
-							InvocationTargetExceptionHelper.toString(e), 
-							e);
-				}
+				throw new AssertionError(
+						InvocationTargetExceptionHelper.toString(e), 
+						e);
 			}
 		}
 		
-		public AnnotatedElement toAnnotatedElement() {
-			return this.annotatedElement;
+		public Method toMethod() {
+			return this.method;
 		}
 	}
 	
@@ -2782,30 +2721,21 @@ public final class ArgMatey {
 		}
 		
 		public static Options newInstanceFrom(final Class<?> cls) {
-			List<OptionSinkAnnotatedElement> optionSinkAnnotatedElements =
-					new ArrayList<OptionSinkAnnotatedElement>();
-			Field[] fields = cls.getFields();
-			for (Field field : fields) {
-				if (field.isAnnotationPresent(OptionSink.class)) {
-					OptionSinkAnnotatedElement element = 
-							OptionSinkAnnotatedElement.newInstance(field);
-					optionSinkAnnotatedElements.add(element);
-				}
-			}
+			List<OptionSinkMethod> optionSinkMethods =
+					new ArrayList<OptionSinkMethod>();
 			Method[] methods = cls.getMethods();
 			for (Method method : methods) {
 				if (method.isAnnotationPresent(OptionSink.class)) {
-					OptionSinkAnnotatedElement element = 
-							OptionSinkAnnotatedElement.newInstance(method);
-					optionSinkAnnotatedElements.add(element);
+					OptionSinkMethod mthd =	
+							OptionSinkMethod.newInstance(method);
+					optionSinkMethods.add(mthd);
 				}
 			}
 			Collections.sort(
-					optionSinkAnnotatedElements,
-					new OptionSinkAnnotatedElementComparator());
+					optionSinkMethods, new OptionSinkMethodComparator());
 			List<Option> options = new ArrayList<Option>();
-			for (OptionSinkAnnotatedElement element : optionSinkAnnotatedElements) {
-				options.add(element.newOption());
+			for (OptionSinkMethod method : optionSinkMethods) {
+				options.add(method.newOption());
 			}
 			return newInstance(options);
 		}
@@ -2893,7 +2823,7 @@ public final class ArgMatey {
 	}
 
 	@Retention(RetentionPolicy.RUNTIME)
-	@Target({ ElementType.FIELD, ElementType.METHOD })
+	@Target({ElementType.METHOD})
 	public static @interface OptionSink {
 		
 		OptionBuilder optionBuilder();
@@ -2902,159 +2832,14 @@ public final class ArgMatey {
 		
 	}
 	
-	static final class OptionSinkAnnotatedElement {
+	static final class OptionSinkMethod {
 		
-		private static enum TargetFieldType implements TargetType {
+		private static enum TargetMethodParameterTypesType {
 			
 			BOOLEAN_PRIMITIVE {
 
 				@Override
-				public Class<?> getTargetClass(final AnnotatedElement element) {
-					return null;
-				}
-				
-				@Override
-				public String getTargetFieldTypeString() {
-					return boolean.class.getName();
-				}
-
-				@Override
-				public boolean isTargetFieldType(final Class<?> type) {
-					return type.equals(boolean.class);
-				}
-
-				@Override
-				public void put(
-						final Object obj, 
-						final AnnotatedElement element, 
-						final Option option, 
-						final OptionArg optionArg) {
-					Field field = (Field) element;
-					try {
-						field.set(obj, Boolean.TRUE.booleanValue());
-					} catch (IllegalArgumentException e) {
-						throw new AssertionError(e);
-					} catch (IllegalAccessException e) {
-						throw new AssertionError(e);
-					}
-				}
-				
-			},
-			
-			LIST {
-
-				@Override
-				public Class<?> getTargetClass(final AnnotatedElement element) {
-					Field field = (Field) element;
-					Type genericType = field.getGenericType();
-					if (genericType instanceof ParameterizedType) {
-						ParameterizedType parameterizedType = 
-								(ParameterizedType) genericType;
-						Type[] typeArguments = 
-								parameterizedType.getActualTypeArguments();
-						Type typeArgument = typeArguments[0];
-						if (typeArgument instanceof Class) {
-							return (Class<?>) typeArgument;
-						}
-					}
-					return Object.class;
-				}
-				
-				@Override
-				public String getTargetFieldTypeString() {
-					return List.class.getName();
-				}
-
-				@Override
-				public boolean isTargetFieldType(final Class<?> type) {
-					return type.equals(List.class);
-				}
-
-				@Override
-				public void put(
-						final Object obj, 
-						final AnnotatedElement element, 
-						final Option option, 
-						final OptionArg optionArg) {
-					Field field = (Field) element;
-					List<Object> objectValues = Collections.emptyList();
-					if (optionArg != null) {
-						objectValues = optionArg.getObjectValues();
-					}
-					try {
-						field.set(obj, objectValues);
-					} catch (IllegalArgumentException e) {
-						throw new AssertionError(e);
-					} catch (IllegalAccessException e) {
-						throw new AssertionError(e);
-					}
-				}
-				
-			},
-			
-			OBJECT {
-
-				@Override
-				public Class<?> getTargetClass(final AnnotatedElement element) {
-					Field field = (Field) element;
-					return field.getType();
-				}
-				
-				@Override
-				public String getTargetFieldTypeString() {
-					return Object.class.getName();
-				}
-
-				@Override
-				public boolean isTargetFieldType(final Class<?> type) {
-					return true;
-				}
-
-				@Override
-				public void put(
-						final Object obj, 
-						final AnnotatedElement element, 
-						final Option option, 
-						final OptionArg optionArg) {
-					Field field = (Field) element;
-					Object objectValue = null;
-					if (optionArg != null) {
-						objectValue = optionArg.getObjectValue();
-					}
-					try {
-						field.set(obj, objectValue);
-					} catch (IllegalArgumentException e) {
-						throw new AssertionError(e);
-					} catch (IllegalAccessException e) {
-						throw new AssertionError(e);
-					}
-				}
-				
-			};
-			
-			public static TargetFieldType get(final Class<?> type) {
-				for (TargetFieldType targetFieldType 
-						: TargetFieldType.values()) {
-					if (targetFieldType.isTargetFieldType(type)) {
-						return targetFieldType;
-					}
-				}
-				return null;
-			}
-			
-			public abstract String getTargetFieldTypeString();
-			
-			public abstract boolean isTargetFieldType(final Class<?> type);
-			
-		}
-		
-		private static enum TargetMethodParameterTypesType 
-			implements TargetType {
-			
-			BOOLEAN_PRIMITIVE {
-
-				@Override
-				public Class<?> getTargetClass(final AnnotatedElement element) {
+				public Class<?> getTargetClass(final Method method) {
 					return null;
 				}
 
@@ -3064,20 +2849,11 @@ public final class ArgMatey {
 				}
 
 				@Override
-				public boolean isTargetMethodParameterTypes(
-						final Class<?>[] types) {
-					if (types.length != 1) { return false; }
-					Class<?> type = types[0];
-					return type.equals(boolean.class);
-				}
-
-				@Override
-				public void put(
+				public void invoke(
+						final Method method, 
 						final Object obj, 
-						final AnnotatedElement element, 
 						final Option option, 
 						final OptionArg optionArg) {
-					Method method = (Method) element;
 					try {
 						method.invoke(obj, Boolean.TRUE.booleanValue());
 					} catch (IllegalAccessException e) {
@@ -3090,14 +2866,21 @@ public final class ArgMatey {
 								e);
 					}
 				}
+
+				@Override
+				public boolean isTargetMethodParameterTypes(
+						final Class<?>[] types) {
+					if (types.length != 1) { return false; }
+					Class<?> type = types[0];
+					return type.equals(boolean.class);
+				}
 				
 			},
 			
 			LIST {
 
 				@Override
-				public Class<?> getTargetClass(final AnnotatedElement element) {
-					Method method = (Method) element;
+				public Class<?> getTargetClass(final Method method) {
 					Type[] genericParameterTypes = 
 							method.getGenericParameterTypes();
 					Type genericParameterType = genericParameterTypes[0];
@@ -3120,20 +2903,11 @@ public final class ArgMatey {
 				}
 
 				@Override
-				public boolean isTargetMethodParameterTypes(
-						final Class<?>[] types) {
-					if (types.length != 1) { return false; }
-					Class<?> type = types[0];
-					return type.equals(List.class);
-				}
-
-				@Override
-				public void put(
+				public void invoke(
+						final Method method, 
 						final Object obj, 
-						final AnnotatedElement element, 
 						final Option option, 
 						final OptionArg optionArg) {
-					Method method = (Method) element;
 					List<Object> objectValues = Collections.emptyList();
 					String optArg = null;
 					if (optionArg != null) {
@@ -3157,13 +2931,21 @@ public final class ArgMatey {
 								e);
 					}
 				}
+
+				@Override
+				public boolean isTargetMethodParameterTypes(
+						final Class<?>[] types) {
+					if (types.length != 1) { return false; }
+					Class<?> type = types[0];
+					return type.equals(List.class);
+				}
 				
 			},
 			
 			NONE {
 
 				@Override
-				public Class<?> getTargetClass(final AnnotatedElement element) {
+				public Class<?> getTargetClass(final Method method) {
 					return null;
 				}
 
@@ -3173,18 +2955,11 @@ public final class ArgMatey {
 				}
 
 				@Override
-				public boolean isTargetMethodParameterTypes(
-						final Class<?>[] types) {
-					return types.length == 0;
-				}
-
-				@Override
-				public void put(
+				public void invoke(
+						final Method method, 
 						final Object obj, 
-						final AnnotatedElement element, 
 						final Option option, 
 						final OptionArg optionArg) {
-					Method method = (Method) element;
 					try {
 						method.invoke(obj);
 					} catch (IllegalAccessException e) {
@@ -3197,14 +2972,19 @@ public final class ArgMatey {
 								e);
 					}
 				}
+
+				@Override
+				public boolean isTargetMethodParameterTypes(
+						final Class<?>[] types) {
+					return types.length == 0;
+				}
 				
 			},
 			
 			OBJECT {
 
 				@Override
-				public Class<?> getTargetClass(final AnnotatedElement element) {
-					Method method = (Method) element;
+				public Class<?> getTargetClass(final Method method) {
 					return method.getParameterTypes()[0];
 				}
 
@@ -3214,18 +2994,11 @@ public final class ArgMatey {
 				}
 
 				@Override
-				public boolean isTargetMethodParameterTypes(
-						final Class<?>[] types) {
-					return types.length == 1;
-				}
-
-				@Override
-				public void put(
+				public void invoke(
+						final Method method, 
 						final Object obj, 
-						final AnnotatedElement element, 
 						final Option option, 
 						final OptionArg optionArg) {
-					Method method = (Method) element;
 					Object objectValue = null;
 					String optArg = null;
 					if (optionArg != null) {
@@ -3249,6 +3022,12 @@ public final class ArgMatey {
 								e);
 					}
 				}
+
+				@Override
+				public boolean isTargetMethodParameterTypes(
+						final Class<?>[] types) {
+					return types.length == 1;
+				}
 				
 			};
 			
@@ -3263,81 +3042,34 @@ public final class ArgMatey {
 				return null;
 			}
 			
+			public abstract Class<?> getTargetClass(final Method method);
+			
 			public abstract String getTargetMethodParameterTypesString();
+			
+			public abstract void invoke(
+					final Method method, 
+					final Object obj, 
+					final Option option, 
+					final OptionArg optionArg);
 			
 			public abstract boolean isTargetMethodParameterTypes(
 					final Class<?>[] types);
 			
 		}
 		
-		private static interface TargetType {
-			
-			public Class<?> getTargetClass(final AnnotatedElement element);
-			
-			public void put(
-					final Object obj, 
-					final AnnotatedElement element, 
-					final Option option, 
-					final OptionArg optionArg);
-			
-		}
-		
-		public static OptionSinkAnnotatedElement newInstance(
-				final AnnotatedElement element) {
-			validateAnnotatedElement(element);
-			return new OptionSinkAnnotatedElement(element);
-		}
-		
-		private static void validateAnnotatedElement(
-				final AnnotatedElement element) {
-			OptionSink optionSink = element.getAnnotation(OptionSink.class);
-			if (optionSink == null) {
-				throw new IllegalArgumentException(String.format(
-						"element '%s' must have the annotation %s", 
-						element,
-						OptionSink.class.getName()));
-			}
-			if (element instanceof Field) {
-				validateField((Field) element);
-			}
-			if (element instanceof Method) {
-				validateMethod((Method) element);
-			}
-		}
-		
-		private static void validateField(final Field field) {
-			int modifiers = field.getModifiers();
-			if (Modifier.isStatic(modifiers)) {
-				throw new IllegalArgumentException(String.format(
-						"field '%s' cannot be static", 
-						field));
-			}
-			if (Modifier.isFinal(modifiers)) {
-				throw new IllegalArgumentException(String.format(
-						"field '%s' cannot be final", 
-						field));
-			}
-			TargetFieldType targetFieldType = TargetFieldType.get(
-					field.getType());
-			if (targetFieldType == null) {
-				StringBuilder sb = new StringBuilder();
-				List<TargetFieldType> list = Arrays.asList(
-						TargetFieldType.values());
-				for (Iterator<TargetFieldType> iterator = list.iterator();
-						iterator.hasNext();) {
-					sb.append(iterator.next().getTargetFieldTypeString());
-					if (iterator.hasNext()) {
-						sb.append(", ");
-					}
-				}
-				throw new IllegalArgumentException(String.format(
-						"field '%s' must be one the following types: %s", 
-						field,
-						sb.toString()));
-			}
+		public static OptionSinkMethod newInstance(final Method method) {
+			validateMethod(method);
+			return new OptionSinkMethod(method);
 		}
 		
 		private static void validateMethod(final Method method) {
+			OptionSink optionSink = method.getAnnotation(OptionSink.class);
+			if (optionSink == null) {
+				throw new IllegalArgumentException(String.format(
+						"method '%s' must have the annotation %s", 
+						method,
+						OptionSink.class.getName()));
+			}
 			int modifiers = method.getModifiers();
 			if (Modifier.isStatic(modifiers)) {
 				throw new IllegalArgumentException(String.format(
@@ -3365,25 +3097,17 @@ public final class ArgMatey {
 			}
 		}
 		
-		private final AnnotatedElement annotatedElement;
+		private final Method method;
 		private final OptionSink optionSink;
-		private final TargetType targetType;
+		private final TargetMethodParameterTypesType targetMethodParameterTypesType;
 		
-		private OptionSinkAnnotatedElement(final AnnotatedElement element) {
-			TargetType tType = null;
-			if (element instanceof Field) {
-				Field field = (Field) element;
-				tType = TargetFieldType.get(field.getType());
-			}
-			if (tType == null && element instanceof Method) {
-				Method method = (Method) element;
-				tType = TargetMethodParameterTypesType.get(
-						method.getParameterTypes());
-			}
-			OptionSink optSink = element.getAnnotation(OptionSink.class);
-			this.annotatedElement = element;
-			this.optionSink = optSink;
-			this.targetType = tType;
+		private OptionSinkMethod(final Method mthd) {
+			TargetMethodParameterTypesType t = TargetMethodParameterTypesType.get(
+					mthd.getParameterTypes());
+			OptionSink sink = mthd.getAnnotation(OptionSink.class);
+			this.method = mthd;
+			this.optionSink = sink;
+			this.targetMethodParameterTypesType = t;
 		}
 		
 		public boolean defines(final Option option) {
@@ -3404,6 +3128,14 @@ public final class ArgMatey {
 		
 		public OptionSink getOptionSink() {
 			return this.optionSink;
+		}
+		
+		public void invoke(
+				final Object obj, 
+				final Option option, 
+				final OptionArg optionArg) {
+			this.targetMethodParameterTypesType.invoke(
+					this.method, obj, option, optionArg);
 		}
 
 		public Option newOption() {
@@ -3433,7 +3165,8 @@ public final class ArgMatey {
 						stringConverterClass);
 				builder.stringConverter(stringConverter);
 			}
-			builder.type(this.targetType.getTargetClass(this.annotatedElement));
+			builder.type(this.targetMethodParameterTypesType.getTargetClass(
+					this.method));
 			return builder;
 		}
 		
@@ -3568,28 +3301,21 @@ public final class ArgMatey {
 			return stringConverter;
 		}
 		
-		public void receive(
-				final Object obj, 
-				final Option option, 
-				final OptionArg optionArg) {
-			this.targetType.put(obj, this.annotatedElement, option, optionArg);
-		}
-		
-		public AnnotatedElement toAnnotatedElement() {
-			return this.annotatedElement;
+		public Method toMethod() {
+			return this.method;
 		}
 		
 	}
 	
-	static final class OptionSinkAnnotatedElementComparator 
-		implements Comparator<OptionSinkAnnotatedElement> {
+	static final class OptionSinkMethodComparator 
+		implements Comparator<OptionSinkMethod> {
 
-		public OptionSinkAnnotatedElementComparator() { }
+		public OptionSinkMethodComparator() { }
 		
 		@Override
 		public int compare(
-				final OptionSinkAnnotatedElement arg0, 
-				final OptionSinkAnnotatedElement arg1) {
+				final OptionSinkMethod arg0, 
+				final OptionSinkMethod arg1) {
 			OptionSink optionSink0 = arg0.getOptionSink();
 			OptionSink optionSink1 = arg1.getOptionSink();
 			OptionBuilder optionBuilder0 = optionSink0.optionBuilder();

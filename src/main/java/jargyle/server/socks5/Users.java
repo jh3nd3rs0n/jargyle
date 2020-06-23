@@ -71,7 +71,8 @@ public final class Users {
 		System.setProperty(
 				"com.sun.xml.bind.v2.bytecode.ClassTailor.noOptimize", "true");
 		UsersCli usersCli = new UsersCli();
-		usersCli.process(args);
+		int status = usersCli.process(args);
+		System.exit(status);
 	}
 	
 	public static Users newInstance(final List<User> usrs) {

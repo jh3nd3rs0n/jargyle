@@ -734,12 +734,6 @@ public final class ArgMatey {
 			}
 		}
 		
-		public void parseRemainingTo(final Object obj) {
-			while (this.hasNext()) {
-				this.parseNextTo(obj);
-			}
-		}
-
 		@Override
 		public String toString() {
 			StringBuilder sb = new StringBuilder();

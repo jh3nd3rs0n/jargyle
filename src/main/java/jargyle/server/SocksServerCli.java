@@ -135,11 +135,15 @@ public final class SocksServerCli {
 			SocksServerCli.class.getName());
 	
 	private ArgsParser argsParser;
+	private boolean configurationFileXsdRequested;
 	private final ModifiableConfiguration modifiableConfiguration;
 	private String monitoredConfigurationFile;
+	private boolean newConfigurationFileRequested;
 	private final Options options;
-	private final String programName;
 	private final String programBeginningUsage;
+	private boolean programHelpRequested;
+	private final String programName;	
+	private boolean settingsHelpRequested;
 	
 	SocksServerCli() {
 		Options opts = Options.newInstanceFrom(this.getClass());
@@ -154,11 +158,15 @@ public final class SocksServerCli {
 			progBeginningUsage = progName;
 		}
 		this.argsParser = null;
+		this.configurationFileXsdRequested = false;
 		this.modifiableConfiguration = new ModifiableConfiguration();
 		this.monitoredConfigurationFile = null;
+		this.newConfigurationFileRequested = false;
 		this.options = opts;
-		this.programName = progName;
 		this.programBeginningUsage = progBeginningUsage;
+		this.programHelpRequested = false;
+		this.programName = progName;
+		this.settingsHelpRequested = false;
 	}
 	
 	@OptionSink(
@@ -362,7 +370,6 @@ public final class SocksServerCli {
 		}
 		Users.main(remainingArgList.toArray(
 				new String[remainingArgList.size()]));
-		System.exit(0);
 	}
 	
 	@OptionSink(
@@ -400,7 +407,7 @@ public final class SocksServerCli {
 			} catch (IllegalArgumentException e) {
 				System.err.printf("%s: %s%n", this.programName, e);
 				e.printStackTrace(System.err);
-				System.exit(-1);
+				return null;
 			}
 			configuration = new MutableConfiguration(configurationService);
 		}
@@ -464,7 +471,7 @@ public final class SocksServerCli {
 						"unable to rename '%s' to '%s'", tempFile, f));
 			}
 		}
-		System.exit(0);
+		this.newConfigurationFileRequested = true;
 	}
 	
 	@OptionSink(
@@ -486,7 +493,7 @@ public final class SocksServerCli {
 		byte[] xsd = ImmutableConfiguration.getXsd();
 		System.out.write(xsd);
 		System.out.flush();
-		System.exit(0);
+		this.configurationFileXsdRequested = true;
 	}
 	
 	@OptionSink(
@@ -541,7 +548,7 @@ public final class SocksServerCli {
 		this.options.printHelpText();
 		System.out.println();
 		System.out.println();
-		System.exit(0);
+		this.programHelpRequested = true;
 	}
 	
 	private void printHelpText(final List<HelpTextParams> list) {
@@ -582,10 +589,10 @@ public final class SocksServerCli {
 		this.printHelpText(Arrays.asList(AuthMethod.values()));
 		System.out.println("SOCKS5_GSSAPI_PROTECTION_LEVELS:");
 		this.printHelpText(Arrays.asList(GssapiProtectionLevel.values()));
-		System.exit(0);
+		this.settingsHelpRequested = true;
 	}
 	
-	public void process(final String[] args) {
+	public int process(final String[] args) {
 		Option settingsOption = this.options.toList().get(
 				SETTINGS_OPTION_ORDINAL);
 		Option settingsHelpOption = this.options.toList().get(
@@ -600,25 +607,34 @@ public final class SocksServerCli {
 				this.programBeginningUsage, 
 				helpOption.getUsage());
 		this.argsParser = ArgsParser.newInstance(args, this.options, false);
-		try {
-			this.argsParser.parseRemainingTo(this);
-		} catch (IllegalOptionArgException e) {
-			String suggest = suggestion;
-			if (settingsOption.getAllOptions().contains(e.getOption())) {
-				suggest = settingsHelpSuggestion;
+		while (this.argsParser.hasNext()) {
+			try {
+				this.argsParser.parseNextTo(this);
+			} catch (IllegalOptionArgException e) {
+				String suggest = suggestion;
+				if (settingsOption.getAllOptions().contains(e.getOption())) {
+					suggest = settingsHelpSuggestion;
+				}
+				System.err.printf("%s: %s%n", this.programName, e);
+				System.err.println(suggest);
+				e.printStackTrace(System.err);
+				return -1;
+			} catch (Throwable t) {
+				System.err.printf("%s: %s%n", this.programName, t);
+				System.err.println(suggestion);
+				t.printStackTrace(System.err);
+				return -1;
 			}
-			System.err.printf("%s: %s%n", this.programName, e);
-			System.err.println(suggest);
-			e.printStackTrace(System.err);
-			System.exit(-1);
-		} catch (Throwable t) {
-			System.err.printf("%s: %s%n", this.programName, t);
-			System.err.println(suggestion);
-			t.printStackTrace(System.err);
-			System.exit(-1);
+			if (this.configurationFileXsdRequested
+					|| this.newConfigurationFileRequested
+					|| this.programHelpRequested
+					|| this.settingsHelpRequested) {
+				return 0;
+			}
 		}
 		Configuration configuration = this.newConfiguration();
-		this.startSocksServer(configuration);
+		if (configuration == null) { return -1;	}
+		return (this.startSocksServer(configuration) != 0) ? -1 : 0;
 	}
 	
 	@OptionSink(
@@ -679,7 +695,7 @@ public final class SocksServerCli {
 				usernamePasswordAuthenticator);
 	}
 	
-	private void startSocksServer(final Configuration configuration) {
+	private int startSocksServer(final Configuration configuration) {
 		SocksServer socksServer = new SocksServer(configuration);
 		try {
 			socksServer.start();
@@ -693,18 +709,21 @@ public final class SocksServerCli {
 							configuration.getSettings().getLastValue(
 									SettingSpec.HOST, Host.class)), 
 					e);
-			System.exit(-1);
+			return -1;
 		} catch (IOException e) {
 			LOGGER.log(
 					Level.SEVERE, 
 					"Error in starting SocksServer", 
 					e);
-			System.exit(-1);
+			return -1;
 		}
-		LOGGER.info(String.format(
-				"Listening on port %s at %s", 
-				socksServer.getPort(),
-				socksServer.getHost()));
+		LOGGER.log(
+				Level.INFO,
+				String.format(
+						"Listening on port %s at %s",
+						socksServer.getPort(),
+						socksServer.getHost()));
+		return 0;
 	}
 
 }

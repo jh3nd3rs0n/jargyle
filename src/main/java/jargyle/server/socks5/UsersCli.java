@@ -272,8 +272,10 @@ public final class UsersCli {
 	private ArgsParser argsParser;
 	private Command command;
 	private final Options options;
-	private final String programName;
 	private final String programBeginningUsage;
+	private boolean programHelpRequested;
+	private final String programName;	
+	private boolean xsdRequested;
 	
 	UsersCli() {
 		Options opts = Options.newInstanceFrom(this.getClass());
@@ -291,8 +293,10 @@ public final class UsersCli {
 		this.argsParser = null;
 		this.command = null;
 		this.options = opts;
-		this.programName = progName;
 		this.programBeginningUsage = progBeginningUsage;
+		this.programHelpRequested = false;
+		this.programName = progName;		
+		this.xsdRequested = false;
 	}
 	
 	@NonparsedArgSink
@@ -343,7 +347,7 @@ public final class UsersCli {
 		this.options.printHelpText();
 		System.out.println();
 		System.out.println();
-		System.exit(0);
+		this.programHelpRequested = true;
 	}
 	
 	@OptionSink(
@@ -365,28 +369,33 @@ public final class UsersCli {
 		byte[] xsd = Users.getXsd();
 		System.out.write(xsd);
 		System.out.flush();
-		System.exit(0);
+		this.xsdRequested = true;
 	}
 	
-	public void process(final String[] args) {
+	public int process(final String[] args) {
 		Option helpOption = this.options.toList().get(HELP_OPTION_ORDINAL);
 		String suggestion = String.format(
 				"Try `%s %s' for more information", 
 				this.programBeginningUsage, 
 				helpOption.getUsage());
 		this.argsParser = ArgsParser.newInstance(args, this.options, false);
-		try {
-			this.argsParser.parseRemainingTo(this);
-		} catch (Throwable t) {
-			System.err.printf("%s: %s%n", programName, t);
-			System.err.println(suggestion);
-			t.printStackTrace(System.err);
-			System.exit(-1);
+		while (this.argsParser.hasNext()) {
+			try {
+				this.argsParser.parseNextTo(this);
+			} catch (Throwable t) {
+				System.err.printf("%s: %s%n", programName, t);
+				System.err.println(suggestion);
+				t.printStackTrace(System.err);
+				return -1;
+			}
+			if (this.programHelpRequested || this.xsdRequested) {
+				return 0;
+			}
 		}
 		if (this.command == null) {
 			System.err.printf("%s: command must be provided%n", programName);
 			System.err.println(suggestion);
-			System.exit(-1);
+			return -1;
 		}
 		try {
 			this.command.invoke(this.argList.toArray(
@@ -395,8 +404,9 @@ public final class UsersCli {
 			System.err.printf("%s: %s%n", programName, e);
 			System.err.println(suggestion);
 			e.printStackTrace(System.err);
-			System.exit(-1);
+			return -1;
 		}
+		return 0;
 	}
 	
 }

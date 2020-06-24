@@ -381,7 +381,7 @@ public final class UsersCli {
 		this.argsParser = ArgsParser.newInstance(args, this.options, false);
 		while (this.argsParser.hasNext()) {
 			try {
-				this.argsParser.parseNextTo(this);
+				this.argsParser.parseNext().sendTo(this);
 			} catch (Throwable t) {
 				System.err.printf("%s: %s%n", programName, t);
 				System.err.println(suggestion);

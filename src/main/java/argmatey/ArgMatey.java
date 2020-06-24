@@ -702,38 +702,6 @@ public final class ArgMatey {
 			return resultHolder;
 		}
 		
-		public void parseNextTo(final Object obj) {
-			ParseResultHolder resultHolder = this.parseNext();
-			Class<?> cls = obj.getClass();
-			if (resultHolder.hasNonparsedArg()) {
-				String nonparsedArg = resultHolder.getNonparsedArg();
-				Method[] methods = cls.getMethods();
-				for (Method method : methods) {
-					if (method.isAnnotationPresent(NonparsedArgSink.class)) {
-						NonparsedArgSinkMethod mthd =
-								NonparsedArgSinkMethod.newInstance(method);
-						mthd.invoke(obj, nonparsedArg);
-						return;
-					}
-				}
-			}
-			if (resultHolder.hasOption()) {
-				Option option = resultHolder.getOption();
-				OptionArg optionArg = resultHolder.getOptionArg();
-				Method[] methods = cls.getMethods();
-				for (Method method : methods) {
-					if (method.isAnnotationPresent(OptionSink.class)) {
-						OptionSinkMethod mthd =
-								OptionSinkMethod.newInstance(method);
-						if (mthd.defines(option)) {
-							mthd.invoke(obj, option, optionArg);
-							return;
-						}
-					}
-				}
-			}
-		}
-		
 		@Override
 		public String toString() {
 			StringBuilder sb = new StringBuilder();
@@ -3517,6 +3485,38 @@ public final class ArgMatey {
 						opt1, opt2, opt3, additionalOpts);
 			}
 			return false;
+		}
+		
+		public void sendTo(final Object obj) {
+			Class<?> cls = obj.getClass();
+			if (this.hasNonparsedArg()) {
+				String nonparsedArg = this.getNonparsedArg();
+				Method[] methods = cls.getMethods();
+				for (Method method : methods) {
+					if (method.isAnnotationPresent(NonparsedArgSink.class)) {
+						NonparsedArgSinkMethod mthd =
+								NonparsedArgSinkMethod.newInstance(method);
+						mthd.invoke(obj, nonparsedArg);
+						return;
+					}
+				}
+			}
+			if (this.hasOptionOccurrence()) {
+				OptionOccurrence optionOccurrence = this.getOptionOccurrence();
+				Option option = optionOccurrence.getOption();
+				OptionArg optionArg = optionOccurrence.getOptionArg();
+				Method[] methods = cls.getMethods();
+				for (Method method : methods) {
+					if (method.isAnnotationPresent(OptionSink.class)) {
+						OptionSinkMethod mthd =
+								OptionSinkMethod.newInstance(method);
+						if (mthd.defines(option)) {
+							mthd.invoke(obj, option, optionArg);
+							return;
+						}
+					}
+				}
+			}
 		}
 		
 		@Override

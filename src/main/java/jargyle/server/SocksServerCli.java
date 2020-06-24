@@ -613,7 +613,7 @@ public final class SocksServerCli {
 		this.argsParser = ArgsParser.newInstance(args, this.options, false);
 		while (this.argsParser.hasNext()) {
 			try {
-				this.argsParser.parseNextTo(this);
+				this.argsParser.parseNext().sendTo(this);
 			} catch (IllegalOptionArgException e) {
 				String suggest = suggestion;
 				if (settingsOption.getAllOptions().contains(e.getOption())) {

@@ -19,7 +19,7 @@ public final class SocksServer {
 				"com.sun.xml.bind.v2.bytecode.ClassTailor.noOptimize", "true");
 		SocksServerCli socksServerCli = new SocksServerCli();
 		int status = socksServerCli.process(args);
-		System.exit(status);
+		if (status != 0) { System.exit(status);	}
 	}
 	
 	private int backlog;

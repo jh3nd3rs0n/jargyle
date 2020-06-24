@@ -72,7 +72,7 @@ public final class Users {
 				"com.sun.xml.bind.v2.bytecode.ClassTailor.noOptimize", "true");
 		UsersCli usersCli = new UsersCli();
 		int status = usersCli.process(args);
-		System.exit(status);
+		if (status != 0) { System.exit(status);	}
 	}
 	
 	public static Users newInstance(final List<User> usrs) {

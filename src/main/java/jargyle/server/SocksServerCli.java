@@ -641,7 +641,7 @@ public final class SocksServerCli {
 		}
 		Configuration configuration = this.newConfiguration();
 		if (configuration == null) { return -1;	}
-		return (this.startSocksServer(configuration) != 0) ? -1 : 0;
+		return this.startSocksServer(configuration);
 	}
 	
 	@OptionSink(

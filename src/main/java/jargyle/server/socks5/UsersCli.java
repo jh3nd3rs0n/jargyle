@@ -277,7 +277,7 @@ public final class UsersCli {
 	private final String programName;	
 	private boolean xsdRequested;
 	
-	UsersCli() {
+	public UsersCli() {
 		Options opts = Options.newInstanceFrom(this.getClass());
 		String progName = System.getProperty(
 				SystemPropertyNameConstants.PROGRAM_NAME);

@@ -36,7 +36,7 @@ import jargyle.common.net.SocketSettingSpec;
 import jargyle.common.net.socks5.AuthMethod;
 import jargyle.common.net.socks5.gssapiauth.GssapiProtectionLevel;
 import jargyle.server.socks5.UsernamePasswordAuthenticator;
-import jargyle.server.socks5.Users;
+import jargyle.server.socks5.UsersCli;
 
 public final class SocksServerCli {
 
@@ -144,6 +144,7 @@ public final class SocksServerCli {
 	private boolean programHelpRequested;
 	private final String programName;	
 	private boolean settingsHelpRequested;
+	private Integer socks5UsersManagementModeStatus;
 	
 	SocksServerCli() {
 		Options opts = Options.newInstanceFrom(this.getClass());
@@ -167,6 +168,7 @@ public final class SocksServerCli {
 		this.programHelpRequested = false;
 		this.programName = progName;
 		this.settingsHelpRequested = false;
+		this.socks5UsersManagementModeStatus = null;
 	}
 	
 	@OptionSink(
@@ -368,8 +370,10 @@ public final class SocksServerCli {
 			String arg = this.argsParser.next();
 			remainingArgList.add(arg);
 		}
-		Users.main(remainingArgList.toArray(
+		UsersCli usersCli = new UsersCli();
+		int status = usersCli.process(remainingArgList.toArray(
 				new String[remainingArgList.size()]));
+		this.socks5UsersManagementModeStatus = Integer.valueOf(status);
 	}
 	
 	@OptionSink(
@@ -630,6 +634,9 @@ public final class SocksServerCli {
 					|| this.programHelpRequested
 					|| this.settingsHelpRequested) {
 				return 0;
+			}
+			if (this.socks5UsersManagementModeStatus != null) {
+				return this.socks5UsersManagementModeStatus.intValue();
 			}
 		}
 		Configuration configuration = this.newConfiguration();

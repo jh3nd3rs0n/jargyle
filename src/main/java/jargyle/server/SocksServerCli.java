@@ -379,8 +379,8 @@ public final class SocksServerCli {
 	@OptionSink(
 			optionBuilder = @OptionBuilder(
 					doc = "Enter through an interactive prompt the username "
-							+ "password for the external SOCKS5 server for "
-							+ "external connections",
+							+ "password to be used to access the external "
+							+ "SOCKS5 server used for external connections",
 					name = "enter-external-client-socks5-user-pass",
 					ordinal = ENTER_EXTERNAL_CLIENT_SOCKS5_USER_PASS_OPTION_ORDINAL,
 					type = GnuLongOption.class
@@ -646,8 +646,9 @@ public final class SocksServerCli {
 	
 	@OptionSink(
 			optionBuilder = @OptionBuilder(
-					doc = "The username password for the external SOCKS5 "
-							+ "server for external connections",
+					doc = "The username password to be used to access the "
+							+ "external SOCKS5 server used for external "
+							+ "connections",
 					name = "external-client-socks5-user-pass",
 					optionArgSpecBuilder = @OptionArgSpecBuilder(),
 					optionUsageProvider = UsernamePasswordOptionUsageProvider.class,

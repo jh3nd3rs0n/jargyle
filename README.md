@@ -7,8 +7,8 @@ Jargyle is a Java SOCKS5 server. It has the following features:
 -   It is a 100% implementation of the [SOCKS5 protocol specification](https://tools.ietf.org/html/rfc1928) which includes [username password authentication](https://tools.ietf.org/html/rfc1929) and [GSS-API authentication](https://tools.ietf.org/html/rfc1961).
 -   It can be run with zero minimal configuration.
 -   It can have its external connections be set through another SOCKS5 server.
--   It can allow/block certain client addresses and certain incoming external addresses.
--   It can allow/block certain SOCKS5 requests.
+-   It can allow or block certain client addresses and certain incoming external addresses.
+-   It can allow or block certain SOCKS5 requests.
 
 **Disclaimer:** Jargyle is a hobby project and is currently subject to breaking changes. Jargyle is currently not production ready but it aims to be.
 
@@ -37,8 +37,8 @@ Jargyle is a Java SOCKS5 server. It has the following features:
 -   [3. 9. 1. 2. Using Username Password Authentication](#3-9-1-2-using-username-password-authentication)
 -   [3. 9. 1. 3. Using GSS-API Authentication](#3-9-1-3-using-gss-api-authentication)
 -   [3. 9. 2. Using Java System Properties](#3-9-2-using-java-system-properties)
--   [3. 10. Allow/Block Addresses](#3-10-allow-block-addresses)
--   [3. 11. Allow/Block SOCKS5 Requests](#3-11-allow-block-socks5-requests)
+-   [3. 10. Allow or Block Addresses](#3-10-allow-or-block-addresses)
+-   [3. 11. Allow or Block SOCKS5 Requests](#3-11-allow-or-block-socks5-requests)
 -   [3. 12. The Comment Attribute](#3-12-the-comment-attribute)
 -   [4. TODO](#4-todo)
 -   [5. Contact](#5-contact)
@@ -105,9 +105,9 @@ The following is the command line help for Jargyle (displayed when using the com
       --config-file-xsd, -x
           Print the configuration file XSD and exit
       --enter-external-client-socks5-user-pass
-          Enter through an interactive prompt the username password for the external SOCKS5 server for external connections
+          Enter through an interactive prompt the username password to be used to access the external SOCKS5 server used for external connections
       --external-client-socks5-user-pass=USERNAME:PASSWORD
-          The username password for the external SOCKS5 server for external connections
+          The username password to be used to access the external SOCKS5 server used for external connections
       --help, -h
           Print this help and exit
       --monitored-config-file=FILE, -m FILE
@@ -138,31 +138,31 @@ The following is a list of available settings for the SOCKS server (displayed wh
           The space separated list of socket settings for the client socket
     
       externalClient.bindHost=HOST
-          The binding host name or address for the socket to connect to the external SOCKS server for external connections (default is 0.0.0.0)
+          The binding host name or address for the socket to connect to the external SOCKS server used for external connections (default is 0.0.0.0)
     
       externalClient.connectTimeout=INTEGER_BETWEEN_1_AND_2147483647
-          The timeout in milliseconds on waiting for the socket to connect to the external SOCKS server for external connections (default is 60000)
+          The timeout in milliseconds on waiting for the socket to connect to the external SOCKS server used for external connections (default is 60000)
     
       externalClient.externalServerUri=SCHEME://HOST[:PORT]
-          The URI of the external SOCKS server for external connections.
+          The URI of the external SOCKS server used for external connections.
     
       externalClient.socketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
-          The space separated list of socket settings for the socket to connect to the external SOCKS server for external connections
+          The space separated list of socket settings for the socket to connect to the external SOCKS server used for external connections
     
       externalClient.socks5.authMethods=SOCKS5_AUTH_METHOD1[ SOCKS5_AUTH_METHOD2[...]]
-          The space separated list of acceptable authentication methods to the external SOCKS5 server for external connections (default is NO_AUTHENTICATION_REQUIRED)
+          The space separated list of acceptable authentication methods to the external SOCKS5 server used for external connections (default is NO_AUTHENTICATION_REQUIRED)
     
       externalClient.socks5.gssapiMechanismOid=GSSAPI_MECHANISM_OID
-          The object ID for the GSS-API authentication mechanism to the external SOCKS5 server for external connections (default is 1.2.840.113554.1.2.2)
+          The object ID for the GSS-API authentication mechanism to the external SOCKS5 server used for external connections (default is 1.2.840.113554.1.2.2)
     
       externalClient.socks5.gssapiNecReferenceImpl=true|false
-          The boolean value to indicate if the exchange of the GSS-API protection level negotiation must be unprotected should the external SOCKS5 server for external connections use the NEC reference implementation (default is false)
+          The boolean value to indicate if the exchange of the GSS-API protection level negotiation must be unprotected should the external SOCKS5 server used for external connections use the NEC reference implementation (default is false)
     
       externalClient.socks5.gssapiProtectionLevels=SOCKS5_GSSAPI_PROTECTION_LEVEL1[ SOCKS5_GSSAPI_PROTECTION_LEVEL2[...]]
-          The space separated list of acceptable protection levels after GSS-API authentication with the external SOCKS5 server for external connections (The first is preferred. The remaining are acceptable if the server does not accept the first.) (default is REQUIRED_INTEG_AND_CONF REQUIRED_INTEG NONE)
+          The space separated list of acceptable protection levels after GSS-API authentication with the external SOCKS5 server used for external connections (The first is preferred. The remaining are acceptable if the server does not accept the first.) (default is REQUIRED_INTEG_AND_CONF REQUIRED_INTEG NONE)
     
       externalClient.socks5.gssapiServiceName=GSSAPI_SERVICE_NAME
-          The GSS-API service name for the external SOCKS5 server for external connections
+          The GSS-API service name for the external SOCKS5 server used for external connections
     
       host=HOST
           The host name or address for the SOCKS server (default is 0.0.0.0)
@@ -1104,22 +1104,20 @@ The command line option `--settings=externalClient.socks5.gssapiServiceName=rcmd
 Instead of using command line options or configuration settings, you can use the following Java system properties to set Jargyle's external connections through another SOCKS server:
 
 -   `socksServerUri.scheme`: The scheme of the URI of the other SOCKS server used for external connections (only `socks5` is supported)
--   `socksServerUri.host`: The host or address of the URI of the other SOCKS server used for external connections
+-   `socksServerUri.host`: The host name or address of the URI of the other SOCKS server used for external connections
 -   `socksServerUri.port`: The port of the URI of the other SOCKS server used for external connections
--   `socksClient.bindHost`
--   `socksClient.connectTimeout`
--   `socksClient.socketSettings`
--   `socksClient.socks5.authMethods`
--   `socksClient.socks5.gssapiMechanismOid`
--   `socksClient.socks5.gssapiNecReferenceImpl`
--   `socksClient.socks5.gssapiProtectionLevels`
--   `socksClient.socks5.gssapiServiceName`
--   `socksClient.socks5.username`: The username used in SOCKS5 username password authentication to access the other SOCKS5 server used for external connections (any special characters must be URL encoded)
--   `socksClient.socks5.password`: The password used in SOCKS5 username password authentication to access the other SOCKS5 server used for external connections (any special characters must be URL encoded)
+-   `socksClient.bindHost`: Its usage is equivalent to the setting `externalClient.bindHost`. See the settings help information for details (use the command line option `--settings-help`) 
+-   `socksClient.connectTimeout`: Its usage is equivalent to the setting `externalClient.connectTimeout`. See the settings help information for details (use the command line option `--settings-help`) 
+-   `socksClient.socketSettings`: Its usage is equivalent to the setting `externalClient.socketSettings`. See the settings help information for details (use the command line option `--settings-help`) 
+-   `socksClient.socks5.authMethods`: Its usage is equivalent to the setting `externalClient.socks5.authMethods`. See the settings help information for details (use the command line option `--settings-help`) 
+-   `socksClient.socks5.gssapiMechanismOid`: Its usage is equivalent to the setting `externalClient.socks5.gssapiMechanismOid`. See the settings help information for details (use the command line option `--settings-help`) 
+-   `socksClient.socks5.gssapiNecReferenceImpl`: Its usage is equivalent to the setting `externalClient.socks5.gssapiNecReferenceImpl`. See the settings help information for details (use the command line option `--settings-help`) 
+-   `socksClient.socks5.gssapiProtectionLevels`: Its usage is equivalent to the setting `externalClient.socks5.gssapiProtectionLevels`. See the settings help information for details (use the command line option `--settings-help`) 
+-   `socksClient.socks5.gssapiServiceName`: Its usage is equivalent to the setting `externalClient.socks5.gssapiServiceName`. See the settings help information for details (use the command line option `--settings-help`) 
+-   `socksClient.socks5.username`: The username to be used in SOCKS5 username password authentication to access the other SOCKS5 server used for external connections (any special characters must be URL encoded)
+-   `socksClient.socks5.password`: The password to be used in SOCKS5 username password authentication to access the other SOCKS5 server used for external connections (any special characters must be URL encoded)
 
-For more information on the other Java system properties starting with `socksClient.`, see the settings help information with setting names starting with `externalClient.` (use the command line option `--settings-help`)
-
-### 3. 10. Allow/Block Addresses
+### 3. 10. Allow or Block Addresses
 
 You can allow or block the following addresses:
 
@@ -1173,7 +1171,7 @@ Partial configuration file example:
     
 ```
 
-### 3. 11. Allow/Block SOCKS5 Requests
+### 3. 11. Allow or Block SOCKS5 Requests
 
 You can allow or block SOCKS5 requests. To allow or block SOCKS5 requests, you will need to specify the SOCKS5 request or requests in either of the following XML elements in the configuration file:
 

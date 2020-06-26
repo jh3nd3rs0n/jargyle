@@ -128,7 +128,7 @@ public enum SettingSpec implements HelpTextParams {
 		public String getDoc() {
 			return String.format(
 					"The binding host name or address for the socket to "
-					+ "connect to the external SOCKS server for external "
+					+ "connect to the external SOCKS server used for external "
 					+ "connections (default is %s)", 
 					SocksClient.DEFAULT_BIND_HOST);
 		}
@@ -176,7 +176,7 @@ public enum SettingSpec implements HelpTextParams {
 		public String getDoc() {
 			return String.format(
 					"The timeout in milliseconds on waiting for the socket to "
-					+ "connect to the external SOCKS server for external "
+					+ "connect to the external SOCKS server used for external "
 					+ "connections (default is %s)", 
 					DEFAULT_INT_VALUE);
 		}
@@ -215,7 +215,8 @@ public enum SettingSpec implements HelpTextParams {
 	EXTERNAL_CLIENT_EXTERNAL_SERVER_URI {
 		
 		private static final String DOC = 
-				"The URI of the external SOCKS server for external connections.";
+				"The URI of the external SOCKS server used for external "
+				+ "connections.";
 		
 		private static final String NAME = "externalClient.externalServerUri";
 		
@@ -260,7 +261,7 @@ public enum SettingSpec implements HelpTextParams {
 
 		private static final String DOC = 
 				"The space separated list of socket settings for the socket "
-				+ "to connect to the external SOCKS server for external "
+				+ "to connect to the external SOCKS server used for external "
 				+ "connections";
 		private static final String NAME = "externalClient.socketSettings";
 		
@@ -317,7 +318,7 @@ public enum SettingSpec implements HelpTextParams {
 		public String getDoc() {
 			return String.format(
 					"The space separated list of acceptable authentication "
-					+ "methods to the external SOCKS5 server for external "
+					+ "methods to the external SOCKS5 server used for external "
 					+ "connections (default is %s)",
 					Socks5Client.DEFAULT_AUTH_METHODS);
 		}
@@ -366,8 +367,8 @@ public enum SettingSpec implements HelpTextParams {
 		public String getDoc() {
 			return String.format(
 					"The object ID for the GSS-API authentication mechanism to "
-					+ "the external SOCKS5 server for external connections "
-					+ "(default is %s)", 
+					+ "the external SOCKS5 server used for external "
+					+ "connections (default is %s)", 
 					Socks5Client.DEFAULT_GSSAPI_MECHANISM_OID);
 		}
 
@@ -421,7 +422,7 @@ public enum SettingSpec implements HelpTextParams {
 			return String.format(
 					"The boolean value to indicate if the exchange of the "
 					+ "GSSAPI protection level negotiation must be unprotected "
-					+ "should the external SOCKS5 server for external "
+					+ "should the external SOCKS5 server used for external "
 					+ "connections use the NEC reference implementation "
 					+ "(default is %s)", 
 					DEFAULT_BOOLEAN_VALUE);
@@ -470,7 +471,7 @@ public enum SettingSpec implements HelpTextParams {
 			return String.format(
 					"The space separated list of acceptable protection levels "
 					+ "after GSS-API authentication with the external SOCKS5 "
-					+ "server for external connections (The first is "
+					+ "server used for external connections (The first is "
 					+ "preferred. The remaining are acceptable if the server "
 					+ "does not accept the first.) (default is %s)",
 					Socks5Client.DEFAULT_GSSAPI_PROTECTION_LEVELS);
@@ -509,7 +510,7 @@ public enum SettingSpec implements HelpTextParams {
 	EXTERNAL_CLIENT_SOCKS5_GSSAPI_SERVICE_NAME {
 		
 		private static final String DOC = "The GSS-API service name for the "
-				+ "external SOCKS5 server for external connections";
+				+ "external SOCKS5 server used for external connections";
 		private static final String NAME = 
 				"externalClient.socks5.gssapiServiceName";
 		

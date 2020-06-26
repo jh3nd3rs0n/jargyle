@@ -21,6 +21,7 @@ import argmatey.ArgMatey.Option;
 import argmatey.ArgMatey.OptionBuilder;
 import argmatey.ArgMatey.OptionSink;
 import argmatey.ArgMatey.Options;
+import argmatey.ArgMatey.ParseResultHolder;
 import argmatey.ArgMatey.PosixOption;
 import jargyle.common.cli.HelpTextParams;
 import jargyle.server.SystemPropertyNameConstants;
@@ -381,7 +382,9 @@ public final class UsersCli {
 		this.argsParser = ArgsParser.newInstance(args, this.options, false);
 		while (this.argsParser.hasNext()) {
 			try {
-				this.argsParser.parseNext().sendTo(this);
+				ParseResultHolder parseResultHolder =
+						this.argsParser.parseNext();
+				parseResultHolder.sendTo(this);
 			} catch (Throwable t) {
 				System.err.printf("%s: %s%n", programName, t);
 				System.err.println(suggestion);

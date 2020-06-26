@@ -26,6 +26,7 @@ import argmatey.ArgMatey.OptionSink;
 import argmatey.ArgMatey.OptionUsageParams;
 import argmatey.ArgMatey.OptionUsageProvider;
 import argmatey.ArgMatey.Options;
+import argmatey.ArgMatey.ParseResultHolder;
 import argmatey.ArgMatey.PosixOption;
 import jargyle.client.Scheme;
 import jargyle.client.socks5.DefaultUsernamePasswordRequestor;
@@ -613,7 +614,9 @@ public final class SocksServerCli {
 		this.argsParser = ArgsParser.newInstance(args, this.options, false);
 		while (this.argsParser.hasNext()) {
 			try {
-				this.argsParser.parseNext().sendTo(this);
+				ParseResultHolder parseResultHolder = 
+						this.argsParser.parseNext();
+				parseResultHolder.sendTo(this);
 			} catch (IllegalOptionArgException e) {
 				String suggest = suggestion;
 				if (settingsOption.getAllOptions().contains(e.getOption())) {

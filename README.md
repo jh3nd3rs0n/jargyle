@@ -4,8 +4,11 @@
 
 Jargyle is a Java SOCKS5 server. It has the following features:
 
--   It is a 100% implementation of the [SOCKS5 protocol specification](https://tools.ietf.org/html/rfc1928) which includes [username password authentication](https://tools.ietf.org/html/rfc1929) and [GSS-API authentication](https://tools.ietf.org/html/rfc1961)
--   It can have its external connections be set through another SOCKS5 server
+-   It is a 100% implementation of the [SOCKS5 protocol specification](https://tools.ietf.org/html/rfc1928) which includes [username password authentication](https://tools.ietf.org/html/rfc1929) and [GSS-API authentication](https://tools.ietf.org/html/rfc1961).
+-   It can be run with zero minimal configuration.
+-   It can have its external connections be set through another SOCKS5 server.
+-   It can allow/block certain client addresses and certain incoming external addresses.
+-   It can allow/block certain SOCKS5 requests.
 
 **Disclaimer:** Jargyle is a hobby project and is currently subject to breaking changes. Jargyle is currently not production ready but it aims to be.
 
@@ -33,6 +36,10 @@ Jargyle is a Java SOCKS5 server. It has the following features:
 -   [3. 9. 1. 1. Using No Authentication](#3-9-1-1-using-no-authentication)
 -   [3. 9. 1. 2. Using Username Password Authentication](#3-9-1-2-using-username-password-authentication)
 -   [3. 9. 1. 3. Using GSS-API Authentication](#3-9-1-3-using-gss-api-authentication)
+-   [3. 9. 2. Using Java System Properties](#3-9-2-using-java-system-properties)
+-   [3. 10. Allow/Block Addresses](#3-10-allow-block-addresses)
+-   [3. 11. Allow/Block SOCKS5 Requests](#3-11-allow-block-socks5-requests)
+-   [3. 12. The Comment Attribute](#3-12-the-comment-attribute)
 -   [4. TODO](#4-todo)
 -   [5. Contact](#5-contact)
 
@@ -1092,16 +1099,195 @@ In `krb5.conf`, a KDC is defined as running at the address `127.0.0.1` on port `
 
 The command line option `--settings=externalClient.socks5.gssapiServiceName=rcmd/127.0.0.1` is the GSS-API service name (or the Kerberos service principal) for the other SOCKS5 server residing at the address `127.0.0.1`. (In a production environment, the address `127.0.0.1` should be replaced by the name of the machine of where the other SOCKS5 server resides.)
 
+#### 3. 9. 2. Using Java System Properties
+
+Instead of using command line options or configuration settings, you can use the following Java system properties to set Jargyle's external connections through another SOCKS server:
+
+-   `socksServerUri.scheme`: The scheme of the URI of the other SOCKS server used for external connections (only `socks5` is supported)
+-   `socksServerUri.host`: The host or address of the URI of the other SOCKS server used for external connections
+-   `socksServerUri.port`: The port of the URI of the other SOCKS server used for external connections
+-   `socksClient.bindHost`
+-   `socksClient.connectTimeout`
+-   `socksClient.socketSettings`
+-   `socksClient.socks5.authMethods`
+-   `socksClient.socks5.gssapiMechanismOid`
+-   `socksClient.socks5.gssapiNecReferenceImpl`
+-   `socksClient.socks5.gssapiProtectionLevels`
+-   `socksClient.socks5.gssapiServiceName`
+-   `socksClient.socks5.username`: The username used in SOCKS5 username password authentication to access the other SOCKS5 server used for external connections (any special characters must be URL encoded)
+-   `socksClient.socks5.password`: The password used in SOCKS5 username password authentication to access the other SOCKS5 server used for external connections (any special characters must be URL encoded)
+
+For more information on the other Java system properties starting with `socksClient.`, see the settings help information with setting names starting with `externalClient.` (use the command line option `--settings-help`)
+
+### 3. 10. Allow/Block Addresses
+
+You can allow or block the following addresses:
+
+-   Client addresses (IPv4, IPv6, and domain name addresses)
+-   Incoming external TCP addresses following the SOCKS5 BIND command (IPv4, IPv6, and domain name addresses)
+-   Incoming external UDP addresses following the SOCKS5 UDP ASSOCIATE command (IPv4, IPv6, and domain name addresses)
+
+To allow or block an address or addresses, you will need to specify the address or addresses in any of the following command line options:
+
+-   `--allowed-client-addr-criteria`
+-   `--allowed-socks5-incoming-tcp-addr-criteria`
+-   `--allowed-socks5-incoming-udp-addr-criteria`
+-   `--blocked-client-addr-criteria`
+-   `--blocked-socks5-incoming-tcp-addr-criteria`
+-   `--blocked-socks5-incoming-udp-addr-criteria`
+
+Or in any of the following XML elements in the configuration file:
+
+-   `<allowedClientAddressCriteria/>`
+-   `<allowedSocks5IncomingTcpAddressCriteria/>`
+-   `<allowedSocks5IncomingUdpAddressCriteria/>`
+-   `<blockedClientAddressCriteria/>`
+-   `<blockedSocks5IncomingTcpAddressCriteria/>`
+-   `<blockedSocks5IncomingUdpAddressCriteria/>`
+
+You can specify an address or addresses in any of the aforementioned command line options as either a literal expression preceded by the prefix `equals:` or a regular expression preceded by the prefix `matches:`.
+
+Partial command line example:
+
+```text
+    
+    "--allowed-client-addr-criteria=equals:127.0.0.1 equals:0:0:0:0:0:0:0:1 equals:localhost" \
+    "--blocked-client-addr-criteria=matches:(?!(127\.0\.0\.1|0:0:0:0:0:0:0:1|localhost)).*"
+    
+```
+
+You can specify an address or addresses in any of the aforementioned XML elements as a `<criterion/>` element.
+
+Partial configuration file example:
+
+```xml
+    
+    <allowedClientAddressCriteria>
+        <criterion method="equals" value="127.0.0.1"/>
+        <criterion method="equals" value="0:0:0:0:0:0:0:1"/>
+        <criterion method="equals" value="localhost"/>
+    </allowedClientAddressCriteria>
+    <blockedClientAddressCriteria>
+        <criterion method="matches" value="(?!(127\.0\.0\.1|0:0:0:0:0:0:0:1|localhost)).*"/>
+    </blockedClientAddressCriteria>
+    
+```
+
+### 3. 11. Allow/Block SOCKS5 Requests
+
+You can allow or block SOCKS5 requests. To allow or block SOCKS5 requests, you will need to specify the SOCKS5 request or requests in either of the following XML elements in the configuration file:
+
+-   `<allowedSocks5RequestCriteria/>`
+-   `<blockedSocks5RequestCriteria/>`
+ 
+You can specify a SOCKS5 request or requests in either of the aforementioned XML elements as a `<socks5RequestCriterion/>` element.
+
+Partial configuration file example:
+
+```xml
+    
+    <allowedSocks5RequestCriteria>
+        <socks5RequestCriterion>
+            <sourceAddressCriterion method="matches" value=".*"/>
+            <commandCriterion method="equals" value="CONNECT"/>
+            <desiredDestinationAddressCriterion method="matches" value=".*"/>
+            <desiredDestinationPortRanges>
+                <portRange minPort="80" maxPort="80"/>
+                <portRange minPort="443" maxPort="443"/>
+            </desiredDestinationPortRanges>
+        </socks5RequestCriterion>
+    </allowedSocks5RequestCriteria>
+    <blockedSocks5RequestCriteria>
+        <socks5RequestCriterion>
+            <sourceAddressCriterion method="matches" value=".*"/>
+            <commandCriterion method="equals" value="BIND"/>
+            <desiredDestinationAddressCriterion method="matches" value=".*"/>
+            <desiredDestinationPortRanges>
+                <portRange minPort="0" maxPort="65535"/>
+            </desiredDestinationPortRanges>
+        </socks5RequestCriterion>
+        <socks5RequestCriterion>
+            <sourceAddressCriterion method="matches" value=".*"/>
+            <commandCriterion method="equals" value="UDP_ASSOCIATE"/>
+            <desiredDestinationAddressCriterion method="matches" value=".*"/>
+            <desiredDestinationPortRanges>
+                <portRange minPort="0" maxPort="65535"/>
+            </desiredDestinationPortRanges>
+        </socks5RequestCriterion>    
+    </blockedSocks5RequestCriteria>
+    
+```
+
+### 3. 12. The Comment Attribute
+
+When using an existing configuration file to create a new configuration file, any XML comments from the existing configuration file cannot be transferred to the new configuration file. To preserve comments  from one configuration file to the next configuration file, the `comment` attribute can be used in certain XML elements. You can use the `comment` attribute in the following XML elements:
+
+-   `<commandCriterion/>`
+-   `<criterion/>`
+-   `<desiredDestinationAddressCriterion/>`
+-   `<desiredDestinationPortRanges/>`
+-   `<portRange/>`
+-   `<setting/>`
+-   `<socks5RequestCriterion/>`
+-   `<sourceAddressCriterion/>`
+
+Partial configuration file example:
+
+```xml
+    
+    <allowedClientAddressCriteria>
+        <criterion method="equals" value="127.0.0.1" comment="IPv4 loopback address"/>
+        <criterion method="equals" value="0:0:0:0:0:0:0:1" comment="IPv6 loopback address"/>
+        <criterion method="equals" value="localhost" comment="domain name of loopback address"/>
+    </allowedClientAddressCriteria>    
+    <allowedSocks5RequestCriteria>
+        <socks5RequestCriterion comment="allow any client to connect to any address on port 80 or port 443">
+            <sourceAddressCriterion method="matches" value=".*"/>
+            <commandCriterion method="equals" value="CONNECT"/>
+            <desiredDestinationAddressCriterion method="matches" value=".*"/>
+            <desiredDestinationPortRanges>
+                <portRange minPort="80" maxPort="80" comment="HTTP port"/>
+                <portRange minPort="443" maxPort="443" comment="HTTPS port"/>
+            </desiredDestinationPortRanges>
+        </socks5RequestCriterion>
+    </allowedSocks5RequestCriteria>
+    <blockedClientAddressCriteria>
+        <criterion method="matches" value="(?!(127\.0\.0\.1|0:0:0:0:0:0:0:1|localhost)).*" comment="block any address that is not a loopback address"/>
+    </blockedClientAddressCriteria>    
+    <blockedSocks5RequestCriteria>
+        <socks5RequestCriterion comment="block any BIND requests">
+            <sourceAddressCriterion method="matches" value=".*"/>
+            <commandCriterion method="equals" value="BIND"/>
+            <desiredDestinationAddressCriterion method="matches" value=".*"/>
+            <desiredDestinationPortRanges>
+                <portRange minPort="0" maxPort="65535"/>
+            </desiredDestinationPortRanges>
+        </socks5RequestCriterion>
+        <socks5RequestCriterion comment="block any UDP ASSOCIATE requests">
+            <sourceAddressCriterion method="matches" value=".*"/>
+            <commandCriterion method="equals" value="UDP_ASSOCIATE"/>
+            <desiredDestinationAddressCriterion method="matches" value=".*"/>
+            <desiredDestinationPortRanges>
+                <portRange minPort="0" maxPort="65535"/>
+            </desiredDestinationPortRanges>
+        </socks5RequestCriterion>    
+    </blockedSocks5RequestCriteria>
+    <settings>
+        <setting name="backlog" value="100" comment="expecting a lot of client connections"/>
+    </settings>
+    
+```
+
 ## 4. TODO
 
 -   [ ] Javadoc documentation on all types
 
 -   [ ] Unit testing on other types
 
--   [ ] Further documentation
-    -   [ ] Command line reference
-    -   [ ] Configuration file reference
-    -   [ ] Users file reference
+-   [ ] ~~Further documentation~~
+    -   [ ] ~~Command line reference~~
+    -   [ ] ~~Configuration file reference~~
+    -   [ ] ~~Users file reference~~
   
 ## 5. Contact
 

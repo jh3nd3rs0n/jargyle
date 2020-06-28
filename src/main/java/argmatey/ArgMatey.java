@@ -3483,7 +3483,7 @@ public final class ArgMatey {
 		
 		private final ParseResultSinkClass cls;
 		
-		protected ParseResultSink() {
+		public ParseResultSink() {
 			this.cls = ParseResultSinkClass.newInstance(this.getClass());
 		}
 		

@@ -2682,26 +2682,6 @@ public final class ArgMatey {
 			return new Options(Arrays.asList(opts));
 		}
 		
-		public static Options newInstanceFrom(final Class<?> cls) {
-			List<OptionSinkMethod> optionSinkMethods =
-					new ArrayList<OptionSinkMethod>();
-			Method[] methods = cls.getMethods();
-			for (Method method : methods) {
-				if (method.isAnnotationPresent(OptionSink.class)) {
-					OptionSinkMethod mthd =	
-							OptionSinkMethod.newInstance(method);
-					optionSinkMethods.add(mthd);
-				}
-			}
-			Collections.sort(
-					optionSinkMethods, new OptionSinkMethodComparator());
-			List<Option> options = new ArrayList<Option>();
-			for (OptionSinkMethod method : optionSinkMethods) {
-				options.add(method.newOption());
-			}
-			return newInstance(options);
-		}
-		
 		private final List<Option> options;
 		
 		private Options(final List<Option> opts) {
@@ -2793,7 +2773,7 @@ public final class ArgMatey {
 		OptionBuilder[] otherOptionBuilders() default { };
 		
 	}
-	
+
 	static final class OptionSinkMethod {
 		
 		private static enum TargetMethodParameterTypesType {
@@ -3487,38 +3467,6 @@ public final class ArgMatey {
 			return false;
 		}
 		
-		public void sendTo(final Object obj) {
-			Class<?> cls = obj.getClass();
-			if (this.hasNonparsedArg()) {
-				String nonparsedArg = this.getNonparsedArg();
-				Method[] methods = cls.getMethods();
-				for (Method method : methods) {
-					if (method.isAnnotationPresent(NonparsedArgSink.class)) {
-						NonparsedArgSinkMethod mthd =
-								NonparsedArgSinkMethod.newInstance(method);
-						mthd.invoke(obj, nonparsedArg);
-						return;
-					}
-				}
-			}
-			if (this.hasOptionOccurrence()) {
-				OptionOccurrence optionOccurrence = this.getOptionOccurrence();
-				Option option = optionOccurrence.getOption();
-				OptionArg optionArg = optionOccurrence.getOptionArg();
-				Method[] methods = cls.getMethods();
-				for (Method method : methods) {
-					if (method.isAnnotationPresent(OptionSink.class)) {
-						OptionSinkMethod mthd =
-								OptionSinkMethod.newInstance(method);
-						if (mthd.defines(option)) {
-							mthd.invoke(obj, option, optionArg);
-							return;
-						}
-					}
-				}
-			}
-		}
-		
 		@Override
 		public String toString() {
 			StringBuilder sb = new StringBuilder();
@@ -3531,6 +3479,103 @@ public final class ArgMatey {
 		
 	}
 
+	public static abstract class ParseResultSink {
+		
+		private final ParseResultSinkClass cls;
+		
+		protected ParseResultSink() {
+			this.cls = ParseResultSinkClass.newInstance(this.getClass());
+		}
+		
+		public final Options getOptions() {
+			return this.cls.getOptions();
+		}
+		
+		public final void receive(final ParseResultHolder parseResultHolder) {
+			if (parseResultHolder.hasNonparsedArg()) {
+				String nonparsedArg = parseResultHolder.getNonparsedArg();
+				NonparsedArgSinkMethod nonparsedArgSinkMethod =
+						this.cls.getNonparsedArgSinkMethod();
+				if (nonparsedArgSinkMethod != null) {
+					nonparsedArgSinkMethod.invoke(this, nonparsedArg);
+				}
+			}
+			if (parseResultHolder.hasOptionOccurrence()) {
+				OptionOccurrence optionOccurrence = 
+						parseResultHolder.getOptionOccurrence();
+				Option option = optionOccurrence.getOption();
+				OptionArg optionArg = optionOccurrence.getOptionArg();
+				for (OptionSinkMethod optionSinkMethod 
+						: this.cls.getOptionSinkMethods()) {
+					if (optionSinkMethod.defines(option)) {
+						optionSinkMethod.invoke(this, option, optionArg);
+						break;
+					}
+				}
+			}
+		}
+		
+	}
+	
+	static final class ParseResultSinkClass {
+		
+		public static ParseResultSinkClass newInstance(
+				final Class<? extends ParseResultSink> cls) {
+			return new ParseResultSinkClass(cls);
+		}
+		
+		private final Class<? extends ParseResultSink> cls;
+		private final NonparsedArgSinkMethod nonparsedArgSinkMethod;
+		private final List<OptionSinkMethod> optionSinkMethods;
+		private final Options options;
+		
+		private ParseResultSinkClass(final Class<? extends ParseResultSink> c) {
+			NonparsedArgSinkMethod argSinkMethod = null;
+			List<OptionSinkMethod> optSinkMethods =
+					new ArrayList<OptionSinkMethod>();
+			Method[] methods = c.getMethods();
+			for (Method method : methods) {
+				if (method.isAnnotationPresent(NonparsedArgSink.class)) {
+					NonparsedArgSinkMethod mthd =
+							NonparsedArgSinkMethod.newInstance(method);
+					argSinkMethod = mthd;
+				}
+				if (method.isAnnotationPresent(OptionSink.class)) {
+					OptionSinkMethod mthd =	
+							OptionSinkMethod.newInstance(method);
+					optSinkMethods.add(mthd);
+				}
+			}
+			Collections.sort(optSinkMethods, new OptionSinkMethodComparator());
+			List<Option> opts = new ArrayList<Option>();
+			for (OptionSinkMethod method : optSinkMethods) {
+				opts.add(method.newOption());
+			}
+			this.cls = c;
+			this.nonparsedArgSinkMethod = argSinkMethod;
+			this.optionSinkMethods = new ArrayList<OptionSinkMethod>(
+					optSinkMethods);
+			this.options = Options.newInstance(opts);
+		}
+		
+		public NonparsedArgSinkMethod getNonparsedArgSinkMethod() {
+			return this.nonparsedArgSinkMethod;
+		}
+		
+		public List<OptionSinkMethod> getOptionSinkMethods() {
+			return Collections.unmodifiableList(this.optionSinkMethods);
+		}
+		
+		public Options getOptions() {
+			return this.options;
+		}
+		
+		public Class<? extends ParseResultSink> toClass() {
+			return this.cls;
+		}
+		
+	}
+	
 	public static final class PosixOption extends Option {
 
 		public static final class Builder extends Option.Builder {

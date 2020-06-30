@@ -20,13 +20,14 @@ import argmatey.ArgMatey.NonparsedArgSink;
 import argmatey.ArgMatey.Option;
 import argmatey.ArgMatey.OptionBuilder;
 import argmatey.ArgMatey.OptionSink;
+import argmatey.ArgMatey.Options;
 import argmatey.ArgMatey.ParseResultHolder;
-import argmatey.ArgMatey.ParseResultSink;
+import argmatey.ArgMatey.ParseResultSinkObject;
 import argmatey.ArgMatey.PosixOption;
 import jargyle.common.cli.HelpTextParams;
 import jargyle.server.SystemPropertyNameConstants;
 
-public final class UsersCli extends ParseResultSink {
+public final class UsersCli {
 	
 	private enum Command implements HelpTextParams {
 		
@@ -272,12 +273,17 @@ public final class UsersCli extends ParseResultSink {
 	private final List<String> argList;
 	private ArgsParser argsParser;
 	private Command command;
+	private final Options options;
+	private final ParseResultSinkObject parseResultSinkObject;
 	private final String programBeginningUsage;
 	private boolean programHelpRequested;
 	private final String programName;	
 	private boolean xsdRequested;
 	
 	public UsersCli() {
+		ParseResultSinkObject parseResultSinkObj =
+				ParseResultSinkObject.newInstance(this);
+		Options opts = parseResultSinkObj.getOptions();
 		String progName = System.getProperty(
 				SystemPropertyNameConstants.PROGRAM_NAME);
 		if (progName == null) {
@@ -291,6 +297,8 @@ public final class UsersCli extends ParseResultSink {
 		this.argList = new ArrayList<String>();
 		this.argsParser = null;
 		this.command = null;
+		this.options = opts;
+		this.parseResultSinkObject = parseResultSinkObj;
 		this.programBeginningUsage = progBeginningUsage;
 		this.programHelpRequested = false;
 		this.programName = progName;		
@@ -322,8 +330,8 @@ public final class UsersCli extends ParseResultSink {
 			}
 	)
 	public void printHelp() {
-		Option helpOption = this.getOptions().toList().get(HELP_OPTION_ORDINAL);
-		Option xsdOption = this.getOptions().toList().get(XSD_OPTION_ORDINAL);
+		Option helpOption = this.options.toList().get(HELP_OPTION_ORDINAL);
+		Option xsdOption = this.options.toList().get(XSD_OPTION_ORDINAL);
 		System.out.printf("Usage: %s COMMAND%n", this.programBeginningUsage);
 		System.out.printf("       %s %s%n", 
 				this.programBeginningUsage, 
@@ -342,7 +350,7 @@ public final class UsersCli extends ParseResultSink {
 		}
 		System.out.println();
 		System.out.println("OPTIONS:");
-		this.getOptions().printHelpText();
+		this.options.printHelpText();
 		System.out.println();
 		System.out.println();
 		this.programHelpRequested = true;
@@ -371,17 +379,17 @@ public final class UsersCli extends ParseResultSink {
 	}
 	
 	public int process(final String[] args) {
-		Option helpOption = this.getOptions().toList().get(HELP_OPTION_ORDINAL);
+		Option helpOption = this.options.toList().get(HELP_OPTION_ORDINAL);
 		String suggestion = String.format(
 				"Try `%s %s' for more information", 
 				this.programBeginningUsage, 
 				helpOption.getUsage());
-		this.argsParser = ArgsParser.newInstance(args, this.getOptions(), false);
+		this.argsParser = ArgsParser.newInstance(args, this.options, false);
 		while (this.argsParser.hasNext()) {
 			try {
 				ParseResultHolder parseResultHolder =
 						this.argsParser.parseNext();
-				this.receive(parseResultHolder);
+				this.parseResultSinkObject.send(parseResultHolder);
 			} catch (Throwable t) {
 				System.err.printf("%s: %s%n", programName, t);
 				System.err.println(suggestion);

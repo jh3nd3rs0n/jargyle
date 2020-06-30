@@ -25,8 +25,9 @@ import argmatey.ArgMatey.OptionBuilder;
 import argmatey.ArgMatey.OptionSink;
 import argmatey.ArgMatey.OptionUsageParams;
 import argmatey.ArgMatey.OptionUsageProvider;
+import argmatey.ArgMatey.Options;
 import argmatey.ArgMatey.ParseResultHolder;
-import argmatey.ArgMatey.ParseResultSink;
+import argmatey.ArgMatey.ParseResultSinkObject;
 import argmatey.ArgMatey.PosixOption;
 import jargyle.client.Scheme;
 import jargyle.client.socks5.DefaultUsernamePasswordRequestor;
@@ -39,7 +40,7 @@ import jargyle.common.net.socks5.gssapiauth.GssapiProtectionLevel;
 import jargyle.server.socks5.UsernamePasswordAuthenticator;
 import jargyle.server.socks5.UsersCli;
 
-public final class SocksServerCli extends ParseResultSink {
+public final class SocksServerCli {
 
 	public static final class CriteriaOptionUsageProvider 
 		extends OptionUsageProvider {
@@ -140,6 +141,8 @@ public final class SocksServerCli extends ParseResultSink {
 	private final ModifiableConfiguration modifiableConfiguration;
 	private String monitoredConfigurationFile;
 	private boolean newConfigurationFileRequested;
+	private final Options options;
+	private final ParseResultSinkObject parseResultSinkObject;
 	private final String programBeginningUsage;
 	private boolean programHelpRequested;
 	private final String programName;	
@@ -147,6 +150,9 @@ public final class SocksServerCli extends ParseResultSink {
 	private Integer socks5UsersManagementModeStatus;
 	
 	SocksServerCli() {
+		ParseResultSinkObject parseResultSinkObj = 
+				ParseResultSinkObject.newInstance(this);
+		Options opts = parseResultSinkObj.getOptions();
 		String progName = System.getProperty(
 				SystemPropertyNameConstants.PROGRAM_NAME);
 		if (progName == null) {
@@ -162,6 +168,8 @@ public final class SocksServerCli extends ParseResultSink {
 		this.modifiableConfiguration = new ModifiableConfiguration();
 		this.monitoredConfigurationFile = null;
 		this.newConfigurationFileRequested = false;
+		this.options = opts;
+		this.parseResultSinkObject = parseResultSinkObj;
 		this.programBeginningUsage = progBeginningUsage;
 		this.programHelpRequested = false;
 		this.programName = progName;
@@ -352,7 +360,7 @@ public final class SocksServerCli extends ParseResultSink {
 			throw new IllegalStateException(
 					"process(java.lang.String[]) must be run first");
 		}
-		Option socks5UsersOption = this.getOptions().toList().get(
+		Option socks5UsersOption = this.options.toList().get(
 				SOCKS5_USERS_OPTION_ORDINAL);
 		String newProgramBeginningUsage = String.format("%s %s", 
 				this.programBeginningUsage, 
@@ -514,16 +522,16 @@ public final class SocksServerCli extends ParseResultSink {
 			}
 	)
 	public void printHelp() {
-		Option configFileXsdOption = this.getOptions().toList().get(
+		Option configFileXsdOption = this.options.toList().get(
 				CONFIG_FILE_XSD_OPTION_ORDINAL);
-		Option helpOption = this.getOptions().toList().get(HELP_OPTION_ORDINAL);
-		Option monitoredConfigFileOption = this.getOptions().toList().get(
+		Option helpOption = this.options.toList().get(HELP_OPTION_ORDINAL);
+		Option monitoredConfigFileOption = this.options.toList().get(
 				MONITORED_CONFIG_FILE_OPTION_ORDINAL);
-		Option newConfigFileOption = this.getOptions().toList().get(
+		Option newConfigFileOption = this.options.toList().get(
 				NEW_CONFIG_FILE_OPTION_ORDINAL);
-		Option settingsHelpOption = this.getOptions().toList().get(
+		Option settingsHelpOption = this.options.toList().get(
 				SETTINGS_HELP_OPTION_ORDINAL);
-		Option socks5UsersOption = this.getOptions().toList().get(
+		Option socks5UsersOption = this.options.toList().get(
 				SOCKS5_USERS_OPTION_ORDINAL);
 		System.out.printf("Usage: %s [OPTIONS]%n", this.programBeginningUsage);
 		System.out.printf("       %s %s%n", 
@@ -547,7 +555,7 @@ public final class SocksServerCli extends ParseResultSink {
 		System.out.println();
 		System.out.println();
 		System.out.println("OPTIONS:");
-		this.getOptions().printHelpText();
+		this.options.printHelpText();
 		System.out.println();
 		System.out.println();
 		this.programHelpRequested = true;
@@ -595,25 +603,25 @@ public final class SocksServerCli extends ParseResultSink {
 	}
 	
 	public int process(final String[] args) {
-		Option settingsOption = this.getOptions().toList().get(
+		Option settingsOption = this.options.toList().get(
 				SETTINGS_OPTION_ORDINAL);
-		Option settingsHelpOption = this.getOptions().toList().get(
+		Option settingsHelpOption = this.options.toList().get(
 				SETTINGS_HELP_OPTION_ORDINAL);
 		String settingsHelpSuggestion = String.format(
 				"Try `%s %s' for more information.", 
 				this.programBeginningUsage, 
 				settingsHelpOption.getUsage());
-		Option helpOption = this.getOptions().toList().get(HELP_OPTION_ORDINAL);
+		Option helpOption = this.options.toList().get(HELP_OPTION_ORDINAL);
 		String suggestion = String.format(
 				"Try `%s %s' for more information.", 
 				this.programBeginningUsage, 
 				helpOption.getUsage());
-		this.argsParser = ArgsParser.newInstance(args, this.getOptions(), false);
+		this.argsParser = ArgsParser.newInstance(args, this.options, false);
 		while (this.argsParser.hasNext()) {
 			try {
 				ParseResultHolder parseResultHolder = 
 						this.argsParser.parseNext();
-				this.receive(parseResultHolder);
+				this.parseResultSinkObject.send(parseResultHolder);
 			} catch (IllegalOptionArgException e) {
 				String suggest = suggestion;
 				if (settingsOption.getAllOptions().contains(e.getOption())) {

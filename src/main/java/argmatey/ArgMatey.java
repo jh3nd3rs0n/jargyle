@@ -3479,57 +3479,18 @@ public final class ArgMatey {
 		
 	}
 
-	public static abstract class ParseResultSink {
-		
-		private final ParseResultSinkClass cls;
-		
-		public ParseResultSink() {
-			this.cls = ParseResultSinkClass.newInstance(this.getClass());
-		}
-		
-		public final Options getOptions() {
-			return this.cls.getOptions();
-		}
-		
-		public final void receive(final ParseResultHolder parseResultHolder) {
-			if (parseResultHolder.hasNonparsedArg()) {
-				String nonparsedArg = parseResultHolder.getNonparsedArg();
-				NonparsedArgSinkMethod nonparsedArgSinkMethod =
-						this.cls.getNonparsedArgSinkMethod();
-				if (nonparsedArgSinkMethod != null) {
-					nonparsedArgSinkMethod.invoke(this, nonparsedArg);
-				}
-			}
-			if (parseResultHolder.hasOptionOccurrence()) {
-				OptionOccurrence optionOccurrence = 
-						parseResultHolder.getOptionOccurrence();
-				Option option = optionOccurrence.getOption();
-				OptionArg optionArg = optionOccurrence.getOptionArg();
-				for (OptionSinkMethod optionSinkMethod 
-						: this.cls.getOptionSinkMethods()) {
-					if (optionSinkMethod.defines(option)) {
-						optionSinkMethod.invoke(this, option, optionArg);
-						break;
-					}
-				}
-			}
-		}
-		
-	}
-	
 	static final class ParseResultSinkClass {
 		
-		public static ParseResultSinkClass newInstance(
-				final Class<? extends ParseResultSink> cls) {
+		public static ParseResultSinkClass newInstance(final Class<?> cls) {
 			return new ParseResultSinkClass(cls);
 		}
 		
-		private final Class<? extends ParseResultSink> cls;
+		private final Class<?> cls;
 		private final NonparsedArgSinkMethod nonparsedArgSinkMethod;
 		private final List<OptionSinkMethod> optionSinkMethods;
 		private final Options options;
 		
-		private ParseResultSinkClass(final Class<? extends ParseResultSink> c) {
+		private ParseResultSinkClass(final Class<?> c) {
 			NonparsedArgSinkMethod argSinkMethod = null;
 			List<OptionSinkMethod> optSinkMethods =
 					new ArrayList<OptionSinkMethod>();
@@ -3570,8 +3531,56 @@ public final class ArgMatey {
 			return this.options;
 		}
 		
-		public Class<? extends ParseResultSink> toClass() {
+		public Class<?> toClass() {
 			return this.cls;
+		}
+		
+	}
+	
+	public static final class ParseResultSinkObject {
+		
+		public static ParseResultSinkObject newInstance(final Object object) {
+			return new ParseResultSinkObject(object);
+		}
+		
+		private final ParseResultSinkClass cls;
+		private final Object object;
+		
+		private ParseResultSinkObject(final Object obj) {
+			this.cls = ParseResultSinkClass.newInstance(obj.getClass());
+			this.object = obj;
+		}
+		
+		public Options getOptions() {
+			return this.cls.getOptions();
+		}
+		
+		public void send(final ParseResultHolder parseResultHolder) {
+			if (parseResultHolder.hasNonparsedArg()) {
+				String nonparsedArg = parseResultHolder.getNonparsedArg();
+				NonparsedArgSinkMethod nonparsedArgSinkMethod =
+						this.cls.getNonparsedArgSinkMethod();
+				if (nonparsedArgSinkMethod != null) {
+					nonparsedArgSinkMethod.invoke(this.object, nonparsedArg);
+				}
+			}
+			if (parseResultHolder.hasOptionOccurrence()) {
+				OptionOccurrence optionOccurrence = 
+						parseResultHolder.getOptionOccurrence();
+				Option option = optionOccurrence.getOption();
+				OptionArg optionArg = optionOccurrence.getOptionArg();
+				for (OptionSinkMethod optionSinkMethod 
+						: this.cls.getOptionSinkMethods()) {
+					if (optionSinkMethod.defines(option)) {
+						optionSinkMethod.invoke(this.object, option, optionArg);
+						break;
+					}
+				}
+			}
+		}
+		
+		public Object toObject() {
+			return this.object;
 		}
 		
 	}

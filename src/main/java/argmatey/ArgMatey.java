@@ -2672,101 +2672,9 @@ public final class ArgMatey {
 		
 	}
 	
-	public static final class Options {
-		
-		public static Options newInstance(final List<Option> opts) {
-			return new Options(opts);
-		}
-		
-		public static Options newInstance(final Option... opts) {
-			return new Options(Arrays.asList(opts));
-		}
-		
-		private final List<Option> options;
-		
-		private Options(final List<Option> opts) {
-			for (Option opt : opts) {
-				Objects.requireNonNull(opt, "Option(s) must not be null");
-			}
-			this.options = new ArrayList<Option>(opts);
-		}
-		
-		public final void printHelpText() {
-			this.printHelpText(System.out);
-		}
-		
-		public final void printHelpText(final PrintStream s) {
-			this.printHelpText(new PrintWriter(s));
-		}
-		
-		public final void printHelpText(final PrintWriter w) {
-			boolean earlierHelpTextNotNullOrEmpty = false;
-			for (Option option : this.options) {
-				String helpText = option.getHelpText();
-				if (helpText != null && !helpText.isEmpty()) {
-					if (earlierHelpTextNotNullOrEmpty) {
-						w.println();
-					}
-					w.print(helpText);
-					w.flush();
-					if (!earlierHelpTextNotNullOrEmpty) {
-						earlierHelpTextNotNullOrEmpty = true;
-					}
-				}
-			}
-		}
-
-		public final void printUsage() {
-			this.printUsage(System.out);
-		}
-		
-		public final void printUsage(final PrintStream s) {
-			this.printUsage(new PrintWriter(s));
-		}
-		
-		public final void printUsage(final PrintWriter w) {
-			boolean earlierUsageNotNullOrEmpty = false;
-			for (Option option : this.options) {
-				String usage = null;
-				for (Option opt : option.getAllOptions()) {
-					usage = opt.getUsage();
-					if (!opt.isHidden() && !opt.isSpecial() 
-							&& usage != null && !usage.isEmpty()) {
-						break;
-					}
-				}
-				if (usage != null && !usage.isEmpty()) {
-					if (earlierUsageNotNullOrEmpty) {
-						w.print(" ");
-					}
-					w.print(String.format("[%s]", usage));
-					w.flush();
-					if (!earlierUsageNotNullOrEmpty) {
-						earlierUsageNotNullOrEmpty = true;
-					}
-				}
-			}
-		}
-		
-		public final List<Option> toList() {
-			return Collections.unmodifiableList(this.options);
-		}
-
-		@Override
-		public final String toString() {
-			StringBuilder sb = new StringBuilder();
-			sb.append(this.getClass().getSimpleName())
-				.append(" [options=")
-				.append(this.options)
-				.append("]");
-			return sb.toString();
-		}
-
-	}
-
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target({ElementType.METHOD})
-	public static @interface OptionSink {
+	public static @interface OptionOccurrenceSink {
 		
 		OptionBuilder optionBuilder();
 		
@@ -2774,7 +2682,7 @@ public final class ArgMatey {
 		
 	}
 
-	static final class OptionSinkMethod {
+	static final class OptionOccurrenceSinkMethod {
 		
 		private static enum TargetMethodParameterTypesType {
 			
@@ -2792,10 +2700,9 @@ public final class ArgMatey {
 
 				@Override
 				public void invoke(
-						final Method method, 
 						final Object obj, 
-						final Option option, 
-						final OptionArg optionArg) {
+						final Method method, 
+						final OptionOccurrence optionOccurrence) {
 					try {
 						method.invoke(obj, Boolean.TRUE.booleanValue());
 					} catch (IllegalAccessException e) {
@@ -2846,10 +2753,11 @@ public final class ArgMatey {
 
 				@Override
 				public void invoke(
-						final Method method, 
 						final Object obj, 
-						final Option option, 
-						final OptionArg optionArg) {
+						final Method method, 
+						final OptionOccurrence optionOccurrence) {
+					Option option = optionOccurrence.getOption();
+					OptionArg optionArg = optionOccurrence.getOptionArg();
 					List<Object> objectValues = Collections.emptyList();
 					String optArg = null;
 					if (optionArg != null) {
@@ -2898,10 +2806,9 @@ public final class ArgMatey {
 
 				@Override
 				public void invoke(
-						final Method method, 
 						final Object obj, 
-						final Option option, 
-						final OptionArg optionArg) {
+						final Method method, 
+						final OptionOccurrence optionOccurrence) {
 					try {
 						method.invoke(obj);
 					} catch (IllegalAccessException e) {
@@ -2937,10 +2844,11 @@ public final class ArgMatey {
 
 				@Override
 				public void invoke(
-						final Method method, 
 						final Object obj, 
-						final Option option, 
-						final OptionArg optionArg) {
+						final Method method, 
+						final OptionOccurrence optionOccurrence) {
+					Option option = optionOccurrence.getOption();
+					OptionArg optionArg = optionOccurrence.getOptionArg();
 					Object objectValue = null;
 					String optArg = null;
 					if (optionArg != null) {
@@ -2989,28 +2897,29 @@ public final class ArgMatey {
 			public abstract String getTargetMethodParameterTypesString();
 			
 			public abstract void invoke(
-					final Method method, 
 					final Object obj, 
-					final Option option, 
-					final OptionArg optionArg);
+					final Method method, 
+					OptionOccurrence optionOccurrence);
 			
 			public abstract boolean isTargetMethodParameterTypes(
 					final Class<?>[] types);
 			
 		}
 		
-		public static OptionSinkMethod newInstance(final Method method) {
+		public static OptionOccurrenceSinkMethod newInstance(
+				final Method method) {
 			validateMethod(method);
-			return new OptionSinkMethod(method);
+			return new OptionOccurrenceSinkMethod(method);
 		}
 		
 		private static void validateMethod(final Method method) {
-			OptionSink optionSink = method.getAnnotation(OptionSink.class);
-			if (optionSink == null) {
+			OptionOccurrenceSink optionOccurrenceSink = method.getAnnotation(
+					OptionOccurrenceSink.class);
+			if (optionOccurrenceSink == null) {
 				throw new IllegalArgumentException(String.format(
 						"method '%s' must have the annotation %s", 
 						method,
-						OptionSink.class.getName()));
+						OptionOccurrenceSink.class.getName()));
 			}
 			int modifiers = method.getModifiers();
 			if (Modifier.isStatic(modifiers)) {
@@ -3040,23 +2949,24 @@ public final class ArgMatey {
 		}
 		
 		private final Method method;
-		private final OptionSink optionSink;
+		private final OptionOccurrenceSink optionOccurrenceSink;
 		private final TargetMethodParameterTypesType targetMethodParameterTypesType;
 		
-		private OptionSinkMethod(final Method mthd) {
+		private OptionOccurrenceSinkMethod(final Method mthd) {
 			TargetMethodParameterTypesType t = TargetMethodParameterTypesType.get(
 					mthd.getParameterTypes());
-			OptionSink sink = mthd.getAnnotation(OptionSink.class);
+			OptionOccurrenceSink sink = mthd.getAnnotation(
+					OptionOccurrenceSink.class);
 			this.method = mthd;
-			this.optionSink = sink;
+			this.optionOccurrenceSink = sink;
 			this.targetMethodParameterTypesType = t;
 		}
 		
 		public boolean defines(final Option option) {
 			List<OptionBuilder> optionBuilders = new ArrayList<OptionBuilder>();
-			optionBuilders.add(this.optionSink.optionBuilder());
+			optionBuilders.add(this.optionOccurrenceSink.optionBuilder());
 			optionBuilders.addAll(Arrays.asList(
-					this.optionSink.otherOptionBuilders()));
+					this.optionOccurrenceSink.otherOptionBuilders()));
 			for (OptionBuilder optionBuilder : optionBuilders) {
 				Class<?> type = optionBuilder.type();
 				String name = optionBuilder.name();
@@ -3068,28 +2978,27 @@ public final class ArgMatey {
 			return false;
 		}
 		
-		public OptionSink getOptionSink() {
-			return this.optionSink;
+		public OptionOccurrenceSink getOptionOccurrenceSink() {
+			return this.optionOccurrenceSink;
 		}
 		
 		public void invoke(
 				final Object obj, 
-				final Option option, 
-				final OptionArg optionArg) {
+				final OptionOccurrence optionOccurrence) {
 			this.targetMethodParameterTypesType.invoke(
-					this.method, obj, option, optionArg);
+					obj, this.method, optionOccurrence);
 		}
 
 		public Option newOption() {
 			OptionBuilder[] otherOptionBuilders = 
-					this.optionSink.otherOptionBuilders();
+					this.optionOccurrenceSink.otherOptionBuilders();
 			List<Option.Builder> otherBuilders = 
 					new ArrayList<Option.Builder>();
 			for (OptionBuilder otherOptionBuilder : otherOptionBuilders) {
 				otherBuilders.add(this.newOptionBuilder(otherOptionBuilder));
 			}
 			Option.Builder builder = this.newOptionBuilder(
-					this.optionSink.optionBuilder());
+					this.optionOccurrenceSink.optionBuilder());
 			builder.otherBuilders(otherBuilders);
 			return builder.build();
 		}
@@ -3248,25 +3157,121 @@ public final class ArgMatey {
 		}
 		
 	}
-	
-	static final class OptionSinkMethodComparator 
-		implements Comparator<OptionSinkMethod> {
 
-		public OptionSinkMethodComparator() { }
+	static final class OptionOccurrenceSinkMethodComparator 
+		implements Comparator<OptionOccurrenceSinkMethod> {
+
+		public OptionOccurrenceSinkMethodComparator() { }
 		
 		@Override
 		public int compare(
-				final OptionSinkMethod arg0, 
-				final OptionSinkMethod arg1) {
-			OptionSink optionSink0 = arg0.getOptionSink();
-			OptionSink optionSink1 = arg1.getOptionSink();
-			OptionBuilder optionBuilder0 = optionSink0.optionBuilder();
-			OptionBuilder optionBuilder1 = optionSink1.optionBuilder();
+				final OptionOccurrenceSinkMethod arg0, 
+				final OptionOccurrenceSinkMethod arg1) {
+			OptionOccurrenceSink optionOccurrenceSink0 = 
+					arg0.getOptionOccurrenceSink();
+			OptionOccurrenceSink optionOccurrenceSink1 = 
+					arg1.getOptionOccurrenceSink();
+			OptionBuilder optionBuilder0 = 
+					optionOccurrenceSink0.optionBuilder();
+			OptionBuilder optionBuilder1 = 
+					optionOccurrenceSink1.optionBuilder();
 			int diff = optionBuilder0.ordinal() - optionBuilder1.ordinal();
 			if (diff != 0) { return diff; }
 			return optionBuilder0.name().compareTo(optionBuilder1.name());
 		}
 		
+	}
+	
+	public static final class Options {
+		
+		public static Options newInstance(final List<Option> opts) {
+			return new Options(opts);
+		}
+		
+		public static Options newInstance(final Option... opts) {
+			return new Options(Arrays.asList(opts));
+		}
+		
+		private final List<Option> options;
+		
+		private Options(final List<Option> opts) {
+			for (Option opt : opts) {
+				Objects.requireNonNull(opt, "Option(s) must not be null");
+			}
+			this.options = new ArrayList<Option>(opts);
+		}
+		
+		public final void printHelpText() {
+			this.printHelpText(System.out);
+		}
+		
+		public final void printHelpText(final PrintStream s) {
+			this.printHelpText(new PrintWriter(s));
+		}
+		
+		public final void printHelpText(final PrintWriter w) {
+			boolean earlierHelpTextNotNullOrEmpty = false;
+			for (Option option : this.options) {
+				String helpText = option.getHelpText();
+				if (helpText != null && !helpText.isEmpty()) {
+					if (earlierHelpTextNotNullOrEmpty) {
+						w.println();
+					}
+					w.print(helpText);
+					w.flush();
+					if (!earlierHelpTextNotNullOrEmpty) {
+						earlierHelpTextNotNullOrEmpty = true;
+					}
+				}
+			}
+		}
+
+		public final void printUsage() {
+			this.printUsage(System.out);
+		}
+		
+		public final void printUsage(final PrintStream s) {
+			this.printUsage(new PrintWriter(s));
+		}
+		
+		public final void printUsage(final PrintWriter w) {
+			boolean earlierUsageNotNullOrEmpty = false;
+			for (Option option : this.options) {
+				String usage = null;
+				for (Option opt : option.getAllOptions()) {
+					usage = opt.getUsage();
+					if (!opt.isHidden() && !opt.isSpecial() 
+							&& usage != null && !usage.isEmpty()) {
+						break;
+					}
+				}
+				if (usage != null && !usage.isEmpty()) {
+					if (earlierUsageNotNullOrEmpty) {
+						w.print(" ");
+					}
+					w.print(String.format("[%s]", usage));
+					w.flush();
+					if (!earlierUsageNotNullOrEmpty) {
+						earlierUsageNotNullOrEmpty = true;
+					}
+				}
+			}
+		}
+		
+		public final List<Option> toList() {
+			return Collections.unmodifiableList(this.options);
+		}
+
+		@Override
+		public final String toString() {
+			StringBuilder sb = new StringBuilder();
+			sb.append(this.getClass().getSimpleName())
+				.append(" [options=")
+				.append(this.options)
+				.append("]");
+			return sb.toString();
+		}
+
 	}
 
 	public static final class OptionUsageParams {
@@ -3487,13 +3492,13 @@ public final class ArgMatey {
 		
 		private final Class<?> cls;
 		private final NonparsedArgSinkMethod nonparsedArgSinkMethod;
-		private final List<OptionSinkMethod> optionSinkMethods;
+		private final List<OptionOccurrenceSinkMethod> optionOccurrenceSinkMethods;
 		private final Options options;
 		
 		private ParseResultSinkClass(final Class<?> c) {
 			NonparsedArgSinkMethod argSinkMethod = null;
-			List<OptionSinkMethod> optSinkMethods =
-					new ArrayList<OptionSinkMethod>();
+			List<OptionOccurrenceSinkMethod> optOccurrenceSinkMethods =
+					new ArrayList<OptionOccurrenceSinkMethod>();
 			Method[] methods = c.getMethods();
 			for (Method method : methods) {
 				if (method.isAnnotationPresent(NonparsedArgSink.class)) {
@@ -3501,21 +3506,24 @@ public final class ArgMatey {
 							NonparsedArgSinkMethod.newInstance(method);
 					argSinkMethod = mthd;
 				}
-				if (method.isAnnotationPresent(OptionSink.class)) {
-					OptionSinkMethod mthd =	
-							OptionSinkMethod.newInstance(method);
-					optSinkMethods.add(mthd);
+				if (method.isAnnotationPresent(OptionOccurrenceSink.class)) {
+					OptionOccurrenceSinkMethod mthd =	
+							OptionOccurrenceSinkMethod.newInstance(method);
+					optOccurrenceSinkMethods.add(mthd);
 				}
 			}
-			Collections.sort(optSinkMethods, new OptionSinkMethodComparator());
+			Collections.sort(
+					optOccurrenceSinkMethods, 
+					new OptionOccurrenceSinkMethodComparator());
 			List<Option> opts = new ArrayList<Option>();
-			for (OptionSinkMethod method : optSinkMethods) {
+			for (OptionOccurrenceSinkMethod method : optOccurrenceSinkMethods) {
 				opts.add(method.newOption());
 			}
 			this.cls = c;
 			this.nonparsedArgSinkMethod = argSinkMethod;
-			this.optionSinkMethods = new ArrayList<OptionSinkMethod>(
-					optSinkMethods);
+			this.optionOccurrenceSinkMethods = 
+					new ArrayList<OptionOccurrenceSinkMethod>(
+							optOccurrenceSinkMethods);
 			this.options = Options.newInstance(opts);
 		}
 		
@@ -3523,8 +3531,8 @@ public final class ArgMatey {
 			return this.nonparsedArgSinkMethod;
 		}
 		
-		public List<OptionSinkMethod> getOptionSinkMethods() {
-			return Collections.unmodifiableList(this.optionSinkMethods);
+		public List<OptionOccurrenceSinkMethod> getOptionOccurrenceSinkMethods() {
+			return Collections.unmodifiableList(this.optionOccurrenceSinkMethods);
 		}
 		
 		public Options getOptions() {
@@ -3568,11 +3576,11 @@ public final class ArgMatey {
 				OptionOccurrence optionOccurrence = 
 						parseResultHolder.getOptionOccurrence();
 				Option option = optionOccurrence.getOption();
-				OptionArg optionArg = optionOccurrence.getOptionArg();
-				for (OptionSinkMethod optionSinkMethod 
-						: this.cls.getOptionSinkMethods()) {
-					if (optionSinkMethod.defines(option)) {
-						optionSinkMethod.invoke(this.object, option, optionArg);
+				for (OptionOccurrenceSinkMethod optionOccurrenceSinkMethod 
+						: this.cls.getOptionOccurrenceSinkMethods()) {
+					if (optionOccurrenceSinkMethod.defines(option)) {
+						optionOccurrenceSinkMethod.invoke(
+								this.object, optionOccurrence);
 						break;
 					}
 				}

@@ -19,7 +19,7 @@ import argmatey.ArgMatey.GnuLongOption;
 import argmatey.ArgMatey.NonparsedArgSink;
 import argmatey.ArgMatey.Option;
 import argmatey.ArgMatey.OptionBuilder;
-import argmatey.ArgMatey.OptionSink;
+import argmatey.ArgMatey.OptionOccurrenceSink;
 import argmatey.ArgMatey.Options;
 import argmatey.ArgMatey.ParseResultHolder;
 import argmatey.ArgMatey.ParseResultSinkObject;
@@ -314,7 +314,7 @@ public final class UsersCli {
 		}
 	}
 	
-	@OptionSink(
+	@OptionOccurrenceSink(
 			optionBuilder = @OptionBuilder(
 					doc = "Print this help and exit",
 					name = "help",
@@ -356,7 +356,7 @@ public final class UsersCli {
 		this.programHelpRequested = true;
 	}
 	
-	@OptionSink(
+	@OptionOccurrenceSink(
 			optionBuilder = @OptionBuilder(
 					doc = "Print the XSD and exit",
 					name = "xsd",

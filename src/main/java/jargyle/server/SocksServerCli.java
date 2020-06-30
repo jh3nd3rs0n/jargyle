@@ -22,7 +22,7 @@ import argmatey.ArgMatey.IllegalOptionArgException;
 import argmatey.ArgMatey.Option;
 import argmatey.ArgMatey.OptionArgSpecBuilder;
 import argmatey.ArgMatey.OptionBuilder;
-import argmatey.ArgMatey.OptionSink;
+import argmatey.ArgMatey.OptionOccurrenceSink;
 import argmatey.ArgMatey.OptionUsageParams;
 import argmatey.ArgMatey.OptionUsageProvider;
 import argmatey.ArgMatey.Options;
@@ -177,7 +177,7 @@ public final class SocksServerCli {
 		this.socks5UsersManagementModeStatus = null;
 	}
 	
-	@OptionSink(
+	@OptionOccurrenceSink(
 			optionBuilder = @OptionBuilder(
 					doc = "The space separated list of allowed client address "
 							+ "criteria",
@@ -194,7 +194,7 @@ public final class SocksServerCli {
 				allowedClientAddrCriteria);
 	}
 	
-	@OptionSink(
+	@OptionOccurrenceSink(
 			optionBuilder = @OptionBuilder(
 					doc = "The space separated list of allowed SOCKS5 "
 							+ "incoming TCP address criteria",
@@ -211,7 +211,7 @@ public final class SocksServerCli {
 				allowedSocks5IncomingTcpAddrCriteria);
 	}
 	
-	@OptionSink(
+	@OptionOccurrenceSink(
 			optionBuilder = @OptionBuilder(
 					doc = "The space separated list of allowed SOCKS5 "
 							+ "incoming UDP address criteria",
@@ -228,7 +228,7 @@ public final class SocksServerCli {
 				allowedSocks5IncomingUdpAddrCriteria);
 	}
 
-	@OptionSink(
+	@OptionOccurrenceSink(
 			optionBuilder = @OptionBuilder(
 					doc = "The space separated list of blocked client address "
 							+ "criteria",
@@ -245,7 +245,7 @@ public final class SocksServerCli {
 				blockedClientAddrCriteria);
 	}
 	
-	@OptionSink(
+	@OptionOccurrenceSink(
 			optionBuilder = @OptionBuilder(
 					doc = "The space separated list of blocked SOCKS5 "
 							+ "incoming TCP address criteria",
@@ -262,7 +262,7 @@ public final class SocksServerCli {
 				blockedSocks5IncomingTcpAddrCriteria);
 	}
 	
-	@OptionSink(
+	@OptionOccurrenceSink(
 			optionBuilder = @OptionBuilder(
 					doc = "The space separated list of blocked SOCKS5 "
 							+ "incoming UDP address criteria",
@@ -279,7 +279,7 @@ public final class SocksServerCli {
 				blockedSocks5IncomingUdpAddrCriteria);
 	}
 	
-	@OptionSink(
+	@OptionOccurrenceSink(
 			optionBuilder = @OptionBuilder(
 					doc = "The configuration file",
 					name = "config-file",
@@ -323,7 +323,7 @@ public final class SocksServerCli {
 		this.modifiableConfiguration.add(configuration);
 	}
 	
-	@OptionSink(
+	@OptionOccurrenceSink(
 			optionBuilder = @OptionBuilder(
 					doc = "The comma separated list of settings for the SOCKS "
 							+ "server",
@@ -345,7 +345,7 @@ public final class SocksServerCli {
 		this.modifiableConfiguration.addSettings(sttngs);
 	}
 	
-	@OptionSink(
+	@OptionOccurrenceSink(
 			optionBuilder = @OptionBuilder(
 					doc = "Mode for managing SOCKS5 users (add --help for "
 							+ "more information)",
@@ -382,7 +382,7 @@ public final class SocksServerCli {
 		this.socks5UsersManagementModeStatus = Integer.valueOf(status);
 	}
 	
-	@OptionSink(
+	@OptionOccurrenceSink(
 			optionBuilder = @OptionBuilder(
 					doc = "Enter through an interactive prompt the username "
 							+ "password to be used to access the external "
@@ -424,7 +424,7 @@ public final class SocksServerCli {
 		return configuration;
 	}
 	
-	@OptionSink(
+	@OptionOccurrenceSink(
 			optionBuilder = @OptionBuilder(
 					doc = "Create a new configuration file based on the "
 							+ "preceding options and exit",
@@ -484,7 +484,7 @@ public final class SocksServerCli {
 		this.newConfigurationFileRequested = true;
 	}
 	
-	@OptionSink(
+	@OptionOccurrenceSink(
 			optionBuilder = @OptionBuilder(
 					doc = "Print the configuration file XSD and exit",
 					name = "config-file-xsd",
@@ -506,7 +506,7 @@ public final class SocksServerCli {
 		this.configurationFileXsdRequested = true;
 	}
 	
-	@OptionSink(
+	@OptionOccurrenceSink(
 			optionBuilder = @OptionBuilder(
 					doc = "Print this help and exit",
 					name = "help",
@@ -572,7 +572,7 @@ public final class SocksServerCli {
 		}
 	}
 	
-	@OptionSink(
+	@OptionOccurrenceSink(
 			optionBuilder = @OptionBuilder(
 					doc = "Print the list of available settings for the SOCKS "
 							+ "server and exit",
@@ -652,7 +652,7 @@ public final class SocksServerCli {
 		return this.startSocksServer(configuration);
 	}
 	
-	@OptionSink(
+	@OptionOccurrenceSink(
 			optionBuilder = @OptionBuilder(
 					doc = "The username password to be used to access the "
 							+ "external SOCKS5 server used for external "
@@ -670,7 +670,7 @@ public final class SocksServerCli {
 				usernamePassword);
 	}
 	
-	@OptionSink(
+	@OptionOccurrenceSink(
 			optionBuilder = @OptionBuilder(
 					doc = "The configuration file to be monitored for any "
 							+ "changes to be applied to the running "
@@ -694,7 +694,7 @@ public final class SocksServerCli {
 		this.monitoredConfigurationFile = file;
 	}
 	
-	@OptionSink(
+	@OptionOccurrenceSink(
 			optionBuilder = @OptionBuilder(
 					doc = "The SOCKS5 username password authenticator for the "
 							+ "SOCKS server",

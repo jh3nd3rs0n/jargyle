@@ -354,7 +354,7 @@ public final class ArgMatey {
 				}
 				OptionArgSpec optionArgSpec = opt.getOptionArgSpec();
 				if (optionArg == null && optionArgSpec != null 
-						&& !optionArgSpec.isOptional()) {
+						&& optionArgSpec.isRequired()) {
 					String[] args = context.getArgs();
 					int argIndex = context.getArgIndex();
 					if (argIndex < args.length - 1) {
@@ -406,7 +406,7 @@ public final class ArgMatey {
 				}
 				String optionArg = null;
 				OptionArgSpec optionArgSpec = opt.getOptionArgSpec();
-				if (optionArgSpec != null && !optionArgSpec.isOptional()) {
+				if (optionArgSpec != null && optionArgSpec.isRequired()) {
 					String[] args = context.getArgs();
 					int argIndex = context.getArgIndex();
 					if (argIndex < args.length - 1) {
@@ -520,7 +520,7 @@ public final class ArgMatey {
 							argCharIndex = context.incrementArgCharIndex();
 						}
 					} else {
-						if (!optionArgSpec.isOptional()) {
+						if (optionArgSpec.isRequired()) {
 							String[] args = context.getArgs();
 							int argIndex = context.getArgIndex();
 							if (argIndex < args.length - 1) {
@@ -735,13 +735,13 @@ public final class ArgMatey {
 			} else {
 				String optionArgSeparator = optionArgSpec.getSeparator();
 				String optionArgName = optionArgSpec.getName();
-				if (optionArgSpec.isOptional()) {
+				if (optionArgSpec.isRequired()) {
 					if (optionArgSeparator.equals(
 							OptionArgSpec.DEFAULT_SEPARATOR)) {
-						usage = String.format("%s[=%s]", option, optionArgName);
+						usage = String.format("%s=%s", option, optionArgName);
 					} else {
 						usage = String.format(
-								"%1$s[=%2$s1[%3$s%2$s2]...]", 
+								"%1$s=%2$s1[%3$s%2$s2]...", 
 								option, 
 								optionArgName,
 								optionArgSeparator);
@@ -749,10 +749,10 @@ public final class ArgMatey {
 				} else {
 					if (optionArgSeparator.equals(
 							OptionArgSpec.DEFAULT_SEPARATOR)) {
-						usage = String.format("%s=%s", option, optionArgName);
+						usage = String.format("%s[=%s]", option, optionArgName);
 					} else {
 						usage = String.format(
-								"%1$s=%2$s1[%3$s%2$s2]...", 
+								"%1$s[=%2$s1[%3$s%2$s2]...]", 
 								option, 
 								optionArgName,
 								optionArgSeparator);
@@ -784,9 +784,7 @@ public final class ArgMatey {
 			} else {
 				String optionArgSeparator = optionArgSpec.getSeparator();
 				String optionArgName = optionArgSpec.getName();
-				if (optionArgSpec.isOptional()) {
-					usage = option;
-				} else {
+				if (optionArgSpec.isRequired()) {
 					if (optionArgSeparator.equals(
 							OptionArgSpec.DEFAULT_SEPARATOR)) {
 						usage = String.format("%s %s", option, optionArgName);
@@ -797,6 +795,8 @@ public final class ArgMatey {
 								optionArgName,
 								optionArgSeparator);
 					}
+				} else {
+					usage = option;
 				}
 			}		
 			return usage;
@@ -892,13 +892,13 @@ public final class ArgMatey {
 			} else {
 				String optionArgSeparator = optionArgSpec.getSeparator();
 				String optionArgName = optionArgSpec.getName();
-				if (optionArgSpec.isOptional()) {
+				if (optionArgSpec.isRequired()) {
 					if (optionArgSeparator.equals(
 							OptionArgSpec.DEFAULT_SEPARATOR)) {
-						usage = String.format("%s[%s]", option, optionArgName);
+						usage = String.format("%s %s", option, optionArgName);
 					} else {
 						usage = String.format(
-								"%1$s[%2$s1[%3$s%2$s2]...]", 
+								"%1$s %2$s1[%3$s%2$s2]...", 
 								option, 
 								optionArgName,
 								optionArgSeparator);
@@ -906,10 +906,10 @@ public final class ArgMatey {
 				} else {
 					if (optionArgSeparator.equals(
 							OptionArgSpec.DEFAULT_SEPARATOR)) {
-						usage = String.format("%s %s", option, optionArgName);
+						usage = String.format("%s[%s]", option, optionArgName);
 					} else {
 						usage = String.format(
-								"%1$s %2$s1[%3$s%2$s2]...", 
+								"%1$s[%2$s1[%3$s%2$s2]...]", 
 								option, 
 								optionArgName,
 								optionArgSeparator);
@@ -2315,14 +2315,14 @@ public final class ArgMatey {
 		public static final class Builder {
 					
 			private String name;
-			private boolean optional;
+			private boolean required;
 			private String separator;
 			private StringConverter stringConverter;
 			private Class<?> type;
 			
 			public Builder() {
 				this.name = null;
-				this.optional = false;
+				this.required = true;
 				this.separator = null;
 				this.stringConverter = null;
 				this.type = null;
@@ -2337,8 +2337,8 @@ public final class ArgMatey {
 				return this;
 			}
 			
-			public Builder optional(final boolean b) {
-				this.optional = b;
+			public Builder required(final boolean b) {
+				this.required = b;
 				return this;
 			}
 			
@@ -2364,14 +2364,14 @@ public final class ArgMatey {
 		public static final Class<?> DEFAULT_TYPE = String.class;
 			
 		private final String name;
-		private final boolean optional;
+		private final boolean required;
 		private final String separator;
 		private final StringConverter stringConverter;
 		private final Class<?> type;
 		
 		private OptionArgSpec(final Builder builder) {
 			String n = builder.name;
-			boolean o = builder.optional;
+			boolean r = builder.required;
 			String s = builder.separator;
 			StringConverter sc = builder.stringConverter;
 			Class<?> t = builder.type;
@@ -2380,7 +2380,7 @@ public final class ArgMatey {
 			if (t == null) { t = DEFAULT_TYPE; }
 			if (sc == null) { sc = new DefaultStringConverter(t); }
 			this.name = n;
-			this.optional = o;
+			this.required = r;
 			this.separator = s;
 			this.stringConverter = sc;
 			this.type = t;
@@ -2402,16 +2402,16 @@ public final class ArgMatey {
 			return this.type;
 		}
 
-		public boolean isOptional() {
-			return this.optional;
+		public boolean isRequired() {
+			return this.required;
 		}
 
 		public OptionArg newOptionArg(final String optionArg) {
-			if (!this.optional && optionArg == null) {
+			if (this.required && optionArg == null) {
 				Objects.requireNonNull(
 						optionArg, "option argument must not be null");
 			}
-			if (this.optional && optionArg == null) {
+			if (!this.required && optionArg == null) {
 				return null;
 			}
 			List<String> optArgs = Arrays.asList(optionArg.split(
@@ -2435,8 +2435,8 @@ public final class ArgMatey {
 			sb.append(this.getClass().getSimpleName())
 				.append(" [name=")
 				.append(this.name)
-				.append(", optional=")
-				.append(this.optional)
+				.append(", required=")
+				.append(this.required)
 				.append(", separator=")
 				.append(this.separator)
 				.append(", stringConverter=")
@@ -2452,11 +2452,11 @@ public final class ArgMatey {
 	@Retention(RetentionPolicy.RUNTIME)
 	public static @interface OptionArgSpecBuilder {
 		
-		boolean ignored() default false;
+		boolean allowed() default true;
 		
 		String name() default OptionArgSpec.DEFAULT_NAME;
 		
-		boolean optional() default false;
+		boolean required() default true;
 		
 		String separator() default OptionArgSpec.DEFAULT_SEPARATOR;
 		
@@ -2475,7 +2475,7 @@ public final class ArgMatey {
 		String name();
 		
 		OptionArgSpecBuilder optionArgSpecBuilder() 
-			default @OptionArgSpecBuilder(ignored = true);
+			default @OptionArgSpecBuilder(allowed = false);
 		
 		Class<? extends OptionHelpTextProvider> optionHelpTextProvider()
 			default DefaultOptionHelpTextProvider.class;
@@ -3007,7 +3007,7 @@ public final class ArgMatey {
 				final OptionArgSpecBuilder optionArgSpecBuilder) {
 			OptionArgSpec.Builder builder = new OptionArgSpec.Builder();
 			builder.name(optionArgSpecBuilder.name());
-			builder.optional(optionArgSpecBuilder.optional());
+			builder.required(optionArgSpecBuilder.required());
 			builder.separator(optionArgSpecBuilder.separator());
 			Class<?> stringConverterClass = 
 					optionArgSpecBuilder.stringConverter();
@@ -3049,7 +3049,7 @@ public final class ArgMatey {
 			builder.hidden(optionBuilder.hidden());
 			OptionArgSpecBuilder optionArgSpecBuilder = 
 					optionBuilder.optionArgSpecBuilder();
-			if (!optionArgSpecBuilder.ignored()) {
+			if (optionArgSpecBuilder.allowed()) {
 				builder.optionArgSpec(this.newOptionArgSpecBuilder(
 						optionArgSpecBuilder).build());
 			}

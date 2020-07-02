@@ -1841,6 +1841,10 @@ public final class ArgMatey {
 				return this;
 			}
 			
+			public final boolean hidden() {
+				return this.hidden;
+			}
+			
 			public Builder hidden(final boolean b) {
 				this.hidden = b;
 				this.hiddenSet = true;
@@ -1849,6 +1853,10 @@ public final class ArgMatey {
 			
 			public final boolean hiddenSet() {
 				return this.hiddenSet;
+			}
+			
+			public final OptionArgSpec optionArgSpec() {
+				return this.optionArgSpec;
 			}
 			
 			public Builder optionArgSpec(final OptionArgSpec optArgSpec) {
@@ -1866,6 +1874,10 @@ public final class ArgMatey {
 				this.optionUsageProvider = optUsageProvider;
 				this.optionUsageProviderSet = true;
 				return this;
+			}
+			
+			public final boolean special() {
+				return this.special;
 			}
 			
 			public Builder special(final boolean b) {
@@ -2478,14 +2490,15 @@ public final class ArgMatey {
 			Option opt = optBuilder.build();
 			opts.add(opt);
 			for (Option.Builder otherOptBuilder : otherOptBuilders) {
-				if (!otherOptBuilder.hiddenSet()) {
-					otherOptBuilder.hidden(opt.isHidden());
+				if (optBuilder.hiddenSet() && !otherOptBuilder.hiddenSet()) {
+					otherOptBuilder.hidden(optBuilder.hidden());
 				}
-				if (!otherOptBuilder.optionArgSpecSet()) {
-					otherOptBuilder.optionArgSpec(opt.getOptionArgSpec());
+				if (optBuilder.optionArgSpecSet() 
+						&& !otherOptBuilder.optionArgSpecSet()) {
+					otherOptBuilder.optionArgSpec(optBuilder.optionArgSpec());
 				}
-				if (!otherOptBuilder.specialSet()) {
-					otherOptBuilder.special(opt.isSpecial());
+				if (optBuilder.specialSet() && !otherOptBuilder.specialSet()) {
+					otherOptBuilder.special(optBuilder.special());
 				}
 				Option otherOpt = otherOptBuilder.build();
 				opts.add(otherOpt);

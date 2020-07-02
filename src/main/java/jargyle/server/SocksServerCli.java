@@ -16,18 +16,16 @@ import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBException;
 
-import argmatey.ArgMatey.ArgsParser;
+import argmatey.ArgMatey;
+import argmatey.ArgMatey.Annotations.Option;
+import argmatey.ArgMatey.Annotations.OptionArgSpec;
+import argmatey.ArgMatey.Annotations.OptionGroup;
+import argmatey.ArgMatey.ArgsHandler;
 import argmatey.ArgMatey.GnuLongOption;
 import argmatey.ArgMatey.IllegalOptionArgException;
-import argmatey.ArgMatey.Option;
-import argmatey.ArgMatey.OptionArgSpecBuilder;
-import argmatey.ArgMatey.OptionBuilder;
-import argmatey.ArgMatey.OptionOccurrenceSink;
+import argmatey.ArgMatey.OptionGroups;
 import argmatey.ArgMatey.OptionUsageParams;
 import argmatey.ArgMatey.OptionUsageProvider;
-import argmatey.ArgMatey.Options;
-import argmatey.ArgMatey.ParseResultHolder;
-import argmatey.ArgMatey.ParseResultSinkObject;
 import argmatey.ArgMatey.PosixOption;
 import jargyle.client.Scheme;
 import jargyle.client.socks5.DefaultUsernamePasswordRequestor;
@@ -115,34 +113,33 @@ public final class SocksServerCli {
 		
 	}
 	
-	private static final int ALLOWED_CLIENT_ADDR_CRITERIA_OPTION_ORDINAL = 0;
-	private static final int ALLOWED_SOCKS5_INCOMING_TCP_ADDR_CRITERIA_OPTION_ORDINAL = 1;
-	private static final int ALLOWED_SOCKS5_INCOMING_UDP_ADDR_CRITERIA_OPTION_ORDINAL = 2;
-	private static final int BLOCKED_CLIENT_ADDR_CRITERIA_OPTION_ORDINAL = 3;
-	private static final int BLOCKED_SOCKS5_INCOMING_TCP_ADDR_CRITERIA_OPTION_ORDINAL = 4;
-	private static final int BLOCKED_SOCKS5_INCOMING_UDP_ADDR_CRITERIA_OPTION_ORDINAL = 5;
-	private static final int CONFIG_FILE_OPTION_ORDINAL = 6;
-	private static final int CONFIG_FILE_XSD_OPTION_ORDINAL = 7;
-	private static final int ENTER_EXTERNAL_CLIENT_SOCKS5_USER_PASS_OPTION_ORDINAL = 8;
-	private static final int EXTERNAL_CLIENT_SOCKS5_USER_PASS_OPTION_ORDINAL = 9;
-	private static final int HELP_OPTION_ORDINAL = 10;
-	private static final int MONITORED_CONFIG_FILE_OPTION_ORDINAL = 11;
-	private static final int NEW_CONFIG_FILE_OPTION_ORDINAL = 12;
-	private static final int SETTINGS_HELP_OPTION_ORDINAL = 13;
-	private static final int SETTINGS_OPTION_ORDINAL = 14;
-	private static final int SOCKS5_USER_PASS_AUTHENTICATOR_OPTION_ORDINAL = 15;
-	private static final int SOCKS5_USERS_OPTION_ORDINAL = 16;
+	private static final int ALLOWED_CLIENT_ADDR_CRITERIA_OPTION_GROUP_ORDINAL = 0;
+	private static final int ALLOWED_SOCKS5_INCOMING_TCP_ADDR_CRITERIA_OPTION_GROUP_ORDINAL = 1;
+	private static final int ALLOWED_SOCKS5_INCOMING_UDP_ADDR_CRITERIA_OPTION_GROUP_ORDINAL = 2;
+	private static final int BLOCKED_CLIENT_ADDR_CRITERIA_OPTION_GROUP_ORDINAL = 3;
+	private static final int BLOCKED_SOCKS5_INCOMING_TCP_ADDR_CRITERIA_OPTION_GROUP_ORDINAL = 4;
+	private static final int BLOCKED_SOCKS5_INCOMING_UDP_ADDR_CRITERIA_OPTION_GROUP_ORDINAL = 5;
+	private static final int CONFIG_FILE_OPTION_GROUP_ORDINAL = 6;
+	private static final int CONFIG_FILE_XSD_OPTION_GROUP_ORDINAL = 7;
+	private static final int ENTER_EXTERNAL_CLIENT_SOCKS5_USER_PASS_OPTION_GROUP_ORDINAL = 8;
+	private static final int EXTERNAL_CLIENT_SOCKS5_USER_PASS_OPTION_GROUP_ORDINAL = 9;
+	private static final int HELP_OPTION_GROUP_ORDINAL = 10;
+	private static final int MONITORED_CONFIG_FILE_OPTION_GROUP_ORDINAL = 11;
+	private static final int NEW_CONFIG_FILE_OPTION_GROUP_ORDINAL = 12;
+	private static final int SETTINGS_HELP_OPTION_GROUP_ORDINAL = 13;
+	private static final int SETTINGS_OPTION_GROUP_ORDINAL = 14;
+	private static final int SOCKS5_USER_PASS_AUTHENTICATOR_OPTION_GROUP_ORDINAL = 15;
+	private static final int SOCKS5_USERS_OPTION_GROUP_ORDINAL = 16;
 	
 	private static final Logger LOGGER = Logger.getLogger(
 			SocksServerCli.class.getName());
 	
-	private ArgsParser argsParser;
+	private ArgsHandler argsHandler;
 	private boolean configurationFileXsdRequested;
 	private final ModifiableConfiguration modifiableConfiguration;
 	private String monitoredConfigurationFile;
 	private boolean newConfigurationFileRequested;
-	private final Options options;
-	private final ParseResultSinkObject parseResultSinkObject;
+	private OptionGroups optionGroups;
 	private final String programBeginningUsage;
 	private boolean programHelpRequested;
 	private final String programName;	
@@ -150,9 +147,6 @@ public final class SocksServerCli {
 	private Integer socks5UsersManagementModeStatus;
 	
 	SocksServerCli() {
-		ParseResultSinkObject parseResultSinkObj = 
-				ParseResultSinkObject.newInstance(this);
-		Options opts = parseResultSinkObj.getOptions();
 		String progName = System.getProperty(
 				SystemPropertyNameConstants.PROGRAM_NAME);
 		if (progName == null) {
@@ -163,64 +157,63 @@ public final class SocksServerCli {
 		if (progBeginningUsage == null) {
 			progBeginningUsage = progName;
 		}
-		this.argsParser = null;
+		this.argsHandler = null;
 		this.configurationFileXsdRequested = false;
 		this.modifiableConfiguration = new ModifiableConfiguration();
 		this.monitoredConfigurationFile = null;
 		this.newConfigurationFileRequested = false;
-		this.options = opts;
-		this.parseResultSinkObject = parseResultSinkObj;
+		this.optionGroups = null;
 		this.programBeginningUsage = progBeginningUsage;
 		this.programHelpRequested = false;
 		this.programName = progName;
 		this.settingsHelpRequested = false;
 		this.socks5UsersManagementModeStatus = null;
 	}
-	
-	@OptionOccurrenceSink(
-			optionBuilder = @OptionBuilder(
+		
+	@OptionGroup(
+			option = @Option(
 					doc = "The space separated list of allowed client address "
 							+ "criteria",
 					name = "allowed-client-addr-criteria",
-					optionArgSpecBuilder = @OptionArgSpecBuilder(),
+					optionArgSpec = @OptionArgSpec(),
 					optionUsageProvider = CriteriaOptionUsageProvider.class,
-					ordinal = ALLOWED_CLIENT_ADDR_CRITERIA_OPTION_ORDINAL,
 					type = GnuLongOption.class
-			)
+			),
+			ordinal = ALLOWED_CLIENT_ADDR_CRITERIA_OPTION_GROUP_ORDINAL 
 	)
 	public void addAllowedClientAddressCriteria(
 			final Criteria allowedClientAddrCriteria) {
 		this.modifiableConfiguration.addAllowedClientAddressCriteria(
 				allowedClientAddrCriteria);
 	}
-	
-	@OptionOccurrenceSink(
-			optionBuilder = @OptionBuilder(
+		
+	@OptionGroup(
+			option = @Option(
 					doc = "The space separated list of allowed SOCKS5 "
 							+ "incoming TCP address criteria",
 					name = "allowed-socks5-incoming-tcp-addr-criteria",
-					optionArgSpecBuilder = @OptionArgSpecBuilder(),
+					optionArgSpec = @OptionArgSpec(),
 					optionUsageProvider = CriteriaOptionUsageProvider.class,
-					ordinal = ALLOWED_SOCKS5_INCOMING_TCP_ADDR_CRITERIA_OPTION_ORDINAL,
 					type = GnuLongOption.class
-			)
+			),
+			ordinal = ALLOWED_SOCKS5_INCOMING_TCP_ADDR_CRITERIA_OPTION_GROUP_ORDINAL 
 	)
 	public void addAllowedSocks5IncomingTcpAddressCriteria(
 			final Criteria allowedSocks5IncomingTcpAddrCriteria) {
 		this.modifiableConfiguration.addAllowedSocks5IncomingTcpAddressCriteria(
 				allowedSocks5IncomingTcpAddrCriteria);
 	}
-	
-	@OptionOccurrenceSink(
-			optionBuilder = @OptionBuilder(
+		
+	@OptionGroup(
+			option = @Option(
 					doc = "The space separated list of allowed SOCKS5 "
 							+ "incoming UDP address criteria",
 					name = "allowed-socks5-incoming-udp-addr-criteria",
-					optionArgSpecBuilder = @OptionArgSpecBuilder(),
+					optionArgSpec = @OptionArgSpec(),
 					optionUsageProvider = CriteriaOptionUsageProvider.class,
-					ordinal = ALLOWED_SOCKS5_INCOMING_UDP_ADDR_CRITERIA_OPTION_ORDINAL,
 					type = GnuLongOption.class
-			)
+			),
+			ordinal = ALLOWED_SOCKS5_INCOMING_UDP_ADDR_CRITERIA_OPTION_GROUP_ORDINAL 
 	)
 	public void addAllowedSocks5IncomingUdpAddressCriteria(
 			final Criteria allowedSocks5IncomingUdpAddrCriteria) {
@@ -228,16 +221,16 @@ public final class SocksServerCli {
 				allowedSocks5IncomingUdpAddrCriteria);
 	}
 
-	@OptionOccurrenceSink(
-			optionBuilder = @OptionBuilder(
+	@OptionGroup(
+			option = @Option(
 					doc = "The space separated list of blocked client address "
 							+ "criteria",
 					name = "blocked-client-addr-criteria",
-					optionArgSpecBuilder = @OptionArgSpecBuilder(),
+					optionArgSpec = @OptionArgSpec(),
 					optionUsageProvider = CriteriaOptionUsageProvider.class,
-					ordinal = BLOCKED_CLIENT_ADDR_CRITERIA_OPTION_ORDINAL,
 					type = GnuLongOption.class
-			)
+			),
+			ordinal = BLOCKED_CLIENT_ADDR_CRITERIA_OPTION_GROUP_ORDINAL 
 	)
 	public void addBlockedClientAddressCriteria(
 			final Criteria blockedClientAddrCriteria) {
@@ -245,52 +238,52 @@ public final class SocksServerCli {
 				blockedClientAddrCriteria);
 	}
 	
-	@OptionOccurrenceSink(
-			optionBuilder = @OptionBuilder(
+	@OptionGroup(
+			option = @Option(
 					doc = "The space separated list of blocked SOCKS5 "
 							+ "incoming TCP address criteria",
 					name = "blocked-socks5-incoming-tcp-addr-criteria",
-					optionArgSpecBuilder = @OptionArgSpecBuilder(),
+					optionArgSpec = @OptionArgSpec(),
 					optionUsageProvider = CriteriaOptionUsageProvider.class,
-					ordinal = BLOCKED_SOCKS5_INCOMING_TCP_ADDR_CRITERIA_OPTION_ORDINAL,
 					type = GnuLongOption.class
-			)
+			),
+			ordinal = BLOCKED_SOCKS5_INCOMING_TCP_ADDR_CRITERIA_OPTION_GROUP_ORDINAL 
 	)
 	public void addBlockedSocks5IncomingTcpAddressCriteria(
 			final Criteria blockedSocks5IncomingTcpAddrCriteria) {
 		this.modifiableConfiguration.addBlockedSocks5IncomingTcpAddressCriteria(
 				blockedSocks5IncomingTcpAddrCriteria);
 	}
-	
-	@OptionOccurrenceSink(
-			optionBuilder = @OptionBuilder(
+		
+	@OptionGroup(
+			option = @Option(
 					doc = "The space separated list of blocked SOCKS5 "
 							+ "incoming UDP address criteria",
 					name = "blocked-socks5-incoming-udp-addr-criteria",
-					optionArgSpecBuilder = @OptionArgSpecBuilder(),
+					optionArgSpec = @OptionArgSpec(),
 					optionUsageProvider = CriteriaOptionUsageProvider.class,
-					ordinal = BLOCKED_SOCKS5_INCOMING_UDP_ADDR_CRITERIA_OPTION_ORDINAL,
 					type = GnuLongOption.class
-			)
+			),
+			ordinal = BLOCKED_SOCKS5_INCOMING_UDP_ADDR_CRITERIA_OPTION_GROUP_ORDINAL 
 	)
 	public void addBlockedSocks5IncomingUdpAddressCriteria(
 			final Criteria blockedSocks5IncomingUdpAddrCriteria) {
 		this.modifiableConfiguration.addBlockedSocks5IncomingUdpAddressCriteria(
 				blockedSocks5IncomingUdpAddrCriteria);
 	}
-	
-	@OptionOccurrenceSink(
-			optionBuilder = @OptionBuilder(
+		
+	@OptionGroup(
+			option = @Option(
 					doc = "The configuration file",
 					name = "config-file",
-					optionArgSpecBuilder = @OptionArgSpecBuilder(
+					optionArgSpec = @OptionArgSpec(
 							name = "FILE"
 					),
-					ordinal = CONFIG_FILE_OPTION_ORDINAL,
 					type = GnuLongOption.class
 			),
-			otherOptionBuilders = {
-					@OptionBuilder(
+			ordinal = CONFIG_FILE_OPTION_GROUP_ORDINAL,
+			otherOptions = {
+					@Option(
 							name = "f",
 							type = PosixOption.class
 					)
@@ -322,19 +315,19 @@ public final class SocksServerCli {
 		}
 		this.modifiableConfiguration.add(configuration);
 	}
-	
-	@OptionOccurrenceSink(
-			optionBuilder = @OptionBuilder(
+		
+	@OptionGroup(
+			option = @Option(
 					doc = "The comma separated list of settings for the SOCKS "
 							+ "server",
 					name = "settings",
-					optionArgSpecBuilder = @OptionArgSpecBuilder(),
+					optionArgSpec = @OptionArgSpec(),
 					optionUsageProvider = SettingsGnuLongOptionUsageProvider.class,
-					ordinal = SETTINGS_OPTION_ORDINAL,
 					type = GnuLongOption.class
 			),
-			otherOptionBuilders = {
-					@OptionBuilder(
+			ordinal = SETTINGS_OPTION_GROUP_ORDINAL,
+			otherOptions = {
+					@Option(
 							name = "s",
 							optionUsageProvider = SettingsPosixOptionUsageProvider.class,
 							type = PosixOption.class
@@ -345,23 +338,19 @@ public final class SocksServerCli {
 		this.modifiableConfiguration.addSettings(sttngs);
 	}
 	
-	@OptionOccurrenceSink(
-			optionBuilder = @OptionBuilder(
+	@OptionGroup(
+			option = @Option(
 					doc = "Mode for managing SOCKS5 users (add --help for "
 							+ "more information)",
 					name = "socks5-users",
-					ordinal = SOCKS5_USERS_OPTION_ORDINAL,
 					special = true,
 					type = GnuLongOption.class
-			)
+			),
+			ordinal = SOCKS5_USERS_OPTION_GROUP_ORDINAL
 	)
 	public void doSocks5UsersManagementMode() {
-		if (this.argsParser == null) {
-			throw new IllegalStateException(
-					"process(java.lang.String[]) must be run first");
-		}
-		Option socks5UsersOption = this.options.toList().get(
-				SOCKS5_USERS_OPTION_ORDINAL);
+		ArgMatey.Option socks5UsersOption = this.optionGroups.toList().get(
+				SOCKS5_USERS_OPTION_GROUP_ORDINAL).toList().get(0);
 		String newProgramBeginningUsage = String.format("%s %s", 
 				this.programBeginningUsage, 
 				socks5UsersOption.getUsage());
@@ -372,8 +361,8 @@ public final class SocksServerCli {
 				SystemPropertyNameConstants.PROGRAM_BEGINNING_USAGE, 
 				newProgramBeginningUsage);
 		List<String> remainingArgList = new ArrayList<String>();
-		while (this.argsParser.hasNext()) {
-			String arg = this.argsParser.next();
+		while (this.argsHandler.hasNext()) {
+			String arg = this.argsHandler.next();
 			remainingArgList.add(arg);
 		}
 		UsersCli usersCli = new UsersCli();
@@ -381,16 +370,16 @@ public final class SocksServerCli {
 				new String[remainingArgList.size()]));
 		this.socks5UsersManagementModeStatus = Integer.valueOf(status);
 	}
-	
-	@OptionOccurrenceSink(
-			optionBuilder = @OptionBuilder(
+		
+	@OptionGroup(
+			option = @Option(
 					doc = "Enter through an interactive prompt the username "
 							+ "password to be used to access the external "
 							+ "SOCKS5 server used for external connections",
 					name = "enter-external-client-socks5-user-pass",
-					ordinal = ENTER_EXTERNAL_CLIENT_SOCKS5_USER_PASS_OPTION_ORDINAL,
 					type = GnuLongOption.class
-			)
+			),
+			ordinal = ENTER_EXTERNAL_CLIENT_SOCKS5_USER_PASS_OPTION_GROUP_ORDINAL 
 	)
 	public void enterExternalClientSocks5UsernamePassword() {
 		String prompt = "Please enter username and password for the external "
@@ -423,20 +412,20 @@ public final class SocksServerCli {
 		}
 		return configuration;
 	}
-	
-	@OptionOccurrenceSink(
-			optionBuilder = @OptionBuilder(
+		
+	@OptionGroup(
+			option = @Option(
 					doc = "Create a new configuration file based on the "
 							+ "preceding options and exit",
 					name = "new-config-file",
-					optionArgSpecBuilder = @OptionArgSpecBuilder(
+					optionArgSpec = @OptionArgSpec(
 							name = "FILE"
 					),
-					ordinal = NEW_CONFIG_FILE_OPTION_ORDINAL,
 					type = GnuLongOption.class
 			),
-			otherOptionBuilders = {
-					@OptionBuilder(
+			ordinal = NEW_CONFIG_FILE_OPTION_GROUP_ORDINAL,
+			otherOptions = {
+					@Option(
 							name = "n",
 							type = PosixOption.class
 					)
@@ -484,16 +473,16 @@ public final class SocksServerCli {
 		this.newConfigurationFileRequested = true;
 	}
 	
-	@OptionOccurrenceSink(
-			optionBuilder = @OptionBuilder(
+	@OptionGroup(
+			option = @Option(
 					doc = "Print the configuration file XSD and exit",
 					name = "config-file-xsd",
-					ordinal = CONFIG_FILE_XSD_OPTION_ORDINAL,
 					special = true,
 					type = GnuLongOption.class
 			),
-			otherOptionBuilders = {
-					@OptionBuilder(
+			ordinal = CONFIG_FILE_XSD_OPTION_GROUP_ORDINAL,
+			otherOptions = {
+					@Option(
 							name = "x",
 							type = PosixOption.class
 					)
@@ -505,34 +494,35 @@ public final class SocksServerCli {
 		System.out.flush();
 		this.configurationFileXsdRequested = true;
 	}
-	
-	@OptionOccurrenceSink(
-			optionBuilder = @OptionBuilder(
+		
+	@OptionGroup(
+			option = @Option(
 					doc = "Print this help and exit",
 					name = "help",
-					ordinal = HELP_OPTION_ORDINAL,
 					special = true,
 					type = GnuLongOption.class
 			),
-			otherOptionBuilders = {
-					@OptionBuilder(
+			ordinal = HELP_OPTION_GROUP_ORDINAL,
+			otherOptions = {
+					@Option(
 							name = "h",
 							type = PosixOption.class
 					)
 			}
 	)
 	public void printHelp() {
-		Option configFileXsdOption = this.options.toList().get(
-				CONFIG_FILE_XSD_OPTION_ORDINAL);
-		Option helpOption = this.options.toList().get(HELP_OPTION_ORDINAL);
-		Option monitoredConfigFileOption = this.options.toList().get(
-				MONITORED_CONFIG_FILE_OPTION_ORDINAL);
-		Option newConfigFileOption = this.options.toList().get(
-				NEW_CONFIG_FILE_OPTION_ORDINAL);
-		Option settingsHelpOption = this.options.toList().get(
-				SETTINGS_HELP_OPTION_ORDINAL);
-		Option socks5UsersOption = this.options.toList().get(
-				SOCKS5_USERS_OPTION_ORDINAL);
+		ArgMatey.Option configFileXsdOption = this.optionGroups.toList().get(
+				CONFIG_FILE_XSD_OPTION_GROUP_ORDINAL).toList().get(0);
+		ArgMatey.Option helpOption = this.optionGroups.toList().get(
+				HELP_OPTION_GROUP_ORDINAL).toList().get(0);
+		ArgMatey.Option monitoredConfigFileOption = this.optionGroups.toList().get(
+				MONITORED_CONFIG_FILE_OPTION_GROUP_ORDINAL).toList().get(0);
+		ArgMatey.Option newConfigFileOption = this.optionGroups.toList().get(
+				NEW_CONFIG_FILE_OPTION_GROUP_ORDINAL).toList().get(0);
+		ArgMatey.Option settingsHelpOption = this.optionGroups.toList().get(
+				SETTINGS_HELP_OPTION_GROUP_ORDINAL).toList().get(0);
+		ArgMatey.Option socks5UsersOption = this.optionGroups.toList().get(
+				SOCKS5_USERS_OPTION_GROUP_ORDINAL).toList().get(0);
 		System.out.printf("Usage: %s [OPTIONS]%n", this.programBeginningUsage);
 		System.out.printf("       %s %s%n", 
 				this.programBeginningUsage, 
@@ -555,7 +545,7 @@ public final class SocksServerCli {
 		System.out.println();
 		System.out.println();
 		System.out.println("OPTIONS:");
-		this.options.printHelpText();
+		this.optionGroups.printHelpText();
 		System.out.println();
 		System.out.println();
 		this.programHelpRequested = true;
@@ -571,18 +561,18 @@ public final class SocksServerCli {
 			System.out.println();
 		}
 	}
-	
-	@OptionOccurrenceSink(
-			optionBuilder = @OptionBuilder(
+		
+	@OptionGroup(
+			option = @Option(
 					doc = "Print the list of available settings for the SOCKS "
 							+ "server and exit",
 					name = "settings-help",
-					ordinal = SETTINGS_HELP_OPTION_ORDINAL,
 					special = true,
 					type = GnuLongOption.class
 			),
-			otherOptionBuilders = {
-					@OptionBuilder(
+			ordinal = SETTINGS_HELP_OPTION_GROUP_ORDINAL,
+			otherOptions = {
+					@Option(
 							name = "H",
 							type = PosixOption.class
 					)
@@ -603,28 +593,28 @@ public final class SocksServerCli {
 	}
 	
 	public int process(final String[] args) {
-		Option settingsOption = this.options.toList().get(
-				SETTINGS_OPTION_ORDINAL);
-		Option settingsHelpOption = this.options.toList().get(
-				SETTINGS_HELP_OPTION_ORDINAL);
+		this.argsHandler = ArgsHandler.newInstance(args, this, false);
+		this.optionGroups = this.argsHandler.getOptionGroups();
+		ArgMatey.OptionGroup settingsOptionGroup = this.optionGroups.toList().get(
+				SETTINGS_OPTION_GROUP_ORDINAL); 
+		ArgMatey.Option settingsHelpOption = this.optionGroups.toList().get(
+				SETTINGS_HELP_OPTION_GROUP_ORDINAL).toList().get(0);
 		String settingsHelpSuggestion = String.format(
 				"Try `%s %s' for more information.", 
 				this.programBeginningUsage, 
 				settingsHelpOption.getUsage());
-		Option helpOption = this.options.toList().get(HELP_OPTION_ORDINAL);
+		ArgMatey.Option helpOption = this.optionGroups.toList().get(
+				HELP_OPTION_GROUP_ORDINAL).toList().get(0);
 		String suggestion = String.format(
 				"Try `%s %s' for more information.", 
 				this.programBeginningUsage, 
 				helpOption.getUsage());
-		this.argsParser = ArgsParser.newInstance(args, this.options, false);
-		while (this.argsParser.hasNext()) {
+		while (this.argsHandler.hasNext()) {
 			try {
-				ParseResultHolder parseResultHolder = 
-						this.argsParser.parseNext();
-				this.parseResultSinkObject.send(parseResultHolder);
+				this.argsHandler.handleNext();
 			} catch (IllegalOptionArgException e) {
 				String suggest = suggestion;
-				if (settingsOption.getAllOptions().contains(e.getOption())) {
+				if (settingsOptionGroup.toList().contains(e.getOption())) {
 					suggest = settingsHelpSuggestion;
 				}
 				System.err.printf("%s: %s%n", this.programName, e);
@@ -652,58 +642,58 @@ public final class SocksServerCli {
 		return this.startSocksServer(configuration);
 	}
 	
-	@OptionOccurrenceSink(
-			optionBuilder = @OptionBuilder(
+	@OptionGroup(
+			option = @Option(
 					doc = "The username password to be used to access the "
 							+ "external SOCKS5 server used for external "
 							+ "connections",
 					name = "external-client-socks5-user-pass",
-					optionArgSpecBuilder = @OptionArgSpecBuilder(),
+					optionArgSpec = @OptionArgSpec(),
 					optionUsageProvider = UsernamePasswordOptionUsageProvider.class,
-					ordinal = EXTERNAL_CLIENT_SOCKS5_USER_PASS_OPTION_ORDINAL,
 					type = GnuLongOption.class
-			)
+			),
+			ordinal = EXTERNAL_CLIENT_SOCKS5_USER_PASS_OPTION_GROUP_ORDINAL
 	)
 	public void setExternalClientSocks5UsernamePassword(
 			final UsernamePassword usernamePassword) {
 		this.modifiableConfiguration.setExternalClientSocks5UsernamePassword(
 				usernamePassword);
 	}
-	
-	@OptionOccurrenceSink(
-			optionBuilder = @OptionBuilder(
+		
+	@OptionGroup(
+			option = @Option(
 					doc = "The configuration file to be monitored for any "
 							+ "changes to be applied to the running "
 							+ "configuration",
 					name = "monitored-config-file",
-					optionArgSpecBuilder = @OptionArgSpecBuilder(
+					optionArgSpec = @OptionArgSpec(
 							name = "FILE"
 					),
-					ordinal = MONITORED_CONFIG_FILE_OPTION_ORDINAL,
 					special = true,
 					type = GnuLongOption.class
 			),
-			otherOptionBuilders = {
-					@OptionBuilder(
+			ordinal = MONITORED_CONFIG_FILE_OPTION_GROUP_ORDINAL,
+			otherOptions = {
+					@Option(
 							name = "m",
 							type = PosixOption.class
-					)
+					)					
 			}
 	)
 	public void setMonitoredConfigurationFile(final String file) {
 		this.monitoredConfigurationFile = file;
 	}
-	
-	@OptionOccurrenceSink(
-			optionBuilder = @OptionBuilder(
+		
+	@OptionGroup(
+			option = @Option(
 					doc = "The SOCKS5 username password authenticator for the "
 							+ "SOCKS server",
 					name = "socks5-user-pass-authenticator",
-					optionArgSpecBuilder = @OptionArgSpecBuilder(),
+					optionArgSpec = @OptionArgSpec(),
 					optionUsageProvider = UsernamePasswordAuthenticatorOptionUsageProvider.class,
-					ordinal = SOCKS5_USER_PASS_AUTHENTICATOR_OPTION_ORDINAL,
 					type = GnuLongOption.class
-			)
+			),
+			ordinal = SOCKS5_USER_PASS_AUTHENTICATOR_OPTION_GROUP_ORDINAL 
 	)
 	public void setSocks5UsernamePasswordAuthenticator(
 			final UsernamePasswordAuthenticator usernamePasswordAuthenticator) {

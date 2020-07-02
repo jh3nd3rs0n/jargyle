@@ -14,15 +14,13 @@ import java.util.List;
 
 import javax.xml.bind.JAXBException;
 
-import argmatey.ArgMatey.ArgsParser;
+import argmatey.ArgMatey;
+import argmatey.ArgMatey.Annotations.NonparsedArg;
+import argmatey.ArgMatey.Annotations.Option;
+import argmatey.ArgMatey.Annotations.OptionGroup;
+import argmatey.ArgMatey.ArgsHandler;
 import argmatey.ArgMatey.GnuLongOption;
-import argmatey.ArgMatey.NonparsedArgSink;
-import argmatey.ArgMatey.Option;
-import argmatey.ArgMatey.OptionBuilder;
-import argmatey.ArgMatey.OptionOccurrenceSink;
-import argmatey.ArgMatey.Options;
-import argmatey.ArgMatey.ParseResultHolder;
-import argmatey.ArgMatey.ParseResultSinkObject;
+import argmatey.ArgMatey.OptionGroups;
 import argmatey.ArgMatey.PosixOption;
 import jargyle.common.cli.HelpTextParams;
 import jargyle.server.SystemPropertyNameConstants;
@@ -267,23 +265,19 @@ public final class UsersCli {
 		
 	}
 	
-	private static final int HELP_OPTION_ORDINAL = 0;
-	private static final int XSD_OPTION_ORDINAL = 1;
+	private static final int HELP_OPTION_GROUP_ORDINAL = 0;
+	private static final int XSD_OPTION_GROUP_ORDINAL = 1;
 	
 	private final List<String> argList;
-	private ArgsParser argsParser;
+	private ArgsHandler argsHandler;
 	private Command command;
-	private final Options options;
-	private final ParseResultSinkObject parseResultSinkObject;
+	private OptionGroups optionGroups;
 	private final String programBeginningUsage;
 	private boolean programHelpRequested;
 	private final String programName;	
 	private boolean xsdRequested;
 	
 	public UsersCli() {
-		ParseResultSinkObject parseResultSinkObj =
-				ParseResultSinkObject.newInstance(this);
-		Options opts = parseResultSinkObj.getOptions();
 		String progName = System.getProperty(
 				SystemPropertyNameConstants.PROGRAM_NAME);
 		if (progName == null) {
@@ -295,17 +289,16 @@ public final class UsersCli {
 			progBeginningUsage = progName;
 		}
 		this.argList = new ArrayList<String>();
-		this.argsParser = null;
+		this.argsHandler = null;
 		this.command = null;
-		this.options = opts;
-		this.parseResultSinkObject = parseResultSinkObj;
+		this.optionGroups = null;
 		this.programBeginningUsage = progBeginningUsage;
 		this.programHelpRequested = false;
 		this.programName = progName;		
 		this.xsdRequested = false;
 	}
 	
-	@NonparsedArgSink
+	@NonparsedArg
 	public void addNonparsedArg(final String nonparsedArg) {
 		if (this.command == null) {
 			this.command = Command.getInstance(nonparsedArg);
@@ -314,24 +307,26 @@ public final class UsersCli {
 		}
 	}
 	
-	@OptionOccurrenceSink(
-			optionBuilder = @OptionBuilder(
+	@OptionGroup(
+			option = @Option(
 					doc = "Print this help and exit",
 					name = "help",
-					ordinal = HELP_OPTION_ORDINAL,
 					special = true,
 					type = GnuLongOption.class
 			),
-			otherOptionBuilders = {
-					@OptionBuilder(
+			ordinal = HELP_OPTION_GROUP_ORDINAL,
+			otherOptions = {
+					@Option(
 							name = "h",
 							type = PosixOption.class
 					)
 			}
 	)
 	public void printHelp() {
-		Option helpOption = this.options.toList().get(HELP_OPTION_ORDINAL);
-		Option xsdOption = this.options.toList().get(XSD_OPTION_ORDINAL);
+		ArgMatey.Option helpOption = this.optionGroups.toList().get(
+				HELP_OPTION_GROUP_ORDINAL).toList().get(0);
+		ArgMatey.Option xsdOption = this.optionGroups.toList().get(
+				XSD_OPTION_GROUP_ORDINAL).toList().get(0);
 		System.out.printf("Usage: %s COMMAND%n", this.programBeginningUsage);
 		System.out.printf("       %s %s%n", 
 				this.programBeginningUsage, 
@@ -350,22 +345,22 @@ public final class UsersCli {
 		}
 		System.out.println();
 		System.out.println("OPTIONS:");
-		this.options.printHelpText();
+		this.optionGroups.printHelpText();
 		System.out.println();
 		System.out.println();
 		this.programHelpRequested = true;
 	}
-	
-	@OptionOccurrenceSink(
-			optionBuilder = @OptionBuilder(
+		
+	@OptionGroup(
+			option = @Option(
 					doc = "Print the XSD and exit",
 					name = "xsd",
-					ordinal = XSD_OPTION_ORDINAL,
 					special = true,
 					type = GnuLongOption.class
 			),
-			otherOptionBuilders = {
-					@OptionBuilder(
+			ordinal = XSD_OPTION_GROUP_ORDINAL,
+			otherOptions = {
+					@Option(
 							name = "x",
 							type = PosixOption.class
 					)
@@ -379,17 +374,17 @@ public final class UsersCli {
 	}
 	
 	public int process(final String[] args) {
-		Option helpOption = this.options.toList().get(HELP_OPTION_ORDINAL);
+		this.argsHandler = ArgsHandler.newInstance(args, this, false);
+		this.optionGroups = this.argsHandler.getOptionGroups();
+		ArgMatey.Option helpOption = this.optionGroups.toList().get(
+				HELP_OPTION_GROUP_ORDINAL).toList().get(0);
 		String suggestion = String.format(
 				"Try `%s %s' for more information", 
 				this.programBeginningUsage, 
 				helpOption.getUsage());
-		this.argsParser = ArgsParser.newInstance(args, this.options, false);
-		while (this.argsParser.hasNext()) {
+		while (this.argsHandler.hasNext()) {
 			try {
-				ParseResultHolder parseResultHolder =
-						this.argsParser.parseNext();
-				this.parseResultSinkObject.send(parseResultHolder);
+				this.argsHandler.handleNext();
 			} catch (Throwable t) {
 				System.err.printf("%s: %s%n", programName, t);
 				System.err.println(suggestion);

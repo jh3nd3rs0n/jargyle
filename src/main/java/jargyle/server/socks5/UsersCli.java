@@ -323,10 +323,10 @@ public final class UsersCli {
 			}
 	)
 	public void printHelp() {
-		ArgMatey.Option helpOption = this.optionGroups.toList().get(
-				HELP_OPTION_GROUP_ORDINAL).toList().get(0);
-		ArgMatey.Option xsdOption = this.optionGroups.toList().get(
-				XSD_OPTION_GROUP_ORDINAL).toList().get(0);
+		ArgMatey.Option helpOption = this.optionGroups.get(
+				HELP_OPTION_GROUP_ORDINAL).get(0);
+		ArgMatey.Option xsdOption = this.optionGroups.get(
+				XSD_OPTION_GROUP_ORDINAL).get(0);
 		System.out.printf("Usage: %s COMMAND%n", this.programBeginningUsage);
 		System.out.printf("       %s %s%n", 
 				this.programBeginningUsage, 
@@ -376,8 +376,8 @@ public final class UsersCli {
 	public int process(final String[] args) {
 		this.argsHandler = ArgsHandler.newInstance(args, this, false);
 		this.optionGroups = this.argsHandler.getOptionGroups();
-		ArgMatey.Option helpOption = this.optionGroups.toList().get(
-				HELP_OPTION_GROUP_ORDINAL).toList().get(0);
+		ArgMatey.Option helpOption = this.optionGroups.get(
+				HELP_OPTION_GROUP_ORDINAL).get(0);
 		String suggestion = String.format(
 				"Try `%s %s' for more information", 
 				this.programBeginningUsage, 

@@ -2467,6 +2467,7 @@ public final class ArgMatey {
 		
 		private final List<Option> options;
 		private final OptionGroupHelpTextProvider optionGroupHelpTextProvider;
+		
 		private OptionGroup(final Builder builder) {
 			Option.Builder optBuilder = builder.optionBuilder;
 			OptionGroupHelpTextProvider optGroupHelpTextProvider =
@@ -2495,6 +2496,10 @@ public final class ArgMatey {
 			}
 			this.options = new ArrayList<Option>(opts);
 			this.optionGroupHelpTextProvider = optGroupHelpTextProvider;
+		}
+		
+		public Option get(final int index) {
+			return this.options.get(index);
 		}
 		
 		public String getHelpText() {
@@ -2827,22 +2832,18 @@ public final class ArgMatey {
 		
 		private final Method method;
 		private OptionGroup optionGroup;
-		private final Annotations.OptionGroup annotationsOptionGroup;
+		private final Annotations.OptionGroup optionGroupAnnotation;
 		private final TargetMethodParameterTypesType targetMethodParameterTypesType;
 		
 		private OptionGroupMethod(final Method mthd) {
+			Annotations.OptionGroup optGroupAnnotation = mthd.getAnnotation(
+					Annotations.OptionGroup.class);
 			TargetMethodParameterTypesType t = TargetMethodParameterTypesType.get(
 					mthd.getParameterTypes());
-			Annotations.OptionGroup annotationsOptGroup = mthd.getAnnotation(
-					Annotations.OptionGroup.class);
 			this.method = mthd;
 			this.optionGroup = null;
-			this.annotationsOptionGroup = annotationsOptGroup;
+			this.optionGroupAnnotation = optGroupAnnotation;
 			this.targetMethodParameterTypesType = t;
-		}
-		
-		public Annotations.OptionGroup getAnnotationsOptionGroup() {
-			return this.annotationsOptionGroup;
 		}
 		
 		public OptionGroup getOptionGroup() {
@@ -2850,6 +2851,10 @@ public final class ArgMatey {
 				this.optionGroup = this.newOptionGroup();
 			}
 			return this.optionGroup;
+		}
+		
+		public Annotations.OptionGroup getOptionGroupAnnotation() {
+			return this.optionGroupAnnotation;
 		}
 
 		public void invoke(
@@ -2920,9 +2925,9 @@ public final class ArgMatey {
 		}
 		
 		private OptionGroup newOptionGroup() {
-			Annotations.Option option = this.annotationsOptionGroup.option();
+			Annotations.Option option = this.optionGroupAnnotation.option();
 			Annotations.Option[] otherOptions = 
-					this.annotationsOptionGroup.otherOptions();
+					this.optionGroupAnnotation.otherOptions();
 			Option.Builder optionBuilder = this.newOptionBuilder(option);
 			List<Option.Builder> otherOptionBuilders = 
 					new ArrayList<Option.Builder>();
@@ -2932,7 +2937,7 @@ public final class ArgMatey {
 			OptionGroup.Builder builder = new OptionGroup.Builder(
 					optionBuilder, otherOptionBuilders);
 			Class<?> optionGroupHelpTextProviderClass = 
-					this.annotationsOptionGroup.optionGroupHelpTextProvider();
+					this.optionGroupAnnotation.optionGroupHelpTextProvider();
 			OptionGroupHelpTextProvider optionGroupHelpTextProvider = 
 					this.newOptionGroupHelpTextProvider(
 							optionGroupHelpTextProviderClass);
@@ -3037,9 +3042,9 @@ public final class ArgMatey {
 		public int compare(
 				final OptionGroupMethod arg0, final OptionGroupMethod arg1) {
 			Annotations.OptionGroup optionGroup0 = 
-					arg0.getAnnotationsOptionGroup();
+					arg0.getOptionGroupAnnotation();
 			Annotations.OptionGroup optionGroup1 = 
-					arg1.getAnnotationsOptionGroup();
+					arg1.getOptionGroupAnnotation();
 			int diff = optionGroup0.ordinal() - optionGroup1.ordinal();
 			if (diff != 0) { return diff; }
 			Annotations.Option option0 = optionGroup0.option();
@@ -3068,6 +3073,10 @@ public final class ArgMatey {
 						optGroup, "OptionGroup(s) must not be null");
 			}
 			this.optionGroups = new ArrayList<OptionGroup>(optGroups);
+		}
+		
+		public OptionGroup get(final int index) {
+			return this.optionGroups.get(index);
 		}
 		
 		public void printHelpText() {

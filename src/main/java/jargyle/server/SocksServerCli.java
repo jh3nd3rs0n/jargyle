@@ -349,8 +349,8 @@ public final class SocksServerCli {
 			ordinal = SOCKS5_USERS_OPTION_GROUP_ORDINAL
 	)
 	public void doSocks5UsersManagementMode() {
-		ArgMatey.Option socks5UsersOption = this.optionGroups.toList().get(
-				SOCKS5_USERS_OPTION_GROUP_ORDINAL).toList().get(0);
+		ArgMatey.Option socks5UsersOption = this.optionGroups.get(
+				SOCKS5_USERS_OPTION_GROUP_ORDINAL).get(0);
 		String newProgramBeginningUsage = String.format("%s %s", 
 				this.programBeginningUsage, 
 				socks5UsersOption.getUsage());
@@ -511,18 +511,18 @@ public final class SocksServerCli {
 			}
 	)
 	public void printHelp() {
-		ArgMatey.Option configFileXsdOption = this.optionGroups.toList().get(
-				CONFIG_FILE_XSD_OPTION_GROUP_ORDINAL).toList().get(0);
-		ArgMatey.Option helpOption = this.optionGroups.toList().get(
-				HELP_OPTION_GROUP_ORDINAL).toList().get(0);
-		ArgMatey.Option monitoredConfigFileOption = this.optionGroups.toList().get(
-				MONITORED_CONFIG_FILE_OPTION_GROUP_ORDINAL).toList().get(0);
-		ArgMatey.Option newConfigFileOption = this.optionGroups.toList().get(
-				NEW_CONFIG_FILE_OPTION_GROUP_ORDINAL).toList().get(0);
-		ArgMatey.Option settingsHelpOption = this.optionGroups.toList().get(
-				SETTINGS_HELP_OPTION_GROUP_ORDINAL).toList().get(0);
-		ArgMatey.Option socks5UsersOption = this.optionGroups.toList().get(
-				SOCKS5_USERS_OPTION_GROUP_ORDINAL).toList().get(0);
+		ArgMatey.Option configFileXsdOption = this.optionGroups.get(
+				CONFIG_FILE_XSD_OPTION_GROUP_ORDINAL).get(0);
+		ArgMatey.Option helpOption = this.optionGroups.get(
+				HELP_OPTION_GROUP_ORDINAL).get(0);
+		ArgMatey.Option monitoredConfigFileOption = this.optionGroups.get(
+				MONITORED_CONFIG_FILE_OPTION_GROUP_ORDINAL).get(0);
+		ArgMatey.Option newConfigFileOption = this.optionGroups.get(
+				NEW_CONFIG_FILE_OPTION_GROUP_ORDINAL).get(0);
+		ArgMatey.Option settingsHelpOption = this.optionGroups.get(
+				SETTINGS_HELP_OPTION_GROUP_ORDINAL).get(0);
+		ArgMatey.Option socks5UsersOption = this.optionGroups.get(
+				SOCKS5_USERS_OPTION_GROUP_ORDINAL).get(0);
 		System.out.printf("Usage: %s [OPTIONS]%n", this.programBeginningUsage);
 		System.out.printf("       %s %s%n", 
 				this.programBeginningUsage, 
@@ -595,16 +595,16 @@ public final class SocksServerCli {
 	public int process(final String[] args) {
 		this.argsHandler = ArgsHandler.newInstance(args, this, false);
 		this.optionGroups = this.argsHandler.getOptionGroups();
-		ArgMatey.OptionGroup settingsOptionGroup = this.optionGroups.toList().get(
+		ArgMatey.OptionGroup settingsOptionGroup = this.optionGroups.get(
 				SETTINGS_OPTION_GROUP_ORDINAL); 
-		ArgMatey.Option settingsHelpOption = this.optionGroups.toList().get(
-				SETTINGS_HELP_OPTION_GROUP_ORDINAL).toList().get(0);
+		ArgMatey.Option settingsHelpOption = this.optionGroups.get(
+				SETTINGS_HELP_OPTION_GROUP_ORDINAL).get(0);
 		String settingsHelpSuggestion = String.format(
 				"Try `%s %s' for more information.", 
 				this.programBeginningUsage, 
 				settingsHelpOption.getUsage());
-		ArgMatey.Option helpOption = this.optionGroups.toList().get(
-				HELP_OPTION_GROUP_ORDINAL).toList().get(0);
+		ArgMatey.Option helpOption = this.optionGroups.get(
+				HELP_OPTION_GROUP_ORDINAL).get(0);
 		String suggestion = String.format(
 				"Try `%s %s' for more information.", 
 				this.programBeginningUsage, 

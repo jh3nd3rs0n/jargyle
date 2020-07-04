@@ -1760,7 +1760,7 @@ public final class ArgMatey {
 			}
 			Class<?>[] parameterTypes = method.getParameterTypes();
 			if (parameterTypes.length != 1 
-					&& parameterTypes[0].equals(String.class)) {
+					|| !parameterTypes[0].equals(String.class)) {
 				throw new IllegalArgumentException(String.format(
 						"method '%s' must have only one paramter of type %s", 
 						method,
@@ -1986,11 +1986,11 @@ public final class ArgMatey {
 		}
 		
 		public final OptionArg newOptionArg(final String optionArg) {
-			if (optionArg != null && this.optionArgSpec == null) {
+			if (this.optionArgSpec == null && optionArg != null) {
 				throw new OptionArgNotAllowedException(this);
 			}
 			OptionArg optArg = null;
-			if (optionArg != null && this.optionArgSpec != null) {
+			if (this.optionArgSpec != null && optionArg != null) {
 				try {
 					optArg = this.optionArgSpec.newOptionArg(optionArg);
 				} catch (NullPointerException e) {
@@ -2883,8 +2883,7 @@ public final class ArgMatey {
 			builder.name(optionArgSpec.name());
 			builder.required(optionArgSpec.required());
 			builder.separator(optionArgSpec.separator());
-			Class<?> stringConverterClass = 
-					optionArgSpec.stringConverter();
+			Class<?> stringConverterClass =	optionArgSpec.stringConverter();
 			if (!stringConverterClass.equals(DefaultStringConverter.class)) {
 				StringConverter stringConverter = this.newStringConverter(
 						stringConverterClass);
@@ -2915,7 +2914,7 @@ public final class ArgMatey {
 				builder = new PosixOption.Builder(name.charAt(0));
 			} else {
 				throw new AssertionError(String.format(
-						"unknown %s: %s", 
+						"unhandled %s: %s", 
 						Option.class.getName(), 
 						type.getName()));
 			}

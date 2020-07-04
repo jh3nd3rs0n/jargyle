@@ -987,7 +987,6 @@ public final class ArgMatey {
 				final OptionGroupHelpTextParams params) {
 			String optionGroupHelpText = null;
 			StringBuilder sb = null;
-			boolean earlierUsageNotNullOrEmpty = false;
 			String doc = null;
 			for (Option option : params.getOptions()) {
 				if (!option.isHidden()) {
@@ -996,22 +995,21 @@ public final class ArgMatey {
 						if (sb == null) {
 							sb = new StringBuilder();
 							sb.append("  ");
-						}
-						if (earlierUsageNotNullOrEmpty) {
+						} else {
 							sb.append(", ");
 						}
 						sb.append(usage);
-						if (!earlierUsageNotNullOrEmpty) {
-							earlierUsageNotNullOrEmpty = true;
-						}
-						if (doc == null || doc.isEmpty()) {
-							doc = option.getDoc();
+					}
+					if (doc == null) {
+						String d = option.getDoc();
+						if (d != null && !d.isEmpty()) {
+							doc = d;
 						}
 					}
 				}
 			}
 			if (sb != null) {
-				if (doc != null && !doc.isEmpty()) {
+				if (doc != null) {
 					sb.append(System.getProperty("line.separator"));
 					sb.append("      ");
 					sb.append(doc);

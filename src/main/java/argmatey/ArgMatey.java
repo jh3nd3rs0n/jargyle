@@ -2129,7 +2129,7 @@ public final class ArgMatey {
 				objectValues.add(this.objectValue);
 			} else {
 				for (OptionArg optionArg : this.optionArgs) {
-					objectValues.add(optionArg.getObjectValue());
+					objectValues.addAll(optionArg.getObjectValues());
 				}
 			}
 			return Collections.unmodifiableList(objectValues);
@@ -2448,8 +2448,13 @@ public final class ArgMatey {
 			
 			public Builder(final Option.Builder optBuilder,
 					final List<Option.Builder> otherOptBuilders) {
-				Objects.requireNonNull(optBuilder);
-				Objects.requireNonNull(otherOptBuilders);
+				Objects.requireNonNull(
+						optBuilder, "Option.Builder must not be null");
+				for (Option.Builder otherOptBuilder : otherOptBuilders) {
+					Objects.requireNonNull(
+							otherOptBuilder, 
+							"other Option.Builder(s) must not be null");
+				}
 				this.optionBuilder = optBuilder;
 				this.otherOptionBuilders = new ArrayList<Option.Builder>(
 						otherOptBuilders);
@@ -2903,9 +2908,10 @@ public final class ArgMatey {
 				builder = new LongOption.Builder(name);
 			} else if (type.equals(PosixOption.class)) {
 				if (name.length() != 1) {
-					throw new AssertionError(String.format(
-							"expected name for %s to be only one character. "
-							+ "actual name is '%s'", 
+					throw new IllegalArgumentException(String.format(
+							"expected option name for %s to be only one "
+							+ "alphanumeric character. actual option name is "
+							+ "'%s'", 
 							Annotations.Option.class.getName(),
 							name));
 				}
@@ -3344,9 +3350,16 @@ public final class ArgMatey {
 			Method[] methods = c.getMethods();
 			for (Method method : methods) {
 				if (method.isAnnotationPresent(Annotations.NonparsedArg.class)) {
-					NonparsedArgMethod mthd =
-							NonparsedArgMethod.newInstance(method);
-					argSinkMethod = mthd;
+					if (argSinkMethod == null) {
+						NonparsedArgMethod mthd =
+								NonparsedArgMethod.newInstance(method);
+						argSinkMethod = mthd;
+					} else {
+						throw new IllegalArgumentException(String.format(
+								"there can only be one method with the "
+								+ "annotation %s", 
+								Annotations.NonparsedArg.class.getName()));
+					}
 				}
 				if (method.isAnnotationPresent(Annotations.OptionGroup.class)) {
 					OptionGroupMethod mthd = OptionGroupMethod.newInstance(
@@ -3367,7 +3380,8 @@ public final class ArgMatey {
 			this.nonparsedArgMethod = argSinkMethod;
 			this.optionGroupMethodMap = new HashMap<String, OptionGroupMethod>(
 					optGroupMethodMap);
-			this.optionGroupMethods = new ArrayList<OptionGroupMethod>(optGroupMethods);
+			this.optionGroupMethods = new ArrayList<OptionGroupMethod>(
+					optGroupMethods);
 			this.optionGroups = OptionGroups.newInstance(optGroups);
 		}
 		

@@ -820,23 +820,7 @@ public final class ArgMatey {
 				)
 		)
 		public void displayProgramHelp() {
-			System.out.printf("Usage: %s", this.getProgramName());
-			int commonDisplayableOptionGroupCount = 0;
-			for (OptionGroup optionGroup : this.getOptionGroups().toList()) {
-				if (optionGroup.toCommonDisplayableList().size() > 0) {
-					commonDisplayableOptionGroupCount++;
-				}
-			}
-			if (commonDisplayableOptionGroupCount == 1) {
-				System.out.print(" [OPTION]");
-			} else if (commonDisplayableOptionGroupCount > 1) {
-				System.out.print(" [OPTION]...");
-			}
-			if (this.programArgsUsage != null 
-					&& !this.programArgsUsage.isEmpty()) {
-				System.out.print(this.programArgsUsage);
-			}
-			System.out.println();
+			this.displayProgramUsage();
 			if (this.programDoc != null && !this.programDoc.isEmpty()) {
 				System.out.println(this.programDoc);
 			}
@@ -857,6 +841,26 @@ public final class ArgMatey {
 				System.out.println();
 			}
 			this.programHelpDisplayed = true;
+		}
+		
+		public void displayProgramUsage() {
+			System.out.printf("Usage: %s", this.getProgramName());
+			int commonDisplayableOptionGroupCount = 0;
+			for (OptionGroup optionGroup : this.getOptionGroups().toList()) {
+				if (optionGroup.toCommonDisplayableList().size() > 0) {
+					commonDisplayableOptionGroupCount++;
+				}
+			}
+			if (commonDisplayableOptionGroupCount == 1) {
+				System.out.print(" [OPTION]");
+			} else if (commonDisplayableOptionGroupCount > 1) {
+				System.out.print(" [OPTION]...");
+			}
+			if (this.programArgsUsage != null 
+					&& !this.programArgsUsage.isEmpty()) {
+				System.out.print(this.programArgsUsage);
+			}
+			System.out.println();
 		}
 		
 		@Annotations.OptionGroup(

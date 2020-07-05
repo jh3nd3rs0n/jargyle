@@ -360,7 +360,7 @@ public final class UsersCLI extends CLI {
 	@Override
 	public void displayProgramVersion() { }
 		
-	public int execute() {
+	public int handleRemaining() {
 		ArgMatey.Option helpOption = this.getOptionGroups().get(
 				HELP_OPTION_GROUP_ORDINAL).get(0);
 		String suggestion = String.format(

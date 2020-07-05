@@ -18,7 +18,7 @@ public final class SocksServer {
 		System.setProperty(
 				"com.sun.xml.bind.v2.bytecode.ClassTailor.noOptimize", "true");
 		SocksServerCLI socksServerCLI = new SocksServerCLI(args, false);
-		int status = socksServerCLI.execute();
+		int status = socksServerCLI.handleRemaining();
 		if (status != 0) { System.exit(status);	}
 	}
 	

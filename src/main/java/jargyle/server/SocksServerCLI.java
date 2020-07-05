@@ -464,7 +464,7 @@ public final class SocksServerCLI extends CLI {
 				newProgramBeginningUsage, 
 				remainingArgs, 
 				this.posixlyCorrect);
-		int status = usersCLI.execute();
+		int status = usersCLI.handleRemaining();
 		this.socks5UsersManagementModeStatus = Integer.valueOf(status);
 	}
 		
@@ -489,7 +489,7 @@ public final class SocksServerCLI extends CLI {
 				usernamePassword);
 	}
 	
-	public int execute() {
+	public int handleRemaining() {
 		ArgMatey.OptionGroup settingsOptionGroup = this.getOptionGroups().get(
 				SETTINGS_OPTION_GROUP_ORDINAL); 
 		ArgMatey.Option settingsHelpOption = this.getOptionGroups().get(

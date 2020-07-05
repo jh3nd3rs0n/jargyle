@@ -821,7 +821,17 @@ public final class ArgMatey {
 		)
 		public void displayProgramHelp() {
 			System.out.printf("Usage: %s", this.getProgramName());
-			this.getOptionGroups().printAbbreviatedUsage();
+			int commonDisplayableOptionGroupCount = 0;
+			for (OptionGroup optionGroup : this.getOptionGroups().toList()) {
+				if (optionGroup.toCommonDisplayableList().size() > 0) {
+					commonDisplayableOptionGroupCount++;
+				}
+			}
+			if (commonDisplayableOptionGroupCount == 1) {
+				System.out.print(" [OPTION]");
+			} else if (commonDisplayableOptionGroupCount > 1) {
+				System.out.print(" [OPTION]...");
+			}
 			if (this.programArgsUsage != null 
 					&& !this.programArgsUsage.isEmpty()) {
 				System.out.print(this.programArgsUsage);
@@ -831,9 +841,21 @@ public final class ArgMatey {
 				System.out.println(this.programDoc);
 			}
 			System.out.println();
-			System.out.println("OPTIONS:");
-			this.getOptionGroups().printHelpText();
-			System.out.println();
+			int displayableOptionGroupCount = 0;
+			for (OptionGroup optionGroup : this.getOptionGroups().toList()) {
+				if (optionGroup.toDisplayableList().size() > 0) {
+					displayableOptionGroupCount++;
+				}
+			}
+			if (displayableOptionGroupCount > 0) {
+				if (displayableOptionGroupCount == 1) {
+					System.out.println("OPTION:");
+				} else if (displayableOptionGroupCount > 1) {
+					System.out.println("OPTIONS:");
+				}
+				this.getOptionGroups().printHelpText();
+				System.out.println();
+			}
 			this.programHelpDisplayed = true;
 		}
 		
@@ -1151,23 +1173,18 @@ public final class ArgMatey {
 			String optionGroupHelpText = null;
 			StringBuilder sb = null;
 			String doc = null;
-			for (Option option : params.getOptions()) {
-				if (!option.isHidden()) {
-					String usage = option.getUsage();
-					if (usage != null && !usage.isEmpty()) {
-						if (sb == null) {
-							sb = new StringBuilder();
-							sb.append("  ");
-						} else {
-							sb.append(", ");
-						}
-						sb.append(usage);
-					}
-					if (doc == null) {
-						String d = option.getDoc();
-						if (d != null && !d.isEmpty()) {
-							doc = d;
-						}
+			for (Option option : params.getDisplayableOptions()) {
+				if (sb == null) {
+					sb = new StringBuilder();
+					sb.append("  ");
+				} else {
+					sb.append(", ");
+				}
+				sb.append(option.getUsage());
+				if (doc == null) {
+					String d = option.getDoc();
+					if (d != null && !d.isEmpty()) {
+						doc = d;
 					}
 				}
 			}
@@ -2643,8 +2660,31 @@ public final class ArgMatey {
 			
 		}
 		
+		private static void add(
+				final Option option,
+				final List<Option> options,
+				final List<Option> displayableOptions,
+				final List<Option> commonDisplayableOptions,
+				final List<Option> specialDisplayableOptions) {
+			options.add(option);
+			if (!option.isHidden()) {
+				String usage = option.getUsage();
+				if (usage != null && !usage.isEmpty()) {
+					displayableOptions.add(option);
+					if (!option.isSpecial()) {
+						commonDisplayableOptions.add(option);
+					} else {
+						specialDisplayableOptions.add(option);
+					}
+				}
+			}
+		}
+		
+		private final List<Option> commonDisplayableOptions;
+		private final List<Option> displayableOptions;
 		private final List<Option> options;
 		private final OptionGroupHelpTextProvider optionGroupHelpTextProvider;
+		private final List<Option> specialDisplayableOptions;
 		
 		private OptionGroup(final Builder builder) {
 			Option.Builder optBuilder = builder.optionBuilder;
@@ -2652,9 +2692,17 @@ public final class ArgMatey {
 					builder.optionGroupHelpTextProvider;
 			List<Option.Builder> otherOptBuilders = 
 					new ArrayList<Option.Builder>(builder.otherOptionBuilders);
+			List<Option> commonDisplayableOpts = new ArrayList<Option>();
+			List<Option> displayableOpts = new ArrayList<Option>();
 			List<Option> opts = new ArrayList<Option>();
+			List<Option> specialDisplayableOpts = new ArrayList<Option>();
 			Option opt = optBuilder.build();
-			opts.add(opt);
+			add(
+					opt, 
+					opts, 
+					displayableOpts, 
+					commonDisplayableOpts, 
+					specialDisplayableOpts);
 			for (Option.Builder otherOptBuilder : otherOptBuilders) {
 				if (optBuilder.hiddenSet() && !otherOptBuilder.hiddenSet()) {
 					otherOptBuilder.hidden(optBuilder.hidden());
@@ -2667,14 +2715,24 @@ public final class ArgMatey {
 					otherOptBuilder.special(optBuilder.special());
 				}
 				Option otherOpt = otherOptBuilder.build();
-				opts.add(otherOpt);
+				add(
+						otherOpt, 
+						opts, 
+						displayableOpts, 
+						commonDisplayableOpts, 
+						specialDisplayableOpts);
 			}
 			if (!builder.optionGroupHelpTextProviderSet) {
 				optGroupHelpTextProvider = 
 						OptionGroupHelpTextProvider.getDefault();
 			}
+			this.commonDisplayableOptions = new ArrayList<Option>(
+					commonDisplayableOpts);
+			this.displayableOptions = new ArrayList<Option>(displayableOpts);
 			this.options = new ArrayList<Option>(opts);
 			this.optionGroupHelpTextProvider = optGroupHelpTextProvider;
+			this.specialDisplayableOptions = new ArrayList<Option>(
+					specialDisplayableOpts);
 		}
 		
 		public Option get(final int index) {
@@ -2693,8 +2751,20 @@ public final class ArgMatey {
 			return this.optionGroupHelpTextProvider;
 		}
 		
+		public List<Option> toCommonDisplayableList() {
+			return Collections.unmodifiableList(this.commonDisplayableOptions);
+		}
+		
+		public List<Option> toDisplayableList() {
+			return Collections.unmodifiableList(this.displayableOptions);
+		}
+		
 		public List<Option> toList() {
 			return Collections.unmodifiableList(this.options);
+		}
+		
+		public List<Option> toSpecialDisplayableList() {
+			return Collections.unmodifiableList(this.specialDisplayableOptions);
 		}
 
 		@Override
@@ -2717,8 +2787,8 @@ public final class ArgMatey {
 			this.optionGroup = optGroup;
 		}
 		
-		public List<Option> getOptions() {
-			return this.optionGroup.toList();
+		public List<Option> getDisplayableOptions() {
+			return this.optionGroup.toDisplayableList();
 		}
 		
 	}
@@ -3261,33 +3331,6 @@ public final class ArgMatey {
 			return this.optionGroups.get(index);
 		}
 		
-		public void printAbbreviatedUsage() {
-			this.printAbbreviatedUsage(System.out);
-		}
-		
-		public void printAbbreviatedUsage(final PrintStream s) {
-			this.printAbbreviatedUsage(new PrintWriter(s));
-		}
-		
-		public void printAbbreviatedUsage(final PrintWriter w) {
-			int optionGroupCount = 0;
-			for (OptionGroup optionGroup : this.optionGroups) {
-				for (Option option : optionGroup.toList()) {
-					if (!option.isHidden() && !option.isSpecial()) {
-						optionGroupCount++;
-						break;
-					}
-				}
-			}
-			if (optionGroupCount == 1) {
-				w.print(" [OPTION]");
-				w.flush();
-			} else if (optionGroupCount > 1) {
-				w.print(" [OPTION]...");
-				w.flush();
-			}
-		}
-		
 		public void printHelpText() {
 			this.printHelpText(System.out);
 		}
@@ -3301,33 +3344,6 @@ public final class ArgMatey {
 				String helpText = optionGroup.getHelpText();
 				if (helpText != null && !helpText.isEmpty()) {
 					w.println(helpText);
-					w.flush();
-				}
-			}
-		}
-
-		public void printUsage() {
-			this.printUsage(System.out);
-		}
-		
-		public void printUsage(final PrintStream s) {
-			this.printUsage(new PrintWriter(s));
-		}
-		
-		public void printUsage(final PrintWriter w) {
-			for (OptionGroup optionGroup : this.optionGroups) {
-				String usage = null;
-				for (Option option : optionGroup.toList()) {
-					if (!option.isHidden() && !option.isSpecial()) {
-						String use = option.getUsage();
-						if (use != null && !use.isEmpty()) {
-							usage = use;
-							break;
-						}
-					}
-				}
-				if (usage != null && !usage.isEmpty()) {
-					w.print(String.format(" [%s]", usage));
 					w.flush();
 				}
 			}

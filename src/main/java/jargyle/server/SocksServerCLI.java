@@ -17,13 +17,13 @@ import java.util.logging.Logger;
 import javax.xml.bind.JAXBException;
 
 import argmatey.ArgMatey;
+import argmatey.ArgMatey.Annotations.IgnoreOptionGroup;
 import argmatey.ArgMatey.Annotations.Option;
 import argmatey.ArgMatey.Annotations.OptionArgSpec;
 import argmatey.ArgMatey.Annotations.OptionGroup;
-import argmatey.ArgMatey.ArgsHandler;
+import argmatey.ArgMatey.CLI;
 import argmatey.ArgMatey.GnuLongOption;
 import argmatey.ArgMatey.IllegalOptionArgException;
-import argmatey.ArgMatey.OptionGroups;
 import argmatey.ArgMatey.OptionUsageParams;
 import argmatey.ArgMatey.OptionUsageProvider;
 import argmatey.ArgMatey.PosixOption;
@@ -36,9 +36,9 @@ import jargyle.common.net.SocketSettingSpec;
 import jargyle.common.net.socks5.AuthMethod;
 import jargyle.common.net.socks5.gssapiauth.GssapiProtectionLevel;
 import jargyle.server.socks5.UsernamePasswordAuthenticator;
-import jargyle.server.socks5.UsersCli;
+import jargyle.server.socks5.UsersCLI;
 
-public final class SocksServerCli {
+public final class SocksServerCLI extends CLI {
 
 	public static final class CriteriaOptionUsageProvider 
 		extends OptionUsageProvider {
@@ -132,21 +132,20 @@ public final class SocksServerCli {
 	private static final int SOCKS5_USERS_OPTION_GROUP_ORDINAL = 16;
 	
 	private static final Logger LOGGER = Logger.getLogger(
-			SocksServerCli.class.getName());
+			SocksServerCLI.class.getName());
 	
-	private ArgsHandler argsHandler;
 	private boolean configurationFileXsdRequested;
 	private final ModifiableConfiguration modifiableConfiguration;
 	private String monitoredConfigurationFile;
 	private boolean newConfigurationFileRequested;
-	private OptionGroups optionGroups;
+	private final boolean posixlyCorrect;
 	private final String programBeginningUsage;
-	private boolean programHelpRequested;
-	private final String programName;	
-	private boolean settingsHelpRequested;
+	private final String programName;
+	private boolean settingsHelpDisplayed;
 	private Integer socks5UsersManagementModeStatus;
 	
-	SocksServerCli() {
+	SocksServerCLI(final String[] args, final boolean posixCorrect) {
+		super(args, posixCorrect);
 		String progName = System.getProperty(
 				SystemPropertyNameConstants.PROGRAM_NAME);
 		if (progName == null) {
@@ -157,16 +156,14 @@ public final class SocksServerCli {
 		if (progBeginningUsage == null) {
 			progBeginningUsage = progName;
 		}
-		this.argsHandler = null;
 		this.configurationFileXsdRequested = false;
 		this.modifiableConfiguration = new ModifiableConfiguration();
 		this.monitoredConfigurationFile = null;
 		this.newConfigurationFileRequested = false;
-		this.optionGroups = null;
+		this.posixlyCorrect = posixCorrect;
 		this.programBeginningUsage = progBeginningUsage;
-		this.programHelpRequested = false;
 		this.programName = progName;
-		this.settingsHelpRequested = false;
+		this.settingsHelpDisplayed = false;
 		this.socks5UsersManagementModeStatus = null;
 	}
 		
@@ -338,6 +335,107 @@ public final class SocksServerCli {
 		this.modifiableConfiguration.addSettings(sttngs);
 	}
 	
+	private void displayHelpText(final List<HelpTextParams> list) {
+		System.out.println();
+		for (HelpTextParams helpTextParams : list) {
+			System.out.print("  ");
+			System.out.println(helpTextParams.getUsage());
+			System.out.print("      ");
+			System.out.println(helpTextParams.getDoc());
+			System.out.println();
+		}
+	}
+		
+	@OptionGroup(
+			option = @Option(
+					doc = "Print this help and exit",
+					name = "help",
+					special = true,
+					type = GnuLongOption.class
+			),
+			ordinal = HELP_OPTION_GROUP_ORDINAL,
+			otherOptions = {
+					@Option(
+							name = "h",
+							type = PosixOption.class
+					)
+			}
+	)
+	@Override
+	public void displayProgramHelp() {
+		ArgMatey.Option configFileXsdOption = this.getOptionGroups().get(
+				CONFIG_FILE_XSD_OPTION_GROUP_ORDINAL).get(0);
+		ArgMatey.Option helpOption = this.getOptionGroups().get(
+				HELP_OPTION_GROUP_ORDINAL).get(0);
+		ArgMatey.Option monitoredConfigFileOption = this.getOptionGroups().get(
+				MONITORED_CONFIG_FILE_OPTION_GROUP_ORDINAL).get(0);
+		ArgMatey.Option newConfigFileOption = this.getOptionGroups().get(
+				NEW_CONFIG_FILE_OPTION_GROUP_ORDINAL).get(0);
+		ArgMatey.Option settingsHelpOption = this.getOptionGroups().get(
+				SETTINGS_HELP_OPTION_GROUP_ORDINAL).get(0);
+		ArgMatey.Option socks5UsersOption = this.getOptionGroups().get(
+				SOCKS5_USERS_OPTION_GROUP_ORDINAL).get(0);
+		System.out.printf("Usage: %s [OPTIONS]%n", this.programBeginningUsage);
+		System.out.printf("       %s %s%n", 
+				this.programBeginningUsage, 
+				configFileXsdOption.getUsage());
+		System.out.printf("       %s %s%n", 
+				this.programBeginningUsage, 
+				helpOption.getUsage());
+		System.out.printf("       %s %s%n", 
+				this.programBeginningUsage, 
+				monitoredConfigFileOption.getUsage());		
+		System.out.printf("       %s [OPTIONS] %s%n", 
+				this.programBeginningUsage, 
+				newConfigFileOption.getUsage());
+		System.out.printf("       %s %s%n", 
+				this.programBeginningUsage, 
+				settingsHelpOption.getUsage());
+		System.out.printf("       %s %s ARGS", 
+				this.programBeginningUsage, 
+				socks5UsersOption.getUsage());
+		System.out.println();
+		System.out.println();
+		System.out.println("OPTIONS:");
+		this.getOptionGroups().printHelpText();
+		System.out.println();
+		this.programHelpDisplayed = true;
+	}
+	
+	@IgnoreOptionGroup
+	@Override
+	public void displayProgramVersion() { }
+		
+	@OptionGroup(
+			option = @Option(
+					doc = "Print the list of available settings for the SOCKS "
+							+ "server and exit",
+					name = "settings-help",
+					special = true,
+					type = GnuLongOption.class
+			),
+			ordinal = SETTINGS_HELP_OPTION_GROUP_ORDINAL,
+			otherOptions = {
+					@Option(
+							name = "H",
+							type = PosixOption.class
+					)
+			}
+	)
+	public void displaySettingsHelp() {
+		System.out.println("SETTINGS:");
+		this.displayHelpText(Arrays.asList(SettingSpec.values()));
+		System.out.println("SCHEMES:");
+		this.displayHelpText(Arrays.asList(Scheme.values()));
+		System.out.println("SOCKET_SETTINGS:");
+		this.displayHelpText(Arrays.asList(SocketSettingSpec.values()));
+		System.out.println("SOCKS5_AUTH_METHODS:");
+		this.displayHelpText(Arrays.asList(AuthMethod.values()));
+		System.out.println("SOCKS5_GSSAPI_PROTECTION_LEVELS:");
+		this.displayHelpText(Arrays.asList(GssapiProtectionLevel.values()));
+		this.settingsHelpDisplayed = true;
+	}
+	
 	@OptionGroup(
 			option = @Option(
 					doc = "Mode for managing SOCKS5 users (add --help for "
@@ -349,25 +447,24 @@ public final class SocksServerCli {
 			ordinal = SOCKS5_USERS_OPTION_GROUP_ORDINAL
 	)
 	public void doSocks5UsersManagementMode() {
-		ArgMatey.Option socks5UsersOption = this.optionGroups.get(
+		ArgMatey.Option socks5UsersOption = this.getOptionGroups().get(
 				SOCKS5_USERS_OPTION_GROUP_ORDINAL).get(0);
 		String newProgramBeginningUsage = String.format("%s %s", 
 				this.programBeginningUsage, 
 				socks5UsersOption.getUsage());
-		System.setProperty(
-				SystemPropertyNameConstants.PROGRAM_NAME, 
-				this.programName);
-		System.setProperty(
-				SystemPropertyNameConstants.PROGRAM_BEGINNING_USAGE, 
-				newProgramBeginningUsage);
 		List<String> remainingArgList = new ArrayList<String>();
-		while (this.argsHandler.hasNext()) {
-			String arg = this.argsHandler.next();
+		while (this.hasNext()) {
+			String arg = this.next();
 			remainingArgList.add(arg);
 		}
-		UsersCli usersCli = new UsersCli();
-		int status = usersCli.process(remainingArgList.toArray(
-				new String[remainingArgList.size()]));
+		String[] remainingArgs = remainingArgList.toArray(
+				new String[remainingArgList.size()]);
+		UsersCLI usersCLI = new UsersCLI(
+				this.programName, 
+				newProgramBeginningUsage, 
+				remainingArgs, 
+				this.posixlyCorrect);
+		int status = usersCLI.execute();
 		this.socks5UsersManagementModeStatus = Integer.valueOf(status);
 	}
 		
@@ -390,6 +487,54 @@ public final class SocksServerCli {
 				usernamePasswordRequestor.requestUsernamePassword(null, prompt);
 		this.modifiableConfiguration.setExternalClientSocks5UsernamePassword(
 				usernamePassword);
+	}
+	
+	public int execute() {
+		ArgMatey.OptionGroup settingsOptionGroup = this.getOptionGroups().get(
+				SETTINGS_OPTION_GROUP_ORDINAL); 
+		ArgMatey.Option settingsHelpOption = this.getOptionGroups().get(
+				SETTINGS_HELP_OPTION_GROUP_ORDINAL).get(0);
+		String settingsHelpSuggestion = String.format(
+				"Try `%s %s' for more information.", 
+				this.programBeginningUsage, 
+				settingsHelpOption.getUsage());
+		ArgMatey.Option helpOption = this.getOptionGroups().get(
+				HELP_OPTION_GROUP_ORDINAL).get(0);
+		String suggestion = String.format(
+				"Try `%s %s' for more information.", 
+				this.programBeginningUsage, 
+				helpOption.getUsage());
+		while (this.hasNext()) {
+			try {
+				this.handleNext();
+			} catch (IllegalOptionArgException e) {
+				String suggest = suggestion;
+				if (settingsOptionGroup.toList().contains(e.getOption())) {
+					suggest = settingsHelpSuggestion;
+				}
+				System.err.printf("%s: %s%n", this.programName, e);
+				System.err.println(suggest);
+				e.printStackTrace(System.err);
+				return -1;
+			} catch (Throwable t) {
+				System.err.printf("%s: %s%n", this.programName, t);
+				System.err.println(suggestion);
+				t.printStackTrace(System.err);
+				return -1;
+			}
+			if (this.configurationFileXsdRequested
+					|| this.newConfigurationFileRequested
+					|| this.programHelpDisplayed
+					|| this.settingsHelpDisplayed) {
+				return 0;
+			}
+			if (this.socks5UsersManagementModeStatus != null) {
+				return this.socks5UsersManagementModeStatus.intValue();
+			}
+		}
+		Configuration configuration = this.newConfiguration();
+		if (configuration == null) { return -1;	}
+		return this.startSocksServer(configuration);
 	}
 	
 	private Configuration newConfiguration() {
@@ -493,153 +638,6 @@ public final class SocksServerCli {
 		System.out.write(xsd);
 		System.out.flush();
 		this.configurationFileXsdRequested = true;
-	}
-		
-	@OptionGroup(
-			option = @Option(
-					doc = "Print this help and exit",
-					name = "help",
-					special = true,
-					type = GnuLongOption.class
-			),
-			ordinal = HELP_OPTION_GROUP_ORDINAL,
-			otherOptions = {
-					@Option(
-							name = "h",
-							type = PosixOption.class
-					)
-			}
-	)
-	public void printHelp() {
-		ArgMatey.Option configFileXsdOption = this.optionGroups.get(
-				CONFIG_FILE_XSD_OPTION_GROUP_ORDINAL).get(0);
-		ArgMatey.Option helpOption = this.optionGroups.get(
-				HELP_OPTION_GROUP_ORDINAL).get(0);
-		ArgMatey.Option monitoredConfigFileOption = this.optionGroups.get(
-				MONITORED_CONFIG_FILE_OPTION_GROUP_ORDINAL).get(0);
-		ArgMatey.Option newConfigFileOption = this.optionGroups.get(
-				NEW_CONFIG_FILE_OPTION_GROUP_ORDINAL).get(0);
-		ArgMatey.Option settingsHelpOption = this.optionGroups.get(
-				SETTINGS_HELP_OPTION_GROUP_ORDINAL).get(0);
-		ArgMatey.Option socks5UsersOption = this.optionGroups.get(
-				SOCKS5_USERS_OPTION_GROUP_ORDINAL).get(0);
-		System.out.printf("Usage: %s [OPTIONS]%n", this.programBeginningUsage);
-		System.out.printf("       %s %s%n", 
-				this.programBeginningUsage, 
-				configFileXsdOption.getUsage());
-		System.out.printf("       %s %s%n", 
-				this.programBeginningUsage, 
-				helpOption.getUsage());
-		System.out.printf("       %s %s%n", 
-				this.programBeginningUsage, 
-				monitoredConfigFileOption.getUsage());		
-		System.out.printf("       %s [OPTIONS] %s%n", 
-				this.programBeginningUsage, 
-				newConfigFileOption.getUsage());
-		System.out.printf("       %s %s%n", 
-				this.programBeginningUsage, 
-				settingsHelpOption.getUsage());
-		System.out.printf("       %s %s ARGS", 
-				this.programBeginningUsage, 
-				socks5UsersOption.getUsage());
-		System.out.println();
-		System.out.println();
-		System.out.println("OPTIONS:");
-		this.optionGroups.printHelpText();
-		System.out.println();
-		System.out.println();
-		this.programHelpRequested = true;
-	}
-	
-	private void printHelpText(final List<HelpTextParams> list) {
-		System.out.println();
-		for (HelpTextParams helpTextParams : list) {
-			System.out.print("  ");
-			System.out.println(helpTextParams.getUsage());
-			System.out.print("      ");
-			System.out.println(helpTextParams.getDoc());
-			System.out.println();
-		}
-	}
-		
-	@OptionGroup(
-			option = @Option(
-					doc = "Print the list of available settings for the SOCKS "
-							+ "server and exit",
-					name = "settings-help",
-					special = true,
-					type = GnuLongOption.class
-			),
-			ordinal = SETTINGS_HELP_OPTION_GROUP_ORDINAL,
-			otherOptions = {
-					@Option(
-							name = "H",
-							type = PosixOption.class
-					)
-			}
-	)
-	public void printSettingsHelp() {
-		System.out.println("SETTINGS:");
-		this.printHelpText(Arrays.asList(SettingSpec.values()));
-		System.out.println("SCHEMES:");
-		this.printHelpText(Arrays.asList(Scheme.values()));
-		System.out.println("SOCKET_SETTINGS:");
-		this.printHelpText(Arrays.asList(SocketSettingSpec.values()));
-		System.out.println("SOCKS5_AUTH_METHODS:");
-		this.printHelpText(Arrays.asList(AuthMethod.values()));
-		System.out.println("SOCKS5_GSSAPI_PROTECTION_LEVELS:");
-		this.printHelpText(Arrays.asList(GssapiProtectionLevel.values()));
-		this.settingsHelpRequested = true;
-	}
-	
-	public int process(final String[] args) {
-		this.argsHandler = ArgsHandler.newInstance(args, this, false);
-		this.optionGroups = this.argsHandler.getOptionGroups();
-		ArgMatey.OptionGroup settingsOptionGroup = this.optionGroups.get(
-				SETTINGS_OPTION_GROUP_ORDINAL); 
-		ArgMatey.Option settingsHelpOption = this.optionGroups.get(
-				SETTINGS_HELP_OPTION_GROUP_ORDINAL).get(0);
-		String settingsHelpSuggestion = String.format(
-				"Try `%s %s' for more information.", 
-				this.programBeginningUsage, 
-				settingsHelpOption.getUsage());
-		ArgMatey.Option helpOption = this.optionGroups.get(
-				HELP_OPTION_GROUP_ORDINAL).get(0);
-		String suggestion = String.format(
-				"Try `%s %s' for more information.", 
-				this.programBeginningUsage, 
-				helpOption.getUsage());
-		while (this.argsHandler.hasNext()) {
-			try {
-				this.argsHandler.handleNext();
-			} catch (IllegalOptionArgException e) {
-				String suggest = suggestion;
-				if (settingsOptionGroup.toList().contains(e.getOption())) {
-					suggest = settingsHelpSuggestion;
-				}
-				System.err.printf("%s: %s%n", this.programName, e);
-				System.err.println(suggest);
-				e.printStackTrace(System.err);
-				return -1;
-			} catch (Throwable t) {
-				System.err.printf("%s: %s%n", this.programName, t);
-				System.err.println(suggestion);
-				t.printStackTrace(System.err);
-				return -1;
-			}
-			if (this.configurationFileXsdRequested
-					|| this.newConfigurationFileRequested
-					|| this.programHelpRequested
-					|| this.settingsHelpRequested) {
-				return 0;
-			}
-			if (this.socks5UsersManagementModeStatus != null) {
-				return this.socks5UsersManagementModeStatus.intValue();
-			}
-		}
-		Configuration configuration = this.newConfiguration();
-		if (configuration == null) { return -1;	}
-		return this.startSocksServer(configuration);
 	}
 	
 	@OptionGroup(

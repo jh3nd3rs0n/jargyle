@@ -70,8 +70,8 @@ public final class Users {
 		 */
 		System.setProperty(
 				"com.sun.xml.bind.v2.bytecode.ClassTailor.noOptimize", "true");
-		UsersCli usersCli = new UsersCli();
-		int status = usersCli.process(args);
+		UsersCLI usersCLI = new UsersCLI(null, null, args, false);
+		int status = usersCLI.execute();
 		if (status != 0) { System.exit(status);	}
 	}
 	

@@ -58,6 +58,10 @@ public final class ArgMatey {
 		
 		@Retention(RetentionPolicy.RUNTIME)
 		@Target({ElementType.METHOD})
+		public static @interface IgnoreOptionGroup { }
+		
+		@Retention(RetentionPolicy.RUNTIME)
+		@Target({ElementType.METHOD})
 		public static @interface NonparsedArg { }
 
 		@Retention(RetentionPolicy.RUNTIME)
@@ -113,112 +117,6 @@ public final class ArgMatey {
 		}
 
 		private Annotations() { }
-		
-	}
-	
-	public static final class ArgsHandler {
-		
-		public static ArgsHandler newInstance(
-				final String[] args, 
-				final Object parseResultHandler, 
-				final boolean posixlyCorrect) {
-			return new ArgsHandler(args, parseResultHandler, posixlyCorrect);
-		}
-		
-		private final ArgsParser argsParser;
-		private final Object parseResultHandler;
-		private final ParseResultHandlerClass parseResultHandlerClass;
-		
-		private ArgsHandler(
-				final String[] args, 
-				final Object handler, 
-				final boolean posixlyCorrect) {
-			ParseResultHandlerClass handlerClass = 
-					ParseResultHandlerClass.newInstance(handler.getClass());
-			ArgsParser parser = ArgsParser.newInstance(
-					args, handlerClass.getOptionGroups(), posixlyCorrect);
-			this.argsParser = parser;
-			this.parseResultHandler = handler;
-			this.parseResultHandlerClass = handlerClass;
-		}
-		
-		public int getArgCharIndex() {
-			return this.argsParser.getArgCharIndex();
-		}
-		
-		public int getArgIndex() {
-			return this.argsParser.getArgIndex();
-		}
-		
-		public String[] getArgs() {
-			return this.argsParser.getArgs();
-		}
-		
-		public ArgsParser getArgsParser() {
-			return this.argsParser;
-		}
-		
-		public OptionGroups getOptionGroups() {
-			return this.argsParser.getOptionGroups();
-		}
-		
-		public Object getParseResultHandler() {
-			return this.parseResultHandler;
-		}
-		
-		public ParseResultHolder getParseResultHolder() {
-			return this.argsParser.getParseResultHolder();
-		}
-		
-		public void handleNext() {
-			ParseResultHolder parseResultHolder = this.argsParser.parseNext();
-			if (parseResultHolder.hasNonparsedArg()) {
-				String nonparsedArg = parseResultHolder.getNonparsedArg();
-				NonparsedArgMethod nonparsedArgMethod =
-						this.parseResultHandlerClass.getNonparsedArgMethod();
-				if (nonparsedArgMethod != null) {
-					nonparsedArgMethod.invoke(
-							this.parseResultHandler, nonparsedArg);
-				}
-			}
-			if (parseResultHolder.hasOptionOccurrence()) {
-				OptionOccurrence optionOccurrence = 
-						parseResultHolder.getOptionOccurrence();
-				Option option = optionOccurrence.getOption();
-				Map<String, OptionGroupMethod> optionMethodMap = 
-						this.parseResultHandlerClass.getOptionGroupMethodMap();
-				OptionGroupMethod optionGroupMethod = optionMethodMap.get(
-						option.toString());
-				if (optionGroupMethod != null) {
-					optionGroupMethod.invoke(
-							this.parseResultHandler, optionOccurrence);
-				}
-			}
-		}
-		
-		public boolean hasNext() {
-			return this.argsParser.hasNext();
-		}
-		
-		public String next() {
-			return this.argsParser.next();
-		}
-		
-		@Override
-		public String toString() {
-			StringBuilder sb = new StringBuilder();
-			sb.append(this.getClass().getSimpleName())
-				.append(" [getArgCharIndex()=")
-				.append(this.getArgCharIndex())
-				.append(", getArgIndex()=")
-				.append(this.getArgIndex())
-				.append(", getArgs()=")
-				.append(Arrays.toString(this.getArgs()))
-				.append(", getOptionGroups()=")
-				.append(this.getOptionGroups())
-				.append("]");
-			return sb.toString();
-		}
 		
 	}
 	
@@ -888,6 +786,271 @@ public final class ArgMatey {
 
 	}
 	
+	public static class CLI {
+		
+		private final ArgsParser argsParser;
+		private final CLIClass cliClass;
+		private String programArgsUsage;
+		private String programDoc;
+		protected boolean programHelpDisplayed;
+		private String programName;
+		private String programVersion;
+		protected boolean programVersionDisplayed;
+		
+		public CLI(final String[] args, final boolean posixlyCorrect) {
+			CLIClass cls = CLIClass.newInstance(this.getClass());
+			ArgsParser parser = ArgsParser.newInstance(
+					args, cls.getOptionGroups(), posixlyCorrect);
+			this.argsParser = parser;
+			this.cliClass = cls;
+			this.programArgsUsage = null;
+			this.programDoc = null;
+			this.programHelpDisplayed = false;
+			this.programName = null;
+			this.programVersion = null;
+			this.programVersionDisplayed = false;
+		}
+		
+		@Annotations.OptionGroup(
+				option = @Annotations.Option(
+						doc = "Display this help and exit",
+						name = "help",
+						special = true,
+						type = GnuLongOption.class
+				)
+		)
+		public void displayProgramHelp() {
+			System.out.printf("Usage: %s", this.getProgramName());
+			this.getOptionGroups().printAbbreviatedUsage();
+			if (this.programArgsUsage != null 
+					&& !this.programArgsUsage.isEmpty()) {
+				System.out.print(this.programArgsUsage);
+			}
+			System.out.println();
+			if (this.programDoc != null && !this.programDoc.isEmpty()) {
+				System.out.println(this.programDoc);
+			}
+			System.out.println();
+			System.out.println("OPTIONS:");
+			this.getOptionGroups().printHelpText();
+			System.out.println();
+			this.programHelpDisplayed = true;
+		}
+		
+		@Annotations.OptionGroup(
+				option = @Annotations.Option(
+						doc = "Display version information and exit",
+						name = "version",
+						special = true,
+						type = GnuLongOption.class
+				)
+		)
+		public void displayProgramVersion() {
+			System.out.println(this.getProgramVersion());
+			this.programVersionDisplayed = true;
+		}
+		
+		public final int getArgCharIndex() {
+			return this.argsParser.getArgCharIndex();
+		}
+		
+		public final int getArgIndex() {
+			return this.argsParser.getArgIndex();
+		}
+		
+		public final String[] getArgs() {
+			return this.argsParser.getArgs();
+		}
+		
+		public final ArgsParser getArgsParser() {
+			return this.argsParser;
+		}
+		
+		public final OptionGroups getOptionGroups() {
+			return this.argsParser.getOptionGroups();
+		}
+		
+		public final ParseResultHolder getParseResultHolder() {
+			return this.argsParser.getParseResultHolder();
+		}
+		
+		public final String getProgramArgsUsage() {
+			return this.programArgsUsage;
+		}
+		
+		public final String getProgramDoc() {
+			return this.programDoc;
+		}
+		
+		public final String getProgramName() {
+			if (this.programName == null) {
+				return this.getClass().getName();
+			}
+			return this.programName;
+		}
+		
+		public final String getProgramVersion() {
+			if (this.programVersion == null) {
+				return this.getProgramName();
+			}
+			return this.programVersion;
+		}
+		
+		public final void handleNext() {
+			ParseResultHolder parseResultHolder = this.argsParser.parseNext();
+			if (parseResultHolder.hasNonparsedArg()) {
+				String nonparsedArg = parseResultHolder.getNonparsedArg();
+				NonparsedArgMethod nonparsedArgMethod =
+						this.cliClass.getNonparsedArgMethod();
+				if (nonparsedArgMethod != null) {
+					nonparsedArgMethod.invoke(this, nonparsedArg);
+				}
+			}
+			if (parseResultHolder.hasOptionOccurrence()) {
+				OptionOccurrence optionOccurrence = 
+						parseResultHolder.getOptionOccurrence();
+				Option option = optionOccurrence.getOption();
+				Map<String, OptionGroupMethod> optionMethodMap = 
+						this.cliClass.getOptionGroupMethodMap();
+				OptionGroupMethod optionGroupMethod = optionMethodMap.get(
+						option.toString());
+				if (optionGroupMethod != null) {
+					optionGroupMethod.invoke(this, optionOccurrence);
+				}
+			}
+		}
+		
+		public final boolean hasNext() {
+			return this.argsParser.hasNext();
+		}
+		
+		public final boolean isProgramHelpDisplayed() {
+			return this.programHelpDisplayed;
+		}
+		
+		public final boolean isProgramVersionDisplayed() {
+			return this.programVersionDisplayed;
+		}
+		
+		public final String next() {
+			return this.argsParser.next();
+		}
+
+		public final void setProgramArgsUsage(final String progArgsUsage) {
+			this.programArgsUsage = progArgsUsage;
+		}
+		
+		public final void setProgramDoc(final String progDoc) {
+			this.programDoc = progDoc;
+		}
+		
+		public final void setProgramName(final String progName) {
+			this.programName = progName;
+		}
+		
+		public final void setProgramVersion(final String progVersion) {
+			this.programVersion = progVersion;
+		}
+		
+		@Override
+		public String toString() {
+			StringBuilder sb = new StringBuilder();
+			sb.append(this.getClass().getSimpleName())
+				.append(" [getArgCharIndex()=")
+				.append(this.getArgCharIndex())
+				.append(", getArgIndex()=")
+				.append(this.getArgIndex())
+				.append(", getArgs()=")
+				.append(Arrays.toString(this.getArgs()))
+				.append(", getOptionGroups()=")
+				.append(this.getOptionGroups())
+				.append("]");
+			return sb.toString();
+		}
+		
+	}
+
+	static final class CLIClass {
+		
+		public static CLIClass newInstance(final Class<?> cls) {
+			return new CLIClass(cls);
+		}
+		
+		private final Class<?> cls;
+		private final NonparsedArgMethod nonparsedArgMethod;
+		private final Map<String, OptionGroupMethod> optionGroupMethodMap;
+		private final List<OptionGroupMethod> optionGroupMethods;
+		private final OptionGroups optionGroups;
+		
+		private CLIClass(final Class<?> c) {
+			NonparsedArgMethod argSinkMethod = null;
+			Map<String, OptionGroupMethod> optGroupMethodMap = 
+					new HashMap<String, OptionGroupMethod>();
+			List<OptionGroupMethod> optGroupMethods = 
+					new ArrayList<OptionGroupMethod>();
+			Method[] methods = c.getMethods();
+			for (Method method : methods) {
+				if (method.isAnnotationPresent(Annotations.NonparsedArg.class)) {
+					if (argSinkMethod == null) {
+						NonparsedArgMethod mthd =
+								NonparsedArgMethod.newInstance(method);
+						argSinkMethod = mthd;
+					} else {
+						throw new IllegalArgumentException(String.format(
+								"there can only be one method with the "
+								+ "annotation %s", 
+								Annotations.NonparsedArg.class.getName()));
+					}
+				}
+				if (method.isAnnotationPresent(Annotations.OptionGroup.class)) {
+					OptionGroupMethod mthd = OptionGroupMethod.newInstance(
+							method);
+					if (!method.isAnnotationPresent(
+							Annotations.IgnoreOptionGroup.class)) {
+						OptionGroup optGroup = mthd.getOptionGroup();
+						for (Option opt : optGroup.toList()) {
+							optGroupMethodMap.put(opt.toString(), mthd);
+						}
+						optGroupMethods.add(mthd);						
+					}
+				}
+			}
+			Collections.sort(optGroupMethods, new OptionGroupMethodComparator());
+			List<OptionGroup> optGroups = new ArrayList<OptionGroup>();
+			for (OptionGroupMethod optGroupMethod : optGroupMethods) {
+				optGroups.add(optGroupMethod.getOptionGroup());
+			}
+			this.cls = c;
+			this.nonparsedArgMethod = argSinkMethod;
+			this.optionGroupMethodMap = new HashMap<String, OptionGroupMethod>(
+					optGroupMethodMap);
+			this.optionGroupMethods = new ArrayList<OptionGroupMethod>(
+					optGroupMethods);
+			this.optionGroups = OptionGroups.newInstance(optGroups);
+		}
+		
+		public NonparsedArgMethod getNonparsedArgMethod() {
+			return this.nonparsedArgMethod;
+		}
+		
+		public Map<String, OptionGroupMethod> getOptionGroupMethodMap() {
+			return Collections.unmodifiableMap(this.optionGroupMethodMap);
+		}
+		
+		public List<OptionGroupMethod> getOptionGroupMethods() {
+			return Collections.unmodifiableList(this.optionGroupMethods);
+		}
+		
+		public OptionGroups getOptionGroups() {
+			return this.optionGroups;
+		}
+		
+		public Class<?> toClass() {
+			return this.cls;
+		}
+		
+	}
+
 	public static final class DefaultGnuLongOptionUsageProvider 
 		extends OptionUsageProvider {
 
@@ -936,7 +1099,7 @@ public final class ArgMatey {
 		}
 		
 	}
-
+	
 	public static final class DefaultLongOptionUsageProvider 
 		extends OptionUsageProvider {
 
@@ -1020,7 +1183,7 @@ public final class ArgMatey {
 		}
 		
 	}
-	
+
 	public static final class DefaultOptionUsageProvider 
 		extends OptionUsageProvider {
 
@@ -1339,7 +1502,7 @@ public final class ArgMatey {
 		}
 
 	}
-
+	
 	public static final class GnuLongOption extends Option {
 
 		public static final class Builder extends Option.Builder {
@@ -1391,7 +1554,7 @@ public final class ArgMatey {
 		}
 
 	}
-
+	
 	/**
 	 * Thrown to indicate that a provided command line argument is illegal or 
 	 * inappropriate. 
@@ -1657,7 +1820,7 @@ public final class ArgMatey {
 		}
 		
 	}
-	
+
 	static final class InvocationTargetExceptionHelper {
 		
 		public static String toString(final InvocationTargetException e) {
@@ -1794,7 +1957,7 @@ public final class ArgMatey {
 			return this.method;
 		}
 	}
-	
+
 	public static abstract class Option {
 
 		public static abstract class Builder {
@@ -2253,7 +2416,7 @@ public final class ArgMatey {
 		}
 
 	}
-
+	
 	/**
 	 * Thrown when an {@code Option} is not provided with a required 
 	 * command line option argument.
@@ -2297,7 +2460,7 @@ public final class ArgMatey {
 		}
 
 	}
-
+	
 	public static final class OptionArgSpec {
 
 		public static final class Builder {
@@ -2954,10 +3117,13 @@ public final class ArgMatey {
 					optionBuilder, otherOptionBuilders);
 			Class<?> optionGroupHelpTextProviderClass = 
 					this.optionGroupAnnotation.optionGroupHelpTextProvider();
-			OptionGroupHelpTextProvider optionGroupHelpTextProvider = 
-					this.newOptionGroupHelpTextProvider(
-							optionGroupHelpTextProviderClass);
-			builder.optionGroupHelpTextProvider(optionGroupHelpTextProvider);
+			if (!optionGroupHelpTextProviderClass.equals(
+					DefaultOptionGroupHelpTextProvider.class)) {
+				OptionGroupHelpTextProvider optionGroupHelpTextProvider = 
+						this.newOptionGroupHelpTextProvider(
+								optionGroupHelpTextProviderClass);
+				builder.optionGroupHelpTextProvider(optionGroupHelpTextProvider);
+			}
 			return builder.build();
 		}
 		
@@ -3048,7 +3214,7 @@ public final class ArgMatey {
 		}
 		
 	}
-	
+
 	static final class OptionGroupMethodComparator 
 		implements Comparator<OptionGroupMethod> {
 
@@ -3095,6 +3261,33 @@ public final class ArgMatey {
 			return this.optionGroups.get(index);
 		}
 		
+		public void printAbbreviatedUsage() {
+			this.printAbbreviatedUsage(System.out);
+		}
+		
+		public void printAbbreviatedUsage(final PrintStream s) {
+			this.printAbbreviatedUsage(new PrintWriter(s));
+		}
+		
+		public void printAbbreviatedUsage(final PrintWriter w) {
+			int optionGroupCount = 0;
+			for (OptionGroup optionGroup : this.optionGroups) {
+				for (Option option : optionGroup.toList()) {
+					if (!option.isHidden() && !option.isSpecial()) {
+						optionGroupCount++;
+						break;
+					}
+				}
+			}
+			if (optionGroupCount == 1) {
+				w.print(" [OPTION]");
+				w.flush();
+			} else if (optionGroupCount > 1) {
+				w.print(" [OPTION]...");
+				w.flush();
+			}
+		}
+		
 		public void printHelpText() {
 			this.printHelpText(System.out);
 		}
@@ -3104,18 +3297,11 @@ public final class ArgMatey {
 		}
 		
 		public final void printHelpText(final PrintWriter w) {
-			boolean earlierHelpTextNotNullOrEmpty = false;
 			for (OptionGroup optionGroup : this.optionGroups) {
 				String helpText = optionGroup.getHelpText();
 				if (helpText != null && !helpText.isEmpty()) {
-					if (earlierHelpTextNotNullOrEmpty) {
-						w.println();
-					}
-					w.print(helpText);
+					w.println(helpText);
 					w.flush();
-					if (!earlierHelpTextNotNullOrEmpty) {
-						earlierHelpTextNotNullOrEmpty = true;
-					}
 				}
 			}
 		}
@@ -3129,7 +3315,6 @@ public final class ArgMatey {
 		}
 		
 		public void printUsage(final PrintWriter w) {
-			boolean earlierUsageNotNullOrEmpty = false;
 			for (OptionGroup optionGroup : this.optionGroups) {
 				String usage = null;
 				for (Option option : optionGroup.toList()) {
@@ -3142,14 +3327,8 @@ public final class ArgMatey {
 					}
 				}
 				if (usage != null && !usage.isEmpty()) {
-					if (earlierUsageNotNullOrEmpty) {
-						w.print(" ");
-					}
-					w.print(String.format("[%s]", usage));
+					w.print(String.format(" [%s]", usage));
 					w.flush();
-					if (!earlierUsageNotNullOrEmpty) {
-						earlierUsageNotNullOrEmpty = true;
-					}
 				}
 			}
 		}
@@ -3169,7 +3348,7 @@ public final class ArgMatey {
 		}
 		
 	}
-
+	
 	public static final class OptionOccurrence {
 
 		private final Option option;
@@ -3267,7 +3446,7 @@ public final class ArgMatey {
 		}
 		
 	}
-	
+
 	public static final class OptionUsageParams {
 
 		private final Option option;
@@ -3326,84 +3505,6 @@ public final class ArgMatey {
 		public OptionUsageProvider() { }
 		
 		public abstract String getOptionUsage(OptionUsageParams params);
-		
-	}
-
-	static final class ParseResultHandlerClass {
-		
-		public static ParseResultHandlerClass newInstance(final Class<?> cls) {
-			return new ParseResultHandlerClass(cls);
-		}
-		
-		private final Class<?> cls;
-		private final NonparsedArgMethod nonparsedArgMethod;
-		private final Map<String, OptionGroupMethod> optionGroupMethodMap;
-		private final List<OptionGroupMethod> optionGroupMethods;
-		private final OptionGroups optionGroups;
-		
-		private ParseResultHandlerClass(final Class<?> c) {
-			NonparsedArgMethod argSinkMethod = null;
-			Map<String, OptionGroupMethod> optGroupMethodMap = 
-					new HashMap<String, OptionGroupMethod>();
-			List<OptionGroupMethod> optGroupMethods = 
-					new ArrayList<OptionGroupMethod>();
-			Method[] methods = c.getMethods();
-			for (Method method : methods) {
-				if (method.isAnnotationPresent(Annotations.NonparsedArg.class)) {
-					if (argSinkMethod == null) {
-						NonparsedArgMethod mthd =
-								NonparsedArgMethod.newInstance(method);
-						argSinkMethod = mthd;
-					} else {
-						throw new IllegalArgumentException(String.format(
-								"there can only be one method with the "
-								+ "annotation %s", 
-								Annotations.NonparsedArg.class.getName()));
-					}
-				}
-				if (method.isAnnotationPresent(Annotations.OptionGroup.class)) {
-					OptionGroupMethod mthd = OptionGroupMethod.newInstance(
-							method);
-					OptionGroup optGroup = mthd.getOptionGroup();
-					for (Option opt : optGroup.toList()) {
-						optGroupMethodMap.put(opt.toString(), mthd);
-					}
-					optGroupMethods.add(mthd);
-				}
-			}
-			Collections.sort(optGroupMethods, new OptionGroupMethodComparator());
-			List<OptionGroup> optGroups = new ArrayList<OptionGroup>();
-			for (OptionGroupMethod optGroupMethod : optGroupMethods) {
-				optGroups.add(optGroupMethod.getOptionGroup());
-			}
-			this.cls = c;
-			this.nonparsedArgMethod = argSinkMethod;
-			this.optionGroupMethodMap = new HashMap<String, OptionGroupMethod>(
-					optGroupMethodMap);
-			this.optionGroupMethods = new ArrayList<OptionGroupMethod>(
-					optGroupMethods);
-			this.optionGroups = OptionGroups.newInstance(optGroups);
-		}
-		
-		public NonparsedArgMethod getNonparsedArgMethod() {
-			return this.nonparsedArgMethod;
-		}
-		
-		public Map<String, OptionGroupMethod> getOptionGroupMethodMap() {
-			return Collections.unmodifiableMap(this.optionGroupMethodMap);
-		}
-		
-		public List<OptionGroupMethod> getOptionGroupMethods() {
-			return Collections.unmodifiableList(this.optionGroupMethods);
-		}
-		
-		public OptionGroups getOptionGroups() {
-			return this.optionGroups;
-		}
-		
-		public Class<?> toClass() {
-			return this.cls;
-		}
 		
 	}
 

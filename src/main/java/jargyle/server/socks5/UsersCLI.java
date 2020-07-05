@@ -15,17 +15,17 @@ import java.util.List;
 import javax.xml.bind.JAXBException;
 
 import argmatey.ArgMatey;
+import argmatey.ArgMatey.Annotations.IgnoreOptionGroup;
 import argmatey.ArgMatey.Annotations.NonparsedArg;
 import argmatey.ArgMatey.Annotations.Option;
 import argmatey.ArgMatey.Annotations.OptionGroup;
-import argmatey.ArgMatey.ArgsHandler;
+import argmatey.ArgMatey.CLI;
 import argmatey.ArgMatey.GnuLongOption;
-import argmatey.ArgMatey.OptionGroups;
 import argmatey.ArgMatey.PosixOption;
 import jargyle.common.cli.HelpTextParams;
 import jargyle.server.SystemPropertyNameConstants;
 
-public final class UsersCli {
+public final class UsersCLI extends CLI {
 	
 	private enum Command implements HelpTextParams {
 		
@@ -269,32 +269,37 @@ public final class UsersCli {
 	private static final int XSD_OPTION_GROUP_ORDINAL = 1;
 	
 	private final List<String> argList;
-	private ArgsHandler argsHandler;
 	private Command command;
-	private OptionGroups optionGroups;
 	private final String programBeginningUsage;
-	private boolean programHelpRequested;
 	private final String programName;	
 	private boolean xsdRequested;
 	
-	public UsersCli() {
-		String progName = System.getProperty(
-				SystemPropertyNameConstants.PROGRAM_NAME);
-		if (progName == null) {
-			progName = Users.class.getName();
+	public UsersCLI(
+			final String progName, 
+			final String progBeginningUsage, 
+			final String[] args, 
+			final boolean posixlyCorrect) {
+		super(args, posixlyCorrect);
+		String prgName = progName;
+		if (prgName == null) {
+			prgName = System.getProperty(
+					SystemPropertyNameConstants.PROGRAM_NAME);
 		}
-		String progBeginningUsage = System.getProperty(
-				SystemPropertyNameConstants.PROGRAM_BEGINNING_USAGE);
-		if (progBeginningUsage == null) {
-			progBeginningUsage = progName;
+		if (prgName == null) {
+			prgName = Users.class.getName();
+		}
+		String prgBeginningUsage = progBeginningUsage;
+		if (prgBeginningUsage == null) {
+			prgBeginningUsage = System.getProperty(
+					SystemPropertyNameConstants.PROGRAM_BEGINNING_USAGE);
+		}
+		if (prgBeginningUsage == null) {
+			prgBeginningUsage = progName;
 		}
 		this.argList = new ArrayList<String>();
-		this.argsHandler = null;
 		this.command = null;
-		this.optionGroups = null;
-		this.programBeginningUsage = progBeginningUsage;
-		this.programHelpRequested = false;
-		this.programName = progName;		
+		this.programBeginningUsage = prgBeginningUsage;
+		this.programName = prgName;		
 		this.xsdRequested = false;
 	}
 	
@@ -322,10 +327,11 @@ public final class UsersCli {
 					)
 			}
 	)
-	public void printHelp() {
-		ArgMatey.Option helpOption = this.optionGroups.get(
+	@Override
+	public void displayProgramHelp() {
+		ArgMatey.Option helpOption = this.getOptionGroups().get(
 				HELP_OPTION_GROUP_ORDINAL).get(0);
-		ArgMatey.Option xsdOption = this.optionGroups.get(
+		ArgMatey.Option xsdOption = this.getOptionGroups().get(
 				XSD_OPTION_GROUP_ORDINAL).get(0);
 		System.out.printf("Usage: %s COMMAND%n", this.programBeginningUsage);
 		System.out.printf("       %s %s%n", 
@@ -345,12 +351,52 @@ public final class UsersCli {
 		}
 		System.out.println();
 		System.out.println("OPTIONS:");
-		this.optionGroups.printHelpText();
+		this.getOptionGroups().printHelpText();
 		System.out.println();
-		System.out.println();
-		this.programHelpRequested = true;
+		this.programHelpDisplayed = true;
 	}
+	
+	@IgnoreOptionGroup
+	@Override
+	public void displayProgramVersion() { }
 		
+	public int execute() {
+		ArgMatey.Option helpOption = this.getOptionGroups().get(
+				HELP_OPTION_GROUP_ORDINAL).get(0);
+		String suggestion = String.format(
+				"Try `%s %s' for more information", 
+				this.programBeginningUsage, 
+				helpOption.getUsage());
+		while (this.hasNext()) {
+			try {
+				this.handleNext();
+			} catch (Throwable t) {
+				System.err.printf("%s: %s%n", programName, t);
+				System.err.println(suggestion);
+				t.printStackTrace(System.err);
+				return -1;
+			}
+			if (this.programHelpDisplayed || this.xsdRequested) {
+				return 0;
+			}
+		}
+		if (this.command == null) {
+			System.err.printf("%s: command must be provided%n", programName);
+			System.err.println(suggestion);
+			return -1;
+		}
+		try {
+			this.command.invoke(this.argList.toArray(
+					new String[this.argList.size()]));
+		} catch (Exception e) {
+			System.err.printf("%s: %s%n", programName, e);
+			System.err.println(suggestion);
+			e.printStackTrace(System.err);
+			return -1;
+		}
+		return 0;
+	}
+	
 	@OptionGroup(
 			option = @Option(
 					doc = "Print the XSD and exit",
@@ -371,45 +417,6 @@ public final class UsersCli {
 		System.out.write(xsd);
 		System.out.flush();
 		this.xsdRequested = true;
-	}
-	
-	public int process(final String[] args) {
-		this.argsHandler = ArgsHandler.newInstance(args, this, false);
-		this.optionGroups = this.argsHandler.getOptionGroups();
-		ArgMatey.Option helpOption = this.optionGroups.get(
-				HELP_OPTION_GROUP_ORDINAL).get(0);
-		String suggestion = String.format(
-				"Try `%s %s' for more information", 
-				this.programBeginningUsage, 
-				helpOption.getUsage());
-		while (this.argsHandler.hasNext()) {
-			try {
-				this.argsHandler.handleNext();
-			} catch (Throwable t) {
-				System.err.printf("%s: %s%n", programName, t);
-				System.err.println(suggestion);
-				t.printStackTrace(System.err);
-				return -1;
-			}
-			if (this.programHelpRequested || this.xsdRequested) {
-				return 0;
-			}
-		}
-		if (this.command == null) {
-			System.err.printf("%s: command must be provided%n", programName);
-			System.err.println(suggestion);
-			return -1;
-		}
-		try {
-			this.command.invoke(this.argList.toArray(
-					new String[this.argList.size()]));
-		} catch (Exception e) {
-			System.err.printf("%s: %s%n", programName, e);
-			System.err.println(suggestion);
-			e.printStackTrace(System.err);
-			return -1;
-		}
-		return 0;
 	}
 	
 }

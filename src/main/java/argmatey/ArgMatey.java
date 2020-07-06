@@ -834,7 +834,7 @@ public final class ArgMatey {
 			if (displayableOptionGroupCount > 0) {
 				if (displayableOptionGroupCount == 1) {
 					System.out.println("OPTION:");
-				} else if (displayableOptionGroupCount > 1) {
+				} else {
 					System.out.println("OPTIONS:");
 				}
 				this.getOptionGroups().printHelpText();
@@ -1275,10 +1275,10 @@ public final class ArgMatey {
 	 * Default {@code StringConverter} that converts the provided 
 	 * {@code String} to an {@code Object} of the provided type. This 
 	 * {@code StringConverter} uses the provided type's public static method 
-	 * that has one method parameter of type {@code String} and a method 
+	 * that has only one method parameter of type {@code String} and a method 
 	 * return type of the provided type. If the provided type does not have 
 	 * that type of method, this {@code StringConverter} uses the provided 
-	 * type's public instantiatable constructor that has one constructor 
+	 * type's public instantiatable constructor that has only one constructor 
 	 * parameter of type {@code String}. If the provided type has neither, a 
 	 * {@code IllegalArgumentException} is thrown.
 	 */
@@ -1286,14 +1286,14 @@ public final class ArgMatey {
 		
 		/**
 		 * Returns the provided type's {@code Method} that is public and static 
-		 * and has one method parameter of type {@code String} and a method 
+		 * and has only one method parameter of type {@code String} and a method 
 		 * return type of the provided type. If the provided type has no such 
 		 * method, {@code null} is returned.
 		 *  
 		 * @param type the provided type
 		 * 
 		 * @return the provided type's {@code Method} that is public and static 
-		 * and has one method parameter of type {@code String} and a method 
+		 * and has only one method parameter of type {@code String} and a method 
 		 * return type of the provided type or {@code null} if no such method 
 		 * is found in the provided type
 		 */
@@ -1319,14 +1319,14 @@ public final class ArgMatey {
 		
 		/**
 		 * Returns the provided type's {@code Constructor} that is public and 
-		 * instantiatable and has a constructor parameter of type 
+		 * instantiatable and has only one constructor parameter of type 
 		 * {@code String}. If the provided type has no such constructor, 
 		 * {@code null} is returned.
 		 * 
 		 * @param type the provided type
 		 * 
 		 * @return the provided type's {@code Constructor} that is public and 
-		 * instantiatable and has a constructor parameter of type 
+		 * instantiatable and has only one constructor parameter of type 
 		 * {@code String} or {@code null} if no such constructor is found
 		 */
 		private static <T> Constructor<T> getStringParameterConstructor(
@@ -1354,15 +1354,15 @@ public final class ArgMatey {
 		private final Class<?> convertedType;
 		
 		/** 
-		 * The {@code Method} that is public and static and has one method 
+		 * The {@code Method} that is public and static and has only one method 
 		 * parameter of type {@code String} and a method return type of the 
 		 * converted type. 
 		 */
 		private final Method staticStringConversionMethod;
 		
 		/**
-		 * The {@code Constructor} that is public and instantiatable and has a 
-		 * constructor parameter of type {@code String}.
+		 * The {@code Constructor} that is public and instantiatable and has 
+		 * only one constructor parameter of type {@code String}.
 		 */
 		private final Constructor<?> stringParameterConstructor;
 		
@@ -1372,10 +1372,10 @@ public final class ArgMatey {
 		 * @param type the provided type
 		 * 
 		 * @throws IllegalArgumentException if the provided type does not have 
-		 * either a public static method that has one method parameter of type 
-		 * {@code String} and a method return type of the provided type nor a 
-		 * public instantiatable constructor that has one constructor parameter 
-		 * of type {@code String}
+		 * either a public static method that has only one method parameter of 
+		 * type {@code String} and a method return type of the provided type 
+		 * nor a public instantiatable constructor that has only one 
+		 * constructor parameter of type {@code String}
 		 */
 		public DefaultStringConverter(final Class<?> type) {
 			Objects.requireNonNull(type, "type must not be null");

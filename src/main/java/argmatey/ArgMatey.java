@@ -50,7 +50,7 @@ import java.util.Objects;
 
 /**
  * Provides interfaces and classes for parsing command line arguments and 
- * for displaying the usage and help text of the command line options.
+ * for displaying the program usage and help.
  */
 public final class ArgMatey {
 
@@ -67,9 +67,9 @@ public final class ArgMatey {
 		@Retention(RetentionPolicy.RUNTIME)
 		public static @interface Option {
 			
-			String doc() default "";
+			boolean displayable() default true;
 			
-			boolean hidden() default false;
+			String doc() default "";
 			
 			String name();
 			
@@ -79,8 +79,6 @@ public final class ArgMatey {
 			Class<? extends ArgMatey.OptionUsageProvider> optionUsageProvider()
 				default ArgMatey.DefaultOptionUsageProvider.class;
 					
-			boolean special() default false;
-			
 			Class<? extends ArgMatey.Option> type();
 			
 		}
@@ -919,7 +917,6 @@ public final class ArgMatey {
 				option = @Annotations.Option(
 						doc = "Display this help and exit",
 						name = "help",
-						special = true,
 						type = GnuLongOption.class
 				)
 		)
@@ -949,15 +946,13 @@ public final class ArgMatey {
 		
 		public void displayProgramUsage() {
 			System.out.printf("Usage: %s", this.getProgramName());
-			int commonDisplayableOptionGroupCount = 0;
+			int displayableOptionCount = 0;
 			for (OptionGroup optionGroup : this.getOptionGroups().toList()) {
-				if (optionGroup.toCommonDisplayableList().size() > 0) {
-					commonDisplayableOptionGroupCount++;
-				}
+				displayableOptionCount += optionGroup.toDisplayableList().size();
 			}
-			if (commonDisplayableOptionGroupCount == 1) {
+			if (displayableOptionCount == 1) {
 				System.out.print(" [OPTION]");
-			} else if (commonDisplayableOptionGroupCount > 1) {
+			} else if (displayableOptionCount > 1) {
 				System.out.print(" [OPTION]...");
 			}
 			if (this.programArgsUsage != null 
@@ -971,7 +966,6 @@ public final class ArgMatey {
 				option = @Annotations.Option(
 						doc = "Display version information and exit",
 						name = "version",
-						special = true,
 						type = GnuLongOption.class
 				)
 		)
@@ -1190,7 +1184,7 @@ public final class ArgMatey {
 				sb.append(option.getUsage());
 				if (doc == null) {
 					String d = option.getDoc();
-					if (d != null && !d.isEmpty()) {
+					if (d != null && !d.trim().isEmpty()) {
 						doc = d;
 					}
 				}
@@ -1541,14 +1535,14 @@ public final class ArgMatey {
 			}
 			
 			@Override
-			public Builder doc(final String d) {
-				super.doc(d);
+			public Builder displayable(final boolean b) {
+				super.displayable(b);
 				return this;
 			}
 			
 			@Override
-			public Builder hidden(final boolean b) {
-				super.hidden(b);
+			public Builder doc(final String d) {
+				super.doc(d);
 				return this;
 			}
 			
@@ -1562,12 +1556,6 @@ public final class ArgMatey {
 			public Builder optionUsageProvider(
 					final OptionUsageProvider optUsageProvider) {
 				super.optionUsageProvider(optUsageProvider);
-				return this;
-			}
-			
-			@Override
-			public Builder special(final boolean b) {
-				super.special(b);
 				return this;
 			}
 			
@@ -1883,14 +1871,14 @@ public final class ArgMatey {
 			}
 			
 			@Override
-			public Builder doc(final String d) {
-				super.doc(d);
+			public Builder displayable(final boolean b) {
+				super.displayable(b);
 				return this;
 			}
 			
 			@Override
-			public Builder hidden(final boolean b) {
-				super.hidden(b);
+			public Builder doc(final String d) {
+				super.doc(d);
 				return this;
 			}
 
@@ -1904,12 +1892,6 @@ public final class ArgMatey {
 			public Builder optionUsageProvider(
 					final OptionUsageProvider optUsageProvider) {
 				super.optionUsageProvider(optUsageProvider);
-				return this;
-			}
-			
-			@Override
-			public Builder special(final boolean b) {
-				super.special(b);
 				return this;
 			}
 			
@@ -1985,59 +1967,68 @@ public final class ArgMatey {
 	public static abstract class Option {
 
 		public static abstract class Builder {
-			
+
+			private boolean displayable;
+			private boolean displayableSet;
 			private String doc;
-			private boolean hidden;
-			private boolean hiddenSet;
 			private final String name;
 			private OptionArgSpec optionArgSpec;
 			private boolean optionArgSpecSet;
 			private OptionUsageProvider optionUsageProvider;
 			private boolean optionUsageProviderSet;
-			private boolean special;
-			private boolean specialSet;
 			private String string;
 			
 			Builder(final String optName, final String opt) {
 				Objects.requireNonNull(optName, "option name must not be null");
+				if (optName.matches("\\s")) {
+					throw new IllegalArgumentException(
+							"option name must not contain any whitespace "
+							+ "characters");
+				}
 				if (optName.isEmpty()) {
 					throw new IllegalArgumentException(
 							"option name must not be empty");
 				}
 				Objects.requireNonNull(opt, "option must not be null");
+				if (opt.matches("\\s")) {
+					throw new IllegalArgumentException(
+							"option must not contain any whitespace "
+							+ "characters");
+				}
 				if (opt.isEmpty()) {
 					throw new IllegalArgumentException(
 							"option must not be empty");
 				}
-				this.hidden = false;
-				this.hiddenSet = false;
+				this.displayable = true;
+				this.displayableSet = false;
+				this.doc = null;
 				this.name = optName;
+				this.optionArgSpec = null;
 				this.optionArgSpecSet = false;
+				this.optionUsageProvider = null;
 				this.optionUsageProviderSet = false;
-				this.special = false;
-				this.specialSet = false;
 				this.string = opt;
 			}
 			
 			public abstract Option build();
 			
+			public final boolean displayable() {
+				return this.displayable;
+			}
+			
+			public Builder displayable(final boolean b) {
+				this.displayable = b;
+				this.displayableSet = true;
+				return this;
+			}
+			
+			public final boolean displayableSet() {
+				return this.displayableSet;
+			}
+			
 			public Builder doc(final String d) {
 				this.doc = d;
 				return this;
-			}
-			
-			public final boolean hidden() {
-				return this.hidden;
-			}
-			
-			public Builder hidden(final boolean b) {
-				this.hidden = b;
-				this.hiddenSet = true;
-				return this;
-			}
-			
-			public final boolean hiddenSet() {
-				return this.hiddenSet;
 			}
 			
 			public final OptionArgSpec optionArgSpec() {
@@ -2061,48 +2052,31 @@ public final class ArgMatey {
 				return this;
 			}
 			
-			public final boolean special() {
-				return this.special;
-			}
-			
-			public Builder special(final boolean b) {
-				this.special = b;
-				this.specialSet = true;
-				return this;
-			}
-			
-			public final boolean specialSet() {
-				return this.specialSet;
-			}
-			
 		}
 		
+		private final boolean displayable;
 		private final String doc;
-		private final boolean hidden;
 		private final String name;
 		private final OptionArgSpec optionArgSpec;
 		private final OptionUsageProvider optionUsageProvider;
-		private final boolean special;
 		private final String string;
 
 		Option(final Builder builder) {
+			boolean display = builder.displayable;
 			String d = builder.doc;
-			boolean hide = builder.hidden;
 			String n = builder.name;
 			OptionArgSpec optArgSpec = builder.optionArgSpec;
 			OptionUsageProvider optUsageProvider = builder.optionUsageProvider;
-			boolean spcl = builder.special;
 			String str = builder.string;
 			if (!builder.optionUsageProviderSet) {
 				optUsageProvider = OptionUsageProvider.getDefault(
 						this.getClass());
 			}
+			this.displayable = display;
 			this.doc = d;
-			this.hidden = hide;
 			this.name = n;
 			this.optionArgSpec = optArgSpec;
 			this.optionUsageProvider = optUsageProvider;
-			this.special = spcl;
 			this.string = str;
 		}
 		
@@ -2130,8 +2104,8 @@ public final class ArgMatey {
 			return null;
 		}
 		
-		public final boolean isHidden() {
-			return this.hidden;
+		public final boolean isDisplayable() {
+			return this.displayable;
 		}
 		
 		public final boolean isOf(final String opt) {
@@ -2164,10 +2138,6 @@ public final class ArgMatey {
 			opts.add(opt3);
 			opts.addAll(Arrays.asList(additionalOpts));
 			return this.isOfAnyOf(opts);
-		}
-		
-		public final boolean isSpecial() {
-			return this.special;
 		}
 		
 		public final OptionArg newOptionArg(final String optionArg) {
@@ -2670,28 +2640,19 @@ public final class ArgMatey {
 		private static void add(
 				final Option option,
 				final List<Option> options,
-				final List<Option> displayableOptions,
-				final List<Option> commonDisplayableOptions,
-				final List<Option> specialDisplayableOptions) {
+				final List<Option> displayableOptions) {
 			options.add(option);
-			if (!option.isHidden()) {
+			if (option.isDisplayable()) {
 				String usage = option.getUsage();
-				if (usage != null && !usage.isEmpty()) {
+				if (usage != null && !usage.trim().isEmpty()) {
 					displayableOptions.add(option);
-					if (!option.isSpecial()) {
-						commonDisplayableOptions.add(option);
-					} else {
-						specialDisplayableOptions.add(option);
-					}
 				}
 			}
 		}
 		
-		private final List<Option> commonDisplayableOptions;
 		private final List<Option> displayableOptions;
 		private final List<Option> options;
 		private final OptionGroupHelpTextProvider optionGroupHelpTextProvider;
-		private final List<Option> specialDisplayableOptions;
 		
 		private OptionGroup(final Builder builder) {
 			Option.Builder optBuilder = builder.optionBuilder;
@@ -2699,47 +2660,29 @@ public final class ArgMatey {
 					builder.optionGroupHelpTextProvider;
 			List<Option.Builder> otherOptBuilders = 
 					new ArrayList<Option.Builder>(builder.otherOptionBuilders);
-			List<Option> commonDisplayableOpts = new ArrayList<Option>();
 			List<Option> displayableOpts = new ArrayList<Option>();
 			List<Option> opts = new ArrayList<Option>();
-			List<Option> specialDisplayableOpts = new ArrayList<Option>();
 			Option opt = optBuilder.build();
-			add(
-					opt, 
-					opts, 
-					displayableOpts, 
-					commonDisplayableOpts, 
-					specialDisplayableOpts);
+			add(opt, opts, displayableOpts);
 			for (Option.Builder otherOptBuilder : otherOptBuilders) {
-				if (optBuilder.hiddenSet() && !otherOptBuilder.hiddenSet()) {
-					otherOptBuilder.hidden(optBuilder.hidden());
+				if (optBuilder.displayableSet() 
+						&& !otherOptBuilder.displayableSet()) {
+					otherOptBuilder.displayable(optBuilder.displayable());
 				}
 				if (optBuilder.optionArgSpecSet() 
 						&& !otherOptBuilder.optionArgSpecSet()) {
 					otherOptBuilder.optionArgSpec(optBuilder.optionArgSpec());
 				}
-				if (optBuilder.specialSet() && !otherOptBuilder.specialSet()) {
-					otherOptBuilder.special(optBuilder.special());
-				}
 				Option otherOpt = otherOptBuilder.build();
-				add(
-						otherOpt, 
-						opts, 
-						displayableOpts, 
-						commonDisplayableOpts, 
-						specialDisplayableOpts);
+				add(otherOpt, opts, displayableOpts);
 			}
 			if (!builder.optionGroupHelpTextProviderSet) {
 				optGroupHelpTextProvider = 
 						OptionGroupHelpTextProvider.getDefault();
 			}
-			this.commonDisplayableOptions = new ArrayList<Option>(
-					commonDisplayableOpts);
 			this.displayableOptions = new ArrayList<Option>(displayableOpts);
 			this.options = new ArrayList<Option>(opts);
 			this.optionGroupHelpTextProvider = optGroupHelpTextProvider;
-			this.specialDisplayableOptions = new ArrayList<Option>(
-					specialDisplayableOpts);
 		}
 		
 		public Option get(final int index) {
@@ -2758,10 +2701,6 @@ public final class ArgMatey {
 			return this.optionGroupHelpTextProvider;
 		}
 		
-		public List<Option> toCommonDisplayableList() {
-			return Collections.unmodifiableList(this.commonDisplayableOptions);
-		}
-		
 		public List<Option> toDisplayableList() {
 			return Collections.unmodifiableList(this.displayableOptions);
 		}
@@ -2770,10 +2709,6 @@ public final class ArgMatey {
 			return Collections.unmodifiableList(this.options);
 		}
 		
-		public List<Option> toSpecialDisplayableList() {
-			return Collections.unmodifiableList(this.specialDisplayableOptions);
-		}
-
 		@Override
 		public final String toString() {
 			StringBuilder sb = new StringBuilder();
@@ -3127,6 +3062,12 @@ public final class ArgMatey {
 			builder.required(optionArgSpec.required());
 			builder.separator(optionArgSpec.separator());
 			Class<?> stringConverterClass =	optionArgSpec.stringConverter();
+			if (stringConverterClass.equals(StringConverter.class)) {
+				throw new IllegalArgumentException(String.format(
+						"expected class must extend %s. actual class is %s", 
+						StringConverter.class.getName(),
+						stringConverterClass.getName()));
+			}
 			if (!stringConverterClass.equals(DefaultStringConverter.class)) {
 				StringConverter stringConverter = this.newStringConverter(
 						stringConverterClass);
@@ -3156,27 +3097,37 @@ public final class ArgMatey {
 							name));
 				}
 				builder = new PosixOption.Builder(name.charAt(0));
+			} else if (type.equals(Option.class)) {
+				throw new IllegalArgumentException(String.format(
+						"expected class must extend %s. actual class is %s", 
+						Option.class.getName(),
+						type.getName())); 
 			} else {
 				throw new AssertionError(String.format(
 						"unhandled %s: %s", 
 						Option.class.getName(), 
 						type.getName()));
 			}
+			builder.displayable(option.displayable());			
 			builder.doc(option.doc());
-			builder.hidden(option.hidden());
 			Annotations.OptionArgSpec optionArgSpec = option.optionArgSpec();
 			if (optionArgSpec.allowed()) {
 				builder.optionArgSpec(this.newOptionArgSpecBuilder(
 						optionArgSpec).build());
 			}
 			Class<?> optionUsageProviderClass = option.optionUsageProvider();
+			if (optionUsageProviderClass.equals(OptionUsageProvider.class)) {
+				throw new IllegalArgumentException(String.format(
+						"expected class must extend %s. actual class is %s",
+						OptionUsageProvider.class.getName(),
+						optionUsageProviderClass.getName()));
+			}
 			if (!optionUsageProviderClass.equals(
 					DefaultOptionUsageProvider.class)) {
 				OptionUsageProvider optionUsageProvider = 
 						this.newOptionUsageProvider(optionUsageProviderClass);
 				builder.optionUsageProvider(optionUsageProvider);
 			}
-			builder.special(option.special());
 			return builder;
 		}
 		
@@ -3194,6 +3145,13 @@ public final class ArgMatey {
 					optionBuilder, otherOptionBuilders);
 			Class<?> optionGroupHelpTextProviderClass = 
 					this.optionGroupAnnotation.optionGroupHelpTextProvider();
+			if (optionGroupHelpTextProviderClass.equals(
+					OptionGroupHelpTextProvider.class)) {
+				throw new IllegalArgumentException(String.format(
+						"expected class must extend %s. actual class is %s", 
+						OptionGroupHelpTextProvider.class.getName(),
+						optionGroupHelpTextProviderClass.getName()));
+			}
 			if (!optionGroupHelpTextProviderClass.equals(
 					DefaultOptionGroupHelpTextProvider.class)) {
 				OptionGroupHelpTextProvider optionGroupHelpTextProvider = 
@@ -3349,7 +3307,7 @@ public final class ArgMatey {
 		public final void printHelpText(final PrintWriter w) {
 			for (OptionGroup optionGroup : this.optionGroups) {
 				String helpText = optionGroup.getHelpText();
-				if (helpText != null && !helpText.isEmpty()) {
+				if (helpText != null && !helpText.trim().isEmpty()) {
 					w.println(helpText);
 					w.flush();
 				}
@@ -3784,14 +3742,14 @@ public final class ArgMatey {
 			}
 			
 			@Override
-			public Builder doc(final String d) {
-				super.doc(d);
+			public Builder displayable(final boolean b) {
+				super.displayable(b);
 				return this;
 			}
 			
 			@Override
-			public Builder hidden(final boolean b) {
-				super.hidden(b);
+			public Builder doc(final String d) {
+				super.doc(d);
 				return this;
 			}
 			
@@ -3805,12 +3763,6 @@ public final class ArgMatey {
 			public Builder optionUsageProvider(
 					final OptionUsageProvider optUsageProvider) {
 				super.optionUsageProvider(optUsageProvider);
-				return this;
-			}
-			
-			@Override
-			public Builder special(final boolean b) {
-				super.special(b);
 				return this;
 			}
 			

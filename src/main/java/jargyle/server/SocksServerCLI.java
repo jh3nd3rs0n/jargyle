@@ -350,7 +350,6 @@ public final class SocksServerCLI extends CLI {
 			option = @Option(
 					doc = "Print this help and exit",
 					name = "help",
-					special = true,
 					type = GnuLongOption.class
 			),
 			ordinal = HELP_OPTION_GROUP_ORDINAL,
@@ -411,7 +410,6 @@ public final class SocksServerCLI extends CLI {
 					doc = "Print the list of available settings for the SOCKS "
 							+ "server and exit",
 					name = "settings-help",
-					special = true,
 					type = GnuLongOption.class
 			),
 			ordinal = SETTINGS_HELP_OPTION_GROUP_ORDINAL,
@@ -441,7 +439,6 @@ public final class SocksServerCLI extends CLI {
 					doc = "Mode for managing SOCKS5 users (add --help for "
 							+ "more information)",
 					name = "socks5-users",
-					special = true,
 					type = GnuLongOption.class
 			),
 			ordinal = SOCKS5_USERS_OPTION_GROUP_ORDINAL
@@ -622,7 +619,6 @@ public final class SocksServerCLI extends CLI {
 			option = @Option(
 					doc = "Print the configuration file XSD and exit",
 					name = "config-file-xsd",
-					special = true,
 					type = GnuLongOption.class
 			),
 			ordinal = CONFIG_FILE_XSD_OPTION_GROUP_ORDINAL,
@@ -667,7 +663,6 @@ public final class SocksServerCLI extends CLI {
 					optionArgSpec = @OptionArgSpec(
 							name = "FILE"
 					),
-					special = true,
 					type = GnuLongOption.class
 			),
 			ordinal = MONITORED_CONFIG_FILE_OPTION_GROUP_ORDINAL,

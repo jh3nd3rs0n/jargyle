@@ -316,7 +316,6 @@ public final class UsersCLI extends CLI {
 			option = @Option(
 					doc = "Print this help and exit",
 					name = "help",
-					special = true,
 					type = GnuLongOption.class
 			),
 			ordinal = HELP_OPTION_GROUP_ORDINAL,
@@ -401,7 +400,6 @@ public final class UsersCLI extends CLI {
 			option = @Option(
 					doc = "Print the XSD and exit",
 					name = "xsd",
-					special = true,
 					type = GnuLongOption.class
 			),
 			ordinal = XSD_OPTION_GROUP_ORDINAL,

@@ -926,14 +926,12 @@ public final class ArgMatey {
 				System.out.println(this.programDoc);
 			}
 			System.out.println();
-			int displayableOptionGroupCount = 0;
+			int displayableOptionCount = 0;
 			for (OptionGroup optionGroup : this.getOptionGroups().toList()) {
-				if (optionGroup.toDisplayableList().size() > 0) {
-					displayableOptionGroupCount++;
-				}
+				displayableOptionCount += optionGroup.toDisplayableList().size();
 			}
-			if (displayableOptionGroupCount > 0) {
-				if (displayableOptionGroupCount == 1) {
+			if (displayableOptionCount > 0) {
+				if (displayableOptionCount == 1) {
 					System.out.println("OPTION:");
 				} else {
 					System.out.println("OPTIONS:");
@@ -950,9 +948,7 @@ public final class ArgMatey {
 			for (OptionGroup optionGroup : this.getOptionGroups().toList()) {
 				displayableOptionCount += optionGroup.toDisplayableList().size();
 			}
-			if (displayableOptionCount == 1) {
-				System.out.print(" [OPTION]");
-			} else if (displayableOptionCount > 1) {
+			if (displayableOptionCount > 0) {
 				System.out.print(" [OPTION]...");
 			}
 			if (this.programArgsUsage != null 

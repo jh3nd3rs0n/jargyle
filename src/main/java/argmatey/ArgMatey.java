@@ -128,6 +128,7 @@ public final class ArgMatey {
 		}
 		
 		private final ArgsParser argsParser;
+		private boolean canProceed;
 		private final Object parseResultHandler;
 		private final ParseResultHandlerClass parseResultHandlerClass;
 		
@@ -141,6 +142,7 @@ public final class ArgMatey {
 			ArgsParser parser = ArgsParser.newInstance(
 					args, resultHandlerClass.getOptionGroups(), posixlyCorrect);
 			this.argsParser = parser;
+			this.canProceed = true;
 			this.parseResultHandler = resultHandler;
 			this.parseResultHandlerClass = resultHandlerClass;
 		}
@@ -157,10 +159,6 @@ public final class ArgMatey {
 			return this.argsParser.getArgs();
 		}
 		
-		public ArgsParser getArgsParser() {
-			return this.argsParser;
-		}
-		
 		public OptionGroups getOptionGroups() {
 			return this.argsParser.getOptionGroups();
 		}
@@ -173,28 +171,46 @@ public final class ArgMatey {
 			return this.argsParser.getParseResultHolder();
 		}
 		
-		public final void handleNext() {
-			ParseResultHolder parseResultHolder = this.argsParser.parseNext();
+		public void handleNext() {
+			if (this.canProceed) { this.argsParser.parseNext(); }
+			ParseResultHolder parseResultHolder = 
+					this.argsParser.getParseResultHolder();
 			if (parseResultHolder.hasNonparsedArg()) {
 				String nonparsedArg = parseResultHolder.getNonparsedArg();
 				NonparsedArgMethod nonparsedArgMethod =
 						this.parseResultHandlerClass.getNonparsedArgMethod();
 				if (nonparsedArgMethod != null) {
-					nonparsedArgMethod.invoke(
-							this.parseResultHandler, nonparsedArg);
+					try {
+						nonparsedArgMethod.invoke(
+								this.parseResultHandler, nonparsedArg);
+					} catch (RuntimeException e) {
+						this.canProceed = false;
+						throw e;
+					} catch (Error e) {
+						this.canProceed = false;
+						throw e;
+					}
 				}
 			}
 			if (parseResultHolder.hasOptionOccurrence()) {
 				OptionOccurrence optionOccurrence = 
 						parseResultHolder.getOptionOccurrence();
 				Option option = optionOccurrence.getOption();
-				Map<String, OptionGroupMethod> optionMethodMap = 
+				Map<String, OptionGroupMethod> optionGroupMethodMap = 
 						this.parseResultHandlerClass.getOptionGroupMethodMap();
-				OptionGroupMethod optionGroupMethod = optionMethodMap.get(
+				OptionGroupMethod optionGroupMethod = optionGroupMethodMap.get(
 						option.toString());
 				if (optionGroupMethod != null) {
-					optionGroupMethod.invoke(
-							this.parseResultHandler, optionOccurrence);
+					try {
+						optionGroupMethod.invoke(
+								this.parseResultHandler, optionOccurrence);
+					} catch (RuntimeException e) {
+						this.canProceed = false;
+						throw e;
+					} catch (Error e) {
+						this.canProceed = false;
+						throw e;
+					}
 				}
 			}
 		}
@@ -980,10 +996,6 @@ public final class ArgMatey {
 		
 		public final String[] getArgs() {
 			return this.argsHandler.getArgs();
-		}
-		
-		public final ArgsHandler getArgsHandler() {
-			return this.argsHandler;
 		}
 		
 		public final OptionGroups getOptionGroups() {

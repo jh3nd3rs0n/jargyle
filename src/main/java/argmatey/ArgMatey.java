@@ -2008,7 +2008,7 @@ public final class ArgMatey {
 			
 			public abstract Option build();
 			
-			public final boolean displayable() {
+			final boolean displayable() {
 				return this.displayable;
 			}
 			
@@ -2018,7 +2018,7 @@ public final class ArgMatey {
 				return this;
 			}
 			
-			public final boolean displayableSet() {
+			final boolean displayableSet() {
 				return this.displayableSet;
 			}
 			
@@ -2027,7 +2027,7 @@ public final class ArgMatey {
 				return this;
 			}
 			
-			public final OptionArgSpec optionArgSpec() {
+			final OptionArgSpec optionArgSpec() {
 				return this.optionArgSpec;
 			}
 			
@@ -2037,7 +2037,7 @@ public final class ArgMatey {
 				return this;
 			}
 			
-			public final boolean optionArgSpecSet() {
+			final boolean optionArgSpecSet() {
 				return this.optionArgSpecSet;
 			}
 			
@@ -2599,25 +2599,13 @@ public final class ArgMatey {
 			private boolean optionGroupHelpTextProviderSet;
 			private final List<Option.Builder> otherOptionBuilders;
 			
-			public Builder(final Option.Builder optBuilder,
-					final List<Option.Builder> otherOptBuilders) {
+			public Builder(final Option.Builder optBuilder) {
 				Objects.requireNonNull(
 						optBuilder, "Option.Builder must not be null");
-				for (Option.Builder otherOptBuilder : otherOptBuilders) {
-					Objects.requireNonNull(
-							otherOptBuilder, 
-							"other Option.Builder(s) must not be null");
-				}
 				this.optionBuilder = optBuilder;
-				this.otherOptionBuilders = new ArrayList<Option.Builder>(
-						otherOptBuilders);
+				this.otherOptionBuilders = new ArrayList<Option.Builder>();
 				this.optionGroupHelpTextProvider = null;
 				this.optionGroupHelpTextProviderSet = false;
-			}
-			
-			public Builder(final Option.Builder optBuilder,
-					final Option.Builder... otherOptBuilders) {
-				this(optBuilder, Arrays.asList(otherOptBuilders));
 			}
 			
 			public OptionGroup build() {
@@ -2629,6 +2617,41 @@ public final class ArgMatey {
 				this.optionGroupHelpTextProvider = optGroupHelpTextProvider;
 				this.optionGroupHelpTextProviderSet = true;
 				return this;
+			}
+			
+			public Builder otherOptionBuilders(
+					final List<Option.Builder> otherOptBuilders) {
+				for (Option.Builder otherOptBuilder : otherOptBuilders) {
+					Objects.requireNonNull(
+							otherOptBuilder, 
+							"other Option.Builder(s) must not be null");
+				}
+				this.otherOptionBuilders.clear();
+				this.otherOptionBuilders.addAll(otherOptBuilders);
+				return this;
+			}
+			
+			public Builder otherOptionBuilders(
+					final Option.Builder otherOptBuilder) {
+				return this.otherOptionBuilders(Arrays.asList(otherOptBuilder));
+			}
+			
+			public Builder otherOptionBuilders(
+					final Option.Builder otherOptBuilder1,
+					final Option.Builder otherOptBuilder2) {
+				return this.otherOptionBuilders(Arrays.asList(
+						otherOptBuilder1, otherOptBuilder2));
+			}
+			
+			public Builder otherOptionBuilders(
+					final Option.Builder otherOptBuilder1,
+					final Option.Builder otherOptBuilder2,
+					final Option.Builder... additionalOtherOptBuilders) {
+				List<Option.Builder> list = new ArrayList<Option.Builder>();
+				list.add(otherOptBuilder1);
+				list.add(otherOptBuilder2);
+				list.addAll(Arrays.asList(additionalOtherOptBuilders));
+				return this.otherOptionBuilders(list);
 			}
 			
 		}
@@ -3129,16 +3152,8 @@ public final class ArgMatey {
 		
 		private OptionGroup newOptionGroup() {
 			Annotations.Option option = this.optionGroupAnnotation.option();
-			Annotations.Option[] otherOptions = 
-					this.optionGroupAnnotation.otherOptions();
 			Option.Builder optionBuilder = this.newOptionBuilder(option);
-			List<Option.Builder> otherOptionBuilders = 
-					new ArrayList<Option.Builder>();
-			for (Annotations.Option otherOption : otherOptions) {
-				otherOptionBuilders.add(this.newOptionBuilder(otherOption));
-			}
-			OptionGroup.Builder builder = new OptionGroup.Builder(
-					optionBuilder, otherOptionBuilders);
+			OptionGroup.Builder builder = new OptionGroup.Builder(optionBuilder);
 			Class<?> optionGroupHelpTextProviderClass = 
 					this.optionGroupAnnotation.optionGroupHelpTextProvider();
 			if (optionGroupHelpTextProviderClass.equals(
@@ -3155,6 +3170,14 @@ public final class ArgMatey {
 								optionGroupHelpTextProviderClass);
 				builder.optionGroupHelpTextProvider(optionGroupHelpTextProvider);
 			}
+			Annotations.Option[] otherOptions = 
+					this.optionGroupAnnotation.otherOptions();
+			List<Option.Builder> otherOptionBuilders = 
+					new ArrayList<Option.Builder>();
+			for (Annotations.Option otherOption : otherOptions) {
+				otherOptionBuilders.add(this.newOptionBuilder(otherOption));
+			}
+			builder.otherOptionBuilders(otherOptionBuilders);
 			return builder.build();
 		}
 		

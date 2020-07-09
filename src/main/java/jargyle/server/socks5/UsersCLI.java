@@ -271,7 +271,6 @@ public final class UsersCLI extends CLI {
 	private final List<String> argList;
 	private Command command;
 	private final String programBeginningUsage;
-	private final String programName;	
 	private boolean xsdRequested;
 	
 	public UsersCLI(
@@ -370,7 +369,7 @@ public final class UsersCLI extends CLI {
 			try {
 				this.handleNext();
 			} catch (Throwable t) {
-				System.err.printf("%s: %s%n", programName, t);
+				System.err.printf("%s: %s%n", this.programName, t);
 				System.err.println(suggestion);
 				t.printStackTrace(System.err);
 				return -1;
@@ -380,7 +379,7 @@ public final class UsersCLI extends CLI {
 			}
 		}
 		if (this.command == null) {
-			System.err.printf("%s: command must be provided%n", programName);
+			System.err.printf("%s: command must be provided%n", this.programName);
 			System.err.println(suggestion);
 			return -1;
 		}
@@ -388,7 +387,7 @@ public final class UsersCLI extends CLI {
 			this.command.invoke(this.argList.toArray(
 					new String[this.argList.size()]));
 		} catch (Exception e) {
-			System.err.printf("%s: %s%n", programName, e);
+			System.err.printf("%s: %s%n", this.programName, e);
 			System.err.println(suggestion);
 			e.printStackTrace(System.err);
 			return -1;

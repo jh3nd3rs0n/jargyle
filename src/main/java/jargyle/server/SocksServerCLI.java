@@ -140,7 +140,6 @@ public final class SocksServerCLI extends CLI {
 	private boolean newConfigurationFileRequested;
 	private final boolean posixlyCorrect;
 	private final String programBeginningUsage;
-	private final String programName;
 	private boolean settingsHelpDisplayed;
 	private Integer socks5UsersManagementModeStatus;
 	

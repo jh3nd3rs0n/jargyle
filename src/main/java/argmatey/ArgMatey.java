@@ -910,11 +910,11 @@ public final class ArgMatey {
 	public static class CLI {
 		
 		private final ArgsHandler argsHandler;
-		private String programArgsUsage;
-		private String programDoc;
+		protected String programArgsUsage;
+		protected String programDoc;
 		protected boolean programHelpDisplayed;
-		private String programName;
-		private String programVersion;
+		protected String programName;
+		protected String programVersion;
 		protected boolean programVersionDisplayed;
 		
 		public CLI(final String[] args, final boolean posixlyCorrect) {
@@ -924,8 +924,8 @@ public final class ArgMatey {
 			this.programArgsUsage = null;
 			this.programDoc = null;
 			this.programHelpDisplayed = false;
-			this.programName = null;
-			this.programVersion = null;
+			this.programName = this.getClass().getName();
+			this.programVersion = this.getClass().getName();
 			this.programVersionDisplayed = false;
 		}
 		
@@ -938,7 +938,7 @@ public final class ArgMatey {
 		)
 		public void displayProgramHelp() {
 			this.displayProgramUsage();
-			if (this.programDoc != null && !this.programDoc.isEmpty()) {
+			if (this.programDoc != null && !this.programDoc.trim().isEmpty()) {
 				System.out.println(this.programDoc);
 			}
 			System.out.println();
@@ -959,7 +959,7 @@ public final class ArgMatey {
 		}
 		
 		public void displayProgramUsage() {
-			System.out.printf("Usage: %s", this.getProgramName());
+			System.out.printf("Usage: %s", this.programName);
 			int displayableOptionCount = 0;
 			for (OptionGroup optionGroup : this.getOptionGroups().toList()) {
 				displayableOptionCount += optionGroup.toDisplayableList().size();
@@ -968,7 +968,7 @@ public final class ArgMatey {
 				System.out.print(" [OPTION]...");
 			}
 			if (this.programArgsUsage != null 
-					&& !this.programArgsUsage.isEmpty()) {
+					&& !this.programArgsUsage.trim().isEmpty()) {
 				System.out.print(this.programArgsUsage);
 			}
 			System.out.println();
@@ -982,7 +982,7 @@ public final class ArgMatey {
 				)
 		)
 		public void displayProgramVersion() {
-			System.out.println(this.getProgramVersion());
+			System.out.println(this.programVersion);
 			this.programVersionDisplayed = true;
 		}
 		
@@ -1006,26 +1006,8 @@ public final class ArgMatey {
 			return this.argsHandler.getParseResultHolder();
 		}
 		
-		public final String getProgramArgsUsage() {
-			return this.programArgsUsage;
-		}
-		
-		public final String getProgramDoc() {
-			return this.programDoc;
-		}
-		
 		public final String getProgramName() {
-			if (this.programName == null) {
-				return this.getClass().getName();
-			}
 			return this.programName;
-		}
-		
-		public final String getProgramVersion() {
-			if (this.programVersion == null) {
-				return this.getProgramName();
-			}
-			return this.programVersion;
 		}
 		
 		public final void handleNext() {
@@ -1046,22 +1028,6 @@ public final class ArgMatey {
 		
 		public final String next() {
 			return this.argsHandler.next();
-		}
-
-		public final void setProgramArgsUsage(final String progArgsUsage) {
-			this.programArgsUsage = progArgsUsage;
-		}
-		
-		public final void setProgramDoc(final String progDoc) {
-			this.programDoc = progDoc;
-		}
-		
-		public final void setProgramName(final String progName) {
-			this.programName = progName;
-		}
-		
-		public final void setProgramVersion(final String progVersion) {
-			this.programVersion = progVersion;
 		}
 		
 		@Override

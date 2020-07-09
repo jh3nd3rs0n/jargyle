@@ -924,8 +924,8 @@ public final class ArgMatey {
 			this.programArgsUsage = null;
 			this.programDoc = null;
 			this.programHelpDisplayed = false;
-			this.programName = this.getClass().getName();
-			this.programVersion = this.getClass().getName();
+			this.programName = null;
+			this.programVersion = null;
 			this.programVersionDisplayed = false;
 		}
 		
@@ -938,7 +938,7 @@ public final class ArgMatey {
 		)
 		public void displayProgramHelp() {
 			this.displayProgramUsage();
-			if (this.programDoc != null && !this.programDoc.trim().isEmpty()) {
+			if (this.programDoc != null) {
 				System.out.println(this.programDoc);
 			}
 			System.out.println();
@@ -959,7 +959,11 @@ public final class ArgMatey {
 		}
 		
 		public void displayProgramUsage() {
-			System.out.printf("Usage: %s", this.programName);
+			String progName = this.programName;
+			if (progName == null) {
+				progName = this.getClass().getName();
+			}
+			System.out.printf("Usage: %s", progName);
 			int displayableOptionCount = 0;
 			for (OptionGroup optionGroup : this.getOptionGroups().toList()) {
 				displayableOptionCount += optionGroup.toDisplayableList().size();
@@ -967,9 +971,8 @@ public final class ArgMatey {
 			if (displayableOptionCount > 0) {
 				System.out.print(" [OPTION]...");
 			}
-			if (this.programArgsUsage != null 
-					&& !this.programArgsUsage.trim().isEmpty()) {
-				System.out.print(this.programArgsUsage);
+			if (this.programArgsUsage != null) {
+				System.out.printf(" %s", this.programArgsUsage);
 			}
 			System.out.println();
 		}
@@ -982,7 +985,14 @@ public final class ArgMatey {
 				)
 		)
 		public void displayProgramVersion() {
-			System.out.println(this.programVersion);
+			String progVersion = this.programVersion;
+			if (progVersion == null) {
+				progVersion = this.programName;
+				if (progVersion == null) {
+					progVersion = this.getClass().getName();
+				}
+			}
+			System.out.println(progVersion);
 			this.programVersionDisplayed = true;
 		}
 		
@@ -1157,10 +1167,7 @@ public final class ArgMatey {
 				}
 				sb.append(option.getUsage());
 				if (doc == null) {
-					String d = option.getDoc();
-					if (d != null && !d.trim().isEmpty()) {
-						doc = d;
-					}
+					doc = option.getDoc();
 				}
 			}
 			if (sb != null) {
@@ -2641,7 +2648,7 @@ public final class ArgMatey {
 			options.add(option);
 			if (option.isDisplayable()) {
 				String usage = option.getUsage();
-				if (usage != null && !usage.trim().isEmpty()) {
+				if (usage != null) {
 					displayableOptions.add(option);
 				}
 			}
@@ -3304,7 +3311,7 @@ public final class ArgMatey {
 		public final void printHelpText(final PrintWriter w) {
 			for (OptionGroup optionGroup : this.optionGroups) {
 				String helpText = optionGroup.getHelpText();
-				if (helpText != null && !helpText.trim().isEmpty()) {
+				if (helpText != null) {
 					w.println(helpText);
 					w.flush();
 				}

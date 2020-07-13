@@ -67,14 +67,14 @@ public final class ArgMatey {
 		@Retention(RetentionPolicy.RUNTIME)
 		public static @interface Option {
 			
-			boolean displayable() default true;
+			OptionalBoolean displayable() default OptionalBoolean.NONE;
 			
 			String doc() default "";
 			
 			String name();
 			
 			Annotations.OptionArgSpec optionArgSpec() 
-				default @OptionArgSpec(allowed = false);
+				default @OptionArgSpec(allowed = OptionalBoolean.NONE);
 			
 			Class<? extends ArgMatey.OptionUsageProvider> optionUsageProvider()
 				default ArgMatey.DefaultOptionUsageProvider.class;
@@ -86,11 +86,11 @@ public final class ArgMatey {
 		@Retention(RetentionPolicy.RUNTIME)
 		public static @interface OptionArgSpec {
 			
-			boolean allowed() default true;
+			OptionalBoolean allowed() default OptionalBoolean.TRUE;
 			
 			String name() default ArgMatey.OptionArgSpec.DEFAULT_NAME;
 			
-			boolean required() default true;
+			OptionalBoolean required() default OptionalBoolean.NONE;
 			
 			String separator() default ArgMatey.OptionArgSpec.DEFAULT_SEPARATOR;
 			
@@ -2145,6 +2145,26 @@ public final class ArgMatey {
 
 	}
 
+	public static enum OptionalBoolean {
+		
+		FALSE(Boolean.FALSE),
+		
+		NONE(null),
+		
+		TRUE(Boolean.TRUE);
+		
+		private final Boolean booleanValue;
+		
+		private OptionalBoolean(final Boolean bValue) {
+			this.booleanValue = bValue;
+		}
+		
+		public Boolean booleanValue() {
+			return this.booleanValue;
+		}
+		
+	}
+	
 	/**
 	 * An {@code Object} that represents a command line option argument.
 	 */
@@ -3063,7 +3083,10 @@ public final class ArgMatey {
 				final Annotations.OptionArgSpec optionArgSpec) {
 			OptionArgSpec.Builder builder = new OptionArgSpec.Builder();
 			builder.name(optionArgSpec.name());
-			builder.required(optionArgSpec.required());
+			OptionalBoolean required = optionArgSpec.required();
+			if (!required.equals(OptionalBoolean.NONE)) {
+				builder.required(required.booleanValue().booleanValue());
+			}
 			builder.separator(optionArgSpec.separator());
 			Class<?> stringConverterClass =	optionArgSpec.stringConverter();
 			if (stringConverterClass.equals(StringConverter.class)) {
@@ -3112,12 +3135,20 @@ public final class ArgMatey {
 						Option.class.getName(), 
 						type.getName()));
 			}
-			builder.displayable(option.displayable());			
+			OptionalBoolean displayable = option.displayable();
+			if (!displayable.equals(OptionalBoolean.NONE)) {
+				builder.displayable(displayable.booleanValue().booleanValue());
+			}
 			builder.doc(option.doc());
 			Annotations.OptionArgSpec optionArgSpec = option.optionArgSpec();
-			if (optionArgSpec.allowed()) {
-				builder.optionArgSpec(this.newOptionArgSpecBuilder(
-						optionArgSpec).build());
+			OptionalBoolean optionArgAllowed = optionArgSpec.allowed();
+			if (!optionArgAllowed.equals(OptionalBoolean.NONE)) {
+				if (optionArgAllowed.booleanValue().booleanValue()) {
+					builder.optionArgSpec(this.newOptionArgSpecBuilder(
+							optionArgSpec).build());
+				} else {
+					builder.optionArgSpec(null);
+				}
 			}
 			Class<?> optionUsageProviderClass = option.optionUsageProvider();
 			if (optionUsageProviderClass.equals(OptionUsageProvider.class)) {

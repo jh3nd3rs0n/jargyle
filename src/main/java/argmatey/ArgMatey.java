@@ -67,14 +67,14 @@ public final class ArgMatey {
 		@Retention(RetentionPolicy.RUNTIME)
 		public static @interface Option {
 			
-			OptionalBoolean displayable() default OptionalBoolean.NONE;
+			OptionalBoolean displayable() default OptionalBoolean.UNSPECIFIED;
 			
 			String doc() default "";
 			
 			String name();
 			
 			Annotations.OptionArgSpec optionArgSpec() 
-				default @OptionArgSpec(allowed = OptionalBoolean.NONE);
+				default @OptionArgSpec(allowed = OptionalBoolean.UNSPECIFIED);
 			
 			Class<? extends ArgMatey.OptionUsageProvider> optionUsageProvider()
 				default ArgMatey.DefaultOptionUsageProvider.class;
@@ -90,7 +90,7 @@ public final class ArgMatey {
 			
 			String name() default ArgMatey.OptionArgSpec.DEFAULT_NAME;
 			
-			OptionalBoolean required() default OptionalBoolean.NONE;
+			OptionalBoolean required() default OptionalBoolean.UNSPECIFIED;
 			
 			String separator() default ArgMatey.OptionArgSpec.DEFAULT_SEPARATOR;
 			
@@ -2149,9 +2149,9 @@ public final class ArgMatey {
 		
 		FALSE(Boolean.FALSE),
 		
-		NONE(null),
+		TRUE(Boolean.TRUE),
 		
-		TRUE(Boolean.TRUE);
+		UNSPECIFIED(null);
 		
 		private final Boolean booleanValue;
 		
@@ -3084,7 +3084,7 @@ public final class ArgMatey {
 			OptionArgSpec.Builder builder = new OptionArgSpec.Builder();
 			builder.name(optionArgSpec.name());
 			OptionalBoolean required = optionArgSpec.required();
-			if (!required.equals(OptionalBoolean.NONE)) {
+			if (!required.equals(OptionalBoolean.UNSPECIFIED)) {
 				builder.required(required.booleanValue().booleanValue());
 			}
 			builder.separator(optionArgSpec.separator());
@@ -3136,13 +3136,13 @@ public final class ArgMatey {
 						type.getName()));
 			}
 			OptionalBoolean displayable = option.displayable();
-			if (!displayable.equals(OptionalBoolean.NONE)) {
+			if (!displayable.equals(OptionalBoolean.UNSPECIFIED)) {
 				builder.displayable(displayable.booleanValue().booleanValue());
 			}
 			builder.doc(option.doc());
 			Annotations.OptionArgSpec optionArgSpec = option.optionArgSpec();
 			OptionalBoolean optionArgAllowed = optionArgSpec.allowed();
-			if (!optionArgAllowed.equals(OptionalBoolean.NONE)) {
+			if (!optionArgAllowed.equals(OptionalBoolean.UNSPECIFIED)) {
 				if (optionArgAllowed.booleanValue().booleanValue()) {
 					builder.optionArgSpec(this.newOptionArgSpecBuilder(
 							optionArgSpec).build());

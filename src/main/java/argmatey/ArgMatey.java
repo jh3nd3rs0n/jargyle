@@ -77,7 +77,7 @@ public final class ArgMatey {
 				default @OptionArgSpec(allowed = OptionalBoolean.UNSPECIFIED);
 			
 			Class<? extends ArgMatey.OptionUsageProvider> optionUsageProvider()
-				default ArgMatey.DefaultOptionUsageProvider.class;
+				default ArgMatey.OptionUsageProvider.class;
 					
 			Class<? extends ArgMatey.Option> type();
 			
@@ -95,7 +95,7 @@ public final class ArgMatey {
 			String separator() default ArgMatey.OptionArgSpec.DEFAULT_SEPARATOR;
 			
 			Class<? extends ArgMatey.StringConverter> stringConverter() 
-				default ArgMatey.DefaultStringConverter.class;
+				default ArgMatey.StringConverter.class;
 			
 		}
 
@@ -106,7 +106,7 @@ public final class ArgMatey {
 			Annotations.Option option();
 			
 			Class<? extends ArgMatey.OptionGroupHelpTextProvider> optionGroupHelpTextProvider()
-				default ArgMatey.DefaultOptionGroupHelpTextProvider.class;
+				default ArgMatey.OptionGroupHelpTextProvider.class;
 			
 			int ordinal() default 0;
 			
@@ -1179,24 +1179,6 @@ public final class ArgMatey {
 				optionGroupHelpText = sb.toString();
 			}
 			return optionGroupHelpText;
-		}
-		
-	}
-
-	public static final class DefaultOptionUsageProvider 
-		extends OptionUsageProvider {
-
-		private DefaultOptionUsageProvider() { 
-			throw new AssertionError(String.format(
-					"%s is not to be constructed", 
-					this.getClass().getName()));
-		}
-		
-		@Override
-		public String getOptionUsage(final OptionUsageParams params) {
-			throw new AssertionError(String.format(
-					"method '%s' is not to be invoked", 
-					this.getClass().getEnclosingMethod()));
 		}
 		
 	}
@@ -3089,13 +3071,7 @@ public final class ArgMatey {
 			}
 			builder.separator(optionArgSpec.separator());
 			Class<?> stringConverterClass =	optionArgSpec.stringConverter();
-			if (stringConverterClass.equals(StringConverter.class)) {
-				throw new IllegalArgumentException(String.format(
-						"expected class must extend %s. actual class is %s", 
-						StringConverter.class.getName(),
-						stringConverterClass.getName()));
-			}
-			if (!stringConverterClass.equals(DefaultStringConverter.class)) {
+			if (!stringConverterClass.equals(StringConverter.class)) {
 				StringConverter stringConverter = this.newStringConverter(
 						stringConverterClass);
 				builder.stringConverter(stringConverter);
@@ -3151,14 +3127,7 @@ public final class ArgMatey {
 				}
 			}
 			Class<?> optionUsageProviderClass = option.optionUsageProvider();
-			if (optionUsageProviderClass.equals(OptionUsageProvider.class)) {
-				throw new IllegalArgumentException(String.format(
-						"expected class must extend %s. actual class is %s",
-						OptionUsageProvider.class.getName(),
-						optionUsageProviderClass.getName()));
-			}
-			if (!optionUsageProviderClass.equals(
-					DefaultOptionUsageProvider.class)) {
+			if (!optionUsageProviderClass.equals(OptionUsageProvider.class)) {
 				OptionUsageProvider optionUsageProvider = 
 						this.newOptionUsageProvider(optionUsageProviderClass);
 				builder.optionUsageProvider(optionUsageProvider);
@@ -3172,15 +3141,8 @@ public final class ArgMatey {
 			OptionGroup.Builder builder = new OptionGroup.Builder(optionBuilder);
 			Class<?> optionGroupHelpTextProviderClass = 
 					this.optionGroupAnnotation.optionGroupHelpTextProvider();
-			if (optionGroupHelpTextProviderClass.equals(
-					OptionGroupHelpTextProvider.class)) {
-				throw new IllegalArgumentException(String.format(
-						"expected class must extend %s. actual class is %s", 
-						OptionGroupHelpTextProvider.class.getName(),
-						optionGroupHelpTextProviderClass.getName()));
-			}
 			if (!optionGroupHelpTextProviderClass.equals(
-					DefaultOptionGroupHelpTextProvider.class)) {
+					OptionGroupHelpTextProvider.class)) {
 				OptionGroupHelpTextProvider optionGroupHelpTextProvider = 
 						this.newOptionGroupHelpTextProvider(
 								optionGroupHelpTextProviderClass);

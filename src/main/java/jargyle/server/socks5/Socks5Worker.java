@@ -33,14 +33,12 @@ import jargyle.common.net.socks5.ServerMethodSelectionMessage;
 import jargyle.common.net.socks5.Socks5Reply;
 import jargyle.common.net.socks5.Socks5Request;
 import jargyle.common.net.socks5.Version;
-import jargyle.common.net.socks5.gssapiauth.GssDatagramPacketFilter;
-import jargyle.common.net.socks5.gssapiauth.GssSocket;
 import jargyle.common.util.PositiveInteger;
-import jargyle.server.Host;
 import jargyle.server.Configuration;
 import jargyle.server.Criteria;
 import jargyle.server.Criterion;
 import jargyle.server.CriterionMethod;
+import jargyle.server.Host;
 import jargyle.server.SettingSpec;
 import jargyle.server.Settings;
 import jargyle.server.SocksClientHelper;
@@ -682,24 +680,11 @@ public final class Socks5Worker implements Runnable {
 					SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_CLIENT_BIND_HOST, 
 					Host.class);
 			InetAddress bindInetAddress = bindHost.toInetAddress();
-			if (this.clientSocket instanceof GssSocket) {
-				GssSocket gssSocket = (GssSocket) this.clientSocket;
-				DatagramPacketFilter datagramPacketFilter =
-						new GssDatagramPacketFilter(
-								gssSocket.getGSSContext(),
-								gssSocket.getMessageProp());
-				clientDatagramSock = new FilterDatagramSocket(
-						datagramPacketFilter,
-						new InetSocketAddress(bindInetAddress, 0));
-			} else if (!this.clientSocket.getClass().equals(Socket.class)) {
-				throw new AssertionError(String.format(
-						"unhandled %s: %s", 
-						Socket.class.getSimpleName(), 
-						this.clientSocket.getClass().getSimpleName()));
-			} else {
-				clientDatagramSock = new DatagramSocket(new InetSocketAddress(
-						bindInetAddress, 0));
-			}
+			DatagramPacketFilter datagramPacketFilter = 
+					DatagramPacketFilter.newInstanceFrom(this.clientSocket);
+			clientDatagramSock = new FilterDatagramSocket(
+					datagramPacketFilter,
+					new InetSocketAddress(bindInetAddress, 0));
 		} catch (SocketException e) {
 			LOGGER.log(
 					Level.WARNING, 

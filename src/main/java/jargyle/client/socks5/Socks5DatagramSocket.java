@@ -22,8 +22,6 @@ import jargyle.common.net.socks5.Reply;
 import jargyle.common.net.socks5.Socks5Reply;
 import jargyle.common.net.socks5.Socks5Request;
 import jargyle.common.net.socks5.UdpRequestHeader;
-import jargyle.common.net.socks5.gssapiauth.GssDatagramPacketFilter;
-import jargyle.common.net.socks5.gssapiauth.GssSocket;
 
 public final class Socks5DatagramSocket extends DatagramSocket {
 	
@@ -122,17 +120,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			throw new IOException(String.format(
 					"received reply: %s", reply));
 		}
-		if (sock instanceof GssSocket) {
-			GssSocket gssSocket = (GssSocket) sock;
-			this.datagramPacketFilter =	new GssDatagramPacketFilter(
-					gssSocket.getGSSContext(),
-					gssSocket.getMessageProp());
-		} else if (!sock.getClass().equals(Socket.class)) {
-			throw new AssertionError(String.format(
-					"unhandled %s: %s", 
-					Socket.class.getSimpleName(), 
-					sock.getClass().getSimpleName()));
-		}
+		this.datagramPacketFilter = DatagramPacketFilter.newInstanceFrom(sock);
 		this.udpRelayServerInetAddress = InetAddress.getByName(
 				socks5Rep.getServerBoundAddress());
 		this.udpRelayServerPort = socks5Rep.getServerBoundPort();

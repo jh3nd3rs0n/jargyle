@@ -120,7 +120,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			throw new IOException(String.format(
 					"received reply: %s", reply));
 		}
-		this.datagramPacketFilter = DatagramPacketFilter.newInstanceFrom(sock);
+		this.datagramPacketFilter = DatagramPacketFilter.newInstance(sock);
 		this.udpRelayServerInetAddress = InetAddress.getByName(
 				socks5Rep.getServerBoundAddress());
 		this.udpRelayServerPort = socks5Rep.getServerBoundPort();

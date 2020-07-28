@@ -9,14 +9,15 @@ import jargyle.common.net.socks5.gssapiauth.GssSocket;
 
 public abstract class DatagramPacketFilter {
 
-	public static DatagramPacketFilter newInstanceFrom(final Socket socket) {
+	public static DatagramPacketFilter newInstance(final Socket socket) {
 		Class<?> socketClass = socket.getClass();
 		if (socketClass.equals(GssSocket.class)) {
 			GssSocket gssSocket = (GssSocket) socket;
 			return new GssDatagramPacketFilter(
 					gssSocket.getGSSContext(),
 					gssSocket.getMessageProp());
-		} else if (socketClass.equals(Socket.class)) {
+		}
+		if (socketClass.equals(Socket.class)) {
 			return new DefaultDatagramPacketFilter();
 		}
 		throw new IllegalArgumentException(String.format(

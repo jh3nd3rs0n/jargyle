@@ -681,7 +681,7 @@ public final class Socks5Worker implements Runnable {
 					Host.class);
 			InetAddress bindInetAddress = bindHost.toInetAddress();
 			DatagramPacketFilter datagramPacketFilter = 
-					DatagramPacketFilter.newInstanceFrom(this.clientSocket);
+					DatagramPacketFilter.newInstance(this.clientSocket);
 			clientDatagramSock = new FilterDatagramSocket(
 					datagramPacketFilter,
 					new InetSocketAddress(bindInetAddress, 0));

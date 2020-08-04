@@ -14,7 +14,7 @@ import java.net.UnknownHostException;
 import java.nio.channels.DatagramChannel;
 
 import jargyle.common.net.DatagramPacketFilter;
-import jargyle.common.net.DefaultDatagramPacketFilter;
+import jargyle.common.net.DatagramPacketFilterFactory;
 import jargyle.common.net.SocketSettings;
 import jargyle.common.net.socks5.AddressType;
 import jargyle.common.net.socks5.Command;
@@ -36,9 +36,10 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 	private static void init(
 			final Socks5DatagramSocket socks5DatagramSocket) throws SocketException {
 		socks5DatagramSocket.associated = false;
-		socks5DatagramSocket.datagramPacketFilter = 
-				new DefaultDatagramPacketFilter();
 		socks5DatagramSocket.socket = new Socket();
+		socks5DatagramSocket.datagramPacketFilter = 
+				DatagramPacketFilterFactory.newDatagramPacketFilter(
+						socks5DatagramSocket.socket);
 		SocketSettings socketSettings = 
 				socks5DatagramSocket.socks5Client.getSocketSettings();
 		socketSettings.applyTo(socks5DatagramSocket.socket);
@@ -120,7 +121,8 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			throw new IOException(String.format(
 					"received reply: %s", reply));
 		}
-		this.datagramPacketFilter = DatagramPacketFilter.newInstance(sock);
+		this.datagramPacketFilter = 
+				DatagramPacketFilterFactory.newDatagramPacketFilter(sock);
 		this.udpRelayServerInetAddress = InetAddress.getByName(
 				socks5Rep.getServerBoundAddress());
 		this.udpRelayServerPort = socks5Rep.getServerBoundPort();

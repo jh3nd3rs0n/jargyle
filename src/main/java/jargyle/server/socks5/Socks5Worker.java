@@ -20,6 +20,7 @@ import jargyle.client.ServerSocketFactory;
 import jargyle.client.SocketFactory;
 import jargyle.client.SocksClient;
 import jargyle.common.net.DatagramPacketFilter;
+import jargyle.common.net.DatagramPacketFilterFactory;
 import jargyle.common.net.FilterDatagramSocket;
 import jargyle.common.net.SocketSettings;
 import jargyle.common.net.socks5.AddressType;
@@ -41,7 +42,7 @@ import jargyle.server.CriterionMethod;
 import jargyle.server.Host;
 import jargyle.server.SettingSpec;
 import jargyle.server.Settings;
-import jargyle.server.SocksClientHelper;
+import jargyle.server.SocksClientFactory;
 import jargyle.server.TcpRelayServer;
 
 public final class Socks5Worker implements Runnable {
@@ -62,7 +63,7 @@ public final class Socks5Worker implements Runnable {
 			final Socket clientSock, 
 			final Configuration config) {
 		Settings sttngs = config.getSettings();
-		SocksClient client = SocksClientHelper.newSocksClient(config);
+		SocksClient client = SocksClientFactory.newSocksClient(config);
 		this.clientInputStream = null;
 		this.clientOutputStream = null;
 		this.clientSocket = clientSock;
@@ -681,7 +682,8 @@ public final class Socks5Worker implements Runnable {
 					Host.class);
 			InetAddress bindInetAddress = bindHost.toInetAddress();
 			DatagramPacketFilter datagramPacketFilter = 
-					DatagramPacketFilter.newInstance(this.clientSocket);
+					DatagramPacketFilterFactory.newDatagramPacketFilter(
+							this.clientSocket);
 			clientDatagramSock = new FilterDatagramSocket(
 					datagramPacketFilter,
 					new InetSocketAddress(bindInetAddress, 0));

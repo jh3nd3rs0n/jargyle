@@ -95,7 +95,7 @@ public class UsernamePasswordAuthenticator {
 					throw new AssertionError(e);
 				} catch (InvocationTargetException e) {
 					throw new AssertionError(
-							InvocationTargetExceptionHelper.toString(e), e); 
+							ThrowableHelper.toString(e), e); 
 				}
 			} else {
 				Constructor<?> ctor = null;
@@ -118,7 +118,7 @@ public class UsernamePasswordAuthenticator {
 					throw new AssertionError(e);
 				} catch (InvocationTargetException e) {
 					throw new AssertionError(
-							InvocationTargetExceptionHelper.toString(e), e); 
+							ThrowableHelper.toString(e), e); 
 				}
 			}
 		} else {

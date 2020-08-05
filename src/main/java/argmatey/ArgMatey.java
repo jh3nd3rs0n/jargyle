@@ -1394,7 +1394,7 @@ public final class ArgMatey {
 							throw iae;
 						}						
 						throw new AssertionError(
-								InvocationTargetExceptionHelper.toString(e), 
+								ThrowableHelper.toString(e), 
 								e);
 					}
 				} else if (this.stringParameterConstructor != null) {
@@ -1415,7 +1415,7 @@ public final class ArgMatey {
 							throw iae;
 						}
 						throw new AssertionError(
-								InvocationTargetExceptionHelper.toString(e), 
+								ThrowableHelper.toString(e), 
 								e);
 					}
 				}
@@ -1796,30 +1796,6 @@ public final class ArgMatey {
 		
 	}
 	
-	static final class InvocationTargetExceptionHelper {
-		
-		public static String toString(final InvocationTargetException e) {
-			StringBuilder sb = new StringBuilder();
-			sb.append(e.getClass().getName());
-			String message = e.getMessage();
-			if (message != null) {
-				sb.append(": ");
-				sb.append(message);
-				return sb.toString();
-			}
-			Throwable cause = e.getCause();
-			if (cause != null) {
-				sb.append(": ");
-				sb.append(cause);
-				return sb.toString();
-			}
-			return sb.toString();
-		}
-		
-		private InvocationTargetExceptionHelper() { }
-		
-	}
-
 	public static final class LongOption extends Option {
 
 		public static final class Builder extends Option.Builder {
@@ -1865,7 +1841,7 @@ public final class ArgMatey {
 		}
 		
 	}
-	
+
 	static final class NonparsedArgMethod {
 		
 		public static NonparsedArgMethod newInstance(final Method method) {
@@ -1917,7 +1893,7 @@ public final class ArgMatey {
 					throw new IllegalArgException(nonparsedArg, cause);
 				}
 				throw new AssertionError(
-						InvocationTargetExceptionHelper.toString(e), 
+						ThrowableHelper.toString(e), 
 						e);
 			}
 		}
@@ -1926,7 +1902,7 @@ public final class ArgMatey {
 			return this.method;
 		}
 	}
-
+	
 	public static abstract class Option {
 
 		public static abstract class Builder {
@@ -2146,7 +2122,7 @@ public final class ArgMatey {
 		}
 		
 	}
-	
+
 	/**
 	 * An {@code Object} that represents a command line option argument.
 	 */
@@ -2349,7 +2325,7 @@ public final class ArgMatey {
 		}
 		
 	}
-
+	
 	/**
 	 * Thrown when an {@code Option} is provided with a command line option 
 	 * argument that is not allowed.
@@ -2437,7 +2413,7 @@ public final class ArgMatey {
 		}
 
 	}
-	
+
 	public static final class OptionArgSpec {
 
 		public static final class Builder {
@@ -2791,7 +2767,7 @@ public final class ArgMatey {
 						throw new AssertionError(e);
 					} catch (InvocationTargetException e) {
 						throw new AssertionError(
-								InvocationTargetExceptionHelper.toString(e), 
+								ThrowableHelper.toString(e), 
 								e);
 					}
 				}
@@ -2857,7 +2833,7 @@ public final class ArgMatey {
 									option, optArg, cause);
 						}
 						throw new AssertionError(
-								InvocationTargetExceptionHelper.toString(e), 
+								ThrowableHelper.toString(e), 
 								e);
 					}
 				}
@@ -2897,7 +2873,7 @@ public final class ArgMatey {
 						throw new AssertionError(e);
 					} catch (InvocationTargetException e) {
 						throw new AssertionError(
-								InvocationTargetExceptionHelper.toString(e), 
+								ThrowableHelper.toString(e), 
 								e);
 					}
 				}
@@ -2948,7 +2924,7 @@ public final class ArgMatey {
 									option, optArg, cause);
 						}
 						throw new AssertionError(
-								InvocationTargetExceptionHelper.toString(e), 
+								ThrowableHelper.toString(e), 
 								e);
 					}
 				}
@@ -3181,7 +3157,7 @@ public final class ArgMatey {
 				throw new AssertionError(e);
 			} catch (InvocationTargetException e) {
 				throw new AssertionError(
-						InvocationTargetExceptionHelper.toString(e), 
+						ThrowableHelper.toString(e), 
 						e);
 			}
 			return optionGroupHelpTextProvider;
@@ -3208,7 +3184,7 @@ public final class ArgMatey {
 				throw new AssertionError(e);
 			} catch (InvocationTargetException e) {
 				throw new AssertionError(
-						InvocationTargetExceptionHelper.toString(e), 
+						ThrowableHelper.toString(e), 
 						e);
 			}
 			return optionUsageProvider;
@@ -3235,7 +3211,7 @@ public final class ArgMatey {
 				throw new AssertionError(e);
 			} catch (InvocationTargetException e) {
 				throw new AssertionError(
-						InvocationTargetExceptionHelper.toString(e), 
+						ThrowableHelper.toString(e), 
 						e);
 			}
 			return stringConverter;
@@ -3267,7 +3243,7 @@ public final class ArgMatey {
 		}
 		
 	}
-
+	
 	public static final class OptionGroups {
 		
 		public static OptionGroups newInstance(
@@ -3326,7 +3302,7 @@ public final class ArgMatey {
 		}
 		
 	}
-	
+
 	public static final class OptionOccurrence {
 
 		private final Option option;
@@ -3442,7 +3418,7 @@ public final class ArgMatey {
 		}
 				
 	}
-
+	
 	public static abstract class OptionUsageProvider {
 
 		private static final Map<Class<? extends Option>, OptionUsageProvider> DEFAULT_INSTANCES = 
@@ -3485,7 +3461,7 @@ public final class ArgMatey {
 		public abstract String getOptionUsage(OptionUsageParams params);
 		
 	}
-	
+
 	static final class ParseResultHandlerClass {
 		
 		public static ParseResultHandlerClass newInstance(final Class<?> cls) {
@@ -3566,7 +3542,7 @@ public final class ArgMatey {
 		}
 		
 	}
-
+	
 	public static final class ParseResultHolder {
 		
 		private final Object parseResult;
@@ -3715,7 +3691,7 @@ public final class ArgMatey {
 		}
 		
 	}
-	
+
 	public static final class PosixOption extends Option {
 
 		public static final class Builder extends Option.Builder {
@@ -3770,7 +3746,7 @@ public final class ArgMatey {
 		}
 		
 	}
-
+	
 	/**
 	 * Converts the provided {@code String} to an {@code Object}.
 	 */
@@ -3792,6 +3768,30 @@ public final class ArgMatey {
 		 * illegal or inappropriate
 		 */
 		public abstract Object convert(String string);
+		
+	}
+
+	static final class ThrowableHelper {
+		
+		public static String toString(final Throwable t) {
+			StringBuilder sb = new StringBuilder();
+			sb.append(t.getClass().getName());
+			String message = t.getMessage();
+			if (message != null) {
+				sb.append(": ");
+				sb.append(message);
+				return sb.toString();
+			}
+			Throwable cause = t.getCause();
+			if (cause != null) {
+				sb.append(": ");
+				sb.append(cause);
+				return sb.toString();
+			}
+			return sb.toString();
+		}
+		
+		private ThrowableHelper() { }
 		
 	}
 

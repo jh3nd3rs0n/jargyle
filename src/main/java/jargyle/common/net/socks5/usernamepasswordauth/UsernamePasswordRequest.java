@@ -32,13 +32,13 @@ public final class UsernamePasswordRequest {
 			try {
 				writer.write(ch);
 			} catch (IOException e) {
-				throw new AssertionError(e);
+				throw new AssertionError(e.toString(), e);
 			}
 		}
 		try {
 			writer.flush();
 		} catch (IOException e) {
-			throw new AssertionError(e);
+			throw new AssertionError(e.toString(), e);
 		}
 		byte[] passwordBytes = byteArrayOutputStream.toByteArray();
 		if (passwordBytes.length > MAX_PASSWD_LENGTH) {
@@ -82,13 +82,13 @@ public final class UsernamePasswordRequest {
 		try {
 			out.write(usernameBytes);
 		} catch (IOException e) {
-			throw new AssertionError(e);
+			throw new AssertionError(e.toString(), e);
 		}
 		out.write((byte) passwdBytes.length);
 		try {
 			out.write(passwdBytes);
 		} catch (IOException e) {
-			throw new AssertionError(e);
+			throw new AssertionError(e.toString(), e);
 		}
 		Params params = new Params();
 		params.version = version;
@@ -156,7 +156,7 @@ public final class UsernamePasswordRequest {
 			try {
 				ch = reader.read();
 			} catch (IOException e) {
-				throw new AssertionError(e);
+				throw new AssertionError(e.toString(), e);
 			}
 			if (ch != -1) {
 				passwd = Arrays.copyOf(passwd, ++passwdLength);

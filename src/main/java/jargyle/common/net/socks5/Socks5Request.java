@@ -64,13 +64,13 @@ public final class Socks5Request {
 		try {
 			out.write(addressType.writeAddress(desiredDestinationAddress));
 		} catch (IOException e) {
-			throw new AssertionError(e);
+			throw new AssertionError(e.toString(), e);
 		}
 		try {
 			out.write(UnsignedShort.newInstance(
 					desiredDestinationPort).toByteArray());
 		} catch (IOException e) {
-			throw new AssertionError(e);
+			throw new AssertionError(e.toString(), e);
 		}
 		Params params = new Params();
 		params.version = version;

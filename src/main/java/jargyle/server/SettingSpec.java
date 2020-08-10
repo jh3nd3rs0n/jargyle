@@ -562,7 +562,7 @@ public enum SettingSpec implements HelpTextParams {
 			try {
 				host = Host.newInstance(DEFAULT_HOST);
 			} catch (UnknownHostException e) {
-				throw new AssertionError(e);
+				throw new AssertionError(e.toString(), e);
 			}
 			return new Setting(NAME, host);
 		}
@@ -1152,7 +1152,7 @@ public enum SettingSpec implements HelpTextParams {
 			try {
 				host = Host.newInstance(DEFAULT_BIND_HOST);
 			} catch (UnknownHostException e) {
-				throw new AssertionError(e);
+				throw new AssertionError(e.toString(), e);
 			}
 			return new Setting(NAME, host);
 		}
@@ -1309,7 +1309,7 @@ public enum SettingSpec implements HelpTextParams {
 			try {
 				host = Host.newInstance(DEFAULT_BIND_HOST);
 			} catch (UnknownHostException e) {
-				throw new AssertionError(e);
+				throw new AssertionError(e.toString(), e);
 			}
 			return new Setting(NAME, host);
 		}
@@ -1516,7 +1516,7 @@ public enum SettingSpec implements HelpTextParams {
 			try {
 				host = Host.newInstance(DEFAULT_BIND_HOST);
 			} catch (UnknownHostException e) {
-				throw new AssertionError(e);
+				throw new AssertionError(e.toString(), e);
 			}
 			return new Setting(NAME, host);
 		}

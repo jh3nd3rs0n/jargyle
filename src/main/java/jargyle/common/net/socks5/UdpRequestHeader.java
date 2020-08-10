@@ -34,7 +34,7 @@ public final class UdpRequestHeader {
 		try {
 			bytesRead = in.read(bytes);
 		} catch (IOException e) {
-			throw new AssertionError(e);
+			throw new AssertionError(e.toString(), e);
 		}
 		bytes = Arrays.copyOf(bytes, bytesRead);
 		int rsv = UnsignedShort.newInstance(bytes).intValue();
@@ -46,7 +46,7 @@ public final class UdpRequestHeader {
 		try {
 			out.write(bytes);
 		} catch (IOException e) {
-			throw new AssertionError(e);
+			throw new AssertionError(e.toString(), e);
 		}
 		b = in.read();
 		int frag = UnsignedByte.newInstance(b).intValue();
@@ -69,13 +69,13 @@ public final class UdpRequestHeader {
 		try {
 			out.write(bytes);
 		} catch (IOException e) {
-			throw new AssertionError(e);
+			throw new AssertionError(e.toString(), e);
 		}
 		bytes = new byte[UnsignedShort.BYTE_ARRAY_LENGTH];
 		try {
 			bytesRead = in.read(bytes);
 		} catch (IOException e) {
-			throw new AssertionError(e);
+			throw new AssertionError(e.toString(), e);
 		}
 		bytes = Arrays.copyOf(bytes, bytesRead);
 		int dstPort = UnsignedShort.newInstance(bytes).intValue();
@@ -83,20 +83,20 @@ public final class UdpRequestHeader {
 		try {
 			out.write(bytes);
 		} catch (IOException e) {
-			throw new AssertionError(e);
+			throw new AssertionError(e.toString(), e);
 		}
 		dataStartIndex++;
 		bytes = new byte[byteArray.length - dataStartIndex + 1];
 		try {
 			bytesRead = in.read(bytes);
 		} catch (IOException e) {
-			throw new AssertionError(e);
+			throw new AssertionError(e.toString(), e);
 		}
 		bytes = Arrays.copyOf(bytes, bytesRead);
 		try {
 			out.write(bytes);
 		} catch (IOException e) {
-			throw new AssertionError(e);
+			throw new AssertionError(e.toString(), e);
 		}
 		Params params = new Params();
 		params.currentFragmentNumber = frag;
@@ -130,7 +130,7 @@ public final class UdpRequestHeader {
 		try {
 			out.write(rsv);
 		} catch (IOException e) {
-			throw new AssertionError(e);
+			throw new AssertionError(e.toString(), e);
 		}
 		dataStartIndex++;
 		out.write(currentFragmentNumber);
@@ -141,7 +141,7 @@ public final class UdpRequestHeader {
 		try {
 			out.write(address);
 		} catch (IOException e) {
-			throw new AssertionError(e);
+			throw new AssertionError(e.toString(), e);
 		}
 		byte[] port = UnsignedShort.newInstance(
 				desiredDestinationPort).toByteArray();
@@ -149,13 +149,13 @@ public final class UdpRequestHeader {
 		try {
 			out.write(port);
 		} catch (IOException e) {
-			throw new AssertionError(e);
+			throw new AssertionError(e.toString(), e);
 		}
 		dataStartIndex++;
 		try {
 			out.write(userData);
 		} catch (IOException e) {
-			throw new AssertionError(e);
+			throw new AssertionError(e.toString(), e);
 		}
 		Params params = new Params();
 		params.currentFragmentNumber = currentFragmentNumber;

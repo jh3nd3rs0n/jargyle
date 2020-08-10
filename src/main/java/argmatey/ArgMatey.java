@@ -1383,9 +1383,9 @@ public final class ArgMatey {
 						object = this.staticStringConversionMethod.invoke(
 								null, string);
 					} catch (IllegalAccessException e) {
-						throw new AssertionError(e);
+						throw new AssertionError(e.toString(), e);
 					} catch (IllegalArgumentException e) {
-						throw new AssertionError(e);
+						throw new AssertionError(e.toString(), e);
 					} catch (InvocationTargetException e) {
 						Throwable cause = e.getCause();
 						if (cause instanceof IllegalArgumentException) {
@@ -1393,20 +1393,18 @@ public final class ArgMatey {
 									(IllegalArgumentException) cause;
 							throw iae;
 						}						
-						throw new AssertionError(
-								ThrowableHelper.toString(e), 
-								e);
+						throw new AssertionError(e.toString(), e);
 					}
 				} else if (this.stringParameterConstructor != null) {
 					try {
 						object = this.stringParameterConstructor.newInstance(
 								string);
 					} catch (InstantiationException e) {
-						throw new AssertionError(e);
+						throw new AssertionError(e.toString(), e);
 					} catch (IllegalAccessException e) {
-						throw new AssertionError(e);
+						throw new AssertionError(e.toString(), e);
 					} catch (IllegalArgumentException e) {
-						throw new AssertionError(e);
+						throw new AssertionError(e.toString(), e);
 					} catch (InvocationTargetException e) {
 						Throwable cause = e.getCause();
 						if (cause instanceof IllegalArgumentException) {
@@ -1414,9 +1412,7 @@ public final class ArgMatey {
 									(IllegalArgumentException) cause;
 							throw iae;
 						}
-						throw new AssertionError(
-								ThrowableHelper.toString(e), 
-								e);
+						throw new AssertionError(e.toString(), e);
 					}
 				}
 			}
@@ -1884,17 +1880,15 @@ public final class ArgMatey {
 			try {
 				this.method.invoke(obj, nonparsedArg);
 			} catch (IllegalAccessException e) {
-				throw new AssertionError(e);
+				throw new AssertionError(e.toString(), e);
 			} catch (IllegalArgumentException e) {
-				throw new AssertionError(e);
+				throw new AssertionError(e.toString(), e);
 			} catch (InvocationTargetException e) {
 				Throwable cause = e.getCause();
 				if (cause instanceof IllegalArgumentException) {
 					throw new IllegalArgException(nonparsedArg, cause);
 				}
-				throw new AssertionError(
-						ThrowableHelper.toString(e), 
-						e);
+				throw new AssertionError(e.toString(), e);
 			}
 		}
 		
@@ -2762,13 +2756,11 @@ public final class ArgMatey {
 					try {
 						method.invoke(obj, Boolean.TRUE.booleanValue());
 					} catch (IllegalAccessException e) {
-						throw new AssertionError(e);
+						throw new AssertionError(e.toString(), e);
 					} catch (IllegalArgumentException e) {
-						throw new AssertionError(e);
+						throw new AssertionError(e.toString(), e);
 					} catch (InvocationTargetException e) {
-						throw new AssertionError(
-								ThrowableHelper.toString(e), 
-								e);
+						throw new AssertionError(e.toString(), e);
 					}
 				}
 
@@ -2823,18 +2815,16 @@ public final class ArgMatey {
 					try {
 						method.invoke(obj, objectValues);
 					} catch (IllegalAccessException e) {
-						throw new AssertionError(e);
+						throw new AssertionError(e.toString(), e);
 					} catch (IllegalArgumentException e) {
-						throw new AssertionError(e);
+						throw new AssertionError(e.toString(), e);
 					} catch (InvocationTargetException e) {
 						Throwable cause = e.getCause();
 						if (cause instanceof IllegalArgumentException) {
 							throw new IllegalOptionArgException(
 									option, optArg, cause);
 						}
-						throw new AssertionError(
-								ThrowableHelper.toString(e), 
-								e);
+						throw new AssertionError(e.toString(), e);
 					}
 				}
 
@@ -2868,13 +2858,11 @@ public final class ArgMatey {
 					try {
 						method.invoke(obj);
 					} catch (IllegalAccessException e) {
-						throw new AssertionError(e);
+						throw new AssertionError(e.toString(), e);
 					} catch (IllegalArgumentException e) {
-						throw new AssertionError(e);
+						throw new AssertionError(e.toString(), e);
 					} catch (InvocationTargetException e) {
-						throw new AssertionError(
-								ThrowableHelper.toString(e), 
-								e);
+						throw new AssertionError(e.toString(), e);
 					}
 				}
 
@@ -2914,18 +2902,16 @@ public final class ArgMatey {
 					try {
 						method.invoke(obj, objectValue);
 					} catch (IllegalAccessException e) {
-						throw new AssertionError(e);
+						throw new AssertionError(e.toString(), e);
 					} catch (IllegalArgumentException e) {
-						throw new AssertionError(e);
+						throw new AssertionError(e.toString(), e);
 					} catch (InvocationTargetException e) {
 						Throwable cause = e.getCause();
 						if (cause instanceof IllegalArgumentException) {
 							throw new IllegalOptionArgException(
 									option, optArg, cause);
 						}
-						throw new AssertionError(
-								ThrowableHelper.toString(e), 
-								e);
+						throw new AssertionError(e.toString(), e);
 					}
 				}
 
@@ -3142,23 +3128,21 @@ public final class ArgMatey {
 			try {
 				ctor = optionGroupHelpTextProviderClass.getDeclaredConstructor();
 			} catch (NoSuchMethodException e) {
-				throw new AssertionError(e);
+				throw new AssertionError(e.toString(), e);
 			} catch (SecurityException e) {
-				throw new AssertionError(e);
+				throw new AssertionError(e.toString(), e);
 			}
 			try {
 				optionGroupHelpTextProvider = 
 						(OptionGroupHelpTextProvider) ctor.newInstance();
 			} catch (InstantiationException e) {
-				throw new AssertionError(e);
+				throw new AssertionError(e.toString(), e);
 			} catch (IllegalAccessException e) {
-				throw new AssertionError(e);
+				throw new AssertionError(e.toString(), e);
 			} catch (IllegalArgumentException e) {
-				throw new AssertionError(e);
+				throw new AssertionError(e.toString(), e);
 			} catch (InvocationTargetException e) {
-				throw new AssertionError(
-						ThrowableHelper.toString(e), 
-						e);
+				throw new AssertionError(e.toString(), e);
 			}
 			return optionGroupHelpTextProvider;
 		}
@@ -3170,22 +3154,20 @@ public final class ArgMatey {
 			try {
 				ctor = optionUsageProviderClass.getDeclaredConstructor();
 			} catch (NoSuchMethodException e) {
-				throw new AssertionError(e);
+				throw new AssertionError(e.toString(), e);
 			} catch (SecurityException e) {
-				throw new AssertionError(e);
+				throw new AssertionError(e.toString(), e);
 			}
 			try {
 				optionUsageProvider = (OptionUsageProvider) ctor.newInstance();
 			} catch (InstantiationException e) {
-				throw new AssertionError(e);
+				throw new AssertionError(e.toString(), e);
 			} catch (IllegalAccessException e) {
-				throw new AssertionError(e);
+				throw new AssertionError(e.toString(), e);
 			} catch (IllegalArgumentException e) {
-				throw new AssertionError(e);
+				throw new AssertionError(e.toString(), e);
 			} catch (InvocationTargetException e) {
-				throw new AssertionError(
-						ThrowableHelper.toString(e), 
-						e);
+				throw new AssertionError(e.toString(), e);
 			}
 			return optionUsageProvider;
 		}
@@ -3197,22 +3179,20 @@ public final class ArgMatey {
 			try {
 				ctor = stringConverterClass.getDeclaredConstructor();
 			} catch (NoSuchMethodException e) {
-				throw new AssertionError(e);
+				throw new AssertionError(e.toString(), e);
 			} catch (SecurityException e) {
-				throw new AssertionError(e);
+				throw new AssertionError(e.toString(), e);
 			}
 			try {
 				stringConverter = (StringConverter) ctor.newInstance();
 			} catch (InstantiationException e) {
-				throw new AssertionError(e);
+				throw new AssertionError(e.toString(), e);
 			} catch (IllegalAccessException e) {
-				throw new AssertionError(e);
+				throw new AssertionError(e.toString(), e);
 			} catch (IllegalArgumentException e) {
-				throw new AssertionError(e);
+				throw new AssertionError(e.toString(), e);
 			} catch (InvocationTargetException e) {
-				throw new AssertionError(
-						ThrowableHelper.toString(e), 
-						e);
+				throw new AssertionError(e.toString(), e);
 			}
 			return stringConverter;
 		}
@@ -3768,30 +3748,6 @@ public final class ArgMatey {
 		 * illegal or inappropriate
 		 */
 		public abstract Object convert(String string);
-		
-	}
-
-	static final class ThrowableHelper {
-		
-		public static String toString(final Throwable t) {
-			StringBuilder sb = new StringBuilder();
-			sb.append(t.getClass().getName());
-			String message = t.getMessage();
-			if (message != null) {
-				sb.append(": ");
-				sb.append(message);
-				return sb.toString();
-			}
-			Throwable cause = t.getCause();
-			if (cause != null) {
-				sb.append(": ");
-				sb.append(cause);
-				return sb.toString();
-			}
-			return sb.toString();
-		}
-		
-		private ThrowableHelper() { }
 		
 	}
 

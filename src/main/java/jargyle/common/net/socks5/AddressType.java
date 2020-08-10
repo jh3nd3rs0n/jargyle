@@ -63,7 +63,7 @@ public enum AddressType {
 			try {
 				inetAddress = InetAddress.getByName(address);
 			} catch (UnknownHostException e) {
-				throw new AssertionError(e);
+				throw new AssertionError(e.toString(), e);
 			}
 			return inetAddress.getAddress();
 		}
@@ -191,7 +191,7 @@ public enum AddressType {
 			try {
 				inetAddress = InetAddress.getByName(address);
 			} catch (UnknownHostException e) {
-				throw new AssertionError(e);
+				throw new AssertionError(e.toString(), e);
 			}
 			return inetAddress.getAddress();
 		}

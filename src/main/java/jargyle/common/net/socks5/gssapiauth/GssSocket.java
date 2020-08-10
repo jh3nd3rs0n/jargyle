@@ -150,7 +150,7 @@ public final class GssSocket extends FilterSocket {
 						prop.getPrivacy(), 
 						Message.MAX_TOKEN_LENGTH);
 			} catch (GSSException e) {
-				throw new AssertionError(e);
+				throw new AssertionError(e.toString(), e);
 			}
 			this.bufferOut = new ByteArrayOutputStream();
 			this.bufferOutLength = 0;

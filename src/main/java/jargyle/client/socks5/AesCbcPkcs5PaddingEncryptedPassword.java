@@ -89,7 +89,7 @@ final class AesCbcPkcs5PaddingEncryptedPassword extends EncryptedPassword {
 		try {
 			keyGenerator = KeyGenerator.getInstance(SECRET_KEY_SPEC_ALGORITHM);
 		} catch (NoSuchAlgorithmException e) {
-			throw new AssertionError(e);
+			throw new AssertionError(e.toString(), e);
 		}
 		keyGenerator.init(KEY_LENGTH);
 		SecretKey secretKey = keyGenerator.generateKey();
@@ -97,29 +97,29 @@ final class AesCbcPkcs5PaddingEncryptedPassword extends EncryptedPassword {
 		try {
 			cipher = Cipher.getInstance(CIPHER_ALGORITHM);
 		} catch (NoSuchAlgorithmException e) {
-			throw new AssertionError(e);
+			throw new AssertionError(e.toString(), e);
 		} catch (NoSuchPaddingException e) {
-			throw new AssertionError(e);
+			throw new AssertionError(e.toString(), e);
 		}
 		try {
 			cipher.init(Cipher.ENCRYPT_MODE, secretKey);
 		} catch (InvalidKeyException e) {
-			throw new AssertionError(e);
+			throw new AssertionError(e.toString(), e);
 		}
 		AlgorithmParameters params = cipher.getParameters();
 		IvParameterSpec ivParameterSpec = null;
 		try {
 			ivParameterSpec = params.getParameterSpec(IvParameterSpec.class);
 		} catch (InvalidParameterSpecException e) {
-			throw new AssertionError(e);
+			throw new AssertionError(e.toString(), e);
 		}
 		byte[] encrypted = null;
 		try {
 			encrypted = cipher.doFinal(secret);
 		} catch (IllegalBlockSizeException e) {
-			throw new AssertionError(e);
+			throw new AssertionError(e.toString(), e);
 		} catch (BadPaddingException e) {
-			throw new AssertionError(e);
+			throw new AssertionError(e.toString(), e);
 		}
 		return new AesCbcPkcs5PaddingEncryptedPassword(
 				secretKey.getEncoded(), 
@@ -136,13 +136,13 @@ final class AesCbcPkcs5PaddingEncryptedPassword extends EncryptedPassword {
 			try {
 				writer.write(ch);
 			} catch (IOException e) {
-				throw new AssertionError(e);
+				throw new AssertionError(e.toString(), e);
 			}
 		}
 		try {
 			writer.flush();
 		} catch (IOException e) {
-			throw new AssertionError(e);
+			throw new AssertionError(e.toString(), e);
 		}
 		byte[] secret = byteArrayOutputStream.toByteArray();
 		return newInstance(secret);
@@ -180,9 +180,9 @@ final class AesCbcPkcs5PaddingEncryptedPassword extends EncryptedPassword {
 		try {
 			cipher = Cipher.getInstance(CIPHER_ALGORITHM);
 		} catch (NoSuchAlgorithmException e) {
-			throw new AssertionError(e);
+			throw new AssertionError(e.toString(), e);
 		} catch (NoSuchPaddingException e) {
-			throw new AssertionError(e);
+			throw new AssertionError(e.toString(), e);
 		}
 		try {
 			cipher.init(
@@ -191,17 +191,17 @@ final class AesCbcPkcs5PaddingEncryptedPassword extends EncryptedPassword {
 							this.encodedKey, SECRET_KEY_SPEC_ALGORITHM),
 					new IvParameterSpec(this.initializationVector));
 		} catch (InvalidKeyException e) {
-			throw new AssertionError(e);
+			throw new AssertionError(e.toString(), e);
 		} catch (InvalidAlgorithmParameterException e) {
-			throw new AssertionError(e);
+			throw new AssertionError(e.toString(), e);
 		}
 		byte[] decrypted = null;
 		try {
 			decrypted = cipher.doFinal(this.encrypted);
 		} catch (IllegalBlockSizeException e) {
-			throw new AssertionError(e);
+			throw new AssertionError(e.toString(), e);
 		} catch (BadPaddingException e) {
-			throw new AssertionError(e);
+			throw new AssertionError(e.toString(), e);
 		}
 		Reader reader = new InputStreamReader(new ByteArrayInputStream(
 				decrypted));
@@ -212,7 +212,7 @@ final class AesCbcPkcs5PaddingEncryptedPassword extends EncryptedPassword {
 			try {
 				ch = reader.read();
 			} catch (IOException e) {
-				throw new AssertionError(e);
+				throw new AssertionError(e.toString(), e);
 			}
 			if (ch != -1) {
 				password = Arrays.copyOf(password, ++passwordLength);

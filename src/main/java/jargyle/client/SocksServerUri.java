@@ -62,7 +62,7 @@ public abstract class SocksServerUri {
 		try {
 			hst = URLDecoder.decode(hst, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
-			throw new AssertionError(e);
+			throw new AssertionError(e.toString(), e);
 		}
 		int port = uri.getPort();
 		Integer prt = null;

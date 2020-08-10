@@ -60,14 +60,14 @@ public final class Message {
 			try {
 				out.write(bytes);
 			} catch (IOException e) {
-				throw new AssertionError(e);
+				throw new AssertionError(e.toString(), e);
 			}
 			byte[] tkn = Arrays.copyOf(token, tokenLength);
 			tknStartIndex++;
 			try {
 				out.write(tkn);
 			} catch (IOException e) {
-				throw new AssertionError(e);
+				throw new AssertionError(e.toString(), e);
 			}
 		}
 		Params params = new Params();

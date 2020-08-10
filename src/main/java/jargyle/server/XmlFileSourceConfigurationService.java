@@ -138,7 +138,7 @@ public final class XmlFileSourceConfigurationService
 				try {
 					in.close();
 				} catch (IOException e) {
-					throw new AssertionError(e);
+					throw new AssertionError(e.toString(), e);
 				}
 			}
 		}

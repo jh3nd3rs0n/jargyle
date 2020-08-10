@@ -27,7 +27,7 @@ public final class GssDatagramPacketFilter extends DatagramPacketFilter {
 						prop.getPrivacy(), 
 						Message.MAX_TOKEN_LENGTH);
 			} catch (GSSException e) {
-				throw new AssertionError(e);
+				throw new AssertionError(e.toString(), e);
 			}
 		}
 		this.gssContext = context;

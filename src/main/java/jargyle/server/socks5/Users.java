@@ -59,7 +59,7 @@ public final class Users {
 		try {
 			jaxbContext.generateSchema(new CustomSchemaOutputResolver(result));
 		} catch (IOException e) {
-			throw new AssertionError(e);
+			throw new AssertionError(e.toString(), e);
 		}
 		return out.toByteArray();
 	}

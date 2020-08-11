@@ -183,7 +183,7 @@ public final class ImmutableConfiguration extends Configuration {
 		try {
 			jaxbContext.generateSchema(new CustomSchemaOutputResolver(result));
 		} catch (IOException e) {
-			throw new AssertionError(e.toString(), e);
+			throw new AssertionError(e);
 		}
 		return out.toByteArray();
 	}

@@ -90,33 +90,33 @@ public class UsernamePasswordAuthenticator {
 							(UsernamePasswordAuthenticator) method.invoke(
 									null, value);
 				} catch (IllegalAccessException e) {
-					throw new AssertionError(e.toString(), e);
+					throw new AssertionError(e);
 				} catch (IllegalArgumentException e) {
-					throw new AssertionError(e.toString(), e);
+					throw new AssertionError(e);
 				} catch (InvocationTargetException e) {
-					throw new AssertionError(e.toString(), e); 
+					throw new AssertionError(e); 
 				}
 			} else {
 				Constructor<?> ctor = null;
 				try {
 					ctor = cls.getConstructor(String.class);
 				} catch (NoSuchMethodException e) {
-					throw new AssertionError(e.toString(), e);
+					throw new AssertionError(e);
 				} catch (SecurityException e) {
-					throw new AssertionError(e.toString(), e);
+					throw new AssertionError(e);
 				}
 				try {
 					usernamePasswordAuthenticator = 
 							(UsernamePasswordAuthenticator) ctor.newInstance(
 									value);
 				} catch (InstantiationException e) {
-					throw new AssertionError(e.toString(), e);
+					throw new AssertionError(e);
 				} catch (IllegalAccessException e) {
-					throw new AssertionError(e.toString(), e);
+					throw new AssertionError(e);
 				} catch (IllegalArgumentException e) {
-					throw new AssertionError(e.toString(), e);
+					throw new AssertionError(e);
 				} catch (InvocationTargetException e) {
-					throw new AssertionError(e.toString(), e); 
+					throw new AssertionError(e); 
 				}
 			}
 		} else {

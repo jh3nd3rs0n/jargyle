@@ -140,7 +140,7 @@ public final class XmlFileSourceUsernamePasswordAuthenticator
 				try {
 					in.close();
 				} catch (IOException e) {
-					throw new AssertionError(e.toString(), e);
+					throw new AssertionError(e);
 				}
 			}
 		}

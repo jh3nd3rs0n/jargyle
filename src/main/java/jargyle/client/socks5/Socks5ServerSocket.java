@@ -67,7 +67,7 @@ public final class Socks5ServerSocket extends ServerSocket {
 				wildcardAddress = InetAddress.getByName(
 						AddressType.IP_V4_ADDRESS.getWildcardAddress());
 			} catch (UnknownHostException e) {
-				throw new AssertionError(e.toString(), e);
+				throw new AssertionError(e);
 			}
 			this.localInetAddress = wildcardAddress;
 			this.localPort = -1;

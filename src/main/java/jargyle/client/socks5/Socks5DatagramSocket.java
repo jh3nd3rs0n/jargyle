@@ -135,13 +135,13 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 		try {
 			this.socket.close();
 		} catch (IOException e) {
-			throw new AssertionError(e.toString(), e);
+			throw new AssertionError(e);
 		}
 		super.close();
 		try {
 			init(this);
 		} catch (SocketException e) {
-			throw new AssertionError(e.toString(), e);
+			throw new AssertionError(e);
 		}
 	}
 	

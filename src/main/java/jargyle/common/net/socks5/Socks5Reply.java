@@ -75,12 +75,12 @@ public final class Socks5Reply {
 		try {
 			out.write(addressType.writeAddress(serverBoundAddress));
 		} catch (IOException e) {
-			throw new AssertionError(e.toString(), e);
+			throw new AssertionError(e);
 		}
 		try {
 			out.write(UnsignedShort.newInstance(serverBoundPort).toByteArray());
 		} catch (IOException e) {
-			throw new AssertionError(e.toString(), e);
+			throw new AssertionError(e);
 		}
 		Params params = new Params();
 		params.version = version;

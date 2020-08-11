@@ -65,13 +65,13 @@ public final class UsernamePassword {
 		try {
 			username = URLDecoder.decode(sElements[0], "UTF-8");
 		} catch (UnsupportedEncodingException e) {
-			throw new AssertionError(e.toString(), e);
+			throw new AssertionError(e);
 		}
 		char[] password = null;
 		try {
 			password = URLDecoder.decode(sElements[1], "UTF-8").toCharArray();
 		} catch (UnsupportedEncodingException e) {
-			throw new AssertionError(e.toString(), e);
+			throw new AssertionError(e);
 		}
 		return newInstance(username, password);
 	}
@@ -115,7 +115,7 @@ public final class UsernamePassword {
 		try {
 			encodedUsername = URLEncoder.encode(this.username, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
-			throw new AssertionError(e.toString(), e);
+			throw new AssertionError(e);
 		}
 		StringBuilder builder = new StringBuilder();
 		builder.append(this.getClass().getSimpleName())

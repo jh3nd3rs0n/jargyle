@@ -70,13 +70,13 @@ final class Pbkdf2WithHmacSha256HashedPassword extends HashedPassword {
 		try {
 			factory = SecretKeyFactory.getInstance(SECRET_KEY_FACTORY_ALGORITHM);
 		} catch (NoSuchAlgorithmException e) {
-			throw new AssertionError(e.toString(), e);
+			throw new AssertionError(e);
 		}
 		byte[] hsh = null;
 		try {
 			hsh = factory.generateSecret(keySpec).getEncoded();
 		} catch (InvalidKeySpecException e) {
-			throw new AssertionError(e.toString(), e);
+			throw new AssertionError(e);
 		}
 		return new Pbkdf2WithHmacSha256HashedPassword(hsh, slt);
 	}

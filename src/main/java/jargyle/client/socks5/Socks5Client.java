@@ -166,7 +166,7 @@ public final class Socks5Client extends SocksClient {
 		try {
 			DEFAULT_GSSAPI_MECHANISM_OID = new Oid("1.2.840.113554.1.2.2");
 		} catch (GSSException e) {
-			throw new AssertionError(e.toString(), e);
+			throw new AssertionError(e);
 		}
 	}
 	

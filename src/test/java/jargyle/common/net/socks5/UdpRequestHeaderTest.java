@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+import jargyle.TestStringConstants;
+
 public class UdpRequestHeaderTest {
 
 	@Test
@@ -13,7 +15,7 @@ public class UdpRequestHeaderTest {
 				AddressType.IP_V4_ADDRESS, 
 				"12.216.103.24", 
 				0, 
-				"Hello, World".getBytes());
+				TestStringConstants.STRING_01.getBytes());
 		UdpRequestHeader udpDatagram2 = UdpRequestHeader.newInstance(udpDatagram1.toByteArray());
 		assertEquals(udpDatagram1, udpDatagram2);
 	}
@@ -25,7 +27,7 @@ public class UdpRequestHeaderTest {
 				AddressType.DOMAINNAME, 
 				"google.com", 
 				1234, 
-				"Goodbye, Cruel World".getBytes());
+				TestStringConstants.STRING_02.getBytes());
 		UdpRequestHeader udpDatagram2 = UdpRequestHeader.newInstance(udpDatagram1.toByteArray());
 		assertEquals(udpDatagram1, udpDatagram2);
 	}
@@ -37,7 +39,7 @@ public class UdpRequestHeaderTest {
 				AddressType.IP_V6_ADDRESS, 
 				"abcd:1234:ef56:abcd:789e:f123:456a:b789", 
 				0xffff, 
-				"Ugh...".getBytes());
+				TestStringConstants.STRING_03.getBytes());
 		UdpRequestHeader udpDatagram2 = UdpRequestHeader.newInstance(udpDatagram1.toByteArray());
 		assertEquals(udpDatagram1, udpDatagram2);
 	}

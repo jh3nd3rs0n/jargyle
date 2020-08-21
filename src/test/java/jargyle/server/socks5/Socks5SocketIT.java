@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import org.junit.Test;
 
+import jargyle.TestStringConstants;
 import jargyle.client.socks5.UsernamePassword;
 import jargyle.server.ConfigurationFactory;
 
@@ -15,7 +16,7 @@ public class Socks5SocketIT {
 	@Test
 	public void testThroughSocks5Socket01() throws IOException {
 		System.out.println("Testing through Socks5Socket...");
-		String string = "Hello, World";
+		String string = TestStringConstants.STRING_01;
 		String returningString = echoThroughSocket(
 				string, 
 				Socks5ClientFactory.newSocks5Client(
@@ -27,7 +28,7 @@ public class Socks5SocketIT {
 	@Test
 	public void testThroughSocks5Socket02() throws IOException {
 		System.out.println("Testing through Socks5Socket...");
-		String string = "The quick brown fox jumped over the lazy dog";
+		String string = TestStringConstants.STRING_02;
 		String returningString = echoThroughSocket(
 				string, 
 				Socks5ClientFactory.newSocks5Client(
@@ -39,7 +40,7 @@ public class Socks5SocketIT {
 	@Test
 	public void testThroughSocks5Socket03() throws IOException {
 		System.out.println("Testing through Socks5Socket...");
-		String string = "Goodbye, World";
+		String string = TestStringConstants.STRING_03;
 		String returningString = echoThroughSocket(
 				string, 
 				Socks5ClientFactory.newSocks5Client(
@@ -51,7 +52,7 @@ public class Socks5SocketIT {
 	@Test
 	public void testThroughSocks5SocketUsingUsernamePasswordAuth01() throws IOException {
 		System.out.println("Testing through Socks5Socket using username password authentication...");
-		String string = "Hello, World";
+		String string = TestStringConstants.STRING_01;
 		String returningString = echoThroughSocket(
 				string, 
 				Socks5ClientFactory.newSocks5Client(
@@ -65,7 +66,7 @@ public class Socks5SocketIT {
 	@Test
 	public void testThroughSocks5SocketUsingUsernamePasswordAuth02() throws IOException {
 		System.out.println("Testing through Socks5Socket using username password authentication...");
-		String string = "The quick brown fox jumped over the lazy dog";
+		String string = TestStringConstants.STRING_02;
 		String returningString = echoThroughSocket(
 				string, 
 				Socks5ClientFactory.newSocks5Client(
@@ -79,7 +80,7 @@ public class Socks5SocketIT {
 	@Test
 	public void testThroughSocks5SocketUsingUsernamePasswordAuth03() throws IOException {
 		System.out.println("Testing through Socks5Socket using username password authentication...");
-		String string = "Goodbye, World";
+		String string = TestStringConstants.STRING_03;
 		String returningString = echoThroughSocket(
 				string, 
 				Socks5ClientFactory.newSocks5Client(

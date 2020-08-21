@@ -15,6 +15,7 @@ import java.util.concurrent.Executors;
 
 import org.junit.Test;
 
+import jargyle.TestStringConstants;
 import jargyle.client.DatagramSocketFactory;
 import jargyle.client.SocksClient;
 
@@ -176,7 +177,7 @@ public class DatagramSocketIT {
 	@Test
 	public void testThroughDatagramSocket01() throws IOException {
 		System.out.println("Testing through DatagramSocket...");
-		String string = "Hello, World";
+		String string = TestStringConstants.STRING_01;
 		String returningString = echoThroughDatagramSocket(string, null, null);
 		assertEquals(string, returningString);
 	}
@@ -184,7 +185,7 @@ public class DatagramSocketIT {
 	@Test
 	public void testThroughDatagramSocket02() throws IOException {
 		System.out.println("Testing through DatagramSocket...");
-		String string = "The quick brown fox jumped over the lazy dog";
+		String string = TestStringConstants.STRING_02;
 		String returningString = echoThroughDatagramSocket(string, null, null);
 		assertEquals(string, returningString);
 	}
@@ -192,7 +193,7 @@ public class DatagramSocketIT {
 	@Test
 	public void testThroughDatagramSocket03() throws IOException {
 		System.out.println("Testing through DatagramSocket...");
-		String string = "Goodbye, World";
+		String string = TestStringConstants.STRING_03;
 		String returningString = echoThroughDatagramSocket(string, null, null);
 		assertEquals(string, returningString);
 	}

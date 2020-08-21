@@ -21,6 +21,7 @@ import javax.net.SocketFactory;
 
 import org.junit.Test;
 
+import jargyle.TestStringConstants;
 import jargyle.client.SocksClient;
 
 public class ServerSocketIT {
@@ -253,7 +254,7 @@ public class ServerSocketIT {
 	@Test
 	public void testThroughServerSocket01() throws IOException {
 		System.out.println("Testing through ServerSocket...");
-		String string = "Hello, World";
+		String string = TestStringConstants.STRING_01;
 		String returningString = echoThroughServerSocket(string, null, null);
 		assertEquals(string, returningString);
 	}
@@ -261,7 +262,7 @@ public class ServerSocketIT {
 	@Test
 	public void testThroughServerSocket02() throws IOException {
 		System.out.println("Testing through ServerSocket...");
-		String string = "The quick brown fox jumped over the lazy dog";
+		String string = TestStringConstants.STRING_02;
 		String returningString = echoThroughServerSocket(string, null, null);
 		assertEquals(string, returningString);
 	}
@@ -269,7 +270,7 @@ public class ServerSocketIT {
 	@Test
 	public void testThroughServerSocket03() throws IOException {
 		System.out.println("Testing through ServerSocket...");
-		String string = "Goodbye, World";
+		String string = TestStringConstants.STRING_03;
 		String returningString = echoThroughServerSocket(string, null, null);
 		assertEquals(string, returningString);
 	}

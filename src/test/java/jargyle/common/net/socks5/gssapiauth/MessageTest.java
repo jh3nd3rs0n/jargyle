@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+import jargyle.TestStringConstants;
+
 public class MessageTest {
 
 	@Test
@@ -19,7 +21,7 @@ public class MessageTest {
 	public void testNewInstanceVersionMessageTypeByteArray02() {
 		Message message1 = Message.newInstance(
 				MessageType.AUTHENTICATION, 
-				"Hello, World".getBytes());
+				TestStringConstants.STRING_01.getBytes());
 		Message message2 = Message.newInstance(message1.toByteArray());
 		assertEquals(message1, message2);
 	}
@@ -28,7 +30,7 @@ public class MessageTest {
 	public void testNewInstanceVersionMessageTypeByteArray03() {
 		Message message1 = Message.newInstance(
 				MessageType.ENCAPSULATED_USER_DATA, 
-				"The quick brown fox jumped over the lazy dog.".getBytes());
+				TestStringConstants.STRING_02.getBytes());
 		Message message2 = Message.newInstance(message1.toByteArray());
 		assertEquals(message1, message2);
 	}
@@ -37,7 +39,7 @@ public class MessageTest {
 	public void testNewInstanceVersionMessageTypeByteArray04() {
 		Message message1 = Message.newInstance(
 				MessageType.PROTECTION_LEVEL_NEGOTIATION, 
-				"Goodbye, Cruel World".getBytes());
+				TestStringConstants.STRING_03.getBytes());
 		Message message2 = Message.newInstance(message1.toByteArray());
 		assertEquals(message1, message2);
 	}

@@ -213,6 +213,7 @@ public final class ArgMatey {
 					}
 				}
 			}
+			this.canProceed = true;
 		}
 		
 		public boolean hasNext() {
@@ -1959,9 +1960,17 @@ public final class ArgMatey {
 				return this.displayableSet;
 			}
 			
+			final String doc() {
+				return this.doc;
+			}
+			
 			public Builder doc(final String d) {
 				this.doc = d;
 				return this;
+			}
+			
+			final String name() {
+				return this.name;
 			}
 			
 			final OptionArgSpec optionArgSpec() {
@@ -1978,11 +1987,23 @@ public final class ArgMatey {
 				return this.optionArgSpecSet;
 			}
 			
+			final OptionUsageProvider optionUsageProvider() {
+				return this.optionUsageProvider;
+			}
+			
 			public Builder optionUsageProvider(
 					final OptionUsageProvider optUsageProvider) {
 				this.optionUsageProvider = optUsageProvider;
 				this.optionUsageProviderSet = true;
 				return this;
+			}
+			
+			final boolean optionUsageProviderSet() {
+				return this.optionUsageProviderSet;
+			}
+			
+			final String string() {
+				return this.string;
 			}
 			
 		}
@@ -1995,13 +2016,13 @@ public final class ArgMatey {
 		private final String string;
 
 		Option(final Builder builder) {
-			boolean display = builder.displayable;
-			String d = builder.doc;
-			String n = builder.name;
-			OptionArgSpec optArgSpec = builder.optionArgSpec;
-			OptionUsageProvider optUsageProvider = builder.optionUsageProvider;
-			String str = builder.string;
-			if (!builder.optionUsageProviderSet) {
+			boolean display = builder.displayable();
+			String d = builder.doc();
+			String n = builder.name();
+			OptionArgSpec optArgSpec = builder.optionArgSpec();
+			OptionUsageProvider optUsageProvider = builder.optionUsageProvider();
+			String str = builder.string();
+			if (!builder.optionUsageProviderSet()) {
 				optUsageProvider = OptionUsageProvider.getDefault(
 						this.getClass());
 			}
@@ -2430,9 +2451,17 @@ public final class ArgMatey {
 				return new OptionArgSpec(this); 
 			}
 			
+			final String name() {
+				return this.name;
+			}
+			
 			public Builder name(final String n) {
 				this.name = n;
 				return this;
+			}
+			
+			final boolean required() {
+				return this.required;
 			}
 			
 			public Builder required(final boolean b) {
@@ -2440,14 +2469,26 @@ public final class ArgMatey {
 				return this;
 			}
 			
+			final String separator() {
+				return this.separator;
+			}
+			
 			public Builder separator(final String s) {
 				this.separator = s;
 				return this;
 			}
 			
+			final StringConverter stringConverter() {
+				return this.stringConverter;
+			}
+			
 			public Builder stringConverter(final StringConverter sc) {
 				this.stringConverter = sc;
 				return this;
+			}
+			
+			final Class<?> type() {
+				return this.type;
 			}
 			
 			public Builder type(final Class<?> t) {
@@ -2468,11 +2509,11 @@ public final class ArgMatey {
 		private final Class<?> type;
 		
 		private OptionArgSpec(final Builder builder) {
-			String n = builder.name;
-			boolean r = builder.required;
-			String s = builder.separator;
-			StringConverter sc = builder.stringConverter;
-			Class<?> t = builder.type;
+			String n = builder.name();
+			boolean r = builder.required();
+			String s = builder.separator();
+			StringConverter sc = builder.stringConverter();
+			Class<?> t = builder.type();
 			if (n == null) { n = DEFAULT_NAME; }
 			if (s == null) { s = DEFAULT_SEPARATOR;	}
 			if (t == null) { t = DEFAULT_TYPE; }
@@ -2569,11 +2610,27 @@ public final class ArgMatey {
 				return new OptionGroup(this); 
 			}
 			
+			final Option.Builder optionBuilder() {
+				return this.optionBuilder;
+			}
+			
+			final OptionGroupHelpTextProvider optionGroupHelpTextProvider() {
+				return this.optionGroupHelpTextProvider;
+			}
+			
 			public Builder optionGroupHelpTextProvider(
 					final OptionGroupHelpTextProvider optGroupHelpTextProvider) {
 				this.optionGroupHelpTextProvider = optGroupHelpTextProvider;
 				this.optionGroupHelpTextProviderSet = true;
 				return this;
+			}
+			
+			final boolean optionGroupHelpTextProviderSet() {
+				return this.optionGroupHelpTextProviderSet;
+			}
+			
+			final List<Option.Builder> otherOptionBuilders() {
+				return Collections.unmodifiableList(this.otherOptionBuilders);
 			}
 			
 			public Builder otherOptionBuilders(
@@ -2631,11 +2688,11 @@ public final class ArgMatey {
 		private final OptionGroupHelpTextProvider optionGroupHelpTextProvider;
 		
 		private OptionGroup(final Builder builder) {
-			Option.Builder optBuilder = builder.optionBuilder;
+			Option.Builder optBuilder = builder.optionBuilder();
 			OptionGroupHelpTextProvider optGroupHelpTextProvider =
-					builder.optionGroupHelpTextProvider;
+					builder.optionGroupHelpTextProvider();
 			List<Option.Builder> otherOptBuilders = 
-					new ArrayList<Option.Builder>(builder.otherOptionBuilders);
+					new ArrayList<Option.Builder>(builder.otherOptionBuilders());
 			List<Option> displayableOpts = new ArrayList<Option>();
 			List<Option> opts = new ArrayList<Option>();
 			Option opt = optBuilder.build();
@@ -2652,7 +2709,7 @@ public final class ArgMatey {
 				Option otherOpt = otherOptBuilder.build();
 				add(otherOpt, opts, displayableOpts);
 			}
-			if (!builder.optionGroupHelpTextProviderSet) {
+			if (!builder.optionGroupHelpTextProviderSet()) {
 				optGroupHelpTextProvider = 
 						OptionGroupHelpTextProvider.getDefault();
 			}

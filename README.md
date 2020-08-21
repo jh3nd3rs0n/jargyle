@@ -42,6 +42,7 @@ Jargyle is a Java SOCKS5 server. It has the following features:
 -   [3. 12. The Comment Attribute](#3-12-the-comment-attribute)
 -   [4. TODO](#4-todo)
 -   [5. Contact](#5-contact)
+-   [6. Donate](#6-donate)
 
 ## 1. Requirements
 
@@ -1290,3 +1291,13 @@ Partial configuration file example:
 ## 5. Contact
 
 If you have any questions or comments, you can e-mail me at `j0n4th4n.h3nd3rs0n@gmail.com`
+
+## 6. Donate
+
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+<input type="hidden" name="cmd" value="_donations" />
+<input type="hidden" name="business" value="BRABJQVU3S6LW" />
+<input type="hidden" name="currency_code" value="USD" />
+<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
+<img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1" />
+</form>

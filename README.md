@@ -37,9 +37,10 @@ Jargyle is a Java SOCKS5 server. It has the following features:
 -   [3. 9. 1. 2. Using Username Password Authentication](#3-9-1-2-using-username-password-authentication)
 -   [3. 9. 1. 3. Using GSS-API Authentication](#3-9-1-3-using-gss-api-authentication)
 -   [3. 9. 2. Using Java System Properties](#3-9-2-using-java-system-properties)
--   [3. 10. Allow or Block Addresses](#3-10-allow-or-block-addresses)
--   [3. 11. Allow or Block SOCKS5 Requests](#3-11-allow-or-block-socks5-requests)
+-   [3. 10. Allowing or Blocking Addresses](#3-10-allowing-or-blocking-addresses)
+-   [3. 11. Allowing or Blocking SOCKS5 Requests](#3-11-allowing-or-blocking-socks5-requests)
 -   [3. 12. The Comment Attribute](#3-12-the-comment-attribute)
+-   [3. 13. Logging](#3-13-logging)
 -   [4. TODO](#4-todo)
 -   [5. Contact](#5-contact)
 -   [6. Donate](#6-donate)
@@ -1118,7 +1119,7 @@ Instead of using command line options or configuration settings, you can use the
 -   `socksClient.socks5.username`: The username to be used in SOCKS5 username password authentication to access the other SOCKS5 server used for external connections (any special characters must be URL encoded)
 -   `socksClient.socks5.password`: The password to be used in SOCKS5 username password authentication to access the other SOCKS5 server used for external connections (any special characters must be URL encoded)
 
-### 3. 10. Allow or Block Addresses
+### 3. 10. Allowing or Blocking Addresses
 
 You can allow or block the following addresses:
 
@@ -1172,7 +1173,7 @@ Partial configuration file example:
     
 ```
 
-### 3. 11. Allow or Block SOCKS5 Requests
+### 3. 11. Allowing or Blocking SOCKS5 Requests
 
 You can allow or block SOCKS5 requests. To allow or block SOCKS5 requests, you will need to specify the SOCKS5 request or requests in either of the following XML elements in the configuration file:
 
@@ -1274,6 +1275,65 @@ Partial configuration file example:
     <settings>
         <setting name="backlog" value="100" comment="expecting a lot of client connections"/>
     </settings>
+    
+```
+
+### 3. 13. Logging
+
+Jargyle uses Java's built-in logging framework. There are seven logging levels in the order of highest priority to the lowest priority:
+
+-   `SEVERE`
+-   `WARNING`
+-   `INFO`
+-   `CONFIG`
+-   `FINE`
+-   `FINER`
+-   `FINEST`
+
+By default, the current level is set at `INFO` and up. This means that only logging messages of levels `INFO` and up will appear in the output.
+
+The following are the classes that use logging:
+
+-   `jargyle.server.Listener`
+-   `jargyle.server.SocksServer`
+-   `jargyle.server.SocksServerCLI`
+-   `jargyle.server.TcpRelayServer$DataWorker`
+-   `jargyle.server.Worker`
+-   `jargyle.server.XmlFileSourceConfigurationService$ConfigurationUpdater`
+-   `jargyle.server.socks5.Socks5Worker`
+-   `jargyle.server.socks5.UdpRelayServer$IncomingPacketsWorker`
+-   `jargyle.server.socks5.UdpRelayServer$OutgoingPacketsWorker`
+-   `jargyle.server.socks5.XmlFileSourceUsernamePasswordAuthenticator$UsersUpdater`
+
+To configure logging for any of the aforementioned classes, you can use a configuration file to specify the logging properties for any of the classes.
+
+The following is a configuration file example of setting the logging level of some of the classes to `FINE` and up:
+
+`logging.properties`:
+
+```text
+    
+    jargyle.server.Listener.handlers = java.util.logging.ConsoleHandler
+    jargyle.server.Listener.level = FINE    
+    jargyle.server.SocksServer.handlers = java.util.logging.ConsoleHandler
+    jargyle.server.SocksServer.level = FINE
+    jargyle.server.SocksServerCLI.handlers = java.util.logging.ConsoleHandler
+    jargyle.server.SocksServerCLI.level = FINE
+    jargyle.server.Worker.handlers = java.util.logging.ConsoleHandler
+    jargyle.server.Worker.level = FINE
+    jargyle.server.socks5.Socks5Worker.handlers = java.util.logging.ConsoleHandler
+    jargyle.server.socks5.Socks5Worker.level = FINE
+    java.util.logging.ConsoleHandler.level = FINE
+    
+```
+
+To use the configuration file, you can use the Java system property `java.util.logging.config.file`.
+
+Example:
+
+```bash
+    
+    java -Djava.util.logging.config.file=logging.properties -jar target/jargyle-${VERSION}.jar
     
 ```
 

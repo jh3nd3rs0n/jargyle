@@ -15,10 +15,10 @@ import java.util.List;
 import javax.xml.bind.JAXBException;
 
 import argmatey.ArgMatey;
-import argmatey.ArgMatey.Annotations.IgnoreOptionGroup;
+import argmatey.ArgMatey.Annotations.Ignore;
 import argmatey.ArgMatey.Annotations.NonparsedArg;
 import argmatey.ArgMatey.Annotations.Option;
-import argmatey.ArgMatey.Annotations.OptionGroup;
+import argmatey.ArgMatey.Annotations.Ordinal;
 import argmatey.ArgMatey.CLI;
 import argmatey.ArgMatey.GnuLongOption;
 import argmatey.ArgMatey.PosixOption;
@@ -311,20 +311,16 @@ public final class UsersCLI extends CLI {
 		}
 	}
 	
-	@OptionGroup(
-			option = @Option(
-					doc = "Print this help and exit",
-					name = "help",
-					type = GnuLongOption.class
-			),
-			ordinal = HELP_OPTION_GROUP_ORDINAL,
-			otherOptions = {
-					@Option(
-							name = "h",
-							type = PosixOption.class
-					)
-			}
+	@Option(
+			doc = "Print this help and exit",
+			name = "help",
+			type = GnuLongOption.class
 	)
+	@Option(
+			name = "h",
+			type = PosixOption.class
+	)
+	@Ordinal(HELP_OPTION_GROUP_ORDINAL)
 	@Override
 	public void displayProgramHelp() {
 		ArgMatey.Option helpOption = this.getOptionGroups().get(
@@ -354,7 +350,7 @@ public final class UsersCLI extends CLI {
 		this.programHelpDisplayed = true;
 	}
 	
-	@IgnoreOptionGroup
+	@Ignore
 	@Override
 	public void displayProgramVersion() { }
 		
@@ -395,20 +391,16 @@ public final class UsersCLI extends CLI {
 		return 0;
 	}
 	
-	@OptionGroup(
-			option = @Option(
-					doc = "Print the XSD and exit",
-					name = "xsd",
-					type = GnuLongOption.class
-			),
-			ordinal = XSD_OPTION_GROUP_ORDINAL,
-			otherOptions = {
-					@Option(
-							name = "x",
-							type = PosixOption.class
-					)
-			}
+	@Option(
+			doc = "Print the XSD and exit",
+			name = "xsd",
+			type = GnuLongOption.class
 	)
+	@Option(
+			name = "x",
+			type = PosixOption.class
+	)
+	@Ordinal(XSD_OPTION_GROUP_ORDINAL)
 	public void printXsd() throws JAXBException, IOException {
 		byte[] xsd = Users.getXsd();
 		System.out.write(xsd);

@@ -65,7 +65,7 @@ public final class ArgMatey {
 		@Target({ElementType.METHOD})
 		public static @interface NonparsedArg { }
 
-		@Repeatable(OptionGroup.class)
+		@Repeatable(Options.class)
 		@Retention(RetentionPolicy.RUNTIME)
 		@Target({ElementType.METHOD})
 		public static @interface Option {
@@ -104,17 +104,17 @@ public final class ArgMatey {
 
 		@Retention(RetentionPolicy.RUNTIME)
 		@Target({ElementType.METHOD})
-		public static @interface OptionGroup {
+		public static @interface OptionGroupHelpTextProvider {
 			
-			Annotations.Option[] value();
+			Class<? extends ArgMatey.OptionGroupHelpTextProvider> value();
 			
 		}
 
 		@Retention(RetentionPolicy.RUNTIME)
 		@Target({ElementType.METHOD})
-		public static @interface OptionGroupHelpTextProvider {
+		public static @interface Options {
 			
-			Class<? extends ArgMatey.OptionGroupHelpTextProvider> value();
+			Annotations.Option[] value();
 			
 		}
 		
@@ -3057,9 +3057,9 @@ public final class ArgMatey {
 					mthd.getParameterTypes());
 			optAnnotations = mthd.getAnnotationsByType(Annotations.Option.class);
 			if (optAnnotations.length == 0) {
-				Annotations.OptionGroup optGroupAnnotation = mthd.getAnnotation(
-						Annotations.OptionGroup.class);
-				optAnnotations = optGroupAnnotation.value();
+				Annotations.Options optsAnnotation = mthd.getAnnotation(
+						Annotations.Options.class);
+				optAnnotations = optsAnnotation.value();
 			}
 			if (mthd.isAnnotationPresent(Annotations.OptionGroupHelpTextProvider.class)) {
 				Annotations.OptionGroupHelpTextProvider optGroupHelpTextProviderAnnotation =
@@ -3560,7 +3560,7 @@ public final class ArgMatey {
 					}
 				}
 				if (method.isAnnotationPresent(Annotations.OptionGroupHelpTextProvider.class)
-						|| method.isAnnotationPresent(Annotations.OptionGroup.class)
+						|| method.isAnnotationPresent(Annotations.Options.class)
 						|| method.isAnnotationPresent(Annotations.Option.class)) {
 					if (!method.isAnnotationPresent(Annotations.Ignore.class)) {
 						OptionGroupMethod mthd = OptionGroupMethod.newInstance(

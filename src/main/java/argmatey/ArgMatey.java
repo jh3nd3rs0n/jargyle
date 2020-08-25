@@ -42,12 +42,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Objects;
+import java.util.Properties;
 
 /**
  * Provides interfaces and classes for parsing command line arguments and 
@@ -56,6 +58,14 @@ import java.util.Objects;
 public final class ArgMatey {
 
 	public static final class Annotations {
+		
+		@Retention(RetentionPolicy.RUNTIME)
+		@Target({ElementType.METHOD})
+		public static @interface HelpText {
+			
+			String value();
+			
+		}
 		
 		@Retention(RetentionPolicy.RUNTIME)
 		@Target({ElementType.METHOD})
@@ -83,6 +93,8 @@ public final class ArgMatey {
 				default ArgMatey.OptionUsageProvider.class;
 					
 			Class<? extends ArgMatey.Option> type();
+			
+			String usage() default "";
 			
 		}
 
@@ -1527,6 +1539,12 @@ public final class ArgMatey {
 				return this;
 			}
 			
+			@Override
+			public Builder usage(final String u) {
+				super.usage(u);
+				return this;
+			}
+			
 		}
 		
 		private GnuLongOption(final Builder builder) {
@@ -1801,6 +1819,82 @@ public final class ArgMatey {
 		
 	}
 	
+	static final class InterpolatedOptionGroupHelpTextProvider 
+		extends OptionGroupHelpTextProvider {
+
+		private final String string;
+		
+		public InterpolatedOptionGroupHelpTextProvider(final String str) {
+			this.string = str;
+		}
+		
+		@Override
+		public String getOptionGroupHelpText(
+				final OptionGroupHelpTextParams params) {
+			Properties properties = new Properties();
+			int index = -1;
+			for (Option option : params.getDisplayableOptions()) {
+				String optionPropertyName = String.format("option%s", ++index);
+				properties.setProperty(optionPropertyName, option.toString());
+				String doc = option.getDoc();
+				if (doc != null) {
+					properties.setProperty(
+							optionPropertyName.concat(".doc"), doc);
+				}
+				properties.setProperty(
+						optionPropertyName.concat(".name"),	option.getName());
+				OptionArgSpec optionArgSpec = option.getOptionArgSpec();
+				if (optionArgSpec != null) {
+					properties.setProperty(
+							optionPropertyName.concat(".optionArgSpec.name"), 
+							optionArgSpec.getName());
+					properties.setProperty(
+							optionPropertyName.concat(".optionArgSpec.separator"), 
+							optionArgSpec.getSeparator());
+				}
+				properties.setProperty(
+						optionPropertyName.concat(".usage"), option.getUsage());
+			}
+			Properties systemProperties = System.getProperties();
+			PropertiesHelper.putAll(systemProperties, properties);
+			StringBuilder sb = new StringBuilder(this.string);
+			StringInterpolator.interpolate(sb, properties);
+			return sb.toString();
+		}
+		
+	}
+	
+	static final class InterpolatedOptionUsageProvider 
+		extends OptionUsageProvider {
+
+		private final String string;
+		
+		public InterpolatedOptionUsageProvider(final String str) {
+			this.string = str;
+		}
+		
+		@Override
+		public String getOptionUsage(final OptionUsageParams params) {
+			Properties properties = new Properties();
+			properties.setProperty("option", params.getOption());
+			OptionArgSpec optionArgSpec = params.getOptionArgSpec();
+			if (optionArgSpec != null) {
+				properties.setProperty(
+						"option.optionArgSpec.name", 
+						optionArgSpec.getName());
+				properties.setProperty(
+						"option.optionArgSpec.separator", 
+						optionArgSpec.getSeparator());
+			}
+			Properties systemProperties = System.getProperties();
+			PropertiesHelper.putAll(systemProperties, properties);
+			StringBuilder sb = new StringBuilder(this.string);
+			StringInterpolator.interpolate(sb, properties);
+			return sb.toString();
+		}
+		
+	}
+	
 	public static final class LongOption extends Option {
 
 		public static final class Builder extends Option.Builder {
@@ -1836,6 +1930,12 @@ public final class ArgMatey {
 			public Builder optionUsageProvider(
 					final OptionUsageProvider optUsageProvider) {
 				super.optionUsageProvider(optUsageProvider);
+				return this;
+			}
+			
+			@Override
+			public Builder usage(final String u) {
+				super.usage(u);
 				return this;
 			}
 			
@@ -1919,6 +2019,7 @@ public final class ArgMatey {
 			private OptionUsageProvider optionUsageProvider;
 			private boolean optionUsageProviderSet;
 			private String string;
+			private String usage;
 			
 			Builder(final String optName, final String opt) {
 				Objects.requireNonNull(optName, "option name must not be null");
@@ -1950,6 +2051,7 @@ public final class ArgMatey {
 				this.optionUsageProvider = null;
 				this.optionUsageProviderSet = false;
 				this.string = opt;
+				this.usage = null;
 			}
 			
 			public abstract Option build();
@@ -2014,6 +2116,15 @@ public final class ArgMatey {
 				return this.string;
 			}
 			
+			final String usage() {
+				return this.usage;
+			}
+			
+			public Builder usage(final String u) {
+				this.usage = u;
+				return this;
+			}
+			
 		}
 		
 		private final boolean displayable;
@@ -2029,10 +2140,15 @@ public final class ArgMatey {
 			String n = builder.name();
 			OptionArgSpec optArgSpec = builder.optionArgSpec();
 			OptionUsageProvider optUsageProvider = builder.optionUsageProvider();
+			boolean optUsageProviderSet = builder.optionUsageProviderSet();
 			String str = builder.string();
-			if (!builder.optionUsageProviderSet()) {
+			String u = builder.usage();
+			if (!optUsageProviderSet) {
 				optUsageProvider = OptionUsageProvider.getDefault(
 						this.getClass());
+			}
+			if (u != null) {
+				optUsageProvider = new InterpolatedOptionUsageProvider(u);
 			}
 			this.displayable = display;
 			this.doc = d;
@@ -2600,11 +2716,13 @@ public final class ArgMatey {
 		
 		public static final class Builder {
 			
+			private String helpText;
+			private final List<Option.Builder> optionBuilders;
 			private OptionGroupHelpTextProvider optionGroupHelpTextProvider;
 			private boolean optionGroupHelpTextProviderSet;
-			private final List<Option.Builder> optionBuilders;
-			
+						
 			public Builder() {
+				this.helpText = null;
 				this.optionBuilders = new ArrayList<Option.Builder>();
 				this.optionGroupHelpTextProvider = null;
 				this.optionGroupHelpTextProviderSet = false;
@@ -2612,6 +2730,15 @@ public final class ArgMatey {
 			
 			public OptionGroup build() {
 				return new OptionGroup(this); 
+			}
+			
+			final String helpText() {
+				return this.helpText;
+			}
+			
+			public Builder helpText(final String h) {
+				this.helpText = h;
+				return this;
 			}
 			
 			final List<Option.Builder> optionBuilders() {
@@ -2687,10 +2814,13 @@ public final class ArgMatey {
 		private final OptionGroupHelpTextProvider optionGroupHelpTextProvider;
 		
 		private OptionGroup(final Builder builder) {
+			String h = builder.helpText();
 			List<Option.Builder> optBuilders = new ArrayList<Option.Builder>(
 					builder.optionBuilders());
 			OptionGroupHelpTextProvider optGroupHelpTextProvider =
 					builder.optionGroupHelpTextProvider();
+			boolean optGroupHelpTextProviderSet = 
+					builder.optionGroupHelpTextProviderSet();
 			List<Option> displayableOpts = new ArrayList<Option>();
 			List<Option> opts = new ArrayList<Option>();
 			Iterator<Option.Builder> iterator = optBuilders.iterator();
@@ -2713,9 +2843,13 @@ public final class ArgMatey {
 				Option additionalOpt = additionalOptBuilder.build();
 				add(additionalOpt, opts, displayableOpts);
 			}
-			if (!builder.optionGroupHelpTextProviderSet()) {
+			if (!optGroupHelpTextProviderSet) {
 				optGroupHelpTextProvider = 
 						OptionGroupHelpTextProvider.getDefault();
+			}
+			if (h != null) {
+				optGroupHelpTextProvider = 
+						new InterpolatedOptionGroupHelpTextProvider(h);
 			}
 			this.displayableOptions = new ArrayList<Option>(displayableOpts);
 			this.options = new ArrayList<Option>(opts);
@@ -3042,6 +3176,7 @@ public final class ArgMatey {
 			}
 		}
 		
+		private final String helpText;
 		private final Method method;
 		private OptionGroup optionGroup;
 		private final Annotations.Option[] optionAnnotations;
@@ -3050,13 +3185,20 @@ public final class ArgMatey {
 		private final TargetMethodParameterTypesType targetMethodParameterTypesType;
 		
 		private OptionGroupMethod(final Method mthd) {
+			String h = null;
 			Annotations.Option[] optAnnotations = new Annotations.Option[] { };
 			Class<?> optGroupHelpTextProviderClass = OptionGroupHelpTextProvider.class;
 			int ord = 0;
 			TargetMethodParameterTypesType t = TargetMethodParameterTypesType.get(
 					mthd.getParameterTypes());
+			if (mthd.isAnnotationPresent(Annotations.HelpText.class)) {
+				Annotations.HelpText hAnnotation = mthd.getAnnotation(
+						Annotations.HelpText.class);
+				h = hAnnotation.value();
+			}
 			optAnnotations = mthd.getAnnotationsByType(Annotations.Option.class);
-			if (optAnnotations.length == 0) {
+			if (optAnnotations.length == 0 
+					&& mthd.isAnnotationPresent(Annotations.Options.class)) {
 				Annotations.Options optsAnnotation = mthd.getAnnotation(
 						Annotations.Options.class);
 				optAnnotations = optsAnnotation.value();
@@ -3071,12 +3213,17 @@ public final class ArgMatey {
 						Annotations.Ordinal.class);
 				ord = ordAnnotation.value();
 			}
+			this.helpText = h;
 			this.method = mthd;
 			this.optionGroup = null;
 			this.optionAnnotations = optAnnotations;
 			this.optionGroupHelpTextProviderClass = optGroupHelpTextProviderClass;
 			this.ordinal = ord;
 			this.targetMethodParameterTypesType = t;
+		}
+		
+		public String getHelpText() {
+			return this.helpText;
 		}
 		
 		public Annotations.Option[] getOptionAnnotations() {
@@ -3159,7 +3306,10 @@ public final class ArgMatey {
 			if (!displayable.equals(OptionalBoolean.UNSPECIFIED)) {
 				builder.displayable(displayable.booleanValue().booleanValue());
 			}
-			builder.doc(option.doc());
+			String doc = option.doc();
+			if (!doc.isEmpty()) {
+				builder.doc(option.doc());
+			}
 			Annotations.OptionArgSpec optionArgSpec = option.optionArgSpec();
 			OptionalBoolean optionArgAllowed = optionArgSpec.allowed();
 			if (!optionArgAllowed.equals(OptionalBoolean.UNSPECIFIED)) {
@@ -3176,11 +3326,18 @@ public final class ArgMatey {
 						this.newOptionUsageProvider(optionUsageProviderClass);
 				builder.optionUsageProvider(optionUsageProvider);
 			}
+			String usage = option.usage();
+			if (!usage.isEmpty()) {
+				builder.usage(usage);
+			}
 			return builder;
 		}
 		
 		private OptionGroup newOptionGroup() {
 			OptionGroup.Builder builder = new OptionGroup.Builder();
+			if (this.helpText != null) {
+				builder.helpText(this.helpText);
+			}
 			List<Option.Builder> optionBuilders = new ArrayList<Option.Builder>();
 			for (Annotations.Option optionAnnotation : this.optionAnnotations) {
 				optionBuilders.add(this.newOptionBuilder(optionAnnotation));
@@ -3559,7 +3716,8 @@ public final class ArgMatey {
 						}
 					}
 				}
-				if (method.isAnnotationPresent(Annotations.OptionGroupHelpTextProvider.class)
+				if (method.isAnnotationPresent(Annotations.HelpText.class)
+						|| method.isAnnotationPresent(Annotations.OptionGroupHelpTextProvider.class)
 						|| method.isAnnotationPresent(Annotations.Options.class)
 						|| method.isAnnotationPresent(Annotations.Option.class)) {
 					if (!method.isAnnotationPresent(Annotations.Ignore.class)) {
@@ -3805,11 +3963,35 @@ public final class ArgMatey {
 				return this;
 			}
 			
+			@Override
+			public Builder usage(final String u) {
+				super.usage(u);
+				return this;
+			}
+
 		}
 		
 		private PosixOption(final Builder builder) {
 			super(builder);
 		}
+		
+	}
+	
+	static final class PropertiesHelper {
+		
+		public static void putAll(
+				final Properties source, final Properties destination) {
+			Enumeration<?> sourcePropertyNames = source.propertyNames();
+			while (sourcePropertyNames.hasMoreElements()) {
+				String sourcePropertyName = 
+						(String) sourcePropertyNames.nextElement();
+				String property = source.getProperty(
+						sourcePropertyName);
+				destination.setProperty(sourcePropertyName, property);
+			}
+		}
+		
+		private PropertiesHelper() { }
 		
 	}
 	
@@ -3834,6 +4016,64 @@ public final class ArgMatey {
 		 * illegal or inappropriate
 		 */
 		public abstract Object convert(String string);
+		
+	}
+	
+	static final class StringInterpolator {
+		
+		public static void interpolate(
+				final StringBuilder sb, final Properties properties) {
+			StringBuilder keyBuilder = null;
+			int propertyStart = -1;
+			for (int i = 0; i < sb.length(); i++) {
+				char ch = sb.charAt(i);
+				if (ch == '$' && i + 1 < sb.length()) {
+					char nextCh = sb.charAt(i + 1);
+					switch (nextCh) {
+					case '$':
+						sb.replace(i, i + 2, "$");
+						break;
+					case '{':
+						if (keyBuilder == null) {
+							keyBuilder = new StringBuilder();
+							propertyStart = i;
+							i++;
+							continue;
+						} else {
+							StringBuilder sb2 = new StringBuilder(sb.substring(i));
+							interpolate(sb2, properties);
+							int len = sb2.length();
+							sb.replace(i, i + len, sb2.toString());
+							sb2.delete(0, len);
+							if (len == 0) { continue; }
+						}
+						break;
+					case '}':
+						sb.replace(i, i + 2, "}");
+						break;
+					default:
+						break;
+					}
+					ch = sb.charAt(i);
+				} else if (ch == '}' && keyBuilder != null) {
+					String key = keyBuilder.toString();
+					String property = properties.getProperty(key);
+					if (property != null) {
+						sb.replace(propertyStart, i + 1, property);
+						i = propertyStart + property.length() - 1;
+					}
+					keyBuilder.delete(0, keyBuilder.length());
+					keyBuilder = null;
+					propertyStart = -1;
+					continue;
+				}
+				if (keyBuilder != null) {
+					keyBuilder.append(ch);
+				}
+			}
+		}
+		
+		private StringInterpolator() { }
 		
 	}
 

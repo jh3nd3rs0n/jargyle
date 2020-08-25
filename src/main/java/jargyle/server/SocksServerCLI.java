@@ -24,8 +24,6 @@ import argmatey.ArgMatey.Annotations.Ordinal;
 import argmatey.ArgMatey.CLI;
 import argmatey.ArgMatey.GnuLongOption;
 import argmatey.ArgMatey.IllegalOptionArgException;
-import argmatey.ArgMatey.OptionUsageParams;
-import argmatey.ArgMatey.OptionUsageProvider;
 import argmatey.ArgMatey.PosixOption;
 import jargyle.client.Scheme;
 import jargyle.client.socks5.DefaultUsernamePasswordRequestor;
@@ -39,79 +37,6 @@ import jargyle.server.socks5.UsernamePasswordAuthenticator;
 import jargyle.server.socks5.UsersCLI;
 
 public final class SocksServerCLI extends CLI {
-
-	public static final class CriteriaOptionUsageProvider 
-		extends OptionUsageProvider {
-		
-		public CriteriaOptionUsageProvider() { }
-
-		@Override
-		public String getOptionUsage(final OptionUsageParams params) {
-			return String.format(
-					"%1$s=[%2$s:%3$s1[ %2$s:%3$s2[...]]]", 
-					params.getOption(),
-					"equals|matches",
-					"VALUE");
-		}
-		
-	}
-	
-	public static final class SettingsGnuLongOptionUsageProvider 
-		extends OptionUsageProvider {
-		
-		public SettingsGnuLongOptionUsageProvider() { }
-
-		@Override
-		public String getOptionUsage(final OptionUsageParams params) {
-			return String.format(
-					"%1$s=[%2$s1=%3$s1[,%2$s2=%3$s2[...]]]", 
-					params.getOption(),
-					"NAME",
-					"VALUE");
-		}
-		
-	}
-	
-	public static final class SettingsPosixOptionUsageProvider 
-		extends OptionUsageProvider {
-		
-		public SettingsPosixOptionUsageProvider() { }
-
-		@Override
-		public String getOptionUsage(final OptionUsageParams params) {
-			return String.format(
-					"%1$s [%2$s1=%3$s1[,%2$s2=%3$s2[...]]]",
-					params.getOption(),
-					"NAME",
-					"VALUE");
-		}
-		
-		
-	}
-	
-	public static final class UsernamePasswordAuthenticatorOptionUsageProvider 
-		extends OptionUsageProvider {
-		
-		public UsernamePasswordAuthenticatorOptionUsageProvider() { }
-
-		@Override
-		public String getOptionUsage(final OptionUsageParams params) {
-			return String.format("%s=CLASSNAME[:VALUE]", params.getOption());
-		}
-		
-	}
-	
-	public static final class UsernamePasswordOptionUsageProvider
-		extends OptionUsageProvider {
-				
-		public UsernamePasswordOptionUsageProvider() { }
-
-		@Override
-		public String getOptionUsage(final OptionUsageParams params) {
-			return String.format("%s=USERNAME:PASSWORD", params.getOption());
-		}
-		
-	}
 	
 	private static final int ALLOWED_CLIENT_ADDR_CRITERIA_OPTION_GROUP_ORDINAL = 0;
 	private static final int ALLOWED_SOCKS5_INCOMING_TCP_ADDR_CRITERIA_OPTION_GROUP_ORDINAL = 1;
@@ -130,6 +55,21 @@ public final class SocksServerCLI extends CLI {
 	private static final int SETTINGS_OPTION_GROUP_ORDINAL = 14;
 	private static final int SOCKS5_USER_PASS_AUTHENTICATOR_OPTION_GROUP_ORDINAL = 15;
 	private static final int SOCKS5_USERS_OPTION_GROUP_ORDINAL = 16;
+
+	private static final String CRITERIA_OPTION_USAGE = 
+			"${option}=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"; 
+
+	private static final String SETTINGS_GNU_LONG_OPTION_USAGE = 
+			"${option}=[NAME1=VALUE1[,NAME2=VALUE2[...]]]"; 
+
+	private static final String SETTINGS_POSIX_OPTION_USAGE = 
+			"${option} [NAME1=VALUE1[,NAME2=VALUE2[...]]]"; 
+
+	private static final String USERNAME_PASSWORD_AUTHENTICATOR_OPTION_USAGE =
+			"${option}=CLASSNAME[:VALUE]";
+
+	private static final String USERNAME_PASSWORD_OPTION_USAGE =
+			"${option}=USERNAME:PASSWORD";
 	
 	private static final Logger LOGGER = Logger.getLogger(
 			SocksServerCLI.class.getName());
@@ -171,8 +111,8 @@ public final class SocksServerCLI extends CLI {
 					+ "criteria",
 			name = "allowed-client-addr-criteria",
 			optionArgSpec = @OptionArgSpec(),
-			optionUsageProvider = CriteriaOptionUsageProvider.class,
-			type = GnuLongOption.class
+			type = GnuLongOption.class,
+			usage = CRITERIA_OPTION_USAGE
 	)
 	@Ordinal(ALLOWED_CLIENT_ADDR_CRITERIA_OPTION_GROUP_ORDINAL)
 	public void addAllowedClientAddressCriteria(
@@ -186,8 +126,8 @@ public final class SocksServerCLI extends CLI {
 					+ "incoming TCP address criteria",
 			name = "allowed-socks5-incoming-tcp-addr-criteria",
 			optionArgSpec = @OptionArgSpec(),
-			optionUsageProvider = CriteriaOptionUsageProvider.class,
-			type = GnuLongOption.class
+			type = GnuLongOption.class,
+			usage = CRITERIA_OPTION_USAGE
 	)
 	@Ordinal(ALLOWED_SOCKS5_INCOMING_TCP_ADDR_CRITERIA_OPTION_GROUP_ORDINAL)
 	public void addAllowedSocks5IncomingTcpAddressCriteria(
@@ -201,8 +141,8 @@ public final class SocksServerCLI extends CLI {
 					+ "incoming UDP address criteria",
 			name = "allowed-socks5-incoming-udp-addr-criteria",
 			optionArgSpec = @OptionArgSpec(),
-			optionUsageProvider = CriteriaOptionUsageProvider.class,
-			type = GnuLongOption.class
+			type = GnuLongOption.class,
+			usage = CRITERIA_OPTION_USAGE
 	)
 	@Ordinal(ALLOWED_SOCKS5_INCOMING_UDP_ADDR_CRITERIA_OPTION_GROUP_ORDINAL)
 	public void addAllowedSocks5IncomingUdpAddressCriteria(
@@ -216,8 +156,8 @@ public final class SocksServerCLI extends CLI {
 					+ "criteria",
 			name = "blocked-client-addr-criteria",
 			optionArgSpec = @OptionArgSpec(),
-			optionUsageProvider = CriteriaOptionUsageProvider.class,
-			type = GnuLongOption.class
+			type = GnuLongOption.class,
+			usage = CRITERIA_OPTION_USAGE
 	)
 	@Ordinal(BLOCKED_CLIENT_ADDR_CRITERIA_OPTION_GROUP_ORDINAL)
 	public void addBlockedClientAddressCriteria(
@@ -231,8 +171,8 @@ public final class SocksServerCLI extends CLI {
 					+ "incoming TCP address criteria",
 			name = "blocked-socks5-incoming-tcp-addr-criteria",
 			optionArgSpec = @OptionArgSpec(),
-			optionUsageProvider = CriteriaOptionUsageProvider.class,
-			type = GnuLongOption.class
+			type = GnuLongOption.class,
+			usage = CRITERIA_OPTION_USAGE
 	)
 	@Ordinal(BLOCKED_SOCKS5_INCOMING_TCP_ADDR_CRITERIA_OPTION_GROUP_ORDINAL)
 	public void addBlockedSocks5IncomingTcpAddressCriteria(
@@ -246,8 +186,8 @@ public final class SocksServerCLI extends CLI {
 					+ "incoming UDP address criteria",
 			name = "blocked-socks5-incoming-udp-addr-criteria",
 			optionArgSpec = @OptionArgSpec(),
-			optionUsageProvider = CriteriaOptionUsageProvider.class,
-			type = GnuLongOption.class
+			type = GnuLongOption.class,
+			usage = CRITERIA_OPTION_USAGE
 	)
 	@Ordinal(BLOCKED_SOCKS5_INCOMING_UDP_ADDR_CRITERIA_OPTION_GROUP_ORDINAL)
 	public void addBlockedSocks5IncomingUdpAddressCriteria(
@@ -299,13 +239,13 @@ public final class SocksServerCLI extends CLI {
 					+ "server",
 			name = "settings",
 			optionArgSpec = @OptionArgSpec(),
-			optionUsageProvider = SettingsGnuLongOptionUsageProvider.class,
-			type = GnuLongOption.class
+			type = GnuLongOption.class,
+			usage = SETTINGS_GNU_LONG_OPTION_USAGE
 	)
 	@Option(
 			name = "s",
-			optionUsageProvider = SettingsPosixOptionUsageProvider.class,
-			type = PosixOption.class
+			type = PosixOption.class,
+			usage = SETTINGS_POSIX_OPTION_USAGE
 	)
 	@Ordinal(SETTINGS_OPTION_GROUP_ORDINAL)
 	public void addSettings(final Settings sttngs) {
@@ -599,8 +539,8 @@ public final class SocksServerCLI extends CLI {
 					+ "connections",
 			name = "external-client-socks5-user-pass",
 			optionArgSpec = @OptionArgSpec(),
-			optionUsageProvider = UsernamePasswordOptionUsageProvider.class,
-			type = GnuLongOption.class
+			type = GnuLongOption.class,
+			usage = USERNAME_PASSWORD_OPTION_USAGE
 	)
 	@Ordinal(EXTERNAL_CLIENT_SOCKS5_USER_PASS_OPTION_GROUP_ORDINAL)
 	public void setExternalClientSocks5UsernamePassword(
@@ -633,8 +573,8 @@ public final class SocksServerCLI extends CLI {
 					+ "SOCKS server",
 			name = "socks5-user-pass-authenticator",
 			optionArgSpec = @OptionArgSpec(),
-			optionUsageProvider = UsernamePasswordAuthenticatorOptionUsageProvider.class,
-			type = GnuLongOption.class
+			type = GnuLongOption.class,
+			usage = USERNAME_PASSWORD_AUTHENTICATOR_OPTION_USAGE
 	)
 	@Ordinal(SOCKS5_USER_PASS_AUTHENTICATOR_OPTION_GROUP_ORDINAL)
 	public void setSocks5UsernamePasswordAuthenticator(

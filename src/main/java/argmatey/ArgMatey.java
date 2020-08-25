@@ -2796,19 +2796,6 @@ public final class ArgMatey {
 			
 		}
 		
-		private static void add(
-				final Option option,
-				final List<Option> options,
-				final List<Option> displayableOptions) {
-			options.add(option);
-			if (option.isDisplayable()) {
-				String usage = option.getUsage();
-				if (usage != null) {
-					displayableOptions.add(option);
-				}
-			}
-		}
-		
 		private final List<Option> displayableOptions;
 		private final List<Option> options;
 		private final OptionGroupHelpTextProvider optionGroupHelpTextProvider;
@@ -2824,24 +2811,29 @@ public final class ArgMatey {
 			List<Option> displayableOpts = new ArrayList<Option>();
 			List<Option> opts = new ArrayList<Option>();
 			Iterator<Option.Builder> iterator = optBuilders.iterator();
-			Option.Builder optBuilder = null;
-			if (iterator.hasNext()) {
-				optBuilder = iterator.next();
-				Option opt = optBuilder.build();
-				add(opt, opts, displayableOpts);
-			}
+			Option.Builder firstOptBuilder = null;
 			while (iterator.hasNext()) {
-				Option.Builder additionalOptBuilder = iterator.next();
-				if (optBuilder.displayableSet() 
-						&& !additionalOptBuilder.displayableSet()) {
-					additionalOptBuilder.displayable(optBuilder.displayable());
+				Option.Builder optBuilder = iterator.next();
+				if (firstOptBuilder == null) {
+					firstOptBuilder = optBuilder;
+				} else {
+					if (firstOptBuilder.displayableSet() 
+							&& !optBuilder.displayableSet()) {
+						optBuilder.displayable(firstOptBuilder.displayable());
+					}
+					if (firstOptBuilder.optionArgSpecSet() 
+							&& !optBuilder.optionArgSpecSet()) {
+						optBuilder.optionArgSpec(firstOptBuilder.optionArgSpec());
+					}
 				}
-				if (optBuilder.optionArgSpecSet() 
-						&& !additionalOptBuilder.optionArgSpecSet()) {
-					additionalOptBuilder.optionArgSpec(optBuilder.optionArgSpec());
+				Option opt = optBuilder.build();
+				opts.add(opt);
+				if (opt.isDisplayable()) {
+					String usage = opt.getUsage();
+					if (usage != null) {
+						displayableOpts.add(opt);
+					}
 				}
-				Option additionalOpt = additionalOptBuilder.build();
-				add(additionalOpt, opts, displayableOpts);
 			}
 			if (!optGroupHelpTextProviderSet) {
 				optGroupHelpTextProvider = 

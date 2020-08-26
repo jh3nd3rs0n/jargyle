@@ -22,9 +22,8 @@ import argmatey.ArgMatey.Annotations.Option;
 import argmatey.ArgMatey.Annotations.OptionArgSpec;
 import argmatey.ArgMatey.Annotations.Ordinal;
 import argmatey.ArgMatey.CLI;
-import argmatey.ArgMatey.GnuLongOption;
 import argmatey.ArgMatey.IllegalOptionArgException;
-import argmatey.ArgMatey.PosixOption;
+import argmatey.ArgMatey.OptionType;
 import jargyle.client.Scheme;
 import jargyle.client.socks5.DefaultUsernamePasswordRequestor;
 import jargyle.client.socks5.UsernamePassword;
@@ -110,8 +109,7 @@ public final class SocksServerCLI extends CLI {
 			doc = "The space separated list of allowed client address "
 					+ "criteria",
 			name = "allowed-client-addr-criteria",
-			optionArgSpec = @OptionArgSpec(),
-			type = GnuLongOption.class,
+			type = OptionType.GNU_LONG,
 			usage = CRITERIA_OPTION_USAGE
 	)
 	@Ordinal(ALLOWED_CLIENT_ADDR_CRITERIA_OPTION_GROUP_ORDINAL)
@@ -125,8 +123,7 @@ public final class SocksServerCLI extends CLI {
 			doc = "The space separated list of allowed SOCKS5 "
 					+ "incoming TCP address criteria",
 			name = "allowed-socks5-incoming-tcp-addr-criteria",
-			optionArgSpec = @OptionArgSpec(),
-			type = GnuLongOption.class,
+			type = OptionType.GNU_LONG,
 			usage = CRITERIA_OPTION_USAGE
 	)
 	@Ordinal(ALLOWED_SOCKS5_INCOMING_TCP_ADDR_CRITERIA_OPTION_GROUP_ORDINAL)
@@ -140,8 +137,7 @@ public final class SocksServerCLI extends CLI {
 			doc = "The space separated list of allowed SOCKS5 "
 					+ "incoming UDP address criteria",
 			name = "allowed-socks5-incoming-udp-addr-criteria",
-			optionArgSpec = @OptionArgSpec(),
-			type = GnuLongOption.class,
+			type = OptionType.GNU_LONG,
 			usage = CRITERIA_OPTION_USAGE
 	)
 	@Ordinal(ALLOWED_SOCKS5_INCOMING_UDP_ADDR_CRITERIA_OPTION_GROUP_ORDINAL)
@@ -155,8 +151,7 @@ public final class SocksServerCLI extends CLI {
 			doc = "The space separated list of blocked client address "
 					+ "criteria",
 			name = "blocked-client-addr-criteria",
-			optionArgSpec = @OptionArgSpec(),
-			type = GnuLongOption.class,
+			type = OptionType.GNU_LONG,
 			usage = CRITERIA_OPTION_USAGE
 	)
 	@Ordinal(BLOCKED_CLIENT_ADDR_CRITERIA_OPTION_GROUP_ORDINAL)
@@ -170,8 +165,7 @@ public final class SocksServerCLI extends CLI {
 			doc = "The space separated list of blocked SOCKS5 "
 					+ "incoming TCP address criteria",
 			name = "blocked-socks5-incoming-tcp-addr-criteria",
-			optionArgSpec = @OptionArgSpec(),
-			type = GnuLongOption.class,
+			type = OptionType.GNU_LONG,
 			usage = CRITERIA_OPTION_USAGE
 	)
 	@Ordinal(BLOCKED_SOCKS5_INCOMING_TCP_ADDR_CRITERIA_OPTION_GROUP_ORDINAL)
@@ -185,8 +179,7 @@ public final class SocksServerCLI extends CLI {
 			doc = "The space separated list of blocked SOCKS5 "
 					+ "incoming UDP address criteria",
 			name = "blocked-socks5-incoming-udp-addr-criteria",
-			optionArgSpec = @OptionArgSpec(),
-			type = GnuLongOption.class,
+			type = OptionType.GNU_LONG,
 			usage = CRITERIA_OPTION_USAGE
 	)
 	@Ordinal(BLOCKED_SOCKS5_INCOMING_UDP_ADDR_CRITERIA_OPTION_GROUP_ORDINAL)
@@ -200,11 +193,11 @@ public final class SocksServerCLI extends CLI {
 			doc = "The configuration file",
 			name = "config-file",
 			optionArgSpec = @OptionArgSpec(name = "FILE"),
-			type = GnuLongOption.class
+			type = OptionType.GNU_LONG
 	)
 	@Option(
 			name = "f",
-			type = PosixOption.class
+			type = OptionType.POSIX
 	)
 	@Ordinal(CONFIG_FILE_OPTION_GROUP_ORDINAL)
 	public void addConfigurationFile(final String file)	throws IOException {
@@ -238,13 +231,12 @@ public final class SocksServerCLI extends CLI {
 			doc = "The comma separated list of settings for the SOCKS "
 					+ "server",
 			name = "settings",
-			optionArgSpec = @OptionArgSpec(),
-			type = GnuLongOption.class,
+			type = OptionType.GNU_LONG,
 			usage = SETTINGS_GNU_LONG_OPTION_USAGE
 	)
 	@Option(
 			name = "s",
-			type = PosixOption.class,
+			type = OptionType.POSIX,
 			usage = SETTINGS_POSIX_OPTION_USAGE
 	)
 	@Ordinal(SETTINGS_OPTION_GROUP_ORDINAL)
@@ -266,11 +258,11 @@ public final class SocksServerCLI extends CLI {
 	@Option(
 			doc = "Print this help and exit",
 			name = "help",
-			type = GnuLongOption.class
+			type = OptionType.GNU_LONG
 	)
 	@Option(
 			name = "h",
-			type = PosixOption.class
+			type = OptionType.POSIX
 	)
 	@Ordinal(HELP_OPTION_GROUP_ORDINAL)
 	@Override
@@ -322,11 +314,11 @@ public final class SocksServerCLI extends CLI {
 			doc = "Print the list of available settings for the SOCKS "
 					+ "server and exit",
 			name = "settings-help",
-			type = GnuLongOption.class
+			type = OptionType.GNU_LONG
 	)
 	@Option(
 			name = "H",
-			type = PosixOption.class
+			type = OptionType.POSIX
 	)
 	@Ordinal(SETTINGS_HELP_OPTION_GROUP_ORDINAL)
 	public void displaySettingsHelp() {
@@ -347,7 +339,7 @@ public final class SocksServerCLI extends CLI {
 			doc = "Mode for managing SOCKS5 users (add --help for "
 					+ "more information)",
 			name = "socks5-users",
-			type = GnuLongOption.class
+			type = OptionType.GNU_LONG
 	)
 	@Ordinal(SOCKS5_USERS_OPTION_GROUP_ORDINAL)
 	public void doSocks5UsersManagementMode() {
@@ -377,7 +369,7 @@ public final class SocksServerCLI extends CLI {
 					+ "password to be used to access the external "
 					+ "SOCKS5 server used for external connections",
 			name = "enter-external-client-socks5-user-pass",
-			type = GnuLongOption.class
+			type = OptionType.GNU_LONG
 	)
 	@Ordinal(ENTER_EXTERNAL_CLIENT_SOCKS5_USER_PASS_OPTION_GROUP_ORDINAL)
 	public void enterExternalClientSocks5UsernamePassword() {
@@ -464,14 +456,12 @@ public final class SocksServerCLI extends CLI {
 			doc = "Create a new configuration file based on the "
 					+ "preceding options and exit",
 			name = "new-config-file",
-			optionArgSpec = @OptionArgSpec(
-					name = "FILE"
-			),
-			type = GnuLongOption.class
+			optionArgSpec = @OptionArgSpec(name = "FILE"),
+			type = OptionType.GNU_LONG
 	)
 	@Option(
 			name = "n",
-			type = PosixOption.class
+			type = OptionType.POSIX
 	)
 	@Ordinal(NEW_CONFIG_FILE_OPTION_GROUP_ORDINAL)
 	public void newConfigurationFile(final String file) 
@@ -519,11 +509,11 @@ public final class SocksServerCLI extends CLI {
 	@Option(
 			doc = "Print the configuration file XSD and exit",
 			name = "config-file-xsd",
-			type = GnuLongOption.class
+			type = OptionType.GNU_LONG
 	)
 	@Option(
 			name = "x",
-			type = PosixOption.class
+			type = OptionType.POSIX
 	)
 	@Ordinal(CONFIG_FILE_XSD_OPTION_GROUP_ORDINAL)
 	public void printConfigurationFileXsd() throws JAXBException, IOException {
@@ -538,8 +528,7 @@ public final class SocksServerCLI extends CLI {
 					+ "external SOCKS5 server used for external "
 					+ "connections",
 			name = "external-client-socks5-user-pass",
-			optionArgSpec = @OptionArgSpec(),
-			type = GnuLongOption.class,
+			type = OptionType.GNU_LONG,
 			usage = USERNAME_PASSWORD_OPTION_USAGE
 	)
 	@Ordinal(EXTERNAL_CLIENT_SOCKS5_USER_PASS_OPTION_GROUP_ORDINAL)
@@ -554,14 +543,12 @@ public final class SocksServerCLI extends CLI {
 					+ "changes to be applied to the running "
 					+ "configuration",
 			name = "monitored-config-file",
-			optionArgSpec = @OptionArgSpec(
-					name = "FILE"
-			),
-			type = GnuLongOption.class
+			optionArgSpec = @OptionArgSpec(name = "FILE"),
+			type = OptionType.GNU_LONG
 	)
 	@Option(
 			name = "m",
-			type = PosixOption.class
+			type = OptionType.POSIX
 	)
 	@Ordinal(MONITORED_CONFIG_FILE_OPTION_GROUP_ORDINAL)
 	public void setMonitoredConfigurationFile(final String file) {
@@ -572,8 +559,7 @@ public final class SocksServerCLI extends CLI {
 			doc = "The SOCKS5 username password authenticator for the "
 					+ "SOCKS server",
 			name = "socks5-user-pass-authenticator",
-			optionArgSpec = @OptionArgSpec(),
-			type = GnuLongOption.class,
+			type = OptionType.GNU_LONG,
 			usage = USERNAME_PASSWORD_AUTHENTICATOR_OPTION_USAGE
 	)
 	@Ordinal(SOCKS5_USER_PASS_AUTHENTICATOR_OPTION_GROUP_ORDINAL)

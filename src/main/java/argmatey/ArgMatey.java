@@ -92,7 +92,7 @@ public final class ArgMatey {
 			Class<? extends ArgMatey.OptionUsageProvider> optionUsageProvider()
 				default ArgMatey.OptionUsageProvider.class;
 					
-			Class<? extends ArgMatey.Option> type();
+			ArgMatey.OptionType type();
 			
 			String usage() default "";
 			
@@ -103,7 +103,7 @@ public final class ArgMatey {
 			
 			OptionalBoolean allowed() default OptionalBoolean.TRUE;
 			
-			String name() default ArgMatey.OptionArgSpec.DEFAULT_NAME;
+			String name() default "";
 			
 			OptionalBoolean required() default OptionalBoolean.UNSPECIFIED;
 			
@@ -957,7 +957,7 @@ public final class ArgMatey {
 		@Annotations.Option(
 				doc = "Display this help and exit",
 				name = "help",
-				type = GnuLongOption.class
+				type = OptionType.GNU_LONG
 		)
 		public void displayProgramHelp() {
 			this.displayProgramUsage();
@@ -1003,7 +1003,7 @@ public final class ArgMatey {
 		@Annotations.Option(
 				doc = "Display version information and exit",
 				name = "version",
-				type = GnuLongOption.class
+				type = OptionType.GNU_LONG
 		)
 		public void displayProgramVersion() {
 			String progVersion = this.programVersion;
@@ -2622,7 +2622,6 @@ public final class ArgMatey {
 			
 		}
 		
-		public static final String DEFAULT_NAME = "option_argument";
 		public static final String DEFAULT_SEPARATOR = "[^\\w\\W]";
 		public static final Class<?> DEFAULT_TYPE = String.class;
 			
@@ -2638,9 +2637,9 @@ public final class ArgMatey {
 			String s = builder.separator();
 			StringConverter sc = builder.stringConverter();
 			Class<?> t = builder.type();
-			if (n == null) { n = DEFAULT_NAME; }
 			if (s == null) { s = DEFAULT_SEPARATOR;	}
 			if (t == null) { t = DEFAULT_TYPE; }
+			if (n == null) { n = t.getName(); }
 			if (sc == null) { sc = new DefaultStringConverter(t); }
 			this.name = n;
 			this.required = r;
@@ -3244,56 +3243,41 @@ public final class ArgMatey {
 					obj, this.method, optionOccurrence);
 		}
 		
-		private OptionArgSpec.Builder newOptionArgSpecBuilder(
+		private OptionArgSpec newOptionArgSpec(
 				final Annotations.OptionArgSpec optionArgSpec) {
 			OptionArgSpec.Builder builder = new OptionArgSpec.Builder();
-			builder.name(optionArgSpec.name());
+			String name = optionArgSpec.name();
+			if (!name.isEmpty()) {
+				builder.name(optionArgSpec.name());
+			}
 			OptionalBoolean required = optionArgSpec.required();
 			if (!required.equals(OptionalBoolean.UNSPECIFIED)) {
 				builder.required(required.booleanValue().booleanValue());
 			}
-			builder.separator(optionArgSpec.separator());
+			String separator = optionArgSpec.separator();
+			if (!separator.equals(OptionArgSpec.DEFAULT_SEPARATOR)) {
+				builder.separator(optionArgSpec.separator());
+			}
 			Class<?> stringConverterClass =	optionArgSpec.stringConverter();
 			if (!stringConverterClass.equals(StringConverter.class)) {
 				StringConverter stringConverter = this.newStringConverter(
 						stringConverterClass);
 				builder.stringConverter(stringConverter);
 			}
-			builder.type(this.targetMethodParameterTypesType.getTargetClass(
-					this.method));
-			return builder;
+			Class<?> targetClass = 
+					this.targetMethodParameterTypesType.getTargetClass(
+							this.method);
+			if (targetClass != null) {
+				builder.type(targetClass);
+			}
+			return builder.build();
 		}
 		
 		private Option.Builder newOptionBuilder(
-				final Annotations.Option option) {
-			Option.Builder builder = null;
-			Class<?> type = option.type();
+				final Annotations.Option option, final boolean first) {
+			OptionType type = option.type();
 			String name = option.name();
-			if (type.equals(GnuLongOption.class)) {
-				builder = new GnuLongOption.Builder(name);
-			} else if (type.equals(LongOption.class)) {
-				builder = new LongOption.Builder(name);
-			} else if (type.equals(PosixOption.class)) {
-				if (name.length() != 1) {
-					throw new IllegalArgumentException(String.format(
-							"expected option name for %s to be only one "
-							+ "alphanumeric character. actual option name is "
-							+ "'%s'", 
-							Annotations.Option.class.getName(),
-							name));
-				}
-				builder = new PosixOption.Builder(name.charAt(0));
-			} else if (type.equals(Option.class)) {
-				throw new IllegalArgumentException(String.format(
-						"expected class must extend %s. actual class is %s", 
-						Option.class.getName(),
-						type.getName())); 
-			} else {
-				throw new AssertionError(String.format(
-						"unhandled %s: %s", 
-						Option.class.getName(), 
-						type.getName()));
-			}
+			Option.Builder builder = type.newOptionBuilder(name);
 			OptionalBoolean displayable = option.displayable();
 			if (!displayable.equals(OptionalBoolean.UNSPECIFIED)) {
 				builder.displayable(displayable.booleanValue().booleanValue());
@@ -3304,13 +3288,20 @@ public final class ArgMatey {
 			}
 			Annotations.OptionArgSpec optionArgSpec = option.optionArgSpec();
 			OptionalBoolean optionArgAllowed = optionArgSpec.allowed();
-			if (!optionArgAllowed.equals(OptionalBoolean.UNSPECIFIED)) {
-				if (optionArgAllowed.booleanValue().booleanValue()) {
-					builder.optionArgSpec(this.newOptionArgSpecBuilder(
-							optionArgSpec).build());
-				} else {
-					builder.optionArgSpec(null);
+			if (optionArgAllowed.equals(OptionalBoolean.UNSPECIFIED)) {
+				if (first) {
+					Class<?> targetClass = 
+							this.targetMethodParameterTypesType.getTargetClass(
+									this.method);
+					if (targetClass != null) {
+						builder.optionArgSpec(this.newOptionArgSpec(
+								optionArgSpec));
+					}
 				}
+			} else if (optionArgAllowed.booleanValue().booleanValue()) {
+				builder.optionArgSpec(this.newOptionArgSpec(optionArgSpec));
+			} else {
+				builder.optionArgSpec(null);
 			}
 			Class<?> optionUsageProviderClass = option.optionUsageProvider();
 			if (!optionUsageProviderClass.equals(OptionUsageProvider.class)) {
@@ -3330,11 +3321,17 @@ public final class ArgMatey {
 			if (this.helpText != null) {
 				builder.helpText(this.helpText);
 			}
-			List<Option.Builder> optionBuilders = new ArrayList<Option.Builder>();
-			for (Annotations.Option optionAnnotation : this.optionAnnotations) {
-				optionBuilders.add(this.newOptionBuilder(optionAnnotation));
+			if (this.optionAnnotations.length > 0) {
+				boolean first = true;
+				List<Option.Builder> optionBuilders = new ArrayList<Option.Builder>();
+				for (Annotations.Option optionAnnotation : this.optionAnnotations) {
+					Option.Builder optionBuilder = this.newOptionBuilder(
+							optionAnnotation, first);
+					optionBuilders.add(optionBuilder);
+					if (first) { first = false; }
+				}
+				builder.optionBuilders(optionBuilders);
 			}
-			builder.optionBuilders(optionBuilders);
 			if (!this.optionGroupHelpTextProviderClass.equals(
 					OptionGroupHelpTextProvider.class)) {
 				OptionGroupHelpTextProvider optionGroupHelpTextProvider = 
@@ -3610,6 +3607,39 @@ public final class ArgMatey {
 				.append("]");
 			return sb.toString();
 		}
+		
+	}
+	
+	public static enum OptionType {
+		
+		GNU_LONG {
+			@Override
+			public Option.Builder newOptionBuilder(final String name) {
+				return new GnuLongOption.Builder(name);
+			}
+		},
+		
+		LONG {
+			@Override
+			public Option.Builder newOptionBuilder(final String name) {
+				return new LongOption.Builder(name);
+			}
+		},
+		
+		POSIX {
+			@Override
+			public Option.Builder newOptionBuilder(final String name) {
+				if (name.length() != 1) {
+					throw new IllegalArgumentException(String.format(
+							"expected option name to be only one alphanumeric "
+							+ "character. actual option name is '%s'", 
+							name));
+				}
+				return new PosixOption.Builder(name.charAt(0));
+			}
+		};
+		
+		public abstract Option.Builder newOptionBuilder(final String name);
 		
 	}
 	

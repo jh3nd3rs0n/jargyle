@@ -20,8 +20,7 @@ import argmatey.ArgMatey.Annotations.NonparsedArg;
 import argmatey.ArgMatey.Annotations.Option;
 import argmatey.ArgMatey.Annotations.Ordinal;
 import argmatey.ArgMatey.CLI;
-import argmatey.ArgMatey.GnuLongOption;
-import argmatey.ArgMatey.PosixOption;
+import argmatey.ArgMatey.OptionType;
 import jargyle.common.cli.HelpTextParams;
 import jargyle.server.SystemPropertyNameConstants;
 
@@ -314,11 +313,11 @@ public final class UsersCLI extends CLI {
 	@Option(
 			doc = "Print this help and exit",
 			name = "help",
-			type = GnuLongOption.class
+			type = OptionType.GNU_LONG
 	)
 	@Option(
 			name = "h",
-			type = PosixOption.class
+			type = OptionType.POSIX
 	)
 	@Ordinal(HELP_OPTION_GROUP_ORDINAL)
 	@Override
@@ -394,11 +393,11 @@ public final class UsersCLI extends CLI {
 	@Option(
 			doc = "Print the XSD and exit",
 			name = "xsd",
-			type = GnuLongOption.class
+			type = OptionType.GNU_LONG
 	)
 	@Option(
 			name = "x",
-			type = PosixOption.class
+			type = OptionType.POSIX
 	)
 	@Ordinal(XSD_OPTION_GROUP_ORDINAL)
 	public void printXsd() throws JAXBException, IOException {

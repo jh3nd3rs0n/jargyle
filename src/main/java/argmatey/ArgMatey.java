@@ -2129,6 +2129,11 @@ public final class ArgMatey {
 			boolean optUsageProviderSet = builder.optionUsageProviderSet();
 			String str = builder.string();
 			String u = builder.usage();
+			if (d != null) {
+				StringBuilder sb = new StringBuilder(d);
+				StringInterpolator.interpolate(sb, System.getProperties());
+				d = sb.toString();
+			}
 			if (!optUsageProviderSet) {
 				optUsageProvider = OptionUsageProvider.getDefault(
 						this.getClass());

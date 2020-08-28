@@ -1016,9 +1016,7 @@ public final class ArgMatey {
 								Annotations.NonparsedArg.class.getName()));
 					}
 				}
-				if (method.isAnnotationPresent(Annotations.HelpText.class)
-						|| method.isAnnotationPresent(Annotations.Option.class)
-						|| method.isAnnotationPresent(Annotations.OptionGroupHelpTextProvider.class)
+				if (method.isAnnotationPresent(Annotations.Option.class)
 						|| method.isAnnotationPresent(Annotations.Options.class)) {
 					OptionGroupMethod mthd = OptionGroupMethod.newInstance(
 							method);

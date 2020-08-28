@@ -296,7 +296,9 @@ public final class SocksServerCLI extends CLI {
 	
 	@Ignore
 	@Override
-	public void displayProgramVersion() { }
+	public void displayProgramVersion() { 
+		throw new UnsupportedOperationException("not implemented");
+	}
 		
 	@Option(
 			doc = "Print the list of available settings for the SOCKS "

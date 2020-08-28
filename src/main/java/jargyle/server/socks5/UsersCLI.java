@@ -351,7 +351,9 @@ public final class UsersCLI extends CLI {
 	
 	@Ignore
 	@Override
-	public void displayProgramVersion() { }
+	public void displayProgramVersion() { 
+		throw new UnsupportedOperationException("not implemented");
+	}
 		
 	public int handleRemaining() {
 		ArgMatey.Option helpOption = this.getOptionGroups().get(

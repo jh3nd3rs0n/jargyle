@@ -57,18 +57,6 @@ public final class SocksServerCLI extends CLI {
 
 	private static final String CRITERIA_OPTION_USAGE = 
 			"${option}=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"; 
-
-	private static final String SETTINGS_GNU_LONG_OPTION_USAGE = 
-			"${option}=[NAME1=VALUE1[,NAME2=VALUE2[...]]]"; 
-
-	private static final String SETTINGS_POSIX_OPTION_USAGE = 
-			"${option} [NAME1=VALUE1[,NAME2=VALUE2[...]]]"; 
-
-	private static final String USERNAME_PASSWORD_AUTHENTICATOR_OPTION_USAGE =
-			"${option}=CLASSNAME[:VALUE]";
-
-	private static final String USERNAME_PASSWORD_OPTION_USAGE =
-			"${option}=USERNAME:PASSWORD";
 	
 	private static final Logger LOGGER = Logger.getLogger(
 			SocksServerCLI.class.getName());
@@ -232,12 +220,12 @@ public final class SocksServerCLI extends CLI {
 					+ "server",
 			name = "settings",
 			type = OptionType.GNU_LONG,
-			usage = SETTINGS_GNU_LONG_OPTION_USAGE
+			usage = "${option}=[NAME1=VALUE1[,NAME2=VALUE2[...]]]"
 	)
 	@Option(
 			name = "s",
 			type = OptionType.POSIX,
-			usage = SETTINGS_POSIX_OPTION_USAGE
+			usage = "${option} [NAME1=VALUE1[,NAME2=VALUE2[...]]]"
 	)
 	@Ordinal(SETTINGS_OPTION_GROUP_ORDINAL)
 	public void addSettings(final Settings sttngs) {
@@ -529,7 +517,7 @@ public final class SocksServerCLI extends CLI {
 					+ "connections",
 			name = "external-client-socks5-user-pass",
 			type = OptionType.GNU_LONG,
-			usage = USERNAME_PASSWORD_OPTION_USAGE
+			usage = "${option}=USERNAME:PASSWORD"
 	)
 	@Ordinal(EXTERNAL_CLIENT_SOCKS5_USER_PASS_OPTION_GROUP_ORDINAL)
 	public void setExternalClientSocks5UsernamePassword(
@@ -560,7 +548,7 @@ public final class SocksServerCLI extends CLI {
 					+ "SOCKS server",
 			name = "socks5-user-pass-authenticator",
 			type = OptionType.GNU_LONG,
-			usage = USERNAME_PASSWORD_AUTHENTICATOR_OPTION_USAGE
+			usage = "${option}=CLASSNAME[:VALUE]"
 	)
 	@Ordinal(SOCKS5_USER_PASS_AUTHENTICATOR_OPTION_GROUP_ORDINAL)
 	public void setSocks5UsernamePasswordAuthenticator(

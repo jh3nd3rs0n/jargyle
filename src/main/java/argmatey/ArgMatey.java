@@ -821,11 +821,11 @@ public final class ArgMatey {
 		protected boolean programVersionDisplayed;
 		
 		public CLI(final String[] args, final boolean posixlyCorrect) {
-			CLIClass cliCls = CLIClass.newInstance(this.getClass());
+			CLIClass cls = CLIClass.newInstance(this.getClass());
 			ArgsParser parser = ArgsParser.newInstance(
-					args, cliCls.getOptionGroups(), posixlyCorrect);
+					args, cls.getOptionGroups(), posixlyCorrect);
 			this.argsParser = parser;
-			this.cliClass = cliCls;
+			this.cliClass = cls;
 			this.programArgsUsage = null;
 			this.programDoc = null;
 			this.programHelpDisplayed = false;
@@ -983,18 +983,18 @@ public final class ArgMatey {
 
 	static final class CLIClass {
 		
-		public static CLIClass newInstance(final Class<?> cls) {
+		public static CLIClass newInstance(final Class<? extends CLI> cls) {
 			return new CLIClass(cls);
 		}
 		
-		private final Class<?> cls;
+		private final Class<? extends CLI> cls;
 		private final NonparsedArgMethod nonparsedArgMethod;
 		private final Map<String, OptionGroupMethod> optionGroupMethodMap;
 		private final List<OptionGroupMethod> optionGroupMethods;
 		private final OptionGroups optionGroups;
 		
-		private CLIClass(final Class<?> c) {
-			NonparsedArgMethod argSinkMethod = null;
+		private CLIClass(final Class<? extends CLI> c) {
+			NonparsedArgMethod argMethod = null;
 			Map<String, OptionGroupMethod> optGroupMethodMap = 
 					new HashMap<String, OptionGroupMethod>();
 			List<OptionGroupMethod> optGroupMethods = 
@@ -1005,10 +1005,10 @@ public final class ArgMatey {
 					continue;
 				}
 				if (method.isAnnotationPresent(Annotations.NonparsedArg.class)) {
-					if (argSinkMethod == null) {
+					if (argMethod == null) {
 						NonparsedArgMethod mthd =
 								NonparsedArgMethod.newInstance(method);
-						argSinkMethod = mthd;
+						argMethod = mthd;
 					} else {
 						throw new IllegalArgumentException(String.format(
 								"there can only be one method with the "
@@ -1035,7 +1035,7 @@ public final class ArgMatey {
 				optGroups.add(optGroupMethod.getOptionGroup());
 			}
 			this.cls = c;
-			this.nonparsedArgMethod = argSinkMethod;
+			this.nonparsedArgMethod = argMethod;
 			this.optionGroupMethodMap = new HashMap<String, OptionGroupMethod>(
 					optGroupMethodMap);
 			this.optionGroupMethods = new ArrayList<OptionGroupMethod>(
@@ -1842,7 +1842,7 @@ public final class ArgMatey {
 						optionPropertyName.concat(".usage"), option.getUsage());
 			}
 			Properties systemProperties = System.getProperties();
-			PropertiesHelper.putAll(systemProperties, properties);
+			PropertiesHelper.copy(systemProperties, properties);
 			StringBuilder sb = new StringBuilder(this.string);
 			StringInterpolator.interpolate(sb, properties);
 			return sb.toString();
@@ -1873,7 +1873,7 @@ public final class ArgMatey {
 						optionArgSpec.getSeparator());
 			}
 			Properties systemProperties = System.getProperties();
-			PropertiesHelper.putAll(systemProperties, properties);
+			PropertiesHelper.copy(systemProperties, properties);
 			StringBuilder sb = new StringBuilder(this.string);
 			StringInterpolator.interpolate(sb, properties);
 			return sb.toString();
@@ -3909,7 +3909,7 @@ public final class ArgMatey {
 	
 	static final class PropertiesHelper {
 		
-		public static void putAll(
+		public static void copy(
 				final Properties source, final Properties destination) {
 			Enumeration<?> sourcePropertyNames = source.propertyNames();
 			while (sourcePropertyNames.hasMoreElements()) {

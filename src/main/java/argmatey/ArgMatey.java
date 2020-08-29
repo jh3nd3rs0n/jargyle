@@ -3951,48 +3951,60 @@ public final class ArgMatey {
 		
 		public static void interpolate(
 				final StringBuilder sb, final Properties properties) {
+			int propertyVariableStart = -1;
 			StringBuilder propertyNameBuilder = null;
-			int propertyStart = -1;
 			for (int i = 0; i < sb.length(); i++) {
 				char ch = sb.charAt(i);
 				if (ch == '$' && i + 1 < sb.length()) {
 					char nextCh = sb.charAt(i + 1);
 					switch (nextCh) {
 					case '$':
-						sb.replace(i, i + 2, "$");
-						break;
-					case '{':
-						if (propertyNameBuilder == null) {
-							propertyNameBuilder = new StringBuilder();
-							propertyStart = i;
+						if (propertyVariableStart == -1) {
+							sb.replace(i, i + 2, "$");
+							break;
+						} else if (propertyVariableStart > -1) {
+							propertyNameBuilder.append(nextCh);
 							i++;
 							continue;
-						} else {
-							StringBuilder sb2 = new StringBuilder(sb.substring(i));
-							interpolate(sb2, properties);
-							int length = sb2.length();
-							sb.replace(i, i + length, sb2.toString());
-							sb2.delete(0, length);
-							if (length == 0) { continue; }
 						}
-						break;
+					case '{':
+						if (propertyVariableStart == -1) {
+							propertyVariableStart = i;
+							propertyNameBuilder = new StringBuilder();
+							i++;
+							continue;
+						} else if (propertyVariableStart > -1) {
+							propertyNameBuilder.append(ch).append(nextCh);
+							i++;
+							continue;
+						}
 					case '}':
-						sb.replace(i, i + 2, "}");
-						break;
+						if (propertyVariableStart == -1) {
+							sb.replace(i, i + 2, "}");
+							break;
+						} else if (propertyVariableStart > -1) {
+							propertyNameBuilder.append(nextCh);
+							i++;
+							continue;
+						}
 					default:
 						break;
 					}
 					ch = sb.charAt(i);
-				} else if (ch == '}' && propertyNameBuilder != null) {
-					String propertyName = propertyNameBuilder.toString();
-					String property = properties.getProperty(propertyName);
-					if (property != null) {
-						sb.replace(propertyStart, i + 1, property);
-						i = propertyStart + property.length() - 1;
-					}
+				} else if (ch == '}' && propertyVariableStart > -1) {
+					StringBuilder sb2 = new StringBuilder(
+							propertyNameBuilder.toString());
+					interpolate(sb2, properties);
+					String propertyName = sb2.toString();
+					sb2.delete(0, sb2.length());
 					propertyNameBuilder.delete(0, propertyNameBuilder.length());
 					propertyNameBuilder = null;
-					propertyStart = -1;
+					String property = properties.getProperty(propertyName);
+					if (property != null) {
+						sb.replace(propertyVariableStart, i + 1, property);
+						i = propertyVariableStart + property.length() - 1;
+					}
+					propertyVariableStart = -1;
 					continue;
 				}
 				if (propertyNameBuilder != null) {

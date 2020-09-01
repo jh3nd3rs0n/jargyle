@@ -3975,13 +3975,12 @@ public final class ArgMatey {
 				} else if (ch == '}' && inPropertyVariable) {
 					String propertyName = sb.substring(start, i);
 					String property = properties.getProperty(propertyName);
-					int end = i + 1;
 					if (property != null) {
 						int propertyVariableStart = start - 2;
 						sb.replace(propertyVariableStart, i + 1, property);
-						end = propertyVariableStart + property.length();
+						return propertyVariableStart + property.length();
 					}
-					return end;
+					return i + 1;
 				}
 			}
 			return sb.length();

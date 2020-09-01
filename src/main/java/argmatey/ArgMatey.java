@@ -1841,9 +1841,7 @@ public final class ArgMatey {
 			}
 			Properties systemProperties = System.getProperties();
 			PropertiesHelper.copy(systemProperties, properties);
-			StringBuilder sb = new StringBuilder(this.string);
-			StringInterpolator.interpolate(sb, properties);
-			return sb.toString();
+			return StringInterpolator.interpolate(this.string, properties);
 		}
 		
 	}
@@ -1872,9 +1870,7 @@ public final class ArgMatey {
 			}
 			Properties systemProperties = System.getProperties();
 			PropertiesHelper.copy(systemProperties, properties);
-			StringBuilder sb = new StringBuilder(this.string);
-			StringInterpolator.interpolate(sb, properties);
-			return sb.toString();
+			return StringInterpolator.interpolate(this.string, properties);
 		}
 		
 	}
@@ -2128,9 +2124,7 @@ public final class ArgMatey {
 			String str = builder.string();
 			String u = builder.usage();
 			if (d != null) {
-				StringBuilder sb = new StringBuilder(d);
-				StringInterpolator.interpolate(sb, System.getProperties());
-				d = sb.toString();
+				d = StringInterpolator.interpolate(d, System.getProperties());
 			}
 			if (!optUsageProviderSet) {
 				optUsageProvider = OptionUsageProvider.getDefault(
@@ -3949,68 +3943,48 @@ public final class ArgMatey {
 	
 	static final class StringInterpolator {
 		
-		public static void interpolate(
-				final StringBuilder sb, final Properties properties) {
-			int propertyVariableStart = -1;
-			StringBuilder propertyNameBuilder = null;
-			for (int i = 0; i < sb.length(); i++) {
+		public static String interpolate(
+				final String string, final Properties properties) {
+			StringBuilder sb = new StringBuilder(string);
+			interpolate(sb, properties, 0, false);
+			return sb.toString();
+		}
+		
+		private static int interpolate(
+				final StringBuilder sb,
+				final Properties properties,
+				final int start,
+				final boolean inPropertyVariable) {
+			for (int i = start; i < sb.length(); i++) {
 				char ch = sb.charAt(i);
 				if (ch == '$' && i + 1 < sb.length()) {
 					char nextCh = sb.charAt(i + 1);
 					switch (nextCh) {
 					case '$':
-						if (propertyVariableStart == -1) {
-							sb.replace(i, i + 2, "$");
-							break;
-						} else if (propertyVariableStart > -1) {
-							propertyNameBuilder.append(nextCh);
-							i++;
-							continue;
-						}
+						sb.replace(i, i + 2, "$");
+						break;
 					case '{':
-						if (propertyVariableStart == -1) {
-							propertyVariableStart = i;
-							propertyNameBuilder = new StringBuilder();
-							i++;
-							continue;
-						} else if (propertyVariableStart > -1) {
-							propertyNameBuilder.append(ch).append(nextCh);
-							i++;
-							continue;
-						}
+						i = interpolate(sb, properties, i + 2, true) - 1;
+						break;
 					case '}':
-						if (propertyVariableStart == -1) {
-							sb.replace(i, i + 2, "}");
-							break;
-						} else if (propertyVariableStart > -1) {
-							propertyNameBuilder.append(nextCh);
-							i++;
-							continue;
-						}
+						sb.replace(i, i + 2, "}");
+						break;
 					default:
 						break;
 					}
-					ch = sb.charAt(i);
-				} else if (ch == '}' && propertyVariableStart > -1) {
-					StringBuilder sb2 = new StringBuilder(
-							propertyNameBuilder.toString());
-					interpolate(sb2, properties);
-					String propertyName = sb2.toString();
-					sb2.delete(0, sb2.length());
-					propertyNameBuilder.delete(0, propertyNameBuilder.length());
-					propertyNameBuilder = null;
+				} else if (ch == '}' && inPropertyVariable) {
+					String propertyName = sb.substring(start, i);
 					String property = properties.getProperty(propertyName);
+					int end = i + 1;
 					if (property != null) {
+						int propertyVariableStart = start - 2;
 						sb.replace(propertyVariableStart, i + 1, property);
-						i = propertyVariableStart + property.length() - 1;
+						end = propertyVariableStart + property.length();
 					}
-					propertyVariableStart = -1;
-					continue;
-				}
-				if (propertyNameBuilder != null) {
-					propertyNameBuilder.append(ch);
+					return end;
 				}
 			}
+			return sb.length();
 		}
 		
 		private StringInterpolator() { }

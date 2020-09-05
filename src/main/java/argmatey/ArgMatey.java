@@ -72,10 +72,6 @@ public final class ArgMatey {
 		@Target({ElementType.METHOD})
 		public static @interface Ignore { }
 		
-		@Retention(RetentionPolicy.RUNTIME)
-		@Target({ElementType.METHOD})
-		public static @interface NonparsedArg { }
-
 		@Repeatable(Options.class)
 		@Retention(RetentionPolicy.RUNTIME)
 		@Target({ElementType.METHOD})
@@ -927,10 +923,10 @@ public final class ArgMatey {
 					this.argsParser.getParseResultHolder();
 			if (parseResultHolder.hasNonparsedArg()) {
 				String nonparsedArg = parseResultHolder.getNonparsedArg();
-				NonparsedArgMethod nonparsedArgMethod =
-						this.cliClass.getNonparsedArgMethod();
-				if (nonparsedArgMethod != null) {
-					nonparsedArgMethod.invoke(this, nonparsedArg);
+				try {
+					this.handleNonparsedArg(nonparsedArg);
+				} catch (IllegalArgumentException e) {
+					throw new IllegalArgException(nonparsedArg, e);
 				}
 			}
 			if (parseResultHolder.hasOptionOccurrence()) {
@@ -946,6 +942,8 @@ public final class ArgMatey {
 				}
 			}
 		}
+		
+		protected void handleNonparsedArg(final String nonparsedArg) { }
 		
 		public final boolean hasNext() {
 			return this.argsParser.hasNext();
@@ -988,13 +986,11 @@ public final class ArgMatey {
 		}
 		
 		private final Class<? extends CLI> cls;
-		private final NonparsedArgMethod nonparsedArgMethod;
 		private final Map<String, OptionGroupMethod> optionGroupMethodMap;
 		private final List<OptionGroupMethod> optionGroupMethods;
 		private final OptionGroups optionGroups;
 		
 		private CLIClass(final Class<? extends CLI> c) {
-			NonparsedArgMethod argMethod = null;
 			Map<String, OptionGroupMethod> optGroupMethodMap = 
 					new HashMap<String, OptionGroupMethod>();
 			List<OptionGroupMethod> optGroupMethods = 
@@ -1003,18 +999,6 @@ public final class ArgMatey {
 			for (Method method : methods) {
 				if (method.isAnnotationPresent(Annotations.Ignore.class)) {
 					continue;
-				}
-				if (method.isAnnotationPresent(Annotations.NonparsedArg.class)) {
-					if (argMethod == null) {
-						NonparsedArgMethod mthd =
-								NonparsedArgMethod.newInstance(method);
-						argMethod = mthd;
-					} else {
-						throw new IllegalArgumentException(String.format(
-								"there can only be one method with the "
-								+ "annotation %s", 
-								Annotations.NonparsedArg.class.getName()));
-					}
 				}
 				if (method.isAnnotationPresent(Annotations.Option.class)
 						|| method.isAnnotationPresent(Annotations.Options.class)) {
@@ -1033,16 +1017,11 @@ public final class ArgMatey {
 				optGroups.add(optGroupMethod.getOptionGroup());
 			}
 			this.cls = c;
-			this.nonparsedArgMethod = argMethod;
 			this.optionGroupMethodMap = new HashMap<String, OptionGroupMethod>(
 					optGroupMethodMap);
 			this.optionGroupMethods = new ArrayList<OptionGroupMethod>(
 					optGroupMethods);
 			this.optionGroups = OptionGroups.newInstance(optGroups);
-		}
-		
-		public NonparsedArgMethod getNonparsedArgMethod() {
-			return this.nonparsedArgMethod;
 		}
 		
 		public Map<String, OptionGroupMethod> getOptionGroupMethodMap() {
@@ -1927,65 +1906,6 @@ public final class ArgMatey {
 		
 	}
 	
-	static final class NonparsedArgMethod {
-		
-		public static NonparsedArgMethod newInstance(final Method method) {
-			validateMethod(method);
-			return new NonparsedArgMethod(method);
-		}
-		
-		private static void validateMethod(final Method method) {
-			Annotations.NonparsedArg nonparsedArg = method.getAnnotation(
-					Annotations.NonparsedArg.class);
-			if (nonparsedArg == null) {
-				throw new IllegalArgumentException(String.format(
-						"method '%s' must have the annotation %s", 
-						method,
-						Annotations.NonparsedArg.class.getName()));
-			}
-			int modifiers = method.getModifiers();
-			if (Modifier.isStatic(modifiers)) {
-				throw new IllegalArgumentException(String.format(
-						"method '%s' cannot be static", 
-						method));
-			}
-			Class<?>[] parameterTypes = method.getParameterTypes();
-			if (parameterTypes.length != 1 
-					|| !parameterTypes[0].equals(String.class)) {
-				throw new IllegalArgumentException(String.format(
-						"method '%s' must have only one paramter of type %s", 
-						method,
-						String.class.getName()));
-			}
-		}
-		
-		private final Method method;
-		
-		private NonparsedArgMethod(final Method mthd) {
-			this.method = mthd;
-		}
-		
-		public void invoke(final Object obj, final String nonparsedArg) {
-			try {
-				this.method.invoke(obj, nonparsedArg);
-			} catch (IllegalAccessException e) {
-				throw new AssertionError(e);
-			} catch (IllegalArgumentException e) {
-				throw new AssertionError(e);
-			} catch (InvocationTargetException e) {
-				Throwable cause = e.getCause();
-				if (cause instanceof IllegalArgumentException) {
-					throw new IllegalArgException(nonparsedArg, cause);
-				}
-				throw new AssertionError(e);
-			}
-		}
-		
-		public Method toMethod() {
-			return this.method;
-		}
-	}
-
 	public static abstract class Option {
 
 		public static abstract class Builder {

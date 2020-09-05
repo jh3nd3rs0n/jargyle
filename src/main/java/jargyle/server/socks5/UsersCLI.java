@@ -16,7 +16,6 @@ import javax.xml.bind.JAXBException;
 
 import argmatey.ArgMatey;
 import argmatey.ArgMatey.Annotations.Ignore;
-import argmatey.ArgMatey.Annotations.NonparsedArg;
 import argmatey.ArgMatey.Annotations.Option;
 import argmatey.ArgMatey.Annotations.Ordinal;
 import argmatey.ArgMatey.CLI;
@@ -301,15 +300,6 @@ public final class UsersCLI extends CLI {
 		this.xsdRequested = false;
 	}
 	
-	@NonparsedArg
-	public void addNonparsedArg(final String nonparsedArg) {
-		if (this.command == null) {
-			this.command = Command.getInstance(nonparsedArg);
-		} else {
-			this.argList.add(nonparsedArg);
-		}
-	}
-	
 	@Option(
 			doc = "Print this help and exit",
 			name = "help",
@@ -353,6 +343,15 @@ public final class UsersCLI extends CLI {
 	@Override
 	public void displayProgramVersion() { 
 		throw new UnsupportedOperationException("not implemented");
+	}
+	
+	@Override
+	protected void handleNonparsedArg(final String nonparsedArg) {
+		if (this.command == null) {
+			this.command = Command.getInstance(nonparsedArg);
+		} else {
+			this.argList.add(nonparsedArg);
+		}
 	}
 		
 	public int handleRemaining() {

@@ -3038,116 +3038,13 @@ public final class ArgMatey {
 		}
 		
 		public static OptionGroupMethod newInstance(final Method method) {
-			validateMethod(method);
 			return new OptionGroupMethod(method);
 		}
 		
-		private static void validateMethod(final Method method) {
-			int modifiers = method.getModifiers();
-			if (Modifier.isStatic(modifiers)) {
-				throw new IllegalArgumentException(String.format(
-						"method '%s' cannot be static", 
-						method));
-			}
-			TargetMethodParameterTypesType targetMethodParameterTypesType =
-					TargetMethodParameterTypesType.get(
-							method.getParameterTypes());
-			if (targetMethodParameterTypesType == null) {
-				StringBuilder sb = new StringBuilder();
-				List<TargetMethodParameterTypesType> list = Arrays.asList(
-						TargetMethodParameterTypesType.values());
-				for (Iterator<TargetMethodParameterTypesType> iterator = list.iterator();
-						iterator.hasNext();) {
-					sb.append(iterator.next().getTargetMethodParameterTypesString());
-					if (iterator.hasNext()) {
-						sb.append(", ");
-					}
-				}
-				throw new IllegalArgumentException(String.format(
-						"method '%s' must have one the following parameter types: %s", 
-						method,
-						sb.toString()));
-			}
-		}
-		
-		private final String helpText;
-		private final Method method;
-		private OptionGroup optionGroup;
-		private final Annotations.Option[] optionAnnotations;
-		private final Class<?> optionGroupHelpTextProviderClass;
-		private final int ordinal;
-		private final TargetMethodParameterTypesType targetMethodParameterTypesType;
-		
-		private OptionGroupMethod(final Method mthd) {
-			String h = null;
-			Annotations.Option[] optAnnotations = new Annotations.Option[] { };
-			Class<?> optGroupHelpTextProviderClass = OptionGroupHelpTextProvider.class;
-			int ord = 0;
-			TargetMethodParameterTypesType t = TargetMethodParameterTypesType.get(
-					mthd.getParameterTypes());
-			if (mthd.isAnnotationPresent(Annotations.HelpText.class)) {
-				Annotations.HelpText hAnnotation = mthd.getAnnotation(
-						Annotations.HelpText.class);
-				h = hAnnotation.value();
-			}
-			optAnnotations = mthd.getAnnotationsByType(Annotations.Option.class);
-			if (optAnnotations.length == 0 
-					&& mthd.isAnnotationPresent(Annotations.Options.class)) {
-				Annotations.Options optsAnnotation = mthd.getAnnotation(
-						Annotations.Options.class);
-				optAnnotations = optsAnnotation.value();
-			}
-			if (mthd.isAnnotationPresent(Annotations.OptionGroupHelpTextProvider.class)) {
-				Annotations.OptionGroupHelpTextProvider optGroupHelpTextProviderAnnotation =
-						mthd.getAnnotation(Annotations.OptionGroupHelpTextProvider.class);
-				optGroupHelpTextProviderClass = optGroupHelpTextProviderAnnotation.value();
-			}
-			if (mthd.isAnnotationPresent(Annotations.Ordinal.class)) {
-				Annotations.Ordinal ordAnnotation = mthd.getAnnotation(
-						Annotations.Ordinal.class);
-				ord = ordAnnotation.value();
-			}
-			this.helpText = h;
-			this.method = mthd;
-			this.optionGroup = null;
-			this.optionAnnotations = optAnnotations;
-			this.optionGroupHelpTextProviderClass = optGroupHelpTextProviderClass;
-			this.ordinal = ord;
-			this.targetMethodParameterTypesType = t;
-		}
-		
-		public String getHelpText() {
-			return this.helpText;
-		}
-		
-		public Annotations.Option[] getOptionAnnotations() {
-			return Arrays.copyOf(this.optionAnnotations, this.optionAnnotations.length);
-		}
-		
-		public OptionGroup getOptionGroup() {
-			if (this.optionGroup == null) {
-				this.optionGroup = this.newOptionGroup();
-			}
-			return this.optionGroup;
-		}
-		
-		public Class<?> getOptionGroupHelpTextProviderClass() {
-			return this.optionGroupHelpTextProviderClass;
-		}
-		
-		public int getOrdinal() {
-			return this.ordinal;
-		}
-
-		public void invoke(
-				final Object obj, 
-				final OptionOccurrence optionOccurrence) {
-			this.targetMethodParameterTypesType.invoke(
-					obj, this.method, optionOccurrence);
-		}
-		
-		private OptionArgSpec newOptionArgSpec(
-				final Annotations.OptionArgSpec optionArgSpec) {
+		private static OptionArgSpec newOptionArgSpec(
+				final Annotations.OptionArgSpec optionArgSpec,
+				final Method method,
+				final TargetMethodParameterTypesType t) {
 			OptionArgSpec.Builder builder = new OptionArgSpec.Builder();
 			String name = optionArgSpec.name();
 			if (!name.isEmpty()) {
@@ -3164,21 +3061,22 @@ public final class ArgMatey {
 			}
 			Class<?> stringConverterClass =	optionArgSpec.stringConverter();
 			if (!stringConverterClass.equals(StringConverter.class)) {
-				StringConverter stringConverter = this.newStringConverter(
+				StringConverter stringConverter = newStringConverter(
 						stringConverterClass);
 				builder.stringConverter(stringConverter);
 			}
-			Class<?> targetClass = 
-					this.targetMethodParameterTypesType.getTargetClass(
-							this.method);
+			Class<?> targetClass = t.getTargetClass(method);
 			if (targetClass != null) {
 				builder.type(targetClass);
 			}
 			return builder.build();
 		}
 		
-		private Option.Builder newOptionBuilder(
-				final Annotations.Option option, final boolean firstInGroup) {
+		private static Option.Builder newOptionBuilder(
+				final Annotations.Option option, 
+				final boolean firstInGroup,
+				final Method method,
+				final TargetMethodParameterTypesType t) {
 			OptionType type = option.type();
 			String name = option.name();
 			Option.Builder builder = type.newOptionBuilder(name);
@@ -3195,23 +3093,21 @@ public final class ArgMatey {
 			OptionalBoolean optionArgAllowed = optionArgSpec.allowed();
 			if (!optionArgAllowed.optionalBooleanValue().isPresent()) {
 				if (firstInGroup) {
-					Class<?> targetClass = 
-							this.targetMethodParameterTypesType.getTargetClass(
-									this.method);
+					Class<?> targetClass = t.getTargetClass(method);
 					if (targetClass != null) {
-						builder.optionArgSpec(this.newOptionArgSpec(
-								optionArgSpec));
+						builder.optionArgSpec(newOptionArgSpec(
+								optionArgSpec, method, t));
 					}
 				}
 			} else if (optionArgAllowed.optionalBooleanValue().get().booleanValue()) {
-				builder.optionArgSpec(this.newOptionArgSpec(optionArgSpec));
+				builder.optionArgSpec(newOptionArgSpec(optionArgSpec, method, t));
 			} else {
 				builder.optionArgSpec(null);
 			}
 			Class<?> optionUsageProviderClass = option.optionUsageProvider();
 			if (!optionUsageProviderClass.equals(OptionUsageProvider.class)) {
 				OptionUsageProvider optionUsageProvider = 
-						this.newOptionUsageProvider(optionUsageProviderClass);
+						newOptionUsageProvider(optionUsageProviderClass);
 				builder.optionUsageProvider(optionUsageProvider);
 			}
 			String usage = option.usage();
@@ -3221,33 +3117,49 @@ public final class ArgMatey {
 			return builder;
 		}
 		
-		private OptionGroup newOptionGroup() {
+		private static OptionGroup newOptionGroup(
+				final Method method, 
+				final TargetMethodParameterTypesType t) {
 			OptionGroup.Builder builder = new OptionGroup.Builder();
-			if (this.helpText != null) {
-				builder.helpText(this.helpText);
+			if (method.isAnnotationPresent(Annotations.HelpText.class)) {
+				Annotations.HelpText helpTextAnnotation = method.getAnnotation(
+						Annotations.HelpText.class);
+				builder.helpText(helpTextAnnotation.value());
 			}
-			if (this.optionAnnotations.length > 0) {
-				boolean firstInGroup = true;
+			Annotations.Option[] optionAnnotations = method.getAnnotationsByType(
+					Annotations.Option.class);
+			if (optionAnnotations.length == 0 && method.isAnnotationPresent(
+					Annotations.Options.class)) {
+				Annotations.Options optsAnnotation = method.getAnnotation(
+						Annotations.Options.class);
+				optionAnnotations = optsAnnotation.value();
+			}
+			if (optionAnnotations.length > 0) {
 				List<Option.Builder> optionBuilders = new ArrayList<Option.Builder>();
-				for (Annotations.Option optionAnnotation : this.optionAnnotations) {
-					Option.Builder optionBuilder = this.newOptionBuilder(
-							optionAnnotation, firstInGroup);
+				for (Annotations.Option optionAnnotation : optionAnnotations) {
+					boolean firstInGroup = optionBuilders.size() == 0;
+					Option.Builder optionBuilder = newOptionBuilder(
+							optionAnnotation, 
+							firstInGroup, 
+							method, 
+							t);
 					optionBuilders.add(optionBuilder);
-					if (firstInGroup) { firstInGroup = false; }
 				}
 				builder.optionBuilders(optionBuilders);
 			}
-			if (!this.optionGroupHelpTextProviderClass.equals(
-					OptionGroupHelpTextProvider.class)) {
+			if (method.isAnnotationPresent(
+					Annotations.OptionGroupHelpTextProvider.class)) {
+				Annotations.OptionGroupHelpTextProvider optionGroupHelpTextProviderAnnotation =
+						method.getAnnotation(Annotations.OptionGroupHelpTextProvider.class);
 				OptionGroupHelpTextProvider optionGroupHelpTextProvider = 
-						this.newOptionGroupHelpTextProvider(
-								optionGroupHelpTextProviderClass);
+						newOptionGroupHelpTextProvider(
+								optionGroupHelpTextProviderAnnotation.value());
 				builder.optionGroupHelpTextProvider(optionGroupHelpTextProvider);
 			}
 			return builder.build();
 		}
 		
-		private OptionGroupHelpTextProvider newOptionGroupHelpTextProvider(
+		private static OptionGroupHelpTextProvider newOptionGroupHelpTextProvider(
 				final Class<?> optionGroupHelpTextProviderClass) {
 			OptionGroupHelpTextProvider optionGroupHelpTextProvider = null;
 			Constructor<?> ctor = null;
@@ -3273,7 +3185,7 @@ public final class ArgMatey {
 			return optionGroupHelpTextProvider;
 		}
 		
-		private OptionUsageProvider newOptionUsageProvider(
+		private static OptionUsageProvider newOptionUsageProvider(
 				final Class<?> optionUsageProviderClass) {
 			OptionUsageProvider optionUsageProvider = null;
 			Constructor<?> ctor = null;
@@ -3298,7 +3210,7 @@ public final class ArgMatey {
 			return optionUsageProvider;
 		}
 		
-		private StringConverter newStringConverter(
+		private static StringConverter newStringConverter(
 				final Class<?> stringConverterClass) {
 			StringConverter stringConverter = null;
 			Constructor<?> ctor = null;
@@ -3323,6 +3235,67 @@ public final class ArgMatey {
 			return stringConverter;
 		}
 		
+		private final Method method;
+		
+		private final OptionGroup optionGroup;
+		
+		private final int ordinal;
+		
+		private final TargetMethodParameterTypesType targetMethodParameterTypesType;
+
+		private OptionGroupMethod(final Method mthd) {
+			int modifiers = mthd.getModifiers();
+			if (Modifier.isStatic(modifiers)) {
+				throw new IllegalArgumentException(String.format(
+						"method '%s' cannot be static", 
+						mthd));
+			}
+			TargetMethodParameterTypesType t = 
+					TargetMethodParameterTypesType.get(mthd.getParameterTypes());
+			if (t == null) {
+				StringBuilder sb = new StringBuilder();
+				List<TargetMethodParameterTypesType> list = Arrays.asList(
+						TargetMethodParameterTypesType.values());
+				for (Iterator<TargetMethodParameterTypesType> iterator = list.iterator();
+						iterator.hasNext();) {
+					sb.append(iterator.next().getTargetMethodParameterTypesString());
+					if (iterator.hasNext()) {
+						sb.append(", ");
+					}
+				}
+				throw new IllegalArgumentException(String.format(
+						"method '%s' must have one the following parameter types: %s", 
+						mthd,
+						sb.toString()));
+			}
+			OptionGroup optGroup = newOptionGroup(mthd, t);
+			int ord = 0;
+			if (mthd.isAnnotationPresent(Annotations.Ordinal.class)) {
+				Annotations.Ordinal ordAnnotation = mthd.getAnnotation(
+						Annotations.Ordinal.class);
+				ord = ordAnnotation.value();
+			}
+			this.method = mthd;
+			this.optionGroup = optGroup;
+			this.ordinal = ord;
+			this.targetMethodParameterTypesType = t; 
+		}
+		
+		public OptionGroup getOptionGroup() {
+			return this.optionGroup;
+		}
+		
+		public int getOrdinal() {
+			return this.ordinal;
+		}
+		
+		public void invoke(
+				final Object obj, 
+				final OptionOccurrence optionOccurrence) {
+			this.targetMethodParameterTypesType.invoke(
+					obj, this.method, optionOccurrence);
+		}
+		
 		public Method toMethod() {
 			return this.method;
 		}
@@ -3339,18 +3312,18 @@ public final class ArgMatey {
 				final OptionGroupMethod arg0, final OptionGroupMethod arg1) {
 			int diff = arg0.getOrdinal() - arg1.getOrdinal();
 			if (diff != 0) { return diff; }
-			Annotations.Option[] optionAnnotations0 = arg0.getOptionAnnotations();
-			Annotations.Option[] optionAnnotations1 = arg1.getOptionAnnotations();
-			int length0 = optionAnnotations0.length;
-			int length1 = optionAnnotations1.length;
-			int maxLength = (length0 >= length1) ? length0 : length1;
-			for (int i = 0; i < maxLength; i++) {
-				if (i == length0 || i == length1) {
-					return length0 - length1;
+			List<Option> options0 = arg0.getOptionGroup().toDisplayableList();
+			List<Option> options1 = arg1.getOptionGroup().toDisplayableList();
+			int size0 = options0.size();
+			int size1 = options1.size();
+			int maxSize = (size0 >= size1) ? size0 : size1;
+			for (int i = 0; i < maxSize; i++) {
+				if (i == size0 || i == size1) {
+					return size0 - size1;
 				}
-				Annotations.Option option0 = optionAnnotations0[i];
-				Annotations.Option option1 = optionAnnotations1[i];
-				int value = option0.name().compareTo(option1.name());
+				Option option0 = options0.get(i);
+				Option option1 = options1.get(i);
+				int value = option0.getName().compareTo(option1.getName());
 				if (value != 0) { return value; } 
 			}
 			return 0;

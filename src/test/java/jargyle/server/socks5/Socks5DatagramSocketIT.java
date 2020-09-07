@@ -15,7 +15,6 @@ public class Socks5DatagramSocketIT {
 
 	@Test
 	public void testThroughSocks5DatagramSocket01() throws IOException {
-		System.out.println("Testing through Socks5DatagramSocket...");
 		String string = TestStringConstants.STRING_01;
 		String returningString = echoThroughDatagramSocket(
 				string, 
@@ -27,7 +26,6 @@ public class Socks5DatagramSocketIT {
 	
 	@Test
 	public void testThroughSocks5DatagramSocket02() throws IOException {
-		System.out.println("Testing through Socks5DatagramSocket...");
 		String string = TestStringConstants.STRING_02;
 		String returningString = echoThroughDatagramSocket(
 				string, 
@@ -39,7 +37,6 @@ public class Socks5DatagramSocketIT {
 
 	@Test
 	public void testThroughSocks5DatagramSocket03() throws IOException {
-		System.out.println("Testing through Socks5DatagramSocket...");
 		String string = TestStringConstants.STRING_03;
 		String returningString = echoThroughDatagramSocket(
 				string, 
@@ -51,7 +48,6 @@ public class Socks5DatagramSocketIT {
 	
 	@Test
 	public void testThroughSocks5DatagramSocketUsingUsernamePasswordAuth01() throws IOException {
-		System.out.println("Testing through Socks5DatagramSocket using username password authentication...");
 		String string = TestStringConstants.STRING_01;
 		String returningString = echoThroughDatagramSocket(
 				string, 
@@ -65,7 +61,6 @@ public class Socks5DatagramSocketIT {
 
 	@Test
 	public void testThroughSocks5DatagramSocketUsingUsernamePasswordAuth02() throws IOException {
-		System.out.println("Testing through Socks5DatagramSocket using username password authentication...");
 		String string = TestStringConstants.STRING_02;
 		String returningString = echoThroughDatagramSocket(
 				string, 
@@ -79,7 +74,6 @@ public class Socks5DatagramSocketIT {
 	
 	@Test
 	public void testThroughSocks5DatagramSocketUsingUsernamePasswordAuth03() throws IOException {
-		System.out.println("Testing through Socks5DatagramSocket using username password authentication...");
 		String string = TestStringConstants.STRING_03;
 		String returningString = echoThroughDatagramSocket(
 				string, 

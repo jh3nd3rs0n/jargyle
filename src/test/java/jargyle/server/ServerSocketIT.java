@@ -148,13 +148,9 @@ public class ServerSocketIT {
 				} catch (InterruptedException e) {
 					Thread.currentThread().interrupt();
 				}
-				System.out.printf("Sending to client: %s (%s bytes)%n", 
-						string, string.getBytes().length);
 				IoHelper.writeThenFlush(string.getBytes(), socketOut);
 				byte[] b = IoHelper.readFrom(socketIn);
 				String returningString = new String(b);
-				System.out.printf("Received from client: %s (%s bytes)%n", 
-						returningString, returningString.getBytes().length);
 				this.echoServer.setReturningString(returningString);
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -223,8 +219,6 @@ public class ServerSocketIT {
 			OutputStream socketOut = socket.getOutputStream();
 			byte[] b = IoHelper.readFrom(socketIn);
 			String str = new String(b);
-			System.out.printf("Received from server: %s (%s bytes)%n", 
-					str, str.getBytes().length);
 			IoHelper.writeThenFlush(str.getBytes(), socketOut);
 		} finally {
 			if (socket != null) {
@@ -253,7 +247,6 @@ public class ServerSocketIT {
 
 	@Test
 	public void testThroughServerSocket01() throws IOException {
-		System.out.println("Testing through ServerSocket...");
 		String string = TestStringConstants.STRING_01;
 		String returningString = echoThroughServerSocket(string, null, null);
 		assertEquals(string, returningString);
@@ -261,7 +254,6 @@ public class ServerSocketIT {
 
 	@Test
 	public void testThroughServerSocket02() throws IOException {
-		System.out.println("Testing through ServerSocket...");
 		String string = TestStringConstants.STRING_02;
 		String returningString = echoThroughServerSocket(string, null, null);
 		assertEquals(string, returningString);
@@ -269,7 +261,6 @@ public class ServerSocketIT {
 
 	@Test
 	public void testThroughServerSocket03() throws IOException {
-		System.out.println("Testing through ServerSocket...");
 		String string = TestStringConstants.STRING_03;
 		String returningString = echoThroughServerSocket(string, null, null);
 		assertEquals(string, returningString);

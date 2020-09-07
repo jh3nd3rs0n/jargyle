@@ -85,8 +85,6 @@ public class DatagramSocketIT {
 					DataInputStream dataInputStream = new DataInputStream(
 							new ByteArrayInputStream(packet.getData()));
 					String string = dataInputStream.readUTF();
-					System.out.printf("Received from client: %s (%s bytes)%n", 
-							string, string.getBytes().length);
 					ByteArrayOutputStream byteArrayOutputStream = 
 							new ByteArrayOutputStream();
 					DataOutputStream dataOutputStream = 
@@ -144,8 +142,6 @@ public class DatagramSocketIT {
 			byte[] buffer = byteArrayOutputStream.toByteArray();
 			DatagramPacket packet = new DatagramPacket(
 					buffer, buffer.length, LOOPBACK_ADDRESS, port);
-			System.out.printf("Sending to server: %s (%s bytes)%n", 
-					string, string.getBytes().length);
 			echoDatagramSocket.send(packet);
 			buffer = new byte[BUFFER_SIZE];
 			packet = new DatagramPacket(buffer, buffer.length);
@@ -153,8 +149,6 @@ public class DatagramSocketIT {
 			DataInputStream dataInputStream = new DataInputStream(
 					new ByteArrayInputStream(packet.getData()));
 			returningString = dataInputStream.readUTF();
-			System.out.printf("Received from server: %s (%s bytes)%n", 
-					returningString, returningString.getBytes().length);
 		} finally {
 			if (echoDatagramSocket != null) {
 				echoDatagramSocket.close();
@@ -176,7 +170,6 @@ public class DatagramSocketIT {
 
 	@Test
 	public void testThroughDatagramSocket01() throws IOException {
-		System.out.println("Testing through DatagramSocket...");
 		String string = TestStringConstants.STRING_01;
 		String returningString = echoThroughDatagramSocket(string, null, null);
 		assertEquals(string, returningString);
@@ -184,7 +177,6 @@ public class DatagramSocketIT {
 
 	@Test
 	public void testThroughDatagramSocket02() throws IOException {
-		System.out.println("Testing through DatagramSocket...");
 		String string = TestStringConstants.STRING_02;
 		String returningString = echoThroughDatagramSocket(string, null, null);
 		assertEquals(string, returningString);
@@ -192,7 +184,6 @@ public class DatagramSocketIT {
 
 	@Test
 	public void testThroughDatagramSocket03() throws IOException {
-		System.out.println("Testing through DatagramSocket...");
 		String string = TestStringConstants.STRING_03;
 		String returningString = echoThroughDatagramSocket(string, null, null);
 		assertEquals(string, returningString);

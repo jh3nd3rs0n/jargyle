@@ -107,8 +107,6 @@ public class SocketIT {
 				OutputStream out = this.clientSocket.getOutputStream();
 				byte[] b = IoHelper.readFrom(in);
 				String string = new String(b);
-				System.out.printf("Received from client: %s (%s bytes)%n", 
-						string, string.getBytes().length);
 				IoHelper.writeThenFlush(string.getBytes(), out);
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -150,14 +148,9 @@ public class SocketIT {
 					LOOPBACK_ADDRESS, echoServer.getPort()));
 			InputStream in = echoSocket.getInputStream();
 			OutputStream out = echoSocket.getOutputStream();
-			System.out.printf("Sending to server: %s (%s bytes)%n", 
-					string, string.getBytes().length);
 			IoHelper.writeThenFlush(string.getBytes(), out);
 			byte[] b = IoHelper.readFrom(in);
 			returningString = new String(b);
-			System.out.printf("Received from server: %s (%s bytes)%n", 
-					returningString,
-					returningString.getBytes().length);
 		} finally {
 			if (echoSocket != null) {
 				echoSocket.close();
@@ -179,7 +172,6 @@ public class SocketIT {
 
 	@Test
 	public void testThroughSocket01() throws IOException {
-		System.out.println("Testing through Socket...");
 		String string = TestStringConstants.STRING_01;
 		String returningString = echoThroughSocket(string, null, null);
 		assertEquals(string, returningString);
@@ -187,7 +179,6 @@ public class SocketIT {
 
 	@Test
 	public void testThroughSocket02() throws IOException {
-		System.out.println("Testing through Socket...");
 		String string = TestStringConstants.STRING_02;
 		String returningString = echoThroughSocket(string, null, null);
 		assertEquals(string, returningString);
@@ -195,7 +186,6 @@ public class SocketIT {
 
 	@Test
 	public void testThroughSocket03() throws IOException {
-		System.out.println("Testing through Socket...");
 		String string = TestStringConstants.STRING_03;
 		String returningString = echoThroughSocket(string, null, null);
 		assertEquals(string, returningString);

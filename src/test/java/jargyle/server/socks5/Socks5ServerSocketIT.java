@@ -15,7 +15,6 @@ public class Socks5ServerSocketIT {
 	
 	@Test
 	public void testThroughSocks5ServerSocket01() throws IOException {
-		System.out.println("Testing through Socks5ServerSocket...");
 		String string = TestStringConstants.STRING_01;
 		String returningString = echoThroughServerSocket(
 				string, 
@@ -27,7 +26,6 @@ public class Socks5ServerSocketIT {
 	
 	@Test
 	public void testThroughSocks5ServerSocket02() throws IOException {
-		System.out.println("Testing through Socks5ServerSocket...");
 		String string = TestStringConstants.STRING_02;
 		String returningString = echoThroughServerSocket(
 				string, 
@@ -39,7 +37,6 @@ public class Socks5ServerSocketIT {
 
 	@Test
 	public void testThroughSocks5ServerSocket03() throws IOException {
-		System.out.println("Testing through Socks5ServerSocket...");
 		String string = TestStringConstants.STRING_03;
 		String returningString = echoThroughServerSocket(
 				string, 
@@ -51,7 +48,6 @@ public class Socks5ServerSocketIT {
 	
 	@Test
 	public void testThroughSocks5ServerSocketUsingUsernamePasswordAuth01() throws IOException {
-		System.out.println("Testing through Socks5ServerSocket using username password authentication...");
 		String string = TestStringConstants.STRING_01;
 		String returningString = echoThroughServerSocket(
 				string, 
@@ -65,7 +61,6 @@ public class Socks5ServerSocketIT {
 
 	@Test
 	public void testThroughSocks5ServerSocketUsingUsernamePasswordAuth02() throws IOException {
-		System.out.println("Testing through Socks5ServerSocket using username password authentication...");
 		String string = TestStringConstants.STRING_02;
 		String returningString = echoThroughServerSocket(
 				string, 
@@ -79,7 +74,6 @@ public class Socks5ServerSocketIT {
 	
 	@Test
 	public void testThroughSocks5ServerSocketUsingUsernamePasswordAuth03() throws IOException {
-		System.out.println("Testing through Socks5ServerSocket using username password authentication...");
 		String string = TestStringConstants.STRING_03;
 		String returningString = echoThroughServerSocket(
 				string, 

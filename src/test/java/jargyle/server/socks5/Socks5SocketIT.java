@@ -15,7 +15,6 @@ public class Socks5SocketIT {
 	
 	@Test
 	public void testThroughSocks5Socket01() throws IOException {
-		System.out.println("Testing through Socks5Socket...");
 		String string = TestStringConstants.STRING_01;
 		String returningString = echoThroughSocket(
 				string, 
@@ -27,7 +26,6 @@ public class Socks5SocketIT {
 	
 	@Test
 	public void testThroughSocks5Socket02() throws IOException {
-		System.out.println("Testing through Socks5Socket...");
 		String string = TestStringConstants.STRING_02;
 		String returningString = echoThroughSocket(
 				string, 
@@ -39,7 +37,6 @@ public class Socks5SocketIT {
 
 	@Test
 	public void testThroughSocks5Socket03() throws IOException {
-		System.out.println("Testing through Socks5Socket...");
 		String string = TestStringConstants.STRING_03;
 		String returningString = echoThroughSocket(
 				string, 
@@ -51,7 +48,6 @@ public class Socks5SocketIT {
 	
 	@Test
 	public void testThroughSocks5SocketUsingUsernamePasswordAuth01() throws IOException {
-		System.out.println("Testing through Socks5Socket using username password authentication...");
 		String string = TestStringConstants.STRING_01;
 		String returningString = echoThroughSocket(
 				string, 
@@ -65,7 +61,6 @@ public class Socks5SocketIT {
 
 	@Test
 	public void testThroughSocks5SocketUsingUsernamePasswordAuth02() throws IOException {
-		System.out.println("Testing through Socks5Socket using username password authentication...");
 		String string = TestStringConstants.STRING_02;
 		String returningString = echoThroughSocket(
 				string, 
@@ -79,7 +74,6 @@ public class Socks5SocketIT {
 	
 	@Test
 	public void testThroughSocks5SocketUsingUsernamePasswordAuth03() throws IOException {
-		System.out.println("Testing through Socks5Socket using username password authentication...");
 		String string = TestStringConstants.STRING_03;
 		String returningString = echoThroughSocket(
 				string, 

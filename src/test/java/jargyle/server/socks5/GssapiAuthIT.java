@@ -139,7 +139,6 @@ public class GssapiAuthIT {
 	
 	@Test
 	public void testThroughSocks5DatagramSocketUsingGssapiAuth01() throws IOException {
-		System.out.println("Testing through Socks5DatagramSocket using GSS-API authentication...");
 		String string = TestStringConstants.STRING_01;
 		String returningString = DatagramSocketIT.echoThroughDatagramSocket(
 				string, 
@@ -154,7 +153,6 @@ public class GssapiAuthIT {
 
 	@Test
 	public void testThroughSocks5DatagramSocketUsingGssapiAuth02() throws IOException {
-		System.out.println("Testing through Socks5DatagramSocket using GSS-API authentication...");
 		String string = TestStringConstants.STRING_02;
 		String returningString = DatagramSocketIT.echoThroughDatagramSocket(
 				string, 
@@ -169,7 +167,6 @@ public class GssapiAuthIT {
 
 	@Test
 	public void testThroughSocks5DatagramSocketUsingGssapiAuth03() throws IOException {
-		System.out.println("Testing through Socks5DatagramSocket using GSS-API authentication...");
 		String string = TestStringConstants.STRING_03;
 		String returningString = DatagramSocketIT.echoThroughDatagramSocket(
 				string, 
@@ -184,7 +181,6 @@ public class GssapiAuthIT {
 
 	@Test
 	public void testThroughSocks5DatagramSocketUsingGssapiAuthNecReferenceImpl01() throws IOException {
-		System.out.println("Testing through Socks5DatagramSocket using GSS-API authentication NEC reference implementation...");
 		String string = TestStringConstants.STRING_01;
 		String returningString = DatagramSocketIT.echoThroughDatagramSocket(
 				string, 
@@ -199,7 +195,6 @@ public class GssapiAuthIT {
 
 	@Test
 	public void testThroughSocks5DatagramSocketUsingGssapiAuthNecReferenceImpl02() throws IOException {
-		System.out.println("Testing through Socks5DatagramSocket using GSS-API authentication NEC reference implementation...");
 		String string = TestStringConstants.STRING_02;
 		String returningString = DatagramSocketIT.echoThroughDatagramSocket(
 				string, 
@@ -214,7 +209,6 @@ public class GssapiAuthIT {
 
 	@Test
 	public void testThroughSocks5DatagramSocketUsingGssapiAuthNecReferenceImpl03() throws IOException {
-		System.out.println("Testing through Socks5DatagramSocket using GSS-API authentication NEC reference implementation...");
 		String string = TestStringConstants.STRING_03;
 		String returningString = DatagramSocketIT.echoThroughDatagramSocket(
 				string, 
@@ -229,8 +223,6 @@ public class GssapiAuthIT {
 
 	@Test
 	public void testThroughSocks5DatagramSocketUsingGssapiAuthNecReferenceImplWithIntegAndConfProtection01() throws IOException {
-		System.out.println("Testing through Socks5DatagramSocket using GSS-API authentication NEC reference implementation with integrity "
-				+ "and confidentiality protection...");
 		String string = TestStringConstants.STRING_01;
 		String returningString = DatagramSocketIT.echoThroughDatagramSocket(
 				string, 
@@ -245,8 +237,6 @@ public class GssapiAuthIT {
 
 	@Test
 	public void testThroughSocks5DatagramSocketUsingGssapiAuthNecReferenceImplWithIntegAndConfProtection02() throws IOException {
-		System.out.println("Testing through Socks5DatagramSocket using GSS-API authentication NEC reference implementation with integrity "
-				+ "and confidentiality protection...");
 		String string = TestStringConstants.STRING_02;
 		String returningString = DatagramSocketIT.echoThroughDatagramSocket(
 				string, 
@@ -261,8 +251,6 @@ public class GssapiAuthIT {
 
 	@Test
 	public void testThroughSocks5DatagramSocketUsingGssapiAuthNecReferenceImplWithIntegAndConfProtection03() throws IOException {
-		System.out.println("Testing through Socks5DatagramSocket using GSS-API authentication NEC reference implementation with integrity "
-				+ "and confidentiality protection...");
 		String string = TestStringConstants.STRING_03;
 		String returningString = DatagramSocketIT.echoThroughDatagramSocket(
 				string, 
@@ -277,7 +265,6 @@ public class GssapiAuthIT {
 
 	@Test
 	public void testThroughSocks5DatagramSocketUsingGssapiAuthNecReferenceImplWithIntegProtection01() throws IOException {
-		System.out.println("Testing through Socks5DatagramSocket using GSS-API authentication NEC reference implementation with integrity protection...");
 		String string = TestStringConstants.STRING_01;
 		String returningString = DatagramSocketIT.echoThroughDatagramSocket(
 				string, 
@@ -292,7 +279,6 @@ public class GssapiAuthIT {
 
 	@Test
 	public void testThroughSocks5DatagramSocketUsingGssapiAuthNecReferenceImplWithIntegProtection02() throws IOException {
-		System.out.println("Testing through Socks5DatagramSocket using GSS-API authentication NEC reference implementation with integrity protection...");
 		String string = TestStringConstants.STRING_02;
 		String returningString = DatagramSocketIT.echoThroughDatagramSocket(
 				string, 
@@ -307,7 +293,6 @@ public class GssapiAuthIT {
 
 	@Test
 	public void testThroughSocks5DatagramSocketUsingGssapiAuthNecReferenceImplWithIntegProtection03() throws IOException {
-		System.out.println("Testing through Socks5DatagramSocket using GSS-API authentication NEC reference implementation with integrity protection...");
 		String string = TestStringConstants.STRING_03;
 		String returningString = DatagramSocketIT.echoThroughDatagramSocket(
 				string, 
@@ -322,8 +307,6 @@ public class GssapiAuthIT {
 
 	@Test
 	public void testThroughSocks5DatagramSocketUsingGssapiAuthWithIntegAndConfProtection01() throws IOException {
-		System.out.println("Testing through Socks5DatagramSocket using GSS-API authentication with integrity "
-				+ "and confidentiality protection...");
 		String string = TestStringConstants.STRING_01;
 		String returningString = DatagramSocketIT.echoThroughDatagramSocket(
 				string, 
@@ -338,8 +321,6 @@ public class GssapiAuthIT {
 
 	@Test
 	public void testThroughSocks5DatagramSocketUsingGssapiAuthWithIntegAndConfProtection02() throws IOException {
-		System.out.println("Testing through Socks5DatagramSocket using GSS-API authentication with integrity "
-				+ "and confidentiality protection...");
 		String string = TestStringConstants.STRING_02;
 		String returningString = DatagramSocketIT.echoThroughDatagramSocket(
 				string, 
@@ -354,8 +335,6 @@ public class GssapiAuthIT {
 
 	@Test
 	public void testThroughSocks5DatagramSocketUsingGssapiAuthWithIntegAndConfProtection03() throws IOException {
-		System.out.println("Testing through Socks5DatagramSocket using GSS-API authentication with integrity "
-				+ "and confidentiality protection...");
 		String string = TestStringConstants.STRING_03;
 		String returningString = DatagramSocketIT.echoThroughDatagramSocket(
 				string, 
@@ -370,7 +349,6 @@ public class GssapiAuthIT {
 
 	@Test
 	public void testThroughSocks5DatagramSocketUsingGssapiAuthWithIntegProtection01() throws IOException {
-		System.out.println("Testing through Socks5DatagramSocket using GSS-API authentication with integrity protection...");
 		String string = TestStringConstants.STRING_01;
 		String returningString = DatagramSocketIT.echoThroughDatagramSocket(
 				string, 
@@ -385,7 +363,6 @@ public class GssapiAuthIT {
 
 	@Test
 	public void testThroughSocks5DatagramSocketUsingGssapiAuthWithIntegProtection02() throws IOException {
-		System.out.println("Testing through Socks5DatagramSocket using GSS-API authentication with integrity protection...");
 		String string = TestStringConstants.STRING_02;
 		String returningString = DatagramSocketIT.echoThroughDatagramSocket(
 				string, 
@@ -400,7 +377,6 @@ public class GssapiAuthIT {
 
 	@Test
 	public void testThroughSocks5DatagramSocketUsingGssapiAuthWithIntegProtection03() throws IOException {
-		System.out.println("Testing through Socks5DatagramSocket using GSS-API authentication with integrity protection...");
 		String string = TestStringConstants.STRING_03;
 		String returningString = DatagramSocketIT.echoThroughDatagramSocket(
 				string, 
@@ -415,7 +391,6 @@ public class GssapiAuthIT {
 
 	@Test
 	public void testThroughSocks5ServerSocketUsingGssapiAuth01() throws IOException {
-		System.out.println("Testing through Socks5ServerSocket using GSS-API authentication...");
 		String string = TestStringConstants.STRING_01;
 		String returningString = ServerSocketIT.echoThroughServerSocket(
 				string, 
@@ -430,7 +405,6 @@ public class GssapiAuthIT {
 
 	@Test
 	public void testThroughSocks5ServerSocketUsingGssapiAuth02() throws IOException {
-		System.out.println("Testing through Socks5ServerSocket using GSS-API authentication...");
 		String string = TestStringConstants.STRING_02;
 		String returningString = ServerSocketIT.echoThroughServerSocket(
 				string, 
@@ -445,7 +419,6 @@ public class GssapiAuthIT {
 
 	@Test
 	public void testThroughSocks5ServerSocketUsingGssapiAuth03() throws IOException {
-		System.out.println("Testing through Socks5ServerSocket using GSS-API authentication...");
 		String string = TestStringConstants.STRING_03;
 		String returningString = ServerSocketIT.echoThroughServerSocket(
 				string, 
@@ -460,7 +433,6 @@ public class GssapiAuthIT {
 
 	@Test
 	public void testThroughSocks5ServerSocketUsingGssapiAuthNecReferenceImpl01() throws IOException {
-		System.out.println("Testing through Socks5ServerSocket using GSS-API authentication NEC reference implementation...");
 		String string = TestStringConstants.STRING_01;
 		String returningString = ServerSocketIT.echoThroughServerSocket(
 				string, 
@@ -475,7 +447,6 @@ public class GssapiAuthIT {
 
 	@Test
 	public void testThroughSocks5ServerSocketUsingGssapiAuthNecReferenceImpl02() throws IOException {
-		System.out.println("Testing through Socks5ServerSocket using GSS-API authentication NEC reference implementation...");
 		String string = TestStringConstants.STRING_02;
 		String returningString = ServerSocketIT.echoThroughServerSocket(
 				string, 
@@ -490,7 +461,6 @@ public class GssapiAuthIT {
 
 	@Test
 	public void testThroughSocks5ServerSocketUsingGssapiAuthNecReferenceImpl03() throws IOException {
-		System.out.println("Testing through Socks5ServerSocket using GSS-API authentication NEC reference implementation...");
 		String string = TestStringConstants.STRING_03;
 		String returningString = ServerSocketIT.echoThroughServerSocket(
 				string, 
@@ -505,8 +475,6 @@ public class GssapiAuthIT {
 
 	@Test
 	public void testThroughSocks5ServerSocketUsingGssapiAuthNecReferenceImplWithIntegAndConfProtection01() throws IOException {
-		System.out.println("Testing through Socks5ServerSocket using GSS-API authentication NEC reference implementation with integrity "
-				+ "and confidentiality protection...");
 		String string = TestStringConstants.STRING_01;
 		String returningString = ServerSocketIT.echoThroughServerSocket(
 				string, 
@@ -521,8 +489,6 @@ public class GssapiAuthIT {
 
 	@Test
 	public void testThroughSocks5ServerSocketUsingGssapiAuthNecReferenceImplWithIntegAndConfProtection02() throws IOException {
-		System.out.println("Testing through Socks5ServerSocket using GSS-API authentication NEC reference implementation with integrity "
-				+ "and confidentiality protection...");
 		String string = TestStringConstants.STRING_02;
 		String returningString = ServerSocketIT.echoThroughServerSocket(
 				string, 
@@ -537,8 +503,6 @@ public class GssapiAuthIT {
 
 	@Test
 	public void testThroughSocks5ServerSocketUsingGssapiAuthNecReferenceImplWithIntegAndConfProtection03() throws IOException {
-		System.out.println("Testing through Socks5ServerSocket using GSS-API authentication NEC reference implementation with integrity "
-				+ "and confidentiality protection...");
 		String string = TestStringConstants.STRING_03;
 		String returningString = ServerSocketIT.echoThroughServerSocket(
 				string, 
@@ -553,7 +517,6 @@ public class GssapiAuthIT {
 	
 	@Test
 	public void testThroughSocks5ServerSocketUsingGssapiAuthNecReferenceImplWithIntegProtection01() throws IOException {
-		System.out.println("Testing through Socks5ServerSocket using GSS-API authentication NEC reference implementation with integrity protection...");
 		String string = TestStringConstants.STRING_01;
 		String returningString = ServerSocketIT.echoThroughServerSocket(
 				string, 
@@ -568,7 +531,6 @@ public class GssapiAuthIT {
 
 	@Test
 	public void testThroughSocks5ServerSocketUsingGssapiAuthNecReferenceImplWithIntegProtection02() throws IOException {
-		System.out.println("Testing through Socks5ServerSocket using GSS-API authentication NEC reference implementation with integrity protection...");
 		String string = TestStringConstants.STRING_02;
 		String returningString = ServerSocketIT.echoThroughServerSocket(
 				string, 
@@ -583,7 +545,6 @@ public class GssapiAuthIT {
 
 	@Test
 	public void testThroughSocks5ServerSocketUsingGssapiAuthNecReferenceImplWithIntegProtection03() throws IOException {
-		System.out.println("Testing through Socks5ServerSocket using GSS-API authentication NEC reference implementation with integrity protection...");
 		String string = TestStringConstants.STRING_03;
 		String returningString = ServerSocketIT.echoThroughServerSocket(
 				string, 
@@ -598,8 +559,6 @@ public class GssapiAuthIT {
 
 	@Test
 	public void testThroughSocks5ServerSocketUsingGssapiAuthWithIntegAndConfProtection01() throws IOException {
-		System.out.println("Testing through Socks5ServerSocket using GSS-API authentication with integrity "
-				+ "and confidentiality protection...");
 		String string = TestStringConstants.STRING_01;
 		String returningString = ServerSocketIT.echoThroughServerSocket(
 				string, 
@@ -614,8 +573,6 @@ public class GssapiAuthIT {
 
 	@Test
 	public void testThroughSocks5ServerSocketUsingGssapiAuthWithIntegAndConfProtection02() throws IOException {
-		System.out.println("Testing through Socks5ServerSocket using GSS-API authentication with integrity "
-				+ "and confidentiality protection...");
 		String string = TestStringConstants.STRING_02;
 		String returningString = ServerSocketIT.echoThroughServerSocket(
 				string, 
@@ -630,8 +587,6 @@ public class GssapiAuthIT {
 
 	@Test
 	public void testThroughSocks5ServerSocketUsingGssapiAuthWithIntegAndConfProtection03() throws IOException {
-		System.out.println("Testing through Socks5ServerSocket using GSS-API authentication with integrity "
-				+ "and confidentiality protection...");
 		String string = TestStringConstants.STRING_03;
 		String returningString = ServerSocketIT.echoThroughServerSocket(
 				string, 
@@ -646,7 +601,6 @@ public class GssapiAuthIT {
 
 	@Test
 	public void testThroughSocks5ServerSocketUsingGssapiAuthWithIntegProtection01() throws IOException {
-		System.out.println("Testing through Socks5ServerSocket using GSS-API authentication with integrity protection...");
 		String string = TestStringConstants.STRING_01;
 		String returningString = ServerSocketIT.echoThroughServerSocket(
 				string, 
@@ -661,7 +615,6 @@ public class GssapiAuthIT {
 
 	@Test
 	public void testThroughSocks5ServerSocketUsingGssapiAuthWithIntegProtection02() throws IOException {
-		System.out.println("Testing through Socks5ServerSocket using GSS-API authentication with integrity protection...");
 		String string = TestStringConstants.STRING_02;
 		String returningString = ServerSocketIT.echoThroughServerSocket(
 				string, 
@@ -676,7 +629,6 @@ public class GssapiAuthIT {
 
 	@Test
 	public void testThroughSocks5ServerSocketUsingGssapiAuthWithIntegProtection03() throws IOException {
-		System.out.println("Testing through Socks5ServerSocket using GSS-API authentication with integrity protection...");
 		String string = TestStringConstants.STRING_03;
 		String returningString = ServerSocketIT.echoThroughServerSocket(
 				string, 
@@ -691,7 +643,6 @@ public class GssapiAuthIT {
 
 	@Test
 	public void testThroughSocks5SocketUsingGssapiAuth01() throws IOException {
-		System.out.println("Testing through Socks5Socket using GSS-API authentication...");
 		String string = TestStringConstants.STRING_01;
 		String returningString = SocketIT.echoThroughSocket(
 				string, 
@@ -706,7 +657,6 @@ public class GssapiAuthIT {
 
 	@Test
 	public void testThroughSocks5SocketUsingGssapiAuth02() throws IOException {
-		System.out.println("Testing through Socks5Socket using GSS-API authentication...");
 		String string = TestStringConstants.STRING_02;
 		String returningString = SocketIT.echoThroughSocket(
 				string, 
@@ -721,7 +671,6 @@ public class GssapiAuthIT {
 
 	@Test
 	public void testThroughSocks5SocketUsingGssapiAuth03() throws IOException {
-		System.out.println("Testing through Socks5Socket using GSS-API authentication...");
 		String string = TestStringConstants.STRING_03;
 		String returningString = SocketIT.echoThroughSocket(
 				string, 
@@ -736,7 +685,6 @@ public class GssapiAuthIT {
 
 	@Test
 	public void testThroughSocks5SocketUsingGssapiAuthNecReferenceImpl01() throws IOException {
-		System.out.println("Testing through Socks5Socket using GSS-API authentication NEC reference implementation...");
 		String string = TestStringConstants.STRING_01;
 		String returningString = SocketIT.echoThroughSocket(
 				string, 
@@ -751,7 +699,6 @@ public class GssapiAuthIT {
 
 	@Test
 	public void testThroughSocks5SocketUsingGssapiAuthNecReferenceImpl02() throws IOException {
-		System.out.println("Testing through Socks5Socket using GSS-API authentication NEC reference implementation...");
 		String string = TestStringConstants.STRING_02;
 		String returningString = SocketIT.echoThroughSocket(
 				string, 
@@ -766,7 +713,6 @@ public class GssapiAuthIT {
 
 	@Test
 	public void testThroughSocks5SocketUsingGssapiAuthNecReferenceImpl03() throws IOException {
-		System.out.println("Testing through Socks5Socket using GSS-API authentication NEC reference implementation...");
 		String string = TestStringConstants.STRING_03;
 		String returningString = SocketIT.echoThroughSocket(
 				string, 
@@ -781,8 +727,6 @@ public class GssapiAuthIT {
 
 	@Test
 	public void testThroughSocks5SocketUsingGssapiAuthNecReferenceImplWithIntegAndConfProtection01() throws IOException {
-		System.out.println("Testing through Socks5Socket using GSS-API authentication NEC reference implementation with integrity "
-				+ "and confidentiality protection...");
 		String string = TestStringConstants.STRING_01;
 		String returningString = SocketIT.echoThroughSocket(
 				string, 
@@ -797,8 +741,6 @@ public class GssapiAuthIT {
 
 	@Test
 	public void testThroughSocks5SocketUsingGssapiAuthNecReferenceImplWithIntegAndConfProtection02() throws IOException {
-		System.out.println("Testing through Socks5Socket using GSS-API authentication NEC reference implementation with integrity "
-				+ "and confidentiality protection...");
 		String string = TestStringConstants.STRING_02;
 		String returningString = SocketIT.echoThroughSocket(
 				string, 
@@ -813,8 +755,6 @@ public class GssapiAuthIT {
 
 	@Test
 	public void testThroughSocks5SocketUsingGssapiAuthNecReferenceImplWithIntegAndConfProtection03() throws IOException {
-		System.out.println("Testing through Socks5Socket using GSS-API authentication NEC reference implementation with integrity "
-				+ "and confidentiality protection...");
 		String string = TestStringConstants.STRING_03;
 		String returningString = SocketIT.echoThroughSocket(
 				string, 
@@ -829,7 +769,6 @@ public class GssapiAuthIT {
 
 	@Test
 	public void testThroughSocks5SocketUsingGssapiAuthNecReferenceImplWithIntegProtection01() throws IOException {
-		System.out.println("Testing through Socks5Socket using GSS-API authentication NEC reference implementation with integrity protection...");
 		String string = TestStringConstants.STRING_01;
 		String returningString = SocketIT.echoThroughSocket(
 				string, 
@@ -844,7 +783,6 @@ public class GssapiAuthIT {
 
 	@Test
 	public void testThroughSocks5SocketUsingGssapiAuthNecReferenceImplWithIntegProtection02() throws IOException {
-		System.out.println("Testing through Socks5Socket using GSS-API authentication NEC reference implementation with integrity protection...");
 		String string = TestStringConstants.STRING_02;
 		String returningString = SocketIT.echoThroughSocket(
 				string, 
@@ -859,7 +797,6 @@ public class GssapiAuthIT {
 
 	@Test
 	public void testThroughSocks5SocketUsingGssapiAuthNecReferenceImplWithIntegProtection03() throws IOException {
-		System.out.println("Testing through Socks5Socket using GSS-API authentication NEC reference implementation with integrity protection...");
 		String string = TestStringConstants.STRING_03;
 		String returningString = SocketIT.echoThroughSocket(
 				string, 
@@ -874,8 +811,6 @@ public class GssapiAuthIT {
 
 	@Test
 	public void testThroughSocks5SocketUsingGssapiAuthWithIntegAndConfProtection01() throws IOException {
-		System.out.println("Testing through Socks5Socket using GSS-API authentication with integrity "
-				+ "and confidentiality protection...");
 		String string = TestStringConstants.STRING_01;
 		String returningString = SocketIT.echoThroughSocket(
 				string, 
@@ -890,8 +825,6 @@ public class GssapiAuthIT {
 
 	@Test
 	public void testThroughSocks5SocketUsingGssapiAuthWithIntegAndConfProtection02() throws IOException {
-		System.out.println("Testing through Socks5Socket using GSS-API authentication with integrity "
-				+ "and confidentiality protection...");
 		String string = TestStringConstants.STRING_02;
 		String returningString = SocketIT.echoThroughSocket(
 				string, 
@@ -906,8 +839,6 @@ public class GssapiAuthIT {
 
 	@Test
 	public void testThroughSocks5SocketUsingGssapiAuthWithIntegAndConfProtection03() throws IOException {
-		System.out.println("Testing through Socks5Socket using GSS-API authentication with integrity "
-				+ "and confidentiality protection...");
 		String string = TestStringConstants.STRING_03;
 		String returningString = SocketIT.echoThroughSocket(
 				string, 
@@ -922,7 +853,6 @@ public class GssapiAuthIT {
 
 	@Test
 	public void testThroughSocks5SocketUsingGssapiAuthWithIntegProtection01() throws IOException {
-		System.out.println("Testing through Socks5Socket using GSS-API authentication with integrity protection...");
 		String string = TestStringConstants.STRING_01;
 		String returningString = SocketIT.echoThroughSocket(
 				string, 
@@ -937,7 +867,6 @@ public class GssapiAuthIT {
 
 	@Test
 	public void testThroughSocks5SocketUsingGssapiAuthWithIntegProtection02() throws IOException {
-		System.out.println("Testing through Socks5Socket using GSS-API authentication with integrity protection...");
 		String string = TestStringConstants.STRING_02;
 		String returningString = SocketIT.echoThroughSocket(
 				string, 
@@ -952,7 +881,6 @@ public class GssapiAuthIT {
 
 	@Test
 	public void testThroughSocks5SocketUsingGssapiAuthWithIntegProtection03() throws IOException {
-		System.out.println("Testing through Socks5Socket using GSS-API authentication with integrity protection...");
 		String string = TestStringConstants.STRING_03;
 		String returningString = SocketIT.echoThroughSocket(
 				string, 

@@ -101,7 +101,7 @@ public final class SocksServerCLI extends CLI {
 			usage = CRITERIA_OPTION_USAGE
 	)
 	@Ordinal(ALLOWED_CLIENT_ADDR_CRITERIA_OPTION_GROUP_ORDINAL)
-	public void addAllowedClientAddressCriteria(
+	private void addAllowedClientAddressCriteria(
 			final Criteria allowedClientAddrCriteria) {
 		this.modifiableConfiguration.addAllowedClientAddressCriteria(
 				allowedClientAddrCriteria);
@@ -115,7 +115,7 @@ public final class SocksServerCLI extends CLI {
 			usage = CRITERIA_OPTION_USAGE
 	)
 	@Ordinal(ALLOWED_SOCKS5_INCOMING_TCP_ADDR_CRITERIA_OPTION_GROUP_ORDINAL)
-	public void addAllowedSocks5IncomingTcpAddressCriteria(
+	private void addAllowedSocks5IncomingTcpAddressCriteria(
 			final Criteria allowedSocks5IncomingTcpAddrCriteria) {
 		this.modifiableConfiguration.addAllowedSocks5IncomingTcpAddressCriteria(
 				allowedSocks5IncomingTcpAddrCriteria);
@@ -129,7 +129,7 @@ public final class SocksServerCLI extends CLI {
 			usage = CRITERIA_OPTION_USAGE
 	)
 	@Ordinal(ALLOWED_SOCKS5_INCOMING_UDP_ADDR_CRITERIA_OPTION_GROUP_ORDINAL)
-	public void addAllowedSocks5IncomingUdpAddressCriteria(
+	private void addAllowedSocks5IncomingUdpAddressCriteria(
 			final Criteria allowedSocks5IncomingUdpAddrCriteria) {
 		this.modifiableConfiguration.addAllowedSocks5IncomingUdpAddressCriteria(
 				allowedSocks5IncomingUdpAddrCriteria);
@@ -143,7 +143,7 @@ public final class SocksServerCLI extends CLI {
 			usage = CRITERIA_OPTION_USAGE
 	)
 	@Ordinal(BLOCKED_CLIENT_ADDR_CRITERIA_OPTION_GROUP_ORDINAL)
-	public void addBlockedClientAddressCriteria(
+	private void addBlockedClientAddressCriteria(
 			final Criteria blockedClientAddrCriteria) {
 		this.modifiableConfiguration.addBlockedClientAddressCriteria(
 				blockedClientAddrCriteria);
@@ -157,7 +157,7 @@ public final class SocksServerCLI extends CLI {
 			usage = CRITERIA_OPTION_USAGE
 	)
 	@Ordinal(BLOCKED_SOCKS5_INCOMING_TCP_ADDR_CRITERIA_OPTION_GROUP_ORDINAL)
-	public void addBlockedSocks5IncomingTcpAddressCriteria(
+	private void addBlockedSocks5IncomingTcpAddressCriteria(
 			final Criteria blockedSocks5IncomingTcpAddrCriteria) {
 		this.modifiableConfiguration.addBlockedSocks5IncomingTcpAddressCriteria(
 				blockedSocks5IncomingTcpAddrCriteria);
@@ -171,7 +171,7 @@ public final class SocksServerCLI extends CLI {
 			usage = CRITERIA_OPTION_USAGE
 	)
 	@Ordinal(BLOCKED_SOCKS5_INCOMING_UDP_ADDR_CRITERIA_OPTION_GROUP_ORDINAL)
-	public void addBlockedSocks5IncomingUdpAddressCriteria(
+	private void addBlockedSocks5IncomingUdpAddressCriteria(
 			final Criteria blockedSocks5IncomingUdpAddrCriteria) {
 		this.modifiableConfiguration.addBlockedSocks5IncomingUdpAddressCriteria(
 				blockedSocks5IncomingUdpAddrCriteria);
@@ -188,7 +188,7 @@ public final class SocksServerCLI extends CLI {
 			type = OptionType.POSIX
 	)
 	@Ordinal(CONFIG_FILE_OPTION_GROUP_ORDINAL)
-	public void addConfigurationFile(final String file)	throws IOException {
+	private void addConfigurationFile(final String file)	throws IOException {
 		InputStream in = null;
 		if (file.equals("-")) {
 			in = System.in;
@@ -228,7 +228,7 @@ public final class SocksServerCLI extends CLI {
 			usage = "${option} [NAME1=VALUE1[,NAME2=VALUE2[...]]]"
 	)
 	@Ordinal(SETTINGS_OPTION_GROUP_ORDINAL)
-	public void addSettings(final Settings sttngs) {
+	private void addSettings(final Settings sttngs) {
 		this.modifiableConfiguration.addSettings(sttngs);
 	}
 	
@@ -254,7 +254,7 @@ public final class SocksServerCLI extends CLI {
 	)
 	@Ordinal(HELP_OPTION_GROUP_ORDINAL)
 	@Override
-	public void displayProgramHelp() {
+	protected void displayProgramHelp() {
 		ArgMatey.Option configFileXsdOption = this.getOptionGroups().get(
 				CONFIG_FILE_XSD_OPTION_GROUP_ORDINAL).get(0);
 		ArgMatey.Option helpOption = this.getOptionGroups().get(
@@ -296,7 +296,7 @@ public final class SocksServerCLI extends CLI {
 	
 	@Ignore
 	@Override
-	public void displayProgramVersion() { 
+	protected void displayProgramVersion() { 
 		throw new UnsupportedOperationException("not implemented");
 	}
 		
@@ -311,7 +311,7 @@ public final class SocksServerCLI extends CLI {
 			type = OptionType.POSIX
 	)
 	@Ordinal(SETTINGS_HELP_OPTION_GROUP_ORDINAL)
-	public void displaySettingsHelp() {
+	private void displaySettingsHelp() {
 		System.out.println("SETTINGS:");
 		this.displayHelpText(Arrays.asList(SettingSpec.values()));
 		System.out.println("SCHEMES:");
@@ -332,7 +332,7 @@ public final class SocksServerCLI extends CLI {
 			type = OptionType.GNU_LONG
 	)
 	@Ordinal(SOCKS5_USERS_OPTION_GROUP_ORDINAL)
-	public void doSocks5UsersManagementMode() {
+	private void doSocks5UsersManagementMode() {
 		ArgMatey.Option socks5UsersOption = this.getOptionGroups().get(
 				SOCKS5_USERS_OPTION_GROUP_ORDINAL).get(0);
 		String newProgramBeginningUsage = String.format("%s %s", 
@@ -362,7 +362,7 @@ public final class SocksServerCLI extends CLI {
 			type = OptionType.GNU_LONG
 	)
 	@Ordinal(ENTER_EXTERNAL_CLIENT_SOCKS5_USER_PASS_OPTION_GROUP_ORDINAL)
-	public void enterExternalClientSocks5UsernamePassword() {
+	private void enterExternalClientSocks5UsernamePassword() {
 		String prompt = "Please enter username and password for the external "
 				+ "SOCKS5 server for external connections";
 		UsernamePasswordRequestor usernamePasswordRequestor = 
@@ -373,6 +373,7 @@ public final class SocksServerCLI extends CLI {
 				usernamePassword);
 	}
 	
+	@Override
 	public int handleRemaining() {
 		ArgMatey.OptionGroup settingsOptionGroup = this.getOptionGroups().get(
 				SETTINGS_OPTION_GROUP_ORDINAL); 
@@ -454,7 +455,7 @@ public final class SocksServerCLI extends CLI {
 			type = OptionType.POSIX
 	)
 	@Ordinal(NEW_CONFIG_FILE_OPTION_GROUP_ORDINAL)
-	public void newConfigurationFile(final String file) 
+	private void newConfigurationFile(final String file) 
 			throws JAXBException, IOException {
 		ImmutableConfiguration immutableConfiguration = 
 				ImmutableConfiguration.newInstance(
@@ -506,7 +507,7 @@ public final class SocksServerCLI extends CLI {
 			type = OptionType.POSIX
 	)
 	@Ordinal(CONFIG_FILE_XSD_OPTION_GROUP_ORDINAL)
-	public void printConfigurationFileXsd() throws JAXBException, IOException {
+	private void printConfigurationFileXsd() throws JAXBException, IOException {
 		byte[] xsd = ImmutableConfiguration.getXsd();
 		System.out.write(xsd);
 		System.out.flush();
@@ -522,7 +523,7 @@ public final class SocksServerCLI extends CLI {
 			usage = "${option}=USERNAME:PASSWORD"
 	)
 	@Ordinal(EXTERNAL_CLIENT_SOCKS5_USER_PASS_OPTION_GROUP_ORDINAL)
-	public void setExternalClientSocks5UsernamePassword(
+	private void setExternalClientSocks5UsernamePassword(
 			final UsernamePassword usernamePassword) {
 		this.modifiableConfiguration.setExternalClientSocks5UsernamePassword(
 				usernamePassword);
@@ -541,7 +542,7 @@ public final class SocksServerCLI extends CLI {
 			type = OptionType.POSIX
 	)
 	@Ordinal(MONITORED_CONFIG_FILE_OPTION_GROUP_ORDINAL)
-	public void setMonitoredConfigurationFile(final String file) {
+	private void setMonitoredConfigurationFile(final String file) {
 		this.monitoredConfigurationFile = file;
 	}
 		
@@ -553,7 +554,7 @@ public final class SocksServerCLI extends CLI {
 			usage = "${option}=CLASSNAME[:VALUE]"
 	)
 	@Ordinal(SOCKS5_USER_PASS_AUTHENTICATOR_OPTION_GROUP_ORDINAL)
-	public void setSocks5UsernamePasswordAuthenticator(
+	private void setSocks5UsernamePasswordAuthenticator(
 			final UsernamePasswordAuthenticator usernamePasswordAuthenticator) {
 		this.modifiableConfiguration.setSocks5UsernamePasswordAuthenticator(
 				usernamePasswordAuthenticator);

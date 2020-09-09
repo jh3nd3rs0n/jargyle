@@ -311,7 +311,7 @@ public final class UsersCLI extends CLI {
 	)
 	@Ordinal(HELP_OPTION_GROUP_ORDINAL)
 	@Override
-	public void displayProgramHelp() {
+	protected void displayProgramHelp() {
 		ArgMatey.Option helpOption = this.getOptionGroups().get(
 				HELP_OPTION_GROUP_ORDINAL).get(0);
 		ArgMatey.Option xsdOption = this.getOptionGroups().get(
@@ -341,7 +341,7 @@ public final class UsersCLI extends CLI {
 	
 	@Ignore
 	@Override
-	public void displayProgramVersion() { 
+	protected void displayProgramVersion() { 
 		throw new UnsupportedOperationException("not implemented");
 	}
 	
@@ -354,6 +354,7 @@ public final class UsersCLI extends CLI {
 		}
 	}
 		
+	@Override
 	public int handleRemaining() {
 		ArgMatey.Option helpOption = this.getOptionGroups().get(
 				HELP_OPTION_GROUP_ORDINAL).get(0);
@@ -401,7 +402,7 @@ public final class UsersCLI extends CLI {
 			type = OptionType.POSIX
 	)
 	@Ordinal(XSD_OPTION_GROUP_ORDINAL)
-	public void printXsd() throws JAXBException, IOException {
+	private void printXsd() throws JAXBException, IOException {
 		byte[] xsd = Users.getXsd();
 		System.out.write(xsd);
 		System.out.flush();

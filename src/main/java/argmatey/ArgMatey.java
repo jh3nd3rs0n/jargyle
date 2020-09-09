@@ -51,6 +51,8 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Provides interfaces and classes for parsing command line arguments and 
@@ -835,7 +837,7 @@ public final class ArgMatey {
 				name = "help",
 				type = OptionType.GNU_LONG
 		)
-		public void displayProgramHelp() {
+		protected void displayProgramHelp() {
 			this.displayProgramUsage();
 			if (this.programDoc != null) {
 				System.out.println(this.programDoc);
@@ -857,7 +859,7 @@ public final class ArgMatey {
 			this.programHelpDisplayed = true;
 		}
 		
-		public void displayProgramUsage() {
+		protected void displayProgramUsage() {
 			String progName = this.programName;
 			if (progName == null) {
 				progName = this.getClass().getName();
@@ -881,7 +883,7 @@ public final class ArgMatey {
 				name = "version",
 				type = OptionType.GNU_LONG
 		)
-		public void displayProgramVersion() {
+		protected void displayProgramVersion() {
 			String progVersion = this.programVersion;
 			if (progVersion == null) {
 				progVersion = this.programName;
@@ -945,6 +947,16 @@ public final class ArgMatey {
 		
 		protected void handleNonparsedArg(final String nonparsedArg) { }
 		
+		public int handleRemaining() {
+			while (this.hasNext()) {
+				if (this.programHelpDisplayed || this.programVersionDisplayed) {
+					return 0;
+				}
+				this.handleNext();
+			}
+			return 0;
+		}
+		
 		public final boolean hasNext() {
 			return this.argsParser.hasNext();
 		}
@@ -963,23 +975,80 @@ public final class ArgMatey {
 		
 		@Override
 		public String toString() {
-			StringBuilder sb = new StringBuilder();
-			sb.append(this.getClass().getSimpleName())
-				.append(" [getArgCharIndex()=")
-				.append(this.getArgCharIndex())
-				.append(", getArgIndex()=")
-				.append(this.getArgIndex())
-				.append(", getArgs()=")
-				.append(Arrays.toString(this.getArgs()))
-				.append(", getOptionGroups()=")
-				.append(this.getOptionGroups())
-				.append("]");
-			return sb.toString();
+			return this.getClass().getName();
 		}
 		
 	}
 
 	static final class CLIClass {
+		
+		private static final class MethodComparator 
+			implements Comparator<Method> {
+
+			public MethodComparator() { }
+			
+			@Override
+			public int compare(final Method arg0, final Method arg1) {
+				int value = arg0.getName().compareTo(arg1.getName());
+				if (value != 0) {return value; }
+				Class<?>[] parameterTypes0 = arg0.getParameterTypes();
+				Class<?>[] parameterTypes1 = arg1.getParameterTypes();
+				int length0 = parameterTypes0.length;
+				int length1 = parameterTypes1.length;
+				int maxLength = (length0 >= length1) ? length0 : length1;
+				for (int i = 0; i < maxLength; i++) {
+					if (i == length0 || i == length1) {
+						return length0 - length1;
+					}
+					Class<?> parameterType0 = parameterTypes0[i];
+					Class<?> parameterType1 = parameterTypes1[i];
+					value = parameterType0.getName().compareTo(
+							parameterType1.getName());
+					if (value != 0) { return value; } 
+				}
+				return 0;
+			}
+			
+		}
+		
+		private static final class OptionGroupMethodComparator 
+			implements Comparator<OptionGroupMethod> {
+
+			public OptionGroupMethodComparator() { }
+			
+			@Override
+			public int compare(
+					final OptionGroupMethod arg0, final OptionGroupMethod arg1) {
+				int diff = arg0.getOrdinal() - arg1.getOrdinal();
+				if (diff != 0) { return diff; }
+				List<Option> options0 = arg0.getOptionGroup().toDisplayableList();
+				List<Option> options1 = arg1.getOptionGroup().toDisplayableList();
+				int size0 = options0.size();
+				int size1 = options1.size();
+				int maxSize = (size0 >= size1) ? size0 : size1;
+				for (int i = 0; i < maxSize; i++) {
+					if (i == size0 || i == size1) {
+						return size0 - size1;
+					}
+					Option option0 = options0.get(i);
+					Option option1 = options1.get(i);
+					int value = option0.getName().compareTo(option1.getName());
+					if (value != 0) { return value; } 
+				}
+				return 0;
+			}
+			
+		}
+		
+		private static List<Class<?>> getHierarchy(final Class<?> cls) {
+			List<Class<?>> hierarchy = new ArrayList<Class<?>>();
+			if (CLI.class.isAssignableFrom(cls)) {
+				hierarchy.add(cls);
+				Class<?> superclass = cls.getSuperclass();
+				hierarchy.addAll(getHierarchy(superclass));
+			}
+			return hierarchy;
+		}
 		
 		public static CLIClass newInstance(final Class<? extends CLI> cls) {
 			return new CLIClass(cls);
@@ -995,13 +1064,18 @@ public final class ArgMatey {
 					new HashMap<String, OptionGroupMethod>();
 			List<OptionGroupMethod> optGroupMethods = 
 					new ArrayList<OptionGroupMethod>();
-			Method[] methods = c.getMethods();
+			List<Class<?>> hierarchy = getHierarchy(c);
+			Set<Method> methods = new TreeSet<Method>(new MethodComparator());
+			for (Class<?> clazz : hierarchy) {
+				methods.addAll(Arrays.asList(clazz.getDeclaredMethods()));
+			}
 			for (Method method : methods) {
 				if (method.isAnnotationPresent(Annotations.Ignore.class)) {
 					continue;
 				}
 				if (method.isAnnotationPresent(Annotations.Option.class)
 						|| method.isAnnotationPresent(Annotations.Options.class)) {
+					method.setAccessible(true);
 					OptionGroupMethod mthd = OptionGroupMethod.newInstance(
 							method);
 					OptionGroup optGroup = mthd.getOptionGroup();
@@ -3298,35 +3372,6 @@ public final class ArgMatey {
 		
 		public Method toMethod() {
 			return this.method;
-		}
-		
-	}
-	
-	static final class OptionGroupMethodComparator 
-		implements Comparator<OptionGroupMethod> {
-
-		public OptionGroupMethodComparator() { }
-		
-		@Override
-		public int compare(
-				final OptionGroupMethod arg0, final OptionGroupMethod arg1) {
-			int diff = arg0.getOrdinal() - arg1.getOrdinal();
-			if (diff != 0) { return diff; }
-			List<Option> options0 = arg0.getOptionGroup().toDisplayableList();
-			List<Option> options1 = arg1.getOptionGroup().toDisplayableList();
-			int size0 = options0.size();
-			int size1 = options1.size();
-			int maxSize = (size0 >= size1) ? size0 : size1;
-			for (int i = 0; i < maxSize; i++) {
-				if (i == size0 || i == size1) {
-					return size0 - size1;
-				}
-				Option option0 = options0.get(i);
-				Option option1 = options1.get(i);
-				int value = option0.getName().compareTo(option1.getName());
-				if (value != 0) { return value; } 
-			}
-			return 0;
 		}
 		
 	}

@@ -837,7 +837,7 @@ public final class ArgMatey {
 				name = "help",
 				type = OptionType.GNU_LONG
 		)
-		protected void displayProgramHelp() {
+		public void displayProgramHelp() {
 			this.displayProgramUsage();
 			if (this.programDoc != null) {
 				System.out.println(this.programDoc);
@@ -859,7 +859,7 @@ public final class ArgMatey {
 			this.programHelpDisplayed = true;
 		}
 		
-		protected void displayProgramUsage() {
+		public void displayProgramUsage() {
 			String progName = this.programName;
 			if (progName == null) {
 				progName = this.getClass().getName();
@@ -883,7 +883,7 @@ public final class ArgMatey {
 				name = "version",
 				type = OptionType.GNU_LONG
 		)
-		protected void displayProgramVersion() {
+		public void displayProgramVersion() {
 			String progVersion = this.programVersion;
 			if (progVersion == null) {
 				progVersion = this.programName;
@@ -1329,6 +1329,7 @@ public final class ArgMatey {
 						&& isStatic 
 						&& isReturnTypeClass 
 						&& isParameterTypeString) {
+					method.setAccessible(true);
 					return method;
 				}
 			}
@@ -1349,16 +1350,18 @@ public final class ArgMatey {
 		 */
 		private static <T> Constructor<T> getStringParameterConstructor(
 				final Class<T> type) {
-			for (Constructor<?> constructor : type.getConstructors()) {
+			for (Constructor<?> constructor : type.getDeclaredConstructors()) {
 				int modifiers = constructor.getModifiers();
 				Class<?>[] parameterTypes = constructor.getParameterTypes();
+				boolean isPublic = Modifier.isPublic(modifiers);
 				boolean isInstantiatable = !Modifier.isAbstract(modifiers)
 						&& !Modifier.isInterface(modifiers);
 				boolean isParameterTypeString = parameterTypes.length == 1 
 						&& parameterTypes[0].equals(String.class);
-				if (isInstantiatable && isParameterTypeString) {
+				if (isPublic && isInstantiatable && isParameterTypeString) {
 					@SuppressWarnings("unchecked")
 					Constructor<T> ctor = (Constructor<T>) constructor;
+					ctor.setAccessible(true);
 					return ctor;
 				}
 			}
@@ -3244,6 +3247,7 @@ public final class ArgMatey {
 			} catch (SecurityException e) {
 				throw new AssertionError(e);
 			}
+			ctor.setAccessible(true);
 			try {
 				optionGroupHelpTextProvider = 
 						(OptionGroupHelpTextProvider) ctor.newInstance();
@@ -3270,6 +3274,7 @@ public final class ArgMatey {
 			} catch (SecurityException e) {
 				throw new AssertionError(e);
 			}
+			ctor.setAccessible(true);
 			try {
 				optionUsageProvider = (OptionUsageProvider) ctor.newInstance();
 			} catch (InstantiationException e) {
@@ -3295,6 +3300,7 @@ public final class ArgMatey {
 			} catch (SecurityException e) {
 				throw new AssertionError(e);
 			}
+			ctor.setAccessible(true);
 			try {
 				stringConverter = (StringConverter) ctor.newInstance();
 			} catch (InstantiationException e) {

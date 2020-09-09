@@ -67,6 +67,7 @@ public class UsernamePasswordAuthenticator {
 							value);
 		} else if (UsernamePasswordAuthenticator.class.isAssignableFrom(cls)) {
 			Method method = null;
+			Constructor<?> constructor = null;
 			for (Method meth : cls.getDeclaredMethods()) {
 				int modifiers = meth.getModifiers();
 				Class<?> returnType = meth.getReturnType();
@@ -84,7 +85,23 @@ public class UsernamePasswordAuthenticator {
 					break;
 				}
 			}
+			if (method == null) {
+				for (Constructor<?> ctor : cls.getDeclaredConstructors()) {
+					int modifiers = ctor.getModifiers();
+					Class<?>[] parameterTypes = ctor.getParameterTypes();
+					boolean isPublic = Modifier.isPublic(modifiers);
+					boolean isInstantiatable = !Modifier.isAbstract(modifiers)
+							&& !Modifier.isInterface(modifiers);
+					boolean isParameterTypeString = parameterTypes.length == 1 
+							&& parameterTypes[0].equals(String.class);
+					if (isPublic && isInstantiatable && isParameterTypeString) {
+						constructor = ctor;
+						break;
+					}
+				}
+			}
 			if (method != null) {
+				method.setAccessible(true);
 				try {
 					usernamePasswordAuthenticator = 
 							(UsernamePasswordAuthenticator) method.invoke(
@@ -96,18 +113,11 @@ public class UsernamePasswordAuthenticator {
 				} catch (InvocationTargetException e) {
 					throw new AssertionError(e); 
 				}
-			} else {
-				Constructor<?> ctor = null;
-				try {
-					ctor = cls.getConstructor(String.class);
-				} catch (NoSuchMethodException e) {
-					throw new AssertionError(e);
-				} catch (SecurityException e) {
-					throw new AssertionError(e);
-				}
+			} else if (constructor != null) {
+				constructor.setAccessible(true);
 				try {
 					usernamePasswordAuthenticator = 
-							(UsernamePasswordAuthenticator) ctor.newInstance(
+							(UsernamePasswordAuthenticator) constructor.newInstance(
 									value);
 				} catch (InstantiationException e) {
 					throw new AssertionError(e);
@@ -118,6 +128,14 @@ public class UsernamePasswordAuthenticator {
 				} catch (InvocationTargetException e) {
 					throw new AssertionError(e); 
 				}
+			} else {
+				throw new IllegalArgumentException(String.format(
+						"class %1$s does not have either a public static "
+						+ "method that has one method parameter of type "
+						+ "%1$s and a method return type of the provided "
+						+ "type nor a public instantiatable constructor "
+						+ "that has one constructor parameter of type %1$s",
+						String.class.getName()));
 			}
 		} else {
 			throw new IllegalArgumentException(String.format(

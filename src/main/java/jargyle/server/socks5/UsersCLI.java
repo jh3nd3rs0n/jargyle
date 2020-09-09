@@ -311,7 +311,7 @@ public final class UsersCLI extends CLI {
 	)
 	@Ordinal(HELP_OPTION_GROUP_ORDINAL)
 	@Override
-	protected void displayProgramHelp() {
+	public void displayProgramHelp() {
 		ArgMatey.Option helpOption = this.getOptionGroups().get(
 				HELP_OPTION_GROUP_ORDINAL).get(0);
 		ArgMatey.Option xsdOption = this.getOptionGroups().get(
@@ -341,7 +341,7 @@ public final class UsersCLI extends CLI {
 	
 	@Ignore
 	@Override
-	protected void displayProgramVersion() { 
+	public void displayProgramVersion() { 
 		throw new UnsupportedOperationException("not implemented");
 	}
 	

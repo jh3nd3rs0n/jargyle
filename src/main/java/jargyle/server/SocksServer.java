@@ -6,6 +6,7 @@ import java.net.ServerSocket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import argmatey.ArgMatey.CLI;
 import jargyle.common.net.SocketSettings;
 import jargyle.common.util.NonnegativeInteger;
 
@@ -17,8 +18,8 @@ public final class SocksServer {
 		 */
 		System.setProperty(
 				"com.sun.xml.bind.v2.bytecode.ClassTailor.noOptimize", "true");
-		SocksServerCLI socksServerCLI = new SocksServerCLI(args, false);
-		int status = socksServerCLI.handleRemaining();
+		CLI socksServerCLI = new SocksServerCLI(args, false);
+		int status = socksServerCLI.handleArgs();
 		if (status != 0) { System.exit(status);	}
 	}
 	

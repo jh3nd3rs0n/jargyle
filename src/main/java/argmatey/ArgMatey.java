@@ -807,27 +807,27 @@ public final class ArgMatey {
 
 	}
 	
-	public static class CLI {
+	public static abstract class CLI {
 		
 		private final ArgsParser argsParser;
 		private final CLIClass cliClass;
-		protected String programArgsUsage;
 		protected String programDoc;
 		protected boolean programHelpDisplayed;
 		protected String programName;
+		protected String programOperandsUsage;
 		protected String programVersion;
 		protected boolean programVersionDisplayed;
 		
-		public CLI(final String[] args, final boolean posixlyCorrect) {
+		protected CLI(final String[] args, final boolean posixlyCorrect) {
 			CLIClass cls = CLIClass.newInstance(this.getClass());
 			ArgsParser parser = ArgsParser.newInstance(
 					args, cls.getOptionGroups(), posixlyCorrect);
 			this.argsParser = parser;
 			this.cliClass = cls;
-			this.programArgsUsage = null;
 			this.programDoc = null;
 			this.programHelpDisplayed = false;
 			this.programName = null;
+			this.programOperandsUsage = null;
 			this.programVersion = null;
 			this.programVersionDisplayed = false;
 		}
@@ -837,7 +837,7 @@ public final class ArgMatey {
 				name = "help",
 				type = OptionType.GNU_LONG
 		)
-		public void displayProgramHelp() {
+		protected void displayProgramHelp() {
 			this.displayProgramUsage();
 			if (this.programDoc != null) {
 				System.out.println(this.programDoc);
@@ -859,7 +859,7 @@ public final class ArgMatey {
 			this.programHelpDisplayed = true;
 		}
 		
-		public void displayProgramUsage() {
+		protected void displayProgramUsage() {
 			String progName = this.programName;
 			if (progName == null) {
 				progName = this.getClass().getName();
@@ -872,8 +872,8 @@ public final class ArgMatey {
 			if (displayableOptionCount > 0) {
 				System.out.print(" [OPTION]...");
 			}
-			if (this.programArgsUsage != null) {
-				System.out.printf(" %s", this.programArgsUsage);
+			if (this.programOperandsUsage != null) {
+				System.out.printf(" %s", this.programOperandsUsage);
 			}
 			System.out.println();
 		}
@@ -883,7 +883,7 @@ public final class ArgMatey {
 				name = "version",
 				type = OptionType.GNU_LONG
 		)
-		public void displayProgramVersion() {
+		protected void displayProgramVersion() {
 			String progVersion = this.programVersion;
 			if (progVersion == null) {
 				progVersion = this.programName;
@@ -895,31 +895,29 @@ public final class ArgMatey {
 			this.programVersionDisplayed = true;
 		}
 		
-		public final int getArgCharIndex() {
+		protected final int getArgCharIndex() {
 			return this.argsParser.getArgCharIndex();
 		}
 		
-		public final int getArgIndex() {
+		protected final int getArgIndex() {
 			return this.argsParser.getArgIndex();
 		}
 		
-		public final String[] getArgs() {
+		protected final String[] getArgs() {
 			return this.argsParser.getArgs();
 		}
 		
-		public final OptionGroups getOptionGroups() {
+		protected final OptionGroups getOptionGroups() {
 			return this.argsParser.getOptionGroups();
 		}
 		
-		public final ParseResultHolder getParseResultHolder() {
+		protected final ParseResultHolder getParseResultHolder() {
 			return this.argsParser.getParseResultHolder();
 		}
 		
-		public final String getProgramName() {
-			return this.programName;
-		}
+		public abstract int handleArgs();
 		
-		public final void handleNext() {
+		protected final void handleNext() {
 			this.argsParser.parseNext();
 			ParseResultHolder parseResultHolder = 
 					this.argsParser.getParseResultHolder();
@@ -947,29 +945,11 @@ public final class ArgMatey {
 		
 		protected void handleNonparsedArg(final String nonparsedArg) { }
 		
-		public int handleRemaining() {
-			while (this.hasNext()) {
-				if (this.programHelpDisplayed || this.programVersionDisplayed) {
-					return 0;
-				}
-				this.handleNext();
-			}
-			return 0;
-		}
-		
-		public final boolean hasNext() {
+		protected final boolean hasNext() {
 			return this.argsParser.hasNext();
 		}
 		
-		public final boolean isProgramHelpDisplayed() {
-			return this.programHelpDisplayed;
-		}
-		
-		public final boolean isProgramVersionDisplayed() {
-			return this.programVersionDisplayed;
-		}
-		
-		public final String next() {
+		protected final String next() {
 			return this.argsParser.next();
 		}
 		

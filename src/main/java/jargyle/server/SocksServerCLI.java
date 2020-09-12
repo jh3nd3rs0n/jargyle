@@ -254,7 +254,7 @@ public final class SocksServerCLI extends CLI {
 	)
 	@Ordinal(HELP_OPTION_GROUP_ORDINAL)
 	@Override
-	public void displayProgramHelp() {
+	protected void displayProgramHelp() {
 		ArgMatey.Option configFileXsdOption = this.getOptionGroups().get(
 				CONFIG_FILE_XSD_OPTION_GROUP_ORDINAL).get(0);
 		ArgMatey.Option helpOption = this.getOptionGroups().get(
@@ -296,7 +296,7 @@ public final class SocksServerCLI extends CLI {
 	
 	@Ignore
 	@Override
-	public void displayProgramVersion() { 
+	protected void displayProgramVersion() { 
 		throw new UnsupportedOperationException("not implemented");
 	}
 		
@@ -345,12 +345,12 @@ public final class SocksServerCLI extends CLI {
 		}
 		String[] remainingArgs = remainingArgList.toArray(
 				new String[remainingArgList.size()]);
-		UsersCLI usersCLI = new UsersCLI(
+		CLI usersCLI = new UsersCLI(
 				this.programName, 
 				newProgramBeginningUsage, 
 				remainingArgs, 
 				this.posixlyCorrect);
-		int status = usersCLI.handleRemaining();
+		int status = usersCLI.handleArgs();
 		this.socks5UsersManagementModeStatus = Integer.valueOf(status);
 	}
 		
@@ -374,7 +374,7 @@ public final class SocksServerCLI extends CLI {
 	}
 	
 	@Override
-	public int handleRemaining() {
+	public int handleArgs() {
 		ArgMatey.OptionGroup settingsOptionGroup = this.getOptionGroups().get(
 				SETTINGS_OPTION_GROUP_ORDINAL); 
 		ArgMatey.Option settingsHelpOption = this.getOptionGroups().get(

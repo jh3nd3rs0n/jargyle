@@ -311,7 +311,7 @@ public final class UsersCLI extends CLI {
 	)
 	@Ordinal(HELP_OPTION_GROUP_ORDINAL)
 	@Override
-	public void displayProgramHelp() {
+	protected void displayProgramHelp() {
 		ArgMatey.Option helpOption = this.getOptionGroups().get(
 				HELP_OPTION_GROUP_ORDINAL).get(0);
 		ArgMatey.Option xsdOption = this.getOptionGroups().get(
@@ -341,21 +341,12 @@ public final class UsersCLI extends CLI {
 	
 	@Ignore
 	@Override
-	public void displayProgramVersion() { 
+	protected void displayProgramVersion() { 
 		throw new UnsupportedOperationException("not implemented");
 	}
 	
 	@Override
-	protected void handleNonparsedArg(final String nonparsedArg) {
-		if (this.command == null) {
-			this.command = Command.getInstance(nonparsedArg);
-		} else {
-			this.argList.add(nonparsedArg);
-		}
-	}
-		
-	@Override
-	public int handleRemaining() {
+	public int handleArgs() {
 		ArgMatey.Option helpOption = this.getOptionGroups().get(
 				HELP_OPTION_GROUP_ORDINAL).get(0);
 		String suggestion = String.format(
@@ -390,6 +381,15 @@ public final class UsersCLI extends CLI {
 			return -1;
 		}
 		return 0;
+	}
+		
+	@Override
+	protected void handleNonparsedArg(final String nonparsedArg) {
+		if (this.command == null) {
+			this.command = Command.getInstance(nonparsedArg);
+		} else {
+			this.argList.add(nonparsedArg);
+		}
 	}
 	
 	@Option(

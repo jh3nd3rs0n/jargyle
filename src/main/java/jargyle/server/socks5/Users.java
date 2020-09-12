@@ -71,7 +71,7 @@ public final class Users {
 		System.setProperty(
 				"com.sun.xml.bind.v2.bytecode.ClassTailor.noOptimize", "true");
 		UsersCLI usersCLI = new UsersCLI(null, null, args, false);
-		int status = usersCLI.handleRemaining();
+		int status = usersCLI.handleArgs();
 		if (status != 0) { System.exit(status);	}
 	}
 	

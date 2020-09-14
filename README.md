@@ -116,10 +116,10 @@ The following is the command line help for Jargyle (displayed when using the com
           The configuration file to be monitored for any changes to be applied to the running configuration
       --new-config-file=FILE, -n FILE
           Create a new configuration file based on the preceding options and exit
+      --setting=NAME=VALUE, -s NAME=VALUE
+          A setting for the SOCKS server
       --settings-help, -H
           Print the list of available settings for the SOCKS server and exit
-      --settings=[NAME1=VALUE1[,NAME2=VALUE2[...]]], -s [NAME1=VALUE1[,NAME2=VALUE2[...]]]
-          The comma separated list of settings for the SOCKS server
       --socks5-user-pass-authenticator=CLASSNAME[:VALUE]
           The SOCKS5 username password authenticator for the SOCKS server
       --socks5-users
@@ -344,7 +344,7 @@ The following command creates a configuration file with the port number, the num
 
 ```bash
 
-    java -jar target/jargyle-${VERSION}.jar --settings=port=1234,backlog=100,socks5.authMethods=NO_AUTHENTICATION_REQUIRED --new-config-file=configuration.xml
+    java -jar target/jargyle-${VERSION}.jar --setting=port=1234 --setting=backlog=100 --setting=socks5.authMethods=NO_AUTHENTICATION_REQUIRED --new-config-file=configuration.xml
 
 ```
 
@@ -371,7 +371,7 @@ The following command adds one command line options before the existing configur
 
 ```bash
 
-    java -jar target/jargyle-${VERSION}.jar --settings=clientSocketSettings=SO_TIMEOUT=500 --config-file=configuration.xml --settings=socketSettings=SO_TIMEOUT=0 --new-config-file=new_configuration.xml
+    java -jar target/jargyle-${VERSION}.jar --setting=clientSocketSettings=SO_TIMEOUT=500 --config-file=configuration.xml --setting=socketSettings=SO_TIMEOUT=0 --new-config-file=new_configuration.xml
 
 ```
 
@@ -695,7 +695,7 @@ Partial command line example:
 
 ```text
 
-    "--settings=socks5.authMethods=NO_AUTHENTICATION_REQUIRED GSSAPI"
+    "--setting=socks5.authMethods=NO_AUTHENTICATION_REQUIRED GSSAPI"
 
 ```
 
@@ -721,7 +721,7 @@ Partial command line example:
 
 ```text
 
-    "--settings=socks5.authMethods=NO_AUTHENTICATION_REQUIRED GSSAPI USERNAME_PASSWORD"
+    "--setting=socks5.authMethods=NO_AUTHENTICATION_REQUIRED GSSAPI USERNAME_PASSWORD"
 
 ```
 
@@ -743,7 +743,7 @@ Partial command line example:
 
 ```text
 
-    --settings=socks5.authMethods=USERNAME_PASSWORD
+    --setting=socks5.authMethods=USERNAME_PASSWORD
 
 ```
 
@@ -822,7 +822,7 @@ Partial command line example:
 
 ```text
 
-    --settings=socks5.authMethods=GSSAPI
+    --setting=socks5.authMethods=GSSAPI
 
 ```
 
@@ -846,7 +846,7 @@ The following is a sufficient example of using the Kerberos security mechanism:
 	    -Djava.security.auth.login.config=login.conf \
 	    -Djava.security.krb5.conf=krb5.conf \
 	    -jar target/jargyle-${VERSION}.jar \
-	    --settings=socks5.authMethods=GSSAPI 
+	    --setting=socks5.authMethods=GSSAPI 
 
 ```
 
@@ -901,7 +901,7 @@ Partial command line example:
 
 ```text
 
-    --settings=externalClient.externalServerUri=socks5://127.0.0.1:23456
+    --setting=externalClient.externalServerUri=socks5://127.0.0.1:23456
 
 ```
 
@@ -931,7 +931,7 @@ Partial command line example:
 
 ```text
 
-    "--settings=externalClient.socks5.authMethods=NO_AUTHENTICATION_REQUIRED GSSAPI"
+    "--setting=externalClient.socks5.authMethods=NO_AUTHENTICATION_REQUIRED GSSAPI"
 
 ```
 
@@ -957,7 +957,7 @@ Partial command line example:
 
 ```text
 
-    "--settings=externalClient.socks5.authMethods=NO_AUTHENTICATION_REQUIRED GSSAPI USERNAME_PASSWORD"
+    "--setting=externalClient.socks5.authMethods=NO_AUTHENTICATION_REQUIRED GSSAPI USERNAME_PASSWORD"
 
 ```
 
@@ -979,7 +979,7 @@ Partial command line example:
 
 ```text
 
-    --settings=externalClient.socks5.authMethods=USERNAME_PASSWORD
+    --setting=externalClient.socks5.authMethods=USERNAME_PASSWORD
 
 ```
 
@@ -1026,7 +1026,7 @@ Partial command line example:
 
 ```text
 
-    --settings=externalClient.socks5.authMethods=GSSAPI
+    --setting=externalClient.socks5.authMethods=GSSAPI
 
 ```
 
@@ -1050,9 +1050,9 @@ The following is a sufficient example of using the Kerberos security mechanism:
 	    -Djava.security.auth.login.config=login.conf \
 	    -Djava.security.krb5.conf=krb5.conf \
 	    -jar target/jargyle-${VERSION}.jar \
-	    --settings=externalClient.externalServerUri=socks5://127.0.0.1:23456 \
-	    --settings=externalClient.socks5.authMethods=GSSAPI \
-	    --settings=externalClient.socks5.gssapiServiceName=rcmd/127.0.0.1 
+	    --setting=externalClient.externalServerUri=socks5://127.0.0.1:23456 \
+	    --setting=externalClient.socks5.authMethods=GSSAPI \
+	    --setting=externalClient.socks5.gssapiServiceName=rcmd/127.0.0.1 
 
 ```
 
@@ -1099,7 +1099,7 @@ The Java system property `-Djava.security.krb5.conf=krb5.conf` provides the Kerb
 
 In `krb5.conf`, a KDC is defined as running at the address `127.0.0.1` on port `12345` with its realm as `EXAMPLE.COM`. (In a production environment, the address `127.0.0.1` should be replaced by the actual address or name of the machine of where the KDC resides. Also, in a production environment, the realm `EXAMPLE.COM` should be replaced by an actual realm provided by a Kerberos administrator.)
 
-The command line option `--settings=externalClient.socks5.gssapiServiceName=rcmd/127.0.0.1` is the GSS-API service name (or the Kerberos service principal) for the other SOCKS5 server residing at the address `127.0.0.1`. (In a production environment, the address `127.0.0.1` should be replaced by the name of the machine of where the other SOCKS5 server resides.)
+The command line option `--setting=externalClient.socks5.gssapiServiceName=rcmd/127.0.0.1` is the GSS-API service name (or the Kerberos service principal) for the other SOCKS5 server residing at the address `127.0.0.1`. (In a production environment, the address `127.0.0.1` should be replaced by the name of the machine of where the other SOCKS5 server resides.)
 
 #### 3. 9. 2. Using Java System Properties
 

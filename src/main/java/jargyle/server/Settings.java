@@ -53,18 +53,6 @@ public final class Settings {
 		return newInstance(Arrays.asList(settings));
 	}
 	
-	public static Settings newInstance(final String s) {
-		List<Setting> settings = new ArrayList<Setting>();
-		if (s.isEmpty()) {
-			return new Settings(settings);
-		}
-		String[] sElements = s.split(",");
-		for (String sElement : sElements) {
-			settings.add(Setting.newInstance(sElement));
-		}
-		return new Settings(settings);
-	}
-	
 	private final List<Setting> settings;
 	
 	private Settings(final List<Setting> sttngs) {

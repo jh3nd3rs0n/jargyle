@@ -150,6 +150,10 @@ final class ModifiableConfiguration extends Configuration {
 		this.blockedSocks5RequestCriteria.addAll(blockedSocks5ReqCriteriaList);
 	}
 	
+	public void addSetting(final Setting sttng) {
+		this.settings.add(sttng);
+	}
+	
 	public void addSettings(final Settings sttngs) {
 		List<Setting> sttngsList = sttngs.toList();
 		if (sttngsList.isEmpty()) {

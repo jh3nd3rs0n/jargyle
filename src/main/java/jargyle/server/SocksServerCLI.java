@@ -50,8 +50,8 @@ public final class SocksServerCLI extends CLI {
 	private static final int HELP_OPTION_GROUP_ORDINAL = 10;
 	private static final int MONITORED_CONFIG_FILE_OPTION_GROUP_ORDINAL = 11;
 	private static final int NEW_CONFIG_FILE_OPTION_GROUP_ORDINAL = 12;
-	private static final int SETTINGS_HELP_OPTION_GROUP_ORDINAL = 13;
-	private static final int SETTINGS_OPTION_GROUP_ORDINAL = 14;
+	private static final int SETTING_OPTION_GROUP_ORDINAL = 13;
+	private static final int SETTINGS_HELP_OPTION_GROUP_ORDINAL = 14;
 	private static final int SOCKS5_USER_PASS_AUTHENTICATOR_OPTION_GROUP_ORDINAL = 15;
 	private static final int SOCKS5_USERS_OPTION_GROUP_ORDINAL = 16;
 
@@ -70,7 +70,7 @@ public final class SocksServerCLI extends CLI {
 	private boolean settingsHelpDisplayed;
 	private Integer socks5UsersManagementModeStatus;
 	
-	SocksServerCLI(final String[] args, final boolean posixCorrect) {
+	public SocksServerCLI(final String[] args, final boolean posixCorrect) {
 		super(args, posixCorrect);
 		String progName = System.getProperty(
 				SystemPropertyNameConstants.PROGRAM_NAME);
@@ -216,20 +216,19 @@ public final class SocksServerCLI extends CLI {
 	}
 		
 	@Option(
-			doc = "The comma separated list of settings for the SOCKS "
-					+ "server",
-			name = "settings",
+			doc = "A setting for the SOCKS server",
+			name = "setting",
 			type = OptionType.GNU_LONG,
-			usage = "${option}=[NAME1=VALUE1[,NAME2=VALUE2[...]]]"
+			usage = "${option}=NAME=VALUE"
 	)
 	@Option(
 			name = "s",
 			type = OptionType.POSIX,
-			usage = "${option} [NAME1=VALUE1[,NAME2=VALUE2[...]]]"
+			usage = "${option} NAME=VALUE"
 	)
-	@Ordinal(SETTINGS_OPTION_GROUP_ORDINAL)
-	private void addSettings(final Settings sttngs) {
-		this.modifiableConfiguration.addSettings(sttngs);
+	@Ordinal(SETTING_OPTION_GROUP_ORDINAL)
+	private void addSetting(final Setting sttng) {
+		this.modifiableConfiguration.addSetting(sttng);
 	}
 	
 	private void displayHelpText(final List<HelpTextParams> list) {
@@ -376,7 +375,7 @@ public final class SocksServerCLI extends CLI {
 	@Override
 	public int handleArgs() {
 		ArgMatey.OptionGroup settingsOptionGroup = this.getOptionGroups().get(
-				SETTINGS_OPTION_GROUP_ORDINAL); 
+				SETTING_OPTION_GROUP_ORDINAL); 
 		ArgMatey.Option settingsHelpOption = this.getOptionGroups().get(
 				SETTINGS_HELP_OPTION_GROUP_ORDINAL).get(0);
 		String settingsHelpSuggestion = String.format(

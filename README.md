@@ -355,9 +355,18 @@ The following command creates a configuration file with the port number, the num
     <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <configuration>
         <settings>
-            <setting name="port" value="1234"/>
-            <setting name="backlog" value="100"/>
-            <setting name="socks5.authMethods" value="NO_AUTHENTICATION_REQUIRED"/>
+            <setting>
+                <name>port</name>
+                <value>1234</value>
+            </setting>
+            <setting>
+                <name>backlog</name>
+                <value>100</value>
+            </setting>
+            <setting>
+                <name>socks5.authMethods</name>
+                <value>NO_AUTHENTICATION_REQUIRED</value>
+            </setting>
         </settings>
     </configuration>
 
@@ -382,11 +391,26 @@ The following command adds one command line options before the existing configur
     <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <configuration>
         <settings>
-            <setting name="clientSocketSettings" value="SO_TIMEOUT=500"/>
-            <setting name="port" value="1234"/>
-            <setting name="backlog" value="100"/>
-            <setting name="socks5.authMethods" value="NO_AUTHENTICATION_REQUIRED"/>
-            <setting name="socketSettings" value="SO_TIMEOUT=0"/>
+            <setting>
+                <name>clientSocketSettings</name>
+                <value>SO_TIMEOUT=500</value>
+            </setting>
+            <setting>
+                <name>port</name>
+                <value>1234</value>
+            </setting>
+            <setting>
+                <name>backlog</name>
+                <value>100</value>
+            </setting>
+            <setting>
+                <name>socks5.authMethods</name>
+                <value>NO_AUTHENTICATION_REQUIRED</value>
+            </setting>
+            <setting>
+                <name>socketSettings</name>
+                <value>SO_TIMEOUT=0</value>
+            </setting>
         </settings>
     </configuration>
 
@@ -411,14 +435,38 @@ The following command combines the two earlier configuration files into one:
     <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <configuration>
         <settings>
-            <setting name="port" value="1234"/>
-            <setting name="backlog" value="100"/>
-            <setting name="socks5.authMethods" value="NO_AUTHENTICATION_REQUIRED"/>
-            <setting name="clientSocketSettings" value="SO_TIMEOUT=500"/>
-            <setting name="port" value="1234"/>
-            <setting name="backlog" value="100"/>
-            <setting name="socks5.authMethods" value="NO_AUTHENTICATION_REQUIRED"/>
-            <setting name="socketSettings" value="SO_TIMEOUT=0"/>
+            <setting>
+                <name>port</name>
+                <value>1234</value>
+            </setting>
+            <setting>
+                <name>backlog</name>
+                <value>100</value>
+            </setting>
+            <setting>
+                <name>socks5.authMethods</name>
+                <value>NO_AUTHENTICATION_REQUIRED</value>
+            </setting>
+            <setting>
+                <name>clientSocketSettings</name>
+                <value>SO_TIMEOUT=500</value>
+            </setting>
+            <setting>
+                <name>port</name>
+                <value>1234</value>
+            </setting>
+            <setting>
+                <name>backlog</name>
+                <value>100</value>
+            </setting>
+            <setting>
+                <name>socks5.authMethods</name>
+                <value>NO_AUTHENTICATION_REQUIRED</value>
+            </setting>
+            <setting>
+                <name>socketSettings</name>
+                <value>SO_TIMEOUT=0</value>
+            </setting>
         </settings>
     </configuration>
 
@@ -704,7 +752,10 @@ Partial configuration file example:
 ```xml
 
     <settings>
-        <setting name="socks5.authMethods" value="GSSAPI USERNAME_PASSWORD"/>
+        <setting>
+            <name>socks5.authMethods</name>
+            <value>GSSAPI USERNAME_PASSWORD</value>
+        </setting>
     </settings>
 
 ```
@@ -730,7 +781,10 @@ Partial configuration file example:
 ```xml
 
     <settings>
-        <setting name="socks5.authMethods" value="NO_AUTHENTICATION_REQUIRED GSSAPI USERNAME_PASSWORD"/>
+        <setting>
+            <name>socks5.authMethods</name>
+            <value>NO_AUTHENTICATION_REQUIRED GSSAPI USERNAME_PASSWORD</value>
+        </setting>
     </settings>
 
 ```
@@ -752,7 +806,10 @@ Partial configuration file example:
 ```xml
 
     <settings>
-        <setting name="socks5.authMethods" value="USERNAME_PASSWORD"/>
+        <setting>
+            <name>socks5.authMethods</name>
+            <value>USERNAME_PASSWORD</value>
+        </setting>
     </settings>
 
 ```
@@ -831,7 +888,10 @@ Partial configuration file example:
 ```xml
 
     <settings>
-        <setting name="socks5.authMethods" value="GSSAPI"/>
+        <setting>
+            <name>socks5.authMethods</name>
+            <value>GSSAPI</value>
+        </setting>
     </settings>
 
 ```
@@ -910,7 +970,10 @@ Partial configuration file example:
 ```xml
 
     <settings>
-        <setting name="externalClient.externalServerUri" value="socks5://127.0.0.1:23456"/>
+        <setting>
+            <name>externalClient.externalServerUri</name>
+            <value>socks5://127.0.0.1:23456</value>
+        </setting>
     </settings>
 
 ```
@@ -940,7 +1003,10 @@ Partial configuration file example:
 ```xml
 
     <settings>
-        <setting name="externalClient.socks5.authMethods" value="GSSAPI USERNAME_PASSWORD"/>
+        <setting>
+            <name>externalClient.socks5.authMethods</name>
+            <value>GSSAPI USERNAME_PASSWORD</value>
+        </setting>
     </settings>
 
 ```
@@ -966,7 +1032,10 @@ Partial configuration file example:
 ```xml
 
     <settings>
-        <setting name="externalClient.socks5.authMethods" value="NO_AUTHENTICATION_REQUIRED GSSAPI USERNAME_PASSWORD"/>
+        <setting>
+            <name>externalClient.socks5.authMethods</name>
+            <value>NO_AUTHENTICATION_REQUIRED GSSAPI USERNAME_PASSWORD</value>
+        </setting>
     </settings>
     
 ```
@@ -988,7 +1057,10 @@ Partial configuration file example:
 ```xml
 
     <settings>
-        <setting name="externalClient.socks5.authMethods" value="USERNAME_PASSWORD"/>
+        <setting>
+            <name>externalClient.socks5.authMethods</name>
+            <value>USERNAME_PASSWORD</value>
+        </setting>
     </settings>
 
 ```
@@ -1035,7 +1107,10 @@ Partial configuration file example:
 ```xml
 
     <settings>
-        <setting name="externalClient.socks5.authMethods" value="GSSAPI"/>
+        <setting>
+            <name>externalClient.socks5.authMethods</name>
+            <value>GSSAPI</value>
+        </setting>
     </settings>
 
 ```
@@ -1273,7 +1348,10 @@ Partial configuration file example:
         </socks5RequestCriterion>    
     </blockedSocks5RequestCriteria>
     <settings>
-        <setting name="backlog" value="100" comment="expecting a lot of client connections"/>
+        <setting comment="expecting a lot of client connections"/>
+            <name>backlog</name>
+            <value>100</value>
+        </setting>
     </settings>
     
 ```

@@ -2,21 +2,27 @@ package jargyle.server;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAnyElement;
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.XmlValue;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 @XmlJavaTypeAdapter(Setting.SettingXmlAdapter.class)
 public final class Setting {
-
+	
 	@XmlAccessorType(XmlAccessType.NONE)
 	@XmlType(name = "setting", propOrder = { })
+	@XmlSeeAlso({Value.class})
 	static class SettingXml {
-		@XmlAttribute(name = "name", required = true)
+		@XmlElement(name = "name", required = true)
 		protected String name;
-		@XmlAttribute(name = "value", required = true)
-		protected String value;
+		@XmlAnyElement(lax = true)
+		protected Object value;
 		@XmlAttribute(name = "comment")
 		protected String comment;		
 	}
@@ -29,14 +35,36 @@ public final class Setting {
 			SettingXml settingXml = new SettingXml();
 			settingXml.comment = v.comment;
 			settingXml.name = v.getName();
-			settingXml.value = v.getValue().toString();
+			Object val = v.getValue();
+			Class<?> cls = val.getClass();
+			if (cls.isAnnotationPresent(XmlJavaTypeAdapter.class)) {
+				settingXml.value = val;
+			} else {
+				Value newVal = new Value();
+				newVal.value = val.toString();
+				settingXml.value = newVal;
+			}
 			return settingXml;
 		}
 
 		@Override
 		public Setting unmarshal(final SettingXml v) throws Exception {
-			return newInstance(v.name, v.value, v.comment);
+			Object val = v.value;
+			if (val instanceof Value) {
+				Value newVal = (Value) val;
+				return newInstance(v.name, newVal.value, v.comment);
+			}
+			return new Setting(v.name, v.value, v.comment);
 		}
+		
+	}
+	
+	@XmlRootElement
+	@XmlType(name = "value")
+	static class Value {
+		
+		@XmlValue
+		protected String value;
 		
 	}
 	
@@ -125,4 +153,5 @@ public final class Setting {
 	public String toString() {
 		return String.format("%s=%s", this.name, this.value);
 	}
+	
 }

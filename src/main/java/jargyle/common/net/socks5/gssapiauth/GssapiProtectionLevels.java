@@ -16,19 +16,19 @@ public final class GssapiProtectionLevels {
 	
 	public static GssapiProtectionLevels newInstance(
 			final GssapiProtectionLevel gssapiProtectionLvl,
+			final GssapiProtectionLevel... gssapiProtectionLvls) {
+		return newInstance(gssapiProtectionLvl, Arrays.asList(
+				gssapiProtectionLvls));
+	}
+	
+	public static GssapiProtectionLevels newInstance(
+			final GssapiProtectionLevel gssapiProtectionLvl,
 			final List<GssapiProtectionLevel> gssapiProtectionLvls) {
 		List<GssapiProtectionLevel> list = 
 				new ArrayList<GssapiProtectionLevel>();
 		list.add(gssapiProtectionLvl);
 		list.addAll(gssapiProtectionLvls);
 		return new GssapiProtectionLevels(list);
-	}
-	
-	public static GssapiProtectionLevels newInstance(
-			final GssapiProtectionLevel gssapiProtectionLvl,
-			final GssapiProtectionLevel... gssapiProtectionLvls) {
-		return newInstance(gssapiProtectionLvl, Arrays.asList(
-				gssapiProtectionLvls));
 	}
 	
 	public static GssapiProtectionLevels newInstance(final String s) {

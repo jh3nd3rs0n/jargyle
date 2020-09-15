@@ -5,8 +5,47 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.adapters.XmlAdapter;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+@XmlJavaTypeAdapter(SocketSetting.SocketSettingXmlAdapter.class)
 public final class SocketSetting {
 
+	@XmlAccessorType(XmlAccessType.NONE)
+	@XmlType(name = "socketSetting", propOrder = { })
+	static class SocketSettingXml {
+		@XmlElement(name = "name", required = true)
+		protected String name;
+		@XmlElement(name = "value", required = true)
+		protected String value;
+		@XmlAttribute(name = "comment")
+		protected String comment;
+	}
+	
+	static final class SocketSettingXmlAdapter 
+		extends XmlAdapter<SocketSettingXml, SocketSetting> {
+
+		@Override
+		public SocketSettingXml marshal(final SocketSetting v) throws Exception {
+			SocketSettingXml socketSettingXml = new SocketSettingXml();
+			socketSettingXml.comment = v.comment;
+			socketSettingXml.name = v.getSocketSettingSpec().toString();
+			socketSettingXml.value = v.getValue().toString();
+			return socketSettingXml;
+		}
+
+		@Override
+		public SocketSetting unmarshal(final SocketSettingXml v) throws Exception {
+			return newInstance(v.name, v.value, v.comment);
+		}
+		
+	}
+	
 	public static SocketSetting newInstance(final String s) {
 		String[] sElements = s.split("=", 2);
 		if (sElements.length != 2) {
@@ -24,12 +63,29 @@ public final class SocketSetting {
 		return SocketSettingSpec.getInstance(socketSettingSpecString).newSocketSetting(value);
 	}
 	
+	private static SocketSetting newInstance(
+			final String socketSettingSpecString, 
+			final String value, 
+			final String comment) {
+		SocketSetting socketSetting = newInstance(socketSettingSpecString, value);
+		return new SocketSetting(
+				socketSetting.getSocketSettingSpec(), 
+				socketSetting.getValue(), 
+				comment);
+	}
+	
 	private final SocketSettingSpec socketSettingSpec;
 	private final Object value;
+	private final String comment;
 	
 	SocketSetting(final SocketSettingSpec spec, final Object val) {
+		this(spec, val, null);
+	}
+	
+	private SocketSetting(final SocketSettingSpec spec, final Object val, final String cmmnt) {
 		this.socketSettingSpec = spec;
 		this.value = val;
+		this.comment = cmmnt;
 	}
 	
 	public void applyTo(

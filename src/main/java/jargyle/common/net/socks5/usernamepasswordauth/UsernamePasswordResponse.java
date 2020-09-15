@@ -18,16 +18,6 @@ public final class UsernamePasswordResponse {
 	
 	public static final byte STATUS_SUCCESS = 0x0;
 	
-	public static UsernamePasswordResponse newInstance(final byte[] b) {
-		UsernamePasswordResponse usernamePasswordResponse;
-		try {
-			usernamePasswordResponse = newInstanceFrom(new ByteArrayInputStream(b));
-		} catch (IOException e) {
-			throw new IllegalArgumentException(e);
-		}
-		return usernamePasswordResponse;
-	}
-	
 	public static UsernamePasswordResponse newInstance(
 			final byte status) {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -39,6 +29,16 @@ public final class UsernamePasswordResponse {
 		params.status = status;
 		params.byteArray = out.toByteArray();
 		return new UsernamePasswordResponse(params);
+	}
+	
+	public static UsernamePasswordResponse newInstance(final byte[] b) {
+		UsernamePasswordResponse usernamePasswordResponse;
+		try {
+			usernamePasswordResponse = newInstanceFrom(new ByteArrayInputStream(b));
+		} catch (IOException e) {
+			throw new IllegalArgumentException(e);
+		}
+		return usernamePasswordResponse;
 	}
 	
 	public static UsernamePasswordResponse newInstanceFrom(
@@ -136,6 +136,5 @@ public final class UsernamePasswordResponse {
 			.append("]");
 		return builder.toString();
 	}
-	
 	
 }

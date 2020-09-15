@@ -4,6 +4,7 @@ import java.net.DatagramSocket;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -12,8 +13,43 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.adapters.XmlAdapter;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+@XmlJavaTypeAdapter(SocketSettings.SocketSettingsXmlAdapter.class)
 public final class SocketSettings {
 
+	@XmlAccessorType(XmlAccessType.NONE)
+	@XmlType(name = "socketSettings", propOrder = { "socketSettings" })
+	static class SocketSettingsXml {
+		@XmlElement(name = "socketSetting")
+		protected List<SocketSetting> socketSettings = new ArrayList<SocketSetting>();
+	}
+	
+	static final class SocketSettingsXmlAdapter 
+		extends XmlAdapter<SocketSettingsXml, SocketSettings> {
+
+		@Override
+		public SocketSettingsXml marshal(final SocketSettings v) throws Exception {
+			if (v == null) { return null; }
+			SocketSettingsXml socketSettingsXml = new SocketSettingsXml();
+			socketSettingsXml.socketSettings = new ArrayList<SocketSetting>(
+					v.socketSettings.values());
+			return socketSettingsXml;
+		}
+
+		@Override
+		public SocketSettings unmarshal(final SocketSettingsXml v) throws Exception {
+			if (v == null) { return null; }
+			return newInstance(v.socketSettings);
+		}
+		
+	}
+	
 	public static SocketSettings newInstance(
 			final List<SocketSetting> socketSttngs) {
 		Map<SocketSettingSpec, SocketSetting> socketSettings = 

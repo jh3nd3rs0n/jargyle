@@ -35,18 +35,6 @@ public final class GssDatagramPacketFilter extends DatagramPacketFilter {
 		this.wrapSizeLimit = sizeLimit;
 	}
 
-	public GSSContext getGSSContext() {
-		return this.gssContext;
-	}
-	
-	public MessageProp getMessageProp() {
-		if (this.messageProp == null) {
-			return null;
-		}
-		return new MessageProp(
-				this.messageProp.getQOP(), this.messageProp.getPrivacy());
-	}
-
 	@Override
 	public void filterAfterReceive(final DatagramPacket p) throws IOException {
 		if (this.messageProp == null) {
@@ -64,7 +52,7 @@ public final class GssDatagramPacketFilter extends DatagramPacketFilter {
 		p.setData(token, 0, token.length);
 		p.setLength(token.length);
 	}
-
+	
 	@Override
 	public void filterBeforeSend(final DatagramPacket p) throws IOException {
 		if (this.messageProp == null) {
@@ -89,6 +77,18 @@ public final class GssDatagramPacketFilter extends DatagramPacketFilter {
 		byte[] messageBytes = message.toByteArray();
 		p.setData(messageBytes, 0, messageBytes.length);
 		p.setLength(messageBytes.length);
+	}
+
+	public GSSContext getGSSContext() {
+		return this.gssContext;
+	}
+
+	public MessageProp getMessageProp() {
+		if (this.messageProp == null) {
+			return null;
+		}
+		return new MessageProp(
+				this.messageProp.getQOP(), this.messageProp.getPrivacy());
 	}
 
 	@Override

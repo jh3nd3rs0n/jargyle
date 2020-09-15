@@ -61,6 +61,11 @@ public enum Scheme implements HelpTextParams {
 		return this.toString();
 	}
 	
+	@Override
+	public boolean isDisplayable() {
+		return true;
+	}
+	
 	public abstract SocksServerUri newSocksServerUri(
 			final String host, final Integer port);
 	

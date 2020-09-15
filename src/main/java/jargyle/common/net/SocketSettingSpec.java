@@ -567,6 +567,11 @@ public enum SocketSettingSpec implements HelpTextParams {
 				this, Socket.class.getName()));
 	}
 	
+	@Override
+	public boolean isDisplayable() {
+		return true;
+	}
+	
 	public abstract SocketSetting newSocketSetting(final Object value);
 	
 	public abstract SocketSetting newSocketSetting(final String value);

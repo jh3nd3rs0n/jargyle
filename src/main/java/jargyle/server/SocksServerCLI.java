@@ -32,31 +32,19 @@ import jargyle.common.cli.HelpTextParams;
 import jargyle.common.net.SocketSettingSpec;
 import jargyle.common.net.socks5.AuthMethod;
 import jargyle.common.net.socks5.gssapiauth.GssapiProtectionLevel;
-import jargyle.server.socks5.UsernamePasswordAuthenticator;
 import jargyle.server.socks5.UsersCLI;
 
 public final class SocksServerCLI extends CLI {
 	
-	private static final int ALLOWED_CLIENT_ADDR_CRITERIA_OPTION_GROUP_ORDINAL = 0;
-	private static final int ALLOWED_SOCKS5_INCOMING_TCP_ADDR_CRITERIA_OPTION_GROUP_ORDINAL = 1;
-	private static final int ALLOWED_SOCKS5_INCOMING_UDP_ADDR_CRITERIA_OPTION_GROUP_ORDINAL = 2;
-	private static final int BLOCKED_CLIENT_ADDR_CRITERIA_OPTION_GROUP_ORDINAL = 3;
-	private static final int BLOCKED_SOCKS5_INCOMING_TCP_ADDR_CRITERIA_OPTION_GROUP_ORDINAL = 4;
-	private static final int BLOCKED_SOCKS5_INCOMING_UDP_ADDR_CRITERIA_OPTION_GROUP_ORDINAL = 5;
-	private static final int CONFIG_FILE_OPTION_GROUP_ORDINAL = 6;
-	private static final int CONFIG_FILE_XSD_OPTION_GROUP_ORDINAL = 7;
-	private static final int ENTER_EXTERNAL_CLIENT_SOCKS5_USER_PASS_OPTION_GROUP_ORDINAL = 8;
-	private static final int EXTERNAL_CLIENT_SOCKS5_USER_PASS_OPTION_GROUP_ORDINAL = 9;
-	private static final int HELP_OPTION_GROUP_ORDINAL = 10;
-	private static final int MONITORED_CONFIG_FILE_OPTION_GROUP_ORDINAL = 11;
-	private static final int NEW_CONFIG_FILE_OPTION_GROUP_ORDINAL = 12;
-	private static final int SETTING_OPTION_GROUP_ORDINAL = 13;
-	private static final int SETTINGS_HELP_OPTION_GROUP_ORDINAL = 14;
-	private static final int SOCKS5_USER_PASS_AUTHENTICATOR_OPTION_GROUP_ORDINAL = 15;
-	private static final int SOCKS5_USERS_OPTION_GROUP_ORDINAL = 16;
-
-	private static final String CRITERIA_OPTION_USAGE = 
-			"${option}=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"; 
+	private static final int CONFIG_FILE_OPTION_GROUP_ORDINAL = 0;
+	private static final int CONFIG_FILE_XSD_OPTION_GROUP_ORDINAL = 1;
+	private static final int ENTER_EXTERNAL_CLIENT_SOCKS5_USER_PASS_OPTION_GROUP_ORDINAL = 2;
+	private static final int HELP_OPTION_GROUP_ORDINAL = 3;
+	private static final int MONITORED_CONFIG_FILE_OPTION_GROUP_ORDINAL = 4;
+	private static final int NEW_CONFIG_FILE_OPTION_GROUP_ORDINAL = 5;
+	private static final int SETTING_OPTION_GROUP_ORDINAL = 6;
+	private static final int SETTINGS_HELP_OPTION_GROUP_ORDINAL = 7;
+	private static final int SOCKS5_USERS_OPTION_GROUP_ORDINAL = 8;
 	
 	private static final Logger LOGGER = Logger.getLogger(
 			SocksServerCLI.class.getName());
@@ -91,90 +79,6 @@ public final class SocksServerCLI extends CLI {
 		this.programName = progName;
 		this.settingsHelpDisplayed = false;
 		this.socks5UsersManagementModeStatus = null;
-	}
-		
-	@Option(
-			doc = "The space separated list of allowed client address "
-					+ "criteria",
-			name = "allowed-client-addr-criteria",
-			type = OptionType.GNU_LONG,
-			usage = CRITERIA_OPTION_USAGE
-	)
-	@Ordinal(ALLOWED_CLIENT_ADDR_CRITERIA_OPTION_GROUP_ORDINAL)
-	private void addAllowedClientAddressCriteria(
-			final Criteria allowedClientAddrCriteria) {
-		this.modifiableConfiguration.addAllowedClientAddressCriteria(
-				allowedClientAddrCriteria);
-	}
-		
-	@Option(
-			doc = "The space separated list of allowed SOCKS5 "
-					+ "incoming TCP address criteria",
-			name = "allowed-socks5-incoming-tcp-addr-criteria",
-			type = OptionType.GNU_LONG,
-			usage = CRITERIA_OPTION_USAGE
-	)
-	@Ordinal(ALLOWED_SOCKS5_INCOMING_TCP_ADDR_CRITERIA_OPTION_GROUP_ORDINAL)
-	private void addAllowedSocks5IncomingTcpAddressCriteria(
-			final Criteria allowedSocks5IncomingTcpAddrCriteria) {
-		this.modifiableConfiguration.addAllowedSocks5IncomingTcpAddressCriteria(
-				allowedSocks5IncomingTcpAddrCriteria);
-	}
-		
-	@Option(
-			doc = "The space separated list of allowed SOCKS5 "
-					+ "incoming UDP address criteria",
-			name = "allowed-socks5-incoming-udp-addr-criteria",
-			type = OptionType.GNU_LONG,
-			usage = CRITERIA_OPTION_USAGE
-	)
-	@Ordinal(ALLOWED_SOCKS5_INCOMING_UDP_ADDR_CRITERIA_OPTION_GROUP_ORDINAL)
-	private void addAllowedSocks5IncomingUdpAddressCriteria(
-			final Criteria allowedSocks5IncomingUdpAddrCriteria) {
-		this.modifiableConfiguration.addAllowedSocks5IncomingUdpAddressCriteria(
-				allowedSocks5IncomingUdpAddrCriteria);
-	}
-
-	@Option(
-			doc = "The space separated list of blocked client address "
-					+ "criteria",
-			name = "blocked-client-addr-criteria",
-			type = OptionType.GNU_LONG,
-			usage = CRITERIA_OPTION_USAGE
-	)
-	@Ordinal(BLOCKED_CLIENT_ADDR_CRITERIA_OPTION_GROUP_ORDINAL)
-	private void addBlockedClientAddressCriteria(
-			final Criteria blockedClientAddrCriteria) {
-		this.modifiableConfiguration.addBlockedClientAddressCriteria(
-				blockedClientAddrCriteria);
-	}
-	
-	@Option(
-			doc = "The space separated list of blocked SOCKS5 "
-					+ "incoming TCP address criteria",
-			name = "blocked-socks5-incoming-tcp-addr-criteria",
-			type = OptionType.GNU_LONG,
-			usage = CRITERIA_OPTION_USAGE
-	)
-	@Ordinal(BLOCKED_SOCKS5_INCOMING_TCP_ADDR_CRITERIA_OPTION_GROUP_ORDINAL)
-	private void addBlockedSocks5IncomingTcpAddressCriteria(
-			final Criteria blockedSocks5IncomingTcpAddrCriteria) {
-		this.modifiableConfiguration.addBlockedSocks5IncomingTcpAddressCriteria(
-				blockedSocks5IncomingTcpAddrCriteria);
-	}
-		
-	@Option(
-			doc = "The space separated list of blocked SOCKS5 "
-					+ "incoming UDP address criteria",
-			name = "blocked-socks5-incoming-udp-addr-criteria",
-			type = OptionType.GNU_LONG,
-			usage = CRITERIA_OPTION_USAGE
-	)
-	@Ordinal(BLOCKED_SOCKS5_INCOMING_UDP_ADDR_CRITERIA_OPTION_GROUP_ORDINAL)
-	private void addBlockedSocks5IncomingUdpAddressCriteria(
-			final Criteria blockedSocks5IncomingUdpAddrCriteria) {
-		this.modifiableConfiguration.addBlockedSocks5IncomingUdpAddressCriteria(
-				blockedSocks5IncomingUdpAddrCriteria);
 	}
 		
 	@Option(
@@ -234,11 +138,13 @@ public final class SocksServerCLI extends CLI {
 	private void displayHelpText(final List<HelpTextParams> list) {
 		System.out.println();
 		for (HelpTextParams helpTextParams : list) {
-			System.out.print("  ");
-			System.out.println(helpTextParams.getUsage());
-			System.out.print("      ");
-			System.out.println(helpTextParams.getDoc());
-			System.out.println();
+			if (helpTextParams.isDisplayable()) {
+				System.out.print("  ");
+				System.out.println(helpTextParams.getUsage());
+				System.out.print("      ");
+				System.out.println(helpTextParams.getDoc());
+				System.out.println();
+			}
 		}
 	}
 		
@@ -368,8 +274,10 @@ public final class SocksServerCLI extends CLI {
 				new DefaultUsernamePasswordRequestor();
 		UsernamePassword usernamePassword = 
 				usernamePasswordRequestor.requestUsernamePassword(null, prompt);
-		this.modifiableConfiguration.setExternalClientSocks5UsernamePassword(
-				usernamePassword);
+		Setting setting = 
+				SettingSpec.EXTERNAL_CLIENT_SOCKS5_USERNAME_PASSWORD.newSetting(
+						usernamePassword);
+		this.modifiableConfiguration.addSetting(setting);
 	}
 	
 	@Override
@@ -514,21 +422,6 @@ public final class SocksServerCLI extends CLI {
 	}
 	
 	@Option(
-			doc = "The username password to be used to access the "
-					+ "external SOCKS5 server used for external "
-					+ "connections",
-			name = "external-client-socks5-user-pass",
-			type = OptionType.GNU_LONG,
-			usage = "${option}=USERNAME:PASSWORD"
-	)
-	@Ordinal(EXTERNAL_CLIENT_SOCKS5_USER_PASS_OPTION_GROUP_ORDINAL)
-	private void setExternalClientSocks5UsernamePassword(
-			final UsernamePassword usernamePassword) {
-		this.modifiableConfiguration.setExternalClientSocks5UsernamePassword(
-				usernamePassword);
-	}
-		
-	@Option(
 			doc = "The configuration file to be monitored for any "
 					+ "changes to be applied to the running "
 					+ "configuration",
@@ -545,20 +438,6 @@ public final class SocksServerCLI extends CLI {
 		this.monitoredConfigurationFile = file;
 	}
 		
-	@Option(
-			doc = "The SOCKS5 username password authenticator for the "
-					+ "SOCKS server",
-			name = "socks5-user-pass-authenticator",
-			type = OptionType.GNU_LONG,
-			usage = "${option}=CLASSNAME[:VALUE]"
-	)
-	@Ordinal(SOCKS5_USER_PASS_AUTHENTICATOR_OPTION_GROUP_ORDINAL)
-	private void setSocks5UsernamePasswordAuthenticator(
-			final UsernamePasswordAuthenticator usernamePasswordAuthenticator) {
-		this.modifiableConfiguration.setSocks5UsernamePasswordAuthenticator(
-				usernamePasswordAuthenticator);
-	}
-	
 	private int startSocksServer(final Configuration configuration) {
 		SocksServer socksServer = new SocksServer(configuration);
 		try {

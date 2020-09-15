@@ -78,6 +78,11 @@ public enum AuthMethod implements HelpTextParams {
 		return this.toString();
 	}
 	
+	@Override
+	public boolean isDisplayable() {
+		return true;
+	}
+	
 	public Method methodValue() {
 		return this.methodValue;
 	}

@@ -31,15 +31,15 @@ public final class ConfigurationFactory {
 	
 	public static Configuration newConfigurationUsingSocks5UsernamePasswordAuth() {
 		ImmutableConfiguration.Builder builder = new ImmutableConfiguration.Builder();
-		builder.settings(Settings.newInstance(
-				SettingSpec.SOCKS5_AUTH_METHODS.newSetting(
-						AuthMethods.newInstance(AuthMethod.USERNAME_PASSWORD))));
 		StringBuilder sb = new StringBuilder();
 		sb.append("Aladdin:opensesame ");
 		sb.append("Jasmine:mission%3Aimpossible ");
 		sb.append("Abu:safeDriversSave40%25");
-		builder.socks5UsernamePasswordAuthenticator(
-				new StringSourceUsernamePasswordAuthenticator(sb.toString()));
+		builder.settings(Settings.newInstance(
+				SettingSpec.SOCKS5_AUTH_METHODS.newSetting(
+						AuthMethods.newInstance(AuthMethod.USERNAME_PASSWORD)),
+				SettingSpec.SOCKS5_USERNAME_PASSWORD_AUTHENTICATOR.newSetting(
+						new StringSourceUsernamePasswordAuthenticator(sb.toString()))));
 		return builder.build();
 	}
 	

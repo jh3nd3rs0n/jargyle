@@ -6,4 +6,6 @@ public interface HelpTextParams {
 	
 	String getUsage();
 	
+	boolean isDisplayable();
+	
 }

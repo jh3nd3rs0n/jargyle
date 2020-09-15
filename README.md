@@ -7,7 +7,7 @@ Jargyle is a Java SOCKS5 server. It has the following features:
 -   It is a 100% implementation of the [SOCKS5 protocol specification](https://tools.ietf.org/html/rfc1928) which includes [username password authentication](https://tools.ietf.org/html/rfc1929) and [GSS-API authentication](https://tools.ietf.org/html/rfc1961).
 -   It can be run with zero minimal configuration.
 -   It can have its external connections be set through another SOCKS5 server.
--   It can allow or block certain client addresses and certain incoming external addresses.
+-   It can allow or block certain client addresses and certain external incoming addresses.
 -   It can allow or block certain SOCKS5 requests.
 
 **Disclaimer:** Jargyle is a hobby project and is currently subject to breaking changes. Jargyle is currently not production ready but it aims to be.
@@ -90,26 +90,12 @@ The following is the command line help for Jargyle (displayed when using the com
            jargyle.server.SocksServer --socks5-users ARGS
     
     OPTIONS:
-      --allowed-client-addr-criteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
-          The space separated list of allowed client address criteria
-      --allowed-socks5-incoming-tcp-addr-criteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
-          The space separated list of allowed SOCKS5 incoming TCP address criteria
-      --allowed-socks5-incoming-udp-addr-criteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
-          The space separated list of allowed SOCKS5 incoming UDP address criteria
-      --blocked-client-addr-criteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
-          The space separated list of blocked client address criteria
-      --blocked-socks5-incoming-tcp-addr-criteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
-          The space separated list of blocked SOCKS5 incoming TCP address criteria
-      --blocked-socks5-incoming-udp-addr-criteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
-          The space separated list of blocked SOCKS5 incoming UDP address criteria
       --config-file=FILE, -f FILE
           The configuration file
       --config-file-xsd, -x
           Print the configuration file XSD and exit
       --enter-external-client-socks5-user-pass
           Enter through an interactive prompt the username password to be used to access the external SOCKS5 server used for external connections
-      --external-client-socks5-user-pass=USERNAME:PASSWORD
-          The username password to be used to access the external SOCKS5 server used for external connections
       --help, -h
           Print this help and exit
       --monitored-config-file=FILE, -m FILE
@@ -120,8 +106,6 @@ The following is the command line help for Jargyle (displayed when using the com
           A setting for the SOCKS server
       --settings-help, -H
           Print the list of available settings for the SOCKS server and exit
-      --socks5-user-pass-authenticator=CLASSNAME[:VALUE]
-          The SOCKS5 username password authenticator for the SOCKS server
       --socks5-users
           Mode for managing SOCKS5 users (add --help for more information)
     
@@ -133,8 +117,14 @@ The following is a list of available settings for the SOCKS server (displayed wh
 
     SETTINGS:
     
+      allowedClientAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
+          The space separated list of allowed client address criteria (default is matches:.*)
+    
       backlog=INTEGER_BETWEEN_0_AND_2147483647
           The maximum length of the queue of incoming connections (default is 50)
+    
+      blockedClientAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
+          The space separated list of blocked client address criteria
     
       clientSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
           The space separated list of socket settings for the client socket
@@ -158,13 +148,16 @@ The following is a list of available settings for the SOCKS server (displayed wh
           The object ID for the GSS-API authentication mechanism to the external SOCKS5 server used for external connections (default is 1.2.840.113554.1.2.2)
     
       externalClient.socks5.gssapiNecReferenceImpl=true|false
-          The boolean value to indicate if the exchange of the GSS-API protection level negotiation must be unprotected should the external SOCKS5 server used for external connections use the NEC reference implementation (default is false)
+          The boolean value to indicate if the exchange of the GSSAPI protection level negotiation must be unprotected should the external SOCKS5 server used for external connections use the NEC reference implementation (default is false)
     
       externalClient.socks5.gssapiProtectionLevels=SOCKS5_GSSAPI_PROTECTION_LEVEL1[ SOCKS5_GSSAPI_PROTECTION_LEVEL2[...]]
           The space separated list of acceptable protection levels after GSS-API authentication with the external SOCKS5 server used for external connections (The first is preferred. The remaining are acceptable if the server does not accept the first.) (default is REQUIRED_INTEG_AND_CONF REQUIRED_INTEG NONE)
     
       externalClient.socks5.gssapiServiceName=GSSAPI_SERVICE_NAME
           The GSS-API service name for the external SOCKS5 server used for external connections
+    
+      externalClient.socks5.usernamePassword=USERNAME:PASSWORD
+          The username password to be used to access the external SOCKS5 server used for external connections
     
       host=HOST
           The host name or address for the SOCKS server (default is 0.0.0.0)
@@ -175,11 +168,23 @@ The following is a list of available settings for the SOCKS server (displayed wh
       socketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
           The space separated list of socket settings for the SOCKS server
     
+      socks5.allowedExternalIncomingTcpAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
+          The space separated list of allowed SOCKS5 external incoming TCP address criteria (default is matches:.*)
+    
+      socks5.allowedExternalIncomingUdpAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
+          The space separated list of allowed SOCKS5 external incoming UDP address criteria (default is matches:.*)
+    
       socks5.authMethods=SOCKS5_AUTH_METHOD1[ SOCKS5_AUTH_METHOD2[...]]
           The space separated list of acceptable authentication methods in order of preference (default is NO_AUTHENTICATION_REQUIRED)
     
+      socks5.blockedExternalIncomingTcpAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
+          The space separated list of blocked SOCKS5 external incoming TCP address criteria
+    
+      socks5.blockedExternalIncomingUdpAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
+          The space separated list of blocked SOCKS5 external incoming UDP address criteria
+    
       socks5.gssapiNecReferenceImpl=true|false
-          The boolean value to indicate if the exchange of the GSS-API protection level negotiation must be unprotected according to the NEC reference implementation (default is false)
+          The boolean value to indicate if the exchange of the GSSAPI protection level negotiation must be unprotected according to the NEC reference implementation (default is false)
     
       socks5.gssapiProtectionLevels=SOCKS5_GSSAPI_PROTECTION_LEVEL1[ SOCKS5_GSSAPI_PROTECTION_LEVEL2[...]]
           The space separated list of acceptable protection levels after GSS-API authentication (The first is preferred if the client does not provide a protection level that is acceptable.) (default is REQUIRED_INTEG_AND_CONF REQUIRED_INTEG NONE)
@@ -228,6 +233,9 @@ The following is a list of available settings for the SOCKS server (displayed wh
     
       socks5.onUdpAssociate.serverSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
           The space separated list of socket settings for the server-facing UDP socket
+    
+      socks5.usernamePasswordAuthenticator=CLASSNAME[:VALUE]
+          The SOCKS5 username password authenticator for the SOCKS server
     
     SCHEMES:
     
@@ -290,6 +298,7 @@ The following is a list of available settings for the SOCKS server (displayed wh
     
       REQUIRED_INTEG_AND_CONF
           Required per-message integrity and confidentiality
+    
     
 ```
 
@@ -393,7 +402,14 @@ The following command adds one command line options before the existing configur
         <settings>
             <setting>
                 <name>clientSocketSettings</name>
-                <value>SO_TIMEOUT=500</value>
+                <value>
+                    <socketSettings>
+                        <socketSetting>
+                            <name>SO_TIMEOUT</name>
+                            <value>500</value>
+                        </socketSetting>
+                    </socketSettings>
+                </value>
             </setting>
             <setting>
                 <name>port</name>
@@ -409,7 +425,14 @@ The following command adds one command line options before the existing configur
             </setting>
             <setting>
                 <name>socketSettings</name>
-                <value>SO_TIMEOUT=0</value>
+                <value>
+                    <socketSettings>
+                        <socketSetting>
+                            <name>SO_TIMEOUT</name>
+                            <value>0</value>
+                        </socketSetting>
+                    </socketSettings>
+                </value>
             </setting>
         </settings>
     </configuration>
@@ -449,7 +472,14 @@ The following command combines the two earlier configuration files into one:
             </setting>
             <setting>
                 <name>clientSocketSettings</name>
-                <value>SO_TIMEOUT=500</value>
+                <value>
+                    <socketSettings>
+                        <socketSetting>
+                            <name>SO_TIMEOUT</name>
+                            <value>500</value>
+                        </socketSetting>
+                    </socketSettings>
+                </value>
             </setting>
             <setting>
                 <name>port</name>
@@ -465,7 +495,14 @@ The following command combines the two earlier configuration files into one:
             </setting>
             <setting>
                 <name>socketSettings</name>
-                <value>SO_TIMEOUT=0</value>
+                <value>
+                    <socketSettings>
+                        <socketSetting>
+                            <name>SO_TIMEOUT</name>
+                            <value>0</value>
+                        </socketSetting>
+                    </socketSettings>
+                </value>
             </setting>
         </settings>
     </configuration>
@@ -814,7 +851,7 @@ Partial configuration file example:
 
 ```
 
-Also, you will need to specify the name of the class that extends `jargyle.server.socks5.UsernamePasswordAuthenticator` along with a string value
+Also, you will need to have the setting `socks5.usernamePasswordAuthenticator` to specify the name of the class that extends `jargyle.server.socks5.UsernamePasswordAuthenticator` along with a string value
 
 The following are two provided classes you can use:
 
@@ -826,8 +863,9 @@ The following are two provided classes you can use:
 Partial command line example:
 
 ```text
-
-    "--socks5-user-pass-authenticator=jargyle.server.socks5.StringSourceUsernamePasswordAuthenticator:Aladdin:opensesame Jasmine:mission%3Aimpossible"
+    
+    "--setting=socks5.authMethods=USERNAME_PASSWORD" \
+    "--setting=socks5.usernamePasswordAuthenticator=jargyle.server.socks5.StringSourceUsernamePasswordAuthenticator:Aladdin:opensesame Jasmine:mission%3Aimpossible"
 
 ```
 
@@ -835,10 +873,21 @@ Partial configuration file example:
 
 ```xml
 
-    <socks5UsernamePasswordAuthenticator>
-	    <className>jargyle.server.socks5.StringSourceUsernamePasswordAuthenticator</className>	
-	    <value>Aladdin:opensesame Jasmine:mission%3Aimpossible</value>
-    </socks5UsernamePasswordAuthenticator>
+    <settings>
+        <setting>
+            <name>socks5.authMethods</name>
+            <value>USERNAME_PASSWORD</value>
+        </setting>
+        <setting>
+            <name>socks5.usernamePasswordAuthenticator</name>
+            <value>
+                <usernamePasswordAuthenticator>
+                    <className>jargyle.server.socks5.StringSourceUsernamePasswordAuthenticator</className>
+                    <value>Aladdin:opensesame Jasmine:mission%3Aimpossible</value>
+                </usernamePasswordAuthenticator>
+            </value>
+        </setting>
+    </settings>
 
 ```
 
@@ -855,8 +904,9 @@ If any of the usernames or any of the passwords contain a percent sign character
 Partial command line example:
 
 ```text
-
-    --socks5-user-pass-authenticator=jargyle.server.socks5.XmlFileSourceUsernamePasswordAuthenticator:users.xml
+    
+    --setting=socks5.authMethods=USERNAME_PASSWORD \
+    --setting=socks5.usernamePasswordAuthenticator=jargyle.server.socks5.XmlFileSourceUsernamePasswordAuthenticator:users.xml
 
 ```
 
@@ -864,10 +914,21 @@ Partial configuration file example:
 
 ```xml
 
-    <socks5UsernamePasswordAuthenticator>
-	    <className>jargyle.server.socks5.XmlFileSourceUsernamePasswordAuthenticator</className>	
-	    <value>users.xml</value>
-    </socks5UsernamePasswordAuthenticator>
+    <settings>
+        <setting>
+            <name>socks5.authMethods</name>
+            <value>USERNAME_PASSWORD</value>
+        </setting>    
+        <setting>
+            <name>socks5.usernamePasswordAuthenticator</name>
+            <value>
+                <usernamePasswordAuthenticator>
+                    <className>jargyle.server.socks5.XmlFileSourceUsernamePasswordAuthenticator</className>
+                    <value>users.xml</value>
+                </usernamePasswordAuthenticator>
+            </value>
+        </setting>
+    </settings>
 
 ```
 
@@ -1067,16 +1128,17 @@ Partial configuration file example:
 
 To provide a username and password for the other SOCKS5 server, you can use either of the following command line options:
 
--   `--external-client-socks5-user-pass=USERNAME:PASSWORD`
+-   `--setting=externalClient.socks5.usernamePassword=USERNAME:PASSWORD`
 -   `--enter-external-client-socks5-user-pass`
 
-The command line option `--external-client-socks5-user-pass` requires an actual username followed by a colon character (`:`) followed by an actual password.
+The command line option `--setting=externalClient.socks5.usernamePassword=USERNAME:PASSWORD` requires an actual username followed by a colon character (`:`) followed by an actual password.
 
 Partial command line example:
 
 ```text
-
-    --external-client-socks5-user-pass=Aladdin:opensesame
+    
+    --setting=externalClient.socks5.authMethods=USERNAME_PASSWORD \
+    --setting=externalClient.socks5.usernamePassword=Aladdin:opensesame
 
 ```
 
@@ -1089,6 +1151,15 @@ If the username or the password contains a plus sign character (`+`) not used fo
 If the username or the password contains a percent sign character (`%`) not used for URL encoding, then each percent sign character not used for URL encoding must be replaced with the URL encoding character `%25`.
 
 The command line option `--enter-external-client-socks5-user-pass` provides an interactive prompt for you to enter the username and password. This command line option is used for when you do not want to have the username and password appear in any script or in any part of the command line history for security reasons.
+
+Partial command line example:
+
+```text
+    
+    --setting=externalClient.socks5.authMethods=USERNAME_PASSWORD \
+    --enter-external-client-socks5-user-pass
+
+```
 
 ##### 3. 9. 1. 3. Using GSS-API Authentication
 
@@ -1199,97 +1270,112 @@ Instead of using command line options or configuration settings, you can use the
 You can allow or block the following addresses:
 
 -   Client addresses (IPv4, IPv6, and domain name addresses)
--   Incoming external TCP addresses following the SOCKS5 BIND command (IPv4, IPv6, and domain name addresses)
--   Incoming external UDP addresses following the SOCKS5 UDP ASSOCIATE command (IPv4, IPv6, and domain name addresses)
+-   External incoming TCP addresses following the SOCKS5 BIND command (IPv4, IPv6, and domain name addresses)
+-   External incoming UDP addresses following the SOCKS5 UDP ASSOCIATE command (IPv4, IPv6, and domain name addresses)
 
-To allow or block an address or addresses, you will need to specify the address or addresses in any of the following command line options:
+To allow or block an address or addresses, you will need to specify the address or addresses in any of the following settings:
 
--   `--allowed-client-addr-criteria`
--   `--allowed-socks5-incoming-tcp-addr-criteria`
--   `--allowed-socks5-incoming-udp-addr-criteria`
--   `--blocked-client-addr-criteria`
--   `--blocked-socks5-incoming-tcp-addr-criteria`
--   `--blocked-socks5-incoming-udp-addr-criteria`
+-   `allowedClientAddressCriteria`
+-   `blockedClientAddressCriteria`
+-   `socks5.allowedExternalIncomingTcpAddressCriteria`
+-   `socks5.allowedExternalIncomingUdpAddressCriteria`
+-   `socks5.blockedExternalIncomingTcpAddressCriteria`
+-   `socks5.blockedExternalIncomingUdpAddressCriteria`
 
-Or in any of the following XML elements in the configuration file:
-
--   `<allowedClientAddressCriteria/>`
--   `<allowedSocks5IncomingTcpAddressCriteria/>`
--   `<allowedSocks5IncomingUdpAddressCriteria/>`
--   `<blockedClientAddressCriteria/>`
--   `<blockedSocks5IncomingTcpAddressCriteria/>`
--   `<blockedSocks5IncomingUdpAddressCriteria/>`
-
-You can specify an address or addresses in any of the aforementioned command line options as either a literal expression preceded by the prefix `equals:` or a regular expression preceded by the prefix `matches:`.
+You can specify an address or addresses in any of the aforementioned settings as either a literal expression preceded by the prefix `equals:` or a regular expression preceded by the prefix `matches:`.
 
 Partial command line example:
 
 ```text
     
-    "--allowed-client-addr-criteria=equals:127.0.0.1 equals:0:0:0:0:0:0:0:1 equals:localhost" \
-    "--blocked-client-addr-criteria=matches:(?!(127\.0\.0\.1|0:0:0:0:0:0:0:1|localhost)).*"
+    "--setting=allowedClientAddressCriteria=equals:127.0.0.1 equals:0:0:0:0:0:0:0:1 equals:localhost" \
+    "--setting=blockedClientAddressCriteria=matches:(?!(127\.0\.0\.1|0:0:0:0:0:0:0:1|localhost)).*"
     
 ```
 
-You can specify an address or addresses in any of the aforementioned XML elements as a `<criterion/>` element.
+You can specify an address or addresses in any of the aforementioned settings as a `<criterion/>` XML element in the configuration file.
 
 Partial configuration file example:
 
 ```xml
     
-    <allowedClientAddressCriteria>
-        <criterion method="equals" value="127.0.0.1"/>
-        <criterion method="equals" value="0:0:0:0:0:0:0:1"/>
-        <criterion method="equals" value="localhost"/>
-    </allowedClientAddressCriteria>
-    <blockedClientAddressCriteria>
-        <criterion method="matches" value="(?!(127\.0\.0\.1|0:0:0:0:0:0:0:1|localhost)).*"/>
-    </blockedClientAddressCriteria>
+    <settings>
+        <setting>
+            <name>allowedClientAddressCriteria</name>
+            <value>
+                <criteria>
+                    <criterion method="equals" value="127.0.0.1"/>
+                    <criterion method="equals" value="0:0:0:0:0:0:0:1"/>
+                    <criterion method="equals" value="localhost"/>
+                </criteria>
+            </value>
+        </setting>
+        <setting>
+            <name>blockedClientAddressCriteria</name>
+            <value>
+                <criteria>
+                    <criterion method="matches" value="(?!(127\.0\.0\.1|0:0:0:0:0:0:0:1|localhost)).*"/>
+                </criteria>
+            </value>
+        </setting>        
+    </settings>
     
 ```
 
 ### 3. 11. Allowing or Blocking SOCKS5 Requests
 
-You can allow or block SOCKS5 requests. To allow or block SOCKS5 requests, you will need to specify the SOCKS5 request or requests in either of the following XML elements in the configuration file:
+You can allow or block SOCKS5 requests. To allow or block SOCKS5 requests, you will need to specify the SOCKS5 request or requests in any of the following settings in the configuration file:
 
--   `<allowedSocks5RequestCriteria/>`
--   `<blockedSocks5RequestCriteria/>`
+-   `socks5.allowedSocks5RequestCriteria`
+-   `socks5.blockedSocks5RequestCriteria`
  
-You can specify a SOCKS5 request or requests in either of the aforementioned XML elements as a `<socks5RequestCriterion/>` element.
+You can specify a SOCKS5 request or requests in any of the aforementioned settings as a `<socks5RequestCriterion/>` XML element in the configuration file.
 
 Partial configuration file example:
 
 ```xml
     
-    <allowedSocks5RequestCriteria>
-        <socks5RequestCriterion>
-            <sourceAddressCriterion method="matches" value=".*"/>
-            <commandCriterion method="equals" value="CONNECT"/>
-            <desiredDestinationAddressCriterion method="matches" value=".*"/>
-            <desiredDestinationPortRanges>
-                <portRange minPort="80" maxPort="80"/>
-                <portRange minPort="443" maxPort="443"/>
-            </desiredDestinationPortRanges>
-        </socks5RequestCriterion>
-    </allowedSocks5RequestCriteria>
-    <blockedSocks5RequestCriteria>
-        <socks5RequestCriterion>
-            <sourceAddressCriterion method="matches" value=".*"/>
-            <commandCriterion method="equals" value="BIND"/>
-            <desiredDestinationAddressCriterion method="matches" value=".*"/>
-            <desiredDestinationPortRanges>
-                <portRange minPort="0" maxPort="65535"/>
-            </desiredDestinationPortRanges>
-        </socks5RequestCriterion>
-        <socks5RequestCriterion>
-            <sourceAddressCriterion method="matches" value=".*"/>
-            <commandCriterion method="equals" value="UDP_ASSOCIATE"/>
-            <desiredDestinationAddressCriterion method="matches" value=".*"/>
-            <desiredDestinationPortRanges>
-                <portRange minPort="0" maxPort="65535"/>
-            </desiredDestinationPortRanges>
-        </socks5RequestCriterion>    
-    </blockedSocks5RequestCriteria>
+    <settings>
+        <setting>
+            <name>socks5.allowedSocks5RequestCriteria</name>
+            <value>
+                <socks5RequestCriteria>
+                    <socks5RequestCriterion>
+                        <sourceAddressCriterion method="matches" value=".*"/>
+                        <commandCriterion method="equals" value="CONNECT"/>
+                        <desiredDestinationAddressCriterion method="matches" value=".*"/>
+                        <desiredDestinationPortRanges>
+                            <portRange minPort="80" maxPort="80"/>
+                            <portRange minPort="443" maxPort="443"/>
+                        </desiredDestinationPortRanges>
+                    </socks5RequestCriterion>
+                </socks5RequestCriteria>
+            </value>
+        </setting>
+        <setting>
+            <name>socks5.blockedSocks5RequestCriteria</name>
+            <value>
+                <socks5RequestCriteria>
+                    <socks5RequestCriterion>
+                        <sourceAddressCriterion method="matches" value=".*"/>
+                        <commandCriterion method="equals" value="BIND"/>
+                        <desiredDestinationAddressCriterion method="matches" value=".*"/>
+                        <desiredDestinationPortRanges>
+                            <portRange minPort="0" maxPort="65535"/>
+                        </desiredDestinationPortRanges>
+                    </socks5RequestCriterion>
+                    <socks5RequestCriterion>
+                        <sourceAddressCriterion method="matches" value=".*"/>
+                        <commandCriterion method="equals" value="UDP_ASSOCIATE"/>
+                        <desiredDestinationAddressCriterion method="matches" value=".*"/>
+                        <desiredDestinationPortRanges>
+                            <portRange minPort="0" maxPort="65535"/>
+                        </desiredDestinationPortRanges>
+                    </socks5RequestCriterion>                    
+                </socks5RequestCriteria>
+            </value>
+        </setting>        
+    </settings>
     
 ```
 
@@ -1303,6 +1389,7 @@ When using an existing configuration file to create a new configuration file, an
 -   `<desiredDestinationPortRanges/>`
 -   `<portRange/>`
 -   `<setting/>`
+-   `<socketSetting/>`
 -   `<socks5RequestCriterion/>`
 -   `<sourceAddressCriterion/>`
 
@@ -1310,47 +1397,63 @@ Partial configuration file example:
 
 ```xml
     
-    <allowedClientAddressCriteria>
-        <criterion method="equals" value="127.0.0.1" comment="IPv4 loopback address"/>
-        <criterion method="equals" value="0:0:0:0:0:0:0:1" comment="IPv6 loopback address"/>
-        <criterion method="equals" value="localhost" comment="domain name of loopback address"/>
-    </allowedClientAddressCriteria>    
-    <allowedSocks5RequestCriteria>
-        <socks5RequestCriterion comment="allow any client to connect to any address on port 80 or port 443">
-            <sourceAddressCriterion method="matches" value=".*"/>
-            <commandCriterion method="equals" value="CONNECT"/>
-            <desiredDestinationAddressCriterion method="matches" value=".*"/>
-            <desiredDestinationPortRanges>
-                <portRange minPort="80" maxPort="80" comment="HTTP port"/>
-                <portRange minPort="443" maxPort="443" comment="HTTPS port"/>
-            </desiredDestinationPortRanges>
-        </socks5RequestCriterion>
-    </allowedSocks5RequestCriteria>
-    <blockedClientAddressCriteria>
-        <criterion method="matches" value="(?!(127\.0\.0\.1|0:0:0:0:0:0:0:1|localhost)).*" comment="block any address that is not a loopback address"/>
-    </blockedClientAddressCriteria>    
-    <blockedSocks5RequestCriteria>
-        <socks5RequestCriterion comment="block any BIND requests">
-            <sourceAddressCriterion method="matches" value=".*"/>
-            <commandCriterion method="equals" value="BIND"/>
-            <desiredDestinationAddressCriterion method="matches" value=".*"/>
-            <desiredDestinationPortRanges>
-                <portRange minPort="0" maxPort="65535"/>
-            </desiredDestinationPortRanges>
-        </socks5RequestCriterion>
-        <socks5RequestCriterion comment="block any UDP ASSOCIATE requests">
-            <sourceAddressCriterion method="matches" value=".*"/>
-            <commandCriterion method="equals" value="UDP_ASSOCIATE"/>
-            <desiredDestinationAddressCriterion method="matches" value=".*"/>
-            <desiredDestinationPortRanges>
-                <portRange minPort="0" maxPort="65535"/>
-            </desiredDestinationPortRanges>
-        </socks5RequestCriterion>    
-    </blockedSocks5RequestCriteria>
     <settings>
-        <setting comment="expecting a lot of client connections"/>
-            <name>backlog</name>
-            <value>100</value>
+        <setting>
+            <name>allowedClientAddressCriteria</name>
+            <value>
+                <criteria>
+                    <criterion method="equals" value="127.0.0.1" comment="IPv4 loopback address"/>
+                    <criterion method="equals" value="0:0:0:0:0:0:0:1" comment="IPv6 loopback address"/>
+                    <criterion method="equals" value="localhost" comment="domain name of loopback address"/>
+                </criteria>
+            </value>
+        </setting>
+        <setting>
+            <name>blockedClientAddressCriteria</name>
+            <value>
+                <criteria>
+                    <criterion method="matches" value="(?!(127\.0\.0\.1|0:0:0:0:0:0:0:1|localhost)).*" comment="block any address that is not a loopback address"/>
+                </criteria>
+            </value>
+        </setting>
+        <setting>
+            <name>socks5.allowedSocks5RequestCriteria</name>
+            <value>
+                <socks5RequestCriteria>
+                    <socks5RequestCriterion comment="allow any client to connect to any address on port 80 or port 443">
+                        <sourceAddressCriterion method="matches" value=".*"/>
+                        <commandCriterion method="equals" value="CONNECT"/>
+                        <desiredDestinationAddressCriterion method="matches" value=".*"/>
+                        <desiredDestinationPortRanges>
+                            <portRange minPort="80" maxPort="80" comment="HTTP port"/>
+                            <portRange minPort="443" maxPort="443" comment="HTTPS port"/>
+                        </desiredDestinationPortRanges>
+                    </socks5RequestCriterion>
+                </socks5RequestCriteria>
+            </value>
+        </setting>
+        <setting>
+            <name>socks5.blockedSocks5RequestCriteria</name>
+            <value>
+                <socks5RequestCriteria>
+                    <socks5RequestCriterion comment="block any BIND requests">
+                        <sourceAddressCriterion method="matches" value=".*"/>
+                        <commandCriterion method="equals" value="BIND"/>
+                        <desiredDestinationAddressCriterion method="matches" value=".*"/>
+                        <desiredDestinationPortRanges>
+                            <portRange minPort="0" maxPort="65535"/>
+                        </desiredDestinationPortRanges>
+                    </socks5RequestCriterion>
+                    <socks5RequestCriterion comment="block any UDP ASSOCIATE requests">
+                        <sourceAddressCriterion method="matches" value=".*"/>
+                        <commandCriterion method="equals" value="UDP_ASSOCIATE"/>
+                        <desiredDestinationAddressCriterion method="matches" value=".*"/>
+                        <desiredDestinationPortRanges>
+                            <portRange minPort="0" maxPort="65535"/>
+                        </desiredDestinationPortRanges>
+                    </socks5RequestCriterion>                    
+                </socks5RequestCriteria>
+            </value>
         </setting>
     </settings>
     

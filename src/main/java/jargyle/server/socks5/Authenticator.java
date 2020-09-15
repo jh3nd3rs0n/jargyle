@@ -237,7 +237,9 @@ enum Authenticator {
 			String username = usernamePasswordReq.getUsername();
 			char[] password = usernamePasswordReq.getPassword();
 			UsernamePasswordAuthenticator authenticator = 
-					configuration.getSocks5UsernamePasswordAuthenticator();
+					configuration.getSettings().getLastValue(
+							SettingSpec.SOCKS5_USERNAME_PASSWORD_AUTHENTICATOR, 
+							UsernamePasswordAuthenticator.class);
 			if (authenticator == null) { 
 				authenticator = UsernamePasswordAuthenticator.INSTANCE; 
 			}

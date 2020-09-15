@@ -8,6 +8,7 @@ import org.ietf.jgss.Oid;
 import jargyle.client.SocksClient;
 import jargyle.client.SocksServerUri;
 import jargyle.client.socks5.Socks5Client;
+import jargyle.client.socks5.UsernamePassword;
 import jargyle.common.cli.HelpTextParams;
 import jargyle.common.net.SocketSettings;
 import jargyle.common.net.socks5.AuthMethod;
@@ -15,9 +16,58 @@ import jargyle.common.net.socks5.AuthMethods;
 import jargyle.common.net.socks5.gssapiauth.GssapiProtectionLevels;
 import jargyle.common.util.NonnegativeInteger;
 import jargyle.common.util.PositiveInteger;
+import jargyle.server.socks5.Socks5RequestCriteria;
+import jargyle.server.socks5.Socks5RequestCriterion;
+import jargyle.server.socks5.UsernamePasswordAuthenticator;
 
 public enum SettingSpec implements HelpTextParams {
 	
+	ALLOWED_CLIENT_ADDRESS_CRITERIA {
+
+		private static final String DOC = "The space separated list of "
+				+ "allowed client address criteria (default is matches:.*)";
+		private static final String NAME = "allowedClientAddressCriteria";
+		
+		@Override
+		public Setting getDefaultSetting() {
+			return newSetting(Criteria.newInstance(Criterion.newInstance(
+					CriterionMethod.MATCHES, ".*")));
+		}
+
+		@Override
+		public String getDoc() {
+			return DOC;
+		}
+
+		@Override
+		public String getName() {
+			return NAME;
+		}
+
+		@Override
+		public String getUsage() {
+			return String.format(
+					"%s=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]", 
+					NAME);
+		}
+
+		@Override
+		public Setting newSetting(final Object value) {
+			if (!(value instanceof Criteria)) {
+				throw new ClassCastException(String.format(
+						"unable to cast %s to %s",
+						value.getClass().getName(),
+						Criteria.class.getName()));
+			}
+			return new Setting(NAME, value);
+		}
+
+		@Override
+		public Setting newSetting(final String value) {
+			return newSetting(Criteria.newInstance(value));
+		}
+		
+	},
 	BACKLOG {
 
 		private static final int DEFAULT_INT_VALUE = 50;
@@ -67,7 +117,52 @@ public enum SettingSpec implements HelpTextParams {
 			return newSetting(NonnegativeInteger.newInstance(value));
 		}
 		
-	},	
+	},
+	BLOCKED_CLIENT_ADDRESS_CRITERIA {
+
+		private static final String DOC = "The space separated list of "
+				+ "blocked client address criteria";
+		private static final String NAME = "blockedClientAddressCriteria";
+		
+		@Override
+		public Setting getDefaultSetting() {
+			return newSetting(Criteria.EMPTY_INSTANCE);
+		}
+
+		@Override
+		public String getDoc() {
+			return DOC;
+		}
+
+		@Override
+		public String getName() {
+			return NAME;
+		}
+
+		@Override
+		public String getUsage() {
+			return String.format(
+					"%s=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]", 
+					NAME);
+		}
+
+		@Override
+		public Setting newSetting(final Object value) {
+			if (!(value instanceof Criteria)) {
+				throw new ClassCastException(String.format(
+						"unable to cast %s to %s",
+						value.getClass().getName(),
+						Criteria.class.getName()));
+			}
+			return new Setting(NAME, value);
+		}
+
+		@Override
+		public Setting newSetting(final String value) {
+			return newSetting(Criteria.newInstance(value));
+		}
+		
+	},
 	CLIENT_SOCKET_SETTINGS {
 		
 		private static final String DOC = 
@@ -551,6 +646,50 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
+	EXTERNAL_CLIENT_SOCKS5_USERNAME_PASSWORD {
+
+		private static final String DOC = "The username password to be used "
+				+ "to access the external SOCKS5 server used for external "
+				+ "connections";
+		private static final String NAME = "externalClient.socks5.usernamePassword";
+		
+		@Override
+		public Setting getDefaultSetting() {
+			return new Setting(NAME, null);
+		}
+
+		@Override
+		public String getDoc() {
+			return DOC;
+		}
+
+		@Override
+		public String getName() {
+			return NAME;
+		}
+
+		@Override
+		public String getUsage() {
+			return String.format("%s=USERNAME:PASSWORD", NAME);
+		}
+
+		@Override
+		public Setting newSetting(final Object value) {
+			if (!(value instanceof UsernamePassword)) {
+				throw new ClassCastException(String.format(
+						"unable to cast %s to %s",
+						value.getClass().getName(),
+						UsernamePassword.class.getName()));
+			}
+			return new Setting(NAME, value);
+		}
+
+		@Override
+		public Setting newSetting(final String value) {
+			return newSetting(UsernamePassword.newInstance(value));
+		}
+		
+	},
 	HOST {
 
 		private static final String DEFAULT_HOST = "0.0.0.0";
@@ -702,6 +841,152 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
+	SOCKS5_ALLOWED_EXTERNAL_INCOMING_TCP_ADDRESS_CRITERIA {
+
+		private static final String DOC = "The space separated list of "
+				+ "allowed SOCKS5 external incoming TCP address criteria "
+				+ "(default is matches:.*)";
+		private static final String NAME = 
+				"socks5.allowedExternalIncomingTcpAddressCriteria";
+		
+		@Override
+		public Setting getDefaultSetting() {
+			return newSetting(Criteria.newInstance(Criterion.newInstance(
+					CriterionMethod.MATCHES, ".*")));
+		}
+
+		@Override
+		public String getDoc() {
+			return DOC;
+		}
+
+		@Override
+		public String getName() {
+			return NAME;
+		}
+
+		@Override
+		public String getUsage() {
+			return String.format(
+					"%s=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]", 
+					NAME);
+		}
+
+		@Override
+		public Setting newSetting(final Object value) {
+			if (!(value instanceof Criteria)) {
+				throw new ClassCastException(String.format(
+						"unable to cast %s to %s",
+						value.getClass().getName(),
+						Criteria.class.getName()));
+			}
+			return new Setting(NAME, value);
+		}
+
+		@Override
+		public Setting newSetting(final String value) {
+			return newSetting(Criteria.newInstance(value));
+		}
+		
+	},
+	SOCKS5_ALLOWED_EXTERNAL_INCOMING_UDP_ADDRESS_CRITERIA {
+
+		private static final String DOC = "The space separated list of "
+				+ "allowed SOCKS5 external incoming UDP address criteria "
+				+ "(default is matches:.*)";
+		private static final String NAME = 
+				"socks5.allowedExternalIncomingUdpAddressCriteria";
+		
+		@Override
+		public Setting getDefaultSetting() {
+			return newSetting(Criteria.newInstance(Criterion.newInstance(
+					CriterionMethod.MATCHES, ".*")));
+		}
+
+		@Override
+		public String getDoc() {
+			return DOC;
+		}
+
+		@Override
+		public String getName() {
+			return NAME;
+		}
+
+		@Override
+		public String getUsage() {
+			return String.format(
+					"%s=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]", 
+					NAME);
+		}
+
+		@Override
+		public Setting newSetting(final Object value) {
+			if (!(value instanceof Criteria)) {
+				throw new ClassCastException(String.format(
+						"unable to cast %s to %s",
+						value.getClass().getName(),
+						Criteria.class.getName()));
+			}
+			return new Setting(NAME, value);
+		}
+
+		@Override
+		public Setting newSetting(final String value) {
+			return newSetting(Criteria.newInstance(value));
+		}
+		
+	},
+	SOCKS5_ALLOWED_SOCKS5_REQUEST_CRITERIA {
+		
+		private static final String NAME = "socks5.allowedSocks5RequestCriteria";
+
+		@Override
+		public Setting getDefaultSetting() {
+			return newSetting(new Socks5RequestCriteria(
+					new Socks5RequestCriterion(null, null, null, null)));
+		}
+
+		@Override
+		public String getDoc() {
+			return null;
+		}
+
+		@Override
+		public String getName() {
+			return NAME;
+		}
+
+		@Override
+		public String getUsage() {
+			return null;
+		}
+		
+		@Override
+		public boolean isDisplayable() {
+			return false;
+		}
+
+		@Override
+		public Setting newSetting(final Object value) {
+			if (!(value instanceof Socks5RequestCriteria)) {
+				throw new ClassCastException(String.format(
+						"unable to cast %s to %s",
+						value.getClass().getName(),
+						Socks5RequestCriteria.class.getName()));
+			}
+			return new Setting(NAME, value);
+		}
+
+		@Override
+		public Setting newSetting(final String value) {
+			throw new UnsupportedOperationException(String.format(
+					"%s does not accept a String representation of %s",
+					NAME,
+					Socks5RequestCriteria.class.getName()));
+		}
+		
+	},
 	SOCKS5_AUTH_METHODS {
 		
 		private static final String NAME = "socks5.authMethods";
@@ -746,6 +1031,147 @@ public enum SettingSpec implements HelpTextParams {
 		@Override
 		public Setting newSetting(final String value) {
 			return newSetting(AuthMethods.newInstance(value));
+		}
+		
+	},
+	SOCKS5_BLOCKED_EXTERNAL_INCOMING_TCP_ADDRESS_CRITERIA {
+
+		private static final String DOC = "The space separated list of "
+				+ "blocked SOCKS5 external incoming TCP address criteria";
+		private static final String NAME = 
+				"socks5.blockedExternalIncomingTcpAddressCriteria";
+		
+		@Override
+		public Setting getDefaultSetting() {
+			return newSetting(Criteria.EMPTY_INSTANCE);
+		}
+
+		@Override
+		public String getDoc() {
+			return DOC;
+		}
+
+		@Override
+		public String getName() {
+			return NAME;
+		}
+
+		@Override
+		public String getUsage() {
+			return String.format(
+					"%s=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]", 
+					NAME);
+		}
+
+		@Override
+		public Setting newSetting(final Object value) {
+			if (!(value instanceof Criteria)) {
+				throw new ClassCastException(String.format(
+						"unable to cast %s to %s",
+						value.getClass().getName(),
+						Criteria.class.getName()));
+			}
+			return new Setting(NAME, value);
+		}
+
+		@Override
+		public Setting newSetting(final String value) {
+			return newSetting(Criteria.newInstance(value));
+		}
+		
+	},
+	SOCKS5_BLOCKED_EXTERNAL_INCOMING_UDP_ADDRESS_CRITERIA {
+
+		private static final String DOC = "The space separated list of "
+				+ "blocked SOCKS5 external incoming UDP address criteria";
+		private static final String NAME = 
+				"socks5.blockedExternalIncomingUdpAddressCriteria";
+		
+		@Override
+		public Setting getDefaultSetting() {
+			return newSetting(Criteria.EMPTY_INSTANCE);
+		}
+
+		@Override
+		public String getDoc() {
+			return DOC;
+		}
+
+		@Override
+		public String getName() {
+			return NAME;
+		}
+
+		@Override
+		public String getUsage() {
+			return String.format(
+					"%s=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]", 
+					NAME);
+		}
+
+		@Override
+		public Setting newSetting(final Object value) {
+			if (!(value instanceof Criteria)) {
+				throw new ClassCastException(String.format(
+						"unable to cast %s to %s",
+						value.getClass().getName(),
+						Criteria.class.getName()));
+			}
+			return new Setting(NAME, value);
+		}
+
+		@Override
+		public Setting newSetting(final String value) {
+			return newSetting(Criteria.newInstance(value));
+		}
+		
+	},
+	SOCKS5_BLOCKED_SOCKS5_REQUEST_CRITERIA {
+		
+		private static final String NAME = "socks5.blockedSocks5RequestCriteria";
+
+		@Override
+		public Setting getDefaultSetting() {
+			return newSetting(Socks5RequestCriteria.EMPTY_INSTANCE);
+		}
+
+		@Override
+		public String getDoc() {
+			return null;
+		}
+
+		@Override
+		public String getName() {
+			return NAME;
+		}
+
+		@Override
+		public String getUsage() {
+			return null;
+		}
+		
+		@Override
+		public boolean isDisplayable() {
+			return false;
+		}
+
+		@Override
+		public Setting newSetting(final Object value) {
+			if (!(value instanceof Socks5RequestCriteria)) {
+				throw new ClassCastException(String.format(
+						"unable to cast %s to %s",
+						value.getClass().getName(),
+						Socks5RequestCriteria.class.getName()));
+			}
+			return new Setting(NAME, value);
+		}
+
+		@Override
+		public Setting newSetting(final String value) {
+			throw new UnsupportedOperationException(String.format(
+					"%s does not accept a String representation of %s",
+					NAME,
+					Socks5RequestCriteria.class.getName()));
 		}
 		
 	},
@@ -1609,6 +2035,50 @@ public enum SettingSpec implements HelpTextParams {
 			return newSetting(SocketSettings.newInstance(value));
 		}
 		
+	},
+	SOCKS5_USERNAME_PASSWORD_AUTHENTICATOR {
+
+		private static final String DOC = "The SOCKS5 username password "
+				+ "authenticator for the SOCKS server";
+		private static final String NAME = 
+				"socks5.usernamePasswordAuthenticator";
+		
+		@Override
+		public Setting getDefaultSetting() {
+			return new Setting(NAME, null);
+		}
+
+		@Override
+		public String getDoc() {
+			return DOC;
+		}
+
+		@Override
+		public String getName() {
+			return NAME;
+		}
+
+		@Override
+		public String getUsage() {
+			return String.format("%s=CLASSNAME[:VALUE]", NAME);
+		}
+
+		@Override
+		public Setting newSetting(final Object value) {
+			if (!(value instanceof UsernamePasswordAuthenticator)) {
+				throw new ClassCastException(String.format(
+						"unable to cast %s to %s",
+						value.getClass().getName(),
+						UsernamePasswordAuthenticator.class.getName()));
+			}
+			return new Setting(NAME, value);
+		}
+
+		@Override
+		public Setting newSetting(final String value) {
+			return newSetting(UsernamePasswordAuthenticator.getInstance(value));
+		}
+		
 	};
 
 	public static SettingSpec getInstance(final String name) {
@@ -1624,6 +2094,11 @@ public enum SettingSpec implements HelpTextParams {
 	public abstract Setting getDefaultSetting();
 	
 	public abstract String getName();
+	
+	@Override
+	public boolean isDisplayable() {
+		return true;
+	}
 	
 	public abstract Setting newSetting(final Object value);
 	

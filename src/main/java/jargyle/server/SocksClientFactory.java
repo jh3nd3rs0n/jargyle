@@ -51,8 +51,9 @@ public final class SocksClientFactory {
 		if (gssapiServiceName != null) {
 			builder.gssapiServiceName(gssapiServiceName);
 		}
-		UsernamePassword usernamePassword = 
-				configuration.getExternalClientSocks5UsernamePassword();
+		UsernamePassword usernamePassword = settings.getLastValue(
+				SettingSpec.EXTERNAL_CLIENT_SOCKS5_USERNAME_PASSWORD, 
+				UsernamePassword.class);
 		if (usernamePassword != null) {
 			builder.usernamePassword(usernamePassword);
 		}		

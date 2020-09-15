@@ -17,7 +17,6 @@ import jargyle.common.net.socks5.AddressType;
 import jargyle.common.net.socks5.UdpRequestHeader;
 import jargyle.server.Criteria;
 import jargyle.server.Criterion;
-import jargyle.server.CriterionMethod;
 
 final class UdpRelayServer {
 	
@@ -30,36 +29,32 @@ final class UdpRelayServer {
 			super(server);
 		}
 		
-		private boolean canAcceptIncomingUdpAddress(
-				final InetAddress incomingUdpInetAddress) {
-			Criteria allowedSocks5IncomingUdpAddrCriteria =
-					this.getUdpRelayServer().allowedSocks5IncomingUdpAddressCriteria;
-			if (allowedSocks5IncomingUdpAddrCriteria.toList().isEmpty()) {
-				allowedSocks5IncomingUdpAddrCriteria = Criteria.newInstance(
-						Criterion.newInstance(CriterionMethod.MATCHES, ".*"));
-			}
+		private boolean canAcceptExternalIncomingUdpAddress(
+				final InetAddress externalIncomingUdpInetAddress) {
+			Criteria allowedExternalIncomingUdpAddrCriteria =
+					this.getUdpRelayServer().allowedExternalIncomingUdpAddressCriteria;
 			Criterion criterion = 
-					allowedSocks5IncomingUdpAddrCriteria.anyEvaluatesTrue(
-							incomingUdpInetAddress);
+					allowedExternalIncomingUdpAddrCriteria.anyEvaluatesTrue(
+							externalIncomingUdpInetAddress);
 			if (criterion == null) {
 				LOGGER.log(
 						Level.FINE, 
 						this.format(String.format(
-								"Incoming UDP address %s not allowed", 
-								incomingUdpInetAddress)));
+								"External incoming UDP address %s not allowed", 
+								externalIncomingUdpInetAddress)));
 				return false;
 			}
-			Criteria blockedSocks5IncomingUdpAddrCriteria =
-					this.getUdpRelayServer().blockedSocks5IncomingUdpAddressCriteria;
-			criterion = blockedSocks5IncomingUdpAddrCriteria.anyEvaluatesTrue(
-					incomingUdpInetAddress);
+			Criteria blockedExternalIncomingUdpAddrCriteria =
+					this.getUdpRelayServer().blockedExternalIncomingUdpAddressCriteria;
+			criterion = blockedExternalIncomingUdpAddrCriteria.anyEvaluatesTrue(
+					externalIncomingUdpInetAddress);
 			if (criterion != null) {
 				LOGGER.log(
 						Level.FINE, 
 						this.format(String.format(
-								"Incoming UDP address %s blocked based on the "
+								"External incoming UDP address %s blocked based on the "
 								+ "following criterion: %s", 
-								incomingUdpInetAddress,
+								externalIncomingUdpInetAddress,
 								criterion)));
 				return false;
 			}
@@ -173,7 +168,7 @@ final class UdpRelayServer {
 							this.format(String.format(
 									"Packet data received: %s byte(s)", 
 									packet.getLength())));
-					if (!this.canAcceptIncomingUdpAddress(packet.getAddress())) {
+					if (!this.canAcceptExternalIncomingUdpAddress(packet.getAddress())) {
 						continue;
 					}
 					if (!this.canForwardDatagramPacket(packet)) {
@@ -465,8 +460,8 @@ final class UdpRelayServer {
 		
 	}
 	
-	private final Criteria allowedSocks5IncomingUdpAddressCriteria;
-	private final Criteria blockedSocks5IncomingUdpAddressCriteria;
+	private final Criteria allowedExternalIncomingUdpAddressCriteria;
+	private final Criteria blockedExternalIncomingUdpAddressCriteria;
 	private final DatagramSocket clientDatagramSocket;
 	private final int bufferSize;
 	private String desiredDestinationAddress;
@@ -487,15 +482,15 @@ final class UdpRelayServer {
 			final String sourceAddr,
 			final String desiredDestinationAddr,
 			final int desiredDestinationPrt, 
-			final Criteria allowedSocks5IncomingUdpAddrCriteria, 
-			final Criteria blockedSocks5IncomingUdpAddrCriteria, 
+			final Criteria allowedExternalIncomingUdpAddrCriteria, 
+			final Criteria blockedExternalIncomingUdpAddrCriteria, 
 			final int bffrSize, 
 			final int tmt) {
 		Objects.requireNonNull(clientDatagramSock);
 		Objects.requireNonNull(serverDatagramSock);
 		Objects.requireNonNull(desiredDestinationAddr);
-		Objects.requireNonNull(allowedSocks5IncomingUdpAddrCriteria);
-		Objects.requireNonNull(blockedSocks5IncomingUdpAddrCriteria);
+		Objects.requireNonNull(allowedExternalIncomingUdpAddrCriteria);
+		Objects.requireNonNull(blockedExternalIncomingUdpAddrCriteria);
 		UdpRequestHeader.validateDesiredDestinationAddress(
 				desiredDestinationAddr);
 		UdpRequestHeader.validateDesiredDestinationPort(
@@ -514,8 +509,10 @@ final class UdpRelayServer {
 			desiredDestAddr = null;
 			desiredDestPrt = -1;
 		}
-		this.allowedSocks5IncomingUdpAddressCriteria = allowedSocks5IncomingUdpAddrCriteria;
-		this.blockedSocks5IncomingUdpAddressCriteria = blockedSocks5IncomingUdpAddrCriteria;
+		this.allowedExternalIncomingUdpAddressCriteria = 
+				allowedExternalIncomingUdpAddrCriteria;
+		this.blockedExternalIncomingUdpAddressCriteria = 
+				blockedExternalIncomingUdpAddrCriteria;
 		this.clientDatagramSocket = clientDatagramSock;
 		this.bufferSize = bffrSize;
 		this.desiredDestinationAddress = desiredDestAddr;

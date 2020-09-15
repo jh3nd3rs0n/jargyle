@@ -2,26 +2,44 @@ package jargyle.server;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAnyElement;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlSeeAlso;
+import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.XmlValue;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import jargyle.client.socks5.UsernamePassword;
+import jargyle.common.net.SocketSettings;
+import jargyle.server.socks5.Socks5RequestCriteria;
+import jargyle.server.socks5.UsernamePasswordAuthenticator;
+
 @XmlJavaTypeAdapter(Setting.SettingXmlAdapter.class)
 public final class Setting {
+
+	@XmlAccessorType(XmlAccessType.NONE)
+	@XmlType(name = "criteriaValue")
+	static class CriteriaValue {
+		
+		@XmlElement(name = "criteria", required = true)
+		protected Criteria value;
+		
+	}
 	
 	@XmlAccessorType(XmlAccessType.NONE)
 	@XmlType(name = "setting", propOrder = { })
-	@XmlSeeAlso({Value.class})
 	static class SettingXml {
 		@XmlElement(name = "name", required = true)
 		protected String name;
-		@XmlAnyElement(lax = true)
+		@XmlElements({
+			@XmlElement(name = "value", type = CriteriaValue.class),
+			@XmlElement(name = "value", type = SocketSettingsValue.class),
+			@XmlElement(name = "value", type = Socks5RequestCriteriaValue.class),
+			@XmlElement(name = "value", type = StringValue.class),
+			@XmlElement(name = "value", type = UsernamePasswordAuthenticatorValue.class),
+			@XmlElement(name = "value", type = UsernamePasswordValue.class)
+		})
 		protected Object value;
 		@XmlAttribute(name = "comment")
 		protected String comment;		
@@ -36,11 +54,29 @@ public final class Setting {
 			settingXml.comment = v.comment;
 			settingXml.name = v.getName();
 			Object val = v.getValue();
-			Class<?> cls = val.getClass();
-			if (cls.isAnnotationPresent(XmlJavaTypeAdapter.class)) {
-				settingXml.value = val;
+			if (val instanceof Criteria) {
+				CriteriaValue newVal = new CriteriaValue();
+				newVal.value = (Criteria) val;
+				settingXml.value = newVal;
+			} else if (val instanceof SocketSettings) {
+				SocketSettingsValue newVal = new SocketSettingsValue();
+				newVal.value = (SocketSettings) val;
+				settingXml.value = newVal;
+			} else if (val instanceof Socks5RequestCriteria) {
+				Socks5RequestCriteriaValue newVal = new Socks5RequestCriteriaValue();
+				newVal.value = (Socks5RequestCriteria) val;
+				settingXml.value = newVal;
+			} else if (val instanceof UsernamePasswordAuthenticator) {
+				UsernamePasswordAuthenticatorValue newVal =
+						new UsernamePasswordAuthenticatorValue();
+				newVal.value = (UsernamePasswordAuthenticator) val;
+				settingXml.value = newVal;
+			} else if (val instanceof UsernamePassword) {
+				UsernamePasswordValue newVal = new UsernamePasswordValue();
+				newVal.value = (UsernamePassword) val;
+				settingXml.value = newVal;
 			} else {
-				Value newVal = new Value();
+				StringValue newVal = new StringValue();
 				newVal.value = val.toString();
 				settingXml.value = newVal;
 			}
@@ -50,21 +86,76 @@ public final class Setting {
 		@Override
 		public Setting unmarshal(final SettingXml v) throws Exception {
 			Object val = v.value;
-			if (val instanceof Value) {
-				Value newVal = (Value) val;
+			if (val instanceof CriteriaValue) {
+				CriteriaValue newVal = (CriteriaValue) val;
 				return newInstance(v.name, newVal.value, v.comment);
 			}
-			return new Setting(v.name, v.value, v.comment);
+			if (val instanceof SocketSettingsValue) {
+				SocketSettingsValue newVal = (SocketSettingsValue) val;
+				return newInstance(v.name, newVal.value, v.comment);
+			}
+			if (val instanceof Socks5RequestCriteriaValue) {
+				Socks5RequestCriteriaValue newVal = 
+						(Socks5RequestCriteriaValue) val;
+				return newInstance(v.name, newVal.value, v.comment);
+			}
+			if (val instanceof UsernamePasswordAuthenticatorValue) {
+				UsernamePasswordAuthenticatorValue newVal =
+						(UsernamePasswordAuthenticatorValue) val;
+				return newInstance(v.name, newVal.value, v.comment);
+			}
+			if (val instanceof UsernamePasswordValue) {
+				UsernamePasswordValue newVal = (UsernamePasswordValue) val;
+				return newInstance(v.name, newVal.value, v.comment);
+			} 
+			StringValue newVal = (StringValue) val;
+			return newInstance(v.name, newVal.value, v.comment);
 		}
 		
 	}
+
+	@XmlAccessorType(XmlAccessType.NONE)
+	@XmlType(name = "socketSettingsValue")
+	static class SocketSettingsValue {
+		
+		@XmlElement(name = "socketSettings", required = true)
+		protected SocketSettings value;
+		
+	}
 	
-	@XmlRootElement
-	@XmlType(name = "value")
-	static class Value {
+	@XmlAccessorType(XmlAccessType.NONE)
+	@XmlType(name = "socks5RequestCriteriaValue")
+	static class Socks5RequestCriteriaValue {
+		
+		@XmlElement(name = "socks5RequestCriteria", required = true)
+		protected Socks5RequestCriteria value;
+		
+	}
+	
+	@XmlAccessorType(XmlAccessType.NONE)
+	@XmlType(name = "stringValue")
+	static class StringValue {
 		
 		@XmlValue
 		protected String value;
+		
+	}
+	
+	@XmlAccessorType(XmlAccessType.NONE)
+	@XmlType(name = "usernamePasswordAuthenticatorValue")
+	static class UsernamePasswordAuthenticatorValue {
+		
+		@XmlElement(name = "usernamePasswordAuthenticator", required = true)
+		protected UsernamePasswordAuthenticator value;
+		
+	}
+	
+	@XmlAccessorType(XmlAccessType.NONE)
+	@XmlType(name = "usernamePasswordValue")
+	static class UsernamePasswordValue {
+		
+		@XmlElement(name = "usernamePassword", required = true)
+		protected UsernamePassword value;
 		
 	}
 	
@@ -77,6 +168,16 @@ public final class Setting {
 		String name = sElements[0];
 		String value = sElements[1];
 		return newInstance(name, value);
+	}
+	
+	private static Setting newInstance(final String name, final Object value) {
+		return SettingSpec.getInstance(name).newSetting(value);
+	}
+
+	private static Setting newInstance(
+			final String name, final Object value, final String comment) {
+		Setting setting = newInstance(name, value);
+		return new Setting(setting.getName(), setting.getValue(), comment);
 	}
 	
 	private static Setting newInstance(final String name, final String value) {

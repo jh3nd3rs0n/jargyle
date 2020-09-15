@@ -38,7 +38,6 @@ import jargyle.common.util.PositiveInteger;
 import jargyle.server.Configuration;
 import jargyle.server.Criteria;
 import jargyle.server.Criterion;
-import jargyle.server.CriterionMethod;
 import jargyle.server.Host;
 import jargyle.server.SettingSpec;
 import jargyle.server.Settings;
@@ -99,23 +98,21 @@ public final class Socks5Worker implements Runnable {
 		return socket;
 	}
 
-	private boolean canAcceptIncomingTcpAddress(
-			final InetAddress incomingTcpInetAddress) {
-		Criteria allowedSocks5IncomingTcpAddressCriteria = 
-				this.configuration.getAllowedSocks5IncomingTcpAddressCriteria();
-		if (allowedSocks5IncomingTcpAddressCriteria.toList().isEmpty()) {
-			allowedSocks5IncomingTcpAddressCriteria = Criteria.newInstance(
-					Criterion.newInstance(CriterionMethod.MATCHES, ".*"));
-		}
+	private boolean canAcceptExternalIncomingTcpAddress(
+			final InetAddress externalIncomingTcpInetAddress) {
+		Criteria allowedExternalIncomingTcpAddressCriteria = 
+				this.settings.getLastValue(
+						SettingSpec.SOCKS5_ALLOWED_EXTERNAL_INCOMING_TCP_ADDRESS_CRITERIA, 
+						Criteria.class);
 		Criterion criterion = 
-				allowedSocks5IncomingTcpAddressCriteria.anyEvaluatesTrue(
-						incomingTcpInetAddress);
+				allowedExternalIncomingTcpAddressCriteria.anyEvaluatesTrue(
+						externalIncomingTcpInetAddress);
 		if (criterion == null) {
 			LOGGER.log(
 					Level.FINE, 
 					this.format(String.format(
-							"Incoming TCP address %s not allowed", 
-							incomingTcpInetAddress)));
+							"External incoming TCP address %s not allowed", 
+							externalIncomingTcpInetAddress)));
 			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
 					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
 			LOGGER.log(
@@ -130,17 +127,19 @@ public final class Socks5Worker implements Runnable {
 			}
 			return false;
 		}
-		Criteria blockedSocks5IncomingTcpAddressCriteria =
-				this.configuration.getBlockedSocks5IncomingTcpAddressCriteria();
-		criterion = blockedSocks5IncomingTcpAddressCriteria.anyEvaluatesTrue(
-				incomingTcpInetAddress);
+		Criteria blockedExternalIncomingTcpAddressCriteria =
+				this.settings.getLastValue(
+						SettingSpec.SOCKS5_BLOCKED_EXTERNAL_INCOMING_TCP_ADDRESS_CRITERIA, 
+						Criteria.class);
+		criterion = blockedExternalIncomingTcpAddressCriteria.anyEvaluatesTrue(
+				externalIncomingTcpInetAddress);
 		if (criterion != null) {
 			LOGGER.log(
 					Level.FINE, 
 					this.format(String.format(
-							"Incoming TCP address %s blocked based on the "
+							"External incoming TCP address %s blocked based on the "
 							+ "following criterion: %s", 
-							incomingTcpInetAddress,
+							externalIncomingTcpInetAddress,
 							criterion)));
 			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
 					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
@@ -163,11 +162,9 @@ public final class Socks5Worker implements Runnable {
 			final InetAddress sourceInetAddress,
 			final Socks5Request socks5Req) {
 		Socks5RequestCriteria allowedSocks5RequestCriteria = 
-				this.configuration.getAllowedSocks5RequestCriteria();
-		if (allowedSocks5RequestCriteria.toList().isEmpty()) {
-			allowedSocks5RequestCriteria = new Socks5RequestCriteria(
-					new Socks5RequestCriterion(null, null, null, null));
-		}
+				this.settings.getLastValue(
+						SettingSpec.SOCKS5_ALLOWED_SOCKS5_REQUEST_CRITERIA, 
+						Socks5RequestCriteria.class);
 		Socks5RequestCriterion socks5RequestCriterion =
 				allowedSocks5RequestCriteria.anyEvaluatesTrue(
 						sourceInetAddress, socks5Req);
@@ -189,7 +186,9 @@ public final class Socks5Worker implements Runnable {
 			return false;
 		}
 		Socks5RequestCriteria blockedSocks5RequestCriteria = 
-				this.configuration.getBlockedSocks5RequestCriteria();
+				this.settings.getLastValue(
+						SettingSpec.SOCKS5_BLOCKED_SOCKS5_REQUEST_CRITERIA, 
+						Socks5RequestCriteria.class);
 		socks5RequestCriterion =
 				blockedSocks5RequestCriteria.anyEvaluatesTrue(
 						sourceInetAddress, socks5Req);
@@ -478,7 +477,7 @@ public final class Socks5Worker implements Runnable {
 				listenSocket.close();
 			}
 			InetAddress incomingTcpInetAddress = incomingSocket.getInetAddress();
-			if (!this.canAcceptIncomingTcpAddress(incomingTcpInetAddress)) {
+			if (!this.canAcceptExternalIncomingTcpAddress(incomingTcpInetAddress)) {
 				return;
 			}
 			serverBoundAddress = incomingTcpInetAddress.getHostAddress();
@@ -625,8 +624,12 @@ public final class Socks5Worker implements Runnable {
 					this.clientSocket.getInetAddress().getHostAddress(),
 					desiredDestinationAddress,
 					desiredDestinationPort, 
-					this.configuration.getAllowedSocks5IncomingUdpAddressCriteria(), 
-					this.configuration.getBlockedSocks5IncomingUdpAddressCriteria(), 
+					this.settings.getLastValue(
+							SettingSpec.SOCKS5_ALLOWED_EXTERNAL_INCOMING_UDP_ADDRESS_CRITERIA, 
+							Criteria.class), 
+					this.settings.getLastValue(
+							SettingSpec.SOCKS5_BLOCKED_EXTERNAL_INCOMING_UDP_ADDRESS_CRITERIA, 
+							Criteria.class), 
 					this.settings.getLastValue(
 							SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_RELAY_BUFFER_SIZE, 
 							PositiveInteger.class).intValue(), 

@@ -19,22 +19,20 @@ final class Worker implements Runnable {
 	
 	private final Socket clientSocket;
 	private final Configuration configuration;
+	private final Settings settings;
 	
 	public Worker(
 			final Socket clientSock, 
 			final Configuration config) {
 		this.clientSocket = clientSock;
 		this.configuration = config;
+		this.settings = config.getSettings();
 	}
 	
 	private boolean canAcceptClientSocket(final Socket clientSocket) {
 		InetAddress clientInetAddress = clientSocket.getInetAddress();
-		Criteria allowedClientAddressCriteria = 
-				this.configuration.getAllowedClientAddressCriteria();
-		if (allowedClientAddressCriteria.toList().isEmpty()) {
-			allowedClientAddressCriteria = Criteria.newInstance(
-					Criterion.newInstance(CriterionMethod.MATCHES, ".*"));
-		}
+		Criteria allowedClientAddressCriteria = this.settings.getLastValue(
+				SettingSpec.ALLOWED_CLIENT_ADDRESS_CRITERIA, Criteria.class);
 		Criterion criterion = allowedClientAddressCriteria.anyEvaluatesTrue(
 				clientInetAddress);
 		if (criterion == null) {
@@ -45,8 +43,8 @@ final class Worker implements Runnable {
 							clientInetAddress)));
 			return false;
 		}
-		Criteria blockedClientAddressCriteria =
-				this.configuration.getBlockedClientAddressCriteria();
+		Criteria blockedClientAddressCriteria = this.settings.getLastValue(
+				SettingSpec.BLOCKED_CLIENT_ADDRESS_CRITERIA, Criteria.class);
 		criterion = blockedClientAddressCriteria.anyEvaluatesTrue(
 				clientInetAddress);
 		if (criterion != null) {
@@ -64,10 +62,8 @@ final class Worker implements Runnable {
 	
 	private boolean configureClientSocket(final Socket clientSocket) {
 		try {
-			SocketSettings socketSettings = 
-					this.configuration.getSettings().getLastValue(
-							SettingSpec.CLIENT_SOCKET_SETTINGS,
-							SocketSettings.class);
+			SocketSettings socketSettings =	this.settings.getLastValue(
+					SettingSpec.CLIENT_SOCKET_SETTINGS, SocketSettings.class);
 			socketSettings.applyTo(clientSocket);
 		} catch (SocketException e) {
 			LOGGER.log(

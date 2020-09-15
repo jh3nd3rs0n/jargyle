@@ -257,6 +257,11 @@ public final class UsersCLI extends CLI {
 		
 		public abstract void invoke(final String[] args) throws Exception;
 		
+		@Override
+		public boolean isDisplayable() {
+			return true;
+		}
+		
 		public String toString() {
 			return this.value;
 		}

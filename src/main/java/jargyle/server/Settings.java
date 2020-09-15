@@ -3,7 +3,6 @@ package jargyle.server;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -91,18 +90,17 @@ public final class Settings {
 	public List<Setting> toList() {
 		return Collections.unmodifiableList(this.settings);
 	}
-	
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		for (Iterator<Setting> iterator = this.settings.iterator();
-				iterator.hasNext();) {
-			Setting setting = iterator.next();
-			builder.append(setting.toString());
-			if (iterator.hasNext()) {
-				builder.append(',');
-			}
-		}
+		builder.append(this.getClass().getSimpleName())
+			.append(" [settings=")
+			.append(this.settings)
+			.append("]");
 		return builder.toString();
 	}
+	
+	
+	
 }

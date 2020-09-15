@@ -33,12 +33,30 @@ public final class Setting {
 		@XmlElement(name = "name", required = true)
 		protected String name;
 		@XmlElements({
-			@XmlElement(name = "value", type = CriteriaValue.class),
-			@XmlElement(name = "value", type = SocketSettingsValue.class),
-			@XmlElement(name = "value", type = Socks5RequestCriteriaValue.class),
-			@XmlElement(name = "value", type = StringValue.class),
-			@XmlElement(name = "value", type = UsernamePasswordAuthenticatorValue.class),
-			@XmlElement(name = "value", type = UsernamePasswordValue.class)
+			@XmlElement(
+					name = "value", 
+					required = true, 
+					type = CriteriaValue.class),
+			@XmlElement(
+					name = "value", 
+					required = true, 
+					type = SocketSettingsValue.class),
+			@XmlElement(
+					name = "value", 
+					required = true, 
+					type = Socks5RequestCriteriaValue.class),
+			@XmlElement(
+					name = "value", 
+					required = true, 
+					type = StringValue.class),
+			@XmlElement(
+					name = "value", 
+					required = true, 
+					type = UsernamePasswordAuthenticatorValue.class),
+			@XmlElement(
+					name = "value", 
+					required = true, 
+					type = UsernamePasswordValue.class)
 		})
 		protected Object value;
 		@XmlAttribute(name = "comment")

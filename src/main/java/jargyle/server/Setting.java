@@ -46,17 +46,17 @@ public final class Setting {
 					required = true, 
 					type = Socks5RequestCriteriaValue.class),
 			@XmlElement(
-					name = "stringValue", 
-					required = true, 
-					type = StringValue.class),
-			@XmlElement(
 					name = "usernamePasswordAuthenticatorValue", 
 					required = true, 
 					type = UsernamePasswordAuthenticatorValue.class),
 			@XmlElement(
 					name = "usernamePasswordValue", 
 					required = true, 
-					type = UsernamePasswordValue.class)
+					type = UsernamePasswordValue.class),
+			@XmlElement(
+					name = "value", 
+					required = true, 
+					type = Value.class)
 		})
 		protected Object value;
 		@XmlAttribute(name = "comment")
@@ -94,7 +94,7 @@ public final class Setting {
 				newVal.value = (UsernamePassword) val;
 				settingXml.value = newVal;
 			} else {
-				StringValue newVal = new StringValue();
+				Value newVal = new Value();
 				newVal.value = val.toString();
 				settingXml.value = newVal;
 			}
@@ -126,7 +126,7 @@ public final class Setting {
 				UsernamePasswordValue newVal = (UsernamePasswordValue) val;
 				return newInstance(v.name, newVal.value, v.comment);
 			} 
-			StringValue newVal = (StringValue) val;
+			Value newVal = (Value) val;
 			return newInstance(v.name, newVal.value, v.comment);
 		}
 		
@@ -151,15 +151,6 @@ public final class Setting {
 	}
 	
 	@XmlAccessorType(XmlAccessType.NONE)
-	@XmlType(name = "stringValue")
-	static class StringValue {
-		
-		@XmlValue
-		protected String value;
-		
-	}
-	
-	@XmlAccessorType(XmlAccessType.NONE)
 	@XmlType(name = "usernamePasswordAuthenticatorValue")
 	static class UsernamePasswordAuthenticatorValue {
 		
@@ -174,6 +165,15 @@ public final class Setting {
 		
 		@XmlElement(name = "usernamePassword", required = true)
 		protected UsernamePassword value;
+		
+	}
+	
+	@XmlAccessorType(XmlAccessType.NONE)
+	@XmlType(name = "value")
+	static class Value {
+		
+		@XmlValue
+		protected String value;
 		
 	}
 	

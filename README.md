@@ -366,15 +366,15 @@ The following command creates a configuration file with the port number, the num
         <settings>
             <setting>
                 <name>port</name>
-                <stringValue>1234</stringValue>
+                <value>1234</value>
             </setting>
             <setting>
                 <name>backlog</name>
-                <stringValue>100</stringValue>
+                <value>100</value>
             </setting>
             <setting>
                 <name>socks5.authMethods</name>
-                <stringValue>NO_AUTHENTICATION_REQUIRED</stringValue>
+                <value>NO_AUTHENTICATION_REQUIRED</value>
             </setting>
         </settings>
     </configuration>
@@ -413,15 +413,15 @@ The following command adds one command line options before the existing configur
             </setting>
             <setting>
                 <name>port</name>
-                <stringValue>1234</stringValue>
+                <value>1234</value>
             </setting>
             <setting>
                 <name>backlog</name>
-                <stringValue>100</stringValue>
+                <value>100</value>
             </setting>
             <setting>
                 <name>socks5.authMethods</name>
-                <stringValue>NO_AUTHENTICATION_REQUIRED</stringValue>
+                <value>NO_AUTHENTICATION_REQUIRED</value>
             </setting>
             <setting>
                 <name>socketSettings</name>
@@ -460,15 +460,15 @@ The following command combines the two earlier configuration files into one:
         <settings>
             <setting>
                 <name>port</name>
-                <stringValue>1234</stringValue>
+                <value>1234</value>
             </setting>
             <setting>
                 <name>backlog</name>
-                <stringValue>100</stringValue>
+                <value>100</value>
             </setting>
             <setting>
                 <name>socks5.authMethods</name>
-                <stringValue>NO_AUTHENTICATION_REQUIRED</stringValue>
+                <value>NO_AUTHENTICATION_REQUIRED</value>
             </setting>
             <setting>
                 <name>clientSocketSettings</name>
@@ -483,15 +483,15 @@ The following command combines the two earlier configuration files into one:
             </setting>
             <setting>
                 <name>port</name>
-                <stringValue>1234</stringValue>
+                <value>1234</value>
             </setting>
             <setting>
                 <name>backlog</name>
-                <stringValue>100</stringValue>
+                <value>100</value>
             </setting>
             <setting>
                 <name>socks5.authMethods</name>
-                <stringValue>NO_AUTHENTICATION_REQUIRED</stringValue>
+                <value>NO_AUTHENTICATION_REQUIRED</value>
             </setting>
             <setting>
                 <name>socketSettings</name>
@@ -791,7 +791,7 @@ Partial configuration file example:
     <settings>
         <setting>
             <name>socks5.authMethods</name>
-            <stringValue>GSSAPI USERNAME_PASSWORD</stringValue>
+            <value>GSSAPI USERNAME_PASSWORD</value>
         </setting>
     </settings>
 
@@ -820,7 +820,7 @@ Partial configuration file example:
     <settings>
         <setting>
             <name>socks5.authMethods</name>
-            <stringValue>NO_AUTHENTICATION_REQUIRED GSSAPI USERNAME_PASSWORD</stringValue>
+            <value>NO_AUTHENTICATION_REQUIRED GSSAPI USERNAME_PASSWORD</value>
         </setting>
     </settings>
 
@@ -845,7 +845,7 @@ Partial configuration file example:
     <settings>
         <setting>
             <name>socks5.authMethods</name>
-            <stringValue>USERNAME_PASSWORD</stringValue>
+            <value>USERNAME_PASSWORD</value>
         </setting>
     </settings>
 
@@ -876,7 +876,7 @@ Partial configuration file example:
     <settings>
         <setting>
             <name>socks5.authMethods</name>
-            <stringValue>USERNAME_PASSWORD</stringValue>
+            <value>USERNAME_PASSWORD</value>
         </setting>
         <setting>
             <name>socks5.usernamePasswordAuthenticator</name>
@@ -917,7 +917,7 @@ Partial configuration file example:
     <settings>
         <setting>
             <name>socks5.authMethods</name>
-            <stringValue>USERNAME_PASSWORD</stringValue>
+            <value>USERNAME_PASSWORD</value>
         </setting>    
         <setting>
             <name>socks5.usernamePasswordAuthenticator</name>
@@ -951,7 +951,7 @@ Partial configuration file example:
     <settings>
         <setting>
             <name>socks5.authMethods</name>
-            <stringValue>GSSAPI</stringValue>
+            <value>GSSAPI</value>
         </setting>
     </settings>
 
@@ -1033,7 +1033,7 @@ Partial configuration file example:
     <settings>
         <setting>
             <name>externalClient.externalServerUri</name>
-            <stringValue>socks5://127.0.0.1:23456</stringValue>
+            <value>socks5://127.0.0.1:23456</value>
         </setting>
     </settings>
 
@@ -1066,7 +1066,7 @@ Partial configuration file example:
     <settings>
         <setting>
             <name>externalClient.socks5.authMethods</name>
-            <stringValue>GSSAPI USERNAME_PASSWORD</stringValue>
+            <value>GSSAPI USERNAME_PASSWORD</value>
         </setting>
     </settings>
 
@@ -1095,7 +1095,7 @@ Partial configuration file example:
     <settings>
         <setting>
             <name>externalClient.socks5.authMethods</name>
-            <stringValue>NO_AUTHENTICATION_REQUIRED GSSAPI USERNAME_PASSWORD</stringValue>
+            <value>NO_AUTHENTICATION_REQUIRED GSSAPI USERNAME_PASSWORD</value>
         </setting>
     </settings>
     
@@ -1120,7 +1120,7 @@ Partial configuration file example:
     <settings>
         <setting>
             <name>externalClient.socks5.authMethods</name>
-            <stringValue>USERNAME_PASSWORD</stringValue>
+            <value>USERNAME_PASSWORD</value>
         </setting>
     </settings>
 
@@ -1180,7 +1180,7 @@ Partial configuration file example:
     <settings>
         <setting>
             <name>externalClient.socks5.authMethods</name>
-            <stringValue>GSSAPI</stringValue>
+            <value>GSSAPI</value>
         </setting>
     </settings>
 

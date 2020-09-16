@@ -34,27 +34,27 @@ public final class Setting {
 		protected String name;
 		@XmlElements({
 			@XmlElement(
-					name = "value", 
+					name = "criteriaValue", 
 					required = true, 
 					type = CriteriaValue.class),
 			@XmlElement(
-					name = "value", 
+					name = "socketSettingsValue", 
 					required = true, 
 					type = SocketSettingsValue.class),
 			@XmlElement(
-					name = "value", 
+					name = "socks5RequestCriteriaValue", 
 					required = true, 
 					type = Socks5RequestCriteriaValue.class),
 			@XmlElement(
-					name = "value", 
+					name = "stringValue", 
 					required = true, 
 					type = StringValue.class),
 			@XmlElement(
-					name = "value", 
+					name = "usernamePasswordAuthenticatorValue", 
 					required = true, 
 					type = UsernamePasswordAuthenticatorValue.class),
 			@XmlElement(
-					name = "value", 
+					name = "usernamePasswordValue", 
 					required = true, 
 					type = UsernamePasswordValue.class)
 		})

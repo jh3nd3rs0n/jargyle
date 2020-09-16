@@ -366,15 +366,15 @@ The following command creates a configuration file with the port number, the num
         <settings>
             <setting>
                 <name>port</name>
-                <value>1234</value>
+                <stringValue>1234</stringValue>
             </setting>
             <setting>
                 <name>backlog</name>
-                <value>100</value>
+                <stringValue>100</stringValue>
             </setting>
             <setting>
                 <name>socks5.authMethods</name>
-                <value>NO_AUTHENTICATION_REQUIRED</value>
+                <stringValue>NO_AUTHENTICATION_REQUIRED</stringValue>
             </setting>
         </settings>
     </configuration>
@@ -402,37 +402,37 @@ The following command adds one command line options before the existing configur
         <settings>
             <setting>
                 <name>clientSocketSettings</name>
-                <value>
+                <socketSettingsValue>
                     <socketSettings>
                         <socketSetting>
                             <name>SO_TIMEOUT</name>
                             <value>500</value>
                         </socketSetting>
                     </socketSettings>
-                </value>
+                </socketSettingsValue>
             </setting>
             <setting>
                 <name>port</name>
-                <value>1234</value>
+                <stringValue>1234</stringValue>
             </setting>
             <setting>
                 <name>backlog</name>
-                <value>100</value>
+                <stringValue>100</stringValue>
             </setting>
             <setting>
                 <name>socks5.authMethods</name>
-                <value>NO_AUTHENTICATION_REQUIRED</value>
+                <stringValue>NO_AUTHENTICATION_REQUIRED</stringValue>
             </setting>
             <setting>
                 <name>socketSettings</name>
-                <value>
+                <socketSettingsValue>
                     <socketSettings>
                         <socketSetting>
                             <name>SO_TIMEOUT</name>
                             <value>0</value>
                         </socketSetting>
                     </socketSettings>
-                </value>
+                </socketSettingsValue>
             </setting>
         </settings>
     </configuration>
@@ -460,49 +460,49 @@ The following command combines the two earlier configuration files into one:
         <settings>
             <setting>
                 <name>port</name>
-                <value>1234</value>
+                <stringValue>1234</stringValue>
             </setting>
             <setting>
                 <name>backlog</name>
-                <value>100</value>
+                <stringValue>100</stringValue>
             </setting>
             <setting>
                 <name>socks5.authMethods</name>
-                <value>NO_AUTHENTICATION_REQUIRED</value>
+                <stringValue>NO_AUTHENTICATION_REQUIRED</stringValue>
             </setting>
             <setting>
                 <name>clientSocketSettings</name>
-                <value>
+                <socketSettingsValue>
                     <socketSettings>
                         <socketSetting>
                             <name>SO_TIMEOUT</name>
                             <value>500</value>
                         </socketSetting>
                     </socketSettings>
-                </value>
+                </socketSettingsValue>
             </setting>
             <setting>
                 <name>port</name>
-                <value>1234</value>
+                <stringValue>1234</stringValue>
             </setting>
             <setting>
                 <name>backlog</name>
-                <value>100</value>
+                <stringValue>100</stringValue>
             </setting>
             <setting>
                 <name>socks5.authMethods</name>
-                <value>NO_AUTHENTICATION_REQUIRED</value>
+                <stringValue>NO_AUTHENTICATION_REQUIRED</stringValue>
             </setting>
             <setting>
                 <name>socketSettings</name>
-                <value>
+                <socketSettingsValue>
                     <socketSettings>
                         <socketSetting>
                             <name>SO_TIMEOUT</name>
                             <value>0</value>
                         </socketSetting>
                     </socketSettings>
-                </value>
+                </socketSettingsValue>
             </setting>
         </settings>
     </configuration>
@@ -791,7 +791,7 @@ Partial configuration file example:
     <settings>
         <setting>
             <name>socks5.authMethods</name>
-            <value>GSSAPI USERNAME_PASSWORD</value>
+            <stringValue>GSSAPI USERNAME_PASSWORD</stringValue>
         </setting>
     </settings>
 
@@ -820,7 +820,7 @@ Partial configuration file example:
     <settings>
         <setting>
             <name>socks5.authMethods</name>
-            <value>NO_AUTHENTICATION_REQUIRED GSSAPI USERNAME_PASSWORD</value>
+            <stringValue>NO_AUTHENTICATION_REQUIRED GSSAPI USERNAME_PASSWORD</stringValue>
         </setting>
     </settings>
 
@@ -845,7 +845,7 @@ Partial configuration file example:
     <settings>
         <setting>
             <name>socks5.authMethods</name>
-            <value>USERNAME_PASSWORD</value>
+            <stringValue>USERNAME_PASSWORD</stringValue>
         </setting>
     </settings>
 
@@ -876,16 +876,16 @@ Partial configuration file example:
     <settings>
         <setting>
             <name>socks5.authMethods</name>
-            <value>USERNAME_PASSWORD</value>
+            <stringValue>USERNAME_PASSWORD</stringValue>
         </setting>
         <setting>
             <name>socks5.usernamePasswordAuthenticator</name>
-            <value>
+            <usernamePasswordAuthenticatorValue>
                 <usernamePasswordAuthenticator>
                     <className>jargyle.server.socks5.StringSourceUsernamePasswordAuthenticator</className>
                     <value>Aladdin:opensesame Jasmine:mission%3Aimpossible</value>
                 </usernamePasswordAuthenticator>
-            </value>
+            </usernamePasswordAuthenticatorValue>
         </setting>
     </settings>
 
@@ -917,16 +917,16 @@ Partial configuration file example:
     <settings>
         <setting>
             <name>socks5.authMethods</name>
-            <value>USERNAME_PASSWORD</value>
+            <stringValue>USERNAME_PASSWORD</stringValue>
         </setting>    
         <setting>
             <name>socks5.usernamePasswordAuthenticator</name>
-            <value>
+            <usernamePasswordAuthenticatorValue>
                 <usernamePasswordAuthenticator>
                     <className>jargyle.server.socks5.XmlFileSourceUsernamePasswordAuthenticator</className>
                     <value>users.xml</value>
                 </usernamePasswordAuthenticator>
-            </value>
+            </usernamePasswordAuthenticatorValue>
         </setting>
     </settings>
 
@@ -951,7 +951,7 @@ Partial configuration file example:
     <settings>
         <setting>
             <name>socks5.authMethods</name>
-            <value>GSSAPI</value>
+            <stringValue>GSSAPI</stringValue>
         </setting>
     </settings>
 
@@ -1033,7 +1033,7 @@ Partial configuration file example:
     <settings>
         <setting>
             <name>externalClient.externalServerUri</name>
-            <value>socks5://127.0.0.1:23456</value>
+            <stringValue>socks5://127.0.0.1:23456</stringValue>
         </setting>
     </settings>
 
@@ -1066,7 +1066,7 @@ Partial configuration file example:
     <settings>
         <setting>
             <name>externalClient.socks5.authMethods</name>
-            <value>GSSAPI USERNAME_PASSWORD</value>
+            <stringValue>GSSAPI USERNAME_PASSWORD</stringValue>
         </setting>
     </settings>
 
@@ -1095,7 +1095,7 @@ Partial configuration file example:
     <settings>
         <setting>
             <name>externalClient.socks5.authMethods</name>
-            <value>NO_AUTHENTICATION_REQUIRED GSSAPI USERNAME_PASSWORD</value>
+            <stringValue>NO_AUTHENTICATION_REQUIRED GSSAPI USERNAME_PASSWORD</stringValue>
         </setting>
     </settings>
     
@@ -1120,7 +1120,7 @@ Partial configuration file example:
     <settings>
         <setting>
             <name>externalClient.socks5.authMethods</name>
-            <value>USERNAME_PASSWORD</value>
+            <stringValue>USERNAME_PASSWORD</stringValue>
         </setting>
     </settings>
 
@@ -1180,7 +1180,7 @@ Partial configuration file example:
     <settings>
         <setting>
             <name>externalClient.socks5.authMethods</name>
-            <value>GSSAPI</value>
+            <stringValue>GSSAPI</stringValue>
         </setting>
     </settings>
 
@@ -1302,21 +1302,21 @@ Partial configuration file example:
     <settings>
         <setting>
             <name>allowedClientAddressCriteria</name>
-            <value>
+            <criteriaValue>
                 <criteria>
                     <criterion method="equals" value="127.0.0.1"/>
                     <criterion method="equals" value="0:0:0:0:0:0:0:1"/>
                     <criterion method="equals" value="localhost"/>
                 </criteria>
-            </value>
+            </criteriaValue>
         </setting>
         <setting>
             <name>blockedClientAddressCriteria</name>
-            <value>
+            <criteriaValue>
                 <criteria>
                     <criterion method="matches" value="(?!(127\.0\.0\.1|0:0:0:0:0:0:0:1|localhost)).*"/>
                 </criteria>
-            </value>
+            </criteriaValue>
         </setting>        
     </settings>
     
@@ -1338,7 +1338,7 @@ Partial configuration file example:
     <settings>
         <setting>
             <name>socks5.allowedSocks5RequestCriteria</name>
-            <value>
+            <socks5RequestCriteriaValue>
                 <socks5RequestCriteria>
                     <socks5RequestCriterion>
                         <sourceAddressCriterion method="matches" value=".*"/>
@@ -1350,11 +1350,11 @@ Partial configuration file example:
                         </desiredDestinationPortRanges>
                     </socks5RequestCriterion>
                 </socks5RequestCriteria>
-            </value>
+            </socks5RequestCriteriaValue>
         </setting>
         <setting>
             <name>socks5.blockedSocks5RequestCriteria</name>
-            <value>
+            <socks5RequestCriteriaValue>
                 <socks5RequestCriteria>
                     <socks5RequestCriterion>
                         <sourceAddressCriterion method="matches" value=".*"/>
@@ -1373,7 +1373,7 @@ Partial configuration file example:
                         </desiredDestinationPortRanges>
                     </socks5RequestCriterion>                    
                 </socks5RequestCriteria>
-            </value>
+            </socks5RequestCriteriaValue>
         </setting>        
     </settings>
     
@@ -1400,25 +1400,25 @@ Partial configuration file example:
     <settings>
         <setting>
             <name>allowedClientAddressCriteria</name>
-            <value>
+            <criteriaValue>
                 <criteria>
                     <criterion method="equals" value="127.0.0.1" comment="IPv4 loopback address"/>
                     <criterion method="equals" value="0:0:0:0:0:0:0:1" comment="IPv6 loopback address"/>
                     <criterion method="equals" value="localhost" comment="domain name of loopback address"/>
                 </criteria>
-            </value>
+            </criteriaValue>
         </setting>
         <setting>
             <name>blockedClientAddressCriteria</name>
-            <value>
+            <criteriaValue>
                 <criteria>
                     <criterion method="matches" value="(?!(127\.0\.0\.1|0:0:0:0:0:0:0:1|localhost)).*" comment="block any address that is not a loopback address"/>
                 </criteria>
-            </value>
+            </criteriaValue>
         </setting>
         <setting>
             <name>socks5.allowedSocks5RequestCriteria</name>
-            <value>
+            <socks5RequestCriteriaValue>
                 <socks5RequestCriteria>
                     <socks5RequestCriterion comment="allow any client to connect to any address on port 80 or port 443">
                         <sourceAddressCriterion method="matches" value=".*"/>
@@ -1430,11 +1430,11 @@ Partial configuration file example:
                         </desiredDestinationPortRanges>
                     </socks5RequestCriterion>
                 </socks5RequestCriteria>
-            </value>
+            </socks5RequestCriteriaValue>
         </setting>
         <setting>
             <name>socks5.blockedSocks5RequestCriteria</name>
-            <value>
+            <socks5RequestCriteriaValue>
                 <socks5RequestCriteria>
                     <socks5RequestCriterion comment="block any BIND requests">
                         <sourceAddressCriterion method="matches" value=".*"/>
@@ -1453,7 +1453,7 @@ Partial configuration file example:
                         </desiredDestinationPortRanges>
                     </socks5RequestCriterion>                    
                 </socks5RequestCriteria>
-            </value>
+            </socks5RequestCriteriaValue>
         </setting>
     </settings>
     

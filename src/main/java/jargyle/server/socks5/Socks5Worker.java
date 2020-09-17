@@ -271,16 +271,17 @@ public final class Socks5Worker implements Runnable {
 		return true;
 	}
 	
-	private boolean configureIncomingSocket(final Socket incomingSocket) {
+	private boolean configureExternalIncomingSocket(
+			final Socket externalIncomingSocket) {
 		try {
 			SocketSettings socketSettings = this.settings.getLastValue(
-					SettingSpec.SOCKS5_ON_BIND_INCOMING_SOCKET_SETTINGS, 
+					SettingSpec.SOCKS5_ON_BIND_EXTERNAL_INCOMING_SOCKET_SETTINGS, 
 					SocketSettings.class);
-			socketSettings.applyTo(incomingSocket);
+			socketSettings.applyTo(externalIncomingSocket);
 		} catch (SocketException e) {
 			LOGGER.log(
 					Level.WARNING, 
-					this.format("Error in setting the incoming socket"), 
+					this.format("Error in setting the external incoming socket"), 
 					e);
 			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
 					Reply.GENERAL_SOCKS_SERVER_FAILURE);
@@ -414,7 +415,7 @@ public final class Socks5Worker implements Runnable {
 		ServerSocketFactory serverSocketFactory = 
 				ServerSocketFactory.newInstance(this.socksClient);
 		ServerSocket listenSocket = null;
-		Socket incomingSocket = null;
+		Socket externalIncomingSocket = null;
 		try {
 			listenSocket = serverSocketFactory.newServerSocket();
 			if (!this.configureListenSocket(listenSocket)) {
@@ -455,14 +456,15 @@ public final class Socks5Worker implements Runnable {
 							socks5Rep.toString())));
 			this.writeThenFlush(socks5Rep.toByteArray());
 			try {
-				incomingSocket = listenSocket.accept();
-				if (!this.configureIncomingSocket(incomingSocket)) {
+				externalIncomingSocket = listenSocket.accept();
+				if (!this.configureExternalIncomingSocket(
+						externalIncomingSocket)) {
 					return;
 				}
 			} catch (IOException e) {
 				LOGGER.log(
 						Level.WARNING, 
-						this.format("Error in waiting for an incoming socket"), 
+						this.format("Error in waiting for an external incoming socket"), 
 						e);
 				socks5Rep = Socks5Reply.newErrorInstance(
 						Reply.GENERAL_SOCKS_SERVER_FAILURE);
@@ -476,13 +478,15 @@ public final class Socks5Worker implements Runnable {
 			} finally {
 				listenSocket.close();
 			}
-			InetAddress incomingTcpInetAddress = incomingSocket.getInetAddress();
-			if (!this.canAcceptExternalIncomingTcpAddress(incomingTcpInetAddress)) {
+			InetAddress externalIncomingTcpInetAddress = 
+					externalIncomingSocket.getInetAddress();
+			if (!this.canAcceptExternalIncomingTcpAddress(
+					externalIncomingTcpInetAddress)) {
 				return;
 			}
-			serverBoundAddress = incomingTcpInetAddress.getHostAddress();
+			serverBoundAddress = externalIncomingTcpInetAddress.getHostAddress();
 			addressType = AddressType.get(serverBoundAddress);
-			serverBoundPort = incomingSocket.getLocalPort();
+			serverBoundPort = externalIncomingSocket.getLocalPort();
 			socks5Rep = Socks5Reply.newInstance(
 					Reply.SUCCEEDED, 
 					addressType, 
@@ -495,7 +499,7 @@ public final class Socks5Worker implements Runnable {
 							socks5Rep.toString())));
 			this.writeThenFlush(socks5Rep.toByteArray());
 			this.passData(
-					incomingSocket, 
+					externalIncomingSocket, 
 					this.settings.getLastValue(
 							SettingSpec.SOCKS5_ON_BIND_RELAY_BUFFER_SIZE, 
 							PositiveInteger.class).intValue(), 
@@ -503,8 +507,9 @@ public final class Socks5Worker implements Runnable {
 							SettingSpec.SOCKS5_ON_BIND_RELAY_TIMEOUT, 
 							PositiveInteger.class).intValue());
 		} finally {
-			if (incomingSocket != null && !incomingSocket.isClosed()) {
-				incomingSocket.close();
+			if (externalIncomingSocket != null 
+					&& !externalIncomingSocket.isClosed()) {
+				externalIncomingSocket.close();
 			}
 			if (listenSocket != null && !listenSocket.isClosed()) {
 				listenSocket.close();

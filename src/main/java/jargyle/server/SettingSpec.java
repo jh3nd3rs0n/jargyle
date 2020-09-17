@@ -1272,13 +1272,13 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
-	SOCKS5_ON_BIND_INCOMING_SOCKET_SETTINGS {
+	SOCKS5_ON_BIND_EXTERNAL_INCOMING_SOCKET_SETTINGS {
 		
 		private static final String DOC = 
-				"The space separated list of socket settings for the incoming "
-				+ "socket";
+				"The space separated list of socket settings for the external "
+				+ "incoming socket";
 		private static final String NAME = 
-				"socks5.onBind.incomingSocketSettings";
+				"socks5.onBind.externalIncomingSocketSettings";
 				
 		@Override
 		public Setting getDefaultSetting() {
@@ -2038,8 +2038,8 @@ public enum SettingSpec implements HelpTextParams {
 	},
 	SOCKS5_USERNAME_PASSWORD_AUTHENTICATOR {
 
-		private static final String DOC = "The SOCKS5 username password "
-				+ "authenticator for the SOCKS server";
+		private static final String DOC = "The username password "
+				+ "authenticator for the SOCKS5 server";
 		private static final String NAME = 
 				"socks5.usernamePasswordAuthenticator";
 		

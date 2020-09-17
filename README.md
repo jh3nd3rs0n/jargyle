@@ -189,8 +189,8 @@ The following is a list of available settings for the SOCKS server (displayed wh
       socks5.gssapiProtectionLevels=SOCKS5_GSSAPI_PROTECTION_LEVEL1[ SOCKS5_GSSAPI_PROTECTION_LEVEL2[...]]
           The space separated list of acceptable protection levels after GSS-API authentication (The first is preferred if the client does not provide a protection level that is acceptable.) (default is REQUIRED_INTEG_AND_CONF REQUIRED_INTEG NONE)
     
-      socks5.onBind.incomingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
-          The space separated list of socket settings for the incoming socket
+      socks5.onBind.externalIncomingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
+          The space separated list of socket settings for the external incoming socket
     
       socks5.onBind.listenSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
           The space separated list of socket settings for the listen socket
@@ -235,7 +235,7 @@ The following is a list of available settings for the SOCKS server (displayed wh
           The space separated list of socket settings for the server-facing UDP socket
     
       socks5.usernamePasswordAuthenticator=CLASSNAME[:VALUE]
-          The SOCKS5 username password authenticator for the SOCKS server
+          The username password authenticator for the SOCKS5 server
     
     SCHEMES:
     

@@ -6,7 +6,6 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -144,8 +143,8 @@ public final class SocketSettings {
 		return recentValue;
 	}
 	
-	public Collection<SocketSetting> toCollection() {
-		return Collections.unmodifiableCollection(this.socketSettings.values());
+	public Map<SocketSettingSpec, SocketSetting> toMap() {
+		return Collections.unmodifiableMap(this.socketSettings);
 	}
 	
 	@Override

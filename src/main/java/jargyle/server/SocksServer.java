@@ -13,11 +13,6 @@ import jargyle.common.util.NonnegativeInteger;
 public final class SocksServer {
 	
 	public static void main(final String[] args) {
-		/* 
-		 * https://stackoverflow.com/questions/50237516/proper-fix-for-java-10-complaining-about-illegal-reflection-access-by-jaxb-impl#50251510
-		 */
-		System.setProperty(
-				"com.sun.xml.bind.v2.bytecode.ClassTailor.noOptimize", "true");
 		CLI socksServerCLI = new SocksServerCLI(args, false);
 		int status = socksServerCLI.handleArgs();
 		if (status != 0) { System.exit(status);	}

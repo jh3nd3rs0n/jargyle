@@ -66,6 +66,9 @@ public final class ImmutableConfiguration extends Configuration {
 	}
 	
 	public static byte[] getXsd() throws JAXBException {
+		if (!XmlBindHelper.isOptimizedCodeGenerationDisabled()) {
+			XmlBindHelper.setOptimizedCodeGenerationDisabled(true);
+		}
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		JAXBContext jaxbContext = JAXBContext.newInstance(
 				ConfigurationXml.class);
@@ -99,6 +102,9 @@ public final class ImmutableConfiguration extends Configuration {
 	
 	public static ImmutableConfiguration newInstanceFrom(
 			final InputStream in) throws JAXBException {
+		if (!XmlBindHelper.isOptimizedCodeGenerationDisabled()) {
+			XmlBindHelper.setOptimizedCodeGenerationDisabled(true);
+		}
 		JAXBContext jaxbContext = JAXBContext.newInstance(
 				ConfigurationXml.class);
 		Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
@@ -109,6 +115,7 @@ public final class ImmutableConfiguration extends Configuration {
 	}
 	
 	private final Settings settings;
+	
 	private ImmutableConfiguration(final Builder builder) {
 		Settings sttngs = builder.settings;
 		this.settings = sttngs;
@@ -141,6 +148,9 @@ public final class ImmutableConfiguration extends Configuration {
 	}
 	
 	public byte[] toXml() throws JAXBException {
+		if (!XmlBindHelper.isOptimizedCodeGenerationDisabled()) {
+			XmlBindHelper.setOptimizedCodeGenerationDisabled(true);
+		}
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		JAXBContext jaxbContext = JAXBContext.newInstance(
 				ConfigurationXml.class);

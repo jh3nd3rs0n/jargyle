@@ -23,6 +23,8 @@ import javax.xml.bind.helpers.DefaultValidationEventHandler;
 import javax.xml.transform.Result;
 import javax.xml.transform.stream.StreamResult;
 
+import jargyle.server.XmlBindHelper;
+
 public final class Users {
 	
 	private static final class CustomSchemaOutputResolver 
@@ -52,6 +54,9 @@ public final class Users {
 	}
 
 	public static byte[] getXsd() throws JAXBException {
+		if (!XmlBindHelper.isOptimizedCodeGenerationDisabled()) {
+			XmlBindHelper.setOptimizedCodeGenerationDisabled(true);
+		}
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		JAXBContext jaxbContext = JAXBContext.newInstance(UsersXml.class);
 		StreamResult result = new StreamResult(out);
@@ -65,11 +70,6 @@ public final class Users {
 	}
 	
 	public static void main(final String[] args) {
-		/* 
-		 * https://stackoverflow.com/questions/50237516/proper-fix-for-java-10-complaining-about-illegal-reflection-access-by-jaxb-impl#50251510
-		 */
-		System.setProperty(
-				"com.sun.xml.bind.v2.bytecode.ClassTailor.noOptimize", "true");
 		UsersCLI usersCLI = new UsersCLI(null, null, args, false);
 		int status = usersCLI.handleArgs();
 		if (status != 0) { System.exit(status);	}
@@ -98,6 +98,9 @@ public final class Users {
 	
 	public static Users newInstanceFrom(
 			final InputStream in) throws JAXBException {
+		if (!XmlBindHelper.isOptimizedCodeGenerationDisabled()) {
+			XmlBindHelper.setOptimizedCodeGenerationDisabled(true);
+		}
 		JAXBContext jaxbContext = JAXBContext.newInstance(UsersXml.class);
 		Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 		unmarshaller.setEventHandler(new DefaultValidationEventHandler());
@@ -155,6 +158,9 @@ public final class Users {
 	}
 	
 	public byte[] toXml() throws JAXBException {
+		if (!XmlBindHelper.isOptimizedCodeGenerationDisabled()) {
+			XmlBindHelper.setOptimizedCodeGenerationDisabled(true);
+		}
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		JAXBContext jaxbContext = JAXBContext.newInstance(UsersXml.class);
 		Marshaller marshaller = jaxbContext.createMarshaller();

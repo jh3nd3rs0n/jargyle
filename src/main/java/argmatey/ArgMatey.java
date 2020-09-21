@@ -3870,16 +3870,9 @@ public final class ArgMatey {
 		public static String interpolate(
 				final String string, final Properties properties) {
 			StringBuilder sb = new StringBuilder(string);
-			interpolate(sb, properties, 0, false);
-			return sb.toString();
-		}
-		
-		private static int interpolate(
-				final StringBuilder sb,
-				final Properties properties,
-				final int start,
-				final boolean inPropertyVariable) {
-			for (int i = start; i < sb.length(); i++) {
+			List<Integer> propertyVariableStartIndices = 
+					new ArrayList<Integer>();
+			for (int i = 0; i < sb.length(); i++) {
 				char ch = sb.charAt(i);
 				if (ch == '$' && i + 1 < sb.length()) {
 					char nextCh = sb.charAt(i + 1);
@@ -3888,26 +3881,30 @@ public final class ArgMatey {
 						sb.replace(i, i + 2, "$");
 						break;
 					case '{':
-						i = interpolate(sb, properties, i + 2, true) - 1;
-						break;
+						propertyVariableStartIndices.add(Integer.valueOf(i));
+						i++;
+						continue;
 					case '}':
 						sb.replace(i, i + 2, "}");
 						break;
 					default:
 						break;
 					}
-				} else if (ch == '}' && inPropertyVariable) {
-					String propertyName = sb.substring(start, i);
+				} else if (ch == '}' && propertyVariableStartIndices.size() > 0) {
+					int lastIndex = propertyVariableStartIndices.size() - 1;
+					int propertyVariableStartIndex = 
+							propertyVariableStartIndices.get(lastIndex).intValue();
+					String propertyName = sb.substring(
+							propertyVariableStartIndex + 2, i);
 					String property = properties.getProperty(propertyName);
 					if (property != null) {
-						int propertyVariableStart = start - 2;
-						sb.replace(propertyVariableStart, i + 1, property);
-						return propertyVariableStart + property.length();
+						sb.replace(propertyVariableStartIndex, i + 1, property);
+						i = propertyVariableStartIndex + property.length() - 1;
 					}
-					return i + 1;
+					propertyVariableStartIndices.remove(lastIndex);
 				}
 			}
-			return sb.length();
+			return sb.toString();
 		}
 		
 		private StringInterpolator() { }

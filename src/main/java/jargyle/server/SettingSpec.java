@@ -22,11 +22,10 @@ import jargyle.server.socks5.UsernamePasswordAuthenticator;
 
 public enum SettingSpec implements HelpTextParams {
 	
-	ALLOWED_CLIENT_ADDRESS_CRITERIA {
+	ALLOWED_CLIENT_ADDRESS_CRITERIA("allowedClientAddressCriteria") {
 
 		private static final String DOC = "The space separated list of "
 				+ "allowed client address criteria (default is matches:.*)";
-		private static final String NAME = "allowedClientAddressCriteria";
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -40,15 +39,10 @@ public enum SettingSpec implements HelpTextParams {
 		}
 
 		@Override
-		public String getName() {
-			return NAME;
-		}
-
-		@Override
 		public String getUsage() {
 			return String.format(
 					"%s=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]", 
-					NAME);
+					this.getName());
 		}
 
 		@Override
@@ -59,7 +53,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						Criteria.class.getName()));
 			}
-			return new Setting(NAME, value);
+			return new Setting(this.getName(), value);
 		}
 
 		@Override
@@ -68,15 +62,15 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
-	BACKLOG {
+	BACKLOG("backlog") {
 
 		private static final int DEFAULT_INT_VALUE = 50;
-		private static final String NAME = "backlog";
 		
 		@Override
 		public Setting getDefaultSetting() {
 			return new Setting(
-					NAME, NonnegativeInteger.newInstance(DEFAULT_INT_VALUE));
+					this.getName(), 
+					NonnegativeInteger.newInstance(DEFAULT_INT_VALUE));
 		}
 
 		@Override
@@ -88,15 +82,10 @@ public enum SettingSpec implements HelpTextParams {
 		}
 
 		@Override
-		public String getName() {
-			return NAME;
-		}
-
-		@Override
 		public String getUsage() {
 			return String.format(
 					"%s=INTEGER_BETWEEN_%s_AND_%s", 
-					NAME, 
+					this.getName(), 
 					NonnegativeInteger.MIN_INT_VALUE, 
 					NonnegativeInteger.MAX_INT_VALUE);
 		}
@@ -109,7 +98,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						NonnegativeInteger.class.getName()));
 			}
-			return new Setting(NAME, value);
+			return new Setting(this.getName(), value);
 		}
 
 		@Override
@@ -118,11 +107,10 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
-	BLOCKED_CLIENT_ADDRESS_CRITERIA {
+	BLOCKED_CLIENT_ADDRESS_CRITERIA("blockedClientAddressCriteria") {
 
 		private static final String DOC = "The space separated list of "
 				+ "blocked client address criteria";
-		private static final String NAME = "blockedClientAddressCriteria";
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -135,15 +123,10 @@ public enum SettingSpec implements HelpTextParams {
 		}
 
 		@Override
-		public String getName() {
-			return NAME;
-		}
-
-		@Override
 		public String getUsage() {
 			return String.format(
 					"%s=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]", 
-					NAME);
+					this.getName());
 		}
 
 		@Override
@@ -154,7 +137,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						Criteria.class.getName()));
 			}
-			return new Setting(NAME, value);
+			return new Setting(this.getName(), value);
 		}
 
 		@Override
@@ -163,16 +146,15 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
-	CLIENT_SOCKET_SETTINGS {
+	CLIENT_SOCKET_SETTINGS("clientSocketSettings") {
 		
 		private static final String DOC = 
 				"The space separated list of socket settings for the client "
 				+ "socket";
-		private static final String NAME = "clientSocketSettings";
 				
 		@Override
 		public Setting getDefaultSetting() {
-			return new Setting(NAME, SocketSettings.newInstance());
+			return new Setting(this.getName(), SocketSettings.newInstance());
 		}
 
 		@Override
@@ -181,15 +163,10 @@ public enum SettingSpec implements HelpTextParams {
 		}
 
 		@Override
-		public String getName() {
-			return NAME;
-		}
-
-		@Override
 		public String getUsage() {
 			return String.format(
 					"%1$s=[%2$s1[ %2$s2[...]]]", 
-					NAME, 
+					this.getName(), 
 					"SOCKET_SETTING");
 		}
 
@@ -201,7 +178,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						SocketSettings.class.getName()));
 			}
-			return new Setting(NAME, value);
+			return new Setting(this.getName(), value);
 		}
 
 		@Override
@@ -210,13 +187,11 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
-	EXTERNAL_CLIENT_BIND_HOST {
-		
-		private static final String NAME = "externalClient.bindHost";
+	EXTERNAL_CLIENT_BIND_HOST("externalClient.bindHost") {
 		
 		@Override
 		public Setting getDefaultSetting() {
-			return new Setting(NAME, SocksClient.DEFAULT_BIND_HOST);
+			return new Setting(this.getName(), SocksClient.DEFAULT_BIND_HOST);
 		}
 
 		@Override
@@ -229,13 +204,8 @@ public enum SettingSpec implements HelpTextParams {
 		}
 
 		@Override
-		public String getName() {
-			return NAME;
-		}
-
-		@Override
 		public String getUsage() {
-			return String.format("%s=HOST", NAME);
+			return String.format("%s=HOST", this.getName());
 		}
 
 		@Override
@@ -246,25 +216,25 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						String.class.getName()));
 			}
-			return new Setting(NAME, value);
+			return new Setting(this.getName(), value);
 		}
 
 		@Override
 		public Setting newSetting(final String value) {
-			return new Setting(NAME, value);
+			return new Setting(this.getName(), value);
 		}
 		
 	},
-	EXTERNAL_CLIENT_CONNECT_TIMEOUT {
+	EXTERNAL_CLIENT_CONNECT_TIMEOUT("externalClient.connectTimeout") {
 
 		private static final int DEFAULT_INT_VALUE = 
 				SocksClient.DEFAULT_CONNECT_TIMEOUT;
-		private static final String NAME = "externalClient.connectTimeout";
 		
 		@Override
 		public Setting getDefaultSetting() {
 			return new Setting(
-					NAME, PositiveInteger.newInstance(DEFAULT_INT_VALUE));
+					this.getName(), 
+					PositiveInteger.newInstance(DEFAULT_INT_VALUE));
 		}
 
 		@Override
@@ -277,15 +247,10 @@ public enum SettingSpec implements HelpTextParams {
 		}
 
 		@Override
-		public String getName() {
-			return NAME;
-		}
-
-		@Override
 		public String getUsage() {
 			return String.format(
 					"%s=INTEGER_BETWEEN_%s_AND_%s", 
-					NAME, 
+					this.getName(), 
 					PositiveInteger.MIN_INT_VALUE, 
 					PositiveInteger.MAX_INT_VALUE);
 		}
@@ -298,7 +263,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						PositiveInteger.class.getName()));
 			}
-			return new Setting(NAME, value);
+			return new Setting(this.getName(), value);
 		}
 
 		@Override
@@ -307,17 +272,15 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
-	EXTERNAL_CLIENT_EXTERNAL_SERVER_URI {
+	EXTERNAL_CLIENT_EXTERNAL_SERVER_URI("externalClient.externalServerUri") {
 		
 		private static final String DOC = 
 				"The URI of the external SOCKS server used for external "
 				+ "connections.";
 		
-		private static final String NAME = "externalClient.externalServerUri";
-		
 		@Override
 		public Setting getDefaultSetting() {
-			return new Setting(NAME, null);
+			return new Setting(this.getName(), null);
 		}
 
 		@Override
@@ -326,13 +289,8 @@ public enum SettingSpec implements HelpTextParams {
 		}
 
 		@Override
-		public String getName() {
-			return NAME;
-		}
-
-		@Override
 		public String getUsage() {
-			return String.format("%s=SCHEME://HOST[:PORT]", NAME);
+			return String.format("%s=SCHEME://HOST[:PORT]", this.getName());
 		}
 
 		@Override
@@ -343,7 +301,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						SocksServerUri.class.getName()));
 			}
-			return new Setting(NAME, value);
+			return new Setting(this.getName(), value);
 		}
 
 		@Override
@@ -352,17 +310,17 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
-	EXTERNAL_CLIENT_SOCKET_SETTINGS {
+	EXTERNAL_CLIENT_SOCKET_SETTINGS("externalClient.socketSettings") {
 
 		private static final String DOC = 
 				"The space separated list of socket settings for the socket "
 				+ "to connect to the external SOCKS server used for external "
 				+ "connections";
-		private static final String NAME = "externalClient.socketSettings";
 		
 		@Override
 		public Setting getDefaultSetting() {
-			return new Setting(NAME, SocksClient.DEFAULT_SOCKET_SETTINGS);
+			return new Setting(
+					this.getName(), SocksClient.DEFAULT_SOCKET_SETTINGS);
 		}
 
 		@Override
@@ -371,15 +329,10 @@ public enum SettingSpec implements HelpTextParams {
 		}
 
 		@Override
-		public String getName() {
-			return NAME;
-		}
-
-		@Override
 		public String getUsage() {
 			return String.format(
 					"%1$s=[%2$s1[ %2$s2[...]]]", 
-					NAME, 
+					this.getName(), 
 					"SOCKET_SETTING");
 		}
 
@@ -391,7 +344,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						SocketSettings.class.getName()));
 			}
-			return new Setting(NAME, value);
+			return new Setting(this.getName(), value);
 		}
 
 		@Override
@@ -400,13 +353,12 @@ public enum SettingSpec implements HelpTextParams {
 		}
 			
 	},
-	EXTERNAL_CLIENT_SOCKS5_AUTH_METHODS {
-		
-		private static final String NAME = "externalClient.socks5.authMethods";
+	EXTERNAL_CLIENT_SOCKS5_AUTH_METHODS("externalClient.socks5.authMethods") {
 		
 		@Override
 		public Setting getDefaultSetting() {
-			return new Setting(NAME, Socks5Client.DEFAULT_AUTH_METHODS);
+			return new Setting(
+					this.getName(), Socks5Client.DEFAULT_AUTH_METHODS);
 		}
 
 		@Override
@@ -419,14 +371,10 @@ public enum SettingSpec implements HelpTextParams {
 		}
 
 		@Override
-		public String getName() {
-			return NAME;
-		}
-
-		@Override
 		public String getUsage() {
-			return String.format("%1$s=%2$s1[ %2$s2[...]]", 
-					NAME, 
+			return String.format(
+					"%1$s=%2$s1[ %2$s2[...]]", 
+					this.getName(), 
 					"SOCKS5_AUTH_METHOD");
 		}
 
@@ -438,7 +386,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						AuthMethods.class.getName()));
 			}
-			return new Setting(NAME, value);
+			return new Setting(this.getName(), value);
 		}
 
 		@Override
@@ -447,15 +395,13 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
-	EXTERNAL_CLIENT_SOCKS5_GSSAPI_MECHANISM_OID {
-		
-		private static final String NAME = 
-				"externalClient.socks5.gssapiMechanismOid";
+	EXTERNAL_CLIENT_SOCKS5_GSSAPI_MECHANISM_OID(
+			"externalClient.socks5.gssapiMechanismOid") {
 		
 		@Override
 		public Setting getDefaultSetting() {
 			return new Setting(
-					NAME, Socks5Client.DEFAULT_GSSAPI_MECHANISM_OID);
+					this.getName(), Socks5Client.DEFAULT_GSSAPI_MECHANISM_OID);
 		}
 
 		@Override
@@ -468,13 +414,8 @@ public enum SettingSpec implements HelpTextParams {
 		}
 
 		@Override
-		public String getName() {
-			return NAME;
-		}
-
-		@Override
 		public String getUsage() {
-			return String.format("%s=GSSAPI_MECHANISM_OID", NAME);
+			return String.format("%s=GSSAPI_MECHANISM_OID", this.getName());
 		}
 
 		@Override
@@ -485,7 +426,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						Oid.class.getName()));
 			}
-			return new Setting(NAME, value);
+			return new Setting(this.getName(), value);
 		}
 
 		@Override
@@ -500,16 +441,15 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
-	EXTERNAL_CLIENT_SOCKS5_GSSAPI_NEC_REFERENCE_IMPL {
+	EXTERNAL_CLIENT_SOCKS5_GSSAPI_NEC_REFERENCE_IMPL(
+			"externalClient.socks5.gssapiNecReferenceImpl") {
 		
 		private static final boolean DEFAULT_BOOLEAN_VALUE = 
 				Socks5Client.DEFAULT_GSSAPI_NEC_REFERENCE_IMPL;
-		private static final String NAME = 
-				"externalClient.socks5.gssapiNecReferenceImpl";
 
 		@Override
 		public Setting getDefaultSetting() {
-			return new Setting(NAME, DEFAULT_BOOLEAN_VALUE);
+			return new Setting(this.getName(), DEFAULT_BOOLEAN_VALUE);
 		}
 
 		@Override
@@ -524,13 +464,8 @@ public enum SettingSpec implements HelpTextParams {
 		}
 
 		@Override
-		public String getName() {
-			return NAME;
-		}
-
-		@Override
 		public String getUsage() {
-			return String.format("%s=true|false", NAME);
+			return String.format("%s=true|false", this.getName());
 		}
 
 		@Override
@@ -541,7 +476,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						Boolean.class.getName()));
 			}
-			return new Setting(NAME, value);
+			return new Setting(this.getName(), value);
 		}
 
 		@Override
@@ -550,15 +485,14 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
-	EXTERNAL_CLIENT_SOCKS5_GSSAPI_PROTECTION_LEVELS {
-		
-		private static final String NAME = 
-				"externalClient.socks5.gssapiProtectionLevels";
+	EXTERNAL_CLIENT_SOCKS5_GSSAPI_PROTECTION_LEVELS(
+			"externalClient.socks5.gssapiProtectionLevels") {
 		
 		@Override
 		public Setting getDefaultSetting() {
 			return new Setting(
-					NAME, Socks5Client.DEFAULT_GSSAPI_PROTECTION_LEVELS);
+					this.getName(), 
+					Socks5Client.DEFAULT_GSSAPI_PROTECTION_LEVELS);
 		}
 
 		@Override
@@ -573,15 +507,10 @@ public enum SettingSpec implements HelpTextParams {
 		}
 
 		@Override
-		public String getName() {
-			return NAME;
-		}
-
-		@Override
 		public String getUsage() {
 			return String.format(
 					"%1$s=%2$s1[ %2$s2[...]]", 
-					NAME, 
+					this.getName(), 
 					"SOCKS5_GSSAPI_PROTECTION_LEVEL");
 		}
 
@@ -593,7 +522,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						GssapiProtectionLevels.class.getName()));
 			}
-			return new Setting(NAME, value);
+			return new Setting(this.getName(), value);
 		}
 
 		@Override
@@ -602,16 +531,15 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
-	EXTERNAL_CLIENT_SOCKS5_GSSAPI_SERVICE_NAME {
+	EXTERNAL_CLIENT_SOCKS5_GSSAPI_SERVICE_NAME(
+			"externalClient.socks5.gssapiServiceName") {
 		
 		private static final String DOC = "The GSS-API service name for the "
 				+ "external SOCKS5 server used for external connections";
-		private static final String NAME = 
-				"externalClient.socks5.gssapiServiceName";
 		
 		@Override
 		public Setting getDefaultSetting() {
-			return new Setting(NAME, null);
+			return new Setting(this.getName(), null);
 		}
 
 		@Override
@@ -620,13 +548,9 @@ public enum SettingSpec implements HelpTextParams {
 		}
 
 		@Override
-		public String getName() {
-			return NAME;
-		}
-
-		@Override
 		public String getUsage() {
-			return String.format("%s=GSSAPI_SERVICE_NAME", NAME);
+			return String.format(
+					"%s=GSSAPI_SERVICE_this.getName()", this.getName());
 		}
 
 		@Override
@@ -637,25 +561,25 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						String.class.getName()));
 			}
-			return new Setting(NAME, value);
+			return new Setting(this.getName(), value);
 		}
 
 		@Override
 		public Setting newSetting(final String value) {
-			return new Setting(NAME, value);
+			return new Setting(this.getName(), value);
 		}
 		
 	},
-	EXTERNAL_CLIENT_SOCKS5_USERNAME_PASSWORD {
+	EXTERNAL_CLIENT_SOCKS5_USERNAME_PASSWORD(
+			"externalClient.socks5.usernamePassword") {
 
 		private static final String DOC = "The username password to be used "
 				+ "to access the external SOCKS5 server used for external "
 				+ "connections";
-		private static final String NAME = "externalClient.socks5.usernamePassword";
 		
 		@Override
 		public Setting getDefaultSetting() {
-			return new Setting(NAME, null);
+			return new Setting(this.getName(), null);
 		}
 
 		@Override
@@ -664,13 +588,8 @@ public enum SettingSpec implements HelpTextParams {
 		}
 
 		@Override
-		public String getName() {
-			return NAME;
-		}
-
-		@Override
 		public String getUsage() {
-			return String.format("%s=USERNAME:PASSWORD", NAME);
+			return String.format("%s=USERNAME:PASSWORD", this.getName());
 		}
 
 		@Override
@@ -681,7 +600,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						UsernamePassword.class.getName()));
 			}
-			return new Setting(NAME, value);
+			return new Setting(this.getName(), value);
 		}
 
 		@Override
@@ -690,10 +609,9 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
-	HOST {
+	HOST("host") {
 
 		private static final String DEFAULT_HOST = "0.0.0.0";
-		private static final String NAME = "host";
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -703,7 +621,7 @@ public enum SettingSpec implements HelpTextParams {
 			} catch (UnknownHostException e) {
 				throw new AssertionError(e);
 			}
-			return new Setting(NAME, host);
+			return new Setting(this.getName(), host);
 		}
 
 		@Override
@@ -714,13 +632,8 @@ public enum SettingSpec implements HelpTextParams {
 		}
 
 		@Override
-		public String getName() {
-			return NAME;
-		}
-
-		@Override
 		public String getUsage() {
-			return String.format("%s=HOST", NAME);
+			return String.format("%s=HOST", this.getName());
 		}
 
 		@Override
@@ -731,7 +644,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						Host.class.getName()));
 			}
-			return new Setting(NAME, value);
+			return new Setting(this.getName(), value);
 		}
 
 		@Override
@@ -746,14 +659,14 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
-	PORT {
+	PORT("port") {
 		
 		private static final int DEFAULT_INT_VALUE = 1080;
-		private static final String NAME = "port";
 		
 		@Override
 		public Setting getDefaultSetting() {
-			return new Setting(NAME, Port.newInstance(DEFAULT_INT_VALUE));
+			return new Setting(
+					this.getName(), Port.newInstance(DEFAULT_INT_VALUE));
 		}
 
 		@Override
@@ -764,15 +677,10 @@ public enum SettingSpec implements HelpTextParams {
 		}
 
 		@Override
-		public String getName() {
-			return NAME;
-		}
-
-		@Override
 		public String getUsage() {
 			return String.format(
 					"%s=INTEGER_BETWEEN_%s_AND_%s", 
-					NAME, 
+					this.getName(), 
 					Port.MIN_INT_VALUE, 
 					Port.MAX_INT_VALUE);
 		}
@@ -785,7 +693,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						Port.class.getName()));
 			}
-			return new Setting(NAME, value);
+			return new Setting(this.getName(), value);
 		}
 
 		@Override
@@ -794,16 +702,15 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
-	SOCKET_SETTINGS {
+	SOCKET_SETTINGS("socketSettings") {
 
 		private static final String DOC = 
 				"The space separated list of socket settings for the SOCKS "
 				+ "server";
-		private static final String NAME = "socketSettings";
 		
 		@Override
 		public Setting getDefaultSetting() {
-			return new Setting(NAME, SocketSettings.newInstance());
+			return new Setting(this.getName(), SocketSettings.newInstance());
 		}
 
 		@Override
@@ -812,15 +719,10 @@ public enum SettingSpec implements HelpTextParams {
 		}
 
 		@Override
-		public String getName() {
-			return NAME;
-		}
-
-		@Override
 		public String getUsage() {
 			return String.format(
 					"%1$s=[%2$s1[ %2$s2[...]]]", 
-					NAME, 
+					this.getName(), 
 					"SOCKET_SETTING");
 		}
 
@@ -832,7 +734,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						SocketSettings.class.getName()));
 			}
-			return new Setting(NAME, value);
+			return new Setting(this.getName(), value);
 		}
 
 		@Override
@@ -841,13 +743,12 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
-	SOCKS5_ALLOWED_EXTERNAL_INCOMING_TCP_ADDRESS_CRITERIA {
+	SOCKS5_ALLOWED_EXTERNAL_INCOMING_TCP_ADDRESS_CRITERIA(
+			"socks5.allowedExternalIncomingTcpAddressCriteria") {
 
 		private static final String DOC = "The space separated list of "
 				+ "allowed SOCKS5 external incoming TCP address criteria "
 				+ "(default is matches:.*)";
-		private static final String NAME = 
-				"socks5.allowedExternalIncomingTcpAddressCriteria";
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -861,15 +762,10 @@ public enum SettingSpec implements HelpTextParams {
 		}
 
 		@Override
-		public String getName() {
-			return NAME;
-		}
-
-		@Override
 		public String getUsage() {
 			return String.format(
 					"%s=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]", 
-					NAME);
+					this.getName());
 		}
 
 		@Override
@@ -880,7 +776,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						Criteria.class.getName()));
 			}
-			return new Setting(NAME, value);
+			return new Setting(this.getName(), value);
 		}
 
 		@Override
@@ -889,13 +785,12 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
-	SOCKS5_ALLOWED_EXTERNAL_INCOMING_UDP_ADDRESS_CRITERIA {
+	SOCKS5_ALLOWED_EXTERNAL_INCOMING_UDP_ADDRESS_CRITERIA(
+			"socks5.allowedExternalIncomingUdpAddressCriteria") {
 
 		private static final String DOC = "The space separated list of "
 				+ "allowed SOCKS5 external incoming UDP address criteria "
 				+ "(default is matches:.*)";
-		private static final String NAME = 
-				"socks5.allowedExternalIncomingUdpAddressCriteria";
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -909,15 +804,10 @@ public enum SettingSpec implements HelpTextParams {
 		}
 
 		@Override
-		public String getName() {
-			return NAME;
-		}
-
-		@Override
 		public String getUsage() {
 			return String.format(
 					"%s=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]", 
-					NAME);
+					this.getName());
 		}
 
 		@Override
@@ -928,7 +818,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						Criteria.class.getName()));
 			}
-			return new Setting(NAME, value);
+			return new Setting(this.getName(), value);
 		}
 
 		@Override
@@ -937,9 +827,8 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
-	SOCKS5_ALLOWED_SOCKS5_REQUEST_CRITERIA {
-		
-		private static final String NAME = "socks5.allowedSocks5RequestCriteria";
+	SOCKS5_ALLOWED_SOCKS5_REQUEST_CRITERIA(
+			"socks5.allowedSocks5RequestCriteria") {
 
 		@Override
 		public Setting getDefaultSetting() {
@@ -953,11 +842,6 @@ public enum SettingSpec implements HelpTextParams {
 		}
 
 		@Override
-		public String getName() {
-			return NAME;
-		}
-
-		@Override
 		public String getUsage() {
 			return null;
 		}
@@ -975,25 +859,23 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						Socks5RequestCriteria.class.getName()));
 			}
-			return new Setting(NAME, value);
+			return new Setting(this.getName(), value);
 		}
 
 		@Override
 		public Setting newSetting(final String value) {
 			throw new UnsupportedOperationException(String.format(
 					"%s does not accept a String representation of %s",
-					NAME,
+					this.getName(),
 					Socks5RequestCriteria.class.getName()));
 		}
 		
 	},
-	SOCKS5_AUTH_METHODS {
-		
-		private static final String NAME = "socks5.authMethods";
+	SOCKS5_AUTH_METHODS("socks5.authMethods") {
 		
 		@Override
 		public Setting getDefaultSetting() {
-			return new Setting(NAME, AuthMethods.newInstance(
+			return new Setting(this.getName(), AuthMethods.newInstance(
 					AuthMethod.NO_AUTHENTICATION_REQUIRED));
 		}
 
@@ -1006,14 +888,9 @@ public enum SettingSpec implements HelpTextParams {
 		}
 
 		@Override
-		public String getName() {
-			return NAME;
-		}
-
-		@Override
 		public String getUsage() {
 			return String.format("%1$s=%2$s1[ %2$s2[...]]", 
-					NAME, 
+					this.getName(), 
 					"SOCKS5_AUTH_METHOD");
 		}
 
@@ -1025,7 +902,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						AuthMethods.class.getName()));
 			}
-			return new Setting(NAME, value);
+			return new Setting(this.getName(), value);
 		}
 
 		@Override
@@ -1034,12 +911,11 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
-	SOCKS5_BLOCKED_EXTERNAL_INCOMING_TCP_ADDRESS_CRITERIA {
+	SOCKS5_BLOCKED_EXTERNAL_INCOMING_TCP_ADDRESS_CRITERIA(
+			"socks5.blockedExternalIncomingTcpAddressCriteria") {
 
 		private static final String DOC = "The space separated list of "
 				+ "blocked SOCKS5 external incoming TCP address criteria";
-		private static final String NAME = 
-				"socks5.blockedExternalIncomingTcpAddressCriteria";
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -1052,15 +928,10 @@ public enum SettingSpec implements HelpTextParams {
 		}
 
 		@Override
-		public String getName() {
-			return NAME;
-		}
-
-		@Override
 		public String getUsage() {
 			return String.format(
 					"%s=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]", 
-					NAME);
+					this.getName());
 		}
 
 		@Override
@@ -1071,7 +942,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						Criteria.class.getName()));
 			}
-			return new Setting(NAME, value);
+			return new Setting(this.getName(), value);
 		}
 
 		@Override
@@ -1080,12 +951,11 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
-	SOCKS5_BLOCKED_EXTERNAL_INCOMING_UDP_ADDRESS_CRITERIA {
+	SOCKS5_BLOCKED_EXTERNAL_INCOMING_UDP_ADDRESS_CRITERIA(
+			"socks5.blockedExternalIncomingUdpAddressCriteria") {
 
 		private static final String DOC = "The space separated list of "
 				+ "blocked SOCKS5 external incoming UDP address criteria";
-		private static final String NAME = 
-				"socks5.blockedExternalIncomingUdpAddressCriteria";
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -1098,15 +968,10 @@ public enum SettingSpec implements HelpTextParams {
 		}
 
 		@Override
-		public String getName() {
-			return NAME;
-		}
-
-		@Override
 		public String getUsage() {
 			return String.format(
 					"%s=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]", 
-					NAME);
+					this.getName());
 		}
 
 		@Override
@@ -1117,7 +982,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						Criteria.class.getName()));
 			}
-			return new Setting(NAME, value);
+			return new Setting(this.getName(), value);
 		}
 
 		@Override
@@ -1126,9 +991,8 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
-	SOCKS5_BLOCKED_SOCKS5_REQUEST_CRITERIA {
-		
-		private static final String NAME = "socks5.blockedSocks5RequestCriteria";
+	SOCKS5_BLOCKED_SOCKS5_REQUEST_CRITERIA(
+			"socks5.blockedSocks5RequestCriteria") {
 
 		@Override
 		public Setting getDefaultSetting() {
@@ -1138,11 +1002,6 @@ public enum SettingSpec implements HelpTextParams {
 		@Override
 		public String getDoc() {
 			return null;
-		}
-
-		@Override
-		public String getName() {
-			return NAME;
 		}
 
 		@Override
@@ -1163,26 +1022,25 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						Socks5RequestCriteria.class.getName()));
 			}
-			return new Setting(NAME, value);
+			return new Setting(this.getName(), value);
 		}
 
 		@Override
 		public Setting newSetting(final String value) {
 			throw new UnsupportedOperationException(String.format(
 					"%s does not accept a String representation of %s",
-					NAME,
+					this.getName(),
 					Socks5RequestCriteria.class.getName()));
 		}
 		
 	},
-	SOCKS5_GSSAPI_NEC_REFERENCE_IMPL {
+	SOCKS5_GSSAPI_NEC_REFERENCE_IMPL("socks5.gssapiNecReferenceImpl") {
 		
 		private static final boolean DEFAULT_BOOLEAN_VALUE = false;
-		private static final String NAME = "socks5.gssapiNecReferenceImpl";
 
 		@Override
 		public Setting getDefaultSetting() {
-			return new Setting(NAME, DEFAULT_BOOLEAN_VALUE);
+			return new Setting(this.getName(), DEFAULT_BOOLEAN_VALUE);
 		}
 
 		@Override
@@ -1196,13 +1054,8 @@ public enum SettingSpec implements HelpTextParams {
 		}
 
 		@Override
-		public String getName() {
-			return NAME;
-		}
-
-		@Override
 		public String getUsage() {
-			return String.format("%s=true|false", NAME);
+			return String.format("%s=true|false", this.getName());
 		}
 
 		@Override
@@ -1213,7 +1066,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						Boolean.class.getName()));
 			}
-			return new Setting(NAME, value);
+			return new Setting(this.getName(), value);
 		}
 
 		@Override
@@ -1222,14 +1075,12 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
-	SOCKS5_GSSAPI_PROTECTION_LEVELS {
-		
-		private static final String NAME = "socks5.gssapiProtectionLevels";
+	SOCKS5_GSSAPI_PROTECTION_LEVELS("socks5.gssapiProtectionLevels") {
 		
 		@Override
 		public Setting getDefaultSetting() {
 			return new Setting(
-					NAME, GssapiProtectionLevels.DEFAULT_INSTANCE);
+					this.getName(), GssapiProtectionLevels.DEFAULT_INSTANCE);
 		}
 
 		@Override
@@ -1243,15 +1094,10 @@ public enum SettingSpec implements HelpTextParams {
 		}
 
 		@Override
-		public String getName() {
-			return NAME;
-		}
-
-		@Override
 		public String getUsage() {
 			return String.format(
 					"%1$s=%2$s1[ %2$s2[...]]", 
-					NAME, 
+					this.getName(), 
 					"SOCKS5_GSSAPI_PROTECTION_LEVEL");
 		}
 
@@ -1263,7 +1109,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						GssapiProtectionLevels.class.getName()));
 			}
-			return new Setting(NAME, value);
+			return new Setting(this.getName(), value);
 		}
 
 		@Override
@@ -1272,17 +1118,16 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
-	SOCKS5_ON_BIND_EXTERNAL_INCOMING_SOCKET_SETTINGS {
+	SOCKS5_ON_BIND_EXTERNAL_INCOMING_SOCKET_SETTINGS(
+			"socks5.onBind.externalIncomingSocketSettings") {
 		
 		private static final String DOC = 
 				"The space separated list of socket settings for the external "
 				+ "incoming socket";
-		private static final String NAME = 
-				"socks5.onBind.externalIncomingSocketSettings";
 				
 		@Override
 		public Setting getDefaultSetting() {
-			return new Setting(NAME, SocketSettings.newInstance());
+			return new Setting(this.getName(), SocketSettings.newInstance());
 		}
 
 		@Override
@@ -1291,15 +1136,10 @@ public enum SettingSpec implements HelpTextParams {
 		}
 
 		@Override
-		public String getName() {
-			return NAME;
-		}
-
-		@Override
 		public String getUsage() {
 			return String.format(
 					"%1$s=[%2$s1[ %2$s2[...]]]", 
-					NAME, 
+					this.getName(), 
 					"SOCKET_SETTING");
 		}
 
@@ -1311,7 +1151,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						SocketSettings.class.getName()));
 			}
-			return new Setting(NAME, value);
+			return new Setting(this.getName(), value);
 		}
 
 		@Override
@@ -1320,16 +1160,16 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
-	SOCKS5_ON_BIND_LISTEN_SOCKET_SETTINGS {
+	SOCKS5_ON_BIND_LISTEN_SOCKET_SETTINGS(
+			"socks5.onBind.listenSocketSettings") {
 		
 		private static final String DOC = 
 				"The space separated list of socket settings for the listen "
 				+ "socket";
-		private static final String NAME = "socks5.onBind.listenSocketSettings";
 				
 		@Override
 		public Setting getDefaultSetting() {
-			return new Setting(NAME, SocketSettings.newInstance());
+			return new Setting(this.getName(), SocketSettings.newInstance());
 		}
 
 		@Override
@@ -1338,15 +1178,10 @@ public enum SettingSpec implements HelpTextParams {
 		}
 
 		@Override
-		public String getName() {
-			return NAME;
-		}
-
-		@Override
 		public String getUsage() {
 			return String.format(
 					"%1$s=[%2$s1[ %2$s2[...]]]", 
-					NAME, 
+					this.getName(), 
 					"SOCKET_SETTING");
 		}
 
@@ -1358,7 +1193,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						SocketSettings.class.getName()));
 			}
-			return new Setting(NAME, value);
+			return new Setting(this.getName(), value);
 		}
 
 		@Override
@@ -1367,15 +1202,15 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
-	SOCKS5_ON_BIND_RELAY_BUFFER_SIZE {
+	SOCKS5_ON_BIND_RELAY_BUFFER_SIZE("socks5.onBind.relayBufferSize") {
 		
 		private static final int DEFAULT_INT_VALUE = 1024;
-		private static final String NAME = "socks5.onBind.relayBufferSize";
 				
 		@Override
 		public Setting getDefaultSetting() {
 			return new Setting(
-					NAME, PositiveInteger.newInstance(DEFAULT_INT_VALUE));
+					this.getName(), 
+					PositiveInteger.newInstance(DEFAULT_INT_VALUE));
 		}
 
 		@Override
@@ -1387,15 +1222,10 @@ public enum SettingSpec implements HelpTextParams {
 		}
 
 		@Override
-		public String getName() {
-			return NAME;
-		}
-
-		@Override
 		public String getUsage() {
 			return String.format(
 					"%s=INTEGER_BETWEEN_%s_AND_%s", 
-					NAME, 
+					this.getName(), 
 					PositiveInteger.MIN_INT_VALUE, 
 					PositiveInteger.MAX_INT_VALUE);
 		}
@@ -1408,7 +1238,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						PositiveInteger.class.getName()));
 			}
-			return new Setting(NAME, value);
+			return new Setting(this.getName(), value);
 		}
 
 		@Override
@@ -1417,15 +1247,15 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
-	SOCKS5_ON_BIND_RELAY_TIMEOUT {
+	SOCKS5_ON_BIND_RELAY_TIMEOUT("socks5.onBind.relayTimeout") {
 		
 		private static final int DEFAULT_INT_VALUE = 60000; // 1 minute
-		private static final String NAME = "socks5.onBind.relayTimeout";
 				
 		@Override
 		public Setting getDefaultSetting() {
 			return new Setting(
-					NAME, PositiveInteger.newInstance(DEFAULT_INT_VALUE));
+					this.getName(), 
+					PositiveInteger.newInstance(DEFAULT_INT_VALUE));
 		}
 
 		@Override
@@ -1437,15 +1267,10 @@ public enum SettingSpec implements HelpTextParams {
 		}
 
 		@Override
-		public String getName() {
-			return NAME;
-		}
-
-		@Override
 		public String getUsage() {
 			return String.format(
 					"%s=INTEGER_BETWEEN_%s_AND_%s", 
-					NAME, 
+					this.getName(), 
 					PositiveInteger.MIN_INT_VALUE, 
 					PositiveInteger.MAX_INT_VALUE);
 		}
@@ -1458,7 +1283,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						PositiveInteger.class.getName()));
 			}
-			return new Setting(NAME, value);
+			return new Setting(this.getName(), value);
 		}
 
 		@Override
@@ -1467,15 +1292,15 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
-	SOCKS5_ON_CONNECT_RELAY_BUFFER_SIZE {
+	SOCKS5_ON_CONNECT_RELAY_BUFFER_SIZE("socks5.onConnect.relayBufferSize") {
 		
 		private static final int DEFAULT_INT_VALUE = 1024;
-		private static final String NAME = "socks5.onConnect.relayBufferSize";
 				
 		@Override
 		public Setting getDefaultSetting() {
 			return new Setting(
-					NAME, PositiveInteger.newInstance(DEFAULT_INT_VALUE));
+					this.getName(), 
+					PositiveInteger.newInstance(DEFAULT_INT_VALUE));
 		}
 
 		@Override
@@ -1487,15 +1312,10 @@ public enum SettingSpec implements HelpTextParams {
 		}
 
 		@Override
-		public String getName() {
-			return NAME;
-		}
-
-		@Override
 		public String getUsage() {
 			return String.format(
 					"%s=INTEGER_BETWEEN_%s_AND_%s", 
-					NAME, 
+					this.getName(), 
 					PositiveInteger.MIN_INT_VALUE, 
 					PositiveInteger.MAX_INT_VALUE);
 		}
@@ -1508,7 +1328,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						PositiveInteger.class.getName()));
 			}
-			return new Setting(NAME, value);
+			return new Setting(this.getName(), value);
 		}
 
 		@Override
@@ -1517,15 +1337,15 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
-	SOCKS5_ON_CONNECT_RELAY_TIMEOUT {
+	SOCKS5_ON_CONNECT_RELAY_TIMEOUT("socks5.onConnect.relayTimeout") {
 		
 		private static final int DEFAULT_INT_VALUE = 60000; // 1 minute
-		private static final String NAME = "socks5.onConnect.relayTimeout";
 				
 		@Override
 		public Setting getDefaultSetting() {
 			return new Setting(
-					NAME, PositiveInteger.newInstance(DEFAULT_INT_VALUE));
+					this.getName(), 
+					PositiveInteger.newInstance(DEFAULT_INT_VALUE));
 		}
 
 		@Override
@@ -1537,15 +1357,10 @@ public enum SettingSpec implements HelpTextParams {
 		}
 
 		@Override
-		public String getName() {
-			return NAME;
-		}
-
-		@Override
 		public String getUsage() {
 			return String.format(
 					"%s=INTEGER_BETWEEN_%s_AND_%s", 
-					NAME, 
+					this.getName(), 
 					PositiveInteger.MIN_INT_VALUE, 
 					PositiveInteger.MAX_INT_VALUE);
 		}
@@ -1558,7 +1373,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						PositiveInteger.class.getName()));
 			}
-			return new Setting(NAME, value);
+			return new Setting(this.getName(), value);
 		}
 
 		@Override
@@ -1567,10 +1382,9 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
-	SOCKS5_ON_CONNECT_SERVER_BIND_HOST {
+	SOCKS5_ON_CONNECT_SERVER_BIND_HOST("socks5.onConnect.serverBindHost") {
 		
 		private static final String DEFAULT_BIND_HOST = "0.0.0.0";
-		private static final String NAME = "socks5.onConnect.serverBindHost";
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -1580,7 +1394,7 @@ public enum SettingSpec implements HelpTextParams {
 			} catch (UnknownHostException e) {
 				throw new AssertionError(e);
 			}
-			return new Setting(NAME, host);
+			return new Setting(this.getName(), host);
 		}
 
 		@Override
@@ -1592,13 +1406,8 @@ public enum SettingSpec implements HelpTextParams {
 		}
 
 		@Override
-		public String getName() {
-			return NAME;
-		}
-
-		@Override
 		public String getUsage() {
-			return String.format("%s=HOST", NAME);
+			return String.format("%s=HOST", this.getName());
 		}
 
 		@Override
@@ -1609,7 +1418,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						Host.class.getName()));
 			}
-			return new Setting(NAME, value);
+			return new Setting(this.getName(), value);
 		}
 
 		@Override
@@ -1624,16 +1433,16 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
-	SOCKS5_ON_CONNECT_SERVER_CONNECT_TIMEOUT {
+	SOCKS5_ON_CONNECT_SERVER_CONNECT_TIMEOUT(
+			"socks5.onConnect.serverConnectTimeout") {
 
 		private static final int DEFAULT_INT_VALUE = 60000; // 1 minute
-		private static final String NAME = 
-				"socks5.onConnect.serverConnectTimeout";
 		
 		@Override
 		public Setting getDefaultSetting() {
 			return new Setting(
-					NAME, PositiveInteger.newInstance(DEFAULT_INT_VALUE));
+					this.getName(), 
+					PositiveInteger.newInstance(DEFAULT_INT_VALUE));
 		}
 
 		@Override
@@ -1645,15 +1454,10 @@ public enum SettingSpec implements HelpTextParams {
 		}
 
 		@Override
-		public String getName() {
-			return NAME;
-		}
-
-		@Override
 		public String getUsage() {
 			return String.format(
 					"%s=INTEGER_BETWEEN_%s_AND_%s", 
-					NAME, 
+					this.getName(), 
 					PositiveInteger.MIN_INT_VALUE, 
 					PositiveInteger.MAX_INT_VALUE);
 		}
@@ -1666,7 +1470,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						PositiveInteger.class.getName()));
 			}
-			return new Setting(NAME, value);
+			return new Setting(this.getName(), value);
 		}
 
 		@Override
@@ -1675,17 +1479,16 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
-	SOCKS5_ON_CONNECT_SERVER_SOCKET_SETTINGS {
+	SOCKS5_ON_CONNECT_SERVER_SOCKET_SETTINGS(
+			"socks5.onConnect.serverSocketSettings") {
 		
 		private static final String DOC = 
 				"The space separated list of socket settings for the "
 				+ "server-facing socket";
-		private static final String NAME = 
-				"socks5.onConnect.serverSocketSettings";
 				
 		@Override
 		public Setting getDefaultSetting() {
-			return new Setting(NAME, SocketSettings.newInstance());
+			return new Setting(this.getName(), SocketSettings.newInstance());
 		}
 
 		@Override
@@ -1694,15 +1497,10 @@ public enum SettingSpec implements HelpTextParams {
 		}
 
 		@Override
-		public String getName() {
-			return NAME;
-		}
-
-		@Override
 		public String getUsage() {
 			return String.format(
 					"%1$s=[%2$s1[ %2$s2[...]]]", 
-					NAME, 
+					this.getName(), 
 					"SOCKET_SETTING");
 		}
 
@@ -1714,7 +1512,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						SocketSettings.class.getName()));
 			}
-			return new Setting(NAME, value);
+			return new Setting(this.getName(), value);
 		}
 
 		@Override
@@ -1723,11 +1521,10 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
-	SOCKS5_ON_UDP_ASSOCIATE_CLIENT_BIND_HOST {
+	SOCKS5_ON_UDP_ASSOCIATE_CLIENT_BIND_HOST(
+			"socks5.onUdpAssociate.clientBindHost") {
 		
 		private static final String DEFAULT_BIND_HOST = "0.0.0.0";
-		private static final String NAME = 
-				"socks5.onUdpAssociate.clientBindHost";
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -1737,7 +1534,7 @@ public enum SettingSpec implements HelpTextParams {
 			} catch (UnknownHostException e) {
 				throw new AssertionError(e);
 			}
-			return new Setting(NAME, host);
+			return new Setting(this.getName(), host);
 		}
 
 		@Override
@@ -1749,13 +1546,8 @@ public enum SettingSpec implements HelpTextParams {
 		}
 
 		@Override
-		public String getName() {
-			return NAME;
-		}
-
-		@Override
 		public String getUsage() {
-			return String.format("%s=HOST", NAME);
+			return String.format("%s=HOST", this.getName());
 		}
 
 		@Override
@@ -1766,7 +1558,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						Host.class.getName()));
 			}
-			return new Setting(NAME, value);
+			return new Setting(this.getName(), value);
 		}
 
 		@Override
@@ -1781,17 +1573,16 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
-	SOCKS5_ON_UDP_ASSOCIATE_CLIENT_SOCKET_SETTINGS {
+	SOCKS5_ON_UDP_ASSOCIATE_CLIENT_SOCKET_SETTINGS(
+			"socks5.onUdpAssociate.clientSocketSettings") {
 		
 		private static final String DOC = 
 				"The space separated list of socket settings for the "
 				+ "client-facing UDP socket";
-		private static final String NAME = 
-				"socks5.onUdpAssociate.clientSocketSettings";
 				
 		@Override
 		public Setting getDefaultSetting() {
-			return new Setting(NAME, SocketSettings.newInstance());
+			return new Setting(this.getName(), SocketSettings.newInstance());
 		}
 
 		@Override
@@ -1800,15 +1591,10 @@ public enum SettingSpec implements HelpTextParams {
 		}
 
 		@Override
-		public String getName() {
-			return NAME;
-		}
-
-		@Override
 		public String getUsage() {
 			return String.format(
 					"%1$s=[%2$s1[ %2$s2[...]]]", 
-					NAME, 
+					this.getName(), 
 					"SOCKET_SETTING");
 		}
 
@@ -1820,7 +1606,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						SocketSettings.class.getName()));
 			}
-			return new Setting(NAME, value);
+			return new Setting(this.getName(), value);
 		}
 
 		@Override
@@ -1829,16 +1615,16 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
-	SOCKS5_ON_UDP_ASSOCIATE_RELAY_BUFFER_SIZE {
+	SOCKS5_ON_UDP_ASSOCIATE_RELAY_BUFFER_SIZE(
+			"socks5.onUdpAssociate.relayBufferSize") {
 		
 		private static final int DEFAULT_INT_VALUE = 32768;
-		private static final String NAME = 
-				"socks5.onUdpAssociate.relayBufferSize";
 				
 		@Override
 		public Setting getDefaultSetting() {
 			return new Setting(
-					NAME, PositiveInteger.newInstance(DEFAULT_INT_VALUE));
+					this.getName(), 
+					PositiveInteger.newInstance(DEFAULT_INT_VALUE));
 		}
 
 		@Override
@@ -1850,15 +1636,10 @@ public enum SettingSpec implements HelpTextParams {
 		}
 
 		@Override
-		public String getName() {
-			return NAME;
-		}
-
-		@Override
 		public String getUsage() {
 			return String.format(
 					"%s=INTEGER_BETWEEN_%s_AND_%s", 
-					NAME, 
+					this.getName(), 
 					PositiveInteger.MIN_INT_VALUE, 
 					PositiveInteger.MAX_INT_VALUE);
 		}
@@ -1871,7 +1652,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						PositiveInteger.class.getName()));
 			}
-			return new Setting(NAME, value);
+			return new Setting(this.getName(), value);
 		}
 
 		@Override
@@ -1880,15 +1661,16 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
-	SOCKS5_ON_UDP_ASSOCIATE_RELAY_TIMEOUT {
+	SOCKS5_ON_UDP_ASSOCIATE_RELAY_TIMEOUT(
+			"socks5.onUdpAssociate.relayTimeout") {
 		
 		private static final int DEFAULT_INT_VALUE = 60000; // 1 minute
-		private static final String NAME = "socks5.onUdpAssociate.relayTimeout";
 				
 		@Override
 		public Setting getDefaultSetting() {
 			return new Setting(
-					NAME, PositiveInteger.newInstance(DEFAULT_INT_VALUE));
+					this.getName(), 
+					PositiveInteger.newInstance(DEFAULT_INT_VALUE));
 		}
 
 		@Override
@@ -1900,15 +1682,10 @@ public enum SettingSpec implements HelpTextParams {
 		}
 
 		@Override
-		public String getName() {
-			return NAME;
-		}
-
-		@Override
 		public String getUsage() {
 			return String.format(
 					"%s=INTEGER_BETWEEN_%s_AND_%s", 
-					NAME, 
+					this.getName(), 
 					PositiveInteger.MIN_INT_VALUE, 
 					PositiveInteger.MAX_INT_VALUE);
 		}
@@ -1921,7 +1698,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						PositiveInteger.class.getName()));
 			}
-			return new Setting(NAME, value);
+			return new Setting(this.getName(), value);
 		}
 
 		@Override
@@ -1930,11 +1707,10 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
-	SOCKS5_ON_UDP_ASSOCIATE_SERVER_BIND_HOST {
+	SOCKS5_ON_UDP_ASSOCIATE_SERVER_BIND_HOST(
+			"socks5.onUdpAssociate.serverBindHost") {
 		
 		private static final String DEFAULT_BIND_HOST = "0.0.0.0";
-		private static final String NAME = 
-				"socks5.onUdpAssociate.serverBindHost";
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -1944,7 +1720,7 @@ public enum SettingSpec implements HelpTextParams {
 			} catch (UnknownHostException e) {
 				throw new AssertionError(e);
 			}
-			return new Setting(NAME, host);
+			return new Setting(this.getName(), host);
 		}
 
 		@Override
@@ -1956,13 +1732,8 @@ public enum SettingSpec implements HelpTextParams {
 		}
 
 		@Override
-		public String getName() {
-			return NAME;
-		}
-
-		@Override
 		public String getUsage() {
-			return String.format("%s=HOST", NAME);
+			return String.format("%s=HOST", this.getName());
 		}
 
 		@Override
@@ -1973,7 +1744,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						Host.class.getName()));
 			}
-			return new Setting(NAME, value);
+			return new Setting(this.getName(), value);
 		}
 
 		@Override
@@ -1988,17 +1759,16 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
-	SOCKS5_ON_UDP_ASSOCIATE_SERVER_SOCKET_SETTINGS {
+	SOCKS5_ON_UDP_ASSOCIATE_SERVER_SOCKET_SETTINGS(
+			"socks5.onUdpAssociate.serverSocketSettings") {
 		
 		private static final String DOC = 
 				"The space separated list of socket settings for the "
 				+ "server-facing UDP socket";
-		private static final String NAME = 
-				"socks5.onUdpAssociate.serverSocketSettings";
 				
 		@Override
 		public Setting getDefaultSetting() {
-			return new Setting(NAME, SocketSettings.newInstance());
+			return new Setting(this.getName(), SocketSettings.newInstance());
 		}
 
 		@Override
@@ -2007,15 +1777,10 @@ public enum SettingSpec implements HelpTextParams {
 		}
 
 		@Override
-		public String getName() {
-			return NAME;
-		}
-
-		@Override
 		public String getUsage() {
 			return String.format(
 					"%1$s=[%2$s1[ %2$s2[...]]]", 
-					NAME, 
+					this.getName(), 
 					"SOCKET_SETTING");
 		}
 
@@ -2027,7 +1792,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						SocketSettings.class.getName()));
 			}
-			return new Setting(NAME, value);
+			return new Setting(this.getName(), value);
 		}
 
 		@Override
@@ -2036,16 +1801,15 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
-	SOCKS5_USERNAME_PASSWORD_AUTHENTICATOR {
+	SOCKS5_USERNAME_PASSWORD_AUTHENTICATOR(
+			"socks5.usernamePasswordAuthenticator") {
 
 		private static final String DOC = "The username password "
 				+ "authenticator for the SOCKS5 server";
-		private static final String NAME = 
-				"socks5.usernamePasswordAuthenticator";
 		
 		@Override
 		public Setting getDefaultSetting() {
-			return new Setting(NAME, null);
+			return new Setting(this.getName(), null);
 		}
 
 		@Override
@@ -2054,13 +1818,8 @@ public enum SettingSpec implements HelpTextParams {
 		}
 
 		@Override
-		public String getName() {
-			return NAME;
-		}
-
-		@Override
 		public String getUsage() {
-			return String.format("%s=CLASSNAME[:VALUE]", NAME);
+			return String.format("%s=CLASSNAME[:VALUE]", this.getName());
 		}
 
 		@Override
@@ -2071,7 +1830,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						UsernamePasswordAuthenticator.class.getName()));
 			}
-			return new Setting(NAME, value);
+			return new Setting(this.getName(), value);
 		}
 
 		@Override
@@ -2091,9 +1850,17 @@ public enum SettingSpec implements HelpTextParams {
 				"unknown setting name: %s", name));
 	}
 	
+	private final String name;
+	
+	private SettingSpec(final String n) {
+		this.name = n;
+	}
+	
 	public abstract Setting getDefaultSetting();
 	
-	public abstract String getName();
+	public final String getName() { 
+		return this.name; 
+	};
 	
 	@Override
 	public boolean isDisplayable() {

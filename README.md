@@ -148,7 +148,7 @@ The following is a list of available settings for the SOCKS server (displayed wh
           The object ID for the GSS-API authentication mechanism to the external SOCKS5 server used for external connections (default is 1.2.840.113554.1.2.2)
     
       externalClient.socks5.gssapiNecReferenceImpl=true|false
-          The boolean value to indicate if the exchange of the GSSAPI protection level negotiation must be unprotected should the external SOCKS5 server used for external connections use the NEC reference implementation (default is false)
+          The boolean value to indicate if the exchange of the GSS-API protection level negotiation must be unprotected should the external SOCKS5 server used for external connections use the NEC reference implementation (default is false)
     
       externalClient.socks5.gssapiProtectionLevels=SOCKS5_GSSAPI_PROTECTION_LEVEL1[ SOCKS5_GSSAPI_PROTECTION_LEVEL2[...]]
           The space separated list of acceptable protection levels after GSS-API authentication with the external SOCKS5 server used for external connections (The first is preferred. The remaining are acceptable if the server does not accept the first.) (default is REQUIRED_INTEG_AND_CONF REQUIRED_INTEG NONE)
@@ -172,7 +172,7 @@ The following is a list of available settings for the SOCKS server (displayed wh
           The space separated list of acceptable authentication methods in order of preference (default is NO_AUTHENTICATION_REQUIRED)
     
       socks5.gssapiNecReferenceImpl=true|false
-          The boolean value to indicate if the exchange of the GSSAPI protection level negotiation must be unprotected according to the NEC reference implementation (default is false)
+          The boolean value to indicate if the exchange of the GSS-API protection level negotiation must be unprotected according to the NEC reference implementation (default is false)
     
       socks5.gssapiProtectionLevels=SOCKS5_GSSAPI_PROTECTION_LEVEL1[ SOCKS5_GSSAPI_PROTECTION_LEVEL2[...]]
           The space separated list of acceptable protection levels after GSS-API authentication (The first is preferred if the client does not provide a protection level that is acceptable.) (default is REQUIRED_INTEG_AND_CONF REQUIRED_INTEG NONE)

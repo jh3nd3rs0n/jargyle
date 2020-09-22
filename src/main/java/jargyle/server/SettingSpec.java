@@ -456,10 +456,10 @@ public enum SettingSpec implements HelpTextParams {
 		public String getDoc() {
 			return String.format(
 					"The boolean value to indicate if the exchange of the "
-					+ "GSSAPI protection level negotiation must be unprotected "
-					+ "should the external SOCKS5 server used for external "
-					+ "connections use the NEC reference implementation "
-					+ "(default is %s)", 
+					+ "GSS-API protection level negotiation must be "
+					+ "unprotected should the external SOCKS5 server used for "
+					+ "external connections use the NEC reference "
+					+ "implementation (default is %s)", 
 					DEFAULT_BOOLEAN_VALUE);
 		}
 
@@ -549,8 +549,7 @@ public enum SettingSpec implements HelpTextParams {
 
 		@Override
 		public String getUsage() {
-			return String.format(
-					"%s=GSSAPI_SERVICE_this.getName()", this.getName());
+			return String.format("%s=GSSAPI_SERVICE_NAME", this.getName());
 		}
 
 		@Override
@@ -883,9 +882,9 @@ public enum SettingSpec implements HelpTextParams {
 		public String getDoc() {
 			return String.format(
 					"The boolean value to indicate if the exchange of the "
-					+ "GSSAPI protection level negotiation must be unprotected "
-					+ "according to the NEC reference implementation "
-					+ "(default is %s)", 
+					+ "GSS-API protection level negotiation must be "
+					+ "unprotected according to the NEC reference "
+					+ "implementation (default is %s)", 
 					DEFAULT_BOOLEAN_VALUE);
 		}
 

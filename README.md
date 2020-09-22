@@ -168,26 +168,20 @@ The following is a list of available settings for the SOCKS server (displayed wh
       socketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
           The space separated list of socket settings for the SOCKS server
     
-      socks5.allowedExternalIncomingTcpAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
-          The space separated list of allowed SOCKS5 external incoming TCP address criteria (default is matches:.*)
-    
-      socks5.allowedExternalIncomingUdpAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
-          The space separated list of allowed SOCKS5 external incoming UDP address criteria (default is matches:.*)
-    
       socks5.authMethods=SOCKS5_AUTH_METHOD1[ SOCKS5_AUTH_METHOD2[...]]
           The space separated list of acceptable authentication methods in order of preference (default is NO_AUTHENTICATION_REQUIRED)
-    
-      socks5.blockedExternalIncomingTcpAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
-          The space separated list of blocked SOCKS5 external incoming TCP address criteria
-    
-      socks5.blockedExternalIncomingUdpAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
-          The space separated list of blocked SOCKS5 external incoming UDP address criteria
     
       socks5.gssapiNecReferenceImpl=true|false
           The boolean value to indicate if the exchange of the GSSAPI protection level negotiation must be unprotected according to the NEC reference implementation (default is false)
     
       socks5.gssapiProtectionLevels=SOCKS5_GSSAPI_PROTECTION_LEVEL1[ SOCKS5_GSSAPI_PROTECTION_LEVEL2[...]]
           The space separated list of acceptable protection levels after GSS-API authentication (The first is preferred if the client does not provide a protection level that is acceptable.) (default is REQUIRED_INTEG_AND_CONF REQUIRED_INTEG NONE)
+    
+      socks5.onBind.allowedExternalIncomingAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
+          The space separated list of allowed external incoming address criteria (default is matches:.*)
+    
+      socks5.onBind.blockedExternalIncomingAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
+          The space separated list of blocked external incoming address criteria
     
       socks5.onBind.externalIncomingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
           The space separated list of socket settings for the external incoming socket
@@ -215,6 +209,12 @@ The following is a list of available settings for the SOCKS server (displayed wh
     
       socks5.onConnect.serverSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
           The space separated list of socket settings for the server-facing socket
+    
+      socks5.onUdpAssociate.allowedExternalIncomingAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
+          The space separated list of allowed external incoming address criteria (default is matches:.*)
+    
+      socks5.onUdpAssociate.blockedExternalIncomingAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
+          The space separated list of blocked external incoming address criteria
     
       socks5.onUdpAssociate.clientBindHost=HOST
           The binding host name or address for the client-facing UDP socket (default is 0.0.0.0)
@@ -1270,17 +1270,17 @@ Instead of using command line options or configuration settings, you can use the
 You can allow or block the following addresses:
 
 -   Client addresses (IPv4, IPv6, and domain name addresses)
--   External incoming TCP addresses following the SOCKS5 BIND command (IPv4, IPv6, and domain name addresses)
--   External incoming UDP addresses following the SOCKS5 UDP ASSOCIATE command (IPv4, IPv6, and domain name addresses)
+-   External incoming addresses following the SOCKS5 BIND command (IPv4, IPv6, and domain name addresses)
+-   External incoming addresses following the SOCKS5 UDP ASSOCIATE command (IPv4, IPv6, and domain name addresses)
 
 To allow or block an address or addresses, you will need to specify the address or addresses in any of the following settings:
 
 -   `allowedClientAddressCriteria`
 -   `blockedClientAddressCriteria`
--   `socks5.allowedExternalIncomingTcpAddressCriteria`
--   `socks5.allowedExternalIncomingUdpAddressCriteria`
--   `socks5.blockedExternalIncomingTcpAddressCriteria`
--   `socks5.blockedExternalIncomingUdpAddressCriteria`
+-   `socks5.onBind.allowedExternalIncomingAddressCriteria`
+-   `socks5.onBind.blockedExternalIncomingAddressCriteria`
+-   `socks5.onUdpAssociate.allowedExternalIncomingAddressCriteria`
+-   `socks5.onUdpAssociate.blockedExternalIncomingAddressCriteria`
 
 You can specify an address or addresses in any of the aforementioned settings as either a literal expression preceded by the prefix `equals:` or a regular expression preceded by the prefix `matches:`.
 

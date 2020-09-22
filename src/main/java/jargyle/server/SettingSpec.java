@@ -743,90 +743,6 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
-	SOCKS5_ALLOWED_EXTERNAL_INCOMING_TCP_ADDRESS_CRITERIA(
-			"socks5.allowedExternalIncomingTcpAddressCriteria") {
-
-		private static final String DOC = "The space separated list of "
-				+ "allowed SOCKS5 external incoming TCP address criteria "
-				+ "(default is matches:.*)";
-		
-		@Override
-		public Setting getDefaultSetting() {
-			return newSetting(Criteria.newInstance(Criterion.newInstance(
-					CriterionMethod.MATCHES, ".*")));
-		}
-
-		@Override
-		public String getDoc() {
-			return DOC;
-		}
-
-		@Override
-		public String getUsage() {
-			return String.format(
-					"%s=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]", 
-					this.getName());
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			if (!(value instanceof Criteria)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						Criteria.class.getName()));
-			}
-			return new Setting(this.getName(), value);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return newSetting(Criteria.newInstance(value));
-		}
-		
-	},
-	SOCKS5_ALLOWED_EXTERNAL_INCOMING_UDP_ADDRESS_CRITERIA(
-			"socks5.allowedExternalIncomingUdpAddressCriteria") {
-
-		private static final String DOC = "The space separated list of "
-				+ "allowed SOCKS5 external incoming UDP address criteria "
-				+ "(default is matches:.*)";
-		
-		@Override
-		public Setting getDefaultSetting() {
-			return newSetting(Criteria.newInstance(Criterion.newInstance(
-					CriterionMethod.MATCHES, ".*")));
-		}
-
-		@Override
-		public String getDoc() {
-			return DOC;
-		}
-
-		@Override
-		public String getUsage() {
-			return String.format(
-					"%s=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]", 
-					this.getName());
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			if (!(value instanceof Criteria)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						Criteria.class.getName()));
-			}
-			return new Setting(this.getName(), value);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return newSetting(Criteria.newInstance(value));
-		}
-		
-	},
 	SOCKS5_ALLOWED_SOCKS5_REQUEST_CRITERIA(
 			"socks5.allowedSocks5RequestCriteria") {
 
@@ -908,86 +824,6 @@ public enum SettingSpec implements HelpTextParams {
 		@Override
 		public Setting newSetting(final String value) {
 			return newSetting(AuthMethods.newInstance(value));
-		}
-		
-	},
-	SOCKS5_BLOCKED_EXTERNAL_INCOMING_TCP_ADDRESS_CRITERIA(
-			"socks5.blockedExternalIncomingTcpAddressCriteria") {
-
-		private static final String DOC = "The space separated list of "
-				+ "blocked SOCKS5 external incoming TCP address criteria";
-		
-		@Override
-		public Setting getDefaultSetting() {
-			return newSetting(Criteria.EMPTY_INSTANCE);
-		}
-
-		@Override
-		public String getDoc() {
-			return DOC;
-		}
-
-		@Override
-		public String getUsage() {
-			return String.format(
-					"%s=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]", 
-					this.getName());
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			if (!(value instanceof Criteria)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						Criteria.class.getName()));
-			}
-			return new Setting(this.getName(), value);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return newSetting(Criteria.newInstance(value));
-		}
-		
-	},
-	SOCKS5_BLOCKED_EXTERNAL_INCOMING_UDP_ADDRESS_CRITERIA(
-			"socks5.blockedExternalIncomingUdpAddressCriteria") {
-
-		private static final String DOC = "The space separated list of "
-				+ "blocked SOCKS5 external incoming UDP address criteria";
-		
-		@Override
-		public Setting getDefaultSetting() {
-			return newSetting(Criteria.EMPTY_INSTANCE);
-		}
-
-		@Override
-		public String getDoc() {
-			return DOC;
-		}
-
-		@Override
-		public String getUsage() {
-			return String.format(
-					"%s=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]", 
-					this.getName());
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			if (!(value instanceof Criteria)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						Criteria.class.getName()));
-			}
-			return new Setting(this.getName(), value);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return newSetting(Criteria.newInstance(value));
 		}
 		
 	},
@@ -1115,6 +951,88 @@ public enum SettingSpec implements HelpTextParams {
 		@Override
 		public Setting newSetting(final String value) {
 			return newSetting(GssapiProtectionLevels.newInstance(value));
+		}
+		
+	},
+	SOCKS5_ON_BIND_ALLOWED_EXTERNAL_INCOMING_ADDRESS_CRITERIA(
+			"socks5.onBind.allowedExternalIncomingAddressCriteria") {
+
+		private static final String DOC = "The space separated list of "
+				+ "allowed external incoming address criteria (default is "
+				+ "matches:.*)";
+		
+		@Override
+		public Setting getDefaultSetting() {
+			return newSetting(Criteria.newInstance(Criterion.newInstance(
+					CriterionMethod.MATCHES, ".*")));
+		}
+
+		@Override
+		public String getDoc() {
+			return DOC;
+		}
+
+		@Override
+		public String getUsage() {
+			return String.format(
+					"%s=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]", 
+					this.getName());
+		}
+
+		@Override
+		public Setting newSetting(final Object value) {
+			if (!(value instanceof Criteria)) {
+				throw new ClassCastException(String.format(
+						"unable to cast %s to %s",
+						value.getClass().getName(),
+						Criteria.class.getName()));
+			}
+			return new Setting(this.getName(), value);
+		}
+
+		@Override
+		public Setting newSetting(final String value) {
+			return newSetting(Criteria.newInstance(value));
+		}
+		
+	},
+	SOCKS5_ON_BIND_BLOCKED_EXTERNAL_INCOMING_ADDRESS_CRITERIA(
+			"socks5.onBind.blockedExternalIncomingAddressCriteria") {
+
+		private static final String DOC = "The space separated list of "
+				+ "blocked external incoming address criteria";
+		
+		@Override
+		public Setting getDefaultSetting() {
+			return newSetting(Criteria.EMPTY_INSTANCE);
+		}
+
+		@Override
+		public String getDoc() {
+			return DOC;
+		}
+
+		@Override
+		public String getUsage() {
+			return String.format(
+					"%s=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]", 
+					this.getName());
+		}
+
+		@Override
+		public Setting newSetting(final Object value) {
+			if (!(value instanceof Criteria)) {
+				throw new ClassCastException(String.format(
+						"unable to cast %s to %s",
+						value.getClass().getName(),
+						Criteria.class.getName()));
+			}
+			return new Setting(this.getName(), value);
+		}
+
+		@Override
+		public Setting newSetting(final String value) {
+			return newSetting(Criteria.newInstance(value));
 		}
 		
 	},
@@ -1518,6 +1436,88 @@ public enum SettingSpec implements HelpTextParams {
 		@Override
 		public Setting newSetting(final String value) {
 			return newSetting(SocketSettings.newInstance(value));
+		}
+		
+	},
+	SOCKS5_ON_UDP_ASSOCIATE_ALLOWED_EXTERNAL_INCOMING_ADDRESS_CRITERIA(
+			"socks5.onUdpAssociate.allowedExternalIncomingAddressCriteria") {
+
+		private static final String DOC = "The space separated list of "
+				+ "allowed external incoming address criteria (default is "
+				+ "matches:.*)";
+		
+		@Override
+		public Setting getDefaultSetting() {
+			return newSetting(Criteria.newInstance(Criterion.newInstance(
+					CriterionMethod.MATCHES, ".*")));
+		}
+
+		@Override
+		public String getDoc() {
+			return DOC;
+		}
+
+		@Override
+		public String getUsage() {
+			return String.format(
+					"%s=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]", 
+					this.getName());
+		}
+
+		@Override
+		public Setting newSetting(final Object value) {
+			if (!(value instanceof Criteria)) {
+				throw new ClassCastException(String.format(
+						"unable to cast %s to %s",
+						value.getClass().getName(),
+						Criteria.class.getName()));
+			}
+			return new Setting(this.getName(), value);
+		}
+
+		@Override
+		public Setting newSetting(final String value) {
+			return newSetting(Criteria.newInstance(value));
+		}
+		
+	},
+	SOCKS5_ON_UDP_ASSOCIATE_BLOCKED_EXTERNAL_INCOMING_ADDRESS_CRITERIA(
+			"socks5.onUdpAssociate.blockedExternalIncomingAddressCriteria") {
+
+		private static final String DOC = "The space separated list of "
+				+ "blocked external incoming address criteria";
+		
+		@Override
+		public Setting getDefaultSetting() {
+			return newSetting(Criteria.EMPTY_INSTANCE);
+		}
+
+		@Override
+		public String getDoc() {
+			return DOC;
+		}
+
+		@Override
+		public String getUsage() {
+			return String.format(
+					"%s=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]", 
+					this.getName());
+		}
+
+		@Override
+		public Setting newSetting(final Object value) {
+			if (!(value instanceof Criteria)) {
+				throw new ClassCastException(String.format(
+						"unable to cast %s to %s",
+						value.getClass().getName(),
+						Criteria.class.getName()));
+			}
+			return new Setting(this.getName(), value);
+		}
+
+		@Override
+		public Setting newSetting(final String value) {
+			return newSetting(Criteria.newInstance(value));
 		}
 		
 	},

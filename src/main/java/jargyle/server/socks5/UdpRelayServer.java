@@ -29,32 +29,32 @@ final class UdpRelayServer {
 			super(server);
 		}
 		
-		private boolean canAcceptExternalIncomingUdpAddress(
-				final InetAddress externalIncomingUdpInetAddress) {
-			Criteria allowedExternalIncomingUdpAddrCriteria =
-					this.getUdpRelayServer().allowedExternalIncomingUdpAddressCriteria;
+		private boolean canAcceptExternalIncomingAddress(
+				final InetAddress externalIncomingInetAddress) {
+			Criteria allowedExternalIncomingAddrCriteria =
+					this.getUdpRelayServer().allowedExternalIncomingAddressCriteria;
 			Criterion criterion = 
-					allowedExternalIncomingUdpAddrCriteria.anyEvaluatesTrue(
-							externalIncomingUdpInetAddress);
+					allowedExternalIncomingAddrCriteria.anyEvaluatesTrue(
+							externalIncomingInetAddress);
 			if (criterion == null) {
 				LOGGER.log(
 						Level.FINE, 
 						this.format(String.format(
-								"External incoming UDP address %s not allowed", 
-								externalIncomingUdpInetAddress)));
+								"External incoming address %s not allowed", 
+								externalIncomingInetAddress)));
 				return false;
 			}
-			Criteria blockedExternalIncomingUdpAddrCriteria =
-					this.getUdpRelayServer().blockedExternalIncomingUdpAddressCriteria;
-			criterion = blockedExternalIncomingUdpAddrCriteria.anyEvaluatesTrue(
-					externalIncomingUdpInetAddress);
+			Criteria blockedExternalIncomingAddrCriteria =
+					this.getUdpRelayServer().blockedExternalIncomingAddressCriteria;
+			criterion = blockedExternalIncomingAddrCriteria.anyEvaluatesTrue(
+					externalIncomingInetAddress);
 			if (criterion != null) {
 				LOGGER.log(
 						Level.FINE, 
 						this.format(String.format(
-								"External incoming UDP address %s blocked based on the "
+								"External incoming address %s blocked based on the "
 								+ "following criterion: %s", 
-								externalIncomingUdpInetAddress,
+								externalIncomingInetAddress,
 								criterion)));
 				return false;
 			}
@@ -168,7 +168,7 @@ final class UdpRelayServer {
 							this.format(String.format(
 									"Packet data received: %s byte(s)", 
 									packet.getLength())));
-					if (!this.canAcceptExternalIncomingUdpAddress(packet.getAddress())) {
+					if (!this.canAcceptExternalIncomingAddress(packet.getAddress())) {
 						continue;
 					}
 					if (!this.canForwardDatagramPacket(packet)) {
@@ -460,8 +460,8 @@ final class UdpRelayServer {
 		
 	}
 	
-	private final Criteria allowedExternalIncomingUdpAddressCriteria;
-	private final Criteria blockedExternalIncomingUdpAddressCriteria;
+	private final Criteria allowedExternalIncomingAddressCriteria;
+	private final Criteria blockedExternalIncomingAddressCriteria;
 	private final DatagramSocket clientDatagramSocket;
 	private final int bufferSize;
 	private String desiredDestinationAddress;
@@ -482,15 +482,15 @@ final class UdpRelayServer {
 			final String sourceAddr,
 			final String desiredDestinationAddr,
 			final int desiredDestinationPrt, 
-			final Criteria allowedExternalIncomingUdpAddrCriteria, 
-			final Criteria blockedExternalIncomingUdpAddrCriteria, 
+			final Criteria allowedExternalIncomingAddrCriteria, 
+			final Criteria blockedExternalIncomingAddrCriteria, 
 			final int bffrSize, 
 			final int tmt) {
 		Objects.requireNonNull(clientDatagramSock);
 		Objects.requireNonNull(serverDatagramSock);
 		Objects.requireNonNull(desiredDestinationAddr);
-		Objects.requireNonNull(allowedExternalIncomingUdpAddrCriteria);
-		Objects.requireNonNull(blockedExternalIncomingUdpAddrCriteria);
+		Objects.requireNonNull(allowedExternalIncomingAddrCriteria);
+		Objects.requireNonNull(blockedExternalIncomingAddrCriteria);
 		UdpRequestHeader.validateDesiredDestinationAddress(
 				desiredDestinationAddr);
 		UdpRequestHeader.validateDesiredDestinationPort(
@@ -509,10 +509,10 @@ final class UdpRelayServer {
 			desiredDestAddr = null;
 			desiredDestPrt = -1;
 		}
-		this.allowedExternalIncomingUdpAddressCriteria = 
-				allowedExternalIncomingUdpAddrCriteria;
-		this.blockedExternalIncomingUdpAddressCriteria = 
-				blockedExternalIncomingUdpAddrCriteria;
+		this.allowedExternalIncomingAddressCriteria = 
+				allowedExternalIncomingAddrCriteria;
+		this.blockedExternalIncomingAddressCriteria = 
+				blockedExternalIncomingAddrCriteria;
 		this.clientDatagramSocket = clientDatagramSock;
 		this.bufferSize = bffrSize;
 		this.desiredDestinationAddress = desiredDestAddr;

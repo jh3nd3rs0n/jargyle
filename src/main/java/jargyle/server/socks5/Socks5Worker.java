@@ -98,21 +98,21 @@ public final class Socks5Worker implements Runnable {
 		return socket;
 	}
 
-	private boolean canAcceptExternalIncomingTcpAddress(
-			final InetAddress externalIncomingTcpInetAddress) {
-		Criteria allowedExternalIncomingTcpAddressCriteria = 
+	private boolean canAcceptExternalIncomingAddress(
+			final InetAddress externalIncomingInetAddress) {
+		Criteria allowedExternalIncomingAddressCriteria = 
 				this.settings.getLastValue(
-						SettingSpec.SOCKS5_ALLOWED_EXTERNAL_INCOMING_TCP_ADDRESS_CRITERIA, 
+						SettingSpec.SOCKS5_ON_BIND_ALLOWED_EXTERNAL_INCOMING_ADDRESS_CRITERIA, 
 						Criteria.class);
 		Criterion criterion = 
-				allowedExternalIncomingTcpAddressCriteria.anyEvaluatesTrue(
-						externalIncomingTcpInetAddress);
+				allowedExternalIncomingAddressCriteria.anyEvaluatesTrue(
+						externalIncomingInetAddress);
 		if (criterion == null) {
 			LOGGER.log(
 					Level.FINE, 
 					this.format(String.format(
-							"External incoming TCP address %s not allowed", 
-							externalIncomingTcpInetAddress)));
+							"External incoming address %s not allowed", 
+							externalIncomingInetAddress)));
 			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
 					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
 			LOGGER.log(
@@ -127,19 +127,19 @@ public final class Socks5Worker implements Runnable {
 			}
 			return false;
 		}
-		Criteria blockedExternalIncomingTcpAddressCriteria =
+		Criteria blockedExternalIncomingAddressCriteria =
 				this.settings.getLastValue(
-						SettingSpec.SOCKS5_BLOCKED_EXTERNAL_INCOMING_TCP_ADDRESS_CRITERIA, 
+						SettingSpec.SOCKS5_ON_BIND_BLOCKED_EXTERNAL_INCOMING_ADDRESS_CRITERIA, 
 						Criteria.class);
-		criterion = blockedExternalIncomingTcpAddressCriteria.anyEvaluatesTrue(
-				externalIncomingTcpInetAddress);
+		criterion = blockedExternalIncomingAddressCriteria.anyEvaluatesTrue(
+				externalIncomingInetAddress);
 		if (criterion != null) {
 			LOGGER.log(
 					Level.FINE, 
 					this.format(String.format(
-							"External incoming TCP address %s blocked based on the "
+							"External incoming address %s blocked based on the "
 							+ "following criterion: %s", 
-							externalIncomingTcpInetAddress,
+							externalIncomingInetAddress,
 							criterion)));
 			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
 					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
@@ -478,13 +478,13 @@ public final class Socks5Worker implements Runnable {
 			} finally {
 				listenSocket.close();
 			}
-			InetAddress externalIncomingTcpInetAddress = 
+			InetAddress externalIncomingInetAddress = 
 					externalIncomingSocket.getInetAddress();
-			if (!this.canAcceptExternalIncomingTcpAddress(
-					externalIncomingTcpInetAddress)) {
+			if (!this.canAcceptExternalIncomingAddress(
+					externalIncomingInetAddress)) {
 				return;
 			}
-			serverBoundAddress = externalIncomingTcpInetAddress.getHostAddress();
+			serverBoundAddress = externalIncomingInetAddress.getHostAddress();
 			addressType = AddressType.get(serverBoundAddress);
 			serverBoundPort = externalIncomingSocket.getLocalPort();
 			socks5Rep = Socks5Reply.newInstance(
@@ -630,10 +630,10 @@ public final class Socks5Worker implements Runnable {
 					desiredDestinationAddress,
 					desiredDestinationPort, 
 					this.settings.getLastValue(
-							SettingSpec.SOCKS5_ALLOWED_EXTERNAL_INCOMING_UDP_ADDRESS_CRITERIA, 
+							SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_ALLOWED_EXTERNAL_INCOMING_ADDRESS_CRITERIA, 
 							Criteria.class), 
 					this.settings.getLastValue(
-							SettingSpec.SOCKS5_BLOCKED_EXTERNAL_INCOMING_UDP_ADDRESS_CRITERIA, 
+							SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_BLOCKED_EXTERNAL_INCOMING_ADDRESS_CRITERIA, 
 							Criteria.class), 
 					this.settings.getLastValue(
 							SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_RELAY_BUFFER_SIZE, 

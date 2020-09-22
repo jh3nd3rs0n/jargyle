@@ -42,7 +42,7 @@ public enum SettingSpec implements HelpTextParams {
 		public String getUsage() {
 			return String.format(
 					"%s=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]", 
-					this.getName());
+					this);
 		}
 
 		@Override
@@ -53,7 +53,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						Criteria.class.getName()));
 			}
-			return new Setting(this.getName(), value);
+			return new Setting(this, value);
 		}
 
 		@Override
@@ -69,8 +69,7 @@ public enum SettingSpec implements HelpTextParams {
 		@Override
 		public Setting getDefaultSetting() {
 			return new Setting(
-					this.getName(), 
-					NonnegativeInteger.newInstance(DEFAULT_INT_VALUE));
+					this, NonnegativeInteger.newInstance(DEFAULT_INT_VALUE));
 		}
 
 		@Override
@@ -85,7 +84,7 @@ public enum SettingSpec implements HelpTextParams {
 		public String getUsage() {
 			return String.format(
 					"%s=INTEGER_BETWEEN_%s_AND_%s", 
-					this.getName(), 
+					this, 
 					NonnegativeInteger.MIN_INT_VALUE, 
 					NonnegativeInteger.MAX_INT_VALUE);
 		}
@@ -98,7 +97,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						NonnegativeInteger.class.getName()));
 			}
-			return new Setting(this.getName(), value);
+			return new Setting(this, value);
 		}
 
 		@Override
@@ -126,7 +125,7 @@ public enum SettingSpec implements HelpTextParams {
 		public String getUsage() {
 			return String.format(
 					"%s=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]", 
-					this.getName());
+					this);
 		}
 
 		@Override
@@ -137,7 +136,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						Criteria.class.getName()));
 			}
-			return new Setting(this.getName(), value);
+			return new Setting(this, value);
 		}
 
 		@Override
@@ -154,7 +153,7 @@ public enum SettingSpec implements HelpTextParams {
 				
 		@Override
 		public Setting getDefaultSetting() {
-			return new Setting(this.getName(), SocketSettings.newInstance());
+			return new Setting(this, SocketSettings.newInstance());
 		}
 
 		@Override
@@ -166,7 +165,7 @@ public enum SettingSpec implements HelpTextParams {
 		public String getUsage() {
 			return String.format(
 					"%1$s=[%2$s1[ %2$s2[...]]]", 
-					this.getName(), 
+					this, 
 					"SOCKET_SETTING");
 		}
 
@@ -178,7 +177,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						SocketSettings.class.getName()));
 			}
-			return new Setting(this.getName(), value);
+			return new Setting(this, value);
 		}
 
 		@Override
@@ -191,7 +190,7 @@ public enum SettingSpec implements HelpTextParams {
 		
 		@Override
 		public Setting getDefaultSetting() {
-			return new Setting(this.getName(), SocksClient.DEFAULT_BIND_HOST);
+			return new Setting(this, SocksClient.DEFAULT_BIND_HOST);
 		}
 
 		@Override
@@ -205,7 +204,7 @@ public enum SettingSpec implements HelpTextParams {
 
 		@Override
 		public String getUsage() {
-			return String.format("%s=HOST", this.getName());
+			return String.format("%s=HOST", this);
 		}
 
 		@Override
@@ -216,12 +215,12 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						String.class.getName()));
 			}
-			return new Setting(this.getName(), value);
+			return new Setting(this, value);
 		}
 
 		@Override
 		public Setting newSetting(final String value) {
-			return new Setting(this.getName(), value);
+			return new Setting(this, value);
 		}
 		
 	},
@@ -233,8 +232,7 @@ public enum SettingSpec implements HelpTextParams {
 		@Override
 		public Setting getDefaultSetting() {
 			return new Setting(
-					this.getName(), 
-					PositiveInteger.newInstance(DEFAULT_INT_VALUE));
+					this, PositiveInteger.newInstance(DEFAULT_INT_VALUE));
 		}
 
 		@Override
@@ -250,7 +248,7 @@ public enum SettingSpec implements HelpTextParams {
 		public String getUsage() {
 			return String.format(
 					"%s=INTEGER_BETWEEN_%s_AND_%s", 
-					this.getName(), 
+					this, 
 					PositiveInteger.MIN_INT_VALUE, 
 					PositiveInteger.MAX_INT_VALUE);
 		}
@@ -263,7 +261,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						PositiveInteger.class.getName()));
 			}
-			return new Setting(this.getName(), value);
+			return new Setting(this, value);
 		}
 
 		@Override
@@ -280,7 +278,7 @@ public enum SettingSpec implements HelpTextParams {
 		
 		@Override
 		public Setting getDefaultSetting() {
-			return new Setting(this.getName(), null);
+			return new Setting(this, null);
 		}
 
 		@Override
@@ -290,7 +288,7 @@ public enum SettingSpec implements HelpTextParams {
 
 		@Override
 		public String getUsage() {
-			return String.format("%s=SCHEME://HOST[:PORT]", this.getName());
+			return String.format("%s=SCHEME://HOST[:PORT]", this);
 		}
 
 		@Override
@@ -301,7 +299,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						SocksServerUri.class.getName()));
 			}
-			return new Setting(this.getName(), value);
+			return new Setting(this, value);
 		}
 
 		@Override
@@ -319,8 +317,7 @@ public enum SettingSpec implements HelpTextParams {
 		
 		@Override
 		public Setting getDefaultSetting() {
-			return new Setting(
-					this.getName(), SocksClient.DEFAULT_SOCKET_SETTINGS);
+			return new Setting(this, SocksClient.DEFAULT_SOCKET_SETTINGS);
 		}
 
 		@Override
@@ -332,7 +329,7 @@ public enum SettingSpec implements HelpTextParams {
 		public String getUsage() {
 			return String.format(
 					"%1$s=[%2$s1[ %2$s2[...]]]", 
-					this.getName(), 
+					this, 
 					"SOCKET_SETTING");
 		}
 
@@ -344,7 +341,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						SocketSettings.class.getName()));
 			}
-			return new Setting(this.getName(), value);
+			return new Setting(this, value);
 		}
 
 		@Override
@@ -357,8 +354,7 @@ public enum SettingSpec implements HelpTextParams {
 		
 		@Override
 		public Setting getDefaultSetting() {
-			return new Setting(
-					this.getName(), Socks5Client.DEFAULT_AUTH_METHODS);
+			return new Setting(this, Socks5Client.DEFAULT_AUTH_METHODS);
 		}
 
 		@Override
@@ -374,7 +370,7 @@ public enum SettingSpec implements HelpTextParams {
 		public String getUsage() {
 			return String.format(
 					"%1$s=%2$s1[ %2$s2[...]]", 
-					this.getName(), 
+					this, 
 					"SOCKS5_AUTH_METHOD");
 		}
 
@@ -386,7 +382,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						AuthMethods.class.getName()));
 			}
-			return new Setting(this.getName(), value);
+			return new Setting(this, value);
 		}
 
 		@Override
@@ -400,8 +396,7 @@ public enum SettingSpec implements HelpTextParams {
 		
 		@Override
 		public Setting getDefaultSetting() {
-			return new Setting(
-					this.getName(), Socks5Client.DEFAULT_GSSAPI_MECHANISM_OID);
+			return new Setting(this, Socks5Client.DEFAULT_GSSAPI_MECHANISM_OID);
 		}
 
 		@Override
@@ -415,7 +410,7 @@ public enum SettingSpec implements HelpTextParams {
 
 		@Override
 		public String getUsage() {
-			return String.format("%s=GSSAPI_MECHANISM_OID", this.getName());
+			return String.format("%s=GSSAPI_MECHANISM_OID", this);
 		}
 
 		@Override
@@ -426,7 +421,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						Oid.class.getName()));
 			}
-			return new Setting(this.getName(), value);
+			return new Setting(this, value);
 		}
 
 		@Override
@@ -449,7 +444,7 @@ public enum SettingSpec implements HelpTextParams {
 
 		@Override
 		public Setting getDefaultSetting() {
-			return new Setting(this.getName(), DEFAULT_BOOLEAN_VALUE);
+			return new Setting(this, DEFAULT_BOOLEAN_VALUE);
 		}
 
 		@Override
@@ -465,7 +460,7 @@ public enum SettingSpec implements HelpTextParams {
 
 		@Override
 		public String getUsage() {
-			return String.format("%s=true|false", this.getName());
+			return String.format("%s=true|false", this);
 		}
 
 		@Override
@@ -476,7 +471,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						Boolean.class.getName()));
 			}
-			return new Setting(this.getName(), value);
+			return new Setting(this, value);
 		}
 
 		@Override
@@ -491,8 +486,7 @@ public enum SettingSpec implements HelpTextParams {
 		@Override
 		public Setting getDefaultSetting() {
 			return new Setting(
-					this.getName(), 
-					Socks5Client.DEFAULT_GSSAPI_PROTECTION_LEVELS);
+					this, Socks5Client.DEFAULT_GSSAPI_PROTECTION_LEVELS);
 		}
 
 		@Override
@@ -510,7 +504,7 @@ public enum SettingSpec implements HelpTextParams {
 		public String getUsage() {
 			return String.format(
 					"%1$s=%2$s1[ %2$s2[...]]", 
-					this.getName(), 
+					this, 
 					"SOCKS5_GSSAPI_PROTECTION_LEVEL");
 		}
 
@@ -522,7 +516,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						GssapiProtectionLevels.class.getName()));
 			}
-			return new Setting(this.getName(), value);
+			return new Setting(this, value);
 		}
 
 		@Override
@@ -539,7 +533,7 @@ public enum SettingSpec implements HelpTextParams {
 		
 		@Override
 		public Setting getDefaultSetting() {
-			return new Setting(this.getName(), null);
+			return new Setting(this, null);
 		}
 
 		@Override
@@ -549,7 +543,7 @@ public enum SettingSpec implements HelpTextParams {
 
 		@Override
 		public String getUsage() {
-			return String.format("%s=GSSAPI_SERVICE_NAME", this.getName());
+			return String.format("%s=GSSAPI_SERVICE_NAME", this);
 		}
 
 		@Override
@@ -560,12 +554,12 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						String.class.getName()));
 			}
-			return new Setting(this.getName(), value);
+			return new Setting(this, value);
 		}
 
 		@Override
 		public Setting newSetting(final String value) {
-			return new Setting(this.getName(), value);
+			return new Setting(this, value);
 		}
 		
 	},
@@ -578,7 +572,7 @@ public enum SettingSpec implements HelpTextParams {
 		
 		@Override
 		public Setting getDefaultSetting() {
-			return new Setting(this.getName(), null);
+			return new Setting(this, null);
 		}
 
 		@Override
@@ -588,7 +582,7 @@ public enum SettingSpec implements HelpTextParams {
 
 		@Override
 		public String getUsage() {
-			return String.format("%s=USERNAME:PASSWORD", this.getName());
+			return String.format("%s=USERNAME:PASSWORD", this);
 		}
 
 		@Override
@@ -599,7 +593,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						UsernamePassword.class.getName()));
 			}
-			return new Setting(this.getName(), value);
+			return new Setting(this, value);
 		}
 
 		@Override
@@ -620,7 +614,7 @@ public enum SettingSpec implements HelpTextParams {
 			} catch (UnknownHostException e) {
 				throw new AssertionError(e);
 			}
-			return new Setting(this.getName(), host);
+			return new Setting(this, host);
 		}
 
 		@Override
@@ -632,7 +626,7 @@ public enum SettingSpec implements HelpTextParams {
 
 		@Override
 		public String getUsage() {
-			return String.format("%s=HOST", this.getName());
+			return String.format("%s=HOST", this);
 		}
 
 		@Override
@@ -643,7 +637,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						Host.class.getName()));
 			}
-			return new Setting(this.getName(), value);
+			return new Setting(this, value);
 		}
 
 		@Override
@@ -664,8 +658,7 @@ public enum SettingSpec implements HelpTextParams {
 		
 		@Override
 		public Setting getDefaultSetting() {
-			return new Setting(
-					this.getName(), Port.newInstance(DEFAULT_INT_VALUE));
+			return new Setting(this, Port.newInstance(DEFAULT_INT_VALUE));
 		}
 
 		@Override
@@ -679,7 +672,7 @@ public enum SettingSpec implements HelpTextParams {
 		public String getUsage() {
 			return String.format(
 					"%s=INTEGER_BETWEEN_%s_AND_%s", 
-					this.getName(), 
+					this, 
 					Port.MIN_INT_VALUE, 
 					Port.MAX_INT_VALUE);
 		}
@@ -692,7 +685,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						Port.class.getName()));
 			}
-			return new Setting(this.getName(), value);
+			return new Setting(this, value);
 		}
 
 		@Override
@@ -709,7 +702,7 @@ public enum SettingSpec implements HelpTextParams {
 		
 		@Override
 		public Setting getDefaultSetting() {
-			return new Setting(this.getName(), SocketSettings.newInstance());
+			return new Setting(this, SocketSettings.newInstance());
 		}
 
 		@Override
@@ -721,7 +714,7 @@ public enum SettingSpec implements HelpTextParams {
 		public String getUsage() {
 			return String.format(
 					"%1$s=[%2$s1[ %2$s2[...]]]", 
-					this.getName(), 
+					this, 
 					"SOCKET_SETTING");
 		}
 
@@ -733,7 +726,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						SocketSettings.class.getName()));
 			}
-			return new Setting(this.getName(), value);
+			return new Setting(this, value);
 		}
 
 		@Override
@@ -774,14 +767,14 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						Socks5RequestCriteria.class.getName()));
 			}
-			return new Setting(this.getName(), value);
+			return new Setting(this, value);
 		}
 
 		@Override
 		public Setting newSetting(final String value) {
 			throw new UnsupportedOperationException(String.format(
 					"%s does not accept a String representation of %s",
-					this.getName(),
+					this,
 					Socks5RequestCriteria.class.getName()));
 		}
 		
@@ -790,7 +783,7 @@ public enum SettingSpec implements HelpTextParams {
 		
 		@Override
 		public Setting getDefaultSetting() {
-			return new Setting(this.getName(), AuthMethods.newInstance(
+			return new Setting(this, AuthMethods.newInstance(
 					AuthMethod.NO_AUTHENTICATION_REQUIRED));
 		}
 
@@ -805,7 +798,7 @@ public enum SettingSpec implements HelpTextParams {
 		@Override
 		public String getUsage() {
 			return String.format("%1$s=%2$s1[ %2$s2[...]]", 
-					this.getName(), 
+					this, 
 					"SOCKS5_AUTH_METHOD");
 		}
 
@@ -817,7 +810,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						AuthMethods.class.getName()));
 			}
-			return new Setting(this.getName(), value);
+			return new Setting(this, value);
 		}
 
 		@Override
@@ -857,14 +850,14 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						Socks5RequestCriteria.class.getName()));
 			}
-			return new Setting(this.getName(), value);
+			return new Setting(this, value);
 		}
 
 		@Override
 		public Setting newSetting(final String value) {
 			throw new UnsupportedOperationException(String.format(
 					"%s does not accept a String representation of %s",
-					this.getName(),
+					this,
 					Socks5RequestCriteria.class.getName()));
 		}
 		
@@ -875,7 +868,7 @@ public enum SettingSpec implements HelpTextParams {
 
 		@Override
 		public Setting getDefaultSetting() {
-			return new Setting(this.getName(), DEFAULT_BOOLEAN_VALUE);
+			return new Setting(this, DEFAULT_BOOLEAN_VALUE);
 		}
 
 		@Override
@@ -890,7 +883,7 @@ public enum SettingSpec implements HelpTextParams {
 
 		@Override
 		public String getUsage() {
-			return String.format("%s=true|false", this.getName());
+			return String.format("%s=true|false", this);
 		}
 
 		@Override
@@ -901,7 +894,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						Boolean.class.getName()));
 			}
-			return new Setting(this.getName(), value);
+			return new Setting(this, value);
 		}
 
 		@Override
@@ -915,7 +908,7 @@ public enum SettingSpec implements HelpTextParams {
 		@Override
 		public Setting getDefaultSetting() {
 			return new Setting(
-					this.getName(), GssapiProtectionLevels.DEFAULT_INSTANCE);
+					this, GssapiProtectionLevels.DEFAULT_INSTANCE);
 		}
 
 		@Override
@@ -932,7 +925,7 @@ public enum SettingSpec implements HelpTextParams {
 		public String getUsage() {
 			return String.format(
 					"%1$s=%2$s1[ %2$s2[...]]", 
-					this.getName(), 
+					this, 
 					"SOCKS5_GSSAPI_PROTECTION_LEVEL");
 		}
 
@@ -944,7 +937,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						GssapiProtectionLevels.class.getName()));
 			}
-			return new Setting(this.getName(), value);
+			return new Setting(this, value);
 		}
 
 		@Override
@@ -975,7 +968,7 @@ public enum SettingSpec implements HelpTextParams {
 		public String getUsage() {
 			return String.format(
 					"%s=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]", 
-					this.getName());
+					this);
 		}
 
 		@Override
@@ -986,7 +979,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						Criteria.class.getName()));
 			}
-			return new Setting(this.getName(), value);
+			return new Setting(this, value);
 		}
 
 		@Override
@@ -1015,7 +1008,7 @@ public enum SettingSpec implements HelpTextParams {
 		public String getUsage() {
 			return String.format(
 					"%s=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]", 
-					this.getName());
+					this);
 		}
 
 		@Override
@@ -1026,7 +1019,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						Criteria.class.getName()));
 			}
-			return new Setting(this.getName(), value);
+			return new Setting(this, value);
 		}
 
 		@Override
@@ -1044,7 +1037,7 @@ public enum SettingSpec implements HelpTextParams {
 				
 		@Override
 		public Setting getDefaultSetting() {
-			return new Setting(this.getName(), SocketSettings.newInstance());
+			return new Setting(this, SocketSettings.newInstance());
 		}
 
 		@Override
@@ -1056,7 +1049,7 @@ public enum SettingSpec implements HelpTextParams {
 		public String getUsage() {
 			return String.format(
 					"%1$s=[%2$s1[ %2$s2[...]]]", 
-					this.getName(), 
+					this, 
 					"SOCKET_SETTING");
 		}
 
@@ -1068,7 +1061,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						SocketSettings.class.getName()));
 			}
-			return new Setting(this.getName(), value);
+			return new Setting(this, value);
 		}
 
 		@Override
@@ -1086,7 +1079,7 @@ public enum SettingSpec implements HelpTextParams {
 				
 		@Override
 		public Setting getDefaultSetting() {
-			return new Setting(this.getName(), SocketSettings.newInstance());
+			return new Setting(this, SocketSettings.newInstance());
 		}
 
 		@Override
@@ -1098,7 +1091,7 @@ public enum SettingSpec implements HelpTextParams {
 		public String getUsage() {
 			return String.format(
 					"%1$s=[%2$s1[ %2$s2[...]]]", 
-					this.getName(), 
+					this, 
 					"SOCKET_SETTING");
 		}
 
@@ -1110,7 +1103,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						SocketSettings.class.getName()));
 			}
-			return new Setting(this.getName(), value);
+			return new Setting(this, value);
 		}
 
 		@Override
@@ -1126,8 +1119,7 @@ public enum SettingSpec implements HelpTextParams {
 		@Override
 		public Setting getDefaultSetting() {
 			return new Setting(
-					this.getName(), 
-					PositiveInteger.newInstance(DEFAULT_INT_VALUE));
+					this, PositiveInteger.newInstance(DEFAULT_INT_VALUE));
 		}
 
 		@Override
@@ -1142,7 +1134,7 @@ public enum SettingSpec implements HelpTextParams {
 		public String getUsage() {
 			return String.format(
 					"%s=INTEGER_BETWEEN_%s_AND_%s", 
-					this.getName(), 
+					this, 
 					PositiveInteger.MIN_INT_VALUE, 
 					PositiveInteger.MAX_INT_VALUE);
 		}
@@ -1155,7 +1147,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						PositiveInteger.class.getName()));
 			}
-			return new Setting(this.getName(), value);
+			return new Setting(this, value);
 		}
 
 		@Override
@@ -1171,8 +1163,7 @@ public enum SettingSpec implements HelpTextParams {
 		@Override
 		public Setting getDefaultSetting() {
 			return new Setting(
-					this.getName(), 
-					PositiveInteger.newInstance(DEFAULT_INT_VALUE));
+					this, PositiveInteger.newInstance(DEFAULT_INT_VALUE));
 		}
 
 		@Override
@@ -1187,7 +1178,7 @@ public enum SettingSpec implements HelpTextParams {
 		public String getUsage() {
 			return String.format(
 					"%s=INTEGER_BETWEEN_%s_AND_%s", 
-					this.getName(), 
+					this, 
 					PositiveInteger.MIN_INT_VALUE, 
 					PositiveInteger.MAX_INT_VALUE);
 		}
@@ -1200,7 +1191,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						PositiveInteger.class.getName()));
 			}
-			return new Setting(this.getName(), value);
+			return new Setting(this, value);
 		}
 
 		@Override
@@ -1216,8 +1207,7 @@ public enum SettingSpec implements HelpTextParams {
 		@Override
 		public Setting getDefaultSetting() {
 			return new Setting(
-					this.getName(), 
-					PositiveInteger.newInstance(DEFAULT_INT_VALUE));
+					this, PositiveInteger.newInstance(DEFAULT_INT_VALUE));
 		}
 
 		@Override
@@ -1232,7 +1222,7 @@ public enum SettingSpec implements HelpTextParams {
 		public String getUsage() {
 			return String.format(
 					"%s=INTEGER_BETWEEN_%s_AND_%s", 
-					this.getName(), 
+					this, 
 					PositiveInteger.MIN_INT_VALUE, 
 					PositiveInteger.MAX_INT_VALUE);
 		}
@@ -1245,7 +1235,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						PositiveInteger.class.getName()));
 			}
-			return new Setting(this.getName(), value);
+			return new Setting(this, value);
 		}
 
 		@Override
@@ -1261,8 +1251,7 @@ public enum SettingSpec implements HelpTextParams {
 		@Override
 		public Setting getDefaultSetting() {
 			return new Setting(
-					this.getName(), 
-					PositiveInteger.newInstance(DEFAULT_INT_VALUE));
+					this, PositiveInteger.newInstance(DEFAULT_INT_VALUE));
 		}
 
 		@Override
@@ -1277,7 +1266,7 @@ public enum SettingSpec implements HelpTextParams {
 		public String getUsage() {
 			return String.format(
 					"%s=INTEGER_BETWEEN_%s_AND_%s", 
-					this.getName(), 
+					this, 
 					PositiveInteger.MIN_INT_VALUE, 
 					PositiveInteger.MAX_INT_VALUE);
 		}
@@ -1290,7 +1279,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						PositiveInteger.class.getName()));
 			}
-			return new Setting(this.getName(), value);
+			return new Setting(this, value);
 		}
 
 		@Override
@@ -1311,7 +1300,7 @@ public enum SettingSpec implements HelpTextParams {
 			} catch (UnknownHostException e) {
 				throw new AssertionError(e);
 			}
-			return new Setting(this.getName(), host);
+			return new Setting(this, host);
 		}
 
 		@Override
@@ -1324,7 +1313,7 @@ public enum SettingSpec implements HelpTextParams {
 
 		@Override
 		public String getUsage() {
-			return String.format("%s=HOST", this.getName());
+			return String.format("%s=HOST", this);
 		}
 
 		@Override
@@ -1335,7 +1324,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						Host.class.getName()));
 			}
-			return new Setting(this.getName(), value);
+			return new Setting(this, value);
 		}
 
 		@Override
@@ -1358,8 +1347,7 @@ public enum SettingSpec implements HelpTextParams {
 		@Override
 		public Setting getDefaultSetting() {
 			return new Setting(
-					this.getName(), 
-					PositiveInteger.newInstance(DEFAULT_INT_VALUE));
+					this, PositiveInteger.newInstance(DEFAULT_INT_VALUE));
 		}
 
 		@Override
@@ -1374,7 +1362,7 @@ public enum SettingSpec implements HelpTextParams {
 		public String getUsage() {
 			return String.format(
 					"%s=INTEGER_BETWEEN_%s_AND_%s", 
-					this.getName(), 
+					this, 
 					PositiveInteger.MIN_INT_VALUE, 
 					PositiveInteger.MAX_INT_VALUE);
 		}
@@ -1387,7 +1375,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						PositiveInteger.class.getName()));
 			}
-			return new Setting(this.getName(), value);
+			return new Setting(this, value);
 		}
 
 		@Override
@@ -1405,7 +1393,7 @@ public enum SettingSpec implements HelpTextParams {
 				
 		@Override
 		public Setting getDefaultSetting() {
-			return new Setting(this.getName(), SocketSettings.newInstance());
+			return new Setting(this, SocketSettings.newInstance());
 		}
 
 		@Override
@@ -1417,7 +1405,7 @@ public enum SettingSpec implements HelpTextParams {
 		public String getUsage() {
 			return String.format(
 					"%1$s=[%2$s1[ %2$s2[...]]]", 
-					this.getName(), 
+					this, 
 					"SOCKET_SETTING");
 		}
 
@@ -1429,7 +1417,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						SocketSettings.class.getName()));
 			}
-			return new Setting(this.getName(), value);
+			return new Setting(this, value);
 		}
 
 		@Override
@@ -1460,7 +1448,7 @@ public enum SettingSpec implements HelpTextParams {
 		public String getUsage() {
 			return String.format(
 					"%s=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]", 
-					this.getName());
+					this);
 		}
 
 		@Override
@@ -1471,7 +1459,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						Criteria.class.getName()));
 			}
-			return new Setting(this.getName(), value);
+			return new Setting(this, value);
 		}
 
 		@Override
@@ -1500,7 +1488,7 @@ public enum SettingSpec implements HelpTextParams {
 		public String getUsage() {
 			return String.format(
 					"%s=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]", 
-					this.getName());
+					this);
 		}
 
 		@Override
@@ -1511,7 +1499,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						Criteria.class.getName()));
 			}
-			return new Setting(this.getName(), value);
+			return new Setting(this, value);
 		}
 
 		@Override
@@ -1533,7 +1521,7 @@ public enum SettingSpec implements HelpTextParams {
 			} catch (UnknownHostException e) {
 				throw new AssertionError(e);
 			}
-			return new Setting(this.getName(), host);
+			return new Setting(this, host);
 		}
 
 		@Override
@@ -1546,7 +1534,7 @@ public enum SettingSpec implements HelpTextParams {
 
 		@Override
 		public String getUsage() {
-			return String.format("%s=HOST", this.getName());
+			return String.format("%s=HOST", this);
 		}
 
 		@Override
@@ -1557,7 +1545,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						Host.class.getName()));
 			}
-			return new Setting(this.getName(), value);
+			return new Setting(this, value);
 		}
 
 		@Override
@@ -1581,7 +1569,7 @@ public enum SettingSpec implements HelpTextParams {
 				
 		@Override
 		public Setting getDefaultSetting() {
-			return new Setting(this.getName(), SocketSettings.newInstance());
+			return new Setting(this, SocketSettings.newInstance());
 		}
 
 		@Override
@@ -1593,7 +1581,7 @@ public enum SettingSpec implements HelpTextParams {
 		public String getUsage() {
 			return String.format(
 					"%1$s=[%2$s1[ %2$s2[...]]]", 
-					this.getName(), 
+					this, 
 					"SOCKET_SETTING");
 		}
 
@@ -1605,7 +1593,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						SocketSettings.class.getName()));
 			}
-			return new Setting(this.getName(), value);
+			return new Setting(this, value);
 		}
 
 		@Override
@@ -1622,8 +1610,7 @@ public enum SettingSpec implements HelpTextParams {
 		@Override
 		public Setting getDefaultSetting() {
 			return new Setting(
-					this.getName(), 
-					PositiveInteger.newInstance(DEFAULT_INT_VALUE));
+					this, PositiveInteger.newInstance(DEFAULT_INT_VALUE));
 		}
 
 		@Override
@@ -1638,7 +1625,7 @@ public enum SettingSpec implements HelpTextParams {
 		public String getUsage() {
 			return String.format(
 					"%s=INTEGER_BETWEEN_%s_AND_%s", 
-					this.getName(), 
+					this, 
 					PositiveInteger.MIN_INT_VALUE, 
 					PositiveInteger.MAX_INT_VALUE);
 		}
@@ -1651,7 +1638,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						PositiveInteger.class.getName()));
 			}
-			return new Setting(this.getName(), value);
+			return new Setting(this, value);
 		}
 
 		@Override
@@ -1668,8 +1655,7 @@ public enum SettingSpec implements HelpTextParams {
 		@Override
 		public Setting getDefaultSetting() {
 			return new Setting(
-					this.getName(), 
-					PositiveInteger.newInstance(DEFAULT_INT_VALUE));
+					this, PositiveInteger.newInstance(DEFAULT_INT_VALUE));
 		}
 
 		@Override
@@ -1684,7 +1670,7 @@ public enum SettingSpec implements HelpTextParams {
 		public String getUsage() {
 			return String.format(
 					"%s=INTEGER_BETWEEN_%s_AND_%s", 
-					this.getName(), 
+					this, 
 					PositiveInteger.MIN_INT_VALUE, 
 					PositiveInteger.MAX_INT_VALUE);
 		}
@@ -1697,7 +1683,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						PositiveInteger.class.getName()));
 			}
-			return new Setting(this.getName(), value);
+			return new Setting(this, value);
 		}
 
 		@Override
@@ -1719,7 +1705,7 @@ public enum SettingSpec implements HelpTextParams {
 			} catch (UnknownHostException e) {
 				throw new AssertionError(e);
 			}
-			return new Setting(this.getName(), host);
+			return new Setting(this, host);
 		}
 
 		@Override
@@ -1732,7 +1718,7 @@ public enum SettingSpec implements HelpTextParams {
 
 		@Override
 		public String getUsage() {
-			return String.format("%s=HOST", this.getName());
+			return String.format("%s=HOST", this);
 		}
 
 		@Override
@@ -1743,7 +1729,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						Host.class.getName()));
 			}
-			return new Setting(this.getName(), value);
+			return new Setting(this, value);
 		}
 
 		@Override
@@ -1767,7 +1753,7 @@ public enum SettingSpec implements HelpTextParams {
 				
 		@Override
 		public Setting getDefaultSetting() {
-			return new Setting(this.getName(), SocketSettings.newInstance());
+			return new Setting(this, SocketSettings.newInstance());
 		}
 
 		@Override
@@ -1779,7 +1765,7 @@ public enum SettingSpec implements HelpTextParams {
 		public String getUsage() {
 			return String.format(
 					"%1$s=[%2$s1[ %2$s2[...]]]", 
-					this.getName(), 
+					this, 
 					"SOCKET_SETTING");
 		}
 
@@ -1791,7 +1777,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						SocketSettings.class.getName()));
 			}
-			return new Setting(this.getName(), value);
+			return new Setting(this, value);
 		}
 
 		@Override
@@ -1808,7 +1794,7 @@ public enum SettingSpec implements HelpTextParams {
 		
 		@Override
 		public Setting getDefaultSetting() {
-			return new Setting(this.getName(), null);
+			return new Setting(this, null);
 		}
 
 		@Override
@@ -1818,7 +1804,7 @@ public enum SettingSpec implements HelpTextParams {
 
 		@Override
 		public String getUsage() {
-			return String.format("%s=CLASSNAME[:VALUE]", this.getName());
+			return String.format("%s=CLASSNAME[:VALUE]", this);
 		}
 
 		@Override
@@ -1829,7 +1815,7 @@ public enum SettingSpec implements HelpTextParams {
 						value.getClass().getName(),
 						UsernamePasswordAuthenticator.class.getName()));
 			}
-			return new Setting(this.getName(), value);
+			return new Setting(this, value);
 		}
 
 		@Override
@@ -1839,27 +1825,23 @@ public enum SettingSpec implements HelpTextParams {
 		
 	};
 
-	public static SettingSpec getInstance(final String name) {
+	public static SettingSpec getInstance(final String s) {
 		for (SettingSpec settingSpec : SettingSpec.values()) {
-			if (settingSpec.getName().equals(name)) {
+			if (settingSpec.toString().equals(s)) {
 				return settingSpec;
 			}
 		}
 		throw new IllegalArgumentException(String.format(
-				"unknown setting name: %s", name));
+				"unknown setting: %s", s));
 	}
 	
-	private final String name;
+	private final String string;
 	
-	private SettingSpec(final String n) {
-		this.name = n;
+	private SettingSpec(final String s) {
+		this.string = s;
 	}
 	
 	public abstract Setting getDefaultSetting();
-	
-	public final String getName() { 
-		return this.name; 
-	};
 	
 	@Override
 	public boolean isDisplayable() {
@@ -1869,5 +1851,10 @@ public enum SettingSpec implements HelpTextParams {
 	public abstract Setting newSetting(final Object value);
 	
 	public abstract Setting newSetting(final String value);
+	
+	@Override
+	public String toString() {
+		return this.string;
+	}
 	
 }

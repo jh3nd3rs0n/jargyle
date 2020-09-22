@@ -70,7 +70,7 @@ public final class Setting {
 		public SettingXml marshal(final Setting v) throws Exception {
 			SettingXml settingXml = new SettingXml();
 			settingXml.comment = v.comment;
-			settingXml.name = v.getName();
+			settingXml.name = v.getSettingSpec().toString();
 			Object val = v.getValue();
 			if (val instanceof Criteria) {
 				CriteriaValue newVal = new CriteriaValue();
@@ -195,7 +195,7 @@ public final class Setting {
 	private static Setting newInstance(
 			final String name, final Object value, final String comment) {
 		Setting setting = newInstance(name, value);
-		return new Setting(setting.getName(), setting.getValue(), comment);
+		return new Setting(setting.getSettingSpec(), setting.getValue(), comment);
 	}
 	
 	private static Setting newInstance(final String name, final String value) {
@@ -205,23 +205,23 @@ public final class Setting {
 	private static Setting newInstance(
 			final String name, final String value, final String comment) {
 		Setting setting = newInstance(name, value);
-		return new Setting(setting.getName(), setting.getValue(), comment);
+		return new Setting(setting.getSettingSpec(), setting.getValue(), comment);
 	}
 	
 	private final String comment;
-	private final String name;
+	private final SettingSpec settingSpec;
 	private final Object value;
 	
-	Setting(final String n, final Object val) {
-		this(n, val, null);
+	Setting(final SettingSpec spec, final Object val) {
+		this(spec, val, null);
 	}
 	
-	private Setting(final String n, final Object val, final String cmmnt) {
+	private Setting(final SettingSpec spec, final Object val, final String cmmnt) {
 		this.comment = cmmnt;
-		this.name = n;
+		this.settingSpec = spec;
 		this.value = val;
 	}
-		
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -234,11 +234,7 @@ public final class Setting {
 			return false;
 		}
 		Setting other = (Setting) obj;
-		if (this.name == null) {
-			if (other.name != null) {
-				return false;
-			}
-		} else if (!this.name.equals(other.name)) {
+		if (this.settingSpec != other.settingSpec) {
 			return false;
 		}
 		if (this.value == null) {
@@ -250,9 +246,9 @@ public final class Setting {
 		}
 		return true;
 	}
-
-	public String getName() {
-		return this.name;
+	
+	public SettingSpec getSettingSpec() {
+		return this.settingSpec;
 	}
 
 	public Object getValue() {
@@ -263,14 +259,14 @@ public final class Setting {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
+		result = prime * result + ((this.settingSpec == null) ? 0 : this.settingSpec.hashCode());
 		result = prime * result + ((this.value == null) ? 0 : this.value.hashCode());
 		return result;
 	}
 
 	@Override
 	public String toString() {
-		return String.format("%s=%s", this.name, this.value);
+		return String.format("%s=%s", this.settingSpec, this.value);
 	}
 	
 }

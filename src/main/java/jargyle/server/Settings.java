@@ -62,8 +62,9 @@ public final class Settings {
 			final SettingSpec settingSpec, final Class<T> type) {
 		List<T> values = this.getValues(settingSpec, type);
 		T value = null;
-		if (values.size() > 0) {
-			value = values.get(values.size() - 1);
+		int size = values.size();
+		if (size > 0) {
+			value = values.get(size - 1);
 		}
 		return value;
 	}
@@ -72,7 +73,7 @@ public final class Settings {
 			final SettingSpec settingSpec, final Class<T> type) {
 		List<T> values = new ArrayList<T>();
 		for (Setting setting : this.settings) {
-			if (setting.getName().equals(settingSpec.getName())) {
+			if (setting.getSettingSpec().equals(settingSpec)) {
 				@SuppressWarnings("unchecked")
 				T val = (T) setting.getValue();
 				values.add(val);

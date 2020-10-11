@@ -40,9 +40,8 @@ Jargyle is a Java SOCKS5 server. It has the following features:
 -   [3. 11. Allowing or Blocking SOCKS5 Requests](#3-11-allowing-or-blocking-socks5-requests)
 -   [3. 12. The Comment Attribute](#3-12-the-comment-attribute)
 -   [3. 13. Logging](#3-13-logging)
--   [4. TODO](#4-todo)
--   [5. Contact](#5-contact)
--   [6. Donate](#6-donate)
+-   [4. Contact](#4-contact)
+-   [5. Donate](#5-donate)
 
 ## 1. Requirements
 
@@ -1516,22 +1515,11 @@ Example:
     java -Djava.util.logging.config.file=logging.properties -jar target/jargyle-${VERSION}.jar
     
 ```
-
-## 4. TODO
-
--   [ ] Javadoc documentation on all types
-
--   [ ] Unit testing on other types
-
--   [ ] ~~Further documentation~~
-    -   [ ] ~~Command line reference~~
-    -   [ ] ~~Configuration file reference~~
-    -   [ ] ~~Users file reference~~
   
-## 5. Contact
+## 4. Contact
 
 If you have any questions or comments, you can e-mail me at `j0n4th4n.h3nd3rs0n@gmail.com`
 
-## 6. Donate
+## 5. Donate
 
 [PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=BRABJQVU3S6LW&currency_code=USD&source=url)

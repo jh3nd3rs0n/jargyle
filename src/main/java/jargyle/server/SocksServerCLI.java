@@ -7,9 +7,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Field;
 import java.net.BindException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,7 +28,7 @@ import jargyle.client.Scheme;
 import jargyle.client.socks5.DefaultUsernamePasswordRequestor;
 import jargyle.client.socks5.UsernamePassword;
 import jargyle.client.socks5.UsernamePasswordRequestor;
-import jargyle.common.cli.HelpTextParams;
+import jargyle.common.annotation.HelpText;
 import jargyle.common.net.SocketSettingSpec;
 import jargyle.common.net.socks5.AuthMethod;
 import jargyle.common.net.socks5.gssapiauth.GssapiProtectionLevel;
@@ -135,14 +135,16 @@ public final class SocksServerCLI extends CLI {
 		this.modifiableConfiguration.addSetting(sttng);
 	}
 	
-	private void displayHelpText(final List<HelpTextParams> list) {
+	private void displayHelpText(final Class<?> cls) {
 		System.out.println();
-		for (HelpTextParams helpTextParams : list) {
-			if (helpTextParams.isDisplayable()) {
+		Field[] fields = cls.getDeclaredFields();
+		for (Field field : fields) {
+			HelpText helpText = field.getAnnotation(HelpText.class);
+			if (helpText != null) {
 				System.out.print("  ");
-				System.out.println(helpTextParams.getUsage());
+				System.out.println(helpText.usage());
 				System.out.print("      ");
-				System.out.println(helpTextParams.getDoc());
+				System.out.println(helpText.doc());
 				System.out.println();
 			}
 		}
@@ -218,15 +220,15 @@ public final class SocksServerCLI extends CLI {
 	@Ordinal(SETTINGS_HELP_OPTION_GROUP_ORDINAL)
 	private void displaySettingsHelp() {
 		System.out.println("SETTINGS:");
-		this.displayHelpText(Arrays.asList(SettingSpec.values()));
+		this.displayHelpText(SettingSpec.class);
 		System.out.println("SCHEMES:");
-		this.displayHelpText(Arrays.asList(Scheme.values()));
+		this.displayHelpText(Scheme.class);
 		System.out.println("SOCKET_SETTINGS:");
-		this.displayHelpText(Arrays.asList(SocketSettingSpec.values()));
+		this.displayHelpText(SocketSettingSpec.class);
 		System.out.println("SOCKS5_AUTH_METHODS:");
-		this.displayHelpText(Arrays.asList(AuthMethod.values()));
+		this.displayHelpText(AuthMethod.class);
 		System.out.println("SOCKS5_GSSAPI_PROTECTION_LEVELS:");
-		this.displayHelpText(Arrays.asList(GssapiProtectionLevel.values()));
+		this.displayHelpText(GssapiProtectionLevel.class);
 		this.settingsHelpDisplayed = true;
 	}
 	

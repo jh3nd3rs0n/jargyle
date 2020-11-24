@@ -5,13 +5,17 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 
-import jargyle.common.cli.HelpTextParams;
+import jargyle.common.annotation.HelpText;
 import jargyle.common.util.NonnegativeInteger;
 import jargyle.common.util.PositiveInteger;
 import jargyle.common.util.UnsignedByte;
 
-public enum SocketSettingSpec implements HelpTextParams {
+public enum SocketSettingSpec {
 
+	@HelpText(
+			doc = "The type-of-service or traffic class field in the IP "
+					+ "header for a TCP or UDP socket", 
+			usage = "IP_TOS=INTEGER_BETWEEN_0_AND_255")
 	IP_TOS {
 		
 		@Override
@@ -28,21 +32,6 @@ public enum SocketSettingSpec implements HelpTextParams {
 				final Socket socket) throws SocketException {
 			UnsignedByte b = (UnsignedByte) value;
 			socket.setTrafficClass(b.intValue());
-		}
-		
-		@Override
-		public String getDoc() {
-			return "The type-of-service or traffic class field in the IP "
-					+ "header for a TCP or UDP socket";
-		}
-
-		@Override
-		public String getUsage() {
-			return String.format(
-					"%s=INTEGER_BETWEEN_%s_AND_%s", 
-					this, 
-					UnsignedByte.MIN_INT_VALUE, 
-					UnsignedByte.MAX_INT_VALUE);
 		}
 
 		@Override
@@ -63,6 +52,12 @@ public enum SocketSettingSpec implements HelpTextParams {
 		
 	},
 	
+	@HelpText(
+			doc = "Performance preferences for a TCP socket described by "
+					+ "three digits whose values indicate the relative "
+					+ "importance of short connection time, low latency, and "
+					+ "high bandwidth", 
+			usage = "PERF_PREF=3_DIGITS_EACH_BETWEEN_0_AND_2")
 	PERF_PREF {
 		
 		@Override
@@ -79,23 +74,6 @@ public enum SocketSettingSpec implements HelpTextParams {
 				final Socket socket) throws SocketException {
 			PerformancePreferences p = (PerformancePreferences) value;
 			p.applyTo(socket);
-		}
-		
-		@Override
-		public String getDoc() {
-			return "Performance preferences for a TCP socket described by "
-					+ "three digits whose values indicate the relative "
-					+ "importance of short connection time, low latency, and "
-					+ "high bandwidth";
-		}
-
-		@Override
-		public String getUsage() {
-			return String.format(
-					"%s=3_DIGITS_EACH_BETWEEN_%s_AND_%s",
-					this,
-					PerformancePreferences.MIN_IMPORTANCE_VALUE,
-					PerformancePreferences.MAX_IMPORTANCE_VALUE);
 		}
 
 		@Override
@@ -116,6 +94,9 @@ public enum SocketSettingSpec implements HelpTextParams {
 		
 	},
 	
+	@HelpText(
+			doc = "Can send broadcast datagrams", 
+			usage = "SO_BROADCAST=true|false")
 	SO_BROADCAST {
 		
 		@Override
@@ -124,16 +105,6 @@ public enum SocketSettingSpec implements HelpTextParams {
 				final DatagramSocket datagramSocket) throws SocketException {
 			Boolean b = (Boolean) value;
 			datagramSocket.setBroadcast(b.booleanValue());
-		}
-		
-		@Override
-		public String getDoc() {
-			return "Can send broadcast datagrams";
-		}
-
-		@Override
-		public String getUsage() {
-			return String.format("%s=true|false", this);
 		}
 
 		@Override
@@ -154,6 +125,10 @@ public enum SocketSettingSpec implements HelpTextParams {
 		
 	},
 	
+	@HelpText(
+			doc = "Keeps a TCP socket alive when no data has been exchanged "
+					+ "in either direction", 
+			usage = "SO_KEEPALIVE=true|false")
 	SO_KEEPALIVE {
 		
 		@Override
@@ -165,17 +140,6 @@ public enum SocketSettingSpec implements HelpTextParams {
 		}
 
 		@Override
-		public String getDoc() {
-			return "Keeps a TCP socket alive when no data has been exchanged "
-					+ "in either direction";
-		}
-
-		@Override
-		public String getUsage() {
-			return String.format("%s=true|false", this);
-		}
-
-		@Override
 		public SocketSetting newSocketSetting(final Object value) {
 			if (!(value instanceof Boolean)) {
 				throw new ClassCastException(String.format(
@@ -193,6 +157,9 @@ public enum SocketSettingSpec implements HelpTextParams {
 		
 	},
 	
+	@HelpText(
+			doc = "Linger on closing the TCP socket in seconds", 
+			usage = "SO_LINGER=INTEGER_BETWEEN_0_AND_2147483647")
 	SO_LINGER {
 		
 		@Override
@@ -201,20 +168,6 @@ public enum SocketSettingSpec implements HelpTextParams {
 				final Socket socket) throws SocketException {
 			NonnegativeInteger i = (NonnegativeInteger) value;
 			socket.setSoLinger(true, i.intValue());
-		}
-
-		@Override
-		public String getDoc() {
-			return "Linger on closing the TCP socket in seconds";
-		}
-
-		@Override
-		public String getUsage() {
-			return String.format(
-					"%s=INTEGER_BETWEEN_%s_AND_%s", 
-					this, 
-					NonnegativeInteger.MIN_INT_VALUE, 
-					NonnegativeInteger.MAX_INT_VALUE);
 		}
 
 		@Override
@@ -235,6 +188,9 @@ public enum SocketSettingSpec implements HelpTextParams {
 		
 	},
 	
+	@HelpText(
+			doc = "Can receive TCP urgent data", 
+			usage = "SO_OOBINLINE=true|false")
 	SO_OOBINLINE {
 		
 		@Override
@@ -243,16 +199,6 @@ public enum SocketSettingSpec implements HelpTextParams {
 				final Socket socket) throws SocketException {
 			Boolean b = (Boolean) value;
 			socket.setOOBInline(b.booleanValue());
-		}
-
-		@Override
-		public String getDoc() {
-			return "Can receive TCP urgent data";
-		}
-
-		@Override
-		public String getUsage() {
-			return String.format("%s=true|false", this);
 		}
 
 		@Override
@@ -273,6 +219,9 @@ public enum SocketSettingSpec implements HelpTextParams {
 
 	},
 	
+	@HelpText(
+			doc = "The receive buffer size", 
+			usage = "SO_RCVBUF=INTEGER_BETWEEN_1_AND_2147483647")
 	SO_RCVBUF {
 				
 		@Override
@@ -298,20 +247,6 @@ public enum SocketSettingSpec implements HelpTextParams {
 			PositiveInteger i = (PositiveInteger) value;
 			socket.setReceiveBufferSize(i.intValue());
 		}
-		
-		@Override
-		public String getDoc() {
-			return "The receive buffer size";
-		}
-
-		@Override
-		public String getUsage() {
-			return String.format(
-					"%s=INTEGER_BETWEEN_%s_AND_%s", 
-					this, 
-					PositiveInteger.MIN_INT_VALUE, 
-					PositiveInteger.MAX_INT_VALUE);
-		}
 
 		@Override
 		public SocketSetting newSocketSetting(final Object value) {
@@ -331,6 +266,9 @@ public enum SocketSettingSpec implements HelpTextParams {
 		
 	},
 	
+	@HelpText(
+			doc = "Can reuse socket address and port", 
+			usage = "SO_REUSEADDR=true|false")
 	SO_REUSEADDR {
 		
 		@Override
@@ -356,16 +294,6 @@ public enum SocketSettingSpec implements HelpTextParams {
 			Boolean b = (Boolean) value;
 			socket.setReuseAddress(b.booleanValue());
 		}
-		
-		@Override
-		public String getDoc() {
-			return "Can reuse socket address and port";
-		}
-
-		@Override
-		public String getUsage() {
-			return String.format("%s=true|false", this);
-		}
 
 		@Override
 		public SocketSetting newSocketSetting(final Object value) {
@@ -385,6 +313,9 @@ public enum SocketSettingSpec implements HelpTextParams {
 
 	},
 	
+	@HelpText(
+			doc = "The send buffer size", 
+			usage = "SO_SNDBUF=INTEGER_BETWEEN_1_AND_2147483647")
 	SO_SNDBUF {
 		
 		@Override
@@ -401,20 +332,6 @@ public enum SocketSettingSpec implements HelpTextParams {
 				final Socket socket) throws SocketException {
 			PositiveInteger i = (PositiveInteger) value;
 			socket.setSendBufferSize(i.intValue());
-		}
-		
-		@Override
-		public String getDoc() {
-			return "The send buffer size";
-		}
-
-		@Override
-		public String getUsage() {
-			return String.format(
-					"%s=INTEGER_BETWEEN_%s_AND_%s", 
-					this, 
-					PositiveInteger.MIN_INT_VALUE, 
-					PositiveInteger.MAX_INT_VALUE);
 		}
 
 		@Override
@@ -435,6 +352,9 @@ public enum SocketSettingSpec implements HelpTextParams {
 		
 	},
 	
+	@HelpText(
+			doc = "The timeout in milliseconds on waiting for an idle socket", 
+			usage = "SO_TIMEOUT=INTEGER_BETWEEN_0_AND_2147483647")
 	SO_TIMEOUT {
 		
 		@Override
@@ -460,20 +380,6 @@ public enum SocketSettingSpec implements HelpTextParams {
 			NonnegativeInteger i = (NonnegativeInteger) value;
 			socket.setSoTimeout(i.intValue());
 		}
-		
-		@Override
-		public String getDoc() {
-			return "The timeout in milliseconds on waiting for an idle socket";
-		}
-
-		@Override
-		public String getUsage() {
-			return String.format(
-					"%s=INTEGER_BETWEEN_%s_AND_%s", 
-					this, 
-					NonnegativeInteger.MIN_INT_VALUE, 
-					NonnegativeInteger.MAX_INT_VALUE);
-		}
 
 		@Override
 		public SocketSetting newSocketSetting(final Object value) {
@@ -493,6 +399,9 @@ public enum SocketSettingSpec implements HelpTextParams {
 		
 	},
 	
+	@HelpText(
+			doc = "Disables Nagle's algorithm", 
+			usage = "TCP_NODELAY=true|false")
 	TCP_NODELAY {
 		
 		@Override
@@ -501,16 +410,6 @@ public enum SocketSettingSpec implements HelpTextParams {
 				final Socket socket) throws SocketException {
 			Boolean b = (Boolean) value;
 			socket.setTcpNoDelay(b.booleanValue());
-		}
-
-		@Override
-		public String getDoc() {
-			return "Disables Nagle's algorithm";
-		}
-
-		@Override
-		public String getUsage() {
-			return String.format("%s=true|false", this);
 		}
 
 		@Override
@@ -565,11 +464,6 @@ public enum SocketSettingSpec implements HelpTextParams {
 		throw new UnsupportedOperationException(String.format(
 				"socket setting spec %s is not supported under %s", 
 				this, Socket.class.getName()));
-	}
-	
-	@Override
-	public boolean isDisplayable() {
-		return true;
 	}
 	
 	public abstract SocketSetting newSocketSetting(final Object value);

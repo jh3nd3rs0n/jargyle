@@ -9,7 +9,7 @@ import jargyle.client.SocksClient;
 import jargyle.client.SocksServerUri;
 import jargyle.client.socks5.Socks5Client;
 import jargyle.client.socks5.UsernamePassword;
-import jargyle.common.cli.HelpTextParams;
+import jargyle.common.annotation.HelpText;
 import jargyle.common.net.SocketSettings;
 import jargyle.common.net.socks5.AuthMethod;
 import jargyle.common.net.socks5.AuthMethods;
@@ -20,29 +20,18 @@ import jargyle.server.socks5.Socks5RequestCriteria;
 import jargyle.server.socks5.Socks5RequestCriterion;
 import jargyle.server.socks5.UsernamePasswordAuthenticator;
 
-public enum SettingSpec implements HelpTextParams {
+public enum SettingSpec {
 	
+	@HelpText(
+			doc = "The space separated list of allowed client address "
+					+ "criteria (default is matches:.*)", 
+			usage = "allowedClientAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]")
 	ALLOWED_CLIENT_ADDRESS_CRITERIA("allowedClientAddressCriteria") {
-
-		private static final String DOC = "The space separated list of "
-				+ "allowed client address criteria (default is matches:.*)";
 		
 		@Override
 		public Setting getDefaultSetting() {
 			return newSetting(Criteria.newInstance(Criterion.newInstance(
 					CriterionMethod.MATCHES, ".*")));
-		}
-
-		@Override
-		public String getDoc() {
-			return DOC;
-		}
-
-		@Override
-		public String getUsage() {
-			return String.format(
-					"%s=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]", 
-					this);
 		}
 
 		@Override
@@ -62,6 +51,10 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
+	@HelpText(
+			doc = "The maximum length of the queue of incoming connections "
+					+ "(default is 50)", 
+			usage = "backlog=INTEGER_BETWEEN_0_AND_2147483647")
 	BACKLOG("backlog") {
 
 		private static final int DEFAULT_INT_VALUE = 50;
@@ -70,23 +63,6 @@ public enum SettingSpec implements HelpTextParams {
 		public Setting getDefaultSetting() {
 			return new Setting(
 					this, NonnegativeInteger.newInstance(DEFAULT_INT_VALUE));
-		}
-
-		@Override
-		public String getDoc() {
-			return String.format(
-					"The maximum length of the queue of incoming connections "
-					+ "(default is %s)", 
-					DEFAULT_INT_VALUE);
-		}
-
-		@Override
-		public String getUsage() {
-			return String.format(
-					"%s=INTEGER_BETWEEN_%s_AND_%s", 
-					this, 
-					NonnegativeInteger.MIN_INT_VALUE, 
-					NonnegativeInteger.MAX_INT_VALUE);
 		}
 
 		@Override
@@ -106,26 +82,14 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
+	@HelpText(
+			doc = "The space separated list of blocked client address criteria", 
+			usage = "blockedClientAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]")
 	BLOCKED_CLIENT_ADDRESS_CRITERIA("blockedClientAddressCriteria") {
-
-		private static final String DOC = "The space separated list of "
-				+ "blocked client address criteria";
 		
 		@Override
 		public Setting getDefaultSetting() {
 			return newSetting(Criteria.EMPTY_INSTANCE);
-		}
-
-		@Override
-		public String getDoc() {
-			return DOC;
-		}
-
-		@Override
-		public String getUsage() {
-			return String.format(
-					"%s=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]", 
-					this);
 		}
 
 		@Override
@@ -145,28 +109,15 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
+	@HelpText(
+			doc = "The space separated list of socket settings for the client "
+					+ "socket", 
+			usage = "clientSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]")
 	CLIENT_SOCKET_SETTINGS("clientSocketSettings") {
-		
-		private static final String DOC = 
-				"The space separated list of socket settings for the client "
-				+ "socket";
 				
 		@Override
 		public Setting getDefaultSetting() {
 			return new Setting(this, SocketSettings.newInstance());
-		}
-
-		@Override
-		public String getDoc() {
-			return DOC;
-		}
-
-		@Override
-		public String getUsage() {
-			return String.format(
-					"%1$s=[%2$s1[ %2$s2[...]]]", 
-					this, 
-					"SOCKET_SETTING");
 		}
 
 		@Override
@@ -186,25 +137,16 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
+	@HelpText(
+			doc = "The binding host name or address for the socket to connect "
+					+ "to the external SOCKS server used for external "
+					+ "connections (default is 0.0.0.0)", 
+			usage = "externalClient.bindHost=HOST")
 	EXTERNAL_CLIENT_BIND_HOST("externalClient.bindHost") {
 		
 		@Override
 		public Setting getDefaultSetting() {
 			return new Setting(this, SocksClient.DEFAULT_BIND_HOST);
-		}
-
-		@Override
-		public String getDoc() {
-			return String.format(
-					"The binding host name or address for the socket to "
-					+ "connect to the external SOCKS server used for external "
-					+ "connections (default is %s)", 
-					SocksClient.DEFAULT_BIND_HOST);
-		}
-
-		@Override
-		public String getUsage() {
-			return String.format("%s=HOST", this);
 		}
 
 		@Override
@@ -224,6 +166,11 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
+	@HelpText(
+			doc = "The timeout in milliseconds on waiting for the socket to "
+					+ "connect to the external SOCKS server used for external "
+					+ "connections (default is 60000)", 
+			usage = "externalClient.connectTimeout=INTEGER_BETWEEN_1_AND_2147483647")
 	EXTERNAL_CLIENT_CONNECT_TIMEOUT("externalClient.connectTimeout") {
 
 		private static final int DEFAULT_INT_VALUE = 
@@ -233,24 +180,6 @@ public enum SettingSpec implements HelpTextParams {
 		public Setting getDefaultSetting() {
 			return new Setting(
 					this, PositiveInteger.newInstance(DEFAULT_INT_VALUE));
-		}
-
-		@Override
-		public String getDoc() {
-			return String.format(
-					"The timeout in milliseconds on waiting for the socket to "
-					+ "connect to the external SOCKS server used for external "
-					+ "connections (default is %s)", 
-					DEFAULT_INT_VALUE);
-		}
-
-		@Override
-		public String getUsage() {
-			return String.format(
-					"%s=INTEGER_BETWEEN_%s_AND_%s", 
-					this, 
-					PositiveInteger.MIN_INT_VALUE, 
-					PositiveInteger.MAX_INT_VALUE);
 		}
 
 		@Override
@@ -270,25 +199,15 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
+	@HelpText(
+			doc = "The URI of the external SOCKS server used for external "
+					+ "connections", 
+			usage = "externalClient.externalServerUri=SCHEME://HOST[:PORT]")
 	EXTERNAL_CLIENT_EXTERNAL_SERVER_URI("externalClient.externalServerUri") {
-		
-		private static final String DOC = 
-				"The URI of the external SOCKS server used for external "
-				+ "connections.";
 		
 		@Override
 		public Setting getDefaultSetting() {
 			return new Setting(this, null);
-		}
-
-		@Override
-		public String getDoc() {
-			return DOC;
-		}
-
-		@Override
-		public String getUsage() {
-			return String.format("%s=SCHEME://HOST[:PORT]", this);
 		}
 
 		@Override
@@ -308,29 +227,16 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
+	@HelpText(
+			doc = "The space separated list of socket settings for the socket "
+					+ "to connect to the external SOCKS server used for "
+					+ "external connections", 
+			usage = "externalClient.socketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]")
 	EXTERNAL_CLIENT_SOCKET_SETTINGS("externalClient.socketSettings") {
-
-		private static final String DOC = 
-				"The space separated list of socket settings for the socket "
-				+ "to connect to the external SOCKS server used for external "
-				+ "connections";
 		
 		@Override
 		public Setting getDefaultSetting() {
 			return new Setting(this, SocksClient.DEFAULT_SOCKET_SETTINGS);
-		}
-
-		@Override
-		public String getDoc() {
-			return DOC;
-		}
-
-		@Override
-		public String getUsage() {
-			return String.format(
-					"%1$s=[%2$s1[ %2$s2[...]]]", 
-					this, 
-					"SOCKET_SETTING");
 		}
 
 		@Override
@@ -350,28 +256,16 @@ public enum SettingSpec implements HelpTextParams {
 		}
 			
 	},
+	@HelpText(
+			doc = "The space separated list of acceptable authentication "
+					+ "methods to the external SOCKS5 server used for external "
+					+ "connections (default is NO_AUTHENTICATION_REQUIRED)", 
+			usage = "externalClient.socks5.authMethods=SOCKS5_AUTH_METHOD1[ SOCKS5_AUTH_METHOD2[...]]")
 	EXTERNAL_CLIENT_SOCKS5_AUTH_METHODS("externalClient.socks5.authMethods") {
 		
 		@Override
 		public Setting getDefaultSetting() {
 			return new Setting(this, Socks5Client.DEFAULT_AUTH_METHODS);
-		}
-
-		@Override
-		public String getDoc() {
-			return String.format(
-					"The space separated list of acceptable authentication "
-					+ "methods to the external SOCKS5 server used for external "
-					+ "connections (default is %s)",
-					Socks5Client.DEFAULT_AUTH_METHODS);
-		}
-
-		@Override
-		public String getUsage() {
-			return String.format(
-					"%1$s=%2$s1[ %2$s2[...]]", 
-					this, 
-					"SOCKS5_AUTH_METHOD");
 		}
 
 		@Override
@@ -391,26 +285,17 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
+	@HelpText(
+			doc = "The object ID for the GSS-API authentication mechanism to "
+					+ "the external SOCKS5 server used for external "
+					+ "connections (default is 1.2.840.113554.1.2.2)", 
+			usage = "externalClient.socks5.gssapiMechanismOid=GSSAPI_MECHANISM_OID")
 	EXTERNAL_CLIENT_SOCKS5_GSSAPI_MECHANISM_OID(
 			"externalClient.socks5.gssapiMechanismOid") {
 		
 		@Override
 		public Setting getDefaultSetting() {
 			return new Setting(this, Socks5Client.DEFAULT_GSSAPI_MECHANISM_OID);
-		}
-
-		@Override
-		public String getDoc() {
-			return String.format(
-					"The object ID for the GSS-API authentication mechanism to "
-					+ "the external SOCKS5 server used for external "
-					+ "connections (default is %s)", 
-					Socks5Client.DEFAULT_GSSAPI_MECHANISM_OID);
-		}
-
-		@Override
-		public String getUsage() {
-			return String.format("%s=GSSAPI_MECHANISM_OID", this);
 		}
 
 		@Override
@@ -436,6 +321,13 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
+	@HelpText(
+			doc = "The boolean value to indicate if the exchange of the "
+					+ "GSS-API protection level negotiation must be "
+					+ "unprotected should the external SOCKS5 server used for "
+					+ "external connections use the NEC reference "
+					+ "implementation (default is false)", 
+			usage = "externalClient.socks5.gssapiNecReferenceImpl=true|false")
 	EXTERNAL_CLIENT_SOCKS5_GSSAPI_NEC_REFERENCE_IMPL(
 			"externalClient.socks5.gssapiNecReferenceImpl") {
 		
@@ -445,22 +337,6 @@ public enum SettingSpec implements HelpTextParams {
 		@Override
 		public Setting getDefaultSetting() {
 			return new Setting(this, DEFAULT_BOOLEAN_VALUE);
-		}
-
-		@Override
-		public String getDoc() {
-			return String.format(
-					"The boolean value to indicate if the exchange of the "
-					+ "GSS-API protection level negotiation must be "
-					+ "unprotected should the external SOCKS5 server used for "
-					+ "external connections use the NEC reference "
-					+ "implementation (default is %s)", 
-					DEFAULT_BOOLEAN_VALUE);
-		}
-
-		@Override
-		public String getUsage() {
-			return String.format("%s=true|false", this);
 		}
 
 		@Override
@@ -480,6 +356,14 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
+	@HelpText(
+			doc = "The space separated list of acceptable protection levels "
+					+ "after GSS-API authentication with the external SOCKS5 "
+					+ "server used for external connections (The first is "
+					+ "preferred. The remaining are acceptable if the server "
+					+ "does not accept the first.) (default is "
+					+ "REQUIRED_INTEG_AND_CONF REQUIRED_INTEG NONE)", 
+			usage = "externalClient.socks5.gssapiProtectionLevels=SOCKS5_GSSAPI_PROTECTION_LEVEL1[ SOCKS5_GSSAPI_PROTECTION_LEVEL2[...]]")
 	EXTERNAL_CLIENT_SOCKS5_GSSAPI_PROTECTION_LEVELS(
 			"externalClient.socks5.gssapiProtectionLevels") {
 		
@@ -487,25 +371,6 @@ public enum SettingSpec implements HelpTextParams {
 		public Setting getDefaultSetting() {
 			return new Setting(
 					this, Socks5Client.DEFAULT_GSSAPI_PROTECTION_LEVELS);
-		}
-
-		@Override
-		public String getDoc() {
-			return String.format(
-					"The space separated list of acceptable protection levels "
-					+ "after GSS-API authentication with the external SOCKS5 "
-					+ "server used for external connections (The first is "
-					+ "preferred. The remaining are acceptable if the server "
-					+ "does not accept the first.) (default is %s)",
-					Socks5Client.DEFAULT_GSSAPI_PROTECTION_LEVELS);
-		}
-
-		@Override
-		public String getUsage() {
-			return String.format(
-					"%1$s=%2$s1[ %2$s2[...]]", 
-					this, 
-					"SOCKS5_GSSAPI_PROTECTION_LEVEL");
 		}
 
 		@Override
@@ -525,25 +390,16 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
+	@HelpText(
+			doc = "The GSS-API service name for the external SOCKS5 server "
+					+ "used for external connections", 
+			usage = "externalClient.socks5.gssapiServiceName=GSSAPI_SERVICE_NAME")
 	EXTERNAL_CLIENT_SOCKS5_GSSAPI_SERVICE_NAME(
 			"externalClient.socks5.gssapiServiceName") {
-		
-		private static final String DOC = "The GSS-API service name for the "
-				+ "external SOCKS5 server used for external connections";
 		
 		@Override
 		public Setting getDefaultSetting() {
 			return new Setting(this, null);
-		}
-
-		@Override
-		public String getDoc() {
-			return DOC;
-		}
-
-		@Override
-		public String getUsage() {
-			return String.format("%s=GSSAPI_SERVICE_NAME", this);
 		}
 
 		@Override
@@ -563,26 +419,16 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
+	@HelpText(
+			doc = "The username password to be used to access the external "
+					+ "SOCKS5 server used for external connections", 
+			usage = "externalClient.socks5.usernamePassword=USERNAME:PASSWORD")
 	EXTERNAL_CLIENT_SOCKS5_USERNAME_PASSWORD(
 			"externalClient.socks5.usernamePassword") {
-
-		private static final String DOC = "The username password to be used "
-				+ "to access the external SOCKS5 server used for external "
-				+ "connections";
 		
 		@Override
 		public Setting getDefaultSetting() {
 			return new Setting(this, null);
-		}
-
-		@Override
-		public String getDoc() {
-			return DOC;
-		}
-
-		@Override
-		public String getUsage() {
-			return String.format("%s=USERNAME:PASSWORD", this);
 		}
 
 		@Override
@@ -602,6 +448,10 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
+	@HelpText(
+			doc = "The host name or address for the SOCKS server (default is "
+					+ "0.0.0.0)", 
+			usage = "host=HOST")
 	HOST("host") {
 
 		private static final String DEFAULT_HOST = "0.0.0.0";
@@ -615,18 +465,6 @@ public enum SettingSpec implements HelpTextParams {
 				throw new AssertionError(e);
 			}
 			return new Setting(this, host);
-		}
-
-		@Override
-		public String getDoc() {
-			return String.format(
-					"The host name or address for the SOCKS server (default is %s)", 
-					DEFAULT_HOST);
-		}
-
-		@Override
-		public String getUsage() {
-			return String.format("%s=HOST", this);
 		}
 
 		@Override
@@ -652,6 +490,9 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
+	@HelpText(
+			doc = "The port for the SOCKS server (default is 1080)", 
+			usage = "port=INTEGER_BETWEEN_0_AND_65535")
 	PORT("port") {
 		
 		private static final int DEFAULT_INT_VALUE = 1080;
@@ -659,22 +500,6 @@ public enum SettingSpec implements HelpTextParams {
 		@Override
 		public Setting getDefaultSetting() {
 			return new Setting(this, Port.newInstance(DEFAULT_INT_VALUE));
-		}
-
-		@Override
-		public String getDoc() {
-			return String.format(
-					"The port for the SOCKS server (default is %s)", 
-					DEFAULT_INT_VALUE);
-		}
-
-		@Override
-		public String getUsage() {
-			return String.format(
-					"%s=INTEGER_BETWEEN_%s_AND_%s", 
-					this, 
-					Port.MIN_INT_VALUE, 
-					Port.MAX_INT_VALUE);
 		}
 
 		@Override
@@ -694,28 +519,15 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
+	@HelpText(
+			doc = "The space separated list of socket settings for the SOCKS "
+					+ "server", 
+			usage = "socketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]")
 	SOCKET_SETTINGS("socketSettings") {
-
-		private static final String DOC = 
-				"The space separated list of socket settings for the SOCKS "
-				+ "server";
 		
 		@Override
 		public Setting getDefaultSetting() {
 			return new Setting(this, SocketSettings.newInstance());
-		}
-
-		@Override
-		public String getDoc() {
-			return DOC;
-		}
-
-		@Override
-		public String getUsage() {
-			return String.format(
-					"%1$s=[%2$s1[ %2$s2[...]]]", 
-					this, 
-					"SOCKET_SETTING");
 		}
 
 		@Override
@@ -745,21 +557,6 @@ public enum SettingSpec implements HelpTextParams {
 		}
 
 		@Override
-		public String getDoc() {
-			return null;
-		}
-
-		@Override
-		public String getUsage() {
-			return null;
-		}
-		
-		@Override
-		public boolean isDisplayable() {
-			return false;
-		}
-
-		@Override
 		public Setting newSetting(final Object value) {
 			if (!(value instanceof Socks5RequestCriteria)) {
 				throw new ClassCastException(String.format(
@@ -779,27 +576,17 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
+	@HelpText(
+			doc = "The space separated list of acceptable authentication "
+					+ "methods in order of preference (default is "
+					+ "NO_AUTHENTICATION_REQUIRED)", 
+			usage = "socks5.authMethods=SOCKS5_AUTH_METHOD1[ SOCKS5_AUTH_METHOD2[...]]")
 	SOCKS5_AUTH_METHODS("socks5.authMethods") {
 		
 		@Override
 		public Setting getDefaultSetting() {
 			return new Setting(this, AuthMethods.newInstance(
 					AuthMethod.NO_AUTHENTICATION_REQUIRED));
-		}
-
-		@Override
-		public String getDoc() {
-			return String.format(
-					"The space separated list of acceptable authentication "
-					+ "methods in order of preference (default is %s)",
-					AuthMethod.NO_AUTHENTICATION_REQUIRED);
-		}
-
-		@Override
-		public String getUsage() {
-			return String.format("%1$s=%2$s1[ %2$s2[...]]", 
-					this, 
-					"SOCKS5_AUTH_METHOD");
 		}
 
 		@Override
@@ -828,21 +615,6 @@ public enum SettingSpec implements HelpTextParams {
 		}
 
 		@Override
-		public String getDoc() {
-			return null;
-		}
-
-		@Override
-		public String getUsage() {
-			return null;
-		}
-		
-		@Override
-		public boolean isDisplayable() {
-			return false;
-		}
-
-		@Override
 		public Setting newSetting(final Object value) {
 			if (!(value instanceof Socks5RequestCriteria)) {
 				throw new ClassCastException(String.format(
@@ -862,6 +634,12 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
+	@HelpText(
+			doc = "The boolean value to indicate if the exchange of the "
+					+ "GSS-API protection level negotiation must be "
+					+ "unprotected according to the NEC reference "
+					+ "implementation (default is false)", 
+			usage = "socks5.gssapiNecReferenceImpl=true|false")
 	SOCKS5_GSSAPI_NEC_REFERENCE_IMPL("socks5.gssapiNecReferenceImpl") {
 		
 		private static final boolean DEFAULT_BOOLEAN_VALUE = false;
@@ -869,21 +647,6 @@ public enum SettingSpec implements HelpTextParams {
 		@Override
 		public Setting getDefaultSetting() {
 			return new Setting(this, DEFAULT_BOOLEAN_VALUE);
-		}
-
-		@Override
-		public String getDoc() {
-			return String.format(
-					"The boolean value to indicate if the exchange of the "
-					+ "GSS-API protection level negotiation must be "
-					+ "unprotected according to the NEC reference "
-					+ "implementation (default is %s)", 
-					DEFAULT_BOOLEAN_VALUE);
-		}
-
-		@Override
-		public String getUsage() {
-			return String.format("%s=true|false", this);
 		}
 
 		@Override
@@ -903,30 +666,19 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
+	@HelpText(
+			doc = "The space separated list of acceptable protection levels "
+					+ "after GSS-API authentication (The first is preferred "
+					+ "if the client does not provide a protection level that "
+					+ "is acceptable.) (default is REQUIRED_INTEG_AND_CONF "
+					+ "REQUIRED_INTEG NONE)", 
+			usage = "socks5.gssapiProtectionLevels=SOCKS5_GSSAPI_PROTECTION_LEVEL1[ SOCKS5_GSSAPI_PROTECTION_LEVEL2[...]]")
 	SOCKS5_GSSAPI_PROTECTION_LEVELS("socks5.gssapiProtectionLevels") {
 		
 		@Override
 		public Setting getDefaultSetting() {
 			return new Setting(
 					this, GssapiProtectionLevels.DEFAULT_INSTANCE);
-		}
-
-		@Override
-		public String getDoc() {
-			return String.format(
-					"The space separated list of acceptable protection levels "
-					+ "after GSS-API authentication (The first is preferred "
-					+ "if the client does not provide a protection level that "
-					+ "is acceptable.) (default is %s)",
-					GssapiProtectionLevels.DEFAULT_INSTANCE);
-		}
-
-		@Override
-		public String getUsage() {
-			return String.format(
-					"%1$s=%2$s1[ %2$s2[...]]", 
-					this, 
-					"SOCKS5_GSSAPI_PROTECTION_LEVEL");
 		}
 
 		@Override
@@ -946,12 +698,12 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
+	@HelpText(
+			doc = "The space separated list of allowed external incoming "
+					+ "address criteria (default is matches:.*)", 
+			usage = "socks5.onBind.allowedExternalIncomingAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]")
 	SOCKS5_ON_BIND_ALLOWED_EXTERNAL_INCOMING_ADDRESS_CRITERIA(
 			"socks5.onBind.allowedExternalIncomingAddressCriteria") {
-
-		private static final String DOC = "The space separated list of "
-				+ "allowed external incoming address criteria (default is "
-				+ "matches:.*)";
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -960,18 +712,6 @@ public enum SettingSpec implements HelpTextParams {
 		}
 
 		@Override
-		public String getDoc() {
-			return DOC;
-		}
-
-		@Override
-		public String getUsage() {
-			return String.format(
-					"%s=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]", 
-					this);
-		}
-
-		@Override
 		public Setting newSetting(final Object value) {
 			if (!(value instanceof Criteria)) {
 				throw new ClassCastException(String.format(
@@ -988,11 +728,12 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
+	@HelpText(
+			doc = "The space separated list of blocked external incoming "
+					+ "address criteria", 
+			usage = "socks5.onBind.blockedExternalIncomingAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]")
 	SOCKS5_ON_BIND_BLOCKED_EXTERNAL_INCOMING_ADDRESS_CRITERIA(
 			"socks5.onBind.blockedExternalIncomingAddressCriteria") {
-
-		private static final String DOC = "The space separated list of "
-				+ "blocked external incoming address criteria";
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -1000,18 +741,6 @@ public enum SettingSpec implements HelpTextParams {
 		}
 
 		@Override
-		public String getDoc() {
-			return DOC;
-		}
-
-		@Override
-		public String getUsage() {
-			return String.format(
-					"%s=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]", 
-					this);
-		}
-
-		@Override
 		public Setting newSetting(final Object value) {
 			if (!(value instanceof Criteria)) {
 				throw new ClassCastException(String.format(
@@ -1028,29 +757,16 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
+	@HelpText(
+			doc = "The space separated list of socket settings for the "
+					+ "external incoming socket", 
+			usage = "socks5.onBind.externalIncomingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]")
 	SOCKS5_ON_BIND_EXTERNAL_INCOMING_SOCKET_SETTINGS(
 			"socks5.onBind.externalIncomingSocketSettings") {
-		
-		private static final String DOC = 
-				"The space separated list of socket settings for the external "
-				+ "incoming socket";
 				
 		@Override
 		public Setting getDefaultSetting() {
 			return new Setting(this, SocketSettings.newInstance());
-		}
-
-		@Override
-		public String getDoc() {
-			return DOC;
-		}
-
-		@Override
-		public String getUsage() {
-			return String.format(
-					"%1$s=[%2$s1[ %2$s2[...]]]", 
-					this, 
-					"SOCKET_SETTING");
 		}
 
 		@Override
@@ -1070,29 +786,16 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
+	@HelpText(
+			doc = "The space separated list of socket settings for the listen "
+					+ "socket", 
+			usage = "socks5.onBind.listenSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]")
 	SOCKS5_ON_BIND_LISTEN_SOCKET_SETTINGS(
 			"socks5.onBind.listenSocketSettings") {
-		
-		private static final String DOC = 
-				"The space separated list of socket settings for the listen "
-				+ "socket";
 				
 		@Override
 		public Setting getDefaultSetting() {
 			return new Setting(this, SocketSettings.newInstance());
-		}
-
-		@Override
-		public String getDoc() {
-			return DOC;
-		}
-
-		@Override
-		public String getUsage() {
-			return String.format(
-					"%1$s=[%2$s1[ %2$s2[...]]]", 
-					this, 
-					"SOCKET_SETTING");
 		}
 
 		@Override
@@ -1112,6 +815,10 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
+	@HelpText(
+			doc = "The buffer size in bytes for relaying the data (default is "
+					+ "1024)", 
+			usage = "socks5.onBind.relayBufferSize=INTEGER_BETWEEN_1_AND_2147483647")
 	SOCKS5_ON_BIND_RELAY_BUFFER_SIZE("socks5.onBind.relayBufferSize") {
 		
 		private static final int DEFAULT_INT_VALUE = 1024;
@@ -1123,23 +830,6 @@ public enum SettingSpec implements HelpTextParams {
 		}
 
 		@Override
-		public String getDoc() {
-			return String.format(
-					"The buffer size in bytes for relaying the data "
-					+ "(default is %s)", 
-					DEFAULT_INT_VALUE);
-		}
-
-		@Override
-		public String getUsage() {
-			return String.format(
-					"%s=INTEGER_BETWEEN_%s_AND_%s", 
-					this, 
-					PositiveInteger.MIN_INT_VALUE, 
-					PositiveInteger.MAX_INT_VALUE);
-		}
-
-		@Override
 		public Setting newSetting(final Object value) {
 			if (!(value instanceof PositiveInteger)) {
 				throw new ClassCastException(String.format(
@@ -1156,6 +846,10 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
+	@HelpText(
+			doc = "The timeout in milliseconds on relaying no data (default "
+					+ "is 60000)", 
+			usage = "socks5.onBind.relayTimeout=INTEGER_BETWEEN_1_AND_2147483647")
 	SOCKS5_ON_BIND_RELAY_TIMEOUT("socks5.onBind.relayTimeout") {
 		
 		private static final int DEFAULT_INT_VALUE = 60000; // 1 minute
@@ -1167,23 +861,6 @@ public enum SettingSpec implements HelpTextParams {
 		}
 
 		@Override
-		public String getDoc() {
-			return String.format(
-					"The timeout in milliseconds on relaying no data "
-					+ "(default is %s)", 
-					DEFAULT_INT_VALUE);
-		}
-
-		@Override
-		public String getUsage() {
-			return String.format(
-					"%s=INTEGER_BETWEEN_%s_AND_%s", 
-					this, 
-					PositiveInteger.MIN_INT_VALUE, 
-					PositiveInteger.MAX_INT_VALUE);
-		}
-
-		@Override
 		public Setting newSetting(final Object value) {
 			if (!(value instanceof PositiveInteger)) {
 				throw new ClassCastException(String.format(
@@ -1200,6 +877,10 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
+	@HelpText(
+			doc = "The buffer size in bytes for relaying the data (default is "
+					+ "1024)", 
+			usage = "socks5.onConnect.relayBufferSize=INTEGER_BETWEEN_1_AND_2147483647")
 	SOCKS5_ON_CONNECT_RELAY_BUFFER_SIZE("socks5.onConnect.relayBufferSize") {
 		
 		private static final int DEFAULT_INT_VALUE = 1024;
@@ -1211,23 +892,6 @@ public enum SettingSpec implements HelpTextParams {
 		}
 
 		@Override
-		public String getDoc() {
-			return String.format(
-					"The buffer size in bytes for relaying the data "
-					+ "(default is %s)", 
-					DEFAULT_INT_VALUE);
-		}
-
-		@Override
-		public String getUsage() {
-			return String.format(
-					"%s=INTEGER_BETWEEN_%s_AND_%s", 
-					this, 
-					PositiveInteger.MIN_INT_VALUE, 
-					PositiveInteger.MAX_INT_VALUE);
-		}
-
-		@Override
 		public Setting newSetting(final Object value) {
 			if (!(value instanceof PositiveInteger)) {
 				throw new ClassCastException(String.format(
@@ -1244,6 +908,10 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
+	@HelpText(
+			doc = "The timeout in milliseconds on relaying no data (default "
+					+ "is 60000)", 
+			usage = "socks5.onConnect.relayTimeout=INTEGER_BETWEEN_1_AND_2147483647")
 	SOCKS5_ON_CONNECT_RELAY_TIMEOUT("socks5.onConnect.relayTimeout") {
 		
 		private static final int DEFAULT_INT_VALUE = 60000; // 1 minute
@@ -1255,23 +923,6 @@ public enum SettingSpec implements HelpTextParams {
 		}
 
 		@Override
-		public String getDoc() {
-			return String.format(
-					"The timeout in milliseconds on relaying no data "
-					+ "(default is %s)", 
-					DEFAULT_INT_VALUE);
-		}
-
-		@Override
-		public String getUsage() {
-			return String.format(
-					"%s=INTEGER_BETWEEN_%s_AND_%s", 
-					this, 
-					PositiveInteger.MIN_INT_VALUE, 
-					PositiveInteger.MAX_INT_VALUE);
-		}
-
-		@Override
 		public Setting newSetting(final Object value) {
 			if (!(value instanceof PositiveInteger)) {
 				throw new ClassCastException(String.format(
@@ -1288,6 +939,10 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
+	@HelpText(
+			doc = "The binding host name or address for the server-facing "
+					+ "socket (default is 0.0.0.0)", 
+			usage = "socks5.onConnect.serverBindHost=HOST")
 	SOCKS5_ON_CONNECT_SERVER_BIND_HOST("socks5.onConnect.serverBindHost") {
 		
 		private static final String DEFAULT_BIND_HOST = "0.0.0.0";
@@ -1301,19 +956,6 @@ public enum SettingSpec implements HelpTextParams {
 				throw new AssertionError(e);
 			}
 			return new Setting(this, host);
-		}
-
-		@Override
-		public String getDoc() {
-			return String.format(
-					"The binding host name or address for the server-facing "
-					+ "socket (default is %s)", 
-					DEFAULT_BIND_HOST);
-		}
-
-		@Override
-		public String getUsage() {
-			return String.format("%s=HOST", this);
 		}
 
 		@Override
@@ -1339,6 +981,10 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
+	@HelpText(
+			doc = "The timeout in milliseconds on waiting the server-facing "
+					+ "socket to connect (default is 60000)", 
+			usage = "socks5.onConnect.serverConnectTimeout=INTEGER_BETWEEN_1_AND_2147483647")
 	SOCKS5_ON_CONNECT_SERVER_CONNECT_TIMEOUT(
 			"socks5.onConnect.serverConnectTimeout") {
 
@@ -1348,23 +994,6 @@ public enum SettingSpec implements HelpTextParams {
 		public Setting getDefaultSetting() {
 			return new Setting(
 					this, PositiveInteger.newInstance(DEFAULT_INT_VALUE));
-		}
-
-		@Override
-		public String getDoc() {
-			return String.format(
-					"The timeout in milliseconds on waiting the "
-					+ "server-facing socket to connect (default is %s)", 
-					DEFAULT_INT_VALUE);
-		}
-
-		@Override
-		public String getUsage() {
-			return String.format(
-					"%s=INTEGER_BETWEEN_%s_AND_%s", 
-					this, 
-					PositiveInteger.MIN_INT_VALUE, 
-					PositiveInteger.MAX_INT_VALUE);
 		}
 
 		@Override
@@ -1384,29 +1013,16 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
+	@HelpText(
+			doc = "The space separated list of socket settings for the "
+					+ "server-facing socket", 
+			usage = "socks5.onConnect.serverSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]")
 	SOCKS5_ON_CONNECT_SERVER_SOCKET_SETTINGS(
 			"socks5.onConnect.serverSocketSettings") {
-		
-		private static final String DOC = 
-				"The space separated list of socket settings for the "
-				+ "server-facing socket";
 				
 		@Override
 		public Setting getDefaultSetting() {
 			return new Setting(this, SocketSettings.newInstance());
-		}
-
-		@Override
-		public String getDoc() {
-			return DOC;
-		}
-
-		@Override
-		public String getUsage() {
-			return String.format(
-					"%1$s=[%2$s1[ %2$s2[...]]]", 
-					this, 
-					"SOCKET_SETTING");
 		}
 
 		@Override
@@ -1426,12 +1042,12 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
+	@HelpText(
+			doc = "The space separated list of allowed external incoming "
+					+ "address criteria (default is matches:.*)", 
+			usage = "socks5.onUdpAssociate.allowedExternalIncomingAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]")
 	SOCKS5_ON_UDP_ASSOCIATE_ALLOWED_EXTERNAL_INCOMING_ADDRESS_CRITERIA(
 			"socks5.onUdpAssociate.allowedExternalIncomingAddressCriteria") {
-
-		private static final String DOC = "The space separated list of "
-				+ "allowed external incoming address criteria (default is "
-				+ "matches:.*)";
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -1440,18 +1056,6 @@ public enum SettingSpec implements HelpTextParams {
 		}
 
 		@Override
-		public String getDoc() {
-			return DOC;
-		}
-
-		@Override
-		public String getUsage() {
-			return String.format(
-					"%s=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]", 
-					this);
-		}
-
-		@Override
 		public Setting newSetting(final Object value) {
 			if (!(value instanceof Criteria)) {
 				throw new ClassCastException(String.format(
@@ -1468,11 +1072,12 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
+	@HelpText(
+			doc = "The space separated list of blocked external incoming "
+					+ "address criteria", 
+			usage = "socks5.onUdpAssociate.blockedExternalIncomingAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]")
 	SOCKS5_ON_UDP_ASSOCIATE_BLOCKED_EXTERNAL_INCOMING_ADDRESS_CRITERIA(
 			"socks5.onUdpAssociate.blockedExternalIncomingAddressCriteria") {
-
-		private static final String DOC = "The space separated list of "
-				+ "blocked external incoming address criteria";
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -1480,18 +1085,6 @@ public enum SettingSpec implements HelpTextParams {
 		}
 
 		@Override
-		public String getDoc() {
-			return DOC;
-		}
-
-		@Override
-		public String getUsage() {
-			return String.format(
-					"%s=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]", 
-					this);
-		}
-
-		@Override
 		public Setting newSetting(final Object value) {
 			if (!(value instanceof Criteria)) {
 				throw new ClassCastException(String.format(
@@ -1508,6 +1101,10 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
+	@HelpText(
+			doc = "The binding host name or address for the client-facing UDP "
+					+ "socket (default is 0.0.0.0)", 
+			usage = "socks5.onUdpAssociate.clientBindHost=HOST")
 	SOCKS5_ON_UDP_ASSOCIATE_CLIENT_BIND_HOST(
 			"socks5.onUdpAssociate.clientBindHost") {
 		
@@ -1525,19 +1122,6 @@ public enum SettingSpec implements HelpTextParams {
 		}
 
 		@Override
-		public String getDoc() {
-			return String.format(
-					"The binding host name or address for the client-facing "
-					+ "UDP socket (default is %s)", 
-					DEFAULT_BIND_HOST);
-		}
-
-		@Override
-		public String getUsage() {
-			return String.format("%s=HOST", this);
-		}
-
-		@Override
 		public Setting newSetting(final Object value) {
 			if (!(value instanceof Host)) {
 				throw new ClassCastException(String.format(
@@ -1560,29 +1144,16 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
+	@HelpText(
+			doc = "The space separated list of socket settings for the "
+					+ "client-facing UDP socket", 
+			usage = "socks5.onUdpAssociate.clientSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]")
 	SOCKS5_ON_UDP_ASSOCIATE_CLIENT_SOCKET_SETTINGS(
 			"socks5.onUdpAssociate.clientSocketSettings") {
-		
-		private static final String DOC = 
-				"The space separated list of socket settings for the "
-				+ "client-facing UDP socket";
 				
 		@Override
 		public Setting getDefaultSetting() {
 			return new Setting(this, SocketSettings.newInstance());
-		}
-
-		@Override
-		public String getDoc() {
-			return DOC;
-		}
-
-		@Override
-		public String getUsage() {
-			return String.format(
-					"%1$s=[%2$s1[ %2$s2[...]]]", 
-					this, 
-					"SOCKET_SETTING");
 		}
 
 		@Override
@@ -1602,6 +1173,10 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
+	@HelpText(
+			doc = "The buffer size in bytes for relaying the data (default is "
+					+ "32768)", 
+			usage = "socks5.onUdpAssociate.relayBufferSize=INTEGER_BETWEEN_1_AND_2147483647")
 	SOCKS5_ON_UDP_ASSOCIATE_RELAY_BUFFER_SIZE(
 			"socks5.onUdpAssociate.relayBufferSize") {
 		
@@ -1614,23 +1189,6 @@ public enum SettingSpec implements HelpTextParams {
 		}
 
 		@Override
-		public String getDoc() {
-			return String.format(
-					"The buffer size in bytes for relaying the data "
-					+ "(default is %s)", 
-					DEFAULT_INT_VALUE);
-		}
-
-		@Override
-		public String getUsage() {
-			return String.format(
-					"%s=INTEGER_BETWEEN_%s_AND_%s", 
-					this, 
-					PositiveInteger.MIN_INT_VALUE, 
-					PositiveInteger.MAX_INT_VALUE);
-		}
-
-		@Override
 		public Setting newSetting(final Object value) {
 			if (!(value instanceof PositiveInteger)) {
 				throw new ClassCastException(String.format(
@@ -1647,6 +1205,10 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
+	@HelpText(
+			doc = "The timeout in milliseconds on relaying no data (default "
+					+ "is 60000)", 
+			usage = "socks5.onUdpAssociate.relayTimeout=INTEGER_BETWEEN_1_AND_2147483647")
 	SOCKS5_ON_UDP_ASSOCIATE_RELAY_TIMEOUT(
 			"socks5.onUdpAssociate.relayTimeout") {
 		
@@ -1659,23 +1221,6 @@ public enum SettingSpec implements HelpTextParams {
 		}
 
 		@Override
-		public String getDoc() {
-			return String.format(
-					"The timeout in milliseconds on relaying no data "
-					+ "(default is %s)", 
-					DEFAULT_INT_VALUE);
-		}
-
-		@Override
-		public String getUsage() {
-			return String.format(
-					"%s=INTEGER_BETWEEN_%s_AND_%s", 
-					this, 
-					PositiveInteger.MIN_INT_VALUE, 
-					PositiveInteger.MAX_INT_VALUE);
-		}
-
-		@Override
 		public Setting newSetting(final Object value) {
 			if (!(value instanceof PositiveInteger)) {
 				throw new ClassCastException(String.format(
@@ -1692,6 +1237,10 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
+	@HelpText(
+			doc = "The binding host name or address for the server-facing UDP "
+					+ "socket (default is 0.0.0.0)", 
+			usage = "socks5.onUdpAssociate.serverBindHost=HOST")
 	SOCKS5_ON_UDP_ASSOCIATE_SERVER_BIND_HOST(
 			"socks5.onUdpAssociate.serverBindHost") {
 		
@@ -1709,19 +1258,6 @@ public enum SettingSpec implements HelpTextParams {
 		}
 
 		@Override
-		public String getDoc() {
-			return String.format(
-					"The binding host name or address for the server-facing "
-					+ "UDP socket (default is %s)", 
-					DEFAULT_BIND_HOST);
-		}
-
-		@Override
-		public String getUsage() {
-			return String.format("%s=HOST", this);
-		}
-
-		@Override
 		public Setting newSetting(final Object value) {
 			if (!(value instanceof Host)) {
 				throw new ClassCastException(String.format(
@@ -1744,29 +1280,16 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
+	@HelpText(
+			doc = "The space separated list of socket settings for the "
+					+ "server-facing UDP socket", 
+			usage = "socks5.onUdpAssociate.serverSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]")
 	SOCKS5_ON_UDP_ASSOCIATE_SERVER_SOCKET_SETTINGS(
 			"socks5.onUdpAssociate.serverSocketSettings") {
-		
-		private static final String DOC = 
-				"The space separated list of socket settings for the "
-				+ "server-facing UDP socket";
 				
 		@Override
 		public Setting getDefaultSetting() {
 			return new Setting(this, SocketSettings.newInstance());
-		}
-
-		@Override
-		public String getDoc() {
-			return DOC;
-		}
-
-		@Override
-		public String getUsage() {
-			return String.format(
-					"%1$s=[%2$s1[ %2$s2[...]]]", 
-					this, 
-					"SOCKET_SETTING");
 		}
 
 		@Override
@@ -1786,25 +1309,15 @@ public enum SettingSpec implements HelpTextParams {
 		}
 		
 	},
+	@HelpText(
+			doc = "The username password authenticator for the SOCKS5 server", 
+			usage = "socks5.usernamePasswordAuthenticator=CLASSNAME[:VALUE]")
 	SOCKS5_USERNAME_PASSWORD_AUTHENTICATOR(
 			"socks5.usernamePasswordAuthenticator") {
-
-		private static final String DOC = "The username password "
-				+ "authenticator for the SOCKS5 server";
 		
 		@Override
 		public Setting getDefaultSetting() {
 			return new Setting(this, null);
-		}
-
-		@Override
-		public String getDoc() {
-			return DOC;
-		}
-
-		@Override
-		public String getUsage() {
-			return String.format("%s=CLASSNAME[:VALUE]", this);
 		}
 
 		@Override
@@ -1842,11 +1355,6 @@ public enum SettingSpec implements HelpTextParams {
 	}
 	
 	public abstract Setting getDefaultSetting();
-	
-	@Override
-	public boolean isDisplayable() {
-		return true;
-	}
 	
 	public abstract Setting newSetting(final Object value);
 	

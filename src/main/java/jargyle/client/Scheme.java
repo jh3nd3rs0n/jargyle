@@ -5,18 +5,12 @@ import java.util.Iterator;
 import java.util.List;
 
 import jargyle.client.socks5.Socks5ServerUri;
-import jargyle.common.cli.HelpTextParams;
+import jargyle.common.annotation.HelpText;
 
-public enum Scheme implements HelpTextParams {
+public enum Scheme {
 
+	@HelpText(doc = "SOCKS protocol version 5", usage = "socks5")
 	SOCKS5("socks5") {
-		
-		private static final String DOC = "SOCKS protocol version 5";
-
-		@Override
-		public String getDoc() {
-			return DOC;
-		}
 
 		@Override
 		public SocksServerUri newSocksServerUri(
@@ -54,16 +48,6 @@ public enum Scheme implements HelpTextParams {
 	
 	private Scheme(final String str) {
 		this.string = str;
-	}
-
-	@Override
-	public String getUsage() {
-		return this.toString();
-	}
-	
-	@Override
-	public boolean isDisplayable() {
-		return true;
 	}
 	
 	public abstract SocksServerUri newSocksServerUri(

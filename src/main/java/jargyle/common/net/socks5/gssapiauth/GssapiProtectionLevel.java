@@ -6,18 +6,12 @@ import java.util.List;
 
 import org.ietf.jgss.MessageProp;
 
-import jargyle.common.cli.HelpTextParams;
+import jargyle.common.annotation.HelpText;
 
-public enum GssapiProtectionLevel implements HelpTextParams {
+public enum GssapiProtectionLevel {
 
+	@HelpText(doc = "No protection", usage = "NONE")
 	NONE(ProtectionLevel.NONE) {
-		
-		private static final String DOC = "No protection";
-		
-		@Override
-		public String getDoc() {
-			return DOC;
-		}
 
 		@Override
 		public MessageProp newMessageProp() {
@@ -26,14 +20,8 @@ public enum GssapiProtectionLevel implements HelpTextParams {
 		
 	},
 	
+	@HelpText(doc = "Required per-message integrity", usage = "REQUIRED_INTEG")
 	REQUIRED_INTEG(ProtectionLevel.REQUIRED_INTEG) {
-		
-		private static final String DOC = "Required per-message integrity";
-		
-		@Override
-		public String getDoc() {
-			return DOC;
-		}
 
 		@Override
 		public MessageProp newMessageProp() {
@@ -42,15 +30,10 @@ public enum GssapiProtectionLevel implements HelpTextParams {
 		
 	},
 	
+	@HelpText(
+			doc = "Required per-message integrity and confidentiality", 
+			usage = "REQUIRED_INTEG_AND_CONF")
 	REQUIRED_INTEG_AND_CONF(ProtectionLevel.REQUIRED_INTEG_AND_CONF) {
-		
-		private static final String DOC = 
-				"Required per-message integrity and confidentiality";
-		
-		@Override
-		public String getDoc() {
-			return DOC;
-		}
 
 		@Override
 		public MessageProp newMessageProp() {
@@ -118,16 +101,6 @@ public enum GssapiProtectionLevel implements HelpTextParams {
 	
 	private GssapiProtectionLevel(final ProtectionLevel levelValue) {
 		this.protectionLevelValue = levelValue;
-	}
-	
-	@Override
-	public final String getUsage() {
-		return this.toString();
-	}
-	
-	@Override
-	public boolean isDisplayable() {
-		return true;
 	}
 	
 	public abstract MessageProp newMessageProp();

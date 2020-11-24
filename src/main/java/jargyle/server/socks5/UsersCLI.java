@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -20,24 +21,18 @@ import argmatey.ArgMatey.Annotations.Option;
 import argmatey.ArgMatey.Annotations.Ordinal;
 import argmatey.ArgMatey.CLI;
 import argmatey.ArgMatey.OptionType;
-import jargyle.common.cli.HelpTextParams;
+import jargyle.common.annotation.HelpText;
 import jargyle.server.SystemPropertyNameConstants;
 
 public final class UsersCLI extends CLI {
 	
-	private enum Command implements HelpTextParams {
+	private enum Command {
 		
+		@HelpText(
+				doc = "Add users to an existing file through an interactive "
+						+ "prompt", 
+				usage = "add-users-to-file FILE")
 		ADD_USERS_TO_FILE("add-users-to-file") {
-			
-			@Override
-			public String getDoc() {
-				return "Add users to an existing file through an interactive prompt";
-			}
-
-			@Override
-			public String getUsage() {
-				return String.format("%s FILE", this);
-			}
 
 			@Override
 			public void invoke(final String[] args) throws Exception {
@@ -54,17 +49,11 @@ public final class UsersCLI extends CLI {
 			}
 
 		},
+		@HelpText(
+				doc = "Create a new file of zero or more users through an "
+						+ "interactive prompt", 
+				usage = "create-new-file FILE")
 		CREATE_NEW_FILE("create-new-file") {
-			
-			@Override
-			public String getDoc() {
-				return "Create a new file of zero or more users through an interactive prompt";
-			}
-
-			@Override
-			public String getUsage() {
-				return String.format("%s FILE", this);
-			}
 
 			@Override
 			public void invoke(final String[] args) throws Exception {
@@ -84,17 +73,10 @@ public final class UsersCLI extends CLI {
 			}
 			
 		},
+		@HelpText(
+				doc = "Remove user by name from an existing file", 
+				usage = "remove-user NAME FILE")		
 		REMOVE_USER("remove-user") {
-			
-			@Override
-			public String getDoc() {
-				return "Remove user by name from an existing file";
-			}
-
-			@Override
-			public String getUsage() {
-				return String.format("%s NAME FILE", this);
-			}
 
 			@Override
 			public void invoke(final String[] args) throws Exception {
@@ -257,11 +239,6 @@ public final class UsersCLI extends CLI {
 		
 		public abstract void invoke(final String[] args) throws Exception;
 		
-		@Override
-		public boolean isDisplayable() {
-			return true;
-		}
-		
 		public String toString() {
 			return this.value;
 		}
@@ -331,11 +308,15 @@ public final class UsersCLI extends CLI {
 		System.out.println();
 		System.out.println();
 		System.out.println("COMMANDS:");
-		for (HelpTextParams helpTextParams : Command.values()) {
-			System.out.print("  ");
-			System.out.println(helpTextParams.getUsage());
-			System.out.print("      ");
-			System.out.println(helpTextParams.getDoc());
+		Field[] fields = Command.class.getDeclaredFields();
+		for (Field field : fields) {
+			HelpText helpText = field.getAnnotation(HelpText.class);
+			if (helpText != null) {
+				System.out.print("  ");
+				System.out.println(helpText.usage());
+				System.out.print("      ");
+				System.out.println(helpText.doc());
+			}
 		}
 		System.out.println();
 		System.out.println("OPTIONS:");

@@ -4,42 +4,18 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import jargyle.common.cli.HelpTextParams;
+import jargyle.common.annotation.HelpText;
 
-public enum AuthMethod implements HelpTextParams {
+public enum AuthMethod {
 
-	NO_AUTHENTICATION_REQUIRED(Method.NO_AUTHENTICATION_REQUIRED) {
-		
-		private static final String DOC = "No authentication required";
-		
-		@Override
-		public String getDoc() {
-			return DOC;
-		}
-		
-	},
+	@HelpText(doc = "No authentication required", usage = "NO_AUTHENTICATION_REQUIRED")
+	NO_AUTHENTICATION_REQUIRED(Method.NO_AUTHENTICATION_REQUIRED),
 	
-	GSSAPI(Method.GSSAPI) {
-		
-		private static final String DOC = "GSS-API authentication";
-		
-		@Override
-		public String getDoc() {
-			return DOC;
-		}
-		
-	},
+	@HelpText(doc = "GSS-API authentication", usage = "GSSAPI")
+	GSSAPI(Method.GSSAPI),
 	
-	USERNAME_PASSWORD(Method.USERNAME_PASSWORD) {
-		
-		private static final String DOC = "Username password authentication";
-		
-		@Override
-		public String getDoc() {
-			return DOC;
-		}
-		
-	};
+	@HelpText(doc = "Username password authentication", usage = "USERNAME_PASSWORD")
+	USERNAME_PASSWORD(Method.USERNAME_PASSWORD);
 	
 	public static AuthMethod getInstance(final String s) {
 		AuthMethod authMethod = null;
@@ -71,16 +47,6 @@ public enum AuthMethod implements HelpTextParams {
 	
 	private AuthMethod(final Method methValue) {
 		this.methodValue = methValue;
-	}
-
-	@Override
-	public final String getUsage() {
-		return this.toString();
-	}
-	
-	@Override
-	public boolean isDisplayable() {
-		return true;
 	}
 	
 	public Method methodValue() {

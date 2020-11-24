@@ -134,7 +134,7 @@ The following is a list of available settings for the SOCKS server (displayed wh
           The timeout in milliseconds on waiting for the socket to connect to the external SOCKS server used for external connections (default is 60000)
     
       externalClient.externalServerUri=SCHEME://HOST[:PORT]
-          The URI of the external SOCKS server used for external connections.
+          The URI of the external SOCKS server used for external connections
     
       externalClient.socketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
           The space separated list of socket settings for the socket to connect to the external SOCKS server used for external connections

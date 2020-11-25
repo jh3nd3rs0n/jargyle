@@ -31,7 +31,8 @@ public final class UsersCLI extends CLI {
 		@HelpText(
 				doc = "Add users to an existing file through an interactive "
 						+ "prompt", 
-				usage = "add-users-to-file FILE")
+				usage = "add-users-to-file FILE"
+		)
 		ADD_USERS_TO_FILE("add-users-to-file") {
 
 			@Override
@@ -52,7 +53,8 @@ public final class UsersCLI extends CLI {
 		@HelpText(
 				doc = "Create a new file of zero or more users through an "
 						+ "interactive prompt", 
-				usage = "create-new-file FILE")
+				usage = "create-new-file FILE"
+		)
 		CREATE_NEW_FILE("create-new-file") {
 
 			@Override
@@ -75,7 +77,8 @@ public final class UsersCLI extends CLI {
 		},
 		@HelpText(
 				doc = "Remove user by name from an existing file", 
-				usage = "remove-user NAME FILE")		
+				usage = "remove-user NAME FILE"
+		)		
 		REMOVE_USER("remove-user") {
 
 			@Override

@@ -25,7 +25,8 @@ public enum SettingSpec {
 	@HelpText(
 			doc = "The space separated list of allowed client address "
 					+ "criteria (default is matches:.*)", 
-			usage = "allowedClientAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]")
+			usage = "allowedClientAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
+	)
 	ALLOWED_CLIENT_ADDRESS_CRITERIA("allowedClientAddressCriteria") {
 		
 		@Override
@@ -54,7 +55,8 @@ public enum SettingSpec {
 	@HelpText(
 			doc = "The maximum length of the queue of incoming connections "
 					+ "(default is 50)", 
-			usage = "backlog=INTEGER_BETWEEN_0_AND_2147483647")
+			usage = "backlog=INTEGER_BETWEEN_0_AND_2147483647"
+	)
 	BACKLOG("backlog") {
 
 		private static final int DEFAULT_INT_VALUE = 50;
@@ -84,7 +86,8 @@ public enum SettingSpec {
 	},
 	@HelpText(
 			doc = "The space separated list of blocked client address criteria", 
-			usage = "blockedClientAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]")
+			usage = "blockedClientAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
+	)
 	BLOCKED_CLIENT_ADDRESS_CRITERIA("blockedClientAddressCriteria") {
 		
 		@Override
@@ -112,7 +115,8 @@ public enum SettingSpec {
 	@HelpText(
 			doc = "The space separated list of socket settings for the client "
 					+ "socket", 
-			usage = "clientSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]")
+			usage = "clientSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
+	)
 	CLIENT_SOCKET_SETTINGS("clientSocketSettings") {
 				
 		@Override
@@ -141,7 +145,8 @@ public enum SettingSpec {
 			doc = "The binding host name or address for the socket to connect "
 					+ "to the external SOCKS server used for external "
 					+ "connections (default is 0.0.0.0)", 
-			usage = "externalClient.bindHost=HOST")
+			usage = "externalClient.bindHost=HOST"
+	)
 	EXTERNAL_CLIENT_BIND_HOST("externalClient.bindHost") {
 		
 		@Override
@@ -170,7 +175,8 @@ public enum SettingSpec {
 			doc = "The timeout in milliseconds on waiting for the socket to "
 					+ "connect to the external SOCKS server used for external "
 					+ "connections (default is 60000)", 
-			usage = "externalClient.connectTimeout=INTEGER_BETWEEN_1_AND_2147483647")
+			usage = "externalClient.connectTimeout=INTEGER_BETWEEN_1_AND_2147483647"
+	)
 	EXTERNAL_CLIENT_CONNECT_TIMEOUT("externalClient.connectTimeout") {
 
 		private static final int DEFAULT_INT_VALUE = 
@@ -202,7 +208,8 @@ public enum SettingSpec {
 	@HelpText(
 			doc = "The URI of the external SOCKS server used for external "
 					+ "connections", 
-			usage = "externalClient.externalServerUri=SCHEME://HOST[:PORT]")
+			usage = "externalClient.externalServerUri=SCHEME://HOST[:PORT]"
+	)
 	EXTERNAL_CLIENT_EXTERNAL_SERVER_URI("externalClient.externalServerUri") {
 		
 		@Override
@@ -231,7 +238,8 @@ public enum SettingSpec {
 			doc = "The space separated list of socket settings for the socket "
 					+ "to connect to the external SOCKS server used for "
 					+ "external connections", 
-			usage = "externalClient.socketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]")
+			usage = "externalClient.socketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
+	)
 	EXTERNAL_CLIENT_SOCKET_SETTINGS("externalClient.socketSettings") {
 		
 		@Override
@@ -260,7 +268,8 @@ public enum SettingSpec {
 			doc = "The space separated list of acceptable authentication "
 					+ "methods to the external SOCKS5 server used for external "
 					+ "connections (default is NO_AUTHENTICATION_REQUIRED)", 
-			usage = "externalClient.socks5.authMethods=SOCKS5_AUTH_METHOD1[ SOCKS5_AUTH_METHOD2[...]]")
+			usage = "externalClient.socks5.authMethods=SOCKS5_AUTH_METHOD1[ SOCKS5_AUTH_METHOD2[...]]"
+	)
 	EXTERNAL_CLIENT_SOCKS5_AUTH_METHODS("externalClient.socks5.authMethods") {
 		
 		@Override
@@ -289,7 +298,8 @@ public enum SettingSpec {
 			doc = "The object ID for the GSS-API authentication mechanism to "
 					+ "the external SOCKS5 server used for external "
 					+ "connections (default is 1.2.840.113554.1.2.2)", 
-			usage = "externalClient.socks5.gssapiMechanismOid=GSSAPI_MECHANISM_OID")
+			usage = "externalClient.socks5.gssapiMechanismOid=GSSAPI_MECHANISM_OID"
+	)
 	EXTERNAL_CLIENT_SOCKS5_GSSAPI_MECHANISM_OID(
 			"externalClient.socks5.gssapiMechanismOid") {
 		
@@ -327,7 +337,8 @@ public enum SettingSpec {
 					+ "unprotected should the external SOCKS5 server used for "
 					+ "external connections use the NEC reference "
 					+ "implementation (default is false)", 
-			usage = "externalClient.socks5.gssapiNecReferenceImpl=true|false")
+			usage = "externalClient.socks5.gssapiNecReferenceImpl=true|false"
+	)
 	EXTERNAL_CLIENT_SOCKS5_GSSAPI_NEC_REFERENCE_IMPL(
 			"externalClient.socks5.gssapiNecReferenceImpl") {
 		
@@ -363,7 +374,8 @@ public enum SettingSpec {
 					+ "preferred. The remaining are acceptable if the server "
 					+ "does not accept the first.) (default is "
 					+ "REQUIRED_INTEG_AND_CONF REQUIRED_INTEG NONE)", 
-			usage = "externalClient.socks5.gssapiProtectionLevels=SOCKS5_GSSAPI_PROTECTION_LEVEL1[ SOCKS5_GSSAPI_PROTECTION_LEVEL2[...]]")
+			usage = "externalClient.socks5.gssapiProtectionLevels=SOCKS5_GSSAPI_PROTECTION_LEVEL1[ SOCKS5_GSSAPI_PROTECTION_LEVEL2[...]]"
+	)
 	EXTERNAL_CLIENT_SOCKS5_GSSAPI_PROTECTION_LEVELS(
 			"externalClient.socks5.gssapiProtectionLevels") {
 		
@@ -393,7 +405,8 @@ public enum SettingSpec {
 	@HelpText(
 			doc = "The GSS-API service name for the external SOCKS5 server "
 					+ "used for external connections", 
-			usage = "externalClient.socks5.gssapiServiceName=GSSAPI_SERVICE_NAME")
+			usage = "externalClient.socks5.gssapiServiceName=GSSAPI_SERVICE_NAME"
+	)
 	EXTERNAL_CLIENT_SOCKS5_GSSAPI_SERVICE_NAME(
 			"externalClient.socks5.gssapiServiceName") {
 		
@@ -422,7 +435,8 @@ public enum SettingSpec {
 	@HelpText(
 			doc = "The username password to be used to access the external "
 					+ "SOCKS5 server used for external connections", 
-			usage = "externalClient.socks5.usernamePassword=USERNAME:PASSWORD")
+			usage = "externalClient.socks5.usernamePassword=USERNAME:PASSWORD"
+	)
 	EXTERNAL_CLIENT_SOCKS5_USERNAME_PASSWORD(
 			"externalClient.socks5.usernamePassword") {
 		
@@ -451,7 +465,8 @@ public enum SettingSpec {
 	@HelpText(
 			doc = "The host name or address for the SOCKS server (default is "
 					+ "0.0.0.0)", 
-			usage = "host=HOST")
+			usage = "host=HOST"
+	)
 	HOST("host") {
 
 		private static final String DEFAULT_HOST = "0.0.0.0";
@@ -492,7 +507,8 @@ public enum SettingSpec {
 	},
 	@HelpText(
 			doc = "The port for the SOCKS server (default is 1080)", 
-			usage = "port=INTEGER_BETWEEN_0_AND_65535")
+			usage = "port=INTEGER_BETWEEN_0_AND_65535"
+	)
 	PORT("port") {
 		
 		private static final int DEFAULT_INT_VALUE = 1080;
@@ -522,7 +538,8 @@ public enum SettingSpec {
 	@HelpText(
 			doc = "The space separated list of socket settings for the SOCKS "
 					+ "server", 
-			usage = "socketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]")
+			usage = "socketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
+	)
 	SOCKET_SETTINGS("socketSettings") {
 		
 		@Override
@@ -580,7 +597,8 @@ public enum SettingSpec {
 			doc = "The space separated list of acceptable authentication "
 					+ "methods in order of preference (default is "
 					+ "NO_AUTHENTICATION_REQUIRED)", 
-			usage = "socks5.authMethods=SOCKS5_AUTH_METHOD1[ SOCKS5_AUTH_METHOD2[...]]")
+			usage = "socks5.authMethods=SOCKS5_AUTH_METHOD1[ SOCKS5_AUTH_METHOD2[...]]"
+	)
 	SOCKS5_AUTH_METHODS("socks5.authMethods") {
 		
 		@Override
@@ -639,7 +657,8 @@ public enum SettingSpec {
 					+ "GSS-API protection level negotiation must be "
 					+ "unprotected according to the NEC reference "
 					+ "implementation (default is false)", 
-			usage = "socks5.gssapiNecReferenceImpl=true|false")
+			usage = "socks5.gssapiNecReferenceImpl=true|false"
+	)
 	SOCKS5_GSSAPI_NEC_REFERENCE_IMPL("socks5.gssapiNecReferenceImpl") {
 		
 		private static final boolean DEFAULT_BOOLEAN_VALUE = false;
@@ -672,7 +691,8 @@ public enum SettingSpec {
 					+ "if the client does not provide a protection level that "
 					+ "is acceptable.) (default is REQUIRED_INTEG_AND_CONF "
 					+ "REQUIRED_INTEG NONE)", 
-			usage = "socks5.gssapiProtectionLevels=SOCKS5_GSSAPI_PROTECTION_LEVEL1[ SOCKS5_GSSAPI_PROTECTION_LEVEL2[...]]")
+			usage = "socks5.gssapiProtectionLevels=SOCKS5_GSSAPI_PROTECTION_LEVEL1[ SOCKS5_GSSAPI_PROTECTION_LEVEL2[...]]"
+	)
 	SOCKS5_GSSAPI_PROTECTION_LEVELS("socks5.gssapiProtectionLevels") {
 		
 		@Override
@@ -701,7 +721,8 @@ public enum SettingSpec {
 	@HelpText(
 			doc = "The space separated list of allowed external incoming "
 					+ "address criteria (default is matches:.*)", 
-			usage = "socks5.onBind.allowedExternalIncomingAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]")
+			usage = "socks5.onBind.allowedExternalIncomingAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
+	)
 	SOCKS5_ON_BIND_ALLOWED_EXTERNAL_INCOMING_ADDRESS_CRITERIA(
 			"socks5.onBind.allowedExternalIncomingAddressCriteria") {
 		
@@ -731,7 +752,8 @@ public enum SettingSpec {
 	@HelpText(
 			doc = "The space separated list of blocked external incoming "
 					+ "address criteria", 
-			usage = "socks5.onBind.blockedExternalIncomingAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]")
+			usage = "socks5.onBind.blockedExternalIncomingAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
+	)
 	SOCKS5_ON_BIND_BLOCKED_EXTERNAL_INCOMING_ADDRESS_CRITERIA(
 			"socks5.onBind.blockedExternalIncomingAddressCriteria") {
 		
@@ -760,7 +782,8 @@ public enum SettingSpec {
 	@HelpText(
 			doc = "The space separated list of socket settings for the "
 					+ "external incoming socket", 
-			usage = "socks5.onBind.externalIncomingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]")
+			usage = "socks5.onBind.externalIncomingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
+	)
 	SOCKS5_ON_BIND_EXTERNAL_INCOMING_SOCKET_SETTINGS(
 			"socks5.onBind.externalIncomingSocketSettings") {
 				
@@ -789,7 +812,8 @@ public enum SettingSpec {
 	@HelpText(
 			doc = "The space separated list of socket settings for the listen "
 					+ "socket", 
-			usage = "socks5.onBind.listenSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]")
+			usage = "socks5.onBind.listenSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
+	)
 	SOCKS5_ON_BIND_LISTEN_SOCKET_SETTINGS(
 			"socks5.onBind.listenSocketSettings") {
 				
@@ -818,7 +842,8 @@ public enum SettingSpec {
 	@HelpText(
 			doc = "The buffer size in bytes for relaying the data (default is "
 					+ "1024)", 
-			usage = "socks5.onBind.relayBufferSize=INTEGER_BETWEEN_1_AND_2147483647")
+			usage = "socks5.onBind.relayBufferSize=INTEGER_BETWEEN_1_AND_2147483647"
+	)
 	SOCKS5_ON_BIND_RELAY_BUFFER_SIZE("socks5.onBind.relayBufferSize") {
 		
 		private static final int DEFAULT_INT_VALUE = 1024;
@@ -849,7 +874,8 @@ public enum SettingSpec {
 	@HelpText(
 			doc = "The timeout in milliseconds on relaying no data (default "
 					+ "is 60000)", 
-			usage = "socks5.onBind.relayTimeout=INTEGER_BETWEEN_1_AND_2147483647")
+			usage = "socks5.onBind.relayTimeout=INTEGER_BETWEEN_1_AND_2147483647"
+	)
 	SOCKS5_ON_BIND_RELAY_TIMEOUT("socks5.onBind.relayTimeout") {
 		
 		private static final int DEFAULT_INT_VALUE = 60000; // 1 minute
@@ -880,7 +906,8 @@ public enum SettingSpec {
 	@HelpText(
 			doc = "The buffer size in bytes for relaying the data (default is "
 					+ "1024)", 
-			usage = "socks5.onConnect.relayBufferSize=INTEGER_BETWEEN_1_AND_2147483647")
+			usage = "socks5.onConnect.relayBufferSize=INTEGER_BETWEEN_1_AND_2147483647"
+	)
 	SOCKS5_ON_CONNECT_RELAY_BUFFER_SIZE("socks5.onConnect.relayBufferSize") {
 		
 		private static final int DEFAULT_INT_VALUE = 1024;
@@ -911,7 +938,8 @@ public enum SettingSpec {
 	@HelpText(
 			doc = "The timeout in milliseconds on relaying no data (default "
 					+ "is 60000)", 
-			usage = "socks5.onConnect.relayTimeout=INTEGER_BETWEEN_1_AND_2147483647")
+			usage = "socks5.onConnect.relayTimeout=INTEGER_BETWEEN_1_AND_2147483647"
+	)
 	SOCKS5_ON_CONNECT_RELAY_TIMEOUT("socks5.onConnect.relayTimeout") {
 		
 		private static final int DEFAULT_INT_VALUE = 60000; // 1 minute
@@ -942,7 +970,8 @@ public enum SettingSpec {
 	@HelpText(
 			doc = "The binding host name or address for the server-facing "
 					+ "socket (default is 0.0.0.0)", 
-			usage = "socks5.onConnect.serverBindHost=HOST")
+			usage = "socks5.onConnect.serverBindHost=HOST"
+	)
 	SOCKS5_ON_CONNECT_SERVER_BIND_HOST("socks5.onConnect.serverBindHost") {
 		
 		private static final String DEFAULT_BIND_HOST = "0.0.0.0";
@@ -984,7 +1013,8 @@ public enum SettingSpec {
 	@HelpText(
 			doc = "The timeout in milliseconds on waiting the server-facing "
 					+ "socket to connect (default is 60000)", 
-			usage = "socks5.onConnect.serverConnectTimeout=INTEGER_BETWEEN_1_AND_2147483647")
+			usage = "socks5.onConnect.serverConnectTimeout=INTEGER_BETWEEN_1_AND_2147483647"
+	)
 	SOCKS5_ON_CONNECT_SERVER_CONNECT_TIMEOUT(
 			"socks5.onConnect.serverConnectTimeout") {
 
@@ -1016,7 +1046,8 @@ public enum SettingSpec {
 	@HelpText(
 			doc = "The space separated list of socket settings for the "
 					+ "server-facing socket", 
-			usage = "socks5.onConnect.serverSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]")
+			usage = "socks5.onConnect.serverSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
+	)
 	SOCKS5_ON_CONNECT_SERVER_SOCKET_SETTINGS(
 			"socks5.onConnect.serverSocketSettings") {
 				
@@ -1045,7 +1076,8 @@ public enum SettingSpec {
 	@HelpText(
 			doc = "The space separated list of allowed external incoming "
 					+ "address criteria (default is matches:.*)", 
-			usage = "socks5.onUdpAssociate.allowedExternalIncomingAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]")
+			usage = "socks5.onUdpAssociate.allowedExternalIncomingAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
+	)
 	SOCKS5_ON_UDP_ASSOCIATE_ALLOWED_EXTERNAL_INCOMING_ADDRESS_CRITERIA(
 			"socks5.onUdpAssociate.allowedExternalIncomingAddressCriteria") {
 		
@@ -1075,7 +1107,8 @@ public enum SettingSpec {
 	@HelpText(
 			doc = "The space separated list of blocked external incoming "
 					+ "address criteria", 
-			usage = "socks5.onUdpAssociate.blockedExternalIncomingAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]")
+			usage = "socks5.onUdpAssociate.blockedExternalIncomingAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
+	)
 	SOCKS5_ON_UDP_ASSOCIATE_BLOCKED_EXTERNAL_INCOMING_ADDRESS_CRITERIA(
 			"socks5.onUdpAssociate.blockedExternalIncomingAddressCriteria") {
 		
@@ -1104,7 +1137,8 @@ public enum SettingSpec {
 	@HelpText(
 			doc = "The binding host name or address for the client-facing UDP "
 					+ "socket (default is 0.0.0.0)", 
-			usage = "socks5.onUdpAssociate.clientBindHost=HOST")
+			usage = "socks5.onUdpAssociate.clientBindHost=HOST"
+	)
 	SOCKS5_ON_UDP_ASSOCIATE_CLIENT_BIND_HOST(
 			"socks5.onUdpAssociate.clientBindHost") {
 		
@@ -1147,7 +1181,8 @@ public enum SettingSpec {
 	@HelpText(
 			doc = "The space separated list of socket settings for the "
 					+ "client-facing UDP socket", 
-			usage = "socks5.onUdpAssociate.clientSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]")
+			usage = "socks5.onUdpAssociate.clientSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
+	)
 	SOCKS5_ON_UDP_ASSOCIATE_CLIENT_SOCKET_SETTINGS(
 			"socks5.onUdpAssociate.clientSocketSettings") {
 				
@@ -1176,7 +1211,8 @@ public enum SettingSpec {
 	@HelpText(
 			doc = "The buffer size in bytes for relaying the data (default is "
 					+ "32768)", 
-			usage = "socks5.onUdpAssociate.relayBufferSize=INTEGER_BETWEEN_1_AND_2147483647")
+			usage = "socks5.onUdpAssociate.relayBufferSize=INTEGER_BETWEEN_1_AND_2147483647"
+	)
 	SOCKS5_ON_UDP_ASSOCIATE_RELAY_BUFFER_SIZE(
 			"socks5.onUdpAssociate.relayBufferSize") {
 		
@@ -1208,7 +1244,8 @@ public enum SettingSpec {
 	@HelpText(
 			doc = "The timeout in milliseconds on relaying no data (default "
 					+ "is 60000)", 
-			usage = "socks5.onUdpAssociate.relayTimeout=INTEGER_BETWEEN_1_AND_2147483647")
+			usage = "socks5.onUdpAssociate.relayTimeout=INTEGER_BETWEEN_1_AND_2147483647"
+	)
 	SOCKS5_ON_UDP_ASSOCIATE_RELAY_TIMEOUT(
 			"socks5.onUdpAssociate.relayTimeout") {
 		
@@ -1240,7 +1277,8 @@ public enum SettingSpec {
 	@HelpText(
 			doc = "The binding host name or address for the server-facing UDP "
 					+ "socket (default is 0.0.0.0)", 
-			usage = "socks5.onUdpAssociate.serverBindHost=HOST")
+			usage = "socks5.onUdpAssociate.serverBindHost=HOST"
+	)
 	SOCKS5_ON_UDP_ASSOCIATE_SERVER_BIND_HOST(
 			"socks5.onUdpAssociate.serverBindHost") {
 		
@@ -1283,7 +1321,8 @@ public enum SettingSpec {
 	@HelpText(
 			doc = "The space separated list of socket settings for the "
 					+ "server-facing UDP socket", 
-			usage = "socks5.onUdpAssociate.serverSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]")
+			usage = "socks5.onUdpAssociate.serverSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
+	)
 	SOCKS5_ON_UDP_ASSOCIATE_SERVER_SOCKET_SETTINGS(
 			"socks5.onUdpAssociate.serverSocketSettings") {
 				
@@ -1311,7 +1350,8 @@ public enum SettingSpec {
 	},
 	@HelpText(
 			doc = "The username password authenticator for the SOCKS5 server", 
-			usage = "socks5.usernamePasswordAuthenticator=CLASSNAME[:VALUE]")
+			usage = "socks5.usernamePasswordAuthenticator=CLASSNAME[:VALUE]"
+	)
 	SOCKS5_USERNAME_PASSWORD_AUTHENTICATOR(
 			"socks5.usernamePasswordAuthenticator") {
 		

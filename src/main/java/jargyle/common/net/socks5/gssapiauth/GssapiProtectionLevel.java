@@ -32,7 +32,8 @@ public enum GssapiProtectionLevel {
 	
 	@HelpText(
 			doc = "Required per-message integrity and confidentiality", 
-			usage = "REQUIRED_INTEG_AND_CONF")
+			usage = "REQUIRED_INTEG_AND_CONF"
+	)
 	REQUIRED_INTEG_AND_CONF(ProtectionLevel.REQUIRED_INTEG_AND_CONF) {
 
 		@Override

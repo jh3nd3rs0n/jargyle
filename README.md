@@ -1260,8 +1260,8 @@ Instead of using command line options or configuration settings, you can use the
 -   `socksClient.socks5.gssapiNecReferenceImpl`: Its usage is equivalent to the setting `externalClient.socks5.gssapiNecReferenceImpl`. See the settings help information for details (use the command line option `--settings-help`) 
 -   `socksClient.socks5.gssapiProtectionLevels`: Its usage is equivalent to the setting `externalClient.socks5.gssapiProtectionLevels`. See the settings help information for details (use the command line option `--settings-help`) 
 -   `socksClient.socks5.gssapiServiceName`: Its usage is equivalent to the setting `externalClient.socks5.gssapiServiceName`. See the settings help information for details (use the command line option `--settings-help`) 
--   `socksClient.socks5.username`: The username to be used in SOCKS5 username password authentication to access the other SOCKS5 server used for external connections (any special characters must be URL encoded)
--   `socksClient.socks5.password`: The password to be used in SOCKS5 username password authentication to access the other SOCKS5 server used for external connections (any special characters must be URL encoded)
+-   `socksClient.socks5.username`: The username to be used in SOCKS5 username password authentication to access the other SOCKS5 server used for external connections
+-   `socksClient.socks5.password`: The password to be used in SOCKS5 username password authentication to access the other SOCKS5 server used for external connections
 
 ### 3. 10. Allowing or Blocking Addresses
 

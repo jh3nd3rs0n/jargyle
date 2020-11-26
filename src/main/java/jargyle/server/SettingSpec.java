@@ -5,9 +5,8 @@ import java.net.UnknownHostException;
 import org.ietf.jgss.GSSException;
 import org.ietf.jgss.Oid;
 
-import jargyle.client.SocksClient;
+import jargyle.client.PropertySpec;
 import jargyle.client.SocksServerUri;
-import jargyle.client.socks5.Socks5Client;
 import jargyle.client.socks5.UsernamePassword;
 import jargyle.common.annotation.HelpText;
 import jargyle.common.net.Host;
@@ -153,16 +152,18 @@ public enum SettingSpec {
 		
 		@Override
 		public Setting getDefaultSetting() {
-			return new Setting(this, SocksClient.DEFAULT_BIND_HOST);
+			return new Setting(
+					this, 
+					PropertySpec.BIND_HOST.getDefaultProperty().getValue());
 		}
 
 		@Override
 		public Setting newSetting(final Object value) {
-			if (!(value instanceof String)) {
+			if (!(value instanceof Host)) {
 				throw new ClassCastException(String.format(
 						"unable to cast %s to %s",
 						value.getClass().getName(),
-						String.class.getName()));
+						Host.class.getName()));
 			}
 			return new Setting(this, value);
 		}
@@ -180,14 +181,12 @@ public enum SettingSpec {
 			usage = "externalClient.connectTimeout=INTEGER_BETWEEN_1_AND_2147483647"
 	)
 	EXTERNAL_CLIENT_CONNECT_TIMEOUT("externalClient.connectTimeout") {
-
-		private static final int DEFAULT_INT_VALUE = 
-				SocksClient.DEFAULT_CONNECT_TIMEOUT;
 		
 		@Override
 		public Setting getDefaultSetting() {
 			return new Setting(
-					this, PositiveInteger.newInstance(DEFAULT_INT_VALUE));
+					this, 
+					PropertySpec.CONNECT_TIMEOUT.getDefaultProperty().getValue());
 		}
 
 		@Override
@@ -246,7 +245,9 @@ public enum SettingSpec {
 		
 		@Override
 		public Setting getDefaultSetting() {
-			return new Setting(this, SocksClient.DEFAULT_SOCKET_SETTINGS);
+			return new Setting(
+					this, 
+					PropertySpec.SOCKET_SETTINGS.getDefaultProperty().getValue());
 		}
 
 		@Override
@@ -276,7 +277,9 @@ public enum SettingSpec {
 		
 		@Override
 		public Setting getDefaultSetting() {
-			return new Setting(this, Socks5Client.DEFAULT_AUTH_METHODS);
+			return new Setting(
+					this, 
+					PropertySpec.SOCKS5_AUTH_METHODS.getDefaultProperty().getValue());
 		}
 
 		@Override
@@ -307,7 +310,9 @@ public enum SettingSpec {
 		
 		@Override
 		public Setting getDefaultSetting() {
-			return new Setting(this, Socks5Client.DEFAULT_GSSAPI_MECHANISM_OID);
+			return new Setting(
+					this, 
+					PropertySpec.SOCKS5_GSSAPI_MECHANISM_OID.getDefaultProperty().getValue());
 		}
 
 		@Override
@@ -343,13 +348,12 @@ public enum SettingSpec {
 	)
 	EXTERNAL_CLIENT_SOCKS5_GSSAPI_NEC_REFERENCE_IMPL(
 			"externalClient.socks5.gssapiNecReferenceImpl") {
-		
-		private static final boolean DEFAULT_BOOLEAN_VALUE = 
-				Socks5Client.DEFAULT_GSSAPI_NEC_REFERENCE_IMPL;
 
 		@Override
 		public Setting getDefaultSetting() {
-			return new Setting(this, DEFAULT_BOOLEAN_VALUE);
+			return new Setting(
+					this, 
+					PropertySpec.SOCKS5_GSSAPI_NEC_REFERENCE_IMPL.getDefaultProperty().getValue());
 		}
 
 		@Override
@@ -384,7 +388,8 @@ public enum SettingSpec {
 		@Override
 		public Setting getDefaultSetting() {
 			return new Setting(
-					this, Socks5Client.DEFAULT_GSSAPI_PROTECTION_LEVELS);
+					this, 
+					PropertySpec.SOCKS5_GSSAPI_PROTECTION_LEVELS.getDefaultProperty().getValue());
 		}
 
 		@Override
@@ -414,7 +419,9 @@ public enum SettingSpec {
 		
 		@Override
 		public Setting getDefaultSetting() {
-			return new Setting(this, null);
+			return new Setting(
+					this, 
+					PropertySpec.SOCKS5_GSSAPI_SERVICE_NAME.getDefaultProperty().getValue());
 		}
 
 		@Override

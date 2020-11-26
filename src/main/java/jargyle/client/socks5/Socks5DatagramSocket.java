@@ -13,6 +13,7 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.nio.channels.DatagramChannel;
 
+import jargyle.client.PropertySpec;
 import jargyle.common.net.DatagramPacketFilter;
 import jargyle.common.net.DatagramPacketFilterFactory;
 import jargyle.common.net.SocketSettings;
@@ -41,7 +42,8 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 				DatagramPacketFilterFactory.newDatagramPacketFilter(
 						socks5DatagramSocket.socket);
 		SocketSettings socketSettings = 
-				socks5DatagramSocket.socks5Client.getSocketSettings();
+				socks5DatagramSocket.socks5Client.getProperties().getValue(
+						PropertySpec.SOCKET_SETTINGS, SocketSettings.class);
 		socketSettings.applyTo(socks5DatagramSocket.socket);
 		socks5DatagramSocket.udpRelayServerInetAddress = null;
 		socks5DatagramSocket.udpRelayServerPort = -1;

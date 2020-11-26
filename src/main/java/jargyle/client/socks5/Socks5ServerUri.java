@@ -1,5 +1,6 @@
 package jargyle.client.socks5;
 
+import jargyle.client.Properties;
 import jargyle.client.Scheme;
 import jargyle.client.SocksServerUri;
 
@@ -10,8 +11,8 @@ public final class Socks5ServerUri extends SocksServerUri {
 	}
 
 	@Override
-	public Socks5Client.Builder newSocksClientBuilder() {
-		return new Socks5Client.Builder(this);
+	public Socks5Client newSocksClient(final Properties properties) {
+		return new Socks5Client(this, properties);
 	}
 
 }

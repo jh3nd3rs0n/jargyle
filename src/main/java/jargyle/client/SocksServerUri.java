@@ -126,7 +126,7 @@ public abstract class SocksServerUri {
 		return this.scheme;
 	}
 	
-	public abstract SocksClient.Builder newSocksClientBuilder();
+	public abstract SocksClient newSocksClient(final Properties properties);
 	
 	@Override
 	public final String toString() {

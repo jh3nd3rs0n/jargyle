@@ -14,6 +14,8 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import jargyle.common.net.Port;
+
 @XmlJavaTypeAdapter(PortRanges.PortRangesXmlAdapter.class)
 public final class PortRanges {
 	

@@ -7,6 +7,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import argmatey.ArgMatey.CLI;
+import jargyle.common.net.Host;
+import jargyle.common.net.Port;
 import jargyle.common.net.SocketSettings;
 import jargyle.common.util.NonnegativeInteger;
 

@@ -29,6 +29,8 @@ import jargyle.client.socks5.DefaultUsernamePasswordRequestor;
 import jargyle.client.socks5.UsernamePassword;
 import jargyle.client.socks5.UsernamePasswordRequestor;
 import jargyle.common.annotation.HelpText;
+import jargyle.common.net.Host;
+import jargyle.common.net.Port;
 import jargyle.common.net.SocketSettingSpec;
 import jargyle.common.net.socks5.AuthMethod;
 import jargyle.common.net.socks5.gssapiauth.GssapiProtectionLevel;

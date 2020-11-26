@@ -7,6 +7,8 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import jargyle.common.net.Port;
+
 @XmlJavaTypeAdapter(PortRange.PortRangeXmlAdapter.class)
 public final class PortRange {
 

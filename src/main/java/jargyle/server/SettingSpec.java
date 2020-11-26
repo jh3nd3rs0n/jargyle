@@ -10,6 +10,8 @@ import jargyle.client.SocksServerUri;
 import jargyle.client.socks5.Socks5Client;
 import jargyle.client.socks5.UsernamePassword;
 import jargyle.common.annotation.HelpText;
+import jargyle.common.net.Host;
+import jargyle.common.net.Port;
 import jargyle.common.net.SocketSettings;
 import jargyle.common.net.socks5.AuthMethod;
 import jargyle.common.net.socks5.AuthMethods;

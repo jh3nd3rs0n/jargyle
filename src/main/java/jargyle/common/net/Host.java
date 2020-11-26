@@ -1,4 +1,4 @@
-package jargyle.server;
+package jargyle.common.net;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;

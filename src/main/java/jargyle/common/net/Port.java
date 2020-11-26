@@ -1,4 +1,4 @@
-package jargyle.server;
+package jargyle.common.net;
 
 public final class Port implements Comparable<Port> {
 

@@ -2,7 +2,6 @@ package jargyle.client.socks5;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -111,18 +110,12 @@ public final class UsernamePassword {
 	
 	@Override
 	public String toString() {
-		String encodedUsername = null;
-		try {
-			encodedUsername = URLEncoder.encode(this.username, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			throw new AssertionError(e);
-		}
 		StringBuilder builder = new StringBuilder();
 		builder.append(this.getClass().getSimpleName())
 			.append(" [encryptedPassword=")
 			.append(this.encryptedPassword)
 			.append(", username=")
-			.append(encodedUsername)
+			.append(this.username)
 			.append("]");
 		return builder.toString();
 	}

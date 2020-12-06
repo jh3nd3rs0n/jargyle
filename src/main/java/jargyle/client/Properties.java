@@ -11,16 +11,13 @@ public final class Properties {
 	public static Properties newInstance(final List<Property> properties) {
 		Map<PropertySpec, Property> props = 
 				new HashMap<PropertySpec, Property>();
-		if (properties.isEmpty()) {
-			for (PropertySpec propertySpec : PropertySpec.values()) {
-				String property = System.getProperty(propertySpec.toString());
-				if (property != null) {
-					props.put(propertySpec, propertySpec.newProperty(property));
-				}
-			}
-		} else {
-			for (Property property : properties) {
-				props.put(property.getPropertySpec(), property);
+		for (Property property : properties) {
+			props.put(property.getPropertySpec(), property);
+		}
+		for (PropertySpec propertySpec : PropertySpec.values()) {
+			String property = System.getProperty(propertySpec.toString());
+			if (property != null) {
+				props.put(propertySpec, propertySpec.newProperty(property));
 			}
 		}
 		return new Properties(props);

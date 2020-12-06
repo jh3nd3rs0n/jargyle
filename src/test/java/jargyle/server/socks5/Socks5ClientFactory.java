@@ -1,10 +1,6 @@
 package jargyle.server.socks5;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import jargyle.client.Properties;
-import jargyle.client.Property;
 import jargyle.client.PropertySpec;
 import jargyle.client.socks5.Socks5Client;
 import jargyle.client.socks5.Socks5ServerUri;
@@ -25,15 +21,14 @@ public final class Socks5ClientFactory {
 			final String host, 
 			final Integer port, 
 			final UsernamePassword usernamePassword) {
-		List<Property> properties = new ArrayList<Property>();
-		properties.add(PropertySpec.SOCKS5_AUTH_METHODS.newProperty(
-				AuthMethods.newInstance(AuthMethod.USERNAME_PASSWORD)));
-		properties.add(PropertySpec.SOCKS5_USERNAME.newProperty(
-				usernamePassword.getUsername()));
-		properties.add(PropertySpec.SOCKS5_PASSWORD.newProperty(
-				usernamePassword.getEncryptedPassword().getPassword()));
-		return new Socks5ServerUri(host, port).newSocksClient(
-				Properties.newInstance(properties));
+		Properties properties = Properties.newInstance(
+				PropertySpec.SOCKS5_AUTH_METHODS.newProperty(
+						AuthMethods.newInstance(AuthMethod.USERNAME_PASSWORD)),
+				PropertySpec.SOCKS5_USERNAME.newProperty(
+						usernamePassword.getUsername()),
+				PropertySpec.SOCKS5_PASSWORD.newProperty(
+						usernamePassword.getEncryptedPassword().getPassword()));
+		return new Socks5ServerUri(host, port).newSocksClient(properties);
 	}
 	
 	public static Socks5Client newSocks5Client(
@@ -42,17 +37,16 @@ public final class Socks5ClientFactory {
 			final String gssapiServiceName,
 			final GssapiProtectionLevels gssapiProtectionLevels, 
 			final boolean gssapiNecReferenceImpl) {
-		List<Property> properties = new ArrayList<Property>();
-		properties.add(PropertySpec.SOCKS5_AUTH_METHODS.newProperty(
-				AuthMethods.newInstance(AuthMethod.GSSAPI)));
-		properties.add(PropertySpec.SOCKS5_GSSAPI_SERVICE_NAME.newProperty(
-				gssapiServiceName));
-		properties.add(PropertySpec.SOCKS5_GSSAPI_PROTECTION_LEVELS.newProperty(
-				gssapiProtectionLevels));
-		properties.add(PropertySpec.SOCKS5_GSSAPI_NEC_REFERENCE_IMPL.newProperty(
-				Boolean.valueOf(gssapiNecReferenceImpl)));
-		return new Socks5ServerUri(host, port).newSocksClient(
-				Properties.newInstance(properties));
+		Properties properties = Properties.newInstance(
+				PropertySpec.SOCKS5_AUTH_METHODS.newProperty(
+						AuthMethods.newInstance(AuthMethod.GSSAPI)),
+				PropertySpec.SOCKS5_GSSAPI_SERVICE_NAME.newProperty(
+						gssapiServiceName),
+				PropertySpec.SOCKS5_GSSAPI_PROTECTION_LEVELS.newProperty(
+						gssapiProtectionLevels),
+				PropertySpec.SOCKS5_GSSAPI_NEC_REFERENCE_IMPL.newProperty(
+						Boolean.valueOf(gssapiNecReferenceImpl)));
+		return new Socks5ServerUri(host, port).newSocksClient(properties);
 	}
 	
 	private Socks5ClientFactory() { }

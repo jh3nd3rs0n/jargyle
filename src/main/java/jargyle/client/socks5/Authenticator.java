@@ -102,7 +102,7 @@ enum Authenticator {
 			GssapiProtectionLevels gssapiProtectionLevels = 
 					socks5Client.getProperties().getValue(
 							PropertySpec.SOCKS5_GSSAPI_PROTECTION_LEVELS, 
-							GssapiProtectionLevels.class);;
+							GssapiProtectionLevels.class);
 			List<GssapiProtectionLevel> gssapiProtectionLevelList = 
 					gssapiProtectionLevels.toList(); 
 			GssapiProtectionLevel firstGssapiProtectionLevel = 

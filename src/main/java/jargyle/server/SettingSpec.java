@@ -215,7 +215,7 @@ public enum SettingSpec {
 		
 		@Override
 		public Setting getDefaultSetting() {
-			return new Setting(this, null);
+			return new Setting(this, SocksServerUri.newInstance());
 		}
 
 		@Override

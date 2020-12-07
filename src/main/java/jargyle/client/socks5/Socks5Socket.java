@@ -23,10 +23,8 @@ public final class Socks5Socket extends FilterSocket {
 			final InetAddress inetAddress,
 			final int port,
 			final int timeout) throws IOException {
-		socks5Socket.socks5Client.connectToSocksServerWith(
+		Socket sock = socks5Socket.socks5Client.connectToSocksServerWith(
 				socks5Socket.socket, timeout);
-		Socket sock = socks5Socket.socks5Client.authenticate(
-				socks5Socket.socket);
 		InputStream inputStream = sock.getInputStream();
 		OutputStream outputStream = sock.getOutputStream();
 		String address = inetAddress.getHostAddress();

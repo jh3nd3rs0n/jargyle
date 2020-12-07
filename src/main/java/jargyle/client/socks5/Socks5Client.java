@@ -22,9 +22,15 @@ public final class Socks5Client extends SocksClient {
 		super(serverUri, props);
 	}
 	
-	public Socket authenticate(final Socket socket) throws IOException {
-		InputStream inputStream = socket.getInputStream();
-		OutputStream outputStream = socket.getOutputStream();
+	@Override
+	public Socket connectToSocksServerWith(
+			final Socket socket, 
+			final int timeout, 
+			final boolean bindBeforeConnect) throws IOException {
+		Socket sock = super.connectToSocksServerWith(
+				socket, timeout, bindBeforeConnect);
+		InputStream inputStream = sock.getInputStream();
+		OutputStream outputStream = sock.getOutputStream();
 		Set<Method> methods = new TreeSet<Method>();
 		AuthMethods authMethods = this.getProperties().getValue(
 				PropertySpec.SOCKS5_AUTH_METHODS, AuthMethods.class);

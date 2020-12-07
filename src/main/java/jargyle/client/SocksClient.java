@@ -32,28 +32,48 @@ public abstract class SocksClient {
 		this.properties = props;
 	}
 	
-	public final void bind(final Socket socket) throws IOException {
-		socket.bind(new InetSocketAddress(
-				InetAddress.getByName(this.properties.getValue(
-						PropertySpec.BIND_HOST, Host.class).toString()), 
-				this.properties.getValue(
-						PropertySpec.BIND_PORT, Port.class).intValue()));
-	}
-	
-	public final void connectToSocksServerWith(
+	public Socket connectToSocksServerWith(
 			final Socket socket) throws IOException {
-		this.connectToSocksServerWith(socket, this.properties.getValue(
-				PropertySpec.CONNECT_TIMEOUT, PositiveInteger.class).intValue());
+		return this.connectToSocksServerWith(
+				socket, 
+				this.properties.getValue(PropertySpec.CONNECT_TIMEOUT, 
+						PositiveInteger.class).intValue(), 
+				false);
 	}
 	
-	public final void connectToSocksServerWith(
+	public Socket connectToSocksServerWith(
+			final Socket socket, 
+			final boolean bindBeforeConnect) throws IOException {
+		return this.connectToSocksServerWith(
+				socket, 
+				this.properties.getValue(PropertySpec.CONNECT_TIMEOUT, 
+						PositiveInteger.class).intValue(), 
+				bindBeforeConnect);
+	}
+	
+	public Socket connectToSocksServerWith(
 			final Socket socket, final int timeout) throws IOException {
+		return this.connectToSocksServerWith(socket, timeout, false);
+	}
+	
+	public Socket connectToSocksServerWith(
+			final Socket socket, 
+			final int timeout, 
+			final boolean bindBeforeConnect) throws IOException {
+		if (bindBeforeConnect) {
+			socket.bind(new InetSocketAddress(
+					InetAddress.getByName(this.properties.getValue(
+							PropertySpec.BIND_HOST, Host.class).toString()), 
+					this.properties.getValue(
+							PropertySpec.BIND_PORT, Port.class).intValue()));
+		}
 		SocksServerUri socksServerUri = this.getSocksServerUri();
-		InetAddress inetAddress = InetAddress.getByName(
-				socksServerUri.getHost());
-		socket.connect(new InetSocketAddress(
-				inetAddress, socksServerUri.getPort()), 
+		socket.connect(
+				new InetSocketAddress(
+						InetAddress.getByName(socksServerUri.getHost()), 
+						socksServerUri.getPort()), 
 				timeout);
+		return socket;
 	}
 	
 	public final Properties getProperties() {

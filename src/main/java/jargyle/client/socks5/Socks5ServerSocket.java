@@ -144,11 +144,8 @@ public final class Socks5ServerSocket extends ServerSocket {
 			final Socks5ServerSocket socks5ServerSocket,
 			final int port,
 			final InetAddress bindAddr) throws IOException {
-		socks5ServerSocket.socks5Client.bind(socks5ServerSocket.socket);
-		socks5ServerSocket.socks5Client.connectToSocksServerWith(
-				socks5ServerSocket.socket);
-		Socket sock = socks5ServerSocket.socks5Client.authenticate(
-				socks5ServerSocket.socket);
+		Socket sock = socks5ServerSocket.socks5Client.connectToSocksServerWith(
+				socks5ServerSocket.socket, true);
 		InputStream inStream = sock.getInputStream();
 		OutputStream outStream = sock.getOutputStream();
 		InetAddress bAddr = bindAddr;

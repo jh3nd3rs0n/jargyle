@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 
-import jargyle.client.ServerSocketFactory;
+import jargyle.common.net.ServerSocketFactory;
 
 public final class Socks5ServerSocketFactory extends ServerSocketFactory {
 

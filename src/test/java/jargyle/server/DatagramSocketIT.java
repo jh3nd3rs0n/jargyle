@@ -16,8 +16,8 @@ import java.util.concurrent.Executors;
 import org.junit.Test;
 
 import jargyle.TestStringConstants;
-import jargyle.client.DatagramSocketFactory;
 import jargyle.client.SocksClient;
+import jargyle.common.net.DatagramSocketFactory;
 
 public class DatagramSocketIT {
 
@@ -131,7 +131,10 @@ public class DatagramSocketIT {
 			echoServer.start();
 			int port = echoServer.getPort();
 			DatagramSocketFactory datagramSocketFactory =
-					DatagramSocketFactory.newInstance(socksClient);
+					DatagramSocketFactory.newInstance();
+			if (socksClient != null) {
+				datagramSocketFactory = socksClient.newDatagramSocketFactory();
+			}
 			echoDatagramSocket = datagramSocketFactory.newDatagramSocket(0);
 			echoDatagramSocket.connect(LOOPBACK_ADDRESS, port);
 			ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();

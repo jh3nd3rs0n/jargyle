@@ -1,4 +1,4 @@
-package jargyle.client;
+package jargyle.common.net;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -8,17 +8,6 @@ import java.net.UnknownHostException;
 public class SocketFactory {
 
 	public static SocketFactory newInstance() {
-		return newInstance(null);
-	}
-	
-	public static SocketFactory newInstance(final SocksClient socksClient) {
-		SocksClient client = socksClient;
-		if (client == null) {
-			client = SocksClient.newInstance();
-		}
-		if (client != null) {
-			return client.newSocketFactory();
-		}
 		return new SocketFactory();
 	}
 	

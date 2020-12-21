@@ -194,15 +194,21 @@ public class ServerSocketIT {
 			}
 			echoServer = new EchoServer(ECHO_SERVER_PORT, string);
 			echoServer.start();
-			jargyle.client.SocketFactory socketFactory =
-					jargyle.client.SocketFactory.newInstance(socksClient);
+			jargyle.common.net.SocketFactory socketFactory =
+					jargyle.common.net.SocketFactory.newInstance();
+			if (socksClient != null) {
+				socketFactory = socksClient.newSocketFactory();
+			}
 			echoSocket = socketFactory.newSocket();
 			echoSocket.connect(new InetSocketAddress(
 					LOOPBACK_ADDRESS, echoServer.getPort()));
 			OutputStream out = echoSocket.getOutputStream();
 			PrintWriter writer = new PrintWriter(out, true);
-			jargyle.client.ServerSocketFactory serverSocketFactory =
-					jargyle.client.ServerSocketFactory.newInstance(socksClient);
+			jargyle.common.net.ServerSocketFactory serverSocketFactory =
+					jargyle.common.net.ServerSocketFactory.newInstance();
+			if (socksClient != null) {
+				serverSocketFactory = socksClient.newServerSocketFactory();
+			}
 			ServerSocket serverSocket = serverSocketFactory.newServerSocket();
 			serverSocket.bind(new InetSocketAddress(
 					(InetAddress) null, SERVER_PORT));

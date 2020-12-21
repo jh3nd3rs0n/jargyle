@@ -5,7 +5,7 @@ import java.net.InetAddress;
 import java.net.SocketAddress;
 import java.net.SocketException;
 
-import jargyle.client.DatagramSocketFactory;
+import jargyle.common.net.DatagramSocketFactory;
 
 public final class Socks5DatagramSocketFactory extends DatagramSocketFactory {
 

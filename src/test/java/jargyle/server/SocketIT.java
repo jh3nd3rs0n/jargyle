@@ -18,8 +18,8 @@ import javax.net.ServerSocketFactory;
 import org.junit.Test;
 
 import jargyle.TestStringConstants;
-import jargyle.client.SocketFactory;
 import jargyle.client.SocksClient;
+import jargyle.common.net.SocketFactory;
 
 public class SocketIT {
 
@@ -141,8 +141,10 @@ public class SocketIT {
 			}
 			echoServer = new EchoServer(ECHO_SERVER_PORT);
 			echoServer.start();
-			SocketFactory socketFactory = SocketFactory.newInstance(
-					socksClient);
+			SocketFactory socketFactory = SocketFactory.newInstance();
+			if (socksClient != null) {
+				socketFactory = socksClient.newSocketFactory();
+			}
 			echoSocket = socketFactory.newSocket();
 			echoSocket.connect(new InetSocketAddress(
 					LOOPBACK_ADDRESS, echoServer.getPort()));

@@ -15,14 +15,14 @@ import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import jargyle.client.DatagramSocketFactory;
-import jargyle.client.ServerSocketFactory;
-import jargyle.client.SocketFactory;
 import jargyle.client.SocksClient;
 import jargyle.common.net.DatagramPacketFilter;
 import jargyle.common.net.DatagramPacketFilterFactory;
+import jargyle.common.net.DatagramSocketFactory;
 import jargyle.common.net.FilterDatagramSocket;
 import jargyle.common.net.Host;
+import jargyle.common.net.ServerSocketFactory;
+import jargyle.common.net.SocketFactory;
 import jargyle.common.net.SocketSettings;
 import jargyle.common.net.socks5.AddressType;
 import jargyle.common.net.socks5.AuthMethod;
@@ -413,7 +413,10 @@ public final class Socks5Worker implements Runnable {
 				socks5Req.getDesiredDestinationAddress();
 		int desiredDestinationPort = socks5Req.getDesiredDestinationPort();
 		ServerSocketFactory serverSocketFactory = 
-				ServerSocketFactory.newInstance(this.socksClient);
+				ServerSocketFactory.newInstance();
+		if (this.socksClient != null) {
+			serverSocketFactory = this.socksClient.newServerSocketFactory();
+		}
 		ServerSocket listenSocket = null;
 		Socket externalIncomingSocket = null;
 		try {
@@ -522,8 +525,10 @@ public final class Socks5Worker implements Runnable {
 		String desiredDestinationAddress = 
 				socks5Req.getDesiredDestinationAddress();
 		int desiredDestinationPort = socks5Req.getDesiredDestinationPort();
-		SocketFactory socketFactory = SocketFactory.newInstance(
-				this.socksClient);
+		SocketFactory socketFactory = SocketFactory.newInstance();
+		if (this.socksClient != null) {
+			socketFactory = this.socksClient.newSocketFactory();
+		}
 		Socket serverSocket = null;
 		try {
 			serverSocket = socketFactory.newSocket();
@@ -726,7 +731,11 @@ public final class Socks5Worker implements Runnable {
 					Host.class);
 			InetAddress bindInetAddress = bindHost.toInetAddress();
 			DatagramSocketFactory datagramSocketFactory = 
-					DatagramSocketFactory.newInstance(this.socksClient);
+					DatagramSocketFactory.newInstance();
+			if (this.socksClient != null) {
+				datagramSocketFactory = 
+						this.socksClient.newDatagramSocketFactory();
+			}
 			serverDatagramSock = datagramSocketFactory.newDatagramSocket(
 					new InetSocketAddress(bindInetAddress, 0));
 		} catch (SocketException e) {

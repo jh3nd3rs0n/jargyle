@@ -5,7 +5,7 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-import jargyle.client.SocketFactory;
+import jargyle.common.net.SocketFactory;
 
 public final class Socks5SocketFactory extends SocketFactory {
 

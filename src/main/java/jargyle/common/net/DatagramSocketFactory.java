@@ -1,4 +1,4 @@
-package jargyle.client;
+package jargyle.common.net;
 
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -8,18 +8,6 @@ import java.net.SocketException;
 public class DatagramSocketFactory {
 
 	public static DatagramSocketFactory newInstance() {
-		return newInstance(null);
-	}
-	
-	public static DatagramSocketFactory newInstance(
-			final SocksClient socksClient) {
-		SocksClient client = socksClient;
-		if (client == null) {
-			client = SocksClient.newInstance();
-		}
-		if (client != null) {
-			return client.newDatagramSocketFactory();
-		}
 		return new DatagramSocketFactory();
 	}
 	

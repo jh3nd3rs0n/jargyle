@@ -6,8 +6,11 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.Objects;
 
+import jargyle.common.net.DatagramSocketFactory;
 import jargyle.common.net.Host;
 import jargyle.common.net.Port;
+import jargyle.common.net.ServerSocketFactory;
+import jargyle.common.net.SocketFactory;
 import jargyle.common.util.PositiveInteger;
 
 public abstract class SocksClient {

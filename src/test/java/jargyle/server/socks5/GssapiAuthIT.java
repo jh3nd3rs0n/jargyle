@@ -77,6 +77,19 @@ public class GssapiAuthIT {
 		kerbyServer.exportPrincipal(RCMD_SERVICE_PRINCIPAL, rcmdKeytab.toFile());
 		kerbyServer.start();
 		
+		String aliceKeytabPathString = aliceKeytab.toAbsolutePath().toString();
+		
+		String rcmdKeytabPathString = rcmdKeytab.toAbsolutePath().toString();
+		
+		if ("\\".equals(System.getProperty("file.separator"))) {
+			aliceKeytabPathString = "///".concat(aliceKeytabPathString)
+					.replace("\\:", "/")
+					.replace('\\', '/');
+			rcmdKeytabPathString = "///".concat(rcmdKeytabPathString)
+					.replace("\\:", "/")
+					.replace('\\', '/');
+		}
+		
 		FileWriter w = new FileWriter(loginConf.toFile());
 		w.write("com.sun.security.jgss.initiate {\n");
 		w.write("  com.sun.security.auth.module.Krb5LoginModule required\n");
@@ -84,16 +97,16 @@ public class GssapiAuthIT {
 				"  principal=\"%s\"\n", ALICE_PRINCIPAL));		
 		w.write("  useKeyTab=true\n");
 		w.write(String.format(
-				"  keyTab=\"%s\"\n", aliceKeytab.toAbsolutePath().toString()));
+				"  keyTab=\"%s\"\n", aliceKeytabPathString));
 		w.write("  storeKey=true;\n");
-		w.write("};");
+		w.write("};\n");
 		w.write("com.sun.security.jgss.accept {\n");
 		w.write("  com.sun.security.auth.module.Krb5LoginModule required\n");
 		w.write(String.format(
 				"  principal=\"%s\"\n", RCMD_SERVICE_PRINCIPAL));		
 		w.write("  useKeyTab=true\n");
 		w.write(String.format(
-				"  keyTab=\"%s\"\n", rcmdKeytab.toAbsolutePath().toString()));
+				"  keyTab=\"%s\"\n", rcmdKeytabPathString));
 		w.write("  storeKey=true;\n");
 		w.write("};\n");
 		w.flush();
@@ -102,7 +115,7 @@ public class GssapiAuthIT {
 		System.setProperty(KRB5_CONF_PROPERTY_NAME, krb5Conf.toAbsolutePath().toString());
 		System.setProperty(USE_SUBJECT_CREDS_ONLY_PROPERTY_NAME, "false");
 		System.setProperty(LOGIN_CONFIG_PROPERTY_NAME, loginConf.toAbsolutePath().toString());
-		
+				
 	}
 	
 	@AfterClass

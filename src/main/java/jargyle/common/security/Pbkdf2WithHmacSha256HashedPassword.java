@@ -1,4 +1,4 @@
-package jargyle.server.socks5;
+package jargyle.common.security;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;

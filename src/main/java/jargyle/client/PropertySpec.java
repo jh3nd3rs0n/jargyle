@@ -5,7 +5,6 @@ import java.net.UnknownHostException;
 import org.ietf.jgss.GSSException;
 import org.ietf.jgss.Oid;
 
-import jargyle.client.socks5.EncryptedPassword;
 import jargyle.client.socks5.UsernamePassword;
 import jargyle.common.net.Host;
 import jargyle.common.net.Port;
@@ -13,6 +12,7 @@ import jargyle.common.net.SocketSettings;
 import jargyle.common.net.socks5.AuthMethod;
 import jargyle.common.net.socks5.AuthMethods;
 import jargyle.common.net.socks5.gssapiauth.GssapiProtectionLevels;
+import jargyle.common.security.EncryptedPassword;
 import jargyle.common.util.PositiveInteger;
 
 public enum PropertySpec {

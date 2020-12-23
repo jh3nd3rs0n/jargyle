@@ -1,4 +1,4 @@
-package jargyle.client.socks5;
+package jargyle.common.security;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -7,7 +7,7 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import jargyle.client.socks5.AesCbcPkcs5PaddingEncryptedPassword.AesCbcPkcs5PaddingEncryptedPasswordXml;
+import jargyle.common.security.AesCbcPkcs5PaddingEncryptedPassword.AesCbcPkcs5PaddingEncryptedPasswordXml;
 
 @XmlJavaTypeAdapter(EncryptedPassword.EncryptedPasswordXmlAdapter.class)
 public abstract class EncryptedPassword {

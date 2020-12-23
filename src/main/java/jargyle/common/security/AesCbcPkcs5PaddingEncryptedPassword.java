@@ -1,4 +1,4 @@
-package jargyle.client.socks5;
+package jargyle.common.security;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

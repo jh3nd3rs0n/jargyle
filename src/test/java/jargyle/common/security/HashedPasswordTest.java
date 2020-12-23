@@ -1,4 +1,4 @@
-package jargyle.server.socks5;
+package jargyle.common.security;
 
 import static org.junit.Assert.assertEquals;
 

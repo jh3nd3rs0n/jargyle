@@ -1,5 +1,7 @@
 package jargyle.server.socks5;
 
+import jargyle.common.security.HashedPassword;
+
 public final class StringSourceUsernamePasswordAuthenticator 
 	extends UsernamePasswordAuthenticator {
 

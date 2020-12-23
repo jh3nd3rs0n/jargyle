@@ -1,4 +1,4 @@
-package jargyle.server;
+package jargyle.common.io;
 
 import java.io.File;
 import java.io.IOException;

@@ -12,9 +12,9 @@ import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBException;
 
+import jargyle.common.io.FileMonitor;
+import jargyle.common.io.FileStatusListener;
 import jargyle.common.security.HashedPassword;
-import jargyle.server.FileMonitor;
-import jargyle.server.FileStatusListener;
 
 public final class XmlFileSourceUsernamePasswordAuthenticator 
 	extends UsernamePasswordAuthenticator {

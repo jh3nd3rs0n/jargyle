@@ -13,6 +13,9 @@ import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBException;
 
+import jargyle.common.io.FileMonitor;
+import jargyle.common.io.FileStatusListener;
+
 public final class XmlFileSourceConfigurationService 
 	extends ConfigurationService {
 

@@ -1,4 +1,4 @@
-package jargyle.server;
+package jargyle.common.net;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,8 +13,6 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-
-import jargyle.common.net.Port;
 
 @XmlJavaTypeAdapter(PortRanges.PortRangesXmlAdapter.class)
 public final class PortRanges {

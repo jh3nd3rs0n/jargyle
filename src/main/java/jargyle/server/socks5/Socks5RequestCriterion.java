@@ -11,10 +11,10 @@ import javax.xml.bind.annotation.adapters.XmlAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import jargyle.common.net.Port;
+import jargyle.common.net.PortRanges;
 import jargyle.common.net.socks5.Socks5Request;
 import jargyle.server.Criterion;
 import jargyle.server.CriterionMethod;
-import jargyle.server.PortRanges;
 
 @XmlJavaTypeAdapter(Socks5RequestCriterion.Socks5RequestCriterionXmlAdapter.class)
 public final class Socks5RequestCriterion {

@@ -1,4 +1,4 @@
-package jargyle.server;
+package jargyle.common.net;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -6,8 +6,6 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-
-import jargyle.common.net.Port;
 
 @XmlJavaTypeAdapter(PortRange.PortRangeXmlAdapter.class)
 public final class PortRange {

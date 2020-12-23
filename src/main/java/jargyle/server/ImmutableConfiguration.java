@@ -18,6 +18,8 @@ import javax.xml.bind.helpers.DefaultValidationEventHandler;
 import javax.xml.transform.Result;
 import javax.xml.transform.stream.StreamResult;
 
+import jargyle.common.xml.bind.XmlBindHelper;
+
 public final class ImmutableConfiguration extends Configuration {
 
 	public static final class Builder {

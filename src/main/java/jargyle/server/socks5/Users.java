@@ -23,7 +23,7 @@ import javax.xml.bind.helpers.DefaultValidationEventHandler;
 import javax.xml.transform.Result;
 import javax.xml.transform.stream.StreamResult;
 
-import jargyle.server.XmlBindHelper;
+import jargyle.common.xml.bind.XmlBindHelper;
 
 public final class Users {
 	

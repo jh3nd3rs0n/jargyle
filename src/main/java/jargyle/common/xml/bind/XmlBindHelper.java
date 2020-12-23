@@ -1,4 +1,4 @@
-package jargyle.server;
+package jargyle.common.xml.bind;
 
 public final class XmlBindHelper {
 
@@ -7,7 +7,7 @@ public final class XmlBindHelper {
 	
 	public static boolean isOptimizedCodeGenerationDisabled() {
 		String property = System.getProperty(NO_OPTIMIZE_PROPERTY_NAME);
-		return property != null && property.equals("true");
+		return property != null && property.equals(Boolean.TRUE.toString());
 	}
 	
 	/* 

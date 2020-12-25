@@ -34,6 +34,7 @@ import jargyle.common.net.Port;
 import jargyle.common.net.SocketSettingSpec;
 import jargyle.common.net.socks5.AuthMethod;
 import jargyle.common.net.socks5.gssapiauth.GssapiProtectionLevel;
+import jargyle.common.net.ssl.ClientAuthSetting;
 import jargyle.server.socks5.UsersCLI;
 
 public final class SocksServerCLI extends CLI {
@@ -231,6 +232,8 @@ public final class SocksServerCLI extends CLI {
 		this.displayHelpText(AuthMethod.class);
 		System.out.println("SOCKS5_GSSAPI_PROTECTION_LEVELS:");
 		this.displayHelpText(GssapiProtectionLevel.class);
+		System.out.println("SSL_CLIENT_AUTH_SETTINGS:");
+		this.displayHelpText(ClientAuthSetting.class);
 		this.settingsHelpDisplayed = true;
 	}
 	

@@ -6,6 +6,7 @@ Jargyle is a Java SOCKS5 server. It has the following features:
 
 -   It is a 100% implementation of the [SOCKS5 protocol specification](https://tools.ietf.org/html/rfc1928) which includes [username password authentication](https://tools.ietf.org/html/rfc1929) and [GSS-API authentication](https://tools.ietf.org/html/rfc1961).
 -   It can have its external connections be set through another SOCKS5 server.
+-   It can have SSL/TLS connections to clients and have SSL/TLS connections to the other SOCKS5 server.
 -   It can allow or block certain client addresses and certain external incoming addresses.
 -   It can allow or block certain SOCKS5 requests.
 
@@ -157,6 +158,27 @@ The following is a list of available settings for the SOCKS server (displayed wh
       externalClient.socks5.usernamePassword=USERNAME:PASSWORD
           The username password to be used to access the external SOCKS5 server used for external connections
     
+      externalClient.ssl.enabled=true|false
+          The boolean value to indicate if SSL/TLS connections to the external SOCKS server for external connections are enabled (default is false)
+    
+      externalClient.ssl.enabledCipherSuites=[SSL_CIPHER_SUITE1[ SSL_CIPHER_SUITE2[...]]]
+          The space separated list of cipher suites enabled for SSL/TLS connections to the external SOCKS server for external connections
+    
+      externalClient.ssl.enabledProtocols=[SSL_PROTOCOL1[ SSL_PROTOCOL2[...]]]
+          The space separated list of protocol versions enabled for SSL/TLS connections to the external SOCKS server for external connections
+    
+      externalClient.ssl.keyStoreFile=FILE
+          The key store file for the SSL/TLS connections to the external SOCKS server for external connections
+    
+      externalClient.ssl.keyStorePassword=PASSWORD
+          The password for the key store for the SSL/TLS connections to the external SOCKS server for external connections
+    
+      externalClient.ssl.trustStoreFile=FILE
+          The trust store file for the SSL/TLS connections to the external SOCKS server for external connections
+    
+      externalClient.ssl.trustStorePassword=PASSWORD
+          The password for the trust store for the SSL/TLS connections to the external SOCKS server for external connections
+    
       host=HOST
           The host name or address for the SOCKS server (default is 0.0.0.0)
     
@@ -235,6 +257,27 @@ The following is a list of available settings for the SOCKS server (displayed wh
       socks5.usernamePasswordAuthenticator=CLASSNAME[:VALUE]
           The username password authenticator for the SOCKS5 server
     
+      ssl.enabled=true|false
+          The boolean value to indicate if SSL/TLS connections to the SOCKS server are enabled (default is false)
+    
+      ssl.enabledCipherSuites=[SSL_CIPHER_SUITE1[ SSL_CIPHER_SUITE2[...]]]
+          The space separated list of cipher suites enabled for SSL/TLS connections to the SOCKS server
+    
+      ssl.enabledProtocols=[SSL_PROTOCOL1[ SSL_PROTOCOL2[...]]]
+          The space separated list of protocol versions enabled for SSL/TLS connections to the SOCKS server
+    
+      ssl.keyStoreFile=FILE
+          The key store file for the SSL/TLS connections to the SOCKS server
+    
+      ssl.keyStorePassword=PASSWORD
+          The password for the key store for the SSL/TLS connections to the SOCKS server
+    
+      ssl.trustStoreFile=FILE
+          The trust store file for the SSL/TLS connections to the SOCKS server
+    
+      ssl.trustStorePassword=PASSWORD
+          The password for the trust store for the SSL/TLS connections to the SOCKS server
+    
     SCHEMES:
     
       socks5
@@ -297,6 +340,16 @@ The following is a list of available settings for the SOCKS server (displayed wh
       REQUIRED_INTEG_AND_CONF
           Required per-message integrity and confidentiality
     
+    SSL_CLIENT_AUTH_SETTINGS:
+    
+      NOT_DESIRED
+          No client authentication desired
+    
+      REQUESTED
+          Client authentication requested
+    
+      REQUIRED
+          Client authentication required
     
 ```
 
@@ -542,7 +595,15 @@ The following are the settings in the monitored configuration file that will hav
 -   `backlog`
 -   `host`
 -   `port`
--   `socketSettings` 
+-   `socketSettings`
+-   `ssl.clientAuthSetting`
+-   `ssl.enabled`
+-   `ssl.enabledCipherSuites`
+-   `ssl.enabledProtocols`
+-   `ssl.keyStoreFile`
+-   `ssl.keyStorePassword`
+-   `ssl.trustStoreFile`
+-   `ssl.trustStorePassword` 
 
 ### 3. 7. Managing SOCKS5 Users (for Username Password Authentication)
 
@@ -1262,6 +1323,13 @@ Instead of using command line options or configuration settings, you can use the
 -   `socksClient.socks5.gssapiServiceName`: Its usage is equivalent to the setting `externalClient.socks5.gssapiServiceName`. See the settings help information for details (use the command line option `--settings-help`) 
 -   `socksClient.socks5.username`: The username to be used in SOCKS5 username password authentication to access the other SOCKS5 server used for external connections
 -   `socksClient.socks5.password`: The password to be used in SOCKS5 username password authentication to access the other SOCKS5 server used for external connections
+-   `socksClient.ssl.enabled`: Its usage is equivalent to the setting `externalClient.ssl.enabled`. See the settings help information for details (use the command line option `--settings-help`)
+-   `socksClient.ssl.enabledCipherSuites`: Its usage is equivalent to the setting `externalClient.ssl.enabledCipherSuites`. See the settings help information for details (use the command line option `--settings-help`)
+-   `socksClient.ssl.enabledProtocols`: Its usage is equivalent to the setting `externalClient.ssl.enabledProtocols`. See the settings help information for details (use the command line option `--settings-help`)
+-   `socksClient.ssl.keyStoreFile`: Its usage is equivalent to the setting `externalClient.ssl.keyStoreFile`. See the settings help information for details (use the command line option `--settings-help`)
+-   `socksClient.ssl.keyStorePassword`: Its usage is equivalent to the setting `externalClient.ssl.keyStorePassword`. See the settings help information for details (use the command line option `--settings-help`)
+-   `socksClient.ssl.trustStoreFile`: Its usage is equivalent to the setting `externalClient.ssl.trustStoreFile`. See the settings help information for details (use the command line option `--settings-help`)
+-   `socksClient.ssl.trustStorePassword`: Its usage is equivalent to the setting `externalClient.ssl.trustStorePassword`. See the settings help information for details (use the command line option `--settings-help`)
 
 ### 3. 10. Allowing or Blocking Addresses
 

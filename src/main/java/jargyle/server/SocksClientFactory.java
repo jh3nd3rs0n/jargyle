@@ -1,5 +1,6 @@
 package jargyle.server;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +17,9 @@ import jargyle.common.net.Host;
 import jargyle.common.net.SocketSettings;
 import jargyle.common.net.socks5.AuthMethods;
 import jargyle.common.net.socks5.gssapiauth.GssapiProtectionLevels;
+import jargyle.common.net.ssl.CipherSuites;
+import jargyle.common.net.ssl.Protocols;
+import jargyle.common.security.EncryptedPassword;
 import jargyle.common.util.PositiveInteger;
 
 public final class SocksClientFactory {
@@ -58,7 +62,7 @@ public final class SocksClientFactory {
 			properties.add(PropertySpec.SOCKS5_USERNAME.newProperty(
 					usernamePassword.getUsername()));
 			properties.add(PropertySpec.SOCKS5_PASSWORD.newProperty(
-					usernamePassword.getEncryptedPassword().getPassword()));			
+					usernamePassword.getEncryptedPassword()));			
 		}
 		return properties;
 	}
@@ -78,6 +82,37 @@ public final class SocksClientFactory {
 				SettingSpec.EXTERNAL_CLIENT_SOCKET_SETTINGS, 
 				SocketSettings.class);
 		properties.add(PropertySpec.SOCKET_SETTINGS.newProperty(socketSettings));
+		Boolean sslEnabled = settings.getLastValue(
+				SettingSpec.EXTERNAL_CLIENT_SSL_ENABLED, Boolean.class);
+		properties.add(PropertySpec.SSL_ENABLED.newProperty(sslEnabled));
+		CipherSuites sslEnabledCipherSuites = settings.getLastValue(
+				SettingSpec.EXTERNAL_CLIENT_SSL_ENABLED_CIPHER_SUITES, 
+				CipherSuites.class);
+		properties.add(PropertySpec.SSL_ENABLED_CIPHER_SUITES.newProperty(
+				sslEnabledCipherSuites));
+		Protocols sslEnabledProtocols = settings.getLastValue(
+				SettingSpec.EXTERNAL_CLIENT_SSL_ENABLED_PROTOCOLS, 
+				Protocols.class);
+		properties.add(PropertySpec.SSL_ENABLED_PROTOCOLS.newProperty(
+				sslEnabledProtocols));
+		File sslKeyStoreFile = settings.getLastValue(
+				SettingSpec.EXTERNAL_CLIENT_SSL_KEY_STORE_FILE, File.class);
+		properties.add(PropertySpec.SSL_KEY_STORE_FILE.newProperty(
+				sslKeyStoreFile));
+		EncryptedPassword sslKeyStorePassword = settings.getLastValue(
+				SettingSpec.EXTERNAL_CLIENT_SSL_KEY_STORE_PASSWORD, 
+				EncryptedPassword.class);
+		properties.add(PropertySpec.SSL_KEY_STORE_PASSWORD.newProperty(
+				sslKeyStorePassword));
+		File sslTrustStoreFile = settings.getLastValue(
+				SettingSpec.EXTERNAL_CLIENT_SSL_TRUST_STORE_FILE, File.class);
+		properties.add(PropertySpec.SSL_TRUST_STORE_FILE.newProperty(
+				sslTrustStoreFile));
+		EncryptedPassword sslTrustStorePassword = settings.getLastValue(
+				SettingSpec.EXTERNAL_CLIENT_SSL_TRUST_STORE_PASSWORD, 
+				EncryptedPassword.class);
+		properties.add(PropertySpec.SSL_TRUST_STORE_PASSWORD.newProperty(
+				sslTrustStorePassword));
 		return properties;
 	}
 	

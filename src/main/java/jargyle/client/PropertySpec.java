@@ -1,6 +1,8 @@
 package jargyle.client;
 
+import java.io.File;
 import java.net.UnknownHostException;
+import java.util.Arrays;
 
 import org.ietf.jgss.GSSException;
 import org.ietf.jgss.Oid;
@@ -12,6 +14,8 @@ import jargyle.common.net.SocketSettings;
 import jargyle.common.net.socks5.AuthMethod;
 import jargyle.common.net.socks5.AuthMethods;
 import jargyle.common.net.socks5.gssapiauth.GssapiProtectionLevels;
+import jargyle.common.net.ssl.CipherSuites;
+import jargyle.common.net.ssl.Protocols;
 import jargyle.common.security.EncryptedPassword;
 import jargyle.common.util.PositiveInteger;
 
@@ -302,16 +306,17 @@ public enum PropertySpec {
 
 		@Override
 		public Property newProperty(final Object value) {
-			if (!(value instanceof char[])) {
+			if (!(value instanceof EncryptedPassword)) {
 				throw new ClassCastException(String.format(
 						"unable to cast %s to %s",
 						value.getClass().getName(),
-						char[].class.getName()));
+						EncryptedPassword.class.getName()));
 			}
-			char[] val = (char[]) value;
-			UsernamePassword.validatePassword(val);
-			EncryptedPassword v = EncryptedPassword.newInstance(val);
-			return new Property(this, v);
+			EncryptedPassword val = (EncryptedPassword) value;
+			char[] password = val.getPassword();
+			UsernamePassword.validatePassword(password);
+			Arrays.fill(password, '\0');
+			return new Property(this, val);
 		}
 
 		@Override
@@ -320,6 +325,198 @@ public enum PropertySpec {
 			UsernamePassword.validatePassword(val);
 			EncryptedPassword v = EncryptedPassword.newInstance(val);
 			return new Property(this, v);
+		}
+		
+	},
+	SSL_ENABLED("socksClient.ssl.enabled") {
+		
+		private static final boolean DEFAULT_BOOLEAN_VALUE = false;
+		
+		@Override
+		public Property getDefaultProperty() {
+			return new Property(this, Boolean.valueOf(DEFAULT_BOOLEAN_VALUE));
+		}
+
+		@Override
+		public Property newProperty(final Object value) {
+			if (!(value instanceof Boolean)) {
+				throw new ClassCastException(String.format(
+						"unable to cast %s to %s",
+						value.getClass().getName(),
+						Boolean.class.getName()));
+			}
+			return new Property(this, value);
+		}
+
+		@Override
+		public Property newProperty(final String value) {
+			return newProperty(Boolean.valueOf(value));
+		}
+		
+	},
+	SSL_ENABLED_CIPHER_SUITES("socksClient.ssl.enabledCipherSuites") {
+		
+		@Override
+		public Property getDefaultProperty() {
+			return new Property(this, CipherSuites.newInstance(new String[] { }));
+		}
+
+		@Override
+		public Property newProperty(final Object value) {
+			if (!(value instanceof CipherSuites)) {
+				throw new ClassCastException(String.format(
+						"unable to cast %s to %s",
+						value.getClass().getName(),
+						CipherSuites.class.getName()));
+			}
+			return new Property(this, value);
+		}
+
+		@Override
+		public Property newProperty(final String value) {
+			return newProperty(CipherSuites.newInstance(value));
+		}
+		
+	},
+	SSL_ENABLED_PROTOCOLS("socksClient.ssl.enabledProtocols") {
+		
+		@Override
+		public Property getDefaultProperty() {
+			return new Property(this, Protocols.newInstance(new String[] { }));
+		}
+
+		@Override
+		public Property newProperty(final Object value) {
+			if (!(value instanceof Protocols)) {
+				throw new ClassCastException(String.format(
+						"unable to cast %s to %s",
+						value.getClass().getName(),
+						Protocols.class.getName()));
+			}
+			return new Property(this, value);
+		}
+
+		@Override
+		public Property newProperty(final String value) {
+			return newProperty(Protocols.newInstance(value));
+		}
+		
+	},
+	SSL_KEY_STORE_FILE("socksClient.ssl.keyStoreFile") {
+		
+		@Override
+		public Property getDefaultProperty() {
+			return new Property(this, null);
+		}
+
+		@Override
+		public Property newProperty(final Object value) {
+			if (!(value instanceof File)) {
+				throw new ClassCastException(String.format(
+						"unable to cast %s to %s",
+						value.getClass().getName(),
+						File.class.getName()));
+			}
+			File val = (File) value;
+			if (!val.exists()) {
+				throw new IllegalArgumentException(String.format(
+						"file `%s' does not exist", 
+						val));
+			}
+			if (!val.isDirectory()) {
+				throw new IllegalArgumentException(String.format(
+						"file `%s' must not be a directory", 
+						val));
+			}
+			return new Property(this, val);
+		}
+
+		@Override
+		public Property newProperty(final String value) {
+			return newProperty(new File(value));
+		}
+		
+	},
+	SSL_KEY_STORE_PASSWORD("socksClient.ssl.keyStorePassword") {
+		
+		@Override
+		public Property getDefaultProperty() {
+			return new Property(this, EncryptedPassword.newInstance(new char[] { }));
+		}
+
+		@Override
+		public Property newProperty(final Object value) {
+			if (!(value instanceof EncryptedPassword)) {
+				throw new ClassCastException(String.format(
+						"unable to cast %s to %s",
+						value.getClass().getName(),
+						EncryptedPassword.class.getName()));
+			}
+			return new Property(this, value);
+		}
+
+		@Override
+		public Property newProperty(final String value) {
+			return newProperty(EncryptedPassword.newInstance(value.toCharArray()));
+		}
+		
+	},
+	SSL_TRUST_STORE_FILE("socksClient.ssl.trustStoreFile") {
+		
+		@Override
+		public Property getDefaultProperty() {
+			return new Property(this, null);
+		}
+
+		@Override
+		public Property newProperty(final Object value) {
+			if (!(value instanceof File)) {
+				throw new ClassCastException(String.format(
+						"unable to cast %s to %s",
+						value.getClass().getName(),
+						File.class.getName()));
+			}
+			File val = (File) value;
+			if (!val.exists()) {
+				throw new IllegalArgumentException(String.format(
+						"file `%s' does not exist", 
+						val));
+			}
+			if (!val.isDirectory()) {
+				throw new IllegalArgumentException(String.format(
+						"file `%s' must not be a directory", 
+						val));
+			}
+			return new Property(this, val);
+		}
+
+		@Override
+		public Property newProperty(final String value) {
+			return newProperty(new File(value));
+		}
+		
+	},
+	SSL_TRUST_STORE_PASSWORD("socksClient.ssl.trustStorePassword") {
+		
+		@Override
+		public Property getDefaultProperty() {
+			return new Property(this, EncryptedPassword.newInstance(new char[] { }));
+		}
+
+		@Override
+		public Property newProperty(final Object value) {
+			if (!(value instanceof EncryptedPassword)) {
+				throw new ClassCastException(String.format(
+						"unable to cast %s to %s",
+						value.getClass().getName(),
+						EncryptedPassword.class.getName()));
+			}
+			return new Property(this, value);
+		}
+
+		@Override
+		public Property newProperty(final String value) {
+			return newProperty(EncryptedPassword.newInstance(value.toCharArray()));
 		}
 		
 	};

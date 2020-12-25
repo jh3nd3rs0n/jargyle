@@ -27,7 +27,7 @@ public final class Socks5ClientFactory {
 				PropertySpec.SOCKS5_USERNAME.newProperty(
 						usernamePassword.getUsername()),
 				PropertySpec.SOCKS5_PASSWORD.newProperty(
-						usernamePassword.getEncryptedPassword().getPassword()));
+						usernamePassword.getEncryptedPassword()));
 		return new Socks5ServerUri(host, port).newSocksClient(properties);
 	}
 	

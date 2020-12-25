@@ -1,5 +1,6 @@
 package jargyle.server;
 
+import java.io.File;
 import java.net.UnknownHostException;
 
 import org.ietf.jgss.GSSException;
@@ -15,6 +16,10 @@ import jargyle.common.net.SocketSettings;
 import jargyle.common.net.socks5.AuthMethod;
 import jargyle.common.net.socks5.AuthMethods;
 import jargyle.common.net.socks5.gssapiauth.GssapiProtectionLevels;
+import jargyle.common.net.ssl.CipherSuites;
+import jargyle.common.net.ssl.ClientAuthSetting;
+import jargyle.common.net.ssl.Protocols;
+import jargyle.common.security.EncryptedPassword;
 import jargyle.common.util.NonnegativeInteger;
 import jargyle.common.util.PositiveInteger;
 import jargyle.server.socks5.Socks5RequestCriteria;
@@ -468,6 +473,253 @@ public enum SettingSpec {
 		@Override
 		public Setting newSetting(final String value) {
 			return newSetting(UsernamePassword.newInstance(value));
+		}
+		
+	},
+	@HelpText(
+			doc = "The boolean value to indicate if SSL/TLS connections to "
+					+ "the external SOCKS server for external connections are "
+					+ "enabled (default is false)",
+			usage = "externalClient.ssl.enabled=true|false"
+	)
+	EXTERNAL_CLIENT_SSL_ENABLED("externalClient.ssl.enabled") {
+		
+		@Override
+		public Setting getDefaultSetting() {
+			return new Setting(
+					this,
+					PropertySpec.SSL_ENABLED.getDefaultProperty().getValue());
+		}
+
+		@Override
+		public Setting newSetting(final Object value) {
+			if (!(value instanceof Boolean)) {
+				throw new ClassCastException(String.format(
+						"unable to cast %s to %s",
+						value.getClass().getName(),
+						Boolean.class.getName()));
+			}
+			return new Setting(this, value);
+		}
+
+		@Override
+		public Setting newSetting(final String value) {
+			return newSetting(Boolean.valueOf(value));
+		}
+		
+	},
+	@HelpText(
+			doc = "The space separated list of cipher suites enabled for "
+					+ "SSL/TLS connections to the external SOCKS server for "
+					+ "external connections",
+			usage = "externalClient.ssl.enabledCipherSuites=[SSL_CIPHER_SUITE1[ SSL_CIPHER_SUITE2[...]]]"
+	)
+	EXTERNAL_CLIENT_SSL_ENABLED_CIPHER_SUITES(
+			"externalClient.ssl.enabledCipherSuites") {
+		
+		@Override
+		public Setting getDefaultSetting() {
+			return new Setting(
+					this,
+					PropertySpec.SSL_ENABLED_CIPHER_SUITES.getDefaultProperty().getValue());
+		}
+
+		@Override
+		public Setting newSetting(final Object value) {
+			if (!(value instanceof CipherSuites)) {
+				throw new ClassCastException(String.format(
+						"unable to cast %s to %s",
+						value.getClass().getName(),
+						CipherSuites.class.getName()));
+			}
+			return new Setting(this, value);
+		}
+
+		@Override
+		public Setting newSetting(final String value) {
+			return newSetting(CipherSuites.newInstance(value));
+		}
+		
+	},
+	@HelpText(
+			doc = "The space separated list of protocol versions enabled for "
+					+ "SSL/TLS connections to the external SOCKS server for "
+					+ "external connections",
+			usage = "externalClient.ssl.enabledProtocols=[SSL_PROTOCOL1[ SSL_PROTOCOL2[...]]]"
+	)	
+	EXTERNAL_CLIENT_SSL_ENABLED_PROTOCOLS(
+			"externalClient.ssl.enabledProtocols") {
+		
+		@Override
+		public Setting getDefaultSetting() {
+			return new Setting(
+					this,
+					PropertySpec.SSL_ENABLED_PROTOCOLS.getDefaultProperty().getValue());
+		}
+
+		@Override
+		public Setting newSetting(final Object value) {
+			if (!(value instanceof Protocols)) {
+				throw new ClassCastException(String.format(
+						"unable to cast %s to %s",
+						value.getClass().getName(),
+						Protocols.class.getName()));
+			}
+			return new Setting(this, value);
+		}
+
+		@Override
+		public Setting newSetting(final String value) {
+			return newSetting(Protocols.newInstance(value));
+		}
+		
+	},
+	@HelpText(
+			doc = "The key store file for the SSL/TLS connections to the "
+					+ "external SOCKS server for external connections",
+			usage = "externalClient.ssl.keyStoreFile=FILE"
+	)
+	EXTERNAL_CLIENT_SSL_KEY_STORE_FILE("externalClient.ssl.keyStoreFile") {
+		
+		@Override
+		public Setting getDefaultSetting() {
+			return new Setting(
+					this,
+					PropertySpec.SSL_KEY_STORE_FILE.getDefaultProperty().getValue());
+		}
+
+		@Override
+		public Setting newSetting(final Object value) {
+			if (!(value instanceof File)) {
+				throw new ClassCastException(String.format(
+						"unable to cast %s to %s",
+						value.getClass().getName(),
+						File.class.getName()));
+			}
+			File val = (File) value;
+			if (!val.exists()) {
+				throw new IllegalArgumentException(String.format(
+						"file `%s' does not exist", 
+						val));
+			}
+			if (!val.isDirectory()) {
+				throw new IllegalArgumentException(String.format(
+						"file `%s' must not be a directory", 
+						val));
+			}
+			return new Setting(this, val);
+		}
+
+		@Override
+		public Setting newSetting(final String value) {
+			return newSetting(new File(value));
+		}
+		
+	},
+	@HelpText(
+			doc = "The password for the key store for the SSL/TLS connections "
+					+ "to the external SOCKS server for external connections",
+			usage = "externalClient.ssl.keyStorePassword=PASSWORD"
+	)
+	EXTERNAL_CLIENT_SSL_KEY_STORE_PASSWORD(
+			"externalClient.ssl.keyStorePassword") {
+		
+		@Override
+		public Setting getDefaultSetting() {
+			return new Setting(
+					this,
+					PropertySpec.SSL_KEY_STORE_PASSWORD.getDefaultProperty().getValue());
+		}
+
+		@Override
+		public Setting newSetting(final Object value) {
+			if (!(value instanceof EncryptedPassword)) {
+				throw new ClassCastException(String.format(
+						"unable to cast %s to %s",
+						value.getClass().getName(),
+						EncryptedPassword.class.getName()));
+			}
+			return new Setting(this, value);
+		}
+
+		@Override
+		public Setting newSetting(final String value) {
+			return newSetting(EncryptedPassword.newInstance(value.toCharArray()));
+		}
+		
+	},
+	@HelpText(
+			doc = "The trust store file for the SSL/TLS connections to the "
+					+ "external SOCKS server for external connections",
+			usage = "externalClient.ssl.trustStoreFile=FILE"
+	)	
+	EXTERNAL_CLIENT_SSL_TRUST_STORE_FILE("externalClient.ssl.trustStoreFile") {
+		
+		@Override
+		public Setting getDefaultSetting() {
+			return new Setting(
+					this,
+					PropertySpec.SSL_TRUST_STORE_FILE.getDefaultProperty().getValue());
+		}
+
+		@Override
+		public Setting newSetting(final Object value) {
+			if (!(value instanceof File)) {
+				throw new ClassCastException(String.format(
+						"unable to cast %s to %s",
+						value.getClass().getName(),
+						File.class.getName()));
+			}
+			File val = (File) value;
+			if (!val.exists()) {
+				throw new IllegalArgumentException(String.format(
+						"file `%s' does not exist", 
+						val));
+			}
+			if (!val.isDirectory()) {
+				throw new IllegalArgumentException(String.format(
+						"file `%s' must not be a directory", 
+						val));
+			}
+			return new Setting(this, val);
+		}
+
+		@Override
+		public Setting newSetting(final String value) {
+			return newSetting(new File(value));
+		}
+		
+	},
+	@HelpText(
+			doc = "The password for the trust store for the SSL/TLS "
+					+ "connections to the external SOCKS server for external "
+					+ "connections",
+			usage = "externalClient.ssl.trustStorePassword=PASSWORD"
+	)	
+	EXTERNAL_CLIENT_SSL_TRUST_STORE_PASSWORD(
+			"externalClient.ssl.trustStorePassword") {
+		
+		@Override
+		public Setting getDefaultSetting() {
+			return new Setting(
+					this,
+					PropertySpec.SSL_TRUST_STORE_PASSWORD.getDefaultProperty().getValue());
+		}
+
+		@Override
+		public Setting newSetting(final Object value) {
+			if (!(value instanceof EncryptedPassword)) {
+				throw new ClassCastException(String.format(
+						"unable to cast %s to %s",
+						value.getClass().getName(),
+						EncryptedPassword.class.getName()));
+			}
+			return new Setting(this, value);
+		}
+
+		@Override
+		public Setting newSetting(final String value) {
+			return newSetting(EncryptedPassword.newInstance(value.toCharArray()));
 		}
 		
 	},
@@ -1383,6 +1635,262 @@ public enum SettingSpec {
 		@Override
 		public Setting newSetting(final String value) {
 			return newSetting(UsernamePasswordAuthenticator.getInstance(value));
+		}
+		
+	},
+	@HelpText(
+			doc = "The client authentication setting for SSL/TLS connections "
+					+ "to the SOCKS server (default is NOT_DESIRED)",
+			usage = "ssl.clientAuthSetting=SSL_CLIENT_AUTH_SETTING"
+	)
+	SSL_CLIENT_AUTH_SETTING("ssl.clientAuthSetting") {
+		
+		@Override
+		public Setting getDefaultSetting() {
+			return new Setting(this, ClientAuthSetting.NOT_DESIRED);
+		}
+
+		@Override
+		public Setting newSetting(final Object value) {
+			if (!(value instanceof ClientAuthSetting)) {
+				throw new ClassCastException(String.format(
+						"unable to cast %s to %s",
+						value.getClass().getName(),
+						ClientAuthSetting.class.getName()));
+			}
+			return new Setting(this, value);
+		}
+
+		@Override
+		public Setting newSetting(final String value) {
+			return newSetting(ClientAuthSetting.getInstance(value));
+		}
+		
+	},
+	@HelpText(
+			doc = "The boolean value to indicate if SSL/TLS connections to "
+					+ "the SOCKS server are enabled (default is false)",
+			usage = "ssl.enabled=true|false"
+	)	
+	SSL_ENABLED("ssl.enabled") {
+	
+		private static final boolean DEFAULT_BOOLEAN_VALUE = false;
+		
+		@Override
+		public Setting getDefaultSetting() {
+			return new Setting(this, Boolean.valueOf(DEFAULT_BOOLEAN_VALUE));
+		}
+
+		@Override
+		public Setting newSetting(final Object value) {
+			if (!(value instanceof Boolean)) {
+				throw new ClassCastException(String.format(
+						"unable to cast %s to %s",
+						value.getClass().getName(),
+						Boolean.class.getName()));
+			}
+			return new Setting(this, value);
+		}
+
+		@Override
+		public Setting newSetting(final String value) {
+			return newSetting(Boolean.valueOf(value));
+		}
+		
+	},
+	@HelpText(
+			doc = "The space separated list of cipher suites enabled for "
+					+ "SSL/TLS connections to the SOCKS server",
+			usage = "ssl.enabledCipherSuites=[SSL_CIPHER_SUITE1[ SSL_CIPHER_SUITE2[...]]]"
+	)	
+	SSL_ENABLED_CIPHER_SUITES("ssl.enabledCipherSuites") {
+		
+		@Override
+		public Setting getDefaultSetting() {
+			return new Setting(this, CipherSuites.newInstance(new String[] { }));
+		}
+
+		@Override
+		public Setting newSetting(final Object value) {
+			if (!(value instanceof CipherSuites)) {
+				throw new ClassCastException(String.format(
+						"unable to cast %s to %s",
+						value.getClass().getName(),
+						CipherSuites.class.getName()));
+			}
+			return new Setting(this, value);
+		}
+
+		@Override
+		public Setting newSetting(final String value) {
+			return newSetting(CipherSuites.newInstance(value));
+		}
+		
+	},
+	@HelpText(
+			doc = "The space separated list of protocol versions enabled for "
+					+ "SSL/TLS connections to the SOCKS server",
+			usage = "ssl.enabledProtocols=[SSL_PROTOCOL1[ SSL_PROTOCOL2[...]]]"
+	)	
+	SSL_ENABLED_PROTOCOLS("ssl.enabledProtocols") {
+		
+		@Override
+		public Setting getDefaultSetting() {
+			return new Setting(this, Protocols.newInstance(new String[] { }));
+		}
+
+		@Override
+		public Setting newSetting(final Object value) {
+			if (!(value instanceof Protocols)) {
+				throw new ClassCastException(String.format(
+						"unable to cast %s to %s",
+						value.getClass().getName(),
+						Protocols.class.getName()));
+			}
+			return new Setting(this, value);
+		}
+
+		@Override
+		public Setting newSetting(final String value) {
+			return newSetting(Protocols.newInstance(value));
+		}
+		
+	},
+	@HelpText(
+			doc = "The key store file for the SSL/TLS connections to the SOCKS "
+					+ "server",
+			usage = "ssl.keyStoreFile=FILE"
+	)	
+	SSL_KEY_STORE_FILE("ssl.keyStoreFile") {
+		
+		@Override
+		public Setting getDefaultSetting() {
+			return new Setting(this, null);
+		}
+
+		@Override
+		public Setting newSetting(final Object value) {
+			if (!(value instanceof File)) {
+				throw new ClassCastException(String.format(
+						"unable to cast %s to %s",
+						value.getClass().getName(),
+						File.class.getName()));
+			}
+			File val = (File) value;
+			if (!val.exists()) {
+				throw new IllegalArgumentException(String.format(
+						"file `%s' does not exist", 
+						val));
+			}
+			if (!val.isDirectory()) {
+				throw new IllegalArgumentException(String.format(
+						"file `%s' must not be a directory", 
+						val));
+			}
+			return new Setting(this, val);
+		}
+
+		@Override
+		public Setting newSetting(final String value) {
+			return newSetting(new File(value));
+		}
+		
+	},
+	@HelpText(
+			doc = "The password for the key store for the SSL/TLS connections "
+					+ "to the SOCKS server",
+			usage = "ssl.keyStorePassword=PASSWORD"
+	)	
+	SSL_KEY_STORE_PASSWORD("ssl.keyStorePassword") {
+		
+		@Override
+		public Setting getDefaultSetting() {
+			return new Setting(this, EncryptedPassword.newInstance(new char[] { }));
+		}
+
+		@Override
+		public Setting newSetting(final Object value) {
+			if (!(value instanceof EncryptedPassword)) {
+				throw new ClassCastException(String.format(
+						"unable to cast %s to %s",
+						value.getClass().getName(),
+						EncryptedPassword.class.getName()));
+			}
+			return new Setting(this, value);
+		}
+
+		@Override
+		public Setting newSetting(final String value) {
+			return newSetting(EncryptedPassword.newInstance(value.toCharArray()));
+		}
+		
+	},
+	@HelpText(
+			doc = "The trust store file for the SSL/TLS connections to the "
+					+ "SOCKS server",
+			usage = "ssl.trustStoreFile=FILE"
+	)	
+	SSL_TRUST_STORE_FILE("ssl.trustStoreFile") {
+		
+		@Override
+		public Setting getDefaultSetting() {
+			return new Setting(this, null);
+		}
+
+		@Override
+		public Setting newSetting(final Object value) {
+			if (!(value instanceof File)) {
+				throw new ClassCastException(String.format(
+						"unable to cast %s to %s",
+						value.getClass().getName(),
+						File.class.getName()));
+			}
+			File val = (File) value;
+			if (!val.exists()) {
+				throw new IllegalArgumentException(String.format(
+						"file `%s' does not exist", 
+						val));
+			}
+			if (!val.isDirectory()) {
+				throw new IllegalArgumentException(String.format(
+						"file `%s' must not be a directory", 
+						val));
+			}
+			return new Setting(this, val);
+		}
+
+		@Override
+		public Setting newSetting(final String value) {
+			return newSetting(new File(value));
+		}
+		
+	},
+	@HelpText(
+			doc = "The password for the trust store for the SSL/TLS "
+					+ "connections to the SOCKS server",
+			usage = "ssl.trustStorePassword=PASSWORD"
+	)	
+	SSL_TRUST_STORE_PASSWORD("ssl.trustStorePassword") {
+		
+		@Override
+		public Setting getDefaultSetting() {
+			return new Setting(this, EncryptedPassword.newInstance(new char[] { }));
+		}
+
+		@Override
+		public Setting newSetting(final Object value) {
+			if (!(value instanceof EncryptedPassword)) {
+				throw new ClassCastException(String.format(
+						"unable to cast %s to %s",
+						value.getClass().getName(),
+						EncryptedPassword.class.getName()));
+			}
+			return new Setting(this, value);
+		}
+
+		@Override
+		public Setting newSetting(final String value) {
+			return newSetting(EncryptedPassword.newInstance(value.toCharArray()));
 		}
 		
 	};

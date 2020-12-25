@@ -1,15 +1,31 @@
 package jargyle.server;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLServerSocket;
+import javax.net.ssl.SSLServerSocketFactory;
+import javax.net.ssl.TrustManager;
 
 import argmatey.ArgMatey.CLI;
 import jargyle.common.net.Host;
 import jargyle.common.net.Port;
 import jargyle.common.net.SocketSettings;
+import jargyle.common.net.ssl.CipherSuites;
+import jargyle.common.net.ssl.ClientAuthSetting;
+import jargyle.common.net.ssl.KeyManagersFactory;
+import jargyle.common.net.ssl.Protocols;
+import jargyle.common.net.ssl.TrustManagersFactory;
+import jargyle.common.security.EncryptedPassword;
 import jargyle.common.util.NonnegativeInteger;
 
 public final class SocksServer {
@@ -71,6 +87,66 @@ public final class SocksServer {
 			throw new IllegalStateException("SocksServer already started");
 		}
 		this.serverSocket = new ServerSocket();
+		Settings settings = this.configuration.getSettings();
+		if (settings.getLastValue(
+				SettingSpec.SSL_ENABLED, Boolean.class).booleanValue()) {
+			SSLServerSocketFactory sslServerSocketFactory =
+					(SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
+			File keyStoreFile = settings.getLastValue(
+					SettingSpec.SSL_KEY_STORE_FILE, File.class);
+			File trustStoreFile = settings.getLastValue(
+					SettingSpec.SSL_TRUST_STORE_FILE, File.class);
+			if (keyStoreFile != null || trustStoreFile != null) {
+				SSLContext sslContext = null;
+				try {
+					sslContext = SSLContext.getDefault();
+				} catch (NoSuchAlgorithmException e) {
+					throw new AssertionError(e);
+				}
+				KeyManager[] keyManagers = null;
+				TrustManager[] trustManagers = null;
+				if (keyStoreFile != null) {
+					EncryptedPassword keyStorePassword = 
+							settings.getLastValue(
+									SettingSpec.SSL_KEY_STORE_PASSWORD, 
+									EncryptedPassword.class);
+					keyManagers = KeyManagersFactory.getKeyManagers(
+							keyStoreFile, keyStorePassword);
+				}
+				if (trustStoreFile != null) {
+					EncryptedPassword trustStorePassword =
+							settings.getLastValue(
+									SettingSpec.SSL_TRUST_STORE_PASSWORD, 
+									EncryptedPassword.class);
+					trustManagers = TrustManagersFactory.getTrustManagers(
+							trustStoreFile, trustStorePassword);
+				}
+				try {
+					sslContext.init(keyManagers, trustManagers, new SecureRandom());
+				} catch (KeyManagementException e) {
+					throw new AssertionError(e);
+				}
+				sslServerSocketFactory = sslContext.getServerSocketFactory();
+			}
+			SSLServerSocket sslServerSocket = 
+					(SSLServerSocket) sslServerSocketFactory.createServerSocket();
+			ClientAuthSetting clientAuthSetting = settings.getLastValue(
+					SettingSpec.SSL_CLIENT_AUTH_SETTING, ClientAuthSetting.class);
+			clientAuthSetting.applyTo(sslServerSocket);
+			CipherSuites enabledCipherSuites = settings.getLastValue(
+					SettingSpec.SSL_ENABLED_CIPHER_SUITES, CipherSuites.class);
+			String[] cipherSuites = enabledCipherSuites.toStringArray();
+			if (cipherSuites.length > 0) {
+				sslServerSocket.setEnabledCipherSuites(cipherSuites);
+			}
+			Protocols enabledProtocols = settings.getLastValue(
+					SettingSpec.SSL_ENABLED_PROTOCOLS, Protocols.class);
+			String[] protocols = enabledProtocols.toStringArray();
+			if (protocols.length > 0) {
+				sslServerSocket.setEnabledProtocols(protocols);
+			}
+			this.serverSocket = sslServerSocket;
+		}
 		this.socketSettings.applyTo(this.serverSocket);
 		this.serverSocket.bind(new InetSocketAddress(
 				this.host.toInetAddress(), this.port.intValue()), this.backlog);

@@ -104,6 +104,10 @@ public final class SocksClientFactory {
 				EncryptedPassword.class);
 		properties.add(PropertySpec.SSL_KEY_STORE_PASSWORD.newProperty(
 				sslKeyStorePassword));
+		String sslKeyStoreType = settings.getLastValue(
+				SettingSpec.EXTERNAL_CLIENT_SSL_KEY_STORE_TYPE, String.class);
+		properties.add(PropertySpec.SSL_KEY_STORE_TYPE.newProperty(
+				sslKeyStoreType));
 		File sslTrustStoreFile = settings.getLastValue(
 				SettingSpec.EXTERNAL_CLIENT_SSL_TRUST_STORE_FILE, File.class);
 		properties.add(PropertySpec.SSL_TRUST_STORE_FILE.newProperty(
@@ -113,6 +117,10 @@ public final class SocksClientFactory {
 				EncryptedPassword.class);
 		properties.add(PropertySpec.SSL_TRUST_STORE_PASSWORD.newProperty(
 				sslTrustStorePassword));
+		String sslTrustStoreType = settings.getLastValue(
+				SettingSpec.EXTERNAL_CLIENT_SSL_TRUST_STORE_TYPE, String.class);
+		properties.add(PropertySpec.SSL_TRUST_STORE_TYPE.newProperty(
+				sslTrustStoreType));
 		return properties;
 	}
 	

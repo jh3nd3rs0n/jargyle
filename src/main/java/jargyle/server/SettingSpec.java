@@ -17,7 +17,6 @@ import jargyle.common.net.socks5.AuthMethod;
 import jargyle.common.net.socks5.AuthMethods;
 import jargyle.common.net.socks5.gssapiauth.GssapiProtectionLevels;
 import jargyle.common.net.ssl.CipherSuites;
-import jargyle.common.net.ssl.ClientAuthSetting;
 import jargyle.common.net.ssl.Protocols;
 import jargyle.common.security.EncryptedPassword;
 import jargyle.common.util.NonnegativeInteger;
@@ -1444,30 +1443,6 @@ public enum SettingSpec {
 		
 	},
 	@HelpText(
-			doc = "The client authentication setting for SSL/TLS connections "
-					+ "to the SOCKS server (default is NOT_DESIRED)",
-			usage = "ssl.clientAuthSetting=SSL_CLIENT_AUTH_SETTING"
-	)
-	SSL_CLIENT_AUTH_SETTING("ssl.clientAuthSetting") {
-		
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(this, ClientAuthSetting.NOT_DESIRED);
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			ClientAuthSetting val = ClientAuthSetting.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return newSetting(ClientAuthSetting.getInstance(value));
-		}
-		
-	},
-	@HelpText(
 			doc = "The boolean value to indicate if SSL/TLS connections to "
 					+ "the SOCKS server are enabled (default is false)",
 			usage = "ssl.enabled=true|false"
@@ -1624,6 +1599,33 @@ public enum SettingSpec {
 		
 	},
 	@HelpText(
+			doc = "The boolean value to indicate that client authentication is "
+					+ "required for SSL/TLS connections to the SOCKS server "
+					+ "(default is false)",
+			usage = "ssl.needClientAuth=true|false"
+	)	
+	SSL_NEED_CLIENT_AUTH("ssl.needClientAuth") {
+		
+		private static final boolean DEFAULT_BOOLEAN_VALUE = false;
+		
+		@Override
+		public Setting getDefaultSetting() {
+			return new Setting(this, Boolean.valueOf(DEFAULT_BOOLEAN_VALUE));
+		}
+
+		@Override
+		public Setting newSetting(final Object value) {
+			Boolean val = Boolean.class.cast(value);
+			return new Setting(this, val);
+		}
+
+		@Override
+		public Setting newSetting(final String value) {
+			return newSetting(Boolean.valueOf(value));
+		}
+		
+	},
+	@HelpText(
 			doc = "The trust store file for the SSL/TLS connections to the "
 					+ "SOCKS server",
 			usage = "ssl.trustStoreFile=FILE"
@@ -1704,6 +1706,33 @@ public enum SettingSpec {
 			return newSetting(value);
 		}
 		
+	},
+	@HelpText(
+			doc = "The boolean value to indicate that client authentication is "
+					+ "requested for SSL/TLS connections to the SOCKS server "
+					+ "(default is false)",
+			usage = "ssl.wantClientAuth=true|false"
+	)	
+	SSL_WANT_CLIENT_AUTH("ssl.wantClientAuth") {
+		
+		private static final boolean DEFAULT_BOOLEAN_VALUE = false;
+		
+		@Override
+		public Setting getDefaultSetting() {
+			return new Setting(this, Boolean.valueOf(DEFAULT_BOOLEAN_VALUE));
+		}
+
+		@Override
+		public Setting newSetting(final Object value) {
+			Boolean val = Boolean.class.cast(value);
+			return new Setting(this, val);
+		}
+
+		@Override
+		public Setting newSetting(final String value) {
+			return newSetting(Boolean.valueOf(value));
+		}
+
 	};
 
 	public static SettingSpec getInstance(final String s) {

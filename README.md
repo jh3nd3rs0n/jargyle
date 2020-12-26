@@ -284,6 +284,9 @@ The following is a list of available settings for the SOCKS server (displayed wh
       ssl.keyStoreType=TYPE
           The type of key store file for the SSL/TLS connections to the SOCKS server
     
+      ssl.needClientAuth=true|false
+          The boolean value to indicate that client authentication is required for SSL/TLS connections to the SOCKS server (default is false)
+    
       ssl.trustStoreFile=FILE
           The trust store file for the SSL/TLS connections to the SOCKS server
     
@@ -292,6 +295,9 @@ The following is a list of available settings for the SOCKS server (displayed wh
     
       ssl.trustStoreType=TYPE
           The type of trust store file for the SSL/TLS connections to the SOCKS server
+    
+      ssl.wantClientAuth=true|false
+          The boolean value to indicate that client authentication is requested for SSL/TLS connections to the SOCKS server (default is false)
     
     SCHEMES:
     
@@ -355,16 +361,6 @@ The following is a list of available settings for the SOCKS server (displayed wh
       REQUIRED_INTEG_AND_CONF
           Required per-message integrity and confidentiality
     
-    SSL_CLIENT_AUTH_SETTINGS:
-    
-      NOT_DESIRED
-          No client authentication desired
-    
-      REQUESTED
-          Client authentication requested
-    
-      REQUIRED
-          Client authentication required
     
 ```
 
@@ -611,16 +607,17 @@ The following are the settings in the monitored configuration file that will hav
 -   `host`
 -   `port`
 -   `socketSettings`
--   `ssl.clientAuthSetting`
 -   `ssl.enabled`
 -   `ssl.enabledCipherSuites`
 -   `ssl.enabledProtocols`
 -   `ssl.keyStoreFile`
 -   `ssl.keyStorePassword`
 -   `ssl.keyStoreType`
+-   `ssl.needClientAuth`
 -   `ssl.trustStoreFile`
 -   `ssl.trustStorePassword` 
 -   `ssl.trustStoreType`
+-   `ssl.wantClientAuth`
 
 ### 3. 7. Managing SOCKS5 Users (for Username Password Authentication)
 

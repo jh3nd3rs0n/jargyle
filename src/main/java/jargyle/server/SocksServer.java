@@ -21,7 +21,6 @@ import jargyle.common.net.Host;
 import jargyle.common.net.Port;
 import jargyle.common.net.SocketSettings;
 import jargyle.common.net.ssl.CipherSuites;
-import jargyle.common.net.ssl.ClientAuthSetting;
 import jargyle.common.net.ssl.KeyManagersFactory;
 import jargyle.common.net.ssl.Protocols;
 import jargyle.common.net.ssl.TrustManagersFactory;
@@ -134,9 +133,6 @@ public final class SocksServer {
 			}
 			SSLServerSocket sslServerSocket = 
 					(SSLServerSocket) sslServerSocketFactory.createServerSocket();
-			ClientAuthSetting clientAuthSetting = settings.getLastValue(
-					SettingSpec.SSL_CLIENT_AUTH_SETTING, ClientAuthSetting.class);
-			clientAuthSetting.applyTo(sslServerSocket);
 			CipherSuites enabledCipherSuites = settings.getLastValue(
 					SettingSpec.SSL_ENABLED_CIPHER_SUITES, CipherSuites.class);
 			String[] cipherSuites = enabledCipherSuites.toStringArray();
@@ -148,6 +144,14 @@ public final class SocksServer {
 			String[] protocols = enabledProtocols.toStringArray();
 			if (protocols.length > 0) {
 				sslServerSocket.setEnabledProtocols(protocols);
+			}
+			if (settings.getLastValue(SettingSpec.SSL_NEED_CLIENT_AUTH, 
+					Boolean.class).booleanValue()) {
+				sslServerSocket.setNeedClientAuth(true);
+			}
+			if (settings.getLastValue(SettingSpec.SSL_WANT_CLIENT_AUTH, 
+					Boolean.class).booleanValue()) {
+				sslServerSocket.setWantClientAuth(true);
 			}
 			this.serverSocket = sslServerSocket;
 		}

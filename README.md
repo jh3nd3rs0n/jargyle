@@ -257,6 +257,9 @@ The following is a list of available settings for the SOCKS server (displayed wh
       socks5.usernamePasswordAuthenticator=CLASSNAME[:VALUE]
           The username password authenticator for the SOCKS5 server
     
+      ssl.clientAuthSetting=SSL_CLIENT_AUTH_SETTING
+          The client authentication setting for SSL/TLS connections to the SOCKS server (default is NOT_DESIRED)
+    
       ssl.enabled=true|false
           The boolean value to indicate if SSL/TLS connections to the SOCKS server are enabled (default is false)
     

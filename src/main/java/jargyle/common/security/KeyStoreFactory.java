@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -25,10 +26,8 @@ public final class KeyStoreFactory {
 		} catch (KeyStoreException e) {
 			throw new AssertionError(e);
 		}
-		try {
-			keyStore.load(
-					new FileInputStream(keyStoreFile), 
-					keyStorePassword.getPassword());
+		try (InputStream in = new FileInputStream(keyStoreFile)) {
+			keyStore.load(in, keyStorePassword.getPassword());
 		} catch (NoSuchAlgorithmException e) {
 			throw new AssertionError(e);
 		} catch (CertificateException e) {

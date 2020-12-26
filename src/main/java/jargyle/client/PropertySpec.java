@@ -38,13 +38,8 @@ public enum PropertySpec {
 
 		@Override
 		public Property newProperty(final Object value) {
-			if (!(value instanceof Host)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						Host.class.getName()));
-			}
-			return new Property(this, value);
+			Host val = Host.class.cast(value);
+			return new Property(this, val);
 		}
 
 		@Override
@@ -70,13 +65,8 @@ public enum PropertySpec {
 
 		@Override
 		public Property newProperty(final Object value) {
-			if (!(value instanceof Port)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						Port.class.getName()));
-			}
-			return new Property(this, value);
+			Port val = Port.class.cast(value);
+			return new Property(this, val);
 		}
 
 		@Override
@@ -97,13 +87,8 @@ public enum PropertySpec {
 
 		@Override
 		public Property newProperty(final Object value) {
-			if (!(value instanceof PositiveInteger)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						PositiveInteger.class.getName()));
-			}
-			return new Property(this, value);
+			PositiveInteger val = PositiveInteger.class.cast(value);
+			return new Property(this, val);
 		}
 
 		@Override
@@ -121,13 +106,8 @@ public enum PropertySpec {
 
 		@Override
 		public Property newProperty(final Object value) {
-			if (!(value instanceof SocketSettings)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						SocketSettings.class.getName()));
-			}
-			return new Property(this, value);
+			SocketSettings val = SocketSettings.class.cast(value);
+			return new Property(this, val);
 		}
 
 		@Override
@@ -146,13 +126,8 @@ public enum PropertySpec {
 
 		@Override
 		public Property newProperty(final Object value) {
-			if (!(value instanceof AuthMethods)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						AuthMethods.class.getName()));
-			}
-			return new Property(this, value);
+			AuthMethods val = AuthMethods.class.cast(value);
+			return new Property(this, val);
 		}
 
 		@Override
@@ -176,13 +151,8 @@ public enum PropertySpec {
 
 		@Override
 		public Property newProperty(final Object value) {
-			if (!(value instanceof Oid)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						Oid.class.getName()));
-			}
-			return new Property(this, value);
+			Oid val = Oid.class.cast(value);
+			return new Property(this, val);
 		}
 
 		@Override
@@ -208,13 +178,8 @@ public enum PropertySpec {
 
 		@Override
 		public Property newProperty(final Object value) {
-			if (!(value instanceof Boolean)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						Boolean.class.getName()));
-			}
-			return new Property(this, value);
+			Boolean val = Boolean.class.cast(value);
+			return new Property(this, val);
 		}
 
 		@Override
@@ -232,13 +197,8 @@ public enum PropertySpec {
 
 		@Override
 		public Property newProperty(final Object value) {
-			if (!(value instanceof GssapiProtectionLevels)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						GssapiProtectionLevels.class.getName()));
-			}
-			return new Property(this, value);
+			GssapiProtectionLevels val = GssapiProtectionLevels.class.cast(value);
+			return new Property(this, val);
 		}
 
 		@Override
@@ -256,13 +216,8 @@ public enum PropertySpec {
 
 		@Override
 		public Property newProperty(final Object value) {
-			if (!(value instanceof String)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						String.class.getName()));
-			}
-			return new Property(this, value);
+			String val = String.class.cast(value);
+			return new Property(this, val);
 		}
 
 		@Override
@@ -280,14 +235,9 @@ public enum PropertySpec {
 
 		@Override
 		public Property newProperty(final Object value) {
-			if (!(value instanceof String)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						String.class.getName()));
-			}
-			UsernamePassword.validateUsername((String) value);
-			return new Property(this, value);
+			String val = String.class.cast(value);
+			UsernamePassword.validateUsername(val);
+			return new Property(this, val);
 		}
 
 		@Override
@@ -306,13 +256,7 @@ public enum PropertySpec {
 
 		@Override
 		public Property newProperty(final Object value) {
-			if (!(value instanceof EncryptedPassword)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						EncryptedPassword.class.getName()));
-			}
-			EncryptedPassword val = (EncryptedPassword) value;
+			EncryptedPassword val = EncryptedPassword.class.cast(value);
 			char[] password = val.getPassword();
 			UsernamePassword.validatePassword(password);
 			Arrays.fill(password, '\0');
@@ -339,13 +283,8 @@ public enum PropertySpec {
 
 		@Override
 		public Property newProperty(final Object value) {
-			if (!(value instanceof Boolean)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						Boolean.class.getName()));
-			}
-			return new Property(this, value);
+			Boolean val = Boolean.class.cast(value);
+			return new Property(this, val);
 		}
 
 		@Override
@@ -363,13 +302,8 @@ public enum PropertySpec {
 
 		@Override
 		public Property newProperty(final Object value) {
-			if (!(value instanceof CipherSuites)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						CipherSuites.class.getName()));
-			}
-			return new Property(this, value);
+			CipherSuites val = CipherSuites.class.cast(value);
+			return new Property(this, val);
 		}
 
 		@Override
@@ -387,13 +321,8 @@ public enum PropertySpec {
 
 		@Override
 		public Property newProperty(final Object value) {
-			if (!(value instanceof Protocols)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						Protocols.class.getName()));
-			}
-			return new Property(this, value);
+			Protocols val = Protocols.class.cast(value);
+			return new Property(this, val);
 		}
 
 		@Override
@@ -411,13 +340,7 @@ public enum PropertySpec {
 
 		@Override
 		public Property newProperty(final Object value) {
-			if (!(value instanceof File)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						File.class.getName()));
-			}
-			File val = (File) value;
+			File val = File.class.cast(value);
 			if (!val.exists()) {
 				throw new IllegalArgumentException(String.format(
 						"file `%s' does not exist", 
@@ -446,13 +369,8 @@ public enum PropertySpec {
 
 		@Override
 		public Property newProperty(final Object value) {
-			if (!(value instanceof EncryptedPassword)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						EncryptedPassword.class.getName()));
-			}
-			return new Property(this, value);
+			EncryptedPassword val = EncryptedPassword.class.cast(value);
+			return new Property(this, val);
 		}
 
 		@Override
@@ -470,13 +388,7 @@ public enum PropertySpec {
 
 		@Override
 		public Property newProperty(final Object value) {
-			if (!(value instanceof File)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						File.class.getName()));
-			}
-			File val = (File) value;
+			File val = File.class.cast(value);
 			if (!val.exists()) {
 				throw new IllegalArgumentException(String.format(
 						"file `%s' does not exist", 
@@ -505,13 +417,8 @@ public enum PropertySpec {
 
 		@Override
 		public Property newProperty(final Object value) {
-			if (!(value instanceof EncryptedPassword)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						EncryptedPassword.class.getName()));
-			}
-			return new Property(this, value);
+			EncryptedPassword val = EncryptedPassword.class.cast(value);
+			return new Property(this, val);
 		}
 
 		@Override

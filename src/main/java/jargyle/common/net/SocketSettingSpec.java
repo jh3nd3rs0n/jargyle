@@ -23,7 +23,7 @@ public enum SocketSettingSpec {
 		public void apply(
 				final Object value,
 				final DatagramSocket datagramSocket) throws SocketException {
-			UnsignedByte b = (UnsignedByte) value;
+			UnsignedByte b = UnsignedByte.class.cast(value);
 			datagramSocket.setTrafficClass(b.intValue());
 		}
 		
@@ -31,19 +31,14 @@ public enum SocketSettingSpec {
 		public void apply(
 				final Object value,
 				final Socket socket) throws SocketException {
-			UnsignedByte b = (UnsignedByte) value;
+			UnsignedByte b = UnsignedByte.class.cast(value);
 			socket.setTrafficClass(b.intValue());
 		}
 
 		@Override
 		public SocketSetting newSocketSetting(final Object value) {
-			if (!(value instanceof UnsignedByte)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						UnsignedByte.class.getName()));
-			}
-			return new SocketSetting(this, value);
+			UnsignedByte val = UnsignedByte.class.cast(value);
+			return new SocketSetting(this, val);
 		}
 
 		@Override
@@ -66,7 +61,7 @@ public enum SocketSettingSpec {
 		public void apply(
 				final Object value,
 				final ServerSocket serverSocket) throws SocketException {
-			PerformancePreferences p = (PerformancePreferences) value;
+			PerformancePreferences p = PerformancePreferences.class.cast(value);
 			p.applyTo(serverSocket);
 		}
 
@@ -74,19 +69,14 @@ public enum SocketSettingSpec {
 		public void apply(
 				final Object value,
 				final Socket socket) throws SocketException {
-			PerformancePreferences p = (PerformancePreferences) value;
+			PerformancePreferences p = PerformancePreferences.class.cast(value);
 			p.applyTo(socket);
 		}
 
 		@Override
 		public SocketSetting newSocketSetting(final Object value) {
-			if (!(value instanceof PerformancePreferences)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						PerformancePreferences.class.getName()));
-			}
-			return new SocketSetting(this, value);
+			PerformancePreferences val = PerformancePreferences.class.cast(value);
+			return new SocketSetting(this, val);
 		}
 
 		@Override
@@ -106,19 +96,14 @@ public enum SocketSettingSpec {
 		public void apply(
 				final Object value,
 				final DatagramSocket datagramSocket) throws SocketException {
-			Boolean b = (Boolean) value;
+			Boolean b = Boolean.class.cast(value);
 			datagramSocket.setBroadcast(b.booleanValue());
 		}
 
 		@Override
 		public SocketSetting newSocketSetting(final Object value) {
-			if (!(value instanceof Boolean)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						Boolean.class.getName()));
-			}
-			return new SocketSetting(this, value);
+			Boolean val = Boolean.class.cast(value);
+			return new SocketSetting(this, val);
 		}
 
 		@Override
@@ -139,19 +124,14 @@ public enum SocketSettingSpec {
 		public void apply(
 				final Object value, 
 				final Socket socket) throws SocketException {
-			Boolean b = (Boolean) value;
+			Boolean b = Boolean.class.cast(value);
 			socket.setKeepAlive(b.booleanValue());
 		}
 
 		@Override
 		public SocketSetting newSocketSetting(final Object value) {
-			if (!(value instanceof Boolean)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						Boolean.class.getName()));
-			}
-			return new SocketSetting(this, value);
+			Boolean val = Boolean.class.cast(value);
+			return new SocketSetting(this, val);
 		}
 
 		@Override
@@ -171,19 +151,14 @@ public enum SocketSettingSpec {
 		public void apply(
 				final Object value, 
 				final Socket socket) throws SocketException {
-			NonnegativeInteger i = (NonnegativeInteger) value;
+			NonnegativeInteger i = NonnegativeInteger.class.cast(value);
 			socket.setSoLinger(true, i.intValue());
 		}
 
 		@Override
 		public SocketSetting newSocketSetting(final Object value) {
-			if (!(value instanceof NonnegativeInteger)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						NonnegativeInteger.class.getName()));
-			}
-			return new SocketSetting(this, value);
+			NonnegativeInteger val = NonnegativeInteger.class.cast(value);
+			return new SocketSetting(this, val);
 		}
 
 		@Override
@@ -203,19 +178,14 @@ public enum SocketSettingSpec {
 		public void apply(
 				final Object value, 
 				final Socket socket) throws SocketException {
-			Boolean b = (Boolean) value;
+			Boolean b = Boolean.class.cast(value);
 			socket.setOOBInline(b.booleanValue());
 		}
 
 		@Override
 		public SocketSetting newSocketSetting(final Object value) {
-			if (!(value instanceof Boolean)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						Boolean.class.getName()));
-			}
-			return new SocketSetting(this, value);
+			Boolean val = Boolean.class.cast(value);
+			return new SocketSetting(this, val);
 		}
 
 		@Override
@@ -235,7 +205,7 @@ public enum SocketSettingSpec {
 		public void apply(
 				final Object value,
 				final DatagramSocket datagramSocket) throws SocketException {
-			PositiveInteger i = (PositiveInteger) value;
+			PositiveInteger i = PositiveInteger.class.cast(value);
 			datagramSocket.setReceiveBufferSize(i.intValue());
 		}
 		
@@ -243,7 +213,7 @@ public enum SocketSettingSpec {
 		public void apply(
 				final Object value, 
 				final ServerSocket serverSocket) throws SocketException {
-			PositiveInteger i = (PositiveInteger) value;
+			PositiveInteger i = PositiveInteger.class.cast(value);
 			serverSocket.setReceiveBufferSize(i.intValue());
 		}
 
@@ -251,19 +221,14 @@ public enum SocketSettingSpec {
 		public void apply(
 				final Object value, 
 				final Socket socket) throws SocketException {
-			PositiveInteger i = (PositiveInteger) value;
+			PositiveInteger i = PositiveInteger.class.cast(value);
 			socket.setReceiveBufferSize(i.intValue());
 		}
 
 		@Override
 		public SocketSetting newSocketSetting(final Object value) {
-			if (!(value instanceof PositiveInteger)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						PositiveInteger.class.getName()));
-			}
-			return new SocketSetting(this, value);
+			PositiveInteger val = PositiveInteger.class.cast(value);
+			return new SocketSetting(this, val);
 		}
 
 		@Override
@@ -283,7 +248,7 @@ public enum SocketSettingSpec {
 		public void apply(
 				final Object value,
 				final DatagramSocket datagramSocket) throws SocketException {
-			Boolean b = (Boolean) value;
+			Boolean b = Boolean.class.cast(value);
 			datagramSocket.setReuseAddress(b.booleanValue());
 		}
 		
@@ -291,7 +256,7 @@ public enum SocketSettingSpec {
 		public void apply(
 				final Object value, 
 				final ServerSocket serverSocket) throws SocketException {
-			Boolean b = (Boolean) value;
+			Boolean b = Boolean.class.cast(value);
 			serverSocket.setReuseAddress(b.booleanValue());
 		}
 
@@ -299,19 +264,14 @@ public enum SocketSettingSpec {
 		public void apply(
 				final Object value, 
 				final Socket socket) throws SocketException {
-			Boolean b = (Boolean) value;
+			Boolean b = Boolean.class.cast(value);
 			socket.setReuseAddress(b.booleanValue());
 		}
 
 		@Override
 		public SocketSetting newSocketSetting(final Object value) {
-			if (!(value instanceof Boolean)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						Boolean.class.getName()));
-			}
-			return new SocketSetting(this, value);
+			Boolean val = Boolean.class.cast(value);
+			return new SocketSetting(this, val);
 		}
 
 		@Override
@@ -331,7 +291,7 @@ public enum SocketSettingSpec {
 		public void apply(
 				final Object value,
 				final DatagramSocket datagramSocket) throws SocketException {
-			PositiveInteger i = (PositiveInteger) value;
+			PositiveInteger i = PositiveInteger.class.cast(value);
 			datagramSocket.setSendBufferSize(i.intValue());
 		}
 		
@@ -339,19 +299,14 @@ public enum SocketSettingSpec {
 		public void apply(
 				final Object value, 
 				final Socket socket) throws SocketException {
-			PositiveInteger i = (PositiveInteger) value;
+			PositiveInteger i = PositiveInteger.class.cast(value);
 			socket.setSendBufferSize(i.intValue());
 		}
 
 		@Override
 		public SocketSetting newSocketSetting(final Object value) {
-			if (!(value instanceof PositiveInteger)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						PositiveInteger.class.getName()));
-			}
-			return new SocketSetting(this, value);
+			PositiveInteger val = PositiveInteger.class.cast(value);
+			return new SocketSetting(this, val);
 		}
 
 		@Override
@@ -371,7 +326,7 @@ public enum SocketSettingSpec {
 		public void apply(
 				final Object value,
 				final DatagramSocket datagramSocket) throws SocketException {
-			NonnegativeInteger i = (NonnegativeInteger) value;
+			NonnegativeInteger i = NonnegativeInteger.class.cast(value);
 			datagramSocket.setSoTimeout(i.intValue());
 		}
 		
@@ -379,7 +334,7 @@ public enum SocketSettingSpec {
 		public void apply(
 				final Object value, 
 				final ServerSocket serverSocket) throws SocketException {
-			NonnegativeInteger i = (NonnegativeInteger) value;
+			NonnegativeInteger i = NonnegativeInteger.class.cast(value);
 			serverSocket.setSoTimeout(i.intValue());
 		}
 
@@ -387,19 +342,14 @@ public enum SocketSettingSpec {
 		public void apply(
 				final Object value, 
 				final Socket socket) throws SocketException {
-			NonnegativeInteger i = (NonnegativeInteger) value;
+			NonnegativeInteger i = NonnegativeInteger.class.cast(value);
 			socket.setSoTimeout(i.intValue());
 		}
 
 		@Override
 		public SocketSetting newSocketSetting(final Object value) {
-			if (!(value instanceof NonnegativeInteger)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						NonnegativeInteger.class.getName()));
-			}
-			return new SocketSetting(this, value);
+			NonnegativeInteger val = NonnegativeInteger.class.cast(value);
+			return new SocketSetting(this, val);
 		}
 
 		@Override
@@ -419,19 +369,14 @@ public enum SocketSettingSpec {
 		public void apply(
 				final Object value, 
 				final Socket socket) throws SocketException {
-			Boolean b = (Boolean) value;
+			Boolean b = Boolean.class.cast(value);
 			socket.setTcpNoDelay(b.booleanValue());
 		}
 
 		@Override
 		public SocketSetting newSocketSetting(final Object value) {
-			if (!(value instanceof Boolean)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						Boolean.class.getName()));
-			}
-			return new SocketSetting(this, value);
+			Boolean val = Boolean.class.cast(value);
+			return new SocketSetting(this, val);
 		}
 
 		@Override

@@ -37,19 +37,14 @@ public enum SettingSpec {
 		
 		@Override
 		public Setting getDefaultSetting() {
-			return newSetting(Criteria.newInstance(Criterion.newInstance(
+			return new Setting(this, Criteria.newInstance(Criterion.newInstance(
 					CriterionMethod.MATCHES, ".*")));
 		}
 
 		@Override
 		public Setting newSetting(final Object value) {
-			if (!(value instanceof Criteria)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						Criteria.class.getName()));
-			}
-			return new Setting(this, value);
+			Criteria val = Criteria.class.cast(value);
+			return new Setting(this, val);
 		}
 
 		@Override
@@ -75,13 +70,8 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final Object value) {
-			if (!(value instanceof NonnegativeInteger)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						NonnegativeInteger.class.getName()));
-			}
-			return new Setting(this, value);
+			NonnegativeInteger val = NonnegativeInteger.class.cast(value);
+			return new Setting(this, val);
 		}
 
 		@Override
@@ -98,18 +88,13 @@ public enum SettingSpec {
 		
 		@Override
 		public Setting getDefaultSetting() {
-			return newSetting(Criteria.EMPTY_INSTANCE);
+			return new Setting(this, Criteria.EMPTY_INSTANCE);
 		}
 
 		@Override
 		public Setting newSetting(final Object value) {
-			if (!(value instanceof Criteria)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						Criteria.class.getName()));
-			}
-			return new Setting(this, value);
+			Criteria val = Criteria.class.cast(value);
+			return new Setting(this, val);
 		}
 
 		@Override
@@ -132,13 +117,8 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final Object value) {
-			if (!(value instanceof SocketSettings)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						SocketSettings.class.getName()));
-			}
-			return new Setting(this, value);
+			SocketSettings val = SocketSettings.class.cast(value);
+			return new Setting(this, val);
 		}
 
 		@Override
@@ -164,13 +144,8 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final Object value) {
-			if (!(value instanceof Host)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						Host.class.getName()));
-			}
-			return new Setting(this, value);
+			Host val = Host.class.cast(value);
+			return new Setting(this, val);
 		}
 
 		@Override
@@ -196,13 +171,8 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final Object value) {
-			if (!(value instanceof PositiveInteger)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						PositiveInteger.class.getName()));
-			}
-			return new Setting(this, value);
+			PositiveInteger val = PositiveInteger.class.cast(value);
+			return new Setting(this, val);
 		}
 
 		@Override
@@ -225,13 +195,8 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final Object value) {
-			if (!(value instanceof SocksServerUri)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						SocksServerUri.class.getName()));
-			}
-			return new Setting(this, value);
+			SocksServerUri val = SocksServerUri.class.cast(value);
+			return new Setting(this, val);
 		}
 
 		@Override
@@ -257,13 +222,8 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final Object value) {
-			if (!(value instanceof SocketSettings)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						SocketSettings.class.getName()));
-			}
-			return new Setting(this, value);
+			SocketSettings val = SocketSettings.class.cast(value);
+			return new Setting(this, val);
 		}
 
 		@Override
@@ -289,13 +249,8 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final Object value) {
-			if (!(value instanceof AuthMethods)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						AuthMethods.class.getName()));
-			}
-			return new Setting(this, value);
+			AuthMethods val = AuthMethods.class.cast(value);
+			return new Setting(this, val);
 		}
 
 		@Override
@@ -322,13 +277,8 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final Object value) {
-			if (!(value instanceof Oid)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						Oid.class.getName()));
-			}
-			return new Setting(this, value);
+			Oid val = Oid.class.cast(value);
+			return new Setting(this, val);
 		}
 
 		@Override
@@ -363,13 +313,8 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final Object value) {
-			if (!(value instanceof Boolean)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						Boolean.class.getName()));
-			}
-			return new Setting(this, value);
+			Boolean val = Boolean.class.cast(value);
+			return new Setting(this, val);
 		}
 
 		@Override
@@ -399,13 +344,8 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final Object value) {
-			if (!(value instanceof GssapiProtectionLevels)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						GssapiProtectionLevels.class.getName()));
-			}
-			return new Setting(this, value);
+			GssapiProtectionLevels val = GssapiProtectionLevels.class.cast(value);
+			return new Setting(this, val);
 		}
 
 		@Override
@@ -431,13 +371,8 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final Object value) {
-			if (!(value instanceof String)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						String.class.getName()));
-			}
-			return new Setting(this, value);
+			String val = String.class.cast(value);
+			return new Setting(this, val);
 		}
 
 		@Override
@@ -461,13 +396,8 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final Object value) {
-			if (!(value instanceof UsernamePassword)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						UsernamePassword.class.getName()));
-			}
-			return new Setting(this, value);
+			UsernamePassword val = UsernamePassword.class.cast(value);
+			return new Setting(this, val);
 		}
 
 		@Override
@@ -493,13 +423,8 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final Object value) {
-			if (!(value instanceof Boolean)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						Boolean.class.getName()));
-			}
-			return new Setting(this, value);
+			Boolean val = Boolean.class.cast(value);
+			return new Setting(this, val);
 		}
 
 		@Override
@@ -526,13 +451,8 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final Object value) {
-			if (!(value instanceof CipherSuites)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						CipherSuites.class.getName()));
-			}
-			return new Setting(this, value);
+			CipherSuites val = CipherSuites.class.cast(value);
+			return new Setting(this, val);
 		}
 
 		@Override
@@ -559,13 +479,8 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final Object value) {
-			if (!(value instanceof Protocols)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						Protocols.class.getName()));
-			}
-			return new Setting(this, value);
+			Protocols val = Protocols.class.cast(value);
+			return new Setting(this, val);
 		}
 
 		@Override
@@ -590,13 +505,7 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final Object value) {
-			if (!(value instanceof File)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						File.class.getName()));
-			}
-			File val = (File) value;
+			File val = File.class.cast(value);
 			if (!val.exists()) {
 				throw new IllegalArgumentException(String.format(
 						"file `%s' does not exist", 
@@ -633,13 +542,8 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final Object value) {
-			if (!(value instanceof EncryptedPassword)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						EncryptedPassword.class.getName()));
-			}
-			return new Setting(this, value);
+			EncryptedPassword val = EncryptedPassword.class.cast(value);
+			return new Setting(this, val);
 		}
 
 		@Override
@@ -664,13 +568,7 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final Object value) {
-			if (!(value instanceof File)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						File.class.getName()));
-			}
-			File val = (File) value;
+			File val = File.class.cast(value);
 			if (!val.exists()) {
 				throw new IllegalArgumentException(String.format(
 						"file `%s' does not exist", 
@@ -708,13 +606,8 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final Object value) {
-			if (!(value instanceof EncryptedPassword)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						EncryptedPassword.class.getName()));
-			}
-			return new Setting(this, value);
+			EncryptedPassword val = EncryptedPassword.class.cast(value);
+			return new Setting(this, val);
 		}
 
 		@Override
@@ -745,13 +638,8 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final Object value) {
-			if (!(value instanceof Host)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						Host.class.getName()));
-			}
-			return new Setting(this, value);
+			Host val = Host.class.cast(value);
+			return new Setting(this, val);
 		}
 
 		@Override
@@ -781,13 +669,8 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final Object value) {
-			if (!(value instanceof Port)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						Port.class.getName()));
-			}
-			return new Setting(this, value);
+			Port val = Port.class.cast(value);
+			return new Setting(this, val);
 		}
 
 		@Override
@@ -810,13 +693,8 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final Object value) {
-			if (!(value instanceof SocketSettings)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						SocketSettings.class.getName()));
-			}
-			return new Setting(this, value);
+			SocketSettings val = SocketSettings.class.cast(value);
+			return new Setting(this, val);
 		}
 
 		@Override
@@ -830,19 +708,14 @@ public enum SettingSpec {
 
 		@Override
 		public Setting getDefaultSetting() {
-			return newSetting(new Socks5RequestCriteria(
+			return new Setting(this, new Socks5RequestCriteria(
 					new Socks5RequestCriterion(null, null, null, null)));
 		}
 
 		@Override
 		public Setting newSetting(final Object value) {
-			if (!(value instanceof Socks5RequestCriteria)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						Socks5RequestCriteria.class.getName()));
-			}
-			return new Setting(this, value);
+			Socks5RequestCriteria val = Socks5RequestCriteria.class.cast(value);
+			return new Setting(this, val);
 		}
 
 		@Override
@@ -870,13 +743,8 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final Object value) {
-			if (!(value instanceof AuthMethods)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						AuthMethods.class.getName()));
-			}
-			return new Setting(this, value);
+			AuthMethods val = AuthMethods.class.cast(value);
+			return new Setting(this, val);
 		}
 
 		@Override
@@ -890,18 +758,13 @@ public enum SettingSpec {
 
 		@Override
 		public Setting getDefaultSetting() {
-			return newSetting(Socks5RequestCriteria.EMPTY_INSTANCE);
+			return new Setting(this, Socks5RequestCriteria.EMPTY_INSTANCE);
 		}
 
 		@Override
 		public Setting newSetting(final Object value) {
-			if (!(value instanceof Socks5RequestCriteria)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						Socks5RequestCriteria.class.getName()));
-			}
-			return new Setting(this, value);
+			Socks5RequestCriteria val = Socks5RequestCriteria.class.cast(value);
+			return new Setting(this, val);
 		}
 
 		@Override
@@ -926,18 +789,13 @@ public enum SettingSpec {
 
 		@Override
 		public Setting getDefaultSetting() {
-			return new Setting(this, DEFAULT_BOOLEAN_VALUE);
+			return new Setting(this, Boolean.valueOf(DEFAULT_BOOLEAN_VALUE));
 		}
 
 		@Override
 		public Setting newSetting(final Object value) {
-			if (!(value instanceof Boolean)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						Boolean.class.getName()));
-			}
-			return new Setting(this, value);
+			Boolean val = Boolean.class.cast(value);
+			return new Setting(this, val);
 		}
 
 		@Override
@@ -964,13 +822,8 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final Object value) {
-			if (!(value instanceof GssapiProtectionLevels)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						GssapiProtectionLevels.class.getName()));
-			}
-			return new Setting(this, value);
+			GssapiProtectionLevels val = GssapiProtectionLevels.class.cast(value);
+			return new Setting(this, val);
 		}
 
 		@Override
@@ -989,19 +842,14 @@ public enum SettingSpec {
 		
 		@Override
 		public Setting getDefaultSetting() {
-			return newSetting(Criteria.newInstance(Criterion.newInstance(
+			return new Setting(this, Criteria.newInstance(Criterion.newInstance(
 					CriterionMethod.MATCHES, ".*")));
 		}
 
 		@Override
 		public Setting newSetting(final Object value) {
-			if (!(value instanceof Criteria)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						Criteria.class.getName()));
-			}
-			return new Setting(this, value);
+			Criteria val = Criteria.class.cast(value);
+			return new Setting(this, val);
 		}
 
 		@Override
@@ -1020,18 +868,13 @@ public enum SettingSpec {
 		
 		@Override
 		public Setting getDefaultSetting() {
-			return newSetting(Criteria.EMPTY_INSTANCE);
+			return new Setting(this, Criteria.EMPTY_INSTANCE);
 		}
 
 		@Override
 		public Setting newSetting(final Object value) {
-			if (!(value instanceof Criteria)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						Criteria.class.getName()));
-			}
-			return new Setting(this, value);
+			Criteria val = Criteria.class.cast(value);
+			return new Setting(this, val);
 		}
 
 		@Override
@@ -1055,13 +898,8 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final Object value) {
-			if (!(value instanceof SocketSettings)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						SocketSettings.class.getName()));
-			}
-			return new Setting(this, value);
+			SocketSettings val = SocketSettings.class.cast(value);
+			return new Setting(this, val);
 		}
 
 		@Override
@@ -1085,13 +923,8 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final Object value) {
-			if (!(value instanceof SocketSettings)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						SocketSettings.class.getName()));
-			}
-			return new Setting(this, value);
+			SocketSettings val = SocketSettings.class.cast(value);
+			return new Setting(this, val);
 		}
 
 		@Override
@@ -1117,13 +950,8 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final Object value) {
-			if (!(value instanceof PositiveInteger)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						PositiveInteger.class.getName()));
-			}
-			return new Setting(this, value);
+			PositiveInteger val = PositiveInteger.class.cast(value);
+			return new Setting(this, val);
 		}
 
 		@Override
@@ -1149,13 +977,8 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final Object value) {
-			if (!(value instanceof PositiveInteger)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						PositiveInteger.class.getName()));
-			}
-			return new Setting(this, value);
+			PositiveInteger val = PositiveInteger.class.cast(value);
+			return new Setting(this, val);
 		}
 
 		@Override
@@ -1181,13 +1004,8 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final Object value) {
-			if (!(value instanceof PositiveInteger)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						PositiveInteger.class.getName()));
-			}
-			return new Setting(this, value);
+			PositiveInteger val = PositiveInteger.class.cast(value);
+			return new Setting(this, val);
 		}
 
 		@Override
@@ -1213,13 +1031,8 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final Object value) {
-			if (!(value instanceof PositiveInteger)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						PositiveInteger.class.getName()));
-			}
-			return new Setting(this, value);
+			PositiveInteger val = PositiveInteger.class.cast(value);
+			return new Setting(this, val);
 		}
 
 		@Override
@@ -1250,13 +1063,8 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final Object value) {
-			if (!(value instanceof Host)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						Host.class.getName()));
-			}
-			return new Setting(this, value);
+			Host val = Host.class.cast(value);
+			return new Setting(this, val);
 		}
 
 		@Override
@@ -1289,13 +1097,8 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final Object value) {
-			if (!(value instanceof PositiveInteger)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						PositiveInteger.class.getName()));
-			}
-			return new Setting(this, value);
+			PositiveInteger val = PositiveInteger.class.cast(value);
+			return new Setting(this, val);
 		}
 
 		@Override
@@ -1319,13 +1122,8 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final Object value) {
-			if (!(value instanceof SocketSettings)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						SocketSettings.class.getName()));
-			}
-			return new Setting(this, value);
+			SocketSettings val = SocketSettings.class.cast(value);
+			return new Setting(this, val);
 		}
 
 		@Override
@@ -1344,19 +1142,14 @@ public enum SettingSpec {
 		
 		@Override
 		public Setting getDefaultSetting() {
-			return newSetting(Criteria.newInstance(Criterion.newInstance(
+			return new Setting(this, Criteria.newInstance(Criterion.newInstance(
 					CriterionMethod.MATCHES, ".*")));
 		}
 
 		@Override
 		public Setting newSetting(final Object value) {
-			if (!(value instanceof Criteria)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						Criteria.class.getName()));
-			}
-			return new Setting(this, value);
+			Criteria val = Criteria.class.cast(value);
+			return new Setting(this, val);
 		}
 
 		@Override
@@ -1375,18 +1168,13 @@ public enum SettingSpec {
 		
 		@Override
 		public Setting getDefaultSetting() {
-			return newSetting(Criteria.EMPTY_INSTANCE);
+			return new Setting(this, Criteria.EMPTY_INSTANCE);
 		}
 
 		@Override
 		public Setting newSetting(final Object value) {
-			if (!(value instanceof Criteria)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						Criteria.class.getName()));
-			}
-			return new Setting(this, value);
+			Criteria val = Criteria.class.cast(value);
+			return new Setting(this, val);
 		}
 
 		@Override
@@ -1418,13 +1206,8 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final Object value) {
-			if (!(value instanceof Host)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						Host.class.getName()));
-			}
-			return new Setting(this, value);
+			Host val = Host.class.cast(value);
+			return new Setting(this, val);
 		}
 
 		@Override
@@ -1454,13 +1237,8 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final Object value) {
-			if (!(value instanceof SocketSettings)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						SocketSettings.class.getName()));
-			}
-			return new Setting(this, value);
+			SocketSettings val = SocketSettings.class.cast(value);
+			return new Setting(this, val);
 		}
 
 		@Override
@@ -1487,13 +1265,8 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final Object value) {
-			if (!(value instanceof PositiveInteger)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						PositiveInteger.class.getName()));
-			}
-			return new Setting(this, value);
+			PositiveInteger val = PositiveInteger.class.cast(value);
+			return new Setting(this, val);
 		}
 
 		@Override
@@ -1520,13 +1293,8 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final Object value) {
-			if (!(value instanceof PositiveInteger)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						PositiveInteger.class.getName()));
-			}
-			return new Setting(this, value);
+			PositiveInteger val = PositiveInteger.class.cast(value);
+			return new Setting(this, val);
 		}
 
 		@Override
@@ -1558,13 +1326,8 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final Object value) {
-			if (!(value instanceof Host)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						Host.class.getName()));
-			}
-			return new Setting(this, value);
+			Host val = Host.class.cast(value);
+			return new Setting(this, val);
 		}
 
 		@Override
@@ -1594,13 +1357,8 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final Object value) {
-			if (!(value instanceof SocketSettings)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						SocketSettings.class.getName()));
-			}
-			return new Setting(this, value);
+			SocketSettings val = SocketSettings.class.cast(value);
+			return new Setting(this, val);
 		}
 
 		@Override
@@ -1623,13 +1381,9 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final Object value) {
-			if (!(value instanceof UsernamePasswordAuthenticator)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						UsernamePasswordAuthenticator.class.getName()));
-			}
-			return new Setting(this, value);
+			UsernamePasswordAuthenticator val = 
+					UsernamePasswordAuthenticator.class.cast(value);
+			return new Setting(this, val);
 		}
 
 		@Override
@@ -1652,13 +1406,8 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final Object value) {
-			if (!(value instanceof ClientAuthSetting)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						ClientAuthSetting.class.getName()));
-			}
-			return new Setting(this, value);
+			ClientAuthSetting val = ClientAuthSetting.class.cast(value);
+			return new Setting(this, val);
 		}
 
 		@Override
@@ -1683,13 +1432,8 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final Object value) {
-			if (!(value instanceof Boolean)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						Boolean.class.getName()));
-			}
-			return new Setting(this, value);
+			Boolean val = Boolean.class.cast(value);
+			return new Setting(this, val);
 		}
 
 		@Override
@@ -1712,13 +1456,8 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final Object value) {
-			if (!(value instanceof CipherSuites)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						CipherSuites.class.getName()));
-			}
-			return new Setting(this, value);
+			CipherSuites val = CipherSuites.class.cast(value);
+			return new Setting(this, val);
 		}
 
 		@Override
@@ -1741,13 +1480,8 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final Object value) {
-			if (!(value instanceof Protocols)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						Protocols.class.getName()));
-			}
-			return new Setting(this, value);
+			Protocols val = Protocols.class.cast(value);
+			return new Setting(this, val);
 		}
 
 		@Override
@@ -1770,13 +1504,7 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final Object value) {
-			if (!(value instanceof File)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						File.class.getName()));
-			}
-			File val = (File) value;
+			File val = File.class.cast(value);
 			if (!val.exists()) {
 				throw new IllegalArgumentException(String.format(
 						"file `%s' does not exist", 
@@ -1810,13 +1538,8 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final Object value) {
-			if (!(value instanceof EncryptedPassword)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						EncryptedPassword.class.getName()));
-			}
-			return new Setting(this, value);
+			EncryptedPassword val = EncryptedPassword.class.cast(value);
+			return new Setting(this, val);
 		}
 
 		@Override
@@ -1839,13 +1562,7 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final Object value) {
-			if (!(value instanceof File)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						File.class.getName()));
-			}
-			File val = (File) value;
+			File val = File.class.cast(value);
 			if (!val.exists()) {
 				throw new IllegalArgumentException(String.format(
 						"file `%s' does not exist", 
@@ -1879,13 +1596,8 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final Object value) {
-			if (!(value instanceof EncryptedPassword)) {
-				throw new ClassCastException(String.format(
-						"unable to cast %s to %s",
-						value.getClass().getName(),
-						EncryptedPassword.class.getName()));
-			}
-			return new Setting(this, value);
+			EncryptedPassword val = EncryptedPassword.class.cast(value);
+			return new Setting(this, val);
 		}
 
 		@Override

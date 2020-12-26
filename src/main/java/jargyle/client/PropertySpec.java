@@ -346,9 +346,9 @@ public enum PropertySpec {
 						"file `%s' does not exist", 
 						val));
 			}
-			if (!val.isDirectory()) {
+			if (!val.isFile()) {
 				throw new IllegalArgumentException(String.format(
-						"file `%s' must not be a directory", 
+						"file `%s' must be a file", 
 						val));
 			}
 			return new Property(this, val);
@@ -413,9 +413,9 @@ public enum PropertySpec {
 						"file `%s' does not exist", 
 						val));
 			}
-			if (!val.isDirectory()) {
+			if (!val.isFile()) {
 				throw new IllegalArgumentException(String.format(
-						"file `%s' must not be a directory", 
+						"file `%s' must be a file", 
 						val));
 			}
 			return new Property(this, val);

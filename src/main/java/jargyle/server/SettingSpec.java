@@ -510,9 +510,9 @@ public enum SettingSpec {
 						"file `%s' does not exist", 
 						val));
 			}
-			if (!val.isDirectory()) {
+			if (!val.isFile()) {
 				throw new IllegalArgumentException(String.format(
-						"file `%s' must not be a directory", 
+						"file `%s' must be a file", 
 						val));
 			}
 			return new Setting(this, val);
@@ -598,9 +598,9 @@ public enum SettingSpec {
 						"file `%s' does not exist", 
 						val));
 			}
-			if (!val.isDirectory()) {
+			if (!val.isFile()) {
 				throw new IllegalArgumentException(String.format(
-						"file `%s' must not be a directory", 
+						"file `%s' must be a file", 
 						val));
 			}
 			return new Setting(this, val);
@@ -1536,9 +1536,9 @@ public enum SettingSpec {
 						"file `%s' does not exist", 
 						val));
 			}
-			if (!val.isDirectory()) {
+			if (!val.isFile()) {
 				throw new IllegalArgumentException(String.format(
-						"file `%s' must not be a directory", 
+						"file `%s' must be a file", 
 						val));
 			}
 			return new Setting(this, val);
@@ -1645,9 +1645,9 @@ public enum SettingSpec {
 						"file `%s' does not exist", 
 						val));
 			}
-			if (!val.isDirectory()) {
+			if (!val.isFile()) {
 				throw new IllegalArgumentException(String.format(
-						"file `%s' must not be a directory", 
+						"file `%s' must be a file", 
 						val));
 			}
 			return new Setting(this, val);

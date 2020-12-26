@@ -13,10 +13,10 @@ import jargyle.common.security.KeyStoreFactory;
 
 public final class TrustManagersFactory {
 
-	public static TrustManager[] getTrustManagers(
+	public static TrustManager[] newTrustManagers(
 			final File trustStoreFile, 
 			final EncryptedPassword trustStorePassword) {
-		KeyStore trustStore = KeyStoreFactory.getKeyStore(
+		KeyStore trustStore = KeyStoreFactory.newKeyStore(
 				trustStoreFile, trustStorePassword);
 		TrustManagerFactory trustManagerFactory = null;
 		try {

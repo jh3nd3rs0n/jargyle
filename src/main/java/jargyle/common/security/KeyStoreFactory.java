@@ -11,7 +11,7 @@ import java.security.cert.CertificateException;
 
 public final class KeyStoreFactory {
 	
-	public static KeyStore getKeyStore(
+	public static KeyStore newKeyStore(
 			final File keyStoreFile, final EncryptedPassword keyStorePassword) {
 		KeyStore keyStore = null;
 		try {

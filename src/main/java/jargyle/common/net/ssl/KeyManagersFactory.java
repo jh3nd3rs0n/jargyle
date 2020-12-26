@@ -14,9 +14,9 @@ import jargyle.common.security.KeyStoreFactory;
 
 public final class KeyManagersFactory {
 
-	public static KeyManager[] getKeyManagers(
+	public static KeyManager[] newKeyManagers(
 			final File keyStoreFile, final EncryptedPassword keyStorePassword) {
-		KeyStore keyStore = KeyStoreFactory.getKeyStore(
+		KeyStore keyStore = KeyStoreFactory.newKeyStore(
 				keyStoreFile, keyStorePassword);
 		KeyManagerFactory keyManagerFactory = null;
 		try {

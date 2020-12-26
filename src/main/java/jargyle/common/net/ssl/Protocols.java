@@ -28,7 +28,7 @@ public final class Protocols {
 		for (Iterator<String> iterator = Arrays.asList(this.protocols).iterator(); 
 				iterator.hasNext();) {
 			String protocol = iterator.next();
-			builder.append(protocol.toString());
+			builder.append(protocol);
 			if (iterator.hasNext()) {
 				builder.append(' ');
 			}

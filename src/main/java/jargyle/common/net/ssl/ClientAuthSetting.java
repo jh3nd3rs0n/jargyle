@@ -15,6 +15,8 @@ public enum ClientAuthSetting {
 		
 		@Override
 		public void applyTo(final SSLServerSocket sslServerSocket) {
+			sslServerSocket.setNeedClientAuth(false);
+			sslServerSocket.setWantClientAuth(false);
 		}
 		
 	},

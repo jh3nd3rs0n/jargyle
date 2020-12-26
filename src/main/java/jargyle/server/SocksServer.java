@@ -110,7 +110,7 @@ public final class SocksServer {
 							settings.getLastValue(
 									SettingSpec.SSL_KEY_STORE_PASSWORD, 
 									EncryptedPassword.class);
-					keyManagers = KeyManagersFactory.getKeyManagers(
+					keyManagers = KeyManagersFactory.newKeyManagers(
 							keyStoreFile, keyStorePassword);
 				}
 				if (trustStoreFile != null) {
@@ -118,7 +118,7 @@ public final class SocksServer {
 							settings.getLastValue(
 									SettingSpec.SSL_TRUST_STORE_PASSWORD, 
 									EncryptedPassword.class);
-					trustManagers = TrustManagersFactory.getTrustManagers(
+					trustManagers = TrustManagersFactory.newTrustManagers(
 							trustStoreFile, trustStorePassword);
 				}
 				try {

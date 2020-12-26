@@ -28,7 +28,7 @@ public final class CipherSuites {
 		for (Iterator<String> iterator = Arrays.asList(this.cipherSuites).iterator(); 
 				iterator.hasNext();) {
 			String cipherSuite = iterator.next();
-			builder.append(cipherSuite.toString());
+			builder.append(cipherSuite);
 			if (iterator.hasNext()) {
 				builder.append(' ');
 			}

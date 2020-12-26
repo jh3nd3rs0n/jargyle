@@ -162,10 +162,10 @@ The following is a list of available settings for the SOCKS server (displayed wh
           The boolean value to indicate if SSL/TLS connections to the external SOCKS server for external connections are enabled (default is false)
     
       externalClient.ssl.enabledCipherSuites=[SSL_CIPHER_SUITE1[ SSL_CIPHER_SUITE2[...]]]
-          The space separated list of cipher suites enabled for SSL/TLS connections to the external SOCKS server for external connections
+          The space separated list of acceptable cipher suites enabled for SSL/TLS connections to the external SOCKS server for external connections
     
       externalClient.ssl.enabledProtocols=[SSL_PROTOCOL1[ SSL_PROTOCOL2[...]]]
-          The space separated list of protocol versions enabled for SSL/TLS connections to the external SOCKS server for external connections
+          The space separated list of acceptable protocol versions enabled for SSL/TLS connections to the external SOCKS server for external connections
     
       externalClient.ssl.keyStoreFile=FILE
           The key store file for the SSL/TLS connections to the external SOCKS server for external connections
@@ -175,6 +175,9 @@ The following is a list of available settings for the SOCKS server (displayed wh
     
       externalClient.ssl.keyStoreType=TYPE
           The type of key store file for the SSL/TLS connections to the external SOCKS server for external connections
+    
+      externalClient.ssl.protocol=PROTOCOL
+          The protocol version for the SSL/TLS connections to the external SOCKS server for external connections
     
       externalClient.ssl.trustStoreFile=FILE
           The trust store file for the SSL/TLS connections to the external SOCKS server for external connections
@@ -270,10 +273,10 @@ The following is a list of available settings for the SOCKS server (displayed wh
           The boolean value to indicate if SSL/TLS connections to the SOCKS server are enabled (default is false)
     
       ssl.enabledCipherSuites=[SSL_CIPHER_SUITE1[ SSL_CIPHER_SUITE2[...]]]
-          The space separated list of cipher suites enabled for SSL/TLS connections to the SOCKS server
+          The space separated list of acceptable cipher suites enabled for SSL/TLS connections to the SOCKS server
     
       ssl.enabledProtocols=[SSL_PROTOCOL1[ SSL_PROTOCOL2[...]]]
-          The space separated list of protocol versions enabled for SSL/TLS connections to the SOCKS server
+          The space separated list of acceptable protocol versions enabled for SSL/TLS connections to the SOCKS server
     
       ssl.keyStoreFile=FILE
           The key store file for the SSL/TLS connections to the SOCKS server
@@ -286,6 +289,9 @@ The following is a list of available settings for the SOCKS server (displayed wh
     
       ssl.needClientAuth=true|false
           The boolean value to indicate that client authentication is required for SSL/TLS connections to the SOCKS server (default is false)
+    
+      ssl.protocol=PROTOCOL
+          The protocol version for the SSL/TLS connections to the SOCKS server
     
       ssl.trustStoreFile=FILE
           The trust store file for the SSL/TLS connections to the SOCKS server
@@ -614,6 +620,7 @@ The following are the settings in the monitored configuration file that will hav
 -   `ssl.keyStorePassword`
 -   `ssl.keyStoreType`
 -   `ssl.needClientAuth`
+-   `ssl.protocol`
 -   `ssl.trustStoreFile`
 -   `ssl.trustStorePassword` 
 -   `ssl.trustStoreType`
@@ -1343,6 +1350,7 @@ Instead of using command line options or configuration settings, you can use the
 -   `socksClient.ssl.keyStoreFile`: Its usage is equivalent to the setting `externalClient.ssl.keyStoreFile`. See the settings help information for details (use the command line option `--settings-help`)
 -   `socksClient.ssl.keyStorePassword`: Its usage is equivalent to the setting `externalClient.ssl.keyStorePassword`. See the settings help information for details (use the command line option `--settings-help`)
 -   `socksClient.ssl.keyStoreType`: Its usage is equivalent to the setting `externalClient.ssl.keyStoreType`. See the settings help information for details (use the command line option `--settings-help`)
+-   `socksClient.ssl.protocol`: Its usage is equivalent to the setting `externalClient.ssl.protocol`. See the settings help information for details (use the command line option `--settings-help`)
 -   `socksClient.ssl.trustStoreFile`: Its usage is equivalent to the setting `externalClient.ssl.trustStoreFile`. See the settings help information for details (use the command line option `--settings-help`)
 -   `socksClient.ssl.trustStorePassword`: Its usage is equivalent to the setting `externalClient.ssl.trustStorePassword`. See the settings help information for details (use the command line option `--settings-help`)
 -   `socksClient.ssl.trustStoreType`: Its usage is equivalent to the setting `externalClient.ssl.trustStoreType`. See the settings help information for details (use the command line option `--settings-help`)

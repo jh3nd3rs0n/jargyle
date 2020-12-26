@@ -433,9 +433,9 @@ public enum SettingSpec {
 		
 	},
 	@HelpText(
-			doc = "The space separated list of cipher suites enabled for "
-					+ "SSL/TLS connections to the external SOCKS server for "
-					+ "external connections",
+			doc = "The space separated list of acceptable cipher suites "
+					+ "enabled for SSL/TLS connections to the external SOCKS "
+					+ "server for external connections",
 			usage = "externalClient.ssl.enabledCipherSuites=[SSL_CIPHER_SUITE1[ SSL_CIPHER_SUITE2[...]]]"
 	)
 	EXTERNAL_CLIENT_SSL_ENABLED_CIPHER_SUITES(
@@ -461,9 +461,9 @@ public enum SettingSpec {
 		
 	},
 	@HelpText(
-			doc = "The space separated list of protocol versions enabled for "
-					+ "SSL/TLS connections to the external SOCKS server for "
-					+ "external connections",
+			doc = "The space separated list of acceptable protocol versions "
+					+ "enabled for SSL/TLS connections to the external SOCKS "
+					+ "server for external connections",
 			usage = "externalClient.ssl.enabledProtocols=[SSL_PROTOCOL1[ SSL_PROTOCOL2[...]]]"
 	)	
 	EXTERNAL_CLIENT_SSL_ENABLED_PROTOCOLS(
@@ -575,6 +575,32 @@ public enum SettingSpec {
 		public Setting newSetting(String value) {
 			return newSetting(value);
 		}
+	},
+	@HelpText(
+			doc = "The protocol version for the SSL/TLS connections to the "
+					+ "external SOCKS server for external connections",
+			usage = "externalClient.ssl.protocol=PROTOCOL"
+	)	
+	EXTERNAL_CLIENT_SSL_PROTOCOL("externalClient.ssl.protocol") {
+		
+		@Override
+		public Setting getDefaultSetting() {
+			return new Setting(
+					this,
+					PropertySpec.SSL_PROTOCOL.getDefaultProperty().getValue());
+		}
+
+		@Override
+		public Setting newSetting(final Object value) {
+			String val = String.class.cast(value);
+			return new Setting(this, val);
+		}
+
+		@Override
+		public Setting newSetting(final String value) {
+			return newSetting(value);
+		}
+		
 	},
 	@HelpText(
 			doc = "The trust store file for the SSL/TLS connections to the "
@@ -1469,8 +1495,8 @@ public enum SettingSpec {
 		
 	},
 	@HelpText(
-			doc = "The space separated list of cipher suites enabled for "
-					+ "SSL/TLS connections to the SOCKS server",
+			doc = "The space separated list of acceptable cipher suites "
+					+ "enabled for SSL/TLS connections to the SOCKS server",
 			usage = "ssl.enabledCipherSuites=[SSL_CIPHER_SUITE1[ SSL_CIPHER_SUITE2[...]]]"
 	)	
 	SSL_ENABLED_CIPHER_SUITES("ssl.enabledCipherSuites") {
@@ -1493,8 +1519,8 @@ public enum SettingSpec {
 		
 	},
 	@HelpText(
-			doc = "The space separated list of protocol versions enabled for "
-					+ "SSL/TLS connections to the SOCKS server",
+			doc = "The space separated list of acceptable protocol versions "
+					+ "enabled for SSL/TLS connections to the SOCKS server",
 			usage = "ssl.enabledProtocols=[SSL_PROTOCOL1[ SSL_PROTOCOL2[...]]]"
 	)	
 	SSL_ENABLED_PROTOCOLS("ssl.enabledProtocols") {
@@ -1622,6 +1648,30 @@ public enum SettingSpec {
 		@Override
 		public Setting newSetting(final String value) {
 			return newSetting(Boolean.valueOf(value));
+		}
+		
+	},
+	@HelpText(
+			doc = "The protocol version for the SSL/TLS connections to the "
+					+ "SOCKS server",
+			usage = "ssl.protocol=PROTOCOL"
+	)	
+	SSL_PROTOCOL("ssl.protocol") {
+		
+		@Override
+		public Setting getDefaultSetting() {
+			return new Setting(this, null);
+		}
+
+		@Override
+		public Setting newSetting(final Object value) {
+			String val = String.class.cast(value);
+			return new Setting(this, val);
+		}
+
+		@Override
+		public Setting newSetting(final String value) {
+			return newSetting(value);
 		}
 		
 	},

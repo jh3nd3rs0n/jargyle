@@ -108,6 +108,9 @@ public final class SocksClientFactory {
 				SettingSpec.EXTERNAL_CLIENT_SSL_KEY_STORE_TYPE, String.class);
 		properties.add(PropertySpec.SSL_KEY_STORE_TYPE.newProperty(
 				sslKeyStoreType));
+		String sslProtocol = settings.getLastValue(
+				SettingSpec.EXTERNAL_CLIENT_SSL_PROTOCOL, String.class);
+		properties.add(PropertySpec.SSL_PROTOCOL.newProperty(sslProtocol));
 		File sslTrustStoreFile = settings.getLastValue(
 				SettingSpec.EXTERNAL_CLIENT_SSL_TRUST_STORE_FILE, File.class);
 		properties.add(PropertySpec.SSL_TRUST_STORE_FILE.newProperty(

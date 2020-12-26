@@ -398,6 +398,25 @@ public enum PropertySpec {
 		}
 		
 	},
+	SSL_PROTOCOL("socksClient.ssl.protocol") {
+		
+		@Override
+		public Property getDefaultProperty() {
+			return new Property(this, null);
+		}
+
+		@Override
+		public Property newProperty(final Object value) {
+			String val = String.class.cast(value);
+			return new Property(this, val);
+		}
+
+		@Override
+		public Property newProperty(final String value) {
+			return newProperty(value);
+		}
+		
+	},
 	SSL_TRUST_STORE_FILE("socksClient.ssl.trustStoreFile") {
 		
 		@Override

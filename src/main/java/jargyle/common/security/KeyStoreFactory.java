@@ -12,10 +12,16 @@ import java.security.cert.CertificateException;
 public final class KeyStoreFactory {
 	
 	public static KeyStore newKeyStore(
-			final File keyStoreFile, final EncryptedPassword keyStorePassword) {
+			final File keyStoreFile, 
+			final EncryptedPassword keyStorePassword, 
+			final String keyStoreType) {
+		String type = keyStoreType;
+		if (type == null) {
+			type = KeyStore.getDefaultType();
+		}
 		KeyStore keyStore = null;
 		try {
-			keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+			keyStore = KeyStore.getInstance(type);
 		} catch (KeyStoreException e) {
 			throw new AssertionError(e);
 		}

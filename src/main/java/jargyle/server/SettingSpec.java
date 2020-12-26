@@ -553,6 +553,31 @@ public enum SettingSpec {
 		
 	},
 	@HelpText(
+			doc = "The type of key store file for the SSL/TLS connections to "
+					+ "the external SOCKS server for external connections",
+			usage = "externalClient.ssl.keyStoreType=TYPE"
+	)	
+	EXTERNAL_CLIENT_SSL_KEY_STORE_TYPE("externalClient.ssl.keyStoreType") {
+		
+		@Override
+		public Setting getDefaultSetting() {
+			return new Setting(
+					this, 
+					PropertySpec.SSL_KEY_STORE_TYPE.getDefaultProperty().getValue());
+		}
+
+		@Override
+		public Setting newSetting(final Object value) {
+			String val = String.class.cast(value);
+			return new Setting(this, val);
+		}
+
+		@Override
+		public Setting newSetting(String value) {
+			return newSetting(value);
+		}
+	},
+	@HelpText(
 			doc = "The trust store file for the SSL/TLS connections to the "
 					+ "external SOCKS server for external connections",
 			usage = "externalClient.ssl.trustStoreFile=FILE"
@@ -613,6 +638,32 @@ public enum SettingSpec {
 		@Override
 		public Setting newSetting(final String value) {
 			return newSetting(EncryptedPassword.newInstance(value.toCharArray()));
+		}
+		
+	},
+	@HelpText(
+			doc = "The type of trust store file for the SSL/TLS connections to "
+					+ "the external SOCKS server for external connections",
+			usage = "externalClient.ssl.trustStoreType=TYPE"
+	)	
+	EXTERNAL_CLIENT_SSL_TRUST_STORE_TYPE("externalClient.ssl.trustStoreType") {
+		
+		@Override
+		public Setting getDefaultSetting() {
+			return new Setting(
+					this,
+					PropertySpec.SSL_TRUST_STORE_TYPE.getDefaultProperty().getValue());
+		}
+
+		@Override
+		public Setting newSetting(final Object value) {
+			String val = String.class.cast(value);
+			return new Setting(this, val);
+		}
+
+		@Override
+		public Setting newSetting(final String value) {
+			return newSetting(value);
 		}
 		
 	},
@@ -1549,6 +1600,30 @@ public enum SettingSpec {
 		
 	},
 	@HelpText(
+			doc = "The type of key store file for the SSL/TLS connections to "
+					+ "the SOCKS server",
+			usage = "ssl.keyStoreType=TYPE"
+	)	
+	SSL_KEY_STORE_TYPE("ssl.keyStoreType") {
+		
+		@Override
+		public Setting getDefaultSetting() {
+			return new Setting(this, null);
+		}
+
+		@Override
+		public Setting newSetting(final Object value) {
+			String val = String.class.cast(value);
+			return new Setting(this, val);
+		}
+
+		@Override
+		public Setting newSetting(final String value) {
+			return newSetting(value);
+		}
+		
+	},
+	@HelpText(
 			doc = "The trust store file for the SSL/TLS connections to the "
 					+ "SOCKS server",
 			usage = "ssl.trustStoreFile=FILE"
@@ -1603,6 +1678,30 @@ public enum SettingSpec {
 		@Override
 		public Setting newSetting(final String value) {
 			return newSetting(EncryptedPassword.newInstance(value.toCharArray()));
+		}
+		
+	},
+	@HelpText(
+			doc = "The type of trust store file for the SSL/TLS connections to "
+					+ "the SOCKS server",
+			usage = "ssl.trustStoreType=TYPE"
+	)		
+	SSL_TRUST_STORE_TYPE("ssl.trustStoreType") {
+		
+		@Override
+		public Setting getDefaultSetting() {
+			return new Setting(this, null);
+		}
+
+		@Override
+		public Setting newSetting(final Object value) {
+			String val = String.class.cast(value);
+			return new Setting(this, val);
+		}
+
+		@Override
+		public Setting newSetting(final String value) {
+			return newSetting(value);
 		}
 		
 	};

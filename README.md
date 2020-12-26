@@ -173,11 +173,17 @@ The following is a list of available settings for the SOCKS server (displayed wh
       externalClient.ssl.keyStorePassword=PASSWORD
           The password for the key store for the SSL/TLS connections to the external SOCKS server for external connections
     
+      externalClient.ssl.keyStoreType=TYPE
+          The type of key store file for the SSL/TLS connections to the external SOCKS server for external connections
+    
       externalClient.ssl.trustStoreFile=FILE
           The trust store file for the SSL/TLS connections to the external SOCKS server for external connections
     
       externalClient.ssl.trustStorePassword=PASSWORD
           The password for the trust store for the SSL/TLS connections to the external SOCKS server for external connections
+    
+      externalClient.ssl.trustStoreType=TYPE
+          The type of trust store file for the SSL/TLS connections to the external SOCKS server for external connections
     
       host=HOST
           The host name or address for the SOCKS server (default is 0.0.0.0)
@@ -275,11 +281,17 @@ The following is a list of available settings for the SOCKS server (displayed wh
       ssl.keyStorePassword=PASSWORD
           The password for the key store for the SSL/TLS connections to the SOCKS server
     
+      ssl.keyStoreType=TYPE
+          The type of key store file for the SSL/TLS connections to the SOCKS server
+    
       ssl.trustStoreFile=FILE
           The trust store file for the SSL/TLS connections to the SOCKS server
     
       ssl.trustStorePassword=PASSWORD
           The password for the trust store for the SSL/TLS connections to the SOCKS server
+    
+      ssl.trustStoreType=TYPE
+          The type of trust store file for the SSL/TLS connections to the SOCKS server
     
     SCHEMES:
     
@@ -605,8 +617,10 @@ The following are the settings in the monitored configuration file that will hav
 -   `ssl.enabledProtocols`
 -   `ssl.keyStoreFile`
 -   `ssl.keyStorePassword`
+-   `ssl.keyStoreType`
 -   `ssl.trustStoreFile`
 -   `ssl.trustStorePassword` 
+-   `ssl.trustStoreType`
 
 ### 3. 7. Managing SOCKS5 Users (for Username Password Authentication)
 
@@ -1331,8 +1345,10 @@ Instead of using command line options or configuration settings, you can use the
 -   `socksClient.ssl.enabledProtocols`: Its usage is equivalent to the setting `externalClient.ssl.enabledProtocols`. See the settings help information for details (use the command line option `--settings-help`)
 -   `socksClient.ssl.keyStoreFile`: Its usage is equivalent to the setting `externalClient.ssl.keyStoreFile`. See the settings help information for details (use the command line option `--settings-help`)
 -   `socksClient.ssl.keyStorePassword`: Its usage is equivalent to the setting `externalClient.ssl.keyStorePassword`. See the settings help information for details (use the command line option `--settings-help`)
+-   `socksClient.ssl.keyStoreType`: Its usage is equivalent to the setting `externalClient.ssl.keyStoreType`. See the settings help information for details (use the command line option `--settings-help`)
 -   `socksClient.ssl.trustStoreFile`: Its usage is equivalent to the setting `externalClient.ssl.trustStoreFile`. See the settings help information for details (use the command line option `--settings-help`)
 -   `socksClient.ssl.trustStorePassword`: Its usage is equivalent to the setting `externalClient.ssl.trustStorePassword`. See the settings help information for details (use the command line option `--settings-help`)
+-   `socksClient.ssl.trustStoreType`: Its usage is equivalent to the setting `externalClient.ssl.trustStoreType`. See the settings help information for details (use the command line option `--settings-help`)
 
 ### 3. 10. Allowing or Blocking Addresses
 

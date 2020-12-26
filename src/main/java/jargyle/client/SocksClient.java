@@ -115,16 +115,20 @@ public abstract class SocksClient {
 						this.properties.getValue(
 								PropertySpec.SSL_KEY_STORE_PASSWORD, 
 								EncryptedPassword.class);
+				String keyStoreType = this.properties.getValue(
+						PropertySpec.SSL_KEY_STORE_TYPE, String.class);
 				keyManagers = KeyManagersFactory.newKeyManagers(
-						keyStoreFile, keyStorePassword);
+						keyStoreFile, keyStorePassword, keyStoreType);
 			}
 			if (trustStoreFile != null) {
 				EncryptedPassword trustStorePassword = 
 						this.properties.getValue(
 								PropertySpec.SSL_TRUST_STORE_PASSWORD, 
 								EncryptedPassword.class);
+				String trustStoreType = this.properties.getValue(
+						PropertySpec.SSL_TRUST_STORE_TYPE, String.class);
 				trustManagers = TrustManagersFactory.newTrustManagers(
-						trustStoreFile, trustStorePassword);
+						trustStoreFile, trustStorePassword, trustStoreType);
 			}
 			try {
 				sslContext.init(keyManagers, trustManagers, new SecureRandom());

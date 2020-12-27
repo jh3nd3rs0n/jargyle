@@ -1,5 +1,6 @@
 package jargyle.server;
 
+import jargyle.ResourceHelper;
 import jargyle.common.net.socks5.AuthMethod;
 import jargyle.common.net.socks5.AuthMethods;
 import jargyle.server.socks5.StringSourceUsernamePasswordAuthenticator;
@@ -40,6 +41,17 @@ public final class ConfigurationFactory {
 						AuthMethods.newInstance(AuthMethod.USERNAME_PASSWORD)),
 				SettingSpec.SOCKS5_USERNAME_PASSWORD_AUTHENTICATOR.newSetting(
 						new StringSourceUsernamePasswordAuthenticator(sb.toString()))));
+		return builder.build();
+	}
+	
+	public static Configuration newConfigurationUsingSsl() {
+		ImmutableConfiguration.Builder builder = new ImmutableConfiguration.Builder();
+		builder.settings(Settings.newInstance(
+				SettingSpec.SSL_ENABLED.newSetting(Boolean.TRUE),
+				SettingSpec.SSL_KEY_STORE_FILE.newSetting(
+						ResourceHelper.getServerKeyStoreFile()),
+				SettingSpec.SSL_KEY_STORE_PASSWORD.newSetting(
+						ResourceHelper.getServerKeyStorePassword())));
 		return builder.build();
 	}
 	

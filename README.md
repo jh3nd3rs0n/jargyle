@@ -174,10 +174,10 @@ The following is a list of available settings for the SOCKS server (displayed wh
           The password for the key store for the SSL/TLS connections to the external SOCKS server for external connections
     
       externalClient.ssl.keyStoreType=TYPE
-          The type of key store file for the SSL/TLS connections to the external SOCKS server for external connections
+          The type of key store file for the SSL/TLS connections to the external SOCKS server for external connections (default is PKCS12)
     
       externalClient.ssl.protocol=PROTOCOL
-          The protocol version for the SSL/TLS connections to the external SOCKS server for external connections
+          The protocol version for the SSL/TLS connections to the external SOCKS server for external connections (default is TLSv1)
     
       externalClient.ssl.trustStoreFile=FILE
           The trust store file for the SSL/TLS connections to the external SOCKS server for external connections
@@ -186,7 +186,7 @@ The following is a list of available settings for the SOCKS server (displayed wh
           The password for the trust store for the SSL/TLS connections to the external SOCKS server for external connections
     
       externalClient.ssl.trustStoreType=TYPE
-          The type of trust store file for the SSL/TLS connections to the external SOCKS server for external connections
+          The type of trust store file for the SSL/TLS connections to the external SOCKS server for external connections (default is PKCS12)
     
       host=HOST
           The host name or address for the SOCKS server (default is 0.0.0.0)
@@ -285,13 +285,13 @@ The following is a list of available settings for the SOCKS server (displayed wh
           The password for the key store for the SSL/TLS connections to the SOCKS server
     
       ssl.keyStoreType=TYPE
-          The type of key store file for the SSL/TLS connections to the SOCKS server
+          The type of key store file for the SSL/TLS connections to the SOCKS server (default is PKCS12)
     
       ssl.needClientAuth=true|false
           The boolean value to indicate that client authentication is required for SSL/TLS connections to the SOCKS server (default is false)
     
       ssl.protocol=PROTOCOL
-          The protocol version for the SSL/TLS connections to the SOCKS server
+          The protocol version for the SSL/TLS connections to the SOCKS server (default is TLSv1)
     
       ssl.trustStoreFile=FILE
           The trust store file for the SSL/TLS connections to the SOCKS server
@@ -300,7 +300,7 @@ The following is a list of available settings for the SOCKS server (displayed wh
           The password for the trust store for the SSL/TLS connections to the SOCKS server
     
       ssl.trustStoreType=TYPE
-          The type of trust store file for the SSL/TLS connections to the SOCKS server
+          The type of trust store file for the SSL/TLS connections to the SOCKS server (default is PKCS12)
     
       ssl.wantClientAuth=true|false
           The boolean value to indicate that client authentication is requested for SSL/TLS connections to the SOCKS server (default is false)

@@ -43,7 +43,7 @@ public enum SocketSettingSpec {
 
 		@Override
 		public SocketSetting newSocketSetting(final String value) {
-			return newSocketSetting(UnsignedByte.newInstance(value));
+			return new SocketSetting(this, UnsignedByte.newInstance(value));
 		}
 		
 	},
@@ -81,7 +81,7 @@ public enum SocketSettingSpec {
 
 		@Override
 		public SocketSetting newSocketSetting(final String value) {
-			return newSocketSetting(PerformancePreferences.newInstance(value));
+			return new SocketSetting(this, PerformancePreferences.newInstance(value));
 		}
 		
 	},
@@ -108,7 +108,7 @@ public enum SocketSettingSpec {
 
 		@Override
 		public SocketSetting newSocketSetting(final String value) {
-			return newSocketSetting(Boolean.valueOf(value));
+			return new SocketSetting(this, Boolean.valueOf(value));
 		}
 		
 	},
@@ -136,7 +136,7 @@ public enum SocketSettingSpec {
 
 		@Override
 		public SocketSetting newSocketSetting(final String value) {
-			return newSocketSetting(Boolean.valueOf(value));
+			return new SocketSetting(this, Boolean.valueOf(value));
 		}
 		
 	},
@@ -163,7 +163,7 @@ public enum SocketSettingSpec {
 
 		@Override
 		public SocketSetting newSocketSetting(final String value) {
-			return newSocketSetting(NonnegativeInteger.newInstance(value));
+			return new SocketSetting(this, NonnegativeInteger.newInstance(value));
 		}
 		
 	},
@@ -190,7 +190,7 @@ public enum SocketSettingSpec {
 
 		@Override
 		public SocketSetting newSocketSetting(final String value) {
-			return newSocketSetting(Boolean.valueOf(value));
+			return new SocketSetting(this, Boolean.valueOf(value));
 		}
 
 	},
@@ -233,7 +233,7 @@ public enum SocketSettingSpec {
 
 		@Override
 		public SocketSetting newSocketSetting(final String value) {
-			return newSocketSetting(PositiveInteger.newInstance(value));
+			return new SocketSetting(this, PositiveInteger.newInstance(value));
 		}
 		
 	},
@@ -276,7 +276,7 @@ public enum SocketSettingSpec {
 
 		@Override
 		public SocketSetting newSocketSetting(final String value) {
-			return newSocketSetting(Boolean.valueOf(value));
+			return new SocketSetting(this, Boolean.valueOf(value));
 		}
 
 	},
@@ -311,7 +311,7 @@ public enum SocketSettingSpec {
 
 		@Override
 		public SocketSetting newSocketSetting(final String value) {
-			return newSocketSetting(PositiveInteger.newInstance(value));
+			return new SocketSetting(this, PositiveInteger.newInstance(value));
 		}
 		
 	},
@@ -354,7 +354,7 @@ public enum SocketSettingSpec {
 
 		@Override
 		public SocketSetting newSocketSetting(final String value) {
-			return newSocketSetting(NonnegativeInteger.newInstance(value));
+			return new SocketSetting(this, NonnegativeInteger.newInstance(value));
 		}
 		
 	},
@@ -381,7 +381,7 @@ public enum SocketSettingSpec {
 
 		@Override
 		public SocketSetting newSocketSetting(final String value) {
-			return newSocketSetting(Boolean.valueOf(value));
+			return new SocketSetting(this, Boolean.valueOf(value));
 		}
 		
 	};

@@ -48,7 +48,7 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final String value) {
-			return newSetting(Criteria.newInstance(value));
+			return new Setting(this, Criteria.newInstance(value));
 		}
 		
 	},
@@ -75,7 +75,7 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final String value) {
-			return newSetting(NonnegativeInteger.newInstance(value));
+			return new Setting(this, NonnegativeInteger.newInstance(value));
 		}
 		
 	},
@@ -98,7 +98,7 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final String value) {
-			return newSetting(Criteria.newInstance(value));
+			return new Setting(this, Criteria.newInstance(value));
 		}
 		
 	},
@@ -122,7 +122,7 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final String value) {
-			return newSetting(SocketSettings.newInstance(value));
+			return new Setting(this, SocketSettings.newInstance(value));
 		}
 		
 	},
@@ -176,7 +176,7 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final String value) {
-			return newSetting(PositiveInteger.newInstance(value));
+			return new Setting(this, PositiveInteger.newInstance(value));
 		}
 		
 	},
@@ -200,7 +200,7 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final String value) {
-			return newSetting(SocksServerUri.newInstance(value));
+			return new Setting(this, SocksServerUri.newInstance(value));
 		}
 		
 	},
@@ -227,7 +227,7 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final String value) {
-			return newSetting(SocketSettings.newInstance(value));
+			return new Setting(this, SocketSettings.newInstance(value));
 		}
 			
 	},
@@ -254,7 +254,7 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final String value) {
-			return newSetting(AuthMethods.newInstance(value));
+			return new Setting(this, AuthMethods.newInstance(value));
 		}
 		
 	},
@@ -288,7 +288,7 @@ public enum SettingSpec {
 			} catch (GSSException e) {
 				throw new IllegalArgumentException(e);
 			}
-			return newSetting(gssapiMechanismOid);
+			return new Setting(this, gssapiMechanismOid);
 		}
 		
 	},
@@ -318,7 +318,7 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final String value) {
-			return newSetting(Boolean.valueOf(value));
+			return new Setting(this, Boolean.valueOf(value));
 		}
 		
 	},
@@ -349,7 +349,7 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final String value) {
-			return newSetting(GssapiProtectionLevels.newInstance(value));
+			return new Setting(this, GssapiProtectionLevels.newInstance(value));
 		}
 		
 	},
@@ -401,7 +401,7 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final String value) {
-			return newSetting(UsernamePassword.newInstance(value));
+			return new Setting(this, UsernamePassword.newInstance(value));
 		}
 		
 	},
@@ -428,7 +428,7 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final String value) {
-			return newSetting(Boolean.valueOf(value));
+			return new Setting(this, Boolean.valueOf(value));
 		}
 		
 	},
@@ -456,7 +456,7 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final String value) {
-			return newSetting(CipherSuites.newInstance(value));
+			return new Setting(this, CipherSuites.newInstance(value));
 		}
 		
 	},
@@ -484,7 +484,7 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final String value) {
-			return newSetting(Protocols.newInstance(value));
+			return new Setting(this, Protocols.newInstance(value));
 		}
 		
 	},
@@ -547,13 +547,14 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final String value) {
-			return newSetting(EncryptedPassword.newInstance(value.toCharArray()));
+			return new Setting(this, EncryptedPassword.newInstance(value.toCharArray()));
 		}
 		
 	},
 	@HelpText(
 			doc = "The type of key store file for the SSL/TLS connections to "
-					+ "the external SOCKS server for external connections",
+					+ "the external SOCKS server for external connections "
+					+ "(default is PKCS12)",
 			usage = "externalClient.ssl.keyStoreType=TYPE"
 	)	
 	EXTERNAL_CLIENT_SSL_KEY_STORE_TYPE("externalClient.ssl.keyStoreType") {
@@ -573,12 +574,13 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(String value) {
-			return newSetting(value);
+			return new Setting(this, value);
 		}
 	},
 	@HelpText(
 			doc = "The protocol version for the SSL/TLS connections to the "
-					+ "external SOCKS server for external connections",
+					+ "external SOCKS server for external connections "
+					+ "(default is TLSv1)",
 			usage = "externalClient.ssl.protocol=PROTOCOL"
 	)	
 	EXTERNAL_CLIENT_SSL_PROTOCOL("externalClient.ssl.protocol") {
@@ -598,7 +600,7 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final String value) {
-			return newSetting(value);
+			return new Setting(this, value);
 		}
 		
 	},
@@ -662,13 +664,14 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final String value) {
-			return newSetting(EncryptedPassword.newInstance(value.toCharArray()));
+			return new Setting(this, EncryptedPassword.newInstance(value.toCharArray()));
 		}
 		
 	},
 	@HelpText(
 			doc = "The type of trust store file for the SSL/TLS connections to "
-					+ "the external SOCKS server for external connections",
+					+ "the external SOCKS server for external connections "
+					+ "(default is PKCS12)",
 			usage = "externalClient.ssl.trustStoreType=TYPE"
 	)	
 	EXTERNAL_CLIENT_SSL_TRUST_STORE_TYPE("externalClient.ssl.trustStoreType") {
@@ -688,7 +691,7 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final String value) {
-			return newSetting(value);
+			return new Setting(this, value);
 		}
 		
 	},
@@ -726,7 +729,7 @@ public enum SettingSpec {
 			} catch (UnknownHostException e) {
 				throw new IllegalArgumentException(e);
 			}
-			return newSetting(host);
+			return new Setting(this, host);
 		}
 		
 	},
@@ -751,7 +754,7 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final String value) {
-			return newSetting(Port.newInstance(value));
+			return new Setting(this, Port.newInstance(value));
 		}
 		
 	},
@@ -775,7 +778,7 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final String value) {
-			return newSetting(SocketSettings.newInstance(value));
+			return new Setting(this, SocketSettings.newInstance(value));
 		}
 		
 	},
@@ -825,7 +828,7 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final String value) {
-			return newSetting(AuthMethods.newInstance(value));
+			return new Setting(this, AuthMethods.newInstance(value));
 		}
 		
 	},
@@ -876,7 +879,7 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final String value) {
-			return newSetting(Boolean.valueOf(value));
+			return new Setting(this, Boolean.valueOf(value));
 		}
 		
 	},
@@ -904,7 +907,7 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final String value) {
-			return newSetting(GssapiProtectionLevels.newInstance(value));
+			return new Setting(this, GssapiProtectionLevels.newInstance(value));
 		}
 		
 	},
@@ -930,7 +933,7 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final String value) {
-			return newSetting(Criteria.newInstance(value));
+			return new Setting(this, Criteria.newInstance(value));
 		}
 		
 	},
@@ -955,7 +958,7 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final String value) {
-			return newSetting(Criteria.newInstance(value));
+			return new Setting(this, Criteria.newInstance(value));
 		}
 		
 	},
@@ -980,7 +983,7 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final String value) {
-			return newSetting(SocketSettings.newInstance(value));
+			return new Setting(this, SocketSettings.newInstance(value));
 		}
 		
 	},
@@ -1005,7 +1008,7 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final String value) {
-			return newSetting(SocketSettings.newInstance(value));
+			return new Setting(this, SocketSettings.newInstance(value));
 		}
 		
 	},
@@ -1032,7 +1035,7 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final String value) {
-			return newSetting(PositiveInteger.newInstance(value));
+			return new Setting(this, PositiveInteger.newInstance(value));
 		}
 		
 	},
@@ -1059,7 +1062,7 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final String value) {
-			return newSetting(PositiveInteger.newInstance(value));
+			return new Setting(this, PositiveInteger.newInstance(value));
 		}
 		
 	},
@@ -1086,7 +1089,7 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final String value) {
-			return newSetting(PositiveInteger.newInstance(value));
+			return new Setting(this, PositiveInteger.newInstance(value));
 		}
 		
 	},
@@ -1113,7 +1116,7 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final String value) {
-			return newSetting(PositiveInteger.newInstance(value));
+			return new Setting(this, PositiveInteger.newInstance(value));
 		}
 		
 	},
@@ -1151,7 +1154,7 @@ public enum SettingSpec {
 			} catch (UnknownHostException e) {
 				throw new IllegalArgumentException(e);
 			}
-			return newSetting(host);
+			return new Setting(this, host);
 		}
 		
 	},
@@ -1179,7 +1182,7 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final String value) {
-			return newSetting(PositiveInteger.newInstance(value));
+			return new Setting(this, PositiveInteger.newInstance(value));
 		}
 		
 	},
@@ -1204,7 +1207,7 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final String value) {
-			return newSetting(SocketSettings.newInstance(value));
+			return new Setting(this, SocketSettings.newInstance(value));
 		}
 		
 	},
@@ -1230,7 +1233,7 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final String value) {
-			return newSetting(Criteria.newInstance(value));
+			return new Setting(this, Criteria.newInstance(value));
 		}
 		
 	},
@@ -1255,7 +1258,7 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final String value) {
-			return newSetting(Criteria.newInstance(value));
+			return new Setting(this, Criteria.newInstance(value));
 		}
 		
 	},
@@ -1294,7 +1297,7 @@ public enum SettingSpec {
 			} catch (UnknownHostException e) {
 				throw new IllegalArgumentException(e);
 			}
-			return newSetting(host);
+			return new Setting(this, host);
 		}
 		
 	},
@@ -1319,7 +1322,7 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final String value) {
-			return newSetting(SocketSettings.newInstance(value));
+			return new Setting(this, SocketSettings.newInstance(value));
 		}
 		
 	},
@@ -1347,7 +1350,7 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final String value) {
-			return newSetting(PositiveInteger.newInstance(value));
+			return new Setting(this, PositiveInteger.newInstance(value));
 		}
 		
 	},
@@ -1375,7 +1378,7 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final String value) {
-			return newSetting(PositiveInteger.newInstance(value));
+			return new Setting(this, PositiveInteger.newInstance(value));
 		}
 		
 	},
@@ -1414,7 +1417,7 @@ public enum SettingSpec {
 			} catch (UnknownHostException e) {
 				throw new IllegalArgumentException(e);
 			}
-			return newSetting(host);
+			return new Setting(this, host);
 		}
 		
 	},
@@ -1439,7 +1442,7 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final String value) {
-			return newSetting(SocketSettings.newInstance(value));
+			return new Setting(this, SocketSettings.newInstance(value));
 		}
 		
 	},
@@ -1464,7 +1467,7 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final String value) {
-			return newSetting(UsernamePasswordAuthenticator.getInstance(value));
+			return new Setting(this, UsernamePasswordAuthenticator.getInstance(value));
 		}
 		
 	},
@@ -1490,7 +1493,7 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final String value) {
-			return newSetting(Boolean.valueOf(value));
+			return new Setting(this, Boolean.valueOf(value));
 		}
 		
 	},
@@ -1514,7 +1517,7 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final String value) {
-			return newSetting(CipherSuites.newInstance(value));
+			return new Setting(this, CipherSuites.newInstance(value));
 		}
 		
 	},
@@ -1538,7 +1541,7 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final String value) {
-			return newSetting(Protocols.newInstance(value));
+			return new Setting(this, Protocols.newInstance(value));
 		}
 		
 	},
@@ -1596,20 +1599,22 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final String value) {
-			return newSetting(EncryptedPassword.newInstance(value.toCharArray()));
+			return new Setting(this, EncryptedPassword.newInstance(value.toCharArray()));
 		}
 		
 	},
 	@HelpText(
 			doc = "The type of key store file for the SSL/TLS connections to "
-					+ "the SOCKS server",
+					+ "the SOCKS server (default is PKCS12)",
 			usage = "ssl.keyStoreType=TYPE"
 	)	
 	SSL_KEY_STORE_TYPE("ssl.keyStoreType") {
 		
+		private static final String DEFAULT_STRING_VALUE = "PKCS12";
+		
 		@Override
 		public Setting getDefaultSetting() {
-			return new Setting(this, null);
+			return new Setting(this, DEFAULT_STRING_VALUE);
 		}
 
 		@Override
@@ -1620,7 +1625,7 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final String value) {
-			return newSetting(value);
+			return new Setting(this, value);
 		}
 		
 	},
@@ -1647,20 +1652,22 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final String value) {
-			return newSetting(Boolean.valueOf(value));
+			return new Setting(this, Boolean.valueOf(value));
 		}
 		
 	},
 	@HelpText(
 			doc = "The protocol version for the SSL/TLS connections to the "
-					+ "SOCKS server",
+					+ "SOCKS server (default is TLSv1)",
 			usage = "ssl.protocol=PROTOCOL"
 	)	
 	SSL_PROTOCOL("ssl.protocol") {
 		
+		private static final String DEFAULT_STRING_VALUE = "TLSv1";
+		
 		@Override
 		public Setting getDefaultSetting() {
-			return new Setting(this, null);
+			return new Setting(this, DEFAULT_STRING_VALUE);
 		}
 
 		@Override
@@ -1671,7 +1678,7 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final String value) {
-			return newSetting(value);
+			return new Setting(this, value);
 		}
 		
 	},
@@ -1729,20 +1736,22 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final String value) {
-			return newSetting(EncryptedPassword.newInstance(value.toCharArray()));
+			return new Setting(this, EncryptedPassword.newInstance(value.toCharArray()));
 		}
 		
 	},
 	@HelpText(
 			doc = "The type of trust store file for the SSL/TLS connections to "
-					+ "the SOCKS server",
+					+ "the SOCKS server (default is PKCS12)",
 			usage = "ssl.trustStoreType=TYPE"
 	)		
 	SSL_TRUST_STORE_TYPE("ssl.trustStoreType") {
 		
+		private static final String DEFAULT_STRING_VALUE = "PKCS12";
+		
 		@Override
 		public Setting getDefaultSetting() {
-			return new Setting(this, null);
+			return new Setting(this, DEFAULT_STRING_VALUE);
 		}
 
 		@Override
@@ -1753,7 +1762,7 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final String value) {
-			return newSetting(value);
+			return new Setting(this, value);
 		}
 		
 	},
@@ -1780,7 +1789,7 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final String value) {
-			return newSetting(Boolean.valueOf(value));
+			return new Setting(this, Boolean.valueOf(value));
 		}
 
 	};

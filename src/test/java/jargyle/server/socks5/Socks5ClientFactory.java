@@ -1,5 +1,6 @@
 package jargyle.server.socks5;
 
+import jargyle.ResourceHelper;
 import jargyle.client.Properties;
 import jargyle.client.PropertySpec;
 import jargyle.client.socks5.Socks5Client;
@@ -46,6 +47,18 @@ public final class Socks5ClientFactory {
 						gssapiProtectionLevels),
 				PropertySpec.SOCKS5_GSSAPI_NEC_REFERENCE_IMPL.newProperty(
 						Boolean.valueOf(gssapiNecReferenceImpl)));
+		return new Socks5ServerUri(host, port).newSocksClient(properties);
+	}
+	
+	public static Socks5Client newSocks5ClientUsingSsl(
+			final String host, 
+			final Integer port) {
+		Properties properties = Properties.newInstance(
+				PropertySpec.SSL_ENABLED.newProperty(Boolean.TRUE),
+				PropertySpec.SSL_TRUST_STORE_FILE.newProperty(
+						ResourceHelper.getServerKeyStoreFile()),
+				PropertySpec.SSL_TRUST_STORE_PASSWORD.newProperty(
+						ResourceHelper.getServerKeyStorePassword()));
 		return new Socks5ServerUri(host, port).newSocksClient(properties);
 	}
 	

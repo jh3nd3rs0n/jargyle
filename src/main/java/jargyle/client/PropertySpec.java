@@ -50,7 +50,7 @@ public enum PropertySpec {
 			} catch (UnknownHostException e) {
 				throw new IllegalArgumentException(e);
 			}
-			return newProperty(bindHost);
+			return new Property(this, bindHost);
 		}
 		
 	},
@@ -71,7 +71,7 @@ public enum PropertySpec {
 
 		@Override
 		public Property newProperty(final String value) {
-			return newProperty(Port.newInstance(value));
+			return new Property(this, Port.newInstance(value));
 		}
 		
 	},
@@ -93,7 +93,7 @@ public enum PropertySpec {
 
 		@Override
 		public Property newProperty(final String value) {
-			return newProperty(PositiveInteger.newInstance(value));
+			return new Property(this, PositiveInteger.newInstance(value));
 		}
 		
 	},
@@ -112,7 +112,7 @@ public enum PropertySpec {
 
 		@Override
 		public Property newProperty(final String value) {
-			return newProperty(SocketSettings.newInstance(value));
+			return new Property(this, SocketSettings.newInstance(value));
 		}
 		
 	},
@@ -132,7 +132,7 @@ public enum PropertySpec {
 
 		@Override
 		public Property newProperty(final String value) {
-			return newProperty(AuthMethods.newInstance(value));
+			return new Property(this, AuthMethods.newInstance(value));
 		}
 		
 	},
@@ -163,7 +163,7 @@ public enum PropertySpec {
 			} catch (GSSException e) {
 				throw new IllegalArgumentException(e);
 			}
-			return newProperty(gssapiMechanismOid);
+			return new Property(this, gssapiMechanismOid);
 		}
 		
 	},
@@ -184,7 +184,7 @@ public enum PropertySpec {
 
 		@Override
 		public Property newProperty(final String value) {
-			return newProperty(Boolean.valueOf(value));
+			return new Property(this, Boolean.valueOf(value));
 		}
 		
 	},
@@ -203,7 +203,7 @@ public enum PropertySpec {
 
 		@Override
 		public Property newProperty(final String value) {
-			return newProperty(GssapiProtectionLevels.newInstance(value));
+			return new Property(this, GssapiProtectionLevels.newInstance(value));
 		}
 		
 	},
@@ -242,7 +242,7 @@ public enum PropertySpec {
 
 		@Override
 		public Property newProperty(final String value) {
-			UsernamePassword.validateUsername((String) value);
+			UsernamePassword.validateUsername(value);
 			return new Property(this, value);
 		}
 		
@@ -268,6 +268,7 @@ public enum PropertySpec {
 			char[] val = value.toCharArray();
 			UsernamePassword.validatePassword(val);
 			EncryptedPassword v = EncryptedPassword.newInstance(val);
+			Arrays.fill(val, '\0');
 			return new Property(this, v);
 		}
 		
@@ -289,7 +290,7 @@ public enum PropertySpec {
 
 		@Override
 		public Property newProperty(final String value) {
-			return newProperty(Boolean.valueOf(value));
+			return new Property(this, Boolean.valueOf(value));
 		}
 		
 	},
@@ -308,7 +309,7 @@ public enum PropertySpec {
 
 		@Override
 		public Property newProperty(final String value) {
-			return newProperty(CipherSuites.newInstance(value));
+			return new Property(this, CipherSuites.newInstance(value));
 		}
 		
 	},
@@ -327,7 +328,7 @@ public enum PropertySpec {
 
 		@Override
 		public Property newProperty(final String value) {
-			return newProperty(Protocols.newInstance(value));
+			return new Property(this, Protocols.newInstance(value));
 		}
 		
 	},
@@ -375,15 +376,17 @@ public enum PropertySpec {
 
 		@Override
 		public Property newProperty(final String value) {
-			return newProperty(EncryptedPassword.newInstance(value.toCharArray()));
+			return new Property(this, EncryptedPassword.newInstance(value.toCharArray()));
 		}
 		
 	},
 	SSL_KEY_STORE_TYPE("socksClient.ssl.keyStoreType") {
 		
+		private static final String DEFAULT_STRING_VALUE = "PKCS12";
+		
 		@Override
 		public Property getDefaultProperty() {
-			return new Property(this, null);
+			return new Property(this, DEFAULT_STRING_VALUE);
 		}
 
 		@Override
@@ -394,15 +397,17 @@ public enum PropertySpec {
 
 		@Override
 		public Property newProperty(final String value) {
-			return newProperty(value);
+			return new Property(this, value);
 		}
 		
 	},
 	SSL_PROTOCOL("socksClient.ssl.protocol") {
 		
+		private static final String DEFAULT_STRING_VALUE = "TLSv1";
+		
 		@Override
 		public Property getDefaultProperty() {
-			return new Property(this, null);
+			return new Property(this, DEFAULT_STRING_VALUE);
 		}
 
 		@Override
@@ -413,7 +418,7 @@ public enum PropertySpec {
 
 		@Override
 		public Property newProperty(final String value) {
-			return newProperty(value);
+			return new Property(this, value);
 		}
 		
 	},
@@ -461,15 +466,17 @@ public enum PropertySpec {
 
 		@Override
 		public Property newProperty(final String value) {
-			return newProperty(EncryptedPassword.newInstance(value.toCharArray()));
+			return new Property(this, EncryptedPassword.newInstance(value.toCharArray()));
 		}
 		
 	},
 	SSL_TRUST_STORE_TYPE("socksClient.ssl.trustStoreType") {
 		
+		private static final String DEFAULT_STRING_VALUE = "PKCS12";
+		
 		@Override
 		public Property getDefaultProperty() {
-			return new Property(this, null);
+			return new Property(this, DEFAULT_STRING_VALUE);
 		}
 
 		@Override
@@ -480,7 +487,7 @@ public enum PropertySpec {
 
 		@Override
 		public Property newProperty(final String value) {
-			return newProperty(value);
+			return new Property(this, value);
 		}
 
 	};

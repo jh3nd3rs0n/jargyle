@@ -98,18 +98,10 @@ public abstract class SocksClient {
 		SSLContext sslContext = null;
 		String protocol = this.properties.getValue(
 				PropertySpec.SSL_PROTOCOL, String.class);
-		if (protocol == null) {
-			try {
-				sslContext = SSLContext.getDefault();
-			} catch (NoSuchAlgorithmException e) {
-				throw new AssertionError(e);
-			}
-		} else {
-			try {
-				sslContext = SSLContext.getInstance(protocol);
-			} catch (NoSuchAlgorithmException e) {
-				throw new AssertionError(e);
-			}
+		try {
+			sslContext = SSLContext.getInstance(protocol);
+		} catch (NoSuchAlgorithmException e) {
+			throw new AssertionError(e);
 		}
 		KeyManager[] keyManagers = null;
 		TrustManager[] trustManagers = null;

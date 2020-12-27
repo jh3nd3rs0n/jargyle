@@ -50,7 +50,7 @@ public final class Socks5Client extends SocksClient {
 		} catch (IllegalArgumentException e) {
 			throw new IOException(e);
 		}
-		Socket newSocket = authenticator.authenticate(socket, this);
+		Socket newSocket = authenticator.authenticate(sock, this);
 		return newSocket;
 	}
 

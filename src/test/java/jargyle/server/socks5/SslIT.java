@@ -4,9 +4,6 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import jargyle.TestStringConstants;
@@ -17,17 +14,18 @@ import jargyle.server.SocketIT;
 
 public class SslIT {
 
-	@BeforeClass
+/*	
+	@org.junit.BeforeClass
 	public static void setUp() {
 		System.setProperty("javax.net.debug", "ssl,handshake");
 	}
 	
-	@AfterClass
+	@org.junit.AfterClass
 	public static void tearDown() {
 		System.clearProperty("javax.net.debug");
 	}
+*/
 	
-	@Ignore
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSsl01() throws IOException {
 		String string = TestStringConstants.STRING_01;
@@ -40,7 +38,6 @@ public class SslIT {
 		assertEquals(string, returningString);
 	}
 
-	@Ignore
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSsl02() throws IOException {
 		String string = TestStringConstants.STRING_02;
@@ -53,7 +50,6 @@ public class SslIT {
 		assertEquals(string, returningString);
 	}
 
-	@Ignore
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSsl03() throws IOException {
 		String string = TestStringConstants.STRING_03;
@@ -66,7 +62,6 @@ public class SslIT {
 		assertEquals(string, returningString);
 	}
 	
-	@Ignore
 	@Test
 	public void testThroughSocks5ServerSocketUsingSsl01() throws IOException {
 		String string = TestStringConstants.STRING_01;
@@ -79,7 +74,6 @@ public class SslIT {
 		assertEquals(string, returningString);
 	}
 	
-	@Ignore
 	@Test
 	public void testThroughSocks5ServerSocketUsingSsl02() throws IOException {
 		String string = TestStringConstants.STRING_02;
@@ -92,7 +86,6 @@ public class SslIT {
 		assertEquals(string, returningString);
 	}
 	
-	@Ignore
 	@Test
 	public void testThroughSocks5ServerSocketUsingSsl03() throws IOException {
 		String string = TestStringConstants.STRING_03;
@@ -105,7 +98,6 @@ public class SslIT {
 		assertEquals(string, returningString);
 	}
 	
-	@Ignore
 	@Test
 	public void testThroughSocks5SocketUsingSsl01() throws IOException {
 		String string = TestStringConstants.STRING_01;
@@ -118,7 +110,6 @@ public class SslIT {
 		assertEquals(string, returningString);
 	}
 	
-	@Ignore
 	@Test
 	public void testThroughSocks5SocketUsingSsl02() throws IOException {
 		String string = TestStringConstants.STRING_02;
@@ -131,7 +122,6 @@ public class SslIT {
 		assertEquals(string, returningString);		
 	}
 	
-	@Ignore
 	@Test
 	public void testThroughSocks5SocketUsingSsl03() throws IOException {
 		String string = TestStringConstants.STRING_03;

@@ -11,23 +11,22 @@ public final class DatagramPacketFilterFactory {
 
 	public static DatagramPacketFilter newDatagramPacketFilter(
 			final Socket socket) {
-		Class<?> socketClass = socket.getClass();
-		if (socketClass.equals(GssSocket.class)) {
+		if (socket instanceof GssSocket) {
 			GssSocket gssSocket = (GssSocket) socket;
 			return new GssDatagramPacketFilter(
 					gssSocket.getGSSContext(),
 					gssSocket.getMessageProp());
 		}
-		if (socketClass.equals(Socket.class)) {
+		if (socket instanceof SSLSocket) {
 			return new DefaultDatagramPacketFilter();
 		}
-		if (socketClass.equals(SSLSocket.class)) {
+		if (socket.getClass().equals(Socket.class)) {
 			return new DefaultDatagramPacketFilter();
 		}
 		throw new IllegalArgumentException(String.format(
 				"unhandled %s: %s",
 				Socket.class.getName(),
-				socketClass.getName()));
+				socket.getClass().getName()));
 	}
 
 	private DatagramPacketFilterFactory() { }

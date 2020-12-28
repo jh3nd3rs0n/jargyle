@@ -2,7 +2,6 @@ package jargyle.server.socks5;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
-import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
@@ -13,6 +12,7 @@ import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import jargyle.common.net.DatagramSocketInterface;
 import jargyle.common.net.socks5.AddressType;
 import jargyle.common.net.socks5.UdpRequestHeader;
 import jargyle.server.Criteria;
@@ -144,7 +144,7 @@ final class UdpRelayServer {
 					byte[] buffer = new byte[this.getUdpRelayServer().bufferSize];
 					DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
 					try {
-						this.getServerDatagramSocket().receive(packet);
+						this.getServerDatagramSocketInterface().receive(packet);
 						this.getUdpRelayServer().lastReceiveTime = System.currentTimeMillis();
 					} catch (SocketException e) {
 						// socket closed
@@ -181,7 +181,7 @@ final class UdpRelayServer {
 						continue;
 					}
 					try {
-						this.getClientDatagramSocket().send(packet);
+						this.getClientDatagramSocketInterface().send(packet);
 					} catch (SocketException e) {
 						// socket closed
 						break;
@@ -346,7 +346,7 @@ final class UdpRelayServer {
 					byte[] buffer = new byte[this.getUdpRelayServer().bufferSize];
 					DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
 					try {
-						this.getClientDatagramSocket().receive(packet);
+						this.getClientDatagramSocketInterface().receive(packet);
 						this.getUdpRelayServer().lastReceiveTime = System.currentTimeMillis();
 					} catch (SocketException e) {
 						// socket closed
@@ -386,7 +386,7 @@ final class UdpRelayServer {
 						continue;
 					}
 					try {
-						this.getServerDatagramSocket().send(packet);
+						this.getServerDatagramSocketInterface().send(packet);
 					} catch (SocketException e) {
 						// socket closed
 						break;
@@ -418,25 +418,25 @@ final class UdpRelayServer {
 	private static abstract class PacketsWorker implements Runnable {
 		
 		private final UdpRelayServer udpRelayServer;
-		private final DatagramSocket clientDatagramSocket;
-		private final DatagramSocket serverDatagramSocket;
+		private final DatagramSocketInterface clientDatagramSocketInterface;
+		private final DatagramSocketInterface serverDatagramSocketInterface;
 
 		public PacketsWorker(final UdpRelayServer server) {
 			this.udpRelayServer = server;
-			this.clientDatagramSocket = server.clientDatagramSocket;
-			this.serverDatagramSocket = server.serverDatagramSocket;
+			this.clientDatagramSocketInterface = server.clientDatagramSocketInterface;
+			this.serverDatagramSocketInterface = server.serverDatagramSocketInterface;
 		}
 		
 		protected String format(final String message) {
 			return String.format("%s: %s", this, message);
 		}
 		
-		protected final DatagramSocket getClientDatagramSocket() {
-			return this.clientDatagramSocket;
+		protected final DatagramSocketInterface getClientDatagramSocketInterface() {
+			return this.clientDatagramSocketInterface;
 		}
 		
-		protected final DatagramSocket getServerDatagramSocket() {
-			return this.serverDatagramSocket;
+		protected final DatagramSocketInterface getServerDatagramSocketInterface() {
+			return this.serverDatagramSocketInterface;
 		}
 		
 		protected final UdpRelayServer getUdpRelayServer() {
@@ -450,10 +450,10 @@ final class UdpRelayServer {
 		public final String toString() {
 			StringBuilder builder = new StringBuilder();
 			builder.append(this.getClass().getSimpleName())
-				.append(" [clientDatagramSocket=")
-				.append(this.clientDatagramSocket)
-				.append(", serverDatagramSocket=")
-				.append(this.serverDatagramSocket)
+				.append(" [clientDatagramSocketInterface=")
+				.append(this.clientDatagramSocketInterface)
+				.append(", serverDatagramSocketInterface=")
+				.append(this.serverDatagramSocketInterface)
 				.append("]");
 			return builder.toString();
 		}
@@ -462,14 +462,14 @@ final class UdpRelayServer {
 	
 	private final Criteria allowedExternalIncomingAddressCriteria;
 	private final Criteria blockedExternalIncomingAddressCriteria;
-	private final DatagramSocket clientDatagramSocket;
+	private final DatagramSocketInterface clientDatagramSocketInterface;
 	private final int bufferSize;
 	private String desiredDestinationAddress;
 	private int desiredDestinationPort;
 	private ExecutorService executor;
 	private boolean firstPacketsWorkerFinished;
 	private long lastReceiveTime;
-	private final DatagramSocket serverDatagramSocket;
+	private final DatagramSocketInterface serverDatagramSocketInterface;
 	private String sourceAddress;
 	private int sourcePort;
 	private boolean started;
@@ -477,8 +477,8 @@ final class UdpRelayServer {
 	private final int timeout;
 	
 	public UdpRelayServer(		
-			final DatagramSocket clientDatagramSock,
-			final DatagramSocket serverDatagramSock,
+			final DatagramSocketInterface clientDatagramSockInterface,
+			final DatagramSocketInterface serverDatagramSockInterface,
 			final String sourceAddr,
 			final String desiredDestinationAddr,
 			final int desiredDestinationPrt, 
@@ -486,8 +486,8 @@ final class UdpRelayServer {
 			final Criteria blockedExternalIncomingAddrCriteria, 
 			final int bffrSize, 
 			final int tmt) {
-		Objects.requireNonNull(clientDatagramSock);
-		Objects.requireNonNull(serverDatagramSock);
+		Objects.requireNonNull(clientDatagramSockInterface);
+		Objects.requireNonNull(serverDatagramSockInterface);
 		Objects.requireNonNull(desiredDestinationAddr);
 		Objects.requireNonNull(allowedExternalIncomingAddrCriteria);
 		Objects.requireNonNull(blockedExternalIncomingAddrCriteria);
@@ -513,14 +513,14 @@ final class UdpRelayServer {
 				allowedExternalIncomingAddrCriteria;
 		this.blockedExternalIncomingAddressCriteria = 
 				blockedExternalIncomingAddrCriteria;
-		this.clientDatagramSocket = clientDatagramSock;
+		this.clientDatagramSocketInterface = clientDatagramSockInterface;
 		this.bufferSize = bffrSize;
 		this.desiredDestinationAddress = desiredDestAddr;
 		this.desiredDestinationPort = desiredDestPrt;
 		this.executor = null;
 		this.firstPacketsWorkerFinished = false;
 		this.lastReceiveTime = 0L;
-		this.serverDatagramSocket = serverDatagramSock;
+		this.serverDatagramSocketInterface = serverDatagramSockInterface;
 		this.sourceAddress = sourceAddr;
 		this.sourcePort = -1;
 		this.started = false;

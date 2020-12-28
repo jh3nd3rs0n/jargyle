@@ -1,8 +1,5 @@
 package jargyle.common.net;
 
-import java.net.ServerSocket;
-import java.net.Socket;
-
 public final class PerformancePreferences {
 	
 	public static final int MAX_IMPORTANCE_VALUE = 2;
@@ -79,14 +76,14 @@ public final class PerformancePreferences {
 		this.bandwidthImportance = other.bandwidthImportance;
 	}
 	
-	public void applyTo(final ServerSocket serverSocket) {
-		serverSocket.setPerformancePreferences(
+	public void applyTo(final ServerSocketInterface serverSocketInterface) {
+		serverSocketInterface.setPerformancePreferences(
 				this.connectionTimeImportance, 
 				this.latencyImportance, 
 				this.bandwidthImportance);
 	}
-	public void applyTo(final Socket socket) {
-		socket.setPerformancePreferences(
+	public void applyTo(final SocketInterface socketInterface) {
+		socketInterface.setPerformancePreferences(
 				this.connectionTimeImportance, 
 				this.latencyImportance, 
 				this.bandwidthImportance);

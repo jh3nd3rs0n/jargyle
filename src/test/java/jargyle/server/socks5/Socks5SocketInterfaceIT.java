@@ -1,6 +1,6 @@
 package jargyle.server.socks5;
-import static jargyle.server.DatagramSocketIT.LOOPBACK_ADDRESS;
-import static jargyle.server.DatagramSocketIT.echoThroughDatagramSocket;
+import static jargyle.server.SocketInterfaceIT.LOOPBACK_ADDRESS;
+import static jargyle.server.SocketInterfaceIT.echoThroughSocketInterface;
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
@@ -11,12 +11,12 @@ import jargyle.TestStringConstants;
 import jargyle.client.socks5.UsernamePassword;
 import jargyle.server.ConfigurationFactory;
 
-public class Socks5DatagramSocketIT {
-
+public class Socks5SocketInterfaceIT {
+	
 	@Test
-	public void testThroughSocks5DatagramSocket01() throws IOException {
+	public void testThroughSocks5SocketInterface01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = echoThroughDatagramSocket(
+		String returningString = echoThroughSocketInterface(
 				string, 
 				Socks5ClientFactory.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), null), 
@@ -25,9 +25,9 @@ public class Socks5DatagramSocketIT {
 	}
 	
 	@Test
-	public void testThroughSocks5DatagramSocket02() throws IOException {
+	public void testThroughSocks5SocketInterface02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = echoThroughDatagramSocket(
+		String returningString = echoThroughSocketInterface(
 				string, 
 				Socks5ClientFactory.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), null), 
@@ -36,9 +36,9 @@ public class Socks5DatagramSocketIT {
 	}
 
 	@Test
-	public void testThroughSocks5DatagramSocket03() throws IOException {
+	public void testThroughSocks5SocketInterface03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = echoThroughDatagramSocket(
+		String returningString = echoThroughSocketInterface(
 				string, 
 				Socks5ClientFactory.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), null), 
@@ -47,9 +47,9 @@ public class Socks5DatagramSocketIT {
 	}
 	
 	@Test
-	public void testThroughSocks5DatagramSocketUsingUsernamePasswordAuth01() throws IOException {
+	public void testThroughSocks5SocketInterfaceUsingUsernamePasswordAuth01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = echoThroughDatagramSocket(
+		String returningString = echoThroughSocketInterface(
 				string, 
 				Socks5ClientFactory.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
@@ -60,9 +60,9 @@ public class Socks5DatagramSocketIT {
 	}
 
 	@Test
-	public void testThroughSocks5DatagramSocketUsingUsernamePasswordAuth02() throws IOException {
+	public void testThroughSocks5SocketInterfaceUsingUsernamePasswordAuth02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = echoThroughDatagramSocket(
+		String returningString = echoThroughSocketInterface(
 				string, 
 				Socks5ClientFactory.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
@@ -73,9 +73,9 @@ public class Socks5DatagramSocketIT {
 	}
 	
 	@Test
-	public void testThroughSocks5DatagramSocketUsingUsernamePasswordAuth03() throws IOException {
+	public void testThroughSocks5SocketInterfaceUsingUsernamePasswordAuth03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = echoThroughDatagramSocket(
+		String returningString = echoThroughSocketInterface(
 				string, 
 				Socks5ClientFactory.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
@@ -84,5 +84,4 @@ public class Socks5DatagramSocketIT {
 				ConfigurationFactory.newConfigurationUsingSocks5UsernamePasswordAuth());
 		assertEquals(string, returningString);
 	}
-
 }

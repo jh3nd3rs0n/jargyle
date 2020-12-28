@@ -1,8 +1,5 @@
 package jargyle.common.net;
 
-import java.net.DatagramSocket;
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -97,22 +94,22 @@ public final class SocketSettings {
 	}
 	
 	public void applyTo(
-			final DatagramSocket datagramSocket) throws SocketException {
+			final DatagramSocketInterface datagramSocketInterface) throws SocketException {
 		for (SocketSetting socketSetting : this.socketSettings.values()) {
-			socketSetting.applyTo(datagramSocket);
+			socketSetting.applyTo(datagramSocketInterface);
 		}
 	}
 	
 	public void applyTo(
-			final ServerSocket serverSocket) throws SocketException {
+			final ServerSocketInterface serverSocketInterface) throws SocketException {
 		for (SocketSetting socketSetting : this.socketSettings.values()) {
-			socketSetting.applyTo(serverSocket);
+			socketSetting.applyTo(serverSocketInterface);
 		}
 	}
 	
-	public void applyTo(final Socket socket) throws SocketException {
+	public void applyTo(final SocketInterface socketInterface) throws SocketException {
 		for (SocketSetting socketSetting : this.socketSettings.values()) {
-			socketSetting.applyTo(socket);
+			socketSetting.applyTo(socketInterface);
 		}
 	}
 	

@@ -8,6 +8,7 @@ import java.net.SocketException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import jargyle.common.net.DefaultSocketInterface;
 import jargyle.common.net.SocketSettings;
 import jargyle.common.net.socks5.Version;
 import jargyle.server.socks5.Socks5Worker;
@@ -64,7 +65,7 @@ final class Worker implements Runnable {
 		try {
 			SocketSettings socketSettings =	this.settings.getLastValue(
 					SettingSpec.CLIENT_SOCKET_SETTINGS, SocketSettings.class);
-			socketSettings.applyTo(clientSocket);
+			socketSettings.applyTo(new DefaultSocketInterface(clientSocket));
 		} catch (SocketException e) {
 			LOGGER.log(
 					Level.WARNING, 
@@ -101,7 +102,7 @@ final class Worker implements Runnable {
 			}
 			if ((byte) version == Version.V5.byteValue()) {
 				Socks5Worker socks5Worker = new Socks5Worker(
-						this.clientSocket, 
+						new DefaultSocketInterface(this.clientSocket), 
 						this.configuration);
 				socks5Worker.run();
 			} else {

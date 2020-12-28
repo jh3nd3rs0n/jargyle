@@ -6,16 +6,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.SequenceInputStream;
-import java.net.Socket;
 import java.util.Objects;
 
 import org.ietf.jgss.GSSContext;
 import org.ietf.jgss.GSSException;
 import org.ietf.jgss.MessageProp;
 
-import jargyle.common.net.FilterSocket;
+import jargyle.common.net.SocketInterface;
+import jargyle.common.net.FilterSocketInterface;
 
-public final class GssSocket extends FilterSocket {
+public final class GssSocketInterface extends FilterSocketInterface {
 
 	private static final class GssUnwrappedInputStream extends InputStream {
 		
@@ -230,17 +230,17 @@ public final class GssSocket extends FilterSocket {
 		}
 			
 	}
-	
+
 	private final GSSContext gssContext;
 	private InputStream inputStream;
 	private MessageProp messageProp;
 	private OutputStream outputStream;
 	
-	public GssSocket(
-			final Socket sock,
+	public GssSocketInterface(
+			final SocketInterface sockInterface,
 			final GSSContext context,
 			final MessageProp prop) {
-		super(sock);
+		super(sockInterface);
 		MessageProp prp = null;
 		if (prop != null) {
 			prp = new MessageProp(prop.getQOP(), prop.getPrivacy());
@@ -258,7 +258,7 @@ public final class GssSocket extends FilterSocket {
 		} catch (GSSException e) {
 			throw new IOException(e);
 		}
-		this.socket.close();
+		super.close();
 	}
 	
 	public GSSContext getGSSContext() {
@@ -270,7 +270,7 @@ public final class GssSocket extends FilterSocket {
 		if (this.inputStream != null) {
 			return this.inputStream;
 		}
-		InputStream inStream = this.socket.getInputStream();
+		InputStream inStream = super.getInputStream();
 		if (this.messageProp == null) {
 			this.inputStream = inStream;
 		} else {
@@ -293,7 +293,7 @@ public final class GssSocket extends FilterSocket {
 		if (this.outputStream != null) {
 			return this.outputStream;
 		}
-		OutputStream outStream = this.socket.getOutputStream();
+		OutputStream outStream = super.getOutputStream();
 		if (this.messageProp == null) {
 			this.outputStream = outStream;
 		} else {
@@ -301,18 +301,6 @@ public final class GssSocket extends FilterSocket {
 					this.gssContext, this.messageProp, outStream);
 		}
 		return this.outputStream;		
-	}
-	
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append(this.getClass().getSimpleName())
-			.append(" [gssContext=")
-			.append(this.gssContext)
-			.append(", socket=")
-			.append(this.socket)
-			.append("]");
-		return builder.toString();
 	}
 	
 }

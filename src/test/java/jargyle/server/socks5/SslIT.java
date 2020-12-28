@@ -8,9 +8,9 @@ import org.junit.Test;
 
 import jargyle.TestStringConstants;
 import jargyle.server.ConfigurationFactory;
-import jargyle.server.DatagramSocketIT;
-import jargyle.server.ServerSocketIT;
-import jargyle.server.SocketIT;
+import jargyle.server.DatagramSocketInterfaceIT;
+import jargyle.server.ServerSocketInterfaceIT;
+import jargyle.server.SocketInterfaceIT;
 
 public class SslIT {
 
@@ -27,324 +27,324 @@ public class SslIT {
 */
 	
 	@Test
-	public void testThroughSocks5DatagramSocketUsingSsl01() throws IOException {
+	public void testThroughSocks5DatagramSocketInterfaceUsingSsl01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = DatagramSocketIT.echoThroughDatagramSocket(
+		String returningString = DatagramSocketInterfaceIT.echoThroughDatagramSocketInterface(
 				string,
 				Socks5ClientFactory.newSocks5ClientUsingSsl(
-						DatagramSocketIT.LOOPBACK_ADDRESS.getHostAddress(), 
+						DatagramSocketInterfaceIT.LOOPBACK_ADDRESS.getHostAddress(), 
 						null),
 				ConfigurationFactory.newConfigurationUsingSsl());
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testThroughSocks5DatagramSocketUsingSsl02() throws IOException {
+	public void testThroughSocks5DatagramSocketInterfaceUsingSsl02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = DatagramSocketIT.echoThroughDatagramSocket(
+		String returningString = DatagramSocketInterfaceIT.echoThroughDatagramSocketInterface(
 				string,
 				Socks5ClientFactory.newSocks5ClientUsingSsl(
-						DatagramSocketIT.LOOPBACK_ADDRESS.getHostAddress(), 
+						DatagramSocketInterfaceIT.LOOPBACK_ADDRESS.getHostAddress(), 
 						null),
 				ConfigurationFactory.newConfigurationUsingSsl());
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testThroughSocks5DatagramSocketUsingSsl03() throws IOException {
+	public void testThroughSocks5DatagramSocketInterfaceUsingSsl03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = DatagramSocketIT.echoThroughDatagramSocket(
+		String returningString = DatagramSocketInterfaceIT.echoThroughDatagramSocketInterface(
 				string,
 				Socks5ClientFactory.newSocks5ClientUsingSsl(
-						DatagramSocketIT.LOOPBACK_ADDRESS.getHostAddress(), 
+						DatagramSocketInterfaceIT.LOOPBACK_ADDRESS.getHostAddress(), 
 						null),
 				ConfigurationFactory.newConfigurationUsingSsl());
 		assertEquals(string, returningString);
 	}
 	
 	@Test
-	public void testThroughSocks5DatagramSocketUsingSslAndClientAuth01() throws IOException {
+	public void testThroughSocks5DatagramSocketInterfaceUsingSslAndClientAuth01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = DatagramSocketIT.echoThroughDatagramSocket(
+		String returningString = DatagramSocketInterfaceIT.echoThroughDatagramSocketInterface(
 				string,
 				Socks5ClientFactory.newSocks5ClientUsingSslAndClientAuth(
-						DatagramSocketIT.LOOPBACK_ADDRESS.getHostAddress(), 
+						DatagramSocketInterfaceIT.LOOPBACK_ADDRESS.getHostAddress(), 
 						null),
 				ConfigurationFactory.newConfigurationUsingSslAndRequiredClientAuth());
 		assertEquals(string, returningString);
 	}
 	
 	@Test
-	public void testThroughSocks5DatagramSocketUsingSslAndRequestedClientAuth01() throws IOException {
+	public void testThroughSocks5DatagramSocketInterfaceUsingSslAndRequestedClientAuth01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = DatagramSocketIT.echoThroughDatagramSocket(
+		String returningString = DatagramSocketInterfaceIT.echoThroughDatagramSocketInterface(
 				string,
 				Socks5ClientFactory.newSocks5ClientUsingSsl(
-						DatagramSocketIT.LOOPBACK_ADDRESS.getHostAddress(), 
+						DatagramSocketInterfaceIT.LOOPBACK_ADDRESS.getHostAddress(), 
 						null),
 				ConfigurationFactory.newConfigurationUsingSslAndRequestedClientAuth());
 		assertEquals(string, returningString);
 	}
 	
 	@Test
-	public void testThroughSocks5DatagramSocketUsingSslAndRequestedClientAuth02() throws IOException {
+	public void testThroughSocks5DatagramSocketInterfaceUsingSslAndRequestedClientAuth02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = DatagramSocketIT.echoThroughDatagramSocket(
+		String returningString = DatagramSocketInterfaceIT.echoThroughDatagramSocketInterface(
 				string,
 				Socks5ClientFactory.newSocks5ClientUsingSsl(
-						DatagramSocketIT.LOOPBACK_ADDRESS.getHostAddress(), 
+						DatagramSocketInterfaceIT.LOOPBACK_ADDRESS.getHostAddress(), 
 						null),
 				ConfigurationFactory.newConfigurationUsingSslAndRequestedClientAuth());
 		assertEquals(string, returningString);
 	}
 	
 	@Test
-	public void testThroughSocks5DatagramSocketUsingSslAndRequestedClientAuth03() throws IOException {
+	public void testThroughSocks5DatagramSocketInterfaceUsingSslAndRequestedClientAuth03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = DatagramSocketIT.echoThroughDatagramSocket(
+		String returningString = DatagramSocketInterfaceIT.echoThroughDatagramSocketInterface(
 				string,
 				Socks5ClientFactory.newSocks5ClientUsingSsl(
-						DatagramSocketIT.LOOPBACK_ADDRESS.getHostAddress(), 
+						DatagramSocketInterfaceIT.LOOPBACK_ADDRESS.getHostAddress(), 
 						null),
 				ConfigurationFactory.newConfigurationUsingSslAndRequestedClientAuth());
 		assertEquals(string, returningString);
 	}
 	
 	@Test
-	public void testThroughSocks5DatagramSocketUsingSslAndRequiredClientAuth02() throws IOException {
+	public void testThroughSocks5DatagramSocketInterfaceUsingSslAndRequiredClientAuth02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = DatagramSocketIT.echoThroughDatagramSocket(
+		String returningString = DatagramSocketInterfaceIT.echoThroughDatagramSocketInterface(
 				string,
 				Socks5ClientFactory.newSocks5ClientUsingSslAndClientAuth(
-						DatagramSocketIT.LOOPBACK_ADDRESS.getHostAddress(), 
+						DatagramSocketInterfaceIT.LOOPBACK_ADDRESS.getHostAddress(), 
 						null),
 				ConfigurationFactory.newConfigurationUsingSslAndRequiredClientAuth());
 		assertEquals(string, returningString);
 	}
 	
 	@Test
-	public void testThroughSocks5DatagramSocketUsingSslAndRequiredClientAuth03() throws IOException {
+	public void testThroughSocks5DatagramSocketInterfaceUsingSslAndRequiredClientAuth03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = DatagramSocketIT.echoThroughDatagramSocket(
+		String returningString = DatagramSocketInterfaceIT.echoThroughDatagramSocketInterface(
 				string,
 				Socks5ClientFactory.newSocks5ClientUsingSslAndClientAuth(
-						DatagramSocketIT.LOOPBACK_ADDRESS.getHostAddress(), 
+						DatagramSocketInterfaceIT.LOOPBACK_ADDRESS.getHostAddress(), 
 						null),
 				ConfigurationFactory.newConfigurationUsingSslAndRequiredClientAuth());
 		assertEquals(string, returningString);
 	}
 	
 	@Test
-	public void testThroughSocks5ServerSocketUsingSsl01() throws IOException {
+	public void testThroughSocks5ServerSocketInterfaceUsingSsl01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = ServerSocketIT.echoThroughServerSocket(
+		String returningString = ServerSocketInterfaceIT.echoThroughServerSocketInterface(
 				string,
 				Socks5ClientFactory.newSocks5ClientUsingSsl(
-						ServerSocketIT.LOOPBACK_ADDRESS.getHostAddress(), 
+						ServerSocketInterfaceIT.LOOPBACK_ADDRESS.getHostAddress(), 
 						null),
 				ConfigurationFactory.newConfigurationUsingSsl());
 		assertEquals(string, returningString);
 	}
 	
 	@Test
-	public void testThroughSocks5ServerSocketUsingSsl02() throws IOException {
+	public void testThroughSocks5ServerSocketInterfaceUsingSsl02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = ServerSocketIT.echoThroughServerSocket(
+		String returningString = ServerSocketInterfaceIT.echoThroughServerSocketInterface(
 				string,
 				Socks5ClientFactory.newSocks5ClientUsingSsl(
-						ServerSocketIT.LOOPBACK_ADDRESS.getHostAddress(), 
+						ServerSocketInterfaceIT.LOOPBACK_ADDRESS.getHostAddress(), 
 						null),
 				ConfigurationFactory.newConfigurationUsingSsl());
 		assertEquals(string, returningString);
 	}
 	
 	@Test
-	public void testThroughSocks5ServerSocketUsingSsl03() throws IOException {
+	public void testThroughSocks5ServerSocketInterfaceUsingSsl03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = ServerSocketIT.echoThroughServerSocket(
+		String returningString = ServerSocketInterfaceIT.echoThroughServerSocketInterface(
 				string,
 				Socks5ClientFactory.newSocks5ClientUsingSsl(
-						ServerSocketIT.LOOPBACK_ADDRESS.getHostAddress(), 
+						ServerSocketInterfaceIT.LOOPBACK_ADDRESS.getHostAddress(), 
 						null),
 				ConfigurationFactory.newConfigurationUsingSsl());
 		assertEquals(string, returningString);
 	}
 	
 	@Test
-	public void testThroughSocks5ServerSocketUsingSslAndRequestedClientAuth01() throws IOException {
+	public void testThroughSocks5ServerSocketInterfaceUsingSslAndRequestedClientAuth01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = ServerSocketIT.echoThroughServerSocket(
+		String returningString = ServerSocketInterfaceIT.echoThroughServerSocketInterface(
 				string,
 				Socks5ClientFactory.newSocks5ClientUsingSsl(
-						ServerSocketIT.LOOPBACK_ADDRESS.getHostAddress(), 
+						ServerSocketInterfaceIT.LOOPBACK_ADDRESS.getHostAddress(), 
 						null),
 				ConfigurationFactory.newConfigurationUsingSslAndRequestedClientAuth());
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testThroughSocks5ServerSocketUsingSslAndRequestedClientAuth02() throws IOException {
+	public void testThroughSocks5ServerSocketInterfaceUsingSslAndRequestedClientAuth02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = ServerSocketIT.echoThroughServerSocket(
+		String returningString = ServerSocketInterfaceIT.echoThroughServerSocketInterface(
 				string,
 				Socks5ClientFactory.newSocks5ClientUsingSsl(
-						ServerSocketIT.LOOPBACK_ADDRESS.getHostAddress(), 
+						ServerSocketInterfaceIT.LOOPBACK_ADDRESS.getHostAddress(), 
 						null),
 				ConfigurationFactory.newConfigurationUsingSslAndRequestedClientAuth());
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testThroughSocks5ServerSocketUsingSslAndRequestedClientAuth03() throws IOException {
+	public void testThroughSocks5ServerSocketInterfaceUsingSslAndRequestedClientAuth03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = ServerSocketIT.echoThroughServerSocket(
+		String returningString = ServerSocketInterfaceIT.echoThroughServerSocketInterface(
 				string,
 				Socks5ClientFactory.newSocks5ClientUsingSsl(
-						ServerSocketIT.LOOPBACK_ADDRESS.getHostAddress(), 
+						ServerSocketInterfaceIT.LOOPBACK_ADDRESS.getHostAddress(), 
 						null),
 				ConfigurationFactory.newConfigurationUsingSslAndRequestedClientAuth());
 		assertEquals(string, returningString);
 	}
 	
 	@Test
-	public void testThroughSocks5ServerSocketUsingSslAndRequiredClientAuth01() throws IOException {
+	public void testThroughSocks5ServerSocketInterfaceUsingSslAndRequiredClientAuth01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = ServerSocketIT.echoThroughServerSocket(
+		String returningString = ServerSocketInterfaceIT.echoThroughServerSocketInterface(
 				string,
 				Socks5ClientFactory.newSocks5ClientUsingSslAndClientAuth(
-						ServerSocketIT.LOOPBACK_ADDRESS.getHostAddress(), 
+						ServerSocketInterfaceIT.LOOPBACK_ADDRESS.getHostAddress(), 
 						null),
 				ConfigurationFactory.newConfigurationUsingSslAndRequiredClientAuth());
 		assertEquals(string, returningString);
 	}
 	
 	@Test
-	public void testThroughSocks5ServerSocketUsingSslAndRequiredClientAuth02() throws IOException {
+	public void testThroughSocks5ServerSocketInterfaceUsingSslAndRequiredClientAuth02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = ServerSocketIT.echoThroughServerSocket(
+		String returningString = ServerSocketInterfaceIT.echoThroughServerSocketInterface(
 				string,
 				Socks5ClientFactory.newSocks5ClientUsingSslAndClientAuth(
-						ServerSocketIT.LOOPBACK_ADDRESS.getHostAddress(), 
+						ServerSocketInterfaceIT.LOOPBACK_ADDRESS.getHostAddress(), 
 						null),
 				ConfigurationFactory.newConfigurationUsingSslAndRequiredClientAuth());
 		assertEquals(string, returningString);
 	}
 	
 	@Test
-	public void testThroughSocks5ServerSocketUsingSslAndRequiredClientAuth03() throws IOException {
+	public void testThroughSocks5ServerSocketInterfaceUsingSslAndRequiredClientAuth03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = ServerSocketIT.echoThroughServerSocket(
+		String returningString = ServerSocketInterfaceIT.echoThroughServerSocketInterface(
 				string,
 				Socks5ClientFactory.newSocks5ClientUsingSslAndClientAuth(
-						ServerSocketIT.LOOPBACK_ADDRESS.getHostAddress(), 
+						ServerSocketInterfaceIT.LOOPBACK_ADDRESS.getHostAddress(), 
 						null),
 				ConfigurationFactory.newConfigurationUsingSslAndRequiredClientAuth());
 		assertEquals(string, returningString);
 	}
 	
 	@Test
-	public void testThroughSocks5SocketUsingSsl01() throws IOException {
+	public void testThroughSocks5SocketInterfaceUsingSsl01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = SocketIT.echoThroughSocket(
+		String returningString = SocketInterfaceIT.echoThroughSocketInterface(
 				string,
 				Socks5ClientFactory.newSocks5ClientUsingSsl(
-						SocketIT.LOOPBACK_ADDRESS.getHostAddress(), 
+						SocketInterfaceIT.LOOPBACK_ADDRESS.getHostAddress(), 
 						null),
 				ConfigurationFactory.newConfigurationUsingSsl());
 		assertEquals(string, returningString);
 	}
 	
 	@Test
-	public void testThroughSocks5SocketUsingSsl02() throws IOException {
+	public void testThroughSocks5SocketInterfaceUsingSsl02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = SocketIT.echoThroughSocket(
+		String returningString = SocketInterfaceIT.echoThroughSocketInterface(
 				string,
 				Socks5ClientFactory.newSocks5ClientUsingSsl(
-						SocketIT.LOOPBACK_ADDRESS.getHostAddress(), 
+						SocketInterfaceIT.LOOPBACK_ADDRESS.getHostAddress(), 
 						null),
 				ConfigurationFactory.newConfigurationUsingSsl());
 		assertEquals(string, returningString);		
 	}
 	
 	@Test
-	public void testThroughSocks5SocketUsingSsl03() throws IOException {
+	public void testThroughSocks5SocketInterfaceUsingSsl03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = SocketIT.echoThroughSocket(
+		String returningString = SocketInterfaceIT.echoThroughSocketInterface(
 				string,
 				Socks5ClientFactory.newSocks5ClientUsingSsl(
-						SocketIT.LOOPBACK_ADDRESS.getHostAddress(), 
+						SocketInterfaceIT.LOOPBACK_ADDRESS.getHostAddress(), 
 						null),
 				ConfigurationFactory.newConfigurationUsingSsl());
 		assertEquals(string, returningString);		
 	}
 	
 	@Test
-	public void testThroughSocks5SocketUsingSslAndRequestedClientAuth01() throws IOException {
+	public void testThroughSocks5SocketInterfaceUsingSslAndRequestedClientAuth01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = SocketIT.echoThroughSocket(
+		String returningString = SocketInterfaceIT.echoThroughSocketInterface(
 				string,
 				Socks5ClientFactory.newSocks5ClientUsingSsl(
-						SocketIT.LOOPBACK_ADDRESS.getHostAddress(), 
+						SocketInterfaceIT.LOOPBACK_ADDRESS.getHostAddress(), 
 						null),
 				ConfigurationFactory.newConfigurationUsingSslAndRequestedClientAuth());
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testThroughSocks5SocketUsingSslAndRequestedClientAuth02() throws IOException {
+	public void testThroughSocks5SocketInterfaceUsingSslAndRequestedClientAuth02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = SocketIT.echoThroughSocket(
+		String returningString = SocketInterfaceIT.echoThroughSocketInterface(
 				string,
 				Socks5ClientFactory.newSocks5ClientUsingSsl(
-						SocketIT.LOOPBACK_ADDRESS.getHostAddress(), 
+						SocketInterfaceIT.LOOPBACK_ADDRESS.getHostAddress(), 
 						null),
 				ConfigurationFactory.newConfigurationUsingSslAndRequestedClientAuth());
 		assertEquals(string, returningString);		
 	}
 
 	@Test
-	public void testThroughSocks5SocketUsingSslAndRequestedClientAuth03() throws IOException {
+	public void testThroughSocks5SocketInterfaceUsingSslAndRequestedClientAuth03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = SocketIT.echoThroughSocket(
+		String returningString = SocketInterfaceIT.echoThroughSocketInterface(
 				string,
 				Socks5ClientFactory.newSocks5ClientUsingSsl(
-						SocketIT.LOOPBACK_ADDRESS.getHostAddress(), 
+						SocketInterfaceIT.LOOPBACK_ADDRESS.getHostAddress(), 
 						null),
 				ConfigurationFactory.newConfigurationUsingSslAndRequestedClientAuth());
 		assertEquals(string, returningString);		
 	}
 	
 	@Test
-	public void testThroughSocks5SocketUsingSslAndRequiredClientAuth01() throws IOException {
+	public void testThroughSocks5SocketInterfaceUsingSslAndRequiredClientAuth01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = SocketIT.echoThroughSocket(
+		String returningString = SocketInterfaceIT.echoThroughSocketInterface(
 				string,
 				Socks5ClientFactory.newSocks5ClientUsingSslAndClientAuth(
-						SocketIT.LOOPBACK_ADDRESS.getHostAddress(), 
+						SocketInterfaceIT.LOOPBACK_ADDRESS.getHostAddress(), 
 						null),
 				ConfigurationFactory.newConfigurationUsingSslAndRequiredClientAuth());
 		assertEquals(string, returningString);
 	}
 	
 	@Test
-	public void testThroughSocks5SocketUsingSslAndRequiredClientAuth02() throws IOException {
+	public void testThroughSocks5SocketInterfaceUsingSslAndRequiredClientAuth02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = SocketIT.echoThroughSocket(
+		String returningString = SocketInterfaceIT.echoThroughSocketInterface(
 				string,
 				Socks5ClientFactory.newSocks5ClientUsingSslAndClientAuth(
-						SocketIT.LOOPBACK_ADDRESS.getHostAddress(), 
+						SocketInterfaceIT.LOOPBACK_ADDRESS.getHostAddress(), 
 						null),
 				ConfigurationFactory.newConfigurationUsingSslAndRequiredClientAuth());
 		assertEquals(string, returningString);		
 	}
 	
 	@Test
-	public void testThroughSocks5SocketUsingSslAndRequiredClientAuth03() throws IOException {
+	public void testThroughSocks5SocketInterfaceUsingSslAndRequiredClientAuth03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = SocketIT.echoThroughSocket(
+		String returningString = SocketInterfaceIT.echoThroughSocketInterface(
 				string,
 				Socks5ClientFactory.newSocks5ClientUsingSslAndClientAuth(
-						SocketIT.LOOPBACK_ADDRESS.getHostAddress(), 
+						SocketInterfaceIT.LOOPBACK_ADDRESS.getHostAddress(), 
 						null),
 				ConfigurationFactory.newConfigurationUsingSslAndRequiredClientAuth());
 		assertEquals(string, returningString);		

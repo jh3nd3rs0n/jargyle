@@ -17,6 +17,7 @@ import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.TrustManager;
 
 import argmatey.ArgMatey.CLI;
+import jargyle.common.net.DefaultServerSocketInterface;
 import jargyle.common.net.Host;
 import jargyle.common.net.Port;
 import jargyle.common.net.SocketSettings;
@@ -154,7 +155,8 @@ public final class SocksServer {
 			}
 			this.serverSocket = sslServerSocket;
 		}
-		this.socketSettings.applyTo(this.serverSocket);
+		this.socketSettings.applyTo(new DefaultServerSocketInterface(
+				this.serverSocket));
 		this.serverSocket.bind(new InetSocketAddress(
 				this.host.toInetAddress(), this.port.intValue()), this.backlog);
 		this.port = Port.newInstance(this.serverSocket.getLocalPort());

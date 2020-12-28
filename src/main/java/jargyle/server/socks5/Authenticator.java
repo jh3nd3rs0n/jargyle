@@ -3,7 +3,6 @@ package jargyle.server.socks5;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.Socket;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -16,8 +15,9 @@ import org.ietf.jgss.GSSException;
 import org.ietf.jgss.GSSManager;
 import org.ietf.jgss.MessageProp;
 
+import jargyle.common.net.SocketInterface;
 import jargyle.common.net.socks5.Method;
-import jargyle.common.net.socks5.gssapiauth.GssSocket;
+import jargyle.common.net.socks5.gssapiauth.GssSocketInterface;
 import jargyle.common.net.socks5.gssapiauth.GssapiProtectionLevel;
 import jargyle.common.net.socks5.gssapiauth.GssapiProtectionLevels;
 import jargyle.common.net.socks5.gssapiauth.Message;
@@ -31,16 +31,16 @@ import jargyle.server.SettingSpec;
 enum Authenticator {
 
 	DEFAULT_AUTHENTICATOR(Method.NO_ACCEPTABLE_METHODS) {
-		
+
 		@Override
-		public Socket authenticate(
-				final Socket socket, 
+		public SocketInterface authenticate(
+				final SocketInterface socketInterface, 
 				final Configuration configuration) throws IOException {
 			LOGGER.log(
 					Level.FINE, 
 					String.format(
 							"No acceptable authentication methods from %s", 
-							socket));
+							socketInterface));
 			return null;
 		}
 		
@@ -49,28 +49,30 @@ enum Authenticator {
 	GSSAPI_AUTHENTICATOR(Method.GSSAPI) {
 		
 		@Override
-		public Socket authenticate(
-				final Socket socket, 
+		public SocketInterface authenticate(
+				final SocketInterface socketInterface, 
 				final Configuration configuration) throws IOException {
 			GSSContext context = this.newContext();
-			if (!this.establishContext(socket, context, configuration)) {
+			if (!this.establishContext(
+					socketInterface, context, configuration)) {
 				return null;
 			}
 			GssapiProtectionLevel gssapiProtectionLevelChoice =
 					this.negotiateProtectionLevel(
-							socket, context, configuration);
+							socketInterface, context, configuration);
 			if (gssapiProtectionLevelChoice == null) { return null;	}
 			MessageProp msgProp = gssapiProtectionLevelChoice.newMessageProp();
-			Socket newSocket = new GssSocket(socket, context, msgProp);
+			SocketInterface newSocket = new GssSocketInterface(
+					socketInterface, context, msgProp);
 			return newSocket;
 		}
 		
 		private boolean establishContext(
-				final Socket socket,
+				final SocketInterface socketInterface,
 				final GSSContext context,
 				final Configuration configuration) throws IOException {
-			InputStream inStream = socket.getInputStream();
-			OutputStream outStream = socket.getOutputStream();
+			InputStream inStream = socketInterface.getInputStream();
+			OutputStream outStream = socketInterface.getOutputStream();
 			byte[] token = null;
 			while (!context.isEstablished()) {
 				Message message = Message.newInstanceFrom(inStream);
@@ -79,7 +81,7 @@ enum Authenticator {
 							Level.FINE, 
 							String.format(
 									"Client %s aborted process of context establishment", 
-									socket));
+									socketInterface));
 					return false;
 				}
 				token = message.getToken();
@@ -108,18 +110,18 @@ enum Authenticator {
 		}
 		
 		private GssapiProtectionLevel negotiateProtectionLevel(
-				final Socket socket, 
+				final SocketInterface socketInterface, 
 				final GSSContext context,
 				final Configuration configuration) throws IOException {
-			InputStream inStream = socket.getInputStream();
-			OutputStream outStream = socket.getOutputStream();
+			InputStream inStream = socketInterface.getInputStream();
+			OutputStream outStream = socketInterface.getOutputStream();
 			Message message = Message.newInstanceFrom(inStream);
 			if (message.getMessageType().equals(MessageType.ABORT)) {
 				LOGGER.log(
 						Level.FINE, 
 						String.format(
 								"Client %s aborted protection level negotiation", 
-								socket));
+								socketInterface));
 				return null;
 			}
 			boolean necReferenceImpl = configuration.getSettings().getLastValue(
@@ -187,18 +189,18 @@ enum Authenticator {
 					MessageType.PROTECTION_LEVEL_NEGOTIATION, 
 					token).toByteArray());
 			outStream.flush();
-			if (socket.isClosed()) {
+			if (socketInterface.isClosed()) {
 				LOGGER.log(
 						Level.FINE, 
 						String.format(
 								"Client %s closed due to client finding "
 								+ "choice of protection level unacceptable", 
-								socket));
+								socketInterface));
 				return null;
 			}
 			return gssapiProtectionLevelChoice;
 		}
-		
+
 		private GSSContext newContext() throws IOException {
 			GSSManager manager = GSSManager.getInstance();
 			GSSContext context = null;
@@ -213,24 +215,24 @@ enum Authenticator {
 	},
 	
 	PERMISSIVE_AUTHENTICATOR(Method.NO_AUTHENTICATION_REQUIRED) {
-		
+
 		@Override
-		public Socket authenticate(
-				final Socket socket, 
+		public SocketInterface authenticate(
+				final SocketInterface socketInterface, 
 				final Configuration configuration) throws IOException {
-			return socket;
+			return socketInterface;
 		}
 		
 	},
 	
 	USERNAME_PASSWORD_AUTHENTICATOR(Method.USERNAME_PASSWORD) {
-		
+
 		@Override
-		public Socket authenticate(
-				final Socket socket, 
+		public SocketInterface authenticate(
+				final SocketInterface socketInterface, 
 				final Configuration configuration) throws IOException {
-			InputStream inputStream = socket.getInputStream();
-			OutputStream outputStream = socket.getOutputStream();
+			InputStream inputStream = socketInterface.getInputStream();
+			OutputStream outputStream = socketInterface.getOutputStream();
 			UsernamePasswordRequest usernamePasswordReq = 
 					UsernamePasswordRequest.newInstanceFrom(inputStream);
 			UsernamePasswordResponse usernamePasswordResp = null;
@@ -252,14 +254,14 @@ enum Authenticator {
 						Level.INFO, 
 						String.format(
 								"Invalid username password from %s", 
-								socket));
+								socketInterface));
 				return null;
 			}
 			usernamePasswordResp = UsernamePasswordResponse.newInstance(
 					UsernamePasswordResponse.STATUS_SUCCESS);
 			outputStream.write(usernamePasswordResp.toByteArray());
 			outputStream.flush();
-			return socket;
+			return socketInterface;
 		}
 		
 	};
@@ -298,8 +300,8 @@ enum Authenticator {
 		this.methodValue = methValue;
 	}
 	
-	public abstract Socket authenticate(
-			final Socket socket, 
+	public abstract SocketInterface authenticate(
+			final SocketInterface socketInterface,
 			final Configuration configuration) throws IOException;
 	
 	public Method methodValue() {

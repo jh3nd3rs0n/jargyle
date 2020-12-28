@@ -4,13 +4,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InterruptedIOException;
 import java.io.OutputStream;
-import java.net.Socket;
 import java.net.SocketException;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import jargyle.common.net.SocketInterface;
 
 public final class TcpRelayServer {
 
@@ -21,19 +22,19 @@ public final class TcpRelayServer {
 		
 		private final TcpRelayServer tcpRelayServer;
 		private final InputStream input;
-		private final Socket inputSocket;
+		private final SocketInterface inputSocketInterface;
 		private final OutputStream output;
-		private final Socket outputSocket;
+		private final SocketInterface outputSocketInterface;
 				
 		public DataWorker(
 				final TcpRelayServer server,
-				final Socket inSocket,
-				final Socket outSocket) throws IOException {
+				final SocketInterface inSocketInterface,
+				final SocketInterface outSocketInterface) throws IOException {
 			this.tcpRelayServer = server;
-			this.input = inSocket.getInputStream();
-			this.inputSocket = inSocket;
-			this.output = outSocket.getOutputStream();
-			this.outputSocket = outSocket;
+			this.input = inSocketInterface.getInputStream();
+			this.inputSocketInterface = inSocketInterface;
+			this.output = outSocketInterface.getOutputStream();
+			this.outputSocketInterface = outSocketInterface;
 		}
 		
 		private String format(final String message) {
@@ -123,10 +124,10 @@ public final class TcpRelayServer {
 		public String toString() {
 			StringBuilder builder = new StringBuilder();
 			builder.append(this.getClass().getSimpleName())
-				.append(" [inputSocket=")
-				.append(this.inputSocket)
-				.append(", outputSocket=")
-				.append(this.outputSocket)
+				.append(" [inputSocketInterface=")
+				.append(this.inputSocketInterface)
+				.append(", outputSocketInterface=")
+				.append(this.outputSocketInterface)
 				.append("]");
 			return builder.toString();
 		}
@@ -139,8 +140,8 @@ public final class TcpRelayServer {
 				final TcpRelayServer server) throws IOException {
 			super(
 					server, 
-					server.serverSocket, 
-					server.clientSocket);
+					server.serverSocketInterface, 
+					server.clientSocketInterface);
 		}
 		
 	}
@@ -151,41 +152,45 @@ public final class TcpRelayServer {
 				final TcpRelayServer server) throws IOException {
 			super(
 					server, 
-					server.clientSocket, 
-					server.serverSocket);
+					server.clientSocketInterface, 
+					server.serverSocketInterface);
 		}
 		
 	}
 	
-	private final Socket clientSocket;
+	private final SocketInterface clientSocketInterface;
 	private final int bufferSize;
 	private ExecutorService executor;
 	private boolean firstDataWorkerFinished;
 	private long lastReadTime;
-	private final Socket serverSocket;
+	private final SocketInterface serverSocketInterface;
 	private boolean started;
 	private boolean stopped;
 	private final int timeout;
 	
 	public TcpRelayServer(
-			final Socket clientSock, 
-			final Socket serverSock, 
+			final SocketInterface clientSockInterface, 
+			final SocketInterface serverSockInterface, 
 			final int bffrSize, 
 			final int tmt) {
-		Objects.requireNonNull(clientSock, "client socket must not be null");
-		Objects.requireNonNull(serverSock, "server-facing socket must not be null");
+		Objects.requireNonNull(
+				clientSockInterface, 
+				"client socket interface must not be null");
+		Objects.requireNonNull(
+				serverSockInterface, 
+				"server-facing socket interface must not be null");
 		if (bffrSize < 1) {
 			throw new IllegalArgumentException("buffer size must not be less than 1");
 		}
 		if (tmt < 1) {
 			throw new IllegalArgumentException("timeout must not be less than 1");
 		}
-		this.clientSocket = clientSock;
+		this.clientSocketInterface = clientSockInterface;
 		this.bufferSize = bffrSize;
 		this.executor = null;
 		this.firstDataWorkerFinished = false;
 		this.lastReadTime = 0L;
-		this.serverSocket = serverSock;
+		this.serverSocketInterface = serverSockInterface;
 		this.started = false;
 		this.stopped = true;
 		this.timeout = tmt;

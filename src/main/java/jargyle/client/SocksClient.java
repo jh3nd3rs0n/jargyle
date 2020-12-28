@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.Socket;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -16,11 +15,14 @@ import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 
-import jargyle.common.net.DatagramSocketFactory;
+import jargyle.common.net.DatagramSocketInterfaceFactory;
+import jargyle.common.net.DefaultSocketInterface;
 import jargyle.common.net.Host;
 import jargyle.common.net.Port;
-import jargyle.common.net.ServerSocketFactory;
-import jargyle.common.net.SocketFactory;
+import jargyle.common.net.ServerSocketInterfaceFactory;
+import jargyle.common.net.SocketInterface;
+import jargyle.common.net.SocketInterfaceFactory;
+import jargyle.common.net.SocketInterfaceSocketAdapter;
 import jargyle.common.net.ssl.CipherSuites;
 import jargyle.common.net.ssl.KeyManagersFactory;
 import jargyle.common.net.ssl.Protocols;
@@ -50,50 +52,51 @@ public abstract class SocksClient {
 		this.properties = props;
 	}
 	
-	public Socket connectToSocksServerWith(
-			final Socket socket) throws IOException {
+	public SocketInterface connectToSocksServerWith(
+			final SocketInterface socketInterface) throws IOException {
 		return this.connectToSocksServerWith(
-				socket, 
+				socketInterface, 
 				this.properties.getValue(PropertySpec.CONNECT_TIMEOUT, 
 						PositiveInteger.class).intValue(), 
 				false);
 	}
 	
-	public Socket connectToSocksServerWith(
-			final Socket socket, 
+	public SocketInterface connectToSocksServerWith(
+			final SocketInterface socketInterface, 
 			final boolean bindBeforeConnect) throws IOException {
 		return this.connectToSocksServerWith(
-				socket, 
+				socketInterface, 
 				this.properties.getValue(PropertySpec.CONNECT_TIMEOUT, 
 						PositiveInteger.class).intValue(), 
 				bindBeforeConnect);
 	}
 	
-	public Socket connectToSocksServerWith(
-			final Socket socket, final int timeout) throws IOException {
-		return this.connectToSocksServerWith(socket, timeout, false);
+	public SocketInterface connectToSocksServerWith(
+			final SocketInterface socketInterface, 
+			final int timeout) throws IOException {
+		return this.connectToSocksServerWith(socketInterface, timeout, false);
 	}
 	
-	public Socket connectToSocksServerWith(
-			final Socket socket, 
+	public SocketInterface connectToSocksServerWith(
+			final SocketInterface socketInterface, 
 			final int timeout, 
 			final boolean bindBeforeConnect) throws IOException {
 		if (bindBeforeConnect) {
-			socket.bind(new InetSocketAddress(
+			socketInterface.bind(new InetSocketAddress(
 					InetAddress.getByName(this.properties.getValue(
 							PropertySpec.BIND_HOST, Host.class).toString()), 
 					this.properties.getValue(
 							PropertySpec.BIND_PORT, Port.class).intValue()));
 		}
 		SocksServerUri socksServerUri = this.getSocksServerUri();
-		socket.connect(
+		socketInterface.connect(
 				new InetSocketAddress(
 						InetAddress.getByName(socksServerUri.getHost()), 
 						socksServerUri.getPort()), 
 				timeout);
 		if (!this.properties.getValue(
 				PropertySpec.SSL_ENABLED, Boolean.class).booleanValue()) {
-			return socket;
+			return socketInterface;
 		}
 		SSLContext sslContext = null;
 		String protocol = this.properties.getValue(
@@ -136,7 +139,7 @@ public abstract class SocksClient {
 		}
 		SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
 		SSLSocket sslSocket = (SSLSocket) sslSocketFactory.createSocket(
-				socket, 
+				new SocketInterfaceSocketAdapter(socketInterface), 
 				socksServerUri.getHost(), 
 				socksServerUri.getPort(), 
 				true); 
@@ -152,7 +155,7 @@ public abstract class SocksClient {
 		if (protocols.length > 0) {
 			sslSocket.setEnabledProtocols(protocols);
 		}
-		return sslSocket;
+		return new DefaultSocketInterface(sslSocket);
 	}
 	
 	public final Properties getProperties() {
@@ -163,11 +166,11 @@ public abstract class SocksClient {
 		return this.socksServerUri;
 	}
 	
-	public abstract DatagramSocketFactory newDatagramSocketFactory();
+	public abstract DatagramSocketInterfaceFactory newDatagramSocketInterfaceFactory();
 	
-	public abstract ServerSocketFactory newServerSocketFactory();
+	public abstract ServerSocketInterfaceFactory newServerSocketInterfaceFactory();
 	
-	public abstract SocketFactory newSocketFactory();
+	public abstract SocketInterfaceFactory newSocketInterfaceFactory();
 
 	@Override
 	public String toString() {

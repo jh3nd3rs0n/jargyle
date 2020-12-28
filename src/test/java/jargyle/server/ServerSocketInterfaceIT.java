@@ -23,8 +23,14 @@ import org.junit.Test;
 
 import jargyle.TestStringConstants;
 import jargyle.client.SocksClient;
+import jargyle.common.net.DefaultServerSocketInterfaceFactory;
+import jargyle.common.net.DefaultSocketInterfaceFactory;
+import jargyle.common.net.ServerSocketInterface;
+import jargyle.common.net.ServerSocketInterfaceFactory;
+import jargyle.common.net.SocketInterface;
+import jargyle.common.net.SocketInterfaceFactory;
 
-public class ServerSocketIT {
+public class ServerSocketInterfaceIT {
 
 	private static final class EchoServer {
 		
@@ -177,15 +183,15 @@ public class ServerSocketIT {
 	private static final int SERVER_PORT = 5678;
 	private static final int SLEEP_TIME = 500; // 1/2 second
 
-	public static String echoThroughServerSocket(
+	public static String echoThroughServerSocketInterface(
 			final String string, 
 			final SocksClient socksClient, 
 			final Configuration configuration) throws IOException {
 		String returningString = null;
 		SocksServer socksServer = null;
 		EchoServer echoServer = null;
-		Socket echoSocket = null;
-		Socket socket = null;
+		SocketInterface echoSocketInterface = null;
+		SocketInterface socketInterface = null;
 		try {
 			if (configuration != null) {
 				socksServer = new SocksServer(
@@ -194,44 +200,46 @@ public class ServerSocketIT {
 			}
 			echoServer = new EchoServer(ECHO_SERVER_PORT, string);
 			echoServer.start();
-			jargyle.common.net.SocketFactory socketFactory =
-					jargyle.common.net.SocketFactory.newInstance();
+			SocketInterfaceFactory socketInterfaceFactory =
+					new DefaultSocketInterfaceFactory();
 			if (socksClient != null) {
-				socketFactory = socksClient.newSocketFactory();
+				socketInterfaceFactory = socksClient.newSocketInterfaceFactory();
 			}
-			echoSocket = socketFactory.newSocket();
-			echoSocket.connect(new InetSocketAddress(
+			echoSocketInterface = socketInterfaceFactory.newSocketInterface();
+			echoSocketInterface.connect(new InetSocketAddress(
 					LOOPBACK_ADDRESS, echoServer.getPort()));
-			OutputStream out = echoSocket.getOutputStream();
+			OutputStream out = echoSocketInterface.getOutputStream();
 			PrintWriter writer = new PrintWriter(out, true);
-			jargyle.common.net.ServerSocketFactory serverSocketFactory =
-					jargyle.common.net.ServerSocketFactory.newInstance();
+			ServerSocketInterfaceFactory serverSocketInterfaceFactory =
+					 new DefaultServerSocketInterfaceFactory();
 			if (socksClient != null) {
-				serverSocketFactory = socksClient.newServerSocketFactory();
+				serverSocketInterfaceFactory = 
+						socksClient.newServerSocketInterfaceFactory();
 			}
-			ServerSocket serverSocket = serverSocketFactory.newServerSocket();
-			serverSocket.bind(new InetSocketAddress(
+			ServerSocketInterface serverSocketInterface = 
+					serverSocketInterfaceFactory.newServerSocketInterface();
+			serverSocketInterface.bind(new InetSocketAddress(
 					(InetAddress) null, SERVER_PORT));
 			writer.println(String.format(
 					"%s:%s", 
-					serverSocket.getInetAddress().getHostAddress(), 
-					serverSocket.getLocalPort()));
+					serverSocketInterface.getInetAddress().getHostAddress(), 
+					serverSocketInterface.getLocalPort()));
 			try {
-				socket = serverSocket.accept();
+				socketInterface = serverSocketInterface.accept();
 			} finally {
-				serverSocket.close();
+				serverSocketInterface.close();
 			}
-			InputStream socketIn = socket.getInputStream();
-			OutputStream socketOut = socket.getOutputStream();
+			InputStream socketIn = socketInterface.getInputStream();
+			OutputStream socketOut = socketInterface.getOutputStream();
 			byte[] b = IoHelper.readFrom(socketIn);
 			String str = new String(b);
 			IoHelper.writeThenFlush(str.getBytes(), socketOut);
 		} finally {
-			if (socket != null) {
-				socket.close();
+			if (socketInterface != null) {
+				socketInterface.close();
 			}
-			if (echoSocket != null) {
-				echoSocket.close();
+			if (echoSocketInterface != null) {
+				echoSocketInterface.close();
 			}
 			if (echoServer != null && echoServer.isStarted()) {
 				echoServer.stop();
@@ -252,23 +260,23 @@ public class ServerSocketIT {
 	}
 
 	@Test
-	public void testThroughServerSocket01() throws IOException {
+	public void testThroughServerSocketInterface01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = echoThroughServerSocket(string, null, null);
+		String returningString = echoThroughServerSocketInterface(string, null, null);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testThroughServerSocket02() throws IOException {
+	public void testThroughServerSocketInterface02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = echoThroughServerSocket(string, null, null);
+		String returningString = echoThroughServerSocketInterface(string, null, null);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testThroughServerSocket03() throws IOException {
+	public void testThroughServerSocketInterface03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = echoThroughServerSocket(string, null, null);
+		String returningString = echoThroughServerSocketInterface(string, null, null);
 		assertEquals(string, returningString);
 	}
 

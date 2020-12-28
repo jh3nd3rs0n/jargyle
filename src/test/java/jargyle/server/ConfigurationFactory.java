@@ -1,6 +1,7 @@
 package jargyle.server;
 
 import jargyle.ResourceHelper;
+import jargyle.ResourceNameConstants;
 import jargyle.common.net.socks5.AuthMethod;
 import jargyle.common.net.socks5.AuthMethods;
 import jargyle.server.socks5.StringSourceUsernamePasswordAuthenticator;
@@ -49,9 +50,51 @@ public final class ConfigurationFactory {
 		builder.settings(Settings.newInstance(
 				SettingSpec.SSL_ENABLED.newSetting(Boolean.TRUE),
 				SettingSpec.SSL_KEY_STORE_FILE.newSetting(
-						ResourceHelper.getServerKeyStoreFile()),
+						ResourceHelper.getResourceAsFile(
+								ResourceNameConstants.SERVER_KEY_STORE_FILE)),
 				SettingSpec.SSL_KEY_STORE_PASSWORD.newSetting(
-						ResourceHelper.getServerKeyStorePassword())));
+						ResourceHelper.getResourceAsString(
+								ResourceNameConstants.SERVER_KEY_STORE_PASSWORD_FILE))));
+		return builder.build();
+	}
+	
+	public static Configuration newConfigurationUsingSslAndRequestedClientAuth() {
+		ImmutableConfiguration.Builder builder = new ImmutableConfiguration.Builder();
+		builder.settings(Settings.newInstance(
+				SettingSpec.SSL_ENABLED.newSetting(Boolean.TRUE),
+				SettingSpec.SSL_KEY_STORE_FILE.newSetting(
+						ResourceHelper.getResourceAsFile(
+								ResourceNameConstants.SERVER_KEY_STORE_FILE)),
+				SettingSpec.SSL_KEY_STORE_PASSWORD.newSetting(
+						ResourceHelper.getResourceAsString(
+								ResourceNameConstants.SERVER_KEY_STORE_PASSWORD_FILE)),
+				SettingSpec.SSL_TRUST_STORE_FILE.newSetting(
+						ResourceHelper.getResourceAsFile(
+								ResourceNameConstants.CLIENT_KEY_STORE_FILE)),
+				SettingSpec.SSL_TRUST_STORE_PASSWORD.newSetting(
+						ResourceHelper.getResourceAsString(
+								ResourceNameConstants.CLIENT_KEY_STORE_PASSWORD_FILE)),
+				SettingSpec.SSL_WANT_CLIENT_AUTH.newSetting(Boolean.TRUE)));
+		return builder.build();
+	}
+	
+	public static Configuration newConfigurationUsingSslAndRequiredClientAuth() {
+		ImmutableConfiguration.Builder builder = new ImmutableConfiguration.Builder();
+		builder.settings(Settings.newInstance(
+				SettingSpec.SSL_ENABLED.newSetting(Boolean.TRUE),
+				SettingSpec.SSL_KEY_STORE_FILE.newSetting(
+						ResourceHelper.getResourceAsFile(
+								ResourceNameConstants.SERVER_KEY_STORE_FILE)),
+				SettingSpec.SSL_KEY_STORE_PASSWORD.newSetting(
+						ResourceHelper.getResourceAsString(
+								ResourceNameConstants.SERVER_KEY_STORE_PASSWORD_FILE)),
+				SettingSpec.SSL_NEED_CLIENT_AUTH.newSetting(Boolean.TRUE),
+				SettingSpec.SSL_TRUST_STORE_FILE.newSetting(
+						ResourceHelper.getResourceAsFile(
+								ResourceNameConstants.CLIENT_KEY_STORE_FILE)),
+				SettingSpec.SSL_TRUST_STORE_PASSWORD.newSetting(
+						ResourceHelper.getResourceAsString(
+								ResourceNameConstants.CLIENT_KEY_STORE_PASSWORD_FILE))));
 		return builder.build();
 	}
 	

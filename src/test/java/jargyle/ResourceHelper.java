@@ -8,40 +8,33 @@ import java.net.URISyntaxException;
 import java.net.URL;
 
 public final class ResourceHelper {
-
-	private static final String SERVER_KEY_STORE_FILE = 
-			"jargyle/server/server.jks";
-	private static final String SERVER_KEY_STORE_PASSWORD_FILE = 
-			"jargyle/server/server.jks.password";
 	
-	public static File getServerKeyStoreFile() {
+	public static File getResourceAsFile(final String name) {
 		ClassLoader classLoader = ResourceHelper.class.getClassLoader();
-		URL keyStoreUrl = classLoader.getResource(SERVER_KEY_STORE_FILE);
-		File keyStoreFile = null;
+		URL url = classLoader.getResource(name);
+		File file = null;
 		try {
-			keyStoreFile = new File(keyStoreUrl.toURI());
+			file = new File(url.toURI());
 		} catch (URISyntaxException e) {
 			throw new AssertionError(e);
 		}
-		return keyStoreFile;
+		return file;
 	}
 	
-	public static String getServerKeyStorePassword() {
+	public static String getResourceAsString(final String name) {
 		ClassLoader classLoader = ResourceHelper.class.getClassLoader();
-		String keyStorePassword = null;
-		try (InputStream keyStorePasswordIn = classLoader.getResourceAsStream(
-				SERVER_KEY_STORE_PASSWORD_FILE)) {
-			ByteArrayOutputStream keyStorePasswordOut = 
-					new ByteArrayOutputStream();
+		String string = null;
+		try (InputStream in = classLoader.getResourceAsStream(name)) {
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			int b = -1;
-			while ((b = keyStorePasswordIn.read()) != -1) {
-				keyStorePasswordOut.write(b);
+			while ((b = in.read()) != -1) {
+				out.write(b);
 			}
-			keyStorePassword = new String(keyStorePasswordOut.toByteArray());
+			string = new String(out.toByteArray());
 		} catch (IOException e) {
 			throw new AssertionError(e);
 		}
-		return keyStorePassword;
+		return string;
 	}
 	
 	private ResourceHelper() { }

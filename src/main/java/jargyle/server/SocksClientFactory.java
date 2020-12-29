@@ -97,8 +97,10 @@ public final class SocksClientFactory {
 				sslEnabledProtocols));
 		File sslKeyStoreFile = settings.getLastValue(
 				SettingSpec.EXTERNAL_CLIENT_SSL_KEY_STORE_FILE, File.class);
-		properties.add(PropertySpec.SSL_KEY_STORE_FILE.newProperty(
-				sslKeyStoreFile));
+		if (sslKeyStoreFile != null) {
+			properties.add(PropertySpec.SSL_KEY_STORE_FILE.newProperty(
+					sslKeyStoreFile));
+		}
 		EncryptedPassword sslKeyStorePassword = settings.getLastValue(
 				SettingSpec.EXTERNAL_CLIENT_SSL_KEY_STORE_PASSWORD, 
 				EncryptedPassword.class);
@@ -113,8 +115,10 @@ public final class SocksClientFactory {
 		properties.add(PropertySpec.SSL_PROTOCOL.newProperty(sslProtocol));
 		File sslTrustStoreFile = settings.getLastValue(
 				SettingSpec.EXTERNAL_CLIENT_SSL_TRUST_STORE_FILE, File.class);
-		properties.add(PropertySpec.SSL_TRUST_STORE_FILE.newProperty(
-				sslTrustStoreFile));
+		if (sslTrustStoreFile != null) {
+			properties.add(PropertySpec.SSL_TRUST_STORE_FILE.newProperty(
+					sslTrustStoreFile));
+		}
 		EncryptedPassword sslTrustStorePassword = settings.getLastValue(
 				SettingSpec.EXTERNAL_CLIENT_SSL_TRUST_STORE_PASSWORD, 
 				EncryptedPassword.class);

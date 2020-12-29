@@ -36,6 +36,7 @@ public final class Socks5ServerSocketInterface extends ServerSocketInterface {
 		private InetAddress remoteInetAddress;
 		private int remotePort;
 		private SocketAddress remoteSocketAddress;
+		private final Socks5Client socks5Client;
 		
 		public AcceptedSocks5SocketInterface(
 				final Socks5SocketInterface socks5SocketInterface, 
@@ -51,6 +52,7 @@ public final class Socks5ServerSocketInterface extends ServerSocketInterface {
 			this.remoteInetAddress = address;
 			this.remotePort = port;
 			this.remoteSocketAddress = new InetSocketAddress(address, port);
+			this.socks5Client = socks5SocketInterface.getSocks5Client();
 		}
 		
 
@@ -125,6 +127,20 @@ public final class Socks5ServerSocketInterface extends ServerSocketInterface {
 		@Override
 		public SocketAddress getRemoteSocketAddress() {
 			return this.remoteSocketAddress;
+		}
+
+		@Override
+		public String toString() {
+			StringBuilder builder = new StringBuilder();
+			builder.append(this.getClass().getSimpleName())
+				.append(" [socks5Client=")
+				.append(this.socks5Client)
+				.append(", getLocalSocketAddress()=")
+				.append(this.getLocalSocketAddress())
+				.append(", getRemoteSocketAddress()=")
+				.append(this.getRemoteSocketAddress())
+				.append("]");
+			return builder.toString();
 		}
 		
 	}

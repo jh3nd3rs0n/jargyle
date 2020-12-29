@@ -16,7 +16,7 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 
 import jargyle.common.net.DatagramSocketInterfaceFactory;
-import jargyle.common.net.DefaultSocketInterface;
+import jargyle.common.net.DirectSocketInterface;
 import jargyle.common.net.Host;
 import jargyle.common.net.Port;
 import jargyle.common.net.ServerSocketInterfaceFactory;
@@ -155,7 +155,7 @@ public abstract class SocksClient {
 		if (protocols.length > 0) {
 			sslSocket.setEnabledProtocols(protocols);
 		}
-		return new DefaultSocketInterface(sslSocket);
+		return new DirectSocketInterface(sslSocket);
 	}
 	
 	public final Properties getProperties() {

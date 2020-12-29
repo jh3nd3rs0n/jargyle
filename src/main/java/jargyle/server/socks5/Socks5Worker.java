@@ -16,10 +16,10 @@ import java.util.logging.Logger;
 import jargyle.client.SocksClient;
 import jargyle.common.net.DatagramSocketInterface;
 import jargyle.common.net.DatagramSocketInterfaceFactory;
-import jargyle.common.net.DefaultDatagramSocketInterface;
-import jargyle.common.net.DefaultDatagramSocketInterfaceFactory;
-import jargyle.common.net.DefaultServerSocketInterfaceFactory;
-import jargyle.common.net.DefaultSocketInterfaceFactory;
+import jargyle.common.net.DirectDatagramSocketInterface;
+import jargyle.common.net.DirectDatagramSocketInterfaceFactory;
+import jargyle.common.net.DirectServerSocketInterfaceFactory;
+import jargyle.common.net.DirectSocketInterfaceFactory;
 import jargyle.common.net.Host;
 import jargyle.common.net.ServerSocketInterface;
 import jargyle.common.net.ServerSocketInterfaceFactory;
@@ -420,7 +420,7 @@ public final class Socks5Worker implements Runnable {
 				socks5Req.getDesiredDestinationAddress();
 		int desiredDestinationPort = socks5Req.getDesiredDestinationPort();
 		ServerSocketInterfaceFactory serverSocketInterfaceFactory = 
-				new DefaultServerSocketInterfaceFactory();
+				new DirectServerSocketInterfaceFactory();
 		if (this.socksClient != null) {
 			serverSocketInterfaceFactory = 
 					this.socksClient.newServerSocketInterfaceFactory();
@@ -535,7 +535,7 @@ public final class Socks5Worker implements Runnable {
 		String desiredDestinationAddress = 
 				socks5Req.getDesiredDestinationAddress();
 		int desiredDestinationPort = socks5Req.getDesiredDestinationPort();
-		SocketInterfaceFactory socketFactory = new DefaultSocketInterfaceFactory();
+		SocketInterfaceFactory socketFactory = new DirectSocketInterfaceFactory();
 		if (this.socksClient != null) {
 			socketFactory = this.socksClient.newSocketInterfaceFactory();
 		}
@@ -704,7 +704,7 @@ public final class Socks5Worker implements Runnable {
 					SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_CLIENT_BIND_HOST, 
 					Host.class);
 			InetAddress bindInetAddress = bindHost.toInetAddress();
-			clientDatagramSockInterface = new DefaultDatagramSocketInterface(
+			clientDatagramSockInterface = new DirectDatagramSocketInterface(
 					new DatagramSocket(new InetSocketAddress(bindInetAddress, 0)));
 			/*
 			if (this.settings.getLastValue(
@@ -751,7 +751,7 @@ public final class Socks5Worker implements Runnable {
 					Host.class);
 			InetAddress bindInetAddress = bindHost.toInetAddress();
 			DatagramSocketInterfaceFactory datagramSocketInterfaceFactory = 
-					new DefaultDatagramSocketInterfaceFactory();
+					new DirectDatagramSocketInterfaceFactory();
 			if (this.socksClient != null) {
 				datagramSocketInterfaceFactory = 
 						this.socksClient.newDatagramSocketInterfaceFactory();

@@ -10,7 +10,7 @@ import java.net.SocketAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
-import jargyle.common.net.DefaultSocketInterface;
+import jargyle.common.net.DirectSocketInterface;
 import jargyle.common.net.SocketInterface;
 import jargyle.common.net.socks5.AddressType;
 import jargyle.common.net.socks5.Command;
@@ -112,7 +112,7 @@ public final class Socks5SocketInterface extends SocketInterface {
 		this.socks5SocketInterfaceImpl = new Socks5SocketInterfaceImpl(
 				client,
 				null,
-				new DefaultSocketInterface(new Socket())); 
+				new DirectSocketInterface(new Socket())); 
 	}
 	
 	public Socks5SocketInterface(
@@ -122,7 +122,7 @@ public final class Socks5SocketInterface extends SocketInterface {
 		this.socks5SocketInterfaceImpl = new Socks5SocketInterfaceImpl(
 				client,
 				null,
-				new DefaultSocketInterface(new Socket()));
+				new DirectSocketInterface(new Socket()));
 		this.socks5SocketInterfaceImpl.socks5Connect(address, port, 0);
 	}
 	
@@ -135,7 +135,7 @@ public final class Socks5SocketInterface extends SocketInterface {
 		this.socks5SocketInterfaceImpl = new Socks5SocketInterfaceImpl(
 				client,
 				null,
-				new DefaultSocketInterface(new Socket()));
+				new DirectSocketInterface(new Socket()));
 		this.socks5SocketInterfaceImpl.socketInterface.bind(
 				new InetSocketAddress(localAddr, localPort));
 		this.socks5SocketInterfaceImpl.socks5Connect(address, port, 0);
@@ -158,7 +158,7 @@ public final class Socks5SocketInterface extends SocketInterface {
 		this.socks5SocketInterfaceImpl = new Socks5SocketInterfaceImpl(
 				client,
 				null,
-				new DefaultSocketInterface(new Socket()));
+				new DirectSocketInterface(new Socket()));
 		this.socks5SocketInterfaceImpl.socks5Connect(
 				InetAddress.getByName(host), port, 0);
 	}
@@ -172,7 +172,7 @@ public final class Socks5SocketInterface extends SocketInterface {
 		this.socks5SocketInterfaceImpl = new Socks5SocketInterfaceImpl(
 				client,
 				null,
-				new DefaultSocketInterface(new Socket()));		
+				new DirectSocketInterface(new Socket()));		
 		this.socks5SocketInterfaceImpl.socketInterface.bind(
 				new InetSocketAddress(localAddr, localPort));
 		this.socks5SocketInterfaceImpl.socks5Connect(

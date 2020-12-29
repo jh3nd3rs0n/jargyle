@@ -10,7 +10,7 @@ import java.net.SocketAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
-import jargyle.common.net.DefaultSocketInterface;
+import jargyle.common.net.DirectSocketInterface;
 import jargyle.common.net.FilterSocketInterface;
 import jargyle.common.net.PerformancePreferences;
 import jargyle.common.net.ServerSocketInterface;
@@ -147,7 +147,7 @@ public final class Socks5ServerSocketInterface extends ServerSocketInterface {
 		public Socks5ServerSocketInterfaceImpl(
 				final Socks5Client client) throws IOException {
 			SocketInterface sockInterface = 
-					new DefaultSocketInterface(new Socket());
+					new DirectSocketInterface(new Socket());
 			this.bound = false;
 			this.closed = false;
 			this.localInetAddress = null;
@@ -185,7 +185,7 @@ public final class Socks5ServerSocketInterface extends ServerSocketInterface {
 						socks5Rep.getServerBoundPort(),
 						this.localInetAddress,
 						this.localPort);
-				SocketInterface newSocketInterface = new DefaultSocketInterface(
+				SocketInterface newSocketInterface = new DirectSocketInterface(
 						new Socket());
 				this.socketSettings.applyTo(newSocketInterface);
 				this.originalSocketInterface = newSocketInterface;

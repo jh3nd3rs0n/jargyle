@@ -4,32 +4,32 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 
-public final class DefaultServerSocketInterfaceFactory 
+public final class DirectServerSocketInterfaceFactory 
 	extends ServerSocketInterfaceFactory {
 	
-	public DefaultServerSocketInterfaceFactory() { }
+	public DirectServerSocketInterfaceFactory() { }
 	
 	@Override
 	public ServerSocketInterface newServerSocketInterface() throws IOException {
-		return new DefaultServerSocketInterface(new ServerSocket());
+		return new DirectServerSocketInterface(new ServerSocket());
 	}
 
 	@Override
 	public ServerSocketInterface newServerSocketInterface(
 			int port) throws IOException {
-		return new DefaultServerSocketInterface(new ServerSocket(port));
+		return new DirectServerSocketInterface(new ServerSocket(port));
 	}
 
 	@Override
 	public ServerSocketInterface newServerSocketInterface(
 			int port, int backlog) throws IOException {
-		return new DefaultServerSocketInterface(new ServerSocket(port, backlog));
+		return new DirectServerSocketInterface(new ServerSocket(port, backlog));
 	}
 
 	@Override
 	public ServerSocketInterface newServerSocketInterface(
 			int port, int backlog, InetAddress bindAddr) throws IOException {
-		return new DefaultServerSocketInterface(new ServerSocket(
+		return new DirectServerSocketInterface(new ServerSocket(
 				port, backlog, bindAddr));
 	}
 

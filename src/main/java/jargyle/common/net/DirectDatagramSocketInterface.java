@@ -7,11 +7,11 @@ import java.net.InetAddress;
 import java.net.SocketAddress;
 import java.net.SocketException;
 
-public final class DefaultDatagramSocketInterface extends DatagramSocketInterface {
+public final class DirectDatagramSocketInterface extends DatagramSocketInterface {
 	
 	private final DatagramSocket datagramSocket;
 	
-	public DefaultDatagramSocketInterface(final DatagramSocket datagramSock) {
+	public DirectDatagramSocketInterface(final DatagramSocket datagramSock) {
 		this.datagramSocket = datagramSock;
 	}
 	

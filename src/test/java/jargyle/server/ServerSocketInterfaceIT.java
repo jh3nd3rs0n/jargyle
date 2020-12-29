@@ -24,8 +24,8 @@ import org.junit.Test;
 import jargyle.IoHelper;
 import jargyle.TestStringConstants;
 import jargyle.client.SocksClient;
-import jargyle.common.net.DefaultServerSocketInterfaceFactory;
-import jargyle.common.net.DefaultSocketInterfaceFactory;
+import jargyle.common.net.DirectServerSocketInterfaceFactory;
+import jargyle.common.net.DirectSocketInterfaceFactory;
 import jargyle.common.net.ServerSocketInterface;
 import jargyle.common.net.ServerSocketInterfaceFactory;
 import jargyle.common.net.SocketInterface;
@@ -202,7 +202,7 @@ public class ServerSocketInterfaceIT {
 			echoServer = new EchoServer(ECHO_SERVER_PORT, string);
 			echoServer.start();
 			SocketInterfaceFactory socketInterfaceFactory =
-					new DefaultSocketInterfaceFactory();
+					new DirectSocketInterfaceFactory();
 			if (socksClient != null) {
 				socketInterfaceFactory = socksClient.newSocketInterfaceFactory();
 			}
@@ -212,7 +212,7 @@ public class ServerSocketInterfaceIT {
 			OutputStream out = echoSocketInterface.getOutputStream();
 			PrintWriter writer = new PrintWriter(out, true);
 			ServerSocketInterfaceFactory serverSocketInterfaceFactory =
-					 new DefaultServerSocketInterfaceFactory();
+					 new DirectServerSocketInterfaceFactory();
 			if (socksClient != null) {
 				serverSocketInterfaceFactory = 
 						socksClient.newServerSocketInterfaceFactory();

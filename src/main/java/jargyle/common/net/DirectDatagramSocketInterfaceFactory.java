@@ -5,29 +5,29 @@ import java.net.InetAddress;
 import java.net.SocketAddress;
 import java.net.SocketException;
 
-public final class DefaultDatagramSocketInterfaceFactory 
+public final class DirectDatagramSocketInterfaceFactory 
 	extends DatagramSocketInterfaceFactory {
 	
-	public DefaultDatagramSocketInterfaceFactory() { }
+	public DirectDatagramSocketInterfaceFactory() { }
 	
 	@Override
 	public DatagramSocketInterface newDatagramSocketInterface() throws SocketException {
-		return new DefaultDatagramSocketInterface(new DatagramSocket());
+		return new DirectDatagramSocketInterface(new DatagramSocket());
 	}
 	
 	public DatagramSocketInterface newDatagramSocketInterface(
 			int port) throws SocketException {
-		return new DefaultDatagramSocketInterface(new DatagramSocket(port));
+		return new DirectDatagramSocketInterface(new DatagramSocket(port));
 	}
 	
 	public DatagramSocketInterface newDatagramSocketInterface(
 			int port, InetAddress laddr) throws SocketException {
-		return new DefaultDatagramSocketInterface(new DatagramSocket(port, laddr));
+		return new DirectDatagramSocketInterface(new DatagramSocket(port, laddr));
 	}
 	
 	public DatagramSocketInterface newDatagramSocketInterface(
 			SocketAddress bindaddr) throws SocketException {
-		return new DefaultDatagramSocketInterface(new DatagramSocket(bindaddr));
+		return new DirectDatagramSocketInterface(new DatagramSocket(bindaddr));
 	}
 	
 }

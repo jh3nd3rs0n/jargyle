@@ -6,17 +6,17 @@ import java.net.ServerSocket;
 import java.net.SocketAddress;
 import java.net.SocketException;
 
-public final class DefaultServerSocketInterface extends ServerSocketInterface {
+public final class DirectServerSocketInterface extends ServerSocketInterface {
 
 	private final ServerSocket serverSocket;
 	
-	public DefaultServerSocketInterface(final ServerSocket serverSock) {
+	public DirectServerSocketInterface(final ServerSocket serverSock) {
 		this.serverSocket = serverSock;
 	}
 	
 	@Override
 	public SocketInterface accept() throws IOException {
-		return new DefaultSocketInterface(this.serverSocket.accept());
+		return new DirectSocketInterface(this.serverSocket.accept());
 	}
 
 	@Override

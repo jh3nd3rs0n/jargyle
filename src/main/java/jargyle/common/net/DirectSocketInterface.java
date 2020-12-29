@@ -8,11 +8,11 @@ import java.net.Socket;
 import java.net.SocketAddress;
 import java.net.SocketException;
 
-public final class DefaultSocketInterface extends SocketInterface {
+public final class DirectSocketInterface extends SocketInterface {
 
 	private final Socket socket;
 	
-	public DefaultSocketInterface(final Socket sock) {
+	public DirectSocketInterface(final Socket sock) {
 		this.socket = sock;
 	}
 

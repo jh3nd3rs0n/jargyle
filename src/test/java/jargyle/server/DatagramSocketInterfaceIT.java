@@ -19,7 +19,7 @@ import jargyle.TestStringConstants;
 import jargyle.client.SocksClient;
 import jargyle.common.net.DatagramSocketInterface;
 import jargyle.common.net.DatagramSocketInterfaceFactory;
-import jargyle.common.net.DefaultDatagramSocketInterfaceFactory;
+import jargyle.common.net.DirectDatagramSocketInterfaceFactory;
 
 public class DatagramSocketInterfaceIT {
 
@@ -133,7 +133,7 @@ public class DatagramSocketInterfaceIT {
 			echoServer.start();
 			int port = echoServer.getPort();
 			DatagramSocketInterfaceFactory datagramSocketInterfaceFactory =
-					new DefaultDatagramSocketInterfaceFactory();
+					new DirectDatagramSocketInterfaceFactory();
 			if (socksClient != null) {
 				datagramSocketInterfaceFactory = 
 						socksClient.newDatagramSocketInterfaceFactory();

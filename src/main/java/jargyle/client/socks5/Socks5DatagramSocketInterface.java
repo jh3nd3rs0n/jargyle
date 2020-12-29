@@ -14,8 +14,8 @@ import java.net.UnknownHostException;
 
 import jargyle.client.PropertySpec;
 import jargyle.common.net.DatagramSocketInterface;
-import jargyle.common.net.DefaultDatagramSocketInterface;
-import jargyle.common.net.DefaultSocketInterface;
+import jargyle.common.net.DirectDatagramSocketInterface;
+import jargyle.common.net.DirectSocketInterface;
 import jargyle.common.net.SocketInterface;
 import jargyle.common.net.SocketSettings;
 import jargyle.common.net.socks5.AddressType;
@@ -48,13 +48,13 @@ public final class Socks5DatagramSocketInterface
 		public Socks5DatagramSocketInterfaceImpl(
 				final Socks5Client client, 
 				final DatagramSocket datagramSocket) throws SocketException {
-			SocketInterface sockInterface = new DefaultSocketInterface(
+			SocketInterface sockInterface = new DirectSocketInterface(
 					new Socket());
 			SocketSettings socketSettings = client.getProperties().getValue(
 					PropertySpec.SOCKET_SETTINGS, SocketSettings.class);
 			socketSettings.applyTo(sockInterface);
 			DatagramSocketInterface datagramSockInterface = 
-					new DefaultDatagramSocketInterface(datagramSocket);
+					new DirectDatagramSocketInterface(datagramSocket);
 			this.associated = false;
 			this.connected = false;
 			this.datagramSocketInterface = datagramSockInterface;

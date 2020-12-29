@@ -311,15 +311,18 @@ public final class Socks5ServerSocketInterface extends ServerSocketInterface {
 
 	}
 	
+	private final Socks5Client socks5Client;
 	private final Socks5ServerSocketInterfaceImpl socks5ServerSocketInterfaceImpl;
 	
 	public Socks5ServerSocketInterface(final Socks5Client client) throws IOException {
+		this.socks5Client = client;
 		this.socks5ServerSocketInterfaceImpl = new Socks5ServerSocketInterfaceImpl(
 				client);
 	}
 
 	public Socks5ServerSocketInterface(
 			final Socks5Client client, final int port) throws IOException {
+		this.socks5Client = client;
 		this.socks5ServerSocketInterfaceImpl = new Socks5ServerSocketInterfaceImpl(
 				client);
 		this.socks5ServerSocketInterfaceImpl.socks5Bind(port, null);
@@ -337,6 +340,7 @@ public final class Socks5ServerSocketInterface extends ServerSocketInterface {
 			final int port, 
 			final int backlog,
 			final InetAddress bindAddr) throws IOException {
+		this.socks5Client = client;
 		this.socks5ServerSocketInterfaceImpl = new Socks5ServerSocketInterfaceImpl(
 				client);
 		this.socks5ServerSocketInterfaceImpl.socks5Bind(port, bindAddr);
@@ -387,6 +391,10 @@ public final class Socks5ServerSocketInterface extends ServerSocketInterface {
 		return this.socks5ServerSocketInterfaceImpl.getReuseAddress();
 	}
 
+	public Socks5Client getSocks5Client() {
+		return this.socks5Client;
+	}
+	
 	@Override
 	public synchronized int getSoTimeout() throws IOException {
 		return this.socks5ServerSocketInterfaceImpl.getSoTimeout();
@@ -428,7 +436,9 @@ public final class Socks5ServerSocketInterface extends ServerSocketInterface {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append(this.getClass().getSimpleName())
-			.append(" [getLocalSocketAddress()=")
+			.append(" [socks5Client=")
+			.append(this.socks5Client)
+			.append(", getLocalSocketAddress()=")
 			.append(this.getLocalSocketAddress())
 			.append("]");
 		return builder.toString();

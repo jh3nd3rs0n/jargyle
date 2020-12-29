@@ -45,6 +45,10 @@ public final class DirectDatagramSocketInterface extends DatagramSocketInterface
 		return this.datagramSocket.getBroadcast();
 	}
 	
+	public DatagramSocket getDatagramSocket() {
+		return this.datagramSocket;
+	}
+	
 	@Override
 	public InetAddress getInetAddress() {
 		return this.datagramSocket.getInetAddress();
@@ -153,6 +157,16 @@ public final class DirectDatagramSocketInterface extends DatagramSocketInterface
 	@Override
 	public void setTrafficClass(int tc) throws SocketException {
 		this.datagramSocket.setTrafficClass(tc);
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append(this.getClass().getSimpleName())
+			.append(" [datagramSocket=")
+			.append(this.datagramSocket)
+			.append("]");
+		return builder.toString();
 	}
 
 }

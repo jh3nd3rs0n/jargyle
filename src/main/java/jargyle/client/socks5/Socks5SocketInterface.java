@@ -106,9 +106,11 @@ public final class Socks5SocketInterface extends SocketInterface {
 		
 	}
 	
+	private final Socks5Client socks5Client;
 	private final Socks5SocketInterfaceImpl socks5SocketInterfaceImpl;
 	
 	public Socks5SocketInterface(final Socks5Client client) {
+		this.socks5Client = client;
 		this.socks5SocketInterfaceImpl = new Socks5SocketInterfaceImpl(
 				client,
 				null,
@@ -119,6 +121,7 @@ public final class Socks5SocketInterface extends SocketInterface {
 			final Socks5Client client, 
 			final InetAddress address, 
 			final int port) throws IOException {
+		this.socks5Client = client;
 		this.socks5SocketInterfaceImpl = new Socks5SocketInterfaceImpl(
 				client,
 				null,
@@ -132,6 +135,7 @@ public final class Socks5SocketInterface extends SocketInterface {
 			final int port, 
 			final InetAddress localAddr, 
 			final int localPort) throws IOException {
+		this.socks5Client = client;
 		this.socks5SocketInterfaceImpl = new Socks5SocketInterfaceImpl(
 				client,
 				null,
@@ -145,6 +149,7 @@ public final class Socks5SocketInterface extends SocketInterface {
 			final Socks5Client client, 
 			final SocketInterface originalSockInterface, 
 			final SocketInterface sockInterface) {
+		this.socks5Client = client;
 		this.socks5SocketInterfaceImpl = new Socks5SocketInterfaceImpl(
 				client,
 				originalSockInterface,
@@ -155,6 +160,7 @@ public final class Socks5SocketInterface extends SocketInterface {
 			final Socks5Client client, 
 			final String host, 
 			final int port) throws UnknownHostException, IOException {
+		this.socks5Client = client;
 		this.socks5SocketInterfaceImpl = new Socks5SocketInterfaceImpl(
 				client,
 				null,
@@ -169,6 +175,7 @@ public final class Socks5SocketInterface extends SocketInterface {
 			final int port, 
 			final InetAddress localAddr, 
 			final int localPort) throws IOException {
+		this.socks5Client = client;
 		this.socks5SocketInterfaceImpl = new Socks5SocketInterfaceImpl(
 				client,
 				null,
@@ -265,6 +272,10 @@ public final class Socks5SocketInterface extends SocketInterface {
 		return this.socks5SocketInterfaceImpl.socketInterface.getSendBufferSize();
 	}
 
+	public Socks5Client getSocks5Client() {
+		return this.socks5Client;
+	}
+	
 	@Override
 	public int getSoLinger() throws SocketException {
 		return this.socks5SocketInterfaceImpl.socketInterface.getSoLinger();
@@ -376,6 +387,20 @@ public final class Socks5SocketInterface extends SocketInterface {
 	@Override
 	public void shutdownOutput() throws IOException {
 		this.socks5SocketInterfaceImpl.socketInterface.shutdownOutput();
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append(this.getClass().getSimpleName())
+			.append(" [socks5Client=")
+			.append(this.socks5Client)
+			.append(", getLocalSocketAddress()=")
+			.append(this.getLocalSocketAddress())
+			.append(", getRemoteSocketAddress()=")
+			.append(this.getRemoteSocketAddress())
+			.append("]");
+		return builder.toString();
 	}
 
 }

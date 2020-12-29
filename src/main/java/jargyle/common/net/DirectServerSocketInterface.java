@@ -59,6 +59,10 @@ public final class DirectServerSocketInterface extends ServerSocketInterface {
 		return this.serverSocket.getReuseAddress();
 	}
 
+	public ServerSocket getServerSocket() {
+		return this.serverSocket;
+	}
+	
 	@Override
 	public int getSoTimeout() throws IOException {
 		return this.serverSocket.getSoTimeout();
@@ -96,7 +100,12 @@ public final class DirectServerSocketInterface extends ServerSocketInterface {
 
 	@Override
 	public String toString() {
-		return this.serverSocket.toString();
+		StringBuilder builder = new StringBuilder();
+		builder.append(this.getClass().getSimpleName())
+			.append(" [serverSocket=")
+			.append(this.serverSocket)
+			.append("]");
+		return builder.toString();
 	}
 
 }

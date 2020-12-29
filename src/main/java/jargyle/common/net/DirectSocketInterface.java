@@ -102,6 +102,10 @@ public final class DirectSocketInterface extends SocketInterface {
 		return this.socket.getSendBufferSize();
 	}
 	
+	public Socket getSocket() {
+		return this.socket;
+	}
+	
 	@Override
 	public int getSoLinger() throws SocketException {
 		return this.socket.getSoLinger();
@@ -214,6 +218,16 @@ public final class DirectSocketInterface extends SocketInterface {
 	@Override
 	public void shutdownOutput() throws IOException {
 		this.socket.shutdownOutput();
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append(this.getClass().getSimpleName())
+			.append(" [socket=")
+			.append(this.socket)
+			.append("]");
+		return builder.toString();
 	}
 	
 }

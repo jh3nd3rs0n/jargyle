@@ -224,10 +224,12 @@ public final class Socks5DatagramSocketInterface
 		
 	}
 	
+	private final Socks5Client socks5Client;
 	private final Socks5DatagramSocketInterfaceImpl socks5DatagramSocketInterfaceImpl;
 	
 	public Socks5DatagramSocketInterface(
 			final Socks5Client client) throws SocketException {
+		this.socks5Client = client;
 		this.socks5DatagramSocketInterfaceImpl = 
 				new Socks5DatagramSocketInterfaceImpl(
 						client, 
@@ -236,6 +238,7 @@ public final class Socks5DatagramSocketInterface
 
 	public Socks5DatagramSocketInterface(
 			final Socks5Client client, final int port) throws SocketException {
+		this.socks5Client = client;		
 		this.socks5DatagramSocketInterfaceImpl = 
 				new Socks5DatagramSocketInterfaceImpl(
 						client, 
@@ -246,6 +249,7 @@ public final class Socks5DatagramSocketInterface
 			final Socks5Client client, 
 			final int port, 
 			final InetAddress laddr) throws SocketException {
+		this.socks5Client = client;		
 		this.socks5DatagramSocketInterfaceImpl = 
 				new Socks5DatagramSocketInterfaceImpl(
 						client, 
@@ -255,6 +259,7 @@ public final class Socks5DatagramSocketInterface
 	public Socks5DatagramSocketInterface(
 			final Socks5Client client, 
 			final SocketAddress bindaddr) throws SocketException {
+		this.socks5Client = client;		
 		this.socks5DatagramSocketInterfaceImpl = 
 				new Socks5DatagramSocketInterfaceImpl(
 						client, 
@@ -336,6 +341,10 @@ public final class Socks5DatagramSocketInterface
 		return this.socks5DatagramSocketInterfaceImpl.datagramSocketInterface.getSendBufferSize();
 	}
 
+	public Socks5Client getSocks5Client() {
+		return this.socks5Client;
+	}
+	
 	@Override
 	public int getSoTimeout() throws SocketException {
 		return this.socks5DatagramSocketInterfaceImpl.datagramSocketInterface.getSoTimeout();
@@ -399,7 +408,20 @@ public final class Socks5DatagramSocketInterface
 	@Override
 	public void setTrafficClass(int tc) throws SocketException {
 		this.socks5DatagramSocketInterfaceImpl.datagramSocketInterface.setTrafficClass(tc);
+	}
 
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append(this.getClass().getSimpleName())
+			.append(" [socks5Client=")
+			.append(this.socks5Client)
+			.append(", getLocalSocketAddress()=")
+			.append(this.getLocalSocketAddress())
+			.append(", getRemoteSocketAddress()=")
+			.append(this.getRemoteSocketAddress())
+			.append("]");
+		return builder.toString();
 	}
 
 }

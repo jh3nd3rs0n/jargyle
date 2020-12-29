@@ -52,10 +52,6 @@ public final class GssDatagramSocketInterface
 				this.messageProp.getQOP(), this.messageProp.getPrivacy());
 	}
 	
-	public int getWrapSizeLimit() {
-		return this.wrapSizeLimit;
-	}
-	
 	@Override
 	public void receive(DatagramPacket p) throws IOException {
 		super.receive(p);
@@ -98,6 +94,20 @@ public final class GssDatagramSocketInterface
 			p.setLength(messageBytes.length);			
 		}
 		super.send(p);
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append(this.getClass().getSimpleName())
+			.append(" [gssContext=")
+			.append(this.gssContext)
+			.append(", messageProp=")
+			.append(this.messageProp)
+			.append(", datagramSocketInterface=")
+			.append(this.datagramSocketInterface)
+			.append("]");
+		return builder.toString();
 	}
 	
 }

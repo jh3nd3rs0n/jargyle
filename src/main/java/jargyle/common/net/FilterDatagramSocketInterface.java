@@ -46,6 +46,10 @@ public abstract class FilterDatagramSocketInterface
 		return this.datagramSocketInterface.getBroadcast();
 	}
 	
+	public final DatagramSocketInterface getDatagramSocketInterface() {
+		return this.datagramSocketInterface;
+	}
+	
 	@Override
 	public InetAddress getInetAddress() {
 		return this.datagramSocketInterface.getInetAddress();
@@ -154,6 +158,16 @@ public abstract class FilterDatagramSocketInterface
 	@Override
 	public void setTrafficClass(int tc) throws SocketException {
 		this.datagramSocketInterface.setTrafficClass(tc);
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append(this.getClass().getSimpleName())
+			.append(" [datagramSocketInterface=")
+			.append(this.datagramSocketInterface)
+			.append("]");
+		return builder.toString();
 	}
 
 }

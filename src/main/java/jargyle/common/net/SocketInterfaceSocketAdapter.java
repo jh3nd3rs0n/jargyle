@@ -108,6 +108,10 @@ public final class SocketInterfaceSocketAdapter extends Socket {
 		return this.socketInterface.getSendBufferSize();
 	}
 
+	public SocketInterface getSocketInterface() {
+		return this.socketInterface;
+	}
+	
 	@Override
 	public int getSoLinger() throws SocketException {
 		return this.socketInterface.getSoLinger();
@@ -220,6 +224,16 @@ public final class SocketInterfaceSocketAdapter extends Socket {
 	@Override
 	public void shutdownOutput() throws IOException {
 		this.socketInterface.shutdownOutput();
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append(this.getClass().getSimpleName())
+			.append(" [socketInterface=")
+			.append(this.socketInterface)
+			.append("]");
+		return builder.toString();
 	}
 	
 }

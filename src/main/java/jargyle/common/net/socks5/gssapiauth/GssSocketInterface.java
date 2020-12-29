@@ -302,5 +302,19 @@ public final class GssSocketInterface extends FilterSocketInterface {
 		}
 		return this.outputStream;		
 	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append(this.getClass().getSimpleName())
+			.append(" [gssContext=")
+			.append(this.gssContext)
+			.append(", messageProp=")
+			.append(this.messageProp)
+			.append(", socketInterface=")
+			.append(this.socketInterface)
+			.append("]");
+		return builder.toString();
+	}
 	
 }

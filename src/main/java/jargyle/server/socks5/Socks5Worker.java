@@ -706,10 +706,12 @@ public final class Socks5Worker implements Runnable {
 			InetAddress bindInetAddress = bindHost.toInetAddress();
 			clientDatagramSockInterface = new DefaultDatagramSocketInterface(
 					new DatagramSocket(new InetSocketAddress(bindInetAddress, 0)));
+			/*
 			if (this.settings.getLastValue(
 					SettingSpec.SSL_ENABLED, Boolean.class).booleanValue()) {
 				// TODO DtlsDatagramSocketInterface
 			}
+			*/
 			if (this.clientSocketInterface instanceof GssSocketInterface) {
 				GssSocketInterface gssSocketInterface = 
 						(GssSocketInterface) this.clientSocketInterface;

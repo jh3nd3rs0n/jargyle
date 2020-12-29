@@ -1,4 +1,4 @@
-package jargyle.server;
+package jargyle;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

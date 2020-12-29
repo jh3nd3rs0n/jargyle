@@ -74,7 +74,6 @@ public final class Socks5SocketInterface extends SocketInterface {
 				final int port,
 				final int timeout) throws IOException {
 			if (this.connected) {
-				this.socketInterface.close();
 				this.socketInterface = this.originalSocketInterface;
 			}
 			SocketInterface sockInterface = socks5Client.connectToSocksServerWith(

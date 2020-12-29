@@ -17,6 +17,7 @@ import javax.net.ServerSocketFactory;
 
 import org.junit.Test;
 
+import jargyle.IoHelper;
 import jargyle.TestStringConstants;
 import jargyle.client.SocksClient;
 import jargyle.common.net.DefaultSocketInterfaceFactory;

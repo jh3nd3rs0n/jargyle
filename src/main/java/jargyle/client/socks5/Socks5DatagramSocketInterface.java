@@ -177,9 +177,7 @@ public final class Socks5DatagramSocketInterface
 				port = this.remotePort;
 			}
 			if (this.associated) {
-				this.datagramSocketInterface.close();
 				this.datagramSocketInterface = this.originalDatagramSocketInterface;
-				this.socketInterface.close();
 				this.socketInterface = this.originalSocketInterface;
 			}
 			SocketInterface sockInterface = this.socks5Client.connectToSocksServerWith(
@@ -202,10 +200,12 @@ public final class Socks5DatagramSocketInterface
 			}
 			DatagramSocketInterface datagramSockInterface = 
 					this.datagramSocketInterface;
+			/*
 			if (this.socks5Client.getProperties().getValue(
 					PropertySpec.SSL_ENABLED, Boolean.class).booleanValue()) {
 				// TODO DtlsDatagramSocketInterface
 			}
+			*/
 			if (sockInterface instanceof GssSocketInterface) {
 				GssSocketInterface gssSocketInterface = 
 						(GssSocketInterface) sockInterface;

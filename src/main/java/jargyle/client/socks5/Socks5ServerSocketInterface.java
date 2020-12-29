@@ -273,7 +273,6 @@ public final class Socks5ServerSocketInterface extends ServerSocketInterface {
 		public void socks5Bind(
 				final int port, final InetAddress bindAddr) throws IOException {
 			if (this.bound) {
-				this.socketInterface.close();
 				this.socketInterface = this.originalSocketInterface;
 			}
 			SocketInterface sockInterface = this.socks5Client.connectToSocksServerWith(

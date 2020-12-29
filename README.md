@@ -6,7 +6,7 @@ Jargyle is a Java SOCKS5 server. It has the following features:
 
 -   It is a 100% implementation of the [SOCKS5 protocol specification](https://tools.ietf.org/html/rfc1928) which includes [username password authentication](https://tools.ietf.org/html/rfc1929) and [GSS-API authentication](https://tools.ietf.org/html/rfc1961).
 -   It can have its external connections be set through another SOCKS5 server.
--   It can have SSL/TLS connections to clients and have SSL/TLS connections to the other SOCKS5 server.
+-   It can have SSL/TLS connections to clients and can have SSL/TLS connections to the other SOCKS5 server.
 -   It can allow or block certain client addresses and certain external incoming addresses.
 -   It can allow or block certain SOCKS5 requests.
 

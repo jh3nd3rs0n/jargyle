@@ -34,13 +34,13 @@ public final class Socks5SocketInterface extends SocketInterface {
 				final Socks5Client client,
 				final SocketInterface originalSockInterface,
 				final SocketInterface sockInterface) {
-			this.connected = sockInterface.isConnected();
-			this.originalSocketInterface = (originalSockInterface == null) ?
-					sockInterface : originalSockInterface;
-			this.remoteInetAddress = sockInterface.getInetAddress();
-			this.remotePort = sockInterface.getPort();
-			this.remoteSocketAddress = sockInterface.getRemoteSocketAddress();
-			this.socketInterface = sockInterface;
+			this.connected = originalSockInterface.isConnected();
+			this.originalSocketInterface = originalSockInterface;
+			this.remoteInetAddress = originalSockInterface.getInetAddress();
+			this.remotePort = originalSockInterface.getPort();
+			this.remoteSocketAddress = originalSockInterface.getRemoteSocketAddress();
+			this.socketInterface = (sockInterface == null) ? 
+					originalSockInterface : sockInterface;
 			this.socks5Client = client;
 		}
 		
@@ -73,9 +73,7 @@ public final class Socks5SocketInterface extends SocketInterface {
 				final InetAddress inetAddress,
 				final int port,
 				final int timeout) throws IOException {
-			if (this.connected) {
-				this.socketInterface = this.originalSocketInterface;
-			}
+			this.socketInterface = this.originalSocketInterface;
 			SocketInterface sockInterface = socks5Client.connectToSocksServerWith(
 					this.socketInterface, timeout);
 			InputStream inputStream = sockInterface.getInputStream();
@@ -113,8 +111,8 @@ public final class Socks5SocketInterface extends SocketInterface {
 		this.socks5Client = client;
 		this.socks5SocketInterfaceImpl = new Socks5SocketInterfaceImpl(
 				client,
-				null,
-				new DirectSocketInterface(new Socket())); 
+				new DirectSocketInterface(new Socket()),
+				null); 
 	}
 	
 	public Socks5SocketInterface(
@@ -124,8 +122,8 @@ public final class Socks5SocketInterface extends SocketInterface {
 		this.socks5Client = client;
 		this.socks5SocketInterfaceImpl = new Socks5SocketInterfaceImpl(
 				client,
-				null,
-				new DirectSocketInterface(new Socket()));
+				new DirectSocketInterface(new Socket()),
+				null);
 		this.socks5SocketInterfaceImpl.socks5Connect(address, port, 0);
 	}
 	
@@ -138,8 +136,8 @@ public final class Socks5SocketInterface extends SocketInterface {
 		this.socks5Client = client;
 		this.socks5SocketInterfaceImpl = new Socks5SocketInterfaceImpl(
 				client,
-				null,
-				new DirectSocketInterface(new Socket()));
+				new DirectSocketInterface(new Socket()),
+				null);
 		this.socks5SocketInterfaceImpl.socketInterface.bind(
 				new InetSocketAddress(localAddr, localPort));
 		this.socks5SocketInterfaceImpl.socks5Connect(address, port, 0);
@@ -163,8 +161,8 @@ public final class Socks5SocketInterface extends SocketInterface {
 		this.socks5Client = client;
 		this.socks5SocketInterfaceImpl = new Socks5SocketInterfaceImpl(
 				client,
-				null,
-				new DirectSocketInterface(new Socket()));
+				new DirectSocketInterface(new Socket()),
+				null);
 		this.socks5SocketInterfaceImpl.socks5Connect(
 				InetAddress.getByName(host), port, 0);
 	}
@@ -178,8 +176,8 @@ public final class Socks5SocketInterface extends SocketInterface {
 		this.socks5Client = client;
 		this.socks5SocketInterfaceImpl = new Socks5SocketInterfaceImpl(
 				client,
-				null,
-				new DirectSocketInterface(new Socket()));		
+				new DirectSocketInterface(new Socket()),
+				null);		
 		this.socks5SocketInterfaceImpl.socketInterface.bind(
 				new InetSocketAddress(localAddr, localPort));
 		this.socks5SocketInterfaceImpl.socks5Connect(

@@ -154,10 +154,10 @@ public final class Socks5ServerSocketInterface extends ServerSocketInterface {
 		private InetAddress localInetAddress;
 		private int localPort;
 		private SocketAddress localSocketAddress;
-		private boolean mustSocks5Bind;		
 		private SocketInterface originalSocketInterface;
 		private SocketInterface socketInterface;
 		private SocketSettings socketSettings;
+		private boolean socks5Bound;
 		private final Socks5Client socks5Client;
 		
 		public Socks5ServerSocketInterfaceImpl(
@@ -169,18 +169,18 @@ public final class Socks5ServerSocketInterface extends ServerSocketInterface {
 			this.localInetAddress = null;
 			this.localPort = -1;
 			this.localSocketAddress = null;
-			this.mustSocks5Bind = true;
 			this.originalSocketInterface = sockInterface;
 			this.socketInterface = sockInterface;
 			this.socketSettings = SocketSettings.newInstance();
 			this.socks5Client = client;
+			this.socks5Bound = false;
 		}
 		
 		public SocketInterface accept() throws IOException {
 			if (this.closed) {
 				throw new SocketException("socket is closed");
 			}
-			if (this.mustSocks5Bind) {
+			if (!this.socks5Bound) {
 				this.socks5Bind(this.localPort, this.localInetAddress);
 			}
 			SocketInterface acceptedSocks5SocketInterface = null;
@@ -207,7 +207,7 @@ public final class Socks5ServerSocketInterface extends ServerSocketInterface {
 				this.originalSocketInterface = newSocketInterface;
 				this.socketInterface = newSocketInterface;
 			} finally {
-				this.mustSocks5Bind = true;
+				this.socks5Bound = false;
 			}
 			return acceptedSocks5SocketInterface;
 		}
@@ -241,7 +241,7 @@ public final class Socks5ServerSocketInterface extends ServerSocketInterface {
 			this.localInetAddress = null;
 			this.localPort = -1;
 			this.localSocketAddress = null;
-			this.mustSocks5Bind = true;
+			this.socks5Bound = false;
 			this.socketInterface.close();
 		}
 		
@@ -288,13 +288,15 @@ public final class Socks5ServerSocketInterface extends ServerSocketInterface {
 
 		public void socks5Bind(
 				final int port, final InetAddress bindAddr) throws IOException {
-			if (this.bound) {
-				this.socketInterface = this.originalSocketInterface;
-			}
+			this.socketInterface = this.originalSocketInterface;
 			SocketInterface sockInterface = this.socks5Client.connectToSocksServerWith(
 					this.socketInterface, true);
 			InputStream inStream = sockInterface.getInputStream();
 			OutputStream outStream = sockInterface.getOutputStream();
+			int prt = port;
+			if (prt == -1) {
+				prt = 0;
+			}
 			InetAddress bAddr = bindAddr;
 			if (bAddr == null) {
 				bAddr = InetAddress.getByName(
@@ -306,7 +308,7 @@ public final class Socks5ServerSocketInterface extends ServerSocketInterface {
 					Command.BIND, 
 					addressType, 
 					address, 
-					port);
+					prt);
 			outStream.write(socks5Req.toByteArray());
 			outStream.flush();
 			Socks5Reply socks5Rep = Socks5Reply.newInstanceFrom(inStream);
@@ -321,8 +323,8 @@ public final class Socks5ServerSocketInterface extends ServerSocketInterface {
 			this.localSocketAddress = new InetSocketAddress(
 					this.localInetAddress,
 					this.localPort);
-			this.mustSocks5Bind = false;
-			this.socketInterface = sockInterface;			
+			this.socketInterface = sockInterface;
+			this.socks5Bound = true;
 		}
 
 	}

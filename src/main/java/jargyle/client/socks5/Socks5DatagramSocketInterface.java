@@ -32,11 +32,9 @@ public final class Socks5DatagramSocketInterface
 
 	private static final class Socks5DatagramSocketInterfaceImpl {
 		
-		private boolean associated;
+		private boolean socks5UdpAssociated;
 		private boolean connected;
 		private DatagramSocketInterface datagramSocketInterface;
-		private DatagramSocketInterface originalDatagramSocketInterface;
-		private SocketInterface originalSocketInterface;
 		private InetAddress remoteInetAddress;
 		private int remotePort;
 		private SocketAddress remoteSocketAddress;
@@ -48,37 +46,35 @@ public final class Socks5DatagramSocketInterface
 		public Socks5DatagramSocketInterfaceImpl(
 				final Socks5Client client, 
 				final DatagramSocket datagramSocket) throws SocketException {
+			DatagramSocketInterface datagramSockInterface = 
+					new DirectDatagramSocketInterface(datagramSocket);
 			SocketInterface sockInterface = new DirectSocketInterface(
 					new Socket());
 			SocketSettings socketSettings = client.getProperties().getValue(
 					PropertySpec.SOCKET_SETTINGS, SocketSettings.class);
 			socketSettings.applyTo(sockInterface);
-			DatagramSocketInterface datagramSockInterface = 
-					new DirectDatagramSocketInterface(datagramSocket);
-			this.associated = false;
 			this.connected = false;
 			this.datagramSocketInterface = datagramSockInterface;
-			this.originalDatagramSocketInterface = datagramSocketInterface;
-			this.originalSocketInterface = sockInterface;
 			this.remoteInetAddress = null;
 			this.remotePort = -1;
 			this.remoteSocketAddress = null;
 			this.socketInterface = sockInterface;
 			this.socks5Client = client;
+			this.socks5UdpAssociated = false;
 			this.udpRelayServerInetAddress = null;
 			this.udpRelayServerPort = -1;
 		}
 		
 		public void close() {
+			this.datagramSocketInterface.close();
+			this.socks5UdpAssociated = false;
+			this.udpRelayServerInetAddress = null;
+			this.udpRelayServerPort = -1;
 			try {
 				this.socketInterface.close();
 			} catch (IOException e) {
 				throw new AssertionError(e);
 			}
-			this.datagramSocketInterface.close();
-			this.associated = false;
-			this.udpRelayServerInetAddress = null;
-			this.udpRelayServerPort = -1;
 		}
 		
 		public void connect(InetAddress address, int port) {
@@ -147,7 +143,7 @@ public final class Socks5DatagramSocketInterface
 				throw new IllegalArgumentException(
 						"packet address and connected socket address must be the same");
 			}
-			if (!this.associated) {
+			if (!this.socks5UdpAssociated) {
 				this.socks5UdpAssociate();
 			}
 			String address = p.getAddress().getHostAddress();
@@ -175,10 +171,6 @@ public final class Socks5DatagramSocketInterface
 			} else {
 				address = this.remoteInetAddress.getHostAddress();
 				port = this.remotePort;
-			}
-			if (this.associated) {
-				this.datagramSocketInterface = this.originalDatagramSocketInterface;
-				this.socketInterface = this.originalSocketInterface;
 			}
 			SocketInterface sockInterface = this.socks5Client.connectToSocksServerWith(
 					this.socketInterface, true);
@@ -219,7 +211,7 @@ public final class Socks5DatagramSocketInterface
 					socks5Rep.getServerBoundAddress());
 			this.udpRelayServerPort = socks5Rep.getServerBoundPort();
 			this.socketInterface = sockInterface;
-			this.associated = true;			
+			this.socks5UdpAssociated = true;			
 		}
 		
 	}

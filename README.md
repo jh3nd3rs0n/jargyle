@@ -4,11 +4,11 @@
 
 Jargyle is a Java SOCKS5 server. It has the following features:
 
--   It is a 100% implementation of the [SOCKS5 protocol specification](https://tools.ietf.org/html/rfc1928) which includes [username password authentication](https://tools.ietf.org/html/rfc1929) and [GSS-API authentication](https://tools.ietf.org/html/rfc1961).
--   It can have its external connections be set through another SOCKS5 server.
--   It can have SSL/TLS connections to clients and it can have external SSL/TLS connections to the other SOCKS5 server.
--   It can allow or block certain client addresses and certain external incoming addresses.
--   It can allow or block certain SOCKS5 requests.
+-   100% implementation of the [SOCKS5 protocol specification](https://tools.ietf.org/html/rfc1928) which includes [username password authentication](https://tools.ietf.org/html/rfc1929) and [GSS-API authentication](https://tools.ietf.org/html/rfc1961)
+-   SOCKS server chaining (routing through another SOCKS server)
+-   SSL/TLS and SSL/TLS for SOCKS server chaining
+-   Allow or block client addresses and external incoming addresses
+-   Allow or block SOCKS5 requests
 
 **Disclaimer:** Jargyle is a hobby project and is currently subject to breaking changes. Jargyle is currently not production ready but it aims to be.
 
@@ -33,13 +33,12 @@ Jargyle is a Java SOCKS5 server. It has the following features:
 -   [4. 9. 1. Using No Authentication](#4-9-1-using-no-authentication)
 -   [4. 9. 2. Using Username Password Authentication](#4-9-2-using-username-password-authentication)
 -   [4. 9. 3. Using GSS-API Authentication](#4-9-3-using-gss-api-authentication)
--   [4. 10. Setting External Connections Through Another SOCKS Server](#4-10-setting-external-connections-through-another-socks-server)
+-   [4. 10. Chaining to Another SOCKS Server](#4-10-chaining-to-another-socks-server)
 -   [4. 10. 1. Enabling SSL/TLS](#4-10-1-enabling-ssl-tls)
 -   [4. 10. 2. Using SOCKS5 Authentication](#4-10-2-using-socks5-authentication)
 -   [4. 10. 2. 1. Using No Authentication](#4-10-2-1-using-no-authentication)
 -   [4. 10. 2. 2. Using Username Password Authentication](#4-10-2-2-using-username-password-authentication)
 -   [4. 10. 2. 3. Using GSS-API Authentication](#4-10-2-3-using-gss-api-authentication)
--   [4. 10. 3. Using Java System Properties](#4-10-3-using-java-system-properties)
 -   [4. 11. Allowing or Blocking Addresses](#4-11-allowing-or-blocking-addresses)
 -   [4. 12. Allowing or Blocking SOCKS5 Requests](#4-12-allowing-or-blocking-socks5-requests)
 -   [4. 13. Logging](#4-13-logging)
@@ -114,8 +113,8 @@ The following is the command line help for Jargyle (displayed when using the com
           The configuration file
       --config-file-xsd, -x
           Print the configuration file XSD and exit
-      --enter-external-client-socks5-user-pass
-          Enter through an interactive prompt the username password to be used to access the external SOCKS5 server used for external connections
+      --enter-chain-agent-socks5-user-pass
+          Enter through an interactive prompt the username password to be used to access the other SOCKS5 server
       --help, -h
           Print this help and exit
       --monitored-config-file=FILE, -m FILE
@@ -142,72 +141,72 @@ The following is a list of available settings for the SOCKS server (displayed wh
     
       backlog=INTEGER_BETWEEN_0_AND_2147483647
           The maximum length of the queue of incoming connections (default is 50)
-    
+
       blockedClientAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
           The space separated list of blocked client address criteria
     
+      chainAgent.bindHost=HOST
+          The binding host name or address for the socket to connect to the other SOCKS server (default is 0.0.0.0)
+    
+      chainAgent.connectTimeout=INTEGER_BETWEEN_1_AND_2147483647
+          The timeout in milliseconds on waiting for the socket to connect to the other SOCKS server (default is 60000)
+    
+      chainAgent.socketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
+          The space separated list of socket settings for the socket to connect to the other SOCKS server (used for SOCKS5 UDP ASSOCIATE command)
+    
+      chainAgent.socksServerUri=SCHEME://HOST[:PORT]
+          The URI of the other SOCKS server
+    
+      chainAgent.socks5.authMethods=SOCKS5_AUTH_METHOD1[ SOCKS5_AUTH_METHOD2[...]]
+          The space separated list of acceptable authentication methods to the other SOCKS5 server (default is NO_AUTHENTICATION_REQUIRED)
+    
+      chainAgent.socks5.gssapiMechanismOid=GSSAPI_MECHANISM_OID
+          The object ID for the GSS-API authentication mechanism to the other SOCKS5 server (default is 1.2.840.113554.1.2.2)
+    
+      chainAgent.socks5.gssapiNecReferenceImpl=true|false
+          The boolean value to indicate if the exchange of the GSS-API protection level negotiation must be unprotected should the other SOCKS5 server use the NEC reference implementation (default is false)
+    
+      chainAgent.socks5.gssapiProtectionLevels=SOCKS5_GSSAPI_PROTECTION_LEVEL1[ SOCKS5_GSSAPI_PROTECTION_LEVEL2[...]]
+          The space separated list of acceptable protection levels after GSS-API authentication with the other SOCKS5 server (The first is preferred. The remaining are acceptable if the server does not accept the first.) (default is REQUIRED_INTEG_AND_CONF REQUIRED_INTEG NONE)
+    
+      chainAgent.socks5.gssapiServiceName=GSSAPI_SERVICE_NAME
+          The GSS-API service name for the other SOCKS5 server
+    
+      chainAgent.socks5.usernamePassword=USERNAME:PASSWORD
+          The username password to be used to access the other SOCKS5 server
+    
+      chainAgent.ssl.enabled=true|false
+          The boolean value to indicate if SSL/TLS connections to the other SOCKS server are enabled (default is false)
+    
+      chainAgent.ssl.enabledCipherSuites=[SSL_CIPHER_SUITE1[ SSL_CIPHER_SUITE2[...]]]
+          The space separated list of acceptable cipher suites enabled for SSL/TLS connections to the other SOCKS server
+    
+      chainAgent.ssl.enabledProtocols=[SSL_PROTOCOL1[ SSL_PROTOCOL2[...]]]
+          The space separated list of acceptable protocol versions enabled for SSL/TLS connections to the other SOCKS server
+    
+      chainAgent.ssl.keyStoreFile=FILE
+          The key store file for the SSL/TLS connections to the other SOCKS server
+    
+      chainAgent.ssl.keyStorePassword=PASSWORD
+          The password for the key store for the SSL/TLS connections to the other SOCKS server
+    
+      chainAgent.ssl.keyStoreType=TYPE
+          The type of key store file for the SSL/TLS connections to the other SOCKS server (default is PKCS12)
+    
+      chainAgent.ssl.protocol=PROTOCOL
+          The protocol version for the SSL/TLS connections to the other SOCKS server (default is TLSv1)
+    
+      chainAgent.ssl.trustStoreFile=FILE
+          The trust store file for the SSL/TLS connections to the other SOCKS server
+    
+      chainAgent.ssl.trustStorePassword=PASSWORD
+          The password for the trust store for the SSL/TLS connections to the other SOCKS server
+    
+      chainAgent.ssl.trustStoreType=TYPE
+          The type of trust store file for the SSL/TLS connections to the other SOCKS server (default is PKCS12)
+    
       clientSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
           The space separated list of socket settings for the client socket
-    
-      externalClient.bindHost=HOST
-          The binding host name or address for the socket to connect to the external SOCKS server used for external connections (default is 0.0.0.0)
-    
-      externalClient.connectTimeout=INTEGER_BETWEEN_1_AND_2147483647
-          The timeout in milliseconds on waiting for the socket to connect to the external SOCKS server used for external connections (default is 60000)
-    
-      externalClient.externalServerUri=SCHEME://HOST[:PORT]
-          The URI of the external SOCKS server used for external connections
-    
-      externalClient.socketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
-          The space separated list of socket settings for the socket to connect to the external SOCKS server used for external connections
-    
-      externalClient.socks5.authMethods=SOCKS5_AUTH_METHOD1[ SOCKS5_AUTH_METHOD2[...]]
-          The space separated list of acceptable authentication methods to the external SOCKS5 server used for external connections (default is NO_AUTHENTICATION_REQUIRED)
-    
-      externalClient.socks5.gssapiMechanismOid=GSSAPI_MECHANISM_OID
-          The object ID for the GSS-API authentication mechanism to the external SOCKS5 server used for external connections (default is 1.2.840.113554.1.2.2)
-    
-      externalClient.socks5.gssapiNecReferenceImpl=true|false
-          The boolean value to indicate if the exchange of the GSS-API protection level negotiation must be unprotected should the external SOCKS5 server used for external connections use the NEC reference implementation (default is false)
-    
-      externalClient.socks5.gssapiProtectionLevels=SOCKS5_GSSAPI_PROTECTION_LEVEL1[ SOCKS5_GSSAPI_PROTECTION_LEVEL2[...]]
-          The space separated list of acceptable protection levels after GSS-API authentication with the external SOCKS5 server used for external connections (The first is preferred. The remaining are acceptable if the server does not accept the first.) (default is REQUIRED_INTEG_AND_CONF REQUIRED_INTEG NONE)
-    
-      externalClient.socks5.gssapiServiceName=GSSAPI_SERVICE_NAME
-          The GSS-API service name for the external SOCKS5 server used for external connections
-    
-      externalClient.socks5.usernamePassword=USERNAME:PASSWORD
-          The username password to be used to access the external SOCKS5 server used for external connections
-    
-      externalClient.ssl.enabled=true|false
-          The boolean value to indicate if SSL/TLS connections to the external SOCKS server for external connections are enabled (default is false)
-    
-      externalClient.ssl.enabledCipherSuites=[SSL_CIPHER_SUITE1[ SSL_CIPHER_SUITE2[...]]]
-          The space separated list of acceptable cipher suites enabled for SSL/TLS connections to the external SOCKS server for external connections
-    
-      externalClient.ssl.enabledProtocols=[SSL_PROTOCOL1[ SSL_PROTOCOL2[...]]]
-          The space separated list of acceptable protocol versions enabled for SSL/TLS connections to the external SOCKS server for external connections
-    
-      externalClient.ssl.keyStoreFile=FILE
-          The key store file for the SSL/TLS connections to the external SOCKS server for external connections
-    
-      externalClient.ssl.keyStorePassword=PASSWORD
-          The password for the key store for the SSL/TLS connections to the external SOCKS server for external connections
-    
-      externalClient.ssl.keyStoreType=TYPE
-          The type of key store file for the SSL/TLS connections to the external SOCKS server for external connections (default is PKCS12)
-    
-      externalClient.ssl.protocol=PROTOCOL
-          The protocol version for the SSL/TLS connections to the external SOCKS server for external connections (default is TLSv1)
-    
-      externalClient.ssl.trustStoreFile=FILE
-          The trust store file for the SSL/TLS connections to the external SOCKS server for external connections
-    
-      externalClient.ssl.trustStorePassword=PASSWORD
-          The password for the trust store for the SSL/TLS connections to the external SOCKS server for external connections
-    
-      externalClient.ssl.trustStoreType=TYPE
-          The type of trust store file for the SSL/TLS connections to the external SOCKS server for external connections (default is PKCS12)
     
       host=HOST
           The host name or address for the SOCKS server (default is 0.0.0.0)
@@ -384,7 +383,6 @@ The following is a list of available settings for the SOCKS server (displayed wh
     
       REQUIRED_INTEG_AND_CONF
           Required per-message integrity and confidentiality
-    
     
 ```
 
@@ -644,7 +642,7 @@ The following are the settings in the monitored configuration file that will hav
 
 ### 4. 7. Enabling SSL/TLS
 
-You can have clients connect to Jargyle using SSL/TLS. By default SSL/TLS is disabled. To enable SSL/TLS, you will need to have the setting `ssl.enabled` set to `true`. In addition, you will need to have the setting `ssl.keyStoreFile` to specify Jargyle's key store file and you will need to have the setting `ssl.keyStorePassword` to specify the password for Jargyle's key store file.
+You can have clients connect to Jargyle through SSL/TLS. By default SSL/TLS is disabled. To enable SSL/TLS, you will need to have the setting `ssl.enabled` set to `true`. In addition, you will need to have the setting `ssl.keyStoreFile` to specify Jargyle's key store file (this file would need to be created by Java's keytool utility). Also, you will need to have the setting `ssl.keyStorePassword` to specify the password for Jargyle's key store file.
 
 Partial command line example:
 
@@ -656,7 +654,7 @@ Partial command line example:
 
 ```
 
-If you want to have the client authenticate using SSL/TLS, you will need to have the setting `ssl.needClientAuth` set to `true`. In addition, you will need to have the setting `ssl.trustStoreFile` to specify the client's key store file used as a trust store and you will need to have the setting `ssl.trustStorePassword` to specify the password for the client's trust store file.
+If you want to have the client authenticate using SSL/TLS, you will need to have the setting `ssl.needClientAuth` set to `true`. In addition, you will need to have the setting `ssl.trustStoreFile` to specify the client's key store file to be used as a trust store (this file would need to be created by Java's keytool utility). Also, you will need to have the setting `ssl.trustStorePassword` to specify the password for the client's trust store file.
 
 Partial command line example:
 
@@ -1139,15 +1137,15 @@ The Java system property `-Djava.security.krb5.conf=krb5.conf` provides the Kerb
 
 In `krb5.conf`, a KDC is defined as running at the address `127.0.0.1` on port `12345` with its realm as `EXAMPLE.COM`. (In a production environment, the address `127.0.0.1` should be replaced by the actual address or name of the machine of where the KDC resides. Also, in a production environment, the realm `EXAMPLE.COM` should be replaced by an actual realm provided by a Kerberos administrator.)  
 
-### 4. 10. Setting External Connections Through Another SOCKS Server
+### 4. 10. Chaining to Another SOCKS Server
 
-You can set Jargyle's external connections through another SOCKS server. To have its external connections set through another SOCKS server, you will need to specify the other SOCKS server as a URI in the setting `externalClient.externalServerUri`
+You can have Jargyle chained to another SOCKS server, meaning that it can route through another SOCKS server. To have Jargyle chained to another SOCKS server, you will need to specify the other SOCKS server as a URI in the setting `chainAgent.socksServerUri`
 
 Partial command line example:
 
 ```text
 
-    --setting=externalClient.externalServerUri=socks5://127.0.0.1:23456
+    --setting=chainAgent.socksServerUri=socks5://127.0.0.1:23456
 
 ```
 
@@ -1157,7 +1155,7 @@ Partial configuration file example:
 
     <settings>
         <setting>
-            <name>externalClient.externalServerUri</name>
+            <name>chainAgent.socksServerUri</name>
             <value>socks5://127.0.0.1:23456</value>
         </setting>
     </settings>
@@ -1168,31 +1166,31 @@ Please note that the scheme in the URI specifies the SOCKS protocol to be used w
 
 #### 4. 10. 1. Enabling SSL/TLS
 
-You can have Jargyle's external connections connect to the other SOCKS server using SSL/TLS. By default SSL/TLS is disabled. To enable SSL/TLS, you will need to have the setting `externalClient.ssl.enabled` set to `true`. In addition, you will need to have the setting `externalClient.ssl.trustStoreFile` to specify the server's key store file used as a trust store and you will need to have the setting `externalClient.ssl.trustStorePassword` to specify the password for the server's trust store file.
+You can have Jargyle chained to the other SOCKS server using SSL/TLS. By default SSL/TLS is disabled. To enable SSL/TLS, you will need to have the setting `chainAgent.ssl.enabled` set to `true`. In addition, you will need to have the setting `chainAgent.ssl.trustStoreFile` to specify the server's key store file used as a trust store (this file would need to be created by Java's keytool utility). Also, you will need to have the setting `chainAgent.ssl.trustStorePassword` to specify the password for the server's trust store file.
 
 Partial command line example:
 
 ```text
 
-    --setting=externalClient.externalServerUri=socks5://127.0.0.1:23456 \
-    --setting=externalClient.ssl.enabled=true \
-    --setting=externalClient.ssl.trustStoreFile=server.jks \
-    --setting=externalClient.ssl.trustStorePassword=password
+    --setting=chainAgent.socksServerUri=socks5://127.0.0.1:23456 \
+    --setting=chainAgent.ssl.enabled=true \
+    --setting=chainAgent.ssl.trustStoreFile=server.jks \
+    --setting=chainAgent.ssl.trustStorePassword=password
 
 ```
 
-If the other SOCKS server wants the client to authenticate using SSL/TLS, you will need to have the setting `externalClient.ssl.keyStoreFile` to specify the client's key store file and you will need to have the setting `externalClient.ssl.keyStorePassword` to specify the password for the client's key store file.
+If the other SOCKS server wants the client to authenticate using SSL/TLS, you will need to have the setting `chainAgent.ssl.keyStoreFile` to specify the client's key store file (this file would need to be created by Java's keytool utility). Also, you will need to have the setting `chainAgent.ssl.keyStorePassword` to specify the password for the client's key store file.
 
 Partial command line example:
 
 ```text
 
-    --setting=externalClient.externalServerUri=socks5://127.0.0.1:23456 \
-    --setting=externalClient.ssl.enabled=true \
-    --setting=externalClient.ssl.keyStoreFile=client.jks \
-    --setting=externalClient.ssl.keyStoreFile=drowssap \
-    --setting=externalClient.ssl.trustStoreFile=server.jks \
-    --setting=externalClient.ssl.trustStorePassword=password    
+    --setting=chainAgent.socksServerUri=socks5://127.0.0.1:23456 \
+    --setting=chainAgent.ssl.enabled=true \
+    --setting=chainAgent.ssl.keyStoreFile=client.jks \
+    --setting=chainAgent.ssl.keyStoreFile=drowssap \
+    --setting=chainAgent.ssl.trustStoreFile=server.jks \
+    --setting=chainAgent.ssl.trustStorePassword=password    
 
 ```
 
@@ -1204,13 +1202,13 @@ Jargyle has the following SOCKS5 authentication methods to choose from for acces
 -   `GSSAPI`: GSS-API authentication
 -   `USERNAME_PASSWORD`: Username password authentication
 
-You can have one or more of the aforementioned authentication methods set in the setting `externalClient.socks5.authMethods` as a space separated list.
+You can have one or more of the aforementioned authentication methods set in the setting `chainAgent.socks5.authMethods` as a space separated list.
 
 Partial command line example:
 
 ```text
 
-    "--setting=externalClient.socks5.authMethods=NO_AUTHENTICATION_REQUIRED GSSAPI"
+    "--setting=chainAgent.socks5.authMethods=NO_AUTHENTICATION_REQUIRED GSSAPI"
 
 ```
 
@@ -1220,26 +1218,26 @@ Partial configuration file example:
 
     <settings>
         <setting>
-            <name>externalClient.socks5.authMethods</name>
+            <name>chainAgent.socks5.authMethods</name>
             <value>GSSAPI USERNAME_PASSWORD</value>
         </setting>
     </settings>
 
 ```
 
-If not set, the default value for the setting `externalClient.socks5.authMethods` is set to `NO_AUTHENTICATION_REQUIRED`
+If not set, the default value for the setting `chainAgent.socks5.authMethods` is set to `NO_AUTHENTICATION_REQUIRED`
 
 ##### 4. 10. 2. 1. Using No Authentication
 
-Because the default value for the setting `externalClient.socks5.authMethods` is set to `NO_AUTHENTICATION_REQUIRED`, it is not required for `NO_AUTHENTICATION_REQUIRED` to be included in the setting `externalClient.socks5.authMethods`.
+Because the default value for the setting `chainAgent.socks5.authMethods` is set to `NO_AUTHENTICATION_REQUIRED`, it is not required for `NO_AUTHENTICATION_REQUIRED` to be included in the setting `chainAgent.socks5.authMethods`.
 
-However, if other authentication methods are to be used in addition to `NO_AUTHENTICATION_REQUIRED`, `NO_AUTHENTICATION_REQUIRED` must be included in the setting `externalClient.socks5.authMethods`
+However, if other authentication methods are to be used in addition to `NO_AUTHENTICATION_REQUIRED`, `NO_AUTHENTICATION_REQUIRED` must be included in the setting `chainAgent.socks5.authMethods`
 
 Partial command line example:
 
 ```text
 
-    "--setting=externalClient.socks5.authMethods=NO_AUTHENTICATION_REQUIRED GSSAPI USERNAME_PASSWORD"
+    "--setting=chainAgent.socks5.authMethods=NO_AUTHENTICATION_REQUIRED GSSAPI USERNAME_PASSWORD"
 
 ```
 
@@ -1249,7 +1247,7 @@ Partial configuration file example:
 
     <settings>
         <setting>
-            <name>externalClient.socks5.authMethods</name>
+            <name>chainAgent.socks5.authMethods</name>
             <value>NO_AUTHENTICATION_REQUIRED GSSAPI USERNAME_PASSWORD</value>
         </setting>
     </settings>
@@ -1258,13 +1256,13 @@ Partial configuration file example:
 
 ##### 4. 10. 2. 2. Using Username Password Authentication
 
-To use username password authentication, you will need to have the setting `externalClient.socks5.authMethods` to have `USERNAME_PASSWORD` included.
+To use username password authentication, you will need to have the setting `chainAgent.socks5.authMethods` to have `USERNAME_PASSWORD` included.
 
 Partial command line example:
 
 ```text
 
-    --setting=externalClient.socks5.authMethods=USERNAME_PASSWORD
+    --setting=chainAgent.socks5.authMethods=USERNAME_PASSWORD
 
 ```
 
@@ -1274,7 +1272,7 @@ Partial configuration file example:
 
     <settings>
         <setting>
-            <name>externalClient.socks5.authMethods</name>
+            <name>chainAgent.socks5.authMethods</name>
             <value>USERNAME_PASSWORD</value>
         </setting>
     </settings>
@@ -1283,17 +1281,17 @@ Partial configuration file example:
 
 To provide a username and password for the other SOCKS5 server, you can use either of the following command line options:
 
--   `--setting=externalClient.socks5.usernamePassword=USERNAME:PASSWORD`
--   `--enter-external-client-socks5-user-pass`
+-   `--setting=chainAgent.socks5.usernamePassword=USERNAME:PASSWORD`
+-   `--enter-chain-agent-socks5-user-pass`
 
-The command line option `--setting=externalClient.socks5.usernamePassword=USERNAME:PASSWORD` requires an actual username followed by a colon character (`:`) followed by an actual password.
+The command line option `--setting=chainAgent.socks5.usernamePassword=USERNAME:PASSWORD` requires an actual username followed by a colon character (`:`) followed by an actual password.
 
 Partial command line example:
 
 ```text
     
-    --setting=externalClient.socks5.authMethods=USERNAME_PASSWORD \
-    --setting=externalClient.socks5.usernamePassword=Aladdin:opensesame
+    --setting=chainAgent.socks5.authMethods=USERNAME_PASSWORD \
+    --setting=chainAgent.socks5.usernamePassword=Aladdin:opensesame
 
 ```
 
@@ -1305,26 +1303,26 @@ If the username or the password contains a plus sign character (`+`) not used fo
 
 If the username or the password contains a percent sign character (`%`) not used for URL encoding, then each percent sign character not used for URL encoding must be replaced with the URL encoding character `%25`.
 
-The command line option `--enter-external-client-socks5-user-pass` provides an interactive prompt for you to enter the username and password. This command line option is used for when you do not want to have the username and password appear in any script or in any part of the command line history for security reasons.
+The command line option `--enter-chain-agent-socks5-user-pass` provides an interactive prompt for you to enter the username and password. This command line option is used for when you do not want to have the username and password appear in any script or in any part of the command line history for security reasons.
 
 Partial command line example:
 
 ```text
     
-    --setting=externalClient.socks5.authMethods=USERNAME_PASSWORD \
-    --enter-external-client-socks5-user-pass
+    --setting=chainAgent.socks5.authMethods=USERNAME_PASSWORD \
+    --enter-chain-agent-socks5-user-pass
 
 ```
 
 ##### 4. 10. 2. 3. Using GSS-API Authentication
 
-To use GSS-API authentication, you will need to have the setting `externalClient.socks5.authMethods` to have `GSSAPI` included.
+To use GSS-API authentication, you will need to have the setting `chainAgent.socks5.authMethods` to have `GSSAPI` included.
 
 Partial command line example:
 
 ```text
 
-    --setting=externalClient.socks5.authMethods=GSSAPI
+    --setting=chainAgent.socks5.authMethods=GSSAPI
 
 ```
 
@@ -1334,7 +1332,7 @@ Partial configuration file example:
 
     <settings>
         <setting>
-            <name>externalClient.socks5.authMethods</name>
+            <name>chainAgent.socks5.authMethods</name>
             <value>GSSAPI</value>
         </setting>
     </settings>
@@ -1351,9 +1349,9 @@ The following is a sufficient example of using the Kerberos security mechanism:
 	    -Djava.security.auth.login.config=login.conf \
 	    -Djava.security.krb5.conf=krb5.conf \
 	    -jar target/jargyle-${VERSION}.jar \
-	    --setting=externalClient.externalServerUri=socks5://127.0.0.1:23456 \
-	    --setting=externalClient.socks5.authMethods=GSSAPI \
-	    --setting=externalClient.socks5.gssapiServiceName=rcmd/127.0.0.1 
+	    --setting=chainAgent.socksServerUri=socks5://127.0.0.1:23456 \
+	    --setting=chainAgent.socks5.authMethods=GSSAPI \
+	    --setting=chainAgent.socks5.gssapiServiceName=rcmd/127.0.0.1 
 
 ```
 
@@ -1400,35 +1398,7 @@ The Java system property `-Djava.security.krb5.conf=krb5.conf` provides the Kerb
 
 In `krb5.conf`, a KDC is defined as running at the address `127.0.0.1` on port `12345` with its realm as `EXAMPLE.COM`. (In a production environment, the address `127.0.0.1` should be replaced by the actual address or name of the machine of where the KDC resides. Also, in a production environment, the realm `EXAMPLE.COM` should be replaced by an actual realm provided by a Kerberos administrator.)
 
-The command line option `--setting=externalClient.socks5.gssapiServiceName=rcmd/127.0.0.1` is the GSS-API service name (or the Kerberos service principal) for the other SOCKS5 server residing at the address `127.0.0.1`. (In a production environment, the address `127.0.0.1` should be replaced by the name of the machine of where the other SOCKS5 server resides.)
-
-#### 4. 10. 3. Using Java System Properties
-
-Instead of using command line options or configuration settings, you can use the following Java system properties to set Jargyle's external connections through another SOCKS server:
-
--   `socksServerUri.scheme`: The scheme of the URI of the other SOCKS server used for external connections (only `socks5` is supported)
--   `socksServerUri.host`: The host name or address of the URI of the other SOCKS server used for external connections
--   `socksServerUri.port`: The port of the URI of the other SOCKS server used for external connections
--   `socksClient.bindHost`: Its usage is equivalent to the setting `externalClient.bindHost`. See the settings help information for details (use the command line option `--settings-help`) 
--   `socksClient.connectTimeout`: Its usage is equivalent to the setting `externalClient.connectTimeout`. See the settings help information for details (use the command line option `--settings-help`) 
--   `socksClient.socketSettings`: Its usage is equivalent to the setting `externalClient.socketSettings`. See the settings help information for details (use the command line option `--settings-help`) 
--   `socksClient.socks5.authMethods`: Its usage is equivalent to the setting `externalClient.socks5.authMethods`. See the settings help information for details (use the command line option `--settings-help`) 
--   `socksClient.socks5.gssapiMechanismOid`: Its usage is equivalent to the setting `externalClient.socks5.gssapiMechanismOid`. See the settings help information for details (use the command line option `--settings-help`) 
--   `socksClient.socks5.gssapiNecReferenceImpl`: Its usage is equivalent to the setting `externalClient.socks5.gssapiNecReferenceImpl`. See the settings help information for details (use the command line option `--settings-help`) 
--   `socksClient.socks5.gssapiProtectionLevels`: Its usage is equivalent to the setting `externalClient.socks5.gssapiProtectionLevels`. See the settings help information for details (use the command line option `--settings-help`) 
--   `socksClient.socks5.gssapiServiceName`: Its usage is equivalent to the setting `externalClient.socks5.gssapiServiceName`. See the settings help information for details (use the command line option `--settings-help`) 
--   `socksClient.socks5.username`: The username to be used in SOCKS5 username password authentication to access the other SOCKS5 server used for external connections
--   `socksClient.socks5.password`: The password to be used in SOCKS5 username password authentication to access the other SOCKS5 server used for external connections
--   `socksClient.ssl.enabled`: Its usage is equivalent to the setting `externalClient.ssl.enabled`. See the settings help information for details (use the command line option `--settings-help`)
--   `socksClient.ssl.enabledCipherSuites`: Its usage is equivalent to the setting `externalClient.ssl.enabledCipherSuites`. See the settings help information for details (use the command line option `--settings-help`)
--   `socksClient.ssl.enabledProtocols`: Its usage is equivalent to the setting `externalClient.ssl.enabledProtocols`. See the settings help information for details (use the command line option `--settings-help`)
--   `socksClient.ssl.keyStoreFile`: Its usage is equivalent to the setting `externalClient.ssl.keyStoreFile`. See the settings help information for details (use the command line option `--settings-help`)
--   `socksClient.ssl.keyStorePassword`: Its usage is equivalent to the setting `externalClient.ssl.keyStorePassword`. See the settings help information for details (use the command line option `--settings-help`)
--   `socksClient.ssl.keyStoreType`: Its usage is equivalent to the setting `externalClient.ssl.keyStoreType`. See the settings help information for details (use the command line option `--settings-help`)
--   `socksClient.ssl.protocol`: Its usage is equivalent to the setting `externalClient.ssl.protocol`. See the settings help information for details (use the command line option `--settings-help`)
--   `socksClient.ssl.trustStoreFile`: Its usage is equivalent to the setting `externalClient.ssl.trustStoreFile`. See the settings help information for details (use the command line option `--settings-help`)
--   `socksClient.ssl.trustStorePassword`: Its usage is equivalent to the setting `externalClient.ssl.trustStorePassword`. See the settings help information for details (use the command line option `--settings-help`)
--   `socksClient.ssl.trustStoreType`: Its usage is equivalent to the setting `externalClient.ssl.trustStoreType`. See the settings help information for details (use the command line option `--settings-help`)
+The command line option `--setting=chainAgent.socks5.gssapiServiceName=rcmd/127.0.0.1` is the GSS-API service name (or the Kerberos service principal) for the other SOCKS5 server residing at the address `127.0.0.1`. (In a production environment, the address `127.0.0.1` should be replaced by the name of the machine of where the other SOCKS5 server resides.)
 
 ### 4. 11. Allowing or Blocking Addresses
 

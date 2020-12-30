@@ -103,36 +103,11 @@ public enum SettingSpec {
 		
 	},
 	@HelpText(
-			doc = "The space separated list of socket settings for the client "
-					+ "socket", 
-			usage = "clientSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
-	)
-	CLIENT_SOCKET_SETTINGS("clientSocketSettings") {
-				
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(this, SocketSettings.newInstance());
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			SocketSettings val = SocketSettings.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return new Setting(this, SocketSettings.newInstance(value));
-		}
-		
-	},
-	@HelpText(
 			doc = "The binding host name or address for the socket to connect "
-					+ "to the external SOCKS server used for external "
-					+ "connections (default is 0.0.0.0)", 
-			usage = "externalClient.bindHost=HOST"
+					+ "to the other SOCKS server (default is 0.0.0.0)", 
+			usage = "chainAgent.bindHost=HOST"
 	)
-	EXTERNAL_CLIENT_BIND_HOST("externalClient.bindHost") {
+	CHAIN_AGENT_BIND_HOST("chainAgent.bindHost") {
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -155,11 +130,10 @@ public enum SettingSpec {
 	},
 	@HelpText(
 			doc = "The timeout in milliseconds on waiting for the socket to "
-					+ "connect to the external SOCKS server used for external "
-					+ "connections (default is 60000)", 
-			usage = "externalClient.connectTimeout=INTEGER_BETWEEN_1_AND_2147483647"
+					+ "connect to the other SOCKS server (default is 60000)", 
+			usage = "chainAgent.connectTimeout=INTEGER_BETWEEN_1_AND_2147483647"
 	)
-	EXTERNAL_CLIENT_CONNECT_TIMEOUT("externalClient.connectTimeout") {
+	CHAIN_AGENT_CONNECT_TIMEOUT("chainAgent.connectTimeout") {
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -181,36 +155,12 @@ public enum SettingSpec {
 		
 	},
 	@HelpText(
-			doc = "The URI of the external SOCKS server used for external "
-					+ "connections", 
-			usage = "externalClient.externalServerUri=SCHEME://HOST[:PORT]"
-	)
-	EXTERNAL_CLIENT_EXTERNAL_SERVER_URI("externalClient.externalServerUri") {
-		
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(this, SocksServerUri.newInstance());
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			SocksServerUri val = SocksServerUri.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return new Setting(this, SocksServerUri.newInstance(value));
-		}
-		
-	},
-	@HelpText(
 			doc = "The space separated list of socket settings for the socket "
-					+ "to connect to the external SOCKS server used for "
-					+ "external connections", 
-			usage = "externalClient.socketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
+					+ "to connect to the other SOCKS server (used for SOCKS5 "
+					+ "UDP ASSOCIATE command)", 
+			usage = "chainAgent.socketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
 	)
-	EXTERNAL_CLIENT_SOCKET_SETTINGS("externalClient.socketSettings") {
+	CHAIN_AGENT_SOCKET_SETTINGS("chainAgent.socketSettings") {
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -232,12 +182,35 @@ public enum SettingSpec {
 			
 	},
 	@HelpText(
-			doc = "The space separated list of acceptable authentication "
-					+ "methods to the external SOCKS5 server used for external "
-					+ "connections (default is NO_AUTHENTICATION_REQUIRED)", 
-			usage = "externalClient.socks5.authMethods=SOCKS5_AUTH_METHOD1[ SOCKS5_AUTH_METHOD2[...]]"
+			doc = "The URI of the other SOCKS server", 
+			usage = "chainAgent.socksServerUri=SCHEME://HOST[:PORT]"
 	)
-	EXTERNAL_CLIENT_SOCKS5_AUTH_METHODS("externalClient.socks5.authMethods") {
+	CHAIN_AGENT_SOCKS_SERVER_URI("chainAgent.socksServerUri") {
+		
+		@Override
+		public Setting getDefaultSetting() {
+			return new Setting(this, SocksServerUri.newInstance());
+		}
+
+		@Override
+		public Setting newSetting(final Object value) {
+			SocksServerUri val = SocksServerUri.class.cast(value);
+			return new Setting(this, val);
+		}
+
+		@Override
+		public Setting newSetting(final String value) {
+			return new Setting(this, SocksServerUri.newInstance(value));
+		}
+		
+	},
+	@HelpText(
+			doc = "The space separated list of acceptable authentication "
+					+ "methods to the other SOCKS5 server (default is "
+					+ "NO_AUTHENTICATION_REQUIRED)", 
+			usage = "chainAgent.socks5.authMethods=SOCKS5_AUTH_METHOD1[ SOCKS5_AUTH_METHOD2[...]]"
+	)
+	CHAIN_AGENT_SOCKS5_AUTH_METHODS("chainAgent.socks5.authMethods") {
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -260,12 +233,11 @@ public enum SettingSpec {
 	},
 	@HelpText(
 			doc = "The object ID for the GSS-API authentication mechanism to "
-					+ "the external SOCKS5 server used for external "
-					+ "connections (default is 1.2.840.113554.1.2.2)", 
-			usage = "externalClient.socks5.gssapiMechanismOid=GSSAPI_MECHANISM_OID"
+					+ "the other SOCKS5 server (default is 1.2.840.113554.1.2.2)", 
+			usage = "chainAgent.socks5.gssapiMechanismOid=GSSAPI_MECHANISM_OID"
 	)
-	EXTERNAL_CLIENT_SOCKS5_GSSAPI_MECHANISM_OID(
-			"externalClient.socks5.gssapiMechanismOid") {
+	CHAIN_AGENT_SOCKS5_GSSAPI_MECHANISM_OID(
+			"chainAgent.socks5.gssapiMechanismOid") {
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -295,13 +267,12 @@ public enum SettingSpec {
 	@HelpText(
 			doc = "The boolean value to indicate if the exchange of the "
 					+ "GSS-API protection level negotiation must be "
-					+ "unprotected should the external SOCKS5 server used for "
-					+ "external connections use the NEC reference "
-					+ "implementation (default is false)", 
-			usage = "externalClient.socks5.gssapiNecReferenceImpl=true|false"
+					+ "unprotected should the other SOCKS5 server use the NEC "
+					+ "reference implementation (default is false)", 
+			usage = "chainAgent.socks5.gssapiNecReferenceImpl=true|false"
 	)
-	EXTERNAL_CLIENT_SOCKS5_GSSAPI_NEC_REFERENCE_IMPL(
-			"externalClient.socks5.gssapiNecReferenceImpl") {
+	CHAIN_AGENT_SOCKS5_GSSAPI_NEC_REFERENCE_IMPL(
+			"chainAgent.socks5.gssapiNecReferenceImpl") {
 
 		@Override
 		public Setting getDefaultSetting() {
@@ -324,15 +295,15 @@ public enum SettingSpec {
 	},
 	@HelpText(
 			doc = "The space separated list of acceptable protection levels "
-					+ "after GSS-API authentication with the external SOCKS5 "
-					+ "server used for external connections (The first is "
-					+ "preferred. The remaining are acceptable if the server "
-					+ "does not accept the first.) (default is "
+					+ "after GSS-API authentication with the other SOCKS5 "
+					+ "server (The first is preferred. The remaining are "
+					+ "acceptable if the server does not accept the first.) "
+					+ "(default is "
 					+ "REQUIRED_INTEG_AND_CONF REQUIRED_INTEG NONE)", 
-			usage = "externalClient.socks5.gssapiProtectionLevels=SOCKS5_GSSAPI_PROTECTION_LEVEL1[ SOCKS5_GSSAPI_PROTECTION_LEVEL2[...]]"
+			usage = "chainAgent.socks5.gssapiProtectionLevels=SOCKS5_GSSAPI_PROTECTION_LEVEL1[ SOCKS5_GSSAPI_PROTECTION_LEVEL2[...]]"
 	)
-	EXTERNAL_CLIENT_SOCKS5_GSSAPI_PROTECTION_LEVELS(
-			"externalClient.socks5.gssapiProtectionLevels") {
+	CHAIN_AGENT_SOCKS5_GSSAPI_PROTECTION_LEVELS(
+			"chainAgent.socks5.gssapiProtectionLevels") {
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -354,12 +325,11 @@ public enum SettingSpec {
 		
 	},
 	@HelpText(
-			doc = "The GSS-API service name for the external SOCKS5 server "
-					+ "used for external connections", 
-			usage = "externalClient.socks5.gssapiServiceName=GSSAPI_SERVICE_NAME"
+			doc = "The GSS-API service name for the other SOCKS5 server", 
+			usage = "chainAgent.socks5.gssapiServiceName=GSSAPI_SERVICE_NAME"
 	)
-	EXTERNAL_CLIENT_SOCKS5_GSSAPI_SERVICE_NAME(
-			"externalClient.socks5.gssapiServiceName") {
+	CHAIN_AGENT_SOCKS5_GSSAPI_SERVICE_NAME(
+			"chainAgent.socks5.gssapiServiceName") {
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -381,12 +351,11 @@ public enum SettingSpec {
 		
 	},
 	@HelpText(
-			doc = "The username password to be used to access the external "
-					+ "SOCKS5 server used for external connections", 
-			usage = "externalClient.socks5.usernamePassword=USERNAME:PASSWORD"
+			doc = "The username password to be used to access the other "
+					+ "SOCKS5 server", 
+			usage = "chainAgent.socks5.usernamePassword=USERNAME:PASSWORD"
 	)
-	EXTERNAL_CLIENT_SOCKS5_USERNAME_PASSWORD(
-			"externalClient.socks5.usernamePassword") {
+	CHAIN_AGENT_SOCKS5_USERNAME_PASSWORD("chainAgent.socks5.usernamePassword") {
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -407,11 +376,10 @@ public enum SettingSpec {
 	},
 	@HelpText(
 			doc = "The boolean value to indicate if SSL/TLS connections to "
-					+ "the external SOCKS server for external connections are "
-					+ "enabled (default is false)",
-			usage = "externalClient.ssl.enabled=true|false"
+					+ "the other SOCKS server are enabled (default is false)",
+			usage = "chainAgent.ssl.enabled=true|false"
 	)
-	EXTERNAL_CLIENT_SSL_ENABLED("externalClient.ssl.enabled") {
+	CHAIN_AGENT_SSL_ENABLED("chainAgent.ssl.enabled") {
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -434,12 +402,12 @@ public enum SettingSpec {
 	},
 	@HelpText(
 			doc = "The space separated list of acceptable cipher suites "
-					+ "enabled for SSL/TLS connections to the external SOCKS "
-					+ "server for external connections",
-			usage = "externalClient.ssl.enabledCipherSuites=[SSL_CIPHER_SUITE1[ SSL_CIPHER_SUITE2[...]]]"
+					+ "enabled for SSL/TLS connections to the other SOCKS "
+					+ "server",
+			usage = "chainAgent.ssl.enabledCipherSuites=[SSL_CIPHER_SUITE1[ SSL_CIPHER_SUITE2[...]]]"
 	)
-	EXTERNAL_CLIENT_SSL_ENABLED_CIPHER_SUITES(
-			"externalClient.ssl.enabledCipherSuites") {
+	CHAIN_AGENT_SSL_ENABLED_CIPHER_SUITES(
+			"chainAgent.ssl.enabledCipherSuites") {
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -462,12 +430,11 @@ public enum SettingSpec {
 	},
 	@HelpText(
 			doc = "The space separated list of acceptable protocol versions "
-					+ "enabled for SSL/TLS connections to the external SOCKS "
-					+ "server for external connections",
-			usage = "externalClient.ssl.enabledProtocols=[SSL_PROTOCOL1[ SSL_PROTOCOL2[...]]]"
+					+ "enabled for SSL/TLS connections to the other SOCKS "
+					+ "server",
+			usage = "chainAgent.ssl.enabledProtocols=[SSL_PROTOCOL1[ SSL_PROTOCOL2[...]]]"
 	)	
-	EXTERNAL_CLIENT_SSL_ENABLED_PROTOCOLS(
-			"externalClient.ssl.enabledProtocols") {
+	CHAIN_AGENT_SSL_ENABLED_PROTOCOLS("chainAgent.ssl.enabledProtocols") {
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -490,10 +457,10 @@ public enum SettingSpec {
 	},
 	@HelpText(
 			doc = "The key store file for the SSL/TLS connections to the "
-					+ "external SOCKS server for external connections",
-			usage = "externalClient.ssl.keyStoreFile=FILE"
+					+ "other SOCKS server",
+			usage = "chainAgent.ssl.keyStoreFile=FILE"
 	)
-	EXTERNAL_CLIENT_SSL_KEY_STORE_FILE("externalClient.ssl.keyStoreFile") {
+	CHAIN_AGENT_SSL_KEY_STORE_FILE("chainAgent.ssl.keyStoreFile") {
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -526,11 +493,10 @@ public enum SettingSpec {
 	},
 	@HelpText(
 			doc = "The password for the key store for the SSL/TLS connections "
-					+ "to the external SOCKS server for external connections",
-			usage = "externalClient.ssl.keyStorePassword=PASSWORD"
+					+ "to the other SOCKS server",
+			usage = "chainAgent.ssl.keyStorePassword=PASSWORD"
 	)
-	EXTERNAL_CLIENT_SSL_KEY_STORE_PASSWORD(
-			"externalClient.ssl.keyStorePassword") {
+	CHAIN_AGENT_SSL_KEY_STORE_PASSWORD("chainAgent.ssl.keyStorePassword") {
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -553,11 +519,10 @@ public enum SettingSpec {
 	},
 	@HelpText(
 			doc = "The type of key store file for the SSL/TLS connections to "
-					+ "the external SOCKS server for external connections "
-					+ "(default is PKCS12)",
-			usage = "externalClient.ssl.keyStoreType=TYPE"
+					+ "the other SOCKS server (default is PKCS12)",
+			usage = "chainAgent.ssl.keyStoreType=TYPE"
 	)	
-	EXTERNAL_CLIENT_SSL_KEY_STORE_TYPE("externalClient.ssl.keyStoreType") {
+	CHAIN_AGENT_SSL_KEY_STORE_TYPE("chainAgent.ssl.keyStoreType") {
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -579,11 +544,10 @@ public enum SettingSpec {
 	},
 	@HelpText(
 			doc = "The protocol version for the SSL/TLS connections to the "
-					+ "external SOCKS server for external connections "
-					+ "(default is TLSv1)",
-			usage = "externalClient.ssl.protocol=PROTOCOL"
+					+ "other SOCKS server (default is TLSv1)",
+			usage = "chainAgent.ssl.protocol=PROTOCOL"
 	)	
-	EXTERNAL_CLIENT_SSL_PROTOCOL("externalClient.ssl.protocol") {
+	CHAIN_AGENT_SSL_PROTOCOL("chainAgent.ssl.protocol") {
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -606,10 +570,10 @@ public enum SettingSpec {
 	},
 	@HelpText(
 			doc = "The trust store file for the SSL/TLS connections to the "
-					+ "external SOCKS server for external connections",
-			usage = "externalClient.ssl.trustStoreFile=FILE"
+					+ "other SOCKS server",
+			usage = "chainAgent.ssl.trustStoreFile=FILE"
 	)	
-	EXTERNAL_CLIENT_SSL_TRUST_STORE_FILE("externalClient.ssl.trustStoreFile") {
+	CHAIN_AGENT_SSL_TRUST_STORE_FILE("chainAgent.ssl.trustStoreFile") {
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -642,12 +606,10 @@ public enum SettingSpec {
 	},
 	@HelpText(
 			doc = "The password for the trust store for the SSL/TLS "
-					+ "connections to the external SOCKS server for external "
-					+ "connections",
-			usage = "externalClient.ssl.trustStorePassword=PASSWORD"
+					+ "connections to the other SOCKS server",
+			usage = "chainAgent.ssl.trustStorePassword=PASSWORD"
 	)	
-	EXTERNAL_CLIENT_SSL_TRUST_STORE_PASSWORD(
-			"externalClient.ssl.trustStorePassword") {
+	CHAIN_AGENT_SSL_TRUST_STORE_PASSWORD("chainAgent.ssl.trustStorePassword") {
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -670,11 +632,10 @@ public enum SettingSpec {
 	},
 	@HelpText(
 			doc = "The type of trust store file for the SSL/TLS connections to "
-					+ "the external SOCKS server for external connections "
-					+ "(default is PKCS12)",
-			usage = "externalClient.ssl.trustStoreType=TYPE"
+					+ "the other SOCKS server (default is PKCS12)",
+			usage = "chainAgent.ssl.trustStoreType=TYPE"
 	)	
-	EXTERNAL_CLIENT_SSL_TRUST_STORE_TYPE("externalClient.ssl.trustStoreType") {
+	CHAIN_AGENT_SSL_TRUST_STORE_TYPE("chainAgent.ssl.trustStoreType") {
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -692,6 +653,30 @@ public enum SettingSpec {
 		@Override
 		public Setting newSetting(final String value) {
 			return new Setting(this, value);
+		}
+		
+	},
+	@HelpText(
+			doc = "The space separated list of socket settings for the client "
+					+ "socket", 
+			usage = "clientSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
+	)
+	CLIENT_SOCKET_SETTINGS("clientSocketSettings") {
+				
+		@Override
+		public Setting getDefaultSetting() {
+			return new Setting(this, SocketSettings.newInstance());
+		}
+
+		@Override
+		public Setting newSetting(final Object value) {
+			SocketSettings val = SocketSettings.class.cast(value);
+			return new Setting(this, val);
+		}
+
+		@Override
+		public Setting newSetting(final String value) {
+			return new Setting(this, SocketSettings.newInstance(value));
 		}
 		
 	},

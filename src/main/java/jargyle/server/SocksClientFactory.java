@@ -28,41 +28,59 @@ public final class SocksClientFactory {
 			final Configuration configuration) {
 		Settings settings = configuration.getSettings();
 		List<Property> properties = new ArrayList<Property>();
-		AuthMethods authMethods = settings.getLastValue(
-				SettingSpec.EXTERNAL_CLIENT_SOCKS5_AUTH_METHODS, 
-				AuthMethods.class);
-		properties.add(PropertySpec.SOCKS5_AUTH_METHODS.newProperty(authMethods));
-		Oid gssapiMechanismOid = settings.getLastValue(
-				SettingSpec.EXTERNAL_CLIENT_SOCKS5_GSSAPI_MECHANISM_OID, 
-				Oid.class);
-		properties.add(PropertySpec.SOCKS5_GSSAPI_MECHANISM_OID.newProperty(
-				gssapiMechanismOid));
-		Boolean gssapiNecReferenceImpl = settings.getLastValue(
-				SettingSpec.EXTERNAL_CLIENT_SOCKS5_GSSAPI_NEC_REFERENCE_IMPL,
-				Boolean.class);
-		properties.add(
-				PropertySpec.SOCKS5_GSSAPI_NEC_REFERENCE_IMPL.newProperty(
-						gssapiNecReferenceImpl));
-		GssapiProtectionLevels gssapiProtectionLevels = 
-				settings.getLastValue(
-						SettingSpec.EXTERNAL_CLIENT_SOCKS5_GSSAPI_PROTECTION_LEVELS, 
-						GssapiProtectionLevels.class);
-		properties.add(
-				PropertySpec.SOCKS5_GSSAPI_PROTECTION_LEVELS.newProperty(
-						gssapiProtectionLevels));
-		String gssapiServiceName = settings.getLastValue(
-				SettingSpec.EXTERNAL_CLIENT_SOCKS5_GSSAPI_SERVICE_NAME, 
-				String.class);
-		properties.add(PropertySpec.SOCKS5_GSSAPI_SERVICE_NAME.newProperty(
-				gssapiServiceName));
-		UsernamePassword usernamePassword = settings.getLastValue(
-				SettingSpec.EXTERNAL_CLIENT_SOCKS5_USERNAME_PASSWORD, 
-				UsernamePassword.class);
-		if (usernamePassword != null) {
-			properties.add(PropertySpec.SOCKS5_USERNAME.newProperty(
-					usernamePassword.getUsername()));
-			properties.add(PropertySpec.SOCKS5_PASSWORD.newProperty(
-					usernamePassword.getEncryptedPassword()));			
+		if (settings.containsNondefaultValue(
+				SettingSpec.EXTERNAL_CLIENT_SOCKS5_AUTH_METHODS)) {
+			AuthMethods authMethods = settings.getLastValue(
+					SettingSpec.EXTERNAL_CLIENT_SOCKS5_AUTH_METHODS, 
+					AuthMethods.class);
+			properties.add(PropertySpec.SOCKS5_AUTH_METHODS.newProperty(
+					authMethods));
+		}
+		if (settings.containsNondefaultValue(
+				SettingSpec.EXTERNAL_CLIENT_SOCKS5_GSSAPI_MECHANISM_OID)) {
+			Oid gssapiMechanismOid = settings.getLastValue(
+					SettingSpec.EXTERNAL_CLIENT_SOCKS5_GSSAPI_MECHANISM_OID, 
+					Oid.class);
+			properties.add(PropertySpec.SOCKS5_GSSAPI_MECHANISM_OID.newProperty(
+					gssapiMechanismOid));
+		}
+		if (settings.containsNondefaultValue(
+				SettingSpec.EXTERNAL_CLIENT_SOCKS5_GSSAPI_NEC_REFERENCE_IMPL)) {
+			Boolean gssapiNecReferenceImpl = settings.getLastValue(
+					SettingSpec.EXTERNAL_CLIENT_SOCKS5_GSSAPI_NEC_REFERENCE_IMPL,
+					Boolean.class);
+			properties.add(
+					PropertySpec.SOCKS5_GSSAPI_NEC_REFERENCE_IMPL.newProperty(
+							gssapiNecReferenceImpl));
+		}
+		if (settings.containsNondefaultValue(
+				SettingSpec.EXTERNAL_CLIENT_SOCKS5_GSSAPI_PROTECTION_LEVELS)) {
+			GssapiProtectionLevels gssapiProtectionLevels =	settings.getLastValue(
+					SettingSpec.EXTERNAL_CLIENT_SOCKS5_GSSAPI_PROTECTION_LEVELS,
+					GssapiProtectionLevels.class);
+			properties.add(
+					PropertySpec.SOCKS5_GSSAPI_PROTECTION_LEVELS.newProperty(
+							gssapiProtectionLevels));
+		}
+		if (settings.containsNondefaultValue(
+				SettingSpec.EXTERNAL_CLIENT_SOCKS5_GSSAPI_SERVICE_NAME)) {
+			String gssapiServiceName = settings.getLastValue(
+					SettingSpec.EXTERNAL_CLIENT_SOCKS5_GSSAPI_SERVICE_NAME, 
+					String.class);
+			properties.add(PropertySpec.SOCKS5_GSSAPI_SERVICE_NAME.newProperty(
+					gssapiServiceName));
+		}
+		if (settings.containsNondefaultValue(
+				SettingSpec.EXTERNAL_CLIENT_SOCKS5_USERNAME_PASSWORD)) {
+			UsernamePassword usernamePassword = settings.getLastValue(
+					SettingSpec.EXTERNAL_CLIENT_SOCKS5_USERNAME_PASSWORD, 
+					UsernamePassword.class);
+			if (usernamePassword != null) {
+				properties.add(PropertySpec.SOCKS5_USERNAME.newProperty(
+						usernamePassword.getUsername()));
+				properties.add(PropertySpec.SOCKS5_PASSWORD.newProperty(
+						usernamePassword.getEncryptedPassword()));			
+			}
 		}
 		return properties;
 	}
@@ -71,63 +89,103 @@ public final class SocksClientFactory {
 			final Configuration configuration) {
 		Settings settings = configuration.getSettings();
 		List<Property> properties = new ArrayList<Property>();
-		Host bindHost = settings.getLastValue(
-				SettingSpec.EXTERNAL_CLIENT_BIND_HOST, Host.class);
-		properties.add(PropertySpec.BIND_HOST.newProperty(bindHost));
-		PositiveInteger connectTimeout = settings.getLastValue(
-				SettingSpec.EXTERNAL_CLIENT_CONNECT_TIMEOUT, 
-				PositiveInteger.class);
-		properties.add(PropertySpec.CONNECT_TIMEOUT.newProperty(connectTimeout));
-		SocketSettings socketSettings = settings.getLastValue(
-				SettingSpec.EXTERNAL_CLIENT_SOCKET_SETTINGS, 
-				SocketSettings.class);
-		properties.add(PropertySpec.SOCKET_SETTINGS.newProperty(socketSettings));
-		Boolean sslEnabled = settings.getLastValue(
-				SettingSpec.EXTERNAL_CLIENT_SSL_ENABLED, Boolean.class);
-		properties.add(PropertySpec.SSL_ENABLED.newProperty(sslEnabled));
-		CipherSuites sslEnabledCipherSuites = settings.getLastValue(
-				SettingSpec.EXTERNAL_CLIENT_SSL_ENABLED_CIPHER_SUITES, 
-				CipherSuites.class);
-		properties.add(PropertySpec.SSL_ENABLED_CIPHER_SUITES.newProperty(
-				sslEnabledCipherSuites));
-		Protocols sslEnabledProtocols = settings.getLastValue(
-				SettingSpec.EXTERNAL_CLIENT_SSL_ENABLED_PROTOCOLS, 
-				Protocols.class);
-		properties.add(PropertySpec.SSL_ENABLED_PROTOCOLS.newProperty(
-				sslEnabledProtocols));
-		File sslKeyStoreFile = settings.getLastValue(
-				SettingSpec.EXTERNAL_CLIENT_SSL_KEY_STORE_FILE, File.class);
-		if (sslKeyStoreFile != null) {
+		if (settings.containsNondefaultValue(
+				SettingSpec.EXTERNAL_CLIENT_BIND_HOST)) {
+			Host bindHost = settings.getLastValue(
+					SettingSpec.EXTERNAL_CLIENT_BIND_HOST, Host.class);
+			properties.add(PropertySpec.BIND_HOST.newProperty(bindHost));
+		}
+		if (settings.containsNondefaultValue(
+				SettingSpec.EXTERNAL_CLIENT_CONNECT_TIMEOUT)) {
+			PositiveInteger connectTimeout = settings.getLastValue(
+					SettingSpec.EXTERNAL_CLIENT_CONNECT_TIMEOUT, 
+					PositiveInteger.class);
+			properties.add(PropertySpec.CONNECT_TIMEOUT.newProperty(
+					connectTimeout));
+		}
+		if (settings.containsNondefaultValue(
+				SettingSpec.EXTERNAL_CLIENT_SOCKET_SETTINGS)) {
+			SocketSettings socketSettings = settings.getLastValue(
+					SettingSpec.EXTERNAL_CLIENT_SOCKET_SETTINGS, 
+					SocketSettings.class);
+			properties.add(PropertySpec.SOCKET_SETTINGS.newProperty(
+					socketSettings));
+		}
+		if (settings.containsNondefaultValue(
+				SettingSpec.EXTERNAL_CLIENT_SSL_ENABLED)) {
+			Boolean sslEnabled = settings.getLastValue(
+					SettingSpec.EXTERNAL_CLIENT_SSL_ENABLED, Boolean.class);
+			properties.add(PropertySpec.SSL_ENABLED.newProperty(sslEnabled));
+		}
+		if (settings.containsNondefaultValue(
+				SettingSpec.EXTERNAL_CLIENT_SSL_ENABLED_CIPHER_SUITES)) {
+			CipherSuites sslEnabledCipherSuites = settings.getLastValue(
+					SettingSpec.EXTERNAL_CLIENT_SSL_ENABLED_CIPHER_SUITES, 
+					CipherSuites.class);
+			properties.add(PropertySpec.SSL_ENABLED_CIPHER_SUITES.newProperty(
+					sslEnabledCipherSuites));
+		}
+		if (settings.containsNondefaultValue(
+				SettingSpec.EXTERNAL_CLIENT_SSL_ENABLED_PROTOCOLS)) {
+			Protocols sslEnabledProtocols = settings.getLastValue(
+					SettingSpec.EXTERNAL_CLIENT_SSL_ENABLED_PROTOCOLS, 
+					Protocols.class);
+			properties.add(PropertySpec.SSL_ENABLED_PROTOCOLS.newProperty(
+					sslEnabledProtocols));			
+		}
+		if (settings.containsNondefaultValue(
+				SettingSpec.EXTERNAL_CLIENT_SSL_KEY_STORE_FILE)) {
+			File sslKeyStoreFile = settings.getLastValue(
+					SettingSpec.EXTERNAL_CLIENT_SSL_KEY_STORE_FILE, File.class);
 			properties.add(PropertySpec.SSL_KEY_STORE_FILE.newProperty(
 					sslKeyStoreFile));
 		}
-		EncryptedPassword sslKeyStorePassword = settings.getLastValue(
-				SettingSpec.EXTERNAL_CLIENT_SSL_KEY_STORE_PASSWORD, 
-				EncryptedPassword.class);
-		properties.add(PropertySpec.SSL_KEY_STORE_PASSWORD.newProperty(
-				sslKeyStorePassword));
-		String sslKeyStoreType = settings.getLastValue(
-				SettingSpec.EXTERNAL_CLIENT_SSL_KEY_STORE_TYPE, String.class);
-		properties.add(PropertySpec.SSL_KEY_STORE_TYPE.newProperty(
-				sslKeyStoreType));
-		String sslProtocol = settings.getLastValue(
-				SettingSpec.EXTERNAL_CLIENT_SSL_PROTOCOL, String.class);
-		properties.add(PropertySpec.SSL_PROTOCOL.newProperty(sslProtocol));
-		File sslTrustStoreFile = settings.getLastValue(
-				SettingSpec.EXTERNAL_CLIENT_SSL_TRUST_STORE_FILE, File.class);
-		if (sslTrustStoreFile != null) {
+		if (settings.containsNondefaultValue(
+				SettingSpec.EXTERNAL_CLIENT_SSL_KEY_STORE_PASSWORD)) {
+			EncryptedPassword sslKeyStorePassword = settings.getLastValue(
+					SettingSpec.EXTERNAL_CLIENT_SSL_KEY_STORE_PASSWORD, 
+					EncryptedPassword.class);
+			properties.add(PropertySpec.SSL_KEY_STORE_PASSWORD.newProperty(
+					sslKeyStorePassword));
+		}
+		if (settings.containsNondefaultValue(
+				SettingSpec.EXTERNAL_CLIENT_SSL_KEY_STORE_TYPE)) {
+			String sslKeyStoreType = settings.getLastValue(
+					SettingSpec.EXTERNAL_CLIENT_SSL_KEY_STORE_TYPE, 
+					String.class);
+			properties.add(PropertySpec.SSL_KEY_STORE_TYPE.newProperty(
+					sslKeyStoreType));
+		}
+		if (settings.containsNondefaultValue(
+				SettingSpec.EXTERNAL_CLIENT_SSL_PROTOCOL)) {
+			String sslProtocol = settings.getLastValue(
+					SettingSpec.EXTERNAL_CLIENT_SSL_PROTOCOL, String.class);
+			properties.add(PropertySpec.SSL_PROTOCOL.newProperty(sslProtocol));
+		}
+		if (settings.containsNondefaultValue(
+				SettingSpec.EXTERNAL_CLIENT_SSL_TRUST_STORE_FILE)) {
+			File sslTrustStoreFile = settings.getLastValue(
+					SettingSpec.EXTERNAL_CLIENT_SSL_TRUST_STORE_FILE, 
+					File.class);
 			properties.add(PropertySpec.SSL_TRUST_STORE_FILE.newProperty(
 					sslTrustStoreFile));
 		}
-		EncryptedPassword sslTrustStorePassword = settings.getLastValue(
-				SettingSpec.EXTERNAL_CLIENT_SSL_TRUST_STORE_PASSWORD, 
-				EncryptedPassword.class);
-		properties.add(PropertySpec.SSL_TRUST_STORE_PASSWORD.newProperty(
-				sslTrustStorePassword));
-		String sslTrustStoreType = settings.getLastValue(
-				SettingSpec.EXTERNAL_CLIENT_SSL_TRUST_STORE_TYPE, String.class);
-		properties.add(PropertySpec.SSL_TRUST_STORE_TYPE.newProperty(
-				sslTrustStoreType));
+		if (settings.containsNondefaultValue(
+				SettingSpec.EXTERNAL_CLIENT_SSL_TRUST_STORE_PASSWORD)) {
+			EncryptedPassword sslTrustStorePassword = settings.getLastValue(
+					SettingSpec.EXTERNAL_CLIENT_SSL_TRUST_STORE_PASSWORD, 
+					EncryptedPassword.class);
+			properties.add(PropertySpec.SSL_TRUST_STORE_PASSWORD.newProperty(
+					sslTrustStorePassword));
+		}
+		if (settings.containsNondefaultValue(
+				SettingSpec.EXTERNAL_CLIENT_SSL_TRUST_STORE_TYPE)) {
+			String sslTrustStoreType = settings.getLastValue(
+					SettingSpec.EXTERNAL_CLIENT_SSL_TRUST_STORE_TYPE, 
+					String.class);
+			properties.add(PropertySpec.SSL_TRUST_STORE_TYPE.newProperty(
+					sslTrustStoreType));
+		}
 		return properties;
 	}
 	

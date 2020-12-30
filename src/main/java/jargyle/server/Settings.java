@@ -58,6 +58,15 @@ public final class Settings {
 		this.settings = new ArrayList<Setting>(sttngs);
 	}
 	
+	public boolean containsNondefaultValue(final SettingSpec settingSpec) {
+		for (Setting setting : this.settings) {
+			if (setting.getSettingSpec().equals(settingSpec)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public <T> T getLastValue(
 			final SettingSpec settingSpec, final Class<T> type) {
 		List<T> values = this.getValues(settingSpec, type);

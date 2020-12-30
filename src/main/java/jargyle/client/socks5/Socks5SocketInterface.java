@@ -23,7 +23,7 @@ public final class Socks5SocketInterface extends SocketInterface {
 	private static final class Socks5SocketInterfaceImpl {
 		
 		private boolean connected;
-		private SocketInterface originalSocketInterface;
+		private SocketInterface directSocketInterface;
 		private InetAddress remoteInetAddress;
 		private int remotePort;
 		private SocketAddress remoteSocketAddress;
@@ -32,15 +32,15 @@ public final class Socks5SocketInterface extends SocketInterface {
 		
 		public Socks5SocketInterfaceImpl(
 				final Socks5Client client,
-				final SocketInterface originalSockInterface,
+				final SocketInterface directSockInterface,
 				final SocketInterface sockInterface) {
-			this.connected = originalSockInterface.isConnected();
-			this.originalSocketInterface = originalSockInterface;
-			this.remoteInetAddress = originalSockInterface.getInetAddress();
-			this.remotePort = originalSockInterface.getPort();
-			this.remoteSocketAddress = originalSockInterface.getRemoteSocketAddress();
+			this.connected = directSockInterface.isConnected();
+			this.directSocketInterface = directSockInterface;
+			this.remoteInetAddress = directSockInterface.getInetAddress();
+			this.remotePort = directSockInterface.getPort();
+			this.remoteSocketAddress = directSockInterface.getRemoteSocketAddress();
 			this.socketInterface = (sockInterface == null) ? 
-					originalSockInterface : sockInterface;
+					directSockInterface : sockInterface;
 			this.socks5Client = client;
 		}
 		
@@ -73,7 +73,7 @@ public final class Socks5SocketInterface extends SocketInterface {
 				final InetAddress inetAddress,
 				final int port,
 				final int timeout) throws IOException {
-			this.socketInterface = this.originalSocketInterface;
+			this.socketInterface = this.directSocketInterface;
 			SocketInterface sockInterface = socks5Client.connectToSocksServerWith(
 					this.socketInterface, timeout);
 			InputStream inputStream = sockInterface.getInputStream();
@@ -145,12 +145,12 @@ public final class Socks5SocketInterface extends SocketInterface {
 
 	Socks5SocketInterface(
 			final Socks5Client client, 
-			final SocketInterface originalSockInterface, 
+			final SocketInterface directSockInterface, 
 			final SocketInterface sockInterface) {
 		this.socks5Client = client;
 		this.socks5SocketInterfaceImpl = new Socks5SocketInterfaceImpl(
 				client,
-				originalSockInterface,
+				directSockInterface,
 				sockInterface);
 	}
 

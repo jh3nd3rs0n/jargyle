@@ -151,10 +151,10 @@ public final class Socks5ServerSocketInterface extends ServerSocketInterface {
 		
 		private boolean bound;
 		private boolean closed;
+		private SocketInterface directSocketInterface;
 		private InetAddress localInetAddress;
 		private int localPort;
 		private SocketAddress localSocketAddress;
-		private SocketInterface originalSocketInterface;
 		private SocketInterface socketInterface;
 		private SocketSettings socketSettings;
 		private boolean socks5Bound;
@@ -162,15 +162,15 @@ public final class Socks5ServerSocketInterface extends ServerSocketInterface {
 		
 		public Socks5ServerSocketInterfaceImpl(
 				final Socks5Client client) throws IOException {
-			SocketInterface sockInterface = 
+			SocketInterface directSockInterface = 
 					new DirectSocketInterface(new Socket());
 			this.bound = false;
 			this.closed = false;
+			this.directSocketInterface = directSockInterface;			
 			this.localInetAddress = null;
 			this.localPort = -1;
 			this.localSocketAddress = null;
-			this.originalSocketInterface = sockInterface;
-			this.socketInterface = sockInterface;
+			this.socketInterface = directSockInterface;
 			this.socketSettings = SocketSettings.newInstance();
 			this.socks5Client = client;
 			this.socks5Bound = false;
@@ -195,17 +195,17 @@ public final class Socks5ServerSocketInterface extends ServerSocketInterface {
 				acceptedSocks5SocketInterface = new AcceptedSocks5SocketInterface(
 						new Socks5SocketInterface(
 								this.socks5Client, 
-								this.originalSocketInterface, 
+								this.directSocketInterface, 
 								this.socketInterface),
 						InetAddress.getByName(socks5Rep.getServerBoundAddress()),
 						socks5Rep.getServerBoundPort(),
 						this.localInetAddress,
 						this.localPort);
-				SocketInterface newSocketInterface = new DirectSocketInterface(
-						new Socket());
-				this.socketSettings.applyTo(newSocketInterface);
-				this.originalSocketInterface = newSocketInterface;
-				this.socketInterface = newSocketInterface;
+				SocketInterface newDirectSocketInterface = 
+						new DirectSocketInterface(new Socket());
+				this.socketSettings.applyTo(newDirectSocketInterface);
+				this.directSocketInterface = newDirectSocketInterface;
+				this.socketInterface = newDirectSocketInterface;
 			} finally {
 				this.socks5Bound = false;
 			}
@@ -288,7 +288,7 @@ public final class Socks5ServerSocketInterface extends ServerSocketInterface {
 
 		public void socks5Bind(
 				final int port, final InetAddress bindAddr) throws IOException {
-			this.socketInterface = this.originalSocketInterface;
+			this.socketInterface = this.directSocketInterface;
 			SocketInterface sockInterface = this.socks5Client.connectToSocksServerWith(
 					this.socketInterface, true);
 			InputStream inStream = sockInterface.getInputStream();

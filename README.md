@@ -113,7 +113,7 @@ The following is the command line help for Jargyle (displayed when using the com
           The configuration file
       --config-file-xsd, -x
           Print the configuration file XSD and exit
-      --enter-chain-agent-socks5-user-pass
+      --enter-chain-socks5-user-pass
           Enter through an interactive prompt the username password to be used to access the other SOCKS5 server
       --help, -h
           Print this help and exit
@@ -145,64 +145,64 @@ The following is a list of available settings for the SOCKS server (displayed wh
       blockedClientAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
           The space separated list of blocked client address criteria
     
-      chainAgent.bindHost=HOST
-          The binding host name or address for the socket to connect to the other SOCKS server (default is 0.0.0.0)
+      chain.bindHost=HOST
+          The binding host name or address for the socket to connect to the other SOCKS server (used for SOCKS5 commands BIND and UDP ASSOCIATE) (default is 0.0.0.0)
     
-      chainAgent.connectTimeout=INTEGER_BETWEEN_1_AND_2147483647
-          The timeout in milliseconds on waiting for the socket to connect to the other SOCKS server (default is 60000)
+      chain.connectTimeout=INTEGER_BETWEEN_1_AND_2147483647
+          The timeout in milliseconds on waiting for the socket to connect to the other SOCKS server (used for SOCKS5 commands BIND and UDP ASSOCIATE) (default is 60000)
     
-      chainAgent.socketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
-          The space separated list of socket settings for the socket to connect to the other SOCKS server (used for SOCKS5 UDP ASSOCIATE command)
+      chain.socketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
+          The space separated list of socket settings for the socket to connect to the other SOCKS server (used for SOCKS5 command UDP ASSOCIATE)
     
-      chainAgent.socksServerUri=SCHEME://HOST[:PORT]
+      chain.socksServerUri=SCHEME://HOST[:PORT]
           The URI of the other SOCKS server
     
-      chainAgent.socks5.authMethods=SOCKS5_AUTH_METHOD1[ SOCKS5_AUTH_METHOD2[...]]
+      chain.socks5.authMethods=SOCKS5_AUTH_METHOD1[ SOCKS5_AUTH_METHOD2[...]]
           The space separated list of acceptable authentication methods to the other SOCKS5 server (default is NO_AUTHENTICATION_REQUIRED)
     
-      chainAgent.socks5.gssapiMechanismOid=GSSAPI_MECHANISM_OID
+      chain.socks5.gssapiMechanismOid=GSSAPI_MECHANISM_OID
           The object ID for the GSS-API authentication mechanism to the other SOCKS5 server (default is 1.2.840.113554.1.2.2)
     
-      chainAgent.socks5.gssapiNecReferenceImpl=true|false
+      chain.socks5.gssapiNecReferenceImpl=true|false
           The boolean value to indicate if the exchange of the GSS-API protection level negotiation must be unprotected should the other SOCKS5 server use the NEC reference implementation (default is false)
     
-      chainAgent.socks5.gssapiProtectionLevels=SOCKS5_GSSAPI_PROTECTION_LEVEL1[ SOCKS5_GSSAPI_PROTECTION_LEVEL2[...]]
+      chain.socks5.gssapiProtectionLevels=SOCKS5_GSSAPI_PROTECTION_LEVEL1[ SOCKS5_GSSAPI_PROTECTION_LEVEL2[...]]
           The space separated list of acceptable protection levels after GSS-API authentication with the other SOCKS5 server (The first is preferred. The remaining are acceptable if the server does not accept the first.) (default is REQUIRED_INTEG_AND_CONF REQUIRED_INTEG NONE)
     
-      chainAgent.socks5.gssapiServiceName=GSSAPI_SERVICE_NAME
+      chain.socks5.gssapiServiceName=GSSAPI_SERVICE_NAME
           The GSS-API service name for the other SOCKS5 server
     
-      chainAgent.socks5.usernamePassword=USERNAME:PASSWORD
+      chain.socks5.usernamePassword=USERNAME:PASSWORD
           The username password to be used to access the other SOCKS5 server
     
-      chainAgent.ssl.enabled=true|false
+      chain.ssl.enabled=true|false
           The boolean value to indicate if SSL/TLS connections to the other SOCKS server are enabled (default is false)
     
-      chainAgent.ssl.enabledCipherSuites=[SSL_CIPHER_SUITE1[ SSL_CIPHER_SUITE2[...]]]
+      chain.ssl.enabledCipherSuites=[SSL_CIPHER_SUITE1[ SSL_CIPHER_SUITE2[...]]]
           The space separated list of acceptable cipher suites enabled for SSL/TLS connections to the other SOCKS server
     
-      chainAgent.ssl.enabledProtocols=[SSL_PROTOCOL1[ SSL_PROTOCOL2[...]]]
+      chain.ssl.enabledProtocols=[SSL_PROTOCOL1[ SSL_PROTOCOL2[...]]]
           The space separated list of acceptable protocol versions enabled for SSL/TLS connections to the other SOCKS server
     
-      chainAgent.ssl.keyStoreFile=FILE
+      chain.ssl.keyStoreFile=FILE
           The key store file for the SSL/TLS connections to the other SOCKS server
     
-      chainAgent.ssl.keyStorePassword=PASSWORD
+      chain.ssl.keyStorePassword=PASSWORD
           The password for the key store for the SSL/TLS connections to the other SOCKS server
     
-      chainAgent.ssl.keyStoreType=TYPE
+      chain.ssl.keyStoreType=TYPE
           The type of key store file for the SSL/TLS connections to the other SOCKS server (default is PKCS12)
     
-      chainAgent.ssl.protocol=PROTOCOL
+      chain.ssl.protocol=PROTOCOL
           The protocol version for the SSL/TLS connections to the other SOCKS server (default is TLSv1)
     
-      chainAgent.ssl.trustStoreFile=FILE
+      chain.ssl.trustStoreFile=FILE
           The trust store file for the SSL/TLS connections to the other SOCKS server
     
-      chainAgent.ssl.trustStorePassword=PASSWORD
+      chain.ssl.trustStorePassword=PASSWORD
           The password for the trust store for the SSL/TLS connections to the other SOCKS server
     
-      chainAgent.ssl.trustStoreType=TYPE
+      chain.ssl.trustStoreType=TYPE
           The type of trust store file for the SSL/TLS connections to the other SOCKS server (default is PKCS12)
     
       clientSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
@@ -1139,13 +1139,13 @@ In `krb5.conf`, a KDC is defined as running at the address `127.0.0.1` on port `
 
 ### 4. 10. Chaining to Another SOCKS Server
 
-You can have Jargyle chained to another SOCKS server, meaning that it can route through another SOCKS server. To have Jargyle chained to another SOCKS server, you will need to specify the other SOCKS server as a URI in the setting `chainAgent.socksServerUri`
+You can have Jargyle chained to another SOCKS server, meaning that it can route through another SOCKS server. To have Jargyle chained to another SOCKS server, you will need to specify the other SOCKS server as a URI in the setting `chain.socksServerUri`
 
 Partial command line example:
 
 ```text
 
-    --setting=chainAgent.socksServerUri=socks5://127.0.0.1:23456
+    --setting=chain.socksServerUri=socks5://127.0.0.1:23456
 
 ```
 
@@ -1155,7 +1155,7 @@ Partial configuration file example:
 
     <settings>
         <setting>
-            <name>chainAgent.socksServerUri</name>
+            <name>chain.socksServerUri</name>
             <value>socks5://127.0.0.1:23456</value>
         </setting>
     </settings>
@@ -1166,31 +1166,31 @@ Please note that the scheme in the URI specifies the SOCKS protocol to be used w
 
 #### 4. 10. 1. Enabling SSL/TLS
 
-You can have Jargyle chained to the other SOCKS server using SSL/TLS. By default SSL/TLS is disabled. To enable SSL/TLS, you will need to have the setting `chainAgent.ssl.enabled` set to `true`. In addition, you will need to have the setting `chainAgent.ssl.trustStoreFile` to specify the server's key store file used as a trust store (this file would need to be created by Java's keytool utility). Also, you will need to have the setting `chainAgent.ssl.trustStorePassword` to specify the password for the server's trust store file.
+You can have Jargyle chained to the other SOCKS server using SSL/TLS. By default SSL/TLS is disabled. To enable SSL/TLS, you will need to have the setting `chain.ssl.enabled` set to `true`. In addition, you will need to have the setting `chain.ssl.trustStoreFile` to specify the server's key store file used as a trust store (this file would need to be created by Java's keytool utility). Also, you will need to have the setting `chain.ssl.trustStorePassword` to specify the password for the server's trust store file.
 
 Partial command line example:
 
 ```text
 
-    --setting=chainAgent.socksServerUri=socks5://127.0.0.1:23456 \
-    --setting=chainAgent.ssl.enabled=true \
-    --setting=chainAgent.ssl.trustStoreFile=server.jks \
-    --setting=chainAgent.ssl.trustStorePassword=password
+    --setting=chain.socksServerUri=socks5://127.0.0.1:23456 \
+    --setting=chain.ssl.enabled=true \
+    --setting=chain.ssl.trustStoreFile=server.jks \
+    --setting=chain.ssl.trustStorePassword=password
 
 ```
 
-If the other SOCKS server wants the client to authenticate using SSL/TLS, you will need to have the setting `chainAgent.ssl.keyStoreFile` to specify the client's key store file (this file would need to be created by Java's keytool utility). Also, you will need to have the setting `chainAgent.ssl.keyStorePassword` to specify the password for the client's key store file.
+If the other SOCKS server wants the client to authenticate using SSL/TLS, you will need to have the setting `chain.ssl.keyStoreFile` to specify the client's key store file (this file would need to be created by Java's keytool utility). Also, you will need to have the setting `chain.ssl.keyStorePassword` to specify the password for the client's key store file.
 
 Partial command line example:
 
 ```text
 
-    --setting=chainAgent.socksServerUri=socks5://127.0.0.1:23456 \
-    --setting=chainAgent.ssl.enabled=true \
-    --setting=chainAgent.ssl.keyStoreFile=client.jks \
-    --setting=chainAgent.ssl.keyStoreFile=drowssap \
-    --setting=chainAgent.ssl.trustStoreFile=server.jks \
-    --setting=chainAgent.ssl.trustStorePassword=password    
+    --setting=chain.socksServerUri=socks5://127.0.0.1:23456 \
+    --setting=chain.ssl.enabled=true \
+    --setting=chain.ssl.keyStoreFile=client.jks \
+    --setting=chain.ssl.keyStoreFile=drowssap \
+    --setting=chain.ssl.trustStoreFile=server.jks \
+    --setting=chain.ssl.trustStorePassword=password    
 
 ```
 
@@ -1202,13 +1202,13 @@ Jargyle has the following SOCKS5 authentication methods to choose from for acces
 -   `GSSAPI`: GSS-API authentication
 -   `USERNAME_PASSWORD`: Username password authentication
 
-You can have one or more of the aforementioned authentication methods set in the setting `chainAgent.socks5.authMethods` as a space separated list.
+You can have one or more of the aforementioned authentication methods set in the setting `chain.socks5.authMethods` as a space separated list.
 
 Partial command line example:
 
 ```text
 
-    "--setting=chainAgent.socks5.authMethods=NO_AUTHENTICATION_REQUIRED GSSAPI"
+    "--setting=chain.socks5.authMethods=NO_AUTHENTICATION_REQUIRED GSSAPI"
 
 ```
 
@@ -1218,26 +1218,26 @@ Partial configuration file example:
 
     <settings>
         <setting>
-            <name>chainAgent.socks5.authMethods</name>
+            <name>chain.socks5.authMethods</name>
             <value>GSSAPI USERNAME_PASSWORD</value>
         </setting>
     </settings>
 
 ```
 
-If not set, the default value for the setting `chainAgent.socks5.authMethods` is set to `NO_AUTHENTICATION_REQUIRED`
+If not set, the default value for the setting `chain.socks5.authMethods` is set to `NO_AUTHENTICATION_REQUIRED`
 
 ##### 4. 10. 2. 1. Using No Authentication
 
-Because the default value for the setting `chainAgent.socks5.authMethods` is set to `NO_AUTHENTICATION_REQUIRED`, it is not required for `NO_AUTHENTICATION_REQUIRED` to be included in the setting `chainAgent.socks5.authMethods`.
+Because the default value for the setting `chain.socks5.authMethods` is set to `NO_AUTHENTICATION_REQUIRED`, it is not required for `NO_AUTHENTICATION_REQUIRED` to be included in the setting `chain.socks5.authMethods`.
 
-However, if other authentication methods are to be used in addition to `NO_AUTHENTICATION_REQUIRED`, `NO_AUTHENTICATION_REQUIRED` must be included in the setting `chainAgent.socks5.authMethods`
+However, if other authentication methods are to be used in addition to `NO_AUTHENTICATION_REQUIRED`, `NO_AUTHENTICATION_REQUIRED` must be included in the setting `chain.socks5.authMethods`
 
 Partial command line example:
 
 ```text
 
-    "--setting=chainAgent.socks5.authMethods=NO_AUTHENTICATION_REQUIRED GSSAPI USERNAME_PASSWORD"
+    "--setting=chain.socks5.authMethods=NO_AUTHENTICATION_REQUIRED GSSAPI USERNAME_PASSWORD"
 
 ```
 
@@ -1247,7 +1247,7 @@ Partial configuration file example:
 
     <settings>
         <setting>
-            <name>chainAgent.socks5.authMethods</name>
+            <name>chain.socks5.authMethods</name>
             <value>NO_AUTHENTICATION_REQUIRED GSSAPI USERNAME_PASSWORD</value>
         </setting>
     </settings>
@@ -1256,13 +1256,13 @@ Partial configuration file example:
 
 ##### 4. 10. 2. 2. Using Username Password Authentication
 
-To use username password authentication, you will need to have the setting `chainAgent.socks5.authMethods` to have `USERNAME_PASSWORD` included.
+To use username password authentication, you will need to have the setting `chain.socks5.authMethods` to have `USERNAME_PASSWORD` included.
 
 Partial command line example:
 
 ```text
 
-    --setting=chainAgent.socks5.authMethods=USERNAME_PASSWORD
+    --setting=chain.socks5.authMethods=USERNAME_PASSWORD
 
 ```
 
@@ -1272,7 +1272,7 @@ Partial configuration file example:
 
     <settings>
         <setting>
-            <name>chainAgent.socks5.authMethods</name>
+            <name>chain.socks5.authMethods</name>
             <value>USERNAME_PASSWORD</value>
         </setting>
     </settings>
@@ -1281,17 +1281,17 @@ Partial configuration file example:
 
 To provide a username and password for the other SOCKS5 server, you can use either of the following command line options:
 
--   `--setting=chainAgent.socks5.usernamePassword=USERNAME:PASSWORD`
--   `--enter-chain-agent-socks5-user-pass`
+-   `--setting=chain.socks5.usernamePassword=USERNAME:PASSWORD`
+-   `--enter-chain-socks5-user-pass`
 
-The command line option `--setting=chainAgent.socks5.usernamePassword=USERNAME:PASSWORD` requires an actual username followed by a colon character (`:`) followed by an actual password.
+The command line option `--setting=chain.socks5.usernamePassword=USERNAME:PASSWORD` requires an actual username followed by a colon character (`:`) followed by an actual password.
 
 Partial command line example:
 
 ```text
     
-    --setting=chainAgent.socks5.authMethods=USERNAME_PASSWORD \
-    --setting=chainAgent.socks5.usernamePassword=Aladdin:opensesame
+    --setting=chain.socks5.authMethods=USERNAME_PASSWORD \
+    --setting=chain.socks5.usernamePassword=Aladdin:opensesame
 
 ```
 
@@ -1303,26 +1303,26 @@ If the username or the password contains a plus sign character (`+`) not used fo
 
 If the username or the password contains a percent sign character (`%`) not used for URL encoding, then each percent sign character not used for URL encoding must be replaced with the URL encoding character `%25`.
 
-The command line option `--enter-chain-agent-socks5-user-pass` provides an interactive prompt for you to enter the username and password. This command line option is used for when you do not want to have the username and password appear in any script or in any part of the command line history for security reasons.
+The command line option `--enter-chain-socks5-user-pass` provides an interactive prompt for you to enter the username and password. This command line option is used for when you do not want to have the username and password appear in any script or in any part of the command line history for security reasons.
 
 Partial command line example:
 
 ```text
     
-    --setting=chainAgent.socks5.authMethods=USERNAME_PASSWORD \
-    --enter-chain-agent-socks5-user-pass
+    --setting=chain.socks5.authMethods=USERNAME_PASSWORD \
+    --enter-chain-socks5-user-pass
 
 ```
 
 ##### 4. 10. 2. 3. Using GSS-API Authentication
 
-To use GSS-API authentication, you will need to have the setting `chainAgent.socks5.authMethods` to have `GSSAPI` included.
+To use GSS-API authentication, you will need to have the setting `chain.socks5.authMethods` to have `GSSAPI` included.
 
 Partial command line example:
 
 ```text
 
-    --setting=chainAgent.socks5.authMethods=GSSAPI
+    --setting=chain.socks5.authMethods=GSSAPI
 
 ```
 
@@ -1332,7 +1332,7 @@ Partial configuration file example:
 
     <settings>
         <setting>
-            <name>chainAgent.socks5.authMethods</name>
+            <name>chain.socks5.authMethods</name>
             <value>GSSAPI</value>
         </setting>
     </settings>
@@ -1349,9 +1349,9 @@ The following is a sufficient example of using the Kerberos security mechanism:
 	    -Djava.security.auth.login.config=login.conf \
 	    -Djava.security.krb5.conf=krb5.conf \
 	    -jar target/jargyle-${VERSION}.jar \
-	    --setting=chainAgent.socksServerUri=socks5://127.0.0.1:23456 \
-	    --setting=chainAgent.socks5.authMethods=GSSAPI \
-	    --setting=chainAgent.socks5.gssapiServiceName=rcmd/127.0.0.1 
+	    --setting=chain.socksServerUri=socks5://127.0.0.1:23456 \
+	    --setting=chain.socks5.authMethods=GSSAPI \
+	    --setting=chain.socks5.gssapiServiceName=rcmd/127.0.0.1 
 
 ```
 
@@ -1398,7 +1398,7 @@ The Java system property `-Djava.security.krb5.conf=krb5.conf` provides the Kerb
 
 In `krb5.conf`, a KDC is defined as running at the address `127.0.0.1` on port `12345` with its realm as `EXAMPLE.COM`. (In a production environment, the address `127.0.0.1` should be replaced by the actual address or name of the machine of where the KDC resides. Also, in a production environment, the realm `EXAMPLE.COM` should be replaced by an actual realm provided by a Kerberos administrator.)
 
-The command line option `--setting=chainAgent.socks5.gssapiServiceName=rcmd/127.0.0.1` is the GSS-API service name (or the Kerberos service principal) for the other SOCKS5 server residing at the address `127.0.0.1`. (In a production environment, the address `127.0.0.1` should be replaced by the name of the machine of where the other SOCKS5 server resides.)
+The command line option `--setting=chain.socks5.gssapiServiceName=rcmd/127.0.0.1` is the GSS-API service name (or the Kerberos service principal) for the other SOCKS5 server residing at the address `127.0.0.1`. (In a production environment, the address `127.0.0.1` should be replaced by the name of the machine of where the other SOCKS5 server resides.)
 
 ### 4. 11. Allowing or Blocking Addresses
 

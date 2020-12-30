@@ -104,10 +104,11 @@ public enum SettingSpec {
 	},
 	@HelpText(
 			doc = "The binding host name or address for the socket to connect "
-					+ "to the other SOCKS server (default is 0.0.0.0)", 
-			usage = "chainAgent.bindHost=HOST"
+					+ "to the other SOCKS server (used for SOCKS5 commands "
+					+ "BIND and UDP ASSOCIATE) (default is 0.0.0.0)", 
+			usage = "chain.bindHost=HOST"
 	)
-	CHAIN_AGENT_BIND_HOST("chainAgent.bindHost") {
+	CHAIN_BIND_HOST("chain.bindHost") {
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -130,10 +131,11 @@ public enum SettingSpec {
 	},
 	@HelpText(
 			doc = "The timeout in milliseconds on waiting for the socket to "
-					+ "connect to the other SOCKS server (default is 60000)", 
-			usage = "chainAgent.connectTimeout=INTEGER_BETWEEN_1_AND_2147483647"
+					+ "connect to the other SOCKS server (used for SOCKS5 "
+					+ "commands BIND and UDP ASSOCIATE) (default is 60000)", 
+			usage = "chain.connectTimeout=INTEGER_BETWEEN_1_AND_2147483647"
 	)
-	CHAIN_AGENT_CONNECT_TIMEOUT("chainAgent.connectTimeout") {
+	CHAIN_CONNECT_TIMEOUT("chain.connectTimeout") {
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -157,10 +159,10 @@ public enum SettingSpec {
 	@HelpText(
 			doc = "The space separated list of socket settings for the socket "
 					+ "to connect to the other SOCKS server (used for SOCKS5 "
-					+ "UDP ASSOCIATE command)", 
-			usage = "chainAgent.socketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
+					+ "command UDP ASSOCIATE)", 
+			usage = "chain.socketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
 	)
-	CHAIN_AGENT_SOCKET_SETTINGS("chainAgent.socketSettings") {
+	CHAIN_SOCKET_SETTINGS("chain.socketSettings") {
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -183,9 +185,9 @@ public enum SettingSpec {
 	},
 	@HelpText(
 			doc = "The URI of the other SOCKS server", 
-			usage = "chainAgent.socksServerUri=SCHEME://HOST[:PORT]"
+			usage = "chain.socksServerUri=SCHEME://HOST[:PORT]"
 	)
-	CHAIN_AGENT_SOCKS_SERVER_URI("chainAgent.socksServerUri") {
+	CHAIN_SOCKS_SERVER_URI("chain.socksServerUri") {
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -208,9 +210,9 @@ public enum SettingSpec {
 			doc = "The space separated list of acceptable authentication "
 					+ "methods to the other SOCKS5 server (default is "
 					+ "NO_AUTHENTICATION_REQUIRED)", 
-			usage = "chainAgent.socks5.authMethods=SOCKS5_AUTH_METHOD1[ SOCKS5_AUTH_METHOD2[...]]"
+			usage = "chain.socks5.authMethods=SOCKS5_AUTH_METHOD1[ SOCKS5_AUTH_METHOD2[...]]"
 	)
-	CHAIN_AGENT_SOCKS5_AUTH_METHODS("chainAgent.socks5.authMethods") {
+	CHAIN_SOCKS5_AUTH_METHODS("chain.socks5.authMethods") {
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -234,10 +236,9 @@ public enum SettingSpec {
 	@HelpText(
 			doc = "The object ID for the GSS-API authentication mechanism to "
 					+ "the other SOCKS5 server (default is 1.2.840.113554.1.2.2)", 
-			usage = "chainAgent.socks5.gssapiMechanismOid=GSSAPI_MECHANISM_OID"
+			usage = "chain.socks5.gssapiMechanismOid=GSSAPI_MECHANISM_OID"
 	)
-	CHAIN_AGENT_SOCKS5_GSSAPI_MECHANISM_OID(
-			"chainAgent.socks5.gssapiMechanismOid") {
+	CHAIN_SOCKS5_GSSAPI_MECHANISM_OID("chain.socks5.gssapiMechanismOid") {
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -269,10 +270,10 @@ public enum SettingSpec {
 					+ "GSS-API protection level negotiation must be "
 					+ "unprotected should the other SOCKS5 server use the NEC "
 					+ "reference implementation (default is false)", 
-			usage = "chainAgent.socks5.gssapiNecReferenceImpl=true|false"
+			usage = "chain.socks5.gssapiNecReferenceImpl=true|false"
 	)
-	CHAIN_AGENT_SOCKS5_GSSAPI_NEC_REFERENCE_IMPL(
-			"chainAgent.socks5.gssapiNecReferenceImpl") {
+	CHAIN_SOCKS5_GSSAPI_NEC_REFERENCE_IMPL(
+			"chain.socks5.gssapiNecReferenceImpl") {
 
 		@Override
 		public Setting getDefaultSetting() {
@@ -300,10 +301,10 @@ public enum SettingSpec {
 					+ "acceptable if the server does not accept the first.) "
 					+ "(default is "
 					+ "REQUIRED_INTEG_AND_CONF REQUIRED_INTEG NONE)", 
-			usage = "chainAgent.socks5.gssapiProtectionLevels=SOCKS5_GSSAPI_PROTECTION_LEVEL1[ SOCKS5_GSSAPI_PROTECTION_LEVEL2[...]]"
+			usage = "chain.socks5.gssapiProtectionLevels=SOCKS5_GSSAPI_PROTECTION_LEVEL1[ SOCKS5_GSSAPI_PROTECTION_LEVEL2[...]]"
 	)
-	CHAIN_AGENT_SOCKS5_GSSAPI_PROTECTION_LEVELS(
-			"chainAgent.socks5.gssapiProtectionLevels") {
+	CHAIN_SOCKS5_GSSAPI_PROTECTION_LEVELS(
+			"chain.socks5.gssapiProtectionLevels") {
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -326,10 +327,9 @@ public enum SettingSpec {
 	},
 	@HelpText(
 			doc = "The GSS-API service name for the other SOCKS5 server", 
-			usage = "chainAgent.socks5.gssapiServiceName=GSSAPI_SERVICE_NAME"
+			usage = "chain.socks5.gssapiServiceName=GSSAPI_SERVICE_NAME"
 	)
-	CHAIN_AGENT_SOCKS5_GSSAPI_SERVICE_NAME(
-			"chainAgent.socks5.gssapiServiceName") {
+	CHAIN_SOCKS5_GSSAPI_SERVICE_NAME("chain.socks5.gssapiServiceName") {
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -353,9 +353,9 @@ public enum SettingSpec {
 	@HelpText(
 			doc = "The username password to be used to access the other "
 					+ "SOCKS5 server", 
-			usage = "chainAgent.socks5.usernamePassword=USERNAME:PASSWORD"
+			usage = "chain.socks5.usernamePassword=USERNAME:PASSWORD"
 	)
-	CHAIN_AGENT_SOCKS5_USERNAME_PASSWORD("chainAgent.socks5.usernamePassword") {
+	CHAIN_SOCKS5_USERNAME_PASSWORD("chain.socks5.usernamePassword") {
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -377,9 +377,9 @@ public enum SettingSpec {
 	@HelpText(
 			doc = "The boolean value to indicate if SSL/TLS connections to "
 					+ "the other SOCKS server are enabled (default is false)",
-			usage = "chainAgent.ssl.enabled=true|false"
+			usage = "chain.ssl.enabled=true|false"
 	)
-	CHAIN_AGENT_SSL_ENABLED("chainAgent.ssl.enabled") {
+	CHAIN_SSL_ENABLED("chain.ssl.enabled") {
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -404,10 +404,9 @@ public enum SettingSpec {
 			doc = "The space separated list of acceptable cipher suites "
 					+ "enabled for SSL/TLS connections to the other SOCKS "
 					+ "server",
-			usage = "chainAgent.ssl.enabledCipherSuites=[SSL_CIPHER_SUITE1[ SSL_CIPHER_SUITE2[...]]]"
+			usage = "chain.ssl.enabledCipherSuites=[SSL_CIPHER_SUITE1[ SSL_CIPHER_SUITE2[...]]]"
 	)
-	CHAIN_AGENT_SSL_ENABLED_CIPHER_SUITES(
-			"chainAgent.ssl.enabledCipherSuites") {
+	CHAIN_SSL_ENABLED_CIPHER_SUITES("chain.ssl.enabledCipherSuites") {
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -432,9 +431,9 @@ public enum SettingSpec {
 			doc = "The space separated list of acceptable protocol versions "
 					+ "enabled for SSL/TLS connections to the other SOCKS "
 					+ "server",
-			usage = "chainAgent.ssl.enabledProtocols=[SSL_PROTOCOL1[ SSL_PROTOCOL2[...]]]"
+			usage = "chain.ssl.enabledProtocols=[SSL_PROTOCOL1[ SSL_PROTOCOL2[...]]]"
 	)	
-	CHAIN_AGENT_SSL_ENABLED_PROTOCOLS("chainAgent.ssl.enabledProtocols") {
+	CHAIN_SSL_ENABLED_PROTOCOLS("chain.ssl.enabledProtocols") {
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -458,9 +457,9 @@ public enum SettingSpec {
 	@HelpText(
 			doc = "The key store file for the SSL/TLS connections to the "
 					+ "other SOCKS server",
-			usage = "chainAgent.ssl.keyStoreFile=FILE"
+			usage = "chain.ssl.keyStoreFile=FILE"
 	)
-	CHAIN_AGENT_SSL_KEY_STORE_FILE("chainAgent.ssl.keyStoreFile") {
+	CHAIN_SSL_KEY_STORE_FILE("chain.ssl.keyStoreFile") {
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -494,9 +493,9 @@ public enum SettingSpec {
 	@HelpText(
 			doc = "The password for the key store for the SSL/TLS connections "
 					+ "to the other SOCKS server",
-			usage = "chainAgent.ssl.keyStorePassword=PASSWORD"
+			usage = "chain.ssl.keyStorePassword=PASSWORD"
 	)
-	CHAIN_AGENT_SSL_KEY_STORE_PASSWORD("chainAgent.ssl.keyStorePassword") {
+	CHAIN_SSL_KEY_STORE_PASSWORD("chain.ssl.keyStorePassword") {
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -520,9 +519,9 @@ public enum SettingSpec {
 	@HelpText(
 			doc = "The type of key store file for the SSL/TLS connections to "
 					+ "the other SOCKS server (default is PKCS12)",
-			usage = "chainAgent.ssl.keyStoreType=TYPE"
+			usage = "chain.ssl.keyStoreType=TYPE"
 	)	
-	CHAIN_AGENT_SSL_KEY_STORE_TYPE("chainAgent.ssl.keyStoreType") {
+	CHAIN_SSL_KEY_STORE_TYPE("chain.ssl.keyStoreType") {
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -545,9 +544,9 @@ public enum SettingSpec {
 	@HelpText(
 			doc = "The protocol version for the SSL/TLS connections to the "
 					+ "other SOCKS server (default is TLSv1)",
-			usage = "chainAgent.ssl.protocol=PROTOCOL"
+			usage = "chain.ssl.protocol=PROTOCOL"
 	)	
-	CHAIN_AGENT_SSL_PROTOCOL("chainAgent.ssl.protocol") {
+	CHAIN_SSL_PROTOCOL("chain.ssl.protocol") {
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -571,9 +570,9 @@ public enum SettingSpec {
 	@HelpText(
 			doc = "The trust store file for the SSL/TLS connections to the "
 					+ "other SOCKS server",
-			usage = "chainAgent.ssl.trustStoreFile=FILE"
+			usage = "chain.ssl.trustStoreFile=FILE"
 	)	
-	CHAIN_AGENT_SSL_TRUST_STORE_FILE("chainAgent.ssl.trustStoreFile") {
+	CHAIN_SSL_TRUST_STORE_FILE("chain.ssl.trustStoreFile") {
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -607,9 +606,9 @@ public enum SettingSpec {
 	@HelpText(
 			doc = "The password for the trust store for the SSL/TLS "
 					+ "connections to the other SOCKS server",
-			usage = "chainAgent.ssl.trustStorePassword=PASSWORD"
+			usage = "chain.ssl.trustStorePassword=PASSWORD"
 	)	
-	CHAIN_AGENT_SSL_TRUST_STORE_PASSWORD("chainAgent.ssl.trustStorePassword") {
+	CHAIN_SSL_TRUST_STORE_PASSWORD("chain.ssl.trustStorePassword") {
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -633,9 +632,9 @@ public enum SettingSpec {
 	@HelpText(
 			doc = "The type of trust store file for the SSL/TLS connections to "
 					+ "the other SOCKS server (default is PKCS12)",
-			usage = "chainAgent.ssl.trustStoreType=TYPE"
+			usage = "chain.ssl.trustStoreType=TYPE"
 	)	
-	CHAIN_AGENT_SSL_TRUST_STORE_TYPE("chainAgent.ssl.trustStoreType") {
+	CHAIN_SSL_TRUST_STORE_TYPE("chain.ssl.trustStoreType") {
 		
 		@Override
 		public Setting getDefaultSetting() {

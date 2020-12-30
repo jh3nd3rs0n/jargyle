@@ -40,7 +40,7 @@ public final class SocksServerCLI extends CLI {
 	
 	private static final int CONFIG_FILE_OPTION_GROUP_ORDINAL = 0;
 	private static final int CONFIG_FILE_XSD_OPTION_GROUP_ORDINAL = 1;
-	private static final int ENTER_CHAIN_AGENT_SOCKS5_USER_PASS_OPTION_GROUP_ORDINAL = 2;
+	private static final int ENTER_CHAIN_SOCKS5_USER_PASS_OPTION_GROUP_ORDINAL = 2;
 	private static final int HELP_OPTION_GROUP_ORDINAL = 3;
 	private static final int MONITORED_CONFIG_FILE_OPTION_GROUP_ORDINAL = 4;
 	private static final int NEW_CONFIG_FILE_OPTION_GROUP_ORDINAL = 5;
@@ -266,20 +266,19 @@ public final class SocksServerCLI extends CLI {
 	@Option(
 			doc = "Enter through an interactive prompt the username "
 					+ "password to be used to access the other SOCKS5 server",
-			name = "enter-chain-agent-socks5-user-pass",
+			name = "enter-chain-socks5-user-pass",
 			type = OptionType.GNU_LONG
 	)
-	@Ordinal(ENTER_CHAIN_AGENT_SOCKS5_USER_PASS_OPTION_GROUP_ORDINAL)
-	private void enterChainAgentSocks5UsernamePassword() {
+	@Ordinal(ENTER_CHAIN_SOCKS5_USER_PASS_OPTION_GROUP_ORDINAL)
+	private void enterChainSocks5UsernamePassword() {
 		String prompt = "Please enter the username and password to be used to "
 				+ "access the other SOCKS5 server";
 		UsernamePasswordRequestor usernamePasswordRequestor = 
 				new DefaultUsernamePasswordRequestor();
 		UsernamePassword usernamePassword = 
 				usernamePasswordRequestor.requestUsernamePassword(null, prompt);
-		Setting setting = 
-				SettingSpec.CHAIN_AGENT_SOCKS5_USERNAME_PASSWORD.newSetting(
-						usernamePassword);
+		Setting setting = SettingSpec.CHAIN_SOCKS5_USERNAME_PASSWORD.newSetting(
+				usernamePassword);
 		this.modifiableConfiguration.addSetting(setting);
 	}
 	

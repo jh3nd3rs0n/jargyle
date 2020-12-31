@@ -34,6 +34,9 @@ import jargyle.common.net.Port;
 import jargyle.common.net.SocketSettingSpec;
 import jargyle.common.net.socks5.AuthMethod;
 import jargyle.common.net.socks5.gssapiauth.GssapiProtectionLevel;
+import jargyle.common.security.DefaultEncryptedPasswordRequestor;
+import jargyle.common.security.EncryptedPassword;
+import jargyle.common.security.EncryptedPasswordRequestor;
 import jargyle.server.socks5.UsersCLI;
 
 public final class SocksServerCLI extends CLI {
@@ -41,12 +44,16 @@ public final class SocksServerCLI extends CLI {
 	private static final int CONFIG_FILE_OPTION_GROUP_ORDINAL = 0;
 	private static final int CONFIG_FILE_XSD_OPTION_GROUP_ORDINAL = 1;
 	private static final int ENTER_CHAINING_SOCKS5_USER_PASS_OPTION_GROUP_ORDINAL = 2;
-	private static final int HELP_OPTION_GROUP_ORDINAL = 3;
-	private static final int MONITORED_CONFIG_FILE_OPTION_GROUP_ORDINAL = 4;
-	private static final int NEW_CONFIG_FILE_OPTION_GROUP_ORDINAL = 5;
-	private static final int SETTING_OPTION_GROUP_ORDINAL = 6;
-	private static final int SETTINGS_HELP_OPTION_GROUP_ORDINAL = 7;
-	private static final int SOCKS5_USERS_OPTION_GROUP_ORDINAL = 8;
+	private static final int ENTER_CHAINING_SSL_KEY_STORE_PASS_OPTION_GROUP_ORDINAL = 3;
+	private static final int ENTER_CHAINING_SSL_TRUST_STORE_PASS_OPTION_GROUP_ORDINAL = 4;
+	private static final int ENTER_SSL_KEY_STORE_PASS_OPTION_GROUP_ORDINAL = 5;
+	private static final int ENTER_SSL_TRUST_STORE_PASS_OPTION_GROUP_ORDINAL = 6;
+	private static final int HELP_OPTION_GROUP_ORDINAL = 7;
+	private static final int MONITORED_CONFIG_FILE_OPTION_GROUP_ORDINAL = 8;
+	private static final int NEW_CONFIG_FILE_OPTION_GROUP_ORDINAL = 9;
+	private static final int SETTING_OPTION_GROUP_ORDINAL = 10;
+	private static final int SETTINGS_HELP_OPTION_GROUP_ORDINAL = 11;
+	private static final int SOCKS5_USERS_OPTION_GROUP_ORDINAL = 12;
 	
 	private static final Logger LOGGER = Logger.getLogger(
 			SocksServerCLI.class.getName());
@@ -277,9 +284,92 @@ public final class SocksServerCLI extends CLI {
 				new DefaultUsernamePasswordRequestor();
 		UsernamePassword usernamePassword = 
 				usernamePasswordRequestor.requestUsernamePassword(null, prompt);
-		Setting setting = SettingSpec.CHAINING_SOCKS5_USERNAME_PASSWORD.newSetting(
-				usernamePassword);
+		Setting setting = 
+				SettingSpec.CHAINING_SOCKS5_USERNAME_PASSWORD.newSetting(
+						usernamePassword);
 		this.modifiableConfiguration.addSetting(setting);
+	}
+	
+	@Option(
+			doc = "Enter through an interactive prompt the password for the "
+					+ "key store for the SSL/TLS connections to the other "
+					+ "SOCKS server",
+			name = "enter-chaining-ssl-key-store-pass",
+			type = OptionType.GNU_LONG
+	)	
+	@Ordinal(ENTER_CHAINING_SSL_KEY_STORE_PASS_OPTION_GROUP_ORDINAL)
+	private void enterChainingSslKeyStorePassword() {
+		String prompt = "Please enter the password for the key store for the "
+				+ "SSL/TLS connections to the other SOCKS server: ";
+		EncryptedPasswordRequestor encryptedPasswordRequestor =
+				new DefaultEncryptedPasswordRequestor();
+		EncryptedPassword encryptedPassword = 
+				encryptedPasswordRequestor.requestEncryptedPassword(prompt);
+		Setting setting = 
+				SettingSpec.CHAINING_SSL_KEY_STORE_PASSWORD.newSetting(
+						encryptedPassword);
+		this.modifiableConfiguration.addSetting(setting);
+	}
+	
+	@Option(
+			doc = "Enter through an interactive prompt the password for the "
+					+ "trust store for the SSL/TLS connections to the other "
+					+ "SOCKS server",
+			name = "enter-chaining-ssl-trust-store-pass",
+			type = OptionType.GNU_LONG
+	)	
+	@Ordinal(ENTER_CHAINING_SSL_TRUST_STORE_PASS_OPTION_GROUP_ORDINAL)
+	private void enterChainingSslTrustStorePassword() {
+		String prompt = "Please enter the password for the trust store for the "
+				+ "SSL/TLS connections to the other SOCKS server: ";
+		EncryptedPasswordRequestor encryptedPasswordRequestor =
+				new DefaultEncryptedPasswordRequestor();
+		EncryptedPassword encryptedPassword = 
+				encryptedPasswordRequestor.requestEncryptedPassword(prompt);
+		Setting setting = 
+				SettingSpec.CHAINING_SSL_TRUST_STORE_PASSWORD.newSetting(
+						encryptedPassword);
+		this.modifiableConfiguration.addSetting(setting);
+	}
+	
+	@Option(
+			doc = "Enter through an interactive prompt the password for the "
+					+ "key store for the SSL/TLS connections to the SOCKS "
+					+ "server",
+			name = "enter-ssl-key-store-pass",
+			type = OptionType.GNU_LONG
+	)	
+	@Ordinal(ENTER_SSL_KEY_STORE_PASS_OPTION_GROUP_ORDINAL)
+	private void enterSslKeyStorePassword() {
+		String prompt = "Please enter the password for the key store for the "
+				+ "SSL/TLS connections to the SOCKS server: ";
+		EncryptedPasswordRequestor encryptedPasswordRequestor =
+				new DefaultEncryptedPasswordRequestor();
+		EncryptedPassword encryptedPassword = 
+				encryptedPasswordRequestor.requestEncryptedPassword(prompt);
+		Setting setting = SettingSpec.SSL_KEY_STORE_PASSWORD.newSetting(
+				encryptedPassword);
+		this.modifiableConfiguration.addSetting(setting);		
+	}
+	
+	@Option(
+			doc = "Enter through an interactive prompt the password for the "
+					+ "trust store for the SSL/TLS connections to the SOCKS "
+					+ "server",
+			name = "enter-ssl-trust-store-pass",
+			type = OptionType.GNU_LONG
+	)	
+	@Ordinal(ENTER_SSL_TRUST_STORE_PASS_OPTION_GROUP_ORDINAL)
+	private void enterSslTrustStorePassword() {
+		String prompt = "Please enter the password for the trust store for the "
+				+ "SSL/TLS connections to the SOCKS server: ";
+		EncryptedPasswordRequestor encryptedPasswordRequestor =
+				new DefaultEncryptedPasswordRequestor();
+		EncryptedPassword encryptedPassword = 
+				encryptedPasswordRequestor.requestEncryptedPassword(prompt);
+		Setting setting = SettingSpec.SSL_TRUST_STORE_PASSWORD.newSetting(
+				encryptedPassword);
+		this.modifiableConfiguration.addSetting(setting);		
 	}
 	
 	@Override

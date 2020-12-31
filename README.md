@@ -115,6 +115,14 @@ The following is the command line help for Jargyle (displayed when using the com
           Print the configuration file XSD and exit
       --enter-chaining-socks5-user-pass
           Enter through an interactive prompt the username password to be used to access the other SOCKS5 server
+      --enter-chaining-ssl-key-store-pass
+          Enter through an interactive prompt the password for the key store for the SSL/TLS connections to the other SOCKS server
+      --enter-chaining-ssl-trust-store-pass
+          Enter through an interactive prompt the password for the trust store for the SSL/TLS connections to the other SOCKS server
+      --enter-ssl-key-store-pass
+          Enter through an interactive prompt the password for the key store for the SSL/TLS connections to the SOCKS server
+      --enter-ssl-trust-store-pass
+          Enter through an interactive prompt the password for the trust store for the SSL/TLS connections to the SOCKS server
       --help, -h
           Print this help and exit
       --monitored-config-file=FILE, -m FILE
@@ -654,6 +662,18 @@ Partial command line example:
 
 ```
 
+If you do not want to have the password appear in any script or in any part of the command line history for security reasons, you can use the command line option `--enter-ssl-key-store-pass` instead.
+
+Partial command line example:
+
+```text
+
+    --setting=ssl.enabled=true \
+    --setting=ssl.keyStoreFile=server.jks \
+    --enter-ssl-key-store-pass
+
+```
+
 If you want to have the client authenticate using SSL/TLS, you will need to have the setting `ssl.needClientAuth` set to `true`. In addition, you will need to have the setting `ssl.trustStoreFile` to specify the client's key store file to be used as a trust store (this file would need to be created by Java's keytool utility). Also, you will need to have the setting `ssl.trustStorePassword` to specify the password for the client's trust store file.
 
 Partial command line example:
@@ -665,7 +685,22 @@ Partial command line example:
     --setting=ssl.keyStorePassword=password \
     --setting=ssl.needClientAuth=true \
     --setting=ssl.trustStoreFile=client.jks \
-    --setting=ssl.trustStoreFile=drowssap
+    --setting=ssl.trustStorePassword=drowssap
+
+```
+
+If you do not want to have the password appear in any script or in any part of the command line history for security reasons, you can use the command line option `--enter-ssl-trust-store-pass` instead.
+
+Partial command line example:
+
+```text
+
+    --setting=ssl.enabled=true \
+    --setting=ssl.keyStoreFile=server.jks \
+    --enter-ssl-key-store-pass \
+    --setting=ssl.needClientAuth=true \
+    --setting=ssl.trustStoreFile=client.jks \
+    --enter-ssl-trust-store-pass
 
 ```
 
@@ -1179,6 +1214,19 @@ Partial command line example:
 
 ```
 
+If you do not want to have the password appear in any script or in any part of the command line history for security reasons, you can use the command line option `--enter-chaining-ssl-trust-store-pass` instead.
+
+Partial command line example:
+
+```text
+
+    --setting=chaining.socksServerUri=socks5://127.0.0.1:23456 \
+    --setting=chaining.ssl.enabled=true \
+    --setting=chaining.ssl.trustStoreFile=server.jks \
+    --enter-chaining-ssl-trust-store-pass
+
+```
+
 If the other SOCKS server wants the client to authenticate using SSL/TLS, you will need to have the setting `chaining.ssl.keyStoreFile` to specify the client's key store file (this file would need to be created by Java's keytool utility). Also, you will need to have the setting `chaining.ssl.keyStorePassword` to specify the password for the client's key store file.
 
 Partial command line example:
@@ -1188,9 +1236,24 @@ Partial command line example:
     --setting=chaining.socksServerUri=socks5://127.0.0.1:23456 \
     --setting=chaining.ssl.enabled=true \
     --setting=chaining.ssl.keyStoreFile=client.jks \
-    --setting=chaining.ssl.keyStoreFile=drowssap \
+    --setting=chaining.ssl.keyStorePassword=drowssap \
     --setting=chaining.ssl.trustStoreFile=server.jks \
     --setting=chaining.ssl.trustStorePassword=password    
+
+```
+
+If you do not want to have the password appear in any script or in any part of the command line history for security reasons, you can use the command line option `--enter-chaining-ssl-key-store-pass` instead.
+
+Partial command line example:
+
+```text
+
+    --setting=chaining.socksServerUri=socks5://127.0.0.1:23456 \
+    --setting=chaining.ssl.enabled=true \
+    --setting=chaining.ssl.keyStoreFile=client.jks \
+    --enter-chaining-ssl-key-store-pass \
+    --setting=chaining.ssl.trustStoreFile=server.jks \
+    --enter-chaining-ssl-trust-store-pass
 
 ```
 

@@ -8,11 +8,10 @@ import java.util.Arrays;
 
 public final class IoHelper {
 
-	private static final int MAX_BUFFER_SIZE = 255;
+	private static final int MAX_BUFFER_LENGTH = 255;
 	
 	public static byte[] readFrom(final InputStream in) throws IOException {
-		int b = -1;
-		b = in.read();
+		int b = in.read();
 		if (b == -1 || b == 0) {
 			return new byte[] { };
 		}
@@ -26,17 +25,35 @@ public final class IoHelper {
 
 	public static void writeThenFlush(
 			final byte[] b, final OutputStream out) throws IOException {
-		if (b.length > MAX_BUFFER_SIZE) {
-			throw new IllegalArgumentException(String.format(
-					"buffer size must be no larger than %s byte(s). "
-					+ "actual size is %s byte(s)", 
-					MAX_BUFFER_SIZE,
-					b.length));
+		if (b.length == 0) {
+			out.write(b.length);
+			out.flush();
+			return;
 		}
 		ByteArrayOutputStream bytesOut = new ByteArrayOutputStream();
-		bytesOut.write(b.length);
-		bytesOut.write(b);
-		out.write(bytesOut.toByteArray());
+		ByteArrayOutputStream bufferOut = new ByteArrayOutputStream();
+		int bufferSize = 0;
+		for (int i = 0; i < b.length; i++) {
+			int byt = b[i];
+			if (byt != -1) {
+				bufferOut.write(byt);
+				if (++bufferSize == MAX_BUFFER_LENGTH) {
+					bytesOut.write(bufferSize);
+					bytesOut.write(bufferOut.toByteArray());
+					bufferOut = new ByteArrayOutputStream();
+					bufferSize = 0;
+				}
+			}
+		}
+		if (bufferSize > 0) {
+			bytesOut.write(bufferSize);
+			bytesOut.write(bufferOut.toByteArray());
+		}
+		byte[] bytes = bytesOut.toByteArray();
+		if (bytes.length == 0) {
+			out.write(bytes.length);
+		}
+		out.write(bytes);
 		out.flush();
 	}
 

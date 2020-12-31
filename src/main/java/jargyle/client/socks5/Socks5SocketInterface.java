@@ -73,9 +73,12 @@ public final class Socks5SocketInterface extends SocketInterface {
 				final InetAddress inetAddress,
 				final int port,
 				final int timeout) throws IOException {
-			this.socketInterface = this.directSocketInterface;
-			SocketInterface sockInterface = socks5Client.connectToSocksServerWith(
-					this.socketInterface, timeout);
+			if (!this.socketInterface.equals(this.directSocketInterface)) {
+				this.socketInterface = this.directSocketInterface;
+			}
+			SocketInterface sockInterface = 
+					this.socks5Client.connectToSocksServerWith(
+							this.socketInterface, timeout);
 			InputStream inputStream = sockInterface.getInputStream();
 			OutputStream outputStream = sockInterface.getOutputStream();
 			String address = inetAddress.getHostAddress();

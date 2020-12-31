@@ -106,9 +106,9 @@ public enum SettingSpec {
 			doc = "The binding host name or address for the socket to connect "
 					+ "to the other SOCKS server (used for SOCKS5 commands "
 					+ "BIND and UDP ASSOCIATE) (default is 0.0.0.0)", 
-			usage = "chain.bindHost=HOST"
+			usage = "chaining.bindHost=HOST"
 	)
-	CHAIN_BIND_HOST("chain.bindHost") {
+	CHAINING_BIND_HOST("chaining.bindHost") {
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -133,9 +133,9 @@ public enum SettingSpec {
 			doc = "The timeout in milliseconds on waiting for the socket to "
 					+ "connect to the other SOCKS server (used for SOCKS5 "
 					+ "commands BIND and UDP ASSOCIATE) (default is 60000)", 
-			usage = "chain.connectTimeout=INTEGER_BETWEEN_1_AND_2147483647"
+			usage = "chaining.connectTimeout=INTEGER_BETWEEN_1_AND_2147483647"
 	)
-	CHAIN_CONNECT_TIMEOUT("chain.connectTimeout") {
+	CHAINING_CONNECT_TIMEOUT("chaining.connectTimeout") {
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -160,9 +160,9 @@ public enum SettingSpec {
 			doc = "The space separated list of socket settings for the socket "
 					+ "to connect to the other SOCKS server (used for SOCKS5 "
 					+ "command UDP ASSOCIATE)", 
-			usage = "chain.socketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
+			usage = "chaining.socketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
 	)
-	CHAIN_SOCKET_SETTINGS("chain.socketSettings") {
+	CHAINING_SOCKET_SETTINGS("chaining.socketSettings") {
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -185,9 +185,9 @@ public enum SettingSpec {
 	},
 	@HelpText(
 			doc = "The URI of the other SOCKS server", 
-			usage = "chain.socksServerUri=SCHEME://HOST[:PORT]"
+			usage = "chaining.socksServerUri=SCHEME://HOST[:PORT]"
 	)
-	CHAIN_SOCKS_SERVER_URI("chain.socksServerUri") {
+	CHAINING_SOCKS_SERVER_URI("chaining.socksServerUri") {
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -210,9 +210,9 @@ public enum SettingSpec {
 			doc = "The space separated list of acceptable authentication "
 					+ "methods to the other SOCKS5 server (default is "
 					+ "NO_AUTHENTICATION_REQUIRED)", 
-			usage = "chain.socks5.authMethods=SOCKS5_AUTH_METHOD1[ SOCKS5_AUTH_METHOD2[...]]"
+			usage = "chaining.socks5.authMethods=SOCKS5_AUTH_METHOD1[ SOCKS5_AUTH_METHOD2[...]]"
 	)
-	CHAIN_SOCKS5_AUTH_METHODS("chain.socks5.authMethods") {
+	CHAINING_SOCKS5_AUTH_METHODS("chaining.socks5.authMethods") {
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -236,9 +236,9 @@ public enum SettingSpec {
 	@HelpText(
 			doc = "The object ID for the GSS-API authentication mechanism to "
 					+ "the other SOCKS5 server (default is 1.2.840.113554.1.2.2)", 
-			usage = "chain.socks5.gssapiMechanismOid=GSSAPI_MECHANISM_OID"
+			usage = "chaining.socks5.gssapiMechanismOid=GSSAPI_MECHANISM_OID"
 	)
-	CHAIN_SOCKS5_GSSAPI_MECHANISM_OID("chain.socks5.gssapiMechanismOid") {
+	CHAINING_SOCKS5_GSSAPI_MECHANISM_OID("chaining.socks5.gssapiMechanismOid") {
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -270,10 +270,10 @@ public enum SettingSpec {
 					+ "GSS-API protection level negotiation must be "
 					+ "unprotected should the other SOCKS5 server use the NEC "
 					+ "reference implementation (default is false)", 
-			usage = "chain.socks5.gssapiNecReferenceImpl=true|false"
+			usage = "chaining.socks5.gssapiNecReferenceImpl=true|false"
 	)
-	CHAIN_SOCKS5_GSSAPI_NEC_REFERENCE_IMPL(
-			"chain.socks5.gssapiNecReferenceImpl") {
+	CHAINING_SOCKS5_GSSAPI_NEC_REFERENCE_IMPL(
+			"chaining.socks5.gssapiNecReferenceImpl") {
 
 		@Override
 		public Setting getDefaultSetting() {
@@ -301,10 +301,10 @@ public enum SettingSpec {
 					+ "acceptable if the server does not accept the first.) "
 					+ "(default is "
 					+ "REQUIRED_INTEG_AND_CONF REQUIRED_INTEG NONE)", 
-			usage = "chain.socks5.gssapiProtectionLevels=SOCKS5_GSSAPI_PROTECTION_LEVEL1[ SOCKS5_GSSAPI_PROTECTION_LEVEL2[...]]"
+			usage = "chaining.socks5.gssapiProtectionLevels=SOCKS5_GSSAPI_PROTECTION_LEVEL1[ SOCKS5_GSSAPI_PROTECTION_LEVEL2[...]]"
 	)
-	CHAIN_SOCKS5_GSSAPI_PROTECTION_LEVELS(
-			"chain.socks5.gssapiProtectionLevels") {
+	CHAINING_SOCKS5_GSSAPI_PROTECTION_LEVELS(
+			"chaining.socks5.gssapiProtectionLevels") {
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -327,9 +327,9 @@ public enum SettingSpec {
 	},
 	@HelpText(
 			doc = "The GSS-API service name for the other SOCKS5 server", 
-			usage = "chain.socks5.gssapiServiceName=GSSAPI_SERVICE_NAME"
+			usage = "chaining.socks5.gssapiServiceName=GSSAPI_SERVICE_NAME"
 	)
-	CHAIN_SOCKS5_GSSAPI_SERVICE_NAME("chain.socks5.gssapiServiceName") {
+	CHAINING_SOCKS5_GSSAPI_SERVICE_NAME("chaining.socks5.gssapiServiceName") {
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -353,9 +353,9 @@ public enum SettingSpec {
 	@HelpText(
 			doc = "The username password to be used to access the other "
 					+ "SOCKS5 server", 
-			usage = "chain.socks5.usernamePassword=USERNAME:PASSWORD"
+			usage = "chaining.socks5.usernamePassword=USERNAME:PASSWORD"
 	)
-	CHAIN_SOCKS5_USERNAME_PASSWORD("chain.socks5.usernamePassword") {
+	CHAINING_SOCKS5_USERNAME_PASSWORD("chaining.socks5.usernamePassword") {
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -377,9 +377,9 @@ public enum SettingSpec {
 	@HelpText(
 			doc = "The boolean value to indicate if SSL/TLS connections to "
 					+ "the other SOCKS server are enabled (default is false)",
-			usage = "chain.ssl.enabled=true|false"
+			usage = "chaining.ssl.enabled=true|false"
 	)
-	CHAIN_SSL_ENABLED("chain.ssl.enabled") {
+	CHAINING_SSL_ENABLED("chaining.ssl.enabled") {
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -404,9 +404,9 @@ public enum SettingSpec {
 			doc = "The space separated list of acceptable cipher suites "
 					+ "enabled for SSL/TLS connections to the other SOCKS "
 					+ "server",
-			usage = "chain.ssl.enabledCipherSuites=[SSL_CIPHER_SUITE1[ SSL_CIPHER_SUITE2[...]]]"
+			usage = "chaining.ssl.enabledCipherSuites=[SSL_CIPHER_SUITE1[ SSL_CIPHER_SUITE2[...]]]"
 	)
-	CHAIN_SSL_ENABLED_CIPHER_SUITES("chain.ssl.enabledCipherSuites") {
+	CHAINING_SSL_ENABLED_CIPHER_SUITES("chaining.ssl.enabledCipherSuites") {
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -431,9 +431,9 @@ public enum SettingSpec {
 			doc = "The space separated list of acceptable protocol versions "
 					+ "enabled for SSL/TLS connections to the other SOCKS "
 					+ "server",
-			usage = "chain.ssl.enabledProtocols=[SSL_PROTOCOL1[ SSL_PROTOCOL2[...]]]"
+			usage = "chaining.ssl.enabledProtocols=[SSL_PROTOCOL1[ SSL_PROTOCOL2[...]]]"
 	)	
-	CHAIN_SSL_ENABLED_PROTOCOLS("chain.ssl.enabledProtocols") {
+	CHAINING_SSL_ENABLED_PROTOCOLS("chaining.ssl.enabledProtocols") {
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -457,9 +457,9 @@ public enum SettingSpec {
 	@HelpText(
 			doc = "The key store file for the SSL/TLS connections to the "
 					+ "other SOCKS server",
-			usage = "chain.ssl.keyStoreFile=FILE"
+			usage = "chaining.ssl.keyStoreFile=FILE"
 	)
-	CHAIN_SSL_KEY_STORE_FILE("chain.ssl.keyStoreFile") {
+	CHAINING_SSL_KEY_STORE_FILE("chaining.ssl.keyStoreFile") {
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -493,9 +493,9 @@ public enum SettingSpec {
 	@HelpText(
 			doc = "The password for the key store for the SSL/TLS connections "
 					+ "to the other SOCKS server",
-			usage = "chain.ssl.keyStorePassword=PASSWORD"
+			usage = "chaining.ssl.keyStorePassword=PASSWORD"
 	)
-	CHAIN_SSL_KEY_STORE_PASSWORD("chain.ssl.keyStorePassword") {
+	CHAINING_SSL_KEY_STORE_PASSWORD("chaining.ssl.keyStorePassword") {
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -519,9 +519,9 @@ public enum SettingSpec {
 	@HelpText(
 			doc = "The type of key store file for the SSL/TLS connections to "
 					+ "the other SOCKS server (default is PKCS12)",
-			usage = "chain.ssl.keyStoreType=TYPE"
+			usage = "chaining.ssl.keyStoreType=TYPE"
 	)	
-	CHAIN_SSL_KEY_STORE_TYPE("chain.ssl.keyStoreType") {
+	CHAINING_SSL_KEY_STORE_TYPE("chaining.ssl.keyStoreType") {
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -544,9 +544,9 @@ public enum SettingSpec {
 	@HelpText(
 			doc = "The protocol version for the SSL/TLS connections to the "
 					+ "other SOCKS server (default is TLSv1)",
-			usage = "chain.ssl.protocol=PROTOCOL"
+			usage = "chaining.ssl.protocol=PROTOCOL"
 	)	
-	CHAIN_SSL_PROTOCOL("chain.ssl.protocol") {
+	CHAINING_SSL_PROTOCOL("chaining.ssl.protocol") {
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -570,9 +570,9 @@ public enum SettingSpec {
 	@HelpText(
 			doc = "The trust store file for the SSL/TLS connections to the "
 					+ "other SOCKS server",
-			usage = "chain.ssl.trustStoreFile=FILE"
+			usage = "chaining.ssl.trustStoreFile=FILE"
 	)	
-	CHAIN_SSL_TRUST_STORE_FILE("chain.ssl.trustStoreFile") {
+	CHAINING_SSL_TRUST_STORE_FILE("chaining.ssl.trustStoreFile") {
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -606,9 +606,9 @@ public enum SettingSpec {
 	@HelpText(
 			doc = "The password for the trust store for the SSL/TLS "
 					+ "connections to the other SOCKS server",
-			usage = "chain.ssl.trustStorePassword=PASSWORD"
+			usage = "chaining.ssl.trustStorePassword=PASSWORD"
 	)	
-	CHAIN_SSL_TRUST_STORE_PASSWORD("chain.ssl.trustStorePassword") {
+	CHAINING_SSL_TRUST_STORE_PASSWORD("chaining.ssl.trustStorePassword") {
 		
 		@Override
 		public Setting getDefaultSetting() {
@@ -632,9 +632,9 @@ public enum SettingSpec {
 	@HelpText(
 			doc = "The type of trust store file for the SSL/TLS connections to "
 					+ "the other SOCKS server (default is PKCS12)",
-			usage = "chain.ssl.trustStoreType=TYPE"
+			usage = "chaining.ssl.trustStoreType=TYPE"
 	)	
-	CHAIN_SSL_TRUST_STORE_TYPE("chain.ssl.trustStoreType") {
+	CHAINING_SSL_TRUST_STORE_TYPE("chaining.ssl.trustStoreType") {
 		
 		@Override
 		public Setting getDefaultSetting() {

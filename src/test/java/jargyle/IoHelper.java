@@ -34,15 +34,12 @@ public final class IoHelper {
 		ByteArrayOutputStream bufferOut = new ByteArrayOutputStream();
 		int bufferSize = 0;
 		for (int i = 0; i < b.length; i++) {
-			int byt = b[i];
-			if (byt != -1) {
-				bufferOut.write(byt);
-				if (++bufferSize == MAX_BUFFER_LENGTH) {
-					bytesOut.write(bufferSize);
-					bytesOut.write(bufferOut.toByteArray());
-					bufferOut = new ByteArrayOutputStream();
-					bufferSize = 0;
-				}
+			bufferOut.write(b[i]);
+			if (++bufferSize == MAX_BUFFER_LENGTH) {
+				bytesOut.write(bufferSize);
+				bytesOut.write(bufferOut.toByteArray());
+				bufferOut = new ByteArrayOutputStream();
+				bufferSize = 0;
 			}
 		}
 		if (bufferSize > 0) {

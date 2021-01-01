@@ -24,7 +24,7 @@ Jargyle is a Java SOCKS5 server. It has the following features:
 -   [4. 4. Combining Configuration Files](#4-4-combining-configuration-files)
 -   [4. 5. Running with a Configuration File](#4-5-running-with-a-configuration-file)
 -   [4. 6. Running with a Monitored Configuration File](#4-6-running-with-a-monitored-configuration-file)
--   [4. 7. Enabling SSL / TLS](#4-7-enabling-ssl-tls)
+-   [4. 7. Enabling SSL/TLS](#4-7-enabling-ssl-tls)
 -   [4. 8. Managing SOCKS5 Users (for Username Password Authentication)](#4-8-managing-socks5-users-for-username-password-authentication)
 -   [4. 8. 1. Creating a Users File](#4-8-1-creating-a-users-file)
 -   [4. 8. 2. Adding Users to an Existing Users File](#4-8-2-adding-users-to-an-existing-users-file)
@@ -34,7 +34,7 @@ Jargyle is a Java SOCKS5 server. It has the following features:
 -   [4. 9. 2. Using Username Password Authentication](#4-9-2-using-username-password-authentication)
 -   [4. 9. 3. Using GSS-API Authentication](#4-9-3-using-gss-api-authentication)
 -   [4. 10. Chaining to Another SOCKS Server](#4-10-chaining-to-another-socks-server)
--   [4. 10. 1. Enabling SSL / TLS](#4-10-1-enabling-ssl-tls)
+-   [4. 10. 1. Enabling SSL/TLS](#4-10-1-enabling-ssl-tls)
 -   [4. 10. 2. Using SOCKS5 Authentication](#4-10-2-using-socks5-authentication)
 -   [4. 10. 2. 1. Using No Authentication](#4-10-2-1-using-no-authentication)
 -   [4. 10. 2. 2. Using Username Password Authentication](#4-10-2-2-using-username-password-authentication)
@@ -648,7 +648,7 @@ The following are the settings in the monitored configuration file that will hav
 -   `ssl.trustStoreType`
 -   `ssl.wantClientAuth`
 
-### 4. 7. Enabling SSL / TLS
+### 4. 7. Enabling SSL/TLS
 
 You can have clients connect to Jargyle through SSL/TLS. By default SSL/TLS is disabled. To enable SSL/TLS, you will need to have the setting `ssl.enabled` set to `true`. In addition, you will need to have the setting `ssl.keyStoreFile` to specify Jargyle's key store file (this file would need to be created by Java's keytool utility). Also, you will need to have the setting `ssl.keyStorePassword` to specify the password for Jargyle's key store file.
 
@@ -1199,7 +1199,7 @@ Partial configuration file example:
 
 Please note that the scheme in the URI specifies the SOCKS protocol to be used when accessing the other SOCKS server (`socks5`), the address or name of the machine of where the other SOCKS server resides (`127.0.0.1`), and the port number of the other SOCKS server (`23456`). In the aforementioned examples, the SOCKS protocol version 5 is used. At this time, the only supported scheme for the URI format is `socks5`
 
-#### 4. 10. 1. Enabling SSL / TLS
+#### 4. 10. 1. Enabling SSL/TLS
 
 You can have Jargyle chained to the other SOCKS server using SSL/TLS. By default SSL/TLS is disabled. To enable SSL/TLS, you will need to have the setting `chaining.ssl.enabled` set to `true`. In addition, you will need to have the setting `chaining.ssl.trustStoreFile` to specify the server's key store file used as a trust store (this file would need to be created by Java's keytool utility). Also, you will need to have the setting `chaining.ssl.trustStorePassword` to specify the password for the server's trust store file.
 

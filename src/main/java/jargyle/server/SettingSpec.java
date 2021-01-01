@@ -103,9 +103,10 @@ public enum SettingSpec {
 		
 	},
 	@HelpText(
-			doc = "The binding host name or address for the socket to connect "
-					+ "to the other SOCKS server (used for SOCKS5 commands "
-					+ "BIND and UDP ASSOCIATE) (default is 0.0.0.0)", 
+			doc = "The binding host name or address for the internal socket "
+					+ "that is used to connect to the other SOCKS server (used "
+					+ "for the SOCKS5 commands BIND and UDP ASSOCIATE) "
+					+ "(default is 0.0.0.0)", 
 			usage = "chaining.bindHost=HOST"
 	)
 	CHAINING_BIND_HOST("chaining.bindHost") {
@@ -130,9 +131,10 @@ public enum SettingSpec {
 		
 	},
 	@HelpText(
-			doc = "The timeout in milliseconds on waiting for the socket to "
-					+ "connect to the other SOCKS server (used for SOCKS5 "
-					+ "commands BIND and UDP ASSOCIATE) (default is 60000)", 
+			doc = "The timeout in milliseconds on waiting for the internal "
+					+ "socket to connect to the other SOCKS server (used for "
+					+ "the SOCKS5 commands BIND and UDP ASSOCIATE) (default is "
+					+ "60000)", 
 			usage = "chaining.connectTimeout=INTEGER_BETWEEN_1_AND_2147483647"
 	)
 	CHAINING_CONNECT_TIMEOUT("chaining.connectTimeout") {
@@ -157,9 +159,9 @@ public enum SettingSpec {
 		
 	},
 	@HelpText(
-			doc = "The space separated list of socket settings for the socket "
-					+ "to connect to the other SOCKS server (used for SOCKS5 "
-					+ "command UDP ASSOCIATE)", 
+			doc = "The space separated list of socket settings for the "
+					+ "internal socket that is used to connect to the other "
+					+ "SOCKS server (used for the SOCKS5 command UDP ASSOCIATE)", 
 			usage = "chaining.socketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
 	)
 	CHAINING_SOCKET_SETTINGS("chaining.socketSettings") {

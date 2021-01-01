@@ -154,13 +154,13 @@ The following is a list of available settings for the SOCKS server (displayed wh
           The space separated list of blocked client address criteria
     
       chaining.bindHost=HOST
-          The binding host name or address for the socket to connect to the other SOCKS server (used for SOCKS5 commands BIND and UDP ASSOCIATE) (default is 0.0.0.0)
+          The binding host name or address for the internal socket that is used to connect to the other SOCKS server (used for the SOCKS5 commands BIND and UDP ASSOCIATE) (default is 0.0.0.0)
     
       chaining.connectTimeout=INTEGER_BETWEEN_1_AND_2147483647
-          The timeout in milliseconds on waiting for the socket to connect to the other SOCKS server (used for SOCKS5 commands BIND and UDP ASSOCIATE) (default is 60000)
+          The timeout in milliseconds on waiting for the internal socket to connect to the other SOCKS server (used for the SOCKS5 commands BIND and UDP ASSOCIATE) (default is 60000)
     
       chaining.socketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
-          The space separated list of socket settings for the socket to connect to the other SOCKS server (used for SOCKS5 command UDP ASSOCIATE)
+          The space separated list of socket settings for the internal socket that is used to connect to the other SOCKS server (used for the SOCKS5 command UDP ASSOCIATE)
     
       chaining.socksServerUri=SCHEME://HOST[:PORT]
           The URI of the other SOCKS server

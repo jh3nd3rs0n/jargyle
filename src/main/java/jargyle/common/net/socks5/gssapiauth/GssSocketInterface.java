@@ -223,9 +223,11 @@ public final class GssSocketInterface extends FilterSocketInterface {
 		
 		@Override
 		public void write(int b) throws IOException {
-			this.bufferOut.write(b);
-			if (++this.bufferOutLength == this.wrapSizeLimit) {
-				this.flush();
+			if (b != -1) {
+				this.bufferOut.write(b);
+				if (++this.bufferOutLength == this.wrapSizeLimit) {
+					this.flush();
+				}
 			}
 		}
 			

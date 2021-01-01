@@ -83,8 +83,8 @@ public abstract class SocksClient {
 			final boolean bindBeforeConnect) throws IOException {
 		if (bindBeforeConnect) {
 			socketInterface.bind(new InetSocketAddress(
-					InetAddress.getByName(this.properties.getValue(
-							PropertySpec.BIND_HOST, Host.class).toString()), 
+					this.properties.getValue(
+							PropertySpec.BIND_HOST, Host.class).toInetAddress(), 
 					this.properties.getValue(
 							PropertySpec.BIND_PORT, Port.class).intValue()));
 		}

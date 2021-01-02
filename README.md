@@ -946,12 +946,10 @@ Partial configuration file example:
 
 ```xml
 
-    <settings>
-        <setting>
-            <name>socks5.authMethods</name>
-            <value>GSSAPI USERNAME_PASSWORD</value>
-        </setting>
-    </settings>
+    <setting>
+        <name>socks5.authMethods</name>
+        <value>GSSAPI USERNAME_PASSWORD</value>
+    </setting>
 
 ```
 
@@ -975,12 +973,10 @@ Partial configuration file example:
 
 ```xml
 
-    <settings>
-        <setting>
-            <name>socks5.authMethods</name>
-            <value>NO_AUTHENTICATION_REQUIRED GSSAPI USERNAME_PASSWORD</value>
-        </setting>
-    </settings>
+    <setting>
+        <name>socks5.authMethods</name>
+        <value>NO_AUTHENTICATION_REQUIRED GSSAPI USERNAME_PASSWORD</value>
+    </setting>
 
 ```
 
@@ -1000,12 +996,10 @@ Partial configuration file example:
 
 ```xml
 
-    <settings>
-        <setting>
-            <name>socks5.authMethods</name>
-            <value>USERNAME_PASSWORD</value>
-        </setting>
-    </settings>
+    <setting>
+        <name>socks5.authMethods</name>
+        <value>USERNAME_PASSWORD</value>
+    </setting>
 
 ```
 
@@ -1031,21 +1025,19 @@ Partial configuration file example:
 
 ```xml
 
-    <settings>
-        <setting>
-            <name>socks5.authMethods</name>
-            <value>USERNAME_PASSWORD</value>
-        </setting>
-        <setting>
-            <name>socks5.usernamePasswordAuthenticator</name>
-            <usernamePasswordAuthenticatorValue>
-                <usernamePasswordAuthenticator>
-                    <className>jargyle.server.socks5.StringSourceUsernamePasswordAuthenticator</className>
-                    <value>Aladdin:opensesame Jasmine:mission%3Aimpossible</value>
-                </usernamePasswordAuthenticator>
-            </usernamePasswordAuthenticatorValue>
-        </setting>
-    </settings>
+    <setting>
+        <name>socks5.authMethods</name>
+        <value>USERNAME_PASSWORD</value>
+    </setting>
+    <setting>
+        <name>socks5.usernamePasswordAuthenticator</name>
+        <usernamePasswordAuthenticatorValue>
+            <usernamePasswordAuthenticator>
+                <className>jargyle.server.socks5.StringSourceUsernamePasswordAuthenticator</className>
+                <value>Aladdin:opensesame Jasmine:mission%3Aimpossible</value>
+            </usernamePasswordAuthenticator>
+        </usernamePasswordAuthenticatorValue>
+    </setting>
 
 ```
 
@@ -1072,21 +1064,19 @@ Partial configuration file example:
 
 ```xml
 
-    <settings>
-        <setting>
-            <name>socks5.authMethods</name>
-            <value>USERNAME_PASSWORD</value>
-        </setting>    
-        <setting>
-            <name>socks5.usernamePasswordAuthenticator</name>
-            <usernamePasswordAuthenticatorValue>
-                <usernamePasswordAuthenticator>
-                    <className>jargyle.server.socks5.XmlFileSourceUsernamePasswordAuthenticator</className>
-                    <value>users.xml</value>
-                </usernamePasswordAuthenticator>
-            </usernamePasswordAuthenticatorValue>
-        </setting>
-    </settings>
+    <setting>
+        <name>socks5.authMethods</name>
+        <value>USERNAME_PASSWORD</value>
+    </setting>    
+    <setting>
+        <name>socks5.usernamePasswordAuthenticator</name>
+        <usernamePasswordAuthenticatorValue>
+            <usernamePasswordAuthenticator>
+                <className>jargyle.server.socks5.XmlFileSourceUsernamePasswordAuthenticator</className>
+                <value>users.xml</value>
+            </usernamePasswordAuthenticator>
+        </usernamePasswordAuthenticatorValue>
+    </setting>
 
 ```
 
@@ -1106,12 +1096,10 @@ Partial configuration file example:
 
 ```xml
 
-    <settings>
-        <setting>
-            <name>socks5.authMethods</name>
-            <value>GSSAPI</value>
-        </setting>
-    </settings>
+    <setting>
+        <name>socks5.authMethods</name>
+        <value>GSSAPI</value>
+    </setting>
 
 ```
 
@@ -1188,12 +1176,10 @@ Partial configuration file example:
 
 ```xml
 
-    <settings>
-        <setting>
-            <name>chaining.socksServerUri</name>
-            <value>socks5://127.0.0.1:23456</value>
-        </setting>
-    </settings>
+    <setting>
+        <name>chaining.socksServerUri</name>
+        <value>socks5://127.0.0.1:23456</value>
+    </setting>
 
 ```
 
@@ -1279,12 +1265,10 @@ Partial configuration file example:
 
 ```xml
 
-    <settings>
-        <setting>
-            <name>chaining.socks5.authMethods</name>
-            <value>GSSAPI USERNAME_PASSWORD</value>
-        </setting>
-    </settings>
+    <setting>
+        <name>chaining.socks5.authMethods</name>
+        <value>GSSAPI USERNAME_PASSWORD</value>
+    </setting>
 
 ```
 
@@ -1308,12 +1292,10 @@ Partial configuration file example:
 
 ```xml
 
-    <settings>
-        <setting>
-            <name>chaining.socks5.authMethods</name>
-            <value>NO_AUTHENTICATION_REQUIRED GSSAPI USERNAME_PASSWORD</value>
-        </setting>
-    </settings>
+    <setting>
+        <name>chaining.socks5.authMethods</name>
+        <value>NO_AUTHENTICATION_REQUIRED GSSAPI USERNAME_PASSWORD</value>
+    </setting>
     
 ```
 
@@ -1333,12 +1315,10 @@ Partial configuration file example:
 
 ```xml
 
-    <settings>
-        <setting>
-            <name>chaining.socks5.authMethods</name>
-            <value>USERNAME_PASSWORD</value>
-        </setting>
-    </settings>
+    <setting>
+        <name>chaining.socks5.authMethods</name>
+        <value>USERNAME_PASSWORD</value>
+    </setting>
 
 ```
 
@@ -1393,12 +1373,10 @@ Partial configuration file example:
 
 ```xml
 
-    <settings>
-        <setting>
-            <name>chaining.socks5.authMethods</name>
-            <value>GSSAPI</value>
-        </setting>
-    </settings>
+    <setting>
+        <name>chaining.socks5.authMethods</name>
+        <value>GSSAPI</value>
+    </setting>
 
 ```
 
@@ -1497,26 +1475,24 @@ Partial configuration file example:
 
 ```xml
     
-    <settings>
-        <setting>
-            <name>allowedClientAddressCriteria</name>
-            <criteriaValue>
-                <criteria>
-                    <criterion method="equals" value="127.0.0.1"/>
-                    <criterion method="equals" value="0:0:0:0:0:0:0:1"/>
-                    <criterion method="equals" value="localhost"/>
-                </criteria>
-            </criteriaValue>
-        </setting>
-        <setting>
-            <name>blockedClientAddressCriteria</name>
-            <criteriaValue>
-                <criteria>
-                    <criterion method="matches" value="(?!(127\.0\.0\.1|0:0:0:0:0:0:0:1|localhost)).*"/>
-                </criteria>
-            </criteriaValue>
-        </setting>        
-    </settings>
+    <setting>
+        <name>allowedClientAddressCriteria</name>
+        <criteriaValue>
+            <criteria>
+                <criterion method="equals" value="127.0.0.1"/>
+                <criterion method="equals" value="0:0:0:0:0:0:0:1"/>
+                <criterion method="equals" value="localhost"/>
+            </criteria>
+        </criteriaValue>
+    </setting>
+    <setting>
+        <name>blockedClientAddressCriteria</name>
+        <criteriaValue>
+            <criteria>
+                <criterion method="matches" value="(?!(127\.0\.0\.1|0:0:0:0:0:0:0:1|localhost)).*"/>
+            </criteria>
+        </criteriaValue>
+    </setting>        
     
 ```
 
@@ -1533,47 +1509,45 @@ Partial configuration file example:
 
 ```xml
     
-    <settings>
-        <setting>
-            <name>socks5.allowedSocks5RequestCriteria</name>
-            <socks5RequestCriteriaValue>
-                <socks5RequestCriteria>
-                    <socks5RequestCriterion>
-                        <sourceAddressCriterion method="matches" value=".*"/>
-                        <commandCriterion method="equals" value="CONNECT"/>
-                        <desiredDestinationAddressCriterion method="matches" value=".*"/>
-                        <desiredDestinationPortRanges>
-                            <portRange minPort="80" maxPort="80"/>
-                            <portRange minPort="443" maxPort="443"/>
-                        </desiredDestinationPortRanges>
-                    </socks5RequestCriterion>
-                </socks5RequestCriteria>
-            </socks5RequestCriteriaValue>
-        </setting>
-        <setting>
-            <name>socks5.blockedSocks5RequestCriteria</name>
-            <socks5RequestCriteriaValue>
-                <socks5RequestCriteria>
-                    <socks5RequestCriterion>
-                        <sourceAddressCriterion method="matches" value=".*"/>
-                        <commandCriterion method="equals" value="BIND"/>
-                        <desiredDestinationAddressCriterion method="matches" value=".*"/>
-                        <desiredDestinationPortRanges>
-                            <portRange minPort="0" maxPort="65535"/>
-                        </desiredDestinationPortRanges>
-                    </socks5RequestCriterion>
-                    <socks5RequestCriterion>
-                        <sourceAddressCriterion method="matches" value=".*"/>
-                        <commandCriterion method="equals" value="UDP_ASSOCIATE"/>
-                        <desiredDestinationAddressCriterion method="matches" value=".*"/>
-                        <desiredDestinationPortRanges>
-                            <portRange minPort="0" maxPort="65535"/>
-                        </desiredDestinationPortRanges>
-                    </socks5RequestCriterion>                    
-                </socks5RequestCriteria>
-            </socks5RequestCriteriaValue>
-        </setting>        
-    </settings>
+    <setting>
+        <name>socks5.allowedSocks5RequestCriteria</name>
+        <socks5RequestCriteriaValue>
+            <socks5RequestCriteria>
+                <socks5RequestCriterion>
+                    <sourceAddressCriterion method="matches" value=".*"/>
+                    <commandCriterion method="equals" value="CONNECT"/>
+                    <desiredDestinationAddressCriterion method="matches" value=".*"/>
+                    <desiredDestinationPortRanges>
+                        <portRange minPort="80" maxPort="80"/>
+                        <portRange minPort="443" maxPort="443"/>
+                    </desiredDestinationPortRanges>
+                </socks5RequestCriterion>
+            </socks5RequestCriteria>
+        </socks5RequestCriteriaValue>
+    </setting>
+    <setting>
+        <name>socks5.blockedSocks5RequestCriteria</name>
+        <socks5RequestCriteriaValue>
+            <socks5RequestCriteria>
+                <socks5RequestCriterion>
+                    <sourceAddressCriterion method="matches" value=".*"/>
+                    <commandCriterion method="equals" value="BIND"/>
+                    <desiredDestinationAddressCriterion method="matches" value=".*"/>
+                    <desiredDestinationPortRanges>
+                        <portRange minPort="0" maxPort="65535"/>
+                    </desiredDestinationPortRanges>
+                </socks5RequestCriterion>
+                <socks5RequestCriterion>
+                    <sourceAddressCriterion method="matches" value=".*"/>
+                    <commandCriterion method="equals" value="UDP_ASSOCIATE"/>
+                    <desiredDestinationAddressCriterion method="matches" value=".*"/>
+                    <desiredDestinationPortRanges>
+                        <portRange minPort="0" maxPort="65535"/>
+                    </desiredDestinationPortRanges>
+                </socks5RequestCriterion>                    
+            </socks5RequestCriteria>
+        </socks5RequestCriteriaValue>
+    </setting>        
     
 ```
 
@@ -1662,65 +1636,63 @@ Partial configuration file example:
 
 ```xml
     
-    <settings>
-        <setting>
-            <name>allowedClientAddressCriteria</name>
-            <criteriaValue>
-                <criteria>
-                    <criterion method="equals" value="127.0.0.1" comment="IPv4 loopback address"/>
-                    <criterion method="equals" value="0:0:0:0:0:0:0:1" comment="IPv6 loopback address"/>
-                    <criterion method="equals" value="localhost" comment="domain name of loopback address"/>
-                </criteria>
-            </criteriaValue>
-        </setting>
-        <setting>
-            <name>blockedClientAddressCriteria</name>
-            <criteriaValue>
-                <criteria>
-                    <criterion method="matches" value="(?!(127\.0\.0\.1|0:0:0:0:0:0:0:1|localhost)).*" comment="block any address that is not a loopback address"/>
-                </criteria>
-            </criteriaValue>
-        </setting>
-        <setting>
-            <name>socks5.allowedSocks5RequestCriteria</name>
-            <socks5RequestCriteriaValue>
-                <socks5RequestCriteria>
-                    <socks5RequestCriterion comment="allow any client to connect to any address on port 80 or port 443">
-                        <sourceAddressCriterion method="matches" value=".*"/>
-                        <commandCriterion method="equals" value="CONNECT"/>
-                        <desiredDestinationAddressCriterion method="matches" value=".*"/>
-                        <desiredDestinationPortRanges>
-                            <portRange minPort="80" maxPort="80" comment="HTTP port"/>
-                            <portRange minPort="443" maxPort="443" comment="HTTPS port"/>
-                        </desiredDestinationPortRanges>
-                    </socks5RequestCriterion>
-                </socks5RequestCriteria>
-            </socks5RequestCriteriaValue>
-        </setting>
-        <setting>
-            <name>socks5.blockedSocks5RequestCriteria</name>
-            <socks5RequestCriteriaValue>
-                <socks5RequestCriteria>
-                    <socks5RequestCriterion comment="block any BIND requests">
-                        <sourceAddressCriterion method="matches" value=".*"/>
-                        <commandCriterion method="equals" value="BIND"/>
-                        <desiredDestinationAddressCriterion method="matches" value=".*"/>
-                        <desiredDestinationPortRanges>
-                            <portRange minPort="0" maxPort="65535"/>
-                        </desiredDestinationPortRanges>
-                    </socks5RequestCriterion>
-                    <socks5RequestCriterion comment="block any UDP ASSOCIATE requests">
-                        <sourceAddressCriterion method="matches" value=".*"/>
-                        <commandCriterion method="equals" value="UDP_ASSOCIATE"/>
-                        <desiredDestinationAddressCriterion method="matches" value=".*"/>
-                        <desiredDestinationPortRanges>
-                            <portRange minPort="0" maxPort="65535"/>
-                        </desiredDestinationPortRanges>
-                    </socks5RequestCriterion>                    
-                </socks5RequestCriteria>
-            </socks5RequestCriteriaValue>
-        </setting>
-    </settings>
+    <setting>
+        <name>allowedClientAddressCriteria</name>
+        <criteriaValue>
+            <criteria>
+                <criterion method="equals" value="127.0.0.1" comment="IPv4 loopback address"/>
+                <criterion method="equals" value="0:0:0:0:0:0:0:1" comment="IPv6 loopback address"/>
+                <criterion method="equals" value="localhost" comment="domain name of loopback address"/>
+            </criteria>
+        </criteriaValue>
+    </setting>
+    <setting>
+        <name>blockedClientAddressCriteria</name>
+        <criteriaValue>
+            <criteria>
+                <criterion method="matches" value="(?!(127\.0\.0\.1|0:0:0:0:0:0:0:1|localhost)).*" comment="block any address that is not a loopback address"/>
+            </criteria>
+        </criteriaValue>
+    </setting>
+    <setting>
+        <name>socks5.allowedSocks5RequestCriteria</name>
+        <socks5RequestCriteriaValue>
+            <socks5RequestCriteria>
+                <socks5RequestCriterion comment="allow any client to connect to any address on port 80 or port 443">
+                    <sourceAddressCriterion method="matches" value=".*"/>
+                    <commandCriterion method="equals" value="CONNECT"/>
+                    <desiredDestinationAddressCriterion method="matches" value=".*"/>
+                    <desiredDestinationPortRanges>
+                        <portRange minPort="80" maxPort="80" comment="HTTP port"/>
+                        <portRange minPort="443" maxPort="443" comment="HTTPS port"/>
+                    </desiredDestinationPortRanges>
+                </socks5RequestCriterion>
+            </socks5RequestCriteria>
+        </socks5RequestCriteriaValue>
+    </setting>
+    <setting>
+        <name>socks5.blockedSocks5RequestCriteria</name>
+        <socks5RequestCriteriaValue>
+            <socks5RequestCriteria>
+                <socks5RequestCriterion comment="block any BIND requests">
+                    <sourceAddressCriterion method="matches" value=".*"/>
+                    <commandCriterion method="equals" value="BIND"/>
+                    <desiredDestinationAddressCriterion method="matches" value=".*"/>
+                    <desiredDestinationPortRanges>
+                        <portRange minPort="0" maxPort="65535"/>
+                    </desiredDestinationPortRanges>
+                </socks5RequestCriterion>
+                <socks5RequestCriterion comment="block any UDP ASSOCIATE requests">
+                    <sourceAddressCriterion method="matches" value=".*"/>
+                    <commandCriterion method="equals" value="UDP_ASSOCIATE"/>
+                    <desiredDestinationAddressCriterion method="matches" value=".*"/>
+                    <desiredDestinationPortRanges>
+                        <portRange minPort="0" maxPort="65535"/>
+                    </desiredDestinationPortRanges>
+                </socks5RequestCriterion>                    
+            </socks5RequestCriteria>
+        </socks5RequestCriteriaValue>
+    </setting>
     
 ```
 

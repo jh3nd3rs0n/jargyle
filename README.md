@@ -426,7 +426,8 @@ The following command creates an empty configuration file:
 
 ```bash
 
-    java -jar target/jargyle-${VERSION}.jar --new-config-file=configuration.xml
+    java -jar target/jargyle-${VERSION}.jar \
+        --new-config-file=configuration.xml
 
 ```
 
@@ -445,7 +446,11 @@ The following command creates a configuration file with the port number, the num
 
 ```bash
 
-    java -jar target/jargyle-${VERSION}.jar --setting=port=1234 --setting=backlog=100 --setting=socks5.authMethods=NO_AUTHENTICATION_REQUIRED --new-config-file=configuration.xml
+    java -jar target/jargyle-${VERSION}.jar \
+        --setting=port=1234 \
+        --setting=backlog=100 \
+        --setting=socks5.authMethods=NO_AUTHENTICATION_REQUIRED \
+        --new-config-file=configuration.xml
 
 ```
 
@@ -481,7 +486,11 @@ The following command adds one command line options before the existing configur
 
 ```bash
 
-    java -jar target/jargyle-${VERSION}.jar --setting=clientSocketSettings=SO_TIMEOUT=500 --config-file=configuration.xml --setting=socketSettings=SO_TIMEOUT=0 --new-config-file=new_configuration.xml
+    java -jar target/jargyle-${VERSION}.jar \
+        --setting=clientSocketSettings=SO_TIMEOUT=500 \
+        --config-file=configuration.xml \
+        --setting=socketSettings=SO_TIMEOUT=0 \
+        --new-config-file=new_configuration.xml
 
 ```
 
@@ -539,7 +548,10 @@ The following command combines the two earlier configuration files into one:
 
 ```bash
 
-    java -jar target/jargyle-${VERSION}.jar --config-file=configuration.xml --config-file=new_configuration.xml --new-config-file=combined_configuration.xml
+    java -jar target/jargyle-${VERSION}.jar \
+        --config-file=configuration.xml \
+        --config-file=new_configuration.xml \
+        --new-config-file=combined_configuration.xml
 
 ```
 
@@ -609,7 +621,8 @@ To run Jargyle with a configuration file, you can use the command line option `-
 
 ```bash
 
-    java -jar target/jargyle-${VERSION}.jar --config-file=configuration.xml
+    java -jar target/jargyle-${VERSION}.jar \
+        --config-file=configuration.xml
 
 ```
 
@@ -623,7 +636,8 @@ To run Jargyle with a monitored configuration file, you can use the command line
 
 ```bash
 
-    java -jar target/jargyle-${VERSION}.jar --monitored-config-file=configuration.xml
+    java -jar target/jargyle-${VERSION}.jar \
+        --monitored-config-file=configuration.xml
 
 ```
 
@@ -652,55 +666,51 @@ The following are the settings in the monitored configuration file that will hav
 
 You can have clients connect to Jargyle through SSL/TLS. By default SSL/TLS is disabled. To enable SSL/TLS, you will need to have the setting `ssl.enabled` set to `true`. In addition, you will need to have the setting `ssl.keyStoreFile` to specify Jargyle's key store file (this file would need to be created by Java's keytool utility). Also, you will need to have the setting `ssl.keyStorePassword` to specify the password for Jargyle's key store file.
 
-Partial command line example:
-
 ```text
 
-    --setting=ssl.enabled=true \
-    --setting=ssl.keyStoreFile=server.jks \
-    --setting=ssl.keyStorePassword=password
+    java -jar target/jargyle-${VERSION}.jar \
+        --setting=ssl.enabled=true \
+        --setting=ssl.keyStoreFile=server.jks \
+        --setting=ssl.keyStorePassword=password
 
 ```
 
 If you do not want to have the password appear in any script or in any part of the command line history for security reasons, you can use the command line option `--enter-ssl-key-store-pass` instead. It will provide an interactive prompt for you to enter the password.
 
-Partial command line example:
-
 ```text
 
-    --setting=ssl.enabled=true \
-    --setting=ssl.keyStoreFile=server.jks \
-    --enter-ssl-key-store-pass
+    java -jar target/jargyle-${VERSION}.jar \
+        --setting=ssl.enabled=true \
+        --setting=ssl.keyStoreFile=server.jks \
+        --enter-ssl-key-store-pass
 
 ```
 
 If you want to have the client authenticate using SSL/TLS, you will need to have the setting `ssl.needClientAuth` set to `true`. In addition, you will need to have the setting `ssl.trustStoreFile` to specify the client's key store file to be used as a trust store (this file would need to be created by Java's keytool utility). Also, you will need to have the setting `ssl.trustStorePassword` to specify the password for the client's trust store file.
 
-Partial command line example:
-
 ```text
 
-    --setting=ssl.enabled=true \
-    --setting=ssl.keyStoreFile=server.jks \
-    --setting=ssl.keyStorePassword=password \
-    --setting=ssl.needClientAuth=true \
-    --setting=ssl.trustStoreFile=client.jks \
-    --setting=ssl.trustStorePassword=drowssap
+    java -jar target/jargyle-${VERSION}.jar \
+        --setting=ssl.enabled=true \
+        --setting=ssl.keyStoreFile=server.jks \
+        --setting=ssl.keyStorePassword=password \
+        --setting=ssl.needClientAuth=true \
+        --setting=ssl.trustStoreFile=client.jks \
+        --setting=ssl.trustStorePassword=drowssap
 
 ```
 
 If you do not want to have the password appear in any script or in any part of the command line history for security reasons, you can use the command line option `--enter-ssl-trust-store-pass` instead. It will provide an interactive prompt for you to enter the password.
 
-Partial command line example:
-
 ```text
 
-    --setting=ssl.enabled=true \
-    --setting=ssl.keyStoreFile=server.jks \
-    --enter-ssl-key-store-pass \
-    --setting=ssl.needClientAuth=true \
-    --setting=ssl.trustStoreFile=client.jks \
-    --enter-ssl-trust-store-pass
+    java -jar target/jargyle-${VERSION}.jar \
+        --setting=ssl.enabled=true \
+        --setting=ssl.keyStoreFile=server.jks \
+        --enter-ssl-key-store-pass \
+        --setting=ssl.needClientAuth=true \
+        --setting=ssl.trustStoreFile=client.jks \
+        --enter-ssl-trust-store-pass
 
 ```
 
@@ -714,7 +724,8 @@ To create a users file, you would run the following command:
 
 ```bash
 
-    java -jar target/jargyle-${VERSION}.jar --socks5-users create-new-file FILE
+    java -jar target/jargyle-${VERSION}.jar \
+        --socks5-users create-new-file FILE
 
 ```
 
@@ -724,7 +735,8 @@ Once you have run the command, an interactive prompt will ask you if you want to
 
 ```text
 
-    java -jar target/jargyle-${VERSION}.jar --socks5-users create-new-file users.xml
+    java -jar target/jargyle-${VERSION}.jar \
+        --socks5-users create-new-file users.xml
     Would you like to enter a user? ('Y' for yes): 
 
 ```
@@ -812,7 +824,8 @@ To add users to an existing users file, you would run the following command:
 
 ```bash
 
-    java -jar target/jargyle-${VERSION}.jar --socks5-users add-users-to-file FILE
+    java -jar target/jargyle-${VERSION}.jar \
+        --socks5-users add-users-to-file FILE
 
 ```
 
@@ -822,7 +835,8 @@ Once you have run the command, an interactive prompt will ask you for the new us
 
 ```text
 
-    java -jar target/jargyle-${VERSION}.jar --socks5-users add-users-to-file users.xml
+    java -jar target/jargyle-${VERSION}.jar \
+        --socks5-users add-users-to-file users.xml
     User
     Name: Jafar
     Password: 
@@ -877,7 +891,8 @@ To remove a user from an existing users file, you would run the following comman
 
 ```bash
 
-    java -jar target/jargyle-${VERSION}.jar --socks5-users remove-user NAME FILE
+    java -jar target/jargyle-${VERSION}.jar \
+        --socks5-users remove-user NAME FILE
 
 ```
 
@@ -887,7 +902,8 @@ Once you have run the command, the user of the specified name will be removed fr
 
 ```text
 
-    java -jar target/jargyle-${VERSION}.jar --socks5-users remove-user Jafar users.xml
+    java -jar target/jargyle-${VERSION}.jar \
+        --socks5-users remove-user Jafar users.xml
     User 'Jafar' removed
     Writing to 'users.xml'...
 
@@ -1110,10 +1126,10 @@ The following is a sufficient example of using the Kerberos security mechanism:
 ```bash
 
     java -Djavax.security.auth.useSubjectCredsOnly=false \
-	    -Djava.security.auth.login.config=login.conf \
-	    -Djava.security.krb5.conf=krb5.conf \
-	    -jar target/jargyle-${VERSION}.jar \
-	    --setting=socks5.authMethods=GSSAPI 
+        -Djava.security.auth.login.config=login.conf \
+        -Djava.security.krb5.conf=krb5.conf \
+        -jar target/jargyle-${VERSION}.jar \
+        --setting=socks5.authMethods=GSSAPI 
 
 ```
 
@@ -1387,12 +1403,12 @@ The following is a sufficient example of using the Kerberos security mechanism:
 ```bash
 
     java -Djavax.security.auth.useSubjectCredsOnly=false \
-	    -Djava.security.auth.login.config=login.conf \
-	    -Djava.security.krb5.conf=krb5.conf \
-	    -jar target/jargyle-${VERSION}.jar \
-	    --setting=chaining.socksServerUri=socks5://127.0.0.1:23456 \
-	    --setting=chaining.socks5.authMethods=GSSAPI \
-	    --setting=chaining.socks5.gssapiServiceName=rcmd/127.0.0.1 
+        -Djava.security.auth.login.config=login.conf \
+        -Djava.security.krb5.conf=krb5.conf \
+        -jar target/jargyle-${VERSION}.jar \
+        --setting=chaining.socksServerUri=socks5://127.0.0.1:23456 \
+        --setting=chaining.socks5.authMethods=GSSAPI \
+        --setting=chaining.socks5.gssapiServiceName=rcmd/127.0.0.1 
 
 ```
 
@@ -1606,7 +1622,8 @@ Example:
 
 ```bash
     
-    java -Djava.util.logging.config.file=logging.properties -jar target/jargyle-${VERSION}.jar
+    java -Djava.util.logging.config.file=logging.properties \
+        -jar target/jargyle-${VERSION}.jar
     
 ```
 

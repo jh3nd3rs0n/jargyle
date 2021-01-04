@@ -1461,9 +1461,9 @@ The command line option `--setting=chaining.socks5.gssapiServiceName=rcmd/127.0.
 
 You can allow or block the following addresses:
 
--   Client addresses (IPv4, IPv6, and domain name addresses)
--   External incoming addresses following the SOCKS5 BIND command (IPv4, IPv6, and domain name addresses)
--   External incoming addresses following the SOCKS5 UDP ASSOCIATE command (IPv4, IPv6, and domain name addresses)
+-   Client addresses (IPv4 and IPv6)
+-   External incoming addresses following the SOCKS5 BIND command (IPv4 and IPv6)
+-   External incoming addresses following the SOCKS5 UDP ASSOCIATE command (IPv4 and IPv6)
 
 To allow or block an address or addresses, you will need to specify the address or addresses in any of the following settings:
 
@@ -1480,8 +1480,8 @@ Partial command line example:
 
 ```text
     
-    "--setting=allowedClientAddressCriteria=equals:127.0.0.1 equals:0:0:0:0:0:0:0:1 equals:localhost" \
-    "--setting=blockedClientAddressCriteria=matches:(?!(127\.0\.0\.1|0:0:0:0:0:0:0:1|localhost)).*"
+    "--setting=allowedClientAddressCriteria=equals:127.0.0.1 equals:0:0:0:0:0:0:0:1" \
+    "--setting=blockedClientAddressCriteria=matches:(?!(127\.0\.0\.1|0:0:0:0:0:0:0:1)).*"
     
 ```
 
@@ -1497,7 +1497,6 @@ Partial configuration file example:
             <criteria>
                 <criterion method="equals" value="127.0.0.1"/>
                 <criterion method="equals" value="0:0:0:0:0:0:0:1"/>
-                <criterion method="equals" value="localhost"/>
             </criteria>
         </criteriaValue>
     </setting>
@@ -1505,7 +1504,7 @@ Partial configuration file example:
         <name>blockedClientAddressCriteria</name>
         <criteriaValue>
             <criteria>
-                <criterion method="matches" value="(?!(127\.0\.0\.1|0:0:0:0:0:0:0:1|localhost)).*"/>
+                <criterion method="matches" value="(?!(127\.0\.0\.1|0:0:0:0:0:0:0:1)).*"/>
             </criteria>
         </criteriaValue>
     </setting>        
@@ -1659,7 +1658,6 @@ Partial configuration file example:
             <criteria>
                 <criterion method="equals" value="127.0.0.1" comment="IPv4 loopback address"/>
                 <criterion method="equals" value="0:0:0:0:0:0:0:1" comment="IPv6 loopback address"/>
-                <criterion method="equals" value="localhost" comment="domain name of loopback address"/>
             </criteria>
         </criteriaValue>
     </setting>
@@ -1667,7 +1665,7 @@ Partial configuration file example:
         <name>blockedClientAddressCriteria</name>
         <criteriaValue>
             <criteria>
-                <criterion method="matches" value="(?!(127\.0\.0\.1|0:0:0:0:0:0:0:1|localhost)).*" comment="block any address that is not a loopback address"/>
+                <criterion method="matches" value="(?!(127\.0\.0\.1|0:0:0:0:0:0:0:1)).*" comment="block any address that is not a loopback address"/>
             </criteria>
         </criteriaValue>
     </setting>

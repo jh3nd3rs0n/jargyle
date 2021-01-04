@@ -2,7 +2,6 @@ package jargyle.server;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.logging.Level;
@@ -31,30 +30,30 @@ final class Worker implements Runnable {
 	}
 	
 	private boolean canAcceptClientSocket(final Socket clientSocket) {
-		InetAddress clientInetAddress = clientSocket.getInetAddress();
+		String clientAddress = clientSocket.getInetAddress().getHostAddress();
 		Criteria allowedClientAddressCriteria = this.settings.getLastValue(
 				SettingSpec.ALLOWED_CLIENT_ADDRESS_CRITERIA, Criteria.class);
 		Criterion criterion = allowedClientAddressCriteria.anyEvaluatesTrue(
-				clientInetAddress);
+				clientAddress);
 		if (criterion == null) {
 			LOGGER.log(
 					Level.FINE, 
 					this.format(String.format(
 							"Client address %s not allowed", 
-							clientInetAddress)));
+							clientAddress)));
 			return false;
 		}
 		Criteria blockedClientAddressCriteria = this.settings.getLastValue(
 				SettingSpec.BLOCKED_CLIENT_ADDRESS_CRITERIA, Criteria.class);
 		criterion = blockedClientAddressCriteria.anyEvaluatesTrue(
-				clientInetAddress);
+				clientAddress);
 		if (criterion != null) {
 			LOGGER.log(
 					Level.FINE, 
 					this.format(String.format(
 							"Client address %s blocked based on the "
 							+ "following criterion: %s", 
-							clientInetAddress,
+							clientAddress,
 							criterion)));
 			return false;
 		}

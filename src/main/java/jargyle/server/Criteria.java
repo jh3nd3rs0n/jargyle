@@ -1,6 +1,5 @@
 package jargyle.server;
 
-import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -67,15 +66,6 @@ public final class Criteria {
 	
 	private Criteria(final List<Criterion> c) {
 		this.criteria = new ArrayList<Criterion>(c);
-	}
-	
-	public Criterion anyEvaluatesTrue(final InetAddress inetAddress) {
-		for (Criterion criterion : this.criteria) {
-			if (criterion.evaluatesTrue(inetAddress)) {
-				return criterion;
-			}
-		}
-		return null;
 	}
 	
 	public Criterion anyEvaluatesTrue(final String str) {

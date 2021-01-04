@@ -1,6 +1,5 @@
 package jargyle.server;
 
-import java.net.InetAddress;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -100,11 +99,6 @@ public final class Criterion {
 		this.value = val;
 	} 
 
-	public boolean evaluatesTrue(final InetAddress arg) {
-		return this.evaluatesTrue(arg.getHostName())
-				|| this.evaluatesTrue(arg.getHostAddress());
-	}
-	
 	public boolean evaluatesTrue(final String arg) {
 		return this.criterionMethod.evaluatesTrue(arg, this.value);
 	}

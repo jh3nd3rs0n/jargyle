@@ -1,7 +1,5 @@
 package jargyle.server.socks5;
 
-import java.net.InetAddress;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -109,10 +107,10 @@ public final class Socks5RequestCriterion {
 	}
 	
 	public boolean evaluatesTrue(
-			final InetAddress sourceInetAddress, 
+			final String sourceAddress, 
 			final Socks5Request socks5Req) {
 		if (!this.getSourceAddressCriterion().evaluatesTrue(
-				sourceInetAddress)) {
+				sourceAddress)) {
 			return false;
 		}
 		if (!this.getCommandCriterion().evaluatesTrue(

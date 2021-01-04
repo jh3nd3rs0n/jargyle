@@ -103,20 +103,20 @@ public final class Socks5Worker implements Runnable {
 	}
 
 	private boolean canAcceptExternalIncomingAddress(
-			final InetAddress externalIncomingInetAddress) {
+			final String externalIncomingAddress) {
 		Criteria allowedExternalIncomingAddressCriteria = 
 				this.settings.getLastValue(
 						SettingSpec.SOCKS5_ON_BIND_ALLOWED_EXTERNAL_INCOMING_ADDRESS_CRITERIA, 
 						Criteria.class);
 		Criterion criterion = 
 				allowedExternalIncomingAddressCriteria.anyEvaluatesTrue(
-						externalIncomingInetAddress);
+						externalIncomingAddress);
 		if (criterion == null) {
 			LOGGER.log(
 					Level.FINE, 
 					this.format(String.format(
 							"External incoming address %s not allowed", 
-							externalIncomingInetAddress)));
+							externalIncomingAddress)));
 			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
 					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
 			LOGGER.log(
@@ -136,14 +136,14 @@ public final class Socks5Worker implements Runnable {
 						SettingSpec.SOCKS5_ON_BIND_BLOCKED_EXTERNAL_INCOMING_ADDRESS_CRITERIA, 
 						Criteria.class);
 		criterion = blockedExternalIncomingAddressCriteria.anyEvaluatesTrue(
-				externalIncomingInetAddress);
+				externalIncomingAddress);
 		if (criterion != null) {
 			LOGGER.log(
 					Level.FINE, 
 					this.format(String.format(
 							"External incoming address %s blocked based on the "
 							+ "following criterion: %s", 
-							externalIncomingInetAddress,
+							externalIncomingAddress,
 							criterion)));
 			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
 					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
@@ -163,7 +163,7 @@ public final class Socks5Worker implements Runnable {
 	}
 	
 	private boolean canAcceptSocks5Request(
-			final InetAddress sourceInetAddress,
+			final String sourceAddress,
 			final Socks5Request socks5Req) {
 		Socks5RequestCriteria allowedSocks5RequestCriteria = 
 				this.settings.getLastValue(
@@ -171,7 +171,7 @@ public final class Socks5Worker implements Runnable {
 						Socks5RequestCriteria.class);
 		Socks5RequestCriterion socks5RequestCriterion =
 				allowedSocks5RequestCriteria.anyEvaluatesTrue(
-						sourceInetAddress, socks5Req);
+						sourceAddress, socks5Req);
 		if (socks5RequestCriterion == null) {
 			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
 					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
@@ -180,7 +180,7 @@ public final class Socks5Worker implements Runnable {
 					this.format(String.format(
 							"SOCKS5 request from %s not allowed. "
 							+ "SOCKS5 request: %s",
-							sourceInetAddress.toString(),
+							sourceAddress.toString(),
 							socks5Req.toString())));
 			try {
 				this.writeThenFlush(socks5Rep.toByteArray());
@@ -195,7 +195,7 @@ public final class Socks5Worker implements Runnable {
 						Socks5RequestCriteria.class);
 		socks5RequestCriterion =
 				blockedSocks5RequestCriteria.anyEvaluatesTrue(
-						sourceInetAddress, socks5Req);
+						sourceAddress, socks5Req);
 		if (socks5RequestCriterion != null) {
 			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
 					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
@@ -204,7 +204,7 @@ public final class Socks5Worker implements Runnable {
 					this.format(String.format(
 							"SOCKS5 request from %s blocked based on the "
 							+ "following criterion: %s. SOCKS5 request: %s",
-							sourceInetAddress.toString(),
+							sourceAddress.toString(),
 							socks5RequestCriterion.toString(),
 							socks5Req.toString())));
 			try {
@@ -492,11 +492,13 @@ public final class Socks5Worker implements Runnable {
 			}
 			InetAddress externalIncomingInetAddress = 
 					externalIncomingSocketInterface.getInetAddress();
+			String externalIncomingAddress = 
+					externalIncomingInetAddress.getHostAddress();
 			if (!this.canAcceptExternalIncomingAddress(
-					externalIncomingInetAddress)) {
+					externalIncomingAddress)) {
 				return;
 			}
-			serverBoundAddress = externalIncomingInetAddress.getHostAddress();
+			serverBoundAddress = externalIncomingAddress;
 			addressType = AddressType.get(serverBoundAddress);
 			serverBoundPort = externalIncomingSocketInterface.getLocalPort();
 			socks5Rep = Socks5Reply.newInstance(
@@ -857,7 +859,8 @@ public final class Socks5Worker implements Runnable {
 			Socks5Request socks5Req = this.newSocks5Request();
 			if (socks5Req == null) { return; }
 			if (!this.canAcceptSocks5Request(
-					this.clientSocketInterface.getInetAddress(), socks5Req)) {
+					this.clientSocketInterface.getInetAddress().getHostAddress(), 
+					socks5Req)) {
 				return;
 			}
 			Command command = socks5Req.getCommand();

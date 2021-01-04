@@ -30,31 +30,31 @@ final class UdpRelayServer {
 		}
 		
 		private boolean canAcceptExternalIncomingAddress(
-				final InetAddress externalIncomingInetAddress) {
+				final String externalIncomingAddress) {
 			Criteria allowedExternalIncomingAddrCriteria =
 					this.getUdpRelayServer().allowedExternalIncomingAddressCriteria;
 			Criterion criterion = 
 					allowedExternalIncomingAddrCriteria.anyEvaluatesTrue(
-							externalIncomingInetAddress);
+							externalIncomingAddress);
 			if (criterion == null) {
 				LOGGER.log(
 						Level.FINE, 
 						this.format(String.format(
 								"External incoming address %s not allowed", 
-								externalIncomingInetAddress)));
+								externalIncomingAddress)));
 				return false;
 			}
 			Criteria blockedExternalIncomingAddrCriteria =
 					this.getUdpRelayServer().blockedExternalIncomingAddressCriteria;
 			criterion = blockedExternalIncomingAddrCriteria.anyEvaluatesTrue(
-					externalIncomingInetAddress);
+					externalIncomingAddress);
 			if (criterion != null) {
 				LOGGER.log(
 						Level.FINE, 
 						this.format(String.format(
 								"External incoming address %s blocked based on the "
 								+ "following criterion: %s", 
-								externalIncomingInetAddress,
+								externalIncomingAddress,
 								criterion)));
 				return false;
 			}
@@ -168,7 +168,8 @@ final class UdpRelayServer {
 							this.format(String.format(
 									"Packet data received: %s byte(s)", 
 									packet.getLength())));
-					if (!this.canAcceptExternalIncomingAddress(packet.getAddress())) {
+					if (!this.canAcceptExternalIncomingAddress(
+							packet.getAddress().getHostAddress())) {
 						continue;
 					}
 					if (!this.canForwardDatagramPacket(packet)) {

@@ -14,11 +14,8 @@ public final class Host {
 	private final String string;
 	
 	private Host(final InetAddress inetAddr, final String str) {
-		String hostName = inetAddr.getHostName();
-		String hostAddress = inetAddr.getHostAddress();
-		String s = (str.equals(hostName)) ? hostName : hostAddress;
 		this.inetAddress = inetAddr;
-		this.string = s;
+		this.string = inetAddr.getHostAddress();
 	}
 	
 	public InetAddress toInetAddress() {

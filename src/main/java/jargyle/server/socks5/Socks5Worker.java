@@ -180,7 +180,7 @@ public final class Socks5Worker implements Runnable {
 					this.format(String.format(
 							"SOCKS5 request from %s not allowed. "
 							+ "SOCKS5 request: %s",
-							sourceAddress.toString(),
+							sourceAddress,
 							socks5Req.toString())));
 			try {
 				this.writeThenFlush(socks5Rep.toByteArray());

@@ -46,7 +46,7 @@ public class ExtendedInetAddressProvider extends InetAddressProvider {
 		
 	}
 	
-	static final ExtendedInetAddressProvider INSTANCE = 
+	private static final ExtendedInetAddressProvider INSTANCE = 
 			new ExtendedInetAddressProvider(); 
 	
 	public static ExtendedInetAddressProvider getInstance() {

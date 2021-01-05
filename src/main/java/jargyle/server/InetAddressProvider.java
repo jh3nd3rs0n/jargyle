@@ -41,31 +41,33 @@ public class InetAddressProvider {
 		public InetAddressProvider unmarshal(
 				final InetAddressProviderXml v) throws Exception {
 			if (v == null) { return null; }
-			return InetAddressProvider.getInstance(v.className);
+			return InetAddressProvider.newInstance(v.className);
 		}
 		
 	}
 	
-	private static InetAddressProvider defaultInstance;
-	
-	private static final InetAddressProvider INSTANCE = 
-			new InetAddressProvider();
-	
-	public static InetAddressProvider getDefault() {
-		if (defaultInstance == null) {
-			defaultInstance = INSTANCE;
+	public synchronized static InetAddressProvider getInstance(
+			final Configuration config) {
+		Settings settings = config.getSettings();
+		InetAddressProvider inetAddressProvider = settings.getLastValue(
+				SettingSpec.INET_ADDRESS_PROVIDER, InetAddressProvider.class);
+		if (inetAddressProvider == null) {
+			inetAddressProvider = new InetAddressProvider();
 		}
-		return defaultInstance;
+		if (inetAddressProvider.getConfiguration() == null) {
+			inetAddressProvider.setConfiguration(config);
+		}
+		return inetAddressProvider;
 	}
 	
-	public static InetAddressProvider getInstance() {
-		return INSTANCE;
-	} 
+	public static InetAddressProvider newInstance() {
+		return new InetAddressProvider();
+	}
 	
-	public static InetAddressProvider getInstance(final Class<?> cls) {
+	public static InetAddressProvider newInstance(final Class<?> cls) {
 		InetAddressProvider inetAddressProvider = null;
 		if (cls.equals(InetAddressProvider.class)) {
-			inetAddressProvider = INSTANCE;
+			inetAddressProvider = new InetAddressProvider();
 		} else if (InetAddressProvider.class.isAssignableFrom(cls)) {
 			Method method = null;
 			Constructor<?> constructor = null;
@@ -141,18 +143,14 @@ public class InetAddressProvider {
 		return inetAddressProvider;
 	}
 	
-	public static InetAddressProvider getInstance(final String s) {
+	public static InetAddressProvider newInstance(final String s) {
 		Class<?> cls = null;
 		try {
 			cls = Class.forName(s);
 		} catch (ClassNotFoundException e) {
 			throw new IllegalArgumentException(e);
 		}
-		return getInstance(cls);		
-	}
-	
-	public static void setDefault(final InetAddressProvider provider) {
-		defaultInstance = provider;
+		return newInstance(cls);		
 	}
 	
 	private Configuration configuration;

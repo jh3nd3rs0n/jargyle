@@ -60,6 +60,7 @@ public final class Socks5Worker implements Runnable {
 	private OutputStream clientOutputStream;
 	private SocketInterface clientSocketInterface;
 	private final Configuration configuration;
+	private final InetAddressProvider inetAddressProvider;
 	private final Settings settings;
 	private final SocksClient socksClient;
 	
@@ -68,10 +69,13 @@ public final class Socks5Worker implements Runnable {
 			final Configuration config) {
 		Settings sttngs = config.getSettings();
 		SocksClient client = SocksClientFactory.newSocksClient(config);
+		InetAddressProvider inetAddrProvider = InetAddressProvider.getInstance(
+				config);
 		this.clientInputStream = null;
 		this.clientOutputStream = null;
 		this.clientSocketInterface = clientSockInterface;
 		this.configuration = config;
+		this.inetAddressProvider = inetAddrProvider;
 		this.settings = sttngs;
 		this.socksClient = client;
 	}
@@ -436,7 +440,7 @@ public final class Socks5Worker implements Runnable {
 			}
 			try {
 				listenSocketInterface.bind(new InetSocketAddress(
-						InetAddressProvider.getDefault().getInetAddress(
+						this.inetAddressProvider.getInetAddress(
 								desiredDestinationAddress),
 						desiredDestinationPort));
 			} catch (IOException e) {
@@ -554,7 +558,7 @@ public final class Socks5Worker implements Runnable {
 						SettingSpec.SOCKS5_ON_CONNECT_SERVER_CONNECT_TIMEOUT, 
 						PositiveInteger.class).intValue();
 				serverSocketInterface.connect(new InetSocketAddress(
-						InetAddressProvider.getDefault().getInetAddress(
+						this.inetAddressProvider.getInetAddress(
 								desiredDestinationAddress),
 						desiredDestinationPort),
 						connectTimeout);
@@ -649,6 +653,7 @@ public final class Socks5Worker implements Runnable {
 					this.clientSocketInterface.getInetAddress().getHostAddress(),
 					desiredDestinationAddress,
 					desiredDestinationPort, 
+					this.inetAddressProvider, 
 					this.settings.getLastValue(
 							SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_ALLOWED_EXTERNAL_INCOMING_ADDRESS_CRITERIA, 
 							Criteria.class), 

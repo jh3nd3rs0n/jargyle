@@ -21,9 +21,9 @@ public final class TcpRelayServer {
 				DataWorker.class.getName());
 		
 		private final TcpRelayServer tcpRelayServer;
-		private final InputStream input;
+		private final InputStream inputStream;
 		private final SocketInterface inputSocketInterface;
-		private final OutputStream output;
+		private final OutputStream outputStream;
 		private final SocketInterface outputSocketInterface;
 				
 		public DataWorker(
@@ -31,9 +31,9 @@ public final class TcpRelayServer {
 				final SocketInterface inSocketInterface,
 				final SocketInterface outSocketInterface) throws IOException {
 			this.tcpRelayServer = server;
-			this.input = inSocketInterface.getInputStream();
+			this.inputStream = inSocketInterface.getInputStream();
 			this.inputSocketInterface = inSocketInterface;
-			this.output = outSocketInterface.getOutputStream();
+			this.outputStream = outSocketInterface.getOutputStream();
 			this.outputSocketInterface = outSocketInterface;
 		}
 		
@@ -41,16 +41,36 @@ public final class TcpRelayServer {
 			return String.format("%s: %s", this, message);
 		}
 
+		private int getBufferSize() {
+			return this.tcpRelayServer.bufferSize;
+		}
+		
+		private long getLastReadTime() {
+			return this.tcpRelayServer.lastReadTime;
+		}
+		
+		private int getTimeout() {
+			return this.tcpRelayServer.timeout;
+		}
+		
+		private boolean isFirstDataWorkerFinished() {
+			return this.tcpRelayServer.firstDataWorkerFinished;
+		}
+		
+		private boolean isTcpRelayServerStopped() {
+			return this.tcpRelayServer.stopped;
+		}
+		
 		@Override
 		public void run() {
-			this.tcpRelayServer.lastReadTime = System.currentTimeMillis();
+			this.setLastReadTime(System.currentTimeMillis());
 			while (true) {
 				try {
 					int bytesRead = 0;
-					byte[] buffer = new byte[this.tcpRelayServer.bufferSize];
+					byte[] buffer = new byte[this.getBufferSize()];
 					try {
-						bytesRead = this.input.read(buffer);
-						this.tcpRelayServer.lastReadTime = System.currentTimeMillis();
+						bytesRead = this.inputStream.read(buffer);
+						this.setLastReadTime(System.currentTimeMillis());
 						LOGGER.log(
 								Level.FINE, 
 								this.format(String.format(
@@ -73,14 +93,14 @@ public final class TcpRelayServer {
 					}
 					if (bytesRead == 0) {
 						long timeSinceRead = 
-								System.currentTimeMillis() - this.tcpRelayServer.lastReadTime;
-						if (timeSinceRead >= this.tcpRelayServer.timeout) {
+								System.currentTimeMillis() - this.getLastReadTime();
+						if (timeSinceRead >= this.getTimeout()) {
 							break;
 						}
 						continue;
 					}
 					try {
-						this.output.write(buffer, 0, bytesRead);
+						this.outputStream.write(buffer, 0, bytesRead);
 					} catch (SocketException e) {
 						// socket closed
 						break;
@@ -92,7 +112,7 @@ public final class TcpRelayServer {
 						break;
 					}
 					try {
-						this.output.flush();
+						this.outputStream.flush();
 					} catch (SocketException e) {
 						// socket closed
 						break;
@@ -111,13 +131,25 @@ public final class TcpRelayServer {
 					break;
 				}
 			}
-			if (!this.tcpRelayServer.firstDataWorkerFinished) {
-				this.tcpRelayServer.firstDataWorkerFinished = true;
+			if (!this.isFirstDataWorkerFinished()) {
+				this.setFirstDataWorkerFinished(true);
 			} else {
-				if (!this.tcpRelayServer.stopped) {
-					this.tcpRelayServer.stop();
+				if (!this.isTcpRelayServerStopped()) {
+					this.stopTcpRelayServer();
 				}
 			}
+		}
+		
+		private void setFirstDataWorkerFinished(final boolean b) {
+			this.tcpRelayServer.firstDataWorkerFinished = b;
+		}
+		
+		private void setLastReadTime(final long time) {
+			this.tcpRelayServer.lastReadTime = time;
+		}
+		
+		private void stopTcpRelayServer() {
+			this.tcpRelayServer.stop();
 		}
 
 		@Override

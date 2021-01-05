@@ -738,7 +738,7 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final String value) {
-			return new Setting(this, InetAddressProvider.getInstance(value));
+			return new Setting(this, InetAddressProvider.newInstance(value));
 		}
 		
 	},	
@@ -1476,7 +1476,7 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final String value) {
-			return new Setting(this, UsernamePasswordAuthenticator.getInstance(value));
+			return new Setting(this, UsernamePasswordAuthenticator.newInstance(value));
 		}
 		
 	},

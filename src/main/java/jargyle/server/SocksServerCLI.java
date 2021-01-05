@@ -531,14 +531,6 @@ public final class SocksServerCLI extends CLI {
 	}
 		
 	private int startSocksServer(final Configuration configuration) {
-		Settings settings = configuration.getSettings();
-		InetAddressProvider inetAddressProvider = settings.getLastValue(
-				SettingSpec.INET_ADDRESS_PROVIDER,
-				InetAddressProvider.class);
-		if (inetAddressProvider != null) {
-			inetAddressProvider.setConfiguration(configuration);
-			InetAddressProvider.setDefault(inetAddressProvider);
-		}
 		SocksServer socksServer = new SocksServer(configuration);
 		try {
 			socksServer.start();

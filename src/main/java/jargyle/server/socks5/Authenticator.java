@@ -243,7 +243,7 @@ enum Authenticator {
 							SettingSpec.SOCKS5_USERNAME_PASSWORD_AUTHENTICATOR, 
 							UsernamePasswordAuthenticator.class);
 			if (authenticator == null) { 
-				authenticator = UsernamePasswordAuthenticator.INSTANCE; 
+				authenticator = UsernamePasswordAuthenticator.newInstance(); 
 			}
 			if (!authenticator.authenticate(username, password)) {
 				usernamePasswordResp = UsernamePasswordResponse.newInstance(

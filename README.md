@@ -650,7 +650,6 @@ The following are the settings in the monitored configuration file that will hav
 
 -   `backlog`
 -   `host`
--   `inetAddressProvider`
 -   `port`
 -   `socketSettings`
 -   `ssl.enabled`

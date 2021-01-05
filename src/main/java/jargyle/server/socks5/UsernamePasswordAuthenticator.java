@@ -42,20 +42,22 @@ public class UsernamePasswordAuthenticator {
 		public UsernamePasswordAuthenticator unmarshal(
 				final UsernamePasswordAuthenticatorXml v) throws Exception {
 			if (v == null) { return null; }
-			return UsernamePasswordAuthenticator.getInstance(
+			return UsernamePasswordAuthenticator.newInstance(
 					v.className, v.value);
 		}
 		
 	}
 	
-	static final UsernamePasswordAuthenticator INSTANCE = 
-			new UsernamePasswordAuthenticator(null);
+	public static UsernamePasswordAuthenticator newInstance() {
+		return new UsernamePasswordAuthenticator(null);
+	}
 	
-	public static UsernamePasswordAuthenticator getInstance(
+	public static UsernamePasswordAuthenticator newInstance(
 			final Class<?> cls, final String value) {
 		UsernamePasswordAuthenticator usernamePasswordAuthenticator = null;
 		if (cls.equals(UsernamePasswordAuthenticator.class)) {
-			usernamePasswordAuthenticator = INSTANCE;
+			usernamePasswordAuthenticator = new UsernamePasswordAuthenticator(
+					value);
 		} else if (cls.equals(
 				StringSourceUsernamePasswordAuthenticator.class)) {
 			usernamePasswordAuthenticator = 
@@ -146,17 +148,17 @@ public class UsernamePasswordAuthenticator {
 		return usernamePasswordAuthenticator;
 	}
 	
-	public static UsernamePasswordAuthenticator getInstance(final String s) {
+	public static UsernamePasswordAuthenticator newInstance(final String s) {
 		String[] sElements = s.split(":", 2);
 		String className = sElements[0];
 		String value = null;
 		if (sElements.length == 2) {
 			value = sElements[1];
 		}
-		return getInstance(className, value);
+		return newInstance(className, value);
 	}
 	
-	private static UsernamePasswordAuthenticator getInstance(
+	private static UsernamePasswordAuthenticator newInstance(
 			final String className, final String value) {
 		Class<?> cls = null;
 		try {
@@ -164,7 +166,7 @@ public class UsernamePasswordAuthenticator {
 		} catch (ClassNotFoundException e) {
 			throw new IllegalArgumentException(e);
 		}
-		return getInstance(cls, value);
+		return newInstance(cls, value);
 	}
 	
 	private final String value;

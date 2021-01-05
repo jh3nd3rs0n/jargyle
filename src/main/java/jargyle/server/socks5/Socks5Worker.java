@@ -21,6 +21,7 @@ import jargyle.common.net.DirectDatagramSocketInterfaceFactory;
 import jargyle.common.net.DirectServerSocketInterfaceFactory;
 import jargyle.common.net.DirectSocketInterfaceFactory;
 import jargyle.common.net.Host;
+import jargyle.common.net.InetAddressProvider;
 import jargyle.common.net.ServerSocketInterface;
 import jargyle.common.net.ServerSocketInterfaceFactory;
 import jargyle.common.net.SocketInterface;
@@ -435,7 +436,8 @@ public final class Socks5Worker implements Runnable {
 			}
 			try {
 				listenSocketInterface.bind(new InetSocketAddress(
-						InetAddress.getByName(desiredDestinationAddress),
+						InetAddressProvider.getInstance().getInetAddress(
+								desiredDestinationAddress),
 						desiredDestinationPort));
 			} catch (IOException e) {
 				LOGGER.log(
@@ -552,7 +554,8 @@ public final class Socks5Worker implements Runnable {
 						SettingSpec.SOCKS5_ON_CONNECT_SERVER_CONNECT_TIMEOUT, 
 						PositiveInteger.class).intValue();
 				serverSocketInterface.connect(new InetSocketAddress(
-						InetAddress.getByName(desiredDestinationAddress),
+						InetAddressProvider.getInstance().getInetAddress(
+								desiredDestinationAddress),
 						desiredDestinationPort),
 						connectTimeout);
 			} catch (UnknownHostException e) {

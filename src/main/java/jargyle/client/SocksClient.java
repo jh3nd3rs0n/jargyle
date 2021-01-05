@@ -2,7 +2,6 @@ package jargyle.client;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -18,6 +17,7 @@ import javax.net.ssl.TrustManager;
 import jargyle.common.net.DatagramSocketInterfaceFactory;
 import jargyle.common.net.DirectSocketInterface;
 import jargyle.common.net.Host;
+import jargyle.common.net.InetAddressProvider;
 import jargyle.common.net.Port;
 import jargyle.common.net.ServerSocketInterfaceFactory;
 import jargyle.common.net.SocketInterface;
@@ -91,7 +91,8 @@ public abstract class SocksClient {
 		SocksServerUri socksServerUri = this.getSocksServerUri();
 		socketInterface.connect(
 				new InetSocketAddress(
-						InetAddress.getByName(socksServerUri.getHost()), 
+						InetAddressProvider.getInstance().getInetAddress(
+								socksServerUri.getHost()), 
 						socksServerUri.getPort()), 
 				timeout);
 		if (!this.properties.getValue(

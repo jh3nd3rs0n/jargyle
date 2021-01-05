@@ -130,11 +130,12 @@ public class UsernamePasswordAuthenticator {
 				}
 			} else {
 				throw new IllegalArgumentException(String.format(
-						"class %1$s does not have either a public static "
-						+ "method that has one method parameter of type "
-						+ "%1$s and a method return type of the provided "
-						+ "type nor a public instantiatable constructor "
-						+ "that has one constructor parameter of type %1$s",
+						"class %1$s does not have either a static method that "
+						+ "has one method parameter of type %2$s and a method "
+						+ "return type of the provided type nor an "
+						+ "instantiatable constructor that has one constructor "
+						+ "parameter of type %2$s",
+						cls,
 						String.class.getName()));
 			}
 		} else {

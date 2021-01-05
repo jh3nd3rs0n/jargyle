@@ -12,6 +12,7 @@ import java.net.UnknownHostException;
 
 import jargyle.common.net.DirectSocketInterface;
 import jargyle.common.net.FilterSocketInterface;
+import jargyle.common.net.InetAddressProvider;
 import jargyle.common.net.PerformancePreferences;
 import jargyle.common.net.ServerSocketInterface;
 import jargyle.common.net.SocketInterface;
@@ -67,8 +68,9 @@ public final class Socks5ServerSocketInterface extends ServerSocketInterface {
 			super.close();
 			InetAddress wildcardAddress = null;
 			try {
-				wildcardAddress = InetAddress.getByName(
-						AddressType.IP_V4_ADDRESS.getWildcardAddress());
+				wildcardAddress = 
+						InetAddressProvider.getInstance().getInetAddress(
+								AddressType.IP_V4_ADDRESS.getWildcardAddress());
 			} catch (UnknownHostException e) {
 				throw new AssertionError(e);
 			}
@@ -181,7 +183,8 @@ public final class Socks5ServerSocketInterface extends ServerSocketInterface {
 								this.socks5Client, 
 								this.directSocketInterface, 
 								this.socketInterface),
-						InetAddress.getByName(socks5Rep.getServerBoundAddress()),
+						InetAddressProvider.getInstance().getInetAddress(
+								socks5Rep.getServerBoundAddress()),
 						socks5Rep.getServerBoundPort(),
 						this.localInetAddress,
 						this.localPort);
@@ -286,7 +289,7 @@ public final class Socks5ServerSocketInterface extends ServerSocketInterface {
 			}
 			InetAddress bAddr = bindAddr;
 			if (bAddr == null) {
-				bAddr = InetAddress.getByName(
+				bAddr = InetAddressProvider.getInstance().getInetAddress(
 						AddressType.IP_V4_ADDRESS.getWildcardAddress());
 			}
 			String address = bAddr.getHostAddress();
@@ -304,8 +307,9 @@ public final class Socks5ServerSocketInterface extends ServerSocketInterface {
 				throw new IOException(String.format("received reply: %s", reply));
 			}
 			this.bound = true;
-			this.localInetAddress = InetAddress.getByName(
-					socks5Rep.getServerBoundAddress());
+			this.localInetAddress = 
+					InetAddressProvider.getInstance().getInetAddress(
+							socks5Rep.getServerBoundAddress());
 			this.localPort = socks5Rep.getServerBoundPort();
 			this.localSocketAddress = new InetSocketAddress(
 					this.localInetAddress,

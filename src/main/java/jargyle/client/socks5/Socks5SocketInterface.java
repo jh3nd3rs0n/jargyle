@@ -11,6 +11,7 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 
 import jargyle.common.net.DirectSocketInterface;
+import jargyle.common.net.InetAddressProvider;
 import jargyle.common.net.SocketInterface;
 import jargyle.common.net.socks5.AddressType;
 import jargyle.common.net.socks5.Command;
@@ -96,8 +97,9 @@ public final class Socks5SocketInterface extends SocketInterface {
 				throw new IOException(String.format("received reply: %s", reply));
 			}
 			this.connected = true;
-			this.remoteInetAddress = InetAddress.getByName(
-					socks5Rep.getServerBoundAddress());
+			this.remoteInetAddress = 
+					InetAddressProvider.getInstance().getInetAddress(
+							socks5Rep.getServerBoundAddress());
 			this.remotePort = socks5Rep.getServerBoundPort();
 			this.remoteSocketAddress = new InetSocketAddress(
 					this.remoteInetAddress,
@@ -167,7 +169,9 @@ public final class Socks5SocketInterface extends SocketInterface {
 				new DirectSocketInterface(new Socket()),
 				null);
 		this.socks5SocketInterfaceImpl.socks5Connect(
-				InetAddress.getByName(host), port, 0);
+				InetAddressProvider.getInstance().getInetAddress(host), 
+				port, 
+				0);
 	}
 
 	public Socks5SocketInterface(
@@ -184,7 +188,9 @@ public final class Socks5SocketInterface extends SocketInterface {
 		this.socks5SocketInterfaceImpl.socketInterface.bind(
 				new InetSocketAddress(localAddr, localPort));
 		this.socks5SocketInterfaceImpl.socks5Connect(
-				InetAddress.getByName(host), port, 0);
+				InetAddressProvider.getInstance().getInetAddress(host), 
+				port, 
+				0);
 	}
 	
 	

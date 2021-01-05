@@ -30,6 +30,7 @@ import jargyle.client.socks5.UsernamePassword;
 import jargyle.client.socks5.UsernamePasswordRequestor;
 import jargyle.common.annotation.HelpText;
 import jargyle.common.net.Host;
+import jargyle.common.net.InetAddressProvider;
 import jargyle.common.net.Port;
 import jargyle.common.net.SocketSettingSpec;
 import jargyle.common.net.socks5.AuthMethod;
@@ -531,6 +532,13 @@ public final class SocksServerCLI extends CLI {
 	}
 		
 	private int startSocksServer(final Configuration configuration) {
+		Settings settings = configuration.getSettings();
+		ExtendedInetAddressProvider extendedInetAddressProvider =
+				settings.getLastValue(
+						SettingSpec.EXTENDED_INET_ADDRESS_PROVIDER, 
+						ExtendedInetAddressProvider.class);
+		extendedInetAddressProvider.setConfiguration(configuration);
+		InetAddressProvider.setInstance(extendedInetAddressProvider);
 		SocksServer socksServer = new SocksServer(configuration);
 		try {
 			socksServer.start();

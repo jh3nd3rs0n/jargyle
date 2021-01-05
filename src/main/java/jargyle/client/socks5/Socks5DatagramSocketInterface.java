@@ -16,6 +16,7 @@ import jargyle.client.PropertySpec;
 import jargyle.common.net.DatagramSocketInterface;
 import jargyle.common.net.DirectDatagramSocketInterface;
 import jargyle.common.net.DirectSocketInterface;
+import jargyle.common.net.InetAddressProvider;
 import jargyle.common.net.SocketInterface;
 import jargyle.common.net.SocketSettings;
 import jargyle.common.net.socks5.AddressType;
@@ -120,7 +121,7 @@ public final class Socks5DatagramSocketInterface
 			byte[] userData = header.getUserData();
 			InetAddress inetAddress = null;
 			try {
-				inetAddress = InetAddress.getByName(
+				inetAddress = InetAddressProvider.getInstance().getInetAddress(
 						header.getDesiredDestinationAddress());
 			} catch (UnknownHostException e) {
 				throw new IOException("error in determining address", e);
@@ -207,8 +208,9 @@ public final class Socks5DatagramSocketInterface
 						gssSocketInterface.getMessageProp());
 			}
 			this.datagramSocketInterface = datagramSockInterface;
-			this.udpRelayServerInetAddress = InetAddress.getByName(
-					socks5Rep.getServerBoundAddress());
+			this.udpRelayServerInetAddress = 
+					InetAddressProvider.getInstance().getInetAddress(
+							socks5Rep.getServerBoundAddress());
 			this.udpRelayServerPort = socks5Rep.getServerBoundPort();
 			this.socketInterface = sockInterface;
 			this.socks5UdpAssociated = true;			

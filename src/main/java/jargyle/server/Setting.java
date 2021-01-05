@@ -28,6 +28,15 @@ public final class Setting {
 	}
 	
 	@XmlAccessorType(XmlAccessType.NONE)
+	@XmlType(name = "extendedInetAddressProviderValue")	
+	static class ExtendedInetAddressProviderValue {
+		
+		@XmlElement(name = "extendedInetAddressProvider", required = true)
+		protected ExtendedInetAddressProvider value;
+		
+	}
+	
+	@XmlAccessorType(XmlAccessType.NONE)
 	@XmlType(name = "setting", propOrder = { })
 	static class SettingXml {
 		@XmlElement(name = "name", required = true)
@@ -37,6 +46,10 @@ public final class Setting {
 					name = "criteriaValue", 
 					required = true, 
 					type = CriteriaValue.class),
+			@XmlElement(
+					name = "extendedInetAddressProviderValue",
+					required = true,
+					type = ExtendedInetAddressProviderValue.class),
 			@XmlElement(
 					name = "socketSettingsValue", 
 					required = true, 
@@ -76,6 +89,11 @@ public final class Setting {
 				CriteriaValue newVal = new CriteriaValue();
 				newVal.value = (Criteria) val;
 				settingXml.value = newVal;
+			} else if (val instanceof ExtendedInetAddressProvider) {
+				ExtendedInetAddressProviderValue newVal =
+						new ExtendedInetAddressProviderValue();
+				newVal.value = (ExtendedInetAddressProvider) val;
+				settingXml.value = newVal;
 			} else if (val instanceof SocketSettings) {
 				SocketSettingsValue newVal = new SocketSettingsValue();
 				newVal.value = (SocketSettings) val;
@@ -106,6 +124,11 @@ public final class Setting {
 			Object val = v.value;
 			if (val instanceof CriteriaValue) {
 				CriteriaValue newVal = (CriteriaValue) val;
+				return newInstance(v.name, newVal.value, v.comment);
+			}
+			if (val instanceof ExtendedInetAddressProviderValue) {
+				ExtendedInetAddressProviderValue newVal = 
+						(ExtendedInetAddressProviderValue) val;
 				return newInstance(v.name, newVal.value, v.comment);
 			}
 			if (val instanceof SocketSettingsValue) {

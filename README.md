@@ -216,11 +216,11 @@ The following is a list of available settings for the SOCKS server (displayed wh
       clientSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
           The space separated list of socket settings for the client socket
     
-      extendedInetAddressProvider=CLASSNAME
-          The extended Internet address provider for the SOCKS server (default is jargyle.server.ExtendedInetAddressProvider)
-    
       host=HOST
           The host name or address for the SOCKS server (default is 0.0.0.0)
+    
+      inetAddressProvider=CLASSNAME
+          The Internet address provider for the SOCKS server
     
       port=INTEGER_BETWEEN_0_AND_65535
           The port for the SOCKS server (default is 1080)
@@ -649,8 +649,8 @@ Unlike the command line option `--config-file`, the monitored configuration file
 The following are the settings in the monitored configuration file that will have no effect if changed during the running configuration:
 
 -   `backlog`
--   `extendedInetAddressProvider`
 -   `host`
+-   `inetAddressProvider`
 -   `port`
 -   `socketSettings`
 -   `ssl.enabled`

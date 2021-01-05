@@ -11,7 +11,6 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 
 import jargyle.common.net.DirectSocketInterface;
-import jargyle.common.net.InetAddressProvider;
 import jargyle.common.net.SocketInterface;
 import jargyle.common.net.socks5.AddressType;
 import jargyle.common.net.socks5.Command;
@@ -39,7 +38,8 @@ public final class Socks5SocketInterface extends SocketInterface {
 			this.directSocketInterface = directSockInterface;
 			this.remoteInetAddress = directSockInterface.getInetAddress();
 			this.remotePort = directSockInterface.getPort();
-			this.remoteSocketAddress = directSockInterface.getRemoteSocketAddress();
+			this.remoteSocketAddress = 
+					directSockInterface.getRemoteSocketAddress();
 			this.socketInterface = (sockInterface == null) ? 
 					directSockInterface : sockInterface;
 			this.socks5Client = client;
@@ -94,12 +94,13 @@ public final class Socks5SocketInterface extends SocketInterface {
 			Socks5Reply socks5Rep = Socks5Reply.newInstanceFrom(inputStream);
 			Reply reply = socks5Rep.getReply();
 			if (!reply.equals(Reply.SUCCEEDED)) {
-				throw new IOException(String.format("received reply: %s", reply));
+				throw new IOException(String.format(
+						"received reply: %s", 
+						reply));
 			}
 			this.connected = true;
 			this.remoteInetAddress = 
-					InetAddressProvider.getInstance().getInetAddress(
-							socks5Rep.getServerBoundAddress());
+					InetAddress.getByName(socks5Rep.getServerBoundAddress());
 			this.remotePort = socks5Rep.getServerBoundPort();
 			this.remoteSocketAddress = new InetSocketAddress(
 					this.remoteInetAddress,
@@ -169,9 +170,7 @@ public final class Socks5SocketInterface extends SocketInterface {
 				new DirectSocketInterface(new Socket()),
 				null);
 		this.socks5SocketInterfaceImpl.socks5Connect(
-				InetAddressProvider.getInstance().getInetAddress(host), 
-				port, 
-				0);
+				InetAddress.getByName(host), port, 0);
 	}
 
 	public Socks5SocketInterface(
@@ -188,9 +187,7 @@ public final class Socks5SocketInterface extends SocketInterface {
 		this.socks5SocketInterfaceImpl.socketInterface.bind(
 				new InetSocketAddress(localAddr, localPort));
 		this.socks5SocketInterfaceImpl.socks5Connect(
-				InetAddressProvider.getInstance().getInetAddress(host), 
-				port, 
-				0);
+				InetAddress.getByName(host), port, 0);
 	}
 	
 	

@@ -4,6 +4,8 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -12,52 +14,59 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import jargyle.common.net.InetAddressProvider;
-
-@XmlJavaTypeAdapter(ExtendedInetAddressProvider.ExtendedInetAddressServiceXmlAdapter.class)
-public class ExtendedInetAddressProvider extends InetAddressProvider {
+@XmlJavaTypeAdapter(InetAddressProvider.InetAddressServiceXmlAdapter.class)
+public class InetAddressProvider {
 	
 	@XmlAccessorType(XmlAccessType.NONE)
-	@XmlType(name = "extendedInetAddressProvider", propOrder = { })	
-	static class ExtendedInetAddressProviderXml {
+	@XmlType(name = "inetAddressProvider", propOrder = { })	
+	static class InetAddressProviderXml {
 		@XmlElement(name = "className", required = true)
 		protected String className;
 	}
 	
-	static class ExtendedInetAddressServiceXmlAdapter extends 
-	XmlAdapter<ExtendedInetAddressProviderXml, ExtendedInetAddressProvider> {
+	static class InetAddressServiceXmlAdapter extends 
+	XmlAdapter<InetAddressProviderXml, InetAddressProvider> {
 
 		@Override
-		public ExtendedInetAddressProviderXml marshal(
-				final ExtendedInetAddressProvider v) throws Exception {
+		public InetAddressProviderXml marshal(
+				final InetAddressProvider v) throws Exception {
 			if (v == null) { return null; }
-			ExtendedInetAddressProviderXml extendedInetAddressProviderXml =
-					new ExtendedInetAddressProviderXml();
-			extendedInetAddressProviderXml.className = v.getClass().getName();
-			return extendedInetAddressProviderXml;
+			InetAddressProviderXml inetAddressProviderXml =
+					new InetAddressProviderXml();
+			inetAddressProviderXml.className = v.getClass().getName();
+			return inetAddressProviderXml;
 		}
 
 		@Override
-		public ExtendedInetAddressProvider unmarshal(
-				final ExtendedInetAddressProviderXml v) throws Exception {
+		public InetAddressProvider unmarshal(
+				final InetAddressProviderXml v) throws Exception {
 			if (v == null) { return null; }
-			return ExtendedInetAddressProvider.getInstance(v.className);
+			return InetAddressProvider.getInstance(v.className);
 		}
 		
 	}
 	
-	private static final ExtendedInetAddressProvider INSTANCE = 
-			new ExtendedInetAddressProvider(); 
+	private static InetAddressProvider defaultInstance;
 	
-	public static ExtendedInetAddressProvider getInstance() {
-		return INSTANCE;
+	private static final InetAddressProvider INSTANCE = 
+			new InetAddressProvider();
+	
+	public static InetAddressProvider getDefault() {
+		if (defaultInstance == null) {
+			defaultInstance = INSTANCE;
+		}
+		return defaultInstance;
 	}
 	
-	public static ExtendedInetAddressProvider getInstance(final Class<?> cls) {
-		ExtendedInetAddressProvider extendedInetAddressProvider = null;
-		if (cls.equals(ExtendedInetAddressProvider.class)) {
-			extendedInetAddressProvider = INSTANCE;
-		} else if (ExtendedInetAddressProvider.class.isAssignableFrom(cls)) {
+	public static InetAddressProvider getInstance() {
+		return INSTANCE;
+	} 
+	
+	public static InetAddressProvider getInstance(final Class<?> cls) {
+		InetAddressProvider inetAddressProvider = null;
+		if (cls.equals(InetAddressProvider.class)) {
+			inetAddressProvider = INSTANCE;
+		} else if (InetAddressProvider.class.isAssignableFrom(cls)) {
 			Method method = null;
 			Constructor<?> constructor = null;
 			for (Method meth : cls.getDeclaredMethods()) {
@@ -93,8 +102,8 @@ public class ExtendedInetAddressProvider extends InetAddressProvider {
 			if (method != null) {
 				method.setAccessible(true);
 				try {
-					extendedInetAddressProvider = 
-							(ExtendedInetAddressProvider) method.invoke(null);
+					inetAddressProvider =
+							(InetAddressProvider) method.invoke(null);
 				} catch (IllegalAccessException e) {
 					throw new AssertionError(e);
 				} catch (IllegalArgumentException e) {
@@ -105,8 +114,8 @@ public class ExtendedInetAddressProvider extends InetAddressProvider {
 			} else if (constructor != null) {
 				constructor.setAccessible(true);
 				try {
-					extendedInetAddressProvider = 
-							(ExtendedInetAddressProvider) constructor.newInstance();
+					inetAddressProvider = 
+							(InetAddressProvider) constructor.newInstance();
 				} catch (InstantiationException e) {
 					throw new AssertionError(e);
 				} catch (IllegalAccessException e) {
@@ -127,12 +136,12 @@ public class ExtendedInetAddressProvider extends InetAddressProvider {
 		} else {
 			throw new IllegalArgumentException(String.format(
 					"class must be or must extend '%s'", 
-					ExtendedInetAddressProvider.class.getName()));
+					InetAddressProvider.class.getName()));
 		}
-		return extendedInetAddressProvider;
+		return inetAddressProvider;
 	}
 	
-	public static ExtendedInetAddressProvider getInstance(final String s) {
+	public static InetAddressProvider getInstance(final String s) {
 		Class<?> cls = null;
 		try {
 			cls = Class.forName(s);
@@ -142,14 +151,23 @@ public class ExtendedInetAddressProvider extends InetAddressProvider {
 		return getInstance(cls);		
 	}
 	
+	public static void setDefault(final InetAddressProvider provider) {
+		defaultInstance = provider;
+	}
+	
 	private Configuration configuration;
 	
-	protected ExtendedInetAddressProvider() {
+	protected InetAddressProvider() {
 		this.configuration = null;
 	}
 
 	public final Configuration getConfiguration() {
 		return this.configuration;
+	}
+	
+	public InetAddress getInetAddress(
+			final String host) throws UnknownHostException {
+		return InetAddress.getByName(host);
 	}
 
 	public final void setConfiguration(final Configuration config) {

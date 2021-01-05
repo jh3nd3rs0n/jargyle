@@ -12,7 +12,6 @@ import java.net.UnknownHostException;
 
 import jargyle.common.net.DirectSocketInterface;
 import jargyle.common.net.FilterSocketInterface;
-import jargyle.common.net.InetAddressProvider;
 import jargyle.common.net.PerformancePreferences;
 import jargyle.common.net.ServerSocketInterface;
 import jargyle.common.net.SocketInterface;
@@ -69,7 +68,7 @@ public final class Socks5ServerSocketInterface extends ServerSocketInterface {
 			InetAddress wildcardAddress = null;
 			try {
 				wildcardAddress = 
-						InetAddressProvider.getInstance().getInetAddress(
+						InetAddress.getByName(
 								AddressType.IP_V4_ADDRESS.getWildcardAddress());
 			} catch (UnknownHostException e) {
 				throw new AssertionError(e);
@@ -183,7 +182,7 @@ public final class Socks5ServerSocketInterface extends ServerSocketInterface {
 								this.socks5Client, 
 								this.directSocketInterface, 
 								this.socketInterface),
-						InetAddressProvider.getInstance().getInetAddress(
+						InetAddress.getByName(
 								socks5Rep.getServerBoundAddress()),
 						socks5Rep.getServerBoundPort(),
 						this.localInetAddress,
@@ -219,7 +218,9 @@ public final class Socks5ServerSocketInterface extends ServerSocketInterface {
 				}
 			}
 			InetSocketAddress inetSocketAddress = (InetSocketAddress) end;
-			this.socks5Bind(inetSocketAddress.getPort(), inetSocketAddress.getAddress());
+			this.socks5Bind(
+					inetSocketAddress.getPort(), 
+					inetSocketAddress.getAddress());
 		}
 		
 		public void close() throws IOException {
@@ -289,7 +290,7 @@ public final class Socks5ServerSocketInterface extends ServerSocketInterface {
 			}
 			InetAddress bAddr = bindAddr;
 			if (bAddr == null) {
-				bAddr = InetAddressProvider.getInstance().getInetAddress(
+				bAddr = InetAddress.getByName(
 						AddressType.IP_V4_ADDRESS.getWildcardAddress());
 			}
 			String address = bAddr.getHostAddress();
@@ -308,8 +309,7 @@ public final class Socks5ServerSocketInterface extends ServerSocketInterface {
 			}
 			this.bound = true;
 			this.localInetAddress = 
-					InetAddressProvider.getInstance().getInetAddress(
-							socks5Rep.getServerBoundAddress());
+					InetAddress.getByName(socks5Rep.getServerBoundAddress());
 			this.localPort = socks5Rep.getServerBoundPort();
 			this.localSocketAddress = new InetSocketAddress(
 					this.localInetAddress,
@@ -323,17 +323,18 @@ public final class Socks5ServerSocketInterface extends ServerSocketInterface {
 	private final Socks5Client socks5Client;
 	private final Socks5ServerSocketInterfaceImpl socks5ServerSocketInterfaceImpl;
 	
-	public Socks5ServerSocketInterface(final Socks5Client client) throws IOException {
+	public Socks5ServerSocketInterface(
+			final Socks5Client client) throws IOException {
 		this.socks5Client = client;
-		this.socks5ServerSocketInterfaceImpl = new Socks5ServerSocketInterfaceImpl(
-				client);
+		this.socks5ServerSocketInterfaceImpl = 
+				new Socks5ServerSocketInterfaceImpl(client);
 	}
 
 	public Socks5ServerSocketInterface(
 			final Socks5Client client, final int port) throws IOException {
 		this.socks5Client = client;
-		this.socks5ServerSocketInterfaceImpl = new Socks5ServerSocketInterfaceImpl(
-				client);
+		this.socks5ServerSocketInterfaceImpl = 
+				new Socks5ServerSocketInterfaceImpl(client);
 		this.socks5ServerSocketInterfaceImpl.socks5Bind(port, null);
 	}
 
@@ -350,8 +351,8 @@ public final class Socks5ServerSocketInterface extends ServerSocketInterface {
 			final int backlog,
 			final InetAddress bindAddr) throws IOException {
 		this.socks5Client = client;
-		this.socks5ServerSocketInterfaceImpl = new Socks5ServerSocketInterfaceImpl(
-				client);
+		this.socks5ServerSocketInterfaceImpl = 
+				new Socks5ServerSocketInterfaceImpl(client);
 		this.socks5ServerSocketInterfaceImpl.socks5Bind(port, bindAddr);
 	}
 	
@@ -427,7 +428,8 @@ public final class Socks5ServerSocketInterface extends ServerSocketInterface {
 	}
 
 	@Override
-	public synchronized void setReceiveBufferSize(int size) throws SocketException {
+	public synchronized void setReceiveBufferSize(
+			int size) throws SocketException {
 		this.socks5ServerSocketInterfaceImpl.setReceiveBufferSize(size);
 	}
 

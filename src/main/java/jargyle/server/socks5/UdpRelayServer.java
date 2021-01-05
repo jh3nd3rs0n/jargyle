@@ -13,11 +13,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import jargyle.common.net.DatagramSocketInterface;
-import jargyle.common.net.InetAddressProvider;
 import jargyle.common.net.socks5.AddressType;
 import jargyle.common.net.socks5.UdpRequestHeader;
 import jargyle.server.Criteria;
 import jargyle.server.Criterion;
+import jargyle.server.InetAddressProvider;
 
 final class UdpRelayServer {
 	
@@ -74,7 +74,7 @@ final class UdpRelayServer {
 				InetAddress desiredDestinationInetAddr = null;
 				try {
 					desiredDestinationInetAddr = 
-							InetAddressProvider.getInstance().getInetAddress(
+							InetAddressProvider.getDefault().getInetAddress(
 									desiredDestinationAddr);
 				} catch (UnknownHostException e) {
 					LOGGER.log(
@@ -85,7 +85,7 @@ final class UdpRelayServer {
 				}
 				InetAddress inetAddr = null;
 				try {
-					inetAddr = InetAddressProvider.getInstance().getInetAddress(
+					inetAddr = InetAddressProvider.getDefault().getInetAddress(
 							address);
 				} catch (UnknownHostException e) {
 					LOGGER.log(
@@ -111,7 +111,7 @@ final class UdpRelayServer {
 			byte[] headerBytes = header.toByteArray();
 			InetAddress inetAddress = null;
 			try {
-				inetAddress = InetAddressProvider.getInstance().getInetAddress(
+				inetAddress = InetAddressProvider.getDefault().getInetAddress(
 						this.getUdpRelayServer().sourceAddress);
 			} catch (UnknownHostException e) {
 				LOGGER.log(
@@ -229,7 +229,7 @@ final class UdpRelayServer {
 			InetAddress sourceInetAddr = null;
 			try {
 				sourceInetAddr = 
-						InetAddressProvider.getInstance().getInetAddress(
+						InetAddressProvider.getDefault().getInetAddress(
 								this.getUdpRelayServer().sourceAddress);
 			} catch (UnknownHostException e) {
 				LOGGER.log(
@@ -240,7 +240,7 @@ final class UdpRelayServer {
 			}
 			InetAddress inetAddr = null;
 			try {
-				inetAddr = InetAddressProvider.getInstance().getInetAddress(
+				inetAddr = InetAddressProvider.getDefault().getInetAddress(
 						address);
 			} catch (UnknownHostException e) {
 				LOGGER.log(
@@ -279,7 +279,7 @@ final class UdpRelayServer {
 				InetAddress desiredDestinationInetAddr = null;
 				try {
 					desiredDestinationInetAddr = 
-							InetAddressProvider.getInstance().getInetAddress(
+							InetAddressProvider.getDefault().getInetAddress(
 									desiredDestinationAddr);
 				} catch (UnknownHostException e) {
 					LOGGER.log(
@@ -291,7 +291,7 @@ final class UdpRelayServer {
 				InetAddress desiredDestInetAddr = null;
 				try {
 					desiredDestInetAddr = 
-							InetAddressProvider.getInstance().getInetAddress(
+							InetAddressProvider.getDefault().getInetAddress(
 									desiredDestAddr);
 				} catch (UnknownHostException e) {
 					LOGGER.log(
@@ -318,7 +318,7 @@ final class UdpRelayServer {
 			byte[] userData = header.getUserData();
 			InetAddress inetAddress = null;
 			try {
-				inetAddress = InetAddressProvider.getInstance().getInetAddress(
+				inetAddress = InetAddressProvider.getDefault().getInetAddress(
 						header.getDesiredDestinationAddress());
 			} catch (UnknownHostException e) {
 				LOGGER.log(

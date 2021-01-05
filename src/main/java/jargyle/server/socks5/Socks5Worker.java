@@ -21,7 +21,6 @@ import jargyle.common.net.DirectDatagramSocketInterfaceFactory;
 import jargyle.common.net.DirectServerSocketInterfaceFactory;
 import jargyle.common.net.DirectSocketInterfaceFactory;
 import jargyle.common.net.Host;
-import jargyle.common.net.InetAddressProvider;
 import jargyle.common.net.ServerSocketInterface;
 import jargyle.common.net.ServerSocketInterfaceFactory;
 import jargyle.common.net.SocketInterface;
@@ -44,6 +43,7 @@ import jargyle.common.util.PositiveInteger;
 import jargyle.server.Configuration;
 import jargyle.server.Criteria;
 import jargyle.server.Criterion;
+import jargyle.server.InetAddressProvider;
 import jargyle.server.SettingSpec;
 import jargyle.server.Settings;
 import jargyle.server.SocksClientFactory;
@@ -436,7 +436,7 @@ public final class Socks5Worker implements Runnable {
 			}
 			try {
 				listenSocketInterface.bind(new InetSocketAddress(
-						InetAddressProvider.getInstance().getInetAddress(
+						InetAddressProvider.getDefault().getInetAddress(
 								desiredDestinationAddress),
 						desiredDestinationPort));
 			} catch (IOException e) {
@@ -554,7 +554,7 @@ public final class Socks5Worker implements Runnable {
 						SettingSpec.SOCKS5_ON_CONNECT_SERVER_CONNECT_TIMEOUT, 
 						PositiveInteger.class).intValue();
 				serverSocketInterface.connect(new InetSocketAddress(
-						InetAddressProvider.getInstance().getInetAddress(
+						InetAddressProvider.getDefault().getInetAddress(
 								desiredDestinationAddress),
 						desiredDestinationPort),
 						connectTimeout);

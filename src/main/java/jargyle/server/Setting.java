@@ -28,11 +28,11 @@ public final class Setting {
 	}
 	
 	@XmlAccessorType(XmlAccessType.NONE)
-	@XmlType(name = "extendedInetAddressProviderValue")	
-	static class ExtendedInetAddressProviderValue {
+	@XmlType(name = "inetAddressProviderValue")	
+	static class InetAddressProviderValue {
 		
-		@XmlElement(name = "extendedInetAddressProvider", required = true)
-		protected ExtendedInetAddressProvider value;
+		@XmlElement(name = "inetAddressProvider", required = true)
+		protected InetAddressProvider value;
 		
 	}
 	
@@ -47,9 +47,9 @@ public final class Setting {
 					required = true, 
 					type = CriteriaValue.class),
 			@XmlElement(
-					name = "extendedInetAddressProviderValue",
+					name = "inetAddressProviderValue",
 					required = true,
-					type = ExtendedInetAddressProviderValue.class),
+					type = InetAddressProviderValue.class),
 			@XmlElement(
 					name = "socketSettingsValue", 
 					required = true, 
@@ -89,10 +89,10 @@ public final class Setting {
 				CriteriaValue newVal = new CriteriaValue();
 				newVal.value = (Criteria) val;
 				settingXml.value = newVal;
-			} else if (val instanceof ExtendedInetAddressProvider) {
-				ExtendedInetAddressProviderValue newVal =
-						new ExtendedInetAddressProviderValue();
-				newVal.value = (ExtendedInetAddressProvider) val;
+			} else if (val instanceof InetAddressProvider) {
+				InetAddressProviderValue newVal = 
+						new InetAddressProviderValue();
+				newVal.value = (InetAddressProvider) val;
 				settingXml.value = newVal;
 			} else if (val instanceof SocketSettings) {
 				SocketSettingsValue newVal = new SocketSettingsValue();
@@ -126,9 +126,9 @@ public final class Setting {
 				CriteriaValue newVal = (CriteriaValue) val;
 				return newInstance(v.name, newVal.value, v.comment);
 			}
-			if (val instanceof ExtendedInetAddressProviderValue) {
-				ExtendedInetAddressProviderValue newVal = 
-						(ExtendedInetAddressProviderValue) val;
+			if (val instanceof InetAddressProviderValue) {
+				InetAddressProviderValue newVal = 
+						(InetAddressProviderValue) val;
 				return newInstance(v.name, newVal.value, v.comment);
 			}
 			if (val instanceof SocketSettingsValue) {

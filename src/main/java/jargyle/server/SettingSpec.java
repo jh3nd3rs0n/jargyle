@@ -682,31 +682,6 @@ public enum SettingSpec {
 		
 	},
 	@HelpText(
-			doc = "The extended Internet address provider for the SOCKS server "
-					+ "(default is jargyle.server.ExtendedInetAddressProvider)", 
-			usage = "extendedInetAddressProvider=CLASSNAME"
-	)
-	EXTENDED_INET_ADDRESS_PROVIDER("extendedInetAddressProvider") {
-		
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(this, ExtendedInetAddressProvider.getInstance());
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			ExtendedInetAddressProvider val = 
-					ExtendedInetAddressProvider.class.cast(value); 
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return new Setting(this, ExtendedInetAddressProvider.getInstance(value));
-		}
-		
-	},
-	@HelpText(
 			doc = "The host name or address for the SOCKS server (default is "
 					+ "0.0.0.0)", 
 			usage = "host=HOST"
@@ -744,6 +719,29 @@ public enum SettingSpec {
 		}
 		
 	},
+	@HelpText(
+			doc = "The Internet address provider for the SOCKS server", 
+			usage = "inetAddressProvider=CLASSNAME"
+	)
+	INET_ADDRESS_PROVIDER("inetAddressProvider") {
+		
+		@Override
+		public Setting getDefaultSetting() {
+			return new Setting(this, null);
+		}
+
+		@Override
+		public Setting newSetting(final Object value) {
+			InetAddressProvider val = InetAddressProvider.class.cast(value); 
+			return new Setting(this, val);
+		}
+
+		@Override
+		public Setting newSetting(final String value) {
+			return new Setting(this, InetAddressProvider.getInstance(value));
+		}
+		
+	},	
 	@HelpText(
 			doc = "The port for the SOCKS server (default is 1080)", 
 			usage = "port=INTEGER_BETWEEN_0_AND_65535"

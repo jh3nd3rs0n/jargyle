@@ -71,7 +71,7 @@ public final class SocketSettings {
 		if (s.isEmpty()) {
 			return new SocketSettings(socketSettings);
 		}
-		String[] sElements = s.split("\\s");
+		String[] sElements = s.split(" ");
 		for (String sElement : sElements) {
 			SocketSetting socketSetting = SocketSetting.newInstance(sElement);
 			socketSettings.put(

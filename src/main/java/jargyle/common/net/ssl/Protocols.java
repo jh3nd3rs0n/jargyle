@@ -9,7 +9,7 @@ public final class Protocols {
 		if (s.isEmpty()) {
 			return newInstance(new String[] { });
 		}
-		return newInstance(s.split("\\s"));
+		return newInstance(s.split(" "));
 	}
 	
 	public static Protocols newInstance(final String[] prtcls) {

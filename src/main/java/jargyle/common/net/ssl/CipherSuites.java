@@ -9,7 +9,7 @@ public final class CipherSuites {
 		if (s.isEmpty()) {
 			return newInstance(new String[] { });
 		}
-		return newInstance(s.split("\\s"));
+		return newInstance(s.split(" "));
 	}
 	
 	public static CipherSuites newInstance(final String[] suites) {

@@ -23,7 +23,7 @@ public final class AuthMethods {
 	
 	public static AuthMethods newInstance(final String s) {
 		List<AuthMethod> authMethods = new ArrayList<AuthMethod>();
-		String[] sElements = s.split("\\s");
+		String[] sElements = s.split(" ");
 		for (String sElement : sElements) {
 			authMethods.add(AuthMethod.getInstance(sElement));
 		}

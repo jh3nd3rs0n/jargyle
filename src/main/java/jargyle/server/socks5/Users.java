@@ -81,7 +81,7 @@ public final class Users {
 	
 	public static Users newInstance(final String s) {
 		List<User> users = new ArrayList<User>();
-		String[] sElements = s.split("\\s");
+		String[] sElements = s.split(" ");
 		for (String sElement : sElements) {
 			users.add(User.newInstance(sElement));
 		}

@@ -55,7 +55,7 @@ public final class Criteria {
 	
 	public static Criteria newInstance(final String s) {
 		List<Criterion> criteria = new ArrayList<Criterion>();
-		String[] sElements = s.split("\\s");
+		String[] sElements = s.split(" ");
 		for (String sElement : sElements) {
 			criteria.add(Criterion.newInstance(sElement));
 		}

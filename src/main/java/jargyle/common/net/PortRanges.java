@@ -64,7 +64,7 @@ public final class PortRanges {
 	
 	public static PortRanges newInstance(final String s) {
 		List<PortRange> prtRanges = new ArrayList<PortRange>();
-		String[] sElements = s.split("\\s");
+		String[] sElements = s.split(" ");
 		for (String sElement : sElements) {
 			prtRanges.add(PortRange.newInstance(sElement));
 		}

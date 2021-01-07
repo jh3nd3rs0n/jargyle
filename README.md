@@ -216,11 +216,11 @@ The following is a list of available settings for the SOCKS server (displayed wh
       clientSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
           The space separated list of socket settings for the client socket
     
+      dnsProvider=CLASSNAME
+          The DNS resolver for the SOCKS server
+    
       host=HOST
           The host name or address for the SOCKS server (default is 0.0.0.0)
-    
-      inetAddressProvider=CLASSNAME
-          The Internet address provider for the SOCKS server
     
       port=INTEGER_BETWEEN_0_AND_65535
           The port for the SOCKS server (default is 1080)

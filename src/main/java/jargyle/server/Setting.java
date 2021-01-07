@@ -28,11 +28,11 @@ public final class Setting {
 	}
 	
 	@XmlAccessorType(XmlAccessType.NONE)
-	@XmlType(name = "inetAddressProviderValue")	
-	static class InetAddressProviderValue {
+	@XmlType(name = "dnsResolverValue")	
+	static class DnsResolverValue {
 		
-		@XmlElement(name = "inetAddressProvider", required = true)
-		protected InetAddressProvider value;
+		@XmlElement(name = "dnsResolver", required = true)
+		protected DnsResolver value;
 		
 	}
 	
@@ -47,9 +47,9 @@ public final class Setting {
 					required = true, 
 					type = CriteriaValue.class),
 			@XmlElement(
-					name = "inetAddressProviderValue",
+					name = "dnsResolverValue",
 					required = true,
-					type = InetAddressProviderValue.class),
+					type = DnsResolverValue.class),
 			@XmlElement(
 					name = "socketSettingsValue", 
 					required = true, 
@@ -89,10 +89,9 @@ public final class Setting {
 				CriteriaValue newVal = new CriteriaValue();
 				newVal.value = (Criteria) val;
 				settingXml.value = newVal;
-			} else if (val instanceof InetAddressProvider) {
-				InetAddressProviderValue newVal = 
-						new InetAddressProviderValue();
-				newVal.value = (InetAddressProvider) val;
+			} else if (val instanceof DnsResolver) {
+				DnsResolverValue newVal = new DnsResolverValue();
+				newVal.value = (DnsResolver) val;
 				settingXml.value = newVal;
 			} else if (val instanceof SocketSettings) {
 				SocketSettingsValue newVal = new SocketSettingsValue();
@@ -126,9 +125,8 @@ public final class Setting {
 				CriteriaValue newVal = (CriteriaValue) val;
 				return newInstance(v.name, newVal.value, v.comment);
 			}
-			if (val instanceof InetAddressProviderValue) {
-				InetAddressProviderValue newVal = 
-						(InetAddressProviderValue) val;
+			if (val instanceof DnsResolverValue) {
+				DnsResolverValue newVal = (DnsResolverValue) val;
 				return newInstance(v.name, newVal.value, v.comment);
 			}
 			if (val instanceof SocketSettingsValue) {

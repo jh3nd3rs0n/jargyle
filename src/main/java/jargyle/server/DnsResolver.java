@@ -14,61 +14,58 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-@XmlJavaTypeAdapter(InetAddressProvider.InetAddressServiceXmlAdapter.class)
-public class InetAddressProvider {
+@XmlJavaTypeAdapter(DnsResolver.DnsResolverXmlAdapter.class)
+public class DnsResolver {
 	
 	@XmlAccessorType(XmlAccessType.NONE)
-	@XmlType(name = "inetAddressProvider", propOrder = { })	
-	static class InetAddressProviderXml {
+	@XmlType(name = "dnsResolver", propOrder = { })	
+	static class DnsResolverXml {
 		@XmlElement(name = "className", required = true)
 		protected String className;
 	}
 	
-	static class InetAddressServiceXmlAdapter extends 
-	XmlAdapter<InetAddressProviderXml, InetAddressProvider> {
+	static class DnsResolverXmlAdapter extends 
+	XmlAdapter<DnsResolverXml, DnsResolver> {
 
 		@Override
-		public InetAddressProviderXml marshal(
-				final InetAddressProvider v) throws Exception {
+		public DnsResolverXml marshal(final DnsResolver v) throws Exception {
 			if (v == null) { return null; }
-			InetAddressProviderXml inetAddressProviderXml =
-					new InetAddressProviderXml();
-			inetAddressProviderXml.className = v.getClass().getName();
-			return inetAddressProviderXml;
+			DnsResolverXml dnsResolverXml =	new DnsResolverXml();
+			dnsResolverXml.className = v.getClass().getName();
+			return dnsResolverXml;
 		}
 
 		@Override
-		public InetAddressProvider unmarshal(
-				final InetAddressProviderXml v) throws Exception {
+		public DnsResolver unmarshal(final DnsResolverXml v) throws Exception {
 			if (v == null) { return null; }
-			return InetAddressProvider.newInstance(v.className);
+			return DnsResolver.newInstance(v.className);
 		}
 		
 	}
 	
-	public synchronized static InetAddressProvider getInstance(
+	public synchronized static DnsResolver getInstance(
 			final Configuration config) {
 		Settings settings = config.getSettings();
-		InetAddressProvider inetAddressProvider = settings.getLastValue(
-				SettingSpec.INET_ADDRESS_PROVIDER, InetAddressProvider.class);
-		if (inetAddressProvider == null) {
-			inetAddressProvider = new InetAddressProvider();
+		DnsResolver dnsResolver = settings.getLastValue(
+				SettingSpec.DNS_RESOLVER, DnsResolver.class);
+		if (dnsResolver == null) {
+			dnsResolver = new DnsResolver();
 		}
-		if (inetAddressProvider.getConfiguration() == null) {
-			inetAddressProvider.setConfiguration(config);
+		if (dnsResolver.getConfiguration() == null) {
+			dnsResolver.setConfiguration(config);
 		}
-		return inetAddressProvider;
+		return dnsResolver;
 	}
 	
-	public static InetAddressProvider newInstance() {
-		return new InetAddressProvider();
+	public static DnsResolver newInstance() {
+		return new DnsResolver();
 	}
 	
-	public static InetAddressProvider newInstance(final Class<?> cls) {
-		InetAddressProvider inetAddressProvider = null;
-		if (cls.equals(InetAddressProvider.class)) {
-			inetAddressProvider = new InetAddressProvider();
-		} else if (InetAddressProvider.class.isAssignableFrom(cls)) {
+	public static DnsResolver newInstance(final Class<?> cls) {
+		DnsResolver dnsResolver = null;
+		if (cls.equals(DnsResolver.class)) {
+			dnsResolver = new DnsResolver();
+		} else if (DnsResolver.class.isAssignableFrom(cls)) {
 			Method method = null;
 			Constructor<?> constructor = null;
 			for (Method meth : cls.getDeclaredMethods()) {
@@ -104,8 +101,7 @@ public class InetAddressProvider {
 			if (method != null) {
 				method.setAccessible(true);
 				try {
-					inetAddressProvider =
-							(InetAddressProvider) method.invoke(null);
+					dnsResolver = (DnsResolver) method.invoke(null);
 				} catch (IllegalAccessException e) {
 					throw new AssertionError(e);
 				} catch (IllegalArgumentException e) {
@@ -116,8 +112,7 @@ public class InetAddressProvider {
 			} else if (constructor != null) {
 				constructor.setAccessible(true);
 				try {
-					inetAddressProvider = 
-							(InetAddressProvider) constructor.newInstance();
+					dnsResolver = (DnsResolver) constructor.newInstance();
 				} catch (InstantiationException e) {
 					throw new AssertionError(e);
 				} catch (IllegalAccessException e) {
@@ -138,12 +133,12 @@ public class InetAddressProvider {
 		} else {
 			throw new IllegalArgumentException(String.format(
 					"class must be or must extend '%s'", 
-					InetAddressProvider.class.getName()));
+					DnsResolver.class.getName()));
 		}
-		return inetAddressProvider;
+		return dnsResolver;
 	}
 	
-	public static InetAddressProvider newInstance(final String s) {
+	public static DnsResolver newInstance(final String s) {
 		Class<?> cls = null;
 		try {
 			cls = Class.forName(s);
@@ -155,7 +150,7 @@ public class InetAddressProvider {
 	
 	private Configuration configuration;
 	
-	protected InetAddressProvider() {
+	protected DnsResolver() {
 		this.configuration = null;
 	}
 
@@ -163,8 +158,7 @@ public class InetAddressProvider {
 		return this.configuration;
 	}
 	
-	public InetAddress getInetAddress(
-			final String host) throws UnknownHostException {
+	public InetAddress resolve(final String host) throws UnknownHostException {
 		return InetAddress.getByName(host);
 	}
 

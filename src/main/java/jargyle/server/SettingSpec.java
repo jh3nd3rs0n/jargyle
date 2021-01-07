@@ -682,6 +682,29 @@ public enum SettingSpec {
 		
 	},
 	@HelpText(
+			doc = "The DNS resolver for the SOCKS server", 
+			usage = "dnsResolver=CLASSNAME"
+	)
+	DNS_RESOLVER("dnsResolver") {
+		
+		@Override
+		public Setting getDefaultSetting() {
+			return new Setting(this, null);
+		}
+
+		@Override
+		public Setting newSetting(final Object value) {
+			DnsResolver val = DnsResolver.class.cast(value); 
+			return new Setting(this, val);
+		}
+
+		@Override
+		public Setting newSetting(final String value) {
+			return new Setting(this, DnsResolver.newInstance(value));
+		}
+		
+	},
+	@HelpText(
 			doc = "The host name or address for the SOCKS server (default is "
 					+ "0.0.0.0)", 
 			usage = "host=HOST"
@@ -719,29 +742,6 @@ public enum SettingSpec {
 		}
 		
 	},
-	@HelpText(
-			doc = "The Internet address provider for the SOCKS server", 
-			usage = "inetAddressProvider=CLASSNAME"
-	)
-	INET_ADDRESS_PROVIDER("inetAddressProvider") {
-		
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(this, null);
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			InetAddressProvider val = InetAddressProvider.class.cast(value); 
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return new Setting(this, InetAddressProvider.newInstance(value));
-		}
-		
-	},	
 	@HelpText(
 			doc = "The port for the SOCKS server (default is 1080)", 
 			usage = "port=INTEGER_BETWEEN_0_AND_65535"

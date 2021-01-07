@@ -28,15 +28,6 @@ public final class Setting {
 	}
 	
 	@XmlAccessorType(XmlAccessType.NONE)
-	@XmlType(name = "dnsResolverValue")	
-	static class DnsResolverValue {
-		
-		@XmlElement(name = "dnsResolver", required = true)
-		protected DnsResolver value;
-		
-	}
-	
-	@XmlAccessorType(XmlAccessType.NONE)
 	@XmlType(name = "setting", propOrder = { })
 	static class SettingXml {
 		@XmlElement(name = "name", required = true)
@@ -46,10 +37,6 @@ public final class Setting {
 					name = "criteriaValue", 
 					required = true, 
 					type = CriteriaValue.class),
-			@XmlElement(
-					name = "dnsResolverValue",
-					required = true,
-					type = DnsResolverValue.class),
 			@XmlElement(
 					name = "socketSettingsValue", 
 					required = true, 
@@ -76,7 +63,7 @@ public final class Setting {
 		protected String comment;		
 	}
 	
-	static final class SettingXmlAdapter 
+	static final class SettingXmlAdapter
 		extends XmlAdapter<SettingXml, Setting> {
 
 		@Override
@@ -88,10 +75,6 @@ public final class Setting {
 			if (val instanceof Criteria) {
 				CriteriaValue newVal = new CriteriaValue();
 				newVal.value = (Criteria) val;
-				settingXml.value = newVal;
-			} else if (val instanceof DnsResolver) {
-				DnsResolverValue newVal = new DnsResolverValue();
-				newVal.value = (DnsResolver) val;
 				settingXml.value = newVal;
 			} else if (val instanceof SocketSettings) {
 				SocketSettingsValue newVal = new SocketSettingsValue();
@@ -123,10 +106,6 @@ public final class Setting {
 			Object val = v.value;
 			if (val instanceof CriteriaValue) {
 				CriteriaValue newVal = (CriteriaValue) val;
-				return newInstance(v.name, newVal.value, v.comment);
-			}
-			if (val instanceof DnsResolverValue) {
-				DnsResolverValue newVal = (DnsResolverValue) val;
 				return newInstance(v.name, newVal.value, v.comment);
 			}
 			if (val instanceof SocketSettingsValue) {

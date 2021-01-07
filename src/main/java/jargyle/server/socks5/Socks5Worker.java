@@ -43,7 +43,6 @@ import jargyle.common.util.PositiveInteger;
 import jargyle.server.Configuration;
 import jargyle.server.Criteria;
 import jargyle.server.Criterion;
-import jargyle.server.DnsResolver;
 import jargyle.server.SettingSpec;
 import jargyle.server.Settings;
 import jargyle.server.SocksClientFactory;
@@ -60,7 +59,6 @@ public final class Socks5Worker implements Runnable {
 	private OutputStream clientOutputStream;
 	private SocketInterface clientSocketInterface;
 	private final Configuration configuration;
-	private final DnsResolver dnsResolver;
 	private final Settings settings;
 	private final SocksClient socksClient;
 	
@@ -69,12 +67,10 @@ public final class Socks5Worker implements Runnable {
 			final Configuration config) {
 		Settings sttngs = config.getSettings();
 		SocksClient client = SocksClientFactory.newSocksClient(config);
-		DnsResolver resolver = DnsResolver.getInstance(config);
 		this.clientInputStream = null;
 		this.clientOutputStream = null;
 		this.clientSocketInterface = clientSockInterface;
 		this.configuration = config;
-		this.dnsResolver = resolver;
 		this.settings = sttngs;
 		this.socksClient = client;
 	}
@@ -439,7 +435,7 @@ public final class Socks5Worker implements Runnable {
 			}
 			try {
 				listenSocketInterface.bind(new InetSocketAddress(
-						this.dnsResolver.resolve(desiredDestinationAddress),
+						InetAddress.getByName(desiredDestinationAddress),
 						desiredDestinationPort));
 			} catch (IOException e) {
 				LOGGER.log(
@@ -556,7 +552,7 @@ public final class Socks5Worker implements Runnable {
 						SettingSpec.SOCKS5_ON_CONNECT_SERVER_CONNECT_TIMEOUT, 
 						PositiveInteger.class).intValue();
 				serverSocketInterface.connect(new InetSocketAddress(
-						this.dnsResolver.resolve(desiredDestinationAddress),
+						InetAddress.getByName(desiredDestinationAddress),
 						desiredDestinationPort),
 						connectTimeout);
 			} catch (UnknownHostException e) {
@@ -650,7 +646,6 @@ public final class Socks5Worker implements Runnable {
 					this.clientSocketInterface.getInetAddress().getHostAddress(),
 					desiredDestinationAddress,
 					desiredDestinationPort, 
-					this.dnsResolver, 
 					this.settings.getLastValue(
 							SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_ALLOWED_EXTERNAL_INCOMING_ADDRESS_CRITERIA, 
 							Criteria.class), 

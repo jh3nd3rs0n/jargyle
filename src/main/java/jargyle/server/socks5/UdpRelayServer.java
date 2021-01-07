@@ -17,7 +17,6 @@ import jargyle.common.net.socks5.AddressType;
 import jargyle.common.net.socks5.UdpRequestHeader;
 import jargyle.server.Criteria;
 import jargyle.server.Criterion;
-import jargyle.server.DnsResolver;
 
 final class UdpRelayServer {
 	
@@ -70,7 +69,7 @@ final class UdpRelayServer {
 			if (desiredDestinationAddr != null && desiredDestinationPrt > -1) {
 				InetAddress desiredDestinationInetAddr = null;
 				try {
-					desiredDestinationInetAddr = this.getDnsResolver().resolve(
+					desiredDestinationInetAddr = InetAddress.getByName(
 							desiredDestinationAddr);
 				} catch (UnknownHostException e) {
 					LOGGER.log(
@@ -81,7 +80,7 @@ final class UdpRelayServer {
 				}
 				InetAddress inetAddr = null;
 				try {
-					inetAddr = this.getDnsResolver().resolve(address);
+					inetAddr = InetAddress.getByName(address);
 				} catch (UnknownHostException e) {
 					LOGGER.log(
 							Level.WARNING, 
@@ -106,8 +105,7 @@ final class UdpRelayServer {
 			byte[] headerBytes = header.toByteArray();
 			InetAddress inetAddress = null;
 			try {
-				inetAddress = this.getDnsResolver().resolve(
-						this.getSourceAddress());
+				inetAddress = InetAddress.getByName(this.getSourceAddress());
 			} catch (UnknownHostException e) {
 				LOGGER.log(
 						Level.WARNING, 
@@ -223,8 +221,7 @@ final class UdpRelayServer {
 			int port = packet.getPort();
 			InetAddress sourceInetAddr = null;
 			try {
-				sourceInetAddr = this.getDnsResolver().resolve(
-						this.getSourceAddress());
+				sourceInetAddr = InetAddress.getByName(this.getSourceAddress());
 			} catch (UnknownHostException e) {
 				LOGGER.log(
 						Level.WARNING, 
@@ -234,7 +231,7 @@ final class UdpRelayServer {
 			}
 			InetAddress inetAddr = null;
 			try {
-				inetAddr = this.getDnsResolver().resolve(address);
+				inetAddr = InetAddress.getByName(address);
 			} catch (UnknownHostException e) {
 				LOGGER.log(
 						Level.WARNING, 
@@ -266,7 +263,7 @@ final class UdpRelayServer {
 			if (desiredDestinationAddr != null && desiredDestinationPrt > -1) {
 				InetAddress desiredDestinationInetAddr = null;
 				try {
-					desiredDestinationInetAddr = this.getDnsResolver().resolve(
+					desiredDestinationInetAddr = InetAddress.getByName(
 							desiredDestinationAddr);
 				} catch (UnknownHostException e) {
 					LOGGER.log(
@@ -277,7 +274,7 @@ final class UdpRelayServer {
 				}
 				InetAddress desiredDestInetAddr = null;
 				try {
-					desiredDestInetAddr = this.getDnsResolver().resolve(
+					desiredDestInetAddr = InetAddress.getByName(
 							desiredDestAddr);
 				} catch (UnknownHostException e) {
 					LOGGER.log(
@@ -304,7 +301,7 @@ final class UdpRelayServer {
 			byte[] userData = header.getUserData();
 			InetAddress inetAddress = null;
 			try {
-				inetAddress = this.getDnsResolver().resolve(
+				inetAddress = InetAddress.getByName(
 						header.getDesiredDestinationAddress());
 			} catch (UnknownHostException e) {
 				LOGGER.log(
@@ -451,10 +448,6 @@ final class UdpRelayServer {
 			return this.udpRelayServer.desiredDestinationPort;
 		}
 		
-		protected final DnsResolver getDnsResolver() {
-			return this.udpRelayServer.dnsResolver;
-		}
-		
 		protected final long getLastReceiveTime() {
 			return this.udpRelayServer.lastReceiveTime;
 		}
@@ -524,7 +517,6 @@ final class UdpRelayServer {
 	private int desiredDestinationPort;
 	private ExecutorService executor;
 	private boolean firstPacketsWorkerFinished;
-	private final DnsResolver dnsResolver;
 	private long lastReceiveTime;
 	private final DatagramSocketInterface serverDatagramSocketInterface;
 	private String sourceAddress;
@@ -539,14 +531,13 @@ final class UdpRelayServer {
 			final String sourceAddr,
 			final String desiredDestinationAddr,
 			final int desiredDestinationPrt, 
-			final DnsResolver dnsResolver, 
 			final Criteria allowedExternalIncomingAddrCriteria, 
 			final Criteria blockedExternalIncomingAddrCriteria, 
-			final int bffrSize, final int tmt) {
+			final int bffrSize, 
+			final int tmt) {
 		Objects.requireNonNull(clientDatagramSockInterface);
 		Objects.requireNonNull(serverDatagramSockInterface);
 		Objects.requireNonNull(desiredDestinationAddr);
-		Objects.requireNonNull(dnsResolver);
 		Objects.requireNonNull(allowedExternalIncomingAddrCriteria);
 		Objects.requireNonNull(blockedExternalIncomingAddrCriteria);
 		UdpRequestHeader.validateDesiredDestinationAddress(
@@ -567,7 +558,6 @@ final class UdpRelayServer {
 			desiredDestAddr = null;
 			desiredDestPrt = -1;
 		}
-		this.dnsResolver = dnsResolver;
 		this.allowedExternalIncomingAddressCriteria = 
 				allowedExternalIncomingAddrCriteria;
 		this.blockedExternalIncomingAddressCriteria = 

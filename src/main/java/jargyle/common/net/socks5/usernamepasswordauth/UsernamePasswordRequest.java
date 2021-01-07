@@ -200,24 +200,11 @@ public final class UsernamePasswordRequest {
 		if (obj == null) {
 			return false;
 		}
-		if (!(obj instanceof UsernamePasswordRequest)) {
+		if (this.getClass() != obj.getClass()) {
 			return false;
 		}
 		UsernamePasswordRequest other = (UsernamePasswordRequest) obj;
 		if (!Arrays.equals(this.byteArray, other.byteArray)) {
-			return false;
-		}
-		if (!Arrays.equals(this.password, other.password)) {
-			return false;
-		}
-		if (this.username == null) {
-			if (other.username != null) {
-				return false;
-			}
-		} else if (!this.username.equals(other.username)) {
-			return false;
-		}
-		if (this.version != other.version) {
 			return false;
 		}
 		return true;
@@ -226,11 +213,11 @@ public final class UsernamePasswordRequest {
 	public char[] getPassword() {
 		return Arrays.copyOf(this.password, this.password.length);
 	}
-
+	
 	public String getUsername() {
 		return this.username;
 	}
-	
+
 	public Version getVersion() {
 		return this.version;
 	}
@@ -240,9 +227,6 @@ public final class UsernamePasswordRequest {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + Arrays.hashCode(this.byteArray);
-		result = prime * result + Arrays.hashCode(this.password);
-		result = prime * result + ((this.username == null) ? 0 : this.username.hashCode());
-		result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
 		return result;
 	}
 

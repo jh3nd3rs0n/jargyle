@@ -69,13 +69,12 @@ public final class Socks5Worker implements Runnable {
 			final Configuration config) {
 		Settings sttngs = config.getSettings();
 		SocksClient client = SocksClientFactory.newSocksClient(config);
-		DnsResolver inetAddrProvider = DnsResolver.getInstance(
-				config);
+		DnsResolver resolver = DnsResolver.getInstance(config);
 		this.clientInputStream = null;
 		this.clientOutputStream = null;
 		this.clientSocketInterface = clientSockInterface;
 		this.configuration = config;
-		this.dnsResolver = inetAddrProvider;
+		this.dnsResolver = resolver;
 		this.settings = sttngs;
 		this.socksClient = client;
 	}

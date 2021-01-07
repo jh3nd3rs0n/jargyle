@@ -87,17 +87,11 @@ public final class UsernamePasswordResponse {
 		if (obj == null) {
 			return false;
 		}
-		if (!(obj instanceof UsernamePasswordResponse)) {
+		if (this.getClass() != obj.getClass()) {
 			return false;
 		}
 		UsernamePasswordResponse other = (UsernamePasswordResponse) obj;
 		if (!Arrays.equals(this.byteArray, other.byteArray)) {
-			return false;
-		}
-		if (this.status != other.status) {
-			return false;
-		}
-		if (this.version != other.version) {
 			return false;
 		}
 		return true;
@@ -106,7 +100,7 @@ public final class UsernamePasswordResponse {
 	public byte getStatus() {
 		return this.status;
 	}
-
+	
 	public Version getVersion() {
 		return this.version;
 	}
@@ -116,11 +110,9 @@ public final class UsernamePasswordResponse {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + Arrays.hashCode(this.byteArray);
-		result = prime * result + this.status;
-		result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
 		return result;
 	}
-	
+
 	public byte[] toByteArray() {
 		return Arrays.copyOf(this.byteArray, this.byteArray.length);
 	}

@@ -121,7 +121,7 @@ public final class ClientMethodSelectionMessage {
 		this.methods = params.methods;
 		this.byteArray = params.byteArray;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -130,21 +130,11 @@ public final class ClientMethodSelectionMessage {
 		if (obj == null) {
 			return false;
 		}
-		if (!(obj instanceof ClientMethodSelectionMessage)) {
+		if (this.getClass() != obj.getClass()) {
 			return false;
 		}
 		ClientMethodSelectionMessage other = (ClientMethodSelectionMessage) obj;
 		if (!Arrays.equals(this.byteArray, other.byteArray)) {
-			return false;
-		}
-		if (this.methods == null) {
-			if (other.methods != null) {
-				return false;
-			}
-		} else if (!this.methods.equals(other.methods)) {
-			return false;
-		}
-		if (this.version != other.version) {
 			return false;
 		}
 		return true;
@@ -153,21 +143,19 @@ public final class ClientMethodSelectionMessage {
 	public Set<Method> getMethods() {
 		return Collections.unmodifiableSet(this.methods);
 	}
-
+	
 	public Version getVersion() {
 		return this.version;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + Arrays.hashCode(this.byteArray);
-		result = prime * result + ((this.methods == null) ? 0 : this.methods.hashCode());
-		result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
 		return result;
 	}
-	
+
 	public byte[] toByteArray() {
 		return Arrays.copyOf(this.byteArray, this.byteArray.length);
 	}

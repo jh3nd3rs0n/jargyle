@@ -189,7 +189,7 @@ public final class Socks5Reply {
 		this.serverBoundPort = params.serverBoundPort;
 		this.byteArray = params.byteArray;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -198,30 +198,11 @@ public final class Socks5Reply {
 		if (obj == null) {
 			return false;
 		}
-		if (!(obj instanceof Socks5Reply)) {
+		if (this.getClass() != obj.getClass()) {
 			return false;
 		}
 		Socks5Reply other = (Socks5Reply) obj;
-		if (this.addressType != other.addressType) {
-			return false;
-		}
 		if (!Arrays.equals(this.byteArray, other.byteArray)) {
-			return false;
-		}
-		if (this.reply != other.reply) {
-			return false;
-		}
-		if (this.serverBoundAddress == null) {
-			if (other.serverBoundAddress != null) {
-				return false;
-			}
-		} else if (!this.serverBoundAddress.equals(other.serverBoundAddress)) {
-			return false;
-		}
-		if (this.serverBoundPort != other.serverBoundPort) {
-			return false;
-		}
-		if (this.version != other.version) {
 			return false;
 		}
 		return true;
@@ -251,12 +232,7 @@ public final class Socks5Reply {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((this.addressType == null) ? 0 : this.addressType.hashCode());
 		result = prime * result + Arrays.hashCode(this.byteArray);
-		result = prime * result + ((this.reply == null) ? 0 : this.reply.hashCode());
-		result = prime * result + ((this.serverBoundAddress == null) ? 0 : this.serverBoundAddress.hashCode());
-		result = prime * result + this.serverBoundPort;
-		result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
 		return result;
 	}
 

@@ -205,7 +205,7 @@ public final class UdpRequestHeader {
 		this.userDataStartIndex = params.userDataStartIndex;
 		this.byteArray = params.byteArray;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -214,30 +214,11 @@ public final class UdpRequestHeader {
 		if (obj == null) {
 			return false;
 		}
-		if (!(obj instanceof UdpRequestHeader)) {
+		if (this.getClass() != obj.getClass()) {
 			return false;
 		}
 		UdpRequestHeader other = (UdpRequestHeader) obj;
-		if (this.addressType != other.addressType) {
-			return false;
-		}
 		if (!Arrays.equals(this.byteArray, other.byteArray)) {
-			return false;
-		}
-		if (this.currentFragmentNumber != other.currentFragmentNumber) {
-			return false;
-		}
-		if (this.desiredDestinationAddress == null) {
-			if (other.desiredDestinationAddress != null) {
-				return false;
-			}
-		} else if (!this.desiredDestinationAddress.equals(other.desiredDestinationAddress)) {
-			return false;
-		}
-		if (this.desiredDestinationPort != other.desiredDestinationPort) {
-			return false;
-		}
-		if (this.userDataStartIndex != other.userDataStartIndex) {
 			return false;
 		}
 		return true;
@@ -258,12 +239,12 @@ public final class UdpRequestHeader {
 	public int getDesiredDestinationPort() {
 		return this.desiredDestinationPort;
 	}
-
+	
 	public byte[] getUserData() {
 		return Arrays.copyOfRange(
 				this.byteArray, this.userDataStartIndex, this.byteArray.length);
 	}
-	
+
 	public int getUserDataStartIndex() {
 		return this.userDataStartIndex;
 	}
@@ -272,12 +253,7 @@ public final class UdpRequestHeader {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((this.addressType == null) ? 0 : this.addressType.hashCode());
 		result = prime * result + Arrays.hashCode(this.byteArray);
-		result = prime * result + this.currentFragmentNumber;
-		result = prime * result + ((this.desiredDestinationAddress == null) ? 0 : this.desiredDestinationAddress.hashCode());
-		result = prime * result + this.desiredDestinationPort;
-		result = prime * result + this.userDataStartIndex;
 		return result;
 	}
 

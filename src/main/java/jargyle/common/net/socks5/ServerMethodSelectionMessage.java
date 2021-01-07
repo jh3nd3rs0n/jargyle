@@ -74,7 +74,7 @@ public final class ServerMethodSelectionMessage {
 		this.method = params.method;
 		this.byteArray = params.byteArray;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -83,17 +83,11 @@ public final class ServerMethodSelectionMessage {
 		if (obj == null) {
 			return false;
 		}
-		if (!(obj instanceof ServerMethodSelectionMessage)) {
+		if (this.getClass() != obj.getClass()) {
 			return false;
 		}
 		ServerMethodSelectionMessage other = (ServerMethodSelectionMessage) obj;
 		if (!Arrays.equals(this.byteArray, other.byteArray)) {
-			return false;
-		}
-		if (this.method != other.method) {
-			return false;
-		}
-		if (this.version != other.version) {
 			return false;
 		}
 		return true;
@@ -102,21 +96,19 @@ public final class ServerMethodSelectionMessage {
 	public Method getMethod() {
 		return this.method;
 	}
-
+	
 	public Version getVersion() {
 		return this.version;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + Arrays.hashCode(this.byteArray);
-		result = prime * result + ((this.method == null) ? 0 : this.method.hashCode());
-		result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
 		return result;
 	}
-	
+
 	public byte[] toByteArray() {
 		return Arrays.copyOf(this.byteArray, this.byteArray.length);
 	}

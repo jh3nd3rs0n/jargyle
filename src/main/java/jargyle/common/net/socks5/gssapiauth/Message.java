@@ -157,20 +157,11 @@ public final class Message {
 		if (obj == null) {
 			return false;
 		}
-		if (!(obj instanceof Message)) {
+		if (this.getClass() != obj.getClass()) {
 			return false;
 		}
 		Message other = (Message) obj;
 		if (!Arrays.equals(this.byteArray, other.byteArray)) {
-			return false;
-		}
-		if (this.messageType != other.messageType) {
-			return false;
-		}
-		if (this.tokenStartIndex != other.tokenStartIndex) {
-			return false;
-		}
-		if (this.version != other.version) {
 			return false;
 		}
 		return true;
@@ -179,12 +170,12 @@ public final class Message {
 	public MessageType getMessageType() {
 		return this.messageType;
 	}
-
+	
 	public byte[] getToken() {
 		return Arrays.copyOfRange(
 				this.byteArray, this.tokenStartIndex, this.byteArray.length);
 	}
-	
+
 	public int getTokenStartIndex() {
 		return this.tokenStartIndex;
 	}
@@ -198,9 +189,6 @@ public final class Message {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + Arrays.hashCode(this.byteArray);
-		result = prime * result + ((this.messageType == null) ? 0 : this.messageType.hashCode());
-		result = prime * result + this.tokenStartIndex;
-		result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
 		return result;
 	}
 

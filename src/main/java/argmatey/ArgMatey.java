@@ -1,5 +1,5 @@
 /*
-Copyright © 2016-2020 Jonathan K. Henderson
+Copyright © 2016-2021 Jonathan K. Henderson
 
 Permission is hereby granted, free of charge, to any person
 obtaining a copy of this software and associated documentation

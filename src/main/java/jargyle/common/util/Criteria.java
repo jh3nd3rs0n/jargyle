@@ -1,4 +1,4 @@
-package jargyle.server;
+package jargyle.common.util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -55,6 +55,9 @@ public final class Criteria {
 	
 	public static Criteria newInstance(final String s) {
 		List<Criterion> criteria = new ArrayList<Criterion>();
+		if (s.isEmpty()) {
+			return new Criteria(criteria);
+		}
 		String[] sElements = s.split(" ");
 		for (String sElement : sElements) {
 			criteria.add(Criterion.newInstance(sElement));

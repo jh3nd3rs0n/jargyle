@@ -8,6 +8,8 @@ import jargyle.common.util.UnsignedByte;
 
 public enum Command {
 
+	RESOLVE((byte) 0x00),
+	
 	CONNECT((byte) 0x01),
 	
 	BIND((byte) 0x02),

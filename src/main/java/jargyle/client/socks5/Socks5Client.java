@@ -10,6 +10,7 @@ import jargyle.client.Properties;
 import jargyle.client.PropertySpec;
 import jargyle.client.SocksClient;
 import jargyle.common.net.DatagramSocketInterfaceFactory;
+import jargyle.common.net.HostnameResolverFactory;
 import jargyle.common.net.ServerSocketInterfaceFactory;
 import jargyle.common.net.SocketInterface;
 import jargyle.common.net.SocketInterfaceFactory;
@@ -61,6 +62,11 @@ public final class Socks5Client extends SocksClient {
 	@Override
 	public DatagramSocketInterfaceFactory newDatagramSocketInterfaceFactory() {
 		return new Socks5DatagramSocketInterfaceFactory(this);
+	}
+
+	@Override
+	public HostnameResolverFactory newHostnameResolverFactory() {
+		return new Socks5HostnameResolverFactory(this);
 	}
 
 	@Override

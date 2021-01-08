@@ -16,11 +16,14 @@ import java.util.logging.Logger;
 import jargyle.client.SocksClient;
 import jargyle.common.net.DatagramSocketInterface;
 import jargyle.common.net.DatagramSocketInterfaceFactory;
+import jargyle.common.net.DefaultHostnameResolverFactory;
 import jargyle.common.net.DirectDatagramSocketInterface;
 import jargyle.common.net.DirectDatagramSocketInterfaceFactory;
 import jargyle.common.net.DirectServerSocketInterfaceFactory;
 import jargyle.common.net.DirectSocketInterfaceFactory;
 import jargyle.common.net.Host;
+import jargyle.common.net.HostnameResolver;
+import jargyle.common.net.HostnameResolverFactory;
 import jargyle.common.net.ServerSocketInterface;
 import jargyle.common.net.ServerSocketInterfaceFactory;
 import jargyle.common.net.SocketInterface;
@@ -39,10 +42,10 @@ import jargyle.common.net.socks5.Socks5Request;
 import jargyle.common.net.socks5.Version;
 import jargyle.common.net.socks5.gssapiauth.GssDatagramSocketInterface;
 import jargyle.common.net.socks5.gssapiauth.GssSocketInterface;
+import jargyle.common.util.Criteria;
+import jargyle.common.util.Criterion;
 import jargyle.common.util.PositiveInteger;
 import jargyle.server.Configuration;
-import jargyle.server.Criteria;
-import jargyle.server.Criterion;
 import jargyle.server.SettingSpec;
 import jargyle.server.Settings;
 import jargyle.server.SocksClientFactory;
@@ -419,15 +422,21 @@ public final class Socks5Worker implements Runnable {
 		String desiredDestinationAddress = 
 				socks5Req.getDesiredDestinationAddress();
 		int desiredDestinationPort = socks5Req.getDesiredDestinationPort();
+		HostnameResolverFactory hostnameResolverFactory =
+				new DefaultHostnameResolverFactory();
 		ServerSocketInterfaceFactory serverSocketInterfaceFactory = 
 				new DirectServerSocketInterfaceFactory();
 		if (this.socksClient != null) {
+			hostnameResolverFactory = 
+					this.socksClient.newHostnameResolverFactory();
 			serverSocketInterfaceFactory = 
 					this.socksClient.newServerSocketInterfaceFactory();
 		}
+		HostnameResolver hostnameResolver = null;
 		ServerSocketInterface listenSocketInterface = null;
 		SocketInterface externalIncomingSocketInterface = null;
 		try {
+			hostnameResolver = hostnameResolverFactory.newHostnameResolver();
 			listenSocketInterface = 
 					serverSocketInterfaceFactory.newServerSocketInterface();
 			if (!this.configureListenSocketInterface(listenSocketInterface)) {
@@ -435,7 +444,7 @@ public final class Socks5Worker implements Runnable {
 			}
 			try {
 				listenSocketInterface.bind(new InetSocketAddress(
-						InetAddress.getByName(desiredDestinationAddress),
+						hostnameResolver.resolve(desiredDestinationAddress),
 						desiredDestinationPort));
 			} catch (IOException e) {
 				LOGGER.log(
@@ -537,12 +546,18 @@ public final class Socks5Worker implements Runnable {
 		String desiredDestinationAddress = 
 				socks5Req.getDesiredDestinationAddress();
 		int desiredDestinationPort = socks5Req.getDesiredDestinationPort();
+		HostnameResolverFactory hostnameResolverFactory =
+				new DefaultHostnameResolverFactory();
 		SocketInterfaceFactory socketFactory = new DirectSocketInterfaceFactory();
 		if (this.socksClient != null) {
+			hostnameResolverFactory = 
+					this.socksClient.newHostnameResolverFactory();
 			socketFactory = this.socksClient.newSocketInterfaceFactory();
 		}
+		HostnameResolver hostnameResolver = null;
 		SocketInterface serverSocketInterface = null;
 		try {
+			hostnameResolver = hostnameResolverFactory.newHostnameResolver();
 			serverSocketInterface = socketFactory.newSocketInterface();
 			if (!this.configureServerSocketInterface(serverSocketInterface)) {
 				return;
@@ -552,7 +567,7 @@ public final class Socks5Worker implements Runnable {
 						SettingSpec.SOCKS5_ON_CONNECT_SERVER_CONNECT_TIMEOUT, 
 						PositiveInteger.class).intValue();
 				serverSocketInterface.connect(new InetSocketAddress(
-						InetAddress.getByName(desiredDestinationAddress),
+						hostnameResolver.resolve(desiredDestinationAddress),
 						desiredDestinationPort),
 						connectTimeout);
 			} catch (UnknownHostException e) {
@@ -597,16 +612,82 @@ public final class Socks5Worker implements Runnable {
 		}
 	}
 	
+	private void doResolve(final Socks5Request socks5Req) throws IOException {
+		Socks5Reply socks5Rep = null;
+		String desiredDestinationAddress = 
+				socks5Req.getDesiredDestinationAddress();
+		int desiredDestinationPort = socks5Req.getDesiredDestinationPort();
+		HostnameResolverFactory hostnameResolverFactory = 
+				new DefaultHostnameResolverFactory();
+		if (this.socksClient != null) {
+			hostnameResolverFactory = 
+					this.socksClient.newHostnameResolverFactory();
+		}
+		HostnameResolver hostnameResolver = 
+				hostnameResolverFactory.newHostnameResolver();
+		InetAddress inetAddress = null;
+		try {
+			inetAddress = hostnameResolver.resolve(desiredDestinationAddress);
+		} catch (UnknownHostException e) {
+			LOGGER.log(
+					Level.WARNING, 
+					this.format("Error in resolving the hostname"), 
+					e);
+			socks5Rep = Socks5Reply.newErrorInstance(Reply.HOST_UNREACHABLE);
+			LOGGER.log(
+					Level.FINE, 
+					this.format(String.format(
+							"Sending %s", 
+							socks5Rep.toString())));
+			this.writeThenFlush(socks5Rep.toByteArray());
+			return;			
+		} catch (IOException e) {
+			LOGGER.log(
+					Level.WARNING, 
+					this.format("Error in resolving the hostname"), 
+					e);
+			socks5Rep = Socks5Reply.newErrorInstance(
+					Reply.GENERAL_SOCKS_SERVER_FAILURE);
+			LOGGER.log(
+					Level.FINE, 
+					this.format(String.format(
+							"Sending %s", 
+							socks5Rep.toString())));
+			this.writeThenFlush(socks5Rep.toByteArray());
+			return;
+		}
+		String serverBoundAddress = inetAddress.getHostAddress();
+		AddressType addressType = AddressType.get(serverBoundAddress);
+		int serverBoundPort = desiredDestinationPort;
+		socks5Rep = Socks5Reply.newInstance(
+				Reply.SUCCEEDED, 
+				addressType, 
+				serverBoundAddress, 
+				serverBoundPort);
+		LOGGER.log(
+				Level.FINE, 
+				this.format(String.format("Sending %s", socks5Rep.toString())));
+		this.writeThenFlush(socks5Rep.toByteArray());		
+	}
+	
 	private void doUdpAssociate(
 			final Socks5Request socks5Req) throws IOException {
 		Socks5Reply socks5Rep = null;
 		String desiredDestinationAddress = 
 				socks5Req.getDesiredDestinationAddress();
 		int desiredDestinationPort = socks5Req.getDesiredDestinationPort();
+		HostnameResolverFactory hostnameResolverFactory = 
+				new DefaultHostnameResolverFactory();
+		if (this.socksClient != null) {
+			hostnameResolverFactory = 
+					this.socksClient.newHostnameResolverFactory();
+		}
+		HostnameResolver hostnameResolver = null;
 		DatagramSocketInterface serverDatagramSock = null;
 		DatagramSocketInterface clientDatagramSock = null;
 		UdpRelayServer udpRelayServer = null;
-		try { 
+		try {
+			hostnameResolver = hostnameResolverFactory.newHostnameResolver();
 			serverDatagramSock = this.newServerDatagramSocketInterface();
 			if (serverDatagramSock == null) {
 				return;
@@ -646,6 +727,7 @@ public final class Socks5Worker implements Runnable {
 					this.clientSocketInterface.getInetAddress().getHostAddress(),
 					desiredDestinationAddress,
 					desiredDestinationPort, 
+					hostnameResolver, 
 					this.settings.getLastValue(
 							SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_ALLOWED_EXTERNAL_INCOMING_ADDRESS_CRITERIA, 
 							Criteria.class), 
@@ -654,8 +736,7 @@ public final class Socks5Worker implements Runnable {
 							Criteria.class), 
 					this.settings.getLastValue(
 							SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_RELAY_BUFFER_SIZE, 
-							PositiveInteger.class).intValue(), 
-					this.settings.getLastValue(
+							PositiveInteger.class).intValue(), this.settings.getLastValue(
 							SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_RELAY_TIMEOUT, 
 							PositiveInteger.class).intValue());
 			try {
@@ -870,6 +951,9 @@ public final class Socks5Worker implements Runnable {
 				break;
 			case CONNECT:
 				this.doConnect(socks5Req);
+				break;
+			case RESOLVE:
+				this.doResolve(socks5Req);
 				break;
 			case UDP_ASSOCIATE:
 				this.doUdpAssociate(socks5Req);

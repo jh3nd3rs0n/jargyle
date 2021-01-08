@@ -6,6 +6,7 @@ Jargyle is a Java SOCKS5 server. It has the following features:
 
 -   100% implementation of the [SOCKS5 protocol specification](https://tools.ietf.org/html/rfc1928) which includes [username password authentication](https://tools.ietf.org/html/rfc1929) and [GSS-API authentication](https://tools.ietf.org/html/rfc1961)
 -   SOCKS server chaining (routing through another SOCKS server)
+-   Host name resolution through SOCKS server chaining
 -   SSL/TLS and SSL/TLS for SOCKS server chaining
 -   Allow or block client addresses and external incoming addresses
 -   Allow or block SOCKS5 requests
@@ -35,10 +36,11 @@ Jargyle is a Java SOCKS5 server. It has the following features:
 -   [4. 9. 3. Using GSS-API Authentication](#4-9-3-using-gss-api-authentication)
 -   [4. 10. Chaining to Another SOCKS Server](#4-10-chaining-to-another-socks-server)
 -   [4. 10. 1. Enabling SSL/TLS](#4-10-1-enabling-ssl-tls)
--   [4. 10. 2. Using SOCKS5 Authentication](#4-10-2-using-socks5-authentication)
--   [4. 10. 2. 1. Using No Authentication](#4-10-2-1-using-no-authentication)
--   [4. 10. 2. 2. Using Username Password Authentication](#4-10-2-2-using-username-password-authentication)
--   [4. 10. 2. 3. Using GSS-API Authentication](#4-10-2-3-using-gss-api-authentication)
+-   [4. 10. 2. Enabling Host Name Resolution through SOCKS5 Server Chaining](#4-10-2-enabling-host-name-resolution-through-socks5-server-chaining)
+-   [4. 10. 3. Using SOCKS5 Authentication](#4-10-3-using-socks5-authentication)
+-   [4. 10. 3. 1. Using No Authentication](#4-10-3-1-using-no-authentication)
+-   [4. 10. 3. 2. Using Username Password Authentication](#4-10-3-2-using-username-password-authentication)
+-   [4. 10. 3. 3. Using GSS-API Authentication](#4-10-3-3-using-gss-api-authentication)
 -   [4. 11. Allowing or Blocking Addresses](#4-11-allowing-or-blocking-addresses)
 -   [4. 12. Allowing or Blocking SOCKS5 Requests](#4-12-allowing-or-blocking-socks5-requests)
 -   [4. 13. Logging](#4-13-logging)
@@ -179,6 +181,12 @@ The following is a list of available settings for the SOCKS server (displayed wh
     
       chaining.socks5.gssapiServiceName=GSSAPI_SERVICE_NAME
           The GSS-API service name for the other SOCKS5 server
+    
+      chaining.socks5.onResolve.directResolveHostnameCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
+          The space separated list of hostname criteria to be resolved from the SOCKS server (default is matches:.*)
+    
+      chaining.socks5.onResolve.forwardResolveHostnameCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
+          The space separated list of hostname criteria to be resolved from the other SOCKS server
     
       chaining.socks5.usernamePassword=USERNAME:PASSWORD
           The username password to be used to access the other SOCKS5 server
@@ -1259,7 +1267,86 @@ Partial command line example:
 
 ```
 
-#### 4. 10. 2. Using SOCKS5 Authentication
+#### 4. 10. 2. Enabling Host Name Resolution through SOCKS5 Server Chaining
+
+You can have Jargyle perform host name resolution through SOCKS5 server chaining under the following conditions:
+
+-   Jargyle is chained to another SOCKS5 server.
+-   The other SOCKS5 server supports the RESOLVE command. (At the time of this writing, the RESOLVE command is an exclusive SOCKS5 command made for Jargyle. Therefore the other SOCKS5 server would at the very least be another running instance of Jargyle.)
+
+By default, host name resolution through SOCKS5 server chaining is disabled.
+
+To enable host name resolution through SOCKS5 server chaining, you would need to set the following settings:
+
+-   `chaining.socks5.onResolve.directResolveHostnameCriteria`
+-   `chaining.socks5.onResolve.forwardResolveHostnameCriteria`
+
+The setting `chaining.socks5.onResolve.directResolveHostnameCriteria` contains criteria for a host name to be resolved from Jargyle. By default it accepts all host names to be resolved from Jargyle. To have some host names to be resolved from Jargyle, you can specify a host name or host names as either a literal expression preceded by the prefix `equals:` or a regular expression preceded by the prefix `matches:`.
+
+Partial command line example:
+
+```text
+    
+    --setting=chaining.socksServerUri=socks5://127.0.0.1:23456 \
+    "--setting=chaining.socks5.onResolve.directResolveHostnameCriteria=equals:localhost matches:^.*\.example\.com$"
+    
+```
+
+You can specify a host name or host names as a `<criterion/>` XML element in the configuration file.
+
+Partial configuration file example:
+
+```xml
+    
+    <setting>
+        <name>chaining.socksServerUri</name>
+        <value>socks5://127.0.0.1:23456</value>
+    </setting>
+    <setting>
+        <name>chaining.socks5.onResolve.directResolveHostnameCriteria</name>
+        <criteriaValue>
+            <criteria>
+                <criterion method="equals" value="localhost"/>
+                <criterion method="matches" value="^.*\.example\.com$"/>
+            </criteria>
+        </criteriaValue>
+    </setting>
+    
+```
+
+The setting `chaining.socks5.onResolve.forwardResolveHostnameCriteria` contains criteria for a host name to be resolved from the other SOCKS5 server. By default it accepts no host names to be resolved from the other SOCKS5 server. To have some (or all) host names to be resolved from the other SOCKS5 server, you can specify a host name or host names as either a literal expression preceded by the prefix `equals:` or a regular expression preceded by the prefix `matches:`.
+
+Partial command line example:
+
+```text
+    
+    --setting=chaining.socksServerUri=socks5://127.0.0.1:23456 \
+    --setting=chaining.socks5.onResolve.forwardResolveHostnameCriteria=matches:.*
+    
+```
+
+You can specify a host name or host names as a `<criterion/>` XML element in the configuration file.
+
+Partial configuration file example:
+
+```xml
+    
+    <setting>
+        <name>chaining.socksServerUri</name>
+        <value>socks5://127.0.0.1:23456</value>
+    </setting>
+    <setting>
+        <name>chaining.socks5.onResolve.forwardResolveHostnameCriteria</name>
+        <criteriaValue>
+            <criteria>
+                <criterion method="matches" value=".*"/>
+            </criteria>
+        </criteriaValue>
+    </setting>
+    
+```
+
+#### 4. 10. 3. Using SOCKS5 Authentication
 
 Jargyle has the following SOCKS5 authentication methods to choose from for accessing the other SOCKS5 server:
 
@@ -1290,7 +1377,7 @@ Partial configuration file example:
 
 If not set, the default value for the setting `chaining.socks5.authMethods` is set to `NO_AUTHENTICATION_REQUIRED`
 
-##### 4. 10. 2. 1. Using No Authentication
+##### 4. 10. 3. 1. Using No Authentication
 
 Because the default value for the setting `chaining.socks5.authMethods` is set to `NO_AUTHENTICATION_REQUIRED`, it is not required for `NO_AUTHENTICATION_REQUIRED` to be included in the setting `chaining.socks5.authMethods`.
 
@@ -1315,7 +1402,7 @@ Partial configuration file example:
     
 ```
 
-##### 4. 10. 2. 2. Using Username Password Authentication
+##### 4. 10. 3. 2. Using Username Password Authentication
 
 To use username password authentication, you will need to have the setting `chaining.socks5.authMethods` to have `USERNAME_PASSWORD` included.
 
@@ -1373,7 +1460,7 @@ Partial command line example:
 
 ```
 
-##### 4. 10. 2. 3. Using GSS-API Authentication
+##### 4. 10. 3. 3. Using GSS-API Authentication
 
 To use GSS-API authentication, you will need to have the setting `chaining.socks5.authMethods` to have `GSSAPI` included.
 
@@ -1652,6 +1739,23 @@ Partial configuration file example:
 
 ```xml
     
+    <setting>
+        <name>chaining.socks5.onResolve.directResolveHostnameCriteria</name>
+        <criteriaValue>
+            <criteria>
+                <criterion method="equals" value="localhost" comment="no need to forward localhost to be resolved"/>
+                <criterion method="matches" value="^.*\.example\.com$" comment="*.example.com is our local domain"/>
+            </criteria>
+        </criteriaValue>
+    </setting>
+    <setting>
+        <name>chaining.socks5.onResolve.forwardResolveHostnameCriteria</name>
+        <criteriaValue>
+            <criteria>
+                <criterion method="matches" value=".*" comment="forward all host names to be resolved"/>
+            </criteria>
+        </criteriaValue>
+    </setting>
     <setting>
         <name>allowedClientAddressCriteria</name>
         <criteriaValue>

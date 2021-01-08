@@ -13,6 +13,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import jargyle.client.socks5.UsernamePassword;
 import jargyle.common.net.SocketSettings;
 import jargyle.common.security.EncryptedPassword;
+import jargyle.common.util.Criteria;
 import jargyle.server.socks5.Socks5RequestCriteria;
 import jargyle.server.socks5.UsernamePasswordAuthenticator;
 

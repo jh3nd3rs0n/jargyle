@@ -19,6 +19,9 @@ import jargyle.common.net.socks5.gssapiauth.GssapiProtectionLevels;
 import jargyle.common.net.ssl.CipherSuites;
 import jargyle.common.net.ssl.Protocols;
 import jargyle.common.security.EncryptedPassword;
+import jargyle.common.util.Criteria;
+import jargyle.common.util.Criterion;
+import jargyle.common.util.CriterionMethod;
 import jargyle.common.util.NonnegativeInteger;
 import jargyle.common.util.PositiveInteger;
 import jargyle.server.socks5.Socks5RequestCriteria;
@@ -105,7 +108,7 @@ public enum SettingSpec {
 	@HelpText(
 			doc = "The binding host name or address for the internal socket "
 					+ "that is used to connect to the other SOCKS server (used "
-					+ "for the SOCKS5 commands BIND and UDP ASSOCIATE) "
+					+ "for the SOCKS5 commands RESOLVE, BIND and UDP ASSOCIATE) "
 					+ "(default is 0.0.0.0)", 
 			usage = "chaining.bindHost=HOST"
 	)
@@ -133,8 +136,8 @@ public enum SettingSpec {
 	@HelpText(
 			doc = "The timeout in milliseconds on waiting for the internal "
 					+ "socket to connect to the other SOCKS server (used for "
-					+ "the SOCKS5 commands BIND and UDP ASSOCIATE) (default is "
-					+ "60000)", 
+					+ "the SOCKS5 commands RESOLVE, BIND and UDP ASSOCIATE) "
+					+ "(default is 60000)", 
 			usage = "chaining.connectTimeout=INTEGER_BETWEEN_1_AND_2147483647"
 	)
 	CHAINING_CONNECT_TIMEOUT("chaining.connectTimeout") {
@@ -161,7 +164,8 @@ public enum SettingSpec {
 	@HelpText(
 			doc = "The space separated list of socket settings for the "
 					+ "internal socket that is used to connect to the other "
-					+ "SOCKS server (used for the SOCKS5 command UDP ASSOCIATE)", 
+					+ "SOCKS server (used for the SOCKS5 command RESOLVE and "
+					+ "UDP ASSOCIATE)", 
 			usage = "chaining.socketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
 	)
 	CHAINING_SOCKET_SETTINGS("chaining.socketSettings") {
@@ -352,6 +356,60 @@ public enum SettingSpec {
 		}
 		
 	},
+	@HelpText(
+			doc = "The space separated list of hostname criteria to be "
+					+ "resolved from the SOCKS server (default is matches:.*)", 
+			usage = "chaining.socks5.onResolve.directResolveHostnameCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
+	)	
+	CHAINING_SOCKS5_ON_RESOLVE_DIRECT_RESOLVE_HOSTNAME_CRITERIA(
+			"chaining.socks5.onResolve.directResolveHostnameCriteria") {
+		
+		@Override
+		public Setting getDefaultSetting() {
+			return new Setting(
+					this,
+					PropertySpec.SOCKS5_ON_RESOLVE_DIRECT_RESOLVE_HOSTNAME_CRITERIA.getDefaultProperty().getValue());
+		}
+
+		@Override
+		public Setting newSetting(final Object value) {
+			Criteria val = Criteria.class.cast(value);
+			return new Setting(this, val);
+		}
+
+		@Override
+		public Setting newSetting(final String value) {
+			return new Setting(this, Criteria.newInstance(value));
+		}
+		
+	},
+	@HelpText(
+			doc = "The space separated list of hostname criteria to be "
+					+ "resolved from the other SOCKS server", 
+			usage = "chaining.socks5.onResolve.forwardResolveHostnameCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
+	)	
+	CHAINING_SOCKS5_ON_RESOLVE_FORWARD_RESOLVE_HOSTNAME_CRITERIA(
+			"chaining.socks5.onResolve.forwardResolveHostnameCriteria") {
+		
+		@Override
+		public Setting getDefaultSetting() {
+			return new Setting(
+					this,
+					PropertySpec.SOCKS5_ON_RESOLVE_FORWARD_RESOLVE_HOSTNAME_CRITERIA.getDefaultProperty().getValue());
+		}
+
+		@Override
+		public Setting newSetting(final Object value) {
+			Criteria val = Criteria.class.cast(value);
+			return new Setting(this, val);
+		}
+
+		@Override
+		public Setting newSetting(final String value) {
+			return new Setting(this, Criteria.newInstance(value));
+		}
+		
+	},	
 	@HelpText(
 			doc = "The username password to be used to access the other "
 					+ "SOCKS5 server", 

@@ -5,7 +5,6 @@ import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
-import java.net.UnknownHostException;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -13,10 +12,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import jargyle.common.net.DatagramSocketInterface;
+import jargyle.common.net.HostnameResolver;
 import jargyle.common.net.socks5.AddressType;
 import jargyle.common.net.socks5.UdpRequestHeader;
-import jargyle.server.Criteria;
-import jargyle.server.Criterion;
+import jargyle.common.util.Criteria;
+import jargyle.common.util.Criterion;
 
 final class UdpRelayServer {
 	
@@ -69,9 +69,10 @@ final class UdpRelayServer {
 			if (desiredDestinationAddr != null && desiredDestinationPrt > -1) {
 				InetAddress desiredDestinationInetAddr = null;
 				try {
-					desiredDestinationInetAddr = InetAddress.getByName(
-							desiredDestinationAddr);
-				} catch (UnknownHostException e) {
+					desiredDestinationInetAddr = 
+							this.getHostnameResolver().resolve(
+									desiredDestinationAddr);
+				} catch (IOException e) {
 					LOGGER.log(
 							Level.WARNING, 
 							this.format("Error in determining the IP address from the server"), 
@@ -80,8 +81,8 @@ final class UdpRelayServer {
 				}
 				InetAddress inetAddr = null;
 				try {
-					inetAddr = InetAddress.getByName(address);
-				} catch (UnknownHostException e) {
+					inetAddr = this.getHostnameResolver().resolve(address);
+				} catch (IOException e) {
 					LOGGER.log(
 							Level.WARNING, 
 							this.format("Error in determining the IP address from the server"), 
@@ -105,8 +106,9 @@ final class UdpRelayServer {
 			byte[] headerBytes = header.toByteArray();
 			InetAddress inetAddress = null;
 			try {
-				inetAddress = InetAddress.getByName(this.getSourceAddress());
-			} catch (UnknownHostException e) {
+				inetAddress = this.getHostnameResolver().resolve(
+						this.getSourceAddress());
+			} catch (IOException e) {
 				LOGGER.log(
 						Level.WARNING, 
 						this.format("Error in determining the IP address from the client"), 
@@ -221,8 +223,9 @@ final class UdpRelayServer {
 			int port = packet.getPort();
 			InetAddress sourceInetAddr = null;
 			try {
-				sourceInetAddr = InetAddress.getByName(this.getSourceAddress());
-			} catch (UnknownHostException e) {
+				sourceInetAddr = this.getHostnameResolver().resolve(
+						this.getSourceAddress());
+			} catch (IOException e) {
 				LOGGER.log(
 						Level.WARNING, 
 						this.format("Error in determining the IP address from the client"), 
@@ -231,8 +234,8 @@ final class UdpRelayServer {
 			}
 			InetAddress inetAddr = null;
 			try {
-				inetAddr = InetAddress.getByName(address);
-			} catch (UnknownHostException e) {
+				inetAddr = this.getHostnameResolver().resolve(address);
+			} catch (IOException e) {
 				LOGGER.log(
 						Level.WARNING, 
 						this.format("Error in determining the IP address from the client"), 
@@ -263,9 +266,10 @@ final class UdpRelayServer {
 			if (desiredDestinationAddr != null && desiredDestinationPrt > -1) {
 				InetAddress desiredDestinationInetAddr = null;
 				try {
-					desiredDestinationInetAddr = InetAddress.getByName(
-							desiredDestinationAddr);
-				} catch (UnknownHostException e) {
+					desiredDestinationInetAddr = 
+							this.getHostnameResolver().resolve(
+									desiredDestinationAddr);
+				} catch (IOException e) {
 					LOGGER.log(
 							Level.WARNING, 
 							this.format("Error in determining the IP address from the server"), 
@@ -274,9 +278,9 @@ final class UdpRelayServer {
 				}
 				InetAddress desiredDestInetAddr = null;
 				try {
-					desiredDestInetAddr = InetAddress.getByName(
+					desiredDestInetAddr = this.getHostnameResolver().resolve(
 							desiredDestAddr);
-				} catch (UnknownHostException e) {
+				} catch (IOException e) {
 					LOGGER.log(
 							Level.WARNING, 
 							this.format("Error in determining the IP address from the server"), 
@@ -301,9 +305,9 @@ final class UdpRelayServer {
 			byte[] userData = header.getUserData();
 			InetAddress inetAddress = null;
 			try {
-				inetAddress = InetAddress.getByName(
+				inetAddress = this.getHostnameResolver().resolve(
 						header.getDesiredDestinationAddress());
-			} catch (UnknownHostException e) {
+			} catch (IOException e) {
 				LOGGER.log(
 						Level.WARNING, 
 						this.format("Error in determining the IP address from the server"), 
@@ -448,6 +452,10 @@ final class UdpRelayServer {
 			return this.udpRelayServer.desiredDestinationPort;
 		}
 		
+		protected final HostnameResolver getHostnameResolver() {
+			return this.udpRelayServer.hostnameResolver;
+		}
+		
 		protected final long getLastReceiveTime() {
 			return this.udpRelayServer.lastReceiveTime;
 		}
@@ -517,6 +525,7 @@ final class UdpRelayServer {
 	private int desiredDestinationPort;
 	private ExecutorService executor;
 	private boolean firstPacketsWorkerFinished;
+	private HostnameResolver hostnameResolver;
 	private long lastReceiveTime;
 	private final DatagramSocketInterface serverDatagramSocketInterface;
 	private String sourceAddress;
@@ -531,13 +540,14 @@ final class UdpRelayServer {
 			final String sourceAddr,
 			final String desiredDestinationAddr,
 			final int desiredDestinationPrt, 
+			final HostnameResolver resolver, 
 			final Criteria allowedExternalIncomingAddrCriteria, 
 			final Criteria blockedExternalIncomingAddrCriteria, 
-			final int bffrSize, 
-			final int tmt) {
+			final int bffrSize, final int tmt) {
 		Objects.requireNonNull(clientDatagramSockInterface);
 		Objects.requireNonNull(serverDatagramSockInterface);
 		Objects.requireNonNull(desiredDestinationAddr);
+		Objects.requireNonNull(resolver);
 		Objects.requireNonNull(allowedExternalIncomingAddrCriteria);
 		Objects.requireNonNull(blockedExternalIncomingAddrCriteria);
 		UdpRequestHeader.validateDesiredDestinationAddress(
@@ -568,6 +578,7 @@ final class UdpRelayServer {
 		this.desiredDestinationPort = desiredDestPrt;
 		this.executor = null;
 		this.firstPacketsWorkerFinished = false;
+		this.hostnameResolver = resolver;
 		this.lastReceiveTime = 0L;
 		this.serverDatagramSocketInterface = serverDatagramSockInterface;
 		this.sourceAddress = sourceAddr;

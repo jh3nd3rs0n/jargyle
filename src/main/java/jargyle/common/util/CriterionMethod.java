@@ -1,4 +1,4 @@
-package jargyle.server;
+package jargyle.common.util;
 
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlEnumValue;

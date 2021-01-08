@@ -18,6 +18,7 @@ import javax.net.ssl.TrustManager;
 import jargyle.common.net.DatagramSocketInterfaceFactory;
 import jargyle.common.net.DirectSocketInterface;
 import jargyle.common.net.Host;
+import jargyle.common.net.HostnameResolverFactory;
 import jargyle.common.net.Port;
 import jargyle.common.net.ServerSocketInterfaceFactory;
 import jargyle.common.net.SocketInterface;
@@ -167,6 +168,8 @@ public abstract class SocksClient {
 	}
 	
 	public abstract DatagramSocketInterfaceFactory newDatagramSocketInterfaceFactory();
+	
+	public abstract HostnameResolverFactory newHostnameResolverFactory();
 	
 	public abstract ServerSocketInterfaceFactory newServerSocketInterfaceFactory();
 	

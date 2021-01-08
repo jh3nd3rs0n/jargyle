@@ -10,6 +10,8 @@ import java.util.logging.Logger;
 import jargyle.common.net.DirectSocketInterface;
 import jargyle.common.net.SocketSettings;
 import jargyle.common.net.socks5.Version;
+import jargyle.common.util.Criteria;
+import jargyle.common.util.Criterion;
 import jargyle.server.socks5.Socks5Worker;
 
 final class Worker implements Runnable {

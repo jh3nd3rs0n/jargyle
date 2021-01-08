@@ -20,6 +20,7 @@ import jargyle.common.net.socks5.gssapiauth.GssapiProtectionLevels;
 import jargyle.common.net.ssl.CipherSuites;
 import jargyle.common.net.ssl.Protocols;
 import jargyle.common.security.EncryptedPassword;
+import jargyle.common.util.Criteria;
 import jargyle.common.util.PositiveInteger;
 
 public final class SocksClientFactory {
@@ -70,6 +71,22 @@ public final class SocksClientFactory {
 			properties.add(PropertySpec.SOCKS5_GSSAPI_SERVICE_NAME.newProperty(
 					gssapiServiceName));
 		}
+		if (settings.containsNondefaultValue(
+				SettingSpec.CHAINING_SOCKS5_ON_RESOLVE_DIRECT_RESOLVE_HOSTNAME_CRITERIA)) {
+			Criteria directResolveHostnameCriteria = settings.getLastValue(
+					SettingSpec.CHAINING_SOCKS5_ON_RESOLVE_DIRECT_RESOLVE_HOSTNAME_CRITERIA, 
+					Criteria.class);
+			properties.add(PropertySpec.SOCKS5_ON_RESOLVE_DIRECT_RESOLVE_HOSTNAME_CRITERIA.newProperty(
+					directResolveHostnameCriteria));
+		}
+		if (settings.containsNondefaultValue(
+				SettingSpec.CHAINING_SOCKS5_ON_RESOLVE_FORWARD_RESOLVE_HOSTNAME_CRITERIA)) {
+			Criteria forwardResolveHostnameCriteria = settings.getLastValue(
+					SettingSpec.CHAINING_SOCKS5_ON_RESOLVE_FORWARD_RESOLVE_HOSTNAME_CRITERIA, 
+					Criteria.class);
+			properties.add(PropertySpec.SOCKS5_ON_RESOLVE_FORWARD_RESOLVE_HOSTNAME_CRITERIA.newProperty(
+					forwardResolveHostnameCriteria));			
+		}		
 		if (settings.containsNondefaultValue(
 				SettingSpec.CHAINING_SOCKS5_USERNAME_PASSWORD)) {
 			UsernamePassword usernamePassword = settings.getLastValue(

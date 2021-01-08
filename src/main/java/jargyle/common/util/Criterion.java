@@ -1,4 +1,4 @@
-package jargyle.server;
+package jargyle.common.util;
 
 import java.util.Arrays;
 import java.util.Iterator;

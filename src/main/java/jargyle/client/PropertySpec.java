@@ -17,6 +17,9 @@ import jargyle.common.net.socks5.gssapiauth.GssapiProtectionLevels;
 import jargyle.common.net.ssl.CipherSuites;
 import jargyle.common.net.ssl.Protocols;
 import jargyle.common.security.EncryptedPassword;
+import jargyle.common.util.Criteria;
+import jargyle.common.util.Criterion;
+import jargyle.common.util.CriterionMethod;
 import jargyle.common.util.PositiveInteger;
 
 public enum PropertySpec {
@@ -226,24 +229,44 @@ public enum PropertySpec {
 		}
 		
 	},
-	SOCKS5_USERNAME("socksClient.socks5.username") {
-		
+	SOCKS5_ON_RESOLVE_DIRECT_RESOLVE_HOSTNAME_CRITERIA(
+			"socksClient.socks5.onResolve.directResolveHostnameCriteria") {
+
 		@Override
 		public Property getDefaultProperty() {
-			return new Property(this, System.getProperty("user.name"));
+			return new Property(this, Criteria.newInstance(
+					Criterion.newInstance(CriterionMethod.MATCHES, ".*")));
 		}
 
 		@Override
 		public Property newProperty(final Object value) {
-			String val = String.class.cast(value);
-			UsernamePassword.validateUsername(val);
+			Criteria val = Criteria.class.cast(value);
 			return new Property(this, val);
 		}
 
 		@Override
 		public Property newProperty(final String value) {
-			UsernamePassword.validateUsername(value);
-			return new Property(this, value);
+			return new Property(this, Criteria.newInstance(value));
+		}
+		
+	},	
+	SOCKS5_ON_RESOLVE_FORWARD_RESOLVE_HOSTNAME_CRITERIA(
+			"socksClient.socks5.onResolve.forwardResolveHostnameCriteria") {
+
+		@Override
+		public Property getDefaultProperty() {
+			return new Property(this, Criteria.EMPTY_INSTANCE);
+		}
+
+		@Override
+		public Property newProperty(final Object value) {
+			Criteria val = Criteria.class.cast(value);
+			return new Property(this, val);
+		}
+
+		@Override
+		public Property newProperty(final String value) {
+			return new Property(this, Criteria.newInstance(value));
 		}
 		
 	},
@@ -270,6 +293,27 @@ public enum PropertySpec {
 			EncryptedPassword v = EncryptedPassword.newInstance(val);
 			Arrays.fill(val, '\0');
 			return new Property(this, v);
+		}
+		
+	},
+	SOCKS5_USERNAME("socksClient.socks5.username") {
+		
+		@Override
+		public Property getDefaultProperty() {
+			return new Property(this, System.getProperty("user.name"));
+		}
+
+		@Override
+		public Property newProperty(final Object value) {
+			String val = String.class.cast(value);
+			UsernamePassword.validateUsername(val);
+			return new Property(this, val);
+		}
+
+		@Override
+		public Property newProperty(final String value) {
+			UsernamePassword.validateUsername(value);
+			return new Property(this, value);
 		}
 		
 	},

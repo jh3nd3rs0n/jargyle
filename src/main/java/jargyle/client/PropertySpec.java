@@ -17,9 +17,6 @@ import jargyle.common.net.socks5.gssapiauth.GssapiProtectionLevels;
 import jargyle.common.net.ssl.CipherSuites;
 import jargyle.common.net.ssl.Protocols;
 import jargyle.common.security.EncryptedPassword;
-import jargyle.common.util.Criteria;
-import jargyle.common.util.Criterion;
-import jargyle.common.util.CriterionMethod;
 import jargyle.common.util.PositiveInteger;
 
 public enum PropertySpec {
@@ -139,6 +136,28 @@ public enum PropertySpec {
 		}
 		
 	},
+	SOCKS5_FORWARD_HOSTNAME_RESOLUTION_ENABLED(
+			"socksClient.socks5.forwardHostnameResolution.enabled") {
+		
+		private static final boolean DEFAULT_BOOLEAN_VALUE = false;
+		
+		@Override
+		public Property getDefaultProperty() {
+			return new Property(this, Boolean.valueOf(DEFAULT_BOOLEAN_VALUE));
+		}
+
+		@Override
+		public Property newProperty(final Object value) {
+			Boolean val = Boolean.class.cast(value);
+			return new Property(this, val);
+		}
+
+		@Override
+		public Property newProperty(final String value) {
+			return new Property(this, Boolean.valueOf(value));
+		}
+		
+	},
 	SOCKS5_GSSAPI_MECHANISM_OID("socksClient.socks5.gssapiMechanismOid") {
 		
 		@Override
@@ -226,47 +245,6 @@ public enum PropertySpec {
 		@Override
 		public Property newProperty(final String value) {
 			return new Property(this, value);
-		}
-		
-	},
-	SOCKS5_ON_RESOLVE_DIRECT_RESOLVE_HOSTNAME_CRITERIA(
-			"socksClient.socks5.onResolve.directResolveHostnameCriteria") {
-
-		@Override
-		public Property getDefaultProperty() {
-			return new Property(this, Criteria.newInstance(
-					Criterion.newInstance(CriterionMethod.MATCHES, ".*")));
-		}
-
-		@Override
-		public Property newProperty(final Object value) {
-			Criteria val = Criteria.class.cast(value);
-			return new Property(this, val);
-		}
-
-		@Override
-		public Property newProperty(final String value) {
-			return new Property(this, Criteria.newInstance(value));
-		}
-		
-	},	
-	SOCKS5_ON_RESOLVE_FORWARD_RESOLVE_HOSTNAME_CRITERIA(
-			"socksClient.socks5.onResolve.forwardResolveHostnameCriteria") {
-
-		@Override
-		public Property getDefaultProperty() {
-			return new Property(this, Criteria.EMPTY_INSTANCE);
-		}
-
-		@Override
-		public Property newProperty(final Object value) {
-			Criteria val = Criteria.class.cast(value);
-			return new Property(this, val);
-		}
-
-		@Override
-		public Property newProperty(final String value) {
-			return new Property(this, Criteria.newInstance(value));
 		}
 		
 	},

@@ -17,7 +17,6 @@ import jargyle.common.net.socks5.Command;
 import jargyle.common.net.socks5.Reply;
 import jargyle.common.net.socks5.Socks5Reply;
 import jargyle.common.net.socks5.Socks5Request;
-import jargyle.common.util.Criteria;
 
 public final class Socks5HostnameResolver extends HostnameResolver {
 
@@ -43,16 +42,9 @@ public final class Socks5HostnameResolver extends HostnameResolver {
 					addressType));
 		}
 		Properties properties = this.socks5Client.getProperties();
-		Criteria directResolveHostnameCriteria = properties.getValue(
-				PropertySpec.SOCKS5_ON_RESOLVE_DIRECT_RESOLVE_HOSTNAME_CRITERIA, 
-				Criteria.class);
-		if (directResolveHostnameCriteria.anyEvaluatesTrue(host) != null) {
-			return InetAddress.getByName(host);
-		}
-		Criteria forwardResolveHostnameCriteria = properties.getValue(
-				PropertySpec.SOCKS5_ON_RESOLVE_FORWARD_RESOLVE_HOSTNAME_CRITERIA, 
-				Criteria.class);
-		if (forwardResolveHostnameCriteria.anyEvaluatesTrue(host) == null) {
+		if (!properties.getValue(
+				PropertySpec.SOCKS5_FORWARD_HOSTNAME_RESOLUTION_ENABLED, 
+				Boolean.class).booleanValue()) {
 			return InetAddress.getByName(host);
 		}
 		SocketInterface socketInterface = new DirectSocketInterface(

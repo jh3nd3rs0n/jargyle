@@ -240,6 +240,34 @@ public enum SettingSpec {
 		
 	},
 	@HelpText(
+			doc = "The boolean value to indicate that host name resolution is "
+					+ "to be done from the other SOCKS5 server (default is "
+					+ "false)", 
+			usage = "chaining.socks5.forwardHostnameResolution.enabled=true|false"
+	)	
+	CHAINING_SOCKS5_FORWARD_HOSTNAME_RESOLUTION_ENABLED(
+			"chaining.socks5.forwardHostnameResolution.enabled") {
+		
+		@Override
+		public Setting getDefaultSetting() {
+			return new Setting(
+					this,
+					PropertySpec.SOCKS5_FORWARD_HOSTNAME_RESOLUTION_ENABLED.getDefaultProperty().getValue());
+		}
+
+		@Override
+		public Setting newSetting(final Object value) {
+			Boolean val = Boolean.class.cast(value);
+			return new Setting(this, val);
+		}
+
+		@Override
+		public Setting newSetting(final String value) {
+			return new Setting(this, Boolean.valueOf(value));
+		}
+		
+	},
+	@HelpText(
 			doc = "The object ID for the GSS-API authentication mechanism to "
 					+ "the other SOCKS5 server (default is 1.2.840.113554.1.2.2)", 
 			usage = "chaining.socks5.gssapiMechanismOid=GSSAPI_MECHANISM_OID"
@@ -356,60 +384,6 @@ public enum SettingSpec {
 		}
 		
 	},
-	@HelpText(
-			doc = "The space separated list of hostname criteria to be "
-					+ "resolved from the SOCKS server (default is matches:.*)", 
-			usage = "chaining.socks5.onResolve.directResolveHostnameCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
-	)	
-	CHAINING_SOCKS5_ON_RESOLVE_DIRECT_RESOLVE_HOSTNAME_CRITERIA(
-			"chaining.socks5.onResolve.directResolveHostnameCriteria") {
-		
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(
-					this,
-					PropertySpec.SOCKS5_ON_RESOLVE_DIRECT_RESOLVE_HOSTNAME_CRITERIA.getDefaultProperty().getValue());
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			Criteria val = Criteria.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return new Setting(this, Criteria.newInstance(value));
-		}
-		
-	},
-	@HelpText(
-			doc = "The space separated list of hostname criteria to be "
-					+ "resolved from the other SOCKS server", 
-			usage = "chaining.socks5.onResolve.forwardResolveHostnameCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
-	)	
-	CHAINING_SOCKS5_ON_RESOLVE_FORWARD_RESOLVE_HOSTNAME_CRITERIA(
-			"chaining.socks5.onResolve.forwardResolveHostnameCriteria") {
-		
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(
-					this,
-					PropertySpec.SOCKS5_ON_RESOLVE_FORWARD_RESOLVE_HOSTNAME_CRITERIA.getDefaultProperty().getValue());
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			Criteria val = Criteria.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return new Setting(this, Criteria.newInstance(value));
-		}
-		
-	},	
 	@HelpText(
 			doc = "The username password to be used to access the other "
 					+ "SOCKS5 server", 

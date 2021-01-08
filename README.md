@@ -170,6 +170,9 @@ The following is a list of available settings for the SOCKS server (displayed wh
       chaining.socks5.authMethods=SOCKS5_AUTH_METHOD1[ SOCKS5_AUTH_METHOD2[...]]
           The space separated list of acceptable authentication methods to the other SOCKS5 server (default is NO_AUTHENTICATION_REQUIRED)
     
+      chaining.socks5.forwardHostnameResolution.enabled=true|false
+          The boolean value to indicate that host name resolution is to be done from the other SOCKS5 server (default is false)
+    
       chaining.socks5.gssapiMechanismOid=GSSAPI_MECHANISM_OID
           The object ID for the GSS-API authentication mechanism to the other SOCKS5 server (default is 1.2.840.113554.1.2.2)
     
@@ -181,12 +184,6 @@ The following is a list of available settings for the SOCKS server (displayed wh
     
       chaining.socks5.gssapiServiceName=GSSAPI_SERVICE_NAME
           The GSS-API service name for the other SOCKS5 server
-    
-      chaining.socks5.onResolve.directResolveHostnameCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
-          The space separated list of hostname criteria to be resolved from the SOCKS server (default is matches:.*)
-    
-      chaining.socks5.onResolve.forwardResolveHostnameCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
-          The space separated list of hostname criteria to be resolved from the other SOCKS server
     
       chaining.socks5.usernamePassword=USERNAME:PASSWORD
           The username password to be used to access the other SOCKS5 server
@@ -1274,25 +1271,16 @@ You can have Jargyle perform host name resolution through SOCKS5 server chaining
 -   Jargyle is chained to another SOCKS5 server.
 -   The other SOCKS5 server supports the RESOLVE command. (At the time of this writing, the RESOLVE command is an exclusive SOCKS5 command made for Jargyle. Therefore the other SOCKS5 server would at the very least be another running instance of Jargyle.)
 
-By default, host name resolution through SOCKS5 server chaining is disabled.
-
-To enable host name resolution through SOCKS5 server chaining, you would need to set the following settings:
-
--   `chaining.socks5.onResolve.directResolveHostnameCriteria`
--   `chaining.socks5.onResolve.forwardResolveHostnameCriteria`
-
-The setting `chaining.socks5.onResolve.directResolveHostnameCriteria` contains criteria for a host name to be resolved from Jargyle. By default it accepts all host names to be resolved from Jargyle. To have some host names to be resolved from Jargyle, you can specify a host name or host names as either a literal expression preceded by the prefix `equals:` or a regular expression preceded by the prefix `matches:`.
+By default, host name resolution through SOCKS5 server chaining is disabled. To enable host name resolution through SOCKS5 server chaining, you would need to set the setting `chaining.socks5.forwardHostnameResolution.enabled` to `true`.
 
 Partial command line example:
 
 ```text
     
     --setting=chaining.socksServerUri=socks5://127.0.0.1:23456 \
-    "--setting=chaining.socks5.onResolve.directResolveHostnameCriteria=equals:localhost matches:^.*\.example\.com$"
+    --setting=chaining.socks5.forwardHostnameResolution.enabled=true
     
 ```
-
-You can specify a host name or host names as a `<criterion/>` XML element in the configuration file.
 
 Partial configuration file example:
 
@@ -1303,45 +1291,8 @@ Partial configuration file example:
         <value>socks5://127.0.0.1:23456</value>
     </setting>
     <setting>
-        <name>chaining.socks5.onResolve.directResolveHostnameCriteria</name>
-        <criteriaValue>
-            <criteria>
-                <criterion method="equals" value="localhost"/>
-                <criterion method="matches" value="^.*\.example\.com$"/>
-            </criteria>
-        </criteriaValue>
-    </setting>
-    
-```
-
-The setting `chaining.socks5.onResolve.forwardResolveHostnameCriteria` contains criteria for a host name to be resolved from the other SOCKS5 server. By default it accepts no host names to be resolved from the other SOCKS5 server. To have some (or all) host names to be resolved from the other SOCKS5 server, you can specify a host name or host names as either a literal expression preceded by the prefix `equals:` or a regular expression preceded by the prefix `matches:`.
-
-Partial command line example:
-
-```text
-    
-    --setting=chaining.socksServerUri=socks5://127.0.0.1:23456 \
-    --setting=chaining.socks5.onResolve.forwardResolveHostnameCriteria=matches:.*
-    
-```
-
-You can specify a host name or host names as a `<criterion/>` XML element in the configuration file.
-
-Partial configuration file example:
-
-```xml
-    
-    <setting>
-        <name>chaining.socksServerUri</name>
-        <value>socks5://127.0.0.1:23456</value>
-    </setting>
-    <setting>
-        <name>chaining.socks5.onResolve.forwardResolveHostnameCriteria</name>
-        <criteriaValue>
-            <criteria>
-                <criterion method="matches" value=".*"/>
-            </criteria>
-        </criteriaValue>
+        <name>chaining.socks5.forwardHostnameResolution.enabled</name>
+        <value>true</value>
     </setting>
     
 ```
@@ -1739,23 +1690,6 @@ Partial configuration file example:
 
 ```xml
     
-    <setting>
-        <name>chaining.socks5.onResolve.directResolveHostnameCriteria</name>
-        <criteriaValue>
-            <criteria>
-                <criterion method="equals" value="localhost" comment="no need to forward localhost to be resolved"/>
-                <criterion method="matches" value="^.*\.example\.com$" comment="*.example.com is our local domain"/>
-            </criteria>
-        </criteriaValue>
-    </setting>
-    <setting>
-        <name>chaining.socks5.onResolve.forwardResolveHostnameCriteria</name>
-        <criteriaValue>
-            <criteria>
-                <criterion method="matches" value=".*" comment="forward all host names to be resolved"/>
-            </criteria>
-        </criteriaValue>
-    </setting>
     <setting>
         <name>allowedClientAddressCriteria</name>
         <criteriaValue>

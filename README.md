@@ -4,12 +4,12 @@
 
 Jargyle is a Java SOCKS5 server. It has the following features:
 
--   100% implementation of the [SOCKS5 protocol specification](https://tools.ietf.org/html/rfc1928) which includes [username password authentication](https://tools.ietf.org/html/rfc1929) and [GSS-API authentication](https://tools.ietf.org/html/rfc1961)
--   SOCKS server chaining (routing through another SOCKS server)
--   Host name resolution through SOCKS server chaining
--   SSL/TLS and SSL/TLS for SOCKS server chaining
--   Allow or block client addresses and external incoming addresses
--   Allow or block SOCKS5 requests
+-   100% implementation of the SOCKS5 protocol specification which includes [username password authentication](#4-9-2-using-username-password-authentication) and [GSS-API authentication](#4-9-3-using-gss-api-authentication)
+-   [SOCKS server chaining](#4-10-chaining-to-another-socks-server)
+-   [SSL/TLS](#4-7-enabling-ssl-tls) and [SSL/TLS for SOCKS server chaining](#4-10-1-enabling-ssl-tls)
+-   [Host name resolution through SOCKS5 server chaining](#4-10-2-enabling-host-name-resolution-through-socks5-server-chaining)
+-   [Allow or block client addresses and external incoming addresses](#4-11-allowing-or-blocking-addresses)
+-   [Allow or block SOCKS5 requests](#4-12-allowing-or-blocking-socks5-requests)
 
 **Disclaimer:** Jargyle is a hobby project and is currently subject to breaking changes. Jargyle is currently not production ready but it aims to be.
 
@@ -1208,7 +1208,11 @@ Please note that the scheme in the URI specifies the SOCKS protocol to be used w
 
 #### 4. 10. 1. Enabling SSL/TLS
 
-You can have Jargyle chained to the other SOCKS server using SSL/TLS. By default SSL/TLS is disabled. To enable SSL/TLS, you will need to have the setting `chaining.ssl.enabled` set to `true`. In addition, you will need to have the setting `chaining.ssl.trustStoreFile` to specify the server's key store file used as a trust store (this file would need to be created by Java's keytool utility). Also, you will need to have the setting `chaining.ssl.trustStorePassword` to specify the password for the server's trust store file.
+You can have Jargyle chained to the other SOCKS server through SSL/TLS under the following condition: 
+
+-   The other SOCKS server supports accepting connections through SSL/TLS.
+
+By default SSL/TLS is disabled. To enable SSL/TLS, you will need to have the setting `chaining.ssl.enabled` set to `true`. In addition, you will need to have the setting `chaining.ssl.trustStoreFile` to specify the server's key store file used as a trust store (this file would need to be created by Java's keytool utility). Also, you will need to have the setting `chaining.ssl.trustStorePassword` to specify the password for the server's trust store file.
 
 Partial command line example:
 
@@ -1234,7 +1238,7 @@ Partial command line example:
 
 ```
 
-If the other SOCKS server wants the client to authenticate using SSL/TLS, you will need to have the setting `chaining.ssl.keyStoreFile` to specify the client's key store file (this file would need to be created by Java's keytool utility). Also, you will need to have the setting `chaining.ssl.keyStorePassword` to specify the password for the client's key store file.
+If the other SOCKS server wants the client (Jargyle) to authenticate using SSL/TLS, you will need to have the setting `chaining.ssl.keyStoreFile` to specify the client's key store file (this file would need to be created by Java's keytool utility). Also, you will need to have the setting `chaining.ssl.keyStorePassword` to specify the password for the client's key store file.
 
 Partial command line example:
 

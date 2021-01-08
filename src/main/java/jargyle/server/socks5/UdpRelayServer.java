@@ -20,6 +20,78 @@ import jargyle.common.util.Criterion;
 
 final class UdpRelayServer {
 	
+	public static final class DatagramSocketInterfaces {
+		
+		private final DatagramSocketInterface clientDatagramSocketInterface;
+		private final DatagramSocketInterface serverDatagramSocketInterface;
+		
+		public DatagramSocketInterfaces(
+				final DatagramSocketInterface clientDatagramSockInterface,
+				final DatagramSocketInterface serverDatagramSockInterface) {
+			Objects.requireNonNull(clientDatagramSockInterface);
+			Objects.requireNonNull(serverDatagramSockInterface);
+			this.clientDatagramSocketInterface = clientDatagramSockInterface;
+			this.serverDatagramSocketInterface = serverDatagramSockInterface;
+		}
+		
+		public DatagramSocketInterface getClientDatagramSocketInterface() {
+			return this.clientDatagramSocketInterface;
+		}
+		
+		public DatagramSocketInterface getServerDatagramSocketInterface() {
+			return this.serverDatagramSocketInterface;
+		}
+		
+	}
+	
+	public static final class DesiredDestinationSocketAddress {
+		
+		private final String address;
+		private final int port;
+		
+		public DesiredDestinationSocketAddress(
+				final String addr, final int prt) {
+			Objects.requireNonNull(addr);
+			UdpRequestHeader.validateDesiredDestinationAddress(addr);
+			UdpRequestHeader.validateDesiredDestinationPort(prt);			
+			this.address = addr;
+			this.port = prt; 
+		}
+		
+		public String getAddress() {
+			return this.address;
+		}
+		
+		public int getPort() {
+			return this.port;
+		}
+		
+	}
+	
+	public static final class ExternalIncomingAddressCriteria {
+		
+		private final Criteria allowedCriteria;
+		private final Criteria blockedCriteria;
+		
+		public ExternalIncomingAddressCriteria(
+				final Criteria allowCriteria,
+				final Criteria blockCriteria) {
+			Objects.requireNonNull(allowCriteria);
+			Objects.requireNonNull(blockCriteria);
+			this.allowedCriteria = allowCriteria;
+			this.blockedCriteria = blockCriteria;
+		}
+		
+		public Criteria getAllowedCriteria() {
+			return this.allowedCriteria;
+		}
+		
+		public Criteria getBlockedCriteria() {
+			return this.blockedCriteria;
+		}
+		
+	}
+	
 	private static final class IncomingPacketsWorker extends PacketsWorker {
 		
 		private static final Logger LOGGER = Logger.getLogger(
@@ -517,6 +589,34 @@ final class UdpRelayServer {
 		
 	}
 	
+	public static final class RelaySettings {
+		
+		private final int bufferSize;
+		private final int timeout;
+		
+		public RelaySettings(final int bffrSize, final int tmt) {
+			if (bffrSize < 1) {
+				throw new IllegalArgumentException(
+						"buffer size must not be less than 1");
+			}
+			if (tmt < 1) {
+				throw new IllegalArgumentException(
+						"timeout must not be less than 1");
+			}
+			this.bufferSize = bffrSize;
+			this.timeout = tmt;
+		}
+		
+		public int getBufferSize() {
+			return this.bufferSize;
+		}
+		
+		public int getTimeout() {
+			return this.timeout;
+		}
+		
+	}
+	
 	private final Criteria allowedExternalIncomingAddressCriteria;
 	private final Criteria blockedExternalIncomingAddressCriteria;
 	private final DatagramSocketInterface clientDatagramSocketInterface;
@@ -535,57 +635,43 @@ final class UdpRelayServer {
 	private final int timeout;
 	
 	public UdpRelayServer(		
-			final DatagramSocketInterface clientDatagramSockInterface,
-			final DatagramSocketInterface serverDatagramSockInterface,
+			final DatagramSocketInterfaces datagramSockInterfaces,
 			final String sourceAddr,
-			final String desiredDestinationAddr,
-			final int desiredDestinationPrt, 
+			final DesiredDestinationSocketAddress desiredDestinationSocketAddr, 
 			final HostnameResolver resolver, 
-			final Criteria allowedExternalIncomingAddrCriteria, 
-			final Criteria blockedExternalIncomingAddrCriteria, 
-			final int bffrSize, final int tmt) {
-		Objects.requireNonNull(clientDatagramSockInterface);
-		Objects.requireNonNull(serverDatagramSockInterface);
-		Objects.requireNonNull(desiredDestinationAddr);
+			final ExternalIncomingAddressCriteria externalIncomingAddrCriteria, 
+			final RelaySettings settings) {
+		Objects.requireNonNull(datagramSockInterfaces);
+		Objects.requireNonNull(desiredDestinationSocketAddr);
 		Objects.requireNonNull(resolver);
-		Objects.requireNonNull(allowedExternalIncomingAddrCriteria);
-		Objects.requireNonNull(blockedExternalIncomingAddrCriteria);
-		UdpRequestHeader.validateDesiredDestinationAddress(
-				desiredDestinationAddr);
-		UdpRequestHeader.validateDesiredDestinationPort(
-				desiredDestinationPrt);
-		if (bffrSize < 1) {
-			throw new IllegalArgumentException(
-					"buffer size must not be less than 1");
-		}
-		if (tmt < 1) {
-			throw new IllegalArgumentException(
-					"timeout must not be less than 1");
-		}
-		String desiredDestAddr = desiredDestinationAddr;
-		int desiredDestPrt = desiredDestinationPrt;
+		Objects.requireNonNull(externalIncomingAddrCriteria);
+		Objects.requireNonNull(settings);
+		String desiredDestAddr = desiredDestinationSocketAddr.getAddress();
+		int desiredDestPrt = desiredDestinationSocketAddr.getPort();
 		if (!desiredDestAddr.matches("[a-zA-Z1-9]") && desiredDestPrt == 0) {
 			desiredDestAddr = null;
 			desiredDestPrt = -1;
 		}
 		this.allowedExternalIncomingAddressCriteria = 
-				allowedExternalIncomingAddrCriteria;
+				externalIncomingAddrCriteria.getAllowedCriteria();
 		this.blockedExternalIncomingAddressCriteria = 
-				blockedExternalIncomingAddrCriteria;
-		this.clientDatagramSocketInterface = clientDatagramSockInterface;
-		this.bufferSize = bffrSize;
+				externalIncomingAddrCriteria.getBlockedCriteria();
+		this.clientDatagramSocketInterface = 
+				datagramSockInterfaces.getClientDatagramSocketInterface();
+		this.bufferSize = settings.getBufferSize();
 		this.desiredDestinationAddress = desiredDestAddr;
 		this.desiredDestinationPort = desiredDestPrt;
 		this.executor = null;
 		this.firstPacketsWorkerFinished = false;
 		this.hostnameResolver = resolver;
 		this.lastReceiveTime = 0L;
-		this.serverDatagramSocketInterface = serverDatagramSockInterface;
+		this.serverDatagramSocketInterface = 
+				datagramSockInterfaces.getServerDatagramSocketInterface();
 		this.sourceAddress = sourceAddr;
 		this.sourcePort = -1;
 		this.started = false;
 		this.stopped = true;
-		this.timeout = tmt;
+		this.timeout = settings.getTimeout();
 	}
 	
 	public boolean isStarted() {

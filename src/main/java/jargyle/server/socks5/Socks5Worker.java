@@ -722,23 +722,26 @@ public final class Socks5Worker implements Runnable {
 							socks5Rep.toString())));
 			this.writeThenFlush(socks5Rep.toByteArray());
 			udpRelayServer = new UdpRelayServer(
-					clientDatagramSock,
-					serverDatagramSock,
+					new UdpRelayServer.DatagramSocketInterfaces(
+							clientDatagramSock, serverDatagramSock),
 					this.clientSocketInterface.getInetAddress().getHostAddress(),
-					desiredDestinationAddress,
-					desiredDestinationPort, 
+					new UdpRelayServer.DesiredDestinationSocketAddress(
+							desiredDestinationAddress, desiredDestinationPort),
 					hostnameResolver, 
-					this.settings.getLastValue(
-							SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_ALLOWED_EXTERNAL_INCOMING_ADDRESS_CRITERIA, 
-							Criteria.class), 
-					this.settings.getLastValue(
-							SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_BLOCKED_EXTERNAL_INCOMING_ADDRESS_CRITERIA, 
-							Criteria.class), 
-					this.settings.getLastValue(
-							SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_RELAY_BUFFER_SIZE, 
-							PositiveInteger.class).intValue(), this.settings.getLastValue(
-							SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_RELAY_TIMEOUT, 
-							PositiveInteger.class).intValue());
+					new UdpRelayServer.ExternalIncomingAddressCriteria(
+							this.settings.getLastValue(
+									SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_ALLOWED_EXTERNAL_INCOMING_ADDRESS_CRITERIA, 
+									Criteria.class), 
+							this.settings.getLastValue(
+									SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_BLOCKED_EXTERNAL_INCOMING_ADDRESS_CRITERIA, 
+									Criteria.class)),
+					new UdpRelayServer.RelaySettings(
+							this.settings.getLastValue(
+									SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_RELAY_BUFFER_SIZE, 
+									PositiveInteger.class).intValue(), 
+							this.settings.getLastValue(
+									SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_RELAY_TIMEOUT, 
+									PositiveInteger.class).intValue()));
 			try {
 				udpRelayServer.start();
 				while (!this.clientSocketInterface.isClosed()

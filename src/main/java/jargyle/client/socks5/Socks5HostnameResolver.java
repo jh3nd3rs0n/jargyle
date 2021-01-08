@@ -43,7 +43,7 @@ public final class Socks5HostnameResolver extends HostnameResolver {
 		}
 		Properties properties = this.socks5Client.getProperties();
 		if (!properties.getValue(
-				PropertySpec.SOCKS5_FORWARD_HOSTNAME_RESOLUTION_ENABLED, 
+				PropertySpec.SOCKS5_FORWARD_HOSTNAME_RESOLUTION, 
 				Boolean.class).booleanValue()) {
 			return InetAddress.getByName(host);
 		}

@@ -136,8 +136,8 @@ public enum PropertySpec {
 		}
 		
 	},
-	SOCKS5_FORWARD_HOSTNAME_RESOLUTION_ENABLED(
-			"socksClient.socks5.forwardHostnameResolution.enabled") {
+	SOCKS5_FORWARD_HOSTNAME_RESOLUTION(
+			"socksClient.socks5.forwardHostnameResolution") {
 		
 		private static final boolean DEFAULT_BOOLEAN_VALUE = false;
 		

@@ -37,12 +37,12 @@ public final class SocksClientFactory {
 					authMethods));
 		}
 		if (settings.containsNondefaultValue(
-				SettingSpec.CHAINING_SOCKS5_FORWARD_HOSTNAME_RESOLUTION_ENABLED)) {
-			Boolean forwardHostnameResolutionEnabled = settings.getLastValue(
-					SettingSpec.CHAINING_SOCKS5_FORWARD_HOSTNAME_RESOLUTION_ENABLED, 
+				SettingSpec.CHAINING_SOCKS5_FORWARD_HOSTNAME_RESOLUTION)) {
+			Boolean forwardHostnameResolution = settings.getLastValue(
+					SettingSpec.CHAINING_SOCKS5_FORWARD_HOSTNAME_RESOLUTION, 
 					Boolean.class);
-			properties.add(PropertySpec.SOCKS5_FORWARD_HOSTNAME_RESOLUTION_ENABLED.newProperty(
-					forwardHostnameResolutionEnabled));
+			properties.add(PropertySpec.SOCKS5_FORWARD_HOSTNAME_RESOLUTION.newProperty(
+					forwardHostnameResolution));
 		}
 		if (settings.containsNondefaultValue(
 				SettingSpec.CHAINING_SOCKS5_GSSAPI_MECHANISM_OID)) {

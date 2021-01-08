@@ -241,18 +241,18 @@ public enum SettingSpec {
 	},
 	@HelpText(
 			doc = "The boolean value to indicate that host name resolution is "
-					+ "to be done from the other SOCKS5 server (default is "
+					+ "to be forwarded to the other SOCKS5 server (default is "
 					+ "false)", 
-			usage = "chaining.socks5.forwardHostnameResolution.enabled=true|false"
+			usage = "chaining.socks5.forwardHostnameResolution=true|false"
 	)	
-	CHAINING_SOCKS5_FORWARD_HOSTNAME_RESOLUTION_ENABLED(
-			"chaining.socks5.forwardHostnameResolution.enabled") {
+	CHAINING_SOCKS5_FORWARD_HOSTNAME_RESOLUTION(
+			"chaining.socks5.forwardHostnameResolution") {
 		
 		@Override
 		public Setting getDefaultSetting() {
 			return new Setting(
 					this,
-					PropertySpec.SOCKS5_FORWARD_HOSTNAME_RESOLUTION_ENABLED.getDefaultProperty().getValue());
+					PropertySpec.SOCKS5_FORWARD_HOSTNAME_RESOLUTION.getDefaultProperty().getValue());
 		}
 
 		@Override

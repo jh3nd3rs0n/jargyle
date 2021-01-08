@@ -156,13 +156,13 @@ The following is a list of available settings for the SOCKS server (displayed wh
           The space separated list of blocked client address criteria
     
       chaining.bindHost=HOST
-          The binding host name or address for the internal socket that is used to connect to the other SOCKS server (used for the SOCKS5 commands BIND and UDP ASSOCIATE) (default is 0.0.0.0)
+          The binding host name or address for the internal socket that is used to connect to the other SOCKS server (used for the SOCKS5 commands RESOLVE, BIND and UDP ASSOCIATE) (default is 0.0.0.0)
     
       chaining.connectTimeout=INTEGER_BETWEEN_1_AND_2147483647
-          The timeout in milliseconds on waiting for the internal socket to connect to the other SOCKS server (used for the SOCKS5 commands BIND and UDP ASSOCIATE) (default is 60000)
+          The timeout in milliseconds on waiting for the internal socket to connect to the other SOCKS server (used for the SOCKS5 commands RESOLVE, BIND and UDP ASSOCIATE) (default is 60000)
     
       chaining.socketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
-          The space separated list of socket settings for the internal socket that is used to connect to the other SOCKS server (used for the SOCKS5 command UDP ASSOCIATE)
+          The space separated list of socket settings for the internal socket that is used to connect to the other SOCKS server (used for the SOCKS5 commands RESOLVE and UDP ASSOCIATE)
     
       chaining.socksServerUri=SCHEME://HOST[:PORT]
           The URI of the other SOCKS server
@@ -170,8 +170,8 @@ The following is a list of available settings for the SOCKS server (displayed wh
       chaining.socks5.authMethods=SOCKS5_AUTH_METHOD1[ SOCKS5_AUTH_METHOD2[...]]
           The space separated list of acceptable authentication methods to the other SOCKS5 server (default is NO_AUTHENTICATION_REQUIRED)
     
-      chaining.socks5.forwardHostnameResolution.enabled=true|false
-          The boolean value to indicate that host name resolution is to be done from the other SOCKS5 server (default is false)
+      chaining.socks5.forwardHostnameResolution=true|false
+          The boolean value to indicate that host name resolution is to be forwarded to the other SOCKS5 server (default is false)
     
       chaining.socks5.gssapiMechanismOid=GSSAPI_MECHANISM_OID
           The object ID for the GSS-API authentication mechanism to the other SOCKS5 server (default is 1.2.840.113554.1.2.2)
@@ -1273,16 +1273,16 @@ Partial command line example:
 You can have Jargyle perform host name resolution through SOCKS5 server chaining under the following conditions:
 
 -   Jargyle is chained to another SOCKS5 server.
--   The other SOCKS5 server supports the RESOLVE command. (At the time of this writing, the RESOLVE command is an exclusive SOCKS5 command made for Jargyle. Therefore the other SOCKS5 server would at the very least be another running instance of Jargyle.)
+-   The other SOCKS5 server supports the SOCKS5 RESOLVE command. (At the time of this writing, the SOCKS5 RESOLVE command is an exclusive SOCKS5 command made for Jargyle. Therefore the other SOCKS5 server would at the very least be another running instance of Jargyle.)
 
-By default, host name resolution through SOCKS5 server chaining is disabled. To enable host name resolution through SOCKS5 server chaining, you would need to set the setting `chaining.socks5.forwardHostnameResolution.enabled` to `true`.
+By default, host name resolution through SOCKS5 server chaining is disabled. To enable host name resolution through SOCKS5 server chaining, you would need to set the setting `chaining.socks5.forwardHostnameResolution` to `true`.
 
 Partial command line example:
 
 ```text
     
     --setting=chaining.socksServerUri=socks5://127.0.0.1:23456 \
-    --setting=chaining.socks5.forwardHostnameResolution.enabled=true
+    --setting=chaining.socks5.forwardHostnameResolution=true
     
 ```
 
@@ -1295,7 +1295,7 @@ Partial configuration file example:
         <value>socks5://127.0.0.1:23456</value>
     </setting>
     <setting>
-        <name>chaining.socks5.forwardHostnameResolution.enabled</name>
+        <name>chaining.socks5.forwardHostnameResolution</name>
         <value>true</value>
     </setting>
     

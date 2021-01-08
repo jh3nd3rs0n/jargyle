@@ -7,14 +7,14 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import jargyle.common.security.AesCbcPkcs5PaddingEncryptedPassword.AesCbcPkcs5PaddingEncryptedPasswordXml;
+import jargyle.common.security.AesCfbPkcs5PaddingEncryptedPassword.AesCfbPkcs5PaddingEncryptedPasswordXml;
 
 @XmlJavaTypeAdapter(EncryptedPassword.EncryptedPasswordXmlAdapter.class)
 public abstract class EncryptedPassword {
 	
 	@XmlAccessorType(XmlAccessType.NONE)
 	@XmlType(name = "encryptedPassword", propOrder = { })
-	@XmlSeeAlso(value = { AesCbcPkcs5PaddingEncryptedPasswordXml.class })
+	@XmlSeeAlso(value = { AesCfbPkcs5PaddingEncryptedPasswordXml.class })
 	static abstract class EncryptedPasswordXml { }
 	
 	static final class EncryptedPasswordXmlAdapter 
@@ -24,9 +24,9 @@ public abstract class EncryptedPassword {
 		public EncryptedPasswordXml marshal(
 				final EncryptedPassword arg) throws Exception {
 			EncryptedPasswordXml encryptedPasswordXml = null;
-			if (arg instanceof AesCbcPkcs5PaddingEncryptedPassword) {
-				AesCbcPkcs5PaddingEncryptedPassword encryptedPassword =
-						(AesCbcPkcs5PaddingEncryptedPassword) arg;
+			if (arg instanceof AesCfbPkcs5PaddingEncryptedPassword) {
+				AesCfbPkcs5PaddingEncryptedPassword encryptedPassword =
+						(AesCfbPkcs5PaddingEncryptedPassword) arg;
 				encryptedPasswordXml = 
 						encryptedPassword.toAesCbcPkcs5PaddingEncryptedPasswordXml();
 			}
@@ -43,11 +43,11 @@ public abstract class EncryptedPassword {
 		public EncryptedPassword unmarshal(
 				final EncryptedPasswordXml arg) throws Exception {
 			EncryptedPassword encryptedPassword = null;
-			if (arg instanceof AesCbcPkcs5PaddingEncryptedPasswordXml) {
-				AesCbcPkcs5PaddingEncryptedPasswordXml encryptedPasswordXml =
-						(AesCbcPkcs5PaddingEncryptedPasswordXml) arg;
+			if (arg instanceof AesCfbPkcs5PaddingEncryptedPasswordXml) {
+				AesCfbPkcs5PaddingEncryptedPasswordXml encryptedPasswordXml =
+						(AesCfbPkcs5PaddingEncryptedPasswordXml) arg;
 				encryptedPassword = 
-						AesCbcPkcs5PaddingEncryptedPassword.newInstance(
+						AesCfbPkcs5PaddingEncryptedPassword.newInstance(
 								encryptedPasswordXml);
 			}
 			if (encryptedPassword == null) {
@@ -62,7 +62,7 @@ public abstract class EncryptedPassword {
 	}
 	
 	public static EncryptedPassword newInstance(final char[] password) {
-		return AesCbcPkcs5PaddingEncryptedPassword.newInstance(password);
+		return AesCfbPkcs5PaddingEncryptedPassword.newInstance(password);
 	}
 
 	public abstract char[] getPassword();

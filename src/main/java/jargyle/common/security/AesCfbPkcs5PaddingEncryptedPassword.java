@@ -29,12 +29,12 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-@XmlJavaTypeAdapter(AesCbcPkcs5PaddingEncryptedPassword.AesCbcPkcs5PaddingEncryptedPasswordXmlAdapter.class)
-final class AesCbcPkcs5PaddingEncryptedPassword extends EncryptedPassword {
+@XmlJavaTypeAdapter(AesCfbPkcs5PaddingEncryptedPassword.AesCfbPkcs5PaddingEncryptedPasswordXmlAdapter.class)
+final class AesCfbPkcs5PaddingEncryptedPassword extends EncryptedPassword {
 
 	@XmlAccessorType(XmlAccessType.NONE)
-	@XmlType(name = "aesCbcPkcs5PaddingEncryptedPassword", propOrder = { })
-	static class AesCbcPkcs5PaddingEncryptedPasswordXml extends EncryptedPasswordXml {
+	@XmlType(name = "aesCfbPkcs5PaddingEncryptedPassword", propOrder = { })
+	static class AesCfbPkcs5PaddingEncryptedPasswordXml extends EncryptedPasswordXml {
 		@XmlElement(name = "encodedKey", required = true)
 		protected byte[] encodedKey;
 		@XmlElement(name = "encrypted", required = true)
@@ -43,14 +43,14 @@ final class AesCbcPkcs5PaddingEncryptedPassword extends EncryptedPassword {
 		protected byte[] initializationVector;
 	}
 
-	static final class AesCbcPkcs5PaddingEncryptedPasswordXmlAdapter
-			extends XmlAdapter<AesCbcPkcs5PaddingEncryptedPasswordXml, AesCbcPkcs5PaddingEncryptedPassword> {
+	static final class AesCfbPkcs5PaddingEncryptedPasswordXmlAdapter
+			extends XmlAdapter<AesCfbPkcs5PaddingEncryptedPasswordXml, AesCfbPkcs5PaddingEncryptedPassword> {
 
 		@Override
-		public AesCbcPkcs5PaddingEncryptedPasswordXml marshal(
-				final AesCbcPkcs5PaddingEncryptedPassword arg) throws Exception {
-			AesCbcPkcs5PaddingEncryptedPasswordXml encryptedPasswordXml = 
-					new AesCbcPkcs5PaddingEncryptedPasswordXml();
+		public AesCfbPkcs5PaddingEncryptedPasswordXml marshal(
+				final AesCfbPkcs5PaddingEncryptedPassword arg) throws Exception {
+			AesCfbPkcs5PaddingEncryptedPasswordXml encryptedPasswordXml = 
+					new AesCfbPkcs5PaddingEncryptedPasswordXml();
 			encryptedPasswordXml.encodedKey = Arrays.copyOf(
 					arg.encodedKey, arg.encodedKey.length);
 			encryptedPasswordXml.encrypted = Arrays.copyOf(
@@ -61,9 +61,9 @@ final class AesCbcPkcs5PaddingEncryptedPassword extends EncryptedPassword {
 		}
 
 		@Override
-		public AesCbcPkcs5PaddingEncryptedPassword unmarshal(
-				final AesCbcPkcs5PaddingEncryptedPasswordXml arg) throws Exception {
-			return new AesCbcPkcs5PaddingEncryptedPassword(
+		public AesCfbPkcs5PaddingEncryptedPassword unmarshal(
+				final AesCfbPkcs5PaddingEncryptedPasswordXml arg) throws Exception {
+			return new AesCfbPkcs5PaddingEncryptedPassword(
 					arg.encodedKey, 
 					arg.encrypted, 
 					arg.initializationVector);
@@ -71,19 +71,19 @@ final class AesCbcPkcs5PaddingEncryptedPassword extends EncryptedPassword {
 
 	}
 
-	private static final String CIPHER_ALGORITHM = "AES/CBC/PKCS5Padding";
+	private static final String CIPHER_ALGORITHM = "AES/CFB/PKCS5Padding";
 	private static final int KEY_LENGTH = 256;
 	private static final String SECRET_KEY_SPEC_ALGORITHM = "AES";
 
-	public static AesCbcPkcs5PaddingEncryptedPassword newInstance(
-			final AesCbcPkcs5PaddingEncryptedPasswordXml encryptedPasswordXml) {
-		return new AesCbcPkcs5PaddingEncryptedPassword(
+	public static AesCfbPkcs5PaddingEncryptedPassword newInstance(
+			final AesCfbPkcs5PaddingEncryptedPasswordXml encryptedPasswordXml) {
+		return new AesCfbPkcs5PaddingEncryptedPassword(
 				encryptedPasswordXml.encodedKey, 
 				encryptedPasswordXml.encrypted, 
 				encryptedPasswordXml.initializationVector);
 	}
 
-	private static AesCbcPkcs5PaddingEncryptedPassword newInstance(
+	private static AesCfbPkcs5PaddingEncryptedPassword newInstance(
 			final byte[] secret) {
 		KeyGenerator keyGenerator = null;
 		try {
@@ -121,13 +121,13 @@ final class AesCbcPkcs5PaddingEncryptedPassword extends EncryptedPassword {
 		} catch (BadPaddingException e) {
 			throw new AssertionError(e);
 		}
-		return new AesCbcPkcs5PaddingEncryptedPassword(
+		return new AesCfbPkcs5PaddingEncryptedPassword(
 				secretKey.getEncoded(), 
 				encrypted, 
 				ivParameterSpec.getIV());
 	}
 	
-	public static AesCbcPkcs5PaddingEncryptedPassword newInstance(
+	public static AesCfbPkcs5PaddingEncryptedPassword newInstance(
 			final char[] password) {
 		ByteArrayOutputStream byteArrayOutputStream = 
 				new ByteArrayOutputStream();
@@ -152,7 +152,7 @@ final class AesCbcPkcs5PaddingEncryptedPassword extends EncryptedPassword {
 	private final byte[] encrypted;
 	private final byte[] initializationVector;
 
-	private AesCbcPkcs5PaddingEncryptedPassword(
+	private AesCfbPkcs5PaddingEncryptedPassword(
 			final byte[] key, 
 			final byte[] enc, 
 			final byte[] iv) {
@@ -222,9 +222,9 @@ final class AesCbcPkcs5PaddingEncryptedPassword extends EncryptedPassword {
 		return password;
 	}
 
-	public AesCbcPkcs5PaddingEncryptedPasswordXml toAesCbcPkcs5PaddingEncryptedPasswordXml() {
-		AesCbcPkcs5PaddingEncryptedPasswordXml encryptedPasswordXml = 
-				new AesCbcPkcs5PaddingEncryptedPasswordXml();
+	public AesCfbPkcs5PaddingEncryptedPasswordXml toAesCbcPkcs5PaddingEncryptedPasswordXml() {
+		AesCfbPkcs5PaddingEncryptedPasswordXml encryptedPasswordXml = 
+				new AesCfbPkcs5PaddingEncryptedPasswordXml();
 		encryptedPasswordXml.encodedKey = Arrays.copyOf(
 				this.encodedKey, this.encodedKey.length);
 		encryptedPasswordXml.encrypted = Arrays.copyOf(

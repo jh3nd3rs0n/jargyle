@@ -12,6 +12,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import jargyle.client.socks5.UsernamePassword;
 import jargyle.common.net.SocketSettings;
+import jargyle.common.security.EncryptedPassword;
 import jargyle.server.socks5.Socks5RequestCriteria;
 import jargyle.server.socks5.UsernamePasswordAuthenticator;
 
@@ -28,6 +29,15 @@ public final class Setting {
 	}
 	
 	@XmlAccessorType(XmlAccessType.NONE)
+	@XmlType(name = "encryptedPasswordValue")
+	static class EncryptedPasswordValue {
+		
+		@XmlElement(name = "encryptedPassword", required = true)
+		protected EncryptedPassword value;
+		
+	}
+	
+	@XmlAccessorType(XmlAccessType.NONE)
 	@XmlType(name = "setting", propOrder = { })
 	static class SettingXml {
 		@XmlElement(name = "name", required = true)
@@ -37,6 +47,10 @@ public final class Setting {
 					name = "criteriaValue", 
 					required = true, 
 					type = CriteriaValue.class),
+			@XmlElement(
+					name = "encryptedPasswordValue",
+					required = true,
+					type = EncryptedPasswordValue.class),
 			@XmlElement(
 					name = "socketSettingsValue", 
 					required = true, 
@@ -76,6 +90,10 @@ public final class Setting {
 				CriteriaValue newVal = new CriteriaValue();
 				newVal.value = (Criteria) val;
 				settingXml.value = newVal;
+			} else if (val instanceof EncryptedPassword) {
+				EncryptedPasswordValue newVal = new EncryptedPasswordValue();
+				newVal.value = (EncryptedPassword) val;
+				settingXml.value = newVal;
 			} else if (val instanceof SocketSettings) {
 				SocketSettingsValue newVal = new SocketSettingsValue();
 				newVal.value = (SocketSettings) val;
@@ -106,6 +124,10 @@ public final class Setting {
 			Object val = v.value;
 			if (val instanceof CriteriaValue) {
 				CriteriaValue newVal = (CriteriaValue) val;
+				return newInstance(v.name, newVal.value, v.comment);
+			}
+			if (val instanceof EncryptedPasswordValue) {
+				EncryptedPasswordValue newVal = (EncryptedPasswordValue) val;
 				return newInstance(v.name, newVal.value, v.comment);
 			}
 			if (val instanceof SocketSettingsValue) {

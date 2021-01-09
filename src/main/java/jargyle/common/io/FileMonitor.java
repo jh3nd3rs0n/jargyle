@@ -91,9 +91,6 @@ public final class FileMonitor implements Runnable {
 			} catch (InterruptedException e) {
 				return;
 			}
-			if (watchKey.equals(key)) {
-				continue;
-			}
 			for (WatchEvent<?> watchEvent : key.pollEvents()) {
 				WatchEvent.Kind<?> kind = watchEvent.kind();
 				if (kind == StandardWatchEventKinds.OVERFLOW) {

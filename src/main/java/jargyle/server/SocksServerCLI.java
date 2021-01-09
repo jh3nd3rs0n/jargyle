@@ -9,12 +9,13 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.net.BindException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javax.xml.bind.JAXBException;
 
 import argmatey.ArgMatey;
 import argmatey.ArgMatey.Annotations.Ignore;
@@ -101,7 +102,7 @@ public final class SocksServerCLI extends CLI {
 			type = OptionType.POSIX
 	)
 	@Ordinal(CONFIG_FILE_OPTION_GROUP_ORDINAL)
-	private void addConfigurationFile(final String file)	throws IOException {
+	private void addConfigurationFile(final String file) throws IOException {
 		InputStream in = null;
 		if (file.equals("-")) {
 			in = System.in;
@@ -116,7 +117,7 @@ public final class SocksServerCLI extends CLI {
 		Configuration configuration = null;
 		try {
 			configuration = ImmutableConfiguration.newInstanceFrom(in);
-		} catch (JAXBException e) { 
+		} catch (IOException e) { 
 			throw new IllegalArgumentException(String.format(
 					"possible invalid XML file '%s'", file), 
 					e);
@@ -454,8 +455,7 @@ public final class SocksServerCLI extends CLI {
 			type = OptionType.POSIX
 	)
 	@Ordinal(NEW_CONFIG_FILE_OPTION_GROUP_ORDINAL)
-	private void newConfigurationFile(final String file) 
-			throws JAXBException, IOException {
+	private void newConfigurationFile(final String file) throws IOException {
 		ImmutableConfiguration immutableConfiguration = 
 				ImmutableConfiguration.newInstance(
 						this.modifiableConfiguration);
@@ -486,12 +486,10 @@ public final class SocksServerCLI extends CLI {
 			}
 		}
 		if (!file.equals("-")) {
-			File f = new File(file);
-			File tempFile = new File(tempArg);
-			if (!tempFile.renameTo(f)) {
-				throw new IOException(String.format(
-						"unable to rename '%s' to '%s'", tempFile, f));
-			}
+			Files.move(
+					Path.of(tempArg), 
+					Path.of(file), 
+					StandardCopyOption.REPLACE_EXISTING);
 		}
 		this.newConfigurationFileRequested = true;
 	}
@@ -506,7 +504,7 @@ public final class SocksServerCLI extends CLI {
 			type = OptionType.POSIX
 	)
 	@Ordinal(CONFIG_FILE_XSD_OPTION_GROUP_ORDINAL)
-	private void printConfigurationFileXsd() throws JAXBException, IOException {
+	private void printConfigurationFileXsd() throws IOException {
 		byte[] xsd = ImmutableConfiguration.getXsd();
 		System.out.write(xsd);
 		System.out.flush();

@@ -12,6 +12,7 @@ import java.util.List;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.bind.PropertyException;
 import javax.xml.bind.SchemaOutputResolver;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -53,12 +54,17 @@ public final class Users {
 		protected List<User> users = new ArrayList<User>();
 	}
 
-	public static byte[] getXsd() throws JAXBException {
+	public static byte[] getXsd() {
 		if (!XmlBindHelper.isOptimizedCodeGenerationDisabled()) {
 			XmlBindHelper.setOptimizedCodeGenerationDisabled(true);
 		}
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		JAXBContext jaxbContext = JAXBContext.newInstance(UsersXml.class);
+		JAXBContext jaxbContext = null;
+		try {
+			jaxbContext = JAXBContext.newInstance(UsersXml.class);
+		} catch (JAXBException e) {
+			throw new AssertionError(e);
+		}
 		StreamResult result = new StreamResult(out);
 		result.setSystemId("");
 		try {
@@ -97,14 +103,33 @@ public final class Users {
 	}
 	
 	public static Users newInstanceFrom(
-			final InputStream in) throws JAXBException {
+			final InputStream in) throws IOException {
 		if (!XmlBindHelper.isOptimizedCodeGenerationDisabled()) {
 			XmlBindHelper.setOptimizedCodeGenerationDisabled(true);
 		}
-		JAXBContext jaxbContext = JAXBContext.newInstance(UsersXml.class);
-		Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-		unmarshaller.setEventHandler(new DefaultValidationEventHandler());
-		UsersXml usersXml = (UsersXml) unmarshaller.unmarshal(in);
+		JAXBContext jaxbContext = null;
+		try {
+			jaxbContext = JAXBContext.newInstance(UsersXml.class);
+		} catch (JAXBException e) {
+			throw new IOException(e);
+		}
+		Unmarshaller unmarshaller = null;
+		try {
+			unmarshaller = jaxbContext.createUnmarshaller();
+		} catch (JAXBException e) {
+			throw new IOException(e);
+		}
+		try {
+			unmarshaller.setEventHandler(new DefaultValidationEventHandler());
+		} catch (JAXBException e) {
+			throw new IOException(e);
+		}
+		UsersXml usersXml = null;
+		try {
+			usersXml = (UsersXml) unmarshaller.unmarshal(in);
+		} catch (JAXBException e) {
+			throw new IOException(e);
+		}
 		return newInstance(usersXml);
 	}
 	
@@ -157,15 +182,33 @@ public final class Users {
 		return usersXml;
 	}
 	
-	public byte[] toXml() throws JAXBException {
+	public byte[] toXml() {
 		if (!XmlBindHelper.isOptimizedCodeGenerationDisabled()) {
 			XmlBindHelper.setOptimizedCodeGenerationDisabled(true);
 		}
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		JAXBContext jaxbContext = JAXBContext.newInstance(UsersXml.class);
-		Marshaller marshaller = jaxbContext.createMarshaller();
-		marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-		marshaller.marshal(this.toUsersXml(), out);
+		JAXBContext jaxbContext = null;
+		try {
+			jaxbContext = JAXBContext.newInstance(UsersXml.class);
+		} catch (JAXBException e) {
+			throw new AssertionError(e);
+		}
+		Marshaller marshaller = null;
+		try {
+			marshaller = jaxbContext.createMarshaller();
+		} catch (JAXBException e) {
+			throw new AssertionError(e);
+		}
+		try {
+			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+		} catch (PropertyException e) {
+			throw new AssertionError(e);
+		}
+		try {
+			marshaller.marshal(this.toUsersXml(), out);
+		} catch (JAXBException e) {
+			throw new AssertionError(e);
+		}
 		return out.toByteArray();
 	}
 }

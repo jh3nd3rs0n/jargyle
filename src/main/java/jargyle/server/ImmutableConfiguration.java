@@ -7,6 +7,7 @@ import java.io.InputStream;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.bind.PropertyException;
 import javax.xml.bind.SchemaOutputResolver;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -67,13 +68,18 @@ public final class ImmutableConfiguration extends Configuration {
 		
 	}
 	
-	public static byte[] getXsd() throws JAXBException {
+	public static byte[] getXsd() {
 		if (!XmlBindHelper.isOptimizedCodeGenerationDisabled()) {
 			XmlBindHelper.setOptimizedCodeGenerationDisabled(true);
 		}
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		JAXBContext jaxbContext = JAXBContext.newInstance(
-				ConfigurationXml.class);
+		JAXBContext jaxbContext = null;
+		try {
+			jaxbContext = JAXBContext.newInstance(
+					ConfigurationXml.class);
+		} catch (JAXBException e) {
+			throw new AssertionError(e);
+		}
 		StreamResult result = new StreamResult(out);
 		result.setSystemId("");
 		try {
@@ -103,16 +109,33 @@ public final class ImmutableConfiguration extends Configuration {
 	}
 	
 	public static ImmutableConfiguration newInstanceFrom(
-			final InputStream in) throws JAXBException {
+			final InputStream in) throws IOException {
 		if (!XmlBindHelper.isOptimizedCodeGenerationDisabled()) {
 			XmlBindHelper.setOptimizedCodeGenerationDisabled(true);
 		}
-		JAXBContext jaxbContext = JAXBContext.newInstance(
-				ConfigurationXml.class);
-		Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-		unmarshaller.setEventHandler(new DefaultValidationEventHandler());
-		ConfigurationXml configurationXml = 
-				(ConfigurationXml) unmarshaller.unmarshal(in);
+		JAXBContext jaxbContext = null;
+		try {
+			jaxbContext = JAXBContext.newInstance(ConfigurationXml.class);
+		} catch (JAXBException e) {
+			throw new IOException(e);
+		}
+		Unmarshaller unmarshaller = null;
+		try {
+			unmarshaller = jaxbContext.createUnmarshaller();
+		} catch (JAXBException e) {
+			throw new IOException(e);
+		}
+		try {
+			unmarshaller.setEventHandler(new DefaultValidationEventHandler());
+		} catch (JAXBException e) {
+			throw new IOException(e);
+		}
+		ConfigurationXml configurationXml;
+		try {
+			configurationXml = (ConfigurationXml) unmarshaller.unmarshal(in);
+		} catch (JAXBException e) {
+			throw new IOException(e);
+		}
 		return newInstance(configurationXml);
 	}
 	
@@ -149,16 +172,33 @@ public final class ImmutableConfiguration extends Configuration {
 		return builder.toString();
 	}
 	
-	public byte[] toXml() throws JAXBException {
+	public byte[] toXml() {
 		if (!XmlBindHelper.isOptimizedCodeGenerationDisabled()) {
 			XmlBindHelper.setOptimizedCodeGenerationDisabled(true);
 		}
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		JAXBContext jaxbContext = JAXBContext.newInstance(
-				ConfigurationXml.class);
-		Marshaller marshaller = jaxbContext.createMarshaller();
-		marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-		marshaller.marshal(this.toConfigurationXml(), out);
+		JAXBContext jaxbContext = null;
+		try {
+			jaxbContext = JAXBContext.newInstance(ConfigurationXml.class);
+		} catch (JAXBException e) {
+			throw new AssertionError(e);
+		}
+		Marshaller marshaller = null;
+		try {
+			marshaller = jaxbContext.createMarshaller();
+		} catch (JAXBException e) {
+			throw new AssertionError(e);
+		}
+		try {
+			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+		} catch (PropertyException e) {
+			throw new AssertionError(e);
+		}
+		try {
+			marshaller.marshal(this.toConfigurationXml(), out);
+		} catch (JAXBException e) {
+			throw new AssertionError(e);
+		}
 		return out.toByteArray();
 	}
 }

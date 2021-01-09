@@ -9,11 +9,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import javax.xml.bind.JAXBException;
 
 import argmatey.ArgMatey;
 import argmatey.ArgMatey.Annotations.Ignore;
@@ -122,7 +123,7 @@ public final class UsersCLI extends CLI {
 		
 		private static void newFile(
 				final Users users,
-				final String arg) throws JAXBException, IOException {
+				final String arg) throws IOException {
 			String tempArg = arg;
 			System.out.print("Writing to ");
 			OutputStream out = null;
@@ -150,12 +151,10 @@ public final class UsersCLI extends CLI {
 				}
 			}
 			if (!arg.equals("-")) {
-				File file = new File(arg);
-				File tempFile = new File(tempArg);
-				if (!tempFile.renameTo(file)) {
-					throw new IOException(String.format(
-							"unable to rename '%s' to '%s'", tempFile, file));
-				}
+				Files.move(
+						Path.of(tempArg), 
+						Path.of(arg), 
+						StandardCopyOption.REPLACE_EXISTING);
 			}
 		}
 
@@ -174,9 +173,9 @@ public final class UsersCLI extends CLI {
 			Users users = null;
 			try {
 				users = Users.newInstanceFrom(in);
-			} catch (JAXBException e) { 
+			} catch (IOException e) { 
 				throw new IllegalArgumentException(String.format(
-						"possible invalid XML file '%s'", arg), 
+						"error in reading XML file '%s'", arg), 
 						e);
 			} finally {
 				if (in instanceof FileInputStream) {
@@ -391,7 +390,7 @@ public final class UsersCLI extends CLI {
 			type = OptionType.POSIX
 	)
 	@Ordinal(XSD_OPTION_GROUP_ORDINAL)
-	private void printXsd() throws JAXBException, IOException {
+	private void printXsd() throws IOException {
 		byte[] xsd = Users.getXsd();
 		System.out.write(xsd);
 		System.out.flush();

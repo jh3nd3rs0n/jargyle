@@ -10,8 +10,6 @@ import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.xml.bind.JAXBException;
-
 import jargyle.common.io.FileMonitor;
 import jargyle.common.io.FileStatusListener;
 import jargyle.common.security.HashedPassword;
@@ -82,11 +80,11 @@ public final class XmlFileSourceUsernamePasswordAuthenticator
 								file), 
 						e);
 				return false;
-			} catch (JAXBException e) {
+			} catch (IOException e) {
 				LOGGER.log(
 						Level.WARNING, 
 						String.format(
-								"File '%s' not valid", 
+								"Error in reading file '%s'", 
 								file), 
 						e);
 				return false;
@@ -132,9 +130,9 @@ public final class XmlFileSourceUsernamePasswordAuthenticator
 			usrs = Users.newInstanceFrom(in);
 		} catch (FileNotFoundException e) {
 			throw new IllegalArgumentException(e);
-		} catch (JAXBException e) {
+		} catch (IOException e) {
 			throw new IllegalArgumentException(String.format(
-					"possible invalid XML file '%s'", value), 
+					"error in reading XML file '%s'", value), 
 					e);
 		} finally {
 			if (in != null) {

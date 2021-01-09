@@ -10,7 +10,6 @@ import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.net.BindException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
@@ -487,8 +486,8 @@ public final class SocksServerCLI extends CLI {
 		}
 		if (!file.equals("-")) {
 			Files.move(
-					Path.of(tempArg), 
-					Path.of(file), 
+					new File(tempArg).toPath(), 
+					new File(file).toPath(), 
 					StandardCopyOption.REPLACE_EXISTING);
 		}
 		this.newConfigurationFileRequested = true;

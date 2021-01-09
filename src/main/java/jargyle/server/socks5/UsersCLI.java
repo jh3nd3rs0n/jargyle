@@ -10,7 +10,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -152,8 +151,8 @@ public final class UsersCLI extends CLI {
 			}
 			if (!arg.equals("-")) {
 				Files.move(
-						Path.of(tempArg), 
-						Path.of(arg), 
+						new File(tempArg).toPath(), 
+						new File(arg).toPath(), 
 						StandardCopyOption.REPLACE_EXISTING);
 			}
 		}

@@ -92,11 +92,14 @@ public final class FileMonitor implements Runnable {
 		if (watchKey == null) { return; } 
 		while (true) {
 			WatchKey key = null;
+			/*
 			try {
 				key = watchService.take();
 			} catch (InterruptedException e) {
 				return;
 			}
+			*/
+			if ((key = watchService.poll()) == null) { continue; }
 			System.out.println("Key: " + key);
 			for (WatchEvent<?> watchEvent : key.pollEvents()) {
 				WatchEvent.Kind<?> kind = watchEvent.kind();

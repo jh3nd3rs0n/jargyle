@@ -16,7 +16,7 @@ import jargyle.ResourceNameConstants;
 
 public class XmlFileSourceUsersServiceTest {
 
-	private static final int HALF_SECOND = 500;
+	private static final int ONE_SECOND = 1000;
 	
 	private Path baseDir = null;
 	private Path usersFile = null;
@@ -51,7 +51,7 @@ public class XmlFileSourceUsersServiceTest {
 		xmlFileSourceUsersService = XmlFileSourceUsersService.newInstance(
 				usersFile.toFile());
 		try {
-			Thread.sleep(HALF_SECOND);
+			Thread.sleep(ONE_SECOND);
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
 		}
@@ -59,7 +59,7 @@ public class XmlFileSourceUsersServiceTest {
 				ResourceNameConstants.USERS_FILE), 
 				usersFile.toFile());
 		try {
-			Thread.sleep(HALF_SECOND);
+			Thread.sleep(ONE_SECOND);
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
 		}
@@ -75,7 +75,7 @@ public class XmlFileSourceUsersServiceTest {
 		xmlFileSourceUsersService = XmlFileSourceUsersService.newInstance(
 				usersFile.toFile());
 		try {
-			Thread.sleep(HALF_SECOND);
+			Thread.sleep(ONE_SECOND);
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
 		}
@@ -83,7 +83,7 @@ public class XmlFileSourceUsersServiceTest {
 				ResourceNameConstants.ADDED_USER_TO_USERS_FILE), 
 				usersFile.toFile());
 		try {
-			Thread.sleep(HALF_SECOND);
+			Thread.sleep(ONE_SECOND);
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
 		}

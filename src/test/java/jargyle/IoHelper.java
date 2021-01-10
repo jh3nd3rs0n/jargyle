@@ -10,7 +10,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
-import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.charset.Charset;
@@ -88,22 +87,17 @@ public final class IoHelper {
 		out.flush();
 	}
 	
+	public static void writeThenFlush(
+			final String string, final Writer writer) throws IOException {
+		writer.write(string);
+		writer.flush();
+	}
+	
 	public static void writeToFile(
 			final String string, final File file) throws IOException {
 		try (Writer writer = new OutputStreamWriter(
 				new FileOutputStream(file), Charset.forName("UTF-8"))) {
-			writeToWriter(string, writer);
-		}
-	}
-	
-	public static void writeToWriter(
-			final String string, final Writer writer) throws IOException {
-		try (Reader reader = new StringReader(string)) {
-			int ch = -1;
-			while ((ch = reader.read()) != -1) {
-				writer.write(ch);
-			}
-			writer.flush();
+			writeThenFlush(string, writer);
 		}
 	}
 

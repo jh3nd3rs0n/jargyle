@@ -1633,7 +1633,7 @@ The following are the classes that use logging:
 -   `jargyle.server.socks5.Socks5Worker`
 -   `jargyle.server.socks5.UdpRelayServer$IncomingPacketsWorker`
 -   `jargyle.server.socks5.UdpRelayServer$OutgoingPacketsWorker`
--   `jargyle.server.socks5.XmlFileSourceUsernamePasswordAuthenticator$UsersUpdater`
+-   `jargyle.server.socks5.XmlFileSourceUsersService$UsersUpdater`
 
 To configure logging for any of the aforementioned classes, you can use a configuration file to specify the logging properties for any of the classes.
 

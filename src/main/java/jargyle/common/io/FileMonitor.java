@@ -77,33 +77,22 @@ public final class FileMonitor implements Runnable {
 	
 	@Override
 	public void run() {
-		System.out.println("OS Name: " + System.getProperty("os.name"));
-		File absoluteFile = this.file.getAbsoluteFile();
-		System.out.println("Absolute file: " + absoluteFile.toString());
-		String parent = absoluteFile.getParent();
-		System.out.println("Parent: " + parent);
-		Path dir = Paths.get(parent);
-		System.out.println("Dir: " + dir);
 		WatchService watchService = this.newWatchService();
-		System.out.println("WatchService: " + watchService);
-		if (watchService == null) { return; } 
+		if (watchService == null) { return; }
+		File absoluteFile = this.file.getAbsoluteFile();
+		String parent = absoluteFile.getParent();
+		Path dir = Paths.get(parent);
 		WatchKey watchKey = this.register(dir, watchService);
-		System.out.println("WatchKey: " + watchKey);
 		if (watchKey == null) { return; } 
 		while (true) {
 			WatchKey key = null;
-			/*
 			try {
 				key = watchService.take();
 			} catch (InterruptedException e) {
 				return;
 			}
-			*/
-			if ((key = watchService.poll()) == null) { continue; }
-			System.out.println("Key: " + key);
 			for (WatchEvent<?> watchEvent : key.pollEvents()) {
 				WatchEvent.Kind<?> kind = watchEvent.kind();
-				System.out.println("WatchEvent.Kind: " + kind);
 				if (kind == StandardWatchEventKinds.OVERFLOW) {
 					continue;
 				}
@@ -111,7 +100,6 @@ public final class FileMonitor implements Runnable {
 				WatchEvent<Path> event = (WatchEvent<Path>) watchEvent;
 				Path filename = event.context();
 				Path child = dir.resolve(filename);
-				System.out.println("Child: " + child);
 				if (absoluteFile.equals(child.toFile())) {
 					this.notifyFileStatusListener(kind, absoluteFile);
 				}

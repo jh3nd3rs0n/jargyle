@@ -57,7 +57,7 @@ public final class IoHelper {
 		return string;
 	}
 	
-	public static void writeAsDataWithIndicatedLengthThenFlush(
+	public static void writeAsDataWithIndicatedLengthsThenFlush(
 			final byte[] b, final OutputStream out) throws IOException {
 		if (b.length == 0) {
 			out.write(b.length);

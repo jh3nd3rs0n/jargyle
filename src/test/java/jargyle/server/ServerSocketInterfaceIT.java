@@ -155,7 +155,7 @@ public class ServerSocketInterfaceIT {
 				} catch (InterruptedException e) {
 					Thread.currentThread().interrupt();
 				}
-				IoHelper.writeAsDataWithIndicatedLengthThenFlush(
+				IoHelper.writeAsDataWithIndicatedLengthsThenFlush(
 						string.getBytes(), socketOut);
 				byte[] b = IoHelper.readDataWithIndicatedLengthFrom(socketIn);
 				String returningString = new String(b);
@@ -235,7 +235,7 @@ public class ServerSocketInterfaceIT {
 			OutputStream socketOut = socketInterface.getOutputStream();
 			byte[] b = IoHelper.readDataWithIndicatedLengthFrom(socketIn);
 			String str = new String(b);
-			IoHelper.writeAsDataWithIndicatedLengthThenFlush(
+			IoHelper.writeAsDataWithIndicatedLengthsThenFlush(
 					str.getBytes(), socketOut);
 		} finally {
 			if (socketInterface != null) {

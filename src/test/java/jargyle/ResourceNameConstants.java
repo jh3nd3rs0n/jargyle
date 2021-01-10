@@ -17,14 +17,14 @@ public final class ResourceNameConstants {
 	public static final String EMPTY_CONFIGURATION_FILE = 
 			"jargyle/server/empty_configuration.xml";
 	
-	public static final String NEW_CONFIGURATION_FILE = 
-			"jargyle/server/new_configuration.xml";
-	
 	public static final String SERVER_KEY_STORE_FILE = 
 			"jargyle/server/server.jks";
 	
 	public static final String SERVER_KEY_STORE_PASSWORD_FILE = 
 			"jargyle/server/server.jks.password";
+	
+	public static final String SUPPLEMENTED_CONFIGURATION_FILE = 
+			"jargyle/server/supplemented_configuration.xml";
 	
 	private ResourceNameConstants() { }
 	

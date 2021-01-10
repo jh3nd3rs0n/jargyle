@@ -432,11 +432,11 @@ The following command creates an empty configuration file:
 ```bash
 
     java -jar target/jargyle-${VERSION}.jar \
-        --new-config-file=configuration.xml
+        --new-config-file=empty_configuration.xml
 
 ```
 
-`configuration.xml`:
+`empty_configuration.xml`:
 
 ```xml
 
@@ -495,11 +495,11 @@ The following command adds one command line options before the existing configur
         --setting=clientSocketSettings=SO_TIMEOUT=500 \
         --config-file=configuration.xml \
         --setting=socketSettings=SO_TIMEOUT=0 \
-        --new-config-file=new_configuration.xml
+        --new-config-file=supplemented_configuration.xml
 
 ```
 
-`new_configuration.xml`:
+`supplemented_configuration.xml`:
 
 ```xml
 
@@ -555,7 +555,7 @@ The following command combines the two earlier configuration files into one:
 
     java -jar target/jargyle-${VERSION}.jar \
         --config-file=configuration.xml \
-        --config-file=new_configuration.xml \
+        --config-file=supplemented_configuration.xml \
         --new-config-file=combined_configuration.xml
 
 ```

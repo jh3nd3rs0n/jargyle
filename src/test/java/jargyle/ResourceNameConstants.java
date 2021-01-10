@@ -2,6 +2,9 @@ package jargyle;
 
 public final class ResourceNameConstants {
 
+	public static final String ADDED_USER_TO_USERS_FILE =
+			"jargyle/server/added_user_to_users.xml";
+	
 	public static final String CLIENT_KEY_STORE_FILE =
 			"jargyle/server/client.jks";
 	
@@ -17,6 +20,9 @@ public final class ResourceNameConstants {
 	public static final String EMPTY_CONFIGURATION_FILE = 
 			"jargyle/server/empty_configuration.xml";
 	
+	public static final String EMPTY_USERS_FILE = 
+			"jargyle/server/empty_users.xml";
+	
 	public static final String SERVER_KEY_STORE_FILE = 
 			"jargyle/server/server.jks";
 	
@@ -25,6 +31,8 @@ public final class ResourceNameConstants {
 	
 	public static final String SUPPLEMENTED_CONFIGURATION_FILE = 
 			"jargyle/server/supplemented_configuration.xml";
+	
+	public static final String USERS_FILE = "jargyle/server/users.xml";
 	
 	private ResourceNameConstants() { }
 	

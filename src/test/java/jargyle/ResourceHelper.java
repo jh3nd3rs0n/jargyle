@@ -1,11 +1,12 @@
 package jargyle;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.Charset;
 
 public final class ResourceHelper {
 	
@@ -24,13 +25,10 @@ public final class ResourceHelper {
 	public static String getResourceAsString(final String name) {
 		ClassLoader classLoader = ResourceHelper.class.getClassLoader();
 		String string = null;
-		try (InputStream in = classLoader.getResourceAsStream(name)) {
-			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			int b = -1;
-			while ((b = in.read()) != -1) {
-				out.write(b);
-			}
-			string = new String(out.toByteArray());
+		try (Reader reader = new InputStreamReader(
+				classLoader.getResourceAsStream(name), 
+				Charset.forName("UTF-8"))) {
+			string = IoHelper.readStringFrom(reader);
 		} catch (IOException e) {
 			throw new AssertionError(e);
 		}

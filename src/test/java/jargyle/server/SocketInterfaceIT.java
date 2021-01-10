@@ -108,9 +108,10 @@ public class SocketInterfaceIT {
 			try {
 				InputStream in = this.clientSocket.getInputStream();
 				OutputStream out = this.clientSocket.getOutputStream();
-				byte[] b = IoHelper.readFrom(in);
+				byte[] b = IoHelper.readDataWithIndicatedLengthFrom(in);
 				String string = new String(b);
-				IoHelper.writeThenFlush(string.getBytes(), out);
+				IoHelper.writeAsDataWithIndicatedLengthThenFlush(
+						string.getBytes(), out);
 			} catch (IOException e) {
 				e.printStackTrace();
 			} finally {
@@ -154,8 +155,9 @@ public class SocketInterfaceIT {
 					LOOPBACK_ADDRESS, echoServer.getPort()));
 			InputStream in = echoSocketInterface.getInputStream();
 			OutputStream out = echoSocketInterface.getOutputStream();
-			IoHelper.writeThenFlush(string.getBytes(), out);
-			byte[] b = IoHelper.readFrom(in);
+			IoHelper.writeAsDataWithIndicatedLengthThenFlush(
+					string.getBytes(), out);
+			byte[] b = IoHelper.readDataWithIndicatedLengthFrom(in);
 			returningString = new String(b);
 		} finally {
 			if (echoSocketInterface != null) {

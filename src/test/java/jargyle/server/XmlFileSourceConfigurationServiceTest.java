@@ -25,37 +25,39 @@ public class XmlFileSourceConfigurationServiceTest {
 
 	@Before
 	public void setUp() throws Exception {
-		baseDir = Files.createTempDirectory("jargyle-");
-		configurationFile = baseDir.resolve("configuration.xml");
+		this.baseDir = Files.createTempDirectory("jargyle-");
+		this.configurationFile = this.baseDir.resolve("configuration.xml");
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		if (xmlFileSourceConfigurationService != null) {
-			xmlFileSourceConfigurationService = null;
+		if (this.xmlFileSourceConfigurationService != null) {
+			this.xmlFileSourceConfigurationService = null;
 		}
-		if (configurationFile != null) {
-			Files.deleteIfExists(configurationFile);
-			configurationFile = null;
+		if (this.configurationFile != null) {
+			Files.deleteIfExists(this.configurationFile);
+			this.configurationFile = null;
 		}
-		if (baseDir != null) {
-			Files.deleteIfExists(baseDir);
-			baseDir = null;
+		if (this.baseDir != null) {
+			Files.deleteIfExists(this.baseDir);
+			this.baseDir = null;
 		}
 	}
 
 	@Test
 	public void testForUpdatedConfigurationFile() throws IOException {
+		/*
 		if (System.getProperty("os.name").equals("Mac OS X")) {
 			// WatchService.take() in FileMonitor does not receive a WatchKey
 			return; 
-		} 
+		}
+		*/
 		IoHelper.writeToFile(ResourceHelper.getResourceAsString(
 				ResourceNameConstants.EMPTY_CONFIGURATION_FILE), 
-				configurationFile.toFile());
-		xmlFileSourceConfigurationService = 
+				this.configurationFile.toFile());
+		this.xmlFileSourceConfigurationService = 
 				XmlFileSourceConfigurationService.newInstance(
-						configurationFile.toFile());
+						this.configurationFile.toFile());
 		try {
 			Thread.sleep(ONE_SECOND);
 		} catch (InterruptedException e) {
@@ -63,14 +65,14 @@ public class XmlFileSourceConfigurationServiceTest {
 		}
 		IoHelper.writeToFile(ResourceHelper.getResourceAsString(
 				ResourceNameConstants.CONFIGURATION_FILE), 
-				configurationFile.toFile());
+				this.configurationFile.toFile());
 		try {
 			Thread.sleep(ONE_SECOND);
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
 		}
 		Configuration configuration = 
-				xmlFileSourceConfigurationService.getConfiguration();
+				this.xmlFileSourceConfigurationService.getConfiguration();
 		Settings settings = configuration.getSettings();
 		Port expectedPort = Port.newInstance(1234);
 		Port actualPort = settings.getLastValue(SettingSpec.PORT, Port.class);

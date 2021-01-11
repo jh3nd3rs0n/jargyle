@@ -24,36 +24,38 @@ public class XmlFileSourceUsersServiceTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		baseDir = Files.createTempDirectory("jargyle-");
-		usersFile = baseDir.resolve("users.xml");
+		this.baseDir = Files.createTempDirectory("jargyle-");
+		this.usersFile = this.baseDir.resolve("users.xml");
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		if (xmlFileSourceUsersService != null) {
-			xmlFileSourceUsersService = null;
+		if (this.xmlFileSourceUsersService != null) {
+			this.xmlFileSourceUsersService = null;
 		}
-		if (usersFile != null) {
-			Files.deleteIfExists(usersFile);
-			usersFile = null;
+		if (this.usersFile != null) {
+			Files.deleteIfExists(this.usersFile);
+			this.usersFile = null;
 		}
-		if (baseDir != null) {
-			Files.deleteIfExists(baseDir);
-			baseDir = null;
+		if (this.baseDir != null) {
+			Files.deleteIfExists(this.baseDir);
+			this.baseDir = null;
 		}		
 	}
 
 	@Test
 	public void testForUpdatedUsersFile01() throws IOException {
+		/*
 		if (System.getProperty("os.name").equals("Mac OS X")) {
 			// WatchService.take() in FileMonitor does not receive a WatchKey
 			return; 
-		} 		
+		}
+		*/
 		IoHelper.writeToFile(ResourceHelper.getResourceAsString(
 				ResourceNameConstants.EMPTY_USERS_FILE), 
-				usersFile.toFile());
-		xmlFileSourceUsersService = XmlFileSourceUsersService.newInstance(
-				usersFile.toFile());
+				this.usersFile.toFile());
+		this.xmlFileSourceUsersService = XmlFileSourceUsersService.newInstance(
+				this.usersFile.toFile());
 		try {
 			Thread.sleep(ONE_SECOND);
 		} catch (InterruptedException e) {
@@ -61,27 +63,29 @@ public class XmlFileSourceUsersServiceTest {
 		}
 		IoHelper.writeToFile(ResourceHelper.getResourceAsString(
 				ResourceNameConstants.USERS_FILE), 
-				usersFile.toFile());
+				this.usersFile.toFile());
 		try {
 			Thread.sleep(ONE_SECOND);
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
 		}
 		final int numOfUsersAdded = 3; 
-		assertTrue(xmlFileSourceUsersService.getUsers().toList().size() == numOfUsersAdded);
+		assertTrue(this.xmlFileSourceUsersService.getUsers().toList().size() == numOfUsersAdded);
 	}
 
 	@Test
 	public void testForUpdatedUsersFile02() throws IOException {
+		/*
 		if (System.getProperty("os.name").equals("Mac OS X")) {
 			// WatchService.take() in FileMonitor does not receive a WatchKey
 			return; 
-		} 		
+		}
+		*/
 		IoHelper.writeToFile(ResourceHelper.getResourceAsString(
 				ResourceNameConstants.USERS_FILE), 
-				usersFile.toFile());
-		xmlFileSourceUsersService = XmlFileSourceUsersService.newInstance(
-				usersFile.toFile());
+				this.usersFile.toFile());
+		this.xmlFileSourceUsersService = XmlFileSourceUsersService.newInstance(
+				this.usersFile.toFile());
 		try {
 			Thread.sleep(ONE_SECOND);
 		} catch (InterruptedException e) {
@@ -89,14 +93,14 @@ public class XmlFileSourceUsersServiceTest {
 		}
 		IoHelper.writeToFile(ResourceHelper.getResourceAsString(
 				ResourceNameConstants.ADDED_USER_TO_USERS_FILE), 
-				usersFile.toFile());
+				this.usersFile.toFile());
 		try {
 			Thread.sleep(ONE_SECOND);
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
 		}
 		final int numOfUsersAdded = 4; 
-		assertTrue(xmlFileSourceUsersService.getUsers().toList().size() == numOfUsersAdded);
+		assertTrue(this.xmlFileSourceUsersService.getUsers().toList().size() == numOfUsersAdded);
 	}
 
 }

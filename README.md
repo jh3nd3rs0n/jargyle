@@ -667,7 +667,7 @@ The following are the settings in the monitored configuration file that will hav
 -   `ssl.trustStoreType`
 -   `ssl.wantClientAuth`
 
-Note: If you are running Jargyle with this command line option on Mac OS X, due to a bug on Mac OS X, the running configuration will not be updated when changes are made to the monitored configuration file.
+**Note:** If you are running Jargyle with this command line option on Mac OS X, the running configuration will not be updated when changes are made to the configuration file.
 
 ### 4. 7. Enabling SSL/TLS
 

@@ -45,12 +45,6 @@ public class XmlFileSourceUsersServiceTest {
 
 	@Test
 	public void testForUpdatedUsersFile01() throws IOException {
-		/*
-		if (System.getProperty("os.name").equals("Mac OS X")) {
-			// WatchService.take() in FileMonitor does not receive a WatchKey
-			return; 
-		}
-		*/
 		IoHelper.writeToFile(ResourceHelper.getResourceAsString(
 				ResourceNameConstants.EMPTY_USERS_FILE), 
 				this.usersFile.toFile());
@@ -75,12 +69,6 @@ public class XmlFileSourceUsersServiceTest {
 
 	@Test
 	public void testForUpdatedUsersFile02() throws IOException {
-		/*
-		if (System.getProperty("os.name").equals("Mac OS X")) {
-			// WatchService.take() in FileMonitor does not receive a WatchKey
-			return; 
-		}
-		*/
 		IoHelper.writeToFile(ResourceHelper.getResourceAsString(
 				ResourceNameConstants.USERS_FILE), 
 				this.usersFile.toFile());

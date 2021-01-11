@@ -1,6 +1,24 @@
 package jargyle.common.io;
 
 import java.io.File;
+
+/*
+Method java.nio.file.WatchService.take() does not receive a WatchKey under the 
+following conditions:
+
+OS: Mac OS X
+JDK: openjdk 11
+OS: Mac OS X
+JDK: openjdk 10
+OS: Mac OS X
+JDK: openjdk 9
+OS: Mac OS X
+JDK: oraclejdk 11
+OS: Mac OS X
+JDK: oraclejdk 9
+
+Related WatchService code is commented out and kept for historical purposes. 
+*/
 /*
 import java.io.IOException;
 import java.nio.file.FileSystems;
@@ -21,70 +39,72 @@ public final class FileMonitor implements Runnable {
 			FileMonitor.class.getName());
 	*/
 
-	private static final class FileCreatedState extends FileState {
+	private static final class CreatedFileStatus extends FileStatus {
 
-		public FileCreatedState(final long time) {
+		public CreatedFileStatus(final long time) {
 			super(time);
 		}
 		
 	}
 	
-	private static final class FileDeletedState extends FileState {
+	private static final class DeletedFileStatus extends FileStatus {
 
-		public FileDeletedState(final long time) {
+		public DeletedFileStatus(final long time) {
 			super(time);
 		}
 		
 	}
 	
-	private static final class FileModifiedState extends FileState {
+	private static final class ModifiedFileStatus extends FileStatus {
 
-		public FileModifiedState(final long time) {
+		public ModifiedFileStatus(final long time) {
 			super(time);
 		}
 		
 	}
 	
-	private static final class FileNonexistentState extends FileState {
+	private static final class NonexistentFileStatus extends FileStatus {
 
-		public FileNonexistentState(final long time) {
+		public NonexistentFileStatus(final long time) {
 			super(time);
 		}
 		
 	}
 	
-	private static abstract class FileState {
+	private static abstract class FileStatus {
 		
-		public static FileState get(
-				final File file, final FileState lastFileState) {
-			if (lastFileState == null && !file.exists()) {
-				return new FileNonexistentState(System.currentTimeMillis());
+		public static FileStatus get(
+				final File file, final FileStatus lastFileStatus) {
+			if (lastFileStatus == null && !file.exists()) {
+				return new NonexistentFileStatus(System.currentTimeMillis());
 			}
-			if ((lastFileState == null 
-					|| lastFileState instanceof FileDeletedState
-					|| lastFileState instanceof FileNonexistentState) 
+			if ((lastFileStatus == null 
+					|| lastFileStatus instanceof DeletedFileStatus
+					|| lastFileStatus instanceof NonexistentFileStatus) 
 					&& file.exists()) {
-				return new FileCreatedState(System.currentTimeMillis());
+				return new CreatedFileStatus(System.currentTimeMillis());
 			}
-			if (lastFileState != null 
-					&& (lastFileState instanceof FileCreatedState
-							|| lastFileState instanceof FileModifiedState) 
+			if (lastFileStatus != null 
+					&& (lastFileStatus instanceof CreatedFileStatus
+							|| lastFileStatus instanceof ModifiedFileStatus) 
 					&& !file.exists()) {
-				return new FileDeletedState(System.currentTimeMillis());
+				return new DeletedFileStatus(System.currentTimeMillis());
 			}
-			if (lastFileState != null
-					&& (lastFileState instanceof FileCreatedState
-							|| lastFileState instanceof FileModifiedState)
-					&& file.exists()
-					&& file.lastModified() > lastFileState.since()) {
-				return new FileModifiedState(file.lastModified());
+			if (lastFileStatus != null
+					&& (lastFileStatus instanceof CreatedFileStatus
+							|| lastFileStatus instanceof ModifiedFileStatus)
+					&& file.exists()) {
+				long lastModified = file.lastModified();
+				if (lastModified > lastFileStatus.since()) {
+					return new ModifiedFileStatus(lastModified);
+				}
 			}
-			return null;
+			return lastFileStatus;
 		}
 		
 		private final long since;
 		
-		public FileState(final long time) {
+		public FileStatus(final long time) {
 			this.since = time;
 		}
 		
@@ -97,14 +117,12 @@ public final class FileMonitor implements Runnable {
 	private final File file;
 	private final FileStatusListener fileStatusListener;
 	
-	private FileState lastFileState;
+	private FileStatus lastFileStatus;
 		
-	public FileMonitor(
-			final File f, 
-			final FileStatusListener listener) {
+	public FileMonitor(final File f, final FileStatusListener listener) {
 		this.file = f;
 		this.fileStatusListener = listener;
-		this.lastFileState = FileState.get(f, null);
+		this.lastFileStatus = FileStatus.get(f, null);
 	}
 	
 	/*
@@ -193,23 +211,21 @@ public final class FileMonitor implements Runnable {
 		}
 		*/
 		while (true) {
-			FileState newFileState = FileState.get(
-					this.file, this.lastFileState);
-			if (newFileState instanceof FileCreatedState) {
+			FileStatus fileStatus = FileStatus.get(
+					this.file, this.lastFileStatus);
+			if (this.lastFileStatus.equals(fileStatus)) {
+				continue;
+			}
+			if (fileStatus instanceof CreatedFileStatus) {
 				this.fileStatusListener.fileCreated(this.file);
-				this.lastFileState = newFileState;
-				continue;
 			}
-			if (newFileState instanceof FileDeletedState) {
+			if (fileStatus instanceof DeletedFileStatus) {
 				this.fileStatusListener.fileDeleted(this.file);
-				this.lastFileState = newFileState;
-				continue;
 			}
-			if (newFileState instanceof FileModifiedState) {
+			if (fileStatus instanceof ModifiedFileStatus) {
 				this.fileStatusListener.fileModfied(this.file);
-				this.lastFileState = newFileState;
-				continue;
 			}
+			this.lastFileStatus = fileStatus;
 		}
 	}
 	

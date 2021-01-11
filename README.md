@@ -667,8 +667,6 @@ The following are the settings in the monitored configuration file that will hav
 -   `ssl.trustStoreType`
 -   `ssl.wantClientAuth`
 
-**Note:** If you are running Jargyle with this command line option on Mac OS X, the running configuration will not be updated when changes are made to the configuration file.
-
 ### 4. 7. Enabling SSL/TLS
 
 You can have clients connect to Jargyle through SSL/TLS. By default SSL/TLS is disabled. To enable SSL/TLS, you will need to have the setting `ssl.enabled` set to `true`. In addition, you will need to have the setting `ssl.keyStoreFile` to specify Jargyle's key store file (this file would need to be created by Java's keytool utility). Also, you will need to have the setting `ssl.keyStorePassword` to specify the password for Jargyle's key store file.

@@ -53,9 +53,15 @@ final class UdpRelayServer {
 				final String addr, final int prt) {
 			Objects.requireNonNull(addr);
 			UdpRequestHeader.validateDesiredDestinationAddress(addr);
-			UdpRequestHeader.validateDesiredDestinationPort(prt);			
-			this.address = addr;
-			this.port = prt; 
+			UdpRequestHeader.validateDesiredDestinationPort(prt);
+			String a = addr;
+			int p = prt;
+			if (!a.matches("[a-zA-Z1-9]") && p == 0) {
+				a = null;
+				p = -1;
+			}
+			this.address = a;
+			this.port = p; 
 		}
 		
 		public String getAddress() {
@@ -178,8 +184,7 @@ final class UdpRelayServer {
 			byte[] headerBytes = header.toByteArray();
 			InetAddress inetAddress = null;
 			try {
-				inetAddress = this.getHostnameResolver().resolve(
-						this.getSourceAddress());
+				inetAddress = InetAddress.getByName(this.getSourceAddress());
 			} catch (IOException e) {
 				LOGGER.log(
 						Level.WARNING, 
@@ -295,8 +300,7 @@ final class UdpRelayServer {
 			int port = packet.getPort();
 			InetAddress sourceInetAddr = null;
 			try {
-				sourceInetAddr = this.getHostnameResolver().resolve(
-						this.getSourceAddress());
+				sourceInetAddr = InetAddress.getByName(this.getSourceAddress());
 			} catch (IOException e) {
 				LOGGER.log(
 						Level.WARNING, 
@@ -306,7 +310,7 @@ final class UdpRelayServer {
 			}
 			InetAddress inetAddr = null;
 			try {
-				inetAddr = this.getHostnameResolver().resolve(address);
+				inetAddr = InetAddress.getByName(address);
 			} catch (IOException e) {
 				LOGGER.log(
 						Level.WARNING, 
@@ -646,12 +650,6 @@ final class UdpRelayServer {
 		Objects.requireNonNull(resolver);
 		Objects.requireNonNull(externalIncomingAddrCriteria);
 		Objects.requireNonNull(settings);
-		String desiredDestAddr = desiredDestinationSocketAddr.getAddress();
-		int desiredDestPrt = desiredDestinationSocketAddr.getPort();
-		if (!desiredDestAddr.matches("[a-zA-Z1-9]") && desiredDestPrt == 0) {
-			desiredDestAddr = null;
-			desiredDestPrt = -1;
-		}
 		this.allowedExternalIncomingAddressCriteria = 
 				externalIncomingAddrCriteria.getAllowedCriteria();
 		this.blockedExternalIncomingAddressCriteria = 
@@ -659,8 +657,9 @@ final class UdpRelayServer {
 		this.clientDatagramSocketInterface = 
 				datagramSockInterfaces.getClientDatagramSocketInterface();
 		this.bufferSize = settings.getBufferSize();
-		this.desiredDestinationAddress = desiredDestAddr;
-		this.desiredDestinationPort = desiredDestPrt;
+		this.desiredDestinationAddress = 
+				desiredDestinationSocketAddr.getAddress();
+		this.desiredDestinationPort = desiredDestinationSocketAddr.getPort();
 		this.executor = null;
 		this.firstPacketsWorkerFinished = false;
 		this.hostnameResolver = resolver;

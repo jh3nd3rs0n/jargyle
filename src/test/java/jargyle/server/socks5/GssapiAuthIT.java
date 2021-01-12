@@ -77,10 +77,18 @@ public class GssapiAuthIT {
 		kerbyServer.exportPrincipal(RCMD_SERVICE_PRINCIPAL, rcmdKeytab.toFile());
 		kerbyServer.start();
 		
+		String aliceKeytabPathString = aliceKeytab.toUri().toString();
+		
+		String rcmdKeytabPathString = rcmdKeytab.toUri().toString();
+		
+		System.out.println(aliceKeytabPathString);
+		System.out.println(rcmdKeytabPathString);
+		
+		/*		
 		String aliceKeytabPathString = aliceKeytab.toAbsolutePath().toString();
 		
 		String rcmdKeytabPathString = rcmdKeytab.toAbsolutePath().toString();
-		
+
 		if ("\\".equals(System.getProperty("file.separator"))) {
 			aliceKeytabPathString = "///".concat(aliceKeytabPathString)
 					.replace("\\:", "/")
@@ -89,7 +97,7 @@ public class GssapiAuthIT {
 					.replace("\\:", "/")
 					.replace('\\', '/');
 		}
-		
+		*/
 		FileWriter w = new FileWriter(loginConf.toFile());
 		w.write("com.sun.security.jgss.initiate {\n");
 		w.write("  com.sun.security.auth.module.Krb5LoginModule required\n");

@@ -54,7 +54,7 @@ public class GssapiAuthIT {
 	private static SimpleKdcServer kerbyServer = null;
 
 	@BeforeClass
-	public static void setUp() throws IOException, KrbException {
+	public static void setUpBeforeClass() throws IOException, KrbException {
 		
 		baseDir = Files.createTempDirectory("jargyle-");
 		loginConf = Files.createFile(baseDir.resolve("login.conf"));
@@ -77,27 +77,9 @@ public class GssapiAuthIT {
 		kerbyServer.exportPrincipal(RCMD_SERVICE_PRINCIPAL, rcmdKeytab.toFile());
 		kerbyServer.start();
 		
-		String aliceKeytabPathString = aliceKeytab.toUri().toString();
+		String aliceKeytabUriString = aliceKeytab.toUri().toString();
+		String rcmdKeytabUriString = rcmdKeytab.toUri().toString();
 		
-		String rcmdKeytabPathString = rcmdKeytab.toUri().toString();
-		
-		System.out.println(aliceKeytabPathString);
-		System.out.println(rcmdKeytabPathString);
-		
-		/*		
-		String aliceKeytabPathString = aliceKeytab.toAbsolutePath().toString();
-		
-		String rcmdKeytabPathString = rcmdKeytab.toAbsolutePath().toString();
-
-		if ("\\".equals(System.getProperty("file.separator"))) {
-			aliceKeytabPathString = "///".concat(aliceKeytabPathString)
-					.replace("\\:", "/")
-					.replace('\\', '/');
-			rcmdKeytabPathString = "///".concat(rcmdKeytabPathString)
-					.replace("\\:", "/")
-					.replace('\\', '/');
-		}
-		*/
 		FileWriter w = new FileWriter(loginConf.toFile());
 		w.write("com.sun.security.jgss.initiate {\n");
 		w.write("  com.sun.security.auth.module.Krb5LoginModule required\n");
@@ -105,7 +87,7 @@ public class GssapiAuthIT {
 				"  principal=\"%s\"\n", ALICE_PRINCIPAL));		
 		w.write("  useKeyTab=true\n");
 		w.write(String.format(
-				"  keyTab=\"%s\"\n", aliceKeytabPathString));
+				"  keyTab=\"%s\"\n", aliceKeytabUriString));
 		w.write("  storeKey=true;\n");
 		w.write("};\n");
 		w.write("com.sun.security.jgss.accept {\n");
@@ -114,7 +96,7 @@ public class GssapiAuthIT {
 				"  principal=\"%s\"\n", RCMD_SERVICE_PRINCIPAL));		
 		w.write("  useKeyTab=true\n");
 		w.write(String.format(
-				"  keyTab=\"%s\"\n", rcmdKeytabPathString));
+				"  keyTab=\"%s\"\n", rcmdKeytabUriString));
 		w.write("  storeKey=true;\n");
 		w.write("};\n");
 		w.flush();
@@ -127,7 +109,7 @@ public class GssapiAuthIT {
 	}
 	
 	@AfterClass
-	public static void tearDown() throws IOException, KrbException {
+	public static void tearDownAfterClass() throws IOException, KrbException {
 		if (kerbyServer != null) {
 			kerbyServer.stop();
 			kerbyServer = null;

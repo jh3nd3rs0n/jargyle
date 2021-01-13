@@ -95,7 +95,7 @@ After running the aforementioned command, the executable jar file and its copied
     
 ```
 
-`${VERSION}` would be replaced by the actual version shown within the name of the executable jar file.
+`${VERSION}` is replaced by the actual version shown within the name of the executable jar file.
 
 ## 4. Running Jargyle 
 

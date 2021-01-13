@@ -82,13 +82,28 @@ To build and package Jargyle as an executable jar file, run the following comman
 
 ```
 
+After running the aforementioned command, the executable jar file and its copied dependencies can be found in the following paths:
+
+```text
+    
+    target/jargyle-${VERSION}.jar
+    target/lib/activation-1.1.1.jar
+    target/lib/jaxb-api-2.3.1.jar
+    target/lib/jaxb-core-2.3.0.jar
+    target/lib/jaxb-impl-2.3.0.jar
+    target/lib/jaxb-runtime-2.3.1.jar
+    
+```
+
+`${VERSION}` would be replaced by the actual version shown within the name of the executable jar file.
+
 ## 4. Running Jargyle 
 
 To run Jargyle without any command line arguments, you can run the following command:
 
 ```bash
 
-    java -jar target/jargyle-${VERSION}.jar
+    java -jar jargyle-${VERSION}.jar
 
 ```
 
@@ -431,7 +446,7 @@ The following command creates an empty configuration file:
 
 ```bash
 
-    java -jar target/jargyle-${VERSION}.jar \
+    java -jar jargyle-${VERSION}.jar \
         --new-config-file=empty_configuration.xml
 
 ```
@@ -451,7 +466,7 @@ The following command creates a configuration file with the port number, the num
 
 ```bash
 
-    java -jar target/jargyle-${VERSION}.jar \
+    java -jar jargyle-${VERSION}.jar \
         --setting=port=1234 \
         --setting=backlog=100 \
         --setting=socks5.authMethods=NO_AUTHENTICATION_REQUIRED \
@@ -491,7 +506,7 @@ The following command adds one command line options before the existing configur
 
 ```bash
 
-    java -jar target/jargyle-${VERSION}.jar \
+    java -jar jargyle-${VERSION}.jar \
         --setting=clientSocketSettings=SO_TIMEOUT=500 \
         --config-file=configuration.xml \
         --setting=socketSettings=SO_TIMEOUT=0 \
@@ -553,7 +568,7 @@ The following command combines the two earlier configuration files into one:
 
 ```bash
 
-    java -jar target/jargyle-${VERSION}.jar \
+    java -jar jargyle-${VERSION}.jar \
         --config-file=configuration.xml \
         --config-file=supplemented_configuration.xml \
         --new-config-file=combined_configuration.xml
@@ -626,7 +641,7 @@ To run Jargyle with a configuration file, you can use the command line option `-
 
 ```bash
 
-    java -jar target/jargyle-${VERSION}.jar \
+    java -jar jargyle-${VERSION}.jar \
         --config-file=configuration.xml
 
 ```
@@ -641,7 +656,7 @@ To run Jargyle with a monitored configuration file, you can use the command line
 
 ```bash
 
-    java -jar target/jargyle-${VERSION}.jar \
+    java -jar jargyle-${VERSION}.jar \
         --monitored-config-file=configuration.xml
 
 ```
@@ -667,13 +682,15 @@ The following are the settings in the monitored configuration file that will hav
 -   `ssl.trustStoreType`
 -   `ssl.wantClientAuth`
 
+A restart of Jargyle would be required if you want any of the changed aforementioned settings to be applied to the running configuration.
+
 ### 4. 7. Enabling SSL/TLS
 
 You can have clients connect to Jargyle through SSL/TLS. By default SSL/TLS is disabled. To enable SSL/TLS, you will need to have the setting `ssl.enabled` set to `true`. In addition, you will need to have the setting `ssl.keyStoreFile` to specify Jargyle's key store file (this file would need to be created by Java's keytool utility). Also, you will need to have the setting `ssl.keyStorePassword` to specify the password for Jargyle's key store file.
 
 ```text
 
-    java -jar target/jargyle-${VERSION}.jar \
+    java -jar jargyle-${VERSION}.jar \
         --setting=ssl.enabled=true \
         --setting=ssl.keyStoreFile=server.jks \
         --setting=ssl.keyStorePassword=password
@@ -684,7 +701,7 @@ If you do not want to have the password appear in any script or in any part of t
 
 ```text
 
-    java -jar target/jargyle-${VERSION}.jar \
+    java -jar jargyle-${VERSION}.jar \
         --setting=ssl.enabled=true \
         --setting=ssl.keyStoreFile=server.jks \
         --enter-ssl-key-store-pass
@@ -695,7 +712,7 @@ If you want to have the client authenticate using SSL/TLS, you will need to have
 
 ```text
 
-    java -jar target/jargyle-${VERSION}.jar \
+    java -jar jargyle-${VERSION}.jar \
         --setting=ssl.enabled=true \
         --setting=ssl.keyStoreFile=server.jks \
         --setting=ssl.keyStorePassword=password \
@@ -709,7 +726,7 @@ If you do not want to have the password appear in any script or in any part of t
 
 ```text
 
-    java -jar target/jargyle-${VERSION}.jar \
+    java -jar jargyle-${VERSION}.jar \
         --setting=ssl.enabled=true \
         --setting=ssl.keyStoreFile=server.jks \
         --enter-ssl-key-store-pass \
@@ -729,7 +746,7 @@ To create a users file, you would run the following command:
 
 ```bash
 
-    java -jar target/jargyle-${VERSION}.jar \
+    java -jar jargyle-${VERSION}.jar \
         --socks5-users create-new-file FILE
 
 ```
@@ -740,7 +757,7 @@ Once you have run the command, an interactive prompt will ask you if you want to
 
 ```text
 
-    java -jar target/jargyle-${VERSION}.jar \
+    java -jar jargyle-${VERSION}.jar \
         --socks5-users create-new-file users.xml
     Would you like to enter a user? ('Y' for yes): 
 
@@ -829,7 +846,7 @@ To add users to an existing users file, you would run the following command:
 
 ```bash
 
-    java -jar target/jargyle-${VERSION}.jar \
+    java -jar jargyle-${VERSION}.jar \
         --socks5-users add-users-to-file FILE
 
 ```
@@ -840,7 +857,7 @@ Once you have run the command, an interactive prompt will ask you for the new us
 
 ```text
 
-    java -jar target/jargyle-${VERSION}.jar \
+    java -jar jargyle-${VERSION}.jar \
         --socks5-users add-users-to-file users.xml
     User
     Name: Jafar
@@ -896,7 +913,7 @@ To remove a user from an existing users file, you would run the following comman
 
 ```bash
 
-    java -jar target/jargyle-${VERSION}.jar \
+    java -jar jargyle-${VERSION}.jar \
         --socks5-users remove-user NAME FILE
 
 ```
@@ -907,7 +924,7 @@ Once you have run the command, the user of the specified name will be removed fr
 
 ```text
 
-    java -jar target/jargyle-${VERSION}.jar \
+    java -jar jargyle-${VERSION}.jar \
         --socks5-users remove-user Jafar users.xml
     User 'Jafar' removed
     Writing to 'users.xml'...
@@ -1133,7 +1150,7 @@ The following is a sufficient example of using the Kerberos security mechanism:
     java -Djavax.security.auth.useSubjectCredsOnly=false \
         -Djava.security.auth.login.config=login.conf \
         -Djava.security.krb5.conf=krb5.conf \
-        -jar target/jargyle-${VERSION}.jar \
+        -jar jargyle-${VERSION}.jar \
         --setting=socks5.authMethods=GSSAPI 
 
 ```
@@ -1447,7 +1464,7 @@ The following is a sufficient example of using the Kerberos security mechanism:
     java -Djavax.security.auth.useSubjectCredsOnly=false \
         -Djava.security.auth.login.config=login.conf \
         -Djava.security.krb5.conf=krb5.conf \
-        -jar target/jargyle-${VERSION}.jar \
+        -jar jargyle-${VERSION}.jar \
         --setting=chaining.socksServerUri=socks5://127.0.0.1:23456 \
         --setting=chaining.socks5.authMethods=GSSAPI \
         --setting=chaining.socks5.gssapiServiceName=rcmd/127.0.0.1 
@@ -1664,7 +1681,7 @@ Example:
 ```bash
     
     java -Djava.util.logging.config.file=logging.properties \
-        -jar target/jargyle-${VERSION}.jar
+        -jar jargyle-${VERSION}.jar
     
 ```
 

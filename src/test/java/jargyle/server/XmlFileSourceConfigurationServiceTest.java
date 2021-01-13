@@ -14,6 +14,7 @@ import jargyle.IoHelper;
 import jargyle.ResourceHelper;
 import jargyle.ResourceNameConstants;
 import jargyle.common.net.Port;
+import jargyle.common.util.NonnegativeInteger;
 
 public class XmlFileSourceConfigurationServiceTest {
 
@@ -45,7 +46,7 @@ public class XmlFileSourceConfigurationServiceTest {
 	}
 
 	@Test
-	public void testForUpdatedConfigurationFile() throws IOException {
+	public void testForUpdatedConfigurationFile01() throws IOException {
 		IoHelper.writeToFile(ResourceHelper.getResourceAsString(
 				ResourceNameConstants.EMPTY_CONFIGURATION_FILE), 
 				this.configurationFile.toFile());
@@ -71,6 +72,36 @@ public class XmlFileSourceConfigurationServiceTest {
 		Port expectedPort = Port.newInstance(1234);
 		Port actualPort = settings.getLastValue(SettingSpec.PORT, Port.class);
 		assertEquals(expectedPort, actualPort);
+	}
+
+	@Test
+	public void testForUpdatedConfigurationFile02() throws IOException {
+		IoHelper.writeToFile(ResourceHelper.getResourceAsString(
+				ResourceNameConstants.EMPTY_CONFIGURATION_FILE), 
+				this.configurationFile.toFile());
+		this.xmlFileSourceConfigurationService = 
+				XmlFileSourceConfigurationService.newInstance(
+						this.configurationFile.toFile());
+		try {
+			Thread.sleep(ONE_SECOND);
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+		}
+		IoHelper.writeToFile(ResourceHelper.getResourceAsString(
+				ResourceNameConstants.CONFIGURATION_FILE), 
+				this.configurationFile.toFile());
+		try {
+			Thread.sleep(ONE_SECOND);
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+		}
+		Configuration configuration = 
+				this.xmlFileSourceConfigurationService.getConfiguration();
+		Settings settings = configuration.getSettings();
+		NonnegativeInteger expectedBacklog = NonnegativeInteger.newInstance(100);
+		NonnegativeInteger actualBacklog = settings.getLastValue(
+				SettingSpec.BACKLOG, NonnegativeInteger.class);
+		assertEquals(expectedBacklog, actualBacklog);
 	}
 
 }

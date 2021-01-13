@@ -6,52 +6,55 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import jargyle.IoHelper;
 import jargyle.ResourceHelper;
 import jargyle.ResourceNameConstants;
+import jargyle.common.net.Port;
 
 public class SocksServerTest {
 
-	private static Path baseDir = null;
-	private static Path combinedConfigurationFile = null;
-	private static Path configurationFile = null;
-	private static Path emptyConfigurationFile = null;
-	private static Path supplementedConfigurationFile = null;
+	private static final int ONE_SECOND = 1000;
 	
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-		baseDir = Files.createTempDirectory("jargyle-");
-		combinedConfigurationFile = baseDir.resolve("combined_configuration.xml");
-		configurationFile = baseDir.resolve("configuration.xml");
-		emptyConfigurationFile = baseDir.resolve("empty_configuration.xml");
-		supplementedConfigurationFile = baseDir.resolve("supplemented_configuration.xml");		
+	private Path baseDir = null;
+	private Path combinedConfigurationFile = null;
+	private Path configurationFile = null;
+	private Path emptyConfigurationFile = null;
+	private Path supplementedConfigurationFile = null;
+	
+	@Before
+	public void setUpBeforeClass() throws Exception {
+		this.baseDir = Files.createTempDirectory("jargyle-");
+		this.combinedConfigurationFile = this.baseDir.resolve("combined_configuration.xml");
+		this.configurationFile = this.baseDir.resolve("configuration.xml");
+		this.emptyConfigurationFile = this.baseDir.resolve("empty_configuration.xml");
+		this.supplementedConfigurationFile = this.baseDir.resolve("supplemented_configuration.xml");		
 	}
 
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-		if (supplementedConfigurationFile != null) {
-			Files.deleteIfExists(supplementedConfigurationFile);
-			supplementedConfigurationFile = null;
+	@After
+	public void tearDownAfterClass() throws Exception {
+		if (this.supplementedConfigurationFile != null) {
+			Files.deleteIfExists(this.supplementedConfigurationFile);
+			this.supplementedConfigurationFile = null;
 		}
-		if (emptyConfigurationFile != null) {
-			Files.deleteIfExists(emptyConfigurationFile);
-			emptyConfigurationFile = null;
+		if (this.emptyConfigurationFile != null) {
+			Files.deleteIfExists(this.emptyConfigurationFile);
+			this.emptyConfigurationFile = null;
 		}
-		if (configurationFile != null) {
-			Files.deleteIfExists(configurationFile);
-			configurationFile = null;
+		if (this.configurationFile != null) {
+			Files.deleteIfExists(this.configurationFile);
+			this.configurationFile = null;
 		}
-		if (combinedConfigurationFile != null) {
-			Files.deleteIfExists(combinedConfigurationFile);
-			combinedConfigurationFile = null;
+		if (this.combinedConfigurationFile != null) {
+			Files.deleteIfExists(this.combinedConfigurationFile);
+			this.combinedConfigurationFile = null;
 		}
-		if (baseDir != null) {
-			Files.deleteIfExists(baseDir);
-			baseDir = null;
+		if (this.baseDir != null) {
+			Files.deleteIfExists(this.baseDir);
+			this.baseDir = null;
 		}
 	}
 
@@ -63,7 +66,7 @@ public class SocksServerTest {
 				"--config-file=".concat(ResourceHelper.getResourceAsFile(
 						ResourceNameConstants.SUPPLEMENTED_CONFIGURATION_FILE).getAbsolutePath()),
 				"--new-config-file=".concat(
-						combinedConfigurationFile.toAbsolutePath().toString())
+						this.combinedConfigurationFile.toAbsolutePath().toString())
 		};
 		SocksServer.main(args);
 		String expectedCombinedConfigurationFileContents =
@@ -71,7 +74,7 @@ public class SocksServerTest {
 						ResourceNameConstants.COMBINED_CONFIGURATION_FILE).replace(
 								"\r\n", "\n").trim();
 		String actualCombinedConfigurationFileContents =
-				IoHelper.readStringFrom(combinedConfigurationFile.toFile()).replace(
+				IoHelper.readStringFrom(this.combinedConfigurationFile.toFile()).replace(
 						"\r\n", "\n").trim();
 		assertEquals(
 				expectedCombinedConfigurationFileContents, 
@@ -85,7 +88,7 @@ public class SocksServerTest {
 				"--setting=backlog=100",
 				"--setting=socks5.authMethods=NO_AUTHENTICATION_REQUIRED",
 				"--new-config-file=".concat(
-						configurationFile.toAbsolutePath().toString())
+						this.configurationFile.toAbsolutePath().toString())
 		};
 		SocksServer.main(args);
 		String expectedConfigurationFileContents =
@@ -93,7 +96,7 @@ public class SocksServerTest {
 						ResourceNameConstants.CONFIGURATION_FILE).replace(
 								"\r\n", "\n").trim();
 		String actualConfigurationFileContents =
-				IoHelper.readStringFrom(configurationFile.toFile()).replace(
+				IoHelper.readStringFrom(this.configurationFile.toFile()).replace(
 						"\r\n", "\n").trim();
 		assertEquals(
 				expectedConfigurationFileContents, 
@@ -104,7 +107,7 @@ public class SocksServerTest {
 	public void testMainForCreatingAnEmptyConfigurationFile() throws IOException {
 		String[] args = new String[] {
 				"--new-config-file=".concat(
-						emptyConfigurationFile.toAbsolutePath().toString())
+						this.emptyConfigurationFile.toAbsolutePath().toString())
 		};
 		SocksServer.main(args);
 		String expectedEmptyConfigurationFileContents =
@@ -112,7 +115,7 @@ public class SocksServerTest {
 						ResourceNameConstants.EMPTY_CONFIGURATION_FILE).replace(
 								"\r\n", "\n").trim();
 		String actualEmptyConfigurationFileContents =
-				IoHelper.readStringFrom(emptyConfigurationFile.toFile()).replace(
+				IoHelper.readStringFrom(this.emptyConfigurationFile.toFile()).replace(
 						"\r\n", "\n").trim();
 		assertEquals(
 				expectedEmptyConfigurationFileContents, 
@@ -127,7 +130,7 @@ public class SocksServerTest {
 						ResourceNameConstants.CONFIGURATION_FILE).getAbsolutePath()),
 				"--setting=socketSettings=SO_TIMEOUT=0",
 				"--new-config-file=".concat(
-						supplementedConfigurationFile.toAbsolutePath().toString())
+						this.supplementedConfigurationFile.toAbsolutePath().toString())
 		};
 		SocksServer.main(args);
 		String expectedSupplementedConfigurationFileContents =
@@ -135,11 +138,49 @@ public class SocksServerTest {
 						ResourceNameConstants.SUPPLEMENTED_CONFIGURATION_FILE).replace(
 								"\r\n", "\n").trim();
 		String actualSupplementedConfigurationFileContents =
-				IoHelper.readStringFrom(supplementedConfigurationFile.toFile()).replace(
+				IoHelper.readStringFrom(this.supplementedConfigurationFile.toFile()).replace(
 						"\r\n", "\n").trim();
 		assertEquals(
 				expectedSupplementedConfigurationFileContents, 
 				actualSupplementedConfigurationFileContents);
+	}
+	
+	@Test
+	public void testGetPortForChangingConfiguration() throws IOException {
+		IoHelper.writeToFile(
+				ResourceHelper.getResourceAsString(
+						ResourceNameConstants.EMPTY_CONFIGURATION_FILE), 
+				this.configurationFile.toFile());
+		ConfigurationService configurationService = 
+				XmlFileSourceConfigurationService.newInstance(
+						this.configurationFile.toFile());
+		Configuration configuration = 
+				new MutableConfiguration(configurationService);
+		SocksServer socksServer = new SocksServer(configuration);
+		try {
+			socksServer.start();
+			try {
+				Thread.sleep(ONE_SECOND);
+			} catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
+			}		
+			IoHelper.writeToFile(
+					ResourceHelper.getResourceAsString(
+							ResourceNameConstants.CONFIGURATION_FILE), 
+					this.configurationFile.toFile());
+			try {
+				Thread.sleep(ONE_SECOND);
+			} catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
+			}
+			Port expectedPort = Port.newInstance(1080);
+			Port actualPort = socksServer.getPort();
+			assertEquals(expectedPort, actualPort);
+		} finally {
+			if (socksServer.isStarted()) {
+				socksServer.stop();
+			}
+		}
 	}
 
 }

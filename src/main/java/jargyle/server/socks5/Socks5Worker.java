@@ -783,6 +783,7 @@ public final class Socks5Worker implements Runnable {
 		return String.format("%s: %s", this, message);
 	}
 	
+	@SuppressWarnings("resource")
 	private DatagramSocketInterface newClientDatagramSocketInterface() {
 		DatagramSocketInterface clientDatagramSockInterface = null;
 		try {
@@ -792,20 +793,6 @@ public final class Socks5Worker implements Runnable {
 			InetAddress bindInetAddress = bindHost.toInetAddress();
 			clientDatagramSockInterface = new DirectDatagramSocketInterface(
 					new DatagramSocket(new InetSocketAddress(bindInetAddress, 0)));
-			/*
-			if (this.settings.getLastValue(
-					SettingSpec.SSL_ENABLED, Boolean.class).booleanValue()) {
-				// TODO DtlsDatagramSocketInterface
-			}
-			*/
-			if (this.clientSocketInterface instanceof GssSocketInterface) {
-				GssSocketInterface gssSocketInterface = 
-						(GssSocketInterface) this.clientSocketInterface;
-				clientDatagramSockInterface = new GssDatagramSocketInterface(
-						clientDatagramSockInterface,
-						gssSocketInterface.getGSSContext(),
-						gssSocketInterface.getMessageProp());
-			}
 		} catch (SocketException e) {
 			LOGGER.log(
 					Level.WARNING, 
@@ -822,9 +809,47 @@ public final class Socks5Worker implements Runnable {
 			try {
 				this.writeThenFlush(socks5Rep.toByteArray());
 			} catch (IOException e1) {
-				return null;
+				LOGGER.log(
+						Level.WARNING, 
+						this.format("Error in writing SOCKS5 reply"), 
+						e1);
 			}
 			return null;
+		}
+		try {
+			clientDatagramSockInterface = this.wrapIfRequired(
+					clientDatagramSockInterface);
+		} catch (IOException e) {
+			LOGGER.log(
+					Level.WARNING, 
+					this.format("Error in wrapping the client-facing UDP "
+							+ "socket"), 
+					e);
+			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
+					Reply.GENERAL_SOCKS_SERVER_FAILURE);
+			LOGGER.log(
+					Level.FINE, 
+					this.format(String.format(
+							"Sending %s", 
+							socks5Rep.toString())));
+			try {
+				this.writeThenFlush(socks5Rep.toByteArray());
+			} catch (IOException e1) {
+				LOGGER.log(
+						Level.WARNING, 
+						this.format("Error in writing SOCKS5 reply"), 
+						e1);				
+			}
+			clientDatagramSockInterface.close();
+			return null;
+		}
+		if (this.clientSocketInterface instanceof GssSocketInterface) {
+			GssSocketInterface gssSocketInterface = 
+					(GssSocketInterface) this.clientSocketInterface;
+			clientDatagramSockInterface = new GssDatagramSocketInterface(
+					clientDatagramSockInterface,
+					gssSocketInterface.getGSSContext(),
+					gssSocketInterface.getMessageProp());
 		}
 		return clientDatagramSockInterface;
 	}
@@ -861,7 +886,10 @@ public final class Socks5Worker implements Runnable {
 			try {
 				this.writeThenFlush(socks5Rep.toByteArray());
 			} catch (IOException e1) {
-				return null;
+				LOGGER.log(
+						Level.WARNING, 
+						this.format("Error in writing SOCKS5 reply"), 
+						e1);
 			}
 			return null;
 		}
@@ -1036,7 +1064,20 @@ public final class Socks5Worker implements Runnable {
 			.append("]");
 		return builder.toString();
 	}
-
+	
+	private DatagramSocketInterface wrapIfRequired(
+			final DatagramSocketInterface datagramSocketInterface) 
+			throws IOException {
+		/*
+		if (!this.socks5Client.getProperties().getValue(
+				PropertySpec.SSL_ENABLED, Boolean.class).booleanValue()) {
+			return datagramSocketInterface;
+		}
+		// TODO DtlsDatagramSocketInterface
+		*/
+		return datagramSocketInterface;			
+	}
+	
 	private void writeThenFlush(final byte[] b) throws IOException {
 		this.clientOutputStream.write(b);
 		this.clientOutputStream.flush();

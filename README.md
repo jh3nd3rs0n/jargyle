@@ -669,18 +669,6 @@ The following are the settings in the monitored configuration file that will hav
 -   `host`
 -   `port`
 -   `socketSettings`
--   `ssl.enabled`
--   `ssl.enabledCipherSuites`
--   `ssl.enabledProtocols`
--   `ssl.keyStoreFile`
--   `ssl.keyStorePassword`
--   `ssl.keyStoreType`
--   `ssl.needClientAuth`
--   `ssl.protocol`
--   `ssl.trustStoreFile`
--   `ssl.trustStorePassword` 
--   `ssl.trustStoreType`
--   `ssl.wantClientAuth`
 
 A restart of Jargyle would be required if you want any of the changed aforementioned settings to be applied to the running configuration.
 

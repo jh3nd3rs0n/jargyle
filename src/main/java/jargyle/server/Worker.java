@@ -2,12 +2,11 @@ package jargyle.server;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.Socket;
 import java.net.SocketException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import jargyle.common.net.DirectSocketInterface;
+import jargyle.common.net.SocketInterface;
 import jargyle.common.net.SocketSettings;
 import jargyle.common.net.socks5.Version;
 import jargyle.common.util.Criteria;
@@ -19,20 +18,22 @@ final class Worker implements Runnable {
 	private static final Logger LOGGER = Logger.getLogger(
 			Worker.class.getName());
 	
-	private final Socket clientSocket;
+	private final SocketInterface clientSocketInterface;
 	private final Configuration configuration;
 	private final Settings settings;
 	
 	public Worker(
-			final Socket clientSock, 
+			final SocketInterface clientSockInterface, 
 			final Configuration config) {
-		this.clientSocket = clientSock;
+		this.clientSocketInterface = clientSockInterface;
 		this.configuration = config;
 		this.settings = config.getSettings();
 	}
 	
-	private boolean canAcceptClientSocket(final Socket clientSocket) {
-		String clientAddress = clientSocket.getInetAddress().getHostAddress();
+	private boolean canAcceptClientSocketInterface(
+			final SocketInterface clientSocketInterface) {
+		String clientAddress = 
+				clientSocketInterface.getInetAddress().getHostAddress();
 		Criteria allowedClientAddressCriteria = this.settings.getLastValue(
 				SettingSpec.ALLOWED_CLIENT_ADDRESS_CRITERIA, Criteria.class);
 		Criterion criterion = allowedClientAddressCriteria.anyEvaluatesTrue(
@@ -62,11 +63,12 @@ final class Worker implements Runnable {
 		return true;
 	}
 	
-	private boolean configureClientSocket(final Socket clientSocket) {
+	private boolean configureClientSocketInterface(
+			final SocketInterface clientSocketInterface) {
 		try {
 			SocketSettings socketSettings =	this.settings.getLastValue(
 					SettingSpec.CLIENT_SOCKET_SETTINGS, SocketSettings.class);
-			socketSettings.applyTo(new DirectSocketInterface(clientSocket));
+			socketSettings.applyTo(clientSocketInterface);
 		} catch (SocketException e) {
 			LOGGER.log(
 					Level.WARNING, 
@@ -83,13 +85,16 @@ final class Worker implements Runnable {
 	
 	public void run() {
 		try {
-			if (!this.canAcceptClientSocket(this.clientSocket)) {
+			if (!this.canAcceptClientSocketInterface(
+					this.clientSocketInterface)) {
 				return;
 			}
-			if (!this.configureClientSocket(this.clientSocket)) {
+			if (!this.configureClientSocketInterface(
+					this.clientSocketInterface)) {
 				return;
 			}
-			InputStream clientInputStream = this.clientSocket.getInputStream();
+			InputStream clientInputStream = 
+					this.clientSocketInterface.getInputStream();
 			int version = -1;
 			try {
 				version = clientInputStream.read();
@@ -103,7 +108,7 @@ final class Worker implements Runnable {
 			}
 			if ((byte) version == Version.V5.byteValue()) {
 				Socks5Worker socks5Worker = new Socks5Worker(
-						new DirectSocketInterface(this.clientSocket), 
+						this.clientSocketInterface, 
 						this.configuration);
 				socks5Worker.run();
 			} else {
@@ -119,9 +124,9 @@ final class Worker implements Runnable {
 					this.format("Internal server error"), 
 					t);
 		} finally {
-			if (!this.clientSocket.isClosed()) {
+			if (!this.clientSocketInterface.isClosed()) {
 				try {
-					this.clientSocket.close();
+					this.clientSocketInterface.close();
 				} catch (IOException e) {
 					LOGGER.log(
 							Level.WARNING, 
@@ -137,8 +142,8 @@ final class Worker implements Runnable {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append(this.getClass().getSimpleName())
-			.append(" [clientSocket=")
-			.append(this.clientSocket)
+			.append(" [clientSocketInterface=")
+			.append(this.clientSocketInterface)
 			.append("]");
 		return builder.toString();
 	}

@@ -95,6 +95,37 @@ public abstract class SocksClient {
 						InetAddress.getByName(socksServerUri.getHost()), 
 						socksServerUri.getPort()), 
 				timeout);
+		return this.wrapIfRequired(socketInterface);
+	}
+	
+	public final Properties getProperties() {
+		return this.properties;
+	}
+	
+	public final SocksServerUri getSocksServerUri() {
+		return this.socksServerUri;
+	}
+	
+	public abstract DatagramSocketInterfaceFactory newDatagramSocketInterfaceFactory();
+	
+	public abstract HostnameResolverFactory newHostnameResolverFactory();
+	
+	public abstract ServerSocketInterfaceFactory newServerSocketInterfaceFactory();
+	
+	public abstract SocketInterfaceFactory newSocketInterfaceFactory();
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append(this.getClass().getSimpleName())
+			.append(" [socksServerUri=")
+			.append(this.socksServerUri)
+			.append("]");
+		return builder.toString();
+	}
+	
+	private SocketInterface wrapIfRequired(
+			final SocketInterface socketInterface) throws IOException {
 		if (!this.properties.getValue(
 				PropertySpec.SSL_ENABLED, Boolean.class).booleanValue()) {
 			return socketInterface;
@@ -105,7 +136,7 @@ public abstract class SocksClient {
 		try {
 			sslContext = SSLContext.getInstance(protocol);
 		} catch (NoSuchAlgorithmException e) {
-			throw new AssertionError(e);
+			throw new IOException(e);
 		}
 		KeyManager[] keyManagers = null;
 		TrustManager[] trustManagers = null;
@@ -136,7 +167,7 @@ public abstract class SocksClient {
 		try {
 			sslContext.init(keyManagers, trustManagers, new SecureRandom());
 		} catch (KeyManagementException e) {
-			throw new AssertionError(e);
+			throw new IOException(e);
 		}
 		SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
 		SSLSocket sslSocket = (SSLSocket) sslSocketFactory.createSocket(
@@ -157,32 +188,6 @@ public abstract class SocksClient {
 			sslSocket.setEnabledProtocols(protocols);
 		}
 		return new DirectSocketInterface(sslSocket);
-	}
-	
-	public final Properties getProperties() {
-		return this.properties;
-	}
-	
-	public final SocksServerUri getSocksServerUri() {
-		return this.socksServerUri;
-	}
-	
-	public abstract DatagramSocketInterfaceFactory newDatagramSocketInterfaceFactory();
-	
-	public abstract HostnameResolverFactory newHostnameResolverFactory();
-	
-	public abstract ServerSocketInterfaceFactory newServerSocketInterfaceFactory();
-	
-	public abstract SocketInterfaceFactory newSocketInterfaceFactory();
-
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append(this.getClass().getSimpleName())
-			.append(" [socksServerUri=")
-			.append(this.socksServerUri)
-			.append("]");
-		return builder.toString();
 	}
 	
 }

@@ -172,8 +172,9 @@ public final class Socks5DatagramSocketInterface
 				address = this.remoteInetAddress.getHostAddress();
 				port = this.remotePort;
 			}
-			SocketInterface sockInterface = this.socks5Client.connectToSocksServerWith(
-					this.socketInterface, true);
+			SocketInterface sockInterface = 
+					this.socks5Client.connectToSocksServerWith(
+							this.socketInterface, true);
 			InputStream inputStream = sockInterface.getInputStream();
 			OutputStream outputStream = sockInterface.getOutputStream();
 			AddressType addressType = AddressType.get(address);
@@ -191,13 +192,7 @@ public final class Socks5DatagramSocketInterface
 						"received reply: %s", reply));
 			}
 			DatagramSocketInterface datagramSockInterface = 
-					this.datagramSocketInterface;
-			/*
-			if (this.socks5Client.getProperties().getValue(
-					PropertySpec.SSL_ENABLED, Boolean.class).booleanValue()) {
-				// TODO DtlsDatagramSocketInterface
-			}
-			*/
+					this.wrapIfRequired(this.datagramSocketInterface);
 			if (sockInterface instanceof GssSocketInterface) {
 				GssSocketInterface gssSocketInterface = 
 						(GssSocketInterface) sockInterface;
@@ -212,6 +207,19 @@ public final class Socks5DatagramSocketInterface
 			this.udpRelayServerPort = socks5Rep.getServerBoundPort();
 			this.socketInterface = sockInterface;
 			this.socks5UdpAssociated = true;			
+		}
+		
+		private DatagramSocketInterface wrapIfRequired(
+				final DatagramSocketInterface datagramSocketInterface) 
+				throws IOException {
+			/*
+			if (!this.socks5Client.getProperties().getValue(
+					PropertySpec.SSL_ENABLED, Boolean.class).booleanValue()) {
+				return datagramSocketInterface;
+			}
+			// TODO DtlsDatagramSocketInterface
+			*/
+			return datagramSocketInterface;			
 		}
 		
 	}

@@ -63,7 +63,7 @@ final class Listener implements Runnable {
 			SocketInterface clientSocketInterface = new DirectSocketInterface(
 					clientSocket);
 			try {
-				clientSocketInterface = this.wrapIfRequired(
+				clientSocketInterface = this.wrapIfSslEnabled(
 						clientSocketInterface);
 			} catch (IOException e) {
 				LOGGER.log(
@@ -86,7 +86,7 @@ final class Listener implements Runnable {
 		executor.shutdownNow();
 	}
 	
-	private SocketInterface wrapIfRequired(
+	private SocketInterface wrapIfSslEnabled(
 			final SocketInterface socketInterface) throws IOException {
 		Settings settings = this.configuration.getSettings();
 		if (!settings.getLastValue(

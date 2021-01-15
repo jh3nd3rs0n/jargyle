@@ -167,11 +167,10 @@ final class UdpRelayServer {
 							e);
 					return false;
 				}
-				if (!desiredDestinationInetAddr.isLoopbackAddress()
-						|| !inetAddr.isLoopbackAddress()) {
-					if (!desiredDestinationInetAddr.equals(inetAddr)) {
-						return false;
-					}
+				if ((!desiredDestinationInetAddr.isLoopbackAddress()
+						|| !inetAddr.isLoopbackAddress())
+						&& !desiredDestinationInetAddr.equals(inetAddr)) {
+					return false;
 				}
 				if (desiredDestinationPrt != port) {
 					return false;
@@ -318,11 +317,10 @@ final class UdpRelayServer {
 						e);
 				return false;
 			}
-			if (!sourceInetAddr.isLoopbackAddress() 
-					|| !inetAddr.isLoopbackAddress()) {
-				if (!sourceInetAddr.equals(inetAddr)) {
-					return false;
-				}
+			if ((!sourceInetAddr.isLoopbackAddress() 
+					|| !inetAddr.isLoopbackAddress())
+					&& !sourceInetAddr.equals(inetAddr)) {
+				return false;
 			}
 			if (this.getSourcePort() == -1) {
 				this.setSourcePort(port);
@@ -363,12 +361,11 @@ final class UdpRelayServer {
 							e);
 					return false;
 				}
-				if (!desiredDestinationInetAddr.isLoopbackAddress()
-						|| !desiredDestInetAddr.isLoopbackAddress()) {
-					if (!desiredDestinationInetAddr.equals(
-							desiredDestInetAddr)) {
-						return false;
-					}
+				if ((!desiredDestinationInetAddr.isLoopbackAddress()
+						|| !desiredDestInetAddr.isLoopbackAddress())
+						&& !desiredDestinationInetAddr.equals(
+								desiredDestInetAddr)) {
+					return false;
 				}
 				if (desiredDestinationPrt != desiredDestPrt) {
 					return false;

@@ -95,7 +95,7 @@ public abstract class SocksClient {
 						InetAddress.getByName(socksServerUri.getHost()), 
 						socksServerUri.getPort()), 
 				timeout);
-		return this.wrapIfRequired(socketInterface);
+		return this.wrapIfSslEnabled(socketInterface);
 	}
 	
 	public final Properties getProperties() {
@@ -124,7 +124,7 @@ public abstract class SocksClient {
 		return builder.toString();
 	}
 	
-	private SocketInterface wrapIfRequired(
+	private SocketInterface wrapIfSslEnabled(
 			final SocketInterface socketInterface) throws IOException {
 		if (!this.properties.getValue(
 				PropertySpec.SSL_ENABLED, Boolean.class).booleanValue()) {

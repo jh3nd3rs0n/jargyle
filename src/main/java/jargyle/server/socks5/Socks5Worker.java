@@ -130,7 +130,10 @@ public final class Socks5Worker implements Runnable {
 			try {
 				this.writeThenFlush(socks5Rep.toByteArray());
 			} catch (IOException e) {
-				return false;
+				LOGGER.log(
+						Level.WARNING, 
+						this.format("Error in writing SOCKS5 reply"), 
+						e);
 			}
 			return false;
 		}
@@ -158,7 +161,10 @@ public final class Socks5Worker implements Runnable {
 			try {
 				this.writeThenFlush(socks5Rep.toByteArray());
 			} catch (IOException e) {
-				return false;
+				LOGGER.log(
+						Level.WARNING, 
+						this.format("Error in writing SOCKS5 reply"), 
+						e);
 			}
 			return false;
 		}
@@ -188,7 +194,10 @@ public final class Socks5Worker implements Runnable {
 			try {
 				this.writeThenFlush(socks5Rep.toByteArray());
 			} catch (IOException e) {
-				return false;
+				LOGGER.log(
+						Level.WARNING, 
+						this.format("Error in writing SOCKS5 reply"), 
+						e);
 			}
 			return false;
 		}
@@ -207,13 +216,16 @@ public final class Socks5Worker implements Runnable {
 					this.format(String.format(
 							"SOCKS5 request from %s blocked based on the "
 							+ "following criterion: %s. SOCKS5 request: %s",
-							sourceAddress.toString(),
+							sourceAddress,
 							socks5RequestCriterion.toString(),
 							socks5Req.toString())));
 			try {
 				this.writeThenFlush(socks5Rep.toByteArray());
 			} catch (IOException e) {
-				return false;
+				LOGGER.log(
+						Level.WARNING, 
+						this.format("Error in writing SOCKS5 reply"), 
+						e);
 			}
 			return false;
 		}
@@ -272,7 +284,10 @@ public final class Socks5Worker implements Runnable {
 			try {
 				this.writeThenFlush(socks5Rep.toByteArray());
 			} catch (IOException e1) {
-				return false;
+				LOGGER.log(
+						Level.WARNING, 
+						this.format("Error in setting the client socket"), 
+						e1);				
 			}
 			return false;
 		}
@@ -301,7 +316,10 @@ public final class Socks5Worker implements Runnable {
 			try {
 				this.writeThenFlush(socks5Rep.toByteArray());
 			} catch (IOException e1) {
-				return false;
+				LOGGER.log(
+						Level.WARNING, 
+						this.format("Error in writing SOCKS5 reply"), 
+						e1);
 			}
 			return false;
 		}
@@ -330,7 +348,10 @@ public final class Socks5Worker implements Runnable {
 			try {
 				this.writeThenFlush(socks5Rep.toByteArray());
 			} catch (IOException e1) {
-				return false;
+				LOGGER.log(
+						Level.WARNING, 
+						this.format("Error in writing SOCKS5 reply"), 
+						e1);
 			}
 			return false;
 		}
@@ -359,7 +380,10 @@ public final class Socks5Worker implements Runnable {
 			try {
 				this.writeThenFlush(socks5Rep.toByteArray());
 			} catch (IOException e1) {
-				return false;
+				LOGGER.log(
+						Level.WARNING, 
+						this.format("Error in writing SOCKS5 reply"), 
+						e1);
 			}
 			return false;
 		}
@@ -392,7 +416,10 @@ public final class Socks5Worker implements Runnable {
 			try {
 				this.writeThenFlush(socks5Rep.toByteArray());
 			} catch (IOException e1) {
-				return false;
+				LOGGER.log(
+						Level.WARNING, 
+						this.format("Error in writing SOCKS5 reply"), 
+						e1);
 			}
 			return false;
 		} catch (IOException e) {
@@ -410,7 +437,10 @@ public final class Socks5Worker implements Runnable {
 			try {
 				this.writeThenFlush(socks5Rep.toByteArray());
 			} catch (IOException e1) {
-				return false;
+				LOGGER.log(
+						Level.WARNING, 
+						this.format("Error in writing SOCKS5 reply"), 
+						e1);
 			}
 			return false;
 		}
@@ -817,7 +847,7 @@ public final class Socks5Worker implements Runnable {
 			return null;
 		}
 		try {
-			clientDatagramSockInterface = this.wrapIfRequired(
+			clientDatagramSockInterface = this.wrapIfSslEnabled(
 					clientDatagramSockInterface);
 		} catch (IOException e) {
 			LOGGER.log(
@@ -960,11 +990,11 @@ public final class Socks5Worker implements Runnable {
 			this.clientOutputStream = this.clientSocketInterface.getOutputStream();
 			Method method = this.selectMethod();
 			if (method == null) { return; } 
-			SocketInterface socket = this.authenticateUsing(method);
-			if (socket == null) { return; } 
-			this.clientInputStream = socket.getInputStream();
-			this.clientOutputStream = socket.getOutputStream();
-			this.clientSocketInterface = socket;
+			SocketInterface socketInterface = this.authenticateUsing(method);
+			if (socketInterface == null) { return; } 
+			this.clientInputStream = socketInterface.getInputStream();
+			this.clientOutputStream = socketInterface.getOutputStream();
+			this.clientSocketInterface = socketInterface;
 			if (!this.configureClientSocketInterface(this.clientSocketInterface)) {
 				return;
 			}
@@ -1065,7 +1095,7 @@ public final class Socks5Worker implements Runnable {
 		return builder.toString();
 	}
 	
-	private DatagramSocketInterface wrapIfRequired(
+	private DatagramSocketInterface wrapIfSslEnabled(
 			final DatagramSocketInterface datagramSocketInterface) 
 			throws IOException {
 		/*

@@ -192,7 +192,7 @@ public final class Socks5DatagramSocketInterface
 						"received reply: %s", reply));
 			}
 			DatagramSocketInterface datagramSockInterface = 
-					this.wrapIfRequired(this.datagramSocketInterface);
+					this.wrapIfSslEnabled(this.datagramSocketInterface);
 			if (sockInterface instanceof GssSocketInterface) {
 				GssSocketInterface gssSocketInterface = 
 						(GssSocketInterface) sockInterface;
@@ -209,7 +209,7 @@ public final class Socks5DatagramSocketInterface
 			this.socks5UdpAssociated = true;			
 		}
 		
-		private DatagramSocketInterface wrapIfRequired(
+		private DatagramSocketInterface wrapIfSslEnabled(
 				final DatagramSocketInterface datagramSocketInterface) 
 				throws IOException {
 			/*

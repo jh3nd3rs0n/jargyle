@@ -5,8 +5,9 @@
 Jargyle is a Java SOCKS5 server. It has the following features:
 
 -   100% implementation of the SOCKS5 protocol specification which includes [username password authentication](#4-9-2-using-username-password-authentication) and [GSS-API authentication](#4-9-3-using-gss-api-authentication)
+-   [SSL/TLS](#4-7-enabling-ssl-tls)
 -   [SOCKS server chaining](#4-10-chaining-to-another-socks-server)
--   [SSL/TLS](#4-7-enabling-ssl-tls) and [SSL/TLS for SOCKS server chaining](#4-10-1-enabling-ssl-tls)
+-   [SSL/TLS for SOCKS server chaining](#4-10-1-enabling-ssl-tls)
 -   [Host name resolution through SOCKS5 server chaining](#4-10-2-enabling-host-name-resolution-through-socks5-server-chaining)
 -   [Allow or block client addresses and external incoming addresses](#4-11-allowing-or-blocking-addresses)
 -   [Allow or block SOCKS5 requests](#4-12-allowing-or-blocking-socks5-requests)
@@ -44,11 +45,12 @@ Jargyle is a Java SOCKS5 server. It has the following features:
 -   [4. 11. Allowing or Blocking Addresses](#4-11-allowing-or-blocking-addresses)
 -   [4. 12. Allowing or Blocking SOCKS5 Requests](#4-12-allowing-or-blocking-socks5-requests)
 -   [4. 13. Logging](#4-13-logging)
--   [4. 14. Miscellaneous Notes](#4-14-miscellaneous-notes)
--   [4. 14. 1. Multiple Settings of the Same Name](#4-14-1-multiple-settings-of-the-same-name)
--   [4. 14. 2. The Comment Attribute](#4-14-2-the-comment-attribute)
--   [5. Contact](#5-contact)
--   [6. Donate](#6-donate)
+-   [5. Miscellaneous Notes](#5-miscellaneous-notes)
+-   [5. 1. The Comment Attribute](#5-1-the-comment-attribute)
+-   [5. 2. Multiple Settings of the Same Name](#5-2-multiple-settings-of-the-same-name)
+-   [5. 3. The SOCKS5 RESOLVE Command](#5-3-the-socks5-resolve-command)
+-   [6. Contact](#6-contact)
+-   [7. Donate](#7-donate)
 
 ## 1. Requirements
 
@@ -633,7 +635,7 @@ The following command combines the two earlier configuration files into one:
 
 ```
 
-Although the redundant settings in the combined configuration file are unnecessary, the result configuration file is for demonstration purposes only. (See [Multiple Settings of the Same Name](#4-14-1-multiple-settings-of-the-same-name) for more information.)
+Although the redundant settings in the combined configuration file are unnecessary, the result configuration file is for demonstration purposes only. (See [Multiple Settings of the Same Name](#5-2-multiple-settings-of-the-same-name) for more information.)
 
 ### 4. 5. Running with a Configuration File
 
@@ -1278,7 +1280,7 @@ Partial command line example:
 You can have Jargyle perform host name resolution through SOCKS5 server chaining under the following conditions:
 
 -   Jargyle is chained to another SOCKS5 server.
--   The other SOCKS5 server supports the SOCKS5 RESOLVE command. (At the time of this writing, the SOCKS5 RESOLVE command is an exclusive SOCKS5 command made for Jargyle. Therefore the other SOCKS5 server would at the very least be another running instance of Jargyle.)
+-   The other SOCKS5 server supports [the SOCKS5 RESOLVE command](#5-3-the-socks5-resolve-command). (At the time of this writing, the SOCKS5 RESOLVE command is an additional SOCKS5 command made for Jargyle. Therefore the other SOCKS5 server would at the very least be another running instance of Jargyle.)
 
 By default, host name resolution through SOCKS5 server chaining is disabled. To enable host name resolution through SOCKS5 server chaining, you would need to set the setting `chaining.socks5.forwardHostnameResolution` to `true`.
 
@@ -1673,15 +1675,11 @@ Example:
     
 ```
 
-### 4. 14. Miscellaneous Notes
+## 5. Miscellaneous Notes
 
-The following are miscellaneous notes in regards to running Jargyle.
+The following are miscellaneous notes regarding Jargyle.
 
-#### 4. 14. 1. Multiple Settings of the Same Name
-
-If a setting of the same name appears more than once in the configuration file or on the command line, then only the last setting of the same name is recognized. 
-
-#### 4. 14. 2. The Comment Attribute
+### 5. 1. The Comment Attribute
 
 When using an existing configuration file to create a new configuration file, any XML comments from the existing configuration file cannot be transferred to the new configuration file. To preserve comments  from one configuration file to the next configuration file, the `comment` attribute can be used in certain XML elements. You can use the `comment` attribute in the following XML elements:
 
@@ -1758,10 +1756,22 @@ Partial configuration file example:
     
 ```
 
-## 5. Contact
+### 5. 2. Multiple Settings of the Same Name
+
+If a setting of the same name appears more than once on the command line or in the configuration file, then only the last setting of the same name is recognized. 
+
+### 5. 3. The SOCKS5 RESOLVE Command
+
+At the time of this writing, the SOCKS5 RESOLVE command is an additional SOCKS5 command made for Jargyle. It is not a part of the SOCKS5 protocol specification. 
+
+The RESOLVE command in a SOCKS5 request is represented by the byte `0x00`. 
+
+A SOCKS5 request with the RESOLVE command should contain the provided desired destination domain name address. The desired destination port in the SOCKS5 request can be of any value. A successful SOCKS5 reply must contain the server bound IPv4 or IPv6 address of the desired destination domain name address of the SOCKS5 request. If the SOCKS5 request has a desired destination address of IPv4 or IPv6, the SOCKS5 reply must contain the same server bound address of that desired destination address of the SOCKS5 request. The server bound port in the SOCKS5 reply may be zero or the value from the desired destination port of the SOCKS5 request. After the SOCKS5 reply is sent, the connection is then closed.
+
+## 6. Contact
 
 If you have any questions or comments, you can e-mail me at `j0n4th4n.h3nd3rs0n@gmail.com`
 
-## 6. Donate
+## 7. Donate
 
 [PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=BRABJQVU3S6LW&currency_code=USD&source=url)

@@ -44,13 +44,15 @@ public abstract class SocksClient {
 	
 	private final Properties properties;
 	private final SocksServerUri socksServerUri;
+	private SSLContext sslContext;
 	
 	protected SocksClient(final SocksServerUri serverUri, final Properties props) {
 		Objects.requireNonNull(
 				serverUri, "SOCKS server URI must not be null");
 		Objects.requireNonNull(props, "Properties must not be null");
-		this.socksServerUri = serverUri;
 		this.properties = props;
+		this.socksServerUri = serverUri;
+		this.sslContext = null;
 	}
 	
 	public SocketInterface connectToSocksServerWith(
@@ -106,6 +108,13 @@ public abstract class SocksClient {
 		return this.socksServerUri;
 	}
 	
+	private SSLContext getSslContext() {
+		if (this.sslContext == null) {
+			return this.newSslContext();
+		}
+		return this.sslContext;
+	}
+	
 	public abstract DatagramSocketInterfaceFactory newDatagramSocketInterfaceFactory();
 	
 	public abstract HostnameResolverFactory newHostnameResolverFactory();
@@ -114,29 +123,14 @@ public abstract class SocksClient {
 	
 	public abstract SocketInterfaceFactory newSocketInterfaceFactory();
 
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append(this.getClass().getSimpleName())
-			.append(" [socksServerUri=")
-			.append(this.socksServerUri)
-			.append("]");
-		return builder.toString();
-	}
-	
-	private SocketInterface wrapIfSslEnabled(
-			final SocketInterface socketInterface) throws IOException {
-		if (!this.properties.getValue(
-				PropertySpec.SSL_ENABLED, Boolean.class).booleanValue()) {
-			return socketInterface;
-		}
-		SSLContext sslContext = null;
+	private SSLContext newSslContext() {
+		SSLContext context = null;
 		String protocol = this.properties.getValue(
 				PropertySpec.SSL_PROTOCOL, String.class);
 		try {
-			sslContext = SSLContext.getInstance(protocol);
+			context = SSLContext.getInstance(protocol);
 		} catch (NoSuchAlgorithmException e) {
-			throw new IOException(e);
+			throw new AssertionError(e);
 		}
 		KeyManager[] keyManagers = null;
 		TrustManager[] trustManagers = null;
@@ -165,10 +159,31 @@ public abstract class SocksClient {
 					trustStoreFile, trustStorePassword, trustStoreType);
 		}
 		try {
-			sslContext.init(keyManagers, trustManagers, new SecureRandom());
+			context.init(keyManagers, trustManagers, new SecureRandom());
 		} catch (KeyManagementException e) {
-			throw new IOException(e);
+			throw new AssertionError(e);
 		}
+		this.sslContext = context;
+		return this.sslContext;
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append(this.getClass().getSimpleName())
+			.append(" [socksServerUri=")
+			.append(this.socksServerUri)
+			.append("]");
+		return builder.toString();
+	}
+	
+	private SocketInterface wrapIfSslEnabled(
+			final SocketInterface socketInterface) throws IOException {
+		if (!this.properties.getValue(
+				PropertySpec.SSL_ENABLED, Boolean.class).booleanValue()) {
+			return socketInterface;
+		}
+		SSLContext sslContext = this.getSslContext();
 		SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
 		SSLSocket sslSocket = (SSLSocket) sslSocketFactory.createSocket(
 				new SocketInterfaceSocketAdapter(socketInterface), 

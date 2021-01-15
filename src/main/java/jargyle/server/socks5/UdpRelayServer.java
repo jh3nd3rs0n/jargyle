@@ -638,13 +638,14 @@ final class UdpRelayServer {
 	public UdpRelayServer(		
 			final DatagramSocketInterfaces datagramSockInterfaces,
 			final String sourceAddr,
-			final DesiredDestinationSocketAddress desiredDestinationSocketAddr, 
 			final HostnameResolver resolver, 
+			final DesiredDestinationSocketAddress desiredDestinationSocketAddr, 
 			final ExternalIncomingAddressCriteria externalIncomingAddrCriteria, 
 			final RelaySettings settings) {
 		Objects.requireNonNull(datagramSockInterfaces);
+		Objects.requireNonNull(sourceAddr);
+		Objects.requireNonNull(resolver);		
 		Objects.requireNonNull(desiredDestinationSocketAddr);
-		Objects.requireNonNull(resolver);
 		Objects.requireNonNull(externalIncomingAddrCriteria);
 		Objects.requireNonNull(settings);
 		this.allowedExternalIncomingAddressCriteria = 

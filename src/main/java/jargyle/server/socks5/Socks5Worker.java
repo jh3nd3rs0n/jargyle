@@ -715,7 +715,6 @@ public final class Socks5Worker implements Runnable {
 		HostnameResolver hostnameResolver = null;
 		DatagramSocketInterface serverDatagramSock = null;
 		DatagramSocketInterface clientDatagramSock = null;
-		UdpRelayServer udpRelayServer = null;
 		try {
 			hostnameResolver = hostnameResolverFactory.newHostnameResolver();
 			serverDatagramSock = this.newServerDatagramSocketInterface();
@@ -751,20 +750,19 @@ public final class Socks5Worker implements Runnable {
 							"Sending %s", 
 							socks5Rep.toString())));
 			this.writeThenFlush(socks5Rep.toByteArray());
-			udpRelayServer = new UdpRelayServer(
+			this.passPackets(
 					new UdpRelayServer.DatagramSocketInterfaces(
 							clientDatagramSock, serverDatagramSock),
-					this.clientSocketInterface.getInetAddress().getHostAddress(),
-					new UdpRelayServer.DesiredDestinationSocketAddress(
-							desiredDestinationAddress, desiredDestinationPort),
 					hostnameResolver, 
+					new UdpRelayServer.DesiredDestinationSocketAddress(
+							desiredDestinationAddress, desiredDestinationPort), 
 					new UdpRelayServer.ExternalIncomingAddressCriteria(
 							this.settings.getLastValue(
 									SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_ALLOWED_EXTERNAL_INCOMING_ADDRESS_CRITERIA, 
 									Criteria.class), 
 							this.settings.getLastValue(
 									SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_BLOCKED_EXTERNAL_INCOMING_ADDRESS_CRITERIA, 
-									Criteria.class)),
+									Criteria.class)), 
 					new UdpRelayServer.RelaySettings(
 							this.settings.getLastValue(
 									SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_RELAY_BUFFER_SIZE, 
@@ -772,34 +770,7 @@ public final class Socks5Worker implements Runnable {
 							this.settings.getLastValue(
 									SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_RELAY_TIMEOUT, 
 									PositiveInteger.class).intValue()));
-			try {
-				udpRelayServer.start();
-				while (!this.clientSocketInterface.isClosed()
-						&& !udpRelayServer.isStopped()) {
-					try {
-						Thread.sleep(HALF_SECOND);
-					} catch (InterruptedException e) {
-						Thread.currentThread().interrupt();
-					}
-				}
-			} catch (IOException e) {
-				LOGGER.log(
-						Level.WARNING, 
-						this.format("Error in starting the UDP association"), 
-						e);
-				socks5Rep = Socks5Reply.newErrorInstance(
-						Reply.GENERAL_SOCKS_SERVER_FAILURE);
-				LOGGER.log(
-						Level.FINE, 
-						this.format(String.format(
-								"Sending %s", 
-								socks5Rep.toString())));
-				this.writeThenFlush(socks5Rep.toByteArray());				
-			} 
 		} finally {
-			if (udpRelayServer != null && !udpRelayServer.isStopped()) {
-				udpRelayServer.stop();
-			}
 			if (clientDatagramSock != null && !clientDatagramSock.isClosed()) {
 				clientDatagramSock.close();
 			}
@@ -979,6 +950,41 @@ public final class Socks5Worker implements Runnable {
 		} finally {
 			if (!tcpRelayServer.isStopped()) {
 				tcpRelayServer.stop();
+			}
+		}
+	}
+	
+	private void passPackets(
+			final UdpRelayServer.DatagramSocketInterfaces datagramSocketInterfaces,
+			final HostnameResolver hostnameResolver,
+			final UdpRelayServer.DesiredDestinationSocketAddress desiredDestinationSocketAddress,
+			final UdpRelayServer.ExternalIncomingAddressCriteria externalIncomingAddressCriteria,
+			final UdpRelayServer.RelaySettings relaySettings) {
+		UdpRelayServer udpRelayServer = new UdpRelayServer(
+				datagramSocketInterfaces,
+				this.clientSocketInterface.getInetAddress().getHostAddress(),
+				hostnameResolver,
+				desiredDestinationSocketAddress, 
+				externalIncomingAddressCriteria,
+				relaySettings);
+		try {
+			udpRelayServer.start();
+			while (!this.clientSocketInterface.isClosed()
+					&& !udpRelayServer.isStopped()) {
+				try {
+					Thread.sleep(HALF_SECOND);
+				} catch (InterruptedException e) {
+					Thread.currentThread().interrupt();
+				}
+			}
+		} catch (IOException e) {
+			LOGGER.log(
+					Level.WARNING, 
+					this.format("Error in starting the UDP association"), 
+					e);
+		} finally {
+			if (!udpRelayServer.isStopped()) {
+				udpRelayServer.stop();
 			}
 		}
 	}

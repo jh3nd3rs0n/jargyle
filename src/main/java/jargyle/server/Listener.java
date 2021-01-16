@@ -48,7 +48,9 @@ final class Listener implements Runnable {
 					clientSocket);
 			try {
 				clientSocketInterface = this.sslWrapper.wrapIfSslEnabled(
-						clientSocketInterface);
+						clientSocketInterface, 
+						null, 
+						true);
 			} catch (IOException e) {
 				LOGGER.log(
 						Level.WARNING, 

@@ -2,6 +2,7 @@ package jargyle.server;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -153,7 +154,9 @@ public final class SslWrapper {
 	}
 	
 	public SocketInterface wrapIfSslEnabled(
-			final SocketInterface socketInterface) throws IOException {
+			final SocketInterface socketInterface, 
+			final InputStream consumed, 
+			final boolean autoClose) throws IOException {
 		Settings settings = this.configuration.getSettings();
 		if (!settings.getLastValue(
 				SettingSpec.SSL_ENABLED, Boolean.class).booleanValue()) {
@@ -163,8 +166,8 @@ public final class SslWrapper {
 		SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
 		SSLSocket sslSocket = (SSLSocket) sslSocketFactory.createSocket(
 				new SocketInterfaceSocketAdapter(socketInterface), 
-				null, 
-				true); 
+				consumed, 
+				autoClose); 
 		CipherSuites enabledCipherSuites = settings.getLastValue(
 				SettingSpec.SSL_ENABLED_CIPHER_SUITES, CipherSuites.class);
 		String[] cipherSuites = enabledCipherSuites.toStringArray();

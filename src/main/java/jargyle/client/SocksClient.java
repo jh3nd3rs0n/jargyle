@@ -35,10 +35,7 @@ public abstract class SocksClient {
 		Objects.requireNonNull(props, "Properties must not be null");
 		this.properties = props;
 		this.socksServerUri = serverUri;
-		this.sslWrapper = new SslWrapper(
-				serverUri.getHost(), 
-				serverUri.getPort(), 
-				props);
+		this.sslWrapper = new SslWrapper(props);
 	}
 	
 	public SocketInterface connectToSocksServerWith(
@@ -83,7 +80,11 @@ public abstract class SocksClient {
 						InetAddress.getByName(socksServerUri.getHost()), 
 						socksServerUri.getPort()), 
 				timeout);
-		return this.sslWrapper.wrapIfSslEnabled(socketInterface);
+		return this.sslWrapper.wrapIfSslEnabled(
+				socketInterface, 
+				this.socksServerUri.getHost(), 
+				this.socksServerUri.getPort(), 
+				true);
 	}
 	
 	public final Properties getProperties() {

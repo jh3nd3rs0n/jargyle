@@ -25,14 +25,10 @@ import jargyle.common.security.EncryptedPassword;
 public final class SslWrapper {
 
 	private final Properties properties;
-	private final String serverHost;
-	private final int serverPort;
 	private SSLContext sslContext;
 	
-	SslWrapper(final String host, final int port, final Properties props) {
+	SslWrapper(final Properties props) {
 		this.properties = props;
-		this.serverHost = host;
-		this.serverPort = port;
 		this.sslContext = null;
 	}
 	
@@ -101,7 +97,10 @@ public final class SslWrapper {
 	}
 	
 	public SocketInterface wrapIfSslEnabled(
-			final SocketInterface socketInterface) throws IOException {
+			final SocketInterface socketInterface, 
+			final String host, 
+			final int port, 
+			final boolean autoClose) throws IOException {
 		if (!this.properties.getValue(
 				PropertySpec.SSL_ENABLED, Boolean.class).booleanValue()) {
 			return socketInterface;
@@ -110,9 +109,9 @@ public final class SslWrapper {
 		SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
 		SSLSocket sslSocket = (SSLSocket) sslSocketFactory.createSocket(
 				new SocketInterfaceSocketAdapter(socketInterface), 
-				this.serverHost, 
-				this.serverPort, 
-				true); 
+				host, 
+				port, 
+				autoClose); 
 		CipherSuites enabledCipherSuites = this.properties.getValue(
 				PropertySpec.SSL_ENABLED_CIPHER_SUITES, CipherSuites.class);
 		String[] cipherSuites = enabledCipherSuites.toStringArray();

@@ -21,13 +21,16 @@ final class Worker implements Runnable {
 	private final SocketInterface clientSocketInterface;
 	private final Configuration configuration;
 	private final Settings settings;
+	private final SslWrapper sslWrapper;
 	
 	public Worker(
 			final SocketInterface clientSockInterface, 
-			final Configuration config) {
+			final Configuration config, 
+			final SslWrapper wrapper) {
 		this.clientSocketInterface = clientSockInterface;
 		this.configuration = config;
 		this.settings = config.getSettings();
+		this.sslWrapper = wrapper;
 	}
 	
 	private boolean canAcceptClientSocketInterface(
@@ -109,7 +112,8 @@ final class Worker implements Runnable {
 			if ((byte) version == Version.V5.byteValue()) {
 				Socks5Worker socks5Worker = new Socks5Worker(
 						this.clientSocketInterface, 
-						this.configuration);
+						this.configuration, 
+						this.sslWrapper);
 				socks5Worker.run();
 			} else {
 				LOGGER.log(

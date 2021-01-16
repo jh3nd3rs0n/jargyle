@@ -192,7 +192,8 @@ public final class Socks5DatagramSocketInterface
 						"received reply: %s", reply));
 			}
 			DatagramSocketInterface datagramSockInterface = 
-					this.wrapIfSslEnabled(this.datagramSocketInterface);
+					this.socks5Client.getSslWrapper().wrapIfSslEnabled(
+							this.datagramSocketInterface);
 			if (sockInterface instanceof GssSocketInterface) {
 				GssSocketInterface gssSocketInterface = 
 						(GssSocketInterface) sockInterface;
@@ -207,19 +208,6 @@ public final class Socks5DatagramSocketInterface
 			this.udpRelayServerPort = socks5Rep.getServerBoundPort();
 			this.socketInterface = sockInterface;
 			this.socks5UdpAssociated = true;			
-		}
-		
-		private DatagramSocketInterface wrapIfSslEnabled(
-				final DatagramSocketInterface datagramSocketInterface) 
-				throws IOException {
-			/*
-			if (!this.socks5Client.getProperties().getValue(
-					PropertySpec.SSL_ENABLED, Boolean.class).booleanValue()) {
-				return datagramSocketInterface;
-			}
-			// TODO DtlsDatagramSocketInterface
-			*/
-			return datagramSocketInterface;			
 		}
 		
 	}

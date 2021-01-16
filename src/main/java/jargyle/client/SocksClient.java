@@ -1,34 +1,17 @@
 package jargyle.client;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.util.Objects;
 
-import javax.net.ssl.KeyManager;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocket;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-
 import jargyle.common.net.DatagramSocketInterfaceFactory;
-import jargyle.common.net.DirectSocketInterface;
 import jargyle.common.net.Host;
 import jargyle.common.net.HostnameResolverFactory;
 import jargyle.common.net.Port;
 import jargyle.common.net.ServerSocketInterfaceFactory;
 import jargyle.common.net.SocketInterface;
 import jargyle.common.net.SocketInterfaceFactory;
-import jargyle.common.net.SocketInterfaceSocketAdapter;
-import jargyle.common.net.ssl.CipherSuites;
-import jargyle.common.net.ssl.KeyManagersFactory;
-import jargyle.common.net.ssl.Protocols;
-import jargyle.common.net.ssl.TrustManagersFactory;
-import jargyle.common.security.EncryptedPassword;
 import jargyle.common.util.PositiveInteger;
 
 public abstract class SocksClient {
@@ -44,7 +27,7 @@ public abstract class SocksClient {
 	
 	private final Properties properties;
 	private final SocksServerUri socksServerUri;
-	private SSLContext sslContext;
+	private final SslWrapper sslWrapper;
 	
 	protected SocksClient(final SocksServerUri serverUri, final Properties props) {
 		Objects.requireNonNull(
@@ -52,7 +35,10 @@ public abstract class SocksClient {
 		Objects.requireNonNull(props, "Properties must not be null");
 		this.properties = props;
 		this.socksServerUri = serverUri;
-		this.sslContext = null;
+		this.sslWrapper = new SslWrapper(
+				serverUri.getHost(), 
+				serverUri.getPort(), 
+				props);
 	}
 	
 	public SocketInterface connectToSocksServerWith(
@@ -97,7 +83,7 @@ public abstract class SocksClient {
 						InetAddress.getByName(socksServerUri.getHost()), 
 						socksServerUri.getPort()), 
 				timeout);
-		return this.wrapIfSslEnabled(socketInterface);
+		return this.sslWrapper.wrapIfSslEnabled(socketInterface);
 	}
 	
 	public final Properties getProperties() {
@@ -108,11 +94,8 @@ public abstract class SocksClient {
 		return this.socksServerUri;
 	}
 	
-	private SSLContext getSslContext() {
-		if (this.sslContext == null) {
-			return this.newSslContext();
-		}
-		return this.sslContext;
+	public final SslWrapper getSslWrapper() {
+		return this.sslWrapper;
 	}
 	
 	public abstract DatagramSocketInterfaceFactory newDatagramSocketInterfaceFactory();
@@ -122,50 +105,6 @@ public abstract class SocksClient {
 	public abstract ServerSocketInterfaceFactory newServerSocketInterfaceFactory();
 	
 	public abstract SocketInterfaceFactory newSocketInterfaceFactory();
-
-	private SSLContext newSslContext() {
-		SSLContext context = null;
-		String protocol = this.properties.getValue(
-				PropertySpec.SSL_PROTOCOL, String.class);
-		try {
-			context = SSLContext.getInstance(protocol);
-		} catch (NoSuchAlgorithmException e) {
-			throw new AssertionError(e);
-		}
-		KeyManager[] keyManagers = null;
-		TrustManager[] trustManagers = null;
-		File keyStoreFile = this.properties.getValue(
-				PropertySpec.SSL_KEY_STORE_FILE, File.class);
-		if (keyStoreFile != null) {
-			EncryptedPassword keyStorePassword = 
-					this.properties.getValue(
-							PropertySpec.SSL_KEY_STORE_PASSWORD, 
-							EncryptedPassword.class);
-			String keyStoreType = this.properties.getValue(
-					PropertySpec.SSL_KEY_STORE_TYPE, String.class);
-			keyManagers = KeyManagersFactory.newKeyManagers(
-					keyStoreFile, keyStorePassword, keyStoreType);
-		}
-		File trustStoreFile = this.properties.getValue(
-				PropertySpec.SSL_TRUST_STORE_FILE, File.class);
-		if (trustStoreFile != null) {
-			EncryptedPassword trustStorePassword = 
-					this.properties.getValue(
-							PropertySpec.SSL_TRUST_STORE_PASSWORD, 
-							EncryptedPassword.class);
-			String trustStoreType = this.properties.getValue(
-					PropertySpec.SSL_TRUST_STORE_TYPE, String.class);
-			trustManagers = TrustManagersFactory.newTrustManagers(
-					trustStoreFile, trustStorePassword, trustStoreType);
-		}
-		try {
-			context.init(keyManagers, trustManagers, new SecureRandom());
-		} catch (KeyManagementException e) {
-			throw new AssertionError(e);
-		}
-		this.sslContext = context;
-		return this.sslContext;
-	}
 	
 	@Override
 	public String toString() {
@@ -175,34 +114,6 @@ public abstract class SocksClient {
 			.append(this.socksServerUri)
 			.append("]");
 		return builder.toString();
-	}
-	
-	private SocketInterface wrapIfSslEnabled(
-			final SocketInterface socketInterface) throws IOException {
-		if (!this.properties.getValue(
-				PropertySpec.SSL_ENABLED, Boolean.class).booleanValue()) {
-			return socketInterface;
-		}
-		SSLContext sslContext = this.getSslContext();
-		SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
-		SSLSocket sslSocket = (SSLSocket) sslSocketFactory.createSocket(
-				new SocketInterfaceSocketAdapter(socketInterface), 
-				socksServerUri.getHost(), 
-				socksServerUri.getPort(), 
-				true); 
-		CipherSuites enabledCipherSuites = this.properties.getValue(
-				PropertySpec.SSL_ENABLED_CIPHER_SUITES, CipherSuites.class);
-		String[] cipherSuites = enabledCipherSuites.toStringArray();
-		if (cipherSuites.length > 0) {
-			sslSocket.setEnabledCipherSuites(cipherSuites);
-		}
-		Protocols enabledProtocols = this.properties.getValue(
-				PropertySpec.SSL_ENABLED_PROTOCOLS, Protocols.class);
-		String[] protocols = enabledProtocols.toStringArray();
-		if (protocols.length > 0) {
-			sslSocket.setEnabledProtocols(protocols);
-		}
-		return new DirectSocketInterface(sslSocket);
 	}
 	
 }

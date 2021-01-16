@@ -49,6 +49,7 @@ import jargyle.server.Configuration;
 import jargyle.server.SettingSpec;
 import jargyle.server.Settings;
 import jargyle.server.SocksClientFactory;
+import jargyle.server.SslWrapper;
 import jargyle.server.TcpRelayServer;
 
 public final class Socks5Worker implements Runnable {
@@ -64,10 +65,12 @@ public final class Socks5Worker implements Runnable {
 	private final Configuration configuration;
 	private final Settings settings;
 	private final SocksClient socksClient;
+	private final SslWrapper sslWrapper;
 	
 	public Socks5Worker(
 			final SocketInterface clientSockInterface, 
-			final Configuration config) {
+			final Configuration config, 
+			final SslWrapper wrapper) {
 		Settings sttngs = config.getSettings();
 		SocksClient client = SocksClientFactory.newSocksClient(config);
 		this.clientInputStream = null;
@@ -76,6 +79,7 @@ public final class Socks5Worker implements Runnable {
 		this.configuration = config;
 		this.settings = sttngs;
 		this.socksClient = client;
+		this.sslWrapper = wrapper;
 	}
 	
 	private SocketInterface authenticateUsing(final Method method) {
@@ -818,7 +822,7 @@ public final class Socks5Worker implements Runnable {
 			return null;
 		}
 		try {
-			clientDatagramSockInterface = this.wrapIfSslEnabled(
+			clientDatagramSockInterface = this.sslWrapper.wrapIfSslEnabled(
 					clientDatagramSockInterface);
 		} catch (IOException e) {
 			LOGGER.log(
@@ -1099,19 +1103,6 @@ public final class Socks5Worker implements Runnable {
 			.append(this.clientSocketInterface)
 			.append("]");
 		return builder.toString();
-	}
-	
-	private DatagramSocketInterface wrapIfSslEnabled(
-			final DatagramSocketInterface datagramSocketInterface) 
-			throws IOException {
-		/*
-		if (!this.socks5Client.getProperties().getValue(
-				PropertySpec.SSL_ENABLED, Boolean.class).booleanValue()) {
-			return datagramSocketInterface;
-		}
-		// TODO DtlsDatagramSocketInterface
-		*/
-		return datagramSocketInterface;			
 	}
 	
 	private void writeThenFlush(final byte[] b) throws IOException {

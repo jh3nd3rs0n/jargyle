@@ -16,7 +16,7 @@ import jargyle.ResourceNameConstants;
 import jargyle.common.net.Port;
 import jargyle.common.util.NonnegativeInteger;
 
-public class XmlFileSourceConfigurationServiceTest {
+public class XmlFileSourceConfigurationServiceIT {
 
 	private static final int ONE_SECOND = 1000;
 	

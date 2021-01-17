@@ -14,7 +14,7 @@ import jargyle.IoHelper;
 import jargyle.ResourceHelper;
 import jargyle.ResourceNameConstants;
 
-public class XmlFileSourceUsersServiceTest {
+public class XmlFileSourceUsersServiceIT {
 
 	private static final int ONE_SECOND = 1000;
 	

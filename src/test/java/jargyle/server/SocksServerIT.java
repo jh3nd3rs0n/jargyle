@@ -15,7 +15,7 @@ import jargyle.ResourceHelper;
 import jargyle.ResourceNameConstants;
 import jargyle.common.net.Port;
 
-public class SocksServerTest {
+public class SocksServerIT {
 
 	private static final int ONE_SECOND = 1000;
 	

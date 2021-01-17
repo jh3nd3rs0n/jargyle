@@ -51,19 +51,19 @@ final class Listener implements Runnable {
 						clientSocketInterface, 
 						null, 
 						true);
-			} catch (IOException e) {
+			} catch (Throwable t) {
 				LOGGER.log(
 						Level.WARNING, 
 						"Error in wrapping the client socket", 
-						e);
+						t);
 				if (!clientSocketInterface.isClosed()) {
 					try {
 						clientSocketInterface.close();
-					} catch (IOException e1) {
+					} catch (IOException e) {
 						LOGGER.log(
 								Level.WARNING, 
 								"Error in closing the client socket", 
-								e1);
+								e);
 					}
 				}
 				continue;

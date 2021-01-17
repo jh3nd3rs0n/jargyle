@@ -32,14 +32,14 @@ public final class SslWrapper {
 		this.sslContext = null;
 	}
 	
-	private SSLContext getSslContext() {
+	private SSLContext getSslContext() throws IOException {
 		if (this.sslContext == null) {
 			return this.newSslContext();
 		}
 		return this.sslContext;
 	}
 
-	private SSLContext newSslContext() {
+	private SSLContext newSslContext() throws IOException {
 		SSLContext context = null;
 		String protocol = this.properties.getValue(
 				PropertySpec.SSL_PROTOCOL, String.class);
@@ -77,7 +77,7 @@ public final class SslWrapper {
 		try {
 			context.init(keyManagers, trustManagers, new SecureRandom());
 		} catch (KeyManagementException e) {
-			throw new AssertionError(e);
+			throw new IOException(e);
 		}
 		this.sslContext = context;
 		return this.sslContext;

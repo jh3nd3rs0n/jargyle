@@ -1,6 +1,7 @@
 package jargyle.common.net.ssl;
 
 import java.io.File;
+import java.io.IOException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -17,7 +18,7 @@ public final class KeyManagersFactory {
 	public static KeyManager[] newKeyManagers(
 			final File keyStoreFile, 
 			final EncryptedPassword keyStorePassword, 
-			final String keyStoreType) {
+			final String keyStoreType) throws IOException {
 		KeyStore keyStore = KeyStoreFactory.newKeyStore(
 				keyStoreFile, keyStorePassword, keyStoreType);
 		KeyManagerFactory keyManagerFactory = null;
@@ -31,11 +32,11 @@ public final class KeyManagersFactory {
 			keyManagerFactory.init(
 					keyStore, keyStorePassword.getPassword());
 		} catch (UnrecoverableKeyException e) {
-			throw new AssertionError(e);
+			throw new IOException(e);
 		} catch (KeyStoreException e) {
-			throw new AssertionError(e);
+			throw new IOException(e);
 		} catch (NoSuchAlgorithmException e) {
-			throw new AssertionError(e);
+			throw new IOException(e);
 		}
 		return keyManagerFactory.getKeyManagers();
 	}

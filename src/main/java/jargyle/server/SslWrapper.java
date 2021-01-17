@@ -41,7 +41,7 @@ public final class SslWrapper {
 		this.lastTrustStoreFileModified = 0L;		
 	}
 	
-	private SSLContext getSslContext() {
+	private SSLContext getSslContext() throws IOException {
 		Settings settings = this.configuration.getSettings();
 		File keyStoreFile = settings.getLastValue(
 				SettingSpec.SSL_KEY_STORE_FILE, File.class);
@@ -87,7 +87,7 @@ public final class SslWrapper {
 		return this.lastSslContext;
 	}
 	
-	private SSLContext newSslContext() {
+	private SSLContext newSslContext() throws IOException {
 		SSLContext sslContext = null;
 		Settings settings = this.configuration.getSettings();
 		String protocol = settings.getLastValue(
@@ -126,7 +126,7 @@ public final class SslWrapper {
 		try {
 			sslContext.init(keyManagers, trustManagers, new SecureRandom());
 		} catch (KeyManagementException e) {
-			throw new AssertionError(e);
+			throw new IOException(e);
 		}
 		this.lastKeyStoreFile = keyStoreFile;
 		if (keyStoreFile != null) {

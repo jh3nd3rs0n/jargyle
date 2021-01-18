@@ -40,6 +40,14 @@ public final class FileMonitor implements Runnable {
 	*/
 
 	private static final class CreatedFileStatus extends FileStatus {
+		
+		public static boolean isCreated(
+				final File file, final FileStatus lastFileStatus) {
+			return (lastFileStatus == null 
+					|| lastFileStatus instanceof DeletedFileStatus
+					|| lastFileStatus instanceof NonexistentFileStatus) 
+					&& file.exists();
+		}
 
 		public CreatedFileStatus(final long time) {
 			super(time);
@@ -49,23 +57,15 @@ public final class FileMonitor implements Runnable {
 	
 	private static final class DeletedFileStatus extends FileStatus {
 
+		public static boolean isDeleted(
+				final File file, final FileStatus lastFileStatus) {
+			return lastFileStatus != null 
+					&& (lastFileStatus instanceof CreatedFileStatus
+							|| lastFileStatus instanceof ModifiedFileStatus) 
+					&& !file.exists();
+		}
+		
 		public DeletedFileStatus(final long time) {
-			super(time);
-		}
-		
-	}
-	
-	private static final class ModifiedFileStatus extends FileStatus {
-
-		public ModifiedFileStatus(final long time) {
-			super(time);
-		}
-		
-	}
-	
-	private static final class NonexistentFileStatus extends FileStatus {
-
-		public NonexistentFileStatus(final long time) {
 			super(time);
 		}
 		
@@ -75,29 +75,20 @@ public final class FileMonitor implements Runnable {
 		
 		public static FileStatus get(
 				final File file, final FileStatus lastFileStatus) {
-			if (lastFileStatus == null && !file.exists()) {
-				return new NonexistentFileStatus(System.currentTimeMillis());
-			}
-			if ((lastFileStatus == null 
-					|| lastFileStatus instanceof DeletedFileStatus
-					|| lastFileStatus instanceof NonexistentFileStatus) 
-					&& file.exists()) {
+			if (CreatedFileStatus.isCreated(file, lastFileStatus)) {
 				return new CreatedFileStatus(System.currentTimeMillis());
 			}
-			if (lastFileStatus != null 
-					&& (lastFileStatus instanceof CreatedFileStatus
-							|| lastFileStatus instanceof ModifiedFileStatus) 
-					&& !file.exists()) {
+			if (DeletedFileStatus.isDeleted(file, lastFileStatus)) {
 				return new DeletedFileStatus(System.currentTimeMillis());
 			}
-			if (lastFileStatus != null
-					&& (lastFileStatus instanceof CreatedFileStatus
-							|| lastFileStatus instanceof ModifiedFileStatus)
-					&& file.exists()) {
+			if (ModifiedFileStatus.isExisting(file, lastFileStatus)) {
 				long lastModified = file.lastModified();
 				if (lastModified > lastFileStatus.since()) {
 					return new ModifiedFileStatus(lastModified);
 				}
+			}
+			if (NonexistentFileStatus.isNonexistent(file, lastFileStatus)) {
+				return new NonexistentFileStatus(System.currentTimeMillis());
 			}
 			return lastFileStatus;
 		}
@@ -110,6 +101,35 @@ public final class FileMonitor implements Runnable {
 		
 		public long since() {
 			return this.since;
+		}
+		
+	}
+	
+	private static final class ModifiedFileStatus extends FileStatus {
+
+		public static boolean isExisting(
+				final File file, final FileStatus lastFileStatus) {
+			return lastFileStatus != null
+					&& (lastFileStatus instanceof CreatedFileStatus
+							|| lastFileStatus instanceof ModifiedFileStatus)
+					&& file.exists();
+		}
+		
+		public ModifiedFileStatus(final long time) {
+			super(time);
+		}
+		
+	}
+	
+	private static final class NonexistentFileStatus extends FileStatus {
+
+		public static boolean isNonexistent(
+				final File file, final FileStatus lastFileStatus) {
+			return lastFileStatus == null && !file.exists();
+		}
+		
+		public NonexistentFileStatus(final long time) {
+			super(time);
 		}
 		
 	}

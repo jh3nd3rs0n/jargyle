@@ -12,6 +12,11 @@ Jargyle is a Java SOCKS5 server. It has the following features:
 -   [Allow or block client addresses and external incoming addresses](#4-11-allowing-or-blocking-addresses)
 -   [Allow or block SOCKS5 requests](#4-12-allowing-or-blocking-socks5-requests)
 
+Although Jargyle can act as a standalone SOCKS5 server, it can act as a bridge between the following:
+
+-   Operating systems and applications that access SOCKS5 servers using plaintext connections and no SOCKS5 authentication
+-   SOCKS5 servers requiring SSL/TLS connections and/or SOCKS5 authentication
+
 **Disclaimer:** Jargyle is a hobby project and is currently subject to breaking changes. Jargyle is currently not production ready but it aims to be.
 
 ## Contents
@@ -50,7 +55,6 @@ Jargyle is a Java SOCKS5 server. It has the following features:
 -   [5. 2. Multiple Settings of the Same Name](#5-2-multiple-settings-of-the-same-name)
 -   [5. 3. The SOCKS5 RESOLVE Command](#5-3-the-socks5-resolve-command)
 -   [6. Contact](#6-contact)
--   [7. Donate](#7-donate)
 
 ## 1. Requirements
 
@@ -1771,7 +1775,3 @@ A SOCKS5 request with the RESOLVE command should contain the provided desired de
 ## 6. Contact
 
 If you have any questions or comments, you can e-mail me at `j0n4th4n.h3nd3rs0n@gmail.com`
-
-## 7. Donate
-
-[PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=BRABJQVU3S6LW&currency_code=USD&source=url)

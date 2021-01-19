@@ -17,7 +17,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import argmatey.ArgMatey;
-import argmatey.ArgMatey.Annotations.Ignore;
 import argmatey.ArgMatey.Annotations.Option;
 import argmatey.ArgMatey.Annotations.OptionArgSpec;
 import argmatey.ArgMatey.Annotations.Ordinal;
@@ -54,6 +53,7 @@ public final class SocksServerCLI extends CLI {
 	private static final int SETTING_OPTION_GROUP_ORDINAL = 10;
 	private static final int SETTINGS_HELP_OPTION_GROUP_ORDINAL = 11;
 	private static final int SOCKS5_USERS_OPTION_GROUP_ORDINAL = 12;
+	private static final int VERSION_OPTION_GROUP_ORDINAL = 13;
 	
 	private static final Logger LOGGER = Logger.getLogger(
 			SocksServerCLI.class.getName());
@@ -210,10 +210,24 @@ public final class SocksServerCLI extends CLI {
 		this.programHelpDisplayed = true;
 	}
 	
-	@Ignore
+	@Option(
+			doc = "Print version information and exit",
+			name = "version",
+			type = OptionType.GNU_LONG
+	)
+	@Option(
+			name = "v",
+			type = OptionType.POSIX
+	)
+	@Ordinal(VERSION_OPTION_GROUP_ORDINAL)	
 	@Override
 	protected void displayProgramVersion() { 
-		throw new UnsupportedOperationException("not implemented");
+		Package pkg = this.getClass().getPackage();
+		System.out.printf(
+				"%s %s%n", 
+				pkg.getSpecificationTitle(), 
+				pkg.getSpecificationVersion());
+		this.programVersionDisplayed = true;
 	}
 		
 	@Option(
@@ -409,6 +423,7 @@ public final class SocksServerCLI extends CLI {
 			if (this.configurationFileXsdRequested
 					|| this.newConfigurationFileRequested
 					|| this.programHelpDisplayed
+					|| this.programVersionDisplayed
 					|| this.settingsHelpDisplayed) {
 				return 0;
 			}

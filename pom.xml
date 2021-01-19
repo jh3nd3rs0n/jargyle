@@ -92,8 +92,7 @@
 					</execution>
 				</executions>
 				<configuration>
-					<excludeGroupIds>org.apache.kerby,junit</excludeGroupIds>
-					<excludeTransitive>true</excludeTransitive>
+					<includeScope>runtime</includeScope>
 					<outputDirectory>${project.build.directory}/lib</outputDirectory>
 				</configuration>
 			</plugin>
@@ -124,6 +123,8 @@
 					<archive>
 						<manifest>
 							<addClasspath>true</addClasspath>
+							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+							<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
 							<classpathPrefix>lib/</classpathPrefix>
 							<mainClass>jargyle.server.SocksServer</mainClass>
 						</manifest>

@@ -94,10 +94,15 @@ After running the aforementioned command, the executable jar file and its copied
     
     target/jargyle-${VERSION}.jar
     target/lib/activation-1.1.1.jar
+    target/lib/FastInfoset-1.2.15.jar
+    target/lib/istack-commons-runtime-3.0.7.jar
+    target/lib/javax.activation-api-1.2.0.jar
     target/lib/jaxb-api-2.3.1.jar
     target/lib/jaxb-core-2.3.0.jar
     target/lib/jaxb-impl-2.3.0.jar
     target/lib/jaxb-runtime-2.3.1.jar
+    target/lib/stax-ex-1.8.jar
+    target/lib/txw2-2.3.1.jar
     
 ```
 
@@ -158,6 +163,8 @@ The following is the command line help for Jargyle (displayed when using the com
           Print the list of available settings for the SOCKS server and exit
       --socks5-users
           Mode for managing SOCKS5 users (add --help for more information)
+      --version, -v
+          Print version information and exit
     
 ```
 

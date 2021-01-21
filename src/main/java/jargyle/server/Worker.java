@@ -2,15 +2,11 @@ package jargyle.server;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.SocketException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import jargyle.common.net.SocketInterface;
-import jargyle.common.net.SocketSettings;
 import jargyle.common.net.socks5.Version;
-import jargyle.common.util.Criteria;
-import jargyle.common.util.Criterion;
 import jargyle.server.socks5.Socks5Worker;
 
 final class Worker implements Runnable {
@@ -20,7 +16,6 @@ final class Worker implements Runnable {
 	
 	private final SocketInterface clientSocketInterface;
 	private final Configuration configuration;
-	private final Settings settings;
 	private final SslWrapper sslWrapper;
 	
 	public Worker(
@@ -29,57 +24,7 @@ final class Worker implements Runnable {
 			final SslWrapper wrapper) {
 		this.clientSocketInterface = clientSockInterface;
 		this.configuration = config;
-		this.settings = config.getSettings();
 		this.sslWrapper = wrapper;
-	}
-	
-	private boolean canAcceptClientSocketInterface(
-			final SocketInterface clientSocketInterface) {
-		String clientAddress = 
-				clientSocketInterface.getInetAddress().getHostAddress();
-		Criteria allowedClientAddressCriteria = this.settings.getLastValue(
-				SettingSpec.ALLOWED_CLIENT_ADDRESS_CRITERIA, Criteria.class);
-		Criterion criterion = allowedClientAddressCriteria.anyEvaluatesTrue(
-				clientAddress);
-		if (criterion == null) {
-			LOGGER.log(
-					Level.FINE, 
-					this.format(String.format(
-							"Client address %s not allowed", 
-							clientAddress)));
-			return false;
-		}
-		Criteria blockedClientAddressCriteria = this.settings.getLastValue(
-				SettingSpec.BLOCKED_CLIENT_ADDRESS_CRITERIA, Criteria.class);
-		criterion = blockedClientAddressCriteria.anyEvaluatesTrue(
-				clientAddress);
-		if (criterion != null) {
-			LOGGER.log(
-					Level.FINE, 
-					this.format(String.format(
-							"Client address %s blocked based on the "
-							+ "following criterion: %s", 
-							clientAddress,
-							criterion)));
-			return false;
-		}
-		return true;
-	}
-	
-	private boolean configureClientSocketInterface(
-			final SocketInterface clientSocketInterface) {
-		try {
-			SocketSettings socketSettings =	this.settings.getLastValue(
-					SettingSpec.CLIENT_SOCKET_SETTINGS, SocketSettings.class);
-			socketSettings.applyTo(clientSocketInterface);
-		} catch (SocketException e) {
-			LOGGER.log(
-					Level.WARNING, 
-					this.format("Error in setting the client socket"), 
-					e);
-			return false;
-		}
-		return true;
 	}
 	
 	private String format(final String message) {
@@ -88,14 +33,6 @@ final class Worker implements Runnable {
 	
 	public void run() {
 		try {
-			if (!this.canAcceptClientSocketInterface(
-					this.clientSocketInterface)) {
-				return;
-			}
-			if (!this.configureClientSocketInterface(
-					this.clientSocketInterface)) {
-				return;
-			}
 			InputStream clientInputStream = 
 					this.clientSocketInterface.getInputStream();
 			int version = -1;

@@ -66,18 +66,14 @@ final class Listener implements Runnable {
 	
 	private void closeClientSocketInterface(
 			final SocketInterface clientSocketInterface) {
-		try {
-			clientSocketInterface.close();
-		} catch (IOException e) {
-			if (!clientSocketInterface.isClosed()) {
-				try {
-					clientSocketInterface.close();
-				} catch (IOException e1) {
-					LOGGER.log(
-							Level.WARNING, 
-							this.format("Error in closing the client socket"), 
-							e1);
-				}
+		if (!clientSocketInterface.isClosed()) {
+			try {
+				clientSocketInterface.close();
+			} catch (IOException e) {
+				LOGGER.log(
+						Level.WARNING, 
+						this.format("Error in closing the client socket"), 
+						e);
 			}
 		}
 	}
@@ -132,12 +128,13 @@ final class Listener implements Runnable {
 					this.closeClientSocketInterface(clientSocketInterface);
 					continue;
 				}
-				clientSocketInterface = this.wrapClientSocketInterface(
-						clientSocketInterface);
-				if (clientSocketInterface == null) {
+				SocketInterface clientSockInterface = 
+						this.wrapClientSocketInterface(clientSocketInterface); 
+				if (clientSockInterface == null) {
 					this.closeClientSocketInterface(clientSocketInterface);
 					continue; 
 				}
+				clientSocketInterface = clientSockInterface;
 			} catch (Throwable t) {
 				LOGGER.log(
 						Level.WARNING, 

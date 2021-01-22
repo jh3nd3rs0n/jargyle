@@ -737,11 +737,13 @@ public final class Socks5Worker implements Runnable {
 					clientDatagramSockInterface)) {
 				return;
 			}
-			clientDatagramSockInterface = this.wrapClientDatagramSocketInterface(
-					clientDatagramSockInterface);
-			if (clientDatagramSockInterface == null) {
+			DatagramSocketInterface clientDatagramSock = 
+					this.wrapClientDatagramSocketInterface(
+							clientDatagramSockInterface); 
+			if (clientDatagramSock == null) {
 				return;
 			}
+			clientDatagramSockInterface = clientDatagramSock;
 			InetAddress inetAddress = clientDatagramSockInterface.getLocalAddress();
 			String serverBoundAddress = inetAddress.getHostAddress();
 			if (!serverBoundAddress.matches("[a-zA-Z1-9]")) {

@@ -34,7 +34,7 @@ public final class SslWrapper {
 	
 	private SSLContext getSslContext() throws IOException {
 		if (this.sslContext == null) {
-			return this.newSslContext();
+			this.sslContext = this.newSslContext();
 		}
 		return this.sslContext;
 	}
@@ -79,8 +79,7 @@ public final class SslWrapper {
 		} catch (KeyManagementException e) {
 			throw new IOException(e);
 		}
-		this.sslContext = context;
-		return this.sslContext;
+		return context;
 	}
 	
 	public DatagramSocketInterface wrapIfSslEnabled(

@@ -58,11 +58,16 @@ Although Jargyle can act as a standalone SOCKS5 server, it can act as a bridge b
 
 ## 1. News
 
+-   2021-01-22: Jargyle 1.0.3 is released
 -   2021-01-21: Jargyle 1.0.2 is released
 -   2021-01-21: Jargyle 1.0.1 is released
 -   2021-01-20: Jargyle 1.0.0 is released
 
 ## 2. Release Notes
+
+Jargyle 1.0.3 Release Notes
+
+-   Fixed any monitored and changed server-side SSL/TLS context related settings to be applied to the running configuration.
 
 Jargyle 1.0.2 Release Notes
 

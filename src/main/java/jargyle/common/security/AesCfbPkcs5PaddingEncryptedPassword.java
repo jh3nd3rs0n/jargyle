@@ -161,6 +161,32 @@ final class AesCfbPkcs5PaddingEncryptedPassword extends EncryptedPassword {
 		this.initializationVector = Arrays.copyOf(iv, iv.length);
 	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (this.getClass() != obj.getClass()) {
+			return false;
+		}
+		AesCfbPkcs5PaddingEncryptedPassword other = 
+				(AesCfbPkcs5PaddingEncryptedPassword) obj;
+		if (!Arrays.equals(this.encodedKey, other.encodedKey)) {
+			return false;
+		}
+		if (!Arrays.equals(this.encrypted, other.encrypted)) {
+			return false;
+		}
+		if (!Arrays.equals(
+				this.initializationVector, other.initializationVector)) {
+			return false;
+		}
+		return true;
+	}
+	
 	public byte[] getEncodedKey() {
 		return Arrays.copyOf(this.encodedKey, this.encodedKey.length);
 	}
@@ -173,7 +199,7 @@ final class AesCfbPkcs5PaddingEncryptedPassword extends EncryptedPassword {
 		return Arrays.copyOf(
 				this.initializationVector, this.initializationVector.length);
 	}
-	
+
 	@Override
 	public char[] getPassword() {
 		Cipher cipher = null;
@@ -220,6 +246,16 @@ final class AesCfbPkcs5PaddingEncryptedPassword extends EncryptedPassword {
 			}
 		} while (ch != -1);
 		return password;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + Arrays.hashCode(this.encodedKey);
+		result = prime * result + Arrays.hashCode(this.encrypted);
+		result = prime * result + Arrays.hashCode(this.initializationVector);
+		return result;
 	}
 
 	public AesCfbPkcs5PaddingEncryptedPasswordXml toAesCbcPkcs5PaddingEncryptedPasswordXml() {

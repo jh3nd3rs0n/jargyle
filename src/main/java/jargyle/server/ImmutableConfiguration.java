@@ -153,7 +153,7 @@ public final class ImmutableConfiguration extends Configuration {
 		}
 		return this.settings;
 	}
-
+	
 	private ConfigurationXml toConfigurationXml() {
 		ConfigurationXml configurationXml = new ConfigurationXml();
 		if (this.settings != null) {
@@ -161,7 +161,7 @@ public final class ImmutableConfiguration extends Configuration {
 		}
 		return configurationXml;
 	}
-	
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -171,7 +171,7 @@ public final class ImmutableConfiguration extends Configuration {
 			.append("]");
 		return builder.toString();
 	}
-	
+
 	public byte[] toXml() {
 		if (!XmlBindHelper.isOptimizedCodeGenerationDisabled()) {
 			XmlBindHelper.setOptimizedCodeGenerationDisabled(true);

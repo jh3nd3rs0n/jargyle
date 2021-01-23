@@ -82,5 +82,11 @@ public abstract class HashedPassword {
 		}
 		return hashedPassword;
 	}
+
+	@Override
+	public abstract boolean equals(Object obj);
+	
+	@Override
+	public abstract int hashCode();
 	
 }

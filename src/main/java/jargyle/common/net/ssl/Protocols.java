@@ -11,15 +11,41 @@ public final class Protocols {
 		}
 		return newInstance(s.split(" "));
 	}
-	
+
 	public static Protocols newInstance(final String[] prtcls) {
 		return new Protocols(prtcls);
 	}
-	
+
 	private final String[] protocols;
 	
 	private Protocols(final String[] prtcls) {
 		this.protocols = Arrays.copyOf(prtcls, prtcls.length);
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (this.getClass() != obj.getClass()) {
+			return false;
+		}
+		Protocols other = (Protocols) obj;
+		if (!Arrays.equals(this.protocols, other.protocols)) {
+			return false;
+		}
+		return true;
+	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + Arrays.hashCode(this.protocols);
+		return result;
 	}
 	
 	@Override

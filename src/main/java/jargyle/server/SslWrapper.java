@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.Objects;
 
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.SSLContext;
@@ -27,99 +26,20 @@ import jargyle.common.security.EncryptedPassword;
 public final class SslWrapper {
 	
 	private final Configuration configuration;
-	private File lastKeyStoreFile;
-	private long lastKeyStoreFileModified;
-	private EncryptedPassword lastKeyStorePassword;
-	private String lastKeyStoreType;
-	private String lastProtocol;
-	private File lastTrustStoreFile;
-	private long lastTrustStoreFileModified;
-	private EncryptedPassword lastTrustStorePassword;
-	private String lastTrustStoreType;
+	private Configuration lastConfiguration;
 	private SSLContext sslContext;	
 	
 	SslWrapper(final Configuration config) {
 		this.configuration = config;
-		this.lastKeyStoreFile = null;
-		this.lastKeyStoreFileModified = 0L;
-		this.lastKeyStorePassword = null;
-		this.lastKeyStoreType = null;
-		this.lastProtocol = null;
-		this.lastTrustStoreFile = null;
-		this.lastTrustStoreFileModified = 0L;
-		this.lastTrustStorePassword = null;
-		this.lastTrustStoreType = null;
+		this.lastConfiguration = null;
 		this.sslContext = null;		
 	}
 	
 	private SSLContext getSslContext() throws IOException {
-		if (this.isNewSslContextNeeded()) {
+		if (!Configuration.equals(this.lastConfiguration, this.configuration)) {
 			this.sslContext = this.newSslContext();
 		}
 		return this.sslContext;
-	}
-	
-	private boolean isNewSslContextNeeded() {
-		if (this.sslContext == null) {
-			return true;
-		}
-		Settings settings = this.configuration.getSettings();
-		File keyStoreFile = settings.getLastValue(
-				SettingSpec.SSL_KEY_STORE_FILE, File.class);
-		if (!Objects.equals(this.lastKeyStoreFile, keyStoreFile)) {
-			return true;
-		} else {
-			if (keyStoreFile != null 
-					&& this.lastKeyStoreFileModified < keyStoreFile.lastModified()) {
-				return true;
-			}
-		}
-		char[] lastKeyStorePsswrd = (this.lastKeyStorePassword != null) ? 
-				this.lastKeyStorePassword.getPassword() : null; 
-		EncryptedPassword keyStorePassword = settings.getLastValue(
-				SettingSpec.SSL_KEY_STORE_PASSWORD, 
-				EncryptedPassword.class);
-		char[] keyStorePsswrd = (keyStorePassword != null) ? 
-				keyStorePassword.getPassword() : null;
-		if (!Objects.deepEquals(lastKeyStorePsswrd, keyStorePsswrd)) {
-			return true;
-		}		
-		String keyStoreType = settings.getLastValue(
-				SettingSpec.SSL_KEY_STORE_TYPE, String.class);
-		if (!Objects.equals(this.lastKeyStoreType, keyStoreType)) {
-			return true;
-		}
-		String protocol = settings.getLastValue(
-				SettingSpec.SSL_PROTOCOL, String.class);
-		if (!Objects.equals(this.lastProtocol, protocol)) {
-			return true;
-		}
-		File trustStoreFile = settings.getLastValue(
-				SettingSpec.SSL_TRUST_STORE_FILE, File.class);
-		if (!Objects.equals(this.lastTrustStoreFile, trustStoreFile)) {
-			return true;
-		} else {
-			if (trustStoreFile != null 
-					&& this.lastTrustStoreFileModified < trustStoreFile.lastModified()) {
-				return true;
-			}			
-		}
-		char[] lastTrustStorePsswrd = (this.lastTrustStorePassword != null) ?
-				this.lastTrustStorePassword.getPassword() : null;
-		EncryptedPassword trustStorePassword = settings.getLastValue(
-				SettingSpec.SSL_TRUST_STORE_PASSWORD,
-				EncryptedPassword.class);
-		char[] trustStorePsswrd = (trustStorePassword != null) ?
-				trustStorePassword.getPassword() : null;
-		if (!Objects.deepEquals(lastTrustStorePsswrd, trustStorePsswrd)) {
-			return true;
-		}
-		String trustStoreType = settings.getLastValue(
-				SettingSpec.SSL_TRUST_STORE_TYPE, String.class);
-		if (!Objects.equals(this.lastTrustStoreType, trustStoreType)) {
-			return true;
-		}
-		return false;		
 	}
 	
 	private SSLContext newSslContext() throws IOException {
@@ -136,25 +56,25 @@ public final class SslWrapper {
 		TrustManager[] trustManagers = null;
 		File keyStoreFile = settings.getLastValue(
 				SettingSpec.SSL_KEY_STORE_FILE, File.class);
-		EncryptedPassword keyStorePassword = 
-				settings.getLastValue(
-						SettingSpec.SSL_KEY_STORE_PASSWORD, 
-						EncryptedPassword.class);
-		String keyStoreType = settings.getLastValue(
-				SettingSpec.SSL_KEY_STORE_TYPE, String.class);
 		if (keyStoreFile != null) {
+			EncryptedPassword keyStorePassword = 
+					settings.getLastValue(
+							SettingSpec.SSL_KEY_STORE_PASSWORD, 
+							EncryptedPassword.class);
+			String keyStoreType = settings.getLastValue(
+					SettingSpec.SSL_KEY_STORE_TYPE, String.class);
 			keyManagers = KeyManagersFactory.newKeyManagers(
 					keyStoreFile, keyStorePassword, keyStoreType);
 		}
 		File trustStoreFile = settings.getLastValue(
 				SettingSpec.SSL_TRUST_STORE_FILE, File.class);
-		EncryptedPassword trustStorePassword =
-				settings.getLastValue(
-						SettingSpec.SSL_TRUST_STORE_PASSWORD, 
-						EncryptedPassword.class);
-		String trustStoreType = settings.getLastValue(
-				SettingSpec.SSL_TRUST_STORE_TYPE, String.class);
 		if (trustStoreFile != null) {
+			EncryptedPassword trustStorePassword =
+					settings.getLastValue(
+							SettingSpec.SSL_TRUST_STORE_PASSWORD, 
+							EncryptedPassword.class);
+			String trustStoreType = settings.getLastValue(
+					SettingSpec.SSL_TRUST_STORE_TYPE, String.class);			
 			trustManagers = TrustManagersFactory.newTrustManagers(
 					trustStoreFile, trustStorePassword, trustStoreType);
 		}
@@ -163,19 +83,8 @@ public final class SslWrapper {
 		} catch (KeyManagementException e) {
 			throw new IOException(e);
 		}
-		this.lastKeyStoreFile = keyStoreFile;
-		if (keyStoreFile != null) {
-			this.lastKeyStoreFileModified = keyStoreFile.lastModified();
-		}
-		this.lastKeyStorePassword = keyStorePassword;
-		this.lastKeyStoreType = keyStoreType;
-		this.lastProtocol = protocol;
-		this.lastTrustStoreFile = trustStoreFile;
-		if (trustStoreFile != null) {
-			this.lastTrustStoreFileModified = trustStoreFile.lastModified();
-		}
-		this.lastTrustStorePassword = trustStorePassword;
-		this.lastTrustStoreType = trustStoreType;
+		this.lastConfiguration = ImmutableConfiguration.newInstance(
+				this.configuration);
 		return context;
 	}
 	
@@ -183,7 +92,8 @@ public final class SslWrapper {
 			final DatagramSocketInterface datagramSocketInterface) 
 			throws IOException {
 		/*
-		if (!this.configuration.getSettings().getLastValue(
+		Settings settings = this.configuration.getSettings();
+		if (!settings.getLastValue(
 				SettingSpec.SSL_ENABLED, Boolean.class).booleanValue()) {
 			return datagramSocketInterface;
 		}

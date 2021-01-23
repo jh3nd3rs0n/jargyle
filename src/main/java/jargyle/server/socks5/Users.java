@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.xml.bind.JAXBContext;
@@ -139,6 +138,28 @@ public final class Users {
 		this.users = new ArrayList<User>(usrs);
 	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (this.getClass() != obj.getClass()) {
+			return false;
+		}
+		Users other = (Users) obj;
+		if (this.users == null) {
+			if (other.users != null) {
+				return false;
+			}
+		} else if (!this.users.equals(other.users)) {
+			return false;
+		}
+		return true;
+	}
+	
 	public List<User> get(final String name) {
 		List<User> usrs = new ArrayList<User>();
 		for (User user : this.users) {
@@ -158,24 +179,28 @@ public final class Users {
 		return usr;
 	}
 	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((this.users == null) ? 0 : this.users.hashCode());
+		return result;
+	}
+
 	public List<User> toList() {
 		return Collections.unmodifiableList(this.users);
 	}
-	
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		for (Iterator<User> iterator = this.users.iterator(); 
-				iterator.hasNext();) {
-			User user = iterator.next();
-			builder.append(user.toString());
-			if (iterator.hasNext()) {
-				builder.append(" ");
-			}
-		}
+		builder.append(this.getClass().getSimpleName())
+			.append(" [users=")
+			.append(this.users)
+			.append("]");
 		return builder.toString();
 	}
-	
+
 	private UsersXml toUsersXml() {
 		UsersXml usersXml = new UsersXml();
 		usersXml.users.addAll(this.users);

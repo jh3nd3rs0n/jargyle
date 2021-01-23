@@ -113,6 +113,28 @@ public final class SocketSettings {
 		}
 	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (this.getClass() != obj.getClass()) {
+			return false;
+		}
+		SocketSettings other = (SocketSettings) obj;
+		if (this.socketSettings == null) {
+			if (other.socketSettings != null) {
+				return false;
+			}
+		} else if (!this.socketSettings.equals(other.socketSettings)) {
+			return false;
+		}
+		return true;
+	}
+	
 	public <T> T getValue(
 			final SocketSettingSpec socketSettingSpec, final Class<T> type) {
 		T value = null;
@@ -124,6 +146,14 @@ public final class SocketSettings {
 			value = val; 
 		}
 		return value;
+	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((this.socketSettings == null) ? 0 : this.socketSettings.hashCode());
+		return result;
 	}
 	
 	public <T> T putValue(
@@ -139,11 +169,11 @@ public final class SocketSettings {
 		}
 		return recentValue;
 	}
-	
+
 	public Map<SocketSettingSpec, SocketSetting> toMap() {
 		return Collections.unmodifiableMap(this.socketSettings);
 	}
-	
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();

@@ -101,6 +101,35 @@ public final class UsernamePassword {
 		this.username = usrnm;
 	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (this.getClass() != obj.getClass()) {
+			return false;
+		}
+		UsernamePassword other = (UsernamePassword) obj;
+		if (this.encryptedPassword == null) {
+			if (other.encryptedPassword != null) {
+				return false;
+			}
+		} else if (!this.encryptedPassword.equals(other.encryptedPassword)) {
+			return false;
+		}
+		if (this.username == null) {
+			if (other.username != null) {
+				return false;
+			}
+		} else if (!this.username.equals(other.username)) {
+			return false;
+		}
+		return true;
+	}
+	
 	public EncryptedPassword getEncryptedPassword() {
 		return this.encryptedPassword;
 	}
@@ -108,7 +137,16 @@ public final class UsernamePassword {
 	public String getUsername() {
 		return this.username;
 	}
-	
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((this.encryptedPassword == null) ? 0 : this.encryptedPassword.hashCode());
+		result = prime * result + ((this.username == null) ? 0 : this.username.hashCode());
+		return result;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();

@@ -70,9 +70,10 @@ public final class Socks5Worker implements Runnable {
 	public Socks5Worker(
 			final SocketInterface clientSockInterface, 
 			final Configuration config, 
+			final SocksClientFactory factory, 
 			final SslWrapper wrapper) {
 		Settings sttngs = config.getSettings();
-		SocksClient client = SocksClientFactory.newSocksClient(config);
+		SocksClient client = factory.getSocksClient();
 		this.clientInputStream = null;
 		this.clientOutputStream = null;
 		this.clientSocketInterface = clientSockInterface;

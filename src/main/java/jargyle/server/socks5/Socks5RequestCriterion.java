@@ -106,6 +106,49 @@ public final class Socks5RequestCriterion {
 		this.desiredDestinationPortRanges = desiredDestinationPrtRange;
 	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (this.getClass() != obj.getClass()) {
+			return false;
+		}
+		Socks5RequestCriterion other = (Socks5RequestCriterion) obj;
+		if (this.commandCriterion == null) {
+			if (other.commandCriterion != null) {
+				return false;
+			}
+		} else if (!this.commandCriterion.equals(other.commandCriterion)) {
+			return false;
+		}
+		if (this.desiredDestinationAddressCriterion == null) {
+			if (other.desiredDestinationAddressCriterion != null) {
+				return false;
+			}
+		} else if (!this.desiredDestinationAddressCriterion.equals(other.desiredDestinationAddressCriterion)) {
+			return false;
+		}
+		if (this.desiredDestinationPortRanges == null) {
+			if (other.desiredDestinationPortRanges != null) {
+				return false;
+			}
+		} else if (!this.desiredDestinationPortRanges.equals(other.desiredDestinationPortRanges)) {
+			return false;
+		}
+		if (this.sourceAddressCriterion == null) {
+			if (other.sourceAddressCriterion != null) {
+				return false;
+			}
+		} else if (!this.sourceAddressCriterion.equals(other.sourceAddressCriterion)) {
+			return false;
+		}
+		return true;
+	}
+	
 	public boolean evaluatesTrue(
 			final String sourceAddress, 
 			final Socks5Request socks5Req) {
@@ -127,7 +170,7 @@ public final class Socks5RequestCriterion {
 		}
 		return true;
 	}
-	
+
 	public Criterion getCommandCriterion() {
 		if (this.commandCriterion == null) {
 			return DEFAULT_COMMAND_CRITERION;
@@ -141,7 +184,7 @@ public final class Socks5RequestCriterion {
 		}
 		return this.desiredDestinationAddressCriterion;
 	}
-
+	
 	public PortRanges getDesiredDestinationPortRanges() {
 		if (this.desiredDestinationPortRanges == null) {
 			return DEFAULT_DESIRED_DESTINATION_PORT_RANGES;
@@ -155,7 +198,20 @@ public final class Socks5RequestCriterion {
 		}
 		return this.sourceAddressCriterion;
 	}
-	
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((this.commandCriterion == null) ? 0 : this.commandCriterion.hashCode());
+		result = prime * result
+				+ ((this.desiredDestinationAddressCriterion == null) ? 0 : this.desiredDestinationAddressCriterion.hashCode());
+		result = prime * result
+				+ ((this.desiredDestinationPortRanges == null) ? 0 : this.desiredDestinationPortRanges.hashCode());
+		result = prime * result + ((this.sourceAddressCriterion == null) ? 0 : this.sourceAddressCriterion.hashCode());
+		return result;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();

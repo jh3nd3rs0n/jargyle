@@ -79,6 +79,36 @@ public final class Socks5RequestCriteria {
 		return null;
 	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (this.getClass() != obj.getClass()) {
+			return false;
+		}
+		Socks5RequestCriteria other = (Socks5RequestCriteria) obj;
+		if (this.socks5RequestCriteria == null) {
+			if (other.socks5RequestCriteria != null) {
+				return false;
+			}
+		} else if (!this.socks5RequestCriteria.equals(other.socks5RequestCriteria)) {
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((this.socks5RequestCriteria == null) ? 0 : this.socks5RequestCriteria.hashCode());
+		return result;
+	}
+
 	public List<Socks5RequestCriterion> toList() {
 		return Collections.unmodifiableList(this.socks5RequestCriteria);
 	}

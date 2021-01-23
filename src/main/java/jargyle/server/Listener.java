@@ -22,11 +22,13 @@ final class Listener implements Runnable {
 	
 	private final Configuration configuration;
 	private final ServerSocket serverSocket;
+	private final SocksClientFactory socksClientFactory;
 	private final SslWrapper sslWrapper;
 	
 	public Listener(final ServerSocket serverSock, final Configuration config) {
 		this.configuration = config;
 		this.serverSocket = serverSock;
+		this.socksClientFactory = new SocksClientFactory(config);
 		this.sslWrapper = new SslWrapper(config);
 	}
 	
@@ -146,6 +148,7 @@ final class Listener implements Runnable {
 			executor.execute(new Worker(
 					clientSocketInterface, 
 					this.configuration, 
+					this.socksClientFactory, 
 					this.sslWrapper));
 		}
 		executor.shutdownNow();

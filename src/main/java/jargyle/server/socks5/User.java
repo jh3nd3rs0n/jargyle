@@ -93,12 +93,50 @@ public final class User {
 		this.hashedPassword = hashedPssword;
 	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (this.getClass() != obj.getClass()) {
+			return false;
+		}
+		User other = (User) obj;
+		if (this.hashedPassword == null) {
+			if (other.hashedPassword != null) {
+				return false;
+			}
+		} else if (!this.hashedPassword.equals(other.hashedPassword)) {
+			return false;
+		}
+		if (this.name == null) {
+			if (other.name != null) {
+				return false;
+			}
+		} else if (!this.name.equals(other.name)) {
+			return false;
+		}
+		return true;
+	}
+	
 	public HashedPassword getHashedPassword() {
 		return this.hashedPassword;
 	}
-	
+
 	public String getName() {
 		return this.name;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((this.hashedPassword == null) ? 0 : this.hashedPassword.hashCode());
+		result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
+		return result;
 	}
 
 	@Override

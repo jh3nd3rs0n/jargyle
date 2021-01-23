@@ -67,6 +67,28 @@ public final class Settings {
 		return false;
 	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (this.getClass() != obj.getClass()) {
+			return false;
+		}
+		Settings other = (Settings) obj;
+		if (this.settings == null) {
+			if (other.settings != null) {
+				return false;
+			}
+		} else if (!this.settings.equals(other.settings)) {
+			return false;
+		}
+		return true;
+	}
+	
 	public <T> T getLastValue(
 			final SettingSpec settingSpec, final Class<T> type) {
 		List<T> values = this.getValues(settingSpec, type);
@@ -96,7 +118,15 @@ public final class Settings {
 		}
 		return Collections.unmodifiableList(values);
 	}
-	
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((this.settings == null) ? 0 : this.settings.hashCode());
+		return result;
+	}
+
 	public List<Setting> toList() {
 		return Collections.unmodifiableList(this.settings);
 	}
@@ -110,7 +140,5 @@ public final class Settings {
 			.append("]");
 		return builder.toString();
 	}
-	
-	
 	
 }

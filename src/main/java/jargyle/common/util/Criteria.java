@@ -80,10 +80,40 @@ public final class Criteria {
 		return null;
 	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (this.getClass() != obj.getClass()) {
+			return false;
+		}
+		Criteria other = (Criteria) obj;
+		if (this.criteria == null) {
+			if (other.criteria != null) {
+				return false;
+			}
+		} else if (!this.criteria.equals(other.criteria)) {
+			return false;
+		}
+		return true;
+	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((this.criteria == null) ? 0 : this.criteria.hashCode());
+		return result;
+	}
+
 	public List<Criterion> toList() {
 		return Collections.unmodifiableList(this.criteria);
 	}
-	
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();

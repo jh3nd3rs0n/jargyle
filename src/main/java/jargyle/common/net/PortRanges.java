@@ -88,10 +88,40 @@ public final class PortRanges {
 		return false;
 	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (this.getClass() != obj.getClass()) {
+			return false;
+		}
+		PortRanges other = (PortRanges) obj;
+		if (this.portRanges == null) {
+			if (other.portRanges != null) {
+				return false;
+			}
+		} else if (!this.portRanges.equals(other.portRanges)) {
+			return false;
+		}
+		return true;
+	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((this.portRanges == null) ? 0 : this.portRanges.hashCode());
+		return result;
+	}
+
 	public List<PortRange> toList() {
 		return Collections.unmodifiableList(this.portRanges);
 	}
-	
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();

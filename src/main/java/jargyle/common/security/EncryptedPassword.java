@@ -65,6 +65,12 @@ public abstract class EncryptedPassword {
 		return AesCfbPkcs5PaddingEncryptedPassword.newInstance(password);
 	}
 
+	@Override
+	public abstract boolean equals(Object obj);
+	
 	public abstract char[] getPassword();
+	
+	@Override
+	public abstract int hashCode();
 	
 }

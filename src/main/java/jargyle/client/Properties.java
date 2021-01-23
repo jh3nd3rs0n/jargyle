@@ -23,10 +23,6 @@ public final class Properties {
 		return new Properties(props);
 	}
 	
-	public static Properties newInstance(final Properties other) {
-		return new Properties(other);
-	}
-	
 	public static Properties newInstance(final Property... properties) {
 		return newInstance(Arrays.asList(properties));
 	}
@@ -39,6 +35,28 @@ public final class Properties {
 	
 	private Properties(final Properties other) {
 		this.properties = new HashMap<PropertySpec, Property>(other.properties);
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (this.getClass() != obj.getClass()) {
+			return false;
+		}
+		Properties other = (Properties) obj;
+		if (this.properties == null) { 
+			if (other.properties != null) {
+				return false;
+			}
+		} else if (!this.properties.equals(other.properties)) {
+			return false;
+		}
+		return true;
 	}
 	
 	public <T> T getValue(
@@ -57,7 +75,15 @@ public final class Properties {
 		}
 		return value;
 	}
-	
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((this.properties == null) ? 0 : this.properties.hashCode());
+		return result;
+	}
+
 	public Map<PropertySpec, Property> toMap() {
 		return Collections.unmodifiableMap(this.properties);
 	}
@@ -71,6 +97,5 @@ public final class Properties {
 			.append("]");
 		return builder.toString();
 	}
-	
 	
 }

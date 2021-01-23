@@ -24,9 +24,25 @@ import jargyle.common.util.PositiveInteger;
 
 public final class SocksClientFactory {
 	
-	private static List<Property> getSocks5ClientProperties(
-			final Configuration configuration) {
-		Settings settings = configuration.getSettings();
+	private final Configuration configuration;
+	private Configuration lastConfiguration;
+	private SocksClient socksClient;
+	
+	SocksClientFactory(final Configuration config) { 
+		this.configuration = config;
+		this.lastConfiguration = null;
+		this.socksClient = null;
+	}
+	
+	public SocksClient getSocksClient() {
+		if (!Configuration.equals(this.lastConfiguration, this.configuration)) {
+			this.socksClient = this.newSocksClient();
+		}
+		return this.socksClient;
+	}
+	
+	private List<Property> newSocks5ClientProperties() {
+		Settings settings = this.configuration.getSettings();
 		List<Property> properties = new ArrayList<Property>();
 		if (settings.containsNondefaultValue(
 				SettingSpec.CHAINING_SOCKS5_AUTH_METHODS)) {
@@ -90,11 +106,36 @@ public final class SocksClientFactory {
 						usernamePassword.getEncryptedPassword()));			
 			}
 		}
-		return properties;
+		return properties;		
 	}
 	
-	private static List<Property> getSocksClientProperties(
-			final Configuration configuration) {
+	private SocksClient newSocksClient() {
+		Settings settings = configuration.getSettings();
+		SocksServerUri socksServerUri = settings.getLastValue(
+				SettingSpec.CHAINING_SOCKS_SERVER_URI, SocksServerUri.class);
+		if (socksServerUri == null) {
+			return null;
+		}
+		List<Property> properties = new ArrayList<Property>();
+		properties.addAll(this.newSocksClientProperties());
+		SocksClient client = null;
+		if (socksServerUri instanceof Socks5ServerUri) {
+			properties.addAll(this.newSocks5ClientProperties());
+			Socks5ServerUri socks5ServerUri = (Socks5ServerUri) socksServerUri;
+			client = socks5ServerUri.newSocksClient(Properties.newInstance(
+					properties));
+		} else {
+			throw new AssertionError(String.format(
+					"unhandled %s: %s", 
+					SocksServerUri.class.getSimpleName(), 
+					socksServerUri.getClass().getSimpleName()));
+		}
+		this.lastConfiguration = ImmutableConfiguration.newInstance(
+				this.configuration);
+		return client;
+	}
+	
+	private List<Property> newSocksClientProperties() {
 		Settings settings = configuration.getSettings();
 		List<Property> properties = new ArrayList<Property>();
 		if (settings.containsNondefaultValue(SettingSpec.CHAINING_BIND_HOST)) {
@@ -189,34 +230,7 @@ public final class SocksClientFactory {
 			properties.add(PropertySpec.SSL_TRUST_STORE_TYPE.newProperty(
 					sslTrustStoreType));
 		}
-		return properties;
+		return properties;		
 	}
-	
-	public static SocksClient newSocksClient(
-			final Configuration configuration) {
-		Settings settings = configuration.getSettings();
-		SocksServerUri socksServerUri = settings.getLastValue(
-				SettingSpec.CHAINING_SOCKS_SERVER_URI, SocksServerUri.class);
-		if (socksServerUri == null) {
-			return null;
-		}
-		List<Property> properties = new ArrayList<Property>();
-		properties.addAll(getSocksClientProperties(configuration));
-		SocksClient socksClient = null;
-		if (socksServerUri instanceof Socks5ServerUri) {
-			properties.addAll(getSocks5ClientProperties(configuration));
-			Socks5ServerUri socks5ServerUri = (Socks5ServerUri) socksServerUri;
-			socksClient = socks5ServerUri.newSocksClient(Properties.newInstance(
-					properties));
-		} else {
-			throw new AssertionError(String.format(
-					"unhandled %s: %s", 
-					SocksServerUri.class.getSimpleName(), 
-					socksServerUri.getClass().getSimpleName()));
-		}
-		return socksClient;
-	}
-	
-	private SocksClientFactory() { }
 	
 }

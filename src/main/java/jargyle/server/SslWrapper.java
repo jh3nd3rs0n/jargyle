@@ -165,18 +165,16 @@ public final class SslWrapper {
 		if (keyStoreFile != null) {
 			this.lastKeyStoreFileModified = keyStoreFile.lastModified();
 		}
-		if (settings.containsNondefaultValue(SettingSpec.SSL_KEY_STORE_PASSWORD)) {
-			this.lastKeyStorePassword = keyStorePassword;
-		}
+		this.lastKeyStorePassword = settings.containsNondefaultValue(
+				SettingSpec.SSL_KEY_STORE_PASSWORD) ? keyStorePassword : null;
 		this.lastKeyStoreType = keyStoreType;
 		this.lastProtocol = protocol;
 		this.lastTrustStoreFile = trustStoreFile;
 		if (trustStoreFile != null) {
 			this.lastTrustStoreFileModified = trustStoreFile.lastModified();
 		}
-		if (settings.containsNondefaultValue(SettingSpec.SSL_TRUST_STORE_PASSWORD)) {
-			this.lastTrustStorePassword = trustStorePassword;
-		}
+		this.lastTrustStorePassword = settings.containsNondefaultValue(
+				SettingSpec.SSL_TRUST_STORE_PASSWORD) ? trustStorePassword : null;
 		this.lastTrustStoreType = trustStoreType;
 		return context;
 	}

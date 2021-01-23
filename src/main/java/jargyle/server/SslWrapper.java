@@ -74,13 +74,14 @@ public final class SslWrapper {
 				return true;
 			}
 		}
-		EncryptedPassword keyStorePassword = null; 
-		if (settings.containsNondefaultValue(SettingSpec.SSL_KEY_STORE_PASSWORD)) {
-			keyStorePassword = settings.getLastValue(
-					SettingSpec.SSL_KEY_STORE_PASSWORD, 
-					EncryptedPassword.class);
-		}
-		if (!Objects.equals(this.lastKeyStorePassword, keyStorePassword)) {
+		char[] lastKeyStorePsswrd = (this.lastKeyStorePassword != null) ? 
+				this.lastKeyStorePassword.getPassword() : null; 
+		EncryptedPassword keyStorePassword = settings.getLastValue(
+				SettingSpec.SSL_KEY_STORE_PASSWORD, 
+				EncryptedPassword.class);
+		char[] keyStorePsswrd = (keyStorePassword != null) ? 
+				keyStorePassword.getPassword() : null;
+		if (!Objects.deepEquals(lastKeyStorePsswrd, keyStorePsswrd)) {
 			return true;
 		}		
 		String keyStoreType = settings.getLastValue(
@@ -103,13 +104,14 @@ public final class SslWrapper {
 				return true;
 			}			
 		}
-		EncryptedPassword trustStorePassword = null;
-		if (settings.containsNondefaultValue(SettingSpec.SSL_TRUST_STORE_PASSWORD)) {
-			trustStorePassword = settings.getLastValue(
-					SettingSpec.SSL_TRUST_STORE_PASSWORD,
-					EncryptedPassword.class);
-		}
-		if (!Objects.equals(this.lastTrustStorePassword, trustStorePassword)) {
+		char[] lastTrustStorePsswrd = (this.lastTrustStorePassword != null) ?
+				this.lastTrustStorePassword.getPassword() : null;
+		EncryptedPassword trustStorePassword = settings.getLastValue(
+				SettingSpec.SSL_TRUST_STORE_PASSWORD,
+				EncryptedPassword.class);
+		char[] trustStorePsswrd = (trustStorePassword != null) ?
+				trustStorePassword.getPassword() : null;
+		if (!Objects.deepEquals(lastTrustStorePsswrd, trustStorePsswrd)) {
 			return true;
 		}
 		String trustStoreType = settings.getLastValue(
@@ -165,16 +167,14 @@ public final class SslWrapper {
 		if (keyStoreFile != null) {
 			this.lastKeyStoreFileModified = keyStoreFile.lastModified();
 		}
-		this.lastKeyStorePassword = settings.containsNondefaultValue(
-				SettingSpec.SSL_KEY_STORE_PASSWORD) ? keyStorePassword : null;
+		this.lastKeyStorePassword = keyStorePassword;
 		this.lastKeyStoreType = keyStoreType;
 		this.lastProtocol = protocol;
 		this.lastTrustStoreFile = trustStoreFile;
 		if (trustStoreFile != null) {
 			this.lastTrustStoreFileModified = trustStoreFile.lastModified();
 		}
-		this.lastTrustStorePassword = settings.containsNondefaultValue(
-				SettingSpec.SSL_TRUST_STORE_PASSWORD) ? trustStorePassword : null;
+		this.lastTrustStorePassword = trustStorePassword;
 		this.lastTrustStoreType = trustStoreType;
 		return context;
 	}

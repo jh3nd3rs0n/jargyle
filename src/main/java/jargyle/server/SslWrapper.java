@@ -18,9 +18,9 @@ import jargyle.common.net.DirectSocketInterface;
 import jargyle.common.net.SocketInterface;
 import jargyle.common.net.SocketInterfaceSocketAdapter;
 import jargyle.common.net.ssl.CipherSuites;
-import jargyle.common.net.ssl.KeyManagersFactory;
+import jargyle.common.net.ssl.KeyManagerHelper;
 import jargyle.common.net.ssl.Protocols;
-import jargyle.common.net.ssl.TrustManagersFactory;
+import jargyle.common.net.ssl.TrustManagerHelper;
 import jargyle.common.security.EncryptedPassword;
 
 public final class SslWrapper {
@@ -63,7 +63,7 @@ public final class SslWrapper {
 							EncryptedPassword.class);
 			String keyStoreType = settings.getLastValue(
 					SettingSpec.SSL_KEY_STORE_TYPE, String.class);
-			keyManagers = KeyManagersFactory.newKeyManagers(
+			keyManagers = KeyManagerHelper.newKeyManagers(
 					keyStoreFile, keyStorePassword, keyStoreType);
 		}
 		File trustStoreFile = settings.getLastValue(
@@ -75,7 +75,7 @@ public final class SslWrapper {
 							EncryptedPassword.class);
 			String trustStoreType = settings.getLastValue(
 					SettingSpec.SSL_TRUST_STORE_TYPE, String.class);			
-			trustManagers = TrustManagersFactory.newTrustManagers(
+			trustManagers = TrustManagerHelper.newTrustManagers(
 					trustStoreFile, trustStorePassword, trustStoreType);
 		}
 		try {

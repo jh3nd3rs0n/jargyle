@@ -10,15 +10,15 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 
 import jargyle.common.security.EncryptedPassword;
-import jargyle.common.security.KeyStoreFactory;
+import jargyle.common.security.KeyStoreHelper;
 
-public final class TrustManagersFactory {
+public final class TrustManagerHelper {
 
 	public static TrustManager[] newTrustManagers(
 			final File trustStoreFile,
 			final EncryptedPassword trustStorePassword, 
 			final String trustStoreType) throws IOException {
-		KeyStore trustStore = KeyStoreFactory.newKeyStore(
+		KeyStore trustStore = KeyStoreHelper.newKeyStore(
 				trustStoreFile, trustStorePassword, trustStoreType);
 		TrustManagerFactory trustManagerFactory = null;
 		try {
@@ -35,6 +35,6 @@ public final class TrustManagersFactory {
 		return trustManagerFactory.getTrustManagers();
 	}
 	
-	private TrustManagersFactory() { }
+	private TrustManagerHelper() { }
 	
 }

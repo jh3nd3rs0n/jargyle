@@ -11,15 +11,15 @@ import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
 
 import jargyle.common.security.EncryptedPassword;
-import jargyle.common.security.KeyStoreFactory;
+import jargyle.common.security.KeyStoreHelper;
 
-public final class KeyManagersFactory {
+public final class KeyManagerHelper {
 
 	public static KeyManager[] newKeyManagers(
 			final File keyStoreFile, 
 			final EncryptedPassword keyStorePassword, 
 			final String keyStoreType) throws IOException {
-		KeyStore keyStore = KeyStoreFactory.newKeyStore(
+		KeyStore keyStore = KeyStoreHelper.newKeyStore(
 				keyStoreFile, keyStorePassword, keyStoreType);
 		KeyManagerFactory keyManagerFactory = null;
 		try {
@@ -41,6 +41,6 @@ public final class KeyManagersFactory {
 		return keyManagerFactory.getKeyManagers();
 	}
 	
-	private KeyManagersFactory() { }
+	private KeyManagerHelper() { }
 	
 }

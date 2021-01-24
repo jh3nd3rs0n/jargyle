@@ -9,7 +9,7 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 
-public final class KeyStoreFactory {
+public final class KeyStoreHelper {
 	
 	public static KeyStore newKeyStore(
 			final File keyStoreFile, 
@@ -35,6 +35,6 @@ public final class KeyStoreFactory {
 		return keyStore;
 	}
 
-	private KeyStoreFactory() { }
+	private KeyStoreHelper() { }
 	
 }

@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import jargyle.TestStringConstants;
 import jargyle.client.socks5.UsernamePassword;
-import jargyle.server.ConfigurationFactory;
+import jargyle.server.ConfigurationHelper;
 
 public class Socks5SocketInterfaceIT {
 	
@@ -18,9 +18,9 @@ public class Socks5SocketInterfaceIT {
 		String string = TestStringConstants.STRING_01;
 		String returningString = echoThroughSocketInterface(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), null), 
-				ConfigurationFactory.newConfiguration());
+				ConfigurationHelper.newConfiguration());
 		assertEquals(string, returningString);
 	}
 	
@@ -29,9 +29,9 @@ public class Socks5SocketInterfaceIT {
 		String string = TestStringConstants.STRING_02;
 		String returningString = echoThroughSocketInterface(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), null), 
-				ConfigurationFactory.newConfiguration());
+				ConfigurationHelper.newConfiguration());
 		assertEquals(string, returningString);
 	}
 
@@ -40,9 +40,9 @@ public class Socks5SocketInterfaceIT {
 		String string = TestStringConstants.STRING_03;
 		String returningString = echoThroughSocketInterface(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), null), 
-				ConfigurationFactory.newConfiguration());
+				ConfigurationHelper.newConfiguration());
 		assertEquals(string, returningString);
 	}
 	
@@ -51,11 +51,11 @@ public class Socks5SocketInterfaceIT {
 		String string = TestStringConstants.STRING_01;
 		String returningString = echoThroughSocketInterface(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						UsernamePassword.newInstance("Aladdin", "opensesame".toCharArray())),
-				ConfigurationFactory.newConfigurationUsingSocks5UsernamePasswordAuth());
+				ConfigurationHelper.newConfigurationUsingSocks5UsernamePasswordAuth());
 		assertEquals(string, returningString);
 	}
 
@@ -64,11 +64,11 @@ public class Socks5SocketInterfaceIT {
 		String string = TestStringConstants.STRING_02;
 		String returningString = echoThroughSocketInterface(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						UsernamePassword.newInstance("Jasmine", "mission:impossible".toCharArray())),
-				ConfigurationFactory.newConfigurationUsingSocks5UsernamePasswordAuth());
+				ConfigurationHelper.newConfigurationUsingSocks5UsernamePasswordAuth());
 		assertEquals(string, returningString);
 	}
 	
@@ -77,11 +77,11 @@ public class Socks5SocketInterfaceIT {
 		String string = TestStringConstants.STRING_03;
 		String returningString = echoThroughSocketInterface(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						UsernamePassword.newInstance("Abu", "safeDriversSave40%".toCharArray())),
-				ConfigurationFactory.newConfigurationUsingSocks5UsernamePasswordAuth());
+				ConfigurationHelper.newConfigurationUsingSocks5UsernamePasswordAuth());
 		assertEquals(string, returningString);
 	}
 }

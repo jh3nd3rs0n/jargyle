@@ -18,7 +18,7 @@ import org.junit.Test;
 import jargyle.TestStringConstants;
 import jargyle.common.net.socks5.gssapiauth.GssapiProtectionLevel;
 import jargyle.common.net.socks5.gssapiauth.GssapiProtectionLevels;
-import jargyle.server.ConfigurationFactory;
+import jargyle.server.ConfigurationHelper;
 import jargyle.server.DatagramSocketInterfaceIT;
 import jargyle.server.ServerSocketInterfaceIT;
 import jargyle.server.SocketInterfaceIT;
@@ -145,12 +145,12 @@ public class GssapiAuthIT {
 		String string = TestStringConstants.STRING_01;
 		String returningString = DatagramSocketInterfaceIT.echoThroughDatagramSocketInterface(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.NONE), false),
-				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuth());
+				ConfigurationHelper.newConfigurationUsingSocks5GssapiAuth());
 		assertEquals(string, returningString);
 	}
 
@@ -159,12 +159,12 @@ public class GssapiAuthIT {
 		String string = TestStringConstants.STRING_02;
 		String returningString = DatagramSocketInterfaceIT.echoThroughDatagramSocketInterface(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.NONE), false),
-				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuth());
+				ConfigurationHelper.newConfigurationUsingSocks5GssapiAuth());
 		assertEquals(string, returningString);
 	}
 
@@ -173,12 +173,12 @@ public class GssapiAuthIT {
 		String string = TestStringConstants.STRING_03;
 		String returningString = DatagramSocketInterfaceIT.echoThroughDatagramSocketInterface(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.NONE), false),
-				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuth());
+				ConfigurationHelper.newConfigurationUsingSocks5GssapiAuth());
 		assertEquals(string, returningString);
 	}
 
@@ -187,12 +187,12 @@ public class GssapiAuthIT {
 		String string = TestStringConstants.STRING_01;
 		String returningString = DatagramSocketInterfaceIT.echoThroughDatagramSocketInterface(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.NONE), true),
-				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
+				ConfigurationHelper.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
 		assertEquals(string, returningString);
 	}
 
@@ -201,12 +201,12 @@ public class GssapiAuthIT {
 		String string = TestStringConstants.STRING_02;
 		String returningString = DatagramSocketInterfaceIT.echoThroughDatagramSocketInterface(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.NONE), true),
-				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
+				ConfigurationHelper.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
 		assertEquals(string, returningString);
 	}
 
@@ -215,12 +215,12 @@ public class GssapiAuthIT {
 		String string = TestStringConstants.STRING_03;
 		String returningString = DatagramSocketInterfaceIT.echoThroughDatagramSocketInterface(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.NONE), true),
-				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
+				ConfigurationHelper.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
 		assertEquals(string, returningString);
 	}
 
@@ -229,12 +229,12 @@ public class GssapiAuthIT {
 		String string = TestStringConstants.STRING_01;
 		String returningString = DatagramSocketInterfaceIT.echoThroughDatagramSocketInterface(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG_AND_CONF), true),
-				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
+				ConfigurationHelper.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
 		assertEquals(string, returningString);
 	}
 
@@ -243,12 +243,12 @@ public class GssapiAuthIT {
 		String string = TestStringConstants.STRING_02;
 		String returningString = DatagramSocketInterfaceIT.echoThroughDatagramSocketInterface(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG_AND_CONF), true),
-				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
+				ConfigurationHelper.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
 		assertEquals(string, returningString);
 	}
 
@@ -257,12 +257,12 @@ public class GssapiAuthIT {
 		String string = TestStringConstants.STRING_03;
 		String returningString = DatagramSocketInterfaceIT.echoThroughDatagramSocketInterface(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG_AND_CONF), true),
-				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
+				ConfigurationHelper.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
 		assertEquals(string, returningString);
 	}
 
@@ -271,12 +271,12 @@ public class GssapiAuthIT {
 		String string = TestStringConstants.STRING_01;
 		String returningString = DatagramSocketInterfaceIT.echoThroughDatagramSocketInterface(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG), true),
-				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
+				ConfigurationHelper.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
 		assertEquals(string, returningString);
 	}
 
@@ -285,12 +285,12 @@ public class GssapiAuthIT {
 		String string = TestStringConstants.STRING_02;
 		String returningString = DatagramSocketInterfaceIT.echoThroughDatagramSocketInterface(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG), true),
-				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
+				ConfigurationHelper.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
 		assertEquals(string, returningString);
 	}
 
@@ -299,12 +299,12 @@ public class GssapiAuthIT {
 		String string = TestStringConstants.STRING_03;
 		String returningString = DatagramSocketInterfaceIT.echoThroughDatagramSocketInterface(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG), true),
-				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
+				ConfigurationHelper.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
 		assertEquals(string, returningString);
 	}
 
@@ -313,12 +313,12 @@ public class GssapiAuthIT {
 		String string = TestStringConstants.STRING_01;
 		String returningString = DatagramSocketInterfaceIT.echoThroughDatagramSocketInterface(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG_AND_CONF), false),
-				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuth());
+				ConfigurationHelper.newConfigurationUsingSocks5GssapiAuth());
 		assertEquals(string, returningString);
 	}
 
@@ -327,12 +327,12 @@ public class GssapiAuthIT {
 		String string = TestStringConstants.STRING_02;
 		String returningString = DatagramSocketInterfaceIT.echoThroughDatagramSocketInterface(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG_AND_CONF), false),
-				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuth());
+				ConfigurationHelper.newConfigurationUsingSocks5GssapiAuth());
 		assertEquals(string, returningString);
 	}
 
@@ -341,12 +341,12 @@ public class GssapiAuthIT {
 		String string = TestStringConstants.STRING_03;
 		String returningString = DatagramSocketInterfaceIT.echoThroughDatagramSocketInterface(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG_AND_CONF), false),
-				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuth());
+				ConfigurationHelper.newConfigurationUsingSocks5GssapiAuth());
 		assertEquals(string, returningString);
 	}
 
@@ -355,12 +355,12 @@ public class GssapiAuthIT {
 		String string = TestStringConstants.STRING_01;
 		String returningString = DatagramSocketInterfaceIT.echoThroughDatagramSocketInterface(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG), false),
-				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuth());
+				ConfigurationHelper.newConfigurationUsingSocks5GssapiAuth());
 		assertEquals(string, returningString);
 	}
 
@@ -369,12 +369,12 @@ public class GssapiAuthIT {
 		String string = TestStringConstants.STRING_02;
 		String returningString = DatagramSocketInterfaceIT.echoThroughDatagramSocketInterface(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG), false),
-				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuth());
+				ConfigurationHelper.newConfigurationUsingSocks5GssapiAuth());
 		assertEquals(string, returningString);
 	}
 
@@ -383,12 +383,12 @@ public class GssapiAuthIT {
 		String string = TestStringConstants.STRING_03;
 		String returningString = DatagramSocketInterfaceIT.echoThroughDatagramSocketInterface(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG), false),
-				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuth());
+				ConfigurationHelper.newConfigurationUsingSocks5GssapiAuth());
 		assertEquals(string, returningString);
 	}
 
@@ -397,12 +397,12 @@ public class GssapiAuthIT {
 		String string = TestStringConstants.STRING_01;
 		String returningString = ServerSocketInterfaceIT.echoThroughServerSocketInterface(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.NONE), false),
-				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuth());
+				ConfigurationHelper.newConfigurationUsingSocks5GssapiAuth());
 		assertEquals(string, returningString);
 	}
 
@@ -411,12 +411,12 @@ public class GssapiAuthIT {
 		String string = TestStringConstants.STRING_02;
 		String returningString = ServerSocketInterfaceIT.echoThroughServerSocketInterface(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.NONE), false),
-				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuth());
+				ConfigurationHelper.newConfigurationUsingSocks5GssapiAuth());
 		assertEquals(string, returningString);
 	}
 
@@ -425,12 +425,12 @@ public class GssapiAuthIT {
 		String string = TestStringConstants.STRING_03;
 		String returningString = ServerSocketInterfaceIT.echoThroughServerSocketInterface(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.NONE), false),
-				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuth());
+				ConfigurationHelper.newConfigurationUsingSocks5GssapiAuth());
 		assertEquals(string, returningString);
 	}
 
@@ -439,12 +439,12 @@ public class GssapiAuthIT {
 		String string = TestStringConstants.STRING_01;
 		String returningString = ServerSocketInterfaceIT.echoThroughServerSocketInterface(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.NONE), true),
-				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
+				ConfigurationHelper.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
 		assertEquals(string, returningString);
 	}
 
@@ -453,12 +453,12 @@ public class GssapiAuthIT {
 		String string = TestStringConstants.STRING_02;
 		String returningString = ServerSocketInterfaceIT.echoThroughServerSocketInterface(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.NONE), true),
-				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
+				ConfigurationHelper.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
 		assertEquals(string, returningString);
 	}
 
@@ -467,12 +467,12 @@ public class GssapiAuthIT {
 		String string = TestStringConstants.STRING_03;
 		String returningString = ServerSocketInterfaceIT.echoThroughServerSocketInterface(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.NONE), true),
-				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
+				ConfigurationHelper.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
 		assertEquals(string, returningString);
 	}
 
@@ -481,12 +481,12 @@ public class GssapiAuthIT {
 		String string = TestStringConstants.STRING_01;
 		String returningString = ServerSocketInterfaceIT.echoThroughServerSocketInterface(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG_AND_CONF), true),
-				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
+				ConfigurationHelper.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
 		assertEquals(string, returningString);
 	}
 
@@ -495,12 +495,12 @@ public class GssapiAuthIT {
 		String string = TestStringConstants.STRING_02;
 		String returningString = ServerSocketInterfaceIT.echoThroughServerSocketInterface(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG_AND_CONF), true),
-				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
+				ConfigurationHelper.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
 		assertEquals(string, returningString);
 	}
 
@@ -509,12 +509,12 @@ public class GssapiAuthIT {
 		String string = TestStringConstants.STRING_03;
 		String returningString = ServerSocketInterfaceIT.echoThroughServerSocketInterface(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG_AND_CONF), true),
-				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
+				ConfigurationHelper.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
 		assertEquals(string, returningString);
 	}
 	
@@ -523,12 +523,12 @@ public class GssapiAuthIT {
 		String string = TestStringConstants.STRING_01;
 		String returningString = ServerSocketInterfaceIT.echoThroughServerSocketInterface(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG), true),
-				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
+				ConfigurationHelper.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
 		assertEquals(string, returningString);
 	}
 
@@ -537,12 +537,12 @@ public class GssapiAuthIT {
 		String string = TestStringConstants.STRING_02;
 		String returningString = ServerSocketInterfaceIT.echoThroughServerSocketInterface(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG), true),
-				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
+				ConfigurationHelper.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
 		assertEquals(string, returningString);
 	}
 
@@ -551,12 +551,12 @@ public class GssapiAuthIT {
 		String string = TestStringConstants.STRING_03;
 		String returningString = ServerSocketInterfaceIT.echoThroughServerSocketInterface(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG), true),
-				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
+				ConfigurationHelper.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
 		assertEquals(string, returningString);
 	}
 
@@ -565,12 +565,12 @@ public class GssapiAuthIT {
 		String string = TestStringConstants.STRING_01;
 		String returningString = ServerSocketInterfaceIT.echoThroughServerSocketInterface(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG_AND_CONF), false),
-				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuth());
+				ConfigurationHelper.newConfigurationUsingSocks5GssapiAuth());
 		assertEquals(string, returningString);
 	}
 
@@ -579,12 +579,12 @@ public class GssapiAuthIT {
 		String string = TestStringConstants.STRING_02;
 		String returningString = ServerSocketInterfaceIT.echoThroughServerSocketInterface(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG_AND_CONF), false),
-				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuth());
+				ConfigurationHelper.newConfigurationUsingSocks5GssapiAuth());
 		assertEquals(string, returningString);
 	}
 
@@ -593,12 +593,12 @@ public class GssapiAuthIT {
 		String string = TestStringConstants.STRING_03;
 		String returningString = ServerSocketInterfaceIT.echoThroughServerSocketInterface(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG_AND_CONF), false),
-				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuth());
+				ConfigurationHelper.newConfigurationUsingSocks5GssapiAuth());
 		assertEquals(string, returningString);
 	}
 
@@ -607,12 +607,12 @@ public class GssapiAuthIT {
 		String string = TestStringConstants.STRING_01;
 		String returningString = ServerSocketInterfaceIT.echoThroughServerSocketInterface(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG), false),
-				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuth());
+				ConfigurationHelper.newConfigurationUsingSocks5GssapiAuth());
 		assertEquals(string, returningString);
 	}
 
@@ -621,12 +621,12 @@ public class GssapiAuthIT {
 		String string = TestStringConstants.STRING_02;
 		String returningString = ServerSocketInterfaceIT.echoThroughServerSocketInterface(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG), false),
-				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuth());
+				ConfigurationHelper.newConfigurationUsingSocks5GssapiAuth());
 		assertEquals(string, returningString);
 	}
 
@@ -635,12 +635,12 @@ public class GssapiAuthIT {
 		String string = TestStringConstants.STRING_03;
 		String returningString = ServerSocketInterfaceIT.echoThroughServerSocketInterface(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG), false),
-				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuth());
+				ConfigurationHelper.newConfigurationUsingSocks5GssapiAuth());
 		assertEquals(string, returningString);
 	}
 
@@ -649,12 +649,12 @@ public class GssapiAuthIT {
 		String string = TestStringConstants.STRING_01;
 		String returningString = SocketInterfaceIT.echoThroughSocketInterface(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.NONE), false),
-				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuth());
+				ConfigurationHelper.newConfigurationUsingSocks5GssapiAuth());
 		assertEquals(string, returningString);
 	}
 
@@ -663,12 +663,12 @@ public class GssapiAuthIT {
 		String string = TestStringConstants.STRING_02;
 		String returningString = SocketInterfaceIT.echoThroughSocketInterface(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.NONE), false),
-				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuth());
+				ConfigurationHelper.newConfigurationUsingSocks5GssapiAuth());
 		assertEquals(string, returningString);
 	}
 
@@ -677,12 +677,12 @@ public class GssapiAuthIT {
 		String string = TestStringConstants.STRING_03;
 		String returningString = SocketInterfaceIT.echoThroughSocketInterface(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.NONE), false),
-				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuth());
+				ConfigurationHelper.newConfigurationUsingSocks5GssapiAuth());
 		assertEquals(string, returningString);
 	}
 
@@ -691,12 +691,12 @@ public class GssapiAuthIT {
 		String string = TestStringConstants.STRING_01;
 		String returningString = SocketInterfaceIT.echoThroughSocketInterface(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.NONE), true),
-				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
+				ConfigurationHelper.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
 		assertEquals(string, returningString);
 	}
 
@@ -705,12 +705,12 @@ public class GssapiAuthIT {
 		String string = TestStringConstants.STRING_02;
 		String returningString = SocketInterfaceIT.echoThroughSocketInterface(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.NONE), true),
-				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
+				ConfigurationHelper.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
 		assertEquals(string, returningString);
 	}
 
@@ -719,12 +719,12 @@ public class GssapiAuthIT {
 		String string = TestStringConstants.STRING_03;
 		String returningString = SocketInterfaceIT.echoThroughSocketInterface(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.NONE), true),
-				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
+				ConfigurationHelper.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
 		assertEquals(string, returningString);
 	}
 
@@ -733,12 +733,12 @@ public class GssapiAuthIT {
 		String string = TestStringConstants.STRING_01;
 		String returningString = SocketInterfaceIT.echoThroughSocketInterface(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG_AND_CONF), true),
-				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
+				ConfigurationHelper.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
 		assertEquals(string, returningString);
 	}
 
@@ -747,12 +747,12 @@ public class GssapiAuthIT {
 		String string = TestStringConstants.STRING_02;
 		String returningString = SocketInterfaceIT.echoThroughSocketInterface(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG_AND_CONF), true),
-				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
+				ConfigurationHelper.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
 		assertEquals(string, returningString);
 	}
 
@@ -761,12 +761,12 @@ public class GssapiAuthIT {
 		String string = TestStringConstants.STRING_03;
 		String returningString = SocketInterfaceIT.echoThroughSocketInterface(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG_AND_CONF), true),
-				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
+				ConfigurationHelper.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
 		assertEquals(string, returningString);
 	}
 
@@ -775,12 +775,12 @@ public class GssapiAuthIT {
 		String string = TestStringConstants.STRING_01;
 		String returningString = SocketInterfaceIT.echoThroughSocketInterface(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG), true),
-				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
+				ConfigurationHelper.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
 		assertEquals(string, returningString);
 	}
 
@@ -789,12 +789,12 @@ public class GssapiAuthIT {
 		String string = TestStringConstants.STRING_02;
 		String returningString = SocketInterfaceIT.echoThroughSocketInterface(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG), true),
-				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
+				ConfigurationHelper.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
 		assertEquals(string, returningString);
 	}
 
@@ -803,12 +803,12 @@ public class GssapiAuthIT {
 		String string = TestStringConstants.STRING_03;
 		String returningString = SocketInterfaceIT.echoThroughSocketInterface(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG), true),
-				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
+				ConfigurationHelper.newConfigurationUsingSocks5GssapiAuthNecReferenceImpl());
 		assertEquals(string, returningString);
 	}
 
@@ -817,12 +817,12 @@ public class GssapiAuthIT {
 		String string = TestStringConstants.STRING_01;
 		String returningString = SocketInterfaceIT.echoThroughSocketInterface(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG_AND_CONF), false),
-				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuth());
+				ConfigurationHelper.newConfigurationUsingSocks5GssapiAuth());
 		assertEquals(string, returningString);
 	}
 
@@ -831,12 +831,12 @@ public class GssapiAuthIT {
 		String string = TestStringConstants.STRING_02;
 		String returningString = SocketInterfaceIT.echoThroughSocketInterface(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG_AND_CONF), false),
-				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuth());
+				ConfigurationHelper.newConfigurationUsingSocks5GssapiAuth());
 		assertEquals(string, returningString);
 	}
 
@@ -845,12 +845,12 @@ public class GssapiAuthIT {
 		String string = TestStringConstants.STRING_03;
 		String returningString = SocketInterfaceIT.echoThroughSocketInterface(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG_AND_CONF), false),
-				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuth());
+				ConfigurationHelper.newConfigurationUsingSocks5GssapiAuth());
 		assertEquals(string, returningString);
 	}
 
@@ -859,12 +859,12 @@ public class GssapiAuthIT {
 		String string = TestStringConstants.STRING_01;
 		String returningString = SocketInterfaceIT.echoThroughSocketInterface(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG), false),
-				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuth());
+				ConfigurationHelper.newConfigurationUsingSocks5GssapiAuth());
 		assertEquals(string, returningString);
 	}
 
@@ -873,12 +873,12 @@ public class GssapiAuthIT {
 		String string = TestStringConstants.STRING_02;
 		String returningString = SocketInterfaceIT.echoThroughSocketInterface(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG), false),
-				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuth());
+				ConfigurationHelper.newConfigurationUsingSocks5GssapiAuth());
 		assertEquals(string, returningString);
 	}
 
@@ -887,12 +887,12 @@ public class GssapiAuthIT {
 		String string = TestStringConstants.STRING_03;
 		String returningString = SocketInterfaceIT.echoThroughSocketInterface(
 				string, 
-				Socks5ClientFactory.newSocks5Client(
+				Socks5ClientHelper.newSocks5Client(
 						LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						GssapiProtectionLevels.newInstance(GssapiProtectionLevel.REQUIRED_INTEG), false),
-				ConfigurationFactory.newConfigurationUsingSocks5GssapiAuth());
+				ConfigurationHelper.newConfigurationUsingSocks5GssapiAuth());
 		assertEquals(string, returningString);
 	}
 	

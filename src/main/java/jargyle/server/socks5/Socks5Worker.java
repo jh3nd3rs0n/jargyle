@@ -41,7 +41,7 @@ import jargyle.common.util.Criteria;
 import jargyle.common.util.Criterion;
 import jargyle.common.util.PositiveInteger;
 import jargyle.server.Configuration;
-import jargyle.server.Router;
+import jargyle.server.ExternalTrafficRouter;
 import jargyle.server.SettingSpec;
 import jargyle.server.Settings;
 import jargyle.server.SslWrapper;
@@ -58,7 +58,7 @@ public final class Socks5Worker implements Runnable {
 	private OutputStream clientOutputStream;
 	private SocketInterface clientSocketInterface;
 	private final Configuration configuration;
-	private final Router router;
+	private final ExternalTrafficRouter externalTrafficRouter;
 	private final Settings settings;
 	private final SslWrapper sslWrapper;
 	
@@ -66,13 +66,13 @@ public final class Socks5Worker implements Runnable {
 			final SocketInterface clientSockInterface, 
 			final Configuration config, 
 			final SslWrapper wrapper, 
-			final Router rtr) {
+			final ExternalTrafficRouter router) {
 		Settings sttngs = config.getSettings();
 		this.clientInputStream = null;
 		this.clientOutputStream = null;
 		this.clientSocketInterface = clientSockInterface;
 		this.configuration = config;
-		this.router = rtr;
+		this.externalTrafficRouter = router;
 		this.settings = sttngs;
 		this.sslWrapper = wrapper;
 	}
@@ -452,9 +452,9 @@ public final class Socks5Worker implements Runnable {
 				socks5Req.getDesiredDestinationAddress();
 		int desiredDestinationPort = socks5Req.getDesiredDestinationPort();
 		HostnameResolverFactory hostnameResolverFactory =
-				this.router.newHostnameResolverFactory();
+				this.externalTrafficRouter.newHostnameResolverFactory();
 		ServerSocketInterfaceFactory serverSocketInterfaceFactory = 
-				this.router.newServerSocketInterfaceFactory();
+				this.externalTrafficRouter.newServerSocketInterfaceFactory();
 		HostnameResolver hostnameResolver = null;
 		ServerSocketInterface listenSocketInterface = null;
 		SocketInterface externalIncomingSocketInterface = null;
@@ -570,9 +570,9 @@ public final class Socks5Worker implements Runnable {
 				socks5Req.getDesiredDestinationAddress();
 		int desiredDestinationPort = socks5Req.getDesiredDestinationPort();
 		HostnameResolverFactory hostnameResolverFactory =
-				this.router.newHostnameResolverFactory();
+				this.externalTrafficRouter.newHostnameResolverFactory();
 		SocketInterfaceFactory socketInterfaceFactory = 
-				this.router.newSocketInterfaceFactory();
+				this.externalTrafficRouter.newSocketInterfaceFactory();
 		HostnameResolver hostnameResolver = null;
 		SocketInterface serverSocketInterface = null;
 		try {
@@ -637,7 +637,7 @@ public final class Socks5Worker implements Runnable {
 				socks5Req.getDesiredDestinationAddress();
 		int desiredDestinationPort = socks5Req.getDesiredDestinationPort();
 		HostnameResolverFactory hostnameResolverFactory = 
-				this.router.newHostnameResolverFactory();
+				this.externalTrafficRouter.newHostnameResolverFactory();
 		HostnameResolver hostnameResolver = 
 				hostnameResolverFactory.newHostnameResolver();
 		InetAddress inetAddress = null;
@@ -692,7 +692,7 @@ public final class Socks5Worker implements Runnable {
 				socks5Req.getDesiredDestinationAddress();
 		int desiredDestinationPort = socks5Req.getDesiredDestinationPort();
 		HostnameResolverFactory hostnameResolverFactory = 
-				this.router.newHostnameResolverFactory();
+				this.externalTrafficRouter.newHostnameResolverFactory();
 		HostnameResolver hostnameResolver = null;
 		DatagramSocketInterface serverDatagramSockInterface = null;
 		DatagramSocketInterface clientDatagramSockInterface = null;
@@ -819,7 +819,7 @@ public final class Socks5Worker implements Runnable {
 					Host.class);
 			InetAddress bindInetAddress = bindHost.toInetAddress();
 			DatagramSocketInterfaceFactory datagramSocketInterfaceFactory = 
-					this.router.newDatagramSocketInterfaceFactory();
+					this.externalTrafficRouter.newDatagramSocketInterfaceFactory();
 			serverDatagramSock = 
 					datagramSocketInterfaceFactory.newDatagramSocketInterface(
 							new InetSocketAddress(bindInetAddress, 0));

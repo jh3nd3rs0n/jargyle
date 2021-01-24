@@ -2,9 +2,14 @@ package jargyle.server;
 
 public final class MutableConfiguration extends Configuration {
 	
+	public static MutableConfiguration newInstance(
+			final ConfigurationService service) {
+		return new MutableConfiguration(service);
+	}
+	
 	private final ConfigurationService configurationService;
 	
-	public MutableConfiguration(final ConfigurationService service) {
+	private MutableConfiguration(final ConfigurationService service) {
 		this.configurationService = service;
 	}
 	

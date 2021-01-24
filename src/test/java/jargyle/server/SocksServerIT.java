@@ -154,8 +154,8 @@ public class SocksServerIT {
 		ConfigurationService configurationService = 
 				XmlFileSourceConfigurationService.newInstance(
 						this.configurationFile.toFile());
-		Configuration configuration = 
-				new MutableConfiguration(configurationService);
+		Configuration configuration = MutableConfiguration.newInstance(
+				configurationService);
 		SocksServer socksServer = new SocksServer(configuration);
 		try {
 			socksServer.start();

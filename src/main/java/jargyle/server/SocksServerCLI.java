@@ -80,7 +80,7 @@ public final class SocksServerCLI extends CLI {
 			progBeginningUsage = progName;
 		}
 		this.configurationFileXsdRequested = false;
-		this.modifiableConfiguration = new ModifiableConfiguration();
+		this.modifiableConfiguration = ModifiableConfiguration.newInstance();
 		this.monitoredConfigurationFile = null;
 		this.newConfigurationFileRequested = false;
 		this.posixlyCorrect = posixCorrect;
@@ -452,7 +452,8 @@ public final class SocksServerCLI extends CLI {
 				e.printStackTrace(System.err);
 				return null;
 			}
-			configuration = new MutableConfiguration(configurationService);
+			configuration = MutableConfiguration.newInstance(
+					configurationService);
 		}
 		return configuration;
 	}

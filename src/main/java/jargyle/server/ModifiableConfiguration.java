@@ -5,9 +5,13 @@ import java.util.List;
 
 final class ModifiableConfiguration extends Configuration {
 	
+	public static ModifiableConfiguration newInstance() {
+		return new ModifiableConfiguration();
+	}
+	
 	private final List<Setting> settings;
 	
-	public ModifiableConfiguration() {
+	private ModifiableConfiguration() {
 		this.settings = new ArrayList<Setting>();
 	}
 	

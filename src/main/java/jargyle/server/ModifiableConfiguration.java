@@ -37,7 +37,7 @@ final class ModifiableConfiguration extends Configuration {
 		StringBuilder builder = new StringBuilder();
 		builder.append(this.getClass().getSimpleName())
 			.append(" [settings=")
-			.append(this.settings)
+			.append(this.getSettings())
 			.append("]");
 		return builder.toString();
 	}

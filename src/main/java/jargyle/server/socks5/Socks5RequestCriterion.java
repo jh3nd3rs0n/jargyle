@@ -73,13 +73,25 @@ public final class Socks5RequestCriterion {
 	public static final PortRanges DEFAULT_DESIRED_DESTINATION_PORT_RANGES =
 			PortRanges.DEFAULT_INSTANCE;
 	
+	public static Socks5RequestCriterion newInstance(
+			final Criterion sourceAddrCriterion, 
+			final Criterion cmdCriterion,
+			final Criterion desiredDestinationAddrCriterion, 
+			final PortRanges desiredDestinationPrtRange) {
+		return new Socks5RequestCriterion(
+				sourceAddrCriterion,
+				cmdCriterion, 
+				desiredDestinationAddrCriterion, 
+				desiredDestinationPrtRange);
+	}
+	
 	private final Criterion sourceAddressCriterion;
 	private final Criterion commandCriterion;
 	private final String comment;
 	private final Criterion desiredDestinationAddressCriterion;
 	private final PortRanges desiredDestinationPortRanges;
 	
-	public Socks5RequestCriterion(
+	private Socks5RequestCriterion(
 			final Criterion sourceAddrCriterion, 
 			final Criterion cmdCriterion,
 			final Criterion desiredDestinationAddrCriterion, 
@@ -98,12 +110,15 @@ public final class Socks5RequestCriterion {
 			final Criterion desiredDestinationAddrCriterion,
 			final PortRanges desiredDestinationPrtRange,
 			final String cmmnt) {
-		this.sourceAddressCriterion = sourceAddrCriterion;
-		this.commandCriterion = cmdCriterion;
+		this.sourceAddressCriterion = (sourceAddrCriterion != null) ?
+				sourceAddrCriterion : DEFAULT_SOURCE_ADDRESS_CRITERION;
+		this.commandCriterion = (cmdCriterion != null) ?
+				cmdCriterion : DEFAULT_COMMAND_CRITERION;
 		this.comment = cmmnt;		
-		this.desiredDestinationAddressCriterion = 
-				desiredDestinationAddrCriterion;
-		this.desiredDestinationPortRanges = desiredDestinationPrtRange;
+		this.desiredDestinationAddressCriterion = (desiredDestinationAddrCriterion != null) ?
+				desiredDestinationAddrCriterion : DEFAULT_DESIRED_DESTINATION_ADDRESS_CRITERION;
+		this.desiredDestinationPortRanges = (desiredDestinationPrtRange != null) ?
+				desiredDestinationPrtRange : DEFAULT_DESIRED_DESTINATION_PORT_RANGES;
 	}
 	
 	@Override
@@ -152,19 +167,18 @@ public final class Socks5RequestCriterion {
 	public boolean evaluatesTrue(
 			final String sourceAddress, 
 			final Socks5Request socks5Req) {
-		if (!this.getSourceAddressCriterion().evaluatesTrue(
-				sourceAddress)) {
+		if (!this.sourceAddressCriterion.evaluatesTrue(sourceAddress)) {
 			return false;
 		}
-		if (!this.getCommandCriterion().evaluatesTrue(
+		if (!this.commandCriterion.evaluatesTrue(
 				socks5Req.getCommand().toString())) {
 			return false;
 		}
-		if (!this.getDesiredDestinationAddressCriterion().evaluatesTrue(
+		if (!this.desiredDestinationAddressCriterion.evaluatesTrue(
 				socks5Req.getDesiredDestinationAddress())) {
 			return false;
 		}
-		if (!this.getDesiredDestinationPortRanges().contains(
+		if (!this.desiredDestinationPortRanges.contains(
 				Port.newInstance(socks5Req.getDesiredDestinationPort()))) {
 			return false;
 		}
@@ -172,30 +186,18 @@ public final class Socks5RequestCriterion {
 	}
 
 	public Criterion getCommandCriterion() {
-		if (this.commandCriterion == null) {
-			return DEFAULT_COMMAND_CRITERION;
-		}
 		return this.commandCriterion;
 	}
 
 	public Criterion getDesiredDestinationAddressCriterion() {
-		if (this.desiredDestinationAddressCriterion == null) {
-			return DEFAULT_DESIRED_DESTINATION_ADDRESS_CRITERION;
-		}
 		return this.desiredDestinationAddressCriterion;
 	}
 	
 	public PortRanges getDesiredDestinationPortRanges() {
-		if (this.desiredDestinationPortRanges == null) {
-			return DEFAULT_DESIRED_DESTINATION_PORT_RANGES;
-		}
 		return this.desiredDestinationPortRanges;
 	}
 	
 	public Criterion getSourceAddressCriterion() {
-		if (this.sourceAddressCriterion == null) {
-			return DEFAULT_SOURCE_ADDRESS_CRITERION;
-		}
 		return this.sourceAddressCriterion;
 	}
 
@@ -217,13 +219,13 @@ public final class Socks5RequestCriterion {
 		StringBuilder builder = new StringBuilder();
 		builder.append(this.getClass().getSimpleName())
 			.append(" [sourceAddressCriterion=")
-			.append(this.getSourceAddressCriterion())
+			.append(this.sourceAddressCriterion)
 			.append(", commandCriterion=")
-			.append(this.getCommandCriterion())
+			.append(this.commandCriterion)
 			.append(", desiredDestinationAddressCriterion=")
-			.append(this.getDesiredDestinationAddressCriterion())
+			.append(this.desiredDestinationAddressCriterion)
 			.append(", desiredDestinationPortRanges=")
-			.append(this.getDesiredDestinationPortRanges())
+			.append(this.desiredDestinationPortRanges)
 			.append("]");
 		return builder.toString();
 	}

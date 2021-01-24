@@ -805,8 +805,8 @@ public enum SettingSpec {
 
 		@Override
 		public Setting getDefaultSetting() {
-			return new Setting(this, new Socks5RequestCriteria(
-					new Socks5RequestCriterion(null, null, null, null)));
+			return new Setting(this, Socks5RequestCriteria.newInstance(
+					Socks5RequestCriterion.newInstance(null, null, null, null)));
 		}
 
 		@Override

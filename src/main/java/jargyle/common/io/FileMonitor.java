@@ -134,6 +134,8 @@ public final class FileMonitor implements Runnable {
 		
 	}
 	
+	private static final int HALF_SECOND = 500;
+	
 	private final File file;
 	private final FileStatusListener fileStatusListener;
 	
@@ -231,6 +233,11 @@ public final class FileMonitor implements Runnable {
 		}
 		*/
 		while (true) {
+			try {
+				Thread.sleep(HALF_SECOND);
+			} catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
+			}
 			FileStatus fileStatus = FileStatus.get(
 					this.file, this.lastFileStatus);
 			if (this.lastFileStatus.equals(fileStatus)) {

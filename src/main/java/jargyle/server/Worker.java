@@ -13,20 +13,20 @@ final class Worker implements Runnable {
 	
 	private static final Logger LOGGER = Logger.getLogger(
 			Worker.class.getName());
-	
+
+	private final ChainingAgentService chainingAgentService;	
 	private final SocketInterface clientSocketInterface;
 	private final Configuration configuration;
-	private final SocksClientFactory socksClientFactory;
 	private final SslWrapper sslWrapper;
 	
 	public Worker(
 			final SocketInterface clientSockInterface, 
 			final Configuration config, 
-			final SocksClientFactory factory, 
-			final SslWrapper wrapper) {
+			final SslWrapper wrapper, 
+			final ChainingAgentService service) {
+		this.chainingAgentService = service;		
 		this.clientSocketInterface = clientSockInterface;
 		this.configuration = config;
-		this.socksClientFactory = factory;
 		this.sslWrapper = wrapper;
 	}
 	
@@ -53,8 +53,8 @@ final class Worker implements Runnable {
 				Socks5Worker socks5Worker = new Socks5Worker(
 						this.clientSocketInterface, 
 						this.configuration, 
-						this.socksClientFactory, 
-						this.sslWrapper);
+						this.sslWrapper, 
+						this.chainingAgentService);
 				socks5Worker.run();
 			} else {
 				LOGGER.log(

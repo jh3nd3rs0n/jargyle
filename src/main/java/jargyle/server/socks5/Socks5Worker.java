@@ -48,7 +48,7 @@ import jargyle.common.util.PositiveInteger;
 import jargyle.server.Configuration;
 import jargyle.server.SettingSpec;
 import jargyle.server.Settings;
-import jargyle.server.SocksClientFactory;
+import jargyle.server.ChainingAgentService;
 import jargyle.server.SslWrapper;
 import jargyle.server.TcpRelayServer;
 
@@ -58,28 +58,28 @@ public final class Socks5Worker implements Runnable {
 
 	private static final Logger LOGGER = Logger.getLogger(
 			Socks5Worker.class.getName());
-	
+
+	private final SocksClient chainingAgent;	
 	private InputStream clientInputStream;
 	private OutputStream clientOutputStream;
 	private SocketInterface clientSocketInterface;
 	private final Configuration configuration;
 	private final Settings settings;
-	private final SocksClient socksClient;
 	private final SslWrapper sslWrapper;
 	
 	public Socks5Worker(
 			final SocketInterface clientSockInterface, 
 			final Configuration config, 
-			final SocksClientFactory factory, 
-			final SslWrapper wrapper) {
+			final SslWrapper wrapper, 
+			final ChainingAgentService service) {
+		SocksClient agent = service.getChainingAgent();		
 		Settings sttngs = config.getSettings();
-		SocksClient client = factory.getSocksClient();
+		this.chainingAgent = agent;		
 		this.clientInputStream = null;
 		this.clientOutputStream = null;
 		this.clientSocketInterface = clientSockInterface;
 		this.configuration = config;
 		this.settings = sttngs;
-		this.socksClient = client;
 		this.sslWrapper = wrapper;
 	}
 	
@@ -461,11 +461,11 @@ public final class Socks5Worker implements Runnable {
 				new DefaultHostnameResolverFactory();
 		ServerSocketInterfaceFactory serverSocketInterfaceFactory = 
 				new DirectServerSocketInterfaceFactory();
-		if (this.socksClient != null) {
+		if (this.chainingAgent != null) {
 			hostnameResolverFactory = 
-					this.socksClient.newHostnameResolverFactory();
+					this.chainingAgent.newHostnameResolverFactory();
 			serverSocketInterfaceFactory = 
-					this.socksClient.newServerSocketInterfaceFactory();
+					this.chainingAgent.newServerSocketInterfaceFactory();
 		}
 		HostnameResolver hostnameResolver = null;
 		ServerSocketInterface listenSocketInterface = null;
@@ -583,17 +583,19 @@ public final class Socks5Worker implements Runnable {
 		int desiredDestinationPort = socks5Req.getDesiredDestinationPort();
 		HostnameResolverFactory hostnameResolverFactory =
 				new DefaultHostnameResolverFactory();
-		SocketInterfaceFactory socketFactory = new DirectSocketInterfaceFactory();
-		if (this.socksClient != null) {
+		SocketInterfaceFactory socketInterfaceFactory = 
+				new DirectSocketInterfaceFactory();
+		if (this.chainingAgent != null) {
 			hostnameResolverFactory = 
-					this.socksClient.newHostnameResolverFactory();
-			socketFactory = this.socksClient.newSocketInterfaceFactory();
+					this.chainingAgent.newHostnameResolverFactory();
+			socketInterfaceFactory = 
+					this.chainingAgent.newSocketInterfaceFactory();
 		}
 		HostnameResolver hostnameResolver = null;
 		SocketInterface serverSocketInterface = null;
 		try {
 			hostnameResolver = hostnameResolverFactory.newHostnameResolver();
-			serverSocketInterface = socketFactory.newSocketInterface();
+			serverSocketInterface = socketInterfaceFactory.newSocketInterface();
 			if (!this.configureServerSocketInterface(serverSocketInterface)) {
 				return;
 			}
@@ -654,9 +656,9 @@ public final class Socks5Worker implements Runnable {
 		int desiredDestinationPort = socks5Req.getDesiredDestinationPort();
 		HostnameResolverFactory hostnameResolverFactory = 
 				new DefaultHostnameResolverFactory();
-		if (this.socksClient != null) {
+		if (this.chainingAgent != null) {
 			hostnameResolverFactory = 
-					this.socksClient.newHostnameResolverFactory();
+					this.chainingAgent.newHostnameResolverFactory();
 		}
 		HostnameResolver hostnameResolver = 
 				hostnameResolverFactory.newHostnameResolver();
@@ -713,9 +715,9 @@ public final class Socks5Worker implements Runnable {
 		int desiredDestinationPort = socks5Req.getDesiredDestinationPort();
 		HostnameResolverFactory hostnameResolverFactory = 
 				new DefaultHostnameResolverFactory();
-		if (this.socksClient != null) {
+		if (this.chainingAgent != null) {
 			hostnameResolverFactory = 
-					this.socksClient.newHostnameResolverFactory();
+					this.chainingAgent.newHostnameResolverFactory();
 		}
 		HostnameResolver hostnameResolver = null;
 		DatagramSocketInterface serverDatagramSockInterface = null;
@@ -844,9 +846,9 @@ public final class Socks5Worker implements Runnable {
 			InetAddress bindInetAddress = bindHost.toInetAddress();
 			DatagramSocketInterfaceFactory datagramSocketInterfaceFactory = 
 					new DirectDatagramSocketInterfaceFactory();
-			if (this.socksClient != null) {
+			if (this.chainingAgent != null) {
 				datagramSocketInterfaceFactory = 
-						this.socksClient.newDatagramSocketInterfaceFactory();
+						this.chainingAgent.newDatagramSocketInterfaceFactory();
 			}
 			serverDatagramSock = 
 					datagramSocketInterfaceFactory.newDatagramSocketInterface(

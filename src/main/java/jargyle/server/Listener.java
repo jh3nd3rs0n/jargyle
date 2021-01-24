@@ -19,16 +19,16 @@ final class Listener implements Runnable {
 
 	private static final Logger LOGGER = Logger.getLogger(
 			Listener.class.getName());
-	
+
+	private final ChainingAgentService chainingAgentService;	
 	private final Configuration configuration;
 	private final ServerSocket serverSocket;
-	private final SocksClientFactory socksClientFactory;
 	private final SslWrapper sslWrapper;
 	
 	public Listener(final ServerSocket serverSock, final Configuration config) {
+		this.chainingAgentService = new ChainingAgentService(config);		
 		this.configuration = config;
 		this.serverSocket = serverSock;
-		this.socksClientFactory = new SocksClientFactory(config);
 		this.sslWrapper = new SslWrapper(config);
 	}
 	
@@ -148,8 +148,8 @@ final class Listener implements Runnable {
 			executor.execute(new Worker(
 					clientSocketInterface, 
 					this.configuration, 
-					this.socksClientFactory, 
-					this.sslWrapper));
+					this.sslWrapper, 
+					this.chainingAgentService));
 		}
 		executor.shutdownNow();
 	}

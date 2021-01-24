@@ -22,94 +22,26 @@ import jargyle.common.net.ssl.Protocols;
 import jargyle.common.security.EncryptedPassword;
 import jargyle.common.util.PositiveInteger;
 
-public final class SocksClientFactory {
+public final class ChainingAgentService {
 	
+	private SocksClient chainingAgent;
 	private final Configuration configuration;
 	private Configuration lastConfiguration;
-	private SocksClient socksClient;
-	
-	SocksClientFactory(final Configuration config) { 
+		
+	ChainingAgentService(final Configuration config) {
+		this.chainingAgent = null;
 		this.configuration = config;
 		this.lastConfiguration = null;
-		this.socksClient = null;
 	}
 	
-	public SocksClient getSocksClient() {
+	public SocksClient getChainingAgent() {
 		if (!Configuration.equals(this.lastConfiguration, this.configuration)) {
-			this.socksClient = this.newSocksClient();
+			this.chainingAgent = this.newChainingAgent();
 		}
-		return this.socksClient;
+		return this.chainingAgent;
 	}
 	
-	private List<Property> newSocks5ClientProperties() {
-		Settings settings = this.configuration.getSettings();
-		List<Property> properties = new ArrayList<Property>();
-		if (settings.containsNondefaultValue(
-				SettingSpec.CHAINING_SOCKS5_AUTH_METHODS)) {
-			AuthMethods authMethods = settings.getLastValue(
-					SettingSpec.CHAINING_SOCKS5_AUTH_METHODS, 
-					AuthMethods.class);
-			properties.add(PropertySpec.SOCKS5_AUTH_METHODS.newProperty(
-					authMethods));
-		}
-		if (settings.containsNondefaultValue(
-				SettingSpec.CHAINING_SOCKS5_FORWARD_HOSTNAME_RESOLUTION)) {
-			Boolean forwardHostnameResolution = settings.getLastValue(
-					SettingSpec.CHAINING_SOCKS5_FORWARD_HOSTNAME_RESOLUTION, 
-					Boolean.class);
-			properties.add(PropertySpec.SOCKS5_FORWARD_HOSTNAME_RESOLUTION.newProperty(
-					forwardHostnameResolution));
-		}
-		if (settings.containsNondefaultValue(
-				SettingSpec.CHAINING_SOCKS5_GSSAPI_MECHANISM_OID)) {
-			Oid gssapiMechanismOid = settings.getLastValue(
-					SettingSpec.CHAINING_SOCKS5_GSSAPI_MECHANISM_OID, 
-					Oid.class);
-			properties.add(PropertySpec.SOCKS5_GSSAPI_MECHANISM_OID.newProperty(
-					gssapiMechanismOid));
-		}
-		if (settings.containsNondefaultValue(
-				SettingSpec.CHAINING_SOCKS5_GSSAPI_NEC_REFERENCE_IMPL)) {
-			Boolean gssapiNecReferenceImpl = settings.getLastValue(
-					SettingSpec.CHAINING_SOCKS5_GSSAPI_NEC_REFERENCE_IMPL,
-					Boolean.class);
-			properties.add(
-					PropertySpec.SOCKS5_GSSAPI_NEC_REFERENCE_IMPL.newProperty(
-							gssapiNecReferenceImpl));
-		}
-		if (settings.containsNondefaultValue(
-				SettingSpec.CHAINING_SOCKS5_GSSAPI_PROTECTION_LEVELS)) {
-			GssapiProtectionLevels gssapiProtectionLevels =	settings.getLastValue(
-					SettingSpec.CHAINING_SOCKS5_GSSAPI_PROTECTION_LEVELS,
-					GssapiProtectionLevels.class);
-			properties.add(
-					PropertySpec.SOCKS5_GSSAPI_PROTECTION_LEVELS.newProperty(
-							gssapiProtectionLevels));
-		}
-		if (settings.containsNondefaultValue(
-				SettingSpec.CHAINING_SOCKS5_GSSAPI_SERVICE_NAME)) {
-			String gssapiServiceName = settings.getLastValue(
-					SettingSpec.CHAINING_SOCKS5_GSSAPI_SERVICE_NAME, 
-					String.class);
-			properties.add(PropertySpec.SOCKS5_GSSAPI_SERVICE_NAME.newProperty(
-					gssapiServiceName));
-		}
-		if (settings.containsNondefaultValue(
-				SettingSpec.CHAINING_SOCKS5_USERNAME_PASSWORD)) {
-			UsernamePassword usernamePassword = settings.getLastValue(
-					SettingSpec.CHAINING_SOCKS5_USERNAME_PASSWORD, 
-					UsernamePassword.class);
-			if (usernamePassword != null) {
-				properties.add(PropertySpec.SOCKS5_USERNAME.newProperty(
-						usernamePassword.getUsername()));
-				properties.add(PropertySpec.SOCKS5_PASSWORD.newProperty(
-						usernamePassword.getEncryptedPassword()));			
-			}
-		}
-		return properties;		
-	}
-	
-	private SocksClient newSocksClient() {
+	private SocksClient newChainingAgent() {
 		Settings settings = configuration.getSettings();
 		SocksServerUri socksServerUri = settings.getLastValue(
 				SettingSpec.CHAINING_SOCKS_SERVER_URI, SocksServerUri.class);
@@ -117,12 +49,12 @@ public final class SocksClientFactory {
 			return null;
 		}
 		List<Property> properties = new ArrayList<Property>();
-		properties.addAll(this.newSocksClientProperties());
-		SocksClient client = null;
+		properties.addAll(this.newChainingAgentProperties());
+		SocksClient agent = null;
 		if (socksServerUri instanceof Socks5ServerUri) {
-			properties.addAll(this.newSocks5ClientProperties());
+			properties.addAll(this.newChainingAgentSocks5Properties());
 			Socks5ServerUri socks5ServerUri = (Socks5ServerUri) socksServerUri;
-			client = socks5ServerUri.newSocksClient(Properties.newInstance(
+			agent = socks5ServerUri.newSocksClient(Properties.newInstance(
 					properties));
 		} else {
 			throw new AssertionError(String.format(
@@ -132,10 +64,10 @@ public final class SocksClientFactory {
 		}
 		this.lastConfiguration = ImmutableConfiguration.newInstance(
 				this.configuration);
-		return client;
+		return agent;
 	}
 	
-	private List<Property> newSocksClientProperties() {
+	private List<Property> newChainingAgentProperties() {
 		Settings settings = configuration.getSettings();
 		List<Property> properties = new ArrayList<Property>();
 		if (settings.containsNondefaultValue(SettingSpec.CHAINING_BIND_HOST)) {
@@ -229,6 +161,74 @@ public final class SocksClientFactory {
 					SettingSpec.CHAINING_SSL_TRUST_STORE_TYPE, String.class);
 			properties.add(PropertySpec.SSL_TRUST_STORE_TYPE.newProperty(
 					sslTrustStoreType));
+		}
+		return properties;		
+	}
+	
+	private List<Property> newChainingAgentSocks5Properties() {
+		Settings settings = this.configuration.getSettings();
+		List<Property> properties = new ArrayList<Property>();
+		if (settings.containsNondefaultValue(
+				SettingSpec.CHAINING_SOCKS5_AUTH_METHODS)) {
+			AuthMethods authMethods = settings.getLastValue(
+					SettingSpec.CHAINING_SOCKS5_AUTH_METHODS, 
+					AuthMethods.class);
+			properties.add(PropertySpec.SOCKS5_AUTH_METHODS.newProperty(
+					authMethods));
+		}
+		if (settings.containsNondefaultValue(
+				SettingSpec.CHAINING_SOCKS5_FORWARD_HOSTNAME_RESOLUTION)) {
+			Boolean forwardHostnameResolution = settings.getLastValue(
+					SettingSpec.CHAINING_SOCKS5_FORWARD_HOSTNAME_RESOLUTION, 
+					Boolean.class);
+			properties.add(PropertySpec.SOCKS5_FORWARD_HOSTNAME_RESOLUTION.newProperty(
+					forwardHostnameResolution));
+		}
+		if (settings.containsNondefaultValue(
+				SettingSpec.CHAINING_SOCKS5_GSSAPI_MECHANISM_OID)) {
+			Oid gssapiMechanismOid = settings.getLastValue(
+					SettingSpec.CHAINING_SOCKS5_GSSAPI_MECHANISM_OID, 
+					Oid.class);
+			properties.add(PropertySpec.SOCKS5_GSSAPI_MECHANISM_OID.newProperty(
+					gssapiMechanismOid));
+		}
+		if (settings.containsNondefaultValue(
+				SettingSpec.CHAINING_SOCKS5_GSSAPI_NEC_REFERENCE_IMPL)) {
+			Boolean gssapiNecReferenceImpl = settings.getLastValue(
+					SettingSpec.CHAINING_SOCKS5_GSSAPI_NEC_REFERENCE_IMPL,
+					Boolean.class);
+			properties.add(
+					PropertySpec.SOCKS5_GSSAPI_NEC_REFERENCE_IMPL.newProperty(
+							gssapiNecReferenceImpl));
+		}
+		if (settings.containsNondefaultValue(
+				SettingSpec.CHAINING_SOCKS5_GSSAPI_PROTECTION_LEVELS)) {
+			GssapiProtectionLevels gssapiProtectionLevels =	settings.getLastValue(
+					SettingSpec.CHAINING_SOCKS5_GSSAPI_PROTECTION_LEVELS,
+					GssapiProtectionLevels.class);
+			properties.add(
+					PropertySpec.SOCKS5_GSSAPI_PROTECTION_LEVELS.newProperty(
+							gssapiProtectionLevels));
+		}
+		if (settings.containsNondefaultValue(
+				SettingSpec.CHAINING_SOCKS5_GSSAPI_SERVICE_NAME)) {
+			String gssapiServiceName = settings.getLastValue(
+					SettingSpec.CHAINING_SOCKS5_GSSAPI_SERVICE_NAME, 
+					String.class);
+			properties.add(PropertySpec.SOCKS5_GSSAPI_SERVICE_NAME.newProperty(
+					gssapiServiceName));
+		}
+		if (settings.containsNondefaultValue(
+				SettingSpec.CHAINING_SOCKS5_USERNAME_PASSWORD)) {
+			UsernamePassword usernamePassword = settings.getLastValue(
+					SettingSpec.CHAINING_SOCKS5_USERNAME_PASSWORD, 
+					UsernamePassword.class);
+			if (usernamePassword != null) {
+				properties.add(PropertySpec.SOCKS5_USERNAME.newProperty(
+						usernamePassword.getUsername()));
+				properties.add(PropertySpec.SOCKS5_PASSWORD.newProperty(
+						usernamePassword.getEncryptedPassword()));			
+			}
 		}
 		return properties;		
 	}

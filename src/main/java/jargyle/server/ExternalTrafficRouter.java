@@ -30,13 +30,13 @@ import jargyle.common.net.ssl.Protocols;
 import jargyle.common.security.EncryptedPassword;
 import jargyle.common.util.PositiveInteger;
 
-public final class Router {
+public final class ExternalTrafficRouter {
 		
 	private final Configuration configuration;
 	private Configuration lastConfiguration;
 	private SocksClient socksClient;
 		
-	Router(final Configuration config) {
+	ExternalTrafficRouter(final Configuration config) {
 		this.configuration = config;
 		this.lastConfiguration = null;
 		this.socksClient = null;		

@@ -156,28 +156,24 @@ public final class Socks5RequestCriterion {
 	public boolean evaluatesTrue(
 			final String sourceAddress, 
 			final Socks5Request socks5Req) {
-		if (this.sourceAddressCriterion != null) {
-			if (!this.sourceAddressCriterion.evaluatesTrue(sourceAddress)) {
-				return false;
-			}
+		if (this.sourceAddressCriterion != null 
+				&& !this.sourceAddressCriterion.evaluatesTrue(sourceAddress)) {
+			return false;
 		}
-		if (this.commandCriterion != null) {
-			if (!this.commandCriterion.evaluatesTrue(
-					socks5Req.getCommand().toString())) {
-				return false;
-			}
+		if (this.commandCriterion != null
+				&& !this.commandCriterion.evaluatesTrue(
+						socks5Req.getCommand().toString())) {
+			return false;
 		}
-		if (this.desiredDestinationAddressCriterion != null) {
-			if (!this.desiredDestinationAddressCriterion.evaluatesTrue(
-					socks5Req.getDesiredDestinationAddress())) {
-				return false;
-			}
+		if (this.desiredDestinationAddressCriterion != null
+				&& !this.desiredDestinationAddressCriterion.evaluatesTrue(
+						socks5Req.getDesiredDestinationAddress())) {
+			return false;
 		}
-		if (this.desiredDestinationPortRanges != null) {
-			if (!this.desiredDestinationPortRanges.contains(Port.newInstance(
-					socks5Req.getDesiredDestinationPort()))) {
-				return false;
-			}
+		if (this.desiredDestinationPortRanges != null
+				&& !this.desiredDestinationPortRanges.contains(Port.newInstance(
+						socks5Req.getDesiredDestinationPort()))) {
+			return false;
 		}
 		return true;
 	}

@@ -58,6 +58,7 @@ Although Jargyle can act as a standalone SOCKS5 server, it can act as a bridge b
 
 ## 1. News
 
+-   2021-01-25: Jargyle 1.1.2 is released
 -   2021-01-24: Jargyle 1.1.1 is released
 -   2021-01-23: Jargyle 1.1.0 is released
 -   2021-01-22: Jargyle 1.0.3 is released
@@ -66,6 +67,10 @@ Although Jargyle can act as a standalone SOCKS5 server, it can act as a bridge b
 -   2021-01-20: Jargyle 1.0.0 is released
 
 ## 2. Release Notes
+
+Jargyle 1.1.2 Release Notes
+
+-   Fixed configuration XML element `<socks5RequestCriterion/>` in new configuration file to not retain default values as before in 1.0.3.
 
 Jargyle 1.1.1 Release Notes
 

@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>jargyle</groupId>
 	<artifactId>jargyle</artifactId>
-	<version>1.1.1</version>
+	<version>1.1.2-SNAPSHOT</version>
 	<name>Jargyle</name>
 	<description>A Java SOCKS5 server</description>
 	<properties>

@@ -12,7 +12,6 @@ import jargyle.common.net.Port;
 import jargyle.common.net.PortRanges;
 import jargyle.common.net.socks5.Socks5Request;
 import jargyle.common.util.Criterion;
-import jargyle.common.util.CriterionMethod;
 
 @XmlJavaTypeAdapter(Socks5RequestCriterion.Socks5RequestCriterionXmlAdapter.class)
 public final class Socks5RequestCriterion {
@@ -64,15 +63,6 @@ public final class Socks5RequestCriterion {
 		
 	}
 	
-	public static final Criterion DEFAULT_SOURCE_ADDRESS_CRITERION =
-			Criterion.newInstance(CriterionMethod.MATCHES, ".*");
-	public static final Criterion DEFAULT_COMMAND_CRITERION =
-			Criterion.newInstance(CriterionMethod.MATCHES, ".*");
-	public static final Criterion DEFAULT_DESIRED_DESTINATION_ADDRESS_CRITERION =
-			Criterion.newInstance(CriterionMethod.MATCHES, ".*");
-	public static final PortRanges DEFAULT_DESIRED_DESTINATION_PORT_RANGES =
-			PortRanges.DEFAULT_INSTANCE;
-	
 	public static Socks5RequestCriterion newInstance(
 			final Criterion sourceAddrCriterion, 
 			final Criterion cmdCriterion,
@@ -110,15 +100,11 @@ public final class Socks5RequestCriterion {
 			final Criterion desiredDestinationAddrCriterion,
 			final PortRanges desiredDestinationPrtRange,
 			final String cmmnt) {
-		this.sourceAddressCriterion = (sourceAddrCriterion != null) ?
-				sourceAddrCriterion : DEFAULT_SOURCE_ADDRESS_CRITERION;
-		this.commandCriterion = (cmdCriterion != null) ?
-				cmdCriterion : DEFAULT_COMMAND_CRITERION;
+		this.sourceAddressCriterion = sourceAddrCriterion;
+		this.commandCriterion = cmdCriterion;
 		this.comment = cmmnt;		
-		this.desiredDestinationAddressCriterion = (desiredDestinationAddrCriterion != null) ?
-				desiredDestinationAddrCriterion : DEFAULT_DESIRED_DESTINATION_ADDRESS_CRITERION;
-		this.desiredDestinationPortRanges = (desiredDestinationPrtRange != null) ?
-				desiredDestinationPrtRange : DEFAULT_DESIRED_DESTINATION_PORT_RANGES;
+		this.desiredDestinationAddressCriterion = desiredDestinationAddrCriterion;
+		this.desiredDestinationPortRanges = desiredDestinationPrtRange;
 	}
 	
 	@Override
@@ -144,21 +130,24 @@ public final class Socks5RequestCriterion {
 			if (other.desiredDestinationAddressCriterion != null) {
 				return false;
 			}
-		} else if (!this.desiredDestinationAddressCriterion.equals(other.desiredDestinationAddressCriterion)) {
+		} else if (!this.desiredDestinationAddressCriterion.equals(
+				other.desiredDestinationAddressCriterion)) {
 			return false;
 		}
 		if (this.desiredDestinationPortRanges == null) {
 			if (other.desiredDestinationPortRanges != null) {
 				return false;
 			}
-		} else if (!this.desiredDestinationPortRanges.equals(other.desiredDestinationPortRanges)) {
+		} else if (!this.desiredDestinationPortRanges.equals(
+				other.desiredDestinationPortRanges)) {
 			return false;
 		}
 		if (this.sourceAddressCriterion == null) {
 			if (other.sourceAddressCriterion != null) {
 				return false;
 			}
-		} else if (!this.sourceAddressCriterion.equals(other.sourceAddressCriterion)) {
+		} else if (!this.sourceAddressCriterion.equals(
+				other.sourceAddressCriterion)) {
 			return false;
 		}
 		return true;
@@ -167,20 +156,28 @@ public final class Socks5RequestCriterion {
 	public boolean evaluatesTrue(
 			final String sourceAddress, 
 			final Socks5Request socks5Req) {
-		if (!this.sourceAddressCriterion.evaluatesTrue(sourceAddress)) {
-			return false;
+		if (this.sourceAddressCriterion != null) {
+			if (!this.sourceAddressCriterion.evaluatesTrue(sourceAddress)) {
+				return false;
+			}
 		}
-		if (!this.commandCriterion.evaluatesTrue(
-				socks5Req.getCommand().toString())) {
-			return false;
+		if (this.commandCriterion != null) {
+			if (!this.commandCriterion.evaluatesTrue(
+					socks5Req.getCommand().toString())) {
+				return false;
+			}
 		}
-		if (!this.desiredDestinationAddressCriterion.evaluatesTrue(
-				socks5Req.getDesiredDestinationAddress())) {
-			return false;
+		if (this.desiredDestinationAddressCriterion != null) {
+			if (!this.desiredDestinationAddressCriterion.evaluatesTrue(
+					socks5Req.getDesiredDestinationAddress())) {
+				return false;
+			}
 		}
-		if (!this.desiredDestinationPortRanges.contains(
-				Port.newInstance(socks5Req.getDesiredDestinationPort()))) {
-			return false;
+		if (this.desiredDestinationPortRanges != null) {
+			if (!this.desiredDestinationPortRanges.contains(Port.newInstance(
+					socks5Req.getDesiredDestinationPort()))) {
+				return false;
+			}
 		}
 		return true;
 	}
@@ -205,12 +202,16 @@ public final class Socks5RequestCriterion {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((this.commandCriterion == null) ? 0 : this.commandCriterion.hashCode());
+		result = prime * result + ((this.commandCriterion == null) ? 
+				0 : this.commandCriterion.hashCode());
 		result = prime * result
-				+ ((this.desiredDestinationAddressCriterion == null) ? 0 : this.desiredDestinationAddressCriterion.hashCode());
+				+ ((this.desiredDestinationAddressCriterion == null) ? 
+						0 : this.desiredDestinationAddressCriterion.hashCode());
 		result = prime * result
-				+ ((this.desiredDestinationPortRanges == null) ? 0 : this.desiredDestinationPortRanges.hashCode());
-		result = prime * result + ((this.sourceAddressCriterion == null) ? 0 : this.sourceAddressCriterion.hashCode());
+				+ ((this.desiredDestinationPortRanges == null) ? 
+						0 : this.desiredDestinationPortRanges.hashCode());
+		result = prime * result + ((this.sourceAddressCriterion == null) ? 
+				0 : this.sourceAddressCriterion.hashCode());
 		return result;
 	}
 

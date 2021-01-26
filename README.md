@@ -58,6 +58,7 @@ Although Jargyle can act as a standalone SOCKS5 server, it can act as a bridge b
 
 ## 1. News
 
+-   2021-01-26: Jargyle 2.0.1 is released
 -   2021-01-26: Jargyle 2.0.0 is released
 -   2021-01-25: Jargyle 1.1.2 is released
 -   2021-01-24: Jargyle 1.1.1 is released
@@ -69,9 +70,13 @@ Although Jargyle can act as a standalone SOCKS5 server, it can act as a bridge b
 
 ## 2. Release Notes
 
+Jargyle 2.0.1 Release Notes
+
+-   Edits in README.md.
+
 Jargyle 2.0.0 Release Notes
 
--   Batch scripts are used to start up Jargyle
+-   Batch scripts are used to start up Jargyle.
 
 Jargyle 1.1.2 Release Notes
 
@@ -125,7 +130,7 @@ To run automated testing, run the following commands:
 
 ```
 
-`directory-containing-pom.xml` is to be the actual directory that contains the file `pom.xml`. This file is used by the command `mvn`
+Where `directory-containing-pom.xml` would be the actual directory that contains the file `pom.xml`. This file is used by the command `mvn`.
 
 ## 5. Building
 
@@ -159,7 +164,7 @@ Where `${VERSION}` would be the actual version shown within the name of the buil
 
 ## 6. Running Jargyle 
 
-To run Jargyle with the built jar file and its copied dependencies without any command line arguments, you will need to use the following command:
+To run Jargyle with the built jar file and its copied dependencies without any command line arguments, you can run the following command:
 
 ```bash
     
@@ -909,8 +914,7 @@ Once you have run the command, an interactive prompt will ask you for the new us
 
 ```text
 
-    ./bin/jargyle \
-        --socks5-users add-users-to-file users.xml
+    ./bin/jargyle --socks5-users add-users-to-file users.xml
     User
     Name: Jafar
     Password: 
@@ -1197,7 +1201,7 @@ The following is a sufficient example of using the Kerberos security mechanism:
 
 ```bash
 
-    env JARGYLE_OPTS="-Djavax.security.auth.useSubjectCredsOnly=false -Djava.security.auth.login.config=login.conf -Djava.security.krb5.conf=krb5.conf"
+    env JARGYLE_OPTS="-Djavax.security.auth.useSubjectCredsOnly=false -Djava.security.auth.login.config=login.conf -Djava.security.krb5.conf=krb5.conf" \
     ./bin/jargyle --setting=socks5.authMethods=GSSAPI 
 
 ```
@@ -1508,7 +1512,7 @@ The following is a sufficient example of using the Kerberos security mechanism:
 
 ```bash
 
-    env JARGYLE_OPTS="-Djavax.security.auth.useSubjectCredsOnly=false -Djava.security.auth.login.config=login.conf -Djava.security.krb5.conf=krb5.conf"
+    env JARGYLE_OPTS="-Djavax.security.auth.useSubjectCredsOnly=false -Djava.security.auth.login.config=login.conf -Djava.security.krb5.conf=krb5.conf" \
     ./bin/jargyle \
         --setting=chaining.socksServerUri=socks5://127.0.0.1:23456 \
         --setting=chaining.socks5.authMethods=GSSAPI \
@@ -1725,8 +1729,8 @@ Example:
 
 ```bash
     
-    java -Djava.util.logging.config.file=logging.properties \
-        -jar jargyle-${VERSION}.jar
+    env JARGYLE_OPTS="-Djava.util.logging.config.file=logging.properties" \
+    ./bin/jargyle
     
 ```
 

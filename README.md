@@ -58,6 +58,7 @@ Although Jargyle can act as a standalone SOCKS5 server, it can act as a bridge b
 
 ## 1. News
 
+-   2021-01-26: Jargyle 2.0.0 is released
 -   2021-01-25: Jargyle 1.1.2 is released
 -   2021-01-24: Jargyle 1.1.1 is released
 -   2021-01-23: Jargyle 1.1.0 is released
@@ -67,6 +68,10 @@ Although Jargyle can act as a standalone SOCKS5 server, it can act as a bridge b
 -   2021-01-20: Jargyle 1.0.0 is released
 
 ## 2. Release Notes
+
+Jargyle 2.0.0 Release Notes
+
+-   Batch scripts are used to start up Jargyle
 
 Jargyle 1.1.2 Release Notes
 
@@ -124,7 +129,7 @@ To run automated testing, run the following commands:
 
 ## 5. Building
 
-To build and package Jargyle as an executable jar file, run the following command:
+To build and package Jargyle, run the following command:
 
 ```bash
 
@@ -132,39 +137,47 @@ To build and package Jargyle as an executable jar file, run the following comman
 
 ```
 
-After running the aforementioned command, the executable jar file and its copied dependencies can be found in the following paths:
+After running the aforementioned command, the built jar file and its copied dependencies can be found in the following paths:
 
 ```text
     
-    target/jargyle-${VERSION}.jar
-    target/lib/activation-1.1.1.jar
-    target/lib/FastInfoset-1.2.15.jar
-    target/lib/istack-commons-runtime-3.0.7.jar
-    target/lib/javax.activation-api-1.2.0.jar
-    target/lib/jaxb-api-2.3.1.jar
-    target/lib/jaxb-core-2.3.0.jar
-    target/lib/jaxb-impl-2.3.0.jar
-    target/lib/jaxb-runtime-2.3.1.jar
-    target/lib/stax-ex-1.8.jar
-    target/lib/txw2-2.3.1.jar
+    target/activation-1.1.1.jar
+    target/FastInfoset-1.2.15.jar
+    target/istack-commons-runtime-3.0.7.jar
+    target/jargyle-${VERSION}.jar    
+    target/javax.activation-api-1.2.0.jar
+    target/jaxb-api-2.3.1.jar
+    target/jaxb-core-2.3.0.jar
+    target/jaxb-impl-2.3.0.jar
+    target/jaxb-runtime-2.3.1.jar
+    target/stax-ex-1.8.jar
+    target/txw2-2.3.1.jar
     
 ```
 
-`${VERSION}` is replaced by the actual version shown within the name of the executable jar file.
+Where `${VERSION}` would be the actual version shown within the name of the built jar file.
 
 ## 6. Running Jargyle 
 
-To run Jargyle without any command line arguments, you can run the following command:
+To run Jargyle with the built jar file and its copied dependencies without any command line arguments, you will need to use the following command:
+
+```bash
+    
+    ./bin/jargyleDev
+    
+```
+
+To run Jargyle from the binary distribution without any command line arguments, you can run the following command:
 
 ```bash
 
-    java -jar jargyle-${VERSION}.jar
+    ./bin/jargyle
 
 ```
 
-Be sure to replace `${VERSION}` with the actual version shown within the name of the executable jar file.
+The aforementioned commands will run Jargyle on port 1080 at address 0.0.0.0 using no authentication.
 
-The aforementioned command will run Jargyle on port 1080 at address 0.0.0.0 using no authentication.
+Note: Although either command can be used throughout the rest of this README, the command from the binary distribution will be used throughout the rest of this README.
 
 ### 6. 1. Usage
 
@@ -172,13 +185,13 @@ The following is the command line help for Jargyle (displayed when using the com
 
 ```text
 
-    Usage: jargyle.server.SocksServer [OPTIONS]
-           jargyle.server.SocksServer --config-file-xsd
-           jargyle.server.SocksServer --help
-           jargyle.server.SocksServer --monitored-config-file=FILE
-           jargyle.server.SocksServer [OPTIONS] --new-config-file=FILE
-           jargyle.server.SocksServer --settings-help
-           jargyle.server.SocksServer --socks5-users ARGS
+    Usage: jargyle [OPTIONS]
+           jargyle --config-file-xsd
+           jargyle --help
+           jargyle --monitored-config-file=FILE
+           jargyle [OPTIONS] --new-config-file=FILE
+           jargyle --settings-help
+           jargyle --socks5-users ARGS
     
     OPTIONS:
       --config-file=FILE, -f FILE
@@ -475,9 +488,9 @@ The following is the command line help for managing SOCKS5 users for username pa
 
 ```text
 
-    Usage: jargyle.server.SocksServer --socks5-users COMMAND
-           jargyle.server.SocksServer --socks5-users --help
-           jargyle.server.SocksServer --socks5-users --xsd
+    Usage: jargyle --socks5-users COMMAND
+           jargyle --socks5-users --help
+           jargyle --socks5-users --xsd
     
     COMMANDS:
       add-users-to-file FILE
@@ -503,8 +516,7 @@ The following command creates an empty configuration file:
 
 ```bash
 
-    java -jar jargyle-${VERSION}.jar \
-        --new-config-file=empty_configuration.xml
+    ./bin/jargyle --new-config-file=empty_configuration.xml
 
 ```
 
@@ -523,7 +535,7 @@ The following command creates a configuration file with the port number, the num
 
 ```bash
 
-    java -jar jargyle-${VERSION}.jar \
+    ./bin/jargyle \
         --setting=port=1234 \
         --setting=backlog=100 \
         --setting=socks5.authMethods=NO_AUTHENTICATION_REQUIRED \
@@ -563,7 +575,7 @@ The following command adds one command line options before the existing configur
 
 ```bash
 
-    java -jar jargyle-${VERSION}.jar \
+    ./bin/jargyle \
         --setting=clientSocketSettings=SO_TIMEOUT=500 \
         --config-file=configuration.xml \
         --setting=socketSettings=SO_TIMEOUT=0 \
@@ -625,7 +637,7 @@ The following command combines the two earlier configuration files into one:
 
 ```bash
 
-    java -jar jargyle-${VERSION}.jar \
+    ./bin/jargyle \
         --config-file=configuration.xml \
         --config-file=supplemented_configuration.xml \
         --new-config-file=combined_configuration.xml
@@ -698,8 +710,7 @@ To run Jargyle with a configuration file, you can use the command line option `-
 
 ```bash
 
-    java -jar jargyle-${VERSION}.jar \
-        --config-file=configuration.xml
+    ./bin/jargyle --config-file=configuration.xml
 
 ```
 
@@ -713,8 +724,7 @@ To run Jargyle with a monitored configuration file, you can use the command line
 
 ```bash
 
-    java -jar jargyle-${VERSION}.jar \
-        --monitored-config-file=configuration.xml
+    ./bin/jargyle --monitored-config-file=configuration.xml
 
 ```
 
@@ -735,7 +745,7 @@ You can have clients connect to Jargyle through SSL/TLS. By default SSL/TLS is d
 
 ```text
 
-    java -jar jargyle-${VERSION}.jar \
+    ./bin/jargyle \
         --setting=ssl.enabled=true \
         --setting=ssl.keyStoreFile=server.jks \
         --setting=ssl.keyStorePassword=password
@@ -746,7 +756,7 @@ If you do not want to have the password appear in any script or in any part of t
 
 ```text
 
-    java -jar jargyle-${VERSION}.jar \
+    ./bin/jargyle \
         --setting=ssl.enabled=true \
         --setting=ssl.keyStoreFile=server.jks \
         --enter-ssl-key-store-pass
@@ -757,7 +767,7 @@ If you want to have the client authenticate using SSL/TLS, you will need to have
 
 ```text
 
-    java -jar jargyle-${VERSION}.jar \
+    ./bin/jargyle \
         --setting=ssl.enabled=true \
         --setting=ssl.keyStoreFile=server.jks \
         --setting=ssl.keyStorePassword=password \
@@ -771,7 +781,7 @@ If you do not want to have the password appear in any script or in any part of t
 
 ```text
 
-    java -jar jargyle-${VERSION}.jar \
+    ./bin/jargyle \
         --setting=ssl.enabled=true \
         --setting=ssl.keyStoreFile=server.jks \
         --enter-ssl-key-store-pass \
@@ -791,8 +801,7 @@ To create a users file, you would run the following command:
 
 ```bash
 
-    java -jar jargyle-${VERSION}.jar \
-        --socks5-users create-new-file FILE
+    ./bin/jargyle --socks5-users create-new-file FILE
 
 ```
 
@@ -802,8 +811,7 @@ Once you have run the command, an interactive prompt will ask you if you want to
 
 ```text
 
-    java -jar jargyle-${VERSION}.jar \
-        --socks5-users create-new-file users.xml
+    ./bin/jargyle --socks5-users create-new-file users.xml
     Would you like to enter a user? ('Y' for yes): 
 
 ```
@@ -891,8 +899,7 @@ To add users to an existing users file, you would run the following command:
 
 ```bash
 
-    java -jar jargyle-${VERSION}.jar \
-        --socks5-users add-users-to-file FILE
+    ./bin/jargyle --socks5-users add-users-to-file FILE
 
 ```
 
@@ -902,7 +909,7 @@ Once you have run the command, an interactive prompt will ask you for the new us
 
 ```text
 
-    java -jar jargyle-${VERSION}.jar \
+    ./bin/jargyle \
         --socks5-users add-users-to-file users.xml
     User
     Name: Jafar
@@ -958,8 +965,7 @@ To remove a user from an existing users file, you would run the following comman
 
 ```bash
 
-    java -jar jargyle-${VERSION}.jar \
-        --socks5-users remove-user NAME FILE
+    ./bin/jargyle --socks5-users remove-user NAME FILE
 
 ```
 
@@ -969,8 +975,7 @@ Once you have run the command, the user of the specified name will be removed fr
 
 ```text
 
-    java -jar jargyle-${VERSION}.jar \
-        --socks5-users remove-user Jafar users.xml
+    ./bin/jargyle --socks5-users remove-user Jafar users.xml
     User 'Jafar' removed
     Writing to 'users.xml'...
 
@@ -1192,11 +1197,8 @@ The following is a sufficient example of using the Kerberos security mechanism:
 
 ```bash
 
-    java -Djavax.security.auth.useSubjectCredsOnly=false \
-        -Djava.security.auth.login.config=login.conf \
-        -Djava.security.krb5.conf=krb5.conf \
-        -jar jargyle-${VERSION}.jar \
-        --setting=socks5.authMethods=GSSAPI 
+    env JARGYLE_OPTS="-Djavax.security.auth.useSubjectCredsOnly=false -Djava.security.auth.login.config=login.conf -Djava.security.krb5.conf=krb5.conf"
+    ./bin/jargyle --setting=socks5.authMethods=GSSAPI 
 
 ```
 
@@ -1506,10 +1508,8 @@ The following is a sufficient example of using the Kerberos security mechanism:
 
 ```bash
 
-    java -Djavax.security.auth.useSubjectCredsOnly=false \
-        -Djava.security.auth.login.config=login.conf \
-        -Djava.security.krb5.conf=krb5.conf \
-        -jar jargyle-${VERSION}.jar \
+    env JARGYLE_OPTS="-Djavax.security.auth.useSubjectCredsOnly=false -Djava.security.auth.login.config=login.conf -Djava.security.krb5.conf=krb5.conf"
+    ./bin/jargyle \
         --setting=chaining.socksServerUri=socks5://127.0.0.1:23456 \
         --setting=chaining.socks5.authMethods=GSSAPI \
         --setting=chaining.socks5.gssapiServiceName=rcmd/127.0.0.1 

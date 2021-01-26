@@ -18,14 +18,15 @@
 			</includes>
 		</fileSet>	
 		<fileSet>
-			<directory>${project.build.directory}</directory>
-			<outputDirectory>bin</outputDirectory>
+			<directory>${project.basedir}/bin</directory>
+			<outputDirectory>bin/bin</outputDirectory>
 			<includes>
-				<include>*.jar</include>
+				<include>jargyle</include>
+				<include>jargyle.cmd</include>				
 			</includes>
-		</fileSet>
+		</fileSet>		
 		<fileSet>
-			<directory>${project.build.directory}/lib</directory>
+			<directory>${project.build.directory}</directory>
 			<outputDirectory>bin/lib</outputDirectory>
 			<includes>
 				<include>*.jar</include>
@@ -42,6 +43,16 @@
 				<include>README.md</include>
 			</includes>
 		</fileSet>
+		<fileSet>
+			<directory>${project.basedir}/bin</directory>
+			<outputDirectory>src/bin</outputDirectory>
+			<includes>
+				<include>jargyle</include>
+				<include>jargyle.cmd</include>				
+				<include>jargyleDev</include>			
+				<include>jargyleDev.cmd</include>				
+			</includes>
+		</fileSet>		
 		<fileSet>
 			<directory>${project.basedir}/src</directory>
 			<outputDirectory>src/src</outputDirectory>

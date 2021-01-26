@@ -1,0 +1,8 @@
+#!/bin/sh
+# ----------------------------------------------------------------------------
+# Jargyle Start Up Batch script to run jargyle with the lib dir set to target
+# ----------------------------------------------------------------------------
+
+JARGYLE_LIB=target
+
+env JARGYLE_LIB="${JARGYLE_LIB}" $(dirname $0)/jargyle "$@"

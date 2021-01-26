@@ -38,6 +38,8 @@ public final class SslWrapper {
 	private SSLContext getSslContext() throws IOException {
 		if (!Configuration.equals(this.lastConfiguration, this.configuration)) {
 			this.sslContext = this.newSslContext();
+			this.lastConfiguration = ImmutableConfiguration.newInstance(
+					this.configuration);
 		}
 		return this.sslContext;
 	}
@@ -83,8 +85,6 @@ public final class SslWrapper {
 		} catch (KeyManagementException e) {
 			throw new IOException(e);
 		}
-		this.lastConfiguration = ImmutableConfiguration.newInstance(
-				this.configuration);
 		return context;
 	}
 	

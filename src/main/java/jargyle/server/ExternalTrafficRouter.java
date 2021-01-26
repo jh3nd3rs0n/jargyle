@@ -45,6 +45,8 @@ public final class ExternalTrafficRouter {
 	private SocksClient getSocksClient() {
 		if (!Configuration.equals(this.lastConfiguration, this.configuration)) {
 			this.socksClient = this.newSocksClient();
+			this.lastConfiguration = ImmutableConfiguration.newInstance(
+					this.configuration);
 		}
 		return this.socksClient;
 	}
@@ -150,7 +152,7 @@ public final class ExternalTrafficRouter {
 	}
 	
 	private SocksClient newSocksClient() {
-		Settings settings = configuration.getSettings();
+		Settings settings = this.configuration.getSettings();
 		SocksServerUri socksServerUri = settings.getLastValue(
 				SettingSpec.CHAINING_SOCKS_SERVER_URI, SocksServerUri.class);
 		if (socksServerUri == null) {
@@ -170,13 +172,11 @@ public final class ExternalTrafficRouter {
 					SocksServerUri.class.getSimpleName(), 
 					socksServerUri.getClass().getSimpleName()));
 		}
-		this.lastConfiguration = ImmutableConfiguration.newInstance(
-				this.configuration);
 		return client;
 	}
 	
 	private List<Property> newSocksClientProperties() {
-		Settings settings = configuration.getSettings();
+		Settings settings = this.configuration.getSettings();
 		List<Property> properties = new ArrayList<Property>();
 		if (settings.containsNondefaultValue(SettingSpec.CHAINING_BIND_HOST)) {
 			Host bindHost = settings.getLastValue(

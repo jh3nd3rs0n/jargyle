@@ -75,7 +75,8 @@
 				<version>3.3.0</version>
 				<configuration>
 					<descriptors>
-						<descriptor>distribution.xml</descriptor>
+						<descriptor>src/assembly/bin_distribution.xml</descriptor>
+						<descriptor>src/assembly/src_distribution.xml</descriptor>						
 					</descriptors>
 				</configuration>
 			</plugin>

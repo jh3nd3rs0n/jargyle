@@ -24,8 +24,6 @@
 			<includes>
 				<include>jargyle</include>
 				<include>jargyle.cmd</include>				
-				<include>jargyleDev</include>			
-				<include>jargyleDev.cmd</include>				
 			</includes>
 			<fileMode>0755</fileMode>
 		</fileSet>		

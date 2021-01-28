@@ -56,7 +56,7 @@ Although Jargyle can act as a standalone SOCKS5 server, it can act as a bridge b
 
 ## 1. Requirements
 
-For automated testing, building, and running Jargyle under this repository or the source distribution:
+For automated testing, building, and running Jargyle under the source distribution:
 
 -   Apache Maven&#8482; 3.3.9 or higher 
 -   Java&#8482; SDK 1.8 or higher
@@ -112,15 +112,7 @@ Where `${VERSION}` would be the actual version shown within the name of the buil
 
 ## 4. Running Jargyle 
 
-After you have built the jar file and copied its dependencies, to run Jargyle without any command line arguments under this repository or the source distribution, you can run the following command:
-
-```bash
-    
-    ./bin/jargyleDev
-    
-```
-
-To run Jargyle without any command line arguments under the binary distribution, you can run the following command:
+To run Jargyle without any command line arguments, you can run the following command:
 
 ```bash
     
@@ -128,9 +120,7 @@ To run Jargyle without any command line arguments under the binary distribution,
     
 ```
 
-The aforementioned commands will run Jargyle on port 1080 at address 0.0.0.0 using no authentication.
-
-**Note:** Although the command `./bin/jargyleDev` can be used throughout the rest of this README, the command from the binary distribution (`./bin/jargyle`) will be used throughout the rest of this README.
+The aforementioned command will run Jargyle on port 1080 at address 0.0.0.0 using no authentication.
 
 ### 4. 1. Usage
 

@@ -9,7 +9,6 @@
 # Optional ENV variables:
 # -----------------------
 #   JARGYLE_HOME - location of Jargyle's installed home dir
-#   JARGYLE_LIB - Jargyle's lib dir relative to Jargyle's installed home dir
 #   JARGYLE_OPTS - parameters passed to the Java VM when running Jargyle
 # ----------------------------------------------------------------------------
 
@@ -20,10 +19,10 @@ mingw=false;
 case "`uname`" in
   CYGWIN*)
     cygwin=true
-  ;;
+    ;;
   MINGW*)
     mingw=true
-  ;;
+    ;;
   Darwin*)
     darwin=true
     #
@@ -57,7 +56,7 @@ case "`uname`" in
       #
       export JAVA_HOME=`/usr/libexec/java_home`
     fi
-  ;;
+    ;;
 esac
 
 if [ -z "$JAVA_HOME" ] ; then
@@ -163,13 +162,37 @@ if $cygwin; then
     CLASSPATH=`cygpath --path --windows "$CLASSPATH"`
 fi
 
-if [ -z "$JARGYLE_LIB" ] ; then
-  JARGYLE_LIB=lib
+construct_jargyle_classpath() {
+  for i in "${JARGYLE_HOME}"/"${1}"/*.jar; do
+    if [ -e "$i" ] ; then
+      j="$i"
+      # For Cygwin, switch path to Windows format
+      if $cygwin; then
+        j=`cygpath --path --windows "$i"`
+      fi      
+      if [ ! -z "$JARGYLE_CLASSPATH" ] ; then
+        JARGYLE_CLASSPATH="${JARGYLE_CLASSPATH}:"
+      fi    
+      JARGYLE_CLASSPATH="${JARGYLE_CLASSPATH}${j}"
+    fi
+  done
+  echo "$JARGYLE_CLASSPATH"
+}
+
+# Construct Jargyle's classpath of jar files from the source distribution.
+JARGYLE_CLASSPATH=$(construct_jargyle_classpath "target") 
+
+# If there are no jar files from the source distribution,
+# then this must be the binary distribution.
+# Construct Jargyle's classpath of jar files from the binary distribution.
+if [ -z "$JARGYLE_CLASSPATH" ] ; then
+  JARGYLE_CLASSPATH=$(construct_jargyle_classpath "lib")
 fi
 
-for i in "${JARGYLE_HOME}"/"${JARGYLE_LIB}"/*.jar; do
-  JARGYLE_CLASSPATH="${JARGYLE_CLASSPATH}${i}:"
-done
+if [ -z "$JARGYLE_CLASSPATH" ] ; then
+  echo "Error: Unable to find jar files in '${JARGYLE_HOME}/target' or '${JARGYLE_HOME}/lib'"
+  exit 1
+fi
 
 JARGYLE_MAIN_CLASS=jargyle.server.SocksServer
 
@@ -180,6 +203,6 @@ export JARGYLE_CMD_LINE_ARGS
 
 exec "$JAVACMD" \
   $JARGYLE_OPTS \
-  "-Dprogram.name=jargyle" \  
-  -classpath "${JARGYLE_CLASSPATH}" \
-  ${JARGYLE_MAIN_CLASS} "$@"
+  -classpath "$JARGYLE_CLASSPATH" \
+  "-Dprogram.name=jargyle" \
+  $JARGYLE_MAIN_CLASS "$@"

@@ -6,7 +6,6 @@
 @REM
 @REM Optional ENV variables
 @REM JARGYLE_HOME - location of Jargyle's installed home dir
-@REM JARGYLE_LIB - Jargyle's lib dir relative to Jargyle's installed home dir
 @REM JARGYLE_BATCH_ECHO - set to 'on' to enable the echoing of the batch commands
 @REM JARGYLE_BATCH_PAUSE - set to 'on' to wait for a key stroke before ending
 @REM JARGYLE_OPTS - parameters passed to the Java VM when running Jargyle
@@ -66,7 +65,7 @@ set "JARGYLE_HOME=%JARGYLE_HOME:~0,-1%"
 goto stripJargyleHome
 
 :checkJargyleCmd
-if exist "%JARGYLE_HOME%\bin\jargyle.cmd" goto init
+if exist "%JARGYLE_HOME%\bin\jargyle.cmd" goto constructJargyleClasspath
 
 echo.
 echo Error: JARGYLE_HOME is set to an invalid directory. >&2
@@ -77,19 +76,32 @@ echo.
 goto error
 @REM ==== END VALIDATION ====
 
-:init
+:constructJargyleClasspath
 
-set JARGYLE_CMD_LINE_ARGS=%*
+@setlocal EnableDelayedExpansion
+for %%i in ("%JARGYLE_HOME%"\target\*.jar) do set JARGYLE_CLASSPATH=!JARGYLE_CLASSPATH!%%i;
+@endlocal & set JARGYLE_CLASSPATH=%JARGYLE_CLASSPATH%
+
+if not "%JARGYLE_CLASSPATH%"=="" goto init
+
+@setlocal EnableDelayedExpansion
+for %%i in ("%JARGYLE_HOME%"\lib\*.jar) do set JARGYLE_CLASSPATH=!JARGYLE_CLASSPATH!%%i;
+@endlocal & set JARGYLE_CLASSPATH=%JARGYLE_CLASSPATH%
+
+if not "%JARGYLE_CLASSPATH%"=="" goto init
+
+echo.
+echo Error: Unable to find jar files in '%JARGYLE_HOME%\target' or '%JARGYLE_HOME%\lib' 
+echo.
+goto error
+
+:init
 
 set JARGYLE_JAVA_EXE="%JAVA_HOME%\bin\java.exe"
 
-if "%JARGYLE_LIB%" == "" set JARGYLE_LIB=lib
-
-@setlocal EnableDelayedExpansion
-for %%i in ("%JARGYLE_HOME%"\%JARGYLE_LIB%\*.jar) do set JARGYLE_CLASSPATH=!JARGYLE_CLASSPATH!%%i;
-@endlocal & set JARGYLE_CLASSPATH=%JARGYLE_CLASSPATH%
-
 set JARGYLE_MAIN_CLASS=jargyle.server.SocksServer
+
+set JARGYLE_CMD_LINE_ARGS=%*
 
 %JARGYLE_JAVA_EXE% %JARGYLE_OPTS% -classpath %JARGYLE_CLASSPATH% -Dprogram.name=jargyle %JARGYLE_MAIN_CLASS% %JARGYLE_CMD_LINE_ARGS%
 if ERRORLEVEL 1 goto error

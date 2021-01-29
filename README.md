@@ -90,25 +90,13 @@ To build and package Jargyle, run the following command:
     
 ```
 
-After running the aforementioned command, the built jar file and its copied dependencies can be found in the following paths:
+After running the aforementioned command, the built jar file and its copied dependencies can be found in the following path:
 
 ```text
     
-    target/activation-1.1.1.jar
-    target/FastInfoset-1.2.15.jar
-    target/istack-commons-runtime-3.0.7.jar
-    target/jargyle-${VERSION}.jar    
-    target/javax.activation-api-1.2.0.jar
-    target/jaxb-api-2.3.1.jar
-    target/jaxb-core-2.3.0.jar
-    target/jaxb-impl-2.3.0.jar
-    target/jaxb-runtime-2.3.1.jar
-    target/stax-ex-1.8.jar
-    target/txw2-2.3.1.jar
+    target/
     
 ```
-
-Where `${VERSION}` would be the actual version shown within the name of the built jar file.
 
 ## 4. Running Jargyle 
 

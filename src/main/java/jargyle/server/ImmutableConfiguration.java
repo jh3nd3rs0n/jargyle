@@ -19,8 +19,6 @@ import javax.xml.bind.helpers.DefaultValidationEventHandler;
 import javax.xml.transform.Result;
 import javax.xml.transform.stream.StreamResult;
 
-import jargyle.common.xml.bind.XmlBindHelper;
-
 public final class ImmutableConfiguration extends Configuration {
 
 	public static final class Builder {
@@ -69,9 +67,6 @@ public final class ImmutableConfiguration extends Configuration {
 	}
 	
 	public static byte[] getXsd() {
-		if (!XmlBindHelper.isOptimizedCodeGenerationDisabled()) {
-			XmlBindHelper.setOptimizedCodeGenerationDisabled(true);
-		}
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		JAXBContext jaxbContext = null;
 		try {
@@ -110,9 +105,6 @@ public final class ImmutableConfiguration extends Configuration {
 	
 	public static ImmutableConfiguration newInstanceFrom(
 			final InputStream in) throws IOException {
-		if (!XmlBindHelper.isOptimizedCodeGenerationDisabled()) {
-			XmlBindHelper.setOptimizedCodeGenerationDisabled(true);
-		}
 		JAXBContext jaxbContext = null;
 		try {
 			jaxbContext = JAXBContext.newInstance(ConfigurationXml.class);
@@ -173,9 +165,6 @@ public final class ImmutableConfiguration extends Configuration {
 	}
 
 	public byte[] toXml() {
-		if (!XmlBindHelper.isOptimizedCodeGenerationDisabled()) {
-			XmlBindHelper.setOptimizedCodeGenerationDisabled(true);
-		}
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		JAXBContext jaxbContext = null;
 		try {

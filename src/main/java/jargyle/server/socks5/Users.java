@@ -23,8 +23,6 @@ import javax.xml.bind.helpers.DefaultValidationEventHandler;
 import javax.xml.transform.Result;
 import javax.xml.transform.stream.StreamResult;
 
-import jargyle.common.xml.bind.XmlBindHelper;
-
 public final class Users {
 	
 	private static final class CustomSchemaOutputResolver 
@@ -54,9 +52,6 @@ public final class Users {
 	}
 
 	public static byte[] getXsd() {
-		if (!XmlBindHelper.isOptimizedCodeGenerationDisabled()) {
-			XmlBindHelper.setOptimizedCodeGenerationDisabled(true);
-		}
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		JAXBContext jaxbContext = null;
 		try {
@@ -103,9 +98,6 @@ public final class Users {
 	
 	public static Users newInstanceFrom(
 			final InputStream in) throws IOException {
-		if (!XmlBindHelper.isOptimizedCodeGenerationDisabled()) {
-			XmlBindHelper.setOptimizedCodeGenerationDisabled(true);
-		}
 		JAXBContext jaxbContext = null;
 		try {
 			jaxbContext = JAXBContext.newInstance(UsersXml.class);
@@ -208,9 +200,6 @@ public final class Users {
 	}
 	
 	public byte[] toXml() {
-		if (!XmlBindHelper.isOptimizedCodeGenerationDisabled()) {
-			XmlBindHelper.setOptimizedCodeGenerationDisabled(true);
-		}
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		JAXBContext jaxbContext = null;
 		try {

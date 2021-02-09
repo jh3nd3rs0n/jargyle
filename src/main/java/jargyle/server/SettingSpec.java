@@ -1256,6 +1256,32 @@ public enum SettingSpec {
 		
 	},
 	@HelpText(
+			doc = "The space separated list of allowed external outgoing "
+					+ "address criteria (default is matches:.*)", 
+			usage = "socks5.onUdpAssociate.allowedExternalOutgoingAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
+	)
+	SOCKS5_ON_UDP_ASSOCIATE_ALLOWED_EXTERNAL_OUTGOING_ADDRESS_CRITERIA(
+			"socks5.onUdpAssociate.allowedExternalOutgoingAddressCriteria") {
+		
+		@Override
+		public Setting getDefaultSetting() {
+			return new Setting(this, Criteria.newInstance(Criterion.newInstance(
+					CriterionMethod.MATCHES, ".*")));
+		}
+
+		@Override
+		public Setting newSetting(final Object value) {
+			Criteria val = Criteria.class.cast(value);
+			return new Setting(this, val);
+		}
+
+		@Override
+		public Setting newSetting(final String value) {
+			return new Setting(this, Criteria.newInstance(value));
+		}
+		
+	},	
+	@HelpText(
 			doc = "The space separated list of blocked external incoming "
 					+ "address criteria", 
 			usage = "socks5.onUdpAssociate.blockedExternalIncomingAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
@@ -1280,6 +1306,31 @@ public enum SettingSpec {
 		}
 		
 	},
+	@HelpText(
+			doc = "The space separated list of blocked external outgoing "
+					+ "address criteria", 
+			usage = "socks5.onUdpAssociate.blockedExternalOutgoingAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
+	)
+	SOCKS5_ON_UDP_ASSOCIATE_BLOCKED_EXTERNAL_OUTGOING_ADDRESS_CRITERIA(
+			"socks5.onUdpAssociate.blockedExternalOutgoingAddressCriteria") {
+		
+		@Override
+		public Setting getDefaultSetting() {
+			return new Setting(this, Criteria.EMPTY_INSTANCE);
+		}
+
+		@Override
+		public Setting newSetting(final Object value) {
+			Criteria val = Criteria.class.cast(value);
+			return new Setting(this, val);
+		}
+
+		@Override
+		public Setting newSetting(final String value) {
+			return new Setting(this, Criteria.newInstance(value));
+		}
+		
+	},	
 	@HelpText(
 			doc = "The binding host name or address for the client-facing UDP "
 					+ "socket (default is 0.0.0.0)", 
@@ -1397,45 +1448,6 @@ public enum SettingSpec {
 		@Override
 		public Setting newSetting(final String value) {
 			return new Setting(this, PositiveInteger.newInstance(value));
-		}
-		
-	},
-	@HelpText(
-			doc = "The binding host name or address for the server-facing UDP "
-					+ "socket (default is 0.0.0.0)", 
-			usage = "socks5.onUdpAssociate.serverBindHost=HOST"
-	)
-	SOCKS5_ON_UDP_ASSOCIATE_SERVER_BIND_HOST(
-			"socks5.onUdpAssociate.serverBindHost") {
-		
-		private static final String DEFAULT_BIND_HOST = "0.0.0.0";
-		
-		@Override
-		public Setting getDefaultSetting() {
-			Host host = null;
-			try {
-				host = Host.newInstance(DEFAULT_BIND_HOST);
-			} catch (UnknownHostException e) {
-				throw new AssertionError(e);
-			}
-			return new Setting(this, host);
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			Host val = Host.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			Host host = null;
-			try {
-				host = Host.newInstance(value);
-			} catch (UnknownHostException e) {
-				throw new IllegalArgumentException(e);
-			}
-			return new Setting(this, host);
 		}
 		
 	},

@@ -44,42 +44,36 @@ final class UdpRelayServer {
 		
 	}
 	
-	public static final class DesiredDestinationSocketAddress {
-		
-		private final String address;
-		private final int port;
-		
-		public DesiredDestinationSocketAddress(
-				final String addr, final int prt) {
-			Objects.requireNonNull(addr);
-			UdpRequestHeader.validateDesiredDestinationAddress(addr);
-			UdpRequestHeader.validateDesiredDestinationPort(prt);
-			String a = addr;
-			int p = prt;
-			if (!a.matches("[a-zA-Z1-9]") && p == 0) {
-				a = null;
-				p = -1;
-			}
-			this.address = a;
-			this.port = p; 
-		}
-		
-		public String getAddress() {
-			return this.address;
-		}
-		
-		public int getPort() {
-			return this.port;
-		}
-		
-	}
-	
 	public static final class ExternalIncomingAddressCriteria {
 		
 		private final Criteria allowedCriteria;
 		private final Criteria blockedCriteria;
 		
 		public ExternalIncomingAddressCriteria(
+				final Criteria allowCriteria,
+				final Criteria blockCriteria) {
+			Objects.requireNonNull(allowCriteria);
+			Objects.requireNonNull(blockCriteria);
+			this.allowedCriteria = allowCriteria;
+			this.blockedCriteria = blockCriteria;
+		}
+		
+		public Criteria getAllowedCriteria() {
+			return this.allowedCriteria;
+		}
+		
+		public Criteria getBlockedCriteria() {
+			return this.blockedCriteria;
+		}
+		
+	}
+	
+	public static final class ExternalOutgoingAddressCriteria {
+		
+		private final Criteria allowedCriteria;
+		private final Criteria blockedCriteria;
+		
+		public ExternalOutgoingAddressCriteria(
 				final Criteria allowCriteria,
 				final Criteria blockCriteria) {
 			Objects.requireNonNull(allowCriteria);
@@ -135,46 +129,6 @@ final class UdpRelayServer {
 								externalIncomingAddress,
 								criterion)));
 				return false;
-			}
-			return true;
-		}
-		
-		private boolean canForwardDatagramPacket(final DatagramPacket packet) {
-			String address = packet.getAddress().getHostAddress();
-			int port = packet.getPort();
-			String desiredDestinationAddr = this.getDesiredDestinationAddress();
-			int desiredDestinationPrt =	this.getDesiredDestinationPort();
-			if (desiredDestinationAddr != null && desiredDestinationPrt > -1) {
-				InetAddress desiredDestinationInetAddr = null;
-				try {
-					desiredDestinationInetAddr = 
-							this.getHostnameResolver().resolve(
-									desiredDestinationAddr);
-				} catch (IOException e) {
-					LOGGER.log(
-							Level.WARNING, 
-							this.format("Error in determining the IP address from the server"), 
-							e);
-					return false;
-				}
-				InetAddress inetAddr = null;
-				try {
-					inetAddr = this.getHostnameResolver().resolve(address);
-				} catch (IOException e) {
-					LOGGER.log(
-							Level.WARNING, 
-							this.format("Error in determining the IP address from the server"), 
-							e);
-					return false;
-				}
-				if ((!desiredDestinationInetAddr.isLoopbackAddress()
-						|| !inetAddr.isLoopbackAddress())
-						&& !desiredDestinationInetAddr.equals(inetAddr)) {
-					return false;
-				}
-				if (desiredDestinationPrt != port) {
-					return false;
-				}
 			}
 			return true;
 		}
@@ -246,9 +200,6 @@ final class UdpRelayServer {
 							packet.getAddress().getHostAddress())) {
 						continue;
 					}
-					if (!this.canForwardDatagramPacket(packet)) {
-						continue;
-					}
 					UdpRequestHeader header = this.newUdpRequestHeader(packet);
 					LOGGER.log(Level.FINE, this.format(header.toString()));
 					packet = this.newDatagramPacket(header);
@@ -294,6 +245,38 @@ final class UdpRelayServer {
 			super(server);
 		}
 		
+		private boolean canAcceptExternalOutgoingAddress(
+				final String externalOutgoingAddress) {
+			Criteria allowedExternalOutgoingAddrCriteria =
+					this.getAllowedExternalOutgoingAddressCriteria();
+			Criterion criterion = 
+					allowedExternalOutgoingAddrCriteria.anyEvaluatesTrue(
+							externalOutgoingAddress);
+			if (criterion == null) {
+				LOGGER.log(
+						Level.FINE, 
+						this.format(String.format(
+								"External outgoing address %s not allowed", 
+								externalOutgoingAddress)));
+				return false;
+			}
+			Criteria blockedExternalOutgoingAddrCriteria =
+					this.getBlockedExternalOutgoingAddressCriteria();
+			criterion = blockedExternalOutgoingAddrCriteria.anyEvaluatesTrue(
+					externalOutgoingAddress);
+			if (criterion != null) {
+				LOGGER.log(
+						Level.FINE, 
+						this.format(String.format(
+								"External outgoing address %s blocked based on the "
+								+ "following criterion: %s", 
+								externalOutgoingAddress,
+								criterion)));
+				return false;
+			}
+			return true;
+		}
+		
 		private boolean canForwardDatagramPacket(final DatagramPacket packet) {
 			String address = packet.getAddress().getHostAddress();
 			int port = packet.getPort();
@@ -324,52 +307,6 @@ final class UdpRelayServer {
 			}
 			if (this.getSourcePort() == -1) {
 				this.setSourcePort(port);
-			}
-			return true;
-		}
-		
-		private boolean canForwardUdpRequestHeader(
-				final UdpRequestHeader header) {
-			if (header.getCurrentFragmentNumber() != 0) {
-				return false;
-			}
-			String desiredDestinationAddr = this.getDesiredDestinationAddress();
-			int desiredDestinationPrt = this.getDesiredDestinationPort();
-			String desiredDestAddr = header.getDesiredDestinationAddress();
-			int desiredDestPrt = header.getDesiredDestinationPort();
-			if (desiredDestinationAddr != null && desiredDestinationPrt > -1) {
-				InetAddress desiredDestinationInetAddr = null;
-				try {
-					desiredDestinationInetAddr = 
-							this.getHostnameResolver().resolve(
-									desiredDestinationAddr);
-				} catch (IOException e) {
-					LOGGER.log(
-							Level.WARNING, 
-							this.format("Error in determining the IP address from the server"), 
-							e);
-					return false;
-				}
-				InetAddress desiredDestInetAddr = null;
-				try {
-					desiredDestInetAddr = this.getHostnameResolver().resolve(
-							desiredDestAddr);
-				} catch (IOException e) {
-					LOGGER.log(
-							Level.WARNING, 
-							this.format("Error in determining the IP address from the server"), 
-							e);
-					return false;
-				}
-				if ((!desiredDestinationInetAddr.isLoopbackAddress()
-						|| !desiredDestInetAddr.isLoopbackAddress())
-						&& !desiredDestinationInetAddr.equals(
-								desiredDestInetAddr)) {
-					return false;
-				}
-				if (desiredDestinationPrt != desiredDestPrt) {
-					return false;
-				}
 			}
 			return true;
 		}
@@ -446,7 +383,11 @@ final class UdpRelayServer {
 						continue;
 					}
 					LOGGER.log(Level.FINE, this.format(header.toString()));
-					if (!this.canForwardUdpRequestHeader(header)) {
+					if (header.getCurrentFragmentNumber() != 0) {
+						continue;
+					}
+					if (!this.canAcceptExternalOutgoingAddress(
+							header.getDesiredDestinationAddress())) {
 						continue;
 					}
 					packet = this.newDatagramPacket(header);
@@ -505,8 +446,16 @@ final class UdpRelayServer {
 			return this.udpRelayServer.allowedExternalIncomingAddressCriteria;
 		}
 		
+		protected final Criteria getAllowedExternalOutgoingAddressCriteria() {
+			return this.udpRelayServer.allowedExternalOutgoingAddressCriteria;
+		}
+		
 		protected final Criteria getBlockedExternalIncomingAddressCriteria() {
 			return this.udpRelayServer.blockedExternalIncomingAddressCriteria;
+		}
+		
+		protected final Criteria getBlockedExternalOutgoingAddressCriteria() {
+			return this.udpRelayServer.blockedExternalOutgoingAddressCriteria;
 		}
 		
 		protected final int getBufferSize() {
@@ -515,14 +464,6 @@ final class UdpRelayServer {
 		
 		protected final DatagramSocketInterface getClientDatagramSocketInterface() {
 			return this.clientDatagramSocketInterface;
-		}
-		
-		protected final String getDesiredDestinationAddress() {
-			return this.udpRelayServer.desiredDestinationAddress;
-		}
-		
-		protected final int getDesiredDestinationPort() {
-			return this.udpRelayServer.desiredDestinationPort;
 		}
 		
 		protected final HostnameResolver getHostnameResolver() {
@@ -619,11 +560,11 @@ final class UdpRelayServer {
 	}
 	
 	private final Criteria allowedExternalIncomingAddressCriteria;
+	private final Criteria allowedExternalOutgoingAddressCriteria;
 	private final Criteria blockedExternalIncomingAddressCriteria;
+	private final Criteria blockedExternalOutgoingAddressCriteria;
 	private final DatagramSocketInterface clientDatagramSocketInterface;
 	private final int bufferSize;
-	private String desiredDestinationAddress;
-	private int desiredDestinationPort;
 	private ExecutorService executor;
 	private boolean firstPacketsWorkerFinished;
 	private HostnameResolver hostnameResolver;
@@ -639,25 +580,26 @@ final class UdpRelayServer {
 			final DatagramSocketInterfaces datagramSockInterfaces,
 			final String sourceAddr,
 			final HostnameResolver resolver, 
-			final DesiredDestinationSocketAddress desiredDestinationSocketAddr, 
 			final ExternalIncomingAddressCriteria externalIncomingAddrCriteria, 
+			final ExternalOutgoingAddressCriteria externalOutgoingAddrCriteria, 
 			final RelaySettings settings) {
 		Objects.requireNonNull(datagramSockInterfaces);
 		Objects.requireNonNull(sourceAddr);
 		Objects.requireNonNull(resolver);		
-		Objects.requireNonNull(desiredDestinationSocketAddr);
 		Objects.requireNonNull(externalIncomingAddrCriteria);
+		Objects.requireNonNull(externalOutgoingAddrCriteria);
 		Objects.requireNonNull(settings);
 		this.allowedExternalIncomingAddressCriteria = 
 				externalIncomingAddrCriteria.getAllowedCriteria();
+		this.allowedExternalOutgoingAddressCriteria =
+				externalOutgoingAddrCriteria.getAllowedCriteria();
 		this.blockedExternalIncomingAddressCriteria = 
 				externalIncomingAddrCriteria.getBlockedCriteria();
+		this.blockedExternalOutgoingAddressCriteria =
+				externalOutgoingAddrCriteria.getBlockedCriteria();
 		this.clientDatagramSocketInterface = 
 				datagramSockInterfaces.getClientDatagramSocketInterface();
 		this.bufferSize = settings.getBufferSize();
-		this.desiredDestinationAddress = 
-				desiredDestinationSocketAddr.getAddress();
-		this.desiredDestinationPort = desiredDestinationSocketAddr.getPort();
 		this.executor = null;
 		this.firstPacketsWorkerFinished = false;
 		this.hostnameResolver = resolver;

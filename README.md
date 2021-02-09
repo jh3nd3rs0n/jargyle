@@ -9,7 +9,7 @@ Jargyle is a Java SOCKS5 server. It has the following features:
 -   [SOCKS server chaining](#4-10-chaining-to-another-socks-server)
 -   [SSL/TLS for SOCKS server chaining](#4-10-1-enabling-ssl-tls)
 -   [Host name resolution through SOCKS5 server chaining](#4-10-2-enabling-host-name-resolution-through-socks5-server-chaining)
--   [Allow or block client addresses and external incoming addresses](#4-11-allowing-or-blocking-addresses)
+-   [Allow or block client addresses and external addresses](#4-11-allowing-or-blocking-addresses)
 -   [Allow or block SOCKS5 requests](#4-12-allowing-or-blocking-socks5-requests)
 
 Although Jargyle can act as a standalone SOCKS5 server, it can act as a bridge between the following:
@@ -291,8 +291,14 @@ The following is a list of available settings for the SOCKS server (displayed wh
       socks5.onUdpAssociate.allowedExternalIncomingAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
           The space separated list of allowed external incoming address criteria (default is matches:.*)
     
+      socks5.onUdpAssociate.allowedExternalOutgoingAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
+          The space separated list of allowed external outgoing address criteria (default is matches:.*)
+    
       socks5.onUdpAssociate.blockedExternalIncomingAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
           The space separated list of blocked external incoming address criteria
+    
+      socks5.onUdpAssociate.blockedExternalOutgoingAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
+          The space separated list of blocked external outgoing address criteria
     
       socks5.onUdpAssociate.clientBindHost=HOST
           The binding host name or address for the client-facing UDP socket (default is 0.0.0.0)
@@ -305,9 +311,6 @@ The following is a list of available settings for the SOCKS server (displayed wh
     
       socks5.onUdpAssociate.relayTimeout=INTEGER_BETWEEN_1_AND_2147483647
           The timeout in milliseconds on relaying no data (default is 60000)
-    
-      socks5.onUdpAssociate.serverBindHost=HOST
-          The binding host name or address for the server-facing UDP socket (default is 0.0.0.0)
     
       socks5.onUdpAssociate.serverSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
           The space separated list of socket settings for the server-facing UDP socket
@@ -1497,6 +1500,7 @@ You can allow or block the following addresses:
 -   Client addresses (IPv4 and IPv6)
 -   External incoming addresses following the SOCKS5 BIND command (IPv4 and IPv6)
 -   External incoming addresses following the SOCKS5 UDP ASSOCIATE command (IPv4 and IPv6)
+-   External outgoing addresses following the SOCKS5 UDP ASSOCIATE command (IPv4, IPv6, and domain name)
 
 To allow or block an address or addresses, you will need to specify the address or addresses in any of the following settings:
 
@@ -1505,7 +1509,9 @@ To allow or block an address or addresses, you will need to specify the address 
 -   `socks5.onBind.allowedExternalIncomingAddressCriteria`
 -   `socks5.onBind.blockedExternalIncomingAddressCriteria`
 -   `socks5.onUdpAssociate.allowedExternalIncomingAddressCriteria`
+-   `socks5.onUdpAssociate.allowedExternalOutgoingAddressCriteria`
 -   `socks5.onUdpAssociate.blockedExternalIncomingAddressCriteria`
+-   `socks5.onUdpAssociate.blockedExternalOutgoingAddressCriteria`
 
 You can specify an address or addresses in any of the aforementioned settings as either a literal expression preceded by the prefix `equals:` or a regular expression preceded by the prefix `matches:`.
 

@@ -15,7 +15,7 @@ import javax.net.ssl.TrustManager;
 import jargyle.common.net.DatagramSocketInterface;
 import jargyle.common.net.DirectSocketInterface;
 import jargyle.common.net.SocketInterface;
-import jargyle.common.net.SocketInterfaceSocketAdapter;
+import jargyle.common.net.SocketInterfaceSocket;
 import jargyle.common.net.ssl.CipherSuites;
 import jargyle.common.net.ssl.KeyManagerHelper;
 import jargyle.common.net.ssl.Protocols;
@@ -107,7 +107,7 @@ public final class SslWrapper {
 		SSLContext sslContext = this.getSslContext();
 		SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
 		SSLSocket sslSocket = (SSLSocket) sslSocketFactory.createSocket(
-				new SocketInterfaceSocketAdapter(socketInterface), 
+				new SocketInterfaceSocket(socketInterface), 
 				host, 
 				port, 
 				autoClose); 

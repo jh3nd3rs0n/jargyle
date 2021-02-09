@@ -9,11 +9,11 @@ import java.net.SocketAddress;
 import java.net.SocketException;
 import java.nio.channels.SocketChannel;
 
-public final class SocketInterfaceSocketAdapter extends Socket {
+public final class SocketInterfaceSocket extends Socket {
 
 	private final SocketInterface socketInterface;
 	
-	public SocketInterfaceSocketAdapter(final SocketInterface sockInterface) {
+	public SocketInterfaceSocket(final SocketInterface sockInterface) {
 		this.socketInterface = sockInterface;
 	}
 

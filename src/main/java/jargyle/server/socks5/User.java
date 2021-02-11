@@ -11,7 +11,7 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import jargyle.common.net.socks5.usernamepasswordauth.UsernamePasswordRequest;
+import jargyle.common.net.socks5.userpassauth.UsernamePasswordRequest;
 import jargyle.common.security.HashedPassword;
 
 @XmlJavaTypeAdapter(User.UserXmlAdapter.class)

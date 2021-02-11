@@ -1,8 +1,10 @@
-package jargyle.common.net.socks5.usernamepasswordauth;
+package jargyle.common.net.socks5.userpassauth;
 
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
+
+import jargyle.common.net.socks5.userpassauth.UsernamePasswordRequest;
 
 public class UsernamePasswordRequestTest {
 

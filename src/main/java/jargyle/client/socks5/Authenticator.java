@@ -23,8 +23,8 @@ import jargyle.common.net.socks5.gssapiauth.GssapiProtectionLevels;
 import jargyle.common.net.socks5.gssapiauth.Message;
 import jargyle.common.net.socks5.gssapiauth.MessageType;
 import jargyle.common.net.socks5.gssapiauth.ProtectionLevel;
-import jargyle.common.net.socks5.usernamepasswordauth.UsernamePasswordRequest;
-import jargyle.common.net.socks5.usernamepasswordauth.UsernamePasswordResponse;
+import jargyle.common.net.socks5.userpassauth.UsernamePasswordRequest;
+import jargyle.common.net.socks5.userpassauth.UsernamePasswordResponse;
 import jargyle.common.security.EncryptedPassword;
 
 enum Authenticator {

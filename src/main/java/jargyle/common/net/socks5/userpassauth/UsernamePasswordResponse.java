@@ -1,4 +1,4 @@
-package jargyle.common.net.socks5.usernamepasswordauth;
+package jargyle.common.net.socks5.userpassauth;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

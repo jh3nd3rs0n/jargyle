@@ -44,6 +44,28 @@ final class UdpRelayServer {
 		
 	}
 	
+	public static final class DesiredDestinationSocketAddress {
+
+		private final String address;
+		private final int port;
+
+		public DesiredDestinationSocketAddress(
+				final String addr, final int prt) {
+			Objects.requireNonNull(addr);
+			this.address = addr;
+			this.port = prt; 	
+		}
+		
+		public String getAddress() {
+			return this.address;
+		}
+		
+		public int getPort() {
+			return this.port;
+		}
+		
+	}
+	
 	public static final class ExternalIncomingAddressCriteria {
 		
 		private final Criteria allowedCriteria;
@@ -137,7 +159,7 @@ final class UdpRelayServer {
 			byte[] headerBytes = header.toByteArray();
 			InetAddress inetAddress = null;
 			try {
-				inetAddress = InetAddress.getByName(this.getSourceAddress());
+				inetAddress = InetAddress.getByName(this.getDesiredDestinationAddress());
 			} catch (IOException e) {
 				LOGGER.log(
 						Level.WARNING, 
@@ -145,7 +167,7 @@ final class UdpRelayServer {
 						e);
 				return null;
 			}
-			int inetPort = this.getSourcePort();
+			int inetPort = this.getDesiredDestinationPort();
 			return new DatagramPacket(
 					headerBytes, headerBytes.length, inetAddress, inetPort);
 		}
@@ -280,9 +302,10 @@ final class UdpRelayServer {
 		private boolean canForwardDatagramPacket(final DatagramPacket packet) {
 			String address = packet.getAddress().getHostAddress();
 			int port = packet.getPort();
-			InetAddress sourceInetAddr = null;
+			InetAddress desiredDestinationInetAddr = null;
 			try {
-				sourceInetAddr = InetAddress.getByName(this.getSourceAddress());
+				desiredDestinationInetAddr = InetAddress.getByName(
+						this.getDesiredDestinationAddress());
 			} catch (IOException e) {
 				LOGGER.log(
 						Level.WARNING, 
@@ -300,13 +323,18 @@ final class UdpRelayServer {
 						e);
 				return false;
 			}
-			if ((!sourceInetAddr.isLoopbackAddress() 
+			if ((!desiredDestinationInetAddr.isLoopbackAddress() 
 					|| !inetAddr.isLoopbackAddress())
-					&& !sourceInetAddr.equals(inetAddr)) {
+					&& !desiredDestinationInetAddr.equals(inetAddr)) {
 				return false;
 			}
-			if (this.getSourcePort() == -1) {
-				this.setSourcePort(port);
+			int desiredDestinationPrt = this.getDesiredDestinationPort();
+			if (desiredDestinationPrt == 0) {
+				this.setDesiredDestinationPort(port);
+			} else {
+				if (desiredDestinationPrt != port) {
+					return false;
+				}
 			}
 			return true;
 		}
@@ -466,6 +494,14 @@ final class UdpRelayServer {
 			return this.clientDatagramSocketInterface;
 		}
 		
+		protected final String getDesiredDestinationAddress() {
+			return this.udpRelayServer.desiredDestinationAddress;
+		}
+		
+		protected final int getDesiredDestinationPort() {
+			return this.udpRelayServer.desiredDestinationPort;
+		}
+		
 		protected final HostnameResolver getHostnameResolver() {
 			return this.udpRelayServer.hostnameResolver;
 		}
@@ -476,14 +512,6 @@ final class UdpRelayServer {
 		
 		protected final DatagramSocketInterface getServerDatagramSocketInterface() {
 			return this.serverDatagramSocketInterface;
-		}
-		
-		protected final String getSourceAddress() {
-			return this.udpRelayServer.sourceAddress;
-		}
-		
-		protected final int getSourcePort() {
-			return this.udpRelayServer.sourcePort;
 		}
 		
 		protected final int getTimeout() {
@@ -501,16 +529,16 @@ final class UdpRelayServer {
 		@Override
 		public abstract void run();
 		
+		protected final void setDesiredDestinationPort(final int port) {
+			this.udpRelayServer.desiredDestinationPort = port;
+		}
+		
 		protected final void setFirstPacketsWorkerFinished(final boolean b) {
 			this.udpRelayServer.firstPacketsWorkerFinished = b;
 		}
 		
 		protected final void setLastReceiveTime(final long time) {
 			this.udpRelayServer.lastReceiveTime = time;
-		}
-		
-		protected final void setSourcePort(final int port) {
-			this.udpRelayServer.sourcePort = port;
 		}
 		
 		protected final void stopUdpRelayServer() {
@@ -564,27 +592,27 @@ final class UdpRelayServer {
 	private final Criteria blockedExternalIncomingAddressCriteria;
 	private final Criteria blockedExternalOutgoingAddressCriteria;
 	private final DatagramSocketInterface clientDatagramSocketInterface;
+	private String desiredDestinationAddress;
+	private int desiredDestinationPort;
 	private final int bufferSize;
 	private ExecutorService executor;
 	private boolean firstPacketsWorkerFinished;
 	private HostnameResolver hostnameResolver;
 	private long lastReceiveTime;
 	private final DatagramSocketInterface serverDatagramSocketInterface;
-	private String sourceAddress;
-	private int sourcePort;
 	private boolean started;
 	private boolean stopped;
 	private final int timeout;
 	
 	public UdpRelayServer(		
+			final DesiredDestinationSocketAddress desiredDestinationSockAddr,
 			final DatagramSocketInterfaces datagramSockInterfaces,
-			final String sourceAddr,
 			final HostnameResolver resolver, 
 			final ExternalIncomingAddressCriteria externalIncomingAddrCriteria, 
 			final ExternalOutgoingAddressCriteria externalOutgoingAddrCriteria, 
 			final RelaySettings settings) {
+		Objects.requireNonNull(desiredDestinationSockAddr);
 		Objects.requireNonNull(datagramSockInterfaces);
-		Objects.requireNonNull(sourceAddr);
 		Objects.requireNonNull(resolver);		
 		Objects.requireNonNull(externalIncomingAddrCriteria);
 		Objects.requireNonNull(externalOutgoingAddrCriteria);
@@ -600,14 +628,14 @@ final class UdpRelayServer {
 		this.clientDatagramSocketInterface = 
 				datagramSockInterfaces.getClientDatagramSocketInterface();
 		this.bufferSize = settings.getBufferSize();
+		this.desiredDestinationAddress = desiredDestinationSockAddr.getAddress();
+		this.desiredDestinationPort = desiredDestinationSockAddr.getPort();
 		this.executor = null;
 		this.firstPacketsWorkerFinished = false;
 		this.hostnameResolver = resolver;
 		this.lastReceiveTime = 0L;
 		this.serverDatagramSocketInterface = 
 				datagramSockInterfaces.getServerDatagramSocketInterface();
-		this.sourceAddress = sourceAddr;
-		this.sourcePort = -1;
 		this.started = false;
 		this.stopped = true;
 		this.timeout = settings.getTimeout();

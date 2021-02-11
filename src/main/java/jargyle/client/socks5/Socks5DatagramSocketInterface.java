@@ -32,26 +32,10 @@ public final class Socks5DatagramSocketInterface
 
 	private static final class Socks5DatagramSocketInterfaceImpl {
 		
-		private static final InetAddress WILDCARD_INET_ADDRESS;
-		
-		static {
-			InetAddress wildcardInetAddress = null;
-			try {
-				wildcardInetAddress = InetAddress.getByName(
-						AddressType.IP_V4_ADDRESS.getWildcardAddress());
-			} catch (UnknownHostException e) {
-				throw new AssertionError(e);
-			}
-			WILDCARD_INET_ADDRESS = wildcardInetAddress; 
-		}
-		
 		private boolean connected;
 		private DatagramSocketInterface datagramSocketInterface;
 		private DatagramSocketInterface directDatagramSocketInterface;
 		private SocketInterface directSocketInterface;
-		private InetAddress localInetAddress;
-		private int localPort;
-		private SocketAddress localSocketAddress;
 		private InetAddress remoteInetAddress;
 		private int remotePort;
 		private SocketAddress remoteSocketAddress;
@@ -73,9 +57,6 @@ public final class Socks5DatagramSocketInterface
 			this.datagramSocketInterface = directDatagramSockInterface;
 			this.directDatagramSocketInterface = directDatagramSockInterface;
 			this.directSocketInterface = directSockInterface;
-			this.localInetAddress = WILDCARD_INET_ADDRESS;
-			this.localPort = 0;
-			this.localSocketAddress = null;			
 			this.remoteInetAddress = null;
 			this.remotePort = -1;
 			this.remoteSocketAddress = null;
@@ -89,8 +70,15 @@ public final class Socks5DatagramSocketInterface
 			if (this.datagramSocketInterface.isBound()) {
 				throw new SocketException("socket is already bound");
 			}
+			InetAddress wildcardInetAddress = null;
+			try {
+				wildcardInetAddress = InetAddress.getByName(
+						AddressType.IP_V4_ADDRESS.getWildcardAddress());
+			} catch (UnknownHostException e) {
+				throw new AssertionError(e);
+			}
 			int port = 0;
-			InetAddress inetAddress = WILDCARD_INET_ADDRESS;
+			InetAddress inetAddress = wildcardInetAddress;
 			if (addr != null) {
 				if (!(addr instanceof InetSocketAddress)) {
 					throw new IllegalArgumentException(
@@ -109,9 +97,6 @@ public final class Socks5DatagramSocketInterface
 		
 		public void close() {
 			this.datagramSocketInterface.close();
-			this.localInetAddress = null;
-			this.localPort = -1;
-			this.localSocketAddress = null;
 			this.udpRelayServerInetAddress = null;
 			this.udpRelayServerPort = -1;
 			try {
@@ -157,7 +142,7 @@ public final class Socks5DatagramSocketInterface
 				throw new SocketException("socket is closed");
 			}
 			if (!this.datagramSocketInterface.isBound()) {
-				this.bind(this.localSocketAddress);
+				throw new SocketException("socket is not bound");
 			}
 			this.datagramSocketInterface.receive(p);
 			UdpRequestHeader header = null; 
@@ -194,7 +179,7 @@ public final class Socks5DatagramSocketInterface
 						"packet address and connected socket address must be the same");
 			}
 			if (!this.datagramSocketInterface.isBound()) {
-				this.bind(this.localSocketAddress);
+				throw new SocketException("socket is not bound");
 			}
 			String address = p.getAddress().getHostAddress();
 			int port = p.getPort();
@@ -221,23 +206,6 @@ public final class Socks5DatagramSocketInterface
 			SocketInterface sockInterface = 
 					this.socks5Client.connectToSocksServerWith(
 							this.socketInterface, true);
-			InputStream inputStream = sockInterface.getInputStream();
-			OutputStream outputStream = sockInterface.getOutputStream();
-			String address = inetAddress.getHostAddress();			
-			AddressType addressType = AddressType.get(address);
-			Socks5Request socks5Req = Socks5Request.newInstance(
-					Command.UDP_ASSOCIATE, 
-					addressType, 
-					address, 
-					port);
-			outputStream.write(socks5Req.toByteArray());
-			outputStream.flush();
-			Socks5Reply socks5Rep = Socks5Reply.newInstanceFrom(inputStream);
-			Reply reply = socks5Rep.getReply();
-			if (!reply.equals(Reply.SUCCEEDED)) {
-				throw new IOException(String.format(
-						"received reply: %s", reply));
-			}
 			if (!this.datagramSocketInterface.equals(
 					this.directDatagramSocketInterface)) {
 				this.datagramSocketInterface = 
@@ -254,12 +222,27 @@ public final class Socks5DatagramSocketInterface
 						gssSocketInterface.getGSSContext(),
 						gssSocketInterface.getMessageProp());
 			}
-			datagramSockInterface.bind(null);
+			datagramSockInterface.bind(new InetSocketAddress(inetAddress, port));
+			String address = 
+					datagramSockInterface.getLocalAddress().getHostAddress();
+			int prt = datagramSockInterface.getLocalPort();
+			InputStream inputStream = sockInterface.getInputStream();
+			OutputStream outputStream = sockInterface.getOutputStream();
+			AddressType addressType = AddressType.get(address);
+			Socks5Request socks5Req = Socks5Request.newInstance(
+					Command.UDP_ASSOCIATE, 
+					addressType, 
+					address, 
+					prt);
+			outputStream.write(socks5Req.toByteArray());
+			outputStream.flush();
+			Socks5Reply socks5Rep = Socks5Reply.newInstanceFrom(inputStream);
+			Reply reply = socks5Rep.getReply();
+			if (!reply.equals(Reply.SUCCEEDED)) {
+				throw new IOException(String.format(
+						"received reply: %s", reply));
+			}
 			this.datagramSocketInterface = datagramSockInterface;
-			this.localInetAddress = inetAddress;
-			this.localPort = port;
-			this.localSocketAddress = new InetSocketAddress(
-					this.localInetAddress, this.localPort);
 			this.udpRelayServerInetAddress = 
 					InetAddress.getByName(socks5Rep.getServerBoundAddress());
 			this.udpRelayServerPort = socks5Rep.getServerBoundPort();
@@ -348,17 +331,17 @@ public final class Socks5DatagramSocketInterface
 
 	@Override
 	public InetAddress getLocalAddress() {
-		return this.socks5DatagramSocketInterfaceImpl.localInetAddress;
+		return this.socks5DatagramSocketInterfaceImpl.datagramSocketInterface.getLocalAddress();
 	}
 
 	@Override
 	public int getLocalPort() {
-		return this.socks5DatagramSocketInterfaceImpl.localPort;
+		return this.socks5DatagramSocketInterfaceImpl.datagramSocketInterface.getLocalPort();
 	}
 
 	@Override
 	public SocketAddress getLocalSocketAddress() {
-		return this.socks5DatagramSocketInterfaceImpl.localSocketAddress;
+		return this.socks5DatagramSocketInterfaceImpl.datagramSocketInterface.getLocalSocketAddress();
 	}
 
 	@Override

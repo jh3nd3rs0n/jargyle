@@ -1452,6 +1452,45 @@ public enum SettingSpec {
 		
 	},
 	@HelpText(
+			doc = "The binding host name or address for the server-facing UDP "
+					+ "socket (default is 0.0.0.0)", 
+			usage = "socks5.onUdpAssociate.serverBindHost=HOST"
+	)
+	SOCKS5_ON_UDP_ASSOCIATE_SERVER_BIND_HOST(
+			"socks5.onUdpAssociate.serverBindHost") {
+
+		private static final String DEFAULT_BIND_HOST = "0.0.0.0";
+
+		@Override
+		public Setting getDefaultSetting() {
+			Host host = null;
+			try {
+				host = Host.newInstance(DEFAULT_BIND_HOST);
+			} catch (UnknownHostException e) {
+				throw new AssertionError(e);
+			}
+			return new Setting(this, host);
+		}
+
+		@Override
+		public Setting newSetting(final Object value) {
+			Host val = Host.class.cast(value);
+			return new Setting(this, val);
+		}
+
+		@Override
+		public Setting newSetting(final String value) {
+			Host host = null;
+			try {
+				host = Host.newInstance(value);
+			} catch (UnknownHostException e) {
+				throw new IllegalArgumentException(e);
+			}
+			return new Setting(this, host);
+		}
+
+	},	
+	@HelpText(
 			doc = "The space separated list of socket settings for the "
 					+ "server-facing UDP socket", 
 			usage = "socks5.onUdpAssociate.serverSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"

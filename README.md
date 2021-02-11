@@ -312,6 +312,9 @@ The following is a list of available settings for the SOCKS server (displayed wh
       socks5.onUdpAssociate.relayTimeout=INTEGER_BETWEEN_1_AND_2147483647
           The timeout in milliseconds on relaying no data (default is 60000)
     
+      socks5.onUdpAssociate.serverBindHost=HOST
+          The binding host name or address for the server-facing UDP socket (default is 0.0.0.0)
+    
       socks5.onUdpAssociate.serverSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
           The space separated list of socket settings for the server-facing UDP socket
     

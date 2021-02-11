@@ -8,7 +8,6 @@ import java.io.SequenceInputStream;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.SocketAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.logging.Level;
@@ -691,6 +690,10 @@ public final class Socks5Worker implements Runnable {
 		Socks5Reply socks5Rep = null;
 		String desiredDestinationAddress = 
 				socks5Req.getDesiredDestinationAddress();
+		if (!desiredDestinationAddress.matches("[a-zA-Z1-9]")) {
+			desiredDestinationAddress = 
+					this.clientSocketInterface.getInetAddress().getHostAddress();
+		}
 		int desiredDestinationPort = socks5Req.getDesiredDestinationPort();
 		HostnameResolverFactory hostnameResolverFactory = 
 				this.externalTrafficRouter.newHostnameResolverFactory();
@@ -699,10 +702,7 @@ public final class Socks5Worker implements Runnable {
 		DatagramSocketInterface clientDatagramSockInterface = null;
 		try {
 			hostnameResolver = hostnameResolverFactory.newHostnameResolver();
-			serverDatagramSockInterface = this.newServerDatagramSocketInterface(
-					new InetSocketAddress(
-							hostnameResolver.resolve(desiredDestinationAddress),
-							desiredDestinationPort));
+			serverDatagramSockInterface = this.newServerDatagramSocketInterface();
 			if (serverDatagramSockInterface == null) {
 				return;
 			}
@@ -745,8 +745,11 @@ public final class Socks5Worker implements Runnable {
 							socks5Rep.toString())));
 			this.writeThenFlush(socks5Rep.toByteArray());
 			this.passPackets(
+					new UdpRelayServer.DesiredDestinationSocketAddress(
+							desiredDestinationAddress, desiredDestinationPort),
 					new UdpRelayServer.DatagramSocketInterfaces(
-							clientDatagramSockInterface, serverDatagramSockInterface),
+							clientDatagramSockInterface, 
+							serverDatagramSockInterface), 
 					hostnameResolver, 
 					new UdpRelayServer.ExternalIncomingAddressCriteria(
 							this.settings.getLastValue(
@@ -820,15 +823,18 @@ public final class Socks5Worker implements Runnable {
 		return clientDatagramSockInterface;
 	}
 	
-	private DatagramSocketInterface newServerDatagramSocketInterface(
-			final SocketAddress socketAddr) {
+	private DatagramSocketInterface newServerDatagramSocketInterface() {
 		DatagramSocketInterface serverDatagramSock = null;
 		try {
+			Host bindHost = this.settings.getLastValue(
+					SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_SERVER_BIND_HOST, 
+					Host.class);
+			InetAddress bindInetAddress = bindHost.toInetAddress();
 			DatagramSocketInterfaceFactory datagramSocketInterfaceFactory = 
 					this.externalTrafficRouter.newDatagramSocketInterfaceFactory();
 			serverDatagramSock = 
 					datagramSocketInterfaceFactory.newDatagramSocketInterface(
-							socketAddr);
+							new InetSocketAddress(bindInetAddress, 0));
 		} catch (SocketException e) {
 			LOGGER.log(
 					Level.WARNING, 
@@ -913,14 +919,15 @@ public final class Socks5Worker implements Runnable {
 	}
 	
 	private void passPackets(
+			final UdpRelayServer.DesiredDestinationSocketAddress desiredDestinationSocketAddress,
 			final UdpRelayServer.DatagramSocketInterfaces datagramSocketInterfaces,
 			final HostnameResolver hostnameResolver,
 			final UdpRelayServer.ExternalIncomingAddressCriteria externalIncomingAddressCriteria,
-			final UdpRelayServer.ExternalOutgoingAddressCriteria externalOutgoingAddressCriteria,
+			final UdpRelayServer.ExternalOutgoingAddressCriteria externalOutgoingAddressCriteria, 
 			final UdpRelayServer.RelaySettings relaySettings) {
 		UdpRelayServer udpRelayServer = new UdpRelayServer(
+				desiredDestinationSocketAddress,
 				datagramSocketInterfaces,
-				this.clientSocketInterface.getInetAddress().getHostAddress(),
 				hostnameResolver,
 				externalIncomingAddressCriteria, 
 				externalOutgoingAddressCriteria,

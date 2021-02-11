@@ -191,7 +191,7 @@ if $cygwin; then
     CLASSPATH=`cygpath --path --windows "$CLASSPATH"`
 fi
 
-JARGYLE_MAIN_CLASS=jargyle.server.SocksServer
+JARGYLE_MAIN_CLASS=jargyle.net.socks.SocksServer
 
 # Provide a "standardized" way to retrieve the CLI args that will
 # work with both Windows and non-Windows executions.

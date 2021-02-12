@@ -16,8 +16,9 @@ public final class Host {
 	
 	private Host(final InetAddress inetAddr, final String str) {
 		this.inetAddress = inetAddr;
-		this.string = inetAddr.getHostAddress();
+		this.string = str;
 	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {

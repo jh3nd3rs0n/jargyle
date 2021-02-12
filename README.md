@@ -1132,7 +1132,7 @@ The following is a sufficient example of using the Kerberos security mechanism:
 
 ```bash
     
-    env JARGYLE_OPTS="-Djavax.security.auth.useSubjectCredsOnly=false -Djava.security.auth.login.config=login.conf -Djava.security.krb5.conf=krb5.conf" \
+    env JARGYLE_OPTS="-Djavax.security.auth.useSubjectCredsOnly=false -Djava.security.auth.login.config=login.conf -Djava.security.krb5.conf=krb5.conf"
     ./bin/jargyle --setting=socks5.authMethods=GSSAPI 
     
 ```
@@ -1443,7 +1443,7 @@ The following is a sufficient example of using the Kerberos security mechanism:
 
 ```bash
     
-    env JARGYLE_OPTS="-Djavax.security.auth.useSubjectCredsOnly=false -Djava.security.auth.login.config=login.conf -Djava.security.krb5.conf=krb5.conf" \
+    env JARGYLE_OPTS="-Djavax.security.auth.useSubjectCredsOnly=false -Djava.security.auth.login.config=login.conf -Djava.security.krb5.conf=krb5.conf"
     ./bin/jargyle \
         --setting=chaining.socksServerUri=socks5://127.0.0.1:23456 \
         --setting=chaining.socks5.authMethods=GSSAPI \
@@ -1663,7 +1663,7 @@ Example:
 
 ```bash
     
-    env JARGYLE_OPTS="-Djava.util.logging.config.file=logging.properties" \
+    env JARGYLE_OPTS="-Djava.util.logging.config.file=logging.properties"
     ./bin/jargyle
     
 ```

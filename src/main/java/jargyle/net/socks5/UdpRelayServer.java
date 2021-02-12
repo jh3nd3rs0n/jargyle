@@ -18,6 +18,27 @@ import jargyle.util.Criterion;
 
 final class UdpRelayServer {
 	
+	public static final class ClientSocketAddress {
+
+		private final String address;
+		private final int port;
+
+		public ClientSocketAddress(final String addr, final int prt) {
+			Objects.requireNonNull(addr);
+			this.address = addr;
+			this.port = prt; 	
+		}
+		
+		public String getAddress() {
+			return this.address;
+		}
+		
+		public int getPort() {
+			return this.port;
+		}
+		
+	}
+	
 	public static final class DatagramSocketInterfaces {
 		
 		private final DatagramSocketInterface clientDatagramSocketInterface;
@@ -38,28 +59,6 @@ final class UdpRelayServer {
 		
 		public DatagramSocketInterface getServerDatagramSocketInterface() {
 			return this.serverDatagramSocketInterface;
-		}
-		
-	}
-	
-	public static final class DesiredDestinationSocketAddress {
-
-		private final String address;
-		private final int port;
-
-		public DesiredDestinationSocketAddress(
-				final String addr, final int prt) {
-			Objects.requireNonNull(addr);
-			this.address = addr;
-			this.port = prt; 	
-		}
-		
-		public String getAddress() {
-			return this.address;
-		}
-		
-		public int getPort() {
-			return this.port;
 		}
 		
 	}
@@ -157,7 +156,7 @@ final class UdpRelayServer {
 			byte[] headerBytes = header.toByteArray();
 			InetAddress inetAddress = null;
 			try {
-				inetAddress = InetAddress.getByName(this.getDesiredDestinationAddress());
+				inetAddress = InetAddress.getByName(this.getClientAddress());
 			} catch (IOException e) {
 				LOGGER.log(
 						Level.WARNING, 
@@ -165,7 +164,7 @@ final class UdpRelayServer {
 						e);
 				return null;
 			}
-			int inetPort = this.getDesiredDestinationPort();
+			int inetPort = this.getClientPort();
 			return new DatagramPacket(
 					headerBytes, headerBytes.length, inetAddress, inetPort);
 		}
@@ -300,10 +299,9 @@ final class UdpRelayServer {
 		private boolean canForwardDatagramPacket(final DatagramPacket packet) {
 			String address = packet.getAddress().getHostAddress();
 			int port = packet.getPort();
-			InetAddress desiredDestinationInetAddr = null;
+			InetAddress clientInetAddr = null;
 			try {
-				desiredDestinationInetAddr = InetAddress.getByName(
-						this.getDesiredDestinationAddress());
+				clientInetAddr = InetAddress.getByName(this.getClientAddress());
 			} catch (IOException e) {
 				LOGGER.log(
 						Level.WARNING, 
@@ -321,16 +319,16 @@ final class UdpRelayServer {
 						e);
 				return false;
 			}
-			if ((!desiredDestinationInetAddr.isLoopbackAddress() 
+			if ((!clientInetAddr.isLoopbackAddress() 
 					|| !inetAddr.isLoopbackAddress())
-					&& !desiredDestinationInetAddr.equals(inetAddr)) {
+					&& !clientInetAddr.equals(inetAddr)) {
 				return false;
 			}
-			int desiredDestinationPrt = this.getDesiredDestinationPort();
-			if (desiredDestinationPrt == 0) {
-				this.setDesiredDestinationPort(port);
+			int clientPrt = this.getClientPort();
+			if (clientPrt == 0) {
+				this.setClientPort(port);
 			} else {
-				if (desiredDestinationPrt != port) {
+				if (clientPrt != port) {
 					return false;
 				}
 			}
@@ -464,7 +462,7 @@ final class UdpRelayServer {
 					server.serverDatagramSocketInterface;
 		}
 		
-		protected String format(final String message) {
+		protected final String format(final String message) {
 			return String.format("%s: %s", this, message);
 		}
 		
@@ -488,16 +486,16 @@ final class UdpRelayServer {
 			return this.udpRelayServer.bufferSize;
 		}
 		
+		protected final String getClientAddress() {
+			return this.udpRelayServer.clientAddress;
+		}
+		
 		protected final DatagramSocketInterface getClientDatagramSocketInterface() {
 			return this.clientDatagramSocketInterface;
 		}
 		
-		protected final String getDesiredDestinationAddress() {
-			return this.udpRelayServer.desiredDestinationAddress;
-		}
-		
-		protected final int getDesiredDestinationPort() {
-			return this.udpRelayServer.desiredDestinationPort;
+		protected final int getClientPort() {
+			return this.udpRelayServer.clientPort;
 		}
 		
 		protected final HostnameResolver getHostnameResolver() {
@@ -527,8 +525,8 @@ final class UdpRelayServer {
 		@Override
 		public abstract void run();
 		
-		protected final void setDesiredDestinationPort(final int port) {
-			this.udpRelayServer.desiredDestinationPort = port;
+		protected final void setClientPort(final int port) {
+			this.udpRelayServer.clientPort = port;
 		}
 		
 		protected final void setFirstPacketsWorkerFinished(final boolean b) {
@@ -589,10 +587,10 @@ final class UdpRelayServer {
 	private final Criteria allowedExternalOutgoingAddressCriteria;
 	private final Criteria blockedExternalIncomingAddressCriteria;
 	private final Criteria blockedExternalOutgoingAddressCriteria;
+	private final int bufferSize;	
 	private final DatagramSocketInterface clientDatagramSocketInterface;
-	private String desiredDestinationAddress;
-	private int desiredDestinationPort;
-	private final int bufferSize;
+	private String clientAddress;
+	private int clientPort;
 	private ExecutorService executor;
 	private boolean firstPacketsWorkerFinished;
 	private HostnameResolver hostnameResolver;
@@ -603,13 +601,13 @@ final class UdpRelayServer {
 	private final int timeout;
 	
 	public UdpRelayServer(		
-			final DesiredDestinationSocketAddress desiredDestinationSockAddr,
+			final ClientSocketAddress clientSockAddr,
 			final DatagramSocketInterfaces datagramSockInterfaces,
 			final HostnameResolver resolver, 
 			final ExternalIncomingAddressCriteria externalIncomingAddrCriteria, 
 			final ExternalOutgoingAddressCriteria externalOutgoingAddrCriteria, 
 			final RelaySettings settings) {
-		Objects.requireNonNull(desiredDestinationSockAddr);
+		Objects.requireNonNull(clientSockAddr);
 		Objects.requireNonNull(datagramSockInterfaces);
 		Objects.requireNonNull(resolver);		
 		Objects.requireNonNull(externalIncomingAddrCriteria);
@@ -626,8 +624,8 @@ final class UdpRelayServer {
 		this.clientDatagramSocketInterface = 
 				datagramSockInterfaces.getClientDatagramSocketInterface();
 		this.bufferSize = settings.getBufferSize();
-		this.desiredDestinationAddress = desiredDestinationSockAddr.getAddress();
-		this.desiredDestinationPort = desiredDestinationSockAddr.getPort();
+		this.clientAddress = clientSockAddr.getAddress();
+		this.clientPort = clientSockAddr.getPort();
 		this.executor = null;
 		this.firstPacketsWorkerFinished = false;
 		this.hostnameResolver = resolver;

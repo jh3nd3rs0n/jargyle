@@ -736,7 +736,7 @@ public final class Socks5Worker implements Runnable {
 							socks5Rep.toString())));
 			this.writeThenFlush(socks5Rep.toByteArray());
 			this.passPackets(
-					new UdpRelayServer.DesiredDestinationSocketAddress(
+					new UdpRelayServer.ClientSocketAddress(
 							desiredDestinationAddress, desiredDestinationPort),
 					new UdpRelayServer.DatagramSocketInterfaces(
 							clientDatagramSockInterface, 
@@ -910,14 +910,14 @@ public final class Socks5Worker implements Runnable {
 	}
 	
 	private void passPackets(
-			final UdpRelayServer.DesiredDestinationSocketAddress desiredDestinationSocketAddress,
+			final UdpRelayServer.ClientSocketAddress clientSocketAddress,
 			final UdpRelayServer.DatagramSocketInterfaces datagramSocketInterfaces,
 			final HostnameResolver hostnameResolver,
 			final UdpRelayServer.ExternalIncomingAddressCriteria externalIncomingAddressCriteria,
 			final UdpRelayServer.ExternalOutgoingAddressCriteria externalOutgoingAddressCriteria, 
 			final UdpRelayServer.RelaySettings relaySettings) {
 		UdpRelayServer udpRelayServer = new UdpRelayServer(
-				desiredDestinationSocketAddress,
+				clientSocketAddress,
 				datagramSocketInterfaces,
 				hostnameResolver,
 				externalIncomingAddressCriteria, 

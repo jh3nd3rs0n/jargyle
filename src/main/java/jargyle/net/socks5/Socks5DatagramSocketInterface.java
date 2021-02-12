@@ -206,16 +206,7 @@ public final class Socks5DatagramSocketInterface
 						this.directDatagramSocketInterface;
 			}
 			DatagramSocketInterface datagramSockInterface = 
-					this.socks5Client.getClientSideSslWrapper().wrapIfSslEnabled(
-							this.datagramSocketInterface);
-			if (sockInterface instanceof GssSocketInterface) {
-				GssSocketInterface gssSocketInterface = 
-						(GssSocketInterface) sockInterface;
-				datagramSockInterface = new GssDatagramSocketInterface(
-						datagramSockInterface,
-						gssSocketInterface.getGSSContext(),
-						gssSocketInterface.getMessageProp());
-			}
+					this.datagramSocketInterface;
 			datagramSockInterface.bind(new InetSocketAddress(inetAddress, port));
 			String address = 
 					datagramSockInterface.getLocalAddress().getHostAddress();
@@ -235,6 +226,19 @@ public final class Socks5DatagramSocketInterface
 			if (!reply.equals(Reply.SUCCEEDED)) {
 				throw new IOException(String.format(
 						"received reply: %s", reply));
+			}
+			datagramSockInterface = 
+					this.socks5Client.getClientSideSslWrapper().wrapIfSslEnabled(
+							datagramSockInterface, 
+							socks5Rep.getServerBoundAddress(), 
+							socks5Rep.getServerBoundPort());
+			if (sockInterface instanceof GssSocketInterface) {
+				GssSocketInterface gssSocketInterface = 
+						(GssSocketInterface) sockInterface;
+				datagramSockInterface = new GssDatagramSocketInterface(
+						datagramSockInterface,
+						gssSocketInterface.getGSSContext(),
+						gssSocketInterface.getMessageProp());
 			}
 			this.datagramSocketInterface = datagramSockInterface;
 			this.udpRelayServerInetAddress = 

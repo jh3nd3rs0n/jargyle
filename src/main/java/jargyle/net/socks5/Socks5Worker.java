@@ -709,7 +709,9 @@ public final class Socks5Worker implements Runnable {
 			}
 			DatagramSocketInterface clientDatagramSock = 
 					this.wrapClientDatagramSocketInterface(
-							clientDatagramSockInterface); 
+							clientDatagramSockInterface, 
+							desiredDestinationAddress, 
+							desiredDestinationPort); 
 			if (clientDatagramSock == null) {
 				return;
 			}
@@ -1056,11 +1058,13 @@ public final class Socks5Worker implements Runnable {
 	}
 	
 	private DatagramSocketInterface wrapClientDatagramSocketInterface(
-			final DatagramSocketInterface clientDatagramSockInterface) {
+			final DatagramSocketInterface clientDatagramSockInterface, 
+			final String peerHost, 
+			final int peerPort) {
 		DatagramSocketInterface clientDatagramSock = null;
 		try {
 			clientDatagramSock = this.serverSideSslWrapper.wrapIfSslEnabled(
-					clientDatagramSockInterface);
+					clientDatagramSockInterface, peerHost, peerPort);
 		} catch (IOException e) {
 			LOGGER.log(
 					Level.WARNING, 

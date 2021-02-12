@@ -89,7 +89,9 @@ public final class ServerSideSslWrapper {
 	}
 	
 	public DatagramSocketInterface wrapIfSslEnabled(
-			final DatagramSocketInterface datagramSocketInterface) 
+			final DatagramSocketInterface datagramSocketInterface, 
+			final String peerHost, 
+			final int peerPort) 
 			throws IOException {
 		/*
 		Settings settings = this.configuration.getSettings();

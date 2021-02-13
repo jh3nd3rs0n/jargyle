@@ -16,9 +16,9 @@ import java.util.concurrent.Executors;
 import org.junit.Test;
 
 import jargyle.TestStringConstants;
-import jargyle.net.socks.Configuration;
-import jargyle.net.socks.SocksClient;
-import jargyle.net.socks.SocksServer;
+import jargyle.net.socks.client.SocksClient;
+import jargyle.net.socks.server.Configuration;
+import jargyle.net.socks.server.SocksServer;
 
 public class DatagramSocketInterfaceIT {
 

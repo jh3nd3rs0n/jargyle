@@ -99,7 +99,7 @@ goto error
 
 set JARGYLE_JAVA_EXE="%JAVA_HOME%\bin\java.exe"
 
-set JARGYLE_MAIN_CLASS=jargyle.net.socks.SocksServer
+set JARGYLE_MAIN_CLASS=jargyle.net.socks.server.SocksServer
 
 set JARGYLE_CMD_LINE_ARGS=%*
 

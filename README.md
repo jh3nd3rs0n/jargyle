@@ -1026,21 +1026,21 @@ Partial configuration file example:
     
 ```
 
-Also, you will need to have the setting `socks5.usernamePasswordAuthenticator` to specify the name of the class that extends `jargyle.net.socks5.UsernamePasswordAuthenticator` along with a string value
+Also, you will need to have the setting `socks5.usernamePasswordAuthenticator` to specify the name of the class that extends `jargyle.net.socks.socks5.server.UsernamePasswordAuthenticator` along with a string value
 
 The following are two provided classes you can use:
 
--   `jargyle.net.socks5.StringSourceUsernamePasswordAuthenticator`
--   `jargyle.net.socks5.XmlFileSourceUsernamePasswordAuthenticator`
+-   `jargyle.net.socks.socks5.server.StringSourceUsernamePasswordAuthenticator`
+-   `jargyle.net.socks.socks5.server.XmlFileSourceUsernamePasswordAuthenticator`
 
-`jargyle.net.socks5.StringSourceUsernamePasswordAuthenticator`: This class authenticates the username and password based on the string value of a space separated list of USERNAME:PASSWORD pairs
+`jargyle.net.socks.socks5.server.StringSourceUsernamePasswordAuthenticator`: This class authenticates the username and password based on the string value of a space separated list of USERNAME:PASSWORD pairs
 
 Partial command line example:
 
 ```text
     
     "--setting=socks5.authMethods=USERNAME_PASSWORD" \
-    "--setting=socks5.usernamePasswordAuthenticator=jargyle.net.socks5.StringSourceUsernamePasswordAuthenticator:Aladdin:opensesame Jasmine:mission%3Aimpossible"
+    "--setting=socks5.usernamePasswordAuthenticator=jargyle.net.socks.socks5.server.StringSourceUsernamePasswordAuthenticator:Aladdin:opensesame Jasmine:mission%3Aimpossible"
     
 ```
 
@@ -1056,7 +1056,7 @@ Partial configuration file example:
         <name>socks5.usernamePasswordAuthenticator</name>
         <usernamePasswordAuthenticatorValue>
             <usernamePasswordAuthenticator>
-                <className>jargyle.net.socks5.StringSourceUsernamePasswordAuthenticator</className>
+                <className>jargyle.net.socks.socks5.server.StringSourceUsernamePasswordAuthenticator</className>
                 <value>Aladdin:opensesame Jasmine:mission%3Aimpossible</value>
             </usernamePasswordAuthenticator>
         </usernamePasswordAuthenticatorValue>
@@ -1072,14 +1072,14 @@ If any of the usernames or any of the passwords contain a plus sign character (`
 
 If any of the usernames or any of the passwords contain a percent sign character (`%`) not used for URL encoding, then each percent sign character not used for URL encoding must be replaced with the URL encoding character `%25`.
 
-`jargyle.net.socks5.XmlFileSourceUsernamePasswordAuthenticator`: This class authenticates the username and password based on the [XML file of users](#4-8-managing-socks5-users-for-username-password-authentication) whose file name is provided as a string value
+`jargyle.net.socks.socks5.server.XmlFileSourceUsernamePasswordAuthenticator`: This class authenticates the username and password based on the [XML file of users](#4-8-managing-socks5-users-for-username-password-authentication) whose file name is provided as a string value
 
 Partial command line example:
 
 ```text
     
     --setting=socks5.authMethods=USERNAME_PASSWORD \
-    --setting=socks5.usernamePasswordAuthenticator=jargyle.net.socks5.XmlFileSourceUsernamePasswordAuthenticator:users.xml
+    --setting=socks5.usernamePasswordAuthenticator=jargyle.net.socks.socks5.server.XmlFileSourceUsernamePasswordAuthenticator:users.xml
     
 ```
 
@@ -1095,7 +1095,7 @@ Partial configuration file example:
         <name>socks5.usernamePasswordAuthenticator</name>
         <usernamePasswordAuthenticatorValue>
             <usernamePasswordAuthenticator>
-                <className>jargyle.net.socks5.XmlFileSourceUsernamePasswordAuthenticator</className>
+                <className>jargyle.net.socks.socks5.server.XmlFileSourceUsernamePasswordAuthenticator</className>
                 <value>users.xml</value>
             </usernamePasswordAuthenticator>
         </usernamePasswordAuthenticatorValue>
@@ -1624,16 +1624,16 @@ By default, the current level is set at `INFO` and up. This means that only logg
 
 The following are the classes that use logging:
 
--   `jargyle.net.socks.Listener`
--   `jargyle.net.socks.SocksServerCLI`
--   `jargyle.net.socks.TcpRelayServer$DataWorker`
--   `jargyle.net.socks.Worker`
--   `jargyle.net.socks.XmlFileSourceConfigurationService$ConfigurationUpdater`
--   `jargyle.net.socks5.ServerSideAuthenticator`
--   `jargyle.net.socks5.Socks5Worker`
--   `jargyle.net.socks5.UdpRelayServer$IncomingPacketsWorker`
--   `jargyle.net.socks5.UdpRelayServer$OutgoingPacketsWorker`
--   `jargyle.net.socks5.XmlFileSourceUsersService$UsersUpdater`
+-   `jargyle.net.socks.server.Listener`
+-   `jargyle.net.socks.server.SocksServerCLI`
+-   `jargyle.net.socks.server.TcpRelayServer$DataWorker`
+-   `jargyle.net.socks.server.Worker`
+-   `jargyle.net.socks.server.XmlFileSourceConfigurationService$ConfigurationUpdater`
+-   `jargyle.net.socks.socks5.server.Authenticator`
+-   `jargyle.net.socks.socks5.server.Socks5Worker`
+-   `jargyle.net.socks.socks5.server.UdpRelayServer$IncomingPacketsWorker`
+-   `jargyle.net.socks.socks5.server.UdpRelayServer$OutgoingPacketsWorker`
+-   `jargyle.net.socks.socks5.server.XmlFileSourceUsersService$UsersUpdater`
 
 To configure logging for any of the aforementioned classes, you can use a configuration file to specify the logging properties for any of the classes.
 
@@ -1643,16 +1643,16 @@ The following is a configuration file example of setting the logging level of so
 
 ```text
     
-    jargyle.net.socks.Listener.handlers = java.util.logging.ConsoleHandler
-    jargyle.net.socks.Listener.level = FINE    
-    jargyle.net.socks.SocksServerCLI.handlers = java.util.logging.ConsoleHandler
-    jargyle.net.socks.SocksServerCLI.level = FINE
-    jargyle.net.socks.Worker.handlers = java.util.logging.ConsoleHandler
-    jargyle.net.socks.Worker.level = FINE
-    jargyle.net.socks5.ServerSideAuthenticator.handlers = java.util.logging.ConsoleHandler
-    jargyle.net.socks5.ServerSideAuthenticator.level = FINE
-    jargyle.net.socks5.Socks5Worker.handlers = java.util.logging.ConsoleHandler
-    jargyle.net.socks5.Socks5Worker.level = FINE
+    jargyle.net.socks.server.Listener.handlers = java.util.logging.ConsoleHandler
+    jargyle.net.socks.server.Listener.level = FINE    
+    jargyle.net.socks.server.SocksServerCLI.handlers = java.util.logging.ConsoleHandler
+    jargyle.net.socks.server.SocksServerCLI.level = FINE
+    jargyle.net.socks.server.Worker.handlers = java.util.logging.ConsoleHandler
+    jargyle.net.socks.server.Worker.level = FINE
+    jargyle.net.socks.socks5.server.Authenticator.handlers = java.util.logging.ConsoleHandler
+    jargyle.net.socks.socks5.server.Authenticator.level = FINE
+    jargyle.net.socks.socks5.server.Socks5Worker.handlers = java.util.logging.ConsoleHandler
+    jargyle.net.socks.socks5.server.Socks5Worker.level = FINE
     java.util.logging.ConsoleHandler.level = FINE
     
 ```

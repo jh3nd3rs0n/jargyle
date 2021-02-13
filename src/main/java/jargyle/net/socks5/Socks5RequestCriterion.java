@@ -18,8 +18,8 @@ public final class Socks5RequestCriterion {
 	@XmlAccessorType(XmlAccessType.NONE)
 	@XmlType(name = "socks5RequestCriterion", propOrder = { })
 	static class Socks5RequestCriterionXml {
-		@XmlElement(name = "sourceAddressCriterion")
-		protected Criterion sourceAddressCriterion;
+		@XmlElement(name = "clientAddressCriterion")
+		protected Criterion clientAddressCriterion;
 		@XmlElement(name = "commandCriterion")
 		protected Criterion commandCriterion;
 		@XmlElement(name = "desiredDestinationAddressCriterion")
@@ -38,14 +38,14 @@ public final class Socks5RequestCriterion {
 				final Socks5RequestCriterion arg) throws Exception {
 			Socks5RequestCriterionXml socks5RequestCriterionXml = 
 					new Socks5RequestCriterionXml();
+			socks5RequestCriterionXml.clientAddressCriterion = 
+					arg.clientAddressCriterion;
 			socks5RequestCriterionXml.commandCriterion = arg.commandCriterion;
 			socks5RequestCriterionXml.comment = arg.comment;
 			socks5RequestCriterionXml.desiredDestinationAddressCriterion = 
 					arg.desiredDestinationAddressCriterion;
 			socks5RequestCriterionXml.desiredDestinationPortRanges = 
 					arg.desiredDestinationPortRanges;
-			socks5RequestCriterionXml.sourceAddressCriterion = 
-					arg.sourceAddressCriterion;
 			return socks5RequestCriterionXml;
 		}
 
@@ -53,7 +53,7 @@ public final class Socks5RequestCriterion {
 		public Socks5RequestCriterion unmarshal(
 				final Socks5RequestCriterionXml arg) throws Exception {
 			return new Socks5RequestCriterion(
-					arg.sourceAddressCriterion,
+					arg.clientAddressCriterion,
 					arg.commandCriterion,
 					arg.desiredDestinationAddressCriterion, 
 					arg.desiredDestinationPortRanges, 
@@ -63,30 +63,30 @@ public final class Socks5RequestCriterion {
 	}
 	
 	public static Socks5RequestCriterion newInstance(
-			final Criterion sourceAddrCriterion, 
+			final Criterion clientAddrCriterion, 
 			final Criterion cmdCriterion,
 			final Criterion desiredDestinationAddrCriterion, 
 			final PortRanges desiredDestinationPrtRange) {
 		return new Socks5RequestCriterion(
-				sourceAddrCriterion,
+				clientAddrCriterion,
 				cmdCriterion, 
 				desiredDestinationAddrCriterion, 
 				desiredDestinationPrtRange);
 	}
 	
-	private final Criterion sourceAddressCriterion;
+	private final Criterion clientAddressCriterion;
 	private final Criterion commandCriterion;
 	private final String comment;
 	private final Criterion desiredDestinationAddressCriterion;
 	private final PortRanges desiredDestinationPortRanges;
 	
 	private Socks5RequestCriterion(
-			final Criterion sourceAddrCriterion, 
+			final Criterion clientAddrCriterion, 
 			final Criterion cmdCriterion,
 			final Criterion desiredDestinationAddrCriterion, 
 			final PortRanges desiredDestinationPrtRange) {
 		this(
-				sourceAddrCriterion,
+				clientAddrCriterion,
 				cmdCriterion, 
 				desiredDestinationAddrCriterion, 
 				desiredDestinationPrtRange, 
@@ -94,12 +94,12 @@ public final class Socks5RequestCriterion {
 	}
 
 	private Socks5RequestCriterion(
-			final Criterion sourceAddrCriterion,
+			final Criterion clientAddrCriterion,
 			final Criterion cmdCriterion,
 			final Criterion desiredDestinationAddrCriterion,
 			final PortRanges desiredDestinationPrtRange,
 			final String cmmnt) {
-		this.sourceAddressCriterion = sourceAddrCriterion;
+		this.clientAddressCriterion = clientAddrCriterion;
 		this.commandCriterion = cmdCriterion;
 		this.comment = cmmnt;		
 		this.desiredDestinationAddressCriterion = desiredDestinationAddrCriterion;
@@ -118,6 +118,14 @@ public final class Socks5RequestCriterion {
 			return false;
 		}
 		Socks5RequestCriterion other = (Socks5RequestCriterion) obj;
+		if (this.clientAddressCriterion == null) {
+			if (other.clientAddressCriterion != null) {
+				return false;
+			}
+		} else if (!this.clientAddressCriterion.equals(
+				other.clientAddressCriterion)) {
+			return false;
+		}
 		if (this.commandCriterion == null) {
 			if (other.commandCriterion != null) {
 				return false;
@@ -141,22 +149,14 @@ public final class Socks5RequestCriterion {
 				other.desiredDestinationPortRanges)) {
 			return false;
 		}
-		if (this.sourceAddressCriterion == null) {
-			if (other.sourceAddressCriterion != null) {
-				return false;
-			}
-		} else if (!this.sourceAddressCriterion.equals(
-				other.sourceAddressCriterion)) {
-			return false;
-		}
 		return true;
 	}
 	
 	public boolean evaluatesTrue(
-			final String sourceAddress, 
+			final String clientAddress, 
 			final Socks5Request socks5Req) {
-		if (this.sourceAddressCriterion != null 
-				&& !this.sourceAddressCriterion.evaluatesTrue(sourceAddress)) {
+		if (this.clientAddressCriterion != null 
+				&& !this.clientAddressCriterion.evaluatesTrue(clientAddress)) {
 			return false;
 		}
 		if (this.commandCriterion != null
@@ -177,10 +177,14 @@ public final class Socks5RequestCriterion {
 		return true;
 	}
 
+	public Criterion getClientAddressCriterion() {
+		return this.clientAddressCriterion;
+	}
+
 	public Criterion getCommandCriterion() {
 		return this.commandCriterion;
 	}
-
+	
 	public Criterion getDesiredDestinationAddressCriterion() {
 		return this.desiredDestinationAddressCriterion;
 	}
@@ -188,15 +192,13 @@ public final class Socks5RequestCriterion {
 	public PortRanges getDesiredDestinationPortRanges() {
 		return this.desiredDestinationPortRanges;
 	}
-	
-	public Criterion getSourceAddressCriterion() {
-		return this.sourceAddressCriterion;
-	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((this.clientAddressCriterion == null) ? 
+				0 : this.clientAddressCriterion.hashCode());
 		result = prime * result + ((this.commandCriterion == null) ? 
 				0 : this.commandCriterion.hashCode());
 		result = prime * result
@@ -205,8 +207,6 @@ public final class Socks5RequestCriterion {
 		result = prime * result
 				+ ((this.desiredDestinationPortRanges == null) ? 
 						0 : this.desiredDestinationPortRanges.hashCode());
-		result = prime * result + ((this.sourceAddressCriterion == null) ? 
-				0 : this.sourceAddressCriterion.hashCode());
 		return result;
 	}
 
@@ -214,8 +214,8 @@ public final class Socks5RequestCriterion {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append(this.getClass().getSimpleName())
-			.append(" [sourceAddressCriterion=")
-			.append(this.sourceAddressCriterion)
+			.append(" [clientAddressCriterion=")
+			.append(this.clientAddressCriterion)
 			.append(", commandCriterion=")
 			.append(this.commandCriterion)
 			.append(", desiredDestinationAddressCriterion=")

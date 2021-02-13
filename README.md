@@ -1571,7 +1571,7 @@ Partial configuration file example:
         <socks5RequestCriteriaValue>
             <socks5RequestCriteria>
                 <socks5RequestCriterion>
-                    <sourceAddressCriterion method="matches" value=".*"/>
+                    <clientAddressCriterion method="matches" value=".*"/>
                     <commandCriterion method="equals" value="CONNECT"/>
                     <desiredDestinationAddressCriterion method="matches" value=".*"/>
                     <desiredDestinationPortRanges>
@@ -1587,7 +1587,7 @@ Partial configuration file example:
         <socks5RequestCriteriaValue>
             <socks5RequestCriteria>
                 <socks5RequestCriterion>
-                    <sourceAddressCriterion method="matches" value=".*"/>
+                    <clientAddressCriterion method="matches" value=".*"/>
                     <commandCriterion method="equals" value="BIND"/>
                     <desiredDestinationAddressCriterion method="matches" value=".*"/>
                     <desiredDestinationPortRanges>
@@ -1595,7 +1595,7 @@ Partial configuration file example:
                     </desiredDestinationPortRanges>
                 </socks5RequestCriterion>
                 <socks5RequestCriterion>
-                    <sourceAddressCriterion method="matches" value=".*"/>
+                    <clientAddressCriterion method="matches" value=".*"/>
                     <commandCriterion method="equals" value="UDP_ASSOCIATE"/>
                     <desiredDestinationAddressCriterion method="matches" value=".*"/>
                     <desiredDestinationPortRanges>
@@ -1676,6 +1676,7 @@ The following are miscellaneous notes regarding Jargyle.
 
 When using an existing configuration file to create a new configuration file, any XML comments from the existing configuration file cannot be transferred to the new configuration file. To preserve comments  from one configuration file to the next configuration file, the `comment` attribute can be used in certain XML elements. You can use the `comment` attribute in the following XML elements:
 
+-   `<clientAddressCriterion/>`
 -   `<commandCriterion/>`
 -   `<criterion/>`
 -   `<desiredDestinationAddressCriterion/>`
@@ -1684,7 +1685,6 @@ When using an existing configuration file to create a new configuration file, an
 -   `<setting/>`
 -   `<socketSetting/>`
 -   `<socks5RequestCriterion/>`
--   `<sourceAddressCriterion/>`
 
 Partial configuration file example:
 
@@ -1712,7 +1712,7 @@ Partial configuration file example:
         <socks5RequestCriteriaValue>
             <socks5RequestCriteria>
                 <socks5RequestCriterion comment="allow any client to connect to any address on port 80 or port 443">
-                    <sourceAddressCriterion method="matches" value=".*"/>
+                    <clientAddressCriterion method="matches" value=".*"/>
                     <commandCriterion method="equals" value="CONNECT"/>
                     <desiredDestinationAddressCriterion method="matches" value=".*"/>
                     <desiredDestinationPortRanges>
@@ -1728,7 +1728,7 @@ Partial configuration file example:
         <socks5RequestCriteriaValue>
             <socks5RequestCriteria>
                 <socks5RequestCriterion comment="block any BIND requests">
-                    <sourceAddressCriterion method="matches" value=".*"/>
+                    <clientAddressCriterion method="matches" value=".*"/>
                     <commandCriterion method="equals" value="BIND"/>
                     <desiredDestinationAddressCriterion method="matches" value=".*"/>
                     <desiredDestinationPortRanges>
@@ -1736,7 +1736,7 @@ Partial configuration file example:
                     </desiredDestinationPortRanges>
                 </socks5RequestCriterion>
                 <socks5RequestCriterion comment="block any UDP ASSOCIATE requests">
-                    <sourceAddressCriterion method="matches" value=".*"/>
+                    <clientAddressCriterion method="matches" value=".*"/>
                     <commandCriterion method="equals" value="UDP_ASSOCIATE"/>
                     <desiredDestinationAddressCriterion method="matches" value=".*"/>
                     <desiredDestinationPortRanges>

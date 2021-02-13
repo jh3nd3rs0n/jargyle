@@ -160,7 +160,7 @@ public final class Socks5Worker implements Runnable {
 	}
 	
 	private boolean canAcceptSocks5Request(
-			final String sourceAddress,
+			final String clientAddress,
 			final Socks5Request socks5Req) {
 		Socks5RequestCriteria allowedSocks5RequestCriteria = 
 				this.settings.getLastValue(
@@ -168,7 +168,7 @@ public final class Socks5Worker implements Runnable {
 						Socks5RequestCriteria.class);
 		Socks5RequestCriterion socks5RequestCriterion =
 				allowedSocks5RequestCriteria.anyEvaluatesTrue(
-						sourceAddress, socks5Req);
+						clientAddress, socks5Req);
 		if (socks5RequestCriterion == null) {
 			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
 					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
@@ -177,7 +177,7 @@ public final class Socks5Worker implements Runnable {
 					this.format(String.format(
 							"SOCKS5 request from %s not allowed. "
 							+ "SOCKS5 request: %s",
-							sourceAddress,
+							clientAddress,
 							socks5Req.toString())));
 			try {
 				this.writeThenFlush(socks5Rep.toByteArray());
@@ -195,7 +195,7 @@ public final class Socks5Worker implements Runnable {
 						Socks5RequestCriteria.class);
 		socks5RequestCriterion =
 				blockedSocks5RequestCriteria.anyEvaluatesTrue(
-						sourceAddress, socks5Req);
+						clientAddress, socks5Req);
 		if (socks5RequestCriterion != null) {
 			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
 					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
@@ -204,7 +204,7 @@ public final class Socks5Worker implements Runnable {
 					this.format(String.format(
 							"SOCKS5 request from %s blocked based on the "
 							+ "following criterion: %s. SOCKS5 request: %s",
-							sourceAddress,
+							clientAddress,
 							socks5RequestCriterion.toString(),
 							socks5Req.toString())));
 			try {

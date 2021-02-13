@@ -69,12 +69,12 @@ public final class Socks5RequestCriteria {
 	}
 	
 	public Socks5RequestCriterion anyEvaluatesTrue(
-			final String sourceAddress,
+			final String clientAddress,
 			final Socks5Request socks5Req) {
 		for (Socks5RequestCriterion socks5RequestCriterion 
 				: this.socks5RequestCriteria) {
 			if (socks5RequestCriterion.evaluatesTrue(
-					sourceAddress, socks5Req)) {
+					clientAddress, socks5Req)) {
 				return socks5RequestCriterion;
 			}
 		}

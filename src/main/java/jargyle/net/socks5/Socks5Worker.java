@@ -249,39 +249,6 @@ public final class Socks5Worker implements Runnable {
 		return true;
 	}
 	
-	private boolean configureClientSocketInterface(
-			final SocketInterface clientSocketInterface) {
-		try {
-			SocketSettings socketSettings = 
-					this.settings.getLastValue(
-							SettingSpec.CLIENT_SOCKET_SETTINGS,
-							SocketSettings.class);
-			socketSettings.applyTo(clientSocketInterface);
-		} catch (SocketException e) {
-			LOGGER.log(
-					Level.WARNING, 
-					this.format("Error in setting the client socket"), 
-					e);
-			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
-					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			LOGGER.log(
-					Level.FINE, 
-					this.format(String.format(
-							"Sending %s", 
-							socks5Rep.toString())));
-			try {
-				this.writeThenFlush(socks5Rep.toByteArray());
-			} catch (IOException e1) {
-				LOGGER.log(
-						Level.WARNING, 
-						this.format("Error in setting the client socket"), 
-						e1);				
-			}
-			return false;
-		}
-		return true;
-	}
-	
 	private boolean configureExternalIncomingSocketInterface(
 			final SocketInterface externalIncomingSocketInterface) {
 		try {
@@ -957,9 +924,6 @@ public final class Socks5Worker implements Runnable {
 			this.clientInputStream = socketInterface.getInputStream();
 			this.clientOutputStream = socketInterface.getOutputStream();
 			this.clientSocketInterface = socketInterface;
-			if (!this.configureClientSocketInterface(this.clientSocketInterface)) {
-				return;
-			}
 			Socks5Request socks5Req = this.newSocks5Request();
 			if (socks5Req == null) { return; }
 			if (!this.canAcceptSocks5Request(

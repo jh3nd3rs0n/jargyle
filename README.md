@@ -1625,11 +1625,11 @@ By default, the current level is set at `INFO` and up. This means that only logg
 The following are the classes that use logging:
 
 -   `jargyle.net.socks.Listener`
--   `jargyle.net.socks.SocksServer`
 -   `jargyle.net.socks.SocksServerCLI`
 -   `jargyle.net.socks.TcpRelayServer$DataWorker`
 -   `jargyle.net.socks.Worker`
 -   `jargyle.net.socks.XmlFileSourceConfigurationService$ConfigurationUpdater`
+-   `jargyle.net.socks5.ServerSideAuthenticator`
 -   `jargyle.net.socks5.Socks5Worker`
 -   `jargyle.net.socks5.UdpRelayServer$IncomingPacketsWorker`
 -   `jargyle.net.socks5.UdpRelayServer$OutgoingPacketsWorker`
@@ -1645,12 +1645,12 @@ The following is a configuration file example of setting the logging level of so
     
     jargyle.net.socks.Listener.handlers = java.util.logging.ConsoleHandler
     jargyle.net.socks.Listener.level = FINE    
-    jargyle.net.socks.SocksServer.handlers = java.util.logging.ConsoleHandler
-    jargyle.net.socks.SocksServer.level = FINE
     jargyle.net.socks.SocksServerCLI.handlers = java.util.logging.ConsoleHandler
     jargyle.net.socks.SocksServerCLI.level = FINE
     jargyle.net.socks.Worker.handlers = java.util.logging.ConsoleHandler
     jargyle.net.socks.Worker.level = FINE
+    jargyle.net.socks5.ServerSideAuthenticator.handlers = java.util.logging.ConsoleHandler
+    jargyle.net.socks5.ServerSideAuthenticator.level = FINE
     jargyle.net.socks5.Socks5Worker.handlers = java.util.logging.ConsoleHandler
     jargyle.net.socks5.Socks5Worker.level = FINE
     java.util.logging.ConsoleHandler.level = FINE

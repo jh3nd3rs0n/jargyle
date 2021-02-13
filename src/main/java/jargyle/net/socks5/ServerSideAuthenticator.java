@@ -250,7 +250,7 @@ enum ServerSideAuthenticator {
 				outputStream.write(usernamePasswordResp.toByteArray());
 				outputStream.flush();
 				LOGGER.log(
-						Level.INFO, 
+						Level.FINE, 
 						String.format(
 								"Invalid username password from %s", 
 								socketInterface));
@@ -275,7 +275,8 @@ enum ServerSideAuthenticator {
 			}
 		}
 		StringBuilder sb = new StringBuilder();
-		List<ServerSideAuthenticator> list = Arrays.asList(ServerSideAuthenticator.values());
+		List<ServerSideAuthenticator> list = Arrays.asList(
+				ServerSideAuthenticator.values());
 		for (Iterator<ServerSideAuthenticator> iterator = list.iterator();
 				iterator.hasNext();) {
 			ServerSideAuthenticator value = iterator.next();

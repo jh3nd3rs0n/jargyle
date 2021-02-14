@@ -6,8 +6,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import jargyle.net.SocketInterface;
-import jargyle.net.socks.socks5.common.Version;
-import jargyle.net.socks.socks5.server.Socks5Worker;
+import jargyle.net.socks.server.v5.Socks5Worker;
+import jargyle.net.socks.transport.v5.Version;
 
 final class Worker implements Runnable {
 	

@@ -2,12 +2,12 @@ package jargyle.net.socks.client;
 
 import jargyle.ResourceHelper;
 import jargyle.ResourceNameConstants;
-import jargyle.net.socks.socks5.client.Socks5Client;
-import jargyle.net.socks.socks5.client.Socks5ServerUri;
-import jargyle.net.socks.socks5.client.UsernamePassword;
-import jargyle.net.socks.socks5.common.AuthMethod;
-import jargyle.net.socks.socks5.common.AuthMethods;
-import jargyle.net.socks.socks5.common.gssapiauth.GssapiProtectionLevels;
+import jargyle.net.socks.client.v5.Socks5Client;
+import jargyle.net.socks.client.v5.Socks5ServerUri;
+import jargyle.net.socks.client.v5.UsernamePassword;
+import jargyle.net.socks.transport.v5.AuthMethod;
+import jargyle.net.socks.transport.v5.AuthMethods;
+import jargyle.net.socks.transport.v5.gssapiauth.GssapiProtectionLevels;
 
 public final class SocksClientHelper {
 

@@ -5,8 +5,6 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import jargyle.TestStringConstants;
-import jargyle.net.socks.transport.v5.AddressType;
-import jargyle.net.socks.transport.v5.UdpRequestHeader;
 
 public class UdpRequestHeaderTest {
 

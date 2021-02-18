@@ -6,9 +6,6 @@ import java.util.EnumSet;
 
 import org.junit.Test;
 
-import jargyle.net.socks.transport.v5.ClientMethodSelectionMessage;
-import jargyle.net.socks.transport.v5.Method;
-
 public class ClientMethodSelectionMessageTest {
 
 	@Test

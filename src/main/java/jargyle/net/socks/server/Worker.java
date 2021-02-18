@@ -2,8 +2,9 @@ package jargyle.net.socks.server;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import jargyle.net.SocketInterface;
 import jargyle.net.socks.server.v5.Socks5Worker;
@@ -11,8 +12,7 @@ import jargyle.net.socks.transport.v5.Version;
 
 final class Worker implements Runnable {
 	
-	private static final Logger LOGGER = Logger.getLogger(
-			Worker.class.getName());
+	private static final Logger LOGGER = LoggerFactory.getLogger(Worker.class);
 	
 	private final SocketInterface clientSocketInterface;
 	private final Configuration configuration;
@@ -42,8 +42,7 @@ final class Worker implements Runnable {
 			try {
 				version = clientInputStream.read();
 			} catch (IOException e) {
-				LOGGER.log(
-						Level.WARNING, 
+				LOGGER.warn(
 						this.format("Error in getting the SOCKS version from "
 								+ "the client"), 
 						e);
@@ -57,15 +56,12 @@ final class Worker implements Runnable {
 						this.externalNetFactory);
 				socks5Worker.run();
 			} else {
-				LOGGER.log(
-						Level.WARNING,
-						this.format(String.format(
-								"Unknown SOCKS version: %s", 
-								version)));
+				LOGGER.warn(this.format(String.format(
+						"Unknown SOCKS version: %s",
+						version)));
 			}
 		} catch (Throwable t) {
-			LOGGER.log(
-					Level.WARNING, 
+			LOGGER.warn(
 					this.format("Internal server error"), 
 					t);
 		} finally {
@@ -73,8 +69,7 @@ final class Worker implements Runnable {
 				try {
 					this.clientSocketInterface.close();
 				} catch (IOException e) {
-					LOGGER.log(
-							Level.WARNING, 
+					LOGGER.warn(
 							this.format("Error upon closing connection to the "
 									+ "client"), 
 							e);

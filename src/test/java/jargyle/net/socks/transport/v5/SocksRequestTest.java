@@ -4,10 +4,6 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import jargyle.net.socks.transport.v5.AddressType;
-import jargyle.net.socks.transport.v5.Command;
-import jargyle.net.socks.transport.v5.Socks5Request;
-
 public class SocksRequestTest {
 
 	@Test

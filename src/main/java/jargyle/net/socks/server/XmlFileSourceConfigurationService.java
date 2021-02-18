@@ -8,8 +8,9 @@ import java.io.InputStream;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import jargyle.io.FileMonitor;
 import jargyle.io.FileStatusListener;
@@ -20,8 +21,8 @@ public final class XmlFileSourceConfigurationService
 	private static final class ConfigurationUpdater 
 		implements FileStatusListener {
 		
-		private static final Logger LOGGER = Logger.getLogger(
-				ConfigurationUpdater.class.getName());
+		private static final Logger LOGGER = LoggerFactory.getLogger(
+				ConfigurationUpdater.class);
 
 		private final XmlFileSourceConfigurationService configurationService;
 		
@@ -32,38 +33,28 @@ public final class XmlFileSourceConfigurationService
 		
 		@Override
 		public void fileCreated(final File file) {
-			LOGGER.log(
-					Level.INFO, 
-					String.format(
-							"File '%s' created. Updating configuration...", 
-							file));
+			LOGGER.info(String.format(
+					"File '%s' created. Updating configuration...",
+					file));
 			if (this.updateFrom(file)) {
-				LOGGER.log(
-						Level.INFO, 
-						"Configuration updated successfully");
+				LOGGER.info("Configuration updated successfully");
 			}
 		}
 
 		@Override
 		public void fileDeleted(final File file) {
-			LOGGER.log(
-					Level.INFO, 
-					String.format(
-							"File '%s' deleted (using in-memory copy).", 
-							file));
+			LOGGER.info(String.format(
+					"File '%s' deleted (using in-memory copy).",
+					file));
 		}
 
 		@Override
 		public void fileModfied(final File file) {
-			LOGGER.log(
-					Level.INFO, 
-					String.format(
-							"File '%s' modified. Updating configuration...", 
-							file));
+			LOGGER.info(String.format(
+					"File '%s' modified. Updating configuration...",
+					file));
 			if (this.updateFrom(file)) {
-				LOGGER.log(
-						Level.INFO, 
-						"Configuration updated successfully");
+				LOGGER.info("Configuration updated successfully");
 			}
 		}
 		
@@ -74,16 +65,14 @@ public final class XmlFileSourceConfigurationService
 				in = new FileInputStream(file);
 				config = ImmutableConfiguration.newInstanceFrom(in);
 			} catch (FileNotFoundException e) {
-				LOGGER.log(
-						Level.WARNING, 
+				LOGGER.warn(
 						String.format(
 								"File '%s' not found", 
 								file), 
 						e);
 				return false;
 			} catch (IOException e) {
-				LOGGER.log(
-						Level.WARNING, 
+				LOGGER.warn(
 						String.format(
 								"Error in reading file '%s'", 
 								file), 
@@ -94,8 +83,7 @@ public final class XmlFileSourceConfigurationService
 					try {
 						in.close();
 					} catch (IOException e) {
-						LOGGER.log(
-								Level.WARNING, 
+						LOGGER.warn(
 								String.format(
 										"Unable to close input stream of file '%s'", 
 										file), 

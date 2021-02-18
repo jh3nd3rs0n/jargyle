@@ -6,14 +6,14 @@ import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.ietf.jgss.GSSContext;
 import org.ietf.jgss.GSSCredential;
 import org.ietf.jgss.GSSException;
 import org.ietf.jgss.GSSManager;
 import org.ietf.jgss.MessageProp;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import jargyle.net.SocketInterface;
 import jargyle.net.socks.server.Configuration;
@@ -36,11 +36,9 @@ enum Authenticator {
 		public SocketInterface authenticate(
 				final SocketInterface socketInterface, 
 				final Configuration configuration) throws IOException {
-			LOGGER.log(
-					Level.FINE, 
-					String.format(
-							"No acceptable authentication methods from %s", 
-							socketInterface));
+			LOGGER.debug(String.format(
+					"No acceptable authentication methods from %s",
+					socketInterface));
 			return null;
 		}
 		
@@ -77,11 +75,9 @@ enum Authenticator {
 			while (!context.isEstablished()) {
 				Message message = Message.newInstanceFrom(inStream);
 				if (message.getMessageType().equals(MessageType.ABORT)) {
-					LOGGER.log(
-							Level.FINE, 
-							String.format(
-									"Client %s aborted process of context establishment", 
-									socketInterface));
+					LOGGER.debug(String.format(
+							"Client %s aborted process of context establishment",
+							socketInterface));
 					return false;
 				}
 				token = message.getToken();
@@ -117,11 +113,9 @@ enum Authenticator {
 			OutputStream outStream = socketInterface.getOutputStream();
 			Message message = Message.newInstanceFrom(inStream);
 			if (message.getMessageType().equals(MessageType.ABORT)) {
-				LOGGER.log(
-						Level.FINE, 
-						String.format(
-								"Client %s aborted protection level negotiation", 
-								socketInterface));
+				LOGGER.debug(String.format(
+						"Client %s aborted protection level negotiation",
+						socketInterface));
 				return null;
 			}
 			boolean necReferenceImpl = configuration.getSettings().getLastValue(
@@ -190,12 +184,10 @@ enum Authenticator {
 					token).toByteArray());
 			outStream.flush();
 			if (socketInterface.isClosed()) {
-				LOGGER.log(
-						Level.FINE, 
-						String.format(
-								"Client %s closed due to client finding "
-								+ "choice of protection level unacceptable", 
-								socketInterface));
+				LOGGER.debug(String.format(
+						"Client %s closed due to client finding choice of "
+						+ "protection level unacceptable",
+						socketInterface));
 				return null;
 			}
 			return gssapiProtectionLevelChoice;
@@ -250,11 +242,9 @@ enum Authenticator {
 						(byte) 0x01);
 				outputStream.write(usernamePasswordResp.toByteArray());
 				outputStream.flush();
-				LOGGER.log(
-						Level.FINE, 
-						String.format(
-								"Invalid username password from %s", 
-								socketInterface));
+				LOGGER.debug(String.format(
+						"Invalid username password from %s",
+						socketInterface));
 				return null;
 			}
 			usernamePasswordResp = UsernamePasswordResponse.newInstance(
@@ -266,8 +256,8 @@ enum Authenticator {
 		
 	};
 
-	private static final Logger LOGGER = Logger.getLogger(
-			Authenticator.class.getName());
+	private static final Logger LOGGER = LoggerFactory.getLogger(
+			Authenticator.class);
 	
 	public static Authenticator valueOf(final Method meth) {
 		for (Authenticator value : Authenticator.values()) {

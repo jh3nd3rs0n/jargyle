@@ -13,7 +13,6 @@ import org.junit.Test;
 import jargyle.IoHelper;
 import jargyle.ResourceHelper;
 import jargyle.ResourceNameConstants;
-import jargyle.net.socks.server.v5.XmlFileSourceUsersService;
 
 public class XmlFileSourceUsersServiceIT {
 

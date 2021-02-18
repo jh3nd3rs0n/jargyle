@@ -9,7 +9,6 @@ import org.junit.Test;
 
 import jargyle.TestStringConstants;
 import jargyle.net.socks.client.SocksClientHelper;
-import jargyle.net.socks.client.v5.UsernamePassword;
 import jargyle.net.socks.server.ConfigurationHelper;
 
 public class Socks5SocketInterfaceIT {

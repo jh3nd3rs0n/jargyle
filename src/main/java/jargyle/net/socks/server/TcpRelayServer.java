@@ -8,8 +8,9 @@ import java.net.SocketException;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import jargyle.net.SocketInterface;
 
@@ -17,8 +18,8 @@ public final class TcpRelayServer {
 
 	private static class DataWorker implements Runnable {
 		
-		private static final Logger LOGGER = Logger.getLogger(
-				DataWorker.class.getName());
+		private static final Logger LOGGER = LoggerFactory.getLogger(
+				DataWorker.class);
 		
 		private final TcpRelayServer tcpRelayServer;
 		private final InputStream inputStream;
@@ -71,19 +72,16 @@ public final class TcpRelayServer {
 					try {
 						bytesRead = this.inputStream.read(buffer);
 						this.setLastReadTime(System.currentTimeMillis());
-						LOGGER.log(
-								Level.FINE, 
-								this.format(String.format(
-										"Bytes read: %s", 
-										bytesRead)));
+						LOGGER.debug(this.format(String.format(
+								"Bytes read: %s",
+								bytesRead)));
 					} catch (SocketException e) {
 						// socket closed
 						break;
 					} catch (InterruptedIOException e) {
 						bytesRead = 0;
 					} catch (IOException e) {
-						LOGGER.log(
-								Level.WARNING,
+						LOGGER.warn(
 								this.format("Error occurred in the process of reading in data"), 
 								e);
 						break;
@@ -105,8 +103,7 @@ public final class TcpRelayServer {
 						// socket closed
 						break;
 					} catch (IOException e) {
-						LOGGER.log(
-								Level.WARNING,
+						LOGGER.warn(
 								this.format("Error occurred in the process of writing out data"), 
 								e);
 						break;
@@ -117,15 +114,13 @@ public final class TcpRelayServer {
 						// socket closed
 						break;
 					} catch (IOException e) {
-						LOGGER.log(
-								Level.WARNING,
+						LOGGER.warn(
 								this.format("Error occurred in the process of flushing out any data"), 
 								e);
 						break;
 					}					
 				} catch (Throwable t) {
-					LOGGER.log(
-							Level.WARNING,
+					LOGGER.warn(
 							this.format("Error occurred in the process of relaying the data"), 
 							t);
 					break;

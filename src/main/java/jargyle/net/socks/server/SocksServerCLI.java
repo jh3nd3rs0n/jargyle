@@ -13,8 +13,9 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import argmatey.ArgMatey;
 import argmatey.ArgMatey.Annotations.Option;
@@ -55,8 +56,8 @@ public final class SocksServerCLI extends CLI {
 	private static final int SOCKS5_USERS_OPTION_GROUP_ORDINAL = 12;
 	private static final int VERSION_OPTION_GROUP_ORDINAL = 13;
 	
-	private static final Logger LOGGER = Logger.getLogger(
-			SocksServerCLI.class.getName());
+	private static final Logger LOGGER = LoggerFactory.getLogger(
+			SocksServerCLI.class);
 	
 	private boolean configurationFileXsdRequested;
 	private final ModifiableConfiguration modifiableConfiguration;
@@ -548,8 +549,7 @@ public final class SocksServerCLI extends CLI {
 		try {
 			socksServer.start();
 		} catch (BindException e) {
-			LOGGER.log(
-					Level.SEVERE, 
+			LOGGER.error(
 					String.format(
 							"Unable to listen on port %s at %s", 
 							configuration.getSettings().getLastValue(
@@ -559,18 +559,13 @@ public final class SocksServerCLI extends CLI {
 					e);
 			return -1;
 		} catch (IOException e) {
-			LOGGER.log(
-					Level.SEVERE, 
-					"Error in starting SocksServer", 
-					e);
+			LOGGER.error("Error in starting SocksServer", e);
 			return -1;
 		}
-		LOGGER.log(
-				Level.INFO,
-				String.format(
-						"Listening on port %s at %s",
-						socksServer.getPort(),
-						socksServer.getHost()));
+		LOGGER.info(String.format(
+				"Listening on port %s at %s",
+				socksServer.getPort(),
+				socksServer.getHost()));
 		return 0;
 	}
 

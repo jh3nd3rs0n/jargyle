@@ -6,8 +6,9 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import jargyle.net.DirectSocketInterface;
 import jargyle.net.SocketInterface;
@@ -17,8 +18,8 @@ import jargyle.util.Criterion;
 
 final class Listener implements Runnable {
 
-	private static final Logger LOGGER = Logger.getLogger(
-			Listener.class.getName());
+	private static final Logger LOGGER = LoggerFactory.getLogger(
+			Listener.class);
 	
 	private final Configuration configuration;
 	private final ExternalNetFactory externalNetFactory;
@@ -42,11 +43,9 @@ final class Listener implements Runnable {
 		Criterion criterion = allowedClientAddressCriteria.anyEvaluatesTrue(
 				clientAddress);
 		if (criterion == null) {
-			LOGGER.log(
-					Level.FINE, 
-					this.format(String.format(
-							"Client address %s not allowed", 
-							clientAddress)));
+			LOGGER.debug(this.format(String.format(
+					"Client address %s not allowed",
+					clientAddress)));
 			return false;
 		}
 		Criteria blockedClientAddressCriteria = settings.getLastValue(
@@ -54,13 +53,11 @@ final class Listener implements Runnable {
 		criterion = blockedClientAddressCriteria.anyEvaluatesTrue(
 				clientAddress);
 		if (criterion != null) {
-			LOGGER.log(
-					Level.FINE, 
-					this.format(String.format(
-							"Client address %s blocked based on the "
-							+ "following criterion: %s", 
-							clientAddress,
-							criterion)));
+			LOGGER.debug(this.format(String.format(
+					"Client address %s blocked based on the following "
+					+ "criterion: %s",
+					clientAddress,
+					criterion)));
 			return false;
 		}
 		return true;
@@ -72,8 +69,7 @@ final class Listener implements Runnable {
 			try {
 				clientSocketInterface.close();
 			} catch (IOException e) {
-				LOGGER.log(
-						Level.WARNING, 
+				LOGGER.warn( 
 						this.format("Error in closing the client socket"), 
 						e);
 			}
@@ -88,8 +84,7 @@ final class Listener implements Runnable {
 					SettingSpec.CLIENT_SOCKET_SETTINGS, SocketSettings.class);
 			socketSettings.applyTo(clientSocketInterface);
 		} catch (SocketException e) {
-			LOGGER.log(
-					Level.WARNING, 
+			LOGGER.warn(
 					this.format("Error in setting the client socket"), 
 					e);
 			return false;
@@ -111,8 +106,7 @@ final class Listener implements Runnable {
 				// closed by SocksServer.stop()
 				break;
 			} catch (IOException e) {
-				LOGGER.log(
-						Level.WARNING, 
+				LOGGER.warn(
 						this.format("Error in waiting for a connection"), 
 						e);
 				continue;
@@ -138,8 +132,7 @@ final class Listener implements Runnable {
 				}
 				clientSocketInterface = clientSockInterface;
 			} catch (Throwable t) {
-				LOGGER.log(
-						Level.WARNING, 
+				LOGGER.warn(
 						this.format("Internal server error"), 
 						t);
 				this.closeClientSocketInterface(clientSocketInterface);
@@ -171,8 +164,7 @@ final class Listener implements Runnable {
 			clientSockInterface = this.sslWrapper.wrapIfSslEnabled(
 					clientSocketInterface, null, true);
 		} catch (IOException e) {
-			LOGGER.log(
-					Level.WARNING, 
+			LOGGER.warn(
 					this.format("Error in wrapping the client socket"), 
 					e);
 			return null;

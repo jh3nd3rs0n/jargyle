@@ -4,8 +4,6 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import jargyle.net.socks.transport.v5.userpassauth.UsernamePasswordResponse;
-
 public class UsernamePasswordResponseTest {
 
 	@Test

@@ -28,15 +28,15 @@ import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 */
 
 public final class FileMonitor implements Runnable {
 	
 	/*
-	private static final Logger LOGGER = Logger.getLogger(
-			FileMonitor.class.getName());
+	private static final Logger LOGGER = LoggerFactory.getLogger(
+			FileMonitor.class);
 	*/
 
 	private static final class CreatedFileStatus extends FileStatus {
@@ -153,8 +153,7 @@ public final class FileMonitor implements Runnable {
 		try {
 			watchService = FileSystems.getDefault().newWatchService();
 		} catch (IOException e) {
-			LOGGER.log(
-					Level.WARNING, 
+			LOGGER.warn(
 					"Unable to create WatchService", 
 					e);
 			return null;
@@ -185,8 +184,7 @@ public final class FileMonitor implements Runnable {
 					StandardWatchEventKinds.ENTRY_DELETE,
 					StandardWatchEventKinds.ENTRY_MODIFY);
 		} catch (IOException e) {
-			LOGGER.log(
-					Level.WARNING, 
+			LOGGER.warn(
 					String.format(
 							"Unable to register '%s' to WatchService", 
 							path), 

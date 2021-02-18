@@ -8,8 +8,9 @@ import java.net.SocketTimeoutException;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import jargyle.net.DatagramSocketInterface;
 import jargyle.net.HostnameResolver;
@@ -115,8 +116,8 @@ final class UdpRelayServer {
 	
 	private static final class IncomingPacketsWorker extends PacketsWorker {
 		
-		private static final Logger LOGGER = Logger.getLogger(
-				IncomingPacketsWorker.class.getName());
+		private static final Logger LOGGER = LoggerFactory.getLogger(
+				IncomingPacketsWorker.class);
 		
 		public IncomingPacketsWorker(final UdpRelayServer server) {
 			super(server);
@@ -130,11 +131,9 @@ final class UdpRelayServer {
 					allowedExternalIncomingAddrCriteria.anyEvaluatesTrue(
 							externalIncomingAddress);
 			if (criterion == null) {
-				LOGGER.log(
-						Level.FINE, 
-						this.format(String.format(
-								"External incoming address %s not allowed", 
-								externalIncomingAddress)));
+				LOGGER.debug(this.format(String.format(
+						"External incoming address %s not allowed",
+						externalIncomingAddress)));
 				return false;
 			}
 			Criteria blockedExternalIncomingAddrCriteria =
@@ -142,13 +141,11 @@ final class UdpRelayServer {
 			criterion = blockedExternalIncomingAddrCriteria.anyEvaluatesTrue(
 					externalIncomingAddress);
 			if (criterion != null) {
-				LOGGER.log(
-						Level.FINE, 
-						this.format(String.format(
-								"External incoming address %s blocked based on the "
-								+ "following criterion: %s", 
-								externalIncomingAddress,
-								criterion)));
+				LOGGER.debug(this.format(String.format(
+						"External incoming address %s blocked based on the "
+						+ "following criterion: %s",
+						externalIncomingAddress,
+						criterion)));
 				return false;
 			}
 			return true;
@@ -160,8 +157,7 @@ final class UdpRelayServer {
 			try {
 				inetAddress = InetAddress.getByName(this.getClientAddress());
 			} catch (IOException e) {
-				LOGGER.log(
-						Level.WARNING, 
+				LOGGER.warn( 
 						this.format("Error in determining the IP address from the client"), 
 						e);
 				return null;
@@ -206,23 +202,20 @@ final class UdpRelayServer {
 						}
 						continue;
 					} catch (IOException e) {
-						LOGGER.log(
-								Level.WARNING, 
+						LOGGER.warn( 
 								this.format("Error in receiving the packet from the server"), 
 								e);
 						continue;
 					}
-					LOGGER.log(
-							Level.FINE, 
-							this.format(String.format(
-									"Packet data received: %s byte(s)", 
-									packet.getLength())));
+					LOGGER.debug(this.format(String.format(
+							"Packet data received: %s byte(s)",
+							packet.getLength())));
 					if (!this.canAcceptExternalIncomingAddress(
 							packet.getAddress().getHostAddress())) {
 						continue;
 					}
 					UdpRequestHeader header = this.newUdpRequestHeader(packet);
-					LOGGER.log(Level.FINE, this.format(header.toString()));
+					LOGGER.debug(this.format(header.toString()));
 					packet = this.newDatagramPacket(header);
 					if (packet == null) {
 						continue;
@@ -233,14 +226,12 @@ final class UdpRelayServer {
 						// socket closed
 						break;
 					} catch (IOException e) {
-						LOGGER.log(
-								Level.WARNING, 
+						LOGGER.warn( 
 								this.format("Error in sending the packet to the client"), 
 								e);
 					}
 				} catch (Throwable t) {
-					LOGGER.log(
-							Level.WARNING, 
+					LOGGER.warn( 
 							this.format("Error occurred in the process of relaying of "
 									+ "a packet from the server to the client"), 
 							t);
@@ -259,8 +250,8 @@ final class UdpRelayServer {
 	
 	private static final class OutgoingPacketsWorker extends PacketsWorker {
 		
-		private static final Logger LOGGER = Logger.getLogger(
-				OutgoingPacketsWorker.class.getName());
+		private static final Logger LOGGER = LoggerFactory.getLogger(
+				OutgoingPacketsWorker.class);
 		
 		public OutgoingPacketsWorker(final UdpRelayServer server) {
 			super(server);
@@ -274,11 +265,9 @@ final class UdpRelayServer {
 					allowedExternalOutgoingAddrCriteria.anyEvaluatesTrue(
 							externalOutgoingAddress);
 			if (criterion == null) {
-				LOGGER.log(
-						Level.FINE, 
-						this.format(String.format(
-								"External outgoing address %s not allowed", 
-								externalOutgoingAddress)));
+				LOGGER.debug(this.format(String.format(
+						"External outgoing address %s not allowed",
+						externalOutgoingAddress)));
 				return false;
 			}
 			Criteria blockedExternalOutgoingAddrCriteria =
@@ -286,13 +275,11 @@ final class UdpRelayServer {
 			criterion = blockedExternalOutgoingAddrCriteria.anyEvaluatesTrue(
 					externalOutgoingAddress);
 			if (criterion != null) {
-				LOGGER.log(
-						Level.FINE, 
-						this.format(String.format(
-								"External outgoing address %s blocked based on the "
-								+ "following criterion: %s", 
-								externalOutgoingAddress,
-								criterion)));
+				LOGGER.debug(this.format(String.format(
+						"External outgoing address %s blocked based on the "
+						+ "following criterion: %s",
+						externalOutgoingAddress,
+						criterion)));
 				return false;
 			}
 			return true;
@@ -305,8 +292,7 @@ final class UdpRelayServer {
 			try {
 				clientInetAddr = InetAddress.getByName(this.getClientAddress());
 			} catch (IOException e) {
-				LOGGER.log(
-						Level.WARNING, 
+				LOGGER.warn( 
 						this.format("Error in determining the IP address from the client"), 
 						e);
 				return false;
@@ -315,8 +301,7 @@ final class UdpRelayServer {
 			try {
 				inetAddr = InetAddress.getByName(address);
 			} catch (IOException e) {
-				LOGGER.log(
-						Level.WARNING, 
+				LOGGER.warn( 
 						this.format("Error in determining the IP address from the client"), 
 						e);
 				return false;
@@ -344,8 +329,7 @@ final class UdpRelayServer {
 				inetAddress = this.getHostnameResolver().resolve(
 						header.getDesiredDestinationAddress());
 			} catch (IOException e) {
-				LOGGER.log(
-						Level.WARNING, 
+				LOGGER.warn( 
 						this.format("Error in determining the IP address from the server"), 
 						e);
 				return null;
@@ -360,8 +344,7 @@ final class UdpRelayServer {
 			try {
 				header = UdpRequestHeader.newInstance(packet.getData());
 			} catch (IllegalArgumentException e) {
-				LOGGER.log(
-						Level.WARNING, 
+				LOGGER.warn( 
 						this.format("Error in parsing the UDP header request from the client"), 
 						e);
 				return null;
@@ -390,17 +373,14 @@ final class UdpRelayServer {
 						}
 						continue;
 					} catch (IOException e) {
-						LOGGER.log(
-								Level.WARNING, 
+						LOGGER.warn( 
 								this.format("Error in receiving packet from the client"), 
 								e);
 						continue;
 					}
-					LOGGER.log(
-							Level.FINE, 
-							this.format(String.format(
-									"Packet data received: %s byte(s)", 
-									packet.getLength())));					
+					LOGGER.debug(this.format(String.format(
+							"Packet data received: %s byte(s)",
+							packet.getLength())));					
 					if (!this.canForwardDatagramPacket(packet)) {
 						continue;
 					}
@@ -408,7 +388,7 @@ final class UdpRelayServer {
 					if (header == null) {
 						continue;
 					}
-					LOGGER.log(Level.FINE, this.format(header.toString()));
+					LOGGER.debug(this.format(header.toString()));
 					if (header.getCurrentFragmentNumber() != 0) {
 						continue;
 					}
@@ -426,14 +406,12 @@ final class UdpRelayServer {
 						// socket closed
 						break;
 					} catch (IOException e) {
-						LOGGER.log(
-								Level.WARNING, 
+						LOGGER.warn( 
 								this.format("Error in sending the packet to the server"), 
 								e);
 					}
 				} catch (Throwable t) {
-					LOGGER.log(
-							Level.WARNING, 
+					LOGGER.warn( 
 							this.format("Error occurred in the process of relaying of "
 									+ "a packet from the client to the server"), 
 							t);

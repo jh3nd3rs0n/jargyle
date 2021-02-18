@@ -20,13 +20,13 @@ import jargyle.net.DirectDatagramSocketInterface;
 import jargyle.net.Host;
 import jargyle.net.HostnameResolver;
 import jargyle.net.HostnameResolverFactory;
+import jargyle.net.NetFactory;
 import jargyle.net.ServerSocketInterface;
 import jargyle.net.ServerSocketInterfaceFactory;
 import jargyle.net.SocketInterface;
 import jargyle.net.SocketInterfaceFactory;
 import jargyle.net.SocketSettings;
 import jargyle.net.socks.server.Configuration;
-import jargyle.net.socks.server.ExternalNetFactory;
 import jargyle.net.socks.server.SettingSpec;
 import jargyle.net.socks.server.Settings;
 import jargyle.net.socks.server.SslWrapper;
@@ -59,7 +59,7 @@ public final class Socks5Worker implements Runnable {
 	private OutputStream clientOutputStream;
 	private SocketInterface clientSocketInterface;
 	private final Configuration configuration;
-	private final ExternalNetFactory externalNetFactory;
+	private final NetFactory externalNetFactory;
 	private final Settings settings;
 	private final SslWrapper sslWrapper;
 	
@@ -67,7 +67,7 @@ public final class Socks5Worker implements Runnable {
 			final SocketInterface clientSockInterface, 
 			final Configuration config, 
 			final SslWrapper wrapper, 
-			final ExternalNetFactory factory) {
+			final NetFactory factory) {
 		Settings sttngs = config.getSettings();
 		this.clientInputStream = null;
 		this.clientOutputStream = null;

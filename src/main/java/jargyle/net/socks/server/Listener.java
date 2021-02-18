@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import jargyle.net.DirectSocketInterface;
+import jargyle.net.NetFactory;
 import jargyle.net.SocketInterface;
 import jargyle.net.SocketSettings;
 import jargyle.util.Criteria;
@@ -22,7 +23,7 @@ final class Listener implements Runnable {
 			Listener.class);
 	
 	private final Configuration configuration;
-	private final ExternalNetFactory externalNetFactory;
+	private final NetFactory externalNetFactory;
 	private final ServerSocket serverSocket;
 	private final SslWrapper sslWrapper;
 		

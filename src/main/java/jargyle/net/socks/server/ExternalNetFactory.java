@@ -27,13 +27,13 @@ import jargyle.net.ssl.Protocols;
 import jargyle.security.EncryptedPassword;
 import jargyle.util.PositiveInteger;
 
-public final class ExternalNetFactory extends NetFactory {
+final class ExternalNetFactory extends NetFactory {
 		
 	private final Configuration configuration;
 	private Configuration lastConfiguration;
 	private NetFactory netFactory;
 		
-	ExternalNetFactory(final Configuration config) {
+	public ExternalNetFactory(final Configuration config) {
 		this.configuration = config;
 		this.lastConfiguration = null;
 		this.netFactory = null;
@@ -53,6 +53,7 @@ public final class ExternalNetFactory extends NetFactory {
 		return this.getNetFactory().newDatagramSocketInterfaceFactory();
 	}
 	
+	@Override
 	public HostnameResolverFactory newHostnameResolverFactory() {
 		return this.getNetFactory().newHostnameResolverFactory();		
 	}
@@ -65,10 +66,12 @@ public final class ExternalNetFactory extends NetFactory {
 		return new DefaultNetFactory();
 	}
 	
+	@Override
 	public ServerSocketInterfaceFactory newServerSocketInterfaceFactory() {
 		return this.getNetFactory().newServerSocketInterfaceFactory();		
 	}
 	
+	@Override
 	public SocketInterfaceFactory newSocketInterfaceFactory() {
 		return this.getNetFactory().newSocketInterfaceFactory();
 	}

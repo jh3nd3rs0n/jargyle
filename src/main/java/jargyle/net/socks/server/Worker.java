@@ -6,6 +6,7 @@ import java.io.InputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import jargyle.net.NetFactory;
 import jargyle.net.SocketInterface;
 import jargyle.net.socks.server.v5.Socks5Worker;
 import jargyle.net.socks.transport.v5.Version;
@@ -16,14 +17,14 @@ final class Worker implements Runnable {
 	
 	private final SocketInterface clientSocketInterface;
 	private final Configuration configuration;
-	private final ExternalNetFactory externalNetFactory;
+	private final NetFactory externalNetFactory;
 	private final SslWrapper sslWrapper;
 	
 	public Worker(
 			final SocketInterface clientSockInterface, 
 			final Configuration config, 
 			final SslWrapper wrapper, 
-			final ExternalNetFactory factory) {
+			final NetFactory factory) {
 		this.clientSocketInterface = clientSockInterface;
 		this.configuration = config;
 		this.externalNetFactory = factory;		

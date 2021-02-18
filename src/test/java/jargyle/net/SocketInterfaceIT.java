@@ -147,7 +147,8 @@ public class SocketInterfaceIT {
 			SocketInterfaceFactory socketFactory = 
 					new DirectSocketInterfaceFactory();
 			if (socksClient != null) {
-				socketFactory = socksClient.newSocketInterfaceFactory();
+				socketFactory = 
+						socksClient.newNetFactory().newSocketInterfaceFactory();
 			}
 			echoSocketInterface = socketFactory.newSocketInterface();
 			echoSocketInterface.connect(new InetSocketAddress(

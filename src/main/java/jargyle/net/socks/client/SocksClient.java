@@ -5,13 +5,10 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.util.Objects;
 
-import jargyle.net.DatagramSocketInterfaceFactory;
 import jargyle.net.Host;
-import jargyle.net.HostnameResolverFactory;
+import jargyle.net.NetFactory;
 import jargyle.net.Port;
-import jargyle.net.ServerSocketInterfaceFactory;
 import jargyle.net.SocketInterface;
-import jargyle.net.SocketInterfaceFactory;
 import jargyle.util.PositiveInteger;
 
 public abstract class SocksClient {
@@ -99,13 +96,7 @@ public abstract class SocksClient {
 		return this.sslWrapper;
 	}
 	
-	public abstract DatagramSocketInterfaceFactory newDatagramSocketInterfaceFactory();
-	
-	public abstract HostnameResolverFactory newHostnameResolverFactory();
-	
-	public abstract ServerSocketInterfaceFactory newServerSocketInterfaceFactory();
-	
-	public abstract SocketInterfaceFactory newSocketInterfaceFactory();
+	public abstract NetFactory newNetFactory();
 	
 	@Override
 	public String toString() {

@@ -135,7 +135,7 @@ public class DatagramSocketInterfaceIT {
 					new DirectDatagramSocketInterfaceFactory();
 			if (socksClient != null) {
 				datagramSocketInterfaceFactory = 
-						socksClient.newDatagramSocketInterfaceFactory();
+						socksClient.newNetFactory().newDatagramSocketInterfaceFactory();
 			}
 			echoDatagramSocketInterface = 
 					datagramSocketInterfaceFactory.newDatagramSocketInterface(0);

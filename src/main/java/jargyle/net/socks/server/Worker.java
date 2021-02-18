@@ -16,17 +16,17 @@ final class Worker implements Runnable {
 	
 	private final SocketInterface clientSocketInterface;
 	private final Configuration configuration;
-	private final ExternalTrafficRouter externalTrafficRouter;
+	private final ExternalNetFactory externalNetFactory;
 	private final SslWrapper sslWrapper;
 	
 	public Worker(
 			final SocketInterface clientSockInterface, 
 			final Configuration config, 
 			final SslWrapper wrapper, 
-			final ExternalTrafficRouter router) {
+			final ExternalNetFactory factory) {
 		this.clientSocketInterface = clientSockInterface;
 		this.configuration = config;
-		this.externalTrafficRouter = router;		
+		this.externalNetFactory = factory;		
 		this.sslWrapper = wrapper;
 	}
 	
@@ -54,7 +54,7 @@ final class Worker implements Runnable {
 						this.clientSocketInterface, 
 						this.configuration, 
 						this.sslWrapper, 
-						this.externalTrafficRouter);
+						this.externalNetFactory);
 				socks5Worker.run();
 			} else {
 				LOGGER.log(

@@ -6,11 +6,8 @@ import java.io.OutputStream;
 import java.util.Set;
 import java.util.TreeSet;
 
-import jargyle.net.DatagramSocketInterfaceFactory;
-import jargyle.net.HostnameResolverFactory;
-import jargyle.net.ServerSocketInterfaceFactory;
+import jargyle.net.NetFactory;
 import jargyle.net.SocketInterface;
-import jargyle.net.SocketInterfaceFactory;
 import jargyle.net.socks.client.Properties;
 import jargyle.net.socks.client.PropertySpec;
 import jargyle.net.socks.client.SocksClient;
@@ -60,23 +57,8 @@ public final class Socks5Client extends SocksClient {
 	}
 
 	@Override
-	public DatagramSocketInterfaceFactory newDatagramSocketInterfaceFactory() {
-		return new Socks5DatagramSocketInterfaceFactory(this);
-	}
-
-	@Override
-	public HostnameResolverFactory newHostnameResolverFactory() {
-		return new Socks5HostnameResolverFactory(this);
-	}
-
-	@Override
-	public ServerSocketInterfaceFactory newServerSocketInterfaceFactory() {
-		return new Socks5ServerSocketInterfaceFactory(this);
-	}
-
-	@Override
-	public SocketInterfaceFactory newSocketInterfaceFactory() {
-		return new Socks5SocketInterfaceFactory(this);
+	public NetFactory newNetFactory() {
+		return new Socks5NetFactory(this);
 	}
 	
 }

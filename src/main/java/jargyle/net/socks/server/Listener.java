@@ -21,13 +21,13 @@ final class Listener implements Runnable {
 			Listener.class.getName());
 	
 	private final Configuration configuration;
-	private final ExternalTrafficRouter externalTrafficRouter;
+	private final ExternalNetFactory externalNetFactory;
 	private final ServerSocket serverSocket;
 	private final SslWrapper sslWrapper;
 		
 	public Listener(final ServerSocket serverSock, final Configuration config) {
 		this.configuration = config;
-		this.externalTrafficRouter = new ExternalTrafficRouter(config);
+		this.externalNetFactory = new ExternalNetFactory(config);
 		this.serverSocket = serverSock;
 		this.sslWrapper = new SslWrapper(config);
 	}
@@ -149,7 +149,7 @@ final class Listener implements Runnable {
 					clientSocketInterface, 
 					this.configuration, 
 					this.sslWrapper, 
-					this.externalTrafficRouter));
+					this.externalNetFactory));
 		}
 		executor.shutdownNow();
 	}

@@ -25,7 +25,7 @@ import jargyle.net.SocketInterface;
 import jargyle.net.SocketInterfaceFactory;
 import jargyle.net.SocketSettings;
 import jargyle.net.socks.server.Configuration;
-import jargyle.net.socks.server.ExternalTrafficRouter;
+import jargyle.net.socks.server.ExternalNetFactory;
 import jargyle.net.socks.server.SslWrapper;
 import jargyle.net.socks.server.SettingSpec;
 import jargyle.net.socks.server.Settings;
@@ -58,7 +58,7 @@ public final class Socks5Worker implements Runnable {
 	private OutputStream clientOutputStream;
 	private SocketInterface clientSocketInterface;
 	private final Configuration configuration;
-	private final ExternalTrafficRouter externalTrafficRouter;
+	private final ExternalNetFactory externalNetFactory;
 	private final Settings settings;
 	private final SslWrapper sslWrapper;
 	
@@ -66,13 +66,13 @@ public final class Socks5Worker implements Runnable {
 			final SocketInterface clientSockInterface, 
 			final Configuration config, 
 			final SslWrapper wrapper, 
-			final ExternalTrafficRouter router) {
+			final ExternalNetFactory factory) {
 		Settings sttngs = config.getSettings();
 		this.clientInputStream = null;
 		this.clientOutputStream = null;
 		this.clientSocketInterface = clientSockInterface;
 		this.configuration = config;
-		this.externalTrafficRouter = router;
+		this.externalNetFactory = factory;
 		this.settings = sttngs;
 		this.sslWrapper = wrapper;
 	}
@@ -419,9 +419,9 @@ public final class Socks5Worker implements Runnable {
 				socks5Req.getDesiredDestinationAddress();
 		int desiredDestinationPort = socks5Req.getDesiredDestinationPort();
 		HostnameResolverFactory hostnameResolverFactory =
-				this.externalTrafficRouter.newHostnameResolverFactory();
+				this.externalNetFactory.newHostnameResolverFactory();
 		ServerSocketInterfaceFactory serverSocketInterfaceFactory = 
-				this.externalTrafficRouter.newServerSocketInterfaceFactory();
+				this.externalNetFactory.newServerSocketInterfaceFactory();
 		HostnameResolver hostnameResolver = null;
 		ServerSocketInterface listenSocketInterface = null;
 		SocketInterface externalIncomingSocketInterface = null;
@@ -537,9 +537,9 @@ public final class Socks5Worker implements Runnable {
 				socks5Req.getDesiredDestinationAddress();
 		int desiredDestinationPort = socks5Req.getDesiredDestinationPort();
 		HostnameResolverFactory hostnameResolverFactory =
-				this.externalTrafficRouter.newHostnameResolverFactory();
+				this.externalNetFactory.newHostnameResolverFactory();
 		SocketInterfaceFactory socketInterfaceFactory = 
-				this.externalTrafficRouter.newSocketInterfaceFactory();
+				this.externalNetFactory.newSocketInterfaceFactory();
 		HostnameResolver hostnameResolver = null;
 		SocketInterface serverSocketInterface = null;
 		try {
@@ -604,7 +604,7 @@ public final class Socks5Worker implements Runnable {
 				socks5Req.getDesiredDestinationAddress();
 		int desiredDestinationPort = socks5Req.getDesiredDestinationPort();
 		HostnameResolverFactory hostnameResolverFactory = 
-				this.externalTrafficRouter.newHostnameResolverFactory();
+				this.externalNetFactory.newHostnameResolverFactory();
 		HostnameResolver hostnameResolver = 
 				hostnameResolverFactory.newHostnameResolver();
 		InetAddress inetAddress = null;
@@ -663,7 +663,7 @@ public final class Socks5Worker implements Runnable {
 		}
 		int desiredDestinationPort = socks5Req.getDesiredDestinationPort();
 		HostnameResolverFactory hostnameResolverFactory = 
-				this.externalTrafficRouter.newHostnameResolverFactory();
+				this.externalNetFactory.newHostnameResolverFactory();
 		HostnameResolver hostnameResolver = null;
 		DatagramSocketInterface serverDatagramSockInterface = null;
 		DatagramSocketInterface clientDatagramSockInterface = null;
@@ -800,7 +800,7 @@ public final class Socks5Worker implements Runnable {
 					Host.class);
 			InetAddress bindInetAddress = bindHost.toInetAddress();
 			DatagramSocketInterfaceFactory datagramSocketInterfaceFactory = 
-					this.externalTrafficRouter.newDatagramSocketInterfaceFactory();
+					this.externalNetFactory.newDatagramSocketInterfaceFactory();
 			serverDatagramSock = 
 					datagramSocketInterfaceFactory.newDatagramSocketInterface(
 							new InetSocketAddress(bindInetAddress, 0));

@@ -201,7 +201,8 @@ public class ServerSocketInterfaceIT {
 			SocketInterfaceFactory socketInterfaceFactory =
 					new DirectSocketInterfaceFactory();
 			if (socksClient != null) {
-				socketInterfaceFactory = socksClient.newSocketInterfaceFactory();
+				socketInterfaceFactory = 
+						socksClient.newNetFactory().newSocketInterfaceFactory();
 			}
 			echoSocketInterface = socketInterfaceFactory.newSocketInterface();
 			echoSocketInterface.connect(new InetSocketAddress(
@@ -212,7 +213,7 @@ public class ServerSocketInterfaceIT {
 					 new DirectServerSocketInterfaceFactory();
 			if (socksClient != null) {
 				serverSocketInterfaceFactory = 
-						socksClient.newServerSocketInterfaceFactory();
+						socksClient.newNetFactory().newServerSocketInterfaceFactory();
 			}
 			ServerSocketInterface serverSocketInterface = 
 					serverSocketInterfaceFactory.newServerSocketInterface();

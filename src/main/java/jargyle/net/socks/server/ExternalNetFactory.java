@@ -7,12 +7,10 @@ import java.util.List;
 import org.ietf.jgss.Oid;
 
 import jargyle.net.DatagramSocketInterfaceFactory;
-import jargyle.net.DefaultHostnameResolverFactory;
-import jargyle.net.DirectDatagramSocketInterfaceFactory;
-import jargyle.net.DirectServerSocketInterfaceFactory;
-import jargyle.net.DirectSocketInterfaceFactory;
+import jargyle.net.DefaultNetFactory;
 import jargyle.net.Host;
 import jargyle.net.HostnameResolverFactory;
+import jargyle.net.NetFactory;
 import jargyle.net.ServerSocketInterfaceFactory;
 import jargyle.net.SocketInterfaceFactory;
 import jargyle.net.SocketSettings;
@@ -21,7 +19,6 @@ import jargyle.net.socks.client.Property;
 import jargyle.net.socks.client.PropertySpec;
 import jargyle.net.socks.client.SocksClient;
 import jargyle.net.socks.client.SocksServerUri;
-import jargyle.net.socks.client.v5.Socks5ServerUri;
 import jargyle.net.socks.client.v5.UsernamePassword;
 import jargyle.net.socks.transport.v5.AuthMethods;
 import jargyle.net.socks.transport.v5.gssapiauth.GssapiProtectionLevels;
@@ -30,57 +27,50 @@ import jargyle.net.ssl.Protocols;
 import jargyle.security.EncryptedPassword;
 import jargyle.util.PositiveInteger;
 
-public final class ExternalTrafficRouter {
+public final class ExternalNetFactory extends NetFactory {
 		
 	private final Configuration configuration;
 	private Configuration lastConfiguration;
-	private SocksClient socksClient;
+	private NetFactory netFactory;
 		
-	ExternalTrafficRouter(final Configuration config) {
+	ExternalNetFactory(final Configuration config) {
 		this.configuration = config;
 		this.lastConfiguration = null;
-		this.socksClient = null;		
+		this.netFactory = null;
 	}
 	
-	private SocksClient getSocksClient() {
+	private NetFactory getNetFactory() {
 		if (!Configuration.equals(this.lastConfiguration, this.configuration)) {
-			this.socksClient = this.newSocksClient();
+			this.netFactory = this.newNetFactory();
 			this.lastConfiguration = ImmutableConfiguration.newInstance(
 					this.configuration);
 		}
-		return this.socksClient;
+		return this.netFactory;
 	}
 	
+	@Override
 	public DatagramSocketInterfaceFactory newDatagramSocketInterfaceFactory() {
-		SocksClient client = this.getSocksClient();
-		if (client != null) {
-			return client.newDatagramSocketInterfaceFactory();
-		}
-		return new DirectDatagramSocketInterfaceFactory();
+		return this.getNetFactory().newDatagramSocketInterfaceFactory();
 	}
 	
 	public HostnameResolverFactory newHostnameResolverFactory() {
-		SocksClient client = this.getSocksClient();
+		return this.getNetFactory().newHostnameResolverFactory();		
+	}
+	
+	private NetFactory newNetFactory() {
+		SocksClient client = this.newSocksClient();
 		if (client != null) {
-			return client.newHostnameResolverFactory();
+			return client.newNetFactory();
 		}
-		return new DefaultHostnameResolverFactory();		
+		return new DefaultNetFactory();
 	}
 	
 	public ServerSocketInterfaceFactory newServerSocketInterfaceFactory() {
-		SocksClient client = this.getSocksClient();
-		if (client != null) {
-			return client.newServerSocketInterfaceFactory();
-		}
-		return new DirectServerSocketInterfaceFactory();		
+		return this.getNetFactory().newServerSocketInterfaceFactory();		
 	}
 	
 	public SocketInterfaceFactory newSocketInterfaceFactory() {
-		SocksClient client = this.getSocksClient();
-		if (client != null) {
-			return client.newSocketInterfaceFactory();			
-		}
-		return new DirectSocketInterfaceFactory();
+		return this.getNetFactory().newSocketInterfaceFactory();
 	}
 	
 	private List<Property> newSocks5ClientProperties() {
@@ -160,19 +150,8 @@ public final class ExternalTrafficRouter {
 		}
 		List<Property> properties = new ArrayList<Property>();
 		properties.addAll(this.newSocksClientProperties());
-		SocksClient client = null;
-		if (socksServerUri instanceof Socks5ServerUri) {
-			properties.addAll(this.newSocks5ClientProperties());
-			Socks5ServerUri socks5ServerUri = (Socks5ServerUri) socksServerUri;
-			client = socks5ServerUri.newSocksClient(Properties.newInstance(
-					properties));
-		} else {
-			throw new AssertionError(String.format(
-					"unhandled %s: %s", 
-					SocksServerUri.class.getSimpleName(), 
-					socksServerUri.getClass().getSimpleName()));
-		}
-		return client;
+		properties.addAll(this.newSocks5ClientProperties());
+		return socksServerUri.newSocksClient(Properties.newInstance(properties));
 	}
 	
 	private List<Property> newSocksClientProperties() {

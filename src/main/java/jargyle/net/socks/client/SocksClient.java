@@ -9,7 +9,7 @@ import java.util.Objects;
 import jargyle.net.Host;
 import jargyle.net.NetFactory;
 import jargyle.net.Port;
-import jargyle.net.ssl.SslSocketFactory;
+import jargyle.net.ssl.SslFactory;
 import jargyle.util.PositiveInteger;
 
 public abstract class SocksClient {
@@ -25,7 +25,7 @@ public abstract class SocksClient {
 
 	private final Properties properties;
 	private final SocksServerUri socksServerUri;
-	private final SslSocketFactory sslSocketFactory;
+	private final SslFactory sslFactory;
 		
 	protected SocksClient(final SocksServerUri serverUri, final Properties props) {
 		Objects.requireNonNull(
@@ -33,7 +33,7 @@ public abstract class SocksClient {
 		Objects.requireNonNull(props, "Properties must not be null");
 		this.properties = props;
 		this.socksServerUri = serverUri;
-		this.sslSocketFactory = new SslSocketFactoryImpl(props);
+		this.sslFactory = new SslFactoryImpl(props);
 	}
 	
 	public Socket connectToSocksServerWith(
@@ -78,7 +78,7 @@ public abstract class SocksClient {
 						InetAddress.getByName(socksServerUri.getHost()), 
 						socksServerUri.getPort()), 
 				timeout);
-		return this.sslSocketFactory.newSocket(
+		return this.sslFactory.newSslSocketFactory().newSocket(
 				socket, 
 				this.socksServerUri.getHost(), 
 				this.socksServerUri.getPort(), 
@@ -91,6 +91,10 @@ public abstract class SocksClient {
 	
 	public final SocksServerUri getSocksServerUri() {
 		return this.socksServerUri;
+	}
+	
+	public final SslFactory getSslFactory() {
+		return this.sslFactory;
 	}
 	
 	public abstract NetFactory newNetFactory();

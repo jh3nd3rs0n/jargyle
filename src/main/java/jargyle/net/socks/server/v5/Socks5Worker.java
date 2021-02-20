@@ -41,6 +41,7 @@ import jargyle.net.socks.transport.v5.Socks5Request;
 import jargyle.net.socks.transport.v5.Version;
 import jargyle.net.socks.transport.v5.gssapiauth.GssDatagramSocket;
 import jargyle.net.socks.transport.v5.gssapiauth.GssSocket;
+import jargyle.net.ssl.SslFactory;
 import jargyle.util.Criteria;
 import jargyle.util.Criterion;
 import jargyle.util.PositiveInteger;
@@ -62,13 +63,14 @@ public final class Socks5Worker implements Runnable {
 	public Socks5Worker(
 			final Socket clientSock, 
 			final Configuration config, 
-			final NetFactory factory) {
+			final NetFactory nFactory, 
+			final SslFactory sFactory) {
 		Settings sttngs = config.getSettings();
 		this.clientInputStream = null;
 		this.clientOutputStream = null;
 		this.clientSocket = clientSock;
 		this.configuration = config;
-		this.externalNetFactory = factory;
+		this.externalNetFactory = nFactory;
 		this.settings = sttngs;
 	}
 	

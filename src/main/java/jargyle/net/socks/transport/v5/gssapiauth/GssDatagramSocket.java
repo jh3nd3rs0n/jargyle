@@ -2,26 +2,26 @@ package jargyle.net.socks.transport.v5.gssapiauth;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.SocketException;
 
 import org.ietf.jgss.GSSContext;
 import org.ietf.jgss.GSSException;
 import org.ietf.jgss.MessageProp;
 
-import jargyle.net.DatagramSocketInterface;
-import jargyle.net.FilterDatagramSocketInterface;
+import jargyle.net.FilterDatagramSocket;
 
-public final class GssDatagramSocketInterface 
-	extends FilterDatagramSocketInterface {
+public final class GssDatagramSocket extends FilterDatagramSocket {
 
 	private final GSSContext gssContext;
 	private final MessageProp messageProp;
 	private final int wrapSizeLimit;
 	
-	public GssDatagramSocketInterface(
-			final DatagramSocketInterface datagramSockInterface,
+	public GssDatagramSocket(
+			final DatagramSocket datagramSock,
 			final GSSContext context, 
-			final MessageProp prop) {
-		super(datagramSockInterface);
+			final MessageProp prop) throws SocketException {
+		super(datagramSock);
 		MessageProp prp = null;
 		int sizeLimit = Message.MAX_TOKEN_LENGTH;
 		if (prop != null) {
@@ -37,7 +37,7 @@ public final class GssDatagramSocketInterface
 		}
 		this.gssContext = context;
 		this.messageProp = prp;
-		this.wrapSizeLimit = sizeLimit;
+		this.wrapSizeLimit = sizeLimit;		
 	}
 
 	public GSSContext getGSSContext() {
@@ -104,10 +104,10 @@ public final class GssDatagramSocketInterface
 			.append(this.gssContext)
 			.append(", messageProp=")
 			.append(this.messageProp)
-			.append(", datagramSocketInterface=")
-			.append(this.datagramSocketInterface)
+			.append(", datagramSocket=")
+			.append(this.datagramSocket)
 			.append("]");
 		return builder.toString();
 	}
-	
+
 }

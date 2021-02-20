@@ -3,12 +3,12 @@ package jargyle.net.socks.client;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.util.Objects;
 
 import jargyle.net.Host;
 import jargyle.net.NetFactory;
 import jargyle.net.Port;
-import jargyle.net.SocketInterface;
 import jargyle.util.PositiveInteger;
 
 public abstract class SocksClient {
@@ -35,50 +35,50 @@ public abstract class SocksClient {
 		this.sslWrapper = new SslWrapper(props);		
 	}
 	
-	public SocketInterface connectToSocksServerWith(
-			final SocketInterface socketInterface) throws IOException {
+	public Socket connectToSocksServerWith(
+			final Socket socket) throws IOException {
 		return this.connectToSocksServerWith(
-				socketInterface, 
+				socket, 
 				this.properties.getValue(PropertySpec.CONNECT_TIMEOUT, 
 						PositiveInteger.class).intValue(), 
 				false);
 	}
 	
-	public SocketInterface connectToSocksServerWith(
-			final SocketInterface socketInterface, 
+	public Socket connectToSocksServerWith(
+			final Socket socket, 
 			final boolean bindBeforeConnect) throws IOException {
 		return this.connectToSocksServerWith(
-				socketInterface, 
+				socket, 
 				this.properties.getValue(PropertySpec.CONNECT_TIMEOUT, 
 						PositiveInteger.class).intValue(), 
 				bindBeforeConnect);
 	}
 	
-	public SocketInterface connectToSocksServerWith(
-			final SocketInterface socketInterface, 
+	public Socket connectToSocksServerWith(
+			final Socket socket, 
 			final int timeout) throws IOException {
-		return this.connectToSocksServerWith(socketInterface, timeout, false);
+		return this.connectToSocksServerWith(socket, timeout, false);
 	}
 	
-	public SocketInterface connectToSocksServerWith(
-			final SocketInterface socketInterface, 
+	public Socket connectToSocksServerWith(
+			final Socket socket, 
 			final int timeout, 
 			final boolean bindBeforeConnect) throws IOException {
 		if (bindBeforeConnect) {
-			socketInterface.bind(new InetSocketAddress(
+			socket.bind(new InetSocketAddress(
 					this.properties.getValue(
 							PropertySpec.BIND_HOST, Host.class).toInetAddress(), 
 					this.properties.getValue(
 							PropertySpec.BIND_PORT, Port.class).intValue()));
 		}
 		SocksServerUri socksServerUri = this.getSocksServerUri();
-		socketInterface.connect(
+		socket.connect(
 				new InetSocketAddress(
 						InetAddress.getByName(socksServerUri.getHost()), 
 						socksServerUri.getPort()), 
 				timeout);
 		return this.sslWrapper.wrapIfSslEnabled(
-				socketInterface, 
+				socket, 
 				this.socksServerUri.getHost(), 
 				this.socksServerUri.getPort(), 
 				true);

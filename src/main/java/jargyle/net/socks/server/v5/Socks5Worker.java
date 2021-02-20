@@ -8,23 +8,21 @@ import java.io.SequenceInputStream;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jargyle.net.DatagramSocketInterface;
-import jargyle.net.DatagramSocketInterfaceFactory;
-import jargyle.net.DirectDatagramSocketInterface;
+import jargyle.net.DatagramSocketFactory;
 import jargyle.net.Host;
 import jargyle.net.HostnameResolver;
 import jargyle.net.HostnameResolverFactory;
 import jargyle.net.NetFactory;
-import jargyle.net.ServerSocketInterface;
-import jargyle.net.ServerSocketInterfaceFactory;
-import jargyle.net.SocketInterface;
-import jargyle.net.SocketInterfaceFactory;
+import jargyle.net.ServerSocketFactory;
+import jargyle.net.SocketFactory;
 import jargyle.net.SocketSettings;
 import jargyle.net.socks.server.Configuration;
 import jargyle.net.socks.server.SettingSpec;
@@ -42,8 +40,8 @@ import jargyle.net.socks.transport.v5.ServerMethodSelectionMessage;
 import jargyle.net.socks.transport.v5.Socks5Reply;
 import jargyle.net.socks.transport.v5.Socks5Request;
 import jargyle.net.socks.transport.v5.Version;
-import jargyle.net.socks.transport.v5.gssapiauth.GssDatagramSocketInterface;
-import jargyle.net.socks.transport.v5.gssapiauth.GssSocketInterface;
+import jargyle.net.socks.transport.v5.gssapiauth.GssDatagramSocket;
+import jargyle.net.socks.transport.v5.gssapiauth.GssSocket;
 import jargyle.util.Criteria;
 import jargyle.util.Criterion;
 import jargyle.util.PositiveInteger;
@@ -57,28 +55,28 @@ public final class Socks5Worker implements Runnable {
 
 	private InputStream clientInputStream;
 	private OutputStream clientOutputStream;
-	private SocketInterface clientSocketInterface;
+	private Socket clientSocket;
 	private final Configuration configuration;
 	private final NetFactory externalNetFactory;
 	private final Settings settings;
 	private final SslWrapper sslWrapper;
 	
 	public Socks5Worker(
-			final SocketInterface clientSockInterface, 
+			final Socket clientSock, 
 			final Configuration config, 
 			final SslWrapper wrapper, 
 			final NetFactory factory) {
 		Settings sttngs = config.getSettings();
 		this.clientInputStream = null;
 		this.clientOutputStream = null;
-		this.clientSocketInterface = clientSockInterface;
+		this.clientSocket = clientSock;
 		this.configuration = config;
 		this.externalNetFactory = factory;
 		this.settings = sttngs;
 		this.sslWrapper = wrapper;
 	}
 	
-	private SocketInterface authenticateUsing(final Method method) {
+	private Socket authenticateUsing(final Method method) {
 		Authenticator authenticator = null;
 		try {
 			authenticator = Authenticator.valueOf(method);
@@ -90,17 +88,17 @@ public final class Socks5Worker implements Runnable {
 					e);
 			return null;
 		}
-		SocketInterface socketInterface = null;
+		Socket Socket = null;
 		try {
-			socketInterface = authenticator.authenticate(
-					this.clientSocketInterface, this.configuration);
+			Socket = authenticator.authenticate(
+					this.clientSocket, this.configuration);
 		} catch (IOException e) {
 			LOGGER.warn( 
 					this.format("Error in authenticating the client"), 
 					e);
 			return null;
 		}
-		return socketInterface;
+		return Socket;
 	}
 
 	private boolean canAcceptExternalIncomingAddress(
@@ -213,13 +211,13 @@ public final class Socks5Worker implements Runnable {
 		return true;
 	}
 	
-	private boolean configureClientDatagramSocketInterface(
-			final DatagramSocketInterface clientDatagramSockInterface) {
+	private boolean configureClientDatagramSocket(
+			final DatagramSocket clientDatagramSock) {
 		try {
 			SocketSettings socketSettings = this.settings.getLastValue(
 					SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_CLIENT_SOCKET_SETTINGS, 
 					SocketSettings.class);
-			socketSettings.applyTo(clientDatagramSockInterface);
+			socketSettings.applyTo(clientDatagramSock);
 		} catch (SocketException e) {
 			LOGGER.warn( 
 					this.format("Error in setting the client-facing UDP socket"), 
@@ -239,13 +237,13 @@ public final class Socks5Worker implements Runnable {
 		return true;
 	}
 	
-	private boolean configureExternalIncomingSocketInterface(
-			final SocketInterface externalIncomingSocketInterface) {
+	private boolean configureExternalIncomingSocket(
+			final Socket externalIncomingSocket) {
 		try {
 			SocketSettings socketSettings = this.settings.getLastValue(
 					SettingSpec.SOCKS5_ON_BIND_EXTERNAL_INCOMING_SOCKET_SETTINGS, 
 					SocketSettings.class);
-			socketSettings.applyTo(externalIncomingSocketInterface);
+			socketSettings.applyTo(externalIncomingSocket);
 		} catch (SocketException e) {
 			LOGGER.warn( 
 					this.format("Error in setting the external incoming socket"), 
@@ -267,13 +265,12 @@ public final class Socks5Worker implements Runnable {
 		return true;
 	}
 	
-	private boolean configureListenSocketInterface(
-			final ServerSocketInterface listenSocketInterface) {
+	private boolean configureListenSocket(final ServerSocket listenSocket) {
 		try {
 			SocketSettings socketSettings = this.settings.getLastValue(
 					SettingSpec.SOCKS5_ON_BIND_LISTEN_SOCKET_SETTINGS, 
 					SocketSettings.class);
-			socketSettings.applyTo(listenSocketInterface);
+			socketSettings.applyTo(listenSocket);
 		} catch (SocketException e) {
 			LOGGER.warn( 
 					this.format("Error in setting the listen socket"), 
@@ -295,13 +292,13 @@ public final class Socks5Worker implements Runnable {
 		return true;
 	}
 	
-	private boolean configureServerDatagramSocketInterface(
-			final DatagramSocketInterface serverDatagramSockInterface) {
+	private boolean configureServerDatagramSocket(
+			final DatagramSocket serverDatagramSock) {
 		try {
 			SocketSettings socketSettings = this.settings.getLastValue(
 					SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_SERVER_SOCKET_SETTINGS, 
 					SocketSettings.class);
-			socketSettings.applyTo(serverDatagramSockInterface);
+			socketSettings.applyTo(serverDatagramSock);
 		} catch (SocketException e) {
 			LOGGER.warn( 
 					this.format("Error in setting the server-facing UDP socket"), 
@@ -323,17 +320,16 @@ public final class Socks5Worker implements Runnable {
 		return true;
 	}
 	
-	private boolean configureServerSocketInterface(
-			final SocketInterface serverSocketInterface) {
+	private boolean configureServerSocket(final Socket serverSocket) {
 		try {
 			SocketSettings socketSettings = this.settings.getLastValue(
 					SettingSpec.SOCKS5_ON_CONNECT_SERVER_SOCKET_SETTINGS, 
 					SocketSettings.class);
-			socketSettings.applyTo(serverSocketInterface);
+			socketSettings.applyTo(serverSocket);
 			Host bindHost = this.settings.getLastValue(
 					SettingSpec.SOCKS5_ON_CONNECT_SERVER_BIND_HOST, Host.class);
 			InetAddress bindInetAddress = bindHost.toInetAddress();
-			serverSocketInterface.bind(new InetSocketAddress(bindInetAddress, 0));
+			serverSocket.bind(new InetSocketAddress(bindInetAddress, 0));
 		} catch (SocketException e) {
 			LOGGER.warn( 
 					this.format("Error in setting the server-facing socket"), 
@@ -379,20 +375,19 @@ public final class Socks5Worker implements Runnable {
 		int desiredDestinationPort = socks5Req.getDesiredDestinationPort();
 		HostnameResolverFactory hostnameResolverFactory =
 				this.externalNetFactory.newHostnameResolverFactory();
-		ServerSocketInterfaceFactory serverSocketInterfaceFactory = 
-				this.externalNetFactory.newServerSocketInterfaceFactory();
+		ServerSocketFactory serverSocketFactory = 
+				this.externalNetFactory.newServerSocketFactory();
 		HostnameResolver hostnameResolver = null;
-		ServerSocketInterface listenSocketInterface = null;
-		SocketInterface externalIncomingSocketInterface = null;
+		ServerSocket listenSocket = null;
+		Socket externalIncomingSocket = null;
 		try {
 			hostnameResolver = hostnameResolverFactory.newHostnameResolver();
-			listenSocketInterface = 
-					serverSocketInterfaceFactory.newServerSocketInterface();
-			if (!this.configureListenSocketInterface(listenSocketInterface)) {
+			listenSocket = serverSocketFactory.newServerSocket();
+			if (!this.configureListenSocket(listenSocket)) {
 				return;
 			}
 			try {
-				listenSocketInterface.bind(new InetSocketAddress(
+				listenSocket.bind(new InetSocketAddress(
 						hostnameResolver.resolve(desiredDestinationAddress),
 						desiredDestinationPort));
 			} catch (IOException e) {
@@ -407,10 +402,10 @@ public final class Socks5Worker implements Runnable {
 				this.writeThenFlush(socks5Rep.toByteArray());
 				return;
 			}
-			InetAddress inetAddress = listenSocketInterface.getInetAddress();
+			InetAddress inetAddress = listenSocket.getInetAddress();
 			String serverBoundAddress =	inetAddress.getHostAddress();
 			AddressType addressType = AddressType.get(serverBoundAddress);
-			int serverBoundPort = listenSocketInterface.getLocalPort();
+			int serverBoundPort = listenSocket.getLocalPort();
 			socks5Rep = Socks5Reply.newInstance(
 					Reply.SUCCEEDED, 
 					addressType, 
@@ -421,9 +416,9 @@ public final class Socks5Worker implements Runnable {
 					socks5Rep.toString())));
 			this.writeThenFlush(socks5Rep.toByteArray());
 			try {
-				externalIncomingSocketInterface = listenSocketInterface.accept();
-				if (!this.configureExternalIncomingSocketInterface(
-						externalIncomingSocketInterface)) {
+				externalIncomingSocket = listenSocket.accept();
+				if (!this.configureExternalIncomingSocket(
+						externalIncomingSocket)) {
 					return;
 				}
 			} catch (IOException e) {
@@ -438,10 +433,10 @@ public final class Socks5Worker implements Runnable {
 				this.writeThenFlush(socks5Rep.toByteArray());
 				return;
 			} finally {
-				listenSocketInterface.close();
+				listenSocket.close();
 			}
 			InetAddress externalIncomingInetAddress = 
-					externalIncomingSocketInterface.getInetAddress();
+					externalIncomingSocket.getInetAddress();
 			String externalIncomingAddress = 
 					externalIncomingInetAddress.getHostAddress();
 			if (!this.canAcceptExternalIncomingAddress(
@@ -450,7 +445,7 @@ public final class Socks5Worker implements Runnable {
 			}
 			serverBoundAddress = externalIncomingAddress;
 			addressType = AddressType.get(serverBoundAddress);
-			serverBoundPort = externalIncomingSocketInterface.getLocalPort();
+			serverBoundPort = externalIncomingSocket.getLocalPort();
 			socks5Rep = Socks5Reply.newInstance(
 					Reply.SUCCEEDED, 
 					addressType, 
@@ -461,7 +456,7 @@ public final class Socks5Worker implements Runnable {
 					socks5Rep.toString())));
 			this.writeThenFlush(socks5Rep.toByteArray());
 			this.passData(
-					externalIncomingSocketInterface, 
+					externalIncomingSocket, 
 					this.settings.getLastValue(
 							SettingSpec.SOCKS5_ON_BIND_RELAY_BUFFER_SIZE, 
 							PositiveInteger.class).intValue(), 
@@ -469,13 +464,12 @@ public final class Socks5Worker implements Runnable {
 							SettingSpec.SOCKS5_ON_BIND_RELAY_TIMEOUT, 
 							PositiveInteger.class).intValue());
 		} finally {
-			if (externalIncomingSocketInterface != null 
-					&& !externalIncomingSocketInterface.isClosed()) {
-				externalIncomingSocketInterface.close();
+			if (externalIncomingSocket != null 
+					&& !externalIncomingSocket.isClosed()) {
+				externalIncomingSocket.close();
 			}
-			if (listenSocketInterface != null 
-					&& !listenSocketInterface.isClosed()) {
-				listenSocketInterface.close();
+			if (listenSocket != null && !listenSocket.isClosed()) {
+				listenSocket.close();
 			}
 		}
 	}
@@ -487,21 +481,21 @@ public final class Socks5Worker implements Runnable {
 		int desiredDestinationPort = socks5Req.getDesiredDestinationPort();
 		HostnameResolverFactory hostnameResolverFactory =
 				this.externalNetFactory.newHostnameResolverFactory();
-		SocketInterfaceFactory socketInterfaceFactory = 
-				this.externalNetFactory.newSocketInterfaceFactory();
+		SocketFactory SocketFactory = 
+				this.externalNetFactory.newSocketFactory();
 		HostnameResolver hostnameResolver = null;
-		SocketInterface serverSocketInterface = null;
+		Socket serverSocket = null;
 		try {
 			hostnameResolver = hostnameResolverFactory.newHostnameResolver();
-			serverSocketInterface = socketInterfaceFactory.newSocketInterface();
-			if (!this.configureServerSocketInterface(serverSocketInterface)) {
+			serverSocket = SocketFactory.newSocket();
+			if (!this.configureServerSocket(serverSocket)) {
 				return;
 			}
 			try {
 				int connectTimeout = this.settings.getLastValue(
 						SettingSpec.SOCKS5_ON_CONNECT_SERVER_CONNECT_TIMEOUT, 
 						PositiveInteger.class).intValue();
-				serverSocketInterface.connect(new InetSocketAddress(
+				serverSocket.connect(new InetSocketAddress(
 						hostnameResolver.resolve(desiredDestinationAddress),
 						desiredDestinationPort),
 						connectTimeout);
@@ -517,9 +511,9 @@ public final class Socks5Worker implements Runnable {
 				return;
 			}
 			String serverBoundAddress = 
-					serverSocketInterface.getInetAddress().getHostAddress();
+					serverSocket.getInetAddress().getHostAddress();
 			AddressType addressType = AddressType.get(serverBoundAddress);
-			int serverBoundPort = serverSocketInterface.getPort();
+			int serverBoundPort = serverSocket.getPort();
 			socks5Rep = Socks5Reply.newInstance(
 					Reply.SUCCEEDED, 
 					addressType, 
@@ -530,7 +524,7 @@ public final class Socks5Worker implements Runnable {
 					socks5Rep.toString())));
 			this.writeThenFlush(socks5Rep.toByteArray());
 			this.passData(
-					serverSocketInterface, 
+					serverSocket, 
 					this.settings.getLastValue(
 							SettingSpec.SOCKS5_ON_CONNECT_RELAY_BUFFER_SIZE, 
 							PositiveInteger.class).intValue(),
@@ -538,8 +532,8 @@ public final class Socks5Worker implements Runnable {
 							SettingSpec.SOCKS5_ON_CONNECT_RELAY_TIMEOUT, 
 							PositiveInteger.class).intValue());
 		} finally {
-			if (serverSocketInterface != null && !serverSocketInterface.isClosed()) {
-				serverSocketInterface.close();
+			if (serverSocket != null && !serverSocket.isClosed()) {
+				serverSocket.close();
 			}
 		}
 	}
@@ -599,49 +593,47 @@ public final class Socks5Worker implements Runnable {
 				socks5Req.getDesiredDestinationAddress();
 		if (!desiredDestinationAddress.matches("[a-zA-Z1-9]")) {
 			desiredDestinationAddress = 
-					this.clientSocketInterface.getInetAddress().getHostAddress();
+					this.clientSocket.getInetAddress().getHostAddress();
 		}
 		int desiredDestinationPort = socks5Req.getDesiredDestinationPort();
 		HostnameResolverFactory hostnameResolverFactory = 
 				this.externalNetFactory.newHostnameResolverFactory();
 		HostnameResolver hostnameResolver = null;
-		DatagramSocketInterface serverDatagramSockInterface = null;
-		DatagramSocketInterface clientDatagramSockInterface = null;
+		DatagramSocket serverDatagramSock = null;
+		DatagramSocket clientDatagramSock = null;
 		try {
 			hostnameResolver = hostnameResolverFactory.newHostnameResolver();
-			serverDatagramSockInterface = this.newServerDatagramSocketInterface();
-			if (serverDatagramSockInterface == null) {
+			serverDatagramSock = this.newServerDatagramSocket();
+			if (serverDatagramSock == null) {
 				return;
 			}
-			if (!this.configureServerDatagramSocketInterface(
-					serverDatagramSockInterface)) {
+			if (!this.configureServerDatagramSocket(serverDatagramSock)) {
 				return;
 			}
-			clientDatagramSockInterface = this.newClientDatagramSocketInterface();
-			if (clientDatagramSockInterface == null) {
-				return;
-			}
-			if (!this.configureClientDatagramSocketInterface(
-					clientDatagramSockInterface)) {
-				return;
-			}
-			DatagramSocketInterface clientDatagramSock = 
-					this.wrapClientDatagramSocketInterface(
-							clientDatagramSockInterface, 
-							desiredDestinationAddress, 
-							desiredDestinationPort); 
+			clientDatagramSock = this.newClientDatagramSocket();
 			if (clientDatagramSock == null) {
 				return;
 			}
-			clientDatagramSockInterface = clientDatagramSock;
-			InetAddress inetAddress = clientDatagramSockInterface.getLocalAddress();
+			if (!this.configureClientDatagramSocket(clientDatagramSock)) {
+				return;
+			}
+			DatagramSocket clientDatagramSck = 
+					this.wrapClientDatagramSocket(
+							clientDatagramSock, 
+							desiredDestinationAddress, 
+							desiredDestinationPort); 
+			if (clientDatagramSck == null) {
+				return;
+			}
+			clientDatagramSock = clientDatagramSck;
+			InetAddress inetAddress = clientDatagramSock.getLocalAddress();
 			String serverBoundAddress = inetAddress.getHostAddress();
 			if (!serverBoundAddress.matches("[a-zA-Z1-9]")) {
-				inetAddress = this.clientSocketInterface.getLocalAddress();
+				inetAddress = this.clientSocket.getLocalAddress();
 				serverBoundAddress = inetAddress.getHostAddress();
 			}
 			AddressType addressType = AddressType.get(serverBoundAddress);
-			int serverBoundPort = clientDatagramSockInterface.getLocalPort();
+			int serverBoundPort = clientDatagramSock.getLocalPort();
 			socks5Rep = Socks5Reply.newInstance(
 					Reply.SUCCEEDED, 
 					addressType, 
@@ -654,9 +646,9 @@ public final class Socks5Worker implements Runnable {
 			this.passPackets(
 					new UdpRelayServer.ClientSocketAddress(
 							desiredDestinationAddress, desiredDestinationPort),
-					new UdpRelayServer.DatagramSocketInterfaces(
-							clientDatagramSockInterface, 
-							serverDatagramSockInterface), 
+					new UdpRelayServer.DatagramSockets(
+							clientDatagramSock, 
+							serverDatagramSock), 
 					hostnameResolver, 
 					new UdpRelayServer.ExternalIncomingAddressCriteria(
 							this.settings.getLastValue(
@@ -680,13 +672,11 @@ public final class Socks5Worker implements Runnable {
 									SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_RELAY_TIMEOUT, 
 									PositiveInteger.class).intValue()));
 		} finally {
-			if (clientDatagramSockInterface != null 
-					&& !clientDatagramSockInterface.isClosed()) {
-				clientDatagramSockInterface.close();
+			if (clientDatagramSock != null && !clientDatagramSock.isClosed()) {
+				clientDatagramSock.close();
 			}
-			if (serverDatagramSockInterface != null 
-					&& !serverDatagramSockInterface.isClosed()) {
-				serverDatagramSockInterface.close();
+			if (serverDatagramSock != null && !serverDatagramSock.isClosed()) {
+				serverDatagramSock.close();
 			}
 		}
 	}
@@ -695,15 +685,15 @@ public final class Socks5Worker implements Runnable {
 		return String.format("%s: %s", this, message);
 	}
 	
-	private DatagramSocketInterface newClientDatagramSocketInterface() {
-		DatagramSocketInterface clientDatagramSockInterface = null;
+	private DatagramSocket newClientDatagramSocket() {
+		DatagramSocket clientDatagramSock = null;
 		try {
 			Host bindHost = this.settings.getLastValue(
 					SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_CLIENT_BIND_HOST, 
 					Host.class);
 			InetAddress bindInetAddress = bindHost.toInetAddress();
-			clientDatagramSockInterface = new DirectDatagramSocketInterface(
-					new DatagramSocket(new InetSocketAddress(bindInetAddress, 0)));
+			clientDatagramSock = new DatagramSocket(new InetSocketAddress(
+					bindInetAddress, 0));
 		} catch (SocketException e) {
 			LOGGER.warn( 
 					this.format("Error in creating the client-facing UDP "
@@ -723,20 +713,20 @@ public final class Socks5Worker implements Runnable {
 			}
 			return null;
 		}
-		return clientDatagramSockInterface;
+		return clientDatagramSock;
 	}
 	
-	private DatagramSocketInterface newServerDatagramSocketInterface() {
-		DatagramSocketInterface serverDatagramSock = null;
+	private DatagramSocket newServerDatagramSocket() {
+		DatagramSocket serverDatagramSock = null;
 		try {
 			Host bindHost = this.settings.getLastValue(
 					SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_SERVER_BIND_HOST, 
 					Host.class);
 			InetAddress bindInetAddress = bindHost.toInetAddress();
-			DatagramSocketInterfaceFactory datagramSocketInterfaceFactory = 
-					this.externalNetFactory.newDatagramSocketInterfaceFactory();
+			DatagramSocketFactory datagramSocketFactory = 
+					this.externalNetFactory.newDatagramSocketFactory();
 			serverDatagramSock = 
-					datagramSocketInterfaceFactory.newDatagramSocketInterface(
+					datagramSocketFactory.newDatagramSocket(
 							new InetSocketAddress(bindInetAddress, 0));
 		} catch (SocketException e) {
 			LOGGER.warn( 
@@ -783,12 +773,12 @@ public final class Socks5Worker implements Runnable {
 	}
 	
 	private void passData(
-			final SocketInterface serverSocketInterface, 
+			final Socket serverSocket, 
 			final int bufferSize, 
 			final int timeout) {
 		TcpRelayServer tcpRelayServer = new TcpRelayServer(
-				this.clientSocketInterface, 
-				serverSocketInterface, 
+				this.clientSocket, 
+				serverSocket, 
 				bufferSize, 
 				timeout);
 		try {
@@ -813,21 +803,21 @@ public final class Socks5Worker implements Runnable {
 	
 	private void passPackets(
 			final UdpRelayServer.ClientSocketAddress clientSocketAddress,
-			final UdpRelayServer.DatagramSocketInterfaces datagramSocketInterfaces,
+			final UdpRelayServer.DatagramSockets datagramSockets,
 			final HostnameResolver hostnameResolver,
 			final UdpRelayServer.ExternalIncomingAddressCriteria externalIncomingAddressCriteria,
 			final UdpRelayServer.ExternalOutgoingAddressCriteria externalOutgoingAddressCriteria, 
 			final UdpRelayServer.RelaySettings relaySettings) {
 		UdpRelayServer udpRelayServer = new UdpRelayServer(
 				clientSocketAddress,
-				datagramSocketInterfaces,
+				datagramSockets,
 				hostnameResolver,
 				externalIncomingAddressCriteria, 
 				externalOutgoingAddressCriteria,
 				relaySettings);
 		try {
 			udpRelayServer.start();
-			while (!this.clientSocketInterface.isClosed()
+			while (!this.clientSocket.isClosed() 
 					&& !udpRelayServer.isStopped()) {
 				try {
 					Thread.sleep(HALF_SECOND);
@@ -849,19 +839,19 @@ public final class Socks5Worker implements Runnable {
 	@Override
 	public void run() {
 		try {
-			this.clientInputStream = this.clientSocketInterface.getInputStream();
-			this.clientOutputStream = this.clientSocketInterface.getOutputStream();
+			this.clientInputStream = this.clientSocket.getInputStream();
+			this.clientOutputStream = this.clientSocket.getOutputStream();
 			Method method = this.selectMethod();
 			if (method == null) { return; } 
-			SocketInterface socketInterface = this.authenticateUsing(method);
-			if (socketInterface == null) { return; } 
-			this.clientInputStream = socketInterface.getInputStream();
-			this.clientOutputStream = socketInterface.getOutputStream();
-			this.clientSocketInterface = socketInterface;
+			Socket socket = this.authenticateUsing(method);
+			if (socket == null) { return; } 
+			this.clientInputStream = socket.getInputStream();
+			this.clientOutputStream = socket.getOutputStream();
+			this.clientSocket = socket;
 			Socks5Request socks5Req = this.newSocks5Request();
 			if (socks5Req == null) { return; }
 			if (!this.canAcceptSocks5Request(
-					this.clientSocketInterface.getInetAddress().getHostAddress(), 
+					this.clientSocket.getInetAddress().getHostAddress(), 
 					socks5Req)) {
 				return;
 			}
@@ -890,12 +880,11 @@ public final class Socks5Worker implements Runnable {
 					this.format("Internal server error"), 
 					t);
 		} finally {
-			if (!this.clientSocketInterface.isClosed()) {
+			if (!this.clientSocket.isClosed()) {
 				try {
-					this.clientSocketInterface.close();
+					this.clientSocket.close();
 				} catch (IOException e) {
-					
-							LOGGER.warn( 
+					LOGGER.warn( 
 							this.format("Error upon closing connection to the "
 									+ "client"), 
 							e);
@@ -947,20 +936,20 @@ public final class Socks5Worker implements Runnable {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append(this.getClass().getSimpleName())
-			.append(" [clientSocketInterface=")
-			.append(this.clientSocketInterface)
+			.append(" [clientSocket=")
+			.append(this.clientSocket)
 			.append("]");
 		return builder.toString();
 	}
 	
-	private DatagramSocketInterface wrapClientDatagramSocketInterface(
-			final DatagramSocketInterface clientDatagramSockInterface, 
+	private DatagramSocket wrapClientDatagramSocket(
+			final DatagramSocket clientDatagramSock, 
 			final String peerHost, 
 			final int peerPort) {
-		DatagramSocketInterface clientDatagramSock = null;
+		DatagramSocket clientDatagramSck = null;
 		try {
-			clientDatagramSock = this.sslWrapper.wrapIfSslEnabled(
-					clientDatagramSockInterface, peerHost, peerPort);
+			clientDatagramSck = this.sslWrapper.wrapIfSslEnabled(
+					clientDatagramSock, peerHost, peerPort);
 		} catch (IOException e) {
 			LOGGER.warn( 
 					this.format("Error in wrapping the client-facing UDP "
@@ -980,15 +969,21 @@ public final class Socks5Worker implements Runnable {
 			}
 			return null;
 		}
-		if (this.clientSocketInterface instanceof GssSocketInterface) {
-			GssSocketInterface gssSocketInterface = 
-					(GssSocketInterface) this.clientSocketInterface;
-			clientDatagramSock = new GssDatagramSocketInterface(
-					clientDatagramSock,
-					gssSocketInterface.getGSSContext(),
-					gssSocketInterface.getMessageProp());
+		if (this.clientSocket instanceof GssSocket) {
+			GssSocket gssSocket = (GssSocket) this.clientSocket;
+			try {
+				clientDatagramSck = new GssDatagramSocket(
+						clientDatagramSck,
+						gssSocket.getGSSContext(),
+						gssSocket.getMessageProp());
+			} catch (SocketException e) {
+				LOGGER.warn( 
+						this.format("Error creating GssDatagramSocket"), 
+						e);
+				return null;
+			}
 		}
-		return clientDatagramSock;
+		return clientDatagramSck;
 	}
 	
 	private void writeThenFlush(final byte[] b) throws IOException {

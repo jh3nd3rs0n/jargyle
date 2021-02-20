@@ -20,7 +20,7 @@ import jargyle.net.socks.client.SocksClient;
 import jargyle.net.socks.server.Configuration;
 import jargyle.net.socks.server.SocksServer;
 
-public class DatagramSocketInterfaceIT {
+public class DatagramSocketIT {
 
 	private static final class EchoServer {
 		
@@ -114,13 +114,13 @@ public class DatagramSocketInterfaceIT {
 			InetAddress.getLoopbackAddress();
 	private static final int SLEEP_TIME = 500; // 1/2 second
 
-	public static String echoThroughDatagramSocketInterface(
+	public static String echoThroughDatagramSocket(
 			final String string, 
 			final SocksClient socksClient, 
 			final Configuration configuration) throws IOException {
 		SocksServer socksServer = null;
 		EchoServer echoServer = null;
-		DatagramSocketInterface echoDatagramSocketInterface = null;
+		DatagramSocket echoDatagramSocket = null;
 		String returningString = null;
 		try {
 			if (configuration != null) {
@@ -131,15 +131,15 @@ public class DatagramSocketInterfaceIT {
 			echoServer = new EchoServer(ECHO_SERVER_PORT);
 			echoServer.start();
 			int port = echoServer.getPort();
-			DatagramSocketInterfaceFactory datagramSocketInterfaceFactory =
-					new DirectDatagramSocketInterfaceFactory();
+			DatagramSocketFactory datagramSocketFactory =
+					new DefaultDatagramSocketFactory();
 			if (socksClient != null) {
-				datagramSocketInterfaceFactory = 
-						socksClient.newNetFactory().newDatagramSocketInterfaceFactory();
+				datagramSocketFactory = 
+						socksClient.newNetFactory().newDatagramSocketFactory();
 			}
-			echoDatagramSocketInterface = 
-					datagramSocketInterfaceFactory.newDatagramSocketInterface(0);
-			echoDatagramSocketInterface.connect(LOOPBACK_ADDRESS, port);
+			echoDatagramSocket = 
+					datagramSocketFactory.newDatagramSocket(0);
+			echoDatagramSocket.connect(LOOPBACK_ADDRESS, port);
 			ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 			DataOutputStream dataOutputStream = 
 					new DataOutputStream(byteArrayOutputStream);
@@ -148,16 +148,16 @@ public class DatagramSocketInterfaceIT {
 			byte[] buffer = byteArrayOutputStream.toByteArray();
 			DatagramPacket packet = new DatagramPacket(
 					buffer, buffer.length, LOOPBACK_ADDRESS, port);
-			echoDatagramSocketInterface.send(packet);
+			echoDatagramSocket.send(packet);
 			buffer = new byte[BUFFER_SIZE];
 			packet = new DatagramPacket(buffer, buffer.length);
-			echoDatagramSocketInterface.receive(packet);
+			echoDatagramSocket.receive(packet);
 			DataInputStream dataInputStream = new DataInputStream(
 					new ByteArrayInputStream(packet.getData()));
 			returningString = dataInputStream.readUTF();
 		} finally {
-			if (echoDatagramSocketInterface != null) {
-				echoDatagramSocketInterface.close();
+			if (echoDatagramSocket != null) {
+				echoDatagramSocket.close();
 			}
 			if (echoServer != null && echoServer.isStarted()) {
 				echoServer.stop();
@@ -175,23 +175,23 @@ public class DatagramSocketInterfaceIT {
 	}
 
 	@Test
-	public void testThroughDatagramSocketInterface01() throws IOException {
+	public void testThroughDatagramSocket01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = echoThroughDatagramSocketInterface(string, null, null);
+		String returningString = echoThroughDatagramSocket(string, null, null);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testThroughDatagramSocketInterface02() throws IOException {
+	public void testThroughDatagramSocket02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = echoThroughDatagramSocketInterface(string, null, null);
+		String returningString = echoThroughDatagramSocket(string, null, null);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testThroughDatagramSocketInterface03() throws IOException {
+	public void testThroughDatagramSocket03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = echoThroughDatagramSocketInterface(string, null, null);
+		String returningString = echoThroughDatagramSocket(string, null, null);
 		assertEquals(string, returningString);
 	}
 

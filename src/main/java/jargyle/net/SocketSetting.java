@@ -1,5 +1,8 @@
 package jargyle.net;
 
+import java.net.DatagramSocket;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.net.SocketException;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -86,17 +89,17 @@ public final class SocketSetting {
 	}
 	
 	public void applyTo(
-			final DatagramSocketInterface datagramSocketInterface) throws SocketException {
-		this.socketSettingSpec.apply(this.value, datagramSocketInterface);
+			final DatagramSocket datagramSocket) throws SocketException {
+		this.socketSettingSpec.apply(this.value, datagramSocket);
 	}
 	
 	public void applyTo(
-			final ServerSocketInterface serverSocketInterface) throws SocketException {
-		this.socketSettingSpec.apply(this.value, serverSocketInterface);
+			final ServerSocket serverSocket) throws SocketException {
+		this.socketSettingSpec.apply(this.value, serverSocket);
 	}
 	
-	public void applyTo(final SocketInterface socketInterface) throws SocketException {
-		this.socketSettingSpec.apply(this.value, socketInterface);
+	public void applyTo(final Socket Socket) throws SocketException {
+		this.socketSettingSpec.apply(this.value, Socket);
 	}
 	
 	@Override

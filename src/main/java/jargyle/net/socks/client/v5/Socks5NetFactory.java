@@ -1,10 +1,10 @@
 package jargyle.net.socks.client.v5;
 
-import jargyle.net.DatagramSocketInterfaceFactory;
+import jargyle.net.DatagramSocketFactory;
 import jargyle.net.HostnameResolverFactory;
 import jargyle.net.NetFactory;
-import jargyle.net.ServerSocketInterfaceFactory;
-import jargyle.net.SocketInterfaceFactory;
+import jargyle.net.ServerSocketFactory;
+import jargyle.net.SocketFactory;
 
 public final class Socks5NetFactory extends NetFactory {
 
@@ -15,8 +15,8 @@ public final class Socks5NetFactory extends NetFactory {
 	}
 	
 	@Override
-	public DatagramSocketInterfaceFactory newDatagramSocketInterfaceFactory() {
-		return new Socks5DatagramSocketInterfaceFactory(this.socks5Client);
+	public DatagramSocketFactory newDatagramSocketFactory() {
+		return new Socks5DatagramSocketFactory(this.socks5Client);
 	}
 
 	@Override
@@ -25,13 +25,13 @@ public final class Socks5NetFactory extends NetFactory {
 	}
 
 	@Override
-	public ServerSocketInterfaceFactory newServerSocketInterfaceFactory() {
-		return new Socks5ServerSocketInterfaceFactory(this.socks5Client);
+	public ServerSocketFactory newServerSocketFactory() {
+		return new Socks5ServerSocketFactory(this.socks5Client);
 	}
 
 	@Override
-	public SocketInterfaceFactory newSocketInterfaceFactory() {
-		return new Socks5SocketInterfaceFactory(this.socks5Client);
+	public SocketFactory newSocketFactory() {
+		return new Socks5SocketFactory(this.socks5Client);
 	}
 
 }

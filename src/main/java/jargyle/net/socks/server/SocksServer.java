@@ -7,7 +7,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import argmatey.ArgMatey.CLI;
-import jargyle.net.DirectServerSocketInterface;
 import jargyle.net.Host;
 import jargyle.net.Port;
 import jargyle.net.SocketSettings;
@@ -72,8 +71,7 @@ public final class SocksServer {
 			throw new IllegalStateException("SocksServer already started");
 		}
 		this.serverSocket = new ServerSocket();
-		this.socketSettings.applyTo(new DirectServerSocketInterface(
-				this.serverSocket));
+		this.socketSettings.applyTo(this.serverSocket);
 		this.serverSocket.bind(new InetSocketAddress(
 				this.host.toInetAddress(), this.port.intValue()), this.backlog);
 		this.port = Port.newInstance(this.serverSocket.getLocalPort());

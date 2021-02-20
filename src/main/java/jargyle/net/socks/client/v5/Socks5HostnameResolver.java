@@ -6,9 +6,7 @@ import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 
-import jargyle.net.DirectSocketInterface;
 import jargyle.net.HostnameResolver;
-import jargyle.net.SocketInterface;
 import jargyle.net.SocketSettings;
 import jargyle.net.socks.client.Properties;
 import jargyle.net.socks.client.PropertySpec;
@@ -47,16 +45,15 @@ public final class Socks5HostnameResolver extends HostnameResolver {
 				Boolean.class).booleanValue()) {
 			return InetAddress.getByName(host);
 		}
-		SocketInterface socketInterface = new DirectSocketInterface(
-				new Socket());
+		Socket socket = new Socket();
 		SocketSettings socketSettings = properties.getValue(
 				PropertySpec.SOCKET_SETTINGS, SocketSettings.class);
-		socketSettings.applyTo(socketInterface);
-		SocketInterface sockInterface = 
+		socketSettings.applyTo(socket);
+		Socket sock = 
 				this.socks5Client.connectToSocksServerWith(
-						socketInterface, true);
-		InputStream inputStream = sockInterface.getInputStream();
-		OutputStream outputStream = sockInterface.getOutputStream();
+						socket, true);
+		InputStream inputStream = sock.getInputStream();
+		OutputStream outputStream = sock.getOutputStream();
 		Socks5Request socks5Req = Socks5Request.newInstance(
 				Command.RESOLVE, 
 				addressType, 

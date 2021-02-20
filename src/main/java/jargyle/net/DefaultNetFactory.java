@@ -5,23 +5,23 @@ public final class DefaultNetFactory extends NetFactory {
 	public DefaultNetFactory() { }
 	
 	@Override
-	public DatagramSocketInterfaceFactory newDatagramSocketInterfaceFactory() {
-		return new DirectDatagramSocketInterfaceFactory();
-	}
-
-	@Override
 	public HostnameResolverFactory newHostnameResolverFactory() {
 		return new DefaultHostnameResolverFactory();
 	}
 
 	@Override
-	public ServerSocketInterfaceFactory newServerSocketInterfaceFactory() {
-		return new DirectServerSocketInterfaceFactory();
+	public DatagramSocketFactory newDatagramSocketFactory() {
+		return new DefaultDatagramSocketFactory();
 	}
 
 	@Override
-	public SocketInterfaceFactory newSocketInterfaceFactory() {
-		return new DirectSocketInterfaceFactory();
+	public ServerSocketFactory newServerSocketFactory() {
+		return new DefaultServerSocketFactory();
+	}
+
+	@Override
+	public SocketFactory newSocketFactory() {
+		return new DefaultSocketFactory();
 	}
 
 }

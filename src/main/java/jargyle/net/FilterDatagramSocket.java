@@ -2,172 +2,175 @@ package jargyle.net;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketAddress;
 import java.net.SocketException;
+import java.nio.channels.DatagramChannel;
 
-public abstract class FilterDatagramSocketInterface 
-	extends DatagramSocketInterface {
-		
-	protected DatagramSocketInterface datagramSocketInterface;
+public class FilterDatagramSocket extends DatagramSocket {
+
+	protected DatagramSocket datagramSocket;
 	
-	public FilterDatagramSocketInterface(
-			final DatagramSocketInterface datagramSockInterface) {
-		this.datagramSocketInterface = datagramSockInterface;
+	public FilterDatagramSocket(
+			final DatagramSocket datagramSock) throws SocketException {
+		super((SocketAddress) null);
+		this.datagramSocket = datagramSock;
 	}
-	
+
 	@Override
 	public void bind(SocketAddress addr) throws SocketException {
-		this.datagramSocketInterface.bind(addr);
+		this.datagramSocket.bind(addr);
 	}
-	
+
 	@Override
 	public void close() {
-		this.datagramSocketInterface.close();
+		this.datagramSocket.close();
 	}
-	
+
 	@Override
 	public void connect(InetAddress address, int port) {
-		this.datagramSocketInterface.connect(address, port);
+		this.datagramSocket.connect(address, port);
 	}
-	
+
 	@Override
 	public void connect(SocketAddress addr) throws SocketException {
-		this.datagramSocketInterface.connect(addr);
+		this.datagramSocket.connect(addr);
 	}
-	
+
 	@Override
 	public void disconnect() {
-		this.datagramSocketInterface.disconnect();
+		this.datagramSocket.disconnect();
 	}
-	
+
 	@Override
 	public boolean getBroadcast() throws SocketException {
-		return this.datagramSocketInterface.getBroadcast();
+		return this.datagramSocket.getBroadcast();
 	}
-	
-	public final DatagramSocketInterface getDatagramSocketInterface() {
-		return this.datagramSocketInterface;
+
+	@Override
+	public DatagramChannel getChannel() {
+		return null;
 	}
-	
+
 	@Override
 	public InetAddress getInetAddress() {
-		return this.datagramSocketInterface.getInetAddress();
+		return this.datagramSocket.getInetAddress();
 	}
-	
+
 	@Override
 	public InetAddress getLocalAddress() {
-		return this.datagramSocketInterface.getLocalAddress();
+		return this.datagramSocket.getLocalAddress();
 	}
-	
+
 	@Override
 	public int getLocalPort() {
-		return this.datagramSocketInterface.getLocalPort();
+		return this.datagramSocket.getLocalPort();
 	}
-	
+
 	@Override
 	public SocketAddress getLocalSocketAddress() {
-		return this.datagramSocketInterface.getLocalSocketAddress();
+		return this.datagramSocket.getLocalSocketAddress();
 	}
-	
+
 	@Override
 	public int getPort() {
-		return this.datagramSocketInterface.getPort();
+		return this.datagramSocket.getPort();
 	}
-	
+
 	@Override
 	public int getReceiveBufferSize() throws SocketException {
-		return this.datagramSocketInterface.getReceiveBufferSize();
+		return this.datagramSocket.getReceiveBufferSize();
 	}
-	
+
 	@Override
 	public SocketAddress getRemoteSocketAddress() {
-		return this.datagramSocketInterface.getRemoteSocketAddress();
+		return this.datagramSocket.getRemoteSocketAddress();
 	}
-	
+
 	@Override
 	public boolean getReuseAddress() throws SocketException {
-		return this.datagramSocketInterface.getReuseAddress();
+		return this.datagramSocket.getReuseAddress();
 	}
-	
+
 	@Override
 	public int getSendBufferSize() throws SocketException {
-		return this.datagramSocketInterface.getSendBufferSize();
+		return this.datagramSocket.getSendBufferSize();
 	}
-	
+
 	@Override
 	public int getSoTimeout() throws SocketException {
-		return this.datagramSocketInterface.getSoTimeout();
+		return this.datagramSocket.getSoTimeout();
 	}
-	
+
 	@Override
 	public int getTrafficClass() throws SocketException {
-		return this.datagramSocketInterface.getTrafficClass();
+		return this.datagramSocket.getTrafficClass();
 	}
-	
+
 	@Override
 	public boolean isBound() {
-		return this.datagramSocketInterface.isBound();
+		return this.datagramSocket.isBound();
 	}
-	
+
 	@Override
 	public boolean isClosed() {
-		return this.datagramSocketInterface.isClosed();
+		return this.datagramSocket.isClosed();
 	}
-	
+
 	@Override
 	public boolean isConnected() {
-		return this.datagramSocketInterface.isConnected();
+		return this.datagramSocket.isConnected();
 	}
-	
+
 	@Override
 	public void receive(DatagramPacket p) throws IOException {
-		this.datagramSocketInterface.receive(p);
+		this.datagramSocket.receive(p);
 	}
-	
+
 	@Override
 	public void send(DatagramPacket p) throws IOException {
-		this.datagramSocketInterface.send(p);
+		this.datagramSocket.send(p);
 	}
-	
+
 	@Override
 	public void setBroadcast(boolean on) throws SocketException {
-		this.datagramSocketInterface.setBroadcast(on);
+		this.datagramSocket.setBroadcast(on);
 	}
-	
+
 	@Override
 	public void setReceiveBufferSize(int size) throws SocketException {
-		this.datagramSocketInterface.setReceiveBufferSize(size);
+		this.datagramSocket.setReceiveBufferSize(size);
 	}
-	
+
 	@Override
 	public void setReuseAddress(boolean on) throws SocketException {
-		this.datagramSocketInterface.setReuseAddress(on);
+		this.datagramSocket.setReuseAddress(on);
 	}
-	
+
 	@Override
 	public void setSendBufferSize(int size) throws SocketException {
-		this.datagramSocketInterface.setSendBufferSize(size);
+		this.datagramSocket.setSendBufferSize(size);
 	}
-	
+
 	@Override
 	public void setSoTimeout(int timeout) throws SocketException {
-		this.datagramSocketInterface.setSoTimeout(timeout);
+		this.datagramSocket.setSoTimeout(timeout);
 	}
-	
+
 	@Override
 	public void setTrafficClass(int tc) throws SocketException {
-		this.datagramSocketInterface.setTrafficClass(tc);
+		this.datagramSocket.setTrafficClass(tc);
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append(this.getClass().getSimpleName())
-			.append(" [datagramSocketInterface=")
-			.append(this.datagramSocketInterface)
+			.append(" [datagramSocket=")
+			.append(this.datagramSocket)
 			.append("]");
 		return builder.toString();
 	}
-
+	
 }

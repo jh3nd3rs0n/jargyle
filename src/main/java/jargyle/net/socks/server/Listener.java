@@ -10,9 +10,7 @@ import java.util.concurrent.Executors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jargyle.net.DirectSocketInterface;
 import jargyle.net.NetFactory;
-import jargyle.net.SocketInterface;
 import jargyle.net.SocketSettings;
 import jargyle.util.Criteria;
 import jargyle.util.Criterion;
@@ -34,11 +32,10 @@ final class Listener implements Runnable {
 		this.sslWrapper = new SslWrapper(config);
 	}
 	
-	private boolean canAcceptClientSocketInterface(
-			final SocketInterface clientSocketInterface) {
+	private boolean canAcceptClientSocket(final Socket clientSocket) {
 		Settings settings = this.configuration.getSettings();
 		String clientAddress = 
-				clientSocketInterface.getInetAddress().getHostAddress();
+				clientSocket.getInetAddress().getHostAddress();
 		Criteria allowedClientAddressCriteria = settings.getLastValue(
 				SettingSpec.ALLOWED_CLIENT_ADDRESS_CRITERIA, Criteria.class);
 		Criterion criterion = allowedClientAddressCriteria.anyEvaluatesTrue(
@@ -64,11 +61,11 @@ final class Listener implements Runnable {
 		return true;
 	}
 	
-	private void closeClientSocketInterface(
-			final SocketInterface clientSocketInterface) {
-		if (!clientSocketInterface.isClosed()) {
+	private void closeClientSocket(
+			final Socket clientSocket) {
+		if (!clientSocket.isClosed()) {
 			try {
-				clientSocketInterface.close();
+				clientSocket.close();
 			} catch (IOException e) {
 				LOGGER.warn( 
 						this.format("Error in closing the client socket"), 
@@ -77,13 +74,12 @@ final class Listener implements Runnable {
 		}
 	}
 	
-	private boolean configureClientSocketInterface(
-			final SocketInterface clientSocketInterface) {
+	private boolean configureClientSocket(final Socket clientSocket) {
 		Settings settings = this.configuration.getSettings();
 		try {
 			SocketSettings socketSettings =	settings.getLastValue(
 					SettingSpec.CLIENT_SOCKET_SETTINGS, SocketSettings.class);
-			socketSettings.applyTo(clientSocketInterface);
+			socketSettings.applyTo(clientSocket);
 		} catch (SocketException e) {
 			LOGGER.warn(
 					this.format("Error in setting the client socket"), 
@@ -112,35 +108,30 @@ final class Listener implements Runnable {
 						e);
 				continue;
 			}
-			SocketInterface clientSocketInterface = new DirectSocketInterface(
-					clientSocket);
 			try {
-				if (!this.canAcceptClientSocketInterface(
-						clientSocketInterface)) {
-					this.closeClientSocketInterface(clientSocketInterface);
+				if (!this.canAcceptClientSocket(clientSocket)) {
+					this.closeClientSocket(clientSocket);
 					continue;
 				}
-				if (!this.configureClientSocketInterface(
-						clientSocketInterface)) {
-					this.closeClientSocketInterface(clientSocketInterface);
+				if (!this.configureClientSocket(clientSocket)) {
+					this.closeClientSocket(clientSocket);
 					continue;
 				}
-				SocketInterface clientSockInterface = 
-						this.wrapClientSocketInterface(clientSocketInterface); 
-				if (clientSockInterface == null) {
-					this.closeClientSocketInterface(clientSocketInterface);
+				Socket clientSock = this.wrapClientSocket(clientSocket); 
+				if (clientSock == null) {
+					this.closeClientSocket(clientSocket);
 					continue; 
 				}
-				clientSocketInterface = clientSockInterface;
+				clientSocket = clientSock;
 			} catch (Throwable t) {
 				LOGGER.warn(
 						this.format("Internal server error"), 
 						t);
-				this.closeClientSocketInterface(clientSocketInterface);
+				this.closeClientSocket(clientSocket);
 				continue;
 			}
 			executor.execute(new Worker(
-					clientSocketInterface, 
+					clientSocket, 
 					this.configuration, 
 					this.sslWrapper, 
 					this.externalNetFactory));
@@ -158,19 +149,18 @@ final class Listener implements Runnable {
 		return builder.toString();
 	}
 	
-	private SocketInterface wrapClientSocketInterface(
-			final SocketInterface clientSocketInterface) {
-		SocketInterface clientSockInterface = null;
+	private Socket wrapClientSocket(final Socket clientSocket) {
+		Socket clientSock = null;
 		try {
-			clientSockInterface = this.sslWrapper.wrapIfSslEnabled(
-					clientSocketInterface, null, true);
+			clientSock = this.sslWrapper.wrapIfSslEnabled(
+					clientSocket, null, true);
 		} catch (IOException e) {
 			LOGGER.warn(
 					this.format("Error in wrapping the client socket"), 
 					e);
 			return null;
 		}
-		return clientSockInterface;
+		return clientSock;
 	}
 
 }

@@ -2,6 +2,8 @@ package jargyle.net.socks.client;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.DatagramSocket;
+import java.net.Socket;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -12,10 +14,6 @@ import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 
-import jargyle.net.DatagramSocketInterface;
-import jargyle.net.DirectSocketInterface;
-import jargyle.net.SocketInterface;
-import jargyle.net.SocketInterfaceSocket;
 import jargyle.net.ssl.CipherSuites;
 import jargyle.net.ssl.KeyManagerHelper;
 import jargyle.net.ssl.Protocols;
@@ -82,34 +80,34 @@ public final class SslWrapper {
 		return context;
 	}
 	
-	public DatagramSocketInterface wrapIfSslEnabled(
-			final DatagramSocketInterface datagramSocketInterface, 
+	public DatagramSocket wrapIfSslEnabled(
+			final DatagramSocket datagramSocket, 
 			final String peerHost, 
 			final int peerPort) 
 			throws IOException {
 		/*
 		if (!this.properties.getValue(
 				PropertySpec.SSL_ENABLED, Boolean.class).booleanValue()) {
-			return datagramSocketInterface;
+			return datagramSocket;
 		}
-		// TODO DtlsDatagramSocketInterface
+		// TODO DtlsDatagramSocket
 		*/
-		return datagramSocketInterface;		
+		return datagramSocket;		
 	}
 	
-	public SocketInterface wrapIfSslEnabled(
-			final SocketInterface socketInterface, 
+	public Socket wrapIfSslEnabled(
+			final Socket socket, 
 			final String host, 
 			final int port, 
 			final boolean autoClose) throws IOException {
 		if (!this.properties.getValue(
 				PropertySpec.SSL_ENABLED, Boolean.class).booleanValue()) {
-			return socketInterface;
+			return socket;
 		}
 		SSLContext sslContext = this.getSslContext();
 		SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
 		SSLSocket sslSocket = (SSLSocket) sslSocketFactory.createSocket(
-				new SocketInterfaceSocket(socketInterface), 
+				socket, 
 				host, 
 				port, 
 				autoClose); 
@@ -125,6 +123,7 @@ public final class SslWrapper {
 		if (protocols.length > 0) {
 			sslSocket.setEnabledProtocols(protocols);
 		}
-		return new DirectSocketInterface(sslSocket);		
+		return sslSocket;		
 	}
+
 }

@@ -2,12 +2,12 @@ package jargyle.net;
 
 public abstract class NetFactory {
 	
-	public abstract DatagramSocketInterfaceFactory newDatagramSocketInterfaceFactory();
+	public abstract DatagramSocketFactory newDatagramSocketFactory();
 	
 	public abstract HostnameResolverFactory newHostnameResolverFactory();
 	
-	public abstract ServerSocketInterfaceFactory newServerSocketInterfaceFactory();
+	public abstract ServerSocketFactory newServerSocketFactory();
 	
-	public abstract SocketInterfaceFactory newSocketInterfaceFactory();
+	public abstract SocketFactory newSocketFactory();
 	
 }

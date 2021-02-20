@@ -1,5 +1,8 @@
 package jargyle.net;
 
+import java.net.DatagramSocket;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.net.SocketException;
 
 import jargyle.annotation.HelpText;
@@ -19,17 +22,17 @@ public enum SocketSettingSpec {
 		@Override
 		public void apply(
 				final Object value,
-				final DatagramSocketInterface datagramSocketInterface) throws SocketException {
+				final DatagramSocket datagramSocket) throws SocketException {
 			UnsignedByte b = UnsignedByte.class.cast(value);
-			datagramSocketInterface.setTrafficClass(b.intValue());
+			datagramSocket.setTrafficClass(b.intValue());
 		}
 		
 		@Override
 		public void apply(
 				final Object value,
-				final SocketInterface socketInterface) throws SocketException {
+				final Socket Socket) throws SocketException {
 			UnsignedByte b = UnsignedByte.class.cast(value);
-			socketInterface.setTrafficClass(b.intValue());
+			Socket.setTrafficClass(b.intValue());
 		}
 
 		@Override
@@ -57,17 +60,17 @@ public enum SocketSettingSpec {
 		@Override
 		public void apply(
 				final Object value,
-				final ServerSocketInterface serverSocketInterface) throws SocketException {
+				final ServerSocket serverSocket) throws SocketException {
 			PerformancePreferences p = PerformancePreferences.class.cast(value);
-			p.applyTo(serverSocketInterface);
+			p.applyTo(serverSocket);
 		}
 
 		@Override
 		public void apply(
 				final Object value,
-				final SocketInterface socketInterface) throws SocketException {
+				final Socket Socket) throws SocketException {
 			PerformancePreferences p = PerformancePreferences.class.cast(value);
-			p.applyTo(socketInterface);
+			p.applyTo(Socket);
 		}
 
 		@Override
@@ -92,9 +95,9 @@ public enum SocketSettingSpec {
 		@Override
 		public void apply(
 				final Object value,
-				final DatagramSocketInterface datagramSocketInterface) throws SocketException {
+				final DatagramSocket datagramSocket) throws SocketException {
 			Boolean b = Boolean.class.cast(value);
-			datagramSocketInterface.setBroadcast(b.booleanValue());
+			datagramSocket.setBroadcast(b.booleanValue());
 		}
 
 		@Override
@@ -120,9 +123,9 @@ public enum SocketSettingSpec {
 		@Override
 		public void apply(
 				final Object value, 
-				final SocketInterface socketInterface) throws SocketException {
+				final Socket Socket) throws SocketException {
 			Boolean b = Boolean.class.cast(value);
-			socketInterface.setKeepAlive(b.booleanValue());
+			Socket.setKeepAlive(b.booleanValue());
 		}
 
 		@Override
@@ -147,9 +150,9 @@ public enum SocketSettingSpec {
 		@Override
 		public void apply(
 				final Object value, 
-				final SocketInterface socketInterface) throws SocketException {
+				final Socket Socket) throws SocketException {
 			NonnegativeInteger i = NonnegativeInteger.class.cast(value);
-			socketInterface.setSoLinger(true, i.intValue());
+			Socket.setSoLinger(true, i.intValue());
 		}
 
 		@Override
@@ -174,9 +177,9 @@ public enum SocketSettingSpec {
 		@Override
 		public void apply(
 				final Object value, 
-				final SocketInterface socketInterface) throws SocketException {
+				final Socket Socket) throws SocketException {
 			Boolean b = Boolean.class.cast(value);
-			socketInterface.setOOBInline(b.booleanValue());
+			Socket.setOOBInline(b.booleanValue());
 		}
 
 		@Override
@@ -201,25 +204,25 @@ public enum SocketSettingSpec {
 		@Override
 		public void apply(
 				final Object value,
-				final DatagramSocketInterface datagramSocketInterface) throws SocketException {
+				final DatagramSocket datagramSocket) throws SocketException {
 			PositiveInteger i = PositiveInteger.class.cast(value);
-			datagramSocketInterface.setReceiveBufferSize(i.intValue());
+			datagramSocket.setReceiveBufferSize(i.intValue());
 		}
 		
 		@Override
 		public void apply(
 				final Object value, 
-				final ServerSocketInterface serverSocketInterface) throws SocketException {
+				final ServerSocket serverSocket) throws SocketException {
 			PositiveInteger i = PositiveInteger.class.cast(value);
-			serverSocketInterface.setReceiveBufferSize(i.intValue());
+			serverSocket.setReceiveBufferSize(i.intValue());
 		}
 		
 		@Override
 		public void apply(
 				final Object value, 
-				final SocketInterface socketInterface) throws SocketException {
+				final Socket Socket) throws SocketException {
 			PositiveInteger i = PositiveInteger.class.cast(value);
-			socketInterface.setReceiveBufferSize(i.intValue());
+			Socket.setReceiveBufferSize(i.intValue());
 		}
 
 		@Override
@@ -244,25 +247,25 @@ public enum SocketSettingSpec {
 		@Override
 		public void apply(
 				final Object value,
-				final DatagramSocketInterface datagramSocketInterface) throws SocketException {
+				final DatagramSocket datagramSocket) throws SocketException {
 			Boolean b = Boolean.class.cast(value);
-			datagramSocketInterface.setReuseAddress(b.booleanValue());
+			datagramSocket.setReuseAddress(b.booleanValue());
 		}
 		
 		@Override
 		public void apply(
 				final Object value, 
-				final ServerSocketInterface serverSocketInterface) throws SocketException {
+				final ServerSocket serverSocket) throws SocketException {
 			Boolean b = Boolean.class.cast(value);
-			serverSocketInterface.setReuseAddress(b.booleanValue());
+			serverSocket.setReuseAddress(b.booleanValue());
 		}
 
 		@Override
 		public void apply(
 				final Object value, 
-				final SocketInterface socketInterface) throws SocketException {
+				final Socket Socket) throws SocketException {
 			Boolean b = Boolean.class.cast(value);
-			socketInterface.setReuseAddress(b.booleanValue());
+			Socket.setReuseAddress(b.booleanValue());
 		}
 
 		@Override
@@ -287,17 +290,17 @@ public enum SocketSettingSpec {
 		@Override
 		public void apply(
 				final Object value,
-				final DatagramSocketInterface datagramSocketInterface) throws SocketException {
+				final DatagramSocket datagramSocket) throws SocketException {
 			PositiveInteger i = PositiveInteger.class.cast(value);
-			datagramSocketInterface.setSendBufferSize(i.intValue());
+			datagramSocket.setSendBufferSize(i.intValue());
 		}
 		
 		@Override
 		public void apply(
 				final Object value, 
-				final SocketInterface socketInterface) throws SocketException {
+				final Socket Socket) throws SocketException {
 			PositiveInteger i = PositiveInteger.class.cast(value);
-			socketInterface.setSendBufferSize(i.intValue());
+			Socket.setSendBufferSize(i.intValue());
 		}
 
 		@Override
@@ -322,25 +325,25 @@ public enum SocketSettingSpec {
 		@Override
 		public void apply(
 				final Object value,
-				final DatagramSocketInterface datagramSocketInterface) throws SocketException {
+				final DatagramSocket datagramSocket) throws SocketException {
 			NonnegativeInteger i = NonnegativeInteger.class.cast(value);
-			datagramSocketInterface.setSoTimeout(i.intValue());
+			datagramSocket.setSoTimeout(i.intValue());
 		}
 		
 		@Override
 		public void apply(
 				final Object value, 
-				final ServerSocketInterface serverSocketInterface) throws SocketException {
+				final ServerSocket serverSocket) throws SocketException {
 			NonnegativeInteger i = NonnegativeInteger.class.cast(value);
-			serverSocketInterface.setSoTimeout(i.intValue());
+			serverSocket.setSoTimeout(i.intValue());
 		}
 
 		@Override
 		public void apply(
 				final Object value, 
-				final SocketInterface socketInterface) throws SocketException {
+				final Socket Socket) throws SocketException {
 			NonnegativeInteger i = NonnegativeInteger.class.cast(value);
-			socketInterface.setSoTimeout(i.intValue());
+			Socket.setSoTimeout(i.intValue());
 		}
 
 		@Override
@@ -365,9 +368,9 @@ public enum SocketSettingSpec {
 		@Override
 		public void apply(
 				final Object value, 
-				final SocketInterface socketInterface) throws SocketException {
+				final Socket Socket) throws SocketException {
 			Boolean b = Boolean.class.cast(value);
-			socketInterface.setTcpNoDelay(b.booleanValue());
+			Socket.setTcpNoDelay(b.booleanValue());
 		}
 
 		@Override
@@ -397,26 +400,26 @@ public enum SocketSettingSpec {
 	
 	public void apply(
 			final Object value,
-			final DatagramSocketInterface datagramSocketInterface) throws SocketException {
+			final DatagramSocket datagramSocket) throws SocketException {
 		throw new UnsupportedOperationException(String.format(
 				"socket setting spec %s is not supported under %s", 
-				this, DatagramSocketInterface.class.getName()));
+				this, DatagramSocket.class.getName()));
 	}
 	
 	public void apply(
 			final Object value, 
-			final ServerSocketInterface serverSocketInterface) throws SocketException {
+			final ServerSocket serverSocket) throws SocketException {
 		throw new UnsupportedOperationException(String.format(
 				"socket setting spec %s is not supported under %s", 
-				this, ServerSocketInterface.class.getName()));
+				this, ServerSocket.class.getName()));
 	}
 	
 	public void apply(
 			final Object value, 
-			final SocketInterface socketInterface) throws SocketException {
+			final Socket Socket) throws SocketException {
 		throw new UnsupportedOperationException(String.format(
 				"socket setting spec %s is not supported under %s", 
-				this, SocketInterface.class.getName()));
+				this, Socket.class.getName()));
 	}
 	
 	public abstract SocketSetting newSocketSetting(final Object value);

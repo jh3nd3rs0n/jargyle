@@ -2,6 +2,7 @@ package jargyle.net.socks.server.v5;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
@@ -12,7 +13,6 @@ import java.util.concurrent.Executors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jargyle.net.DatagramSocketInterface;
 import jargyle.net.HostnameResolver;
 import jargyle.net.socks.transport.v5.AddressType;
 import jargyle.net.socks.transport.v5.UdpRequestHeader;
@@ -42,26 +42,26 @@ final class UdpRelayServer {
 		
 	}
 	
-	public static final class DatagramSocketInterfaces {
+	public static final class DatagramSockets {
 		
-		private final DatagramSocketInterface clientDatagramSocketInterface;
-		private final DatagramSocketInterface serverDatagramSocketInterface;
+		private final DatagramSocket clientDatagramSocket;
+		private final DatagramSocket serverDatagramSocket;
 		
-		public DatagramSocketInterfaces(
-				final DatagramSocketInterface clientDatagramSockInterface,
-				final DatagramSocketInterface serverDatagramSockInterface) {
-			Objects.requireNonNull(clientDatagramSockInterface);
-			Objects.requireNonNull(serverDatagramSockInterface);
-			this.clientDatagramSocketInterface = clientDatagramSockInterface;
-			this.serverDatagramSocketInterface = serverDatagramSockInterface;
+		public DatagramSockets(
+				final DatagramSocket clientDatagramSock,
+				final DatagramSocket serverDatagramSock) {
+			Objects.requireNonNull(clientDatagramSock);
+			Objects.requireNonNull(serverDatagramSock);
+			this.clientDatagramSocket = clientDatagramSock;
+			this.serverDatagramSocket = serverDatagramSock;
 		}
 		
-		public DatagramSocketInterface getClientDatagramSocketInterface() {
-			return this.clientDatagramSocketInterface;
+		public DatagramSocket getClientDatagramSocket() {
+			return this.clientDatagramSocket;
 		}
 		
-		public DatagramSocketInterface getServerDatagramSocketInterface() {
-			return this.serverDatagramSocketInterface;
+		public DatagramSocket getServerDatagramSocket() {
+			return this.serverDatagramSocket;
 		}
 		
 	}
@@ -189,7 +189,7 @@ final class UdpRelayServer {
 					byte[] buffer = new byte[this.getBufferSize()];
 					DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
 					try {
-						this.getServerDatagramSocketInterface().receive(packet);
+						this.getServerDatagramSocket().receive(packet);
 						this.setLastReceiveTime(System.currentTimeMillis());
 					} catch (SocketException e) {
 						// socket closed
@@ -221,7 +221,7 @@ final class UdpRelayServer {
 						continue;
 					}
 					try {
-						this.getClientDatagramSocketInterface().send(packet);
+						this.getClientDatagramSocket().send(packet);
 					} catch (SocketException e) {
 						// socket closed
 						break;
@@ -360,7 +360,7 @@ final class UdpRelayServer {
 					byte[] buffer = new byte[this.getBufferSize()];
 					DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
 					try {
-						this.getClientDatagramSocketInterface().receive(packet);
+						this.getClientDatagramSocket().receive(packet);
 						this.setLastReceiveTime(System.currentTimeMillis());
 					} catch (SocketException e) {
 						// socket closed
@@ -401,7 +401,7 @@ final class UdpRelayServer {
 						continue;
 					}
 					try {
-						this.getServerDatagramSocketInterface().send(packet);
+						this.getServerDatagramSocket().send(packet);
 					} catch (SocketException e) {
 						// socket closed
 						break;
@@ -431,15 +431,13 @@ final class UdpRelayServer {
 	private static abstract class PacketsWorker implements Runnable {
 		
 		private final UdpRelayServer udpRelayServer;
-		private final DatagramSocketInterface clientDatagramSocketInterface;
-		private final DatagramSocketInterface serverDatagramSocketInterface;
+		private final DatagramSocket clientDatagramSocket;
+		private final DatagramSocket serverDatagramSocket;
 
 		public PacketsWorker(final UdpRelayServer server) {
 			this.udpRelayServer = server;
-			this.clientDatagramSocketInterface = 
-					server.clientDatagramSocketInterface;
-			this.serverDatagramSocketInterface = 
-					server.serverDatagramSocketInterface;
+			this.clientDatagramSocket = server.clientDatagramSocket;
+			this.serverDatagramSocket = server.serverDatagramSocket;
 		}
 		
 		protected final String format(final String message) {
@@ -470,8 +468,8 @@ final class UdpRelayServer {
 			return this.udpRelayServer.clientAddress;
 		}
 		
-		protected final DatagramSocketInterface getClientDatagramSocketInterface() {
-			return this.clientDatagramSocketInterface;
+		protected final DatagramSocket getClientDatagramSocket() {
+			return this.clientDatagramSocket;
 		}
 		
 		protected final int getClientPort() {
@@ -486,8 +484,8 @@ final class UdpRelayServer {
 			return this.udpRelayServer.lastReceiveTime;
 		}
 		
-		protected final DatagramSocketInterface getServerDatagramSocketInterface() {
-			return this.serverDatagramSocketInterface;
+		protected final DatagramSocket getServerDatagramSocket() {
+			return this.serverDatagramSocket;
 		}
 		
 		protected final int getTimeout() {
@@ -525,10 +523,10 @@ final class UdpRelayServer {
 		public final String toString() {
 			StringBuilder builder = new StringBuilder();
 			builder.append(this.getClass().getSimpleName())
-				.append(" [clientDatagramSocketInterface=")
-				.append(this.clientDatagramSocketInterface)
-				.append(", serverDatagramSocketInterface=")
-				.append(this.serverDatagramSocketInterface)
+				.append(" [clientDatagramSocket=")
+				.append(this.clientDatagramSocket)
+				.append(", serverDatagramSocket=")
+				.append(this.serverDatagramSocket)
 				.append("]");
 			return builder.toString();
 		}
@@ -568,27 +566,27 @@ final class UdpRelayServer {
 	private final Criteria blockedExternalIncomingAddressCriteria;
 	private final Criteria blockedExternalOutgoingAddressCriteria;
 	private final int bufferSize;	
-	private final DatagramSocketInterface clientDatagramSocketInterface;
+	private final DatagramSocket clientDatagramSocket;
 	private String clientAddress;
 	private int clientPort;
 	private ExecutorService executor;
 	private boolean firstPacketsWorkerFinished;
 	private HostnameResolver hostnameResolver;
 	private long lastReceiveTime;
-	private final DatagramSocketInterface serverDatagramSocketInterface;
+	private final DatagramSocket serverDatagramSocket;
 	private boolean started;
 	private boolean stopped;
 	private final int timeout;
 	
 	public UdpRelayServer(		
 			final ClientSocketAddress clientSockAddr,
-			final DatagramSocketInterfaces datagramSockInterfaces,
+			final DatagramSockets datagramSocks,
 			final HostnameResolver resolver, 
 			final ExternalIncomingAddressCriteria externalIncomingAddrCriteria, 
 			final ExternalOutgoingAddressCriteria externalOutgoingAddrCriteria, 
 			final RelaySettings settings) {
 		Objects.requireNonNull(clientSockAddr);
-		Objects.requireNonNull(datagramSockInterfaces);
+		Objects.requireNonNull(datagramSocks);
 		Objects.requireNonNull(resolver);		
 		Objects.requireNonNull(externalIncomingAddrCriteria);
 		Objects.requireNonNull(externalOutgoingAddrCriteria);
@@ -601,8 +599,7 @@ final class UdpRelayServer {
 				externalIncomingAddrCriteria.getBlockedCriteria();
 		this.blockedExternalOutgoingAddressCriteria =
 				externalOutgoingAddrCriteria.getBlockedCriteria();
-		this.clientDatagramSocketInterface = 
-				datagramSockInterfaces.getClientDatagramSocketInterface();
+		this.clientDatagramSocket = datagramSocks.getClientDatagramSocket();
 		this.bufferSize = settings.getBufferSize();
 		this.clientAddress = clientSockAddr.getAddress();
 		this.clientPort = clientSockAddr.getPort();
@@ -610,8 +607,7 @@ final class UdpRelayServer {
 		this.firstPacketsWorkerFinished = false;
 		this.hostnameResolver = resolver;
 		this.lastReceiveTime = 0L;
-		this.serverDatagramSocketInterface = 
-				datagramSockInterfaces.getServerDatagramSocketInterface();
+		this.serverDatagramSocket = datagramSocks.getServerDatagramSocket();
 		this.started = false;
 		this.stopped = true;
 		this.timeout = settings.getTimeout();

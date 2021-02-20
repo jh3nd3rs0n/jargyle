@@ -7,7 +7,7 @@ public final class DefaultHostnameResolverFactory
 	
 	@Override
 	public HostnameResolver newHostnameResolver() {
-		return new DefaultHostnameResolver();
+		return new HostnameResolver();
 	}
 
 }

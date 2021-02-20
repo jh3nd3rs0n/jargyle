@@ -6,13 +6,13 @@ import java.util.List;
 
 import org.ietf.jgss.Oid;
 
-import jargyle.net.DatagramSocketInterfaceFactory;
+import jargyle.net.DatagramSocketFactory;
 import jargyle.net.DefaultNetFactory;
 import jargyle.net.Host;
 import jargyle.net.HostnameResolverFactory;
 import jargyle.net.NetFactory;
-import jargyle.net.ServerSocketInterfaceFactory;
-import jargyle.net.SocketInterfaceFactory;
+import jargyle.net.ServerSocketFactory;
+import jargyle.net.SocketFactory;
 import jargyle.net.SocketSettings;
 import jargyle.net.socks.client.Properties;
 import jargyle.net.socks.client.Property;
@@ -49,8 +49,8 @@ final class ExternalNetFactory extends NetFactory {
 	}
 	
 	@Override
-	public DatagramSocketInterfaceFactory newDatagramSocketInterfaceFactory() {
-		return this.getNetFactory().newDatagramSocketInterfaceFactory();
+	public DatagramSocketFactory newDatagramSocketFactory() {
+		return this.getNetFactory().newDatagramSocketFactory();
 	}
 	
 	@Override
@@ -67,13 +67,13 @@ final class ExternalNetFactory extends NetFactory {
 	}
 	
 	@Override
-	public ServerSocketInterfaceFactory newServerSocketInterfaceFactory() {
-		return this.getNetFactory().newServerSocketInterfaceFactory();		
+	public ServerSocketFactory newServerSocketFactory() {
+		return this.getNetFactory().newServerSocketFactory();		
 	}
 	
 	@Override
-	public SocketInterfaceFactory newSocketInterfaceFactory() {
-		return this.getNetFactory().newSocketInterfaceFactory();
+	public SocketFactory newSocketFactory() {
+		return this.getNetFactory().newSocketFactory();
 	}
 	
 	private List<Property> newSocks5ClientProperties() {

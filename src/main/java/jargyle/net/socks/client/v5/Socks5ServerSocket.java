@@ -5,16 +5,15 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.nio.channels.ServerSocketChannel;
 
-import jargyle.net.DirectSocketInterface;
-import jargyle.net.FilterSocketInterface;
+import jargyle.net.FilterSocket;
 import jargyle.net.PerformancePreferences;
-import jargyle.net.ServerSocketInterface;
-import jargyle.net.SocketInterface;
 import jargyle.net.SocketSettingSpec;
 import jargyle.net.SocketSettings;
 import jargyle.net.socks.transport.v5.AddressType;
@@ -25,10 +24,9 @@ import jargyle.net.socks.transport.v5.Socks5Request;
 import jargyle.util.NonnegativeInteger;
 import jargyle.util.PositiveInteger;
 
-public final class Socks5ServerSocketInterface extends ServerSocketInterface {
+public final class Socks5ServerSocket extends ServerSocket {
 
-	private static final class AcceptedSocks5SocketInterface 
-		extends FilterSocketInterface {
+	private static final class AcceptedSocks5Socket extends FilterSocket {
 		
 		private InetAddress localInetAddress;
 		private int localPort;
@@ -37,13 +35,13 @@ public final class Socks5ServerSocketInterface extends ServerSocketInterface {
 		private int remotePort;
 		private SocketAddress remoteSocketAddress;
 		
-		public AcceptedSocks5SocketInterface(
-				final Socks5SocketInterface socks5SocketInterface, 
+		public AcceptedSocks5Socket(
+				final Socks5Socket socks5Socket, 
 				final InetAddress address, 
 				final int port, 
 				final InetAddress localAddr, 
 				final int localPort) {
-			super(socks5SocketInterface);
+			super(socks5Socket);
 			this.localInetAddress = localAddr;
 			this.localPort = localPort;
 			this.localSocketAddress = new InetSocketAddress(
@@ -52,7 +50,6 @@ public final class Socks5ServerSocketInterface extends ServerSocketInterface {
 			this.remotePort = port;
 			this.remoteSocketAddress = new InetSocketAddress(address, port);
 		}
-		
 
 		@Override
 		public void bind(SocketAddress bindpoint) throws IOException {
@@ -130,72 +127,70 @@ public final class Socks5ServerSocketInterface extends ServerSocketInterface {
 		
 	}
 
-	private static final class Socks5ServerSocketInterfaceImpl {
+	private static final class Socks5ServerSocketImpl {
 		
 		private static final int DEFAULT_BACKLOG = 50;
 		
 		private boolean bound;
 		private boolean closed;
-		private SocketInterface directSocketInterface;
 		private InetAddress localInetAddress;
 		private int localPort;
 		private SocketAddress localSocketAddress;
-		private SocketInterface socketInterface;
+		private Socket originalSocket;
+		private Socket socket;
 		private SocketSettings socketSettings;
 		private boolean socks5Bound;
 		private final Socks5Client socks5Client;
 		
-		public Socks5ServerSocketInterfaceImpl(
+		public Socks5ServerSocketImpl(
 				final Socks5Client client) throws IOException {
-			SocketInterface directSockInterface = 
-					new DirectSocketInterface(new Socket());
+			Socket originalSock = new Socket();
 			this.bound = false;
 			this.closed = false;
-			this.directSocketInterface = directSockInterface;			
 			this.localInetAddress = null;
 			this.localPort = -1;
 			this.localSocketAddress = null;
-			this.socketInterface = directSockInterface;
+			this.originalSocket = originalSock;
+			this.socket = originalSock;
 			this.socketSettings = SocketSettings.newInstance();
 			this.socks5Client = client;
 			this.socks5Bound = false;
 		}
 		
-		public SocketInterface accept() throws IOException {
+		public Socket accept() throws IOException {
 			if (this.closed) {
 				throw new SocketException("socket is closed");
 			}
 			if (!this.socks5Bound) {
 				this.socks5Bind(this.localPort, this.localInetAddress);
 			}
-			SocketInterface acceptedSocks5SocketInterface = null;
+			Socket acceptedSocks5Socket = null;
 			try {
-				InputStream inputStream = this.socketInterface.getInputStream();
+				InputStream inputStream = this.socket.getInputStream();
 				Socks5Reply socks5Rep = Socks5Reply.newInstanceFrom(inputStream);
 				Reply reply = socks5Rep.getReply();
 				if (!reply.equals(Reply.SUCCEEDED)) {
 					throw new IOException(String.format(
 							"received reply: %s", reply));
 				}
-				acceptedSocks5SocketInterface = new AcceptedSocks5SocketInterface(
-						new Socks5SocketInterface(
+				acceptedSocks5Socket = new AcceptedSocks5Socket(
+						new Socks5Socket(
 								this.socks5Client, 
-								this.directSocketInterface, 
-								this.socketInterface),
+								this.originalSocket, 
+								this.socket),
 						InetAddress.getByName(
 								socks5Rep.getServerBoundAddress()),
 						socks5Rep.getServerBoundPort(),
 						this.localInetAddress,
 						this.localPort);
-				SocketInterface newDirectSocketInterface = 
-						new DirectSocketInterface(new Socket());
-				this.socketSettings.applyTo(newDirectSocketInterface);
-				this.directSocketInterface = newDirectSocketInterface;
-				this.socketInterface = newDirectSocketInterface;
+				Socket newOriginalSocket = new Socket();
+				this.socketSettings.applyTo(newOriginalSocket);
+				this.originalSocket = newOriginalSocket;
+				this.socket = newOriginalSocket;
 			} finally {
 				this.socks5Bound = false;
 			}
-			return acceptedSocks5SocketInterface;
+			return acceptedSocks5Socket;
 		}
 
 		public void bind(final SocketAddress endpoint) throws IOException {
@@ -230,19 +225,19 @@ public final class Socks5ServerSocketInterface extends ServerSocketInterface {
 			this.localPort = -1;
 			this.localSocketAddress = null;
 			this.socks5Bound = false;
-			this.socketInterface.close();
+			this.socket.close();
 		}
 		
 		public int getReceiveBufferSize() throws SocketException {
-			return this.socketInterface.getReceiveBufferSize();
+			return this.socket.getReceiveBufferSize();
 		}
 
 		public boolean getReuseAddress() throws SocketException {
-			return this.socketInterface.getReuseAddress();
+			return this.socket.getReuseAddress();
 		}
 
 		public int getSoTimeout() throws IOException {
-			return this.socketInterface.getSoTimeout();
+			return this.socket.getSoTimeout();
 		}
 		
 		public void setPerformancePreferences(
@@ -250,7 +245,7 @@ public final class Socks5ServerSocketInterface extends ServerSocketInterface {
 			if (!this.bound) {
 				PerformancePreferences pp = PerformancePreferences.newInstance(
 						connectionTime, latency, bandwidth);
-				this.socketInterface.setPerformancePreferences(
+				this.socket.setPerformancePreferences(
 						connectionTime, latency, bandwidth);
 				this.socketSettings.putValue(SocketSettingSpec.PERF_PREF, pp);
 			}
@@ -258,32 +253,31 @@ public final class Socks5ServerSocketInterface extends ServerSocketInterface {
 		
 		public void setReceiveBufferSize(int size) throws SocketException {
 			PositiveInteger i = PositiveInteger.newInstance(size);
-			this.socketInterface.setReceiveBufferSize(size);
+			this.socket.setReceiveBufferSize(size);
 			this.socketSettings.putValue(SocketSettingSpec.SO_RCVBUF, i);
 		}
 		
 		public void setReuseAddress(boolean on) throws SocketException {
 			Boolean b = Boolean.valueOf(on);
-			this.socketInterface.setReuseAddress(on);
+			this.socket.setReuseAddress(on);
 			this.socketSettings.putValue(SocketSettingSpec.SO_REUSEADDR, b);
 		}
 
 		public void setSoTimeout(int timeout) throws SocketException {
 			NonnegativeInteger i = NonnegativeInteger.newInstance(timeout);
-			this.socketInterface.setSoTimeout(timeout);
+			this.socket.setSoTimeout(timeout);
 			this.socketSettings.putValue(SocketSettingSpec.SO_TIMEOUT, i);
 		}
 
 		public void socks5Bind(
 				final int port, final InetAddress bindAddr) throws IOException {
-			if (!this.socketInterface.equals(this.directSocketInterface)) {
-				this.socketInterface = this.directSocketInterface;
+			if (!this.socket.equals(this.originalSocket)) {
+				this.socket = this.originalSocket;
 			}
-			SocketInterface sockInterface = 
-					this.socks5Client.connectToSocksServerWith(
-							this.socketInterface, true);
-			InputStream inStream = sockInterface.getInputStream();
-			OutputStream outStream = sockInterface.getOutputStream();
+			Socket sock = this.socks5Client.connectToSocksServerWith(
+					this.socket, true);
+			InputStream inStream = sock.getInputStream();
+			OutputStream outStream = sock.getOutputStream();
 			int prt = port;
 			if (prt == -1) {
 				prt = 0;
@@ -314,91 +308,93 @@ public final class Socks5ServerSocketInterface extends ServerSocketInterface {
 			this.localSocketAddress = new InetSocketAddress(
 					this.localInetAddress,
 					this.localPort);
-			this.socketInterface = sockInterface;
+			this.socket = sock;
 			this.socks5Bound = true;
 		}
 
 	}
 	
 	private final Socks5Client socks5Client;
-	private final Socks5ServerSocketInterfaceImpl socks5ServerSocketInterfaceImpl;
+	private final Socks5ServerSocketImpl socks5ServerSocketImpl;
 	
-	public Socks5ServerSocketInterface(
+	public Socks5ServerSocket(
 			final Socks5Client client) throws IOException {
 		this.socks5Client = client;
-		this.socks5ServerSocketInterfaceImpl = 
-				new Socks5ServerSocketInterfaceImpl(client);
+		this.socks5ServerSocketImpl = new Socks5ServerSocketImpl(client);
 	}
 
-	public Socks5ServerSocketInterface(
+	public Socks5ServerSocket(
 			final Socks5Client client, final int port) throws IOException {
 		this.socks5Client = client;
-		this.socks5ServerSocketInterfaceImpl = 
-				new Socks5ServerSocketInterfaceImpl(client);
-		this.socks5ServerSocketInterfaceImpl.socks5Bind(port, null);
+		this.socks5ServerSocketImpl = new Socks5ServerSocketImpl(client);
+		this.socks5ServerSocketImpl.socks5Bind(port, null);
 	}
 
-	public Socks5ServerSocketInterface(
+	public Socks5ServerSocket(
 			final Socks5Client client, 
 			final int port, 
 			final int backlog) throws IOException {
 		this(client, port);
 	}
 
-	public Socks5ServerSocketInterface(
+	public Socks5ServerSocket(
 			final Socks5Client client, 
 			final int port, 
 			final int backlog,
 			final InetAddress bindAddr) throws IOException {
 		this.socks5Client = client;
-		this.socks5ServerSocketInterfaceImpl = 
-				new Socks5ServerSocketInterfaceImpl(client);
-		this.socks5ServerSocketInterfaceImpl.socks5Bind(port, bindAddr);
+		this.socks5ServerSocketImpl = new Socks5ServerSocketImpl(client);
+		this.socks5ServerSocketImpl.socks5Bind(port, bindAddr);
 	}
 	
 	@Override
-	public SocketInterface accept() throws IOException {
-		return this.socks5ServerSocketInterfaceImpl.accept();
+	public Socket accept() throws IOException {
+		return this.socks5ServerSocketImpl.accept();
 	}
 
 	@Override
 	public void bind(SocketAddress endpoint) throws IOException {
-		this.socks5ServerSocketInterfaceImpl.bind(endpoint);
+		this.socks5ServerSocketImpl.bind(endpoint);
 	}
 
 	@Override
 	public void bind(SocketAddress endpoint, int backlog) throws IOException {
-		this.socks5ServerSocketInterfaceImpl.bind(endpoint, backlog);
+		this.socks5ServerSocketImpl.bind(endpoint, backlog);
 	}
 
 	@Override
 	public void close() throws IOException {
-		this.socks5ServerSocketInterfaceImpl.close();
+		this.socks5ServerSocketImpl.close();
 	}
 
 	@Override
+	public ServerSocketChannel getChannel() {
+		return null;
+	}
+	
+	@Override
 	public InetAddress getInetAddress() {
-		return this.socks5ServerSocketInterfaceImpl.localInetAddress;
+		return this.socks5ServerSocketImpl.localInetAddress;
 	}
 
 	@Override
 	public int getLocalPort() {
-		return this.socks5ServerSocketInterfaceImpl.localPort;
+		return this.socks5ServerSocketImpl.localPort;
 	}
 
 	@Override
 	public SocketAddress getLocalSocketAddress() {
-		return this.socks5ServerSocketInterfaceImpl.localSocketAddress;
+		return this.socks5ServerSocketImpl.localSocketAddress;
 	}
 
 	@Override
 	public synchronized int getReceiveBufferSize() throws SocketException {
-		return this.socks5ServerSocketInterfaceImpl.getReceiveBufferSize();
+		return this.socks5ServerSocketImpl.getReceiveBufferSize();
 	}
 
 	@Override
 	public boolean getReuseAddress() throws SocketException {
-		return this.socks5ServerSocketInterfaceImpl.getReuseAddress();
+		return this.socks5ServerSocketImpl.getReuseAddress();
 	}
 
 	public Socks5Client getSocks5Client() {
@@ -407,40 +403,40 @@ public final class Socks5ServerSocketInterface extends ServerSocketInterface {
 	
 	@Override
 	public synchronized int getSoTimeout() throws IOException {
-		return this.socks5ServerSocketInterfaceImpl.getSoTimeout();
+		return this.socks5ServerSocketImpl.getSoTimeout();
 	}
 
 	@Override
 	public boolean isBound() {
-		return this.socks5ServerSocketInterfaceImpl.bound;
+		return this.socks5ServerSocketImpl.bound;
 	}
 
 	@Override
 	public boolean isClosed() {
-		return this.socks5ServerSocketInterfaceImpl.closed;
+		return this.socks5ServerSocketImpl.closed;
 	}
 
 	@Override
 	public void setPerformancePreferences(
 			int connectionTime, int latency, int bandwidth) {
-		this.socks5ServerSocketInterfaceImpl.setPerformancePreferences(
+		this.socks5ServerSocketImpl.setPerformancePreferences(
 				connectionTime, latency, bandwidth);
 	}
 
 	@Override
 	public synchronized void setReceiveBufferSize(
 			int size) throws SocketException {
-		this.socks5ServerSocketInterfaceImpl.setReceiveBufferSize(size);
+		this.socks5ServerSocketImpl.setReceiveBufferSize(size);
 	}
 
 	@Override
 	public void setReuseAddress(boolean on) throws SocketException {
-		this.socks5ServerSocketInterfaceImpl.setReuseAddress(on);
+		this.socks5ServerSocketImpl.setReuseAddress(on);
 	}
 
 	@Override
 	public synchronized void setSoTimeout(int timeout) throws SocketException {
-		this.socks5ServerSocketInterfaceImpl.setSoTimeout(timeout);
+		this.socks5ServerSocketImpl.setSoTimeout(timeout);
 	}
 
 	@Override

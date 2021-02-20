@@ -3,6 +3,7 @@ package jargyle.net.socks.client.v5;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.Socket;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -14,10 +15,9 @@ import org.ietf.jgss.GSSName;
 import org.ietf.jgss.MessageProp;
 import org.ietf.jgss.Oid;
 
-import jargyle.net.SocketInterface;
 import jargyle.net.socks.client.PropertySpec;
 import jargyle.net.socks.transport.v5.Method;
-import jargyle.net.socks.transport.v5.gssapiauth.GssSocketInterface;
+import jargyle.net.socks.transport.v5.gssapiauth.GssSocket;
 import jargyle.net.socks.transport.v5.gssapiauth.GssapiProtectionLevel;
 import jargyle.net.socks.transport.v5.gssapiauth.GssapiProtectionLevels;
 import jargyle.net.socks.transport.v5.gssapiauth.Message;
@@ -32,8 +32,8 @@ enum Authenticator {
 	DEFAULT_AUTHENTICATOR(Method.NO_ACCEPTABLE_METHODS) {
 
 		@Override
-		public SocketInterface authenticate(
-				final SocketInterface socketInterface, 
+		public Socket authenticate(
+				final Socket Socket, 
 				final Socks5Client socks5Client) throws IOException {
 			throw new IOException("no acceptable authentication methods");
 		}
@@ -43,27 +43,27 @@ enum Authenticator {
 	GSSAPI_AUTHENTICATOR(Method.GSSAPI) {
 		
 		@Override
-		public SocketInterface authenticate(
-				final SocketInterface socketInterface, 
+		public Socket authenticate(
+				final Socket Socket, 
 				final Socks5Client socks5Client) throws IOException {
 			GSSContext context = this.newContext(socks5Client);
-			this.establishContext(socketInterface, context, socks5Client);
+			this.establishContext(Socket, context, socks5Client);
 			GssapiProtectionLevel gssapiProtectionLevelSelection =
 					this.negotiateProtectionLevel(
-							socketInterface, context, socks5Client);
+							Socket, context, socks5Client);
 			MessageProp msgProp = 
 					gssapiProtectionLevelSelection.newMessageProp();
-			SocketInterface newSocketInterface = new GssSocketInterface(
-					socketInterface, context, msgProp);
-			return newSocketInterface;
+			Socket newSocket = new GssSocket(
+					Socket, context, msgProp);
+			return newSocket;
 		}
 		
 		private void establishContext(
-				final SocketInterface socketInterface,
+				final Socket Socket,
 				final GSSContext context,
 				final Socks5Client socks5Client) throws IOException {
-			InputStream inStream = socketInterface.getInputStream();
-			OutputStream outStream = socketInterface.getOutputStream();
+			InputStream inStream = Socket.getInputStream();
+			OutputStream outStream = Socket.getOutputStream();
 			byte[] token = new byte[] { };
 			while (!context.isEstablished()) {
 				if (token == null) {
@@ -92,11 +92,11 @@ enum Authenticator {
 		}
 		
 		private GssapiProtectionLevel negotiateProtectionLevel(
-				final SocketInterface socketInterface,
+				final Socket Socket,
 				final GSSContext context,
 				final Socks5Client socks5Client) throws IOException {
-			InputStream inStream = socketInterface.getInputStream();
-			OutputStream outStream = socketInterface.getOutputStream();
+			InputStream inStream = Socket.getInputStream();
+			OutputStream outStream = Socket.getOutputStream();
 			boolean gssapiNecReferenceImpl = 
 					socks5Client.getProperties().getValue(
 							PropertySpec.SOCKS5_GSSAPI_NEC_REFERENCE_IMPL,
@@ -216,10 +216,10 @@ enum Authenticator {
 	PERMISSIVE_AUTHENTICATOR(Method.NO_AUTHENTICATION_REQUIRED) {
 
 		@Override
-		public SocketInterface authenticate(
-				final SocketInterface socketInterface, 
+		public Socket authenticate(
+				final Socket Socket, 
 				final Socks5Client socks5Client) throws IOException {
-			return socketInterface;
+			return Socket;
 		}
 		
 	},
@@ -227,11 +227,11 @@ enum Authenticator {
 	USERNAME_PASSWORD_AUTHENTICATOR(Method.USERNAME_PASSWORD) {
 
 		@Override
-		public SocketInterface authenticate(
-				final SocketInterface socketInterface, 
+		public Socket authenticate(
+				final Socket Socket, 
 				final Socks5Client socks5Client) throws IOException {
-			InputStream inputStream = socketInterface.getInputStream();
-			OutputStream outputStream = socketInterface.getOutputStream();
+			InputStream inputStream = Socket.getInputStream();
+			OutputStream outputStream = Socket.getOutputStream();
 			UsernamePassword usernamePassword = null;
 			UsernamePasswordRequestor usernamePasswordRequestor = 
 					UsernamePasswordRequestor.getDefault();
@@ -272,7 +272,7 @@ enum Authenticator {
 					UsernamePasswordResponse.STATUS_SUCCESS) {
 				throw new IOException("invalid username password");
 			}
-			return socketInterface;
+			return Socket;
 		}
 		
 	};
@@ -308,8 +308,8 @@ enum Authenticator {
 		this.methodValue = methValue;
 	}
 	
-	public abstract SocketInterface authenticate(
-			final SocketInterface socketInterface,
+	public abstract Socket authenticate(
+			final Socket Socket,
 			final Socks5Client socks5Client) throws IOException;
 	
 	public Method methodValue() {

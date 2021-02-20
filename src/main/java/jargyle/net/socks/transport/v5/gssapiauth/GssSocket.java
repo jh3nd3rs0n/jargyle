@@ -6,16 +6,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.SequenceInputStream;
+import java.net.Socket;
 import java.util.Objects;
 
 import org.ietf.jgss.GSSContext;
 import org.ietf.jgss.GSSException;
 import org.ietf.jgss.MessageProp;
 
-import jargyle.net.FilterSocketInterface;
-import jargyle.net.SocketInterface;
+import jargyle.net.FilterSocket;
 
-public final class GssSocketInterface extends FilterSocketInterface {
+public final class GssSocket extends FilterSocket {
 
 	private static final class GssUnwrappedInputStream extends InputStream {
 		
@@ -236,11 +236,11 @@ public final class GssSocketInterface extends FilterSocketInterface {
 	private MessageProp messageProp;
 	private OutputStream outputStream;
 	
-	public GssSocketInterface(
-			final SocketInterface sockInterface,
+	public GssSocket(
+			final Socket sock,
 			final GSSContext context,
 			final MessageProp prop) {
-		super(sockInterface);
+		super(sock);
 		MessageProp prp = null;
 		if (prop != null) {
 			prp = new MessageProp(prop.getQOP(), prop.getPrivacy());
@@ -248,7 +248,7 @@ public final class GssSocketInterface extends FilterSocketInterface {
 		this.gssContext = context;
 		this.messageProp = prp;
 		this.inputStream = null;
-		this.outputStream = null;
+		this.outputStream = null;		
 	}
 
 	@Override
@@ -311,8 +311,8 @@ public final class GssSocketInterface extends FilterSocketInterface {
 			.append(this.gssContext)
 			.append(", messageProp=")
 			.append(this.messageProp)
-			.append(", socketInterface=")
-			.append(this.socketInterface)
+			.append(", socket=")
+			.append(this.socket)
 			.append("]");
 		return builder.toString();
 	}

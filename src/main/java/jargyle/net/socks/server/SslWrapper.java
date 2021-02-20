@@ -3,6 +3,8 @@ package jargyle.net.socks.server;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.DatagramSocket;
+import java.net.Socket;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -13,10 +15,6 @@ import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 
-import jargyle.net.DatagramSocketInterface;
-import jargyle.net.DirectSocketInterface;
-import jargyle.net.SocketInterface;
-import jargyle.net.SocketInterfaceSocket;
 import jargyle.net.ssl.CipherSuites;
 import jargyle.net.ssl.KeyManagerHelper;
 import jargyle.net.ssl.Protocols;
@@ -88,8 +86,8 @@ public final class SslWrapper {
 		return context;
 	}
 	
-	public DatagramSocketInterface wrapIfSslEnabled(
-			final DatagramSocketInterface datagramSocketInterface, 
+	public DatagramSocket wrapIfSslEnabled(
+			final DatagramSocket datagramSocket, 
 			final String peerHost, 
 			final int peerPort) 
 			throws IOException {
@@ -97,28 +95,26 @@ public final class SslWrapper {
 		Settings settings = this.configuration.getSettings();
 		if (!settings.getLastValue(
 				SettingSpec.SSL_ENABLED, Boolean.class).booleanValue()) {
-			return datagramSocketInterface;
+			return datagramSocket;
 		}
-		// TODO DtlsDatagramSocketInterface
+		// TODO DtlsDatagramSocket
 		*/
-		return datagramSocketInterface;			
+		return datagramSocket;			
 	}
 	
-	public SocketInterface wrapIfSslEnabled(
-			final SocketInterface socketInterface, 
+	public Socket wrapIfSslEnabled(
+			final Socket socket, 
 			final InputStream consumed, 
 			final boolean autoClose) throws IOException {
 		Settings settings = this.configuration.getSettings();
 		if (!settings.getLastValue(
 				SettingSpec.SSL_ENABLED, Boolean.class).booleanValue()) {
-			return socketInterface;
+			return socket;
 		}
 		SSLContext sslContext = this.getSslContext();
 		SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
 		SSLSocket sslSocket = (SSLSocket) sslSocketFactory.createSocket(
-				new SocketInterfaceSocket(socketInterface), 
-				consumed, 
-				autoClose); 
+				socket,	consumed, autoClose); 
 		CipherSuites enabledCipherSuites = settings.getLastValue(
 				SettingSpec.SSL_ENABLED_CIPHER_SUITES, CipherSuites.class);
 		String[] cipherSuites = enabledCipherSuites.toStringArray();
@@ -139,7 +135,7 @@ public final class SslWrapper {
 				Boolean.class).booleanValue()) {
 			sslSocket.setWantClientAuth(true);
 		}
-		return new DirectSocketInterface(sslSocket);
+		return sslSocket;
 	}
 	
 }

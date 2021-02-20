@@ -2,12 +2,12 @@ package jargyle.net.socks.server;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.Socket;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import jargyle.net.NetFactory;
-import jargyle.net.SocketInterface;
 import jargyle.net.socks.server.v5.Socks5Worker;
 import jargyle.net.socks.transport.v5.Version;
 
@@ -15,17 +15,17 @@ final class Worker implements Runnable {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(Worker.class);
 	
-	private final SocketInterface clientSocketInterface;
+	private final Socket clientSocket;
 	private final Configuration configuration;
 	private final NetFactory externalNetFactory;
 	private final SslWrapper sslWrapper;
 	
 	public Worker(
-			final SocketInterface clientSockInterface, 
+			final Socket clientSock, 
 			final Configuration config, 
 			final SslWrapper wrapper, 
 			final NetFactory factory) {
-		this.clientSocketInterface = clientSockInterface;
+		this.clientSocket = clientSock;
 		this.configuration = config;
 		this.externalNetFactory = factory;		
 		this.sslWrapper = wrapper;
@@ -38,7 +38,7 @@ final class Worker implements Runnable {
 	public void run() {
 		try {
 			InputStream clientInputStream = 
-					this.clientSocketInterface.getInputStream();
+					this.clientSocket.getInputStream();
 			int version = -1;
 			try {
 				version = clientInputStream.read();
@@ -51,7 +51,7 @@ final class Worker implements Runnable {
 			}
 			if ((byte) version == Version.V5.byteValue()) {
 				Socks5Worker socks5Worker = new Socks5Worker(
-						this.clientSocketInterface, 
+						this.clientSocket, 
 						this.configuration, 
 						this.sslWrapper, 
 						this.externalNetFactory);
@@ -66,9 +66,9 @@ final class Worker implements Runnable {
 					this.format("Internal server error"), 
 					t);
 		} finally {
-			if (!this.clientSocketInterface.isClosed()) {
+			if (!this.clientSocket.isClosed()) {
 				try {
-					this.clientSocketInterface.close();
+					this.clientSocket.close();
 				} catch (IOException e) {
 					LOGGER.warn(
 							this.format("Error upon closing connection to the "
@@ -83,8 +83,8 @@ final class Worker implements Runnable {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append(this.getClass().getSimpleName())
-			.append(" [clientSocketInterface=")
-			.append(this.clientSocketInterface)
+			.append(" [clientSocket=")
+			.append(this.clientSocket)
 			.append("]");
 		return builder.toString();
 	}

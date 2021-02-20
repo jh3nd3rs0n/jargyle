@@ -3,11 +3,11 @@ package jargyle.net.socks.client.v5;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.Socket;
 import java.util.Set;
 import java.util.TreeSet;
 
 import jargyle.net.NetFactory;
-import jargyle.net.SocketInterface;
 import jargyle.net.socks.client.Properties;
 import jargyle.net.socks.client.PropertySpec;
 import jargyle.net.socks.client.SocksClient;
@@ -24,14 +24,14 @@ public final class Socks5Client extends SocksClient {
 	}
 	
 	@Override
-	public SocketInterface connectToSocksServerWith(
-			final SocketInterface socketInterface, 
+	public Socket connectToSocksServerWith(
+			final Socket socket, 
 			final int timeout, 
 			final boolean bindBeforeConnect) throws IOException {
-		SocketInterface sockInterface = super.connectToSocksServerWith(
-				socketInterface, timeout, bindBeforeConnect);
-		InputStream inputStream = sockInterface.getInputStream();
-		OutputStream outputStream = sockInterface.getOutputStream();
+		Socket sock = super.connectToSocksServerWith(
+				socket, timeout, bindBeforeConnect);
+		InputStream inputStream = sock.getInputStream();
+		OutputStream outputStream = sock.getOutputStream();
 		Set<Method> methods = new TreeSet<Method>();
 		AuthMethods authMethods = this.getProperties().getValue(
 				PropertySpec.SOCKS5_AUTH_METHODS, AuthMethods.class);
@@ -51,9 +51,8 @@ public final class Socks5Client extends SocksClient {
 		} catch (IllegalArgumentException e) {
 			throw new IOException(e);
 		}
-		SocketInterface newSocketInterface = authenticator.authenticate(
-				sockInterface, this);
-		return newSocketInterface;
+		Socket newSocket = authenticator.authenticate(sock, this);
+		return newSocket;
 	}
 
 	@Override

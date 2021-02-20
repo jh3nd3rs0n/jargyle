@@ -23,7 +23,7 @@ import jargyle.net.socks.client.SocksClient;
 import jargyle.net.socks.server.Configuration;
 import jargyle.net.socks.server.SocksServer;
 
-public class SocketInterfaceIT {
+public class SocketIT {
 
 	public static final class EchoServer {
 		
@@ -128,14 +128,14 @@ public class SocketInterfaceIT {
 			InetAddress.getLoopbackAddress();
 	private static final int SLEEP_TIME = 500; // 1/2 second
 
-	public static String echoThroughSocketInterface(
+	public static String echoThroughSocket(
 			final String string, 
 			final SocksClient socksClient, 
 			final Configuration configuration) throws IOException {
 		String returningString = null;
 		SocksServer socksServer = null;
 		EchoServer echoServer = null;
-		SocketInterface echoSocketInterface = null;
+		Socket echoSocket = null;
 		try {
 			if (configuration != null) {
 				socksServer = new SocksServer(
@@ -144,24 +144,24 @@ public class SocketInterfaceIT {
 			}
 			echoServer = new EchoServer(ECHO_SERVER_PORT);
 			echoServer.start();
-			SocketInterfaceFactory socketFactory = 
-					new DirectSocketInterfaceFactory();
+			jargyle.net.SocketFactory socketFactory = 
+					new DefaultSocketFactory();
 			if (socksClient != null) {
 				socketFactory = 
-						socksClient.newNetFactory().newSocketInterfaceFactory();
+						socksClient.newNetFactory().newSocketFactory();
 			}
-			echoSocketInterface = socketFactory.newSocketInterface();
-			echoSocketInterface.connect(new InetSocketAddress(
+			echoSocket = socketFactory.newSocket();
+			echoSocket.connect(new InetSocketAddress(
 					LOOPBACK_ADDRESS, echoServer.getPort()));
-			InputStream in = echoSocketInterface.getInputStream();
-			OutputStream out = echoSocketInterface.getOutputStream();
+			InputStream in = echoSocket.getInputStream();
+			OutputStream out = echoSocket.getOutputStream();
 			IoHelper.writeAsDataWithIndicatedLengthsThenFlush(
 					string.getBytes(), out);
 			byte[] b = IoHelper.readDataWithIndicatedLengthFrom(in);
 			returningString = new String(b);
 		} finally {
-			if (echoSocketInterface != null) {
-				echoSocketInterface.close();
+			if (echoSocket != null) {
+				echoSocket.close();
 			}
 			if (echoServer != null && echoServer.isStarted()) {
 				echoServer.stop();
@@ -179,23 +179,23 @@ public class SocketInterfaceIT {
 	}
 
 	@Test
-	public void testThroughSocketInterface01() throws IOException {
+	public void testThroughSocket01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = echoThroughSocketInterface(string, null, null);
+		String returningString = echoThroughSocket(string, null, null);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testThroughSocketInterface02() throws IOException {
+	public void testThroughSocket02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = echoThroughSocketInterface(string, null, null);
+		String returningString = echoThroughSocket(string, null, null);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testThroughSocketInterface03() throws IOException {
+	public void testThroughSocket03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = echoThroughSocketInterface(string, null, null);
+		String returningString = echoThroughSocket(string, null, null);
 		assertEquals(string, returningString);
 	}
 

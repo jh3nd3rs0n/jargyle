@@ -26,6 +26,8 @@ import jargyle.net.socks.transport.v5.Socks5Request;
 import jargyle.net.socks.transport.v5.UdpRequestHeader;
 import jargyle.net.socks.transport.v5.gssapiauth.GssDatagramSocket;
 import jargyle.net.socks.transport.v5.gssapiauth.GssSocket;
+import jargyle.net.ssl.DtlsDatagramSocketFactory;
+import jargyle.net.ssl.SslFactory;
 
 public final class Socks5DatagramSocket extends DatagramSocket {
 
@@ -232,6 +234,13 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 				throw new IOException(String.format(
 						"received reply: %s", reply));
 			}
+			SslFactory sslFactory = this.socks5Client.getSslFactory();
+			DtlsDatagramSocketFactory dtlsDatagramSocketFactory =
+					sslFactory.newDtlsDatagramSocketFactory();
+			datagramSock = dtlsDatagramSocketFactory.newDatagramSocket(
+					datagramSock, 
+					socks5Rep.getServerBoundAddress(), 
+					socks5Rep.getServerBoundPort());
 			if (sock instanceof GssSocket) {
 				GssSocket gssSocket = (GssSocket) sock;
 				datagramSock = new GssDatagramSocket(

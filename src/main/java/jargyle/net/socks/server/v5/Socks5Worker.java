@@ -41,6 +41,7 @@ import jargyle.net.socks.transport.v5.Socks5Request;
 import jargyle.net.socks.transport.v5.Version;
 import jargyle.net.socks.transport.v5.gssapiauth.GssDatagramSocket;
 import jargyle.net.socks.transport.v5.gssapiauth.GssSocket;
+import jargyle.net.ssl.DtlsDatagramSocketFactory;
 import jargyle.net.ssl.SslFactory;
 import jargyle.util.Criteria;
 import jargyle.util.Criterion;
@@ -59,6 +60,7 @@ public final class Socks5Worker implements Runnable {
 	private final Configuration configuration;
 	private final NetFactory externalNetFactory;
 	private final Settings settings;
+	private final SslFactory sslFactory;
 	
 	public Socks5Worker(
 			final Socket clientSock, 
@@ -72,6 +74,7 @@ public final class Socks5Worker implements Runnable {
 		this.configuration = config;
 		this.externalNetFactory = nFactory;
 		this.settings = sttngs;
+		this.sslFactory = sFactory;
 	}
 	
 	private Socket authenticateUsing(final Method method) {
@@ -616,7 +619,9 @@ public final class Socks5Worker implements Runnable {
 				return;
 			}
 			DatagramSocket clientDatagramSck = this.wrapClientDatagramSocket(
-					clientDatagramSock); 
+					clientDatagramSock, 
+					desiredDestinationAddress, 
+					desiredDestinationPort); 
 			if (clientDatagramSck == null) {
 				return;
 			}
@@ -937,8 +942,53 @@ public final class Socks5Worker implements Runnable {
 	}
 	
 	private DatagramSocket wrapClientDatagramSocket(
-			final DatagramSocket clientDatagramSock) {
-		DatagramSocket clientDatagramSck = clientDatagramSock;
+			final DatagramSocket clientDatagramSock, 
+			final String peerHost, 
+			final int peerPort) {
+		DatagramSocket clientDatagramSck = null;
+		DtlsDatagramSocketFactory dtlsDatagramSocketFactory = null;
+		try {
+			dtlsDatagramSocketFactory = 
+					this.sslFactory.newDtlsDatagramSocketFactory();
+		} catch (IOException e) {
+			LOGGER.warn( 
+					this.format("Error in creating the DtlsDatagramSocketFactory"), 
+					e);
+			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
+					Reply.GENERAL_SOCKS_SERVER_FAILURE);
+			LOGGER.debug(this.format(String.format(
+					"Sending %s",
+					socks5Rep.toString())));
+			try {
+				this.writeThenFlush(socks5Rep.toByteArray());
+			} catch (IOException e1) {
+				LOGGER.warn( 
+						this.format("Error in writing SOCKS5 reply"), 
+						e1);
+			}
+			return null;
+		}
+		try {
+			clientDatagramSck = dtlsDatagramSocketFactory.newDatagramSocket(
+					clientDatagramSock, peerHost, peerPort);
+		} catch (IOException e) {
+			LOGGER.warn( 
+					this.format("Error in creating the DtlsDatagramSocket"), 
+					e);
+			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
+					Reply.GENERAL_SOCKS_SERVER_FAILURE);
+			LOGGER.debug(this.format(String.format(
+					"Sending %s",
+					socks5Rep.toString())));
+			try {
+				this.writeThenFlush(socks5Rep.toByteArray());
+			} catch (IOException e1) {
+				LOGGER.warn( 
+						this.format("Error in writing SOCKS5 reply"), 
+						e1);
+			}
+			return null;
+		}
 		if (this.clientSocket instanceof GssSocket) {
 			GssSocket gssSocket = (GssSocket) this.clientSocket;
 			try {
@@ -948,8 +998,20 @@ public final class Socks5Worker implements Runnable {
 						gssSocket.getMessageProp());
 			} catch (SocketException e) {
 				LOGGER.warn( 
-						this.format("Error creating GssDatagramSocket"), 
+						this.format("Error in creating the GssDatagramSocket"), 
 						e);
+				Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
+						Reply.GENERAL_SOCKS_SERVER_FAILURE);
+				LOGGER.debug(this.format(String.format(
+						"Sending %s",
+						socks5Rep.toString())));
+				try {
+					this.writeThenFlush(socks5Rep.toByteArray());
+				} catch (IOException e1) {
+					LOGGER.warn( 
+							this.format("Error in writing SOCKS5 reply"), 
+							e1);
+				}				
 				return null;
 			}
 		}

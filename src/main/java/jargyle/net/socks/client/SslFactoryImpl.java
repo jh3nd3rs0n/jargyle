@@ -10,6 +10,7 @@ import javax.net.ssl.KeyManager;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 
+import jargyle.net.ssl.DtlsDatagramSocketFactory;
 import jargyle.net.ssl.KeyManagerHelper;
 import jargyle.net.ssl.SslFactory;
 import jargyle.net.ssl.SslSocketFactory;
@@ -33,6 +34,12 @@ final class SslFactoryImpl extends SslFactory {
 		return this.sslContext;
 	}
 	
+	@Override
+	public DtlsDatagramSocketFactory newDtlsDatagramSocketFactory() 
+			throws IOException {
+		return new DtlsDatagramSocketFactoryImpl();
+	}
+
 	private SSLContext newSslContext() throws IOException {
 		SSLContext context = null;
 		String protocol = this.properties.getValue(

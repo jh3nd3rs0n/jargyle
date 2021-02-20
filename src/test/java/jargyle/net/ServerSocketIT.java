@@ -22,6 +22,7 @@ import javax.net.SocketFactory;
 import org.junit.Test;
 
 import jargyle.IoHelper;
+import jargyle.NetConstants;
 import jargyle.TestStringConstants;
 import jargyle.net.socks.client.SocksClient;
 import jargyle.net.socks.server.Configuration;
@@ -176,8 +177,6 @@ public class ServerSocketIT {
 	}
 
 	private static final int ECHO_SERVER_PORT = 1024;
-	public static final InetAddress LOOPBACK_ADDRESS = 
-			InetAddress.getLoopbackAddress();
 	private static final int SERVER_PORT = 5678;
 	private static final int SLEEP_TIME = 500; // 1/2 second
 
@@ -204,7 +203,7 @@ public class ServerSocketIT {
 			}
 			echoSocket = SocketFactory.newSocket();
 			echoSocket.connect(new InetSocketAddress(
-					LOOPBACK_ADDRESS, echoServer.getPort()));
+					NetConstants.LOOPBACK_ADDRESS, echoServer.getPort()));
 			OutputStream out = echoSocket.getOutputStream();
 			PrintWriter writer = new PrintWriter(out, true);
 			jargyle.net.ServerSocketFactory serverSocketFactory =

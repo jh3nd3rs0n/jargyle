@@ -5,7 +5,6 @@ import static org.junit.Assert.assertEquals;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -18,6 +17,7 @@ import javax.net.ServerSocketFactory;
 import org.junit.Test;
 
 import jargyle.IoHelper;
+import jargyle.NetConstants;
 import jargyle.TestStringConstants;
 import jargyle.net.socks.client.SocksClient;
 import jargyle.net.socks.server.Configuration;
@@ -124,8 +124,6 @@ public class SocketIT {
 	}
 
 	private static final int ECHO_SERVER_PORT = 1234;
-	public static final InetAddress LOOPBACK_ADDRESS = 
-			InetAddress.getLoopbackAddress();
 	private static final int SLEEP_TIME = 500; // 1/2 second
 
 	public static String echoThroughSocket(
@@ -150,7 +148,7 @@ public class SocketIT {
 			}
 			echoSocket = socketFactory.newSocket();
 			echoSocket.connect(new InetSocketAddress(
-					LOOPBACK_ADDRESS, echoServer.getPort()));
+					NetConstants.LOOPBACK_ADDRESS, echoServer.getPort()));
 			InputStream in = echoSocket.getInputStream();
 			OutputStream out = echoSocket.getOutputStream();
 			IoHelper.writeAsDataWithIndicatedLengthsThenFlush(

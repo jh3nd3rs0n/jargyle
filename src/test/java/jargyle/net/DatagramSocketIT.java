@@ -15,6 +15,7 @@ import java.util.concurrent.Executors;
 
 import org.junit.Test;
 
+import jargyle.NetConstants;
 import jargyle.TestStringConstants;
 import jargyle.net.socks.client.SocksClient;
 import jargyle.net.socks.server.Configuration;
@@ -110,8 +111,6 @@ public class DatagramSocketIT {
 	// big enough for any message size under GSS-API authentication
 	private static final int BUFFER_SIZE = 65535;
 	private static final int ECHO_SERVER_PORT = 1234;
-	public static final InetAddress LOOPBACK_ADDRESS = 
-			InetAddress.getLoopbackAddress();
 	private static final int SLEEP_TIME = 500; // 1/2 second
 
 	public static String echoThroughDatagramSocket(
@@ -137,7 +136,7 @@ public class DatagramSocketIT {
 						socksClient.newNetFactory().newDatagramSocketFactory();
 			}
 			echoDatagramSocket = datagramSocketFactory.newDatagramSocket(0);
-			echoDatagramSocket.connect(LOOPBACK_ADDRESS, port);
+			echoDatagramSocket.connect(NetConstants.LOOPBACK_ADDRESS, port);
 			ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 			DataOutputStream dataOutputStream =	new DataOutputStream(
 					byteArrayOutputStream);
@@ -145,7 +144,7 @@ public class DatagramSocketIT {
 			dataOutputStream.flush();
 			byte[] buffer = byteArrayOutputStream.toByteArray();
 			DatagramPacket packet = new DatagramPacket(
-					buffer, buffer.length, LOOPBACK_ADDRESS, port);
+					buffer, buffer.length, NetConstants.LOOPBACK_ADDRESS, port);
 			echoDatagramSocket.send(packet);
 			buffer = new byte[BUFFER_SIZE];
 			packet = new DatagramPacket(buffer, buffer.length);

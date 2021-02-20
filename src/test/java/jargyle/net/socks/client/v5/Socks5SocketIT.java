@@ -1,5 +1,4 @@
 package jargyle.net.socks.client.v5;
-import static jargyle.net.SocketIT.LOOPBACK_ADDRESS;
 import static jargyle.net.SocketIT.echoThroughSocket;
 import static org.junit.Assert.assertEquals;
 
@@ -7,6 +6,7 @@ import java.io.IOException;
 
 import org.junit.Test;
 
+import jargyle.NetConstants;
 import jargyle.TestStringConstants;
 import jargyle.net.socks.client.SocksClientHelper;
 import jargyle.net.socks.server.ConfigurationHelper;
@@ -19,7 +19,7 @@ public class Socks5SocketIT {
 		String returningString = echoThroughSocket(
 				string, 
 				SocksClientHelper.newSocks5Client(
-						LOOPBACK_ADDRESS.getHostAddress(), null), 
+						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), null), 
 				ConfigurationHelper.newConfiguration());
 		assertEquals(string, returningString);
 	}
@@ -30,7 +30,7 @@ public class Socks5SocketIT {
 		String returningString = echoThroughSocket(
 				string, 
 				SocksClientHelper.newSocks5Client(
-						LOOPBACK_ADDRESS.getHostAddress(), null), 
+						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), null), 
 				ConfigurationHelper.newConfiguration());
 		assertEquals(string, returningString);
 	}
@@ -41,7 +41,7 @@ public class Socks5SocketIT {
 		String returningString = echoThroughSocket(
 				string, 
 				SocksClientHelper.newSocks5Client(
-						LOOPBACK_ADDRESS.getHostAddress(), null), 
+						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), null), 
 				ConfigurationHelper.newConfiguration());
 		assertEquals(string, returningString);
 	}
@@ -52,7 +52,7 @@ public class Socks5SocketIT {
 		String returningString = echoThroughSocket(
 				string, 
 				SocksClientHelper.newSocks5Client(
-						LOOPBACK_ADDRESS.getHostAddress(), 
+						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						UsernamePassword.newInstance("Aladdin", "opensesame".toCharArray())),
 				ConfigurationHelper.newConfigurationUsingSocks5UsernamePasswordAuth());
@@ -65,7 +65,7 @@ public class Socks5SocketIT {
 		String returningString = echoThroughSocket(
 				string, 
 				SocksClientHelper.newSocks5Client(
-						LOOPBACK_ADDRESS.getHostAddress(), 
+						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						UsernamePassword.newInstance("Jasmine", "mission:impossible".toCharArray())),
 				ConfigurationHelper.newConfigurationUsingSocks5UsernamePasswordAuth());
@@ -78,7 +78,7 @@ public class Socks5SocketIT {
 		String returningString = echoThroughSocket(
 				string, 
 				SocksClientHelper.newSocks5Client(
-						LOOPBACK_ADDRESS.getHostAddress(), 
+						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						UsernamePassword.newInstance("Abu", "safeDriversSave40%".toCharArray())),
 				ConfigurationHelper.newConfigurationUsingSocks5UsernamePasswordAuth());

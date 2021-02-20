@@ -29,11 +29,11 @@ final class SslFactoryImpl extends SslFactory {
 		this.sslContext = null;
 	}
 	
-	Configuration getConfiguration() {
+	public Configuration getConfiguration() {
 		return this.configuration;
 	}
 	
-	SSLContext getSslContext() throws IOException {
+	public SSLContext getSslContext() throws IOException {
 		if (!Configuration.equals(this.lastConfiguration, this.configuration)) {
 			this.sslContext = this.newSslContext();
 			this.lastConfiguration = ImmutableConfiguration.newInstance(

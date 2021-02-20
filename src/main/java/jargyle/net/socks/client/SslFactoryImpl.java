@@ -27,11 +27,11 @@ final class SslFactoryImpl extends SslFactory {
 		this.sslContext = null;		
 	}
 	
-	Properties getProperties() {
+	public Properties getProperties() {
 		return this.properties;
 	}
 	
-	SSLContext getSslContext() throws IOException {
+	public SSLContext getSslContext() throws IOException {
 		if (this.sslContext == null) {
 			this.sslContext = this.newSslContext();
 		}

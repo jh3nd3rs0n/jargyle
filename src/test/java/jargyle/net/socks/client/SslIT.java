@@ -37,11 +37,19 @@ public class SslIT {
 						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
 						null),
 				ConfigurationHelper.newConfigurationUsingSsl());
-*/		
-		String returningString = DatagramSocketHelper.echoThroughDatagramSocket(
-				string, 
-				null, 
-				ConfigurationHelper.newConfigurationUsingSsl());
+*/
+		String returningString = null; 
+		try {
+			returningString = DatagramSocketHelper.echoThroughDatagramSocket(
+					string,
+					SocksClientHelper.newSocks5ClientUsingSsl(
+							NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+							null),
+					ConfigurationHelper.newConfigurationUsingSsl());			
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+			throw e;
+		}
 		assertEquals(string, returningString);
 	}
 

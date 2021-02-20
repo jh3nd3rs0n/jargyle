@@ -138,14 +138,12 @@ public class SocketIT {
 		Socket echoSocket = null;
 		try {
 			if (configuration != null) {
-				socksServer = new SocksServer(
-						configuration);
+				socksServer = new SocksServer(configuration);
 				socksServer.start();
 			}
 			echoServer = new EchoServer(ECHO_SERVER_PORT);
 			echoServer.start();
-			jargyle.net.SocketFactory socketFactory = 
-					new DefaultSocketFactory();
+			jargyle.net.SocketFactory socketFactory = new DefaultSocketFactory();
 			if (socksClient != null) {
 				socketFactory = 
 						socksClient.newNetFactory().newSocketFactory();

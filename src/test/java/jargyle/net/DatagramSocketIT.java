@@ -124,8 +124,7 @@ public class DatagramSocketIT {
 		String returningString = null;
 		try {
 			if (configuration != null) {
-				socksServer = new SocksServer(
-						configuration);
+				socksServer = new SocksServer(configuration);
 				socksServer.start();
 			}
 			echoServer = new EchoServer(ECHO_SERVER_PORT);
@@ -137,12 +136,11 @@ public class DatagramSocketIT {
 				datagramSocketFactory = 
 						socksClient.newNetFactory().newDatagramSocketFactory();
 			}
-			echoDatagramSocket = 
-					datagramSocketFactory.newDatagramSocket(0);
+			echoDatagramSocket = datagramSocketFactory.newDatagramSocket(0);
 			echoDatagramSocket.connect(LOOPBACK_ADDRESS, port);
 			ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-			DataOutputStream dataOutputStream = 
-					new DataOutputStream(byteArrayOutputStream);
+			DataOutputStream dataOutputStream =	new DataOutputStream(
+					byteArrayOutputStream);
 			dataOutputStream.writeUTF(string);
 			dataOutputStream.flush();
 			byte[] buffer = byteArrayOutputStream.toByteArray();

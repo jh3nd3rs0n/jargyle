@@ -192,8 +192,7 @@ public class ServerSocketIT {
 		Socket Socket = null;
 		try {
 			if (configuration != null) {
-				socksServer = new SocksServer(
-						configuration);
+				socksServer = new SocksServer(configuration);
 				socksServer.start();
 			}
 			echoServer = new EchoServer(ECHO_SERVER_PORT, string);
@@ -214,8 +213,7 @@ public class ServerSocketIT {
 				serverSocketFactory = 
 						socksClient.newNetFactory().newServerSocketFactory();
 			}
-			ServerSocket serverSocket = 
-					serverSocketFactory.newServerSocket();
+			ServerSocket serverSocket = serverSocketFactory.newServerSocket();
 			serverSocket.bind(new InetSocketAddress(
 					(InetAddress) null, SERVER_PORT));
 			writer.println(String.format(

@@ -27,7 +27,11 @@ final class SslFactoryImpl extends SslFactory {
 		this.sslContext = null;		
 	}
 	
-	private SSLContext getSslContext() throws IOException {
+	Properties getProperties() {
+		return this.properties;
+	}
+	
+	SSLContext getSslContext() throws IOException {
 		if (this.sslContext == null) {
 			this.sslContext = this.newSslContext();
 		}
@@ -35,8 +39,7 @@ final class SslFactoryImpl extends SslFactory {
 	}
 	
 	@Override
-	public DtlsDatagramSocketFactory newDtlsDatagramSocketFactory() 
-			throws IOException {
+	public DtlsDatagramSocketFactory newDtlsDatagramSocketFactory() {
 		return new DtlsDatagramSocketFactoryImpl();
 	}
 
@@ -84,8 +87,8 @@ final class SslFactoryImpl extends SslFactory {
 	}
 
 	@Override
-	public SslSocketFactory newSslSocketFactory() throws IOException {
-		return new SslSocketFactoryImpl(this.properties, this.getSslContext());
+	public SslSocketFactory newSslSocketFactory() {
+		return new SslSocketFactoryImpl(this);
 	}
 
 }

@@ -946,34 +946,14 @@ public final class Socks5Worker implements Runnable {
 			final String peerHost, 
 			final int peerPort) {
 		DatagramSocket clientDatagramSck = null;
-		DtlsDatagramSocketFactory dtlsDatagramSocketFactory = null;
-		try {
-			dtlsDatagramSocketFactory = 
-					this.sslFactory.newDtlsDatagramSocketFactory();
-		} catch (IOException e) {
-			LOGGER.warn( 
-					this.format("Error in creating the DtlsDatagramSocketFactory"), 
-					e);
-			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
-					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			LOGGER.debug(this.format(String.format(
-					"Sending %s",
-					socks5Rep.toString())));
-			try {
-				this.writeThenFlush(socks5Rep.toByteArray());
-			} catch (IOException e1) {
-				LOGGER.warn( 
-						this.format("Error in writing SOCKS5 reply"), 
-						e1);
-			}
-			return null;
-		}
+		DtlsDatagramSocketFactory dtlsDatagramSocketFactory = 
+				this.sslFactory.newDtlsDatagramSocketFactory();
 		try {
 			clientDatagramSck = dtlsDatagramSocketFactory.newDatagramSocket(
 					clientDatagramSock, peerHost, peerPort);
 		} catch (IOException e) {
 			LOGGER.warn( 
-					this.format("Error in creating the DtlsDatagramSocket"), 
+					this.format("Error in wrapping the client-facing UDP socket"), 
 					e);
 			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
 					Reply.GENERAL_SOCKS_SERVER_FAILURE);
@@ -998,7 +978,7 @@ public final class Socks5Worker implements Runnable {
 						gssSocket.getMessageProp());
 			} catch (SocketException e) {
 				LOGGER.warn( 
-						this.format("Error in creating the GssDatagramSocket"), 
+						this.format("Error in wrapping the client-facing UDP socket"), 
 						e);
 				Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
 						Reply.GENERAL_SOCKS_SERVER_FAILURE);

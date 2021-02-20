@@ -13,14 +13,11 @@ import jargyle.net.ssl.Protocols;
 import jargyle.net.ssl.SslSocketFactory;
 
 final class SslSocketFactoryImpl extends SslSocketFactory {
-	
-	private final Configuration configuration;
-	private final SSLContext sslContext;	
 
-	public SslSocketFactoryImpl(
-			final Configuration config, final SSLContext context) {
-		this.configuration = config;
-		this.sslContext = context;		
+	private final SslFactoryImpl sslFactoryImpl;
+	
+	public SslSocketFactoryImpl(final SslFactoryImpl factoryImpl) {
+		this.sslFactoryImpl = factoryImpl;
 	}
 	
 	@Override
@@ -28,12 +25,14 @@ final class SslSocketFactoryImpl extends SslSocketFactory {
 			final Socket socket, 
 			final InputStream consumed, 
 			final boolean autoClose) throws IOException {
-		Settings settings = this.configuration.getSettings();
+		Configuration configuration = this.sslFactoryImpl.getConfiguration();
+		Settings settings = configuration.getSettings();
 		if (!settings.getLastValue(
 				SettingSpec.SSL_ENABLED, Boolean.class).booleanValue()) {
 			return socket;
 		}
-		SSLSocketFactory sslSocketFactory = this.sslContext.getSocketFactory();
+		SSLContext sslContext = this.sslFactoryImpl.getSslContext();
+		SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
 		SSLSocket sslSocket = (SSLSocket) sslSocketFactory.createSocket(
 				socket,	consumed, autoClose); 
 		CipherSuites enabledCipherSuites = settings.getLastValue(

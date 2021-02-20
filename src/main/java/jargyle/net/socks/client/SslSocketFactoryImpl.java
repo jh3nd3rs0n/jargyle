@@ -14,13 +14,10 @@ import jargyle.net.ssl.SslSocketFactory;
 
 final class SslSocketFactoryImpl extends SslSocketFactory {
 	
-	private final Properties properties;
-	private final SSLContext sslContext;
+	private final SslFactoryImpl sslFactoryImpl;
 
-	public SslSocketFactoryImpl(
-			final Properties props, final SSLContext context) {
-		this.properties = props;
-		this.sslContext = context;
+	public SslSocketFactoryImpl(final SslFactoryImpl factoryImpl) {
+		this.sslFactoryImpl = factoryImpl;
 	}
 
 	@Override
@@ -37,23 +34,25 @@ final class SslSocketFactoryImpl extends SslSocketFactory {
 			final String host, 
 			final int port, 
 			final boolean autoClose) throws IOException {
-		if (!this.properties.getValue(
+		Properties properties = this.sslFactoryImpl.getProperties();
+		if (!properties.getValue(
 				PropertySpec.SSL_ENABLED, Boolean.class).booleanValue()) {
 			return socket;
 		}
-		SSLSocketFactory sslSocketFactory = this.sslContext.getSocketFactory();
+		SSLContext sslContext = this.sslFactoryImpl.getSslContext();
+		SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
 		SSLSocket sslSocket = (SSLSocket) sslSocketFactory.createSocket(
 				socket, 
 				host, 
 				port, 
 				autoClose); 
-		CipherSuites enabledCipherSuites = this.properties.getValue(
+		CipherSuites enabledCipherSuites = properties.getValue(
 				PropertySpec.SSL_ENABLED_CIPHER_SUITES, CipherSuites.class);
 		String[] cipherSuites = enabledCipherSuites.toStringArray();
 		if (cipherSuites.length > 0) {
 			sslSocket.setEnabledCipherSuites(cipherSuites);
 		}
-		Protocols enabledProtocols = this.properties.getValue(
+		Protocols enabledProtocols = properties.getValue(
 				PropertySpec.SSL_ENABLED_PROTOCOLS, Protocols.class);
 		String[] protocols = enabledProtocols.toStringArray();
 		if (protocols.length > 0) {

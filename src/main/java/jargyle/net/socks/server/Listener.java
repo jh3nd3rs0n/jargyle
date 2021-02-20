@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import jargyle.net.NetFactory;
 import jargyle.net.SocketSettings;
+import jargyle.net.ssl.SslSocketFactory;
 import jargyle.util.Criteria;
 import jargyle.util.Criterion;
 
@@ -23,13 +24,13 @@ final class Listener implements Runnable {
 	private final Configuration configuration;
 	private final NetFactory externalNetFactory;
 	private final ServerSocket serverSocket;
-	private final SslWrapper sslWrapper;
+	private final SslSocketFactory sslSocketFactory;
 		
 	public Listener(final ServerSocket serverSock, final Configuration config) {
 		this.configuration = config;
 		this.externalNetFactory = new ExternalNetFactory(config);
 		this.serverSocket = serverSock;
-		this.sslWrapper = new SslWrapper(config);
+		this.sslSocketFactory = new SslSocketFactoryImpl(config);
 	}
 	
 	private boolean canAcceptClientSocket(final Socket clientSocket) {
@@ -133,7 +134,6 @@ final class Listener implements Runnable {
 			executor.execute(new Worker(
 					clientSocket, 
 					this.configuration, 
-					this.sslWrapper, 
 					this.externalNetFactory));
 		}
 		executor.shutdownNow();
@@ -152,7 +152,7 @@ final class Listener implements Runnable {
 	private Socket wrapClientSocket(final Socket clientSocket) {
 		Socket clientSock = null;
 		try {
-			clientSock = this.sslWrapper.wrapIfSslEnabled(
+			clientSock = this.sslSocketFactory.newSocket(
 					clientSocket, null, true);
 		} catch (IOException e) {
 			LOGGER.warn(

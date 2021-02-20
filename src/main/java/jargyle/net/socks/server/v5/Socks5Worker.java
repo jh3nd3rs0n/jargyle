@@ -27,7 +27,6 @@ import jargyle.net.SocketSettings;
 import jargyle.net.socks.server.Configuration;
 import jargyle.net.socks.server.SettingSpec;
 import jargyle.net.socks.server.Settings;
-import jargyle.net.socks.server.SslWrapper;
 import jargyle.net.socks.server.TcpRelayServer;
 import jargyle.net.socks.transport.v5.AddressType;
 import jargyle.net.socks.transport.v5.AuthMethod;
@@ -59,12 +58,10 @@ public final class Socks5Worker implements Runnable {
 	private final Configuration configuration;
 	private final NetFactory externalNetFactory;
 	private final Settings settings;
-	private final SslWrapper sslWrapper;
 	
 	public Socks5Worker(
 			final Socket clientSock, 
 			final Configuration config, 
-			final SslWrapper wrapper, 
 			final NetFactory factory) {
 		Settings sttngs = config.getSettings();
 		this.clientInputStream = null;
@@ -73,7 +70,6 @@ public final class Socks5Worker implements Runnable {
 		this.configuration = config;
 		this.externalNetFactory = factory;
 		this.settings = sttngs;
-		this.sslWrapper = wrapper;
 	}
 	
 	private Socket authenticateUsing(final Method method) {
@@ -617,11 +613,8 @@ public final class Socks5Worker implements Runnable {
 			if (!this.configureClientDatagramSocket(clientDatagramSock)) {
 				return;
 			}
-			DatagramSocket clientDatagramSck = 
-					this.wrapClientDatagramSocket(
-							clientDatagramSock, 
-							desiredDestinationAddress, 
-							desiredDestinationPort); 
+			DatagramSocket clientDatagramSck = this.wrapClientDatagramSocket(
+					clientDatagramSock); 
 			if (clientDatagramSck == null) {
 				return;
 			}
@@ -725,9 +718,8 @@ public final class Socks5Worker implements Runnable {
 			InetAddress bindInetAddress = bindHost.toInetAddress();
 			DatagramSocketFactory datagramSocketFactory = 
 					this.externalNetFactory.newDatagramSocketFactory();
-			serverDatagramSock = 
-					datagramSocketFactory.newDatagramSocket(
-							new InetSocketAddress(bindInetAddress, 0));
+			serverDatagramSock = datagramSocketFactory.newDatagramSocket(
+					new InetSocketAddress(bindInetAddress, 0));
 		} catch (SocketException e) {
 			LOGGER.warn( 
 					this.format("Error in creating the server-facing UDP "
@@ -943,32 +935,8 @@ public final class Socks5Worker implements Runnable {
 	}
 	
 	private DatagramSocket wrapClientDatagramSocket(
-			final DatagramSocket clientDatagramSock, 
-			final String peerHost, 
-			final int peerPort) {
-		DatagramSocket clientDatagramSck = null;
-		try {
-			clientDatagramSck = this.sslWrapper.wrapIfSslEnabled(
-					clientDatagramSock, peerHost, peerPort);
-		} catch (IOException e) {
-			LOGGER.warn( 
-					this.format("Error in wrapping the client-facing UDP "
-							+ "socket"), 
-					e);
-			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
-					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			LOGGER.debug(this.format(String.format(
-					"Sending %s",
-					socks5Rep.toString())));
-			try {
-				this.writeThenFlush(socks5Rep.toByteArray());
-			} catch (IOException e1) {
-				LOGGER.warn( 
-						this.format("Error in writing SOCKS5 reply"), 
-						e1);				
-			}
-			return null;
-		}
+			final DatagramSocket clientDatagramSock) {
+		DatagramSocket clientDatagramSck = clientDatagramSock;
 		if (this.clientSocket instanceof GssSocket) {
 			GssSocket gssSocket = (GssSocket) this.clientSocket;
 			try {

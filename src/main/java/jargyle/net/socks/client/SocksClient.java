@@ -9,6 +9,7 @@ import java.util.Objects;
 import jargyle.net.Host;
 import jargyle.net.NetFactory;
 import jargyle.net.Port;
+import jargyle.net.ssl.SslSocketFactory;
 import jargyle.util.PositiveInteger;
 
 public abstract class SocksClient {
@@ -24,7 +25,7 @@ public abstract class SocksClient {
 
 	private final Properties properties;
 	private final SocksServerUri socksServerUri;
-	private final SslWrapper sslWrapper;	
+	private final SslSocketFactory sslSocketFactory;
 		
 	protected SocksClient(final SocksServerUri serverUri, final Properties props) {
 		Objects.requireNonNull(
@@ -32,7 +33,7 @@ public abstract class SocksClient {
 		Objects.requireNonNull(props, "Properties must not be null");
 		this.properties = props;
 		this.socksServerUri = serverUri;
-		this.sslWrapper = new SslWrapper(props);		
+		this.sslSocketFactory = new SslSocketFactoryImpl(props);
 	}
 	
 	public Socket connectToSocksServerWith(
@@ -77,7 +78,7 @@ public abstract class SocksClient {
 						InetAddress.getByName(socksServerUri.getHost()), 
 						socksServerUri.getPort()), 
 				timeout);
-		return this.sslWrapper.wrapIfSslEnabled(
+		return this.sslSocketFactory.newSocket(
 				socket, 
 				this.socksServerUri.getHost(), 
 				this.socksServerUri.getPort(), 
@@ -90,10 +91,6 @@ public abstract class SocksClient {
 	
 	public final SocksServerUri getSocksServerUri() {
 		return this.socksServerUri;
-	}
-	
-	public final SslWrapper getSslWrapper() {
-		return this.sslWrapper;
 	}
 	
 	public abstract NetFactory newNetFactory();

@@ -3,7 +3,6 @@ package jargyle.net.socks.server;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.DatagramSocket;
 import java.net.Socket;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -18,16 +17,17 @@ import javax.net.ssl.TrustManager;
 import jargyle.net.ssl.CipherSuites;
 import jargyle.net.ssl.KeyManagerHelper;
 import jargyle.net.ssl.Protocols;
+import jargyle.net.ssl.SslSocketFactory;
 import jargyle.net.ssl.TrustManagerHelper;
 import jargyle.security.EncryptedPassword;
 
-public final class SslWrapper {
+final class SslSocketFactoryImpl extends SslSocketFactory {
 	
 	private final Configuration configuration;
 	private Configuration lastConfiguration;
 	private SSLContext sslContext;	
-	
-	SslWrapper(final Configuration config) {
+
+	public SslSocketFactoryImpl(final Configuration config) {
 		this.configuration = config;
 		this.lastConfiguration = null;
 		this.sslContext = null;		
@@ -42,6 +42,52 @@ public final class SslWrapper {
 		return this.sslContext;
 	}
 	
+	@Override
+	public Socket newSocket(
+			final Socket socket, 
+			final InputStream consumed, 
+			final boolean autoClose) throws IOException {
+		Settings settings = this.configuration.getSettings();
+		if (!settings.getLastValue(
+				SettingSpec.SSL_ENABLED, Boolean.class).booleanValue()) {
+			return socket;
+		}
+		SSLContext sslContext = this.getSslContext();
+		SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
+		SSLSocket sslSocket = (SSLSocket) sslSocketFactory.createSocket(
+				socket,	consumed, autoClose); 
+		CipherSuites enabledCipherSuites = settings.getLastValue(
+				SettingSpec.SSL_ENABLED_CIPHER_SUITES, CipherSuites.class);
+		String[] cipherSuites = enabledCipherSuites.toStringArray();
+		if (cipherSuites.length > 0) {
+			sslSocket.setEnabledCipherSuites(cipherSuites);
+		}
+		Protocols enabledProtocols = settings.getLastValue(
+				SettingSpec.SSL_ENABLED_PROTOCOLS, Protocols.class);
+		String[] protocols = enabledProtocols.toStringArray();
+		if (protocols.length > 0) {
+			sslSocket.setEnabledProtocols(protocols);
+		}
+		if (settings.getLastValue(SettingSpec.SSL_NEED_CLIENT_AUTH, 
+				Boolean.class).booleanValue()) {
+			sslSocket.setNeedClientAuth(true);
+		}
+		if (settings.getLastValue(SettingSpec.SSL_WANT_CLIENT_AUTH, 
+				Boolean.class).booleanValue()) {
+			sslSocket.setWantClientAuth(true);
+		}
+		return sslSocket;
+	}
+	
+	@Override
+	public Socket newSocket(
+			final Socket socket, 
+			final String host, 
+			final int port, 
+			final boolean autoClose) throws IOException {
+		throw new UnsupportedOperationException();
+	}
+
 	private SSLContext newSslContext() throws IOException {
 		SSLContext context = null;
 		Settings settings = this.configuration.getSettings();
@@ -85,57 +131,5 @@ public final class SslWrapper {
 		}
 		return context;
 	}
-	
-	public DatagramSocket wrapIfSslEnabled(
-			final DatagramSocket datagramSocket, 
-			final String peerHost, 
-			final int peerPort) 
-			throws IOException {
-		/*
-		Settings settings = this.configuration.getSettings();
-		if (!settings.getLastValue(
-				SettingSpec.SSL_ENABLED, Boolean.class).booleanValue()) {
-			return datagramSocket;
-		}
-		// TODO DtlsDatagramSocket
-		*/
-		return datagramSocket;			
-	}
-	
-	public Socket wrapIfSslEnabled(
-			final Socket socket, 
-			final InputStream consumed, 
-			final boolean autoClose) throws IOException {
-		Settings settings = this.configuration.getSettings();
-		if (!settings.getLastValue(
-				SettingSpec.SSL_ENABLED, Boolean.class).booleanValue()) {
-			return socket;
-		}
-		SSLContext sslContext = this.getSslContext();
-		SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
-		SSLSocket sslSocket = (SSLSocket) sslSocketFactory.createSocket(
-				socket,	consumed, autoClose); 
-		CipherSuites enabledCipherSuites = settings.getLastValue(
-				SettingSpec.SSL_ENABLED_CIPHER_SUITES, CipherSuites.class);
-		String[] cipherSuites = enabledCipherSuites.toStringArray();
-		if (cipherSuites.length > 0) {
-			sslSocket.setEnabledCipherSuites(cipherSuites);
-		}
-		Protocols enabledProtocols = settings.getLastValue(
-				SettingSpec.SSL_ENABLED_PROTOCOLS, Protocols.class);
-		String[] protocols = enabledProtocols.toStringArray();
-		if (protocols.length > 0) {
-			sslSocket.setEnabledProtocols(protocols);
-		}
-		if (settings.getLastValue(SettingSpec.SSL_NEED_CLIENT_AUTH, 
-				Boolean.class).booleanValue()) {
-			sslSocket.setNeedClientAuth(true);
-		}
-		if (settings.getLastValue(SettingSpec.SSL_WANT_CLIENT_AUTH, 
-				Boolean.class).booleanValue()) {
-			sslSocket.setWantClientAuth(true);
-		}
-		return sslSocket;
-	}
-	
+
 }

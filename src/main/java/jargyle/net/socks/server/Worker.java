@@ -18,17 +18,14 @@ final class Worker implements Runnable {
 	private final Socket clientSocket;
 	private final Configuration configuration;
 	private final NetFactory externalNetFactory;
-	private final SslWrapper sslWrapper;
 	
 	public Worker(
 			final Socket clientSock, 
 			final Configuration config, 
-			final SslWrapper wrapper, 
 			final NetFactory factory) {
 		this.clientSocket = clientSock;
 		this.configuration = config;
 		this.externalNetFactory = factory;		
-		this.sslWrapper = wrapper;
 	}
 	
 	private String format(final String message) {
@@ -53,7 +50,6 @@ final class Worker implements Runnable {
 				Socks5Worker socks5Worker = new Socks5Worker(
 						this.clientSocket, 
 						this.configuration, 
-						this.sslWrapper, 
 						this.externalNetFactory);
 				socks5Worker.run();
 			} else {

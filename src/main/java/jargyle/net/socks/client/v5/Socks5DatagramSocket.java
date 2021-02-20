@@ -232,10 +232,6 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 				throw new IOException(String.format(
 						"received reply: %s", reply));
 			}
-			datagramSock = this.socks5Client.getSslWrapper().wrapIfSslEnabled(
-					datagramSock,
-					socks5Rep.getServerBoundAddress(),
-					socks5Rep.getServerBoundPort());
 			if (sock instanceof GssSocket) {
 				GssSocket gssSocket = (GssSocket) sock;
 				datagramSock = new GssDatagramSocket(

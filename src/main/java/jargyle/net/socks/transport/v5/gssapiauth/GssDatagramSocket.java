@@ -53,7 +53,7 @@ public final class GssDatagramSocket extends FilterDatagramSocket {
 	}
 	
 	@Override
-	public void receive(DatagramPacket p) throws IOException {
+	public synchronized void receive(DatagramPacket p) throws IOException {
 		super.receive(p);
 		if (this.messageProp != null) {
 			byte[] data = p.getData();

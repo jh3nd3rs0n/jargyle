@@ -297,7 +297,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 	}
 	
 	@Override
-	public void bind(SocketAddress addr) throws SocketException {
+	public synchronized void bind(SocketAddress addr) throws SocketException {
 		this.socks5DatagramSocketImpl.bind(addr);
 	}
 
@@ -322,7 +322,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 	}
 
 	@Override
-	public boolean getBroadcast() throws SocketException {
+	public synchronized boolean getBroadcast() throws SocketException {
 		return this.socks5DatagramSocketImpl.datagramSocket.getBroadcast();
 	}
 
@@ -357,7 +357,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 	}
 
 	@Override
-	public int getReceiveBufferSize() throws SocketException {
+	public synchronized int getReceiveBufferSize() throws SocketException {
 		return this.socks5DatagramSocketImpl.datagramSocket.getReceiveBufferSize();
 	}
 
@@ -367,12 +367,12 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 	}
 
 	@Override
-	public boolean getReuseAddress() throws SocketException {
+	public synchronized boolean getReuseAddress() throws SocketException {
 		return this.socks5DatagramSocketImpl.datagramSocket.getReuseAddress();
 	}
 
 	@Override
-	public int getSendBufferSize() throws SocketException {
+	public synchronized int getSendBufferSize() throws SocketException {
 		return this.socks5DatagramSocketImpl.datagramSocket.getSendBufferSize();
 	}
 
@@ -381,12 +381,12 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 	}
 	
 	@Override
-	public int getSoTimeout() throws SocketException {
+	public synchronized int getSoTimeout() throws SocketException {
 		return this.socks5DatagramSocketImpl.datagramSocket.getSoTimeout();
 	}
 
 	@Override
-	public int getTrafficClass() throws SocketException {
+	public synchronized int getTrafficClass() throws SocketException {
 		return this.socks5DatagramSocketImpl.datagramSocket.getTrafficClass();
 	}
 
@@ -406,7 +406,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 	}
 
 	@Override
-	public void receive(DatagramPacket p) throws IOException {
+	public synchronized void receive(DatagramPacket p) throws IOException {
 		this.socks5DatagramSocketImpl.receive(p);
 	}
 
@@ -416,32 +416,32 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 	}
 
 	@Override
-	public void setBroadcast(boolean on) throws SocketException {
+	public synchronized void setBroadcast(boolean on) throws SocketException {
 		this.socks5DatagramSocketImpl.datagramSocket.setBroadcast(on);
 	}
 
 	@Override
-	public void setReceiveBufferSize(int size) throws SocketException {
+	public synchronized void setReceiveBufferSize(int size) throws SocketException {
 		this.socks5DatagramSocketImpl.datagramSocket.setReceiveBufferSize(size);
 	}
 
 	@Override
-	public void setReuseAddress(boolean on) throws SocketException {
+	public synchronized void setReuseAddress(boolean on) throws SocketException {
 		this.socks5DatagramSocketImpl.datagramSocket.setReuseAddress(on);
 	}
 
 	@Override
-	public void setSendBufferSize(int size) throws SocketException {
+	public synchronized void setSendBufferSize(int size) throws SocketException {
 		this.socks5DatagramSocketImpl.datagramSocket.setSendBufferSize(size);
 	}
 
 	@Override
-	public void setSoTimeout(int timeout) throws SocketException {
+	public synchronized void setSoTimeout(int timeout) throws SocketException {
 		this.socks5DatagramSocketImpl.datagramSocket.setSoTimeout(timeout);
 	}
 
 	@Override
-	public void setTrafficClass(int tc) throws SocketException {
+	public synchronized void setTrafficClass(int tc) throws SocketException {
 		this.socks5DatagramSocketImpl.datagramSocket.setTrafficClass(tc);
 	}
 

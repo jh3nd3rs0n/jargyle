@@ -19,7 +19,7 @@ public class FilterDatagramSocket extends DatagramSocket {
 	}
 
 	@Override
-	public void bind(SocketAddress addr) throws SocketException {
+	public synchronized void bind(SocketAddress addr) throws SocketException {
 		this.datagramSocket.bind(addr);
 	}
 
@@ -44,7 +44,7 @@ public class FilterDatagramSocket extends DatagramSocket {
 	}
 
 	@Override
-	public boolean getBroadcast() throws SocketException {
+	public synchronized boolean getBroadcast() throws SocketException {
 		return this.datagramSocket.getBroadcast();
 	}
 
@@ -79,7 +79,7 @@ public class FilterDatagramSocket extends DatagramSocket {
 	}
 
 	@Override
-	public int getReceiveBufferSize() throws SocketException {
+	public synchronized int getReceiveBufferSize() throws SocketException {
 		return this.datagramSocket.getReceiveBufferSize();
 	}
 
@@ -89,22 +89,22 @@ public class FilterDatagramSocket extends DatagramSocket {
 	}
 
 	@Override
-	public boolean getReuseAddress() throws SocketException {
+	public synchronized boolean getReuseAddress() throws SocketException {
 		return this.datagramSocket.getReuseAddress();
 	}
 
 	@Override
-	public int getSendBufferSize() throws SocketException {
+	public synchronized int getSendBufferSize() throws SocketException {
 		return this.datagramSocket.getSendBufferSize();
 	}
 
 	@Override
-	public int getSoTimeout() throws SocketException {
+	public synchronized int getSoTimeout() throws SocketException {
 		return this.datagramSocket.getSoTimeout();
 	}
 
 	@Override
-	public int getTrafficClass() throws SocketException {
+	public synchronized int getTrafficClass() throws SocketException {
 		return this.datagramSocket.getTrafficClass();
 	}
 
@@ -124,7 +124,7 @@ public class FilterDatagramSocket extends DatagramSocket {
 	}
 
 	@Override
-	public void receive(DatagramPacket p) throws IOException {
+	public synchronized void receive(DatagramPacket p) throws IOException {
 		this.datagramSocket.receive(p);
 	}
 
@@ -134,32 +134,32 @@ public class FilterDatagramSocket extends DatagramSocket {
 	}
 
 	@Override
-	public void setBroadcast(boolean on) throws SocketException {
+	public synchronized void setBroadcast(boolean on) throws SocketException {
 		this.datagramSocket.setBroadcast(on);
 	}
 
 	@Override
-	public void setReceiveBufferSize(int size) throws SocketException {
+	public synchronized void setReceiveBufferSize(int size) throws SocketException {
 		this.datagramSocket.setReceiveBufferSize(size);
 	}
 
 	@Override
-	public void setReuseAddress(boolean on) throws SocketException {
+	public synchronized void setReuseAddress(boolean on) throws SocketException {
 		this.datagramSocket.setReuseAddress(on);
 	}
 
 	@Override
-	public void setSendBufferSize(int size) throws SocketException {
+	public synchronized void setSendBufferSize(int size) throws SocketException {
 		this.datagramSocket.setSendBufferSize(size);
 	}
 
 	@Override
-	public void setSoTimeout(int timeout) throws SocketException {
+	public synchronized void setSoTimeout(int timeout) throws SocketException {
 		this.datagramSocket.setSoTimeout(timeout);
 	}
 
 	@Override
-	public void setTrafficClass(int tc) throws SocketException {
+	public synchronized void setTrafficClass(int tc) throws SocketException {
 		this.datagramSocket.setTrafficClass(tc);
 	}
 

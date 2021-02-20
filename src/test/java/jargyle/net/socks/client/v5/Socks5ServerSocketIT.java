@@ -1,5 +1,4 @@
 package jargyle.net.socks.client.v5;
-import static jargyle.net.ServerSocketIT.echoThroughServerSocket;
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
@@ -8,6 +7,7 @@ import org.junit.Test;
 
 import jargyle.NetConstants;
 import jargyle.TestStringConstants;
+import jargyle.net.ServerSocketHelper;
 import jargyle.net.socks.client.SocksClientHelper;
 import jargyle.net.socks.server.ConfigurationHelper;
 
@@ -16,7 +16,7 @@ public class Socks5ServerSocketIT {
 	@Test
 	public void testThroughSocks5ServerSocket01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = echoThroughServerSocket(
+		String returningString = ServerSocketHelper.echoThroughServerSocket(
 				string, 
 				SocksClientHelper.newSocks5Client(
 						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), null), 
@@ -27,7 +27,7 @@ public class Socks5ServerSocketIT {
 	@Test
 	public void testThroughSocks5ServerSocket02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = echoThroughServerSocket(
+		String returningString = ServerSocketHelper.echoThroughServerSocket(
 				string, 
 				SocksClientHelper.newSocks5Client(
 						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), null), 
@@ -38,7 +38,7 @@ public class Socks5ServerSocketIT {
 	@Test
 	public void testThroughSocks5ServerSocket03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = echoThroughServerSocket(
+		String returningString = ServerSocketHelper.echoThroughServerSocket(
 				string, 
 				SocksClientHelper.newSocks5Client(
 						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), null), 
@@ -49,7 +49,7 @@ public class Socks5ServerSocketIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingUsernamePasswordAuth01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = echoThroughServerSocket(
+		String returningString = ServerSocketHelper.echoThroughServerSocket(
 				string, 
 				SocksClientHelper.newSocks5Client(
 						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
@@ -62,7 +62,7 @@ public class Socks5ServerSocketIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingUsernamePasswordAuth02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = echoThroughServerSocket(
+		String returningString = ServerSocketHelper.echoThroughServerSocket(
 				string, 
 				SocksClientHelper.newSocks5Client(
 						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
@@ -75,7 +75,7 @@ public class Socks5ServerSocketIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingUsernamePasswordAuth03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = echoThroughServerSocket(
+		String returningString = ServerSocketHelper.echoThroughServerSocket(
 				string, 
 				SocksClientHelper.newSocks5Client(
 						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 

@@ -59,6 +59,44 @@ public class SocksServerIT {
 	}
 
 	@Test
+	public void testGetPortForChangingConfiguration() throws IOException {
+		IoHelper.writeToFile(
+				ResourceHelper.getResourceAsString(
+						ResourceNameConstants.JARGYLE_NET_SOCKS_SERVER_EMPTY_CONFIGURATION_FILE), 
+				this.configurationFile.toFile());
+		ConfigurationService configurationService = 
+				XmlFileSourceConfigurationService.newInstance(
+						this.configurationFile.toFile());
+		Configuration configuration = MutableConfiguration.newInstance(
+				configurationService);
+		SocksServer socksServer = new SocksServer(configuration);
+		try {
+			socksServer.start();
+			try {
+				Thread.sleep(ONE_SECOND);
+			} catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
+			}		
+			IoHelper.writeToFile(
+					ResourceHelper.getResourceAsString(
+							ResourceNameConstants.JARGYLE_NET_SOCKS_SERVER_CONFIGURATION_FILE), 
+					this.configurationFile.toFile());
+			try {
+				Thread.sleep(ONE_SECOND);
+			} catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
+			}
+			Port expectedPort = Port.newInstance(1080);
+			Port actualPort = socksServer.getPort();
+			assertEquals(expectedPort, actualPort);
+		} finally {
+			if (socksServer.isStarted()) {
+				socksServer.stop();
+			}
+		}
+	}
+
+	@Test
 	public void testMainForCombiningConfigurationFiles() throws IOException {
 		String[] args = new String[] {
 				"--config-file=".concat(ResourceHelper.getResourceAsFile(
@@ -121,7 +159,7 @@ public class SocksServerIT {
 				expectedEmptyConfigurationFileContents, 
 				actualEmptyConfigurationFileContents);
 	}
-
+	
 	@Test
 	public void testMainForSupplementingAConfigurationFile() throws IOException {
 		String[] args = new String[] {
@@ -143,44 +181,6 @@ public class SocksServerIT {
 		assertEquals(
 				expectedSupplementedConfigurationFileContents, 
 				actualSupplementedConfigurationFileContents);
-	}
-	
-	@Test
-	public void testGetPortForChangingConfiguration() throws IOException {
-		IoHelper.writeToFile(
-				ResourceHelper.getResourceAsString(
-						ResourceNameConstants.JARGYLE_NET_SOCKS_SERVER_EMPTY_CONFIGURATION_FILE), 
-				this.configurationFile.toFile());
-		ConfigurationService configurationService = 
-				XmlFileSourceConfigurationService.newInstance(
-						this.configurationFile.toFile());
-		Configuration configuration = MutableConfiguration.newInstance(
-				configurationService);
-		SocksServer socksServer = new SocksServer(configuration);
-		try {
-			socksServer.start();
-			try {
-				Thread.sleep(ONE_SECOND);
-			} catch (InterruptedException e) {
-				Thread.currentThread().interrupt();
-			}		
-			IoHelper.writeToFile(
-					ResourceHelper.getResourceAsString(
-							ResourceNameConstants.JARGYLE_NET_SOCKS_SERVER_CONFIGURATION_FILE), 
-					this.configurationFile.toFile());
-			try {
-				Thread.sleep(ONE_SECOND);
-			} catch (InterruptedException e) {
-				Thread.currentThread().interrupt();
-			}
-			Port expectedPort = Port.newInstance(1080);
-			Port actualPort = socksServer.getPort();
-			assertEquals(expectedPort, actualPort);
-		} finally {
-			if (socksServer.isStarted()) {
-				socksServer.stop();
-			}
-		}
 	}
 
 }

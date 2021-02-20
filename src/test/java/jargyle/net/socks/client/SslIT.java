@@ -39,7 +39,9 @@ public class SslIT {
 				ConfigurationHelper.newConfigurationUsingSsl());
 */		
 		String returningString = DatagramSocketHelper.echoThroughDatagramSocket(
-				string, null, null);
+				string, 
+				null, 
+				ConfigurationHelper.newConfigurationUsingSsl());
 		assertEquals(string, returningString);
 	}
 
@@ -64,18 +66,6 @@ public class SslIT {
 						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
 						null),
 				ConfigurationHelper.newConfigurationUsingSsl());
-		assertEquals(string, returningString);
-	}
-	
-	@Test
-	public void testThroughSocks5DatagramSocketUsingSslAndClientAuth01() throws IOException {
-		String string = TestStringConstants.STRING_01;
-		String returningString = DatagramSocketHelper.echoThroughDatagramSocket(
-				string,
-				SocksClientHelper.newSocks5ClientUsingSslAndClientAuth(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
-						null),
-				ConfigurationHelper.newConfigurationUsingSslAndRequiredClientAuth());
 		assertEquals(string, returningString);
 	}
 	
@@ -112,6 +102,18 @@ public class SslIT {
 						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
 						null),
 				ConfigurationHelper.newConfigurationUsingSslAndRequestedClientAuth());
+		assertEquals(string, returningString);
+	}
+	
+	@Test
+	public void testThroughSocks5DatagramSocketUsingSslAndRequiredClientAuth01() throws IOException {
+		String string = TestStringConstants.STRING_01;
+		String returningString = DatagramSocketHelper.echoThroughDatagramSocket(
+				string,
+				SocksClientHelper.newSocks5ClientUsingSslAndClientAuth(
+						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						null),
+				ConfigurationHelper.newConfigurationUsingSslAndRequiredClientAuth());
 		assertEquals(string, returningString);
 	}
 	

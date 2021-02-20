@@ -262,6 +262,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 	
 	public Socks5DatagramSocket(
 			final Socks5Client client) throws SocketException {
+		super((SocketAddress) null);
 		this.socks5Client = client;
 		this.socks5DatagramSocketImpl =	new Socks5DatagramSocketImpl(client);
 		this.socks5DatagramSocketImpl.bind(new InetSocketAddress(
@@ -270,6 +271,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 
 	public Socks5DatagramSocket(
 			final Socks5Client client, final int port) throws SocketException {
+		super((SocketAddress) null);
 		this.socks5Client = client;		
 		this.socks5DatagramSocketImpl = new Socks5DatagramSocketImpl(client);
 		this.socks5DatagramSocketImpl.bind(new InetSocketAddress(
@@ -280,6 +282,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			final Socks5Client client, 
 			final int port, 
 			final InetAddress laddr) throws SocketException {
+		super((SocketAddress) null);
 		this.socks5Client = client;		
 		this.socks5DatagramSocketImpl = new Socks5DatagramSocketImpl(client);
 		this.socks5DatagramSocketImpl.bind(new InetSocketAddress(
@@ -289,6 +292,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 	public Socks5DatagramSocket(
 			final Socks5Client client, 
 			final SocketAddress bindaddr) throws SocketException {
+		super((SocketAddress) null);
 		this.socks5Client = client;		
 		this.socks5DatagramSocketImpl = new Socks5DatagramSocketImpl(client);
 		if (bindaddr != null) {

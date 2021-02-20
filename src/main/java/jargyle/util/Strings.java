@@ -1,25 +1,25 @@
-package jargyle.net.ssl;
+package jargyle.util;
 
 import java.util.Arrays;
 import java.util.Iterator;
 
-public final class Protocols {
+public final class Strings {
 
-	public static Protocols newInstance(final String s) {
+	public static Strings newInstance(final String s) {
 		if (s.isEmpty()) {
 			return newInstance(new String[] { });
 		}
 		return newInstance(s.split(" "));
 	}
-
-	public static Protocols newInstance(final String[] prtcls) {
-		return new Protocols(prtcls);
-	}
-
-	private final String[] protocols;
 	
-	private Protocols(final String[] prtcls) {
-		this.protocols = Arrays.copyOf(prtcls, prtcls.length);
+	public static Strings newInstance(final String[] strs) {
+		return new Strings(strs);
+	}
+	
+	private final String[] strings;
+	
+	private Strings(final String[] suites) {
+		this.strings = Arrays.copyOf(suites, suites.length);
 	}
 	
 	@Override
@@ -33,8 +33,8 @@ public final class Protocols {
 		if (this.getClass() != obj.getClass()) {
 			return false;
 		}
-		Protocols other = (Protocols) obj;
-		if (!Arrays.equals(this.protocols, other.protocols)) {
+		Strings other = (Strings) obj;
+		if (!Arrays.equals(this.strings, other.strings)) {
 			return false;
 		}
 		return true;
@@ -44,26 +44,26 @@ public final class Protocols {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + Arrays.hashCode(this.protocols);
+		result = prime * result + Arrays.hashCode(this.strings);
 		return result;
 	}
-	
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		for (Iterator<String> iterator = Arrays.asList(this.protocols).iterator(); 
+		for (Iterator<String> iterator = Arrays.asList(this.strings).iterator(); 
 				iterator.hasNext();) {
-			String protocol = iterator.next();
-			builder.append(protocol);
+			String string = iterator.next();
+			builder.append(string);
 			if (iterator.hasNext()) {
 				builder.append(' ');
 			}
 		}
 		return builder.toString();		
 	}
-	
+
 	public String[] toStringArray() {
-		return Arrays.copyOf(this.protocols, this.protocols.length);
+		return Arrays.copyOf(this.strings, this.strings.length);
 	}
 
 }

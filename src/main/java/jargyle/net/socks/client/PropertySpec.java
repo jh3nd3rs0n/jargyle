@@ -14,10 +14,9 @@ import jargyle.net.socks.client.v5.UsernamePassword;
 import jargyle.net.socks.transport.v5.AuthMethod;
 import jargyle.net.socks.transport.v5.AuthMethods;
 import jargyle.net.socks.transport.v5.gssapiauth.GssapiProtectionLevels;
-import jargyle.net.ssl.CipherSuites;
-import jargyle.net.ssl.Protocols;
 import jargyle.security.EncryptedPassword;
 import jargyle.util.PositiveInteger;
+import jargyle.util.Strings;
 
 public enum PropertySpec {
 
@@ -320,18 +319,18 @@ public enum PropertySpec {
 		
 		@Override
 		public Property getDefaultProperty() {
-			return new Property(this, CipherSuites.newInstance(new String[] { }));
+			return new Property(this, Strings.newInstance(new String[] { }));
 		}
 
 		@Override
 		public Property newProperty(final Object value) {
-			CipherSuites val = CipherSuites.class.cast(value);
+			Strings val = Strings.class.cast(value);
 			return new Property(this, val);
 		}
 
 		@Override
 		public Property newProperty(final String value) {
-			return new Property(this, CipherSuites.newInstance(value));
+			return new Property(this, Strings.newInstance(value));
 		}
 		
 	},
@@ -339,18 +338,18 @@ public enum PropertySpec {
 		
 		@Override
 		public Property getDefaultProperty() {
-			return new Property(this, Protocols.newInstance(new String[] { }));
+			return new Property(this, Strings.newInstance(new String[] { }));
 		}
 
 		@Override
 		public Property newProperty(final Object value) {
-			Protocols val = Protocols.class.cast(value);
+			Strings val = Strings.class.cast(value);
 			return new Property(this, val);
 		}
 
 		@Override
 		public Property newProperty(final String value) {
-			return new Property(this, Protocols.newInstance(value));
+			return new Property(this, Strings.newInstance(value));
 		}
 		
 	},

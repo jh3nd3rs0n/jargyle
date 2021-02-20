@@ -19,14 +19,13 @@ import jargyle.net.socks.server.v5.UsernamePasswordAuthenticator;
 import jargyle.net.socks.transport.v5.AuthMethod;
 import jargyle.net.socks.transport.v5.AuthMethods;
 import jargyle.net.socks.transport.v5.gssapiauth.GssapiProtectionLevels;
-import jargyle.net.ssl.CipherSuites;
-import jargyle.net.ssl.Protocols;
 import jargyle.security.EncryptedPassword;
 import jargyle.util.Criteria;
 import jargyle.util.Criterion;
 import jargyle.util.CriterionMethod;
 import jargyle.util.NonnegativeInteger;
 import jargyle.util.PositiveInteger;
+import jargyle.util.Strings;
 
 public enum SettingSpec {
 	
@@ -451,13 +450,13 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final Object value) {
-			CipherSuites val = CipherSuites.class.cast(value);
+			Strings val = Strings.class.cast(value);
 			return new Setting(this, val);
 		}
 
 		@Override
 		public Setting newSetting(final String value) {
-			return new Setting(this, CipherSuites.newInstance(value));
+			return new Setting(this, Strings.newInstance(value));
 		}
 		
 	},
@@ -478,13 +477,13 @@ public enum SettingSpec {
 
 		@Override
 		public Setting newSetting(final Object value) {
-			Protocols val = Protocols.class.cast(value);
+			Strings val = Strings.class.cast(value);
 			return new Setting(this, val);
 		}
 
 		@Override
 		public Setting newSetting(final String value) {
-			return new Setting(this, Protocols.newInstance(value));
+			return new Setting(this, Strings.newInstance(value));
 		}
 		
 	},
@@ -1575,18 +1574,18 @@ public enum SettingSpec {
 		
 		@Override
 		public Setting getDefaultSetting() {
-			return new Setting(this, CipherSuites.newInstance(new String[] { }));
+			return new Setting(this, Strings.newInstance(new String[] { }));
 		}
 
 		@Override
 		public Setting newSetting(final Object value) {
-			CipherSuites val = CipherSuites.class.cast(value);
+			Strings val = Strings.class.cast(value);
 			return new Setting(this, val);
 		}
 
 		@Override
 		public Setting newSetting(final String value) {
-			return new Setting(this, CipherSuites.newInstance(value));
+			return new Setting(this, Strings.newInstance(value));
 		}
 		
 	},
@@ -1599,18 +1598,18 @@ public enum SettingSpec {
 		
 		@Override
 		public Setting getDefaultSetting() {
-			return new Setting(this, Protocols.newInstance(new String[] { }));
+			return new Setting(this, Strings.newInstance(new String[] { }));
 		}
 
 		@Override
 		public Setting newSetting(final Object value) {
-			Protocols val = Protocols.class.cast(value);
+			Strings val = Strings.class.cast(value);
 			return new Setting(this, val);
 		}
 
 		@Override
 		public Setting newSetting(final String value) {
-			return new Setting(this, Protocols.newInstance(value));
+			return new Setting(this, Strings.newInstance(value));
 		}
 		
 	},

@@ -8,9 +8,8 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 
-import jargyle.net.ssl.CipherSuites;
-import jargyle.net.ssl.Protocols;
 import jargyle.net.ssl.SslSocketFactory;
+import jargyle.util.Strings;
 
 final class SslSocketFactoryImpl extends SslSocketFactory {
 	
@@ -46,14 +45,14 @@ final class SslSocketFactoryImpl extends SslSocketFactory {
 				host, 
 				port, 
 				autoClose); 
-		CipherSuites enabledCipherSuites = properties.getValue(
-				PropertySpec.SSL_ENABLED_CIPHER_SUITES, CipherSuites.class);
+		Strings enabledCipherSuites = properties.getValue(
+				PropertySpec.SSL_ENABLED_CIPHER_SUITES, Strings.class);
 		String[] cipherSuites = enabledCipherSuites.toStringArray();
 		if (cipherSuites.length > 0) {
 			sslSocket.setEnabledCipherSuites(cipherSuites);
 		}
-		Protocols enabledProtocols = properties.getValue(
-				PropertySpec.SSL_ENABLED_PROTOCOLS, Protocols.class);
+		Strings enabledProtocols = properties.getValue(
+				PropertySpec.SSL_ENABLED_PROTOCOLS, Strings.class);
 		String[] protocols = enabledProtocols.toStringArray();
 		if (protocols.length > 0) {
 			sslSocket.setEnabledProtocols(protocols);

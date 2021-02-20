@@ -22,10 +22,9 @@ import jargyle.net.socks.client.SocksServerUri;
 import jargyle.net.socks.client.v5.UsernamePassword;
 import jargyle.net.socks.transport.v5.AuthMethods;
 import jargyle.net.socks.transport.v5.gssapiauth.GssapiProtectionLevels;
-import jargyle.net.ssl.CipherSuites;
-import jargyle.net.ssl.Protocols;
 import jargyle.security.EncryptedPassword;
 import jargyle.util.PositiveInteger;
+import jargyle.util.Strings;
 
 final class ExternalNetFactory extends NetFactory {
 		
@@ -188,17 +187,17 @@ final class ExternalNetFactory extends NetFactory {
 		}
 		if (settings.containsNondefaultValue(
 				SettingSpec.CHAINING_SSL_ENABLED_CIPHER_SUITES)) {
-			CipherSuites sslEnabledCipherSuites = settings.getLastValue(
+			Strings sslEnabledCipherSuites = settings.getLastValue(
 					SettingSpec.CHAINING_SSL_ENABLED_CIPHER_SUITES, 
-					CipherSuites.class);
+					Strings.class);
 			properties.add(PropertySpec.SSL_ENABLED_CIPHER_SUITES.newProperty(
 					sslEnabledCipherSuites));
 		}
 		if (settings.containsNondefaultValue(
 				SettingSpec.CHAINING_SSL_ENABLED_PROTOCOLS)) {
-			Protocols sslEnabledProtocols = settings.getLastValue(
+			Strings sslEnabledProtocols = settings.getLastValue(
 					SettingSpec.CHAINING_SSL_ENABLED_PROTOCOLS, 
-					Protocols.class);
+					Strings.class);
 			properties.add(PropertySpec.SSL_ENABLED_PROTOCOLS.newProperty(
 					sslEnabledProtocols));			
 		}

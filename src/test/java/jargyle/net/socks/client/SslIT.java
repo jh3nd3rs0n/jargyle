@@ -26,6 +26,18 @@ public class SslIT {
 		System.clearProperty("javax.net.debug");
 	}
 */
+
+	@org.junit.BeforeClass
+	public static void setUp() {
+		// An attempt to get DatagramSocketHelper to be loaded
+		try {
+			DatagramSocketHelper.echoThroughDatagramSocket("Hello", null, null);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSsl01() throws IOException {

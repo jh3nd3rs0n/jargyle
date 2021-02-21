@@ -36,32 +36,32 @@ public abstract class SocksClient {
 		this.sslFactory = new SslFactoryImpl(props);
 	}
 	
-	public Socket connectToSocksServerWith(
+	public Socket getConnectedSocket(
 			final Socket socket) throws IOException {
-		return this.connectToSocksServerWith(
+		return this.getConnectedSocket(
 				socket, 
 				this.properties.getValue(PropertySpec.CONNECT_TIMEOUT, 
 						PositiveInteger.class).intValue(), 
 				false);
 	}
 	
-	public Socket connectToSocksServerWith(
+	public Socket getConnectedSocket(
 			final Socket socket, 
 			final boolean bindBeforeConnect) throws IOException {
-		return this.connectToSocksServerWith(
+		return this.getConnectedSocket(
 				socket, 
 				this.properties.getValue(PropertySpec.CONNECT_TIMEOUT, 
 						PositiveInteger.class).intValue(), 
 				bindBeforeConnect);
 	}
 	
-	public Socket connectToSocksServerWith(
+	public Socket getConnectedSocket(
 			final Socket socket, 
 			final int timeout) throws IOException {
-		return this.connectToSocksServerWith(socket, timeout, false);
+		return this.getConnectedSocket(socket, timeout, false);
 	}
 	
-	public Socket connectToSocksServerWith(
+	public Socket getConnectedSocket(
 			final Socket socket, 
 			final int timeout, 
 			final boolean bindBeforeConnect) throws IOException {

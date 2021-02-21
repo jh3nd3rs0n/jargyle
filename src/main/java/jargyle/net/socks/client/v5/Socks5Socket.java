@@ -74,7 +74,7 @@ public final class Socks5Socket extends Socket {
 			if (!this.socket.equals(this.originalSocket)) {
 				this.socket = this.originalSocket;
 			}
-			Socket sock = this.socks5Client.connectToSocksServerWith(
+			Socket sock = this.socks5Client.getConnectedSocket(
 					this.socket, timeout);
 			InputStream inputStream = sock.getInputStream();
 			OutputStream outputStream = sock.getOutputStream();

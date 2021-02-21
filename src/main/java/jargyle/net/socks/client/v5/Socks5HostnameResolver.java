@@ -49,9 +49,8 @@ public final class Socks5HostnameResolver extends HostnameResolver {
 		SocketSettings socketSettings = properties.getValue(
 				PropertySpec.SOCKET_SETTINGS, SocketSettings.class);
 		socketSettings.applyTo(socket);
-		Socket sock = 
-				this.socks5Client.connectToSocksServerWith(
-						socket, true);
+		Socket sock = this.socks5Client.getConnectedSocket(
+				socket, true);
 		InputStream inputStream = sock.getInputStream();
 		OutputStream outputStream = sock.getOutputStream();
 		Socks5Request socks5Req = Socks5Request.newInstance(

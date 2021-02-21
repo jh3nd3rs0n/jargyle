@@ -209,7 +209,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			if (!this.socket.equals(this.originalSocket)) {
 				this.socket = this.originalSocket;
 			}
-			Socket sock = this.socks5Client.connectToSocksServerWith(
+			Socket sock = this.socks5Client.getConnectedSocket(
 					this.socket, true);
 			if (!this.datagramSocket.equals(this.originalDatagramSocket)) {
 				this.datagramSocket = this.originalDatagramSocket;

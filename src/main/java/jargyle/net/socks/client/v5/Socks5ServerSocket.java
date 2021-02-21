@@ -64,9 +64,8 @@ public final class Socks5ServerSocket extends ServerSocket {
 			super.close();
 			InetAddress wildcardAddress = null;
 			try {
-				wildcardAddress = 
-						InetAddress.getByName(
-								AddressType.IP_V4_ADDRESS.getWildcardAddress());
+				wildcardAddress = InetAddress.getByName(
+						AddressType.IP_V4_ADDRESS.getWildcardAddress());
 			} catch (UnknownHostException e) {
 				throw new AssertionError(e);
 			}
@@ -274,7 +273,7 @@ public final class Socks5ServerSocket extends ServerSocket {
 			if (!this.socket.equals(this.originalSocket)) {
 				this.socket = this.originalSocket;
 			}
-			Socket sock = this.socks5Client.connectToSocksServerWith(
+			Socket sock = this.socks5Client.getConnectedSocket(
 					this.socket, true);
 			InputStream inStream = sock.getInputStream();
 			OutputStream outStream = sock.getOutputStream();

@@ -24,11 +24,11 @@ public final class Socks5Client extends SocksClient {
 	}
 	
 	@Override
-	public Socket connectToSocksServerWith(
+	public Socket getConnectedSocket(
 			final Socket socket, 
 			final int timeout, 
 			final boolean bindBeforeConnect) throws IOException {
-		Socket sock = super.connectToSocksServerWith(
+		Socket sock = super.getConnectedSocket(
 				socket, timeout, bindBeforeConnect);
 		InputStream inputStream = sock.getInputStream();
 		OutputStream outputStream = sock.getOutputStream();

@@ -241,7 +241,8 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 					dtlsDatagramSocketFactory.newDatagramSocket(
 							this.datagramSocket,
 							socks5Rep.getServerBoundAddress(),
-							socks5Rep.getServerBoundPort());
+							socks5Rep.getServerBoundPort(), 
+							true);
 			if (sock instanceof GssSocket) {
 				GssSocket gssSocket = (GssSocket) sock;
 				datagramSock = new GssDatagramSocket(

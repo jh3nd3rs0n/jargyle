@@ -60,7 +60,7 @@ public final class Socks5ServerSocket extends ServerSocket {
 		}
 		
 		@Override
-		public void close() throws IOException {
+		public synchronized void close() throws IOException {
 			super.close();
 			InetAddress wildcardAddress = null;
 			try {

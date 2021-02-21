@@ -950,7 +950,7 @@ public final class Socks5Worker implements Runnable {
 				this.sslFactory.newDtlsDatagramSocketFactory();
 		try {
 			clientDatagramSck = dtlsDatagramSocketFactory.newDatagramSocket(
-					clientDatagramSock, peerHost, peerPort);
+					clientDatagramSock, peerHost, peerPort, false);
 		} catch (IOException e) {
 			LOGGER.warn( 
 					this.format("Error in wrapping the client-facing UDP socket"), 

@@ -13,7 +13,8 @@ final class DtlsDatagramSocketFactoryImpl extends DtlsDatagramSocketFactory {
 	public DatagramSocket newDatagramSocket(
 			final DatagramSocket datagramSocket, 
 			final String peerHost, 
-			final int peerPort)
+			final int peerPort, 
+			final boolean useClientMode)
 			throws IOException {
 		// TODO: Implement DtlsDatagramSocket
 		return datagramSocket;

@@ -214,10 +214,10 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			if (!this.datagramSocket.equals(this.originalDatagramSocket)) {
 				this.datagramSocket = this.originalDatagramSocket;
 			}
-			DatagramSocket datagramSock = this.datagramSocket;
-			datagramSock.bind(new InetSocketAddress(inetAddress, port));
-			String address = datagramSock.getLocalAddress().getHostAddress();
-			int prt = datagramSock.getLocalPort();
+			this.datagramSocket.bind(new InetSocketAddress(inetAddress, port));
+			String address = 
+					this.datagramSocket.getLocalAddress().getHostAddress();
+			int prt = this.datagramSocket.getLocalPort();
 			InputStream inputStream = sock.getInputStream();
 			OutputStream outputStream = sock.getOutputStream();
 			AddressType addressType = AddressType.get(address);
@@ -237,10 +237,11 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			SslFactory sslFactory = this.socks5Client.getSslFactory();
 			DtlsDatagramSocketFactory dtlsDatagramSocketFactory =
 					sslFactory.newDtlsDatagramSocketFactory();
-			datagramSock = dtlsDatagramSocketFactory.newDatagramSocket(
-					datagramSock, 
-					socks5Rep.getServerBoundAddress(), 
-					socks5Rep.getServerBoundPort());
+			DatagramSocket datagramSock = 
+					dtlsDatagramSocketFactory.newDatagramSocket(
+							this.datagramSocket,
+							socks5Rep.getServerBoundAddress(),
+							socks5Rep.getServerBoundPort());
 			if (sock instanceof GssSocket) {
 				GssSocket gssSocket = (GssSocket) sock;
 				datagramSock = new GssDatagramSocket(

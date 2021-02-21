@@ -30,26 +30,12 @@ public class SslIT {
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSsl01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-/*		
 		String returningString = DatagramSocketHelper.echoThroughDatagramSocket(
 				string,
 				SocksClientHelper.newSocks5ClientUsingSsl(
 						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
 						null),
 				ConfigurationHelper.newConfigurationUsingSsl());
-*/
-		String returningString = null; 
-		try {
-			returningString = DatagramSocketHelper.echoThroughDatagramSocket(
-					string,
-					SocksClientHelper.newSocks5ClientUsingSsl(
-							NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
-							null),
-					ConfigurationHelper.newConfigurationUsingSsl());			
-		} catch (NullPointerException e) {
-			e.printStackTrace();
-			throw e;
-		}
 		assertEquals(string, returningString);
 	}
 

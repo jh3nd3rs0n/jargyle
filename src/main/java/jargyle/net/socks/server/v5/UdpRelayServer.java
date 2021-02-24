@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import jargyle.net.HostResolver;
+import jargyle.net.Port;
 import jargyle.net.socks.transport.v5.AddressType;
 import jargyle.net.socks.transport.v5.UdpRequestHeader;
 import jargyle.util.Criteria;
@@ -28,6 +29,9 @@ final class UdpRelayServer {
 
 		public ClientSocketAddress(final String addr, final int prt) {
 			Objects.requireNonNull(addr);
+			if (prt < 0 || prt > Port.MAX_INT_VALUE) {
+				throw new IllegalArgumentException("port is out of range");
+			}
 			this.address = addr;
 			this.port = prt; 	
 		}

@@ -1,13 +1,13 @@
 package jargyle.net;
 
 public final class DefaultHostnameResolverFactory 
-	extends HostnameResolverFactory {
+	extends HostResolverFactory {
 
 	public DefaultHostnameResolverFactory() { }
 	
 	@Override
-	public HostnameResolver newHostnameResolver() {
-		return new HostnameResolver();
+	public HostResolver newHostResolver() {
+		return new HostResolver();
 	}
 
 }

@@ -1,7 +1,7 @@
 package jargyle.net.socks.client.v5;
 
 import jargyle.net.DatagramSocketFactory;
-import jargyle.net.HostnameResolverFactory;
+import jargyle.net.HostResolverFactory;
 import jargyle.net.NetFactory;
 import jargyle.net.ServerSocketFactory;
 import jargyle.net.SocketFactory;
@@ -20,8 +20,8 @@ public final class Socks5NetFactory extends NetFactory {
 	}
 
 	@Override
-	public HostnameResolverFactory newHostnameResolverFactory() {
-		return new Socks5HostnameResolverFactory(this.socks5Client);
+	public HostResolverFactory newHostResolverFactory() {
+		return new Socks5HostResolverFactory(this.socks5Client);
 	}
 
 	@Override

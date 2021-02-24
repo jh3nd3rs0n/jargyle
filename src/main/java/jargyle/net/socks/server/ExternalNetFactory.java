@@ -9,7 +9,7 @@ import org.ietf.jgss.Oid;
 import jargyle.net.DatagramSocketFactory;
 import jargyle.net.DefaultNetFactory;
 import jargyle.net.Host;
-import jargyle.net.HostnameResolverFactory;
+import jargyle.net.HostResolverFactory;
 import jargyle.net.NetFactory;
 import jargyle.net.ServerSocketFactory;
 import jargyle.net.SocketFactory;
@@ -53,8 +53,8 @@ final class ExternalNetFactory extends NetFactory {
 	}
 	
 	@Override
-	public HostnameResolverFactory newHostnameResolverFactory() {
-		return this.getNetFactory().newHostnameResolverFactory();		
+	public HostResolverFactory newHostResolverFactory() {
+		return this.getNetFactory().newHostResolverFactory();		
 	}
 	
 	private NetFactory newNetFactory() {

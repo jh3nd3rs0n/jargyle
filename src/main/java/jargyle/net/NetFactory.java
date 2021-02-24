@@ -4,7 +4,7 @@ public abstract class NetFactory {
 	
 	public abstract DatagramSocketFactory newDatagramSocketFactory();
 	
-	public abstract HostnameResolverFactory newHostnameResolverFactory();
+	public abstract HostResolverFactory newHostResolverFactory();
 	
 	public abstract ServerSocketFactory newServerSocketFactory();
 	

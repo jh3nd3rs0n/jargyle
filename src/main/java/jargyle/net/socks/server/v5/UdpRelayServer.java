@@ -13,7 +13,7 @@ import java.util.concurrent.Executors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jargyle.net.HostnameResolver;
+import jargyle.net.HostResolver;
 import jargyle.net.socks.transport.v5.AddressType;
 import jargyle.net.socks.transport.v5.UdpRequestHeader;
 import jargyle.util.Criteria;
@@ -476,8 +476,8 @@ final class UdpRelayServer {
 			return this.udpRelayServer.clientPort;
 		}
 		
-		protected final HostnameResolver getHostnameResolver() {
-			return this.udpRelayServer.hostnameResolver;
+		protected final HostResolver getHostnameResolver() {
+			return this.udpRelayServer.hostResolver;
 		}
 		
 		protected final long getLastReceiveTime() {
@@ -571,7 +571,7 @@ final class UdpRelayServer {
 	private int clientPort;
 	private ExecutorService executor;
 	private boolean firstPacketsWorkerFinished;
-	private HostnameResolver hostnameResolver;
+	private HostResolver hostResolver;
 	private long lastReceiveTime;
 	private final DatagramSocket serverDatagramSocket;
 	private boolean started;
@@ -581,7 +581,7 @@ final class UdpRelayServer {
 	public UdpRelayServer(		
 			final ClientSocketAddress clientSockAddr,
 			final DatagramSockets datagramSocks,
-			final HostnameResolver resolver, 
+			final HostResolver resolver, 
 			final ExternalIncomingAddressCriteria externalIncomingAddrCriteria, 
 			final ExternalOutgoingAddressCriteria externalOutgoingAddrCriteria, 
 			final RelaySettings settings) {
@@ -605,7 +605,7 @@ final class UdpRelayServer {
 		this.clientPort = clientSockAddr.getPort();
 		this.executor = null;
 		this.firstPacketsWorkerFinished = false;
-		this.hostnameResolver = resolver;
+		this.hostResolver = resolver;
 		this.lastReceiveTime = 0L;
 		this.serverDatagramSocket = datagramSocks.getServerDatagramSocket();
 		this.started = false;

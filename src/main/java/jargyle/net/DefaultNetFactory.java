@@ -5,7 +5,7 @@ public final class DefaultNetFactory extends NetFactory {
 	public DefaultNetFactory() { }
 	
 	@Override
-	public HostnameResolverFactory newHostnameResolverFactory() {
+	public HostResolverFactory newHostResolverFactory() {
 		return new DefaultHostnameResolverFactory();
 	}
 

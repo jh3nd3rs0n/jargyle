@@ -6,7 +6,7 @@ import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 
-import jargyle.net.HostnameResolver;
+import jargyle.net.HostResolver;
 import jargyle.net.SocketSettings;
 import jargyle.net.socks.client.Properties;
 import jargyle.net.socks.client.PropertySpec;
@@ -16,11 +16,11 @@ import jargyle.net.socks.transport.v5.Reply;
 import jargyle.net.socks.transport.v5.Socks5Reply;
 import jargyle.net.socks.transport.v5.Socks5Request;
 
-public final class Socks5HostnameResolver extends HostnameResolver {
+public final class Socks5HostResolver extends HostResolver {
 
 	private final Socks5Client socks5Client;
 	
-	public Socks5HostnameResolver(final Socks5Client client) {
+	public Socks5HostResolver(final Socks5Client client) {
 		this.socks5Client = client;
 	}
 	
@@ -49,8 +49,7 @@ public final class Socks5HostnameResolver extends HostnameResolver {
 		SocketSettings socketSettings = properties.getValue(
 				PropertySpec.SOCKET_SETTINGS, SocketSettings.class);
 		socketSettings.applyTo(socket);
-		Socket sock = this.socks5Client.getConnectedSocket(
-				socket, true);
+		Socket sock = this.socks5Client.getConnectedSocket(socket, true);
 		InputStream inputStream = sock.getInputStream();
 		OutputStream outputStream = sock.getOutputStream();
 		Socks5Request socks5Req = Socks5Request.newInstance(

@@ -29,7 +29,7 @@ public final class XmlFileSourceUsersService extends UsersService {
 		}
 		
 		@Override
-		public void fileCreated(final File file) {
+		public void onFileCreated(final File file) {
 			LOGGER.info(String.format(
 					"File '%s' created. Updating users...",
 					file));
@@ -39,14 +39,14 @@ public final class XmlFileSourceUsersService extends UsersService {
 		}
 		
 		@Override
-		public void fileDeleted(final File file) {
+		public void onFileDeleted(final File file) {
 			LOGGER.info(String.format(
 					"File '%s' deleted (using in-memory copy).",
 					file));
 		}
 
 		@Override
-		public void fileModfied(final File file) {
+		public void onFileModified(final File file) {
 			LOGGER.info(String.format(
 					"File '%s' modified. Updating users...",
 					file));

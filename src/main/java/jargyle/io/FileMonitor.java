@@ -242,13 +242,13 @@ public final class FileMonitor implements Runnable {
 				continue;
 			}
 			if (fileStatus instanceof CreatedFileStatus) {
-				this.fileStatusListener.fileCreated(this.file);
+				this.fileStatusListener.onFileCreated(this.file);
 			}
 			if (fileStatus instanceof DeletedFileStatus) {
-				this.fileStatusListener.fileDeleted(this.file);
+				this.fileStatusListener.onFileDeleted(this.file);
 			}
 			if (fileStatus instanceof ModifiedFileStatus) {
-				this.fileStatusListener.fileModfied(this.file);
+				this.fileStatusListener.onFileModified(this.file);
 			}
 			this.lastFileStatus = fileStatus;
 		}

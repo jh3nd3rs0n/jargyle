@@ -1,6 +1,6 @@
 package jargyle.net.socks.server.v5;
 
-public final class StringSourceUsersService extends UsersService {
+final class StringSourceUsersService extends UsersService {
 
 	private final Users users;
 	

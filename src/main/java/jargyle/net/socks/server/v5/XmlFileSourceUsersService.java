@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 import jargyle.io.FileMonitor;
 import jargyle.io.FileStatusListener;
 
-public final class XmlFileSourceUsersService extends UsersService {
+final class XmlFileSourceUsersService extends UsersService {
 	
 	private static final class UsersUpdater implements FileStatusListener {
 		

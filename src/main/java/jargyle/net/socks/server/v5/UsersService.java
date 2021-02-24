@@ -1,6 +1,6 @@
 package jargyle.net.socks.server.v5;
 
-public abstract class UsersService {
+abstract class UsersService {
 
 	public UsersService() { }
 	

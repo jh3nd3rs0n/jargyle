@@ -3,8 +3,7 @@ package jargyle.net.socks.client.v5;
 import jargyle.net.HostResolver;
 import jargyle.net.HostResolverFactory;
 
-public final class Socks5HostResolverFactory 
-	extends HostResolverFactory {
+public final class Socks5HostResolverFactory extends HostResolverFactory {
 
 	private final Socks5Client socks5Client;
 	

@@ -5,13 +5,13 @@ public final class DefaultNetFactory extends NetFactory {
 	public DefaultNetFactory() { }
 	
 	@Override
-	public HostResolverFactory newHostResolverFactory() {
-		return new DefaultHostnameResolverFactory();
+	public DatagramSocketFactory newDatagramSocketFactory() {
+		return new DefaultDatagramSocketFactory();
 	}
 
 	@Override
-	public DatagramSocketFactory newDatagramSocketFactory() {
-		return new DefaultDatagramSocketFactory();
+	public HostResolverFactory newHostResolverFactory() {
+		return new DefaultHostResolverFactory();
 	}
 
 	@Override

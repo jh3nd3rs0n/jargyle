@@ -942,14 +942,17 @@ public final class Socks5Worker implements Runnable {
 	
 	private DatagramSocket wrapClientDatagramSocket(
 			final DatagramSocket clientDatagramSock, 
-			final String peerHost, 
-			final int peerPort) {
+			final String udpClientHost, 
+			final int udpClientPort) {
 		DatagramSocket clientDatagramSck = clientDatagramSock;
 		if (this.dtlsDatagramSocketFactory != null) {
 			try {
 				clientDatagramSck = 
 						this.dtlsDatagramSocketFactory.newDatagramSocket(
-								clientDatagramSck, peerHost, peerPort, false);
+								clientDatagramSck, 
+								udpClientHost, 
+								udpClientPort, 
+								false);
 			} catch (IOException e) {
 				LOGGER.warn( 
 						this.format("Error in wrapping the client-facing UDP socket"), 

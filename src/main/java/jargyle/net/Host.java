@@ -4,7 +4,33 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 public final class Host {
-
+	
+	private static Host ipv4WildcardInstance;
+	
+	private static Host ipv6WildcardInstance;
+	
+	public static Host getIpv4WildcardInstance() {
+		if (ipv4WildcardInstance == null) {
+			try {
+				ipv4WildcardInstance = Host.newInstance("0.0.0.0");
+			} catch (UnknownHostException e) {
+				throw new AssertionError(e);
+			}	
+		}
+		return ipv4WildcardInstance;
+	}
+	
+	public static Host getIpv6WildcardInstance() {
+		if (ipv6WildcardInstance == null) {
+			try {
+				ipv6WildcardInstance = Host.newInstance("0:0:0:0:0:0:0:0");
+			} catch (UnknownHostException e) {
+				throw new AssertionError(e);
+			}
+		}
+		return ipv6WildcardInstance; 
+	}
+	
 	public static Host newInstance(final String s) throws UnknownHostException {
 		InetAddress inetAddress = InetAddress.getByName(s);
 		return new Host(inetAddress, s);

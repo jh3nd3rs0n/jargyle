@@ -9,10 +9,10 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.nio.channels.ServerSocketChannel;
 
 import jargyle.net.FilterSocket;
+import jargyle.net.Host;
 import jargyle.net.PerformancePreferences;
 import jargyle.net.SocketSettingSpec;
 import jargyle.net.SocketSettings;
@@ -62,14 +62,8 @@ public final class Socks5ServerSocket extends ServerSocket {
 		@Override
 		public synchronized void close() throws IOException {
 			super.close();
-			InetAddress wildcardAddress = null;
-			try {
-				wildcardAddress = InetAddress.getByName(
-						AddressType.IP_V4_ADDRESS.getWildcardAddress());
-			} catch (UnknownHostException e) {
-				throw new AssertionError(e);
-			}
-			this.localInetAddress = wildcardAddress;
+			this.localInetAddress = 
+					Host.getIpv4WildcardInstance().toInetAddress();
 			this.localPort = -1;
 			this.localSocketAddress = null;
 			this.remoteInetAddress = null;
@@ -283,8 +277,7 @@ public final class Socks5ServerSocket extends ServerSocket {
 			}
 			InetAddress bAddr = bindAddr;
 			if (bAddr == null) {
-				bAddr = InetAddress.getByName(
-						AddressType.IP_V4_ADDRESS.getWildcardAddress());
+				bAddr = Host.getIpv4WildcardInstance().toInetAddress();
 			}
 			String address = bAddr.getHostAddress();
 			AddressType addressType = AddressType.get(address);

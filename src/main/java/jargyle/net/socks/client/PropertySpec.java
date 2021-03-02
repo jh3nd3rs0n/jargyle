@@ -22,17 +22,9 @@ public enum PropertySpec {
 
 	BIND_HOST("socksClient.bindHost") {
 		
-		private static final String DEFAULT_BIND_HOST = "0.0.0.0";
-		
 		@Override
 		public Property getDefaultProperty() {
-			Host bindHost = null;
-			try {
-				bindHost = Host.newInstance(DEFAULT_BIND_HOST);
-			} catch (UnknownHostException e) {
-				throw new AssertionError(e);
-			}
-			return new Property(this, bindHost);
+			return new Property(this, Host.getIpv4WildcardInstance());
 		}
 
 		@Override

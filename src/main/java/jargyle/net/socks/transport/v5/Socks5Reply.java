@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 
+import jargyle.net.Host;
 import jargyle.util.UnsignedByte;
 import jargyle.util.UnsignedShort;
 
@@ -32,7 +33,7 @@ public final class Socks5Reply {
 		return newInstance(
 				reply, 
 				AddressType.IP_V4_ADDRESS,
-				AddressType.IP_V4_ADDRESS.getWildcardAddress(),
+				Host.getIpv4WildcardInstance().toString(),
 				0);
 	}
 	

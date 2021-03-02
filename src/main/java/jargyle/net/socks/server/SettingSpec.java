@@ -718,18 +718,10 @@ public enum SettingSpec {
 			usage = "host=HOST"
 	)
 	HOST("host") {
-
-		private static final String DEFAULT_HOST = "0.0.0.0";
 		
 		@Override
 		public Setting getDefaultSetting() {
-			Host host = null;
-			try {
-				host = Host.newInstance(DEFAULT_HOST);
-			} catch (UnknownHostException e) {
-				throw new AssertionError(e);
-			}
-			return new Setting(this, host);
+			return new Setting(this, Host.getIpv4WildcardInstance());
 		}
 
 		@Override
@@ -1144,17 +1136,9 @@ public enum SettingSpec {
 	)
 	SOCKS5_ON_CONNECT_SERVER_BIND_HOST("socks5.onConnect.serverBindHost") {
 		
-		private static final String DEFAULT_BIND_HOST = "0.0.0.0";
-		
 		@Override
 		public Setting getDefaultSetting() {
-			Host host = null;
-			try {
-				host = Host.newInstance(DEFAULT_BIND_HOST);
-			} catch (UnknownHostException e) {
-				throw new AssertionError(e);
-			}
-			return new Setting(this, host);
+			return new Setting(this, Host.getIpv4WildcardInstance());
 		}
 
 		@Override
@@ -1338,17 +1322,9 @@ public enum SettingSpec {
 	SOCKS5_ON_UDP_ASSOCIATE_CLIENT_BIND_HOST(
 			"socks5.onUdpAssociate.clientBindHost") {
 		
-		private static final String DEFAULT_BIND_HOST = "0.0.0.0";
-		
 		@Override
 		public Setting getDefaultSetting() {
-			Host host = null;
-			try {
-				host = Host.newInstance(DEFAULT_BIND_HOST);
-			} catch (UnknownHostException e) {
-				throw new AssertionError(e);
-			}
-			return new Setting(this, host);
+			return new Setting(this, Host.getIpv4WildcardInstance());
 		}
 
 		@Override
@@ -1458,17 +1434,9 @@ public enum SettingSpec {
 	SOCKS5_ON_UDP_ASSOCIATE_SERVER_BIND_HOST(
 			"socks5.onUdpAssociate.serverBindHost") {
 
-		private static final String DEFAULT_BIND_HOST = "0.0.0.0";
-
 		@Override
 		public Setting getDefaultSetting() {
-			Host host = null;
-			try {
-				host = Host.newInstance(DEFAULT_BIND_HOST);
-			} catch (UnknownHostException e) {
-				throw new AssertionError(e);
-			}
-			return new Setting(this, host);
+			return new Setting(this, Host.getIpv4WildcardInstance());
 		}
 
 		@Override

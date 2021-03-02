@@ -17,16 +17,10 @@ public enum AddressType {
 		private static final int ADDRESS_LENGTH = 4;
 		private static final String ADDRESS_REGEX = 
 				"^[\\d]{1,3}(\\.[\\d]{1,3}){0,3}$";
-		private static final String WILDCARD_ADDRESS = "0.0.0.0";
 		
 		@Override
 		public int getAddressLength(final byte firstByte) {
 			return ADDRESS_LENGTH;
-		}
-
-		@Override
-		public String getWildcardAddress() {
-			return WILDCARD_ADDRESS;
 		}
 
 		@Override
@@ -85,11 +79,6 @@ public enum AddressType {
 		}
 
 		@Override
-		public String getWildcardAddress() {
-			throw new UnsupportedOperationException();
-		}
-
-		@Override
 		public boolean isAddress(final String s) {
 			return s.matches(ADDRESS_REGEX);
 		}
@@ -145,16 +134,10 @@ public enum AddressType {
 		private static final int ADDRESS_LENGTH = 16;
 		private static final String ADDRESS_REGEX = 
 				"^[a-fA-F0-9]{1,4}(:[a-fA-F0-9]{1,4}){7}$";
-		private static final String WILDCARD_ADDRESS = "0:0:0:0:0:0:0:0";
 		
 		@Override
 		public int getAddressLength(final byte firstByte) {
 			return ADDRESS_LENGTH;
-		}
-
-		@Override
-		public String getWildcardAddress() {
-			return WILDCARD_ADDRESS;
 		}
 
 		@Override
@@ -248,8 +231,6 @@ public enum AddressType {
 	}
 	
 	public abstract int getAddressLength(final byte firstByte);
-	
-	public abstract String getWildcardAddress();
 	
 	public abstract boolean isAddress(final String s);
 	

@@ -12,7 +12,9 @@ import org.slf4j.LoggerFactory;
 
 import jargyle.net.NetFactory;
 import jargyle.net.SocketSettings;
+import jargyle.net.ssl.DtlsDatagramSocketFactory;
 import jargyle.net.ssl.SslFactory;
+import jargyle.net.ssl.SslSocketFactory;
 import jargyle.util.Criteria;
 import jargyle.util.Criterion;
 
@@ -24,13 +26,13 @@ final class Listener implements Runnable {
 	private final Configuration configuration;
 	private final NetFactory externalNetFactory;
 	private final ServerSocket serverSocket;
-	private final SslFactory sslFactory;
+	private SslFactory sslFactory;
 			
 	public Listener(final ServerSocket serverSock, final Configuration config) {
 		this.configuration = config;
 		this.externalNetFactory = new ExternalNetFactory(config);
 		this.serverSocket = serverSock;
-		this.sslFactory = new SslFactoryImpl(config);
+		this.sslFactory = null;
 	}
 	
 	private boolean canAcceptClientSocket(final Socket clientSocket) {
@@ -94,6 +96,17 @@ final class Listener implements Runnable {
 		return String.format("%s: %s", this, message);
 	}
 	
+	private SslFactory getSslFactory() {
+		if (!this.configuration.getSettings().getLastValue(
+				SettingSpec.SSL_ENABLED, Boolean.class).booleanValue()) {
+			return null;
+		}
+		if (this.sslFactory == null) {
+			this.sslFactory = new SslFactoryImpl(this.configuration);
+		}
+		return this.sslFactory;
+	}
+	
 	public void run() {
 		ExecutorService executor = Executors.newCachedThreadPool();
 		while (true) {
@@ -131,11 +144,17 @@ final class Listener implements Runnable {
 				this.closeClientSocket(clientSocket);
 				continue;
 			}
+			DtlsDatagramSocketFactory dtlsDatagramSocketFactory = null;
+			SslFactory factory = this.getSslFactory();
+			if (factory != null) {
+				dtlsDatagramSocketFactory = 
+						factory.newDtlsDatagramSocketFactory();
+			}
 			executor.execute(new Worker(
 					clientSocket, 
 					this.configuration, 
 					this.externalNetFactory, 
-					this.sslFactory));
+					dtlsDatagramSocketFactory));
 		}
 		executor.shutdownNow();
 	}
@@ -151,15 +170,18 @@ final class Listener implements Runnable {
 	}
 	
 	private Socket wrapClientSocket(final Socket clientSocket) {
-		Socket clientSock = null;
-		try {
-			clientSock = this.sslFactory.newSslSocketFactory().newSocket(
-					clientSocket, null, true);
-		} catch (IOException e) {
-			LOGGER.warn(
-					this.format("Error in wrapping the client socket"), 
-					e);
-			return null;
+		Socket clientSock = clientSocket;
+		SslFactory factory = this.getSslFactory();
+		if (factory != null) {
+			SslSocketFactory sslSocketFactory =	factory.newSslSocketFactory();
+			try {
+				clientSock = sslSocketFactory.newSocket(clientSock, null, true);
+			} catch (IOException e) {
+				LOGGER.warn(
+						this.format("Error in wrapping the client socket"), 
+						e);
+				return null;
+			}
 		}
 		return clientSock;
 	}

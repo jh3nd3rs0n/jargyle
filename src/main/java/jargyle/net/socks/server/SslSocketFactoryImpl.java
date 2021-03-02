@@ -24,16 +24,12 @@ final class SslSocketFactoryImpl extends SslSocketFactory {
 			final Socket socket, 
 			final InputStream consumed, 
 			final boolean autoClose) throws IOException {
-		Configuration configuration = this.sslFactoryImpl.getConfiguration();
-		Settings settings = configuration.getSettings();
-		if (!settings.getLastValue(
-				SettingSpec.SSL_ENABLED, Boolean.class).booleanValue()) {
-			return socket;
-		}
 		SSLContext sslContext = this.sslFactoryImpl.getSslContext();
 		SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
 		SSLSocket sslSocket = (SSLSocket) sslSocketFactory.createSocket(
-				socket,	consumed, autoClose); 
+				socket,	consumed, autoClose);
+		Configuration configuration = this.sslFactoryImpl.getConfiguration();
+		Settings settings = configuration.getSettings();
 		Strings enabledCipherSuites = settings.getLastValue(
 				SettingSpec.SSL_ENABLED_CIPHER_SUITES, Strings.class);
 		String[] cipherSuites = enabledCipherSuites.toStringArray();

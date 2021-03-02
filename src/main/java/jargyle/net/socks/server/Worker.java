@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import jargyle.net.NetFactory;
 import jargyle.net.socks.server.v5.Socks5Worker;
 import jargyle.net.socks.transport.v5.Version;
-import jargyle.net.ssl.SslFactory;
+import jargyle.net.ssl.DtlsDatagramSocketFactory;
 
 final class Worker implements Runnable {
 	
@@ -18,18 +18,18 @@ final class Worker implements Runnable {
 	
 	private final Socket clientSocket;
 	private final Configuration configuration;
+	private final DtlsDatagramSocketFactory dtlsDatagramSocketFactory;	
 	private final NetFactory externalNetFactory;
-	private final SslFactory sslFactory;
 	
 	public Worker(
 			final Socket clientSock, 
 			final Configuration config, 
-			final NetFactory nFactory, 
-			final SslFactory sFactory) {
+			final NetFactory extNetFactory, 
+			final DtlsDatagramSocketFactory dtlsDatagramSockFactory) {
 		this.clientSocket = clientSock;
 		this.configuration = config;
-		this.externalNetFactory = nFactory;
-		this.sslFactory = sFactory;
+		this.dtlsDatagramSocketFactory = dtlsDatagramSockFactory;
+		this.externalNetFactory = extNetFactory;
 	}
 	
 	private String format(final String message) {
@@ -55,7 +55,7 @@ final class Worker implements Runnable {
 						this.clientSocket, 
 						this.configuration, 
 						this.externalNetFactory, 
-						this.sslFactory);
+						this.dtlsDatagramSocketFactory);
 				socks5Worker.run();
 			} else {
 				LOGGER.warn(this.format(String.format(

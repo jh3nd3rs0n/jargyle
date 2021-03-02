@@ -1,6 +1,7 @@
 package jargyle.net.socks.client;
 
 import java.io.IOException;
+import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -9,7 +10,9 @@ import java.util.Objects;
 import jargyle.net.Host;
 import jargyle.net.NetFactory;
 import jargyle.net.Port;
+import jargyle.net.ssl.DtlsDatagramSocketFactory;
 import jargyle.net.ssl.SslFactory;
+import jargyle.net.ssl.SslSocketFactory;
 import jargyle.util.PositiveInteger;
 
 public abstract class SocksClient {
@@ -33,7 +36,23 @@ public abstract class SocksClient {
 		Objects.requireNonNull(props, "Properties must not be null");
 		this.properties = props;
 		this.socksServerUri = serverUri;
-		this.sslFactory = new SslFactoryImpl(props);
+		this.sslFactory = props.getValue(
+				PropertySpec.SSL_ENABLED, Boolean.class).booleanValue() ? 
+						new SslFactoryImpl(props) : null;
+	}
+	
+	public final DatagramSocket getConnectedDatagramSocket(
+			final DatagramSocket datagramSocket,
+			final String peerHost,
+			final int peerPort) throws IOException {
+		datagramSocket.connect(InetAddress.getByName(peerHost), peerPort);
+		if (this.sslFactory == null) {
+			return datagramSocket;
+		}
+		DtlsDatagramSocketFactory dtlsDatagramSocketFactory =
+				this.sslFactory.newDtlsDatagramSocketFactory();
+		return dtlsDatagramSocketFactory.newDatagramSocket(
+				datagramSocket, peerHost, peerPort, true);
 	}
 	
 	public Socket getConnectedSocket(
@@ -78,7 +97,12 @@ public abstract class SocksClient {
 						InetAddress.getByName(socksServerUri.getHost()), 
 						socksServerUri.getPort()), 
 				timeout);
-		return this.sslFactory.newSslSocketFactory().newSocket(
+		if (this.sslFactory == null) {
+			return socket;
+		}
+		SslSocketFactory sslSocketFactory = 
+				this.sslFactory.newSslSocketFactory();
+		return sslSocketFactory.newSocket(
 				socket, 
 				this.socksServerUri.getHost(), 
 				this.socksServerUri.getPort(), 
@@ -91,10 +115,6 @@ public abstract class SocksClient {
 	
 	public final SocksServerUri getSocksServerUri() {
 		return this.socksServerUri;
-	}
-	
-	public final SslFactory getSslFactory() {
-		return this.sslFactory;
 	}
 	
 	public abstract NetFactory newNetFactory();

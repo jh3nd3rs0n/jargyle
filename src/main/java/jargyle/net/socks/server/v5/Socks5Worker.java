@@ -42,7 +42,6 @@ import jargyle.net.socks.transport.v5.Version;
 import jargyle.net.socks.transport.v5.gssapiauth.GssDatagramSocket;
 import jargyle.net.socks.transport.v5.gssapiauth.GssSocket;
 import jargyle.net.ssl.DtlsDatagramSocketFactory;
-import jargyle.net.ssl.SslFactory;
 import jargyle.util.Criteria;
 import jargyle.util.Criterion;
 import jargyle.util.PositiveInteger;
@@ -58,23 +57,23 @@ public final class Socks5Worker implements Runnable {
 	private OutputStream clientOutputStream;
 	private Socket clientSocket;
 	private final Configuration configuration;
+	private final DtlsDatagramSocketFactory dtlsDatagramSocketFactory;
 	private final NetFactory externalNetFactory;
 	private final Settings settings;
-	private final SslFactory sslFactory;
 	
 	public Socks5Worker(
 			final Socket clientSock, 
 			final Configuration config, 
-			final NetFactory nFactory, 
-			final SslFactory sFactory) {
+			final NetFactory extNetFactory, 
+			final DtlsDatagramSocketFactory dtlsDatagramSockFactory) {
 		Settings sttngs = config.getSettings();
 		this.clientInputStream = null;
 		this.clientOutputStream = null;
 		this.clientSocket = clientSock;
 		this.configuration = config;
-		this.externalNetFactory = nFactory;
+		this.dtlsDatagramSocketFactory = dtlsDatagramSockFactory;
+		this.externalNetFactory = extNetFactory;
 		this.settings = sttngs;
-		this.sslFactory = sFactory;
 	}
 	
 	private Socket authenticateUsing(final Method method) {
@@ -945,29 +944,30 @@ public final class Socks5Worker implements Runnable {
 			final DatagramSocket clientDatagramSock, 
 			final String peerHost, 
 			final int peerPort) {
-		DatagramSocket clientDatagramSck = null;
-		DtlsDatagramSocketFactory dtlsDatagramSocketFactory = 
-				this.sslFactory.newDtlsDatagramSocketFactory();
-		try {
-			clientDatagramSck = dtlsDatagramSocketFactory.newDatagramSocket(
-					clientDatagramSock, peerHost, peerPort, false);
-		} catch (IOException e) {
-			LOGGER.warn( 
-					this.format("Error in wrapping the client-facing UDP socket"), 
-					e);
-			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
-					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			LOGGER.debug(this.format(String.format(
-					"Sending %s",
-					socks5Rep.toString())));
+		DatagramSocket clientDatagramSck = clientDatagramSock;
+		if (this.dtlsDatagramSocketFactory != null) {
 			try {
-				this.writeThenFlush(socks5Rep.toByteArray());
-			} catch (IOException e1) {
+				clientDatagramSck = 
+						this.dtlsDatagramSocketFactory.newDatagramSocket(
+								clientDatagramSck, peerHost, peerPort, false);
+			} catch (IOException e) {
 				LOGGER.warn( 
-						this.format("Error in writing SOCKS5 reply"), 
-						e1);
+						this.format("Error in wrapping the client-facing UDP socket"), 
+						e);
+				Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
+						Reply.GENERAL_SOCKS_SERVER_FAILURE);
+				LOGGER.debug(this.format(String.format(
+						"Sending %s",
+						socks5Rep.toString())));
+				try {
+					this.writeThenFlush(socks5Rep.toByteArray());
+				} catch (IOException e1) {
+					LOGGER.warn( 
+							this.format("Error in writing SOCKS5 reply"), 
+							e1);
+				}
+				return null;
 			}
-			return null;
 		}
 		if (this.clientSocket instanceof GssSocket) {
 			GssSocket gssSocket = (GssSocket) this.clientSocket;

@@ -33,18 +33,14 @@ final class SslSocketFactoryImpl extends SslSocketFactory {
 			final String host, 
 			final int port, 
 			final boolean autoClose) throws IOException {
-		Properties properties = this.sslFactoryImpl.getProperties();
-		if (!properties.getValue(
-				PropertySpec.SSL_ENABLED, Boolean.class).booleanValue()) {
-			return socket;
-		}
 		SSLContext sslContext = this.sslFactoryImpl.getSslContext();
 		SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
 		SSLSocket sslSocket = (SSLSocket) sslSocketFactory.createSocket(
 				socket, 
 				host, 
 				port, 
-				autoClose); 
+				autoClose);
+		Properties properties = this.sslFactoryImpl.getProperties();		
 		Strings enabledCipherSuites = properties.getValue(
 				PropertySpec.SSL_ENABLED_CIPHER_SUITES, Strings.class);
 		String[] cipherSuites = enabledCipherSuites.toStringArray();

@@ -43,16 +43,17 @@ public abstract class SocksClient {
 	
 	public final DatagramSocket getConnectedDatagramSocket(
 			final DatagramSocket datagramSocket,
-			final String peerHost,
-			final int peerPort) throws IOException {
-		datagramSocket.connect(InetAddress.getByName(peerHost), peerPort);
+			final String udpRelayServerHost,
+			final int udpRelayServerPort) throws IOException {
+		datagramSocket.connect(
+				InetAddress.getByName(udpRelayServerHost), udpRelayServerPort);
 		if (this.sslFactory == null) {
 			return datagramSocket;
 		}
 		DtlsDatagramSocketFactory dtlsDatagramSocketFactory =
 				this.sslFactory.newDtlsDatagramSocketFactory();
 		return dtlsDatagramSocketFactory.newDatagramSocket(
-				datagramSocket, peerHost, peerPort, true);
+				datagramSocket, udpRelayServerHost, udpRelayServerPort, true);
 	}
 	
 	public Socket getConnectedSocket(

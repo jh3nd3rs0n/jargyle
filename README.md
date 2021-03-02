@@ -1610,7 +1610,9 @@ Partial configuration file example:
 
 ### 4. 13. Logging
 
-Jargyle uses Java's built-in logging framework. There are seven logging levels in the order of highest priority to the lowest priority:
+Jargyle uses Simple Logging Facade for Java (SLF4J) for logging and uses java.util.logging as its underlying framework. 
+
+In java.util.logging, there are seven logging levels in the order of highest priority to the lowest priority:
 
 -   `SEVERE`
 -   `WARNING`

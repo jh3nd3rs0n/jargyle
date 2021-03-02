@@ -193,12 +193,9 @@ public final class TcpRelayServer {
 			final Socket serverSock, 
 			final int bffrSize, 
 			final int tmt) {
+		Objects.requireNonNull(clientSock, "client socket must not be null");
 		Objects.requireNonNull(
-				clientSock, 
-				"client socket interface must not be null");
-		Objects.requireNonNull(
-				serverSock, 
-				"server-facing socket interface must not be null");
+				serverSock, "server-facing socket must not be null");
 		if (bffrSize < 1) {
 			throw new IllegalArgumentException("buffer size must not be less than 1");
 		}

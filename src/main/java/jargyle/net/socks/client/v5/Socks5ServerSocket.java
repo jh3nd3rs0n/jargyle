@@ -154,6 +154,9 @@ public final class Socks5ServerSocket extends ServerSocket {
 			if (this.closed) {
 				throw new SocketException("socket is closed");
 			}
+			if (!this.bound) {
+				throw new SocketException("socket is not bound");
+			}
 			if (!this.socks5Bound) {
 				this.socks5Bind(this.localPort, this.localInetAddress);
 			}

@@ -171,15 +171,15 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			if (this.datagramSocket.isClosed()) {
 				throw new SocketException("socket is closed");
 			}
+			if (!this.datagramSocket.isBound()) {
+				throw new SocketException("socket is not bound");
+			}
 			SocketAddress socketAddress = p.getSocketAddress();
 			if (socketAddress != null 
 					&& this.connected 
 					&& !this.remoteSocketAddress.equals(socketAddress)) {
 				throw new IllegalArgumentException(
 						"packet address and connected socket address must be the same");
-			}
-			if (!this.datagramSocket.isBound()) {
-				throw new SocketException("socket is not bound");
 			}
 			String address = p.getAddress().getHostAddress();
 			int port = p.getPort();

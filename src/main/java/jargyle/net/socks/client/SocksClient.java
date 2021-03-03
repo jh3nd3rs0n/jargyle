@@ -1,18 +1,25 @@
 package jargyle.net.socks.client;
 
+import java.io.File;
 import java.io.IOException;
-import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Objects;
+
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
 
 import jargyle.net.Host;
 import jargyle.net.NetFactory;
 import jargyle.net.Port;
-import jargyle.net.ssl.DtlsDatagramSocketFactory;
-import jargyle.net.ssl.SslFactory;
+import jargyle.net.ssl.KeyManagerHelper;
 import jargyle.net.ssl.SslSocketFactory;
+import jargyle.net.ssl.TrustManagerHelper;
+import jargyle.security.EncryptedPassword;
 import jargyle.util.PositiveInteger;
 
 public abstract class SocksClient {
@@ -28,7 +35,7 @@ public abstract class SocksClient {
 
 	private final Properties properties;
 	private final SocksServerUri socksServerUri;
-	private final SslFactory sslFactory;
+	private final SslSocketFactory sslSocketFactory;
 		
 	protected SocksClient(final SocksServerUri serverUri, final Properties props) {
 		Objects.requireNonNull(
@@ -36,24 +43,9 @@ public abstract class SocksClient {
 		Objects.requireNonNull(props, "Properties must not be null");
 		this.properties = props;
 		this.socksServerUri = serverUri;
-		this.sslFactory = props.getValue(
+		this.sslSocketFactory = props.getValue(
 				PropertySpec.SSL_ENABLED, Boolean.class).booleanValue() ? 
-						new SslFactoryImpl(props) : null;
-	}
-	
-	public final DatagramSocket getConnectedDatagramSocket(
-			final DatagramSocket datagramSocket,
-			final String udpRelayServerHost,
-			final int udpRelayServerPort) throws IOException {
-		datagramSocket.connect(
-				InetAddress.getByName(udpRelayServerHost), udpRelayServerPort);
-		if (this.sslFactory == null) {
-			return datagramSocket;
-		}
-		DtlsDatagramSocketFactory dtlsDatagramSocketFactory =
-				this.sslFactory.newDtlsDatagramSocketFactory();
-		return dtlsDatagramSocketFactory.newDatagramSocket(
-				datagramSocket, udpRelayServerHost, udpRelayServerPort, true);
+						new SslSocketFactoryImpl(this) : null;
 	}
 	
 	public Socket getConnectedSocket(
@@ -98,12 +90,10 @@ public abstract class SocksClient {
 						InetAddress.getByName(socksServerUri.getHost()), 
 						socksServerUri.getPort()), 
 				timeout);
-		if (this.sslFactory == null) {
+		if (this.sslSocketFactory == null) {
 			return socket;
 		}
-		SslSocketFactory sslSocketFactory = 
-				this.sslFactory.newSslSocketFactory();
-		return sslSocketFactory.newSocket(
+		return this.sslSocketFactory.newSocket(
 				socket, 
 				this.socksServerUri.getHost(), 
 				this.socksServerUri.getPort(), 
@@ -116,6 +106,46 @@ public abstract class SocksClient {
 	
 	public final SocksServerUri getSocksServerUri() {
 		return this.socksServerUri;
+	}
+	
+	public final SSLContext getSslContext(
+			final String protocol) throws IOException {
+		KeyManager[] keyManagers = null;
+		TrustManager[] trustManagers = null;
+		File keyStoreFile = this.properties.getValue(
+				PropertySpec.SSL_KEY_STORE_FILE, File.class);
+		if (keyStoreFile != null) {
+			EncryptedPassword keyStorePassword = 
+					this.properties.getValue(
+							PropertySpec.SSL_KEY_STORE_PASSWORD, 
+							EncryptedPassword.class);
+			String keyStoreType = this.properties.getValue(
+					PropertySpec.SSL_KEY_STORE_TYPE, String.class);
+			keyManagers = KeyManagerHelper.newKeyManagers(
+					keyStoreFile, keyStorePassword, keyStoreType);
+		}
+		File trustStoreFile = this.properties.getValue(
+				PropertySpec.SSL_TRUST_STORE_FILE, File.class);
+		if (trustStoreFile != null) {
+			EncryptedPassword trustStorePassword = 
+					this.properties.getValue(
+							PropertySpec.SSL_TRUST_STORE_PASSWORD, 
+							EncryptedPassword.class);
+			String trustStoreType = this.properties.getValue(
+					PropertySpec.SSL_TRUST_STORE_TYPE, String.class);
+			trustManagers = TrustManagerHelper.newTrustManagers(
+					trustStoreFile, trustStorePassword, trustStoreType);
+		}
+		SSLContext context = null;
+		try {
+			context = jargyle.net.ssl.SslContextHelper.getSslContext(
+					protocol, keyManagers, trustManagers);
+		} catch (KeyManagementException e) {
+			throw new IOException(e);
+		} catch (NoSuchAlgorithmException e) {
+			throw new IllegalArgumentException(e);
+		}
+		return context;		
 	}
 	
 	public abstract NetFactory newNetFactory();

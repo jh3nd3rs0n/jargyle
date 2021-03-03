@@ -1,4 +1,4 @@
-package jargyle.net.socks.client;
+package jargyle.net.socks.client.v5;
 
 import java.io.IOException;
 import java.net.DatagramSocket;

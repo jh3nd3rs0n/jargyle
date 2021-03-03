@@ -4,59 +4,21 @@ import java.io.File;
 import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 
-import jargyle.net.ssl.DtlsDatagramSocketFactory;
 import jargyle.net.ssl.KeyManagerHelper;
-import jargyle.net.ssl.SslFactory;
-import jargyle.net.ssl.SslSocketFactory;
 import jargyle.net.ssl.TrustManagerHelper;
 import jargyle.security.EncryptedPassword;
 
-final class SslFactoryImpl extends SslFactory {
-	
-	private final Configuration configuration;
-	private Configuration lastConfiguration;
-	private SSLContext sslContext;	
-	
-	public SslFactoryImpl(final Configuration config) {
-		this.configuration = config;
-		this.lastConfiguration = null;
-		this.sslContext = null;
-	}
-	
-	public Configuration getConfiguration() {
-		return this.configuration;
-	}
-	
-	public SSLContext getSslContext() throws IOException {
-		if (!Configuration.equals(this.lastConfiguration, this.configuration)) {
-			this.sslContext = this.newSslContext();
-			this.lastConfiguration = ImmutableConfiguration.newInstance(
-					this.configuration);
-		}
-		return this.sslContext;
-	}
+final class SslContextHelper {
 
-	@Override
-	public DtlsDatagramSocketFactory newDtlsDatagramSocketFactory() {
-		return new DtlsDatagramSocketFactoryImpl();
-	}
-	
-	private SSLContext newSslContext() throws IOException {
-		SSLContext context = null;
-		Settings settings = this.configuration.getSettings();
-		String protocol = settings.getLastValue(
-				SettingSpec.SSL_PROTOCOL, String.class);
-		try {
-			context = SSLContext.getInstance(protocol);
-		} catch (NoSuchAlgorithmException e) {
-			throw new AssertionError(e);
-		}
+	public static SSLContext getSslContext(
+			final String protocol,
+			final Configuration configuration) throws IOException {
+		Settings settings = configuration.getSettings();
 		KeyManager[] keyManagers = null;
 		TrustManager[] trustManagers = null;
 		File keyStoreFile = settings.getLastValue(
@@ -83,17 +45,18 @@ final class SslFactoryImpl extends SslFactory {
 			trustManagers = TrustManagerHelper.newTrustManagers(
 					trustStoreFile, trustStorePassword, trustStoreType);
 		}
+		SSLContext context = null;
 		try {
-			context.init(keyManagers, trustManagers, new SecureRandom());
+			context = jargyle.net.ssl.SslContextHelper.getSslContext(
+					protocol, keyManagers, trustManagers);
 		} catch (KeyManagementException e) {
 			throw new IOException(e);
+		} catch (NoSuchAlgorithmException e) {
+			throw new IllegalArgumentException(e);
 		}
 		return context;
 	}
-
-	@Override
-	public SslSocketFactory newSslSocketFactory() {
-		return new SslSocketFactoryImpl(this);
-	}
-
+	
+	private SslContextHelper() { }
+	
 }

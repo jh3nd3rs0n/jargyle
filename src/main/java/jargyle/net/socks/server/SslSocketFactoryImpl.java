@@ -13,10 +13,14 @@ import jargyle.util.Strings;
 
 final class SslSocketFactoryImpl extends SslSocketFactory {
 
-	private final SslFactoryImpl sslFactoryImpl;
+	private final Configuration configuration;
+	private Configuration lastConfiguration;
+	private SSLContext sslContext;
 	
-	public SslSocketFactoryImpl(final SslFactoryImpl factoryImpl) {
-		this.sslFactoryImpl = factoryImpl;
+	public SslSocketFactoryImpl(final Configuration config) {
+		this.configuration = config;
+		this.lastConfiguration = null;
+		this.sslContext = null;
 	}
 	
 	@Override
@@ -24,12 +28,18 @@ final class SslSocketFactoryImpl extends SslSocketFactory {
 			final Socket socket, 
 			final InputStream consumed, 
 			final boolean autoClose) throws IOException {
-		SSLContext sslContext = this.sslFactoryImpl.getSslContext();
-		SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
+		if (!Configuration.equals(this.lastConfiguration, this.configuration)) {
+			this.sslContext = SslContextHelper.getSslContext(
+					this.configuration.getSettings().getLastValue(
+							SettingSpec.SSL_PROTOCOL, String.class), 
+					this.configuration);
+			this.lastConfiguration = ImmutableConfiguration.newInstance(
+					this.configuration);
+		}
+		SSLSocketFactory sslSocketFactory = this.sslContext.getSocketFactory();
 		SSLSocket sslSocket = (SSLSocket) sslSocketFactory.createSocket(
 				socket,	consumed, autoClose);
-		Configuration configuration = this.sslFactoryImpl.getConfiguration();
-		Settings settings = configuration.getSettings();
+		Settings settings = this.configuration.getSettings();
 		Strings enabledCipherSuites = settings.getLastValue(
 				SettingSpec.SSL_ENABLED_CIPHER_SUITES, Strings.class);
 		String[] cipherSuites = enabledCipherSuites.toStringArray();

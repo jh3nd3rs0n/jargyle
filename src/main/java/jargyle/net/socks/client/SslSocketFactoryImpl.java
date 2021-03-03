@@ -12,11 +12,13 @@ import jargyle.net.ssl.SslSocketFactory;
 import jargyle.util.Strings;
 
 final class SslSocketFactoryImpl extends SslSocketFactory {
-	
-	private final SslFactoryImpl sslFactoryImpl;
 
-	public SslSocketFactoryImpl(final SslFactoryImpl factoryImpl) {
-		this.sslFactoryImpl = factoryImpl;
+	private final SocksClient socksClient;
+	private SSLContext sslContext;
+
+	public SslSocketFactoryImpl(final SocksClient client) {
+		this.socksClient = client;
+		this.sslContext = null;
 	}
 
 	@Override
@@ -33,14 +35,18 @@ final class SslSocketFactoryImpl extends SslSocketFactory {
 			final String host, 
 			final int port, 
 			final boolean autoClose) throws IOException {
-		SSLContext sslContext = this.sslFactoryImpl.getSslContext();
-		SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
+		Properties properties = this.socksClient.getProperties();
+		if (this.sslContext == null) {
+			this.sslContext = this.socksClient.getSslContext(
+					properties.getValue(
+							PropertySpec.SSL_PROTOCOL, String.class));
+		}
+		SSLSocketFactory sslSocketFactory = this.sslContext.getSocketFactory();
 		SSLSocket sslSocket = (SSLSocket) sslSocketFactory.createSocket(
 				socket, 
 				host, 
 				port, 
 				autoClose);
-		Properties properties = this.sslFactoryImpl.getProperties();		
 		Strings enabledCipherSuites = properties.getValue(
 				PropertySpec.SSL_ENABLED_CIPHER_SUITES, Strings.class);
 		String[] cipherSuites = enabledCipherSuites.toStringArray();

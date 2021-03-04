@@ -52,7 +52,7 @@ public abstract class Configuration {
 					EncryptedPassword.class);
 			String keyStoreType = settings.getLastValue(
 					SettingSpec.SSL_KEY_STORE_TYPE, String.class);
-			keyManagers = KeyManagerHelper.newKeyManagers(
+			keyManagers = KeyManagerHelper.getKeyManagers(
 					keyStoreFile, keyStorePassword, keyStoreType);
 		}
 		File trustStoreFile = settings.getLastValue(
@@ -63,7 +63,7 @@ public abstract class Configuration {
 					EncryptedPassword.class);
 			String trustStoreType = settings.getLastValue(
 					SettingSpec.SSL_TRUST_STORE_TYPE, String.class);			
-			trustManagers = TrustManagerHelper.newTrustManagers(
+			trustManagers = TrustManagerHelper.getTrustManagers(
 					trustStoreFile, trustStorePassword, trustStoreType);
 		}
 		SSLContext context = null;

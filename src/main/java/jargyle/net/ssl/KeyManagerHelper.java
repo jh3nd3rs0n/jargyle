@@ -15,12 +15,10 @@ import jargyle.security.KeyStoreHelper;
 
 public final class KeyManagerHelper {
 
-	public static KeyManager[] newKeyManagers(
+	public static KeyManager[] getKeyManagers(
 			final File keyStoreFile, 
 			final EncryptedPassword keyStorePassword, 
 			final String keyStoreType) throws IOException {
-		KeyStore keyStore = KeyStoreHelper.newKeyStore(
-				keyStoreFile, keyStorePassword, keyStoreType);
 		KeyManagerFactory keyManagerFactory = null;
 		try {
 			keyManagerFactory = KeyManagerFactory.getInstance(
@@ -28,6 +26,8 @@ public final class KeyManagerHelper {
 		} catch (NoSuchAlgorithmException e) {
 			throw new AssertionError(e);
 		}
+		KeyStore keyStore = KeyStoreHelper.getKeyStore(
+				keyStoreFile, keyStorePassword, keyStoreType);		
 		try {
 			keyManagerFactory.init(
 					keyStore, keyStorePassword.getPassword());

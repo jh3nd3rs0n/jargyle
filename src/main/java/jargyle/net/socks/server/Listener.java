@@ -22,18 +22,19 @@ final class Listener implements Runnable {
 	private static final Logger LOGGER = LoggerFactory.getLogger(
 			Listener.class);
 	
+	private DtlsDatagramSocketFactory clientDtlsDatagramSocketFactory;
+	private SslSocketFactory clientSslSocketFactory;
 	private final Configuration configuration;
-	private DtlsDatagramSocketFactory dtlsDatagramSocketFactory;
 	private final NetFactory externalNetFactory;
 	private final ServerSocket serverSocket;
-	private SslSocketFactory sslSocketFactory;
+	
 			
 	public Listener(final ServerSocket serverSock, final Configuration config) {
+		this.clientDtlsDatagramSocketFactory = null;
+		this.clientSslSocketFactory = null;		
 		this.configuration = config;
-		this.dtlsDatagramSocketFactory = null;
 		this.externalNetFactory = new ExternalNetFactory(config);
 		this.serverSocket = serverSock;
-		this.sslSocketFactory = null;
 	}
 	
 	private boolean canAcceptClientSocket(final Socket clientSocket) {
@@ -97,6 +98,30 @@ final class Listener implements Runnable {
 		return String.format("%s: %s", this, message);
 	}
 	
+	private DtlsDatagramSocketFactory getClientDtlsDatagramSocketFactory() {
+		if (!this.configuration.getSettings().getLastValue(
+				SettingSpec.SSL_ENABLED, Boolean.class).booleanValue()) {
+			return null;
+		}
+		if (this.clientDtlsDatagramSocketFactory == null) {
+			this.clientDtlsDatagramSocketFactory = 
+					new DtlsDatagramSocketFactoryImpl();
+		}
+		return this.clientDtlsDatagramSocketFactory;
+	}
+	
+	private SslSocketFactory getClientSslSocketFactory() {
+		if (!this.configuration.getSettings().getLastValue(
+				SettingSpec.SSL_ENABLED, Boolean.class).booleanValue()) {
+			return null;
+		}
+		if (this.clientSslSocketFactory == null) {
+			this.clientSslSocketFactory = new SslSocketFactoryImpl(
+					this.configuration);
+		}
+		return this.clientSslSocketFactory;
+	}
+	
 	public void run() {
 		ExecutorService executor = Executors.newCachedThreadPool();
 		while (true) {
@@ -134,20 +159,11 @@ final class Listener implements Runnable {
 				this.closeClientSocket(clientSocket);
 				continue;
 			}
-			DtlsDatagramSocketFactory dtlsDatagramSockFactory = null;
-			if (this.configuration.getSettings().getLastValue(
-					SettingSpec.SSL_ENABLED, Boolean.class).booleanValue()) {
-				if (this.dtlsDatagramSocketFactory == null) {
-					this.dtlsDatagramSocketFactory = 
-							new DtlsDatagramSocketFactoryImpl();
-				}
-				dtlsDatagramSockFactory = this.dtlsDatagramSocketFactory;
-			}
 			executor.execute(new Worker(
 					clientSocket, 
 					this.configuration, 
 					this.externalNetFactory, 
-					dtlsDatagramSockFactory));
+					this.getClientDtlsDatagramSocketFactory()));
 		}
 		executor.shutdownNow();
 	}
@@ -164,14 +180,11 @@ final class Listener implements Runnable {
 	
 	private Socket wrapClientSocket(final Socket clientSocket) {
 		Socket clientSock = clientSocket;
-		if (this.configuration.getSettings().getLastValue(
-				SettingSpec.SSL_ENABLED, Boolean.class).booleanValue()) {
-			if (this.sslSocketFactory == null) {
-				this.sslSocketFactory = new SslSocketFactoryImpl(
-						this.configuration);
-			}
+		SslSocketFactory clientSslSockFactory = 
+				this.getClientSslSocketFactory();
+		if (clientSslSockFactory != null) {
 			try {
-				clientSock = this.sslSocketFactory.newSocket(
+				clientSock = clientSslSockFactory.newSocket(
 						clientSock, null, true);
 			} catch (IOException e) {
 				LOGGER.warn(

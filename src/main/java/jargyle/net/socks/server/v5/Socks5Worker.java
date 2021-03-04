@@ -53,11 +53,11 @@ public final class Socks5Worker implements Runnable {
 	private static final Logger LOGGER = LoggerFactory.getLogger(
 			Socks5Worker.class);
 
+	private final DtlsDatagramSocketFactory clientDtlsDatagramSocketFactory;	
 	private InputStream clientInputStream;
 	private OutputStream clientOutputStream;
 	private Socket clientSocket;
 	private final Configuration configuration;
-	private final DtlsDatagramSocketFactory dtlsDatagramSocketFactory;
 	private final NetFactory externalNetFactory;
 	private final Settings settings;
 	
@@ -65,13 +65,13 @@ public final class Socks5Worker implements Runnable {
 			final Socket clientSock, 
 			final Configuration config, 
 			final NetFactory extNetFactory, 
-			final DtlsDatagramSocketFactory dtlsDatagramSockFactory) {
+			final DtlsDatagramSocketFactory clientDtlsDatagramSockFactory) {
 		Settings sttngs = config.getSettings();
+		this.clientDtlsDatagramSocketFactory = clientDtlsDatagramSockFactory;		
 		this.clientInputStream = null;
 		this.clientOutputStream = null;
 		this.clientSocket = clientSock;
 		this.configuration = config;
-		this.dtlsDatagramSocketFactory = dtlsDatagramSockFactory;
 		this.externalNetFactory = extNetFactory;
 		this.settings = sttngs;
 	}
@@ -945,10 +945,10 @@ public final class Socks5Worker implements Runnable {
 			final String udpClientHost, 
 			final int udpClientPort) {
 		DatagramSocket clientDatagramSck = clientDatagramSock;
-		if (this.dtlsDatagramSocketFactory != null) {
+		if (this.clientDtlsDatagramSocketFactory != null) {
 			try {
 				clientDatagramSck = 
-						this.dtlsDatagramSocketFactory.newDatagramSocket(
+						this.clientDtlsDatagramSocketFactory.newDatagramSocket(
 								clientDatagramSck, 
 								udpClientHost, 
 								udpClientPort, 

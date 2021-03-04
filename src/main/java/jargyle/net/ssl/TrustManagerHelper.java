@@ -14,12 +14,10 @@ import jargyle.security.KeyStoreHelper;
 
 public final class TrustManagerHelper {
 
-	public static TrustManager[] newTrustManagers(
+	public static TrustManager[] getTrustManagers(
 			final File trustStoreFile,
 			final EncryptedPassword trustStorePassword, 
 			final String trustStoreType) throws IOException {
-		KeyStore trustStore = KeyStoreHelper.newKeyStore(
-				trustStoreFile, trustStorePassword, trustStoreType);
 		TrustManagerFactory trustManagerFactory = null;
 		try {
 			trustManagerFactory = TrustManagerFactory.getInstance(
@@ -27,6 +25,8 @@ public final class TrustManagerHelper {
 		} catch (NoSuchAlgorithmException e) {
 			throw new AssertionError(e);
 		}
+		KeyStore trustStore = KeyStoreHelper.getKeyStore(
+				trustStoreFile, trustStorePassword, trustStoreType);
 		try {
 			trustManagerFactory.init(trustStore);
 		} catch (KeyStoreException e) {

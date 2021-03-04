@@ -16,19 +16,19 @@ final class Worker implements Runnable {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(Worker.class);
 	
+	private final DtlsDatagramSocketFactory clientDtlsDatagramSocketFactory;
 	private final Socket clientSocket;
 	private final Configuration configuration;
-	private final DtlsDatagramSocketFactory dtlsDatagramSocketFactory;	
 	private final NetFactory externalNetFactory;
 	
 	public Worker(
 			final Socket clientSock, 
 			final Configuration config, 
 			final NetFactory extNetFactory, 
-			final DtlsDatagramSocketFactory dtlsDatagramSockFactory) {
+			final DtlsDatagramSocketFactory clientDtlsDatagramSockFactory) {
+		this.clientDtlsDatagramSocketFactory = clientDtlsDatagramSockFactory;		
 		this.clientSocket = clientSock;
 		this.configuration = config;
-		this.dtlsDatagramSocketFactory = dtlsDatagramSockFactory;
 		this.externalNetFactory = extNetFactory;
 	}
 	
@@ -55,7 +55,7 @@ final class Worker implements Runnable {
 						this.clientSocket, 
 						this.configuration, 
 						this.externalNetFactory, 
-						this.dtlsDatagramSocketFactory);
+						this.clientDtlsDatagramSocketFactory);
 				socks5Worker.run();
 			} else {
 				LOGGER.warn(this.format(String.format(

@@ -11,7 +11,7 @@ import java.security.cert.CertificateException;
 
 public final class KeyStoreHelper {
 	
-	public static KeyStore newKeyStore(
+	public static KeyStore getKeyStore(
 			final File keyStoreFile, 
 			final EncryptedPassword keyStorePassword, 
 			final String keyStoreType) throws IOException {

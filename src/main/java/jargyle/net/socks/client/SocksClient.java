@@ -121,7 +121,7 @@ public abstract class SocksClient {
 					EncryptedPassword.class);
 			String keyStoreType = this.properties.getValue(
 					PropertySpec.SSL_KEY_STORE_TYPE, String.class);
-			keyManagers = KeyManagerHelper.newKeyManagers(
+			keyManagers = KeyManagerHelper.getKeyManagers(
 					keyStoreFile, keyStorePassword, keyStoreType);
 		}
 		File trustStoreFile = this.properties.getValue(
@@ -132,7 +132,7 @@ public abstract class SocksClient {
 					EncryptedPassword.class);
 			String trustStoreType = this.properties.getValue(
 					PropertySpec.SSL_TRUST_STORE_TYPE, String.class);
-			trustManagers = TrustManagerHelper.newTrustManagers(
+			trustManagers = TrustManagerHelper.getTrustManagers(
 					trustStoreFile, trustStorePassword, trustStoreType);
 		}
 		SSLContext context = null;

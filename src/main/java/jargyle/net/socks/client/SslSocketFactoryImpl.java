@@ -1,14 +1,23 @@
 package jargyle.net.socks.client;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 
+import javax.net.ssl.KeyManager;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
 
+import jargyle.net.ssl.KeyManagerHelper;
+import jargyle.net.ssl.SslContextHelper;
 import jargyle.net.ssl.SslSocketFactory;
+import jargyle.net.ssl.TrustManagerHelper;
+import jargyle.security.EncryptedPassword;
 import jargyle.util.Strings;
 
 final class SslSocketFactoryImpl extends SslSocketFactory {
@@ -21,6 +30,47 @@ final class SslSocketFactoryImpl extends SslSocketFactory {
 		this.sslContext = null;
 	}
 
+	private SSLContext getSslContext() throws IOException {
+		KeyManager[] keyManagers = null;
+		TrustManager[] trustManagers = null;
+		Properties properties = this.socksClient.getProperties();
+		File keyStoreFile = properties.getValue(
+				PropertySpec.SSL_KEY_STORE_FILE, File.class);
+		if (keyStoreFile != null) {
+			EncryptedPassword keyStorePassword = properties.getValue(
+					PropertySpec.SSL_KEY_STORE_PASSWORD,
+					EncryptedPassword.class);
+			String keyStoreType = properties.getValue(
+					PropertySpec.SSL_KEY_STORE_TYPE, String.class);
+			keyManagers = KeyManagerHelper.getKeyManagers(
+					keyStoreFile, keyStorePassword, keyStoreType);
+		}
+		File trustStoreFile = properties.getValue(
+				PropertySpec.SSL_TRUST_STORE_FILE, File.class);
+		if (trustStoreFile != null) {
+			EncryptedPassword trustStorePassword = properties.getValue(
+					PropertySpec.SSL_TRUST_STORE_PASSWORD,
+					EncryptedPassword.class);
+			String trustStoreType = properties.getValue(
+					PropertySpec.SSL_TRUST_STORE_TYPE, String.class);
+			trustManagers = TrustManagerHelper.getTrustManagers(
+					trustStoreFile, trustStorePassword, trustStoreType);
+		}
+		SSLContext context = null;
+		try {
+			context = SslContextHelper.getSslContext(
+					properties.getValue(
+							PropertySpec.SSL_PROTOCOL, String.class), 
+					keyManagers, 
+					trustManagers);
+		} catch (KeyManagementException e) {
+			throw new IOException(e);
+		} catch (NoSuchAlgorithmException e) {
+			throw new IllegalArgumentException(e);
+		}
+		return context;		
+	}
+	
 	@Override
 	public Socket newSocket(
 			final Socket socket, 
@@ -35,11 +85,8 @@ final class SslSocketFactoryImpl extends SslSocketFactory {
 			final String host, 
 			final int port, 
 			final boolean autoClose) throws IOException {
-		Properties properties = this.socksClient.getProperties();
 		if (this.sslContext == null) {
-			this.sslContext = this.socksClient.getSslContext(
-					properties.getValue(
-							PropertySpec.SSL_PROTOCOL, String.class));
+			this.sslContext = this.getSslContext();
 		}
 		SSLSocketFactory sslSocketFactory = this.sslContext.getSocketFactory();
 		SSLSocket sslSocket = (SSLSocket) sslSocketFactory.createSocket(
@@ -47,6 +94,7 @@ final class SslSocketFactoryImpl extends SslSocketFactory {
 				host, 
 				port, 
 				autoClose);
+		Properties properties = this.socksClient.getProperties();
 		Strings enabledCipherSuites = properties.getValue(
 				PropertySpec.SSL_ENABLED_CIPHER_SUITES, Strings.class);
 		String[] cipherSuites = enabledCipherSuites.toStringArray();

@@ -27,7 +27,6 @@ final class Listener implements Runnable {
 	private final Configuration configuration;
 	private final NetFactory externalNetFactory;
 	private final ServerSocket serverSocket;
-	
 			
 	public Listener(final ServerSocket serverSock, final Configuration config) {
 		this.clientDtlsDatagramSocketFactory = null;
@@ -99,6 +98,7 @@ final class Listener implements Runnable {
 	}
 	
 	private DtlsDatagramSocketFactory getClientDtlsDatagramSocketFactory() {
+		// TODO: when DTLS support is implemented, use SettingSpec.DTLS_ENABLED 
 		if (!this.configuration.getSettings().getLastValue(
 				SettingSpec.SSL_ENABLED, Boolean.class).booleanValue()) {
 			return null;

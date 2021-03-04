@@ -1,26 +1,15 @@
 package jargyle.net.socks.client;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 import java.util.Objects;
-
-import javax.net.ssl.KeyManager;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
 
 import jargyle.net.Host;
 import jargyle.net.NetFactory;
 import jargyle.net.Port;
-import jargyle.net.ssl.KeyManagerHelper;
-import jargyle.net.ssl.SslContextHelper;
 import jargyle.net.ssl.SslSocketFactory;
-import jargyle.net.ssl.TrustManagerHelper;
-import jargyle.security.EncryptedPassword;
 import jargyle.util.PositiveInteger;
 
 public abstract class SocksClient {
@@ -107,44 +96,6 @@ public abstract class SocksClient {
 	
 	public final SocksServerUri getSocksServerUri() {
 		return this.socksServerUri;
-	}
-	
-	public final SSLContext getSslContext(
-			final String protocol) throws IOException {
-		KeyManager[] keyManagers = null;
-		TrustManager[] trustManagers = null;
-		File keyStoreFile = this.properties.getValue(
-				PropertySpec.SSL_KEY_STORE_FILE, File.class);
-		if (keyStoreFile != null) {
-			EncryptedPassword keyStorePassword = this.properties.getValue(
-					PropertySpec.SSL_KEY_STORE_PASSWORD,
-					EncryptedPassword.class);
-			String keyStoreType = this.properties.getValue(
-					PropertySpec.SSL_KEY_STORE_TYPE, String.class);
-			keyManagers = KeyManagerHelper.getKeyManagers(
-					keyStoreFile, keyStorePassword, keyStoreType);
-		}
-		File trustStoreFile = this.properties.getValue(
-				PropertySpec.SSL_TRUST_STORE_FILE, File.class);
-		if (trustStoreFile != null) {
-			EncryptedPassword trustStorePassword = this.properties.getValue(
-					PropertySpec.SSL_TRUST_STORE_PASSWORD,
-					EncryptedPassword.class);
-			String trustStoreType = this.properties.getValue(
-					PropertySpec.SSL_TRUST_STORE_TYPE, String.class);
-			trustManagers = TrustManagerHelper.getTrustManagers(
-					trustStoreFile, trustStorePassword, trustStoreType);
-		}
-		SSLContext context = null;
-		try {
-			context = SslContextHelper.getSslContext(
-					protocol, keyManagers, trustManagers);
-		} catch (KeyManagementException e) {
-			throw new IOException(e);
-		} catch (NoSuchAlgorithmException e) {
-			throw new IllegalArgumentException(e);
-		}
-		return context;		
 	}
 	
 	public abstract NetFactory newNetFactory();

@@ -17,6 +17,7 @@ import jargyle.net.Host;
 import jargyle.net.NetFactory;
 import jargyle.net.Port;
 import jargyle.net.ssl.KeyManagerHelper;
+import jargyle.net.ssl.SslContextHelper;
 import jargyle.net.ssl.SslSocketFactory;
 import jargyle.net.ssl.TrustManagerHelper;
 import jargyle.security.EncryptedPassword;
@@ -115,10 +116,9 @@ public abstract class SocksClient {
 		File keyStoreFile = this.properties.getValue(
 				PropertySpec.SSL_KEY_STORE_FILE, File.class);
 		if (keyStoreFile != null) {
-			EncryptedPassword keyStorePassword = 
-					this.properties.getValue(
-							PropertySpec.SSL_KEY_STORE_PASSWORD, 
-							EncryptedPassword.class);
+			EncryptedPassword keyStorePassword = this.properties.getValue(
+					PropertySpec.SSL_KEY_STORE_PASSWORD,
+					EncryptedPassword.class);
 			String keyStoreType = this.properties.getValue(
 					PropertySpec.SSL_KEY_STORE_TYPE, String.class);
 			keyManagers = KeyManagerHelper.newKeyManagers(
@@ -127,10 +127,9 @@ public abstract class SocksClient {
 		File trustStoreFile = this.properties.getValue(
 				PropertySpec.SSL_TRUST_STORE_FILE, File.class);
 		if (trustStoreFile != null) {
-			EncryptedPassword trustStorePassword = 
-					this.properties.getValue(
-							PropertySpec.SSL_TRUST_STORE_PASSWORD, 
-							EncryptedPassword.class);
+			EncryptedPassword trustStorePassword = this.properties.getValue(
+					PropertySpec.SSL_TRUST_STORE_PASSWORD,
+					EncryptedPassword.class);
 			String trustStoreType = this.properties.getValue(
 					PropertySpec.SSL_TRUST_STORE_TYPE, String.class);
 			trustManagers = TrustManagerHelper.newTrustManagers(
@@ -138,7 +137,7 @@ public abstract class SocksClient {
 		}
 		SSLContext context = null;
 		try {
-			context = jargyle.net.ssl.SslContextHelper.getSslContext(
+			context = SslContextHelper.getSslContext(
 					protocol, keyManagers, trustManagers);
 		} catch (KeyManagementException e) {
 			throw new IOException(e);

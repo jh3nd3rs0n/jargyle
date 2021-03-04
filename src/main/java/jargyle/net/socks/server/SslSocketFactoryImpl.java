@@ -29,10 +29,9 @@ final class SslSocketFactoryImpl extends SslSocketFactory {
 			final InputStream consumed, 
 			final boolean autoClose) throws IOException {
 		if (!Configuration.equals(this.lastConfiguration, this.configuration)) {
-			this.sslContext = SslContextHelper.getSslContext(
+			this.sslContext = this.configuration.getSslContext(
 					this.configuration.getSettings().getLastValue(
-							SettingSpec.SSL_PROTOCOL, String.class), 
-					this.configuration);
+							SettingSpec.SSL_PROTOCOL, String.class));
 			this.lastConfiguration = ImmutableConfiguration.newInstance(
 					this.configuration);
 		}

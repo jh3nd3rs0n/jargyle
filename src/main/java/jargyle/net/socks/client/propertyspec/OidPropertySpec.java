@@ -35,13 +35,7 @@ public final class OidPropertySpec extends PropertySpec {
 
 	@Override
 	public Property newProperty(final String value) {
-		Oid oid = null;
-		try {
-			oid = new Oid(value);
-		} catch (GSSException e) {
-			throw new IllegalArgumentException(e);
-		}
-		return Property.newInstance(this, oid);
+		return Property.newInstance(this, newOid(value));
 	}
 
 }

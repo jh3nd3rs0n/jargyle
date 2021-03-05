@@ -200,6 +200,10 @@ public final class Setting {
 		
 	}
 	
+	public static Setting newInstance(final SettingSpec spec, final Object val) {
+		return new Setting(spec, val);
+	}
+	
 	public static Setting newInstance(final String s) {
 		String[] sElements = s.split("=", 2);
 		if (sElements.length != 2) {
@@ -235,7 +239,7 @@ public final class Setting {
 	private final SettingSpec settingSpec;
 	private final Object value;
 	
-	Setting(final SettingSpec spec, final Object val) {
+	private Setting(final SettingSpec spec, final Object val) {
 		this(spec, val, null);
 	}
 	

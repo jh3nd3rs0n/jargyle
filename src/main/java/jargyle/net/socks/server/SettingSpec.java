@@ -1,9 +1,10 @@
 package jargyle.net.socks.server;
 
 import java.io.File;
-import java.net.UnknownHostException;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.ietf.jgss.GSSException;
 import org.ietf.jgss.Oid;
 
 import jargyle.annotation.HelpText;
@@ -12,10 +13,26 @@ import jargyle.net.Port;
 import jargyle.net.SocketSettings;
 import jargyle.net.socks.client.PropertySpec;
 import jargyle.net.socks.client.SocksServerUri;
-import jargyle.net.socks.client.v5.UsernamePassword;
+import jargyle.net.socks.server.settingspec.AuthMethodsSettingSpec;
+import jargyle.net.socks.server.settingspec.BooleanSettingSpec;
+import jargyle.net.socks.server.settingspec.CriteriaSettingSpec;
+import jargyle.net.socks.server.settingspec.EncryptedPasswordSettingSpec;
+import jargyle.net.socks.server.settingspec.FileSettingSpec;
+import jargyle.net.socks.server.settingspec.GssapiProtectionLevelsSettingSpec;
+import jargyle.net.socks.server.settingspec.HostSettingSpec;
+import jargyle.net.socks.server.settingspec.NonnegativeIntegerSettingSpec;
+import jargyle.net.socks.server.settingspec.OidSettingSpec;
+import jargyle.net.socks.server.settingspec.PortSettingSpec;
+import jargyle.net.socks.server.settingspec.PositiveIntegerSettingSpec;
+import jargyle.net.socks.server.settingspec.SocketSettingsSettingSpec;
+import jargyle.net.socks.server.settingspec.Socks5RequestCriteriaSettingSpec;
+import jargyle.net.socks.server.settingspec.SocksServerUriSettingSpec;
+import jargyle.net.socks.server.settingspec.StringSettingSpec;
+import jargyle.net.socks.server.settingspec.StringsSettingSpec;
+import jargyle.net.socks.server.settingspec.UsernamePasswordAuthenticatorSettingSpec;
+import jargyle.net.socks.server.settingspec.UsernamePasswordSettingSpec;
 import jargyle.net.socks.server.v5.Socks5RequestCriteria;
 import jargyle.net.socks.server.v5.Socks5RequestCriterion;
-import jargyle.net.socks.server.v5.UsernamePasswordAuthenticator;
 import jargyle.net.socks.transport.v5.AuthMethod;
 import jargyle.net.socks.transport.v5.AuthMethods;
 import jargyle.net.socks.transport.v5.gssapiauth.GssapiProtectionLevels;
@@ -27,83 +44,34 @@ import jargyle.util.NonnegativeInteger;
 import jargyle.util.PositiveInteger;
 import jargyle.util.Strings;
 
-public enum SettingSpec {
+public abstract class SettingSpec {
 	
 	@HelpText(
 			doc = "The space separated list of allowed client address "
 					+ "criteria (default is matches:.*)", 
 			usage = "allowedClientAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
 	)
-	ALLOWED_CLIENT_ADDRESS_CRITERIA("allowedClientAddressCriteria") {
-		
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(this, Criteria.newInstance(Criterion.newInstance(
-					CriterionMethod.MATCHES, ".*")));
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			Criteria val = Criteria.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return new Setting(this, Criteria.newInstance(value));
-		}
-		
-	},
+	public static final SettingSpec ALLOWED_CLIENT_ADDRESS_CRITERIA = new CriteriaSettingSpec(
+			"allowedClientAddressCriteria", 
+			Criteria.newInstance(Criterion.newInstance(CriterionMethod.MATCHES, ".*")));
+	
 	@HelpText(
 			doc = "The maximum length of the queue of incoming connections "
 					+ "(default is 50)", 
 			usage = "backlog=INTEGER_BETWEEN_0_AND_2147483647"
 	)
-	BACKLOG("backlog") {
-
-		private static final int DEFAULT_INT_VALUE = 50;
-		
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(
-					this, NonnegativeInteger.newInstance(DEFAULT_INT_VALUE));
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			NonnegativeInteger val = NonnegativeInteger.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return new Setting(this, NonnegativeInteger.newInstance(value));
-		}
-		
-	},
+	public static final SettingSpec BACKLOG = new NonnegativeIntegerSettingSpec(
+			"backlog",
+			NonnegativeInteger.newInstance(50));
+	
 	@HelpText(
 			doc = "The space separated list of blocked client address criteria", 
 			usage = "blockedClientAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
 	)
-	BLOCKED_CLIENT_ADDRESS_CRITERIA("blockedClientAddressCriteria") {
-		
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(this, Criteria.EMPTY_INSTANCE);
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			Criteria val = Criteria.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return new Setting(this, Criteria.newInstance(value));
-		}
-		
-	},
+	public static final SettingSpec BLOCKED_CLIENT_ADDRESS_CRITERIA = new CriteriaSettingSpec(
+			"blockedClientAddressCriteria",
+			Criteria.EMPTY_INSTANCE);
+	
 	@HelpText(
 			doc = "The binding host name or address for the internal socket "
 					+ "that is used to connect to the other SOCKS server (used "
@@ -111,27 +79,10 @@ public enum SettingSpec {
 					+ "(default is 0.0.0.0)", 
 			usage = "chaining.bindHost=HOST"
 	)
-	CHAINING_BIND_HOST("chaining.bindHost") {
-		
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(
-					this, 
-					PropertySpec.BIND_HOST.getDefaultProperty().getValue());
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			Host val = Host.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return new Setting(this, value);
-		}
-		
-	},
+	public static final SettingSpec CHAINING_BIND_HOST = new HostSettingSpec(
+			"chaining.bindHost",
+			(Host) PropertySpec.BIND_HOST.getDefaultProperty().getValue());
+	
 	@HelpText(
 			doc = "The timeout in milliseconds on waiting for the internal "
 					+ "socket to connect to the other SOCKS server (used for "
@@ -139,27 +90,10 @@ public enum SettingSpec {
 					+ "(default is 60000)", 
 			usage = "chaining.connectTimeout=INTEGER_BETWEEN_1_AND_2147483647"
 	)
-	CHAINING_CONNECT_TIMEOUT("chaining.connectTimeout") {
-		
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(
-					this, 
-					PropertySpec.CONNECT_TIMEOUT.getDefaultProperty().getValue());
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			PositiveInteger val = PositiveInteger.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return new Setting(this, PositiveInteger.newInstance(value));
-		}
-		
-	},
+	public static final SettingSpec CHAINING_CONNECT_TIMEOUT = new PositiveIntegerSettingSpec(
+			"chaining.connectTimeout",
+			(PositiveInteger) PropertySpec.CONNECT_TIMEOUT.getDefaultProperty().getValue());
+	
 	@HelpText(
 			doc = "The space separated list of socket settings for the "
 					+ "internal socket that is used to connect to the other "
@@ -167,137 +101,47 @@ public enum SettingSpec {
 					+ "UDP ASSOCIATE)", 
 			usage = "chaining.socketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
 	)
-	CHAINING_SOCKET_SETTINGS("chaining.socketSettings") {
-		
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(
-					this, 
-					PropertySpec.SOCKET_SETTINGS.getDefaultProperty().getValue());
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			SocketSettings val = SocketSettings.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return new Setting(this, SocketSettings.newInstance(value));
-		}
-			
-	},
+	public static final SettingSpec CHAINING_SOCKET_SETTINGS = new SocketSettingsSettingSpec(
+			"chaining.socketSettings",
+			(SocketSettings) PropertySpec.SOCKET_SETTINGS.getDefaultProperty().getValue());
+	
 	@HelpText(
 			doc = "The URI of the other SOCKS server", 
 			usage = "chaining.socksServerUri=SCHEME://HOST[:PORT]"
 	)
-	CHAINING_SOCKS_SERVER_URI("chaining.socksServerUri") {
-		
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(this, SocksServerUri.newInstance());
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			SocksServerUri val = SocksServerUri.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return new Setting(this, SocksServerUri.newInstance(value));
-		}
-		
-	},
+	public static final SettingSpec CHAINING_SOCKS_SERVER_URI = new SocksServerUriSettingSpec(
+			"chaining.socksServerUri",
+			SocksServerUri.newInstance());
+	
 	@HelpText(
 			doc = "The space separated list of acceptable authentication "
 					+ "methods to the other SOCKS5 server (default is "
 					+ "NO_AUTHENTICATION_REQUIRED)", 
 			usage = "chaining.socks5.authMethods=SOCKS5_AUTH_METHOD1[ SOCKS5_AUTH_METHOD2[...]]"
 	)
-	CHAINING_SOCKS5_AUTH_METHODS("chaining.socks5.authMethods") {
-		
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(
-					this, 
-					PropertySpec.SOCKS5_AUTH_METHODS.getDefaultProperty().getValue());
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			AuthMethods val = AuthMethods.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return new Setting(this, AuthMethods.newInstance(value));
-		}
-		
-	},
+	public static final SettingSpec CHAINING_SOCKS5_AUTH_METHODS = new AuthMethodsSettingSpec(
+			"chaining.socks5.authMethods",
+			(AuthMethods) PropertySpec.SOCKS5_AUTH_METHODS.getDefaultProperty().getValue());
+	
 	@HelpText(
 			doc = "The boolean value to indicate that host name resolution is "
 					+ "to be forwarded to the other SOCKS5 server (default is "
 					+ "false)", 
 			usage = "chaining.socks5.forwardHostnameResolution=true|false"
 	)	
-	CHAINING_SOCKS5_FORWARD_HOSTNAME_RESOLUTION(
-			"chaining.socks5.forwardHostnameResolution") {
-		
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(
-					this,
-					PropertySpec.SOCKS5_FORWARD_HOSTNAME_RESOLUTION.getDefaultProperty().getValue());
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			Boolean val = Boolean.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return new Setting(this, Boolean.valueOf(value));
-		}
-		
-	},
+	public static final SettingSpec CHAINING_SOCKS5_FORWARD_HOSTNAME_RESOLUTION = new BooleanSettingSpec(
+			"chaining.socks5.forwardHostnameResolution",
+			(Boolean) PropertySpec.SOCKS5_FORWARD_HOSTNAME_RESOLUTION.getDefaultProperty().getValue());
+	
 	@HelpText(
 			doc = "The object ID for the GSS-API authentication mechanism to "
 					+ "the other SOCKS5 server (default is 1.2.840.113554.1.2.2)", 
 			usage = "chaining.socks5.gssapiMechanismOid=GSSAPI_MECHANISM_OID"
 	)
-	CHAINING_SOCKS5_GSSAPI_MECHANISM_OID("chaining.socks5.gssapiMechanismOid") {
-		
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(
-					this, 
-					PropertySpec.SOCKS5_GSSAPI_MECHANISM_OID.getDefaultProperty().getValue());
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			Oid val = Oid.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			Oid gssapiMechanismOid = null;
-			try {
-				gssapiMechanismOid = new Oid(value);
-			} catch (GSSException e) {
-				throw new IllegalArgumentException(e);
-			}
-			return new Setting(this, gssapiMechanismOid);
-		}
-		
-	},
+	public static final SettingSpec CHAINING_SOCKS5_GSSAPI_MECHANISM_OID = new OidSettingSpec(
+			"chaining.socks5.gssapiMechanismOid",
+			(Oid) PropertySpec.SOCKS5_GSSAPI_MECHANISM_OID.getDefaultProperty().getValue());
+	
 	@HelpText(
 			doc = "The boolean value to indicate if the exchange of the "
 					+ "GSS-API protection level negotiation must be "
@@ -305,28 +149,10 @@ public enum SettingSpec {
 					+ "reference implementation (default is false)", 
 			usage = "chaining.socks5.gssapiNecReferenceImpl=true|false"
 	)
-	CHAINING_SOCKS5_GSSAPI_NEC_REFERENCE_IMPL(
-			"chaining.socks5.gssapiNecReferenceImpl") {
-
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(
-					this, 
-					PropertySpec.SOCKS5_GSSAPI_NEC_REFERENCE_IMPL.getDefaultProperty().getValue());
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			Boolean val = Boolean.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return new Setting(this, Boolean.valueOf(value));
-		}
-		
-	},
+	public static final SettingSpec CHAINING_SOCKS5_GSSAPI_NEC_REFERENCE_IMPL = new BooleanSettingSpec(
+			"chaining.socks5.gssapiNecReferenceImpl",
+			(Boolean) PropertySpec.SOCKS5_GSSAPI_NEC_REFERENCE_IMPL.getDefaultProperty().getValue());
+	
 	@HelpText(
 			doc = "The space separated list of acceptable protection levels "
 					+ "after GSS-API authentication with the other SOCKS5 "
@@ -336,534 +162,173 @@ public enum SettingSpec {
 					+ "REQUIRED_INTEG_AND_CONF REQUIRED_INTEG NONE)", 
 			usage = "chaining.socks5.gssapiProtectionLevels=SOCKS5_GSSAPI_PROTECTION_LEVEL1[ SOCKS5_GSSAPI_PROTECTION_LEVEL2[...]]"
 	)
-	CHAINING_SOCKS5_GSSAPI_PROTECTION_LEVELS(
-			"chaining.socks5.gssapiProtectionLevels") {
-		
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(
-					this, 
-					PropertySpec.SOCKS5_GSSAPI_PROTECTION_LEVELS.getDefaultProperty().getValue());
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			GssapiProtectionLevels val = GssapiProtectionLevels.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return new Setting(this, GssapiProtectionLevels.newInstance(value));
-		}
-		
-	},
+	public static final SettingSpec CHAINING_SOCKS5_GSSAPI_PROTECTION_LEVELS = new GssapiProtectionLevelsSettingSpec(
+			"chaining.socks5.gssapiProtectionLevels",
+			(GssapiProtectionLevels) PropertySpec.SOCKS5_GSSAPI_PROTECTION_LEVELS.getDefaultProperty().getValue());
+	
 	@HelpText(
 			doc = "The GSS-API service name for the other SOCKS5 server", 
 			usage = "chaining.socks5.gssapiServiceName=GSSAPI_SERVICE_NAME"
 	)
-	CHAINING_SOCKS5_GSSAPI_SERVICE_NAME("chaining.socks5.gssapiServiceName") {
-		
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(
-					this, 
-					PropertySpec.SOCKS5_GSSAPI_SERVICE_NAME.getDefaultProperty().getValue());
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			String val = String.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return new Setting(this, value);
-		}
-		
-	},
+	public static final SettingSpec CHAINING_SOCKS5_GSSAPI_SERVICE_NAME = new StringSettingSpec(
+			"chaining.socks5.gssapiServiceName",
+			(String) PropertySpec.SOCKS5_GSSAPI_SERVICE_NAME.getDefaultProperty().getValue());
+	
 	@HelpText(
 			doc = "The username password to be used to access the other "
 					+ "SOCKS5 server", 
 			usage = "chaining.socks5.usernamePassword=USERNAME:PASSWORD"
 	)
-	CHAINING_SOCKS5_USERNAME_PASSWORD("chaining.socks5.usernamePassword") {
-		
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(this, null);
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			UsernamePassword val = UsernamePassword.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return new Setting(this, UsernamePassword.newInstance(value));
-		}
-		
-	},
+	public static final SettingSpec CHAINING_SOCKS5_USERNAME_PASSWORD = new UsernamePasswordSettingSpec(
+			"chaining.socks5.usernamePassword",
+			null);
+	
 	@HelpText(
 			doc = "The boolean value to indicate if SSL/TLS connections to "
 					+ "the other SOCKS server are enabled (default is false)",
 			usage = "chaining.ssl.enabled=true|false"
 	)
-	CHAINING_SSL_ENABLED("chaining.ssl.enabled") {
-		
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(
-					this,
-					PropertySpec.SSL_ENABLED.getDefaultProperty().getValue());
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			Boolean val = Boolean.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return new Setting(this, Boolean.valueOf(value));
-		}
-		
-	},
+	public static final SettingSpec CHAINING_SSL_ENABLED = new BooleanSettingSpec(
+			"chaining.ssl.enabled",
+			(Boolean) PropertySpec.SSL_ENABLED.getDefaultProperty().getValue());
+	
 	@HelpText(
 			doc = "The space separated list of acceptable cipher suites "
 					+ "enabled for SSL/TLS connections to the other SOCKS "
 					+ "server",
 			usage = "chaining.ssl.enabledCipherSuites=[SSL_CIPHER_SUITE1[ SSL_CIPHER_SUITE2[...]]]"
 	)
-	CHAINING_SSL_ENABLED_CIPHER_SUITES("chaining.ssl.enabledCipherSuites") {
-		
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(
-					this,
-					PropertySpec.SSL_ENABLED_CIPHER_SUITES.getDefaultProperty().getValue());
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			Strings val = Strings.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return new Setting(this, Strings.newInstance(value));
-		}
-		
-	},
+	public static final SettingSpec CHAINING_SSL_ENABLED_CIPHER_SUITES = new StringsSettingSpec(
+			"chaining.ssl.enabledCipherSuites",
+			(Strings) PropertySpec.SSL_ENABLED_CIPHER_SUITES.getDefaultProperty().getValue());
+	
 	@HelpText(
 			doc = "The space separated list of acceptable protocol versions "
 					+ "enabled for SSL/TLS connections to the other SOCKS "
 					+ "server",
 			usage = "chaining.ssl.enabledProtocols=[SSL_PROTOCOL1[ SSL_PROTOCOL2[...]]]"
 	)	
-	CHAINING_SSL_ENABLED_PROTOCOLS("chaining.ssl.enabledProtocols") {
-		
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(
-					this,
-					PropertySpec.SSL_ENABLED_PROTOCOLS.getDefaultProperty().getValue());
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			Strings val = Strings.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return new Setting(this, Strings.newInstance(value));
-		}
-		
-	},
+	public static final SettingSpec CHAINING_SSL_ENABLED_PROTOCOLS = new StringsSettingSpec(
+			"chaining.ssl.enabledProtocols",
+			(Strings) PropertySpec.SSL_ENABLED_PROTOCOLS.getDefaultProperty().getValue());
+	
 	@HelpText(
 			doc = "The key store file for the SSL/TLS connections to the "
 					+ "other SOCKS server",
 			usage = "chaining.ssl.keyStoreFile=FILE"
 	)
-	CHAINING_SSL_KEY_STORE_FILE("chaining.ssl.keyStoreFile") {
-		
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(
-					this,
-					PropertySpec.SSL_KEY_STORE_FILE.getDefaultProperty().getValue());
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			File val = File.class.cast(value);
-			if (!val.exists()) {
-				throw new IllegalArgumentException(String.format(
-						"file `%s' does not exist", 
-						val));
-			}
-			if (!val.isFile()) {
-				throw new IllegalArgumentException(String.format(
-						"file `%s' must be a file", 
-						val));
-			}
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return newSetting(new File(value));
-		}
-		
-	},
+	public static final SettingSpec CHAINING_SSL_KEY_STORE_FILE = new FileSettingSpec(
+			"chaining.ssl.keyStoreFile",
+			(File) PropertySpec.SSL_KEY_STORE_FILE.getDefaultProperty().getValue());
+	
 	@HelpText(
 			doc = "The password for the key store for the SSL/TLS connections "
 					+ "to the other SOCKS server",
 			usage = "chaining.ssl.keyStorePassword=PASSWORD"
 	)
-	CHAINING_SSL_KEY_STORE_PASSWORD("chaining.ssl.keyStorePassword") {
-		
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(
-					this,
-					PropertySpec.SSL_KEY_STORE_PASSWORD.getDefaultProperty().getValue());
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			EncryptedPassword val = EncryptedPassword.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return new Setting(this, EncryptedPassword.newInstance(value.toCharArray()));
-		}
-		
-	},
+	public static final SettingSpec CHAINING_SSL_KEY_STORE_PASSWORD = new EncryptedPasswordSettingSpec(
+			"chaining.ssl.keyStorePassword",
+			(EncryptedPassword) PropertySpec.SSL_KEY_STORE_PASSWORD.getDefaultProperty().getValue());
+	
 	@HelpText(
 			doc = "The type of key store file for the SSL/TLS connections to "
 					+ "the other SOCKS server (default is PKCS12)",
 			usage = "chaining.ssl.keyStoreType=TYPE"
 	)	
-	CHAINING_SSL_KEY_STORE_TYPE("chaining.ssl.keyStoreType") {
-		
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(
-					this, 
-					PropertySpec.SSL_KEY_STORE_TYPE.getDefaultProperty().getValue());
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			String val = String.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(String value) {
-			return new Setting(this, value);
-		}
-	},
+	public static final SettingSpec CHAINING_SSL_KEY_STORE_TYPE = new StringSettingSpec(
+			"chaining.ssl.keyStoreType",
+			(String) PropertySpec.SSL_KEY_STORE_TYPE.getDefaultProperty().getValue());
+	
 	@HelpText(
 			doc = "The protocol version for the SSL/TLS connections to the "
 					+ "other SOCKS server (default is TLSv1)",
 			usage = "chaining.ssl.protocol=PROTOCOL"
 	)	
-	CHAINING_SSL_PROTOCOL("chaining.ssl.protocol") {
-		
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(
-					this,
-					PropertySpec.SSL_PROTOCOL.getDefaultProperty().getValue());
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			String val = String.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return new Setting(this, value);
-		}
-		
-	},
+	public static final SettingSpec CHAINING_SSL_PROTOCOL = new StringSettingSpec(
+			"chaining.ssl.protocol",
+			(String) PropertySpec.SSL_PROTOCOL.getDefaultProperty().getValue());
+	
 	@HelpText(
 			doc = "The trust store file for the SSL/TLS connections to the "
 					+ "other SOCKS server",
 			usage = "chaining.ssl.trustStoreFile=FILE"
 	)	
-	CHAINING_SSL_TRUST_STORE_FILE("chaining.ssl.trustStoreFile") {
-		
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(
-					this,
-					PropertySpec.SSL_TRUST_STORE_FILE.getDefaultProperty().getValue());
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			File val = File.class.cast(value);
-			if (!val.exists()) {
-				throw new IllegalArgumentException(String.format(
-						"file `%s' does not exist", 
-						val));
-			}
-			if (!val.isFile()) {
-				throw new IllegalArgumentException(String.format(
-						"file `%s' must be a file", 
-						val));
-			}
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return newSetting(new File(value));
-		}
-		
-	},
+	public static final SettingSpec CHAINING_SSL_TRUST_STORE_FILE = new FileSettingSpec(
+			"chaining.ssl.trustStoreFile",
+			(File) PropertySpec.SSL_TRUST_STORE_FILE.getDefaultProperty().getValue());
+	
 	@HelpText(
 			doc = "The password for the trust store for the SSL/TLS "
 					+ "connections to the other SOCKS server",
 			usage = "chaining.ssl.trustStorePassword=PASSWORD"
 	)	
-	CHAINING_SSL_TRUST_STORE_PASSWORD("chaining.ssl.trustStorePassword") {
-		
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(
-					this,
-					PropertySpec.SSL_TRUST_STORE_PASSWORD.getDefaultProperty().getValue());
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			EncryptedPassword val = EncryptedPassword.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return new Setting(this, EncryptedPassword.newInstance(value.toCharArray()));
-		}
-		
-	},
+	public static final SettingSpec CHAINING_SSL_TRUST_STORE_PASSWORD = new EncryptedPasswordSettingSpec(
+			"chaining.ssl.trustStorePassword",
+			(EncryptedPassword) PropertySpec.SSL_TRUST_STORE_PASSWORD.getDefaultProperty().getValue());
+	
 	@HelpText(
 			doc = "The type of trust store file for the SSL/TLS connections to "
 					+ "the other SOCKS server (default is PKCS12)",
 			usage = "chaining.ssl.trustStoreType=TYPE"
 	)	
-	CHAINING_SSL_TRUST_STORE_TYPE("chaining.ssl.trustStoreType") {
-		
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(
-					this,
-					PropertySpec.SSL_TRUST_STORE_TYPE.getDefaultProperty().getValue());
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			String val = String.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return new Setting(this, value);
-		}
-		
-	},
+	public static final SettingSpec CHAINING_SSL_TRUST_STORE_TYPE = new StringSettingSpec(
+			"chaining.ssl.trustStoreType",
+			(String) PropertySpec.SSL_TRUST_STORE_TYPE.getDefaultProperty().getValue());
+	
 	@HelpText(
 			doc = "The space separated list of socket settings for the client "
 					+ "socket", 
 			usage = "clientSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
 	)
-	CLIENT_SOCKET_SETTINGS("clientSocketSettings") {
-				
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(this, SocketSettings.newInstance());
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			SocketSettings val = SocketSettings.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return new Setting(this, SocketSettings.newInstance(value));
-		}
-		
-	},
+	public static final SettingSpec CLIENT_SOCKET_SETTINGS = new SocketSettingsSettingSpec(
+			"clientSocketSettings",
+			SocketSettings.newInstance());
+	
 	@HelpText(
 			doc = "The host name or address for the SOCKS server (default is "
 					+ "0.0.0.0)", 
 			usage = "host=HOST"
 	)
-	HOST("host") {
-		
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(this, Host.getIpv4WildcardInstance());
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			Host val = Host.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			Host host = null;
-			try {
-				host = Host.newInstance(value);
-			} catch (UnknownHostException e) {
-				throw new IllegalArgumentException(e);
-			}
-			return new Setting(this, host);
-		}
-		
-	},
+	public static final SettingSpec HOST = new HostSettingSpec(
+			"host", 
+			Host.getIpv4WildcardInstance());
+	
 	@HelpText(
 			doc = "The port for the SOCKS server (default is 1080)", 
 			usage = "port=INTEGER_BETWEEN_0_AND_65535"
 	)
-	PORT("port") {
-		
-		private static final int DEFAULT_INT_VALUE = 1080;
-		
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(this, Port.newInstance(DEFAULT_INT_VALUE));
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			Port val = Port.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return new Setting(this, Port.newInstance(value));
-		}
-		
-	},
+	public static final SettingSpec PORT = new PortSettingSpec(
+			"port",
+			Port.newInstance(1080));
+	
 	@HelpText(
 			doc = "The space separated list of socket settings for the SOCKS "
 					+ "server", 
 			usage = "socketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
 	)
-	SOCKET_SETTINGS("socketSettings") {
-		
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(this, SocketSettings.newInstance());
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			SocketSettings val = SocketSettings.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return new Setting(this, SocketSettings.newInstance(value));
-		}
-		
-	},
-	SOCKS5_ALLOWED_SOCKS5_REQUEST_CRITERIA(
-			"socks5.allowedSocks5RequestCriteria") {
-
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(this, Socks5RequestCriteria.newInstance(
+	public static final SettingSpec SOCKET_SETTINGS = new SocketSettingsSettingSpec(
+			"socketSettings",
+			SocketSettings.newInstance());
+	
+	public static final SettingSpec SOCKS5_ALLOWED_SOCKS5_REQUEST_CRITERIA = new Socks5RequestCriteriaSettingSpec(
+			"socks5.allowedSocks5RequestCriteria",
+			Socks5RequestCriteria.newInstance(
 					Socks5RequestCriterion.newInstance(null, null, null, null)));
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			Socks5RequestCriteria val = Socks5RequestCriteria.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			throw new UnsupportedOperationException(String.format(
-					"%s does not accept a String representation of %s",
-					this,
-					Socks5RequestCriteria.class.getName()));
-		}
-		
-	},
+	
 	@HelpText(
 			doc = "The space separated list of acceptable authentication "
 					+ "methods in order of preference (default is "
 					+ "NO_AUTHENTICATION_REQUIRED)", 
 			usage = "socks5.authMethods=SOCKS5_AUTH_METHOD1[ SOCKS5_AUTH_METHOD2[...]]"
 	)
-	SOCKS5_AUTH_METHODS("socks5.authMethods") {
-		
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(this, AuthMethods.newInstance(
-					AuthMethod.NO_AUTHENTICATION_REQUIRED));
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			AuthMethods val = AuthMethods.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return new Setting(this, AuthMethods.newInstance(value));
-		}
-		
-	},
-	SOCKS5_BLOCKED_SOCKS5_REQUEST_CRITERIA(
-			"socks5.blockedSocks5RequestCriteria") {
-
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(this, Socks5RequestCriteria.EMPTY_INSTANCE);
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			Socks5RequestCriteria val = Socks5RequestCriteria.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			throw new UnsupportedOperationException(String.format(
-					"%s does not accept a String representation of %s",
-					this,
-					Socks5RequestCriteria.class.getName()));
-		}
-		
-	},
+	public static final SettingSpec SOCKS5_AUTH_METHODS = new AuthMethodsSettingSpec(
+			"socks5.authMethods",
+			AuthMethods.newInstance(AuthMethod.NO_AUTHENTICATION_REQUIRED));
+	
+	public static final SettingSpec SOCKS5_BLOCKED_SOCKS5_REQUEST_CRITERIA = new Socks5RequestCriteriaSettingSpec(
+			"socks5.blockedSocks5RequestCriteria",
+			Socks5RequestCriteria.EMPTY_INSTANCE);
+	
 	@HelpText(
 			doc = "The boolean value to indicate if the exchange of the "
 					+ "GSS-API protection level negotiation must be "
@@ -871,27 +336,10 @@ public enum SettingSpec {
 					+ "implementation (default is false)", 
 			usage = "socks5.gssapiNecReferenceImpl=true|false"
 	)
-	SOCKS5_GSSAPI_NEC_REFERENCE_IMPL("socks5.gssapiNecReferenceImpl") {
-		
-		private static final boolean DEFAULT_BOOLEAN_VALUE = false;
-
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(this, Boolean.valueOf(DEFAULT_BOOLEAN_VALUE));
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			Boolean val = Boolean.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return new Setting(this, Boolean.valueOf(value));
-		}
-		
-	},
+	public static final SettingSpec SOCKS5_GSSAPI_NEC_REFERENCE_IMPL = new BooleanSettingSpec(
+			"socks5.gssapiNecReferenceImpl",
+			Boolean.FALSE);
+	
 	@HelpText(
 			doc = "The space separated list of acceptable protection levels "
 					+ "after GSS-API authentication (The first is preferred "
@@ -900,936 +348,322 @@ public enum SettingSpec {
 					+ "REQUIRED_INTEG NONE)", 
 			usage = "socks5.gssapiProtectionLevels=SOCKS5_GSSAPI_PROTECTION_LEVEL1[ SOCKS5_GSSAPI_PROTECTION_LEVEL2[...]]"
 	)
-	SOCKS5_GSSAPI_PROTECTION_LEVELS("socks5.gssapiProtectionLevels") {
-		
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(
-					this, GssapiProtectionLevels.DEFAULT_INSTANCE);
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			GssapiProtectionLevels val = GssapiProtectionLevels.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return new Setting(this, GssapiProtectionLevels.newInstance(value));
-		}
-		
-	},
+	public static final SettingSpec SOCKS5_GSSAPI_PROTECTION_LEVELS = new GssapiProtectionLevelsSettingSpec(
+			"socks5.gssapiProtectionLevels",
+			GssapiProtectionLevels.DEFAULT_INSTANCE);
+	
 	@HelpText(
 			doc = "The space separated list of allowed external incoming "
 					+ "address criteria (default is matches:.*)", 
 			usage = "socks5.onBind.allowedExternalIncomingAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
 	)
-	SOCKS5_ON_BIND_ALLOWED_EXTERNAL_INCOMING_ADDRESS_CRITERIA(
-			"socks5.onBind.allowedExternalIncomingAddressCriteria") {
-		
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(this, Criteria.newInstance(Criterion.newInstance(
+	public static final SettingSpec SOCKS5_ON_BIND_ALLOWED_EXTERNAL_INCOMING_ADDRESS_CRITERIA = new CriteriaSettingSpec(
+			"socks5.onBind.allowedExternalIncomingAddressCriteria",
+			Criteria.newInstance(Criterion.newInstance(
 					CriterionMethod.MATCHES, ".*")));
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			Criteria val = Criteria.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return new Setting(this, Criteria.newInstance(value));
-		}
-		
-	},
+	
 	@HelpText(
 			doc = "The space separated list of blocked external incoming "
 					+ "address criteria", 
 			usage = "socks5.onBind.blockedExternalIncomingAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
 	)
-	SOCKS5_ON_BIND_BLOCKED_EXTERNAL_INCOMING_ADDRESS_CRITERIA(
-			"socks5.onBind.blockedExternalIncomingAddressCriteria") {
-		
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(this, Criteria.EMPTY_INSTANCE);
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			Criteria val = Criteria.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return new Setting(this, Criteria.newInstance(value));
-		}
-		
-	},
+	public static final SettingSpec SOCKS5_ON_BIND_BLOCKED_EXTERNAL_INCOMING_ADDRESS_CRITERIA = new CriteriaSettingSpec(
+			"socks5.onBind.blockedExternalIncomingAddressCriteria",
+			Criteria.EMPTY_INSTANCE);
+	
 	@HelpText(
 			doc = "The space separated list of socket settings for the "
 					+ "external incoming socket", 
 			usage = "socks5.onBind.externalIncomingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
 	)
-	SOCKS5_ON_BIND_EXTERNAL_INCOMING_SOCKET_SETTINGS(
-			"socks5.onBind.externalIncomingSocketSettings") {
-				
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(this, SocketSettings.newInstance());
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			SocketSettings val = SocketSettings.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return new Setting(this, SocketSettings.newInstance(value));
-		}
-		
-	},
+	public static final SettingSpec SOCKS5_ON_BIND_EXTERNAL_INCOMING_SOCKET_SETTINGS = new SocketSettingsSettingSpec(
+			"socks5.onBind.externalIncomingSocketSettings",
+			SocketSettings.newInstance());
+	
 	@HelpText(
 			doc = "The space separated list of socket settings for the listen "
 					+ "socket", 
 			usage = "socks5.onBind.listenSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
 	)
-	SOCKS5_ON_BIND_LISTEN_SOCKET_SETTINGS(
-			"socks5.onBind.listenSocketSettings") {
-				
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(this, SocketSettings.newInstance());
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			SocketSettings val = SocketSettings.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return new Setting(this, SocketSettings.newInstance(value));
-		}
-		
-	},
+	public static final SettingSpec SOCKS5_ON_BIND_LISTEN_SOCKET_SETTINGS = new SocketSettingsSettingSpec(
+			"socks5.onBind.listenSocketSettings",
+			SocketSettings.newInstance());
+	
 	@HelpText(
 			doc = "The buffer size in bytes for relaying the data (default is "
 					+ "1024)", 
 			usage = "socks5.onBind.relayBufferSize=INTEGER_BETWEEN_1_AND_2147483647"
 	)
-	SOCKS5_ON_BIND_RELAY_BUFFER_SIZE("socks5.onBind.relayBufferSize") {
-		
-		private static final int DEFAULT_INT_VALUE = 1024;
-				
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(
-					this, PositiveInteger.newInstance(DEFAULT_INT_VALUE));
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			PositiveInteger val = PositiveInteger.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return new Setting(this, PositiveInteger.newInstance(value));
-		}
-		
-	},
+	public static final SettingSpec SOCKS5_ON_BIND_RELAY_BUFFER_SIZE = new PositiveIntegerSettingSpec(
+			"socks5.onBind.relayBufferSize",
+			PositiveInteger.newInstance(1024));
+	
 	@HelpText(
 			doc = "The timeout in milliseconds on relaying no data (default "
 					+ "is 60000)", 
 			usage = "socks5.onBind.relayTimeout=INTEGER_BETWEEN_1_AND_2147483647"
 	)
-	SOCKS5_ON_BIND_RELAY_TIMEOUT("socks5.onBind.relayTimeout") {
-		
-		private static final int DEFAULT_INT_VALUE = 60000; // 1 minute
-				
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(
-					this, PositiveInteger.newInstance(DEFAULT_INT_VALUE));
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			PositiveInteger val = PositiveInteger.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return new Setting(this, PositiveInteger.newInstance(value));
-		}
-		
-	},
+	public static final SettingSpec SOCKS5_ON_BIND_RELAY_TIMEOUT = new PositiveIntegerSettingSpec(
+			"socks5.onBind.relayTimeout",
+			PositiveInteger.newInstance(60000)); // 1 minute
+	
 	@HelpText(
 			doc = "The buffer size in bytes for relaying the data (default is "
 					+ "1024)", 
 			usage = "socks5.onConnect.relayBufferSize=INTEGER_BETWEEN_1_AND_2147483647"
 	)
-	SOCKS5_ON_CONNECT_RELAY_BUFFER_SIZE("socks5.onConnect.relayBufferSize") {
-		
-		private static final int DEFAULT_INT_VALUE = 1024;
-				
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(
-					this, PositiveInteger.newInstance(DEFAULT_INT_VALUE));
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			PositiveInteger val = PositiveInteger.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return new Setting(this, PositiveInteger.newInstance(value));
-		}
-		
-	},
+	public static final SettingSpec SOCKS5_ON_CONNECT_RELAY_BUFFER_SIZE = new PositiveIntegerSettingSpec(
+			"socks5.onConnect.relayBufferSize",
+			PositiveInteger.newInstance(1024));
+	
 	@HelpText(
 			doc = "The timeout in milliseconds on relaying no data (default "
 					+ "is 60000)", 
 			usage = "socks5.onConnect.relayTimeout=INTEGER_BETWEEN_1_AND_2147483647"
 	)
-	SOCKS5_ON_CONNECT_RELAY_TIMEOUT("socks5.onConnect.relayTimeout") {
-		
-		private static final int DEFAULT_INT_VALUE = 60000; // 1 minute
-				
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(
-					this, PositiveInteger.newInstance(DEFAULT_INT_VALUE));
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			PositiveInteger val = PositiveInteger.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return new Setting(this, PositiveInteger.newInstance(value));
-		}
-		
-	},
+	public static final SettingSpec SOCKS5_ON_CONNECT_RELAY_TIMEOUT = new PositiveIntegerSettingSpec(
+			"socks5.onConnect.relayTimeout",
+			PositiveInteger.newInstance(60000)); // 1 minute
+	
 	@HelpText(
 			doc = "The binding host name or address for the server-facing "
 					+ "socket (default is 0.0.0.0)", 
 			usage = "socks5.onConnect.serverBindHost=HOST"
 	)
-	SOCKS5_ON_CONNECT_SERVER_BIND_HOST("socks5.onConnect.serverBindHost") {
-		
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(this, Host.getIpv4WildcardInstance());
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			Host val = Host.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			Host host = null;
-			try {
-				host = Host.newInstance(value);
-			} catch (UnknownHostException e) {
-				throw new IllegalArgumentException(e);
-			}
-			return new Setting(this, host);
-		}
-		
-	},
+	public static final SettingSpec SOCKS5_ON_CONNECT_SERVER_BIND_HOST = new HostSettingSpec(
+			"socks5.onConnect.serverBindHost",
+			Host.getIpv4WildcardInstance());
+	
 	@HelpText(
 			doc = "The timeout in milliseconds on waiting the server-facing "
 					+ "socket to connect (default is 60000)", 
 			usage = "socks5.onConnect.serverConnectTimeout=INTEGER_BETWEEN_1_AND_2147483647"
 	)
-	SOCKS5_ON_CONNECT_SERVER_CONNECT_TIMEOUT(
-			"socks5.onConnect.serverConnectTimeout") {
-
-		private static final int DEFAULT_INT_VALUE = 60000; // 1 minute
-		
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(
-					this, PositiveInteger.newInstance(DEFAULT_INT_VALUE));
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			PositiveInteger val = PositiveInteger.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return new Setting(this, PositiveInteger.newInstance(value));
-		}
-		
-	},
+	public static final SettingSpec SOCKS5_ON_CONNECT_SERVER_CONNECT_TIMEOUT = new PositiveIntegerSettingSpec(
+			"socks5.onConnect.serverConnectTimeout",
+			PositiveInteger.newInstance(60000)); // 1 minute
+	
 	@HelpText(
 			doc = "The space separated list of socket settings for the "
 					+ "server-facing socket", 
 			usage = "socks5.onConnect.serverSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
 	)
-	SOCKS5_ON_CONNECT_SERVER_SOCKET_SETTINGS(
-			"socks5.onConnect.serverSocketSettings") {
-				
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(this, SocketSettings.newInstance());
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			SocketSettings val = SocketSettings.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return new Setting(this, SocketSettings.newInstance(value));
-		}
-		
-	},
+	public static final SettingSpec SOCKS5_ON_CONNECT_SERVER_SOCKET_SETTINGS = new SocketSettingsSettingSpec(
+			"socks5.onConnect.serverSocketSettings",
+			SocketSettings.newInstance());
+	
 	@HelpText(
 			doc = "The space separated list of allowed external incoming "
 					+ "address criteria (default is matches:.*)", 
 			usage = "socks5.onUdpAssociate.allowedExternalIncomingAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
 	)
-	SOCKS5_ON_UDP_ASSOCIATE_ALLOWED_EXTERNAL_INCOMING_ADDRESS_CRITERIA(
-			"socks5.onUdpAssociate.allowedExternalIncomingAddressCriteria") {
-		
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(this, Criteria.newInstance(Criterion.newInstance(
+	public static final SettingSpec SOCKS5_ON_UDP_ASSOCIATE_ALLOWED_EXTERNAL_INCOMING_ADDRESS_CRITERIA = new CriteriaSettingSpec(
+			"socks5.onUdpAssociate.allowedExternalIncomingAddressCriteria",
+			Criteria.newInstance(Criterion.newInstance(
 					CriterionMethod.MATCHES, ".*")));
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			Criteria val = Criteria.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return new Setting(this, Criteria.newInstance(value));
-		}
-		
-	},
+	
 	@HelpText(
 			doc = "The space separated list of allowed external outgoing "
 					+ "address criteria (default is matches:.*)", 
 			usage = "socks5.onUdpAssociate.allowedExternalOutgoingAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
 	)
-	SOCKS5_ON_UDP_ASSOCIATE_ALLOWED_EXTERNAL_OUTGOING_ADDRESS_CRITERIA(
-			"socks5.onUdpAssociate.allowedExternalOutgoingAddressCriteria") {
-		
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(this, Criteria.newInstance(Criterion.newInstance(
+	public static final SettingSpec SOCKS5_ON_UDP_ASSOCIATE_ALLOWED_EXTERNAL_OUTGOING_ADDRESS_CRITERIA = new CriteriaSettingSpec(
+			"socks5.onUdpAssociate.allowedExternalOutgoingAddressCriteria",
+			Criteria.newInstance(Criterion.newInstance(
 					CriterionMethod.MATCHES, ".*")));
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			Criteria val = Criteria.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return new Setting(this, Criteria.newInstance(value));
-		}
-		
-	},	
+	
 	@HelpText(
 			doc = "The space separated list of blocked external incoming "
 					+ "address criteria", 
 			usage = "socks5.onUdpAssociate.blockedExternalIncomingAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
 	)
-	SOCKS5_ON_UDP_ASSOCIATE_BLOCKED_EXTERNAL_INCOMING_ADDRESS_CRITERIA(
-			"socks5.onUdpAssociate.blockedExternalIncomingAddressCriteria") {
-		
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(this, Criteria.EMPTY_INSTANCE);
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			Criteria val = Criteria.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return new Setting(this, Criteria.newInstance(value));
-		}
-		
-	},
+	public static final SettingSpec SOCKS5_ON_UDP_ASSOCIATE_BLOCKED_EXTERNAL_INCOMING_ADDRESS_CRITERIA = new CriteriaSettingSpec(
+			"socks5.onUdpAssociate.blockedExternalIncomingAddressCriteria",
+			Criteria.EMPTY_INSTANCE);
+	
 	@HelpText(
 			doc = "The space separated list of blocked external outgoing "
 					+ "address criteria", 
 			usage = "socks5.onUdpAssociate.blockedExternalOutgoingAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
 	)
-	SOCKS5_ON_UDP_ASSOCIATE_BLOCKED_EXTERNAL_OUTGOING_ADDRESS_CRITERIA(
-			"socks5.onUdpAssociate.blockedExternalOutgoingAddressCriteria") {
-		
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(this, Criteria.EMPTY_INSTANCE);
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			Criteria val = Criteria.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return new Setting(this, Criteria.newInstance(value));
-		}
-		
-	},	
+	public static final SettingSpec SOCKS5_ON_UDP_ASSOCIATE_BLOCKED_EXTERNAL_OUTGOING_ADDRESS_CRITERIA = new CriteriaSettingSpec(
+			"socks5.onUdpAssociate.blockedExternalOutgoingAddressCriteria",
+			Criteria.EMPTY_INSTANCE);
+	
 	@HelpText(
 			doc = "The binding host name or address for the client-facing UDP "
 					+ "socket (default is 0.0.0.0)", 
 			usage = "socks5.onUdpAssociate.clientBindHost=HOST"
 	)
-	SOCKS5_ON_UDP_ASSOCIATE_CLIENT_BIND_HOST(
-			"socks5.onUdpAssociate.clientBindHost") {
-		
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(this, Host.getIpv4WildcardInstance());
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			Host val = Host.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			Host host = null;
-			try {
-				host = Host.newInstance(value);
-			} catch (UnknownHostException e) {
-				throw new IllegalArgumentException(e);
-			}
-			return new Setting(this, host);
-		}
-		
-	},
+	public static final SettingSpec SOCKS5_ON_UDP_ASSOCIATE_CLIENT_BIND_HOST = new HostSettingSpec(
+			"socks5.onUdpAssociate.clientBindHost",
+			Host.getIpv4WildcardInstance());
+	
 	@HelpText(
 			doc = "The space separated list of socket settings for the "
 					+ "client-facing UDP socket", 
 			usage = "socks5.onUdpAssociate.clientSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
 	)
-	SOCKS5_ON_UDP_ASSOCIATE_CLIENT_SOCKET_SETTINGS(
-			"socks5.onUdpAssociate.clientSocketSettings") {
-				
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(this, SocketSettings.newInstance());
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			SocketSettings val = SocketSettings.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return new Setting(this, SocketSettings.newInstance(value));
-		}
-		
-	},
+	public static final SettingSpec SOCKS5_ON_UDP_ASSOCIATE_CLIENT_SOCKET_SETTINGS = new SocketSettingsSettingSpec(
+			"socks5.onUdpAssociate.clientSocketSettings",
+			SocketSettings.newInstance());
+	
 	@HelpText(
 			doc = "The buffer size in bytes for relaying the data (default is "
 					+ "32768)", 
 			usage = "socks5.onUdpAssociate.relayBufferSize=INTEGER_BETWEEN_1_AND_2147483647"
 	)
-	SOCKS5_ON_UDP_ASSOCIATE_RELAY_BUFFER_SIZE(
-			"socks5.onUdpAssociate.relayBufferSize") {
-		
-		private static final int DEFAULT_INT_VALUE = 32768;
-				
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(
-					this, PositiveInteger.newInstance(DEFAULT_INT_VALUE));
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			PositiveInteger val = PositiveInteger.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return new Setting(this, PositiveInteger.newInstance(value));
-		}
-		
-	},
+	public static final SettingSpec SOCKS5_ON_UDP_ASSOCIATE_RELAY_BUFFER_SIZE = new PositiveIntegerSettingSpec(
+			"socks5.onUdpAssociate.relayBufferSize",
+			PositiveInteger.newInstance(32768));
+	
 	@HelpText(
 			doc = "The timeout in milliseconds on relaying no data (default "
 					+ "is 60000)", 
 			usage = "socks5.onUdpAssociate.relayTimeout=INTEGER_BETWEEN_1_AND_2147483647"
 	)
-	SOCKS5_ON_UDP_ASSOCIATE_RELAY_TIMEOUT(
-			"socks5.onUdpAssociate.relayTimeout") {
-		
-		private static final int DEFAULT_INT_VALUE = 60000; // 1 minute
-				
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(
-					this, PositiveInteger.newInstance(DEFAULT_INT_VALUE));
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			PositiveInteger val = PositiveInteger.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return new Setting(this, PositiveInteger.newInstance(value));
-		}
-		
-	},
+	public static final SettingSpec SOCKS5_ON_UDP_ASSOCIATE_RELAY_TIMEOUT = new PositiveIntegerSettingSpec(
+			"socks5.onUdpAssociate.relayTimeout",
+			PositiveInteger.newInstance(60000)); // 1 minute
+	
 	@HelpText(
 			doc = "The binding host name or address for the server-facing UDP "
 					+ "socket (default is 0.0.0.0)", 
 			usage = "socks5.onUdpAssociate.serverBindHost=HOST"
 	)
-	SOCKS5_ON_UDP_ASSOCIATE_SERVER_BIND_HOST(
-			"socks5.onUdpAssociate.serverBindHost") {
-
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(this, Host.getIpv4WildcardInstance());
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			Host val = Host.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			Host host = null;
-			try {
-				host = Host.newInstance(value);
-			} catch (UnknownHostException e) {
-				throw new IllegalArgumentException(e);
-			}
-			return new Setting(this, host);
-		}
-
-	},	
+	public static final SettingSpec SOCKS5_ON_UDP_ASSOCIATE_SERVER_BIND_HOST = new HostSettingSpec(
+			"socks5.onUdpAssociate.serverBindHost",
+			Host.getIpv4WildcardInstance());
+	
 	@HelpText(
 			doc = "The space separated list of socket settings for the "
 					+ "server-facing UDP socket", 
 			usage = "socks5.onUdpAssociate.serverSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
 	)
-	SOCKS5_ON_UDP_ASSOCIATE_SERVER_SOCKET_SETTINGS(
-			"socks5.onUdpAssociate.serverSocketSettings") {
-				
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(this, SocketSettings.newInstance());
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			SocketSettings val = SocketSettings.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return new Setting(this, SocketSettings.newInstance(value));
-		}
-		
-	},
+	public static final SettingSpec SOCKS5_ON_UDP_ASSOCIATE_SERVER_SOCKET_SETTINGS = new SocketSettingsSettingSpec(
+			"socks5.onUdpAssociate.serverSocketSettings",
+			SocketSettings.newInstance());
+	
 	@HelpText(
 			doc = "The username password authenticator for the SOCKS5 server", 
 			usage = "socks5.usernamePasswordAuthenticator=CLASSNAME[:VALUE]"
 	)
-	SOCKS5_USERNAME_PASSWORD_AUTHENTICATOR(
-			"socks5.usernamePasswordAuthenticator") {
-		
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(this, null);
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			UsernamePasswordAuthenticator val = 
-					UsernamePasswordAuthenticator.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return new Setting(this, UsernamePasswordAuthenticator.newInstance(value));
-		}
-		
-	},
+	public static final SettingSpec SOCKS5_USERNAME_PASSWORD_AUTHENTICATOR = new UsernamePasswordAuthenticatorSettingSpec(
+			"socks5.usernamePasswordAuthenticator",
+			null);
+	
 	@HelpText(
 			doc = "The boolean value to indicate if SSL/TLS connections to "
 					+ "the SOCKS server are enabled (default is false)",
 			usage = "ssl.enabled=true|false"
 	)	
-	SSL_ENABLED("ssl.enabled") {
+	public static final SettingSpec SSL_ENABLED = new BooleanSettingSpec(
+			"ssl.enabled",
+			Boolean.FALSE);
 	
-		private static final boolean DEFAULT_BOOLEAN_VALUE = false;
-		
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(this, Boolean.valueOf(DEFAULT_BOOLEAN_VALUE));
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			Boolean val = Boolean.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return new Setting(this, Boolean.valueOf(value));
-		}
-		
-	},
 	@HelpText(
 			doc = "The space separated list of acceptable cipher suites "
 					+ "enabled for SSL/TLS connections to the SOCKS server",
 			usage = "ssl.enabledCipherSuites=[SSL_CIPHER_SUITE1[ SSL_CIPHER_SUITE2[...]]]"
 	)	
-	SSL_ENABLED_CIPHER_SUITES("ssl.enabledCipherSuites") {
-		
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(this, Strings.newInstance(new String[] { }));
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			Strings val = Strings.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return new Setting(this, Strings.newInstance(value));
-		}
-		
-	},
+	public static final SettingSpec SSL_ENABLED_CIPHER_SUITES = new StringsSettingSpec(
+			"ssl.enabledCipherSuites",
+			Strings.newInstance(new String[] { }));
+	
 	@HelpText(
 			doc = "The space separated list of acceptable protocol versions "
 					+ "enabled for SSL/TLS connections to the SOCKS server",
 			usage = "ssl.enabledProtocols=[SSL_PROTOCOL1[ SSL_PROTOCOL2[...]]]"
 	)	
-	SSL_ENABLED_PROTOCOLS("ssl.enabledProtocols") {
-		
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(this, Strings.newInstance(new String[] { }));
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			Strings val = Strings.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return new Setting(this, Strings.newInstance(value));
-		}
-		
-	},
+	public static final SettingSpec SSL_ENABLED_PROTOCOLS = new StringsSettingSpec(
+			"ssl.enabledProtocols",
+			Strings.newInstance(new String[] { }));
+	
 	@HelpText(
 			doc = "The key store file for the SSL/TLS connections to the SOCKS "
 					+ "server",
 			usage = "ssl.keyStoreFile=FILE"
 	)	
-	SSL_KEY_STORE_FILE("ssl.keyStoreFile") {
-		
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(this, null);
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			File val = File.class.cast(value);
-			if (!val.exists()) {
-				throw new IllegalArgumentException(String.format(
-						"file `%s' does not exist", 
-						val));
-			}
-			if (!val.isFile()) {
-				throw new IllegalArgumentException(String.format(
-						"file `%s' must be a file", 
-						val));
-			}
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return newSetting(new File(value));
-		}
-		
-	},
+	public static final SettingSpec SSL_KEY_STORE_FILE = new FileSettingSpec(
+			"ssl.keyStoreFile",
+			null);
+	
 	@HelpText(
 			doc = "The password for the key store for the SSL/TLS connections "
 					+ "to the SOCKS server",
 			usage = "ssl.keyStorePassword=PASSWORD"
 	)	
-	SSL_KEY_STORE_PASSWORD("ssl.keyStorePassword") {
-		
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(this, EncryptedPassword.newInstance(new char[] { }));
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			EncryptedPassword val = EncryptedPassword.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return new Setting(this, EncryptedPassword.newInstance(value.toCharArray()));
-		}
-		
-	},
+	public static final SettingSpec SSL_KEY_STORE_PASSWORD = new EncryptedPasswordSettingSpec(
+			"ssl.keyStorePassword",
+			EncryptedPassword.newInstance(new char[] { }));
+	
 	@HelpText(
 			doc = "The type of key store file for the SSL/TLS connections to "
 					+ "the SOCKS server (default is PKCS12)",
 			usage = "ssl.keyStoreType=TYPE"
 	)	
-	SSL_KEY_STORE_TYPE("ssl.keyStoreType") {
-		
-		private static final String DEFAULT_STRING_VALUE = "PKCS12";
-		
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(this, DEFAULT_STRING_VALUE);
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			String val = String.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return new Setting(this, value);
-		}
-		
-	},
+	public static final SettingSpec SSL_KEY_STORE_TYPE = new StringSettingSpec(
+			"ssl.keyStoreType",
+			"PKCS12");
+	
 	@HelpText(
 			doc = "The boolean value to indicate that client authentication is "
 					+ "required for SSL/TLS connections to the SOCKS server "
 					+ "(default is false)",
 			usage = "ssl.needClientAuth=true|false"
 	)	
-	SSL_NEED_CLIENT_AUTH("ssl.needClientAuth") {
-		
-		private static final boolean DEFAULT_BOOLEAN_VALUE = false;
-		
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(this, Boolean.valueOf(DEFAULT_BOOLEAN_VALUE));
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			Boolean val = Boolean.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return new Setting(this, Boolean.valueOf(value));
-		}
-		
-	},
+	public static final SettingSpec SSL_NEED_CLIENT_AUTH = new BooleanSettingSpec(
+			"ssl.needClientAuth",
+			Boolean.FALSE);
+	
 	@HelpText(
 			doc = "The protocol version for the SSL/TLS connections to the "
 					+ "SOCKS server (default is TLSv1)",
 			usage = "ssl.protocol=PROTOCOL"
 	)	
-	SSL_PROTOCOL("ssl.protocol") {
-		
-		private static final String DEFAULT_STRING_VALUE = "TLSv1";
-		
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(this, DEFAULT_STRING_VALUE);
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			String val = String.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return new Setting(this, value);
-		}
-		
-	},
+	public static final SettingSpec SSL_PROTOCOL = new StringSettingSpec(
+			"ssl.protocol",
+			"TLSv1");
+	
 	@HelpText(
 			doc = "The trust store file for the SSL/TLS connections to the "
 					+ "SOCKS server",
 			usage = "ssl.trustStoreFile=FILE"
 	)	
-	SSL_TRUST_STORE_FILE("ssl.trustStoreFile") {
-		
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(this, null);
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			File val = File.class.cast(value);
-			if (!val.exists()) {
-				throw new IllegalArgumentException(String.format(
-						"file `%s' does not exist", 
-						val));
-			}
-			if (!val.isFile()) {
-				throw new IllegalArgumentException(String.format(
-						"file `%s' must be a file", 
-						val));
-			}
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return newSetting(new File(value));
-		}
-		
-	},
+	public static final SettingSpec SSL_TRUST_STORE_FILE = new FileSettingSpec(
+			"ssl.trustStoreFile",
+			null);
+	
 	@HelpText(
 			doc = "The password for the trust store for the SSL/TLS "
 					+ "connections to the SOCKS server",
 			usage = "ssl.trustStorePassword=PASSWORD"
 	)	
-	SSL_TRUST_STORE_PASSWORD("ssl.trustStorePassword") {
-		
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(this, EncryptedPassword.newInstance(new char[] { }));
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			EncryptedPassword val = EncryptedPassword.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return new Setting(this, EncryptedPassword.newInstance(value.toCharArray()));
-		}
-		
-	},
+	public static final SettingSpec SSL_TRUST_STORE_PASSWORD = new EncryptedPasswordSettingSpec(
+			"ssl.trustStorePassword",
+			EncryptedPassword.newInstance(new char[] { }));
+	
 	@HelpText(
 			doc = "The type of trust store file for the SSL/TLS connections to "
 					+ "the SOCKS server (default is PKCS12)",
 			usage = "ssl.trustStoreType=TYPE"
 	)		
-	SSL_TRUST_STORE_TYPE("ssl.trustStoreType") {
-		
-		private static final String DEFAULT_STRING_VALUE = "PKCS12";
-		
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(this, DEFAULT_STRING_VALUE);
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			String val = String.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return new Setting(this, value);
-		}
-		
-	},
+	public static final SettingSpec SSL_TRUST_STORE_TYPE = new StringSettingSpec(
+			"ssl.trustStoreType",
+			"PKCS12");
+	
 	@HelpText(
 			doc = "The boolean value to indicate that client authentication is "
 					+ "requested for SSL/TLS connections to the SOCKS server "
 					+ "(default is false)",
 			usage = "ssl.wantClientAuth=true|false"
 	)	
-	SSL_WANT_CLIENT_AUTH("ssl.wantClientAuth") {
-		
-		private static final boolean DEFAULT_BOOLEAN_VALUE = false;
-		
-		@Override
-		public Setting getDefaultSetting() {
-			return new Setting(this, Boolean.valueOf(DEFAULT_BOOLEAN_VALUE));
-		}
-
-		@Override
-		public Setting newSetting(final Object value) {
-			Boolean val = Boolean.class.cast(value);
-			return new Setting(this, val);
-		}
-
-		@Override
-		public Setting newSetting(final String value) {
-			return new Setting(this, Boolean.valueOf(value));
-		}
-
-	};
-
+	public static final SettingSpec SSL_WANT_CLIENT_AUTH = new BooleanSettingSpec(
+			"ssl.wantClientAuth",
+			Boolean.FALSE);
+	
+	private static final List<SettingSpec> VALUES = new ArrayList<SettingSpec>();
+	
 	public static SettingSpec getInstance(final String s) {
 		for (SettingSpec settingSpec : SettingSpec.values()) {
 			if (settingSpec.toString().equals(s)) {
@@ -1840,9 +674,34 @@ public enum SettingSpec {
 				"unknown setting: %s", s));
 	}
 	
-	private final String string;
+	public static SettingSpec[] values() {
+		if (VALUES.isEmpty()) {
+			Field[] fields = SettingSpec.class.getFields();
+			for (Field field : fields) {
+				Class<?> type = field.getType();
+				if (!SettingSpec.class.isAssignableFrom(type)) {
+					continue;
+				}
+				Object value = null;
+				try {
+					value = field.get(null);
+				} catch (IllegalArgumentException e) {
+					throw new AssertionError(e);
+				} catch (IllegalAccessException e) {
+					throw new AssertionError(e);
+				}
+				SettingSpec val = (SettingSpec) value;
+				VALUES.add(val);
+			}
+		}
+		return VALUES.toArray(new SettingSpec[VALUES.size()]);
+	}
 	
-	private SettingSpec(final String s) {
+	protected final Object defaultValue;
+	private final String string;
+		
+	public SettingSpec(final String s, final Object defaultVal) {
+		this.defaultValue = defaultVal;
 		this.string = s;
 	}
 	
@@ -1853,7 +712,7 @@ public enum SettingSpec {
 	public abstract Setting newSetting(final String value);
 	
 	@Override
-	public String toString() {
+	public final String toString() {
 		return this.string;
 	}
 	

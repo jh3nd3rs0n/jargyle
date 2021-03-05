@@ -1,16 +1,26 @@
 package jargyle.net.socks.client;
 
-import java.io.File;
-import java.net.UnknownHostException;
-import java.util.Arrays;
-
-import org.ietf.jgss.GSSException;
-import org.ietf.jgss.Oid;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 
 import jargyle.net.Host;
 import jargyle.net.Port;
 import jargyle.net.SocketSettings;
-import jargyle.net.socks.client.v5.UsernamePassword;
+import jargyle.net.socks.client.propertyspec.AuthMethodsPropertySpec;
+import jargyle.net.socks.client.propertyspec.BooleanPropertySpec;
+import jargyle.net.socks.client.propertyspec.EncryptedPasswordPropertySpec;
+import jargyle.net.socks.client.propertyspec.FilePropertySpec;
+import jargyle.net.socks.client.propertyspec.GssapiProtectionLevelsPropertySpec;
+import jargyle.net.socks.client.propertyspec.HostPropertySpec;
+import jargyle.net.socks.client.propertyspec.OidPropertySpec;
+import jargyle.net.socks.client.propertyspec.PortPropertySpec;
+import jargyle.net.socks.client.propertyspec.PositiveIntegerPropertySpec;
+import jargyle.net.socks.client.propertyspec.SocketSettingsPropertySpec;
+import jargyle.net.socks.client.propertyspec.StringPropertySpec;
+import jargyle.net.socks.client.propertyspec.StringsPropertySpec;
+import jargyle.net.socks.client.propertyspec.UserEncryptedPasswordPropertySpec;
+import jargyle.net.socks.client.propertyspec.UsernamePropertySpec;
 import jargyle.net.socks.transport.v5.AuthMethod;
 import jargyle.net.socks.transport.v5.AuthMethods;
 import jargyle.net.socks.transport.v5.gssapiauth.GssapiProtectionLevels;
@@ -18,496 +28,127 @@ import jargyle.security.EncryptedPassword;
 import jargyle.util.PositiveInteger;
 import jargyle.util.Strings;
 
-public enum PropertySpec {
+public abstract class PropertySpec {
 
-	BIND_HOST("socksClient.bindHost") {
-		
-		@Override
-		public Property getDefaultProperty() {
-			return new Property(this, Host.getIpv4WildcardInstance());
-		}
-
-		@Override
-		public Property newProperty(final Object value) {
-			Host val = Host.class.cast(value);
-			return new Property(this, val);
-		}
-
-		@Override
-		public Property newProperty(final String value) {
-			Host bindHost = null;
-			try {
-				bindHost = Host.newInstance(value);
-			} catch (UnknownHostException e) {
-				throw new IllegalArgumentException(e);
-			}
-			return new Property(this, bindHost);
-		}
-		
-	},
-	BIND_PORT("socksClient.bindPort") {
-		
-		private static final int DEFAULT_INT_VALUE = 0;
-		
-		@Override
-		public Property getDefaultProperty() {
-			return new Property(this, Port.newInstance(DEFAULT_INT_VALUE));
-		}
-
-		@Override
-		public Property newProperty(final Object value) {
-			Port val = Port.class.cast(value);
-			return new Property(this, val);
-		}
-
-		@Override
-		public Property newProperty(final String value) {
-			return new Property(this, Port.newInstance(value));
-		}
-		
-	},
-	CONNECT_TIMEOUT("socksClient.connectTimeout") {
-		
-		private static final int DEFAULT_INT_VALUE = 60000; // 1 minute
-		
-		@Override
-		public Property getDefaultProperty() {
-			return new Property(this, PositiveInteger.newInstance(
-					DEFAULT_INT_VALUE));
-		}
-
-		@Override
-		public Property newProperty(final Object value) {
-			PositiveInteger val = PositiveInteger.class.cast(value);
-			return new Property(this, val);
-		}
-
-		@Override
-		public Property newProperty(final String value) {
-			return new Property(this, PositiveInteger.newInstance(value));
-		}
-		
-	},
-	SOCKET_SETTINGS("socksClient.socketSettings") {
-		
-		@Override
-		public Property getDefaultProperty() {
-			return new Property(this, SocketSettings.newInstance());
-		}
-
-		@Override
-		public Property newProperty(final Object value) {
-			SocketSettings val = SocketSettings.class.cast(value);
-			return new Property(this, val);
-		}
-
-		@Override
-		public Property newProperty(final String value) {
-			return new Property(this, SocketSettings.newInstance(value));
-		}
-		
-	},
-	SOCKS5_AUTH_METHODS("socksClient.socks5.authMethods") {
-		
-		@Override
-		public Property getDefaultProperty() {
-			return new Property(this, AuthMethods.newInstance(
-					AuthMethod.NO_AUTHENTICATION_REQUIRED));
-		}
-
-		@Override
-		public Property newProperty(final Object value) {
-			AuthMethods val = AuthMethods.class.cast(value);
-			return new Property(this, val);
-		}
-
-		@Override
-		public Property newProperty(final String value) {
-			return new Property(this, AuthMethods.newInstance(value));
-		}
-		
-	},
-	SOCKS5_FORWARD_HOSTNAME_RESOLUTION(
-			"socksClient.socks5.forwardHostnameResolution") {
-		
-		private static final boolean DEFAULT_BOOLEAN_VALUE = false;
-		
-		@Override
-		public Property getDefaultProperty() {
-			return new Property(this, Boolean.valueOf(DEFAULT_BOOLEAN_VALUE));
-		}
-
-		@Override
-		public Property newProperty(final Object value) {
-			Boolean val = Boolean.class.cast(value);
-			return new Property(this, val);
-		}
-
-		@Override
-		public Property newProperty(final String value) {
-			return new Property(this, Boolean.valueOf(value));
-		}
-		
-	},
-	SOCKS5_GSSAPI_MECHANISM_OID("socksClient.socks5.gssapiMechanismOid") {
-		
-		@Override
-		public Property getDefaultProperty() {
-			Oid gssapiMechanismOid = null;
-			try {
-				gssapiMechanismOid = new Oid("1.2.840.113554.1.2.2");
-			} catch (GSSException e) {
-				throw new AssertionError(e);
-			}
-			return new Property(this, gssapiMechanismOid);
-		}
-
-		@Override
-		public Property newProperty(final Object value) {
-			Oid val = Oid.class.cast(value);
-			return new Property(this, val);
-		}
-
-		@Override
-		public Property newProperty(final String value) {
-			Oid gssapiMechanismOid = null;
-			try {
-				gssapiMechanismOid = new Oid(value);
-			} catch (GSSException e) {
-				throw new IllegalArgumentException(e);
-			}
-			return new Property(this, gssapiMechanismOid);
-		}
-		
-	},
-	SOCKS5_GSSAPI_NEC_REFERENCE_IMPL("socksClient.socks5.gssapiNecReferenceImpl") {
-		
-		private static final boolean DEFAULT_BOOLEAN_VALUE = false;
-		
-		@Override
-		public Property getDefaultProperty() {
-			return new Property(this, Boolean.valueOf(DEFAULT_BOOLEAN_VALUE));
-		}
-
-		@Override
-		public Property newProperty(final Object value) {
-			Boolean val = Boolean.class.cast(value);
-			return new Property(this, val);
-		}
-
-		@Override
-		public Property newProperty(final String value) {
-			return new Property(this, Boolean.valueOf(value));
-		}
-		
-	},
-	SOCKS5_GSSAPI_PROTECTION_LEVELS("socksClient.socks5.gssapiProtectionLevels") {
-		
-		@Override
-		public Property getDefaultProperty() {
-			return new Property(this, GssapiProtectionLevels.DEFAULT_INSTANCE);
-		}
-
-		@Override
-		public Property newProperty(final Object value) {
-			GssapiProtectionLevels val = GssapiProtectionLevels.class.cast(value);
-			return new Property(this, val);
-		}
-
-		@Override
-		public Property newProperty(final String value) {
-			return new Property(this, GssapiProtectionLevels.newInstance(value));
-		}
-		
-	},
-	SOCKS5_GSSAPI_SERVICE_NAME("socksClient.socks5.gssapiServiceName") {
-		
-		@Override
-		public Property getDefaultProperty() {
-			return new Property(this, null);
-		}
-
-		@Override
-		public Property newProperty(final Object value) {
-			String val = String.class.cast(value);
-			return new Property(this, val);
-		}
-
-		@Override
-		public Property newProperty(final String value) {
-			return new Property(this, value);
-		}
-		
-	},
-	SOCKS5_PASSWORD("socksClient.socks5.password") {
-		
-		@Override
-		public Property getDefaultProperty() {
-			return new Property(this, EncryptedPassword.newInstance(new char[] { }));
-		}
-
-		@Override
-		public Property newProperty(final Object value) {
-			EncryptedPassword val = EncryptedPassword.class.cast(value);
-			char[] password = val.getPassword();
-			UsernamePassword.validatePassword(password);
-			Arrays.fill(password, '\0');
-			return new Property(this, val);
-		}
-
-		@Override
-		public Property newProperty(final String value) {
-			char[] val = value.toCharArray();
-			UsernamePassword.validatePassword(val);
-			EncryptedPassword v = EncryptedPassword.newInstance(val);
-			Arrays.fill(val, '\0');
-			return new Property(this, v);
-		}
-		
-	},
-	SOCKS5_USERNAME("socksClient.socks5.username") {
-		
-		@Override
-		public Property getDefaultProperty() {
-			return new Property(this, System.getProperty("user.name"));
-		}
-
-		@Override
-		public Property newProperty(final Object value) {
-			String val = String.class.cast(value);
-			UsernamePassword.validateUsername(val);
-			return new Property(this, val);
-		}
-
-		@Override
-		public Property newProperty(final String value) {
-			UsernamePassword.validateUsername(value);
-			return new Property(this, value);
-		}
-		
-	},
-	SSL_ENABLED("socksClient.ssl.enabled") {
-		
-		private static final boolean DEFAULT_BOOLEAN_VALUE = false;
-		
-		@Override
-		public Property getDefaultProperty() {
-			return new Property(this, Boolean.valueOf(DEFAULT_BOOLEAN_VALUE));
-		}
-
-		@Override
-		public Property newProperty(final Object value) {
-			Boolean val = Boolean.class.cast(value);
-			return new Property(this, val);
-		}
-
-		@Override
-		public Property newProperty(final String value) {
-			return new Property(this, Boolean.valueOf(value));
-		}
-		
-	},
-	SSL_ENABLED_CIPHER_SUITES("socksClient.ssl.enabledCipherSuites") {
-		
-		@Override
-		public Property getDefaultProperty() {
-			return new Property(this, Strings.newInstance(new String[] { }));
-		}
-
-		@Override
-		public Property newProperty(final Object value) {
-			Strings val = Strings.class.cast(value);
-			return new Property(this, val);
-		}
-
-		@Override
-		public Property newProperty(final String value) {
-			return new Property(this, Strings.newInstance(value));
-		}
-		
-	},
-	SSL_ENABLED_PROTOCOLS("socksClient.ssl.enabledProtocols") {
-		
-		@Override
-		public Property getDefaultProperty() {
-			return new Property(this, Strings.newInstance(new String[] { }));
-		}
-
-		@Override
-		public Property newProperty(final Object value) {
-			Strings val = Strings.class.cast(value);
-			return new Property(this, val);
-		}
-
-		@Override
-		public Property newProperty(final String value) {
-			return new Property(this, Strings.newInstance(value));
-		}
-		
-	},
-	SSL_KEY_STORE_FILE("socksClient.ssl.keyStoreFile") {
-		
-		@Override
-		public Property getDefaultProperty() {
-			return new Property(this, null);
-		}
-
-		@Override
-		public Property newProperty(final Object value) {
-			File val = File.class.cast(value);
-			if (!val.exists()) {
-				throw new IllegalArgumentException(String.format(
-						"file `%s' does not exist", 
-						val));
-			}
-			if (!val.isFile()) {
-				throw new IllegalArgumentException(String.format(
-						"file `%s' must be a file", 
-						val));
-			}
-			return new Property(this, val);
-		}
-
-		@Override
-		public Property newProperty(final String value) {
-			return newProperty(new File(value));
-		}
-		
-	},
-	SSL_KEY_STORE_PASSWORD("socksClient.ssl.keyStorePassword") {
-		
-		@Override
-		public Property getDefaultProperty() {
-			return new Property(this, EncryptedPassword.newInstance(new char[] { }));
-		}
-
-		@Override
-		public Property newProperty(final Object value) {
-			EncryptedPassword val = EncryptedPassword.class.cast(value);
-			return new Property(this, val);
-		}
-
-		@Override
-		public Property newProperty(final String value) {
-			return new Property(this, EncryptedPassword.newInstance(value.toCharArray()));
-		}
-		
-	},
-	SSL_KEY_STORE_TYPE("socksClient.ssl.keyStoreType") {
-		
-		private static final String DEFAULT_STRING_VALUE = "PKCS12";
-		
-		@Override
-		public Property getDefaultProperty() {
-			return new Property(this, DEFAULT_STRING_VALUE);
-		}
-
-		@Override
-		public Property newProperty(final Object value) {
-			String val = String.class.cast(value);
-			return new Property(this, val);
-		}
-
-		@Override
-		public Property newProperty(final String value) {
-			return new Property(this, value);
-		}
-		
-	},
-	SSL_PROTOCOL("socksClient.ssl.protocol") {
-		
-		private static final String DEFAULT_STRING_VALUE = "TLSv1";
-		
-		@Override
-		public Property getDefaultProperty() {
-			return new Property(this, DEFAULT_STRING_VALUE);
-		}
-
-		@Override
-		public Property newProperty(final Object value) {
-			String val = String.class.cast(value);
-			return new Property(this, val);
-		}
-
-		@Override
-		public Property newProperty(final String value) {
-			return new Property(this, value);
-		}
-		
-	},
-	SSL_TRUST_STORE_FILE("socksClient.ssl.trustStoreFile") {
-		
-		@Override
-		public Property getDefaultProperty() {
-			return new Property(this, null);
-		}
-
-		@Override
-		public Property newProperty(final Object value) {
-			File val = File.class.cast(value);
-			if (!val.exists()) {
-				throw new IllegalArgumentException(String.format(
-						"file `%s' does not exist", 
-						val));
-			}
-			if (!val.isFile()) {
-				throw new IllegalArgumentException(String.format(
-						"file `%s' must be a file", 
-						val));
-			}
-			return new Property(this, val);
-		}
-
-		@Override
-		public Property newProperty(final String value) {
-			return newProperty(new File(value));
-		}
-		
-	},
-	SSL_TRUST_STORE_PASSWORD("socksClient.ssl.trustStorePassword") {
-		
-		@Override
-		public Property getDefaultProperty() {
-			return new Property(this, EncryptedPassword.newInstance(new char[] { }));
-		}
-
-		@Override
-		public Property newProperty(final Object value) {
-			EncryptedPassword val = EncryptedPassword.class.cast(value);
-			return new Property(this, val);
-		}
-
-		@Override
-		public Property newProperty(final String value) {
-			return new Property(this, EncryptedPassword.newInstance(value.toCharArray()));
-		}
-		
-	},
-	SSL_TRUST_STORE_TYPE("socksClient.ssl.trustStoreType") {
-		
-		private static final String DEFAULT_STRING_VALUE = "PKCS12";
-		
-		@Override
-		public Property getDefaultProperty() {
-			return new Property(this, DEFAULT_STRING_VALUE);
-		}
-
-		@Override
-		public Property newProperty(final Object value) {
-			String val = String.class.cast(value);
-			return new Property(this, val);
-		}
-
-		@Override
-		public Property newProperty(final String value) {
-			return new Property(this, value);
-		}
-
-	};
+	public static final PropertySpec BIND_HOST = new HostPropertySpec(
+			"socksClient.bindHost",
+			Host.getIpv4WildcardInstance());
 	
+	public static final PropertySpec BIND_PORT = new PortPropertySpec(
+			"socksClient.bindPort",
+			Port.newInstance(0));
+	
+	public static final PropertySpec CONNECT_TIMEOUT = new PositiveIntegerPropertySpec(
+			"socksClient.connectTimeout",
+			PositiveInteger.newInstance(60000)); // 1 minute
+	
+	public static final PropertySpec SOCKET_SETTINGS = new SocketSettingsPropertySpec(
+			"socksClient.socketSettings",
+			SocketSettings.newInstance());
+	
+	public static final PropertySpec SOCKS5_AUTH_METHODS = new AuthMethodsPropertySpec(
+			"socksClient.socks5.authMethods",
+			AuthMethods.newInstance(AuthMethod.NO_AUTHENTICATION_REQUIRED));
+	
+	public static final PropertySpec SOCKS5_FORWARD_HOSTNAME_RESOLUTION = new BooleanPropertySpec(
+			"socksClient.socks5.forwardHostnameResolution",
+			Boolean.FALSE);
+	
+	public static final PropertySpec SOCKS5_GSSAPI_MECHANISM_OID = new OidPropertySpec(
+			"socksClient.socks5.gssapiMechanismOid",
+			"1.2.840.113554.1.2.2");
+	
+	public static final PropertySpec SOCKS5_GSSAPI_NEC_REFERENCE_IMPL = new BooleanPropertySpec(
+			"socksClient.socks5.gssapiNecReferenceImpl",
+			Boolean.FALSE);
+	
+	public static final PropertySpec SOCKS5_GSSAPI_PROTECTION_LEVELS = new GssapiProtectionLevelsPropertySpec(
+			"socksClient.socks5.gssapiProtectionLevels",
+			GssapiProtectionLevels.DEFAULT_INSTANCE);
+	
+	public static final PropertySpec SOCKS5_GSSAPI_SERVICE_NAME = new StringPropertySpec(
+			"socksClient.socks5.gssapiServiceName",
+			null);
+	
+	public static final PropertySpec SOCKS5_PASSWORD = new UserEncryptedPasswordPropertySpec(
+			"socksClient.socks5.password",
+			EncryptedPassword.newInstance(new char[] { }));
+	
+	public static final PropertySpec SOCKS5_USERNAME = new UsernamePropertySpec(
+			"socksClient.socks5.username", 
+			System.getProperty("user.name"));
+	
+	public static final PropertySpec SSL_ENABLED = new BooleanPropertySpec(
+			"socksClient.ssl.enabled",
+			Boolean.FALSE);
+	
+	public static final PropertySpec SSL_ENABLED_CIPHER_SUITES = new StringsPropertySpec(
+			"socksClient.ssl.enabledCipherSuites", 
+			Strings.newInstance(new String[] { }));
+	
+	public static final PropertySpec SSL_ENABLED_PROTOCOLS = new StringsPropertySpec(
+			"socksClient.ssl.enabledProtocols", 
+			Strings.newInstance(new String[] { }));
+	
+	public static final PropertySpec SSL_KEY_STORE_FILE = new FilePropertySpec(
+			"socksClient.ssl.keyStoreFile", 
+			null);
+	
+	public static final PropertySpec SSL_KEY_STORE_PASSWORD = new EncryptedPasswordPropertySpec(
+			"socksClient.ssl.keyStorePassword", 
+			EncryptedPassword.newInstance(new char[] { }));
+	
+	public static final PropertySpec SSL_KEY_STORE_TYPE = new StringPropertySpec(
+			"socksClient.ssl.keyStoreType",
+			"PKCS12");
+	
+	public static final PropertySpec SSL_PROTOCOL = new StringPropertySpec(
+			"socksClient.ssl.protocol",
+			"TLSv1");
+	
+	public static final PropertySpec SSL_TRUST_STORE_FILE = new FilePropertySpec(
+			"socksClient.ssl.trustStoreFile", 
+			null);
+	
+	public static final PropertySpec SSL_TRUST_STORE_PASSWORD = new EncryptedPasswordPropertySpec(
+			"socksClient.ssl.trustStorePassword",
+			EncryptedPassword.newInstance(new char[] { }));
+	
+	public static final PropertySpec SSL_TRUST_STORE_TYPE = new StringPropertySpec(
+			"socksClient.ssl.trustStoreType",
+			"PKCS12");
+	
+	private static final List<PropertySpec> VALUES = new ArrayList<PropertySpec>();
+	
+	public static PropertySpec[] values() {
+		if (VALUES.isEmpty()) {
+			Field[] fields = PropertySpec.class.getFields();
+			for (Field field : fields) {
+				Class<?> type = field.getType();
+				if (!PropertySpec.class.isAssignableFrom(type)) {
+					continue;
+				}
+				Object value = null;
+				try {
+					value = field.get(null);
+				} catch (IllegalArgumentException e) {
+					throw new AssertionError(e);
+				} catch (IllegalAccessException e) {
+					throw new AssertionError(e);
+				}
+				PropertySpec val = (PropertySpec) value;
+				VALUES.add(val);
+			}
+		}
+		return VALUES.toArray(new PropertySpec[VALUES.size()]);
+	}
+
+	
+	protected final Object defaultValue;
 	private final String string;
 	
-	private PropertySpec(final String s) {
+	public PropertySpec(final String s, final Object defaultVal) {
+		this.defaultValue = defaultVal;
 		this.string = s;
 	}
 	
@@ -518,7 +159,7 @@ public enum PropertySpec {
 	public abstract Property newProperty(final String value);
 	
 	@Override
-	public String toString() {
+	public final String toString() {
 		return this.string;
 	}
 	

@@ -1,0 +1,31 @@
+package jargyle.net.socks.client.propertyspec;
+
+import jargyle.net.SocketSettings;
+import jargyle.net.socks.client.Property;
+import jargyle.net.socks.client.PropertySpec;
+
+public final class SocketSettingsPropertySpec extends PropertySpec {
+
+	public SocketSettingsPropertySpec(
+			final String s, final SocketSettings defaultVal) {
+		super(s, defaultVal);
+	}
+
+	@Override
+	public Property getDefaultProperty() {
+		return Property.newInstance(
+				this, SocketSettings.class.cast(this.defaultValue));
+	}
+
+	@Override
+	public Property newProperty(final Object value) {
+		SocketSettings val = SocketSettings.class.cast(value);
+		return Property.newInstance(this, val);
+	}
+
+	@Override
+	public Property newProperty(final String value) {
+		return Property.newInstance(this, SocketSettings.newInstance(value));
+	}
+
+}

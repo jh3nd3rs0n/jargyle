@@ -27,7 +27,7 @@ public abstract class SocksClient {
 	private final SocksServerUri socksServerUri;
 	private final SslSocketFactory sslSocketFactory;
 		
-	protected SocksClient(final SocksServerUri serverUri, final Properties props) {
+	public SocksClient(final SocksServerUri serverUri, final Properties props) {
 		Objects.requireNonNull(
 				serverUri, "SOCKS server URI must not be null");
 		Objects.requireNonNull(props, "Properties must not be null");

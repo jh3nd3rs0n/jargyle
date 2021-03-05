@@ -71,7 +71,7 @@ public final class TcpRelayServer {
 					try {
 						bytesRead = this.inputStream.read(buffer);
 						this.setLastReadTime(System.currentTimeMillis());
-						LOGGER.debug(this.format(String.format(
+						LOGGER.trace(this.format(String.format(
 								"Bytes read: %s",
 								bytesRead)));
 					} catch (SocketException e) {

@@ -211,7 +211,7 @@ final class UdpRelayServer {
 								e);
 						continue;
 					}
-					LOGGER.debug(this.format(String.format(
+					LOGGER.trace(this.format(String.format(
 							"Packet data received: %s byte(s)",
 							packet.getLength())));
 					if (!this.canAcceptExternalIncomingAddress(
@@ -219,7 +219,7 @@ final class UdpRelayServer {
 						continue;
 					}
 					UdpRequestHeader header = this.newUdpRequestHeader(packet);
-					LOGGER.debug(this.format(header.toString()));
+					LOGGER.trace(this.format(header.toString()));
 					packet = this.newDatagramPacket(header);
 					if (packet == null) {
 						continue;
@@ -382,7 +382,7 @@ final class UdpRelayServer {
 								e);
 						continue;
 					}
-					LOGGER.debug(this.format(String.format(
+					LOGGER.trace(this.format(String.format(
 							"Packet data received: %s byte(s)",
 							packet.getLength())));					
 					if (!this.canForwardDatagramPacket(packet)) {
@@ -392,7 +392,7 @@ final class UdpRelayServer {
 					if (header == null) {
 						continue;
 					}
-					LOGGER.debug(this.format(header.toString()));
+					LOGGER.trace(this.format(header.toString()));
 					if (header.getCurrentFragmentNumber() != 0) {
 						continue;
 					}

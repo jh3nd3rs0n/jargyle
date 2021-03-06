@@ -54,18 +54,21 @@ public final class Socks5Reply {
 		if (serverBoundAddressBytes.length < MIN_BND_ADDR_LENGTH
 				|| serverBoundAddressBytes.length > MAX_BND_ADDR_LENGTH) {
 			throw new IllegalArgumentException(String.format(
-					"server bound address must be no less than %s byte(s) and no more than %s byte(s)", 
+					"server bound address must be no less than %s byte(s) and "
+					+ "no more than %s byte(s)", 
 					MIN_BND_ADDR_LENGTH,
 					MAX_BND_ADDR_LENGTH));
 		}
 		if (serverBoundPort < UnsignedShort.MIN_INT_VALUE 
 				|| serverBoundPort > UnsignedShort.MAX_INT_VALUE) {
 			throw new IllegalArgumentException(String.format(
-					"server bound port must be no less than %s and no more than %s", 
+					"server bound port must be no less than %s and no more "
+					+ "than %s", 
 					UnsignedShort.MIN_INT_VALUE,
 					UnsignedShort.MAX_INT_VALUE));
 		}
-		AddressType addressType = AddressType.of(serverBoundAddress);
+		AddressType addressType = AddressType.getAddressTypeOf(
+				serverBoundAddress);
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		Version version = Version.V5;
 		out.write(version.byteValue());

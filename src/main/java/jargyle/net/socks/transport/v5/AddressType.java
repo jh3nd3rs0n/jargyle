@@ -20,7 +20,7 @@ public enum AddressType {
 		
 		@Override
 		public byte[] convertToByteArray(final String address) {
-			if (!this.isOf(address)) {
+			if (!this.isAddressTypeOf(address)) {
 				throw new IllegalArgumentException(String.format(
 						"invalid address: %s", address));
 			}
@@ -58,7 +58,7 @@ public enum AddressType {
 		}
 
 		@Override
-		public boolean isOf(final String s) {
+		public boolean isAddressTypeOf(final String s) {
 			return s.matches(ADDRESS_REGEX);
 		}
 	},
@@ -70,7 +70,7 @@ public enum AddressType {
 		
 		@Override
 		public byte[] convertToByteArray(final String address) {
-			if (!this.isOf(address)) {
+			if (!this.isAddressTypeOf(address)) {
 				throw new IllegalArgumentException(String.format(
 						"invalid address: %s", address));
 			}
@@ -107,7 +107,7 @@ public enum AddressType {
 			}
 			String addr = new String(Arrays.copyOfRange(
 					address, 1, address.length));
-			if (!this.isOf(addr)) {
+			if (!this.isAddressTypeOf(addr)) {
 				throw new IllegalArgumentException(String.format(
 						"invalid address: %s", addr));
 			}
@@ -125,7 +125,7 @@ public enum AddressType {
 		}
 
 		@Override
-		public boolean isOf(final String s) {
+		public boolean isAddressTypeOf(final String s) {
 			return s.matches(ADDRESS_REGEX);
 		}
 	},
@@ -138,7 +138,7 @@ public enum AddressType {
 		
 		@Override
 		public byte[] convertToByteArray(final String address) {
-			if (!this.isOf(address)) {
+			if (!this.isAddressTypeOf(address)) {
 				throw new IllegalArgumentException(String.format(
 						"invalid address: %s", address));
 			}
@@ -176,18 +176,19 @@ public enum AddressType {
 		}
 
 		@Override
-		public boolean isOf(final String s) {
+		public boolean isAddressTypeOf(final String s) {
 			return s.matches(ADDRESS_REGEX);
 		}
 	};
 	
-	public static AddressType of(final String address) {
+	public static AddressType getAddressTypeOf(final String address) {
 		for (AddressType addressType : AddressType.values()) {
-			if (!addressType.equals(DOMAINNAME) && addressType.isOf(address)) {
+			if (!addressType.equals(DOMAINNAME) 
+					&& addressType.isAddressTypeOf(address)) {
 				return addressType;
 			}
 		}
-		if (DOMAINNAME.isOf(address)) {
+		if (DOMAINNAME.isAddressTypeOf(address)) {
 			return DOMAINNAME;
 		}
 		throw new IllegalArgumentException(
@@ -237,5 +238,5 @@ public enum AddressType {
 	
 	public abstract int getAddressLength(final byte firstByte);
 	
-	public abstract boolean isOf(final String s);
+	public abstract boolean isAddressTypeOf(final String s);
 }

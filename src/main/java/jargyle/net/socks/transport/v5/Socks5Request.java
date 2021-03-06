@@ -39,22 +39,26 @@ public final class Socks5Request {
 			final Command command,
 			final String desiredDestinationAddress,
 			final int desiredDestinationPort) {
-		byte[] desiredDestinationAddressBytes = desiredDestinationAddress.getBytes();
+		byte[] desiredDestinationAddressBytes = 
+				desiredDestinationAddress.getBytes();
 		if (desiredDestinationAddressBytes.length < MIN_DST_ADDR_LENGTH
 				|| desiredDestinationAddressBytes.length > MAX_DST_ADDR_LENGTH) {
 			throw new IllegalArgumentException(String.format(
-					"desired destination address must be no less than %s byte(s) and no more than %s byte(s)", 
+					"desired destination address must be no less than %s "
+					+ "byte(s) and no more than %s byte(s)", 
 					MIN_DST_ADDR_LENGTH,
 					MAX_DST_ADDR_LENGTH));
 		}
 		if (desiredDestinationPort < UnsignedShort.MIN_INT_VALUE 
 				|| desiredDestinationPort > UnsignedShort.MAX_INT_VALUE) {
 			throw new IllegalArgumentException(String.format(
-					"desired destination port must be no less than %s and no more than %s", 
+					"desired destination port must be no less than %s and no "
+					+ "more than %s", 
 					UnsignedShort.MIN_INT_VALUE,
 					UnsignedShort.MAX_INT_VALUE));
 		}
-		AddressType addressType = AddressType.of(desiredDestinationAddress);
+		AddressType addressType = AddressType.getAddressTypeOf(
+				desiredDestinationAddress);
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		Version version = Version.V5;
 		out.write(version.byteValue());
@@ -62,7 +66,8 @@ public final class Socks5Request {
 		out.write(RSV);
 		out.write(addressType.byteValue());
 		try {
-			out.write(addressType.convertToByteArray(desiredDestinationAddress));
+			out.write(addressType.convertToByteArray(
+					desiredDestinationAddress));
 		} catch (IOException e) {
 			throw new AssertionError(e);
 		}

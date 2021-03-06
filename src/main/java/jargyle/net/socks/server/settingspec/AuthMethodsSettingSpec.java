@@ -14,12 +14,12 @@ public final class AuthMethodsSettingSpec extends SettingSpec {
 	@Override
 	public Setting newSetting(final Object value) {
 		AuthMethods val = AuthMethods.class.cast(value);
-		return Setting.newInstance(this, val);
+		return super.newSetting(val);
 	}
 
 	@Override
 	public Setting newSetting(final String value) {
-		return Setting.newInstance(this, AuthMethods.newInstance(value));
+		return super.newSetting(AuthMethods.newInstance(value));
 	}
 	
 }

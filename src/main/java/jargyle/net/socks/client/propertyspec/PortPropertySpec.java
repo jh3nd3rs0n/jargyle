@@ -13,12 +13,12 @@ public final class PortPropertySpec extends PropertySpec {
 	@Override
 	public Property newProperty(final Object value) {
 		Port val = Port.class.cast(value);
-		return Property.newInstance(this, val);
+		return super.newProperty(val);
 	}
 
 	@Override
 	public Property newProperty(final String value) {
-		return Property.newInstance(this, Port.newInstance(value));
+		return super.newProperty(Port.newInstance(value));
 	}
 
 }

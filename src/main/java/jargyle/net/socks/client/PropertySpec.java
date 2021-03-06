@@ -147,7 +147,7 @@ public abstract class PropertySpec {
 	private final String string;
 	
 	public PropertySpec(final String s, final Object defaultVal) {
-		this.defaultProperty = Property.newInstance(this, defaultVal);
+		this.defaultProperty = new Property(this, defaultVal);
 		this.string = s;
 	}
 	
@@ -155,7 +155,9 @@ public abstract class PropertySpec {
 		return this.defaultProperty;
 	}
 	
-	public abstract Property newProperty(final Object value);
+	public Property newProperty(final Object value) {
+		return new Property(this, value);
+	}
 	
 	public abstract Property newProperty(final String value);
 	

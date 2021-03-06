@@ -15,7 +15,7 @@ public final class OidSettingSpec extends SettingSpec {
 	@Override
 	public Setting newSetting(final Object value) {
 		Oid val = Oid.class.cast(value);
-		return Setting.newInstance(this, val);
+		return super.newSetting(val);
 	}
 
 	@Override
@@ -26,7 +26,7 @@ public final class OidSettingSpec extends SettingSpec {
 		} catch (GSSException e) {
 			throw new IllegalArgumentException(e);
 		}
-		return Setting.newInstance(this, oid);
+		return super.newSetting(oid);
 	}	
 	
 }

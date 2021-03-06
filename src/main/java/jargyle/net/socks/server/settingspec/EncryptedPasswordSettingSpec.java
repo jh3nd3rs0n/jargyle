@@ -14,13 +14,13 @@ public final class EncryptedPasswordSettingSpec extends SettingSpec {
 	@Override
 	public Setting newSetting(final Object value) {
 		EncryptedPassword val = EncryptedPassword.class.cast(value);
-		return Setting.newInstance(this, val);
+		return super.newSetting(val);
 	}
 
 	@Override
 	public Setting newSetting(final String value) {
-		return Setting.newInstance(
-				this, EncryptedPassword.newInstance(value.toCharArray()));
+		return super.newSetting(EncryptedPassword.newInstance(
+				value.toCharArray()));
 	}
 
 }

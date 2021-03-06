@@ -14,12 +14,12 @@ public final class SocketSettingsSettingSpec extends SettingSpec {
 	@Override
 	public Setting newSetting(final Object value) {
 		SocketSettings val = SocketSettings.class.cast(value);
-		return Setting.newInstance(this, val);
+		return super.newSetting(val);
 	}
 
 	@Override
 	public Setting newSetting(final String value) {
-		return Setting.newInstance(this, SocketSettings.newInstance(value));
+		return super.newSetting(SocketSettings.newInstance(value));
 	}
 	
 }

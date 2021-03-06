@@ -13,12 +13,12 @@ public final class CriteriaSettingSpec extends SettingSpec {
 	@Override
 	public Setting newSetting(final Object value) {
 		Criteria val = Criteria.class.cast(value);
-		return Setting.newInstance(this, val);
+		return super.newSetting(val);
 	}
 
 	@Override
 	public Setting newSetting(final String value) {
-		return Setting.newInstance(this, Criteria.newInstance(value));
+		return super.newSetting(Criteria.newInstance(value));
 	}
 
 }

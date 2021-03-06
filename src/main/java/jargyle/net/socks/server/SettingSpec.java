@@ -701,7 +701,7 @@ public abstract class SettingSpec {
 	private final String string;
 		
 	public SettingSpec(final String s, final Object defaultVal) {
-		this.defaultSetting = Setting.newInstance(this, defaultVal);
+		this.defaultSetting = new Setting(this, defaultVal);
 		this.string = s;
 	}
 	
@@ -709,7 +709,9 @@ public abstract class SettingSpec {
 		return this.defaultSetting;
 	}
 	
-	public abstract Setting newSetting(final Object value);
+	public Setting newSetting(final Object value) {
+		return new Setting(this, value);
+	}
 	
 	public abstract Setting newSetting(final String value);
 	

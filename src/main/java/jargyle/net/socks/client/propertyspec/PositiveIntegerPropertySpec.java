@@ -14,12 +14,12 @@ public final class PositiveIntegerPropertySpec extends PropertySpec {
 	@Override
 	public Property newProperty(final Object value) {
 		PositiveInteger val = PositiveInteger.class.cast(value);
-		return Property.newInstance(this, val);
+		return super.newProperty(val);
 	}
 
 	@Override
 	public Property newProperty(final String value) {
-		return Property.newInstance(this, PositiveInteger.newInstance(value));
+		return super.newProperty(PositiveInteger.newInstance(value));
 	}
 
 }

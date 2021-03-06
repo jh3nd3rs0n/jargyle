@@ -13,12 +13,12 @@ public final class PortSettingSpec extends SettingSpec {
 	@Override
 	public Setting newSetting(final Object value) {
 		Port val = Port.class.cast(value);
-		return Setting.newInstance(this, val);
+		return super.newSetting(val);
 	}
 
 	@Override
 	public Setting newSetting(final String value) {
-		return Setting.newInstance(this, Port.newInstance(value));
+		return super.newSetting(Port.newInstance(value));
 	}
 	
 }

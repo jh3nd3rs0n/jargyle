@@ -14,12 +14,12 @@ public final class SocksServerUriSettingSpec extends SettingSpec {
 	@Override
 	public Setting newSetting(final Object value) {
 		SocksServerUri val = SocksServerUri.class.cast(value);
-		return Setting.newInstance(this, val);
+		return super.newSetting(val);
 	}
 
 	@Override
 	public Setting newSetting(final String value) {
-		return Setting.newInstance(this, SocksServerUri.newInstance(value));
+		return super.newSetting(SocksServerUri.newInstance(value));
 	}
 
 }

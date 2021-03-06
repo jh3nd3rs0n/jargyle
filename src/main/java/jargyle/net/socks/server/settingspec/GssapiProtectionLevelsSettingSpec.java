@@ -14,13 +14,12 @@ public final class GssapiProtectionLevelsSettingSpec extends SettingSpec {
 	@Override
 	public Setting newSetting(final Object value) {
 		GssapiProtectionLevels val = GssapiProtectionLevels.class.cast(value);
-		return Setting.newInstance(this, val);
+		return super.newSetting(val);
 	}
 
 	@Override
 	public Setting newSetting(final String value) {
-		return Setting.newInstance(
-				this, GssapiProtectionLevels.newInstance(value));
+		return super.newSetting(GssapiProtectionLevels.newInstance(value));
 	}
 
 }

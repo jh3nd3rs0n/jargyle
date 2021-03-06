@@ -25,12 +25,12 @@ public final class OidPropertySpec extends PropertySpec {
 	@Override
 	public Property newProperty(final Object value) {
 		Oid val = Oid.class.cast(value);
-		return Property.newInstance(this, val);
+		return super.newProperty(val);
 	}
 
 	@Override
 	public Property newProperty(final String value) {
-		return Property.newInstance(this, newOid(value));
+		return super.newProperty(newOid(value));
 	}
 
 }

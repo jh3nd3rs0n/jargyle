@@ -15,7 +15,7 @@ public final class HostPropertySpec extends PropertySpec {
 	@Override
 	public Property newProperty(final Object value) {
 		Host val = Host.class.cast(value);
-		return Property.newInstance(this, val);
+		return super.newProperty(val);
 	}
 
 	@Override
@@ -26,7 +26,7 @@ public final class HostPropertySpec extends PropertySpec {
 		} catch (UnknownHostException e) {
 			throw new IllegalArgumentException(e);
 		}
-		return Property.newInstance(this, host);
+		return super.newProperty(host);
 	}
 
 }

@@ -14,12 +14,12 @@ public final class NonnegativeIntegerSettingSpec extends SettingSpec {
 	@Override
 	public Setting newSetting(final Object value) {
 		NonnegativeInteger val = NonnegativeInteger.class.cast(value);
-		return Setting.newInstance(this, val);
+		return super.newSetting(val);
 	}
 
 	@Override
 	public Setting newSetting(final String value) {
-		return Setting.newInstance(this, NonnegativeInteger.newInstance(value));
+		return super.newSetting(NonnegativeInteger.newInstance(value));
 	}
 
 }

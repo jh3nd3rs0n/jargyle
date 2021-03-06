@@ -12,12 +12,12 @@ public final class StringSettingSpec extends SettingSpec {
 	@Override
 	public Setting newSetting(final Object value) {
 		String val = String.class.cast(value);
-		return Setting.newInstance(this, val);
+		return super.newSetting((Object) val);
 	}
 
 	@Override
 	public Setting newSetting(final String value) {
-		return Setting.newInstance(this, value);
+		return super.newSetting((Object) value);
 	}
 	
 }

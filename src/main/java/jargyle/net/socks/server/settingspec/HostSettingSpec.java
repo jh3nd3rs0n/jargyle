@@ -15,7 +15,7 @@ public final class HostSettingSpec extends SettingSpec {
 	@Override
 	public Setting newSetting(final Object value) {
 		Host val = Host.class.cast(value);
-		return Setting.newInstance(this, val);
+		return super.newSetting(val);
 	}
 
 	@Override
@@ -26,7 +26,7 @@ public final class HostSettingSpec extends SettingSpec {
 		} catch (UnknownHostException e) {
 			throw new IllegalArgumentException(e);
 		}
-		return Setting.newInstance(this, host);
+		return super.newSetting(host);
 	}
 
 }

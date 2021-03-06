@@ -1,16 +1,11 @@
 package jargyle.net.socks.client;
 
 public final class Property {
-
-	public static Property newInstance(
-			final PropertySpec spec, final Object val) {
-		return new Property(spec, val);
-	}
 	
 	private final PropertySpec propertySpec;
 	private final Object value;
 	
-	private Property(final PropertySpec spec, final Object val) {
+	Property(final PropertySpec spec, final Object val) {
 		this.propertySpec = spec;
 		this.value = val;
 	}

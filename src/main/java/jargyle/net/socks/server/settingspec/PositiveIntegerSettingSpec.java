@@ -14,12 +14,12 @@ public final class PositiveIntegerSettingSpec extends SettingSpec {
 	@Override
 	public Setting newSetting(final Object value) {
 		PositiveInteger val = PositiveInteger.class.cast(value);
-		return Setting.newInstance(this, val);
+		return super.newSetting(val);
 	}
 
 	@Override
 	public Setting newSetting(final String value) {
-		return Setting.newInstance(this, PositiveInteger.newInstance(value));
+		return super.newSetting(PositiveInteger.newInstance(value));
 	}
 	
 }

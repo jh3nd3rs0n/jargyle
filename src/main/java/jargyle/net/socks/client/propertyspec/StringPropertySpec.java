@@ -12,12 +12,12 @@ public final class StringPropertySpec extends PropertySpec {
 	@Override
 	public Property newProperty(final Object value) {
 		String val = String.class.cast(value);
-		return Property.newInstance(this, val);
+		return super.newProperty((Object) val);
 	}
 
 	@Override
 	public Property newProperty(final String value) {
-		return Property.newInstance(this, value);
+		return super.newProperty((Object) value);
 	}
 
 }

@@ -24,7 +24,7 @@ public final class FileSettingSpec extends SettingSpec {
 					"file `%s' must be a file", 
 					val));
 		}
-		return Setting.newInstance(this, val);
+		return super.newSetting(val);
 	}
 
 	@Override

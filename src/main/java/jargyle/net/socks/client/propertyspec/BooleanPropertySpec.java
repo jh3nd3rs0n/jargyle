@@ -12,12 +12,12 @@ public final class BooleanPropertySpec extends PropertySpec {
 	@Override
 	public Property newProperty(final Object value) {
 		Boolean val = Boolean.class.cast(value);
-		return Property.newInstance(this, val);
+		return super.newProperty(val);
 	}
 
 	@Override
 	public Property newProperty(final String value) {
-		return Property.newInstance(this, Boolean.valueOf(value));
+		return super.newProperty(Boolean.valueOf(value));
 	}
 
 }

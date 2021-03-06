@@ -12,12 +12,12 @@ public final class BooleanSettingSpec extends SettingSpec {
 	@Override
 	public Setting newSetting(final Object value) {
 		Boolean val = Boolean.class.cast(value);
-		return Setting.newInstance(this, val);
+		return super.newSetting(val);
 	}
 
 	@Override
 	public Setting newSetting(final String value) {
-		return Setting.newInstance(this, Boolean.valueOf(value));
+		return super.newSetting(Boolean.valueOf(value));
 	}	
 
 }

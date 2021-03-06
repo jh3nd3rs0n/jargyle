@@ -14,12 +14,12 @@ public final class SocketSettingsPropertySpec extends PropertySpec {
 	@Override
 	public Property newProperty(final Object value) {
 		SocketSettings val = SocketSettings.class.cast(value);
-		return Property.newInstance(this, val);
+		return super.newProperty(val);
 	}
 
 	@Override
 	public Property newProperty(final String value) {
-		return Property.newInstance(this, SocketSettings.newInstance(value));
+		return super.newProperty(SocketSettings.newInstance(value));
 	}
 
 }

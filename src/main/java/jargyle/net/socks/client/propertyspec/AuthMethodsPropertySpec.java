@@ -14,12 +14,12 @@ public final class AuthMethodsPropertySpec extends PropertySpec {
 	@Override
 	public Property newProperty(final Object value) {
 		AuthMethods val = AuthMethods.class.cast(value);
-		return Property.newInstance(this, val);
+		return super.newProperty(val);
 	}
 
 	@Override
 	public Property newProperty(final String value) {
-		return Property.newInstance(this, AuthMethods.newInstance(value));
+		return super.newProperty(AuthMethods.newInstance(value));
 	}
 
 }

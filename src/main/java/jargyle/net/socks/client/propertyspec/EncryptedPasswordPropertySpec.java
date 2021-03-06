@@ -14,13 +14,13 @@ public final class EncryptedPasswordPropertySpec extends PropertySpec {
 	@Override
 	public Property newProperty(final Object value) {
 		EncryptedPassword val = EncryptedPassword.class.cast(value);
-		return Property.newInstance(this, val);
+		return super.newProperty(val);
 	}
 
 	@Override
 	public Property newProperty(final String value) {
-		return Property.newInstance(
-				this, EncryptedPassword.newInstance(value.toCharArray()));
+		return super.newProperty(EncryptedPassword.newInstance(
+				value.toCharArray()));
 	}
 
 }

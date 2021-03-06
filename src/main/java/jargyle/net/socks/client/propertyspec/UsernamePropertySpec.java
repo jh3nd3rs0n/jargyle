@@ -18,12 +18,12 @@ public final class UsernamePropertySpec extends PropertySpec {
 	@Override
 	public Property newProperty(final Object value) {
 		String val = String.class.cast(value);
-		return Property.newInstance(this, getValidatedUsername(val));
+		return super.newProperty((Object) getValidatedUsername(val));
 	}
 
 	@Override
 	public Property newProperty(final String value) {
-		return Property.newInstance(this, getValidatedUsername(value));
+		return super.newProperty((Object) getValidatedUsername(value));
 	}
 
 }

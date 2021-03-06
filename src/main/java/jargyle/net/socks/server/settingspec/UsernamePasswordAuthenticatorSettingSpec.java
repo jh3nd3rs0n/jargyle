@@ -15,13 +15,13 @@ public final class UsernamePasswordAuthenticatorSettingSpec extends SettingSpec 
 	public Setting newSetting(final Object value) {
 		UsernamePasswordAuthenticator val = 
 				UsernamePasswordAuthenticator.class.cast(value);
-		return Setting.newInstance(this, val);
+		return super.newSetting(val);
 	}
 
 	@Override
 	public Setting newSetting(final String value) {
-		return Setting.newInstance(
-				this, UsernamePasswordAuthenticator.newInstance(value));
+		return super.newSetting(UsernamePasswordAuthenticator.newInstance(
+				value));
 	}
 
 }

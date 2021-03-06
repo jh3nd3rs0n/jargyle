@@ -24,7 +24,7 @@ public final class FilePropertySpec extends PropertySpec {
 					"file `%s' must be a file", 
 					val));
 		}
-		return Property.newInstance(this, val);
+		return super.newProperty(val);
 	}
 
 	@Override

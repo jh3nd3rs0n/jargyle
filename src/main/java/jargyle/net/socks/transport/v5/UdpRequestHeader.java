@@ -122,7 +122,7 @@ public final class UdpRequestHeader {
 		}
 		validateDesiredDestinationAddress(desiredDestinationAddress);
 		validateDesiredDestinationPort(desiredDestinationPort);
-		AddressType addrType = AddressType.of(desiredDestinationAddress);
+		AddressType addressType = AddressType.of(desiredDestinationAddress);
 		int dataStartIndex = -1;
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		byte[] rsv = UnsignedShort.newInstance(RSV).toByteArray();
@@ -135,8 +135,8 @@ public final class UdpRequestHeader {
 		dataStartIndex++;
 		out.write(currentFragmentNumber);
 		dataStartIndex++;
-		out.write(addrType.byteValue());
-		byte[] address = addrType.convertToByteArray(desiredDestinationAddress);
+		out.write(addressType.byteValue());
+		byte[] address = addressType.convertToByteArray(desiredDestinationAddress);
 		dataStartIndex += address.length;
 		try {
 			out.write(address);
@@ -159,7 +159,7 @@ public final class UdpRequestHeader {
 		}
 		Params params = new Params();
 		params.currentFragmentNumber = currentFragmentNumber;
-		params.addressType = addrType;
+		params.addressType = addressType;
 		params.desiredDestinationAddress = desiredDestinationAddress;
 		params.desiredDestinationPort = desiredDestinationPort;
 		params.userDataStartIndex = dataStartIndex;

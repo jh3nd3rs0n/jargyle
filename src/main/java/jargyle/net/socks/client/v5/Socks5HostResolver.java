@@ -26,7 +26,7 @@ public final class Socks5HostResolver extends HostResolver {
 	
 	@Override
 	public InetAddress resolve(final String host) throws IOException {
-		AddressType addressType = AddressType.get(host);
+		AddressType addressType = AddressType.of(host);
 		switch (addressType) {
 		case IP_V4_ADDRESS:
 		case IP_V6_ADDRESS:

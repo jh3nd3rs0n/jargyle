@@ -74,7 +74,7 @@ public final class Socks5Reply {
 		out.write(RSV);
 		out.write(addressType.byteValue());
 		try {
-			out.write(addressType.writeAddress(serverBoundAddress));
+			out.write(addressType.convertToByteArray(serverBoundAddress));
 		} catch (IOException e) {
 			throw new AssertionError(e);
 		}
@@ -150,7 +150,7 @@ public final class Socks5Reply {
 		bytes = Arrays.copyOf(bytes, bytesRead + 1);
 		String bndAddr = null; 
 		try {
-			bndAddr = atyp.readAddress(bytes);
+			bndAddr = atyp.convertToString(bytes);
 		} catch (IllegalArgumentException e) {
 			throw new IOException(e);
 		}

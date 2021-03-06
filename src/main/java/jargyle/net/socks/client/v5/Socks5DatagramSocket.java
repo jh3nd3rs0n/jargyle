@@ -183,7 +183,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			}
 			String address = p.getAddress().getHostAddress();
 			int port = p.getPort();
-			AddressType addressType = AddressType.get(address);
+			AddressType addressType = AddressType.of(address);
 			byte[] headerBytes = UdpRequestHeader.newInstance(
 					0,
 					addressType,
@@ -214,7 +214,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			int prt = this.datagramSocket.getLocalPort();
 			InputStream inputStream = sock.getInputStream();
 			OutputStream outputStream = sock.getOutputStream();
-			AddressType addressType = AddressType.get(address);
+			AddressType addressType = AddressType.of(address);
 			Socks5Request socks5Req = Socks5Request.newInstance(
 					Command.UDP_ASSOCIATE, 
 					addressType, 

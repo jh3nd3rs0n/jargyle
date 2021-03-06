@@ -283,7 +283,7 @@ public final class Socks5ServerSocket extends ServerSocket {
 				bAddr = Host.getIpv4WildcardInstance().toInetAddress();
 			}
 			String address = bAddr.getHostAddress();
-			AddressType addressType = AddressType.get(address);
+			AddressType addressType = AddressType.of(address);
 			Socks5Request socks5Req = Socks5Request.newInstance(
 					Command.BIND, 
 					addressType, 

@@ -404,7 +404,7 @@ public final class Socks5Worker implements Runnable {
 			}
 			InetAddress inetAddress = listenSocket.getInetAddress();
 			String serverBoundAddress =	inetAddress.getHostAddress();
-			AddressType addressType = AddressType.get(serverBoundAddress);
+			AddressType addressType = AddressType.of(serverBoundAddress);
 			int serverBoundPort = listenSocket.getLocalPort();
 			socks5Rep = Socks5Reply.newInstance(
 					Reply.SUCCEEDED, 
@@ -444,7 +444,7 @@ public final class Socks5Worker implements Runnable {
 				return;
 			}
 			serverBoundAddress = externalIncomingAddress;
-			addressType = AddressType.get(serverBoundAddress);
+			addressType = AddressType.of(serverBoundAddress);
 			serverBoundPort = externalIncomingSocket.getLocalPort();
 			socks5Rep = Socks5Reply.newInstance(
 					Reply.SUCCEEDED, 
@@ -512,7 +512,7 @@ public final class Socks5Worker implements Runnable {
 			}
 			String serverBoundAddress = 
 					serverSocket.getInetAddress().getHostAddress();
-			AddressType addressType = AddressType.get(serverBoundAddress);
+			AddressType addressType = AddressType.of(serverBoundAddress);
 			int serverBoundPort = serverSocket.getPort();
 			socks5Rep = Socks5Reply.newInstance(
 					Reply.SUCCEEDED, 
@@ -573,7 +573,7 @@ public final class Socks5Worker implements Runnable {
 			return;
 		}
 		String serverBoundAddress = inetAddress.getHostAddress();
-		AddressType addressType = AddressType.get(serverBoundAddress);
+		AddressType addressType = AddressType.of(serverBoundAddress);
 		int serverBoundPort = desiredDestinationPort;
 		socks5Rep = Socks5Reply.newInstance(
 				Reply.SUCCEEDED, 
@@ -631,7 +631,7 @@ public final class Socks5Worker implements Runnable {
 				inetAddress = this.clientSocket.getLocalAddress();
 				serverBoundAddress = inetAddress.getHostAddress();
 			}
-			AddressType addressType = AddressType.get(serverBoundAddress);
+			AddressType addressType = AddressType.of(serverBoundAddress);
 			int serverBoundPort = clientDatagramSock.getLocalPort();
 			socks5Rep = Socks5Reply.newInstance(
 					Reply.SUCCEEDED, 

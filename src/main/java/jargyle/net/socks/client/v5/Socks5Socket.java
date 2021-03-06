@@ -79,7 +79,7 @@ public final class Socks5Socket extends Socket {
 			InputStream inputStream = sock.getInputStream();
 			OutputStream outputStream = sock.getOutputStream();
 			String address = inetAddress.getHostAddress();
-			AddressType addressType = AddressType.get(address);
+			AddressType addressType = AddressType.of(address);
 			Socks5Request socks5Req = Socks5Request.newInstance(
 					Command.CONNECT, 
 					addressType, 

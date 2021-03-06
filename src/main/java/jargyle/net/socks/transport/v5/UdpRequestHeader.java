@@ -64,7 +64,7 @@ public final class UdpRequestHeader {
 		bytes[0] = (byte) UnsignedByte.newInstance(b).intValue();
 		bytesRead = in.read(bytes, 1, dstAddrLength - 1);
 		bytes = Arrays.copyOf(bytes, bytesRead + 1);
-		String dstAddr = atyp.readAddress(bytes);
+		String dstAddr = atyp.convertToString(bytes);
 		dataStartIndex += bytes.length;
 		try {
 			out.write(bytes);
@@ -136,7 +136,7 @@ public final class UdpRequestHeader {
 		out.write(currentFragmentNumber);
 		dataStartIndex++;
 		out.write(addressType.byteValue());
-		byte[] address = addressType.writeAddress(desiredDestinationAddress);
+		byte[] address = addressType.convertToByteArray(desiredDestinationAddress);
 		dataStartIndex += address.length;
 		try {
 			out.write(address);

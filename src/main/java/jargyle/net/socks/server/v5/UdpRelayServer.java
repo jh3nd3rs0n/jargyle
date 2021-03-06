@@ -175,7 +175,7 @@ final class UdpRelayServer {
 				final DatagramPacket packet) {
 			String address = packet.getAddress().getHostAddress();
 			int port = packet.getPort();
-			AddressType addressType = AddressType.get(address);
+			AddressType addressType = AddressType.of(address);
 			UdpRequestHeader header = UdpRequestHeader.newInstance(
 					0,
 					addressType,

@@ -19,37 +19,8 @@ public enum AddressType {
 				"^[\\d]{1,3}(\\.[\\d]{1,3}){0,3}$";
 		
 		@Override
-		public int getAddressLength(final byte firstByte) {
-			return ADDRESS_LENGTH;
-		}
-
-		@Override
-		public boolean isAddress(final String s) {
-			return s.matches(ADDRESS_REGEX);
-		}
-
-		@Override
-		public String readAddress(final byte[] b) {
-			InetAddress address = null;
-			try {
-				address = InetAddress.getByAddress(b);
-			} catch (UnknownHostException e) {
-				throw new IllegalArgumentException(String.format(
-						"expected address length is %s. "
-						+ "actual address length is %s", 
-						ADDRESS_LENGTH, 
-						b.length));
-			}
-			if (!(address instanceof Inet4Address)) {
-				throw new IllegalArgumentException(String.format(
-						"raw IP address (%s) not IPv4", address));
-			}
-			return address.getHostAddress();
-		}
-
-		@Override
-		public byte[] writeAddress(final String address) {
-			if (!this.isAddress(address)) {
+		public byte[] convertToByteArray(final String address) {
+			if (!this.isOf(address)) {
 				throw new IllegalArgumentException(String.format(
 						"invalid address: %s", address));
 			}
@@ -61,6 +32,35 @@ public enum AddressType {
 			}
 			return inetAddress.getAddress();
 		}
+
+		@Override
+		public String convertToString(final byte[] address) {
+			InetAddress inetAddress = null;
+			try {
+				inetAddress = InetAddress.getByAddress(address);
+			} catch (UnknownHostException e) {
+				throw new IllegalArgumentException(String.format(
+						"expected address length is %s. "
+						+ "actual address length is %s", 
+						ADDRESS_LENGTH, 
+						address.length));
+			}
+			if (!(inetAddress instanceof Inet4Address)) {
+				throw new IllegalArgumentException(String.format(
+						"raw IP address (%s) not IPv4", inetAddress));
+			}
+			return inetAddress.getHostAddress();
+		}
+
+		@Override
+		public int getAddressLength(final byte firstByte) {
+			return ADDRESS_LENGTH;
+		}
+
+		@Override
+		public boolean isOf(final String s) {
+			return s.matches(ADDRESS_REGEX);
+		}
 	},
 	
 	DOMAINNAME((byte) 0x03) {
@@ -69,46 +69,8 @@ public enum AddressType {
 				"^([a-z0-9]|[a-z0-9][a-z0-9-_]*[a-z0-9])(\\.([a-z0-9]|[a-z0-9][a-z0-9-_]*[a-z0-9]))*$";
 		
 		@Override
-		public int getAddressLength(final byte firstByte) {
-			if (firstByte < 0x01) {
-				throw new IllegalArgumentException(
-						"domain name address length must be at 1");
-			}
-			// length of the byte of the address length + the address length 
-			return 1 + UnsignedByte.newInstance(firstByte).intValue();
-		}
-
-		@Override
-		public boolean isAddress(final String s) {
-			return s.matches(ADDRESS_REGEX);
-		}
-
-		@Override
-		public String readAddress(final byte[] b) {
-			if (b.length <= 1) {
-				throw new IllegalArgumentException(
-						"expected address length greater than 1. "
-						+ "actual address length is " + b.length);
-			}
-			int octetCount = UnsignedByte.newInstance(b[0]).intValue();
-			if (octetCount != b.length - 1) {
-				throw new IllegalArgumentException(String.format(
-						"expected address length is %s. "
-						+ "actual address length is %s", 
-						octetCount + 1, 
-						b.length));
-			}
-			String address = new String(Arrays.copyOfRange(b, 1, b.length));
-			if (!this.isAddress(address)) {
-				throw new IllegalArgumentException(String.format(
-						"invalid address: %s", address));
-			}
-			return address;
-		}
-
-		@Override
-		public byte[] writeAddress(final String address) {
-			if (!this.isAddress(address)) {
+		public byte[] convertToByteArray(final String address) {
+			if (!this.isOf(address)) {
 				throw new IllegalArgumentException(String.format(
 						"invalid address: %s", address));
 			}
@@ -127,6 +89,45 @@ public enum AddressType {
 			}
 			return b;
 		}
+
+		@Override
+		public String convertToString(final byte[] address) {
+			if (address.length <= 1) {
+				throw new IllegalArgumentException(
+						"expected address length greater than 1. "
+						+ "actual address length is " + address.length);
+			}
+			int octetCount = UnsignedByte.newInstance(address[0]).intValue();
+			if (octetCount != address.length - 1) {
+				throw new IllegalArgumentException(String.format(
+						"expected address length is %s. "
+						+ "actual address length is %s", 
+						octetCount + 1, 
+						address.length));
+			}
+			String addr = new String(Arrays.copyOfRange(
+					address, 1, address.length));
+			if (!this.isOf(addr)) {
+				throw new IllegalArgumentException(String.format(
+						"invalid address: %s", addr));
+			}
+			return addr;
+		}
+
+		@Override
+		public int getAddressLength(final byte firstByte) {
+			if (firstByte < 0x01) {
+				throw new IllegalArgumentException(
+						"domain name address length must be at 1");
+			}
+			// length of the byte of the address length + the address length 
+			return 1 + UnsignedByte.newInstance(firstByte).intValue();
+		}
+
+		@Override
+		public boolean isOf(final String s) {
+			return s.matches(ADDRESS_REGEX);
+		}
 	},
 	
 	IP_V6_ADDRESS((byte) 0x04) {
@@ -136,37 +137,8 @@ public enum AddressType {
 				"^[a-fA-F0-9]{1,4}(:[a-fA-F0-9]{1,4}){7}$";
 		
 		@Override
-		public int getAddressLength(final byte firstByte) {
-			return ADDRESS_LENGTH;
-		}
-
-		@Override
-		public boolean isAddress(final String s) {
-			return s.matches(ADDRESS_REGEX);
-		}
-
-		@Override
-		public String readAddress(final byte[] b) {
-			InetAddress address = null;
-			try {
-				address = InetAddress.getByAddress(b);
-			} catch (UnknownHostException e) {
-				throw new IllegalArgumentException(String.format(
-						"expected address length is %s. "
-						+ "actual address length is %s", 
-						ADDRESS_LENGTH, 
-						b.length));
-			}
-			if (!(address instanceof Inet6Address)) {
-				throw new IllegalArgumentException(String.format(
-						"raw IP address (%s) not IPv6", address));
-			}
-			return address.getHostAddress();
-		}
-
-		@Override
-		public byte[] writeAddress(final String address) {
-			if (!this.isAddress(address)) {
+		public byte[] convertToByteArray(final String address) {
+			if (!this.isOf(address)) {
 				throw new IllegalArgumentException(String.format(
 						"invalid address: %s", address));
 			}
@@ -178,15 +150,44 @@ public enum AddressType {
 			}
 			return inetAddress.getAddress();
 		}
+
+		@Override
+		public String convertToString(final byte[] address) {
+			InetAddress inetAddress = null;
+			try {
+				inetAddress = InetAddress.getByAddress(address);
+			} catch (UnknownHostException e) {
+				throw new IllegalArgumentException(String.format(
+						"expected address length is %s. "
+						+ "actual address length is %s", 
+						ADDRESS_LENGTH, 
+						address.length));
+			}
+			if (!(inetAddress instanceof Inet6Address)) {
+				throw new IllegalArgumentException(String.format(
+						"raw IP address (%s) not IPv6", inetAddress));
+			}
+			return inetAddress.getHostAddress();
+		}
+
+		@Override
+		public int getAddressLength(final byte firstByte) {
+			return ADDRESS_LENGTH;
+		}
+
+		@Override
+		public boolean isOf(final String s) {
+			return s.matches(ADDRESS_REGEX);
+		}
 	};
 	
-	public static AddressType get(final String address) {
+	public static AddressType of(final String address) {
 		for (AddressType addressType : AddressType.values()) {
-			if (!addressType.equals(DOMAINNAME) && addressType.isAddress(address)) {
+			if (!addressType.equals(DOMAINNAME) && addressType.isOf(address)) {
 				return addressType;
 			}
 		}
-		if (DOMAINNAME.isAddress(address)) {
+		if (DOMAINNAME.isOf(address)) {
 			return DOMAINNAME;
 		}
 		throw new IllegalArgumentException(
@@ -230,11 +231,11 @@ public enum AddressType {
 		return this.byteValue;
 	}
 	
+	public abstract byte[] convertToByteArray(final String address);
+	
+	public abstract String convertToString(final byte[] address);
+	
 	public abstract int getAddressLength(final byte firstByte);
 	
-	public abstract boolean isAddress(final String s);
-	
-	public abstract String readAddress(final byte[] b);
-	
-	public abstract byte[] writeAddress(final String address);
+	public abstract boolean isOf(final String s);
 }

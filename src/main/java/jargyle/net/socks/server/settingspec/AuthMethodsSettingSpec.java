@@ -10,12 +10,6 @@ public final class AuthMethodsSettingSpec extends SettingSpec {
 			final String s, final AuthMethods defaultVal) {
 		super(s, defaultVal);
 	}
-	
-	@Override
-	public Setting getDefaultSetting() {
-		return Setting.newInstance(
-				this, AuthMethods.class.cast(this.defaultValue));
-	}
 
 	@Override
 	public Setting newSetting(final Object value) {

@@ -14,12 +14,6 @@ public final class UsernamePropertySpec extends PropertySpec {
 	public UsernamePropertySpec(final String s, final String defaultVal) {
 		super(s, getValidatedUsername(defaultVal));
 	}
-	
-	@Override
-	public Property getDefaultProperty() {
-		return Property.newInstance(
-				this, String.class.cast(this.defaultValue));
-	}
 
 	@Override
 	public Property newProperty(final Object value) {

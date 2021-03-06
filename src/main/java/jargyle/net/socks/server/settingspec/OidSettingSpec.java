@@ -11,11 +11,6 @@ public final class OidSettingSpec extends SettingSpec {
 	public OidSettingSpec(final String s, final Oid defaultVal) {
 		super(s, defaultVal);
 	}
-	
-	@Override
-	public Setting getDefaultSetting() {
-		return Setting.newInstance(this, Oid.class.cast(this.defaultValue));
-	}
 
 	@Override
 	public Setting newSetting(final Object value) {

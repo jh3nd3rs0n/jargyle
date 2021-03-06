@@ -10,12 +10,6 @@ public final class NonnegativeIntegerSettingSpec extends SettingSpec {
 			final String s, final NonnegativeInteger defaultVal) {
 		super(s, defaultVal);
 	}
-	
-	@Override
-	public Setting getDefaultSetting() {
-		return Setting.newInstance(
-				this, NonnegativeInteger.class.cast(this.defaultValue));
-	}
 
 	@Override
 	public Setting newSetting(final Object value) {

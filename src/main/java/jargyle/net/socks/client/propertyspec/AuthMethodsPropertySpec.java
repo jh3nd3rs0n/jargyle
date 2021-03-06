@@ -12,12 +12,6 @@ public final class AuthMethodsPropertySpec extends PropertySpec {
 	}
 
 	@Override
-	public Property getDefaultProperty() {
-		return Property.newInstance(
-				this, AuthMethods.class.cast(this.defaultValue));
-	}
-
-	@Override
 	public Property newProperty(final Object value) {
 		AuthMethods val = AuthMethods.class.cast(value);
 		return Property.newInstance(this, val);

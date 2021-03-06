@@ -10,12 +10,6 @@ public final class GssapiProtectionLevelsSettingSpec extends SettingSpec {
 			final String s, final GssapiProtectionLevels defaultVal) {
 		super(s, defaultVal);
 	}
-	
-	@Override
-	public Setting getDefaultSetting() {
-		return Setting.newInstance(
-				this, GssapiProtectionLevels.class.cast(this.defaultValue));
-	}
 
 	@Override
 	public Setting newSetting(final Object value) {

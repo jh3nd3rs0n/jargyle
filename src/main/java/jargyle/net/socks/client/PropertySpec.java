@@ -143,16 +143,17 @@ public abstract class PropertySpec {
 		return VALUES.toArray(new PropertySpec[VALUES.size()]);
 	}
 
-	
-	protected final Object defaultValue;
+	private final Property defaultProperty;
 	private final String string;
 	
 	public PropertySpec(final String s, final Object defaultVal) {
-		this.defaultValue = defaultVal;
+		this.defaultProperty = Property.newInstance(this, defaultVal);
 		this.string = s;
 	}
 	
-	public abstract Property getDefaultProperty();
+	public final Property getDefaultProperty() {
+		return this.defaultProperty;
+	}
 	
 	public abstract Property newProperty(final Object value);
 	

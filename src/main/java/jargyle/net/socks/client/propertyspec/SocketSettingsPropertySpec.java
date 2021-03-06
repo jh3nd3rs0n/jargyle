@@ -12,12 +12,6 @@ public final class SocketSettingsPropertySpec extends PropertySpec {
 	}
 
 	@Override
-	public Property getDefaultProperty() {
-		return Property.newInstance(
-				this, SocketSettings.class.cast(this.defaultValue));
-	}
-
-	@Override
 	public Property newProperty(final Object value) {
 		SocketSettings val = SocketSettings.class.cast(value);
 		return Property.newInstance(this, val);

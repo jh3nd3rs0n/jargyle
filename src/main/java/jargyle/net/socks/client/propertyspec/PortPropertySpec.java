@@ -11,11 +11,6 @@ public final class PortPropertySpec extends PropertySpec {
 	}
 
 	@Override
-	public Property getDefaultProperty() {
-		return Property.newInstance(this, Port.class.cast(this.defaultValue));
-	}
-
-	@Override
 	public Property newProperty(final Object value) {
 		Port val = Port.class.cast(value);
 		return Property.newInstance(this, val);

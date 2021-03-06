@@ -10,12 +10,6 @@ public final class BooleanPropertySpec extends PropertySpec {
 	}
 
 	@Override
-	public Property getDefaultProperty() {
-		return Property.newInstance(
-				this, Boolean.class.cast(this.defaultValue));
-	}
-
-	@Override
 	public Property newProperty(final Object value) {
 		Boolean val = Boolean.class.cast(value);
 		return Property.newInstance(this, val);

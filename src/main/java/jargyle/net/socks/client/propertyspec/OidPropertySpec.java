@@ -23,11 +23,6 @@ public final class OidPropertySpec extends PropertySpec {
 	}
 
 	@Override
-	public Property getDefaultProperty() {
-		return Property.newInstance(this, Oid.class.cast(this.defaultValue));
-	}
-
-	@Override
 	public Property newProperty(final Object value) {
 		Oid val = Oid.class.cast(value);
 		return Property.newInstance(this, val);

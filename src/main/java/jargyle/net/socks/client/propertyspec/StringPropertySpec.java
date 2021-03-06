@@ -10,11 +10,6 @@ public final class StringPropertySpec extends PropertySpec {
 	}
 
 	@Override
-	public Property getDefaultProperty() {
-		return Property.newInstance(this, String.class.cast(this.defaultValue));
-	}
-
-	@Override
 	public Property newProperty(final Object value) {
 		String val = String.class.cast(value);
 		return Property.newInstance(this, val);

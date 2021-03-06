@@ -8,11 +8,6 @@ public final class StringSettingSpec extends SettingSpec {
 	public StringSettingSpec(final String s, final String defaultVal) {
 		super(s, defaultVal);
 	}
-	
-	@Override
-	public Setting getDefaultSetting() {
-		return Setting.newInstance(this, String.class.cast(this.defaultValue));
-	}
 
 	@Override
 	public Setting newSetting(final Object value) {

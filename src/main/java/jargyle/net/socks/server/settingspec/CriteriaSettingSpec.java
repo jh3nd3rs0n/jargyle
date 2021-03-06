@@ -9,11 +9,6 @@ public final class CriteriaSettingSpec extends SettingSpec {
 	public CriteriaSettingSpec(final String s, final Criteria defaultVal) {
 		super(s, defaultVal);
 	}
-	
-	@Override
-	public Setting getDefaultSetting() {
-		return Setting.newInstance(this, Criteria.class.cast(this.defaultValue));
-	}
 
 	@Override
 	public Setting newSetting(final Object value) {

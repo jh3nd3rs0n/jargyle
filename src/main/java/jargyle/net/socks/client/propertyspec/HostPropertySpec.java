@@ -13,11 +13,6 @@ public final class HostPropertySpec extends PropertySpec {
 	}
 
 	@Override
-	public Property getDefaultProperty() {
-		return Property.newInstance(this, Host.class.cast(this.defaultValue));
-	}
-
-	@Override
 	public Property newProperty(final Object value) {
 		Host val = Host.class.cast(value);
 		return Property.newInstance(this, val);

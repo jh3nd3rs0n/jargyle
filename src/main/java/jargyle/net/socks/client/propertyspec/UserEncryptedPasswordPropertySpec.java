@@ -23,12 +23,6 @@ public final class UserEncryptedPasswordPropertySpec extends PropertySpec {
 	}
 
 	@Override
-	public Property getDefaultProperty() {
-		return Property.newInstance(
-				this, EncryptedPassword.class.cast(this.defaultValue));
-	}
-
-	@Override
 	public Property newProperty(final Object value) {
 		EncryptedPassword val = EncryptedPassword.class.cast(value);
 		return Property.newInstance(this, getValidatedEncryptedPassword(val));

@@ -697,15 +697,17 @@ public abstract class SettingSpec {
 		return VALUES.toArray(new SettingSpec[VALUES.size()]);
 	}
 	
-	protected final Object defaultValue;
+	private final Setting defaultSetting;
 	private final String string;
 		
 	public SettingSpec(final String s, final Object defaultVal) {
-		this.defaultValue = defaultVal;
+		this.defaultSetting = Setting.newInstance(this, defaultVal);
 		this.string = s;
 	}
 	
-	public abstract Setting getDefaultSetting();
+	public final Setting getDefaultSetting() {
+		return this.defaultSetting;
+	}
 	
 	public abstract Setting newSetting(final Object value);
 	

@@ -12,12 +12,6 @@ public final class PositiveIntegerPropertySpec extends PropertySpec {
 	}
 
 	@Override
-	public Property getDefaultProperty() {
-		return Property.newInstance(
-				this, PositiveInteger.class.cast(this.defaultValue));
-	}
-
-	@Override
 	public Property newProperty(final Object value) {
 		PositiveInteger val = PositiveInteger.class.cast(value);
 		return Property.newInstance(this, val);

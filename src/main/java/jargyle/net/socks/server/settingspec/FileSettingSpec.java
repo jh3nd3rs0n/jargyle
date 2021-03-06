@@ -10,11 +10,6 @@ public final class FileSettingSpec extends SettingSpec {
 	public FileSettingSpec(final String s, final File defaultVal) {
 		super(s, defaultVal);
 	}
-	
-	@Override
-	public Setting getDefaultSetting() {
-		return Setting.newInstance(this, File.class.cast(this.defaultValue));
-	}
 
 	@Override
 	public Setting newSetting(final Object value) {

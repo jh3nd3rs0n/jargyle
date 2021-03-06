@@ -8,11 +8,6 @@ public final class BooleanSettingSpec extends SettingSpec {
 	public BooleanSettingSpec(final String s, final Boolean defaultVal) {
 		super(s, defaultVal);
 	}
-	
-	@Override
-	public Setting getDefaultSetting() {
-		return Setting.newInstance(this, Boolean.class.cast(this.defaultValue));
-	}
 
 	@Override
 	public Setting newSetting(final Object value) {

@@ -9,11 +9,6 @@ public final class PortSettingSpec extends SettingSpec {
 	public PortSettingSpec(final String s, final Port defaultVal) {
 		super(s, defaultVal);
 	}
-	
-	@Override
-	public Setting getDefaultSetting() {
-		return Setting.newInstance(this, Port.class.cast(this.defaultValue));
-	}
 
 	@Override
 	public Setting newSetting(final Object value) {

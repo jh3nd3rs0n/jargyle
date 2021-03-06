@@ -12,11 +12,6 @@ public final class FilePropertySpec extends PropertySpec {
 	}
 
 	@Override
-	public Property getDefaultProperty() {
-		return Property.newInstance(this, File.class.cast(this.defaultValue));
-	}
-
-	@Override
 	public Property newProperty(final Object value) {
 		File val = File.class.cast(value);
 		if (!val.exists()) {

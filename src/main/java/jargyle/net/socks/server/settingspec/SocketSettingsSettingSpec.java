@@ -10,12 +10,6 @@ public final class SocketSettingsSettingSpec extends SettingSpec {
 			final String s, final SocketSettings defaultVal) {
 		super(s, defaultVal);
 	}
-	
-	@Override
-	public Setting getDefaultSetting() {
-		return Setting.newInstance(
-				this, SocketSettings.class.cast(this.defaultValue));
-	}
 
 	@Override
 	public Setting newSetting(final Object value) {

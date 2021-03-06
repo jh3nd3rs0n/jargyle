@@ -12,12 +12,6 @@ public final class Socks5RequestCriteriaSettingSpec extends SettingSpec {
 	}
 
 	@Override
-	public Setting getDefaultSetting() {
-		return Setting.newInstance(
-				this, Socks5RequestCriteria.class.cast(this.defaultValue));
-	}
-
-	@Override
 	public Setting newSetting(final Object value) {
 		Socks5RequestCriteria val = Socks5RequestCriteria.class.cast(value);
 		return Setting.newInstance(this, val);

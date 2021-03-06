@@ -16,7 +16,6 @@ import jargyle.net.Host;
 import jargyle.net.PerformancePreferences;
 import jargyle.net.SocketSettingSpec;
 import jargyle.net.SocketSettings;
-import jargyle.net.socks.transport.v5.AddressType;
 import jargyle.net.socks.transport.v5.Command;
 import jargyle.net.socks.transport.v5.Reply;
 import jargyle.net.socks.transport.v5.Socks5Reply;
@@ -283,10 +282,8 @@ public final class Socks5ServerSocket extends ServerSocket {
 				bAddr = Host.getIpv4WildcardInstance().toInetAddress();
 			}
 			String address = bAddr.getHostAddress();
-			AddressType addressType = AddressType.of(address);
 			Socks5Request socks5Req = Socks5Request.newInstance(
 					Command.BIND, 
-					addressType, 
 					address, 
 					prt);
 			outStream.write(socks5Req.toByteArray());

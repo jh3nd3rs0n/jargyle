@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 
 import jargyle.net.HostResolver;
 import jargyle.net.Port;
-import jargyle.net.socks.transport.v5.AddressType;
 import jargyle.net.socks.transport.v5.UdpRequestHeader;
 import jargyle.util.Criteria;
 import jargyle.util.Criterion;
@@ -175,10 +174,8 @@ final class UdpRelayServer {
 				final DatagramPacket packet) {
 			String address = packet.getAddress().getHostAddress();
 			int port = packet.getPort();
-			AddressType addressType = AddressType.of(address);
 			UdpRequestHeader header = UdpRequestHeader.newInstance(
 					0,
-					addressType,
 					address,
 					port,
 					packet.getData());

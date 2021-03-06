@@ -11,7 +11,6 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.nio.channels.SocketChannel;
 
-import jargyle.net.socks.transport.v5.AddressType;
 import jargyle.net.socks.transport.v5.Command;
 import jargyle.net.socks.transport.v5.Reply;
 import jargyle.net.socks.transport.v5.Socks5Reply;
@@ -79,10 +78,8 @@ public final class Socks5Socket extends Socket {
 			InputStream inputStream = sock.getInputStream();
 			OutputStream outputStream = sock.getOutputStream();
 			String address = inetAddress.getHostAddress();
-			AddressType addressType = AddressType.of(address);
 			Socks5Request socks5Req = Socks5Request.newInstance(
 					Command.CONNECT, 
-					addressType, 
 					address, 
 					port);
 			outputStream.write(socks5Req.toByteArray());

@@ -12,7 +12,6 @@ public class UdpRequestHeaderTest {
 	public void testNewInstanceIntAddressTypeStringIntByteArray01() {
 		UdpRequestHeader udpDatagram1 = UdpRequestHeader.newInstance(
 				0, 
-				AddressType.IP_V4_ADDRESS, 
 				"12.216.103.24", 
 				0, 
 				TestStringConstants.STRING_01.getBytes());
@@ -24,7 +23,6 @@ public class UdpRequestHeaderTest {
 	public void testNewInstanceIntAddressTypeStringIntByteArray02() {
 		UdpRequestHeader udpDatagram1 = UdpRequestHeader.newInstance(
 				1, 
-				AddressType.DOMAINNAME, 
 				"google.com", 
 				1234, 
 				TestStringConstants.STRING_02.getBytes());
@@ -36,7 +34,6 @@ public class UdpRequestHeaderTest {
 	public void testNewInstanceIntAddressTypeStringIntByteArray03() {
 		UdpRequestHeader udpDatagram1 = UdpRequestHeader.newInstance(
 				255, 
-				AddressType.IP_V6_ADDRESS, 
 				"abcd:1234:ef56:abcd:789e:f123:456a:b789", 
 				0xffff, 
 				TestStringConstants.STRING_03.getBytes());

@@ -54,7 +54,6 @@ public final class Socks5HostResolver extends HostResolver {
 		OutputStream outputStream = sock.getOutputStream();
 		Socks5Request socks5Req = Socks5Request.newInstance(
 				Command.RESOLVE, 
-				addressType, 
 				host, 
 				0);
 		outputStream.write(socks5Req.toByteArray());

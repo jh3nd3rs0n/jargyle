@@ -32,7 +32,6 @@ public final class Socks5Reply {
 		}
 		return newInstance(
 				reply, 
-				AddressType.IP_V4_ADDRESS,
 				Host.getIpv4WildcardInstance().toString(),
 				0);
 	}
@@ -49,7 +48,6 @@ public final class Socks5Reply {
 	
 	public static Socks5Reply newInstance(
 			final Reply reply,
-			final AddressType addressType,
 			final String serverBoundAddress,
 			final int serverBoundPort) {
 		byte[] serverBoundAddressBytes = serverBoundAddress.getBytes();
@@ -67,6 +65,7 @@ public final class Socks5Reply {
 					UnsignedShort.MIN_INT_VALUE,
 					UnsignedShort.MAX_INT_VALUE));
 		}
+		AddressType addressType = AddressType.of(serverBoundAddress);
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		Version version = Version.V5;
 		out.write(version.byteValue());

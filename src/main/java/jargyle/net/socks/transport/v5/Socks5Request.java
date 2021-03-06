@@ -37,7 +37,6 @@ public final class Socks5Request {
 	
 	public static Socks5Request newInstance(
 			final Command command,
-			final AddressType addressType,
 			final String desiredDestinationAddress,
 			final int desiredDestinationPort) {
 		byte[] desiredDestinationAddressBytes = desiredDestinationAddress.getBytes();
@@ -55,6 +54,7 @@ public final class Socks5Request {
 					UnsignedShort.MIN_INT_VALUE,
 					UnsignedShort.MAX_INT_VALUE));
 		}
+		AddressType addressType = AddressType.of(desiredDestinationAddress);
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		Version version = Version.V5;
 		out.write(version.byteValue());

@@ -28,7 +28,6 @@ import jargyle.net.socks.server.Configuration;
 import jargyle.net.socks.server.SettingSpec;
 import jargyle.net.socks.server.Settings;
 import jargyle.net.socks.server.TcpRelayServer;
-import jargyle.net.socks.transport.v5.AddressType;
 import jargyle.net.socks.transport.v5.AuthMethod;
 import jargyle.net.socks.transport.v5.AuthMethods;
 import jargyle.net.socks.transport.v5.ClientMethodSelectionMessage;
@@ -404,11 +403,9 @@ public final class Socks5Worker implements Runnable {
 			}
 			InetAddress inetAddress = listenSocket.getInetAddress();
 			String serverBoundAddress =	inetAddress.getHostAddress();
-			AddressType addressType = AddressType.of(serverBoundAddress);
 			int serverBoundPort = listenSocket.getLocalPort();
 			socks5Rep = Socks5Reply.newInstance(
 					Reply.SUCCEEDED, 
-					addressType, 
 					serverBoundAddress, 
 					serverBoundPort);
 			LOGGER.debug(this.format(String.format(
@@ -444,11 +441,9 @@ public final class Socks5Worker implements Runnable {
 				return;
 			}
 			serverBoundAddress = externalIncomingAddress;
-			addressType = AddressType.of(serverBoundAddress);
 			serverBoundPort = externalIncomingSocket.getLocalPort();
 			socks5Rep = Socks5Reply.newInstance(
 					Reply.SUCCEEDED, 
-					addressType, 
 					serverBoundAddress, 
 					serverBoundPort);
 			LOGGER.debug(this.format(String.format(
@@ -512,11 +507,9 @@ public final class Socks5Worker implements Runnable {
 			}
 			String serverBoundAddress = 
 					serverSocket.getInetAddress().getHostAddress();
-			AddressType addressType = AddressType.of(serverBoundAddress);
 			int serverBoundPort = serverSocket.getPort();
 			socks5Rep = Socks5Reply.newInstance(
 					Reply.SUCCEEDED, 
-					addressType, 
 					serverBoundAddress, 
 					serverBoundPort);
 			LOGGER.debug(this.format(String.format(
@@ -573,11 +566,9 @@ public final class Socks5Worker implements Runnable {
 			return;
 		}
 		String serverBoundAddress = inetAddress.getHostAddress();
-		AddressType addressType = AddressType.of(serverBoundAddress);
 		int serverBoundPort = desiredDestinationPort;
 		socks5Rep = Socks5Reply.newInstance(
 				Reply.SUCCEEDED, 
-				addressType, 
 				serverBoundAddress, 
 				serverBoundPort);
 		LOGGER.debug(this.format(String.format(
@@ -631,11 +622,9 @@ public final class Socks5Worker implements Runnable {
 				inetAddress = this.clientSocket.getLocalAddress();
 				serverBoundAddress = inetAddress.getHostAddress();
 			}
-			AddressType addressType = AddressType.of(serverBoundAddress);
 			int serverBoundPort = clientDatagramSock.getLocalPort();
 			socks5Rep = Socks5Reply.newInstance(
 					Reply.SUCCEEDED, 
-					addressType, 
 					serverBoundAddress, 
 					serverBoundPort);
 			LOGGER.debug(this.format(String.format(

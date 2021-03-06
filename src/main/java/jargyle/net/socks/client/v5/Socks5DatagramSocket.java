@@ -19,7 +19,6 @@ import jargyle.net.Host;
 import jargyle.net.Port;
 import jargyle.net.SocketSettings;
 import jargyle.net.socks.client.PropertySpec;
-import jargyle.net.socks.transport.v5.AddressType;
 import jargyle.net.socks.transport.v5.Command;
 import jargyle.net.socks.transport.v5.Reply;
 import jargyle.net.socks.transport.v5.Socks5Reply;
@@ -183,10 +182,8 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			}
 			String address = p.getAddress().getHostAddress();
 			int port = p.getPort();
-			AddressType addressType = AddressType.of(address);
 			byte[] headerBytes = UdpRequestHeader.newInstance(
 					0,
-					addressType,
 					address,
 					port,
 					p.getData()).toByteArray();
@@ -214,10 +211,8 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			int prt = this.datagramSocket.getLocalPort();
 			InputStream inputStream = sock.getInputStream();
 			OutputStream outputStream = sock.getOutputStream();
-			AddressType addressType = AddressType.of(address);
 			Socks5Request socks5Req = Socks5Request.newInstance(
 					Command.UDP_ASSOCIATE, 
-					addressType, 
 					address, 
 					prt);
 			outputStream.write(socks5Req.toByteArray());

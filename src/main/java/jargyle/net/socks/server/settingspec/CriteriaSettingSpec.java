@@ -7,13 +7,7 @@ import jargyle.util.Criteria;
 public final class CriteriaSettingSpec extends SettingSpec {
 
 	public CriteriaSettingSpec(final String s, final Criteria defaultVal) {
-		super(s, defaultVal);
-	}
-
-	@Override
-	public Setting newSetting(final Object value) {
-		Criteria val = Criteria.class.cast(value);
-		return super.newSetting(val);
+		super(s, Criteria.class, defaultVal);
 	}
 
 	@Override

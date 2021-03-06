@@ -19,13 +19,7 @@ public final class OidPropertySpec extends PropertySpec {
 	}
 	
 	public OidPropertySpec(final String s, final String defaultVal) {
-		super(s, newOid(defaultVal));
-	}
-
-	@Override
-	public Property newProperty(final Object value) {
-		Oid val = Oid.class.cast(value);
-		return super.newProperty(val);
+		super(s, Oid.class, newOid(defaultVal));
 	}
 
 	@Override

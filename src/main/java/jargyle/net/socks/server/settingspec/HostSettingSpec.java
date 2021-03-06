@@ -9,13 +9,7 @@ import jargyle.net.socks.server.SettingSpec;
 public final class HostSettingSpec extends SettingSpec {
 
 	public HostSettingSpec(final String s, final Host defaultVal) {
-		super(s, defaultVal);
-	}
-
-	@Override
-	public Setting newSetting(final Object value) {
-		Host val = Host.class.cast(value);
-		return super.newSetting(val);
+		super(s, Host.class, defaultVal);
 	}
 
 	@Override

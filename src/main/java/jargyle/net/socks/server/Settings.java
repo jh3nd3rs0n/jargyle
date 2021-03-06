@@ -90,8 +90,8 @@ public final class Settings {
 	}
 	
 	public <T> T getLastValue(
-			final SettingSpec settingSpec, final Class<T> type) {
-		List<T> values = this.getValues(settingSpec, type);
+			final SettingSpec settingSpec, final Class<T> valueType) {
+		List<T> values = this.getValues(settingSpec, valueType);
 		T value = null;
 		int size = values.size();
 		if (size > 0) {
@@ -101,20 +101,18 @@ public final class Settings {
 	}
 	
 	public <T> List<T> getValues(
-			final SettingSpec settingSpec, final Class<T> type) {
+			final SettingSpec settingSpec, final Class<T> valueType) {
 		List<T> values = new ArrayList<T>();
 		for (Setting setting : this.settings) {
 			if (setting.getSettingSpec().equals(settingSpec)) {
-				@SuppressWarnings("unchecked")
-				T val = (T) setting.getValue();
-				values.add(val);
+				T value = valueType.cast(setting.getValue());
+				values.add(value);
 			}
 		}
 		if (values.isEmpty()) {
 			Setting defaultSetting = settingSpec.getDefaultSetting();
-			@SuppressWarnings("unchecked")
-			T val = (T) defaultSetting.getValue();
-			values.add(val);
+			T value = valueType.cast(defaultSetting.getValue());
+			values.add(value);
 		}
 		return Collections.unmodifiableList(values);
 	}
@@ -123,7 +121,8 @@ public final class Settings {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((this.settings == null) ? 0 : this.settings.hashCode());
+		result = prime * result + ((this.settings == null) ? 
+				0 : this.settings.hashCode());
 		return result;
 	}
 

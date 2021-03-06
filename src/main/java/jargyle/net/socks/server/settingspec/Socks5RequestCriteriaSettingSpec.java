@@ -8,13 +8,7 @@ public final class Socks5RequestCriteriaSettingSpec extends SettingSpec {
 
 	public Socks5RequestCriteriaSettingSpec(
 			final String s, final Socks5RequestCriteria defaultVal) {
-		super(s, defaultVal);
-	}
-
-	@Override
-	public Setting newSetting(final Object value) {
-		Socks5RequestCriteria val = Socks5RequestCriteria.class.cast(value);
-		return super.newSetting(val);
+		super(s, Socks5RequestCriteria.class, defaultVal);
 	}
 
 	@Override

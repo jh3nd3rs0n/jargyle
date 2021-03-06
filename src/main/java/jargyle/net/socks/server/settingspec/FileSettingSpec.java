@@ -8,7 +8,7 @@ import jargyle.net.socks.server.SettingSpec;
 public final class FileSettingSpec extends SettingSpec {
 
 	public FileSettingSpec(final String s, final File defaultVal) {
-		super(s, defaultVal);
+		super(s, File.class, defaultVal);
 	}
 
 	@Override

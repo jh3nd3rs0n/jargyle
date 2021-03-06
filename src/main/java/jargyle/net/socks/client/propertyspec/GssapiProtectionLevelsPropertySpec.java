@@ -8,13 +8,7 @@ public final class GssapiProtectionLevelsPropertySpec extends PropertySpec {
 
 	public GssapiProtectionLevelsPropertySpec(
 			final String s, final GssapiProtectionLevels defaultVal) {
-		super(s, defaultVal);
-	}
-
-	@Override
-	public Property newProperty(final Object value) {
-		GssapiProtectionLevels val = GssapiProtectionLevels.class.cast(value);
-		return super.newProperty(val);
+		super(s, GssapiProtectionLevels.class, defaultVal);
 	}
 
 	@Override

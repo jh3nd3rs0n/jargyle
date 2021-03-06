@@ -8,13 +8,7 @@ public final class SocksServerUriSettingSpec extends SettingSpec {
 
 	public SocksServerUriSettingSpec(
 			final String s, final SocksServerUri defaultVal) {
-		super(s, defaultVal);
-	}
-
-	@Override
-	public Setting newSetting(final Object value) {
-		SocksServerUri val = SocksServerUri.class.cast(value);
-		return super.newSetting(val);
+		super(s, SocksServerUri.class, defaultVal);
 	}
 
 	@Override

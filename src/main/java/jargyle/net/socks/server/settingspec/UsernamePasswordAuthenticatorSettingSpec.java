@@ -8,14 +8,7 @@ public final class UsernamePasswordAuthenticatorSettingSpec extends SettingSpec 
 
 	public UsernamePasswordAuthenticatorSettingSpec(
 			final String s, final UsernamePasswordAuthenticator defaultVal) {
-		super(s, defaultVal);
-	}
-
-	@Override
-	public Setting newSetting(final Object value) {
-		UsernamePasswordAuthenticator val = 
-				UsernamePasswordAuthenticator.class.cast(value);
-		return super.newSetting(val);
+		super(s, UsernamePasswordAuthenticator.class, defaultVal);
 	}
 
 	@Override

@@ -12,7 +12,7 @@ public final class UsernamePropertySpec extends PropertySpec {
 	}
 	
 	public UsernamePropertySpec(final String s, final String defaultVal) {
-		super(s, getValidatedUsername(defaultVal));
+		super(s, String.class, getValidatedUsername(defaultVal));
 	}
 
 	@Override

@@ -699,10 +699,13 @@ public abstract class SettingSpec {
 	
 	private final Setting defaultSetting;
 	private final String string;
+	private final Class<?> valueType;
 		
-	public SettingSpec(final String s, final Object defaultVal) {
-		this.defaultSetting = new Setting(this, defaultVal);
+	public SettingSpec(
+			final String s, final Class<?> valType, final Object defaultVal) {
+		this.defaultSetting = new Setting(this, valType.cast(defaultVal));
 		this.string = s;
+		this.valueType = valType;
 	}
 	
 	public final Setting getDefaultSetting() {
@@ -710,7 +713,7 @@ public abstract class SettingSpec {
 	}
 	
 	public Setting newSetting(final Object value) {
-		return new Setting(this, value);
+		return new Setting(this, this.valueType.cast(value));
 	}
 	
 	public abstract Setting newSetting(final String value);

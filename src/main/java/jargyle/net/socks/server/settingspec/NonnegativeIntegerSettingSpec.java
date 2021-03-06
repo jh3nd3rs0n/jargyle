@@ -8,13 +8,7 @@ public final class NonnegativeIntegerSettingSpec extends SettingSpec {
 
 	public NonnegativeIntegerSettingSpec(
 			final String s, final NonnegativeInteger defaultVal) {
-		super(s, defaultVal);
-	}
-
-	@Override
-	public Setting newSetting(final Object value) {
-		NonnegativeInteger val = NonnegativeInteger.class.cast(value);
-		return super.newSetting(val);
+		super(s, NonnegativeInteger.class, defaultVal);
 	}
 
 	@Override

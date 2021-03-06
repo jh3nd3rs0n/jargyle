@@ -6,13 +6,7 @@ import jargyle.net.socks.client.PropertySpec;
 public final class StringPropertySpec extends PropertySpec {
 
 	public StringPropertySpec(final String s, final String defaultVal) {
-		super(s, defaultVal);
-	}
-
-	@Override
-	public Property newProperty(final Object value) {
-		String val = String.class.cast(value);
-		return super.newProperty((Object) val);
+		super(s, String.class, defaultVal);
 	}
 
 	@Override

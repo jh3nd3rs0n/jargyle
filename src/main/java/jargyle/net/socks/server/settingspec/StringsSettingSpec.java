@@ -7,13 +7,7 @@ import jargyle.util.Strings;
 public final class StringsSettingSpec extends SettingSpec {
 
 	public StringsSettingSpec(final String s, final Strings defaultVal) {
-		super(s, defaultVal);
-	}
-
-	@Override
-	public Setting newSetting(final Object value) {
-		Strings val = Strings.class.cast(value);
-		return super.newSetting(val);
+		super(s, Strings.class, defaultVal);
 	}
 
 	@Override

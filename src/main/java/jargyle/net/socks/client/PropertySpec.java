@@ -145,10 +145,13 @@ public abstract class PropertySpec {
 
 	private final Property defaultProperty;
 	private final String string;
+	private final Class<?> valueType;
 	
-	public PropertySpec(final String s, final Object defaultVal) {
-		this.defaultProperty = new Property(this, defaultVal);
+	public PropertySpec(
+			final String s, final Class<?> valType, final Object defaultVal) {
+		this.defaultProperty = new Property(this, valType.cast(defaultVal));
 		this.string = s;
+		this.valueType = valType;
 	}
 	
 	public final Property getDefaultProperty() {
@@ -156,7 +159,7 @@ public abstract class PropertySpec {
 	}
 	
 	public Property newProperty(final Object value) {
-		return new Property(this, value);
+		return new Property(this, this.valueType.cast(value));
 	}
 	
 	public abstract Property newProperty(final String value);

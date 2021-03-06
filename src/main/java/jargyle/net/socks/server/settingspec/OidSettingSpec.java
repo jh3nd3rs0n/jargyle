@@ -9,13 +9,7 @@ import jargyle.net.socks.server.SettingSpec;
 public final class OidSettingSpec extends SettingSpec {
 
 	public OidSettingSpec(final String s, final Oid defaultVal) {
-		super(s, defaultVal);
-	}
-
-	@Override
-	public Setting newSetting(final Object value) {
-		Oid val = Oid.class.cast(value);
-		return super.newSetting(val);
+		super(s, Oid.class, defaultVal);
 	}
 
 	@Override

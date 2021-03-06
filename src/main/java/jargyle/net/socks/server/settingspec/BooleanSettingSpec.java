@@ -6,13 +6,7 @@ import jargyle.net.socks.server.SettingSpec;
 public final class BooleanSettingSpec extends SettingSpec {
 
 	public BooleanSettingSpec(final String s, final Boolean defaultVal) {
-		super(s, defaultVal);
-	}
-
-	@Override
-	public Setting newSetting(final Object value) {
-		Boolean val = Boolean.class.cast(value);
-		return super.newSetting(val);
+		super(s, Boolean.class, defaultVal);
 	}
 
 	@Override

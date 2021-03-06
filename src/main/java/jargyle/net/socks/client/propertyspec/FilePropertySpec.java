@@ -8,7 +8,7 @@ import jargyle.net.socks.client.PropertySpec;
 public final class FilePropertySpec extends PropertySpec {
 
 	public FilePropertySpec(final String s, final File defaultVal) {
-		super(s, defaultVal);
+		super(s, File.class, defaultVal);
 	}
 
 	@Override

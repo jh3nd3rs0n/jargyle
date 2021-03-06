@@ -7,13 +7,7 @@ import jargyle.net.socks.server.SettingSpec;
 public final class PortSettingSpec extends SettingSpec {
 
 	public PortSettingSpec(final String s, final Port defaultVal) {
-		super(s, defaultVal);
-	}
-
-	@Override
-	public Setting newSetting(final Object value) {
-		Port val = Port.class.cast(value);
-		return super.newSetting(val);
+		super(s, Port.class, defaultVal);
 	}
 
 	@Override

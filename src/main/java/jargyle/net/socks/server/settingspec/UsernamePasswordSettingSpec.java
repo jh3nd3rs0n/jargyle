@@ -8,13 +8,7 @@ public final class UsernamePasswordSettingSpec extends SettingSpec {
 
 	public UsernamePasswordSettingSpec(
 			final String s, final UsernamePassword defaultVal) {
-		super(s, defaultVal);
-	}
-
-	@Override
-	public Setting newSetting(final Object value) {
-		UsernamePassword val = UsernamePassword.class.cast(value);
-		return super.newSetting(val);
+		super(s, UsernamePassword.class, defaultVal);
 	}
 
 	@Override

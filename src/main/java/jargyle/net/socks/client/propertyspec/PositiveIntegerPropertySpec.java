@@ -8,13 +8,7 @@ public final class PositiveIntegerPropertySpec extends PropertySpec {
 
 	public PositiveIntegerPropertySpec(
 			final String s, final PositiveInteger defaultVal) {
-		super(s, defaultVal);
-	}
-
-	@Override
-	public Property newProperty(final Object value) {
-		PositiveInteger val = PositiveInteger.class.cast(value);
-		return super.newProperty(val);
+		super(s, PositiveInteger.class, defaultVal);
 	}
 
 	@Override

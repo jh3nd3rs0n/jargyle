@@ -9,13 +9,7 @@ import jargyle.net.socks.client.PropertySpec;
 public final class HostPropertySpec extends PropertySpec {
 
 	public HostPropertySpec(final String s, final Host defaultVal) {
-		super(s, defaultVal);
-	}
-
-	@Override
-	public Property newProperty(final Object value) {
-		Host val = Host.class.cast(value);
-		return super.newProperty(val);
+		super(s, Host.class, defaultVal);
 	}
 
 	@Override

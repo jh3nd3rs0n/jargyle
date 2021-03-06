@@ -60,18 +60,15 @@ public final class Properties {
 	}
 	
 	public <T> T getValue(
-			final PropertySpec propertySpec, final Class<T> type) {
+			final PropertySpec propertySpec, final Class<T> valueType) {
 		T value = null;
 		Property property = this.properties.get(propertySpec);
 		if (property != null) {
-			@SuppressWarnings("unchecked")
-			T val = (T) property.getValue();
-			value = val;
+			value = valueType.cast(property.getValue());
 		}
 		if (value == null) {
-			@SuppressWarnings("unchecked")
-			T val = (T) propertySpec.getDefaultProperty().getValue();
-			value = val;
+			Property defaultProperty = propertySpec.getDefaultProperty();
+			value = valueType.cast(defaultProperty.getValue());
 		}
 		return value;
 	}
@@ -80,7 +77,8 @@ public final class Properties {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((this.properties == null) ? 0 : this.properties.hashCode());
+		result = prime * result + ((this.properties == null) ? 
+				0 : this.properties.hashCode());
 		return result;
 	}
 

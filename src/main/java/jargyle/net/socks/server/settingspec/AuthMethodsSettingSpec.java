@@ -8,13 +8,7 @@ public final class AuthMethodsSettingSpec extends SettingSpec {
 
 	public AuthMethodsSettingSpec(
 			final String s, final AuthMethods defaultVal) {
-		super(s, defaultVal);
-	}
-
-	@Override
-	public Setting newSetting(final Object value) {
-		AuthMethods val = AuthMethods.class.cast(value);
-		return super.newSetting(val);
+		super(s, AuthMethods.class, defaultVal);
 	}
 
 	@Override

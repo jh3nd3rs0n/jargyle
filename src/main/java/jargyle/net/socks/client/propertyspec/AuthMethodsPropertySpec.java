@@ -8,13 +8,7 @@ public final class AuthMethodsPropertySpec extends PropertySpec {
 
 	public AuthMethodsPropertySpec(
 			final String s, final AuthMethods defaultVal) {
-		super(s, defaultVal);
-	}
-
-	@Override
-	public Property newProperty(final Object value) {
-		AuthMethods val = AuthMethods.class.cast(value);
-		return super.newProperty(val);
+		super(s, AuthMethods.class, defaultVal);
 	}
 
 	@Override

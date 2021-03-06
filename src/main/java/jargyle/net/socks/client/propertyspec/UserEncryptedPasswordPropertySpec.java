@@ -19,7 +19,10 @@ public final class UserEncryptedPasswordPropertySpec extends PropertySpec {
 	
 	public UserEncryptedPasswordPropertySpec(
 			final String s, final EncryptedPassword defaultVal) {
-		super(s, getValidatedEncryptedPassword(defaultVal));
+		super(
+				s, 
+				EncryptedPassword.class, 
+				getValidatedEncryptedPassword(defaultVal));
 	}
 
 	@Override

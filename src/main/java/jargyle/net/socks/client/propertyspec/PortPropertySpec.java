@@ -7,13 +7,7 @@ import jargyle.net.socks.client.PropertySpec;
 public final class PortPropertySpec extends PropertySpec {
 
 	public PortPropertySpec(final String s, final Port defaultVal) {
-		super(s, defaultVal);
-	}
-
-	@Override
-	public Property newProperty(final Object value) {
-		Port val = Port.class.cast(value);
-		return super.newProperty(val);
+		super(s, Port.class, defaultVal);
 	}
 
 	@Override

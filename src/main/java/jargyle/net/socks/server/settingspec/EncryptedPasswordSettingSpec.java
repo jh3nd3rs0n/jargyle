@@ -8,13 +8,7 @@ public final class EncryptedPasswordSettingSpec extends SettingSpec {
 
 	public EncryptedPasswordSettingSpec(
 			final String s, final EncryptedPassword defaultVal) {
-		super(s, defaultVal);
-	}
-
-	@Override
-	public Setting newSetting(final Object value) {
-		EncryptedPassword val = EncryptedPassword.class.cast(value);
-		return super.newSetting(val);
+		super(s, EncryptedPassword.class, defaultVal);
 	}
 
 	@Override

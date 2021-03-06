@@ -33,7 +33,8 @@ public final class SocketSettings {
 		extends XmlAdapter<SocketSettingsXml, SocketSettings> {
 
 		@Override
-		public SocketSettingsXml marshal(final SocketSettings v) throws Exception {
+		public SocketSettingsXml marshal(
+				final SocketSettings v) throws Exception {
 			if (v == null) { return null; }
 			SocketSettingsXml socketSettingsXml = new SocketSettingsXml();
 			socketSettingsXml.socketSettings = new ArrayList<SocketSetting>(
@@ -42,7 +43,8 @@ public final class SocketSettings {
 		}
 
 		@Override
-		public SocketSettings unmarshal(final SocketSettingsXml v) throws Exception {
+		public SocketSettings unmarshal(
+				final SocketSettingsXml v) throws Exception {
 			if (v == null) { return null; }
 			return newInstance(v.socketSettings);
 		}
@@ -110,9 +112,9 @@ public final class SocketSettings {
 		}
 	}
 	
-	public void applyTo(final Socket Socket) throws SocketException {
+	public void applyTo(final Socket socket) throws SocketException {
 		for (SocketSetting socketSetting : this.socketSettings.values()) {
-			socketSetting.applyTo(Socket);
+			socketSetting.applyTo(socket);
 		}
 	}
 	
@@ -139,14 +141,13 @@ public final class SocketSettings {
 	}
 	
 	public <T> T getValue(
-			final SocketSettingSpec socketSettingSpec, final Class<T> type) {
+			final SocketSettingSpec socketSettingSpec, 
+			final Class<T> valueType) {
 		T value = null;
 		SocketSetting socketSetting = this.socketSettings.get(
 				socketSettingSpec);
 		if (socketSetting != null) {
-			@SuppressWarnings("unchecked")
-			T val = (T) socketSetting.getValue();
-			value = val; 
+			value = valueType.cast(socketSetting.getValue()); 
 		}
 		return value;
 	}
@@ -155,7 +156,8 @@ public final class SocketSettings {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((this.socketSettings == null) ? 0 : this.socketSettings.hashCode());
+		result = prime * result + ((this.socketSettings == null) ? 
+				0 : this.socketSettings.hashCode());
 		return result;
 	}
 	

@@ -17,7 +17,7 @@ public enum SocketSettingSpec {
 					+ "header for a TCP or UDP socket", 
 			usage = "IP_TOS=INTEGER_BETWEEN_0_AND_255"
 	)
-	IP_TOS {
+	IP_TOS(UnsignedByte.class) {
 		
 		@Override
 		public void apply(
@@ -30,20 +30,14 @@ public enum SocketSettingSpec {
 		@Override
 		public void apply(
 				final Object value,
-				final Socket Socket) throws SocketException {
+				final Socket socket) throws SocketException {
 			UnsignedByte b = UnsignedByte.class.cast(value);
-			Socket.setTrafficClass(b.intValue());
-		}
-
-		@Override
-		public SocketSetting newSocketSetting(final Object value) {
-			UnsignedByte val = UnsignedByte.class.cast(value);
-			return new SocketSetting(this, val);
+			socket.setTrafficClass(b.intValue());
 		}
 
 		@Override
 		public SocketSetting newSocketSetting(final String value) {
-			return new SocketSetting(this, UnsignedByte.newInstance(value));
+			return super.newSocketSetting(UnsignedByte.newInstance(value));
 		}
 		
 	},
@@ -55,7 +49,7 @@ public enum SocketSettingSpec {
 					+ "high bandwidth", 
 			usage = "PERF_PREF=3_DIGITS_EACH_BETWEEN_0_AND_2"
 	)
-	PERF_PREF {
+	PERF_PREF(PerformancePreferences.class) {
 		
 		@Override
 		public void apply(
@@ -68,20 +62,14 @@ public enum SocketSettingSpec {
 		@Override
 		public void apply(
 				final Object value,
-				final Socket Socket) throws SocketException {
+				final Socket socket) throws SocketException {
 			PerformancePreferences p = PerformancePreferences.class.cast(value);
-			p.applyTo(Socket);
-		}
-
-		@Override
-		public SocketSetting newSocketSetting(final Object value) {
-			PerformancePreferences val = PerformancePreferences.class.cast(value);
-			return new SocketSetting(this, val);
+			p.applyTo(socket);
 		}
 
 		@Override
 		public SocketSetting newSocketSetting(final String value) {
-			return new SocketSetting(this, PerformancePreferences.newInstance(value));
+			return super.newSocketSetting(PerformancePreferences.newInstance(value));
 		}
 		
 	},
@@ -90,7 +78,7 @@ public enum SocketSettingSpec {
 			doc = "Can send broadcast datagrams", 
 			usage = "SO_BROADCAST=true|false"
 	)
-	SO_BROADCAST {
+	SO_BROADCAST(Boolean.class) {
 		
 		@Override
 		public void apply(
@@ -101,14 +89,8 @@ public enum SocketSettingSpec {
 		}
 
 		@Override
-		public SocketSetting newSocketSetting(final Object value) {
-			Boolean val = Boolean.class.cast(value);
-			return new SocketSetting(this, val);
-		}
-
-		@Override
 		public SocketSetting newSocketSetting(final String value) {
-			return new SocketSetting(this, Boolean.valueOf(value));
+			return super.newSocketSetting(Boolean.valueOf(value));
 		}
 		
 	},
@@ -118,25 +100,19 @@ public enum SocketSettingSpec {
 					+ "in either direction", 
 			usage = "SO_KEEPALIVE=true|false"
 	)
-	SO_KEEPALIVE {
+	SO_KEEPALIVE(Boolean.class) {
 		
 		@Override
 		public void apply(
 				final Object value, 
-				final Socket Socket) throws SocketException {
+				final Socket socket) throws SocketException {
 			Boolean b = Boolean.class.cast(value);
-			Socket.setKeepAlive(b.booleanValue());
-		}
-
-		@Override
-		public SocketSetting newSocketSetting(final Object value) {
-			Boolean val = Boolean.class.cast(value);
-			return new SocketSetting(this, val);
+			socket.setKeepAlive(b.booleanValue());
 		}
 
 		@Override
 		public SocketSetting newSocketSetting(final String value) {
-			return new SocketSetting(this, Boolean.valueOf(value));
+			return super.newSocketSetting(Boolean.valueOf(value));
 		}
 		
 	},
@@ -145,25 +121,19 @@ public enum SocketSettingSpec {
 			doc = "Linger on closing the TCP socket in seconds", 
 			usage = "SO_LINGER=INTEGER_BETWEEN_0_AND_2147483647"
 	)
-	SO_LINGER {
+	SO_LINGER(NonnegativeInteger.class) {
 		
 		@Override
 		public void apply(
 				final Object value, 
-				final Socket Socket) throws SocketException {
+				final Socket socket) throws SocketException {
 			NonnegativeInteger i = NonnegativeInteger.class.cast(value);
-			Socket.setSoLinger(true, i.intValue());
-		}
-
-		@Override
-		public SocketSetting newSocketSetting(final Object value) {
-			NonnegativeInteger val = NonnegativeInteger.class.cast(value);
-			return new SocketSetting(this, val);
+			socket.setSoLinger(true, i.intValue());
 		}
 
 		@Override
 		public SocketSetting newSocketSetting(final String value) {
-			return new SocketSetting(this, NonnegativeInteger.newInstance(value));
+			return super.newSocketSetting(NonnegativeInteger.newInstance(value));
 		}
 		
 	},
@@ -172,25 +142,19 @@ public enum SocketSettingSpec {
 			doc = "Can receive TCP urgent data", 
 			usage = "SO_OOBINLINE=true|false"
 	)
-	SO_OOBINLINE {
+	SO_OOBINLINE(Boolean.class) {
 		
 		@Override
 		public void apply(
 				final Object value, 
-				final Socket Socket) throws SocketException {
+				final Socket socket) throws SocketException {
 			Boolean b = Boolean.class.cast(value);
-			Socket.setOOBInline(b.booleanValue());
-		}
-
-		@Override
-		public SocketSetting newSocketSetting(final Object value) {
-			Boolean val = Boolean.class.cast(value);
-			return new SocketSetting(this, val);
+			socket.setOOBInline(b.booleanValue());
 		}
 
 		@Override
 		public SocketSetting newSocketSetting(final String value) {
-			return new SocketSetting(this, Boolean.valueOf(value));
+			return super.newSocketSetting(Boolean.valueOf(value));
 		}
 
 	},
@@ -199,7 +163,7 @@ public enum SocketSettingSpec {
 			doc = "The receive buffer size", 
 			usage = "SO_RCVBUF=INTEGER_BETWEEN_1_AND_2147483647"
 	)
-	SO_RCVBUF {
+	SO_RCVBUF(PositiveInteger.class) {
 		
 		@Override
 		public void apply(
@@ -220,20 +184,14 @@ public enum SocketSettingSpec {
 		@Override
 		public void apply(
 				final Object value, 
-				final Socket Socket) throws SocketException {
+				final Socket socket) throws SocketException {
 			PositiveInteger i = PositiveInteger.class.cast(value);
-			Socket.setReceiveBufferSize(i.intValue());
-		}
-
-		@Override
-		public SocketSetting newSocketSetting(final Object value) {
-			PositiveInteger val = PositiveInteger.class.cast(value);
-			return new SocketSetting(this, val);
+			socket.setReceiveBufferSize(i.intValue());
 		}
 
 		@Override
 		public SocketSetting newSocketSetting(final String value) {
-			return new SocketSetting(this, PositiveInteger.newInstance(value));
+			return super.newSocketSetting(PositiveInteger.newInstance(value));
 		}
 		
 	},
@@ -242,7 +200,7 @@ public enum SocketSettingSpec {
 			doc = "Can reuse socket address and port", 
 			usage = "SO_REUSEADDR=true|false"
 	)
-	SO_REUSEADDR {
+	SO_REUSEADDR(Boolean.class) {
 		
 		@Override
 		public void apply(
@@ -263,20 +221,14 @@ public enum SocketSettingSpec {
 		@Override
 		public void apply(
 				final Object value, 
-				final Socket Socket) throws SocketException {
+				final Socket socket) throws SocketException {
 			Boolean b = Boolean.class.cast(value);
-			Socket.setReuseAddress(b.booleanValue());
-		}
-
-		@Override
-		public SocketSetting newSocketSetting(final Object value) {
-			Boolean val = Boolean.class.cast(value);
-			return new SocketSetting(this, val);
+			socket.setReuseAddress(b.booleanValue());
 		}
 
 		@Override
 		public SocketSetting newSocketSetting(final String value) {
-			return new SocketSetting(this, Boolean.valueOf(value));
+			return super.newSocketSetting(Boolean.valueOf(value));
 		}
 
 	},
@@ -285,7 +237,7 @@ public enum SocketSettingSpec {
 			doc = "The send buffer size", 
 			usage = "SO_SNDBUF=INTEGER_BETWEEN_1_AND_2147483647"
 	)
-	SO_SNDBUF {
+	SO_SNDBUF(PositiveInteger.class) {
 		
 		@Override
 		public void apply(
@@ -298,20 +250,14 @@ public enum SocketSettingSpec {
 		@Override
 		public void apply(
 				final Object value, 
-				final Socket Socket) throws SocketException {
+				final Socket socket) throws SocketException {
 			PositiveInteger i = PositiveInteger.class.cast(value);
-			Socket.setSendBufferSize(i.intValue());
-		}
-
-		@Override
-		public SocketSetting newSocketSetting(final Object value) {
-			PositiveInteger val = PositiveInteger.class.cast(value);
-			return new SocketSetting(this, val);
+			socket.setSendBufferSize(i.intValue());
 		}
 
 		@Override
 		public SocketSetting newSocketSetting(final String value) {
-			return new SocketSetting(this, PositiveInteger.newInstance(value));
+			return super.newSocketSetting(PositiveInteger.newInstance(value));
 		}
 		
 	},
@@ -320,7 +266,7 @@ public enum SocketSettingSpec {
 			doc = "The timeout in milliseconds on waiting for an idle socket", 
 			usage = "SO_TIMEOUT=INTEGER_BETWEEN_0_AND_2147483647"
 	)
-	SO_TIMEOUT {
+	SO_TIMEOUT(NonnegativeInteger.class) {
 		
 		@Override
 		public void apply(
@@ -341,20 +287,14 @@ public enum SocketSettingSpec {
 		@Override
 		public void apply(
 				final Object value, 
-				final Socket Socket) throws SocketException {
+				final Socket socket) throws SocketException {
 			NonnegativeInteger i = NonnegativeInteger.class.cast(value);
-			Socket.setSoTimeout(i.intValue());
-		}
-
-		@Override
-		public SocketSetting newSocketSetting(final Object value) {
-			NonnegativeInteger val = NonnegativeInteger.class.cast(value);
-			return new SocketSetting(this, val);
+			socket.setSoTimeout(i.intValue());
 		}
 
 		@Override
 		public SocketSetting newSocketSetting(final String value) {
-			return new SocketSetting(this, NonnegativeInteger.newInstance(value));
+			return super.newSocketSetting(NonnegativeInteger.newInstance(value));
 		}
 		
 	},
@@ -363,25 +303,19 @@ public enum SocketSettingSpec {
 			doc = "Disables Nagle's algorithm", 
 			usage = "TCP_NODELAY=true|false"
 	)
-	TCP_NODELAY {
+	TCP_NODELAY(Boolean.class) {
 		
 		@Override
 		public void apply(
 				final Object value, 
-				final Socket Socket) throws SocketException {
+				final Socket socket) throws SocketException {
 			Boolean b = Boolean.class.cast(value);
-			Socket.setTcpNoDelay(b.booleanValue());
-		}
-
-		@Override
-		public SocketSetting newSocketSetting(final Object value) {
-			Boolean val = Boolean.class.cast(value);
-			return new SocketSetting(this, val);
+			socket.setTcpNoDelay(b.booleanValue());
 		}
 
 		@Override
 		public SocketSetting newSocketSetting(final String value) {
-			return new SocketSetting(this, Boolean.valueOf(value));
+			return super.newSocketSetting(Boolean.valueOf(value));
 		}
 		
 	};
@@ -396,6 +330,12 @@ public enum SocketSettingSpec {
 					SocketSettingSpec.class.getSimpleName(), s), e);
 		}
 		return socketSettingSpec;
+	}
+	
+	private final Class<?> valueType;
+	
+	private SocketSettingSpec(final Class<?> valType) {
+		this.valueType = valType;
 	}
 	
 	public void apply(
@@ -416,13 +356,15 @@ public enum SocketSettingSpec {
 	
 	public void apply(
 			final Object value, 
-			final Socket Socket) throws SocketException {
+			final Socket socket) throws SocketException {
 		throw new UnsupportedOperationException(String.format(
 				"socket setting spec %s is not supported under %s", 
 				this, Socket.class.getName()));
 	}
 	
-	public abstract SocketSetting newSocketSetting(final Object value);
+	public final SocketSetting newSocketSetting(final Object value) {
+		return new SocketSetting(this, this.valueType.cast(value));
+	}
 	
 	public abstract SocketSetting newSocketSetting(final String value);
 	

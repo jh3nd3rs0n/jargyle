@@ -31,7 +31,8 @@ public final class SocketSetting {
 		extends XmlAdapter<SocketSettingXml, SocketSetting> {
 
 		@Override
-		public SocketSettingXml marshal(final SocketSetting v) throws Exception {
+		public SocketSettingXml marshal(
+				final SocketSetting v) throws Exception {
 			SocketSettingXml socketSettingXml = new SocketSettingXml();
 			socketSettingXml.comment = v.comment;
 			socketSettingXml.name = v.getSocketSettingSpec().toString();
@@ -40,7 +41,8 @@ public final class SocketSetting {
 		}
 
 		@Override
-		public SocketSetting unmarshal(final SocketSettingXml v) throws Exception {
+		public SocketSetting unmarshal(
+				final SocketSettingXml v) throws Exception {
 			return newInstance(v.name, v.value, v.comment);
 		}
 		
@@ -51,7 +53,7 @@ public final class SocketSetting {
 		if (sElements.length != 2) {
 			throw new IllegalArgumentException(
 					"socket setting must be in the following format: "
-					+ "SOCKET_SETTING_SPEC=VALUE");
+					+ "NAME=VALUE");
 		}
 		String socketSettingSpecString = sElements[0];
 		String value = sElements[1];
@@ -60,14 +62,16 @@ public final class SocketSetting {
 	
 	private static SocketSetting newInstance(
 			final String socketSettingSpecString, final String value) {
-		return SocketSettingSpec.getInstance(socketSettingSpecString).newSocketSetting(value);
+		return SocketSettingSpec.getInstance(
+				socketSettingSpecString).newSocketSetting(value);
 	}
 	
 	private static SocketSetting newInstance(
 			final String socketSettingSpecString, 
 			final String value, 
 			final String comment) {
-		SocketSetting socketSetting = newInstance(socketSettingSpecString, value);
+		SocketSetting socketSetting = newInstance(
+				socketSettingSpecString, value);
 		return new SocketSetting(
 				socketSetting.getSocketSettingSpec(), 
 				socketSetting.getValue(), 
@@ -82,7 +86,10 @@ public final class SocketSetting {
 		this(spec, val, null);
 	}
 	
-	private SocketSetting(final SocketSettingSpec spec, final Object val, final String cmmnt) {
+	private SocketSetting(
+			final SocketSettingSpec spec, 
+			final Object val, 
+			final String cmmnt) {
 		this.socketSettingSpec = spec;
 		this.value = val;
 		this.comment = cmmnt;
@@ -98,8 +105,8 @@ public final class SocketSetting {
 		this.socketSettingSpec.apply(this.value, serverSocket);
 	}
 	
-	public void applyTo(final Socket Socket) throws SocketException {
-		this.socketSettingSpec.apply(this.value, Socket);
+	public void applyTo(final Socket socket) throws SocketException {
+		this.socketSettingSpec.apply(this.value, socket);
 	}
 	
 	@Override
@@ -139,8 +146,10 @@ public final class SocketSetting {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((this.socketSettingSpec == null) ? 0 : this.socketSettingSpec.hashCode());
-		result = prime * result + ((this.value == null) ? 0 : this.value.hashCode());
+		result = prime * result + ((this.socketSettingSpec == null) ? 
+				0 : this.socketSettingSpec.hashCode());
+		result = prime * result + ((this.value == null) ? 
+				0 : this.value.hashCode());
 		return result;
 	}
 	

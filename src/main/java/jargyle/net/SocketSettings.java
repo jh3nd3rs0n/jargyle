@@ -179,7 +179,7 @@ public final class SocketSettings {
 		SocketSettingSpec<Object> socketSttngSpec = 
 				(SocketSettingSpec<Object>) socketSettingSpec;
 		SocketSetting<Object> socketSttng = socketSttngSpec.newSocketSetting(
-				value);
+				socketSettingSpec.getValueType().cast(value));
 		SocketSetting<Object> recentSocketSetting = 
 				this.socketSettings.put(socketSttngSpec, socketSttng);
 		if (recentSocketSetting != null) {

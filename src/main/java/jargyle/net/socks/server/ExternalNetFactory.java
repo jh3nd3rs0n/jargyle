@@ -27,7 +27,18 @@ import jargyle.util.PositiveInteger;
 import jargyle.util.Strings;
 
 final class ExternalNetFactory extends NetFactory {
-		
+	
+	private static List<Property<Object>> castProperties(
+			final List<Property<? extends Object>> properties) {
+		List<Property<Object>> props = new ArrayList<Property<Object>>();
+		for (Property<? extends Object> property : properties) {
+			@SuppressWarnings("unchecked")
+			Property<Object> prop = (Property<Object>) property;
+			props.add(prop);
+		}
+		return props;
+	}
+	
 	private final Configuration configuration;
 	private Configuration lastConfiguration;
 	private NetFactory netFactory;
@@ -75,7 +86,7 @@ final class ExternalNetFactory extends NetFactory {
 		return this.getNetFactory().newSocketFactory();
 	}
 	
-	private Properties newSocks5ClientProperties() {
+	private List<Property<Object>> newSocks5ClientProperties() {
 		Settings settings = this.configuration.getSettings();
 		List<Property<? extends Object>> properties = 
 				new ArrayList<Property<? extends Object>>();
@@ -134,7 +145,7 @@ final class ExternalNetFactory extends NetFactory {
 						usernamePassword.getEncryptedPassword()));			
 			}
 		}
-		return Properties.newInstance(properties);		
+		return castProperties(properties);		
 	}
 	
 	private SocksClient newSocksClient() {
@@ -146,12 +157,13 @@ final class ExternalNetFactory extends NetFactory {
 		}
 		List<Property<? extends Object>> properties = 
 				new ArrayList<Property<? extends Object>>();
-		properties.addAll(this.newSocksClientProperties().toMap().values());
-		properties.addAll(this.newSocks5ClientProperties().toMap().values());
+		properties.addAll(this.newSocksClientProperties());
+		properties.addAll(this.newSocksClientSslProperties());
+		properties.addAll(this.newSocks5ClientProperties());
 		return socksServerUri.newSocksClient(Properties.newInstance(properties));
 	}
 	
-	private Properties newSocksClientProperties() {
+	private List<Property<Object>> newSocksClientProperties() {
 		Settings settings = this.configuration.getSettings();
 		List<Property<? extends Object>> properties = 
 				new ArrayList<Property<? extends Object>>();
@@ -174,6 +186,13 @@ final class ExternalNetFactory extends NetFactory {
 			properties.add(PropertySpec.SOCKET_SETTINGS.newProperty(
 					socketSettings));
 		}
+		return castProperties(properties);		
+	}
+	
+	private List<Property<Object>> newSocksClientSslProperties() {
+		Settings settings = this.configuration.getSettings();
+		List<Property<? extends Object>> properties = 
+				new ArrayList<Property<? extends Object>>();
 		if (settings.containsNondefaultValue(
 				SettingSpec.CHAINING_SSL_ENABLED)) {
 			Boolean sslEnabled = settings.getLastValue(
@@ -242,7 +261,7 @@ final class ExternalNetFactory extends NetFactory {
 			properties.add(PropertySpec.SSL_TRUST_STORE_TYPE.newProperty(
 					sslTrustStoreType));
 		}
-		return Properties.newInstance(properties);		
+		return castProperties(properties);		
 	}
 	
 }

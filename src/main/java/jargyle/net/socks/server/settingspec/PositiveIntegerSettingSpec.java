@@ -4,7 +4,8 @@ import jargyle.net.socks.server.Setting;
 import jargyle.net.socks.server.SettingSpec;
 import jargyle.util.PositiveInteger;
 
-public final class PositiveIntegerSettingSpec extends SettingSpec {
+public final class PositiveIntegerSettingSpec 
+	extends SettingSpec<PositiveInteger> {
 
 	public PositiveIntegerSettingSpec(
 			final String s, final PositiveInteger defaultVal) {
@@ -12,7 +13,8 @@ public final class PositiveIntegerSettingSpec extends SettingSpec {
 	}
 
 	@Override
-	public Setting newSetting(final String value) {
+	public Setting<PositiveInteger> newSettingOfParsableValue(
+			final String value) {
 		return super.newSetting(PositiveInteger.newInstance(value));
 	}
 	

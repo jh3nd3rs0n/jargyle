@@ -25,8 +25,6 @@ import argmatey.ArgMatey.CLI;
 import argmatey.ArgMatey.IllegalOptionArgException;
 import argmatey.ArgMatey.OptionType;
 import jargyle.annotation.HelpText;
-import jargyle.net.Host;
-import jargyle.net.Port;
 import jargyle.net.SocketSettingSpec;
 import jargyle.net.socks.client.Scheme;
 import jargyle.net.socks.client.v5.DefaultUsernamePasswordRequestor;
@@ -141,7 +139,7 @@ public final class SocksServerCLI extends CLI {
 			usage = "${option} NAME=VALUE"
 	)
 	@Ordinal(SETTING_OPTION_GROUP_ORDINAL)
-	private void addSetting(final Setting sttng) {
+	private void addSetting(final Setting<? extends Object> sttng) {
 		this.modifiableConfiguration.addSetting(sttng);
 	}
 	
@@ -299,7 +297,7 @@ public final class SocksServerCLI extends CLI {
 				new DefaultUsernamePasswordRequestor();
 		UsernamePassword usernamePassword = 
 				usernamePasswordRequestor.requestUsernamePassword(null, prompt);
-		Setting setting = 
+		Setting<UsernamePassword> setting = 
 				SettingSpec.CHAINING_SOCKS5_USERNAME_PASSWORD.newSetting(
 						usernamePassword);
 		this.modifiableConfiguration.addSetting(setting);
@@ -320,7 +318,7 @@ public final class SocksServerCLI extends CLI {
 				new DefaultEncryptedPasswordRequestor();
 		EncryptedPassword encryptedPassword = 
 				encryptedPasswordRequestor.requestEncryptedPassword(prompt);
-		Setting setting = 
+		Setting<EncryptedPassword> setting = 
 				SettingSpec.CHAINING_SSL_KEY_STORE_PASSWORD.newSetting(
 						encryptedPassword);
 		this.modifiableConfiguration.addSetting(setting);
@@ -341,7 +339,7 @@ public final class SocksServerCLI extends CLI {
 				new DefaultEncryptedPasswordRequestor();
 		EncryptedPassword encryptedPassword = 
 				encryptedPasswordRequestor.requestEncryptedPassword(prompt);
-		Setting setting = 
+		Setting<EncryptedPassword> setting = 
 				SettingSpec.CHAINING_SSL_TRUST_STORE_PASSWORD.newSetting(
 						encryptedPassword);
 		this.modifiableConfiguration.addSetting(setting);
@@ -362,8 +360,9 @@ public final class SocksServerCLI extends CLI {
 				new DefaultEncryptedPasswordRequestor();
 		EncryptedPassword encryptedPassword = 
 				encryptedPasswordRequestor.requestEncryptedPassword(prompt);
-		Setting setting = SettingSpec.SSL_KEY_STORE_PASSWORD.newSetting(
-				encryptedPassword);
+		Setting<EncryptedPassword> setting = 
+				SettingSpec.SSL_KEY_STORE_PASSWORD.newSetting(
+						encryptedPassword);
 		this.modifiableConfiguration.addSetting(setting);		
 	}
 	
@@ -382,8 +381,9 @@ public final class SocksServerCLI extends CLI {
 				new DefaultEncryptedPasswordRequestor();
 		EncryptedPassword encryptedPassword = 
 				encryptedPasswordRequestor.requestEncryptedPassword(prompt);
-		Setting setting = SettingSpec.SSL_TRUST_STORE_PASSWORD.newSetting(
-				encryptedPassword);
+		Setting<EncryptedPassword> setting = 
+				SettingSpec.SSL_TRUST_STORE_PASSWORD.newSetting(
+						encryptedPassword);
 		this.modifiableConfiguration.addSetting(setting);		
 	}
 	
@@ -553,9 +553,9 @@ public final class SocksServerCLI extends CLI {
 					String.format(
 							"Unable to listen on port %s at %s", 
 							configuration.getSettings().getLastValue(
-									SettingSpec.PORT, Port.class),
+									SettingSpec.PORT),
 							configuration.getSettings().getLastValue(
-									SettingSpec.HOST, Host.class)), 
+									SettingSpec.HOST)), 
 					e);
 			return -1;
 		} catch (IOException e) {

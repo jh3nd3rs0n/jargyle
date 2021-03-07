@@ -6,14 +6,14 @@ import jargyle.net.Host;
 import jargyle.net.socks.client.Property;
 import jargyle.net.socks.client.PropertySpec;
 
-public final class HostPropertySpec extends PropertySpec {
+public final class HostPropertySpec extends PropertySpec<Host> {
 
 	public HostPropertySpec(final String s, final Host defaultVal) {
 		super(s, Host.class, defaultVal);
 	}
 
 	@Override
-	public Property newProperty(final String value) {
+	public Property<Host> newPropertyOfParsableValue(final String value) {
 		Host host = null;
 		try {
 			host = Host.newInstance(value);

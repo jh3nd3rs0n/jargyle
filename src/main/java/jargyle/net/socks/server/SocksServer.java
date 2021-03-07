@@ -10,7 +10,6 @@ import argmatey.ArgMatey.CLI;
 import jargyle.net.Host;
 import jargyle.net.Port;
 import jargyle.net.SocketSettings;
-import jargyle.util.NonnegativeInteger;
 
 public final class SocksServer {
 	
@@ -32,16 +31,14 @@ public final class SocksServer {
 	
 	public SocksServer(final Configuration config) {
 		this.backlog = config.getSettings().getLastValue(
-				SettingSpec.BACKLOG, NonnegativeInteger.class).intValue();
+				SettingSpec.BACKLOG).intValue();
 		this.configuration = config;
 		this.executor = null;
-		this.host = config.getSettings().getLastValue(
-				SettingSpec.HOST, Host.class);
-		this.port = config.getSettings().getLastValue(
-				SettingSpec.PORT, Port.class);
+		this.host = config.getSettings().getLastValue(SettingSpec.HOST);
+		this.port = config.getSettings().getLastValue(SettingSpec.PORT);
 		this.serverSocket = null;
 		this.socketSettings = config.getSettings().getLastValue(
-				SettingSpec.SOCKET_SETTINGS, SocketSettings.class);
+				SettingSpec.SOCKET_SETTINGS);
 		this.started = false;
 		this.stopped = true;
 	}
@@ -87,13 +84,13 @@ public final class SocksServer {
 			throw new IllegalStateException("SocksServer already stopped");
 		}
 		this.backlog = this.configuration.getSettings().getLastValue(
-				SettingSpec.BACKLOG, NonnegativeInteger.class).intValue();
+				SettingSpec.BACKLOG).intValue();
 		this.host = this.configuration.getSettings().getLastValue(
-				SettingSpec.HOST, Host.class);
+				SettingSpec.HOST);
 		this.port = this.configuration.getSettings().getLastValue(
-				SettingSpec.PORT, Port.class);
+				SettingSpec.PORT);
 		this.socketSettings = this.configuration.getSettings().getLastValue(
-				SettingSpec.SOCKET_SETTINGS, SocketSettings.class);
+				SettingSpec.SOCKET_SETTINGS);
 		this.serverSocket.close();
 		this.serverSocket = null;
 		this.executor.shutdownNow();

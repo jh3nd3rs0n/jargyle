@@ -41,13 +41,12 @@ public final class Socks5HostResolver extends HostResolver {
 		}
 		Properties properties = this.socks5Client.getProperties();
 		if (!properties.getValue(
-				PropertySpec.SOCKS5_FORWARD_HOSTNAME_RESOLUTION, 
-				Boolean.class).booleanValue()) {
+				PropertySpec.SOCKS5_FORWARD_HOSTNAME_RESOLUTION).booleanValue()) {
 			return InetAddress.getByName(host);
 		}
 		Socket socket = new Socket();
 		SocketSettings socketSettings = properties.getValue(
-				PropertySpec.SOCKET_SETTINGS, SocketSettings.class);
+				PropertySpec.SOCKET_SETTINGS);
 		socketSettings.applyTo(socket);
 		Socket sock = this.socks5Client.getConnectedSocket(socket, true);
 		InputStream inputStream = sock.getInputStream();

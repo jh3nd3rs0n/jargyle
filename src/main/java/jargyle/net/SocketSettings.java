@@ -26,7 +26,7 @@ public final class SocketSettings {
 	@XmlType(name = "socketSettings", propOrder = { "socketSettings" })
 	static class SocketSettingsXml {
 		@XmlElement(name = "socketSetting")
-		protected List<SocketSetting> socketSettings = new ArrayList<SocketSetting>();
+		protected List<SocketSetting<? extends Object>> socketSettings = new ArrayList<SocketSetting<? extends Object>>();
 	}
 	
 	static final class SocketSettingsXmlAdapter 
@@ -37,8 +37,9 @@ public final class SocketSettings {
 				final SocketSettings v) throws Exception {
 			if (v == null) { return null; }
 			SocketSettingsXml socketSettingsXml = new SocketSettingsXml();
-			socketSettingsXml.socketSettings = new ArrayList<SocketSetting>(
-					v.socketSettings.values());
+			socketSettingsXml.socketSettings = 
+					new ArrayList<SocketSetting<? extends Object>>(
+							v.socketSettings.values());
 			return socketSettingsXml;
 		}
 
@@ -52,17 +53,21 @@ public final class SocketSettings {
 	}
 	
 	public static SocketSettings newInstance(
-			final List<SocketSetting> socketSttngs) {
-		Map<SocketSettingSpec, SocketSetting> socketSettings = 
-				new HashMap<SocketSettingSpec, SocketSetting>();
-		for (SocketSetting socketSttng : socketSttngs) {
-			socketSettings.put(socketSttng.getSocketSettingSpec(), socketSttng);
+			final List<SocketSetting<? extends Object>> socketSttngs) {
+		Map<SocketSettingSpec<Object>, SocketSetting<Object>> socketSettings = 
+				new HashMap<SocketSettingSpec<Object>, SocketSetting<Object>>();
+		for (SocketSetting<? extends Object> socketSttng : socketSttngs) {
+			@SuppressWarnings("unchecked")
+			SocketSetting<Object> sockSttng = (SocketSetting<Object>) socketSttng;
+			SocketSettingSpec<Object> sockSttngSpec = sockSttng.getSocketSettingSpec(); 
+			socketSettings.put(sockSttngSpec, sockSttng);
 		}
 		return new SocketSettings(socketSettings);
 	}
 	
+	@SafeVarargs
 	public static SocketSettings newInstance(
-			final SocketSetting... socketSettings) {
+			final SocketSetting<? extends Object>... socketSettings) {
 		return newInstance(Arrays.asList(socketSettings));
 	}
 	
@@ -71,49 +76,56 @@ public final class SocketSettings {
 	}
 	
 	public static SocketSettings newInstance(final String s) {
-		Map<SocketSettingSpec, SocketSetting> socketSettings = 
-				new HashMap<SocketSettingSpec, SocketSetting>();
+		Map<SocketSettingSpec<Object>, SocketSetting<Object>> socketSettings = 
+				new HashMap<SocketSettingSpec<Object>, SocketSetting<Object>>();
 		if (s.isEmpty()) {
 			return new SocketSettings(socketSettings);
 		}
 		String[] sElements = s.split(" ");
 		for (String sElement : sElements) {
-			SocketSetting socketSetting = SocketSetting.newInstance(sElement);
-			socketSettings.put(
-					socketSetting.getSocketSettingSpec(), socketSetting);
+			SocketSetting<Object> socketSetting = SocketSetting.newInstance(
+					sElement);
+			SocketSettingSpec<Object> socketSettingSpec = 
+					socketSetting.getSocketSettingSpec();
+			socketSettings.put(socketSettingSpec, socketSetting);
 		}
 		return new SocketSettings(socketSettings);
 	}
 	
-	private final Map<SocketSettingSpec, SocketSetting> socketSettings;
+	private final Map<SocketSettingSpec<Object>, SocketSetting<Object>> socketSettings;
 	
 	private SocketSettings(
-			final Map<SocketSettingSpec, SocketSetting> socketSttngs) {
-		this.socketSettings = new HashMap<SocketSettingSpec, SocketSetting>(
-				socketSttngs);
+			final Map<SocketSettingSpec<Object>, SocketSetting<Object>> socketSttngs) {
+		this.socketSettings = 
+				new HashMap<SocketSettingSpec<Object>, SocketSetting<Object>>(
+						socketSttngs);
 	}
 	
 	private SocketSettings(final SocketSettings other) {
-		this.socketSettings = new HashMap<SocketSettingSpec, SocketSetting>(
-				other.socketSettings);
+		this.socketSettings = 
+				new HashMap<SocketSettingSpec<Object>, SocketSetting<Object>>(
+						other.socketSettings);
 	}
 	
 	public void applyTo(
 			final DatagramSocket datagramSocket) throws SocketException {
-		for (SocketSetting socketSetting : this.socketSettings.values()) {
+		for (SocketSetting<Object> socketSetting 
+				: this.socketSettings.values()) {
 			socketSetting.applyTo(datagramSocket);
 		}
 	}
 	
 	public void applyTo(
 			final ServerSocket serverSocket) throws SocketException {
-		for (SocketSetting socketSetting : this.socketSettings.values()) {
+		for (SocketSetting<Object> socketSetting 
+				: this.socketSettings.values()) {
 			socketSetting.applyTo(serverSocket);
 		}
 	}
 	
 	public void applyTo(final Socket socket) throws SocketException {
-		for (SocketSetting socketSetting : this.socketSettings.values()) {
+		for (SocketSetting<Object> socketSetting 
+				: this.socketSettings.values()) {
 			socketSetting.applyTo(socket);
 		}
 	}
@@ -140,14 +152,13 @@ public final class SocketSettings {
 		return true;
 	}
 	
-	public <T> T getValue(
-			final SocketSettingSpec socketSettingSpec, 
-			final Class<T> valueType) {
-		T value = null;
-		SocketSetting socketSetting = this.socketSettings.get(
+	public <V> V getValue(final SocketSettingSpec<V> socketSettingSpec) {
+		V value = null;
+		SocketSetting<Object> socketSetting = this.socketSettings.get(
 				socketSettingSpec);
 		if (socketSetting != null) {
-			value = valueType.cast(socketSetting.getValue()); 
+			value = socketSettingSpec.getValueType().cast(
+					socketSetting.getValue()); 
 		}
 		return value;
 	}
@@ -161,30 +172,33 @@ public final class SocketSettings {
 		return result;
 	}
 	
-	public <T> T putValue(
-			final SocketSettingSpec socketSettingSpec, final T value) {
-		T recentValue = null;
-		SocketSetting socketSetting = socketSettingSpec.newSocketSetting(value);
-		SocketSetting recentSocketSetting = this.socketSettings.put(
-				socketSettingSpec, socketSetting);
+	public <V> V putValue(
+			final SocketSettingSpec<V> socketSettingSpec, final V value) {
+		V recentValue = null;
+		@SuppressWarnings("unchecked")
+		SocketSettingSpec<Object> socketSttngSpec = 
+				(SocketSettingSpec<Object>) socketSettingSpec;
+		SocketSetting<Object> socketSttng = socketSttngSpec.newSocketSetting(
+				value);
+		SocketSetting<Object> recentSocketSetting = 
+				this.socketSettings.put(socketSttngSpec, socketSttng);
 		if (recentSocketSetting != null) {
-			@SuppressWarnings("unchecked")
-			T recentVal = (T) recentSocketSetting.getValue();
-			recentValue = recentVal;
+			recentValue = socketSettingSpec.getValueType().cast(
+					recentSocketSetting.getValue());
 		}
 		return recentValue;
 	}
 
-	public Map<SocketSettingSpec, SocketSetting> toMap() {
+	public Map<SocketSettingSpec<Object>, SocketSetting<Object>> toMap() {
 		return Collections.unmodifiableMap(this.socketSettings);
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		for (Iterator<SocketSetting> iterator = 
+		for (Iterator<SocketSetting<Object>> iterator = 
 				this.socketSettings.values().iterator(); iterator.hasNext();) {
-			SocketSetting socketSetting = iterator.next();
+			SocketSetting<Object> socketSetting = iterator.next();
 			builder.append(socketSetting);
 			if (iterator.hasNext()) {
 				builder.append(' ');

@@ -4,7 +4,8 @@ import jargyle.net.socks.client.Property;
 import jargyle.net.socks.client.PropertySpec;
 import jargyle.util.PositiveInteger;
 
-public final class PositiveIntegerPropertySpec extends PropertySpec {
+public final class PositiveIntegerPropertySpec 
+	extends PropertySpec<PositiveInteger> {
 
 	public PositiveIntegerPropertySpec(
 			final String s, final PositiveInteger defaultVal) {
@@ -12,7 +13,8 @@ public final class PositiveIntegerPropertySpec extends PropertySpec {
 	}
 
 	@Override
-	public Property newProperty(final String value) {
+	public Property<PositiveInteger> newPropertyOfParsableValue(
+			final String value) {
 		return super.newProperty(PositiveInteger.newInstance(value));
 	}
 

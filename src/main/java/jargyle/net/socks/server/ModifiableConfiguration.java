@@ -9,22 +9,24 @@ final class ModifiableConfiguration extends Configuration {
 		return new ModifiableConfiguration();
 	}
 	
-	private final List<Setting> settings;
+	private final List<Setting<Object>> settings;
 	
 	private ModifiableConfiguration() {
-		this.settings = new ArrayList<Setting>();
+		this.settings = new ArrayList<Setting<Object>>();
 	}
 	
 	public void add(final Configuration configuration) {
 		this.addSettings(configuration.getSettings());
 	}
 
-	public void addSetting(final Setting sttng) {
-		this.settings.add(sttng);
+	public void addSetting(final Setting<? extends Object> sttng) {
+		@SuppressWarnings("unchecked")
+		Setting<Object> setting = (Setting<Object>) sttng;
+		this.settings.add(setting);
 	}
 	
 	public void addSettings(final Settings sttngs) {
-		List<Setting> sttngsList = sttngs.toList();
+		List<Setting<Object>> sttngsList = sttngs.toList();
 		if (sttngsList.isEmpty()) {
 			return;
 		}
@@ -33,7 +35,9 @@ final class ModifiableConfiguration extends Configuration {
 
 	@Override
 	public Settings getSettings() {
-		return Settings.newInstance(this.settings);
+		List<Setting<? extends Object>> sttngs = 
+				new ArrayList<Setting<? extends Object>>(this.settings);
+		return Settings.newInstance(sttngs);
 	}
 
 	@Override

@@ -35,32 +35,29 @@ final class SslSocketFactoryImpl extends SslSocketFactory {
 		TrustManager[] trustManagers = null;
 		Properties properties = this.socksClient.getProperties();
 		File keyStoreFile = properties.getValue(
-				PropertySpec.SSL_KEY_STORE_FILE, File.class);
+				PropertySpec.SSL_KEY_STORE_FILE);
 		if (keyStoreFile != null) {
 			EncryptedPassword keyStorePassword = properties.getValue(
-					PropertySpec.SSL_KEY_STORE_PASSWORD,
-					EncryptedPassword.class);
+					PropertySpec.SSL_KEY_STORE_PASSWORD);
 			String keyStoreType = properties.getValue(
-					PropertySpec.SSL_KEY_STORE_TYPE, String.class);
+					PropertySpec.SSL_KEY_STORE_TYPE);
 			keyManagers = KeyManagerHelper.getKeyManagers(
 					keyStoreFile, keyStorePassword, keyStoreType);
 		}
 		File trustStoreFile = properties.getValue(
-				PropertySpec.SSL_TRUST_STORE_FILE, File.class);
+				PropertySpec.SSL_TRUST_STORE_FILE);
 		if (trustStoreFile != null) {
 			EncryptedPassword trustStorePassword = properties.getValue(
-					PropertySpec.SSL_TRUST_STORE_PASSWORD,
-					EncryptedPassword.class);
+					PropertySpec.SSL_TRUST_STORE_PASSWORD);
 			String trustStoreType = properties.getValue(
-					PropertySpec.SSL_TRUST_STORE_TYPE, String.class);
+					PropertySpec.SSL_TRUST_STORE_TYPE);
 			trustManagers = TrustManagerHelper.getTrustManagers(
 					trustStoreFile, trustStorePassword, trustStoreType);
 		}
 		SSLContext context = null;
 		try {
 			context = SslContextHelper.getSslContext(
-					properties.getValue(
-							PropertySpec.SSL_PROTOCOL, String.class), 
+					properties.getValue(PropertySpec.SSL_PROTOCOL), 
 					keyManagers, 
 					trustManagers);
 		} catch (KeyManagementException e) {
@@ -96,13 +93,13 @@ final class SslSocketFactoryImpl extends SslSocketFactory {
 				autoClose);
 		Properties properties = this.socksClient.getProperties();
 		Strings enabledCipherSuites = properties.getValue(
-				PropertySpec.SSL_ENABLED_CIPHER_SUITES, Strings.class);
+				PropertySpec.SSL_ENABLED_CIPHER_SUITES);
 		String[] cipherSuites = enabledCipherSuites.toStringArray();
 		if (cipherSuites.length > 0) {
 			sslSocket.setEnabledCipherSuites(cipherSuites);
 		}
 		Strings enabledProtocols = properties.getValue(
-				PropertySpec.SSL_ENABLED_PROTOCOLS, Strings.class);
+				PropertySpec.SSL_ENABLED_PROTOCOLS);
 		String[] protocols = enabledProtocols.toStringArray();
 		if (protocols.length > 0) {
 			sslSocket.setEnabledProtocols(protocols);

@@ -7,7 +7,8 @@ import jargyle.net.socks.client.PropertySpec;
 import jargyle.net.socks.client.v5.UsernamePassword;
 import jargyle.security.EncryptedPassword;
 
-public final class UserEncryptedPasswordPropertySpec extends PropertySpec {
+public final class UserEncryptedPasswordPropertySpec 
+	extends PropertySpec<EncryptedPassword> {
 
 	private static EncryptedPassword getValidatedEncryptedPassword(
 			final EncryptedPassword encryptedPassword) {
@@ -26,13 +27,14 @@ public final class UserEncryptedPasswordPropertySpec extends PropertySpec {
 	}
 
 	@Override
-	public Property newProperty(final Object value) {
-		EncryptedPassword val = EncryptedPassword.class.cast(value);
-		return super.newProperty(getValidatedEncryptedPassword(val));
+	public Property<EncryptedPassword> newProperty(
+			final EncryptedPassword value) {
+		return super.newProperty(getValidatedEncryptedPassword(value));
 	}
 
 	@Override
-	public Property newProperty(final String value) {
+	public Property<EncryptedPassword> newPropertyOfParsableValue(
+			final String value) {
 		return super.newProperty(getValidatedEncryptedPassword(
 				EncryptedPassword.newInstance(value.toCharArray())));
 	}

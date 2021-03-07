@@ -14,7 +14,7 @@ import javax.xml.bind.annotation.adapters.XmlAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 @XmlJavaTypeAdapter(SocketSetting.SocketSettingXmlAdapter.class)
-public final class SocketSetting {
+public final class SocketSetting<V> {
 
 	@XmlAccessorType(XmlAccessType.NONE)
 	@XmlType(name = "socketSetting", propOrder = { })
@@ -28,11 +28,11 @@ public final class SocketSetting {
 	}
 	
 	static final class SocketSettingXmlAdapter 
-		extends XmlAdapter<SocketSettingXml, SocketSetting> {
+		extends XmlAdapter<SocketSettingXml, SocketSetting<Object>> {
 
 		@Override
 		public SocketSettingXml marshal(
-				final SocketSetting v) throws Exception {
+				final SocketSetting<Object> v) throws Exception {
 			SocketSettingXml socketSettingXml = new SocketSettingXml();
 			socketSettingXml.comment = v.comment;
 			socketSettingXml.name = v.getSocketSettingSpec().toString();
@@ -41,14 +41,14 @@ public final class SocketSetting {
 		}
 
 		@Override
-		public SocketSetting unmarshal(
+		public SocketSetting<Object> unmarshal(
 				final SocketSettingXml v) throws Exception {
 			return newInstance(v.name, v.value, v.comment);
 		}
 		
 	}
 	
-	public static SocketSetting newInstance(final String s) {
+	public static SocketSetting<Object> newInstance(final String s) {
 		String[] sElements = s.split("=", 2);
 		if (sElements.length != 2) {
 			throw new IllegalArgumentException(
@@ -60,35 +60,34 @@ public final class SocketSetting {
 		return newInstance(socketSettingSpecString, value);
 	}
 	
-	private static SocketSetting newInstance(
-			final String socketSettingSpecString, final String value) {
+	private static SocketSetting<Object> newInstance(
+			final String name, final String value) {
 		return SocketSettingSpec.getInstance(
-				socketSettingSpecString).newSocketSetting(value);
+				name).newSocketSettingOfParsableValue(value);
 	}
 	
-	private static SocketSetting newInstance(
-			final String socketSettingSpecString, 
+	private static SocketSetting<Object> newInstance(
+			final String name, 
 			final String value, 
 			final String comment) {
-		SocketSetting socketSetting = newInstance(
-				socketSettingSpecString, value);
-		return new SocketSetting(
+		SocketSetting<Object> socketSetting = newInstance(name, value);
+		return new SocketSetting<Object>(
 				socketSetting.getSocketSettingSpec(), 
 				socketSetting.getValue(), 
 				comment);
 	}
 	
-	private final SocketSettingSpec socketSettingSpec;
-	private final Object value;
+	private final SocketSettingSpec<V> socketSettingSpec;
+	private final V value;
 	private final String comment;
 	
-	SocketSetting(final SocketSettingSpec spec, final Object val) {
+	SocketSetting(final SocketSettingSpec<V> spec, final V val) {
 		this(spec, val, null);
 	}
 	
 	private SocketSetting(
-			final SocketSettingSpec spec, 
-			final Object val, 
+			final SocketSettingSpec<V> spec, 
+			final V val, 
 			final String cmmnt) {
 		this.socketSettingSpec = spec;
 		this.value = val;
@@ -120,7 +119,7 @@ public final class SocketSetting {
 		if (!(obj instanceof SocketSetting)) {
 			return false;
 		}
-		SocketSetting other = (SocketSetting) obj;
+		SocketSetting<?> other = (SocketSetting<?>) obj;
 		if (this.socketSettingSpec != other.socketSettingSpec) {
 			return false;
 		}
@@ -134,11 +133,11 @@ public final class SocketSetting {
 		return true;
 	}
 
-	public SocketSettingSpec getSocketSettingSpec() {
+	public SocketSettingSpec<V> getSocketSettingSpec() {
 		return this.socketSettingSpec;
 	}
 
-	public Object getValue() {
+	public V getValue() {
 		return this.value;
 	}
 	

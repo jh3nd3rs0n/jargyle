@@ -4,7 +4,7 @@ import jargyle.net.socks.server.Setting;
 import jargyle.net.socks.server.SettingSpec;
 import jargyle.net.socks.transport.v5.AuthMethods;
 
-public final class AuthMethodsSettingSpec extends SettingSpec {
+public final class AuthMethodsSettingSpec extends SettingSpec<AuthMethods> {
 
 	public AuthMethodsSettingSpec(
 			final String s, final AuthMethods defaultVal) {
@@ -12,7 +12,7 @@ public final class AuthMethodsSettingSpec extends SettingSpec {
 	}
 
 	@Override
-	public Setting newSetting(final String value) {
+	public Setting<AuthMethods> newSettingOfParsableValue(final String value) {
 		return super.newSetting(AuthMethods.newInstance(value));
 	}
 	

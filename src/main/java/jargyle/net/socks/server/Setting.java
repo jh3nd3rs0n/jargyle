@@ -18,7 +18,7 @@ import jargyle.security.EncryptedPassword;
 import jargyle.util.Criteria;
 
 @XmlJavaTypeAdapter(Setting.SettingXmlAdapter.class)
-public final class Setting {
+public final class Setting<V> {
 
 	@XmlAccessorType(XmlAccessType.NONE)
 	@XmlType(name = "criteriaValue")
@@ -79,10 +79,10 @@ public final class Setting {
 	}
 	
 	static final class SettingXmlAdapter
-		extends XmlAdapter<SettingXml, Setting> {
+		extends XmlAdapter<SettingXml, Setting<Object>> {
 
 		@Override
-		public SettingXml marshal(final Setting v) throws Exception {
+		public SettingXml marshal(final Setting<Object> v) throws Exception {
 			SettingXml settingXml = new SettingXml();
 			settingXml.comment = v.comment;
 			settingXml.name = v.getSettingSpec().toString();
@@ -121,7 +121,7 @@ public final class Setting {
 		}
 
 		@Override
-		public Setting unmarshal(final SettingXml v) throws Exception {
+		public Setting<Object> unmarshal(final SettingXml v) throws Exception {
 			Object val = v.value;
 			if (val instanceof CriteriaValue) {
 				CriteriaValue newVal = (CriteriaValue) val;
@@ -200,7 +200,7 @@ public final class Setting {
 		
 	}
 	
-	public static Setting newInstance(final String s) {
+	public static Setting<Object> newInstance(final String s) {
 		String[] sElements = s.split("=", 2);
 		if (sElements.length != 2) {
 			throw new IllegalArgumentException(
@@ -211,35 +211,41 @@ public final class Setting {
 		return newInstance(name, value);
 	}
 	
-	private static Setting newInstance(final String name, final Object value) {
-		return SettingSpec.getInstance(name).newSetting(value);
+	private static <V> Setting<V> newInstance(final String name, final V value) {
+		@SuppressWarnings("unchecked")
+		Setting<V> setting = 
+				(Setting<V>) SettingSpec.getInstance(name).newSetting(value);
+		return setting;
 	}
 
-	private static Setting newInstance(
-			final String name, final Object value, final String comment) {
-		Setting setting = newInstance(name, value);
-		return new Setting(setting.getSettingSpec(), setting.getValue(), comment);
+	private static <V> Setting<V> newInstance(
+			final String name, final V value, final String comment) {
+		Setting<V> setting = newInstance(name, value);
+		return new Setting<V>(
+				setting.getSettingSpec(), setting.getValue(), comment);
 	}
 	
-	private static Setting newInstance(final String name, final String value) {
-		return SettingSpec.getInstance(name).newSetting(value);
+	private static Setting<Object> newInstance(
+			final String name, final String value) {
+		return SettingSpec.getInstance(name).newSettingOfParsableValue(value);
 	}
 	
-	private static Setting newInstance(
+	private static Setting<Object> newInstance(
 			final String name, final String value, final String comment) {
-		Setting setting = newInstance(name, value);
-		return new Setting(setting.getSettingSpec(), setting.getValue(), comment);
+		Setting<Object> setting = newInstance(name, value);
+		return new Setting<Object>(
+				setting.getSettingSpec(), setting.getValue(), comment);
 	}
 	
 	private final String comment;
-	private final SettingSpec settingSpec;
-	private final Object value;
+	private final SettingSpec<V> settingSpec;
+	private final V value;
 	
-	Setting(final SettingSpec spec, final Object val) {
+	Setting(final SettingSpec<V> spec, final V val) {
 		this(spec, val, null);
 	}
 	
-	private Setting(final SettingSpec spec, final Object val, final String cmmnt) {
+	private Setting(final SettingSpec<V> spec, final V val, final String cmmnt) {
 		this.comment = cmmnt;
 		this.settingSpec = spec;
 		this.value = val;
@@ -256,7 +262,7 @@ public final class Setting {
 		if (!(obj instanceof Setting)) {
 			return false;
 		}
-		Setting other = (Setting) obj;
+		Setting<?> other = (Setting<?>) obj;
 		if (this.settingSpec != other.settingSpec) {
 			return false;
 		}
@@ -270,11 +276,11 @@ public final class Setting {
 		return true;
 	}
 	
-	public SettingSpec getSettingSpec() {
+	public SettingSpec<V> getSettingSpec() {
 		return this.settingSpec;
 	}
 
-	public Object getValue() {
+	public V getValue() {
 		return this.value;
 	}
 
@@ -282,8 +288,10 @@ public final class Setting {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((this.settingSpec == null) ? 0 : this.settingSpec.hashCode());
-		result = prime * result + ((this.value == null) ? 0 : this.value.hashCode());
+		result = prime * result + ((this.settingSpec == null) ? 
+				0 : this.settingSpec.hashCode());
+		result = prime * result + ((this.value == null) ? 
+				0 : this.value.hashCode());
 		return result;
 	}
 

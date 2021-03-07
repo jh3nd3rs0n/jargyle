@@ -4,7 +4,7 @@ import jargyle.net.socks.client.Property;
 import jargyle.net.socks.client.PropertySpec;
 import jargyle.net.socks.transport.v5.AuthMethods;
 
-public final class AuthMethodsPropertySpec extends PropertySpec {
+public final class AuthMethodsPropertySpec extends PropertySpec<AuthMethods> {
 
 	public AuthMethodsPropertySpec(
 			final String s, final AuthMethods defaultVal) {
@@ -12,7 +12,7 @@ public final class AuthMethodsPropertySpec extends PropertySpec {
 	}
 
 	@Override
-	public Property newProperty(final String value) {
+	public Property<AuthMethods> newPropertyOfParsableValue(final String value) {
 		return super.newProperty(AuthMethods.newInstance(value));
 	}
 

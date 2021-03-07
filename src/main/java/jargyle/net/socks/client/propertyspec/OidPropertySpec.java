@@ -6,7 +6,7 @@ import org.ietf.jgss.Oid;
 import jargyle.net.socks.client.Property;
 import jargyle.net.socks.client.PropertySpec;
 
-public final class OidPropertySpec extends PropertySpec {
+public final class OidPropertySpec extends PropertySpec<Oid> {
 
 	private static Oid newOid(final String s) {
 		Oid oid = null;
@@ -23,7 +23,7 @@ public final class OidPropertySpec extends PropertySpec {
 	}
 
 	@Override
-	public Property newProperty(final String value) {
+	public Property<Oid> newPropertyOfParsableValue(final String value) {
 		return super.newProperty(newOid(value));
 	}
 

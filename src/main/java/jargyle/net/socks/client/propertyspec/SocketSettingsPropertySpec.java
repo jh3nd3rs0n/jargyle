@@ -4,7 +4,8 @@ import jargyle.net.SocketSettings;
 import jargyle.net.socks.client.Property;
 import jargyle.net.socks.client.PropertySpec;
 
-public final class SocketSettingsPropertySpec extends PropertySpec {
+public final class SocketSettingsPropertySpec 
+	extends PropertySpec<SocketSettings> {
 
 	public SocketSettingsPropertySpec(
 			final String s, final SocketSettings defaultVal) {
@@ -12,7 +13,8 @@ public final class SocketSettingsPropertySpec extends PropertySpec {
 	}
 
 	@Override
-	public Property newProperty(final String value) {
+	public Property<SocketSettings> newPropertyOfParsableValue(
+			final String value) {
 		return super.newProperty(SocketSettings.newInstance(value));
 	}
 

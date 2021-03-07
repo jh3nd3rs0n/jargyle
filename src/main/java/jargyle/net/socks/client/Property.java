@@ -1,11 +1,11 @@
 package jargyle.net.socks.client;
 
-public final class Property {
+public final class Property<V> {
 	
-	private final PropertySpec propertySpec;
-	private final Object value;
+	private final PropertySpec<V> propertySpec;
+	private final V value;
 	
-	Property(final PropertySpec spec, final Object val) {
+	Property(final PropertySpec<V> spec, final V val) {
 		this.propertySpec = spec;
 		this.value = val;
 	}
@@ -21,7 +21,7 @@ public final class Property {
 		if (this.getClass() != obj.getClass()) {
 			return false;
 		}
-		Property other = (Property) obj;
+		Property<?> other = (Property<?>) obj;
 		if (this.propertySpec != other.propertySpec) {
 			return false;
 		}
@@ -35,11 +35,11 @@ public final class Property {
 		return true;
 	}
 	
-	public PropertySpec getPropertySpec() {
+	public PropertySpec<V> getPropertySpec() {
 		return this.propertySpec;
 	}
 	
-	public Object getValue() {
+	public V getValue() {
 		return this.value;
 	}
 
@@ -47,8 +47,10 @@ public final class Property {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((this.propertySpec == null) ? 0 : this.propertySpec.hashCode());
-		result = prime * result + ((this.value == null) ? 0 : this.value.hashCode());
+		result = prime * result + ((this.propertySpec == null) ? 
+				0 : this.propertySpec.hashCode());
+		result = prime * result + ((this.value == null) ? 
+				0 : this.value.hashCode());
 		return result;
 	}
 

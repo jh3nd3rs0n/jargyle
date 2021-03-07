@@ -19,7 +19,7 @@ public final class Settings {
 	@XmlType(name = "settings", propOrder = { "settings" })
 	static class SettingsXml {
 		@XmlElement(name = "setting")
-		protected List<Setting> settings = new ArrayList<Setting>();
+		protected List<Setting<? extends Object>> settings = new ArrayList<Setting<? extends Object>>();
 	}
 	
 	static final class SettingsXmlAdapter 
@@ -29,14 +29,15 @@ public final class Settings {
 		public SettingsXml marshal(final Settings v) throws Exception {
 			if (v == null) { return null; }
 			SettingsXml settingsXml = new SettingsXml();
-			settingsXml.settings = new ArrayList<Setting>(v.settings);
+			settingsXml.settings = new ArrayList<Setting<? extends Object>>(
+					v.settings);
 			return settingsXml;
 		}
 
 		@Override
 		public Settings unmarshal(final SettingsXml v) throws Exception {
 			if (v == null) { return null; }
-			return new Settings(v.settings);
+			return newInstance(v.settings);
 		}
 		
 	}
@@ -44,22 +45,32 @@ public final class Settings {
 	public static final Settings EMPTY_INSTANCE = new Settings(
 			Collections.emptyList());
 	
-	public static Settings newInstance(final List<Setting> settings) {
-		return new Settings(settings);
+	public static Settings newInstance(
+			final List<Setting<? extends Object>> settings) {
+		List<Setting<Object>> sttngs = new ArrayList<Setting<Object>>();
+		for (Setting<? extends Object> setting : settings) {
+			@SuppressWarnings("unchecked")
+			Setting<Object> sttng = (Setting<Object>) setting;
+			sttngs.add(sttng);
+		}
+		return new Settings(sttngs);
 	}
 	
-	public static Settings newInstance(final Setting... settings) {
+	@SafeVarargs
+	public static Settings newInstance(
+			final Setting<? extends Object>... settings) {
 		return newInstance(Arrays.asList(settings));
 	}
 	
-	private final List<Setting> settings;
+	private final List<Setting<Object>> settings;
 	
-	private Settings(final List<Setting> sttngs) {
-		this.settings = new ArrayList<Setting>(sttngs);
+	private Settings(final List<Setting<Object>> sttngs) {
+		this.settings = new ArrayList<Setting<Object>>(sttngs);
 	}
 	
-	public boolean containsNondefaultValue(final SettingSpec settingSpec) {
-		for (Setting setting : this.settings) {
+	public boolean containsNondefaultValue(
+			final SettingSpec<? extends Object> settingSpec) {
+		for (Setting<?> setting : this.settings) {
 			if (setting.getSettingSpec().equals(settingSpec)) {
 				return true;
 			}
@@ -89,10 +100,9 @@ public final class Settings {
 		return true;
 	}
 	
-	public <T> T getLastValue(
-			final SettingSpec settingSpec, final Class<T> valueType) {
-		List<T> values = this.getValues(settingSpec, valueType);
-		T value = null;
+	public <V> V getLastValue(final SettingSpec<V> settingSpec) {
+		List<V> values = this.getValues(settingSpec);
+		V value = null;
 		int size = values.size();
 		if (size > 0) {
 			value = values.get(size - 1);
@@ -100,18 +110,17 @@ public final class Settings {
 		return value;
 	}
 	
-	public <T> List<T> getValues(
-			final SettingSpec settingSpec, final Class<T> valueType) {
-		List<T> values = new ArrayList<T>();
-		for (Setting setting : this.settings) {
+	public <V> List<V> getValues(final SettingSpec<V> settingSpec) {
+		List<V> values = new ArrayList<V>();
+		for (Setting<Object> setting : this.settings) {
 			if (setting.getSettingSpec().equals(settingSpec)) {
-				T value = valueType.cast(setting.getValue());
+				V value = settingSpec.getValueType().cast(setting.getValue());
 				values.add(value);
 			}
 		}
 		if (values.isEmpty()) {
-			Setting defaultSetting = settingSpec.getDefaultSetting();
-			T value = valueType.cast(defaultSetting.getValue());
+			Setting<V> defaultSetting = settingSpec.getDefaultSetting();
+			V value = defaultSetting.getValue();
 			values.add(value);
 		}
 		return Collections.unmodifiableList(values);
@@ -126,7 +135,7 @@ public final class Settings {
 		return result;
 	}
 
-	public List<Setting> toList() {
+	public List<Setting<Object>> toList() {
 		return Collections.unmodifiableList(this.settings);
 	}
 

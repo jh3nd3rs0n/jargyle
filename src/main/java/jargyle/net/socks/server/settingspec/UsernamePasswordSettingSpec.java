@@ -4,7 +4,8 @@ import jargyle.net.socks.client.v5.UsernamePassword;
 import jargyle.net.socks.server.Setting;
 import jargyle.net.socks.server.SettingSpec;
 
-public final class UsernamePasswordSettingSpec extends SettingSpec {
+public final class UsernamePasswordSettingSpec 
+	extends SettingSpec<UsernamePassword> {
 
 	public UsernamePasswordSettingSpec(
 			final String s, final UsernamePassword defaultVal) {
@@ -12,7 +13,8 @@ public final class UsernamePasswordSettingSpec extends SettingSpec {
 	}
 
 	@Override
-	public Setting newSetting(final String value) {
+	public Setting<UsernamePassword> newSettingOfParsableValue(
+			final String value) {
 		return super.newSetting(UsernamePassword.newInstance(value));
 	}
 	

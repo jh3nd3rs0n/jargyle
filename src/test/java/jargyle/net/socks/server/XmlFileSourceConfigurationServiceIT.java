@@ -70,7 +70,7 @@ public class XmlFileSourceConfigurationServiceIT {
 				this.xmlFileSourceConfigurationService.getConfiguration();
 		Settings settings = configuration.getSettings();
 		Port expectedPort = Port.newInstance(1234);
-		Port actualPort = settings.getLastValue(SettingSpec.PORT, Port.class);
+		Port actualPort = settings.getLastValue(SettingSpec.PORT);
 		assertEquals(expectedPort, actualPort);
 	}
 
@@ -98,9 +98,10 @@ public class XmlFileSourceConfigurationServiceIT {
 		Configuration configuration = 
 				this.xmlFileSourceConfigurationService.getConfiguration();
 		Settings settings = configuration.getSettings();
-		NonnegativeInteger expectedBacklog = NonnegativeInteger.newInstance(100);
+		NonnegativeInteger expectedBacklog = NonnegativeInteger.newInstance(
+				100);
 		NonnegativeInteger actualBacklog = settings.getLastValue(
-				SettingSpec.BACKLOG, NonnegativeInteger.class);
+				SettingSpec.BACKLOG);
 		assertEquals(expectedBacklog, actualBacklog);
 	}
 

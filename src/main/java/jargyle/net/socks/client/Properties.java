@@ -8,33 +8,44 @@ import java.util.Map;
 
 public final class Properties {
 
-	public static Properties newInstance(final List<Property> properties) {
-		Map<PropertySpec, Property> props = 
-				new HashMap<PropertySpec, Property>();
-		for (Property property : properties) {
-			props.put(property.getPropertySpec(), property);
+	public static Properties newInstance(
+			final List<Property<? extends Object>> properties) {
+		Map<PropertySpec<Object>, Property<Object>> props = 
+				new HashMap<PropertySpec<Object>, Property<Object>>();
+		for (Property<? extends Object> property : properties) {
+			@SuppressWarnings("unchecked")
+			Property<Object> prop = (Property<Object>) property;
+			PropertySpec<Object> propSpec = prop.getPropertySpec();
+			props.put(propSpec, prop);
 		}
-		for (PropertySpec propertySpec : PropertySpec.values()) {
+		for (PropertySpec<Object> propertySpec : PropertySpec.values()) {
 			String property = System.getProperty(propertySpec.toString());
 			if (property != null) {
-				props.put(propertySpec, propertySpec.newProperty(property));
+				props.put(
+						propertySpec, 
+						propertySpec.newPropertyOfParsableValue(property));
 			}
 		}
 		return new Properties(props);
 	}
 	
-	public static Properties newInstance(final Property... properties) {
+	@SafeVarargs
+	public static Properties newInstance(
+			final Property<? extends Object>... properties) {
 		return newInstance(Arrays.asList(properties));
 	}
 	
-	private final Map<PropertySpec, Property> properties;
+	private final Map<PropertySpec<Object>, Property<Object>> properties;
 	
-	private Properties(final Map<PropertySpec, Property> props) {
-		this.properties = new HashMap<PropertySpec, Property>(props);
+	private Properties(
+			final Map<PropertySpec<Object>, Property<Object>> props) {
+		this.properties = new HashMap<PropertySpec<Object>, Property<Object>>(
+				props);
 	}
 	
 	private Properties(final Properties other) {
-		this.properties = new HashMap<PropertySpec, Property>(other.properties);
+		this.properties = new HashMap<PropertySpec<Object>, Property<Object>>(
+				other.properties);
 	}
 	
 	@Override
@@ -59,16 +70,15 @@ public final class Properties {
 		return true;
 	}
 	
-	public <T> T getValue(
-			final PropertySpec propertySpec, final Class<T> valueType) {
-		T value = null;
-		Property property = this.properties.get(propertySpec);
+	public <V> V getValue(final PropertySpec<V> propertySpec) {
+		V value = null;
+		Property<Object> property = this.properties.get(propertySpec);
 		if (property != null) {
-			value = valueType.cast(property.getValue());
+			value = propertySpec.getValueType().cast(property.getValue());
 		}
 		if (value == null) {
-			Property defaultProperty = propertySpec.getDefaultProperty();
-			value = valueType.cast(defaultProperty.getValue());
+			Property<V> defaultProperty = propertySpec.getDefaultProperty();
+			value = defaultProperty.getValue();
 		}
 		return value;
 	}
@@ -82,7 +92,7 @@ public final class Properties {
 		return result;
 	}
 
-	public Map<PropertySpec, Property> toMap() {
+	public Map<PropertySpec<Object>, Property<Object>> toMap() {
 		return Collections.unmodifiableMap(this.properties);
 	}
 

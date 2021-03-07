@@ -1,8 +1,12 @@
 package jargyle.net.socks.client;
 
+import java.io.File;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
+import org.ietf.jgss.Oid;
 
 import jargyle.net.Host;
 import jargyle.net.Port;
@@ -28,99 +32,100 @@ import jargyle.security.EncryptedPassword;
 import jargyle.util.PositiveInteger;
 import jargyle.util.Strings;
 
-public abstract class PropertySpec {
+public abstract class PropertySpec<V> {
 
-	public static final PropertySpec BIND_HOST = new HostPropertySpec(
+	public static final PropertySpec<Host> BIND_HOST = new HostPropertySpec(
 			"socksClient.bindHost",
 			Host.getIpv4WildcardInstance());
 	
-	public static final PropertySpec BIND_PORT = new PortPropertySpec(
+	public static final PropertySpec<Port> BIND_PORT = new PortPropertySpec(
 			"socksClient.bindPort",
 			Port.newInstance(0));
 	
-	public static final PropertySpec CONNECT_TIMEOUT = new PositiveIntegerPropertySpec(
+	public static final PropertySpec<PositiveInteger> CONNECT_TIMEOUT = new PositiveIntegerPropertySpec(
 			"socksClient.connectTimeout",
 			PositiveInteger.newInstance(60000)); // 1 minute
 	
-	public static final PropertySpec SOCKET_SETTINGS = new SocketSettingsPropertySpec(
+	public static final PropertySpec<SocketSettings> SOCKET_SETTINGS = new SocketSettingsPropertySpec(
 			"socksClient.socketSettings",
 			SocketSettings.newInstance());
 	
-	public static final PropertySpec SOCKS5_AUTH_METHODS = new AuthMethodsPropertySpec(
+	public static final PropertySpec<AuthMethods> SOCKS5_AUTH_METHODS = new AuthMethodsPropertySpec(
 			"socksClient.socks5.authMethods",
 			AuthMethods.newInstance(AuthMethod.NO_AUTHENTICATION_REQUIRED));
 	
-	public static final PropertySpec SOCKS5_FORWARD_HOSTNAME_RESOLUTION = new BooleanPropertySpec(
+	public static final PropertySpec<Boolean> SOCKS5_FORWARD_HOSTNAME_RESOLUTION = new BooleanPropertySpec(
 			"socksClient.socks5.forwardHostnameResolution",
 			Boolean.FALSE);
 	
-	public static final PropertySpec SOCKS5_GSSAPI_MECHANISM_OID = new OidPropertySpec(
+	public static final PropertySpec<Oid> SOCKS5_GSSAPI_MECHANISM_OID = new OidPropertySpec(
 			"socksClient.socks5.gssapiMechanismOid",
 			"1.2.840.113554.1.2.2");
 	
-	public static final PropertySpec SOCKS5_GSSAPI_NEC_REFERENCE_IMPL = new BooleanPropertySpec(
+	public static final PropertySpec<Boolean> SOCKS5_GSSAPI_NEC_REFERENCE_IMPL = new BooleanPropertySpec(
 			"socksClient.socks5.gssapiNecReferenceImpl",
 			Boolean.FALSE);
 	
-	public static final PropertySpec SOCKS5_GSSAPI_PROTECTION_LEVELS = new GssapiProtectionLevelsPropertySpec(
+	public static final PropertySpec<GssapiProtectionLevels> SOCKS5_GSSAPI_PROTECTION_LEVELS = new GssapiProtectionLevelsPropertySpec(
 			"socksClient.socks5.gssapiProtectionLevels",
 			GssapiProtectionLevels.DEFAULT_INSTANCE);
 	
-	public static final PropertySpec SOCKS5_GSSAPI_SERVICE_NAME = new StringPropertySpec(
+	public static final PropertySpec<String> SOCKS5_GSSAPI_SERVICE_NAME = new StringPropertySpec(
 			"socksClient.socks5.gssapiServiceName",
 			null);
 	
-	public static final PropertySpec SOCKS5_PASSWORD = new UserEncryptedPasswordPropertySpec(
+	public static final PropertySpec<EncryptedPassword> SOCKS5_PASSWORD = new UserEncryptedPasswordPropertySpec(
 			"socksClient.socks5.password",
 			EncryptedPassword.newInstance(new char[] { }));
 	
-	public static final PropertySpec SOCKS5_USERNAME = new UsernamePropertySpec(
+	public static final PropertySpec<String> SOCKS5_USERNAME = new UsernamePropertySpec(
 			"socksClient.socks5.username", 
 			System.getProperty("user.name"));
 	
-	public static final PropertySpec SSL_ENABLED = new BooleanPropertySpec(
+	public static final PropertySpec<Boolean> SSL_ENABLED = new BooleanPropertySpec(
 			"socksClient.ssl.enabled",
 			Boolean.FALSE);
 	
-	public static final PropertySpec SSL_ENABLED_CIPHER_SUITES = new StringsPropertySpec(
+	public static final PropertySpec<Strings> SSL_ENABLED_CIPHER_SUITES = new StringsPropertySpec(
 			"socksClient.ssl.enabledCipherSuites", 
 			Strings.newInstance(new String[] { }));
 	
-	public static final PropertySpec SSL_ENABLED_PROTOCOLS = new StringsPropertySpec(
+	public static final PropertySpec<Strings> SSL_ENABLED_PROTOCOLS = new StringsPropertySpec(
 			"socksClient.ssl.enabledProtocols", 
 			Strings.newInstance(new String[] { }));
 	
-	public static final PropertySpec SSL_KEY_STORE_FILE = new FilePropertySpec(
+	public static final PropertySpec<File> SSL_KEY_STORE_FILE = new FilePropertySpec(
 			"socksClient.ssl.keyStoreFile", 
 			null);
 	
-	public static final PropertySpec SSL_KEY_STORE_PASSWORD = new EncryptedPasswordPropertySpec(
+	public static final PropertySpec<EncryptedPassword> SSL_KEY_STORE_PASSWORD = new EncryptedPasswordPropertySpec(
 			"socksClient.ssl.keyStorePassword", 
 			EncryptedPassword.newInstance(new char[] { }));
 	
-	public static final PropertySpec SSL_KEY_STORE_TYPE = new StringPropertySpec(
+	public static final PropertySpec<String> SSL_KEY_STORE_TYPE = new StringPropertySpec(
 			"socksClient.ssl.keyStoreType",
 			"PKCS12");
 	
-	public static final PropertySpec SSL_PROTOCOL = new StringPropertySpec(
+	public static final PropertySpec<String> SSL_PROTOCOL = new StringPropertySpec(
 			"socksClient.ssl.protocol",
 			"TLSv1");
 	
-	public static final PropertySpec SSL_TRUST_STORE_FILE = new FilePropertySpec(
+	public static final PropertySpec<File> SSL_TRUST_STORE_FILE = new FilePropertySpec(
 			"socksClient.ssl.trustStoreFile", 
 			null);
 	
-	public static final PropertySpec SSL_TRUST_STORE_PASSWORD = new EncryptedPasswordPropertySpec(
+	public static final PropertySpec<EncryptedPassword> SSL_TRUST_STORE_PASSWORD = new EncryptedPasswordPropertySpec(
 			"socksClient.ssl.trustStorePassword",
 			EncryptedPassword.newInstance(new char[] { }));
 	
-	public static final PropertySpec SSL_TRUST_STORE_TYPE = new StringPropertySpec(
+	public static final PropertySpec<String> SSL_TRUST_STORE_TYPE = new StringPropertySpec(
 			"socksClient.ssl.trustStoreType",
 			"PKCS12");
 	
-	private static final List<PropertySpec> VALUES = new ArrayList<PropertySpec>();
+	private static final List<PropertySpec<Object>> VALUES = 
+			new ArrayList<PropertySpec<Object>>();
 	
-	public static PropertySpec[] values() {
+	public static PropertySpec<Object>[] values() {
 		if (VALUES.isEmpty()) {
 			Field[] fields = PropertySpec.class.getFields();
 			for (Field field : fields) {
@@ -136,33 +141,44 @@ public abstract class PropertySpec {
 				} catch (IllegalAccessException e) {
 					throw new AssertionError(e);
 				}
-				PropertySpec val = (PropertySpec) value;
+				@SuppressWarnings("unchecked")
+				PropertySpec<Object> val = (PropertySpec<Object>) value;
 				VALUES.add(val);
 			}
 		}
-		return VALUES.toArray(new PropertySpec[VALUES.size()]);
+		@SuppressWarnings("unchecked")
+		PropertySpec<Object>[] vals =
+				(PropertySpec<Object>[]) VALUES.toArray(
+						new PropertySpec<?>[VALUES.size()]);
+		return vals;
 	}
 
-	private final Property defaultProperty;
+	private final Property<V> defaultProperty;
 	private final String string;
-	private final Class<?> valueType;
+	private final Class<V> valueType;
 	
 	public PropertySpec(
-			final String s, final Class<?> valType, final Object defaultVal) {
-		this.defaultProperty = new Property(this, valType.cast(defaultVal));
+			final String s, final Class<V> valType, final V defaultVal) {
+		Objects.requireNonNull(s);
+		Objects.requireNonNull(valType);
+		this.defaultProperty = new Property<V>(this, defaultVal);
 		this.string = s;
 		this.valueType = valType;
 	}
 	
-	public final Property getDefaultProperty() {
+	public final Property<V> getDefaultProperty() {
 		return this.defaultProperty;
 	}
 	
-	public Property newProperty(final Object value) {
-		return new Property(this, this.valueType.cast(value));
+	public final Class<V> getValueType() {
+		return this.valueType;
 	}
 	
-	public abstract Property newProperty(final String value);
+	public Property<V> newProperty(final V value) {
+		return new Property<V>(this, value);
+	}
+	
+	public abstract Property<V> newPropertyOfParsableValue(final String value);
 	
 	@Override
 	public final String toString() {

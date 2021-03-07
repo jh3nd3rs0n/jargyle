@@ -48,7 +48,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			DatagramSocket originalDatagramSock = new DatagramSocket(null);
 			Socket originalSock = new Socket();
 			SocketSettings socketSettings = client.getProperties().getValue(
-					PropertySpec.SOCKET_SETTINGS, SocketSettings.class);
+					PropertySpec.SOCKET_SETTINGS);
 			socketSettings.applyTo(originalSock);
 			this.connected = false;
 			this.datagramSocket = originalDatagramSock;

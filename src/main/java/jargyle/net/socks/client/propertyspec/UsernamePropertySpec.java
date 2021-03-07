@@ -4,7 +4,7 @@ import jargyle.net.socks.client.Property;
 import jargyle.net.socks.client.PropertySpec;
 import jargyle.net.socks.client.v5.UsernamePassword;
 
-public final class UsernamePropertySpec extends PropertySpec {
+public final class UsernamePropertySpec extends PropertySpec<String> {
 
 	private static String getValidatedUsername(final String s) {
 		UsernamePassword.validateUsername(s);
@@ -16,14 +16,13 @@ public final class UsernamePropertySpec extends PropertySpec {
 	}
 
 	@Override
-	public Property newProperty(final Object value) {
-		String val = String.class.cast(value);
-		return super.newProperty((Object) getValidatedUsername(val));
+	public Property<String> newProperty(final String value) {
+		return super.newProperty(getValidatedUsername(value));
 	}
 
 	@Override
-	public Property newProperty(final String value) {
-		return super.newProperty((Object) getValidatedUsername(value));
+	public Property<String> newPropertyOfParsableValue(final String value) {
+		return super.newProperty(getValidatedUsername(value));
 	}
 
 }

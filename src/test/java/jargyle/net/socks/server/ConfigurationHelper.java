@@ -52,7 +52,7 @@ public final class ConfigurationHelper {
 				SettingSpec.SSL_KEY_STORE_FILE.newSetting(
 						ResourceHelper.getResourceAsFile(
 								ResourceNameConstants.JARGYLE_SECURITY_SERVER_KEY_STORE_FILE)),
-				SettingSpec.SSL_KEY_STORE_PASSWORD.newSetting(
+				SettingSpec.SSL_KEY_STORE_PASSWORD.newSettingOfParsableValue(
 						ResourceHelper.getResourceAsString(
 								ResourceNameConstants.JARGYLE_SECURITY_SERVER_KEY_STORE_PASSWORD_FILE))));
 		return builder.build();
@@ -65,13 +65,13 @@ public final class ConfigurationHelper {
 				SettingSpec.SSL_KEY_STORE_FILE.newSetting(
 						ResourceHelper.getResourceAsFile(
 								ResourceNameConstants.JARGYLE_SECURITY_SERVER_KEY_STORE_FILE)),
-				SettingSpec.SSL_KEY_STORE_PASSWORD.newSetting(
+				SettingSpec.SSL_KEY_STORE_PASSWORD.newSettingOfParsableValue(
 						ResourceHelper.getResourceAsString(
 								ResourceNameConstants.JARGYLE_SECURITY_SERVER_KEY_STORE_PASSWORD_FILE)),
 				SettingSpec.SSL_TRUST_STORE_FILE.newSetting(
 						ResourceHelper.getResourceAsFile(
 								ResourceNameConstants.JARGYLE_SECURITY_CLIENT_KEY_STORE_FILE)),
-				SettingSpec.SSL_TRUST_STORE_PASSWORD.newSetting(
+				SettingSpec.SSL_TRUST_STORE_PASSWORD.newSettingOfParsableValue(
 						ResourceHelper.getResourceAsString(
 								ResourceNameConstants.JARGYLE_SECURITY_CLIENT_KEY_STORE_PASSWORD_FILE)),
 				SettingSpec.SSL_WANT_CLIENT_AUTH.newSetting(Boolean.TRUE)));
@@ -85,14 +85,14 @@ public final class ConfigurationHelper {
 				SettingSpec.SSL_KEY_STORE_FILE.newSetting(
 						ResourceHelper.getResourceAsFile(
 								ResourceNameConstants.JARGYLE_SECURITY_SERVER_KEY_STORE_FILE)),
-				SettingSpec.SSL_KEY_STORE_PASSWORD.newSetting(
+				SettingSpec.SSL_KEY_STORE_PASSWORD.newSettingOfParsableValue(
 						ResourceHelper.getResourceAsString(
 								ResourceNameConstants.JARGYLE_SECURITY_SERVER_KEY_STORE_PASSWORD_FILE)),
 				SettingSpec.SSL_NEED_CLIENT_AUTH.newSetting(Boolean.TRUE),
 				SettingSpec.SSL_TRUST_STORE_FILE.newSetting(
 						ResourceHelper.getResourceAsFile(
 								ResourceNameConstants.JARGYLE_SECURITY_CLIENT_KEY_STORE_FILE)),
-				SettingSpec.SSL_TRUST_STORE_PASSWORD.newSetting(
+				SettingSpec.SSL_TRUST_STORE_PASSWORD.newSettingOfParsableValue(
 						ResourceHelper.getResourceAsString(
 								ResourceNameConstants.JARGYLE_SECURITY_CLIENT_KEY_STORE_PASSWORD_FILE))));
 		return builder.build();

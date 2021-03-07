@@ -4,7 +4,8 @@ import jargyle.net.socks.server.Setting;
 import jargyle.net.socks.server.SettingSpec;
 import jargyle.net.socks.transport.v5.gssapiauth.GssapiProtectionLevels;
 
-public final class GssapiProtectionLevelsSettingSpec extends SettingSpec {
+public final class GssapiProtectionLevelsSettingSpec 
+	extends SettingSpec<GssapiProtectionLevels> {
 
 	public GssapiProtectionLevelsSettingSpec(
 			final String s, final GssapiProtectionLevels defaultVal) {
@@ -12,7 +13,8 @@ public final class GssapiProtectionLevelsSettingSpec extends SettingSpec {
 	}
 
 	@Override
-	public Setting newSetting(final String value) {
+	public Setting<GssapiProtectionLevels> newSettingOfParsableValue(
+			final String value) {
 		return super.newSetting(GssapiProtectionLevels.newInstance(value));
 	}
 

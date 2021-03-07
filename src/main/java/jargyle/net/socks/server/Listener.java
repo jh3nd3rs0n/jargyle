@@ -41,7 +41,7 @@ final class Listener implements Runnable {
 		String clientAddress = 
 				clientSocket.getInetAddress().getHostAddress();
 		Criteria allowedClientAddressCriteria = settings.getLastValue(
-				SettingSpec.ALLOWED_CLIENT_ADDRESS_CRITERIA, Criteria.class);
+				SettingSpec.ALLOWED_CLIENT_ADDRESS_CRITERIA);
 		Criterion criterion = allowedClientAddressCriteria.anyEvaluatesTrue(
 				clientAddress);
 		if (criterion == null) {
@@ -51,7 +51,7 @@ final class Listener implements Runnable {
 			return false;
 		}
 		Criteria blockedClientAddressCriteria = settings.getLastValue(
-				SettingSpec.BLOCKED_CLIENT_ADDRESS_CRITERIA, Criteria.class);
+				SettingSpec.BLOCKED_CLIENT_ADDRESS_CRITERIA);
 		criterion = blockedClientAddressCriteria.anyEvaluatesTrue(
 				clientAddress);
 		if (criterion != null) {
@@ -82,7 +82,7 @@ final class Listener implements Runnable {
 		Settings settings = this.configuration.getSettings();
 		try {
 			SocketSettings socketSettings =	settings.getLastValue(
-					SettingSpec.CLIENT_SOCKET_SETTINGS, SocketSettings.class);
+					SettingSpec.CLIENT_SOCKET_SETTINGS);
 			socketSettings.applyTo(clientSocket);
 		} catch (SocketException e) {
 			LOGGER.warn(
@@ -100,7 +100,7 @@ final class Listener implements Runnable {
 	private DtlsDatagramSocketFactory getClientDtlsDatagramSocketFactory() {
 		// TODO: when DTLS support is implemented, use SettingSpec.DTLS_ENABLED 
 		if (!this.configuration.getSettings().getLastValue(
-				SettingSpec.SSL_ENABLED, Boolean.class).booleanValue()) {
+				SettingSpec.SSL_ENABLED).booleanValue()) {
 			return null;
 		}
 		if (this.clientDtlsDatagramSocketFactory == null) {
@@ -112,7 +112,7 @@ final class Listener implements Runnable {
 	
 	private SslSocketFactory getClientSslSocketFactory() {
 		if (!this.configuration.getSettings().getLastValue(
-				SettingSpec.SSL_ENABLED, Boolean.class).booleanValue()) {
+				SettingSpec.SSL_ENABLED).booleanValue()) {
 			return null;
 		}
 		if (this.clientSslSocketFactory == null) {

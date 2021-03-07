@@ -43,7 +43,6 @@ import jargyle.net.socks.transport.v5.gssapiauth.GssSocket;
 import jargyle.net.ssl.DtlsDatagramSocketFactory;
 import jargyle.util.Criteria;
 import jargyle.util.Criterion;
-import jargyle.util.PositiveInteger;
 
 public final class Socks5Worker implements Runnable {
 
@@ -102,10 +101,9 @@ public final class Socks5Worker implements Runnable {
 
 	private boolean canAcceptExternalIncomingAddress(
 			final String externalIncomingAddress) {
-		Criteria allowedExternalIncomingAddressCriteria = 
+		Criteria allowedExternalIncomingAddressCriteria =
 				this.settings.getLastValue(
-						SettingSpec.SOCKS5_ON_BIND_ALLOWED_EXTERNAL_INCOMING_ADDRESS_CRITERIA, 
-						Criteria.class);
+						SettingSpec.SOCKS5_ON_BIND_ALLOWED_EXTERNAL_INCOMING_ADDRESS_CRITERIA);
 		Criterion criterion = 
 				allowedExternalIncomingAddressCriteria.anyEvaluatesTrue(
 						externalIncomingAddress);
@@ -129,8 +127,7 @@ public final class Socks5Worker implements Runnable {
 		}
 		Criteria blockedExternalIncomingAddressCriteria =
 				this.settings.getLastValue(
-						SettingSpec.SOCKS5_ON_BIND_BLOCKED_EXTERNAL_INCOMING_ADDRESS_CRITERIA, 
-						Criteria.class);
+						SettingSpec.SOCKS5_ON_BIND_BLOCKED_EXTERNAL_INCOMING_ADDRESS_CRITERIA);
 		criterion = blockedExternalIncomingAddressCriteria.anyEvaluatesTrue(
 				externalIncomingAddress);
 		if (criterion != null) {
@@ -161,8 +158,7 @@ public final class Socks5Worker implements Runnable {
 			final Socks5Request socks5Req) {
 		Socks5RequestCriteria allowedSocks5RequestCriteria = 
 				this.settings.getLastValue(
-						SettingSpec.SOCKS5_ALLOWED_SOCKS5_REQUEST_CRITERIA, 
-						Socks5RequestCriteria.class);
+						SettingSpec.SOCKS5_ALLOWED_SOCKS5_REQUEST_CRITERIA);
 		Socks5RequestCriterion socks5RequestCriterion =
 				allowedSocks5RequestCriteria.anyEvaluatesTrue(
 						clientAddress, socks5Req);
@@ -184,8 +180,7 @@ public final class Socks5Worker implements Runnable {
 		}
 		Socks5RequestCriteria blockedSocks5RequestCriteria = 
 				this.settings.getLastValue(
-						SettingSpec.SOCKS5_BLOCKED_SOCKS5_REQUEST_CRITERIA, 
-						Socks5RequestCriteria.class);
+						SettingSpec.SOCKS5_BLOCKED_SOCKS5_REQUEST_CRITERIA);
 		socks5RequestCriterion =
 				blockedSocks5RequestCriteria.anyEvaluatesTrue(
 						clientAddress, socks5Req);
@@ -214,8 +209,7 @@ public final class Socks5Worker implements Runnable {
 			final DatagramSocket clientDatagramSock) {
 		try {
 			SocketSettings socketSettings = this.settings.getLastValue(
-					SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_CLIENT_SOCKET_SETTINGS, 
-					SocketSettings.class);
+					SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_CLIENT_SOCKET_SETTINGS);
 			socketSettings.applyTo(clientDatagramSock);
 		} catch (SocketException e) {
 			LOGGER.warn( 
@@ -240,8 +234,7 @@ public final class Socks5Worker implements Runnable {
 			final Socket externalIncomingSocket) {
 		try {
 			SocketSettings socketSettings = this.settings.getLastValue(
-					SettingSpec.SOCKS5_ON_BIND_EXTERNAL_INCOMING_SOCKET_SETTINGS, 
-					SocketSettings.class);
+					SettingSpec.SOCKS5_ON_BIND_EXTERNAL_INCOMING_SOCKET_SETTINGS);
 			socketSettings.applyTo(externalIncomingSocket);
 		} catch (SocketException e) {
 			LOGGER.warn( 
@@ -267,8 +260,7 @@ public final class Socks5Worker implements Runnable {
 	private boolean configureListenSocket(final ServerSocket listenSocket) {
 		try {
 			SocketSettings socketSettings = this.settings.getLastValue(
-					SettingSpec.SOCKS5_ON_BIND_LISTEN_SOCKET_SETTINGS, 
-					SocketSettings.class);
+					SettingSpec.SOCKS5_ON_BIND_LISTEN_SOCKET_SETTINGS);
 			socketSettings.applyTo(listenSocket);
 		} catch (SocketException e) {
 			LOGGER.warn( 
@@ -295,8 +287,7 @@ public final class Socks5Worker implements Runnable {
 			final DatagramSocket serverDatagramSock) {
 		try {
 			SocketSettings socketSettings = this.settings.getLastValue(
-					SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_SERVER_SOCKET_SETTINGS, 
-					SocketSettings.class);
+					SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_SERVER_SOCKET_SETTINGS);
 			socketSettings.applyTo(serverDatagramSock);
 		} catch (SocketException e) {
 			LOGGER.warn( 
@@ -322,11 +313,10 @@ public final class Socks5Worker implements Runnable {
 	private boolean configureServerSocket(final Socket serverSocket) {
 		try {
 			SocketSettings socketSettings = this.settings.getLastValue(
-					SettingSpec.SOCKS5_ON_CONNECT_SERVER_SOCKET_SETTINGS, 
-					SocketSettings.class);
+					SettingSpec.SOCKS5_ON_CONNECT_SERVER_SOCKET_SETTINGS);
 			socketSettings.applyTo(serverSocket);
 			Host bindHost = this.settings.getLastValue(
-					SettingSpec.SOCKS5_ON_CONNECT_SERVER_BIND_HOST, Host.class);
+					SettingSpec.SOCKS5_ON_CONNECT_SERVER_BIND_HOST);
 			InetAddress bindInetAddress = bindHost.toInetAddress();
 			serverSocket.bind(new InetSocketAddress(bindInetAddress, 0));
 		} catch (SocketException e) {
@@ -453,11 +443,9 @@ public final class Socks5Worker implements Runnable {
 			this.passData(
 					externalIncomingSocket, 
 					this.settings.getLastValue(
-							SettingSpec.SOCKS5_ON_BIND_RELAY_BUFFER_SIZE, 
-							PositiveInteger.class).intValue(), 
+							SettingSpec.SOCKS5_ON_BIND_RELAY_BUFFER_SIZE).intValue(), 
 					this.settings.getLastValue(
-							SettingSpec.SOCKS5_ON_BIND_RELAY_TIMEOUT, 
-							PositiveInteger.class).intValue());
+							SettingSpec.SOCKS5_ON_BIND_RELAY_TIMEOUT).intValue());
 		} finally {
 			if (externalIncomingSocket != null 
 					&& !externalIncomingSocket.isClosed()) {
@@ -488,8 +476,7 @@ public final class Socks5Worker implements Runnable {
 			}
 			try {
 				int connectTimeout = this.settings.getLastValue(
-						SettingSpec.SOCKS5_ON_CONNECT_SERVER_CONNECT_TIMEOUT, 
-						PositiveInteger.class).intValue();
+						SettingSpec.SOCKS5_ON_CONNECT_SERVER_CONNECT_TIMEOUT).intValue();
 				serverSocket.connect(new InetSocketAddress(
 						hostResolver.resolve(desiredDestinationAddress),
 						desiredDestinationPort),
@@ -519,11 +506,9 @@ public final class Socks5Worker implements Runnable {
 			this.passData(
 					serverSocket, 
 					this.settings.getLastValue(
-							SettingSpec.SOCKS5_ON_CONNECT_RELAY_BUFFER_SIZE, 
-							PositiveInteger.class).intValue(),
+							SettingSpec.SOCKS5_ON_CONNECT_RELAY_BUFFER_SIZE).intValue(),
 					this.settings.getLastValue(
-							SettingSpec.SOCKS5_ON_CONNECT_RELAY_TIMEOUT, 
-							PositiveInteger.class).intValue());
+							SettingSpec.SOCKS5_ON_CONNECT_RELAY_TIMEOUT).intValue());
 		} finally {
 			if (serverSocket != null && !serverSocket.isClosed()) {
 				serverSocket.close();
@@ -640,25 +625,19 @@ public final class Socks5Worker implements Runnable {
 					hostResolver, 
 					new UdpRelayServer.ExternalIncomingAddressCriteria(
 							this.settings.getLastValue(
-									SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_ALLOWED_EXTERNAL_INCOMING_ADDRESS_CRITERIA, 
-									Criteria.class), 
+									SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_ALLOWED_EXTERNAL_INCOMING_ADDRESS_CRITERIA), 
 							this.settings.getLastValue(
-									SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_BLOCKED_EXTERNAL_INCOMING_ADDRESS_CRITERIA, 
-									Criteria.class)), 
+									SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_BLOCKED_EXTERNAL_INCOMING_ADDRESS_CRITERIA)), 
 					new UdpRelayServer.ExternalOutgoingAddressCriteria(
 							this.settings.getLastValue(
-									SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_ALLOWED_EXTERNAL_OUTGOING_ADDRESS_CRITERIA, 
-									Criteria.class), 
+									SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_ALLOWED_EXTERNAL_OUTGOING_ADDRESS_CRITERIA), 
 							this.settings.getLastValue(
-									SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_BLOCKED_EXTERNAL_OUTGOING_ADDRESS_CRITERIA, 
-									Criteria.class)), 
+									SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_BLOCKED_EXTERNAL_OUTGOING_ADDRESS_CRITERIA)), 
 					new UdpRelayServer.RelaySettings(
 							this.settings.getLastValue(
-									SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_RELAY_BUFFER_SIZE, 
-									PositiveInteger.class).intValue(), 
+									SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_RELAY_BUFFER_SIZE).intValue(), 
 							this.settings.getLastValue(
-									SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_RELAY_TIMEOUT, 
-									PositiveInteger.class).intValue()));
+									SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_RELAY_TIMEOUT).intValue()));
 		} finally {
 			if (clientDatagramSock != null && !clientDatagramSock.isClosed()) {
 				clientDatagramSock.close();
@@ -677,8 +656,7 @@ public final class Socks5Worker implements Runnable {
 		DatagramSocket clientDatagramSock = null;
 		try {
 			Host bindHost = this.settings.getLastValue(
-					SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_CLIENT_BIND_HOST, 
-					Host.class);
+					SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_CLIENT_BIND_HOST);
 			InetAddress bindInetAddress = bindHost.toInetAddress();
 			clientDatagramSock = new DatagramSocket(new InetSocketAddress(
 					bindInetAddress, 0));
@@ -708,8 +686,7 @@ public final class Socks5Worker implements Runnable {
 		DatagramSocket serverDatagramSock = null;
 		try {
 			Host bindHost = this.settings.getLastValue(
-					SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_SERVER_BIND_HOST, 
-					Host.class);
+					SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_SERVER_BIND_HOST);
 			InetAddress bindInetAddress = bindHost.toInetAddress();
 			DatagramSocketFactory datagramSocketFactory = 
 					this.externalNetFactory.newDatagramSocketFactory();
@@ -899,7 +876,7 @@ public final class Socks5Worker implements Runnable {
 				cmsm.toString())));
 		Method method = null;
 		AuthMethods authMethods = this.settings.getLastValue(
-				SettingSpec.SOCKS5_AUTH_METHODS, AuthMethods.class);
+				SettingSpec.SOCKS5_AUTH_METHODS);
 		for (AuthMethod authMethod : authMethods.toList()) {
 			Method meth = authMethod.methodValue();
 			if (cmsm.getMethods().contains(meth)) {

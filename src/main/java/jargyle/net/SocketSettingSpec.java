@@ -7,41 +7,41 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import jargyle.annotation.HelpText;
 import jargyle.util.NonnegativeInteger;
 import jargyle.util.PositiveInteger;
 import jargyle.util.UnsignedByte;
 
-public abstract class SocketSettingSpec {
+public abstract class SocketSettingSpec<V> {
 
 	@HelpText(
 			doc = "The type-of-service or traffic class field in the IP "
 					+ "header for a TCP or UDP socket", 
 			usage = "IP_TOS=INTEGER_BETWEEN_0_AND_255"
 	)
-	public static final SocketSettingSpec IP_TOS = new SocketSettingSpec(
+	public static final SocketSettingSpec<UnsignedByte> IP_TOS = new SocketSettingSpec<UnsignedByte>(
 			"IP_TOS", 
 			UnsignedByte.class) {
 		
 		@Override
 		public void apply(
-				final Object value,
+				final UnsignedByte value,
 				final DatagramSocket datagramSocket) throws SocketException {
-			UnsignedByte b = UnsignedByte.class.cast(value);
-			datagramSocket.setTrafficClass(b.intValue());
+			datagramSocket.setTrafficClass(value.intValue());
 		}
 		
 		@Override
 		public void apply(
-				final Object value,
+				final UnsignedByte value,
 				final Socket socket) throws SocketException {
-			UnsignedByte b = UnsignedByte.class.cast(value);
-			socket.setTrafficClass(b.intValue());
+			socket.setTrafficClass(value.intValue());
 		}
 
 		@Override
-		public SocketSetting newSocketSetting(final String value) {
+		public SocketSetting<UnsignedByte> newSocketSettingOfParsableValue(
+				final String value) {
 			return super.newSocketSetting(UnsignedByte.newInstance(value));
 		}
 		
@@ -54,28 +54,27 @@ public abstract class SocketSettingSpec {
 					+ "high bandwidth", 
 			usage = "PERF_PREF=3_DIGITS_EACH_BETWEEN_0_AND_2"
 	)
-	public static final SocketSettingSpec PERF_PREF = new SocketSettingSpec(
+	public static final SocketSettingSpec<PerformancePreferences> PERF_PREF = new SocketSettingSpec<PerformancePreferences>(
 			"PERF_PREF", 
 			PerformancePreferences.class) {
 		
 		@Override
 		public void apply(
-				final Object value,
+				final PerformancePreferences value,
 				final ServerSocket serverSocket) throws SocketException {
-			PerformancePreferences p = PerformancePreferences.class.cast(value);
-			p.applyTo(serverSocket);
+			value.applyTo(serverSocket);
 		}
 
 		@Override
 		public void apply(
-				final Object value,
+				final PerformancePreferences value,
 				final Socket socket) throws SocketException {
-			PerformancePreferences p = PerformancePreferences.class.cast(value);
-			p.applyTo(socket);
+			value.applyTo(socket);
 		}
 
 		@Override
-		public SocketSetting newSocketSetting(final String value) {
+		public SocketSetting<PerformancePreferences> newSocketSettingOfParsableValue(
+				final String value) {
 			return super.newSocketSetting(PerformancePreferences.newInstance(value));
 		}
 		
@@ -85,20 +84,20 @@ public abstract class SocketSettingSpec {
 			doc = "Can send broadcast datagrams", 
 			usage = "SO_BROADCAST=true|false"
 	)
-	public static final SocketSettingSpec SO_BROADCAST = new SocketSettingSpec(
+	public static final SocketSettingSpec<Boolean> SO_BROADCAST = new SocketSettingSpec<Boolean>(
 			"SO_BROADCAST", 
 			Boolean.class) {
 		
 		@Override
 		public void apply(
-				final Object value,
+				final Boolean value,
 				final DatagramSocket datagramSocket) throws SocketException {
-			Boolean b = Boolean.class.cast(value);
-			datagramSocket.setBroadcast(b.booleanValue());
+			datagramSocket.setBroadcast(value.booleanValue());
 		}
 
 		@Override
-		public SocketSetting newSocketSetting(final String value) {
+		public SocketSetting<Boolean> newSocketSettingOfParsableValue(
+				final String value) {
 			return super.newSocketSetting(Boolean.valueOf(value));
 		}
 		
@@ -109,20 +108,20 @@ public abstract class SocketSettingSpec {
 					+ "in either direction", 
 			usage = "SO_KEEPALIVE=true|false"
 	)
-	public static final SocketSettingSpec SO_KEEPALIVE = new SocketSettingSpec(
+	public static final SocketSettingSpec<Boolean> SO_KEEPALIVE = new SocketSettingSpec<Boolean>(
 			"SO_KEEPALIVE", 
 			Boolean.class) {
 		
 		@Override
 		public void apply(
-				final Object value, 
+				final Boolean value, 
 				final Socket socket) throws SocketException {
-			Boolean b = Boolean.class.cast(value);
-			socket.setKeepAlive(b.booleanValue());
+			socket.setKeepAlive(value.booleanValue());
 		}
 
 		@Override
-		public SocketSetting newSocketSetting(final String value) {
+		public SocketSetting<Boolean> newSocketSettingOfParsableValue(
+				final String value) {
 			return super.newSocketSetting(Boolean.valueOf(value));
 		}
 		
@@ -132,20 +131,20 @@ public abstract class SocketSettingSpec {
 			doc = "Linger on closing the TCP socket in seconds", 
 			usage = "SO_LINGER=INTEGER_BETWEEN_0_AND_2147483647"
 	)
-	public static final SocketSettingSpec SO_LINGER = new SocketSettingSpec(
+	public static final SocketSettingSpec<NonnegativeInteger> SO_LINGER = new SocketSettingSpec<NonnegativeInteger>(
 			"SO_LINGER", 
 			NonnegativeInteger.class) {
 		
 		@Override
 		public void apply(
-				final Object value, 
+				final NonnegativeInteger value, 
 				final Socket socket) throws SocketException {
-			NonnegativeInteger i = NonnegativeInteger.class.cast(value);
-			socket.setSoLinger(true, i.intValue());
+			socket.setSoLinger(true, value.intValue());
 		}
 
 		@Override
-		public SocketSetting newSocketSetting(final String value) {
+		public SocketSetting<NonnegativeInteger> newSocketSettingOfParsableValue(
+				final String value) {
 			return super.newSocketSetting(NonnegativeInteger.newInstance(value));
 		}
 		
@@ -155,20 +154,20 @@ public abstract class SocketSettingSpec {
 			doc = "Can receive TCP urgent data", 
 			usage = "SO_OOBINLINE=true|false"
 	)
-	public static final SocketSettingSpec SO_OOBINLINE = new SocketSettingSpec(
+	public static final SocketSettingSpec<Boolean> SO_OOBINLINE = new SocketSettingSpec<Boolean>(
 			"SO_OOBINLINE", 
 			Boolean.class) {
 		
 		@Override
 		public void apply(
-				final Object value, 
+				final Boolean value, 
 				final Socket socket) throws SocketException {
-			Boolean b = Boolean.class.cast(value);
-			socket.setOOBInline(b.booleanValue());
+			socket.setOOBInline(value.booleanValue());
 		}
 
 		@Override
-		public SocketSetting newSocketSetting(final String value) {
+		public SocketSetting<Boolean> newSocketSettingOfParsableValue(
+				final String value) {
 			return super.newSocketSetting(Boolean.valueOf(value));
 		}
 
@@ -178,36 +177,34 @@ public abstract class SocketSettingSpec {
 			doc = "The receive buffer size", 
 			usage = "SO_RCVBUF=INTEGER_BETWEEN_1_AND_2147483647"
 	)
-	public static final SocketSettingSpec SO_RCVBUF = new SocketSettingSpec(
+	public static final SocketSettingSpec<PositiveInteger> SO_RCVBUF = new SocketSettingSpec<PositiveInteger>(
 			"SO_RCVBUF", 
 			PositiveInteger.class) {
 		
 		@Override
 		public void apply(
-				final Object value,
+				final PositiveInteger value,
 				final DatagramSocket datagramSocket) throws SocketException {
-			PositiveInteger i = PositiveInteger.class.cast(value);
-			datagramSocket.setReceiveBufferSize(i.intValue());
+			datagramSocket.setReceiveBufferSize(value.intValue());
 		}
 		
 		@Override
 		public void apply(
-				final Object value, 
+				final PositiveInteger value, 
 				final ServerSocket serverSocket) throws SocketException {
-			PositiveInteger i = PositiveInteger.class.cast(value);
-			serverSocket.setReceiveBufferSize(i.intValue());
+			serverSocket.setReceiveBufferSize(value.intValue());
 		}
 		
 		@Override
 		public void apply(
-				final Object value, 
+				final PositiveInteger value, 
 				final Socket socket) throws SocketException {
-			PositiveInteger i = PositiveInteger.class.cast(value);
-			socket.setReceiveBufferSize(i.intValue());
+			socket.setReceiveBufferSize(value.intValue());
 		}
 
 		@Override
-		public SocketSetting newSocketSetting(final String value) {
+		public SocketSetting<PositiveInteger> newSocketSettingOfParsableValue(
+				final String value) {
 			return super.newSocketSetting(PositiveInteger.newInstance(value));
 		}
 		
@@ -217,36 +214,34 @@ public abstract class SocketSettingSpec {
 			doc = "Can reuse socket address and port", 
 			usage = "SO_REUSEADDR=true|false"
 	)
-	public static final SocketSettingSpec SO_REUSEADDR = new SocketSettingSpec(
+	public static final SocketSettingSpec<Boolean> SO_REUSEADDR = new SocketSettingSpec<Boolean>(
 			"SO_REUSEADDR", 
 			Boolean.class) {
 		
 		@Override
 		public void apply(
-				final Object value,
+				final Boolean value,
 				final DatagramSocket datagramSocket) throws SocketException {
-			Boolean b = Boolean.class.cast(value);
-			datagramSocket.setReuseAddress(b.booleanValue());
+			datagramSocket.setReuseAddress(value.booleanValue());
 		}
 		
 		@Override
 		public void apply(
-				final Object value, 
+				final Boolean value, 
 				final ServerSocket serverSocket) throws SocketException {
-			Boolean b = Boolean.class.cast(value);
-			serverSocket.setReuseAddress(b.booleanValue());
+			serverSocket.setReuseAddress(value.booleanValue());
 		}
 
 		@Override
 		public void apply(
-				final Object value, 
+				final Boolean value, 
 				final Socket socket) throws SocketException {
-			Boolean b = Boolean.class.cast(value);
-			socket.setReuseAddress(b.booleanValue());
+			socket.setReuseAddress(value.booleanValue());
 		}
 
 		@Override
-		public SocketSetting newSocketSetting(final String value) {
+		public SocketSetting<Boolean> newSocketSettingOfParsableValue(
+				final String value) {
 			return super.newSocketSetting(Boolean.valueOf(value));
 		}
 
@@ -256,28 +251,27 @@ public abstract class SocketSettingSpec {
 			doc = "The send buffer size", 
 			usage = "SO_SNDBUF=INTEGER_BETWEEN_1_AND_2147483647"
 	)
-	public static final SocketSettingSpec SO_SNDBUF = new SocketSettingSpec(
+	public static final SocketSettingSpec<PositiveInteger> SO_SNDBUF = new SocketSettingSpec<PositiveInteger>(
 			"SO_SNDBUF", 
 			PositiveInteger.class) {
 		
 		@Override
 		public void apply(
-				final Object value,
+				final PositiveInteger value,
 				final DatagramSocket datagramSocket) throws SocketException {
-			PositiveInteger i = PositiveInteger.class.cast(value);
-			datagramSocket.setSendBufferSize(i.intValue());
+			datagramSocket.setSendBufferSize(value.intValue());
 		}
 		
 		@Override
 		public void apply(
-				final Object value, 
+				final PositiveInteger value, 
 				final Socket socket) throws SocketException {
-			PositiveInteger i = PositiveInteger.class.cast(value);
-			socket.setSendBufferSize(i.intValue());
+			socket.setSendBufferSize(value.intValue());
 		}
 
 		@Override
-		public SocketSetting newSocketSetting(final String value) {
+		public SocketSetting<PositiveInteger> newSocketSettingOfParsableValue(
+				final String value) {
 			return super.newSocketSetting(PositiveInteger.newInstance(value));
 		}
 		
@@ -287,36 +281,34 @@ public abstract class SocketSettingSpec {
 			doc = "The timeout in milliseconds on waiting for an idle socket", 
 			usage = "SO_TIMEOUT=INTEGER_BETWEEN_0_AND_2147483647"
 	)
-	public static final SocketSettingSpec SO_TIMEOUT = new SocketSettingSpec(
+	public static final SocketSettingSpec<NonnegativeInteger> SO_TIMEOUT = new SocketSettingSpec<NonnegativeInteger>(
 			"SO_TIMEOUT", 
 			NonnegativeInteger.class) {
 		
 		@Override
 		public void apply(
-				final Object value,
+				final NonnegativeInteger value,
 				final DatagramSocket datagramSocket) throws SocketException {
-			NonnegativeInteger i = NonnegativeInteger.class.cast(value);
-			datagramSocket.setSoTimeout(i.intValue());
+			datagramSocket.setSoTimeout(value.intValue());
 		}
 		
 		@Override
 		public void apply(
-				final Object value, 
+				final NonnegativeInteger value, 
 				final ServerSocket serverSocket) throws SocketException {
-			NonnegativeInteger i = NonnegativeInteger.class.cast(value);
-			serverSocket.setSoTimeout(i.intValue());
+			serverSocket.setSoTimeout(value.intValue());
 		}
 
 		@Override
 		public void apply(
-				final Object value, 
+				final NonnegativeInteger value, 
 				final Socket socket) throws SocketException {
-			NonnegativeInteger i = NonnegativeInteger.class.cast(value);
-			socket.setSoTimeout(i.intValue());
+			socket.setSoTimeout(value.intValue());
 		}
 
 		@Override
-		public SocketSetting newSocketSetting(final String value) {
+		public SocketSetting<NonnegativeInteger> newSocketSettingOfParsableValue(
+				final String value) {
 			return super.newSocketSetting(NonnegativeInteger.newInstance(value));
 		}
 		
@@ -326,30 +318,31 @@ public abstract class SocketSettingSpec {
 			doc = "Disables Nagle's algorithm", 
 			usage = "TCP_NODELAY=true|false"
 	)
-	public static final SocketSettingSpec TCP_NODELAY = new SocketSettingSpec(
+	public static final SocketSettingSpec<Boolean> TCP_NODELAY = new SocketSettingSpec<Boolean>(
 			"TCP_NODELAY", 
 			Boolean.class) {
 		
 		@Override
 		public void apply(
-				final Object value, 
+				final Boolean value, 
 				final Socket socket) throws SocketException {
-			Boolean b = Boolean.class.cast(value);
-			socket.setTcpNoDelay(b.booleanValue());
+			socket.setTcpNoDelay(value.booleanValue());
 		}
 
 		@Override
-		public SocketSetting newSocketSetting(final String value) {
+		public SocketSetting<Boolean> newSocketSettingOfParsableValue(
+				final String value) {
 			return super.newSocketSetting(Boolean.valueOf(value));
 		}
 		
 	};
 	
-	private static final List<SocketSettingSpec> VALUES = 
-			new ArrayList<SocketSettingSpec>();
+	private static final List<SocketSettingSpec<Object>> VALUES = 
+			new ArrayList<SocketSettingSpec<Object>>();
 	
-	public static SocketSettingSpec getInstance(final String s) {
-		for (SocketSettingSpec socketSettingSpec : SocketSettingSpec.values()) {
+	public static SocketSettingSpec<Object> getInstance(final String s) {
+		for (SocketSettingSpec<Object> socketSettingSpec 
+				: SocketSettingSpec.values()) {
 			if (socketSettingSpec.toString().equals(s)) {
 				return socketSettingSpec;
 			}
@@ -358,7 +351,7 @@ public abstract class SocketSettingSpec {
 				"unknown socket setting: %s", s));
 	}
 	
-	public static SocketSettingSpec[] values() {
+	public static SocketSettingSpec<Object>[] values() {
 		if (VALUES.isEmpty()) {
 			Field[] fields = SocketSettingSpec.class.getFields();
 			for (Field field : fields) {
@@ -374,23 +367,30 @@ public abstract class SocketSettingSpec {
 				} catch (IllegalAccessException e) {
 					throw new AssertionError(e);
 				}
-				SocketSettingSpec val = (SocketSettingSpec) value;
+				@SuppressWarnings("unchecked")
+				SocketSettingSpec<Object> val = (SocketSettingSpec<Object>) value;
 				VALUES.add(val);
 			}
 		}
-		return VALUES.toArray(new SocketSettingSpec[VALUES.size()]);
+		@SuppressWarnings("unchecked")
+		SocketSettingSpec<Object>[] vals = 
+				(SocketSettingSpec<Object>[]) VALUES.toArray(
+						new SocketSettingSpec<?>[VALUES.size()]);
+		return vals;
 	}
 	
-	private final Class<?> valueType;
 	private final String string;
-	
-	public SocketSettingSpec(final String s, final Class<?> valType) {
-		this.valueType = valType;
+	private final Class<V> valueType;
+		
+	private SocketSettingSpec(final String s, final Class<V> valType) {
+		Objects.requireNonNull(s);
+		Objects.requireNonNull(valType);
 		this.string = s;
+		this.valueType = valType;
 	}
 	
 	public void apply(
-			final Object value,
+			final V value,
 			final DatagramSocket datagramSocket) throws SocketException {
 		throw new UnsupportedOperationException(String.format(
 				"socket setting spec %s is not supported under %s", 
@@ -398,7 +398,7 @@ public abstract class SocketSettingSpec {
 	}
 	
 	public void apply(
-			final Object value, 
+			final V value, 
 			final ServerSocket serverSocket) throws SocketException {
 		throw new UnsupportedOperationException(String.format(
 				"socket setting spec %s is not supported under %s", 
@@ -406,18 +406,23 @@ public abstract class SocketSettingSpec {
 	}
 	
 	public void apply(
-			final Object value, 
+			final V value, 
 			final Socket socket) throws SocketException {
 		throw new UnsupportedOperationException(String.format(
 				"socket setting spec %s is not supported under %s", 
 				this, Socket.class.getName()));
 	}
 	
-	public final SocketSetting newSocketSetting(final Object value) {
-		return new SocketSetting(this, this.valueType.cast(value));
+	public final Class<V> getValueType() {
+		return this.valueType;
 	}
 	
-	public abstract SocketSetting newSocketSetting(final String value);
+	public final SocketSetting<V> newSocketSetting(final V value) {
+		return new SocketSetting<V>(this, value);
+	}
+	
+	public abstract SocketSetting<V> newSocketSettingOfParsableValue(
+			final String value);
 
 	@Override
 	public final String toString() {

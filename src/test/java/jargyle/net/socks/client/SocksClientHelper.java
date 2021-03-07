@@ -57,7 +57,7 @@ public final class SocksClientHelper {
 				PropertySpec.SSL_TRUST_STORE_FILE.newProperty(
 						ResourceHelper.getResourceAsFile(
 								ResourceNameConstants.JARGYLE_SECURITY_SERVER_KEY_STORE_FILE)),
-				PropertySpec.SSL_TRUST_STORE_PASSWORD.newProperty(
+				PropertySpec.SSL_TRUST_STORE_PASSWORD.newPropertyOfParsableValue(
 						ResourceHelper.getResourceAsString(
 								ResourceNameConstants.JARGYLE_SECURITY_SERVER_KEY_STORE_PASSWORD_FILE)));
 		return new Socks5ServerUri(host, port).newSocksClient(properties);
@@ -71,13 +71,13 @@ public final class SocksClientHelper {
 				PropertySpec.SSL_KEY_STORE_FILE.newProperty(
 						ResourceHelper.getResourceAsFile(
 								ResourceNameConstants.JARGYLE_SECURITY_CLIENT_KEY_STORE_FILE)),
-				PropertySpec.SSL_KEY_STORE_PASSWORD.newProperty(
+				PropertySpec.SSL_KEY_STORE_PASSWORD.newPropertyOfParsableValue(
 						ResourceHelper.getResourceAsString(
 								ResourceNameConstants.JARGYLE_SECURITY_CLIENT_KEY_STORE_PASSWORD_FILE)),
 				PropertySpec.SSL_TRUST_STORE_FILE.newProperty(
 						ResourceHelper.getResourceAsFile(
 								ResourceNameConstants.JARGYLE_SECURITY_SERVER_KEY_STORE_FILE)),
-				PropertySpec.SSL_TRUST_STORE_PASSWORD.newProperty(
+				PropertySpec.SSL_TRUST_STORE_PASSWORD.newPropertyOfParsableValue(
 						ResourceHelper.getResourceAsString(
 								ResourceNameConstants.JARGYLE_SECURITY_SERVER_KEY_STORE_PASSWORD_FILE)));
 		return new Socks5ServerUri(host, port).newSocksClient(properties);

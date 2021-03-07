@@ -28,7 +28,7 @@ public final class Socks5Client extends SocksClient {
 		super(serverUri, props);
 		// TODO: when DTLS support is implemented, use PropertySpec.DTLS_ENABLED
 		this.dtlsDatagramSocketFactory = props.getValue(
-				PropertySpec.SSL_ENABLED, Boolean.class).booleanValue() ? 
+				PropertySpec.SSL_ENABLED).booleanValue() ? 
 						new DtlsDatagramSocketFactoryImpl() : null;
 	}
 	
@@ -56,7 +56,7 @@ public final class Socks5Client extends SocksClient {
 		OutputStream outputStream = sock.getOutputStream();
 		Set<Method> methods = new TreeSet<Method>();
 		AuthMethods authMethods = this.getProperties().getValue(
-				PropertySpec.SOCKS5_AUTH_METHODS, AuthMethods.class);
+				PropertySpec.SOCKS5_AUTH_METHODS);
 		for (AuthMethod authMethod : authMethods.toList()) {
 			methods.add(authMethod.methodValue());
 		}

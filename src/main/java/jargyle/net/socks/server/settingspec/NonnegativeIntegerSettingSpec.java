@@ -4,7 +4,8 @@ import jargyle.net.socks.server.Setting;
 import jargyle.net.socks.server.SettingSpec;
 import jargyle.util.NonnegativeInteger;
 
-public final class NonnegativeIntegerSettingSpec extends SettingSpec {
+public final class NonnegativeIntegerSettingSpec 
+	extends SettingSpec<NonnegativeInteger> {
 
 	public NonnegativeIntegerSettingSpec(
 			final String s, final NonnegativeInteger defaultVal) {
@@ -12,7 +13,8 @@ public final class NonnegativeIntegerSettingSpec extends SettingSpec {
 	}
 
 	@Override
-	public Setting newSetting(final String value) {
+	public Setting<NonnegativeInteger> newSettingOfParsableValue(
+			final String value) {
 		return super.newSetting(NonnegativeInteger.newInstance(value));
 	}
 

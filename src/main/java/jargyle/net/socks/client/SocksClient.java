@@ -6,11 +6,8 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.Objects;
 
-import jargyle.net.Host;
 import jargyle.net.NetFactory;
-import jargyle.net.Port;
 import jargyle.net.ssl.SslSocketFactory;
-import jargyle.util.PositiveInteger;
 
 public abstract class SocksClient {
 
@@ -34,7 +31,7 @@ public abstract class SocksClient {
 		this.properties = props;
 		this.socksServerUri = serverUri;
 		this.sslSocketFactory = props.getValue(
-				PropertySpec.SSL_ENABLED, Boolean.class).booleanValue() ? 
+				PropertySpec.SSL_ENABLED).booleanValue() ? 
 						new SslSocketFactoryImpl(this) : null;
 	}
 	
@@ -42,8 +39,8 @@ public abstract class SocksClient {
 			final Socket socket) throws IOException {
 		return this.getConnectedSocket(
 				socket, 
-				this.properties.getValue(PropertySpec.CONNECT_TIMEOUT, 
-						PositiveInteger.class).intValue(), 
+				this.properties.getValue(
+						PropertySpec.CONNECT_TIMEOUT).intValue(), 
 				false);
 	}
 	
@@ -52,8 +49,8 @@ public abstract class SocksClient {
 			final boolean bindBeforeConnect) throws IOException {
 		return this.getConnectedSocket(
 				socket, 
-				this.properties.getValue(PropertySpec.CONNECT_TIMEOUT, 
-						PositiveInteger.class).intValue(), 
+				this.properties.getValue(
+						PropertySpec.CONNECT_TIMEOUT).intValue(), 
 				bindBeforeConnect);
 	}
 	
@@ -70,9 +67,9 @@ public abstract class SocksClient {
 		if (bindBeforeConnect) {
 			socket.bind(new InetSocketAddress(
 					this.properties.getValue(
-							PropertySpec.BIND_HOST, Host.class).toInetAddress(), 
+							PropertySpec.BIND_HOST).toInetAddress(), 
 					this.properties.getValue(
-							PropertySpec.BIND_PORT, Port.class).intValue()));
+							PropertySpec.BIND_PORT).intValue()));
 		}
 		SocksServerUri socksServerUri = this.getSocksServerUri();
 		socket.connect(

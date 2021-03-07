@@ -4,7 +4,8 @@ import jargyle.net.socks.client.Property;
 import jargyle.net.socks.client.PropertySpec;
 import jargyle.net.socks.transport.v5.gssapiauth.GssapiProtectionLevels;
 
-public final class GssapiProtectionLevelsPropertySpec extends PropertySpec {
+public final class GssapiProtectionLevelsPropertySpec 
+	extends PropertySpec<GssapiProtectionLevels> {
 
 	public GssapiProtectionLevelsPropertySpec(
 			final String s, final GssapiProtectionLevels defaultVal) {
@@ -12,7 +13,8 @@ public final class GssapiProtectionLevelsPropertySpec extends PropertySpec {
 	}
 
 	@Override
-	public Property newProperty(final String value) {
+	public Property<GssapiProtectionLevels> newPropertyOfParsableValue(
+			final String value) {
 		return super.newProperty(GssapiProtectionLevels.newInstance(value));
 	}
 

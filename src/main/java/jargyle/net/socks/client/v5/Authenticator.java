@@ -25,7 +25,6 @@ import jargyle.net.socks.transport.v5.gssapiauth.MessageType;
 import jargyle.net.socks.transport.v5.gssapiauth.ProtectionLevel;
 import jargyle.net.socks.transport.v5.userpassauth.UsernamePasswordRequest;
 import jargyle.net.socks.transport.v5.userpassauth.UsernamePasswordResponse;
-import jargyle.security.EncryptedPassword;
 
 enum Authenticator {
 
@@ -44,26 +43,25 @@ enum Authenticator {
 		
 		@Override
 		public Socket authenticate(
-				final Socket Socket, 
+				final Socket socket, 
 				final Socks5Client socks5Client) throws IOException {
 			GSSContext context = this.newContext(socks5Client);
-			this.establishContext(Socket, context, socks5Client);
+			this.establishContext(socket, context, socks5Client);
 			GssapiProtectionLevel gssapiProtectionLevelSelection =
 					this.negotiateProtectionLevel(
-							Socket, context, socks5Client);
+							socket, context, socks5Client);
 			MessageProp msgProp = 
 					gssapiProtectionLevelSelection.newMessageProp();
-			Socket newSocket = new GssSocket(
-					Socket, context, msgProp);
+			Socket newSocket = new GssSocket(socket, context, msgProp);
 			return newSocket;
 		}
 		
 		private void establishContext(
-				final Socket Socket,
+				final Socket socket,
 				final GSSContext context,
 				final Socks5Client socks5Client) throws IOException {
-			InputStream inStream = Socket.getInputStream();
-			OutputStream outStream = Socket.getOutputStream();
+			InputStream inStream = socket.getInputStream();
+			OutputStream outStream = socket.getOutputStream();
 			byte[] token = new byte[] { };
 			while (!context.isEstablished()) {
 				if (token == null) {
@@ -92,19 +90,17 @@ enum Authenticator {
 		}
 		
 		private GssapiProtectionLevel negotiateProtectionLevel(
-				final Socket Socket,
+				final Socket socket,
 				final GSSContext context,
 				final Socks5Client socks5Client) throws IOException {
-			InputStream inStream = Socket.getInputStream();
-			OutputStream outStream = Socket.getOutputStream();
+			InputStream inStream = socket.getInputStream();
+			OutputStream outStream = socket.getOutputStream();
 			boolean gssapiNecReferenceImpl = 
 					socks5Client.getProperties().getValue(
-							PropertySpec.SOCKS5_GSSAPI_NEC_REFERENCE_IMPL,
-							Boolean.class).booleanValue();
+							PropertySpec.SOCKS5_GSSAPI_NEC_REFERENCE_IMPL).booleanValue();
 			GssapiProtectionLevels gssapiProtectionLevels = 
 					socks5Client.getProperties().getValue(
-							PropertySpec.SOCKS5_GSSAPI_PROTECTION_LEVELS, 
-							GssapiProtectionLevels.class);
+							PropertySpec.SOCKS5_GSSAPI_PROTECTION_LEVELS);
 			List<GssapiProtectionLevel> gssapiProtectionLevelList = 
 					gssapiProtectionLevels.toList(); 
 			GssapiProtectionLevel firstGssapiProtectionLevel = 
@@ -174,7 +170,7 @@ enum Authenticator {
 				final Socks5Client socks5Client) throws IOException {
 			GSSManager manager = GSSManager.getInstance();
 			String server = socks5Client.getProperties().getValue(
-					PropertySpec.SOCKS5_GSSAPI_SERVICE_NAME, String.class);
+					PropertySpec.SOCKS5_GSSAPI_SERVICE_NAME);
 			GSSName serverName = null;
 			try {
 				serverName = manager.createName(server, null);
@@ -182,7 +178,7 @@ enum Authenticator {
 				throw new IOException(e);
 			}
 			Oid gssapiMechanismOid = socks5Client.getProperties().getValue(
-					PropertySpec.SOCKS5_GSSAPI_MECHANISM_OID, Oid.class);
+					PropertySpec.SOCKS5_GSSAPI_MECHANISM_OID);
 			GSSContext context = null;
 			try {
 				context = manager.createContext(
@@ -217,9 +213,9 @@ enum Authenticator {
 
 		@Override
 		public Socket authenticate(
-				final Socket Socket, 
+				final Socket socket, 
 				final Socks5Client socks5Client) throws IOException {
-			return Socket;
+			return socket;
 		}
 		
 	},
@@ -228,10 +224,10 @@ enum Authenticator {
 
 		@Override
 		public Socket authenticate(
-				final Socket Socket, 
+				final Socket socket, 
 				final Socks5Client socks5Client) throws IOException {
-			InputStream inputStream = Socket.getInputStream();
-			OutputStream outputStream = Socket.getOutputStream();
+			InputStream inputStream = socket.getInputStream();
+			OutputStream outputStream = socket.getOutputStream();
 			UsernamePassword usernamePassword = null;
 			UsernamePasswordRequestor usernamePasswordRequestor = 
 					UsernamePasswordRequestor.getDefault();
@@ -254,10 +250,9 @@ enum Authenticator {
 				
 			} else {
 				username = socks5Client.getProperties().getValue(
-						PropertySpec.SOCKS5_USERNAME, String.class);
+						PropertySpec.SOCKS5_USERNAME);
 				password = socks5Client.getProperties().getValue(
-						PropertySpec.SOCKS5_PASSWORD, 
-						EncryptedPassword.class).getPassword();
+						PropertySpec.SOCKS5_PASSWORD).getPassword();
 			}
 			UsernamePasswordRequest usernamePasswordReq = 
 					UsernamePasswordRequest.newInstance(
@@ -272,7 +267,7 @@ enum Authenticator {
 					UsernamePasswordResponse.STATUS_SUCCESS) {
 				throw new IOException("invalid username password");
 			}
-			return Socket;
+			return socket;
 		}
 		
 	};
@@ -309,7 +304,7 @@ enum Authenticator {
 	}
 	
 	public abstract Socket authenticate(
-			final Socket Socket,
+			final Socket socket,
 			final Socks5Client socks5Client) throws IOException;
 	
 	public Method methodValue() {

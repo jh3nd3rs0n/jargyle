@@ -37,32 +37,29 @@ final class SslSocketFactoryImpl extends SslSocketFactory {
 		TrustManager[] trustManagers = null;
 		Settings settings = this.configuration.getSettings();
 		File keyStoreFile = settings.getLastValue(
-				SettingSpec.SSL_KEY_STORE_FILE, File.class);
+				SettingSpec.SSL_KEY_STORE_FILE);
 		if (keyStoreFile != null) {
 			EncryptedPassword keyStorePassword = settings.getLastValue(
-					SettingSpec.SSL_KEY_STORE_PASSWORD,
-					EncryptedPassword.class);
+					SettingSpec.SSL_KEY_STORE_PASSWORD);
 			String keyStoreType = settings.getLastValue(
-					SettingSpec.SSL_KEY_STORE_TYPE, String.class);
+					SettingSpec.SSL_KEY_STORE_TYPE);
 			keyManagers = KeyManagerHelper.getKeyManagers(
 					keyStoreFile, keyStorePassword, keyStoreType);
 		}
 		File trustStoreFile = settings.getLastValue(
-				SettingSpec.SSL_TRUST_STORE_FILE, File.class);
+				SettingSpec.SSL_TRUST_STORE_FILE);
 		if (trustStoreFile != null) {
 			EncryptedPassword trustStorePassword = settings.getLastValue(
-					SettingSpec.SSL_TRUST_STORE_PASSWORD,
-					EncryptedPassword.class);
+					SettingSpec.SSL_TRUST_STORE_PASSWORD);
 			String trustStoreType = settings.getLastValue(
-					SettingSpec.SSL_TRUST_STORE_TYPE, String.class);			
+					SettingSpec.SSL_TRUST_STORE_TYPE);			
 			trustManagers = TrustManagerHelper.getTrustManagers(
 					trustStoreFile, trustStorePassword, trustStoreType);
 		}
 		SSLContext context = null;
 		try {
 			context = SslContextHelper.getSslContext(
-					settings.getLastValue(
-							SettingSpec.SSL_PROTOCOL, String.class), 
+					settings.getLastValue(SettingSpec.SSL_PROTOCOL), 
 					keyManagers, 
 					trustManagers);
 		} catch (KeyManagementException e) {
@@ -88,23 +85,23 @@ final class SslSocketFactoryImpl extends SslSocketFactory {
 				socket,	consumed, autoClose);
 		Settings settings = this.configuration.getSettings();
 		Strings enabledCipherSuites = settings.getLastValue(
-				SettingSpec.SSL_ENABLED_CIPHER_SUITES, Strings.class);
+				SettingSpec.SSL_ENABLED_CIPHER_SUITES);
 		String[] cipherSuites = enabledCipherSuites.toStringArray();
 		if (cipherSuites.length > 0) {
 			sslSocket.setEnabledCipherSuites(cipherSuites);
 		}
 		Strings enabledProtocols = settings.getLastValue(
-				SettingSpec.SSL_ENABLED_PROTOCOLS, Strings.class);
+				SettingSpec.SSL_ENABLED_PROTOCOLS);
 		String[] protocols = enabledProtocols.toStringArray();
 		if (protocols.length > 0) {
 			sslSocket.setEnabledProtocols(protocols);
 		}
-		if (settings.getLastValue(SettingSpec.SSL_NEED_CLIENT_AUTH, 
-				Boolean.class).booleanValue()) {
+		if (settings.getLastValue(
+				SettingSpec.SSL_NEED_CLIENT_AUTH).booleanValue()) {
 			sslSocket.setNeedClientAuth(true);
 		}
-		if (settings.getLastValue(SettingSpec.SSL_WANT_CLIENT_AUTH, 
-				Boolean.class).booleanValue()) {
+		if (settings.getLastValue(
+				SettingSpec.SSL_WANT_CLIENT_AUTH).booleanValue()) {
 			sslSocket.setWantClientAuth(true);
 		}
 		return sslSocket;

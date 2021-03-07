@@ -4,7 +4,8 @@ import jargyle.net.socks.client.SocksServerUri;
 import jargyle.net.socks.server.Setting;
 import jargyle.net.socks.server.SettingSpec;
 
-public final class SocksServerUriSettingSpec extends SettingSpec {
+public final class SocksServerUriSettingSpec 
+	extends SettingSpec<SocksServerUri> {
 
 	public SocksServerUriSettingSpec(
 			final String s, final SocksServerUri defaultVal) {
@@ -12,7 +13,8 @@ public final class SocksServerUriSettingSpec extends SettingSpec {
 	}
 
 	@Override
-	public Setting newSetting(final String value) {
+	public Setting<SocksServerUri> newSettingOfParsableValue(
+			final String value) {
 		return super.newSetting(SocksServerUri.newInstance(value));
 	}
 

@@ -5,30 +5,29 @@ import java.io.File;
 import jargyle.net.socks.client.Property;
 import jargyle.net.socks.client.PropertySpec;
 
-public final class FilePropertySpec extends PropertySpec {
+public final class FilePropertySpec extends PropertySpec<File> {
 
 	public FilePropertySpec(final String s, final File defaultVal) {
 		super(s, File.class, defaultVal);
 	}
 
 	@Override
-	public Property newProperty(final Object value) {
-		File val = File.class.cast(value);
-		if (!val.exists()) {
+	public Property<File> newProperty(final File value) {
+		if (!value.exists()) {
 			throw new IllegalArgumentException(String.format(
 					"file `%s' does not exist", 
-					val));
+					value));
 		}
-		if (!val.isFile()) {
+		if (!value.isFile()) {
 			throw new IllegalArgumentException(String.format(
 					"file `%s' must be a file", 
-					val));
+					value));
 		}
-		return super.newProperty(val);
+		return super.newProperty(value);
 	}
 
 	@Override
-	public Property newProperty(final String value) {
+	public Property<File> newPropertyOfParsableValue(final String value) {
 		return newProperty(new File(value));
 	}
 

@@ -6,14 +6,14 @@ import org.ietf.jgss.Oid;
 import jargyle.net.socks.server.Setting;
 import jargyle.net.socks.server.SettingSpec;
 
-public final class OidSettingSpec extends SettingSpec {
+public final class OidSettingSpec extends SettingSpec<Oid> {
 
 	public OidSettingSpec(final String s, final Oid defaultVal) {
 		super(s, Oid.class, defaultVal);
 	}
 
 	@Override
-	public Setting newSetting(final String value) {
+	public Setting<Oid> newSettingOfParsableValue(final String value) {
 		Oid oid = null;
 		try {
 			oid = new Oid(value);

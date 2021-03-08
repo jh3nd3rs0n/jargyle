@@ -12,12 +12,6 @@ public final class Properties {
 			final List<Property<? extends Object>> properties) {
 		Map<PropertySpec<Object>, Property<Object>> props = 
 				new HashMap<PropertySpec<Object>, Property<Object>>();
-		for (Property<? extends Object> property : properties) {
-			@SuppressWarnings("unchecked")
-			Property<Object> prop = (Property<Object>) property;
-			PropertySpec<Object> propSpec = prop.getPropertySpec();
-			props.put(propSpec, prop);
-		}
 		for (PropertySpec<Object> propertySpec : PropertySpec.values()) {
 			String property = System.getProperty(propertySpec.toString());
 			if (property != null) {
@@ -25,6 +19,12 @@ public final class Properties {
 						propertySpec, 
 						propertySpec.newPropertyOfParsableValue(property));
 			}
+		}
+		for (Property<? extends Object> property : properties) {
+			@SuppressWarnings("unchecked")
+			Property<Object> prop = (Property<Object>) property;
+			PropertySpec<Object> propSpec = prop.getPropertySpec();
+			props.put(propSpec, prop);
 		}
 		return new Properties(props);
 	}

@@ -1,5 +1,5 @@
 /*
-Copyright © 2016-2021 Jonathan K. Henderson
+Copyright (c) 2016 Jonathan K. Henderson
 
 Permission is hereby granted, free of charge, to any person
 obtaining a copy of this software and associated documentation
@@ -42,7 +42,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -1875,9 +1874,8 @@ public final class ArgMatey {
 				properties.setProperty(
 						optionPropertyName.concat(".usage"), option.getUsage());
 			}
-			Properties systemProperties = System.getProperties();
-			PropertiesHelper.copy(systemProperties, properties);
-			return StringInterpolator.interpolate(this.string, properties);
+			Properties props = SystemHelper.newProperties(properties);
+			return StringInterpolator.interpolate(this.string, props);
 		}
 		
 	}
@@ -1904,9 +1902,8 @@ public final class ArgMatey {
 						"option.optionArgSpec.separator", 
 						optionArgSpec.getSeparator());
 			}
-			Properties systemProperties = System.getProperties();
-			PropertiesHelper.copy(systemProperties, properties);
-			return StringInterpolator.interpolate(this.string, properties);
+			Properties props = SystemHelper.newProperties(properties);
+			return StringInterpolator.interpolate(this.string, props);
 		}
 		
 	}
@@ -2202,20 +2199,41 @@ public final class ArgMatey {
 
 	}
 
+	/**
+	 * Enum that represents all values of {@code Boolean} including an 
+	 * unspecified value ({@code null}). It is used primarily for annotations 
+	 * in {@link ArgMatey.Annotations}.
+	 */
 	public static enum OptionalBoolean {
 		
+		/** {@code Boolean} value of {@code false}. */
 		FALSE(Boolean.FALSE),
 		
+		/** {@code Boolean} value of {@code true}. */
 		TRUE(Boolean.TRUE),
 		
+		/** Unspecified {@code Boolean} value ({@code null}). */
 		UNSPECIFIED(null);
 		
+		/** The optional {@code Boolean} value. */
 		private final Optional<Boolean> optionalBooleanValue;
 		
+		/**
+		 * Constructs an {@code OptionalBoolean} based on the provided 
+		 * {@code Boolean}.
+		 * 
+		 * @param booleanValue the provided {@code Boolean} (can be 
+		 * {@code null})
+		 */
 		private OptionalBoolean(final Boolean booleanValue) {
 			this.optionalBooleanValue = Optional.ofNullable(booleanValue);
 		}
 		
+		/**
+		 * Returns the optional {@code Boolean} value.
+		 * 
+		 * @return the optional {@code Boolean} value
+		 */
 		public Optional<Boolean> optionalBooleanValue() {
 			return this.optionalBooleanValue;
 		}
@@ -3823,24 +3841,6 @@ public final class ArgMatey {
 		
 	}
 	
-	static final class PropertiesHelper {
-		
-		public static void copy(
-				final Properties source, final Properties destination) {
-			Enumeration<?> sourcePropertyNames = source.propertyNames();
-			while (sourcePropertyNames.hasMoreElements()) {
-				String sourcePropertyName = 
-						(String) sourcePropertyNames.nextElement();
-				String property = source.getProperty(
-						sourcePropertyName);
-				destination.setProperty(sourcePropertyName, property);
-			}
-		}
-		
-		private PropertiesHelper() { }
-		
-	}
-	
 	/**
 	 * Converts the provided {@code String} to an {@code Object}.
 	 */
@@ -3908,6 +3908,30 @@ public final class ArgMatey {
 		}
 		
 		private StringInterpolator() { }
+		
+	}
+	
+	static final class SystemHelper {
+		
+		public static Properties newProperties(
+				final Properties additionalProperties) {
+			Properties systemProperties = System.getProperties();
+			Properties props = new Properties();
+			for (String propertyName : systemProperties.stringPropertyNames()) {
+				props.setProperty(
+						propertyName, 
+						systemProperties.getProperty(propertyName));
+			}
+			for (String propertyName 
+					: additionalProperties.stringPropertyNames()) {
+				props.setProperty(
+						propertyName, 
+						additionalProperties.getProperty(propertyName));
+			}
+			return props;
+		}
+		
+		private SystemHelper() { }
 		
 	}
 

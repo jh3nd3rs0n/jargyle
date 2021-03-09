@@ -245,10 +245,12 @@ public final class Setting<V> {
 		this(spec, val, null);
 	}
 	
-	private Setting(final SettingSpec<V> spec, final V val, final String cmmnt) {
+	private Setting(
+			final SettingSpec<V> spec, final V val, final String cmmnt) {
+		V v = spec.getValueType().cast(val);
 		this.comment = cmmnt;
 		this.settingSpec = spec;
-		this.value = val;
+		this.value = v;
 	}
 
 	@Override

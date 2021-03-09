@@ -714,21 +714,53 @@ public abstract class SettingSpec<V> {
 			final String s, final Class<V> valType, final V defaultVal) {
 		Objects.requireNonNull(s);
 		Objects.requireNonNull(valType);
-		this.defaultSetting = new Setting<V>(this, defaultVal);
 		this.string = s;
 		this.valueType = valType;
+		this.defaultSetting = new Setting<V>(this, this.valueType.cast(
+				defaultVal));
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (this.getClass() != obj.getClass()) {
+			return false;
+		}
+		SettingSpec<?> other = (SettingSpec<?>) obj;
+		if (this.string == null) {
+			if (other.string != null) {
+				return false;
+			}
+		} else if (!this.string.equals(other.string)) {
+			return false;
+		}
+		return true;
 	}
 	
 	public final Setting<V> getDefaultSetting() {
 		return this.defaultSetting;
 	}
-	
+
 	public final Class<V> getValueType() {
 		return this.valueType;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((this.string == null) ? 
+				0 : this.string.hashCode());
+		return result;
+	}
 	
 	public Setting<V> newSetting(final V value) {
-		return new Setting<V>(this, value);
+		return new Setting<V>(this, this.valueType.cast(value));
 	}
 	
 	public abstract Setting<V> newSettingOfParsableValue(final String value);

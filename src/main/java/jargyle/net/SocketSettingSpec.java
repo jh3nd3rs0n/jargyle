@@ -413,12 +413,43 @@ public abstract class SocketSettingSpec<V> {
 				this, Socket.class.getName()));
 	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (this.getClass() != obj.getClass()) {
+			return false;
+		}
+		SocketSettingSpec<?> other = (SocketSettingSpec<?>) obj;
+		if (this.string == null) {
+			if (other.string != null) {
+				return false;
+			}
+		} else if (!this.string.equals(other.string)) {
+			return false;
+		}
+		return true;
+	}
+	
 	public final Class<V> getValueType() {
 		return this.valueType;
 	}
-	
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((this.string == null) ? 
+				0 : this.string.hashCode());
+		return result;
+	}
+
 	public final SocketSetting<V> newSocketSetting(final V value) {
-		return new SocketSetting<V>(this, value);
+		return new SocketSetting<V>(this, this.valueType.cast(value));
 	}
 	
 	public abstract SocketSetting<V> newSocketSettingOfParsableValue(

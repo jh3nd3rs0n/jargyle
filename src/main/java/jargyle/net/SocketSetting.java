@@ -89,8 +89,9 @@ public final class SocketSetting<V> {
 			final SocketSettingSpec<V> spec, 
 			final V val, 
 			final String cmmnt) {
+		V v = spec.getValueType().cast(val);
 		this.socketSettingSpec = spec;
-		this.value = val;
+		this.value = v;
 		this.comment = cmmnt;
 	}
 	

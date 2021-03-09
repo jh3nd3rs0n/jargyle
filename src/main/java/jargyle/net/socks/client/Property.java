@@ -6,8 +6,9 @@ public final class Property<V> {
 	private final V value;
 	
 	Property(final PropertySpec<V> spec, final V val) {
+		V v = spec.getValueType().cast(val);
 		this.propertySpec = spec;
-		this.value = val;
+		this.value = v;
 	}
 	
 	@Override

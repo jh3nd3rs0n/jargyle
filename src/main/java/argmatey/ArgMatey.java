@@ -811,13 +811,13 @@ public final class ArgMatey {
 		private final ArgsParser argsParser;
 		private final CLIClass cliClass;
 		protected String programDoc;
-		protected boolean programHelpDisplayed;
+		private boolean programHelpDisplayed;
 		protected String programName;
 		protected String programOperandsUsage;
 		protected String programVersion;
-		protected boolean programVersionDisplayed;
+		private boolean programVersionDisplayed;
 		
-		protected CLI(final String[] args, final boolean posixlyCorrect) {
+		public CLI(final String[] args, final boolean posixlyCorrect) {
 			CLIClass cls = CLIClass.newInstance(this.getClass());
 			ArgsParser parser = ArgsParser.newInstance(
 					args, cls.getOptionGroups(), posixlyCorrect);
@@ -831,50 +831,39 @@ public final class ArgMatey {
 			this.programVersionDisplayed = false;
 		}
 		
+		protected int afterHandleArgs() {
+			return 0;
+		}
+		
+		protected Integer afterHandleNext() {
+			if (this.programHelpDisplayed || this.programVersionDisplayed) {
+				return Integer.valueOf(0);
+			}			
+			return null;
+		}
+		
+		protected Integer beforeHandleArgs() {
+			if (this.programHelpDisplayed || this.programVersionDisplayed) {
+				return Integer.valueOf(0);
+			}
+			return null;
+		}
+		
+		protected Integer beforeHandleNext() {
+			if (this.programHelpDisplayed || this.programVersionDisplayed) {
+				return Integer.valueOf(0);
+			}			
+			return null;
+		}
+		
 		@Annotations.Option(
 				doc = "Display this help and exit",
 				name = "help",
 				type = OptionType.GNU_LONG
 		)
 		protected void displayProgramHelp() {
-			this.displayProgramUsage();
-			if (this.programDoc != null) {
-				System.out.println(this.programDoc);
-			}
-			System.out.println();
-			int displayableOptionCount = 0;
-			for (OptionGroup optionGroup : this.getOptionGroups().toList()) {
-				displayableOptionCount += optionGroup.toDisplayableList().size();
-			}
-			if (displayableOptionCount > 0) {
-				if (displayableOptionCount == 1) {
-					System.out.println("OPTION:");
-				} else {
-					System.out.println("OPTIONS:");
-				}
-				this.getOptionGroups().printHelpText();
-				System.out.println();
-			}
+			this.printProgramHelp();
 			this.programHelpDisplayed = true;
-		}
-		
-		protected void displayProgramUsage() {
-			String progName = this.programName;
-			if (progName == null) {
-				progName = this.getClass().getName();
-			}
-			System.out.printf("Usage: %s", progName);
-			int displayableOptionCount = 0;
-			for (OptionGroup optionGroup : this.getOptionGroups().toList()) {
-				displayableOptionCount += optionGroup.toDisplayableList().size();
-			}
-			if (displayableOptionCount > 0) {
-				System.out.print(" [OPTION]...");
-			}
-			if (this.programOperandsUsage != null) {
-				System.out.printf(" %s", this.programOperandsUsage);
-			}
-			System.out.println();
 		}
 		
 		@Annotations.Option(
@@ -883,14 +872,7 @@ public final class ArgMatey {
 				type = OptionType.GNU_LONG
 		)
 		protected void displayProgramVersion() {
-			String progVersion = this.programVersion;
-			if (progVersion == null) {
-				progVersion = this.programName;
-				if (progVersion == null) {
-					progVersion = this.getClass().getName();
-				}
-			}
-			System.out.println(progVersion);
+			this.printProgramVersion();
 			this.programVersionDisplayed = true;
 		}
 		
@@ -914,7 +896,28 @@ public final class ArgMatey {
 			return this.argsParser.getParseResultHolder();
 		}
 		
-		public abstract int handleArgs();
+		public final int handleArgs() {
+			Integer status = this.beforeHandleArgs();
+			if (status != null) {
+				return status.intValue();
+			}
+			while (this.hasNext()) {
+				status = this.beforeHandleNext();
+				if (status != null) {
+					return status.intValue();
+				}
+				try {
+					this.handleNext();
+				} catch (Throwable t) {
+					return this.onHandleNextThrowable(t);
+				}
+				status = this.afterHandleNext();
+				if (status != null) {
+					return status.intValue();
+				}
+			}
+			return this.afterHandleArgs();
+		}
 		
 		protected final void handleNext() {
 			this.argsParser.parseNext();
@@ -948,8 +951,77 @@ public final class ArgMatey {
 			return this.argsParser.hasNext();
 		}
 		
+		public final boolean isProgramHelpDisplayed() {
+			return this.programHelpDisplayed;
+		}
+		
+		public final boolean isProgramVersionDisplayed() {
+			return this.programVersionDisplayed;
+		}
+		
 		protected final String next() {
 			return this.argsParser.next();
+		}
+		
+		protected int onHandleNextThrowable(final Throwable t) {
+			String progName = this.programName;
+			if (progName == null) {
+				progName = this.getClass().getName();
+			}
+			System.err.printf("%s: %s%n", progName, t);
+			t.printStackTrace(System.err);
+			return -1;
+		}
+		
+		protected void printProgramHelp() {
+			this.printProgramUsage();
+			if (this.programDoc != null) {
+				System.out.println(this.programDoc);
+			}
+			System.out.println();
+			int displayableOptionCount = 0;
+			for (OptionGroup optionGroup : this.getOptionGroups().toList()) {
+				displayableOptionCount += optionGroup.toDisplayableList().size();
+			}
+			if (displayableOptionCount > 0) {
+				if (displayableOptionCount == 1) {
+					System.out.println("OPTION:");
+				} else {
+					System.out.println("OPTIONS:");
+				}
+				this.getOptionGroups().printHelpText();
+				System.out.println();
+			}
+		}
+		
+		protected void printProgramUsage() {
+			String progName = this.programName;
+			if (progName == null) {
+				progName = this.getClass().getName();
+			}
+			System.out.printf("Usage: %s", progName);
+			int displayableOptionCount = 0;
+			for (OptionGroup optionGroup : this.getOptionGroups().toList()) {
+				displayableOptionCount += optionGroup.toDisplayableList().size();
+			}
+			if (displayableOptionCount > 0) {
+				System.out.print(" [OPTION]...");
+			}
+			if (this.programOperandsUsage != null) {
+				System.out.printf(" %s", this.programOperandsUsage);
+			}
+			System.out.println();			
+		}
+		
+		protected void printProgramVersion() {
+			String progVersion = this.programVersion;
+			if (progVersion == null) {
+				progVersion = this.programName;
+				if (progVersion == null) {
+					progVersion = this.getClass().getName();
+				}
+			}
+			System.out.println(progVersion);
 		}
 		
 		@Override
@@ -1874,7 +1946,8 @@ public final class ArgMatey {
 				properties.setProperty(
 						optionPropertyName.concat(".usage"), option.getUsage());
 			}
-			Properties props = SystemHelper.newProperties(properties);
+			Properties props = new Properties(System.getProperties());
+			PropertiesHelper.copy(properties, props);
 			return StringInterpolator.interpolate(this.string, props);
 		}
 		
@@ -1902,7 +1975,8 @@ public final class ArgMatey {
 						"option.optionArgSpec.separator", 
 						optionArgSpec.getSeparator());
 			}
-			Properties props = SystemHelper.newProperties(properties);
+			Properties props = new Properties(System.getProperties());
+			PropertiesHelper.copy(properties, props);
 			return StringInterpolator.interpolate(this.string, props);
 		}
 		
@@ -2010,7 +2084,7 @@ public final class ArgMatey {
 			
 			public abstract Option build();
 			
-			final boolean displayable() {
+			public final boolean displayable() {
 				return this.displayable;
 			}
 			
@@ -2020,11 +2094,11 @@ public final class ArgMatey {
 				return this;
 			}
 			
-			final boolean displayableSet() {
+			public final boolean displayableSet() {
 				return this.displayableSet;
 			}
 			
-			final String doc() {
+			public final String doc() {
 				return this.doc;
 			}
 			
@@ -2033,11 +2107,11 @@ public final class ArgMatey {
 				return this;
 			}
 			
-			final String name() {
+			public final String name() {
 				return this.name;
 			}
 			
-			final OptionArgSpec optionArgSpec() {
+			public final OptionArgSpec optionArgSpec() {
 				return this.optionArgSpec;
 			}
 			
@@ -2047,11 +2121,11 @@ public final class ArgMatey {
 				return this;
 			}
 			
-			final boolean optionArgSpecSet() {
+			public final boolean optionArgSpecSet() {
 				return this.optionArgSpecSet;
 			}
 			
-			final OptionUsageProvider optionUsageProvider() {
+			public final OptionUsageProvider optionUsageProvider() {
 				return this.optionUsageProvider;
 			}
 			
@@ -2062,15 +2136,15 @@ public final class ArgMatey {
 				return this;
 			}
 			
-			final boolean optionUsageProviderSet() {
+			public final boolean optionUsageProviderSet() {
 				return this.optionUsageProviderSet;
 			}
 			
-			final String string() {
+			public final String string() {
 				return this.string;
 			}
 			
-			final String usage() {
+			public final String usage() {
 				return this.usage;
 			}
 			
@@ -2553,7 +2627,7 @@ public final class ArgMatey {
 				return new OptionArgSpec(this); 
 			}
 			
-			final String name() {
+			public final String name() {
 				return this.name;
 			}
 			
@@ -2562,7 +2636,7 @@ public final class ArgMatey {
 				return this;
 			}
 			
-			final boolean required() {
+			public final boolean required() {
 				return this.required;
 			}
 			
@@ -2571,7 +2645,7 @@ public final class ArgMatey {
 				return this;
 			}
 			
-			final String separator() {
+			public final String separator() {
 				return this.separator;
 			}
 			
@@ -2580,7 +2654,7 @@ public final class ArgMatey {
 				return this;
 			}
 			
-			final StringConverter stringConverter() {
+			public final StringConverter stringConverter() {
 				return this.stringConverter;
 			}
 			
@@ -2589,7 +2663,7 @@ public final class ArgMatey {
 				return this;
 			}
 			
-			final Class<?> type() {
+			public final Class<?> type() {
 				return this.type;
 			}
 			
@@ -2709,7 +2783,7 @@ public final class ArgMatey {
 				return new OptionGroup(this); 
 			}
 			
-			final String helpText() {
+			public final String helpText() {
 				return this.helpText;
 			}
 			
@@ -2718,7 +2792,7 @@ public final class ArgMatey {
 				return this;
 			}
 			
-			final List<Option.Builder> optionBuilders() {
+			public final List<Option.Builder> optionBuilders() {
 				return Collections.unmodifiableList(this.optionBuilders);
 			}
 			
@@ -2756,7 +2830,7 @@ public final class ArgMatey {
 				return this.optionBuilders(list);
 			}
 			
-			final OptionGroupHelpTextProvider optionGroupHelpTextProvider() {
+			public final OptionGroupHelpTextProvider optionGroupHelpTextProvider() {
 				return this.optionGroupHelpTextProvider;
 			}
 			
@@ -2767,7 +2841,7 @@ public final class ArgMatey {
 				return this;
 			}
 			
-			final boolean optionGroupHelpTextProviderSet() {
+			public final boolean optionGroupHelpTextProviderSet() {
 				return this.optionGroupHelpTextProviderSet;
 			}
 			
@@ -3841,6 +3915,22 @@ public final class ArgMatey {
 		
 	}
 	
+	static final class PropertiesHelper {
+
+		public static void copy(
+				final Properties source, final Properties destination) {
+			Set<String> sourceStringPropertyNames = 
+					source.stringPropertyNames();
+			for (String sourceStringPropertyName : sourceStringPropertyNames) {
+				String property = source.getProperty(sourceStringPropertyName);
+				destination.setProperty(sourceStringPropertyName, property);
+			}
+		}
+
+		private PropertiesHelper() { }
+
+	}
+	
 	/**
 	 * Converts the provided {@code String} to an {@code Object}.
 	 */
@@ -3911,30 +4001,6 @@ public final class ArgMatey {
 		
 	}
 	
-	static final class SystemHelper {
-		
-		public static Properties newProperties(
-				final Properties additionalProperties) {
-			Properties systemProperties = System.getProperties();
-			Properties props = new Properties();
-			for (String propertyName : systemProperties.stringPropertyNames()) {
-				props.setProperty(
-						propertyName, 
-						systemProperties.getProperty(propertyName));
-			}
-			for (String propertyName 
-					: additionalProperties.stringPropertyNames()) {
-				props.setProperty(
-						propertyName, 
-						additionalProperties.getProperty(propertyName));
-			}
-			return props;
-		}
-		
-		private SystemHelper() { }
-		
-	}
-
 	/**
 	 * Thrown when an unknown command line option is encountered.
 	 */

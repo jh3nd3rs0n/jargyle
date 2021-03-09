@@ -143,6 +143,28 @@ public final class SocksServerCLI extends CLI {
 		this.modifiableConfiguration.addSetting(sttng);
 	}
 	
+	@Override
+	protected int afterHandleArgs() {
+		Configuration configuration = this.newConfiguration();
+		if (configuration == null) { return -1;	}
+		return this.startSocksServer(configuration);
+	}
+	
+	@Override
+	protected Integer afterHandleNext() {
+		if (this.configurationFileXsdRequested
+				|| this.isProgramHelpDisplayed()
+				|| this.isProgramVersionDisplayed()
+				|| this.newConfigurationFileRequested
+				|| this.settingsHelpDisplayed) {
+			return Integer.valueOf(0);
+		}
+		if (this.socks5UsersManagementModeStatus != null) {
+			return this.socks5UsersManagementModeStatus;
+		}		
+		return null;
+	}
+	
 	private void displayHelpText(final Class<?> cls) {
 		System.out.println();
 		Field[] fields = cls.getDeclaredFields();
@@ -157,7 +179,7 @@ public final class SocksServerCLI extends CLI {
 			}
 		}
 	}
-		
+	
 	@Option(
 			doc = "Print this help and exit",
 			name = "help",
@@ -170,43 +192,7 @@ public final class SocksServerCLI extends CLI {
 	@Ordinal(HELP_OPTION_GROUP_ORDINAL)
 	@Override
 	protected void displayProgramHelp() {
-		ArgMatey.Option configFileXsdOption = this.getOptionGroups().get(
-				CONFIG_FILE_XSD_OPTION_GROUP_ORDINAL).get(0);
-		ArgMatey.Option helpOption = this.getOptionGroups().get(
-				HELP_OPTION_GROUP_ORDINAL).get(0);
-		ArgMatey.Option monitoredConfigFileOption = this.getOptionGroups().get(
-				MONITORED_CONFIG_FILE_OPTION_GROUP_ORDINAL).get(0);
-		ArgMatey.Option newConfigFileOption = this.getOptionGroups().get(
-				NEW_CONFIG_FILE_OPTION_GROUP_ORDINAL).get(0);
-		ArgMatey.Option settingsHelpOption = this.getOptionGroups().get(
-				SETTINGS_HELP_OPTION_GROUP_ORDINAL).get(0);
-		ArgMatey.Option socks5UsersOption = this.getOptionGroups().get(
-				SOCKS5_USERS_OPTION_GROUP_ORDINAL).get(0);
-		System.out.printf("Usage: %s [OPTIONS]%n", this.programBeginningUsage);
-		System.out.printf("       %s %s%n", 
-				this.programBeginningUsage, 
-				configFileXsdOption.getUsage());
-		System.out.printf("       %s %s%n", 
-				this.programBeginningUsage, 
-				helpOption.getUsage());
-		System.out.printf("       %s %s%n", 
-				this.programBeginningUsage, 
-				monitoredConfigFileOption.getUsage());		
-		System.out.printf("       %s [OPTIONS] %s%n", 
-				this.programBeginningUsage, 
-				newConfigFileOption.getUsage());
-		System.out.printf("       %s %s%n", 
-				this.programBeginningUsage, 
-				settingsHelpOption.getUsage());
-		System.out.printf("       %s %s ARGS", 
-				this.programBeginningUsage, 
-				socks5UsersOption.getUsage());
-		System.out.println();
-		System.out.println();
-		System.out.println("OPTIONS:");
-		this.getOptionGroups().printHelpText();
-		System.out.println();
-		this.programHelpDisplayed = true;
+		super.displayProgramHelp();
 	}
 	
 	@Option(
@@ -221,12 +207,7 @@ public final class SocksServerCLI extends CLI {
 	@Ordinal(VERSION_OPTION_GROUP_ORDINAL)	
 	@Override
 	protected void displayProgramVersion() { 
-		Package pkg = this.getClass().getPackage();
-		System.out.printf(
-				"%s %s%n", 
-				pkg.getSpecificationTitle(), 
-				pkg.getSpecificationVersion());
-		this.programVersionDisplayed = true;
+		super.displayProgramVersion();
 	}
 		
 	@Option(
@@ -387,56 +368,6 @@ public final class SocksServerCLI extends CLI {
 		this.modifiableConfiguration.addSetting(setting);		
 	}
 	
-	@Override
-	public int handleArgs() {
-		ArgMatey.OptionGroup settingsOptionGroup = this.getOptionGroups().get(
-				SETTING_OPTION_GROUP_ORDINAL); 
-		ArgMatey.Option settingsHelpOption = this.getOptionGroups().get(
-				SETTINGS_HELP_OPTION_GROUP_ORDINAL).get(0);
-		String settingsHelpSuggestion = String.format(
-				"Try `%s %s' for more information.", 
-				this.programBeginningUsage, 
-				settingsHelpOption.getUsage());
-		ArgMatey.Option helpOption = this.getOptionGroups().get(
-				HELP_OPTION_GROUP_ORDINAL).get(0);
-		String suggestion = String.format(
-				"Try `%s %s' for more information.", 
-				this.programBeginningUsage, 
-				helpOption.getUsage());
-		while (this.hasNext()) {
-			try {
-				this.handleNext();
-			} catch (IllegalOptionArgException e) {
-				String suggest = suggestion;
-				if (settingsOptionGroup.toList().contains(e.getOption())) {
-					suggest = settingsHelpSuggestion;
-				}
-				System.err.printf("%s: %s%n", this.programName, e);
-				System.err.println(suggest);
-				e.printStackTrace(System.err);
-				return -1;
-			} catch (Throwable t) {
-				System.err.printf("%s: %s%n", this.programName, t);
-				System.err.println(suggestion);
-				t.printStackTrace(System.err);
-				return -1;
-			}
-			if (this.configurationFileXsdRequested
-					|| this.newConfigurationFileRequested
-					|| this.programHelpDisplayed
-					|| this.programVersionDisplayed
-					|| this.settingsHelpDisplayed) {
-				return 0;
-			}
-			if (this.socks5UsersManagementModeStatus != null) {
-				return this.socks5UsersManagementModeStatus.intValue();
-			}
-		}
-		Configuration configuration = this.newConfiguration();
-		if (configuration == null) { return -1;	}
-		return this.startSocksServer(configuration);
-	}
-	
 	private Configuration newConfiguration() {
 		Configuration configuration = null;
 		if (this.monitoredConfigurationFile == null) {
@@ -458,7 +389,7 @@ public final class SocksServerCLI extends CLI {
 		}
 		return configuration;
 	}
-		
+	
 	@Option(
 			doc = "Create a new configuration file based on the "
 					+ "preceding options and exit",
@@ -510,6 +441,39 @@ public final class SocksServerCLI extends CLI {
 		this.newConfigurationFileRequested = true;
 	}
 	
+	@Override
+	protected int onHandleNextThrowable(final Throwable t) {
+		ArgMatey.OptionGroup settingsOptionGroup = this.getOptionGroups().get(
+				SETTING_OPTION_GROUP_ORDINAL); 
+		ArgMatey.Option settingsHelpOption = this.getOptionGroups().get(
+				SETTINGS_HELP_OPTION_GROUP_ORDINAL).get(0);
+		String settingsHelpSuggestion = String.format(
+				"Try `%s %s' for more information.", 
+				this.programBeginningUsage, 
+				settingsHelpOption.getUsage());
+		ArgMatey.Option helpOption = this.getOptionGroups().get(
+				HELP_OPTION_GROUP_ORDINAL).get(0);
+		String suggestion = String.format(
+				"Try `%s %s' for more information.", 
+				this.programBeginningUsage, 
+				helpOption.getUsage());
+		if (t instanceof IllegalOptionArgException) {
+			IllegalOptionArgException e = (IllegalOptionArgException) t;
+			String suggest = suggestion;
+			if (settingsOptionGroup.toList().contains(e.getOption())) {
+				suggest = settingsHelpSuggestion;
+			}
+			System.err.printf("%s: %s%n", this.programName, e);
+			System.err.println(suggest);
+			e.printStackTrace(System.err);
+			return -1;
+		}
+		System.err.printf("%s: %s%n", this.programName, t);
+		System.err.println(suggestion);
+		t.printStackTrace(System.err);
+		return -1;
+	}
+	
 	@Option(
 			doc = "Print the configuration file XSD and exit",
 			name = "config-file-xsd",
@@ -525,6 +489,55 @@ public final class SocksServerCLI extends CLI {
 		System.out.write(xsd);
 		System.out.flush();
 		this.configurationFileXsdRequested = true;
+	}
+		
+	@Override
+	protected void printProgramHelp() {
+		ArgMatey.Option configFileXsdOption = this.getOptionGroups().get(
+				CONFIG_FILE_XSD_OPTION_GROUP_ORDINAL).get(0);
+		ArgMatey.Option helpOption = this.getOptionGroups().get(
+				HELP_OPTION_GROUP_ORDINAL).get(0);
+		ArgMatey.Option monitoredConfigFileOption = this.getOptionGroups().get(
+				MONITORED_CONFIG_FILE_OPTION_GROUP_ORDINAL).get(0);
+		ArgMatey.Option newConfigFileOption = this.getOptionGroups().get(
+				NEW_CONFIG_FILE_OPTION_GROUP_ORDINAL).get(0);
+		ArgMatey.Option settingsHelpOption = this.getOptionGroups().get(
+				SETTINGS_HELP_OPTION_GROUP_ORDINAL).get(0);
+		ArgMatey.Option socks5UsersOption = this.getOptionGroups().get(
+				SOCKS5_USERS_OPTION_GROUP_ORDINAL).get(0);
+		System.out.printf("Usage: %s [OPTIONS]%n", this.programBeginningUsage);
+		System.out.printf("       %s %s%n", 
+				this.programBeginningUsage, 
+				configFileXsdOption.getUsage());
+		System.out.printf("       %s %s%n", 
+				this.programBeginningUsage, 
+				helpOption.getUsage());
+		System.out.printf("       %s %s%n", 
+				this.programBeginningUsage, 
+				monitoredConfigFileOption.getUsage());		
+		System.out.printf("       %s [OPTIONS] %s%n", 
+				this.programBeginningUsage, 
+				newConfigFileOption.getUsage());
+		System.out.printf("       %s %s%n", 
+				this.programBeginningUsage, 
+				settingsHelpOption.getUsage());
+		System.out.printf("       %s %s ARGS", 
+				this.programBeginningUsage, 
+				socks5UsersOption.getUsage());
+		System.out.println();
+		System.out.println();
+		System.out.println("OPTIONS:");
+		this.getOptionGroups().printHelpText();
+		System.out.println();		
+	}
+	
+	@Override
+	protected void printProgramVersion() {
+		Package pkg = this.getClass().getPackage();
+		System.out.printf(
+				"%s %s%n", 
+				pkg.getSpecificationTitle(), 
+				pkg.getSpecificationVersion());		
 	}
 	
 	@Option(

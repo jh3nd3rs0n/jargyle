@@ -252,6 +252,7 @@ public final class UsersCLI extends CLI {
 	private final List<String> argList;
 	private Command command;
 	private final String programBeginningUsage;
+	private final String suggestion;
 	private boolean xsdRequested;
 	
 	public UsersCLI(
@@ -276,11 +277,45 @@ public final class UsersCLI extends CLI {
 		if (prgBeginningUsage == null) {
 			prgBeginningUsage = progName;
 		}
+		ArgMatey.Option helpOption = this.getOptionGroups().get(
+				HELP_OPTION_GROUP_ORDINAL).get(0);
+		String suggest = String.format(
+				"Try `%s %s' for more information", 
+				prgBeginningUsage, 
+				helpOption.getUsage());		
 		this.argList = new ArrayList<String>();
 		this.command = null;
 		this.programBeginningUsage = prgBeginningUsage;
-		this.programName = prgName;		
+		this.programName = prgName;
+		this.suggestion = suggest;
 		this.xsdRequested = false;
+	}
+	
+	@Override
+	protected int afterHandleArgs() {
+		if (this.command == null) {
+			System.err.printf("%s: command must be provided%n", this.programName);
+			System.err.println(this.suggestion);
+			return -1;
+		}
+		try {
+			this.command.invoke(this.argList.toArray(
+					new String[this.argList.size()]));
+		} catch (Exception e) {
+			System.err.printf("%s: %s%n", this.programName, e);
+			System.err.println(this.suggestion);
+			e.printStackTrace(System.err);
+			return -1;
+		}
+		return 0;		
+	}
+	
+	@Override
+	protected Integer afterHandleNext() {
+		if (this.isProgramHelpDisplayed() || this.xsdRequested) {
+			return Integer.valueOf(0);
+		}
+		return null;
 	}
 	
 	@Option(
@@ -295,6 +330,34 @@ public final class UsersCLI extends CLI {
 	@Ordinal(HELP_OPTION_GROUP_ORDINAL)
 	@Override
 	protected void displayProgramHelp() {
+		super.displayProgramHelp();
+	}
+	
+	@Ignore
+	@Override
+	protected void displayProgramVersion() { 
+		throw new UnsupportedOperationException("not implemented");
+	}
+	
+	@Override
+	protected void handleNonparsedArg(final String nonparsedArg) {
+		if (this.command == null) {
+			this.command = Command.getInstance(nonparsedArg);
+		} else {
+			this.argList.add(nonparsedArg);
+		}
+	}
+	
+	@Override
+	protected int onHandleNextThrowable(final Throwable t) {
+		System.err.printf("%s: %s%n", this.programName, t);
+		System.err.println(this.suggestion);
+		t.printStackTrace(System.err);
+		return -1;		
+	}
+		
+	@Override
+	protected void printProgramHelp() {
 		ArgMatey.Option helpOption = this.getOptionGroups().get(
 				HELP_OPTION_GROUP_ORDINAL).get(0);
 		ArgMatey.Option xsdOption = this.getOptionGroups().get(
@@ -322,61 +385,7 @@ public final class UsersCLI extends CLI {
 		System.out.println();
 		System.out.println("OPTIONS:");
 		this.getOptionGroups().printHelpText();
-		System.out.println();
-		this.programHelpDisplayed = true;
-	}
-	
-	@Ignore
-	@Override
-	protected void displayProgramVersion() { 
-		throw new UnsupportedOperationException("not implemented");
-	}
-	
-	@Override
-	public int handleArgs() {
-		ArgMatey.Option helpOption = this.getOptionGroups().get(
-				HELP_OPTION_GROUP_ORDINAL).get(0);
-		String suggestion = String.format(
-				"Try `%s %s' for more information", 
-				this.programBeginningUsage, 
-				helpOption.getUsage());
-		while (this.hasNext()) {
-			try {
-				this.handleNext();
-			} catch (Throwable t) {
-				System.err.printf("%s: %s%n", this.programName, t);
-				System.err.println(suggestion);
-				t.printStackTrace(System.err);
-				return -1;
-			}
-			if (this.programHelpDisplayed || this.xsdRequested) {
-				return 0;
-			}
-		}
-		if (this.command == null) {
-			System.err.printf("%s: command must be provided%n", this.programName);
-			System.err.println(suggestion);
-			return -1;
-		}
-		try {
-			this.command.invoke(this.argList.toArray(
-					new String[this.argList.size()]));
-		} catch (Exception e) {
-			System.err.printf("%s: %s%n", this.programName, e);
-			System.err.println(suggestion);
-			e.printStackTrace(System.err);
-			return -1;
-		}
-		return 0;
-	}
-		
-	@Override
-	protected void handleNonparsedArg(final String nonparsedArg) {
-		if (this.command == null) {
-			this.command = Command.getInstance(nonparsedArg);
-		} else {
-			this.argList.add(nonparsedArg);
-		}
+		System.out.println();		
 	}
 	
 	@Option(

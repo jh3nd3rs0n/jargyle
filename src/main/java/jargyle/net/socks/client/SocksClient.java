@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import jargyle.net.NetFactory;
@@ -15,7 +17,17 @@ public abstract class SocksClient {
 		SocksServerUri socksServerUri = SocksServerUri.newInstance();
 		SocksClient socksClient = null;
 		if (socksServerUri != null) {
-			socksClient = socksServerUri.newSocksClient(Properties.newInstance());
+			List<Property<? extends Object>> properties = 
+					new ArrayList<Property<? extends Object>>();
+			for (PropertySpec<Object> propertySpec : PropertySpec.values()) {
+				String property = System.getProperty(propertySpec.toString());
+				if (property != null) {
+					properties.add(propertySpec.newPropertyOfParsableValue(
+							property));
+				}
+			}			
+			socksClient = socksServerUri.newSocksClient(
+					Properties.newInstance(properties));
 		}
 		return socksClient;
 	}

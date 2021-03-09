@@ -12,14 +12,6 @@ public final class Properties {
 			final List<Property<? extends Object>> properties) {
 		Map<PropertySpec<Object>, Property<Object>> props = 
 				new HashMap<PropertySpec<Object>, Property<Object>>();
-		for (PropertySpec<Object> propertySpec : PropertySpec.values()) {
-			String property = System.getProperty(propertySpec.toString());
-			if (property != null) {
-				props.put(
-						propertySpec, 
-						propertySpec.newPropertyOfParsableValue(property));
-			}
-		}
 		for (Property<? extends Object> property : properties) {
 			@SuppressWarnings("unchecked")
 			Property<Object> prop = (Property<Object>) property;

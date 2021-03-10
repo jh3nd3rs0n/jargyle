@@ -835,25 +835,28 @@ public final class ArgMatey {
 			return 0;
 		}
 		
-		protected Integer afterHandleNext() {
-			if (this.programHelpDisplayed || this.programVersionDisplayed) {
-				return Integer.valueOf(0);
+		protected Optional<Integer> afterHandleNext() {
+			if (this.isProgramHelpDisplayed() 
+					|| this.isProgramVersionDisplayed()) {
+				return Optional.of(Integer.valueOf(0));
 			}			
-			return null;
+			return Optional.empty();
 		}
 		
-		protected Integer beforeHandleArgs() {
-			if (this.programHelpDisplayed || this.programVersionDisplayed) {
-				return Integer.valueOf(0);
-			}
-			return null;
+		protected Optional<Integer> beforeHandleArgs() {
+			if (this.isProgramHelpDisplayed() 
+					|| this.isProgramVersionDisplayed()) {
+				return Optional.of(Integer.valueOf(0));
+			}			
+			return Optional.empty();
 		}
 		
-		protected Integer beforeHandleNext() {
-			if (this.programHelpDisplayed || this.programVersionDisplayed) {
-				return Integer.valueOf(0);
+		protected Optional<Integer> beforeHandleNext() {
+			if (this.isProgramHelpDisplayed() 
+					|| this.isProgramVersionDisplayed()) {
+				return Optional.of(Integer.valueOf(0));
 			}			
-			return null;
+			return Optional.empty();
 		}
 		
 		@Annotations.Option(
@@ -897,23 +900,23 @@ public final class ArgMatey {
 		}
 		
 		public final int handleArgs() {
-			Integer status = this.beforeHandleArgs();
-			if (status != null) {
-				return status.intValue();
+			Optional<Integer> status = this.beforeHandleArgs();
+			if (status.isPresent()) {
+				return status.get().intValue();
 			}
 			while (this.hasNext()) {
 				status = this.beforeHandleNext();
-				if (status != null) {
-					return status.intValue();
+				if (status.isPresent()) {
+					return status.get().intValue();
 				}
 				try {
 					this.handleNext();
 				} catch (Throwable t) {
-					return this.onHandleNextThrowable(t);
+					return this.handleThrowable(t);
 				}
 				status = this.afterHandleNext();
-				if (status != null) {
-					return status.intValue();
+				if (status.isPresent()) {
+					return status.get().intValue();
 				}
 			}
 			return this.afterHandleArgs();
@@ -947,6 +950,16 @@ public final class ArgMatey {
 		
 		protected void handleNonparsedArg(final String nonparsedArg) { }
 		
+		protected int handleThrowable(final Throwable t) {
+			String progName = this.programName;
+			if (progName == null) {
+				progName = this.getClass().getName();
+			}
+			System.err.printf("%s: %s%n", progName, t);
+			t.printStackTrace(System.err);
+			return -1;
+		}
+		
 		protected final boolean hasNext() {
 			return this.argsParser.hasNext();
 		}
@@ -961,16 +974,6 @@ public final class ArgMatey {
 		
 		protected final String next() {
 			return this.argsParser.next();
-		}
-		
-		protected int onHandleNextThrowable(final Throwable t) {
-			String progName = this.programName;
-			if (progName == null) {
-				progName = this.getClass().getName();
-			}
-			System.err.printf("%s: %s%n", progName, t);
-			t.printStackTrace(System.err);
-			return -1;
 		}
 		
 		protected void printProgramHelp() {

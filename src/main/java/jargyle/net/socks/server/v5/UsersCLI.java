@@ -14,6 +14,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import argmatey.ArgMatey;
 import argmatey.ArgMatey.Annotations.Ignore;
@@ -311,11 +312,11 @@ public final class UsersCLI extends CLI {
 	}
 	
 	@Override
-	protected Integer afterHandleNext() {
+	protected Optional<Integer> afterHandleNext() {
 		if (this.isProgramHelpDisplayed() || this.xsdRequested) {
-			return Integer.valueOf(0);
+			return Optional.of(Integer.valueOf(0));
 		}
-		return null;
+		return Optional.empty();
 	}
 	
 	@Option(
@@ -349,7 +350,7 @@ public final class UsersCLI extends CLI {
 	}
 	
 	@Override
-	protected int onHandleNextThrowable(final Throwable t) {
+	protected int handleThrowable(final Throwable t) {
 		System.err.printf("%s: %s%n", this.programName, t);
 		System.err.println(this.suggestion);
 		t.printStackTrace(System.err);

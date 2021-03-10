@@ -13,6 +13,7 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -151,33 +152,18 @@ public final class SocksServerCLI extends CLI {
 	}
 	
 	@Override
-	protected Integer afterHandleNext() {
+	protected Optional<Integer> afterHandleNext() {
 		if (this.configurationFileXsdRequested
 				|| this.isProgramHelpDisplayed()
 				|| this.isProgramVersionDisplayed()
 				|| this.newConfigurationFileRequested
 				|| this.settingsHelpDisplayed) {
-			return Integer.valueOf(0);
+			return Optional.of(Integer.valueOf(0));
 		}
 		if (this.socks5UsersManagementModeStatus != null) {
-			return this.socks5UsersManagementModeStatus;
+			return Optional.of(this.socks5UsersManagementModeStatus);
 		}		
-		return null;
-	}
-	
-	private void displayHelpText(final Class<?> cls) {
-		System.out.println();
-		Field[] fields = cls.getDeclaredFields();
-		for (Field field : fields) {
-			HelpText helpText = field.getAnnotation(HelpText.class);
-			if (helpText != null) {
-				System.out.print("  ");
-				System.out.println(helpText.usage());
-				System.out.print("      ");
-				System.out.println(helpText.doc());
-				System.out.println();
-			}
-		}
+		return Optional.empty();
 	}
 	
 	@Option(
@@ -208,31 +194,6 @@ public final class SocksServerCLI extends CLI {
 	@Override
 	protected void displayProgramVersion() { 
 		super.displayProgramVersion();
-	}
-		
-	@Option(
-			doc = "Print the list of available settings for the SOCKS "
-					+ "server and exit",
-			name = "settings-help",
-			type = OptionType.GNU_LONG
-	)
-	@Option(
-			name = "H",
-			type = OptionType.POSIX
-	)
-	@Ordinal(SETTINGS_HELP_OPTION_GROUP_ORDINAL)
-	private void displaySettingsHelp() {
-		System.out.println("SETTINGS:");
-		this.displayHelpText(SettingSpec.class);
-		System.out.println("SCHEMES:");
-		this.displayHelpText(Scheme.class);
-		System.out.println("SOCKET_SETTINGS:");
-		this.displayHelpText(SocketSettingSpec.class);
-		System.out.println("SOCKS5_AUTH_METHODS:");
-		this.displayHelpText(AuthMethod.class);
-		System.out.println("SOCKS5_GSSAPI_PROTECTION_LEVELS:");
-		this.displayHelpText(GssapiProtectionLevel.class);
-		this.settingsHelpDisplayed = true;
 	}
 	
 	@Option(
@@ -304,7 +265,7 @@ public final class SocksServerCLI extends CLI {
 						encryptedPassword);
 		this.modifiableConfiguration.addSetting(setting);
 	}
-	
+		
 	@Option(
 			doc = "Enter through an interactive prompt the password for the "
 					+ "trust store for the SSL/TLS connections to the other "
@@ -366,6 +327,39 @@ public final class SocksServerCLI extends CLI {
 				SettingSpec.SSL_TRUST_STORE_PASSWORD.newSetting(
 						encryptedPassword);
 		this.modifiableConfiguration.addSetting(setting);		
+	}
+	
+	@Override
+	protected int handleThrowable(final Throwable t) {
+		ArgMatey.OptionGroup settingsOptionGroup = this.getOptionGroups().get(
+				SETTING_OPTION_GROUP_ORDINAL); 
+		ArgMatey.Option settingsHelpOption = this.getOptionGroups().get(
+				SETTINGS_HELP_OPTION_GROUP_ORDINAL).get(0);
+		String settingsHelpSuggestion = String.format(
+				"Try `%s %s' for more information.", 
+				this.programBeginningUsage, 
+				settingsHelpOption.getUsage());
+		ArgMatey.Option helpOption = this.getOptionGroups().get(
+				HELP_OPTION_GROUP_ORDINAL).get(0);
+		String suggestion = String.format(
+				"Try `%s %s' for more information.", 
+				this.programBeginningUsage, 
+				helpOption.getUsage());
+		if (t instanceof IllegalOptionArgException) {
+			IllegalOptionArgException e = (IllegalOptionArgException) t;
+			String suggest = suggestion;
+			if (settingsOptionGroup.toList().contains(e.getOption())) {
+				suggest = settingsHelpSuggestion;
+			}
+			System.err.printf("%s: %s%n", this.programName, e);
+			System.err.println(suggest);
+			e.printStackTrace(System.err);
+			return -1;
+		}
+		System.err.printf("%s: %s%n", this.programName, t);
+		System.err.println(suggestion);
+		t.printStackTrace(System.err);
+		return -1;
 	}
 	
 	private Configuration newConfiguration() {
@@ -441,39 +435,6 @@ public final class SocksServerCLI extends CLI {
 		this.newConfigurationFileRequested = true;
 	}
 	
-	@Override
-	protected int onHandleNextThrowable(final Throwable t) {
-		ArgMatey.OptionGroup settingsOptionGroup = this.getOptionGroups().get(
-				SETTING_OPTION_GROUP_ORDINAL); 
-		ArgMatey.Option settingsHelpOption = this.getOptionGroups().get(
-				SETTINGS_HELP_OPTION_GROUP_ORDINAL).get(0);
-		String settingsHelpSuggestion = String.format(
-				"Try `%s %s' for more information.", 
-				this.programBeginningUsage, 
-				settingsHelpOption.getUsage());
-		ArgMatey.Option helpOption = this.getOptionGroups().get(
-				HELP_OPTION_GROUP_ORDINAL).get(0);
-		String suggestion = String.format(
-				"Try `%s %s' for more information.", 
-				this.programBeginningUsage, 
-				helpOption.getUsage());
-		if (t instanceof IllegalOptionArgException) {
-			IllegalOptionArgException e = (IllegalOptionArgException) t;
-			String suggest = suggestion;
-			if (settingsOptionGroup.toList().contains(e.getOption())) {
-				suggest = settingsHelpSuggestion;
-			}
-			System.err.printf("%s: %s%n", this.programName, e);
-			System.err.println(suggest);
-			e.printStackTrace(System.err);
-			return -1;
-		}
-		System.err.printf("%s: %s%n", this.programName, t);
-		System.err.println(suggestion);
-		t.printStackTrace(System.err);
-		return -1;
-	}
-	
 	@Option(
 			doc = "Print the configuration file XSD and exit",
 			name = "config-file-xsd",
@@ -490,7 +451,22 @@ public final class SocksServerCLI extends CLI {
 		System.out.flush();
 		this.configurationFileXsdRequested = true;
 	}
-		
+	
+	private void printHelpText(final Class<?> cls) {
+		System.out.println();
+		Field[] fields = cls.getDeclaredFields();
+		for (Field field : fields) {
+			HelpText helpText = field.getAnnotation(HelpText.class);
+			if (helpText != null) {
+				System.out.print("  ");
+				System.out.println(helpText.usage());
+				System.out.print("      ");
+				System.out.println(helpText.doc());
+				System.out.println();
+			}
+		}
+	}
+	
 	@Override
 	protected void printProgramHelp() {
 		ArgMatey.Option configFileXsdOption = this.getOptionGroups().get(
@@ -530,7 +506,7 @@ public final class SocksServerCLI extends CLI {
 		this.getOptionGroups().printHelpText();
 		System.out.println();		
 	}
-	
+		
 	@Override
 	protected void printProgramVersion() {
 		Package pkg = this.getClass().getPackage();
@@ -538,6 +514,31 @@ public final class SocksServerCLI extends CLI {
 				"%s %s%n", 
 				pkg.getSpecificationTitle(), 
 				pkg.getSpecificationVersion());		
+	}
+	
+	@Option(
+			doc = "Print the list of available settings for the SOCKS "
+					+ "server and exit",
+			name = "settings-help",
+			type = OptionType.GNU_LONG
+	)
+	@Option(
+			name = "H",
+			type = OptionType.POSIX
+	)
+	@Ordinal(SETTINGS_HELP_OPTION_GROUP_ORDINAL)
+	private void printSettingsHelp() {
+		System.out.println("SETTINGS:");
+		this.printHelpText(SettingSpec.class);
+		System.out.println("SCHEMES:");
+		this.printHelpText(Scheme.class);
+		System.out.println("SOCKET_SETTINGS:");
+		this.printHelpText(SocketSettingSpec.class);
+		System.out.println("SOCKS5_AUTH_METHODS:");
+		this.printHelpText(AuthMethod.class);
+		System.out.println("SOCKS5_GSSAPI_PROTECTION_LEVELS:");
+		this.printHelpText(GssapiProtectionLevel.class);
+		this.settingsHelpDisplayed = true;
 	}
 	
 	@Option(

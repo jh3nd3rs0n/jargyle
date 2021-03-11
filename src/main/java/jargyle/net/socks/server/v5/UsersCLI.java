@@ -293,11 +293,11 @@ public final class UsersCLI extends CLI {
 	}
 	
 	@Override
-	protected int afterHandleArgs() {
+	protected Optional<Integer> afterHandleArgs() {
 		if (this.command == null) {
 			System.err.printf("%s: command must be provided%n", this.programName);
 			System.err.println(this.suggestion);
-			return -1;
+			return Optional.of(Integer.valueOf(-1));
 		}
 		try {
 			this.command.invoke(this.argList.toArray(
@@ -306,9 +306,9 @@ public final class UsersCLI extends CLI {
 			System.err.printf("%s: %s%n", this.programName, e);
 			System.err.println(this.suggestion);
 			e.printStackTrace(System.err);
-			return -1;
+			return Optional.of(Integer.valueOf(-1));
 		}
-		return 0;		
+		return Optional.of(Integer.valueOf(0));
 	}
 	
 	@Override
@@ -350,11 +350,11 @@ public final class UsersCLI extends CLI {
 	}
 	
 	@Override
-	protected int handleThrowable(final Throwable t) {
+	protected Optional<Integer> handleThrowable(final Throwable t) {
 		System.err.printf("%s: %s%n", this.programName, t);
 		System.err.println(this.suggestion);
 		t.printStackTrace(System.err);
-		return -1;		
+		return Optional.of(Integer.valueOf(-1));		
 	}
 		
 	@Override

@@ -831,8 +831,12 @@ public final class ArgMatey {
 			this.programVersionDisplayed = false;
 		}
 		
-		protected int afterHandleArgs() {
-			return 0;
+		protected Optional<Integer> afterHandleArgs() {
+			if (this.isProgramHelpDisplayed() 
+					|| this.isProgramVersionDisplayed()) {
+				return Optional.of(Integer.valueOf(0));
+			}			
+			return Optional.empty();
 		}
 		
 		protected Optional<Integer> afterHandleNext() {
@@ -899,30 +903,33 @@ public final class ArgMatey {
 			return this.argsParser.getParseResultHolder();
 		}
 		
-		public final int handleArgs() {
+		public final Optional<Integer> handleArgs() {
 			Optional<Integer> status = this.beforeHandleArgs();
 			if (status.isPresent()) {
-				return status.get().intValue();
+				return status;
 			}
 			while (this.hasNext()) {
 				status = this.beforeHandleNext();
 				if (status.isPresent()) {
-					return status.get().intValue();
+					return status;
 				}
 				try {
 					this.handleNext();
 				} catch (Throwable t) {
-					return this.handleThrowable(t);
+					status = this.handleThrowable(t);
+					if (status.isPresent()) {
+						return status;
+					}
 				}
 				status = this.afterHandleNext();
 				if (status.isPresent()) {
-					return status.get().intValue();
+					return status;
 				}
 			}
 			return this.afterHandleArgs();
 		}
 		
-		protected final void handleNext() {
+		private final void handleNext() {
 			this.argsParser.parseNext();
 			ParseResultHolder parseResultHolder = 
 					this.argsParser.getParseResultHolder();
@@ -950,25 +957,25 @@ public final class ArgMatey {
 		
 		protected void handleNonparsedArg(final String nonparsedArg) { }
 		
-		protected int handleThrowable(final Throwable t) {
+		protected Optional<Integer> handleThrowable(final Throwable t) {
 			String progName = this.programName;
 			if (progName == null) {
 				progName = this.getClass().getName();
 			}
 			System.err.printf("%s: %s%n", progName, t);
 			t.printStackTrace(System.err);
-			return -1;
+			return Optional.of(Integer.valueOf(-1));
 		}
 		
 		protected final boolean hasNext() {
 			return this.argsParser.hasNext();
 		}
 		
-		public final boolean isProgramHelpDisplayed() {
+		protected final boolean isProgramHelpDisplayed() {
 			return this.programHelpDisplayed;
 		}
 		
-		public final boolean isProgramVersionDisplayed() {
+		protected final boolean isProgramVersionDisplayed() {
 			return this.programVersionDisplayed;
 		}
 		

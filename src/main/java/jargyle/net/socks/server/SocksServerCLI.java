@@ -65,7 +65,7 @@ public final class SocksServerCLI extends CLI {
 	private final boolean posixlyCorrect;
 	private final String programBeginningUsage;
 	private boolean settingsHelpDisplayed;
-	private Integer socks5UsersManagementModeStatus;
+	private Optional<Integer> socks5UsersManagementModeStatus;
 	
 	public SocksServerCLI(final String[] args, final boolean posixCorrect) {
 		super(args, posixCorrect);
@@ -87,7 +87,7 @@ public final class SocksServerCLI extends CLI {
 		this.programBeginningUsage = progBeginningUsage;
 		this.programName = progName;
 		this.settingsHelpDisplayed = false;
-		this.socks5UsersManagementModeStatus = null;
+		this.socks5UsersManagementModeStatus = Optional.empty();
 	}
 		
 	@Option(
@@ -145,9 +145,9 @@ public final class SocksServerCLI extends CLI {
 	}
 	
 	@Override
-	protected int afterHandleArgs() {
+	protected Optional<Integer> afterHandleArgs() {
 		Configuration configuration = this.newConfiguration();
-		if (configuration == null) { return -1;	}
+		if (configuration == null) { return Optional.of(Integer.valueOf(-1)); }
 		return this.startSocksServer(configuration);
 	}
 	
@@ -160,8 +160,8 @@ public final class SocksServerCLI extends CLI {
 				|| this.settingsHelpDisplayed) {
 			return Optional.of(Integer.valueOf(0));
 		}
-		if (this.socks5UsersManagementModeStatus != null) {
-			return Optional.of(this.socks5UsersManagementModeStatus);
+		if (this.socks5UsersManagementModeStatus.isPresent()) {
+			return this.socks5UsersManagementModeStatus;
 		}		
 		return Optional.empty();
 	}
@@ -221,8 +221,7 @@ public final class SocksServerCLI extends CLI {
 				newProgramBeginningUsage, 
 				remainingArgs, 
 				this.posixlyCorrect);
-		int status = usersCLI.handleArgs();
-		this.socks5UsersManagementModeStatus = Integer.valueOf(status);
+		this.socks5UsersManagementModeStatus = usersCLI.handleArgs();
 	}
 		
 	@Option(
@@ -330,7 +329,7 @@ public final class SocksServerCLI extends CLI {
 	}
 	
 	@Override
-	protected int handleThrowable(final Throwable t) {
+	protected Optional<Integer> handleThrowable(final Throwable t) {
 		ArgMatey.OptionGroup settingsOptionGroup = this.getOptionGroups().get(
 				SETTING_OPTION_GROUP_ORDINAL); 
 		ArgMatey.Option settingsHelpOption = this.getOptionGroups().get(
@@ -354,12 +353,12 @@ public final class SocksServerCLI extends CLI {
 			System.err.printf("%s: %s%n", this.programName, e);
 			System.err.println(suggest);
 			e.printStackTrace(System.err);
-			return -1;
+			return Optional.of(Integer.valueOf(-1));
 		}
 		System.err.printf("%s: %s%n", this.programName, t);
 		System.err.println(suggestion);
 		t.printStackTrace(System.err);
-		return -1;
+		return Optional.of(Integer.valueOf(-1));
 	}
 	
 	private Configuration newConfiguration() {
@@ -558,7 +557,8 @@ public final class SocksServerCLI extends CLI {
 		this.monitoredConfigurationFile = file;
 	}
 		
-	private int startSocksServer(final Configuration configuration) {
+	private Optional<Integer> startSocksServer(
+			final Configuration configuration) {
 		SocksServer socksServer = new SocksServer(configuration);
 		try {
 			socksServer.start();
@@ -571,16 +571,16 @@ public final class SocksServerCLI extends CLI {
 							configuration.getSettings().getLastValue(
 									SettingSpec.HOST)), 
 					e);
-			return -1;
+			return Optional.of(Integer.valueOf(-1));
 		} catch (IOException e) {
 			LOGGER.error("Error in starting SocksServer", e);
-			return -1;
+			return Optional.of(Integer.valueOf(-1));
 		}
 		LOGGER.info(String.format(
 				"Listening on port %s at %s",
 				socksServer.getPort(),
 				socksServer.getHost()));
-		return 0;
+		return Optional.empty();
 	}
 
 }

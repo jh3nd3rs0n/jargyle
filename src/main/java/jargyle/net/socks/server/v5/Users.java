@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -71,8 +72,10 @@ public final class Users {
 	
 	public static void main(final String[] args) {
 		UsersCLI usersCLI = new UsersCLI(null, null, args, false);
-		int status = usersCLI.handleArgs();
-		if (status != 0) { System.exit(status);	}
+		Optional<Integer> status = usersCLI.handleArgs();
+		if (status.isPresent() && status.get().intValue() != 0) { 
+			System.exit(status.get().intValue());
+		}
 	}
 	
 	public static Users newInstance(final List<User> usrs) {

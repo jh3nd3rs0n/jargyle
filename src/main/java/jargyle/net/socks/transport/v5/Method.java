@@ -28,7 +28,7 @@ public enum Method {
 	
 	NO_ACCEPTABLE_METHODS((byte) 0xff);
 
-	public static Method valueOf(final byte b) {
+	public static Method valueOfByte(final byte b) {
 		for (Method method : Method.values()) {
 			if (method.byteValue() == b) {
 				return method;

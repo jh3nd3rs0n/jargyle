@@ -86,7 +86,7 @@ public final class Message {
 		b = in.read();
 		Version ver = null;
 		try {
-			ver = Version.valueOf(
+			ver = Version.valueOfByte(
 					(byte) UnsignedByte.newInstance(b).intValue());
 		} catch (IllegalArgumentException e) {
 			throw new IOException(e);
@@ -96,7 +96,7 @@ public final class Message {
 		b = in.read();
 		MessageType mType = null; 
 		try {
-			mType = MessageType.valueOf(
+			mType = MessageType.valueOfByte(
 					(byte) UnsignedByte.newInstance(b).intValue());
 		} catch (IllegalArgumentException e) {
 			throw new IOException(e);

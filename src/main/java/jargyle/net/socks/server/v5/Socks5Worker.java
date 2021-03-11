@@ -77,7 +77,7 @@ public final class Socks5Worker implements Runnable {
 	private Socket authenticateUsing(final Method method) {
 		Authenticator authenticator = null;
 		try {
-			authenticator = Authenticator.valueOf(method);
+			authenticator = Authenticator.valueOfMethod(method);
 		} catch (IllegalArgumentException e) {
 			LOGGER.warn( 
 					this.format(String.format(

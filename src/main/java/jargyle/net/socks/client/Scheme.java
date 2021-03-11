@@ -20,7 +20,7 @@ public enum Scheme {
 
 	};
 	
-	public static Scheme getInstance(final String s) {
+	public static Scheme valueOfString(final String s) {
 		for (Scheme value : Scheme.values()) {
 			if (value.toString().equals(s)) {
 				return value;

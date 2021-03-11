@@ -67,7 +67,7 @@ public final class Socks5Reply {
 					UnsignedShort.MIN_INT_VALUE,
 					UnsignedShort.MAX_INT_VALUE));
 		}
-		AddressType addressType = AddressType.getAddressTypeOf(
+		AddressType addressType = AddressType.valueFromAddress(
 				serverBoundAddress);
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		Version version = Version.V5;
@@ -76,7 +76,8 @@ public final class Socks5Reply {
 		out.write(RSV);
 		out.write(addressType.byteValue());
 		try {
-			out.write(addressType.convertToByteArray(serverBoundAddress));
+			out.write(addressType.convertAddressToByteArray(
+					serverBoundAddress));
 		} catch (IOException e) {
 			throw new AssertionError(e);
 		}
@@ -102,7 +103,7 @@ public final class Socks5Reply {
 		b = in.read();
 		Version ver = null; 
 		try {
-			ver = Version.valueOf(
+			ver = Version.valueOfByte(
 					(byte) UnsignedByte.newInstance(b).intValue());
 		} catch (IllegalArgumentException e) {
 			throw new IOException(e);
@@ -111,7 +112,7 @@ public final class Socks5Reply {
 		b = in.read();
 		Reply rep = null; 
 		try {
-			rep = Reply.valueOf(
+			rep = Reply.valueOfByte(
 					(byte) UnsignedByte.newInstance(b).intValue());
 		} catch (IllegalArgumentException e) {
 			throw new IOException(e);
@@ -132,7 +133,7 @@ public final class Socks5Reply {
 		b = in.read();
 		AddressType atyp = null; 
 		try {
-			atyp = AddressType.valueOf(
+			atyp = AddressType.valueOfByte(
 					(byte) UnsignedByte.newInstance(b).intValue());
 		} catch (IllegalArgumentException e) {
 			throw new IOException(e);
@@ -152,7 +153,7 @@ public final class Socks5Reply {
 		bytes = Arrays.copyOf(bytes, bytesRead + 1);
 		String bndAddr = null; 
 		try {
-			bndAddr = atyp.convertToString(bytes);
+			bndAddr = atyp.convertAddressToString(bytes);
 		} catch (IllegalArgumentException e) {
 			throw new IOException(e);
 		}

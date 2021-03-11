@@ -16,7 +16,7 @@ public enum MessageType {
 	
 	ENCAPSULATED_USER_DATA((byte) 0x03);
 	
-	public static MessageType valueOf(final byte b) {
+	public static MessageType valueOfByte(final byte b) {
 		for (MessageType messageType : MessageType.values()) {
 			if (messageType.byteValue() == b) {
 				return messageType;

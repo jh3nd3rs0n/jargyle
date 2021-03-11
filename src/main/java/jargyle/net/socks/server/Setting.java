@@ -211,29 +211,29 @@ public final class Setting<V> {
 		return newInstance(name, value);
 	}
 	
-	private static <V> Setting<V> newInstance(final String name, final V value) {
-		@SuppressWarnings("unchecked")
-		Setting<V> setting = 
-				(Setting<V>) SettingSpec.getInstance(name).newSetting(value);
-		return setting;
-	}
-
-	private static <V> Setting<V> newInstance(
-			final String name, final V value, final String comment) {
-		Setting<V> setting = newInstance(name, value);
-		return new Setting<V>(
-				setting.getSettingSpec(), setting.getValue(), comment);
-	}
-	
 	private static Setting<Object> newInstance(
 			final String name, final String value) {
-		return SettingSpec.getInstance(name).newSettingOfParsableValue(value);
+		return SettingSpec.valueOfString(name).newSettingOfParsableValue(value);
 	}
-	
+
 	private static Setting<Object> newInstance(
 			final String name, final String value, final String comment) {
 		Setting<Object> setting = newInstance(name, value);
 		return new Setting<Object>(
+				setting.getSettingSpec(), setting.getValue(), comment);
+	}
+	
+	private static <V> Setting<V> newInstance(final String name, final V value) {
+		@SuppressWarnings("unchecked")
+		Setting<V> setting = 
+				(Setting<V>) SettingSpec.valueOfString(name).newSetting(value);
+		return setting;
+	}
+	
+	private static <V> Setting<V> newInstance(
+			final String name, final V value, final String comment) {
+		Setting<V> setting = newInstance(name, value);
+		return new Setting<V>(
 				setting.getSettingSpec(), setting.getValue(), comment);
 	}
 	

@@ -69,7 +69,7 @@ public final class Socks5Client extends SocksClient {
 		Method method = smsm.getMethod();
 		Authenticator authenticator = null;
 		try {
-			authenticator = Authenticator.valueOf(method);
+			authenticator = Authenticator.valueOfMethod(method);
 		} catch (IllegalArgumentException e) {
 			throw new IOException(e);
 		}

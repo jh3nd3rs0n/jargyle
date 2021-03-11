@@ -19,8 +19,8 @@ public enum AddressType {
 				"^[\\d]{1,3}(\\.[\\d]{1,3}){0,3}$";
 		
 		@Override
-		public byte[] convertToByteArray(final String address) {
-			if (!this.isAddressTypeOf(address)) {
+		public byte[] convertAddressToByteArray(final String address) {
+			if (!this.isValueFromAddress(address)) {
 				throw new IllegalArgumentException(String.format(
 						"invalid address: %s", address));
 			}
@@ -34,7 +34,7 @@ public enum AddressType {
 		}
 
 		@Override
-		public String convertToString(final byte[] address) {
+		public String convertAddressToString(final byte[] address) {
 			InetAddress inetAddress = null;
 			try {
 				inetAddress = InetAddress.getByAddress(address);
@@ -58,8 +58,8 @@ public enum AddressType {
 		}
 
 		@Override
-		public boolean isAddressTypeOf(final String s) {
-			return s.matches(ADDRESS_REGEX);
+		public boolean isValueFromAddress(final String address) {
+			return address.matches(ADDRESS_REGEX);
 		}
 	},
 	
@@ -69,8 +69,8 @@ public enum AddressType {
 				"^([a-z0-9]|[a-z0-9][a-z0-9-_]*[a-z0-9])(\\.([a-z0-9]|[a-z0-9][a-z0-9-_]*[a-z0-9]))*$";
 		
 		@Override
-		public byte[] convertToByteArray(final String address) {
-			if (!this.isAddressTypeOf(address)) {
+		public byte[] convertAddressToByteArray(final String address) {
+			if (!this.isValueFromAddress(address)) {
 				throw new IllegalArgumentException(String.format(
 						"invalid address: %s", address));
 			}
@@ -91,7 +91,7 @@ public enum AddressType {
 		}
 
 		@Override
-		public String convertToString(final byte[] address) {
+		public String convertAddressToString(final byte[] address) {
 			if (address.length <= 1) {
 				throw new IllegalArgumentException(
 						"expected address length greater than 1. "
@@ -107,7 +107,7 @@ public enum AddressType {
 			}
 			String addr = new String(Arrays.copyOfRange(
 					address, 1, address.length));
-			if (!this.isAddressTypeOf(addr)) {
+			if (!this.isValueFromAddress(addr)) {
 				throw new IllegalArgumentException(String.format(
 						"invalid address: %s", addr));
 			}
@@ -125,8 +125,8 @@ public enum AddressType {
 		}
 
 		@Override
-		public boolean isAddressTypeOf(final String s) {
-			return s.matches(ADDRESS_REGEX);
+		public boolean isValueFromAddress(final String address) {
+			return address.matches(ADDRESS_REGEX);
 		}
 	},
 	
@@ -137,8 +137,8 @@ public enum AddressType {
 				"^[a-fA-F0-9]{1,4}(:[a-fA-F0-9]{1,4}){7}$";
 		
 		@Override
-		public byte[] convertToByteArray(final String address) {
-			if (!this.isAddressTypeOf(address)) {
+		public byte[] convertAddressToByteArray(final String address) {
+			if (!this.isValueFromAddress(address)) {
 				throw new IllegalArgumentException(String.format(
 						"invalid address: %s", address));
 			}
@@ -152,7 +152,7 @@ public enum AddressType {
 		}
 
 		@Override
-		public String convertToString(final byte[] address) {
+		public String convertAddressToString(final byte[] address) {
 			InetAddress inetAddress = null;
 			try {
 				inetAddress = InetAddress.getByAddress(address);
@@ -176,26 +176,27 @@ public enum AddressType {
 		}
 
 		@Override
-		public boolean isAddressTypeOf(final String s) {
-			return s.matches(ADDRESS_REGEX);
+		public boolean isValueFromAddress(final String address) {
+			return address.matches(ADDRESS_REGEX);
 		}
 	};
 	
-	public static AddressType getAddressTypeOf(final String address) {
+	public static AddressType valueFromAddress(final String address) {
 		for (AddressType addressType : AddressType.values()) {
 			if (!addressType.equals(DOMAINNAME) 
-					&& addressType.isAddressTypeOf(address)) {
+					&& addressType.isValueFromAddress(address)) {
 				return addressType;
 			}
 		}
-		if (DOMAINNAME.isAddressTypeOf(address)) {
+		if (DOMAINNAME.isValueFromAddress(address)) {
 			return DOMAINNAME;
 		}
-		throw new IllegalArgumentException(
-				"no AddressType of the specified address: " + address);
+		throw new IllegalArgumentException(String.format(
+				"unable to determine address type from the specified address: %s",
+				address));
 	}
 	
-	public static AddressType valueOf(final byte b) {
+	public static AddressType valueOfByte(final byte b) {
 		for (AddressType addressType : AddressType.values()) {
 			if (addressType.byteValue() == b) {
 				return addressType;
@@ -232,11 +233,11 @@ public enum AddressType {
 		return this.byteValue;
 	}
 	
-	public abstract byte[] convertToByteArray(final String address);
+	public abstract byte[] convertAddressToByteArray(final String address);
 	
-	public abstract String convertToString(final byte[] address);
+	public abstract String convertAddressToString(final byte[] address);
 	
 	public abstract int getAddressLength(final byte firstByte);
 	
-	public abstract boolean isAddressTypeOf(final String s);
+	public abstract boolean isValueFromAddress(final String address);
 }

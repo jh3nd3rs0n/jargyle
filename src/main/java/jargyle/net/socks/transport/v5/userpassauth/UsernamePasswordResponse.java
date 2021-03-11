@@ -48,7 +48,7 @@ public final class UsernamePasswordResponse {
 		b = in.read();
 		Version ver = null;
 		try {
-			ver = Version.valueOf(
+			ver = Version.valueOfByte(
 					(byte) UnsignedByte.newInstance(b).intValue());
 		} catch (IllegalArgumentException e) {
 			throw new IOException(e);

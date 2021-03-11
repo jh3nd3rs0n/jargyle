@@ -25,7 +25,7 @@ public final class AuthMethods {
 		List<AuthMethod> authMethods = new ArrayList<AuthMethod>();
 		String[] sElements = s.split(" ");
 		for (String sElement : sElements) {
-			authMethods.add(AuthMethod.getInstance(sElement));
+			authMethods.add(AuthMethod.valueOfString(sElement));
 		}
 		return new AuthMethods(authMethods);
 	}
@@ -62,7 +62,8 @@ public final class AuthMethods {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((this.authMethods == null) ? 0 : this.authMethods.hashCode());
+		result = prime * result + ((this.authMethods == null) ? 
+				0 : this.authMethods.hashCode());
 		return result;
 	}
 

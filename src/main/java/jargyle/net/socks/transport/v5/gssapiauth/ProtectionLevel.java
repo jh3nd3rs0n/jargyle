@@ -16,7 +16,7 @@ public enum ProtectionLevel {
 	
 	SELECTIVE_INTEG_OR_CONF((byte) 0x03);
 	
-	public static ProtectionLevel valueOf(final byte b) {
+	public static ProtectionLevel valueOfByte(final byte b) {
 		for (ProtectionLevel protectionLevel : ProtectionLevel.values()) {
 			if (protectionLevel.byteValue() == b) {
 				return protectionLevel;

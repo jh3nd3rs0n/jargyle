@@ -43,34 +43,7 @@ public enum GssapiProtectionLevel {
 		
 	};
 	
-	public static GssapiProtectionLevel getInstance(final String s) {
-		GssapiProtectionLevel gssapiProtectionLevel = null;
-		try {
-			gssapiProtectionLevel = GssapiProtectionLevel.valueOf(s); 
-		} catch (IllegalArgumentException e) {
-			StringBuilder sb = new StringBuilder();
-			List<GssapiProtectionLevel> list = Arrays.asList(
-					GssapiProtectionLevel.values());
-			for (Iterator<GssapiProtectionLevel> iterator = list.iterator();
-					iterator.hasNext();) {
-				GssapiProtectionLevel value = iterator.next();
-				sb.append(value);
-				if (iterator.hasNext()) {
-					sb.append(", ");
-				}
-			}
-			throw new IllegalArgumentException(
-					String.format(
-							"expected GSS-API protection level must be one of "
-							+ "the following values: %s. actual value is %s",
-							sb.toString(),
-							s), 
-					e);
-		}
-		return gssapiProtectionLevel;
-	}
-	
-	public static GssapiProtectionLevel valueOf(
+	public static GssapiProtectionLevel valueOfProtectionLevel(
 			final ProtectionLevel level) {
 		for (GssapiProtectionLevel value 
 				: GssapiProtectionLevel.values()) {
@@ -96,6 +69,33 @@ public enum GssapiProtectionLevel {
 						+ "the following values: %s. actual value is %s",
 						sb.toString(),
 						level));
+	}
+	
+	public static GssapiProtectionLevel valueOfString(final String s) {
+		GssapiProtectionLevel gssapiProtectionLevel = null;
+		try {
+			gssapiProtectionLevel = GssapiProtectionLevel.valueOf(s); 
+		} catch (IllegalArgumentException e) {
+			StringBuilder sb = new StringBuilder();
+			List<GssapiProtectionLevel> list = Arrays.asList(
+					GssapiProtectionLevel.values());
+			for (Iterator<GssapiProtectionLevel> iterator = list.iterator();
+					iterator.hasNext();) {
+				GssapiProtectionLevel value = iterator.next();
+				sb.append(value);
+				if (iterator.hasNext()) {
+					sb.append(", ");
+				}
+			}
+			throw new IllegalArgumentException(
+					String.format(
+							"expected GSS-API protection level must be one of "
+							+ "the following values: %s. actual value is %s",
+							sb.toString(),
+							s), 
+					e);
+		}
+		return gssapiProtectionLevel;
 	}
 	
 	private final ProtectionLevel protectionLevelValue;

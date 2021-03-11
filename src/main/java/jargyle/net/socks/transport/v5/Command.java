@@ -16,7 +16,7 @@ public enum Command {
 	
 	UDP_ASSOCIATE((byte) 0x03);
 	
-	public static Command valueOf(final byte b) {
+	public static Command valueOfByte(final byte b) {
 		for (Command command : Command.values()) {
 			if (command.byteValue() == b) {
 				return command;

@@ -57,7 +57,7 @@ public final class Socks5Request {
 					UnsignedShort.MIN_INT_VALUE,
 					UnsignedShort.MAX_INT_VALUE));
 		}
-		AddressType addressType = AddressType.getAddressTypeOf(
+		AddressType addressType = AddressType.valueFromAddress(
 				desiredDestinationAddress);
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		Version version = Version.V5;
@@ -66,7 +66,7 @@ public final class Socks5Request {
 		out.write(RSV);
 		out.write(addressType.byteValue());
 		try {
-			out.write(addressType.convertToByteArray(
+			out.write(addressType.convertAddressToByteArray(
 					desiredDestinationAddress));
 		} catch (IOException e) {
 			throw new AssertionError(e);
@@ -94,7 +94,7 @@ public final class Socks5Request {
 		b = in.read();
 		Version ver = null; 
 		try {
-			ver = Version.valueOf(
+			ver = Version.valueOfByte(
 					(byte) UnsignedByte.newInstance(b).intValue());
 		} catch (IllegalArgumentException e) {
 			throw new IOException(e);
@@ -103,7 +103,7 @@ public final class Socks5Request {
 		b = in.read();
 		Command cmd = null; 
 		try {
-			cmd = Command.valueOf(
+			cmd = Command.valueOfByte(
 					(byte) UnsignedByte.newInstance(b).intValue());
 		} catch (IllegalArgumentException e) {
 			throw new IOException(e);
@@ -124,7 +124,7 @@ public final class Socks5Request {
 		b = in.read();
 		AddressType atyp = null; 
 		try {
-			atyp = AddressType.valueOf(
+			atyp = AddressType.valueOfByte(
 					(byte) UnsignedByte.newInstance(b).intValue());
 		} catch (IllegalArgumentException e) {
 			throw new IOException(e);
@@ -144,7 +144,7 @@ public final class Socks5Request {
 		bytes = Arrays.copyOf(bytes, bytesRead + 1);
 		String dstAddr = null; 
 		try {
-			dstAddr = atyp.convertToString(bytes);
+			dstAddr = atyp.convertAddressToString(bytes);
 		} catch (IllegalArgumentException e) {
 			throw new IOException(e);
 		}

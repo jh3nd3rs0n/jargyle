@@ -668,7 +668,7 @@ public abstract class SettingSpec<V> {
 	private static final List<SettingSpec<Object>> VALUES = 
 			new ArrayList<SettingSpec<Object>>();
 	
-	public static SettingSpec<Object> getInstance(final String s) {
+	public static SettingSpec<Object> valueOfString(final String s) {
 		for (SettingSpec<Object> settingSpec : SettingSpec.values()) {
 			if (settingSpec.toString().equals(s)) {
 				return settingSpec;

@@ -17,7 +17,7 @@ public enum AuthMethod {
 	@HelpText(doc = "Username password authentication", usage = "USERNAME_PASSWORD")
 	USERNAME_PASSWORD(Method.USERNAME_PASSWORD);
 	
-	public static AuthMethod getInstance(final String s) {
+	public static AuthMethod valueOfString(final String s) {
 		AuthMethod authMethod = null;
 		try {
 			authMethod = AuthMethod.valueOf(s);

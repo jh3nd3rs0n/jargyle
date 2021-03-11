@@ -327,7 +327,7 @@ final class UdpRelayServer {
 			byte[] userData = header.getUserData();
 			InetAddress inetAddress = null;
 			try {
-				inetAddress = this.getHostnameResolver().resolve(
+				inetAddress = this.getHostResolver().resolve(
 						header.getDesiredDestinationAddress());
 			} catch (IOException e) {
 				LOGGER.warn( 
@@ -477,7 +477,7 @@ final class UdpRelayServer {
 			return this.udpRelayServer.clientPort;
 		}
 		
-		protected final HostResolver getHostnameResolver() {
+		protected final HostResolver getHostResolver() {
 			return this.udpRelayServer.hostResolver;
 		}
 		

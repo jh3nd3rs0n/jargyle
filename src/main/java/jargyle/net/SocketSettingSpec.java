@@ -340,7 +340,7 @@ public abstract class SocketSettingSpec<V> {
 	private static final List<SocketSettingSpec<Object>> VALUES = 
 			new ArrayList<SocketSettingSpec<Object>>();
 	
-	public static SocketSettingSpec<Object> getInstance(final String s) {
+	public static SocketSettingSpec<Object> valueOfString(final String s) {
 		for (SocketSettingSpec<Object> socketSettingSpec 
 				: SocketSettingSpec.values()) {
 			if (socketSettingSpec.toString().equals(s)) {

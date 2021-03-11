@@ -64,7 +64,7 @@ public final class ClientMethodSelectionMessage {
 		b = in.read();
 		Version ver = null;
 		try {
-			ver = Version.valueOf(
+			ver = Version.valueOfByte(
 					(byte) UnsignedByte.newInstance(b).intValue());
 		} catch (IllegalArgumentException e) {
 			throw new IOException(e);
@@ -97,7 +97,7 @@ public final class ClientMethodSelectionMessage {
 			b = bytes[i];
 			Method meth = null;
 			try {
-				meth = Method.valueOf(
+				meth = Method.valueOfByte(
 						(byte) UnsignedByte.newInstance(b).intValue());
 			} catch (IllegalArgumentException e) {
 				throw new IOException(e);

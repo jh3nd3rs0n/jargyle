@@ -36,7 +36,7 @@ public final class GssapiProtectionLevels {
 				new ArrayList<GssapiProtectionLevel>();
 		String[] sElements = s.split(" ");
 		for (String sElement : sElements) {
-			gssapiProtectionLevels.add(GssapiProtectionLevel.getInstance(
+			gssapiProtectionLevels.add(GssapiProtectionLevel.valueOfString(
 					sElement));
 		}
 		return new GssapiProtectionLevels(gssapiProtectionLevels);

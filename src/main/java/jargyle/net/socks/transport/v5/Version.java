@@ -10,7 +10,7 @@ public enum Version {
 
 	V5((byte) 0x05);
 	
-	public static Version valueOf(final byte b) {
+	public static Version valueOfByte(final byte b) {
 		for (Version version : Version.values()) {
 			if (version.byteValue() == b) {
 				return version;

@@ -26,7 +26,7 @@ public enum Reply {
 	
 	ADDRESS_TYPE_NOT_SUPPORTED((byte) 0x08);
 	
-	public static Reply valueOf(final byte b) {
+	public static Reply valueOfByte(final byte b) {
 		for (Reply reply : Reply.values()) {
 			if (reply.byteValue() == b) {
 				return reply;

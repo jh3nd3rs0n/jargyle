@@ -146,14 +146,16 @@ enum Authenticator {
 			}
 			ProtectionLevel protectionLevelSelection = null;
 			try {
-				protectionLevelSelection = ProtectionLevel.valueOf(token[0]);
+				protectionLevelSelection = ProtectionLevel.valueOfByte(
+						token[0]);
 			} catch (IllegalArgumentException e) {
 				throw new IOException(e);
 			}
 			GssapiProtectionLevel gssapiProtectionLevelSelection = null;
 			try {
-				gssapiProtectionLevelSelection = GssapiProtectionLevel.valueOf(
-						protectionLevelSelection);
+				gssapiProtectionLevelSelection = 
+						GssapiProtectionLevel.valueOfProtectionLevel(
+								protectionLevelSelection);
 			} catch (IllegalArgumentException e) {
 				throw new IOException(e);
 			}
@@ -272,7 +274,7 @@ enum Authenticator {
 		
 	};
 	
-	public static Authenticator valueOf(final Method meth) {
+	public static Authenticator valueOfMethod(final Method meth) {
 		for (Authenticator value : Authenticator.values()) {
 			if (value.methodValue().equals(meth)) {
 				return value;

@@ -153,7 +153,8 @@ public abstract class PropertySpec<V> {
 		return vals;
 	}
 
-	private final Property<V> defaultProperty;
+	private Property<V> defaultProperty;
+	private final V defaultValue;
 	private final String string;
 	private final Class<V> valueType;
 	
@@ -161,10 +162,10 @@ public abstract class PropertySpec<V> {
 			final String s, final Class<V> valType, final V defaultVal) {
 		Objects.requireNonNull(s);
 		Objects.requireNonNull(valType);
+		this.defaultValue = valType.cast(defaultVal);
 		this.string = s;
 		this.valueType = valType;
-		this.defaultProperty = new Property<V>(this, this.valueType.cast(
-				defaultVal));
+		this.defaultProperty = null;
 	}
 	
 	@Override
@@ -190,6 +191,10 @@ public abstract class PropertySpec<V> {
 	}
 	
 	public final Property<V> getDefaultProperty() {
+		if (this.defaultProperty == null) {
+			this.defaultProperty = new Property<V>(this, this.valueType.cast(
+					this.defaultValue));
+		}
 		return this.defaultProperty;
 	}
 

@@ -706,7 +706,8 @@ public abstract class SettingSpec<V> {
 		return vals;
 	}
 	
-	private final Setting<V> defaultSetting;
+	private Setting<V> defaultSetting;
+	private final V defaultValue;
 	private final String string;
 	private final Class<V> valueType;
 		
@@ -714,10 +715,10 @@ public abstract class SettingSpec<V> {
 			final String s, final Class<V> valType, final V defaultVal) {
 		Objects.requireNonNull(s);
 		Objects.requireNonNull(valType);
+		this.defaultValue = valType.cast(defaultVal);
 		this.string = s;
 		this.valueType = valType;
-		this.defaultSetting = new Setting<V>(this, this.valueType.cast(
-				defaultVal));
+		this.defaultSetting = null;
 	}
 	
 	@Override
@@ -743,6 +744,10 @@ public abstract class SettingSpec<V> {
 	}
 	
 	public final Setting<V> getDefaultSetting() {
+		if (this.defaultSetting == null) {
+			this.defaultSetting = new Setting<V>(this, this.valueType.cast(
+					this.defaultValue)); 
+		}
 		return this.defaultSetting;
 	}
 

@@ -67,7 +67,7 @@ public final class Socks5Reply {
 					UnsignedShort.MIN_INT_VALUE,
 					UnsignedShort.MAX_INT_VALUE));
 		}
-		AddressType addressType = AddressType.valueFromAddress(
+		AddressType addressType = AddressType.valueForAddress(
 				serverBoundAddress);
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		Version version = Version.V5;

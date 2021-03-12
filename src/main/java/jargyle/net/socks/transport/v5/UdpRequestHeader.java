@@ -123,7 +123,7 @@ public final class UdpRequestHeader {
 		}
 		validateDesiredDestinationAddress(desiredDestinationAddress);
 		validateDesiredDestinationPort(desiredDestinationPort);
-		AddressType addressType = AddressType.valueFromAddress(
+		AddressType addressType = AddressType.valueForAddress(
 				desiredDestinationAddress);
 		int dataStartIndex = -1;
 		ByteArrayOutputStream out = new ByteArrayOutputStream();

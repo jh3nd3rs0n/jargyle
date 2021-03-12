@@ -20,7 +20,7 @@ public enum AddressType {
 		
 		@Override
 		public byte[] convertAddressToByteArray(final String address) {
-			if (!this.isValueFromAddress(address)) {
+			if (!this.isValueForAddress(address)) {
 				throw new IllegalArgumentException(String.format(
 						"invalid address: %s", address));
 			}
@@ -58,7 +58,7 @@ public enum AddressType {
 		}
 
 		@Override
-		public boolean isValueFromAddress(final String address) {
+		public boolean isValueForAddress(final String address) {
 			return address.matches(ADDRESS_REGEX);
 		}
 	},
@@ -70,7 +70,7 @@ public enum AddressType {
 		
 		@Override
 		public byte[] convertAddressToByteArray(final String address) {
-			if (!this.isValueFromAddress(address)) {
+			if (!this.isValueForAddress(address)) {
 				throw new IllegalArgumentException(String.format(
 						"invalid address: %s", address));
 			}
@@ -107,7 +107,7 @@ public enum AddressType {
 			}
 			String addr = new String(Arrays.copyOfRange(
 					address, 1, address.length));
-			if (!this.isValueFromAddress(addr)) {
+			if (!this.isValueForAddress(addr)) {
 				throw new IllegalArgumentException(String.format(
 						"invalid address: %s", addr));
 			}
@@ -125,7 +125,7 @@ public enum AddressType {
 		}
 
 		@Override
-		public boolean isValueFromAddress(final String address) {
+		public boolean isValueForAddress(final String address) {
 			return address.matches(ADDRESS_REGEX);
 		}
 	},
@@ -138,7 +138,7 @@ public enum AddressType {
 		
 		@Override
 		public byte[] convertAddressToByteArray(final String address) {
-			if (!this.isValueFromAddress(address)) {
+			if (!this.isValueForAddress(address)) {
 				throw new IllegalArgumentException(String.format(
 						"invalid address: %s", address));
 			}
@@ -176,23 +176,23 @@ public enum AddressType {
 		}
 
 		@Override
-		public boolean isValueFromAddress(final String address) {
+		public boolean isValueForAddress(final String address) {
 			return address.matches(ADDRESS_REGEX);
 		}
 	};
 	
-	public static AddressType valueFromAddress(final String address) {
+	public static AddressType valueForAddress(final String address) {
 		for (AddressType addressType : AddressType.values()) {
 			if (!addressType.equals(DOMAINNAME) 
-					&& addressType.isValueFromAddress(address)) {
+					&& addressType.isValueForAddress(address)) {
 				return addressType;
 			}
 		}
-		if (DOMAINNAME.isValueFromAddress(address)) {
+		if (DOMAINNAME.isValueForAddress(address)) {
 			return DOMAINNAME;
 		}
 		throw new IllegalArgumentException(String.format(
-				"unable to determine address type from the specified address: %s",
+				"unable to determine address type for the specified address: %s",
 				address));
 	}
 	
@@ -239,5 +239,5 @@ public enum AddressType {
 	
 	public abstract int getAddressLength(final byte firstByte);
 	
-	public abstract boolean isValueFromAddress(final String address);
+	public abstract boolean isValueForAddress(final String address);
 }

@@ -59,7 +59,7 @@ public final class SocksServerCLI extends CLI {
 			SocksServerCLI.class);
 	
 	private boolean configurationFileXsdRequested;
-	private final ModifiableConfiguration modifiableConfiguration;
+	private ModifiableConfiguration modifiableConfiguration;
 	private String monitoredConfigurationFile;
 	private boolean newConfigurationFileRequested;
 	private final boolean posixlyCorrect;
@@ -79,15 +79,9 @@ public final class SocksServerCLI extends CLI {
 		if (progBeginningUsage == null) {
 			progBeginningUsage = progName;
 		}
-		this.configurationFileXsdRequested = false;
-		this.modifiableConfiguration = ModifiableConfiguration.newInstance();
-		this.monitoredConfigurationFile = null;
-		this.newConfigurationFileRequested = false;
 		this.posixlyCorrect = posixCorrect;
 		this.programBeginningUsage = progBeginningUsage;
 		this.programName = progName;
-		this.settingsHelpDisplayed = false;
-		this.socks5UsersManagementModeStatus = Optional.empty();
 	}
 		
 	@Option(
@@ -163,6 +157,17 @@ public final class SocksServerCLI extends CLI {
 		if (this.socks5UsersManagementModeStatus.isPresent()) {
 			return this.socks5UsersManagementModeStatus;
 		}		
+		return Optional.empty();
+	}
+	
+	@Override
+	protected Optional<Integer> beforeHandleArgs() {
+		this.configurationFileXsdRequested = false;
+		this.modifiableConfiguration = ModifiableConfiguration.newInstance();
+		this.monitoredConfigurationFile = null;
+		this.newConfigurationFileRequested = false;
+		this.settingsHelpDisplayed = false;
+		this.socks5UsersManagementModeStatus = Optional.empty();
 		return Optional.empty();
 	}
 	

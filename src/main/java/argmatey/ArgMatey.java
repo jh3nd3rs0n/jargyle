@@ -808,8 +808,9 @@ public final class ArgMatey {
 	
 	public static abstract class CLI {
 		
-		private final ArgsParser argsParser;
+		private ArgsParser argsParser;
 		private final CLIClass cliClass;
+		private final boolean posixlyCorrect;
 		protected String programDoc;
 		private boolean programHelpDisplayed;
 		protected String programName;
@@ -817,12 +818,13 @@ public final class ArgMatey {
 		protected String programVersion;
 		private boolean programVersionDisplayed;
 		
-		public CLI(final String[] args, final boolean posixlyCorrect) {
+		public CLI(final String[] args, final boolean posixCorrect) {
 			CLIClass cls = CLIClass.newInstance(this.getClass());
 			ArgsParser parser = ArgsParser.newInstance(
-					args, cls.getOptionGroups(), posixlyCorrect);
+					args, cls.getOptionGroups(), posixCorrect);
 			this.argsParser = parser;
 			this.cliClass = cls;
+			this.posixlyCorrect = posixCorrect;
 			this.programDoc = null;
 			this.programHelpDisplayed = false;
 			this.programName = null;
@@ -832,10 +834,6 @@ public final class ArgMatey {
 		}
 		
 		protected Optional<Integer> afterHandleArgs() {
-			if (this.isProgramHelpDisplayed() 
-					|| this.isProgramVersionDisplayed()) {
-				return Optional.of(Integer.valueOf(0));
-			}			
 			return Optional.empty();
 		}
 		
@@ -848,10 +846,6 @@ public final class ArgMatey {
 		}
 		
 		protected Optional<Integer> beforeHandleArgs() {
-			if (this.isProgramHelpDisplayed() 
-					|| this.isProgramVersionDisplayed()) {
-				return Optional.of(Integer.valueOf(0));
-			}			
 			return Optional.empty();
 		}
 		
@@ -904,6 +898,12 @@ public final class ArgMatey {
 		}
 		
 		public final Optional<Integer> handleArgs() {
+			this.argsParser = ArgsParser.newInstance(
+					this.argsParser.getArgs(), 
+					this.argsParser.getOptionGroups(), 
+					this.posixlyCorrect);
+			this.programHelpDisplayed = false;
+			this.programVersionDisplayed = false;
 			Optional<Integer> status = this.beforeHandleArgs();
 			if (status.isPresent()) {
 				return status;

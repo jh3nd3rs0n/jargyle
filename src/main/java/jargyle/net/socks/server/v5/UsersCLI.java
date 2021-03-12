@@ -250,7 +250,7 @@ public final class UsersCLI extends CLI {
 	private static final int HELP_OPTION_GROUP_ORDINAL = 0;
 	private static final int XSD_OPTION_GROUP_ORDINAL = 1;
 	
-	private final List<String> argList;
+	private List<String> argList;
 	private Command command;
 	private final String programBeginningUsage;
 	private final String suggestion;
@@ -284,12 +284,9 @@ public final class UsersCLI extends CLI {
 				"Try `%s %s' for more information", 
 				prgBeginningUsage, 
 				helpOption.getUsage());		
-		this.argList = new ArrayList<String>();
-		this.command = null;
 		this.programBeginningUsage = prgBeginningUsage;
 		this.programName = prgName;
 		this.suggestion = suggest;
-		this.xsdRequested = false;
 	}
 	
 	@Override
@@ -316,6 +313,14 @@ public final class UsersCLI extends CLI {
 		if (this.isProgramHelpDisplayed() || this.xsdRequested) {
 			return Optional.of(Integer.valueOf(0));
 		}
+		return Optional.empty();
+	}
+	
+	@Override
+	protected Optional<Integer> beforeHandleArgs() {
+		this.argList = new ArrayList<String>();
+		this.command = null;
+		this.xsdRequested = false;		
 		return Optional.empty();
 	}
 	

@@ -126,34 +126,37 @@ public abstract class PropertySpec<V> {
 	private static final List<PropertySpec<Object>> VALUES = 
 			new ArrayList<PropertySpec<Object>>();
 	
+	private static void fillValues() {
+		Field[] fields = PropertySpec.class.getFields();
+		for (Field field : fields) {
+			int modifiers = field.getModifiers();
+			Class<?> type = field.getType();
+			if (!Modifier.isStatic(modifiers)
+					|| !Modifier.isFinal(modifiers)
+					|| !PropertySpec.class.isAssignableFrom(type)) {
+				continue;
+			}
+			Object value = null;
+			try {
+				value = field.get(null);
+			} catch (IllegalArgumentException e) {
+				throw new AssertionError(e);
+			} catch (IllegalAccessException e) {
+				throw new AssertionError(e);
+			}
+			@SuppressWarnings("unchecked")
+			PropertySpec<Object> val = (PropertySpec<Object>) value;
+			VALUES.add(val);
+		}		
+	}
+	
 	public static PropertySpec<Object>[] values() {
 		if (VALUES.isEmpty()) {
-			Field[] fields = PropertySpec.class.getFields();
-			for (Field field : fields) {
-				int modifiers = field.getModifiers();
-				Class<?> type = field.getType();
-				if (!Modifier.isStatic(modifiers)
-						|| !Modifier.isFinal(modifiers)
-						|| !PropertySpec.class.isAssignableFrom(type)) {
-					continue;
-				}
-				Object value = null;
-				try {
-					value = field.get(null);
-				} catch (IllegalArgumentException e) {
-					throw new AssertionError(e);
-				} catch (IllegalAccessException e) {
-					throw new AssertionError(e);
-				}
-				@SuppressWarnings("unchecked")
-				PropertySpec<Object> val = (PropertySpec<Object>) value;
-				VALUES.add(val);
-			}
+			fillValues();
 		}
 		@SuppressWarnings("unchecked")
-		PropertySpec<Object>[] vals =
-				(PropertySpec<Object>[]) VALUES.toArray(
-						new PropertySpec<?>[VALUES.size()]);
+		PropertySpec<Object>[] vals = (PropertySpec<Object>[]) VALUES.toArray(
+				new PropertySpec<?>[VALUES.size()]);
 		return vals;
 	}
 

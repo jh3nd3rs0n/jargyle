@@ -347,6 +347,31 @@ public abstract class SocketSettingSpec<V> {
 	private static final Map<String, SocketSettingSpec<Object>> VALUES_MAP =
 			new HashMap<String, SocketSettingSpec<Object>>();
 	
+	private static void fillValuesAndValuesMap() {
+		Field[] fields = SocketSettingSpec.class.getFields();
+		for (Field field : fields) {
+			int modifiers = field.getModifiers();
+			Class<?> type = field.getType();
+			if (!Modifier.isStatic(modifiers)
+					|| !Modifier.isFinal(modifiers)
+					|| !SocketSettingSpec.class.isAssignableFrom(type)) {
+				continue;
+			}
+			Object value = null;
+			try {
+				value = field.get(null);
+			} catch (IllegalArgumentException e) {
+				throw new AssertionError(e);
+			} catch (IllegalAccessException e) {
+				throw new AssertionError(e);
+			}
+			@SuppressWarnings("unchecked")
+			SocketSettingSpec<Object> val = (SocketSettingSpec<Object>) value;
+			VALUES.add(val);
+			VALUES_MAP.put(val.toString(), val);
+		}
+	}
+	
 	public static SocketSettingSpec<Object> valueOfString(final String s) {
 		Map<String, SocketSettingSpec<Object>> valuesMap =
 				SocketSettingSpec.valuesMap();
@@ -359,27 +384,7 @@ public abstract class SocketSettingSpec<V> {
 	
 	public static SocketSettingSpec<Object>[] values() {
 		if (VALUES.isEmpty()) {
-			Field[] fields = SocketSettingSpec.class.getFields();
-			for (Field field : fields) {
-				int modifiers = field.getModifiers();
-				Class<?> type = field.getType();
-				if (!Modifier.isStatic(modifiers)
-						|| !Modifier.isFinal(modifiers)
-						|| !SocketSettingSpec.class.isAssignableFrom(type)) {
-					continue;
-				}
-				Object value = null;
-				try {
-					value = field.get(null);
-				} catch (IllegalArgumentException e) {
-					throw new AssertionError(e);
-				} catch (IllegalAccessException e) {
-					throw new AssertionError(e);
-				}
-				@SuppressWarnings("unchecked")
-				SocketSettingSpec<Object> val = (SocketSettingSpec<Object>) value;
-				VALUES.add(val);
-			}
+			fillValuesAndValuesMap();
 		}
 		@SuppressWarnings("unchecked")
 		SocketSettingSpec<Object>[] vals = 
@@ -390,27 +395,7 @@ public abstract class SocketSettingSpec<V> {
 	
 	private static Map<String, SocketSettingSpec<Object>> valuesMap() {
 		if (VALUES_MAP.isEmpty()) {
-			Field[] fields = SocketSettingSpec.class.getFields();
-			for (Field field : fields) {
-				int modifiers = field.getModifiers();
-				Class<?> type = field.getType();
-				if (!Modifier.isStatic(modifiers)
-						|| !Modifier.isFinal(modifiers)
-						|| !SocketSettingSpec.class.isAssignableFrom(type)) {
-					continue;
-				}
-				Object value = null;
-				try {
-					value = field.get(null);
-				} catch (IllegalArgumentException e) {
-					throw new AssertionError(e);
-				} catch (IllegalAccessException e) {
-					throw new AssertionError(e);
-				}
-				@SuppressWarnings("unchecked")
-				SocketSettingSpec<Object> val = (SocketSettingSpec<Object>) value;
-				VALUES_MAP.put(val.toString(), val);
-			}
+			fillValuesAndValuesMap();
 		}
 		return Collections.unmodifiableMap(VALUES_MAP);		
 	}

@@ -674,6 +674,31 @@ public abstract class SettingSpec<V> {
 	
 	private static final Map<String, SettingSpec<Object>> VALUES_MAP =
 			new HashMap<String, SettingSpec<Object>>();
+
+	private static void fillValuesAndValuesMap() {
+		Field[] fields = SettingSpec.class.getFields();
+		for (Field field : fields) {
+			int modifiers = field.getModifiers();
+			Class<?> type = field.getType();
+			if (!Modifier.isStatic(modifiers)
+					|| !Modifier.isFinal(modifiers)
+					|| !SettingSpec.class.isAssignableFrom(type)) {
+				continue;
+			}
+			Object value = null;
+			try {
+				value = field.get(null);
+			} catch (IllegalArgumentException e) {
+				throw new AssertionError(e);
+			} catch (IllegalAccessException e) {
+				throw new AssertionError(e);
+			}
+			@SuppressWarnings("unchecked")
+			SettingSpec<Object> val = (SettingSpec<Object>) value;
+			VALUES.add(val);
+			VALUES_MAP.put(val.toString(), val);
+		}		
+	}
 	
 	public static SettingSpec<Object> valueOfString(final String s) {
 		Map<String, SettingSpec<Object>> valuesMap = SettingSpec.valuesMap();
@@ -686,58 +711,17 @@ public abstract class SettingSpec<V> {
 	
 	public static SettingSpec<Object>[] values() {
 		if (VALUES.isEmpty()) {
-			Field[] fields = SettingSpec.class.getFields();
-			for (Field field : fields) {
-				int modifiers = field.getModifiers();
-				Class<?> type = field.getType();
-				if (!Modifier.isStatic(modifiers)
-						|| !Modifier.isFinal(modifiers)
-						|| !SettingSpec.class.isAssignableFrom(type)) {
-					continue;
-				}
-				Object value = null;
-				try {
-					value = field.get(null);
-				} catch (IllegalArgumentException e) {
-					throw new AssertionError(e);
-				} catch (IllegalAccessException e) {
-					throw new AssertionError(e);
-				}
-				@SuppressWarnings("unchecked")
-				SettingSpec<Object> val = (SettingSpec<Object>) value;
-				VALUES.add(val);
-			}
+			fillValuesAndValuesMap();
 		}
 		@SuppressWarnings("unchecked")
-		SettingSpec<Object>[] vals =
-				(SettingSpec<Object>[]) VALUES.toArray(
-						new SettingSpec<?>[VALUES.size()]);
+		SettingSpec<Object>[] vals = (SettingSpec<Object>[]) VALUES.toArray(
+				new SettingSpec<?>[VALUES.size()]);
 		return vals;
 	}
 	
 	private static Map<String, SettingSpec<Object>> valuesMap() {
 		if (VALUES_MAP.isEmpty()) {
-			Field[] fields = SettingSpec.class.getFields();
-			for (Field field : fields) {
-				int modifiers = field.getModifiers();
-				Class<?> type = field.getType();
-				if (!Modifier.isStatic(modifiers)
-						|| !Modifier.isFinal(modifiers)
-						|| !SettingSpec.class.isAssignableFrom(type)) {
-					continue;
-				}
-				Object value = null;
-				try {
-					value = field.get(null);
-				} catch (IllegalArgumentException e) {
-					throw new AssertionError(e);
-				} catch (IllegalAccessException e) {
-					throw new AssertionError(e);
-				}
-				@SuppressWarnings("unchecked")
-				SettingSpec<Object> val = (SettingSpec<Object>) value;
-				VALUES_MAP.put(val.toString(), val);
-			}
+			fillValuesAndValuesMap();
 		}
 		return Collections.unmodifiableMap(VALUES_MAP);
 	}

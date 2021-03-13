@@ -1,12 +1,16 @@
 package jargyle.net;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.net.DatagramSocket;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import jargyle.annotation.HelpText;
@@ -340,12 +344,14 @@ public abstract class SocketSettingSpec<V> {
 	private static final List<SocketSettingSpec<Object>> VALUES = 
 			new ArrayList<SocketSettingSpec<Object>>();
 	
+	private static final Map<String, SocketSettingSpec<Object>> VALUES_MAP =
+			new HashMap<String, SocketSettingSpec<Object>>();
+	
 	public static SocketSettingSpec<Object> valueOfString(final String s) {
-		for (SocketSettingSpec<Object> socketSettingSpec 
-				: SocketSettingSpec.values()) {
-			if (socketSettingSpec.toString().equals(s)) {
-				return socketSettingSpec;
-			}
+		Map<String, SocketSettingSpec<Object>> valuesMap =
+				SocketSettingSpec.valuesMap();
+		if (valuesMap.containsKey(s)) {
+			return valuesMap.get(s);
 		}
 		throw new IllegalArgumentException(String.format(
 				"unknown socket setting: %s", s));
@@ -355,8 +361,11 @@ public abstract class SocketSettingSpec<V> {
 		if (VALUES.isEmpty()) {
 			Field[] fields = SocketSettingSpec.class.getFields();
 			for (Field field : fields) {
+				int modifiers = field.getModifiers();
 				Class<?> type = field.getType();
-				if (!SocketSettingSpec.class.isAssignableFrom(type)) {
+				if (!Modifier.isPublic(modifiers)
+						|| !Modifier.isStatic(modifiers)
+						|| !SocketSettingSpec.class.isAssignableFrom(type)) {
 					continue;
 				}
 				Object value = null;
@@ -377,6 +386,33 @@ public abstract class SocketSettingSpec<V> {
 				(SocketSettingSpec<Object>[]) VALUES.toArray(
 						new SocketSettingSpec<?>[VALUES.size()]);
 		return vals;
+	}
+	
+	private static Map<String, SocketSettingSpec<Object>> valuesMap() {
+		if (VALUES_MAP.isEmpty()) {
+			Field[] fields = SocketSettingSpec.class.getFields();
+			for (Field field : fields) {
+				int modifiers = field.getModifiers();
+				Class<?> type = field.getType();
+				if (!Modifier.isPublic(modifiers)
+						|| !Modifier.isStatic(modifiers)
+						|| !SocketSettingSpec.class.isAssignableFrom(type)) {
+					continue;
+				}
+				Object value = null;
+				try {
+					value = field.get(null);
+				} catch (IllegalArgumentException e) {
+					throw new AssertionError(e);
+				} catch (IllegalAccessException e) {
+					throw new AssertionError(e);
+				}
+				@SuppressWarnings("unchecked")
+				SocketSettingSpec<Object> val = (SocketSettingSpec<Object>) value;
+				VALUES_MAP.put(val.toString(), val);
+			}
+		}
+		return Collections.unmodifiableMap(VALUES_MAP);		
 	}
 	
 	private final String string;

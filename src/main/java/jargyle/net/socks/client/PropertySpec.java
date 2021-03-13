@@ -2,6 +2,7 @@ package jargyle.net.socks.client;
 
 import java.io.File;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -129,8 +130,11 @@ public abstract class PropertySpec<V> {
 		if (VALUES.isEmpty()) {
 			Field[] fields = PropertySpec.class.getFields();
 			for (Field field : fields) {
+				int modifiers = field.getModifiers();
 				Class<?> type = field.getType();
-				if (!PropertySpec.class.isAssignableFrom(type)) {
+				if (!Modifier.isPublic(modifiers)
+						|| !Modifier.isStatic(modifiers)
+						|| !PropertySpec.class.isAssignableFrom(type)) {
 					continue;
 				}
 				Object value = null;

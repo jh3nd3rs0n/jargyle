@@ -2,8 +2,12 @@ package jargyle.net.socks.server;
 
 import java.io.File;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import org.ietf.jgss.Oid;
@@ -668,11 +672,13 @@ public abstract class SettingSpec<V> {
 	private static final List<SettingSpec<Object>> VALUES = 
 			new ArrayList<SettingSpec<Object>>();
 	
+	private static final Map<String, SettingSpec<Object>> VALUES_MAP =
+			new HashMap<String, SettingSpec<Object>>();
+	
 	public static SettingSpec<Object> valueOfString(final String s) {
-		for (SettingSpec<Object> settingSpec : SettingSpec.values()) {
-			if (settingSpec.toString().equals(s)) {
-				return settingSpec;
-			}
+		Map<String, SettingSpec<Object>> valuesMap = SettingSpec.valuesMap();
+		if (valuesMap.containsKey(s)) {
+			return valuesMap.get(s);
 		}
 		throw new IllegalArgumentException(String.format(
 				"unknown setting: %s", s));
@@ -682,8 +688,11 @@ public abstract class SettingSpec<V> {
 		if (VALUES.isEmpty()) {
 			Field[] fields = SettingSpec.class.getFields();
 			for (Field field : fields) {
+				int modifiers = field.getModifiers();
 				Class<?> type = field.getType();
-				if (!SettingSpec.class.isAssignableFrom(type)) {
+				if (!Modifier.isPublic(modifiers)
+						|| !Modifier.isStatic(modifiers)
+						|| !SettingSpec.class.isAssignableFrom(type)) {
 					continue;
 				}
 				Object value = null;
@@ -704,6 +713,33 @@ public abstract class SettingSpec<V> {
 				(SettingSpec<Object>[]) VALUES.toArray(
 						new SettingSpec<?>[VALUES.size()]);
 		return vals;
+	}
+	
+	private static Map<String, SettingSpec<Object>> valuesMap() {
+		if (VALUES_MAP.isEmpty()) {
+			Field[] fields = SettingSpec.class.getFields();
+			for (Field field : fields) {
+				int modifiers = field.getModifiers();
+				Class<?> type = field.getType();
+				if (!Modifier.isPublic(modifiers)
+						|| !Modifier.isStatic(modifiers)
+						|| !SettingSpec.class.isAssignableFrom(type)) {
+					continue;
+				}
+				Object value = null;
+				try {
+					value = field.get(null);
+				} catch (IllegalArgumentException e) {
+					throw new AssertionError(e);
+				} catch (IllegalAccessException e) {
+					throw new AssertionError(e);
+				}
+				@SuppressWarnings("unchecked")
+				SettingSpec<Object> val = (SettingSpec<Object>) value;
+				VALUES_MAP.put(val.toString(), val);
+			}
+		}
+		return Collections.unmodifiableMap(VALUES_MAP);
 	}
 	
 	private Setting<V> defaultSetting;

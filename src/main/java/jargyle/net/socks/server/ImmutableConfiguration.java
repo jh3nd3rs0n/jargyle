@@ -21,25 +21,6 @@ import javax.xml.transform.stream.StreamResult;
 
 public final class ImmutableConfiguration extends Configuration {
 
-	public static final class Builder {
-		
-		private Settings settings;
-		
-		public Builder() {
-			this.settings = null;
-		}
-		
-		public ImmutableConfiguration build() {
-			return new ImmutableConfiguration(this);
-		}
-		
-		public Builder settings(final Settings sttngs) {
-			this.settings = sttngs;
-			return this;
-		}
-		
-	}
-	
 	@XmlAccessorType(XmlAccessType.NONE)
 	@XmlType(name = "configuration", propOrder = { })
 	@XmlRootElement(name = "configuration")
@@ -87,20 +68,16 @@ public final class ImmutableConfiguration extends Configuration {
 	
 	public static ImmutableConfiguration newInstance(
 			final Configuration config) {
-		Builder builder = new Builder();
-		if (!config.getSettings().toList().isEmpty()) {
-			builder.settings(config.getSettings());
-		}
-		return builder.build();
+		return newInstance(config.getSettings());
 	}
 	
 	private static ImmutableConfiguration newInstance(
 			final ConfigurationXml configurationXml) {
-		Builder builder = new Builder();
-		if (configurationXml.settings != null) {
-			builder.settings(configurationXml.settings);
-		}
-		return builder.build();
+		return newInstance(configurationXml.settings);
+	}
+	
+	public static ImmutableConfiguration newInstance(final Settings settings) {
+		return new ImmutableConfiguration(settings);
 	}
 	
 	public static ImmutableConfiguration newInstanceFrom(
@@ -133,8 +110,7 @@ public final class ImmutableConfiguration extends Configuration {
 	
 	private final Settings settings;
 	
-	private ImmutableConfiguration(final Builder builder) {
-		Settings sttngs = builder.settings;
+	private ImmutableConfiguration(final Settings sttngs) {
 		this.settings = sttngs;
 	}
 	
@@ -148,9 +124,7 @@ public final class ImmutableConfiguration extends Configuration {
 	
 	private ConfigurationXml toConfigurationXml() {
 		ConfigurationXml configurationXml = new ConfigurationXml();
-		if (this.settings != null) {
-			configurationXml.settings = this.settings;
-		}
+		configurationXml.settings = this.settings;
 		return configurationXml;
 	}
 

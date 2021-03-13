@@ -26,11 +26,7 @@ final class ModifiableConfiguration extends Configuration {
 	}
 	
 	public void addSettings(final Settings sttngs) {
-		List<Setting<Object>> sttngsList = sttngs.toList();
-		if (sttngsList.isEmpty()) {
-			return;
-		}
-		this.settings.addAll(sttngsList);
+		this.settings.addAll(sttngs.toList());
 	}
 
 	@Override

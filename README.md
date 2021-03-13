@@ -462,7 +462,9 @@ The following command creates an empty configuration file:
 ```xml
     
     <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-    <configuration/>
+    <configuration>
+        <settings/>
+    </configuration>
     
 ```
 

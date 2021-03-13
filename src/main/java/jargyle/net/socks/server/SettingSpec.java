@@ -690,8 +690,8 @@ public abstract class SettingSpec<V> {
 			for (Field field : fields) {
 				int modifiers = field.getModifiers();
 				Class<?> type = field.getType();
-				if (!Modifier.isPublic(modifiers)
-						|| !Modifier.isStatic(modifiers)
+				if (!Modifier.isStatic(modifiers)
+						|| !Modifier.isFinal(modifiers)
 						|| !SettingSpec.class.isAssignableFrom(type)) {
 					continue;
 				}
@@ -721,8 +721,8 @@ public abstract class SettingSpec<V> {
 			for (Field field : fields) {
 				int modifiers = field.getModifiers();
 				Class<?> type = field.getType();
-				if (!Modifier.isPublic(modifiers)
-						|| !Modifier.isStatic(modifiers)
+				if (!Modifier.isStatic(modifiers)
+						|| !Modifier.isFinal(modifiers)
 						|| !SettingSpec.class.isAssignableFrom(type)) {
 					continue;
 				}

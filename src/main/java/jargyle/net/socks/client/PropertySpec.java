@@ -132,8 +132,8 @@ public abstract class PropertySpec<V> {
 			for (Field field : fields) {
 				int modifiers = field.getModifiers();
 				Class<?> type = field.getType();
-				if (!Modifier.isPublic(modifiers)
-						|| !Modifier.isStatic(modifiers)
+				if (!Modifier.isStatic(modifiers)
+						|| !Modifier.isFinal(modifiers)
 						|| !PropertySpec.class.isAssignableFrom(type)) {
 					continue;
 				}

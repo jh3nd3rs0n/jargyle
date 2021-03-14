@@ -126,7 +126,11 @@ public abstract class PropertySpec<V> {
 	private static final List<PropertySpec<Object>> VALUES = 
 			new ArrayList<PropertySpec<Object>>();
 	
-	private static void fillValues() {
+	private static void fillValuesIfEmpty() {
+		if (!VALUES.isEmpty()) {
+			return;
+		}
+		VALUES.clear();
 		Field[] fields = PropertySpec.class.getFields();
 		for (Field field : fields) {
 			int modifiers = field.getModifiers();
@@ -151,9 +155,7 @@ public abstract class PropertySpec<V> {
 	}
 	
 	public static PropertySpec<Object>[] values() {
-		if (VALUES.isEmpty()) {
-			fillValues();
-		}
+		fillValuesIfEmpty();
 		@SuppressWarnings("unchecked")
 		PropertySpec<Object>[] vals = (PropertySpec<Object>[]) VALUES.toArray(
 				new PropertySpec<?>[VALUES.size()]);

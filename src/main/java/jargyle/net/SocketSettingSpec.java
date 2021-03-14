@@ -347,7 +347,12 @@ public abstract class SocketSettingSpec<V> {
 	private static final Map<String, SocketSettingSpec<Object>> VALUES_MAP =
 			new HashMap<String, SocketSettingSpec<Object>>();
 	
-	private static void fillValuesAndValuesMap() {
+	private static synchronized void fillValuesAndValuesMapIfEmpty() {
+		if (!VALUES.isEmpty() && !VALUES_MAP.isEmpty()) {
+			return;
+		}
+		VALUES.clear();
+		VALUES_MAP.clear();
 		Field[] fields = SocketSettingSpec.class.getFields();
 		for (Field field : fields) {
 			int modifiers = field.getModifiers();
@@ -383,9 +388,7 @@ public abstract class SocketSettingSpec<V> {
 	}
 	
 	public static SocketSettingSpec<Object>[] values() {
-		if (VALUES.isEmpty()) {
-			fillValuesAndValuesMap();
-		}
+		fillValuesAndValuesMapIfEmpty();
 		@SuppressWarnings("unchecked")
 		SocketSettingSpec<Object>[] vals = 
 				(SocketSettingSpec<Object>[]) VALUES.toArray(
@@ -394,9 +397,7 @@ public abstract class SocketSettingSpec<V> {
 	}
 	
 	private static Map<String, SocketSettingSpec<Object>> valuesMap() {
-		if (VALUES_MAP.isEmpty()) {
-			fillValuesAndValuesMap();
-		}
+		fillValuesAndValuesMapIfEmpty();
 		return Collections.unmodifiableMap(VALUES_MAP);		
 	}
 	

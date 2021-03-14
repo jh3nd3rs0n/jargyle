@@ -675,7 +675,12 @@ public abstract class SettingSpec<V> {
 	private static final Map<String, SettingSpec<Object>> VALUES_MAP =
 			new HashMap<String, SettingSpec<Object>>();
 
-	private static void fillValuesAndValuesMap() {
+	private static synchronized void fillValuesAndValuesMapIfEmpty() {
+		if (!VALUES.isEmpty() && !VALUES_MAP.isEmpty()) {
+			return;
+		}
+		VALUES.clear();
+		VALUES_MAP.clear();
 		Field[] fields = SettingSpec.class.getFields();
 		for (Field field : fields) {
 			int modifiers = field.getModifiers();
@@ -710,9 +715,7 @@ public abstract class SettingSpec<V> {
 	}
 	
 	public static SettingSpec<Object>[] values() {
-		if (VALUES.isEmpty()) {
-			fillValuesAndValuesMap();
-		}
+		fillValuesAndValuesMapIfEmpty();
 		@SuppressWarnings("unchecked")
 		SettingSpec<Object>[] vals = (SettingSpec<Object>[]) VALUES.toArray(
 				new SettingSpec<?>[VALUES.size()]);
@@ -720,9 +723,7 @@ public abstract class SettingSpec<V> {
 	}
 	
 	private static Map<String, SettingSpec<Object>> valuesMap() {
-		if (VALUES_MAP.isEmpty()) {
-			fillValuesAndValuesMap();
-		}
+		fillValuesAndValuesMapIfEmpty();
 		return Collections.unmodifiableMap(VALUES_MAP);
 	}
 	

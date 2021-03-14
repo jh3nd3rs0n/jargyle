@@ -7,29 +7,19 @@ import java.net.Socket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jargyle.net.NetFactory;
 import jargyle.net.socks.server.v5.Socks5Worker;
 import jargyle.net.socks.transport.v5.Version;
-import jargyle.net.ssl.DtlsDatagramSocketFactory;
 
 final class Worker implements Runnable {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(Worker.class);
 	
-	private final DtlsDatagramSocketFactory clientDtlsDatagramSocketFactory;
 	private final Socket clientSocket;
-	private final Configuration configuration;
-	private final NetFactory externalNetFactory;
+	private final WorkerParams workerParams;
 	
-	public Worker(
-			final Socket clientSock, 
-			final Configuration config, 
-			final NetFactory extNetFactory, 
-			final DtlsDatagramSocketFactory clientDtlsDatagramSockFactory) {
-		this.clientDtlsDatagramSocketFactory = clientDtlsDatagramSockFactory;		
-		this.clientSocket = clientSock;
-		this.configuration = config;
-		this.externalNetFactory = extNetFactory;
+	public Worker(final WorkerParams params) {
+		this.clientSocket = params.getClientSocket();
+		this.workerParams = params;
 	}
 	
 	private String format(final String message) {
@@ -51,11 +41,7 @@ final class Worker implements Runnable {
 				return;
 			}
 			if ((byte) version == Version.V5.byteValue()) {
-				Socks5Worker socks5Worker = new Socks5Worker(
-						this.clientSocket, 
-						this.configuration, 
-						this.externalNetFactory, 
-						this.clientDtlsDatagramSocketFactory);
+				Socks5Worker socks5Worker = new Socks5Worker(this.workerParams);
 				socks5Worker.run();
 			} else {
 				LOGGER.warn(this.format(String.format(

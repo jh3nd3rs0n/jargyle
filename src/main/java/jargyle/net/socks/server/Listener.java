@@ -159,11 +159,12 @@ final class Listener implements Runnable {
 				this.closeClientSocket(clientSocket);
 				continue;
 			}
-			executor.execute(new Worker(
-					clientSocket, 
-					this.configuration, 
-					this.externalNetFactory, 
-					this.getClientDtlsDatagramSocketFactory()));
+			WorkerParams workerParams = new WorkerParams(
+					clientSocket,
+					this.configuration,
+					this.externalNetFactory,
+					this.getClientDtlsDatagramSocketFactory());
+			executor.execute(new Worker(workerParams));
 		}
 		executor.shutdownNow();
 	}

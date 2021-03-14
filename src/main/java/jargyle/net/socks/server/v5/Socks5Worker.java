@@ -28,6 +28,7 @@ import jargyle.net.socks.server.Configuration;
 import jargyle.net.socks.server.SettingSpec;
 import jargyle.net.socks.server.Settings;
 import jargyle.net.socks.server.TcpRelayServer;
+import jargyle.net.socks.server.WorkerParams;
 import jargyle.net.socks.transport.v5.AuthMethod;
 import jargyle.net.socks.transport.v5.AuthMethods;
 import jargyle.net.socks.transport.v5.ClientMethodSelectionMessage;
@@ -59,11 +60,12 @@ public final class Socks5Worker implements Runnable {
 	private final NetFactory externalNetFactory;
 	private final Settings settings;
 	
-	public Socks5Worker(
-			final Socket clientSock, 
-			final Configuration config, 
-			final NetFactory extNetFactory, 
-			final DtlsDatagramSocketFactory clientDtlsDatagramSockFactory) {
+	public Socks5Worker(final WorkerParams params) {
+		DtlsDatagramSocketFactory clientDtlsDatagramSockFactory =
+				params.getClientDtlsDatagramSocketFactory();
+		Socket clientSock = params.getClientSocket();
+		Configuration config = params.getConfiguration();
+		NetFactory extNetFactory = params.getExternalNetFactory();
 		Settings sttngs = config.getSettings();
 		this.clientDtlsDatagramSocketFactory = clientDtlsDatagramSockFactory;		
 		this.clientInputStream = null;

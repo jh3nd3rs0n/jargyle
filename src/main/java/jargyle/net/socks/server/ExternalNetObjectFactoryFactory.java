@@ -7,10 +7,10 @@ import java.util.List;
 import org.ietf.jgss.Oid;
 
 import jargyle.net.DatagramSocketFactory;
-import jargyle.net.DefaultNetFactory;
+import jargyle.net.DefaultNetObjectFactoryFactory;
 import jargyle.net.Host;
 import jargyle.net.HostResolverFactory;
-import jargyle.net.NetFactory;
+import jargyle.net.NetObjectFactoryFactory;
 import jargyle.net.ServerSocketFactory;
 import jargyle.net.SocketFactory;
 import jargyle.net.SocketSettings;
@@ -26,7 +26,7 @@ import jargyle.security.EncryptedPassword;
 import jargyle.util.PositiveInteger;
 import jargyle.util.Strings;
 
-final class ExternalNetFactory extends NetFactory {
+final class ExternalNetObjectFactoryFactory extends NetObjectFactoryFactory {
 	
 	private static Property<Object> cast(
 			final Property<? extends Object> property) {
@@ -37,49 +37,49 @@ final class ExternalNetFactory extends NetFactory {
 	
 	private final Configuration configuration;
 	private Configuration lastConfiguration;
-	private NetFactory netFactory;
+	private NetObjectFactoryFactory netObjectFactoryFactory;
 		
-	public ExternalNetFactory(final Configuration config) {
+	public ExternalNetObjectFactoryFactory(final Configuration config) {
 		this.configuration = config;
 		this.lastConfiguration = null;
-		this.netFactory = null;
+		this.netObjectFactoryFactory = null;
 	}
 	
-	private NetFactory getNetFactory() {
+	private NetObjectFactoryFactory getNetObjectFactoryFactory() {
 		if (!Configuration.equals(this.lastConfiguration, this.configuration)) {
-			this.netFactory = this.newNetFactory();
+			this.netObjectFactoryFactory = this.newNetObjectFactoryFactory();
 			this.lastConfiguration = ImmutableConfiguration.newInstance(
 					this.configuration);
 		}
-		return this.netFactory;
+		return this.netObjectFactoryFactory;
 	}
 	
 	@Override
 	public DatagramSocketFactory newDatagramSocketFactory() {
-		return this.getNetFactory().newDatagramSocketFactory();
+		return this.getNetObjectFactoryFactory().newDatagramSocketFactory();
 	}
 	
 	@Override
 	public HostResolverFactory newHostResolverFactory() {
-		return this.getNetFactory().newHostResolverFactory();		
+		return this.getNetObjectFactoryFactory().newHostResolverFactory();		
 	}
 	
-	private NetFactory newNetFactory() {
+	private NetObjectFactoryFactory newNetObjectFactoryFactory() {
 		SocksClient client = this.newSocksClient();
 		if (client != null) {
-			return client.newNetFactory();
+			return client.newNetObjectFactoryFactory();
 		}
-		return new DefaultNetFactory();
+		return new DefaultNetObjectFactoryFactory();
 	}
 	
 	@Override
 	public ServerSocketFactory newServerSocketFactory() {
-		return this.getNetFactory().newServerSocketFactory();		
+		return this.getNetObjectFactoryFactory().newServerSocketFactory();		
 	}
 	
 	@Override
 	public SocketFactory newSocketFactory() {
-		return this.getNetFactory().newSocketFactory();
+		return this.getNetObjectFactoryFactory().newSocketFactory();
 	}
 	
 	private List<Property<Object>> newSocks5ClientProperties() {

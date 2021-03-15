@@ -139,7 +139,7 @@ public final class SocketHelper {
 			jargyle.net.SocketFactory socketFactory = new DefaultSocketFactory();
 			if (socksClient != null) {
 				socketFactory = 
-						socksClient.newNetFactory().newSocketFactory();
+						socksClient.newNetObjectFactoryFactory().newSocketFactory();
 			}
 			echoSocket = socketFactory.newSocket();
 			echoSocket.connect(new InetSocketAddress(

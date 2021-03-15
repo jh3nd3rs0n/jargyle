@@ -9,7 +9,7 @@ import java.net.Socket;
 import java.util.Set;
 import java.util.TreeSet;
 
-import jargyle.net.NetFactory;
+import jargyle.net.NetObjectFactoryFactory;
 import jargyle.net.socks.client.Properties;
 import jargyle.net.socks.client.PropertySpec;
 import jargyle.net.socks.client.SocksClient;
@@ -78,8 +78,8 @@ public final class Socks5Client extends SocksClient {
 	}
 
 	@Override
-	public NetFactory newNetFactory() {
-		return new Socks5NetFactory(this);
+	public NetObjectFactoryFactory newNetObjectFactoryFactory() {
+		return new Socks5NetObjectFactoryFactory(this);
 	}
 	
 }

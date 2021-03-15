@@ -128,7 +128,7 @@ public final class DatagramSocketHelper {
 					new DefaultDatagramSocketFactory();
 			if (socksClient != null) {
 				datagramSocketFactory = 
-						socksClient.newNetFactory().newDatagramSocketFactory();
+						socksClient.newNetObjectFactoryFactory().newDatagramSocketFactory();
 			}
 			echoDatagramSocket = datagramSocketFactory.newDatagramSocket(0);
 			echoDatagramSocket.connect(NetConstants.LOOPBACK_ADDRESS, port);

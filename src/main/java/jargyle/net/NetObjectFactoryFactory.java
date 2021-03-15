@@ -1,6 +1,6 @@
 package jargyle.net;
 
-public abstract class NetFactory {
+public abstract class NetObjectFactoryFactory {
 	
 	public abstract DatagramSocketFactory newDatagramSocketFactory();
 	

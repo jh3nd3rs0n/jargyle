@@ -118,7 +118,7 @@ public abstract class SettingSpec<V> {
 	)
 	public static final SettingSpec<SocksServerUri> CHAINING_SOCKS_SERVER_URI = new SocksServerUriSettingSpec(
 			"chaining.socksServerUri",
-			SocksServerUri.newInstance());
+			null);
 	
 	@HelpText(
 			doc = "The space separated list of acceptable authentication "

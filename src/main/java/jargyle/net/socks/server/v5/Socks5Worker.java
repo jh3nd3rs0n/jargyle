@@ -20,7 +20,7 @@ import jargyle.net.DatagramSocketFactory;
 import jargyle.net.Host;
 import jargyle.net.HostResolver;
 import jargyle.net.HostResolverFactory;
-import jargyle.net.NetFactory;
+import jargyle.net.NetObjectFactoryFactory;
 import jargyle.net.ServerSocketFactory;
 import jargyle.net.SocketFactory;
 import jargyle.net.SocketSettings;
@@ -57,7 +57,7 @@ public final class Socks5Worker implements Runnable {
 	private OutputStream clientOutputStream;
 	private Socket clientSocket;
 	private final Configuration configuration;
-	private final NetFactory externalNetFactory;
+	private final NetObjectFactoryFactory externalNetObjectFactoryFactory;
 	private final Settings settings;
 	
 	public Socks5Worker(final WorkerParams params) {
@@ -65,14 +65,15 @@ public final class Socks5Worker implements Runnable {
 				params.getClientDtlsDatagramSocketFactory();
 		Socket clientSock = params.getClientSocket();
 		Configuration config = params.getConfiguration();
-		NetFactory extNetFactory = params.getExternalNetFactory();
+		NetObjectFactoryFactory extNetObjectFactoryFactory = 
+				params.getExternalNetObjectFactoryFactory();
 		Settings sttngs = config.getSettings();
 		this.clientDtlsDatagramSocketFactory = clientDtlsDatagramSockFactory;		
 		this.clientInputStream = null;
 		this.clientOutputStream = null;
 		this.clientSocket = clientSock;
 		this.configuration = config;
-		this.externalNetFactory = extNetFactory;
+		this.externalNetObjectFactoryFactory = extNetObjectFactoryFactory;
 		this.settings = sttngs;
 	}
 	
@@ -209,9 +210,9 @@ public final class Socks5Worker implements Runnable {
 	
 	private boolean configureClientDatagramSocket(
 			final DatagramSocket clientDatagramSock) {
+		SocketSettings socketSettings = this.settings.getLastValue(
+				SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_CLIENT_SOCKET_SETTINGS);
 		try {
-			SocketSettings socketSettings = this.settings.getLastValue(
-					SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_CLIENT_SOCKET_SETTINGS);
 			socketSettings.applyTo(clientDatagramSock);
 		} catch (SocketException e) {
 			LOGGER.warn( 
@@ -234,9 +235,9 @@ public final class Socks5Worker implements Runnable {
 	
 	private boolean configureExternalIncomingSocket(
 			final Socket externalIncomingSocket) {
+		SocketSettings socketSettings = this.settings.getLastValue(
+				SettingSpec.SOCKS5_ON_BIND_EXTERNAL_INCOMING_SOCKET_SETTINGS);
 		try {
-			SocketSettings socketSettings = this.settings.getLastValue(
-					SettingSpec.SOCKS5_ON_BIND_EXTERNAL_INCOMING_SOCKET_SETTINGS);
 			socketSettings.applyTo(externalIncomingSocket);
 		} catch (SocketException e) {
 			LOGGER.warn( 
@@ -260,9 +261,9 @@ public final class Socks5Worker implements Runnable {
 	}
 	
 	private boolean configureListenSocket(final ServerSocket listenSocket) {
+		SocketSettings socketSettings = this.settings.getLastValue(
+				SettingSpec.SOCKS5_ON_BIND_LISTEN_SOCKET_SETTINGS);
 		try {
-			SocketSettings socketSettings = this.settings.getLastValue(
-					SettingSpec.SOCKS5_ON_BIND_LISTEN_SOCKET_SETTINGS);
 			socketSettings.applyTo(listenSocket);
 		} catch (SocketException e) {
 			LOGGER.warn( 
@@ -287,9 +288,9 @@ public final class Socks5Worker implements Runnable {
 	
 	private boolean configureServerDatagramSocket(
 			final DatagramSocket serverDatagramSock) {
+		SocketSettings socketSettings = this.settings.getLastValue(
+				SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_SERVER_SOCKET_SETTINGS);
 		try {
-			SocketSettings socketSettings = this.settings.getLastValue(
-					SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_SERVER_SOCKET_SETTINGS);
 			socketSettings.applyTo(serverDatagramSock);
 		} catch (SocketException e) {
 			LOGGER.warn( 
@@ -313,13 +314,13 @@ public final class Socks5Worker implements Runnable {
 	}
 	
 	private boolean configureServerSocket(final Socket serverSocket) {
+		SocketSettings socketSettings = this.settings.getLastValue(
+				SettingSpec.SOCKS5_ON_CONNECT_SERVER_SOCKET_SETTINGS);
+		Host bindHost = this.settings.getLastValue(
+				SettingSpec.SOCKS5_ON_CONNECT_SERVER_BIND_HOST);
+		InetAddress bindInetAddress = bindHost.toInetAddress();		
 		try {
-			SocketSettings socketSettings = this.settings.getLastValue(
-					SettingSpec.SOCKS5_ON_CONNECT_SERVER_SOCKET_SETTINGS);
 			socketSettings.applyTo(serverSocket);
-			Host bindHost = this.settings.getLastValue(
-					SettingSpec.SOCKS5_ON_CONNECT_SERVER_BIND_HOST);
-			InetAddress bindInetAddress = bindHost.toInetAddress();
 			serverSocket.bind(new InetSocketAddress(bindInetAddress, 0));
 		} catch (SocketException e) {
 			LOGGER.warn( 
@@ -365,14 +366,13 @@ public final class Socks5Worker implements Runnable {
 				socks5Req.getDesiredDestinationAddress();
 		int desiredDestinationPort = socks5Req.getDesiredDestinationPort();
 		HostResolverFactory hostResolverFactory =
-				this.externalNetFactory.newHostResolverFactory();
+				this.externalNetObjectFactoryFactory.newHostResolverFactory();
+		HostResolver hostResolver = hostResolverFactory.newHostResolver();		
 		ServerSocketFactory serverSocketFactory = 
-				this.externalNetFactory.newServerSocketFactory();
-		HostResolver hostResolver = null;
+				this.externalNetObjectFactoryFactory.newServerSocketFactory();
 		ServerSocket listenSocket = null;
 		Socket externalIncomingSocket = null;
 		try {
-			hostResolver = hostResolverFactory.newHostResolver();
 			listenSocket = serverSocketFactory.newServerSocket();
 			if (!this.configureListenSocket(listenSocket)) {
 				return;
@@ -465,20 +465,19 @@ public final class Socks5Worker implements Runnable {
 				socks5Req.getDesiredDestinationAddress();
 		int desiredDestinationPort = socks5Req.getDesiredDestinationPort();
 		HostResolverFactory hostResolverFactory =
-				this.externalNetFactory.newHostResolverFactory();
-		SocketFactory SocketFactory = 
-				this.externalNetFactory.newSocketFactory();
-		HostResolver hostResolver = null;
-		Socket serverSocket = null;
+				this.externalNetObjectFactoryFactory.newHostResolverFactory();
+		HostResolver hostResolver = hostResolverFactory.newHostResolver();		
+		SocketFactory socketFactory = 
+				this.externalNetObjectFactoryFactory.newSocketFactory();
+		Socket serverSocket = null;		
+		int connectTimeout = this.settings.getLastValue(
+				SettingSpec.SOCKS5_ON_CONNECT_SERVER_CONNECT_TIMEOUT).intValue();
 		try {
-			hostResolver = hostResolverFactory.newHostResolver();
-			serverSocket = SocketFactory.newSocket();
+			serverSocket = socketFactory.newSocket();
 			if (!this.configureServerSocket(serverSocket)) {
 				return;
 			}
 			try {
-				int connectTimeout = this.settings.getLastValue(
-						SettingSpec.SOCKS5_ON_CONNECT_SERVER_CONNECT_TIMEOUT).intValue();
 				serverSocket.connect(new InetSocketAddress(
 						hostResolver.resolve(desiredDestinationAddress),
 						desiredDestinationPort),
@@ -524,9 +523,8 @@ public final class Socks5Worker implements Runnable {
 				socks5Req.getDesiredDestinationAddress();
 		int desiredDestinationPort = socks5Req.getDesiredDestinationPort();
 		HostResolverFactory hostResolverFactory = 
-				this.externalNetFactory.newHostResolverFactory();
-		HostResolver hostResolver = 
-				hostResolverFactory.newHostResolver();
+				this.externalNetObjectFactoryFactory.newHostResolverFactory();
+		HostResolver hostResolver = hostResolverFactory.newHostResolver();
 		InetAddress inetAddress = null;
 		try {
 			inetAddress = hostResolver.resolve(desiredDestinationAddress);
@@ -575,12 +573,11 @@ public final class Socks5Worker implements Runnable {
 		}
 		int desiredDestinationPort = socks5Req.getDesiredDestinationPort();
 		HostResolverFactory hostResolverFactory = 
-				this.externalNetFactory.newHostResolverFactory();
-		HostResolver hostResolver = null;
+				this.externalNetObjectFactoryFactory.newHostResolverFactory();
+		HostResolver hostResolver = hostResolverFactory.newHostResolver();
 		DatagramSocket serverDatagramSock = null;
 		DatagramSocket clientDatagramSock = null;
 		try {
-			hostResolver = hostResolverFactory.newHostResolver();
 			serverDatagramSock = this.newServerDatagramSocket();
 			if (serverDatagramSock == null) {
 				return;
@@ -655,11 +652,11 @@ public final class Socks5Worker implements Runnable {
 	}
 	
 	private DatagramSocket newClientDatagramSocket() {
+		Host bindHost = this.settings.getLastValue(
+				SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_CLIENT_BIND_HOST);
+		InetAddress bindInetAddress = bindHost.toInetAddress();
 		DatagramSocket clientDatagramSock = null;
 		try {
-			Host bindHost = this.settings.getLastValue(
-					SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_CLIENT_BIND_HOST);
-			InetAddress bindInetAddress = bindHost.toInetAddress();
 			clientDatagramSock = new DatagramSocket(new InetSocketAddress(
 					bindInetAddress, 0));
 		} catch (SocketException e) {
@@ -685,13 +682,13 @@ public final class Socks5Worker implements Runnable {
 	}
 	
 	private DatagramSocket newServerDatagramSocket() {
+		Host bindHost = this.settings.getLastValue(
+				SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_SERVER_BIND_HOST);
+		InetAddress bindInetAddress = bindHost.toInetAddress();
+		DatagramSocketFactory datagramSocketFactory = 
+				this.externalNetObjectFactoryFactory.newDatagramSocketFactory();
 		DatagramSocket serverDatagramSock = null;
 		try {
-			Host bindHost = this.settings.getLastValue(
-					SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_SERVER_BIND_HOST);
-			InetAddress bindInetAddress = bindHost.toInetAddress();
-			DatagramSocketFactory datagramSocketFactory = 
-					this.externalNetFactory.newDatagramSocketFactory();
 			serverDatagramSock = datagramSocketFactory.newDatagramSocket(
 					new InetSocketAddress(bindInetAddress, 0));
 		} catch (SocketException e) {

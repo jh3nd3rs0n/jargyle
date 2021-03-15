@@ -1,8 +1,9 @@
 package jargyle.net;
 
-public final class DefaultNetFactory extends NetFactory {
+public final class DefaultNetObjectFactoryFactory 
+	extends NetObjectFactoryFactory {
 
-	public DefaultNetFactory() { }
+	public DefaultNetObjectFactoryFactory() { }
 	
 	@Override
 	public DatagramSocketFactory newDatagramSocketFactory() {

@@ -194,7 +194,7 @@ public final class ServerSocketHelper {
 			jargyle.net.SocketFactory SocketFactory = new DefaultSocketFactory();
 			if (socksClient != null) {
 				SocketFactory = 
-						socksClient.newNetFactory().newSocketFactory();
+						socksClient.newNetObjectFactoryFactory().newSocketFactory();
 			}
 			echoSocket = SocketFactory.newSocket();
 			echoSocket.connect(new InetSocketAddress(
@@ -205,7 +205,7 @@ public final class ServerSocketHelper {
 					 new DefaultServerSocketFactory();
 			if (socksClient != null) {
 				serverSocketFactory = 
-						socksClient.newNetFactory().newServerSocketFactory();
+						socksClient.newNetObjectFactoryFactory().newServerSocketFactory();
 			}
 			ServerSocket serverSocket = serverSocketFactory.newServerSocket();
 			serverSocket.bind(new InetSocketAddress(

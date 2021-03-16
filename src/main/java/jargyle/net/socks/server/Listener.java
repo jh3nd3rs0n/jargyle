@@ -10,7 +10,7 @@ import java.util.concurrent.Executors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jargyle.net.NetObjectFactoryFactory;
+import jargyle.net.NetObjectFactory;
 import jargyle.net.SocketSettings;
 import jargyle.net.ssl.DtlsDatagramSocketFactory;
 import jargyle.net.ssl.SslSocketFactory;
@@ -25,15 +25,14 @@ final class Listener implements Runnable {
 	private DtlsDatagramSocketFactory clientDtlsDatagramSocketFactory;
 	private SslSocketFactory clientSslSocketFactory;
 	private final Configuration configuration;
-	private final NetObjectFactoryFactory externalNetObjectFactoryFactory;
+	private final NetObjectFactory externalNetObjectFactory;
 	private final ServerSocket serverSocket;
 			
 	public Listener(final ServerSocket serverSock, final Configuration config) {
 		this.clientDtlsDatagramSocketFactory = null;
 		this.clientSslSocketFactory = null;		
 		this.configuration = config;
-		this.externalNetObjectFactoryFactory = 
-				new ExternalNetObjectFactoryFactory(config);
+		this.externalNetObjectFactory = new ExternalNetObjectFactory(config);
 		this.serverSocket = serverSock;
 	}
 	
@@ -163,7 +162,7 @@ final class Listener implements Runnable {
 			WorkerParams workerParams = new WorkerParams(
 					clientSocket,
 					this.configuration,
-					this.externalNetObjectFactoryFactory,
+					this.externalNetObjectFactory,
 					this.getClientDtlsDatagramSocketFactory());
 			executor.execute(new Worker(workerParams));
 		}

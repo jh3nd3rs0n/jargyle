@@ -2,7 +2,7 @@ package jargyle.net.socks.server;
 
 import java.net.Socket;
 
-import jargyle.net.NetObjectFactoryFactory;
+import jargyle.net.NetObjectFactory;
 import jargyle.net.ssl.DtlsDatagramSocketFactory;
 
 public final class WorkerParams {
@@ -10,17 +10,17 @@ public final class WorkerParams {
 	private final DtlsDatagramSocketFactory clientDtlsDatagramSocketFactory;
 	private final Socket clientSocket;
 	private final Configuration configuration;
-	private final NetObjectFactoryFactory externalNetObjectFactoryFactory;
+	private final NetObjectFactory externalNetObjectFactory;
 	
 	WorkerParams(
 			final Socket clientSock,
 			final Configuration config,
-			final NetObjectFactoryFactory extNetObjectFactoryFactory,
+			final NetObjectFactory extNetObjectFactory,
 			final DtlsDatagramSocketFactory clientDtlsDatagramSockFactory) {
 		this.clientDtlsDatagramSocketFactory = clientDtlsDatagramSockFactory;
 		this.clientSocket = clientSock;
 		this.configuration = config;
-		this.externalNetObjectFactoryFactory = extNetObjectFactoryFactory;
+		this.externalNetObjectFactory = extNetObjectFactory;
 	}
 
 	public DtlsDatagramSocketFactory getClientDtlsDatagramSocketFactory() {
@@ -35,8 +35,8 @@ public final class WorkerParams {
 		return this.configuration;
 	}
 
-	public NetObjectFactoryFactory getExternalNetObjectFactoryFactory() {
-		return this.externalNetObjectFactoryFactory;
+	public NetObjectFactory getExternalNetObjectFactory() {
+		return this.externalNetObjectFactory;
 	}
 
 }

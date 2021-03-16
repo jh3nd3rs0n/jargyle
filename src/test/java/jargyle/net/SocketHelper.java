@@ -136,12 +136,11 @@ public final class SocketHelper {
 			}
 			echoServer = new EchoServer(ECHO_SERVER_PORT);
 			echoServer.start();
-			jargyle.net.SocketFactory socketFactory = new DefaultSocketFactory();
+			NetObjectFactory netObjectFactory = new DefaultNetObjectFactory();
 			if (socksClient != null) {
-				socketFactory = 
-						socksClient.newNetObjectFactoryFactory().newSocketFactory();
+				netObjectFactory = socksClient.newNetObjectFactory();
 			}
-			echoSocket = socketFactory.newSocket();
+			echoSocket = netObjectFactory.newSocket();
 			echoSocket.connect(new InetSocketAddress(
 					NetConstants.LOOPBACK_ADDRESS, echoServer.getPort()));
 			InputStream in = echoSocket.getInputStream();

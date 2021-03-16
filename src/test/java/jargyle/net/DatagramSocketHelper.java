@@ -124,15 +124,14 @@ public final class DatagramSocketHelper {
 			echoServer = new EchoServer(ECHO_SERVER_PORT);
 			echoServer.start();
 			int port = echoServer.getPort();
-			DatagramSocketFactory datagramSocketFactory =
-					new DefaultDatagramSocketFactory();
+			NetObjectFactory netObjectFactory = new DefaultNetObjectFactory();
 			if (socksClient != null) {
-				datagramSocketFactory = 
-						socksClient.newNetObjectFactoryFactory().newDatagramSocketFactory();
+				netObjectFactory = socksClient.newNetObjectFactory();
 			}
-			echoDatagramSocket = datagramSocketFactory.newDatagramSocket(0);
+			echoDatagramSocket = netObjectFactory.newDatagramSocket(0);
 			echoDatagramSocket.connect(NetConstants.LOOPBACK_ADDRESS, port);
-			ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+			ByteArrayOutputStream byteArrayOutputStream = 
+					new ByteArrayOutputStream();
 			DataOutputStream dataOutputStream =	new DataOutputStream(
 					byteArrayOutputStream);
 			dataOutputStream.writeUTF(string);

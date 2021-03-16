@@ -191,23 +191,16 @@ public final class ServerSocketHelper {
 			}
 			echoServer = new EchoServer(ECHO_SERVER_PORT, string);
 			echoServer.start();
-			jargyle.net.SocketFactory SocketFactory = new DefaultSocketFactory();
+			NetObjectFactory netObjectFactory = new DefaultNetObjectFactory();
 			if (socksClient != null) {
-				SocketFactory = 
-						socksClient.newNetObjectFactoryFactory().newSocketFactory();
+				netObjectFactory = socksClient.newNetObjectFactory();
 			}
-			echoSocket = SocketFactory.newSocket();
+			echoSocket = netObjectFactory.newSocket();
 			echoSocket.connect(new InetSocketAddress(
 					NetConstants.LOOPBACK_ADDRESS, echoServer.getPort()));
 			OutputStream out = echoSocket.getOutputStream();
 			PrintWriter writer = new PrintWriter(out, true);
-			jargyle.net.ServerSocketFactory serverSocketFactory =
-					 new DefaultServerSocketFactory();
-			if (socksClient != null) {
-				serverSocketFactory = 
-						socksClient.newNetObjectFactoryFactory().newServerSocketFactory();
-			}
-			ServerSocket serverSocket = serverSocketFactory.newServerSocket();
+			ServerSocket serverSocket = netObjectFactory.newServerSocket();
 			serverSocket.bind(new InetSocketAddress(
 					(InetAddress) null, SERVER_PORT));
 			writer.println(String.format(

@@ -1,18 +1,23 @@
 package jargyle.net.socks.server;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.SocketAddress;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.ietf.jgss.Oid;
 
-import jargyle.net.DatagramSocketFactory;
-import jargyle.net.DefaultNetObjectFactoryFactory;
+import jargyle.net.DefaultNetObjectFactory;
 import jargyle.net.Host;
-import jargyle.net.HostResolverFactory;
-import jargyle.net.NetObjectFactoryFactory;
-import jargyle.net.ServerSocketFactory;
-import jargyle.net.SocketFactory;
+import jargyle.net.HostResolver;
+import jargyle.net.NetObjectFactory;
 import jargyle.net.SocketSettings;
 import jargyle.net.socks.client.Properties;
 import jargyle.net.socks.client.Property;
@@ -26,7 +31,7 @@ import jargyle.security.EncryptedPassword;
 import jargyle.util.PositiveInteger;
 import jargyle.util.Strings;
 
-final class ExternalNetObjectFactoryFactory extends NetObjectFactoryFactory {
+final class ExternalNetObjectFactory extends NetObjectFactory {
 	
 	private static Property<Object> cast(
 			final Property<? extends Object> property) {
@@ -37,49 +42,120 @@ final class ExternalNetObjectFactoryFactory extends NetObjectFactoryFactory {
 	
 	private final Configuration configuration;
 	private Configuration lastConfiguration;
-	private NetObjectFactoryFactory netObjectFactoryFactory;
-		
-	public ExternalNetObjectFactoryFactory(final Configuration config) {
+	private NetObjectFactory netObjectFactory;
+
+	public ExternalNetObjectFactory(final Configuration config) {
 		this.configuration = config;
 		this.lastConfiguration = null;
-		this.netObjectFactoryFactory = null;
+		this.netObjectFactory = null;
 	}
 	
-	private NetObjectFactoryFactory getNetObjectFactoryFactory() {
+	private NetObjectFactory getNetObjectFactory() {
 		if (!Configuration.equals(this.lastConfiguration, this.configuration)) {
-			this.netObjectFactoryFactory = this.newNetObjectFactoryFactory();
+			this.netObjectFactory = this.newNetObjectFactory();
 			this.lastConfiguration = ImmutableConfiguration.newInstance(
 					this.configuration);
 		}
-		return this.netObjectFactoryFactory;
+		return this.netObjectFactory;
 	}
 	
 	@Override
-	public DatagramSocketFactory newDatagramSocketFactory() {
-		return this.getNetObjectFactoryFactory().newDatagramSocketFactory();
+	public DatagramSocket newDatagramSocket() throws SocketException {
+		return this.getNetObjectFactory().newDatagramSocket();
 	}
 	
 	@Override
-	public HostResolverFactory newHostResolverFactory() {
-		return this.getNetObjectFactoryFactory().newHostResolverFactory();		
+	public DatagramSocket newDatagramSocket(
+			final int port) throws SocketException {
+		return this.getNetObjectFactory().newDatagramSocket(port);
 	}
-	
-	private NetObjectFactoryFactory newNetObjectFactoryFactory() {
+
+	@Override
+	public DatagramSocket newDatagramSocket(
+			final int port, final InetAddress laddr) throws SocketException {
+		return this.getNetObjectFactory().newDatagramSocket(port, laddr);
+	}
+
+	@Override
+	public DatagramSocket newDatagramSocket(
+			final SocketAddress bindaddr) throws SocketException {
+		return this.getNetObjectFactory().newDatagramSocket(bindaddr);
+	}
+
+	@Override
+	public HostResolver newHostResolver() {
+		return this.getNetObjectFactory().newHostResolver();
+	}
+
+	private NetObjectFactory newNetObjectFactory() {
 		SocksClient client = this.newSocksClient();
 		if (client != null) {
-			return client.newNetObjectFactoryFactory();
+			return client.newNetObjectFactory();
 		}
-		return new DefaultNetObjectFactoryFactory();
+		return new DefaultNetObjectFactory();
 	}
-	
+
 	@Override
-	public ServerSocketFactory newServerSocketFactory() {
-		return this.getNetObjectFactoryFactory().newServerSocketFactory();		
+	public ServerSocket newServerSocket() throws IOException {
+		return this.getNetObjectFactory().newServerSocket();
 	}
-	
+
 	@Override
-	public SocketFactory newSocketFactory() {
-		return this.getNetObjectFactoryFactory().newSocketFactory();
+	public ServerSocket newServerSocket(final int port) throws IOException {
+		return this.getNetObjectFactory().newServerSocket(port);
+	}
+
+	@Override
+	public ServerSocket newServerSocket(
+			final int port, final int backlog) throws IOException {
+		return this.getNetObjectFactory().newServerSocket(port, backlog);
+	}
+
+	@Override
+	public ServerSocket newServerSocket(
+			final int port, 
+			final int backlog, 
+			final InetAddress bindAddr) throws IOException {
+		return this.getNetObjectFactory().newServerSocket(
+				port, backlog, bindAddr);
+	}
+
+	@Override
+	public Socket newSocket() {
+		return this.getNetObjectFactory().newSocket();
+	}
+
+	@Override
+	public Socket newSocket(
+			final InetAddress address, final int port) throws IOException {
+		return this.getNetObjectFactory().newSocket(address, port);
+	}
+
+	@Override
+	public Socket newSocket(
+			final InetAddress address, 
+			final int port, 
+			final InetAddress localAddr, 
+			final int localPort) throws IOException {
+		return this.getNetObjectFactory().newSocket(
+				address, port, localAddr, localPort);
+	}
+
+	@Override
+	public Socket newSocket(
+			final String host, 
+			final int port) throws UnknownHostException, IOException {
+		return this.getNetObjectFactory().newSocket(host, port);
+	}
+
+	@Override
+	public Socket newSocket(
+			final String host, 
+			final int port, 
+			final InetAddress localAddr, 
+			final int localPort) throws IOException {
+		return this.getNetObjectFactory().newSocket(
+				host, port, localAddr, localPort);
 	}
 	
 	private List<Property<Object>> newSocks5ClientProperties() {
@@ -263,5 +339,5 @@ final class ExternalNetObjectFactoryFactory extends NetObjectFactoryFactory {
 		}
 		return properties;		
 	}
-	
+
 }

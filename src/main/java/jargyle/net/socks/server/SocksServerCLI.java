@@ -19,8 +19,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import argmatey.ArgMatey;
-import argmatey.ArgMatey.Annotations.DisplaysProgramHelp;
-import argmatey.ArgMatey.Annotations.DisplaysProgramVersion;
 import argmatey.ArgMatey.Annotations.Option;
 import argmatey.ArgMatey.Annotations.OptionArgSpec;
 import argmatey.ArgMatey.Annotations.Ordinal;
@@ -171,7 +169,6 @@ public final class SocksServerCLI extends CLI {
 		return Optional.empty();
 	}
 
-	@DisplaysProgramHelp
 	@Option(
 			doc = "Print this help and exit",
 			name = "help",
@@ -222,7 +219,6 @@ public final class SocksServerCLI extends CLI {
 		System.out.println();		
 	}
 
-	@DisplaysProgramVersion
 	@Option(
 			doc = "Print version information and exit",
 			name = "version",

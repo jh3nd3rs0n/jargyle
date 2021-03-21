@@ -63,11 +63,11 @@ public final class ArgMatey {
 
 		@Retention(RetentionPolicy.RUNTIME)
 		@Target({ElementType.METHOD})
-		public static @interface DisplaysProgramHelp { }
+		static @interface DisplaysProgramHelp { }
 
 		@Retention(RetentionPolicy.RUNTIME)
 		@Target({ElementType.METHOD})
-		public static @interface DisplaysProgramVersion { }
+		static @interface DisplaysProgramVersion { }
 		
 		@Retention(RetentionPolicy.RUNTIME)
 		@Target({ElementType.METHOD})
@@ -993,10 +993,12 @@ public final class ArgMatey {
 						option.toString());
 				if (optionGroupMethod != null) {
 					optionGroupMethod.invoke(this, optionOccurrence);
-					if (optionGroupMethod.displaysProgramHelp()) {
+					if (optionGroupMethod.toMethod().equals(
+							this.cliClass.getDisplayProgramHelpMethod())) {
 						this.programHelpDisplayed = true;
 					}
-					if (optionGroupMethod.displaysProgramVersion()) {
+					if (optionGroupMethod.toMethod().equals(
+							this.cliClass.getDisplayProgramVersionMethod())) {
 						this.programVersionDisplayed = true;
 					}
 				}
@@ -1102,8 +1104,7 @@ public final class ArgMatey {
 			List<Class<?>> hierarchy = new ArrayList<Class<?>>();
 			if (CLI.class.isAssignableFrom(cls)) {
 				hierarchy.add(cls);
-				Class<?> superclass = cls.getSuperclass();
-				hierarchy.addAll(getHierarchy(superclass));
+				hierarchy.addAll(getHierarchy(cls.getSuperclass()));
 			}
 			return hierarchy;
 		}
@@ -1113,6 +1114,8 @@ public final class ArgMatey {
 		}
 		
 		private final Class<? extends CLI> cls;
+		private final Method displayProgramHelpMethod;
+		private final Method displayProgramVersionMethod;
 		private final Map<String, OptionGroupMethod> optionGroupMethodMap;
 		private final List<OptionGroupMethod> optionGroupMethods;
 		private final OptionGroups optionGroups;
@@ -1122,12 +1125,35 @@ public final class ArgMatey {
 					new HashMap<String, OptionGroupMethod>();
 			List<OptionGroupMethod> optGroupMethods = 
 					new ArrayList<OptionGroupMethod>();
+			Method displayProgHelpMethod = null;
+			Method displayProgVersionMethod = null;
+			List<Method> cliClassDeclaredMethods = Arrays.asList(
+					CLI.class.getDeclaredMethods());
+			for (Method cliClassDeclaredMethod : cliClassDeclaredMethods) {
+				if (cliClassDeclaredMethod.isAnnotationPresent(
+						Annotations.DisplaysProgramHelp.class)) {
+					displayProgHelpMethod = cliClassDeclaredMethod;
+				}
+				if (cliClassDeclaredMethod.isAnnotationPresent(
+						Annotations.DisplaysProgramVersion.class)) {
+					displayProgVersionMethod = cliClassDeclaredMethod;
+				}
+			}			
 			List<Class<?>> hierarchy = getHierarchy(c);
-			Set<Method> methods = new TreeSet<Method>(new MethodComparator());
+			Comparator<Method> methodComparator = new MethodComparator();
+			Set<Method> methods = new TreeSet<Method>(methodComparator);
 			for (Class<?> clazz : hierarchy) {
 				methods.addAll(Arrays.asList(clazz.getDeclaredMethods()));
 			}
 			for (Method method : methods) {
+				if (methodComparator.compare(
+						displayProgHelpMethod, method) == 0) {
+					displayProgHelpMethod = method;
+				}
+				if (methodComparator.compare(
+						displayProgVersionMethod, method) == 0) {
+					displayProgVersionMethod = method;
+				}
 				if (method.isAnnotationPresent(Annotations.Option.class)
 						|| method.isAnnotationPresent(Annotations.Options.class)) {
 					method.setAccessible(true);
@@ -1146,11 +1172,21 @@ public final class ArgMatey {
 				optGroups.add(optGroupMethod.getOptionGroup());
 			}
 			this.cls = c;
+			this.displayProgramHelpMethod = displayProgHelpMethod;
+			this.displayProgramVersionMethod = displayProgVersionMethod;
 			this.optionGroupMethodMap = new HashMap<String, OptionGroupMethod>(
 					optGroupMethodMap);
 			this.optionGroupMethods = new ArrayList<OptionGroupMethod>(
 					optGroupMethods);
 			this.optionGroups = OptionGroups.newInstance(optGroups);
+		}
+		
+		public Method getDisplayProgramHelpMethod() {
+			return this.displayProgramHelpMethod;
+		}
+		
+		public Method getDisplayProgramVersionMethod() {
+			return this.displayProgramVersionMethod;
 		}
 		
 		public Map<String, OptionGroupMethod> getOptionGroupMethodMap() {
@@ -3392,10 +3428,6 @@ public final class ArgMatey {
 			return stringConverter;
 		}
 		
-		private final boolean displaysProgramHelp;
-		
-		private final boolean displaysProgramVersion;
-		
 		private final Method method;
 		
 		private final OptionGroup optionGroup;
@@ -3437,22 +3469,10 @@ public final class ArgMatey {
 						Annotations.Ordinal.class);
 				ord = ordAnnotation.value();
 			}
-			this.displaysProgramHelp = mthd.isAnnotationPresent(
-					Annotations.DisplaysProgramHelp.class);
-			this.displaysProgramVersion = mthd.isAnnotationPresent(
-					Annotations.DisplaysProgramVersion.class);
 			this.method = mthd;
 			this.optionGroup = optGroup;
 			this.ordinal = ord;
 			this.targetMethodParameterTypesType = t; 
-		}
-		
-		public boolean displaysProgramHelp() {
-			return this.displaysProgramHelp;
-		}
-		
-		public boolean displaysProgramVersion() {
-			return this.displaysProgramVersion;
 		}
 		
 		public OptionGroup getOptionGroup() {

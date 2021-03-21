@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Optional;
 
 import argmatey.ArgMatey;
-import argmatey.ArgMatey.Annotations.DisplaysProgramHelp;
 import argmatey.ArgMatey.Annotations.Option;
 import argmatey.ArgMatey.Annotations.Ordinal;
 import argmatey.ArgMatey.CLI;
@@ -324,7 +323,6 @@ public final class UsersCLI extends CLI {
 		return Optional.empty();
 	}
 	
-	@DisplaysProgramHelp
 	@Option(
 			doc = "Print this help and exit",
 			name = "help",

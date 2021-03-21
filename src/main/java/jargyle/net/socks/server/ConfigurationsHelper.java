@@ -1,0 +1,26 @@
+package jargyle.net.socks.server;
+
+import java.util.Objects;
+
+final class ConfigurationsHelper {
+	
+	public static boolean equals(final Configuration a, final Configuration b) {
+		if (a == null) {
+			if (b != null) {
+				return false;
+			}
+		} else {
+			if (b == null) {
+				return false;
+			} else {
+				if (!Objects.equals(a.getSettings(), b.getSettings())) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
+	private ConfigurationsHelper() { }
+	
+}

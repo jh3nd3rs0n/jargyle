@@ -51,7 +51,8 @@ final class ExternalNetObjectFactory extends NetObjectFactory {
 	}
 	
 	private NetObjectFactory getNetObjectFactory() {
-		if (!Configuration.equals(this.lastConfiguration, this.configuration)) {
+		if (!ConfigurationsHelper.equals(
+				this.lastConfiguration, this.configuration)) {
 			this.netObjectFactory = this.newNetObjectFactory();
 			this.lastConfiguration = ImmutableConfiguration.newInstance(
 					this.configuration);

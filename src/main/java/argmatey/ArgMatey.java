@@ -60,6 +60,14 @@ import java.util.TreeSet;
 public final class ArgMatey {
 
 	public static final class Annotations {
+
+		@Retention(RetentionPolicy.RUNTIME)
+		@Target({ElementType.METHOD})
+		public static @interface DisplaysProgramHelp { }
+
+		@Retention(RetentionPolicy.RUNTIME)
+		@Target({ElementType.METHOD})
+		public static @interface DisplaysProgramVersion { }
 		
 		@Retention(RetentionPolicy.RUNTIME)
 		@Target({ElementType.METHOD})
@@ -68,10 +76,6 @@ public final class ArgMatey {
 			String value();
 			
 		}
-		
-		@Retention(RetentionPolicy.RUNTIME)
-		@Target({ElementType.METHOD})
-		public static @interface Ignore { }
 		
 		@Repeatable(Options.class)
 		@Retention(RetentionPolicy.RUNTIME)
@@ -838,10 +842,6 @@ public final class ArgMatey {
 		}
 		
 		protected Optional<Integer> afterHandleNext() {
-			if (this.isProgramHelpDisplayed() 
-					|| this.isProgramVersionDisplayed()) {
-				return Optional.of(Integer.valueOf(0));
-			}			
 			return Optional.empty();
 		}
 		
@@ -850,31 +850,70 @@ public final class ArgMatey {
 		}
 		
 		protected Optional<Integer> beforeHandleNext() {
-			if (this.isProgramHelpDisplayed() 
-					|| this.isProgramVersionDisplayed()) {
-				return Optional.of(Integer.valueOf(0));
-			}			
 			return Optional.empty();
 		}
 		
+		@Annotations.DisplaysProgramHelp
 		@Annotations.Option(
 				doc = "Display this help and exit",
 				name = "help",
 				type = OptionType.GNU_LONG
 		)
 		protected void displayProgramHelp() {
-			this.printProgramHelp();
-			this.programHelpDisplayed = true;
+			this.displayProgramUsage();
+			if (this.programDoc != null) {
+				System.out.println(this.programDoc);
+			}
+			System.out.println();
+			int displayableOptionCount = 0;
+			for (OptionGroup optionGroup : this.getOptionGroups().toList()) {
+				displayableOptionCount += optionGroup.toDisplayableList().size();
+			}
+			if (displayableOptionCount > 0) {
+				if (displayableOptionCount == 1) {
+					System.out.println("OPTION:");
+				} else {
+					System.out.println("OPTIONS:");
+				}
+				this.getOptionGroups().printHelpText();
+				System.out.println();
+			}
 		}
 		
+		protected void displayProgramUsage() {
+			String progName = this.programName;
+			if (progName == null) {
+				progName = this.getClass().getName();
+			}
+			System.out.printf("Usage: %s", progName);
+			int displayableOptionCount = 0;
+			for (OptionGroup optionGroup : this.getOptionGroups().toList()) {
+				displayableOptionCount += optionGroup.toDisplayableList().size();
+			}
+			if (displayableOptionCount > 0) {
+				System.out.print(" [OPTION]...");
+			}
+			if (this.programOperandsUsage != null) {
+				System.out.printf(" %s", this.programOperandsUsage);
+			}
+			System.out.println();			
+		}
+		
+		@Annotations.DisplaysProgramVersion
 		@Annotations.Option(
 				doc = "Display version information and exit",
 				name = "version",
 				type = OptionType.GNU_LONG
 		)
 		protected void displayProgramVersion() {
-			this.printProgramVersion();
-			this.programVersionDisplayed = true;
+			String progVersion = this.programVersion;
+			if (progVersion == null) {
+				progVersion = this.programName;
+				if (progVersion == null) {
+					progVersion = this.getClass().getName();
+				}
+			}
+			System.out.println(progVersion);
 		}
 		
 		protected final int getArgCharIndex() {
@@ -921,6 +960,9 @@ public final class ArgMatey {
 						return status;
 					}
 				}
+				if (this.programHelpDisplayed || this.programVersionDisplayed) {
+					return Optional.of(Integer.valueOf(0));
+				}
 				status = this.afterHandleNext();
 				if (status.isPresent()) {
 					return status;
@@ -951,6 +993,12 @@ public final class ArgMatey {
 						option.toString());
 				if (optionGroupMethod != null) {
 					optionGroupMethod.invoke(this, optionOccurrence);
+					if (optionGroupMethod.displaysProgramHelp()) {
+						this.programHelpDisplayed = true;
+					}
+					if (optionGroupMethod.displaysProgramVersion()) {
+						this.programVersionDisplayed = true;
+					}
 				}
 			}
 		}
@@ -971,67 +1019,16 @@ public final class ArgMatey {
 			return this.argsParser.hasNext();
 		}
 		
-		protected final boolean isProgramHelpDisplayed() {
+		public final boolean isProgramHelpDisplayed() {
 			return this.programHelpDisplayed;
 		}
 		
-		protected final boolean isProgramVersionDisplayed() {
+		public final boolean isProgramVersionDisplayed() {
 			return this.programVersionDisplayed;
 		}
 		
 		protected final String next() {
 			return this.argsParser.next();
-		}
-		
-		protected void printProgramHelp() {
-			this.printProgramUsage();
-			if (this.programDoc != null) {
-				System.out.println(this.programDoc);
-			}
-			System.out.println();
-			int displayableOptionCount = 0;
-			for (OptionGroup optionGroup : this.getOptionGroups().toList()) {
-				displayableOptionCount += optionGroup.toDisplayableList().size();
-			}
-			if (displayableOptionCount > 0) {
-				if (displayableOptionCount == 1) {
-					System.out.println("OPTION:");
-				} else {
-					System.out.println("OPTIONS:");
-				}
-				this.getOptionGroups().printHelpText();
-				System.out.println();
-			}
-		}
-		
-		protected void printProgramUsage() {
-			String progName = this.programName;
-			if (progName == null) {
-				progName = this.getClass().getName();
-			}
-			System.out.printf("Usage: %s", progName);
-			int displayableOptionCount = 0;
-			for (OptionGroup optionGroup : this.getOptionGroups().toList()) {
-				displayableOptionCount += optionGroup.toDisplayableList().size();
-			}
-			if (displayableOptionCount > 0) {
-				System.out.print(" [OPTION]...");
-			}
-			if (this.programOperandsUsage != null) {
-				System.out.printf(" %s", this.programOperandsUsage);
-			}
-			System.out.println();			
-		}
-		
-		protected void printProgramVersion() {
-			String progVersion = this.programVersion;
-			if (progVersion == null) {
-				progVersion = this.programName;
-				if (progVersion == null) {
-					progVersion = this.getClass().getName();
-				}
-			}
-			System.out.println(progVersion);
 		}
 		
 		@Override
@@ -1131,9 +1128,6 @@ public final class ArgMatey {
 				methods.addAll(Arrays.asList(clazz.getDeclaredMethods()));
 			}
 			for (Method method : methods) {
-				if (method.isAnnotationPresent(Annotations.Ignore.class)) {
-					continue;
-				}
 				if (method.isAnnotationPresent(Annotations.Option.class)
 						|| method.isAnnotationPresent(Annotations.Options.class)) {
 					method.setAccessible(true);
@@ -3013,7 +3007,7 @@ public final class ArgMatey {
 				}
 
 				@Override
-				public boolean isTargetMethodParameterTypes(
+				public boolean isValueForMethodParameterTypes(
 						final Class<?>[] types) {
 					if (types.length != 1) { return false; }
 					Class<?> type = types[0];
@@ -3077,7 +3071,7 @@ public final class ArgMatey {
 				}
 
 				@Override
-				public boolean isTargetMethodParameterTypes(
+				public boolean isValueForMethodParameterTypes(
 						final Class<?>[] types) {
 					if (types.length != 1) { return false; }
 					Class<?> type = types[0];
@@ -3115,7 +3109,7 @@ public final class ArgMatey {
 				}
 
 				@Override
-				public boolean isTargetMethodParameterTypes(
+				public boolean isValueForMethodParameterTypes(
 						final Class<?>[] types) {
 					return types.length == 0;
 				}
@@ -3164,18 +3158,19 @@ public final class ArgMatey {
 				}
 
 				@Override
-				public boolean isTargetMethodParameterTypes(
+				public boolean isValueForMethodParameterTypes(
 						final Class<?>[] types) {
 					return types.length == 1;
 				}
 				
 			};
 			
-			public static TargetMethodParameterTypesType get(
+			public static TargetMethodParameterTypesType valueForMethodParameterTypes(
 					final Class<?>[] types) {
 				for (TargetMethodParameterTypesType targetMethodParameterTypesType 
 						: TargetMethodParameterTypesType.values()) {
-					if (targetMethodParameterTypesType.isTargetMethodParameterTypes(types)) {
+					if (targetMethodParameterTypesType.isValueForMethodParameterTypes(
+							types)) {
 						return targetMethodParameterTypesType;
 					}
 				}
@@ -3189,9 +3184,9 @@ public final class ArgMatey {
 			public abstract void invoke(
 					final Object obj, 
 					final Method method, 
-					OptionOccurrence optionOccurrence);
+					final OptionOccurrence optionOccurrence);
 			
-			public abstract boolean isTargetMethodParameterTypes(
+			public abstract boolean isValueForMethodParameterTypes(
 					final Class<?>[] types);
 			
 		}
@@ -3397,6 +3392,10 @@ public final class ArgMatey {
 			return stringConverter;
 		}
 		
+		private final boolean displaysProgramHelp;
+		
+		private final boolean displaysProgramVersion;
+		
 		private final Method method;
 		
 		private final OptionGroup optionGroup;
@@ -3413,7 +3412,8 @@ public final class ArgMatey {
 						mthd));
 			}
 			TargetMethodParameterTypesType t = 
-					TargetMethodParameterTypesType.get(mthd.getParameterTypes());
+					TargetMethodParameterTypesType.valueForMethodParameterTypes(
+							mthd.getParameterTypes());
 			if (t == null) {
 				StringBuilder sb = new StringBuilder();
 				List<TargetMethodParameterTypesType> list = Arrays.asList(
@@ -3437,10 +3437,22 @@ public final class ArgMatey {
 						Annotations.Ordinal.class);
 				ord = ordAnnotation.value();
 			}
+			this.displaysProgramHelp = mthd.isAnnotationPresent(
+					Annotations.DisplaysProgramHelp.class);
+			this.displaysProgramVersion = mthd.isAnnotationPresent(
+					Annotations.DisplaysProgramVersion.class);
 			this.method = mthd;
 			this.optionGroup = optGroup;
 			this.ordinal = ord;
 			this.targetMethodParameterTypesType = t; 
+		}
+		
+		public boolean displaysProgramHelp() {
+			return this.displaysProgramHelp;
+		}
+		
+		public boolean displaysProgramVersion() {
+			return this.displaysProgramVersion;
 		}
 		
 		public OptionGroup getOptionGroup() {

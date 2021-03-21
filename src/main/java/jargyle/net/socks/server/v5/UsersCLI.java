@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 import argmatey.ArgMatey;
-import argmatey.ArgMatey.Annotations.Ignore;
+import argmatey.ArgMatey.Annotations.DisplaysProgramHelp;
 import argmatey.ArgMatey.Annotations.Option;
 import argmatey.ArgMatey.Annotations.Ordinal;
 import argmatey.ArgMatey.CLI;
@@ -310,7 +310,7 @@ public final class UsersCLI extends CLI {
 	
 	@Override
 	protected Optional<Integer> afterHandleNext() {
-		if (this.isProgramHelpDisplayed() || this.xsdRequested) {
+		if (this.xsdRequested) {
 			return Optional.of(Integer.valueOf(0));
 		}
 		return Optional.empty();
@@ -324,6 +324,7 @@ public final class UsersCLI extends CLI {
 		return Optional.empty();
 	}
 	
+	@DisplaysProgramHelp
 	@Option(
 			doc = "Print this help and exit",
 			name = "help",
@@ -336,34 +337,6 @@ public final class UsersCLI extends CLI {
 	@Ordinal(HELP_OPTION_GROUP_ORDINAL)
 	@Override
 	protected void displayProgramHelp() {
-		super.displayProgramHelp();
-	}
-	
-	@Ignore
-	@Override
-	protected void displayProgramVersion() { 
-		throw new UnsupportedOperationException("not implemented");
-	}
-	
-	@Override
-	protected void handleNonparsedArg(final String nonparsedArg) {
-		if (this.command == null) {
-			this.command = Command.getInstance(nonparsedArg);
-		} else {
-			this.argList.add(nonparsedArg);
-		}
-	}
-	
-	@Override
-	protected Optional<Integer> handleThrowable(final Throwable t) {
-		System.err.printf("%s: %s%n", this.programName, t);
-		System.err.println(this.suggestion);
-		t.printStackTrace(System.err);
-		return Optional.of(Integer.valueOf(-1));		
-	}
-		
-	@Override
-	protected void printProgramHelp() {
 		ArgMatey.Option helpOption = this.getOptionGroups().get(
 				HELP_OPTION_GROUP_ORDINAL).get(0);
 		ArgMatey.Option xsdOption = this.getOptionGroups().get(
@@ -392,6 +365,28 @@ public final class UsersCLI extends CLI {
 		System.out.println("OPTIONS:");
 		this.getOptionGroups().printHelpText();
 		System.out.println();		
+	}
+	
+	@Override
+	protected void displayProgramVersion() { 
+		throw new UnsupportedOperationException("not implemented");
+	}
+	
+	@Override
+	protected void handleNonparsedArg(final String nonparsedArg) {
+		if (this.command == null) {
+			this.command = Command.getInstance(nonparsedArg);
+		} else {
+			this.argList.add(nonparsedArg);
+		}
+	}
+	
+	@Override
+	protected Optional<Integer> handleThrowable(final Throwable t) {
+		System.err.printf("%s: %s%n", this.programName, t);
+		System.err.println(this.suggestion);
+		t.printStackTrace(System.err);
+		return Optional.of(Integer.valueOf(-1));		
 	}
 	
 	@Option(

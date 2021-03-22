@@ -320,7 +320,7 @@ public abstract class SettingSpec<V> {
 	public static final SettingSpec<Socks5RequestCriteria> SOCKS5_ALLOWED_SOCKS5_REQUEST_CRITERIA = new Socks5RequestCriteriaSettingSpec(
 			"socks5.allowedSocks5RequestCriteria",
 			Socks5RequestCriteria.newInstance(
-					Socks5RequestCriterion.newInstance(null, null, null, null)));
+					new Socks5RequestCriterion.Builder().build()));
 	
 	@HelpText(
 			doc = "The space separated list of acceptable authentication "

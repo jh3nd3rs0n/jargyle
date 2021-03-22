@@ -16,6 +16,56 @@ import jargyle.util.Criterion;
 @XmlJavaTypeAdapter(Socks5RequestCriterion.Socks5RequestCriterionXmlAdapter.class)
 public final class Socks5RequestCriterion {
 
+	public static final class Builder {
+		
+		private Criterion clientAddressCriterion;
+		private Criterion commandCriterion;
+		private String comment;
+		private Criterion desiredDestinationAddressCriterion;
+		private PortRanges desiredDestinationPortRanges;
+		
+		public Builder() {
+			this.clientAddressCriterion = null;
+			this.commandCriterion = null;
+			this.comment = null;
+			this.desiredDestinationAddressCriterion = null;
+			this.desiredDestinationPortRanges = null;
+		}
+		
+		public Socks5RequestCriterion build() {
+			return new Socks5RequestCriterion(this);
+		}
+		
+		public Builder clientAddressCriterion(
+				final Criterion clientAddrCriterion) {
+			this.clientAddressCriterion = clientAddrCriterion;
+			return this;
+		}
+		
+		public Builder commandCriterion(final Criterion cmdCriterion) {
+			this.commandCriterion = cmdCriterion;
+			return this;
+		}
+		
+		private Builder comment(final String cmmnt) {
+			this.comment = cmmnt;
+			return this;
+		}
+		
+		public Builder desiredDestinationAddressCriterion(
+				final Criterion desiredDestinationAddrCriterion) {
+			this.desiredDestinationAddressCriterion = 
+					desiredDestinationAddrCriterion;
+			return this;
+		}
+		
+		public Builder desiredDestinationPortRanges(
+				final PortRanges desiredDestinationPrtRanges) {
+			this.desiredDestinationPortRanges = desiredDestinationPrtRanges;
+			return this;
+		}
+	}
+	
 	@XmlAccessorType(XmlAccessType.NONE)
 	@XmlType(name = "socks5RequestCriterion", propOrder = { })
 	static class Socks5RequestCriterionXml {
@@ -53,26 +103,17 @@ public final class Socks5RequestCriterion {
 		@Override
 		public Socks5RequestCriterion unmarshal(
 				final Socks5RequestCriterionXml arg) throws Exception {
-			return new Socks5RequestCriterion(
-					arg.clientAddressCriterion,
-					arg.commandCriterion,
-					arg.desiredDestinationAddressCriterion, 
-					arg.desiredDestinationPortRanges, 
-					arg.comment);
+			return new Socks5RequestCriterion.Builder()
+					.clientAddressCriterion(arg.clientAddressCriterion)
+					.commandCriterion(arg.commandCriterion)
+					.comment(arg.comment)
+					.desiredDestinationAddressCriterion(
+							arg.desiredDestinationAddressCriterion)
+					.desiredDestinationPortRanges(
+							arg.desiredDestinationPortRanges)
+					.build();
 		}
 		
-	}
-	
-	public static Socks5RequestCriterion newInstance(
-			final Criterion clientAddrCriterion, 
-			final Criterion cmdCriterion,
-			final Criterion desiredDestinationAddrCriterion, 
-			final PortRanges desiredDestinationPrtRange) {
-		return new Socks5RequestCriterion(
-				clientAddrCriterion,
-				cmdCriterion, 
-				desiredDestinationAddrCriterion, 
-				desiredDestinationPrtRange);
 	}
 	
 	private final Criterion clientAddressCriterion;
@@ -81,30 +122,20 @@ public final class Socks5RequestCriterion {
 	private final Criterion desiredDestinationAddressCriterion;
 	private final PortRanges desiredDestinationPortRanges;
 	
-	private Socks5RequestCriterion(
-			final Criterion clientAddrCriterion, 
-			final Criterion cmdCriterion,
-			final Criterion desiredDestinationAddrCriterion, 
-			final PortRanges desiredDestinationPrtRange) {
-		this(
-				clientAddrCriterion,
-				cmdCriterion, 
-				desiredDestinationAddrCriterion, 
-				desiredDestinationPrtRange, 
-				null);
-	}
-
-	private Socks5RequestCriterion(
-			final Criterion clientAddrCriterion,
-			final Criterion cmdCriterion,
-			final Criterion desiredDestinationAddrCriterion,
-			final PortRanges desiredDestinationPrtRange,
-			final String cmmnt) {
+	private Socks5RequestCriterion(final Builder builder) {
+		Criterion clientAddrCriterion = builder.clientAddressCriterion;
+		Criterion cmdCriterion = builder.commandCriterion;
+		String cmmnt = builder.comment;
+		Criterion desiredDestinationAddrCriterion = 
+				builder.desiredDestinationAddressCriterion;
+		PortRanges desiredDestinationPrtRange = 
+				builder.desiredDestinationPortRanges;
 		this.clientAddressCriterion = clientAddrCriterion;
 		this.commandCriterion = cmdCriterion;
 		this.comment = cmmnt;		
-		this.desiredDestinationAddressCriterion = desiredDestinationAddrCriterion;
-		this.desiredDestinationPortRanges = desiredDestinationPrtRange;
+		this.desiredDestinationAddressCriterion = 
+				desiredDestinationAddrCriterion;
+		this.desiredDestinationPortRanges = desiredDestinationPrtRange;		
 	}
 	
 	@Override

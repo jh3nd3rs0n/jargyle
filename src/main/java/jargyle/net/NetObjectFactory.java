@@ -9,8 +9,18 @@ import java.net.SocketAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
+import jargyle.net.socks.client.SocksClient;
+
 public abstract class NetObjectFactory {
 
+	public static NetObjectFactory newInstance() {
+		SocksClient client = SocksClient.newInstance();
+		if (client != null) {
+			return client.newNetObjectFactory();
+		}
+		return new DefaultNetObjectFactory();
+	}
+	
 	public abstract DatagramSocket newDatagramSocket() throws SocketException;
 	
 	public abstract DatagramSocket newDatagramSocket(

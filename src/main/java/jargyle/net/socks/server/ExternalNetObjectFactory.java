@@ -14,7 +14,6 @@ import java.util.List;
 
 import org.ietf.jgss.Oid;
 
-import jargyle.net.DefaultNetObjectFactory;
 import jargyle.net.Host;
 import jargyle.net.HostResolver;
 import jargyle.net.NetObjectFactory;
@@ -93,7 +92,7 @@ final class ExternalNetObjectFactory extends NetObjectFactory {
 		if (client != null) {
 			return client.newNetObjectFactory();
 		}
-		return new DefaultNetObjectFactory();
+		return NetObjectFactory.newInstance();
 	}
 
 	@Override

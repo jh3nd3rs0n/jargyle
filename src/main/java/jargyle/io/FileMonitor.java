@@ -73,7 +73,7 @@ public final class FileMonitor implements Runnable {
 	
 	private static abstract class FileStatus {
 		
-		public static FileStatus get(
+		public static FileStatus getInstanceFrom(
 				final File file, final FileStatus lastFileStatus) {
 			if (CreatedFileStatus.isCreated(file, lastFileStatus)) {
 				return new CreatedFileStatus(System.currentTimeMillis());
@@ -144,7 +144,7 @@ public final class FileMonitor implements Runnable {
 	public FileMonitor(final File f, final FileStatusListener listener) {
 		this.file = f;
 		this.fileStatusListener = listener;
-		this.lastFileStatus = FileStatus.get(f, null);
+		this.lastFileStatus = FileStatus.getInstanceFrom(f, null);
 	}
 	
 	/*
@@ -236,7 +236,7 @@ public final class FileMonitor implements Runnable {
 			} catch (InterruptedException e) {
 				Thread.currentThread().interrupt();
 			}
-			FileStatus fileStatus = FileStatus.get(
+			FileStatus fileStatus = FileStatus.getInstanceFrom(
 					this.file, this.lastFileStatus);
 			if (this.lastFileStatus.equals(fileStatus)) {
 				continue;

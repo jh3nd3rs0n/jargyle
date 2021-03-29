@@ -10,9 +10,9 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 
 import jargyle.net.HostResolver;
-import jargyle.net.NetObjectFactory;
+import jargyle.net.socks.client.SocksNetObjectFactory;
 
-public final class Socks5NetObjectFactory extends NetObjectFactory {
+public final class Socks5NetObjectFactory extends SocksNetObjectFactory {
 	
 	private final Socks5Client socks5Client;
 

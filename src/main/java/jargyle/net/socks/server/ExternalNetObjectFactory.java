@@ -90,7 +90,7 @@ final class ExternalNetObjectFactory extends NetObjectFactory {
 	private NetObjectFactory newNetObjectFactory() {
 		SocksClient client = this.newSocksClient();
 		if (client != null) {
-			return client.newNetObjectFactory();
+			return client.newSocksNetObjectFactory();
 		}
 		return NetObjectFactory.newInstance();
 	}

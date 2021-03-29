@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import jargyle.net.NetObjectFactory;
 import jargyle.net.ssl.SslSocketFactory;
 
 public abstract class SocksClient {
@@ -107,7 +106,7 @@ public abstract class SocksClient {
 		return this.socksServerUri;
 	}
 	
-	public abstract NetObjectFactory newNetObjectFactory();
+	public abstract SocksNetObjectFactory newSocksNetObjectFactory();
 	
 	@Override
 	public String toString() {

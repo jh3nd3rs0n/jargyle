@@ -138,7 +138,7 @@ public final class SocketHelper {
 			echoServer.start();
 			NetObjectFactory netObjectFactory = new DefaultNetObjectFactory();
 			if (socksClient != null) {
-				netObjectFactory = socksClient.newNetObjectFactory();
+				netObjectFactory = socksClient.newSocksNetObjectFactory();
 			}
 			echoSocket = netObjectFactory.newSocket();
 			echoSocket.connect(new InetSocketAddress(

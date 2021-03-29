@@ -9,10 +9,10 @@ import java.net.Socket;
 import java.util.Set;
 import java.util.TreeSet;
 
-import jargyle.net.NetObjectFactory;
 import jargyle.net.socks.client.Properties;
 import jargyle.net.socks.client.PropertySpec;
 import jargyle.net.socks.client.SocksClient;
+import jargyle.net.socks.client.SocksNetObjectFactory;
 import jargyle.net.socks.transport.v5.AuthMethod;
 import jargyle.net.socks.transport.v5.AuthMethods;
 import jargyle.net.socks.transport.v5.ClientMethodSelectionMessage;
@@ -78,7 +78,7 @@ public final class Socks5Client extends SocksClient {
 	}
 
 	@Override
-	public NetObjectFactory newNetObjectFactory() {
+	public SocksNetObjectFactory newSocksNetObjectFactory() {
 		return new Socks5NetObjectFactory(this);
 	}
 	

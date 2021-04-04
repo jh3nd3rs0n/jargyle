@@ -10,17 +10,8 @@ jdk:
   - openjdk11
   - openjdk10
   - openjdk9
-  - openjdk8
   - oraclejdk11
   # oraclejdk10 is deprecated
   - oraclejdk9
-  - oraclejdk8
-
-jobs:
-  exclude:
-  - os: osx
-    jdk: openjdk8 # expected openjdk9 and up
-  - os: osx
-    jdk: oraclejdk8 # expected oraclejdk9 and up
 
 script: mvn verify -B

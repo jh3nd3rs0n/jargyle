@@ -59,11 +59,11 @@ Although Jargyle can act as a standalone SOCKS5 server, it can act as a bridge b
 For automated testing, building, and running Jargyle under the source distribution:
 
 -   Apache Maven&#8482; 3.3.9 or higher 
--   Java&#8482; SDK 1.8 or higher
+-   Java&#8482; SDK 1.9 or higher
 
 For running Jargyle under the binary distribution:
 
--   Java&#8482; Runtime Environment 1.8 or higher
+-   Java&#8482; Runtime Environment 1.9 or higher
 
 After installation of the requirements, be sure to have the environment variable `JAVA_HOME` set to the location of the installed Java&#8482; SDK or the installed Java&#8482; Runtime Environment.
 

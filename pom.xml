@@ -80,8 +80,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.1</version>
 				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
+					<source>1.9</source>
+					<target>1.9</target>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -140,7 +140,7 @@
 				<version>2.9</version>
 				<configuration>
 					<excludePackageNames>argmatey</excludePackageNames>
-					<source>8</source>
+					<source>9</source>
 				</configuration>
 			</plugin>
 			<plugin>

@@ -174,8 +174,8 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 				throw new SocketException("socket is not bound");
 			}
 			SocketAddress socketAddress = p.getSocketAddress();
-			if (socketAddress != null 
-					&& this.connected 
+			if (this.connected 
+					&& this.remoteSocketAddress != null 
 					&& !this.remoteSocketAddress.equals(socketAddress)) {
 				throw new IllegalArgumentException(
 						"packet address and connected socket address must be the same");

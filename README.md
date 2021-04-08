@@ -15,7 +15,7 @@ Jargyle is a Java SOCKS5 server. It has the following features:
 Although Jargyle can act as a standalone SOCKS5 server, it can act as a bridge between the following:
 
 -   Operating systems and applications that access SOCKS5 servers using plaintext connections and no SOCKS5 authentication
--   SOCKS5 servers requiring SSL/TLS connections and/or SOCKS5 authentication
+-   SOCKS5 servers requiring SSL/TLS/DTLS connections and/or SOCKS5 authentication
 
 ## Contents
 

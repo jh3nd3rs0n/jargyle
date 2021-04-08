@@ -40,6 +40,13 @@ public final class ConfigurationHelper {
 	
 	public static Configuration newConfigurationUsingSsl() {
 		return ImmutableConfiguration.newInstance(Settings.newInstance(
+				SettingSpec.DTLS_ENABLED.newSetting(Boolean.TRUE),
+				SettingSpec.DTLS_KEY_STORE_FILE.newSetting(
+						ResourceHelper.getResourceAsFile(
+								ResourceNameConstants.JARGYLE_SECURITY_SERVER_KEY_STORE_FILE)),
+				SettingSpec.DTLS_KEY_STORE_PASSWORD.newSettingOfParsableValue(
+						ResourceHelper.getResourceAsString(
+								ResourceNameConstants.JARGYLE_SECURITY_SERVER_KEY_STORE_PASSWORD_FILE)),				
 				SettingSpec.SSL_ENABLED.newSetting(Boolean.TRUE),
 				SettingSpec.SSL_KEY_STORE_FILE.newSetting(
 						ResourceHelper.getResourceAsFile(
@@ -51,6 +58,20 @@ public final class ConfigurationHelper {
 	
 	public static Configuration newConfigurationUsingSslAndRequestedClientAuth() {
 		return ImmutableConfiguration.newInstance(Settings.newInstance(
+				SettingSpec.DTLS_ENABLED.newSetting(Boolean.TRUE),
+				SettingSpec.DTLS_KEY_STORE_FILE.newSetting(
+						ResourceHelper.getResourceAsFile(
+								ResourceNameConstants.JARGYLE_SECURITY_SERVER_KEY_STORE_FILE)),
+				SettingSpec.DTLS_KEY_STORE_PASSWORD.newSettingOfParsableValue(
+						ResourceHelper.getResourceAsString(
+								ResourceNameConstants.JARGYLE_SECURITY_SERVER_KEY_STORE_PASSWORD_FILE)),
+				SettingSpec.DTLS_TRUST_STORE_FILE.newSetting(
+						ResourceHelper.getResourceAsFile(
+								ResourceNameConstants.JARGYLE_SECURITY_CLIENT_KEY_STORE_FILE)),
+				SettingSpec.DTLS_TRUST_STORE_PASSWORD.newSettingOfParsableValue(
+						ResourceHelper.getResourceAsString(
+								ResourceNameConstants.JARGYLE_SECURITY_CLIENT_KEY_STORE_PASSWORD_FILE)),
+				SettingSpec.DTLS_WANT_CLIENT_AUTH.newSetting(Boolean.TRUE),				
 				SettingSpec.SSL_ENABLED.newSetting(Boolean.TRUE),
 				SettingSpec.SSL_KEY_STORE_FILE.newSetting(
 						ResourceHelper.getResourceAsFile(
@@ -69,6 +90,20 @@ public final class ConfigurationHelper {
 	
 	public static Configuration newConfigurationUsingSslAndRequiredClientAuth() {
 		return ImmutableConfiguration.newInstance(Settings.newInstance(
+				SettingSpec.DTLS_ENABLED.newSetting(Boolean.TRUE),
+				SettingSpec.DTLS_KEY_STORE_FILE.newSetting(
+						ResourceHelper.getResourceAsFile(
+								ResourceNameConstants.JARGYLE_SECURITY_SERVER_KEY_STORE_FILE)),
+				SettingSpec.DTLS_KEY_STORE_PASSWORD.newSettingOfParsableValue(
+						ResourceHelper.getResourceAsString(
+								ResourceNameConstants.JARGYLE_SECURITY_SERVER_KEY_STORE_PASSWORD_FILE)),
+				SettingSpec.DTLS_NEED_CLIENT_AUTH.newSetting(Boolean.TRUE),
+				SettingSpec.DTLS_TRUST_STORE_FILE.newSetting(
+						ResourceHelper.getResourceAsFile(
+								ResourceNameConstants.JARGYLE_SECURITY_CLIENT_KEY_STORE_FILE)),
+				SettingSpec.DTLS_TRUST_STORE_PASSWORD.newSettingOfParsableValue(
+						ResourceHelper.getResourceAsString(
+								ResourceNameConstants.JARGYLE_SECURITY_CLIENT_KEY_STORE_PASSWORD_FILE)),				
 				SettingSpec.SSL_ENABLED.newSetting(Boolean.TRUE),
 				SettingSpec.SSL_KEY_STORE_FILE.newSetting(
 						ResourceHelper.getResourceAsFile(

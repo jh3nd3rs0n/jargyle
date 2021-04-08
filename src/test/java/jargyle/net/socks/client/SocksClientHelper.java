@@ -53,6 +53,13 @@ public final class SocksClientHelper {
 			final String host, 
 			final Integer port) {
 		Properties properties = Properties.newInstance(
+				PropertySpec.DTLS_ENABLED.newProperty(Boolean.TRUE),
+				PropertySpec.DTLS_TRUST_STORE_FILE.newProperty(
+						ResourceHelper.getResourceAsFile(
+								ResourceNameConstants.JARGYLE_SECURITY_SERVER_KEY_STORE_FILE)),
+				PropertySpec.DTLS_TRUST_STORE_PASSWORD.newPropertyOfParsableValue(
+						ResourceHelper.getResourceAsString(
+								ResourceNameConstants.JARGYLE_SECURITY_SERVER_KEY_STORE_PASSWORD_FILE)),				
 				PropertySpec.SSL_ENABLED.newProperty(Boolean.TRUE),
 				PropertySpec.SSL_TRUST_STORE_FILE.newProperty(
 						ResourceHelper.getResourceAsFile(
@@ -67,6 +74,19 @@ public final class SocksClientHelper {
 			final String host, 
 			final Integer port) {
 		Properties properties = Properties.newInstance(
+				PropertySpec.DTLS_ENABLED.newProperty(Boolean.TRUE),
+				PropertySpec.DTLS_KEY_STORE_FILE.newProperty(
+						ResourceHelper.getResourceAsFile(
+								ResourceNameConstants.JARGYLE_SECURITY_CLIENT_KEY_STORE_FILE)),
+				PropertySpec.DTLS_KEY_STORE_PASSWORD.newPropertyOfParsableValue(
+						ResourceHelper.getResourceAsString(
+								ResourceNameConstants.JARGYLE_SECURITY_CLIENT_KEY_STORE_PASSWORD_FILE)),
+				PropertySpec.DTLS_TRUST_STORE_FILE.newProperty(
+						ResourceHelper.getResourceAsFile(
+								ResourceNameConstants.JARGYLE_SECURITY_SERVER_KEY_STORE_FILE)),
+				PropertySpec.DTLS_TRUST_STORE_PASSWORD.newPropertyOfParsableValue(
+						ResourceHelper.getResourceAsString(
+								ResourceNameConstants.JARGYLE_SECURITY_SERVER_KEY_STORE_PASSWORD_FILE)),
 				PropertySpec.SSL_ENABLED.newProperty(Boolean.TRUE),
 				PropertySpec.SSL_KEY_STORE_FILE.newProperty(
 						ResourceHelper.getResourceAsFile(

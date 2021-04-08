@@ -232,9 +232,95 @@ final class ExternalNetObjectFactory extends NetObjectFactory {
 		List<Property<? extends Object>> properties = 
 				new ArrayList<Property<? extends Object>>();
 		properties.addAll(this.newSocksClientProperties());
+		properties.addAll(this.newSocksClientDtlsProperties());
 		properties.addAll(this.newSocksClientSslProperties());
 		properties.addAll(this.newSocks5ClientProperties());
 		return socksServerUri.newSocksClient(Properties.newInstance(properties));
+	}
+	
+	private List<Property<Object>> newSocksClientDtlsProperties() {
+		Settings settings = this.configuration.getSettings();
+		List<Property<Object>> properties = new ArrayList<Property<Object>>();
+		if (settings.containsNondefaultValue(
+				SettingSpec.CHAINING_DTLS_ENABLED)) {
+			Boolean dtlsEnabled = settings.getLastValue(
+					SettingSpec.CHAINING_DTLS_ENABLED);
+			properties.add(cast(PropertySpec.DTLS_ENABLED.newProperty(
+					dtlsEnabled)));
+		}
+		if (settings.containsNondefaultValue(
+				SettingSpec.CHAINING_DTLS_ENABLED_CIPHER_SUITES)) {
+			Strings dtlsEnabledCipherSuites = settings.getLastValue(
+					SettingSpec.CHAINING_DTLS_ENABLED_CIPHER_SUITES);
+			properties.add(cast(
+					PropertySpec.DTLS_ENABLED_CIPHER_SUITES.newProperty(
+							dtlsEnabledCipherSuites)));
+		}
+		if (settings.containsNondefaultValue(
+				SettingSpec.CHAINING_DTLS_ENABLED_PROTOCOLS)) {
+			Strings dtlsEnabledProtocols = settings.getLastValue(
+					SettingSpec.CHAINING_DTLS_ENABLED_PROTOCOLS);
+			properties.add(cast(PropertySpec.DTLS_ENABLED_PROTOCOLS.newProperty(
+					dtlsEnabledProtocols)));			
+		}
+		if (settings.containsNondefaultValue(
+				SettingSpec.CHAINING_DTLS_KEY_STORE_FILE)) {
+			File dtlsKeyStoreFile = settings.getLastValue(
+					SettingSpec.CHAINING_DTLS_KEY_STORE_FILE);
+			properties.add(cast(PropertySpec.DTLS_KEY_STORE_FILE.newProperty(
+					dtlsKeyStoreFile)));
+		}
+		if (settings.containsNondefaultValue(
+				SettingSpec.CHAINING_DTLS_KEY_STORE_PASSWORD)) {
+			EncryptedPassword dtlsKeyStorePassword = settings.getLastValue(
+					SettingSpec.CHAINING_DTLS_KEY_STORE_PASSWORD);
+			properties.add(cast(PropertySpec.DTLS_KEY_STORE_PASSWORD.newProperty(
+					dtlsKeyStorePassword)));
+		}
+		if (settings.containsNondefaultValue(
+				SettingSpec.CHAINING_DTLS_KEY_STORE_TYPE)) {
+			String dtlsKeyStoreType = settings.getLastValue(
+					SettingSpec.CHAINING_DTLS_KEY_STORE_TYPE);
+			properties.add(cast(PropertySpec.DTLS_KEY_STORE_TYPE.newProperty(
+					dtlsKeyStoreType)));
+		}
+		if (settings.containsNondefaultValue(
+				SettingSpec.CHAINING_DTLS_MAX_PACKET_SIZE)) {
+			PositiveInteger dtlsMaxPacketSize = settings.getLastValue(
+					SettingSpec.CHAINING_DTLS_MAX_PACKET_SIZE);
+			properties.add(cast(PropertySpec.DTLS_MAX_PACKET_SIZE.newProperty(
+					dtlsMaxPacketSize)));
+		}
+		if (settings.containsNondefaultValue(
+				SettingSpec.CHAINING_DTLS_PROTOCOL)) {
+			String dtlsProtocol = settings.getLastValue(
+					SettingSpec.CHAINING_DTLS_PROTOCOL);
+			properties.add(cast(PropertySpec.DTLS_PROTOCOL.newProperty(
+					dtlsProtocol)));
+		}
+		if (settings.containsNondefaultValue(
+				SettingSpec.CHAINING_DTLS_TRUST_STORE_FILE)) {
+			File dtlsTrustStoreFile = settings.getLastValue(
+					SettingSpec.CHAINING_DTLS_TRUST_STORE_FILE);
+			properties.add(cast(PropertySpec.DTLS_TRUST_STORE_FILE.newProperty(
+					dtlsTrustStoreFile)));
+		}
+		if (settings.containsNondefaultValue(
+				SettingSpec.CHAINING_DTLS_TRUST_STORE_PASSWORD)) {
+			EncryptedPassword dtlsTrustStorePassword = settings.getLastValue(
+					SettingSpec.CHAINING_DTLS_TRUST_STORE_PASSWORD);
+			properties.add(cast(
+					PropertySpec.DTLS_TRUST_STORE_PASSWORD.newProperty(
+							dtlsTrustStorePassword)));
+		}
+		if (settings.containsNondefaultValue(
+				SettingSpec.CHAINING_DTLS_TRUST_STORE_TYPE)) {
+			String dtlsTrustStoreType = settings.getLastValue(
+					SettingSpec.CHAINING_DTLS_TRUST_STORE_TYPE);
+			properties.add(cast(PropertySpec.DTLS_TRUST_STORE_TYPE.newProperty(
+					dtlsTrustStoreType)));
+		}
+		return properties;		
 	}
 	
 	private List<Property<Object>> newSocksClientProperties() {

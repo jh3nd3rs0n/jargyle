@@ -42,18 +42,22 @@ public final class SocksServerCLI extends CLI {
 	
 	private static final int CONFIG_FILE_OPTION_GROUP_ORDINAL = 0;
 	private static final int CONFIG_FILE_XSD_OPTION_GROUP_ORDINAL = 1;
-	private static final int ENTER_CHAINING_SOCKS5_USER_PASS_OPTION_GROUP_ORDINAL = 2;
-	private static final int ENTER_CHAINING_SSL_KEY_STORE_PASS_OPTION_GROUP_ORDINAL = 3;
-	private static final int ENTER_CHAINING_SSL_TRUST_STORE_PASS_OPTION_GROUP_ORDINAL = 4;
-	private static final int ENTER_SSL_KEY_STORE_PASS_OPTION_GROUP_ORDINAL = 5;
-	private static final int ENTER_SSL_TRUST_STORE_PASS_OPTION_GROUP_ORDINAL = 6;
-	private static final int HELP_OPTION_GROUP_ORDINAL = 7;
-	private static final int MONITORED_CONFIG_FILE_OPTION_GROUP_ORDINAL = 8;
-	private static final int NEW_CONFIG_FILE_OPTION_GROUP_ORDINAL = 9;
-	private static final int SETTING_OPTION_GROUP_ORDINAL = 10;
-	private static final int SETTINGS_HELP_OPTION_GROUP_ORDINAL = 11;
-	private static final int SOCKS5_USERS_OPTION_GROUP_ORDINAL = 12;
-	private static final int VERSION_OPTION_GROUP_ORDINAL = 13;
+	private static final int ENTER_CHAINING_DTLS_KEY_STORE_PASS_OPTION_GROUP_ORDINAL = 2;
+	private static final int ENTER_CHAINING_DTLS_TRUST_STORE_PASS_OPTION_GROUP_ORDINAL = 3;	
+	private static final int ENTER_CHAINING_SOCKS5_USER_PASS_OPTION_GROUP_ORDINAL = 4;
+	private static final int ENTER_CHAINING_SSL_KEY_STORE_PASS_OPTION_GROUP_ORDINAL = 5;
+	private static final int ENTER_CHAINING_SSL_TRUST_STORE_PASS_OPTION_GROUP_ORDINAL = 6;
+	private static final int ENTER_DTLS_KEY_STORE_PASS_OPTION_GROUP_ORDINAL = 7;
+	private static final int ENTER_DTLS_TRUST_STORE_PASS_OPTION_GROUP_ORDINAL = 8;	
+	private static final int ENTER_SSL_KEY_STORE_PASS_OPTION_GROUP_ORDINAL = 9;
+	private static final int ENTER_SSL_TRUST_STORE_PASS_OPTION_GROUP_ORDINAL = 10;
+	private static final int HELP_OPTION_GROUP_ORDINAL = 11;
+	private static final int MONITORED_CONFIG_FILE_OPTION_GROUP_ORDINAL = 12;
+	private static final int NEW_CONFIG_FILE_OPTION_GROUP_ORDINAL = 13;
+	private static final int SETTING_OPTION_GROUP_ORDINAL = 14;
+	private static final int SETTINGS_HELP_OPTION_GROUP_ORDINAL = 15;
+	private static final int SOCKS5_USERS_OPTION_GROUP_ORDINAL = 16;
+	private static final int VERSION_OPTION_GROUP_ORDINAL = 17;
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(
 			SocksServerCLI.class);
@@ -267,6 +271,48 @@ public final class SocksServerCLI extends CLI {
 	}
 		
 	@Option(
+			doc = "Enter through an interactive prompt the password for the "
+					+ "key store for the DTLS connections to the other "
+					+ "SOCKS server",
+			name = "enter-chaining-dtls-key-store-pass",
+			type = OptionType.GNU_LONG
+	)	
+	@Ordinal(ENTER_CHAINING_DTLS_KEY_STORE_PASS_OPTION_GROUP_ORDINAL)
+	private void enterChainingDtlsKeyStorePassword() {
+		String prompt = "Please enter the password for the key store for the "
+				+ "DTLS connections to the other SOCKS server: ";
+		EncryptedPasswordRequestor encryptedPasswordRequestor =
+				new DefaultEncryptedPasswordRequestor();
+		EncryptedPassword encryptedPassword = 
+				encryptedPasswordRequestor.requestEncryptedPassword(prompt);
+		Setting<EncryptedPassword> setting = 
+				SettingSpec.CHAINING_DTLS_KEY_STORE_PASSWORD.newSetting(
+						encryptedPassword);
+		this.modifiableConfiguration.addSetting(setting);
+	}
+	
+	@Option(
+			doc = "Enter through an interactive prompt the password for the "
+					+ "trust store for the DTLS connections to the other "
+					+ "SOCKS server",
+			name = "enter-chaining-dtls-trust-store-pass",
+			type = OptionType.GNU_LONG
+	)	
+	@Ordinal(ENTER_CHAINING_DTLS_TRUST_STORE_PASS_OPTION_GROUP_ORDINAL)
+	private void enterChainingDtlsTrustStorePassword() {
+		String prompt = "Please enter the password for the trust store for the "
+				+ "DTLS connections to the other SOCKS server: ";
+		EncryptedPasswordRequestor encryptedPasswordRequestor =
+				new DefaultEncryptedPasswordRequestor();
+		EncryptedPassword encryptedPassword = 
+				encryptedPasswordRequestor.requestEncryptedPassword(prompt);
+		Setting<EncryptedPassword> setting = 
+				SettingSpec.CHAINING_DTLS_TRUST_STORE_PASSWORD.newSetting(
+						encryptedPassword);
+		this.modifiableConfiguration.addSetting(setting);
+	}
+	
+	@Option(
 			doc = "Enter through an interactive prompt the username "
 					+ "password to be used to access the other SOCKS5 server",
 			name = "enter-chaining-socks5-user-pass",
@@ -326,6 +372,48 @@ public final class SocksServerCLI extends CLI {
 				SettingSpec.CHAINING_SSL_TRUST_STORE_PASSWORD.newSetting(
 						encryptedPassword);
 		this.modifiableConfiguration.addSetting(setting);
+	}
+	
+	@Option(
+			doc = "Enter through an interactive prompt the password for the "
+					+ "key store for the DTLS connections to the SOCKS "
+					+ "server",
+			name = "enter-dtls-key-store-pass",
+			type = OptionType.GNU_LONG
+	)	
+	@Ordinal(ENTER_DTLS_KEY_STORE_PASS_OPTION_GROUP_ORDINAL)
+	private void enterDtlsKeyStorePassword() {
+		String prompt = "Please enter the password for the key store for the "
+				+ "DTLS connections to the SOCKS server: ";
+		EncryptedPasswordRequestor encryptedPasswordRequestor =
+				new DefaultEncryptedPasswordRequestor();
+		EncryptedPassword encryptedPassword = 
+				encryptedPasswordRequestor.requestEncryptedPassword(prompt);
+		Setting<EncryptedPassword> setting = 
+				SettingSpec.DTLS_KEY_STORE_PASSWORD.newSetting(
+						encryptedPassword);
+		this.modifiableConfiguration.addSetting(setting);		
+	}
+		
+	@Option(
+			doc = "Enter through an interactive prompt the password for the "
+					+ "trust store for the DTLS connections to the SOCKS "
+					+ "server",
+			name = "enter-dtls-trust-store-pass",
+			type = OptionType.GNU_LONG
+	)	
+	@Ordinal(ENTER_DTLS_TRUST_STORE_PASS_OPTION_GROUP_ORDINAL)
+	private void enterDtlsTrustStorePassword() {
+		String prompt = "Please enter the password for the trust store for the "
+				+ "DTLS connections to the SOCKS server: ";
+		EncryptedPasswordRequestor encryptedPasswordRequestor =
+				new DefaultEncryptedPasswordRequestor();
+		EncryptedPassword encryptedPassword = 
+				encryptedPasswordRequestor.requestEncryptedPassword(prompt);
+		Setting<EncryptedPassword> setting = 
+				SettingSpec.DTLS_TRUST_STORE_PASSWORD.newSetting(
+						encryptedPassword);
+		this.modifiableConfiguration.addSetting(setting);		
 	}
 	
 	@Option(

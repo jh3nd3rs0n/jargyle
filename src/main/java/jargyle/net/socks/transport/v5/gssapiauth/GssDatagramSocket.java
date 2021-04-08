@@ -100,12 +100,12 @@ public final class GssDatagramSocket extends FilterDatagramSocket {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append(this.getClass().getSimpleName())
-			.append(" [gssContext=")
+			.append(" [getLocalSocketAddress()=")
+			.append(this.getLocalSocketAddress())
+			.append(", gssContext=")
 			.append(this.gssContext)
 			.append(", messageProp=")
 			.append(this.messageProp)
-			.append(", datagramSocket=")
-			.append(this.datagramSocket)
 			.append("]");
 		return builder.toString();
 	}

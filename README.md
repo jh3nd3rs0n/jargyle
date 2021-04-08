@@ -4,13 +4,13 @@
 
 Jargyle is a Java SOCKS5 server. It has the following features:
 
--   100% implementation of the SOCKS5 protocol specification which includes [username password authentication](#4-9-2-using-username-password-authentication) and [GSS-API authentication](#4-9-3-using-gss-api-authentication)
--   [SSL/TLS](#4-7-enabling-ssl-tls)
--   [SOCKS server chaining](#4-10-chaining-to-another-socks-server)
--   [SSL/TLS for SOCKS server chaining](#4-10-1-enabling-ssl-tls)
--   [Host name resolution through SOCKS5 server chaining](#4-10-2-enabling-host-name-resolution-through-socks5-server-chaining)
--   [Allow or block client addresses and external addresses](#4-11-allowing-or-blocking-addresses)
--   [Allow or block SOCKS5 requests](#4-12-allowing-or-blocking-socks5-requests)
+-   100% implementation of the SOCKS5 protocol specification which includes [username password authentication](#4-10-2-using-username-password-authentication) and [GSS-API authentication](#4-10-3-using-gss-api-authentication)
+-   [SSL/TLS](#4-7-enabling-ssl-tls)/[DTLS](#4-8-enabling-dtls)
+-   [SOCKS server chaining](#4-11-chaining-to-another-socks-server)
+-   [SSL/TLS](#4-11-1-enabling-ssl-tls)/[DTLS](#4-11-2-enabling-dtls) for SOCKS server chaining
+-   [Host name resolution through SOCKS5 server chaining](#4-11-3-enabling-host-name-resolution-through-socks5-server-chaining)
+-   [Allow or block client addresses and external addresses](#4-12-allowing-or-blocking-addresses)
+-   [Allow or block SOCKS5 requests](#4-13-allowing-or-blocking-socks5-requests)
 
 Although Jargyle can act as a standalone SOCKS5 server, it can act as a bridge between the following:
 
@@ -30,24 +30,26 @@ Although Jargyle can act as a standalone SOCKS5 server, it can act as a bridge b
 -   [4. 5. Running with a Configuration File](#4-5-running-with-a-configuration-file)
 -   [4. 6. Running with a Monitored Configuration File](#4-6-running-with-a-monitored-configuration-file)
 -   [4. 7. Enabling SSL/TLS](#4-7-enabling-ssl-tls)
--   [4. 8. Managing SOCKS5 Users (for Username Password Authentication)](#4-8-managing-socks5-users-for-username-password-authentication)
--   [4. 8. 1. Creating a Users File](#4-8-1-creating-a-users-file)
--   [4. 8. 2. Adding Users to an Existing Users File](#4-8-2-adding-users-to-an-existing-users-file)
--   [4. 8. 3. Removing a User from an Existing Users File](#4-8-3-removing-a-user-from-an-existing-users-file)
--   [4. 9. Using SOCKS5 Authentication](#4-9-using-socks5-authentication)
--   [4. 9. 1. Using No Authentication](#4-9-1-using-no-authentication)
--   [4. 9. 2. Using Username Password Authentication](#4-9-2-using-username-password-authentication)
--   [4. 9. 3. Using GSS-API Authentication](#4-9-3-using-gss-api-authentication)
--   [4. 10. Chaining to Another SOCKS Server](#4-10-chaining-to-another-socks-server)
--   [4. 10. 1. Enabling SSL/TLS](#4-10-1-enabling-ssl-tls)
--   [4. 10. 2. Enabling Host Name Resolution through SOCKS5 Server Chaining](#4-10-2-enabling-host-name-resolution-through-socks5-server-chaining)
--   [4. 10. 3. Using SOCKS5 Authentication](#4-10-3-using-socks5-authentication)
--   [4. 10. 3. 1. Using No Authentication](#4-10-3-1-using-no-authentication)
--   [4. 10. 3. 2. Using Username Password Authentication](#4-10-3-2-using-username-password-authentication)
--   [4. 10. 3. 3. Using GSS-API Authentication](#4-10-3-3-using-gss-api-authentication)
--   [4. 11. Allowing or Blocking Addresses](#4-11-allowing-or-blocking-addresses)
--   [4. 12. Allowing or Blocking SOCKS5 Requests](#4-12-allowing-or-blocking-socks5-requests)
--   [4. 13. Logging](#4-13-logging)
+-   [4. 8. Enabling DTLS](#4-8-enabling-dtls)
+-   [4. 9. Managing SOCKS5 Users (for Username Password Authentication)](#4-9-managing-socks5-users-for-username-password-authentication)
+-   [4. 9. 1. Creating a Users File](#4-9-1-creating-a-users-file)
+-   [4. 9. 2. Adding Users to an Existing Users File](#4-9-2-adding-users-to-an-existing-users-file)
+-   [4. 9. 3. Removing a User from an Existing Users File](#4-9-3-removing-a-user-from-an-existing-users-file)
+-   [4. 10. Using SOCKS5 Authentication](#4-10-using-socks5-authentication)
+-   [4. 10. 1. Using No Authentication](#4-10-1-using-no-authentication)
+-   [4. 10. 2. Using Username Password Authentication](#4-10-2-using-username-password-authentication)
+-   [4. 10. 3. Using GSS-API Authentication](#4-10-3-using-gss-api-authentication)
+-   [4. 11. Chaining to Another SOCKS Server](#4-11-chaining-to-another-socks-server)
+-   [4. 11. 1. Enabling SSL/TLS](#4-11-1-enabling-ssl-tls)
+-   [4. 11. 2. Enabling DTLS](#4-11-2-enabling-dtls)
+-   [4. 11. 3. Enabling Host Name Resolution through SOCKS5 Server Chaining](#4-11-3-enabling-host-name-resolution-through-socks5-server-chaining)
+-   [4. 11. 4. Using SOCKS5 Authentication](#4-11-4-using-socks5-authentication)
+-   [4. 11. 4. 1. Using No Authentication](#4-11-4-1-using-no-authentication)
+-   [4. 11. 4. 2. Using Username Password Authentication](#4-11-4-2-using-username-password-authentication)
+-   [4. 11. 4. 3. Using GSS-API Authentication](#4-11-4-3-using-gss-api-authentication)
+-   [4. 12. Allowing or Blocking Addresses](#4-12-allowing-or-blocking-addresses)
+-   [4. 13. Allowing or Blocking SOCKS5 Requests](#4-13-allowing-or-blocking-socks5-requests)
+-   [4. 14. Logging](#4-14-logging)
 -   [5. Miscellaneous Notes](#5-miscellaneous-notes)
 -   [5. 1. The Comment Attribute](#5-1-the-comment-attribute)
 -   [5. 2. Multiple Settings of the Same Name](#5-2-multiple-settings-of-the-same-name)
@@ -129,12 +131,20 @@ The following is the command line help for Jargyle (displayed when using the com
           The configuration file
       --config-file-xsd, -x
           Print the configuration file XSD and exit
+      --enter-chaining-dtls-key-store-pass
+          Enter through an interactive prompt the password for the key store for the DTLS connections to the other SOCKS server
+      --enter-chaining-dtls-trust-store-pass
+          Enter through an interactive prompt the password for the trust store for the DTLS connections to the other SOCKS server
       --enter-chaining-socks5-user-pass
           Enter through an interactive prompt the username password to be used to access the other SOCKS5 server
       --enter-chaining-ssl-key-store-pass
           Enter through an interactive prompt the password for the key store for the SSL/TLS connections to the other SOCKS server
       --enter-chaining-ssl-trust-store-pass
           Enter through an interactive prompt the password for the trust store for the SSL/TLS connections to the other SOCKS server
+      --enter-dtls-key-store-pass
+          Enter through an interactive prompt the password for the key store for the DTLS connections to the SOCKS server
+      --enter-dtls-trust-store-pass
+          Enter through an interactive prompt the password for the trust store for the DTLS connections to the SOCKS server
       --enter-ssl-key-store-pass
           Enter through an interactive prompt the password for the key store for the SSL/TLS connections to the SOCKS server
       --enter-ssl-trust-store-pass
@@ -176,6 +186,39 @@ The following is a list of available settings for the SOCKS server (displayed wh
     
       chaining.connectTimeout=INTEGER_BETWEEN_1_AND_2147483647
           The timeout in milliseconds on waiting for the internal socket to connect to the other SOCKS server (used for the SOCKS5 commands RESOLVE, BIND and UDP ASSOCIATE) (default is 60000)
+    
+      chaining.dtls.enabled=true|false
+          The boolean value to indicate if DTLS connections to the other SOCKS server are enabled (default is false)
+    
+      chaining.dtls.enabledCipherSuites=[DTLS_CIPHER_SUITE1[ DTLS_CIPHER_SUITE2[...]]]
+          The space separated list of acceptable cipher suites enabled for DTLS connections to the other SOCKS server
+    
+      chaining.dtls.enabledProtocols=[DTLS_PROTOCOL1[ DTLS_PROTOCOL2[...]]]
+          The space separated list of acceptable protocol versions enabled for DTLS connections to the other SOCKS server
+    
+      chaining.dtls.keyStoreFile=FILE
+          The key store file for the DTLS connections to the other SOCKS server
+    
+      chaining.dtls.keyStorePassword=PASSWORD
+          The password for the key store for the DTLS connections to the other SOCKS server
+    
+      chaining.dtls.keyStoreType=TYPE
+          The type of key store file for the DTLS connections to the other SOCKS server (default is PKCS12)
+    
+      chaining.dtls.maxPacketSize=INTEGER_BETWEEN_1_AND_2147483647
+          The maximum packet size for the DTLS connections to the other SOCKS server (default is 32768)
+    
+      chaining.dtls.protocol=PROTOCOL
+          The protocol version for the DTLS connections to the other SOCKS server (default is DTLS)
+    
+      chaining.dtls.trustStoreFile=FILE
+          The trust store file for the DTLS connections to the other SOCKS server
+    
+      chaining.dtls.trustStorePassword=PASSWORD
+          The password for the trust store for the DTLS connections to the other SOCKS server
+    
+      chaining.dtls.trustStoreType=TYPE
+          The type of trust store file for the DTLS connections to the other SOCKS server (default is PKCS12)
     
       chaining.socketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
           The space separated list of socket settings for the internal socket that is used to connect to the other SOCKS server (used for the SOCKS5 commands RESOLVE and UDP ASSOCIATE)
@@ -236,6 +279,45 @@ The following is a list of available settings for the SOCKS server (displayed wh
     
       clientSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
           The space separated list of socket settings for the client socket
+    
+      dtls.enabled=true|false
+          The boolean value to indicate if DTLS connections to the SOCKS server are enabled (default is false)
+    
+      dtls.enabledCipherSuites=[DTLS_CIPHER_SUITE1[ DTLS_CIPHER_SUITE2[...]]]
+          The space separated list of acceptable cipher suites enabled for DTLS connections to the SOCKS server
+    
+      dtls.enabledProtocols=[DTLS_PROTOCOL1[ DTLS_PROTOCOL2[...]]]
+          The space separated list of acceptable protocol versions enabled for DTLS connections to the SOCKS server
+    
+      dtls.keyStoreFile=FILE
+          The key store file for the DTLS connections to the SOCKS server
+    
+      dtls.keyStorePassword=PASSWORD
+          The password for the key store for the DTLS connections to the SOCKS server
+    
+      dtls.keyStoreType=TYPE
+          The type of key store file for the DTLS connections to the SOCKS server (default is PKCS12)
+    
+      dtls.maxPacketSize=INTEGER_BETWEEN_1_AND_2147483647
+          The maximum packet size for the DTLS connections to the SOCKS server (default is 32768)
+    
+      dtls.needClientAuth=true|false
+          The boolean value to indicate that client authentication is required for DTLS connections to the SOCKS server (default is false)
+    
+      dtls.protocol=PROTOCOL
+          The protocol version for the DTLS connections to the SOCKS server (default is DTLS)
+    
+      dtls.trustStoreFile=FILE
+          The trust store file for the DTLS connections to the SOCKS server
+    
+      dtls.trustStorePassword=PASSWORD
+          The password for the trust store for the DTLS connections to the SOCKS server
+    
+      dtls.trustStoreType=TYPE
+          The type of trust store file for the DTLS connections to the SOCKS server (default is PKCS12)
+    
+      dtls.wantClientAuth=true|false
+          The boolean value to indicate that client authentication is requested for DTLS connections to the SOCKS server (default is false)
     
       host=HOST
           The host name or address for the SOCKS server (default is 0.0.0.0)
@@ -730,11 +812,63 @@ If you do not want to have the password appear in any script or in any part of t
     
 ```
 
-### 4. 8. Managing SOCKS5 Users (for Username Password Authentication)
+### 4. 8. Enabling DTLS
 
-You can manage SOCKS5 users stored in an XML file called a users file. A users file can be used for [username password authentication](#4-9-2-using-username-password-authentication).
+You can have clients connect to Jargyle through DTLS. By default DTLS is disabled. To enable DTLS, you will need to have the setting `dtls.enabled` set to `true`. In addition, you will need to have the setting `dtls.keyStoreFile` to specify Jargyle's key store file (this file would need to be created by Java's keytool utility). Also, you will need to have the setting `dtls.keyStorePassword` to specify the password for Jargyle's key store file.
 
-#### 4. 8. 1. Creating a Users File
+```text
+    
+    ./bin/jargyle \
+        --setting=dtls.enabled=true \
+        --setting=dtls.keyStoreFile=server.jks \
+        --setting=dtls.keyStorePassword=password
+    
+```
+
+If you do not want to have the password appear in any script or in any part of the command line history for security reasons, you can use the command line option `--enter-dtls-key-store-pass` instead. It will provide an interactive prompt for you to enter the password.
+
+```text
+    
+    ./bin/jargyle \
+        --setting=dtls.enabled=true \
+        --setting=dtls.keyStoreFile=server.jks \
+        --enter-dtls-key-store-pass
+    
+```
+
+If you want to have the client authenticate using DTLS, you will need to have the setting `dtls.needClientAuth` set to `true`. In addition, you will need to have the setting `dtls.trustStoreFile` to specify the client's key store file to be used as a trust store (this file would need to be created by Java's keytool utility). Also, you will need to have the setting `dtls.trustStorePassword` to specify the password for the client's trust store file.
+
+```text
+    
+    ./bin/jargyle \
+        --setting=dtls.enabled=true \
+        --setting=dtls.keyStoreFile=server.jks \
+        --setting=dtls.keyStorePassword=password \
+        --setting=dtls.needClientAuth=true \
+        --setting=dtls.trustStoreFile=client.jks \
+        --setting=dtls.trustStorePassword=drowssap
+    
+```
+
+If you do not want to have the password appear in any script or in any part of the command line history for security reasons, you can use the command line option `--enter-dtls-trust-store-pass` instead. It will provide an interactive prompt for you to enter the password.
+
+```text
+    
+    ./bin/jargyle \
+        --setting=dtls.enabled=true \
+        --setting=dtls.keyStoreFile=server.jks \
+        --enter-dtls-key-store-pass \
+        --setting=dtls.needClientAuth=true \
+        --setting=dtls.trustStoreFile=client.jks \
+        --enter-dtls-trust-store-pass
+    
+```
+
+### 4. 9. Managing SOCKS5 Users (for Username Password Authentication)
+
+You can manage SOCKS5 users stored in an XML file called a users file. A users file can be used for [username password authentication](#4-10-2-using-username-password-authentication).
+
+#### 4. 9. 1. Creating a Users File
 
 To create a users file, you would run the following command:
 
@@ -831,7 +965,7 @@ If you want to enter a user, the prompt will ask you for the user's name, passwo
     
 ```
 
-#### 4. 8. 2. Adding Users to an Existing Users File
+#### 4. 9. 2. Adding Users to an Existing Users File
 
 To add users to an existing users file, you would run the following command:
 
@@ -896,7 +1030,7 @@ Once you have run the command, an interactive prompt will ask you for the new us
     
 ```
 
-#### 4. 8. 3. Removing a User from an Existing Users File
+#### 4. 9. 3. Removing a User from an Existing Users File
 
 To remove a user from an existing users file, you would run the following command:
 
@@ -949,7 +1083,7 @@ Once you have run the command, the user of the specified name will be removed fr
     
 ```
 
-### 4. 9. Using SOCKS5 Authentication
+### 4. 10. Using SOCKS5 Authentication
 
 Jargyle has the following SOCKS5 authentication methods to choose from:
 
@@ -980,7 +1114,7 @@ Partial configuration file example:
 
 If not set, the default value for the setting `socks5.authMethods` is set to `NO_AUTHENTICATION_REQUIRED`
 
-#### 4. 9. 1. Using No Authentication
+#### 4. 10. 1. Using No Authentication
 
 Because the default value for the setting `socks5.authMethods` is set to `NO_AUTHENTICATION_REQUIRED`, it is not required for `NO_AUTHENTICATION_REQUIRED` to be included in the setting `socks5.authMethods`.
 
@@ -1005,7 +1139,7 @@ Partial configuration file example:
     
 ```
 
-#### 4. 9. 2. Using Username Password Authentication
+#### 4. 10. 2. Using Username Password Authentication
 
 To use username password authentication, you will need to have the setting `socks5.authMethods` to have `USERNAME_PASSWORD` included.
 
@@ -1074,7 +1208,7 @@ If any of the usernames or any of the passwords contain a plus sign character (`
 
 If any of the usernames or any of the passwords contain a percent sign character (`%`) not used for URL encoding, then each percent sign character not used for URL encoding must be replaced with the URL encoding character `%25`.
 
-`jargyle.net.socks.server.v5.XmlFileSourceUsernamePasswordAuthenticator`: This class authenticates the username and password based on the [XML file of users](#4-8-managing-socks5-users-for-username-password-authentication) whose file name is provided as a string value
+`jargyle.net.socks.server.v5.XmlFileSourceUsernamePasswordAuthenticator`: This class authenticates the username and password based on the [XML file of users](#4-9-managing-socks5-users-for-username-password-authentication) whose file name is provided as a string value
 
 Partial command line example:
 
@@ -1105,7 +1239,7 @@ Partial configuration file example:
     
 ```
 
-#### 4. 9. 3. Using GSS-API Authentication
+#### 4. 10. 3. Using GSS-API Authentication
 
 To use GSS-API authentication, you will need to have the setting `socks5.authMethods` to have `GSSAPI` included.
 
@@ -1182,7 +1316,7 @@ The Java system property `-Djava.security.krb5.conf=krb5.conf` provides the Kerb
 
 In `krb5.conf`, a KDC is defined as running at the address `127.0.0.1` on port `12345` with its realm as `EXAMPLE.COM`. (In a production environment, the address `127.0.0.1` should be replaced by the actual address or name of the machine of where the KDC resides. Also, in a production environment, the realm `EXAMPLE.COM` should be replaced by an actual realm provided by a Kerberos administrator.)  
 
-### 4. 10. Chaining to Another SOCKS Server
+### 4. 11. Chaining to Another SOCKS Server
 
 You can have Jargyle chained to another SOCKS server, meaning that it can route through another SOCKS server. To have Jargyle chained to another SOCKS server, you will need to specify the other SOCKS server as a URI in the setting `chaining.socksServerUri`
 
@@ -1207,7 +1341,7 @@ Partial configuration file example:
 
 Please note that the scheme in the URI specifies the SOCKS protocol to be used when accessing the other SOCKS server (`socks5`), the address or name of the machine of where the other SOCKS server resides (`127.0.0.1`), and the port number of the other SOCKS server (`23456`). In the aforementioned examples, the SOCKS protocol version 5 is used. At this time, the only supported scheme for the URI format is `socks5`
 
-#### 4. 10. 1. Enabling SSL/TLS
+#### 4. 11. 1. Enabling SSL/TLS
 
 You can have Jargyle chained to the other SOCKS server through SSL/TLS under the following condition: 
 
@@ -1269,7 +1403,69 @@ Partial command line example:
     
 ```
 
-#### 4. 10. 2. Enabling Host Name Resolution through SOCKS5 Server Chaining
+#### 4. 11. 2. Enabling DTLS
+
+You can have Jargyle chained to the other SOCKS server through DTLS under the following condition: 
+
+-   The other SOCKS server supports accepting connections through DTLS.
+
+By default DTLS is disabled. To enable DTLS, you will need to have the setting `chaining.dtls.enabled` set to `true`. In addition, you will need to have the setting `chaining.dtls.trustStoreFile` to specify the server's key store file used as a trust store (this file would need to be created by Java's keytool utility). Also, you will need to have the setting `chaining.dtls.trustStorePassword` to specify the password for the server's trust store file.
+
+Partial command line example:
+
+```text
+    
+    --setting=chaining.socksServerUri=socks5://127.0.0.1:23456 \
+    --setting=chaining.dtls.enabled=true \
+    --setting=chaining.dtls.trustStoreFile=server.jks \
+    --setting=chaining.dtls.trustStorePassword=password
+    
+```
+
+If you do not want to have the password appear in any script or in any part of the command line history for security reasons, you can use the command line option `--enter-chaining-dtls-trust-store-pass` instead. It will provide an interactive prompt for you to enter the password.
+
+Partial command line example:
+
+```text
+    
+    --setting=chaining.socksServerUri=socks5://127.0.0.1:23456 \
+    --setting=chaining.dtls.enabled=true \
+    --setting=chaining.dtls.trustStoreFile=server.jks \
+    --enter-chaining-dtls-trust-store-pass
+    
+```
+
+If the other SOCKS server wants the client (Jargyle) to authenticate using DTLS, you will need to have the setting `chaining.dtls.keyStoreFile` to specify the client's key store file (this file would need to be created by Java's keytool utility). Also, you will need to have the setting `chaining.dtls.keyStorePassword` to specify the password for the client's key store file.
+
+Partial command line example:
+
+```text
+    
+    --setting=chaining.socksServerUri=socks5://127.0.0.1:23456 \
+    --setting=chaining.dtls.enabled=true \
+    --setting=chaining.dtls.keyStoreFile=client.jks \
+    --setting=chaining.dtls.keyStorePassword=drowssap \
+    --setting=chaining.dtls.trustStoreFile=server.jks \
+    --setting=chaining.dtls.trustStorePassword=password    
+    
+```
+
+If you do not want to have the password appear in any script or in any part of the command line history for security reasons, you can use the command line option `--enter-chaining-dtls-key-store-pass` instead. It will provide an interactive prompt for you to enter the password.
+
+Partial command line example:
+
+```text
+    
+    --setting=chaining.socksServerUri=socks5://127.0.0.1:23456 \
+    --setting=chaining.dtls.enabled=true \
+    --setting=chaining.dtls.keyStoreFile=client.jks \
+    --enter-chaining-dtls-key-store-pass \
+    --setting=chaining.dtls.trustStoreFile=server.jks \
+    --enter-chaining-dtls-trust-store-pass
+    
+```
+
+#### 4. 11. 3. Enabling Host Name Resolution through SOCKS5 Server Chaining
 
 You can have Jargyle perform host name resolution through SOCKS5 server chaining under the following conditions:
 
@@ -1302,7 +1498,7 @@ Partial configuration file example:
     
 ```
 
-#### 4. 10. 3. Using SOCKS5 Authentication
+#### 4. 11. 4. Using SOCKS5 Authentication
 
 Jargyle has the following SOCKS5 authentication methods to choose from for accessing the other SOCKS5 server:
 
@@ -1333,7 +1529,7 @@ Partial configuration file example:
 
 If not set, the default value for the setting `chaining.socks5.authMethods` is set to `NO_AUTHENTICATION_REQUIRED`
 
-##### 4. 10. 3. 1. Using No Authentication
+##### 4. 11. 4. 1. Using No Authentication
 
 Because the default value for the setting `chaining.socks5.authMethods` is set to `NO_AUTHENTICATION_REQUIRED`, it is not required for `NO_AUTHENTICATION_REQUIRED` to be included in the setting `chaining.socks5.authMethods`.
 
@@ -1358,7 +1554,7 @@ Partial configuration file example:
     
 ```
 
-##### 4. 10. 3. 2. Using Username Password Authentication
+##### 4. 11. 4. 2. Using Username Password Authentication
 
 To use username password authentication, you will need to have the setting `chaining.socks5.authMethods` to have `USERNAME_PASSWORD` included.
 
@@ -1416,7 +1612,7 @@ Partial command line example:
     
 ```
 
-##### 4. 10. 3. 3. Using GSS-API Authentication
+##### 4. 11. 4. 3. Using GSS-API Authentication
 
 To use GSS-API authentication, you will need to have the setting `chaining.socks5.authMethods` to have `GSSAPI` included.
 
@@ -1498,7 +1694,7 @@ In `krb5.conf`, a KDC is defined as running at the address `127.0.0.1` on port `
 
 The command line option `--setting=chaining.socks5.gssapiServiceName=rcmd/127.0.0.1` is the GSS-API service name (or the Kerberos service principal) for the other SOCKS5 server residing at the address `127.0.0.1`. (In a production environment, the address `127.0.0.1` should be replaced by the name of the machine of where the other SOCKS5 server resides.)
 
-### 4. 11. Allowing or Blocking Addresses
+### 4. 12. Allowing or Blocking Addresses
 
 You can allow or block the following addresses:
 
@@ -1555,7 +1751,7 @@ Partial configuration file example:
     
 ```
 
-### 4. 12. Allowing or Blocking SOCKS5 Requests
+### 4. 13. Allowing or Blocking SOCKS5 Requests
 
 You can allow or block SOCKS5 requests. To allow or block SOCKS5 requests, you will need to specify the SOCKS5 request or requests in any of the following settings in the configuration file:
 
@@ -1610,7 +1806,7 @@ Partial configuration file example:
     
 ```
 
-### 4. 13. Logging
+### 4. 14. Logging
 
 Jargyle uses Simple Logging Facade for Java (SLF4J) for logging and uses java.util.logging as its underlying framework. 
 
@@ -1638,6 +1834,7 @@ The following are the classes that use logging:
 -   `jargyle.net.socks.server.v5.UdpRelayServer$IncomingPacketsWorker`
 -   `jargyle.net.socks.server.v5.UdpRelayServer$OutgoingPacketsWorker`
 -   `jargyle.net.socks.server.v5.XmlFileSourceUsersService$UsersUpdater`
+-   `jargyle.net.ssl.DtlsDatagramSocket`
 
 To configure logging for any of the aforementioned classes, you can use a configuration file to specify the logging properties for any of the classes.
 

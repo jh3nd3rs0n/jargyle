@@ -47,6 +47,50 @@ public abstract class PropertySpec<V> {
 			"socksClient.connectTimeout",
 			PositiveInteger.newInstance(60000)); // 1 minute
 	
+	public static final PropertySpec<Boolean> DTLS_ENABLED = new BooleanPropertySpec(
+			"socksClient.dtls.enabled",
+			Boolean.FALSE);
+	
+	public static final PropertySpec<Strings> DTLS_ENABLED_CIPHER_SUITES = new StringsPropertySpec(
+			"socksClient.dtls.enabledCipherSuites", 
+			Strings.newInstance(new String[] { }));
+	
+	public static final PropertySpec<Strings> DTLS_ENABLED_PROTOCOLS = new StringsPropertySpec(
+			"socksClient.dtls.enabledProtocols", 
+			Strings.newInstance(new String[] { }));
+	
+	public static final PropertySpec<File> DTLS_KEY_STORE_FILE = new FilePropertySpec(
+			"socksClient.dtls.keyStoreFile", 
+			null);
+	
+	public static final PropertySpec<EncryptedPassword> DTLS_KEY_STORE_PASSWORD = new EncryptedPasswordPropertySpec(
+			"socksClient.dtls.keyStorePassword", 
+			EncryptedPassword.newInstance(new char[] { }));
+	
+	public static final PropertySpec<String> DTLS_KEY_STORE_TYPE = new StringPropertySpec(
+			"socksClient.dtls.keyStoreType",
+			"PKCS12");
+
+	public static final PropertySpec<PositiveInteger> DTLS_MAX_PACKET_SIZE = new PositiveIntegerPropertySpec(
+			"socksClient.dtls.maxPacketSize",
+			PositiveInteger.newInstance(32768));
+	
+	public static final PropertySpec<String> DTLS_PROTOCOL = new StringPropertySpec(
+			"socksClient.dtls.protocol",
+			"DTLS");
+	
+	public static final PropertySpec<File> DTLS_TRUST_STORE_FILE = new FilePropertySpec(
+			"socksClient.dtls.trustStoreFile", 
+			null);
+	
+	public static final PropertySpec<EncryptedPassword> DTLS_TRUST_STORE_PASSWORD = new EncryptedPasswordPropertySpec(
+			"socksClient.dtls.trustStorePassword",
+			EncryptedPassword.newInstance(new char[] { }));
+	
+	public static final PropertySpec<String> DTLS_TRUST_STORE_TYPE = new StringPropertySpec(
+			"socksClient.dtls.trustStoreType",
+			"PKCS12");
+	
 	public static final PropertySpec<SocketSettings> SOCKET_SETTINGS = new SocketSettingsPropertySpec(
 			"socksClient.socketSettings",
 			SocketSettings.newInstance());

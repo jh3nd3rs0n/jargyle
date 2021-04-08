@@ -26,10 +26,9 @@ public final class Socks5Client extends SocksClient {
 	
 	public Socks5Client(final Socks5ServerUri serverUri, final Properties props) {
 		super(serverUri, props);
-		// TODO: when DTLS support is implemented, use PropertySpec.DTLS_ENABLED
 		this.dtlsDatagramSocketFactory = props.getValue(
-				PropertySpec.SSL_ENABLED).booleanValue() ? 
-						new DtlsDatagramSocketFactoryImpl() : null;
+				PropertySpec.DTLS_ENABLED).booleanValue() ? 
+						new DtlsDatagramSocketFactoryImpl(this) : null;
 	}
 	
 	public DatagramSocket getConnectedDatagramSocket(

@@ -98,14 +98,13 @@ final class Listener implements Runnable {
 	}
 	
 	private DtlsDatagramSocketFactory getClientDtlsDatagramSocketFactory() {
-		// TODO: when DTLS support is implemented, use SettingSpec.DTLS_ENABLED 
 		if (!this.configuration.getSettings().getLastValue(
-				SettingSpec.SSL_ENABLED).booleanValue()) {
+				SettingSpec.DTLS_ENABLED).booleanValue()) {
 			return null;
 		}
 		if (this.clientDtlsDatagramSocketFactory == null) {
 			this.clientDtlsDatagramSocketFactory = 
-					new DtlsDatagramSocketFactoryImpl();
+					new DtlsDatagramSocketFactoryImpl(this.configuration);
 		}
 		return this.clientDtlsDatagramSocketFactory;
 	}

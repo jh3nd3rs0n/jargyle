@@ -8,8 +8,6 @@ import java.security.NoSuchAlgorithmException;
 
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLEngine;
-import javax.net.ssl.SSLParameters;
 import javax.net.ssl.TrustManager;
 
 import jargyle.net.socks.client.Properties;
@@ -76,33 +74,34 @@ final class DtlsDatagramSocketFactoryImpl extends DtlsDatagramSocketFactory {
 	public DatagramSocket newDatagramSocket(
 			final DatagramSocket datagramSocket, 
 			final String peerHost, 
-			final int peerPort, 
-			final boolean useClientMode)
+			final int peerPort)
 			throws IOException {
 		if (this.dtlsContext == null) {
 			this.dtlsContext = this.getDtlsContext();
 		}
-		SSLEngine sslEngine = this.dtlsContext.createSSLEngine(peerHost, peerPort);
-		sslEngine.setUseClientMode(useClientMode);
+		DtlsDatagramSocketFactory factory = 
+				DtlsDatagramSocketFactory.newInstance(this.dtlsContext);
+		DtlsDatagramSocket dtlsDatagramSocket = 
+				(DtlsDatagramSocket) factory.newDatagramSocket(
+						datagramSocket, peerHost, peerPort);
+		dtlsDatagramSocket.setUseClientMode(true);
 		Properties properties = this.socksClient.getProperties();
 		Strings enabledCipherSuites = properties.getValue(
 				PropertySpec.DTLS_ENABLED_CIPHER_SUITES);
 		String[] cipherSuites = enabledCipherSuites.toStringArray();
 		if (cipherSuites.length > 0) {
-			sslEngine.setEnabledCipherSuites(cipherSuites);
+			dtlsDatagramSocket.setEnabledCipherSuites(cipherSuites);
 		}
 		Strings enabledProtocols = properties.getValue(
 				PropertySpec.DTLS_ENABLED_PROTOCOLS);
 		String[] protocols = enabledProtocols.toStringArray();
 		if (protocols.length > 0) {
-			sslEngine.setEnabledProtocols(protocols);
+			dtlsDatagramSocket.setEnabledProtocols(protocols);
 		}
 		PositiveInteger maxPacketSize = properties.getValue(
 				PropertySpec.DTLS_MAX_PACKET_SIZE);
-		SSLParameters sslParameters = sslEngine.getSSLParameters();
-		sslParameters.setMaximumPacketSize(maxPacketSize.intValue());
-		sslEngine.setSSLParameters(sslParameters);
-		return new DtlsDatagramSocket(datagramSocket, sslEngine);
+		dtlsDatagramSocket.setMaximumPacketSize(maxPacketSize.intValue());
+		return dtlsDatagramSocket;
 	}
 
 }

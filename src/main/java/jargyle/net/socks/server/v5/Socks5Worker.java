@@ -903,8 +903,7 @@ public final class Socks5Worker implements Runnable {
 						this.clientDtlsDatagramSocketFactory.newDatagramSocket(
 								clientDatagramSck, 
 								udpClientHost, 
-								udpClientPort, 
-								false);
+								udpClientPort);
 			} catch (IOException e) {
 				LOGGER.warn( 
 						this.format("Error in wrapping the client-facing UDP socket"), 

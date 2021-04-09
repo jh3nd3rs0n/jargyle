@@ -8,8 +8,6 @@ import java.security.NoSuchAlgorithmException;
 
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLEngine;
-import javax.net.ssl.SSLParameters;
 import javax.net.ssl.TrustManager;
 
 import jargyle.net.ssl.DtlsDatagramSocket;
@@ -75,8 +73,7 @@ final class DtlsDatagramSocketFactoryImpl extends DtlsDatagramSocketFactory {
 	public DatagramSocket newDatagramSocket(
 			final DatagramSocket datagramSocket, 
 			final String peerHost, 
-			final int peerPort, 
-			final boolean useClientMode)
+			final int peerPort)
 			throws IOException {
 		if (!ConfigurationsHelper.equals(
 				this.lastConfiguration, this.configuration)) {
@@ -84,35 +81,37 @@ final class DtlsDatagramSocketFactoryImpl extends DtlsDatagramSocketFactory {
 			this.lastConfiguration = ImmutableConfiguration.newInstance(
 					this.configuration);
 		}		
-		SSLEngine sslEngine = this.dtlsContext.createSSLEngine(peerHost, peerPort);
-		sslEngine.setUseClientMode(useClientMode);
+		DtlsDatagramSocketFactory factory = 
+				DtlsDatagramSocketFactory.newInstance(this.dtlsContext);
+		DtlsDatagramSocket dtlsDatagramSocket = 
+				(DtlsDatagramSocket) factory.newDatagramSocket(
+						datagramSocket, peerHost, peerPort);		
+		dtlsDatagramSocket.setUseClientMode(false);
 		Settings settings = this.configuration.getSettings();
 		Strings enabledCipherSuites = settings.getLastValue(
 				SettingSpec.DTLS_ENABLED_CIPHER_SUITES);
 		String[] cipherSuites = enabledCipherSuites.toStringArray();
 		if (cipherSuites.length > 0) {
-			sslEngine.setEnabledCipherSuites(cipherSuites);
+			dtlsDatagramSocket.setEnabledCipherSuites(cipherSuites);
 		}
 		Strings enabledProtocols = settings.getLastValue(
 				SettingSpec.DTLS_ENABLED_PROTOCOLS);
 		String[] protocols = enabledProtocols.toStringArray();
 		if (protocols.length > 0) {
-			sslEngine.setEnabledProtocols(protocols);
+			dtlsDatagramSocket.setEnabledProtocols(protocols);
 		}
 		PositiveInteger maxPacketSize = settings.getLastValue(
 				SettingSpec.DTLS_MAX_PACKET_SIZE);
-		SSLParameters sslParameters = sslEngine.getSSLParameters();
-		sslParameters.setMaximumPacketSize(maxPacketSize.intValue());
-		sslEngine.setSSLParameters(sslParameters);
+		dtlsDatagramSocket.setMaximumPacketSize(maxPacketSize.intValue());
 		if (settings.getLastValue(
 				SettingSpec.DTLS_NEED_CLIENT_AUTH).booleanValue()) {
-			sslEngine.setNeedClientAuth(true);
+			dtlsDatagramSocket.setNeedClientAuth(true);
 		}
 		if (settings.getLastValue(
 				SettingSpec.DTLS_WANT_CLIENT_AUTH).booleanValue()) {
-			sslEngine.setWantClientAuth(true);
+			dtlsDatagramSocket.setWantClientAuth(true);
 		}		
-		return new DtlsDatagramSocket(datagramSocket, sslEngine);
+		return dtlsDatagramSocket;
 	}
 
 }

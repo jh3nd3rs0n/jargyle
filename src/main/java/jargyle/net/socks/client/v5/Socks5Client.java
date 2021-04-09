@@ -41,7 +41,7 @@ public final class Socks5Client extends SocksClient {
 			return datagramSocket;
 		}
 		return this.dtlsDatagramSocketFactory.newDatagramSocket(
-				datagramSocket, udpRelayServerHost, udpRelayServerPort, true);
+				datagramSocket, udpRelayServerHost, udpRelayServerPort);
 	}
 	
 	@Override

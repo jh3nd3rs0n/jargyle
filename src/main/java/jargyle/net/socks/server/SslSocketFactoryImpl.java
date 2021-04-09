@@ -10,7 +10,6 @@ import java.security.NoSuchAlgorithmException;
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocket;
-import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 
 import jargyle.net.ssl.KeyManagerHelper;
@@ -81,8 +80,9 @@ final class SslSocketFactoryImpl extends SslSocketFactory {
 			this.lastConfiguration = ImmutableConfiguration.newInstance(
 					this.configuration);
 		}
-		SSLSocketFactory sslSocketFactory = this.sslContext.getSocketFactory();
-		SSLSocket sslSocket = (SSLSocket) sslSocketFactory.createSocket(
+		SslSocketFactory factory = SslSocketFactory.newInstance(
+				this.sslContext);
+		SSLSocket sslSocket = (SSLSocket) factory.newSocket(
 				socket,	consumed, autoClose);
 		Settings settings = this.configuration.getSettings();
 		Strings enabledCipherSuites = settings.getLastValue(

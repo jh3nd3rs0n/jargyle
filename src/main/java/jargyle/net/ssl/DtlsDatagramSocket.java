@@ -3,7 +3,6 @@ package jargyle.net.ssl;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.net.SocketException;
@@ -24,38 +23,24 @@ import org.slf4j.LoggerFactory;
 import jargyle.net.FilterDatagramSocket;
 
 public final class DtlsDatagramSocket extends FilterDatagramSocket {
-
+	
 	private static final Logger LOGGER = LoggerFactory.getLogger(
 			DtlsDatagramSocket.class);
 
 	private static final int MAX_APP_READ_LOOPS = 60;
 	private static final int MAX_HANDSHAKE_LOOPS = 200;
 	
-	private final int bufferSize;
-	private final boolean clientMode;
 	private boolean handshakeCompleted;
-	private final InetAddress peerAddress;
-	private final int peerPort;
 	private final SocketAddress peerSocketAddress;
 	private final SSLEngine sslEngine;
 
-	public DtlsDatagramSocket(
+	DtlsDatagramSocket(
 			final DatagramSocket datagramSock, 
 			final SSLEngine engine) throws SocketException {
 		super(datagramSock);
-		SSLParameters params = engine.getSSLParameters();
-		int maxPacketSize = params.getMaximumPacketSize();
 		SocketAddress peerSocketAddr = new InetSocketAddress(
 				engine.getPeerHost(), engine.getPeerPort());
-		InetAddress peerAddr = 
-				((InetSocketAddress) peerSocketAddr).getAddress();
-		int peerPrt = ((InetSocketAddress) peerSocketAddr).getPort();
-		boolean useClientMode = engine.getUseClientMode();
-		this.bufferSize = maxPacketSize;
-		this.clientMode = useClientMode;
 		this.handshakeCompleted = false;
-		this.peerAddress = peerAddr;
-		this.peerPort = peerPrt;
 		this.peerSocketAddress = peerSocketAddr;
 		this.sslEngine = engine;
 	}
@@ -64,16 +49,41 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 		return String.format("%s: %s", this, message);
 	}
 
-	public InetAddress getPeerAddress() {
-		return this.peerAddress;
+	public String[] getEnabledCipherSuites() {
+		return this.sslEngine.getEnabledCipherSuites();
+	}
+	
+	public String[] getEnabledProtocols() {
+		return this.sslEngine.getEnabledProtocols();
+	}
+	
+	public int getMaximumPacketSize() {
+		SSLParameters sslParameters = this.sslEngine.getSSLParameters();
+		return sslParameters.getMaximumPacketSize();
+	}
+	
+	public boolean getNeedClientAuth() {
+		return this.sslEngine.getNeedClientAuth();
+	}
+	
+	public String getPeerHost() {
+		return this.sslEngine.getPeerHost();
 	}
 	
 	public int getPeerPort() {
-		return this.peerPort;
+		return this.sslEngine.getPeerPort();
 	}
 	
 	public SocketAddress getPeerSocketAddress() {
 		return this.peerSocketAddress;
+	}
+	
+	public boolean getUseClientMode() {
+		return this.sslEngine.getUseClientMode();
+	}
+	
+	public boolean getWantClientAuth() {
+		return this.sslEngine.getWantClientAuth();
 	}
 	
 	private void handshake() throws IOException {
@@ -98,7 +108,7 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 				ByteBuffer inNetData;
 				ByteBuffer inAppData;
 				if (hs.equals(SSLEngineResult.HandshakeStatus.NEED_UNWRAP)) {
-					byte[] buffer = new byte[this.bufferSize];
+					byte[] buffer = new byte[this.getMaximumPacketSize()];
 					DatagramPacket packet = new DatagramPacket(
 							buffer, buffer.length);
 					try {
@@ -136,10 +146,10 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 						continue;
 					}
 					inNetData = ByteBuffer.wrap(buffer, 0, packet.getLength());
-					inAppData = ByteBuffer.allocate(this.bufferSize);
+					inAppData = ByteBuffer.allocate(this.getMaximumPacketSize());
 				} else {
 					inNetData = ByteBuffer.allocate(0);
-					inAppData = ByteBuffer.allocate(this.bufferSize);
+					inAppData = ByteBuffer.allocate(this.getMaximumPacketSize());
 				}
 				SSLEngineResult r = this.sslEngine.unwrap(inNetData, inAppData);
 				SSLEngineResult.Status rs = r.getStatus();
@@ -237,16 +247,12 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 		}
 		this.handshakeCompleted = true;
 	}
-
-	public boolean isClientMode() {
-		return this.clientMode;
-	}
 	
 	private List<DatagramPacket> produceApplicationPackets(
 			final ByteBuffer outAppData, 
 			final SocketAddress peerSocketAddr) throws IOException {
 		List<DatagramPacket> packets = new ArrayList<DatagramPacket>();
-		ByteBuffer outNetData = ByteBuffer.allocate(this.bufferSize);
+		ByteBuffer outNetData = ByteBuffer.allocate(this.getMaximumPacketSize());
 		SSLEngineResult r = this.sslEngine.wrap(outAppData, outNetData);
 		outNetData.flip();
 		SSLEngineResult.Status rs = r.getStatus();
@@ -273,7 +279,7 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 		}
 		return packets;
 	}
-
+	
 	private boolean produceHandshakePackets(
 			final List<DatagramPacket> packets,
 			final SocketAddress peerSocketAddr) throws IOException {
@@ -285,7 +291,7 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 						"Too many loops to produce handshake packets");
 			}
 			ByteBuffer outAppData = ByteBuffer.allocate(0);
-			ByteBuffer outNetData = ByteBuffer.allocate(this.bufferSize);
+			ByteBuffer outNetData = ByteBuffer.allocate(this.getMaximumPacketSize());
 			SSLEngineResult r = this.sslEngine.wrap(outAppData, outNetData);
 			outNetData.flip();
 			SSLEngineResult.Status rs = r.getStatus();
@@ -371,7 +377,7 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 				throw new IOException(
 						"Too many loops to receive application data");
 			}
-			byte[] buffer = new byte[this.bufferSize];
+			byte[] buffer = new byte[this.getMaximumPacketSize()];
 			DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
 			this.datagramSocket.receive(packet);
 			ByteBuffer inNetData = ByteBuffer.wrap(buffer, 0, packet.getLength());
@@ -388,7 +394,7 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 			}
 		}
 	}
-
+	
 	private boolean reproduceHandshakePackets(
 			final List<DatagramPacket> packets, 
 			final SocketAddress peerSocketAddr) throws IOException {
@@ -400,7 +406,7 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 			return this.produceHandshakePackets(packets, peerSocketAddr);
 		}
 	}
-
+	
 	private void runDelegatedTasks() throws IOException {
 		Runnable runnable;
 		while ((runnable = this.sslEngine.getDelegatedTask()) != null) {
@@ -429,6 +435,32 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 			this.datagramSocket.send(packet);
 		}
 	}
+	
+	public void setEnabledCipherSuites(final String[] suites) {
+		this.sslEngine.setEnabledCipherSuites(suites);
+	}
+
+	public void setEnabledProtocols(final String[] protocols) {
+		this.sslEngine.setEnabledProtocols(protocols);
+	}
+
+	public void setMaximumPacketSize(final int maximumPacketSize) {
+		SSLParameters sslParameters = this.sslEngine.getSSLParameters();
+		sslParameters.setMaximumPacketSize(maximumPacketSize);
+		this.sslEngine.setSSLParameters(sslParameters);
+	}
+	
+	public void setNeedClientAuth(final boolean need) {
+		this.sslEngine.setNeedClientAuth(need);
+	}
+
+	public void setUseClientMode(final boolean mode) {
+		this.sslEngine.setUseClientMode(mode);
+	}
+
+	public void setWantClientAuth(final boolean want) {
+		this.sslEngine.setWantClientAuth(want);
+	}
 
 	@Override
 	public String toString() {
@@ -436,8 +468,8 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 		builder.append(this.getClass().getSimpleName())
 			.append(" [getLocalSocketAddress()=")
 			.append(this.getLocalSocketAddress())
-			.append(", mode=")
-			.append(this.clientMode ? "clientMode" : "serverMode")
+			.append(", getUseClientMode()=")
+			.append(this.getUseClientMode())
 			.append(", peerSocketAddress=")
 			.append(this.peerSocketAddress)			
 			.append("]");

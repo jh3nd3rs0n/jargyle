@@ -87,7 +87,7 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 			}
 			SSLEngineResult.HandshakeStatus hs = this.sslEngine.getHandshakeStatus();
 			LOGGER.debug(this.format(String.format(
-					"=======handshake(%s, %s)=======", 
+					"Handshaking (iteration ID: %s, status: %s)", 
 					loops, 
 					hs)));
 			if (hs.equals(SSLEngineResult.HandshakeStatus.NEED_UNWRAP)
@@ -242,7 +242,6 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 		return this.clientMode;
 	}
 	
-	// produce application packets
 	private List<DatagramPacket> produceApplicationPackets(
 			final ByteBuffer outAppData, 
 			final SocketAddress peerSocketAddr) throws IOException {
@@ -275,7 +274,6 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 		return packets;
 	}
 
-	// produce handshake packets
 	private boolean produceHandshakePackets(
 			final List<DatagramPacket> packets,
 			final SocketAddress peerSocketAddr) throws IOException {
@@ -293,7 +291,8 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 			SSLEngineResult.Status rs = r.getStatus();
 			SSLEngineResult.HandshakeStatus hs = r.getHandshakeStatus();
 			LOGGER.debug(this.format(String.format(
-					"----produce handshake packet(%s, %s, %s)----", 
+					"Producing handshake packet (iteration ID: %s, "
+					+ "result status: %s, handshake status: %s)", 
 					loops, 
 					rs, 
 					hs)));
@@ -390,7 +389,6 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 		}
 	}
 
-	// reproduce handshake packets if timeout
 	private boolean reproduceHandshakePackets(
 			final List<DatagramPacket> packets, 
 			final SocketAddress peerSocketAddr) throws IOException {
@@ -403,7 +401,6 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 		}
 	}
 
-	// run delegated tasks
 	private void runDelegatedTasks() throws IOException {
 		Runnable runnable;
 		while ((runnable = this.sslEngine.getDelegatedTask()) != null) {
@@ -420,7 +417,7 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 		SocketAddress socketAddress = p.getSocketAddress();
 		if (!this.peerSocketAddress.equals(socketAddress)) {
 			throw new IllegalArgumentException(
-					"packet address and peer socket address must be the same");
+					"Packet address and peer socket address must be the same");
 		}
 		if (!this.handshakeCompleted) { this.handshake(); }
 		ByteBuffer outAppData = ByteBuffer.wrap(p.getData());

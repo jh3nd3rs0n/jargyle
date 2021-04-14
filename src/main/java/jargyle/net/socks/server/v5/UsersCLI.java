@@ -21,7 +21,7 @@ import argmatey.ArgMatey.Annotations.Option;
 import argmatey.ArgMatey.Annotations.Ordinal;
 import argmatey.ArgMatey.CLI;
 import argmatey.ArgMatey.OptionType;
-import jargyle.annotation.HelpText;
+import jargyle.help.HelpText;
 import jargyle.net.socks.server.SystemPropertyNameConstants;
 
 public final class UsersCLI extends CLI {

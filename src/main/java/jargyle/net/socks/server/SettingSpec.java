@@ -12,7 +12,7 @@ import java.util.Objects;
 
 import org.ietf.jgss.Oid;
 
-import jargyle.annotation.HelpText;
+import jargyle.help.HelpText;
 import jargyle.net.Host;
 import jargyle.net.Port;
 import jargyle.net.SocketSettings;

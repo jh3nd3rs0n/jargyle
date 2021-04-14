@@ -1,4 +1,4 @@
-package jargyle.annotation;
+package jargyle.help;
 
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;

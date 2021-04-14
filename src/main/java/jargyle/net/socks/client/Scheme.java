@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import jargyle.annotation.HelpText;
+import jargyle.help.HelpText;
 import jargyle.net.socks.client.v5.Socks5ServerUri;
 
 public enum Scheme {

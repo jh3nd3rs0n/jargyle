@@ -25,7 +25,7 @@ import argmatey.ArgMatey.Annotations.Ordinal;
 import argmatey.ArgMatey.CLI;
 import argmatey.ArgMatey.IllegalOptionArgException;
 import argmatey.ArgMatey.OptionType;
-import jargyle.annotation.HelpText;
+import jargyle.help.HelpText;
 import jargyle.net.SocketSettingSpec;
 import jargyle.net.socks.client.Scheme;
 import jargyle.net.socks.client.v5.DefaultUsernamePasswordRequestor;

@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.ietf.jgss.MessageProp;
 
-import jargyle.annotation.HelpText;
+import jargyle.help.HelpText;
 
 public enum GssapiProtectionLevel {
 

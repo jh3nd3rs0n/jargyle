@@ -24,8 +24,16 @@ public final class Socks5Client extends SocksClient {
 
 	private final DtlsDatagramSocketFactory dtlsDatagramSocketFactory;
 	
-	public Socks5Client(final Socks5ServerUri serverUri, final Properties props) {
-		super(serverUri, props);
+	public Socks5Client(
+			final Socks5ServerUri serverUri, final Properties props) {
+		this(serverUri, props, null);
+	}
+	
+	public Socks5Client(
+			final Socks5ServerUri serverUri, 
+			final Properties props,
+			final SocksClient chainedClient) {
+		super(serverUri, props, chainedClient);
 		this.dtlsDatagramSocketFactory = props.getValue(
 				PropertySpec.DTLS_ENABLED).booleanValue() ? 
 						new DtlsDatagramSocketFactoryImpl(this) : null;

@@ -11,11 +11,14 @@ import java.net.SocketAddress;
 import java.net.SocketException;
 import java.nio.channels.ServerSocketChannel;
 
+import jargyle.net.DefaultNetObjectFactory;
 import jargyle.net.FilterSocket;
 import jargyle.net.Host;
+import jargyle.net.NetObjectFactory;
 import jargyle.net.PerformancePreferences;
 import jargyle.net.SocketSettingSpec;
 import jargyle.net.SocketSettings;
+import jargyle.net.socks.client.SocksClient;
 import jargyle.net.socks.transport.v5.Command;
 import jargyle.net.socks.transport.v5.Reply;
 import jargyle.net.socks.transport.v5.Socks5Reply;
@@ -136,7 +139,12 @@ public final class Socks5ServerSocket extends ServerSocket {
 		
 		public Socks5ServerSocketImpl(
 				final Socks5Client client) throws IOException {
-			Socket originalSock = new Socket();
+			NetObjectFactory netObjectFactory = new DefaultNetObjectFactory();
+			SocksClient chainedSocksClient = client.getChainedSocksClient();
+			if (chainedSocksClient != null) {
+				netObjectFactory = chainedSocksClient.newSocksNetObjectFactory();
+			}
+			Socket originalSock = netObjectFactory.newSocket();
 			this.bound = false;
 			this.closed = false;
 			this.localInetAddress = null;
@@ -178,7 +186,15 @@ public final class Socks5ServerSocket extends ServerSocket {
 						socks5Rep.getServerBoundPort(),
 						this.localInetAddress,
 						this.localPort);
-				Socket newOriginalSocket = new Socket();
+				NetObjectFactory netObjectFactory = 
+						new DefaultNetObjectFactory();
+				SocksClient chainedSocksClient = 
+						this.socks5Client.getChainedSocksClient();
+				if (chainedSocksClient != null) {
+					netObjectFactory = 
+							chainedSocksClient.newSocksNetObjectFactory();
+				}
+				Socket newOriginalSocket = netObjectFactory.newSocket();
 				this.socketSettings.applyTo(newOriginalSocket);
 				this.originalSocket = newOriginalSocket;
 				this.socket = newOriginalSocket;

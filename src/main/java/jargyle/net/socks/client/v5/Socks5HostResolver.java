@@ -6,10 +6,13 @@ import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 
+import jargyle.net.DefaultNetObjectFactory;
 import jargyle.net.HostResolver;
+import jargyle.net.NetObjectFactory;
 import jargyle.net.SocketSettings;
 import jargyle.net.socks.client.Properties;
 import jargyle.net.socks.client.PropertySpec;
+import jargyle.net.socks.client.SocksClient;
 import jargyle.net.socks.transport.v5.AddressType;
 import jargyle.net.socks.transport.v5.Command;
 import jargyle.net.socks.transport.v5.Reply;
@@ -44,7 +47,13 @@ public final class Socks5HostResolver extends HostResolver {
 				PropertySpec.SOCKS5_FORWARD_HOSTNAME_RESOLUTION).booleanValue()) {
 			return InetAddress.getByName(host);
 		}
-		Socket socket = new Socket();
+		NetObjectFactory netObjectFactory = new DefaultNetObjectFactory();
+		SocksClient chainedSocksClient = 
+				this.socks5Client.getChainedSocksClient();
+		if (chainedSocksClient != null) {
+			netObjectFactory = chainedSocksClient.newSocksNetObjectFactory();
+		}
+		Socket socket = netObjectFactory.newSocket();
 		SocketSettings socketSettings = properties.getValue(
 				PropertySpec.SOCKET_SETTINGS);
 		socketSettings.applyTo(socket);

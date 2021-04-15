@@ -11,6 +11,9 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.nio.channels.SocketChannel;
 
+import jargyle.net.DefaultNetObjectFactory;
+import jargyle.net.NetObjectFactory;
+import jargyle.net.socks.client.SocksClient;
 import jargyle.net.socks.transport.v5.Command;
 import jargyle.net.socks.transport.v5.Reply;
 import jargyle.net.socks.transport.v5.Socks5Reply;
@@ -107,16 +110,28 @@ public final class Socks5Socket extends Socket {
 	private final Socks5SocketImpl socks5SocketImpl;
 	
 	public Socks5Socket(final Socks5Client client) {
+		NetObjectFactory netObjectFactory = new DefaultNetObjectFactory();
+		SocksClient chainedSocksClient = client.getChainedSocksClient();
+		if (chainedSocksClient != null) {
+			netObjectFactory = chainedSocksClient.newSocksNetObjectFactory();
+		}
 		this.socks5Client = client;
-		this.socks5SocketImpl = new Socks5SocketImpl(client, new Socket(), null); 
+		this.socks5SocketImpl = new Socks5SocketImpl(
+				client, netObjectFactory.newSocket(), null); 
 	}
 	
 	public Socks5Socket(
 			final Socks5Client client, 
 			final InetAddress address, 
 			final int port) throws IOException {
+		NetObjectFactory netObjectFactory = new DefaultNetObjectFactory();
+		SocksClient chainedSocksClient = client.getChainedSocksClient();
+		if (chainedSocksClient != null) {
+			netObjectFactory = chainedSocksClient.newSocksNetObjectFactory();
+		}		
 		this.socks5Client = client;
-		this.socks5SocketImpl = new Socks5SocketImpl(client, new Socket(), null);
+		this.socks5SocketImpl = new Socks5SocketImpl(
+				client, netObjectFactory.newSocket(), null);
 		this.socks5SocketImpl.socks5Connect(address, port, 0);
 	}
 	
@@ -126,8 +141,14 @@ public final class Socks5Socket extends Socket {
 			final int port, 
 			final InetAddress localAddr, 
 			final int localPort) throws IOException {
+		NetObjectFactory netObjectFactory = new DefaultNetObjectFactory();
+		SocksClient chainedSocksClient = client.getChainedSocksClient();
+		if (chainedSocksClient != null) {
+			netObjectFactory = chainedSocksClient.newSocksNetObjectFactory();
+		}		
 		this.socks5Client = client;
-		this.socks5SocketImpl = new Socks5SocketImpl(client, new Socket(), null);
+		this.socks5SocketImpl = new Socks5SocketImpl(
+				client, netObjectFactory.newSocket(), null);
 		this.socks5SocketImpl.socket.bind(
 				new InetSocketAddress(localAddr, localPort));
 		this.socks5SocketImpl.socks5Connect(address, port, 0);
@@ -145,8 +166,14 @@ public final class Socks5Socket extends Socket {
 			final Socks5Client client, 
 			final String host, 
 			final int port) throws UnknownHostException, IOException {
+		NetObjectFactory netObjectFactory = new DefaultNetObjectFactory();
+		SocksClient chainedSocksClient = client.getChainedSocksClient();
+		if (chainedSocksClient != null) {
+			netObjectFactory = chainedSocksClient.newSocksNetObjectFactory();
+		}		
 		this.socks5Client = client;
-		this.socks5SocketImpl = new Socks5SocketImpl(client, new Socket(), null);
+		this.socks5SocketImpl = new Socks5SocketImpl(
+				client, netObjectFactory.newSocket(), null);
 		this.socks5SocketImpl.socks5Connect(InetAddress.getByName(host), port, 0);
 	}
 
@@ -156,8 +183,14 @@ public final class Socks5Socket extends Socket {
 			final int port, 
 			final InetAddress localAddr, 
 			final int localPort) throws IOException {
+		NetObjectFactory netObjectFactory = new DefaultNetObjectFactory();
+		SocksClient chainedSocksClient = client.getChainedSocksClient();
+		if (chainedSocksClient != null) {
+			netObjectFactory = chainedSocksClient.newSocksNetObjectFactory();
+		}		
 		this.socks5Client = client;
-		this.socks5SocketImpl = new Socks5SocketImpl(client, new Socket(), null);		
+		this.socks5SocketImpl = new Socks5SocketImpl(
+				client, netObjectFactory.newSocket(), null);		
 		this.socks5SocketImpl.socket.bind(
 				new InetSocketAddress(localAddr, localPort));
 		this.socks5SocketImpl.socks5Connect(InetAddress.getByName(host), port, 0);

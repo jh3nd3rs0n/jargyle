@@ -130,6 +130,9 @@ public abstract class SocksServerUri {
 	
 	public abstract SocksClient newSocksClient(final Properties properties);
 	
+	public abstract SocksClient newSocksClient(
+			final Properties properties, final SocksClient chainedSocksClient);
+	
 	@Override
 	public final String toString() {
 		return this.uri.toString();

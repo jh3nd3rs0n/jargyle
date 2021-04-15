@@ -31,19 +31,32 @@ public abstract class SocksClient {
 		return socksClient;
 	}
 
+	private final SocksClient chainedSocksClient;
 	private final Properties properties;
 	private final SocksServerUri socksServerUri;
 	private final SslSocketFactory sslSocketFactory;
 		
 	public SocksClient(final SocksServerUri serverUri, final Properties props) {
+		this(serverUri, props, null);
+	}
+	
+	public SocksClient(
+			final SocksServerUri serverUri, 
+			final Properties props,
+			final SocksClient chainedClient) {
 		Objects.requireNonNull(
 				serverUri, "SOCKS server URI must not be null");
 		Objects.requireNonNull(props, "Properties must not be null");
+		this.chainedSocksClient = chainedClient;
 		this.properties = props;
 		this.socksServerUri = serverUri;
 		this.sslSocketFactory = props.getValue(
 				PropertySpec.SSL_ENABLED).booleanValue() ? 
-						new SslSocketFactoryImpl(this) : null;
+						new SslSocketFactoryImpl(this) : null;		
+	}
+	
+	public final SocksClient getChainedSocksClient() {
+		return this.chainedSocksClient;
 	}
 	
 	public Socket getConnectedSocket(

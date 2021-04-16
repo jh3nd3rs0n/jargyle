@@ -38,7 +38,7 @@ public abstract class SocksClient {
 
 	private final SocksClient chainedSocksClient;
 	private final HostResolver internalHostResolver;
-	private final NetObjectFactory netObjectFactory;
+	private final NetObjectFactory internalNetObjectFactory;
 	private final Properties properties;
 	private final SocksServerUri socksServerUri;
 	private final SslSocketFactory sslSocketFactory;
@@ -54,15 +54,15 @@ public abstract class SocksClient {
 		Objects.requireNonNull(
 				serverUri, "SOCKS server URI must not be null");
 		Objects.requireNonNull(props, "Properties must not be null");
-		NetObjectFactory netObjFactory = (chainedClient == null) ?
+		NetObjectFactory internalNetObjFactory = (chainedClient == null) ?
 				new DefaultNetObjectFactory() 
 				: chainedClient.newSocksNetObjectFactory();
 		SslSocketFactory sslSockFactory = props.getValue(
 				PropertySpec.SSL_ENABLED).booleanValue() ? 
 						new SslSocketFactoryImpl(this) : null;
 		this.chainedSocksClient = chainedClient;
-		this.internalHostResolver = netObjFactory.newHostResolver();
-		this.netObjectFactory = netObjFactory;
+		this.internalHostResolver = internalNetObjFactory.newHostResolver();
+		this.internalNetObjectFactory = internalNetObjFactory;
 		this.properties = props;
 		this.socksServerUri = serverUri;
 		this.sslSocketFactory = sslSockFactory;		
@@ -148,7 +148,7 @@ public abstract class SocksClient {
 	}
 	
 	public final Socket newInternalSocket() {
-		return this.netObjectFactory.newSocket();
+		return this.internalNetObjectFactory.newSocket();
 	}
 	
 	public abstract SocksNetObjectFactory newSocksNetObjectFactory();

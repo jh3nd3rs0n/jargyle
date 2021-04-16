@@ -1469,7 +1469,7 @@ Partial command line example:
 
 #### 4. 11. 3. Enabling Host Name Resolution through SOCKS5 Server Chaining
 
-You can have Jargyle perform host name resolution through SOCKS5 server chaining under the following conditions:
+You can have Jargyle perform host name resolution through SOCKS5 server chaining under the following condition:
 
 -   The other SOCKS5 server supports [the SOCKS5 RESOLVE command](#5-3-the-socks5-resolve-command). (At the time of this writing, the SOCKS5 RESOLVE command is an additional SOCKS5 command made for Jargyle. Therefore the other SOCKS5 server would at the very least be another running instance of Jargyle.)
 
@@ -1697,7 +1697,7 @@ The command line option `--setting=chaining.socks5.gssapiServiceName=rcmd/127.0.
 
 ### 4. 12. Chaining to a Specified Chain of Other SOCKS Servers
 
-You can have Jargyle chained to a specified chain of other SOCKS servers, meaning that it can route through the specified chain of the other SOCKS servers. To have Jargyle chained to a specified chain of other SOCKS servers, you will need to specify each SOCKS server as a URI specified in a separate setting of `chaining.socksServerUri`
+You can have Jargyle chained to a specified chain of other SOCKS servers, meaning that it can route through the specified chain of the other SOCKS servers. To have Jargyle chained to a specified chain of other SOCKS servers, you will need to specify each SOCKS server as a URI in a separate setting of `chaining.socksServerUri`
 
 Partial command line example:
 
@@ -1728,7 +1728,7 @@ Partial configuration file example:
     
 ```
 
-To specify the settings for each SOCKS server in the chain, the settings for each SOCKS server will need to placed after each specified SOCKS server.
+To specify the settings regarding each SOCKS server in the chain, the settings regarding each SOCKS server will need to be placed after each specified SOCKS server.
 
 Partial command line example:
 
@@ -1762,7 +1762,7 @@ Partial configuration file example:
     <setting>
         <name>chaining.socks5.gssapiProtectionLevels</name>
         <value>REQUIRED_INTEG_AND_CONF</value>
-    </setting>    
+    </setting>
     <setting>
         <name>chaining.socksServerUri</name>
         <value>socks5://127.0.0.1:54321</value>

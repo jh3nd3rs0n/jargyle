@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Objects;
 
 import jargyle.net.DefaultNetObjectFactory;
+import jargyle.net.HostResolver;
 import jargyle.net.NetObjectFactory;
 import jargyle.net.SocketSettings;
 import jargyle.net.ssl.SslSocketFactory;
@@ -36,6 +37,7 @@ public abstract class SocksClient {
 	}
 
 	private final SocksClient chainedSocksClient;
+	private final HostResolver internalHostResolver;
 	private final NetObjectFactory netObjectFactory;
 	private final Properties properties;
 	private final SocksServerUri socksServerUri;
@@ -52,15 +54,18 @@ public abstract class SocksClient {
 		Objects.requireNonNull(
 				serverUri, "SOCKS server URI must not be null");
 		Objects.requireNonNull(props, "Properties must not be null");
-		this.chainedSocksClient = chainedClient;
-		this.netObjectFactory = (chainedClient == null) ?
+		NetObjectFactory netObjFactory = (chainedClient == null) ?
 				new DefaultNetObjectFactory() 
 				: chainedClient.newSocksNetObjectFactory();
+		SslSocketFactory sslSockFactory = props.getValue(
+				PropertySpec.SSL_ENABLED).booleanValue() ? 
+						new SslSocketFactoryImpl(this) : null;
+		this.chainedSocksClient = chainedClient;
+		this.internalHostResolver = netObjFactory.newHostResolver();
+		this.netObjectFactory = netObjFactory;
 		this.properties = props;
 		this.socksServerUri = serverUri;
-		this.sslSocketFactory = props.getValue(
-				PropertySpec.SSL_ENABLED).booleanValue() ? 
-						new SslSocketFactoryImpl(this) : null;		
+		this.sslSocketFactory = sslSockFactory;		
 	}
 	
 	public final void configureInternalSocket(
@@ -110,19 +115,22 @@ public abstract class SocksClient {
 					this.properties.getValue(
 							PropertySpec.BIND_PORT).intValue()));
 		}
-		SocksServerUri socksServerUri = this.getSocksServerUri();
+		InetAddress socksServerUriHostInetAddress = 
+				this.internalHostResolver.resolve(
+						this.socksServerUri.getHost());
+		int socksServerUriPort = this.socksServerUri.getPort();
 		internalSocket.connect(
 				new InetSocketAddress(
-						InetAddress.getByName(socksServerUri.getHost()), 
-						socksServerUri.getPort()), 
+						socksServerUriHostInetAddress, 
+						socksServerUriPort), 
 				timeout);
 		if (this.sslSocketFactory == null) {
 			return internalSocket;
 		}
 		return this.sslSocketFactory.newSocket(
 				internalSocket, 
-				this.socksServerUri.getHost(), 
-				this.socksServerUri.getPort(), 
+				socksServerUriHostInetAddress.getHostAddress(), 
+				socksServerUriPort, 
 				true);
 	}
 	
@@ -132,6 +140,11 @@ public abstract class SocksClient {
 	
 	public final SocksServerUri getSocksServerUri() {
 		return this.socksServerUri;
+	}
+	
+	public final InetAddress internalResolve(
+			final String host) throws IOException {
+		return this.internalHostResolver.resolve(host);
 	}
 	
 	public final Socket newInternalSocket() {

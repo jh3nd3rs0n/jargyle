@@ -34,9 +34,10 @@ public final class Socks5Client extends SocksClient {
 			final Properties props,
 			final SocksClient chainedClient) {
 		super(serverUri, props, chainedClient);
-		this.dtlsDatagramSocketFactory = props.getValue(
+		DtlsDatagramSocketFactory dtlsDatagramSockFactory = props.getValue(
 				PropertySpec.DTLS_ENABLED).booleanValue() ? 
 						new DtlsDatagramSocketFactoryImpl(this) : null;
+		this.dtlsDatagramSocketFactory = dtlsDatagramSockFactory;
 	}
 	
 	public DatagramSocket getConnectedInternalDatagramSocket(

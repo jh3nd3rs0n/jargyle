@@ -40,7 +40,8 @@ public final class Socks5HostResolver extends HostResolver {
 		}
 		Properties properties = this.socks5Client.getProperties();
 		if (!properties.getValue(
-				PropertySpec.SOCKS5_FORWARD_HOSTNAME_RESOLUTION).booleanValue()) {
+				PropertySpec.SOCKS5_FORWARD_HOSTNAME_RESOLUTION).booleanValue()
+				|| host.equals("localhost")) {
 			return InetAddress.getByName(host);
 		}
 		Socket socket = this.socks5Client.newInternalSocket();

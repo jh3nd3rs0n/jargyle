@@ -152,7 +152,7 @@ public final class Socks5Socket extends Socket {
 		this.socks5SocketImpl = new Socks5SocketImpl(
 				client, client.newInternalSocket(), null);
 		this.socks5SocketImpl.socks5Connect(
-				client.internalResolve(host), port, 0);
+				InetAddress.getByName(host), port, 0);
 	}
 
 	public Socks5Socket(
@@ -167,7 +167,7 @@ public final class Socks5Socket extends Socket {
 		this.socks5SocketImpl.socket.bind(
 				new InetSocketAddress(localAddr, localPort));
 		this.socks5SocketImpl.socks5Connect(
-				client.internalResolve(host), port, 0);
+				InetAddress.getByName(host), port, 0);
 	}
 	
 	@Override

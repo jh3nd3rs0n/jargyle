@@ -142,11 +142,6 @@ public abstract class SocksClient {
 		return this.socksServerUri;
 	}
 	
-	public final InetAddress internalResolve(
-			final String host) throws IOException {
-		return this.internalHostResolver.resolve(host);
-	}
-	
 	public final Socket newInternalSocket() {
 		return this.internalNetObjectFactory.newSocket();
 	}

@@ -11,14 +11,11 @@ import java.net.SocketAddress;
 import java.net.SocketException;
 import java.nio.channels.ServerSocketChannel;
 
-import jargyle.net.DefaultNetObjectFactory;
 import jargyle.net.FilterSocket;
 import jargyle.net.Host;
-import jargyle.net.NetObjectFactory;
 import jargyle.net.PerformancePreferences;
 import jargyle.net.SocketSettingSpec;
 import jargyle.net.SocketSettings;
-import jargyle.net.socks.client.SocksClient;
 import jargyle.net.socks.transport.v5.Command;
 import jargyle.net.socks.transport.v5.Reply;
 import jargyle.net.socks.transport.v5.Socks5Reply;
@@ -139,12 +136,7 @@ public final class Socks5ServerSocket extends ServerSocket {
 		
 		public Socks5ServerSocketImpl(
 				final Socks5Client client) throws IOException {
-			NetObjectFactory netObjectFactory = new DefaultNetObjectFactory();
-			SocksClient chainedSocksClient = client.getChainedSocksClient();
-			if (chainedSocksClient != null) {
-				netObjectFactory = chainedSocksClient.newSocksNetObjectFactory();
-			}
-			Socket originalSock = netObjectFactory.newSocket();
+			Socket originalSock = client.newInternalSocket();
 			this.bound = false;
 			this.closed = false;
 			this.localInetAddress = null;
@@ -186,15 +178,7 @@ public final class Socks5ServerSocket extends ServerSocket {
 						socks5Rep.getServerBoundPort(),
 						this.localInetAddress,
 						this.localPort);
-				NetObjectFactory netObjectFactory = 
-						new DefaultNetObjectFactory();
-				SocksClient chainedSocksClient = 
-						this.socks5Client.getChainedSocksClient();
-				if (chainedSocksClient != null) {
-					netObjectFactory = 
-							chainedSocksClient.newSocksNetObjectFactory();
-				}
-				Socket newOriginalSocket = netObjectFactory.newSocket();
+				Socket newOriginalSocket = this.socks5Client.newInternalSocket();
 				this.socketSettings.applyTo(newOriginalSocket);
 				this.originalSocket = newOriginalSocket;
 				this.socket = newOriginalSocket;
@@ -285,7 +269,7 @@ public final class Socks5ServerSocket extends ServerSocket {
 			if (!this.socket.equals(this.originalSocket)) {
 				this.socket = this.originalSocket;
 			}
-			Socket sock = this.socks5Client.getConnectedSocket(
+			Socket sock = this.socks5Client.getConnectedInternalSocket(
 					this.socket, true);
 			InputStream inStream = sock.getInputStream();
 			OutputStream outStream = sock.getOutputStream();

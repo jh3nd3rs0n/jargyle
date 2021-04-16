@@ -68,16 +68,6 @@ public final class Settings {
 		this.settings = new ArrayList<Setting<Object>>(sttngs);
 	}
 	
-	public boolean containsNondefaultValue(
-			final SettingSpec<? extends Object> settingSpec) {
-		for (Setting<?> setting : this.settings) {
-			if (setting.getSettingSpec().equals(settingSpec)) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {

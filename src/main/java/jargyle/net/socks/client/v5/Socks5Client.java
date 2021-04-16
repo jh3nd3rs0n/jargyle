@@ -39,26 +39,26 @@ public final class Socks5Client extends SocksClient {
 						new DtlsDatagramSocketFactoryImpl(this) : null;
 	}
 	
-	public DatagramSocket getConnectedDatagramSocket(
-			final DatagramSocket datagramSocket,
+	public DatagramSocket getConnectedInternalDatagramSocket(
+			final DatagramSocket internalDatagramSocket,
 			final String udpRelayServerHost,
 			final int udpRelayServerPort) throws IOException {
-		datagramSocket.connect(
+		internalDatagramSocket.connect(
 				InetAddress.getByName(udpRelayServerHost), udpRelayServerPort);
 		if (this.dtlsDatagramSocketFactory == null) {
-			return datagramSocket;
+			return internalDatagramSocket;
 		}
 		return this.dtlsDatagramSocketFactory.newDatagramSocket(
-				datagramSocket, udpRelayServerHost, udpRelayServerPort);
+				internalDatagramSocket, udpRelayServerHost, udpRelayServerPort);
 	}
 	
 	@Override
-	public Socket getConnectedSocket(
-			final Socket socket, 
+	public Socket getConnectedInternalSocket(
+			final Socket internalSocket, 
 			final int timeout, 
 			final boolean bindBeforeConnect) throws IOException {
-		Socket sock = super.getConnectedSocket(
-				socket, timeout, bindBeforeConnect);
+		Socket sock = super.getConnectedInternalSocket(
+				internalSocket, timeout, bindBeforeConnect);
 		InputStream inputStream = sock.getInputStream();
 		OutputStream outputStream = sock.getOutputStream();
 		Set<Method> methods = new TreeSet<Method>();

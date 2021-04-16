@@ -17,8 +17,6 @@ import java.nio.channels.DatagramChannel;
 
 import jargyle.net.Host;
 import jargyle.net.Port;
-import jargyle.net.SocketSettings;
-import jargyle.net.socks.client.PropertySpec;
 import jargyle.net.socks.transport.v5.Command;
 import jargyle.net.socks.transport.v5.Reply;
 import jargyle.net.socks.transport.v5.Socks5Reply;
@@ -47,9 +45,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 				final Socks5Client client) throws SocketException {
 			DatagramSocket originalDatagramSock = new DatagramSocket(null);
 			Socket originalSock = new Socket();
-			SocketSettings socketSettings = client.getProperties().getValue(
-					PropertySpec.SOCKET_SETTINGS);
-			socketSettings.applyTo(originalSock);
+			client.configureInternalSocket(originalSock);
 			this.connected = false;
 			this.datagramSocket = originalDatagramSock;
 			this.originalDatagramSocket = originalDatagramSock;
@@ -200,7 +196,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			if (!this.socket.equals(this.originalSocket)) {
 				this.socket = this.originalSocket;
 			}
-			Socket sock = this.socks5Client.getConnectedSocket(
+			Socket sock = this.socks5Client.getConnectedInternalSocket(
 					this.socket, true);
 			if (!this.datagramSocket.equals(this.originalDatagramSocket)) {
 				this.datagramSocket = this.originalDatagramSocket;
@@ -224,7 +220,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 						"received reply: %s", reply));
 			}
 			DatagramSocket datagramSock = 
-					this.socks5Client.getConnectedDatagramSocket(
+					this.socks5Client.getConnectedInternalDatagramSocket(
 							this.datagramSocket, 
 							socks5Rep.getServerBoundAddress(),
 							socks5Rep.getServerBoundPort());

@@ -4,10 +4,14 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import jargyle.net.DefaultNetObjectFactory;
+import jargyle.net.NetObjectFactory;
+import jargyle.net.SocketSettings;
 import jargyle.net.ssl.SslSocketFactory;
 
 public abstract class SocksClient {
@@ -32,6 +36,7 @@ public abstract class SocksClient {
 	}
 
 	private final SocksClient chainedSocksClient;
+	private final NetObjectFactory netObjectFactory;
 	private final Properties properties;
 	private final SocksServerUri socksServerUri;
 	private final SslSocketFactory sslSocketFactory;
@@ -48,6 +53,9 @@ public abstract class SocksClient {
 				serverUri, "SOCKS server URI must not be null");
 		Objects.requireNonNull(props, "Properties must not be null");
 		this.chainedSocksClient = chainedClient;
+		this.netObjectFactory = (chainedClient == null) ?
+				new DefaultNetObjectFactory() 
+				: chainedClient.newSocksNetObjectFactory();
 		this.properties = props;
 		this.socksServerUri = serverUri;
 		this.sslSocketFactory = props.getValue(
@@ -55,57 +63,64 @@ public abstract class SocksClient {
 						new SslSocketFactoryImpl(this) : null;		
 	}
 	
+	public final void configureInternalSocket(
+			final Socket internalSocket) throws SocketException {
+		SocketSettings socketSettings = this.properties.getValue(
+				PropertySpec.SOCKET_SETTINGS);
+		socketSettings.applyTo(internalSocket);
+	}
+	
 	public final SocksClient getChainedSocksClient() {
 		return this.chainedSocksClient;
 	}
 	
-	public Socket getConnectedSocket(
-			final Socket socket) throws IOException {
-		return this.getConnectedSocket(
-				socket, 
+	public Socket getConnectedInternalSocket(
+			final Socket internalSocket) throws IOException {
+		return this.getConnectedInternalSocket(
+				internalSocket, 
 				this.properties.getValue(
 						PropertySpec.CONNECT_TIMEOUT).intValue(), 
 				false);
 	}
 	
-	public Socket getConnectedSocket(
-			final Socket socket, 
+	public Socket getConnectedInternalSocket(
+			final Socket internalSocket, 
 			final boolean bindBeforeConnect) throws IOException {
-		return this.getConnectedSocket(
-				socket, 
+		return this.getConnectedInternalSocket(
+				internalSocket, 
 				this.properties.getValue(
 						PropertySpec.CONNECT_TIMEOUT).intValue(), 
 				bindBeforeConnect);
 	}
 	
-	public Socket getConnectedSocket(
-			final Socket socket, 
+	public Socket getConnectedInternalSocket(
+			final Socket internalSocket, 
 			final int timeout) throws IOException {
-		return this.getConnectedSocket(socket, timeout, false);
+		return this.getConnectedInternalSocket(internalSocket, timeout, false);
 	}
 	
-	public Socket getConnectedSocket(
-			final Socket socket, 
+	public Socket getConnectedInternalSocket(
+			final Socket internalSocket, 
 			final int timeout, 
 			final boolean bindBeforeConnect) throws IOException {
 		if (bindBeforeConnect) {
-			socket.bind(new InetSocketAddress(
+			internalSocket.bind(new InetSocketAddress(
 					this.properties.getValue(
 							PropertySpec.BIND_HOST).toInetAddress(), 
 					this.properties.getValue(
 							PropertySpec.BIND_PORT).intValue()));
 		}
 		SocksServerUri socksServerUri = this.getSocksServerUri();
-		socket.connect(
+		internalSocket.connect(
 				new InetSocketAddress(
 						InetAddress.getByName(socksServerUri.getHost()), 
 						socksServerUri.getPort()), 
 				timeout);
 		if (this.sslSocketFactory == null) {
-			return socket;
+			return internalSocket;
 		}
 		return this.sslSocketFactory.newSocket(
-				socket, 
+				internalSocket, 
 				this.socksServerUri.getHost(), 
 				this.socksServerUri.getPort(), 
 				true);
@@ -119,13 +134,19 @@ public abstract class SocksClient {
 		return this.socksServerUri;
 	}
 	
+	public final Socket newInternalSocket() {
+		return this.netObjectFactory.newSocket();
+	}
+	
 	public abstract SocksNetObjectFactory newSocksNetObjectFactory();
 	
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append(this.getClass().getSimpleName())
-			.append(" [socksServerUri=")
+			.append(" [chainedSocksClient=")
+			.append(this.chainedSocksClient)		
+			.append(", socksServerUri=")
 			.append(this.socksServerUri)
 			.append("]");
 		return builder.toString();

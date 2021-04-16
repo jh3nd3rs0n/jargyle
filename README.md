@@ -9,8 +9,9 @@ Jargyle is a Java SOCKS5 server. It has the following features:
 -   [SOCKS server chaining](#4-11-chaining-to-another-socks-server)
 -   [SSL/TLS](#4-11-1-enabling-ssl-tls)/[DTLS](#4-11-2-enabling-dtls) for SOCKS server chaining
 -   [Host name resolution through SOCKS5 server chaining](#4-11-3-enabling-host-name-resolution-through-socks5-server-chaining)
--   [Allow or block client addresses and external addresses](#4-12-allowing-or-blocking-addresses)
--   [Allow or block SOCKS5 requests](#4-13-allowing-or-blocking-socks5-requests)
+-   [SOCKS server chaining to a specified chain of other SOCKS servers](#4-12-chaining-to-a-specified-chain-of-other-socks-servers)
+-   [Allow or block client addresses and external addresses](#4-13-allowing-or-blocking-addresses)
+-   [Allow or block SOCKS5 requests](#4-14-allowing-or-blocking-socks5-requests)
 
 Although Jargyle can act as a standalone SOCKS5 server, it can act as a bridge between the following:
 
@@ -47,9 +48,10 @@ Although Jargyle can act as a standalone SOCKS5 server, it can act as a bridge b
 -   [4. 11. 4. 1. Using No Authentication](#4-11-4-1-using-no-authentication)
 -   [4. 11. 4. 2. Using Username Password Authentication](#4-11-4-2-using-username-password-authentication)
 -   [4. 11. 4. 3. Using GSS-API Authentication](#4-11-4-3-using-gss-api-authentication)
--   [4. 12. Allowing or Blocking Addresses](#4-12-allowing-or-blocking-addresses)
--   [4. 13. Allowing or Blocking SOCKS5 Requests](#4-13-allowing-or-blocking-socks5-requests)
--   [4. 14. Logging](#4-14-logging)
+-   [4. 12. Chaining to a Specified Chain of Other SOCKS Servers](#4-12-chaining-to-a-specified-chain-of-other-socks-servers)
+-   [4. 13. Allowing or Blocking Addresses](#4-13-allowing-or-blocking-addresses)
+-   [4. 14. Allowing or Blocking SOCKS5 Requests](#4-14-allowing-or-blocking-socks5-requests)
+-   [4. 15. Logging](#4-15-logging)
 -   [5. Miscellaneous Notes](#5-miscellaneous-notes)
 -   [5. 1. The Comment Attribute](#5-1-the-comment-attribute)
 -   [5. 2. Multiple Settings of the Same Name](#5-2-multiple-settings-of-the-same-name)
@@ -1469,7 +1471,6 @@ Partial command line example:
 
 You can have Jargyle perform host name resolution through SOCKS5 server chaining under the following conditions:
 
--   Jargyle is chained to another SOCKS5 server.
 -   The other SOCKS5 server supports [the SOCKS5 RESOLVE command](#5-3-the-socks5-resolve-command). (At the time of this writing, the SOCKS5 RESOLVE command is an additional SOCKS5 command made for Jargyle. Therefore the other SOCKS5 server would at the very least be another running instance of Jargyle.)
 
 By default, host name resolution through SOCKS5 server chaining is disabled. To enable host name resolution through SOCKS5 server chaining, you would need to set the setting `chaining.socks5.forwardHostnameResolution` to `true`.
@@ -1694,7 +1695,90 @@ In `krb5.conf`, a KDC is defined as running at the address `127.0.0.1` on port `
 
 The command line option `--setting=chaining.socks5.gssapiServiceName=rcmd/127.0.0.1` is the GSS-API service name (or the Kerberos service principal) for the other SOCKS5 server residing at the address `127.0.0.1`. (In a production environment, the address `127.0.0.1` should be replaced by the name of the machine of where the other SOCKS5 server resides.)
 
-### 4. 12. Allowing or Blocking Addresses
+### 4. 12. Chaining to a Specified Chain of Other SOCKS Servers
+
+You can have Jargyle chained to a specified chain of other SOCKS servers, meaning that it can route through the specified chain of the other SOCKS servers. To have Jargyle chained to a specified chain of other SOCKS servers, you will need to specify each SOCKS server as a URI specified in a separate setting of `chaining.socksServerUri`
+
+Partial command line example:
+
+```text
+    
+    --setting=chaining.socksServerUri=socks5://127.0.0.1:23456 \
+    --setting=chaining.socksServerUri=socks5://127.0.0.1:65432 \
+    --setting=chaining.socksServerUri=socks5://127.0.0.1:54321
+    
+```
+
+Partial configuration file example:
+
+```xml
+    
+    <setting>
+        <name>chaining.socksServerUri</name>
+        <value>socks5://127.0.0.1:23456</value>
+    </setting>
+    <setting>
+        <name>chaining.socksServerUri</name>
+        <value>socks5://127.0.0.1:65432</value>
+    </setting>
+    <setting>
+        <name>chaining.socksServerUri</name>
+        <value>socks5://127.0.0.1:54321</value>
+    </setting>        
+    
+```
+
+To specify the settings for each SOCKS server in the chain, the settings for each SOCKS server will need to placed after each specified SOCKS server.
+
+Partial command line example:
+
+```text
+    
+    --setting=chaining.socksServerUri=socks5://127.0.0.1:23456 \
+    --setting=chaining.socksServerUri=socks5://127.0.0.1:65432 \
+    --setting=chaining.socks5.authMethods=GSSAPI \
+    --setting=chaining.socks5.gssapiProtectionLevels=REQUIRED_INTEG_AND_CONF \
+    --setting=chaining.socksServerUri=socks5://127.0.0.1:54321 \
+    --setting=chaining.socks5.forwardHostnameResolution=true
+    
+```
+
+Partial configuration file example:
+
+```xml
+    
+    <setting>
+        <name>chaining.socksServerUri</name>
+        <value>socks5://127.0.0.1:23456</value>
+    </setting>
+    <setting>
+        <name>chaining.socksServerUri</name>
+        <value>socks5://127.0.0.1:65432</value>
+    </setting>
+    <setting>
+        <name>chaining.socks5.authMethods</name>
+        <value>GSSAPI</value>
+    </setting>
+    <setting>
+        <name>chaining.socks5.gssapiProtectionLevels</name>
+        <value>REQUIRED_INTEG_AND_CONF</value>
+    </setting>    
+    <setting>
+        <name>chaining.socksServerUri</name>
+        <value>socks5://127.0.0.1:54321</value>
+    </setting>        
+    <setting>
+        <name>chaining.socks5.forwardHostnameResolution</name>
+        <value>true</value>
+    </setting>    
+    
+```
+
+The known limitations of Jargyle chained to a specified chain of other SOCKS servers include the following:
+
+-   Only TCP traffic can be routed through the chain. Any UDP traffic will be routed through the last SOCKS server of the chain.
+
+### 4. 13. Allowing or Blocking Addresses
 
 You can allow or block the following addresses:
 
@@ -1751,7 +1835,7 @@ Partial configuration file example:
     
 ```
 
-### 4. 13. Allowing or Blocking SOCKS5 Requests
+### 4. 14. Allowing or Blocking SOCKS5 Requests
 
 You can allow or block SOCKS5 requests. To allow or block SOCKS5 requests, you will need to specify the SOCKS5 request or requests in any of the following settings in the configuration file:
 
@@ -1806,7 +1890,7 @@ Partial configuration file example:
     
 ```
 
-### 4. 14. Logging
+### 4. 15. Logging
 
 Jargyle uses Simple Logging Facade for Java (SLF4J) for logging and uses java.util.logging as its underlying framework. 
 

@@ -103,14 +103,6 @@ public abstract class PropertySpec<V> {
 			"socksClient.socks5.authMethods",
 			AuthMethods.newInstance(AuthMethod.NO_AUTHENTICATION_REQUIRED));
 	
-	public static final PropertySpec<Criteria> SOCKS5_FORWARDABLE_HOST_NAME_CRITERIA = new CriteriaPropertySpec(
-			"socksClient.socks5.forwardableHostNameCriteria",
-			Criteria.newInstance(Criterion.newInstance(CriterionMethod.MATCHES, ".*")));
-	
-	public static final PropertySpec<Boolean> SOCKS5_FORWARD_HOST_NAMES = new BooleanPropertySpec(
-			"socksClient.socks5.forwardHostNames",
-			Boolean.FALSE);
-	
 	public static final PropertySpec<Oid> SOCKS5_GSSAPI_MECHANISM_OID = new OidPropertySpec(
 			"socksClient.socks5.gssapiMechanismOid",
 			"1.2.840.113554.1.2.2");
@@ -127,13 +119,21 @@ public abstract class PropertySpec<V> {
 			"socksClient.socks5.gssapiServiceName",
 			null);
 	
+	public static final PropertySpec<Criteria> SOCKS5_LOCALLY_RESOLVABLE_HOST_NAME_CRITERIA = new CriteriaPropertySpec(
+			"socksClient.socks5.locallyResolvableHostNameCriteria",
+			Criteria.newInstance(Criterion.newInstance(CriterionMethod.EQUALS, "localhost")));
+	
 	public static final PropertySpec<EncryptedPassword> SOCKS5_PASSWORD = new UserEncryptedPasswordPropertySpec(
 			"socksClient.socks5.password",
 			EncryptedPassword.newInstance(new char[] { }));
 	
-	public static final PropertySpec<Criteria> SOCKS5_RESOLVABLE_HOST_NAME_CRITERIA = new CriteriaPropertySpec(
-			"socksClient.socks5.resolvableHostNameCriteria",
-			Criteria.newInstance(Criterion.newInstance(CriterionMethod.EQUALS, "localhost")));
+	public static final PropertySpec<Boolean> SOCKS5_RESOLVE_HOST_NAMES_THROUGH_SERVER = new BooleanPropertySpec(
+			"socksClient.socks5.resolveHostNamesThroughServer",
+			Boolean.FALSE);
+	
+	public static final PropertySpec<Criteria> SOCKS5_SERVER_RESOLVABLE_HOST_NAME_CRITERIA = new CriteriaPropertySpec(
+			"socksClient.socks5.serverResolvableHostNameCriteria",
+			Criteria.newInstance(Criterion.newInstance(CriterionMethod.MATCHES, ".*")));
 	
 	public static final PropertySpec<String> SOCKS5_USERNAME = new UsernamePropertySpec(
 			"socksClient.socks5.username", 

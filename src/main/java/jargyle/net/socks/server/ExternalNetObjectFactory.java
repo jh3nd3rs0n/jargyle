@@ -171,22 +171,6 @@ final class ExternalNetObjectFactory extends NetObjectFactory {
 			return properties;
 		}
 		if (settingSpec.equals(
-				SettingSpec.CHAINING_SOCKS5_FORWARDABLE_HOST_NAME_CRITERIA)) {
-			Criteria forwardableHostNameCriteria = (Criteria) setting.getValue();
-			properties.add(cast(
-					PropertySpec.SOCKS5_FORWARDABLE_HOST_NAME_CRITERIA.newProperty(
-							forwardableHostNameCriteria)));
-			return properties;
-		}
-		if (settingSpec.equals(
-				SettingSpec.CHAINING_SOCKS5_FORWARD_HOST_NAMES)) {
-			Boolean forwardHostNames = (Boolean) setting.getValue();
-			properties.add(cast(
-					PropertySpec.SOCKS5_FORWARD_HOST_NAMES.newProperty(
-							forwardHostNames)));
-			return properties;
-		}
-		if (settingSpec.equals(
 				SettingSpec.CHAINING_SOCKS5_GSSAPI_MECHANISM_OID)) {
 			Oid gssapiMechanismOid = (Oid) setting.getValue();
 			properties.add(cast(
@@ -220,11 +204,30 @@ final class ExternalNetObjectFactory extends NetObjectFactory {
 			return properties;
 		}
 		if (settingSpec.equals(
-				SettingSpec.CHAINING_SOCKS5_RESOLVABLE_HOST_NAME_CRITERIA)) {
-			Criteria resolvableHostNameCriteria = (Criteria) setting.getValue();
+				SettingSpec.CHAINING_SOCKS5_LOCALLY_RESOLVABLE_HOST_NAME_CRITERIA)) {
+			Criteria locallyResolvableHostNameCriteria = 
+					(Criteria) setting.getValue();
 			properties.add(cast(
-					PropertySpec.SOCKS5_RESOLVABLE_HOST_NAME_CRITERIA.newProperty(
-							resolvableHostNameCriteria)));
+					PropertySpec.SOCKS5_LOCALLY_RESOLVABLE_HOST_NAME_CRITERIA.newProperty(
+							locallyResolvableHostNameCriteria)));
+		}
+		if (settingSpec.equals(
+				SettingSpec.CHAINING_SOCKS5_RESOLVE_HOST_NAMES_THROUGH_SERVER)) {
+			Boolean resolveHostNamesThroughServer = 
+					(Boolean) setting.getValue();
+			properties.add(cast(
+					PropertySpec.SOCKS5_RESOLVE_HOST_NAMES_THROUGH_SERVER.newProperty(
+							resolveHostNamesThroughServer)));
+			return properties;
+		}
+		if (settingSpec.equals(
+				SettingSpec.CHAINING_SOCKS5_SERVER_RESOLVABLE_HOST_NAME_CRITERIA)) {
+			Criteria serverResolvableHostNameCriteria = 
+					(Criteria) setting.getValue();
+			properties.add(cast(
+					PropertySpec.SOCKS5_SERVER_RESOLVABLE_HOST_NAME_CRITERIA.newProperty(
+							serverResolvableHostNameCriteria)));
+			return properties;
 		}
 		if (settingSpec.equals(
 				SettingSpec.CHAINING_SOCKS5_USERNAME_PASSWORD)) {

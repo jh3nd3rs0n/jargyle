@@ -28,17 +28,17 @@ public final class Socks5HostResolver extends HostResolver {
 		this.socks5Client = client;
 	}
 	
-	private boolean canForwardHostName(final String hostName) {
-		Criteria forwardableHostNameCriteria = this.properties.getValue(
-				PropertySpec.SOCKS5_FORWARDABLE_HOST_NAME_CRITERIA);
-		Criterion criterion = forwardableHostNameCriteria.anyEvaluatesTrue(
+	private boolean canServerResolveHostName(final String hostName) {
+		Criteria serverResolvableHostNameCriteria = this.properties.getValue(
+				PropertySpec.SOCKS5_SERVER_RESOLVABLE_HOST_NAME_CRITERIA);
+		Criterion criterion = serverResolvableHostNameCriteria.anyEvaluatesTrue(
 				hostName);
 		if (criterion == null) {
 			return false;
 		}
-		Criteria resolvableHostNameCriteria = this.properties.getValue(
-				PropertySpec.SOCKS5_RESOLVABLE_HOST_NAME_CRITERIA);
-		criterion = resolvableHostNameCriteria.anyEvaluatesTrue(hostName);
+		Criteria locallyResolvableHostNameCriteria = this.properties.getValue(
+				PropertySpec.SOCKS5_LOCALLY_RESOLVABLE_HOST_NAME_CRITERIA);
+		criterion = locallyResolvableHostNameCriteria.anyEvaluatesTrue(hostName);
 		if (criterion != null) {
 			return false;
 		}
@@ -61,10 +61,10 @@ public final class Socks5HostResolver extends HostResolver {
 					addressType));
 		}
 		if (!this.properties.getValue(
-				PropertySpec.SOCKS5_FORWARD_HOST_NAMES).booleanValue()) {
+				PropertySpec.SOCKS5_RESOLVE_HOST_NAMES_THROUGH_SERVER).booleanValue()) {
 			return InetAddress.getByName(host);
 		}
-		if (!this.canForwardHostName(host)) {
+		if (!this.canServerResolveHostName(host)) {
 			return InetAddress.getByName(host);
 		}
 		Socket socket = this.socks5Client.newInternalSocket();

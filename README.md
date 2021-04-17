@@ -231,12 +231,6 @@ The following is a list of available settings for the SOCKS server (displayed wh
       chaining.socks5.authMethods=SOCKS5_AUTH_METHOD1[ SOCKS5_AUTH_METHOD2[...]]
           The space separated list of acceptable authentication methods to the other SOCKS5 server (default is NO_AUTHENTICATION_REQUIRED)
     
-      chaining.socks5.forwardableHostNameCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
-          The space separated list of forwardable host name criteria (default is matches:.*)
-    
-      chaining.socks5.forwardHostNames=true|false
-          The boolean value to indicate that host names are to be forwarded to the other SOCKS5 server to be resolved (default is false)
-    
       chaining.socks5.gssapiMechanismOid=GSSAPI_MECHANISM_OID
           The object ID for the GSS-API authentication mechanism to the other SOCKS5 server (default is 1.2.840.113554.1.2.2)
     
@@ -249,8 +243,14 @@ The following is a list of available settings for the SOCKS server (displayed wh
       chaining.socks5.gssapiServiceName=GSSAPI_SERVICE_NAME
           The GSS-API service name for the other SOCKS5 server
     
-      chaining.socks5.resolvableHostNameCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
-          The space separated list of resolvable host name criteria (default is equals:localhost)
+      chaining.socks5.locallyResolvableHostNameCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
+          The space separated list of locally resolvable host name criteria (default is equals:localhost)
+    
+      chaining.socks5.resolveHostNamesThroughServer=true|false
+          The boolean value to indicate that host names are to be resolved through the other SOCKS5 server (default is false)
+    
+      chaining.socks5.serverResolvableHostNameCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
+          The space separated list of server resolvable host name criteria (default is matches:.*)
     
       chaining.socks5.usernamePassword=USERNAME:PASSWORD
           The username password to be used to access the other SOCKS5 server
@@ -1479,14 +1479,14 @@ You can have Jargyle perform host name resolution through SOCKS5 server chaining
 
 -   The other SOCKS5 server supports [the SOCKS5 RESOLVE command](#5-3-the-socks5-resolve-command). (At the time of this writing, the SOCKS5 RESOLVE command is an additional SOCKS5 command made for Jargyle. Therefore the other SOCKS5 server would at the very least be another running instance of Jargyle.)
 
-By default, host name resolution through SOCKS5 server chaining is disabled. To enable host name resolution through SOCKS5 server chaining, you would need to set the setting `chaining.socks5.forwardHostNames` to `true`.
+By default, host name resolution through SOCKS5 server chaining is disabled. To enable host name resolution through SOCKS5 server chaining, you would need to set the setting `chaining.socks5.resolveHostNamesThroughServer` to `true`.
 
 Partial command line example:
 
 ```text
     
     --setting=chaining.socksServerUri=socks5://127.0.0.1:23456 \
-    --setting=chaining.socks5.forwardHostNames=true
+    --setting=chaining.socks5.resolveHostNamesThroughServer=true
     
 ```
 
@@ -1499,16 +1499,16 @@ Partial configuration file example:
         <value>socks5://127.0.0.1:23456</value>
     </setting>
     <setting>
-        <name>chaining.socks5.forwardHostNames</name>
+        <name>chaining.socks5.resolveHostNamesThroughServer</name>
         <value>true</value>
     </setting>
     
 ```
 
-You can specify host names that are forwardable (to be resolved through SOCKS5 server chaining) and host names that are resolvable (to be resolved locally). The host names can be specified in the following settings:
+You can specify host names to be resolved locally and host names to be resolved through SOCKS5 server chaining. The host names can be specified in the following settings:
 
--   `chaining.socks5.forwardableHostNameCriteria`
--   `chaining.socks5.resolvableHostNameCriteria`
+-   `chaining.socks5.locallyResolvableHostNameCriteria`
+-   `chaining.socks5.serverResolvableHostNameCriteria`
 
 You can specify a host name or host names in the aforementioned settings as a space separated list of each as either a literal expression preceded by the prefix `equals:` or a regular expression preceded by the prefix `matches:`.
 
@@ -1517,9 +1517,9 @@ Partial command line example:
 ```text
     
     --setting=chaining.socksServerUri=socks5://127.0.0.1:23456 \
-    --setting=chaining.socks5.forwardHostNames=true \
-    "--setting=chaining.socks5.forwardableHostNameCriteria=matches:.*" \
-    "--setting=chaining.socks5.resolvableHostNameCriteria=equals:localhost equals:localmachine"
+    --setting=chaining.socks5.resolveHostNamesThroughServer=true \
+    "--setting=chaining.socks5.locallyResolvableHostNameCriteria=equals:localhost equals:localmachine" \
+    "--setting=chaining.socks5.serverResolvableHostNameCriteria=matches:.*"
     
 ```
 
@@ -1534,19 +1534,11 @@ Partial configuration file example:
         <value>socks5://127.0.0.1:23456</value>
     </setting>
     <setting>
-        <name>chaining.socks5.forwardHostNames</name>
+        <name>chaining.socks5.resolveHostNamesThroughServer</name>
         <value>true</value>
     </setting>
     <setting>
-        <name>chaining.socks5.forwardableHostNameCriteria</name>
-        <criteriaValue>
-            <criteria>
-                <criterion method="matches" value=".*"/>
-            </criteria>
-        </criteriaValue>
-    </setting>
-    <setting>
-        <name>chaining.socks5.resolvableHostNameCriteria</name>
+        <name>chaining.socks5.locallyResolvableHostNameCriteria</name>
         <criteriaValue>
             <criteria>
                 <criterion method="equals" value="localhost"/>
@@ -1554,6 +1546,14 @@ Partial configuration file example:
             </criteria>
         </criteriaValue>
     </setting>        
+    <setting>
+        <name>chaining.socks5.serverResolvableHostNameCriteria</name>
+        <criteriaValue>
+            <criteria>
+                <criterion method="matches" value=".*"/>
+            </criteria>
+        </criteriaValue>
+    </setting>
     
 ```
 
@@ -1797,7 +1797,7 @@ Partial command line example:
     --setting=chaining.socks5.authMethods=GSSAPI \
     --setting=chaining.socks5.gssapiServiceName=rcmd/127.0.0.1 \
     --setting=chaining.socksServerUri=socks5://127.0.0.1:54321 \
-    --setting=chaining.socks5.forwardHostNames=true
+    --setting=chaining.socks5.resolveHostNamesThroughServer=true
     
 ```
 
@@ -1826,7 +1826,7 @@ Partial configuration file example:
         <value>socks5://127.0.0.1:54321</value>
     </setting>        
     <setting>
-        <name>chaining.socks5.forwardHostNames</name>
+        <name>chaining.socks5.resolveHostNamesThroughServer</name>
         <value>true</value>
     </setting>    
     

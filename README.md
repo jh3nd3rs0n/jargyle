@@ -2036,7 +2036,7 @@ Partial configuration file example:
 
 ### 5. 2. Multiple Settings of the Same Name
 
-If a setting of the same name appears more than once on the command line or in the configuration file, then only the last setting of the same name is recognized. 
+Unless otherwise stated, if a setting of the same name appears more than once on the command line or in the configuration file, then only the last setting of the same name is recognized. 
 
 ### 5. 3. The SOCKS5 RESOLVE Command
 

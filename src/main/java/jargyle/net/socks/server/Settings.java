@@ -91,13 +91,17 @@ public final class Settings {
 	}
 	
 	public <V> V getLastValue(final SettingSpec<V> settingSpec) {
-		List<V> values = this.getValues(settingSpec);
 		V value = null;
-		int size = values.size();
-		if (size > 0) {
-			value = values.get(size - 1);
+		for (Setting<Object> setting : this.settings) {
+			if (setting.getSettingSpec().equals(settingSpec)) {
+				value = settingSpec.getValueType().cast(setting.getValue());
+			}
 		}
-		return value;
+		if (value == null) {
+			Setting<V> defaultSetting = settingSpec.getDefaultSetting();
+			value = defaultSetting.getValue();
+		}
+		return value;		
 	}
 	
 	public <V> List<V> getValues(final SettingSpec<V> settingSpec) {

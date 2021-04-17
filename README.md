@@ -1510,7 +1510,7 @@ You can specify host names to be resolved locally and host names to be resolved 
 -   `chaining.socks5.locallyResolvableHostNameCriteria`
 -   `chaining.socks5.serverResolvableHostNameCriteria`
 
-You can specify a host name or host names in the aforementioned settings as a space separated list of each as either a literal expression preceded by the prefix `equals:` or a regular expression preceded by the prefix `matches:`.
+You can specify a host name or host names in any of the aforementioned settings as a space separated list of each host name or host names as either a literal expression preceded by the prefix `equals:` or a regular expression preceded by the prefix `matches:`.
 
 Partial command line example:
 
@@ -1523,7 +1523,7 @@ Partial command line example:
     
 ```
 
-You can specify a host name or host names in the aforementioned settings as a `<criterion/>` XML element in the configuration file.
+You can specify a host name or host names in any of the aforementioned settings as a sequence of `<criterion/>` XML elements in the configuration file.
 
 Partial configuration file example:
 
@@ -1856,7 +1856,7 @@ To allow or block an address or addresses, you will need to specify the address 
 -   `socks5.onUdpAssociate.blockedExternalIncomingAddressCriteria`
 -   `socks5.onUdpAssociate.blockedExternalOutgoingAddressCriteria`
 
-You can specify an address or addresses in any of the aforementioned settings as a space separated list of each as either a literal expression preceded by the prefix `equals:` or a regular expression preceded by the prefix `matches:`.
+You can specify an address or addresses in any of the aforementioned settings as a space separated list of each address or addresses as either a literal expression preceded by the prefix `equals:` or a regular expression preceded by the prefix `matches:`.
 
 Partial command line example:
 
@@ -1867,7 +1867,7 @@ Partial command line example:
     
 ```
 
-You can specify an address or addresses in any of the aforementioned settings as a `<criterion/>` XML element in the configuration file.
+You can specify an address or addresses in any of the aforementioned settings as a sequence of `<criterion/>` XML elements in the configuration file.
 
 Partial configuration file example:
 
@@ -1900,7 +1900,7 @@ You can allow or block SOCKS5 requests. To allow or block SOCKS5 requests, you w
 -   `socks5.allowedSocks5RequestCriteria`
 -   `socks5.blockedSocks5RequestCriteria`
  
-You can specify a SOCKS5 request or requests in any of the aforementioned settings as a `<socks5RequestCriterion/>` XML element in the configuration file.
+You can specify a SOCKS5 request or requests in any of the aforementioned settings as a sequence of `<socks5RequestCriterion/>` XML elements in the configuration file.
 
 Partial configuration file example:
 

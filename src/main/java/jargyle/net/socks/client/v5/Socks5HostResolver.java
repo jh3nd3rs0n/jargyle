@@ -14,13 +14,35 @@ import jargyle.net.socks.transport.v5.Command;
 import jargyle.net.socks.transport.v5.Reply;
 import jargyle.net.socks.transport.v5.Socks5Reply;
 import jargyle.net.socks.transport.v5.Socks5Request;
+import jargyle.util.Criteria;
+import jargyle.util.Criterion;
 
 public final class Socks5HostResolver extends HostResolver {
 
+	private final Properties properties;
 	private final Socks5Client socks5Client;
 	
 	public Socks5HostResolver(final Socks5Client client) {
+		Properties props = client.getProperties();
+		this.properties = props;
 		this.socks5Client = client;
+	}
+	
+	private boolean canForwardHostName(final String hostName) {
+		Criteria forwardableHostNameCriteria = this.properties.getValue(
+				PropertySpec.SOCKS5_FORWARDABLE_HOST_NAME_CRITERIA);
+		Criterion criterion = forwardableHostNameCriteria.anyEvaluatesTrue(
+				hostName);
+		if (criterion == null) {
+			return false;
+		}
+		Criteria resolvableHostNameCriteria = this.properties.getValue(
+				PropertySpec.SOCKS5_RESOLVABLE_HOST_NAME_CRITERIA);
+		criterion = resolvableHostNameCriteria.anyEvaluatesTrue(hostName);
+		if (criterion != null) {
+			return false;
+		}
+		return true;
 	}
 	
 	@Override
@@ -38,10 +60,11 @@ public final class Socks5HostResolver extends HostResolver {
 					AddressType.class.getName(), 
 					addressType));
 		}
-		Properties properties = this.socks5Client.getProperties();
-		if (!properties.getValue(
-				PropertySpec.SOCKS5_FORWARD_HOSTNAME_RESOLUTION).booleanValue()
-				|| host.equals("localhost")) {
+		if (!this.properties.getValue(
+				PropertySpec.SOCKS5_FORWARD_HOST_NAMES).booleanValue()) {
+			return InetAddress.getByName(host);
+		}
+		if (!this.canForwardHostName(host)) {
 			return InetAddress.getByName(host);
 		}
 		Socket socket = this.socks5Client.newInternalSocket();

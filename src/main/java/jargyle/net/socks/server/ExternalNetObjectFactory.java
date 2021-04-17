@@ -27,6 +27,7 @@ import jargyle.net.socks.client.v5.UsernamePassword;
 import jargyle.net.socks.transport.v5.AuthMethods;
 import jargyle.net.socks.transport.v5.gssapiauth.GssapiProtectionLevels;
 import jargyle.security.EncryptedPassword;
+import jargyle.util.Criteria;
 import jargyle.util.PositiveInteger;
 import jargyle.util.Strings;
 
@@ -170,11 +171,19 @@ final class ExternalNetObjectFactory extends NetObjectFactory {
 			return properties;
 		}
 		if (settingSpec.equals(
-				SettingSpec.CHAINING_SOCKS5_FORWARD_HOSTNAME_RESOLUTION)) {
-			Boolean forwardHostnameResolution = (Boolean) setting.getValue();
+				SettingSpec.CHAINING_SOCKS5_FORWARDABLE_HOST_NAME_CRITERIA)) {
+			Criteria forwardableHostNameCriteria = (Criteria) setting.getValue();
 			properties.add(cast(
-					PropertySpec.SOCKS5_FORWARD_HOSTNAME_RESOLUTION.newProperty(
-							forwardHostnameResolution)));
+					PropertySpec.SOCKS5_FORWARDABLE_HOST_NAME_CRITERIA.newProperty(
+							forwardableHostNameCriteria)));
+			return properties;
+		}
+		if (settingSpec.equals(
+				SettingSpec.CHAINING_SOCKS5_FORWARD_HOST_NAMES)) {
+			Boolean forwardHostNames = (Boolean) setting.getValue();
+			properties.add(cast(
+					PropertySpec.SOCKS5_FORWARD_HOST_NAMES.newProperty(
+							forwardHostNames)));
 			return properties;
 		}
 		if (settingSpec.equals(
@@ -209,6 +218,13 @@ final class ExternalNetObjectFactory extends NetObjectFactory {
 					PropertySpec.SOCKS5_GSSAPI_SERVICE_NAME.newProperty(
 							gssapiServiceName)));
 			return properties;
+		}
+		if (settingSpec.equals(
+				SettingSpec.CHAINING_SOCKS5_RESOLVABLE_HOST_NAME_CRITERIA)) {
+			Criteria resolvableHostNameCriteria = (Criteria) setting.getValue();
+			properties.add(cast(
+					PropertySpec.SOCKS5_RESOLVABLE_HOST_NAME_CRITERIA.newProperty(
+							resolvableHostNameCriteria)));
 		}
 		if (settingSpec.equals(
 				SettingSpec.CHAINING_SOCKS5_USERNAME_PASSWORD)) {

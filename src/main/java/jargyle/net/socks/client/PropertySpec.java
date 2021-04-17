@@ -14,6 +14,7 @@ import jargyle.net.Port;
 import jargyle.net.SocketSettings;
 import jargyle.net.socks.client.propertyspec.AuthMethodsPropertySpec;
 import jargyle.net.socks.client.propertyspec.BooleanPropertySpec;
+import jargyle.net.socks.client.propertyspec.CriteriaPropertySpec;
 import jargyle.net.socks.client.propertyspec.EncryptedPasswordPropertySpec;
 import jargyle.net.socks.client.propertyspec.FilePropertySpec;
 import jargyle.net.socks.client.propertyspec.GssapiProtectionLevelsPropertySpec;
@@ -30,6 +31,9 @@ import jargyle.net.socks.transport.v5.AuthMethod;
 import jargyle.net.socks.transport.v5.AuthMethods;
 import jargyle.net.socks.transport.v5.gssapiauth.GssapiProtectionLevels;
 import jargyle.security.EncryptedPassword;
+import jargyle.util.Criteria;
+import jargyle.util.Criterion;
+import jargyle.util.CriterionMethod;
 import jargyle.util.PositiveInteger;
 import jargyle.util.Strings;
 
@@ -99,8 +103,12 @@ public abstract class PropertySpec<V> {
 			"socksClient.socks5.authMethods",
 			AuthMethods.newInstance(AuthMethod.NO_AUTHENTICATION_REQUIRED));
 	
-	public static final PropertySpec<Boolean> SOCKS5_FORWARD_HOSTNAME_RESOLUTION = new BooleanPropertySpec(
-			"socksClient.socks5.forwardHostnameResolution",
+	public static final PropertySpec<Criteria> SOCKS5_FORWARDABLE_HOST_NAME_CRITERIA = new CriteriaPropertySpec(
+			"socksClient.socks5.forwardableHostNameCriteria",
+			Criteria.newInstance(Criterion.newInstance(CriterionMethod.MATCHES, ".*")));
+	
+	public static final PropertySpec<Boolean> SOCKS5_FORWARD_HOST_NAMES = new BooleanPropertySpec(
+			"socksClient.socks5.forwardHostNames",
 			Boolean.FALSE);
 	
 	public static final PropertySpec<Oid> SOCKS5_GSSAPI_MECHANISM_OID = new OidPropertySpec(
@@ -122,6 +130,10 @@ public abstract class PropertySpec<V> {
 	public static final PropertySpec<EncryptedPassword> SOCKS5_PASSWORD = new UserEncryptedPasswordPropertySpec(
 			"socksClient.socks5.password",
 			EncryptedPassword.newInstance(new char[] { }));
+	
+	public static final PropertySpec<Criteria> SOCKS5_RESOLVABLE_HOST_NAME_CRITERIA = new CriteriaPropertySpec(
+			"socksClient.socks5.resolvableHostNameCriteria",
+			Criteria.newInstance(Criterion.newInstance(CriterionMethod.EQUALS, "localhost")));
 	
 	public static final PropertySpec<String> SOCKS5_USERNAME = new UsernamePropertySpec(
 			"socksClient.socks5.username", 

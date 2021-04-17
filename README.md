@@ -1737,7 +1737,7 @@ Partial command line example:
     --setting=chaining.socksServerUri=socks5://127.0.0.1:23456 \
     --setting=chaining.socksServerUri=socks5://127.0.0.1:65432 \
     --setting=chaining.socks5.authMethods=GSSAPI \
-    --setting=chaining.socks5.gssapiProtectionLevels=REQUIRED_INTEG_AND_CONF \
+    --setting=chaining.socks5.gssapiServiceName=rcmd/127.0.0.1 \
     --setting=chaining.socksServerUri=socks5://127.0.0.1:54321 \
     --setting=chaining.socks5.forwardHostnameResolution=true
     
@@ -1760,8 +1760,8 @@ Partial configuration file example:
         <value>GSSAPI</value>
     </setting>
     <setting>
-        <name>chaining.socks5.gssapiProtectionLevels</name>
-        <value>REQUIRED_INTEG_AND_CONF</value>
+        <name>chaining.socks5.gssapiServiceName</name>
+        <value>rcmd/127.0.0.1</value>
     </setting>
     <setting>
         <name>chaining.socksServerUri</name>

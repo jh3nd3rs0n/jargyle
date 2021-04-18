@@ -12,6 +12,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -181,16 +182,24 @@ public final class ServerSocketHelper {
 			final String string, 
 			final SocksClient socksClient, 
 			final Configuration... configurations) throws IOException {
-		int configurationsLength = configurations.length;
+		return echoThroughServerSocket(
+				string, socksClient, Arrays.asList(configurations));
+	}
+	
+	public static String echoThroughServerSocket(
+			final String string, 
+			final SocksClient socksClient, 
+			final List<Configuration> configurations) throws IOException {
+		int configurationsSize = configurations.size();
 		List<SocksServer> socksServers = new ArrayList<SocksServer>();		
 		EchoServer echoServer = null;
 		Socket echoSocket = null;
 		Socket socket = null;
 		String returningString = null;		
 		try {
-			if (configurationsLength > 0) {
-				for (int i = configurationsLength - 1; i > -1; i--) {
-					Configuration configuration = configurations[i];
+			if (configurationsSize > 0) {
+				for (int i = configurationsSize - 1; i > -1; i--) {
+					Configuration configuration = configurations.get(i);
 					SocksServer socksServer = new SocksServer(configuration);
 					socksServers.add(0, socksServer);
 					socksServer.start();

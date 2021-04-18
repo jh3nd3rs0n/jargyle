@@ -36,9 +36,9 @@ public final class Socks5HostResolver extends HostResolver {
 		if (criterion == null) {
 			return false;
 		}
-		Criteria locallyResolvableHostNameCriteria = this.properties.getValue(
-				PropertySpec.SOCKS5_LOCALLY_RESOLVABLE_HOST_NAME_CRITERIA);
-		criterion = locallyResolvableHostNameCriteria.anyEvaluatesTrue(hostName);
+		Criteria systemResolvableHostNameCriteria = this.properties.getValue(
+				PropertySpec.SOCKS5_SYSTEM_RESOLVABLE_HOST_NAME_CRITERIA);
+		criterion = systemResolvableHostNameCriteria.anyEvaluatesTrue(hostName);
 		if (criterion != null) {
 			return false;
 		}

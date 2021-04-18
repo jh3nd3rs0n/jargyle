@@ -204,14 +204,6 @@ final class ExternalNetObjectFactory extends NetObjectFactory {
 			return properties;
 		}
 		if (settingSpec.equals(
-				SettingSpec.CHAINING_SOCKS5_LOCALLY_RESOLVABLE_HOST_NAME_CRITERIA)) {
-			Criteria locallyResolvableHostNameCriteria = 
-					(Criteria) setting.getValue();
-			properties.add(cast(
-					PropertySpec.SOCKS5_LOCALLY_RESOLVABLE_HOST_NAME_CRITERIA.newProperty(
-							locallyResolvableHostNameCriteria)));
-		}
-		if (settingSpec.equals(
 				SettingSpec.CHAINING_SOCKS5_RESOLVE_HOST_NAMES_THROUGH_SERVER)) {
 			Boolean resolveHostNamesThroughServer = 
 					(Boolean) setting.getValue();
@@ -228,6 +220,14 @@ final class ExternalNetObjectFactory extends NetObjectFactory {
 					PropertySpec.SOCKS5_SERVER_RESOLVABLE_HOST_NAME_CRITERIA.newProperty(
 							serverResolvableHostNameCriteria)));
 			return properties;
+		}
+		if (settingSpec.equals(
+				SettingSpec.CHAINING_SOCKS5_SYSTEM_RESOLVABLE_HOST_NAME_CRITERIA)) {
+			Criteria systemResolvableHostNameCriteria = 
+					(Criteria) setting.getValue();
+			properties.add(cast(
+					PropertySpec.SOCKS5_SYSTEM_RESOLVABLE_HOST_NAME_CRITERIA.newProperty(
+							systemResolvableHostNameCriteria)));
 		}
 		if (settingSpec.equals(
 				SettingSpec.CHAINING_SOCKS5_USERNAME_PASSWORD)) {

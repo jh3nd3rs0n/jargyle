@@ -273,15 +273,6 @@ public abstract class SettingSpec<V> {
 			PropertySpec.SOCKS5_GSSAPI_SERVICE_NAME.getDefaultProperty().getValue());
 	
 	@HelpText(
-			doc = "The space separated list of locally resolvable host name criteria "
-					+ "(default is equals:localhost)", 
-			usage = "chaining.socks5.locallyResolvableHostNameCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
-	)	
-	public static final SettingSpec<Criteria> CHAINING_SOCKS5_LOCALLY_RESOLVABLE_HOST_NAME_CRITERIA = new CriteriaSettingSpec(
-			"chaining.socks5.locallyResolvableHostNameCriteria",
-			PropertySpec.SOCKS5_LOCALLY_RESOLVABLE_HOST_NAME_CRITERIA.getDefaultProperty().getValue());
-	
-	@HelpText(
 			doc = "The boolean value to indicate that host names are to be "
 					+ "resolved through the other SOCKS5 server "
 					+ "(default is false)", 
@@ -292,13 +283,24 @@ public abstract class SettingSpec<V> {
 			PropertySpec.SOCKS5_RESOLVE_HOST_NAMES_THROUGH_SERVER.getDefaultProperty().getValue());
 	
 	@HelpText(
-			doc = "The space separated list of server resolvable host name criteria "
+			doc = "The space separated list of host name criteria for host "
+					+ "names to be resolved through the other SOCKS5 server "
 					+ "(default is matches:.*)", 
 			usage = "chaining.socks5.serverResolvableHostNameCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
 	)	
 	public static final SettingSpec<Criteria> CHAINING_SOCKS5_SERVER_RESOLVABLE_HOST_NAME_CRITERIA = new CriteriaSettingSpec(
 			"chaining.socks5.serverResolvableHostNameCriteria",
 			PropertySpec.SOCKS5_SERVER_RESOLVABLE_HOST_NAME_CRITERIA.getDefaultProperty().getValue());
+	
+	@HelpText(
+			doc = "The space separated list of host name criteria for host "
+					+ "names to be resolved through the system "
+					+ "(default is equals:localhost)", 
+			usage = "chaining.socks5.systemResolvableHostNameCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
+	)	
+	public static final SettingSpec<Criteria> CHAINING_SOCKS5_SYSTEM_RESOLVABLE_HOST_NAME_CRITERIA = new CriteriaSettingSpec(
+			"chaining.socks5.systemResolvableHostNameCriteria",
+			PropertySpec.SOCKS5_SYSTEM_RESOLVABLE_HOST_NAME_CRITERIA.getDefaultProperty().getValue());
 	
 	@HelpText(
 			doc = "The username password to be used to access the other "

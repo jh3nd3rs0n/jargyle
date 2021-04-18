@@ -243,14 +243,14 @@ The following is a list of available settings for the SOCKS server (displayed wh
       chaining.socks5.gssapiServiceName=GSSAPI_SERVICE_NAME
           The GSS-API service name for the other SOCKS5 server
     
-      chaining.socks5.locallyResolvableHostNameCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
-          The space separated list of locally resolvable host name criteria (default is equals:localhost)
-    
       chaining.socks5.resolveHostNamesThroughServer=true|false
           The boolean value to indicate that host names are to be resolved through the other SOCKS5 server (default is false)
     
       chaining.socks5.serverResolvableHostNameCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
-          The space separated list of server resolvable host name criteria (default is matches:.*)
+          The space separated list of host name criteria for host names to be resolved through the other SOCKS5 server (default is matches:.*)
+    
+      chaining.socks5.systemResolvableHostNameCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
+          The space separated list of host name criteria for host names to be resolved through the system (default is equals:localhost)
     
       chaining.socks5.usernamePassword=USERNAME:PASSWORD
           The username password to be used to access the other SOCKS5 server
@@ -1505,10 +1505,10 @@ Partial configuration file example:
     
 ```
 
-You can specify host names to be resolved locally and host names to be resolved through SOCKS5 server chaining. The host names can be specified in the following settings:
+You can specify host names to be resolved through SOCKS5 server chaining and you can specify host names to be resolved through the system. The host names can be specified in the following settings:
 
--   `chaining.socks5.locallyResolvableHostNameCriteria`
 -   `chaining.socks5.serverResolvableHostNameCriteria`
+-   `chaining.socks5.systemResolvableHostNameCriteria`
 
 You can specify a host name or host names in any of the aforementioned settings as a space separated list of each host name or host names as either a literal expression preceded by the prefix `equals:` or a regular expression preceded by the prefix `matches:`.
 
@@ -1518,8 +1518,8 @@ Partial command line example:
     
     --setting=chaining.socksServerUri=socks5://127.0.0.1:23456 \
     --setting=chaining.socks5.resolveHostNamesThroughServer=true \
-    "--setting=chaining.socks5.locallyResolvableHostNameCriteria=equals:localhost matches:.*dev.* matches:.*local.* matches:.*test.*" \
-    "--setting=chaining.socks5.serverResolvableHostNameCriteria=matches:.*"
+    "--setting=chaining.socks5.serverResolvableHostNameCriteria=matches:.*" \
+    "--setting=chaining.socks5.systemResolvableHostNameCriteria=equals:localhost matches:.*dev.* matches:.*local.* matches:.*test.*"
     
 ```
 
@@ -1538,7 +1538,15 @@ Partial configuration file example:
         <value>true</value>
     </setting>
     <setting>
-        <name>chaining.socks5.locallyResolvableHostNameCriteria</name>
+        <name>chaining.socks5.serverResolvableHostNameCriteria</name>
+        <criteriaValue>
+            <criteria>
+                <criterion method="matches" value=".*"/>
+            </criteria>
+        </criteriaValue>
+    </setting>
+    <setting>
+        <name>chaining.socks5.systemResolvableHostNameCriteria</name>
         <criteriaValue>
             <criteria>
                 <criterion method="equals" value="localhost"/>
@@ -1548,14 +1556,6 @@ Partial configuration file example:
             </criteria>
         </criteriaValue>
     </setting>        
-    <setting>
-        <name>chaining.socks5.serverResolvableHostNameCriteria</name>
-        <criteriaValue>
-            <criteria>
-                <criterion method="matches" value=".*"/>
-            </criteria>
-        </criteriaValue>
-    </setting>
     
 ```
 
@@ -1757,7 +1757,7 @@ The command line option `--setting=chaining.socks5.gssapiServiceName=rcmd/127.0.
 
 ### 4. 12. Chaining to a Specified Chain of Other SOCKS Servers
 
-You can have Jargyle chained to a specified chain of other SOCKS servers, meaning that it can route through the specified chain of the other SOCKS servers. To have Jargyle chained to a specified chain of other SOCKS servers, you will need to specify each SOCKS server as a URI in a separate setting of `chaining.socksServerUri`
+You can have Jargyle chained to a specified chain of other SOCKS servers, meaning that it can route through the specified chain of the other SOCKS servers. To have Jargyle chained to a specified chain of other SOCKS servers, you will need to specify each SOCKS server as a URI in its own separate setting of `chaining.socksServerUri`
 
 Partial command line example:
 

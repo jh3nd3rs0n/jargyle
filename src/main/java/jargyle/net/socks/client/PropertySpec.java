@@ -119,10 +119,6 @@ public abstract class PropertySpec<V> {
 			"socksClient.socks5.gssapiServiceName",
 			null);
 	
-	public static final PropertySpec<Criteria> SOCKS5_LOCALLY_RESOLVABLE_HOST_NAME_CRITERIA = new CriteriaPropertySpec(
-			"socksClient.socks5.locallyResolvableHostNameCriteria",
-			Criteria.newInstance(Criterion.newInstance(CriterionMethod.EQUALS, "localhost")));
-	
 	public static final PropertySpec<EncryptedPassword> SOCKS5_PASSWORD = new UserEncryptedPasswordPropertySpec(
 			"socksClient.socks5.password",
 			EncryptedPassword.newInstance(new char[] { }));
@@ -134,6 +130,10 @@ public abstract class PropertySpec<V> {
 	public static final PropertySpec<Criteria> SOCKS5_SERVER_RESOLVABLE_HOST_NAME_CRITERIA = new CriteriaPropertySpec(
 			"socksClient.socks5.serverResolvableHostNameCriteria",
 			Criteria.newInstance(Criterion.newInstance(CriterionMethod.MATCHES, ".*")));
+	
+	public static final PropertySpec<Criteria> SOCKS5_SYSTEM_RESOLVABLE_HOST_NAME_CRITERIA = new CriteriaPropertySpec(
+			"socksClient.socks5.systemResolvableHostNameCriteria",
+			Criteria.newInstance(Criterion.newInstance(CriterionMethod.EQUALS, "localhost")));
 	
 	public static final PropertySpec<String> SOCKS5_USERNAME = new UsernamePropertySpec(
 			"socksClient.socks5.username", 

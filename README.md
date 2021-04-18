@@ -1518,7 +1518,7 @@ Partial command line example:
     
     --setting=chaining.socksServerUri=socks5://127.0.0.1:23456 \
     --setting=chaining.socks5.resolveHostNamesThroughServer=true \
-    "--setting=chaining.socks5.locallyResolvableHostNameCriteria=equals:localhost equals:localmachine" \
+    "--setting=chaining.socks5.locallyResolvableHostNameCriteria=equals:localhost matches:.*dev.* matches:.*local.* matches:.*test.*" \
     "--setting=chaining.socks5.serverResolvableHostNameCriteria=matches:.*"
     
 ```
@@ -1542,7 +1542,9 @@ Partial configuration file example:
         <criteriaValue>
             <criteria>
                 <criterion method="equals" value="localhost"/>
-                <criterion method="equals" value="localmachine"/>                
+                <criterion method="matches" value=".*dev.*"/>
+                <criterion method="matches" value=".*local.*"/>
+                <criterion method="matches" value=".*test.*"/>
             </criteria>
         </criteriaValue>
     </setting>        

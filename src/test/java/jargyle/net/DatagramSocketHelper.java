@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -111,15 +113,20 @@ public final class DatagramSocketHelper {
 	public static String echoThroughDatagramSocket(
 			final String string, 
 			final SocksClient socksClient, 
-			final Configuration configuration) throws IOException {
-		SocksServer socksServer = null;
+			final Configuration... configurations) throws IOException {
+		int configurationsLength = configurations.length;
+		List<SocksServer> socksServers = new ArrayList<SocksServer>();
 		EchoServer echoServer = null;
 		DatagramSocket echoDatagramSocket = null;
 		String returningString = null;
 		try {
-			if (configuration != null) {
-				socksServer = new SocksServer(configuration);
-				socksServer.start();
+			if (configurationsLength > 0) {
+				for (int i = configurationsLength - 1; i > -1; i--) {
+					Configuration configuration = configurations[i];
+					SocksServer socksServer = new SocksServer(configuration);
+					socksServers.add(0, socksServer);
+					socksServer.start();
+				}
 			}
 			echoServer = new EchoServer(ECHO_SERVER_PORT);
 			echoServer.start();
@@ -153,8 +160,12 @@ public final class DatagramSocketHelper {
 			if (echoServer != null && echoServer.isStarted()) {
 				echoServer.stop();
 			}
-			if (socksServer != null && socksServer.isStarted()) {
-				socksServer.stop();
+			if (socksServers.size() > 0) {
+				for (SocksServer socksServer : socksServers) {
+					if (socksServer.isStarted()) {
+						socksServer.stop();
+					}
+				}
 			}
 			try {
 				Thread.sleep(SLEEP_TIME);

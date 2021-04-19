@@ -29,6 +29,10 @@ public final class Socks5HostResolver extends HostResolver {
 	}
 	
 	private boolean canServerResolveHostName(final String hostName) {
+		if (!this.properties.getValue(
+				PropertySpec.SOCKS5_RESOLVE_RESOLVE_HOST_NAMES_THROUGH_SERVER).booleanValue()) {
+			return false;
+		}
 		Criteria serverResolvableHostNameCriteria = this.properties.getValue(
 				PropertySpec.SOCKS5_RESOLVE_SERVER_RESOLVABLE_HOST_NAME_CRITERIA);
 		Criterion criterion = serverResolvableHostNameCriteria.anyEvaluatesTrue(
@@ -59,10 +63,6 @@ public final class Socks5HostResolver extends HostResolver {
 					"unknown %s: %s", 
 					AddressType.class.getName(), 
 					addressType));
-		}
-		if (!this.properties.getValue(
-				PropertySpec.SOCKS5_RESOLVE_RESOLVE_HOST_NAMES_THROUGH_SERVER).booleanValue()) {
-			return InetAddress.getByName(host);
 		}
 		if (!this.canServerResolveHostName(host)) {
 			return InetAddress.getByName(host);

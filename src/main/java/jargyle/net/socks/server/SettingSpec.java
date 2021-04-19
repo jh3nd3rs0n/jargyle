@@ -24,7 +24,7 @@ import jargyle.net.socks.server.settingspec.BooleanSettingSpec;
 import jargyle.net.socks.server.settingspec.CriteriaSettingSpec;
 import jargyle.net.socks.server.settingspec.EncryptedPasswordSettingSpec;
 import jargyle.net.socks.server.settingspec.FileSettingSpec;
-import jargyle.net.socks.server.settingspec.GssapiProtectionLevelsSettingSpec;
+import jargyle.net.socks.server.settingspec.ProtectionLevelsSettingSpec;
 import jargyle.net.socks.server.settingspec.HostSettingSpec;
 import jargyle.net.socks.server.settingspec.NonnegativeIntegerSettingSpec;
 import jargyle.net.socks.server.settingspec.OidSettingSpec;
@@ -42,7 +42,7 @@ import jargyle.net.socks.server.v5.Socks5RequestCriterion;
 import jargyle.net.socks.server.v5.UsernamePasswordAuthenticator;
 import jargyle.net.socks.transport.v5.AuthMethod;
 import jargyle.net.socks.transport.v5.AuthMethods;
-import jargyle.net.socks.transport.v5.gssapiauth.GssapiProtectionLevels;
+import jargyle.net.socks.transport.v5.gssapiauth.ProtectionLevels;
 import jargyle.security.EncryptedPassword;
 import jargyle.util.Criteria;
 import jargyle.util.Criterion;
@@ -260,7 +260,7 @@ public abstract class SettingSpec<V> {
 					+ "REQUIRED_INTEG_AND_CONF REQUIRED_INTEG NONE)", 
 			usage = "chaining.socks5.gssapiProtectionLevels=SOCKS5_GSSAPI_PROTECTION_LEVEL1[ SOCKS5_GSSAPI_PROTECTION_LEVEL2[...]]"
 	)
-	public static final SettingSpec<GssapiProtectionLevels> CHAINING_SOCKS5_GSSAPI_PROTECTION_LEVELS = new GssapiProtectionLevelsSettingSpec(
+	public static final SettingSpec<ProtectionLevels> CHAINING_SOCKS5_GSSAPI_PROTECTION_LEVELS = new ProtectionLevelsSettingSpec(
 			"chaining.socks5.gssapiProtectionLevels",
 			PropertySpec.SOCKS5_GSSAPI_PROTECTION_LEVELS.getDefaultProperty().getValue());
 	
@@ -595,9 +595,9 @@ public abstract class SettingSpec<V> {
 					+ "REQUIRED_INTEG NONE)", 
 			usage = "socks5.gssapiProtectionLevels=SOCKS5_GSSAPI_PROTECTION_LEVEL1[ SOCKS5_GSSAPI_PROTECTION_LEVEL2[...]]"
 	)
-	public static final SettingSpec<GssapiProtectionLevels> SOCKS5_GSSAPI_PROTECTION_LEVELS = new GssapiProtectionLevelsSettingSpec(
+	public static final SettingSpec<ProtectionLevels> SOCKS5_GSSAPI_PROTECTION_LEVELS = new ProtectionLevelsSettingSpec(
 			"socks5.gssapiProtectionLevels",
-			GssapiProtectionLevels.DEFAULT_INSTANCE);
+			ProtectionLevels.DEFAULT_INSTANCE);
 	
 	@HelpText(
 			doc = "The space separated list of allowed external incoming "

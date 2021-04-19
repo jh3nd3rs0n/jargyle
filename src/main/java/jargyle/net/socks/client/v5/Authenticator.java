@@ -18,11 +18,10 @@ import org.ietf.jgss.Oid;
 import jargyle.net.socks.client.PropertySpec;
 import jargyle.net.socks.transport.v5.Method;
 import jargyle.net.socks.transport.v5.gssapiauth.GssSocket;
-import jargyle.net.socks.transport.v5.gssapiauth.GssapiProtectionLevel;
-import jargyle.net.socks.transport.v5.gssapiauth.GssapiProtectionLevels;
 import jargyle.net.socks.transport.v5.gssapiauth.Message;
 import jargyle.net.socks.transport.v5.gssapiauth.MessageType;
 import jargyle.net.socks.transport.v5.gssapiauth.ProtectionLevel;
+import jargyle.net.socks.transport.v5.gssapiauth.ProtectionLevels;
 import jargyle.net.socks.transport.v5.userpassauth.UsernamePasswordRequest;
 import jargyle.net.socks.transport.v5.userpassauth.UsernamePasswordResponse;
 
@@ -47,11 +46,10 @@ enum Authenticator {
 				final Socks5Client socks5Client) throws IOException {
 			GSSContext context = this.newContext(socks5Client);
 			this.establishContext(socket, context, socks5Client);
-			GssapiProtectionLevel gssapiProtectionLevelSelection =
+			ProtectionLevel protectionLevelSelection =
 					this.negotiateProtectionLevel(
 							socket, context, socks5Client);
-			MessageProp msgProp = 
-					gssapiProtectionLevelSelection.newMessageProp();
+			MessageProp msgProp = protectionLevelSelection.newMessageProp();
 			Socket newSocket = new GssSocket(socket, context, msgProp);
 			return newSocket;
 		}
@@ -89,27 +87,23 @@ enum Authenticator {
 			}
 		}
 		
-		private GssapiProtectionLevel negotiateProtectionLevel(
+		private ProtectionLevel negotiateProtectionLevel(
 				final Socket socket,
 				final GSSContext context,
 				final Socks5Client socks5Client) throws IOException {
 			InputStream inStream = socket.getInputStream();
 			OutputStream outStream = socket.getOutputStream();
-			boolean gssapiNecReferenceImpl = 
-					socks5Client.getProperties().getValue(
-							PropertySpec.SOCKS5_GSSAPI_NEC_REFERENCE_IMPL).booleanValue();
-			GssapiProtectionLevels gssapiProtectionLevels = 
+			boolean necReferenceImpl = socks5Client.getProperties().getValue(
+					PropertySpec.SOCKS5_GSSAPI_NEC_REFERENCE_IMPL).booleanValue();
+			ProtectionLevels protectionLevels = 
 					socks5Client.getProperties().getValue(
 							PropertySpec.SOCKS5_GSSAPI_PROTECTION_LEVELS);
-			List<GssapiProtectionLevel> gssapiProtectionLevelList = 
-					gssapiProtectionLevels.toList(); 
-			GssapiProtectionLevel firstGssapiProtectionLevel = 
-					gssapiProtectionLevelList.get(0);
-			byte[] token = new byte[] { 
-					firstGssapiProtectionLevel.protectionLevelValue().byteValue() 
-			};
+			List<ProtectionLevel> protectionLevelList = 
+					protectionLevels.toList(); 
+			ProtectionLevel firstProtectionLevel = protectionLevelList.get(0);
+			byte[] token = new byte[] { firstProtectionLevel.byteValue() };
 			MessageProp prop = null;
-			if (!gssapiNecReferenceImpl) {
+			if (!necReferenceImpl) {
 				prop = new MessageProp(0, true);
 				try {
 					token = context.wrap(token, 0, token.length, 
@@ -131,7 +125,7 @@ enum Authenticator {
 				throw new IOException("server aborted protection level negotiation");
 			}
 			token = message.getToken();
-			if (!gssapiNecReferenceImpl) {
+			if (!necReferenceImpl) {
 				prop = new MessageProp(0, false);
 				try {
 					token = context.unwrap(token, 0, token.length, 
@@ -151,21 +145,12 @@ enum Authenticator {
 			} catch (IllegalArgumentException e) {
 				throw new IOException(e);
 			}
-			GssapiProtectionLevel gssapiProtectionLevelSelection = null;
-			try {
-				gssapiProtectionLevelSelection = 
-						GssapiProtectionLevel.valueOfProtectionLevel(
-								protectionLevelSelection);
-			} catch (IllegalArgumentException e) {
-				throw new IOException(e);
-			}
-			if (!gssapiProtectionLevelList.contains(
-					gssapiProtectionLevelSelection)) {
+			if (!protectionLevelList.contains(protectionLevelSelection)) {
 				throw new IOException(String.format(
 						"server selected %s which is not acceptable by this socket", 
 						protectionLevelSelection));
 			}
-			return gssapiProtectionLevelSelection;
+			return protectionLevelSelection;
 		}
 
 		private GSSContext newContext(
@@ -179,13 +164,13 @@ enum Authenticator {
 			} catch (GSSException e) {
 				throw new IOException(e);
 			}
-			Oid gssapiMechanismOid = socks5Client.getProperties().getValue(
+			Oid mechanismOid = socks5Client.getProperties().getValue(
 					PropertySpec.SOCKS5_GSSAPI_MECHANISM_OID);
 			GSSContext context = null;
 			try {
 				context = manager.createContext(
 						serverName, 
-						gssapiMechanismOid,
+						mechanismOid,
 				        null,
 				        GSSContext.DEFAULT_LIFETIME);
 			} catch (GSSException e) {

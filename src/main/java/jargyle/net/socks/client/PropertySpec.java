@@ -17,7 +17,7 @@ import jargyle.net.socks.client.propertyspec.BooleanPropertySpec;
 import jargyle.net.socks.client.propertyspec.CriteriaPropertySpec;
 import jargyle.net.socks.client.propertyspec.EncryptedPasswordPropertySpec;
 import jargyle.net.socks.client.propertyspec.FilePropertySpec;
-import jargyle.net.socks.client.propertyspec.GssapiProtectionLevelsPropertySpec;
+import jargyle.net.socks.client.propertyspec.ProtectionLevelsPropertySpec;
 import jargyle.net.socks.client.propertyspec.HostPropertySpec;
 import jargyle.net.socks.client.propertyspec.OidPropertySpec;
 import jargyle.net.socks.client.propertyspec.PortPropertySpec;
@@ -29,7 +29,7 @@ import jargyle.net.socks.client.propertyspec.UserEncryptedPasswordPropertySpec;
 import jargyle.net.socks.client.propertyspec.UsernamePropertySpec;
 import jargyle.net.socks.transport.v5.AuthMethod;
 import jargyle.net.socks.transport.v5.AuthMethods;
-import jargyle.net.socks.transport.v5.gssapiauth.GssapiProtectionLevels;
+import jargyle.net.socks.transport.v5.gssapiauth.ProtectionLevels;
 import jargyle.security.EncryptedPassword;
 import jargyle.util.Criteria;
 import jargyle.util.Criterion;
@@ -111,9 +111,9 @@ public abstract class PropertySpec<V> {
 			"socksClient.socks5.gssapiNecReferenceImpl",
 			Boolean.FALSE);
 	
-	public static final PropertySpec<GssapiProtectionLevels> SOCKS5_GSSAPI_PROTECTION_LEVELS = new GssapiProtectionLevelsPropertySpec(
+	public static final PropertySpec<ProtectionLevels> SOCKS5_GSSAPI_PROTECTION_LEVELS = new ProtectionLevelsPropertySpec(
 			"socksClient.socks5.gssapiProtectionLevels",
-			GssapiProtectionLevels.DEFAULT_INSTANCE);
+			ProtectionLevels.DEFAULT_INSTANCE);
 	
 	public static final PropertySpec<String> SOCKS5_GSSAPI_SERVICE_NAME = new StringPropertySpec(
 			"socksClient.socks5.gssapiServiceName",

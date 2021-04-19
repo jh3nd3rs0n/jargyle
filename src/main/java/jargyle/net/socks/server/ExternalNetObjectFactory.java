@@ -25,7 +25,7 @@ import jargyle.net.socks.client.SocksClient;
 import jargyle.net.socks.client.SocksServerUri;
 import jargyle.net.socks.client.v5.UsernamePassword;
 import jargyle.net.socks.transport.v5.AuthMethods;
-import jargyle.net.socks.transport.v5.gssapiauth.GssapiProtectionLevels;
+import jargyle.net.socks.transport.v5.gssapiauth.ProtectionLevels;
 import jargyle.security.EncryptedPassword;
 import jargyle.util.Criteria;
 import jargyle.util.PositiveInteger;
@@ -188,11 +188,11 @@ final class ExternalNetObjectFactory extends NetObjectFactory {
 		}
 		if (settingSpec.equals(
 				SettingSpec.CHAINING_SOCKS5_GSSAPI_PROTECTION_LEVELS)) {
-			GssapiProtectionLevels gssapiProtectionLevels =	
-					(GssapiProtectionLevels) setting.getValue();
+			ProtectionLevels protectionLevels =	
+					(ProtectionLevels) setting.getValue();
 			properties.add(cast(
 					PropertySpec.SOCKS5_GSSAPI_PROTECTION_LEVELS.newProperty(
-							gssapiProtectionLevels)));
+							protectionLevels)));
 			return properties;
 		}
 		if (settingSpec.equals(

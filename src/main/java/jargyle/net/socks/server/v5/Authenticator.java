@@ -20,11 +20,10 @@ import jargyle.net.socks.server.Configuration;
 import jargyle.net.socks.server.SettingSpec;
 import jargyle.net.socks.transport.v5.Method;
 import jargyle.net.socks.transport.v5.gssapiauth.GssSocket;
-import jargyle.net.socks.transport.v5.gssapiauth.GssapiProtectionLevel;
-import jargyle.net.socks.transport.v5.gssapiauth.GssapiProtectionLevels;
 import jargyle.net.socks.transport.v5.gssapiauth.Message;
 import jargyle.net.socks.transport.v5.gssapiauth.MessageType;
 import jargyle.net.socks.transport.v5.gssapiauth.ProtectionLevel;
+import jargyle.net.socks.transport.v5.gssapiauth.ProtectionLevels;
 import jargyle.net.socks.transport.v5.userpassauth.UsernamePasswordRequest;
 import jargyle.net.socks.transport.v5.userpassauth.UsernamePasswordResponse;
 
@@ -54,11 +53,11 @@ enum Authenticator {
 			if (!this.establishContext(socket, context, configuration)) {
 				return null;
 			}
-			GssapiProtectionLevel gssapiProtectionLevelChoice =
+			ProtectionLevel protectionLevelChoice =
 					this.negotiateProtectionLevel(
 							socket, context, configuration);
-			if (gssapiProtectionLevelChoice == null) { return null;	}
-			MessageProp msgProp = gssapiProtectionLevelChoice.newMessageProp();
+			if (protectionLevelChoice == null) { return null;	}
+			MessageProp msgProp = protectionLevelChoice.newMessageProp();
 			Socket newSocket = new GssSocket(socket, context, msgProp);
 			return newSocket;
 		}
@@ -103,7 +102,7 @@ enum Authenticator {
 			return true;
 		}
 		
-		private GssapiProtectionLevel negotiateProtectionLevel(
+		private ProtectionLevel negotiateProtectionLevel(
 				final Socket socket, 
 				final GSSContext context,
 				final Configuration configuration) throws IOException {
@@ -139,29 +138,17 @@ enum Authenticator {
 			} catch (IllegalArgumentException e) {
 				throw new IOException(e);
 			}
-			GssapiProtectionLevel gssapiProtectionLevel = null;
-			try {
-				gssapiProtectionLevel = 
-						GssapiProtectionLevel.valueOfProtectionLevel(
-								protectionLevel);
-			} catch (IllegalArgumentException e) {
-				throw new IOException(e);
-			}
-			GssapiProtectionLevels gssapiProtectionLevels = 
+			ProtectionLevels protectionLevels = 
 					configuration.getSettings().getLastValue(
-							SettingSpec.SOCKS5_GSSAPI_PROTECTION_LEVELS);		
-			List<GssapiProtectionLevel> gssapiProtectionLevelList =
-					gssapiProtectionLevels.toList();
-			GssapiProtectionLevel gssapiProtectionLevelChoice = 
-					gssapiProtectionLevel; 
-			if (!gssapiProtectionLevelList.contains(
-					gssapiProtectionLevelChoice)) {
-				GssapiProtectionLevel firstGssapiProtectionLevel = 
-						gssapiProtectionLevelList.get(0);
-				gssapiProtectionLevelChoice = firstGssapiProtectionLevel;			
+							SettingSpec.SOCKS5_GSSAPI_PROTECTION_LEVELS);
+			List<ProtectionLevel> protectionLevelList = 
+					protectionLevels.toList();
+			ProtectionLevel protectionLevelChoice = protectionLevel;
+			if (!protectionLevelList.contains(protectionLevelChoice)) {
+				ProtectionLevel firstProtectionLevel = 
+						protectionLevelList.get(0);
+				protectionLevelChoice = firstProtectionLevel;
 			}
-			ProtectionLevel protectionLevelChoice = 
-					gssapiProtectionLevelChoice.protectionLevelValue();
 			token = new byte[] { protectionLevelChoice.byteValue() };
 			if (!necReferenceImpl) {
 				prop = new MessageProp(0, true);
@@ -187,7 +174,7 @@ enum Authenticator {
 						socket));
 				return null;
 			}
-			return gssapiProtectionLevelChoice;
+			return protectionLevelChoice;
 		}
 
 		private GSSContext newContext() throws IOException {

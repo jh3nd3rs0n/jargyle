@@ -7,7 +7,7 @@ import jargyle.net.socks.client.v5.Socks5ServerUri;
 import jargyle.net.socks.client.v5.UsernamePassword;
 import jargyle.net.socks.transport.v5.AuthMethod;
 import jargyle.net.socks.transport.v5.AuthMethods;
-import jargyle.net.socks.transport.v5.gssapiauth.GssapiProtectionLevels;
+import jargyle.net.socks.transport.v5.gssapiauth.ProtectionLevels;
 
 public final class SocksClientHelper {
 
@@ -21,7 +21,7 @@ public final class SocksClientHelper {
 			final String host, 
 			final Integer port,
 			final String gssapiServiceName,
-			final GssapiProtectionLevels gssapiProtectionLevels, 
+			final ProtectionLevels protectionLevels, 
 			final boolean gssapiNecReferenceImpl) {
 		Properties properties = Properties.newInstance(
 				PropertySpec.SOCKS5_AUTH_METHODS.newProperty(
@@ -29,7 +29,7 @@ public final class SocksClientHelper {
 				PropertySpec.SOCKS5_GSSAPI_SERVICE_NAME.newProperty(
 						gssapiServiceName),
 				PropertySpec.SOCKS5_GSSAPI_PROTECTION_LEVELS.newProperty(
-						gssapiProtectionLevels),
+						protectionLevels),
 				PropertySpec.SOCKS5_GSSAPI_NEC_REFERENCE_IMPL.newProperty(
 						Boolean.valueOf(gssapiNecReferenceImpl)));
 		return new Socks5ServerUri(host, port).newSocksClient(properties);

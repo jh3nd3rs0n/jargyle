@@ -96,10 +96,10 @@ enum Authenticator {
 			InputStream inStream = socket.getInputStream();
 			OutputStream outStream = socket.getOutputStream();
 			boolean necReferenceImpl = socks5Client.getProperties().getValue(
-					PropertySpec.SOCKS5_GSSAPI_NEC_REFERENCE_IMPL).booleanValue();
+					PropertySpec.SOCKS5_GSSAPIAUTH_NEC_REFERENCE_IMPL).booleanValue();
 			ProtectionLevels protectionLevels = 
 					socks5Client.getProperties().getValue(
-							PropertySpec.SOCKS5_GSSAPI_PROTECTION_LEVELS);
+							PropertySpec.SOCKS5_GSSAPIAUTH_PROTECTION_LEVELS);
 			List<ProtectionLevel> protectionLevelList = 
 					protectionLevels.toList(); 
 			ProtectionLevel firstProtectionLevel = protectionLevelList.get(0);
@@ -159,7 +159,7 @@ enum Authenticator {
 				final Socks5Client socks5Client) throws IOException {
 			GSSManager manager = GSSManager.getInstance();
 			String server = socks5Client.getProperties().getValue(
-					PropertySpec.SOCKS5_GSSAPI_SERVICE_NAME);
+					PropertySpec.SOCKS5_GSSAPIAUTH_SERVICE_NAME);
 			GSSName serverName = null;
 			try {
 				serverName = manager.createName(server, null);
@@ -167,7 +167,7 @@ enum Authenticator {
 				throw new IOException(e);
 			}
 			Oid mechanismOid = socks5Client.getProperties().getValue(
-					PropertySpec.SOCKS5_GSSAPI_MECHANISM_OID);
+					PropertySpec.SOCKS5_GSSAPIAUTH_MECHANISM_OID);
 			GSSContext context = null;
 			try {
 				context = manager.createContext(
@@ -239,9 +239,9 @@ enum Authenticator {
 				
 			} else {
 				username = socks5Client.getProperties().getValue(
-						PropertySpec.SOCKS5_USERNAME);
+						PropertySpec.SOCKS5_USERPASSAUTH_USERNAME);
 				password = socks5Client.getProperties().getValue(
-						PropertySpec.SOCKS5_PASSWORD).getPassword();
+						PropertySpec.SOCKS5_USERPASSAUTH_PASSWORD).getPassword();
 			}
 			UsernamePasswordRequest usernamePasswordReq = 
 					UsernamePasswordRequest.newInstance(

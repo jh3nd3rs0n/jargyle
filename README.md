@@ -137,7 +137,7 @@ The following is the command line help for Jargyle (displayed when using the com
           Enter through an interactive prompt the password for the key store for the DTLS connections to the other SOCKS server
       --enter-chaining-dtls-trust-store-pass
           Enter through an interactive prompt the password for the trust store for the DTLS connections to the other SOCKS server
-      --enter-chaining-socks5-user-pass
+      --enter-chaining-socks5-userpassauth-user-pass
           Enter through an interactive prompt the username password to be used to access the other SOCKS5 server
       --enter-chaining-ssl-key-store-pass
           Enter through an interactive prompt the password for the key store for the SSL/TLS connections to the other SOCKS server
@@ -231,28 +231,28 @@ The following is a list of available settings for the SOCKS server (displayed wh
       chaining.socks5.authMethods=SOCKS5_AUTH_METHOD1[ SOCKS5_AUTH_METHOD2[...]]
           The space separated list of acceptable authentication methods to the other SOCKS5 server (default is NO_AUTHENTICATION_REQUIRED)
     
-      chaining.socks5.gssapiMechanismOid=GSSAPI_MECHANISM_OID
+      chaining.socks5.gssapiauth.mechanismOid=SOCKS5_GSSAPIAUTH_MECHANISM_OID
           The object ID for the GSS-API authentication mechanism to the other SOCKS5 server (default is 1.2.840.113554.1.2.2)
     
-      chaining.socks5.gssapiNecReferenceImpl=true|false
+      chaining.socks5.gssapiauth.necReferenceImpl=true|false
           The boolean value to indicate if the exchange of the GSS-API protection level negotiation must be unprotected should the other SOCKS5 server use the NEC reference implementation (default is false)
     
-      chaining.socks5.gssapiProtectionLevels=SOCKS5_GSSAPI_PROTECTION_LEVEL1[ SOCKS5_GSSAPI_PROTECTION_LEVEL2[...]]
+      chaining.socks5.gssapiauth.protectionLevels=SOCKS5_GSSAPIAUTH_PROTECTION_LEVEL1[ SOCKS5_GSSAPIAUTH_PROTECTION_LEVEL2[...]]
           The space separated list of acceptable protection levels after GSS-API authentication with the other SOCKS5 server (The first is preferred. The remaining are acceptable if the server does not accept the first.) (default is REQUIRED_INTEG_AND_CONF REQUIRED_INTEG NONE)
     
-      chaining.socks5.gssapiServiceName=GSSAPI_SERVICE_NAME
+      chaining.socks5.gssapiauth.serviceName=SOCKS5_GSSAPIAUTH_SERVICE_NAME
           The GSS-API service name for the other SOCKS5 server
     
-      chaining.socks5.resolveHostNamesThroughServer=true|false
+      chaining.socks5.resolve.resolveHostNamesThroughServer=true|false
           The boolean value to indicate that host names are to be resolved through the other SOCKS5 server (default is false)
     
-      chaining.socks5.serverResolvableHostNameCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
+      chaining.socks5.resolve.serverResolvableHostNameCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
           The space separated list of host name criteria for host names to be resolved through the other SOCKS5 server (default is matches:.*)
     
-      chaining.socks5.systemResolvableHostNameCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
+      chaining.socks5.resolve.systemResolvableHostNameCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
           The space separated list of host name criteria for host names to be resolved through the system (default is equals:localhost)
     
-      chaining.socks5.usernamePassword=USERNAME:PASSWORD
+      chaining.socks5.userpassauth.usernamePassword=USERNAME:PASSWORD
           The username password to be used to access the other SOCKS5 server
     
       chaining.ssl.enabled=true|false
@@ -339,10 +339,10 @@ The following is a list of available settings for the SOCKS server (displayed wh
       socks5.authMethods=SOCKS5_AUTH_METHOD1[ SOCKS5_AUTH_METHOD2[...]]
           The space separated list of acceptable authentication methods in order of preference (default is NO_AUTHENTICATION_REQUIRED)
     
-      socks5.gssapiNecReferenceImpl=true|false
+      socks5.gssapiauth.necReferenceImpl=true|false
           The boolean value to indicate if the exchange of the GSS-API protection level negotiation must be unprotected according to the NEC reference implementation (default is false)
     
-      socks5.gssapiProtectionLevels=SOCKS5_GSSAPI_PROTECTION_LEVEL1[ SOCKS5_GSSAPI_PROTECTION_LEVEL2[...]]
+      socks5.gssapiauth.protectionLevels=SOCKS5_GSSAPIAUTH_PROTECTION_LEVEL1[ SOCKS5_GSSAPIAUTH_PROTECTION_LEVEL2[...]]
           The space separated list of acceptable protection levels after GSS-API authentication (The first is preferred if the client does not provide a protection level that is acceptable.) (default is REQUIRED_INTEG_AND_CONF REQUIRED_INTEG NONE)
     
       socks5.onBind.allowedExternalIncomingAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
@@ -408,7 +408,7 @@ The following is a list of available settings for the SOCKS server (displayed wh
       socks5.onUdpAssociate.serverSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
           The space separated list of socket settings for the server-facing UDP socket
     
-      socks5.usernamePasswordAuthenticator=CLASSNAME[:VALUE]
+      socks5.userpassauth.usernamePasswordAuthenticator=CLASSNAME[:VALUE]
           The username password authenticator for the SOCKS5 server
     
       ssl.enabled=true|false
@@ -498,7 +498,7 @@ The following is a list of available settings for the SOCKS server (displayed wh
       USERNAME_PASSWORD
           Username password authentication
     
-    SOCKS5_GSSAPI_PROTECTION_LEVELS:
+    SOCKS5_GSSAPIAUTH_PROTECTION_LEVELS:
     
       NONE
           No protection
@@ -1170,7 +1170,7 @@ Partial configuration file example:
     
 ```
 
-Also, you will need to have the setting `socks5.usernamePasswordAuthenticator` to specify the name of the class that extends `jargyle.net.socks.server.v5.userpassauth.UsernamePasswordAuthenticator` along with a string value
+Also, you will need to have the setting `socks5.userpassauth.usernamePasswordAuthenticator` to specify the name of the class that extends `jargyle.net.socks.server.v5.userpassauth.UsernamePasswordAuthenticator` along with a string value
 
 The following are two provided classes you can use:
 
@@ -1184,7 +1184,7 @@ Partial command line example:
 ```text
     
     "--setting=socks5.authMethods=USERNAME_PASSWORD" \
-    "--setting=socks5.usernamePasswordAuthenticator=jargyle.net.socks.server.v5.userpassauth.StringSourceUsernamePasswordAuthenticator:Aladdin:opensesame Jasmine:mission%3Aimpossible"
+    "--setting=socks5.userpassauth.usernamePasswordAuthenticator=jargyle.net.socks.server.v5.userpassauth.StringSourceUsernamePasswordAuthenticator:Aladdin:opensesame Jasmine:mission%3Aimpossible"
     
 ```
 
@@ -1197,7 +1197,7 @@ Partial configuration file example:
         <value>USERNAME_PASSWORD</value>
     </setting>
     <setting>
-        <name>socks5.usernamePasswordAuthenticator</name>
+        <name>socks5.userpassauth.usernamePasswordAuthenticator</name>
         <usernamePasswordAuthenticatorValue>
             <usernamePasswordAuthenticator>
                 <className>jargyle.net.socks.server.v5.userpassauth.StringSourceUsernamePasswordAuthenticator</className>
@@ -1223,7 +1223,7 @@ Partial command line example:
 ```text
     
     --setting=socks5.authMethods=USERNAME_PASSWORD \
-    --setting=socks5.usernamePasswordAuthenticator=jargyle.net.socks.server.v5.userpassauth.XmlFileSourceUsernamePasswordAuthenticator:users.xml
+    --setting=socks5.userpassauth.usernamePasswordAuthenticator=jargyle.net.socks.server.v5.userpassauth.XmlFileSourceUsernamePasswordAuthenticator:users.xml
     
 ```
 
@@ -1236,7 +1236,7 @@ Partial configuration file example:
         <value>USERNAME_PASSWORD</value>
     </setting>    
     <setting>
-        <name>socks5.usernamePasswordAuthenticator</name>
+        <name>socks5.userpassauth.usernamePasswordAuthenticator</name>
         <usernamePasswordAuthenticatorValue>
             <usernamePasswordAuthenticator>
                 <className>jargyle.net.socks.server.v5.userpassauth.XmlFileSourceUsernamePasswordAuthenticator</className>
@@ -1479,14 +1479,14 @@ You can have Jargyle perform host name resolution through SOCKS5 server chaining
 
 -   The other SOCKS5 server supports [the SOCKS5 RESOLVE command](#5-3-the-socks5-resolve-command). (At the time of this writing, the SOCKS5 RESOLVE command is an additional SOCKS5 command made for Jargyle. Therefore the other SOCKS5 server would at the very least be another running instance of Jargyle.)
 
-By default, host name resolution through SOCKS5 server chaining is disabled. To enable host name resolution through SOCKS5 server chaining, you would need to set the setting `chaining.socks5.resolveHostNamesThroughServer` to `true`.
+By default, host name resolution through SOCKS5 server chaining is disabled. To enable host name resolution through SOCKS5 server chaining, you would need to set the setting `chaining.socks5.resolve.resolveHostNamesThroughServer` to `true`.
 
 Partial command line example:
 
 ```text
     
     --setting=chaining.socksServerUri=socks5://127.0.0.1:23456 \
-    --setting=chaining.socks5.resolveHostNamesThroughServer=true
+    --setting=chaining.socks5.resolve.resolveHostNamesThroughServer=true
     
 ```
 
@@ -1499,7 +1499,7 @@ Partial configuration file example:
         <value>socks5://127.0.0.1:23456</value>
     </setting>
     <setting>
-        <name>chaining.socks5.resolveHostNamesThroughServer</name>
+        <name>chaining.socks5.resolve.resolveHostNamesThroughServer</name>
         <value>true</value>
     </setting>
     
@@ -1507,8 +1507,8 @@ Partial configuration file example:
 
 You can specify host names to be resolved through SOCKS5 server chaining and you can specify host names to be resolved through the system. The host names can be specified in the following settings:
 
--   `chaining.socks5.serverResolvableHostNameCriteria`
--   `chaining.socks5.systemResolvableHostNameCriteria`
+-   `chaining.socks5.resolve.serverResolvableHostNameCriteria`
+-   `chaining.socks5.resolve.systemResolvableHostNameCriteria`
 
 You can specify a host name or host names in any of the aforementioned settings as a space separated list of each host name or host names as either a literal expression preceded by the prefix `equals:` or a regular expression preceded by the prefix `matches:`.
 
@@ -1517,9 +1517,9 @@ Partial command line example:
 ```text
     
     --setting=chaining.socksServerUri=socks5://127.0.0.1:23456 \
-    --setting=chaining.socks5.resolveHostNamesThroughServer=true \
-    "--setting=chaining.socks5.serverResolvableHostNameCriteria=matches:.*" \
-    "--setting=chaining.socks5.systemResolvableHostNameCriteria=equals:localhost matches:.*dev.* matches:.*local.* matches:.*test.*"
+    --setting=chaining.socks5.resolve.resolveHostNamesThroughServer=true \
+    "--setting=chaining.socks5.resolve.serverResolvableHostNameCriteria=matches:.*" \
+    "--setting=chaining.socks5.resolve.systemResolvableHostNameCriteria=equals:localhost matches:.*dev.* matches:.*local.* matches:.*test.*"
     
 ```
 
@@ -1534,11 +1534,11 @@ Partial configuration file example:
         <value>socks5://127.0.0.1:23456</value>
     </setting>
     <setting>
-        <name>chaining.socks5.resolveHostNamesThroughServer</name>
+        <name>chaining.socks5.resolve.resolveHostNamesThroughServer</name>
         <value>true</value>
     </setting>
     <setting>
-        <name>chaining.socks5.serverResolvableHostNameCriteria</name>
+        <name>chaining.socks5.resolve.serverResolvableHostNameCriteria</name>
         <criteriaValue>
             <criteria>
                 <criterion method="matches" value=".*"/>
@@ -1546,7 +1546,7 @@ Partial configuration file example:
         </criteriaValue>
     </setting>
     <setting>
-        <name>chaining.socks5.systemResolvableHostNameCriteria</name>
+        <name>chaining.socks5.resolve.systemResolvableHostNameCriteria</name>
         <criteriaValue>
             <criteria>
                 <criterion method="equals" value="localhost"/>
@@ -1640,17 +1640,17 @@ Partial configuration file example:
 
 To provide a username and password for the other SOCKS5 server, you can use either of the following command line options:
 
--   `--setting=chaining.socks5.usernamePassword=USERNAME:PASSWORD`
--   `--enter-chaining-socks5-user-pass`
+-   `--setting=chaining.socks5.userpassauth.usernamePassword=USERNAME:PASSWORD`
+-   `--enter-chaining-socks5-userpassauth-user-pass`
 
-The command line option `--setting=chaining.socks5.usernamePassword=USERNAME:PASSWORD` requires an actual username followed by a colon character (`:`) followed by an actual password.
+The command line option `--setting=chaining.socks5.userpassauth.usernamePassword=USERNAME:PASSWORD` requires an actual username followed by a colon character (`:`) followed by an actual password.
 
 Partial command line example:
 
 ```text
     
     --setting=chaining.socks5.authMethods=USERNAME_PASSWORD \
-    --setting=chaining.socks5.usernamePassword=Aladdin:opensesame
+    --setting=chaining.socks5.userpassauth.usernamePassword=Aladdin:opensesame
     
 ```
 
@@ -1662,14 +1662,14 @@ If the username or the password contains a plus sign character (`+`) not used fo
 
 If the username or the password contains a percent sign character (`%`) not used for URL encoding, then each percent sign character not used for URL encoding must be replaced with the URL encoding character `%25`.
 
-The command line option `--enter-chaining-socks5-user-pass` provides an interactive prompt for you to enter the username and password. This command line option is used for when you do not want to have the username and password appear in any script or in any part of the command line history for security reasons.
+The command line option `--enter-chaining-socks5-userpassauth-user-pass` provides an interactive prompt for you to enter the username and password. This command line option is used for when you do not want to have the username and password appear in any script or in any part of the command line history for security reasons.
 
 Partial command line example:
 
 ```text
     
     --setting=chaining.socks5.authMethods=USERNAME_PASSWORD \
-    --enter-chaining-socks5-user-pass
+    --enter-chaining-socks5-userpassauth-user-pass
     
 ```
 
@@ -1706,7 +1706,7 @@ The following is a sufficient example of using the Kerberos security mechanism:
     ./bin/jargyle \
         --setting=chaining.socksServerUri=socks5://127.0.0.1:23456 \
         --setting=chaining.socks5.authMethods=GSSAPI \
-        --setting=chaining.socks5.gssapiServiceName=rcmd/127.0.0.1 
+        --setting=chaining.socks5.gssapiauth.serviceName=rcmd/127.0.0.1 
     
 ```
 
@@ -1753,7 +1753,7 @@ The Java system property `-Djava.security.krb5.conf=krb5.conf` provides the Kerb
 
 In `krb5.conf`, a KDC is defined as running at the address `127.0.0.1` on port `12345` with its realm as `EXAMPLE.COM`. (In a production environment, the address `127.0.0.1` should be replaced by the actual address or name of the machine of where the KDC resides. Also, in a production environment, the realm `EXAMPLE.COM` should be replaced by an actual realm provided by a Kerberos administrator.)
 
-The command line option `--setting=chaining.socks5.gssapiServiceName=rcmd/127.0.0.1` is the GSS-API service name (or the Kerberos service principal) for the other SOCKS5 server residing at the address `127.0.0.1`. (In a production environment, the address `127.0.0.1` should be replaced by the name of the machine of where the other SOCKS5 server resides.)
+The command line option `--setting=chaining.socks5.gssapiauth.serviceName=rcmd/127.0.0.1` is the GSS-API service name (or the Kerberos service principal) for the other SOCKS5 server residing at the address `127.0.0.1`. (In a production environment, the address `127.0.0.1` should be replaced by the name of the machine of where the other SOCKS5 server resides.)
 
 ### 4. 12. Chaining to a Specified Chain of Other SOCKS Servers
 
@@ -1797,9 +1797,9 @@ Partial command line example:
     --setting=chaining.socksServerUri=socks5://127.0.0.1:23456 \
     --setting=chaining.socksServerUri=socks5://127.0.0.1:65432 \
     --setting=chaining.socks5.authMethods=GSSAPI \
-    --setting=chaining.socks5.gssapiServiceName=rcmd/127.0.0.1 \
+    --setting=chaining.socks5.gssapiauth.serviceName=rcmd/127.0.0.1 \
     --setting=chaining.socksServerUri=socks5://127.0.0.1:54321 \
-    --setting=chaining.socks5.resolveHostNamesThroughServer=true
+    --setting=chaining.socks5.resolve.resolveHostNamesThroughServer=true
     
 ```
 
@@ -1820,7 +1820,7 @@ Partial configuration file example:
         <value>GSSAPI</value>
     </setting>
     <setting>
-        <name>chaining.socks5.gssapiServiceName</name>
+        <name>chaining.socks5.gssapiauth.serviceName</name>
         <value>rcmd/127.0.0.1</value>
     </setting>
     <setting>
@@ -1828,7 +1828,7 @@ Partial configuration file example:
         <value>socks5://127.0.0.1:54321</value>
     </setting>        
     <setting>
-        <name>chaining.socks5.resolveHostNamesThroughServer</name>
+        <name>chaining.socks5.resolve.resolveHostNamesThroughServer</name>
         <value>true</value>
     </setting>    
     

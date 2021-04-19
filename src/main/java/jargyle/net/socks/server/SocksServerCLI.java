@@ -44,7 +44,7 @@ public final class SocksServerCLI extends CLI {
 	private static final int CONFIG_FILE_XSD_OPTION_GROUP_ORDINAL = 1;
 	private static final int ENTER_CHAINING_DTLS_KEY_STORE_PASS_OPTION_GROUP_ORDINAL = 2;
 	private static final int ENTER_CHAINING_DTLS_TRUST_STORE_PASS_OPTION_GROUP_ORDINAL = 3;	
-	private static final int ENTER_CHAINING_SOCKS5_USER_PASS_OPTION_GROUP_ORDINAL = 4;
+	private static final int ENTER_CHAINING_SOCKS5_USERPASSAUTH_USER_PASS_OPTION_GROUP_ORDINAL = 4;
 	private static final int ENTER_CHAINING_SSL_KEY_STORE_PASS_OPTION_GROUP_ORDINAL = 5;
 	private static final int ENTER_CHAINING_SSL_TRUST_STORE_PASS_OPTION_GROUP_ORDINAL = 6;
 	private static final int ENTER_DTLS_KEY_STORE_PASS_OPTION_GROUP_ORDINAL = 7;
@@ -315,11 +315,11 @@ public final class SocksServerCLI extends CLI {
 	@Option(
 			doc = "Enter through an interactive prompt the username "
 					+ "password to be used to access the other SOCKS5 server",
-			name = "enter-chaining-socks5-user-pass",
+			name = "enter-chaining-socks5-userpassauth-user-pass",
 			type = OptionType.GNU_LONG
 	)
-	@Ordinal(ENTER_CHAINING_SOCKS5_USER_PASS_OPTION_GROUP_ORDINAL)
-	private void enterChainingSocks5UsernamePassword() {
+	@Ordinal(ENTER_CHAINING_SOCKS5_USERPASSAUTH_USER_PASS_OPTION_GROUP_ORDINAL)
+	private void enterChainingSocks5UserpassauthUsernamePassword() {
 		String prompt = "Please enter the username and password to be used to "
 				+ "access the other SOCKS5 server";
 		UsernamePasswordRequestor usernamePasswordRequestor = 
@@ -327,7 +327,7 @@ public final class SocksServerCLI extends CLI {
 		UsernamePassword usernamePassword = 
 				usernamePasswordRequestor.requestUsernamePassword(null, prompt);
 		Setting<UsernamePassword> setting = 
-				SettingSpec.CHAINING_SOCKS5_USERNAME_PASSWORD.newSetting(
+				SettingSpec.CHAINING_SOCKS5_USERPASSAUTH_USERNAME_PASSWORD.newSetting(
 						usernamePassword);
 		this.modifiableConfiguration.addSetting(setting);
 	}
@@ -616,7 +616,7 @@ public final class SocksServerCLI extends CLI {
 		this.printHelpText(SocketSettingSpec.class);
 		System.out.println("SOCKS5_AUTH_METHODS:");
 		this.printHelpText(AuthMethod.class);
-		System.out.println("SOCKS5_GSSAPI_PROTECTION_LEVELS:");
+		System.out.println("SOCKS5_GSSAPIAUTH_PROTECTION_LEVELS:");
 		this.printHelpText(ProtectionLevel.class);
 		this.settingsHelpDisplayed = true;
 	}

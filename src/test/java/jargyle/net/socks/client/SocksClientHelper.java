@@ -20,18 +20,18 @@ public final class SocksClientHelper {
 	public static Socks5Client newSocks5Client(
 			final String host, 
 			final Integer port,
-			final String gssapiServiceName,
+			final String serviceName,
 			final ProtectionLevels protectionLevels, 
-			final boolean gssapiNecReferenceImpl) {
+			final boolean necReferenceImpl) {
 		Properties properties = Properties.newInstance(
 				PropertySpec.SOCKS5_AUTH_METHODS.newProperty(
 						AuthMethods.newInstance(AuthMethod.GSSAPI)),
-				PropertySpec.SOCKS5_GSSAPI_SERVICE_NAME.newProperty(
-						gssapiServiceName),
-				PropertySpec.SOCKS5_GSSAPI_PROTECTION_LEVELS.newProperty(
+				PropertySpec.SOCKS5_GSSAPIAUTH_SERVICE_NAME.newProperty(
+						serviceName),
+				PropertySpec.SOCKS5_GSSAPIAUTH_PROTECTION_LEVELS.newProperty(
 						protectionLevels),
-				PropertySpec.SOCKS5_GSSAPI_NEC_REFERENCE_IMPL.newProperty(
-						Boolean.valueOf(gssapiNecReferenceImpl)));
+				PropertySpec.SOCKS5_GSSAPIAUTH_NEC_REFERENCE_IMPL.newProperty(
+						Boolean.valueOf(necReferenceImpl)));
 		return new Socks5ServerUri(host, port).newSocksClient(properties);
 	}
 	
@@ -42,9 +42,9 @@ public final class SocksClientHelper {
 		Properties properties = Properties.newInstance(
 				PropertySpec.SOCKS5_AUTH_METHODS.newProperty(
 						AuthMethods.newInstance(AuthMethod.USERNAME_PASSWORD)),
-				PropertySpec.SOCKS5_USERNAME.newProperty(
+				PropertySpec.SOCKS5_USERPASSAUTH_USERNAME.newProperty(
 						usernamePassword.getUsername()),
-				PropertySpec.SOCKS5_PASSWORD.newProperty(
+				PropertySpec.SOCKS5_USERPASSAUTH_PASSWORD.newProperty(
 						usernamePassword.getEncryptedPassword()));
 		return new Socks5ServerUri(host, port).newSocksClient(properties);
 	}

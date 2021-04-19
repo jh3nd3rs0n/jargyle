@@ -22,7 +22,7 @@ public final class ConfigurationHelper {
 		return ImmutableConfiguration.newInstance(Settings.newInstance(
 				SettingSpec.SOCKS5_AUTH_METHODS.newSetting(
 						AuthMethods.newInstance(AuthMethod.GSSAPI)),
-				SettingSpec.SOCKS5_GSSAPI_NEC_REFERENCE_IMPL.newSetting(
+				SettingSpec.SOCKS5_GSSAPIAUTH_NEC_REFERENCE_IMPL.newSetting(
 						Boolean.TRUE)));
 	}
 	
@@ -34,7 +34,7 @@ public final class ConfigurationHelper {
 		return ImmutableConfiguration.newInstance(Settings.newInstance(
 				SettingSpec.SOCKS5_AUTH_METHODS.newSetting(
 						AuthMethods.newInstance(AuthMethod.USERNAME_PASSWORD)),
-				SettingSpec.SOCKS5_USERNAME_PASSWORD_AUTHENTICATOR.newSetting(
+				SettingSpec.SOCKS5_USERPASSAUTH_USERNAME_PASSWORD_AUTHENTICATOR.newSetting(
 						new StringSourceUsernamePasswordAuthenticator(sb.toString()))));
 	}
 	

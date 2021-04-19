@@ -171,71 +171,71 @@ final class ExternalNetObjectFactory extends NetObjectFactory {
 			return properties;
 		}
 		if (settingSpec.equals(
-				SettingSpec.CHAINING_SOCKS5_GSSAPI_MECHANISM_OID)) {
-			Oid gssapiMechanismOid = (Oid) setting.getValue();
+				SettingSpec.CHAINING_SOCKS5_GSSAPIAUTH_MECHANISM_OID)) {
+			Oid mechanismOid = (Oid) setting.getValue();
 			properties.add(cast(
-					PropertySpec.SOCKS5_GSSAPI_MECHANISM_OID.newProperty(
-							gssapiMechanismOid)));
+					PropertySpec.SOCKS5_GSSAPIAUTH_MECHANISM_OID.newProperty(
+							mechanismOid)));
 			return properties;
 		}
 		if (settingSpec.equals(
-				SettingSpec.CHAINING_SOCKS5_GSSAPI_NEC_REFERENCE_IMPL)) {
-			Boolean gssapiNecReferenceImpl = (Boolean) setting.getValue();
+				SettingSpec.CHAINING_SOCKS5_GSSAPIAUTH_NEC_REFERENCE_IMPL)) {
+			Boolean necReferenceImpl = (Boolean) setting.getValue();
 			properties.add(cast(
-					PropertySpec.SOCKS5_GSSAPI_NEC_REFERENCE_IMPL.newProperty(
-							gssapiNecReferenceImpl)));
+					PropertySpec.SOCKS5_GSSAPIAUTH_NEC_REFERENCE_IMPL.newProperty(
+							necReferenceImpl)));
 			return properties;
 		}
 		if (settingSpec.equals(
-				SettingSpec.CHAINING_SOCKS5_GSSAPI_PROTECTION_LEVELS)) {
+				SettingSpec.CHAINING_SOCKS5_GSSAPIAUTH_PROTECTION_LEVELS)) {
 			ProtectionLevels protectionLevels =	
 					(ProtectionLevels) setting.getValue();
 			properties.add(cast(
-					PropertySpec.SOCKS5_GSSAPI_PROTECTION_LEVELS.newProperty(
+					PropertySpec.SOCKS5_GSSAPIAUTH_PROTECTION_LEVELS.newProperty(
 							protectionLevels)));
 			return properties;
 		}
 		if (settingSpec.equals(
-				SettingSpec.CHAINING_SOCKS5_GSSAPI_SERVICE_NAME)) {
-			String gssapiServiceName = (String) setting.getValue();
+				SettingSpec.CHAINING_SOCKS5_GSSAPIAUTH_SERVICE_NAME)) {
+			String serviceName = (String) setting.getValue();
 			properties.add(cast(
-					PropertySpec.SOCKS5_GSSAPI_SERVICE_NAME.newProperty(
-							gssapiServiceName)));
+					PropertySpec.SOCKS5_GSSAPIAUTH_SERVICE_NAME.newProperty(
+							serviceName)));
 			return properties;
 		}
 		if (settingSpec.equals(
-				SettingSpec.CHAINING_SOCKS5_RESOLVE_HOST_NAMES_THROUGH_SERVER)) {
+				SettingSpec.CHAINING_SOCKS5_RESOLVE_RESOLVE_HOST_NAMES_THROUGH_SERVER)) {
 			Boolean resolveHostNamesThroughServer = 
 					(Boolean) setting.getValue();
 			properties.add(cast(
-					PropertySpec.SOCKS5_RESOLVE_HOST_NAMES_THROUGH_SERVER.newProperty(
+					PropertySpec.SOCKS5_RESOLVE_RESOLVE_HOST_NAMES_THROUGH_SERVER.newProperty(
 							resolveHostNamesThroughServer)));
 			return properties;
 		}
 		if (settingSpec.equals(
-				SettingSpec.CHAINING_SOCKS5_SERVER_RESOLVABLE_HOST_NAME_CRITERIA)) {
+				SettingSpec.CHAINING_SOCKS5_RESOLVE_SERVER_RESOLVABLE_HOST_NAME_CRITERIA)) {
 			Criteria serverResolvableHostNameCriteria = 
 					(Criteria) setting.getValue();
 			properties.add(cast(
-					PropertySpec.SOCKS5_SERVER_RESOLVABLE_HOST_NAME_CRITERIA.newProperty(
+					PropertySpec.SOCKS5_RESOLVE_SERVER_RESOLVABLE_HOST_NAME_CRITERIA.newProperty(
 							serverResolvableHostNameCriteria)));
 			return properties;
 		}
 		if (settingSpec.equals(
-				SettingSpec.CHAINING_SOCKS5_SYSTEM_RESOLVABLE_HOST_NAME_CRITERIA)) {
+				SettingSpec.CHAINING_SOCKS5_RESOLVE_SYSTEM_RESOLVABLE_HOST_NAME_CRITERIA)) {
 			Criteria systemResolvableHostNameCriteria = 
 					(Criteria) setting.getValue();
 			properties.add(cast(
-					PropertySpec.SOCKS5_SYSTEM_RESOLVABLE_HOST_NAME_CRITERIA.newProperty(
+					PropertySpec.SOCKS5_RESOLVE_SYSTEM_RESOLVABLE_HOST_NAME_CRITERIA.newProperty(
 							systemResolvableHostNameCriteria)));
 		}
 		if (settingSpec.equals(
-				SettingSpec.CHAINING_SOCKS5_USERNAME_PASSWORD)) {
+				SettingSpec.CHAINING_SOCKS5_USERPASSAUTH_USERNAME_PASSWORD)) {
 			UsernamePassword usernamePassword = 
 					(UsernamePassword) setting.getValue();
-			properties.add(cast(PropertySpec.SOCKS5_USERNAME.newProperty(
+			properties.add(cast(PropertySpec.SOCKS5_USERPASSAUTH_USERNAME.newProperty(
 					usernamePassword.getUsername())));
-			properties.add(cast(PropertySpec.SOCKS5_PASSWORD.newProperty(
+			properties.add(cast(PropertySpec.SOCKS5_USERPASSAUTH_PASSWORD.newProperty(
 					usernamePassword.getEncryptedPassword())));
 		}		
 		return properties;

@@ -103,40 +103,40 @@ public abstract class PropertySpec<V> {
 			"socksClient.socks5.authMethods",
 			AuthMethods.newInstance(AuthMethod.NO_AUTHENTICATION_REQUIRED));
 	
-	public static final PropertySpec<Oid> SOCKS5_GSSAPI_MECHANISM_OID = new OidPropertySpec(
-			"socksClient.socks5.gssapiMechanismOid",
+	public static final PropertySpec<Oid> SOCKS5_GSSAPIAUTH_MECHANISM_OID = new OidPropertySpec(
+			"socksClient.socks5.gssapiauth.mechanismOid",
 			"1.2.840.113554.1.2.2");
 	
-	public static final PropertySpec<Boolean> SOCKS5_GSSAPI_NEC_REFERENCE_IMPL = new BooleanPropertySpec(
-			"socksClient.socks5.gssapiNecReferenceImpl",
+	public static final PropertySpec<Boolean> SOCKS5_GSSAPIAUTH_NEC_REFERENCE_IMPL = new BooleanPropertySpec(
+			"socksClient.socks5.gssapiauth.necReferenceImpl",
 			Boolean.FALSE);
 	
-	public static final PropertySpec<ProtectionLevels> SOCKS5_GSSAPI_PROTECTION_LEVELS = new ProtectionLevelsPropertySpec(
-			"socksClient.socks5.gssapiProtectionLevels",
+	public static final PropertySpec<ProtectionLevels> SOCKS5_GSSAPIAUTH_PROTECTION_LEVELS = new ProtectionLevelsPropertySpec(
+			"socksClient.socks5.gssapiauth.protectionLevels",
 			ProtectionLevels.DEFAULT_INSTANCE);
 	
-	public static final PropertySpec<String> SOCKS5_GSSAPI_SERVICE_NAME = new StringPropertySpec(
-			"socksClient.socks5.gssapiServiceName",
+	public static final PropertySpec<String> SOCKS5_GSSAPIAUTH_SERVICE_NAME = new StringPropertySpec(
+			"socksClient.socks5.gssapiauth.serviceName",
 			null);
 	
-	public static final PropertySpec<EncryptedPassword> SOCKS5_PASSWORD = new UserEncryptedPasswordPropertySpec(
-			"socksClient.socks5.password",
-			EncryptedPassword.newInstance(new char[] { }));
-	
-	public static final PropertySpec<Boolean> SOCKS5_RESOLVE_HOST_NAMES_THROUGH_SERVER = new BooleanPropertySpec(
-			"socksClient.socks5.resolveHostNamesThroughServer",
+	public static final PropertySpec<Boolean> SOCKS5_RESOLVE_RESOLVE_HOST_NAMES_THROUGH_SERVER = new BooleanPropertySpec(
+			"socksClient.socks5.resolve.resolveHostNamesThroughServer",
 			Boolean.FALSE);
 	
-	public static final PropertySpec<Criteria> SOCKS5_SERVER_RESOLVABLE_HOST_NAME_CRITERIA = new CriteriaPropertySpec(
-			"socksClient.socks5.serverResolvableHostNameCriteria",
+	public static final PropertySpec<Criteria> SOCKS5_RESOLVE_SERVER_RESOLVABLE_HOST_NAME_CRITERIA = new CriteriaPropertySpec(
+			"socksClient.socks5.resolve.serverResolvableHostNameCriteria",
 			Criteria.newInstance(Criterion.newInstance(CriterionMethod.MATCHES, ".*")));
 	
-	public static final PropertySpec<Criteria> SOCKS5_SYSTEM_RESOLVABLE_HOST_NAME_CRITERIA = new CriteriaPropertySpec(
-			"socksClient.socks5.systemResolvableHostNameCriteria",
+	public static final PropertySpec<Criteria> SOCKS5_RESOLVE_SYSTEM_RESOLVABLE_HOST_NAME_CRITERIA = new CriteriaPropertySpec(
+			"socksClient.socks5.resolve.systemResolvableHostNameCriteria",
 			Criteria.newInstance(Criterion.newInstance(CriterionMethod.EQUALS, "localhost")));
 	
-	public static final PropertySpec<String> SOCKS5_USERNAME = new UsernamePropertySpec(
-			"socksClient.socks5.username", 
+	public static final PropertySpec<EncryptedPassword> SOCKS5_USERPASSAUTH_PASSWORD = new UserEncryptedPasswordPropertySpec(
+			"socksClient.socks5.userpathauth.password",
+			EncryptedPassword.newInstance(new char[] { }));
+	
+	public static final PropertySpec<String> SOCKS5_USERPASSAUTH_USERNAME = new UsernamePropertySpec(
+			"socksClient.socks5.userpathauth.username", 
 			System.getProperty("user.name"));
 	
 	public static final PropertySpec<Boolean> SSL_ENABLED = new BooleanPropertySpec(

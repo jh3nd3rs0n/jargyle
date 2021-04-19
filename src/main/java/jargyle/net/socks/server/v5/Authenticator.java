@@ -117,7 +117,7 @@ enum Authenticator {
 				return null;
 			}
 			boolean necReferenceImpl = configuration.getSettings().getLastValue(
-					SettingSpec.SOCKS5_GSSAPI_NEC_REFERENCE_IMPL).booleanValue();
+					SettingSpec.SOCKS5_GSSAPIAUTH_NEC_REFERENCE_IMPL).booleanValue();
 			byte[] token = message.getToken();
 			MessageProp prop = null;
 			if (!necReferenceImpl) {
@@ -141,7 +141,7 @@ enum Authenticator {
 			}
 			ProtectionLevels protectionLevels = 
 					configuration.getSettings().getLastValue(
-							SettingSpec.SOCKS5_GSSAPI_PROTECTION_LEVELS);
+							SettingSpec.SOCKS5_GSSAPIAUTH_PROTECTION_LEVELS);
 			List<ProtectionLevel> protectionLevelList = 
 					protectionLevels.toList();
 			ProtectionLevel protectionLevelChoice = protectionLevel;
@@ -217,7 +217,7 @@ enum Authenticator {
 			char[] password = usernamePasswordReq.getPassword();
 			UsernamePasswordAuthenticator authenticator = 
 					configuration.getSettings().getLastValue(
-							SettingSpec.SOCKS5_USERNAME_PASSWORD_AUTHENTICATOR);
+							SettingSpec.SOCKS5_USERPASSAUTH_USERNAME_PASSWORD_AUTHENTICATOR);
 			if (authenticator == null) { 
 				authenticator = UsernamePasswordAuthenticator.newInstance(); 
 			}

@@ -234,22 +234,22 @@ public abstract class SettingSpec<V> {
 	@HelpText(
 			doc = "The object ID for the GSS-API authentication mechanism to "
 					+ "the other SOCKS5 server (default is 1.2.840.113554.1.2.2)", 
-			usage = "chaining.socks5.gssapiMechanismOid=GSSAPI_MECHANISM_OID"
+			usage = "chaining.socks5.gssapiauth.mechanismOid=SOCKS5_GSSAPIAUTH_MECHANISM_OID"
 	)
-	public static final SettingSpec<Oid> CHAINING_SOCKS5_GSSAPI_MECHANISM_OID = new OidSettingSpec(
-			"chaining.socks5.gssapiMechanismOid",
-			PropertySpec.SOCKS5_GSSAPI_MECHANISM_OID.getDefaultProperty().getValue());
+	public static final SettingSpec<Oid> CHAINING_SOCKS5_GSSAPIAUTH_MECHANISM_OID = new OidSettingSpec(
+			"chaining.socks5.gssapiauth.mechanismOid",
+			PropertySpec.SOCKS5_GSSAPIAUTH_MECHANISM_OID.getDefaultProperty().getValue());
 	
 	@HelpText(
 			doc = "The boolean value to indicate if the exchange of the "
 					+ "GSS-API protection level negotiation must be "
 					+ "unprotected should the other SOCKS5 server use the NEC "
 					+ "reference implementation (default is false)", 
-			usage = "chaining.socks5.gssapiNecReferenceImpl=true|false"
+			usage = "chaining.socks5.gssapiauth.necReferenceImpl=true|false"
 	)
-	public static final SettingSpec<Boolean> CHAINING_SOCKS5_GSSAPI_NEC_REFERENCE_IMPL = new BooleanSettingSpec(
-			"chaining.socks5.gssapiNecReferenceImpl",
-			PropertySpec.SOCKS5_GSSAPI_NEC_REFERENCE_IMPL.getDefaultProperty().getValue());
+	public static final SettingSpec<Boolean> CHAINING_SOCKS5_GSSAPIAUTH_NEC_REFERENCE_IMPL = new BooleanSettingSpec(
+			"chaining.socks5.gssapiauth.necReferenceImpl",
+			PropertySpec.SOCKS5_GSSAPIAUTH_NEC_REFERENCE_IMPL.getDefaultProperty().getValue());
 	
 	@HelpText(
 			doc = "The space separated list of acceptable protection levels "
@@ -258,57 +258,57 @@ public abstract class SettingSpec<V> {
 					+ "acceptable if the server does not accept the first.) "
 					+ "(default is "
 					+ "REQUIRED_INTEG_AND_CONF REQUIRED_INTEG NONE)", 
-			usage = "chaining.socks5.gssapiProtectionLevels=SOCKS5_GSSAPI_PROTECTION_LEVEL1[ SOCKS5_GSSAPI_PROTECTION_LEVEL2[...]]"
+			usage = "chaining.socks5.gssapiauth.protectionLevels=SOCKS5_GSSAPIAUTH_PROTECTION_LEVEL1[ SOCKS5_GSSAPIAUTH_PROTECTION_LEVEL2[...]]"
 	)
-	public static final SettingSpec<ProtectionLevels> CHAINING_SOCKS5_GSSAPI_PROTECTION_LEVELS = new ProtectionLevelsSettingSpec(
-			"chaining.socks5.gssapiProtectionLevels",
-			PropertySpec.SOCKS5_GSSAPI_PROTECTION_LEVELS.getDefaultProperty().getValue());
+	public static final SettingSpec<ProtectionLevels> CHAINING_SOCKS5_GSSAPIAUTH_PROTECTION_LEVELS = new ProtectionLevelsSettingSpec(
+			"chaining.socks5.gssapiauth.protectionLevels",
+			PropertySpec.SOCKS5_GSSAPIAUTH_PROTECTION_LEVELS.getDefaultProperty().getValue());
 	
 	@HelpText(
 			doc = "The GSS-API service name for the other SOCKS5 server", 
-			usage = "chaining.socks5.gssapiServiceName=GSSAPI_SERVICE_NAME"
+			usage = "chaining.socks5.gssapiauth.serviceName=SOCKS5_GSSAPIAUTH_SERVICE_NAME"
 	)
-	public static final SettingSpec<String> CHAINING_SOCKS5_GSSAPI_SERVICE_NAME = new StringSettingSpec(
-			"chaining.socks5.gssapiServiceName",
-			PropertySpec.SOCKS5_GSSAPI_SERVICE_NAME.getDefaultProperty().getValue());
+	public static final SettingSpec<String> CHAINING_SOCKS5_GSSAPIAUTH_SERVICE_NAME = new StringSettingSpec(
+			"chaining.socks5.gssapiauth.serviceName",
+			PropertySpec.SOCKS5_GSSAPIAUTH_SERVICE_NAME.getDefaultProperty().getValue());
 	
 	@HelpText(
 			doc = "The boolean value to indicate that host names are to be "
 					+ "resolved through the other SOCKS5 server "
 					+ "(default is false)", 
-			usage = "chaining.socks5.resolveHostNamesThroughServer=true|false"
+			usage = "chaining.socks5.resolve.resolveHostNamesThroughServer=true|false"
 	)	
-	public static final SettingSpec<Boolean> CHAINING_SOCKS5_RESOLVE_HOST_NAMES_THROUGH_SERVER = new BooleanSettingSpec(
-			"chaining.socks5.resolveHostNamesThroughServer",
-			PropertySpec.SOCKS5_RESOLVE_HOST_NAMES_THROUGH_SERVER.getDefaultProperty().getValue());
+	public static final SettingSpec<Boolean> CHAINING_SOCKS5_RESOLVE_RESOLVE_HOST_NAMES_THROUGH_SERVER = new BooleanSettingSpec(
+			"chaining.socks5.resolve.resolveHostNamesThroughServer",
+			PropertySpec.SOCKS5_RESOLVE_RESOLVE_HOST_NAMES_THROUGH_SERVER.getDefaultProperty().getValue());
 	
 	@HelpText(
 			doc = "The space separated list of host name criteria for host "
 					+ "names to be resolved through the other SOCKS5 server "
 					+ "(default is matches:.*)", 
-			usage = "chaining.socks5.serverResolvableHostNameCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
+			usage = "chaining.socks5.resolve.serverResolvableHostNameCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
 	)	
-	public static final SettingSpec<Criteria> CHAINING_SOCKS5_SERVER_RESOLVABLE_HOST_NAME_CRITERIA = new CriteriaSettingSpec(
-			"chaining.socks5.serverResolvableHostNameCriteria",
-			PropertySpec.SOCKS5_SERVER_RESOLVABLE_HOST_NAME_CRITERIA.getDefaultProperty().getValue());
+	public static final SettingSpec<Criteria> CHAINING_SOCKS5_RESOLVE_SERVER_RESOLVABLE_HOST_NAME_CRITERIA = new CriteriaSettingSpec(
+			"chaining.socks5.resolve.serverResolvableHostNameCriteria",
+			PropertySpec.SOCKS5_RESOLVE_SERVER_RESOLVABLE_HOST_NAME_CRITERIA.getDefaultProperty().getValue());
 	
 	@HelpText(
 			doc = "The space separated list of host name criteria for host "
 					+ "names to be resolved through the system "
 					+ "(default is equals:localhost)", 
-			usage = "chaining.socks5.systemResolvableHostNameCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
+			usage = "chaining.socks5.resolve.systemResolvableHostNameCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
 	)	
-	public static final SettingSpec<Criteria> CHAINING_SOCKS5_SYSTEM_RESOLVABLE_HOST_NAME_CRITERIA = new CriteriaSettingSpec(
-			"chaining.socks5.systemResolvableHostNameCriteria",
-			PropertySpec.SOCKS5_SYSTEM_RESOLVABLE_HOST_NAME_CRITERIA.getDefaultProperty().getValue());
+	public static final SettingSpec<Criteria> CHAINING_SOCKS5_RESOLVE_SYSTEM_RESOLVABLE_HOST_NAME_CRITERIA = new CriteriaSettingSpec(
+			"chaining.socks5.resolve.systemResolvableHostNameCriteria",
+			PropertySpec.SOCKS5_RESOLVE_SYSTEM_RESOLVABLE_HOST_NAME_CRITERIA.getDefaultProperty().getValue());
 	
 	@HelpText(
 			doc = "The username password to be used to access the other "
 					+ "SOCKS5 server", 
-			usage = "chaining.socks5.usernamePassword=USERNAME:PASSWORD"
+			usage = "chaining.socks5.userpassauth.usernamePassword=USERNAME:PASSWORD"
 	)
-	public static final SettingSpec<UsernamePassword> CHAINING_SOCKS5_USERNAME_PASSWORD = new UsernamePasswordSettingSpec(
-			"chaining.socks5.usernamePassword",
+	public static final SettingSpec<UsernamePassword> CHAINING_SOCKS5_USERPASSAUTH_USERNAME_PASSWORD = new UsernamePasswordSettingSpec(
+			"chaining.socks5.userpassauth.usernamePassword",
 			null);
 	
 	@HelpText(
@@ -581,10 +581,10 @@ public abstract class SettingSpec<V> {
 					+ "GSS-API protection level negotiation must be "
 					+ "unprotected according to the NEC reference "
 					+ "implementation (default is false)", 
-			usage = "socks5.gssapiNecReferenceImpl=true|false"
+			usage = "socks5.gssapiauth.necReferenceImpl=true|false"
 	)
-	public static final SettingSpec<Boolean> SOCKS5_GSSAPI_NEC_REFERENCE_IMPL = new BooleanSettingSpec(
-			"socks5.gssapiNecReferenceImpl",
+	public static final SettingSpec<Boolean> SOCKS5_GSSAPIAUTH_NEC_REFERENCE_IMPL = new BooleanSettingSpec(
+			"socks5.gssapiauth.necReferenceImpl",
 			Boolean.FALSE);
 	
 	@HelpText(
@@ -593,10 +593,10 @@ public abstract class SettingSpec<V> {
 					+ "if the client does not provide a protection level that "
 					+ "is acceptable.) (default is REQUIRED_INTEG_AND_CONF "
 					+ "REQUIRED_INTEG NONE)", 
-			usage = "socks5.gssapiProtectionLevels=SOCKS5_GSSAPI_PROTECTION_LEVEL1[ SOCKS5_GSSAPI_PROTECTION_LEVEL2[...]]"
+			usage = "socks5.gssapiauth.protectionLevels=SOCKS5_GSSAPIAUTH_PROTECTION_LEVEL1[ SOCKS5_GSSAPIAUTH_PROTECTION_LEVEL2[...]]"
 	)
-	public static final SettingSpec<ProtectionLevels> SOCKS5_GSSAPI_PROTECTION_LEVELS = new ProtectionLevelsSettingSpec(
-			"socks5.gssapiProtectionLevels",
+	public static final SettingSpec<ProtectionLevels> SOCKS5_GSSAPIAUTH_PROTECTION_LEVELS = new ProtectionLevelsSettingSpec(
+			"socks5.gssapiauth.protectionLevels",
 			ProtectionLevels.DEFAULT_INSTANCE);
 	
 	@HelpText(
@@ -793,10 +793,10 @@ public abstract class SettingSpec<V> {
 	
 	@HelpText(
 			doc = "The username password authenticator for the SOCKS5 server", 
-			usage = "socks5.usernamePasswordAuthenticator=CLASSNAME[:VALUE]"
+			usage = "socks5.userpassauth.usernamePasswordAuthenticator=CLASSNAME[:VALUE]"
 	)
-	public static final SettingSpec<UsernamePasswordAuthenticator> SOCKS5_USERNAME_PASSWORD_AUTHENTICATOR = new UsernamePasswordAuthenticatorSettingSpec(
-			"socks5.usernamePasswordAuthenticator",
+	public static final SettingSpec<UsernamePasswordAuthenticator> SOCKS5_USERPASSAUTH_USERNAME_PASSWORD_AUTHENTICATOR = new UsernamePasswordAuthenticatorSettingSpec(
+			"socks5.userpassauth.usernamePasswordAuthenticator",
 			null);
 	
 	@HelpText(

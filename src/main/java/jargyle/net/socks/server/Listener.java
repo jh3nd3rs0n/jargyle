@@ -36,7 +36,7 @@ final class Listener implements Runnable {
 		this.serverSocket = serverSock;
 	}
 	
-	private boolean canAcceptClientSocket(final Socket clientSocket) {
+	private boolean canAllowClientSocket(final Socket clientSocket) {
 		Settings settings = this.configuration.getSettings();
 		String clientAddress = 
 				clientSocket.getInetAddress().getHostAddress();
@@ -137,7 +137,7 @@ final class Listener implements Runnable {
 				continue;
 			}
 			try {
-				if (!this.canAcceptClientSocket(clientSocket)) {
+				if (!this.canAllowClientSocket(clientSocket)) {
 					this.closeClientSocket(clientSocket);
 					continue;
 				}

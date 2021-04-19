@@ -126,7 +126,7 @@ final class UdpRelayServer {
 			super(server);
 		}
 		
-		private boolean canAcceptExternalIncomingAddress(
+		private boolean canAllowExternalIncomingAddress(
 				final String externalIncomingAddress) {
 			Criteria allowedExternalIncomingAddrCriteria =
 					this.getAllowedExternalIncomingAddressCriteria();
@@ -211,7 +211,7 @@ final class UdpRelayServer {
 					LOGGER.trace(this.format(String.format(
 							"Packet data received: %s byte(s)",
 							packet.getLength())));
-					if (!this.canAcceptExternalIncomingAddress(
+					if (!this.canAllowExternalIncomingAddress(
 							packet.getAddress().getHostAddress())) {
 						continue;
 					}
@@ -258,7 +258,7 @@ final class UdpRelayServer {
 			super(server);
 		}
 		
-		private boolean canAcceptExternalOutgoingAddress(
+		private boolean canAllowExternalOutgoingAddress(
 				final String externalOutgoingAddress) {
 			Criteria allowedExternalOutgoingAddrCriteria =
 					this.getAllowedExternalOutgoingAddressCriteria();
@@ -393,7 +393,7 @@ final class UdpRelayServer {
 					if (header.getCurrentFragmentNumber() != 0) {
 						continue;
 					}
-					if (!this.canAcceptExternalOutgoingAddress(
+					if (!this.canAllowExternalOutgoingAddress(
 							header.getDesiredDestinationAddress())) {
 						continue;
 					}

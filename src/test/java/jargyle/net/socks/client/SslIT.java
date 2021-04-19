@@ -13,6 +13,7 @@ import jargyle.net.ServerSocketHelper;
 import jargyle.net.SocketHelper;
 import jargyle.net.socks.server.ConfigurationHelper;
 
+@org.junit.Ignore
 public class SslIT {
 
 /*	

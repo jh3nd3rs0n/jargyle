@@ -98,7 +98,7 @@ public final class Socks5Worker implements Runnable {
 		return Socket;
 	}
 
-	private boolean canAcceptExternalIncomingAddress(
+	private boolean canAllowExternalIncomingAddress(
 			final String externalIncomingAddress) {
 		Criteria allowedExternalIncomingAddressCriteria =
 				this.settings.getLastValue(
@@ -152,9 +152,8 @@ public final class Socks5Worker implements Runnable {
 		return true;
 	}
 	
-	private boolean canAcceptSocks5Request(
-			final String clientAddress,
-			final Socks5Request socks5Req) {
+	private boolean canAllowSocks5Request(
+			final String clientAddress,	final Socks5Request socks5Req) {
 		Socks5RequestCriteria allowedSocks5RequestCriteria = 
 				this.settings.getLastValue(
 						SettingSpec.SOCKS5_ALLOWED_SOCKS5_REQUEST_CRITERIA);
@@ -421,7 +420,7 @@ public final class Socks5Worker implements Runnable {
 					externalIncomingSocket.getInetAddress();
 			String externalIncomingAddress = 
 					externalIncomingInetAddress.getHostAddress();
-			if (!this.canAcceptExternalIncomingAddress(
+			if (!this.canAllowExternalIncomingAddress(
 					externalIncomingAddress)) {
 				return;
 			}
@@ -800,7 +799,7 @@ public final class Socks5Worker implements Runnable {
 			this.clientSocket = socket;
 			Socks5Request socks5Req = this.newSocks5Request();
 			if (socks5Req == null) { return; }
-			if (!this.canAcceptSocks5Request(
+			if (!this.canAllowSocks5Request(
 					this.clientSocket.getInetAddress().getHostAddress(), 
 					socks5Req)) {
 				return;

@@ -2,7 +2,7 @@ package jargyle.net.socks.client.propertyspec;
 
 import jargyle.net.socks.client.Property;
 import jargyle.net.socks.client.PropertySpec;
-import jargyle.net.socks.client.v5.UsernamePassword;
+import jargyle.net.socks.client.v5.userpassauth.UsernamePassword;
 
 public final class UsernamePropertySpec extends PropertySpec<String> {
 

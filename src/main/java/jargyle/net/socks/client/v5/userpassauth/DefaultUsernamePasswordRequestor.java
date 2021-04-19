@@ -1,6 +1,8 @@
-package jargyle.net.socks.client.v5;
+package jargyle.net.socks.client.v5.userpassauth;
 
 import java.io.Console;
+
+import jargyle.net.socks.client.v5.Socks5ServerUri;
 
 public final class DefaultUsernamePasswordRequestor 
 	extends UsernamePasswordRequestor {

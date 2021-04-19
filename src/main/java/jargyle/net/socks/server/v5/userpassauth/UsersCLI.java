@@ -1,4 +1,4 @@
-package jargyle.net.socks.server.v5;
+package jargyle.net.socks.server.v5.userpassauth;
 
 import java.io.Console;
 import java.io.File;

@@ -23,7 +23,7 @@ import jargyle.net.socks.client.Property;
 import jargyle.net.socks.client.PropertySpec;
 import jargyle.net.socks.client.SocksClient;
 import jargyle.net.socks.client.SocksServerUri;
-import jargyle.net.socks.client.v5.UsernamePassword;
+import jargyle.net.socks.client.v5.userpassauth.UsernamePassword;
 import jargyle.net.socks.transport.v5.AuthMethods;
 import jargyle.net.socks.transport.v5.gssapiauth.ProtectionLevels;
 import jargyle.security.EncryptedPassword;

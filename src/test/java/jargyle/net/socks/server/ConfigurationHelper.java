@@ -2,7 +2,7 @@ package jargyle.net.socks.server;
 
 import jargyle.ResourceHelper;
 import jargyle.ResourceNameConstants;
-import jargyle.net.socks.server.v5.StringSourceUsernamePasswordAuthenticator;
+import jargyle.net.socks.server.v5.userpassauth.StringSourceUsernamePasswordAuthenticator;
 import jargyle.net.socks.transport.v5.AuthMethod;
 import jargyle.net.socks.transport.v5.AuthMethods;
 

@@ -16,6 +16,8 @@ import org.ietf.jgss.MessageProp;
 import org.ietf.jgss.Oid;
 
 import jargyle.net.socks.client.PropertySpec;
+import jargyle.net.socks.client.v5.userpassauth.UsernamePassword;
+import jargyle.net.socks.client.v5.userpassauth.UsernamePasswordRequestor;
 import jargyle.net.socks.transport.v5.Method;
 import jargyle.net.socks.transport.v5.gssapiauth.GssSocket;
 import jargyle.net.socks.transport.v5.gssapiauth.Message;

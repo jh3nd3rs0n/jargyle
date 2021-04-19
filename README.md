@@ -1170,21 +1170,21 @@ Partial configuration file example:
     
 ```
 
-Also, you will need to have the setting `socks5.usernamePasswordAuthenticator` to specify the name of the class that extends `jargyle.net.socks.server.v5.UsernamePasswordAuthenticator` along with a string value
+Also, you will need to have the setting `socks5.usernamePasswordAuthenticator` to specify the name of the class that extends `jargyle.net.socks.server.v5.userpassauth.UsernamePasswordAuthenticator` along with a string value
 
 The following are two provided classes you can use:
 
--   `jargyle.net.socks.server.v5.StringSourceUsernamePasswordAuthenticator`
--   `jargyle.net.socks.server.v5.XmlFileSourceUsernamePasswordAuthenticator`
+-   `jargyle.net.socks.server.v5.userpassauth.StringSourceUsernamePasswordAuthenticator`
+-   `jargyle.net.socks.server.v5.userpassauth.XmlFileSourceUsernamePasswordAuthenticator`
 
-`jargyle.net.socks.server.v5.StringSourceUsernamePasswordAuthenticator`: This class authenticates the username and password based on the string value of a space separated list of USERNAME:PASSWORD pairs
+`jargyle.net.socks.server.v5.userpassauth.StringSourceUsernamePasswordAuthenticator`: This class authenticates the username and password based on the string value of a space separated list of USERNAME:PASSWORD pairs
 
 Partial command line example:
 
 ```text
     
     "--setting=socks5.authMethods=USERNAME_PASSWORD" \
-    "--setting=socks5.usernamePasswordAuthenticator=jargyle.net.socks.server.v5.StringSourceUsernamePasswordAuthenticator:Aladdin:opensesame Jasmine:mission%3Aimpossible"
+    "--setting=socks5.usernamePasswordAuthenticator=jargyle.net.socks.server.v5.userpassauth.StringSourceUsernamePasswordAuthenticator:Aladdin:opensesame Jasmine:mission%3Aimpossible"
     
 ```
 
@@ -1200,7 +1200,7 @@ Partial configuration file example:
         <name>socks5.usernamePasswordAuthenticator</name>
         <usernamePasswordAuthenticatorValue>
             <usernamePasswordAuthenticator>
-                <className>jargyle.net.socks.server.v5.StringSourceUsernamePasswordAuthenticator</className>
+                <className>jargyle.net.socks.server.v5.userpassauth.StringSourceUsernamePasswordAuthenticator</className>
                 <value>Aladdin:opensesame Jasmine:mission%3Aimpossible</value>
             </usernamePasswordAuthenticator>
         </usernamePasswordAuthenticatorValue>
@@ -1216,14 +1216,14 @@ If any of the usernames or any of the passwords contain a plus sign character (`
 
 If any of the usernames or any of the passwords contain a percent sign character (`%`) not used for URL encoding, then each percent sign character not used for URL encoding must be replaced with the URL encoding character `%25`.
 
-`jargyle.net.socks.server.v5.XmlFileSourceUsernamePasswordAuthenticator`: This class authenticates the username and password based on the [XML file of users](#4-9-managing-socks5-users-for-username-password-authentication) whose file name is provided as a string value
+`jargyle.net.socks.server.v5.userpassauth.XmlFileSourceUsernamePasswordAuthenticator`: This class authenticates the username and password based on the [XML file of users](#4-9-managing-socks5-users-for-username-password-authentication) whose file name is provided as a string value
 
 Partial command line example:
 
 ```text
     
     --setting=socks5.authMethods=USERNAME_PASSWORD \
-    --setting=socks5.usernamePasswordAuthenticator=jargyle.net.socks.server.v5.XmlFileSourceUsernamePasswordAuthenticator:users.xml
+    --setting=socks5.usernamePasswordAuthenticator=jargyle.net.socks.server.v5.userpassauth.XmlFileSourceUsernamePasswordAuthenticator:users.xml
     
 ```
 
@@ -1239,7 +1239,7 @@ Partial configuration file example:
         <name>socks5.usernamePasswordAuthenticator</name>
         <usernamePasswordAuthenticatorValue>
             <usernamePasswordAuthenticator>
-                <className>jargyle.net.socks.server.v5.XmlFileSourceUsernamePasswordAuthenticator</className>
+                <className>jargyle.net.socks.server.v5.userpassauth.XmlFileSourceUsernamePasswordAuthenticator</className>
                 <value>users.xml</value>
             </usernamePasswordAuthenticator>
         </usernamePasswordAuthenticatorValue>

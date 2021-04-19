@@ -1,17 +1,19 @@
-package jargyle.net.socks.server.v5;
+package jargyle.net.socks.server.v5.userpassauth;
+
+import java.io.File;
 
 import jargyle.security.HashedPassword;
 
-public final class StringSourceUsernamePasswordAuthenticator 
+public final class XmlFileSourceUsernamePasswordAuthenticator 
 	extends UsernamePasswordAuthenticator {
-
+	
 	private final UsersService usersService;
-		
-	public StringSourceUsernamePasswordAuthenticator(final String value) {
+	
+	public XmlFileSourceUsernamePasswordAuthenticator(final String value) {
 		super(value);
-		this.usersService = new StringSourceUsersService(value);
+		this.usersService = XmlFileSourceUsersService.newInstance(new File(value));
 	}
-
+	
 	@Override
 	public boolean authenticate(
 			final String username, final char[] password) {
@@ -24,5 +26,5 @@ public final class StringSourceUsernamePasswordAuthenticator
 				password, hashedPassword);
 		return hashedPassword.equals(otherHashedPassword);
 	}
-	
+
 }

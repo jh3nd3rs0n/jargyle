@@ -18,7 +18,7 @@ import jargyle.net.Port;
 import jargyle.net.SocketSettings;
 import jargyle.net.socks.client.PropertySpec;
 import jargyle.net.socks.client.SocksServerUri;
-import jargyle.net.socks.client.v5.UsernamePassword;
+import jargyle.net.socks.client.v5.userpassauth.UsernamePassword;
 import jargyle.net.socks.server.settingspec.AuthMethodsSettingSpec;
 import jargyle.net.socks.server.settingspec.BooleanSettingSpec;
 import jargyle.net.socks.server.settingspec.CriteriaSettingSpec;
@@ -39,7 +39,7 @@ import jargyle.net.socks.server.settingspec.UsernamePasswordAuthenticatorSetting
 import jargyle.net.socks.server.settingspec.UsernamePasswordSettingSpec;
 import jargyle.net.socks.server.v5.Socks5RequestCriteria;
 import jargyle.net.socks.server.v5.Socks5RequestCriterion;
-import jargyle.net.socks.server.v5.UsernamePasswordAuthenticator;
+import jargyle.net.socks.server.v5.userpassauth.UsernamePasswordAuthenticator;
 import jargyle.net.socks.transport.v5.AuthMethod;
 import jargyle.net.socks.transport.v5.AuthMethods;
 import jargyle.net.socks.transport.v5.gssapiauth.ProtectionLevels;

@@ -4,7 +4,7 @@ import jargyle.ResourceHelper;
 import jargyle.ResourceNameConstants;
 import jargyle.net.socks.client.v5.Socks5Client;
 import jargyle.net.socks.client.v5.Socks5ServerUri;
-import jargyle.net.socks.client.v5.UsernamePassword;
+import jargyle.net.socks.client.v5.userpassauth.UsernamePassword;
 import jargyle.net.socks.transport.v5.AuthMethod;
 import jargyle.net.socks.transport.v5.AuthMethods;
 import jargyle.net.socks.transport.v5.gssapiauth.ProtectionLevels;

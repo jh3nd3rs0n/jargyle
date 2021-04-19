@@ -2,7 +2,7 @@ package jargyle.net.socks.server.settingspec;
 
 import jargyle.net.socks.server.Setting;
 import jargyle.net.socks.server.SettingSpec;
-import jargyle.net.socks.server.v5.UsernamePasswordAuthenticator;
+import jargyle.net.socks.server.v5.userpassauth.UsernamePasswordAuthenticator;
 
 public final class UsernamePasswordAuthenticatorSettingSpec 
 	extends SettingSpec<UsernamePasswordAuthenticator> {

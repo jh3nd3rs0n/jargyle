@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 
 import jargyle.net.socks.server.Configuration;
 import jargyle.net.socks.server.SettingSpec;
+import jargyle.net.socks.server.v5.userpassauth.UsernamePasswordAuthenticator;
 import jargyle.net.socks.transport.v5.Method;
 import jargyle.net.socks.transport.v5.gssapiauth.GssSocket;
 import jargyle.net.socks.transport.v5.gssapiauth.Message;

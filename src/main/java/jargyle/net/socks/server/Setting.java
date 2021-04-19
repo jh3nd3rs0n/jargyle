@@ -11,9 +11,9 @@ import javax.xml.bind.annotation.adapters.XmlAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import jargyle.net.SocketSettings;
-import jargyle.net.socks.client.v5.UsernamePassword;
+import jargyle.net.socks.client.v5.userpassauth.UsernamePassword;
 import jargyle.net.socks.server.v5.Socks5RequestCriteria;
-import jargyle.net.socks.server.v5.UsernamePasswordAuthenticator;
+import jargyle.net.socks.server.v5.userpassauth.UsernamePasswordAuthenticator;
 import jargyle.security.EncryptedPassword;
 import jargyle.util.Criteria;
 

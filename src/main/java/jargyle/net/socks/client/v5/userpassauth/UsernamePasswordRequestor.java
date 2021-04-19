@@ -1,4 +1,6 @@
-package jargyle.net.socks.client.v5;
+package jargyle.net.socks.client.v5.userpassauth;
+
+import jargyle.net.socks.client.v5.Socks5ServerUri;
 
 public abstract class UsernamePasswordRequestor {
 

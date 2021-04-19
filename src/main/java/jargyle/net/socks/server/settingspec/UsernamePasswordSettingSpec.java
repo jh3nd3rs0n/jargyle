@@ -1,6 +1,6 @@
 package jargyle.net.socks.server.settingspec;
 
-import jargyle.net.socks.client.v5.UsernamePassword;
+import jargyle.net.socks.client.v5.userpassauth.UsernamePassword;
 import jargyle.net.socks.server.Setting;
 import jargyle.net.socks.server.SettingSpec;
 

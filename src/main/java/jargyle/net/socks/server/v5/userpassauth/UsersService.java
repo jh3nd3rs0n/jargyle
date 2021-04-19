@@ -1,4 +1,4 @@
-package jargyle.net.socks.server.v5;
+package jargyle.net.socks.server.v5.userpassauth;
 
 abstract class UsersService {
 

@@ -14,4 +14,4 @@ jdk:
   # oraclejdk10 is deprecated
   - oraclejdk9
 
-script: mvn verify -B
+script: mvn --batch-mode --file=pom.xml --update-snapshots verify

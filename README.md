@@ -1977,7 +1977,7 @@ The following are the classes that use logging:
 -   `jargyle.net.socks.server.v5.Socks5Worker`
 -   `jargyle.net.socks.server.v5.UdpRelayServer$IncomingPacketsWorker`
 -   `jargyle.net.socks.server.v5.UdpRelayServer$OutgoingPacketsWorker`
--   `jargyle.net.socks.server.v5.XmlFileSourceUsersService$UsersUpdater`
+-   `jargyle.net.socks.server.v5.userpassauth.XmlFileSourceUsersService$UsersUpdater`
 -   `jargyle.net.ssl.DtlsDatagramSocket`
 
 To configure logging for any of the aforementioned classes, you can use a configuration file to specify the logging properties for any of the classes.

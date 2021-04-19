@@ -54,18 +54,8 @@ public final class Socks5HostResolver extends HostResolver {
 		if (host == null) {
 			return InetAddress.getLoopbackAddress();
 		}
-		AddressType addressType = AddressType.valueForAddress(host);
-		switch (addressType) {
-		case IP_V4_ADDRESS:
-		case IP_V6_ADDRESS:
+		if (!AddressType.DOMAINNAME.isValueForAddress(host)) {
 			return InetAddress.getByName(host);
-		case DOMAINNAME:
-			break;
-		default:
-			throw new AssertionError(String.format(
-					"unknown %s: %s", 
-					AddressType.class.getName(), 
-					addressType));
 		}
 		if (!this.canServerResolveHostName(host)) {
 			return InetAddress.getByName(host);

@@ -51,6 +51,9 @@ public final class Socks5HostResolver extends HostResolver {
 	
 	@Override
 	public InetAddress resolve(final String host) throws IOException {
+		if (host == null) {
+			return InetAddress.getLoopbackAddress();
+		}
 		AddressType addressType = AddressType.valueForAddress(host);
 		switch (addressType) {
 		case IP_V4_ADDRESS:

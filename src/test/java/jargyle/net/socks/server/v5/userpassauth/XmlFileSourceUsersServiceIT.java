@@ -16,7 +16,7 @@ import jargyle.ResourceNameConstants;
 
 public class XmlFileSourceUsersServiceIT {
 
-	private static final int ONE_SECOND = 1000;
+	private static final int THREE_SECONDS = 3000;
 	
 	private Path baseDir = null;
 	private Path usersFile = null;
@@ -51,7 +51,7 @@ public class XmlFileSourceUsersServiceIT {
 		this.xmlFileSourceUsersService = XmlFileSourceUsersService.newInstance(
 				this.usersFile.toFile());
 		try {
-			Thread.sleep(ONE_SECOND);
+			Thread.sleep(THREE_SECONDS);
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
 		}
@@ -59,7 +59,7 @@ public class XmlFileSourceUsersServiceIT {
 				ResourceNameConstants.JARGYLE_NET_SOCKS_SERVER_V5_USERS_FILE), 
 				this.usersFile.toFile());
 		try {
-			Thread.sleep(ONE_SECOND);
+			Thread.sleep(THREE_SECONDS);
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
 		}
@@ -75,7 +75,7 @@ public class XmlFileSourceUsersServiceIT {
 		this.xmlFileSourceUsersService = XmlFileSourceUsersService.newInstance(
 				this.usersFile.toFile());
 		try {
-			Thread.sleep(ONE_SECOND);
+			Thread.sleep(THREE_SECONDS);
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
 		}
@@ -83,7 +83,7 @@ public class XmlFileSourceUsersServiceIT {
 				ResourceNameConstants.JARGYLE_NET_SOCKS_SERVER_V5_ADDED_USER_TO_USERS_FILE), 
 				this.usersFile.toFile());
 		try {
-			Thread.sleep(ONE_SECOND);
+			Thread.sleep(THREE_SECONDS);
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
 		}

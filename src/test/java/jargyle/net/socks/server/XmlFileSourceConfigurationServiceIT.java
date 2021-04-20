@@ -18,7 +18,7 @@ import jargyle.util.NonnegativeInteger;
 
 public class XmlFileSourceConfigurationServiceIT {
 
-	private static final int ONE_SECOND = 1000;
+	private static final int THREE_SECONDS = 3000;
 	
 	private Path baseDir = null;
 	private Path configurationFile = null;
@@ -54,7 +54,7 @@ public class XmlFileSourceConfigurationServiceIT {
 				XmlFileSourceConfigurationService.newInstance(
 						this.configurationFile.toFile());
 		try {
-			Thread.sleep(ONE_SECOND);
+			Thread.sleep(THREE_SECONDS);
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
 		}
@@ -62,7 +62,7 @@ public class XmlFileSourceConfigurationServiceIT {
 				ResourceNameConstants.JARGYLE_NET_SOCKS_SERVER_CONFIGURATION_FILE), 
 				this.configurationFile.toFile());
 		try {
-			Thread.sleep(ONE_SECOND);
+			Thread.sleep(THREE_SECONDS);
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
 		}
@@ -83,7 +83,7 @@ public class XmlFileSourceConfigurationServiceIT {
 				XmlFileSourceConfigurationService.newInstance(
 						this.configurationFile.toFile());
 		try {
-			Thread.sleep(ONE_SECOND);
+			Thread.sleep(THREE_SECONDS);
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
 		}
@@ -91,7 +91,7 @@ public class XmlFileSourceConfigurationServiceIT {
 				ResourceNameConstants.JARGYLE_NET_SOCKS_SERVER_CONFIGURATION_FILE), 
 				this.configurationFile.toFile());
 		try {
-			Thread.sleep(ONE_SECOND);
+			Thread.sleep(THREE_SECONDS);
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
 		}

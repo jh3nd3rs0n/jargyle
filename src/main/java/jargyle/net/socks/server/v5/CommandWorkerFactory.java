@@ -38,7 +38,7 @@ enum CommandWorkerFactory {
 		
 	},
 	
-	UDP_COMMAND_WORKER_FACTORY(Command.UDP_ASSOCIATE) {
+	UDP_ASSOCIATE_COMMAND_WORKER_FACTORY(Command.UDP_ASSOCIATE) {
 		
 		@Override
 		public CommandWorker newCommandWorker(

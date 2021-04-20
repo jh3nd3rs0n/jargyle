@@ -10,13 +10,13 @@ import java.util.concurrent.Executors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import jargyle.logging.LoggerHelper;
 import jargyle.net.NetObjectFactory;
 import jargyle.net.SocketSettings;
 import jargyle.net.ssl.DtlsDatagramSocketFactory;
 import jargyle.net.ssl.SslSocketFactory;
 import jargyle.util.Criteria;
 import jargyle.util.Criterion;
-import jargyle.util.logging.LoggerHelper;
 
 final class Listener implements Runnable {
 

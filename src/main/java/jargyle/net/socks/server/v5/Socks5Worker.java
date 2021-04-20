@@ -9,6 +9,7 @@ import java.net.Socket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import jargyle.logging.LoggerHelper;
 import jargyle.net.socks.server.Configuration;
 import jargyle.net.socks.server.SettingSpec;
 import jargyle.net.socks.server.Settings;
@@ -23,7 +24,6 @@ import jargyle.net.socks.transport.v5.ServerMethodSelectionMessage;
 import jargyle.net.socks.transport.v5.Socks5Reply;
 import jargyle.net.socks.transport.v5.Socks5Request;
 import jargyle.net.socks.transport.v5.Version;
-import jargyle.util.logging.LoggerHelper;
 
 public final class Socks5Worker {
 

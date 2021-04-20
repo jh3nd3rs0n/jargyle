@@ -7,10 +7,10 @@ import java.net.Socket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import jargyle.logging.LoggerHelper;
 import jargyle.net.socks.server.v5.Socks5Worker;
 import jargyle.net.socks.server.v5.Socks5WorkerContext;
 import jargyle.net.socks.transport.v5.Version;
-import jargyle.util.logging.LoggerHelper;
 
 final class Worker implements Runnable {
 	

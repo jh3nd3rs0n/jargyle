@@ -1,4 +1,4 @@
-package jargyle.util.logging;
+package jargyle.logging;
 
 public final class LoggerHelper {
 

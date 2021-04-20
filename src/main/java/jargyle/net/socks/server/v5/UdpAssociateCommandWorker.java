@@ -10,6 +10,7 @@ import java.net.SocketException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import jargyle.logging.LoggerHelper;
 import jargyle.net.Host;
 import jargyle.net.HostResolver;
 import jargyle.net.NetObjectFactory;
@@ -21,7 +22,6 @@ import jargyle.net.socks.transport.v5.Socks5Reply;
 import jargyle.net.socks.transport.v5.gssapiauth.GssDatagramSocket;
 import jargyle.net.socks.transport.v5.gssapiauth.GssSocket;
 import jargyle.net.ssl.DtlsDatagramSocketFactory;
-import jargyle.util.logging.LoggerHelper;
 
 final class UdpAssociateCommandWorker extends CommandWorker {
 

@@ -10,6 +10,7 @@ import java.net.SocketException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import jargyle.logging.LoggerHelper;
 import jargyle.net.HostResolver;
 import jargyle.net.NetObjectFactory;
 import jargyle.net.SocketSettings;
@@ -19,7 +20,6 @@ import jargyle.net.socks.transport.v5.Reply;
 import jargyle.net.socks.transport.v5.Socks5Reply;
 import jargyle.util.Criteria;
 import jargyle.util.Criterion;
-import jargyle.util.logging.LoggerHelper;
 
 final class BindCommandWorker extends TcpBasedCommandWorker {
 

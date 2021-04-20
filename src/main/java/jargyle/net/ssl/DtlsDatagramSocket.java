@@ -20,8 +20,8 @@ import javax.net.ssl.SSLSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import jargyle.logging.LoggerHelper;
 import jargyle.net.FilterDatagramSocket;
-import jargyle.util.logging.LoggerHelper;
 
 public final class DtlsDatagramSocket extends FilterDatagramSocket {
 	

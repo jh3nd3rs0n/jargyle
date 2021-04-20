@@ -21,7 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import jargyle.net.FilterDatagramSocket;
-import jargyle.util.LoggerHelper;
+import jargyle.util.logging.LoggerHelper;
 
 public final class DtlsDatagramSocket extends FilterDatagramSocket {
 	

@@ -23,7 +23,7 @@ import jargyle.net.socks.transport.v5.ServerMethodSelectionMessage;
 import jargyle.net.socks.transport.v5.Socks5Reply;
 import jargyle.net.socks.transport.v5.Socks5Request;
 import jargyle.net.socks.transport.v5.Version;
-import jargyle.util.LoggerHelper;
+import jargyle.util.logging.LoggerHelper;
 
 public final class Socks5Worker {
 

@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import jargyle.net.socks.server.v5.Socks5Worker;
 import jargyle.net.socks.server.v5.Socks5WorkerContext;
 import jargyle.net.socks.transport.v5.Version;
-import jargyle.util.LoggerHelper;
+import jargyle.util.logging.LoggerHelper;
 
 final class Worker implements Runnable {
 	

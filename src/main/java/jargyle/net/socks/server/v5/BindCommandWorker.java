@@ -19,7 +19,7 @@ import jargyle.net.socks.transport.v5.Reply;
 import jargyle.net.socks.transport.v5.Socks5Reply;
 import jargyle.util.Criteria;
 import jargyle.util.Criterion;
-import jargyle.util.LoggerHelper;
+import jargyle.util.logging.LoggerHelper;
 
 final class BindCommandWorker extends TcpBasedCommandWorker {
 

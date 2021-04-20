@@ -16,7 +16,7 @@ import jargyle.net.ssl.DtlsDatagramSocketFactory;
 import jargyle.net.ssl.SslSocketFactory;
 import jargyle.util.Criteria;
 import jargyle.util.Criterion;
-import jargyle.util.LoggerHelper;
+import jargyle.util.logging.LoggerHelper;
 
 final class Listener implements Runnable {
 

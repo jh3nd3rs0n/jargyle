@@ -21,7 +21,7 @@ import jargyle.net.socks.transport.v5.Socks5Reply;
 import jargyle.net.socks.transport.v5.gssapiauth.GssDatagramSocket;
 import jargyle.net.socks.transport.v5.gssapiauth.GssSocket;
 import jargyle.net.ssl.DtlsDatagramSocketFactory;
-import jargyle.util.LoggerHelper;
+import jargyle.util.logging.LoggerHelper;
 
 final class UdpAssociateCommandWorker extends CommandWorker {
 

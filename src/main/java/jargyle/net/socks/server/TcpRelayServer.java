@@ -13,7 +13,7 @@ import java.util.concurrent.Executors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jargyle.util.LoggerHelper;
+import jargyle.util.logging.LoggerHelper;
 
 public final class TcpRelayServer {
 

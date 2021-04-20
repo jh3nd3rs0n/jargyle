@@ -3,28 +3,16 @@ package jargyle.net.socks.server.v5;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.SequenceInputStream;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
-import java.net.UnknownHostException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jargyle.net.Host;
-import jargyle.net.HostResolver;
-import jargyle.net.NetObjectFactory;
-import jargyle.net.SocketSettings;
 import jargyle.net.socks.server.Configuration;
 import jargyle.net.socks.server.SettingSpec;
 import jargyle.net.socks.server.Settings;
-import jargyle.net.socks.server.TcpRelayServer;
-import jargyle.net.socks.server.WorkerParams;
+import jargyle.net.socks.server.WorkerContext;
 import jargyle.net.socks.transport.v5.AuthMethod;
 import jargyle.net.socks.transport.v5.AuthMethods;
 import jargyle.net.socks.transport.v5.ClientMethodSelectionMessage;
@@ -35,42 +23,28 @@ import jargyle.net.socks.transport.v5.ServerMethodSelectionMessage;
 import jargyle.net.socks.transport.v5.Socks5Reply;
 import jargyle.net.socks.transport.v5.Socks5Request;
 import jargyle.net.socks.transport.v5.Version;
-import jargyle.net.socks.transport.v5.gssapiauth.GssDatagramSocket;
-import jargyle.net.socks.transport.v5.gssapiauth.GssSocket;
-import jargyle.net.ssl.DtlsDatagramSocketFactory;
-import jargyle.util.Criteria;
-import jargyle.util.Criterion;
+import jargyle.util.LoggerHelper;
 
-public final class Socks5Worker implements Runnable {
-
-	private static final int HALF_SECOND = 500;
+public final class Socks5Worker {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(
 			Socks5Worker.class);
 
-	private final DtlsDatagramSocketFactory clientDtlsDatagramSocketFactory;	
 	private InputStream clientInputStream;
-	private OutputStream clientOutputStream;
 	private Socket clientSocket;
 	private final Configuration configuration;
-	private final NetObjectFactory externalNetObjectFactory;
 	private final Settings settings;
+	private Socks5WorkerContext socks5WorkerContext;
 	
-	public Socks5Worker(final WorkerParams params) {
-		DtlsDatagramSocketFactory clientDtlsDatagramSockFactory =
-				params.getClientDtlsDatagramSocketFactory();
-		Socket clientSock = params.getClientSocket();
-		Configuration config = params.getConfiguration();
-		NetObjectFactory extNetObjectFactory = 
-				params.getExternalNetObjectFactory();
+	public Socks5Worker(final Socks5WorkerContext context) {
+		Socket clientSock = context.getClientSocket();
+		Configuration config = context.getConfiguration();
 		Settings sttngs = config.getSettings();
-		this.clientDtlsDatagramSocketFactory = clientDtlsDatagramSockFactory;		
 		this.clientInputStream = null;
-		this.clientOutputStream = null;
 		this.clientSocket = clientSock;
 		this.configuration = config;
-		this.externalNetObjectFactory = extNetObjectFactory;
 		this.settings = sttngs;
+		this.socks5WorkerContext = context;
 	}
 	
 	private Socket authenticateUsing(final Method method) {
@@ -79,77 +53,24 @@ public final class Socks5Worker implements Runnable {
 			authenticator = Authenticator.valueOfMethod(method);
 		} catch (IllegalArgumentException e) {
 			LOGGER.warn( 
-					this.format(String.format(
+					LoggerHelper.objectMessage(this, String.format(
 							"Unhandled method: %s", 
 							method)),
 					e);
 			return null;
 		}
-		Socket Socket = null;
+		Socket socket = null;
 		try {
-			Socket = authenticator.authenticate(
+			socket = authenticator.authenticate(
 					this.clientSocket, this.configuration);
 		} catch (IOException e) {
 			LOGGER.warn( 
-					this.format("Error in authenticating the client"), 
+					LoggerHelper.objectMessage(
+							this, "Error in authenticating the client"), 
 					e);
 			return null;
 		}
-		return Socket;
-	}
-
-	private boolean canAllowExternalIncomingAddress(
-			final String externalIncomingAddress) {
-		Criteria allowedExternalIncomingAddressCriteria =
-				this.settings.getLastValue(
-						SettingSpec.SOCKS5_ON_BIND_ALLOWED_EXTERNAL_INCOMING_ADDRESS_CRITERIA);
-		Criterion criterion = 
-				allowedExternalIncomingAddressCriteria.anyEvaluatesTrue(
-						externalIncomingAddress);
-		if (criterion == null) {
-			LOGGER.debug(this.format(String.format(
-					"External incoming address %s not allowed",
-					externalIncomingAddress)));
-			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
-					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
-			LOGGER.debug(this.format(String.format(
-					"Sending %s",
-					socks5Rep.toString())));
-			try {
-				this.writeThenFlush(socks5Rep.toByteArray());
-			} catch (IOException e) {
-				LOGGER.warn( 
-						this.format("Error in writing SOCKS5 reply"), 
-						e);
-			}
-			return false;
-		}
-		Criteria blockedExternalIncomingAddressCriteria =
-				this.settings.getLastValue(
-						SettingSpec.SOCKS5_ON_BIND_BLOCKED_EXTERNAL_INCOMING_ADDRESS_CRITERIA);
-		criterion = blockedExternalIncomingAddressCriteria.anyEvaluatesTrue(
-				externalIncomingAddress);
-		if (criterion != null) {
-			LOGGER.debug(this.format(String.format(
-					"External incoming address %s blocked based on the "
-					+ "following criterion: %s",
-					externalIncomingAddress,
-					criterion)));
-			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
-					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
-			LOGGER.debug(this.format(String.format(
-					"Sending %s",
-					socks5Rep.toString())));
-			try {
-				this.writeThenFlush(socks5Rep.toByteArray());
-			} catch (IOException e) {
-				LOGGER.warn( 
-						this.format("Error in writing SOCKS5 reply"), 
-						e);
-			}
-			return false;
-		}
-		return true;
+		return socket;
 	}
 	
 	private boolean canAllowSocks5Request(
@@ -163,15 +84,16 @@ public final class Socks5Worker implements Runnable {
 		if (socks5RequestCriterion == null) {
 			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
 					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
-			LOGGER.debug(this.format(String.format(
+			LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
 					"SOCKS5 request from %s not allowed. SOCKS5 request: %s",
 					clientAddress,
 					socks5Req.toString())));
 			try {
-				this.writeThenFlush(socks5Rep.toByteArray());
+				this.socks5WorkerContext.writeThenFlush(socks5Rep.toByteArray());
 			} catch (IOException e) {
 				LOGGER.warn(
-						this.format("Error in writing SOCKS5 reply"), 
+						LoggerHelper.objectMessage(
+								this, "Error in writing SOCKS5 reply"), 
 						e);
 			}
 			return false;
@@ -185,518 +107,23 @@ public final class Socks5Worker implements Runnable {
 		if (socks5RequestCriterion != null) {
 			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
 					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
-			LOGGER.debug(this.format(String.format(
+			LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
 					"SOCKS5 request from %s blocked based on the following "
 					+ "criterion: %s. SOCKS5 request: %s",
 					clientAddress,
 					socks5RequestCriterion.toString(),
 					socks5Req.toString())));
 			try {
-				this.writeThenFlush(socks5Rep.toByteArray());
+				this.socks5WorkerContext.writeThenFlush(socks5Rep.toByteArray());
 			} catch (IOException e) {
 				LOGGER.warn( 
-						this.format("Error in writing SOCKS5 reply"), 
+						LoggerHelper.objectMessage(
+								this, "Error in writing SOCKS5 reply"), 
 						e);
 			}
 			return false;
 		}
 		return true;
-	}
-	
-	private boolean configureClientDatagramSocket(
-			final DatagramSocket clientDatagramSock) {
-		SocketSettings socketSettings = this.settings.getLastValue(
-				SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_CLIENT_SOCKET_SETTINGS);
-		try {
-			socketSettings.applyTo(clientDatagramSock);
-		} catch (SocketException e) {
-			LOGGER.warn( 
-					this.format("Error in setting the client-facing UDP socket"), 
-					e);
-			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
-					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			LOGGER.debug(this.format(String.format(
-					"Sending %s",
-					socks5Rep.toString())));
-			try {
-				this.writeThenFlush(socks5Rep.toByteArray());
-			} catch (IOException e1) {
-				return false;
-			}
-			return false;
-		}
-		return true;
-	}
-	
-	private boolean configureExternalIncomingSocket(
-			final Socket externalIncomingSocket) {
-		SocketSettings socketSettings = this.settings.getLastValue(
-				SettingSpec.SOCKS5_ON_BIND_EXTERNAL_INCOMING_SOCKET_SETTINGS);
-		try {
-			socketSettings.applyTo(externalIncomingSocket);
-		} catch (SocketException e) {
-			LOGGER.warn( 
-					this.format("Error in setting the external incoming socket"), 
-					e);
-			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
-					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			LOGGER.debug(this.format(String.format(
-					"Sending %s",
-					socks5Rep.toString())));
-			try {
-				this.writeThenFlush(socks5Rep.toByteArray());
-			} catch (IOException e1) {
-				LOGGER.warn( 
-						this.format("Error in writing SOCKS5 reply"), 
-						e1);
-			}
-			return false;
-		}
-		return true;
-	}
-	
-	private boolean configureListenSocket(final ServerSocket listenSocket) {
-		SocketSettings socketSettings = this.settings.getLastValue(
-				SettingSpec.SOCKS5_ON_BIND_LISTEN_SOCKET_SETTINGS);
-		try {
-			socketSettings.applyTo(listenSocket);
-		} catch (SocketException e) {
-			LOGGER.warn( 
-					this.format("Error in setting the listen socket"), 
-					e);
-			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
-					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			LOGGER.debug(this.format(String.format(
-					"Sending %s",
-					socks5Rep.toString())));
-			try {
-				this.writeThenFlush(socks5Rep.toByteArray());
-			} catch (IOException e1) {
-				LOGGER.warn( 
-						this.format("Error in writing SOCKS5 reply"), 
-						e1);
-			}
-			return false;
-		}
-		return true;
-	}
-	
-	private boolean configureServerDatagramSocket(
-			final DatagramSocket serverDatagramSock) {
-		SocketSettings socketSettings = this.settings.getLastValue(
-				SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_SERVER_SOCKET_SETTINGS);
-		try {
-			socketSettings.applyTo(serverDatagramSock);
-		} catch (SocketException e) {
-			LOGGER.warn( 
-					this.format("Error in setting the server-facing UDP socket"), 
-					e);
-			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
-					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			LOGGER.debug(this.format(String.format(
-					"Sending %s",
-					socks5Rep.toString())));
-			try {
-				this.writeThenFlush(socks5Rep.toByteArray());
-			} catch (IOException e1) {
-				LOGGER.warn( 
-						this.format("Error in writing SOCKS5 reply"), 
-						e1);
-			}
-			return false;
-		}
-		return true;
-	}
-	
-	private boolean configureServerSocket(final Socket serverSocket) {
-		SocketSettings socketSettings = this.settings.getLastValue(
-				SettingSpec.SOCKS5_ON_CONNECT_SERVER_SOCKET_SETTINGS);
-		Host bindHost = this.settings.getLastValue(
-				SettingSpec.SOCKS5_ON_CONNECT_SERVER_BIND_HOST);
-		InetAddress bindInetAddress = bindHost.toInetAddress();		
-		try {
-			socketSettings.applyTo(serverSocket);
-			serverSocket.bind(new InetSocketAddress(bindInetAddress, 0));
-		} catch (SocketException e) {
-			LOGGER.warn( 
-					this.format("Error in setting the server-facing socket"), 
-					e);
-			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
-					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			LOGGER.debug(this.format(String.format(
-					"Sending %s",
-					socks5Rep.toString())));
-			try {
-				this.writeThenFlush(socks5Rep.toByteArray());
-			} catch (IOException e1) {
-				LOGGER.warn( 
-						this.format("Error in writing SOCKS5 reply"), 
-						e1);
-			}
-			return false;
-		} catch (IOException e) {
-			LOGGER.warn( 
-					this.format("Error in binding the server-facing socket"), 
-					e);
-			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
-					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			LOGGER.debug(this.format(String.format(
-					"Sending %s",
-					socks5Rep.toString())));
-			try {
-				this.writeThenFlush(socks5Rep.toByteArray());
-			} catch (IOException e1) {
-				LOGGER.warn( 
-						this.format("Error in writing SOCKS5 reply"), 
-						e1);
-			}
-			return false;
-		}
-		return true;
-	}
-	
-	private void doBind(final Socks5Request socks5Req) throws IOException {
-		Socks5Reply socks5Rep = null;
-		String desiredDestinationAddress = 
-				socks5Req.getDesiredDestinationAddress();
-		int desiredDestinationPort = socks5Req.getDesiredDestinationPort();
-		HostResolver hostResolver = 
-				this.externalNetObjectFactory.newHostResolver();		
-		ServerSocket listenSocket = null;
-		Socket externalIncomingSocket = null;
-		try {
-			listenSocket = this.externalNetObjectFactory.newServerSocket();
-			if (!this.configureListenSocket(listenSocket)) {
-				return;
-			}
-			try {
-				listenSocket.bind(new InetSocketAddress(
-						hostResolver.resolve(desiredDestinationAddress),
-						desiredDestinationPort));
-			} catch (IOException e) {
-				LOGGER.warn( 
-						this.format("Error in binding the listen socket"), 
-						e);
-				socks5Rep = Socks5Reply.newErrorInstance(
-						Reply.GENERAL_SOCKS_SERVER_FAILURE);
-				LOGGER.debug(this.format(String.format(
-						"Sending %s",
-						socks5Rep.toString())));
-				this.writeThenFlush(socks5Rep.toByteArray());
-				return;
-			}
-			InetAddress inetAddress = listenSocket.getInetAddress();
-			String serverBoundAddress =	inetAddress.getHostAddress();
-			int serverBoundPort = listenSocket.getLocalPort();
-			socks5Rep = Socks5Reply.newInstance(
-					Reply.SUCCEEDED, 
-					serverBoundAddress, 
-					serverBoundPort);
-			LOGGER.debug(this.format(String.format(
-					"Sending %s",
-					socks5Rep.toString())));
-			this.writeThenFlush(socks5Rep.toByteArray());
-			try {
-				externalIncomingSocket = listenSocket.accept();
-				if (!this.configureExternalIncomingSocket(
-						externalIncomingSocket)) {
-					return;
-				}
-			} catch (IOException e) {
-				LOGGER.warn( 
-						this.format("Error in waiting for an external incoming socket"), 
-						e);
-				socks5Rep = Socks5Reply.newErrorInstance(
-						Reply.GENERAL_SOCKS_SERVER_FAILURE);
-				LOGGER.debug(this.format(String.format(
-						"Sending %s",
-						socks5Rep.toString())));
-				this.writeThenFlush(socks5Rep.toByteArray());
-				return;
-			} finally {
-				listenSocket.close();
-			}
-			InetAddress externalIncomingInetAddress = 
-					externalIncomingSocket.getInetAddress();
-			String externalIncomingAddress = 
-					externalIncomingInetAddress.getHostAddress();
-			if (!this.canAllowExternalIncomingAddress(
-					externalIncomingAddress)) {
-				return;
-			}
-			serverBoundAddress = externalIncomingAddress;
-			serverBoundPort = externalIncomingSocket.getLocalPort();
-			socks5Rep = Socks5Reply.newInstance(
-					Reply.SUCCEEDED, 
-					serverBoundAddress, 
-					serverBoundPort);
-			LOGGER.debug(this.format(String.format(
-					"Sending %s",
-					socks5Rep.toString())));
-			this.writeThenFlush(socks5Rep.toByteArray());
-			this.passData(
-					externalIncomingSocket, 
-					this.settings.getLastValue(
-							SettingSpec.SOCKS5_ON_BIND_RELAY_BUFFER_SIZE).intValue(), 
-					this.settings.getLastValue(
-							SettingSpec.SOCKS5_ON_BIND_RELAY_TIMEOUT).intValue());
-		} finally {
-			if (externalIncomingSocket != null 
-					&& !externalIncomingSocket.isClosed()) {
-				externalIncomingSocket.close();
-			}
-			if (listenSocket != null && !listenSocket.isClosed()) {
-				listenSocket.close();
-			}
-		}
-	}
-	
-	private void doConnect(final Socks5Request socks5Req) throws IOException {
-		Socks5Reply socks5Rep = null;
-		String desiredDestinationAddress = 
-				socks5Req.getDesiredDestinationAddress();
-		int desiredDestinationPort = socks5Req.getDesiredDestinationPort();
-		HostResolver hostResolver = 
-				this.externalNetObjectFactory.newHostResolver();		
-		Socket serverSocket = null;		
-		int connectTimeout = this.settings.getLastValue(
-				SettingSpec.SOCKS5_ON_CONNECT_SERVER_CONNECT_TIMEOUT).intValue();
-		try {
-			serverSocket = this.externalNetObjectFactory.newSocket();
-			if (!this.configureServerSocket(serverSocket)) {
-				return;
-			}
-			try {
-				serverSocket.connect(new InetSocketAddress(
-						hostResolver.resolve(desiredDestinationAddress),
-						desiredDestinationPort),
-						connectTimeout);
-			} catch (UnknownHostException e) {
-				LOGGER.warn( 
-						this.format("Error in connecting the server-facing socket"), 
-						e);
-				socks5Rep = Socks5Reply.newErrorInstance(Reply.HOST_UNREACHABLE);
-				LOGGER.debug(this.format(String.format(
-						"Sending %s",
-						socks5Rep.toString())));
-				this.writeThenFlush(socks5Rep.toByteArray());
-				return;
-			}
-			String serverBoundAddress = 
-					serverSocket.getInetAddress().getHostAddress();
-			int serverBoundPort = serverSocket.getPort();
-			socks5Rep = Socks5Reply.newInstance(
-					Reply.SUCCEEDED, 
-					serverBoundAddress, 
-					serverBoundPort);
-			LOGGER.debug(this.format(String.format(
-					"Sending %s", 
-					socks5Rep.toString())));
-			this.writeThenFlush(socks5Rep.toByteArray());
-			this.passData(
-					serverSocket, 
-					this.settings.getLastValue(
-							SettingSpec.SOCKS5_ON_CONNECT_RELAY_BUFFER_SIZE).intValue(),
-					this.settings.getLastValue(
-							SettingSpec.SOCKS5_ON_CONNECT_RELAY_TIMEOUT).intValue());
-		} finally {
-			if (serverSocket != null && !serverSocket.isClosed()) {
-				serverSocket.close();
-			}
-		}
-	}
-	
-	private void doResolve(final Socks5Request socks5Req) throws IOException {
-		Socks5Reply socks5Rep = null;
-		String desiredDestinationAddress = 
-				socks5Req.getDesiredDestinationAddress();
-		int desiredDestinationPort = socks5Req.getDesiredDestinationPort();
-		HostResolver hostResolver = 
-				this.externalNetObjectFactory.newHostResolver();
-		InetAddress inetAddress = null;
-		try {
-			inetAddress = hostResolver.resolve(desiredDestinationAddress);
-		} catch (UnknownHostException e) {
-			LOGGER.warn( 
-					this.format("Error in resolving the hostname"), 
-					e);
-			socks5Rep = Socks5Reply.newErrorInstance(Reply.HOST_UNREACHABLE);
-			LOGGER.debug(this.format(String.format(
-					"Sending %s",
-					socks5Rep.toString())));
-			this.writeThenFlush(socks5Rep.toByteArray());
-			return;			
-		} catch (IOException e) {
-			LOGGER.warn( 
-					this.format("Error in resolving the hostname"), 
-					e);
-			socks5Rep = Socks5Reply.newErrorInstance(
-					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			LOGGER.debug(this.format(String.format(
-					"Sending %s",
-					socks5Rep.toString())));
-			this.writeThenFlush(socks5Rep.toByteArray());
-			return;
-		}
-		String serverBoundAddress = inetAddress.getHostAddress();
-		int serverBoundPort = desiredDestinationPort;
-		socks5Rep = Socks5Reply.newInstance(
-				Reply.SUCCEEDED, 
-				serverBoundAddress, 
-				serverBoundPort);
-		LOGGER.debug(this.format(String.format(
-				"Sending %s", 
-				socks5Rep.toString())));
-		this.writeThenFlush(socks5Rep.toByteArray());		
-	}
-	
-	private void doUdpAssociate(
-			final Socks5Request socks5Req) throws IOException {
-		Socks5Reply socks5Rep = null;
-		String desiredDestinationAddress = 
-				socks5Req.getDesiredDestinationAddress();
-		if (!desiredDestinationAddress.matches("[a-zA-Z1-9]")) {
-			desiredDestinationAddress = 
-					this.clientSocket.getInetAddress().getHostAddress();
-		}
-		int desiredDestinationPort = socks5Req.getDesiredDestinationPort();
-		HostResolver hostResolver = 
-				this.externalNetObjectFactory.newHostResolver();
-		DatagramSocket serverDatagramSock = null;
-		DatagramSocket clientDatagramSock = null;
-		try {
-			serverDatagramSock = this.newServerDatagramSocket();
-			if (serverDatagramSock == null) {
-				return;
-			}
-			if (!this.configureServerDatagramSocket(serverDatagramSock)) {
-				return;
-			}
-			clientDatagramSock = this.newClientDatagramSocket();
-			if (clientDatagramSock == null) {
-				return;
-			}
-			if (!this.configureClientDatagramSocket(clientDatagramSock)) {
-				return;
-			}
-			DatagramSocket clientDatagramSck = this.wrapClientDatagramSocket(
-					clientDatagramSock, 
-					desiredDestinationAddress, 
-					desiredDestinationPort); 
-			if (clientDatagramSck == null) {
-				return;
-			}
-			clientDatagramSock = clientDatagramSck;
-			InetAddress inetAddress = clientDatagramSock.getLocalAddress();
-			String serverBoundAddress = inetAddress.getHostAddress();
-			if (!serverBoundAddress.matches("[a-zA-Z1-9]")) {
-				inetAddress = this.clientSocket.getLocalAddress();
-				serverBoundAddress = inetAddress.getHostAddress();
-			}
-			int serverBoundPort = clientDatagramSock.getLocalPort();
-			socks5Rep = Socks5Reply.newInstance(
-					Reply.SUCCEEDED, 
-					serverBoundAddress, 
-					serverBoundPort);
-			LOGGER.debug(this.format(String.format(
-					"Sending %s",
-					socks5Rep.toString())));
-			this.writeThenFlush(socks5Rep.toByteArray());
-			this.passPackets(
-					new UdpRelayServer.ClientSocketAddress(
-							desiredDestinationAddress, desiredDestinationPort),
-					new UdpRelayServer.DatagramSockets(
-							clientDatagramSock, 
-							serverDatagramSock), 
-					hostResolver, 
-					new UdpRelayServer.ExternalIncomingAddressCriteria(
-							this.settings.getLastValue(
-									SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_ALLOWED_EXTERNAL_INCOMING_ADDRESS_CRITERIA), 
-							this.settings.getLastValue(
-									SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_BLOCKED_EXTERNAL_INCOMING_ADDRESS_CRITERIA)), 
-					new UdpRelayServer.ExternalOutgoingAddressCriteria(
-							this.settings.getLastValue(
-									SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_ALLOWED_EXTERNAL_OUTGOING_ADDRESS_CRITERIA), 
-							this.settings.getLastValue(
-									SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_BLOCKED_EXTERNAL_OUTGOING_ADDRESS_CRITERIA)), 
-					new UdpRelayServer.RelaySettings(
-							this.settings.getLastValue(
-									SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_RELAY_BUFFER_SIZE).intValue(), 
-							this.settings.getLastValue(
-									SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_RELAY_TIMEOUT).intValue()));
-		} finally {
-			if (clientDatagramSock != null && !clientDatagramSock.isClosed()) {
-				clientDatagramSock.close();
-			}
-			if (serverDatagramSock != null && !serverDatagramSock.isClosed()) {
-				serverDatagramSock.close();
-			}
-		}
-	}
-	
-	private String format(final String message) {
-		return String.format("%s: %s", this, message);
-	}
-	
-	private DatagramSocket newClientDatagramSocket() {
-		Host bindHost = this.settings.getLastValue(
-				SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_CLIENT_BIND_HOST);
-		InetAddress bindInetAddress = bindHost.toInetAddress();
-		DatagramSocket clientDatagramSock = null;
-		try {
-			clientDatagramSock = new DatagramSocket(new InetSocketAddress(
-					bindInetAddress, 0));
-		} catch (SocketException e) {
-			LOGGER.warn( 
-					this.format("Error in creating the client-facing UDP "
-							+ "socket"), 
-					e);
-			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
-					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			LOGGER.debug(this.format(String.format(
-					"Sending %s",
-					socks5Rep.toString())));
-			try {
-				this.writeThenFlush(socks5Rep.toByteArray());
-			} catch (IOException e1) {
-				LOGGER.warn( 
-						this.format("Error in writing SOCKS5 reply"), 
-						e1);
-			}
-			return null;
-		}
-		return clientDatagramSock;
-	}
-	
-	private DatagramSocket newServerDatagramSocket() {
-		Host bindHost = this.settings.getLastValue(
-				SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_SERVER_BIND_HOST);
-		InetAddress bindInetAddress = bindHost.toInetAddress();
-		DatagramSocket serverDatagramSock = null;
-		try {
-			serverDatagramSock = 
-					this.externalNetObjectFactory.newDatagramSocket(
-							new InetSocketAddress(bindInetAddress, 0));
-		} catch (SocketException e) {
-			LOGGER.warn( 
-					this.format("Error in creating the server-facing UDP "
-							+ "socket"), 
-					e);
-			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
-					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			LOGGER.debug(this.format(String.format(
-					"Sending %s",
-					socks5Rep.toString())));
-			try {
-				this.writeThenFlush(socks5Rep.toByteArray());
-			} catch (IOException e1) {
-				LOGGER.warn( 
-						this.format("Error in writing SOCKS5 reply"), 
-						e1);
-			}
-			return null;
-		}
-		return serverDatagramSock;
 	}
 	
 	private Socks5Request newSocks5Request() throws IOException {
@@ -705,98 +132,37 @@ public final class Socks5Worker implements Runnable {
 			socks5Req = Socks5Request.newInstanceFrom(this.clientInputStream);
 		} catch (IOException e) {
 			LOGGER.warn( 
-					this.format("Error in parsing the SOCKS5 request"), 
+					LoggerHelper.objectMessage(
+							this, "Error in parsing the SOCKS5 request"), 
 					e);
 			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
 					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			LOGGER.debug(this.format(String.format(
+			LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
 					"Sending %s",
 					socks5Rep.toString())));
-			this.writeThenFlush(socks5Rep.toByteArray());
+			this.socks5WorkerContext.writeThenFlush(socks5Rep.toByteArray());
 			return null;
 		}
-		LOGGER.debug(this.format(String.format(
+		LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
 				"Received %s",
 				socks5Req.toString())));
 		return socks5Req;
 	}
 	
-	private void passData(
-			final Socket serverSocket, 
-			final int bufferSize, 
-			final int timeout) {
-		TcpRelayServer tcpRelayServer = new TcpRelayServer(
-				this.clientSocket, 
-				serverSocket, 
-				bufferSize, 
-				timeout);
-		try {
-			tcpRelayServer.start();
-			while (!tcpRelayServer.isStopped()) {
-				try {
-					Thread.sleep(HALF_SECOND);
-				} catch (InterruptedException e) {
-					Thread.currentThread().interrupt();
-				}
-			}
-		} catch (IOException e) {
-			LOGGER.warn( 
-					this.format("Error in starting to pass data"), 
-					e);
-		} finally {
-			if (!tcpRelayServer.isStopped()) {
-				tcpRelayServer.stop();
-			}
-		}
-	}
-	
-	private void passPackets(
-			final UdpRelayServer.ClientSocketAddress clientSocketAddress,
-			final UdpRelayServer.DatagramSockets datagramSockets,
-			final HostResolver hostResolver,
-			final UdpRelayServer.ExternalIncomingAddressCriteria externalIncomingAddressCriteria,
-			final UdpRelayServer.ExternalOutgoingAddressCriteria externalOutgoingAddressCriteria, 
-			final UdpRelayServer.RelaySettings relaySettings) {
-		UdpRelayServer udpRelayServer = new UdpRelayServer(
-				clientSocketAddress,
-				datagramSockets,
-				hostResolver,
-				externalIncomingAddressCriteria, 
-				externalOutgoingAddressCriteria,
-				relaySettings);
-		try {
-			udpRelayServer.start();
-			while (!this.clientSocket.isClosed() 
-					&& !udpRelayServer.isStopped()) {
-				try {
-					Thread.sleep(HALF_SECOND);
-				} catch (InterruptedException e) {
-					Thread.currentThread().interrupt();
-				}
-			}
-		} catch (IOException e) {
-			LOGGER.warn( 
-					this.format("Error in starting the UDP association"), 
-					e);
-		} finally {
-			if (!udpRelayServer.isStopped()) {
-				udpRelayServer.stop();
-			}
-		}
-	}
-	
-	@Override
 	public void run() {
 		try {
 			this.clientInputStream = this.clientSocket.getInputStream();
-			this.clientOutputStream = this.clientSocket.getOutputStream();
 			Method method = this.selectMethod();
 			if (method == null) { return; } 
 			Socket socket = this.authenticateUsing(method);
 			if (socket == null) { return; } 
 			this.clientInputStream = socket.getInputStream();
-			this.clientOutputStream = socket.getOutputStream();
 			this.clientSocket = socket;
+			this.socks5WorkerContext = new Socks5WorkerContext(new WorkerContext(
+					this.clientSocket,
+					this.configuration,
+					this.socks5WorkerContext.getExternalNetObjectFactory(),
+					this.socks5WorkerContext.getClientDtlsDatagramSocketFactory()));
 			Socks5Request socks5Req = this.newSocks5Request();
 			if (socks5Req == null) { return; }
 			if (!this.canAllowSocks5Request(
@@ -805,28 +171,18 @@ public final class Socks5Worker implements Runnable {
 				return;
 			}
 			Command command = socks5Req.getCommand();
-			switch (command) {
-			case BIND:
-				this.doBind(socks5Req);
-				break;
-			case CONNECT:
-				this.doConnect(socks5Req);
-				break;
-			case RESOLVE:
-				this.doResolve(socks5Req);
-				break;
-			case UDP_ASSOCIATE:
-				this.doUdpAssociate(socks5Req);
-				break;
-			default:
-				throw new AssertionError(String.format(
-						"unhandled %s: %s", 
-						Command.class.getSimpleName(), 
-						command));
-			}
+			CommandWorkerFactory commandWorkerFactory = 
+					CommandWorkerFactory.valueOfCommand(command);
+			CommandWorkerContext commandWorkerContext = new CommandWorkerContext(
+					this.socks5WorkerContext,
+					socks5Req.getDesiredDestinationAddress(),
+					socks5Req.getDesiredDestinationPort());
+			CommandWorker commandWorker = commandWorkerFactory.newCommandWorker(
+					commandWorkerContext);
+			commandWorker.run();
 		} catch (Throwable t) {
 			LOGGER.warn( 
-					this.format("Internal server error"), 
+					LoggerHelper.objectMessage(this, "Internal server error"), 
 					t);
 		} finally {
 			if (!this.clientSocket.isClosed()) {
@@ -834,7 +190,9 @@ public final class Socks5Worker implements Runnable {
 					this.clientSocket.close();
 				} catch (IOException e) {
 					LOGGER.warn( 
-							this.format("Error upon closing connection to the "
+							LoggerHelper.objectMessage(
+									this, 
+									"Error upon closing connection to the "
 									+ "client"), 
 							e);
 				}
@@ -851,12 +209,14 @@ public final class Socks5Worker implements Runnable {
 			cmsm = ClientMethodSelectionMessage.newInstanceFrom(in); 
 		} catch (IllegalArgumentException e) {
 			LOGGER.warn( 
-					this.format("Error in parsing the method selection "
-							+ "message from the client"), 
+					LoggerHelper.objectMessage(
+							this, 
+							"Error in parsing the method selection message "
+							+ "from the client"), 
 					e);
 			return null;
 		}
-		LOGGER.debug(this.format(String.format(
+		LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
 				"Received %s", 
 				cmsm.toString())));
 		Method method = null;
@@ -874,10 +234,10 @@ public final class Socks5Worker implements Runnable {
 		}
 		ServerMethodSelectionMessage smsm = 
 				ServerMethodSelectionMessage.newInstance(method);
-		LOGGER.debug(this.format(String.format(
+		LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
 				"Sending %s", 
 				smsm.toString())));
-		this.writeThenFlush(smsm.toByteArray());
+		this.socks5WorkerContext.writeThenFlush(smsm.toByteArray());
 		return method;
 	}
 	
@@ -885,75 +245,10 @@ public final class Socks5Worker implements Runnable {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append(this.getClass().getSimpleName())
-			.append(" [clientSocket=")
-			.append(this.clientSocket)
+			.append(" [socks5WorkerContext=")
+			.append(this.socks5WorkerContext)
 			.append("]");
 		return builder.toString();
-	}
-	
-	private DatagramSocket wrapClientDatagramSocket(
-			final DatagramSocket clientDatagramSock, 
-			final String udpClientHost, 
-			final int udpClientPort) {
-		DatagramSocket clientDatagramSck = clientDatagramSock;
-		if (this.clientDtlsDatagramSocketFactory != null) {
-			try {
-				clientDatagramSck = 
-						this.clientDtlsDatagramSocketFactory.newDatagramSocket(
-								clientDatagramSck, 
-								udpClientHost, 
-								udpClientPort);
-			} catch (IOException e) {
-				LOGGER.warn( 
-						this.format("Error in wrapping the client-facing UDP socket"), 
-						e);
-				Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
-						Reply.GENERAL_SOCKS_SERVER_FAILURE);
-				LOGGER.debug(this.format(String.format(
-						"Sending %s",
-						socks5Rep.toString())));
-				try {
-					this.writeThenFlush(socks5Rep.toByteArray());
-				} catch (IOException e1) {
-					LOGGER.warn( 
-							this.format("Error in writing SOCKS5 reply"), 
-							e1);
-				}
-				return null;
-			}
-		}
-		if (this.clientSocket instanceof GssSocket) {
-			GssSocket gssSocket = (GssSocket) this.clientSocket;
-			try {
-				clientDatagramSck = new GssDatagramSocket(
-						clientDatagramSck,
-						gssSocket.getGSSContext(),
-						gssSocket.getMessageProp());
-			} catch (SocketException e) {
-				LOGGER.warn( 
-						this.format("Error in wrapping the client-facing UDP socket"), 
-						e);
-				Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
-						Reply.GENERAL_SOCKS_SERVER_FAILURE);
-				LOGGER.debug(this.format(String.format(
-						"Sending %s",
-						socks5Rep.toString())));
-				try {
-					this.writeThenFlush(socks5Rep.toByteArray());
-				} catch (IOException e1) {
-					LOGGER.warn( 
-							this.format("Error in writing SOCKS5 reply"), 
-							e1);
-				}				
-				return null;
-			}
-		}
-		return clientDatagramSck;
-	}
-	
-	private void writeThenFlush(final byte[] b) throws IOException {
-		this.clientOutputStream.write(b);
-		this.clientOutputStream.flush();
 	}
 	
 }

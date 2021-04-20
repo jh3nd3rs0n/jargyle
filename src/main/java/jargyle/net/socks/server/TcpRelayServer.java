@@ -13,6 +13,8 @@ import java.util.concurrent.Executors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import jargyle.util.LoggerHelper;
+
 public final class TcpRelayServer {
 
 	private static class DataWorker implements Runnable {
@@ -35,10 +37,6 @@ public final class TcpRelayServer {
 			this.inputSocket = inSocket;
 			this.outputStream = outSocket.getOutputStream();
 			this.outputSocket = outSocket;
-		}
-		
-		private String format(final String message) {
-			return String.format("%s: %s", this, message);
 		}
 
 		private int getBufferSize() {
@@ -71,7 +69,7 @@ public final class TcpRelayServer {
 					try {
 						bytesRead = this.inputStream.read(buffer);
 						this.setLastReadTime(System.currentTimeMillis());
-						LOGGER.trace(this.format(String.format(
+						LOGGER.trace(LoggerHelper.objectMessage(this, String.format(
 								"Bytes read: %s",
 								bytesRead)));
 					} catch (SocketException e) {
@@ -81,7 +79,10 @@ public final class TcpRelayServer {
 						bytesRead = 0;
 					} catch (IOException e) {
 						LOGGER.warn(
-								this.format("Error occurred in the process of reading in data"), 
+								LoggerHelper.objectMessage(
+										this, 
+										"Error occurred in the process of "
+										+ "reading in data"), 
 								e);
 						break;
 					}
@@ -103,7 +104,10 @@ public final class TcpRelayServer {
 						break;
 					} catch (IOException e) {
 						LOGGER.warn(
-								this.format("Error occurred in the process of writing out data"), 
+								LoggerHelper.objectMessage(
+										this, 
+										"Error occurred in the process of "
+										+ "writing out data"), 
 								e);
 						break;
 					}
@@ -114,13 +118,19 @@ public final class TcpRelayServer {
 						break;
 					} catch (IOException e) {
 						LOGGER.warn(
-								this.format("Error occurred in the process of flushing out any data"), 
+								LoggerHelper.objectMessage(
+										this, 
+										"Error occurred in the process of "
+										+ "flushing out any data"), 
 								e);
 						break;
 					}					
 				} catch (Throwable t) {
 					LOGGER.warn(
-							this.format("Error occurred in the process of relaying the data"), 
+							LoggerHelper.objectMessage(
+									this, 
+									"Error occurred in the process of "
+									+ "relaying the data"), 
 							t);
 					break;
 				}

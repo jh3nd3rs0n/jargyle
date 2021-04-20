@@ -16,6 +16,7 @@ import jargyle.net.ssl.DtlsDatagramSocketFactory;
 import jargyle.net.ssl.SslSocketFactory;
 import jargyle.util.Criteria;
 import jargyle.util.Criterion;
+import jargyle.util.LoggerHelper;
 
 final class Listener implements Runnable {
 
@@ -45,7 +46,7 @@ final class Listener implements Runnable {
 		Criterion criterion = allowedClientAddressCriteria.anyEvaluatesTrue(
 				clientAddress);
 		if (criterion == null) {
-			LOGGER.debug(this.format(String.format(
+			LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
 					"Client address %s not allowed",
 					clientAddress)));
 			return false;
@@ -55,7 +56,7 @@ final class Listener implements Runnable {
 		criterion = blockedClientAddressCriteria.anyEvaluatesTrue(
 				clientAddress);
 		if (criterion != null) {
-			LOGGER.debug(this.format(String.format(
+			LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
 					"Client address %s blocked based on the following "
 					+ "criterion: %s",
 					clientAddress,
@@ -65,14 +66,14 @@ final class Listener implements Runnable {
 		return true;
 	}
 	
-	private void closeClientSocket(
-			final Socket clientSocket) {
+	private void closeClientSocket(final Socket clientSocket) {
 		if (!clientSocket.isClosed()) {
 			try {
 				clientSocket.close();
 			} catch (IOException e) {
 				LOGGER.warn( 
-						this.format("Error in closing the client socket"), 
+						LoggerHelper.objectMessage(
+								this, "Error in closing the client socket"), 
 						e);
 			}
 		}
@@ -86,15 +87,12 @@ final class Listener implements Runnable {
 			socketSettings.applyTo(clientSocket);
 		} catch (SocketException e) {
 			LOGGER.warn(
-					this.format("Error in setting the client socket"), 
+					LoggerHelper.objectMessage(
+							this, "Error in setting the client socket"), 
 					e);
 			return false;
 		}
 		return true;
-	}
-	
-	private String format(final String message) {
-		return String.format("%s: %s", this, message);
 	}
 	
 	private DtlsDatagramSocketFactory getClientDtlsDatagramSocketFactory() {
@@ -132,7 +130,8 @@ final class Listener implements Runnable {
 				break;
 			} catch (IOException e) {
 				LOGGER.warn(
-						this.format("Error in waiting for a connection"), 
+						LoggerHelper.objectMessage(
+								this, "Error in waiting for a connection"), 
 						e);
 				continue;
 			}
@@ -153,17 +152,17 @@ final class Listener implements Runnable {
 				clientSocket = clientSock;
 			} catch (Throwable t) {
 				LOGGER.warn(
-						this.format("Internal server error"), 
+						LoggerHelper.objectMessage(this, "Internal server error"), 
 						t);
 				this.closeClientSocket(clientSocket);
 				continue;
 			}
-			WorkerParams workerParams = new WorkerParams(
+			WorkerContext workerContext = new WorkerContext(
 					clientSocket,
 					this.configuration,
 					this.externalNetObjectFactory,
 					this.getClientDtlsDatagramSocketFactory());
-			executor.execute(new Worker(workerParams));
+			executor.execute(new Worker(workerContext));
 		}
 		executor.shutdownNow();
 	}
@@ -188,7 +187,8 @@ final class Listener implements Runnable {
 						clientSock, null, true);
 			} catch (IOException e) {
 				LOGGER.warn(
-						this.format("Error in wrapping the client socket"), 
+						LoggerHelper.objectMessage(
+								this, "Error in wrapping the client socket"), 
 						e);
 				return null;
 			}

@@ -168,7 +168,7 @@ public abstract class SettingSpec<V> {
 	
 	@HelpText(
 			doc = "The protocol version for the DTLS connections to the "
-					+ "other SOCKS server (default is DTLS)",
+					+ "other SOCKS server (default is DTLSv1.2)",
 			usage = "chaining.dtls.protocol=PROTOCOL"
 	)	
 	public static final SettingSpec<String> CHAINING_DTLS_PROTOCOL = new StringSettingSpec(
@@ -369,7 +369,7 @@ public abstract class SettingSpec<V> {
 	
 	@HelpText(
 			doc = "The protocol version for the SSL/TLS connections to the "
-					+ "other SOCKS server (default is TLSv1)",
+					+ "other SOCKS server (default is TLSv1.2)",
 			usage = "chaining.ssl.protocol=PROTOCOL"
 	)	
 	public static final SettingSpec<String> CHAINING_SSL_PROTOCOL = new StringSettingSpec(
@@ -487,12 +487,12 @@ public abstract class SettingSpec<V> {
 	
 	@HelpText(
 			doc = "The protocol version for the DTLS connections to the "
-					+ "SOCKS server (default is DTLS)",
+					+ "SOCKS server (default is DTLSv1.2)",
 			usage = "dtls.protocol=PROTOCOL"
 	)	
 	public static final SettingSpec<String> DTLS_PROTOCOL = new StringSettingSpec(
 			"dtls.protocol",
-			"DTLS");
+			"DTLSv1.2");
 	
 	@HelpText(
 			doc = "The trust store file for the DTLS connections to the "
@@ -865,12 +865,12 @@ public abstract class SettingSpec<V> {
 	
 	@HelpText(
 			doc = "The protocol version for the SSL/TLS connections to the "
-					+ "SOCKS server (default is TLSv1)",
+					+ "SOCKS server (default is TLSv1.2)",
 			usage = "ssl.protocol=PROTOCOL"
 	)	
 	public static final SettingSpec<String> SSL_PROTOCOL = new StringSettingSpec(
 			"ssl.protocol",
-			"TLSv1");
+			"TLSv1.2");
 	
 	@HelpText(
 			doc = "The trust store file for the SSL/TLS connections to the "

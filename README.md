@@ -211,7 +211,7 @@ The following is a list of available settings for the SOCKS server (displayed wh
           The maximum packet size for the DTLS connections to the other SOCKS server (default is 32768)
     
       chaining.dtls.protocol=PROTOCOL
-          The protocol version for the DTLS connections to the other SOCKS server (default is DTLS)
+          The protocol version for the DTLS connections to the other SOCKS server (default is DTLSv1.2)
     
       chaining.dtls.trustStoreFile=FILE
           The trust store file for the DTLS connections to the other SOCKS server
@@ -274,7 +274,7 @@ The following is a list of available settings for the SOCKS server (displayed wh
           The type of key store file for the SSL/TLS connections to the other SOCKS server (default is PKCS12)
     
       chaining.ssl.protocol=PROTOCOL
-          The protocol version for the SSL/TLS connections to the other SOCKS server (default is TLSv1)
+          The protocol version for the SSL/TLS connections to the other SOCKS server (default is TLSv1.2)
     
       chaining.ssl.trustStoreFile=FILE
           The trust store file for the SSL/TLS connections to the other SOCKS server
@@ -313,7 +313,7 @@ The following is a list of available settings for the SOCKS server (displayed wh
           The boolean value to indicate that client authentication is required for DTLS connections to the SOCKS server (default is false)
     
       dtls.protocol=PROTOCOL
-          The protocol version for the DTLS connections to the SOCKS server (default is DTLS)
+          The protocol version for the DTLS connections to the SOCKS server (default is DTLSv1.2)
     
       dtls.trustStoreFile=FILE
           The trust store file for the DTLS connections to the SOCKS server
@@ -433,7 +433,7 @@ The following is a list of available settings for the SOCKS server (displayed wh
           The boolean value to indicate that client authentication is required for SSL/TLS connections to the SOCKS server (default is false)
     
       ssl.protocol=PROTOCOL
-          The protocol version for the SSL/TLS connections to the SOCKS server (default is TLSv1)
+          The protocol version for the SSL/TLS connections to the SOCKS server (default is TLSv1.2)
     
       ssl.trustStoreFile=FILE
           The trust store file for the SSL/TLS connections to the SOCKS server

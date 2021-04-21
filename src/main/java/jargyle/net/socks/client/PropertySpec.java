@@ -81,7 +81,7 @@ public abstract class PropertySpec<V> {
 	
 	public static final PropertySpec<String> DTLS_PROTOCOL = new StringPropertySpec(
 			"socksClient.dtls.protocol",
-			"DTLS");
+			"DTLSv1.2");
 	
 	public static final PropertySpec<File> DTLS_TRUST_STORE_FILE = new FilePropertySpec(
 			"socksClient.dtls.trustStoreFile", 
@@ -165,7 +165,7 @@ public abstract class PropertySpec<V> {
 	
 	public static final PropertySpec<String> SSL_PROTOCOL = new StringPropertySpec(
 			"socksClient.ssl.protocol",
-			"TLSv1");
+			"TLSv1.2");
 	
 	public static final PropertySpec<File> SSL_TRUST_STORE_FILE = new FilePropertySpec(
 			"socksClient.ssl.trustStoreFile", 

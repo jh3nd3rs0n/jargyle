@@ -75,9 +75,16 @@ public final class Socks5Socket extends Socket {
 			}
 			Socket sock = this.socks5Client.getConnectedInternalSocket(
 					this.socket, timeout);
-			InputStream inputStream = sock.getInputStream();
-			OutputStream outputStream = sock.getOutputStream();
 			String address = inetAddress.getHostAddress();
+			this.socks5Connect(sock, address, port);
+		}
+		
+		public void socks5Connect(
+				final Socket connectedSocket,
+				final String address,
+				final int port) throws IOException {
+			InputStream inputStream = connectedSocket.getInputStream();
+			OutputStream outputStream = connectedSocket.getOutputStream();
 			Socks5Request socks5Req = Socks5Request.newInstance(
 					Command.CONNECT, 
 					address, 
@@ -87,6 +94,10 @@ public final class Socks5Socket extends Socket {
 			Socks5Reply socks5Rep = Socks5Reply.newInstanceFrom(inputStream);
 			Reply reply = socks5Rep.getReply();
 			if (!reply.equals(Reply.SUCCEEDED)) {
+				if (reply.equals(Reply.HOST_UNREACHABLE)) {
+					throw new UnknownHostException(String.format(
+							"unknown host: %s", address));
+				}
 				throw new IOException(String.format(
 						"received reply: %s", 
 						reply));
@@ -98,7 +109,7 @@ public final class Socks5Socket extends Socket {
 			this.remoteSocketAddress = new InetSocketAddress(
 					this.remoteInetAddress,
 					this.remotePort);
-			this.socket = sock;
+			this.socket = connectedSocket;			
 		}
 		
 	}
@@ -148,11 +159,12 @@ public final class Socks5Socket extends Socket {
 			final Socks5Client client, 
 			final String host, 
 			final int port) throws UnknownHostException, IOException {
+		Socket connectedInternalSocket = client.newConnectedInternalSocket();
 		this.socks5Client = client;
 		this.socks5SocketImpl = new Socks5SocketImpl(
-				client, client.newInternalSocket(), null);
+				client, connectedInternalSocket, null);
 		this.socks5SocketImpl.socks5Connect(
-				InetAddress.getByName(host), port, 0);
+				connectedInternalSocket, host, port);
 	}
 
 	public Socks5Socket(
@@ -161,13 +173,13 @@ public final class Socks5Socket extends Socket {
 			final int port, 
 			final InetAddress localAddr, 
 			final int localPort) throws IOException {
+		Socket connectedInternalSocket = client.newConnectedInternalSocket(
+				localAddr, localPort);
 		this.socks5Client = client;
 		this.socks5SocketImpl = new Socks5SocketImpl(
-				client, client.newInternalSocket(), null);		
-		this.socks5SocketImpl.socket.bind(
-				new InetSocketAddress(localAddr, localPort));
+				client, connectedInternalSocket, null);
 		this.socks5SocketImpl.socks5Connect(
-				InetAddress.getByName(host), port, 0);
+				connectedInternalSocket, host, port);
 	}
 	
 	@Override

@@ -40,6 +40,34 @@ public final class Socks5Client extends SocksClient {
 		this.dtlsDatagramSocketFactory = dtlsDatagramSockFactory;
 	}
 	
+	private Socket getAuthenticatedConnectedInternalSocket(
+			final Socket connectedInternalSocket) throws IOException {
+		InputStream inputStream = connectedInternalSocket.getInputStream();
+		OutputStream outputStream = connectedInternalSocket.getOutputStream();
+		Set<Method> methods = new TreeSet<Method>();
+		AuthMethods authMethods = this.getProperties().getValue(
+				PropertySpec.SOCKS5_AUTH_METHODS);
+		for (AuthMethod authMethod : authMethods.toList()) {
+			methods.add(authMethod.methodValue());
+		}
+		ClientMethodSelectionMessage cmsm = 
+				ClientMethodSelectionMessage.newInstance(methods);
+		outputStream.write(cmsm.toByteArray());
+		outputStream.flush();
+		ServerMethodSelectionMessage smsm =
+				ServerMethodSelectionMessage.newInstanceFrom(inputStream);
+		Method method = smsm.getMethod();
+		Authenticator authenticator = null;
+		try {
+			authenticator = Authenticator.valueOfMethod(method);
+		} catch (IllegalArgumentException e) {
+			throw new IOException(e);
+		}
+		Socket newSocket = authenticator.authenticate(
+				connectedInternalSocket, this);
+		return newSocket;		
+	}
+	
 	public DatagramSocket getConnectedInternalDatagramSocket(
 			final DatagramSocket internalDatagramSocket,
 			final String udpRelayServerHost,
@@ -64,31 +92,17 @@ public final class Socks5Client extends SocksClient {
 			final boolean bindBeforeConnect) throws IOException {
 		Socket sock = super.getConnectedInternalSocket(
 				internalSocket, timeout, bindBeforeConnect);
-		InputStream inputStream = sock.getInputStream();
-		OutputStream outputStream = sock.getOutputStream();
-		Set<Method> methods = new TreeSet<Method>();
-		AuthMethods authMethods = this.getProperties().getValue(
-				PropertySpec.SOCKS5_AUTH_METHODS);
-		for (AuthMethod authMethod : authMethods.toList()) {
-			methods.add(authMethod.methodValue());
-		}
-		ClientMethodSelectionMessage cmsm = 
-				ClientMethodSelectionMessage.newInstance(methods);
-		outputStream.write(cmsm.toByteArray());
-		outputStream.flush();
-		ServerMethodSelectionMessage smsm =
-				ServerMethodSelectionMessage.newInstanceFrom(inputStream);
-		Method method = smsm.getMethod();
-		Authenticator authenticator = null;
-		try {
-			authenticator = Authenticator.valueOfMethod(method);
-		} catch (IllegalArgumentException e) {
-			throw new IOException(e);
-		}
-		Socket newSocket = authenticator.authenticate(sock, this);
-		return newSocket;
+		return this.getAuthenticatedConnectedInternalSocket(sock);
 	}
 
+	@Override
+	public Socket newConnectedInternalSocket(
+			final InetAddress localAddr, 
+			final int localPort) throws IOException {
+		Socket sock = super.newConnectedInternalSocket(localAddr, localPort);
+		return this.getAuthenticatedConnectedInternalSocket(sock);
+	}
+	
 	@Override
 	public SocksNetObjectFactory newSocksNetObjectFactory() {
 		return new Socks5NetObjectFactory(this);

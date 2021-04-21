@@ -146,6 +146,34 @@ public abstract class SocksClient {
 		return this.internalHostResolver.resolve(host);
 	}
 	
+	public Socket newConnectedInternalSocket() throws IOException {
+		return this.newConnectedInternalSocket(
+				this.properties.getValue(
+						PropertySpec.BIND_HOST).toInetAddress(),
+				this.properties.getValue(
+						PropertySpec.BIND_PORT).intValue());
+	}
+	
+	public Socket newConnectedInternalSocket(
+			final InetAddress localAddr, 
+			final int localPort) throws IOException {
+		String socksServerUriHost = this.socksServerUri.getHost();
+		int socksServerUriPort = this.socksServerUri.getPort();
+		Socket internalSocket = this.internalNetObjectFactory.newSocket(
+				socksServerUriHost, 
+				socksServerUriPort, 
+				localAddr, 
+				localPort);
+		if (this.sslSocketFactory == null) {
+			return internalSocket;
+		}
+		return this.sslSocketFactory.newSocket(
+				internalSocket, 
+				socksServerUriHost, 
+				socksServerUriPort, 
+				true);		
+	}
+	
 	public final Socket newInternalSocket() {
 		return this.internalNetObjectFactory.newSocket();
 	}

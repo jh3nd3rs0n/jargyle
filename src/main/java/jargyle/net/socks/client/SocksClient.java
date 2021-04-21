@@ -116,7 +116,8 @@ public abstract class SocksClient {
 							PropertySpec.BIND_PORT).intValue()));
 		}
 		InetAddress socksServerUriHostInetAddress = 
-				this.internalResolve(this.socksServerUri.getHost());
+				this.internalHostResolver.resolve(
+						this.socksServerUri.getHost());
 		int socksServerUriPort = this.socksServerUri.getPort();
 		internalSocket.connect(
 				new InetSocketAddress(
@@ -139,11 +140,6 @@ public abstract class SocksClient {
 	
 	public final SocksServerUri getSocksServerUri() {
 		return this.socksServerUri;
-	}
-	
-	public final InetAddress internalResolve(
-			final String host) throws IOException {
-		return this.internalHostResolver.resolve(host);
 	}
 	
 	public Socket newConnectedInternalSocket() throws IOException {

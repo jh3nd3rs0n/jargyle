@@ -72,16 +72,14 @@ public final class Socks5Client extends SocksClient {
 			final DatagramSocket internalDatagramSocket,
 			final String udpRelayServerHost,
 			final int udpRelayServerPort) throws IOException {
-		InetAddress udpRelayServerHostInetAddress = 
-				this.internalResolve(udpRelayServerHost);
 		internalDatagramSocket.connect(
-				udpRelayServerHostInetAddress, udpRelayServerPort);
+				InetAddress.getByName(udpRelayServerHost), udpRelayServerPort);
 		if (this.dtlsDatagramSocketFactory == null) {
 			return internalDatagramSocket;
 		}
 		return this.dtlsDatagramSocketFactory.newDatagramSocket(
 				internalDatagramSocket, 
-				udpRelayServerHostInetAddress.getHostAddress(), 
+				udpRelayServerHost, 
 				udpRelayServerPort);
 	}
 	

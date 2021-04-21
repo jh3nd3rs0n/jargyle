@@ -239,7 +239,8 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 			}
 			DatagramSocket clientDatagramSck = this.wrapClientDatagramSocket(
 					clientDatagramSock, 
-					desiredDestinationAddr, 
+					hostResolver.resolve(
+							desiredDestinationAddr).getHostAddress(), 
 					desiredDestinationPrt); 
 			if (clientDatagramSck == null) {
 				return;

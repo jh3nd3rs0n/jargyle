@@ -174,9 +174,7 @@ public final class Socks5Worker {
 			CommandWorkerFactory commandWorkerFactory = 
 					CommandWorkerFactory.valueOfCommand(command);
 			CommandWorkerContext commandWorkerContext = new CommandWorkerContext(
-					this.socks5WorkerContext,
-					socks5Req.getDesiredDestinationAddress(),
-					socks5Req.getDesiredDestinationPort());
+					this.socks5WorkerContext, socks5Req);
 			CommandWorker commandWorker = commandWorkerFactory.newCommandWorker(
 					commandWorkerContext);
 			commandWorker.run();

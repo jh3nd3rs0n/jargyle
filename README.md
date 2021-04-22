@@ -246,12 +246,6 @@ The following is a list of available settings for the SOCKS server (displayed wh
       chaining.socks5.resolve.resolveHostNamesThroughServer=true|false
           The boolean value to indicate that host names are to be resolved through the other SOCKS5 server (default is false)
     
-      chaining.socks5.resolve.serverResolvableHostNameCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
-          The space separated list of host name criteria for host names to be resolved through the other SOCKS5 server (default is matches:.*)
-    
-      chaining.socks5.resolve.systemResolvableHostNameCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
-          The space separated list of host name criteria for host names to be resolved through the system (default is equals:localhost)
-    
       chaining.socks5.userpassauth.usernamePassword=USERNAME:PASSWORD
           The username password to be used to access the other SOCKS5 server
     

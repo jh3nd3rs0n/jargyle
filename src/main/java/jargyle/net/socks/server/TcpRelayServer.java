@@ -17,58 +17,36 @@ import jargyle.logging.LoggerHelper;
 
 public final class TcpRelayServer {
 
-	private static class DataWorker implements Runnable {
+	private static final class DataWorker implements Runnable {
 		
 		private static final Logger LOGGER = LoggerFactory.getLogger(
 				DataWorker.class);
 		
-		private final TcpRelayServer tcpRelayServer;
+		private final int bufferSize;
+		private final DataWorkerContext dataWorkerContext;
 		private final InputStream inputStream;
-		private final Socket inputSocket;
 		private final OutputStream outputStream;
-		private final Socket outputSocket;
+		private final int timeout;
 				
-		public DataWorker(
-				final TcpRelayServer server,
-				final Socket inSocket,
-				final Socket outSocket) throws IOException {
-			this.tcpRelayServer = server;
-			this.inputStream = inSocket.getInputStream();
-			this.inputSocket = inSocket;
-			this.outputStream = outSocket.getOutputStream();
-			this.outputSocket = outSocket;
-		}
-
-		private int getBufferSize() {
-			return this.tcpRelayServer.bufferSize;
-		}
-		
-		private long getLastReadTime() {
-			return this.tcpRelayServer.lastReadTime;
-		}
-		
-		private int getTimeout() {
-			return this.tcpRelayServer.timeout;
-		}
-		
-		private boolean isFirstDataWorkerFinished() {
-			return this.tcpRelayServer.firstDataWorkerFinished;
-		}
-		
-		private boolean isTcpRelayServerStopped() {
-			return this.tcpRelayServer.stopped;
+		public DataWorker(final DataWorkerContext context) throws IOException {
+			this.bufferSize = context.getBufferSize();
+			this.dataWorkerContext = context;
+			this.inputStream = context.getInputSocketInputStream();
+			this.outputStream = context.getOutputSocketOutputStream();
+			this.timeout = context.getTimeout();
 		}
 		
 		@Override
 		public void run() {
-			this.setLastReadTime(System.currentTimeMillis());
+			this.dataWorkerContext.setLastReadTime(System.currentTimeMillis());
 			while (true) {
 				try {
 					int bytesRead = 0;
-					byte[] buffer = new byte[this.getBufferSize()];
+					byte[] buffer = new byte[this.bufferSize];
 					try {
 						bytesRead = this.inputStream.read(buffer);
-						this.setLastReadTime(System.currentTimeMillis());
+						this.dataWorkerContext.setLastReadTime(
+								System.currentTimeMillis());
 						LOGGER.trace(LoggerHelper.objectMessage(this, String.format(
 								"Bytes read: %s",
 								bytesRead)));
@@ -90,9 +68,11 @@ public final class TcpRelayServer {
 						break;
 					}
 					if (bytesRead == 0) {
+						long lastReadTime = 
+								this.dataWorkerContext.getLastReadTime();
 						long timeSinceRead = 
-								System.currentTimeMillis() - this.getLastReadTime();
-						if (timeSinceRead >= this.getTimeout()) {
+								System.currentTimeMillis() - lastReadTime;
+						if (timeSinceRead >= this.timeout) {
 							break;
 						}
 						continue;
@@ -135,24 +115,79 @@ public final class TcpRelayServer {
 					break;
 				}
 			}
-			if (!this.isFirstDataWorkerFinished()) {
-				this.setFirstDataWorkerFinished(true);
+			if (!this.dataWorkerContext.isFirstDataWorkerFinished()) {
+				this.dataWorkerContext.setFirstDataWorkerFinished(true);
 			} else {
-				if (!this.isTcpRelayServerStopped()) {
-					this.stopTcpRelayServer();
+				if (!this.dataWorkerContext.isTcpRelayServerStopped()) {
+					this.dataWorkerContext.stopTcpRelayServer();
 				}
 			}
 		}
+
+		@Override
+		public String toString() {
+			StringBuilder builder = new StringBuilder();
+			builder.append(this.getClass().getSimpleName())
+				.append(" [dataWorkerContext=")
+				.append(this.dataWorkerContext)
+				.append("]");
+			return builder.toString();
+		}
 		
-		private void setFirstDataWorkerFinished(final boolean b) {
+	}
+	
+	private static abstract class DataWorkerContext {
+		
+		private final Socket inputSocket;
+		private final Socket outputSocket;
+		private final TcpRelayServer tcpRelayServer;
+		
+		public DataWorkerContext(
+				final TcpRelayServer server,
+				final Socket inputSock,
+				final Socket outputSock) {
+			this.inputSocket = inputSock;
+			this.outputSocket = outputSock;
+			this.tcpRelayServer = server;
+		}
+		
+		public final int getBufferSize() {
+			return this.tcpRelayServer.bufferSize;
+		}
+		
+		public final InputStream getInputSocketInputStream() throws IOException {
+			return this.inputSocket.getInputStream();
+		}
+		
+		public final long getLastReadTime() {
+			return this.tcpRelayServer.lastReadTime;
+		}
+		
+		public final OutputStream getOutputSocketOutputStream() throws IOException {
+			return this.outputSocket.getOutputStream();
+		}
+		
+		public final int getTimeout() {
+			return this.tcpRelayServer.timeout;
+		}
+		
+		public final boolean isFirstDataWorkerFinished() {
+			return this.tcpRelayServer.firstDataWorkerFinished;
+		}
+		
+		public final boolean isTcpRelayServerStopped() {
+			return this.tcpRelayServer.stopped;
+		}
+		
+		public final void setFirstDataWorkerFinished(final boolean b) {
 			this.tcpRelayServer.firstDataWorkerFinished = b;
 		}
 		
-		private void setLastReadTime(final long time) {
+		public final void setLastReadTime(final long time) {
 			this.tcpRelayServer.lastReadTime = time;
 		}
 		
-		private void stopTcpRelayServer() {
+		public final void stopTcpRelayServer() {
 			this.tcpRelayServer.stop();
 		}
 
@@ -170,19 +205,17 @@ public final class TcpRelayServer {
 		
 	}
 	
-	private static final class IncomingDataWorker extends DataWorker {
-
-		public IncomingDataWorker(
-				final TcpRelayServer server) throws IOException {
+	private static final class IncomingDataWorkerContext extends DataWorkerContext {
+		
+		public IncomingDataWorkerContext(final TcpRelayServer server) {
 			super(server, server.serverSocket, server.clientSocket);
 		}
 		
 	}
 	
-	private static final class OutgoingDataWorker extends DataWorker {
-
-		public OutgoingDataWorker(
-				final TcpRelayServer server) throws IOException {
+	private static final class OutgoingDataWorkerContext extends DataWorkerContext {
+		
+		public OutgoingDataWorkerContext(final TcpRelayServer server) {
 			super(server, server.clientSocket, server.serverSocket);
 		}
 		
@@ -238,8 +271,8 @@ public final class TcpRelayServer {
 		this.lastReadTime = 0L;
 		this.firstDataWorkerFinished = false;
 		this.executor = Executors.newFixedThreadPool(2);
-		this.executor.execute(new IncomingDataWorker(this));
-		this.executor.execute(new OutgoingDataWorker(this));
+		this.executor.execute(new DataWorker(new IncomingDataWorkerContext(this)));
+		this.executor.execute(new DataWorker(new OutgoingDataWorkerContext(this)));
 		this.started = true;
 		this.stopped = false;
 	}

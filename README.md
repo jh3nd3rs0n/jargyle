@@ -1505,60 +1505,6 @@ Partial configuration file example:
     
 ```
 
-You can specify host names to be resolved through SOCKS5 server chaining and you can specify host names to be resolved through the system. The host names can be specified in the following settings:
-
--   `chaining.socks5.resolve.serverResolvableHostNameCriteria`
--   `chaining.socks5.resolve.systemResolvableHostNameCriteria`
-
-You can specify a host name or host names in any of the aforementioned settings as a space separated list of each host name or host names as either a literal expression preceded by the prefix `equals:` or a regular expression preceded by the prefix `matches:`.
-
-Partial command line example:
-
-```text
-    
-    --setting=chaining.socksServerUri=socks5://127.0.0.1:23456 \
-    --setting=chaining.socks5.resolve.resolveHostNamesThroughServer=true \
-    "--setting=chaining.socks5.resolve.serverResolvableHostNameCriteria=matches:.*" \
-    "--setting=chaining.socks5.resolve.systemResolvableHostNameCriteria=equals:localhost matches:.*dev.* matches:.*local.* matches:.*test.*"
-    
-```
-
-You can specify a host name or host names in any of the aforementioned settings as a sequence of `<criterion/>` XML elements in the configuration file.
-
-Partial configuration file example:
-
-```xml
-    
-    <setting>
-        <name>chaining.socksServerUri</name>
-        <value>socks5://127.0.0.1:23456</value>
-    </setting>
-    <setting>
-        <name>chaining.socks5.resolve.resolveHostNamesThroughServer</name>
-        <value>true</value>
-    </setting>
-    <setting>
-        <name>chaining.socks5.resolve.serverResolvableHostNameCriteria</name>
-        <criteriaValue>
-            <criteria>
-                <criterion method="matches" value=".*"/>
-            </criteria>
-        </criteriaValue>
-    </setting>
-    <setting>
-        <name>chaining.socks5.resolve.systemResolvableHostNameCriteria</name>
-        <criteriaValue>
-            <criteria>
-                <criterion method="equals" value="localhost"/>
-                <criterion method="matches" value=".*dev.*"/>
-                <criterion method="matches" value=".*local.*"/>
-                <criterion method="matches" value=".*test.*"/>
-            </criteria>
-        </criteriaValue>
-    </setting>        
-    
-```
-
 #### 4. 11. 4. Using SOCKS5 Authentication
 
 Jargyle has the following SOCKS5 authentication methods to choose from for accessing the other SOCKS5 server:

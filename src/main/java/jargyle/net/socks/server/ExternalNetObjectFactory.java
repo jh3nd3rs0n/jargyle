@@ -27,7 +27,6 @@ import jargyle.net.socks.client.v5.userpassauth.UsernamePassword;
 import jargyle.net.socks.transport.v5.AuthMethods;
 import jargyle.net.socks.transport.v5.gssapiauth.ProtectionLevels;
 import jargyle.security.EncryptedPassword;
-import jargyle.util.Criteria;
 import jargyle.util.PositiveInteger;
 import jargyle.util.Strings;
 
@@ -211,23 +210,6 @@ final class ExternalNetObjectFactory extends NetObjectFactory {
 					PropertySpec.SOCKS5_RESOLVE_RESOLVE_HOST_NAMES_THROUGH_SERVER.newProperty(
 							resolveHostNamesThroughServer)));
 			return properties;
-		}
-		if (settingSpec.equals(
-				SettingSpec.CHAINING_SOCKS5_RESOLVE_SERVER_RESOLVABLE_HOST_NAME_CRITERIA)) {
-			Criteria serverResolvableHostNameCriteria = 
-					(Criteria) setting.getValue();
-			properties.add(cast(
-					PropertySpec.SOCKS5_RESOLVE_SERVER_RESOLVABLE_HOST_NAME_CRITERIA.newProperty(
-							serverResolvableHostNameCriteria)));
-			return properties;
-		}
-		if (settingSpec.equals(
-				SettingSpec.CHAINING_SOCKS5_RESOLVE_SYSTEM_RESOLVABLE_HOST_NAME_CRITERIA)) {
-			Criteria systemResolvableHostNameCriteria = 
-					(Criteria) setting.getValue();
-			properties.add(cast(
-					PropertySpec.SOCKS5_RESOLVE_SYSTEM_RESOLVABLE_HOST_NAME_CRITERIA.newProperty(
-							systemResolvableHostNameCriteria)));
 		}
 		if (settingSpec.equals(
 				SettingSpec.CHAINING_SOCKS5_USERPASSAUTH_USERNAME_PASSWORD)) {

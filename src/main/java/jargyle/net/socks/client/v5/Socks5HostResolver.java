@@ -14,39 +14,13 @@ import jargyle.net.socks.transport.v5.Command;
 import jargyle.net.socks.transport.v5.Reply;
 import jargyle.net.socks.transport.v5.Socks5Reply;
 import jargyle.net.socks.transport.v5.Socks5Request;
-import jargyle.util.Criteria;
-import jargyle.util.Criterion;
 
 public final class Socks5HostResolver extends HostResolver {
 
-	private final Properties properties;
 	private final Socks5Client socks5Client;
 	
 	public Socks5HostResolver(final Socks5Client client) {
-		Properties props = client.getProperties();
-		this.properties = props;
 		this.socks5Client = client;
-	}
-	
-	private boolean canServerResolveHostName(final String hostName) {
-		if (!this.properties.getValue(
-				PropertySpec.SOCKS5_RESOLVE_RESOLVE_HOST_NAMES_THROUGH_SERVER).booleanValue()) {
-			return false;
-		}
-		Criteria serverResolvableHostNameCriteria = this.properties.getValue(
-				PropertySpec.SOCKS5_RESOLVE_SERVER_RESOLVABLE_HOST_NAME_CRITERIA);
-		Criterion criterion = serverResolvableHostNameCriteria.anyEvaluatesTrue(
-				hostName);
-		if (criterion == null) {
-			return false;
-		}
-		Criteria systemResolvableHostNameCriteria = this.properties.getValue(
-				PropertySpec.SOCKS5_RESOLVE_SYSTEM_RESOLVABLE_HOST_NAME_CRITERIA);
-		criterion = systemResolvableHostNameCriteria.anyEvaluatesTrue(hostName);
-		if (criterion != null) {
-			return false;
-		}
-		return true;
 	}
 	
 	@Override
@@ -54,9 +28,10 @@ public final class Socks5HostResolver extends HostResolver {
 		if (host == null) {
 			return InetAddress.getLoopbackAddress();
 		}
+		Properties properties = this.socks5Client.getProperties();
 		AddressType addressType = AddressType.valueForAddress(host);
-		if (!addressType.equals(AddressType.DOMAINNAME)
-				|| !this.canServerResolveHostName(host)) {
+		if (!addressType.equals(AddressType.DOMAINNAME) || !properties.getValue(
+				PropertySpec.SOCKS5_RESOLVE_RESOLVE_HOST_NAMES_THROUGH_SERVER).booleanValue()) {
 			return InetAddress.getByName(host);
 		}
 		Socket socket = this.socks5Client.newInternalSocket();

@@ -283,26 +283,6 @@ public abstract class SettingSpec<V> {
 			PropertySpec.SOCKS5_RESOLVE_RESOLVE_HOST_NAMES_THROUGH_SERVER.getDefaultProperty().getValue());
 	
 	@HelpText(
-			doc = "The space separated list of host name criteria for host "
-					+ "names to be resolved through the other SOCKS5 server "
-					+ "(default is matches:.*)", 
-			usage = "chaining.socks5.resolve.serverResolvableHostNameCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
-	)	
-	public static final SettingSpec<Criteria> CHAINING_SOCKS5_RESOLVE_SERVER_RESOLVABLE_HOST_NAME_CRITERIA = new CriteriaSettingSpec(
-			"chaining.socks5.resolve.serverResolvableHostNameCriteria",
-			PropertySpec.SOCKS5_RESOLVE_SERVER_RESOLVABLE_HOST_NAME_CRITERIA.getDefaultProperty().getValue());
-	
-	@HelpText(
-			doc = "The space separated list of host name criteria for host "
-					+ "names to be resolved through the system "
-					+ "(default is equals:localhost)", 
-			usage = "chaining.socks5.resolve.systemResolvableHostNameCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
-	)	
-	public static final SettingSpec<Criteria> CHAINING_SOCKS5_RESOLVE_SYSTEM_RESOLVABLE_HOST_NAME_CRITERIA = new CriteriaSettingSpec(
-			"chaining.socks5.resolve.systemResolvableHostNameCriteria",
-			PropertySpec.SOCKS5_RESOLVE_SYSTEM_RESOLVABLE_HOST_NAME_CRITERIA.getDefaultProperty().getValue());
-	
-	@HelpText(
 			doc = "The username password to be used to access the other "
 					+ "SOCKS5 server", 
 			usage = "chaining.socks5.userpassauth.usernamePassword=USERNAME:PASSWORD"

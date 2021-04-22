@@ -56,7 +56,7 @@ public class Socks5DatagramSocketIT {
 						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						UsernamePassword.newInstance("Aladdin", "opensesame".toCharArray())),
-				ConfigurationHelper.newConfigurationUsingSocks5UsernamePasswordAuth());
+				ConfigurationHelper.newConfigurationUsingSocks5UserpassAuth());
 		assertEquals(string, returningString);
 	}
 
@@ -69,7 +69,7 @@ public class Socks5DatagramSocketIT {
 						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						UsernamePassword.newInstance("Jasmine", "mission:impossible".toCharArray())),
-				ConfigurationHelper.newConfigurationUsingSocks5UsernamePasswordAuth());
+				ConfigurationHelper.newConfigurationUsingSocks5UserpassAuth());
 		assertEquals(string, returningString);
 	}
 	
@@ -82,7 +82,7 @@ public class Socks5DatagramSocketIT {
 						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
 						null,
 						UsernamePassword.newInstance("Abu", "safeDriversSave40%".toCharArray())),
-				ConfigurationHelper.newConfigurationUsingSocks5UsernamePasswordAuth());
+				ConfigurationHelper.newConfigurationUsingSocks5UserpassAuth());
 		assertEquals(string, returningString);
 	}
 

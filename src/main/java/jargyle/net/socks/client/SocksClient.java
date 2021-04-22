@@ -115,10 +115,10 @@ public abstract class SocksClient {
 					this.properties.getValue(
 							PropertySpec.BIND_PORT).intValue()));
 		}
-		InetAddress socksServerUriHostInetAddress = 
-				this.internalHostResolver.resolve(
-						this.socksServerUri.getHost());
+		String socksServerUriHost = this.socksServerUri.getHost();
 		int socksServerUriPort = this.socksServerUri.getPort();
+		InetAddress socksServerUriHostInetAddress = 
+				this.internalHostResolver.resolve(socksServerUriHost);
 		internalSocket.connect(
 				new InetSocketAddress(
 						socksServerUriHostInetAddress, 
@@ -129,7 +129,7 @@ public abstract class SocksClient {
 		}
 		return this.sslSocketFactory.newSocket(
 				internalSocket, 
-				socksServerUriHostInetAddress.getHostAddress(), 
+				socksServerUriHost, 
 				socksServerUriPort, 
 				true);
 	}

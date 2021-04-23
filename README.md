@@ -1483,7 +1483,7 @@ Host name resolution through SOCKS5 server chaining DOES NOT OCCUR WHEN:
 -   Resolving a host name for a TCP socket to receive an external inbound TCP connection.
 -   Resolving a host name for an external outgoing datagram packet.
 
-In addition, provided settings are ignored for preparing a TCP socket to make an external outbound TCP connection. Such provided settings include specified socket settings for the TCP socket and the specified timeout in milliseconds on waiting to connect.
+In addition, settings are ignored for preparing a TCP socket to make an external outbound TCP connection. Such settings include specified socket settings for the TCP socket and the specified timeout in milliseconds on waiting to connect.
 
 To enable host name resolution through SOCKS5 server chaining without the aforementioned limitations, you would need to set the setting `chaining.socks5.resolve.resolveHostNamesThroughServer` to `true`.
 
@@ -1515,7 +1515,7 @@ This setting can be used under the following condition:
 
 -   The other SOCKS5 server supports [the SOCKS5 RESOLVE command](#5-3-the-socks5-resolve-command). (At the time of this writing, the SOCKS5 RESOLVE command is an additional SOCKS5 command made for Jargyle. Therefore the other SOCKS5 server would at the very least be another running instance of Jargyle.)
 
-In addition to using this setting, you can use the setting `socks5.onConnect.prepareServerSocket` to be set to `true` in order for the provided settings to be recognized for preparing a TCP socket to make an external outbound TCP connection.
+In addition to using this setting, you can use the setting `socks5.onConnect.prepareServerSocket` to be set to `true` in order for the settings to be recognized for preparing a TCP socket to make an external outbound TCP connection.
 
 Partial command line example:
 
@@ -1840,7 +1840,7 @@ Partial configuration file example:
 
 The known limitations of Jargyle chained to a specified chain of other SOCKS servers include the following:
 
--   Only TCP traffic can be routed through the chain. Any UDP traffic will be routed through the last SOCKS server of the chain.
+-   Only TCP traffic can be routed through the chain. Jargyle will attempt to route any UDP traffic through the last SOCKS server of the chain.
 
 ### 4. 13. Allowing or Blocking Addresses
 

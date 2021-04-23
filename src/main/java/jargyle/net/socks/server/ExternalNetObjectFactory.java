@@ -203,12 +203,12 @@ final class ExternalNetObjectFactory extends NetObjectFactory {
 			return properties;
 		}
 		if (settingSpec.equals(
-				SettingSpec.CHAINING_SOCKS5_RESOLVE_RESOLVE_HOST_NAMES_THROUGH_SERVER)) {
-			Boolean resolveHostNamesThroughServer = 
+				SettingSpec.CHAINING_SOCKS5_RESOLVE_RESOLVE_HOST_NAMES_THROUGH_SOCKS_SERVER)) {
+			Boolean resolveHostNamesThroughSocksServer = 
 					(Boolean) setting.getValue();
 			properties.add(cast(
-					PropertySpec.SOCKS5_RESOLVE_RESOLVE_HOST_NAMES_THROUGH_SERVER.newProperty(
-							resolveHostNamesThroughServer)));
+					PropertySpec.SOCKS5_RESOLVE_RESOLVE_HOST_NAMES_THROUGH_SOCKS_SERVER.newProperty(
+							resolveHostNamesThroughSocksServer)));
 			return properties;
 		}
 		if (settingSpec.equals(

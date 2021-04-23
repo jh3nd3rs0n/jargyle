@@ -243,7 +243,7 @@ The following is a list of available settings for the SOCKS server (displayed wh
       chaining.socks5.gssapiauth.serviceName=SOCKS5_GSSAPIAUTH_SERVICE_NAME
           The GSS-API service name for the other SOCKS5 server
     
-      chaining.socks5.resolve.resolveHostNamesThroughServer=true|false
+      chaining.socks5.resolve.resolveHostNamesThroughSocksServer=true|false
           The boolean value to indicate that host names are to be resolved through the other SOCKS5 server (default is false)
     
       chaining.socks5.userpassauth.usernamePassword=USERNAME:PASSWORD
@@ -1485,14 +1485,14 @@ Host name resolution through SOCKS5 server chaining DOES NOT OCCUR WHEN:
 
 In addition, settings are ignored for preparing a TCP socket to make an external outbound TCP connection. Such settings include specified socket settings for the TCP socket and the specified timeout in milliseconds on waiting to connect.
 
-To enable host name resolution through SOCKS5 server chaining without the aforementioned limitations, you would need to set the setting `chaining.socks5.resolve.resolveHostNamesThroughServer` to `true`.
+To enable host name resolution through SOCKS5 server chaining without the aforementioned limitations, you would need to set the setting `chaining.socks5.resolve.resolveHostNamesThroughSocksServer` to `true`.
 
 Partial command line example:
 
 ```text
     
     --setting=chaining.socksServerUri=socks5://127.0.0.1:23456 \
-    --setting=chaining.socks5.resolve.resolveHostNamesThroughServer=true
+    --setting=chaining.socks5.resolve.resolveHostNamesThroughSocksServer=true
     
 ```
 
@@ -1505,7 +1505,7 @@ Partial configuration file example:
         <value>socks5://127.0.0.1:23456</value>
     </setting>
     <setting>
-        <name>chaining.socks5.resolve.resolveHostNamesThroughServer</name>
+        <name>chaining.socks5.resolve.resolveHostNamesThroughSocksServer</name>
         <value>true</value>
     </setting>
     
@@ -1522,7 +1522,7 @@ Partial command line example:
 ```text
     
     --setting=chaining.socksServerUri=socks5://127.0.0.1:23456 \
-    --setting=chaining.socks5.resolve.resolveHostNamesThroughServer=true \
+    --setting=chaining.socks5.resolve.resolveHostNamesThroughSocksServer=true \
     --setting=socks5.onConnect.prepareServerSocket=true \
     --setting=socks5.onConnect.serverSocketSettings=SO_TIMEOUT=500 \
     --setting=socks5.onConnect.serverConnectTimeout=10000
@@ -1538,7 +1538,7 @@ Partial configuration file example:
         <value>socks5://127.0.0.1:23456</value>
     </setting>
     <setting>
-        <name>chaining.socks5.resolve.resolveHostNamesThroughServer</name>
+        <name>chaining.socks5.resolve.resolveHostNamesThroughSocksServer</name>
         <value>true</value>
     </setting>
     <setting>
@@ -1803,7 +1803,7 @@ Partial command line example:
     --setting=chaining.socks5.authMethods=GSSAPI \
     --setting=chaining.socks5.gssapiauth.serviceName=rcmd/127.0.0.1 \
     --setting=chaining.socksServerUri=socks5://127.0.0.1:54321 \
-    --setting=chaining.socks5.resolve.resolveHostNamesThroughServer=true
+    --setting=chaining.socks5.resolve.resolveHostNamesThroughSocksServer=true
     
 ```
 
@@ -1832,7 +1832,7 @@ Partial configuration file example:
         <value>socks5://127.0.0.1:54321</value>
     </setting>        
     <setting>
-        <name>chaining.socks5.resolve.resolveHostNamesThroughServer</name>
+        <name>chaining.socks5.resolve.resolveHostNamesThroughSocksServer</name>
         <value>true</value>
     </setting>    
     

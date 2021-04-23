@@ -31,7 +31,7 @@ public final class Socks5HostResolver extends HostResolver {
 		Properties properties = this.socks5Client.getProperties();
 		AddressType addressType = AddressType.valueForAddress(host);
 		if (!addressType.equals(AddressType.DOMAINNAME) || !properties.getValue(
-				PropertySpec.SOCKS5_RESOLVE_RESOLVE_HOST_NAMES_THROUGH_SERVER).booleanValue()) {
+				PropertySpec.SOCKS5_RESOLVE_RESOLVE_HOST_NAMES_THROUGH_SOCKS_SERVER).booleanValue()) {
 			return InetAddress.getByName(host);
 		}
 		Socket socket = this.socks5Client.newInternalSocket();

@@ -276,11 +276,11 @@ public abstract class SettingSpec<V> {
 			doc = "The boolean value to indicate that host names are to be "
 					+ "resolved through the other SOCKS5 server "
 					+ "(default is false)", 
-			usage = "chaining.socks5.resolve.resolveHostNamesThroughServer=true|false"
+			usage = "chaining.socks5.resolve.resolveHostNamesThroughSocksServer=true|false"
 	)	
-	public static final SettingSpec<Boolean> CHAINING_SOCKS5_RESOLVE_RESOLVE_HOST_NAMES_THROUGH_SERVER = new BooleanSettingSpec(
-			"chaining.socks5.resolve.resolveHostNamesThroughServer",
-			PropertySpec.SOCKS5_RESOLVE_RESOLVE_HOST_NAMES_THROUGH_SERVER.getDefaultProperty().getValue());
+	public static final SettingSpec<Boolean> CHAINING_SOCKS5_RESOLVE_RESOLVE_HOST_NAMES_THROUGH_SOCKS_SERVER = new BooleanSettingSpec(
+			"chaining.socks5.resolve.resolveHostNamesThroughSocksServer",
+			PropertySpec.SOCKS5_RESOLVE_RESOLVE_HOST_NAMES_THROUGH_SOCKS_SERVER.getDefaultProperty().getValue());
 	
 	@HelpText(
 			doc = "The username password to be used to access the other "

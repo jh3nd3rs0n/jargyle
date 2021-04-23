@@ -358,7 +358,7 @@ The following is a list of available settings for the SOCKS server (displayed wh
           The timeout in milliseconds on relaying no data (default is 60000)
     
       socks5.onConnect.prepareServerSocket=true|false
-          The boolean value to indicate if the server-facing socket is to be prepared before connecting (involves applying the supplied socket settings, resolving the target host name, and specifying the supplied connect timeout) (default is false)
+          The boolean value to indicate if the server-facing socket is to be prepared before connecting (involves applying the specified socket settings, resolving the target host name, and setting the specified timeout on waiting to connect) (default is false)
     
       socks5.onConnect.relayBufferSize=INTEGER_BETWEEN_1_AND_2147483647
           The buffer size in bytes for relaying the data (default is 1024)
@@ -1474,16 +1474,16 @@ Partial command line example:
 
 Jargyle does perform host name resolution through SOCKS5 server chaining but it has the following limitations: 
 
-Host name resolution through SOCKS5 server chaining occurs only when:
+Host name resolution through SOCKS5 server chaining OCCURS ONLY WHEN:
 
 -   Resolving a host name for a TCP socket to make an external outbound TCP connection.
 
-Host name resolution through SOCKS5 server chaining does not occur when:
+Host name resolution through SOCKS5 server chaining DOES NOT OCCUR WHEN:
 
 -   Resolving a host name for a TCP socket to receive an external inbound TCP connection.
 -   Resolving a host name for an external outgoing datagram packet.
 
-In addition, provided settings are ignored for preparing a TCP socket to make an external outbound TCP connection. Such provided settings include socket settings for the TCP socket and the timeout in milliseconds for connecting.
+In addition, provided settings are ignored for preparing a TCP socket to make an external outbound TCP connection. Such provided settings include specified socket settings for the TCP socket and the specified timeout in milliseconds on waiting to connect.
 
 To enable host name resolution through SOCKS5 server chaining without the aforementioned limitations, you would need to set the setting `chaining.socks5.resolve.resolveHostNamesThroughServer` to `true`.
 

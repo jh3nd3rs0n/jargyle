@@ -637,9 +637,9 @@ public abstract class SettingSpec<V> {
 	@HelpText(
 			doc = "The boolean value to indicate if the server-facing socket "
 					+ "is to be prepared before connecting (involves applying "
-					+ "the supplied socket settings, resolving the target host "
-					+ "name, and specifying the supplied connect timeout) "
-					+ "(default is false)", 
+					+ "the specified socket settings, resolving the target "
+					+ "host name, and setting the specified timeout on waiting "
+					+ "to connect) (default is false)", 
 			usage = "socks5.onConnect.prepareServerSocket=true|false"
 	)	
 	public static final SettingSpec<Boolean> SOCKS5_ON_CONNECT_PREPARE_SERVER_SOCKET = new BooleanSettingSpec(

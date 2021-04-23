@@ -635,6 +635,18 @@ public abstract class SettingSpec<V> {
 			PositiveInteger.newInstance(60000)); // 1 minute
 	
 	@HelpText(
+			doc = "The boolean value to indicate if the server-facing socket "
+					+ "is to be prepared before connecting (involves applying "
+					+ "the supplied socket settings, resolving the target host "
+					+ "name, and specifying the supplied connect timeout) "
+					+ "(default is false)", 
+			usage = "socks5.onConnect.prepareServerSocket=true|false"
+	)	
+	public static final SettingSpec<Boolean> SOCKS5_ON_CONNECT_PREPARE_SERVER_SOCKET = new BooleanSettingSpec(
+			"socks5.onConnect.prepareServerSocket",
+			Boolean.FALSE);
+	
+	@HelpText(
 			doc = "The buffer size in bytes for relaying the data (default is "
 					+ "1024)", 
 			usage = "socks5.onConnect.relayBufferSize=INTEGER_BETWEEN_1_AND_2147483647"

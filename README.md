@@ -357,6 +357,9 @@ The following is a list of available settings for the SOCKS server (displayed wh
       socks5.onBind.relayTimeout=INTEGER_BETWEEN_1_AND_2147483647
           The timeout in milliseconds on relaying no data (default is 60000)
     
+      socks5.onConnect.prepareServerSocket=true|false
+          The boolean value to indicate if the server-facing socket is to be prepared before connecting (involves applying the supplied socket settings, resolving the target host name, and specifying the supplied connect timeout) (default is false)
+    
       socks5.onConnect.relayBufferSize=INTEGER_BETWEEN_1_AND_2147483647
           The buffer size in bytes for relaying the data (default is 1024)
     
@@ -1469,11 +1472,20 @@ Partial command line example:
 
 #### 4. 11. 3. Enabling Host Name Resolution through SOCKS5 Server Chaining
 
-You can have Jargyle perform host name resolution through SOCKS5 server chaining under the following condition:
+Jargyle does perform host name resolution through SOCKS5 server chaining but it has the following limitations: 
 
--   The other SOCKS5 server supports [the SOCKS5 RESOLVE command](#5-3-the-socks5-resolve-command). (At the time of this writing, the SOCKS5 RESOLVE command is an additional SOCKS5 command made for Jargyle. Therefore the other SOCKS5 server would at the very least be another running instance of Jargyle.)
+Host name resolution through SOCKS5 server chaining occurs only when:
 
-By default, host name resolution through SOCKS5 server chaining is disabled. To enable host name resolution through SOCKS5 server chaining, you would need to set the setting `chaining.socks5.resolve.resolveHostNamesThroughServer` to `true`.
+-   Resolving a host name for a TCP socket to make an external outbound TCP connection.
+
+Host name resolution through SOCKS5 server chaining does not occur when:
+
+-   Resolving a host name for a TCP socket to receive an external inbound TCP connection.
+-   Resolving a host name for an external outgoing datagram packet.
+
+In addition, provided settings are ignored for preparing a TCP socket to make an external outbound TCP connection. Such provided settings include socket settings for the TCP socket and the timeout in milliseconds for connecting.
+
+To enable host name resolution through SOCKS5 server chaining without the aforementioned limitations, you would need to set the setting `chaining.socks5.resolve.resolveHostNamesThroughServer` to `true`.
 
 Partial command line example:
 
@@ -1497,6 +1509,58 @@ Partial configuration file example:
         <value>true</value>
     </setting>
     
+```
+
+This setting can be used under the following condition:
+
+-   The other SOCKS5 server supports [the SOCKS5 RESOLVE command](#5-3-the-socks5-resolve-command). (At the time of this writing, the SOCKS5 RESOLVE command is an additional SOCKS5 command made for Jargyle. Therefore the other SOCKS5 server would at the very least be another running instance of Jargyle.)
+
+In addition to using this setting, you can use the setting `socks5.onConnect.prepareServerSocket` to be set to `true` in order for the provided settings to be recognized for preparing a TCP socket to make an external outbound TCP connection.
+
+Partial command line example:
+
+```text
+    
+    --setting=chaining.socksServerUri=socks5://127.0.0.1:23456 \
+    --setting=chaining.socks5.resolve.resolveHostNamesThroughServer=true \
+    --setting=socks5.onConnect.prepareServerSocket=true \
+    --setting=socks5.onConnect.serverSocketSettings=SO_TIMEOUT=500 \
+    --setting=socks5.onConnect.serverConnectTimeout=10000
+        
+```
+
+Partial configuration file example:
+
+```xml
+    
+    <setting>
+        <name>chaining.socksServerUri</name>
+        <value>socks5://127.0.0.1:23456</value>
+    </setting>
+    <setting>
+        <name>chaining.socks5.resolve.resolveHostNamesThroughServer</name>
+        <value>true</value>
+    </setting>
+    <setting>
+        <name>socks5.onConnect.prepareServerSocket</name>
+        <value>true</value>
+    </setting>
+    <setting>
+        <name>socks5.onConnect.serverSocketSettings</name>
+        <socketSettingsValue>
+            <socketSettings>
+                <socketSetting>
+                    <name>SO_TIMEOUT</name>
+                    <value>500</value>
+                </socketSetting>
+            </socketSettings>
+        </socketSettingsValue>
+    </setting>
+    <setting>
+        <name>socks5.onConnect.serverConnectTimeout</name>
+        <value>10000</value>
+    </setting>
+        
 ```
 
 #### 4. 11. 4. Using SOCKS5 Authentication

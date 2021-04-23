@@ -99,22 +99,23 @@ final class ConnectCommandWorker extends TcpBasedCommandWorker {
 		return true;
 	}
 
-	@Override
-	public void run() throws IOException {
+	private Socket newServerSocket() throws IOException {
 		Socks5Reply socks5Rep = null;
 		HostResolver hostResolver =	
 				this.externalNetObjectFactory.newHostResolver();		
 		Socket serverSocket = null;		
 		int connectTimeout = this.settings.getLastValue(
-				SettingSpec.SOCKS5_ON_CONNECT_SERVER_CONNECT_TIMEOUT).intValue();
-		try {
+				SettingSpec.SOCKS5_ON_CONNECT_SERVER_CONNECT_TIMEOUT).intValue();		
+		if (this.settings.getLastValue(
+				SettingSpec.SOCKS5_ON_CONNECT_PREPARE_SERVER_SOCKET)) {
 			serverSocket = externalNetObjectFactory.newSocket();
 			if (!this.configureServerSocket(serverSocket)) {
-				return;
+				return null;
 			}
 			try {
 				serverSocket.connect(new InetSocketAddress(
-						hostResolver.resolve(this.desiredDestinationAddress),
+						hostResolver.resolve(
+								this.desiredDestinationAddress),
 						this.desiredDestinationPort),
 						connectTimeout);
 			} catch (UnknownHostException e) {
@@ -123,11 +124,51 @@ final class ConnectCommandWorker extends TcpBasedCommandWorker {
 								this, 
 								"Error in connecting the server-facing socket"), 
 						e);
-				socks5Rep = Socks5Reply.newErrorInstance(Reply.HOST_UNREACHABLE);
+				socks5Rep = Socks5Reply.newErrorInstance(
+						Reply.HOST_UNREACHABLE);
 				LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
 						"Sending %s",
 						socks5Rep.toString())));
-				this.commandWorkerContext.writeThenFlush(socks5Rep.toByteArray());
+				this.commandWorkerContext.writeThenFlush(
+						socks5Rep.toByteArray());
+				return null;
+			}
+		} else {
+			Host bindHost = this.settings.getLastValue(
+					SettingSpec.SOCKS5_ON_CONNECT_SERVER_BIND_HOST);
+			InetAddress bindInetAddress = bindHost.toInetAddress();
+			try {
+				serverSocket = this.externalNetObjectFactory.newSocket(
+						this.desiredDestinationAddress, 
+						this.desiredDestinationPort, 
+						bindInetAddress, 
+						0);
+			} catch (UnknownHostException e) {
+				LOGGER.warn( 
+						LoggerHelper.objectMessage(
+								this, 
+								"Error in creating the server-facing socket"), 
+						e);
+				socks5Rep = Socks5Reply.newErrorInstance(
+						Reply.HOST_UNREACHABLE);
+				LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
+						"Sending %s",
+						socks5Rep.toString())));
+				this.commandWorkerContext.writeThenFlush(
+						socks5Rep.toByteArray());
+				return null;
+			}				
+		}
+		return serverSocket;
+	}
+	
+	@Override
+	public void run() throws IOException {
+		Socks5Reply socks5Rep = null;
+		Socket serverSocket = null;		
+		try {
+			serverSocket = this.newServerSocket();
+			if (serverSocket == null) {
 				return;
 			}
 			String serverBoundAddress = 
@@ -145,9 +186,9 @@ final class ConnectCommandWorker extends TcpBasedCommandWorker {
 				this.passData(
 						this.clientSocket,
 						serverSocket, 
-						settings.getLastValue(
+						this.settings.getLastValue(
 								SettingSpec.SOCKS5_ON_CONNECT_RELAY_BUFFER_SIZE).intValue(),
-						settings.getLastValue(
+						this.settings.getLastValue(
 								SettingSpec.SOCKS5_ON_CONNECT_RELAY_TIMEOUT).intValue());				
 			} catch (IOException e) {
 				LOGGER.warn( 

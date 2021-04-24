@@ -5,22 +5,22 @@ import java.net.Socket;
 
 import jargyle.net.socks.server.TcpRelayServer;
 
-abstract class TcpBasedCommandWorker extends CommandWorker {
+abstract class PassDataCommandWorker extends CommandWorker {
 
 	private static final int HALF_SECOND = 500;
 	
-	public TcpBasedCommandWorker(final CommandWorkerContext context) {
+	public PassDataCommandWorker(final CommandWorkerContext context) {
 		super(context);
 	}
 	
 	protected void passData(
-			final Socket clientSocket,
-			final Socket serverSocket, 
+			final Socket clientFacingSocket,
+			final Socket serverFacingSocket, 
 			final int bufferSize, 
 			final int timeout) throws IOException {
 		TcpRelayServer tcpRelayServer = new TcpRelayServer(
-				clientSocket, 
-				serverSocket, 
+				clientFacingSocket, 
+				serverFacingSocket, 
 				bufferSize, 
 				timeout);
 		try {

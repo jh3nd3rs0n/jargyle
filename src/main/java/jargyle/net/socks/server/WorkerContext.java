@@ -10,17 +10,17 @@ public class WorkerContext {
 	private final DtlsDatagramSocketFactory clientDtlsDatagramSocketFactory;
 	private Socket clientSocket;
 	private final Configuration configuration;
-	private final NetObjectFactory externalNetObjectFactory;
+	private final NetObjectFactory netObjectFactory;
 	
 	public WorkerContext(
 			final Socket clientSock,
 			final Configuration config,
-			final NetObjectFactory extNetObjectFactory,
+			final NetObjectFactory netObjFactory,
 			final DtlsDatagramSocketFactory clientDtlsDatagramSockFactory) {
 		this.clientDtlsDatagramSocketFactory = clientDtlsDatagramSockFactory;
 		this.clientSocket = clientSock;
 		this.configuration = config;
-		this.externalNetObjectFactory = extNetObjectFactory;
+		this.netObjectFactory = netObjFactory;
 	}
 	
 	public WorkerContext(final WorkerContext other) {
@@ -28,7 +28,7 @@ public class WorkerContext {
 				other.clientDtlsDatagramSocketFactory;
 		this.clientSocket = other.clientSocket;
 		this.configuration = other.configuration;
-		this.externalNetObjectFactory = other.externalNetObjectFactory;
+		this.netObjectFactory = other.netObjectFactory;
 	}
 
 	public final DtlsDatagramSocketFactory getClientDtlsDatagramSocketFactory() {
@@ -43,8 +43,8 @@ public class WorkerContext {
 		return this.configuration;
 	}
 
-	public final NetObjectFactory getExternalNetObjectFactory() {
-		return this.externalNetObjectFactory;
+	public final NetObjectFactory getNetObjectFactory() {
+		return this.netObjectFactory;
 	}
 	
 	public final Settings getSettings() {

@@ -580,31 +580,31 @@ public abstract class SettingSpec<V> {
 			ProtectionLevels.DEFAULT_INSTANCE);
 	
 	@HelpText(
-			doc = "The space separated list of allowed external incoming "
+			doc = "The space separated list of allowed external inbound "
 					+ "address criteria (default is matches:.*)", 
-			usage = "socks5.onBind.allowedExternalIncomingAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
+			usage = "socks5.onBind.allowedExternalInboundAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
 	)
-	public static final SettingSpec<Criteria> SOCKS5_ON_BIND_ALLOWED_EXTERNAL_INCOMING_ADDRESS_CRITERIA = new CriteriaSettingSpec(
-			"socks5.onBind.allowedExternalIncomingAddressCriteria",
+	public static final SettingSpec<Criteria> SOCKS5_ON_BIND_ALLOWED_EXTERNAL_INBOUND_ADDRESS_CRITERIA = new CriteriaSettingSpec(
+			"socks5.onBind.allowedExternalInboundAddressCriteria",
 			Criteria.newInstance(Criterion.newInstance(
 					CriterionMethod.MATCHES, ".*")));
 	
 	@HelpText(
-			doc = "The space separated list of blocked external incoming "
+			doc = "The space separated list of blocked external inbound "
 					+ "address criteria", 
-			usage = "socks5.onBind.blockedExternalIncomingAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
+			usage = "socks5.onBind.blockedExternalInboundAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
 	)
-	public static final SettingSpec<Criteria> SOCKS5_ON_BIND_BLOCKED_EXTERNAL_INCOMING_ADDRESS_CRITERIA = new CriteriaSettingSpec(
-			"socks5.onBind.blockedExternalIncomingAddressCriteria",
+	public static final SettingSpec<Criteria> SOCKS5_ON_BIND_BLOCKED_EXTERNAL_INBOUND_ADDRESS_CRITERIA = new CriteriaSettingSpec(
+			"socks5.onBind.blockedExternalInboundAddressCriteria",
 			Criteria.EMPTY_INSTANCE);
 	
 	@HelpText(
 			doc = "The space separated list of socket settings for the "
-					+ "external incoming socket", 
-			usage = "socks5.onBind.externalIncomingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
+					+ "external inbound socket", 
+			usage = "socks5.onBind.externalInboundSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
 	)
-	public static final SettingSpec<SocketSettings> SOCKS5_ON_BIND_EXTERNAL_INCOMING_SOCKET_SETTINGS = new SocketSettingsSettingSpec(
-			"socks5.onBind.externalIncomingSocketSettings",
+	public static final SettingSpec<SocketSettings> SOCKS5_ON_BIND_EXTERNAL_INBOUND_SOCKET_SETTINGS = new SocketSettingsSettingSpec(
+			"socks5.onBind.externalInboundSocketSettings",
 			SocketSettings.newInstance());
 	
 	@HelpText(
@@ -640,10 +640,10 @@ public abstract class SettingSpec<V> {
 					+ "the specified socket settings, resolving the target "
 					+ "host name, and setting the specified timeout on waiting "
 					+ "to connect) (default is false)", 
-			usage = "socks5.onConnect.prepareServerSocket=true|false"
+			usage = "socks5.onConnect.prepareServerFacingSocket=true|false"
 	)	
-	public static final SettingSpec<Boolean> SOCKS5_ON_CONNECT_PREPARE_SERVER_SOCKET = new BooleanSettingSpec(
-			"socks5.onConnect.prepareServerSocket",
+	public static final SettingSpec<Boolean> SOCKS5_ON_CONNECT_PREPARE_SERVER_FACING_SOCKET = new BooleanSettingSpec(
+			"socks5.onConnect.prepareServerFacingSocket",
 			Boolean.FALSE);
 	
 	@HelpText(
@@ -667,84 +667,84 @@ public abstract class SettingSpec<V> {
 	@HelpText(
 			doc = "The binding host name or address for the server-facing "
 					+ "socket (default is 0.0.0.0)", 
-			usage = "socks5.onConnect.serverBindHost=HOST"
+			usage = "socks5.onConnect.serverFacingBindHost=HOST"
 	)
-	public static final SettingSpec<Host> SOCKS5_ON_CONNECT_SERVER_BIND_HOST = new HostSettingSpec(
-			"socks5.onConnect.serverBindHost",
+	public static final SettingSpec<Host> SOCKS5_ON_CONNECT_SERVER_FACING_BIND_HOST = new HostSettingSpec(
+			"socks5.onConnect.serverFacingBindHost",
 			Host.getIpv4WildcardInstance());
 	
 	@HelpText(
-			doc = "The timeout in milliseconds on waiting the server-facing "
-					+ "socket to connect (default is 60000)", 
-			usage = "socks5.onConnect.serverConnectTimeout=INTEGER_BETWEEN_1_AND_2147483647"
+			doc = "The timeout in milliseconds on waiting for the "
+					+ "server-facing socket to connect (default is 60000)", 
+			usage = "socks5.onConnect.serverFacingConnectTimeout=INTEGER_BETWEEN_1_AND_2147483647"
 	)
-	public static final SettingSpec<PositiveInteger> SOCKS5_ON_CONNECT_SERVER_CONNECT_TIMEOUT = new PositiveIntegerSettingSpec(
-			"socks5.onConnect.serverConnectTimeout",
+	public static final SettingSpec<PositiveInteger> SOCKS5_ON_CONNECT_SERVER_FACING_CONNECT_TIMEOUT = new PositiveIntegerSettingSpec(
+			"socks5.onConnect.serverFacingConnectTimeout",
 			PositiveInteger.newInstance(60000)); // 1 minute
 	
 	@HelpText(
 			doc = "The space separated list of socket settings for the "
 					+ "server-facing socket", 
-			usage = "socks5.onConnect.serverSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
+			usage = "socks5.onConnect.serverFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
 	)
-	public static final SettingSpec<SocketSettings> SOCKS5_ON_CONNECT_SERVER_SOCKET_SETTINGS = new SocketSettingsSettingSpec(
-			"socks5.onConnect.serverSocketSettings",
+	public static final SettingSpec<SocketSettings> SOCKS5_ON_CONNECT_SERVER_FACING_SOCKET_SETTINGS = new SocketSettingsSettingSpec(
+			"socks5.onConnect.serverFacingSocketSettings",
 			SocketSettings.newInstance());
 	
 	@HelpText(
-			doc = "The space separated list of allowed external incoming "
+			doc = "The space separated list of allowed external inbound "
 					+ "address criteria (default is matches:.*)", 
-			usage = "socks5.onUdpAssociate.allowedExternalIncomingAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
+			usage = "socks5.onUdpAssociate.allowedExternalInboundAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
 	)
-	public static final SettingSpec<Criteria> SOCKS5_ON_UDP_ASSOCIATE_ALLOWED_EXTERNAL_INCOMING_ADDRESS_CRITERIA = new CriteriaSettingSpec(
-			"socks5.onUdpAssociate.allowedExternalIncomingAddressCriteria",
+	public static final SettingSpec<Criteria> SOCKS5_ON_UDP_ASSOCIATE_ALLOWED_EXTERNAL_INBOUND_ADDRESS_CRITERIA = new CriteriaSettingSpec(
+			"socks5.onUdpAssociate.allowedExternalInboundAddressCriteria",
 			Criteria.newInstance(Criterion.newInstance(
 					CriterionMethod.MATCHES, ".*")));
 	
 	@HelpText(
-			doc = "The space separated list of allowed external outgoing "
+			doc = "The space separated list of allowed internal outbound "
 					+ "address criteria (default is matches:.*)", 
-			usage = "socks5.onUdpAssociate.allowedExternalOutgoingAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
+			usage = "socks5.onUdpAssociate.allowedInternalOutboundAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
 	)
-	public static final SettingSpec<Criteria> SOCKS5_ON_UDP_ASSOCIATE_ALLOWED_EXTERNAL_OUTGOING_ADDRESS_CRITERIA = new CriteriaSettingSpec(
-			"socks5.onUdpAssociate.allowedExternalOutgoingAddressCriteria",
+	public static final SettingSpec<Criteria> SOCKS5_ON_UDP_ASSOCIATE_ALLOWED_INTERNAL_OUTBOUND_ADDRESS_CRITERIA = new CriteriaSettingSpec(
+			"socks5.onUdpAssociate.allowedInternalOutboundAddressCriteria",
 			Criteria.newInstance(Criterion.newInstance(
 					CriterionMethod.MATCHES, ".*")));
 	
 	@HelpText(
-			doc = "The space separated list of blocked external incoming "
+			doc = "The space separated list of blocked external inbound "
 					+ "address criteria", 
-			usage = "socks5.onUdpAssociate.blockedExternalIncomingAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
+			usage = "socks5.onUdpAssociate.blockedExternalInboundAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
 	)
-	public static final SettingSpec<Criteria> SOCKS5_ON_UDP_ASSOCIATE_BLOCKED_EXTERNAL_INCOMING_ADDRESS_CRITERIA = new CriteriaSettingSpec(
-			"socks5.onUdpAssociate.blockedExternalIncomingAddressCriteria",
+	public static final SettingSpec<Criteria> SOCKS5_ON_UDP_ASSOCIATE_BLOCKED_EXTERNAL_INBOUND_ADDRESS_CRITERIA = new CriteriaSettingSpec(
+			"socks5.onUdpAssociate.blockedExternalInboundAddressCriteria",
 			Criteria.EMPTY_INSTANCE);
 	
 	@HelpText(
-			doc = "The space separated list of blocked external outgoing "
+			doc = "The space separated list of blocked internal outbound "
 					+ "address criteria", 
-			usage = "socks5.onUdpAssociate.blockedExternalOutgoingAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
+			usage = "socks5.onUdpAssociate.blockedInternalOutboundAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
 	)
-	public static final SettingSpec<Criteria> SOCKS5_ON_UDP_ASSOCIATE_BLOCKED_EXTERNAL_OUTGOING_ADDRESS_CRITERIA = new CriteriaSettingSpec(
-			"socks5.onUdpAssociate.blockedExternalOutgoingAddressCriteria",
+	public static final SettingSpec<Criteria> SOCKS5_ON_UDP_ASSOCIATE_BLOCKED_INTERNAL_OUTBOUND_ADDRESS_CRITERIA = new CriteriaSettingSpec(
+			"socks5.onUdpAssociate.blockedInternalOutboundAddressCriteria",
 			Criteria.EMPTY_INSTANCE);
 	
 	@HelpText(
 			doc = "The binding host name or address for the client-facing UDP "
 					+ "socket (default is 0.0.0.0)", 
-			usage = "socks5.onUdpAssociate.clientBindHost=HOST"
+			usage = "socks5.onUdpAssociate.clientFacingBindHost=HOST"
 	)
-	public static final SettingSpec<Host> SOCKS5_ON_UDP_ASSOCIATE_CLIENT_BIND_HOST = new HostSettingSpec(
-			"socks5.onUdpAssociate.clientBindHost",
+	public static final SettingSpec<Host> SOCKS5_ON_UDP_ASSOCIATE_CLIENT_FACING_BIND_HOST = new HostSettingSpec(
+			"socks5.onUdpAssociate.clientFacingBindHost",
 			Host.getIpv4WildcardInstance());
 	
 	@HelpText(
 			doc = "The space separated list of socket settings for the "
 					+ "client-facing UDP socket", 
-			usage = "socks5.onUdpAssociate.clientSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
+			usage = "socks5.onUdpAssociate.clientFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
 	)
-	public static final SettingSpec<SocketSettings> SOCKS5_ON_UDP_ASSOCIATE_CLIENT_SOCKET_SETTINGS = new SocketSettingsSettingSpec(
-			"socks5.onUdpAssociate.clientSocketSettings",
+	public static final SettingSpec<SocketSettings> SOCKS5_ON_UDP_ASSOCIATE_CLIENT_FACING_SOCKET_SETTINGS = new SocketSettingsSettingSpec(
+			"socks5.onUdpAssociate.clientFacingSocketSettings",
 			SocketSettings.newInstance());
 	
 	@HelpText(
@@ -768,19 +768,19 @@ public abstract class SettingSpec<V> {
 	@HelpText(
 			doc = "The binding host name or address for the server-facing UDP "
 					+ "socket (default is 0.0.0.0)", 
-			usage = "socks5.onUdpAssociate.serverBindHost=HOST"
+			usage = "socks5.onUdpAssociate.serverFacingBindHost=HOST"
 	)
-	public static final SettingSpec<Host> SOCKS5_ON_UDP_ASSOCIATE_SERVER_BIND_HOST = new HostSettingSpec(
-			"socks5.onUdpAssociate.serverBindHost",
+	public static final SettingSpec<Host> SOCKS5_ON_UDP_ASSOCIATE_SERVER_FACING_BIND_HOST = new HostSettingSpec(
+			"socks5.onUdpAssociate.serverFacingBindHost",
 			Host.getIpv4WildcardInstance());
 	
 	@HelpText(
 			doc = "The space separated list of socket settings for the "
 					+ "server-facing UDP socket", 
-			usage = "socks5.onUdpAssociate.serverSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
+			usage = "socks5.onUdpAssociate.serverFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
 	)
-	public static final SettingSpec<SocketSettings> SOCKS5_ON_UDP_ASSOCIATE_SERVER_SOCKET_SETTINGS = new SocketSettingsSettingSpec(
-			"socks5.onUdpAssociate.serverSocketSettings",
+	public static final SettingSpec<SocketSettings> SOCKS5_ON_UDP_ASSOCIATE_SERVER_FACING_SOCKET_SETTINGS = new SocketSettingsSettingSpec(
+			"socks5.onUdpAssociate.serverFacingSocketSettings",
 			SocketSettings.newInstance());
 	
 	@HelpText(

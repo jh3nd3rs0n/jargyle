@@ -35,7 +35,7 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 	private final CommandWorkerContext commandWorkerContext;
 	private final String desiredDestinationAddress;
 	private final int desiredDestinationPort;
-	private final NetObjectFactory externalNetObjectFactory;
+	private final NetObjectFactory netObjectFactory;
 	private final Settings settings;
 	
 	public UdpAssociateCommandWorker(final CommandWorkerContext context) {
@@ -45,24 +45,23 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 		Socket clientSock = context.getClientSocket();
 		String desiredDestinationAddr =	context.getDesiredDestinationAddress();
 		int desiredDestinationPrt = context.getDesiredDestinationPort();
-		NetObjectFactory extNetObjectFactory = 
-				context.getExternalNetObjectFactory();
+		NetObjectFactory netObjFactory = context.getNetObjectFactory();
 		Settings sttngs = context.getSettings();
 		this.clientDtlsDatagramSocketFactory = clientDtlsDatagramSockFactory;
 		this.clientSocket = clientSock;
 		this.commandWorkerContext = context;
 		this.desiredDestinationAddress = desiredDestinationAddr;
 		this.desiredDestinationPort = desiredDestinationPrt;
-		this.externalNetObjectFactory = extNetObjectFactory;
+		this.netObjectFactory = netObjFactory;
 		this.settings = sttngs;		
 	}
 	
-	private boolean configureClientDatagramSocket(
-			final DatagramSocket clientDatagramSock) {
+	private boolean configureClientFacingDatagramSocket(
+			final DatagramSocket clientFacingDatagramSock) {
 		SocketSettings socketSettings = this.settings.getLastValue(
-				SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_CLIENT_SOCKET_SETTINGS);
+				SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_CLIENT_FACING_SOCKET_SETTINGS);
 		try {
-			socketSettings.applyTo(clientDatagramSock);
+			socketSettings.applyTo(clientFacingDatagramSock);
 		} catch (SocketException e) {
 			LOGGER.warn( 
 					LoggerHelper.objectMessage(
@@ -75,21 +74,25 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 					"Sending %s",
 					socks5Rep.toString())));
 			try {
-				this.commandWorkerContext.writeThenFlush(socks5Rep.toByteArray());
+				this.commandWorkerContext.writeThenFlush(
+						socks5Rep.toByteArray());
 			} catch (IOException e1) {
-				return false;
+				LOGGER.warn( 
+						LoggerHelper.objectMessage(
+								this, "Error in writing SOCKS5 reply"), 
+						e1);
 			}
 			return false;
 		}
 		return true;
 	}
 	
-	private boolean configureServerDatagramSocket(
-			final DatagramSocket serverDatagramSock) {
+	private boolean configureServerFacingDatagramSocket(
+			final DatagramSocket serverFacingDatagramSock) {
 		SocketSettings socketSettings = this.settings.getLastValue(
-				SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_SERVER_SOCKET_SETTINGS);
+				SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_SERVER_FACING_SOCKET_SETTINGS);
 		try {
-			socketSettings.applyTo(serverDatagramSock);
+			socketSettings.applyTo(serverFacingDatagramSock);
 		} catch (SocketException e) {
 			LOGGER.warn( 
 					LoggerHelper.objectMessage(
@@ -102,7 +105,8 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 					"Sending %s",
 					socks5Rep.toString())));
 			try {
-				this.commandWorkerContext.writeThenFlush(socks5Rep.toByteArray());
+				this.commandWorkerContext.writeThenFlush(
+						socks5Rep.toByteArray());
 			} catch (IOException e1) {
 				LOGGER.warn( 
 						LoggerHelper.objectMessage(
@@ -114,13 +118,13 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 		return true;
 	}
 	
-	private DatagramSocket newClientDatagramSocket() {
+	private DatagramSocket newClientFacingDatagramSocket() {
 		Host bindHost = this.settings.getLastValue(
-				SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_CLIENT_BIND_HOST);
+				SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_CLIENT_FACING_BIND_HOST);
 		InetAddress bindInetAddress = bindHost.toInetAddress();
-		DatagramSocket clientDatagramSock = null;
+		DatagramSocket clientFacingDatagramSock = null;
 		try {
-			clientDatagramSock = new DatagramSocket(new InetSocketAddress(
+			clientFacingDatagramSock = new DatagramSocket(new InetSocketAddress(
 					bindInetAddress, 0));
 		} catch (SocketException e) {
 			LOGGER.warn( 
@@ -134,7 +138,8 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 					"Sending %s",
 					socks5Rep.toString())));
 			try {
-				this.commandWorkerContext.writeThenFlush(socks5Rep.toByteArray());
+				this.commandWorkerContext.writeThenFlush(
+						socks5Rep.toByteArray());
 			} catch (IOException e1) {
 				LOGGER.warn( 
 						LoggerHelper.objectMessage(
@@ -143,16 +148,16 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 			}
 			return null;
 		}
-		return clientDatagramSock;
+		return clientFacingDatagramSock;
 	}
 	
-	private DatagramSocket newServerDatagramSocket() {
+	private DatagramSocket newServerFacingDatagramSocket() {
 		Host bindHost = this.settings.getLastValue(
-				SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_SERVER_BIND_HOST);
+				SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_SERVER_FACING_BIND_HOST);
 		InetAddress bindInetAddress = bindHost.toInetAddress();
-		DatagramSocket serverDatagramSock = null;
+		DatagramSocket serverFacingDatagramSock = null;
 		try {
-			serverDatagramSock = this.externalNetObjectFactory.newDatagramSocket(
+			serverFacingDatagramSock = this.netObjectFactory.newDatagramSocket(
 					new InetSocketAddress(bindInetAddress, 0));
 		} catch (SocketException e) {
 			LOGGER.warn( 
@@ -166,7 +171,8 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 					"Sending %s",
 					socks5Rep.toString())));
 			try {
-				this.commandWorkerContext.writeThenFlush(socks5Rep.toByteArray());
+				this.commandWorkerContext.writeThenFlush(
+						socks5Rep.toByteArray());
 			} catch (IOException e1) {
 				LOGGER.warn( 
 						LoggerHelper.objectMessage(
@@ -175,22 +181,22 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 			}
 			return null;
 		}
-		return serverDatagramSock;
+		return serverFacingDatagramSock;
 	}
 
 	private void passPackets(
 			final UdpRelayServer.ClientSocketAddress clientSocketAddress,
 			final UdpRelayServer.DatagramSockets datagramSockets,
 			final HostResolver hostResolver,
-			final UdpRelayServer.ExternalIncomingAddressCriteria externalIncomingAddressCriteria,
-			final UdpRelayServer.ExternalOutgoingAddressCriteria externalOutgoingAddressCriteria, 
+			final UdpRelayServer.ExternalInboundAddressCriteria externalInboundAddressCriteria,
+			final UdpRelayServer.InternalOutboundAddressCriteria internalOutboundAddressCriteria, 
 			final UdpRelayServer.RelaySettings relaySettings) throws IOException {
 		UdpRelayServer udpRelayServer = new UdpRelayServer(
 				clientSocketAddress,
 				datagramSockets,
 				hostResolver,
-				externalIncomingAddressCriteria, 
-				externalOutgoingAddressCriteria,
+				externalInboundAddressCriteria, 
+				internalOutboundAddressCriteria,
 				relaySettings);
 		try {
 			udpRelayServer.start();
@@ -218,40 +224,43 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 					this.clientSocket.getInetAddress().getHostAddress();
 		}
 		int desiredDestinationPrt = this.desiredDestinationPort;
-		HostResolver hostResolver = 
-				this.externalNetObjectFactory.newHostResolver();
-		DatagramSocket serverDatagramSock = null;
-		DatagramSocket clientDatagramSock = null;
+		HostResolver hostResolver = this.netObjectFactory.newHostResolver();
+		DatagramSocket serverFacingDatagramSock = null;
+		DatagramSocket clientFacingDatagramSock = null;
 		try {
-			serverDatagramSock = this.newServerDatagramSocket();
-			if (serverDatagramSock == null) {
+			serverFacingDatagramSock = this.newServerFacingDatagramSocket();
+			if (serverFacingDatagramSock == null) {
 				return;
 			}
-			if (!this.configureServerDatagramSocket(serverDatagramSock)) {
+			if (!this.configureServerFacingDatagramSocket(
+					serverFacingDatagramSock)) {
 				return;
 			}
-			clientDatagramSock = this.newClientDatagramSocket();
-			if (clientDatagramSock == null) {
+			clientFacingDatagramSock = this.newClientFacingDatagramSocket();
+			if (clientFacingDatagramSock == null) {
 				return;
 			}
-			if (!this.configureClientDatagramSocket(clientDatagramSock)) {
+			if (!this.configureClientFacingDatagramSocket(
+					clientFacingDatagramSock)) {
 				return;
 			}
-			DatagramSocket clientDatagramSck = this.wrapClientDatagramSocket(
-					clientDatagramSock, 
-					desiredDestinationAddr, 
-					desiredDestinationPrt); 
-			if (clientDatagramSck == null) {
+			DatagramSocket clientFacingDatagramSck = 
+					this.wrapClientFacingDatagramSocket(
+							clientFacingDatagramSock,
+							desiredDestinationAddr,
+							desiredDestinationPrt); 
+			if (clientFacingDatagramSck == null) {
 				return;
 			}
-			clientDatagramSock = clientDatagramSck;
-			InetAddress inetAddress = clientDatagramSock.getLocalAddress();
+			clientFacingDatagramSock = clientFacingDatagramSck;
+			InetAddress inetAddress = 
+					clientFacingDatagramSock.getLocalAddress();
 			String serverBoundAddress = inetAddress.getHostAddress();
 			if (!serverBoundAddress.matches("[a-zA-Z1-9]")) {
 				inetAddress = this.clientSocket.getLocalAddress();
 				serverBoundAddress = inetAddress.getHostAddress();
 			}
-			int serverBoundPort = clientDatagramSock.getLocalPort();
+			int serverBoundPort = clientFacingDatagramSock.getLocalPort();
 			socks5Rep = Socks5Reply.newInstance(
 					Reply.SUCCEEDED, 
 					serverBoundAddress, 
@@ -265,19 +274,19 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 						new UdpRelayServer.ClientSocketAddress(
 								desiredDestinationAddr, desiredDestinationPrt),
 						new UdpRelayServer.DatagramSockets(
-								clientDatagramSock, 
-								serverDatagramSock), 
+								clientFacingDatagramSock, 
+								serverFacingDatagramSock), 
 						hostResolver, 
-						new UdpRelayServer.ExternalIncomingAddressCriteria(
+						new UdpRelayServer.ExternalInboundAddressCriteria(
 								this.settings.getLastValue(
-										SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_ALLOWED_EXTERNAL_INCOMING_ADDRESS_CRITERIA), 
+										SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_ALLOWED_EXTERNAL_INBOUND_ADDRESS_CRITERIA), 
 								this.settings.getLastValue(
-										SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_BLOCKED_EXTERNAL_INCOMING_ADDRESS_CRITERIA)), 
-						new UdpRelayServer.ExternalOutgoingAddressCriteria(
+										SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_BLOCKED_EXTERNAL_INBOUND_ADDRESS_CRITERIA)), 
+						new UdpRelayServer.InternalOutboundAddressCriteria(
 								this.settings.getLastValue(
-										SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_ALLOWED_EXTERNAL_OUTGOING_ADDRESS_CRITERIA), 
+										SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_ALLOWED_INTERNAL_OUTBOUND_ADDRESS_CRITERIA), 
 								this.settings.getLastValue(
-										SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_BLOCKED_EXTERNAL_OUTGOING_ADDRESS_CRITERIA)), 
+										SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_BLOCKED_INTERNAL_OUTBOUND_ADDRESS_CRITERIA)), 
 						new UdpRelayServer.RelaySettings(
 								this.settings.getLastValue(
 										SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_RELAY_BUFFER_SIZE).intValue(), 
@@ -290,32 +299,35 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 						e);
 			}
 		} finally {
-			if (clientDatagramSock != null && !clientDatagramSock.isClosed()) {
-				clientDatagramSock.close();
+			if (clientFacingDatagramSock != null 
+					&& !clientFacingDatagramSock.isClosed()) {
+				clientFacingDatagramSock.close();
 			}
-			if (serverDatagramSock != null && !serverDatagramSock.isClosed()) {
-				serverDatagramSock.close();
+			if (serverFacingDatagramSock != null 
+					&& !serverFacingDatagramSock.isClosed()) {
+				serverFacingDatagramSock.close();
 			}
 		}
 	}
 	
-	private DatagramSocket wrapClientDatagramSocket(
-			final DatagramSocket clientDatagramSock, 
+	private DatagramSocket wrapClientFacingDatagramSocket(
+			final DatagramSocket clientFacingDatagramSock, 
 			final String udpClientHost, 
 			final int udpClientPort) {
-		DatagramSocket clientDatagramSck = clientDatagramSock;
+		DatagramSocket clientFacingDatagramSck = clientFacingDatagramSock;
 		if (this.clientDtlsDatagramSocketFactory != null) {
 			try {
-				clientDatagramSck = 
+				clientFacingDatagramSck = 
 						this.clientDtlsDatagramSocketFactory.newDatagramSocket(
-								clientDatagramSck, 
+								clientFacingDatagramSck, 
 								udpClientHost, 
 								udpClientPort);
 			} catch (IOException e) {
 				LOGGER.warn( 
 						LoggerHelper.objectMessage(
 								this, 
-								"Error in wrapping the client-facing UDP socket"), 
+								"Error in wrapping the client-facing UDP "
+								+ "socket"), 
 						e);
 				Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
 						Reply.GENERAL_SOCKS_SERVER_FAILURE);
@@ -323,7 +335,8 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 						"Sending %s",
 						socks5Rep.toString())));
 				try {
-					this.commandWorkerContext.writeThenFlush(socks5Rep.toByteArray());
+					this.commandWorkerContext.writeThenFlush(
+							socks5Rep.toByteArray());
 				} catch (IOException e1) {
 					LOGGER.warn( 
 							LoggerHelper.objectMessage(
@@ -336,15 +349,16 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 		if (this.clientSocket instanceof GssSocket) {
 			GssSocket gssSocket = (GssSocket) this.clientSocket;
 			try {
-				clientDatagramSck = new GssDatagramSocket(
-						clientDatagramSck,
+				clientFacingDatagramSck = new GssDatagramSocket(
+						clientFacingDatagramSck,
 						gssSocket.getGSSContext(),
 						gssSocket.getMessageProp());
 			} catch (SocketException e) {
 				LOGGER.warn( 
 						LoggerHelper.objectMessage(
 								this, 
-								"Error in wrapping the client-facing UDP socket"), 
+								"Error in wrapping the client-facing UDP "
+								+ "socket"), 
 						e);
 				Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
 						Reply.GENERAL_SOCKS_SERVER_FAILURE);
@@ -352,7 +366,8 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 						"Sending %s",
 						socks5Rep.toString())));
 				try {
-					this.commandWorkerContext.writeThenFlush(socks5Rep.toByteArray());
+					this.commandWorkerContext.writeThenFlush(
+							socks5Rep.toByteArray());
 				} catch (IOException e1) {
 					LOGGER.warn( 
 							LoggerHelper.objectMessage(
@@ -362,7 +377,7 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 				return null;
 			}
 		}
-		return clientDatagramSck;
+		return clientFacingDatagramSck;
 	}
 
 }

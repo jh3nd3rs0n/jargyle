@@ -21,7 +21,7 @@ import jargyle.net.socks.transport.v5.Socks5Reply;
 import jargyle.util.Criteria;
 import jargyle.util.Criterion;
 
-final class BindCommandWorker extends TcpBasedCommandWorker {
+final class BindCommandWorker extends PassDataCommandWorker {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(
 			BindCommandWorker.class);
@@ -30,7 +30,7 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 	private final CommandWorkerContext commandWorkerContext;
 	private final String desiredDestinationAddress;
 	private final int desiredDestinationPort;
-	private final NetObjectFactory externalNetObjectFactory;
+	private final NetObjectFactory netObjectFactory;
 	private final Settings settings;
 		
 	public BindCommandWorker(final CommandWorkerContext context) {
@@ -38,29 +38,28 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 		Socket clientSock = context.getClientSocket();
 		String desiredDestinationAddr =	context.getDesiredDestinationAddress();
 		int desiredDestinationPrt = context.getDesiredDestinationPort();
-		NetObjectFactory extNetObjectFactory = 
-				context.getExternalNetObjectFactory();
+		NetObjectFactory netObjFactory = context.getNetObjectFactory();
 		Settings sttngs = context.getSettings();
 		this.clientSocket = clientSock;
 		this.commandWorkerContext = context;
 		this.desiredDestinationAddress = desiredDestinationAddr;
 		this.desiredDestinationPort = desiredDestinationPrt;
-		this.externalNetObjectFactory = extNetObjectFactory;
+		this.netObjectFactory = netObjFactory;
 		this.settings = sttngs;
 	}
 	
-	private boolean canAllowExternalIncomingAddress(
-			final String externalIncomingAddress) {
-		Criteria allowedExternalIncomingAddressCriteria =
+	private boolean canAllowExternalInboundAddress(
+			final String externalInboundAddress) {
+		Criteria allowedExternalInboundAddressCriteria =
 				this.settings.getLastValue(
-						SettingSpec.SOCKS5_ON_BIND_ALLOWED_EXTERNAL_INCOMING_ADDRESS_CRITERIA);
+						SettingSpec.SOCKS5_ON_BIND_ALLOWED_EXTERNAL_INBOUND_ADDRESS_CRITERIA);
 		Criterion criterion = 
-				allowedExternalIncomingAddressCriteria.anyEvaluatesTrue(
-						externalIncomingAddress);
+				allowedExternalInboundAddressCriteria.anyEvaluatesTrue(
+						externalInboundAddress);
 		if (criterion == null) {
 			LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
-					"External incoming address %s not allowed",
-					externalIncomingAddress)));
+					"External inbound address %s not allowed",
+					externalInboundAddress)));
 			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
 					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
 			LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
@@ -77,16 +76,16 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 			}
 			return false;
 		}
-		Criteria blockedExternalIncomingAddressCriteria =
+		Criteria blockedExternalInboundAddressCriteria =
 				this.settings.getLastValue(
-						SettingSpec.SOCKS5_ON_BIND_BLOCKED_EXTERNAL_INCOMING_ADDRESS_CRITERIA);
-		criterion = blockedExternalIncomingAddressCriteria.anyEvaluatesTrue(
-				externalIncomingAddress);
+						SettingSpec.SOCKS5_ON_BIND_BLOCKED_EXTERNAL_INBOUND_ADDRESS_CRITERIA);
+		criterion = blockedExternalInboundAddressCriteria.anyEvaluatesTrue(
+				externalInboundAddress);
 		if (criterion != null) {
 			LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
-					"External incoming address %s blocked based on the "
+					"External inbound address %s blocked based on the "
 					+ "following criterion: %s",
-					externalIncomingAddress,
+					externalInboundAddress,
 					criterion)));
 			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
 					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
@@ -94,7 +93,8 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 					"Sending %s",
 					socks5Rep.toString())));
 			try {
-				this.commandWorkerContext.writeThenFlush(socks5Rep.toByteArray());
+				this.commandWorkerContext.writeThenFlush(
+						socks5Rep.toByteArray());
 			} catch (IOException e) {
 				LOGGER.warn( 
 						LoggerHelper.objectMessage(
@@ -105,17 +105,18 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 		}
 		return true;
 	}
-	private boolean configureExternalIncomingSocket(
-			final Socket externalIncomingSocket) {
+	
+	private boolean configureExternalInboundSocket(
+			final Socket externalInboundSocket) {
 		SocketSettings socketSettings = this.settings.getLastValue(
-				SettingSpec.SOCKS5_ON_BIND_EXTERNAL_INCOMING_SOCKET_SETTINGS);
+				SettingSpec.SOCKS5_ON_BIND_EXTERNAL_INBOUND_SOCKET_SETTINGS);
 		try {
-			socketSettings.applyTo(externalIncomingSocket);
+			socketSettings.applyTo(externalInboundSocket);
 		} catch (SocketException e) {
 			LOGGER.warn( 
 					LoggerHelper.objectMessage(
 							this, 
-							"Error in setting the external incoming socket"), 
+							"Error in setting the external inbound socket"), 
 					e);
 			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
 					Reply.GENERAL_SOCKS_SERVER_FAILURE);
@@ -123,7 +124,8 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 					"Sending %s",
 					socks5Rep.toString())));
 			try {
-				this.commandWorkerContext.writeThenFlush(socks5Rep.toByteArray());
+				this.commandWorkerContext.writeThenFlush(
+						socks5Rep.toByteArray());
 			} catch (IOException e1) {
 				LOGGER.warn( 
 						LoggerHelper.objectMessage(
@@ -151,7 +153,8 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 					"Sending %s",
 					socks5Rep.toString())));
 			try {
-				this.commandWorkerContext.writeThenFlush(socks5Rep.toByteArray());
+				this.commandWorkerContext.writeThenFlush(
+						socks5Rep.toByteArray());
 			} catch (IOException e1) {
 				LOGGER.warn( 
 						LoggerHelper.objectMessage(
@@ -166,12 +169,11 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 	@Override
 	public void run() throws IOException {
 		Socks5Reply socks5Rep = null;
-		HostResolver hostResolver =	
-				this.externalNetObjectFactory.newHostResolver();		
+		HostResolver hostResolver =	this.netObjectFactory.newHostResolver();		
 		ServerSocket listenSocket = null;
-		Socket externalIncomingSocket = null;
+		Socket externalInboundSocket = null;
 		try {
-			listenSocket = this.externalNetObjectFactory.newServerSocket();
+			listenSocket = this.netObjectFactory.newServerSocket();
 			if (!this.configureListenSocket(listenSocket)) {
 				return;
 			}
@@ -189,7 +191,8 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 				LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
 						"Sending %s",
 						socks5Rep.toString())));
-				this.commandWorkerContext.writeThenFlush(socks5Rep.toByteArray());
+				this.commandWorkerContext.writeThenFlush(
+						socks5Rep.toByteArray());
 				return;
 			}
 			InetAddress inetAddress = listenSocket.getInetAddress();
@@ -204,37 +207,38 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 					socks5Rep.toString())));
 			this.commandWorkerContext.writeThenFlush(socks5Rep.toByteArray());
 			try {
-				externalIncomingSocket = listenSocket.accept();
-				if (!this.configureExternalIncomingSocket(
-						externalIncomingSocket)) {
+				externalInboundSocket = listenSocket.accept();
+				if (!this.configureExternalInboundSocket(
+						externalInboundSocket)) {
 					return;
 				}
 			} catch (IOException e) {
 				LOGGER.warn( 
 						LoggerHelper.objectMessage(
 								this, 
-								"Error in waiting for an external incoming socket"), 
+								"Error in waiting for an external inbound "
+								+ "socket"), 
 						e);
 				socks5Rep = Socks5Reply.newErrorInstance(
 						Reply.GENERAL_SOCKS_SERVER_FAILURE);
 				LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
 						"Sending %s",
 						socks5Rep.toString())));
-				this.commandWorkerContext.writeThenFlush(socks5Rep.toByteArray());
+				this.commandWorkerContext.writeThenFlush(
+						socks5Rep.toByteArray());
 				return;
 			} finally {
 				listenSocket.close();
 			}
-			InetAddress externalIncomingInetAddress = 
-					externalIncomingSocket.getInetAddress();
-			String externalIncomingAddress = 
-					externalIncomingInetAddress.getHostAddress();
-			if (!this.canAllowExternalIncomingAddress(
-					externalIncomingAddress)) {
+			InetAddress externalInboundInetAddress = 
+					externalInboundSocket.getInetAddress();
+			String externalInboundAddress = 
+					externalInboundInetAddress.getHostAddress();
+			if (!this.canAllowExternalInboundAddress(externalInboundAddress)) {
 				return;
 			}
-			serverBoundAddress = externalIncomingAddress;
-			serverBoundPort = externalIncomingSocket.getLocalPort();
+			serverBoundAddress = externalInboundAddress;
+			serverBoundPort = externalInboundSocket.getLocalPort();
 			socks5Rep = Socks5Reply.newInstance(
 					Reply.SUCCEEDED, 
 					serverBoundAddress, 
@@ -246,10 +250,10 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 			try {
 				this.passData(
 						this.clientSocket,
-						externalIncomingSocket, 
-						settings.getLastValue(
+						externalInboundSocket, 
+						this.settings.getLastValue(
 								SettingSpec.SOCKS5_ON_BIND_RELAY_BUFFER_SIZE).intValue(), 
-						settings.getLastValue(
+						this.settings.getLastValue(
 								SettingSpec.SOCKS5_ON_BIND_RELAY_TIMEOUT).intValue());
 			} catch (IOException e) {
 				LOGGER.warn( 
@@ -258,9 +262,9 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 						e);				
 			}
 		} finally {
-			if (externalIncomingSocket != null 
-					&& !externalIncomingSocket.isClosed()) {
-				externalIncomingSocket.close();
+			if (externalInboundSocket != null 
+					&& !externalInboundSocket.isClosed()) {
+				externalInboundSocket.close();
 			}
 			if (listenSocket != null && !listenSocket.isClosed()) {
 				listenSocket.close();

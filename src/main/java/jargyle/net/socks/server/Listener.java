@@ -26,14 +26,14 @@ final class Listener implements Runnable {
 	private DtlsDatagramSocketFactory clientDtlsDatagramSocketFactory;
 	private SslSocketFactory clientSslSocketFactory;
 	private final Configuration configuration;
-	private final NetObjectFactory externalNetObjectFactory;
+	private final NetObjectFactory netObjectFactory;
 	private final ServerSocket serverSocket;
 			
 	public Listener(final ServerSocket serverSock, final Configuration config) {
 		this.clientDtlsDatagramSocketFactory = null;
 		this.clientSslSocketFactory = null;		
 		this.configuration = config;
-		this.externalNetObjectFactory = new ExternalNetObjectFactory(config);
+		this.netObjectFactory = new NetObjectFactoryImpl(config);
 		this.serverSocket = serverSock;
 	}
 	
@@ -160,7 +160,7 @@ final class Listener implements Runnable {
 			WorkerContext workerContext = new WorkerContext(
 					clientSocket,
 					this.configuration,
-					this.externalNetObjectFactory,
+					this.netObjectFactory,
 					this.getClientDtlsDatagramSocketFactory());
 			executor.execute(new Worker(workerContext));
 		}

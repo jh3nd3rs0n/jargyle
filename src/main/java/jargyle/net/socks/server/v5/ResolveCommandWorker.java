@@ -21,26 +21,23 @@ final class ResolveCommandWorker extends CommandWorker {
 	private final CommandWorkerContext commandWorkerContext;
 	private final String desiredDestinationAddress;
 	private final int desiredDestinationPort;
-	private final NetObjectFactory externalNetObjectFactory;
+	private final NetObjectFactory netObjectFactory;
 	
 	public ResolveCommandWorker(final CommandWorkerContext context) {
 		super(context);
-		String desiredDestinationAddr = 
-				context.getDesiredDestinationAddress();
+		String desiredDestinationAddr = context.getDesiredDestinationAddress();
 		int desiredDestinationPrt = context.getDesiredDestinationPort();
-		NetObjectFactory extNetObjectFactory = 
-				context.getExternalNetObjectFactory();
+		NetObjectFactory netObjFactory = context.getNetObjectFactory();
 		this.commandWorkerContext = context;
 		this.desiredDestinationAddress = desiredDestinationAddr;
 		this.desiredDestinationPort = desiredDestinationPrt;
-		this.externalNetObjectFactory = extNetObjectFactory;
+		this.netObjectFactory = netObjFactory;
 	}
 
 	@Override
 	public void run() throws IOException {
 		Socks5Reply socks5Rep = null;
-		HostResolver hostResolver =	
-				this.externalNetObjectFactory.newHostResolver();
+		HostResolver hostResolver =	this.netObjectFactory.newHostResolver();
 		InetAddress inetAddress = null;
 		try {
 			inetAddress = hostResolver.resolve(this.desiredDestinationAddress);

@@ -205,52 +205,57 @@ public final class TcpRelayServer {
 		
 	}
 	
-	private static final class IncomingDataWorkerContext extends DataWorkerContext {
+	private static final class ExternalInboundDataWorkerContext 
+		extends DataWorkerContext {
 		
-		public IncomingDataWorkerContext(final TcpRelayServer server) {
-			super(server, server.serverSocket, server.clientSocket);
+		public ExternalInboundDataWorkerContext(final TcpRelayServer server) {
+			super(server, server.serverFacingSocket, server.clientFacingSocket);
 		}
 		
 	}
 	
-	private static final class OutgoingDataWorkerContext extends DataWorkerContext {
+	private static final class InternalOutboundDataWorkerContext 
+		extends DataWorkerContext {
 		
-		public OutgoingDataWorkerContext(final TcpRelayServer server) {
-			super(server, server.clientSocket, server.serverSocket);
+		public InternalOutboundDataWorkerContext(final TcpRelayServer server) {
+			super(server, server.clientFacingSocket, server.serverFacingSocket);
 		}
 		
 	}
 	
-	private final Socket clientSocket;
+	private final Socket clientFacingSocket;
 	private final int bufferSize;
 	private ExecutorService executor;
 	private boolean firstDataWorkerFinished;
 	private long lastReadTime;
-	private final Socket serverSocket;
+	private final Socket serverFacingSocket;
 	private boolean started;
 	private boolean stopped;
 	private final int timeout;
 	
 	public TcpRelayServer(
-			final Socket clientSock, 
-			final Socket serverSock, 
+			final Socket clientFacingSock, 
+			final Socket serverFacingSock, 
 			final int bffrSize, 
 			final int tmt) {
-		Objects.requireNonNull(clientSock, "client socket must not be null");
 		Objects.requireNonNull(
-				serverSock, "server-facing socket must not be null");
+				clientFacingSock, "client-facing socket must not be null");
+		Objects.requireNonNull(
+				serverFacingSock, "server-facing socket must not be null");
 		if (bffrSize < 1) {
-			throw new IllegalArgumentException("buffer size must not be less than 1");
+			throw new IllegalArgumentException(
+					"buffer size must not be less than 1");
 		}
 		if (tmt < 1) {
-			throw new IllegalArgumentException("timeout must not be less than 1");
+			throw new IllegalArgumentException(
+					"timeout must not be less than 1");
 		}
-		this.clientSocket = clientSock;
+		this.clientFacingSocket = clientFacingSock;
 		this.bufferSize = bffrSize;
 		this.executor = null;
 		this.firstDataWorkerFinished = false;
 		this.lastReadTime = 0L;
-		this.serverSocket = serverSock;
+		this.serverFacingSocket = serverFacingSock;
 		this.started = false;
 		this.stopped = true;
 		this.timeout = tmt;
@@ -271,8 +276,10 @@ public final class TcpRelayServer {
 		this.lastReadTime = 0L;
 		this.firstDataWorkerFinished = false;
 		this.executor = Executors.newFixedThreadPool(2);
-		this.executor.execute(new DataWorker(new IncomingDataWorkerContext(this)));
-		this.executor.execute(new DataWorker(new OutgoingDataWorkerContext(this)));
+		this.executor.execute(new DataWorker(new ExternalInboundDataWorkerContext(
+				this)));
+		this.executor.execute(new DataWorker(new InternalOutboundDataWorkerContext(
+				this)));
 		this.started = true;
 		this.stopped = false;
 	}

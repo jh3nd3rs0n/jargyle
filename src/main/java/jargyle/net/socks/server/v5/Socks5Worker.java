@@ -87,9 +87,10 @@ public final class Socks5Worker {
 			LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
 					"SOCKS5 request from %s not allowed. SOCKS5 request: %s",
 					clientAddress,
-					socks5Req.toString())));
+					socks5Req)));
 			try {
-				this.socks5WorkerContext.writeThenFlush(socks5Rep.toByteArray());
+				this.socks5WorkerContext.writeThenFlush(
+						socks5Rep.toByteArray());
 			} catch (IOException e) {
 				LOGGER.warn(
 						LoggerHelper.objectMessage(
@@ -111,8 +112,8 @@ public final class Socks5Worker {
 					"SOCKS5 request from %s blocked based on the following "
 					+ "criterion: %s. SOCKS5 request: %s",
 					clientAddress,
-					socks5RequestCriterion.toString(),
-					socks5Req.toString())));
+					socks5RequestCriterion,
+					socks5Req)));
 			try {
 				this.socks5WorkerContext.writeThenFlush(socks5Rep.toByteArray());
 			} catch (IOException e) {
@@ -161,7 +162,7 @@ public final class Socks5Worker {
 			this.socks5WorkerContext = new Socks5WorkerContext(new WorkerContext(
 					this.clientSocket,
 					this.configuration,
-					this.socks5WorkerContext.getExternalNetObjectFactory(),
+					this.socks5WorkerContext.getNetObjectFactory(),
 					this.socks5WorkerContext.getClientDtlsDatagramSocketFactory()));
 			Socks5Request socks5Req = this.newSocks5Request();
 			if (socks5Req == null) { return; }

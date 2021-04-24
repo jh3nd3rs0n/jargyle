@@ -30,7 +30,7 @@ import jargyle.security.EncryptedPassword;
 import jargyle.util.PositiveInteger;
 import jargyle.util.Strings;
 
-final class ExternalNetObjectFactory extends NetObjectFactory {
+final class NetObjectFactoryImpl extends NetObjectFactory {
 	
 	private static Property<Object> cast(
 			final Property<? extends Object> property) {
@@ -43,7 +43,7 @@ final class ExternalNetObjectFactory extends NetObjectFactory {
 	private Configuration lastConfiguration;
 	private NetObjectFactory netObjectFactory;
 
-	public ExternalNetObjectFactory(final Configuration config) {
+	public NetObjectFactoryImpl(final Configuration config) {
 		this.configuration = config;
 		this.lastConfiguration = null;
 		this.netObjectFactory = null;

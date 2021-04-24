@@ -339,14 +339,14 @@ The following is a list of available settings for the SOCKS server (displayed wh
       socks5.gssapiauth.protectionLevels=SOCKS5_GSSAPIAUTH_PROTECTION_LEVEL1[ SOCKS5_GSSAPIAUTH_PROTECTION_LEVEL2[...]]
           The space separated list of acceptable protection levels after GSS-API authentication (The first is preferred if the client does not provide a protection level that is acceptable.) (default is REQUIRED_INTEG_AND_CONF REQUIRED_INTEG NONE)
     
-      socks5.onBind.allowedExternalIncomingAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
-          The space separated list of allowed external incoming address criteria (default is matches:.*)
+      socks5.onBind.allowedExternalInboundAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
+          The space separated list of allowed external inbound address criteria (default is matches:.*)
     
-      socks5.onBind.blockedExternalIncomingAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
-          The space separated list of blocked external incoming address criteria
+      socks5.onBind.blockedExternalInboundAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
+          The space separated list of blocked external inbound address criteria
     
-      socks5.onBind.externalIncomingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
-          The space separated list of socket settings for the external incoming socket
+      socks5.onBind.externalInboundSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
+          The space separated list of socket settings for the external inbound socket
     
       socks5.onBind.listenSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
           The space separated list of socket settings for the listen socket
@@ -357,7 +357,7 @@ The following is a list of available settings for the SOCKS server (displayed wh
       socks5.onBind.relayTimeout=INTEGER_BETWEEN_1_AND_2147483647
           The timeout in milliseconds on relaying no data (default is 60000)
     
-      socks5.onConnect.prepareServerSocket=true|false
+      socks5.onConnect.prepareServerFacingSocket=true|false
           The boolean value to indicate if the server-facing socket is to be prepared before connecting (involves applying the specified socket settings, resolving the target host name, and setting the specified timeout on waiting to connect) (default is false)
     
       socks5.onConnect.relayBufferSize=INTEGER_BETWEEN_1_AND_2147483647
@@ -366,31 +366,31 @@ The following is a list of available settings for the SOCKS server (displayed wh
       socks5.onConnect.relayTimeout=INTEGER_BETWEEN_1_AND_2147483647
           The timeout in milliseconds on relaying no data (default is 60000)
     
-      socks5.onConnect.serverBindHost=HOST
+      socks5.onConnect.serverFacingBindHost=HOST
           The binding host name or address for the server-facing socket (default is 0.0.0.0)
     
-      socks5.onConnect.serverConnectTimeout=INTEGER_BETWEEN_1_AND_2147483647
-          The timeout in milliseconds on waiting the server-facing socket to connect (default is 60000)
+      socks5.onConnect.serverFacingConnectTimeout=INTEGER_BETWEEN_1_AND_2147483647
+          The timeout in milliseconds on waiting for the server-facing socket to connect (default is 60000)
     
-      socks5.onConnect.serverSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
+      socks5.onConnect.serverFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
           The space separated list of socket settings for the server-facing socket
     
-      socks5.onUdpAssociate.allowedExternalIncomingAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
-          The space separated list of allowed external incoming address criteria (default is matches:.*)
+      socks5.onUdpAssociate.allowedExternalInboundAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
+          The space separated list of allowed external inbound address criteria (default is matches:.*)
     
-      socks5.onUdpAssociate.allowedExternalOutgoingAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
-          The space separated list of allowed external outgoing address criteria (default is matches:.*)
+      socks5.onUdpAssociate.allowedInternalOutboundAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
+          The space separated list of allowed internal outbound address criteria (default is matches:.*)
     
-      socks5.onUdpAssociate.blockedExternalIncomingAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
-          The space separated list of blocked external incoming address criteria
+      socks5.onUdpAssociate.blockedExternalInboundAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
+          The space separated list of blocked external inbound address criteria
     
-      socks5.onUdpAssociate.blockedExternalOutgoingAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
-          The space separated list of blocked external outgoing address criteria
+      socks5.onUdpAssociate.blockedInternalOutboundAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
+          The space separated list of blocked internal outbound address criteria
     
-      socks5.onUdpAssociate.clientBindHost=HOST
+      socks5.onUdpAssociate.clientFacingBindHost=HOST
           The binding host name or address for the client-facing UDP socket (default is 0.0.0.0)
     
-      socks5.onUdpAssociate.clientSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
+      socks5.onUdpAssociate.clientFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
           The space separated list of socket settings for the client-facing UDP socket
     
       socks5.onUdpAssociate.relayBufferSize=INTEGER_BETWEEN_1_AND_2147483647
@@ -399,10 +399,10 @@ The following is a list of available settings for the SOCKS server (displayed wh
       socks5.onUdpAssociate.relayTimeout=INTEGER_BETWEEN_1_AND_2147483647
           The timeout in milliseconds on relaying no data (default is 60000)
     
-      socks5.onUdpAssociate.serverBindHost=HOST
+      socks5.onUdpAssociate.serverFacingBindHost=HOST
           The binding host name or address for the server-facing UDP socket (default is 0.0.0.0)
     
-      socks5.onUdpAssociate.serverSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
+      socks5.onUdpAssociate.serverFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
           The space separated list of socket settings for the server-facing UDP socket
     
       socks5.userpassauth.usernamePasswordAuthenticator=CLASSNAME[:VALUE]
@@ -1476,14 +1476,14 @@ Jargyle does perform host name resolution through SOCKS5 server chaining but it 
 
 Host name resolution through SOCKS5 server chaining OCCURS ONLY WHEN:
 
--   Resolving a host name for a TCP socket to make an external outbound TCP connection.
+-   Resolving a host name for a TCP socket to make an internal outbound TCP connection.
 
 Host name resolution through SOCKS5 server chaining DOES NOT OCCUR WHEN:
 
 -   Resolving a host name for a TCP socket to receive an external inbound TCP connection.
--   Resolving a host name for an external outgoing datagram packet.
+-   Resolving a host name for an internal outbound datagram packet.
 
-In addition, settings are ignored for preparing a TCP socket to make an external outbound TCP connection. Such settings include specified socket settings for the TCP socket and the specified timeout in milliseconds on waiting to connect.
+In addition, settings are ignored for preparing a TCP socket to make an internal outbound TCP connection. Such settings include specified socket settings for the TCP socket and the specified timeout in milliseconds on waiting to connect.
 
 To enable host name resolution through SOCKS5 server chaining without the aforementioned limitations, you would need to set the setting `chaining.socks5.resolve.resolveHostNamesThroughSocksServer` to `true`.
 
@@ -1515,7 +1515,7 @@ This setting can be used under the following condition:
 
 -   The other SOCKS5 server supports [the SOCKS5 RESOLVE command](#5-3-the-socks5-resolve-command). (At the time of this writing, the SOCKS5 RESOLVE command is an additional SOCKS5 command made for Jargyle. Therefore the other SOCKS5 server would at the very least be another running instance of Jargyle.)
 
-In addition to using this setting, you can use the setting `socks5.onConnect.prepareServerSocket` to be set to `true` in order for the settings to be recognized for preparing a TCP socket to make an external outbound TCP connection.
+In addition to using this setting, you can use the setting `socks5.onConnect.prepareServerFacingSocket` to be set to `true` in order for the settings to be recognized for preparing a TCP socket to make an internal outbound TCP connection.
 
 Partial command line example:
 
@@ -1523,9 +1523,9 @@ Partial command line example:
     
     --setting=chaining.socksServerUri=socks5://127.0.0.1:23456 \
     --setting=chaining.socks5.resolve.resolveHostNamesThroughSocksServer=true \
-    --setting=socks5.onConnect.prepareServerSocket=true \
-    --setting=socks5.onConnect.serverSocketSettings=SO_TIMEOUT=500 \
-    --setting=socks5.onConnect.serverConnectTimeout=10000
+    --setting=socks5.onConnect.prepareServerFacingSocket=true \
+    --setting=socks5.onConnect.serverFacingSocketSettings=SO_TIMEOUT=500 \
+    --setting=socks5.onConnect.serverFacingConnectTimeout=10000
         
 ```
 
@@ -1542,11 +1542,11 @@ Partial configuration file example:
         <value>true</value>
     </setting>
     <setting>
-        <name>socks5.onConnect.prepareServerSocket</name>
+        <name>socks5.onConnect.prepareServerFacingSocket</name>
         <value>true</value>
     </setting>
     <setting>
-        <name>socks5.onConnect.serverSocketSettings</name>
+        <name>socks5.onConnect.serverFacingSocketSettings</name>
         <socketSettingsValue>
             <socketSettings>
                 <socketSetting>
@@ -1557,7 +1557,7 @@ Partial configuration file example:
         </socketSettingsValue>
     </setting>
     <setting>
-        <name>socks5.onConnect.serverConnectTimeout</name>
+        <name>socks5.onConnect.serverFacingConnectTimeout</name>
         <value>10000</value>
     </setting>
         
@@ -1847,20 +1847,20 @@ The known limitations of Jargyle chained to a specified chain of other SOCKS ser
 You can allow or block the following addresses:
 
 -   Client addresses (IPv4 and IPv6)
--   External incoming addresses following the SOCKS5 BIND command (IPv4 and IPv6)
--   External incoming addresses following the SOCKS5 UDP ASSOCIATE command (IPv4 and IPv6)
--   External outgoing addresses following the SOCKS5 UDP ASSOCIATE command (IPv4, IPv6, and domain name)
+-   External inbound addresses following the SOCKS5 BIND command (IPv4 and IPv6)
+-   External inbound addresses following the SOCKS5 UDP ASSOCIATE command (IPv4 and IPv6)
+-   Internal outbound addresses following the SOCKS5 UDP ASSOCIATE command (IPv4, IPv6, and domain name)
 
 To allow or block an address or addresses, you will need to specify the address or addresses in any of the following settings:
 
 -   `allowedClientAddressCriteria`
 -   `blockedClientAddressCriteria`
--   `socks5.onBind.allowedExternalIncomingAddressCriteria`
--   `socks5.onBind.blockedExternalIncomingAddressCriteria`
--   `socks5.onUdpAssociate.allowedExternalIncomingAddressCriteria`
--   `socks5.onUdpAssociate.allowedExternalOutgoingAddressCriteria`
--   `socks5.onUdpAssociate.blockedExternalIncomingAddressCriteria`
--   `socks5.onUdpAssociate.blockedExternalOutgoingAddressCriteria`
+-   `socks5.onBind.allowedExternalInboundAddressCriteria`
+-   `socks5.onBind.blockedExternalInboundAddressCriteria`
+-   `socks5.onUdpAssociate.allowedExternalInboundAddressCriteria`
+-   `socks5.onUdpAssociate.allowedInternalOutboundAddressCriteria`
+-   `socks5.onUdpAssociate.blockedExternalInboundAddressCriteria`
+-   `socks5.onUdpAssociate.blockedInternalOutboundAddressCriteria`
 
 You can specify an address or addresses in any of the aforementioned settings as a space separated list of each address or addresses as either a literal expression preceded by the prefix `equals:` or a regular expression preceded by the prefix `matches:`.
 

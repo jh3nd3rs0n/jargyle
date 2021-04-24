@@ -3,7 +3,9 @@ package jargyle.net.socks.server;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -62,9 +64,25 @@ public final class Settings {
 		return newInstance(Arrays.asList(settings));
 	}
 	
+	private final Map<SettingSpec<Object>, List<Setting<Object>>> settingListMap;
 	private final List<Setting<Object>> settings;
 	
 	private Settings(final List<Setting<Object>> sttngs) {
+		Map<SettingSpec<Object>, List<Setting<Object>>> sttngListMap = 
+				new HashMap<SettingSpec<Object>, List<Setting<Object>>>();
+		for (Setting<Object> sttng : sttngs) {
+			SettingSpec<Object> sttngSpec = sttng.getSettingSpec();
+			if (sttngListMap.containsKey(sttngSpec)) {
+				List<Setting<Object>> sttngList = sttngListMap.get(sttngSpec);
+				sttngList.add(sttng);
+			} else {
+				List<Setting<Object>> sttngList = 
+						new ArrayList<Setting<Object>>();
+				sttngList.add(sttng);
+				sttngListMap.put(sttngSpec, sttngList);
+			}
+		}
+		this.settingListMap = sttngListMap;
 		this.settings = new ArrayList<Setting<Object>>(sttngs);
 	}
 	
@@ -91,11 +109,12 @@ public final class Settings {
 	}
 	
 	public <V> V getLastValue(final SettingSpec<V> settingSpec) {
+		List<Setting<Object>> settingList = this.settingListMap.get(
+				settingSpec);
 		V value = null;
-		for (Setting<Object> setting : this.settings) {
-			if (setting.getSettingSpec().equals(settingSpec)) {
-				value = settingSpec.getValueType().cast(setting.getValue());
-			}
+		if (settingList != null && !settingList.isEmpty()) {
+			Setting<Object> setting = settingList.get(settingList.size() - 1);
+			value = settingSpec.getValueType().cast(setting.getValue());
 		}
 		if (value == null) {
 			Setting<V> defaultSetting = settingSpec.getDefaultSetting();
@@ -105,11 +124,15 @@ public final class Settings {
 	}
 	
 	public <V> List<V> getValues(final SettingSpec<V> settingSpec) {
+		List<Setting<Object>> settingList = this.settingListMap.get(
+				settingSpec);
 		List<V> values = new ArrayList<V>();
-		for (Setting<Object> setting : this.settings) {
-			if (setting.getSettingSpec().equals(settingSpec)) {
-				V value = settingSpec.getValueType().cast(setting.getValue());
-				values.add(value);
+		if (settingList != null) {
+			for (Setting<Object> setting : settingList) {
+				if (setting.getSettingSpec().equals(settingSpec)) {
+					V value = settingSpec.getValueType().cast(setting.getValue());
+					values.add(value);
+				}
 			}
 		}
 		if (values.isEmpty()) {

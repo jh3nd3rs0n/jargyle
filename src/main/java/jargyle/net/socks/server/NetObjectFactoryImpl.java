@@ -55,14 +55,74 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 			return;
 		}
 		putChainingDtlsSettingConverters();
+		putChainingDtlsKeyStoreSettingConverters();
+		putChainingDtlsTrustStoreSettingConverters();
 		putChainingSettingConverters();
 		putChainingSocks5SettingConverters();
+		putChainingSocks5GssapiAuthSettingConverters();
 		putChainingSslSettingConverters();
+		putChainingSslKeyStoreSettingConverters();
+		putChainingSslTrustStoreSettingConverters();
 	}
 	
 	private static Map<SettingSpec<? extends Object>, SettingConverter> getSettingConverterMap() {
 		fillSettingConverterMapIfEmpty();
 		return SETTING_CONVERTER_MAP;
+	}
+	
+	private static void putChainingDtlsKeyStoreSettingConverters() {
+		SETTING_CONVERTER_MAP.put(
+				SettingSpec.CHAINING_DTLS_KEY_STORE_FILE, 
+				new SettingConverter() {
+
+					@Override
+					public List<Property<Object>> convert(
+							final Setting<Object> setting) {
+						List<Property<Object>> properties = 
+								new ArrayList<Property<Object>>();
+						File dtlsKeyStoreFile = (File) setting.getValue();
+						properties.add(cast(
+								PropertySpec.DTLS_KEY_STORE_FILE.newProperty(
+										dtlsKeyStoreFile)));
+						return properties;
+					}
+					
+				});
+		SETTING_CONVERTER_MAP.put(
+				SettingSpec.CHAINING_DTLS_KEY_STORE_PASSWORD, 
+				new SettingConverter() {
+
+					@Override
+					public List<Property<Object>> convert(
+							final Setting<Object> setting) {
+						List<Property<Object>> properties = 
+								new ArrayList<Property<Object>>();
+						EncryptedPassword dtlsKeyStorePassword = 
+								(EncryptedPassword) setting.getValue();
+						properties.add(cast(
+								PropertySpec.DTLS_KEY_STORE_PASSWORD.newProperty(
+										dtlsKeyStorePassword)));
+						return properties;
+					}
+					
+				});
+		SETTING_CONVERTER_MAP.put(
+				SettingSpec.CHAINING_DTLS_KEY_STORE_TYPE, 
+				new SettingConverter() {
+
+					@Override
+					public List<Property<Object>> convert(
+							final Setting<Object> setting) {
+						List<Property<Object>> properties = 
+								new ArrayList<Property<Object>>();
+						String dtlsKeyStoreType = (String) setting.getValue();
+						properties.add(cast(
+								PropertySpec.DTLS_KEY_STORE_TYPE.newProperty(
+										dtlsKeyStoreType)));
+						return properties;
+					}
+					
+				});
 	}
 	
 	private static void putChainingDtlsSettingConverters() {
@@ -120,58 +180,6 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 					
 				});
 		SETTING_CONVERTER_MAP.put(
-				SettingSpec.CHAINING_DTLS_KEY_STORE_FILE, 
-				new SettingConverter() {
-
-					@Override
-					public List<Property<Object>> convert(
-							final Setting<Object> setting) {
-						List<Property<Object>> properties = 
-								new ArrayList<Property<Object>>();
-						File dtlsKeyStoreFile = (File) setting.getValue();
-						properties.add(cast(
-								PropertySpec.DTLS_KEY_STORE_FILE.newProperty(
-										dtlsKeyStoreFile)));
-						return properties;
-					}
-					
-				});
-		SETTING_CONVERTER_MAP.put(
-				SettingSpec.CHAINING_DTLS_KEY_STORE_PASSWORD, 
-				new SettingConverter() {
-
-					@Override
-					public List<Property<Object>> convert(
-							final Setting<Object> setting) {
-						List<Property<Object>> properties = 
-								new ArrayList<Property<Object>>();
-						EncryptedPassword dtlsKeyStorePassword = 
-								(EncryptedPassword) setting.getValue();
-						properties.add(cast(
-								PropertySpec.DTLS_KEY_STORE_PASSWORD.newProperty(
-										dtlsKeyStorePassword)));
-						return properties;
-					}
-					
-				});
-		SETTING_CONVERTER_MAP.put(
-				SettingSpec.CHAINING_DTLS_KEY_STORE_TYPE, 
-				new SettingConverter() {
-
-					@Override
-					public List<Property<Object>> convert(
-							final Setting<Object> setting) {
-						List<Property<Object>> properties = 
-								new ArrayList<Property<Object>>();
-						String dtlsKeyStoreType = (String) setting.getValue();
-						properties.add(cast(
-								PropertySpec.DTLS_KEY_STORE_TYPE.newProperty(
-										dtlsKeyStoreType)));
-						return properties;
-					}
-					
-				});
-		SETTING_CONVERTER_MAP.put(
 				SettingSpec.CHAINING_DTLS_MAX_PACKET_SIZE, 
 				new SettingConverter() {
 
@@ -206,6 +214,9 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 					}
 					
 				});
+	}
+	
+	private static void putChainingDtlsTrustStoreSettingConverters() {
 		SETTING_CONVERTER_MAP.put(
 				SettingSpec.CHAINING_DTLS_TRUST_STORE_FILE, 
 				new SettingConverter() {
@@ -257,7 +268,7 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 						return properties;
 					}
 					
-				});
+				});		
 	}
 	
 	private static void putChainingSettingConverters() {
@@ -315,25 +326,7 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 				});
 	}
 	
-	private static void putChainingSocks5SettingConverters() {
-		SETTING_CONVERTER_MAP.put(
-				SettingSpec.CHAINING_SOCKS5_AUTH_METHODS, 
-				new SettingConverter() {
-
-					@Override
-					public List<Property<Object>> convert(
-							final Setting<Object> setting) {
-						List<Property<Object>> properties = 
-								new ArrayList<Property<Object>>();
-						AuthMethods authMethods = 
-								(AuthMethods) setting.getValue();
-						properties.add(cast(
-								PropertySpec.SOCKS5_AUTH_METHODS.newProperty(
-										authMethods)));
-						return properties;
-					}
-					
-				});
+	private static void putChainingSocks5GssapiAuthSettingConverters() {
 		SETTING_CONVERTER_MAP.put(
 				SettingSpec.CHAINING_SOCKS5_GSSAPIAUTH_MECHANISM_OID, 
 				new SettingConverter() {
@@ -403,6 +396,27 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 					}
 					
 				});
+	}
+	
+	private static void putChainingSocks5SettingConverters() {
+		SETTING_CONVERTER_MAP.put(
+				SettingSpec.CHAINING_SOCKS5_AUTH_METHODS, 
+				new SettingConverter() {
+
+					@Override
+					public List<Property<Object>> convert(
+							final Setting<Object> setting) {
+						List<Property<Object>> properties = 
+								new ArrayList<Property<Object>>();
+						AuthMethods authMethods = 
+								(AuthMethods) setting.getValue();
+						properties.add(cast(
+								PropertySpec.SOCKS5_AUTH_METHODS.newProperty(
+										authMethods)));
+						return properties;
+					}
+					
+				});
 		SETTING_CONVERTER_MAP.put(
 				SettingSpec.CHAINING_SOCKS5_RESOLVE_RESOLVE_HOST_NAMES_THROUGH_SOCKS_SERVER, 
 				new SettingConverter() {
@@ -438,6 +452,61 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 						properties.add(cast(
 								PropertySpec.SOCKS5_USERPASSAUTH_PASSWORD.newProperty(
 										usernamePassword.getEncryptedPassword())));
+						return properties;
+					}
+					
+				});
+	}
+	
+	private static void putChainingSslKeyStoreSettingConverters() {
+		SETTING_CONVERTER_MAP.put(
+				SettingSpec.CHAINING_SSL_KEY_STORE_FILE, 
+				new SettingConverter() {
+
+					@Override
+					public List<Property<Object>> convert(
+							final Setting<Object> setting) {
+						List<Property<Object>> properties = 
+								new ArrayList<Property<Object>>();
+						File sslKeyStoreFile = (File) setting.getValue();
+						properties.add(cast(
+								PropertySpec.SSL_KEY_STORE_FILE.newProperty(
+										sslKeyStoreFile)));
+						return properties;
+					}
+					
+				});
+		SETTING_CONVERTER_MAP.put(
+				SettingSpec.CHAINING_SSL_KEY_STORE_PASSWORD, 
+				new SettingConverter() {
+
+					@Override
+					public List<Property<Object>> convert(
+							final Setting<Object> setting) {
+						List<Property<Object>> properties = 
+								new ArrayList<Property<Object>>();
+						EncryptedPassword sslKeyStorePassword = 
+								(EncryptedPassword) setting.getValue();
+						properties.add(cast(
+								PropertySpec.SSL_KEY_STORE_PASSWORD.newProperty(
+										sslKeyStorePassword)));
+						return properties;
+					}
+					
+				});
+		SETTING_CONVERTER_MAP.put(
+				SettingSpec.CHAINING_SSL_KEY_STORE_TYPE, 
+				new SettingConverter() {
+
+					@Override
+					public List<Property<Object>> convert(
+							final Setting<Object> setting) {
+						List<Property<Object>> properties = 
+								new ArrayList<Property<Object>>();
+						String sslKeyStoreType = (String) setting.getValue();
+						properties.add(cast(
+								PropertySpec.SSL_KEY_STORE_TYPE.newProperty(
+										sslKeyStoreType)));
 						return properties;
 					}
 					
@@ -499,58 +568,6 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 					
 				});
 		SETTING_CONVERTER_MAP.put(
-				SettingSpec.CHAINING_SSL_KEY_STORE_FILE, 
-				new SettingConverter() {
-
-					@Override
-					public List<Property<Object>> convert(
-							final Setting<Object> setting) {
-						List<Property<Object>> properties = 
-								new ArrayList<Property<Object>>();
-						File sslKeyStoreFile = (File) setting.getValue();
-						properties.add(cast(
-								PropertySpec.SSL_KEY_STORE_FILE.newProperty(
-										sslKeyStoreFile)));
-						return properties;
-					}
-					
-				});
-		SETTING_CONVERTER_MAP.put(
-				SettingSpec.CHAINING_SSL_KEY_STORE_PASSWORD, 
-				new SettingConverter() {
-
-					@Override
-					public List<Property<Object>> convert(
-							final Setting<Object> setting) {
-						List<Property<Object>> properties = 
-								new ArrayList<Property<Object>>();
-						EncryptedPassword sslKeyStorePassword = 
-								(EncryptedPassword) setting.getValue();
-						properties.add(cast(
-								PropertySpec.SSL_KEY_STORE_PASSWORD.newProperty(
-										sslKeyStorePassword)));
-						return properties;
-					}
-					
-				});
-		SETTING_CONVERTER_MAP.put(
-				SettingSpec.CHAINING_SSL_KEY_STORE_TYPE, 
-				new SettingConverter() {
-
-					@Override
-					public List<Property<Object>> convert(
-							final Setting<Object> setting) {
-						List<Property<Object>> properties = 
-								new ArrayList<Property<Object>>();
-						String sslKeyStoreType = (String) setting.getValue();
-						properties.add(cast(
-								PropertySpec.SSL_KEY_STORE_TYPE.newProperty(
-										sslKeyStoreType)));
-						return properties;
-					}
-					
-				});
-		SETTING_CONVERTER_MAP.put(
 				SettingSpec.CHAINING_SSL_PROTOCOL, 
 				new SettingConverter() {
 
@@ -567,6 +584,9 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 					}
 					
 				});
+	}
+	
+	private static void putChainingSslTrustStoreSettingConverters() {
 		SETTING_CONVERTER_MAP.put(
 				SettingSpec.CHAINING_SSL_TRUST_STORE_FILE, 
 				new SettingConverter() {

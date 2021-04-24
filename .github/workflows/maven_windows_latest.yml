@@ -14,15 +14,13 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        distribution: [ 'zulu', 'adopt' ]
         java: [ '9', '10', '11' ]
-    name: Java ${{ matrix.java }} (${{ matrix.distribution }})
+    name: Java ${{ matrix.java }}
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK
         uses: actions/setup-java@v1
         with:
-          distribution: ${{ matrix.distribution }}
           java-version: ${{ matrix.java }}
       - name: Cache Maven packages
         uses: actions/cache@v2

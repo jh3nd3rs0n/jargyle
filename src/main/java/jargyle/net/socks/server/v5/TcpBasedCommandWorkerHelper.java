@@ -5,15 +5,11 @@ import java.net.Socket;
 
 import jargyle.net.socks.server.TcpRelayServer;
 
-abstract class PassDataCommandWorker extends CommandWorker {
+final class TcpBasedCommandWorkerHelper {
 
 	private static final int HALF_SECOND = 500;
-	
-	public PassDataCommandWorker(final CommandWorkerContext context) {
-		super(context);
-	}
-	
-	protected void passData(
+
+	public static void passData(
 			final Socket clientFacingSocket,
 			final Socket serverFacingSocket, 
 			final int bufferSize, 
@@ -37,6 +33,8 @@ abstract class PassDataCommandWorker extends CommandWorker {
 				tcpRelayServer.stop();
 			}
 		}		
-	}
-
+	}	
+	
+	private TcpBasedCommandWorkerHelper() { }
+	
 }

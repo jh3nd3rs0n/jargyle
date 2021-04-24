@@ -20,7 +20,7 @@ import jargyle.net.socks.server.Settings;
 import jargyle.net.socks.transport.v5.Reply;
 import jargyle.net.socks.transport.v5.Socks5Reply;
 
-final class ConnectCommandWorker extends PassDataCommandWorker {
+final class ConnectCommandWorker extends CommandWorker {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(
 			ConnectCommandWorker.class);
@@ -197,7 +197,7 @@ final class ConnectCommandWorker extends PassDataCommandWorker {
 					socks5Rep.toString())));
 			this.commandWorkerContext.writeThenFlush(socks5Rep.toByteArray());
 			try {
-				this.passData(
+				TcpBasedCommandWorkerHelper.passData(
 						this.clientSocket,
 						serverFacingSocket, 
 						this.settings.getLastValue(

@@ -1474,16 +1474,16 @@ Partial command line example:
 
 Jargyle does perform host name resolution through SOCKS5 server chaining but it has the following limitations: 
 
-Host name resolution through SOCKS5 server chaining OCCURS ONLY WHEN:
+Host name resolution through SOCKS5 server chaining OCCURS ONLY...
 
--   Resolving a host name for a TCP socket to make an internal outbound TCP connection.
+-   ...under the CONNECT command when resolving a host name for a TCP socket to make an internal outbound TCP connection.
 
-Host name resolution through SOCKS5 server chaining DOES NOT OCCUR WHEN:
+Host name resolution through SOCKS5 server chaining DOES NOT OCCUR...
 
--   Resolving a host name for a TCP socket to receive an external inbound TCP connection.
--   Resolving a host name for an internal outbound datagram packet.
+-   ...under the BIND command when resolving a host name for a TCP socket to receive an external inbound TCP connection.
+-   ...under the UDP ASSOCIATE command when resolving a host name for an internal outbound datagram packet.
 
-In addition, settings are ignored for preparing a TCP socket to make an internal outbound TCP connection. Such settings include specified socket settings for the TCP socket and the specified timeout in milliseconds on waiting to connect.
+In addition, under the CONNECT command, preparation is omitted for a TCP socket to make an internal outbound TCP connection. Such preparation includes applying the specified socket settings for the TCP socket and setting the specified timeout in milliseconds on waiting for the TCP socket to connect.
 
 To enable host name resolution through SOCKS5 server chaining without the aforementioned limitations, you would need to set the setting `chaining.socks5.resolve.resolveHostNamesThroughSocksServer` to `true`.
 
@@ -1515,7 +1515,7 @@ This setting can be used under the following condition:
 
 -   The other SOCKS5 server supports [the SOCKS5 RESOLVE command](#5-3-the-socks5-resolve-command). (At the time of this writing, the SOCKS5 RESOLVE command is an additional SOCKS5 command made for Jargyle. Therefore the other SOCKS5 server would at the very least be another running instance of Jargyle.)
 
-In addition to using this setting, you can use the setting `socks5.onConnect.prepareServerFacingSocket` to be set to `true` in order for the settings to be recognized for preparing a TCP socket to make an internal outbound TCP connection.
+In addition to using this setting, you can use the setting `socks5.onConnect.prepareServerFacingSocket` to be set to `true` in order for preparation to be performed for a TCP socket to make an internal outbound TCP connection  under the CONNECT command.
 
 Partial command line example:
 

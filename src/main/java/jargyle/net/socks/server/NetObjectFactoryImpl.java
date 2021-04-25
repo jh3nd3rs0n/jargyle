@@ -36,7 +36,7 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 	
 	private static abstract class SettingConverter {
 		
-		abstract List<Property<Object>> convertToProperties(
+		public abstract List<Property<Object>> convertToProperties(
 				final Setting<Object> setting);
 		
 	}

@@ -34,9 +34,10 @@ import jargyle.util.Strings;
 
 final class NetObjectFactoryImpl extends NetObjectFactory {
 	
-	private static interface SettingConverter {
+	private static abstract class SettingConverter {
 		
-		List<Property<Object>> convert(final Setting<Object> setting);
+		abstract List<Property<Object>> convertToProperties(
+				final Setting<Object> setting);
 		
 	}
 	
@@ -76,7 +77,7 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 				new SettingConverter() {
 
 					@Override
-					public List<Property<Object>> convert(
+					public List<Property<Object>> convertToProperties(
 							final Setting<Object> setting) {
 						List<Property<Object>> properties = 
 								new ArrayList<Property<Object>>();
@@ -93,7 +94,7 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 				new SettingConverter() {
 
 					@Override
-					public List<Property<Object>> convert(
+					public List<Property<Object>> convertToProperties(
 							final Setting<Object> setting) {
 						List<Property<Object>> properties = 
 								new ArrayList<Property<Object>>();
@@ -111,7 +112,7 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 				new SettingConverter() {
 
 					@Override
-					public List<Property<Object>> convert(
+					public List<Property<Object>> convertToProperties(
 							final Setting<Object> setting) {
 						List<Property<Object>> properties = 
 								new ArrayList<Property<Object>>();
@@ -131,7 +132,7 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 				new SettingConverter() {
 
 					@Override
-					public List<Property<Object>> convert(
+					public List<Property<Object>> convertToProperties(
 							final Setting<Object> setting) {
 						List<Property<Object>> properties = 
 								new ArrayList<Property<Object>>();
@@ -148,7 +149,7 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 				new SettingConverter() {
 
 					@Override
-					public List<Property<Object>> convert(
+					public List<Property<Object>> convertToProperties(
 							final Setting<Object> setting) {
 						List<Property<Object>> properties = 
 								new ArrayList<Property<Object>>();
@@ -166,7 +167,7 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 				new SettingConverter() {
 
 					@Override
-					public List<Property<Object>> convert(
+					public List<Property<Object>> convertToProperties(
 							final Setting<Object> setting) {
 						List<Property<Object>> properties = 
 								new ArrayList<Property<Object>>();
@@ -184,7 +185,7 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 				new SettingConverter() {
 
 					@Override
-					public List<Property<Object>> convert(
+					public List<Property<Object>> convertToProperties(
 							final Setting<Object> setting) {
 						List<Property<Object>> properties = 
 								new ArrayList<Property<Object>>();
@@ -202,7 +203,7 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 				new SettingConverter() {
 
 					@Override
-					public List<Property<Object>> convert(
+					public List<Property<Object>> convertToProperties(
 							final Setting<Object> setting) {
 						List<Property<Object>> properties = 
 								new ArrayList<Property<Object>>();
@@ -222,7 +223,7 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 				new SettingConverter() {
 
 					@Override
-					public List<Property<Object>> convert(
+					public List<Property<Object>> convertToProperties(
 							final Setting<Object> setting) {
 						List<Property<Object>> properties = 
 								new ArrayList<Property<Object>>();
@@ -239,7 +240,7 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 				new SettingConverter() {
 
 					@Override
-					public List<Property<Object>> convert(
+					public List<Property<Object>> convertToProperties(
 							final Setting<Object> setting) {
 						List<Property<Object>> properties = 
 								new ArrayList<Property<Object>>();
@@ -257,7 +258,7 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 				new SettingConverter() {
 
 					@Override
-					public List<Property<Object>> convert(
+					public List<Property<Object>> convertToProperties(
 							final Setting<Object> setting) {
 						List<Property<Object>> properties = 
 								new ArrayList<Property<Object>>();
@@ -277,7 +278,7 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 				new SettingConverter() {
 
 					@Override
-					public List<Property<Object>> convert(
+					public List<Property<Object>> convertToProperties(
 							final Setting<Object> setting) {
 						List<Property<Object>> properties = 
 								new ArrayList<Property<Object>>();
@@ -293,7 +294,7 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 				new SettingConverter() {
 
 					@Override
-					public List<Property<Object>> convert(
+					public List<Property<Object>> convertToProperties(
 							final Setting<Object> setting) {
 						List<Property<Object>> properties = 
 								new ArrayList<Property<Object>>();
@@ -311,7 +312,7 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 				new SettingConverter() {
 
 					@Override
-					public List<Property<Object>> convert(
+					public List<Property<Object>> convertToProperties(
 							final Setting<Object> setting) {
 						List<Property<Object>> properties = 
 								new ArrayList<Property<Object>>();
@@ -332,7 +333,7 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 				new SettingConverter() {
 
 					@Override
-					public List<Property<Object>> convert(
+					public List<Property<Object>> convertToProperties(
 							final Setting<Object> setting) {
 						List<Property<Object>> properties = 
 								new ArrayList<Property<Object>>();
@@ -349,7 +350,7 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 				new SettingConverter() {
 
 					@Override
-					public List<Property<Object>> convert(
+					public List<Property<Object>> convertToProperties(
 							final Setting<Object> setting) {
 						List<Property<Object>> properties = 
 								new ArrayList<Property<Object>>();
@@ -366,7 +367,7 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 				new SettingConverter() {
 
 					@Override
-					public List<Property<Object>> convert(
+					public List<Property<Object>> convertToProperties(
 							final Setting<Object> setting) {
 						List<Property<Object>> properties = 
 								new ArrayList<Property<Object>>();
@@ -384,7 +385,7 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 				new SettingConverter() {
 
 					@Override
-					public List<Property<Object>> convert(
+					public List<Property<Object>> convertToProperties(
 							final Setting<Object> setting) {
 						List<Property<Object>> properties = 
 								new ArrayList<Property<Object>>();
@@ -404,7 +405,7 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 				new SettingConverter() {
 
 					@Override
-					public List<Property<Object>> convert(
+					public List<Property<Object>> convertToProperties(
 							final Setting<Object> setting) {
 						List<Property<Object>> properties = 
 								new ArrayList<Property<Object>>();
@@ -422,7 +423,7 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 				new SettingConverter() {
 
 					@Override
-					public List<Property<Object>> convert(
+					public List<Property<Object>> convertToProperties(
 							final Setting<Object> setting) {
 						List<Property<Object>> properties = 
 								new ArrayList<Property<Object>>();
@@ -440,7 +441,7 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 				new SettingConverter() {
 
 					@Override
-					public List<Property<Object>> convert(
+					public List<Property<Object>> convertToProperties(
 							final Setting<Object> setting) {
 						List<Property<Object>> properties = 
 								new ArrayList<Property<Object>>();
@@ -464,7 +465,7 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 				new SettingConverter() {
 
 					@Override
-					public List<Property<Object>> convert(
+					public List<Property<Object>> convertToProperties(
 							final Setting<Object> setting) {
 						List<Property<Object>> properties = 
 								new ArrayList<Property<Object>>();
@@ -481,7 +482,7 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 				new SettingConverter() {
 
 					@Override
-					public List<Property<Object>> convert(
+					public List<Property<Object>> convertToProperties(
 							final Setting<Object> setting) {
 						List<Property<Object>> properties = 
 								new ArrayList<Property<Object>>();
@@ -499,7 +500,7 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 				new SettingConverter() {
 
 					@Override
-					public List<Property<Object>> convert(
+					public List<Property<Object>> convertToProperties(
 							final Setting<Object> setting) {
 						List<Property<Object>> properties = 
 								new ArrayList<Property<Object>>();
@@ -519,7 +520,7 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 				new SettingConverter() {
 
 					@Override
-					public List<Property<Object>> convert(
+					public List<Property<Object>> convertToProperties(
 							final Setting<Object> setting) {
 						List<Property<Object>> properties = 
 								new ArrayList<Property<Object>>();
@@ -536,7 +537,7 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 				new SettingConverter() {
 
 					@Override
-					public List<Property<Object>> convert(
+					public List<Property<Object>> convertToProperties(
 							final Setting<Object> setting) {
 						List<Property<Object>> properties = 
 								new ArrayList<Property<Object>>();
@@ -554,7 +555,7 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 				new SettingConverter() {
 
 					@Override
-					public List<Property<Object>> convert(
+					public List<Property<Object>> convertToProperties(
 							final Setting<Object> setting) {
 						List<Property<Object>> properties = 
 								new ArrayList<Property<Object>>();
@@ -572,7 +573,7 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 				new SettingConverter() {
 
 					@Override
-					public List<Property<Object>> convert(
+					public List<Property<Object>> convertToProperties(
 							final Setting<Object> setting) {
 						List<Property<Object>> properties = 
 								new ArrayList<Property<Object>>();
@@ -592,7 +593,7 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 				new SettingConverter() {
 
 					@Override
-					public List<Property<Object>> convert(
+					public List<Property<Object>> convertToProperties(
 							final Setting<Object> setting) {
 						List<Property<Object>> properties = 
 								new ArrayList<Property<Object>>();
@@ -609,7 +610,7 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 				new SettingConverter() {
 
 					@Override
-					public List<Property<Object>> convert(
+					public List<Property<Object>> convertToProperties(
 							final Setting<Object> setting) {
 						List<Property<Object>> properties = 
 								new ArrayList<Property<Object>>();
@@ -627,7 +628,7 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 				new SettingConverter() {
 
 					@Override
-					public List<Property<Object>> convert(
+					public List<Property<Object>> convertToProperties(
 							final Setting<Object> setting) {
 						List<Property<Object>> properties = 
 								new ArrayList<Property<Object>>();
@@ -783,7 +784,7 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 			SettingConverter settingConverter = settingConverterMap.get(
 					settingSpec);
 			if (settingConverter != null) {
-				properties.addAll(settingConverter.convert(setting));
+				properties.addAll(settingConverter.convertToProperties(setting));
 			}
 		}
 		if (socksServerUri == null) {

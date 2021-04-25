@@ -17,7 +17,7 @@ import jargyle.net.Port;
 
 public class SocksServerIT {
 
-	private static final int ONE_SECOND = 1000;
+	private static final int THREE_SECONDS = 3000;
 	
 	private Path baseDir = null;
 	private Path combinedConfigurationFile = null;
@@ -73,7 +73,7 @@ public class SocksServerIT {
 		try {
 			socksServer.start();
 			try {
-				Thread.sleep(ONE_SECOND);
+				Thread.sleep(THREE_SECONDS);
 			} catch (InterruptedException e) {
 				Thread.currentThread().interrupt();
 			}		
@@ -82,7 +82,7 @@ public class SocksServerIT {
 							ResourceNameConstants.JARGYLE_NET_SOCKS_SERVER_CONFIGURATION_FILE), 
 					this.configurationFile.toFile());
 			try {
-				Thread.sleep(ONE_SECOND);
+				Thread.sleep(THREE_SECONDS);
 			} catch (InterruptedException e) {
 				Thread.currentThread().interrupt();
 			}
@@ -163,7 +163,6 @@ public class SocksServerIT {
 	@Test
 	public void testMainForSupplementingAConfigurationFile() throws IOException {
 		String[] args = new String[] {
-				"--setting=clientSocketSettings=SO_TIMEOUT=500",
 				"--config-file=".concat(ResourceHelper.getResourceAsFile(
 						ResourceNameConstants.JARGYLE_NET_SOCKS_SERVER_CONFIGURATION_FILE).getAbsolutePath()),
 				"--setting=socketSettings=SO_TIMEOUT=0",

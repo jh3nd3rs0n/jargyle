@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 
 import jargyle.logging.LoggerHelper;
 import jargyle.net.NetObjectFactory;
-import jargyle.net.SocketSettings;
 import jargyle.net.ssl.DtlsDatagramSocketFactory;
 import jargyle.net.ssl.SslSocketFactory;
 import jargyle.util.Criteria;
@@ -79,22 +78,6 @@ final class Listener implements Runnable {
 		}
 	}
 	
-	private boolean configureClientSocket(final Socket clientSocket) {
-		Settings settings = this.configuration.getSettings();
-		SocketSettings socketSettings =	settings.getLastValue(
-				SettingSpec.CLIENT_SOCKET_SETTINGS);
-		try {
-			socketSettings.applyTo(clientSocket);
-		} catch (SocketException e) {
-			LOGGER.warn(
-					LoggerHelper.objectMessage(
-							this, "Error in setting the client socket"), 
-					e);
-			return false;
-		}
-		return true;
-	}
-	
 	private DtlsDatagramSocketFactory getClientDtlsDatagramSocketFactory() {
 		if (!this.configuration.getSettings().getLastValue(
 				SettingSpec.DTLS_ENABLED).booleanValue()) {
@@ -137,10 +120,6 @@ final class Listener implements Runnable {
 			}
 			try {
 				if (!this.canAllowClientSocket(clientSocket)) {
-					this.closeClientSocket(clientSocket);
-					continue;
-				}
-				if (!this.configureClientSocket(clientSocket)) {
 					this.closeClientSocket(clientSocket);
 					continue;
 				}

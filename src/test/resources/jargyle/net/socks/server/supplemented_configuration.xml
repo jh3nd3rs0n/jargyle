@@ -2,17 +2,6 @@
 <configuration>
     <settings>
         <setting>
-            <name>clientSocketSettings</name>
-            <socketSettingsValue>
-                <socketSettings>
-                    <socketSetting>
-                        <name>SO_TIMEOUT</name>
-                        <value>500</value>
-                    </socketSetting>
-                </socketSettings>
-            </socketSettingsValue>
-        </setting>
-        <setting>
             <name>port</name>
             <value>1234</value>
         </setting>

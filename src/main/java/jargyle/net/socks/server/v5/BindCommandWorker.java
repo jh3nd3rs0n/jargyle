@@ -106,37 +106,6 @@ final class BindCommandWorker extends CommandWorker {
 		return true;
 	}
 	
-	private boolean configureExternalInboundSocket(
-			final Socket externalInboundSocket) {
-		SocketSettings socketSettings = this.settings.getLastValue(
-				SettingSpec.SOCKS5_ON_BIND_EXTERNAL_INBOUND_SOCKET_SETTINGS);
-		try {
-			socketSettings.applyTo(externalInboundSocket);
-		} catch (SocketException e) {
-			LOGGER.warn( 
-					LoggerHelper.objectMessage(
-							this, 
-							"Error in setting the external inbound socket"), 
-					e);
-			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
-					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
-					"Sending %s",
-					socks5Rep.toString())));
-			try {
-				this.commandWorkerContext.writeThenFlush(
-						socks5Rep.toByteArray());
-			} catch (IOException e1) {
-				LOGGER.warn( 
-						LoggerHelper.objectMessage(
-								this, "Error in writing SOCKS5 reply"), 
-						e1);
-			}
-			return false;
-		}
-		return true;
-	}
-	
 	private boolean configureListenSocket(final ServerSocket listenSocket) {
 		SocketSettings socketSettings = this.settings.getLastValue(
 				SettingSpec.SOCKS5_ON_BIND_LISTEN_SOCKET_SETTINGS);
@@ -208,10 +177,6 @@ final class BindCommandWorker extends CommandWorker {
 			this.commandWorkerContext.writeThenFlush(socks5Rep.toByteArray());
 			try {
 				externalInboundSocket = listenSocket.accept();
-				if (!this.configureExternalInboundSocket(
-						externalInboundSocket)) {
-					return;
-				}
 			} catch (IOException e) {
 				LOGGER.warn( 
 						LoggerHelper.objectMessage(

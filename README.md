@@ -279,9 +279,6 @@ The following is a list of available settings for the SOCKS server (displayed wh
       chaining.ssl.trustStoreType=TYPE
           The type of trust store file for the SSL/TLS connections to the other SOCKS server (default is PKCS12)
     
-      clientSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
-          The space separated list of socket settings for the client socket
-    
       dtls.enabled=true|false
           The boolean value to indicate if DTLS connections to the SOCKS server are enabled (default is false)
     
@@ -344,9 +341,6 @@ The following is a list of available settings for the SOCKS server (displayed wh
     
       socks5.onBind.blockedExternalInboundAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
           The space separated list of blocked external inbound address criteria
-    
-      socks5.onBind.externalInboundSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
-          The space separated list of socket settings for the external inbound socket
     
       socks5.onBind.listenSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
           The space separated list of socket settings for the listen socket
@@ -597,12 +591,11 @@ The following command creates a configuration file with the port number, the num
 
 You can supplement an existing configuration file with command line options.
 
-The following command adds one command line options before the existing configuration file and another command line option after the existing configuration file:
+The following command adds one command line option after the existing configuration file:
 
 ```bash
     
     ./bin/jargyle \
-        --setting=clientSocketSettings=SO_TIMEOUT=500 \
         --config-file=configuration.xml \
         --setting=socketSettings=SO_TIMEOUT=0 \
         --new-config-file=supplemented_configuration.xml
@@ -616,17 +609,6 @@ The following command adds one command line options before the existing configur
     <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <configuration>
         <settings>
-            <setting>
-                <name>clientSocketSettings</name>
-                <socketSettingsValue>
-                    <socketSettings>
-                        <socketSetting>
-                            <name>SO_TIMEOUT</name>
-                            <value>500</value>
-                        </socketSetting>
-                    </socketSettings>
-                </socketSettingsValue>
-            </setting>
             <setting>
                 <name>port</name>
                 <value>1234</value>
@@ -688,17 +670,6 @@ The following command combines the two earlier configuration files into one:
             <setting>
                 <name>socks5.authMethods</name>
                 <value>NO_AUTHENTICATION_REQUIRED</value>
-            </setting>
-            <setting>
-                <name>clientSocketSettings</name>
-                <socketSettingsValue>
-                    <socketSettings>
-                        <socketSetting>
-                            <name>SO_TIMEOUT</name>
-                            <value>500</value>
-                        </socketSetting>
-                    </socketSettings>
-                </socketSettingsValue>
             </setting>
             <setting>
                 <name>port</name>

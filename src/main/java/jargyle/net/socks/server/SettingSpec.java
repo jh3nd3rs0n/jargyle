@@ -384,15 +384,6 @@ public abstract class SettingSpec<V> {
 			PropertySpec.SSL_TRUST_STORE_TYPE.getDefaultProperty().getValue());
 	
 	@HelpText(
-			doc = "The space separated list of socket settings for the client "
-					+ "socket", 
-			usage = "clientSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
-	)
-	public static final SettingSpec<SocketSettings> CLIENT_SOCKET_SETTINGS = new SocketSettingsSettingSpec(
-			"clientSocketSettings",
-			SocketSettings.newInstance());
-	
-	@HelpText(
 			doc = "The boolean value to indicate if DTLS connections to "
 					+ "the SOCKS server are enabled (default is false)",
 			usage = "dtls.enabled=true|false"
@@ -597,15 +588,6 @@ public abstract class SettingSpec<V> {
 	public static final SettingSpec<Criteria> SOCKS5_ON_BIND_BLOCKED_EXTERNAL_INBOUND_ADDRESS_CRITERIA = new CriteriaSettingSpec(
 			"socks5.onBind.blockedExternalInboundAddressCriteria",
 			Criteria.EMPTY_INSTANCE);
-	
-	@HelpText(
-			doc = "The space separated list of socket settings for the "
-					+ "external inbound socket", 
-			usage = "socks5.onBind.externalInboundSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
-	)
-	public static final SettingSpec<SocketSettings> SOCKS5_ON_BIND_EXTERNAL_INBOUND_SOCKET_SETTINGS = new SocketSettingsSettingSpec(
-			"socks5.onBind.externalInboundSocketSettings",
-			SocketSettings.newInstance());
 	
 	@HelpText(
 			doc = "The space separated list of socket settings for the listen "

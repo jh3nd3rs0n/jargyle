@@ -85,6 +85,7 @@ public class ChainingIT {
 										"Abu:safeDriversSave40%25")))));
 	}
 	
+	/*
 	private static SocksClient newChainedSocks5ClientToConfigurations() {
 		SocksClient client1 = Scheme.SOCKS5.newSocksServerUri(
 				NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
@@ -174,6 +175,7 @@ public class ChainingIT {
 								new StringSourceUsernamePasswordAuthenticator(
 										"Abu:safeDriversSave40%25")))));
 	}
+	*/
 	
 	private static SocksClient newSocks5ClientToChainedConfigurations() {
 		return Scheme.SOCKS5.newSocksServerUri(
@@ -198,6 +200,7 @@ public class ChainingIT {
 	
 	// Socks5DatagramSocket
 	
+	/*
 	@Test
 	public void testThroughSocks5DatagramSocketUsingChainedSocks5ClientToConfigurations01() throws IOException {
 		String string = TestStringConstants.STRING_01;
@@ -257,6 +260,7 @@ public class ChainingIT {
 				newConfigurationsEachUsingUserpassAuth());
 		assertEquals(string, returningString);		
 	}
+	*/
 	
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurations01() throws IOException {
@@ -320,6 +324,7 @@ public class ChainingIT {
 
 	// Socks5ServerSocket
 	
+	/*
 	@Test
 	public void testThroughSocks5ServerSocketUsingChainedSocks5ClientToConfigurations01() throws IOException {
 		String string = TestStringConstants.STRING_01;
@@ -379,6 +384,7 @@ public class ChainingIT {
 				newConfigurationsEachUsingUserpassAuth());
 		assertEquals(string, returningString);		
 	}
+	*/
 	
 	@Test
 	public void testThroughSocks5ServerSocketUsingSocks5ClientToChainedConfigurations01() throws IOException {
@@ -442,6 +448,7 @@ public class ChainingIT {
 	
 	// Socks5Socket
 	
+	/*
 	@Test
 	public void testThroughSocks5SocketUsingChainedSocks5ClientToConfigurations01() throws IOException {
 		String string = TestStringConstants.STRING_01;
@@ -501,6 +508,7 @@ public class ChainingIT {
 				newConfigurationsEachUsingUserpassAuth());
 		assertEquals(string, returningString);		
 	}
+	*/
 	
 	@Test
 	public void testThroughSocks5SocketUsingSocks5ClientToChainedConfigurations01() throws IOException {

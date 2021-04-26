@@ -39,9 +39,9 @@ public class ChainingIT {
 						SettingSpec.CHAINING_SOCKS_SERVER_URI.newSetting(
 								Scheme.SOCKS5.newSocksServerUri(
 										NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
-										Integer.valueOf(54321))))),
+										Integer.valueOf(34567))))),
 				ImmutableConfiguration.newInstance(Settings.newInstance(
-						SettingSpec.PORT.newSetting(Port.newInstance(54321)))));
+						SettingSpec.PORT.newSetting(Port.newInstance(34567)))));
 	}
 	
 	private static List<Configuration> newChainedConfigurationsEachUsingUserpassAuth() {
@@ -71,13 +71,13 @@ public class ChainingIT {
 						SettingSpec.CHAINING_SOCKS_SERVER_URI.newSetting(
 								Scheme.SOCKS5.newSocksServerUri(
 										NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
-										Integer.valueOf(54321))),
+										Integer.valueOf(34567))),
 						SettingSpec.CHAINING_SOCKS5_AUTH_METHODS.newSetting(
 								AuthMethods.newInstance(AuthMethod.USERNAME_PASSWORD)),
 						SettingSpec.CHAINING_SOCKS5_USERPASSAUTH_USERNAME_PASSWORD.newSetting(
 								UsernamePassword.newInstance("Abu:safeDriversSave40%25")))),
 				ImmutableConfiguration.newInstance(Settings.newInstance(
-						SettingSpec.PORT.newSetting(Port.newInstance(54321)),
+						SettingSpec.PORT.newSetting(Port.newInstance(34567)),
 						SettingSpec.SOCKS5_AUTH_METHODS.newSetting(
 								AuthMethods.newInstance(AuthMethod.USERNAME_PASSWORD)),
 						SettingSpec.SOCKS5_USERPASSAUTH_USERNAME_PASSWORD_AUTHENTICATOR.newSetting(
@@ -85,7 +85,6 @@ public class ChainingIT {
 										"Abu:safeDriversSave40%25")))));
 	}
 	
-	/*
 	private static SocksClient newChainedSocks5ClientToConfigurations() {
 		SocksClient client1 = Scheme.SOCKS5.newSocksServerUri(
 				NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
@@ -97,7 +96,7 @@ public class ChainingIT {
 				.newSocksClient(Properties.newInstance(), client1);
 		SocksClient client3 = Scheme.SOCKS5.newSocksServerUri(
 				NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
-				Integer.valueOf(54321))
+				Integer.valueOf(34567))
 				.newSocksClient(Properties.newInstance(), client2);
 		return client3;
 	}
@@ -128,7 +127,7 @@ public class ChainingIT {
 						client1);
 		SocksClient client3 = Scheme.SOCKS5.newSocksServerUri(
 				NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
-				Integer.valueOf(54321))
+				Integer.valueOf(34567))
 				.newSocksClient(Properties.newInstance(
 						PropertySpec.SOCKS5_AUTH_METHODS.newProperty(
 								AuthMethods.newInstance(AuthMethod.USERNAME_PASSWORD)),
@@ -148,7 +147,7 @@ public class ChainingIT {
 				ImmutableConfiguration.newInstance(Settings.newInstance(
 						SettingSpec.PORT.newSetting(Port.newInstance(65432)))),
 				ImmutableConfiguration.newInstance(Settings.newInstance(
-						SettingSpec.PORT.newSetting(Port.newInstance(54321)))));
+						SettingSpec.PORT.newSetting(Port.newInstance(34567)))));
 	}
 	
 	private static List<Configuration> newConfigurationsEachUsingUserpassAuth() {
@@ -168,14 +167,13 @@ public class ChainingIT {
 								new StringSourceUsernamePasswordAuthenticator(
 										"Jasmine:mission%3Aimpossible")))),
 				ImmutableConfiguration.newInstance(Settings.newInstance(
-						SettingSpec.PORT.newSetting(Port.newInstance(54321)),
+						SettingSpec.PORT.newSetting(Port.newInstance(34567)),
 						SettingSpec.SOCKS5_AUTH_METHODS.newSetting(
 								AuthMethods.newInstance(AuthMethod.USERNAME_PASSWORD)),
 						SettingSpec.SOCKS5_USERPASSAUTH_USERNAME_PASSWORD_AUTHENTICATOR.newSetting(
 								new StringSourceUsernamePasswordAuthenticator(
 										"Abu:safeDriversSave40%25")))));
 	}
-	*/
 	
 	private static SocksClient newSocks5ClientToChainedConfigurations() {
 		return Scheme.SOCKS5.newSocksServerUri(
@@ -200,7 +198,6 @@ public class ChainingIT {
 	
 	// Socks5DatagramSocket
 	
-	/*
 	@Test
 	public void testThroughSocks5DatagramSocketUsingChainedSocks5ClientToConfigurations01() throws IOException {
 		String string = TestStringConstants.STRING_01;
@@ -260,7 +257,6 @@ public class ChainingIT {
 				newConfigurationsEachUsingUserpassAuth());
 		assertEquals(string, returningString);		
 	}
-	*/
 	
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurations01() throws IOException {
@@ -324,7 +320,6 @@ public class ChainingIT {
 
 	// Socks5ServerSocket
 	
-	/*
 	@Test
 	public void testThroughSocks5ServerSocketUsingChainedSocks5ClientToConfigurations01() throws IOException {
 		String string = TestStringConstants.STRING_01;
@@ -384,7 +379,6 @@ public class ChainingIT {
 				newConfigurationsEachUsingUserpassAuth());
 		assertEquals(string, returningString);		
 	}
-	*/
 	
 	@Test
 	public void testThroughSocks5ServerSocketUsingSocks5ClientToChainedConfigurations01() throws IOException {
@@ -448,7 +442,6 @@ public class ChainingIT {
 	
 	// Socks5Socket
 	
-	/*
 	@Test
 	public void testThroughSocks5SocketUsingChainedSocks5ClientToConfigurations01() throws IOException {
 		String string = TestStringConstants.STRING_01;
@@ -508,7 +501,6 @@ public class ChainingIT {
 				newConfigurationsEachUsingUserpassAuth());
 		assertEquals(string, returningString);		
 	}
-	*/
 	
 	@Test
 	public void testThroughSocks5SocketUsingSocks5ClientToChainedConfigurations01() throws IOException {

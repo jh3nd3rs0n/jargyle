@@ -1447,11 +1447,11 @@ By default, host name resolution through SOCKS5 server chaining is somewhat perf
 
 Host name resolution through SOCKS5 server chaining OCCURS ONLY...
 
--   ...under the CONNECT command when the server-facing socket makes an unprepared internal outbound TCP connection. Under the CONNECT command, preparation is omitted for the server-facing socket to make an internal outbound TCP connection. Such preparation includes applying the specified socket settings for the server-facing socket, resolving the target host name before connecting, and setting the specified timeout in milliseconds on waiting for the server-facing socket to connect.
+-   ...under the CONNECT command when the server-facing socket makes an extemporaneous internal outbound TCP connection. Under the CONNECT command, preparation is omitted for the server-facing socket to make an internal outbound TCP connection. Such preparation includes applying the specified socket settings for the server-facing socket, resolving the target host name before connecting, and setting the specified timeout in milliseconds on waiting for the server-facing socket to connect.
 
 Host name resolution through SOCKS5 server chaining DOES NOT OCCUR...
 
--   ...under the BIND command when resolving the binding host name for the listen socket to receive an external inbound TCP connection.
+-   ...under the BIND command when resolving the binding host name for the listen socket.
 -   ...under the UDP ASSOCIATE command when resolving a host name for an internal outbound datagram packet.
 
 If you prefer to have host name resolution through SOCKS5 server chaining without the aforementioned limitations, you would need to set the setting `chaining.socks5.resolve.useResolveCommand` to `true`. This setting enables the use of [the SOCKS5 RESOLVE command](#5-3-the-socks5-resolve-command) on the other SOCKS5 server to resolve host names. This setting can only be used if the other SOCKS5 server supports the SOCKS5 RESOLVE command.

@@ -36,25 +36,29 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 	
 	private static abstract class SettingConverter {
 		
-		public abstract List<Property<Object>> convertToProperties(
-				final Setting<Object> setting);
+		public abstract Object convert(final Setting<Object> setting);
 		
 	}
 	
 	private static final Map<SettingSpec<? extends Object>, SettingConverter> SETTING_CONVERTER_MAP =
 			new HashMap<SettingSpec<? extends Object>, SettingConverter>();
 	
-	private static Property<Object> cast(
-			final Property<? extends Object> property) {
-		@SuppressWarnings("unchecked")
-		Property<Object> prop = (Property<Object>) property;
-		return prop;
-	}
-	
 	private static void fillSettingConverterMapIfEmpty() {
 		if (!SETTING_CONVERTER_MAP.isEmpty()) {
 			return;
 		}
+		SETTING_CONVERTER_MAP.put(
+				SettingSpec.CHAINING_SOCKS_SERVER_URI, 
+				new SettingConverter() {
+
+					@Override
+					public Object convert(final Setting<Object> setting) {
+						SocksServerUri socksServerUri = 
+								(SocksServerUri) setting.getValue();
+						return socksServerUri;
+					}
+					
+				});
 		putChainingDtlsSettingConverters();
 		putChainingDtlsKeyStoreSettingConverters();
 		putChainingDtlsTrustStoreSettingConverters();
@@ -77,15 +81,10 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 				new SettingConverter() {
 
 					@Override
-					public List<Property<Object>> convertToProperties(
-							final Setting<Object> setting) {
-						List<Property<Object>> properties = 
-								new ArrayList<Property<Object>>();
+					public Object convert(final Setting<Object> setting) {
 						File dtlsKeyStoreFile = (File) setting.getValue();
-						properties.add(cast(
-								PropertySpec.DTLS_KEY_STORE_FILE.newProperty(
-										dtlsKeyStoreFile)));
-						return properties;
+						return PropertySpec.DTLS_KEY_STORE_FILE.newProperty(
+								dtlsKeyStoreFile);
 					}
 					
 				});
@@ -94,16 +93,11 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 				new SettingConverter() {
 
 					@Override
-					public List<Property<Object>> convertToProperties(
-							final Setting<Object> setting) {
-						List<Property<Object>> properties = 
-								new ArrayList<Property<Object>>();
+					public Object convert(final Setting<Object> setting) {
 						EncryptedPassword dtlsKeyStorePassword = 
 								(EncryptedPassword) setting.getValue();
-						properties.add(cast(
-								PropertySpec.DTLS_KEY_STORE_PASSWORD.newProperty(
-										dtlsKeyStorePassword)));
-						return properties;
+						return PropertySpec.DTLS_KEY_STORE_PASSWORD.newProperty(
+								dtlsKeyStorePassword);
 					}
 					
 				});
@@ -112,15 +106,10 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 				new SettingConverter() {
 
 					@Override
-					public List<Property<Object>> convertToProperties(
-							final Setting<Object> setting) {
-						List<Property<Object>> properties = 
-								new ArrayList<Property<Object>>();
+					public Object convert(final Setting<Object> setting) {
 						String dtlsKeyStoreType = (String) setting.getValue();
-						properties.add(cast(
-								PropertySpec.DTLS_KEY_STORE_TYPE.newProperty(
-										dtlsKeyStoreType)));
-						return properties;
+						return PropertySpec.DTLS_KEY_STORE_TYPE.newProperty(
+								dtlsKeyStoreType);
 					}
 					
 				});
@@ -132,15 +121,10 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 				new SettingConverter() {
 
 					@Override
-					public List<Property<Object>> convertToProperties(
-							final Setting<Object> setting) {
-						List<Property<Object>> properties = 
-								new ArrayList<Property<Object>>();
+					public Object convert(final Setting<Object> setting) {
 						Boolean dtlsEnabled = (Boolean) setting.getValue();
-						properties.add(cast(
-								PropertySpec.DTLS_ENABLED.newProperty(
-										dtlsEnabled)));
-						return properties;
+						return PropertySpec.DTLS_ENABLED.newProperty(
+								dtlsEnabled);
 					}
 					
 				});
@@ -149,16 +133,11 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 				new SettingConverter() {
 
 					@Override
-					public List<Property<Object>> convertToProperties(
-							final Setting<Object> setting) {
-						List<Property<Object>> properties = 
-								new ArrayList<Property<Object>>();
+					public Object convert(final Setting<Object> setting) {
 						Strings dtlsEnabledCipherSuites = 
 								(Strings) setting.getValue();
-						properties.add(cast(
-								PropertySpec.DTLS_ENABLED_CIPHER_SUITES.newProperty(
-										dtlsEnabledCipherSuites)));
-						return properties;
+						return PropertySpec.DTLS_ENABLED_CIPHER_SUITES.newProperty(
+								dtlsEnabledCipherSuites);
 					}
 					
 				});
@@ -167,16 +146,11 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 				new SettingConverter() {
 
 					@Override
-					public List<Property<Object>> convertToProperties(
-							final Setting<Object> setting) {
-						List<Property<Object>> properties = 
-								new ArrayList<Property<Object>>();
+					public Object convert(final Setting<Object> setting) {
 						Strings dtlsEnabledProtocols = 
 								(Strings) setting.getValue();
-						properties.add(cast(
-								PropertySpec.DTLS_ENABLED_PROTOCOLS.newProperty(
-										dtlsEnabledProtocols)));
-						return properties;
+						return PropertySpec.DTLS_ENABLED_PROTOCOLS.newProperty(
+								dtlsEnabledProtocols);
 					}
 					
 				});
@@ -185,16 +159,11 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 				new SettingConverter() {
 
 					@Override
-					public List<Property<Object>> convertToProperties(
-							final Setting<Object> setting) {
-						List<Property<Object>> properties = 
-								new ArrayList<Property<Object>>();
+					public Object convert(final Setting<Object> setting) {
 						PositiveInteger dtlsMaxPacketSize = 
 								(PositiveInteger) setting.getValue();
-						properties.add(cast(
-								PropertySpec.DTLS_MAX_PACKET_SIZE.newProperty(
-										dtlsMaxPacketSize)));
-						return properties;
+						return PropertySpec.DTLS_MAX_PACKET_SIZE.newProperty(
+								dtlsMaxPacketSize);
 					}
 					
 				});
@@ -203,15 +172,10 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 				new SettingConverter() {
 
 					@Override
-					public List<Property<Object>> convertToProperties(
-							final Setting<Object> setting) {
-						List<Property<Object>> properties = 
-								new ArrayList<Property<Object>>();
+					public Object convert(final Setting<Object> setting) {
 						String dtlsProtocol = (String) setting.getValue();
-						properties.add(cast(
-								PropertySpec.DTLS_PROTOCOL.newProperty(
-										dtlsProtocol)));
-						return properties;
+						return PropertySpec.DTLS_PROTOCOL.newProperty(
+								dtlsProtocol);
 					}
 					
 				});
@@ -223,15 +187,10 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 				new SettingConverter() {
 
 					@Override
-					public List<Property<Object>> convertToProperties(
-							final Setting<Object> setting) {
-						List<Property<Object>> properties = 
-								new ArrayList<Property<Object>>();
+					public Object convert(final Setting<Object> setting) {
 						File dtlsTrustStoreFile = (File) setting.getValue();
-						properties.add(cast(
-								PropertySpec.DTLS_TRUST_STORE_FILE.newProperty(
-										dtlsTrustStoreFile)));
-						return properties;
+						return PropertySpec.DTLS_TRUST_STORE_FILE.newProperty(
+								dtlsTrustStoreFile);
 					}
 					
 				});
@@ -240,16 +199,11 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 				new SettingConverter() {
 
 					@Override
-					public List<Property<Object>> convertToProperties(
-							final Setting<Object> setting) {
-						List<Property<Object>> properties = 
-								new ArrayList<Property<Object>>();
+					public Object convert(final Setting<Object> setting) {
 						EncryptedPassword dtlsTrustStorePassword = 
 								(EncryptedPassword) setting.getValue();
-						properties.add(cast(
-								PropertySpec.DTLS_TRUST_STORE_PASSWORD.newProperty(
-										dtlsTrustStorePassword)));
-						return properties;
+						return PropertySpec.DTLS_TRUST_STORE_PASSWORD.newProperty(
+								dtlsTrustStorePassword);
 					}
 					
 				});
@@ -258,15 +212,10 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 				new SettingConverter() {
 
 					@Override
-					public List<Property<Object>> convertToProperties(
-							final Setting<Object> setting) {
-						List<Property<Object>> properties = 
-								new ArrayList<Property<Object>>();
+					public Object convert(final Setting<Object> setting) {
 						String dtlsTrustStoreType = (String) setting.getValue();
-						properties.add(cast(
-								PropertySpec.DTLS_TRUST_STORE_TYPE.newProperty(
-										dtlsTrustStoreType)));
-						return properties;
+						return PropertySpec.DTLS_TRUST_STORE_TYPE.newProperty(
+								dtlsTrustStoreType);
 					}
 					
 				});		
@@ -278,14 +227,9 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 				new SettingConverter() {
 
 					@Override
-					public List<Property<Object>> convertToProperties(
-							final Setting<Object> setting) {
-						List<Property<Object>> properties = 
-								new ArrayList<Property<Object>>();
+					public Object convert(final Setting<Object> setting) {
 						Host bindHost = (Host) setting.getValue();
-						properties.add(cast(PropertySpec.BIND_HOST.newProperty(
-								bindHost)));
-						return properties;
+						return PropertySpec.BIND_HOST.newProperty(bindHost);
 					}
 					
 				});
@@ -294,16 +238,11 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 				new SettingConverter() {
 
 					@Override
-					public List<Property<Object>> convertToProperties(
-							final Setting<Object> setting) {
-						List<Property<Object>> properties = 
-								new ArrayList<Property<Object>>();
+					public Object convert(final Setting<Object> setting) {
 						PositiveInteger connectTimeout = 
 								(PositiveInteger) setting.getValue();
-						properties.add(cast(
-								PropertySpec.CONNECT_TIMEOUT.newProperty(
-										connectTimeout)));
-						return properties;
+						return PropertySpec.CONNECT_TIMEOUT.newProperty(
+								connectTimeout);
 					} 
 					
 				});
@@ -312,16 +251,11 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 				new SettingConverter() {
 
 					@Override
-					public List<Property<Object>> convertToProperties(
-							final Setting<Object> setting) {
-						List<Property<Object>> properties = 
-								new ArrayList<Property<Object>>();
+					public Object convert(final Setting<Object> setting) {
 						SocketSettings socketSettings = 
 								(SocketSettings) setting.getValue();
-						properties.add(cast(
-								PropertySpec.SOCKET_SETTINGS.newProperty(
-										socketSettings)));
-						return properties;
+						return PropertySpec.SOCKET_SETTINGS.newProperty(
+								socketSettings);
 					}
 					
 				});
@@ -333,15 +267,10 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 				new SettingConverter() {
 
 					@Override
-					public List<Property<Object>> convertToProperties(
-							final Setting<Object> setting) {
-						List<Property<Object>> properties = 
-								new ArrayList<Property<Object>>();
+					public Object convert(final Setting<Object> setting) {
 						Oid mechanismOid = (Oid) setting.getValue();
-						properties.add(cast(
-								PropertySpec.SOCKS5_GSSAPIAUTH_MECHANISM_OID.newProperty(
-										mechanismOid)));
-						return properties;
+						return PropertySpec.SOCKS5_GSSAPIAUTH_MECHANISM_OID.newProperty(
+								mechanismOid);
 					}
 					
 				});
@@ -350,15 +279,10 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 				new SettingConverter() {
 
 					@Override
-					public List<Property<Object>> convertToProperties(
-							final Setting<Object> setting) {
-						List<Property<Object>> properties = 
-								new ArrayList<Property<Object>>();
+					public Object convert(final Setting<Object> setting) {
 						Boolean necReferenceImpl = (Boolean) setting.getValue();
-						properties.add(cast(
-								PropertySpec.SOCKS5_GSSAPIAUTH_NEC_REFERENCE_IMPL.newProperty(
-										necReferenceImpl)));
-						return properties;
+						return PropertySpec.SOCKS5_GSSAPIAUTH_NEC_REFERENCE_IMPL.newProperty(
+								necReferenceImpl);
 					}
 					
 				});
@@ -367,16 +291,11 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 				new SettingConverter() {
 
 					@Override
-					public List<Property<Object>> convertToProperties(
-							final Setting<Object> setting) {
-						List<Property<Object>> properties = 
-								new ArrayList<Property<Object>>();
+					public Object convert(final Setting<Object> setting) {
 						ProtectionLevels protectionLevels =	
 								(ProtectionLevels) setting.getValue();
-						properties.add(cast(
-								PropertySpec.SOCKS5_GSSAPIAUTH_PROTECTION_LEVELS.newProperty(
-										protectionLevels)));
-						return properties;
+						return PropertySpec.SOCKS5_GSSAPIAUTH_PROTECTION_LEVELS.newProperty(
+								protectionLevels);
 					}
 					
 				});
@@ -385,15 +304,10 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 				new SettingConverter() {
 
 					@Override
-					public List<Property<Object>> convertToProperties(
-							final Setting<Object> setting) {
-						List<Property<Object>> properties = 
-								new ArrayList<Property<Object>>();
+					public Object convert(final Setting<Object> setting) {
 						String serviceName = (String) setting.getValue();
-						properties.add(cast(
-								PropertySpec.SOCKS5_GSSAPIAUTH_SERVICE_NAME.newProperty(
-										serviceName)));
-						return properties;
+						return PropertySpec.SOCKS5_GSSAPIAUTH_SERVICE_NAME.newProperty(
+								serviceName);
 					}
 					
 				});
@@ -405,16 +319,11 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 				new SettingConverter() {
 
 					@Override
-					public List<Property<Object>> convertToProperties(
-							final Setting<Object> setting) {
-						List<Property<Object>> properties = 
-								new ArrayList<Property<Object>>();
-						AuthMethods authMethods = 
+					public Object convert(final Setting<Object> setting) {
+						AuthMethods authMethods =
 								(AuthMethods) setting.getValue();
-						properties.add(cast(
-								PropertySpec.SOCKS5_AUTH_METHODS.newProperty(
-										authMethods)));
-						return properties;
+						return PropertySpec.SOCKS5_AUTH_METHODS.newProperty(
+								authMethods);
 					}
 					
 				});
@@ -423,16 +332,11 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 				new SettingConverter() {
 
 					@Override
-					public List<Property<Object>> convertToProperties(
-							final Setting<Object> setting) {
-						List<Property<Object>> properties = 
-								new ArrayList<Property<Object>>();
-						Boolean useResolveCommand = 
+					public Object convert(final Setting<Object> setting) {
+						Boolean useResolveCommand =
 								(Boolean) setting.getValue();
-						properties.add(cast(
-								PropertySpec.SOCKS5_RESOLVE_USE_RESOLVE_COMMAND.newProperty(
-										useResolveCommand)));
-						return properties;
+						return PropertySpec.SOCKS5_RESOLVE_USE_RESOLVE_COMMAND.newProperty(
+								useResolveCommand);
 					}
 					
 				});
@@ -441,18 +345,23 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 				new SettingConverter() {
 
 					@Override
-					public List<Property<Object>> convertToProperties(
-							final Setting<Object> setting) {
+					public Object convert(final Setting<Object> setting) {
 						List<Property<Object>> properties = 
 								new ArrayList<Property<Object>>();
 						UsernamePassword usernamePassword = 
 								(UsernamePassword) setting.getValue();
-						properties.add(cast(
+						Property<? extends Object> username = 
 								PropertySpec.SOCKS5_USERPASSAUTH_USERNAME.newProperty(
-										usernamePassword.getUsername())));
-						properties.add(cast(
+										usernamePassword.getUsername());
+						Property<? extends Object> password =
 								PropertySpec.SOCKS5_USERPASSAUTH_PASSWORD.newProperty(
-										usernamePassword.getEncryptedPassword())));
+										usernamePassword.getEncryptedPassword());
+						@SuppressWarnings("unchecked")
+						Property<Object> usrnm = (Property<Object>) username;
+						@SuppressWarnings("unchecked")
+						Property<Object> psswrd = (Property<Object>) password;
+						properties.add(usrnm);
+						properties.add(psswrd);
 						return properties;
 					}
 					
@@ -465,15 +374,10 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 				new SettingConverter() {
 
 					@Override
-					public List<Property<Object>> convertToProperties(
-							final Setting<Object> setting) {
-						List<Property<Object>> properties = 
-								new ArrayList<Property<Object>>();
+					public Object convert(final Setting<Object> setting) {
 						File sslKeyStoreFile = (File) setting.getValue();
-						properties.add(cast(
-								PropertySpec.SSL_KEY_STORE_FILE.newProperty(
-										sslKeyStoreFile)));
-						return properties;
+						return PropertySpec.SSL_KEY_STORE_FILE.newProperty(
+								sslKeyStoreFile);
 					}
 					
 				});
@@ -482,16 +386,11 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 				new SettingConverter() {
 
 					@Override
-					public List<Property<Object>> convertToProperties(
-							final Setting<Object> setting) {
-						List<Property<Object>> properties = 
-								new ArrayList<Property<Object>>();
+					public Object convert(final Setting<Object> setting) {
 						EncryptedPassword sslKeyStorePassword = 
 								(EncryptedPassword) setting.getValue();
-						properties.add(cast(
-								PropertySpec.SSL_KEY_STORE_PASSWORD.newProperty(
-										sslKeyStorePassword)));
-						return properties;
+						return PropertySpec.SSL_KEY_STORE_PASSWORD.newProperty(
+								sslKeyStorePassword);
 					}
 					
 				});
@@ -500,15 +399,10 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 				new SettingConverter() {
 
 					@Override
-					public List<Property<Object>> convertToProperties(
-							final Setting<Object> setting) {
-						List<Property<Object>> properties = 
-								new ArrayList<Property<Object>>();
+					public Object convert(final Setting<Object> setting) {
 						String sslKeyStoreType = (String) setting.getValue();
-						properties.add(cast(
-								PropertySpec.SSL_KEY_STORE_TYPE.newProperty(
-										sslKeyStoreType)));
-						return properties;
+						return PropertySpec.SSL_KEY_STORE_TYPE.newProperty(
+								sslKeyStoreType);
 					}
 					
 				});
@@ -520,15 +414,9 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 				new SettingConverter() {
 
 					@Override
-					public List<Property<Object>> convertToProperties(
-							final Setting<Object> setting) {
-						List<Property<Object>> properties = 
-								new ArrayList<Property<Object>>();
+					public Object convert(final Setting<Object> setting) {
 						Boolean sslEnabled = (Boolean) setting.getValue();
-						properties.add(cast(
-								PropertySpec.SSL_ENABLED.newProperty(
-										sslEnabled)));
-						return properties;
+						return PropertySpec.SSL_ENABLED.newProperty(sslEnabled);
 					}
 					
 				});
@@ -537,16 +425,11 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 				new SettingConverter() {
 
 					@Override
-					public List<Property<Object>> convertToProperties(
-							final Setting<Object> setting) {
-						List<Property<Object>> properties = 
-								new ArrayList<Property<Object>>();
-						Strings sslEnabledCipherSuites = 
+					public Object convert(final Setting<Object> setting) {
+						Strings sslEnabledCipherSuites =
 								(Strings) setting.getValue();
-						properties.add(cast(
-								PropertySpec.SSL_ENABLED_CIPHER_SUITES.newProperty(
-										sslEnabledCipherSuites)));
-						return properties;
+						return PropertySpec.SSL_ENABLED_CIPHER_SUITES.newProperty(
+								sslEnabledCipherSuites);
 					}
 					
 				});
@@ -555,16 +438,11 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 				new SettingConverter() {
 
 					@Override
-					public List<Property<Object>> convertToProperties(
-							final Setting<Object> setting) {
-						List<Property<Object>> properties = 
-								new ArrayList<Property<Object>>();
+					public Object convert(final Setting<Object> setting) {
 						Strings sslEnabledProtocols = 
 								(Strings) setting.getValue();
-						properties.add(cast(
-								PropertySpec.SSL_ENABLED_PROTOCOLS.newProperty(
-										sslEnabledProtocols)));
-						return properties;
+						return PropertySpec.SSL_ENABLED_PROTOCOLS.newProperty(
+								sslEnabledProtocols);
 					}
 					
 				});
@@ -573,15 +451,10 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 				new SettingConverter() {
 
 					@Override
-					public List<Property<Object>> convertToProperties(
-							final Setting<Object> setting) {
-						List<Property<Object>> properties = 
-								new ArrayList<Property<Object>>();
+					public Object convert(final Setting<Object> setting) {
 						String sslProtocol = (String) setting.getValue();
-						properties.add(cast(
-								PropertySpec.SSL_PROTOCOL.newProperty(
-										sslProtocol)));
-						return properties;
+						return PropertySpec.SSL_PROTOCOL.newProperty(
+								sslProtocol);
 					}
 					
 				});
@@ -593,15 +466,10 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 				new SettingConverter() {
 
 					@Override
-					public List<Property<Object>> convertToProperties(
-							final Setting<Object> setting) {
-						List<Property<Object>> properties = 
-								new ArrayList<Property<Object>>();
+					public Object convert(final Setting<Object> setting) {
 						File sslTrustStoreFile = (File) setting.getValue();
-						properties.add(cast(
-								PropertySpec.SSL_TRUST_STORE_FILE.newProperty(
-										sslTrustStoreFile)));
-						return properties;
+						return PropertySpec.SSL_TRUST_STORE_FILE.newProperty(
+								sslTrustStoreFile);
 					}
 					
 				});
@@ -610,16 +478,11 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 				new SettingConverter() {
 
 					@Override
-					public List<Property<Object>> convertToProperties(
-							final Setting<Object> setting) {
-						List<Property<Object>> properties = 
-								new ArrayList<Property<Object>>();
+					public Object convert(final Setting<Object> setting) {
 						EncryptedPassword sslTrustStorePassword = 
 								(EncryptedPassword) setting.getValue();
-						properties.add(cast(
-								PropertySpec.SSL_TRUST_STORE_PASSWORD.newProperty(
-										sslTrustStorePassword)));
-						return properties;
+						return PropertySpec.SSL_TRUST_STORE_PASSWORD.newProperty(
+								sslTrustStorePassword);
 					}
 					
 				});
@@ -628,15 +491,10 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 				new SettingConverter() {
 
 					@Override
-					public List<Property<Object>> convertToProperties(
-							final Setting<Object> setting) {
-						List<Property<Object>> properties = 
-								new ArrayList<Property<Object>>();
+					public Object convert(final Setting<Object> setting) {
 						String sslTrustStoreType = (String) setting.getValue();
-						properties.add(cast(
-								PropertySpec.SSL_TRUST_STORE_TYPE.newProperty(
-										sslTrustStoreType)));
-						return properties;
+						return PropertySpec.SSL_TRUST_STORE_TYPE.newProperty(
+								sslTrustStoreType);
 					}
 					
 				});		
@@ -771,20 +629,33 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 		SocksClient chainedSocksClient = null;
 		for (Setting<Object> setting : settings.toList()) {
 			SettingSpec<Object> settingSpec = setting.getSettingSpec();
-			if (settingSpec.equals(SettingSpec.CHAINING_SOCKS_SERVER_URI)) {
+			SettingConverter settingConverter = settingConverterMap.get(
+					settingSpec);
+			if (settingConverter == null) {
+				continue;
+			}
+			Object obj = settingConverter.convert(setting);
+			if (obj instanceof SocksServerUri) {
+				SocksServerUri serverUri = (SocksServerUri) obj;
 				if (socksServerUri != null) {
 					chainedSocksClient = socksServerUri.newSocksClient(
 							Properties.newInstance(properties), 
 							chainedSocksClient);
 					properties.clear();
 				}
-				socksServerUri = (SocksServerUri) setting.getValue();
+				socksServerUri = serverUri;
 				continue;
 			}
-			SettingConverter settingConverter = settingConverterMap.get(
-					settingSpec);
-			if (settingConverter != null) {
-				properties.addAll(settingConverter.convertToProperties(setting));
+			if (obj instanceof Property) {
+				@SuppressWarnings("unchecked")
+				Property<Object> prop = (Property<Object>) obj;
+				properties.add(prop);
+				continue;
+			}
+			if (obj instanceof List) {
+				@SuppressWarnings("unchecked")
+				List<Property<Object>> props = (List<Property<Object>>) obj;
+				properties.addAll(props);
 			}
 		}
 		if (socksServerUri == null) {

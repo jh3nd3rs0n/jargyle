@@ -6,18 +6,21 @@ import java.nio.file.Path;
 
 public final class FilesHelper {
 	
+	private static final int MAX_NUM_OF_REMAINING_ATTEMPTS = 3;
+	
 	public static void attemptsToDeleteIfExists(
 			final Path path) throws IOException {
-		int numOfRemainingAttempts = 3;
-		boolean deleted = false;
-		while (--numOfRemainingAttempts > 0 
-				&& !(deleted = Files.deleteIfExists(path))) {
+		int numOfRemainingAttempts = MAX_NUM_OF_REMAINING_ATTEMPTS;
+		while (path.toFile().exists() 
+				&& --numOfRemainingAttempts > 0 
+				&& !Files.deleteIfExists(path)) {
 			ThreadHelper.sleepForThreeSeconds();
 		}
-		if (!deleted && path.toFile().exists()) {
+		if (path.toFile().exists() && numOfRemainingAttempts == 0) {
 			throw new IOException(String.format(
-					"unable to delete existing '%s' despite 3 attempts", 
-					path));
+					"unable to delete existing '%s' despite %s attempts", 
+					path,
+					MAX_NUM_OF_REMAINING_ATTEMPTS));
 		}
 	}
 	

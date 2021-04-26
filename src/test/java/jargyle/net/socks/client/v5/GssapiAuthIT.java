@@ -14,6 +14,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import jargyle.FilesHelper;
 import jargyle.NetConstants;
 import jargyle.TestStringConstants;
 import jargyle.net.DatagramSocketHelper;
@@ -151,23 +152,23 @@ public class GssapiAuthIT {
 			kerbyServer = null;
 		}
 		if (krb5Conf != null) {
-			Files.deleteIfExists(krb5Conf);
+			FilesHelper.attemptsToDeleteIfExists(krb5Conf);
 			krb5Conf = null;
 		}
 		if (aliceKeytab != null) {
-			Files.deleteIfExists(aliceKeytab);
+			FilesHelper.attemptsToDeleteIfExists(aliceKeytab);
 			aliceKeytab = null;
 		}
 		if (rcmdKeytab != null) {
-			Files.deleteIfExists(rcmdKeytab);
+			FilesHelper.attemptsToDeleteIfExists(rcmdKeytab);
 			rcmdKeytab = null;
 		}
 		if (loginConf != null) {
-			Files.deleteIfExists(loginConf);
+			FilesHelper.attemptsToDeleteIfExists(loginConf);
 			loginConf = null;
 		}
 		if (baseDir != null) {
-			Files.deleteIfExists(baseDir);
+			FilesHelper.attemptsToDeleteIfExists(baseDir);
 			baseDir = null;
 		}
 		System.clearProperty(KRB5_CONF_PROPERTY_NAME);

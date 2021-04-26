@@ -10,13 +10,13 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import jargyle.FilesHelper;
 import jargyle.IoHelper;
 import jargyle.ResourceHelper;
 import jargyle.ResourceNameConstants;
+import jargyle.ThreadHelper;
 
 public class XmlFileSourceUsersServiceIT {
-
-	private static final int THREE_SECONDS = 3000;
 	
 	private Path baseDir = null;
 	private Path usersFile = null;
@@ -34,11 +34,11 @@ public class XmlFileSourceUsersServiceIT {
 			this.xmlFileSourceUsersService = null;
 		}
 		if (this.usersFile != null) {
-			Files.deleteIfExists(this.usersFile);
+			FilesHelper.attemptsToDeleteIfExists(this.usersFile);
 			this.usersFile = null;
 		}
 		if (this.baseDir != null) {
-			Files.deleteIfExists(this.baseDir);
+			FilesHelper.attemptsToDeleteIfExists(this.baseDir);
 			this.baseDir = null;
 		}		
 	}
@@ -50,19 +50,11 @@ public class XmlFileSourceUsersServiceIT {
 				this.usersFile.toFile());
 		this.xmlFileSourceUsersService = XmlFileSourceUsersService.newInstance(
 				this.usersFile.toFile());
-		try {
-			Thread.sleep(THREE_SECONDS);
-		} catch (InterruptedException e) {
-			Thread.currentThread().interrupt();
-		}
+		ThreadHelper.sleepForThreeSeconds();
 		IoHelper.writeToFile(ResourceHelper.getResourceAsString(
 				ResourceNameConstants.JARGYLE_NET_SOCKS_SERVER_V5_USERS_FILE), 
 				this.usersFile.toFile());
-		try {
-			Thread.sleep(THREE_SECONDS);
-		} catch (InterruptedException e) {
-			Thread.currentThread().interrupt();
-		}
+		ThreadHelper.sleepForThreeSeconds();
 		final int numOfUsersAdded = 3; 
 		assertTrue(this.xmlFileSourceUsersService.getUsers().toList().size() == numOfUsersAdded);
 	}
@@ -74,19 +66,11 @@ public class XmlFileSourceUsersServiceIT {
 				this.usersFile.toFile());
 		this.xmlFileSourceUsersService = XmlFileSourceUsersService.newInstance(
 				this.usersFile.toFile());
-		try {
-			Thread.sleep(THREE_SECONDS);
-		} catch (InterruptedException e) {
-			Thread.currentThread().interrupt();
-		}
+		ThreadHelper.sleepForThreeSeconds();
 		IoHelper.writeToFile(ResourceHelper.getResourceAsString(
 				ResourceNameConstants.JARGYLE_NET_SOCKS_SERVER_V5_ADDED_USER_TO_USERS_FILE), 
 				this.usersFile.toFile());
-		try {
-			Thread.sleep(THREE_SECONDS);
-		} catch (InterruptedException e) {
-			Thread.currentThread().interrupt();
-		}
+		ThreadHelper.sleepForThreeSeconds();
 		final int numOfUsersAdded = 4; 
 		assertTrue(this.xmlFileSourceUsersService.getUsers().toList().size() == numOfUsersAdded);
 	}

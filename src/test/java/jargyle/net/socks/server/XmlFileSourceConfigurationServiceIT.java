@@ -10,15 +10,15 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import jargyle.FilesHelper;
 import jargyle.IoHelper;
 import jargyle.ResourceHelper;
 import jargyle.ResourceNameConstants;
+import jargyle.ThreadHelper;
 import jargyle.net.Port;
 import jargyle.util.NonnegativeInteger;
 
 public class XmlFileSourceConfigurationServiceIT {
-
-	private static final int THREE_SECONDS = 3000;
 	
 	private Path baseDir = null;
 	private Path configurationFile = null;
@@ -36,11 +36,11 @@ public class XmlFileSourceConfigurationServiceIT {
 			this.xmlFileSourceConfigurationService = null;
 		}
 		if (this.configurationFile != null) {
-			Files.deleteIfExists(this.configurationFile);
+			FilesHelper.attemptsToDeleteIfExists(this.configurationFile);
 			this.configurationFile = null;
 		}
 		if (this.baseDir != null) {
-			Files.deleteIfExists(this.baseDir);
+			FilesHelper.attemptsToDeleteIfExists(this.baseDir);
 			this.baseDir = null;
 		}
 	}
@@ -53,19 +53,11 @@ public class XmlFileSourceConfigurationServiceIT {
 		this.xmlFileSourceConfigurationService = 
 				XmlFileSourceConfigurationService.newInstance(
 						this.configurationFile.toFile());
-		try {
-			Thread.sleep(THREE_SECONDS);
-		} catch (InterruptedException e) {
-			Thread.currentThread().interrupt();
-		}
+		ThreadHelper.sleepForThreeSeconds();
 		IoHelper.writeToFile(ResourceHelper.getResourceAsString(
 				ResourceNameConstants.JARGYLE_NET_SOCKS_SERVER_CONFIGURATION_FILE), 
 				this.configurationFile.toFile());
-		try {
-			Thread.sleep(THREE_SECONDS);
-		} catch (InterruptedException e) {
-			Thread.currentThread().interrupt();
-		}
+		ThreadHelper.sleepForThreeSeconds();
 		Configuration configuration = 
 				this.xmlFileSourceConfigurationService.getConfiguration();
 		Settings settings = configuration.getSettings();
@@ -82,19 +74,11 @@ public class XmlFileSourceConfigurationServiceIT {
 		this.xmlFileSourceConfigurationService = 
 				XmlFileSourceConfigurationService.newInstance(
 						this.configurationFile.toFile());
-		try {
-			Thread.sleep(THREE_SECONDS);
-		} catch (InterruptedException e) {
-			Thread.currentThread().interrupt();
-		}
+		ThreadHelper.sleepForThreeSeconds();
 		IoHelper.writeToFile(ResourceHelper.getResourceAsString(
 				ResourceNameConstants.JARGYLE_NET_SOCKS_SERVER_CONFIGURATION_FILE), 
 				this.configurationFile.toFile());
-		try {
-			Thread.sleep(THREE_SECONDS);
-		} catch (InterruptedException e) {
-			Thread.currentThread().interrupt();
-		}
+		ThreadHelper.sleepForThreeSeconds();
 		Configuration configuration = 
 				this.xmlFileSourceConfigurationService.getConfiguration();
 		Settings settings = configuration.getSettings();

@@ -10,14 +10,14 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import jargyle.FilesHelper;
 import jargyle.IoHelper;
 import jargyle.ResourceHelper;
 import jargyle.ResourceNameConstants;
+import jargyle.ThreadHelper;
 import jargyle.net.Port;
 
 public class SocksServerIT {
-
-	private static final int THREE_SECONDS = 3000;
 	
 	private Path baseDir = null;
 	private Path combinedConfigurationFile = null;
@@ -37,23 +37,23 @@ public class SocksServerIT {
 	@After
 	public void tearDownAfterClass() throws Exception {
 		if (this.supplementedConfigurationFile != null) {
-			Files.deleteIfExists(this.supplementedConfigurationFile);
+			FilesHelper.attemptsToDeleteIfExists(this.supplementedConfigurationFile);
 			this.supplementedConfigurationFile = null;
 		}
 		if (this.emptyConfigurationFile != null) {
-			Files.deleteIfExists(this.emptyConfigurationFile);
+			FilesHelper.attemptsToDeleteIfExists(this.emptyConfigurationFile);
 			this.emptyConfigurationFile = null;
 		}
 		if (this.configurationFile != null) {
-			Files.deleteIfExists(this.configurationFile);
+			FilesHelper.attemptsToDeleteIfExists(this.configurationFile);
 			this.configurationFile = null;
 		}
 		if (this.combinedConfigurationFile != null) {
-			Files.deleteIfExists(this.combinedConfigurationFile);
+			FilesHelper.attemptsToDeleteIfExists(this.combinedConfigurationFile);
 			this.combinedConfigurationFile = null;
 		}
 		if (this.baseDir != null) {
-			Files.deleteIfExists(this.baseDir);
+			FilesHelper.attemptsToDeleteIfExists(this.baseDir);
 			this.baseDir = null;
 		}
 	}
@@ -72,20 +72,12 @@ public class SocksServerIT {
 		SocksServer socksServer = new SocksServer(configuration);
 		try {
 			socksServer.start();
-			try {
-				Thread.sleep(THREE_SECONDS);
-			} catch (InterruptedException e) {
-				Thread.currentThread().interrupt();
-			}		
+			ThreadHelper.sleepForThreeSeconds();		
 			IoHelper.writeToFile(
 					ResourceHelper.getResourceAsString(
 							ResourceNameConstants.JARGYLE_NET_SOCKS_SERVER_CONFIGURATION_FILE), 
 					this.configurationFile.toFile());
-			try {
-				Thread.sleep(THREE_SECONDS);
-			} catch (InterruptedException e) {
-				Thread.currentThread().interrupt();
-			}
+			ThreadHelper.sleepForThreeSeconds();
 			Port expectedPort = Port.newInstance(1080);
 			Port actualPort = socksServer.getPort();
 			assertEquals(expectedPort, actualPort);

@@ -419,7 +419,7 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 					
 				});
 		SETTING_CONVERTER_MAP.put(
-				SettingSpec.CHAINING_SOCKS5_RESOLVE_RESOLVE_HOST_NAMES_THROUGH_SOCKS_SERVER, 
+				SettingSpec.CHAINING_SOCKS5_RESOLVE_USE_RESOLVE_COMMAND, 
 				new SettingConverter() {
 
 					@Override
@@ -427,11 +427,11 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 							final Setting<Object> setting) {
 						List<Property<Object>> properties = 
 								new ArrayList<Property<Object>>();
-						Boolean resolveHostNamesThroughSocksServer = 
+						Boolean useResolveCommand = 
 								(Boolean) setting.getValue();
 						properties.add(cast(
-								PropertySpec.SOCKS5_RESOLVE_RESOLVE_HOST_NAMES_THROUGH_SOCKS_SERVER.newProperty(
-										resolveHostNamesThroughSocksServer)));
+								PropertySpec.SOCKS5_RESOLVE_USE_RESOLVE_COMMAND.newProperty(
+										useResolveCommand)));
 						return properties;
 					}
 					

@@ -115,8 +115,8 @@ public abstract class PropertySpec<V> {
 			"socksClient.socks5.gssapiauth.serviceName",
 			null);
 	
-	public static final PropertySpec<Boolean> SOCKS5_RESOLVE_RESOLVE_HOST_NAMES_THROUGH_SOCKS_SERVER = new BooleanPropertySpec(
-			"socksClient.socks5.resolve.resolveHostNamesThroughSocksServer",
+	public static final PropertySpec<Boolean> SOCKS5_RESOLVE_USE_RESOLVE_COMMAND = new BooleanPropertySpec(
+			"socksClient.socks5.resolve.useResolveCommand",
 			Boolean.FALSE);
 	
 	public static final PropertySpec<EncryptedPassword> SOCKS5_USERPASSAUTH_PASSWORD = new UserEncryptedPasswordPropertySpec(

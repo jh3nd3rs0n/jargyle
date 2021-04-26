@@ -273,14 +273,14 @@ public abstract class SettingSpec<V> {
 			PropertySpec.SOCKS5_GSSAPIAUTH_SERVICE_NAME.getDefaultProperty().getValue());
 	
 	@HelpText(
-			doc = "The boolean value to indicate that host names are to be "
-					+ "resolved through the other SOCKS5 server "
-					+ "(default is false)", 
-			usage = "chaining.socks5.resolve.resolveHostNamesThroughSocksServer=true|false"
+			doc = "The boolean value to indicate that the RESOLVE command is "
+					+ "to be used on the other SOCKS5 server for resolving "
+					+ "host names (default is false)", 
+			usage = "chaining.socks5.resolve.useResolveCommand=true|false"
 	)	
-	public static final SettingSpec<Boolean> CHAINING_SOCKS5_RESOLVE_RESOLVE_HOST_NAMES_THROUGH_SOCKS_SERVER = new BooleanSettingSpec(
-			"chaining.socks5.resolve.resolveHostNamesThroughSocksServer",
-			PropertySpec.SOCKS5_RESOLVE_RESOLVE_HOST_NAMES_THROUGH_SOCKS_SERVER.getDefaultProperty().getValue());
+	public static final SettingSpec<Boolean> CHAINING_SOCKS5_RESOLVE_USE_RESOLVE_COMMAND = new BooleanSettingSpec(
+			"chaining.socks5.resolve.useResolveCommand",
+			PropertySpec.SOCKS5_RESOLVE_USE_RESOLVE_COMMAND.getDefaultProperty().getValue());
 	
 	@HelpText(
 			doc = "The username password to be used to access the other "

@@ -243,8 +243,8 @@ The following is a list of available settings for the SOCKS server (displayed wh
       chaining.socks5.gssapiauth.serviceName=SOCKS5_GSSAPIAUTH_SERVICE_NAME
           The GSS-API service name for the other SOCKS5 server
     
-      chaining.socks5.resolve.resolveHostNamesThroughSocksServer=true|false
-          The boolean value to indicate that host names are to be resolved through the other SOCKS5 server (default is false)
+      chaining.socks5.resolve.useResolveCommand=true|false
+          The boolean value to indicate that the RESOLVE command is to be used on the other SOCKS5 server for resolving host names (default is false)
     
       chaining.socks5.userpassauth.usernamePassword=USERNAME:PASSWORD
           The username password to be used to access the other SOCKS5 server
@@ -1443,27 +1443,25 @@ Partial command line example:
 
 #### 4. 11. 3. Enabling Host Name Resolution through SOCKS5 Server Chaining
 
-Jargyle does perform host name resolution through SOCKS5 server chaining but it has the following limitations: 
+By default, host name resolution through SOCKS5 server chaining is somewhat performed but it has the following limitations: 
 
 Host name resolution through SOCKS5 server chaining OCCURS ONLY...
 
--   ...under the CONNECT command when resolving a host name for a TCP socket to make an internal outbound TCP connection.
+-   ...under the CONNECT command when the server-facing socket makes an unprepared internal outbound TCP connection. Under the CONNECT command, preparation is omitted for the server-facing socket to make an internal outbound TCP connection. Such preparation includes applying the specified socket settings for the server-facing socket, resolving the target host name before connecting, and setting the specified timeout in milliseconds on waiting for the server-facing socket to connect.
 
 Host name resolution through SOCKS5 server chaining DOES NOT OCCUR...
 
--   ...under the BIND command when resolving a host name for a TCP socket to receive an external inbound TCP connection.
+-   ...under the BIND command when resolving the binding host name for the listen socket to receive an external inbound TCP connection.
 -   ...under the UDP ASSOCIATE command when resolving a host name for an internal outbound datagram packet.
 
-In addition, under the CONNECT command, preparation is omitted for a TCP socket to make an internal outbound TCP connection. Such preparation includes applying the specified socket settings for the TCP socket and setting the specified timeout in milliseconds on waiting for the TCP socket to connect.
-
-To enable host name resolution through SOCKS5 server chaining without the aforementioned limitations, you would need to set the setting `chaining.socks5.resolve.resolveHostNamesThroughSocksServer` to `true`.
+If you prefer to have host name resolution through SOCKS5 server chaining without the aforementioned limitations, you would need to set the setting `chaining.socks5.resolve.useResolveCommand` to `true`. This setting enables the use of [the SOCKS5 RESOLVE command](#5-3-the-socks5-resolve-command) on the other SOCKS5 server to resolve host names. This setting can only be used if the other SOCKS5 server supports the SOCKS5 RESOLVE command.
 
 Partial command line example:
 
 ```text
     
     --setting=chaining.socksServerUri=socks5://127.0.0.1:23456 \
-    --setting=chaining.socks5.resolve.resolveHostNamesThroughSocksServer=true
+    --setting=chaining.socks5.resolve.useResolveCommand=true
     
 ```
 
@@ -1476,24 +1474,20 @@ Partial configuration file example:
         <value>socks5://127.0.0.1:23456</value>
     </setting>
     <setting>
-        <name>chaining.socks5.resolve.resolveHostNamesThroughSocksServer</name>
+        <name>chaining.socks5.resolve.useResolveCommand</name>
         <value>true</value>
     </setting>
     
 ```
 
-This setting can be used under the following condition:
-
--   The other SOCKS5 server supports [the SOCKS5 RESOLVE command](#5-3-the-socks5-resolve-command). (At the time of this writing, the SOCKS5 RESOLVE command is an additional SOCKS5 command made for Jargyle. Therefore the other SOCKS5 server would at the very least be another running instance of Jargyle.)
-
-In addition to using this setting, you can use the setting `socks5.onConnect.prepareServerFacingSocket` to be set to `true` in order for preparation to be performed for a TCP socket to make an internal outbound TCP connection  under the CONNECT command.
+In addition to using this setting, you can set the setting `socks5.onConnect.prepareServerFacingSocket` to `true` in order for preparation to be performed for the server-facing socket to make an internal outbound TCP connection.
 
 Partial command line example:
 
 ```text
     
     --setting=chaining.socksServerUri=socks5://127.0.0.1:23456 \
-    --setting=chaining.socks5.resolve.resolveHostNamesThroughSocksServer=true \
+    --setting=chaining.socks5.resolve.useResolveCommand=true \
     --setting=socks5.onConnect.prepareServerFacingSocket=true \
     --setting=socks5.onConnect.serverFacingSocketSettings=SO_TIMEOUT=500 \
     --setting=socks5.onConnect.serverFacingConnectTimeout=10000
@@ -1509,7 +1503,7 @@ Partial configuration file example:
         <value>socks5://127.0.0.1:23456</value>
     </setting>
     <setting>
-        <name>chaining.socks5.resolve.resolveHostNamesThroughSocksServer</name>
+        <name>chaining.socks5.resolve.useResolveCommand</name>
         <value>true</value>
     </setting>
     <setting>
@@ -1774,7 +1768,7 @@ Partial command line example:
     --setting=chaining.socks5.authMethods=GSSAPI \
     --setting=chaining.socks5.gssapiauth.serviceName=rcmd/127.0.0.1 \
     --setting=chaining.socksServerUri=socks5://127.0.0.1:54321 \
-    --setting=chaining.socks5.resolve.resolveHostNamesThroughSocksServer=true
+    --setting=chaining.socks5.resolve.useResolveCommand=true
     
 ```
 
@@ -1803,7 +1797,7 @@ Partial configuration file example:
         <value>socks5://127.0.0.1:54321</value>
     </setting>        
     <setting>
-        <name>chaining.socks5.resolve.resolveHostNamesThroughSocksServer</name>
+        <name>chaining.socks5.resolve.useResolveCommand</name>
         <value>true</value>
     </setting>    
     

@@ -18,6 +18,8 @@ Although Jargyle can act as a standalone SOCKS5 server, it can act as a bridge b
 -   Operating systems and applications that access SOCKS5 servers using plaintext connections and no SOCKS5 authentication
 -   SOCKS5 servers requiring SSL/TLS/DTLS connections and/or SOCKS5 authentication
 
+**Disclaimer**: Jargyle is not production-ready but it aims to be. It is also subject to breaking changes.
+
 ## Contents
 
 -   [1. Requirements](#1-requirements)
@@ -1734,7 +1736,7 @@ Partial command line example:
     
     --setting=chaining.socksServerUri=socks5://127.0.0.1:23456 \
     --setting=chaining.socksServerUri=socks5://127.0.0.1:65432 \
-    --setting=chaining.socksServerUri=socks5://127.0.0.1:54321
+    --setting=chaining.socksServerUri=socks5://127.0.0.1:34567
     
 ```
 
@@ -1752,7 +1754,7 @@ Partial configuration file example:
     </setting>
     <setting>
         <name>chaining.socksServerUri</name>
-        <value>socks5://127.0.0.1:54321</value>
+        <value>socks5://127.0.0.1:34567</value>
     </setting>        
     
 ```
@@ -1767,7 +1769,7 @@ Partial command line example:
     --setting=chaining.socksServerUri=socks5://127.0.0.1:65432 \
     --setting=chaining.socks5.authMethods=GSSAPI \
     --setting=chaining.socks5.gssapiauth.serviceName=rcmd/127.0.0.1 \
-    --setting=chaining.socksServerUri=socks5://127.0.0.1:54321 \
+    --setting=chaining.socksServerUri=socks5://127.0.0.1:34567 \
     --setting=chaining.socks5.resolve.useResolveCommand=true
     
 ```
@@ -1794,7 +1796,7 @@ Partial configuration file example:
     </setting>
     <setting>
         <name>chaining.socksServerUri</name>
-        <value>socks5://127.0.0.1:54321</value>
+        <value>socks5://127.0.0.1:34567</value>
     </setting>        
     <setting>
         <name>chaining.socks5.resolve.useResolveCommand</name>

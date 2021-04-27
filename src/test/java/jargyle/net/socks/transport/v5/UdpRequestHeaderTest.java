@@ -9,7 +9,7 @@ import jargyle.TestStringConstants;
 public class UdpRequestHeaderTest {
 
 	@Test
-	public void testNewInstanceIntAddressTypeStringIntByteArray01() {
+	public void testNewInstanceIntStringIntByteArray01() {
 		UdpRequestHeader udpDatagram1 = UdpRequestHeader.newInstance(
 				0, 
 				"12.216.103.24", 
@@ -20,7 +20,7 @@ public class UdpRequestHeaderTest {
 	}
 
 	@Test
-	public void testNewInstanceIntAddressTypeStringIntByteArray02() {
+	public void testNewInstanceIntStringIntByteArray02() {
 		UdpRequestHeader udpDatagram1 = UdpRequestHeader.newInstance(
 				1, 
 				"google.com", 
@@ -31,7 +31,7 @@ public class UdpRequestHeaderTest {
 	}
 
 	@Test
-	public void testNewInstanceIntAddressTypeStringIntByteArray03() {
+	public void testNewInstanceIntStringIntByteArray03() {
 		UdpRequestHeader udpDatagram1 = UdpRequestHeader.newInstance(
 				255, 
 				"abcd:1234:ef56:abcd:789e:f123:456a:b789", 

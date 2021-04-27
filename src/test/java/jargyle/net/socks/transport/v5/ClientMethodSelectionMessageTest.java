@@ -9,7 +9,7 @@ import org.junit.Test;
 public class ClientMethodSelectionMessageTest {
 
 	@Test
-	public void testNewInstanceVersionSetOfMethod01() {
+	public void testNewInstanceSetOfMethod01() {
 		ClientMethodSelectionMessage cmsm1 = 
 				ClientMethodSelectionMessage.newInstance(
 						EnumSet.of(
@@ -20,7 +20,7 @@ public class ClientMethodSelectionMessageTest {
 	}
 
 	@Test
-	public void testNewInstanceVersionSetOfMethod02() {
+	public void testNewInstanceSetOfMethod02() {
 		ClientMethodSelectionMessage cmsm1 = 
 				ClientMethodSelectionMessage.newInstance(
 						EnumSet.of(
@@ -32,7 +32,7 @@ public class ClientMethodSelectionMessageTest {
 	}
 
 	@Test
-	public void testNewInstanceVersionSetOfMethod03() {
+	public void testNewInstanceSetOfMethod03() {
 		ClientMethodSelectionMessage cmsm1 = 
 				ClientMethodSelectionMessage.newInstance(
 						EnumSet.of(
@@ -42,6 +42,16 @@ public class ClientMethodSelectionMessageTest {
 		ClientMethodSelectionMessage cmsm2 =
 				ClientMethodSelectionMessage.newInstance(cmsm1.toByteArray());
 		assertEquals(cmsm1, cmsm2);
+	}
+	
+	@Test
+	public void testNewInstanceSetOfMethod04() {
+		ClientMethodSelectionMessage cmsm1 = 
+				ClientMethodSelectionMessage.newInstance(
+						EnumSet.noneOf(Method.class));
+		ClientMethodSelectionMessage cmsm2 =
+				ClientMethodSelectionMessage.newInstance(cmsm1.toByteArray());
+		assertEquals(cmsm1, cmsm2);		
 	}
 
 }

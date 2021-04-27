@@ -7,7 +7,7 @@ import org.junit.Test;
 public class ServerMethodSelectionMessageTest {
 
 	@Test
-	public void testNewInstanceVersionMethod01() {
+	public void testNewInstanceMethod01() {
 		ServerMethodSelectionMessage smsm1 = 
 				ServerMethodSelectionMessage.newInstance(
 						Method.NO_AUTHENTICATION_REQUIRED);
@@ -17,7 +17,7 @@ public class ServerMethodSelectionMessageTest {
 	}
 
 	@Test
-	public void testNewInstanceVersionMethod02() {
+	public void testNewInstanceMethod02() {
 		ServerMethodSelectionMessage smsm1 = 
 				ServerMethodSelectionMessage.newInstance(
 						Method.NO_ACCEPTABLE_METHODS);
@@ -27,7 +27,7 @@ public class ServerMethodSelectionMessageTest {
 	}
 
 	@Test
-	public void testNewInstanceVersionMethod03() {
+	public void testNewInstanceMethod03() {
 		ServerMethodSelectionMessage smsm1 = 
 				ServerMethodSelectionMessage.newInstance(
 						Method.USERNAME_PASSWORD);

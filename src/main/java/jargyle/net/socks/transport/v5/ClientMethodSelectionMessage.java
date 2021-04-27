@@ -21,8 +21,6 @@ public final class ClientMethodSelectionMessage {
 		private byte[] byteArray;
 	}
 	
-	private static final int MIN_METHODS_LENGTH = 1;
-	
 	public static ClientMethodSelectionMessage newInstance(final byte[] b) {
 		ClientMethodSelectionMessage cmsm;
 		try {
@@ -35,11 +33,9 @@ public final class ClientMethodSelectionMessage {
 	
 	public static ClientMethodSelectionMessage newInstance(
 			final Set<Method> methods) {
-		if (methods.size() == UnsignedByte.MIN_INT_VALUE 
-				|| methods.size() > UnsignedByte.MAX_INT_VALUE) {
+		if (methods.size() > UnsignedByte.MAX_INT_VALUE) {
 			throw new IllegalArgumentException(String.format(
-					"number of methods must be greater than %s and no more than %s",
-					UnsignedByte.MIN_INT_VALUE,
+					"number of methods must be no more than %s",
 					UnsignedByte.MAX_INT_VALUE));
 		}
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -77,21 +73,18 @@ public final class ClientMethodSelectionMessage {
 		} catch (IllegalArgumentException e) {
 			throw new IOException(e);
 		}
-		if (methodCount < MIN_METHODS_LENGTH) {
-			throw new IOException(String.format(
-					"number of methods must be at least %s", 
-					MIN_METHODS_LENGTH));
-		}
 		out.write(b);
 		byte[] bytes = new byte[methodCount];
-		int bytesRead = in.read(bytes);
-		if (bytesRead != methodCount) {
-			throw new IOException(String.format(
-					"expected number of methods is %s. "
-					+ "actual number of methods is %s", 
-					methodCount, bytesRead));
+		if (methodCount > 0) {
+			int bytesRead = in.read(bytes);
+			if (bytesRead != methodCount) {
+				throw new IOException(String.format(
+						"expected number of methods is %s. "
+						+ "actual number of methods is %s", 
+						methodCount, bytesRead));
+			}
+			bytes = Arrays.copyOf(bytes, bytesRead);			
 		}
-		bytes = Arrays.copyOf(bytes, bytesRead);
 		Set<Method> meths = new TreeSet<Method>();
 		for (int i = 0; i < bytes.length; i++) {
 			b = bytes[i];

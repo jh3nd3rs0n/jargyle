@@ -9,7 +9,7 @@ import jargyle.TestStringConstants;
 public class MessageTest {
 
 	@Test
-	public void testNewInstanceVersionMessageTypeByteArray01() {
+	public void testNewInstanceMessageTypeByteArray01() {
 		Message message1 = Message.newInstance(
 				MessageType.ABORT, 
 				null);
@@ -18,7 +18,7 @@ public class MessageTest {
 	}
 
 	@Test
-	public void testNewInstanceVersionMessageTypeByteArray02() {
+	public void testNewInstanceMessageTypeByteArray02() {
 		Message message1 = Message.newInstance(
 				MessageType.AUTHENTICATION, 
 				TestStringConstants.STRING_01.getBytes());
@@ -27,7 +27,7 @@ public class MessageTest {
 	}
 
 	@Test
-	public void testNewInstanceVersionMessageTypeByteArray03() {
+	public void testNewInstanceMessageTypeByteArray03() {
 		Message message1 = Message.newInstance(
 				MessageType.ENCAPSULATED_USER_DATA, 
 				TestStringConstants.STRING_02.getBytes());
@@ -36,7 +36,7 @@ public class MessageTest {
 	}
 
 	@Test
-	public void testNewInstanceVersionMessageTypeByteArray04() {
+	public void testNewInstanceMessageTypeByteArray04() {
 		Message message1 = Message.newInstance(
 				MessageType.PROTECTION_LEVEL_NEGOTIATION, 
 				TestStringConstants.STRING_03.getBytes());

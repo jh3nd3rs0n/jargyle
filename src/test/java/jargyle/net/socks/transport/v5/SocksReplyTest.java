@@ -7,7 +7,7 @@ import org.junit.Test;
 public class SocksReplyTest {
 
 	@Test
-	public void testNewInstanceVersionReplyAddressTypeStringInt01() {
+	public void testNewInstanceReplyStringInt01() {
 		Socks5Reply socks5Reply1 = Socks5Reply.newInstance(
 				Reply.SUCCEEDED, 
 				"12.216.103.24", 
@@ -17,7 +17,7 @@ public class SocksReplyTest {
 	}
 
 	@Test
-	public void testNewInstanceVersionReplyAddressTypeStringInt02() {
+	public void testNewInstanceReplyStringInt02() {
 		Socks5Reply socks5Reply1 = Socks5Reply.newInstance(
 				Reply.GENERAL_SOCKS_SERVER_FAILURE, 
 				"google.com", 
@@ -27,7 +27,7 @@ public class SocksReplyTest {
 	}
 
 	@Test
-	public void testNewInstanceVersionReplyAddressTypeStringInt03() {
+	public void testNewInstanceReplyStringInt03() {
 		Socks5Reply socks5Reply1 = Socks5Reply.newInstance(
 				Reply.COMMAND_NOT_SUPPORTED, 
 				"abcd:1234:ef56:abcd:789e:f123:456a:b789", 

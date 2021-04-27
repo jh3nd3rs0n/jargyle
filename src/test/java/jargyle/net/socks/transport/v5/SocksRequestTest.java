@@ -7,7 +7,7 @@ import org.junit.Test;
 public class SocksRequestTest {
 
 	@Test
-	public void testNewInstanceVersionCommandAddressTypeStringInt01() {
+	public void testNewInstanceCommandStringInt01() {
 		Socks5Request socks5Request1 = Socks5Request.newInstance(
 				Command.CONNECT, 
 				"12.216.103.24", 
@@ -17,7 +17,7 @@ public class SocksRequestTest {
 	}
 
 	@Test
-	public void testNewInstanceVersionCommandAddressTypeStringInt02() {
+	public void testNewInstanceCommandStringInt02() {
 		Socks5Request socks5Request1 = Socks5Request.newInstance(
 				Command.BIND, 
 				"google.com", 
@@ -27,7 +27,7 @@ public class SocksRequestTest {
 	}
 
 	@Test
-	public void testNewInstanceVersionCommandAddressTypeStringInt03() {
+	public void testNewInstanceCommandStringInt03() {
 		Socks5Request socks5Request1 = Socks5Request.newInstance(
 				Command.UDP_ASSOCIATE, 
 				"abcd:1234:ef56:abcd:789e:f123:456a:b789", 

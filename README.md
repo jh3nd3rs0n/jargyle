@@ -1280,15 +1280,11 @@ The Java system property `-Djava.security.krb5.conf=krb5.conf` provides the Kerb
 ```text
     
     [libdefaults]
-        kdc_realm = EXAMPLE.COM
-        default_realm = EXAMPLE.COM
-        kdc_udp_port = 12345
-        kdc_tcp_port = 12345
-    
+    default_realm = EXAMPLE.COM
     [realms]
-        EXAMPLE.COM = {
-            kdc = 127.0.0.1:12345
-        }
+    EXAMPLE.COM = {
+        kdc = 127.0.0.1:12345
+    }
     
 ```
 
@@ -1450,7 +1446,7 @@ Before discussing host name resolution through SOCKS5 server chaining, an explan
 Jargyle uses sockets to interact with the external world.
 
 -   Under the CONNECT command, it uses a socket that connects to the desired target server. In this documentation, this socket is called the server-facing socket.
--   Under the BIND command, it uses a socket that listens for external inbound sockets. In this documentation, this socket is called the listen socket.
+-   Under the BIND command, it uses a socket that listens for an external inbound socket. In this documentation, this socket is called the listen socket.
 -   Under the UDP ASSOCIATE command, it uses a UDP socket that sends and receives datagram packets to and from server UDP sockets. In this documentation, this UDP socket is called the server-facing UDP socket.
 
 When Jargyle is chained to another SOCKS server, the aforementioned sockets that Jargyle uses become SOCKS-enabled, meaning that their traffic is routed through the other SOCKS server. When Jargyle is specifically chained to another SOCKS5 server, the aforementioned sockets that Jargyle uses become SOCKS5-enabled, meaning that their traffic is routed through the other SOCKS5 server.
@@ -1720,15 +1716,11 @@ The Java system property `-Djava.security.krb5.conf=krb5.conf` provides the Kerb
 ```text
     
     [libdefaults]
-        kdc_realm = EXAMPLE.COM
-        default_realm = EXAMPLE.COM
-        kdc_udp_port = 12345
-        kdc_tcp_port = 12345
-    
+    default_realm = EXAMPLE.COM
     [realms]
-        EXAMPLE.COM = {
-            kdc = 127.0.0.1:12345
-        }
+    EXAMPLE.COM = {
+        kdc = 127.0.0.1:12345
+    }
     
 ```
 

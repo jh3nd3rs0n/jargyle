@@ -33,11 +33,9 @@ import jargyle.net.socks.transport.v5.gssapiauth.ProtectionLevels;
 
 public class GssapiAuthIT {
 	
-	private static final String KDC_HOST = NetConstants.LOOPBACK_ADDRESS.getHostAddress();
 	private static final String KDC_REALM = "EXAMPLE.COM";
-	
-	private static final int KDC_TCP_PORT = 54321;
-	private static final int KDC_UDP_PORT = 54321;
+	private static final String KDC_HOST = NetConstants.LOOPBACK_ADDRESS.getHostAddress();
+	private static final int KDC_PORT = 12345;
 	
 	private static final String ALICE_PRINCIPAL = "alice";
 	private static final String RCMD_SERVICE_PRINCIPAL = String.format(
@@ -100,13 +98,12 @@ public class GssapiAuthIT {
 		krb5Conf = baseDir.resolve("krb5.conf");
 		
 		SimpleKdcServer kerbyServer = new SimpleKdcServer();
-		kerbyServer.setKdcHost(KDC_HOST);
 		kerbyServer.setKdcRealm(KDC_REALM);
-		kerbyServer.setKdcTcpPort(KDC_TCP_PORT);
-		kerbyServer.setAllowUdp(true);
-		kerbyServer.setKdcUdpPort(KDC_UDP_PORT);
+		kerbyServer.setKdcHost(KDC_HOST);
+		kerbyServer.setKdcPort(KDC_PORT);
 		kerbyServer.setWorkDir(baseDir.toFile());
-		kerbyServer.setInnerKdcImpl(new DefaultInternalKdcServerImpl(kerbyServer.getKdcSetting()));
+		kerbyServer.setInnerKdcImpl(new DefaultInternalKdcServerImpl(
+				kerbyServer.getKdcSetting()));
 		kerbyServer.init();
 		kerbyServer.createPrincipal(ALICE_PRINCIPAL, "alice");
 		kerbyServer.exportPrincipal(ALICE_PRINCIPAL, aliceKeytab.toFile());
@@ -139,9 +136,11 @@ public class GssapiAuthIT {
 		w.flush();
 		w.close();
 		
-		System.setProperty(KRB5_CONF_PROPERTY_NAME, krb5Conf.toAbsolutePath().toString());
+		System.setProperty(
+				KRB5_CONF_PROPERTY_NAME, krb5Conf.toAbsolutePath().toString());
 		System.setProperty(USE_SUBJECT_CREDS_ONLY_PROPERTY_NAME, "false");
-		System.setProperty(LOGIN_CONFIG_PROPERTY_NAME, loginConf.toAbsolutePath().toString());
+		System.setProperty(
+				LOGIN_CONFIG_PROPERTY_NAME, loginConf.toAbsolutePath().toString());
 				
 	}
 

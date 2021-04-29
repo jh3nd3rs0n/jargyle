@@ -1280,11 +1280,16 @@ The Java system property `-Djava.security.krb5.conf=krb5.conf` provides the Kerb
 ```text
     
     [libdefaults]
-    default_realm = EXAMPLE.COM
+        kdc_realm = EXAMPLE.COM
+        default_realm = EXAMPLE.COM
+        udp_preference_limit = 4096
+        kdc_tcp_port = 12345
+        kdc_udp_port = 12345
+    
     [realms]
-    EXAMPLE.COM = {
-        kdc = 127.0.0.1:12345
-    }
+        EXAMPLE.COM = {
+            kdc = localhost:12345
+        }
     
 ```
 
@@ -1716,11 +1721,16 @@ The Java system property `-Djava.security.krb5.conf=krb5.conf` provides the Kerb
 ```text
     
     [libdefaults]
-    default_realm = EXAMPLE.COM
+        kdc_realm = EXAMPLE.COM
+        default_realm = EXAMPLE.COM
+        udp_preference_limit = 4096
+        kdc_tcp_port = 12345
+        kdc_udp_port = 12345
+    
     [realms]
-    EXAMPLE.COM = {
-        kdc = 127.0.0.1:12345
-    }
+        EXAMPLE.COM = {
+            kdc = localhost:12345
+        }
     
 ```
 

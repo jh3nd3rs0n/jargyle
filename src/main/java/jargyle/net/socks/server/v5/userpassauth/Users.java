@@ -6,7 +6,9 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.xml.bind.JAXBContext;
@@ -127,9 +129,23 @@ public final class Users {
 		return newInstance(usersXml);
 	}
 	
+	private final Map<String, List<User>> userListMap;
 	private final List<User> users;
 	
 	private Users(final List<User> usrs) {
+		Map<String, List<User>> usrListMap = new HashMap<String, List<User>>();
+		for (User usr : usrs) {
+			String name = usr.getName();
+			if (usrListMap.containsKey(name)) {
+				List<User> usrList = usrListMap.get(name);
+				usrList.add(usr);
+			} else {
+				List<User> usrList = new ArrayList<User>();
+				usrList.add(usr);
+				usrListMap.put(name, usrList);
+			}
+		}
+		this.userListMap = usrListMap;
 		this.users = new ArrayList<User>(usrs);
 	}
 	
@@ -156,22 +172,19 @@ public final class Users {
 	}
 	
 	public List<User> get(final String name) {
-		List<User> usrs = new ArrayList<User>();
-		for (User user : this.users) {
-			if (user.getName().equals(name)) {
-				usrs.add(user);
-			}
+		List<User> userList = this.userListMap.get(name);
+		if (userList != null) {
+			return Collections.unmodifiableList(userList);
 		}
-		return Collections.unmodifiableList(usrs);
+		return Collections.emptyList();
 	}
 	
 	public User getLast(final String name) {
-		List<User> usrs = this.get(name);
-		User usr = null;
-		if (usrs.size() > 0) {
-			usr = usrs.get(usrs.size() - 1);
+		List<User> userList = this.userListMap.get(name);
+		if (userList != null) {
+			return userList.get(userList.size() - 1);
 		}
-		return usr;
+		return null;
 	}
 	
 	@Override

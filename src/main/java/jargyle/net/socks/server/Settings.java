@@ -112,7 +112,7 @@ public final class Settings {
 		List<Setting<Object>> settingList = this.settingListMap.get(
 				settingSpec);
 		V value = null;
-		if (settingList != null && !settingList.isEmpty()) {
+		if (settingList != null) {
 			Setting<Object> setting = settingList.get(settingList.size() - 1);
 			value = settingSpec.getValueType().cast(setting.getValue());
 		}
@@ -129,10 +129,8 @@ public final class Settings {
 		List<V> values = new ArrayList<V>();
 		if (settingList != null) {
 			for (Setting<Object> setting : settingList) {
-				if (setting.getSettingSpec().equals(settingSpec)) {
-					V value = settingSpec.getValueType().cast(setting.getValue());
-					values.add(value);
-				}
+				V value = settingSpec.getValueType().cast(setting.getValue());
+				values.add(value);
 			}
 		}
 		if (values.isEmpty()) {

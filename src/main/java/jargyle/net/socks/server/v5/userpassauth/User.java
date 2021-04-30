@@ -105,13 +105,6 @@ public final class User {
 			return false;
 		}
 		User other = (User) obj;
-		if (this.hashedPassword == null) {
-			if (other.hashedPassword != null) {
-				return false;
-			}
-		} else if (!this.hashedPassword.equals(other.hashedPassword)) {
-			return false;
-		}
 		if (this.name == null) {
 			if (other.name != null) {
 				return false;
@@ -121,7 +114,7 @@ public final class User {
 		}
 		return true;
 	}
-	
+
 	public HashedPassword getHashedPassword() {
 		return this.hashedPassword;
 	}
@@ -134,8 +127,8 @@ public final class User {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((this.hashedPassword == null) ? 0 : this.hashedPassword.hashCode());
-		result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
+		result = prime * result + ((this.name == null) ? 
+				0 : this.name.hashCode());
 		return result;
 	}
 

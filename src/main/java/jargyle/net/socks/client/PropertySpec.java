@@ -33,8 +33,11 @@ import jargyle.security.EncryptedPassword;
 import jargyle.util.PositiveInteger;
 import jargyle.util.Strings;
 
-public abstract class PropertySpec<V> {
+public abstract class PropertySpec<V> 
+	implements Comparable<PropertySpec<? extends Object>> {
 
+	private static int NEXT_ORDINAL = 0;
+	
 	public static final PropertySpec<Host> BIND_HOST = new HostPropertySpec(
 			"socksClient.bindHost",
 			Host.getIpv4WildcardInstance());
@@ -208,6 +211,7 @@ public abstract class PropertySpec<V> {
 
 	private Property<V> defaultProperty;
 	private final V defaultValue;
+	private final int ordinal;
 	private final String string;
 	private final Class<V> valueType;
 	
@@ -216,9 +220,15 @@ public abstract class PropertySpec<V> {
 		Objects.requireNonNull(s);
 		Objects.requireNonNull(valType);
 		this.defaultValue = valType.cast(defaultVal);
+		this.ordinal = NEXT_ORDINAL++;
 		this.string = s;
 		this.valueType = valType;
 		this.defaultProperty = null;
+	}
+	
+	@Override
+	public final int compareTo(final PropertySpec<? extends Object> o) {
+		return this.ordinal - o.ordinal;
 	}
 	
 	@Override
@@ -233,16 +243,12 @@ public abstract class PropertySpec<V> {
 			return false;
 		}
 		PropertySpec<?> other = (PropertySpec<?>) obj;
-		if (this.string == null) {
-			if (other.string != null) {
-				return false;
-			}
-		} else if (!this.string.equals(other.string)) {
+		if (this.ordinal != other.ordinal) {
 			return false;
 		}
 		return true;
 	}
-	
+
 	public final Property<V> getDefaultProperty() {
 		if (this.defaultProperty == null) {
 			this.defaultProperty = new Property<V>(this, this.valueType.cast(
@@ -259,8 +265,7 @@ public abstract class PropertySpec<V> {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((this.string == null) ? 
-				0 : this.string.hashCode());
+		result = prime * result + this.ordinal;
 		return result;
 	}
 	
@@ -269,6 +274,10 @@ public abstract class PropertySpec<V> {
 	}
 	
 	public abstract Property<V> newPropertyOfParsableValue(final String value);
+	
+	public final int ordinal() {
+		return this.ordinal;
+	}
 	
 	@Override
 	public final String toString() {

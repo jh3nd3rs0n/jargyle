@@ -18,8 +18,11 @@ import jargyle.util.NonnegativeInteger;
 import jargyle.util.PositiveInteger;
 import jargyle.util.UnsignedByte;
 
-public abstract class SocketSettingSpec<V> {
+public abstract class SocketSettingSpec<V> 
+	implements Comparable<SocketSettingSpec<? extends Object>> {
 
+	private static int NEXT_ORDINAL = 0;
+	
 	@HelpText(
 			doc = "The type-of-service or traffic class field in the IP "
 					+ "header for a TCP or UDP socket", 
@@ -401,12 +404,14 @@ public abstract class SocketSettingSpec<V> {
 		return Collections.unmodifiableMap(VALUES_MAP);		
 	}
 	
+	private final int ordinal;
 	private final String string;
 	private final Class<V> valueType;
 		
 	private SocketSettingSpec(final String s, final Class<V> valType) {
 		Objects.requireNonNull(s);
 		Objects.requireNonNull(valType);
+		this.ordinal = NEXT_ORDINAL++;
 		this.string = s;
 		this.valueType = valType;
 	}
@@ -436,6 +441,11 @@ public abstract class SocketSettingSpec<V> {
 	}
 	
 	@Override
+	public final int compareTo(final SocketSettingSpec<? extends Object> o) {
+		return this.ordinal - o.ordinal;
+	}
+
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
@@ -447,16 +457,12 @@ public abstract class SocketSettingSpec<V> {
 			return false;
 		}
 		SocketSettingSpec<?> other = (SocketSettingSpec<?>) obj;
-		if (this.string == null) {
-			if (other.string != null) {
-				return false;
-			}
-		} else if (!this.string.equals(other.string)) {
+		if (this.ordinal != other.ordinal) {
 			return false;
 		}
 		return true;
 	}
-	
+
 	public final Class<V> getValueType() {
 		return this.valueType;
 	}
@@ -465,11 +471,10 @@ public abstract class SocketSettingSpec<V> {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((this.string == null) ? 
-				0 : this.string.hashCode());
+		result = prime * result + this.ordinal;
 		return result;
 	}
-
+	
 	public final SocketSetting<V> newSocketSetting(final V value) {
 		return new SocketSetting<V>(this, this.valueType.cast(value));
 	}
@@ -477,6 +482,10 @@ public abstract class SocketSettingSpec<V> {
 	public abstract SocketSetting<V> newSocketSettingOfParsableValue(
 			final String value);
 
+	public final int ordinal() {
+		return this.ordinal;
+	}
+	
 	@Override
 	public final String toString() {
 		return this.string;

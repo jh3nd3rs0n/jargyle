@@ -7,10 +7,10 @@ import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -55,7 +55,7 @@ public final class SocketSettings {
 	public static SocketSettings newInstance(
 			final List<SocketSetting<? extends Object>> socketSttngs) {
 		Map<SocketSettingSpec<Object>, SocketSetting<Object>> socketSettings = 
-				new HashMap<SocketSettingSpec<Object>, SocketSetting<Object>>();
+				new TreeMap<SocketSettingSpec<Object>, SocketSetting<Object>>();
 		for (SocketSetting<? extends Object> socketSttng : socketSttngs) {
 			@SuppressWarnings("unchecked")
 			SocketSetting<Object> sockSttng = (SocketSetting<Object>) socketSttng;
@@ -77,7 +77,7 @@ public final class SocketSettings {
 	
 	public static SocketSettings newInstance(final String s) {
 		Map<SocketSettingSpec<Object>, SocketSetting<Object>> socketSettings = 
-				new HashMap<SocketSettingSpec<Object>, SocketSetting<Object>>();
+				new TreeMap<SocketSettingSpec<Object>, SocketSetting<Object>>();
 		if (s.isEmpty()) {
 			return new SocketSettings(socketSettings);
 		}
@@ -97,13 +97,13 @@ public final class SocketSettings {
 	private SocketSettings(
 			final Map<SocketSettingSpec<Object>, SocketSetting<Object>> socketSttngs) {
 		this.socketSettings = 
-				new HashMap<SocketSettingSpec<Object>, SocketSetting<Object>>(
+				new TreeMap<SocketSettingSpec<Object>, SocketSetting<Object>>(
 						socketSttngs);
 	}
 	
 	private SocketSettings(final SocketSettings other) {
 		this.socketSettings = 
-				new HashMap<SocketSettingSpec<Object>, SocketSetting<Object>>(
+				new TreeMap<SocketSettingSpec<Object>, SocketSetting<Object>>(
 						other.socketSettings);
 	}
 	

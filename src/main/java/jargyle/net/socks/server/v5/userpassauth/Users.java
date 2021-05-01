@@ -9,7 +9,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.TreeMap;
+import java.util.LinkedHashMap;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -81,7 +81,7 @@ public final class Users {
 	}
 	
 	public static Users newInstance(final List<User> usrs) {
-		Map<String, User> u = new TreeMap<String, User>();
+		Map<String, User> u = new LinkedHashMap<String, User>();
 		for (User usr : usrs) {
 			u.put(usr.getName(), usr);
 		}
@@ -89,7 +89,7 @@ public final class Users {
 	}
 	
 	public static Users newInstance(final String s) {
-		Map<String, User> users = new TreeMap<String, User>();
+		Map<String, User> users = new LinkedHashMap<String, User>();
 		if (s.isEmpty()) {
 			return new Users(users);
 		}
@@ -144,11 +144,11 @@ public final class Users {
 	private final Map<String, User> users;
 	
 	private Users(final Map<String, User> usrs) {
-		this.users = new TreeMap<String, User>(usrs);
+		this.users = new LinkedHashMap<String, User>(usrs);
 	}
 	
 	private Users(final Users other) {
-		this.users = new TreeMap<String, User>(other.users);
+		this.users = new LinkedHashMap<String, User>(other.users);
 	}
 	
 	@Override

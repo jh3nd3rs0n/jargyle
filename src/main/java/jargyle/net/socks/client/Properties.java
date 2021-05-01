@@ -4,14 +4,14 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
+import java.util.LinkedHashMap;
 
 public final class Properties {
 
 	public static Properties newInstance(
 			final List<Property<? extends Object>> properties) {
 		Map<PropertySpec<Object>, Property<Object>> props = 
-				new TreeMap<PropertySpec<Object>, Property<Object>>();
+				new LinkedHashMap<PropertySpec<Object>, Property<Object>>();
 		for (Property<? extends Object> property : properties) {
 			@SuppressWarnings("unchecked")
 			Property<Object> prop = (Property<Object>) property;
@@ -31,13 +31,15 @@ public final class Properties {
 	
 	private Properties(
 			final Map<PropertySpec<Object>, Property<Object>> props) {
-		this.properties = new TreeMap<PropertySpec<Object>, Property<Object>>(
-				props);
+		this.properties = 
+				new LinkedHashMap<PropertySpec<Object>, Property<Object>>(
+						props);
 	}
 	
 	private Properties(final Properties other) {
-		this.properties = new TreeMap<PropertySpec<Object>, Property<Object>>(
-				other.properties);
+		this.properties = 
+				new LinkedHashMap<PropertySpec<Object>, Property<Object>>(
+						other.properties);
 	}
 	
 	@Override

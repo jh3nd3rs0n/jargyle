@@ -2,13 +2,6 @@
 <users>
     <user>
         <hashedPassword xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="pbkdf2WithHmacSha256HashedPassword">
-            <hash>ycdKuXCehif76Kv4a5TC9tYun5DdibqTOjKmqNv7bJU=</hash>
-            <salt>SaTI6PwS6WE=</salt>
-        </hashedPassword>
-        <name>Abu</name>
-    </user>
-    <user>
-        <hashedPassword xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="pbkdf2WithHmacSha256HashedPassword">
             <hash>bTORKdLBo2nUSOSaQXi5tIKFvxeurm+Bzm6F/VwQERo=</hash>
             <salt>mGvQZmPl/q4=</salt>
         </hashedPassword>
@@ -20,5 +13,12 @@
             <salt>K+aacLMX4TQ=</salt>
         </hashedPassword>
         <name>Jasmine</name>
+    </user>
+    <user>
+        <hashedPassword xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="pbkdf2WithHmacSha256HashedPassword">
+            <hash>ycdKuXCehif76Kv4a5TC9tYun5DdibqTOjKmqNv7bJU=</hash>
+            <salt>SaTI6PwS6WE=</salt>
+        </hashedPassword>
+        <name>Abu</name>
     </user>
 </users>

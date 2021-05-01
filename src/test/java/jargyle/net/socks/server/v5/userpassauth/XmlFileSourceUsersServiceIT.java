@@ -46,13 +46,13 @@ public class XmlFileSourceUsersServiceIT {
 	@Test
 	public void testForUpdatedUsersFile01() throws IOException {
 		IoHelper.writeToFile(ResourceHelper.getResourceAsString(
-				ResourceNameConstants.JARGYLE_NET_SOCKS_SERVER_V5_EMPTY_USERS_FILE), 
+				ResourceNameConstants.JARGYLE_NET_SOCKS_SERVER_V5_USERPASSAUTH_EMPTY_USERS_FILE), 
 				this.usersFile.toFile());
 		this.xmlFileSourceUsersService = XmlFileSourceUsersService.newInstance(
 				this.usersFile.toString());
 		ThreadHelper.sleepForThreeSeconds();
 		IoHelper.writeToFile(ResourceHelper.getResourceAsString(
-				ResourceNameConstants.JARGYLE_NET_SOCKS_SERVER_V5_USERS_FILE), 
+				ResourceNameConstants.JARGYLE_NET_SOCKS_SERVER_V5_USERPASSAUTH_USERS_FILE), 
 				this.usersFile.toFile());
 		ThreadHelper.sleepForThreeSeconds();
 		final int numOfUsersAdded = 3; 
@@ -62,13 +62,13 @@ public class XmlFileSourceUsersServiceIT {
 	@Test
 	public void testForUpdatedUsersFile02() throws IOException {
 		IoHelper.writeToFile(ResourceHelper.getResourceAsString(
-				ResourceNameConstants.JARGYLE_NET_SOCKS_SERVER_V5_USERS_FILE), 
+				ResourceNameConstants.JARGYLE_NET_SOCKS_SERVER_V5_USERPASSAUTH_USERS_FILE), 
 				this.usersFile.toFile());
 		this.xmlFileSourceUsersService = XmlFileSourceUsersService.newInstance(
 				this.usersFile.toString());
 		ThreadHelper.sleepForThreeSeconds();
 		IoHelper.writeToFile(ResourceHelper.getResourceAsString(
-				ResourceNameConstants.JARGYLE_NET_SOCKS_SERVER_V5_ADDED_USER_TO_USERS_FILE), 
+				ResourceNameConstants.JARGYLE_NET_SOCKS_SERVER_V5_USERPASSAUTH_ADDED_USER_TO_USERS_FILE), 
 				this.usersFile.toFile());
 		ThreadHelper.sleepForThreeSeconds();
 		final int numOfUsersAdded = 4; 

@@ -920,13 +920,6 @@ If you want to enter a user, the prompt will ask you for the user's name, passwo
     <users>
         <user>
             <hashedPassword xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="pbkdf2WithHmacSha256HashedPassword">
-                <hash>ycdKuXCehif76Kv4a5TC9tYun5DdibqTOjKmqNv7bJU=</hash>
-                <salt>SaTI6PwS6WE=</salt>
-            </hashedPassword>
-            <name>Abu</name>
-        </user>
-        <user>
-            <hashedPassword xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="pbkdf2WithHmacSha256HashedPassword">
                 <hash>bTORKdLBo2nUSOSaQXi5tIKFvxeurm+Bzm6F/VwQERo=</hash>
                 <salt>mGvQZmPl/q4=</salt>
             </hashedPassword>
@@ -938,6 +931,13 @@ If you want to enter a user, the prompt will ask you for the user's name, passwo
                 <salt>K+aacLMX4TQ=</salt>
             </hashedPassword>
             <name>Jasmine</name>
+        </user>
+        <user>
+            <hashedPassword xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="pbkdf2WithHmacSha256HashedPassword">
+                <hash>ycdKuXCehif76Kv4a5TC9tYun5DdibqTOjKmqNv7bJU=</hash>
+                <salt>SaTI6PwS6WE=</salt>
+            </hashedPassword>
+            <name>Abu</name>
         </user>
     </users>
     
@@ -978,17 +978,24 @@ Once you have run the command, an interactive prompt will ask you for the new us
     <users>
         <user>
             <hashedPassword xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="pbkdf2WithHmacSha256HashedPassword">
-                <hash>ycdKuXCehif76Kv4a5TC9tYun5DdibqTOjKmqNv7bJU=</hash>
-                <salt>SaTI6PwS6WE=</salt>
-            </hashedPassword>
-            <name>Abu</name>
-        </user>
-        <user>
-            <hashedPassword xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="pbkdf2WithHmacSha256HashedPassword">
                 <hash>bTORKdLBo2nUSOSaQXi5tIKFvxeurm+Bzm6F/VwQERo=</hash>
                 <salt>mGvQZmPl/q4=</salt>
             </hashedPassword>
             <name>Aladdin</name>
+        </user>
+        <user>
+            <hashedPassword xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="pbkdf2WithHmacSha256HashedPassword">
+                <hash>c5/RXb2EC0eqVWP5kAIuS0d78Z7O3K49OfxcerMupuo=</hash>
+                <salt>K+aacLMX4TQ=</salt>
+            </hashedPassword>
+            <name>Jasmine</name>
+        </user>
+        <user>
+            <hashedPassword xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="pbkdf2WithHmacSha256HashedPassword">
+                <hash>ycdKuXCehif76Kv4a5TC9tYun5DdibqTOjKmqNv7bJU=</hash>
+                <salt>SaTI6PwS6WE=</salt>
+            </hashedPassword>
+            <name>Abu</name>
         </user>
         <user>
             <hashedPassword xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="pbkdf2WithHmacSha256HashedPassword">
@@ -997,13 +1004,6 @@ Once you have run the command, an interactive prompt will ask you for the new us
             </hashedPassword>
             <name>Jafar</name>
         </user>        
-        <user>
-            <hashedPassword xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="pbkdf2WithHmacSha256HashedPassword">
-                <hash>c5/RXb2EC0eqVWP5kAIuS0d78Z7O3K49OfxcerMupuo=</hash>
-                <salt>K+aacLMX4TQ=</salt>
-            </hashedPassword>
-            <name>Jasmine</name>
-        </user>
     </users>
     
 ```
@@ -1038,13 +1038,6 @@ Once you have run the command, the user of the specified name will be removed fr
     <users>
         <user>
             <hashedPassword xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="pbkdf2WithHmacSha256HashedPassword">
-                <hash>ycdKuXCehif76Kv4a5TC9tYun5DdibqTOjKmqNv7bJU=</hash>
-                <salt>SaTI6PwS6WE=</salt>
-            </hashedPassword>
-            <name>Abu</name>
-        </user>
-        <user>
-            <hashedPassword xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="pbkdf2WithHmacSha256HashedPassword">
                 <hash>bTORKdLBo2nUSOSaQXi5tIKFvxeurm+Bzm6F/VwQERo=</hash>
                 <salt>mGvQZmPl/q4=</salt>
             </hashedPassword>
@@ -1056,6 +1049,13 @@ Once you have run the command, the user of the specified name will be removed fr
                 <salt>K+aacLMX4TQ=</salt>
             </hashedPassword>
             <name>Jasmine</name>
+        </user>
+        <user>
+            <hashedPassword xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="pbkdf2WithHmacSha256HashedPassword">
+                <hash>ycdKuXCehif76Kv4a5TC9tYun5DdibqTOjKmqNv7bJU=</hash>
+                <salt>SaTI6PwS6WE=</salt>
+            </hashedPassword>
+            <name>Abu</name>
         </user>
     </users>
     

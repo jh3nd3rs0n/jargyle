@@ -94,7 +94,7 @@ final class XmlFileSourceUsersService extends UsersService {
 		
 	}
 	
-	public static XmlFileSourceUsersService newInstance(final File xmlFile) {
+	public static XmlFileSourceUsersService newInstance(final String xmlFile) {
 		XmlFileSourceUsersService xmlFileSourceUsersService =
 				new XmlFileSourceUsersService(xmlFile);
 		xmlFileSourceUsersService.startMonitoringXmlFile();
@@ -105,18 +105,20 @@ final class XmlFileSourceUsersService extends UsersService {
 	private Users users;
 	private final File xmlFile;
 	
-	private XmlFileSourceUsersService(final File file) {
+	private XmlFileSourceUsersService(final String file) {
+		super(file);
 		Objects.requireNonNull(file, "XML file must not be null");
+		File f = new File(file);
 		InputStream in = null;
 		Users usrs = null;
 		try {
-			in = new FileInputStream(file);
+			in = new FileInputStream(f);
 			usrs = Users.newInstanceFrom(in);
 		} catch (FileNotFoundException e) {
 			throw new IllegalArgumentException(e);
 		} catch (IOException e) {
 			throw new IllegalArgumentException(String.format(
-					"error in reading XML file '%s'", file), 
+					"error in reading XML file '%s'", f), 
 					e);
 		} finally {
 			if (in != null) {
@@ -129,12 +131,12 @@ final class XmlFileSourceUsersService extends UsersService {
 		}
 		this.executor = null;
 		this.users = usrs;
-		this.xmlFile = file;		
+		this.xmlFile = f;		
 	}
 	
 	@Override
 	public Users getUsers() {
-		return Users.newInstance(this.users.toList());
+		return Users.newInstance(this.users);
 	}
 	
 	private void startMonitoringXmlFile() {

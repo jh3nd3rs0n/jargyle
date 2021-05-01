@@ -6,10 +6,10 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.TreeMap;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -81,20 +81,32 @@ public final class Users {
 	}
 	
 	public static Users newInstance(final List<User> usrs) {
-		return new Users(usrs);
+		Map<String, User> u = new TreeMap<String, User>();
+		for (User usr : usrs) {
+			u.put(usr.getName(), usr);
+		}
+		return new Users(u);
 	}
 	
 	public static Users newInstance(final String s) {
-		List<User> users = new ArrayList<User>();
+		Map<String, User> users = new TreeMap<String, User>();
+		if (s.isEmpty()) {
+			return new Users(users);
+		}
 		String[] sElements = s.split(" ");
 		for (String sElement : sElements) {
-			users.add(User.newInstance(sElement));
+			User user = User.newInstance(sElement);
+			users.put(user.getName(), user);
 		}
 		return new Users(users);
 	}
 	
 	public static Users newInstance(final User... usrs) {
 		return newInstance(Arrays.asList(usrs));
+	}
+	
+	public static Users newInstance(final Users usrs) {
+		return new Users(usrs);
 	}
 	
 	private static Users newInstance(final UsersXml usersXml) {
@@ -129,24 +141,14 @@ public final class Users {
 		return newInstance(usersXml);
 	}
 	
-	private final Map<String, List<User>> userListMap;
-	private final List<User> users;
+	private final Map<String, User> users;
 	
-	private Users(final List<User> usrs) {
-		Map<String, List<User>> usrListMap = new HashMap<String, List<User>>();
-		for (User usr : usrs) {
-			String name = usr.getName();
-			if (usrListMap.containsKey(name)) {
-				List<User> usrList = usrListMap.get(name);
-				usrList.add(usr);
-			} else {
-				List<User> usrList = new ArrayList<User>();
-				usrList.add(usr);
-				usrListMap.put(name, usrList);
-			}
-		}
-		this.userListMap = usrListMap;
-		this.users = new ArrayList<User>(usrs);
+	private Users(final Map<String, User> usrs) {
+		this.users = new TreeMap<String, User>(usrs);
+	}
+	
+	private Users(final Users other) {
+		this.users = new TreeMap<String, User>(other.users);
 	}
 	
 	@Override
@@ -171,32 +173,33 @@ public final class Users {
 		return true;
 	}
 	
-	public List<User> get(final String name) {
-		List<User> userList = this.userListMap.get(name);
-		if (userList != null) {
-			return Collections.unmodifiableList(userList);
-		}
-		return Collections.emptyList();
-	}
-	
-	public User getLast(final String name) {
-		List<User> userList = this.userListMap.get(name);
-		if (userList != null) {
-			return userList.get(userList.size() - 1);
-		}
-		return null;
+	public User get(final String name) {
+		return this.users.get(name);
 	}
 	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((this.users == null) ? 0 : this.users.hashCode());
+		result = prime * result + ((this.users == null) ? 
+				0 : this.users.hashCode());
 		return result;
 	}
 
-	public List<User> toList() {
-		return Collections.unmodifiableList(this.users);
+	public User put(final User usr) {
+		return this.users.put(usr.getName(), usr);
+	}
+	
+	public void putAll(final Users usrs) {
+		this.users.putAll(usrs.toMap());
+	}
+	
+	public User remove(final String name) {
+		return this.users.remove(name);
+	}
+
+	public Map<String, User> toMap() {
+		return Collections.unmodifiableMap(this.users);
 	}
 
 	@Override
@@ -211,7 +214,7 @@ public final class Users {
 
 	private UsersXml toUsersXml() {
 		UsersXml usersXml = new UsersXml();
-		usersXml.users.addAll(this.users);
+		usersXml.users.addAll(this.users.values());
 		return usersXml;
 	}
 	

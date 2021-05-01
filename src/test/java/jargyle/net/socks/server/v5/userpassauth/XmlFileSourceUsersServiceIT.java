@@ -49,14 +49,14 @@ public class XmlFileSourceUsersServiceIT {
 				ResourceNameConstants.JARGYLE_NET_SOCKS_SERVER_V5_EMPTY_USERS_FILE), 
 				this.usersFile.toFile());
 		this.xmlFileSourceUsersService = XmlFileSourceUsersService.newInstance(
-				this.usersFile.toFile());
+				this.usersFile.toString());
 		ThreadHelper.sleepForThreeSeconds();
 		IoHelper.writeToFile(ResourceHelper.getResourceAsString(
 				ResourceNameConstants.JARGYLE_NET_SOCKS_SERVER_V5_USERS_FILE), 
 				this.usersFile.toFile());
 		ThreadHelper.sleepForThreeSeconds();
 		final int numOfUsersAdded = 3; 
-		assertTrue(this.xmlFileSourceUsersService.getUsers().toList().size() == numOfUsersAdded);
+		assertTrue(this.xmlFileSourceUsersService.getUsers().toMap().size() == numOfUsersAdded);
 	}
 
 	@Test
@@ -65,14 +65,14 @@ public class XmlFileSourceUsersServiceIT {
 				ResourceNameConstants.JARGYLE_NET_SOCKS_SERVER_V5_USERS_FILE), 
 				this.usersFile.toFile());
 		this.xmlFileSourceUsersService = XmlFileSourceUsersService.newInstance(
-				this.usersFile.toFile());
+				this.usersFile.toString());
 		ThreadHelper.sleepForThreeSeconds();
 		IoHelper.writeToFile(ResourceHelper.getResourceAsString(
 				ResourceNameConstants.JARGYLE_NET_SOCKS_SERVER_V5_ADDED_USER_TO_USERS_FILE), 
 				this.usersFile.toFile());
 		ThreadHelper.sleepForThreeSeconds();
 		final int numOfUsersAdded = 4; 
-		assertTrue(this.xmlFileSourceUsersService.getUsers().toList().size() == numOfUsersAdded);
+		assertTrue(this.xmlFileSourceUsersService.getUsers().toMap().size() == numOfUsersAdded);
 	}
 
 }

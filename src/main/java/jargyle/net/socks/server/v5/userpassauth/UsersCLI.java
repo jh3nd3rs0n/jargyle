@@ -40,13 +40,11 @@ public final class UsersCLI extends CLI {
 				if (args.length == 0) {
 					throw new IllegalArgumentException("FILE is required");
 				}
-				String arg = args[0];
-				Users users = readFile(arg);
-				List<User> userList = new ArrayList<User>(users.toList());
-				List<User> addedUserList = readUsers();
-				userList.addAll(addedUserList);
-				Users combinedUsers = Users.newInstance(userList);  
-				newFile(combinedUsers, arg);
+				String file = args[0];
+				Users users = readUsersFrom(file);
+				Users addedUsers = readUsers();
+				users.putAll(addedUsers);
+				newFile(users, file);
 			}
 
 		},
@@ -62,16 +60,15 @@ public final class UsersCLI extends CLI {
 				if (args.length == 0) {
 					throw new IllegalArgumentException("FILE is required");
 				}
-				String arg = args[0];
-				List<User> addedUserList = new ArrayList<User>();
+				String file = args[0];
+				Users addedUsers = Users.newInstance();
 				Console console = System.console();
 				String decision = console.readLine(
 						"Would you like to enter a user? ('Y' for yes): ");
 				if (decision.equals("Y")) {
-					addedUserList.addAll(readUsers());
+					addedUsers.putAll(readUsers());
 				}
-				Users addedUsers = Users.newInstance(addedUserList);  
-				newFile(addedUsers, arg);
+				newFile(addedUsers, file);
 			}
 			
 		},
@@ -87,25 +84,16 @@ public final class UsersCLI extends CLI {
 					throw new IllegalArgumentException(
 							"NAME and FILE are required");
 				}
-				String username = args[0];
-				String filename = args[1];
-				Users users = readFile(filename);
-				List<User> userList = new ArrayList<User>(users.toList());
-				List<User> modifiedUserList = new ArrayList<User>();
-				for (User user : userList) {
-					if (user.getName().equals(username)) {
-						continue;
-					}
-					modifiedUserList.add(user);
-				}
-				int numOfUsersRemoved = 
-						userList.size() - modifiedUserList.size();
-				if (numOfUsersRemoved == 0) {
+				String name = args[0];
+				String file = args[1];
+				Users users = readUsersFrom(file);
+				User removedUser = users.remove(name);
+				if (removedUser == null) {
 					throw new IllegalArgumentException(String.format(
-							"User '%s' does not exist", username));
+							"User '%s' does not exist", name));
 				}
-				System.out.printf("User '%s' removed%n", username);
-				newFile(Users.newInstance(modifiedUserList), filename);
+				System.out.printf("User '%s' removed%n", name);
+				newFile(users, file);
 			}
 			
 		};
@@ -122,16 +110,16 @@ public final class UsersCLI extends CLI {
 		
 		private static void newFile(
 				final Users users,
-				final String arg) throws IOException {
-			String tempArg = arg;
+				final String file) throws IOException {
+			String tempArg = file;
 			System.out.print("Writing to ");
 			OutputStream out = null;
-			if (arg.equals("-")) {
+			if (file.equals("-")) {
 				System.out.printf("standard output...%n");
 				out = System.out;
 			} else {
-				File file = new File(arg);
-				System.out.printf("'%s'...%n", file.getAbsolutePath());
+				File f = new File(file);
+				System.out.printf("'%s'...%n", f.getAbsolutePath());
 				File tempFile = null;
 				do {
 					tempArg = tempArg.concat(".tmp");
@@ -149,43 +137,16 @@ public final class UsersCLI extends CLI {
 					out.close();
 				}
 			}
-			if (!arg.equals("-")) {
+			if (!file.equals("-")) {
 				Files.move(
 						new File(tempArg).toPath(), 
-						new File(arg).toPath(), 
+						new File(file).toPath(), 
 						StandardCopyOption.REPLACE_EXISTING);
 			}
 		}
 
-		private static Users readFile(final String arg) throws IOException {
-			InputStream in = null;
-			if (arg.equals("-")) {
-				in = System.in;
-			} else {
-				File file = new File(arg);
-				try {
-					in = new FileInputStream(file);
-				} catch (FileNotFoundException e) {
-					throw new IllegalArgumentException(e);
-				}
-			}
-			Users users = null;
-			try {
-				users = Users.newInstanceFrom(in);
-			} catch (IOException e) { 
-				throw new IllegalArgumentException(String.format(
-						"error in reading XML file '%s'", arg), 
-						e);
-			} finally {
-				if (in instanceof FileInputStream) {
-					in.close();
-				}
-			}
-			return users;
-		}
-		
-		private static List<User> readUsers() {
-			List<User> users = new ArrayList<User>();
+		private static Users readUsers() {
+			Users users = Users.newInstance();
 			Console console = System.console();
 			boolean addAnotherUser = false;
 			do {
@@ -222,13 +183,41 @@ public final class UsersCLI extends CLI {
 								"Password and re-typed password do not match.%n");
 					}
 				}
-				users.add(User.newInstance(name, password));
+				users.put(User.newInstance(name, password));
 				Arrays.fill(password, '\0');
 				console.printf("User '%s' added.%n", name);
 				String decision = console.readLine(
 						"Would you like to enter another user? ('Y' for yes): ");
 				addAnotherUser = decision.equals("Y");
 			} while (addAnotherUser);
+			return users;
+		}
+		
+		private static Users readUsersFrom(
+				final String file) throws IOException {
+			InputStream in = null;
+			if (file.equals("-")) {
+				in = System.in;
+			} else {
+				File f = new File(file);
+				try {
+					in = new FileInputStream(f);
+				} catch (FileNotFoundException e) {
+					throw new IllegalArgumentException(e);
+				}
+			}
+			Users users = null;
+			try {
+				users = Users.newInstanceFrom(in);
+			} catch (IOException e) { 
+				throw new IllegalArgumentException(String.format(
+						"error in reading XML file '%s'", file), 
+						e);
+			} finally {
+				if (in instanceof FileInputStream) {
+					in.close();
+				}
+			}
 			return users;
 		}
 		

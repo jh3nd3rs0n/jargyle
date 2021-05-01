@@ -3,9 +3,9 @@ package jargyle.net.socks.server;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -69,7 +69,7 @@ public final class Settings {
 	
 	private Settings(final List<Setting<Object>> sttngs) {
 		Map<SettingSpec<Object>, List<Setting<Object>>> sttngListMap = 
-				new TreeMap<SettingSpec<Object>, List<Setting<Object>>>();
+				new HashMap<SettingSpec<Object>, List<Setting<Object>>>();
 		for (Setting<Object> sttng : sttngs) {
 			SettingSpec<Object> sttngSpec = sttng.getSettingSpec();
 			if (sttngListMap.containsKey(sttngSpec)) {

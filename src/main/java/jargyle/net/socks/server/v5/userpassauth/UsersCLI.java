@@ -41,7 +41,7 @@ public final class UsersCLI extends CLI {
 					throw new IllegalArgumentException("FILE is required");
 				}
 				String file = args[0];
-				Users users = readUsersFrom(file);
+				Users users = readUsersFromFile(file);
 				Users addedUsers = readUsers();
 				users.putAll(addedUsers);
 				newFile(users, file);
@@ -86,7 +86,7 @@ public final class UsersCLI extends CLI {
 				}
 				String name = args[0];
 				String file = args[1];
-				Users users = readUsersFrom(file);
+				Users users = readUsersFromFile(file);
 				User removedUser = users.remove(name);
 				if (removedUser == null) {
 					throw new IllegalArgumentException(String.format(
@@ -129,8 +129,7 @@ public final class UsersCLI extends CLI {
 				out = new FileOutputStream(tempFile);
 			}
 			try {
-				byte[] xml = users.toXml();
-				out.write(xml);
+				users.toXml(out);
 				out.flush();
 			} finally {
 				if (out instanceof FileOutputStream) {
@@ -193,7 +192,7 @@ public final class UsersCLI extends CLI {
 			return users;
 		}
 		
-		private static Users readUsersFrom(
+		private static Users readUsersFromFile(
 				final String file) throws IOException {
 			InputStream in = null;
 			if (file.equals("-")) {
@@ -208,7 +207,7 @@ public final class UsersCLI extends CLI {
 			}
 			Users users = null;
 			try {
-				users = Users.newInstanceFrom(in);
+				users = Users.newInstanceFromXml(in);
 			} catch (IOException e) { 
 				throw new IllegalArgumentException(String.format(
 						"error in reading XML file '%s'", file), 
@@ -387,8 +386,7 @@ public final class UsersCLI extends CLI {
 	)
 	@Ordinal(XSD_OPTION_GROUP_ORDINAL)
 	private void printXsd() throws IOException {
-		byte[] xsd = Users.getXsd();
-		System.out.write(xsd);
+		Users.toXsd(System.out);
 		System.out.flush();
 		this.xsdRequested = true;
 	}

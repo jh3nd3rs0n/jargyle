@@ -1,8 +1,8 @@
 package jargyle.net.socks.server;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -47,25 +47,6 @@ public final class ImmutableConfiguration extends Configuration {
 		
 	}
 	
-	public static byte[] getXsd() {
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		JAXBContext jaxbContext = null;
-		try {
-			jaxbContext = JAXBContext.newInstance(
-					ConfigurationXml.class);
-		} catch (JAXBException e) {
-			throw new AssertionError(e);
-		}
-		StreamResult result = new StreamResult(out);
-		result.setSystemId("");
-		try {
-			jaxbContext.generateSchema(new CustomSchemaOutputResolver(result));
-		} catch (IOException e) {
-			throw new AssertionError(e);
-		}
-		return out.toByteArray();
-	}
-	
 	public static ImmutableConfiguration newInstance(
 			final Configuration config) {
 		return newInstance(config.getSettings());
@@ -80,7 +61,7 @@ public final class ImmutableConfiguration extends Configuration {
 		return new ImmutableConfiguration(settings);
 	}
 	
-	public static ImmutableConfiguration newInstanceFrom(
+	public static ImmutableConfiguration newInstanceFromXml(
 			final InputStream in) throws IOException {
 		JAXBContext jaxbContext = null;
 		try {
@@ -106,6 +87,18 @@ public final class ImmutableConfiguration extends Configuration {
 			throw new IOException(e);
 		}
 		return newInstance(configurationXml);
+	}
+	
+	public static void toXsd(final OutputStream out) throws IOException {
+		JAXBContext jaxbContext = null;
+		try {
+			jaxbContext = JAXBContext.newInstance(ConfigurationXml.class);
+		} catch (JAXBException e) {
+			throw new AssertionError(e);
+		}
+		StreamResult result = new StreamResult(out);
+		result.setSystemId("");
+		jaxbContext.generateSchema(new CustomSchemaOutputResolver(result));
 	}
 	
 	private final Settings settings;
@@ -138,8 +131,7 @@ public final class ImmutableConfiguration extends Configuration {
 		return builder.toString();
 	}
 
-	public byte[] toXml() {
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
+	public void toXml(final OutputStream out) throws IOException {
 		JAXBContext jaxbContext = null;
 		try {
 			jaxbContext = JAXBContext.newInstance(ConfigurationXml.class);
@@ -160,8 +152,7 @@ public final class ImmutableConfiguration extends Configuration {
 		try {
 			marshaller.marshal(this.toConfigurationXml(), out);
 		} catch (JAXBException e) {
-			throw new AssertionError(e);
+			throw new IOException(e);
 		}
-		return out.toByteArray();
 	}
 }

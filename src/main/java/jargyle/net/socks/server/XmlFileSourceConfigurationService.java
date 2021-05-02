@@ -63,7 +63,7 @@ public final class XmlFileSourceConfigurationService
 			Configuration config = null;
 			try {
 				in = new FileInputStream(file);
-				config = ImmutableConfiguration.newInstanceFrom(in);
+				config = ImmutableConfiguration.newInstanceFromXml(in);
 			} catch (FileNotFoundException e) {
 				LOGGER.warn(
 						String.format(
@@ -115,7 +115,7 @@ public final class XmlFileSourceConfigurationService
 		Configuration config = null;
 		try {
 			in = new FileInputStream(file);
-			config = ImmutableConfiguration.newInstanceFrom(in);
+			config = ImmutableConfiguration.newInstanceFromXml(in);
 		} catch (FileNotFoundException e) {
 			throw new IllegalArgumentException(e);
 		} catch (IOException e) {

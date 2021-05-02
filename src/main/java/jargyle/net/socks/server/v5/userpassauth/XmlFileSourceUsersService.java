@@ -60,7 +60,7 @@ final class XmlFileSourceUsersService extends UsersService {
 			Users usrs = null;
 			try {
 				in = new FileInputStream(file);
-				usrs = Users.newInstanceFrom(in);
+				usrs = Users.newInstanceFromXml(in);
 			} catch (FileNotFoundException e) {
 				LOGGER.warn( 
 						String.format(
@@ -113,7 +113,7 @@ final class XmlFileSourceUsersService extends UsersService {
 		Users usrs = null;
 		try {
 			in = new FileInputStream(f);
-			usrs = Users.newInstanceFrom(in);
+			usrs = Users.newInstanceFromXml(in);
 		} catch (FileNotFoundException e) {
 			throw new IllegalArgumentException(e);
 		} catch (IOException e) {

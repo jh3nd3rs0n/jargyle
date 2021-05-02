@@ -1,15 +1,15 @@
 package jargyle.net.socks.server.v5.userpassauth;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.LinkedHashMap;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -54,24 +54,6 @@ public final class Users {
 		protected List<User> users = new ArrayList<User>();
 	}
 
-	public static byte[] getXsd() {
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		JAXBContext jaxbContext = null;
-		try {
-			jaxbContext = JAXBContext.newInstance(UsersXml.class);
-		} catch (JAXBException e) {
-			throw new AssertionError(e);
-		}
-		StreamResult result = new StreamResult(out);
-		result.setSystemId("");
-		try {
-			jaxbContext.generateSchema(new CustomSchemaOutputResolver(result));
-		} catch (IOException e) {
-			throw new AssertionError(e);
-		}
-		return out.toByteArray();
-	}
-	
 	public static void main(final String[] args) {
 		UsersCLI usersCLI = new UsersCLI(null, null, args, false);
 		Optional<Integer> status = usersCLI.handleArgs();
@@ -113,7 +95,7 @@ public final class Users {
 		return newInstance(usersXml.users);
 	}
 	
-	public static Users newInstanceFrom(
+	public static Users newInstanceFromXml(
 			final InputStream in) throws IOException {
 		JAXBContext jaxbContext = null;
 		try {
@@ -139,6 +121,18 @@ public final class Users {
 			throw new IOException(e);
 		}
 		return newInstance(usersXml);
+	}
+
+	public static void toXsd(final OutputStream out) throws IOException {
+		JAXBContext jaxbContext = null;
+		try {
+			jaxbContext = JAXBContext.newInstance(UsersXml.class);
+		} catch (JAXBException e) {
+			throw new AssertionError(e);
+		}
+		StreamResult result = new StreamResult(out);
+		result.setSystemId("");
+		jaxbContext.generateSchema(new CustomSchemaOutputResolver(result));
 	}
 	
 	private final Map<String, User> users;
@@ -218,8 +212,7 @@ public final class Users {
 		return usersXml;
 	}
 	
-	public byte[] toXml() {
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
+	public void toXml(final OutputStream out) throws IOException {
 		JAXBContext jaxbContext = null;
 		try {
 			jaxbContext = JAXBContext.newInstance(UsersXml.class);
@@ -240,8 +233,7 @@ public final class Users {
 		try {
 			marshaller.marshal(this.toUsersXml(), out);
 		} catch (JAXBException e) {
-			throw new AssertionError(e);
+			throw new IOException(e);
 		}
-		return out.toByteArray();
-	}
+	}	
 }

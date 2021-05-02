@@ -113,7 +113,7 @@ public final class SocksServerCLI extends CLI {
 		}
 		Configuration configuration = null;
 		try {
-			configuration = ImmutableConfiguration.newInstanceFrom(in);
+			configuration = ImmutableConfiguration.newInstanceFromXml(in);
 		} catch (IOException e) { 
 			throw new IllegalArgumentException(String.format(
 					"possible invalid XML file '%s'", file), 
@@ -547,8 +547,7 @@ public final class SocksServerCLI extends CLI {
 			out = new FileOutputStream(tempFile);
 		}
 		try {
-			byte[] xml = immutableConfiguration.toXml();
-			out.write(xml);
+			immutableConfiguration.toXml(out);
 			out.flush();
 		} finally {
 			if (out instanceof FileOutputStream) {
@@ -575,8 +574,7 @@ public final class SocksServerCLI extends CLI {
 	)
 	@Ordinal(CONFIG_FILE_XSD_OPTION_GROUP_ORDINAL)
 	private void printConfigurationFileXsd() throws IOException {
-		byte[] xsd = ImmutableConfiguration.getXsd();
-		System.out.write(xsd);
+		ImmutableConfiguration.toXsd(System.out);
 		System.out.flush();
 		this.configurationFileXsdRequested = true;
 	}

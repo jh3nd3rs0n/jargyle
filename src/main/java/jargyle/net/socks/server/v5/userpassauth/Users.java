@@ -54,6 +54,18 @@ public final class Users {
 		protected List<User> users = new ArrayList<User>();
 	}
 
+	public static void generateXsd(final OutputStream out) throws IOException {
+		JAXBContext jaxbContext = null;
+		try {
+			jaxbContext = JAXBContext.newInstance(UsersXml.class);
+		} catch (JAXBException e) {
+			throw new AssertionError(e);
+		}
+		StreamResult result = new StreamResult(out);
+		result.setSystemId("");
+		jaxbContext.generateSchema(new CustomSchemaOutputResolver(result));
+	}
+	
 	public static void main(final String[] args) {
 		UsersCLI usersCLI = new UsersCLI(null, null, args, false);
 		Optional<Integer> status = usersCLI.handleArgs();
@@ -94,7 +106,7 @@ public final class Users {
 	private static Users newInstance(final UsersXml usersXml) {
 		return newInstance(usersXml.users);
 	}
-	
+
 	public static Users newInstanceFromXml(
 			final InputStream in) throws IOException {
 		JAXBContext jaxbContext = null;
@@ -121,18 +133,6 @@ public final class Users {
 			throw new IOException(e);
 		}
 		return newInstance(usersXml);
-	}
-
-	public static void toXsd(final OutputStream out) throws IOException {
-		JAXBContext jaxbContext = null;
-		try {
-			jaxbContext = JAXBContext.newInstance(UsersXml.class);
-		} catch (JAXBException e) {
-			throw new AssertionError(e);
-		}
-		StreamResult result = new StreamResult(out);
-		result.setSystemId("");
-		jaxbContext.generateSchema(new CustomSchemaOutputResolver(result));
 	}
 	
 	private final Map<String, User> users;

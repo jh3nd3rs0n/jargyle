@@ -13,24 +13,29 @@ import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.charset.Charset;
-import java.util.Arrays;
 
 public final class IoHelper {
 
-	private static final int MAX_BUFFER_LENGTH = 255;
+	public static final int MAX_BUFFER_LENGTH = 255;
 	
-	public static byte[] readDataWithIndicatedLengthFrom(
-			final InputStream in) throws IOException {
-		int b = in.read();
-		if (b == -1 || b == 0) {
-			return new byte[] { };
+	public static int readFrom(
+			final InputStream in, final byte[] b) throws IOException {
+		return readFrom(in, b, 0, b.length);
+	}
+	
+	public static int readFrom(
+			final InputStream in, 
+			final byte[] b,
+			final int off,
+			final int len) throws IOException {
+		int length = in.read();
+		if (length == -1 || length == 0) {
+			return length;
 		}
-		byte[] bytes = new byte[b];
-		int bytesRead = in.read(bytes);
-		if (bytesRead == -1) {
-			return new byte[] { };
+		if (len < length) {
+			length = len;
 		}
-		return Arrays.copyOf(bytes, bytesRead);
+		return in.read(b, off, length);		
 	}
 
 	public static String readStringFrom(final File file) throws IOException {
@@ -56,17 +61,34 @@ public final class IoHelper {
 		return string;
 	}
 	
-	public static void writeAsDataWithIndicatedLengthsThenFlush(
-			final byte[] b, final OutputStream out) throws IOException {
-		if (b.length == 0) {
-			out.write(b.length);
+	public static void writeStringThenFlush(
+			final String string, final Writer writer) throws IOException {
+		writer.write(string);
+		writer.flush();
+	}
+	
+	public static void writeStringToFile(
+			final String string, final File file) throws IOException {
+		try (Writer writer = new OutputStreamWriter(
+				new FileOutputStream(file), Charset.forName("UTF-8"))) {
+			writeStringThenFlush(string, writer);
+		}
+	}
+	
+	public static void writeThenFlush(
+			final byte[] b,
+			final int off,
+			final int len,
+			final OutputStream out) throws IOException {
+		if (len == 0) {
+			out.write(len);
 			out.flush();
 			return;
 		}
 		ByteArrayOutputStream bytesOut = new ByteArrayOutputStream();
 		ByteArrayOutputStream bufferOut = new ByteArrayOutputStream();
 		int bufferLength = 0;
-		for (int i = 0; i < b.length; i++) {
+		for (int i = off; i < off + len; i++) {
 			bufferOut.write(b[i]);
 			if (++bufferLength == MAX_BUFFER_LENGTH) {
 				bytesOut.write(bufferLength);
@@ -84,21 +106,12 @@ public final class IoHelper {
 			out.write(bytes.length);
 		}
 		out.write(bytes);
-		out.flush();
+		out.flush();		
 	}
 	
 	public static void writeThenFlush(
-			final String string, final Writer writer) throws IOException {
-		writer.write(string);
-		writer.flush();
-	}
-	
-	public static void writeToFile(
-			final String string, final File file) throws IOException {
-		try (Writer writer = new OutputStreamWriter(
-				new FileOutputStream(file), Charset.forName("UTF-8"))) {
-			writeThenFlush(string, writer);
-		}
+			final byte[] b, final OutputStream out) throws IOException {
+		writeThenFlush(b, 0, b.length, out);
 	}
 
 	private IoHelper() { }

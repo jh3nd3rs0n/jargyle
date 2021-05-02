@@ -47,6 +47,18 @@ public final class ImmutableConfiguration extends Configuration {
 		
 	}
 	
+	public static void generateXsd(final OutputStream out) throws IOException {
+		JAXBContext jaxbContext = null;
+		try {
+			jaxbContext = JAXBContext.newInstance(ConfigurationXml.class);
+		} catch (JAXBException e) {
+			throw new AssertionError(e);
+		}
+		StreamResult result = new StreamResult(out);
+		result.setSystemId("");
+		jaxbContext.generateSchema(new CustomSchemaOutputResolver(result));
+	}
+	
 	public static ImmutableConfiguration newInstance(
 			final Configuration config) {
 		return newInstance(config.getSettings());
@@ -87,18 +99,6 @@ public final class ImmutableConfiguration extends Configuration {
 			throw new IOException(e);
 		}
 		return newInstance(configurationXml);
-	}
-	
-	public static void toXsd(final OutputStream out) throws IOException {
-		JAXBContext jaxbContext = null;
-		try {
-			jaxbContext = JAXBContext.newInstance(ConfigurationXml.class);
-		} catch (JAXBException e) {
-			throw new AssertionError(e);
-		}
-		StreamResult result = new StreamResult(out);
-		result.setSystemId("");
-		jaxbContext.generateSchema(new CustomSchemaOutputResolver(result));
 	}
 	
 	private final Settings settings;

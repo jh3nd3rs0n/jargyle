@@ -105,10 +105,11 @@ public final class SocketHelper {
 			try {
 				InputStream in = this.clientSocket.getInputStream();
 				OutputStream out = this.clientSocket.getOutputStream();
-				byte[] b = IoHelper.readDataWithIndicatedLengthFrom(in);
-				String string = new String(b);
-				IoHelper.writeAsDataWithIndicatedLengthsThenFlush(
-						string.getBytes(), out);
+				byte[] bytes = new byte[IoHelper.MAX_BUFFER_LENGTH];
+				int bytesRead = IoHelper.readFrom(in, bytes);
+				bytes = Arrays.copyOf(bytes, bytesRead);
+				String string = new String(bytes);
+				IoHelper.writeThenFlush(string.getBytes(), out);
 			} catch (IOException e) {
 				e.printStackTrace();
 			} finally {
@@ -161,10 +162,11 @@ public final class SocketHelper {
 					NetConstants.LOOPBACK_ADDRESS, echoServer.getPort()));
 			InputStream in = echoSocket.getInputStream();
 			OutputStream out = echoSocket.getOutputStream();
-			IoHelper.writeAsDataWithIndicatedLengthsThenFlush(
-					string.getBytes(), out);
-			byte[] b = IoHelper.readDataWithIndicatedLengthFrom(in);
-			returningString = new String(b);
+			IoHelper.writeThenFlush(string.getBytes(), out);
+			byte[] bytes = new byte[IoHelper.MAX_BUFFER_LENGTH];
+			int bytesRead = IoHelper.readFrom(in, bytes);
+			bytes = Arrays.copyOf(bytes, bytesRead);
+			returningString = new String(bytes);
 		} finally {
 			if (echoSocket != null) {
 				echoSocket.close();

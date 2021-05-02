@@ -574,7 +574,7 @@ public final class SocksServerCLI extends CLI {
 	)
 	@Ordinal(CONFIG_FILE_XSD_OPTION_GROUP_ORDINAL)
 	private void printConfigurationFileXsd() throws IOException {
-		ImmutableConfiguration.toXsd(System.out);
+		ImmutableConfiguration.generateXsd(System.out);
 		System.out.flush();
 		this.configurationFileXsdRequested = true;
 	}

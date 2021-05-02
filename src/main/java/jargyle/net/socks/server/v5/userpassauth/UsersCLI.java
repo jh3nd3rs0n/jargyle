@@ -42,9 +42,9 @@ public final class UsersCLI extends CLI {
 				}
 				String file = args[0];
 				Users users = readUsersFromFile(file);
-				Users addedUsers = readUsers();
+				Users addedUsers = readUsersFromPrompt();
 				users.putAll(addedUsers);
-				newFile(users, file);
+				writeUsersToFile(users, file);
 			}
 
 		},
@@ -66,9 +66,9 @@ public final class UsersCLI extends CLI {
 				String decision = console.readLine(
 						"Would you like to enter a user? ('Y' for yes): ");
 				if (decision.equals("Y")) {
-					addedUsers.putAll(readUsers());
+					addedUsers.putAll(readUsersFromPrompt());
 				}
-				newFile(addedUsers, file);
+				writeUsersToFile(addedUsers, file);
 			}
 			
 		},
@@ -93,7 +93,7 @@ public final class UsersCLI extends CLI {
 							"User '%s' does not exist", name));
 				}
 				System.out.printf("User '%s' removed%n", name);
-				newFile(users, file);
+				writeUsersToFile(users, file);
 			}
 			
 		};
@@ -108,43 +108,35 @@ public final class UsersCLI extends CLI {
 					"no command found for %s", s));
 		}
 		
-		private static void newFile(
-				final Users users,
+		private static Users readUsersFromFile(
 				final String file) throws IOException {
-			String tempArg = file;
-			System.out.print("Writing to ");
-			OutputStream out = null;
+			InputStream in = null;
 			if (file.equals("-")) {
-				System.out.printf("standard output...%n");
-				out = System.out;
+				in = System.in;
 			} else {
 				File f = new File(file);
-				System.out.printf("'%s'...%n", f.getAbsolutePath());
-				File tempFile = null;
-				do {
-					tempArg = tempArg.concat(".tmp");
-					tempFile = new File(tempArg);
-				} while (tempFile.exists());
-				tempFile.createNewFile();
-				out = new FileOutputStream(tempFile);
-			}
-			try {
-				users.toXml(out);
-				out.flush();
-			} finally {
-				if (out instanceof FileOutputStream) {
-					out.close();
+				try {
+					in = new FileInputStream(f);
+				} catch (FileNotFoundException e) {
+					throw new IllegalArgumentException(e);
 				}
 			}
-			if (!file.equals("-")) {
-				Files.move(
-						new File(tempArg).toPath(), 
-						new File(file).toPath(), 
-						StandardCopyOption.REPLACE_EXISTING);
+			Users users = null;
+			try {
+				users = Users.newInstanceFromXml(in);
+			} catch (IOException e) { 
+				throw new IllegalArgumentException(String.format(
+						"error in reading XML file '%s'", file), 
+						e);
+			} finally {
+				if (in instanceof FileInputStream) {
+					in.close();
+				}
 			}
+			return users;
 		}
 
-		private static Users readUsers() {
+		private static Users readUsersFromPrompt() {
 			Users users = Users.newInstance();
 			Console console = System.console();
 			boolean addAnotherUser = false;
@@ -192,32 +184,40 @@ public final class UsersCLI extends CLI {
 			return users;
 		}
 		
-		private static Users readUsersFromFile(
+		private static void writeUsersToFile(
+				final Users users,
 				final String file) throws IOException {
-			InputStream in = null;
+			String tempArg = file;
+			System.out.print("Writing to ");
+			OutputStream out = null;
 			if (file.equals("-")) {
-				in = System.in;
+				System.out.printf("standard output...%n");
+				out = System.out;
 			} else {
 				File f = new File(file);
-				try {
-					in = new FileInputStream(f);
-				} catch (FileNotFoundException e) {
-					throw new IllegalArgumentException(e);
-				}
+				System.out.printf("'%s'...%n", f.getAbsolutePath());
+				File tempFile = null;
+				do {
+					tempArg = tempArg.concat(".tmp");
+					tempFile = new File(tempArg);
+				} while (tempFile.exists());
+				tempFile.createNewFile();
+				out = new FileOutputStream(tempFile);
 			}
-			Users users = null;
 			try {
-				users = Users.newInstanceFromXml(in);
-			} catch (IOException e) { 
-				throw new IllegalArgumentException(String.format(
-						"error in reading XML file '%s'", file), 
-						e);
+				users.toXml(out);
+				out.flush();
 			} finally {
-				if (in instanceof FileInputStream) {
-					in.close();
+				if (out instanceof FileOutputStream) {
+					out.close();
 				}
 			}
-			return users;
+			if (!file.equals("-")) {
+				Files.move(
+						new File(tempArg).toPath(), 
+						new File(file).toPath(), 
+						StandardCopyOption.REPLACE_EXISTING);
+			}
 		}
 		
 		private final String value;
@@ -386,7 +386,7 @@ public final class UsersCLI extends CLI {
 	)
 	@Ordinal(XSD_OPTION_GROUP_ORDINAL)
 	private void printXsd() throws IOException {
-		Users.toXsd(System.out);
+		Users.generateXsd(System.out);
 		System.out.flush();
 		this.xsdRequested = true;
 	}

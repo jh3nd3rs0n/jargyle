@@ -150,10 +150,12 @@ public final class ServerSocketHelper {
 				} catch (InterruptedException e) {
 					Thread.currentThread().interrupt();
 				}
-				IoHelper.writeAsDataWithIndicatedLengthsThenFlush(
-						string.getBytes(), socketOut);
-				byte[] b = IoHelper.readDataWithIndicatedLengthFrom(socketIn);
-				String returningString = new String(b);
+				byte[] stringBytes = string.getBytes();
+				IoHelper.writeThenFlush(stringBytes, socketOut);
+				byte[] bytes = new byte[IoHelper.MAX_BUFFER_LENGTH];
+				int bytesRead = IoHelper.readFrom(socketIn, bytes);
+				bytes = Arrays.copyOf(bytes, bytesRead);
+				String returningString = new String(bytes);
 				this.echoServer.setReturningString(returningString);
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -230,10 +232,11 @@ public final class ServerSocketHelper {
 			}
 			InputStream socketIn = socket.getInputStream();
 			OutputStream socketOut = socket.getOutputStream();
-			byte[] b = IoHelper.readDataWithIndicatedLengthFrom(socketIn);
-			String str = new String(b);
-			IoHelper.writeAsDataWithIndicatedLengthsThenFlush(
-					str.getBytes(), socketOut);
+			byte[] bytes = new byte[IoHelper.MAX_BUFFER_LENGTH];
+			int bytesRead = IoHelper.readFrom(socketIn, bytes);
+			bytes = Arrays.copyOf(bytes, bytesRead);
+			String str = new String(bytes);
+			IoHelper.writeThenFlush(str.getBytes(), socketOut);
 		} finally {
 			if (socket != null) {
 				socket.close();

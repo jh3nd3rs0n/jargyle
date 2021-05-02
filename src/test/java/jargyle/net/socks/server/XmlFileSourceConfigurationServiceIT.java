@@ -47,14 +47,14 @@ public class XmlFileSourceConfigurationServiceIT {
 
 	@Test
 	public void testForUpdatedConfigurationFile01() throws IOException {
-		IoHelper.writeToFile(ResourceHelper.getResourceAsString(
+		IoHelper.writeStringToFile(ResourceHelper.getResourceAsString(
 				ResourceNameConstants.JARGYLE_NET_SOCKS_SERVER_EMPTY_CONFIGURATION_FILE), 
 				this.configurationFile.toFile());
 		this.xmlFileSourceConfigurationService = 
 				XmlFileSourceConfigurationService.newInstance(
 						this.configurationFile.toFile());
 		ThreadHelper.sleepForThreeSeconds();
-		IoHelper.writeToFile(ResourceHelper.getResourceAsString(
+		IoHelper.writeStringToFile(ResourceHelper.getResourceAsString(
 				ResourceNameConstants.JARGYLE_NET_SOCKS_SERVER_CONFIGURATION_FILE), 
 				this.configurationFile.toFile());
 		ThreadHelper.sleepForThreeSeconds();
@@ -68,14 +68,14 @@ public class XmlFileSourceConfigurationServiceIT {
 
 	@Test
 	public void testForUpdatedConfigurationFile02() throws IOException {
-		IoHelper.writeToFile(ResourceHelper.getResourceAsString(
+		IoHelper.writeStringToFile(ResourceHelper.getResourceAsString(
 				ResourceNameConstants.JARGYLE_NET_SOCKS_SERVER_EMPTY_CONFIGURATION_FILE), 
 				this.configurationFile.toFile());
 		this.xmlFileSourceConfigurationService = 
 				XmlFileSourceConfigurationService.newInstance(
 						this.configurationFile.toFile());
 		ThreadHelper.sleepForThreeSeconds();
-		IoHelper.writeToFile(ResourceHelper.getResourceAsString(
+		IoHelper.writeStringToFile(ResourceHelper.getResourceAsString(
 				ResourceNameConstants.JARGYLE_NET_SOCKS_SERVER_CONFIGURATION_FILE), 
 				this.configurationFile.toFile());
 		ThreadHelper.sleepForThreeSeconds();

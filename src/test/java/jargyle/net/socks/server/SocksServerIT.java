@@ -60,7 +60,7 @@ public class SocksServerIT {
 
 	@Test
 	public void testGetPortForChangingConfiguration() throws IOException {
-		IoHelper.writeToFile(
+		IoHelper.writeStringToFile(
 				ResourceHelper.getResourceAsString(
 						ResourceNameConstants.JARGYLE_NET_SOCKS_SERVER_EMPTY_CONFIGURATION_FILE), 
 				this.configurationFile.toFile());
@@ -73,7 +73,7 @@ public class SocksServerIT {
 		try {
 			socksServer.start();
 			ThreadHelper.sleepForThreeSeconds();		
-			IoHelper.writeToFile(
+			IoHelper.writeStringToFile(
 					ResourceHelper.getResourceAsString(
 							ResourceNameConstants.JARGYLE_NET_SOCKS_SERVER_CONFIGURATION_FILE), 
 					this.configurationFile.toFile());

@@ -105,9 +105,7 @@ public final class SocketHelper {
 			try {
 				InputStream in = this.clientSocket.getInputStream();
 				OutputStream out = this.clientSocket.getOutputStream();
-				byte[] bytes = new byte[IoHelper.MAX_BUFFER_LENGTH];
-				int bytesRead = IoHelper.readFrom(in, bytes);
-				bytes = Arrays.copyOf(bytes, bytesRead);
+				byte[] bytes = IoHelper.readFrom(in);
 				String string = new String(bytes);
 				IoHelper.writeThenFlush(string.getBytes(), out);
 			} catch (IOException e) {
@@ -163,9 +161,7 @@ public final class SocketHelper {
 			InputStream in = echoSocket.getInputStream();
 			OutputStream out = echoSocket.getOutputStream();
 			IoHelper.writeThenFlush(string.getBytes(), out);
-			byte[] bytes = new byte[IoHelper.MAX_BUFFER_LENGTH];
-			int bytesRead = IoHelper.readFrom(in, bytes);
-			bytes = Arrays.copyOf(bytes, bytesRead);
+			byte[] bytes = IoHelper.readFrom(in);
 			returningString = new String(bytes);
 		} finally {
 			if (echoSocket != null) {

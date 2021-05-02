@@ -152,9 +152,7 @@ public final class ServerSocketHelper {
 				}
 				byte[] stringBytes = string.getBytes();
 				IoHelper.writeThenFlush(stringBytes, socketOut);
-				byte[] bytes = new byte[IoHelper.MAX_BUFFER_LENGTH];
-				int bytesRead = IoHelper.readFrom(socketIn, bytes);
-				bytes = Arrays.copyOf(bytes, bytesRead);
+				byte[] bytes = IoHelper.readFrom(socketIn);
 				String returningString = new String(bytes);
 				this.echoServer.setReturningString(returningString);
 			} catch (IOException e) {
@@ -232,9 +230,7 @@ public final class ServerSocketHelper {
 			}
 			InputStream socketIn = socket.getInputStream();
 			OutputStream socketOut = socket.getOutputStream();
-			byte[] bytes = new byte[IoHelper.MAX_BUFFER_LENGTH];
-			int bytesRead = IoHelper.readFrom(socketIn, bytes);
-			bytes = Arrays.copyOf(bytes, bytesRead);
+			byte[] bytes = IoHelper.readFrom(socketIn);
 			String str = new String(bytes);
 			IoHelper.writeThenFlush(str.getBytes(), socketOut);
 		} finally {

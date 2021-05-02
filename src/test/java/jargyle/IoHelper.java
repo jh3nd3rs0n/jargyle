@@ -16,26 +16,36 @@ import java.nio.charset.Charset;
 
 public final class IoHelper {
 
-	public static final int MAX_BUFFER_LENGTH = 255;
+	private static final int MAX_BUFFER_LENGTH = 255;
 	
-	public static int readFrom(
-			final InputStream in, final byte[] b) throws IOException {
-		return readFrom(in, b, 0, b.length);
-	}
-	
-	public static int readFrom(
-			final InputStream in, 
-			final byte[] b,
-			final int off,
-			final int len) throws IOException {
-		int length = in.read();
-		if (length == -1 || length == 0) {
-			return length;
+	public static byte[] readFrom(final InputStream in) throws IOException {
+		int bytesToRead = -1;
+		ByteArrayOutputStream bytesOut = null;
+		while (true) {
+			if (bytesToRead == -1) {
+				bytesToRead = in.read();
+				if (bytesToRead == -1) {
+					break;
+				}
+			}
+			byte[] bytes = new byte[bytesToRead];
+			int bytesRead = in.read(bytes);
+			if (bytesRead == -1) {
+				break;
+			}
+			if (bytesOut == null) {
+				bytesOut = new ByteArrayOutputStream();
+			}
+			bytesOut.write(bytes, 0, bytesRead);
+			bytesToRead = bytesToRead - bytesRead;
+			if (bytesToRead == 0) {
+				break;
+			}
 		}
-		if (len < length) {
-			length = len;
+		if (bytesOut == null) {
+			return null;
 		}
-		return in.read(b, off, length);		
+		return bytesOut.toByteArray();
 	}
 
 	public static String readStringFrom(final File file) throws IOException {

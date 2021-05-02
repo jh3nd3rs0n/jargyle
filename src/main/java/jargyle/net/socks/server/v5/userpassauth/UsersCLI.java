@@ -1,6 +1,5 @@
 package jargyle.net.socks.server.v5.userpassauth;
 
-import java.io.Console;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -22,6 +21,7 @@ import argmatey.ArgMatey.Annotations.Ordinal;
 import argmatey.ArgMatey.CLI;
 import argmatey.ArgMatey.OptionType;
 import jargyle.help.HelpText;
+import jargyle.io.ConsoleWrapper;
 import jargyle.net.socks.server.SystemPropertyNameConstants;
 
 public final class UsersCLI extends CLI {
@@ -62,8 +62,9 @@ public final class UsersCLI extends CLI {
 				}
 				String file = args[0];
 				Users addedUsers = Users.newInstance();
-				Console console = System.console();
-				String decision = console.readLine(
+				ConsoleWrapper consoleWrapper = new ConsoleWrapper(
+						System.console());
+				String decision = consoleWrapper.readLine(
 						"Would you like to enter a user? ('Y' for yes): ");
 				if (decision.equals("Y")) {
 					addedUsers.putAll(readUsersFromPrompt());
@@ -138,46 +139,47 @@ public final class UsersCLI extends CLI {
 
 		private static Users readUsersFromPrompt() {
 			Users users = Users.newInstance();
-			Console console = System.console();
+			ConsoleWrapper consoleWrapper = new ConsoleWrapper(
+					System.console());
 			boolean addAnotherUser = false;
 			do {
-				console.printf("User%n");
+				consoleWrapper.printf("User%n");
 				String name;
 				while (true) {
-					name = console.readLine("Name: ");
+					name = consoleWrapper.readLine("Name: ");
 					try {
 						User.validateName(name);
 						break;
 					} catch (IllegalArgumentException e) {
-						console.printf(
+						consoleWrapper.printf(
 								"Name must be no more than %s byte(s).%n", 
 								User.MAX_NAME_LENGTH);
 					}
 				}
 				char[] password;
 				while (true) {
-					password = console.readPassword("Password: ");
+					password = consoleWrapper.readPassword("Password: ");
 					try {
 						User.validatePassword(password);
 					} catch (IllegalArgumentException e) {
-						console.printf(
+						consoleWrapper.printf(
 								"Password must be no more than %s byte(s).%n",
 								User.MAX_PASSWORD_LENGTH);
 						continue;
 					}
-					char[] retypedPassword = console.readPassword(
-							"Re-type password:");
+					char[] retypedPassword = consoleWrapper.readPassword(
+							"Re-type password: ");
 					if (Arrays.equals(password, retypedPassword)) {
 						break;
 					} else {
-						console.printf(
+						consoleWrapper.printf(
 								"Password and re-typed password do not match.%n");
 					}
 				}
 				users.put(User.newInstance(name, password));
 				Arrays.fill(password, '\0');
-				console.printf("User '%s' added.%n", name);
-				String decision = console.readLine(
+				consoleWrapper.printf("User '%s' added.%n", name);
+				String decision = consoleWrapper.readLine(
 						"Would you like to enter another user? ('Y' for yes): ");
 				addAnotherUser = decision.equals("Y");
 			} while (addAnotherUser);

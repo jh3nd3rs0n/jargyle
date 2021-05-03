@@ -16,16 +16,23 @@ import java.nio.charset.Charset;
 
 public final class IoHelper {
 
-	private static final int MAX_BUFFER_LENGTH = 255;
+	private static final int MAX_BUFFER_LENGTH = 254;
 	
 	public static byte[] readFrom(final InputStream in) throws IOException {
 		int bytesToRead = -1;
+		boolean moreBytesToRead = false;
 		ByteArrayOutputStream bytesOut = null;
 		while (true) {
 			if (bytesToRead == -1) {
 				bytesToRead = in.read();
 				if (bytesToRead == -1) {
 					break;
+				}
+				if (bytesToRead == MAX_BUFFER_LENGTH + 1) {
+					bytesToRead = MAX_BUFFER_LENGTH;
+					moreBytesToRead = true;
+				} else {
+					moreBytesToRead = false;
 				}
 			}
 			byte[] bytes = new byte[bytesToRead];
@@ -39,7 +46,11 @@ public final class IoHelper {
 			bytesOut.write(bytes, 0, bytesRead);
 			bytesToRead = bytesToRead - bytesRead;
 			if (bytesToRead == 0) {
-				break;
+				if (moreBytesToRead) {
+					bytesToRead = -1;
+				} else {
+					break;
+				}
 			}
 		}
 		if (bytesOut == null) {
@@ -101,6 +112,9 @@ public final class IoHelper {
 		for (int i = off; i < off + len; i++) {
 			bufferOut.write(b[i]);
 			if (++bufferLength == MAX_BUFFER_LENGTH) {
+				if (i < off + len - 1) {
+					bufferLength++;
+				}
 				bytesOut.write(bufferLength);
 				bytesOut.write(bufferOut.toByteArray());
 				bufferOut = new ByteArrayOutputStream();

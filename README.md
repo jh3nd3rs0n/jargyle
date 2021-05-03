@@ -8,7 +8,7 @@ Jargyle is a Java SOCKS5 server. It has the following features:
 -   [SSL/TLS](#4-7-enabling-ssl-tls)/[DTLS](#4-8-enabling-dtls)
 -   [SOCKS server chaining](#4-11-chaining-to-another-socks-server)
 -   [SSL/TLS](#4-11-1-enabling-ssl-tls)/[DTLS](#4-11-2-enabling-dtls) for SOCKS server chaining
--   [Host name resolution through SOCKS5 server chaining](#4-11-3-enabling-host-name-resolution-through-socks5-server-chaining)
+-   [Host name resolution through SOCKS5 server chaining](#4-11-3-using-host-name-resolution-through-socks5-server-chaining)
 -   [SOCKS server chaining to a specified chain of other SOCKS servers](#4-12-chaining-to-a-specified-chain-of-other-socks-servers)
 -   [Allow or block client addresses and external addresses](#4-13-allowing-or-blocking-addresses)
 -   [Allow or block SOCKS5 requests](#4-14-allowing-or-blocking-socks5-requests)
@@ -45,7 +45,7 @@ Although Jargyle can act as a standalone SOCKS5 server, it can act as a bridge b
 -   [4. 11. Chaining to Another SOCKS Server](#4-11-chaining-to-another-socks-server)
 -   [4. 11. 1. Enabling SSL/TLS](#4-11-1-enabling-ssl-tls)
 -   [4. 11. 2. Enabling DTLS](#4-11-2-enabling-dtls)
--   [4. 11. 3. Enabling Host Name Resolution through SOCKS5 Server Chaining](#4-11-3-enabling-host-name-resolution-through-socks5-server-chaining)
+-   [4. 11. 3. Using Host Name Resolution through SOCKS5 Server Chaining](#4-11-3-using-host-name-resolution-through-socks5-server-chaining)
 -   [4. 11. 4. Using SOCKS5 Authentication](#4-11-4-using-socks5-authentication)
 -   [4. 11. 4. 1. Using No Authentication](#4-11-4-1-using-no-authentication)
 -   [4. 11. 4. 2. Using Username Password Authentication](#4-11-4-2-using-username-password-authentication)
@@ -1444,9 +1444,9 @@ Partial command line example:
     
 ```
 
-#### 4. 11. 3. Enabling Host Name Resolution through SOCKS5 Server Chaining
+#### 4. 11. 3. Using Host Name Resolution through SOCKS5 Server Chaining
 
-Before discussing host name resolution through SOCKS5 server chaining, an explanation:
+Before discussing host name resolution through SOCKS5 server chaining, a brief explanation of Jargyle's internals:
 
 Jargyle uses sockets to interact with the external world.
 
@@ -1456,16 +1456,17 @@ Jargyle uses sockets to interact with the external world.
 
 When Jargyle is chained to another SOCKS server, the aforementioned sockets that Jargyle uses become SOCKS-enabled, meaning that their traffic is routed through the other SOCKS server. When Jargyle is specifically chained to another SOCKS5 server, the aforementioned sockets that Jargyle uses become SOCKS5-enabled, meaning that their traffic is routed through the other SOCKS5 server.
 
-By default, host name resolution through SOCKS5 server chaining is somewhat performed but it has the following limitations: 
+By default, host name resolution through SOCKS5 server chaining is somewhat performed but it has the following limitations:
 
 Host name resolution through SOCKS5 server chaining OCCURS ONLY...
 
--   ...under the CONNECT command when the server-facing socket makes an extemporaneous internal outbound connection. Under the CONNECT command, preparation is omitted for the server-facing socket. Such preparation includes applying the specified socket settings for the server-facing socket, resolving the target host name before connecting, and setting the specified timeout in milliseconds on waiting for the server-facing socket to connect. When the server-facing socket is SOCKS5-enabled, the target host name is resolved by the other SOCKS5 server.
+-   ...under the CONNECT command when the server-facing socket makes an extemporaneous internal outbound connection. Preparation is omitted for the server-facing socket. Such preparation includes applying the specified socket settings for the server-facing socket, resolving the target host name before connecting, and setting the specified timeout in milliseconds on waiting for the server-facing socket to connect. When the server-facing socket is SOCKS5-enabled, the target host name is resolved by the other SOCKS5 server.
 
 Host name resolution through SOCKS5 server chaining DOES NOT OCCUR...
 
--   ...under the BIND command when resolving the binding host name for the listen socket. When the listen socket is SOCKS5-enabled, the binding host name for the listen socket is not resolved by the other SOCKS5 server and is instead resolved by the local system.
--   ...under the UDP ASSOCIATE command when resolving a host name for an internal outbound datagram packet. When the server-facing UDP socket is SOCKS5-enabled, the host name for an internal outbound datagram packet is not resolved by the other SOCKS5 server and is instead resolved by the local system.
+-   ...under the CONNECT command when the server-facing socket makes a prepared internal outbound connection. Preparation for the server-facing socket includes resolving the target host name before connecting. When the server-facing socket is SOCKS5-enabled, the target host name is not resolved by the other SOCKS5 server but is instead resolved by the local system.
+-   ...under the BIND command when resolving the binding host name for the listen socket. When the listen socket is SOCKS5-enabled, the binding host name for the listen socket is not resolved by the other SOCKS5 server but is instead resolved by the local system.
+-   ...under the UDP ASSOCIATE command when resolving a host name for an internal outbound datagram packet. When the server-facing UDP socket is SOCKS5-enabled, the host name for an internal outbound datagram packet is not resolved by the other SOCKS5 server but is instead resolved by the local system.
 
 If you prefer to have host name resolution through SOCKS5 server chaining without the aforementioned limitations, you would need to set the setting `chaining.socks5.resolve.useResolveCommand` to `true`. This setting enables the use of [the SOCKS5 RESOLVE command](#5-3-the-socks5-resolve-command) on the other SOCKS5 server to resolve host names. This setting can only be used if the other SOCKS5 server supports the SOCKS5 RESOLVE command.
 

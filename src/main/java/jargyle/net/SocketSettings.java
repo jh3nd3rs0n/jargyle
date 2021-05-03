@@ -181,11 +181,11 @@ public final class SocketSettings {
 				(SocketSettingSpec<Object>) socketSettingSpec;
 		SocketSetting<Object> socketSttng = socketSttngSpec.newSocketSetting(
 				socketSettingSpec.getValueType().cast(value));
+		SocketSetting<Object> recentSocketSetting = null;
 		if (this.socketSettings.containsKey(socketSttngSpec)) {
-			this.socketSettings.remove(socketSttngSpec);
+			recentSocketSetting = this.socketSettings.remove(socketSttngSpec);
 		}
-		SocketSetting<Object> recentSocketSetting = this.socketSettings.put(
-				socketSttngSpec, socketSttng);
+		this.socketSettings.put(socketSttngSpec, socketSttng);
 		if (recentSocketSetting != null) {
 			recentValue = socketSettingSpec.getValueType().cast(
 					recentSocketSetting.getValue());

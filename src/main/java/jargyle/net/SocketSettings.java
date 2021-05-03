@@ -59,7 +59,10 @@ public final class SocketSettings {
 		for (SocketSetting<? extends Object> socketSttng : socketSttngs) {
 			@SuppressWarnings("unchecked")
 			SocketSetting<Object> sockSttng = (SocketSetting<Object>) socketSttng;
-			SocketSettingSpec<Object> sockSttngSpec = sockSttng.getSocketSettingSpec(); 
+			SocketSettingSpec<Object> sockSttngSpec = sockSttng.getSocketSettingSpec();
+			if (socketSettings.containsKey(sockSttngSpec)) {
+				socketSettings.remove(sockSttngSpec);
+			}
 			socketSettings.put(sockSttngSpec, sockSttng);
 		}
 		return new SocketSettings(socketSettings);
@@ -76,20 +79,18 @@ public final class SocketSettings {
 	}
 	
 	public static SocketSettings newInstance(final String s) {
-		Map<SocketSettingSpec<Object>, SocketSetting<Object>> socketSettings = 
-				new LinkedHashMap<SocketSettingSpec<Object>, SocketSetting<Object>>();
+		List<SocketSetting<? extends Object>> socketSettings = 
+				new ArrayList<SocketSetting<? extends Object>>();
 		if (s.isEmpty()) {
-			return new SocketSettings(socketSettings);
+			return newInstance(socketSettings);
 		}
 		String[] sElements = s.split(" ");
 		for (String sElement : sElements) {
 			SocketSetting<Object> socketSetting = SocketSetting.newInstance(
 					sElement);
-			SocketSettingSpec<Object> socketSettingSpec = 
-					socketSetting.getSocketSettingSpec();
-			socketSettings.put(socketSettingSpec, socketSetting);
+			socketSettings.add(socketSetting);
 		}
-		return new SocketSettings(socketSettings);
+		return newInstance(socketSettings);
 	}
 	
 	private final Map<SocketSettingSpec<Object>, SocketSetting<Object>> socketSettings;
@@ -180,8 +181,11 @@ public final class SocketSettings {
 				(SocketSettingSpec<Object>) socketSettingSpec;
 		SocketSetting<Object> socketSttng = socketSttngSpec.newSocketSetting(
 				socketSettingSpec.getValueType().cast(value));
-		SocketSetting<Object> recentSocketSetting = 
-				this.socketSettings.put(socketSttngSpec, socketSttng);
+		if (this.socketSettings.containsKey(socketSttngSpec)) {
+			this.socketSettings.remove(socketSttngSpec);
+		}
+		SocketSetting<Object> recentSocketSetting = this.socketSettings.put(
+				socketSttngSpec, socketSttng);
 		if (recentSocketSetting != null) {
 			recentValue = socketSettingSpec.getValueType().cast(
 					recentSocketSetting.getValue());

@@ -16,6 +16,9 @@ public final class Properties {
 			@SuppressWarnings("unchecked")
 			Property<Object> prop = (Property<Object>) property;
 			PropertySpec<Object> propSpec = prop.getPropertySpec();
+			if (props.containsKey(propSpec)) {
+				props.remove(propSpec);
+			}
 			props.put(propSpec, prop);
 		}
 		return new Properties(props);

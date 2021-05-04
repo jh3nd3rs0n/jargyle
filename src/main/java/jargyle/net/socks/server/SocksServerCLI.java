@@ -251,11 +251,12 @@ public final class SocksServerCLI extends CLI {
 	)
 	@Ordinal(SOCKS5_USERPASSAUTH_USERS_OPTION_GROUP_ORDINAL)
 	private void doSocks5UserpassauthUsersManagementMode() {
-		ArgMatey.Option socks5UsersOption = this.getOptionGroups().get(
-				SOCKS5_USERPASSAUTH_USERS_OPTION_GROUP_ORDINAL).get(0);
+		ArgMatey.Option socks5UserpassauthUsersOption = 
+				this.getOptionGroups().get(
+						SOCKS5_USERPASSAUTH_USERS_OPTION_GROUP_ORDINAL).get(0);
 		String newProgramBeginningUsage = String.format("%s %s", 
 				this.programBeginningUsage, 
-				socks5UsersOption.getUsage());
+				socks5UserpassauthUsersOption.getUsage());
 		List<String> remainingArgList = new ArrayList<String>();
 		while (this.hasNext()) {
 			String arg = this.next();

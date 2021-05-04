@@ -195,8 +195,9 @@ public final class SocksServerCLI extends CLI {
 				NEW_CONFIG_FILE_OPTION_GROUP_ORDINAL).get(0);
 		ArgMatey.Option settingsHelpOption = this.getOptionGroups().get(
 				SETTINGS_HELP_OPTION_GROUP_ORDINAL).get(0);
-		ArgMatey.Option socks5UsersOption = this.getOptionGroups().get(
-				SOCKS5_USERPASSAUTH_USERS_OPTION_GROUP_ORDINAL).get(0);
+		ArgMatey.Option socks5UserpassauthUsersOption = 
+				this.getOptionGroups().get(
+						SOCKS5_USERPASSAUTH_USERS_OPTION_GROUP_ORDINAL).get(0);
 		System.out.printf("Usage: %s [OPTIONS]%n", this.programBeginningUsage);
 		System.out.printf("       %s %s%n", 
 				this.programBeginningUsage, 
@@ -215,7 +216,7 @@ public final class SocksServerCLI extends CLI {
 				settingsHelpOption.getUsage());
 		System.out.printf("       %s %s ARGS", 
 				this.programBeginningUsage, 
-				socks5UsersOption.getUsage());
+				socks5UserpassauthUsersOption.getUsage());
 		System.out.println();
 		System.out.println();
 		System.out.println("OPTIONS:");

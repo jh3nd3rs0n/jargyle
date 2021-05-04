@@ -128,7 +128,7 @@ The following is the command line help for Jargyle (displayed when using the com
            jargyle --monitored-config-file=FILE
            jargyle [OPTIONS] --new-config-file=FILE
            jargyle --settings-help
-           jargyle --socks5-users ARGS
+           jargyle --socks5-userpassauth-users ARGS
     
     OPTIONS:
       --config-file=FILE, -f FILE
@@ -163,7 +163,7 @@ The following is the command line help for Jargyle (displayed when using the com
           A setting for the SOCKS server
       --settings-help, -H
           Print the list of available settings for the SOCKS server and exit
-      --socks5-users
+      --socks5-userpassauth-users
           Mode for managing SOCKS5 users (add --help for more information)
       --version, -v
           Print version information and exit
@@ -504,13 +504,13 @@ The following is a list of available settings for the SOCKS server (displayed wh
     
 ```
 
-The following is the command line help for managing SOCKS5 users for username password authentication (displayed when using the command line options `--socks5-users --help`):
+The following is the command line help for managing SOCKS5 users for username password authentication (displayed when using the command line options `--socks5-userpassauth-users --help`):
 
 ```text
     
-    Usage: jargyle --socks5-users COMMAND
-           jargyle --socks5-users --help
-           jargyle --socks5-users --xsd
+    Usage: jargyle --socks5-userpassauth-users COMMAND
+           jargyle --socks5-userpassauth-users --help
+           jargyle --socks5-userpassauth-users --xsd
     
     COMMANDS:
       add-users-to-file FILE
@@ -852,7 +852,7 @@ To create a users file, you would run the following command:
 
 ```bash
     
-    ./bin/jargyle --socks5-users create-new-file FILE
+    ./bin/jargyle --socks5-userpassauth-users create-new-file FILE
     
 ```
 
@@ -862,7 +862,7 @@ Once you have run the command, an interactive prompt will ask you if you want to
 
 ```text
     
-    ./bin/jargyle --socks5-users create-new-file users.xml
+    ./bin/jargyle --socks5-userpassauth-users create-new-file users.xml
     Would you like to enter a user? ('Y' for yes): 
     
 ```
@@ -949,7 +949,7 @@ To add users to an existing users file, you would run the following command:
 
 ```bash
     
-    ./bin/jargyle --socks5-users add-users-to-file FILE
+    ./bin/jargyle --socks5-userpassauth-users add-users-to-file FILE
     
 ```
 
@@ -959,7 +959,7 @@ Once you have run the command, an interactive prompt will ask you for the new us
 
 ```text
     
-    ./bin/jargyle --socks5-users add-users-to-file users.xml
+    ./bin/jargyle --socks5-userpassauth-users add-users-to-file users.xml
     User
     Name: Jafar
     Password: 
@@ -1014,7 +1014,7 @@ To remove a user from an existing users file, you would run the following comman
 
 ```bash
     
-    ./bin/jargyle --socks5-users remove-user NAME FILE
+    ./bin/jargyle --socks5-userpassauth-users remove-user NAME FILE
     
 ```
 
@@ -1024,7 +1024,7 @@ Once you have run the command, the user of the specified name will be removed fr
 
 ```text
     
-    ./bin/jargyle --socks5-users remove-user Jafar users.xml
+    ./bin/jargyle --socks5-userpassauth-users remove-user Jafar users.xml
     User 'Jafar' removed
     Writing to 'users.xml'...
     

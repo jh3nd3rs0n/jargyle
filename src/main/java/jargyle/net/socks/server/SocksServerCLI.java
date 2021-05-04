@@ -56,7 +56,7 @@ public final class SocksServerCLI extends CLI {
 	private static final int NEW_CONFIG_FILE_OPTION_GROUP_ORDINAL = 13;
 	private static final int SETTING_OPTION_GROUP_ORDINAL = 14;
 	private static final int SETTINGS_HELP_OPTION_GROUP_ORDINAL = 15;
-	private static final int SOCKS5_USERS_OPTION_GROUP_ORDINAL = 16;
+	private static final int SOCKS5_USERPASSAUTH_USERS_OPTION_GROUP_ORDINAL = 16;
 	private static final int VERSION_OPTION_GROUP_ORDINAL = 17;
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(
@@ -69,7 +69,7 @@ public final class SocksServerCLI extends CLI {
 	private final boolean posixlyCorrect;
 	private final String programBeginningUsage;
 	private boolean settingsHelpDisplayed;
-	private Optional<Integer> socks5UsersManagementModeStatus;
+	private Optional<Integer> socks5UserpassauthUsersManagementModeStatus;
 	
 	public SocksServerCLI(final String[] args, final boolean posixCorrect) {
 		super(args, posixCorrect);
@@ -156,8 +156,8 @@ public final class SocksServerCLI extends CLI {
 				|| this.settingsHelpDisplayed) {
 			return Optional.of(Integer.valueOf(0));
 		}
-		if (this.socks5UsersManagementModeStatus.isPresent()) {
-			return this.socks5UsersManagementModeStatus;
+		if (this.socks5UserpassauthUsersManagementModeStatus.isPresent()) {
+			return this.socks5UserpassauthUsersManagementModeStatus;
 		}		
 		return Optional.empty();
 	}
@@ -169,7 +169,7 @@ public final class SocksServerCLI extends CLI {
 		this.monitoredConfigurationFile = null;
 		this.newConfigurationFileRequested = false;
 		this.settingsHelpDisplayed = false;
-		this.socks5UsersManagementModeStatus = Optional.empty();
+		this.socks5UserpassauthUsersManagementModeStatus = Optional.empty();
 		return Optional.empty();
 	}
 
@@ -196,7 +196,7 @@ public final class SocksServerCLI extends CLI {
 		ArgMatey.Option settingsHelpOption = this.getOptionGroups().get(
 				SETTINGS_HELP_OPTION_GROUP_ORDINAL).get(0);
 		ArgMatey.Option socks5UsersOption = this.getOptionGroups().get(
-				SOCKS5_USERS_OPTION_GROUP_ORDINAL).get(0);
+				SOCKS5_USERPASSAUTH_USERS_OPTION_GROUP_ORDINAL).get(0);
 		System.out.printf("Usage: %s [OPTIONS]%n", this.programBeginningUsage);
 		System.out.printf("       %s %s%n", 
 				this.programBeginningUsage, 
@@ -245,13 +245,13 @@ public final class SocksServerCLI extends CLI {
 	@Option(
 			doc = "Mode for managing SOCKS5 users (add --help for "
 					+ "more information)",
-			name = "socks5-users",
+			name = "socks5-userpassauth-users",
 			type = OptionType.GNU_LONG
 	)
-	@Ordinal(SOCKS5_USERS_OPTION_GROUP_ORDINAL)
-	private void doSocks5UsersManagementMode() {
+	@Ordinal(SOCKS5_USERPASSAUTH_USERS_OPTION_GROUP_ORDINAL)
+	private void doSocks5UserpassauthUsersManagementMode() {
 		ArgMatey.Option socks5UsersOption = this.getOptionGroups().get(
-				SOCKS5_USERS_OPTION_GROUP_ORDINAL).get(0);
+				SOCKS5_USERPASSAUTH_USERS_OPTION_GROUP_ORDINAL).get(0);
 		String newProgramBeginningUsage = String.format("%s %s", 
 				this.programBeginningUsage, 
 				socks5UsersOption.getUsage());
@@ -267,7 +267,7 @@ public final class SocksServerCLI extends CLI {
 				newProgramBeginningUsage, 
 				remainingArgs, 
 				this.posixlyCorrect);
-		this.socks5UsersManagementModeStatus = usersCLI.handleArgs();
+		this.socks5UserpassauthUsersManagementModeStatus = usersCLI.handleArgs();
 	}
 		
 	@Option(

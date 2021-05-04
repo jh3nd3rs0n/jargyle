@@ -77,22 +77,26 @@ public final class Users {
 	public static Users newInstance(final List<User> usrs) {
 		Map<String, User> u = new LinkedHashMap<String, User>();
 		for (User usr : usrs) {
-			u.put(usr.getName(), usr);
+			String name = usr.getName();
+			if (u.containsKey(name)) {
+				u.remove(name);
+			}
+			u.put(name, usr);
 		}
 		return new Users(u);
 	}
 	
 	public static Users newInstance(final String s) {
-		Map<String, User> users = new LinkedHashMap<String, User>();
+		List<User> users = new ArrayList<User>();
 		if (s.isEmpty()) {
-			return new Users(users);
+			return newInstance(users);
 		}
 		String[] sElements = s.split(" ");
 		for (String sElement : sElements) {
 			User user = User.newInstance(sElement);
-			users.put(user.getName(), user);
+			users.add(user);
 		}
-		return new Users(users);
+		return newInstance(users);
 	}
 	
 	public static Users newInstance(final User... usrs) {
@@ -181,11 +185,19 @@ public final class Users {
 	}
 
 	public User put(final User usr) {
-		return this.users.put(usr.getName(), usr);
+		String name = usr.getName();
+		User recentUsr = null;
+		if (this.users.containsKey(name)) {
+			recentUsr = this.users.remove(name);
+		}
+		this.users.put(name, usr);
+		return recentUsr;
 	}
 	
 	public void putAll(final Users usrs) {
-		this.users.putAll(usrs.toMap());
+		for (User usr : usrs.users.values()) {
+			this.put(usr);
+		}
 	}
 	
 	public User remove(final String name) {

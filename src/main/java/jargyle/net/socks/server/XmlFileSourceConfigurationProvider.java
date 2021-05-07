@@ -1,4 +1,4 @@
-package jargyle.net.socks.server.v5.userpassauth;
+package jargyle.net.socks.server;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,29 +15,32 @@ import org.slf4j.LoggerFactory;
 import jargyle.io.FileMonitor;
 import jargyle.io.FileStatusListener;
 
-final class XmlFileSourceUsersService extends UsersService {
-	
-	private static final class UsersUpdater implements FileStatusListener {
+public final class XmlFileSourceConfigurationProvider 
+	extends ConfigurationProvider {
+
+	private static final class ConfigurationUpdater 
+		implements FileStatusListener {
 		
-		public static final Logger LOGGER = LoggerFactory.getLogger(
-				UsersUpdater.class);
+		private static final Logger LOGGER = LoggerFactory.getLogger(
+				ConfigurationUpdater.class);
 
-		private final XmlFileSourceUsersService usersService;
-
-		public UsersUpdater(final XmlFileSourceUsersService service) {
-			this.usersService = service;
+		private final XmlFileSourceConfigurationProvider configurationProvider;
+		
+		public ConfigurationUpdater(
+				final XmlFileSourceConfigurationProvider provider) {
+			this.configurationProvider = provider;
 		}
 		
 		@Override
 		public void onFileCreated(final File file) {
 			LOGGER.info(String.format(
-					"File '%s' created. Updating users...",
+					"File '%s' created. Updating configuration...",
 					file));
 			if (this.updateFrom(file)) {
-				LOGGER.info("Users updated successfully");
+				LOGGER.info("Configuration updated successfully");
 			}
 		}
-		
+
 		@Override
 		public void onFileDeleted(final File file) {
 			LOGGER.info(String.format(
@@ -48,28 +51,28 @@ final class XmlFileSourceUsersService extends UsersService {
 		@Override
 		public void onFileModified(final File file) {
 			LOGGER.info(String.format(
-					"File '%s' modified. Updating users...",
+					"File '%s' modified. Updating configuration...",
 					file));
 			if (this.updateFrom(file)) {
-				LOGGER.info("Users updated successfully");
+				LOGGER.info("Configuration updated successfully");
 			}
 		}
-
+		
 		private boolean updateFrom(final File file) {
 			InputStream in = null;
-			Users usrs = null;
+			Configuration config = null;
 			try {
 				in = new FileInputStream(file);
-				usrs = Users.newInstanceFromXml(in);
+				config = ImmutableConfiguration.newInstanceFromXml(in);
 			} catch (FileNotFoundException e) {
-				LOGGER.warn( 
+				LOGGER.warn(
 						String.format(
 								"File '%s' not found", 
 								file), 
 						e);
 				return false;
 			} catch (IOException e) {
-				LOGGER.warn( 
+				LOGGER.warn(
 						String.format(
 								"Error in reading file '%s'", 
 								file), 
@@ -80,7 +83,7 @@ final class XmlFileSourceUsersService extends UsersService {
 					try {
 						in.close();
 					} catch (IOException e) {
-						LOGGER.warn( 
+						LOGGER.warn(
 								String.format(
 										"Unable to close input stream of file '%s'", 
 										file), 
@@ -88,37 +91,36 @@ final class XmlFileSourceUsersService extends UsersService {
 					}
 				}
 			}
-			this.usersService.users = usrs;
+			this.configurationProvider.configuration = config;
 			return true;
 		}
 		
 	}
 	
-	public static XmlFileSourceUsersService newInstance(final String xmlFile) {
-		XmlFileSourceUsersService xmlFileSourceUsersService =
-				new XmlFileSourceUsersService(xmlFile);
-		xmlFileSourceUsersService.startMonitoringXmlFile();
-		return xmlFileSourceUsersService;
+	public static XmlFileSourceConfigurationProvider newInstance(
+			final File xmlFile) {
+		XmlFileSourceConfigurationProvider configurationProvider = 
+				new XmlFileSourceConfigurationProvider(xmlFile);
+		configurationProvider.startMonitoringXmlFile();
+		return configurationProvider;
 	}
 	
+	private Configuration configuration;
 	private ExecutorService executor;
-	private Users users;
 	private final File xmlFile;
 	
-	private XmlFileSourceUsersService(final String file) {
-		super(file);
+	private XmlFileSourceConfigurationProvider(final File file) {
 		Objects.requireNonNull(file, "XML file must not be null");
-		File f = new File(file);
 		InputStream in = null;
-		Users usrs = null;
+		Configuration config = null;
 		try {
-			in = new FileInputStream(f);
-			usrs = Users.newInstanceFromXml(in);
+			in = new FileInputStream(file);
+			config = ImmutableConfiguration.newInstanceFromXml(in);
 		} catch (FileNotFoundException e) {
 			throw new IllegalArgumentException(e);
 		} catch (IOException e) {
 			throw new IllegalArgumentException(String.format(
-					"error in reading XML file '%s'", f), 
+					"error in reading XML file '%s'", file), 
 					e);
 		} finally {
 			if (in != null) {
@@ -129,20 +131,21 @@ final class XmlFileSourceUsersService extends UsersService {
 				}
 			}
 		}
+		this.configuration = config;
 		this.executor = null;
-		this.users = usrs;
-		this.xmlFile = f;		
+		this.xmlFile = file;
 	}
 	
 	@Override
-	public Users getUsers() {
-		return Users.newInstance(this.users);
+	public Configuration getConfiguration() {
+		return this.configuration;
 	}
 	
 	private void startMonitoringXmlFile() {
 		this.executor = Executors.newSingleThreadExecutor();
 		this.executor.execute(new FileMonitor(
-				this.xmlFile, new UsersUpdater(this)));
+				this.xmlFile, 
+				new ConfigurationUpdater(this)));
 	}
-	
+
 }

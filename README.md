@@ -1956,16 +1956,16 @@ The following are the classes that use logging:
 -   `jargyle.net.socks.server.SocksServerCLI`
 -   `jargyle.net.socks.server.TcpRelayServer$DataWorker`
 -   `jargyle.net.socks.server.Worker`
--   `jargyle.net.socks.server.XmlFileSourceConfigurationService$ConfigurationUpdater`
+-   `jargyle.net.socks.server.XmlFileSourceConfigurationProvider$ConfigurationUpdater`
 -   `jargyle.net.socks.server.v5.Authenticator`
 -   `jargyle.net.socks.server.v5.BindCommandWorker`
 -   `jargyle.net.socks.server.v5.ConnectCommandWorker`
 -   `jargyle.net.socks.server.v5.ResolveCommandWorker`
 -   `jargyle.net.socks.server.v5.Socks5Worker`
 -   `jargyle.net.socks.server.v5.UdpAssociateCommandWorker`
--   `jargyle.net.socks.server.v5.UdpRelayServer$IncomingPacketsWorker`
--   `jargyle.net.socks.server.v5.UdpRelayServer$OutgoingPacketsWorker`
--   `jargyle.net.socks.server.v5.userpassauth.XmlFileSourceUsersService$UsersUpdater`
+-   `jargyle.net.socks.server.v5.UdpRelayServer$ExternalInboundPacketsWorker`
+-   `jargyle.net.socks.server.v5.UdpRelayServer$InternalOutboundPacketsWorker`
+-   `jargyle.net.socks.server.v5.userpassauth.XmlFileSourceUsersProvider$UsersUpdater`
 -   `jargyle.net.ssl.DtlsDatagramSocket`
 
 To configure logging for any of the aforementioned classes, you can use a configuration file to specify the logging properties for any of the classes.

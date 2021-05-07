@@ -1,10 +1,10 @@
 package jargyle.net.socks.server.v5.userpassauth;
 
-abstract class UsersService {
+abstract class UsersProvider {
 
 	private final String source;
 	
-	public UsersService(final String src) { 
+	public UsersProvider(final String src) { 
 		this.source = src;
 	}
 	

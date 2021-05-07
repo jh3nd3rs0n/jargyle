@@ -8,7 +8,7 @@ public final class StringSourceUsernamePasswordAuthenticator
 	public StringSourceUsernamePasswordAuthenticator(final String string) {
 		super(string);
 		this.authenticator = new UsersSourceUsernamePasswordAuthenticator(
-				new StringSourceUsersService(string));
+				new StringSourceUsersProvider(string));
 	}
 	
 	@Override

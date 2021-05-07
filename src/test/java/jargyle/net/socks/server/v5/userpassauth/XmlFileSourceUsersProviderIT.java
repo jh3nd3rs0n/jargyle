@@ -16,11 +16,11 @@ import jargyle.ResourceHelper;
 import jargyle.ResourceNameConstants;
 import jargyle.ThreadHelper;
 
-public class XmlFileSourceUsersServiceIT {
+public class XmlFileSourceUsersProviderIT {
 	
 	private Path baseDir = null;
 	private Path usersFile = null;
-	private XmlFileSourceUsersService xmlFileSourceUsersService = null;
+	private XmlFileSourceUsersProvider xmlFileSourceUsersProvider = null;
 	
 	@Before
 	public void setUp() throws Exception {
@@ -30,8 +30,8 @@ public class XmlFileSourceUsersServiceIT {
 
 	@After
 	public void tearDown() throws Exception {
-		if (this.xmlFileSourceUsersService != null) {
-			this.xmlFileSourceUsersService = null;
+		if (this.xmlFileSourceUsersProvider != null) {
+			this.xmlFileSourceUsersProvider = null;
 		}
 		if (this.usersFile != null) {
 			FilesHelper.attemptsToDeleteIfExists(this.usersFile);
@@ -48,15 +48,16 @@ public class XmlFileSourceUsersServiceIT {
 		IoHelper.writeStringToFile(ResourceHelper.getResourceAsString(
 				ResourceNameConstants.JARGYLE_NET_SOCKS_SERVER_V5_USERPASSAUTH_EMPTY_USERS_FILE), 
 				this.usersFile.toFile());
-		this.xmlFileSourceUsersService = XmlFileSourceUsersService.newInstance(
-				this.usersFile.toString());
+		this.xmlFileSourceUsersProvider = 
+				XmlFileSourceUsersProvider.newInstance(
+						this.usersFile.toString());
 		ThreadHelper.sleepForThreeSeconds();
 		IoHelper.writeStringToFile(ResourceHelper.getResourceAsString(
 				ResourceNameConstants.JARGYLE_NET_SOCKS_SERVER_V5_USERPASSAUTH_USERS_FILE), 
 				this.usersFile.toFile());
 		ThreadHelper.sleepForThreeSeconds();
 		final int numOfUsersAdded = 3; 
-		assertTrue(this.xmlFileSourceUsersService.getUsers().toMap().size() == numOfUsersAdded);
+		assertTrue(this.xmlFileSourceUsersProvider.getUsers().toMap().size() == numOfUsersAdded);
 	}
 
 	@Test
@@ -64,15 +65,16 @@ public class XmlFileSourceUsersServiceIT {
 		IoHelper.writeStringToFile(ResourceHelper.getResourceAsString(
 				ResourceNameConstants.JARGYLE_NET_SOCKS_SERVER_V5_USERPASSAUTH_USERS_FILE), 
 				this.usersFile.toFile());
-		this.xmlFileSourceUsersService = XmlFileSourceUsersService.newInstance(
-				this.usersFile.toString());
+		this.xmlFileSourceUsersProvider = 
+				XmlFileSourceUsersProvider.newInstance(
+						this.usersFile.toString());
 		ThreadHelper.sleepForThreeSeconds();
 		IoHelper.writeStringToFile(ResourceHelper.getResourceAsString(
 				ResourceNameConstants.JARGYLE_NET_SOCKS_SERVER_V5_USERPASSAUTH_ADDED_USER_TO_USERS_FILE), 
 				this.usersFile.toFile());
 		ThreadHelper.sleepForThreeSeconds();
 		final int numOfUsersAdded = 4; 
-		assertTrue(this.xmlFileSourceUsersService.getUsers().toMap().size() == numOfUsersAdded);
+		assertTrue(this.xmlFileSourceUsersProvider.getUsers().toMap().size() == numOfUsersAdded);
 	}
 
 }

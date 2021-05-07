@@ -3,24 +3,24 @@ package jargyle.net.socks.server;
 public final class MutableConfiguration extends Configuration {
 	
 	public static MutableConfiguration newInstance(
-			final ConfigurationService service) {
-		return new MutableConfiguration(service);
+			final ConfigurationProvider provider) {
+		return new MutableConfiguration(provider);
 	}
 	
-	private final ConfigurationService configurationService;
+	private final ConfigurationProvider configurationProvider;
 	
-	private MutableConfiguration(final ConfigurationService service) {
-		this.configurationService = service;
+	private MutableConfiguration(final ConfigurationProvider provider) {
+		this.configurationProvider = provider;
 	}
 	
 	@Override
 	public Settings getSettings() {
-		return this.configurationService.getConfiguration().getSettings();
+		return this.configurationProvider.getConfiguration().getSettings();
 	}
 
 	@Override
 	public String toString() {
-		return this.configurationService.getConfiguration().toString();
+		return this.configurationProvider.getConfiguration().toString();
 	}
 
 }

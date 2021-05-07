@@ -5,18 +5,18 @@ import jargyle.security.HashedPassword;
 final class UsersSourceUsernamePasswordAuthenticator 
 	extends UsernamePasswordAuthenticator {
 	
-	private final UsersService usersService;
+	private final UsersProvider usersProvider;
 	
 	public UsersSourceUsernamePasswordAuthenticator(
-			final UsersService usrsService) {
-		super(usrsService.getSource());
-		this.usersService = usrsService;
+			final UsersProvider usrsProvider) {
+		super(usrsProvider.getSource());
+		this.usersProvider = usrsProvider;
 	}
 
 	@Override
 	public boolean authenticate(
 			final String username, final char[] password) {
-		Users users = this.usersService.getUsers();
+		Users users = this.usersProvider.getUsers();
 		User user = users.get(username);
 		if (user == null) { return false; }
 		HashedPassword hashedPassword = user.getHashedPassword();

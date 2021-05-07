@@ -500,17 +500,17 @@ public final class SocksServerCLI extends CLI {
 					this.modifiableConfiguration);
 		} else {
 			File f = new File(this.monitoredConfigurationFile);
-			ConfigurationService configurationService = null;
+			ConfigurationProvider configurationProvider = null;
 			try {
-				configurationService = 
-						XmlFileSourceConfigurationService.newInstance(f);
+				configurationProvider = 
+						XmlFileSourceConfigurationProvider.newInstance(f);
 			} catch (IllegalArgumentException e) {
 				System.err.printf("%s: %s%n", this.programName, e);
 				e.printStackTrace(System.err);
 				return null;
 			}
 			configuration = MutableConfiguration.newInstance(
-					configurationService);
+					configurationProvider);
 		}
 		return configuration;
 	}

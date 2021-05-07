@@ -8,7 +8,7 @@ public final class XmlFileSourceUsernamePasswordAuthenticator
 	public XmlFileSourceUsernamePasswordAuthenticator(final String xmlFile) {
 		super(xmlFile);
 		this.authenticator = new UsersSourceUsernamePasswordAuthenticator(
-				XmlFileSourceUsersService.newInstance(xmlFile));
+				XmlFileSourceUsersProvider.newInstance(xmlFile));
 	}
 	
 	@Override

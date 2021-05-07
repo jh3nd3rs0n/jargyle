@@ -1,8 +1,6 @@
 package jargyle.net.socks.server;
 
-public abstract class ConfigurationService {
-
-	public ConfigurationService() { }
+public abstract class ConfigurationProvider {
 	
 	public abstract Configuration getConfiguration();
 	

@@ -64,11 +64,11 @@ public class SocksServerIT {
 				ResourceHelper.getResourceAsString(
 						ResourceNameConstants.JARGYLE_NET_SOCKS_SERVER_EMPTY_CONFIGURATION_FILE), 
 				this.configurationFile.toFile());
-		ConfigurationService configurationService = 
-				XmlFileSourceConfigurationService.newInstance(
+		ConfigurationProvider configurationProvider = 
+				XmlFileSourceConfigurationProvider.newInstance(
 						this.configurationFile.toFile());
 		Configuration configuration = MutableConfiguration.newInstance(
-				configurationService);
+				configurationProvider);
 		SocksServer socksServer = new SocksServer(configuration);
 		try {
 			socksServer.start();

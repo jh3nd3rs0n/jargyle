@@ -18,11 +18,11 @@ import jargyle.ThreadHelper;
 import jargyle.net.Port;
 import jargyle.util.NonnegativeInteger;
 
-public class XmlFileSourceConfigurationServiceIT {
+public class XmlFileSourceConfigurationProviderIT {
 	
 	private Path baseDir = null;
 	private Path configurationFile = null;
-	private XmlFileSourceConfigurationService xmlFileSourceConfigurationService = null;
+	private XmlFileSourceConfigurationProvider xmlFileSourceConfigurationProvider = null;
 
 	@Before
 	public void setUp() throws Exception {
@@ -32,8 +32,8 @@ public class XmlFileSourceConfigurationServiceIT {
 
 	@After
 	public void tearDown() throws Exception {
-		if (this.xmlFileSourceConfigurationService != null) {
-			this.xmlFileSourceConfigurationService = null;
+		if (this.xmlFileSourceConfigurationProvider != null) {
+			this.xmlFileSourceConfigurationProvider = null;
 		}
 		if (this.configurationFile != null) {
 			FilesHelper.attemptsToDeleteIfExists(this.configurationFile);
@@ -50,8 +50,8 @@ public class XmlFileSourceConfigurationServiceIT {
 		IoHelper.writeStringToFile(ResourceHelper.getResourceAsString(
 				ResourceNameConstants.JARGYLE_NET_SOCKS_SERVER_EMPTY_CONFIGURATION_FILE), 
 				this.configurationFile.toFile());
-		this.xmlFileSourceConfigurationService = 
-				XmlFileSourceConfigurationService.newInstance(
+		this.xmlFileSourceConfigurationProvider = 
+				XmlFileSourceConfigurationProvider.newInstance(
 						this.configurationFile.toFile());
 		ThreadHelper.sleepForThreeSeconds();
 		IoHelper.writeStringToFile(ResourceHelper.getResourceAsString(
@@ -59,7 +59,7 @@ public class XmlFileSourceConfigurationServiceIT {
 				this.configurationFile.toFile());
 		ThreadHelper.sleepForThreeSeconds();
 		Configuration configuration = 
-				this.xmlFileSourceConfigurationService.getConfiguration();
+				this.xmlFileSourceConfigurationProvider.getConfiguration();
 		Settings settings = configuration.getSettings();
 		Port expectedPort = Port.newInstance(1234);
 		Port actualPort = settings.getLastValue(SettingSpec.PORT);
@@ -71,8 +71,8 @@ public class XmlFileSourceConfigurationServiceIT {
 		IoHelper.writeStringToFile(ResourceHelper.getResourceAsString(
 				ResourceNameConstants.JARGYLE_NET_SOCKS_SERVER_EMPTY_CONFIGURATION_FILE), 
 				this.configurationFile.toFile());
-		this.xmlFileSourceConfigurationService = 
-				XmlFileSourceConfigurationService.newInstance(
+		this.xmlFileSourceConfigurationProvider = 
+				XmlFileSourceConfigurationProvider.newInstance(
 						this.configurationFile.toFile());
 		ThreadHelper.sleepForThreeSeconds();
 		IoHelper.writeStringToFile(ResourceHelper.getResourceAsString(
@@ -80,7 +80,7 @@ public class XmlFileSourceConfigurationServiceIT {
 				this.configurationFile.toFile());
 		ThreadHelper.sleepForThreeSeconds();
 		Configuration configuration = 
-				this.xmlFileSourceConfigurationService.getConfiguration();
+				this.xmlFileSourceConfigurationProvider.getConfiguration();
 		Settings settings = configuration.getSettings();
 		NonnegativeInteger expectedBacklog = NonnegativeInteger.newInstance(
 				100);

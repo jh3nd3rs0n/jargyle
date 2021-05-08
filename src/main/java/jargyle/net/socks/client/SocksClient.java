@@ -117,8 +117,8 @@ public abstract class SocksClient {
 		}
 		String socksServerUriHost = this.socksServerUri.getHost();
 		int socksServerUriPort = this.socksServerUri.getPort();
-		InetAddress socksServerUriHostInetAddress = 
-				this.internalHostResolver.resolve(socksServerUriHost);
+		InetAddress socksServerUriHostInetAddress =	this.resolve(
+				socksServerUriHost);
 		internalSocket.connect(
 				new InetSocketAddress(
 						socksServerUriHostInetAddress, 
@@ -175,6 +175,10 @@ public abstract class SocksClient {
 	}
 	
 	public abstract SocksNetObjectFactory newSocksNetObjectFactory();
+	
+	protected final InetAddress resolve(final String host) throws IOException {
+		return this.internalHostResolver.resolve(host);
+	}
 	
 	@Override
 	public String toString() {

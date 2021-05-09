@@ -3,7 +3,6 @@ package jargyle.net.ssl;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
@@ -32,17 +31,17 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 	private static final int MAX_HANDSHAKE_LOOPS = 200;
 	
 	private boolean handshakeCompleted;
-	private final SocketAddress peerSocketAddress;
 	private final SSLEngine sslEngine;
 
 	DtlsDatagramSocket(
 			final DatagramSocket datagramSock, 
 			final SSLEngine engine) throws SocketException {
 		super(datagramSock);
-		SocketAddress peerSocketAddr = new InetSocketAddress(
-				engine.getPeerHost(), engine.getPeerPort());
+		if (!datagramSock.isConnected()) {
+			throw new IllegalArgumentException(
+					"DatagramSocket must be connected");
+		}
 		this.handshakeCompleted = false;
-		this.peerSocketAddress = peerSocketAddr;
 		this.sslEngine = engine;
 	}
 
@@ -69,10 +68,6 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 	
 	public int getPeerPort() {
 		return this.sslEngine.getPeerPort();
-	}
-	
-	public SocketAddress getPeerSocketAddress() {
-		return this.peerSocketAddress;
 	}
 	
 	public boolean getUseClientMode() {
@@ -117,7 +112,8 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 						List<DatagramPacket> packets = 
 								new ArrayList<DatagramPacket>();
 						boolean finished = this.reproduceHandshakePackets(
-								packets, this.peerSocketAddress);
+								packets, 
+								this.datagramSocket.getRemoteSocketAddress());
 						LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
 								"Reproduced %s packets", 
 								packets.size())));
@@ -187,7 +183,8 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 			} else if (hs.equals(SSLEngineResult.HandshakeStatus.NEED_WRAP)) {
 				List<DatagramPacket> packets = new ArrayList<DatagramPacket>();
 				boolean finished = this.produceHandshakePackets(
-						packets, this.peerSocketAddress);
+						packets, 
+						this.datagramSocket.getRemoteSocketAddress());
 				LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
 						"Produced %s packets", 
 						packets.size())));
@@ -417,16 +414,11 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 
 	@Override
 	public void send(final DatagramPacket p) throws IOException {
-		SocketAddress socketAddress = p.getSocketAddress();
-		if (!this.peerSocketAddress.equals(socketAddress)) {
-			throw new IllegalArgumentException(
-					"Packet address and peer socket address must be the same");
-		}
 		if (!this.handshakeCompleted) { this.handshake(); }
 		ByteBuffer outAppData = ByteBuffer.wrap(p.getData());
 		// Note: have not considered the packet losses
 		List<DatagramPacket> packets = this.produceApplicationPackets(
-				outAppData, socketAddress);
+				outAppData, p.getSocketAddress());
 		outAppData.flip();
 		for (DatagramPacket packet : packets) {
 			this.datagramSocket.send(packet);
@@ -467,8 +459,6 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 			.append(this.getLocalSocketAddress())
 			.append(", getUseClientMode()=")
 			.append(this.getUseClientMode())
-			.append(", peerSocketAddress=")
-			.append(this.peerSocketAddress)			
 			.append("]");
 		return builder.toString();
 	}

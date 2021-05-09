@@ -6,6 +6,7 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketException;
+import java.net.UnknownHostException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -315,7 +316,38 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 			final String udpClientHost, 
 			final int udpClientPort) {
 		DatagramSocket clientFacingDatagramSck = clientFacingDatagramSock;
-		if (this.clientDtlsDatagramSocketFactory != null) {
+		if (udpClientPort > 0) {
+			InetAddress udpClientHostInetAddress = null;
+			try {
+				udpClientHostInetAddress = InetAddress.getByName(udpClientHost);
+			} catch (UnknownHostException e) {
+				LOGGER.warn( 
+						LoggerHelper.objectMessage(
+								this, 
+								"Error in determining the IP address for the "
+								+ "client-facing UDP socket to connect"), 
+						e);
+				Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
+						Reply.HOST_UNREACHABLE);
+				LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
+						"Sending %s",
+						socks5Rep.toString())));
+				try {
+					this.commandWorkerContext.writeThenFlush(
+							socks5Rep.toByteArray());
+				} catch (IOException e1) {
+					LOGGER.warn( 
+							LoggerHelper.objectMessage(
+									this, "Error in writing SOCKS5 reply"), 
+							e1);
+				}
+				return null;
+			}
+			clientFacingDatagramSck.connect(
+					udpClientHostInetAddress, udpClientPort);
+		}
+		if (clientFacingDatagramSck.isConnected() 
+				&& this.clientDtlsDatagramSocketFactory != null) {
 			try {
 				clientFacingDatagramSck = 
 						this.clientDtlsDatagramSocketFactory.newDatagramSocket(

@@ -222,7 +222,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			DatagramSocket datagramSock = 
 					this.socks5Client.getConnectedInternalDatagramSocket(
 							this.datagramSocket, 
-							socks5Rep.getServerBoundAddress(),
+							this.socks5Client.getSocksServerUri().getHost(),
 							socks5Rep.getServerBoundPort());
 			if (sock instanceof GssSocket) {
 				GssSocket gssSocket = (GssSocket) sock;
@@ -232,8 +232,8 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 						gssSocket.getMessageProp());
 			}
 			this.datagramSocket = datagramSock;
-			this.udpRelayServerInetAddress = 
-					InetAddress.getByName(socks5Rep.getServerBoundAddress());
+			this.udpRelayServerInetAddress = InetAddress.getByName(
+					socks5Rep.getServerBoundAddress());
 			this.udpRelayServerPort = socks5Rep.getServerBoundPort();
 			this.socket = sock;
 		}

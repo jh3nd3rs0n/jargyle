@@ -72,7 +72,7 @@ public final class Socks5Client extends SocksClient {
 			final DatagramSocket internalDatagramSocket,
 			final String udpRelayServerHost,
 			final int udpRelayServerPort) throws IOException {
-		InetAddress udpRelayServerHostInetAddress = this.resolve(
+		InetAddress udpRelayServerHostInetAddress = InetAddress.getByName(
 				udpRelayServerHost); 
 		internalDatagramSocket.connect(
 				udpRelayServerHostInetAddress, udpRelayServerPort);

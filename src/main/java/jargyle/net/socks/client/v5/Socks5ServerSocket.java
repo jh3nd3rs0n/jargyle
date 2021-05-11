@@ -12,7 +12,7 @@ import java.net.SocketException;
 import java.nio.channels.ServerSocketChannel;
 
 import jargyle.net.FilterSocket;
-import jargyle.net.Host;
+import jargyle.net.InetAddressHelper;
 import jargyle.net.PerformancePreferences;
 import jargyle.net.SocketSettingSpec;
 import jargyle.net.SocketSettings;
@@ -61,8 +61,7 @@ public final class Socks5ServerSocket extends ServerSocket {
 		@Override
 		public synchronized void close() throws IOException {
 			super.close();
-			this.localInetAddress = 
-					Host.getIpv4WildcardInstance().toInetAddress();
+			this.localInetAddress = InetAddressHelper.getInet4AllZerosAddress();
 			this.localPort = -1;
 			this.localSocketAddress = null;
 			this.remoteInetAddress = null;
@@ -279,7 +278,7 @@ public final class Socks5ServerSocket extends ServerSocket {
 			}
 			InetAddress bAddr = bindAddr;
 			if (bAddr == null) {
-				bAddr = Host.getIpv4WildcardInstance().toInetAddress();
+				bAddr = InetAddressHelper.getInet4AllZerosAddress();
 			}
 			String address = bAddr.getHostAddress();
 			Socks5Request socks5Req = Socks5Request.newInstance(

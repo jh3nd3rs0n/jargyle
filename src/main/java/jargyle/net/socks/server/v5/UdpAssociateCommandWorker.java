@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import jargyle.logging.LoggerHelper;
 import jargyle.net.Host;
 import jargyle.net.HostResolver;
+import jargyle.net.InetAddressHelper;
 import jargyle.net.NetObjectFactory;
 import jargyle.net.SocketSettings;
 import jargyle.net.socks.server.SettingSpec;
@@ -220,7 +221,7 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 	public void run() throws IOException {
 		Socks5Reply socks5Rep = null;
 		String desiredDestinationAddr = this.desiredDestinationAddress;
-		if (!desiredDestinationAddr.matches("[a-zA-Z1-9]")) {
+		if (InetAddressHelper.isAllZerosHostAddress(desiredDestinationAddr)) {
 			desiredDestinationAddr = 
 					this.clientSocket.getInetAddress().getHostAddress();
 		}
@@ -257,7 +258,7 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 			InetAddress inetAddress = 
 					clientFacingDatagramSock.getLocalAddress();
 			String serverBoundAddress = inetAddress.getHostAddress();
-			if (!serverBoundAddress.matches("[a-zA-Z1-9]")) {
+			if (InetAddressHelper.isAllZerosHostAddress(serverBoundAddress)) {
 				inetAddress = this.clientSocket.getLocalAddress();
 				serverBoundAddress = inetAddress.getHostAddress();
 			}
@@ -316,7 +317,8 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 			final String udpClientHost, 
 			final int udpClientPort) {
 		DatagramSocket clientFacingDatagramSck = clientFacingDatagramSock;
-		if (udpClientPort > 0) {
+		if (!InetAddressHelper.isAllZerosHostAddress(udpClientHost) 
+				&& udpClientPort > 0) {
 			InetAddress udpClientHostInetAddress = null;
 			try {
 				udpClientHostInetAddress = InetAddress.getByName(udpClientHost);

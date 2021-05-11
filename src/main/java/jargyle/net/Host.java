@@ -5,30 +5,14 @@ import java.net.UnknownHostException;
 
 public final class Host {
 	
-	private static Host ipv4WildcardInstance;
+	public static final Host INET_4_ALL_ZEROS_INSTANCE = Host.newInstance(
+			InetAddressHelper.getInet4AllZerosAddress());
 	
-	private static Host ipv6WildcardInstance;
+	public static final Host INET_6_ALL_ZEROS_INSTANCE = Host.newInstance(
+			InetAddressHelper.getInet6AllZerosAddress());
 	
-	public static Host getIpv4WildcardInstance() {
-		if (ipv4WildcardInstance == null) {
-			try {
-				ipv4WildcardInstance = Host.newInstance("0.0.0.0");
-			} catch (UnknownHostException e) {
-				throw new AssertionError(e);
-			}	
-		}
-		return ipv4WildcardInstance;
-	}
-	
-	public static Host getIpv6WildcardInstance() {
-		if (ipv6WildcardInstance == null) {
-			try {
-				ipv6WildcardInstance = Host.newInstance("0:0:0:0:0:0:0:0");
-			} catch (UnknownHostException e) {
-				throw new AssertionError(e);
-			}
-		}
-		return ipv6WildcardInstance; 
+	private static Host newInstance(final InetAddress inetAddress) {
+		return new Host(inetAddress, inetAddress.getHostAddress());
 	}
 	
 	public static Host newInstance(final String s) throws UnknownHostException {

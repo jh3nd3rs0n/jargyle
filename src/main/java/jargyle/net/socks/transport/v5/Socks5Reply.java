@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 
-import jargyle.net.Host;
+import jargyle.net.InetAddressHelper;
 import jargyle.util.UnsignedByte;
 import jargyle.util.UnsignedShort;
 
@@ -32,7 +32,7 @@ public final class Socks5Reply {
 		}
 		return newInstance(
 				reply, 
-				Host.getIpv4WildcardInstance().toString(),
+				InetAddressHelper.INET_4_ALL_ZEROS_HOST_ADDRESS,
 				0);
 	}
 	

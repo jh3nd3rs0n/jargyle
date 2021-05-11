@@ -15,7 +15,7 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.nio.channels.DatagramChannel;
 
-import jargyle.net.Host;
+import jargyle.net.InetAddressHelper;
 import jargyle.net.Port;
 import jargyle.net.socks.transport.v5.Command;
 import jargyle.net.socks.transport.v5.Reply;
@@ -63,10 +63,9 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			if (this.datagramSocket.isBound()) {
 				throw new SocketException("socket is already bound");
 			}
-			InetAddress wildcardInetAddress = 
-					Host.getIpv4WildcardInstance().toInetAddress();
 			int port = 0;
-			InetAddress inetAddress = wildcardInetAddress;
+			InetAddress inetAddress = 
+					InetAddressHelper.getInet4AllZerosAddress();
 			if (addr != null) {
 				if (!(addr instanceof InetSocketAddress)) {
 					throw new IllegalArgumentException(

@@ -12,7 +12,7 @@ import jargyle.util.UnsignedByte;
 
 public enum AddressType {
 
-	IP_V4_ADDRESS((byte) 0x01) {
+	IPV4((byte) 0x01) {
 		
 		private static final int ADDRESS_LENGTH = 4;
 		private static final String ADDRESS_REGEX = 
@@ -130,7 +130,7 @@ public enum AddressType {
 		}
 	},
 	
-	IP_V6_ADDRESS((byte) 0x04) {
+	IPV6((byte) 0x04) {
 		
 		private static final int ADDRESS_LENGTH = 16;
 		private static final String ADDRESS_REGEX = 

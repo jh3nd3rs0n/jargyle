@@ -32,7 +32,7 @@ public final class Socks5Reply {
 		}
 		return newInstance(
 				reply, 
-				InetAddressHelper.INET_4_ALL_ZEROS_HOST_ADDRESS,
+				InetAddressHelper.INET4_ALL_ZEROS_HOST_ADDRESS,
 				0);
 	}
 	

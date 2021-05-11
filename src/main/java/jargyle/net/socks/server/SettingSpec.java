@@ -512,7 +512,7 @@ public abstract class SettingSpec<V>
 	)
 	public static final SettingSpec<Host> HOST = new HostSettingSpec(
 			"host", 
-			Host.INET_4_ALL_ZEROS_INSTANCE);
+			Host.INET4_ALL_ZEROS_INSTANCE);
 	
 	@HelpText(
 			doc = "The port for the SOCKS server (default is 1080)", 
@@ -656,7 +656,7 @@ public abstract class SettingSpec<V>
 	)
 	public static final SettingSpec<Host> SOCKS5_ON_CONNECT_SERVER_FACING_BIND_HOST = new HostSettingSpec(
 			"socks5.onConnect.serverFacingBindHost",
-			Host.INET_4_ALL_ZEROS_INSTANCE);
+			Host.INET4_ALL_ZEROS_INSTANCE);
 	
 	@HelpText(
 			doc = "The timeout in milliseconds on waiting for the "
@@ -721,7 +721,7 @@ public abstract class SettingSpec<V>
 	)
 	public static final SettingSpec<Host> SOCKS5_ON_UDP_ASSOCIATE_CLIENT_FACING_BIND_HOST = new HostSettingSpec(
 			"socks5.onUdpAssociate.clientFacingBindHost",
-			Host.INET_4_ALL_ZEROS_INSTANCE);
+			Host.INET4_ALL_ZEROS_INSTANCE);
 	
 	@HelpText(
 			doc = "The space separated list of socket settings for the "
@@ -757,7 +757,7 @@ public abstract class SettingSpec<V>
 	)
 	public static final SettingSpec<Host> SOCKS5_ON_UDP_ASSOCIATE_SERVER_FACING_BIND_HOST = new HostSettingSpec(
 			"socks5.onUdpAssociate.serverFacingBindHost",
-			Host.INET_4_ALL_ZEROS_INSTANCE);
+			Host.INET4_ALL_ZEROS_INSTANCE);
 	
 	@HelpText(
 			doc = "The space separated list of socket settings for the "

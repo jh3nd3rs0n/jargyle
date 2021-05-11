@@ -5,9 +5,9 @@ import java.net.UnknownHostException;
 
 public final class InetAddressHelper {
 
-	public static final String INET_4_ALL_ZEROS_HOST_ADDRESS = "0.0.0.0";
+	public static final String INET4_ALL_ZEROS_HOST_ADDRESS = "0.0.0.0";
 	
-	public static final String INET_6_ALL_ZEROS_HOST_ADDRESS = "0:0:0:0:0:0:0:0";
+	public static final String INET6_ALL_ZEROS_HOST_ADDRESS = "0:0:0:0:0:0:0:0";
 	
 	private static InetAddress inet4AllZerosAddress;
 	
@@ -17,7 +17,7 @@ public final class InetAddressHelper {
 		if (inet4AllZerosAddress == null) {
 			try {
 				inet4AllZerosAddress = InetAddress.getByName(
-						INET_4_ALL_ZEROS_HOST_ADDRESS);
+						INET4_ALL_ZEROS_HOST_ADDRESS);
 			} catch (UnknownHostException e) {
 				throw new AssertionError(e);
 			}
@@ -29,7 +29,7 @@ public final class InetAddressHelper {
 		if (inet6AllZerosAddress == null) {
 			try {
 				inet6AllZerosAddress = InetAddress.getByName(
-						INET_6_ALL_ZEROS_HOST_ADDRESS);
+						INET6_ALL_ZEROS_HOST_ADDRESS);
 			} catch (UnknownHostException e) {
 				throw new AssertionError(e);
 			}
@@ -44,12 +44,12 @@ public final class InetAddressHelper {
 	
 	public static boolean isInet4AllZerosHostAddress(
 			final String hostAddress) {
-		return INET_4_ALL_ZEROS_HOST_ADDRESS.equals(hostAddress);
+		return INET4_ALL_ZEROS_HOST_ADDRESS.equals(hostAddress);
 	}
 	
 	public static boolean isInet6AllZerosHostAddress(
 			final String hostAddress) {
-		return INET_6_ALL_ZEROS_HOST_ADDRESS.equals(hostAddress);
+		return INET6_ALL_ZEROS_HOST_ADDRESS.equals(hostAddress);
 	}
 	
 	private InetAddressHelper() { }

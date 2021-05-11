@@ -5,10 +5,10 @@ import java.net.UnknownHostException;
 
 public final class Host {
 	
-	public static final Host INET_4_ALL_ZEROS_INSTANCE = Host.newInstance(
+	public static final Host INET4_ALL_ZEROS_INSTANCE = Host.newInstance(
 			InetAddressHelper.getInet4AllZerosAddress());
 	
-	public static final Host INET_6_ALL_ZEROS_INSTANCE = Host.newInstance(
+	public static final Host INET6_ALL_ZEROS_INSTANCE = Host.newInstance(
 			InetAddressHelper.getInet6AllZerosAddress());
 	
 	private static Host newInstance(final InetAddress inetAddress) {

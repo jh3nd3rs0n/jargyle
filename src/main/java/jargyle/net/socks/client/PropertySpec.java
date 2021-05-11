@@ -40,7 +40,7 @@ public abstract class PropertySpec<V>
 	
 	public static final PropertySpec<Host> BIND_HOST = new HostPropertySpec(
 			"socksClient.bindHost",
-			Host.INET_4_ALL_ZEROS_INSTANCE);
+			Host.INET4_ALL_ZEROS_INSTANCE);
 	
 	public static final PropertySpec<Port> BIND_PORT = new PortPropertySpec(
 			"socksClient.bindPort",

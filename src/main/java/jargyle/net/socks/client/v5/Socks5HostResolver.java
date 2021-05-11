@@ -52,7 +52,9 @@ public final class Socks5HostResolver extends HostResolver {
 					"received reply: %s", 
 					reply));
 		}
-		return InetAddress.getByName(socks5Rep.getServerBoundAddress());
+		InetAddress inetAddress = InetAddress.getByName(
+				socks5Rep.getServerBoundAddress());
+		return InetAddress.getByAddress(host, inetAddress.getAddress());
 	}
 
 }

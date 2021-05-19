@@ -186,10 +186,7 @@ public final class Users {
 
 	public User put(final User usr) {
 		String name = usr.getName();
-		User recentUsr = null;
-		if (this.users.containsKey(name)) {
-			recentUsr = this.users.remove(name);
-		}
+		User recentUsr = this.remove(name);
 		this.users.put(name, usr);
 		return recentUsr;
 	}

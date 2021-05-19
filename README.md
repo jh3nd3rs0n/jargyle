@@ -1,13 +1,15 @@
 # Jargyle 
 
-[![Build Status](https://travis-ci.com/jh3nd3rs0n/jargyle.svg?branch=master)](https://travis-ci.com/jh3nd3rs0n/jargyle) [![Total alerts](https://img.shields.io/lgtm/alerts/g/jh3nd3rs0n/jargyle.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/jh3nd3rs0n/jargyle/alerts/) [![Language grade: Java](https://img.shields.io/lgtm/grade/java/g/jh3nd3rs0n/jargyle.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/jh3nd3rs0n/jargyle/context:java) [![Codacy Badge](https://app.codacy.com/project/badge/Grade/581706f82bf945df84bc397da4cecee5)](https://www.codacy.com/gh/jh3nd3rs0n/jargyle/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=jh3nd3rs0n/jargyle&amp;utm_campaign=Badge_Grade)
+[![Java CI with Maven (Mac OS Latest)](https://github.com/jh3nd3rs0n/jargyle/actions/workflows/maven_macos_latest.yml/badge.svg)](https://github.com/jh3nd3rs0n/jargyle/actions/workflows/maven_macos_latest.yml) [![Java CI with Maven (Ubuntu Latest)](https://github.com/jh3nd3rs0n/jargyle/actions/workflows/maven_ubuntu_latest.yml/badge.svg)](https://github.com/jh3nd3rs0n/jargyle/actions/workflows/maven_ubuntu_latest.yml) [![Java CI with Maven (Windows Latest)](https://github.com/jh3nd3rs0n/jargyle/actions/workflows/maven_windows_latest.yml/badge.svg)](https://github.com/jh3nd3rs0n/jargyle/actions/workflows/maven_windows_latest.yml) [![Build Status](https://travis-ci.com/jh3nd3rs0n/jargyle.svg?branch=master)](https://travis-ci.com/jh3nd3rs0n/jargyle) [![Total alerts](https://img.shields.io/lgtm/alerts/g/jh3nd3rs0n/jargyle.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/jh3nd3rs0n/jargyle/alerts/) [![Language grade: Java](https://img.shields.io/lgtm/grade/java/g/jh3nd3rs0n/jargyle.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/jh3nd3rs0n/jargyle/context:java) [![Codacy Badge](https://app.codacy.com/project/badge/Grade/581706f82bf945df84bc397da4cecee5)](https://www.codacy.com/gh/jh3nd3rs0n/jargyle/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=jh3nd3rs0n/jargyle&amp;utm_campaign=Badge_Grade)
 
 Jargyle is a Java SOCKS5 server. It has the following features:
 
 -   100% implementation of the SOCKS5 protocol specification which includes [username password authentication](#4-10-2-using-username-password-authentication) and [GSS-API authentication](#4-10-3-using-gss-api-authentication)
--   [SSL/TLS](#4-7-enabling-ssl-tls)/[DTLS](#4-8-enabling-dtls)
+-   [SSL/TLS for TCP traffic](#4-7-enabling-ssl-tls-for-tcp-traffic)
+-   [DTLS for UDP traffic](#4-8-enabling-dtls-for-udp-traffic)
 -   [SOCKS server chaining](#4-11-chaining-to-another-socks-server)
--   [SSL/TLS](#4-11-1-enabling-ssl-tls)/[DTLS](#4-11-2-enabling-dtls) for SOCKS server chaining
+-   [SSL/TLS for TCP traffic through SOCKS server chaining](#4-11-1-enabling-ssl-tls-for-tcp-traffic)
+-   [DTLS for UDP traffic through SOCKS server chaining](#4-11-2-enabling-dtls-for-udp-traffic)
 -   [Host name resolution through SOCKS5 server chaining](#4-11-3-using-host-name-resolution-through-socks5-server-chaining)
 -   [SOCKS server chaining to a specified chain of other SOCKS servers](#4-12-chaining-to-a-specified-chain-of-other-socks-servers)
 -   [Allow or block client addresses and external addresses](#4-13-allowing-or-blocking-addresses)
@@ -32,8 +34,8 @@ Although Jargyle can act as a standalone SOCKS5 server, it can act as a bridge b
 -   [4. 4. Combining Configuration Files](#4-4-combining-configuration-files)
 -   [4. 5. Running with a Configuration File](#4-5-running-with-a-configuration-file)
 -   [4. 6. Running with a Monitored Configuration File](#4-6-running-with-a-monitored-configuration-file)
--   [4. 7. Enabling SSL/TLS](#4-7-enabling-ssl-tls)
--   [4. 8. Enabling DTLS](#4-8-enabling-dtls)
+-   [4. 7. Enabling SSL/TLS for TCP Traffic](#4-7-enabling-ssl-tls-for-tcp-traffic)
+-   [4. 8. Enabling DTLS for UDP Traffic](#4-8-enabling-dtls-for-udp-traffic)
 -   [4. 9. Managing SOCKS5 Users (for Username Password Authentication)](#4-9-managing-socks5-users-for-username-password-authentication)
 -   [4. 9. 1. Creating a Users File](#4-9-1-creating-a-users-file)
 -   [4. 9. 2. Adding Users to an Existing Users File](#4-9-2-adding-users-to-an-existing-users-file)
@@ -43,8 +45,8 @@ Although Jargyle can act as a standalone SOCKS5 server, it can act as a bridge b
 -   [4. 10. 2. Using Username Password Authentication](#4-10-2-using-username-password-authentication)
 -   [4. 10. 3. Using GSS-API Authentication](#4-10-3-using-gss-api-authentication)
 -   [4. 11. Chaining to Another SOCKS Server](#4-11-chaining-to-another-socks-server)
--   [4. 11. 1. Enabling SSL/TLS](#4-11-1-enabling-ssl-tls)
--   [4. 11. 2. Enabling DTLS](#4-11-2-enabling-dtls)
+-   [4. 11. 1. Enabling SSL/TLS for TCP Traffic](#4-11-1-enabling-ssl-tls-for-tcp-traffic)
+-   [4. 11. 2. Enabling DTLS for UDP Traffic](#4-11-2-enabling-dtls-for-udp-traffic)
 -   [4. 11. 3. Using Host Name Resolution through SOCKS5 Server Chaining](#4-11-3-using-host-name-resolution-through-socks5-server-chaining)
 -   [4. 11. 4. Using SOCKS5 Authentication](#4-11-4-using-socks5-authentication)
 -   [4. 11. 4. 1. Using No Authentication](#4-11-4-1-using-no-authentication)
@@ -738,9 +740,9 @@ The following are the settings in the monitored configuration file that will hav
 
 A restart of Jargyle would be required if you want any of the changed aforementioned settings to be applied to the running configuration.
 
-### 4. 7. Enabling SSL/TLS
+### 4. 7. Enabling SSL/TLS for TCP Traffic
 
-You can have clients connect to Jargyle through SSL/TLS. By default SSL/TLS is disabled. To enable SSL/TLS, you will need to have the setting `ssl.enabled` set to `true`. In addition, you will need to have the setting `ssl.keyStoreFile` to specify Jargyle's key store file (this file would need to be created by Java's keytool utility). Also, you will need to have the setting `ssl.keyStorePassword` to specify the password for Jargyle's key store file.
+You can have SSL/TLS for TCP traffic. By default SSL/TLS for TCP traffic is disabled. To enable SSL/TLS for TCP traffic, you will need to have the setting `ssl.enabled` set to `true`. In addition, you will need to have the setting `ssl.keyStoreFile` to specify Jargyle's key store file (this file would need to be created by Java's keytool utility). Also, you will need to have the setting `ssl.keyStorePassword` to specify the password for Jargyle's key store file.
 
 ```text
     
@@ -790,9 +792,9 @@ If you do not want to have the password appear in any script or in any part of t
     
 ```
 
-### 4. 8. Enabling DTLS
+### 4. 8. Enabling DTLS for UDP Traffic
 
-You can have clients connect to Jargyle through DTLS. By default DTLS is disabled. To enable DTLS, you will need to have the setting `dtls.enabled` set to `true`. In addition, you will need to have the setting `dtls.keyStoreFile` to specify Jargyle's key store file (this file would need to be created by Java's keytool utility). Also, you will need to have the setting `dtls.keyStorePassword` to specify the password for Jargyle's key store file.
+You can have DTLS for UDP traffic. By default DTLS for UDP traffic is disabled. To enable DTLS for UDP traffic, you will need to have the setting `dtls.enabled` set to `true`. In addition, you will need to have the setting `dtls.keyStoreFile` to specify Jargyle's key store file (this file would need to be created by Java's keytool utility). Also, you will need to have the setting `dtls.keyStorePassword` to specify the password for Jargyle's key store file.
 
 ```text
     
@@ -1288,7 +1290,7 @@ The Java system property `-Djava.security.krb5.conf=krb5.conf` provides the Kerb
     
     [realms]
         EXAMPLE.COM = {
-            kdc = localhost:12345
+            kdc = 127.0.0.1:12345
         }
     
 ```
@@ -1320,13 +1322,13 @@ Partial configuration file example:
 
 Please note that the scheme in the URI specifies the SOCKS protocol to be used when accessing the other SOCKS server (`socks5`), the address or name of the machine of where the other SOCKS server resides (`127.0.0.1`), and the port number of the other SOCKS server (`23456`). In the aforementioned examples, the SOCKS protocol version 5 is used. At this time, the only supported scheme for the URI format is `socks5`
 
-#### 4. 11. 1. Enabling SSL/TLS
+#### 4. 11. 1. Enabling SSL/TLS for TCP Traffic
 
-You can have Jargyle chained to the other SOCKS server through SSL/TLS under the following condition: 
+You can have SSL/TLS for TCP traffic through SOCKS server chaining under the following condition: 
 
--   The other SOCKS server supports accepting connections through SSL/TLS.
+-   The other SOCKS server accepts SSL/TLS connections.
 
-By default SSL/TLS is disabled. To enable SSL/TLS, you will need to have the setting `chaining.ssl.enabled` set to `true`. In addition, you will need to have the setting `chaining.ssl.trustStoreFile` to specify the server's key store file used as a trust store (this file would need to be created by Java's keytool utility). Also, you will need to have the setting `chaining.ssl.trustStorePassword` to specify the password for the server's trust store file.
+By default SSL/TLS for TCP traffic through SOCKS server chaining is disabled. To enable SSL/TLS for TCP traffic through SOCKS server chaining, you will need to have the setting `chaining.ssl.enabled` set to `true`. In addition, you will need to have the setting `chaining.ssl.trustStoreFile` to specify the server's key store file used as a trust store (this file would need to be created by Java's keytool utility). Also, you will need to have the setting `chaining.ssl.trustStorePassword` to specify the password for the server's trust store file.
 
 Partial command line example:
 
@@ -1382,13 +1384,13 @@ Partial command line example:
     
 ```
 
-#### 4. 11. 2. Enabling DTLS
+#### 4. 11. 2. Enabling DTLS for UDP Traffic
 
-You can have Jargyle chained to the other SOCKS server through DTLS under the following condition: 
+You can have DTLS for UDP traffic through SOCKS server chaining under the following condition: 
 
--   The other SOCKS server supports accepting connections through DTLS.
+-   The other SOCKS server accepts DTLS connections.
 
-By default DTLS is disabled. To enable DTLS, you will need to have the setting `chaining.dtls.enabled` set to `true`. In addition, you will need to have the setting `chaining.dtls.trustStoreFile` to specify the server's key store file used as a trust store (this file would need to be created by Java's keytool utility). Also, you will need to have the setting `chaining.dtls.trustStorePassword` to specify the password for the server's trust store file.
+By default DTLS for UDP traffic through SOCKS server chaining is disabled. To enable DTLS for UDP traffic through SOCKS server chaining, you will need to have the setting `chaining.dtls.enabled` set to `true`. In addition, you will need to have the setting `chaining.dtls.trustStoreFile` to specify the server's key store file used as a trust store (this file would need to be created by Java's keytool utility). Also, you will need to have the setting `chaining.dtls.trustStorePassword` to specify the password for the server's trust store file.
 
 Partial command line example:
 
@@ -1730,7 +1732,7 @@ The Java system property `-Djava.security.krb5.conf=krb5.conf` provides the Kerb
     
     [realms]
         EXAMPLE.COM = {
-            kdc = localhost:12345
+            kdc = 127.0.0.1:12345
         }
     
 ```

@@ -175,17 +175,23 @@ public final class SocketSettings {
 	
 	public <V> V putValue(
 			final SocketSettingSpec<V> socketSettingSpec, final V value) {
-		V recentValue = null;
 		@SuppressWarnings("unchecked")
 		SocketSettingSpec<Object> socketSttngSpec = 
 				(SocketSettingSpec<Object>) socketSettingSpec;
 		SocketSetting<Object> socketSttng = socketSttngSpec.newSocketSetting(
 				socketSettingSpec.getValueType().cast(value));
-		SocketSetting<Object> recentSocketSetting = null;
-		if (this.socketSettings.containsKey(socketSttngSpec)) {
-			recentSocketSetting = this.socketSettings.remove(socketSttngSpec);
-		}
+		V recentValue = this.remove(socketSettingSpec);
 		this.socketSettings.put(socketSttngSpec, socketSttng);
+		return recentValue;
+	}
+	
+	public <V> V remove(final SocketSettingSpec<V> socketSettingSpec) {
+		V recentValue = null;
+		@SuppressWarnings("unchecked")
+		SocketSettingSpec<Object> socketSttngSpec = 
+				(SocketSettingSpec<Object>) socketSettingSpec;
+		SocketSetting<Object> recentSocketSetting = this.socketSettings.remove(
+				socketSttngSpec);
 		if (recentSocketSetting != null) {
 			recentValue = socketSettingSpec.getValueType().cast(
 					recentSocketSetting.getValue());

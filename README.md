@@ -5,11 +5,11 @@
 Jargyle is a Java SOCKS5 server. It has the following features:
 
 -   100% implementation of the SOCKS5 protocol specification which includes [username password authentication](#4-10-2-using-username-password-authentication) and [GSS-API authentication](#4-10-3-using-gss-api-authentication)
--   [SSL/TLS for TCP traffic](#4-7-enabling-ssl-tls-for-tcp-traffic)
--   [DTLS for UDP traffic](#4-8-enabling-dtls-for-udp-traffic)
+-   [SSL/TLS for TCP traffic](#4-7-using-ssl-tls-for-tcp-traffic)
+-   [DTLS for UDP traffic](#4-8-using-dtls-for-udp-traffic)
 -   [SOCKS server chaining](#4-11-chaining-to-another-socks-server)
--   [SSL/TLS for TCP traffic through SOCKS server chaining](#4-11-1-enabling-ssl-tls-for-tcp-traffic)
--   [DTLS for UDP traffic through SOCKS server chaining](#4-11-2-enabling-dtls-for-udp-traffic)
+-   [SSL/TLS for TCP traffic through SOCKS server chaining](#4-11-1-using-ssl-tls-for-tcp-traffic)
+-   [DTLS for UDP traffic through SOCKS server chaining](#4-11-2-using-dtls-for-udp-traffic)
 -   [Host name resolution through SOCKS5 server chaining](#4-11-3-using-host-name-resolution-through-socks5-server-chaining)
 -   [SOCKS server chaining to a specified chain of other SOCKS servers](#4-12-chaining-to-a-specified-chain-of-other-socks-servers)
 -   [Allow or block client addresses and external addresses](#4-13-allowing-or-blocking-addresses)
@@ -34,8 +34,8 @@ Although Jargyle can act as a standalone SOCKS5 server, it can act as a bridge b
 -   [4. 4. Combining Configuration Files](#4-4-combining-configuration-files)
 -   [4. 5. Running with a Configuration File](#4-5-running-with-a-configuration-file)
 -   [4. 6. Running with a Monitored Configuration File](#4-6-running-with-a-monitored-configuration-file)
--   [4. 7. Enabling SSL/TLS for TCP Traffic](#4-7-enabling-ssl-tls-for-tcp-traffic)
--   [4. 8. Enabling DTLS for UDP Traffic](#4-8-enabling-dtls-for-udp-traffic)
+-   [4. 7. Using SSL/TLS for TCP Traffic](#4-7-using-ssl-tls-for-tcp-traffic)
+-   [4. 8. Using DTLS for UDP Traffic](#4-8-using-dtls-for-udp-traffic)
 -   [4. 9. Managing SOCKS5 Users (for Username Password Authentication)](#4-9-managing-socks5-users-for-username-password-authentication)
 -   [4. 9. 1. Creating a Users File](#4-9-1-creating-a-users-file)
 -   [4. 9. 2. Adding Users to an Existing Users File](#4-9-2-adding-users-to-an-existing-users-file)
@@ -45,8 +45,8 @@ Although Jargyle can act as a standalone SOCKS5 server, it can act as a bridge b
 -   [4. 10. 2. Using Username Password Authentication](#4-10-2-using-username-password-authentication)
 -   [4. 10. 3. Using GSS-API Authentication](#4-10-3-using-gss-api-authentication)
 -   [4. 11. Chaining to Another SOCKS Server](#4-11-chaining-to-another-socks-server)
--   [4. 11. 1. Enabling SSL/TLS for TCP Traffic](#4-11-1-enabling-ssl-tls-for-tcp-traffic)
--   [4. 11. 2. Enabling DTLS for UDP Traffic](#4-11-2-enabling-dtls-for-udp-traffic)
+-   [4. 11. 1. Using SSL/TLS for TCP Traffic](#4-11-1-using-ssl-tls-for-tcp-traffic)
+-   [4. 11. 2. Using DTLS for UDP Traffic](#4-11-2-using-dtls-for-udp-traffic)
 -   [4. 11. 3. Using Host Name Resolution through SOCKS5 Server Chaining](#4-11-3-using-host-name-resolution-through-socks5-server-chaining)
 -   [4. 11. 4. Using SOCKS5 Authentication](#4-11-4-using-socks5-authentication)
 -   [4. 11. 4. 1. Using No Authentication](#4-11-4-1-using-no-authentication)
@@ -740,9 +740,9 @@ The following are the settings in the monitored configuration file that will hav
 
 A restart of Jargyle would be required if you want any of the changed aforementioned settings to be applied to the running configuration.
 
-### 4. 7. Enabling SSL/TLS for TCP Traffic
+### 4. 7. Using SSL/TLS for TCP Traffic
 
-You can have SSL/TLS for TCP traffic. By default SSL/TLS for TCP traffic is disabled. To enable SSL/TLS for TCP traffic, you will need to have the setting `ssl.enabled` set to `true`. In addition, you will need to have the setting `ssl.keyStoreFile` to specify Jargyle's key store file (this file would need to be created by Java's keytool utility). Also, you will need to have the setting `ssl.keyStorePassword` to specify the password for Jargyle's key store file.
+You can use SSL/TLS for TCP traffic. By default SSL/TLS for TCP traffic is disabled. To enable SSL/TLS for TCP traffic, you will need to have the setting `ssl.enabled` set to `true`. In addition, you will need to have the setting `ssl.keyStoreFile` to specify Jargyle's key store file (this file would need to be created by Java's keytool utility). Also, you will need to have the setting `ssl.keyStorePassword` to specify the password for Jargyle's key store file.
 
 ```text
     
@@ -792,9 +792,9 @@ If you do not want to have the password appear in any script or in any part of t
     
 ```
 
-### 4. 8. Enabling DTLS for UDP Traffic
+### 4. 8. Using DTLS for UDP Traffic
 
-You can have DTLS for UDP traffic. By default DTLS for UDP traffic is disabled. To enable DTLS for UDP traffic, you will need to have the setting `dtls.enabled` set to `true`. In addition, you will need to have the setting `dtls.keyStoreFile` to specify Jargyle's key store file (this file would need to be created by Java's keytool utility). Also, you will need to have the setting `dtls.keyStorePassword` to specify the password for Jargyle's key store file.
+You can use DTLS for UDP traffic. By default DTLS for UDP traffic is disabled. To enable DTLS for UDP traffic, you will need to have the setting `dtls.enabled` set to `true`. In addition, you will need to have the setting `dtls.keyStoreFile` to specify Jargyle's key store file (this file would need to be created by Java's keytool utility). Also, you will need to have the setting `dtls.keyStorePassword` to specify the password for Jargyle's key store file.
 
 ```text
     
@@ -1322,9 +1322,9 @@ Partial configuration file example:
 
 Please note that the scheme in the URI specifies the SOCKS protocol to be used when accessing the other SOCKS server (`socks5`), the address or name of the machine of where the other SOCKS server resides (`127.0.0.1`), and the port number of the other SOCKS server (`23456`). In the aforementioned examples, the SOCKS protocol version 5 is used. At this time, the only supported scheme for the URI format is `socks5`
 
-#### 4. 11. 1. Enabling SSL/TLS for TCP Traffic
+#### 4. 11. 1. Using SSL/TLS for TCP Traffic
 
-You can have SSL/TLS for TCP traffic through SOCKS server chaining under the following condition: 
+You can use SSL/TLS for TCP traffic through SOCKS server chaining under the following condition: 
 
 -   The other SOCKS server accepts SSL/TLS connections.
 
@@ -1384,9 +1384,9 @@ Partial command line example:
     
 ```
 
-#### 4. 11. 2. Enabling DTLS for UDP Traffic
+#### 4. 11. 2. Using DTLS for UDP Traffic
 
-You can have DTLS for UDP traffic through SOCKS server chaining under the following condition: 
+You can use DTLS for UDP traffic through SOCKS server chaining under the following condition: 
 
 -   The other SOCKS server accepts DTLS connections.
 

@@ -48,7 +48,7 @@ public class Socks5DatagramSocketIT {
 	}
 	
 	@Test
-	public void testThroughSocks5DatagramSocketUsingUsernamePasswordAuth01() throws IOException {
+	public void testThroughSocks5DatagramSocketUsingUserpassAuth01() throws IOException {
 		String string = TestStringConstants.STRING_01;
 		String returningString = DatagramSocketHelper.echoThroughDatagramSocket(
 				string, 
@@ -61,7 +61,7 @@ public class Socks5DatagramSocketIT {
 	}
 
 	@Test
-	public void testThroughSocks5DatagramSocketUsingUsernamePasswordAuth02() throws IOException {
+	public void testThroughSocks5DatagramSocketUsingUserpassAuth02() throws IOException {
 		String string = TestStringConstants.STRING_02;
 		String returningString = DatagramSocketHelper.echoThroughDatagramSocket(
 				string, 
@@ -74,7 +74,7 @@ public class Socks5DatagramSocketIT {
 	}
 	
 	@Test
-	public void testThroughSocks5DatagramSocketUsingUsernamePasswordAuth03() throws IOException {
+	public void testThroughSocks5DatagramSocketUsingUserpassAuth03() throws IOException {
 		String string = TestStringConstants.STRING_03;
 		String returningString = DatagramSocketHelper.echoThroughDatagramSocket(
 				string, 

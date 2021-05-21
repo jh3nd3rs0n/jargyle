@@ -48,7 +48,7 @@ public class Socks5SocketIT {
 	}
 	
 	@Test
-	public void testThroughSocks5SocketUsingUsernamePasswordAuth01() throws IOException {
+	public void testThroughSocks5SocketUsingUserpassAuth01() throws IOException {
 		String string = TestStringConstants.STRING_01;
 		String returningString = SocketHelper.echoThroughSocket(
 				string, 
@@ -61,7 +61,7 @@ public class Socks5SocketIT {
 	}
 
 	@Test
-	public void testThroughSocks5SocketUsingUsernamePasswordAuth02() throws IOException {
+	public void testThroughSocks5SocketUsingUserpassAuth02() throws IOException {
 		String string = TestStringConstants.STRING_02;
 		String returningString = SocketHelper.echoThroughSocket(
 				string, 
@@ -74,7 +74,7 @@ public class Socks5SocketIT {
 	}
 	
 	@Test
-	public void testThroughSocks5SocketUsingUsernamePasswordAuth03() throws IOException {
+	public void testThroughSocks5SocketUsingUserpassAuth03() throws IOException {
 		String string = TestStringConstants.STRING_03;
 		String returningString = SocketHelper.echoThroughSocket(
 				string, 

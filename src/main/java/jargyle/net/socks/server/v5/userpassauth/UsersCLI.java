@@ -239,10 +239,19 @@ public final class UsersCLI extends CLI {
 	private static final int HELP_OPTION_GROUP_ORDINAL = 0;
 	private static final int XSD_OPTION_GROUP_ORDINAL = 1;
 	
+	public static void main(final String[] args) {
+		UsersCLI usersCLI = new UsersCLI(null, null, args, false);
+		Optional<Integer> status = usersCLI.handleArgs();
+		if (status.isPresent() && status.get().intValue() != 0) { 
+			System.exit(status.get().intValue());
+		}
+	}
+	
 	private List<String> argList;
 	private Command command;
 	private final String programBeginningUsage;
 	private final String suggestion;
+	
 	private boolean xsdRequested;
 	
 	public UsersCLI(
@@ -376,7 +385,7 @@ public final class UsersCLI extends CLI {
 		t.printStackTrace(System.err);
 		return Optional.of(Integer.valueOf(-1));		
 	}
-	
+
 	@Option(
 			doc = "Print the XSD and exit",
 			name = "xsd",

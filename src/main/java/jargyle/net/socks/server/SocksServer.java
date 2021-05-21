@@ -3,24 +3,14 @@ package jargyle.net.socks.server;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
-import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import argmatey.ArgMatey.CLI;
 import jargyle.net.Host;
 import jargyle.net.Port;
 import jargyle.net.SocketSettings;
 
 public final class SocksServer {
-	
-	public static void main(final String[] args) {
-		CLI socksServerCLI = new SocksServerCLI(args, false);
-		Optional<Integer> status = socksServerCLI.handleArgs();
-		if (status.isPresent() && status.get().intValue() != 0) { 
-			System.exit(status.get().intValue());
-		}
-	}
 	
 	private int backlog;
 	private final Configuration configuration;

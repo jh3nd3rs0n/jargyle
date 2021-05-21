@@ -62,6 +62,14 @@ public final class SocksServerCLI extends CLI {
 	private static final Logger LOGGER = LoggerFactory.getLogger(
 			SocksServerCLI.class);
 	
+	public static void main(final String[] args) {
+		CLI socksServerCLI = new SocksServerCLI(args, false);
+		Optional<Integer> status = socksServerCLI.handleArgs();
+		if (status.isPresent() && status.get().intValue() != 0) { 
+			System.exit(status.get().intValue());
+		}
+	}
+	
 	private boolean configurationFileXsdRequested;
 	private ModifiableConfiguration modifiableConfiguration;
 	private String monitoredConfigurationFile;
@@ -69,8 +77,9 @@ public final class SocksServerCLI extends CLI {
 	private final boolean posixlyCorrect;
 	private final String programBeginningUsage;
 	private boolean settingsHelpDisplayed;
-	private Optional<Integer> socks5UserpassauthUsersManagementModeStatus;
 	
+	private Optional<Integer> socks5UserpassauthUsersManagementModeStatus;
+		
 	public SocksServerCLI(final String[] args, final boolean posixCorrect) {
 		super(args, posixCorrect);
 		String progName = System.getProperty(
@@ -125,7 +134,7 @@ public final class SocksServerCLI extends CLI {
 		}
 		this.modifiableConfiguration.add(configuration);
 	}
-		
+	
 	@Option(
 			doc = "A setting for the SOCKS server",
 			name = "setting",
@@ -161,7 +170,7 @@ public final class SocksServerCLI extends CLI {
 		}		
 		return Optional.empty();
 	}
-	
+
 	@Override
 	protected Optional<Integer> beforeHandleArgs() {
 		this.configurationFileXsdRequested = false;
@@ -223,7 +232,7 @@ public final class SocksServerCLI extends CLI {
 		this.getOptionGroups().printHelpText();
 		System.out.println();		
 	}
-
+	
 	@Option(
 			doc = "Print version information and exit",
 			name = "version",
@@ -242,7 +251,7 @@ public final class SocksServerCLI extends CLI {
 				pkg.getSpecificationTitle(), 
 				pkg.getSpecificationVersion());		
 	}
-	
+		
 	@Option(
 			doc = "Mode for managing SOCKS5 users (add --help for "
 					+ "more information)",
@@ -271,7 +280,7 @@ public final class SocksServerCLI extends CLI {
 				this.posixlyCorrect);
 		this.socks5UserpassauthUsersManagementModeStatus = usersCLI.handleArgs();
 	}
-		
+	
 	@Option(
 			doc = "Enter through an interactive prompt the password for the "
 					+ "key store for the DTLS connections to the other "
@@ -333,7 +342,7 @@ public final class SocksServerCLI extends CLI {
 						usernamePassword);
 		this.modifiableConfiguration.addSetting(setting);
 	}
-	
+		
 	@Option(
 			doc = "Enter through an interactive prompt the password for the "
 					+ "key store for the SSL/TLS connections to the other "
@@ -354,7 +363,7 @@ public final class SocksServerCLI extends CLI {
 						encryptedPassword);
 		this.modifiableConfiguration.addSetting(setting);
 	}
-		
+	
 	@Option(
 			doc = "Enter through an interactive prompt the password for the "
 					+ "trust store for the SSL/TLS connections to the other "
@@ -375,7 +384,7 @@ public final class SocksServerCLI extends CLI {
 						encryptedPassword);
 		this.modifiableConfiguration.addSetting(setting);
 	}
-	
+		
 	@Option(
 			doc = "Enter through an interactive prompt the password for the "
 					+ "key store for the DTLS connections to the SOCKS "
@@ -396,7 +405,7 @@ public final class SocksServerCLI extends CLI {
 						encryptedPassword);
 		this.modifiableConfiguration.addSetting(setting);		
 	}
-		
+	
 	@Option(
 			doc = "Enter through an interactive prompt the password for the "
 					+ "trust store for the DTLS connections to the SOCKS "
@@ -620,7 +629,7 @@ public final class SocksServerCLI extends CLI {
 		this.printHelpText(ProtectionLevel.class);
 		this.settingsHelpDisplayed = true;
 	}
-	
+		
 	@Option(
 			doc = "The configuration file to be monitored for any "
 					+ "changes to be applied to the running "
@@ -637,7 +646,7 @@ public final class SocksServerCLI extends CLI {
 	private void setMonitoredConfigurationFile(final String file) {
 		this.monitoredConfigurationFile = file;
 	}
-		
+
 	private Optional<Integer> startSocksServer(
 			final Configuration configuration) {
 		SocksServer socksServer = new SocksServer(configuration);

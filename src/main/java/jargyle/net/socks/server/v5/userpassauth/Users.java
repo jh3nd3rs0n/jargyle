@@ -9,7 +9,6 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -64,14 +63,6 @@ public final class Users {
 		StreamResult result = new StreamResult(out);
 		result.setSystemId("");
 		jaxbContext.generateSchema(new CustomSchemaOutputResolver(result));
-	}
-	
-	public static void main(final String[] args) {
-		UsersCLI usersCLI = new UsersCLI(null, null, args, false);
-		Optional<Integer> status = usersCLI.handleArgs();
-		if (status.isPresent() && status.get().intValue() != 0) { 
-			System.exit(status.get().intValue());
-		}
 	}
 	
 	public static Users newInstance(final List<User> usrs) {

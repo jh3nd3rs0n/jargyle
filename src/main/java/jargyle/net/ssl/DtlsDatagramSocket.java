@@ -62,14 +62,6 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 		return this.sslEngine.getNeedClientAuth();
 	}
 	
-	public String getPeerHost() {
-		return this.sslEngine.getPeerHost();
-	}
-	
-	public int getPeerPort() {
-		return this.sslEngine.getPeerPort();
-	}
-	
 	public boolean getUseClientMode() {
 		return this.sslEngine.getUseClientMode();
 	}

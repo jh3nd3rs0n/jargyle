@@ -52,19 +52,17 @@ public final class UdpRequestHeader {
 		int frag = UnsignedByte.newInstance(b).intValue();
 		dataStartIndex++;
 		out.write(b);
-		b = in.read();
-		AddressType atyp = AddressType.valueOfByte(
-				(byte) UnsignedByte.newInstance(b).intValue());
-		dataStartIndex++;
-		out.write(b);
-		Address address = null;
+		Address addr = null;
 		try {
-			address = atyp.newAddressFrom(in);
+			addr = Address.newInstanceFrom(in);
 		} catch (IOException e) {
-			throw new AssertionError(e);
+			throw new IllegalArgumentException(e);
 		}
-		bytes = address.toByteArray();
-		String dstAddr = address.toString(); 
+		AddressType atyp = addr.getAddressType();
+		dataStartIndex++;
+		out.write(atyp.byteValue());
+		bytes = addr.toByteArray();
+		String dstAddr = addr.toString(); 
 		dataStartIndex += bytes.length;
 		try {
 			out.write(bytes);
@@ -123,8 +121,6 @@ public final class UdpRequestHeader {
 		}
 		validateDesiredDestinationAddress(desiredDestinationAddress);
 		validateDesiredDestinationPort(desiredDestinationPort);
-		AddressType addressType = AddressType.valueForString(
-				desiredDestinationAddress);
 		int dataStartIndex = -1;
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		byte[] rsv = UnsignedShort.newInstance(RSV).toByteArray();
@@ -136,9 +132,10 @@ public final class UdpRequestHeader {
 		}
 		dataStartIndex++;
 		out.write(currentFragmentNumber);
+		Address address = Address.newInstance(desiredDestinationAddress);
+		AddressType addressType = address.getAddressType();
 		dataStartIndex++;
 		out.write(addressType.byteValue());
-		Address address = addressType.newAddress(desiredDestinationAddress);
 		byte[] bytes = address.toByteArray();
 		dataStartIndex += bytes.length;
 		try {

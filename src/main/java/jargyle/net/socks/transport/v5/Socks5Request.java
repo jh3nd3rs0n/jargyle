@@ -57,17 +57,16 @@ public final class Socks5Request {
 					UnsignedShort.MIN_INT_VALUE,
 					UnsignedShort.MAX_INT_VALUE));
 		}
-		AddressType addressType = AddressType.valueForString(
-				desiredDestinationAddress);
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		Version version = Version.V5;
 		out.write(version.byteValue());
 		out.write(command.byteValue());
 		out.write(RSV);
+		Address address = Address.newInstance(desiredDestinationAddress);
+		AddressType addressType = address.getAddressType();
 		out.write(addressType.byteValue());
 		try {
-			out.write(addressType.newAddress(
-					desiredDestinationAddress).toByteArray());
+			out.write(address.toByteArray());
 		} catch (IOException e) {
 			throw new AssertionError(e);
 		}
@@ -121,20 +120,12 @@ public final class Socks5Request {
 					"expected RSV is %s, actual RSV is %s", RSV, rsv));
 		}
 		out.write(b);
-		b = in.read();
-		AddressType atyp = null; 
-		try {
-			atyp = AddressType.valueOfByte(
-					(byte) UnsignedByte.newInstance(b).intValue());
-		} catch (IllegalArgumentException e) {
-			throw new IOException(e);
-		}
-		out.write(b);
-		Address address = atyp.newAddressFrom(in);
-		byte[] bytes = address.toByteArray();
-		String dstAddr = address.toString(); 
-		out.write(bytes);
-		bytes = new byte[UnsignedShort.BYTE_ARRAY_LENGTH];
+		Address addr = Address.newInstanceFrom(in);
+		AddressType atyp = addr.getAddressType(); 
+		out.write(atyp.byteValue());
+		String dstAddr = addr.toString(); 
+		out.write(addr.toByteArray());
+		byte[] bytes = new byte[UnsignedShort.BYTE_ARRAY_LENGTH];
 		int bytesRead = in.read(bytes);
 		bytes = Arrays.copyOf(bytes, bytesRead);
 		int dstPort; 

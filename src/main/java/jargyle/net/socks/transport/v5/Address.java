@@ -1,9 +1,31 @@
 package jargyle.net.socks.transport.v5;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
+
+import jargyle.util.UnsignedByte;
 
 public final class Address {
 
+	public static Address newInstance(final String string) {
+		AddressType addressType = AddressType.valueForString(string);
+		return addressType.newAddress(string);
+	}
+	
+	public static Address newInstanceFrom(
+			final InputStream in) throws IOException {
+		int b = in.read();
+		AddressType addressType = null;
+		try {
+			addressType = AddressType.valueOfByte(
+					(byte) UnsignedByte.newInstance(b).intValue());
+		} catch (IllegalArgumentException e) {
+			throw new IOException(e);
+		}
+		return addressType.newAddressFrom(in);
+	}
+	
 	private final AddressType addressType;
 	private final byte[] byteArray;
 	private final String string;

@@ -57,7 +57,7 @@ public final class Socks5Request {
 					UnsignedShort.MIN_INT_VALUE,
 					UnsignedShort.MAX_INT_VALUE));
 		}
-		AddressType addressType = AddressType.valueForAddress(
+		AddressType addressType = AddressType.valueForString(
 				desiredDestinationAddress);
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		Version version = Version.V5;
@@ -66,8 +66,8 @@ public final class Socks5Request {
 		out.write(RSV);
 		out.write(addressType.byteValue());
 		try {
-			out.write(addressType.convertAddressToByteArray(
-					desiredDestinationAddress));
+			out.write(addressType.newAddress(
+					desiredDestinationAddress).toByteArray());
 		} catch (IOException e) {
 			throw new AssertionError(e);
 		}
@@ -130,27 +130,12 @@ public final class Socks5Request {
 			throw new IOException(e);
 		}
 		out.write(b);
-		b = in.read();
-		int dstAddrLength;
-		try {
-			dstAddrLength = atyp.getAddressLength(
-					(byte) UnsignedByte.newInstance(b).intValue());
-		} catch (IllegalArgumentException e) {
-			throw new IOException(e);
-		}
-		byte[] bytes = new byte[dstAddrLength];
-		bytes[0] = (byte) UnsignedByte.newInstance(b).intValue();
-		int bytesRead = in.read(bytes, 1, dstAddrLength - 1);
-		bytes = Arrays.copyOf(bytes, bytesRead + 1);
-		String dstAddr = null; 
-		try {
-			dstAddr = atyp.convertAddressToString(bytes);
-		} catch (IllegalArgumentException e) {
-			throw new IOException(e);
-		}
+		Address address = atyp.newAddressFrom(in);
+		byte[] bytes = address.toByteArray();
+		String dstAddr = address.toString(); 
 		out.write(bytes);
 		bytes = new byte[UnsignedShort.BYTE_ARRAY_LENGTH];
-		bytesRead = in.read(bytes);
+		int bytesRead = in.read(bytes);
 		bytes = Arrays.copyOf(bytes, bytesRead);
 		int dstPort; 
 		try {

@@ -29,7 +29,7 @@ public final class Socks5HostResolver extends HostResolver {
 			return InetAddress.getLoopbackAddress();
 		}
 		Properties properties = this.socks5Client.getProperties();
-		AddressType addressType = AddressType.valueForAddress(host);
+		AddressType addressType = AddressType.valueForString(host);
 		if (!addressType.equals(AddressType.DOMAINNAME) || !properties.getValue(
 				PropertySpec.SOCKS5_RESOLVE_USE_RESOLVE_COMMAND).booleanValue()) {
 			return InetAddress.getByName(host);

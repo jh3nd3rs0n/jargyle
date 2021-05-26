@@ -57,14 +57,14 @@ public final class UdpRequestHeader {
 				(byte) UnsignedByte.newInstance(b).intValue());
 		dataStartIndex++;
 		out.write(b);
-		b = in.read();
-		int dstAddrLength = atyp.getAddressLength(
-				(byte) UnsignedByte.newInstance(b).intValue());
-		bytes = new byte[dstAddrLength];
-		bytes[0] = (byte) UnsignedByte.newInstance(b).intValue();
-		bytesRead = in.read(bytes, 1, dstAddrLength - 1);
-		bytes = Arrays.copyOf(bytes, bytesRead + 1);
-		String dstAddr = atyp.convertAddressToString(bytes);
+		Address address = null;
+		try {
+			address = atyp.newAddressFrom(in);
+		} catch (IOException e) {
+			throw new AssertionError(e);
+		}
+		bytes = address.toByteArray();
+		String dstAddr = address.toString(); 
 		dataStartIndex += bytes.length;
 		try {
 			out.write(bytes);
@@ -123,7 +123,7 @@ public final class UdpRequestHeader {
 		}
 		validateDesiredDestinationAddress(desiredDestinationAddress);
 		validateDesiredDestinationPort(desiredDestinationPort);
-		AddressType addressType = AddressType.valueForAddress(
+		AddressType addressType = AddressType.valueForString(
 				desiredDestinationAddress);
 		int dataStartIndex = -1;
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -138,11 +138,11 @@ public final class UdpRequestHeader {
 		out.write(currentFragmentNumber);
 		dataStartIndex++;
 		out.write(addressType.byteValue());
-		byte[] address = addressType.convertAddressToByteArray(
-				desiredDestinationAddress);
-		dataStartIndex += address.length;
+		Address address = addressType.newAddress(desiredDestinationAddress);
+		byte[] bytes = address.toByteArray();
+		dataStartIndex += bytes.length;
 		try {
-			out.write(address);
+			out.write(bytes);
 		} catch (IOException e) {
 			throw new AssertionError(e);
 		}

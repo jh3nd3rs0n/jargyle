@@ -8,8 +8,8 @@ Jargyle is a Java SOCKS5 server. It has the following features:
 -   [SSL/TLS for TCP traffic between Jargyle and its clients](#4-7-using-ssl-tls-for-tcp-traffic-between-jargyle-and-its-clients)
 -   [DTLS for UDP traffic between Jargyle and its clients](#4-8-using-dtls-for-udp-traffic-between-jargyle-and-its-clients)
 -   [SOCKS server chaining](#4-11-chaining-to-another-socks-server)
--   [SSL/TLS for TCP traffic between Jargyle and the other SOCKS server](#4-11-1-using-ssl-tls-for-tcp-traffic-between-jargyle-and-the-other-socks-server)
--   [DTLS for UDP traffic between Jargyle and the other SOCKS server](#4-11-2-using-dtls-for-udp-traffic-between-jargyle-and-the-other-socks-server)
+-   [SSL/TLS for TCP traffic through SOCKS server chaining](#4-11-1-using-ssl-tls-for-tcp-traffic-through-socks-server-chaining)
+-   [DTLS for UDP traffic through SOCKS server chaining](#4-11-2-using-dtls-for-udp-traffic-through-socks-server-chaining)
 -   [Host name resolution through SOCKS5 server chaining](#4-11-3-using-host-name-resolution-through-socks5-server-chaining)
 -   [SOCKS server chaining to a specified chain of other SOCKS servers](#4-12-chaining-to-a-specified-chain-of-other-socks-servers)
 -   [Allow or block addresses](#4-13-allowing-or-blocking-addresses)
@@ -45,8 +45,8 @@ Although Jargyle can act as a standalone SOCKS5 server, it can act as a bridge b
 -   [4. 10. 2. Using Username Password Authentication](#4-10-2-using-username-password-authentication)
 -   [4. 10. 3. Using GSS-API Authentication](#4-10-3-using-gss-api-authentication)
 -   [4. 11. Chaining to Another SOCKS Server](#4-11-chaining-to-another-socks-server)
--   [4. 11. 1. Using SSL/TLS for TCP Traffic Between Jargyle and the Other SOCKS Server](#4-11-1-using-ssl-tls-for-tcp-traffic-between-jargyle-and-the-other-socks-server)
--   [4. 11. 2. Using DTLS for UDP Traffic Between Jargyle and the Other SOCKS Server](#4-11-2-using-dtls-for-udp-traffic-between-jargyle-and-the-other-socks-server)
+-   [4. 11. 1. Using SSL/TLS for TCP Traffic Through SOCKS Server Chaining](#4-11-1-using-ssl-tls-for-tcp-traffic-through-socks-server-chaining)
+-   [4. 11. 2. Using DTLS for UDP Traffic Through SOCKS Server Chaining](#4-11-2-using-dtls-for-udp-traffic-through-socks-server-chaining)
 -   [4. 11. 3. Using Host Name Resolution Through SOCKS5 Server Chaining](#4-11-3-using-host-name-resolution-through-socks5-server-chaining)
 -   [4. 11. 4. Using SOCKS5 Authentication](#4-11-4-using-socks5-authentication)
 -   [4. 11. 4. 1. Using No Authentication](#4-11-4-1-using-no-authentication)
@@ -1324,13 +1324,13 @@ Partial configuration file example:
 
 Please note that the scheme in the URI specifies the SOCKS protocol to be used when accessing the other SOCKS server (`socks5`), the address or name of the machine of where the other SOCKS server resides (`127.0.0.1`), and the port number of the other SOCKS server (`23456`). In the aforementioned examples, the SOCKS protocol version 5 is used. At this time, the only supported scheme for the URI format is `socks5`
 
-#### 4. 11. 1. Using SSL/TLS for TCP Traffic Between Jargyle and the Other SOCKS Server
+#### 4. 11. 1. Using SSL/TLS for TCP Traffic Through SOCKS Server Chaining
 
-You can use SSL/TLS for TCP traffic between Jargyle and the other SOCKS server under the following condition: 
+You can use SSL/TLS for TCP traffic through SOCKS server chaining under the following condition: 
 
 -   The other SOCKS server accepts SSL/TLS connections.
 
-By default SSL/TLS for TCP traffic between Jargyle and the other SOCKS server is disabled. To enable SSL/TLS for TCP traffic between Jargyle and the other SOCKS server, you will need to have the setting `chaining.ssl.enabled` set to `true`. In addition, you will need to have the setting `chaining.ssl.trustStoreFile` to specify the server's key store file used as a trust store (this file would need to be created by Java's keytool utility). Also, you will need to have the setting `chaining.ssl.trustStorePassword` to specify the password for the server's trust store file.
+By default SSL/TLS for TCP traffic through SOCKS server chaining is disabled. To enable SSL/TLS for TCP traffic through SOCKS server chaining, you will need to have the setting `chaining.ssl.enabled` set to `true`. In addition, you will need to have the setting `chaining.ssl.trustStoreFile` to specify the server's key store file used as a trust store (this file would need to be created by Java's keytool utility). Also, you will need to have the setting `chaining.ssl.trustStorePassword` to specify the password for the server's trust store file.
 
 Partial command line example:
 
@@ -1386,13 +1386,13 @@ Partial command line example:
     
 ```
 
-#### 4. 11. 2. Using DTLS for UDP Traffic Between Jargyle and the Other SOCKS Server
+#### 4. 11. 2. Using DTLS for UDP Traffic Through SOCKS Server Chaining
 
-You can use DTLS for UDP traffic between Jargyle and the other SOCKS server under the following condition: 
+You can use DTLS for UDP traffic through SOCKS server chaining under the following condition: 
 
 -   The other SOCKS server accepts DTLS connections.
 
-By default DTLS for UDP traffic between Jargyle and the other SOCKS server is disabled. To enable DTLS for UDP traffic between Jargyle and the other SOCKS server, you will need to have the setting `chaining.dtls.enabled` set to `true`. In addition, you will need to have the setting `chaining.dtls.trustStoreFile` to specify the server's key store file used as a trust store (this file would need to be created by Java's keytool utility). Also, you will need to have the setting `chaining.dtls.trustStorePassword` to specify the password for the server's trust store file.
+By default DTLS for UDP traffic through SOCKS server chaining is disabled. To enable DTLS for UDP traffic through SOCKS server chaining, you will need to have the setting `chaining.dtls.enabled` set to `true`. In addition, you will need to have the setting `chaining.dtls.trustStoreFile` to specify the server's key store file used as a trust store (this file would need to be created by Java's keytool utility). Also, you will need to have the setting `chaining.dtls.trustStorePassword` to specify the password for the server's trust store file.
 
 Partial command line example:
 

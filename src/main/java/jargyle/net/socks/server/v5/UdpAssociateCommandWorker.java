@@ -190,15 +190,15 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 			final UdpRelayServer.ClientSocketAddress clientSocketAddress,
 			final UdpRelayServer.DatagramSockets datagramSockets,
 			final HostResolver hostResolver,
-			final UdpRelayServer.ExternalInboundAddressCriteria externalInboundAddressCriteria,
-			final UdpRelayServer.InternalOutboundAddressCriteria internalOutboundAddressCriteria, 
+			final UdpRelayServer.InboundAddressCriteria inboundAddressCriteria,
+			final UdpRelayServer.OutboundAddressCriteria outboundAddressCriteria, 
 			final UdpRelayServer.RelaySettings relaySettings) throws IOException {
 		UdpRelayServer udpRelayServer = new UdpRelayServer(
 				clientSocketAddress,
 				datagramSockets,
 				hostResolver,
-				externalInboundAddressCriteria, 
-				internalOutboundAddressCriteria,
+				inboundAddressCriteria, 
+				outboundAddressCriteria,
 				relaySettings);
 		try {
 			udpRelayServer.start();
@@ -279,16 +279,16 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 								clientFacingDatagramSock, 
 								serverFacingDatagramSock), 
 						hostResolver, 
-						new UdpRelayServer.ExternalInboundAddressCriteria(
+						new UdpRelayServer.InboundAddressCriteria(
 								this.settings.getLastValue(
-										SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_ALLOWED_EXTERNAL_INBOUND_ADDRESS_CRITERIA), 
+										SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_ALLOWED_INBOUND_ADDRESS_CRITERIA), 
 								this.settings.getLastValue(
-										SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_BLOCKED_EXTERNAL_INBOUND_ADDRESS_CRITERIA)), 
-						new UdpRelayServer.InternalOutboundAddressCriteria(
+										SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_BLOCKED_INBOUND_ADDRESS_CRITERIA)), 
+						new UdpRelayServer.OutboundAddressCriteria(
 								this.settings.getLastValue(
-										SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_ALLOWED_INTERNAL_OUTBOUND_ADDRESS_CRITERIA), 
+										SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_ALLOWED_OUTBOUND_ADDRESS_CRITERIA), 
 								this.settings.getLastValue(
-										SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_BLOCKED_INTERNAL_OUTBOUND_ADDRESS_CRITERIA)), 
+										SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_BLOCKED_OUTBOUND_ADDRESS_CRITERIA)), 
 						new UdpRelayServer.RelaySettings(
 								this.settings.getLastValue(
 										SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_RELAY_BUFFER_SIZE).intValue(), 

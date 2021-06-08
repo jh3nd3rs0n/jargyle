@@ -70,14 +70,13 @@ final class UdpRelayServer {
 		
 	}
 	
-	public static final class ExternalInboundAddressCriteria {
+	public static final class InboundAddressCriteria {
 		
 		private final Criteria allowedCriteria;
 		private final Criteria blockedCriteria;
 		
-		public ExternalInboundAddressCriteria(
-				final Criteria allowCriteria,
-				final Criteria blockCriteria) {
+		public InboundAddressCriteria(
+				final Criteria allowCriteria, final Criteria blockCriteria) {
 			Objects.requireNonNull(allowCriteria);
 			Objects.requireNonNull(blockCriteria);
 			this.allowedCriteria = allowCriteria;
@@ -94,36 +93,32 @@ final class UdpRelayServer {
 		
 	}
 	
-	private static final class ExternalInboundPacketsWorker 
-		extends PacketsWorker {
+	private static final class InboundPacketsWorker	extends PacketsWorker {
 		
 		private static final Logger LOGGER = LoggerFactory.getLogger(
-				ExternalInboundPacketsWorker.class);
+				InboundPacketsWorker.class);
 		
-		public ExternalInboundPacketsWorker(
-				final PacketsWorkerContext context) {
+		public InboundPacketsWorker(final PacketsWorkerContext context) {
 			super(context);
 		}
 		
-		private boolean canAllowExternalInboundAddress(
-				final String externalInboundAddress) {
+		private boolean canAllowInboundAddress(final String inboundAddress) {
 			Criterion criterion = 
-					this.allowedExternalInboundAddressCriteria.anyEvaluatesTrue(
-							externalInboundAddress);
+					this.allowedInboundAddressCriteria.anyEvaluatesTrue(
+							inboundAddress);
 			if (criterion == null) {
 				LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
-						"External inbound address %s not allowed",
-						externalInboundAddress)));
+						"Inbound address %s not allowed",
+						inboundAddress)));
 				return false;
 			}
-			criterion = 
-					this.blockedExternalInboundAddressCriteria.anyEvaluatesTrue(
-							externalInboundAddress);
+			criterion =	this.blockedInboundAddressCriteria.anyEvaluatesTrue(
+					inboundAddress);
 			if (criterion != null) {
 				LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
-						"External inbound address %s blocked based on the "
+						"Inbound address %s blocked based on the "
 						+ "following criterion: %s",
-						externalInboundAddress,
+						inboundAddress,
 						criterion)));
 				return false;
 			}
@@ -199,7 +194,7 @@ final class UdpRelayServer {
 					LOGGER.trace(LoggerHelper.objectMessage(this, String.format(
 							"Packet data received: %s byte(s)",
 							packet.getLength())));
-					if (!this.canAllowExternalInboundAddress(
+					if (!this.canAllowInboundAddress(
 							packet.getAddress().getHostAddress())) {
 						continue;
 					}
@@ -244,14 +239,13 @@ final class UdpRelayServer {
 		
 	}
 	
-	public static final class InternalOutboundAddressCriteria {
+	public static final class OutboundAddressCriteria {
 		
 		private final Criteria allowedCriteria;
 		private final Criteria blockedCriteria;
 		
-		public InternalOutboundAddressCriteria(
-				final Criteria allowCriteria,
-				final Criteria blockCriteria) {
+		public OutboundAddressCriteria(
+				final Criteria allowCriteria, final Criteria blockCriteria) {
 			Objects.requireNonNull(allowCriteria);
 			Objects.requireNonNull(blockCriteria);
 			this.allowedCriteria = allowCriteria;
@@ -268,36 +262,32 @@ final class UdpRelayServer {
 		
 	}
 	
-	private static final class InternalOutboundPacketsWorker 
-		extends PacketsWorker {
+	private static final class OutboundPacketsWorker extends PacketsWorker {
 		
 		private static final Logger LOGGER = LoggerFactory.getLogger(
-				InternalOutboundPacketsWorker.class);
+				OutboundPacketsWorker.class);
 		
-		public InternalOutboundPacketsWorker(
-				final PacketsWorkerContext context) {
+		public OutboundPacketsWorker(final PacketsWorkerContext context) {
 			super(context);
 		}
 		
-		private boolean canAllowInternalOutboundAddress(
-				final String externalOutboundAddress) {
+		private boolean canAllowOutboundAddress(final String outboundAddress) {
 			Criterion criterion = 
-					this.allowedInternalOutboundAddressCriteria.anyEvaluatesTrue(
-							externalOutboundAddress);
+					this.allowedOutboundAddressCriteria.anyEvaluatesTrue(
+							outboundAddress);
 			if (criterion == null) {
 				LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
-						"Internal outbound address %s not allowed",
-						externalOutboundAddress)));
+						"Outbound address %s not allowed",
+						outboundAddress)));
 				return false;
 			}
-			criterion = 
-					this.blockedInternalOutboundAddressCriteria.anyEvaluatesTrue(
-							externalOutboundAddress);
+			criterion = this.blockedOutboundAddressCriteria.anyEvaluatesTrue(
+					outboundAddress);
 			if (criterion != null) {
 				LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
-						"Internal outbound address %s blocked based on the "
+						"Outbound address %s blocked based on the "
 						+ "following criterion: %s",
-						externalOutboundAddress,
+						outboundAddress,
 						criterion)));
 				return false;
 			}
@@ -434,7 +424,7 @@ final class UdpRelayServer {
 					if (header.getCurrentFragmentNumber() != 0) {
 						continue;
 					}
-					if (!this.canAllowInternalOutboundAddress(
+					if (!this.canAllowOutboundAddress(
 							header.getDesiredDestinationAddress())) {
 						continue;
 					}
@@ -478,10 +468,10 @@ final class UdpRelayServer {
 	
 	private static abstract class PacketsWorker implements Runnable {
 		
-		protected final Criteria allowedExternalInboundAddressCriteria;
-		protected final Criteria allowedInternalOutboundAddressCriteria;
-		protected final Criteria blockedExternalInboundAddressCriteria;
-		protected final Criteria blockedInternalOutboundAddressCriteria;
+		protected final Criteria allowedInboundAddressCriteria;
+		protected final Criteria allowedOutboundAddressCriteria;
+		protected final Criteria blockedInboundAddressCriteria;
+		protected final Criteria blockedOutboundAddressCriteria;
 		protected final int bufferSize;
 		protected final String clientAddress;
 		protected final DatagramSocket clientFacingDatagramSocket;
@@ -491,14 +481,14 @@ final class UdpRelayServer {
 		protected final int timeout;
 
 		public PacketsWorker(final PacketsWorkerContext context) {
-			this.allowedExternalInboundAddressCriteria =
-					context.getAllowedExternalInboundAddressCriteria();
-			this.allowedInternalOutboundAddressCriteria =
-					context.getAllowedInternalOutboundAddressCriteria();
-			this.blockedExternalInboundAddressCriteria =
-					context.getBlockedExternalInboundAddressCriteria();
-			this.blockedInternalOutboundAddressCriteria =
-					context.getBlockedInternalOutboundAddressCriteria();
+			this.allowedInboundAddressCriteria =
+					context.getAllowedInboundAddressCriteria();
+			this.allowedOutboundAddressCriteria =
+					context.getAllowedOutboundAddressCriteria();
+			this.blockedInboundAddressCriteria =
+					context.getBlockedInboundAddressCriteria();
+			this.blockedOutboundAddressCriteria =
+					context.getBlockedOutboundAddressCriteria();
 			this.bufferSize = context.getBufferSize();
 			this.clientAddress = context.getClientAddress();
 			this.clientFacingDatagramSocket = 
@@ -534,20 +524,20 @@ final class UdpRelayServer {
 			this.udpRelayServer = server;
 		}
 		
-		public final Criteria getAllowedExternalInboundAddressCriteria() {
-			return this.udpRelayServer.allowedExternalInboundAddressCriteria;
+		public final Criteria getAllowedInboundAddressCriteria() {
+			return this.udpRelayServer.allowedInboundAddressCriteria;
 		}
 		
-		public final Criteria getAllowedInternalOutboundAddressCriteria() {
-			return this.udpRelayServer.allowedInternalOutboundAddressCriteria;
+		public final Criteria getAllowedOutboundAddressCriteria() {
+			return this.udpRelayServer.allowedOutboundAddressCriteria;
 		}
 		
-		public final Criteria getBlockedExternalInboundAddressCriteria() {
-			return this.udpRelayServer.blockedExternalInboundAddressCriteria;
+		public final Criteria getBlockedInboundAddressCriteria() {
+			return this.udpRelayServer.blockedInboundAddressCriteria;
 		}
 		
-		public final Criteria getBlockedInternalOutboundAddressCriteria() {
-			return this.udpRelayServer.blockedInternalOutboundAddressCriteria;
+		public final Criteria getBlockedOutboundAddressCriteria() {
+			return this.udpRelayServer.blockedOutboundAddressCriteria;
 		}
 		
 		public final int getBufferSize() {
@@ -648,10 +638,10 @@ final class UdpRelayServer {
 		
 	}
 	
-	private final Criteria allowedExternalInboundAddressCriteria;
-	private final Criteria allowedInternalOutboundAddressCriteria;
-	private final Criteria blockedExternalInboundAddressCriteria;
-	private final Criteria blockedInternalOutboundAddressCriteria;
+	private final Criteria allowedInboundAddressCriteria;
+	private final Criteria allowedOutboundAddressCriteria;
+	private final Criteria blockedInboundAddressCriteria;
+	private final Criteria blockedOutboundAddressCriteria;
 	private final int bufferSize;	
 	private String clientAddress;
 	private final DatagramSocket clientFacingDatagramSocket;	
@@ -669,23 +659,23 @@ final class UdpRelayServer {
 			final ClientSocketAddress clientSockAddr,
 			final DatagramSockets datagramSocks,
 			final HostResolver resolver, 
-			final ExternalInboundAddressCriteria externalInboundAddrCriteria, 
-			final InternalOutboundAddressCriteria externalOutboundAddrCriteria, 
+			final InboundAddressCriteria inboundAddrCriteria, 
+			final OutboundAddressCriteria outboundAddrCriteria, 
 			final RelaySettings settings) {
 		Objects.requireNonNull(clientSockAddr);
 		Objects.requireNonNull(datagramSocks);
 		Objects.requireNonNull(resolver);		
-		Objects.requireNonNull(externalInboundAddrCriteria);
-		Objects.requireNonNull(externalOutboundAddrCriteria);
+		Objects.requireNonNull(inboundAddrCriteria);
+		Objects.requireNonNull(outboundAddrCriteria);
 		Objects.requireNonNull(settings);
-		this.allowedExternalInboundAddressCriteria = 
-				externalInboundAddrCriteria.getAllowedCriteria();
-		this.allowedInternalOutboundAddressCriteria =
-				externalOutboundAddrCriteria.getAllowedCriteria();
-		this.blockedExternalInboundAddressCriteria = 
-				externalInboundAddrCriteria.getBlockedCriteria();
-		this.blockedInternalOutboundAddressCriteria =
-				externalOutboundAddrCriteria.getBlockedCriteria();
+		this.allowedInboundAddressCriteria = 
+				inboundAddrCriteria.getAllowedCriteria();
+		this.allowedOutboundAddressCriteria =
+				outboundAddrCriteria.getAllowedCriteria();
+		this.blockedInboundAddressCriteria = 
+				inboundAddrCriteria.getBlockedCriteria();
+		this.blockedOutboundAddressCriteria =
+				outboundAddrCriteria.getBlockedCriteria();
 		this.bufferSize = settings.getBufferSize();
 		this.clientAddress = clientSockAddr.getAddress();
 		this.clientFacingDatagramSocket = 
@@ -717,9 +707,9 @@ final class UdpRelayServer {
 		this.lastReceiveTime = 0L;
 		this.firstPacketsWorkerFinished = false;
 		this.executor = Executors.newFixedThreadPool(2);
-		this.executor.execute(new ExternalInboundPacketsWorker(
+		this.executor.execute(new InboundPacketsWorker(
 				new PacketsWorkerContext(this)));
-		this.executor.execute(new InternalOutboundPacketsWorker(
+		this.executor.execute(new OutboundPacketsWorker(
 				new PacketsWorkerContext(this)));
 		this.started = true;
 		this.stopped = false;

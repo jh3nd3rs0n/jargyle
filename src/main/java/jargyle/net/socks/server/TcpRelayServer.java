@@ -47,9 +47,9 @@ public final class TcpRelayServer {
 						bytesRead = this.inputStream.read(buffer);
 						this.dataWorkerContext.setLastReadTime(
 								System.currentTimeMillis());
-						LOGGER.trace(LoggerHelper.objectMessage(this, String.format(
-								"Bytes read: %s",
-								bytesRead)));
+						LOGGER.trace(LoggerHelper.objectMessage(
+								this, 
+								String.format("Bytes read: %s", bytesRead)));
 					} catch (SocketException e) {
 						// socket closed
 						break;
@@ -205,19 +205,19 @@ public final class TcpRelayServer {
 		
 	}
 	
-	private static final class ExternalInboundDataWorkerContext 
+	private static final class InboundDataWorkerContext
 		extends DataWorkerContext {
 		
-		public ExternalInboundDataWorkerContext(final TcpRelayServer server) {
+		public InboundDataWorkerContext(final TcpRelayServer server) {
 			super(server, server.serverFacingSocket, server.clientFacingSocket);
 		}
 		
 	}
 	
-	private static final class InternalOutboundDataWorkerContext 
+	private static final class OutboundDataWorkerContext 
 		extends DataWorkerContext {
 		
-		public InternalOutboundDataWorkerContext(final TcpRelayServer server) {
+		public OutboundDataWorkerContext(final TcpRelayServer server) {
 			super(server, server.clientFacingSocket, server.serverFacingSocket);
 		}
 		
@@ -276,9 +276,9 @@ public final class TcpRelayServer {
 		this.lastReadTime = 0L;
 		this.firstDataWorkerFinished = false;
 		this.executor = Executors.newFixedThreadPool(2);
-		this.executor.execute(new DataWorker(new ExternalInboundDataWorkerContext(
+		this.executor.execute(new DataWorker(new InboundDataWorkerContext(
 				this)));
-		this.executor.execute(new DataWorker(new InternalOutboundDataWorkerContext(
+		this.executor.execute(new DataWorker(new OutboundDataWorkerContext(
 				this)));
 		this.started = true;
 		this.stopped = false;

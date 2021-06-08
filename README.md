@@ -12,7 +12,7 @@ Jargyle is a Java SOCKS5 server. It has the following features:
 -   [DTLS for UDP traffic between Jargyle and the other SOCKS server](#4-11-2-using-dtls-for-udp-traffic-between-jargyle-and-the-other-socks-server)
 -   [Host name resolution through SOCKS5 server chaining](#4-11-3-using-host-name-resolution-through-socks5-server-chaining)
 -   [SOCKS server chaining to a specified chain of other SOCKS servers](#4-12-chaining-to-a-specified-chain-of-other-socks-servers)
--   [Allow or block client addresses and external addresses](#4-13-allowing-or-blocking-addresses)
+-   [Allow or block addresses](#4-13-allowing-or-blocking-addresses)
 -   [Allow or block SOCKS5 requests](#4-14-allowing-or-blocking-socks5-requests)
 
 Although Jargyle can act as a standalone SOCKS5 server, it can act as a bridge between the following:
@@ -340,11 +340,11 @@ The following is a list of available settings for the SOCKS server (displayed wh
       socks5.gssapiauth.protectionLevels=SOCKS5_GSSAPIAUTH_PROTECTION_LEVEL1[ SOCKS5_GSSAPIAUTH_PROTECTION_LEVEL2[...]]
           The space separated list of acceptable protection levels after GSS-API authentication (The first is preferred if the client does not provide a protection level that is acceptable.) (default is REQUIRED_INTEG_AND_CONF REQUIRED_INTEG NONE)
     
-      socks5.onBind.allowedExternalInboundAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
-          The space separated list of allowed external inbound address criteria (default is matches:.*)
+      socks5.onBind.allowedInboundAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
+          The space separated list of allowed inbound address criteria (default is matches:.*)
     
-      socks5.onBind.blockedExternalInboundAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
-          The space separated list of blocked external inbound address criteria
+      socks5.onBind.blockedInboundAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
+          The space separated list of blocked inbound address criteria
     
       socks5.onBind.listenSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
           The space separated list of socket settings for the listen socket
@@ -373,17 +373,17 @@ The following is a list of available settings for the SOCKS server (displayed wh
       socks5.onConnect.serverFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
           The space separated list of socket settings for the server-facing socket
     
-      socks5.onUdpAssociate.allowedExternalInboundAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
-          The space separated list of allowed external inbound address criteria (default is matches:.*)
+      socks5.onUdpAssociate.allowedInboundAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
+          The space separated list of allowed inbound address criteria (default is matches:.*)
     
-      socks5.onUdpAssociate.allowedInternalOutboundAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
-          The space separated list of allowed internal outbound address criteria (default is matches:.*)
+      socks5.onUdpAssociate.allowedOutboundAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
+          The space separated list of allowed outbound address criteria (default is matches:.*)
     
-      socks5.onUdpAssociate.blockedExternalInboundAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
-          The space separated list of blocked external inbound address criteria
+      socks5.onUdpAssociate.blockedInboundAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
+          The space separated list of blocked inbound address criteria
     
-      socks5.onUdpAssociate.blockedInternalOutboundAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
-          The space separated list of blocked internal outbound address criteria
+      socks5.onUdpAssociate.blockedOutboundAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
+          The space separated list of blocked outbound address criteria
     
       socks5.onUdpAssociate.clientFacingBindHost=HOST
           The binding host name or address for the client-facing UDP socket (default is 0.0.0.0)
@@ -1455,7 +1455,7 @@ Before discussing host name resolution through SOCKS5 server chaining, a brief e
 Jargyle uses sockets to interact with the external world.
 
 -   Under the CONNECT command, it uses a socket that connects to the desired target server. In this documentation, this socket is called the server-facing socket.
--   Under the BIND command, it uses a socket that listens for an external inbound socket. In this documentation, this socket is called the listen socket.
+-   Under the BIND command, it uses a socket that listens for an inbound socket. In this documentation, this socket is called the listen socket.
 -   Under the UDP ASSOCIATE command, it uses a UDP socket that sends and receives datagram packets to and from server UDP sockets. In this documentation, this UDP socket is called the server-facing UDP socket.
 
 When Jargyle is chained to another SOCKS server, the aforementioned sockets that Jargyle uses become SOCKS-enabled, meaning that their traffic is routed through the other SOCKS server. When Jargyle is specifically chained to another SOCKS5 server, the aforementioned sockets that Jargyle uses become SOCKS5-enabled, meaning that their traffic is routed through the other SOCKS5 server.
@@ -1464,13 +1464,13 @@ By default, host name resolution through SOCKS5 server chaining is somewhat perf
 
 Host name resolution through SOCKS5 server chaining OCCURS ONLY...
 
--   ...under the CONNECT command when the server-facing socket makes an extemporaneous internal outbound connection. Preparation is omitted for the server-facing socket. Such preparation includes applying the specified socket settings for the server-facing socket, resolving the target host name before connecting, and setting the specified timeout in milliseconds on waiting for the server-facing socket to connect. When the server-facing socket is SOCKS5-enabled, the target host name is resolved by the other SOCKS5 server.
+-   ...under the CONNECT command when the server-facing socket makes an extemporaneous outbound connection. Preparation is omitted for the server-facing socket. Such preparation includes applying the specified socket settings for the server-facing socket, resolving the target host name before connecting, and setting the specified timeout in milliseconds on waiting for the server-facing socket to connect. When the server-facing socket is SOCKS5-enabled, the target host name is resolved by the other SOCKS5 server.
 
 Host name resolution through SOCKS5 server chaining DOES NOT OCCUR...
 
--   ...under the CONNECT command when the server-facing socket makes a prepared internal outbound connection. Preparation for the server-facing socket includes resolving the target host name before connecting. When the server-facing socket is SOCKS5-enabled, the target host name is not resolved by the other SOCKS5 server but is instead resolved by the local system.
+-   ...under the CONNECT command when the server-facing socket makes a prepared outbound connection. Preparation for the server-facing socket includes resolving the target host name before connecting. When the server-facing socket is SOCKS5-enabled, the target host name is not resolved by the other SOCKS5 server but is instead resolved by the local system.
 -   ...under the BIND command when resolving the binding host name for the listen socket. When the listen socket is SOCKS5-enabled, the binding host name for the listen socket is not resolved by the other SOCKS5 server but is instead resolved by the local system.
--   ...under the UDP ASSOCIATE command when resolving a host name for an internal outbound datagram packet. When the server-facing UDP socket is SOCKS5-enabled, the host name for an internal outbound datagram packet is not resolved by the other SOCKS5 server but is instead resolved by the local system.
+-   ...under the UDP ASSOCIATE command when resolving a host name for an outbound datagram packet. When the server-facing UDP socket is SOCKS5-enabled, the host name for an outbound datagram packet is not resolved by the other SOCKS5 server but is instead resolved by the local system.
 
 If you prefer to have host name resolution through SOCKS5 server chaining without the aforementioned limitations, you would need to set the setting `chaining.socks5.resolve.useResolveCommand` to `true`. This setting enables the use of [the SOCKS5 RESOLVE command](#5-3-the-socks5-resolve-command) on the other SOCKS5 server to resolve host names. This setting can only be used if the other SOCKS5 server supports the SOCKS5 RESOLVE command.
 
@@ -1831,20 +1831,20 @@ The known limitations of Jargyle chained to a specified chain of other SOCKS ser
 You can allow or block the following addresses:
 
 -   Client addresses (IPv4 and IPv6)
--   External inbound addresses following the SOCKS5 BIND command (IPv4 and IPv6)
--   External inbound addresses following the SOCKS5 UDP ASSOCIATE command (IPv4 and IPv6)
--   Internal outbound addresses following the SOCKS5 UDP ASSOCIATE command (IPv4, IPv6, and domain name)
+-   Inbound addresses following the SOCKS5 BIND command (IPv4 and IPv6)
+-   Inbound addresses following the SOCKS5 UDP ASSOCIATE command (IPv4 and IPv6)
+-   Outbound addresses following the SOCKS5 UDP ASSOCIATE command (IPv4, IPv6, and domain name)
 
 To allow or block an address or addresses, you will need to specify the address or addresses in any of the following settings:
 
 -   `allowedClientAddressCriteria`
 -   `blockedClientAddressCriteria`
--   `socks5.onBind.allowedExternalInboundAddressCriteria`
--   `socks5.onBind.blockedExternalInboundAddressCriteria`
--   `socks5.onUdpAssociate.allowedExternalInboundAddressCriteria`
--   `socks5.onUdpAssociate.allowedInternalOutboundAddressCriteria`
--   `socks5.onUdpAssociate.blockedExternalInboundAddressCriteria`
--   `socks5.onUdpAssociate.blockedInternalOutboundAddressCriteria`
+-   `socks5.onBind.allowedInboundAddressCriteria`
+-   `socks5.onBind.blockedInboundAddressCriteria`
+-   `socks5.onUdpAssociate.allowedInboundAddressCriteria`
+-   `socks5.onUdpAssociate.allowedOutboundAddressCriteria`
+-   `socks5.onUdpAssociate.blockedInboundAddressCriteria`
+-   `socks5.onUdpAssociate.blockedOutboundAddressCriteria`
 
 You can specify an address or addresses in any of the aforementioned settings as a space separated list of each address or addresses as either a literal expression preceded by the prefix `equals:` or a regular expression preceded by the prefix `matches:`.
 
@@ -1967,8 +1967,8 @@ The following are the classes that use logging:
 -   `jargyle.net.socks.server.v5.ResolveCommandWorker`
 -   `jargyle.net.socks.server.v5.Socks5Worker`
 -   `jargyle.net.socks.server.v5.UdpAssociateCommandWorker`
--   `jargyle.net.socks.server.v5.UdpRelayServer$ExternalInboundPacketsWorker`
--   `jargyle.net.socks.server.v5.UdpRelayServer$InternalOutboundPacketsWorker`
+-   `jargyle.net.socks.server.v5.UdpRelayServer$InboundPacketsWorker`
+-   `jargyle.net.socks.server.v5.UdpRelayServer$OutboundPacketsWorker`
 -   `jargyle.net.socks.server.v5.userpassauth.XmlFileSourceUsersProvider$UsersUpdater`
 -   `jargyle.net.ssl.DtlsDatagramSocket`
 

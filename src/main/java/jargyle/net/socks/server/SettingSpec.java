@@ -574,22 +574,22 @@ public abstract class SettingSpec<V>
 			ProtectionLevels.DEFAULT_INSTANCE);
 	
 	@HelpText(
-			doc = "The space separated list of allowed external inbound "
-					+ "address criteria (default is matches:.*)", 
-			usage = "socks5.onBind.allowedExternalInboundAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
+			doc = "The space separated list of allowed inbound address "
+					+ "criteria (default is matches:.*)", 
+			usage = "socks5.onBind.allowedInboundAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
 	)
-	public static final SettingSpec<Criteria> SOCKS5_ON_BIND_ALLOWED_EXTERNAL_INBOUND_ADDRESS_CRITERIA = new CriteriaSettingSpec(
-			"socks5.onBind.allowedExternalInboundAddressCriteria",
+	public static final SettingSpec<Criteria> SOCKS5_ON_BIND_ALLOWED_INBOUND_ADDRESS_CRITERIA = new CriteriaSettingSpec(
+			"socks5.onBind.allowedInboundAddressCriteria",
 			Criteria.newInstance(Criterion.newInstance(
 					CriterionMethod.MATCHES, ".*")));
 	
 	@HelpText(
-			doc = "The space separated list of blocked external inbound "
-					+ "address criteria", 
-			usage = "socks5.onBind.blockedExternalInboundAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
+			doc = "The space separated list of blocked inbound address "
+					+ "criteria", 
+			usage = "socks5.onBind.blockedInboundAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
 	)
-	public static final SettingSpec<Criteria> SOCKS5_ON_BIND_BLOCKED_EXTERNAL_INBOUND_ADDRESS_CRITERIA = new CriteriaSettingSpec(
-			"socks5.onBind.blockedExternalInboundAddressCriteria",
+	public static final SettingSpec<Criteria> SOCKS5_ON_BIND_BLOCKED_INBOUND_ADDRESS_CRITERIA = new CriteriaSettingSpec(
+			"socks5.onBind.blockedInboundAddressCriteria",
 			Criteria.EMPTY_INSTANCE);
 	
 	@HelpText(
@@ -677,41 +677,41 @@ public abstract class SettingSpec<V>
 			SocketSettings.newInstance());
 	
 	@HelpText(
-			doc = "The space separated list of allowed external inbound "
-					+ "address criteria (default is matches:.*)", 
-			usage = "socks5.onUdpAssociate.allowedExternalInboundAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
+			doc = "The space separated list of allowed inbound address "
+					+ "criteria (default is matches:.*)", 
+			usage = "socks5.onUdpAssociate.allowedInboundAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
 	)
-	public static final SettingSpec<Criteria> SOCKS5_ON_UDP_ASSOCIATE_ALLOWED_EXTERNAL_INBOUND_ADDRESS_CRITERIA = new CriteriaSettingSpec(
-			"socks5.onUdpAssociate.allowedExternalInboundAddressCriteria",
+	public static final SettingSpec<Criteria> SOCKS5_ON_UDP_ASSOCIATE_ALLOWED_INBOUND_ADDRESS_CRITERIA = new CriteriaSettingSpec(
+			"socks5.onUdpAssociate.allowedInboundAddressCriteria",
 			Criteria.newInstance(Criterion.newInstance(
 					CriterionMethod.MATCHES, ".*")));
 	
 	@HelpText(
-			doc = "The space separated list of allowed internal outbound "
-					+ "address criteria (default is matches:.*)", 
-			usage = "socks5.onUdpAssociate.allowedInternalOutboundAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
+			doc = "The space separated list of allowed outbound address "
+					+ "criteria (default is matches:.*)", 
+			usage = "socks5.onUdpAssociate.allowedOutboundAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
 	)
-	public static final SettingSpec<Criteria> SOCKS5_ON_UDP_ASSOCIATE_ALLOWED_INTERNAL_OUTBOUND_ADDRESS_CRITERIA = new CriteriaSettingSpec(
-			"socks5.onUdpAssociate.allowedInternalOutboundAddressCriteria",
+	public static final SettingSpec<Criteria> SOCKS5_ON_UDP_ASSOCIATE_ALLOWED_OUTBOUND_ADDRESS_CRITERIA = new CriteriaSettingSpec(
+			"socks5.onUdpAssociate.allowedOutboundAddressCriteria",
 			Criteria.newInstance(Criterion.newInstance(
 					CriterionMethod.MATCHES, ".*")));
 	
 	@HelpText(
-			doc = "The space separated list of blocked external inbound "
-					+ "address criteria", 
-			usage = "socks5.onUdpAssociate.blockedExternalInboundAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
+			doc = "The space separated list of blocked inbound address "
+					+ "criteria", 
+			usage = "socks5.onUdpAssociate.blockedInboundAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
 	)
-	public static final SettingSpec<Criteria> SOCKS5_ON_UDP_ASSOCIATE_BLOCKED_EXTERNAL_INBOUND_ADDRESS_CRITERIA = new CriteriaSettingSpec(
-			"socks5.onUdpAssociate.blockedExternalInboundAddressCriteria",
+	public static final SettingSpec<Criteria> SOCKS5_ON_UDP_ASSOCIATE_BLOCKED_INBOUND_ADDRESS_CRITERIA = new CriteriaSettingSpec(
+			"socks5.onUdpAssociate.blockedInboundAddressCriteria",
 			Criteria.EMPTY_INSTANCE);
 	
 	@HelpText(
-			doc = "The space separated list of blocked internal outbound "
-					+ "address criteria", 
-			usage = "socks5.onUdpAssociate.blockedInternalOutboundAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
+			doc = "The space separated list of blocked outbound address "
+					+ "criteria", 
+			usage = "socks5.onUdpAssociate.blockedOutboundAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
 	)
-	public static final SettingSpec<Criteria> SOCKS5_ON_UDP_ASSOCIATE_BLOCKED_INTERNAL_OUTBOUND_ADDRESS_CRITERIA = new CriteriaSettingSpec(
-			"socks5.onUdpAssociate.blockedInternalOutboundAddressCriteria",
+	public static final SettingSpec<Criteria> SOCKS5_ON_UDP_ASSOCIATE_BLOCKED_OUTBOUND_ADDRESS_CRITERIA = new CriteriaSettingSpec(
+			"socks5.onUdpAssociate.blockedOutboundAddressCriteria",
 			Criteria.EMPTY_INSTANCE);
 	
 	@HelpText(

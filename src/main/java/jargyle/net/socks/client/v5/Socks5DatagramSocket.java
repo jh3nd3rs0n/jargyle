@@ -22,8 +22,6 @@ import jargyle.net.socks.transport.v5.Reply;
 import jargyle.net.socks.transport.v5.Socks5Reply;
 import jargyle.net.socks.transport.v5.Socks5Request;
 import jargyle.net.socks.transport.v5.UdpRequestHeader;
-import jargyle.net.socks.transport.v5.gssapiauth.GssDatagramSocket;
-import jargyle.net.socks.transport.v5.gssapiauth.GssSocket;
 
 public final class Socks5DatagramSocket extends DatagramSocket {
 
@@ -200,10 +198,10 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			if (!this.datagramSocket.equals(this.originalDatagramSocket)) {
 				this.datagramSocket = this.originalDatagramSocket;
 			}
-			this.datagramSocket.bind(new InetSocketAddress(inetAddress, port));
-			String address = 
-					this.datagramSocket.getLocalAddress().getHostAddress();
-			int prt = this.datagramSocket.getLocalPort();
+			DatagramSocket datagramSock = this.datagramSocket;
+			datagramSock.bind(new InetSocketAddress(inetAddress, port));
+			String address = datagramSock.getLocalAddress().getHostAddress();
+			int prt = datagramSock.getLocalPort();
 			InputStream inputStream = sock.getInputStream();
 			OutputStream outputStream = sock.getOutputStream();
 			Socks5Request socks5Req = Socks5Request.newInstance(
@@ -218,18 +216,11 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 				throw new IOException(String.format(
 						"received reply: %s", reply));
 			}
-			DatagramSocket datagramSock = 
-					this.socks5Client.getConnectedInternalDatagramSocket(
-							this.datagramSocket, 
-							this.socks5Client.getSocksServerUri().getHost(),
-							socks5Rep.getServerBoundPort());
-			if (sock instanceof GssSocket) {
-				GssSocket gssSocket = (GssSocket) sock;
-				datagramSock = new GssDatagramSocket(
-						datagramSock,
-						gssSocket.getGSSContext(),
-						gssSocket.getMessageProp());
-			}
+			datagramSock = this.socks5Client.getConnectedInternalDatagramSocket(
+					datagramSock,
+					this.socks5Client.getSocksServerUri().getHost(),
+					socks5Rep.getServerBoundPort(),
+					sock);
 			this.datagramSocket = datagramSock;
 			this.udpRelayServerInetAddress = InetAddress.getByName(
 					socks5Rep.getServerBoundAddress());

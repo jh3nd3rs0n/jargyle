@@ -18,6 +18,8 @@ import jargyle.net.socks.transport.v5.AuthMethods;
 import jargyle.net.socks.transport.v5.ClientMethodSelectionMessage;
 import jargyle.net.socks.transport.v5.Method;
 import jargyle.net.socks.transport.v5.ServerMethodSelectionMessage;
+import jargyle.net.socks.transport.v5.gssapiauth.GssDatagramSocket;
+import jargyle.net.socks.transport.v5.gssapiauth.GssSocket;
 import jargyle.net.ssl.DtlsDatagramSocketFactory;
 
 public final class Socks5Client extends SocksClient {
@@ -71,18 +73,28 @@ public final class Socks5Client extends SocksClient {
 	public DatagramSocket getConnectedInternalDatagramSocket(
 			final DatagramSocket internalDatagramSocket,
 			final String udpRelayServerHost,
-			final int udpRelayServerPort) throws IOException {
+			final int udpRelayServerPort, 
+			final Socket connectedInternalSocket) throws IOException {
+		DatagramSocket internalDatagramSock = internalDatagramSocket;
 		InetAddress udpRelayServerHostInetAddress = InetAddress.getByName(
 				udpRelayServerHost); 
-		internalDatagramSocket.connect(
+		internalDatagramSock.connect(
 				udpRelayServerHostInetAddress, udpRelayServerPort);
-		if (this.dtlsDatagramSocketFactory == null) {
-			return internalDatagramSocket;
+		if (this.dtlsDatagramSocketFactory != null) {
+			internalDatagramSock = 
+					this.dtlsDatagramSocketFactory.newDatagramSocket(
+							internalDatagramSock,
+							udpRelayServerHost,
+							udpRelayServerPort);
 		}
-		return this.dtlsDatagramSocketFactory.newDatagramSocket(
-				internalDatagramSocket, 
-				udpRelayServerHost, 
-				udpRelayServerPort);
+		if (connectedInternalSocket instanceof GssSocket) {
+			GssSocket gssSocket = (GssSocket) connectedInternalSocket;
+			internalDatagramSock = new GssDatagramSocket(
+					internalDatagramSock,
+					gssSocket.getGSSContext(),
+					gssSocket.getMessageProp());
+		}
+		return internalDatagramSock;
 	}
 	
 	@Override

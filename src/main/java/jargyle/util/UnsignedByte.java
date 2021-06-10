@@ -1,5 +1,8 @@
 package jargyle.util;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 public final class UnsignedByte {
 
 	public static final int MAX_INT_VALUE = 0xff;
@@ -37,10 +40,23 @@ public final class UnsignedByte {
 		return newInstance(i);
 	}
 	
+	public static UnsignedByte newInstanceFrom(
+			final InputStream in) throws IOException {
+		int b = in.read();
+		if (b == -1) {
+			throw new IOException("end of input stream reached");
+		}
+		return newInstance(b);
+	}
+	
 	private final int intValue;
 	
 	private UnsignedByte(final int i) {
 		this.intValue = i;
+	}
+	
+	public byte byteValue() {
+		return (byte) this.intValue;
 	}
 	
 	@Override

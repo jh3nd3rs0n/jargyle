@@ -22,8 +22,8 @@ public final class UsernamePasswordResponse {
 			final byte status) {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		Version version = Version.V1;
-		out.write(version.byteValue());
-		out.write(status);
+		out.write(UnsignedByte.newInstance(version.byteValue()).intValue());
+		out.write(UnsignedByte.newInstance(status).intValue());
 		Params params = new Params();
 		params.version = version;
 		params.status = status;
@@ -34,7 +34,8 @@ public final class UsernamePasswordResponse {
 	public static UsernamePasswordResponse newInstance(final byte[] b) {
 		UsernamePasswordResponse usernamePasswordResponse;
 		try {
-			usernamePasswordResponse = newInstanceFrom(new ByteArrayInputStream(b));
+			usernamePasswordResponse = newInstanceFrom(
+					new ByteArrayInputStream(b));
 		} catch (IOException e) {
 			throw new IllegalArgumentException(e);
 		}
@@ -43,28 +44,14 @@ public final class UsernamePasswordResponse {
 	
 	public static UsernamePasswordResponse newInstanceFrom(
 			final InputStream in) throws IOException {
-		int b = -1;
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		b = in.read();
-		Version ver = null;
-		try {
-			ver = Version.valueOfByte(
-					(byte) UnsignedByte.newInstance(b).intValue());
-		} catch (IllegalArgumentException e) {
-			throw new IOException(e);
-		}
-		out.write(b);
-		b = in.read();
-		byte status;
-		try {
-			status = (byte) UnsignedByte.newInstance(b).intValue();
-		} catch (IllegalArgumentException e) {
-			throw new IOException(e);
-		}
-		out.write(b);
+		Version ver = Version.valueOfByteFrom(in);
+		out.write(UnsignedByte.newInstance(ver.byteValue()).intValue());
+		UnsignedByte status = UnsignedByte.newInstanceFrom(in);
+		out.write(status.intValue());
 		Params params = new Params();
 		params.version = ver;
-		params.status = status;
+		params.status = status.byteValue();
 		params.byteArray = out.toByteArray();
 		return new UsernamePasswordResponse(params);
 	}

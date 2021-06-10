@@ -77,14 +77,14 @@ public final class UsernamePasswordRequest {
 		byte[] passwdBytes = getValidatedPasswordBytes(passwd);
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		Version version = Version.V1;
-		out.write(version.byteValue());
-		out.write((byte) usernameBytes.length);
+		out.write(UnsignedByte.newInstance(version.byteValue()).intValue());
+		out.write(usernameBytes.length);
 		try {
 			out.write(usernameBytes);
 		} catch (IOException e) {
 			throw new AssertionError(e);
 		}
-		out.write((byte) passwdBytes.length);
+		out.write(passwdBytes.length);
 		try {
 			out.write(passwdBytes);
 		} catch (IOException e) {
@@ -100,51 +100,31 @@ public final class UsernamePasswordRequest {
 	
 	public static UsernamePasswordRequest newInstanceFrom(
 			final InputStream in) throws IOException {
-		int b = -1;
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		b = in.read();
-		Version ver = null;
-		try {
-			ver = Version.valueOfByte(
-					(byte) UnsignedByte.newInstance(b).intValue()); 
-		} catch (IllegalArgumentException e) {
-			throw new IOException(e);
-		}
-		out.write(b);
-		b = in.read();
-		int ulen;
-		try {
-			ulen = UnsignedByte.newInstance(b).intValue();
-		} catch (IllegalArgumentException e) {
-			throw new IOException(e);
-		}
-		out.write(b);
-		byte[] bytes = new byte[ulen];
+		Version ver = Version.valueOfByteFrom(in);
+		out.write(UnsignedByte.newInstance(ver.byteValue()).intValue());
+		UnsignedByte ulen = UnsignedByte.newInstanceFrom(in);
+		out.write(ulen.intValue());
+		byte[] bytes = new byte[ulen.intValue()];
 		int bytesRead = in.read(bytes);
-		if (bytesRead != ulen) {
+		if (bytesRead != ulen.intValue()) {
 			throw new IOException(String.format(
 					"expected username length is %s byte(s). "
 					+ "actual username length is %s byte(s)", 
-					ulen, bytesRead));
+					ulen.intValue(), bytesRead));
 		}
 		bytes = Arrays.copyOf(bytes, bytesRead);
 		String uname = new String(bytes);
 		out.write(bytes);
-		b = in.read();
-		int plen;
-		try {
-			plen = UnsignedByte.newInstance(b).intValue();
-		} catch (IllegalArgumentException e) {
-			throw new IOException(e);
-		}
-		out.write(b);
-		bytes = new byte[plen];
+		UnsignedByte plen = UnsignedByte.newInstanceFrom(in);
+		out.write(plen.intValue());
+		bytes = new byte[plen.intValue()];
 		bytesRead = in.read(bytes);
-		if (bytesRead != plen) {
+		if (bytesRead != plen.intValue()) {
 			throw new IOException(String.format(
 					"expected password length is %s byte(s). "
 					+ "actual password length is %s byte(s)", 
-					plen, bytesRead));
+					plen.intValue(), bytesRead));
 		}
 		bytes = Arrays.copyOf(bytes, bytesRead);
 		Reader reader = new InputStreamReader(new ByteArrayInputStream(

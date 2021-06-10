@@ -25,42 +25,44 @@ public final class UdpRequestHeader {
 	private static final int MAX_DST_ADDR_LENGTH = 255;
 	
 	public static UdpRequestHeader newInstance(final byte[] byteArray) {
-		int b = -1;
 		ByteArrayInputStream in = new ByteArrayInputStream(byteArray);
 		int dataStartIndex = -1;
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		byte[] bytes = new byte[UnsignedShort.BYTE_ARRAY_LENGTH];
-		int bytesRead = -1;
+		UnsignedShort rsv;
 		try {
-			bytesRead = in.read(bytes);
+			rsv = UnsignedShort.newInstanceFrom(in);
 		} catch (IOException e) {
 			throw new AssertionError(e);
 		}
-		bytes = Arrays.copyOf(bytes, bytesRead);
-		int rsv = UnsignedShort.newInstance(bytes).intValue();
-		if (rsv != RSV) {
+		if (rsv.intValue() != RSV) {
 			 throw new IllegalArgumentException(String.format(
-					 "expected RSV is %s, actual RSV is %s", RSV, rsv));
+					 "expected RSV is %s, actual RSV is %s", 
+					 RSV, rsv.intValue()));
 		}
+		byte[] bytes = rsv.toByteArray();
 		dataStartIndex += bytes.length;
 		try {
-			out.write(bytes);
+			out.write(rsv.toByteArray());
 		} catch (IOException e) {
 			throw new AssertionError(e);
 		}
-		b = in.read();
-		int frag = UnsignedByte.newInstance(b).intValue();
+		UnsignedByte frag;
+		try {
+			frag = UnsignedByte.newInstanceFrom(in);
+		} catch (IOException e) {
+			throw new AssertionError(e);
+		}
 		dataStartIndex++;
-		out.write(b);
-		Address addr = null;
+		out.write(frag.intValue());
+		Address addr;
 		try {
 			addr = Address.newInstanceFrom(in);
 		} catch (IOException e) {
-			throw new IllegalArgumentException(e);
+			throw new AssertionError(e);
 		}
 		AddressType atyp = addr.getAddressType();
 		dataStartIndex++;
-		out.write(atyp.byteValue());
+		out.write(UnsignedByte.newInstance(atyp.byteValue()).intValue());
 		bytes = addr.toByteArray();
 		String dstAddr = addr.toString(); 
 		dataStartIndex += bytes.length;
@@ -69,14 +71,13 @@ public final class UdpRequestHeader {
 		} catch (IOException e) {
 			throw new AssertionError(e);
 		}
-		bytes = new byte[UnsignedShort.BYTE_ARRAY_LENGTH];
+		UnsignedShort dstPort;
 		try {
-			bytesRead = in.read(bytes);
+			dstPort = UnsignedShort.newInstanceFrom(in);
 		} catch (IOException e) {
 			throw new AssertionError(e);
 		}
-		bytes = Arrays.copyOf(bytes, bytesRead);
-		int dstPort = UnsignedShort.newInstance(bytes).intValue();
+		bytes = dstPort.toByteArray();
 		dataStartIndex += bytes.length;
 		try {
 			out.write(bytes);
@@ -85,6 +86,7 @@ public final class UdpRequestHeader {
 		}
 		dataStartIndex++;
 		bytes = new byte[byteArray.length - dataStartIndex + 1];
+		int bytesRead;
 		try {
 			bytesRead = in.read(bytes);
 		} catch (IOException e) {
@@ -97,10 +99,10 @@ public final class UdpRequestHeader {
 			throw new AssertionError(e);
 		}
 		Params params = new Params();
-		params.currentFragmentNumber = frag;
+		params.currentFragmentNumber = frag.intValue();
 		params.addressType = atyp;
 		params.desiredDestinationAddress = dstAddr;
-		params.desiredDestinationPort = dstPort;
+		params.desiredDestinationPort = dstPort.intValue();
 		params.userDataStartIndex = dataStartIndex;
 		params.byteArray = out.toByteArray();
 		return new UdpRequestHeader(params);
@@ -135,7 +137,7 @@ public final class UdpRequestHeader {
 		Address address = Address.newInstance(desiredDestinationAddress);
 		AddressType addressType = address.getAddressType();
 		dataStartIndex++;
-		out.write(addressType.byteValue());
+		out.write(UnsignedByte.newInstance(addressType.byteValue()).intValue());
 		byte[] bytes = address.toByteArray();
 		dataStartIndex += bytes.length;
 		try {

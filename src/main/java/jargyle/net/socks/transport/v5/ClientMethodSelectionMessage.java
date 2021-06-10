@@ -40,11 +40,12 @@ public final class ClientMethodSelectionMessage {
 		}
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		Version version = Version.V5;
-		out.write(version.byteValue());
+		out.write(UnsignedByte.newInstance(version.byteValue()).intValue());
 		out.write(methods.size());
 		List<Method> meths = new ArrayList<Method>(methods);
 		for (int i = 0; i < meths.size(); i++) {
-			out.write(meths.get(i).byteValue());
+			out.write(UnsignedByte.newInstance(
+					meths.get(i).byteValue()).intValue());
 		}
 		Params params = new Params();
 		params.version = version;
@@ -55,43 +56,29 @@ public final class ClientMethodSelectionMessage {
 	
 	public static ClientMethodSelectionMessage newInstanceFrom(
 			final InputStream in) throws IOException {
-		int b = -1;
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		b = in.read();
-		Version ver = null;
-		try {
-			ver = Version.valueOfByte(
-					(byte) UnsignedByte.newInstance(b).intValue());
-		} catch (IllegalArgumentException e) {
-			throw new IOException(e);
-		}
-		out.write(b);
-		b = in.read();
-		int methodCount;
-		try {
-			methodCount = UnsignedByte.newInstance(b).intValue();
-		} catch (IllegalArgumentException e) {
-			throw new IOException(e);
-		}
-		out.write(b);
-		byte[] bytes = new byte[methodCount];
-		if (methodCount > 0) {
+		Version ver = Version.valueOfByteFrom(in);
+		out.write(UnsignedByte.newInstance(ver.byteValue()).intValue());
+		UnsignedByte methodCount = UnsignedByte.newInstanceFrom(in);
+		out.write(methodCount.intValue());
+		byte[] bytes = new byte[methodCount.intValue()];
+		if (methodCount.intValue() > 0) {
 			int bytesRead = in.read(bytes);
-			if (bytesRead != methodCount) {
+			if (bytesRead != methodCount.intValue()) {
 				throw new IOException(String.format(
 						"expected number of methods is %s. "
 						+ "actual number of methods is %s", 
-						methodCount, bytesRead));
+						methodCount.intValue(), bytesRead));
 			}
 			bytes = Arrays.copyOf(bytes, bytesRead);			
 		}
 		Set<Method> meths = new TreeSet<Method>();
 		for (int i = 0; i < bytes.length; i++) {
-			b = bytes[i];
+			int b = bytes[i];
 			Method meth = null;
 			try {
 				meth = Method.valueOfByte(
-						(byte) UnsignedByte.newInstance(b).intValue());
+						UnsignedByte.newInstance(b).byteValue());
 			} catch (IllegalArgumentException e) {
 				throw new IOException(e);
 			}

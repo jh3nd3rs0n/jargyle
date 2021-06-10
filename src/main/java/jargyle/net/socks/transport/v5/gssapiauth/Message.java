@@ -43,9 +43,9 @@ public final class Message {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		tknStartIndex++;
 		Version version = Version.V1;
-		out.write(version.byteValue());
+		out.write(UnsignedByte.newInstance(version.byteValue()).intValue());
 		tknStartIndex++;
-		out.write(messageType.byteValue());
+		out.write(UnsignedByte.newInstance(messageType.byteValue()).intValue());
 		if (messageType.equals(MessageType.ABORT)) {
 			tknStartIndex++;
 		} else {
@@ -80,50 +80,28 @@ public final class Message {
 	
 	public static Message newInstanceFrom(
 			final InputStream in) throws IOException {
-		int b = -1;
 		int tknStartIndex = -1;
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		b = in.read();
-		Version ver = null;
-		try {
-			ver = Version.valueOfByte(
-					(byte) UnsignedByte.newInstance(b).intValue());
-		} catch (IllegalArgumentException e) {
-			throw new IOException(e);
-		}
+		Version ver = Version.valueOfByteFrom(in);
 		tknStartIndex++;
-		out.write(b);
-		b = in.read();
-		MessageType mType = null; 
-		try {
-			mType = MessageType.valueOfByte(
-					(byte) UnsignedByte.newInstance(b).intValue());
-		} catch (IllegalArgumentException e) {
-			throw new IOException(e);
-		}
+		out.write(UnsignedByte.newInstance(ver.byteValue()).intValue());
+		MessageType mType = MessageType.valueOfByteFrom(in);
 		tknStartIndex++;
-		out.write(b);
+		out.write(UnsignedByte.newInstance(mType.byteValue()).intValue());
 		if (mType.equals(MessageType.ABORT)) {
 			tknStartIndex++;
 		} else {
-			byte[] bytes = new byte[UnsignedShort.BYTE_ARRAY_LENGTH];
-			int bytesRead = in.read(bytes);
-			bytes = Arrays.copyOf(bytes, bytesRead);
-			int len; 
-			try {
-				len = UnsignedShort.newInstance(bytes).intValue();
-			} catch (IllegalArgumentException e) {
-				throw new IOException(e);
-			}
+			UnsignedShort len = UnsignedShort.newInstanceFrom(in);
+			byte[] bytes = len.toByteArray();
 			tknStartIndex += bytes.length;
 			out.write(bytes);
-			bytes = new byte[len];
-			bytesRead = in.read(bytes);
-			if (bytesRead != len) {
+			bytes = new byte[len.intValue()];
+			int bytesRead = in.read(bytes);
+			if (bytesRead != len.intValue()) {
 				throw new IOException(String.format(
 						"expected token length is %s byte(s). "
 						+ "actual token length is %s byte(s)", 
-						len, bytesRead));				
+						len.intValue(), bytesRead));				
 			}
 			bytes = Arrays.copyOf(bytes, bytesRead);
 			tknStartIndex++;

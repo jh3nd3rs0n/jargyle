@@ -106,20 +106,14 @@ public enum AddressType {
 
 		@Override
 		public Address newAddressFrom(final InputStream in) throws IOException {
-			int b = in.read();
-			int octetCount = UnsignedByte.newInstance(b).intValue();
-			if (octetCount <= 1) {
-				throw new IOException(
-						"expected address length greater than 1. "
-						+ "actual address length is " + octetCount);
-			}
-			byte[] bytes = new byte[octetCount];
+			UnsignedByte octetCount = UnsignedByte.newInstanceFrom(in);
+			byte[] bytes = new byte[octetCount.intValue()];
 			int bytesRead = in.read(bytes);
-			if (octetCount != bytesRead) {
+			if (octetCount.intValue() != bytesRead) {
 				throw new IOException(String.format(
 						"expected address length is %s. "
 						+ "actual address length is %s", 
-						octetCount, 
+						octetCount.intValue(), 
 						bytesRead));
 			}
 			bytes = Arrays.copyOf(bytes, bytes.length);
@@ -129,7 +123,8 @@ public enum AddressType {
 						"invalid address: %s", string));
 			}
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			out.write(octetCount);
+			out.write(UnsignedByte.newInstance(
+					octetCount.byteValue()).intValue());
 			out.write(bytes);
 			return new Address(this, out.toByteArray(), string);
 		}
@@ -233,6 +228,12 @@ public enum AddressType {
 						sb.toString(),
 						Integer.toHexString(
 								UnsignedByte.newInstance(b).intValue())));
+	}
+	
+	public static AddressType valueOfByteFrom(
+			final InputStream in) throws IOException {
+		UnsignedByte b = UnsignedByte.newInstanceFrom(in);
+		return valueOfByte(b.byteValue());
 	}
 	
 	private final byte byteValue;

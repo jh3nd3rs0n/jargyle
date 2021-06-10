@@ -1,5 +1,7 @@
 package jargyle.net.socks.transport.v5;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -41,6 +43,12 @@ public enum Command {
 						sb.toString(),
 						Integer.toHexString(
 								UnsignedByte.newInstance(b).intValue())));
+	}
+	
+	public static Command valueOfByteFrom(
+			final InputStream in) throws IOException {
+		UnsignedByte b = UnsignedByte.newInstanceFrom(in);
+		return valueOfByte(b.byteValue());
 	}
 	
 	private final byte byteValue;

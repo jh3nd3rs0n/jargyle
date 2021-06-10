@@ -1,5 +1,7 @@
 package jargyle.util;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 
 public final class UnsignedShort {
@@ -53,6 +55,13 @@ public final class UnsignedShort {
 		return newInstance(i);
 	}
 	
+	public static UnsignedShort newInstanceFrom(
+			final InputStream in) throws IOException {
+		UnsignedByte b0 = UnsignedByte.newInstanceFrom(in);
+		UnsignedByte b1 = UnsignedByte.newInstanceFrom(in);
+		return newInstance(new byte[] { b0.byteValue(), b1.byteValue() });
+	}
+	
 	private final int intValue;
 	
 	private UnsignedShort(final int i) {
@@ -87,6 +96,10 @@ public final class UnsignedShort {
 
 	public int intValue() {
 		return this.intValue;
+	}
+	
+	public short shortValue() {
+		return (short) this.intValue;
 	}
 	
 	public byte[] toByteArray() {

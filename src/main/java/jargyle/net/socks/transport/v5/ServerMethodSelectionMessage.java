@@ -38,26 +38,11 @@ public final class ServerMethodSelectionMessage {
 	
 	public static ServerMethodSelectionMessage newInstanceFrom(
 			final InputStream in) throws IOException {
-		int b = -1;
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		b = in.read();
-		Version ver = null;
-		try {
-			ver = Version.valueOfByte(
-					(byte) UnsignedByte.newInstance(b).intValue());
-		} catch (IllegalArgumentException e) {
-			throw new IOException(e);
-		}
-		out.write(b);
-		b = in.read();
-		Method meth = null; 
-		try {
-			meth = Method.valueOfByte(
-					(byte) UnsignedByte.newInstance(b).intValue());
-		} catch (IllegalArgumentException e) {
-			throw new IOException(e);
-		}
-		out.write(b);
+		Version ver = Version.valueOfByteFrom(in);
+		out.write(UnsignedByte.newInstance(ver.byteValue()).intValue());
+		Method meth = Method.valueOfByteFrom(in);
+		out.write(UnsignedByte.newInstance(meth.byteValue()).intValue());
 		Params params = new Params();
 		params.version = ver;
 		params.method = meth;

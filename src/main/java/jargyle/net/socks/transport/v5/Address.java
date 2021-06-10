@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 
-import jargyle.util.UnsignedByte;
-
 public final class Address {
 
 	public static Address newInstance(final String string) {
@@ -15,14 +13,7 @@ public final class Address {
 	
 	public static Address newInstanceFrom(
 			final InputStream in) throws IOException {
-		int b = in.read();
-		AddressType addressType = null;
-		try {
-			addressType = AddressType.valueOfByte(
-					(byte) UnsignedByte.newInstance(b).intValue());
-		} catch (IllegalArgumentException e) {
-			throw new IOException(e);
-		}
+		AddressType addressType = AddressType.valueOfByteFrom(in);
 		return addressType.newAddressFrom(in);
 	}
 	

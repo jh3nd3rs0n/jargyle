@@ -59,12 +59,12 @@ public final class Socks5Request {
 		}
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		Version version = Version.V5;
-		out.write(version.byteValue());
-		out.write(command.byteValue());
+		out.write(UnsignedByte.newInstance(version.byteValue()).intValue());
+		out.write(UnsignedByte.newInstance(command.byteValue()).intValue());
 		out.write(RSV);
 		Address address = Address.newInstance(desiredDestinationAddress);
 		AddressType addressType = address.getAddressType();
-		out.write(addressType.byteValue());
+		out.write(UnsignedByte.newInstance(addressType.byteValue()).intValue());
 		try {
 			out.write(address.toByteArray());
 		} catch (IOException e) {
@@ -88,59 +88,31 @@ public final class Socks5Request {
 	
 	public static Socks5Request newInstanceFrom(
 			final InputStream in) throws IOException {
-		int b = -1;
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		b = in.read();
-		Version ver = null; 
-		try {
-			ver = Version.valueOfByte(
-					(byte) UnsignedByte.newInstance(b).intValue());
-		} catch (IllegalArgumentException e) {
-			throw new IOException(e);
-		}
-		out.write(b);
-		b = in.read();
-		Command cmd = null; 
-		try {
-			cmd = Command.valueOfByte(
-					(byte) UnsignedByte.newInstance(b).intValue());
-		} catch (IllegalArgumentException e) {
-			throw new IOException(e);
-		}
-		out.write(b);
-		b = in.read();
-		int rsv = -1;
-		try {
-			rsv = UnsignedByte.newInstance(b).intValue();
-		} catch (IllegalArgumentException e) {
-			throw new IOException(e);
-		}
-		if (rsv != RSV) {
+		Version ver = Version.valueOfByteFrom(in);
+		out.write(UnsignedByte.newInstance(ver.byteValue()).intValue());
+		Command cmd = Command.valueOfByteFrom(in);
+		out.write(UnsignedByte.newInstance(cmd.byteValue()).intValue());
+		UnsignedByte rsv = UnsignedByte.newInstanceFrom(in);
+		if (rsv.intValue() != RSV) {
 			throw new IOException(String.format(
-					"expected RSV is %s, actual RSV is %s", RSV, rsv));
+					"expected RSV is %s, actual RSV is %s", 
+					RSV, rsv.intValue()));
 		}
-		out.write(b);
+		out.write(rsv.intValue());
 		Address addr = Address.newInstanceFrom(in);
 		AddressType atyp = addr.getAddressType(); 
-		out.write(atyp.byteValue());
+		out.write(UnsignedByte.newInstance(atyp.byteValue()).intValue());
 		String dstAddr = addr.toString(); 
 		out.write(addr.toByteArray());
-		byte[] bytes = new byte[UnsignedShort.BYTE_ARRAY_LENGTH];
-		int bytesRead = in.read(bytes);
-		bytes = Arrays.copyOf(bytes, bytesRead);
-		int dstPort; 
-		try {
-			dstPort = UnsignedShort.newInstance(bytes).intValue();
-		} catch (IllegalArgumentException e) {
-			throw new IOException(e);
-		}
-		out.write(bytes);
+		UnsignedShort dstPort = UnsignedShort.newInstanceFrom(in);
+		out.write(dstPort.toByteArray());
 		Params params = new Params();
 		params.version = ver;
 		params.command = cmd;
 		params.addressType = atyp;
 		params.desiredDestinationAddress = dstAddr;
-		params.desiredDestinationPort = dstPort;
+		params.desiredDestinationPort = dstPort.intValue();
 		params.byteArray = out.toByteArray();
 		return new Socks5Request(params);
 	}

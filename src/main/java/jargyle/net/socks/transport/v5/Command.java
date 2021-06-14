@@ -48,7 +48,13 @@ public enum Command {
 	public static Command valueOfByteFrom(
 			final InputStream in) throws IOException {
 		UnsignedByte b = UnsignedByte.newInstanceFrom(in);
-		return valueOfByte(b.byteValue());
+		Command command = null;
+		try {
+			command = valueOfByte(b.byteValue());
+		} catch (IllegalArgumentException e) {
+			throw new IOException(e);
+		}
+		return command;
 	}
 	
 	private final byte byteValue;

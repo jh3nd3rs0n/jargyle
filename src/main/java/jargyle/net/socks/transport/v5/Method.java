@@ -60,7 +60,13 @@ public enum Method {
 	public static Method valueOfByteFrom(
 			final InputStream in) throws IOException {
 		UnsignedByte b = UnsignedByte.newInstanceFrom(in);
-		return valueOfByte(b.byteValue());
+		Method method = null;
+		try {
+			method = valueOfByte(b.byteValue());
+		} catch (IllegalArgumentException e) {
+			throw new IOException(e);
+		}
+		return method;
 	}
 	
 	private final byte byteValue;

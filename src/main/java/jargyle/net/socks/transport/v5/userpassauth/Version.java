@@ -42,7 +42,13 @@ public enum Version {
 	public static Version valueOfByteFrom(
 			final InputStream in) throws IOException {
 		UnsignedByte b = UnsignedByte.newInstanceFrom(in);
-		return valueOfByte(b.byteValue());
+		Version version = null;
+		try {
+			version = valueOfByte(b.byteValue());
+		} catch (IllegalArgumentException e) {
+			throw new IOException(e);
+		}
+		return version;
 	}
 	
 	private final byte byteValue;

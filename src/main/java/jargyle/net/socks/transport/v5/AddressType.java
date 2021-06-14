@@ -233,7 +233,13 @@ public enum AddressType {
 	public static AddressType valueOfByteFrom(
 			final InputStream in) throws IOException {
 		UnsignedByte b = UnsignedByte.newInstanceFrom(in);
-		return valueOfByte(b.byteValue());
+		AddressType addressType = null;
+		try {
+			addressType = valueOfByte(b.byteValue());
+		} catch (IllegalArgumentException e) {
+			throw new IOException(e);
+		}
+		return addressType;
 	}
 	
 	private final byte byteValue;

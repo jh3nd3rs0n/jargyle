@@ -57,7 +57,13 @@ public enum Reply {
 	public static Reply valueOfByteFrom(
 			final InputStream in) throws IOException {
 		UnsignedByte b = UnsignedByte.newInstanceFrom(in);
-		return valueOfByte(b.byteValue());
+		Reply reply = null;
+		try {
+			reply = valueOfByte(b.byteValue());
+		} catch (IllegalArgumentException e) {
+			throw new IOException(e);
+		}
+		return reply;
 	}
 	
 	private final byte byteValue;

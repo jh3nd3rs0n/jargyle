@@ -1961,7 +1961,6 @@ The following are the classes that use logging:
 -   `jargyle.net.socks.server.TcpRelayServer$DataWorker`
 -   `jargyle.net.socks.server.Worker`
 -   `jargyle.net.socks.server.XmlFileSourceConfigurationProvider$ConfigurationUpdater`
--   `jargyle.net.socks.server.v5.Authenticator`
 -   `jargyle.net.socks.server.v5.BindCommandWorker`
 -   `jargyle.net.socks.server.v5.ConnectCommandWorker`
 -   `jargyle.net.socks.server.v5.ResolveCommandWorker`
@@ -1986,8 +1985,6 @@ The following is a configuration file example of setting the logging level of so
     jargyle.net.socks.server.SocksServerCLI.level = FINE
     jargyle.net.socks.server.Worker.handlers = java.util.logging.ConsoleHandler
     jargyle.net.socks.server.Worker.level = FINE
-    jargyle.net.socks.server.v5.Authenticator.handlers = java.util.logging.ConsoleHandler
-    jargyle.net.socks.server.v5.Authenticator.level = FINE
     jargyle.net.socks.server.v5.ConnectCommandWorker.handlers = java.util.logging.ConsoleHandler
     jargyle.net.socks.server.v5.ConnectCommandWorker.level = FINE
     jargyle.net.socks.server.v5.Socks5Worker.handlers = java.util.logging.ConsoleHandler

@@ -13,8 +13,6 @@ import org.ietf.jgss.GSSCredential;
 import org.ietf.jgss.GSSException;
 import org.ietf.jgss.GSSManager;
 import org.ietf.jgss.MessageProp;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import jargyle.net.socks.server.Configuration;
 import jargyle.net.socks.server.SettingSpec;
@@ -36,10 +34,9 @@ enum Authenticator {
 		public Socket authenticate(
 				final Socket socket, 
 				final Configuration configuration) throws IOException {
-			LOGGER.debug(String.format(
-					"No acceptable authentication methods from %s",
+			throw new IOException(String.format(
+					"no acceptable authentication methods from %s",
 					socket));
-			return null;
 		}
 		
 	},
@@ -51,19 +48,16 @@ enum Authenticator {
 				final Socket socket, 
 				final Configuration configuration) throws IOException {
 			GSSContext context = this.newContext();
-			if (!this.establishContext(socket, context, configuration)) {
-				return null;
-			}
+			this.establishContext(socket, context, configuration);
 			ProtectionLevel protectionLevelChoice =
 					this.negotiateProtectionLevel(
 							socket, context, configuration);
-			if (protectionLevelChoice == null) { return null;	}
 			MessageProp msgProp = protectionLevelChoice.newMessageProp();
 			Socket newSocket = new GssSocket(socket, context, msgProp);
 			return newSocket;
 		}
 		
-		private boolean establishContext(
+		private void establishContext(
 				final Socket socket,
 				final GSSContext context,
 				final Configuration configuration) throws IOException {
@@ -73,10 +67,9 @@ enum Authenticator {
 			while (!context.isEstablished()) {
 				Message message = Message.newInstanceFrom(inStream);
 				if (message.getMessageType().equals(MessageType.ABORT)) {
-					LOGGER.debug(String.format(
-							"Client %s aborted process of context establishment",
+					throw new IOException(String.format(
+							"client %s aborted process of context establishment",
 							socket));
-					return false;
 				}
 				token = message.getToken();
 				try {
@@ -100,7 +93,6 @@ enum Authenticator {
 					outStream.flush();
 				}
 			}
-			return true;
 		}
 		
 		private ProtectionLevel negotiateProtectionLevel(
@@ -111,10 +103,9 @@ enum Authenticator {
 			OutputStream outStream = socket.getOutputStream();
 			Message message = Message.newInstanceFrom(inStream);
 			if (message.getMessageType().equals(MessageType.ABORT)) {
-				LOGGER.debug(String.format(
-						"Client %s aborted protection level negotiation",
+				throw new IOException(String.format(
+						"client %s aborted protection level negotiation",
 						socket));
-				return null;
 			}
 			boolean necReferenceImpl = configuration.getSettings().getLastValue(
 					SettingSpec.SOCKS5_GSSAPIAUTH_NEC_REFERENCE_IMPL).booleanValue();
@@ -169,11 +160,10 @@ enum Authenticator {
 					token).toByteArray());
 			outStream.flush();
 			if (socket.isClosed()) {
-				LOGGER.debug(String.format(
-						"Client %s closed due to client finding choice of "
+				throw new IOException(String.format(
+						"client %s closed due to client finding choice of "
 						+ "protection level unacceptable",
 						socket));
-				return null;
 			}
 			return protectionLevelChoice;
 		}
@@ -226,10 +216,9 @@ enum Authenticator {
 						(byte) 0x01);
 				outputStream.write(usernamePasswordResp.toByteArray());
 				outputStream.flush();
-				LOGGER.debug(String.format(
-						"Invalid username password from %s",
+				throw new IOException(String.format(
+						"invalid username password from %s",
 						socket));
-				return null;
 			}
 			usernamePasswordResp = UsernamePasswordResponse.newInstance(
 					UsernamePasswordResponse.STATUS_SUCCESS);
@@ -239,9 +228,6 @@ enum Authenticator {
 		}
 		
 	};
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(
-			Authenticator.class);
 	
 	public static Authenticator valueOfMethod(final Method meth) {
 		for (Authenticator value : Authenticator.values()) {

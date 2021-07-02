@@ -48,17 +48,7 @@ public final class Socks5Worker {
 	}
 	
 	private Socket authenticateUsing(final Method method) {
-		Authenticator authenticator = null;
-		try {
-			authenticator = Authenticator.valueOfMethod(method);
-		} catch (IllegalArgumentException e) {
-			LOGGER.warn( 
-					LoggerHelper.objectMessage(this, String.format(
-							"Unhandled method: %s", 
-							method)),
-					e);
-			return null;
-		}
+		Authenticator authenticator = Authenticator.valueOfMethod(method);
 		Socket socket = null;
 		try {
 			socket = authenticator.authenticate(
@@ -154,9 +144,8 @@ public final class Socks5Worker {
 		try {
 			this.clientInputStream = this.clientSocket.getInputStream();
 			Method method = this.selectMethod();
-			if (method == null) { return; } 
 			Socket socket = this.authenticateUsing(method);
-			if (socket == null) { return; } 
+			if (socket == null) { return; }
 			this.clientInputStream = socket.getInputStream();
 			this.clientSocket = socket;
 			this.socks5WorkerContext = new Socks5WorkerContext(new WorkerContext(
@@ -203,18 +192,8 @@ public final class Socks5Worker {
 		InputStream in = new SequenceInputStream(new ByteArrayInputStream(
 				new byte[] { Version.V5.byteValue() }),
 				this.clientInputStream);
-		ClientMethodSelectionMessage cmsm = null;
-		try {
-			cmsm = ClientMethodSelectionMessage.newInstanceFrom(in); 
-		} catch (IllegalArgumentException e) {
-			LOGGER.warn( 
-					LoggerHelper.objectMessage(
-							this, 
-							"Error in parsing the method selection message "
-							+ "from the client"), 
-					e);
-			return null;
-		}
+		ClientMethodSelectionMessage cmsm = 
+				ClientMethodSelectionMessage.newInstanceFrom(in);
 		LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
 				"Received %s", 
 				cmsm.toString())));

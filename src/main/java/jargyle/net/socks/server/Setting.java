@@ -13,6 +13,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import jargyle.net.SocketSettings;
 import jargyle.net.socks.client.v5.userpassauth.UsernamePassword;
 import jargyle.net.socks.server.v5.Socks5RequestCriteria;
+import jargyle.net.socks.server.v5.Socks5RequestWorkerFactory;
 import jargyle.net.socks.server.v5.userpassauth.UsernamePasswordAuthenticator;
 import jargyle.security.EncryptedPassword;
 import jargyle.util.Criteria;
@@ -61,6 +62,10 @@ public final class Setting<V> {
 					required = true, 
 					type = Socks5RequestCriteriaValue.class),
 			@XmlElement(
+					name = "socks5RequestWorkerFactoryValue",
+					required = true,
+					type = Socks5RequestWorkerFactoryValue.class),
+			@XmlElement(
 					name = "usernamePasswordAuthenticatorValue", 
 					required = true, 
 					type = UsernamePasswordAuthenticatorValue.class),
@@ -100,8 +105,14 @@ public final class Setting<V> {
 				newVal.value = (SocketSettings) val;
 				settingXml.value = newVal;
 			} else if (val instanceof Socks5RequestCriteria) {
-				Socks5RequestCriteriaValue newVal = new Socks5RequestCriteriaValue();
+				Socks5RequestCriteriaValue newVal = 
+						new Socks5RequestCriteriaValue();
 				newVal.value = (Socks5RequestCriteria) val;
+				settingXml.value = newVal;
+			} else if (val instanceof Socks5RequestWorkerFactory) {
+				Socks5RequestWorkerFactoryValue newVal = 
+						new Socks5RequestWorkerFactoryValue();
+				newVal.value = (Socks5RequestWorkerFactory) val;
 				settingXml.value = newVal;
 			} else if (val instanceof UsernamePasswordAuthenticator) {
 				UsernamePasswordAuthenticatorValue newVal =
@@ -140,6 +151,11 @@ public final class Setting<V> {
 						(Socks5RequestCriteriaValue) val;
 				return newInstance(v.name, newVal.value, v.comment);
 			}
+			if (val instanceof Socks5RequestWorkerFactoryValue) {
+				Socks5RequestWorkerFactoryValue newVal =
+						(Socks5RequestWorkerFactoryValue) val;
+				return newInstance(v.name, newVal.value, v.comment);
+			}
 			if (val instanceof UsernamePasswordAuthenticatorValue) {
 				UsernamePasswordAuthenticatorValue newVal =
 						(UsernamePasswordAuthenticatorValue) val;
@@ -170,6 +186,15 @@ public final class Setting<V> {
 		
 		@XmlElement(name = "socks5RequestCriteria", required = true)
 		protected Socks5RequestCriteria value;
+		
+	}
+	
+	@XmlAccessorType(XmlAccessType.NONE)
+	@XmlType(name = "socks5RequestWorkerFactoryValue")
+	static class Socks5RequestWorkerFactoryValue {
+		
+		@XmlElement(name = "socks5RequestWorkerFactory", required = true)
+		protected Socks5RequestWorkerFactory value;
 		
 	}
 	

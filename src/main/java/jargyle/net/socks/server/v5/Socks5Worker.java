@@ -17,7 +17,6 @@ import jargyle.net.socks.server.WorkerContext;
 import jargyle.net.socks.transport.v5.AuthMethod;
 import jargyle.net.socks.transport.v5.AuthMethods;
 import jargyle.net.socks.transport.v5.ClientMethodSelectionMessage;
-import jargyle.net.socks.transport.v5.Command;
 import jargyle.net.socks.transport.v5.Method;
 import jargyle.net.socks.transport.v5.Reply;
 import jargyle.net.socks.transport.v5.ServerMethodSelectionMessage;
@@ -161,14 +160,20 @@ public final class Socks5Worker {
 					socks5Req)) {
 				return;
 			}
-			Command command = socks5Req.getCommand();
-			CommandWorkerFactory commandWorkerFactory = 
-					CommandWorkerFactory.valueOfCommand(command);
-			CommandWorkerContext commandWorkerContext = new CommandWorkerContext(
-					this.socks5WorkerContext, socks5Req);
-			CommandWorker commandWorker = commandWorkerFactory.newCommandWorker(
-					commandWorkerContext);
-			commandWorker.run();
+			Socks5RequestWorkerContext socks5RequestWorkerContext = 
+					new Socks5RequestWorkerContext(
+							this.socks5WorkerContext, socks5Req);
+			Socks5RequestWorkerFactory socks5RequestWorkerFactory =
+					this.settings.getLastValue(
+							SettingSpec.SOCKS5_SOCKS5_REQUEST_WORKER_FACTORY);
+			if (socks5RequestWorkerFactory == null) {
+				socks5RequestWorkerFactory = 
+						Socks5RequestWorkerFactory.newInstance(); 
+			}
+			Socks5RequestWorker socks5RequestWorker = 
+					socks5RequestWorkerFactory.newSocks5RequestWorker(
+							socks5RequestWorkerContext);
+			socks5RequestWorker.run();
 		} catch (Throwable t) {
 			LOGGER.warn( 
 					LoggerHelper.objectMessage(this, "Internal server error"), 

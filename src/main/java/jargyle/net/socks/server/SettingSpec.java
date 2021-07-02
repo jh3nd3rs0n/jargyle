@@ -32,6 +32,7 @@ import jargyle.net.socks.server.settingspec.PortSettingSpec;
 import jargyle.net.socks.server.settingspec.PositiveIntegerSettingSpec;
 import jargyle.net.socks.server.settingspec.SocketSettingsSettingSpec;
 import jargyle.net.socks.server.settingspec.Socks5RequestCriteriaSettingSpec;
+import jargyle.net.socks.server.settingspec.Socks5RequestWorkerFactorySettingSpec;
 import jargyle.net.socks.server.settingspec.SocksServerUriSettingSpec;
 import jargyle.net.socks.server.settingspec.StringSettingSpec;
 import jargyle.net.socks.server.settingspec.StringsSettingSpec;
@@ -39,6 +40,7 @@ import jargyle.net.socks.server.settingspec.UsernamePasswordAuthenticatorSetting
 import jargyle.net.socks.server.settingspec.UsernamePasswordSettingSpec;
 import jargyle.net.socks.server.v5.Socks5RequestCriteria;
 import jargyle.net.socks.server.v5.Socks5RequestCriterion;
+import jargyle.net.socks.server.v5.Socks5RequestWorkerFactory;
 import jargyle.net.socks.server.v5.userpassauth.UsernamePasswordAuthenticator;
 import jargyle.net.socks.transport.v5.AuthMethod;
 import jargyle.net.socks.transport.v5.AuthMethods;
@@ -767,6 +769,14 @@ public abstract class SettingSpec<V>
 	public static final SettingSpec<SocketSettings> SOCKS5_ON_UDP_ASSOCIATE_SERVER_FACING_SOCKET_SETTINGS = new SocketSettingsSettingSpec(
 			"socks5.onUdpAssociate.serverFacingSocketSettings",
 			SocketSettings.newInstance());
+	
+	@HelpText(
+			doc = "The SOCKS5 request worker factory for the SOCKS5 server", 
+			usage = "socks5.socks5RequestWorkerFactory=CLASSNAME[:VALUE]"
+	)	
+	public static final SettingSpec<Socks5RequestWorkerFactory> SOCKS5_SOCKS5_REQUEST_WORKER_FACTORY = new Socks5RequestWorkerFactorySettingSpec(
+			"socks5.socks5RequestWorkerFactory",
+			null);
 	
 	@HelpText(
 			doc = "The username password authenticator for the SOCKS5 server", 

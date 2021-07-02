@@ -144,6 +144,7 @@ public final class Socks5Worker {
 		try {
 			this.clientInputStream = this.clientSocket.getInputStream();
 			Method method = this.selectMethod();
+			if (method  == null) { return; } 
 			Socket socket = this.authenticateUsing(method);
 			if (socket == null) { return; }
 			this.clientInputStream = socket.getInputStream();
@@ -192,8 +193,18 @@ public final class Socks5Worker {
 		InputStream in = new SequenceInputStream(new ByteArrayInputStream(
 				new byte[] { Version.V5.byteValue() }),
 				this.clientInputStream);
-		ClientMethodSelectionMessage cmsm = 
-				ClientMethodSelectionMessage.newInstanceFrom(in);
+		ClientMethodSelectionMessage cmsm = null;
+		try {
+			cmsm = ClientMethodSelectionMessage.newInstanceFrom(in); 
+		} catch (IOException e) {
+			LOGGER.warn( 
+					LoggerHelper.objectMessage(
+							this, 
+							"Error in parsing the method selection message "
+							+ "from the client"), 
+					e);
+			return null;
+		}
 		LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
 				"Received %s", 
 				cmsm.toString())));

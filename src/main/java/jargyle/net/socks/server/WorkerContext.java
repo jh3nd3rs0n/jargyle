@@ -1,5 +1,7 @@
 package jargyle.net.socks.server;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.net.Socket;
 
 import jargyle.net.NetObjectFactory;
@@ -59,6 +61,12 @@ public class WorkerContext {
 			.append(this.clientSocket)
 			.append("]");
 		return builder.toString();
+	}
+	
+	public final void writeThenFlush(final byte[] b) throws IOException {
+		OutputStream clientOutputStream = this.clientSocket.getOutputStream();
+		clientOutputStream.write(b);
+		clientOutputStream.flush();
 	}
 	
 }

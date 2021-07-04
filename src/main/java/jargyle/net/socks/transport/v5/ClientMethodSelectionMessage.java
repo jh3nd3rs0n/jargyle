@@ -8,8 +8,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 
 import jargyle.util.UnsignedByte;
 
@@ -17,7 +15,7 @@ public final class ClientMethodSelectionMessage {
 	
 	private static final class Params {
 		private Version version;
-		private Set<Method> methods;
+		private List<Method> methods;
 		private byte[] byteArray;
 	}
 	
@@ -32,7 +30,7 @@ public final class ClientMethodSelectionMessage {
 	}
 	
 	public static ClientMethodSelectionMessage newInstance(
-			final Set<Method> methods) {
+			final List<Method> methods) {
 		if (methods.size() > UnsignedByte.MAX_INT_VALUE) {
 			throw new IllegalArgumentException(String.format(
 					"number of methods must be no more than %s",
@@ -72,7 +70,7 @@ public final class ClientMethodSelectionMessage {
 			}
 			bytes = Arrays.copyOf(bytes, bytesRead);			
 		}
-		Set<Method> meths = new TreeSet<Method>();
+		List<Method> meths = new ArrayList<Method>();
 		for (int i = 0; i < bytes.length; i++) {
 			int b = bytes[i];
 			Method meth = null;
@@ -93,7 +91,7 @@ public final class ClientMethodSelectionMessage {
 	}
 	
 	private final Version version;
-	private final Set<Method> methods;
+	private final List<Method> methods;
 	private final byte[] byteArray;
 	
 	private ClientMethodSelectionMessage(final Params params) {
@@ -120,8 +118,8 @@ public final class ClientMethodSelectionMessage {
 		return true;
 	}
 
-	public Set<Method> getMethods() {
-		return Collections.unmodifiableSet(this.methods);
+	public List<Method> getMethods() {
+		return Collections.unmodifiableList(this.methods);
 	}
 	
 	public Version getVersion() {

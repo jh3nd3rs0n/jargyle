@@ -6,8 +6,8 @@ import java.io.OutputStream;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.ArrayList;
+import java.util.List;
 
 import jargyle.net.socks.client.Properties;
 import jargyle.net.socks.client.PropertySpec;
@@ -46,7 +46,7 @@ public final class Socks5Client extends SocksClient {
 			final Socket connectedInternalSocket) throws IOException {
 		InputStream inputStream = connectedInternalSocket.getInputStream();
 		OutputStream outputStream = connectedInternalSocket.getOutputStream();
-		Set<Method> methods = new TreeSet<Method>();
+		List<Method> methods = new ArrayList<Method>();
 		AuthMethods authMethods = this.getProperties().getValue(
 				PropertySpec.SOCKS5_AUTH_METHODS);
 		for (AuthMethod authMethod : authMethods.toList()) {

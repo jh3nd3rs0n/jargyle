@@ -26,7 +26,7 @@ import jargyle.net.socks.client.PropertySpec;
 import jargyle.net.socks.client.SocksClient;
 import jargyle.net.socks.client.SocksServerUri;
 import jargyle.net.socks.client.v5.userpassauth.UsernamePassword;
-import jargyle.net.socks.transport.v5.AuthMethods;
+import jargyle.net.socks.transport.v5.Methods;
 import jargyle.net.socks.transport.v5.gssapiauth.ProtectionLevels;
 import jargyle.security.EncryptedPassword;
 import jargyle.util.PositiveInteger;
@@ -315,15 +315,13 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 	
 	private static void putChainingSocks5SettingConverters() {
 		SETTING_CONVERTER_MAP.put(
-				SettingSpec.CHAINING_SOCKS5_AUTH_METHODS, 
+				SettingSpec.CHAINING_SOCKS5_METHODS, 
 				new SettingConverter() {
 
 					@Override
 					public Object convert(final Setting<Object> setting) {
-						AuthMethods authMethods =
-								(AuthMethods) setting.getValue();
-						return PropertySpec.SOCKS5_AUTH_METHODS.newProperty(
-								authMethods);
+						Methods methods = (Methods) setting.getValue();
+						return PropertySpec.SOCKS5_METHODS.newProperty(methods);
 					}
 					
 				});

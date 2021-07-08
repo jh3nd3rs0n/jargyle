@@ -32,7 +32,7 @@ import jargyle.net.socks.client.v5.userpassauth.DefaultUsernamePasswordRequestor
 import jargyle.net.socks.client.v5.userpassauth.UsernamePassword;
 import jargyle.net.socks.client.v5.userpassauth.UsernamePasswordRequestor;
 import jargyle.net.socks.server.v5.userpassauth.UsersCLI;
-import jargyle.net.socks.transport.v5.AuthMethod;
+import jargyle.net.socks.transport.v5.Method;
 import jargyle.net.socks.transport.v5.gssapiauth.ProtectionLevel;
 import jargyle.security.DefaultEncryptedPasswordRequestor;
 import jargyle.security.EncryptedPassword;
@@ -623,10 +623,10 @@ public final class SocksServerCLI extends CLI {
 		this.printHelpText(Scheme.class);
 		System.out.println("SOCKET_SETTINGS:");
 		this.printHelpText(SocketSettingSpec.class);
-		System.out.println("SOCKS5_AUTH_METHODS:");
-		this.printHelpText(AuthMethod.class);
 		System.out.println("SOCKS5_GSSAPIAUTH_PROTECTION_LEVELS:");
 		this.printHelpText(ProtectionLevel.class);
+		System.out.println("SOCKS5_METHODS:");
+		this.printHelpText(Method.class);		
 		this.settingsHelpDisplayed = true;
 	}
 		

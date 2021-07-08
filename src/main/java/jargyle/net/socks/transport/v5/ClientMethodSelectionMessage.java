@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import jargyle.util.UnsignedByte;
@@ -15,7 +14,7 @@ public final class ClientMethodSelectionMessage {
 	
 	private static final class Params {
 		private Version version;
-		private List<Method> methods;
+		private Methods methods;
 		private byte[] byteArray;
 	}
 	
@@ -30,8 +29,9 @@ public final class ClientMethodSelectionMessage {
 	}
 	
 	public static ClientMethodSelectionMessage newInstance(
-			final List<Method> methods) {
-		if (methods.size() > UnsignedByte.MAX_INT_VALUE) {
+			final Methods methods) {
+		List<Method> methodsList = methods.toList();
+		if (methodsList.size() > UnsignedByte.MAX_INT_VALUE) {
 			throw new IllegalArgumentException(String.format(
 					"number of methods must be no more than %s",
 					UnsignedByte.MAX_INT_VALUE));
@@ -39,8 +39,8 @@ public final class ClientMethodSelectionMessage {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		Version version = Version.V5;
 		out.write(UnsignedByte.newInstance(version.byteValue()).intValue());
-		out.write(methods.size());
-		List<Method> meths = new ArrayList<Method>(methods);
+		out.write(methodsList.size());
+		List<Method> meths = new ArrayList<Method>(methodsList);
 		for (int i = 0; i < meths.size(); i++) {
 			out.write(UnsignedByte.newInstance(
 					meths.get(i).byteValue()).intValue());
@@ -85,13 +85,13 @@ public final class ClientMethodSelectionMessage {
 		}
 		Params params = new Params();
 		params.version = ver;
-		params.methods = meths;
+		params.methods = Methods.newInstance(meths);
 		params.byteArray = out.toByteArray();
 		return new ClientMethodSelectionMessage(params);
 	}
 	
 	private final Version version;
-	private final List<Method> methods;
+	private final Methods methods;
 	private final byte[] byteArray;
 	
 	private ClientMethodSelectionMessage(final Params params) {
@@ -118,8 +118,8 @@ public final class ClientMethodSelectionMessage {
 		return true;
 	}
 
-	public List<Method> getMethods() {
-		return Collections.unmodifiableList(this.methods);
+	public Methods getMethods() {
+		return this.methods;
 	}
 	
 	public Version getVersion() {

@@ -16,17 +16,17 @@ public final class ProtectionLevels {
 	
 	public static ProtectionLevels newInstance(
 			final ProtectionLevel protectionLvl,
-			final ProtectionLevel... protectionLvls) {
-		return newInstance(protectionLvl, Arrays.asList(protectionLvls));
-	}
-	
-	public static ProtectionLevels newInstance(
-			final ProtectionLevel protectionLvl,
 			final List<ProtectionLevel> protectionLvls) {
 		List<ProtectionLevel> list = new ArrayList<ProtectionLevel>();
 		list.add(protectionLvl);
 		list.addAll(protectionLvls);
 		return new ProtectionLevels(list);
+	}
+	
+	public static ProtectionLevels newInstance(
+			final ProtectionLevel protectionLvl,
+			final ProtectionLevel... protectionLvls) {
+		return newInstance(protectionLvl, Arrays.asList(protectionLvls));
 	}
 	
 	public static ProtectionLevels newInstance(final String s) {

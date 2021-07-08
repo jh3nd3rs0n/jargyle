@@ -14,10 +14,9 @@ import jargyle.net.socks.server.Configuration;
 import jargyle.net.socks.server.SettingSpec;
 import jargyle.net.socks.server.Settings;
 import jargyle.net.socks.server.WorkerContext;
-import jargyle.net.socks.transport.v5.AuthMethod;
-import jargyle.net.socks.transport.v5.AuthMethods;
 import jargyle.net.socks.transport.v5.ClientMethodSelectionMessage;
 import jargyle.net.socks.transport.v5.Method;
+import jargyle.net.socks.transport.v5.Methods;
 import jargyle.net.socks.transport.v5.Reply;
 import jargyle.net.socks.transport.v5.ServerMethodSelectionMessage;
 import jargyle.net.socks.transport.v5.Socks5Reply;
@@ -214,10 +213,9 @@ public final class Socks5Worker {
 				"Received %s", 
 				cmsm.toString())));
 		Method method = null;
-		AuthMethods authMethods = this.settings.getLastValue(
-				SettingSpec.SOCKS5_AUTH_METHODS);
-		for (AuthMethod authMethod : authMethods.toList()) {
-			Method meth = authMethod.methodValue();
+		Methods methods = this.settings.getLastValue(
+				SettingSpec.SOCKS5_METHODS);
+		for (Method meth : methods.toList()) {
 			if (cmsm.getMethods().contains(meth)) {
 				method = meth;
 				break;

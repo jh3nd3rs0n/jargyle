@@ -6,27 +6,19 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import jargyle.help.HelpText;
 import jargyle.util.UnsignedByte;
 
 public enum Method {
 
+	@HelpText(doc = "No authentication required", usage = "NO_AUTHENTICATION_REQUIRED")
 	NO_AUTHENTICATION_REQUIRED((byte) 0x00),
 	
+	@HelpText(doc = "GSS-API authentication", usage = "GSSAPI")
 	GSSAPI((byte) 0x01),
 	
+	@HelpText(doc = "Username password authentication", usage = "USERNAME_PASSWORD")
 	USERNAME_PASSWORD((byte) 0x02),
-	
-	CHALLENGE_HANDSHAKE_AUTHENTICATION_PROTOCOL((byte) 0x03),
-	
-	CHALLENGE_RESPONSE_AUTHENTICATION_METHOD((byte) 0x05),
-	
-	SECURE_SOCKETS_LAYER((byte) 0x06),
-	
-	NDS_AUTHENTICATION((byte) 0x07),
-	
-	MULTI_AUTHENTICATION_FRAMEWORK((byte) 0x08),
-	
-	JSON_PARAMETER_BLOCK((byte) 0x09),
 	
 	NO_ACCEPTABLE_METHODS((byte) 0xff);
 
@@ -65,6 +57,32 @@ public enum Method {
 			method = valueOfByte(b.byteValue());
 		} catch (IllegalArgumentException e) {
 			throw new IOException(e);
+		}
+		return method;
+	}
+	
+	public static Method valueOfString(final String s) {
+		Method method = null;
+		try {
+			method = Method.valueOf(s);
+		} catch (IllegalArgumentException e) {
+			StringBuilder sb = new StringBuilder();
+			List<Method> list = Arrays.asList(Method.values());
+			for (Iterator<Method> iterator = list.iterator();
+					iterator.hasNext();) {
+				Method value = iterator.next();
+				sb.append(value);
+				if (iterator.hasNext()) {
+					sb.append(", ");
+				}
+			}
+			throw new IllegalArgumentException(
+					String.format(
+							"expected method must be one of the following "
+							+ "values: %s. actual value is %s",
+							sb.toString(),
+							s), 
+					e);
 		}
 		return method;
 	}

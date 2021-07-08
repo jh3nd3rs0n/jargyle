@@ -6,17 +6,14 @@ import java.io.OutputStream;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
 
 import jargyle.net.socks.client.Properties;
 import jargyle.net.socks.client.PropertySpec;
 import jargyle.net.socks.client.SocksClient;
 import jargyle.net.socks.client.SocksNetObjectFactory;
-import jargyle.net.socks.transport.v5.AuthMethod;
-import jargyle.net.socks.transport.v5.AuthMethods;
 import jargyle.net.socks.transport.v5.ClientMethodSelectionMessage;
 import jargyle.net.socks.transport.v5.Method;
+import jargyle.net.socks.transport.v5.Methods;
 import jargyle.net.socks.transport.v5.ServerMethodSelectionMessage;
 import jargyle.net.socks.transport.v5.gssapiauth.GssDatagramSocket;
 import jargyle.net.socks.transport.v5.gssapiauth.GssSocket;
@@ -46,12 +43,8 @@ public final class Socks5Client extends SocksClient {
 			final Socket connectedInternalSocket) throws IOException {
 		InputStream inputStream = connectedInternalSocket.getInputStream();
 		OutputStream outputStream = connectedInternalSocket.getOutputStream();
-		List<Method> methods = new ArrayList<Method>();
-		AuthMethods authMethods = this.getProperties().getValue(
-				PropertySpec.SOCKS5_AUTH_METHODS);
-		for (AuthMethod authMethod : authMethods.toList()) {
-			methods.add(authMethod.methodValue());
-		}
+		Methods methods = this.getProperties().getValue(
+				PropertySpec.SOCKS5_METHODS);
 		ClientMethodSelectionMessage cmsm = 
 				ClientMethodSelectionMessage.newInstance(methods);
 		outputStream.write(cmsm.toByteArray());

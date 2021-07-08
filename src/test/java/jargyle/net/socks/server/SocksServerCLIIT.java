@@ -84,7 +84,7 @@ public class SocksServerCLIIT {
 		String[] args = new String[] {
 				"--setting=port=1234",
 				"--setting=backlog=100",
-				"--setting=socks5.authMethods=NO_AUTHENTICATION_REQUIRED",
+				"--setting=socks5.methods=NO_AUTHENTICATION_REQUIRED",
 				"--new-config-file=".concat(
 						this.configurationFile.toAbsolutePath().toString())
 		};

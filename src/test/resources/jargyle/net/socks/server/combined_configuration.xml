@@ -10,7 +10,7 @@
             <value>100</value>
         </setting>
         <setting>
-            <name>socks5.authMethods</name>
+            <name>socks5.methods</name>
             <value>NO_AUTHENTICATION_REQUIRED</value>
         </setting>
         <setting>
@@ -22,7 +22,7 @@
             <value>100</value>
         </setting>
         <setting>
-            <name>socks5.authMethods</name>
+            <name>socks5.methods</name>
             <value>NO_AUTHENTICATION_REQUIRED</value>
         </setting>
         <setting>

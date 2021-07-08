@@ -3,8 +3,8 @@ package jargyle.net.socks.client;
 import jargyle.net.socks.client.v5.Socks5Client;
 import jargyle.net.socks.client.v5.Socks5ServerUri;
 import jargyle.net.socks.client.v5.userpassauth.UsernamePassword;
-import jargyle.net.socks.transport.v5.AuthMethod;
-import jargyle.net.socks.transport.v5.AuthMethods;
+import jargyle.net.socks.transport.v5.Method;
+import jargyle.net.socks.transport.v5.Methods;
 
 public final class SocksClientHelper {
 
@@ -19,8 +19,8 @@ public final class SocksClientHelper {
 			final Integer port, 
 			final UsernamePassword usernamePassword) {
 		Properties properties = Properties.newInstance(
-				PropertySpec.SOCKS5_AUTH_METHODS.newProperty(
-						AuthMethods.newInstance(AuthMethod.USERNAME_PASSWORD)),
+				PropertySpec.SOCKS5_METHODS.newProperty(
+						Methods.newInstance(Method.USERNAME_PASSWORD)),
 				PropertySpec.SOCKS5_USERPASSAUTH_USERNAME.newProperty(
 						usernamePassword.getUsername()),
 				PropertySpec.SOCKS5_USERPASSAUTH_PASSWORD.newProperty(

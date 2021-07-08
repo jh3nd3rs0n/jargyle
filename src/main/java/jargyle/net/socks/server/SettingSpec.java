@@ -19,17 +19,17 @@ import jargyle.net.SocketSettings;
 import jargyle.net.socks.client.PropertySpec;
 import jargyle.net.socks.client.SocksServerUri;
 import jargyle.net.socks.client.v5.userpassauth.UsernamePassword;
-import jargyle.net.socks.server.settingspec.AuthMethodsSettingSpec;
 import jargyle.net.socks.server.settingspec.BooleanSettingSpec;
 import jargyle.net.socks.server.settingspec.CriteriaSettingSpec;
 import jargyle.net.socks.server.settingspec.EncryptedPasswordSettingSpec;
 import jargyle.net.socks.server.settingspec.FileSettingSpec;
-import jargyle.net.socks.server.settingspec.ProtectionLevelsSettingSpec;
 import jargyle.net.socks.server.settingspec.HostSettingSpec;
+import jargyle.net.socks.server.settingspec.MethodsSettingSpec;
 import jargyle.net.socks.server.settingspec.NonnegativeIntegerSettingSpec;
 import jargyle.net.socks.server.settingspec.OidSettingSpec;
 import jargyle.net.socks.server.settingspec.PortSettingSpec;
 import jargyle.net.socks.server.settingspec.PositiveIntegerSettingSpec;
+import jargyle.net.socks.server.settingspec.ProtectionLevelsSettingSpec;
 import jargyle.net.socks.server.settingspec.SocketSettingsSettingSpec;
 import jargyle.net.socks.server.settingspec.Socks5RequestCriteriaSettingSpec;
 import jargyle.net.socks.server.settingspec.Socks5RequestWorkerFactorySettingSpec;
@@ -42,8 +42,8 @@ import jargyle.net.socks.server.v5.Socks5RequestCriteria;
 import jargyle.net.socks.server.v5.Socks5RequestCriterion;
 import jargyle.net.socks.server.v5.Socks5RequestWorkerFactory;
 import jargyle.net.socks.server.v5.userpassauth.UsernamePasswordAuthenticator;
-import jargyle.net.socks.transport.v5.AuthMethod;
-import jargyle.net.socks.transport.v5.AuthMethods;
+import jargyle.net.socks.transport.v5.Method;
+import jargyle.net.socks.transport.v5.Methods;
 import jargyle.net.socks.transport.v5.gssapiauth.ProtectionLevels;
 import jargyle.security.EncryptedPassword;
 import jargyle.util.Criteria;
@@ -227,16 +227,6 @@ public abstract class SettingSpec<V>
 			null);
 	
 	@HelpText(
-			doc = "The space separated list of acceptable authentication "
-					+ "methods to the other SOCKS5 server (default is "
-					+ "NO_AUTHENTICATION_REQUIRED)", 
-			usage = "chaining.socks5.authMethods=SOCKS5_AUTH_METHOD1[ SOCKS5_AUTH_METHOD2[...]]"
-	)
-	public static final SettingSpec<AuthMethods> CHAINING_SOCKS5_AUTH_METHODS = new AuthMethodsSettingSpec(
-			"chaining.socks5.authMethods",
-			PropertySpec.SOCKS5_AUTH_METHODS.getDefaultProperty().getValue());
-	
-	@HelpText(
 			doc = "The object ID for the GSS-API authentication mechanism to "
 					+ "the other SOCKS5 server (default is 1.2.840.113554.1.2.2)", 
 			usage = "chaining.socks5.gssapiauth.mechanismOid=SOCKS5_GSSAPIAUTH_MECHANISM_OID"
@@ -276,6 +266,16 @@ public abstract class SettingSpec<V>
 	public static final SettingSpec<String> CHAINING_SOCKS5_GSSAPIAUTH_SERVICE_NAME = new StringSettingSpec(
 			"chaining.socks5.gssapiauth.serviceName",
 			PropertySpec.SOCKS5_GSSAPIAUTH_SERVICE_NAME.getDefaultProperty().getValue());
+	
+	@HelpText(
+			doc = "The space separated list of acceptable authentication "
+					+ "methods to the other SOCKS5 server (default is "
+					+ "NO_AUTHENTICATION_REQUIRED)", 
+			usage = "chaining.socks5.methods=[SOCKS5_METHOD1[ SOCKS5_METHOD2[...]]]"
+	)
+	public static final SettingSpec<Methods> CHAINING_SOCKS5_METHODS = new MethodsSettingSpec(
+			"chaining.socks5.methods",
+			PropertySpec.SOCKS5_METHODS.getDefaultProperty().getValue());
 	
 	@HelpText(
 			doc = "The boolean value to indicate that the RESOLVE command is "
@@ -538,16 +538,6 @@ public abstract class SettingSpec<V>
 			Socks5RequestCriteria.newInstance(
 					new Socks5RequestCriterion.Builder().build()));
 	
-	@HelpText(
-			doc = "The space separated list of acceptable authentication "
-					+ "methods in order of preference (default is "
-					+ "NO_AUTHENTICATION_REQUIRED)", 
-			usage = "socks5.authMethods=SOCKS5_AUTH_METHOD1[ SOCKS5_AUTH_METHOD2[...]]"
-	)
-	public static final SettingSpec<AuthMethods> SOCKS5_AUTH_METHODS = new AuthMethodsSettingSpec(
-			"socks5.authMethods",
-			AuthMethods.newInstance(AuthMethod.NO_AUTHENTICATION_REQUIRED));
-	
 	public static final SettingSpec<Socks5RequestCriteria> SOCKS5_BLOCKED_SOCKS5_REQUEST_CRITERIA = new Socks5RequestCriteriaSettingSpec(
 			"socks5.blockedSocks5RequestCriteria",
 			Socks5RequestCriteria.EMPTY_INSTANCE);
@@ -574,6 +564,16 @@ public abstract class SettingSpec<V>
 	public static final SettingSpec<ProtectionLevels> SOCKS5_GSSAPIAUTH_PROTECTION_LEVELS = new ProtectionLevelsSettingSpec(
 			"socks5.gssapiauth.protectionLevels",
 			ProtectionLevels.DEFAULT_INSTANCE);
+	
+	@HelpText(
+			doc = "The space separated list of acceptable authentication "
+					+ "methods in order of preference (default is "
+					+ "NO_AUTHENTICATION_REQUIRED)", 
+			usage = "socks5.methods=[SOCKS5_METHOD1[ SOCKS5_METHOD2[...]]]"
+	)
+	public static final SettingSpec<Methods> SOCKS5_METHODS = new MethodsSettingSpec(
+			"socks5.methods",
+			Methods.newInstance(Method.NO_AUTHENTICATION_REQUIRED));
 	
 	@HelpText(
 			doc = "The space separated list of allowed inbound address "

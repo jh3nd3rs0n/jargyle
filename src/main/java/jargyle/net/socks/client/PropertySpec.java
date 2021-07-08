@@ -12,11 +12,11 @@ import org.ietf.jgss.Oid;
 import jargyle.net.Host;
 import jargyle.net.Port;
 import jargyle.net.SocketSettings;
-import jargyle.net.socks.client.propertyspec.AuthMethodsPropertySpec;
 import jargyle.net.socks.client.propertyspec.BooleanPropertySpec;
 import jargyle.net.socks.client.propertyspec.EncryptedPasswordPropertySpec;
 import jargyle.net.socks.client.propertyspec.FilePropertySpec;
 import jargyle.net.socks.client.propertyspec.HostPropertySpec;
+import jargyle.net.socks.client.propertyspec.MethodsPropertySpec;
 import jargyle.net.socks.client.propertyspec.OidPropertySpec;
 import jargyle.net.socks.client.propertyspec.PortPropertySpec;
 import jargyle.net.socks.client.propertyspec.PositiveIntegerPropertySpec;
@@ -26,8 +26,8 @@ import jargyle.net.socks.client.propertyspec.StringPropertySpec;
 import jargyle.net.socks.client.propertyspec.StringsPropertySpec;
 import jargyle.net.socks.client.propertyspec.UserEncryptedPasswordPropertySpec;
 import jargyle.net.socks.client.propertyspec.UsernamePropertySpec;
-import jargyle.net.socks.transport.v5.AuthMethod;
-import jargyle.net.socks.transport.v5.AuthMethods;
+import jargyle.net.socks.transport.v5.Method;
+import jargyle.net.socks.transport.v5.Methods;
 import jargyle.net.socks.transport.v5.gssapiauth.ProtectionLevels;
 import jargyle.security.EncryptedPassword;
 import jargyle.util.PositiveInteger;
@@ -98,10 +98,6 @@ public abstract class PropertySpec<V>
 			"socksClient.socketSettings",
 			SocketSettings.newInstance());
 	
-	public static final PropertySpec<AuthMethods> SOCKS5_AUTH_METHODS = new AuthMethodsPropertySpec(
-			"socksClient.socks5.authMethods",
-			AuthMethods.newInstance(AuthMethod.NO_AUTHENTICATION_REQUIRED));
-	
 	public static final PropertySpec<Oid> SOCKS5_GSSAPIAUTH_MECHANISM_OID = new OidPropertySpec(
 			"socksClient.socks5.gssapiauth.mechanismOid",
 			"1.2.840.113554.1.2.2");
@@ -117,6 +113,10 @@ public abstract class PropertySpec<V>
 	public static final PropertySpec<String> SOCKS5_GSSAPIAUTH_SERVICE_NAME = new StringPropertySpec(
 			"socksClient.socks5.gssapiauth.serviceName",
 			null);
+	
+	public static final PropertySpec<Methods> SOCKS5_METHODS = new MethodsPropertySpec(
+			"socksClient.socks5.methods",
+			Methods.newInstance(Method.NO_AUTHENTICATION_REQUIRED));
 	
 	public static final PropertySpec<Boolean> SOCKS5_RESOLVE_USE_RESOLVE_COMMAND = new BooleanPropertySpec(
 			"socksClient.socks5.resolve.useResolveCommand",

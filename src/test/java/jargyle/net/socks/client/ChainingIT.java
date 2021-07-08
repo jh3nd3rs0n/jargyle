@@ -20,8 +20,8 @@ import jargyle.net.socks.server.ImmutableConfiguration;
 import jargyle.net.socks.server.SettingSpec;
 import jargyle.net.socks.server.Settings;
 import jargyle.net.socks.server.v5.userpassauth.StringSourceUsernamePasswordAuthenticator;
-import jargyle.net.socks.transport.v5.AuthMethod;
-import jargyle.net.socks.transport.v5.AuthMethods;
+import jargyle.net.socks.transport.v5.Method;
+import jargyle.net.socks.transport.v5.Methods;
 import jargyle.security.EncryptedPassword;
 
 public class ChainingIT {
@@ -48,8 +48,8 @@ public class ChainingIT {
 		return Arrays.asList(
 				ImmutableConfiguration.newInstance(Settings.newInstance(
 						SettingSpec.PORT.newSetting(Port.newInstance(23456)),
-						SettingSpec.SOCKS5_AUTH_METHODS.newSetting(
-								AuthMethods.newInstance(AuthMethod.USERNAME_PASSWORD)),
+						SettingSpec.SOCKS5_METHODS.newSetting(
+								Methods.newInstance(Method.USERNAME_PASSWORD)),
 						SettingSpec.SOCKS5_USERPASSAUTH_USERNAME_PASSWORD_AUTHENTICATOR.newSetting(
 								new StringSourceUsernamePasswordAuthenticator(
 										"Aladdin:opensesame")),
@@ -57,14 +57,14 @@ public class ChainingIT {
 								Scheme.SOCKS5.newSocksServerUri(
 										NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
 										Integer.valueOf(65432))),
-						SettingSpec.CHAINING_SOCKS5_AUTH_METHODS.newSetting(
-								AuthMethods.newInstance(AuthMethod.USERNAME_PASSWORD)),
+						SettingSpec.CHAINING_SOCKS5_METHODS.newSetting(
+								Methods.newInstance(Method.USERNAME_PASSWORD)),
 						SettingSpec.CHAINING_SOCKS5_USERPASSAUTH_USERNAME_PASSWORD.newSetting(
 								UsernamePassword.newInstance("Jasmine:mission%3Aimpossible")))),
 				ImmutableConfiguration.newInstance(Settings.newInstance(
 						SettingSpec.PORT.newSetting(Port.newInstance(65432)),
-						SettingSpec.SOCKS5_AUTH_METHODS.newSetting(
-								AuthMethods.newInstance(AuthMethod.USERNAME_PASSWORD)),
+						SettingSpec.SOCKS5_METHODS.newSetting(
+								Methods.newInstance(Method.USERNAME_PASSWORD)),
 						SettingSpec.SOCKS5_USERPASSAUTH_USERNAME_PASSWORD_AUTHENTICATOR.newSetting(
 								new StringSourceUsernamePasswordAuthenticator(
 										"Jasmine:mission%3Aimpossible")),
@@ -72,14 +72,14 @@ public class ChainingIT {
 								Scheme.SOCKS5.newSocksServerUri(
 										NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
 										Integer.valueOf(34567))),
-						SettingSpec.CHAINING_SOCKS5_AUTH_METHODS.newSetting(
-								AuthMethods.newInstance(AuthMethod.USERNAME_PASSWORD)),
+						SettingSpec.CHAINING_SOCKS5_METHODS.newSetting(
+								Methods.newInstance(Method.USERNAME_PASSWORD)),
 						SettingSpec.CHAINING_SOCKS5_USERPASSAUTH_USERNAME_PASSWORD.newSetting(
 								UsernamePassword.newInstance("Abu:safeDriversSave40%25")))),
 				ImmutableConfiguration.newInstance(Settings.newInstance(
 						SettingSpec.PORT.newSetting(Port.newInstance(34567)),
-						SettingSpec.SOCKS5_AUTH_METHODS.newSetting(
-								AuthMethods.newInstance(AuthMethod.USERNAME_PASSWORD)),
+						SettingSpec.SOCKS5_METHODS.newSetting(
+								Methods.newInstance(Method.USERNAME_PASSWORD)),
 						SettingSpec.SOCKS5_USERPASSAUTH_USERNAME_PASSWORD_AUTHENTICATOR.newSetting(
 								new StringSourceUsernamePasswordAuthenticator(
 										"Abu:safeDriversSave40%25")))));
@@ -106,8 +106,8 @@ public class ChainingIT {
 				NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
 				Integer.valueOf(23456))
 				.newSocksClient(Properties.newInstance(
-						PropertySpec.SOCKS5_AUTH_METHODS.newProperty(
-								AuthMethods.newInstance(AuthMethod.USERNAME_PASSWORD)),
+						PropertySpec.SOCKS5_METHODS.newProperty(
+								Methods.newInstance(Method.USERNAME_PASSWORD)),
 						PropertySpec.SOCKS5_USERPASSAUTH_USERNAME.newProperty(
 								"Aladdin"),
 						PropertySpec.SOCKS5_USERPASSAUTH_PASSWORD.newProperty(
@@ -117,8 +117,8 @@ public class ChainingIT {
 				NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
 				Integer.valueOf(65432))
 				.newSocksClient(Properties.newInstance(
-						PropertySpec.SOCKS5_AUTH_METHODS.newProperty(
-								AuthMethods.newInstance(AuthMethod.USERNAME_PASSWORD)),
+						PropertySpec.SOCKS5_METHODS.newProperty(
+								Methods.newInstance(Method.USERNAME_PASSWORD)),
 						PropertySpec.SOCKS5_USERPASSAUTH_USERNAME.newProperty(
 								"Jasmine"),
 						PropertySpec.SOCKS5_USERPASSAUTH_PASSWORD.newProperty(
@@ -129,8 +129,8 @@ public class ChainingIT {
 				NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
 				Integer.valueOf(34567))
 				.newSocksClient(Properties.newInstance(
-						PropertySpec.SOCKS5_AUTH_METHODS.newProperty(
-								AuthMethods.newInstance(AuthMethod.USERNAME_PASSWORD)),
+						PropertySpec.SOCKS5_METHODS.newProperty(
+								Methods.newInstance(Method.USERNAME_PASSWORD)),
 						PropertySpec.SOCKS5_USERPASSAUTH_USERNAME.newProperty(
 								"Abu"),
 						PropertySpec.SOCKS5_USERPASSAUTH_PASSWORD.newProperty(
@@ -154,22 +154,22 @@ public class ChainingIT {
 		return Arrays.asList(
 				ImmutableConfiguration.newInstance(Settings.newInstance(
 						SettingSpec.PORT.newSetting(Port.newInstance(23456)),
-						SettingSpec.SOCKS5_AUTH_METHODS.newSetting(
-								AuthMethods.newInstance(AuthMethod.USERNAME_PASSWORD)),
+						SettingSpec.SOCKS5_METHODS.newSetting(
+								Methods.newInstance(Method.USERNAME_PASSWORD)),
 						SettingSpec.SOCKS5_USERPASSAUTH_USERNAME_PASSWORD_AUTHENTICATOR.newSetting(
 								new StringSourceUsernamePasswordAuthenticator(
 										"Aladdin:opensesame")))),
 				ImmutableConfiguration.newInstance(Settings.newInstance(
 						SettingSpec.PORT.newSetting(Port.newInstance(65432)),
-						SettingSpec.SOCKS5_AUTH_METHODS.newSetting(
-								AuthMethods.newInstance(AuthMethod.USERNAME_PASSWORD)),
+						SettingSpec.SOCKS5_METHODS.newSetting(
+								Methods.newInstance(Method.USERNAME_PASSWORD)),
 						SettingSpec.SOCKS5_USERPASSAUTH_USERNAME_PASSWORD_AUTHENTICATOR.newSetting(
 								new StringSourceUsernamePasswordAuthenticator(
 										"Jasmine:mission%3Aimpossible")))),
 				ImmutableConfiguration.newInstance(Settings.newInstance(
 						SettingSpec.PORT.newSetting(Port.newInstance(34567)),
-						SettingSpec.SOCKS5_AUTH_METHODS.newSetting(
-								AuthMethods.newInstance(AuthMethod.USERNAME_PASSWORD)),
+						SettingSpec.SOCKS5_METHODS.newSetting(
+								Methods.newInstance(Method.USERNAME_PASSWORD)),
 						SettingSpec.SOCKS5_USERPASSAUTH_USERNAME_PASSWORD_AUTHENTICATOR.newSetting(
 								new StringSourceUsernamePasswordAuthenticator(
 										"Abu:safeDriversSave40%25")))));
@@ -187,8 +187,8 @@ public class ChainingIT {
 				NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
 				Integer.valueOf(23456))
 				.newSocksClient(Properties.newInstance(
-						PropertySpec.SOCKS5_AUTH_METHODS.newProperty(
-								AuthMethods.newInstance(AuthMethod.USERNAME_PASSWORD)),
+						PropertySpec.SOCKS5_METHODS.newProperty(
+								Methods.newInstance(Method.USERNAME_PASSWORD)),
 						PropertySpec.SOCKS5_USERPASSAUTH_USERNAME.newProperty(
 								"Aladdin"),
 						PropertySpec.SOCKS5_USERPASSAUTH_PASSWORD.newProperty(

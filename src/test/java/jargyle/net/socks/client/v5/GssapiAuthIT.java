@@ -26,8 +26,8 @@ import jargyle.net.socks.server.Configuration;
 import jargyle.net.socks.server.ImmutableConfiguration;
 import jargyle.net.socks.server.SettingSpec;
 import jargyle.net.socks.server.Settings;
-import jargyle.net.socks.transport.v5.AuthMethod;
-import jargyle.net.socks.transport.v5.AuthMethods;
+import jargyle.net.socks.transport.v5.Method;
+import jargyle.net.socks.transport.v5.Methods;
 import jargyle.net.socks.transport.v5.gssapiauth.ProtectionLevel;
 import jargyle.net.socks.transport.v5.gssapiauth.ProtectionLevels;
 
@@ -58,14 +58,14 @@ public class GssapiAuthIT {
 
 	private static Configuration newConfigurationUsingSocks5GssapiAuth() {
 		return ImmutableConfiguration.newInstance(Settings.newInstance(
-				SettingSpec.SOCKS5_AUTH_METHODS.newSetting(
-						AuthMethods.newInstance(AuthMethod.GSSAPI))));
+				SettingSpec.SOCKS5_METHODS.newSetting(
+						Methods.newInstance(Method.GSSAPI))));
 	}
 	
 	private static Configuration newConfigurationUsingSocks5GssapiAuthNecReferenceImpl() {
 		return ImmutableConfiguration.newInstance(Settings.newInstance(
-				SettingSpec.SOCKS5_AUTH_METHODS.newSetting(
-						AuthMethods.newInstance(AuthMethod.GSSAPI)),
+				SettingSpec.SOCKS5_METHODS.newSetting(
+						Methods.newInstance(Method.GSSAPI)),
 				SettingSpec.SOCKS5_GSSAPIAUTH_NEC_REFERENCE_IMPL.newSetting(
 						Boolean.TRUE)));
 	}
@@ -77,8 +77,8 @@ public class GssapiAuthIT {
 			final ProtectionLevels protectionLevels, 
 			final boolean necReferenceImpl) {
 		Properties properties = Properties.newInstance(
-				PropertySpec.SOCKS5_AUTH_METHODS.newProperty(
-						AuthMethods.newInstance(AuthMethod.GSSAPI)),
+				PropertySpec.SOCKS5_METHODS.newProperty(
+						Methods.newInstance(Method.GSSAPI)),
 				PropertySpec.SOCKS5_GSSAPIAUTH_SERVICE_NAME.newProperty(
 						serviceName),
 				PropertySpec.SOCKS5_GSSAPIAUTH_PROTECTION_LEVELS.newProperty(

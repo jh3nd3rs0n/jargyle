@@ -2096,7 +2096,7 @@ Unless otherwise stated, if a setting of the same name appears more than once on
 
 At the time of this writing, the SOCKS5 RESOLVE command is an additional SOCKS5 command made for Jargyle. It is not a part of the SOCKS5 protocol specification. 
 
-The RESOLVE command in a SOCKS5 request is represented by the byte `0x00`. 
+The RESOLVE command in a SOCKS5 request is represented by the byte `0x04`. 
 
 A SOCKS5 request with the RESOLVE command should contain the provided domain name address. The provided port number of the SOCKS5 request can be of any integer value between 0 and 65535 (inclusive). A successful SOCKS5 reply must contain the IPv4 or IPv6 address of the domain name address of the SOCKS5 request. If the SOCKS5 request has an address of IPv4 or IPv6, the SOCKS5 reply must contain the same address of that address of the SOCKS5 request. The port number of the SOCKS5 reply may be 0 or the provided port number of the SOCKS5 request. After the SOCKS5 reply is sent, the connection is then closed.
 

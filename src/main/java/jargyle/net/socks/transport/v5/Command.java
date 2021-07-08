@@ -9,14 +9,14 @@ import java.util.List;
 import jargyle.util.UnsignedByte;
 
 public enum Command {
-
-	RESOLVE((byte) 0x00),
 	
 	CONNECT((byte) 0x01),
 	
 	BIND((byte) 0x02),
 	
-	UDP_ASSOCIATE((byte) 0x03);
+	UDP_ASSOCIATE((byte) 0x03),
+
+	RESOLVE((byte) 0x04);
 	
 	public static Command valueOfByte(final byte b) {
 		for (Command command : Command.values()) {

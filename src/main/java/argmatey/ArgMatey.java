@@ -59,6 +59,38 @@ import java.util.TreeSet;
  */
 public final class ArgMatey {
 
+	static abstract class AbstractArgHandler implements ArgHandler {
+
+		private final ArgHandler argHandler;
+		
+		protected AbstractArgHandler(final ArgHandler handler) {
+			ArgHandler h = handler;
+			if (h == null) {
+				h = DefaultArgHandler.INSTANCE;
+			}
+			this.argHandler = h;
+		}
+		
+		public final ArgHandler getArgHandler() {
+			return this.argHandler;
+		}
+		
+		@Override
+		public abstract void handle(
+				final String arg, final ArgHandlerContext context);
+
+		@Override
+		public String toString() {
+			StringBuilder sb = new StringBuilder();
+			sb.append(this.getClass().getSimpleName())
+				.append(" [argHandler=")
+				.append(this.argHandler)
+				.append("]");
+			return sb.toString();
+		}	
+		
+	}
+
 	public static final class Annotations {
 
 		@Retention(RetentionPolicy.RUNTIME)
@@ -143,508 +175,194 @@ public final class ArgMatey {
 		private Annotations() { }
 		
 	}
-
-	public static final class ArgsParser {
-
-		private static abstract class AbstractArgHandler implements ArgHandler {
-
-			private final ArgHandler argHandler;
-			
-			protected AbstractArgHandler(final ArgHandler handler) {
-				ArgHandler h = handler;
-				if (h == null) {
-					h = DefaultArgHandler.INSTANCE;
-				}
-				this.argHandler = h;
-			}
-			
-			public final ArgHandler getArgHandler() {
-				return this.argHandler;
-			}
-			
-			@Override
-			public abstract void handle(
-					final String arg, final ArgHandlerContext context);
-
-			@Override
-			public String toString() {
-				StringBuilder sb = new StringBuilder();
-				sb.append(this.getClass().getSimpleName())
-					.append(" [argHandler=")
-					.append(this.argHandler)
-					.append("]");
-				return sb.toString();
-			}	
-			
-		}
-			
-		private static interface ArgHandler {
-			
-			void handle(String arg, ArgHandlerContext context);
-			
+		
+	static interface ArgHandler {
+		
+		void handle(String arg, ArgHandlerContext context);
+		
+	}
+	
+	static final class ArgHandlerContext {
+		
+		private int argCharIndex;
+		private int argIndex;
+		private final String[] args;
+		private final Map<String, Object> properties;
+		
+		public ArgHandlerContext(final ArgHandlerContext other) {
+			this.argCharIndex = other.argCharIndex;
+			this.argIndex = other.argIndex;
+			this.args = Arrays.copyOf(other.args, other.args.length);
+			this.properties = new HashMap<String, Object>(other.properties);
 		}
 		
-		private static final class ArgHandlerContext {
-			
-			private int argCharIndex;
-			private int argIndex;
-			private final String[] args;
-			private final Map<String, Object> properties;
-			
-			public ArgHandlerContext(final ArgHandlerContext other) {
-				this.argCharIndex = other.argCharIndex;
-				this.argIndex = other.argIndex;
-				this.args = Arrays.copyOf(other.args, other.args.length);
-				this.properties = new HashMap<String, Object>(other.properties);
+		public ArgHandlerContext(final String[] arguments) {
+			for (String argument : arguments) {
+				Objects.requireNonNull(
+						argument, "argument(s) must not be null");
 			}
-			
-			public ArgHandlerContext(final String[] arguments) {
-				for (String argument : arguments) {
-					Objects.requireNonNull(
-							argument, "argument(s) must not be null");
-				}
-				this.argCharIndex = -1;
-				this.argIndex = -1;
-				this.args = Arrays.copyOf(arguments, arguments.length);
-				this.properties = new HashMap<String, Object>();
-			}
-			
-			public int getArgCharIndex() {
-				return this.argCharIndex;
-			}
-			
-			public int getArgIndex() {
-				return this.argIndex;
-			}
-			
-			public String[] getArgs() {
-				return Arrays.copyOf(this.args, this.args.length);
-			}
-			
-			@SuppressWarnings("unused")
-			public Map<String, Object> getProperties() {
-				return Collections.unmodifiableMap(this.properties);
-			}
-			
-			public Object getProperty(final String name) {
-				return this.properties.get(name);
-			}
-			
-			public int incrementArgCharIndex() {
-				if (this.argIndex == -1) {
-					throw new ArrayIndexOutOfBoundsException();
-				}
-				if (this.argCharIndex == this.args[this.argIndex].length() - 1) {
-					throw new StringIndexOutOfBoundsException();
-				}
-				return ++this.argCharIndex;
-			}
-			
-			public int incrementArgIndex() {
-				if (this.argIndex == this.args.length - 1) {
-					throw new ArrayIndexOutOfBoundsException();
-				}
-				return ++this.argIndex;
-			}
-			
-			public Object putProperty(final String name, final Object value) {
-				return this.properties.put(name, value);
-			}
-			
-			@SuppressWarnings("unused")
-			public Object removeProperty(final String name) {
-				return this.properties.remove(name);
-			}
-			
-			public int resetArgCharIndex() {
-				this.argCharIndex = -1;
-				return this.argCharIndex;
-			}
-
-			@Override
-			public String toString() {
-				StringBuilder sb = new StringBuilder();
-				sb.append(this.getClass().getSimpleName())
-					.append(" [argCharIndex=")
-					.append(this.argCharIndex)
-					.append(", argIndex=")
-					.append(this.argIndex)
-					.append(", args=")
-					.append(Arrays.toString(this.args))
-					.append(", properties=")
-					.append(this.properties)
-					.append("]");
-				return sb.toString();
-			}
-			
+			this.argCharIndex = -1;
+			this.argIndex = -1;
+			this.args = Arrays.copyOf(arguments, arguments.length);
+			this.properties = new HashMap<String, Object>();
 		}
 		
-		private static final class ArgHandlerContextProperties {
-			
-			private static final class PropertyNameConstants {
-				
-				public static final String OPTION_HANDLING_ENABLED = 
-						"OPTION_HANDLING_ENABLED";
-				
-				public static final String OPTION_MAP = "OPTION_MAP";
-				
-				public static final String PARSE_RESULT_HOLDER = 
-						"PARSE_RESULT_HOLDER";
-				
-				private PropertyNameConstants() { }
-
-			}
-			
-			private final ArgHandlerContext argHandlerContext;
-			
-			public ArgHandlerContextProperties(
-					final ArgHandlerContext handlerContext) {
-				this.argHandlerContext = handlerContext;
-			}
-			
-			public Map<String, Option> getOptionMap() {
-				Map<String, Option> optionMap = null;
-				@SuppressWarnings("unchecked")
-				Map<String, Option> value = 
-						(Map<String, Option>) this.argHandlerContext.getProperty(
-								PropertyNameConstants.OPTION_MAP);
-				if (value != null) {
-					optionMap = Collections.unmodifiableMap(
-							new HashMap<String, Option>(value));
-				}
-				return optionMap;
-			}
-			
-			public ParseResultHolder getParseResultHolder() {
-				ParseResultHolder parseResult = null;
-				ParseResultHolder value = 
-						(ParseResultHolder) this.argHandlerContext.getProperty(
-								PropertyNameConstants.PARSE_RESULT_HOLDER);
-				if (value != null) {
-					parseResult = value;
-				}
-				return parseResult;
-			}
-			
-			public boolean isOptionHandlingEnabled() {
-				boolean optionHandlingEnabled = false;
-				Boolean value = (Boolean) this.argHandlerContext.getProperty(
-						PropertyNameConstants.OPTION_HANDLING_ENABLED);
-				if (value != null) {
-					optionHandlingEnabled = value.booleanValue();
-				}
-				return optionHandlingEnabled;
-			}
-			
-			public void setOptionHandlingEnabled(
-					final boolean optHandlingEnabled) {
-				this.argHandlerContext.putProperty(
-						PropertyNameConstants.OPTION_HANDLING_ENABLED, 
-						Boolean.valueOf(optHandlingEnabled));
-			}
-			
-			public void setOptionMap(final Map<String, Option> optMap) {
-				this.argHandlerContext.putProperty(
-						PropertyNameConstants.OPTION_MAP, optMap);
-			}
-			
-			public void setParseResultHolder(
-					final ParseResultHolder parseResultHolder) {
-				this.argHandlerContext.putProperty(
-						PropertyNameConstants.PARSE_RESULT_HOLDER, 
-						parseResultHolder);
-			}
+		public int getArgCharIndex() {
+			return this.argCharIndex;
 		}
 		
-		private static enum DefaultArgHandler implements ArgHandler {
-
-			INSTANCE;
-			
-			@Override
-			public void handle(
-					final String arg, final ArgHandlerContext context) {
-				ArgHandlerContextProperties properties =
-						new ArgHandlerContextProperties(context);
-				properties.setParseResultHolder(new ParseResultHolder(arg));
-			}
-			
-			@Override
-			public String toString() {
-				return DefaultArgHandler.class.getSimpleName();
-			}
-			
-		}
-
-		private static final class EndOfOptionsArgHandler 
-			extends AbstractArgHandler {
-			
-			public EndOfOptionsArgHandler(final ArgHandler handler) {
-				super(handler);
-			}
-			
-			@Override
-			public void handle(
-					final String arg, final ArgHandlerContext context) {
-				ArgHandlerContextProperties properties = 
-						new ArgHandlerContextProperties(context); 
-				if (properties.isOptionHandlingEnabled()) {
-					properties.setOptionHandlingEnabled(false);
-				}
-				this.getArgHandler().handle(arg, context);
-			}
-			
+		public int getArgIndex() {
+			return this.argIndex;
 		}
 		
-		private static final class EndOfOptionsDelimiterHandler 
-			extends AbstractArgHandler {
-			
-			public EndOfOptionsDelimiterHandler(final ArgHandler argHandler) {
-				super(argHandler);
+		public String[] getArgs() {
+			return Arrays.copyOf(this.args, this.args.length);
+		}
+		
+		public Map<String, Object> getProperties() {
+			return Collections.unmodifiableMap(this.properties);
+		}
+		
+		public Object getProperty(final String name) {
+			return this.properties.get(name);
+		}
+		
+		public int incrementArgCharIndex() {
+			if (this.argIndex == -1) {
+				throw new ArrayIndexOutOfBoundsException();
 			}
-			
-			@Override
-			public void handle(
-					final String arg, final ArgHandlerContext context) {
-				ArgHandlerContextProperties properties = 
-						new ArgHandlerContextProperties(context);
-				if (!(properties.isOptionHandlingEnabled() && arg.equals(
-						EndOfOptionsDelimiter.INSTANCE.toString()))) {
-					this.getArgHandler().handle(arg, context);
-					return;
-				}
-				properties.setOptionHandlingEnabled(false);
-				properties.setParseResultHolder(new ParseResultHolder(
-						EndOfOptionsDelimiter.INSTANCE));
+			if (this.argCharIndex == this.args[this.argIndex].length() - 1) {
+				throw new StringIndexOutOfBoundsException();
 			}
+			return ++this.argCharIndex;
+		}
+		
+		public int incrementArgIndex() {
+			if (this.argIndex == this.args.length - 1) {
+				throw new ArrayIndexOutOfBoundsException();
+			}
+			return ++this.argIndex;
+		}
+		
+		public Object putProperty(final String name, final Object value) {
+			return this.properties.put(name, value);
+		}
+		
+		public Object removeProperty(final String name) {
+			return this.properties.remove(name);
+		}
+		
+		public int resetArgCharIndex() {
+			this.argCharIndex = -1;
+			return this.argCharIndex;
+		}
+
+		@Override
+		public String toString() {
+			StringBuilder sb = new StringBuilder();
+			sb.append(this.getClass().getSimpleName())
+				.append(" [argCharIndex=")
+				.append(this.argCharIndex)
+				.append(", argIndex=")
+				.append(this.argIndex)
+				.append(", args=")
+				.append(Arrays.toString(this.args))
+				.append(", properties=")
+				.append(this.properties)
+				.append("]");
+			return sb.toString();
+		}
+		
+	}
+	
+	static final class ArgHandlerContextProperties {
+		
+		private static final class PropertyNameConstants {
+			
+			public static final String OPTION_HANDLING_ENABLED = 
+					"OPTION_HANDLING_ENABLED";
+			
+			public static final String OPTION_MAP = "OPTION_MAP";
+			
+			public static final String PARSE_RESULT_HOLDER =
+					"PARSE_RESULT_HOLDER";
+			
+			private PropertyNameConstants() { }
 
 		}
 		
-		private static final class GnuLongOptionHandler extends OptionHandler {
-			
-			public GnuLongOptionHandler(final ArgHandler handler) {
-				super(handler, GnuLongOption.class);
-			}
-
-			@Override
-			protected void handleOption(
-					final String arg, final ArgHandlerContext context) {
-				String option = arg;
-				String optionArg = null;
-				String[] argElements = arg.split("=", 2);
-				if (argElements.length == 2) {
-					option = argElements[0];
-					optionArg = argElements[1];
-				}
-				ArgHandlerContextProperties properties = 
-						new ArgHandlerContextProperties(context);
-				Map<String, Option> optionMap = properties.getOptionMap();
-				Option opt = optionMap.get(option);
-				if (opt == null) {
-					throw new UnknownOptionException(option);
-				}
-				OptionArgSpec optionArgSpec = opt.getOptionArgSpec();
-				if (optionArg == null && optionArgSpec != null 
-						&& optionArgSpec.isRequired()) {
-					String[] args = context.getArgs();
-					int argIndex = context.getArgIndex();
-					if (argIndex < args.length - 1) {
-						argIndex = context.incrementArgIndex();
-						optionArg = args[argIndex];
-					}
-				}
-				properties.setParseResultHolder(new ParseResultHolder(
-						new OptionOccurrence(opt, opt.newOptionArg(optionArg))));
-			}
-
-			@Override
-			protected boolean isOption(
-					final String arg, final ArgHandlerContext context) {
-				return arg.startsWith("--") && arg.length() > 2;
-			}
-			
+		private final ArgHandlerContext argHandlerContext;
+		
+		public ArgHandlerContextProperties(
+				final ArgHandlerContext handlerContext) {
+			this.argHandlerContext = handlerContext;
 		}
 		
-		private static final class LongOptionHandler extends OptionHandler {
-			
-			public LongOptionHandler(final ArgHandler handler) {
-				super(new PosixOptionHandler(handler), LongOption.class);
+		public Map<String, Option> getOptionMap() {
+			Map<String, Option> optionMap = null;
+			@SuppressWarnings("unchecked")
+			Map<String, Option> value = 
+					(Map<String, Option>) this.argHandlerContext.getProperty(
+							PropertyNameConstants.OPTION_MAP);
+			if (value != null) {
+				optionMap = Collections.unmodifiableMap(
+						new HashMap<String, Option>(value));
 			}
-
-			@Override
-			protected void handleOption(
-					final String arg, final ArgHandlerContext context) {
-				String option = arg;
-				ArgHandlerContextProperties properties = 
-						new ArgHandlerContextProperties(context);
-				Map<String, Option> optionMap = properties.getOptionMap();
-				Option opt = optionMap.get(option);
-				if (opt == null) {
-					OptionHandler posixOptionHandler = 
-							(PosixOptionHandler) this.getArgHandler();
-					boolean hasPosixOption = false;
-					for (Option o : optionMap.values()) {
-						if (posixOptionHandler.getOptionClass().isInstance(o)) {
-							hasPosixOption = true;
-							break;
-						}
-					}
-					if (hasPosixOption) {
-						posixOptionHandler.handleOption(arg, context);
-						return;
-					}
-					throw new UnknownOptionException(option);
-				}
-				String optionArg = null;
-				OptionArgSpec optionArgSpec = opt.getOptionArgSpec();
-				if (optionArgSpec != null && optionArgSpec.isRequired()) {
-					String[] args = context.getArgs();
-					int argIndex = context.getArgIndex();
-					if (argIndex < args.length - 1) {
-						argIndex = context.incrementArgIndex();
-						optionArg = args[argIndex];
-					}
-				}
-				properties.setParseResultHolder(new ParseResultHolder(
-						new OptionOccurrence(
-								opt, opt.newOptionArg(optionArg))));
-			}
-
-			@Override
-			protected boolean isOption(
-					final String arg, final ArgHandlerContext context) {
-				return arg.length() > 1 
-						&& arg.startsWith("-") 
-						&& !arg.startsWith("--");
-			}
-			
+			return optionMap;
 		}
 		
-		private static abstract class OptionHandler extends AbstractArgHandler {
-			
-			private final Class<?> optionClass;
-			
-			protected OptionHandler(final ArgHandler handler, 
-					final Class<? extends Option> optClass) {
-				super(handler);
-				this.optionClass = Objects.requireNonNull(
-						optClass, "Option class must not be null");
+		public ParseResultHolder getParseResultHolder() {
+			ParseResultHolder parseResult = null;
+			ParseResultHolder value = 
+					(ParseResultHolder) this.argHandlerContext.getProperty(
+							PropertyNameConstants.PARSE_RESULT_HOLDER);
+			if (value != null) {
+				parseResult = value;
 			}
-			
-			public final Class<?> getOptionClass() {
-				return this.optionClass;
-			}
-			
-			@Override
-			public final void handle(
-					final String arg, final ArgHandlerContext context) {
-				ArgHandlerContextProperties properties = 
-						new ArgHandlerContextProperties(context);
-				if (!properties.isOptionHandlingEnabled()) {
-					this.getArgHandler().handle(arg, context);
-					return;
-				}
-				boolean hasOption = false;
-				Map<String, Option> optionMap = properties.getOptionMap();
-				for (Option option : optionMap.values()) {
-					if (this.optionClass.isInstance(option)) {
-						hasOption = true;
-						break;
-					}
-				}
-				if (!hasOption) {
-					this.getArgHandler().handle(arg, context);
-					return;
-				}
-				if (!this.isOption(arg, context)) {
-					this.getArgHandler().handle(arg, context);
-					return;
-				}
-				this.handleOption(arg, context);
-			}
-			
-			protected abstract void handleOption(
-					final String arg, final ArgHandlerContext context);
-
-			protected abstract boolean isOption(
-					final String arg, final ArgHandlerContext context);
-			
+			return parseResult;
 		}
 		
-		private static final class PosixOptionHandler extends OptionHandler {
-
-			public PosixOptionHandler(final ArgHandler handler) {
-				super(handler, PosixOption.class);
+		public boolean isOptionHandlingEnabled() {
+			boolean optionHandlingEnabled = false;
+			Boolean value = (Boolean) this.argHandlerContext.getProperty(
+					PropertyNameConstants.OPTION_HANDLING_ENABLED);
+			if (value != null) {
+				optionHandlingEnabled = value.booleanValue();
 			}
-
-			@Override
-			protected void handleOption(
-					final String arg, final ArgHandlerContext context) {
-				int argCharIndex = context.getArgCharIndex();
-				if (argCharIndex == -1) { /* not incremented yet */
-					/* 
-					 * initiate incrementing. ArgsParser will do the 
-					 * incrementing 
-					 */
-					/* index 0 - '-' */
-					argCharIndex = context.incrementArgCharIndex();
-					/* index 1 - first alphanumeric character */
-					argCharIndex = context.incrementArgCharIndex();
-				}
-				char ch = arg.charAt(argCharIndex);
-				String name = Character.toString(ch);
-				String option = "-".concat(name);
-				ArgHandlerContextProperties properties = 
-						new ArgHandlerContextProperties(context);
-				Map<String, Option> optionMap = properties.getOptionMap();
-				Option opt = optionMap.get(option);
-				if (opt == null) {
-					throw new UnknownOptionException(option);
-				}
-				String optionArg = null;
-				OptionArgSpec optionArgSpec = opt.getOptionArgSpec();
-				if (optionArgSpec != null) {
-					if (argCharIndex < arg.length() - 1) {
-						argCharIndex = context.incrementArgCharIndex();
-						optionArg = arg.substring(argCharIndex);
-						while (argCharIndex < arg.length() - 1) {
-							argCharIndex = context.incrementArgCharIndex();
-						}
-					} else {
-						if (optionArgSpec.isRequired()) {
-							String[] args = context.getArgs();
-							int argIndex = context.getArgIndex();
-							if (argIndex < args.length - 1) {
-								argCharIndex = context.resetArgCharIndex();
-								argIndex = context.incrementArgIndex();
-								optionArg = args[argIndex];
-							}
-						}
-					}
-				}
-				properties.setParseResultHolder(new ParseResultHolder(
-						new OptionOccurrence(opt, opt.newOptionArg(optionArg))));
-			}
-
-			@Override
-			protected boolean isOption(
-					final String arg, final ArgHandlerContext context) {
-				return arg.length() > 1 
-						&& arg.startsWith("-") 
-						&& !arg.startsWith("--");
-			}		
+			return optionHandlingEnabled;
 		}
+		
+		public void setOptionHandlingEnabled(
+				final boolean optHandlingEnabled) {
+			this.argHandlerContext.putProperty(
+					PropertyNameConstants.OPTION_HANDLING_ENABLED, 
+					Boolean.valueOf(optHandlingEnabled));
+		}
+		
+		public void setOptionMap(final Map<String, Option> optMap) {
+			this.argHandlerContext.putProperty(
+					PropertyNameConstants.OPTION_MAP, optMap);
+		}
+		
+		public void setParseResultHolder(
+				final ParseResultHolder parseResultHolder) {
+			this.argHandlerContext.putProperty(
+					PropertyNameConstants.PARSE_RESULT_HOLDER, 
+					parseResultHolder);
+		}
+	}
+	
+	static final class ArgsParser {
 		
 		public static ArgsParser newInstance(
 				final String[] args, 
 				final OptionGroups optionGroups, 
 				final boolean posixlyCorrect) {
-			ArgHandler endOfOptionsArgHandler = null;
-			if (posixlyCorrect) {
-				endOfOptionsArgHandler = new EndOfOptionsArgHandler(null);
-			}
-			ArgHandler argHandler = new GnuLongOptionHandler(
-					new LongOptionHandler(new EndOfOptionsDelimiterHandler(
-							endOfOptionsArgHandler)));
+			ArgHandler argHandler = (posixlyCorrect) ? 
+					new EndOfOptionsArgHandler(null) : null;
+			argHandler = new EndOfOptionsDelimiterHandler(argHandler);
+			argHandler = OptionTypeProfile.LONG.newOptionHandler(argHandler);
+			argHandler = OptionTypeProfile.GNU_LONG.newOptionHandler(argHandler);
 			return new ArgsParser(args, optionGroups, argHandler);
 		}
 		
@@ -809,7 +527,7 @@ public final class ArgMatey {
 		}
 
 	}
-	
+
 	public static abstract class CLI {
 		
 		private ArgsParser argsParser;
@@ -1039,7 +757,7 @@ public final class ArgMatey {
 		}
 		
 	}
-
+	
 	static final class CLIClass {
 		
 		private static final class MethodComparator 
@@ -1206,7 +924,25 @@ public final class ArgMatey {
 		}
 		
 	}
+	
+	static enum DefaultArgHandler implements ArgHandler {
 
+		INSTANCE;
+		
+		@Override
+		public void handle(final String arg, final ArgHandlerContext context) {
+			ArgHandlerContextProperties properties =
+					new ArgHandlerContextProperties(context);
+			properties.setParseResultHolder(new ParseResultHolder(arg));
+		}
+		
+		@Override
+		public String toString() {
+			return DefaultArgHandler.class.getSimpleName();
+		}
+		
+	}
+	
 	public static final class DefaultGnuLongOptionUsageProvider 
 		extends OptionUsageProvider {
 
@@ -1295,7 +1031,7 @@ public final class ArgMatey {
 		}
 
 	}
-
+	
 	public static final class DefaultOptionGroupHelpTextProvider
 		extends OptionGroupHelpTextProvider {
 		
@@ -1379,7 +1115,7 @@ public final class ArgMatey {
 			return DefaultPosixOptionUsageProvider.class.getSimpleName();
 		}
 	}
-
+	
 	/**
 	 * Default {@code StringConverter} that converts the provided 
 	 * {@code String} to an {@code Object} of the provided type. This 
@@ -1601,14 +1337,30 @@ public final class ArgMatey {
 
 	}
 
+	static final class EndOfOptionsArgHandler extends AbstractArgHandler {
+		
+		public EndOfOptionsArgHandler(final ArgHandler handler) {
+			super(handler);
+		}
+		
+		@Override
+		public void handle(final String arg, final ArgHandlerContext context) {
+			ArgHandlerContextProperties properties = 
+					new ArgHandlerContextProperties(context); 
+			if (properties.isOptionHandlingEnabled()) {
+				properties.setOptionHandlingEnabled(false);
+			}
+			this.getArgHandler().handle(arg, context);
+		}
+		
+	}
+
 	/**
-	 * Enum singleton that represents the delimiter signaling the end of the 
-	 * command line options.
+	 * Represents the delimiter signaling the end of the command line options.
 	 */
 	public static enum EndOfOptionsDelimiter {
-
-		/** The single instance. */
-		INSTANCE;
+		
+		INSTANCE;  
 		
 		/** 
 		 * The {@code String} representation of this 
@@ -1632,58 +1384,126 @@ public final class ArgMatey {
 
 	}
 	
-	public static final class GnuLongOption extends Option {
-
-		public static final class Builder extends Option.Builder {
-
-			public Builder(final String optName) {
-				super(optName, "--".concat(optName));
-			}
-
-			@Override
-			public GnuLongOption build() {
-				return new GnuLongOption(this);
-			}
-			
-			@Override
-			public Builder displayable(final boolean b) {
-				super.displayable(b);
-				return this;
-			}
-			
-			@Override
-			public Builder doc(final String d) {
-				super.doc(d);
-				return this;
-			}
-			
-			@Override
-			public Builder optionArgSpec(final OptionArgSpec optArgSpec) {
-				super.optionArgSpec(optArgSpec);
-				return this;
-			}
-			
-			@Override
-			public Builder optionUsageProvider(
-					final OptionUsageProvider optUsageProvider) {
-				super.optionUsageProvider(optUsageProvider);
-				return this;
-			}
-			
-			@Override
-			public Builder usage(final String u) {
-				super.usage(u);
-				return this;
-			}
-			
+	static final class EndOfOptionsDelimiterHandler	extends AbstractArgHandler {
+		
+		public EndOfOptionsDelimiterHandler(final ArgHandler argHandler) {
+			super(argHandler);
 		}
 		
-		private GnuLongOption(final Builder builder) {
-			super(builder);
+		@Override
+		public void handle(final String arg, final ArgHandlerContext context) {
+			ArgHandlerContextProperties properties = 
+					new ArgHandlerContextProperties(context);
+			if (!(properties.isOptionHandlingEnabled() && arg.equals(
+					EndOfOptionsDelimiter.INSTANCE.toString()))) {
+				this.getArgHandler().handle(arg, context);
+				return;
+			}
+			properties.setOptionHandlingEnabled(false);
+			properties.setParseResultHolder(new ParseResultHolder(
+					EndOfOptionsDelimiter.INSTANCE));
 		}
 
 	}
-	
+
+	public static final class GnuLongOption extends Option {
+		
+		GnuLongOption(final GnuLongOptionBuilder gnuLongOptionBuilder) {
+			super(gnuLongOptionBuilder);
+		}
+
+	}
+
+	static final class GnuLongOptionBuilder extends OptionBuilder {
+
+		public GnuLongOptionBuilder(final String optName) {
+			super(optName, "--".concat(optName));
+		}
+
+		@Override
+		public GnuLongOption build() {
+			return new GnuLongOption(this);
+		}
+		
+		@Override
+		public GnuLongOptionBuilder getOptionArgSpec(
+				final OptionArgSpec optArgSpec) {
+			super.getOptionArgSpec(optArgSpec);
+			return this;
+		}
+		
+		@Override
+		public GnuLongOptionBuilder setDisplayable(final boolean b) {
+			super.setDisplayable(b);
+			return this;
+		}
+		
+		@Override
+		public GnuLongOptionBuilder setDoc(final String d) {
+			super.setDoc(d);
+			return this;
+		}
+		
+		@Override
+		public GnuLongOptionBuilder setOptionUsageProvider(
+				final OptionUsageProvider optUsageProvider) {
+			super.setOptionUsageProvider(optUsageProvider);
+			return this;
+		}
+		
+		@Override
+		public GnuLongOptionBuilder setUsage(final String u) {
+			super.setUsage(u);
+			return this;
+		}
+		
+	}
+
+	static final class GnuLongOptionHandler extends OptionHandler {
+		
+		public GnuLongOptionHandler(final ArgHandler handler) {
+			super(handler, GnuLongOption.class);
+		}
+
+		@Override
+		protected void handleOption(
+				final String arg, final ArgHandlerContext context) {
+			String option = arg;
+			String optionArg = null;
+			String[] argElements = arg.split("=", 2);
+			if (argElements.length == 2) {
+				option = argElements[0];
+				optionArg = argElements[1];
+			}
+			ArgHandlerContextProperties properties = 
+					new ArgHandlerContextProperties(context);
+			Map<String, Option> optionMap = properties.getOptionMap();
+			Option opt = optionMap.get(option);
+			if (opt == null) {
+				throw new UnknownOptionException(option);
+			}
+			OptionArgSpec optionArgSpec = opt.getOptionArgSpec();
+			if (optionArg == null && optionArgSpec != null 
+					&& optionArgSpec.isRequired()) {
+				String[] args = context.getArgs();
+				int argIndex = context.getArgIndex();
+				if (argIndex < args.length - 1) {
+					argIndex = context.incrementArgIndex();
+					optionArg = args[argIndex];
+				}
+			}
+			properties.setParseResultHolder(new ParseResultHolder(
+					new OptionOccurrence(opt, opt.newOptionArg(optionArg))));
+		}
+
+		@Override
+		protected boolean isOption(
+				final String arg, final ArgHandlerContext context) {
+			return arg.startsWith("--") && arg.length() > 2;
+		}
+		
+	}
+
 	/**
 	 * Thrown to indicate that a provided command line argument is illegal or 
 	 * inappropriate. 
@@ -1949,7 +1769,7 @@ public final class ArgMatey {
 		}
 		
 	}
-	
+
 	static final class InterpolatedOptionGroupHelpTextProvider 
 		extends OptionGroupHelpTextProvider {
 
@@ -2021,179 +1841,116 @@ public final class ArgMatey {
 		}
 		
 	}
-
+	
 	public static final class LongOption extends Option {
-
-		public static final class Builder extends Option.Builder {
-
-			public Builder(final String optName) {
-				super(optName, "-".concat(optName));
-			}
-
-			@Override
-			public LongOption build() {
-				return new LongOption(this);
-			}
-			
-			@Override
-			public Builder displayable(final boolean b) {
-				super.displayable(b);
-				return this;
-			}
-			
-			@Override
-			public Builder doc(final String d) {
-				super.doc(d);
-				return this;
-			}
-
-			@Override
-			public Builder optionArgSpec(final OptionArgSpec optArgSpec) {
-				super.optionArgSpec(optArgSpec);
-				return this;
-			}
-			
-			@Override
-			public Builder optionUsageProvider(
-					final OptionUsageProvider optUsageProvider) {
-				super.optionUsageProvider(optUsageProvider);
-				return this;
-			}
-			
-			@Override
-			public Builder usage(final String u) {
-				super.usage(u);
-				return this;
-			}
-			
-		}
 		
-		private LongOption(final Builder builder) {
-			super(builder);
+		LongOption(final LongOptionBuilder longOptionBuilder) {
+			super(longOptionBuilder);
 		}
 		
 	}
 	
-	public static abstract class Option {
+	static final class LongOptionBuilder extends OptionBuilder {
 
-		public static abstract class Builder {
-
-			private boolean displayable;
-			private boolean displayableSet;
-			private String doc;
-			private final String name;
-			private OptionArgSpec optionArgSpec;
-			private boolean optionArgSpecSet;
-			private OptionUsageProvider optionUsageProvider;
-			private boolean optionUsageProviderSet;
-			private String string;
-			private String usage;
-			
-			Builder(final String optName, final String opt) {
-				Objects.requireNonNull(optName, "option name must not be null");
-				if (optName.matches("\\s")) {
-					throw new IllegalArgumentException(
-							"option name must not contain any whitespace "
-							+ "characters");
-				}
-				if (optName.isEmpty()) {
-					throw new IllegalArgumentException(
-							"option name must not be empty");
-				}
-				Objects.requireNonNull(opt, "option must not be null");
-				if (opt.matches("\\s")) {
-					throw new IllegalArgumentException(
-							"option must not contain any whitespace "
-							+ "characters");
-				}
-				if (opt.isEmpty()) {
-					throw new IllegalArgumentException(
-							"option must not be empty");
-				}
-				this.displayable = true;
-				this.displayableSet = false;
-				this.doc = null;
-				this.name = optName;
-				this.optionArgSpec = null;
-				this.optionArgSpecSet = false;
-				this.optionUsageProvider = null;
-				this.optionUsageProviderSet = false;
-				this.string = opt;
-				this.usage = null;
-			}
-			
-			public abstract Option build();
-			
-			public final boolean displayable() {
-				return this.displayable;
-			}
-			
-			public Builder displayable(final boolean b) {
-				this.displayable = b;
-				this.displayableSet = true;
-				return this;
-			}
-			
-			public final boolean displayableSet() {
-				return this.displayableSet;
-			}
-			
-			public final String doc() {
-				return this.doc;
-			}
-			
-			public Builder doc(final String d) {
-				this.doc = d;
-				return this;
-			}
-			
-			public final String name() {
-				return this.name;
-			}
-			
-			public final OptionArgSpec optionArgSpec() {
-				return this.optionArgSpec;
-			}
-			
-			public Builder optionArgSpec(final OptionArgSpec optArgSpec) {
-				this.optionArgSpec = optArgSpec;
-				this.optionArgSpecSet = true;
-				return this;
-			}
-			
-			public final boolean optionArgSpecSet() {
-				return this.optionArgSpecSet;
-			}
-			
-			public final OptionUsageProvider optionUsageProvider() {
-				return this.optionUsageProvider;
-			}
-			
-			public Builder optionUsageProvider(
-					final OptionUsageProvider optUsageProvider) {
-				this.optionUsageProvider = optUsageProvider;
-				this.optionUsageProviderSet = true;
-				return this;
-			}
-			
-			public final boolean optionUsageProviderSet() {
-				return this.optionUsageProviderSet;
-			}
-			
-			public final String string() {
-				return this.string;
-			}
-			
-			public final String usage() {
-				return this.usage;
-			}
-			
-			public Builder usage(final String u) {
-				this.usage = u;
-				return this;
-			}
-			
+		public LongOptionBuilder(final String optName) {
+			super(optName, "-".concat(optName));
 		}
+
+		@Override
+		public LongOption build() {
+			return new LongOption(this);
+		}
+		
+		@Override
+		public LongOptionBuilder getOptionArgSpec(
+				final OptionArgSpec optArgSpec) {
+			super.getOptionArgSpec(optArgSpec);
+			return this;
+		}
+		
+		@Override
+		public LongOptionBuilder setDisplayable(final boolean b) {
+			super.setDisplayable(b);
+			return this;
+		}
+
+		@Override
+		public LongOptionBuilder setDoc(final String d) {
+			super.setDoc(d);
+			return this;
+		}
+		
+		@Override
+		public LongOptionBuilder setOptionUsageProvider(
+				final OptionUsageProvider optUsageProvider) {
+			super.setOptionUsageProvider(optUsageProvider);
+			return this;
+		}
+		
+		@Override
+		public LongOptionBuilder setUsage(final String u) {
+			super.setUsage(u);
+			return this;
+		}
+		
+	}
+	
+	static final class LongOptionHandler extends OptionHandler {
+		
+		public LongOptionHandler(final ArgHandler handler) {
+			super(new PosixOptionHandler(handler), LongOption.class);
+		}
+
+		@Override
+		protected void handleOption(
+				final String arg, final ArgHandlerContext context) {
+			String option = arg;
+			ArgHandlerContextProperties properties = 
+					new ArgHandlerContextProperties(context);
+			Map<String, Option> optionMap = properties.getOptionMap();
+			Option opt = optionMap.get(option);
+			if (opt == null) {
+				OptionHandler posixOptionHandler = 
+						(PosixOptionHandler) this.getArgHandler();
+				boolean hasPosixOption = false;
+				for (Option o : optionMap.values()) {
+					if (posixOptionHandler.getOptionClass().isInstance(o)) {
+						hasPosixOption = true;
+						break;
+					}
+				}
+				if (hasPosixOption) {
+					posixOptionHandler.handleOption(arg, context);
+					return;
+				}
+				throw new UnknownOptionException(option);
+			}
+			String optionArg = null;
+			OptionArgSpec optionArgSpec = opt.getOptionArgSpec();
+			if (optionArgSpec != null && optionArgSpec.isRequired()) {
+				String[] args = context.getArgs();
+				int argIndex = context.getArgIndex();
+				if (argIndex < args.length - 1) {
+					argIndex = context.incrementArgIndex();
+					optionArg = args[argIndex];
+				}
+			}
+			properties.setParseResultHolder(new ParseResultHolder(
+					new OptionOccurrence(
+							opt, opt.newOptionArg(optionArg))));
+		}
+
+		@Override
+		protected boolean isOption(
+				final String arg, final ArgHandlerContext context) {
+			return arg.length() > 1 
+					&& arg.startsWith("-") 
+					&& !arg.startsWith("--");
+		}
+		
+	}
+
+	public static abstract class Option {
 		
 		private final boolean displayable;
 		private final String doc;
@@ -2202,15 +1959,16 @@ public final class ArgMatey {
 		private final OptionUsageProvider optionUsageProvider;
 		private final String string;
 
-		Option(final Builder builder) {
-			boolean display = builder.displayable();
-			String d = builder.doc();
-			String n = builder.name();
-			OptionArgSpec optArgSpec = builder.optionArgSpec();
-			OptionUsageProvider optUsageProvider = builder.optionUsageProvider();
-			boolean optUsageProviderSet = builder.optionUsageProviderSet();
-			String str = builder.string();
-			String u = builder.usage();
+		Option(final OptionBuilder optionBuilder) {
+			boolean display = optionBuilder.isDisplayable();
+			String d = optionBuilder.getDoc();
+			String n = optionBuilder.getName();
+			OptionArgSpec optArgSpec = optionBuilder.getOptionArgSpec();
+			OptionUsageProvider optUsageProvider = 
+					optionBuilder.getOptionUsageProvider();
+			boolean optUsageProviderSet = optionBuilder.hasOptionUsageProviderSet();
+			String str = optionBuilder.getString();
+			String u = optionBuilder.getUsage();
 			if (d != null) {
 				d = StringInterpolator.interpolate(d, System.getProperties());
 			}
@@ -2314,9 +2072,9 @@ public final class ArgMatey {
 	}
 
 	/**
-	 * Enum that represents all values of {@code Boolean} including an 
-	 * unspecified value ({@code null}). It is used primarily for annotations 
-	 * in {@link ArgMatey.Annotations}.
+	 * Represents all values of {@code Boolean} including an unspecified value 
+	 * ({@code null}). It is used primarily for annotations in 
+	 * {@link ArgMatey.Annotations}.
 	 */
 	public static enum OptionalBoolean {
 		
@@ -2355,7 +2113,7 @@ public final class ArgMatey {
 	}
 	
 	/**
-	 * An {@code Object} that represents a command line option argument.
+	 * Represents a command line option argument.
 	 */
 	public static final class OptionArg {
 		
@@ -2413,9 +2171,6 @@ public final class ArgMatey {
 			if (this == obj) {
 				return true;
 			}
-			if (obj == null) {
-				return false;
-			}
 			if (!(obj instanceof OptionArg)) {
 				return false;
 			}
@@ -2427,21 +2182,11 @@ public final class ArgMatey {
 			} else if (!this.objectValue.equals(other.objectValue)) {
 				return false;
 			}
-			if (this.objectValueSet != other.objectValueSet) {
-				return false;
-			}
 			if (this.optionArgs == null) {
 				if (other.optionArgs != null) {
 					return false;
 				}
 			} else if (!this.optionArgs.equals(other.optionArgs)) {
-				return false;
-			}
-			if (this.string == null) {
-				if (other.string != null) {
-					return false;
-				}
-			} else if (!this.string.equals(other.string)) {
 				return false;
 			}
 			return true;
@@ -2481,7 +2226,7 @@ public final class ArgMatey {
 			}
 			return Collections.unmodifiableList(objectValues);
 		}
-
+		
 		/**
 		 * Returns an unmodifiable {@code List} of sub {@code OptionArg}s.
 		 * 
@@ -2528,21 +2273,18 @@ public final class ArgMatey {
 			}
 			return Collections.unmodifiableList(typeValues);
 		}
-		
+
 		@Override
 		public int hashCode() {
 			final int prime = 31;
 			int result = 1;
 			result = prime * result + ((this.objectValue == null) ? 
-					0 : this.objectValue.hashCode());
-			result = prime * result + (this.objectValueSet ? 1231 : 1237);
+					0 : objectValue.hashCode());
 			result = prime * result + ((this.optionArgs == null) ? 
-					0 : this.optionArgs.hashCode());
-			result = prime * result + ((this.string == null) ? 
-					0 : this.string.hashCode());
+					0 : optionArgs.hashCode());
 			return result;
 		}
-		
+
 		/**
 		 * Returns the {@code String} representation of this {@code OptionArg} 
 		 * as it appears in the command line.
@@ -2600,7 +2342,7 @@ public final class ArgMatey {
 		}
 
 	}
-
+	
 	/**
 	 * Thrown when an {@code Option} is not provided with a required 
 	 * command line option argument.
@@ -2644,75 +2386,8 @@ public final class ArgMatey {
 		}
 
 	}
-	
-	public static final class OptionArgSpec {
 
-		public static final class Builder {
-					
-			private String name;
-			private boolean required;
-			private String separator;
-			private StringConverter stringConverter;
-			private Class<?> type;
-			
-			public Builder() {
-				this.name = null;
-				this.required = true;
-				this.separator = null;
-				this.stringConverter = null;
-				this.type = null;
-			}
-			
-			public OptionArgSpec build() {
-				return new OptionArgSpec(this); 
-			}
-			
-			public final String name() {
-				return this.name;
-			}
-			
-			public Builder name(final String n) {
-				this.name = n;
-				return this;
-			}
-			
-			public final boolean required() {
-				return this.required;
-			}
-			
-			public Builder required(final boolean b) {
-				this.required = b;
-				return this;
-			}
-			
-			public final String separator() {
-				return this.separator;
-			}
-			
-			public Builder separator(final String s) {
-				this.separator = s;
-				return this;
-			}
-			
-			public final StringConverter stringConverter() {
-				return this.stringConverter;
-			}
-			
-			public Builder stringConverter(final StringConverter sc) {
-				this.stringConverter = sc;
-				return this;
-			}
-			
-			public final Class<?> type() {
-				return this.type;
-			}
-			
-			public Builder type(final Class<?> t) {
-				this.type = t;
-				return this;
-			}
-			
-		}
+	public static final class OptionArgSpec {
 		
 		public static final String DEFAULT_SEPARATOR = "[^\\w\\W]";
 		public static final Class<?> DEFAULT_TYPE = String.class;
@@ -2723,12 +2398,12 @@ public final class ArgMatey {
 		private final StringConverter stringConverter;
 		private final Class<?> type;
 		
-		private OptionArgSpec(final Builder builder) {
-			String n = builder.name();
-			boolean r = builder.required();
-			String s = builder.separator();
-			StringConverter sc = builder.stringConverter();
-			Class<?> t = builder.type();
+		OptionArgSpec(final OptionArgSpecBuilder optionArgSpecBuilder) {
+			String n = optionArgSpecBuilder.getName();
+			boolean r = optionArgSpecBuilder.isRequired();
+			String s = optionArgSpecBuilder.getSeparator();
+			StringConverter sc = optionArgSpecBuilder.getStringConverter();
+			Class<?> t = optionArgSpecBuilder.getType();
 			if (s == null) { s = DEFAULT_SEPARATOR;	}
 			if (t == null) { t = DEFAULT_TYPE; }
 			if (n == null) { n = t.getName(); }
@@ -2802,119 +2477,224 @@ public final class ArgMatey {
 		}
 
 	}
-	
-	public static final class OptionGroup {
+
+	static final class OptionArgSpecBuilder {
+				
+		private String name;
+		private boolean required;
+		private String separator;
+		private StringConverter stringConverter;
+		private Class<?> type;
 		
-		public static final class Builder {
-			
-			private String helpText;
-			private final List<Option.Builder> optionBuilders;
-			private OptionGroupHelpTextProvider optionGroupHelpTextProvider;
-			private boolean optionGroupHelpTextProviderSet;
-						
-			public Builder() {
-				this.helpText = null;
-				this.optionBuilders = new ArrayList<Option.Builder>();
-				this.optionGroupHelpTextProvider = null;
-				this.optionGroupHelpTextProviderSet = false;
-			}
-			
-			public OptionGroup build() {
-				return new OptionGroup(this); 
-			}
-			
-			public final String helpText() {
-				return this.helpText;
-			}
-			
-			public Builder helpText(final String h) {
-				this.helpText = h;
-				return this;
-			}
-			
-			public final List<Option.Builder> optionBuilders() {
-				return Collections.unmodifiableList(this.optionBuilders);
-			}
-			
-			public Builder optionBuilders(
-					final List<Option.Builder> optBuilders) {
-				for (Option.Builder otherOptBuilder : optBuilders) {
-					Objects.requireNonNull(
-							otherOptBuilder, 
-							"other Option.Builder(s) must not be null");
-				}
-				this.optionBuilders.clear();
-				this.optionBuilders.addAll(optBuilders);
-				return this;
-			}
-			
-			public Builder optionBuilders(final Option.Builder optBuilder) {
-				return this.optionBuilders(Arrays.asList(optBuilder));
-			}
-			
-			public Builder optionBuilders(
-					final Option.Builder optBuilder1,
-					final Option.Builder optBuilder2) {
-				return this.optionBuilders(Arrays.asList(
-						optBuilder1, optBuilder2));
-			}
-			
-			public Builder optionBuilders(
-					final Option.Builder optBuilder1,
-					final Option.Builder optBuilder2,
-					final Option.Builder... additionalOptBuilders) {
-				List<Option.Builder> list = new ArrayList<Option.Builder>();
-				list.add(optBuilder1);
-				list.add(optBuilder2);
-				list.addAll(Arrays.asList(additionalOptBuilders));
-				return this.optionBuilders(list);
-			}
-			
-			public final OptionGroupHelpTextProvider optionGroupHelpTextProvider() {
-				return this.optionGroupHelpTextProvider;
-			}
-			
-			public Builder optionGroupHelpTextProvider(
-					final OptionGroupHelpTextProvider optGroupHelpTextProvider) {
-				this.optionGroupHelpTextProvider = optGroupHelpTextProvider;
-				this.optionGroupHelpTextProviderSet = true;
-				return this;
-			}
-			
-			public final boolean optionGroupHelpTextProviderSet() {
-				return this.optionGroupHelpTextProviderSet;
-			}
-			
+		public OptionArgSpecBuilder() {
+			this.name = null;
+			this.required = true;
+			this.separator = null;
+			this.stringConverter = null;
+			this.type = null;
 		}
+		
+		public OptionArgSpec build() {
+			return new OptionArgSpec(this); 
+		}
+		
+		public final String getName() {
+			return this.name;
+		}
+		
+		public final String getSeparator() {
+			return this.separator;
+		}
+		
+		public final StringConverter getStringConverter() {
+			return this.stringConverter;
+		}
+		
+		public final Class<?> getType() {
+			return this.type;
+		}
+		
+		public final boolean isRequired() {
+			return this.required;
+		}
+		
+		public OptionArgSpecBuilder setName(final String n) {
+			this.name = n;
+			return this;
+		}
+		
+		public OptionArgSpecBuilder setRequired(final boolean b) {
+			this.required = b;
+			return this;
+		}
+		
+		public OptionArgSpecBuilder setSeparator(final String s) {
+			this.separator = s;
+			return this;
+		}
+		
+		public OptionArgSpecBuilder setStringConverter(
+				final StringConverter sc) {
+			this.stringConverter = sc;
+			return this;
+		}
+		
+		public OptionArgSpecBuilder setType(final Class<?> t) {
+			this.type = t;
+			return this;
+		}
+		
+	}
+	
+	static abstract class OptionBuilder {
+
+		private boolean displayable;
+		private boolean displayableSet;
+		private String doc;
+		private final String name;
+		private OptionArgSpec optionArgSpec;
+		private boolean optionArgSpecSet;
+		private OptionUsageProvider optionUsageProvider;
+		private boolean optionUsageProviderSet;
+		private String string;
+		private String usage;
+		
+		OptionBuilder(final String optName, final String opt) {
+			Objects.requireNonNull(optName, "option name must not be null");
+			if (optName.matches("\\s")) {
+				throw new IllegalArgumentException(
+						"option name must not contain any whitespace "
+						+ "characters");
+			}
+			if (optName.isEmpty()) {
+				throw new IllegalArgumentException(
+						"option name must not be empty");
+			}
+			Objects.requireNonNull(opt, "option must not be null");
+			if (opt.matches("\\s")) {
+				throw new IllegalArgumentException(
+						"option must not contain any whitespace "
+						+ "characters");
+			}
+			if (opt.isEmpty()) {
+				throw new IllegalArgumentException(
+						"option must not be empty");
+			}
+			this.displayable = true;
+			this.displayableSet = false;
+			this.doc = null;
+			this.name = optName;
+			this.optionArgSpec = null;
+			this.optionArgSpecSet = false;
+			this.optionUsageProvider = null;
+			this.optionUsageProviderSet = false;
+			this.string = opt;
+			this.usage = null;
+		}
+		
+		public abstract Option build();
+		
+		public final String getDoc() {
+			return this.doc;
+		}
+		
+		public final String getName() {
+			return this.name;
+		}
+		
+		public final OptionArgSpec getOptionArgSpec() {
+			return this.optionArgSpec;
+		}
+		
+		public OptionBuilder getOptionArgSpec(final OptionArgSpec optArgSpec) {
+			this.optionArgSpec = optArgSpec;
+			this.optionArgSpecSet = true;
+			return this;
+		}
+		
+		public final OptionUsageProvider getOptionUsageProvider() {
+			return this.optionUsageProvider;
+		}
+		
+		public final String getString() {
+			return this.string;
+		}
+		
+		public final String getUsage() {
+			return this.usage;
+		}
+		
+		public final boolean hasDisplayableSet() {
+			return this.displayableSet;
+		}
+		
+		public final boolean hasOptionArgSpecSet() {
+			return this.optionArgSpecSet;
+		}
+		
+		public final boolean hasOptionUsageProviderSet() {
+			return this.optionUsageProviderSet;
+		}
+		
+		public final boolean isDisplayable() {
+			return this.displayable;
+		}
+		
+		public OptionBuilder setDisplayable(final boolean b) {
+			this.displayable = b;
+			this.displayableSet = true;
+			return this;
+		}
+		
+		public OptionBuilder setDoc(final String d) {
+			this.doc = d;
+			return this;
+		}
+		
+		public OptionBuilder setOptionUsageProvider(
+				final OptionUsageProvider optUsageProvider) {
+			this.optionUsageProvider = optUsageProvider;
+			this.optionUsageProviderSet = true;
+			return this;
+		}
+		
+		public OptionBuilder setUsage(final String u) {
+			this.usage = u;
+			return this;
+		}
+		
+	}
+
+	public static final class OptionGroup {
 		
 		private final List<Option> displayableOptions;
 		private final List<Option> options;
 		private final OptionGroupHelpTextProvider optionGroupHelpTextProvider;
 		
-		private OptionGroup(final Builder builder) {
-			String h = builder.helpText();
-			List<Option.Builder> optBuilders = new ArrayList<Option.Builder>(
-					builder.optionBuilders());
+		OptionGroup(final OptionGroupBuilder optionGroupBuilder) {
+			String h = optionGroupBuilder.getHelpText();
+			List<OptionBuilder> optBuilders = new ArrayList<OptionBuilder>(
+					optionGroupBuilder.getOptionBuilders());
 			OptionGroupHelpTextProvider optGroupHelpTextProvider =
-					builder.optionGroupHelpTextProvider();
+					optionGroupBuilder.getOptionGroupHelpTextProvider();
 			boolean optGroupHelpTextProviderSet = 
-					builder.optionGroupHelpTextProviderSet();
+					optionGroupBuilder.hasOptionGroupHelpTextProviderSet();
 			List<Option> displayableOpts = new ArrayList<Option>();
 			List<Option> opts = new ArrayList<Option>();
-			Iterator<Option.Builder> iterator = optBuilders.iterator();
-			Option.Builder firstOptBuilder = null;
+			Iterator<OptionBuilder> iterator = optBuilders.iterator();
+			OptionBuilder firstOptBuilder = null;
 			while (iterator.hasNext()) {
-				Option.Builder optBuilder = iterator.next();
+				OptionBuilder optBuilder = iterator.next();
 				if (firstOptBuilder == null) {
 					firstOptBuilder = optBuilder;
 				} else {
-					if (firstOptBuilder.displayableSet() 
-							&& !optBuilder.displayableSet()) {
-						optBuilder.displayable(firstOptBuilder.displayable());
+					if (firstOptBuilder.hasDisplayableSet() 
+							&& !optBuilder.hasDisplayableSet()) {
+						optBuilder.setDisplayable(firstOptBuilder.isDisplayable());
 					}
-					if (firstOptBuilder.optionArgSpecSet() 
-							&& !optBuilder.optionArgSpecSet()) {
-						optBuilder.optionArgSpec(firstOptBuilder.optionArgSpec());
+					if (firstOptBuilder.hasOptionArgSpecSet() 
+							&& !optBuilder.hasOptionArgSpecSet()) {
+						optBuilder.getOptionArgSpec(firstOptBuilder.getOptionArgSpec());
 					}
 				}
 				Option opt = optBuilder.build();
@@ -2971,6 +2751,88 @@ public final class ArgMatey {
 				.append(this.options)
 				.append("]");
 			return sb.toString();
+		}
+		
+	}
+
+	static final class OptionGroupBuilder {
+		
+		private String helpText;
+		private final List<OptionBuilder> optionBuilders;
+		private OptionGroupHelpTextProvider optionGroupHelpTextProvider;
+		private boolean optionGroupHelpTextProviderSet;
+					
+		public OptionGroupBuilder() {
+			this.helpText = null;
+			this.optionBuilders = new ArrayList<OptionBuilder>();
+			this.optionGroupHelpTextProvider = null;
+			this.optionGroupHelpTextProviderSet = false;
+		}
+		
+		public OptionGroup build() {
+			return new OptionGroup(this); 
+		}
+		
+		public final String getHelpText() {
+			return this.helpText;
+		}
+		
+		public final List<OptionBuilder> getOptionBuilders() {
+			return Collections.unmodifiableList(this.optionBuilders);
+		}
+		
+		public final OptionGroupHelpTextProvider getOptionGroupHelpTextProvider() {
+			return this.optionGroupHelpTextProvider;
+		}
+		
+		public final boolean hasOptionGroupHelpTextProviderSet() {
+			return this.optionGroupHelpTextProviderSet;
+		}
+		
+		public OptionGroupBuilder setHelpText(final String h) {
+			this.helpText = h;
+			return this;
+		}
+		
+		public OptionGroupBuilder setOptionBuilders(
+				final List<OptionBuilder> optBuilders) {
+			for (OptionBuilder otherOptBuilder : optBuilders) {
+				Objects.requireNonNull(
+						otherOptBuilder, 
+						"other Option.Builder(s) must not be null");
+			}
+			this.optionBuilders.clear();
+			this.optionBuilders.addAll(optBuilders);
+			return this;
+		}
+		
+		public OptionGroupBuilder setOptionBuilders(final OptionBuilder optBuilder) {
+			return this.setOptionBuilders(Arrays.asList(optBuilder));
+		}
+		
+		public OptionGroupBuilder setOptionBuilders(
+				final OptionBuilder optBuilder1,
+				final OptionBuilder optBuilder2) {
+			return this.setOptionBuilders(Arrays.asList(
+					optBuilder1, optBuilder2));
+		}
+		
+		public OptionGroupBuilder setOptionBuilders(
+				final OptionBuilder optBuilder1,
+				final OptionBuilder optBuilder2,
+				final OptionBuilder... additionalOptBuilders) {
+			List<OptionBuilder> list = new ArrayList<OptionBuilder>();
+			list.add(optBuilder1);
+			list.add(optBuilder2);
+			list.addAll(Arrays.asList(additionalOptBuilders));
+			return this.setOptionBuilders(list);
+		}
+		
+		public OptionGroupBuilder setOptionGroupHelpTextProvider(
+				final OptionGroupHelpTextProvider optGroupHelpTextProvider) {
+			this.optionGroupHelpTextProvider = optGroupHelpTextProvider;
+			this.optionGroupHelpTextProviderSet = true;
+			return this;
 		}
 		
 	}
@@ -3235,49 +3097,52 @@ public final class ArgMatey {
 				final Annotations.OptionArgSpec optionArgSpec,
 				final Method method,
 				final TargetMethodParameterTypesType t) {
-			OptionArgSpec.Builder builder = new OptionArgSpec.Builder();
+			OptionArgSpecBuilder optionArgSpecBuilder = 
+					new OptionArgSpecBuilder();
 			String name = optionArgSpec.name();
 			if (!name.isEmpty()) {
-				builder.name(optionArgSpec.name());
+				optionArgSpecBuilder.setName(optionArgSpec.name());
 			}
 			OptionalBoolean required = optionArgSpec.required();
 			if (required.optionalBooleanValue().isPresent()) {
-				builder.required(
+				optionArgSpecBuilder.setRequired(
 						required.optionalBooleanValue().get().booleanValue());
 			}
 			String separator = optionArgSpec.separator();
 			if (!separator.equals(OptionArgSpec.DEFAULT_SEPARATOR)) {
-				builder.separator(optionArgSpec.separator());
+				optionArgSpecBuilder.setSeparator(optionArgSpec.separator());
 			}
 			Class<?> stringConverterClass =	optionArgSpec.stringConverter();
 			if (!stringConverterClass.equals(StringConverter.class)) {
 				StringConverter stringConverter = newStringConverter(
 						stringConverterClass);
-				builder.stringConverter(stringConverter);
+				optionArgSpecBuilder.setStringConverter(stringConverter);
 			}
 			Class<?> targetClass = t.getTargetClass(method);
 			if (targetClass != null) {
-				builder.type(targetClass);
+				optionArgSpecBuilder.setType(targetClass);
 			}
-			return builder.build();
+			return optionArgSpecBuilder.build();
 		}
 		
-		private static Option.Builder newOptionBuilder(
+		private static OptionBuilder newOptionBuilder(
 				final Annotations.Option option, 
 				final boolean firstInGroup,
 				final Method method,
 				final TargetMethodParameterTypesType t) {
 			OptionType type = option.type();
+			OptionTypeProfile typeProfile = OptionTypeProfile.valueOfOptionType(
+					type);
 			String name = option.name();
-			Option.Builder builder = type.newOptionBuilder(name);
+			OptionBuilder optionBuilder = typeProfile.newOptionBuilder(name);
 			OptionalBoolean displayable = option.displayable();
 			if (displayable.optionalBooleanValue().isPresent()) {
-				builder.displayable(
+				optionBuilder.setDisplayable(
 						displayable.optionalBooleanValue().get().booleanValue());
 			}
 			String doc = option.doc();
 			if (!doc.isEmpty()) {
-				builder.doc(option.doc());
+				optionBuilder.setDoc(option.doc());
 			}
 			Annotations.OptionArgSpec optionArgSpec = option.optionArgSpec();
 			OptionalBoolean optionArgAllowed = optionArgSpec.allowed();
@@ -3285,36 +3150,37 @@ public final class ArgMatey {
 				if (firstInGroup) {
 					Class<?> targetClass = t.getTargetClass(method);
 					if (targetClass != null) {
-						builder.optionArgSpec(newOptionArgSpec(
+						optionBuilder.getOptionArgSpec(newOptionArgSpec(
 								optionArgSpec, method, t));
 					}
 				}
 			} else if (optionArgAllowed.optionalBooleanValue().get().booleanValue()) {
-				builder.optionArgSpec(newOptionArgSpec(optionArgSpec, method, t));
+				optionBuilder.getOptionArgSpec(newOptionArgSpec(
+						optionArgSpec, method, t));
 			} else {
-				builder.optionArgSpec(null);
+				optionBuilder.getOptionArgSpec(null);
 			}
 			Class<?> optionUsageProviderClass = option.optionUsageProvider();
 			if (!optionUsageProviderClass.equals(OptionUsageProvider.class)) {
 				OptionUsageProvider optionUsageProvider = 
 						newOptionUsageProvider(optionUsageProviderClass);
-				builder.optionUsageProvider(optionUsageProvider);
+				optionBuilder.setOptionUsageProvider(optionUsageProvider);
 			}
 			String usage = option.usage();
 			if (!usage.isEmpty()) {
-				builder.usage(usage);
+				optionBuilder.setUsage(usage);
 			}
-			return builder;
+			return optionBuilder;
 		}
 		
 		private static OptionGroup newOptionGroup(
 				final Method method, 
 				final TargetMethodParameterTypesType t) {
-			OptionGroup.Builder builder = new OptionGroup.Builder();
+			OptionGroupBuilder optionGroupBuilder = new OptionGroupBuilder();
 			if (method.isAnnotationPresent(Annotations.HelpText.class)) {
 				Annotations.HelpText helpTextAnnotation = method.getAnnotation(
 						Annotations.HelpText.class);
-				builder.helpText(helpTextAnnotation.value());
+				optionGroupBuilder.setHelpText(helpTextAnnotation.value());
 			}
 			Annotations.Option[] optionAnnotations = method.getAnnotationsByType(
 					Annotations.Option.class);
@@ -3325,17 +3191,17 @@ public final class ArgMatey {
 				optionAnnotations = optsAnnotation.value();
 			}
 			if (optionAnnotations.length > 0) {
-				List<Option.Builder> optionBuilders = new ArrayList<Option.Builder>();
+				List<OptionBuilder> optionBuilders = new ArrayList<OptionBuilder>();
 				for (Annotations.Option optionAnnotation : optionAnnotations) {
 					boolean firstInGroup = optionBuilders.size() == 0;
-					Option.Builder optionBuilder = newOptionBuilder(
+					OptionBuilder optionBuilder = newOptionBuilder(
 							optionAnnotation, 
 							firstInGroup, 
 							method, 
 							t);
 					optionBuilders.add(optionBuilder);
 				}
-				builder.optionBuilders(optionBuilders);
+				optionGroupBuilder.setOptionBuilders(optionBuilders);
 			}
 			if (method.isAnnotationPresent(
 					Annotations.OptionGroupHelpTextProvider.class)) {
@@ -3344,9 +3210,10 @@ public final class ArgMatey {
 				OptionGroupHelpTextProvider optionGroupHelpTextProvider = 
 						newOptionGroupHelpTextProvider(
 								optionGroupHelpTextProviderAnnotation.value());
-				builder.optionGroupHelpTextProvider(optionGroupHelpTextProvider);
+				optionGroupBuilder.setOptionGroupHelpTextProvider(
+						optionGroupHelpTextProvider);
 			}
-			return builder.build();
+			return optionGroupBuilder.build();
 		}
 		
 		private static OptionGroupHelpTextProvider newOptionGroupHelpTextProvider(
@@ -3495,7 +3362,7 @@ public final class ArgMatey {
 		}
 		
 	}
-
+	
 	public static final class OptionGroups {
 		
 		public static OptionGroups newInstance(
@@ -3555,6 +3422,58 @@ public final class ArgMatey {
 		
 	}
 	
+	static abstract class OptionHandler extends AbstractArgHandler {
+		
+		private final Class<?> optionClass;
+		
+		protected OptionHandler(
+				final ArgHandler handler, 
+				final Class<? extends Option> optClass) {
+			super(handler);
+			this.optionClass = Objects.requireNonNull(
+					optClass, "Option class must not be null");
+		}
+		
+		public final Class<?> getOptionClass() {
+			return this.optionClass;
+		}
+		
+		@Override
+		public final void handle(
+				final String arg, final ArgHandlerContext context) {
+			ArgHandlerContextProperties properties = 
+					new ArgHandlerContextProperties(context);
+			if (!properties.isOptionHandlingEnabled()) {
+				this.getArgHandler().handle(arg, context);
+				return;
+			}
+			boolean hasOption = false;
+			Map<String, Option> optionMap = properties.getOptionMap();
+			for (Option option : optionMap.values()) {
+				if (this.optionClass.isInstance(option)) {
+					hasOption = true;
+					break;
+				}
+			}
+			if (!hasOption) {
+				this.getArgHandler().handle(arg, context);
+				return;
+			}
+			if (!this.isOption(arg, context)) {
+				this.getArgHandler().handle(arg, context);
+				return;
+			}
+			this.handleOption(arg, context);
+		}
+		
+		protected abstract void handleOption(
+				final String arg, final ArgHandlerContext context);
+
+		protected abstract boolean isOption(
+				final String arg, final ArgHandlerContext context);
+		
+	}
+
 	public static final class OptionOccurrence {
 
 		private final Option option;
@@ -3655,34 +3574,124 @@ public final class ArgMatey {
 	
 	public static enum OptionType {
 		
-		GNU_LONG {
+		GNU_LONG,
+		
+		LONG,
+		
+		POSIX;
+		
+	}
+	
+	static enum OptionTypeProfile {
+		
+		GNU_LONG(OptionType.GNU_LONG) {
+			
 			@Override
-			public Option.Builder newOptionBuilder(final String name) {
-				return new GnuLongOption.Builder(name);
+			public Class<? extends Option> getOptionClass() {
+				return GnuLongOption.class;
 			}
+
+			@Override
+			public OptionUsageProvider newDefaultOptionUsageProvider() {
+				return new DefaultGnuLongOptionUsageProvider();
+			}
+
+			@Override
+			public OptionBuilder newOptionBuilder(final String name) {
+				return new GnuLongOptionBuilder(name);
+			}
+
+			@Override
+			public OptionHandler newOptionHandler(final ArgHandler argHandler) {
+				return new GnuLongOptionHandler(argHandler);
+			}
+			
 		},
 		
-		LONG {
+		LONG(OptionType.LONG) {
+			
 			@Override
-			public Option.Builder newOptionBuilder(final String name) {
-				return new LongOption.Builder(name);
+			public Class<? extends Option> getOptionClass() {
+				return LongOption.class;
 			}
+
+			@Override
+			public OptionUsageProvider newDefaultOptionUsageProvider() {
+				return new DefaultLongOptionUsageProvider();
+			}
+
+			@Override
+			public OptionBuilder newOptionBuilder(final String name) {
+				return new LongOptionBuilder(name);
+			}
+
+			@Override
+			public OptionHandler newOptionHandler(final ArgHandler argHandler) {
+				return new LongOptionHandler(argHandler);
+			}
+			
 		},
 		
-		POSIX {
+		POSIX(OptionType.POSIX) {
+			
 			@Override
-			public Option.Builder newOptionBuilder(final String name) {
+			public Class<? extends Option> getOptionClass() {
+				return PosixOption.class;
+			}
+
+			@Override
+			public OptionUsageProvider newDefaultOptionUsageProvider() {
+				return new DefaultPosixOptionUsageProvider();
+			}
+
+			@Override
+			public OptionBuilder newOptionBuilder(final String name) {
 				if (name.length() != 1) {
 					throw new IllegalArgumentException(String.format(
 							"expected option name to be only one alphanumeric "
 							+ "character. actual option name is '%s'", 
 							name));
 				}
-				return new PosixOption.Builder(name.charAt(0));
+				return new PosixOptionBuilder(name.charAt(0));
 			}
+
+			@Override
+			public OptionHandler newOptionHandler(final ArgHandler argHandler) {
+				return new PosixOptionHandler(argHandler);
+			}
+			
 		};
 		
-		public abstract Option.Builder newOptionBuilder(final String name);
+		public static OptionTypeProfile valueOfOptionType(final OptionType optType) {
+			for (OptionTypeProfile optionTypeProfile : OptionTypeProfile.values()) {
+				if (optionTypeProfile.optionTypeValue().equals(optType)) {
+					return optionTypeProfile;
+				}
+			}
+			throw new IllegalArgumentException(String.format(
+					"unknown %s: %s", 
+					OptionType.class.getSimpleName(),
+					optType));
+		}
+		
+		private final OptionType optionType;
+		
+		private OptionTypeProfile(final OptionType optType) {
+			this.optionType = optType;
+		}
+		
+		public abstract Class<? extends Option> getOptionClass();
+		
+		public abstract OptionUsageProvider newDefaultOptionUsageProvider();
+		
+		public abstract OptionBuilder newOptionBuilder(final String name);
+		
+		public abstract OptionHandler newOptionHandler(
+				final ArgHandler argHandler);
+		
+		public OptionType optionTypeValue() {
+			return this.optionType;
+		}
 		
 	}
 	
@@ -3703,22 +3712,18 @@ public final class ArgMatey {
 		}
 				
 	}
-
+	
 	public static abstract class OptionUsageProvider {
 
 		private static final Map<Class<? extends Option>, OptionUsageProvider> DEFAULT_INSTANCES = 
 				new HashMap<Class<? extends Option>, OptionUsageProvider>();
 
 		static {
-			DEFAULT_INSTANCES.put(
-					GnuLongOption.class, 
-					new DefaultGnuLongOptionUsageProvider());
-			DEFAULT_INSTANCES.put(
-					LongOption.class, 
-					new DefaultLongOptionUsageProvider());
-			DEFAULT_INSTANCES.put(
-					PosixOption.class, 
-					new DefaultPosixOptionUsageProvider());
+			for (OptionTypeProfile optionTypeProfile : OptionTypeProfile.values()) {
+				DEFAULT_INSTANCES.put(
+						optionTypeProfile.getOptionClass(), 
+						optionTypeProfile.newDefaultOptionUsageProvider());
+			}
 		}
 
 		public static OptionUsageProvider getDefault(
@@ -3746,7 +3751,7 @@ public final class ArgMatey {
 		public abstract String getOptionUsage(OptionUsageParams params);
 		
 	}
-	
+
 	public static final class ParseResultHolder {
 		
 		private final Object parseResult;
@@ -3895,66 +3900,131 @@ public final class ArgMatey {
 		}
 		
 	}
-
+	
 	public static final class PosixOption extends Option {
+		
+		PosixOption(final PosixOptionBuilder posixOptionBuilder) {
+			super(posixOptionBuilder);
+		}
+		
+	}
 
-		public static final class Builder extends Option.Builder {
+	static final class PosixOptionBuilder extends OptionBuilder {
 
-			private static String toPosixOptionName(final char ch) {
-				if (!Character.isLetterOrDigit(ch)) {
-					throw new IllegalArgumentException(
-							"option name must be a letter or a digit");
+		private static String toPosixOptionName(final char ch) {
+			if (!Character.isLetterOrDigit(ch)) {
+				throw new IllegalArgumentException(
+						"option name must be a letter or a digit");
+			}
+			return Character.toString(ch);
+		}
+		
+		public PosixOptionBuilder(final char optName) {
+			super(toPosixOptionName(optName),
+					"-".concat(toPosixOptionName(optName)));
+		}
+
+		@Override
+		public PosixOption build() {
+			return new PosixOption(this);
+		}
+		
+		@Override
+		public PosixOptionBuilder getOptionArgSpec(
+				final OptionArgSpec optArgSpec) {
+			super.getOptionArgSpec(optArgSpec);
+			return this;
+		}
+		
+		@Override
+		public PosixOptionBuilder setDisplayable(final boolean b) {
+			super.setDisplayable(b);
+			return this;
+		}
+		
+		@Override
+		public PosixOptionBuilder setDoc(final String d) {
+			super.setDoc(d);
+			return this;
+		}
+		
+		@Override
+		public PosixOptionBuilder setOptionUsageProvider(
+				final OptionUsageProvider optUsageProvider) {
+			super.setOptionUsageProvider(optUsageProvider);
+			return this;
+		}
+		
+		@Override
+		public PosixOptionBuilder setUsage(final String u) {
+			super.setUsage(u);
+			return this;
+		}
+
+	}
+
+	static final class PosixOptionHandler extends OptionHandler {
+
+		public PosixOptionHandler(final ArgHandler handler) {
+			super(handler, PosixOption.class);
+		}
+
+		@Override
+		protected void handleOption(
+				final String arg, final ArgHandlerContext context) {
+			int argCharIndex = context.getArgCharIndex();
+			if (argCharIndex == -1) { /* not incremented yet */
+				/* 
+				 * initiate incrementing. ArgsParser will do the 
+				 * incrementing 
+				 */
+				/* index 0 - '-' */
+				argCharIndex = context.incrementArgCharIndex();
+				/* index 1 - first alphanumeric character */
+				argCharIndex = context.incrementArgCharIndex();
+			}
+			char ch = arg.charAt(argCharIndex);
+			String name = Character.toString(ch);
+			String option = "-".concat(name);
+			ArgHandlerContextProperties properties = 
+					new ArgHandlerContextProperties(context);
+			Map<String, Option> optionMap = properties.getOptionMap();
+			Option opt = optionMap.get(option);
+			if (opt == null) {
+				throw new UnknownOptionException(option);
+			}
+			String optionArg = null;
+			OptionArgSpec optionArgSpec = opt.getOptionArgSpec();
+			if (optionArgSpec != null) {
+				if (argCharIndex < arg.length() - 1) {
+					argCharIndex = context.incrementArgCharIndex();
+					optionArg = arg.substring(argCharIndex);
+					while (argCharIndex < arg.length() - 1) {
+						argCharIndex = context.incrementArgCharIndex();
+					}
+				} else {
+					if (optionArgSpec.isRequired()) {
+						String[] args = context.getArgs();
+						int argIndex = context.getArgIndex();
+						if (argIndex < args.length - 1) {
+							argCharIndex = context.resetArgCharIndex();
+							argIndex = context.incrementArgIndex();
+							optionArg = args[argIndex];
+						}
+					}
 				}
-				return Character.toString(ch);
 			}
-			
-			public Builder(final char optName) {
-				super(toPosixOptionName(optName), 
-						"-".concat(toPosixOptionName(optName)));
-			}
-
-			@Override
-			public PosixOption build() {
-				return new PosixOption(this);
-			}
-			
-			@Override
-			public Builder displayable(final boolean b) {
-				super.displayable(b);
-				return this;
-			}
-			
-			@Override
-			public Builder doc(final String d) {
-				super.doc(d);
-				return this;
-			}
-			
-			@Override
-			public Builder optionArgSpec(final OptionArgSpec optArgSpec) {
-				super.optionArgSpec(optArgSpec);
-				return this;
-			}
-			
-			@Override
-			public Builder optionUsageProvider(
-					final OptionUsageProvider optUsageProvider) {
-				super.optionUsageProvider(optUsageProvider);
-				return this;
-			}
-			
-			@Override
-			public Builder usage(final String u) {
-				super.usage(u);
-				return this;
-			}
-
+			properties.setParseResultHolder(new ParseResultHolder(
+					new OptionOccurrence(opt, opt.newOptionArg(optionArg))));
 		}
-		
-		private PosixOption(final Builder builder) {
-			super(builder);
-		}
-		
+
+		@Override
+		protected boolean isOption(
+				final String arg, final ArgHandlerContext context) {
+			return arg.length() > 1 
+					&& arg.startsWith("-") 
+					&& !arg.startsWith("--");
+		}		
 	}
 	
 	static final class PropertiesHelper {

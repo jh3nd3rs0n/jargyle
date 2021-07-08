@@ -40,10 +40,8 @@ public final class ClientMethodSelectionMessage {
 		Version version = Version.V5;
 		out.write(UnsignedByte.newInstance(version.byteValue()).intValue());
 		out.write(methodsList.size());
-		List<Method> meths = new ArrayList<Method>(methodsList);
-		for (int i = 0; i < meths.size(); i++) {
-			out.write(UnsignedByte.newInstance(
-					meths.get(i).byteValue()).intValue());
+		for (Method method : methodsList) {
+			out.write(UnsignedByte.newInstance(method.byteValue()).intValue());
 		}
 		Params params = new Params();
 		params.version = version;
@@ -71,17 +69,15 @@ public final class ClientMethodSelectionMessage {
 			bytes = Arrays.copyOf(bytes, bytesRead);			
 		}
 		List<Method> meths = new ArrayList<Method>();
-		for (int i = 0; i < bytes.length; i++) {
-			int b = bytes[i];
+		for (byte by : bytes) {
 			Method meth = null;
 			try {
-				meth = Method.valueOfByte(
-						UnsignedByte.newInstance(b).byteValue());
+				meth = Method.valueOfByte(by);
 			} catch (IllegalArgumentException e) {
 				throw new IOException(e);
 			}
 			meths.add(meth);
-			out.write(b);
+			out.write(UnsignedByte.newInstance(by).intValue());
 		}
 		Params params = new Params();
 		params.version = ver;

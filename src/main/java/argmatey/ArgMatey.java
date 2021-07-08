@@ -705,17 +705,17 @@ public final class ArgMatey {
 				OptionOccurrence optionOccurrence = 
 						parseResultHolder.getOptionOccurrence();
 				Option option = optionOccurrence.getOption();
-				Map<String, OptionGroupMethod> optionGroupMethodMap = 
-						this.cliClass.getOptionGroupMethodMap();
-				OptionGroupMethod optionGroupMethod = optionGroupMethodMap.get(
-						option.toString());
-				if (optionGroupMethod != null) {
-					optionGroupMethod.invoke(this, optionOccurrence);
-					if (optionGroupMethod.toMethod().equals(
+				Map<Option, OptionAnnotatedMethod> optionAnnotatedMethodMap = 
+						this.cliClass.getOptionAnnotatedMethodMap();
+				OptionAnnotatedMethod optionAnnotatedMethod = 
+						optionAnnotatedMethodMap.get(option);
+				if (optionAnnotatedMethod != null) {
+					optionAnnotatedMethod.invoke(this, optionOccurrence);
+					if (optionAnnotatedMethod.toMethod().equals(
 							this.cliClass.getDisplayProgramHelpMethod())) {
 						this.programHelpDisplayed = true;
 					}
-					if (optionGroupMethod.toMethod().equals(
+					if (optionAnnotatedMethod.toMethod().equals(
 							this.cliClass.getDisplayProgramVersionMethod())) {
 						this.programVersionDisplayed = true;
 					}
@@ -767,36 +767,20 @@ public final class ArgMatey {
 			
 			@Override
 			public int compare(final Method arg0, final Method arg1) {
-				int value = arg0.getName().compareTo(arg1.getName());
-				if (value != 0) {return value; }
-				Class<?>[] parameterTypes0 = arg0.getParameterTypes();
-				Class<?>[] parameterTypes1 = arg1.getParameterTypes();
-				int length0 = parameterTypes0.length;
-				int length1 = parameterTypes1.length;
-				int maxLength = (length0 >= length1) ? length0 : length1;
-				for (int i = 0; i < maxLength; i++) {
-					if (i == length0 || i == length1) {
-						return length0 - length1;
-					}
-					Class<?> parameterType0 = parameterTypes0[i];
-					Class<?> parameterType1 = parameterTypes1[i];
-					value = parameterType0.getName().compareTo(
-							parameterType1.getName());
-					if (value != 0) { return value; } 
-				}
-				return 0;
+				return CLIClass.compare(arg0, arg1);
 			}
 			
 		}
 		
-		private static final class OptionGroupMethodComparator 
-			implements Comparator<OptionGroupMethod> {
+		private static final class OptionAnnotatedMethodComparator 
+			implements Comparator<OptionAnnotatedMethod> {
 
-			public OptionGroupMethodComparator() { }
+			public OptionAnnotatedMethodComparator() { }
 			
 			@Override
 			public int compare(
-					final OptionGroupMethod arg0, final OptionGroupMethod arg1) {
+					final OptionAnnotatedMethod arg0, 
+					final OptionAnnotatedMethod arg1) {
 				int diff = arg0.getOrdinal() - arg1.getOrdinal();
 				if (diff != 0) { return diff; }
 				List<Option> options0 = arg0.getOptionGroup().toDisplayableList();
@@ -818,6 +802,49 @@ public final class ArgMatey {
 			
 		}
 		
+		private static final Method DECLARED_DISPLAY_PROGRAM_HELP_METHOD;
+		private static final Method DECLARED_DISPLAY_PROGRAM_VERSION_METHOD;
+		
+		static {
+			Method displayProgramHelpMethod = null;
+			Method displayProgramVersionMethod = null;
+			List<Method> cliClassDeclaredMethods = Arrays.asList(
+					CLI.class.getDeclaredMethods());
+			for (Method cliClassDeclaredMethod : cliClassDeclaredMethods) {
+				if (cliClassDeclaredMethod.isAnnotationPresent(
+						Annotations.DisplaysProgramHelp.class)) {
+					displayProgramHelpMethod = cliClassDeclaredMethod;
+				}
+				if (cliClassDeclaredMethod.isAnnotationPresent(
+						Annotations.DisplaysProgramVersion.class)) {
+					displayProgramVersionMethod = cliClassDeclaredMethod;
+				}
+			}
+			DECLARED_DISPLAY_PROGRAM_HELP_METHOD = displayProgramHelpMethod;
+			DECLARED_DISPLAY_PROGRAM_VERSION_METHOD = displayProgramVersionMethod; 
+		}
+		
+		public static int compare(final Method arg0, final Method arg1) {
+			int value = arg0.getName().compareTo(arg1.getName());
+			if (value != 0) { return value; }
+			Class<?>[] parameterTypes0 = arg0.getParameterTypes();
+			Class<?>[] parameterTypes1 = arg1.getParameterTypes();
+			int length0 = parameterTypes0.length;
+			int length1 = parameterTypes1.length;
+			int maxLength = (length0 >= length1) ? length0 : length1;
+			for (int i = 0; i < maxLength; i++) {
+				if (i == length0 || i == length1) {
+					return length0 - length1;
+				}
+				Class<?> parameterType0 = parameterTypes0[i];
+				Class<?> parameterType1 = parameterTypes1[i];
+				value = parameterType0.getName().compareTo(
+						parameterType1.getName());
+				if (value != 0) { return value; } 
+			}
+			return 0;				
+		}
+		
 		private static List<Class<?>> getHierarchy(final Class<?> cls) {
 			List<Class<?>> hierarchy = new ArrayList<Class<?>>();
 			if (CLI.class.isAssignableFrom(cls)) {
@@ -827,6 +854,16 @@ public final class ArgMatey {
 			return hierarchy;
 		}
 		
+		private static Set<Method> getMethods(final Class<?> cls) {
+			List<Class<?>> hierarchy = getHierarchy(cls);
+			Comparator<Method> methodComparator = new MethodComparator();
+			Set<Method> methods = new TreeSet<Method>(methodComparator);
+			for (Class<?> c : hierarchy) {
+				methods.addAll(Arrays.asList(c.getDeclaredMethods()));
+			}
+			return Collections.unmodifiableSet(methods);
+		}
+		
 		public static CLIClass newInstance(final Class<? extends CLI> cls) {
 			return new CLIClass(cls);
 		}
@@ -834,68 +871,52 @@ public final class ArgMatey {
 		private final Class<? extends CLI> cls;
 		private final Method displayProgramHelpMethod;
 		private final Method displayProgramVersionMethod;
-		private final Map<String, OptionGroupMethod> optionGroupMethodMap;
-		private final List<OptionGroupMethod> optionGroupMethods;
+		private final Map<Option, OptionAnnotatedMethod> optionAnnotatedMethodMap;
+		private final List<OptionAnnotatedMethod> optionAnnotatedMethods;
 		private final OptionGroups optionGroups;
 		
 		private CLIClass(final Class<? extends CLI> c) {
-			Map<String, OptionGroupMethod> optGroupMethodMap = 
-					new HashMap<String, OptionGroupMethod>();
-			List<OptionGroupMethod> optGroupMethods = 
-					new ArrayList<OptionGroupMethod>();
+			Map<Option, OptionAnnotatedMethod> optAnnotatedMethodMap = 
+					new HashMap<Option, OptionAnnotatedMethod>();
+			List<OptionAnnotatedMethod> optAnnotatedMethods = 
+					new ArrayList<OptionAnnotatedMethod>();
 			Method displayProgHelpMethod = null;
 			Method displayProgVersionMethod = null;
-			List<Method> cliClassDeclaredMethods = Arrays.asList(
-					CLI.class.getDeclaredMethods());
-			for (Method cliClassDeclaredMethod : cliClassDeclaredMethods) {
-				if (cliClassDeclaredMethod.isAnnotationPresent(
-						Annotations.DisplaysProgramHelp.class)) {
-					displayProgHelpMethod = cliClassDeclaredMethod;
-				}
-				if (cliClassDeclaredMethod.isAnnotationPresent(
-						Annotations.DisplaysProgramVersion.class)) {
-					displayProgVersionMethod = cliClassDeclaredMethod;
-				}
-			}			
-			List<Class<?>> hierarchy = getHierarchy(c);
-			Comparator<Method> methodComparator = new MethodComparator();
-			Set<Method> methods = new TreeSet<Method>(methodComparator);
-			for (Class<?> clazz : hierarchy) {
-				methods.addAll(Arrays.asList(clazz.getDeclaredMethods()));
-			}
+			Set<Method> methods = getMethods(c);
 			for (Method method : methods) {
-				if (methodComparator.compare(
-						displayProgHelpMethod, method) == 0) {
+				if (compare(
+						DECLARED_DISPLAY_PROGRAM_HELP_METHOD, method) == 0) {
 					displayProgHelpMethod = method;
 				}
-				if (methodComparator.compare(
-						displayProgVersionMethod, method) == 0) {
+				if (compare(
+						DECLARED_DISPLAY_PROGRAM_VERSION_METHOD, method) == 0) {
 					displayProgVersionMethod = method;
 				}
 				if (method.isAnnotationPresent(Annotations.Option.class)
 						|| method.isAnnotationPresent(Annotations.Options.class)) {
 					method.setAccessible(true);
-					OptionGroupMethod mthd = OptionGroupMethod.newInstance(
+					OptionAnnotatedMethod mthd = OptionAnnotatedMethod.newInstance(
 							method);
 					OptionGroup optGroup = mthd.getOptionGroup();
 					for (Option opt : optGroup.toList()) {
-						optGroupMethodMap.put(opt.toString(), mthd);
+						optAnnotatedMethodMap.put(opt, mthd);
 					}
-					optGroupMethods.add(mthd);
+					optAnnotatedMethods.add(mthd);
 				}
 			}
-			Collections.sort(optGroupMethods, new OptionGroupMethodComparator());
+			Collections.sort(
+					optAnnotatedMethods, new OptionAnnotatedMethodComparator());
 			List<OptionGroup> optGroups = new ArrayList<OptionGroup>();
-			for (OptionGroupMethod optGroupMethod : optGroupMethods) {
-				optGroups.add(optGroupMethod.getOptionGroup());
+			for (OptionAnnotatedMethod optAnnotatedMethod : optAnnotatedMethods) {
+				optGroups.add(optAnnotatedMethod.getOptionGroup());
 			}
 			this.cls = c;
 			this.displayProgramHelpMethod = displayProgHelpMethod;
 			this.displayProgramVersionMethod = displayProgVersionMethod;
-			this.optionGroupMethodMap = new HashMap<String, OptionGroupMethod>(
-					optGroupMethodMap);
-			this.optionGroupMethods = new ArrayList<OptionGroupMethod>(
-					optGroupMethods);
+			this.optionAnnotatedMethodMap = new HashMap<Option, OptionAnnotatedMethod>(
+					optAnnotatedMethodMap);
+			this.optionAnnotatedMethods = new ArrayList<OptionAnnotatedMethod>(
+					optAnnotatedMethods);
 			this.optionGroups = OptionGroups.newInstance(optGroups);
 		}
 		
@@ -907,12 +928,12 @@ public final class ArgMatey {
 			return this.displayProgramVersionMethod;
 		}
 		
-		public Map<String, OptionGroupMethod> getOptionGroupMethodMap() {
-			return Collections.unmodifiableMap(this.optionGroupMethodMap);
+		public Map<Option, OptionAnnotatedMethod> getOptionAnnotatedMethodMap() {
+			return Collections.unmodifiableMap(this.optionAnnotatedMethodMap);
 		}
 		
-		public List<OptionGroupMethod> getOptionGroupMethods() {
-			return Collections.unmodifiableList(this.optionGroupMethods);
+		public List<OptionAnnotatedMethod> getOptionAnnotatedMethods() {
+			return Collections.unmodifiableList(this.optionAnnotatedMethods);
 		}
 		
 		public OptionGroups getOptionGroups() {
@@ -1808,7 +1829,7 @@ public final class ArgMatey {
 			}
 			Properties props = new Properties(System.getProperties());
 			PropertiesHelper.copy(properties, props);
-			return StringInterpolator.interpolate(this.string, props);
+			return StringHelper.interpolate(this.string, props);
 		}
 		
 	}
@@ -1837,7 +1858,7 @@ public final class ArgMatey {
 			}
 			Properties props = new Properties(System.getProperties());
 			PropertiesHelper.copy(properties, props);
-			return StringInterpolator.interpolate(this.string, props);
+			return StringHelper.interpolate(this.string, props);
 		}
 		
 	}
@@ -1970,7 +1991,7 @@ public final class ArgMatey {
 			String str = optionBuilder.getString();
 			String u = optionBuilder.getUsage();
 			if (d != null) {
-				d = StringInterpolator.interpolate(d, System.getProperties());
+				d = StringHelper.interpolate(d, System.getProperties());
 			}
 			if (!optUsageProviderSet) {
 				optUsageProvider = OptionUsageProvider.getDefault(
@@ -2112,767 +2133,7 @@ public final class ArgMatey {
 		
 	}
 	
-	/**
-	 * Represents a command line option argument.
-	 */
-	public static final class OptionArg {
-		
-		/** The {@code Object} value of this {@code OptionArg}. */
-		private final Object objectValue;
-		
-		/** 
-		 * The {@code boolean} value that determines if the {@code Object} 
-		 * value of this {@code OptionArg} is set.
-		 */
-		private final boolean objectValueSet;
-		
-		/** 
-		 * The {@code List} of sub {@code OptionArg}s if any.
-		 */
-		private final List<OptionArg> optionArgs;
-		
-		/** 
-		 * The {@code String} representation of this {@code OptionArg} as it 
-		 * appears in the command line. 
-		 */
-		private final String string;
-		
-		/**
-		 * Constructs a node {@code OptionArg} based on the provided command 
-		 * line option argument and the provided {@code List} of sub 
-		 * {@code OptionArg}s.
-		 * 	
-		 * @param optArg the provided command line option argument
-		 * @param optArgs the provided {@code List} of sub {@code OptionArg}s
-		 */
-		OptionArg(final String optArg, final List<OptionArg> optArgs) {
-			this.objectValue = null;
-			this.objectValueSet = false;
-			this.optionArgs = new ArrayList<OptionArg>(optArgs);
-			this.string = optArg;
-		}
-		
-		/**
-		 * Constructs a leaf {@code OptionArg} based on the provided command 
-		 * line option argument and the provided {@code Object} value.
-		 * 
-		 * @param optArg the provided command line option argument
-		 * @param objValue the provided {@code Object} value
-		 */
-		OptionArg(final String optArg, final Object objValue) {
-			this.objectValue = objValue;
-			this.objectValueSet = true;
-			this.optionArgs = new ArrayList<OptionArg>();
-			this.string = optArg;
-		}
-
-		@Override
-		public boolean equals(Object obj) {
-			if (this == obj) {
-				return true;
-			}
-			if (!(obj instanceof OptionArg)) {
-				return false;
-			}
-			OptionArg other = (OptionArg) obj;
-			if (this.objectValue == null) {
-				if (other.objectValue != null) {
-					return false;
-				}
-			} else if (!this.objectValue.equals(other.objectValue)) {
-				return false;
-			}
-			if (this.optionArgs == null) {
-				if (other.optionArgs != null) {
-					return false;
-				}
-			} else if (!this.optionArgs.equals(other.optionArgs)) {
-				return false;
-			}
-			return true;
-		}
-
-		/**
-		 * Return the {@code Object} value of this {@code OptionArg}. If there 
-		 * are more than one {@code Object} value, the first {@code Object} 
-		 * value is returned.
-		 * 
-		 * @return the {@code Object} value of this {@code OptionArg} or the 
-		 * first {@code Object} value if there are more than one {@code Object} 
-		 * value
-		 */
-		public Object getObjectValue() {
-			if (this.objectValueSet) {
-				return this.objectValue;
-			}
-			return this.getObjectValues().get(0);
-		}
-
-		/**
-		 * Returns an unmodifiable {@code List} of {@code Object} values of 
-		 * this {@code OptionArg}.
-		 * 
-		 * @return an unmodifiable {@code List} of {@code Object} values of 
-		 * this {@code OptionArg}
-		 */
-		public List<Object> getObjectValues() {
-			List<Object> objectValues = new ArrayList<Object>();
-			if (this.objectValueSet) {
-				objectValues.add(this.objectValue);
-			} else {
-				for (OptionArg optionArg : this.optionArgs) {
-					objectValues.addAll(optionArg.getObjectValues());
-				}
-			}
-			return Collections.unmodifiableList(objectValues);
-		}
-		
-		/**
-		 * Returns an unmodifiable {@code List} of sub {@code OptionArg}s.
-		 * 
-		 * @return an unmodifiable {@code List} of sub {@code OptionArg}s
-		 */
-		public List<OptionArg> getOptionArgs() {
-			return Collections.unmodifiableList(this.optionArgs);
-		}
-		
-		/**
-		 * Returns the {@code Object} value of this {@code OptionArg} as the 
-		 * specified type. If there are more than one {@code Object} values, 
-		 * the first {@code Object} value is returned as the specified type.
-		 * 
-		 * @param type the specified type
-		 * 
-		 * @throws ClassCastException if the {@code Object} value of this 
-		 * {@code OptionArg} is not of the specified type
-		 * 
-		 * @return the {@code Object} value of this {@code OptionArg} as the 
-		 * specified type or the the first {@code Object} value as the 
-		 * specified type if there are more than one {@code Object} value
-		 */
-		public <T> T getTypeValue(final Class<T> type) {
-			return type.cast(this.getObjectValue());
-		}
-		
-		/**
-		 * Returns an unmodifiable {@code List} of the specified type of 
-		 * {@code Object} values of this {@code OptionArg}.
-		 *  
-		 * @param type the specified type
-		 * 
-		 * @throws ClassCastException if any of the {@code Object} values of 
-		 * this {@code OptionArg} are not of the specified type  
-		 * 
-		 * @return an unmodifiable {@code List} of the specified type of 
-		 * {@code Object} values of this {@code OptionArg}
-		 */
-		public <T> List<T> getTypeValues(final Class<T> type) {
-			List<T> typeValues = new ArrayList<T>();
-			for (Object objectValue : this.getObjectValues()) {
-				typeValues.add(type.cast(objectValue));
-			}
-			return Collections.unmodifiableList(typeValues);
-		}
-
-		@Override
-		public int hashCode() {
-			final int prime = 31;
-			int result = 1;
-			result = prime * result + ((this.objectValue == null) ? 
-					0 : objectValue.hashCode());
-			result = prime * result + ((this.optionArgs == null) ? 
-					0 : optionArgs.hashCode());
-			return result;
-		}
-
-		/**
-		 * Returns the {@code String} representation of this {@code OptionArg} 
-		 * as it appears in the command line.
-		 * 
-		 * @return the {@code String} representation of this {@code OptionArg} 
-		 * as it appears in the command line
-		 */
-		@Override
-		public String toString() {
-			return this.string;
-		}
-		
-	}
-
-	/**
-	 * Thrown when an {@code Option} is provided with a command line option 
-	 * argument that is not allowed.
-	 */
-	public static final class OptionArgNotAllowedException 
-		extends RuntimeException {
-		
-		/** The default serial version UID. */
-		private static final long serialVersionUID = 1L;
-		
-		/** 
-		 * The {@code Option} that was provided with a command line option 
-		 * argument that is not allowed.
-		 */
-		private final Option option;
-		
-		/**
-		 * Constructs an {@code OptionArgNotAllowedException} with the provided 
-		 * {@code Option} that was provided with a command line option argument 
-		 * that is not allowed.
-		 *  
-		 * @param opt the provided {@code Option} that was provided with a 
-		 * command line option argument that is not allowed
-		 */
-		OptionArgNotAllowedException(final Option opt) {
-			super(String.format(
-					"option `%s' does not allow an argument", 
-					opt.toString()));
-			this.option = opt;
-		}
-		
-		/**
-		 * Returns the {@code Option} that was provided with a command line 
-		 * option argument that is not allowed.
-		 * 
-		 * @return the {@code Option} that was provided with a command line 
-		 * option argument that is not allowed
-		 */
-		public Option getOption() {
-			return this.option;
-		}
-
-	}
-	
-	/**
-	 * Thrown when an {@code Option} is not provided with a required 
-	 * command line option argument.
-	 */
-	public static final class OptionArgRequiredException 
-		extends RuntimeException {
-		
-		/** The default serial version UID. */
-		private static final long serialVersionUID = 1L;
-		
-		/** 
-		 * The {@code Option} that was not provided with a required command 
-		 * line option argument. 
-		 */
-		private final Option option;
-		
-		/**
-		 * Constructs an {@code OptionArgRequiredException} with the provided 
-		 * {@code Option} that was not provided with a required command line 
-		 * option argument.
-		 * 
-		 * @param opt the provided {@code Option} that was not provided with a 
-		 * required command line option argument
-		 */
-		OptionArgRequiredException(final Option opt) {
-			super(String.format(
-					"option `%s' requires an argument", 
-					opt.toString()));
-			this.option = opt;
-		}
-		
-		/**
-		 * Returns the {@code Option} that was not provided with a required 
-		 * command line option argument.
-		 * 
-		 * @return the {@code Option} that was not provided with a required 
-		 * command line option argument
-		 */
-		public Option getOption() {
-			return this.option;
-		}
-
-	}
-
-	public static final class OptionArgSpec {
-		
-		public static final String DEFAULT_SEPARATOR = "[^\\w\\W]";
-		public static final Class<?> DEFAULT_TYPE = String.class;
-			
-		private final String name;
-		private final boolean required;
-		private final String separator;
-		private final StringConverter stringConverter;
-		private final Class<?> type;
-		
-		OptionArgSpec(final OptionArgSpecBuilder optionArgSpecBuilder) {
-			String n = optionArgSpecBuilder.getName();
-			boolean r = optionArgSpecBuilder.isRequired();
-			String s = optionArgSpecBuilder.getSeparator();
-			StringConverter sc = optionArgSpecBuilder.getStringConverter();
-			Class<?> t = optionArgSpecBuilder.getType();
-			if (s == null) { s = DEFAULT_SEPARATOR;	}
-			if (t == null) { t = DEFAULT_TYPE; }
-			if (n == null) { n = t.getName(); }
-			if (sc == null) { sc = new DefaultStringConverter(t); }
-			this.name = n;
-			this.required = r;
-			this.separator = s;
-			this.stringConverter = sc;
-			this.type = t;
-		}
-		
-		public String getName() {
-			return this.name;
-		}
-		
-		public String getSeparator() {
-			return this.separator;
-		}
-		
-		public StringConverter getStringConverter() {
-			return this.stringConverter;
-		}
-		
-		public Class<?> getType() {
-			return this.type;
-		}
-
-		public boolean isRequired() {
-			return this.required;
-		}
-
-		public OptionArg newOptionArg(final String optionArg) {
-			if (this.required && optionArg == null) {
-				Objects.requireNonNull(
-						optionArg, "option argument must not be null");
-			}
-			if (!this.required && optionArg == null) {
-				return null;
-			}
-			List<String> optArgs = Arrays.asList(optionArg.split(
-					this.separator));
-			if (optArgs.size() == 1) {
-				Object objectValue = this.stringConverter.convert(optionArg);
-				return new OptionArg(optionArg, objectValue);
-			} else {
-				List<OptionArg> list = new ArrayList<OptionArg>();
-				for (String optArg : optArgs) {
-					Object objectValue = this.stringConverter.convert(optArg);
-					list.add(new OptionArg(optArg, objectValue));
-				}
-				return new OptionArg(optionArg, list);
-			}
-		}
-
-		@Override
-		public String toString() {
-			StringBuilder sb = new StringBuilder();
-			sb.append(this.getClass().getSimpleName())
-				.append(" [name=")
-				.append(this.name)
-				.append(", required=")
-				.append(this.required)
-				.append(", separator=")
-				.append(this.separator)
-				.append(", stringConverter=")
-				.append(this.stringConverter)			
-				.append(", type=")
-				.append(this.type)
-				.append("]");
-			return sb.toString();
-		}
-
-	}
-
-	static final class OptionArgSpecBuilder {
-				
-		private String name;
-		private boolean required;
-		private String separator;
-		private StringConverter stringConverter;
-		private Class<?> type;
-		
-		public OptionArgSpecBuilder() {
-			this.name = null;
-			this.required = true;
-			this.separator = null;
-			this.stringConverter = null;
-			this.type = null;
-		}
-		
-		public OptionArgSpec build() {
-			return new OptionArgSpec(this); 
-		}
-		
-		public final String getName() {
-			return this.name;
-		}
-		
-		public final String getSeparator() {
-			return this.separator;
-		}
-		
-		public final StringConverter getStringConverter() {
-			return this.stringConverter;
-		}
-		
-		public final Class<?> getType() {
-			return this.type;
-		}
-		
-		public final boolean isRequired() {
-			return this.required;
-		}
-		
-		public OptionArgSpecBuilder setName(final String n) {
-			this.name = n;
-			return this;
-		}
-		
-		public OptionArgSpecBuilder setRequired(final boolean b) {
-			this.required = b;
-			return this;
-		}
-		
-		public OptionArgSpecBuilder setSeparator(final String s) {
-			this.separator = s;
-			return this;
-		}
-		
-		public OptionArgSpecBuilder setStringConverter(
-				final StringConverter sc) {
-			this.stringConverter = sc;
-			return this;
-		}
-		
-		public OptionArgSpecBuilder setType(final Class<?> t) {
-			this.type = t;
-			return this;
-		}
-		
-	}
-	
-	static abstract class OptionBuilder {
-
-		private boolean displayable;
-		private boolean displayableSet;
-		private String doc;
-		private final String name;
-		private OptionArgSpec optionArgSpec;
-		private boolean optionArgSpecSet;
-		private OptionUsageProvider optionUsageProvider;
-		private boolean optionUsageProviderSet;
-		private String string;
-		private String usage;
-		
-		OptionBuilder(final String optName, final String opt) {
-			Objects.requireNonNull(optName, "option name must not be null");
-			if (optName.matches("\\s")) {
-				throw new IllegalArgumentException(
-						"option name must not contain any whitespace "
-						+ "characters");
-			}
-			if (optName.isEmpty()) {
-				throw new IllegalArgumentException(
-						"option name must not be empty");
-			}
-			Objects.requireNonNull(opt, "option must not be null");
-			if (opt.matches("\\s")) {
-				throw new IllegalArgumentException(
-						"option must not contain any whitespace "
-						+ "characters");
-			}
-			if (opt.isEmpty()) {
-				throw new IllegalArgumentException(
-						"option must not be empty");
-			}
-			this.displayable = true;
-			this.displayableSet = false;
-			this.doc = null;
-			this.name = optName;
-			this.optionArgSpec = null;
-			this.optionArgSpecSet = false;
-			this.optionUsageProvider = null;
-			this.optionUsageProviderSet = false;
-			this.string = opt;
-			this.usage = null;
-		}
-		
-		public abstract Option build();
-		
-		public final String getDoc() {
-			return this.doc;
-		}
-		
-		public final String getName() {
-			return this.name;
-		}
-		
-		public final OptionArgSpec getOptionArgSpec() {
-			return this.optionArgSpec;
-		}
-		
-		public OptionBuilder getOptionArgSpec(final OptionArgSpec optArgSpec) {
-			this.optionArgSpec = optArgSpec;
-			this.optionArgSpecSet = true;
-			return this;
-		}
-		
-		public final OptionUsageProvider getOptionUsageProvider() {
-			return this.optionUsageProvider;
-		}
-		
-		public final String getString() {
-			return this.string;
-		}
-		
-		public final String getUsage() {
-			return this.usage;
-		}
-		
-		public final boolean hasDisplayableSet() {
-			return this.displayableSet;
-		}
-		
-		public final boolean hasOptionArgSpecSet() {
-			return this.optionArgSpecSet;
-		}
-		
-		public final boolean hasOptionUsageProviderSet() {
-			return this.optionUsageProviderSet;
-		}
-		
-		public final boolean isDisplayable() {
-			return this.displayable;
-		}
-		
-		public OptionBuilder setDisplayable(final boolean b) {
-			this.displayable = b;
-			this.displayableSet = true;
-			return this;
-		}
-		
-		public OptionBuilder setDoc(final String d) {
-			this.doc = d;
-			return this;
-		}
-		
-		public OptionBuilder setOptionUsageProvider(
-				final OptionUsageProvider optUsageProvider) {
-			this.optionUsageProvider = optUsageProvider;
-			this.optionUsageProviderSet = true;
-			return this;
-		}
-		
-		public OptionBuilder setUsage(final String u) {
-			this.usage = u;
-			return this;
-		}
-		
-	}
-
-	public static final class OptionGroup {
-		
-		private final List<Option> displayableOptions;
-		private final List<Option> options;
-		private final OptionGroupHelpTextProvider optionGroupHelpTextProvider;
-		
-		OptionGroup(final OptionGroupBuilder optionGroupBuilder) {
-			String h = optionGroupBuilder.getHelpText();
-			List<OptionBuilder> optBuilders = new ArrayList<OptionBuilder>(
-					optionGroupBuilder.getOptionBuilders());
-			OptionGroupHelpTextProvider optGroupHelpTextProvider =
-					optionGroupBuilder.getOptionGroupHelpTextProvider();
-			boolean optGroupHelpTextProviderSet = 
-					optionGroupBuilder.hasOptionGroupHelpTextProviderSet();
-			List<Option> displayableOpts = new ArrayList<Option>();
-			List<Option> opts = new ArrayList<Option>();
-			Iterator<OptionBuilder> iterator = optBuilders.iterator();
-			OptionBuilder firstOptBuilder = null;
-			while (iterator.hasNext()) {
-				OptionBuilder optBuilder = iterator.next();
-				if (firstOptBuilder == null) {
-					firstOptBuilder = optBuilder;
-				} else {
-					if (firstOptBuilder.hasDisplayableSet() 
-							&& !optBuilder.hasDisplayableSet()) {
-						optBuilder.setDisplayable(firstOptBuilder.isDisplayable());
-					}
-					if (firstOptBuilder.hasOptionArgSpecSet() 
-							&& !optBuilder.hasOptionArgSpecSet()) {
-						optBuilder.getOptionArgSpec(firstOptBuilder.getOptionArgSpec());
-					}
-				}
-				Option opt = optBuilder.build();
-				opts.add(opt);
-				if (opt.isDisplayable()) {
-					String usage = opt.getUsage();
-					if (usage != null) {
-						displayableOpts.add(opt);
-					}
-				}
-			}
-			if (!optGroupHelpTextProviderSet) {
-				optGroupHelpTextProvider = 
-						OptionGroupHelpTextProvider.getDefault();
-			}
-			if (h != null) {
-				optGroupHelpTextProvider = 
-						new InterpolatedOptionGroupHelpTextProvider(h);
-			}
-			this.displayableOptions = new ArrayList<Option>(displayableOpts);
-			this.options = new ArrayList<Option>(opts);
-			this.optionGroupHelpTextProvider = optGroupHelpTextProvider;
-		}
-		
-		public Option get(final int index) {
-			return this.options.get(index);
-		}
-		
-		public String getHelpText() {
-			if (this.optionGroupHelpTextProvider != null) {
-				return this.optionGroupHelpTextProvider.getOptionGroupHelpText(
-								new OptionGroupHelpTextParams(this));
-			}
-			return null;
-		}
-		
-		public OptionGroupHelpTextProvider getOptionGroupHelpTextProvider() {
-			return this.optionGroupHelpTextProvider;
-		}
-		
-		public List<Option> toDisplayableList() {
-			return Collections.unmodifiableList(this.displayableOptions);
-		}
-		
-		public List<Option> toList() {
-			return Collections.unmodifiableList(this.options);
-		}
-		
-		@Override
-		public final String toString() {
-			StringBuilder sb = new StringBuilder();
-			sb.append(this.getClass().getSimpleName())
-				.append(" [options=")
-				.append(this.options)
-				.append("]");
-			return sb.toString();
-		}
-		
-	}
-
-	static final class OptionGroupBuilder {
-		
-		private String helpText;
-		private final List<OptionBuilder> optionBuilders;
-		private OptionGroupHelpTextProvider optionGroupHelpTextProvider;
-		private boolean optionGroupHelpTextProviderSet;
-					
-		public OptionGroupBuilder() {
-			this.helpText = null;
-			this.optionBuilders = new ArrayList<OptionBuilder>();
-			this.optionGroupHelpTextProvider = null;
-			this.optionGroupHelpTextProviderSet = false;
-		}
-		
-		public OptionGroup build() {
-			return new OptionGroup(this); 
-		}
-		
-		public final String getHelpText() {
-			return this.helpText;
-		}
-		
-		public final List<OptionBuilder> getOptionBuilders() {
-			return Collections.unmodifiableList(this.optionBuilders);
-		}
-		
-		public final OptionGroupHelpTextProvider getOptionGroupHelpTextProvider() {
-			return this.optionGroupHelpTextProvider;
-		}
-		
-		public final boolean hasOptionGroupHelpTextProviderSet() {
-			return this.optionGroupHelpTextProviderSet;
-		}
-		
-		public OptionGroupBuilder setHelpText(final String h) {
-			this.helpText = h;
-			return this;
-		}
-		
-		public OptionGroupBuilder setOptionBuilders(
-				final List<OptionBuilder> optBuilders) {
-			for (OptionBuilder otherOptBuilder : optBuilders) {
-				Objects.requireNonNull(
-						otherOptBuilder, 
-						"other Option.Builder(s) must not be null");
-			}
-			this.optionBuilders.clear();
-			this.optionBuilders.addAll(optBuilders);
-			return this;
-		}
-		
-		public OptionGroupBuilder setOptionBuilders(final OptionBuilder optBuilder) {
-			return this.setOptionBuilders(Arrays.asList(optBuilder));
-		}
-		
-		public OptionGroupBuilder setOptionBuilders(
-				final OptionBuilder optBuilder1,
-				final OptionBuilder optBuilder2) {
-			return this.setOptionBuilders(Arrays.asList(
-					optBuilder1, optBuilder2));
-		}
-		
-		public OptionGroupBuilder setOptionBuilders(
-				final OptionBuilder optBuilder1,
-				final OptionBuilder optBuilder2,
-				final OptionBuilder... additionalOptBuilders) {
-			List<OptionBuilder> list = new ArrayList<OptionBuilder>();
-			list.add(optBuilder1);
-			list.add(optBuilder2);
-			list.addAll(Arrays.asList(additionalOptBuilders));
-			return this.setOptionBuilders(list);
-		}
-		
-		public OptionGroupBuilder setOptionGroupHelpTextProvider(
-				final OptionGroupHelpTextProvider optGroupHelpTextProvider) {
-			this.optionGroupHelpTextProvider = optGroupHelpTextProvider;
-			this.optionGroupHelpTextProviderSet = true;
-			return this;
-		}
-		
-	}
-	
-	public static final class OptionGroupHelpTextParams {
-		
-		private final OptionGroup optionGroup;
-		
-		OptionGroupHelpTextParams(final OptionGroup optGroup) {
-			this.optionGroup = optGroup;
-		}
-		
-		public List<Option> getDisplayableOptions() {
-			return this.optionGroup.toDisplayableList();
-		}
-		
-	}
-	
-	public static abstract class OptionGroupHelpTextProvider {
-		
-		private static OptionGroupHelpTextProvider defaultInstance = 
-				new DefaultOptionGroupHelpTextProvider();
-		
-		public static OptionGroupHelpTextProvider getDefault() {
-			return defaultInstance;
-		}
-		
-		public static void setDefault(
-				final OptionGroupHelpTextProvider optGroupHelpTextProvider) {
-			defaultInstance = optGroupHelpTextProvider;
-		}
-		
-		public OptionGroupHelpTextProvider() { }
-		
-		public abstract String getOptionGroupHelpText(
-				final OptionGroupHelpTextParams params);
-		
-	}
-	
-	static final class OptionGroupMethod {
+	static final class OptionAnnotatedMethod {
 		
 		private static enum TargetMethodParameterTypesType {
 			
@@ -3089,8 +2350,8 @@ public final class ArgMatey {
 			
 		}
 		
-		public static OptionGroupMethod newInstance(final Method method) {
-			return new OptionGroupMethod(method);
+		public static OptionAnnotatedMethod newInstance(final Method method) {
+			return new OptionAnnotatedMethod(method);
 		}
 		
 		private static OptionArgSpec newOptionArgSpec(
@@ -3303,7 +2564,7 @@ public final class ArgMatey {
 		
 		private final TargetMethodParameterTypesType targetMethodParameterTypesType;
 
-		private OptionGroupMethod(final Method mthd) {
+		private OptionAnnotatedMethod(final Method mthd) {
 			int modifiers = mthd.getModifiers();
 			if (Modifier.isStatic(modifiers)) {
 				throw new IllegalArgumentException(String.format(
@@ -3360,6 +2621,766 @@ public final class ArgMatey {
 		public Method toMethod() {
 			return this.method;
 		}
+		
+	}
+
+	/**
+	 * Represents a command line option argument.
+	 */
+	public static final class OptionArg {
+		
+		/** The {@code Object} value of this {@code OptionArg}. */
+		private final Object objectValue;
+		
+		/** 
+		 * The {@code boolean} value that determines if the {@code Object} 
+		 * value of this {@code OptionArg} is set.
+		 */
+		private final boolean objectValueSet;
+		
+		/** 
+		 * The {@code List} of sub {@code OptionArg}s if any.
+		 */
+		private final List<OptionArg> optionArgs;
+		
+		/** 
+		 * The {@code String} representation of this {@code OptionArg} as it 
+		 * appears in the command line. 
+		 */
+		private final String string;
+		
+		/**
+		 * Constructs a node {@code OptionArg} based on the provided command 
+		 * line option argument and the provided {@code List} of sub 
+		 * {@code OptionArg}s.
+		 * 	
+		 * @param optArg the provided command line option argument
+		 * @param optArgs the provided {@code List} of sub {@code OptionArg}s
+		 */
+		OptionArg(final String optArg, final List<OptionArg> optArgs) {
+			this.objectValue = null;
+			this.objectValueSet = false;
+			this.optionArgs = new ArrayList<OptionArg>(optArgs);
+			this.string = optArg;
+		}
+		
+		/**
+		 * Constructs a leaf {@code OptionArg} based on the provided command 
+		 * line option argument and the provided {@code Object} value.
+		 * 
+		 * @param optArg the provided command line option argument
+		 * @param objValue the provided {@code Object} value
+		 */
+		OptionArg(final String optArg, final Object objValue) {
+			this.objectValue = objValue;
+			this.objectValueSet = true;
+			this.optionArgs = new ArrayList<OptionArg>();
+			this.string = optArg;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj) {
+				return true;
+			}
+			if (!(obj instanceof OptionArg)) {
+				return false;
+			}
+			OptionArg other = (OptionArg) obj;
+			if (this.objectValue == null) {
+				if (other.objectValue != null) {
+					return false;
+				}
+			} else if (!this.objectValue.equals(other.objectValue)) {
+				return false;
+			}
+			if (this.optionArgs == null) {
+				if (other.optionArgs != null) {
+					return false;
+				}
+			} else if (!this.optionArgs.equals(other.optionArgs)) {
+				return false;
+			}
+			return true;
+		}
+
+		/**
+		 * Return the {@code Object} value of this {@code OptionArg}. If there 
+		 * are more than one {@code Object} value, the first {@code Object} 
+		 * value is returned.
+		 * 
+		 * @return the {@code Object} value of this {@code OptionArg} or the 
+		 * first {@code Object} value if there are more than one {@code Object} 
+		 * value
+		 */
+		public Object getObjectValue() {
+			if (this.objectValueSet) {
+				return this.objectValue;
+			}
+			return this.getObjectValues().get(0);
+		}
+
+		/**
+		 * Returns an unmodifiable {@code List} of {@code Object} values of 
+		 * this {@code OptionArg}.
+		 * 
+		 * @return an unmodifiable {@code List} of {@code Object} values of 
+		 * this {@code OptionArg}
+		 */
+		public List<Object> getObjectValues() {
+			List<Object> objectValues = new ArrayList<Object>();
+			if (this.objectValueSet) {
+				objectValues.add(this.objectValue);
+			} else {
+				for (OptionArg optionArg : this.optionArgs) {
+					objectValues.addAll(optionArg.getObjectValues());
+				}
+			}
+			return Collections.unmodifiableList(objectValues);
+		}
+		
+		/**
+		 * Returns an unmodifiable {@code List} of sub {@code OptionArg}s.
+		 * 
+		 * @return an unmodifiable {@code List} of sub {@code OptionArg}s
+		 */
+		public List<OptionArg> getOptionArgs() {
+			return Collections.unmodifiableList(this.optionArgs);
+		}
+		
+		/**
+		 * Returns the {@code Object} value of this {@code OptionArg} as the 
+		 * specified type. If there are more than one {@code Object} values, 
+		 * the first {@code Object} value is returned as the specified type.
+		 * 
+		 * @param type the specified type
+		 * 
+		 * @throws ClassCastException if the {@code Object} value of this 
+		 * {@code OptionArg} is not of the specified type
+		 * 
+		 * @return the {@code Object} value of this {@code OptionArg} as the 
+		 * specified type or the the first {@code Object} value as the 
+		 * specified type if there are more than one {@code Object} value
+		 */
+		public <T> T getTypeValue(final Class<T> type) {
+			return type.cast(this.getObjectValue());
+		}
+		
+		/**
+		 * Returns an unmodifiable {@code List} of the specified type of 
+		 * {@code Object} values of this {@code OptionArg}.
+		 *  
+		 * @param type the specified type
+		 * 
+		 * @throws ClassCastException if any of the {@code Object} values of 
+		 * this {@code OptionArg} are not of the specified type  
+		 * 
+		 * @return an unmodifiable {@code List} of the specified type of 
+		 * {@code Object} values of this {@code OptionArg}
+		 */
+		public <T> List<T> getTypeValues(final Class<T> type) {
+			List<T> typeValues = new ArrayList<T>();
+			for (Object objectValue : this.getObjectValues()) {
+				typeValues.add(type.cast(objectValue));
+			}
+			return Collections.unmodifiableList(typeValues);
+		}
+
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + ((this.objectValue == null) ? 
+					0 : objectValue.hashCode());
+			result = prime * result + ((this.optionArgs == null) ? 
+					0 : optionArgs.hashCode());
+			return result;
+		}
+
+		/**
+		 * Returns the {@code String} representation of this {@code OptionArg} 
+		 * as it appears in the command line.
+		 * 
+		 * @return the {@code String} representation of this {@code OptionArg} 
+		 * as it appears in the command line
+		 */
+		@Override
+		public String toString() {
+			return this.string;
+		}
+		
+	}
+	
+	/**
+	 * Thrown when an {@code Option} is provided with a command line option 
+	 * argument that is not allowed.
+	 */
+	public static final class OptionArgNotAllowedException 
+		extends RuntimeException {
+		
+		/** The default serial version UID. */
+		private static final long serialVersionUID = 1L;
+		
+		/** 
+		 * The {@code Option} that was provided with a command line option 
+		 * argument that is not allowed.
+		 */
+		private final Option option;
+		
+		/**
+		 * Constructs an {@code OptionArgNotAllowedException} with the provided 
+		 * {@code Option} that was provided with a command line option argument 
+		 * that is not allowed.
+		 *  
+		 * @param opt the provided {@code Option} that was provided with a 
+		 * command line option argument that is not allowed
+		 */
+		OptionArgNotAllowedException(final Option opt) {
+			super(String.format(
+					"option `%s' does not allow an argument", 
+					opt.toString()));
+			this.option = opt;
+		}
+		
+		/**
+		 * Returns the {@code Option} that was provided with a command line 
+		 * option argument that is not allowed.
+		 * 
+		 * @return the {@code Option} that was provided with a command line 
+		 * option argument that is not allowed
+		 */
+		public Option getOption() {
+			return this.option;
+		}
+
+	}
+
+	/**
+	 * Thrown when an {@code Option} is not provided with a required 
+	 * command line option argument.
+	 */
+	public static final class OptionArgRequiredException 
+		extends RuntimeException {
+		
+		/** The default serial version UID. */
+		private static final long serialVersionUID = 1L;
+		
+		/** 
+		 * The {@code Option} that was not provided with a required command 
+		 * line option argument. 
+		 */
+		private final Option option;
+		
+		/**
+		 * Constructs an {@code OptionArgRequiredException} with the provided 
+		 * {@code Option} that was not provided with a required command line 
+		 * option argument.
+		 * 
+		 * @param opt the provided {@code Option} that was not provided with a 
+		 * required command line option argument
+		 */
+		OptionArgRequiredException(final Option opt) {
+			super(String.format(
+					"option `%s' requires an argument", 
+					opt.toString()));
+			this.option = opt;
+		}
+		
+		/**
+		 * Returns the {@code Option} that was not provided with a required 
+		 * command line option argument.
+		 * 
+		 * @return the {@code Option} that was not provided with a required 
+		 * command line option argument
+		 */
+		public Option getOption() {
+			return this.option;
+		}
+
+	}
+
+	public static final class OptionArgSpec {
+		
+		public static final String DEFAULT_SEPARATOR = "[^\\w\\W]";
+		public static final Class<?> DEFAULT_TYPE = String.class;
+			
+		private final String name;
+		private final boolean required;
+		private final String separator;
+		private final StringConverter stringConverter;
+		private final Class<?> type;
+		
+		OptionArgSpec(final OptionArgSpecBuilder optionArgSpecBuilder) {
+			String n = optionArgSpecBuilder.getName();
+			boolean r = optionArgSpecBuilder.isRequired();
+			String s = optionArgSpecBuilder.getSeparator();
+			StringConverter sc = optionArgSpecBuilder.getStringConverter();
+			Class<?> t = optionArgSpecBuilder.getType();
+			if (s == null) { s = DEFAULT_SEPARATOR;	}
+			if (t == null) { t = DEFAULT_TYPE; }
+			if (n == null) { n = t.getName(); }
+			if (sc == null) { sc = new DefaultStringConverter(t); }
+			this.name = n;
+			this.required = r;
+			this.separator = s;
+			this.stringConverter = sc;
+			this.type = t;
+		}
+		
+		public String getName() {
+			return this.name;
+		}
+		
+		public String getSeparator() {
+			return this.separator;
+		}
+		
+		public StringConverter getStringConverter() {
+			return this.stringConverter;
+		}
+		
+		public Class<?> getType() {
+			return this.type;
+		}
+
+		public boolean isRequired() {
+			return this.required;
+		}
+
+		public OptionArg newOptionArg(final String optionArg) {
+			if (this.required && optionArg == null) {
+				Objects.requireNonNull(
+						optionArg, "option argument must not be null");
+			}
+			if (!this.required && optionArg == null) {
+				return null;
+			}
+			List<String> optArgs = Arrays.asList(optionArg.split(
+					this.separator));
+			if (optArgs.size() == 1) {
+				Object objectValue = this.stringConverter.convert(optionArg);
+				return new OptionArg(optionArg, objectValue);
+			} else {
+				List<OptionArg> list = new ArrayList<OptionArg>();
+				for (String optArg : optArgs) {
+					Object objectValue = this.stringConverter.convert(optArg);
+					list.add(new OptionArg(optArg, objectValue));
+				}
+				return new OptionArg(optionArg, list);
+			}
+		}
+
+		@Override
+		public String toString() {
+			StringBuilder sb = new StringBuilder();
+			sb.append(this.getClass().getSimpleName())
+				.append(" [name=")
+				.append(this.name)
+				.append(", required=")
+				.append(this.required)
+				.append(", separator=")
+				.append(this.separator)
+				.append(", stringConverter=")
+				.append(this.stringConverter)			
+				.append(", type=")
+				.append(this.type)
+				.append("]");
+			return sb.toString();
+		}
+
+	}
+	
+	static final class OptionArgSpecBuilder {
+				
+		private String name;
+		private boolean required;
+		private String separator;
+		private StringConverter stringConverter;
+		private Class<?> type;
+		
+		public OptionArgSpecBuilder() {
+			this.name = null;
+			this.required = true;
+			this.separator = null;
+			this.stringConverter = null;
+			this.type = null;
+		}
+		
+		public OptionArgSpec build() {
+			return new OptionArgSpec(this); 
+		}
+		
+		public final String getName() {
+			return this.name;
+		}
+		
+		public final String getSeparator() {
+			return this.separator;
+		}
+		
+		public final StringConverter getStringConverter() {
+			return this.stringConverter;
+		}
+		
+		public final Class<?> getType() {
+			return this.type;
+		}
+		
+		public final boolean isRequired() {
+			return this.required;
+		}
+		
+		public OptionArgSpecBuilder setName(final String n) {
+			this.name = n;
+			return this;
+		}
+		
+		public OptionArgSpecBuilder setRequired(final boolean b) {
+			this.required = b;
+			return this;
+		}
+		
+		public OptionArgSpecBuilder setSeparator(final String s) {
+			this.separator = s;
+			return this;
+		}
+		
+		public OptionArgSpecBuilder setStringConverter(
+				final StringConverter sc) {
+			this.stringConverter = sc;
+			return this;
+		}
+		
+		public OptionArgSpecBuilder setType(final Class<?> t) {
+			this.type = t;
+			return this;
+		}
+		
+	}
+
+	static abstract class OptionBuilder {
+
+		private boolean displayable;
+		private boolean displayableSet;
+		private String doc;
+		private final String name;
+		private OptionArgSpec optionArgSpec;
+		private boolean optionArgSpecSet;
+		private OptionUsageProvider optionUsageProvider;
+		private boolean optionUsageProviderSet;
+		private String string;
+		private String usage;
+		
+		OptionBuilder(final String optName, final String opt) {
+			Objects.requireNonNull(optName, "option name must not be null");
+			if (optName.matches("\\s")) {
+				throw new IllegalArgumentException(
+						"option name must not contain any whitespace "
+						+ "characters");
+			}
+			if (optName.isEmpty()) {
+				throw new IllegalArgumentException(
+						"option name must not be empty");
+			}
+			Objects.requireNonNull(opt, "option must not be null");
+			if (opt.matches("\\s")) {
+				throw new IllegalArgumentException(
+						"option must not contain any whitespace "
+						+ "characters");
+			}
+			if (opt.isEmpty()) {
+				throw new IllegalArgumentException(
+						"option must not be empty");
+			}
+			this.displayable = true;
+			this.displayableSet = false;
+			this.doc = null;
+			this.name = optName;
+			this.optionArgSpec = null;
+			this.optionArgSpecSet = false;
+			this.optionUsageProvider = null;
+			this.optionUsageProviderSet = false;
+			this.string = opt;
+			this.usage = null;
+		}
+		
+		public abstract Option build();
+		
+		public final String getDoc() {
+			return this.doc;
+		}
+		
+		public final String getName() {
+			return this.name;
+		}
+		
+		public final OptionArgSpec getOptionArgSpec() {
+			return this.optionArgSpec;
+		}
+		
+		public OptionBuilder getOptionArgSpec(final OptionArgSpec optArgSpec) {
+			this.optionArgSpec = optArgSpec;
+			this.optionArgSpecSet = true;
+			return this;
+		}
+		
+		public final OptionUsageProvider getOptionUsageProvider() {
+			return this.optionUsageProvider;
+		}
+		
+		public final String getString() {
+			return this.string;
+		}
+		
+		public final String getUsage() {
+			return this.usage;
+		}
+		
+		public final boolean hasDisplayableSet() {
+			return this.displayableSet;
+		}
+		
+		public final boolean hasOptionArgSpecSet() {
+			return this.optionArgSpecSet;
+		}
+		
+		public final boolean hasOptionUsageProviderSet() {
+			return this.optionUsageProviderSet;
+		}
+		
+		public final boolean isDisplayable() {
+			return this.displayable;
+		}
+		
+		public OptionBuilder setDisplayable(final boolean b) {
+			this.displayable = b;
+			this.displayableSet = true;
+			return this;
+		}
+		
+		public OptionBuilder setDoc(final String d) {
+			this.doc = d;
+			return this;
+		}
+		
+		public OptionBuilder setOptionUsageProvider(
+				final OptionUsageProvider optUsageProvider) {
+			this.optionUsageProvider = optUsageProvider;
+			this.optionUsageProviderSet = true;
+			return this;
+		}
+		
+		public OptionBuilder setUsage(final String u) {
+			this.usage = u;
+			return this;
+		}
+		
+	}
+
+	public static final class OptionGroup {
+		
+		private final List<Option> displayableOptions;
+		private final List<Option> options;
+		private final OptionGroupHelpTextProvider optionGroupHelpTextProvider;
+		
+		OptionGroup(final OptionGroupBuilder optionGroupBuilder) {
+			String h = optionGroupBuilder.getHelpText();
+			List<OptionBuilder> optBuilders = new ArrayList<OptionBuilder>(
+					optionGroupBuilder.getOptionBuilders());
+			OptionGroupHelpTextProvider optGroupHelpTextProvider =
+					optionGroupBuilder.getOptionGroupHelpTextProvider();
+			boolean optGroupHelpTextProviderSet = 
+					optionGroupBuilder.hasOptionGroupHelpTextProviderSet();
+			List<Option> displayableOpts = new ArrayList<Option>();
+			List<Option> opts = new ArrayList<Option>();
+			Iterator<OptionBuilder> iterator = optBuilders.iterator();
+			OptionBuilder firstOptBuilder = null;
+			while (iterator.hasNext()) {
+				OptionBuilder optBuilder = iterator.next();
+				if (firstOptBuilder == null) {
+					firstOptBuilder = optBuilder;
+				} else {
+					if (firstOptBuilder.hasDisplayableSet() 
+							&& !optBuilder.hasDisplayableSet()) {
+						optBuilder.setDisplayable(firstOptBuilder.isDisplayable());
+					}
+					if (firstOptBuilder.hasOptionArgSpecSet() 
+							&& !optBuilder.hasOptionArgSpecSet()) {
+						optBuilder.getOptionArgSpec(firstOptBuilder.getOptionArgSpec());
+					}
+				}
+				Option opt = optBuilder.build();
+				opts.add(opt);
+				if (opt.isDisplayable()) {
+					String usage = opt.getUsage();
+					if (usage != null) {
+						displayableOpts.add(opt);
+					}
+				}
+			}
+			if (!optGroupHelpTextProviderSet) {
+				optGroupHelpTextProvider = 
+						OptionGroupHelpTextProvider.getDefault();
+			}
+			if (h != null) {
+				optGroupHelpTextProvider = 
+						new InterpolatedOptionGroupHelpTextProvider(h);
+			}
+			this.displayableOptions = new ArrayList<Option>(displayableOpts);
+			this.options = new ArrayList<Option>(opts);
+			this.optionGroupHelpTextProvider = optGroupHelpTextProvider;
+		}
+		
+		public Option get(final int index) {
+			return this.options.get(index);
+		}
+		
+		public String getHelpText() {
+			if (this.optionGroupHelpTextProvider != null) {
+				return this.optionGroupHelpTextProvider.getOptionGroupHelpText(
+								new OptionGroupHelpTextParams(this));
+			}
+			return null;
+		}
+		
+		public OptionGroupHelpTextProvider getOptionGroupHelpTextProvider() {
+			return this.optionGroupHelpTextProvider;
+		}
+		
+		public List<Option> toDisplayableList() {
+			return Collections.unmodifiableList(this.displayableOptions);
+		}
+		
+		public List<Option> toList() {
+			return Collections.unmodifiableList(this.options);
+		}
+		
+		@Override
+		public final String toString() {
+			StringBuilder sb = new StringBuilder();
+			sb.append(this.getClass().getSimpleName())
+				.append(" [options=")
+				.append(this.options)
+				.append("]");
+			return sb.toString();
+		}
+		
+	}
+	
+	static final class OptionGroupBuilder {
+		
+		private String helpText;
+		private final List<OptionBuilder> optionBuilders;
+		private OptionGroupHelpTextProvider optionGroupHelpTextProvider;
+		private boolean optionGroupHelpTextProviderSet;
+					
+		public OptionGroupBuilder() {
+			this.helpText = null;
+			this.optionBuilders = new ArrayList<OptionBuilder>();
+			this.optionGroupHelpTextProvider = null;
+			this.optionGroupHelpTextProviderSet = false;
+		}
+		
+		public OptionGroup build() {
+			return new OptionGroup(this); 
+		}
+		
+		public final String getHelpText() {
+			return this.helpText;
+		}
+		
+		public final List<OptionBuilder> getOptionBuilders() {
+			return Collections.unmodifiableList(this.optionBuilders);
+		}
+		
+		public final OptionGroupHelpTextProvider getOptionGroupHelpTextProvider() {
+			return this.optionGroupHelpTextProvider;
+		}
+		
+		public final boolean hasOptionGroupHelpTextProviderSet() {
+			return this.optionGroupHelpTextProviderSet;
+		}
+		
+		public OptionGroupBuilder setHelpText(final String h) {
+			this.helpText = h;
+			return this;
+		}
+		
+		public OptionGroupBuilder setOptionBuilders(
+				final List<OptionBuilder> optBuilders) {
+			for (OptionBuilder otherOptBuilder : optBuilders) {
+				Objects.requireNonNull(
+						otherOptBuilder, 
+						"other Option.Builder(s) must not be null");
+			}
+			this.optionBuilders.clear();
+			this.optionBuilders.addAll(optBuilders);
+			return this;
+		}
+		
+		public OptionGroupBuilder setOptionBuilders(final OptionBuilder optBuilder) {
+			return this.setOptionBuilders(Arrays.asList(optBuilder));
+		}
+		
+		public OptionGroupBuilder setOptionBuilders(
+				final OptionBuilder optBuilder1,
+				final OptionBuilder optBuilder2) {
+			return this.setOptionBuilders(Arrays.asList(
+					optBuilder1, optBuilder2));
+		}
+		
+		public OptionGroupBuilder setOptionBuilders(
+				final OptionBuilder optBuilder1,
+				final OptionBuilder optBuilder2,
+				final OptionBuilder... additionalOptBuilders) {
+			List<OptionBuilder> list = new ArrayList<OptionBuilder>();
+			list.add(optBuilder1);
+			list.add(optBuilder2);
+			list.addAll(Arrays.asList(additionalOptBuilders));
+			return this.setOptionBuilders(list);
+		}
+		
+		public OptionGroupBuilder setOptionGroupHelpTextProvider(
+				final OptionGroupHelpTextProvider optGroupHelpTextProvider) {
+			this.optionGroupHelpTextProvider = optGroupHelpTextProvider;
+			this.optionGroupHelpTextProviderSet = true;
+			return this;
+		}
+		
+	}
+	
+	public static final class OptionGroupHelpTextParams {
+		
+		private final OptionGroup optionGroup;
+		
+		OptionGroupHelpTextParams(final OptionGroup optGroup) {
+			this.optionGroup = optGroup;
+		}
+		
+		public List<Option> getDisplayableOptions() {
+			return this.optionGroup.toDisplayableList();
+		}
+		
+	}
+	
+	public static abstract class OptionGroupHelpTextProvider {
+		
+		private static OptionGroupHelpTextProvider defaultInstance = 
+				new DefaultOptionGroupHelpTextProvider();
+		
+		public static OptionGroupHelpTextProvider getDefault() {
+			return defaultInstance;
+		}
+		
+		public static void setDefault(
+				final OptionGroupHelpTextProvider optGroupHelpTextProvider) {
+			defaultInstance = optGroupHelpTextProvider;
+		}
+		
+		public OptionGroupHelpTextProvider() { }
+		
+		public abstract String getOptionGroupHelpText(
+				final OptionGroupHelpTextParams params);
 		
 	}
 	
@@ -4067,7 +4088,7 @@ public final class ArgMatey {
 		
 	}
 	
-	static final class StringInterpolator {
+	static final class StringHelper {
 		
 		public static String interpolate(
 				final String string, final Properties properties) {
@@ -4109,7 +4130,7 @@ public final class ArgMatey {
 			return sb.toString();
 		}
 		
-		private StringInterpolator() { }
+		private StringHelper() { }
 		
 	}
 	

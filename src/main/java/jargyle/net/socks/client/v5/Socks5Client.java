@@ -37,7 +37,7 @@ public final class Socks5Client extends SocksClient {
 		this.dtlsDatagramSocketFactory = dtlsDatagramSockFactory;
 	}
 	
-	public AuthResult authenticate(
+	public AuthResultSockets authenticate(
 			final Socket connectedInternalSocket) throws IOException {
 		InputStream inputStream = connectedInternalSocket.getInputStream();
 		OutputStream outputStream = connectedInternalSocket.getOutputStream();

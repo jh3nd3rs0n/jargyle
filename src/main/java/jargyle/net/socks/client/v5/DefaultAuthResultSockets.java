@@ -4,15 +4,11 @@ import java.net.DatagramSocket;
 import java.net.Socket;
 import java.net.SocketException;
 
-import jargyle.net.socks.transport.v5.Method;
+final class DefaultAuthResultSockets extends AuthResultSockets {
 
-final class DefaultAuthResult extends AuthResult {
-
-	private final Method method;
 	private final Socket socket;
 	
-	public DefaultAuthResult(final Method meth, final Socket sock) {
-		this.method = meth;
+	public DefaultAuthResultSockets(final Socket sock) {
 		this.socket = sock;
 	}
 	
@@ -20,11 +16,6 @@ final class DefaultAuthResult extends AuthResult {
 	public DatagramSocket getDatagramSocket(
 			final DatagramSocket datagramSocket) throws SocketException {
 		return datagramSocket;
-	}
-
-	@Override
-	public Method getMethod() {
-		return this.method;
 	}
 
 	@Override

@@ -30,7 +30,7 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 	private static final Logger LOGGER = LoggerFactory.getLogger(
 			UdpAssociateCommandWorker.class);
 	
-	private final AuthResult authResult;
+	private final AuthResultSockets authResultSockets;
 	private final DtlsDatagramSocketFactory clientDtlsDatagramSocketFactory;
 	private final Socket clientSocket;
 	private final CommandWorkerContext commandWorkerContext;
@@ -41,7 +41,7 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 	
 	public UdpAssociateCommandWorker(final CommandWorkerContext context) {
 		super(context);
-		AuthResult aResult = context.getAuthResult();
+		AuthResultSockets authResultSocks = context.getAuthResultSockets();
 		DtlsDatagramSocketFactory clientDtlsDatagramSockFactory =
 				context.getClientDtlsDatagramSocketFactory();
 		Socket clientSock = context.getClientSocket();
@@ -49,7 +49,7 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 		int desiredDestinationPrt = context.getDesiredDestinationPort();
 		NetObjectFactory netObjFactory = context.getNetObjectFactory();
 		Settings sttngs = context.getSettings();
-		this.authResult = aResult;
+		this.authResultSockets = authResultSocks;
 		this.clientDtlsDatagramSocketFactory = clientDtlsDatagramSockFactory;
 		this.clientSocket = clientSock;
 		this.commandWorkerContext = context;
@@ -382,8 +382,8 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 			}
 		}
 		try {
-			clientFacingDatagramSck = 
-					this.authResult.getDatagramSocket(clientFacingDatagramSck);
+			clientFacingDatagramSck = this.authResultSockets.getDatagramSocket(
+					clientFacingDatagramSck);
 		} catch (SocketException e) {
 			LOGGER.warn( 
 					LoggerHelper.objectMessage(

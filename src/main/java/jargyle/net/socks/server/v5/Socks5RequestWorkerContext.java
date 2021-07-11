@@ -5,26 +5,26 @@ import jargyle.net.socks.transport.v5.Socks5Request;
 
 public class Socks5RequestWorkerContext extends Socks5WorkerContext {
 
-	private final AuthResult authResult;
+	private final AuthResultSockets authResultSockets;
 	private final Socks5Request socks5Request;
 	
 	public Socks5RequestWorkerContext(final Socks5RequestWorkerContext other) {
 		super(other);
-		this.authResult = other.authResult;
+		this.authResultSockets = other.authResultSockets;
 		this.socks5Request = other.socks5Request; 
 	}
 	
 	public Socks5RequestWorkerContext(
 			final Socks5WorkerContext context, 
-			final AuthResult aResult, 
+			final AuthResultSockets authResultSocks, 
 			final Socks5Request socks5Req) {
 		super(context);
-		this.authResult = aResult;
+		this.authResultSockets = authResultSocks;
 		this.socks5Request = socks5Req;
 	}
 	
-	public final AuthResult getAuthResult() {
-		return this.authResult;
+	public final AuthResultSockets getAuthResultSockets() {
+		return this.authResultSockets;
 	}
 	
 	public final Command getCommand() {

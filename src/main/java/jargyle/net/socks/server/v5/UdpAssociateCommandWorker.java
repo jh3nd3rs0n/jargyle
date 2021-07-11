@@ -21,8 +21,6 @@ import jargyle.net.socks.server.SettingSpec;
 import jargyle.net.socks.server.Settings;
 import jargyle.net.socks.transport.v5.Reply;
 import jargyle.net.socks.transport.v5.Socks5Reply;
-import jargyle.net.socks.transport.v5.gssapiauth.GssDatagramSocket;
-import jargyle.net.socks.transport.v5.gssapiauth.GssSocket;
 import jargyle.net.ssl.DtlsDatagramSocketFactory;
 
 final class UdpAssociateCommandWorker extends CommandWorker {
@@ -32,6 +30,7 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 	private static final Logger LOGGER = LoggerFactory.getLogger(
 			UdpAssociateCommandWorker.class);
 	
+	private final AuthResult authResult;
 	private final DtlsDatagramSocketFactory clientDtlsDatagramSocketFactory;
 	private final Socket clientSocket;
 	private final CommandWorkerContext commandWorkerContext;
@@ -42,6 +41,7 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 	
 	public UdpAssociateCommandWorker(final CommandWorkerContext context) {
 		super(context);
+		AuthResult aResult = context.getAuthResult();
 		DtlsDatagramSocketFactory clientDtlsDatagramSockFactory =
 				context.getClientDtlsDatagramSocketFactory();
 		Socket clientSock = context.getClientSocket();
@@ -49,6 +49,7 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 		int desiredDestinationPrt = context.getDesiredDestinationPort();
 		NetObjectFactory netObjFactory = context.getNetObjectFactory();
 		Settings sttngs = context.getSettings();
+		this.authResult = aResult;
 		this.clientDtlsDatagramSocketFactory = clientDtlsDatagramSockFactory;
 		this.clientSocket = clientSock;
 		this.commandWorkerContext = context;
@@ -380,36 +381,31 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 				return null;
 			}
 		}
-		if (this.clientSocket instanceof GssSocket) {
-			GssSocket gssSocket = (GssSocket) this.clientSocket;
+		try {
+			clientFacingDatagramSck = 
+					this.authResult.getDatagramSocket(clientFacingDatagramSck);
+		} catch (SocketException e) {
+			LOGGER.warn( 
+					LoggerHelper.objectMessage(
+							this, 
+							"Error in wrapping the client-facing UDP "
+							+ "socket"), 
+					e);
+			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
+					Reply.GENERAL_SOCKS_SERVER_FAILURE);
+			LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
+					"Sending %s",
+					socks5Rep.toString())));
 			try {
-				clientFacingDatagramSck = new GssDatagramSocket(
-						clientFacingDatagramSck,
-						gssSocket.getGSSContext(),
-						gssSocket.getMessageProp());
-			} catch (SocketException e) {
+				this.commandWorkerContext.writeThenFlush(
+						socks5Rep.toByteArray());
+			} catch (IOException e1) {
 				LOGGER.warn( 
 						LoggerHelper.objectMessage(
-								this, 
-								"Error in wrapping the client-facing UDP "
-								+ "socket"), 
-						e);
-				Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
-						Reply.GENERAL_SOCKS_SERVER_FAILURE);
-				LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
-						"Sending %s",
-						socks5Rep.toString())));
-				try {
-					this.commandWorkerContext.writeThenFlush(
-							socks5Rep.toByteArray());
-				} catch (IOException e1) {
-					LOGGER.warn( 
-							LoggerHelper.objectMessage(
-									this, "Error in writing SOCKS5 reply"), 
-							e1);
-				}				
-				return null;
-			}
+								this, "Error in writing SOCKS5 reply"), 
+						e1);
+			}				
+			return null;
 		}
 		return clientFacingDatagramSck;
 	}

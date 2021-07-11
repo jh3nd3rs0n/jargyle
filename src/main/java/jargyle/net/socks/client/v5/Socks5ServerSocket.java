@@ -270,8 +270,9 @@ public final class Socks5ServerSocket extends ServerSocket {
 			}
 			Socket sock = this.socks5Client.getConnectedInternalSocket(
 					this.socket, true);
-			InputStream inStream = sock.getInputStream();
-			OutputStream outStream = sock.getOutputStream();
+			Socket sck = this.socks5Client.authenticate(sock).getSocket();
+			InputStream inStream = sck.getInputStream();
+			OutputStream outStream = sck.getOutputStream();
 			int prt = port;
 			if (prt == -1) {
 				prt = 0;
@@ -299,7 +300,7 @@ public final class Socks5ServerSocket extends ServerSocket {
 			this.localSocketAddress = new InetSocketAddress(
 					this.localInetAddress,
 					this.localPort);
-			this.socket = sock;
+			this.socket = sck;
 			this.socks5Bound = true;
 		}
 

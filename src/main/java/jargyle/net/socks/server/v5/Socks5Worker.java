@@ -45,11 +45,11 @@ public final class Socks5Worker {
 		this.socks5WorkerContext = context;
 	}
 	
-	private Socket authenticateUsing(final Method method) {
+	private AuthResult authenticateUsing(final Method method) {
 		Authenticator authenticator = Authenticator.valueOfMethod(method);
-		Socket socket = null;
+		AuthResult authResult = null;
 		try {
-			socket = authenticator.authenticate(
+			authResult = authenticator.authenticate(
 					this.clientSocket, this.configuration);
 		} catch (IOException e) {
 			LOGGER.warn( 
@@ -58,7 +58,7 @@ public final class Socks5Worker {
 					e);
 			return null;
 		}
-		return socket;
+		return authResult;
 	}
 	
 	private boolean canAllowSocks5Request(
@@ -142,9 +142,10 @@ public final class Socks5Worker {
 		try {
 			this.clientInputStream = this.clientSocket.getInputStream();
 			Method method = this.selectMethod();
-			if (method  == null) { return; } 
-			Socket socket = this.authenticateUsing(method);
-			if (socket == null) { return; }
+			if (method  == null) { return; }
+			AuthResult authResult = this.authenticateUsing(method);
+			if (authResult == null) { return; }
+			Socket socket = authResult.getSocket();
 			this.clientInputStream = socket.getInputStream();
 			this.clientSocket = socket;
 			this.socks5WorkerContext = new Socks5WorkerContext(new WorkerContext(
@@ -161,7 +162,7 @@ public final class Socks5Worker {
 			}
 			Socks5RequestWorkerContext socks5RequestWorkerContext = 
 					new Socks5RequestWorkerContext(
-							this.socks5WorkerContext, socks5Req);
+							this.socks5WorkerContext, authResult, socks5Req);
 			Socks5RequestWorkerFactory socks5RequestWorkerFactory =
 					this.settings.getLastValue(
 							SettingSpec.SOCKS5_SOCKS5_REQUEST_WORKER_FACTORY);

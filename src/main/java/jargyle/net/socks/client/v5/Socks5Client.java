@@ -15,8 +15,6 @@ import jargyle.net.socks.transport.v5.ClientMethodSelectionMessage;
 import jargyle.net.socks.transport.v5.Method;
 import jargyle.net.socks.transport.v5.Methods;
 import jargyle.net.socks.transport.v5.ServerMethodSelectionMessage;
-import jargyle.net.socks.transport.v5.gssapiauth.GssDatagramSocket;
-import jargyle.net.socks.transport.v5.gssapiauth.GssSocket;
 import jargyle.net.ssl.DtlsDatagramSocketFactory;
 
 public final class Socks5Client extends SocksClient {
@@ -39,7 +37,7 @@ public final class Socks5Client extends SocksClient {
 		this.dtlsDatagramSocketFactory = dtlsDatagramSockFactory;
 	}
 	
-	private Socket getAuthenticatedConnectedInternalSocket(
+	public AuthResult authenticate(
 			final Socket connectedInternalSocket) throws IOException {
 		InputStream inputStream = connectedInternalSocket.getInputStream();
 		OutputStream outputStream = connectedInternalSocket.getOutputStream();
@@ -58,16 +56,13 @@ public final class Socks5Client extends SocksClient {
 		} catch (IllegalArgumentException e) {
 			throw new IOException(e);
 		}
-		Socket newSocket = authenticator.authenticate(
-				connectedInternalSocket, this);
-		return newSocket;		
+		return authenticator.authenticate(connectedInternalSocket, this);
 	}
 	
 	public DatagramSocket getConnectedInternalDatagramSocket(
 			final DatagramSocket internalDatagramSocket,
 			final String udpRelayServerHost,
-			final int udpRelayServerPort, 
-			final Socket connectedInternalSocket) throws IOException {
+			final int udpRelayServerPort) throws IOException {
 		DatagramSocket internalDatagramSock = internalDatagramSocket;
 		InetAddress udpRelayServerHostInetAddress = InetAddress.getByName(
 				udpRelayServerHost); 
@@ -80,32 +75,7 @@ public final class Socks5Client extends SocksClient {
 							udpRelayServerHost,
 							udpRelayServerPort);
 		}
-		if (connectedInternalSocket instanceof GssSocket) {
-			GssSocket gssSocket = (GssSocket) connectedInternalSocket;
-			internalDatagramSock = new GssDatagramSocket(
-					internalDatagramSock,
-					gssSocket.getGSSContext(),
-					gssSocket.getMessageProp());
-		}
 		return internalDatagramSock;
-	}
-	
-	@Override
-	public Socket getConnectedInternalSocket(
-			final Socket internalSocket, 
-			final int timeout, 
-			final boolean bindBeforeConnect) throws IOException {
-		Socket sock = super.getConnectedInternalSocket(
-				internalSocket, timeout, bindBeforeConnect);
-		return this.getAuthenticatedConnectedInternalSocket(sock);
-	}
-
-	@Override
-	public Socket newConnectedInternalSocket(
-			final InetAddress localAddr, 
-			final int localPort) throws IOException {
-		Socket sock = super.newConnectedInternalSocket(localAddr, localPort);
-		return this.getAuthenticatedConnectedInternalSocket(sock);
 	}
 	
 	@Override

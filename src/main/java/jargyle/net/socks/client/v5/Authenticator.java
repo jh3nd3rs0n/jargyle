@@ -19,7 +19,6 @@ import jargyle.net.socks.client.PropertySpec;
 import jargyle.net.socks.client.v5.userpassauth.UsernamePassword;
 import jargyle.net.socks.client.v5.userpassauth.UsernamePasswordRequestor;
 import jargyle.net.socks.transport.v5.Method;
-import jargyle.net.socks.transport.v5.gssapiauth.GssSocket;
 import jargyle.net.socks.transport.v5.gssapiauth.Message;
 import jargyle.net.socks.transport.v5.gssapiauth.MessageType;
 import jargyle.net.socks.transport.v5.gssapiauth.ProtectionLevel;
@@ -28,22 +27,11 @@ import jargyle.net.socks.transport.v5.userpassauth.UsernamePasswordRequest;
 import jargyle.net.socks.transport.v5.userpassauth.UsernamePasswordResponse;
 
 enum Authenticator {
-
-	DEFAULT_AUTHENTICATOR(Method.NO_ACCEPTABLE_METHODS) {
-
-		@Override
-		public Socket authenticate(
-				final Socket Socket, 
-				final Socks5Client socks5Client) throws IOException {
-			throw new IOException("no acceptable authentication methods");
-		}
-		
-	},
 	
 	GSSAPI_AUTHENTICATOR(Method.GSSAPI) {
 		
 		@Override
-		public Socket authenticate(
+		public AuthResult authenticate(
 				final Socket socket, 
 				final Socks5Client socks5Client) throws IOException {
 			GSSContext context = this.newContext(socks5Client);
@@ -52,8 +40,7 @@ enum Authenticator {
 					this.negotiateProtectionLevel(
 							socket, context, socks5Client);
 			MessageProp msgProp = protectionLevelSelection.newMessageProp();
-			Socket newSocket = new GssSocket(socket, context, msgProp);
-			return newSocket;
+			return new GssapiAuthResult(context, msgProp, socket);
 		}
 		
 		private void establishContext(
@@ -201,10 +188,21 @@ enum Authenticator {
 	PERMISSIVE_AUTHENTICATOR(Method.NO_AUTHENTICATION_REQUIRED) {
 
 		@Override
-		public Socket authenticate(
+		public AuthResult authenticate(
 				final Socket socket, 
 				final Socks5Client socks5Client) throws IOException {
-			return socket;
+			return new DefaultAuthResult(this.methodValue(), socket);
+		}
+		
+	},
+	
+	UNPERMISSIVE_AUTHENTICATOR(Method.NO_ACCEPTABLE_METHODS) {
+
+		@Override
+		public AuthResult authenticate(
+				final Socket Socket, 
+				final Socks5Client socks5Client) throws IOException {
+			throw new IOException("no acceptable authentication methods");
 		}
 		
 	},
@@ -212,7 +210,7 @@ enum Authenticator {
 	USERNAME_PASSWORD_AUTHENTICATOR(Method.USERNAME_PASSWORD) {
 
 		@Override
-		public Socket authenticate(
+		public AuthResult authenticate(
 				final Socket socket, 
 				final Socks5Client socks5Client) throws IOException {
 			InputStream inputStream = socket.getInputStream();
@@ -256,7 +254,7 @@ enum Authenticator {
 					UsernamePasswordResponse.STATUS_SUCCESS) {
 				throw new IOException("invalid username password");
 			}
-			return socket;
+			return new DefaultAuthResult(this.methodValue(), socket);
 		}
 		
 	};
@@ -292,7 +290,7 @@ enum Authenticator {
 		this.methodValue = methValue;
 	}
 	
-	public abstract Socket authenticate(
+	public abstract AuthResult authenticate(
 			final Socket socket,
 			final Socks5Client socks5Client) throws IOException;
 	

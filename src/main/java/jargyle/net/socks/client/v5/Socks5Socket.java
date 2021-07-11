@@ -83,8 +83,10 @@ public final class Socks5Socket extends Socket {
 				final Socket connectedSocket,
 				final String address,
 				final int port) throws IOException {
-			InputStream inputStream = connectedSocket.getInputStream();
-			OutputStream outputStream = connectedSocket.getOutputStream();
+			Socket connectedSock = this.socks5Client.authenticate(
+					connectedSocket).getSocket(); 
+			InputStream inputStream = connectedSock.getInputStream();
+			OutputStream outputStream = connectedSock.getOutputStream();
 			Socks5Request socks5Req = Socks5Request.newInstance(
 					Command.CONNECT, 
 					address, 
@@ -109,7 +111,7 @@ public final class Socks5Socket extends Socket {
 			this.remoteSocketAddress = new InetSocketAddress(
 					this.remoteInetAddress,
 					this.remotePort);
-			this.socket = connectedSocket;			
+			this.socket = connectedSock;			
 		}
 		
 	}

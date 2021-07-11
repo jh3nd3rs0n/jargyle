@@ -195,6 +195,8 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			}
 			Socket sock = this.socks5Client.getConnectedInternalSocket(
 					this.socket, true);
+			AuthResult authResult = this.socks5Client.authenticate(sock);
+			Socket sck = authResult.getSocket();
 			if (!this.datagramSocket.equals(this.originalDatagramSocket)) {
 				this.datagramSocket = this.originalDatagramSocket;
 			}
@@ -202,8 +204,8 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			datagramSock.bind(new InetSocketAddress(inetAddress, port));
 			String address = datagramSock.getLocalAddress().getHostAddress();
 			int prt = datagramSock.getLocalPort();
-			InputStream inputStream = sock.getInputStream();
-			OutputStream outputStream = sock.getOutputStream();
+			InputStream inputStream = sck.getInputStream();
+			OutputStream outputStream = sck.getOutputStream();
 			Socks5Request socks5Req = Socks5Request.newInstance(
 					Command.UDP_ASSOCIATE, 
 					address, 
@@ -219,13 +221,14 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			datagramSock = this.socks5Client.getConnectedInternalDatagramSocket(
 					datagramSock,
 					this.socks5Client.getSocksServerUri().getHost(),
-					socks5Rep.getServerBoundPort(),
-					sock);
-			this.datagramSocket = datagramSock;
+					socks5Rep.getServerBoundPort());
+			DatagramSocket datagramSck = authResult.getDatagramSocket(
+					datagramSock);
+			this.datagramSocket = datagramSck;
 			this.udpRelayServerInetAddress = InetAddress.getByName(
 					socks5Rep.getServerBoundAddress());
 			this.udpRelayServerPort = socks5Rep.getServerBoundPort();
-			this.socket = sock;
+			this.socket = sck;
 		}
 		
 	}

@@ -195,9 +195,8 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			}
 			Socket sock = this.socks5Client.getConnectedInternalSocket(
 					this.socket, true);
-			AuthResultSockets authResultSockets = 
-					this.socks5Client.authenticate(sock);
-			Socket sck = authResultSockets.getSocket();
+			Encapsulator encapsulator = this.socks5Client.authenticate(sock);
+			Socket sck = encapsulator.encapsulate(sock);
 			if (!this.datagramSocket.equals(this.originalDatagramSocket)) {
 				this.datagramSocket = this.originalDatagramSocket;
 			}
@@ -223,7 +222,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 					datagramSock,
 					this.socks5Client.getSocksServerUri().getHost(),
 					socks5Rep.getServerBoundPort());
-			DatagramSocket datagramSck = authResultSockets.getDatagramSocket(
+			DatagramSocket datagramSck = encapsulator.encapsulate(
 					datagramSock);
 			this.datagramSocket = datagramSck;
 			this.udpRelayServerInetAddress = InetAddress.getByName(

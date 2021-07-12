@@ -31,7 +31,7 @@ enum Authenticator {
 	GSSAPI_AUTHENTICATOR(Method.GSSAPI) {
 		
 		@Override
-		public AuthResultSockets authenticate(
+		public Encapsulator authenticate(
 				final Socket socket, 
 				final Socks5Client socks5Client) throws IOException {
 			GSSContext context = this.newContext(socks5Client);
@@ -40,7 +40,7 @@ enum Authenticator {
 					this.negotiateProtectionLevel(
 							socket, context, socks5Client);
 			MessageProp msgProp = protectionLevelSelection.newMessageProp();
-			return new GssapiAuthResultSockets(context, msgProp, socket);
+			return new GssapiEncapsulator(context, msgProp);
 		}
 		
 		private void establishContext(
@@ -188,10 +188,10 @@ enum Authenticator {
 	PERMISSIVE_AUTHENTICATOR(Method.NO_AUTHENTICATION_REQUIRED) {
 
 		@Override
-		public AuthResultSockets authenticate(
+		public Encapsulator authenticate(
 				final Socket socket, 
 				final Socks5Client socks5Client) throws IOException {
-			return new DefaultAuthResultSockets(socket);
+			return new NullEncapsulator();
 		}
 		
 	},
@@ -199,7 +199,7 @@ enum Authenticator {
 	UNPERMISSIVE_AUTHENTICATOR(Method.NO_ACCEPTABLE_METHODS) {
 
 		@Override
-		public AuthResultSockets authenticate(
+		public Encapsulator authenticate(
 				final Socket Socket, 
 				final Socks5Client socks5Client) throws IOException {
 			throw new IOException("no acceptable authentication methods");
@@ -210,7 +210,7 @@ enum Authenticator {
 	USERNAME_PASSWORD_AUTHENTICATOR(Method.USERNAME_PASSWORD) {
 
 		@Override
-		public AuthResultSockets authenticate(
+		public Encapsulator authenticate(
 				final Socket socket, 
 				final Socks5Client socks5Client) throws IOException {
 			InputStream inputStream = socket.getInputStream();
@@ -254,7 +254,7 @@ enum Authenticator {
 					UsernamePasswordResponse.STATUS_SUCCESS) {
 				throw new IOException("invalid username password");
 			}
-			return new DefaultAuthResultSockets(socket);
+			return new NullEncapsulator();
 		}
 		
 	};
@@ -290,7 +290,7 @@ enum Authenticator {
 		this.methodValue = methValue;
 	}
 	
-	public abstract AuthResultSockets authenticate(
+	public abstract Encapsulator authenticate(
 			final Socket socket,
 			final Socks5Client socks5Client) throws IOException;
 	

@@ -30,31 +30,31 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 	private static final Logger LOGGER = LoggerFactory.getLogger(
 			UdpAssociateCommandWorker.class);
 	
-	private final AuthResultSockets authResultSockets;
 	private final DtlsDatagramSocketFactory clientDtlsDatagramSocketFactory;
 	private final Socket clientSocket;
 	private final CommandWorkerContext commandWorkerContext;
 	private final String desiredDestinationAddress;
 	private final int desiredDestinationPort;
+	private final Encapsulator encapsulator;
 	private final NetObjectFactory netObjectFactory;
 	private final Settings settings;
 	
 	public UdpAssociateCommandWorker(final CommandWorkerContext context) {
 		super(context);
-		AuthResultSockets authResultSocks = context.getAuthResultSockets();
 		DtlsDatagramSocketFactory clientDtlsDatagramSockFactory =
 				context.getClientDtlsDatagramSocketFactory();
 		Socket clientSock = context.getClientSocket();
 		String desiredDestinationAddr =	context.getDesiredDestinationAddress();
 		int desiredDestinationPrt = context.getDesiredDestinationPort();
+		Encapsulator encpsltr = context.getEncapsulator();
 		NetObjectFactory netObjFactory = context.getNetObjectFactory();
 		Settings sttngs = context.getSettings();
-		this.authResultSockets = authResultSocks;
 		this.clientDtlsDatagramSocketFactory = clientDtlsDatagramSockFactory;
 		this.clientSocket = clientSock;
 		this.commandWorkerContext = context;
 		this.desiredDestinationAddress = desiredDestinationAddr;
 		this.desiredDestinationPort = desiredDestinationPrt;
+		this.encapsulator = encpsltr; 
 		this.netObjectFactory = netObjFactory;
 		this.settings = sttngs;		
 	}
@@ -349,8 +349,7 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 			clientFacingDatagramSck.connect(
 					udpClientHostInetAddress, udpClientPort);
 		}
-		if (clientFacingDatagramSck.isConnected() 
-				&& this.clientDtlsDatagramSocketFactory != null) {
+		if (clientFacingDatagramSck.isConnected()) {
 			try {
 				clientFacingDatagramSck = 
 						this.clientDtlsDatagramSocketFactory.newDatagramSocket(
@@ -382,7 +381,7 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 			}
 		}
 		try {
-			clientFacingDatagramSck = this.authResultSockets.getDatagramSocket(
+			clientFacingDatagramSck = this.encapsulator.encapsulate(
 					clientFacingDatagramSck);
 		} catch (SocketException e) {
 			LOGGER.warn( 

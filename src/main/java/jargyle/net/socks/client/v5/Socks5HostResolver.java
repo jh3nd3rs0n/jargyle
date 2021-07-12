@@ -37,7 +37,8 @@ public final class Socks5HostResolver extends HostResolver {
 		Socket socket = this.socks5Client.newInternalSocket();
 		this.socks5Client.configureInternalSocket(socket);
 		Socket sock = this.socks5Client.getConnectedInternalSocket(socket, true);
-		Socket sck = this.socks5Client.authenticate(sock).getSocket();
+		Encapsulator encapsulator = this.socks5Client.authenticate(sock);
+		Socket sck = encapsulator.encapsulate(sock);
 		InputStream inputStream = sck.getInputStream();
 		OutputStream outputStream = sck.getOutputStream();
 		Socks5Request socks5Req = Socks5Request.newInstance(

@@ -75,19 +75,22 @@ final class DtlsDatagramSocketFactoryImpl extends DtlsDatagramSocketFactory {
 			final String peerHost, 
 			final int peerPort)
 			throws IOException {
+		Settings settings = this.configuration.getSettings();
+		if (!settings.getLastValue(SettingSpec.DTLS_ENABLED).booleanValue()) {
+			return datagramSocket;
+		}
 		if (!ConfigurationsHelper.equals(
 				this.lastConfiguration, this.configuration)) {
 			this.dtlsContext = this.getDtlsContext();
 			this.lastConfiguration = ImmutableConfiguration.newInstance(
 					this.configuration);
-		}		
+		}
 		DtlsDatagramSocketFactory factory = 
 				DtlsDatagramSocketFactory.newInstance(this.dtlsContext);
 		DtlsDatagramSocket dtlsDatagramSocket = 
 				(DtlsDatagramSocket) factory.newDatagramSocket(
 						datagramSocket, peerHost, peerPort);		
 		dtlsDatagramSocket.setUseClientMode(false);
-		Settings settings = this.configuration.getSettings();
 		Strings enabledCipherSuites = settings.getLastValue(
 				SettingSpec.DTLS_ENABLED_CIPHER_SUITES);
 		String[] cipherSuites = enabledCipherSuites.toStringArray();

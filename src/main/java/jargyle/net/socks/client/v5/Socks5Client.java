@@ -31,13 +31,11 @@ public final class Socks5Client extends SocksClient {
 			final Properties props,
 			final SocksClient chainedClient) {
 		super(serverUri, props, chainedClient);
-		DtlsDatagramSocketFactory dtlsDatagramSockFactory = props.getValue(
-				PropertySpec.DTLS_ENABLED).booleanValue() ? 
-						new DtlsDatagramSocketFactoryImpl(this) : null;
-		this.dtlsDatagramSocketFactory = dtlsDatagramSockFactory;
+		this.dtlsDatagramSocketFactory = new DtlsDatagramSocketFactoryImpl(
+				this);
 	}
 	
-	public AuthResultSockets authenticate(
+	public Encapsulator authenticate(
 			final Socket connectedInternalSocket) throws IOException {
 		InputStream inputStream = connectedInternalSocket.getInputStream();
 		OutputStream outputStream = connectedInternalSocket.getOutputStream();
@@ -63,19 +61,14 @@ public final class Socks5Client extends SocksClient {
 			final DatagramSocket internalDatagramSocket,
 			final String udpRelayServerHost,
 			final int udpRelayServerPort) throws IOException {
-		DatagramSocket internalDatagramSock = internalDatagramSocket;
 		InetAddress udpRelayServerHostInetAddress = InetAddress.getByName(
 				udpRelayServerHost); 
-		internalDatagramSock.connect(
+		internalDatagramSocket.connect(
 				udpRelayServerHostInetAddress, udpRelayServerPort);
-		if (this.dtlsDatagramSocketFactory != null) {
-			internalDatagramSock = 
-					this.dtlsDatagramSocketFactory.newDatagramSocket(
-							internalDatagramSock,
-							udpRelayServerHost,
-							udpRelayServerPort);
-		}
-		return internalDatagramSock;
+		return this.dtlsDatagramSocketFactory.newDatagramSocket(
+				internalDatagramSocket,
+				udpRelayServerHost,
+				udpRelayServerPort);
 	}
 	
 	@Override

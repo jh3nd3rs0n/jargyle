@@ -4,11 +4,11 @@ import java.net.DatagramSocket;
 import java.net.Socket;
 import java.net.SocketException;
 
-public abstract class AuthResultSockets {
+public abstract class Encapsulator {
 
-	public abstract DatagramSocket getDatagramSocket(
+	public abstract DatagramSocket encapsulate(
 			final DatagramSocket datagramSocket) throws SocketException;
 	
-	public abstract Socket getSocket();
+	public abstract Socket encapsulate(final Socket socket);
 	
 }

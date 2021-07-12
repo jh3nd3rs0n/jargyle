@@ -29,8 +29,9 @@ final class Listener implements Runnable {
 	private final ServerSocket serverSocket;
 			
 	public Listener(final ServerSocket serverSock, final Configuration config) {
-		this.clientDtlsDatagramSocketFactory = null;
-		this.clientSslSocketFactory = null;		
+		this.clientDtlsDatagramSocketFactory = 
+				new DtlsDatagramSocketFactoryImpl(config);
+		this.clientSslSocketFactory = new SslSocketFactoryImpl(config);		
 		this.configuration = config;
 		this.netObjectFactory = new NetObjectFactoryImpl(config);
 		this.serverSocket = serverSock;
@@ -78,30 +79,6 @@ final class Listener implements Runnable {
 		}
 	}
 	
-	private DtlsDatagramSocketFactory getClientDtlsDatagramSocketFactory() {
-		if (!this.configuration.getSettings().getLastValue(
-				SettingSpec.DTLS_ENABLED).booleanValue()) {
-			return null;
-		}
-		if (this.clientDtlsDatagramSocketFactory == null) {
-			this.clientDtlsDatagramSocketFactory = 
-					new DtlsDatagramSocketFactoryImpl(this.configuration);
-		}
-		return this.clientDtlsDatagramSocketFactory;
-	}
-	
-	private SslSocketFactory getClientSslSocketFactory() {
-		if (!this.configuration.getSettings().getLastValue(
-				SettingSpec.SSL_ENABLED).booleanValue()) {
-			return null;
-		}
-		if (this.clientSslSocketFactory == null) {
-			this.clientSslSocketFactory = new SslSocketFactoryImpl(
-					this.configuration);
-		}
-		return this.clientSslSocketFactory;
-	}
-	
 	public void run() {
 		ExecutorService executor = Executors.newCachedThreadPool();
 		while (true) {
@@ -140,7 +117,7 @@ final class Listener implements Runnable {
 					clientSocket,
 					this.configuration,
 					this.netObjectFactory,
-					this.getClientDtlsDatagramSocketFactory());
+					this.clientDtlsDatagramSocketFactory);
 			executor.execute(new Worker(workerContext));
 		}
 		executor.shutdownNow();
@@ -157,20 +134,16 @@ final class Listener implements Runnable {
 	}
 	
 	private Socket wrapClientSocket(final Socket clientSocket) {
-		Socket clientSock = clientSocket;
-		SslSocketFactory clientSslSockFactory = 
-				this.getClientSslSocketFactory();
-		if (clientSslSockFactory != null) {
-			try {
-				clientSock = clientSslSockFactory.newSocket(
-						clientSock, null, true);
-			} catch (IOException e) {
-				LOGGER.warn(
-						LoggerHelper.objectMessage(
-								this, "Error in wrapping the client socket"), 
-						e);
-				return null;
-			}
+		Socket clientSock = null;
+		try {
+			clientSock = this.clientSslSocketFactory.newSocket(
+					clientSocket, null, true);
+		} catch (IOException e) {
+			LOGGER.warn(
+					LoggerHelper.objectMessage(
+							this, "Error in wrapping the client socket"), 
+					e);
+			return null;
 		}
 		return clientSock;
 	}

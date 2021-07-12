@@ -10,35 +10,31 @@ import org.ietf.jgss.MessageProp;
 import jargyle.net.socks.transport.v5.gssapiauth.GssDatagramSocket;
 import jargyle.net.socks.transport.v5.gssapiauth.GssSocket;
 
-final class GssapiAuthResultSockets extends AuthResultSockets {
+final class GssapiEncapsulator extends Encapsulator {
 
 	private final GSSContext gssContext;
 	private final MessageProp messageProp;
-	private final Socket socket;
 	
-	public GssapiAuthResultSockets(
-			final GSSContext context, 
-			final MessageProp prop,
-			final Socket sock) {
+	public GssapiEncapsulator(
+			final GSSContext context, final MessageProp prop) {
 		MessageProp prp = null;
 		if (prop != null) {
 			prp = new MessageProp(prop.getQOP(), prop.getPrivacy());
 		}
 		this.gssContext = context;
 		this.messageProp = prp;
-		this.socket = new GssSocket(sock, context, prp);
 	}
 	
 	@Override
-	public DatagramSocket getDatagramSocket(
+	public DatagramSocket encapsulate(
 			final DatagramSocket datagramSocket) throws SocketException {
 		return new GssDatagramSocket(
 				datagramSocket, this.gssContext, this.messageProp);
 	}
 
 	@Override
-	public Socket getSocket() {
-		return this.socket;
+	public Socket encapsulate(final Socket socket) {
+		return new GssSocket(socket, this.gssContext, this.messageProp);
 	}
 
 }

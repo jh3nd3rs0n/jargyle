@@ -74,6 +74,10 @@ final class SslSocketFactoryImpl extends SslSocketFactory {
 			final Socket socket, 
 			final InputStream consumed, 
 			final boolean autoClose) throws IOException {
+		Settings settings = this.configuration.getSettings();
+		if (!settings.getLastValue(SettingSpec.SSL_ENABLED).booleanValue()) {
+			return socket;
+		}
 		if (!ConfigurationsHelper.equals(
 				this.lastConfiguration, this.configuration)) {
 			this.sslContext = this.getSslContext();
@@ -84,7 +88,6 @@ final class SslSocketFactoryImpl extends SslSocketFactory {
 				this.sslContext);
 		SSLSocket sslSocket = (SSLSocket) factory.newSocket(
 				socket,	consumed, autoClose);
-		Settings settings = this.configuration.getSettings();
 		Strings enabledCipherSuites = settings.getLastValue(
 				SettingSpec.SSL_ENABLED_CIPHER_SUITES);
 		String[] cipherSuites = enabledCipherSuites.toStringArray();

@@ -270,8 +270,9 @@ public final class Socks5ServerSocket extends ServerSocket {
 			}
 			Socket sock = this.socks5Client.getConnectedInternalSocket(
 					this.socket, true);
-			Encapsulator encapsulator = this.socks5Client.authenticate(sock);
-			Socket sck = encapsulator.encapsulate(sock);
+			MethodSubnegotiationResult methodSubnegotiationResult = 
+					this.socks5Client.negotiateUsing(sock);
+			Socket sck = methodSubnegotiationResult.getSocket();
 			InputStream inStream = sck.getInputStream();
 			OutputStream outStream = sck.getOutputStream();
 			int prt = port;

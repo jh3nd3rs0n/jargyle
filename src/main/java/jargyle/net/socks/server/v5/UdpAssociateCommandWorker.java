@@ -35,7 +35,7 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 	private final CommandWorkerContext commandWorkerContext;
 	private final String desiredDestinationAddress;
 	private final int desiredDestinationPort;
-	private final Encapsulator encapsulator;
+	private final MethodSubnegotiationResult methodSubnegotiationResult;
 	private final NetObjectFactory netObjectFactory;
 	private final Settings settings;
 	
@@ -46,7 +46,8 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 		Socket clientSock = context.getClientSocket();
 		String desiredDestinationAddr =	context.getDesiredDestinationAddress();
 		int desiredDestinationPrt = context.getDesiredDestinationPort();
-		Encapsulator encpsltr = context.getEncapsulator();
+		MethodSubnegotiationResult methSubnegotiationResult = 
+				context.getMethodSubnegotiationResult();
 		NetObjectFactory netObjFactory = context.getNetObjectFactory();
 		Settings sttngs = context.getSettings();
 		this.clientDtlsDatagramSocketFactory = clientDtlsDatagramSockFactory;
@@ -54,7 +55,7 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 		this.commandWorkerContext = context;
 		this.desiredDestinationAddress = desiredDestinationAddr;
 		this.desiredDestinationPort = desiredDestinationPrt;
-		this.encapsulator = encpsltr; 
+		this.methodSubnegotiationResult = methSubnegotiationResult; 
 		this.netObjectFactory = netObjFactory;
 		this.settings = sttngs;		
 	}
@@ -349,7 +350,8 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 			clientFacingDatagramSck.connect(
 					udpClientHostInetAddress, udpClientPort);
 		}
-		if (clientFacingDatagramSck.isConnected()) {
+		if (clientFacingDatagramSck.isConnected() 
+				&& this.clientDtlsDatagramSocketFactory != null) {
 			try {
 				clientFacingDatagramSck = 
 						this.clientDtlsDatagramSocketFactory.newDatagramSocket(
@@ -381,9 +383,10 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 			}
 		}
 		try {
-			clientFacingDatagramSck = this.encapsulator.encapsulate(
-					clientFacingDatagramSck);
-		} catch (SocketException e) {
+			clientFacingDatagramSck = 
+					this.methodSubnegotiationResult.getDatagramSocket(
+							clientFacingDatagramSck);
+		} catch (IOException e) {
 			LOGGER.warn( 
 					LoggerHelper.objectMessage(
 							this, 

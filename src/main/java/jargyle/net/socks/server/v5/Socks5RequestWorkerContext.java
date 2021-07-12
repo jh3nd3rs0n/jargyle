@@ -5,21 +5,21 @@ import jargyle.net.socks.transport.v5.Socks5Request;
 
 public class Socks5RequestWorkerContext extends Socks5WorkerContext {
 
-	private final Encapsulator encapsulator;
+	private final MethodSubnegotiationResult methodSubnegotiationResult;
 	private final Socks5Request socks5Request;
 	
 	public Socks5RequestWorkerContext(final Socks5RequestWorkerContext other) {
 		super(other);
-		this.encapsulator = other.encapsulator;
+		this.methodSubnegotiationResult = other.methodSubnegotiationResult;
 		this.socks5Request = other.socks5Request; 
 	}
 	
 	public Socks5RequestWorkerContext(
 			final Socks5WorkerContext context,
-			final Encapsulator encpsltr,
+			final MethodSubnegotiationResult methSubnegotiationResult,
 			final Socks5Request socks5Req) {
 		super(context);
-		this.encapsulator = encpsltr;
+		this.methodSubnegotiationResult = methSubnegotiationResult;
 		this.socks5Request = socks5Req;
 	}
 	
@@ -35,8 +35,8 @@ public class Socks5RequestWorkerContext extends Socks5WorkerContext {
 		return this.socks5Request.getDesiredDestinationPort();
 	}
 	
-	public final Encapsulator getEncapsulator() {
-		return this.encapsulator;
+	public final MethodSubnegotiationResult getMethodSubnegotiationResult() {
+		return this.methodSubnegotiationResult;
 	}
 	
 	public final Socks5Request getSocks5Request() {

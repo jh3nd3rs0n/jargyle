@@ -57,12 +57,15 @@ public abstract class SocksClient {
 		NetObjectFactory internalNetObjFactory = (chainedClient == null) ?
 				new DefaultNetObjectFactory() 
 				: chainedClient.newSocksNetObjectFactory();
+		SslSocketFactory sslSockFactory = 
+				(props.getValue(PropertySpec.SSL_ENABLED).booleanValue()) ?
+						new SslSocketFactoryImpl(this) : null;
 		this.chainedSocksClient = chainedClient;
 		this.internalHostResolver = internalNetObjFactory.newHostResolver();
 		this.internalNetObjectFactory = internalNetObjFactory;
 		this.properties = props;
 		this.socksServerUri = serverUri;
-		this.sslSocketFactory = new SslSocketFactoryImpl(this);
+		this.sslSocketFactory = sslSockFactory;
 	}
 	
 	public final void configureInternalSocket(
@@ -120,6 +123,9 @@ public abstract class SocksClient {
 				new InetSocketAddress(
 						socksServerUriHostInetAddress, socksServerUriPort), 
 				timeout);
+		if (this.sslSocketFactory == null) {
+			return internalSocket;
+		}
 		return this.sslSocketFactory.newSocket(
 				internalSocket, 
 				socksServerUriHost, 
@@ -153,6 +159,9 @@ public abstract class SocksClient {
 				socksServerUriPort, 
 				localAddr, 
 				localPort);
+		if (this.sslSocketFactory == null) {
+			return internalSocket;
+		}
 		return this.sslSocketFactory.newSocket(
 				internalSocket, 
 				socksServerUriHost, 

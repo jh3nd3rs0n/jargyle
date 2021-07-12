@@ -18,6 +18,7 @@ import jargyle.net.socks.server.Configuration;
 import jargyle.net.socks.server.SettingSpec;
 import jargyle.net.socks.server.v5.userpassauth.UsernamePasswordAuthenticator;
 import jargyle.net.socks.transport.v5.Method;
+import jargyle.net.socks.transport.v5.gssapiauth.GssSocket;
 import jargyle.net.socks.transport.v5.gssapiauth.Message;
 import jargyle.net.socks.transport.v5.gssapiauth.MessageType;
 import jargyle.net.socks.transport.v5.gssapiauth.ProtectionLevel;
@@ -25,22 +26,9 @@ import jargyle.net.socks.transport.v5.gssapiauth.ProtectionLevels;
 import jargyle.net.socks.transport.v5.userpassauth.UsernamePasswordRequest;
 import jargyle.net.socks.transport.v5.userpassauth.UsernamePasswordResponse;
 
-enum Authenticator {
+enum MethodSubnegotiator {
 
-	GSSAPI_AUTHENTICATOR(Method.GSSAPI) {
-		
-		@Override
-		public Encapsulator authenticate(
-				final Socket socket, 
-				final Configuration configuration) throws IOException {
-			GSSContext context = this.newContext();
-			this.establishContext(socket, context, configuration);
-			ProtectionLevel protectionLevelChoice =
-					this.negotiateProtectionLevel(
-							socket, context, configuration);
-			MessageProp msgProp = protectionLevelChoice.newMessageProp();
-			return new GssapiEncapsulator(context, msgProp);
-		}
+	GSSAPI_METHOD_SUBNEGOTIATOR(Method.GSSAPI) {
 		
 		private void establishContext(
 				final Socket socket,
@@ -152,7 +140,7 @@ enum Authenticator {
 			}
 			return protectionLevelChoice;
 		}
-
+		
 		private GSSContext newContext() throws IOException {
 			GSSManager manager = GSSManager.getInstance();
 			GSSContext context = null;
@@ -163,37 +151,52 @@ enum Authenticator {
 			}
 			return context;
 		}
-		
-	},
-	
-	PERMISSIVE_AUTHENTICATOR(Method.NO_AUTHENTICATION_REQUIRED) {
 
 		@Override
-		public Encapsulator authenticate(
+		public MethodSubnegotiationResult subnegotiateWith(
 				final Socket socket, 
 				final Configuration configuration) throws IOException {
-			return new NullEncapsulator();
+			GSSContext context = this.newContext();
+			this.establishContext(socket, context, configuration);
+			ProtectionLevel protectionLevelChoice =
+					this.negotiateProtectionLevel(
+							socket, context, configuration);
+			MessageProp msgProp = protectionLevelChoice.newMessageProp();
+			GssSocket gssSocket = new GssSocket(socket, context, msgProp);
+			return new GssapiMethodSubnegotiationResult(gssSocket);
 		}
 		
 	},
 	
-	UNPERMISSIVE_AUTHENTICATOR(Method.NO_ACCEPTABLE_METHODS) {
+	NO_ACCEPTABLE_METHODS_METHOD_SUBNEGOTIATOR(Method.NO_ACCEPTABLE_METHODS) {
 
 		@Override
-		public Encapsulator authenticate(
+		public MethodSubnegotiationResult subnegotiateWith(
 				final Socket socket, 
 				final Configuration configuration) throws IOException {
 			throw new IOException(String.format(
-					"no acceptable authentication methods from %s",
+					"no acceptable methods from %s",
 					socket));
 		}
 		
 	},
 	
-	USERNAME_PASSWORD_AUTHENTICATOR(Method.USERNAME_PASSWORD) {
+	NO_AUTHENTICATION_REQUIRED_METHOD_SUBNEGOTIATOR(
+			Method.NO_AUTHENTICATION_REQUIRED) {
 
 		@Override
-		public Encapsulator authenticate(
+		public MethodSubnegotiationResult subnegotiateWith(
+				final Socket socket, 
+				final Configuration configuration) throws IOException {
+			return new DefaultMethodSubnegotiationResult(socket);
+		}
+		
+	},
+	
+	USERNAME_PASSWORD_METHOD_SUBNEGOTIATOR(Method.USERNAME_PASSWORD) {
+
+		@Override
+		public MethodSubnegotiationResult subnegotiateWith(
 				final Socket socket, 
 				final Configuration configuration) throws IOException {
 			InputStream inputStream = socket.getInputStream();
@@ -222,22 +225,23 @@ enum Authenticator {
 					UsernamePasswordResponse.STATUS_SUCCESS);
 			outputStream.write(usernamePasswordResp.toByteArray());
 			outputStream.flush();
-			return new NullEncapsulator();
+			return new DefaultMethodSubnegotiationResult(socket);
 		}
 		
 	};
 	
-	public static Authenticator valueOfMethod(final Method meth) {
-		for (Authenticator value : Authenticator.values()) {
+	public static MethodSubnegotiator valueOfMethod(final Method meth) {
+		for (MethodSubnegotiator value : MethodSubnegotiator.values()) {
 			if (value.methodValue().equals(meth)) {
 				return value;
 			}
 		}
 		StringBuilder sb = new StringBuilder();
-		List<Authenticator> list = Arrays.asList(Authenticator.values());
-		for (Iterator<Authenticator> iterator = list.iterator();
+		List<MethodSubnegotiator> list = Arrays.asList(
+				MethodSubnegotiator.values());
+		for (Iterator<MethodSubnegotiator> iterator = list.iterator();
 				iterator.hasNext();) {
-			Authenticator value = iterator.next();
+			MethodSubnegotiator value = iterator.next();
 			Method method = value.methodValue();
 			sb.append(method);
 			if (iterator.hasNext()) {
@@ -254,16 +258,16 @@ enum Authenticator {
 	
 	private final Method methodValue;
 	
-	private Authenticator(final Method methValue) {
+	private MethodSubnegotiator(final Method methValue) {
 		this.methodValue = methValue;
 	}
-	
-	public abstract Encapsulator authenticate(
-			final Socket socket,
-			final Configuration configuration) throws IOException;
 	
 	public Method methodValue() {
 		return this.methodValue;
 	}
+	
+	public abstract MethodSubnegotiationResult subnegotiateWith(
+			final Socket socket,
+			final Configuration configuration) throws IOException;
 	
 }

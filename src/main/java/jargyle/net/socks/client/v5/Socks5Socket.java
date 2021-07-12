@@ -83,9 +83,9 @@ public final class Socks5Socket extends Socket {
 				final Socket connectedSocket,
 				final String address,
 				final int port) throws IOException {
-			Encapsulator encapsulator = this.socks5Client.authenticate(
-					connectedSocket); 
-			Socket connectedSock = encapsulator.encapsulate(connectedSocket); 
+			MethodSubnegotiationResult methodSubnegotiationResult = 
+					this.socks5Client.negotiateUsing(connectedSocket); 
+			Socket connectedSock = methodSubnegotiationResult.getSocket(); 
 			InputStream inputStream = connectedSock.getInputStream();
 			OutputStream outputStream = connectedSock.getOutputStream();
 			Socks5Request socks5Req = Socks5Request.newInstance(

@@ -76,10 +76,6 @@ final class DtlsDatagramSocketFactoryImpl extends DtlsDatagramSocketFactory {
 			final String peerHost, 
 			final int peerPort)
 			throws IOException {
-		Properties properties = this.socksClient.getProperties();
-		if (!properties.getValue(PropertySpec.DTLS_ENABLED).booleanValue()) {
-			return datagramSocket;
-		}
 		if (this.dtlsContext == null) {
 			this.dtlsContext = this.getDtlsContext();
 		}
@@ -89,6 +85,7 @@ final class DtlsDatagramSocketFactoryImpl extends DtlsDatagramSocketFactory {
 				(DtlsDatagramSocket) factory.newDatagramSocket(
 						datagramSocket, peerHost, peerPort);
 		dtlsDatagramSocket.setUseClientMode(true);
+		Properties properties = this.socksClient.getProperties();
 		Strings enabledCipherSuites = properties.getValue(
 				PropertySpec.DTLS_ENABLED_CIPHER_SUITES);
 		String[] cipherSuites = enabledCipherSuites.toStringArray();

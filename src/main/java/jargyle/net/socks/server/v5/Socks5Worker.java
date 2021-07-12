@@ -45,22 +45,6 @@ public final class Socks5Worker {
 		this.socks5WorkerContext = context;
 	}
 	
-	private Encapsulator authenticateUsing(final Method method) {
-		Authenticator authenticator = Authenticator.valueOfMethod(method);
-		Encapsulator encapsulator = null;
-		try {
-			encapsulator = authenticator.authenticate(
-					this.clientSocket, this.configuration);
-		} catch (IOException e) {
-			LOGGER.warn( 
-					LoggerHelper.objectMessage(
-							this, "Error in authenticating the client"), 
-					e);
-			return null;
-		}
-		return encapsulator;
-	}
-	
 	private boolean canAllowSocks5Request(
 			final String clientAddress,	final Socks5Request socks5Req) {
 		Socks5RequestCriteria allowedSocks5RequestCriteria = 
@@ -115,86 +99,7 @@ public final class Socks5Worker {
 		return true;
 	}
 	
-	private Socks5Request newSocks5Request() throws IOException {
-		Socks5Request socks5Req = null;
-		try {
-			socks5Req = Socks5Request.newInstanceFrom(this.clientInputStream);
-		} catch (IOException e) {
-			LOGGER.warn( 
-					LoggerHelper.objectMessage(
-							this, "Error in parsing the SOCKS5 request"), 
-					e);
-			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
-					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
-					"Sending %s",
-					socks5Rep.toString())));
-			this.socks5WorkerContext.writeThenFlush(socks5Rep.toByteArray());
-			return null;
-		}
-		LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
-				"Received %s",
-				socks5Req.toString())));
-		return socks5Req;
-	}
-	
-	public void run() {
-		try {
-			this.clientInputStream = this.clientSocket.getInputStream();
-			Method method = this.selectMethod();
-			if (method  == null) { return; }
-			Encapsulator encapsulator = this.authenticateUsing(method);
-			if (encapsulator == null) { return; }
-			Socket socket = encapsulator.encapsulate(this.clientSocket);
-			this.clientInputStream = socket.getInputStream();
-			this.clientSocket = socket;
-			this.socks5WorkerContext = new Socks5WorkerContext(new WorkerContext(
-					this.clientSocket,
-					this.configuration,
-					this.socks5WorkerContext.getNetObjectFactory(),
-					this.socks5WorkerContext.getClientDtlsDatagramSocketFactory()));
-			Socks5Request socks5Req = this.newSocks5Request();
-			if (socks5Req == null) { return; }
-			if (!this.canAllowSocks5Request(
-					this.clientSocket.getInetAddress().getHostAddress(), 
-					socks5Req)) {
-				return;
-			}
-			Socks5RequestWorkerContext socks5RequestWorkerContext = 
-					new Socks5RequestWorkerContext(
-							this.socks5WorkerContext, encapsulator, socks5Req);
-			Socks5RequestWorkerFactory socks5RequestWorkerFactory =
-					this.settings.getLastValue(
-							SettingSpec.SOCKS5_SOCKS5_REQUEST_WORKER_FACTORY);
-			if (socks5RequestWorkerFactory == null) {
-				socks5RequestWorkerFactory = 
-						Socks5RequestWorkerFactory.newInstance(); 
-			}
-			Socks5RequestWorker socks5RequestWorker = 
-					socks5RequestWorkerFactory.newSocks5RequestWorker(
-							socks5RequestWorkerContext);
-			socks5RequestWorker.run();
-		} catch (Throwable t) {
-			LOGGER.warn( 
-					LoggerHelper.objectMessage(this, "Internal server error"), 
-					t);
-		} finally {
-			if (!this.clientSocket.isClosed()) {
-				try {
-					this.clientSocket.close();
-				} catch (IOException e) {
-					LOGGER.warn( 
-							LoggerHelper.objectMessage(
-									this, 
-									"Error upon closing connection to the "
-									+ "client"), 
-							e);
-				}
-			}
-		}
-	}
-	
-	private Method selectMethod() throws IOException {
+	private MethodSubnegotiationResult negotiate() throws IOException {
 		InputStream in = new SequenceInputStream(new ByteArrayInputStream(
 				new byte[] { Version.V5.byteValue() }),
 				this.clientInputStream);
@@ -231,7 +136,100 @@ public final class Socks5Worker {
 				"Sending %s", 
 				smsm.toString())));
 		this.socks5WorkerContext.writeThenFlush(smsm.toByteArray());
-		return method;
+		MethodSubnegotiator methodSubnegotiator = 
+				MethodSubnegotiator.valueOfMethod(method);
+		MethodSubnegotiationResult methodSubnegotiationResult = null;
+		try {
+			methodSubnegotiationResult = methodSubnegotiator.subnegotiateWith(
+					this.clientSocket, this.configuration);
+		} catch (IOException e) {
+			LOGGER.warn( 
+					LoggerHelper.objectMessage(
+							this, "Error in sub-negotiating with the client"), 
+					e);
+			return null;
+		}
+		return methodSubnegotiationResult;		
+	}
+	
+	private Socks5Request newSocks5Request() throws IOException {
+		Socks5Request socks5Req = null;
+		try {
+			socks5Req = Socks5Request.newInstanceFrom(this.clientInputStream);
+		} catch (IOException e) {
+			LOGGER.warn( 
+					LoggerHelper.objectMessage(
+							this, "Error in parsing the SOCKS5 request"), 
+					e);
+			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
+					Reply.GENERAL_SOCKS_SERVER_FAILURE);
+			LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
+					"Sending %s",
+					socks5Rep.toString())));
+			this.socks5WorkerContext.writeThenFlush(socks5Rep.toByteArray());
+			return null;
+		}
+		LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
+				"Received %s",
+				socks5Req.toString())));
+		return socks5Req;
+	}
+	
+	public void run() {
+		try {
+			this.clientInputStream = this.clientSocket.getInputStream();
+			MethodSubnegotiationResult methodSubnegotiationResult = 
+					this.negotiate();
+			if (methodSubnegotiationResult == null) { return; }
+			Socket socket = methodSubnegotiationResult.getSocket();
+			this.clientInputStream = socket.getInputStream();
+			this.clientSocket = socket;
+			this.socks5WorkerContext = new Socks5WorkerContext(new WorkerContext(
+					this.clientSocket,
+					this.configuration,
+					this.socks5WorkerContext.getNetObjectFactory(),
+					this.socks5WorkerContext.getClientDtlsDatagramSocketFactory()));
+			Socks5Request socks5Req = this.newSocks5Request();
+			if (socks5Req == null) { return; }
+			if (!this.canAllowSocks5Request(
+					this.clientSocket.getInetAddress().getHostAddress(), 
+					socks5Req)) {
+				return;
+			}
+			Socks5RequestWorkerContext socks5RequestWorkerContext = 
+					new Socks5RequestWorkerContext(
+							this.socks5WorkerContext, 
+							methodSubnegotiationResult, 
+							socks5Req);
+			Socks5RequestWorkerFactory socks5RequestWorkerFactory =
+					this.settings.getLastValue(
+							SettingSpec.SOCKS5_SOCKS5_REQUEST_WORKER_FACTORY);
+			if (socks5RequestWorkerFactory == null) {
+				socks5RequestWorkerFactory = 
+						Socks5RequestWorkerFactory.newInstance(); 
+			}
+			Socks5RequestWorker socks5RequestWorker = 
+					socks5RequestWorkerFactory.newSocks5RequestWorker(
+							socks5RequestWorkerContext);
+			socks5RequestWorker.run();
+		} catch (Throwable t) {
+			LOGGER.warn( 
+					LoggerHelper.objectMessage(this, "Internal server error"), 
+					t);
+		} finally {
+			if (!this.clientSocket.isClosed()) {
+				try {
+					this.clientSocket.close();
+				} catch (IOException e) {
+					LOGGER.warn( 
+							LoggerHelper.objectMessage(
+									this, 
+									"Error upon closing connection to the "
+									+ "client"), 
+							e);
+				}
+			}
+		}
 	}
 	
 	@Override

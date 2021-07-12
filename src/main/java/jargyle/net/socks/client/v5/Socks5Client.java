@@ -31,11 +31,30 @@ public final class Socks5Client extends SocksClient {
 			final Properties props,
 			final SocksClient chainedClient) {
 		super(serverUri, props, chainedClient);
-		this.dtlsDatagramSocketFactory = new DtlsDatagramSocketFactoryImpl(
-				this);
+		DtlsDatagramSocketFactory dtlsDatagramSockFactory =
+				(props.getValue(PropertySpec.DTLS_ENABLED).booleanValue()) ?
+						new DtlsDatagramSocketFactoryImpl(this) : null;
+		this.dtlsDatagramSocketFactory = dtlsDatagramSockFactory;
 	}
 	
-	public Encapsulator authenticate(
+	public DatagramSocket getConnectedInternalDatagramSocket(
+			final DatagramSocket internalDatagramSocket,
+			final String udpRelayServerHost,
+			final int udpRelayServerPort) throws IOException {
+		InetAddress udpRelayServerHostInetAddress = InetAddress.getByName(
+				udpRelayServerHost); 
+		internalDatagramSocket.connect(
+				udpRelayServerHostInetAddress, udpRelayServerPort);
+		if (this.dtlsDatagramSocketFactory == null) {
+			return internalDatagramSocket;
+		}
+		return this.dtlsDatagramSocketFactory.newDatagramSocket(
+				internalDatagramSocket,
+				udpRelayServerHost,
+				udpRelayServerPort);
+	}
+	
+	public MethodSubnegotiationResult negotiateUsing(
 			final Socket connectedInternalSocket) throws IOException {
 		InputStream inputStream = connectedInternalSocket.getInputStream();
 		OutputStream outputStream = connectedInternalSocket.getOutputStream();
@@ -48,27 +67,14 @@ public final class Socks5Client extends SocksClient {
 		ServerMethodSelectionMessage smsm =
 				ServerMethodSelectionMessage.newInstanceFrom(inputStream);
 		Method method = smsm.getMethod();
-		Authenticator authenticator = null;
+		MethodSubnegotiator methodSubnegotiator = null;
 		try {
-			authenticator = Authenticator.valueOfMethod(method);
+			methodSubnegotiator = MethodSubnegotiator.valueOfMethod(method);
 		} catch (IllegalArgumentException e) {
 			throw new IOException(e);
 		}
-		return authenticator.authenticate(connectedInternalSocket, this);
-	}
-	
-	public DatagramSocket getConnectedInternalDatagramSocket(
-			final DatagramSocket internalDatagramSocket,
-			final String udpRelayServerHost,
-			final int udpRelayServerPort) throws IOException {
-		InetAddress udpRelayServerHostInetAddress = InetAddress.getByName(
-				udpRelayServerHost); 
-		internalDatagramSocket.connect(
-				udpRelayServerHostInetAddress, udpRelayServerPort);
-		return this.dtlsDatagramSocketFactory.newDatagramSocket(
-				internalDatagramSocket,
-				udpRelayServerHost,
-				udpRelayServerPort);
+		return methodSubnegotiator.subnegotiateUsing(
+				connectedInternalSocket, this);
 	}
 	
 	@Override

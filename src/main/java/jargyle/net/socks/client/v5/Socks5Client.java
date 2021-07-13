@@ -71,7 +71,7 @@ public final class Socks5Client extends SocksClient {
 		try {
 			methodSubnegotiator = MethodSubnegotiator.valueOfMethod(method);
 		} catch (IllegalArgumentException e) {
-			throw new IOException(e);
+			throw new AssertionError(e);
 		}
 		return methodSubnegotiator.subnegotiateUsing(
 				connectedInternalSocket, this);

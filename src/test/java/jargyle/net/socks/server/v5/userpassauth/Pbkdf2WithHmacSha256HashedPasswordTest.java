@@ -1,4 +1,4 @@
-package jargyle.security;
+package jargyle.net.socks.server.v5.userpassauth;
 
 import static org.junit.Assert.assertEquals;
 

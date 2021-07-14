@@ -1,4 +1,4 @@
-package jargyle.security;
+package jargyle.net.socks.server.v5.userpassauth;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -7,10 +7,10 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import jargyle.security.Pbkdf2WithHmacSha256HashedPassword.Pbkdf2WithHmacSha256HashedPasswordXml;
+import jargyle.net.socks.server.v5.userpassauth.Pbkdf2WithHmacSha256HashedPassword.Pbkdf2WithHmacSha256HashedPasswordXml;
 
 @XmlJavaTypeAdapter(HashedPassword.HashedPasswordXmlAdapter.class)
-public abstract class HashedPassword {
+abstract class HashedPassword {
 
 	@XmlAccessorType(XmlAccessType.NONE)
 	@XmlType(name = "hashedPassword", propOrder = { })

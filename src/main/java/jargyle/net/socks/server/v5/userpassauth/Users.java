@@ -25,7 +25,7 @@ import javax.xml.bind.helpers.DefaultValidationEventHandler;
 import javax.xml.transform.Result;
 import javax.xml.transform.stream.StreamResult;
 
-public final class Users {
+final class Users {
 	
 	private static final class CustomSchemaOutputResolver 
 		extends SchemaOutputResolver {

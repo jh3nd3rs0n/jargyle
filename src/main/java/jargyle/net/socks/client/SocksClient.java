@@ -68,7 +68,7 @@ public abstract class SocksClient {
 		this.sslSocketFactory = sslSockFactory;
 	}
 	
-	public final void configureInternalSocket(
+	protected void configureInternalSocket(
 			final Socket internalSocket) throws SocketException {
 		SocketSettings socketSettings = this.properties.getValue(
 				PropertySpec.SOCKET_SETTINGS);
@@ -79,7 +79,7 @@ public abstract class SocksClient {
 		return this.chainedSocksClient;
 	}
 	
-	public Socket getConnectedInternalSocket(
+	protected Socket getConnectedInternalSocket(
 			final Socket internalSocket) throws IOException {
 		return this.getConnectedInternalSocket(
 				internalSocket, 
@@ -88,7 +88,7 @@ public abstract class SocksClient {
 				false);
 	}
 	
-	public Socket getConnectedInternalSocket(
+	protected Socket getConnectedInternalSocket(
 			final Socket internalSocket, 
 			final boolean bindBeforeConnect) throws IOException {
 		return this.getConnectedInternalSocket(
@@ -98,13 +98,13 @@ public abstract class SocksClient {
 				bindBeforeConnect);
 	}
 	
-	public Socket getConnectedInternalSocket(
+	protected Socket getConnectedInternalSocket(
 			final Socket internalSocket, 
 			final int timeout) throws IOException {
 		return this.getConnectedInternalSocket(internalSocket, timeout, false);
 	}
 	
-	public Socket getConnectedInternalSocket(
+	protected Socket getConnectedInternalSocket(
 			final Socket internalSocket, 
 			final int timeout, 
 			final boolean bindBeforeConnect) throws IOException {
@@ -141,7 +141,7 @@ public abstract class SocksClient {
 		return this.socksServerUri;
 	}
 	
-	public Socket newConnectedInternalSocket() throws IOException {
+	protected Socket newConnectedInternalSocket() throws IOException {
 		return this.newConnectedInternalSocket(
 				this.properties.getValue(
 						PropertySpec.BIND_HOST).toInetAddress(),
@@ -149,7 +149,7 @@ public abstract class SocksClient {
 						PropertySpec.BIND_PORT).intValue());
 	}
 	
-	public Socket newConnectedInternalSocket(
+	protected Socket newConnectedInternalSocket(
 			final InetAddress localAddr, 
 			final int localPort) throws IOException {
 		String socksServerUriHost = this.socksServerUri.getHost();
@@ -169,13 +169,13 @@ public abstract class SocksClient {
 				true);		
 	}
 	
-	public final Socket newInternalSocket() {
+	protected Socket newInternalSocket() {
 		return this.internalNetObjectFactory.newSocket();
 	}
 	
 	public abstract SocksNetObjectFactory newSocksNetObjectFactory();
 	
-	protected final InetAddress resolve(final String host) throws IOException {
+	protected InetAddress resolve(final String host) throws IOException {
 		return this.internalHostResolver.resolve(host);
 	}
 	

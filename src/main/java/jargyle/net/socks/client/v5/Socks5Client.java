@@ -6,6 +6,7 @@ import java.io.OutputStream;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.SocketException;
 
 import jargyle.net.socks.client.Properties;
 import jargyle.net.socks.client.PropertySpec;
@@ -37,7 +38,13 @@ public final class Socks5Client extends SocksClient {
 		this.dtlsDatagramSocketFactory = dtlsDatagramSockFactory;
 	}
 	
-	public DatagramSocket getConnectedInternalDatagramSocket(
+	@Override
+	protected void configureInternalSocket(
+			final Socket internalSocket) throws SocketException {
+		super.configureInternalSocket(internalSocket);
+	}
+	
+	protected DatagramSocket getConnectedInternalDatagramSocket(
 			final DatagramSocket internalDatagramSocket,
 			final String udpRelayServerHost,
 			final int udpRelayServerPort) throws IOException {
@@ -54,7 +61,37 @@ public final class Socks5Client extends SocksClient {
 				udpRelayServerPort);
 	}
 	
-	public MethodSubnegotiationResult negotiateUsing(
+	@Override
+	protected Socket getConnectedInternalSocket(
+			final Socket internalSocket) throws IOException {
+		return super.getConnectedInternalSocket(internalSocket);
+	}
+	
+	@Override
+	protected Socket getConnectedInternalSocket(
+			final Socket internalSocket, 
+			final boolean bindBeforeConnect) throws IOException {
+		return super.getConnectedInternalSocket(
+				internalSocket, bindBeforeConnect);
+	}
+	
+	@Override
+	protected Socket getConnectedInternalSocket(
+			final Socket internalSocket, 
+			final int timeout) throws IOException {
+		return super.getConnectedInternalSocket(internalSocket, timeout);
+	}
+	
+	@Override
+	protected Socket getConnectedInternalSocket(
+			final Socket internalSocket, 
+			final int timeout, 
+			final boolean bindBeforeConnect) throws IOException {
+		return super.getConnectedInternalSocket(
+				internalSocket, timeout, bindBeforeConnect);
+	}
+	
+	protected MethodSubnegotiationResult negotiateUsing(
 			final Socket connectedInternalSocket) throws IOException {
 		InputStream inputStream = connectedInternalSocket.getInputStream();
 		OutputStream outputStream = connectedInternalSocket.getOutputStream();
@@ -75,6 +112,23 @@ public final class Socks5Client extends SocksClient {
 		}
 		return methodSubnegotiator.subnegotiateUsing(
 				connectedInternalSocket, this);
+	}
+	
+	@Override
+	protected Socket newConnectedInternalSocket() throws IOException {
+		return super.newConnectedInternalSocket();
+	}
+	
+	@Override
+	protected Socket newConnectedInternalSocket(
+			final InetAddress localAddr, 
+			final int localPort) throws IOException {
+		return super.newConnectedInternalSocket(localAddr, localPort);
+	}
+	
+	@Override
+	protected Socket newInternalSocket() {
+		return super.newInternalSocket();
 	}
 	
 	@Override

@@ -22,6 +22,8 @@ import jargyle.util.Strings;
 
 public abstract class SettingSpecFactory {
 
+	protected abstract boolean canCreateNewInstanceOf(final Class<?> cls);
+	
 	protected abstract SettingSpec<Boolean> newBooleanSettingSpec(
 			final String s, final Boolean defaultVal);
 	

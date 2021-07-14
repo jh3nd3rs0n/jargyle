@@ -1,6 +1,9 @@
 package jargyle.net.socks.server.settingspecfactory;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.ietf.jgss.Oid;
 
@@ -24,6 +27,32 @@ import jargyle.util.Strings;
 
 public final class SettingSpecFactoryImpl extends SettingSpecFactory {
 
+	private static final Set<Class<?>> SETTING_SPEC_IMPL_CLASSES = new HashSet<Class<?>>(Arrays.asList(
+			BooleanSettingSpec.class,
+			CriteriaSettingSpec.class,
+			EncryptedPasswordSettingSpec.class,
+			FileSettingSpec.class,
+			HostSettingSpec.class,
+			MethodsSettingSpec.class,
+			NonnegativeIntegerSettingSpec.class,
+			OidSettingSpec.class,
+			PortSettingSpec.class,
+			PositiveIntegerSettingSpec.class,
+			ProtectionLevelsSettingSpec.class,
+			SocketSettingsSettingSpec.class,
+			Socks5RequestCriteriaSettingSpec.class,
+			Socks5RequestWorkerFactorySettingSpec.class,
+			SocksServerUriSettingSpec.class,
+			StringSettingSpec.class,
+			StringsSettingSpec.class,
+			UsernamePasswordAuthenticatorSettingSpec.class,
+			UsernamePasswordSettingSpec.class));
+	
+	@Override
+	protected boolean canCreateNewInstanceOf(final Class<?> cls) {
+		return SETTING_SPEC_IMPL_CLASSES.contains(cls);
+	}
+	
 	@Override
 	protected SettingSpec<Boolean> newBooleanSettingSpec(
 			final String s, final Boolean defaultVal) {

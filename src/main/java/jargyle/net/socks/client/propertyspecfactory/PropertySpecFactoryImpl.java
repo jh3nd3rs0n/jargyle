@@ -1,6 +1,9 @@
 package jargyle.net.socks.client.propertyspecfactory;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.ietf.jgss.Oid;
 
@@ -17,6 +20,28 @@ import jargyle.util.PositiveInteger;
 import jargyle.util.Strings;
 
 public final class PropertySpecFactoryImpl extends PropertySpecFactory {
+
+	private static final Set<Class<?>> PROPERTY_SPEC_IMPL_CLASSES = new HashSet<Class<?>>(Arrays.asList(
+			BooleanPropertySpec.class,
+			CriteriaPropertySpec.class,
+			EncryptedPasswordPropertySpec.class,
+			FilePropertySpec.class,
+			HostPropertySpec.class,
+			MethodsPropertySpec.class,
+			OidPropertySpec.class,
+			PortPropertySpec.class,
+			PositiveIntegerPropertySpec.class,
+			ProtectionLevelsPropertySpec.class,
+			SocketSettingsPropertySpec.class,
+			StringPropertySpec.class,
+			StringsPropertySpec.class,
+			UserEncryptedPasswordPropertySpec.class,
+			UsernamePropertySpec.class));
+	
+	@Override
+	protected boolean canCreateNewInstanceOf(final Class<?> cls) {
+		return PROPERTY_SPEC_IMPL_CLASSES.contains(cls);
+	}
 	
 	@Override
 	protected PropertySpec<Boolean> newBooleanPropertySpec(

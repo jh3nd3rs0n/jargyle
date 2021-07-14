@@ -1038,6 +1038,11 @@ public abstract class SettingSpec<V>
 		
 	public SettingSpec(
 			final String s, final Class<V> valType, final V defaultVal) {
+		if (!SETTING_SPEC_FACTORY.canCreateNewInstanceOf(this.getClass())) {
+			throw new AssertionError(String.format(
+					"creating a custom %s is not allowed", 
+					SettingSpec.class.getSimpleName()));
+		}
 		Objects.requireNonNull(s);
 		Objects.requireNonNull(valType);
 		this.defaultValue = valType.cast(defaultVal);

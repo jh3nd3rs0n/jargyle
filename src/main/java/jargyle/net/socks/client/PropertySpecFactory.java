@@ -16,6 +16,8 @@ import jargyle.util.Strings;
 
 public abstract class PropertySpecFactory {
 	
+	protected abstract boolean canCreateNewInstanceOf(final Class<?> cls);
+	
 	protected abstract PropertySpec<Boolean> newBooleanPropertySpec(
 			final String s, final Boolean defaultVal);
 	

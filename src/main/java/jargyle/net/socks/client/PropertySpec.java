@@ -240,6 +240,11 @@ public abstract class PropertySpec<V>
 	
 	public PropertySpec(
 			final String s, final Class<V> valType, final V defaultVal) {
+		if (!PROPERTY_SPEC_FACTORY.canCreateNewInstanceOf(this.getClass())) {
+			throw new AssertionError(String.format(
+					"creating a custom %s is not allowed", 
+					PropertySpec.class.getSimpleName()));
+		}
 		Objects.requireNonNull(s);
 		Objects.requireNonNull(valType);
 		this.defaultValue = valType.cast(defaultVal);

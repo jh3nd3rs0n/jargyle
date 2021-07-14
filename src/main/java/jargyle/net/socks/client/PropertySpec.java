@@ -12,7 +12,6 @@ import org.ietf.jgss.Oid;
 import jargyle.net.Host;
 import jargyle.net.Port;
 import jargyle.net.SocketSettings;
-import jargyle.net.socks.client.propertyspecfactory.PropertySpecFactoryImpl;
 import jargyle.net.socks.transport.v5.Method;
 import jargyle.net.socks.transport.v5.Methods;
 import jargyle.net.socks.transport.v5.gssapiauth.ProtectionLevels;
@@ -22,174 +21,171 @@ import jargyle.util.Strings;
 
 public abstract class PropertySpec<V> 
 	implements Comparable<PropertySpec<? extends Object>> {
-	
-	private static final PropertySpecFactory PROPERTY_SPEC_FACTORY = 
-			new PropertySpecFactoryImpl(); 
 
 	private static int NEXT_ORDINAL = 0;
 	
 	public static final PropertySpec<Host> BIND_HOST = 
-			PROPERTY_SPEC_FACTORY.newHostPropertySpec(
+			PropertySpecFactoryImpl.INSTANCE.newHostPropertySpec(
 					"socksClient.bindHost",
 					Host.INET4_ALL_ZEROS_INSTANCE);
 	
 	public static final PropertySpec<Port> BIND_PORT = 
-			PROPERTY_SPEC_FACTORY.newPortPropertySpec(
+			PropertySpecFactoryImpl.INSTANCE.newPortPropertySpec(
 					"socksClient.bindPort",
 					Port.newInstance(0));
 	
 	public static final PropertySpec<PositiveInteger> CONNECT_TIMEOUT = 
-			PROPERTY_SPEC_FACTORY.newPositiveIntegerPropertySpec(
+			PropertySpecFactoryImpl.INSTANCE.newPositiveIntegerPropertySpec(
 					"socksClient.connectTimeout",
 					PositiveInteger.newInstance(60000)); // 1 minute
 	
 	public static final PropertySpec<Boolean> DTLS_ENABLED = 
-			PROPERTY_SPEC_FACTORY.newBooleanPropertySpec(
+			PropertySpecFactoryImpl.INSTANCE.newBooleanPropertySpec(
 					"socksClient.dtls.enabled",
 					Boolean.FALSE);
 	
 	public static final PropertySpec<Strings> DTLS_ENABLED_CIPHER_SUITES = 
-			PROPERTY_SPEC_FACTORY.newStringsPropertySpec(
+			PropertySpecFactoryImpl.INSTANCE.newStringsPropertySpec(
 					"socksClient.dtls.enabledCipherSuites",
 					Strings.newInstance(new String[] { }));
 	
 	public static final PropertySpec<Strings> DTLS_ENABLED_PROTOCOLS = 
-			PROPERTY_SPEC_FACTORY.newStringsPropertySpec(
+			PropertySpecFactoryImpl.INSTANCE.newStringsPropertySpec(
 					"socksClient.dtls.enabledProtocols",
 					Strings.newInstance(new String[] { }));
 	
 	public static final PropertySpec<File> DTLS_KEY_STORE_FILE = 
-			PROPERTY_SPEC_FACTORY.newFilePropertySpec(
+			PropertySpecFactoryImpl.INSTANCE.newFilePropertySpec(
 					"socksClient.dtls.keyStoreFile",
 					null);
 	
 	public static final PropertySpec<EncryptedPassword> DTLS_KEY_STORE_PASSWORD = 
-			PROPERTY_SPEC_FACTORY.newEncryptedPasswordPropertySpec(
+			PropertySpecFactoryImpl.INSTANCE.newEncryptedPasswordPropertySpec(
 					"socksClient.dtls.keyStorePassword",
 					EncryptedPassword.newInstance(new char[] { }));
 	
 	public static final PropertySpec<String> DTLS_KEY_STORE_TYPE = 
-			PROPERTY_SPEC_FACTORY.newStringPropertySpec(
+			PropertySpecFactoryImpl.INSTANCE.newStringPropertySpec(
 					"socksClient.dtls.keyStoreType",
 					"PKCS12");
 
 	public static final PropertySpec<PositiveInteger> DTLS_MAX_PACKET_SIZE = 
-			PROPERTY_SPEC_FACTORY.newPositiveIntegerPropertySpec(
+			PropertySpecFactoryImpl.INSTANCE.newPositiveIntegerPropertySpec(
 					"socksClient.dtls.maxPacketSize",
 					PositiveInteger.newInstance(32768));
 	
 	public static final PropertySpec<String> DTLS_PROTOCOL = 
-			PROPERTY_SPEC_FACTORY.newStringPropertySpec(
+			PropertySpecFactoryImpl.INSTANCE.newStringPropertySpec(
 					"socksClient.dtls.protocol",
 					"DTLSv1.2");
 	
 	public static final PropertySpec<File> DTLS_TRUST_STORE_FILE = 
-			PROPERTY_SPEC_FACTORY.newFilePropertySpec(
+			PropertySpecFactoryImpl.INSTANCE.newFilePropertySpec(
 					"socksClient.dtls.trustStoreFile",
 					null);
 	
 	public static final PropertySpec<EncryptedPassword> DTLS_TRUST_STORE_PASSWORD = 
-			PROPERTY_SPEC_FACTORY.newEncryptedPasswordPropertySpec(
+			PropertySpecFactoryImpl.INSTANCE.newEncryptedPasswordPropertySpec(
 					"socksClient.dtls.trustStorePassword",
 					EncryptedPassword.newInstance(new char[] { }));
 	
 	public static final PropertySpec<String> DTLS_TRUST_STORE_TYPE = 
-			PROPERTY_SPEC_FACTORY.newStringPropertySpec(
+			PropertySpecFactoryImpl.INSTANCE.newStringPropertySpec(
 					"socksClient.dtls.trustStoreType",
 					"PKCS12");
 	
 	public static final PropertySpec<SocketSettings> SOCKET_SETTINGS = 
-			PROPERTY_SPEC_FACTORY.newSocketSettingsPropertySpec(
+			PropertySpecFactoryImpl.INSTANCE.newSocketSettingsPropertySpec(
 					"socksClient.socketSettings",
 					SocketSettings.newInstance());
 	
 	public static final PropertySpec<Oid> SOCKS5_GSSAPIAUTH_MECHANISM_OID = 
-			PROPERTY_SPEC_FACTORY.newOidPropertySpec(
+			PropertySpecFactoryImpl.INSTANCE.newOidPropertySpec(
 					"socksClient.socks5.gssapiauth.mechanismOid",
 					"1.2.840.113554.1.2.2");
 	
 	public static final PropertySpec<Boolean> SOCKS5_GSSAPIAUTH_NEC_REFERENCE_IMPL = 
-			PROPERTY_SPEC_FACTORY.newBooleanPropertySpec(
+			PropertySpecFactoryImpl.INSTANCE.newBooleanPropertySpec(
 					"socksClient.socks5.gssapiauth.necReferenceImpl",
 					Boolean.FALSE);
 	
 	public static final PropertySpec<ProtectionLevels> SOCKS5_GSSAPIAUTH_PROTECTION_LEVELS = 
-			PROPERTY_SPEC_FACTORY.newProtectionLevelsPropertySpec(
+			PropertySpecFactoryImpl.INSTANCE.newProtectionLevelsPropertySpec(
 					"socksClient.socks5.gssapiauth.protectionLevels",
 					ProtectionLevels.DEFAULT_INSTANCE);
 	
 	public static final PropertySpec<String> SOCKS5_GSSAPIAUTH_SERVICE_NAME = 
-			PROPERTY_SPEC_FACTORY.newStringPropertySpec(
+			PropertySpecFactoryImpl.INSTANCE.newStringPropertySpec(
 					"socksClient.socks5.gssapiauth.serviceName",
 					null);
 	
 	public static final PropertySpec<Methods> SOCKS5_METHODS = 
-			PROPERTY_SPEC_FACTORY.newMethodsPropertySpec(
+			PropertySpecFactoryImpl.INSTANCE.newMethodsPropertySpec(
 					"socksClient.socks5.methods",
 					Methods.newInstance(Method.NO_AUTHENTICATION_REQUIRED));
 	
 	public static final PropertySpec<Boolean> SOCKS5_RESOLVE_USE_RESOLVE_COMMAND = 
-			PROPERTY_SPEC_FACTORY.newBooleanPropertySpec(
+			PropertySpecFactoryImpl.INSTANCE.newBooleanPropertySpec(
 					"socksClient.socks5.resolve.useResolveCommand",
 					Boolean.FALSE);
 	
 	public static final PropertySpec<EncryptedPassword> SOCKS5_USERPASSAUTH_PASSWORD = 
-			PROPERTY_SPEC_FACTORY.newUserEncryptedPasswordPropertySpec(
+			PropertySpecFactoryImpl.INSTANCE.newUserEncryptedPasswordPropertySpec(
 					"socksClient.socks5.userpathauth.password",
 					EncryptedPassword.newInstance(new char[] { }));
 	
 	public static final PropertySpec<String> SOCKS5_USERPASSAUTH_USERNAME = 
-			PROPERTY_SPEC_FACTORY.newUsernamePropertySpec(
+			PropertySpecFactoryImpl.INSTANCE.newUsernamePropertySpec(
 					"socksClient.socks5.userpathauth.username",
 					System.getProperty("user.name"));
 	
 	public static final PropertySpec<Boolean> SSL_ENABLED = 
-			PROPERTY_SPEC_FACTORY.newBooleanPropertySpec(
+			PropertySpecFactoryImpl.INSTANCE.newBooleanPropertySpec(
 					"socksClient.ssl.enabled",
 					Boolean.FALSE);
 	
 	public static final PropertySpec<Strings> SSL_ENABLED_CIPHER_SUITES = 
-			PROPERTY_SPEC_FACTORY.newStringsPropertySpec(
+			PropertySpecFactoryImpl.INSTANCE.newStringsPropertySpec(
 					"socksClient.ssl.enabledCipherSuites",
 					Strings.newInstance(new String[] { }));
 	
 	public static final PropertySpec<Strings> SSL_ENABLED_PROTOCOLS = 
-			PROPERTY_SPEC_FACTORY.newStringsPropertySpec(
+			PropertySpecFactoryImpl.INSTANCE.newStringsPropertySpec(
 					"socksClient.ssl.enabledProtocols",
 					Strings.newInstance(new String[] { }));
 	
 	public static final PropertySpec<File> SSL_KEY_STORE_FILE = 
-			PROPERTY_SPEC_FACTORY.newFilePropertySpec(
+			PropertySpecFactoryImpl.INSTANCE.newFilePropertySpec(
 					"socksClient.ssl.keyStoreFile",
 					null);
 	
 	public static final PropertySpec<EncryptedPassword> SSL_KEY_STORE_PASSWORD = 
-			PROPERTY_SPEC_FACTORY.newEncryptedPasswordPropertySpec(
+			PropertySpecFactoryImpl.INSTANCE.newEncryptedPasswordPropertySpec(
 					"socksClient.ssl.keyStorePassword",
 					EncryptedPassword.newInstance(new char[] { }));
 	
 	public static final PropertySpec<String> SSL_KEY_STORE_TYPE = 
-			PROPERTY_SPEC_FACTORY.newStringPropertySpec(
+			PropertySpecFactoryImpl.INSTANCE.newStringPropertySpec(
 					"socksClient.ssl.keyStoreType",
 					"PKCS12");
 	
 	public static final PropertySpec<String> SSL_PROTOCOL = 
-			PROPERTY_SPEC_FACTORY.newStringPropertySpec(
+			PropertySpecFactoryImpl.INSTANCE.newStringPropertySpec(
 					"socksClient.ssl.protocol",
 					"TLSv1.2");
 	
 	public static final PropertySpec<File> SSL_TRUST_STORE_FILE = 
-			PROPERTY_SPEC_FACTORY.newFilePropertySpec(
+			PropertySpecFactoryImpl.INSTANCE.newFilePropertySpec(
 					"socksClient.ssl.trustStoreFile",
 					null);
 	
 	public static final PropertySpec<EncryptedPassword> SSL_TRUST_STORE_PASSWORD = 
-			PROPERTY_SPEC_FACTORY.newEncryptedPasswordPropertySpec(
+			PropertySpecFactoryImpl.INSTANCE.newEncryptedPasswordPropertySpec(
 					"socksClient.ssl.trustStorePassword",
 					EncryptedPassword.newInstance(new char[] { }));
 	
 	public static final PropertySpec<String> SSL_TRUST_STORE_TYPE = 
-			PROPERTY_SPEC_FACTORY.newStringPropertySpec(
+			PropertySpecFactoryImpl.INSTANCE.newStringPropertySpec(
 					"socksClient.ssl.trustStoreType",
 					"PKCS12");
 	
@@ -240,7 +236,8 @@ public abstract class PropertySpec<V>
 	
 	public PropertySpec(
 			final String s, final Class<V> valType, final V defaultVal) {
-		if (!PROPERTY_SPEC_FACTORY.canCreateNewInstanceOf(this.getClass())) {
+		if (!PropertySpecFactoryImpl.INSTANCE.canCreateNewInstanceOf(
+				this.getClass())) {
 			throw new AssertionError(String.format(
 					"creating a custom %s is not allowed", 
 					PropertySpec.class.getSimpleName()));

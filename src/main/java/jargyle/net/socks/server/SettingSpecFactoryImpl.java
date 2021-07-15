@@ -23,8 +23,12 @@ import jargyle.util.Strings;
 
 final class SettingSpecFactoryImpl extends SettingSpecFactory {
 
-	public static final SettingSpecFactoryImpl INSTANCE = 
+	private static final SettingSpecFactoryImpl INSTANCE = 
 			new SettingSpecFactoryImpl();
+
+	public static SettingSpecFactoryImpl getInstance() {
+		return INSTANCE;
+	}
 	
 	@Override
 	protected boolean canCreateNewInstanceOf(final Class<?> cls) {

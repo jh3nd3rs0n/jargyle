@@ -22,6 +22,15 @@ public abstract class PropertySpecFactory {
 
 	private static PropertySpecFactory instance;
 	
+	private static void setInstance(final PropertySpecFactory factory) {
+		if (instance != null) {
+			throw new AssertionError(String.format(
+					"there can only be one instance of %s", 
+					PropertySpecFactory.class.getSimpleName()));
+		}
+		instance = factory;
+	}
+	
 	private static final Set<Class<?>> PROPERTY_SPEC_IMPL_CLASSES = new HashSet<Class<?>>(Arrays.asList(
 			BooleanPropertySpec.class,
 			CriteriaPropertySpec.class,
@@ -40,12 +49,7 @@ public abstract class PropertySpecFactory {
 			UsernamePropertySpec.class));
 	
 	public PropertySpecFactory() {
-		if (instance != null) {
-			throw new AssertionError(String.format(
-					"there can only be one instance of %s", 
-					PropertySpecFactory.class.getSimpleName()));
-		}
-		instance = this;
+		setInstance(this);
 	}
 	
 	protected boolean canCreateNewInstanceOf(final Class<?> cls) {

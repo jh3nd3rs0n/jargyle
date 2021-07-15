@@ -28,6 +28,15 @@ public abstract class SettingSpecFactory {
 
 	private static SettingSpecFactory instance;
 	
+	private static void setInstance(final SettingSpecFactory factory) {
+		if (instance != null) {
+			throw new AssertionError(String.format(
+					"there can only be one instance of %s", 
+					SettingSpecFactory.class.getSimpleName()));
+		}
+		instance = factory;
+	}
+	
 	private static final Set<Class<?>> SETTING_SPEC_IMPL_CLASSES = new HashSet<Class<?>>(Arrays.asList(
 			BooleanSettingSpec.class,
 			CriteriaSettingSpec.class,
@@ -50,12 +59,7 @@ public abstract class SettingSpecFactory {
 			UsernamePasswordSettingSpec.class));
 	
 	public SettingSpecFactory() {
-		if (instance != null) {
-			throw new AssertionError(String.format(
-					"there can only be one instance of %s", 
-					SettingSpecFactory.class.getSimpleName()));
-		}
-		instance = this;
+		setInstance(this);
 	}
 	
 	protected boolean canCreateNewInstanceOf(final Class<?> cls) {

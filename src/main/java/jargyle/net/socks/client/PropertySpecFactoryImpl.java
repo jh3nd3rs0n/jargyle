@@ -17,8 +17,12 @@ import jargyle.util.Strings;
 
 final class PropertySpecFactoryImpl extends PropertySpecFactory {
 
-	public static final PropertySpecFactoryImpl INSTANCE = 
+	private static final PropertySpecFactoryImpl INSTANCE = 
 			new PropertySpecFactoryImpl();
+	
+	public static PropertySpecFactoryImpl getInstance() {
+		return INSTANCE;
+	}
 	
 	@Override
 	protected boolean canCreateNewInstanceOf(final Class<?> cls) {

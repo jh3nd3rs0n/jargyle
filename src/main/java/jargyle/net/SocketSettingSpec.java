@@ -18,7 +18,7 @@ import jargyle.util.UnsignedByte;
 public abstract class SocketSettingSpec<V> 
 	implements Comparable<SocketSettingSpec<? extends Object>> {
 
-	private static int NEXT_ORDINAL = 0;
+	private static int nextOrdinal = 0;
 	
 	private static final List<SocketSettingSpec<Object>> VALUES = 
 			new ArrayList<SocketSettingSpec<Object>>();
@@ -370,7 +370,7 @@ public abstract class SocketSettingSpec<V>
 	private SocketSettingSpec(final String s, final Class<V> valType) {
 		Objects.requireNonNull(s);
 		Objects.requireNonNull(valType);
-		this.ordinal = NEXT_ORDINAL++;
+		this.ordinal = nextOrdinal++;
 		this.string = s;
 		this.valueType = valType;
 		@SuppressWarnings("unchecked")

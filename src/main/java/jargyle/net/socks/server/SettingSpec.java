@@ -35,7 +35,7 @@ import jargyle.util.Strings;
 public abstract class SettingSpec<V> 
 	implements Comparable<SettingSpec<? extends Object>> {
 	
-	private static int NEXT_ORDINAL = 0;
+	private static int nextOrdinal = 0;
 	
 	private static final List<SettingSpec<Object>> VALUES = 
 			new ArrayList<SettingSpec<Object>>();
@@ -1001,7 +1001,7 @@ public abstract class SettingSpec<V>
 		Objects.requireNonNull(s);
 		Objects.requireNonNull(valType);
 		this.defaultValue = valType.cast(defaultVal);
-		this.ordinal = NEXT_ORDINAL++;
+		this.ordinal = nextOrdinal++;
 		this.string = s;
 		this.valueType = valType;
 		this.defaultSetting = null;

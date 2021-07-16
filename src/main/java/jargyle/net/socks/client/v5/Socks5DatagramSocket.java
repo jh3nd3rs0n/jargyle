@@ -197,7 +197,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			Socket sock = this.socks5Client.getConnectedInternalSocket(
 					this.socket, true);
 			MethodSubnegotiationResult methodSubnegotiationResult = 
-					Socks5ClientHelper.negotiateUsing(sock, this.socks5Client);
+					this.socks5Client.negotiateUsing(sock);
 			Socket sck = methodSubnegotiationResult.getSocket();
 			if (!this.datagramSocket.equals(this.originalDatagramSocket)) {
 				this.datagramSocket = this.originalDatagramSocket;

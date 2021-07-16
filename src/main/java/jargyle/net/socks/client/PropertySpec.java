@@ -21,7 +21,7 @@ import jargyle.util.Strings;
 public abstract class PropertySpec<V> 
 	implements Comparable<PropertySpec<? extends Object>> {
 	
-	private static int NEXT_ORDINAL = 0;
+	private static int nextOrdinal = 0;
 	
 	private static final List<PropertySpec<Object>> VALUES = 
 			new ArrayList<PropertySpec<Object>>();
@@ -212,7 +212,7 @@ public abstract class PropertySpec<V>
 		Objects.requireNonNull(s);
 		Objects.requireNonNull(valType);
 		this.defaultValue = valType.cast(defaultVal);
-		this.ordinal = NEXT_ORDINAL++;
+		this.ordinal = nextOrdinal++;
 		this.string = s;
 		this.valueType = valType;
 		this.defaultProperty = null;

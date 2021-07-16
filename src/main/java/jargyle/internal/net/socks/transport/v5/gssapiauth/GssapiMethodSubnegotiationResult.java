@@ -1,13 +1,12 @@
-package jargyle.net.socks.client.v5;
+package jargyle.internal.net.socks.transport.v5.gssapiauth;
 
 import java.io.IOException;
 import java.net.DatagramSocket;
 import java.net.Socket;
 
-import jargyle.internal.net.socks.common.v5.gssapiauth.GssDatagramSocket;
-import jargyle.internal.net.socks.common.v5.gssapiauth.GssSocket;
+import jargyle.net.socks.transport.v5.MethodSubnegotiationResult;
 
-final class GssapiMethodSubnegotiationResult 
+public final class GssapiMethodSubnegotiationResult 
 	extends MethodSubnegotiationResult {
 	
 	private final GssSocket socket;

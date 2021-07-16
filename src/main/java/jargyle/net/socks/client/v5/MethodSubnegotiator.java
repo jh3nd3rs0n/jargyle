@@ -16,13 +16,16 @@ import org.ietf.jgss.GSSName;
 import org.ietf.jgss.MessageProp;
 import org.ietf.jgss.Oid;
 
-import jargyle.internal.net.socks.common.v5.gssapiauth.GssSocket;
+import jargyle.internal.net.socks.transport.v5.DefaultMethodSubnegotiationResult;
+import jargyle.internal.net.socks.transport.v5.gssapiauth.GssSocket;
+import jargyle.internal.net.socks.transport.v5.gssapiauth.GssapiMethodSubnegotiationResult;
 import jargyle.internal.net.socks.transport.v5.gssapiauth.Message;
 import jargyle.internal.net.socks.transport.v5.gssapiauth.MessageType;
 import jargyle.internal.net.socks.transport.v5.userpassauth.UsernamePasswordRequest;
 import jargyle.internal.net.socks.transport.v5.userpassauth.UsernamePasswordResponse;
 import jargyle.net.socks.client.PropertySpec;
 import jargyle.net.socks.transport.v5.Method;
+import jargyle.net.socks.transport.v5.MethodSubnegotiationResult;
 import jargyle.net.socks.transport.v5.gssapiauth.ProtectionLevel;
 import jargyle.net.socks.transport.v5.gssapiauth.ProtectionLevels;
 

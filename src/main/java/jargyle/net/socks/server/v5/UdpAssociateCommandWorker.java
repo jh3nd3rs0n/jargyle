@@ -21,6 +21,7 @@ import jargyle.net.NetObjectFactory;
 import jargyle.net.SocketSettings;
 import jargyle.net.socks.server.SettingSpec;
 import jargyle.net.socks.server.Settings;
+import jargyle.net.socks.transport.v5.MethodSubnegotiationResult;
 import jargyle.net.socks.transport.v5.Reply;
 import jargyle.net.socks.transport.v5.Socks5Reply;
 import jargyle.net.ssl.DtlsDatagramSocketFactory;

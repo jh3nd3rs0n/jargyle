@@ -17,6 +17,7 @@ import jargyle.net.socks.server.SettingSpec;
 import jargyle.net.socks.server.Settings;
 import jargyle.net.socks.server.WorkerContext;
 import jargyle.net.socks.transport.v5.Method;
+import jargyle.net.socks.transport.v5.MethodSubnegotiationResult;
 import jargyle.net.socks.transport.v5.Methods;
 import jargyle.net.socks.transport.v5.Reply;
 import jargyle.net.socks.transport.v5.Socks5Reply;
@@ -34,7 +35,7 @@ public final class Socks5Worker {
 	private final Settings settings;
 	private Socks5WorkerContext socks5WorkerContext;
 	
-	Socks5Worker(final Socks5WorkerContext context) {
+	public Socks5Worker(final Socks5WorkerContext context) {
 		Socket clientSock = context.getClientSocket();
 		Configuration config = context.getConfiguration();
 		Settings sttngs = config.getSettings();

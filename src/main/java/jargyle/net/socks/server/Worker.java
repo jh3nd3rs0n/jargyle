@@ -40,9 +40,8 @@ final class Worker implements Runnable {
 				return;
 			}
 			if ((byte) version == Version.V5.byteValue()) {
-				Socks5Worker socks5Worker = 
-						Socks5WorkerFactoryImpl.getInstance().newSocks5Worker(
-								new Socks5WorkerContext(this.workerContext));
+				Socks5Worker socks5Worker = new Socks5Worker(
+						new Socks5WorkerContext(this.workerContext));
 				socks5Worker.run();
 			} else {
 				LOGGER.warn(LoggerHelper.objectMessage(this, String.format(

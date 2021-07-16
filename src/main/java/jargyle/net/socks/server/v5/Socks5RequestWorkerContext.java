@@ -3,6 +3,7 @@ package jargyle.net.socks.server.v5;
 import java.util.Objects;
 
 import jargyle.net.socks.transport.v5.Command;
+import jargyle.net.socks.transport.v5.MethodSubnegotiationResult;
 import jargyle.net.socks.transport.v5.Socks5Request;
 
 public class Socks5RequestWorkerContext extends Socks5WorkerContext {

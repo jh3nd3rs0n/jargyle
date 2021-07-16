@@ -1,10 +1,12 @@
-package jargyle.net.socks.client.v5;
+package jargyle.internal.net.socks.transport.v5;
 
 import java.io.IOException;
 import java.net.DatagramSocket;
 import java.net.Socket;
 
-final class DefaultMethodSubnegotiationResult 
+import jargyle.net.socks.transport.v5.MethodSubnegotiationResult;
+
+public final class DefaultMethodSubnegotiationResult 
 	extends MethodSubnegotiationResult {
 	
 	private final Socket socket;

@@ -15,7 +15,9 @@ import org.ietf.jgss.GSSException;
 import org.ietf.jgss.GSSManager;
 import org.ietf.jgss.MessageProp;
 
-import jargyle.internal.net.socks.common.v5.gssapiauth.GssSocket;
+import jargyle.internal.net.socks.transport.v5.DefaultMethodSubnegotiationResult;
+import jargyle.internal.net.socks.transport.v5.gssapiauth.GssSocket;
+import jargyle.internal.net.socks.transport.v5.gssapiauth.GssapiMethodSubnegotiationResult;
 import jargyle.internal.net.socks.transport.v5.gssapiauth.Message;
 import jargyle.internal.net.socks.transport.v5.gssapiauth.MessageType;
 import jargyle.internal.net.socks.transport.v5.userpassauth.UsernamePasswordRequest;
@@ -24,6 +26,7 @@ import jargyle.net.socks.server.Configuration;
 import jargyle.net.socks.server.SettingSpec;
 import jargyle.net.socks.server.v5.userpassauth.UsernamePasswordAuthenticator;
 import jargyle.net.socks.transport.v5.Method;
+import jargyle.net.socks.transport.v5.MethodSubnegotiationResult;
 import jargyle.net.socks.transport.v5.gssapiauth.ProtectionLevel;
 import jargyle.net.socks.transport.v5.gssapiauth.ProtectionLevels;
 

@@ -1,4 +1,4 @@
-package jargyle.internal.net.socks.common.v5.gssapiauth;
+package jargyle.internal.net.socks.transport.v5.gssapiauth;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -15,8 +15,6 @@ import org.ietf.jgss.GSSException;
 import org.ietf.jgss.MessageProp;
 
 import jargyle.internal.net.FilterSocket;
-import jargyle.internal.net.socks.transport.v5.gssapiauth.Message;
-import jargyle.internal.net.socks.transport.v5.gssapiauth.MessageType;
 
 public final class GssSocket extends FilterSocket {
 

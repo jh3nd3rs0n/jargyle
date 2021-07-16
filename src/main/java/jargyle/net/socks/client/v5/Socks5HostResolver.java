@@ -11,6 +11,7 @@ import jargyle.net.socks.client.Properties;
 import jargyle.net.socks.client.PropertySpec;
 import jargyle.net.socks.transport.v5.AddressType;
 import jargyle.net.socks.transport.v5.Command;
+import jargyle.net.socks.transport.v5.MethodSubnegotiationResult;
 import jargyle.net.socks.transport.v5.Reply;
 import jargyle.net.socks.transport.v5.Socks5Reply;
 import jargyle.net.socks.transport.v5.Socks5Request;

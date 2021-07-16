@@ -1,13 +1,10 @@
 package jargyle.net;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.net.DatagramSocket;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +19,12 @@ public abstract class SocketSettingSpec<V>
 	implements Comparable<SocketSettingSpec<? extends Object>> {
 
 	private static int NEXT_ORDINAL = 0;
+	
+	private static final List<SocketSettingSpec<Object>> VALUES = 
+			new ArrayList<SocketSettingSpec<Object>>();
+	
+	private static final Map<String, SocketSettingSpec<Object>> VALUES_MAP =
+			new HashMap<String, SocketSettingSpec<Object>>();
 	
 	@HelpText(
 			doc = "The type-of-service or traffic class field in the IP "
@@ -344,64 +347,20 @@ public abstract class SocketSettingSpec<V>
 		
 	};
 	
-	private static final List<SocketSettingSpec<Object>> VALUES = 
-			new ArrayList<SocketSettingSpec<Object>>();
-	
-	private static final Map<String, SocketSettingSpec<Object>> VALUES_MAP =
-			new HashMap<String, SocketSettingSpec<Object>>();
-	
-	private static synchronized void fillValuesAndValuesMapIfEmpty() {
-		if (!VALUES.isEmpty() && !VALUES_MAP.isEmpty()) {
-			return;
-		}
-		VALUES.clear();
-		VALUES_MAP.clear();
-		Field[] fields = SocketSettingSpec.class.getFields();
-		for (Field field : fields) {
-			int modifiers = field.getModifiers();
-			Class<?> type = field.getType();
-			if (!Modifier.isStatic(modifiers)
-					|| !Modifier.isFinal(modifiers)
-					|| !SocketSettingSpec.class.isAssignableFrom(type)) {
-				continue;
-			}
-			Object value = null;
-			try {
-				value = field.get(null);
-			} catch (IllegalArgumentException e) {
-				throw new AssertionError(e);
-			} catch (IllegalAccessException e) {
-				throw new AssertionError(e);
-			}
-			@SuppressWarnings("unchecked")
-			SocketSettingSpec<Object> val = (SocketSettingSpec<Object>) value;
-			VALUES.add(val);
-			VALUES_MAP.put(val.toString(), val);
-		}
-	}
-	
 	public static SocketSettingSpec<Object> valueOfString(final String s) {
-		Map<String, SocketSettingSpec<Object>> valuesMap =
-				SocketSettingSpec.valuesMap();
-		if (valuesMap.containsKey(s)) {
-			return valuesMap.get(s);
+		if (VALUES_MAP.containsKey(s)) {
+			return VALUES_MAP.get(s);
 		}
 		throw new IllegalArgumentException(String.format(
 				"unknown socket setting: %s", s));
 	}
 	
 	public static SocketSettingSpec<Object>[] values() {
-		fillValuesAndValuesMapIfEmpty();
 		@SuppressWarnings("unchecked")
 		SocketSettingSpec<Object>[] vals = 
 				(SocketSettingSpec<Object>[]) VALUES.toArray(
 						new SocketSettingSpec<?>[VALUES.size()]);
 		return vals;
-	}
-	
-	private static Map<String, SocketSettingSpec<Object>> valuesMap() {
-		fillValuesAndValuesMapIfEmpty();
-		return Collections.unmodifiableMap(VALUES_MAP);		
 	}
 	
 	private final int ordinal;
@@ -414,6 +373,10 @@ public abstract class SocketSettingSpec<V>
 		this.ordinal = NEXT_ORDINAL++;
 		this.string = s;
 		this.valueType = valType;
+		@SuppressWarnings("unchecked")
+		SocketSettingSpec<Object> val = (SocketSettingSpec<Object>) this;
+		VALUES.add(val);
+		VALUES_MAP.put(val.toString(), val);
 	}
 	
 	public void apply(

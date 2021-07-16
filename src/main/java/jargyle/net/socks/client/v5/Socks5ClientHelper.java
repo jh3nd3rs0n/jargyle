@@ -9,6 +9,7 @@ import jargyle.internal.net.socks.transport.v5.ClientMethodSelectionMessage;
 import jargyle.internal.net.socks.transport.v5.ServerMethodSelectionMessage;
 import jargyle.net.socks.client.PropertySpec;
 import jargyle.net.socks.transport.v5.Method;
+import jargyle.net.socks.transport.v5.MethodSubnegotiationResult;
 import jargyle.net.socks.transport.v5.Methods;
 
 final class Socks5ClientHelper {

@@ -55,7 +55,7 @@ public abstract class SocksClient {
 				serverUri, "SOCKS server URI must not be null");
 		Objects.requireNonNull(props, "Properties must not be null");
 		Optional<SocksClient> client = Optional.ofNullable(chainedClient);
-		NetObjectFactory internalNetObjFactory = (client.isEmpty()) ?
+		NetObjectFactory internalNetObjFactory = (!client.isPresent()) ?
 				NetObjectFactory.newInstance() 
 				: chainedClient.newSocksNetObjectFactory();
 		Optional<SslSocketFactory> sslSockFactory = Optional.ofNullable( 
@@ -124,7 +124,7 @@ public abstract class SocksClient {
 				new InetSocketAddress(
 						socksServerUriHostInetAddress, socksServerUriPort), 
 				timeout);
-		if (this.sslSocketFactory.isEmpty()) {
+		if (!this.sslSocketFactory.isPresent()) {
 			return internalSocket;
 		}
 		return this.sslSocketFactory.get().newSocket(
@@ -160,7 +160,7 @@ public abstract class SocksClient {
 				socksServerUriPort, 
 				localAddr, 
 				localPort);
-		if (this.sslSocketFactory.isEmpty()) {
+		if (!this.sslSocketFactory.isPresent()) {
 			return internalSocket;
 		}
 		return this.sslSocketFactory.get().newSocket(

@@ -276,7 +276,7 @@ public final class GssSocket extends FilterSocket {
 			return this.inputStream;
 		}
 		InputStream inStream = super.getInputStream();
-		if (this.messageProp.isEmpty()) {
+		if (!this.messageProp.isPresent()) {
 			this.inputStream = inStream;
 		} else {
 			this.inputStream = new GssUnwrappedInputStream(
@@ -286,7 +286,7 @@ public final class GssSocket extends FilterSocket {
 	}
 	
 	public Optional<MessageProp> getMessageProp() {
-		if (this.messageProp.isEmpty()) {
+		if (!this.messageProp.isPresent()) {
 			return this.messageProp;
 		}
 		return Optional.of(new MessageProp(
@@ -300,7 +300,7 @@ public final class GssSocket extends FilterSocket {
 			return this.outputStream;
 		}
 		OutputStream outStream = super.getOutputStream();
-		if (this.messageProp.isEmpty()) {
+		if (!this.messageProp.isPresent()) {
 			this.outputStream = outStream;
 		} else {
 			this.outputStream = new GssWrappedOutputStream(

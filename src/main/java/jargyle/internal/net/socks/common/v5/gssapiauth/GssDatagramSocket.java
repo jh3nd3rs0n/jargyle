@@ -49,7 +49,7 @@ public final class GssDatagramSocket extends FilterDatagramSocket {
 	}
 
 	public Optional<MessageProp> getMessageProp() {
-		if (this.messageProp.isEmpty()) {
+		if (!this.messageProp.isPresent()) {
 			return this.messageProp;
 		}
 		return Optional.of(new MessageProp(

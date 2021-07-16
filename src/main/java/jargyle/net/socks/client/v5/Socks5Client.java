@@ -48,7 +48,7 @@ public final class Socks5Client extends SocksClient {
 				udpRelayServerHost); 
 		internalDatagramSocket.connect(
 				udpRelayServerHostInetAddress, udpRelayServerPort);
-		if (this.dtlsDatagramSocketFactory.isEmpty()) {
+		if (!this.dtlsDatagramSocketFactory.isPresent()) {
 			return internalDatagramSocket;
 		}
 		return this.dtlsDatagramSocketFactory.get().newDatagramSocket(

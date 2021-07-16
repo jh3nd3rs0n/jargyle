@@ -82,7 +82,7 @@ final class Listener implements Runnable {
 	private Optional<DtlsDatagramSocketFactory> getClientDtlsDatagramSocketFactory() {
 		Settings settings = this.configuration.getSettings();
 		if (settings.getLastValue(SettingSpec.DTLS_ENABLED).booleanValue()) {
-			if (this.clientDtlsDatagramSocketFactory.isEmpty()) {
+			if (!this.clientDtlsDatagramSocketFactory.isPresent()) {
 				this.clientDtlsDatagramSocketFactory = Optional.of(
 						new DtlsDatagramSocketFactoryImpl(this.configuration));
 			}
@@ -97,7 +97,7 @@ final class Listener implements Runnable {
 	private Optional<SslSocketFactory> getClientSslSocketFactory() {
 		Settings settings = this.configuration.getSettings();
 		if (settings.getLastValue(SettingSpec.SSL_ENABLED).booleanValue()) {
-			if (this.clientSslSocketFactory.isEmpty()) {
+			if (!this.clientSslSocketFactory.isPresent()) {
 				this.clientSslSocketFactory = Optional.of(
 						new SslSocketFactoryImpl(this.configuration));
 			}

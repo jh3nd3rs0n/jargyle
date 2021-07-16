@@ -49,8 +49,12 @@ public final class Socks5RequestCriteria {
 		
 	}
 	
-	public static final Socks5RequestCriteria EMPTY_INSTANCE = 
+	private static final Socks5RequestCriteria EMPTY_INSTANCE = 
 			new Socks5RequestCriteria(Collections.emptyList());
+	
+	public static Socks5RequestCriteria getEmptyInstance() {
+		return EMPTY_INSTANCE;
+	}
 	
 	public static Socks5RequestCriteria newInstance(
 			final List<Socks5RequestCriterion> socks5ReqCriteria) {

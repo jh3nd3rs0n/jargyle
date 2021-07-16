@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import jargyle.NetConstants;
 import jargyle.net.socks.client.SocksClient;
 import jargyle.net.socks.server.Configuration;
 import jargyle.net.socks.server.SocksServer;
@@ -145,7 +144,7 @@ public final class DatagramSocketHelper {
 				netObjectFactory = socksClient.newSocksNetObjectFactory();
 			}
 			echoDatagramSocket = netObjectFactory.newDatagramSocket(0);
-			echoDatagramSocket.connect(NetConstants.LOOPBACK_ADDRESS, port);
+			echoDatagramSocket.connect(InetAddress.getLoopbackAddress(), port);
 			ByteArrayOutputStream byteArrayOutputStream = 
 					new ByteArrayOutputStream();
 			DataOutputStream dataOutputStream =	new DataOutputStream(
@@ -154,7 +153,7 @@ public final class DatagramSocketHelper {
 			dataOutputStream.flush();
 			byte[] buffer = byteArrayOutputStream.toByteArray();
 			DatagramPacket packet = new DatagramPacket(
-					buffer, buffer.length, NetConstants.LOOPBACK_ADDRESS, port);
+					buffer, buffer.length, InetAddress.getLoopbackAddress(), port);
 			echoDatagramSocket.send(packet);
 			buffer = new byte[BUFFER_SIZE];
 			packet = new DatagramPacket(buffer, buffer.length);

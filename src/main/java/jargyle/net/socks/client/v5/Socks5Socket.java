@@ -84,7 +84,8 @@ public final class Socks5Socket extends Socket {
 				final String address,
 				final int port) throws IOException {
 			MethodSubnegotiationResult methodSubnegotiationResult = 
-					this.socks5Client.negotiateUsing(connectedSocket); 
+					Socks5ClientHelper.negotiateUsing(
+							connectedSocket, this.socks5Client); 
 			Socket connectedSock = methodSubnegotiationResult.getSocket(); 
 			InputStream inputStream = connectedSock.getInputStream();
 			OutputStream outputStream = connectedSock.getOutputStream();

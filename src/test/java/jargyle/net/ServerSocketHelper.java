@@ -21,7 +21,6 @@ import javax.net.ServerSocketFactory;
 import javax.net.SocketFactory;
 
 import jargyle.IoHelper;
-import jargyle.NetConstants;
 import jargyle.net.socks.client.SocksClient;
 import jargyle.net.socks.server.Configuration;
 import jargyle.net.socks.server.SocksServer;
@@ -213,7 +212,7 @@ public final class ServerSocketHelper {
 			}
 			echoSocket = netObjectFactory.newSocket();
 			echoSocket.connect(new InetSocketAddress(
-					NetConstants.LOOPBACK_ADDRESS, echoServer.getPort()));
+					InetAddress.getLoopbackAddress(), echoServer.getPort()));
 			OutputStream out = echoSocket.getOutputStream();
 			PrintWriter writer = new PrintWriter(out, true);
 			ServerSocket serverSocket = netObjectFactory.newServerSocket();

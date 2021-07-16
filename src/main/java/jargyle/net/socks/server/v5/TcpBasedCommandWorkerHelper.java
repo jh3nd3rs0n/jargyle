@@ -3,7 +3,7 @@ package jargyle.net.socks.server.v5;
 import java.io.IOException;
 import java.net.Socket;
 
-import jargyle.net.socks.server.TcpRelayServer;
+import jargyle.internal.net.socks.server.TcpRelayServer;
 
 final class TcpBasedCommandWorkerHelper {
 

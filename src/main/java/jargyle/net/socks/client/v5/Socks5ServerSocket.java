@@ -11,8 +11,8 @@ import java.net.SocketAddress;
 import java.net.SocketException;
 import java.nio.channels.ServerSocketChannel;
 
-import jargyle.net.FilterSocket;
-import jargyle.net.InetAddressHelper;
+import jargyle.internal.net.FilterSocket;
+import jargyle.internal.net.InetAddressHelper;
 import jargyle.net.PerformancePreferences;
 import jargyle.net.SocketSettingSpec;
 import jargyle.net.SocketSettings;
@@ -271,7 +271,7 @@ public final class Socks5ServerSocket extends ServerSocket {
 			Socket sock = this.socks5Client.getConnectedInternalSocket(
 					this.socket, true);
 			MethodSubnegotiationResult methodSubnegotiationResult = 
-					this.socks5Client.negotiateUsing(sock);
+					Socks5ClientHelper.negotiateUsing(sock, this.socks5Client);
 			Socket sck = methodSubnegotiationResult.getSocket();
 			InputStream inStream = sck.getInputStream();
 			OutputStream outStream = sck.getOutputStream();

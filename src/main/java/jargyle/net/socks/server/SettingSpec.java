@@ -12,7 +12,7 @@ import java.util.Objects;
 
 import org.ietf.jgss.Oid;
 
-import jargyle.help.HelpText;
+import jargyle.internal.help.HelpText;
 import jargyle.net.Host;
 import jargyle.net.Port;
 import jargyle.net.SocketSettings;
@@ -66,7 +66,7 @@ public abstract class SettingSpec<V>
 	public static final SettingSpec<Criteria> BLOCKED_CLIENT_ADDRESS_CRITERIA = 
 			SettingSpecFactoryImpl.getInstance().newCriteriaSettingSpec(
 					"blockedClientAddressCriteria",
-					Criteria.EMPTY_INSTANCE);
+					Criteria.getEmptyInstance());
 	
 	@HelpText(
 			doc = "The binding host name or address for the internal socket "
@@ -544,7 +544,7 @@ public abstract class SettingSpec<V>
 	public static final SettingSpec<Host> HOST = 
 			SettingSpecFactoryImpl.getInstance().newHostSettingSpec(
 					"host",
-					Host.INET4_ALL_ZEROS_INSTANCE);
+					Host.getInet4AllZerosInstance());
 	
 	@HelpText(
 			doc = "The port for the SOCKS server (default is 1080)", 
@@ -574,7 +574,7 @@ public abstract class SettingSpec<V>
 	public static final SettingSpec<Socks5RequestCriteria> SOCKS5_BLOCKED_SOCKS5_REQUEST_CRITERIA = 
 			SettingSpecFactoryImpl.getInstance().newSocks5RequestCriteriaSettingSpec(
 					"socks5.blockedSocks5RequestCriteria",
-					Socks5RequestCriteria.EMPTY_INSTANCE);
+					Socks5RequestCriteria.getEmptyInstance());
 	
 	@HelpText(
 			doc = "The boolean value to indicate if the exchange of the "
@@ -599,7 +599,7 @@ public abstract class SettingSpec<V>
 	public static final SettingSpec<ProtectionLevels> SOCKS5_GSSAPIAUTH_PROTECTION_LEVELS = 
 			SettingSpecFactoryImpl.getInstance().newProtectionLevelsSettingSpec(
 					"socks5.gssapiauth.protectionLevels",
-					ProtectionLevels.DEFAULT_INSTANCE);
+					ProtectionLevels.getDefault());
 	
 	@HelpText(
 			doc = "The space separated list of acceptable authentication "
@@ -631,7 +631,7 @@ public abstract class SettingSpec<V>
 	public static final SettingSpec<Criteria> SOCKS5_ON_BIND_BLOCKED_INBOUND_ADDRESS_CRITERIA = 
 			SettingSpecFactoryImpl.getInstance().newCriteriaSettingSpec(
 					"socks5.onBind.blockedInboundAddressCriteria",
-					Criteria.EMPTY_INSTANCE);
+					Criteria.getEmptyInstance());
 	
 	@HelpText(
 			doc = "The space separated list of socket settings for the listen "
@@ -704,7 +704,7 @@ public abstract class SettingSpec<V>
 	public static final SettingSpec<Host> SOCKS5_ON_CONNECT_SERVER_FACING_BIND_HOST = 
 			SettingSpecFactoryImpl.getInstance().newHostSettingSpec(
 					"socks5.onConnect.serverFacingBindHost",
-					Host.INET4_ALL_ZEROS_INSTANCE);
+					Host.getInet4AllZerosInstance());
 	
 	@HelpText(
 			doc = "The timeout in milliseconds on waiting for the "
@@ -756,7 +756,7 @@ public abstract class SettingSpec<V>
 	public static final SettingSpec<Criteria> SOCKS5_ON_UDP_ASSOCIATE_BLOCKED_INBOUND_ADDRESS_CRITERIA = 
 			SettingSpecFactoryImpl.getInstance().newCriteriaSettingSpec(
 					"socks5.onUdpAssociate.blockedInboundAddressCriteria",
-					Criteria.EMPTY_INSTANCE);
+					Criteria.getEmptyInstance());
 	
 	@HelpText(
 			doc = "The space separated list of blocked outbound address "
@@ -766,7 +766,7 @@ public abstract class SettingSpec<V>
 	public static final SettingSpec<Criteria> SOCKS5_ON_UDP_ASSOCIATE_BLOCKED_OUTBOUND_ADDRESS_CRITERIA = 
 			SettingSpecFactoryImpl.getInstance().newCriteriaSettingSpec(
 					"socks5.onUdpAssociate.blockedOutboundAddressCriteria",
-					Criteria.EMPTY_INSTANCE);
+					Criteria.getEmptyInstance());
 	
 	@HelpText(
 			doc = "The binding host name or address for the client-facing UDP "
@@ -776,7 +776,7 @@ public abstract class SettingSpec<V>
 	public static final SettingSpec<Host> SOCKS5_ON_UDP_ASSOCIATE_CLIENT_FACING_BIND_HOST = 
 			SettingSpecFactoryImpl.getInstance().newHostSettingSpec(
 					"socks5.onUdpAssociate.clientFacingBindHost",
-					Host.INET4_ALL_ZEROS_INSTANCE);
+					Host.getInet4AllZerosInstance());
 	
 	@HelpText(
 			doc = "The space separated list of socket settings for the "
@@ -816,7 +816,7 @@ public abstract class SettingSpec<V>
 	public static final SettingSpec<Host> SOCKS5_ON_UDP_ASSOCIATE_SERVER_FACING_BIND_HOST = 
 			SettingSpecFactoryImpl.getInstance().newHostSettingSpec(
 					"socks5.onUdpAssociate.serverFacingBindHost",
-					Host.INET4_ALL_ZEROS_INSTANCE);
+					Host.getInet4AllZerosInstance());
 	
 	@HelpText(
 			doc = "The space separated list of socket settings for the "

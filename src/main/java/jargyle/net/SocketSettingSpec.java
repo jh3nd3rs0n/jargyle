@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import jargyle.help.HelpText;
+import jargyle.internal.help.HelpText;
 import jargyle.util.NonnegativeInteger;
 import jargyle.util.PositiveInteger;
 import jargyle.util.UnsignedByte;

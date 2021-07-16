@@ -43,9 +43,13 @@ public final class PortRange {
 		
 	}
 	
-	public static final PortRange DEFAULT_INSTANCE = PortRange.newInstance(
+	private static final PortRange DEFAULT_INSTANCE = PortRange.newInstance(
 			Port.newInstance(Port.MIN_INT_VALUE), 
 			Port.newInstance(Port.MAX_INT_VALUE));
+	
+	public static PortRange getDefault() {
+		return DEFAULT_INSTANCE;
+	}
 	
 	public static PortRange newInstance(final Port prt) {
 		return newInstance(prt, prt);

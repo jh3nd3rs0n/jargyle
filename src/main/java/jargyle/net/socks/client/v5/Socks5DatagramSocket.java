@@ -15,7 +15,7 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.nio.channels.DatagramChannel;
 
-import jargyle.net.InetAddressHelper;
+import jargyle.internal.net.InetAddressHelper;
 import jargyle.net.Port;
 import jargyle.net.socks.transport.v5.Command;
 import jargyle.net.socks.transport.v5.Reply;
@@ -196,7 +196,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			Socket sock = this.socks5Client.getConnectedInternalSocket(
 					this.socket, true);
 			MethodSubnegotiationResult methodSubnegotiationResult = 
-					this.socks5Client.negotiateUsing(sock);
+					Socks5ClientHelper.negotiateUsing(sock, this.socks5Client);
 			Socket sck = methodSubnegotiationResult.getSocket();
 			if (!this.datagramSocket.equals(this.originalDatagramSocket)) {
 				this.datagramSocket = this.originalDatagramSocket;

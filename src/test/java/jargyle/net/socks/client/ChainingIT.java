@@ -3,12 +3,12 @@ package jargyle.net.socks.client;
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Test;
 
-import jargyle.NetConstants;
 import jargyle.TestStringConstants;
 import jargyle.net.DatagramSocketHelper;
 import jargyle.net.Port;
@@ -32,13 +32,13 @@ public class ChainingIT {
 						SettingSpec.PORT.newSetting(Port.newInstance(23456)),
 						SettingSpec.CHAINING_SOCKS_SERVER_URI.newSetting(
 								Scheme.SOCKS5.newSocksServerUri(
-										NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+										InetAddress.getLoopbackAddress().getHostAddress(), 
 										Integer.valueOf(65432))))),
 				ImmutableConfiguration.newInstance(Settings.newInstance(
 						SettingSpec.PORT.newSetting(Port.newInstance(65432)),
 						SettingSpec.CHAINING_SOCKS_SERVER_URI.newSetting(
 								Scheme.SOCKS5.newSocksServerUri(
-										NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+										InetAddress.getLoopbackAddress().getHostAddress(), 
 										Integer.valueOf(34567))))),
 				ImmutableConfiguration.newInstance(Settings.newInstance(
 						SettingSpec.PORT.newSetting(Port.newInstance(34567)))));
@@ -55,7 +55,7 @@ public class ChainingIT {
 										"Aladdin:opensesame")),
 						SettingSpec.CHAINING_SOCKS_SERVER_URI.newSetting(
 								Scheme.SOCKS5.newSocksServerUri(
-										NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+										InetAddress.getLoopbackAddress().getHostAddress(), 
 										Integer.valueOf(65432))),
 						SettingSpec.CHAINING_SOCKS5_METHODS.newSetting(
 								Methods.newInstance(Method.USERNAME_PASSWORD)),
@@ -70,7 +70,7 @@ public class ChainingIT {
 										"Jasmine:mission%3Aimpossible")),
 						SettingSpec.CHAINING_SOCKS_SERVER_URI.newSetting(
 								Scheme.SOCKS5.newSocksServerUri(
-										NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+										InetAddress.getLoopbackAddress().getHostAddress(), 
 										Integer.valueOf(34567))),
 						SettingSpec.CHAINING_SOCKS5_METHODS.newSetting(
 								Methods.newInstance(Method.USERNAME_PASSWORD)),
@@ -87,15 +87,15 @@ public class ChainingIT {
 	
 	private static SocksClient newChainedSocks5ClientToConfigurations() {
 		SocksClient client1 = Scheme.SOCKS5.newSocksServerUri(
-				NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+				InetAddress.getLoopbackAddress().getHostAddress(), 
 				Integer.valueOf(23456))
 				.newSocksClient(Properties.newInstance());
 		SocksClient client2 = Scheme.SOCKS5.newSocksServerUri(
-				NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+				InetAddress.getLoopbackAddress().getHostAddress(), 
 				Integer.valueOf(65432))
 				.newSocksClient(Properties.newInstance(), client1);
 		SocksClient client3 = Scheme.SOCKS5.newSocksServerUri(
-				NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+				InetAddress.getLoopbackAddress().getHostAddress(), 
 				Integer.valueOf(34567))
 				.newSocksClient(Properties.newInstance(), client2);
 		return client3;
@@ -103,7 +103,7 @@ public class ChainingIT {
 	
 	private static SocksClient newChainedSocks5ClientToConfigurationsEachUsingUserpassAuth() {
 		SocksClient client1 = Scheme.SOCKS5.newSocksServerUri(
-				NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+				InetAddress.getLoopbackAddress().getHostAddress(), 
 				Integer.valueOf(23456))
 				.newSocksClient(Properties.newInstance(
 						PropertySpec.SOCKS5_METHODS.newProperty(
@@ -114,7 +114,7 @@ public class ChainingIT {
 								EncryptedPassword.newInstance(
 										"opensesame".toCharArray()))));
 		SocksClient client2 = Scheme.SOCKS5.newSocksServerUri(
-				NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+				InetAddress.getLoopbackAddress().getHostAddress(), 
 				Integer.valueOf(65432))
 				.newSocksClient(Properties.newInstance(
 						PropertySpec.SOCKS5_METHODS.newProperty(
@@ -126,7 +126,7 @@ public class ChainingIT {
 										"mission:impossible".toCharArray()))), 
 						client1);
 		SocksClient client3 = Scheme.SOCKS5.newSocksServerUri(
-				NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+				InetAddress.getLoopbackAddress().getHostAddress(), 
 				Integer.valueOf(34567))
 				.newSocksClient(Properties.newInstance(
 						PropertySpec.SOCKS5_METHODS.newProperty(
@@ -177,14 +177,14 @@ public class ChainingIT {
 	
 	private static SocksClient newSocks5ClientToChainedConfigurations() {
 		return Scheme.SOCKS5.newSocksServerUri(
-				NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+				InetAddress.getLoopbackAddress().getHostAddress(), 
 				Integer.valueOf(23456))
 				.newSocksClient(Properties.newInstance());
 	}
 	
 	private static SocksClient newSocks5ClientToChainedConfigurationsEachUsingUserpassAuth() {
 		return Scheme.SOCKS5.newSocksServerUri(
-				NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+				InetAddress.getLoopbackAddress().getHostAddress(), 
 				Integer.valueOf(23456))
 				.newSocksClient(Properties.newInstance(
 						PropertySpec.SOCKS5_METHODS.newProperty(

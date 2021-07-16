@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -15,7 +16,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import jargyle.FilesHelper;
-import jargyle.NetConstants;
 import jargyle.TestStringConstants;
 import jargyle.net.DatagramSocketHelper;
 import jargyle.net.ServerSocketHelper;
@@ -34,12 +34,13 @@ import jargyle.net.socks.transport.v5.gssapiauth.ProtectionLevels;
 public class GssapiAuthIT {
 	
 	private static final String KDC_REALM = "EXAMPLE.COM";
-	private static final String KDC_HOST = NetConstants.LOOPBACK_ADDRESS.getHostAddress();
+	private static final String KDC_HOST = 
+			InetAddress.getLoopbackAddress().getHostAddress();
 	private static final int KDC_PORT = 12345;
 	
 	private static final String ALICE_PRINCIPAL = "alice";
 	private static final String RCMD_SERVICE_PRINCIPAL = String.format(
-			"rcmd/%s", NetConstants.LOOPBACK_ADDRESS.getHostAddress());
+			"rcmd/%s", InetAddress.getLoopbackAddress().getHostAddress());
 
 	private static final String KRB5_CONF_PROPERTY_NAME = 
 			"java.security.krb5.conf";
@@ -181,7 +182,7 @@ public class GssapiAuthIT {
 		String returningString = DatagramSocketHelper.echoThroughDatagramSocket(
 				string, 
 				GssapiAuthIT.newSocks5Client(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						ProtectionLevels.newInstance(ProtectionLevel.NONE), false),
@@ -195,7 +196,7 @@ public class GssapiAuthIT {
 		String returningString = DatagramSocketHelper.echoThroughDatagramSocket(
 				string, 
 				GssapiAuthIT.newSocks5Client(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						ProtectionLevels.newInstance(ProtectionLevel.NONE), false),
@@ -209,7 +210,7 @@ public class GssapiAuthIT {
 		String returningString = DatagramSocketHelper.echoThroughDatagramSocket(
 				string, 
 				GssapiAuthIT.newSocks5Client(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						ProtectionLevels.newInstance(ProtectionLevel.NONE), false),
@@ -223,7 +224,7 @@ public class GssapiAuthIT {
 		String returningString = DatagramSocketHelper.echoThroughDatagramSocket(
 				string, 
 				GssapiAuthIT.newSocks5Client(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						ProtectionLevels.newInstance(ProtectionLevel.NONE), true),
@@ -237,7 +238,7 @@ public class GssapiAuthIT {
 		String returningString = DatagramSocketHelper.echoThroughDatagramSocket(
 				string, 
 				GssapiAuthIT.newSocks5Client(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						ProtectionLevels.newInstance(ProtectionLevel.NONE), true),
@@ -251,7 +252,7 @@ public class GssapiAuthIT {
 		String returningString = DatagramSocketHelper.echoThroughDatagramSocket(
 				string, 
 				GssapiAuthIT.newSocks5Client(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						ProtectionLevels.newInstance(ProtectionLevel.NONE), true),
@@ -265,7 +266,7 @@ public class GssapiAuthIT {
 		String returningString = DatagramSocketHelper.echoThroughDatagramSocket(
 				string, 
 				GssapiAuthIT.newSocks5Client(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						ProtectionLevels.newInstance(ProtectionLevel.REQUIRED_INTEG_AND_CONF), true),
@@ -279,7 +280,7 @@ public class GssapiAuthIT {
 		String returningString = DatagramSocketHelper.echoThroughDatagramSocket(
 				string, 
 				GssapiAuthIT.newSocks5Client(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						ProtectionLevels.newInstance(ProtectionLevel.REQUIRED_INTEG_AND_CONF), true),
@@ -293,7 +294,7 @@ public class GssapiAuthIT {
 		String returningString = DatagramSocketHelper.echoThroughDatagramSocket(
 				string, 
 				GssapiAuthIT.newSocks5Client(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						ProtectionLevels.newInstance(ProtectionLevel.REQUIRED_INTEG_AND_CONF), true),
@@ -307,7 +308,7 @@ public class GssapiAuthIT {
 		String returningString = DatagramSocketHelper.echoThroughDatagramSocket(
 				string, 
 				GssapiAuthIT.newSocks5Client(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						ProtectionLevels.newInstance(ProtectionLevel.REQUIRED_INTEG), true),
@@ -321,7 +322,7 @@ public class GssapiAuthIT {
 		String returningString = DatagramSocketHelper.echoThroughDatagramSocket(
 				string, 
 				GssapiAuthIT.newSocks5Client(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						ProtectionLevels.newInstance(ProtectionLevel.REQUIRED_INTEG), true),
@@ -335,7 +336,7 @@ public class GssapiAuthIT {
 		String returningString = DatagramSocketHelper.echoThroughDatagramSocket(
 				string, 
 				GssapiAuthIT.newSocks5Client(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						ProtectionLevels.newInstance(ProtectionLevel.REQUIRED_INTEG), true),
@@ -349,7 +350,7 @@ public class GssapiAuthIT {
 		String returningString = DatagramSocketHelper.echoThroughDatagramSocket(
 				string, 
 				GssapiAuthIT.newSocks5Client(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						ProtectionLevels.newInstance(ProtectionLevel.REQUIRED_INTEG_AND_CONF), false),
@@ -363,7 +364,7 @@ public class GssapiAuthIT {
 		String returningString = DatagramSocketHelper.echoThroughDatagramSocket(
 				string, 
 				GssapiAuthIT.newSocks5Client(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						ProtectionLevels.newInstance(ProtectionLevel.REQUIRED_INTEG_AND_CONF), false),
@@ -377,7 +378,7 @@ public class GssapiAuthIT {
 		String returningString = DatagramSocketHelper.echoThroughDatagramSocket(
 				string, 
 				GssapiAuthIT.newSocks5Client(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						ProtectionLevels.newInstance(ProtectionLevel.REQUIRED_INTEG_AND_CONF), false),
@@ -391,7 +392,7 @@ public class GssapiAuthIT {
 		String returningString = DatagramSocketHelper.echoThroughDatagramSocket(
 				string, 
 				GssapiAuthIT.newSocks5Client(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						ProtectionLevels.newInstance(ProtectionLevel.REQUIRED_INTEG), false),
@@ -405,7 +406,7 @@ public class GssapiAuthIT {
 		String returningString = DatagramSocketHelper.echoThroughDatagramSocket(
 				string, 
 				GssapiAuthIT.newSocks5Client(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						ProtectionLevels.newInstance(ProtectionLevel.REQUIRED_INTEG), false),
@@ -419,7 +420,7 @@ public class GssapiAuthIT {
 		String returningString = DatagramSocketHelper.echoThroughDatagramSocket(
 				string, 
 				GssapiAuthIT.newSocks5Client(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						ProtectionLevels.newInstance(ProtectionLevel.REQUIRED_INTEG), false),
@@ -433,7 +434,7 @@ public class GssapiAuthIT {
 		String returningString = ServerSocketHelper.echoThroughServerSocket(
 				string, 
 				GssapiAuthIT.newSocks5Client(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						ProtectionLevels.newInstance(ProtectionLevel.NONE), false),
@@ -447,7 +448,7 @@ public class GssapiAuthIT {
 		String returningString = ServerSocketHelper.echoThroughServerSocket(
 				string, 
 				GssapiAuthIT.newSocks5Client(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						ProtectionLevels.newInstance(ProtectionLevel.NONE), false),
@@ -461,7 +462,7 @@ public class GssapiAuthIT {
 		String returningString = ServerSocketHelper.echoThroughServerSocket(
 				string, 
 				GssapiAuthIT.newSocks5Client(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						ProtectionLevels.newInstance(ProtectionLevel.NONE), false),
@@ -475,7 +476,7 @@ public class GssapiAuthIT {
 		String returningString = ServerSocketHelper.echoThroughServerSocket(
 				string, 
 				GssapiAuthIT.newSocks5Client(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						ProtectionLevels.newInstance(ProtectionLevel.NONE), true),
@@ -489,7 +490,7 @@ public class GssapiAuthIT {
 		String returningString = ServerSocketHelper.echoThroughServerSocket(
 				string, 
 				GssapiAuthIT.newSocks5Client(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						ProtectionLevels.newInstance(ProtectionLevel.NONE), true),
@@ -503,7 +504,7 @@ public class GssapiAuthIT {
 		String returningString = ServerSocketHelper.echoThroughServerSocket(
 				string, 
 				GssapiAuthIT.newSocks5Client(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						ProtectionLevels.newInstance(ProtectionLevel.NONE), true),
@@ -517,7 +518,7 @@ public class GssapiAuthIT {
 		String returningString = ServerSocketHelper.echoThroughServerSocket(
 				string, 
 				GssapiAuthIT.newSocks5Client(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						ProtectionLevels.newInstance(ProtectionLevel.REQUIRED_INTEG_AND_CONF), true),
@@ -531,7 +532,7 @@ public class GssapiAuthIT {
 		String returningString = ServerSocketHelper.echoThroughServerSocket(
 				string, 
 				GssapiAuthIT.newSocks5Client(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						ProtectionLevels.newInstance(ProtectionLevel.REQUIRED_INTEG_AND_CONF), true),
@@ -545,7 +546,7 @@ public class GssapiAuthIT {
 		String returningString = ServerSocketHelper.echoThroughServerSocket(
 				string, 
 				GssapiAuthIT.newSocks5Client(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						ProtectionLevels.newInstance(ProtectionLevel.REQUIRED_INTEG_AND_CONF), true),
@@ -559,7 +560,7 @@ public class GssapiAuthIT {
 		String returningString = ServerSocketHelper.echoThroughServerSocket(
 				string, 
 				GssapiAuthIT.newSocks5Client(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						ProtectionLevels.newInstance(ProtectionLevel.REQUIRED_INTEG), true),
@@ -573,7 +574,7 @@ public class GssapiAuthIT {
 		String returningString = ServerSocketHelper.echoThroughServerSocket(
 				string, 
 				GssapiAuthIT.newSocks5Client(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						ProtectionLevels.newInstance(ProtectionLevel.REQUIRED_INTEG), true),
@@ -587,7 +588,7 @@ public class GssapiAuthIT {
 		String returningString = ServerSocketHelper.echoThroughServerSocket(
 				string, 
 				GssapiAuthIT.newSocks5Client(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						ProtectionLevels.newInstance(ProtectionLevel.REQUIRED_INTEG), true),
@@ -601,7 +602,7 @@ public class GssapiAuthIT {
 		String returningString = ServerSocketHelper.echoThroughServerSocket(
 				string, 
 				GssapiAuthIT.newSocks5Client(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						ProtectionLevels.newInstance(ProtectionLevel.REQUIRED_INTEG_AND_CONF), false),
@@ -615,7 +616,7 @@ public class GssapiAuthIT {
 		String returningString = ServerSocketHelper.echoThroughServerSocket(
 				string, 
 				GssapiAuthIT.newSocks5Client(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						ProtectionLevels.newInstance(ProtectionLevel.REQUIRED_INTEG_AND_CONF), false),
@@ -629,7 +630,7 @@ public class GssapiAuthIT {
 		String returningString = ServerSocketHelper.echoThroughServerSocket(
 				string, 
 				GssapiAuthIT.newSocks5Client(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						ProtectionLevels.newInstance(ProtectionLevel.REQUIRED_INTEG_AND_CONF), false),
@@ -643,7 +644,7 @@ public class GssapiAuthIT {
 		String returningString = ServerSocketHelper.echoThroughServerSocket(
 				string, 
 				GssapiAuthIT.newSocks5Client(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						ProtectionLevels.newInstance(ProtectionLevel.REQUIRED_INTEG), false),
@@ -657,7 +658,7 @@ public class GssapiAuthIT {
 		String returningString = ServerSocketHelper.echoThroughServerSocket(
 				string, 
 				GssapiAuthIT.newSocks5Client(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						ProtectionLevels.newInstance(ProtectionLevel.REQUIRED_INTEG), false),
@@ -671,7 +672,7 @@ public class GssapiAuthIT {
 		String returningString = ServerSocketHelper.echoThroughServerSocket(
 				string, 
 				GssapiAuthIT.newSocks5Client(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						ProtectionLevels.newInstance(ProtectionLevel.REQUIRED_INTEG), false),
@@ -685,7 +686,7 @@ public class GssapiAuthIT {
 		String returningString = SocketHelper.echoThroughSocket(
 				string, 
 				GssapiAuthIT.newSocks5Client(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						ProtectionLevels.newInstance(ProtectionLevel.NONE), false),
@@ -699,7 +700,7 @@ public class GssapiAuthIT {
 		String returningString = SocketHelper.echoThroughSocket(
 				string, 
 				GssapiAuthIT.newSocks5Client(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						ProtectionLevels.newInstance(ProtectionLevel.NONE), false),
@@ -713,7 +714,7 @@ public class GssapiAuthIT {
 		String returningString = SocketHelper.echoThroughSocket(
 				string, 
 				GssapiAuthIT.newSocks5Client(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						ProtectionLevels.newInstance(ProtectionLevel.NONE), false),
@@ -727,7 +728,7 @@ public class GssapiAuthIT {
 		String returningString = SocketHelper.echoThroughSocket(
 				string, 
 				GssapiAuthIT.newSocks5Client(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						ProtectionLevels.newInstance(ProtectionLevel.NONE), true),
@@ -741,7 +742,7 @@ public class GssapiAuthIT {
 		String returningString = SocketHelper.echoThroughSocket(
 				string, 
 				GssapiAuthIT.newSocks5Client(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						ProtectionLevels.newInstance(ProtectionLevel.NONE), true),
@@ -755,7 +756,7 @@ public class GssapiAuthIT {
 		String returningString = SocketHelper.echoThroughSocket(
 				string, 
 				GssapiAuthIT.newSocks5Client(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						ProtectionLevels.newInstance(ProtectionLevel.NONE), true),
@@ -769,7 +770,7 @@ public class GssapiAuthIT {
 		String returningString = SocketHelper.echoThroughSocket(
 				string, 
 				GssapiAuthIT.newSocks5Client(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						ProtectionLevels.newInstance(ProtectionLevel.REQUIRED_INTEG_AND_CONF), true),
@@ -783,7 +784,7 @@ public class GssapiAuthIT {
 		String returningString = SocketHelper.echoThroughSocket(
 				string, 
 				GssapiAuthIT.newSocks5Client(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						ProtectionLevels.newInstance(ProtectionLevel.REQUIRED_INTEG_AND_CONF), true),
@@ -797,7 +798,7 @@ public class GssapiAuthIT {
 		String returningString = SocketHelper.echoThroughSocket(
 				string, 
 				GssapiAuthIT.newSocks5Client(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						ProtectionLevels.newInstance(ProtectionLevel.REQUIRED_INTEG_AND_CONF), true),
@@ -811,7 +812,7 @@ public class GssapiAuthIT {
 		String returningString = SocketHelper.echoThroughSocket(
 				string, 
 				GssapiAuthIT.newSocks5Client(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						ProtectionLevels.newInstance(ProtectionLevel.REQUIRED_INTEG), true),
@@ -825,7 +826,7 @@ public class GssapiAuthIT {
 		String returningString = SocketHelper.echoThroughSocket(
 				string, 
 				GssapiAuthIT.newSocks5Client(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						ProtectionLevels.newInstance(ProtectionLevel.REQUIRED_INTEG), true),
@@ -839,7 +840,7 @@ public class GssapiAuthIT {
 		String returningString = SocketHelper.echoThroughSocket(
 				string, 
 				GssapiAuthIT.newSocks5Client(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						ProtectionLevels.newInstance(ProtectionLevel.REQUIRED_INTEG), true),
@@ -853,7 +854,7 @@ public class GssapiAuthIT {
 		String returningString = SocketHelper.echoThroughSocket(
 				string, 
 				GssapiAuthIT.newSocks5Client(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						ProtectionLevels.newInstance(ProtectionLevel.REQUIRED_INTEG_AND_CONF), false),
@@ -867,7 +868,7 @@ public class GssapiAuthIT {
 		String returningString = SocketHelper.echoThroughSocket(
 				string, 
 				GssapiAuthIT.newSocks5Client(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						ProtectionLevels.newInstance(ProtectionLevel.REQUIRED_INTEG_AND_CONF), false),
@@ -881,7 +882,7 @@ public class GssapiAuthIT {
 		String returningString = SocketHelper.echoThroughSocket(
 				string, 
 				GssapiAuthIT.newSocks5Client(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						ProtectionLevels.newInstance(ProtectionLevel.REQUIRED_INTEG_AND_CONF), false),
@@ -895,7 +896,7 @@ public class GssapiAuthIT {
 		String returningString = SocketHelper.echoThroughSocket(
 				string, 
 				GssapiAuthIT.newSocks5Client(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						ProtectionLevels.newInstance(ProtectionLevel.REQUIRED_INTEG), false),
@@ -909,7 +910,7 @@ public class GssapiAuthIT {
 		String returningString = SocketHelper.echoThroughSocket(
 				string, 
 				GssapiAuthIT.newSocks5Client(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						ProtectionLevels.newInstance(ProtectionLevel.REQUIRED_INTEG), false),
@@ -923,7 +924,7 @@ public class GssapiAuthIT {
 		String returningString = SocketHelper.echoThroughSocket(
 				string, 
 				GssapiAuthIT.newSocks5Client(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null,
 						RCMD_SERVICE_PRINCIPAL,
 						ProtectionLevels.newInstance(ProtectionLevel.REQUIRED_INTEG), false),

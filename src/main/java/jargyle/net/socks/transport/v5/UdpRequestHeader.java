@@ -5,8 +5,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 
+import jargyle.internal.util.UnsignedShort;
 import jargyle.util.UnsignedByte;
-import jargyle.util.UnsignedShort;
 
 public final class UdpRequestHeader {
 

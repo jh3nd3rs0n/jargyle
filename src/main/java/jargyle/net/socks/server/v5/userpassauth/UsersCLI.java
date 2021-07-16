@@ -20,8 +20,8 @@ import argmatey.ArgMatey.Annotations.Option;
 import argmatey.ArgMatey.Annotations.Ordinal;
 import argmatey.ArgMatey.CLI;
 import argmatey.ArgMatey.OptionType;
-import jargyle.help.HelpText;
-import jargyle.io.ConsoleWrapper;
+import jargyle.internal.help.HelpText;
+import jargyle.internal.io.ConsoleWrapper;
 import jargyle.net.socks.server.SystemPropertyNameConstants;
 
 public final class UsersCLI extends CLI {

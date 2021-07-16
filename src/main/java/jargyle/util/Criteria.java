@@ -42,8 +42,12 @@ public final class Criteria {
 		
 	}
 
-	public static final Criteria EMPTY_INSTANCE = new Criteria(
+	private static final Criteria EMPTY_INSTANCE = new Criteria(
 			Collections.emptyList());
+	
+	public static Criteria getEmptyInstance() {
+		return EMPTY_INSTANCE;
+	}
 	
 	public static Criteria newInstance(final Criterion... c) {
 		return newInstance(Arrays.asList(c));

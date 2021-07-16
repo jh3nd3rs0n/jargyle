@@ -1,5 +1,7 @@
 package jargyle.net.socks.server.v5;
 
+import java.util.Objects;
+
 import jargyle.net.socks.transport.v5.Command;
 import jargyle.net.socks.transport.v5.Socks5Request;
 
@@ -19,6 +21,8 @@ public class Socks5RequestWorkerContext extends Socks5WorkerContext {
 			final MethodSubnegotiationResult methSubnegotiationResult,
 			final Socks5Request socks5Req) {
 		super(context);
+		Objects.requireNonNull(methSubnegotiationResult);
+		Objects.requireNonNull(socks5Req);
 		this.methodSubnegotiationResult = methSubnegotiationResult;
 		this.socks5Request = socks5Req;
 	}

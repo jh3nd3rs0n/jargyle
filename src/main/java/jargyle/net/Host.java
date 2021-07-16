@@ -3,13 +3,23 @@ package jargyle.net;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+import jargyle.internal.net.InetAddressHelper;
+
 public final class Host {
 	
-	public static final Host INET4_ALL_ZEROS_INSTANCE = Host.newInstance(
+	private static final Host INET4_ALL_ZEROS_INSTANCE = Host.newInstance(
 			InetAddressHelper.getInet4AllZerosAddress());
 	
-	public static final Host INET6_ALL_ZEROS_INSTANCE = Host.newInstance(
+	private static final Host INET6_ALL_ZEROS_INSTANCE = Host.newInstance(
 			InetAddressHelper.getInet6AllZerosAddress());
+	
+	public static final Host getInet4AllZerosInstance() {
+		return INET4_ALL_ZEROS_INSTANCE;
+	}
+	
+	public static final Host getInet6AllZerosInstance() {
+		return INET6_ALL_ZEROS_INSTANCE;
+	}
 	
 	private static Host newInstance(final InetAddress inetAddress) {
 		return new Host(inetAddress, inetAddress.getHostAddress());

@@ -7,14 +7,16 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jargyle.logging.LoggerHelper;
+import jargyle.internal.logging.LoggerHelper;
+import jargyle.internal.net.InetAddressHelper;
+import jargyle.internal.net.socks.server.v5.UdpRelayServer;
 import jargyle.net.Host;
 import jargyle.net.HostResolver;
-import jargyle.net.InetAddressHelper;
 import jargyle.net.NetObjectFactory;
 import jargyle.net.SocketSettings;
 import jargyle.net.socks.server.SettingSpec;
@@ -30,7 +32,7 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 	private static final Logger LOGGER = LoggerFactory.getLogger(
 			UdpAssociateCommandWorker.class);
 	
-	private final DtlsDatagramSocketFactory clientDtlsDatagramSocketFactory;
+	private final Optional<DtlsDatagramSocketFactory> clientDtlsDatagramSocketFactory;
 	private final Socket clientSocket;
 	private final CommandWorkerContext commandWorkerContext;
 	private final String desiredDestinationAddress;
@@ -41,7 +43,7 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 	
 	public UdpAssociateCommandWorker(final CommandWorkerContext context) {
 		super(context);
-		DtlsDatagramSocketFactory clientDtlsDatagramSockFactory =
+		Optional<DtlsDatagramSocketFactory> clientDtlsDatagramSockFactory =
 				context.getClientDtlsDatagramSocketFactory();
 		Socket clientSock = context.getClientSocket();
 		String desiredDestinationAddr =	context.getDesiredDestinationAddress();
@@ -351,10 +353,10 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 					udpClientHostInetAddress, udpClientPort);
 		}
 		if (clientFacingDatagramSck.isConnected() 
-				&& this.clientDtlsDatagramSocketFactory != null) {
+				&& this.clientDtlsDatagramSocketFactory.isPresent()) {
 			try {
 				clientFacingDatagramSck = 
-						this.clientDtlsDatagramSocketFactory.newDatagramSocket(
+						this.clientDtlsDatagramSocketFactory.get().newDatagramSocket(
 								clientFacingDatagramSck, 
 								udpClientHost, 
 								udpClientPort);

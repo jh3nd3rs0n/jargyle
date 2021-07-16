@@ -12,8 +12,8 @@ import java.util.concurrent.Executors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jargyle.io.FileMonitor;
-import jargyle.io.FileStatusListener;
+import jargyle.internal.io.FileMonitor;
+import jargyle.internal.io.FileStatusListener;
 
 final class XmlFileSourceUsersProvider extends UsersProvider {
 	

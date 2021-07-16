@@ -3,6 +3,7 @@ package jargyle.net;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -16,7 +17,6 @@ import java.util.concurrent.Executors;
 import javax.net.ServerSocketFactory;
 
 import jargyle.IoHelper;
-import jargyle.NetConstants;
 import jargyle.net.socks.client.SocksClient;
 import jargyle.net.socks.server.Configuration;
 import jargyle.net.socks.server.SocksServer;
@@ -157,7 +157,7 @@ public final class SocketHelper {
 			}
 			echoSocket = netObjectFactory.newSocket();
 			echoSocket.connect(new InetSocketAddress(
-					NetConstants.LOOPBACK_ADDRESS, echoServer.getPort()));
+					InetAddress.getLoopbackAddress(), echoServer.getPort()));
 			InputStream in = echoSocket.getInputStream();
 			OutputStream out = echoSocket.getOutputStream();
 			IoHelper.writeThenFlush(string.getBytes(), out);

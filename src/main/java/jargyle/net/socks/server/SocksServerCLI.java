@@ -25,18 +25,15 @@ import argmatey.ArgMatey.Annotations.Ordinal;
 import argmatey.ArgMatey.CLI;
 import argmatey.ArgMatey.IllegalOptionArgException;
 import argmatey.ArgMatey.OptionType;
-import jargyle.help.HelpText;
+import jargyle.internal.help.HelpText;
+import jargyle.internal.io.ConsoleWrapper;
 import jargyle.net.SocketSettingSpec;
 import jargyle.net.socks.client.Scheme;
-import jargyle.net.socks.client.v5.userpassauth.DefaultUsernamePasswordRequestor;
 import jargyle.net.socks.client.v5.userpassauth.UsernamePassword;
-import jargyle.net.socks.client.v5.userpassauth.UsernamePasswordRequestor;
 import jargyle.net.socks.server.v5.userpassauth.UsersCLI;
 import jargyle.net.socks.transport.v5.Method;
 import jargyle.net.socks.transport.v5.gssapiauth.ProtectionLevel;
-import jargyle.security.DefaultEncryptedPasswordRequestor;
 import jargyle.security.EncryptedPassword;
-import jargyle.security.EncryptedPasswordRequestor;
 
 public final class SocksServerCLI extends CLI {
 	
@@ -292,10 +289,7 @@ public final class SocksServerCLI extends CLI {
 	private void enterChainingDtlsKeyStorePassword() {
 		String prompt = "Please enter the password for the key store for the "
 				+ "DTLS connections to the other SOCKS server: ";
-		EncryptedPasswordRequestor encryptedPasswordRequestor =
-				new DefaultEncryptedPasswordRequestor();
-		EncryptedPassword encryptedPassword = 
-				encryptedPasswordRequestor.requestEncryptedPassword(prompt);
+		EncryptedPassword encryptedPassword = readEncryptedPassword(prompt);
 		Setting<EncryptedPassword> setting = 
 				SettingSpec.CHAINING_DTLS_KEY_STORE_PASSWORD.newSetting(
 						encryptedPassword);
@@ -313,10 +307,7 @@ public final class SocksServerCLI extends CLI {
 	private void enterChainingDtlsTrustStorePassword() {
 		String prompt = "Please enter the password for the trust store for the "
 				+ "DTLS connections to the other SOCKS server: ";
-		EncryptedPasswordRequestor encryptedPasswordRequestor =
-				new DefaultEncryptedPasswordRequestor();
-		EncryptedPassword encryptedPassword = 
-				encryptedPasswordRequestor.requestEncryptedPassword(prompt);
+		EncryptedPassword encryptedPassword = readEncryptedPassword(prompt);
 		Setting<EncryptedPassword> setting = 
 				SettingSpec.CHAINING_DTLS_TRUST_STORE_PASSWORD.newSetting(
 						encryptedPassword);
@@ -333,10 +324,35 @@ public final class SocksServerCLI extends CLI {
 	private void enterChainingSocks5UserpassauthUsernamePassword() {
 		String prompt = "Please enter the username and password to be used to "
 				+ "access the other SOCKS5 server";
-		UsernamePasswordRequestor usernamePasswordRequestor = 
-				new DefaultUsernamePasswordRequestor();
-		UsernamePassword usernamePassword = 
-				usernamePasswordRequestor.requestUsernamePassword(null, prompt);
+		ConsoleWrapper consoleWrapper = new ConsoleWrapper(System.console());
+		consoleWrapper.printf(prompt);
+		consoleWrapper.printf("%n");
+		String username;
+		while (true) {
+			username = consoleWrapper.readLine("Username: ");
+			try {
+				UsernamePassword.validateUsername(username);
+				break;
+			} catch (IllegalArgumentException e) {
+				consoleWrapper.printf(
+						"Username must be no more than %s byte(s).%n", 
+						UsernamePassword.MAX_USERNAME_LENGTH);
+			}
+		}
+		char[] password;
+		while (true) {
+			password = consoleWrapper.readPassword("Password: ");
+			try {
+				UsernamePassword.validatePassword(password);
+				break;
+			} catch (IllegalArgumentException e) {
+				consoleWrapper.printf(
+						"Password must be no more than %s byte(s).%n", 
+						UsernamePassword.MAX_PASSWORD_LENGTH);
+			}
+		}		
+		UsernamePassword usernamePassword = UsernamePassword.newInstance(
+				username, password);
 		Setting<UsernamePassword> setting = 
 				SettingSpec.CHAINING_SOCKS5_USERPASSAUTH_USERNAME_PASSWORD.newSetting(
 						usernamePassword);
@@ -354,10 +370,7 @@ public final class SocksServerCLI extends CLI {
 	private void enterChainingSslKeyStorePassword() {
 		String prompt = "Please enter the password for the key store for the "
 				+ "SSL/TLS connections to the other SOCKS server: ";
-		EncryptedPasswordRequestor encryptedPasswordRequestor =
-				new DefaultEncryptedPasswordRequestor();
-		EncryptedPassword encryptedPassword = 
-				encryptedPasswordRequestor.requestEncryptedPassword(prompt);
+		EncryptedPassword encryptedPassword = readEncryptedPassword(prompt);
 		Setting<EncryptedPassword> setting = 
 				SettingSpec.CHAINING_SSL_KEY_STORE_PASSWORD.newSetting(
 						encryptedPassword);
@@ -375,10 +388,7 @@ public final class SocksServerCLI extends CLI {
 	private void enterChainingSslTrustStorePassword() {
 		String prompt = "Please enter the password for the trust store for the "
 				+ "SSL/TLS connections to the other SOCKS server: ";
-		EncryptedPasswordRequestor encryptedPasswordRequestor =
-				new DefaultEncryptedPasswordRequestor();
-		EncryptedPassword encryptedPassword = 
-				encryptedPasswordRequestor.requestEncryptedPassword(prompt);
+		EncryptedPassword encryptedPassword = readEncryptedPassword(prompt);
 		Setting<EncryptedPassword> setting = 
 				SettingSpec.CHAINING_SSL_TRUST_STORE_PASSWORD.newSetting(
 						encryptedPassword);
@@ -396,10 +406,7 @@ public final class SocksServerCLI extends CLI {
 	private void enterDtlsKeyStorePassword() {
 		String prompt = "Please enter the password for the key store for the "
 				+ "DTLS connections to the SOCKS server: ";
-		EncryptedPasswordRequestor encryptedPasswordRequestor =
-				new DefaultEncryptedPasswordRequestor();
-		EncryptedPassword encryptedPassword = 
-				encryptedPasswordRequestor.requestEncryptedPassword(prompt);
+		EncryptedPassword encryptedPassword = readEncryptedPassword(prompt);
 		Setting<EncryptedPassword> setting = 
 				SettingSpec.DTLS_KEY_STORE_PASSWORD.newSetting(
 						encryptedPassword);
@@ -417,10 +424,7 @@ public final class SocksServerCLI extends CLI {
 	private void enterDtlsTrustStorePassword() {
 		String prompt = "Please enter the password for the trust store for the "
 				+ "DTLS connections to the SOCKS server: ";
-		EncryptedPasswordRequestor encryptedPasswordRequestor =
-				new DefaultEncryptedPasswordRequestor();
-		EncryptedPassword encryptedPassword = 
-				encryptedPasswordRequestor.requestEncryptedPassword(prompt);
+		EncryptedPassword encryptedPassword = readEncryptedPassword(prompt);
 		Setting<EncryptedPassword> setting = 
 				SettingSpec.DTLS_TRUST_STORE_PASSWORD.newSetting(
 						encryptedPassword);
@@ -438,10 +442,7 @@ public final class SocksServerCLI extends CLI {
 	private void enterSslKeyStorePassword() {
 		String prompt = "Please enter the password for the key store for the "
 				+ "SSL/TLS connections to the SOCKS server: ";
-		EncryptedPasswordRequestor encryptedPasswordRequestor =
-				new DefaultEncryptedPasswordRequestor();
-		EncryptedPassword encryptedPassword = 
-				encryptedPasswordRequestor.requestEncryptedPassword(prompt);
+		EncryptedPassword encryptedPassword = readEncryptedPassword(prompt);
 		Setting<EncryptedPassword> setting = 
 				SettingSpec.SSL_KEY_STORE_PASSWORD.newSetting(
 						encryptedPassword);
@@ -459,10 +460,7 @@ public final class SocksServerCLI extends CLI {
 	private void enterSslTrustStorePassword() {
 		String prompt = "Please enter the password for the trust store for the "
 				+ "SSL/TLS connections to the SOCKS server: ";
-		EncryptedPasswordRequestor encryptedPasswordRequestor =
-				new DefaultEncryptedPasswordRequestor();
-		EncryptedPassword encryptedPassword = 
-				encryptedPasswordRequestor.requestEncryptedPassword(prompt);
+		EncryptedPassword encryptedPassword = readEncryptedPassword(prompt);
 		Setting<EncryptedPassword> setting = 
 				SettingSpec.SSL_TRUST_STORE_PASSWORD.newSetting(
 						encryptedPassword);
@@ -647,6 +645,12 @@ public final class SocksServerCLI extends CLI {
 		this.monitoredConfigurationFile = file;
 	}
 
+	private EncryptedPassword readEncryptedPassword(final String prompt) {
+		ConsoleWrapper consoleWrapper = new ConsoleWrapper(System.console());
+		return EncryptedPassword.newInstance(consoleWrapper.readPassword(
+				prompt));
+	}
+	
 	private Optional<Integer> startSocksServer(
 			final Configuration configuration) {
 		SocksServer socksServer = new SocksServer(configuration);

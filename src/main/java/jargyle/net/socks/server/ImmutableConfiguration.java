@@ -110,7 +110,7 @@ public final class ImmutableConfiguration extends Configuration {
 	@Override
 	public Settings getSettings() {
 		if (this.settings == null) {
-			return Settings.EMPTY_INSTANCE;
+			return Settings.getEmptyInstance();
 		}
 		return this.settings;
 	}

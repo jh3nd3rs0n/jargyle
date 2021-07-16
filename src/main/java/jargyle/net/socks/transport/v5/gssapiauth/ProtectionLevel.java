@@ -3,10 +3,11 @@ package jargyle.net.socks.transport.v5.gssapiauth;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 import org.ietf.jgss.MessageProp;
 
-import jargyle.help.HelpText;
+import jargyle.internal.help.HelpText;
 import jargyle.util.UnsignedByte;
 
 public enum ProtectionLevel {
@@ -15,8 +16,8 @@ public enum ProtectionLevel {
 	NONE((byte) 0x00) {
 		
 		@Override
-		public MessageProp newMessageProp() {
-			return null;
+		public Optional<MessageProp> getMessageProp() {
+			return Optional.empty();
 		}
 		
 	},
@@ -25,8 +26,8 @@ public enum ProtectionLevel {
 	REQUIRED_INTEG((byte) 0x01) {
 		
 		@Override
-		public MessageProp newMessageProp() {
-			return new MessageProp(0, false);
+		public Optional<MessageProp> getMessageProp() {
+			return Optional.of(new MessageProp(0, false));
 		}
 		
 	},
@@ -38,8 +39,8 @@ public enum ProtectionLevel {
 	REQUIRED_INTEG_AND_CONF((byte) 0x02) {
 		
 		@Override
-		public MessageProp newMessageProp() {
-			return new MessageProp(0, true);
+		public Optional<MessageProp> getMessageProp() {
+			return Optional.of(new MessageProp(0, true));
 		}
 		
 	},
@@ -47,8 +48,8 @@ public enum ProtectionLevel {
 	SELECTIVE_INTEG_OR_CONF((byte) 0x03) {
 		
 		@Override
-		public MessageProp newMessageProp() {
-			return new MessageProp(0, true);
+		public Optional<MessageProp> getMessageProp() {
+			return Optional.of(new MessageProp(0, true));
 		}
 		
 	};
@@ -117,6 +118,6 @@ public enum ProtectionLevel {
 		return this.byteValue;
 	}
 	
-	public abstract MessageProp newMessageProp();
+	public abstract Optional<MessageProp> getMessageProp();
 	
 }

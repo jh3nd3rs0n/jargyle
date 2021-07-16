@@ -7,7 +7,7 @@ import java.net.Socket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jargyle.logging.LoggerHelper;
+import jargyle.internal.logging.LoggerHelper;
 import jargyle.net.socks.server.v5.Socks5Worker;
 import jargyle.net.socks.server.v5.Socks5WorkerContext;
 import jargyle.net.socks.transport.v5.Version;
@@ -40,8 +40,9 @@ final class Worker implements Runnable {
 				return;
 			}
 			if ((byte) version == Version.V5.byteValue()) {
-				Socks5Worker socks5Worker = new Socks5Worker(
-						new Socks5WorkerContext(this.workerContext));
+				Socks5Worker socks5Worker = 
+						Socks5WorkerFactoryImpl.getInstance().newSocks5Worker(
+								new Socks5WorkerContext(this.workerContext));
 				socks5Worker.run();
 			} else {
 				LOGGER.warn(LoggerHelper.objectMessage(this, String.format(

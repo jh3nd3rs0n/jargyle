@@ -3,13 +3,15 @@ package jargyle.net.socks.server;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.Objects;
+import java.util.Optional;
 
 import jargyle.net.NetObjectFactory;
 import jargyle.net.ssl.DtlsDatagramSocketFactory;
 
 public class WorkerContext {
 
-	private final DtlsDatagramSocketFactory clientDtlsDatagramSocketFactory;
+	private final Optional<DtlsDatagramSocketFactory> clientDtlsDatagramSocketFactory;
 	private Socket clientSocket;
 	private final Configuration configuration;
 	private final NetObjectFactory netObjectFactory;
@@ -18,7 +20,11 @@ public class WorkerContext {
 			final Socket clientSock,
 			final Configuration config,
 			final NetObjectFactory netObjFactory,
-			final DtlsDatagramSocketFactory clientDtlsDatagramSockFactory) {
+			final Optional<DtlsDatagramSocketFactory> clientDtlsDatagramSockFactory) {
+		Objects.requireNonNull(clientSock);
+		Objects.requireNonNull(config);
+		Objects.requireNonNull(netObjFactory);
+		Objects.requireNonNull(clientDtlsDatagramSockFactory);
 		this.clientDtlsDatagramSocketFactory = clientDtlsDatagramSockFactory;
 		this.clientSocket = clientSock;
 		this.configuration = config;
@@ -33,7 +39,7 @@ public class WorkerContext {
 		this.netObjectFactory = other.netObjectFactory;
 	}
 
-	public final DtlsDatagramSocketFactory getClientDtlsDatagramSocketFactory() {
+	public final Optional<DtlsDatagramSocketFactory> getClientDtlsDatagramSocketFactory() {
 		return this.clientDtlsDatagramSocketFactory;
 	}
 

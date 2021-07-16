@@ -1,6 +1,7 @@
 package jargyle.net.socks.server.v5;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import jargyle.net.socks.transport.v5.Command;
 
@@ -11,6 +12,7 @@ public class Socks5RequestWorker {
 	
 	public Socks5RequestWorker(
 			final Socks5RequestWorkerContext context, final String val) {
+		Objects.requireNonNull(context);
 		this.socks5RequestWorkerContext = context;
 		this.value = val;
 	}

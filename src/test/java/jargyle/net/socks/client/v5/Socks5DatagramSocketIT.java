@@ -2,10 +2,10 @@ package jargyle.net.socks.client.v5;
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
+import java.net.InetAddress;
 
 import org.junit.Test;
 
-import jargyle.NetConstants;
 import jargyle.TestStringConstants;
 import jargyle.net.DatagramSocketHelper;
 import jargyle.net.socks.client.SocksClientHelper;
@@ -20,7 +20,7 @@ public class Socks5DatagramSocketIT {
 		String returningString = DatagramSocketHelper.echoThroughDatagramSocket(
 				string, 
 				SocksClientHelper.newSocks5Client(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), null), 
+						InetAddress.getLoopbackAddress().getHostAddress(), null), 
 				ConfigurationHelper.newConfiguration());
 		assertEquals(string, returningString);
 	}
@@ -31,7 +31,7 @@ public class Socks5DatagramSocketIT {
 		String returningString = DatagramSocketHelper.echoThroughDatagramSocket(
 				string, 
 				SocksClientHelper.newSocks5Client(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), null), 
+						InetAddress.getLoopbackAddress().getHostAddress(), null), 
 				ConfigurationHelper.newConfiguration());
 		assertEquals(string, returningString);
 	}
@@ -42,7 +42,7 @@ public class Socks5DatagramSocketIT {
 		String returningString = DatagramSocketHelper.echoThroughDatagramSocket(
 				string, 
 				SocksClientHelper.newSocks5Client(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), null), 
+						InetAddress.getLoopbackAddress().getHostAddress(), null), 
 				ConfigurationHelper.newConfiguration());
 		assertEquals(string, returningString);
 	}
@@ -53,7 +53,7 @@ public class Socks5DatagramSocketIT {
 		String returningString = DatagramSocketHelper.echoThroughDatagramSocket(
 				string, 
 				SocksClientHelper.newSocks5Client(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null,
 						UsernamePassword.newInstance("Aladdin", "opensesame".toCharArray())),
 				ConfigurationHelper.newConfigurationUsingSocks5UserpassAuth());
@@ -66,7 +66,7 @@ public class Socks5DatagramSocketIT {
 		String returningString = DatagramSocketHelper.echoThroughDatagramSocket(
 				string, 
 				SocksClientHelper.newSocks5Client(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null,
 						UsernamePassword.newInstance("Jasmine", "mission:impossible".toCharArray())),
 				ConfigurationHelper.newConfigurationUsingSocks5UserpassAuth());
@@ -79,7 +79,7 @@ public class Socks5DatagramSocketIT {
 		String returningString = DatagramSocketHelper.echoThroughDatagramSocket(
 				string, 
 				SocksClientHelper.newSocks5Client(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null,
 						UsernamePassword.newInstance("Abu", "safeDriversSave40%".toCharArray())),
 				ConfigurationHelper.newConfigurationUsingSocks5UserpassAuth());

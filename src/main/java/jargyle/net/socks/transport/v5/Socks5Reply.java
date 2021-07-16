@@ -6,9 +6,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 
-import jargyle.net.InetAddressHelper;
+import jargyle.internal.net.InetAddressHelper;
+import jargyle.internal.util.UnsignedShort;
 import jargyle.util.UnsignedByte;
-import jargyle.util.UnsignedShort;
 
 public final class Socks5Reply {
 

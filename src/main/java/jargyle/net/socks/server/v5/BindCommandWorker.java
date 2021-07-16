@@ -10,7 +10,7 @@ import java.net.SocketException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jargyle.logging.LoggerHelper;
+import jargyle.internal.logging.LoggerHelper;
 import jargyle.net.HostResolver;
 import jargyle.net.NetObjectFactory;
 import jargyle.net.SocketSettings;

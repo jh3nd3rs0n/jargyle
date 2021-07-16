@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.net.DatagramSocket;
 import java.net.Socket;
 
-import jargyle.net.socks.transport.v5.gssapiauth.GssDatagramSocket;
-import jargyle.net.socks.transport.v5.gssapiauth.GssSocket;
+import jargyle.internal.net.socks.common.v5.gssapiauth.GssDatagramSocket;
+import jargyle.internal.net.socks.common.v5.gssapiauth.GssSocket;
 
 final class GssapiMethodSubnegotiationResult 
 	extends MethodSubnegotiationResult {

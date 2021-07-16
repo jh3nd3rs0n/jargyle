@@ -7,6 +7,7 @@ import java.net.Socket;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 import org.ietf.jgss.GSSContext;
 import org.ietf.jgss.GSSCredential;
@@ -14,17 +15,17 @@ import org.ietf.jgss.GSSException;
 import org.ietf.jgss.GSSManager;
 import org.ietf.jgss.MessageProp;
 
+import jargyle.internal.net.socks.common.v5.gssapiauth.GssSocket;
+import jargyle.internal.net.socks.transport.v5.gssapiauth.Message;
+import jargyle.internal.net.socks.transport.v5.gssapiauth.MessageType;
+import jargyle.internal.net.socks.transport.v5.userpassauth.UsernamePasswordRequest;
+import jargyle.internal.net.socks.transport.v5.userpassauth.UsernamePasswordResponse;
 import jargyle.net.socks.server.Configuration;
 import jargyle.net.socks.server.SettingSpec;
 import jargyle.net.socks.server.v5.userpassauth.UsernamePasswordAuthenticator;
 import jargyle.net.socks.transport.v5.Method;
-import jargyle.net.socks.transport.v5.gssapiauth.GssSocket;
-import jargyle.net.socks.transport.v5.gssapiauth.Message;
-import jargyle.net.socks.transport.v5.gssapiauth.MessageType;
 import jargyle.net.socks.transport.v5.gssapiauth.ProtectionLevel;
 import jargyle.net.socks.transport.v5.gssapiauth.ProtectionLevels;
-import jargyle.net.socks.transport.v5.userpassauth.UsernamePasswordRequest;
-import jargyle.net.socks.transport.v5.userpassauth.UsernamePasswordResponse;
 
 enum MethodSubnegotiator {
 
@@ -161,7 +162,8 @@ enum MethodSubnegotiator {
 			ProtectionLevel protectionLevelChoice =
 					this.negotiateProtectionLevel(
 							socket, context, configuration);
-			MessageProp msgProp = protectionLevelChoice.newMessageProp();
+			Optional<MessageProp> msgProp = 
+					protectionLevelChoice.getMessageProp();
 			GssSocket gssSocket = new GssSocket(socket, context, msgProp);
 			return new GssapiMethodSubnegotiationResult(gssSocket);
 		}

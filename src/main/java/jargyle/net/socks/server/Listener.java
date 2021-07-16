@@ -4,16 +4,17 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jargyle.logging.LoggerHelper;
+import jargyle.internal.logging.LoggerHelper;
+import jargyle.internal.net.ssl.SslSocketFactory;
 import jargyle.net.NetObjectFactory;
 import jargyle.net.ssl.DtlsDatagramSocketFactory;
-import jargyle.net.ssl.SslSocketFactory;
 import jargyle.util.Criteria;
 import jargyle.util.Criterion;
 
@@ -22,15 +23,15 @@ final class Listener implements Runnable {
 	private static final Logger LOGGER = LoggerFactory.getLogger(
 			Listener.class);
 	
-	private DtlsDatagramSocketFactory clientDtlsDatagramSocketFactory;
-	private SslSocketFactory clientSslSocketFactory;
+	private Optional<DtlsDatagramSocketFactory> clientDtlsDatagramSocketFactory;
+	private Optional<SslSocketFactory> clientSslSocketFactory;
 	private final Configuration configuration;
 	private final NetObjectFactory netObjectFactory;
 	private final ServerSocket serverSocket;
 			
 	public Listener(final ServerSocket serverSock, final Configuration config) {
-		this.clientDtlsDatagramSocketFactory = null;
-		this.clientSslSocketFactory = null;		
+		this.clientDtlsDatagramSocketFactory = Optional.empty();
+		this.clientSslSocketFactory = Optional.empty();		
 		this.configuration = config;
 		this.netObjectFactory = new NetObjectFactoryImpl(config);
 		this.serverSocket = serverSock;
@@ -78,31 +79,31 @@ final class Listener implements Runnable {
 		}
 	}
 	
-	private DtlsDatagramSocketFactory getClientDtlsDatagramSocketFactory() {
+	private Optional<DtlsDatagramSocketFactory> getClientDtlsDatagramSocketFactory() {
 		Settings settings = this.configuration.getSettings();
 		if (settings.getLastValue(SettingSpec.DTLS_ENABLED).booleanValue()) {
-			if (this.clientDtlsDatagramSocketFactory == null) {
-				this.clientDtlsDatagramSocketFactory = 
-						new DtlsDatagramSocketFactoryImpl(this.configuration);
+			if (this.clientDtlsDatagramSocketFactory.isEmpty()) {
+				this.clientDtlsDatagramSocketFactory = Optional.of(
+						new DtlsDatagramSocketFactoryImpl(this.configuration));
 			}
 		} else {
-			if (this.clientDtlsDatagramSocketFactory != null) {
-				this.clientDtlsDatagramSocketFactory = null;
+			if (this.clientDtlsDatagramSocketFactory.isPresent()) {
+				this.clientDtlsDatagramSocketFactory = Optional.empty();
 			}
 		}
 		return this.clientDtlsDatagramSocketFactory;
 	}
 	
-	private SslSocketFactory getClientSslSocketFactory() {
+	private Optional<SslSocketFactory> getClientSslSocketFactory() {
 		Settings settings = this.configuration.getSettings();
 		if (settings.getLastValue(SettingSpec.SSL_ENABLED).booleanValue()) {
-			if (this.clientSslSocketFactory == null) {
-				this.clientSslSocketFactory = new SslSocketFactoryImpl(
-						this.configuration);
+			if (this.clientSslSocketFactory.isEmpty()) {
+				this.clientSslSocketFactory = Optional.of(
+						new SslSocketFactoryImpl(this.configuration));
 			}
 		} else {
-			if (this.clientSslSocketFactory != null) {
-				this.clientSslSocketFactory = null;
+			if (this.clientSslSocketFactory.isPresent()) {
+				this.clientSslSocketFactory = Optional.empty();
 			}
 		}
 		return this.clientSslSocketFactory;
@@ -164,11 +165,11 @@ final class Listener implements Runnable {
 	
 	private Socket wrapClientSocket(final Socket clientSocket) {
 		Socket clientSock = clientSocket;
-		SslSocketFactory clientSslSockFactory = 
+		Optional<SslSocketFactory> clientSslSockFactory = 
 				this.getClientSslSocketFactory();
-		if (clientSslSockFactory != null) {
+		if (clientSslSockFactory.isPresent()) {
 			try {
-				clientSock = clientSslSockFactory.newSocket(
+				clientSock = clientSslSockFactory.get().newSocket(
 						clientSock, null, true);
 			} catch (IOException e) {
 				LOGGER.warn(

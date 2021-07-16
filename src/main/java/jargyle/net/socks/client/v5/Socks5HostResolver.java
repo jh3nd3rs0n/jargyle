@@ -39,7 +39,7 @@ public final class Socks5HostResolver extends HostResolver {
 		Socket sock = this.socks5Client.getConnectedInternalSocket(
 				socket, true);
 		MethodSubnegotiationResult methodSubnegotiationResult = 
-				this.socks5Client.negotiateUsing(sock);
+				Socks5ClientHelper.negotiateUsing(sock, this.socks5Client);
 		Socket sck = methodSubnegotiationResult.getSocket();
 		InputStream inputStream = sck.getInputStream();
 		OutputStream outputStream = sck.getOutputStream();

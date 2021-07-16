@@ -44,8 +44,12 @@ public final class Settings {
 		
 	}
 	
-	public static final Settings EMPTY_INSTANCE = new Settings(
+	private static final Settings EMPTY_INSTANCE = new Settings(
 			Collections.emptyList());
+	
+	public static Settings getEmptyInstance() {
+		return EMPTY_INSTANCE;
+	}
 	
 	public static Settings newInstance(
 			final List<Setting<? extends Object>> settings) {

@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import jargyle.help.HelpText;
+import jargyle.internal.help.HelpText;
 import jargyle.util.UnsignedByte;
 
 public enum Method {

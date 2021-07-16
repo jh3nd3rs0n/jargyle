@@ -139,7 +139,7 @@
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<version>2.9</version>
 				<configuration>
-					<excludePackageNames>argmatey</excludePackageNames>
+					<excludePackageNames>argmatey,jargyle.internal.*</excludePackageNames>
 					<source>9</source>
 				</configuration>
 			</plugin>

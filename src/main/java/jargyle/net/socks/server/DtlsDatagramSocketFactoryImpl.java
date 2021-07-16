@@ -10,11 +10,11 @@ import javax.net.ssl.KeyManager;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 
+import jargyle.internal.net.ssl.KeyManagerHelper;
+import jargyle.internal.net.ssl.SslContextHelper;
+import jargyle.internal.net.ssl.TrustManagerHelper;
 import jargyle.net.ssl.DtlsDatagramSocket;
 import jargyle.net.ssl.DtlsDatagramSocketFactory;
-import jargyle.net.ssl.KeyManagerHelper;
-import jargyle.net.ssl.SslContextHelper;
-import jargyle.net.ssl.TrustManagerHelper;
 import jargyle.security.EncryptedPassword;
 import jargyle.util.PositiveInteger;
 import jargyle.util.Strings;

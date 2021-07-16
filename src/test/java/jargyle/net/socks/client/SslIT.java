@@ -3,10 +3,10 @@ package jargyle.net.socks.client;
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
+import java.net.InetAddress;
 
 import org.junit.Test;
 
-import jargyle.NetConstants;
 import jargyle.ResourceHelper;
 import jargyle.ResourceNameConstants;
 import jargyle.TestStringConstants;
@@ -176,7 +176,7 @@ public class SslIT {
 		String returningString = DatagramSocketHelper.echoThroughDatagramSocket(
 				string,
 				SslIT.newSocks5ClientUsingSsl(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null),
 				SslIT.newConfigurationUsingSsl());
 		assertEquals(string, returningString);
@@ -188,7 +188,7 @@ public class SslIT {
 		String returningString = DatagramSocketHelper.echoThroughDatagramSocket(
 				string,
 				SslIT.newSocks5ClientUsingSsl(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null),
 				SslIT.newConfigurationUsingSsl());
 		assertEquals(string, returningString);
@@ -200,7 +200,7 @@ public class SslIT {
 		String returningString = DatagramSocketHelper.echoThroughDatagramSocket(
 				string,
 				SslIT.newSocks5ClientUsingSsl(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null),
 				SslIT.newConfigurationUsingSsl());
 		assertEquals(string, returningString);
@@ -212,7 +212,7 @@ public class SslIT {
 		String returningString = DatagramSocketHelper.echoThroughDatagramSocket(
 				string,
 				SslIT.newSocks5ClientUsingSsl(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null),
 				SslIT.newConfigurationUsingSslAndRequestedClientAuth());
 		assertEquals(string, returningString);
@@ -224,7 +224,7 @@ public class SslIT {
 		String returningString = DatagramSocketHelper.echoThroughDatagramSocket(
 				string,
 				SslIT.newSocks5ClientUsingSsl(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null),
 				SslIT.newConfigurationUsingSslAndRequestedClientAuth());
 		assertEquals(string, returningString);
@@ -236,7 +236,7 @@ public class SslIT {
 		String returningString = DatagramSocketHelper.echoThroughDatagramSocket(
 				string,
 				SslIT.newSocks5ClientUsingSsl(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null),
 				SslIT.newConfigurationUsingSslAndRequestedClientAuth());
 		assertEquals(string, returningString);
@@ -248,7 +248,7 @@ public class SslIT {
 		String returningString = DatagramSocketHelper.echoThroughDatagramSocket(
 				string,
 				SslIT.newSocks5ClientUsingSslAndClientAuth(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null),
 				SslIT.newConfigurationUsingSslAndRequiredClientAuth());
 		assertEquals(string, returningString);
@@ -260,7 +260,7 @@ public class SslIT {
 		String returningString = DatagramSocketHelper.echoThroughDatagramSocket(
 				string,
 				SslIT.newSocks5ClientUsingSslAndClientAuth(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null),
 				SslIT.newConfigurationUsingSslAndRequiredClientAuth());
 		assertEquals(string, returningString);
@@ -272,7 +272,7 @@ public class SslIT {
 		String returningString = DatagramSocketHelper.echoThroughDatagramSocket(
 				string,
 				SslIT.newSocks5ClientUsingSslAndClientAuth(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null),
 				SslIT.newConfigurationUsingSslAndRequiredClientAuth());
 		assertEquals(string, returningString);
@@ -284,7 +284,7 @@ public class SslIT {
 		String returningString = ServerSocketHelper.echoThroughServerSocket(
 				string,
 				SslIT.newSocks5ClientUsingSsl(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null),
 				SslIT.newConfigurationUsingSsl());
 		assertEquals(string, returningString);
@@ -296,7 +296,7 @@ public class SslIT {
 		String returningString = ServerSocketHelper.echoThroughServerSocket(
 				string,
 				SslIT.newSocks5ClientUsingSsl(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null),
 				SslIT.newConfigurationUsingSsl());
 		assertEquals(string, returningString);
@@ -308,7 +308,7 @@ public class SslIT {
 		String returningString = ServerSocketHelper.echoThroughServerSocket(
 				string,
 				SslIT.newSocks5ClientUsingSsl(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null),
 				SslIT.newConfigurationUsingSsl());
 		assertEquals(string, returningString);
@@ -320,7 +320,7 @@ public class SslIT {
 		String returningString = ServerSocketHelper.echoThroughServerSocket(
 				string,
 				SslIT.newSocks5ClientUsingSsl(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null),
 				SslIT.newConfigurationUsingSslAndRequestedClientAuth());
 		assertEquals(string, returningString);
@@ -332,7 +332,7 @@ public class SslIT {
 		String returningString = ServerSocketHelper.echoThroughServerSocket(
 				string,
 				SslIT.newSocks5ClientUsingSsl(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null),
 				SslIT.newConfigurationUsingSslAndRequestedClientAuth());
 		assertEquals(string, returningString);
@@ -344,7 +344,7 @@ public class SslIT {
 		String returningString = ServerSocketHelper.echoThroughServerSocket(
 				string,
 				SslIT.newSocks5ClientUsingSsl(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null),
 				SslIT.newConfigurationUsingSslAndRequestedClientAuth());
 		assertEquals(string, returningString);
@@ -356,7 +356,7 @@ public class SslIT {
 		String returningString = ServerSocketHelper.echoThroughServerSocket(
 				string,
 				SslIT.newSocks5ClientUsingSslAndClientAuth(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null),
 				SslIT.newConfigurationUsingSslAndRequiredClientAuth());
 		assertEquals(string, returningString);
@@ -368,7 +368,7 @@ public class SslIT {
 		String returningString = ServerSocketHelper.echoThroughServerSocket(
 				string,
 				SslIT.newSocks5ClientUsingSslAndClientAuth(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null),
 				SslIT.newConfigurationUsingSslAndRequiredClientAuth());
 		assertEquals(string, returningString);
@@ -380,7 +380,7 @@ public class SslIT {
 		String returningString = ServerSocketHelper.echoThroughServerSocket(
 				string,
 				SslIT.newSocks5ClientUsingSslAndClientAuth(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null),
 				SslIT.newConfigurationUsingSslAndRequiredClientAuth());
 		assertEquals(string, returningString);
@@ -392,7 +392,7 @@ public class SslIT {
 		String returningString = SocketHelper.echoThroughSocket(
 				string,
 				SslIT.newSocks5ClientUsingSsl(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null),
 				SslIT.newConfigurationUsingSsl());
 		assertEquals(string, returningString);
@@ -404,7 +404,7 @@ public class SslIT {
 		String returningString = SocketHelper.echoThroughSocket(
 				string,
 				SslIT.newSocks5ClientUsingSsl(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null),
 				SslIT.newConfigurationUsingSsl());
 		assertEquals(string, returningString);		
@@ -416,7 +416,7 @@ public class SslIT {
 		String returningString = SocketHelper.echoThroughSocket(
 				string,
 				SslIT.newSocks5ClientUsingSsl(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null),
 				SslIT.newConfigurationUsingSsl());
 		assertEquals(string, returningString);		
@@ -428,7 +428,7 @@ public class SslIT {
 		String returningString = SocketHelper.echoThroughSocket(
 				string,
 				SslIT.newSocks5ClientUsingSsl(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null),
 				SslIT.newConfigurationUsingSslAndRequestedClientAuth());
 		assertEquals(string, returningString);
@@ -440,7 +440,7 @@ public class SslIT {
 		String returningString = SocketHelper.echoThroughSocket(
 				string,
 				SslIT.newSocks5ClientUsingSsl(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null),
 				SslIT.newConfigurationUsingSslAndRequestedClientAuth());
 		assertEquals(string, returningString);		
@@ -452,7 +452,7 @@ public class SslIT {
 		String returningString = SocketHelper.echoThroughSocket(
 				string,
 				SslIT.newSocks5ClientUsingSsl(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null),
 				SslIT.newConfigurationUsingSslAndRequestedClientAuth());
 		assertEquals(string, returningString);		
@@ -464,7 +464,7 @@ public class SslIT {
 		String returningString = SocketHelper.echoThroughSocket(
 				string,
 				SslIT.newSocks5ClientUsingSslAndClientAuth(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null),
 				SslIT.newConfigurationUsingSslAndRequiredClientAuth());
 		assertEquals(string, returningString);
@@ -476,7 +476,7 @@ public class SslIT {
 		String returningString = SocketHelper.echoThroughSocket(
 				string,
 				SslIT.newSocks5ClientUsingSslAndClientAuth(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null),
 				SslIT.newConfigurationUsingSslAndRequiredClientAuth());
 		assertEquals(string, returningString);		
@@ -488,7 +488,7 @@ public class SslIT {
 		String returningString = SocketHelper.echoThroughSocket(
 				string,
 				SslIT.newSocks5ClientUsingSslAndClientAuth(
-						NetConstants.LOOPBACK_ADDRESS.getHostAddress(), 
+						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null),
 				SslIT.newConfigurationUsingSslAndRequiredClientAuth());
 		assertEquals(string, returningString);		

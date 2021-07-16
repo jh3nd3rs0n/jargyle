@@ -12,10 +12,10 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.TrustManager;
 
-import jargyle.net.ssl.KeyManagerHelper;
-import jargyle.net.ssl.SslContextHelper;
-import jargyle.net.ssl.SslSocketFactory;
-import jargyle.net.ssl.TrustManagerHelper;
+import jargyle.internal.net.ssl.KeyManagerHelper;
+import jargyle.internal.net.ssl.SslContextHelper;
+import jargyle.internal.net.ssl.SslSocketFactory;
+import jargyle.internal.net.ssl.TrustManagerHelper;
 import jargyle.security.EncryptedPassword;
 import jargyle.util.Strings;
 

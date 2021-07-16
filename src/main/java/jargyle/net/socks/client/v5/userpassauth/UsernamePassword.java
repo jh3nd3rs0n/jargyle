@@ -10,7 +10,7 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import jargyle.net.socks.transport.v5.userpassauth.UsernamePasswordRequest;
+import jargyle.internal.net.socks.transport.v5.userpassauth.UsernamePasswordRequest;
 import jargyle.security.EncryptedPassword;
 
 @XmlJavaTypeAdapter(UsernamePassword.UsernamePasswordXmlAdapter.class)

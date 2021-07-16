@@ -9,16 +9,16 @@ import java.net.Socket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jargyle.logging.LoggerHelper;
+import jargyle.internal.logging.LoggerHelper;
+import jargyle.internal.net.socks.transport.v5.ClientMethodSelectionMessage;
+import jargyle.internal.net.socks.transport.v5.ServerMethodSelectionMessage;
 import jargyle.net.socks.server.Configuration;
 import jargyle.net.socks.server.SettingSpec;
 import jargyle.net.socks.server.Settings;
 import jargyle.net.socks.server.WorkerContext;
-import jargyle.net.socks.transport.v5.ClientMethodSelectionMessage;
 import jargyle.net.socks.transport.v5.Method;
 import jargyle.net.socks.transport.v5.Methods;
 import jargyle.net.socks.transport.v5.Reply;
-import jargyle.net.socks.transport.v5.ServerMethodSelectionMessage;
 import jargyle.net.socks.transport.v5.Socks5Reply;
 import jargyle.net.socks.transport.v5.Socks5Request;
 import jargyle.net.socks.transport.v5.Version;
@@ -34,7 +34,7 @@ public final class Socks5Worker {
 	private final Settings settings;
 	private Socks5WorkerContext socks5WorkerContext;
 	
-	public Socks5Worker(final Socks5WorkerContext context) {
+	Socks5Worker(final Socks5WorkerContext context) {
 		Socket clientSock = context.getClientSocket();
 		Configuration config = context.getConfiguration();
 		Settings sttngs = config.getSettings();
@@ -184,11 +184,12 @@ public final class Socks5Worker {
 			Socket socket = methodSubnegotiationResult.getSocket();
 			this.clientInputStream = socket.getInputStream();
 			this.clientSocket = socket;
-			this.socks5WorkerContext = new Socks5WorkerContext(new WorkerContext(
-					this.clientSocket,
-					this.configuration,
-					this.socks5WorkerContext.getNetObjectFactory(),
-					this.socks5WorkerContext.getClientDtlsDatagramSocketFactory()));
+			this.socks5WorkerContext = new Socks5WorkerContext(
+					new WorkerContext(
+							this.clientSocket,
+							this.configuration,
+							this.socks5WorkerContext.getNetObjectFactory(),
+							this.socks5WorkerContext.getClientDtlsDatagramSocketFactory()));
 			Socks5Request socks5Req = this.newSocks5Request();
 			if (socks5Req == null) { return; }
 			if (!this.canAllowSocks5Request(

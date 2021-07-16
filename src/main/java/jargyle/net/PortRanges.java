@@ -47,23 +47,25 @@ public final class PortRanges {
 	}
 	
 	public static final PortRanges DEFAULT_INSTANCE = new PortRanges(
-			Arrays.asList(PortRange.DEFAULT_INSTANCE), null);
+			Arrays.asList(PortRange.getDefault()), null);
 	
-	public static PortRanges newInstance(
-			final PortRange prtRange, final List<PortRange> prtRanges) {
-		List<PortRange> list = new ArrayList<PortRange>();
-		list.add(prtRange);
-		list.addAll(prtRanges);
-		return new PortRanges(list, null);
+	public static PortRanges getDefault() {
+		return DEFAULT_INSTANCE;
 	}
 	
-	public static PortRanges newInstance(
-			final PortRange prtRange, final PortRange... prtRanges) {
-		return newInstance(prtRange, Arrays.asList(prtRanges));
+	public static PortRanges newInstance(final List<PortRange> prtRanges) {
+		return new PortRanges(prtRanges, null);
+	}
+	
+	public static PortRanges newInstance(final PortRange... prtRanges) {
+		return newInstance(Arrays.asList(prtRanges));
 	}
 	
 	public static PortRanges newInstance(final String s) {
 		List<PortRange> prtRanges = new ArrayList<PortRange>();
+		if (s.isEmpty()) {
+			return new PortRanges(prtRanges, null);
+		}
 		String[] sElements = s.split(" ");
 		for (String sElement : sElements) {
 			prtRanges.add(PortRange.newInstance(sElement));

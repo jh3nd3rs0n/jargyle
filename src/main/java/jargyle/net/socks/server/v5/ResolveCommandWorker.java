@@ -7,7 +7,7 @@ import java.net.UnknownHostException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jargyle.logging.LoggerHelper;
+import jargyle.internal.logging.LoggerHelper;
 import jargyle.net.HostResolver;
 import jargyle.net.NetObjectFactory;
 import jargyle.net.socks.transport.v5.Reply;

@@ -7,6 +7,7 @@ import java.net.Socket;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 import org.ietf.jgss.GSSContext;
 import org.ietf.jgss.GSSException;
@@ -15,17 +16,15 @@ import org.ietf.jgss.GSSName;
 import org.ietf.jgss.MessageProp;
 import org.ietf.jgss.Oid;
 
+import jargyle.internal.net.socks.common.v5.gssapiauth.GssSocket;
+import jargyle.internal.net.socks.transport.v5.gssapiauth.Message;
+import jargyle.internal.net.socks.transport.v5.gssapiauth.MessageType;
+import jargyle.internal.net.socks.transport.v5.userpassauth.UsernamePasswordRequest;
+import jargyle.internal.net.socks.transport.v5.userpassauth.UsernamePasswordResponse;
 import jargyle.net.socks.client.PropertySpec;
-import jargyle.net.socks.client.v5.userpassauth.UsernamePassword;
-import jargyle.net.socks.client.v5.userpassauth.UsernamePasswordRequestor;
 import jargyle.net.socks.transport.v5.Method;
-import jargyle.net.socks.transport.v5.gssapiauth.GssSocket;
-import jargyle.net.socks.transport.v5.gssapiauth.Message;
-import jargyle.net.socks.transport.v5.gssapiauth.MessageType;
 import jargyle.net.socks.transport.v5.gssapiauth.ProtectionLevel;
 import jargyle.net.socks.transport.v5.gssapiauth.ProtectionLevels;
-import jargyle.net.socks.transport.v5.userpassauth.UsernamePasswordRequest;
-import jargyle.net.socks.transport.v5.userpassauth.UsernamePasswordResponse;
 
 enum MethodSubnegotiator {
 	
@@ -180,7 +179,8 @@ enum MethodSubnegotiator {
 			ProtectionLevel protectionLevelSelection =
 					this.negotiateProtectionLevel(
 							socket, context, socks5Client);
-			MessageProp msgProp = protectionLevelSelection.newMessageProp();
+			Optional<MessageProp> msgProp = 
+					protectionLevelSelection.getMessageProp();
 			GssSocket gssSocket = new GssSocket(socket, context, msgProp);
 			return new GssapiMethodSubnegotiationResult(gssSocket);
 		}
@@ -218,36 +218,12 @@ enum MethodSubnegotiator {
 				final Socks5Client socks5Client) throws IOException {
 			InputStream inputStream = socket.getInputStream();
 			OutputStream outputStream = socket.getOutputStream();
-			UsernamePassword usernamePassword = null;
-			UsernamePasswordRequestor usernamePasswordRequestor = 
-					UsernamePasswordRequestor.getDefault();
-			if (usernamePasswordRequestor != null) {
-				Socks5ServerUri socksServerUri = 
-						(Socks5ServerUri) socks5Client.getSocksServerUri();
-				String prompt = String.format(
-						"Please enter username and password for %s on port %s", 
-						socksServerUri.getHost(), 
-						socksServerUri.getPort());
-				usernamePassword = 
-						usernamePasswordRequestor.requestUsernamePassword(
-								socksServerUri, prompt);
-			}
-			String username;
-			char[] password;
-			if (usernamePassword != null) {
-				username = usernamePassword.getUsername();
-				password = usernamePassword.getEncryptedPassword().getPassword();
-				
-			} else {
-				username = socks5Client.getProperties().getValue(
-						PropertySpec.SOCKS5_USERPASSAUTH_USERNAME);
-				password = socks5Client.getProperties().getValue(
-						PropertySpec.SOCKS5_USERPASSAUTH_PASSWORD).getPassword();
-			}
+			String username = socks5Client.getProperties().getValue(
+					PropertySpec.SOCKS5_USERPASSAUTH_USERNAME);
+			char[] password = socks5Client.getProperties().getValue(
+					PropertySpec.SOCKS5_USERPASSAUTH_PASSWORD).getPassword();
 			UsernamePasswordRequest usernamePasswordReq = 
-					UsernamePasswordRequest.newInstance(
-							username, 
-							password);
+					UsernamePasswordRequest.newInstance(username, password);
 			outputStream.write(usernamePasswordReq.toByteArray());
 			outputStream.flush();
 			Arrays.fill(password, '\0');

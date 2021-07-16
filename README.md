@@ -1959,9 +1959,11 @@ By default, the current level is set at `INFO` and up. This means that only logg
 
 The following are the classes that use logging:
 
+-   `jargyle.internal.net.socks.server.TcpRelayServer$DataWorker`
+-   `jargyle.internal.net.socks.server.v5.UdpRelayServer$InboundPacketsWorker`
+-   `jargyle.internal.net.socks.server.v5.UdpRelayServer$OutboundPacketsWorker`
 -   `jargyle.net.socks.server.Listener`
 -   `jargyle.net.socks.server.SocksServerCLI`
--   `jargyle.net.socks.server.TcpRelayServer$DataWorker`
 -   `jargyle.net.socks.server.Worker`
 -   `jargyle.net.socks.server.XmlFileSourceConfigurationProvider$ConfigurationUpdater`
 -   `jargyle.net.socks.server.v5.BindCommandWorker`
@@ -1969,8 +1971,6 @@ The following are the classes that use logging:
 -   `jargyle.net.socks.server.v5.ResolveCommandWorker`
 -   `jargyle.net.socks.server.v5.Socks5Worker`
 -   `jargyle.net.socks.server.v5.UdpAssociateCommandWorker`
--   `jargyle.net.socks.server.v5.UdpRelayServer$InboundPacketsWorker`
--   `jargyle.net.socks.server.v5.UdpRelayServer$OutboundPacketsWorker`
 -   `jargyle.net.socks.server.v5.userpassauth.XmlFileSourceUsersProvider$UsersUpdater`
 -   `jargyle.net.ssl.DtlsDatagramSocket`
 

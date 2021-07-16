@@ -4,12 +4,12 @@ import java.io.File;
 
 import org.ietf.jgss.Oid;
 
+import jargyle.internal.net.socks.server.settingspec.impl.SettingSpecFactory;
 import jargyle.net.Host;
 import jargyle.net.Port;
 import jargyle.net.SocketSettings;
 import jargyle.net.socks.client.SocksServerUri;
 import jargyle.net.socks.client.v5.userpassauth.UsernamePassword;
-import jargyle.net.socks.server.settingspecfactory.SettingSpecFactory;
 import jargyle.net.socks.server.v5.Socks5RequestCriteria;
 import jargyle.net.socks.server.v5.Socks5RequestWorkerFactory;
 import jargyle.net.socks.server.v5.userpassauth.UsernamePasswordAuthenticator;

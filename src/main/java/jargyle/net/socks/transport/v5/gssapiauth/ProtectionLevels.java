@@ -8,11 +8,15 @@ import java.util.List;
 
 public final class ProtectionLevels {
 
-	public static final ProtectionLevels DEFAULT_INSTANCE =
+	private static final ProtectionLevels DEFAULT_INSTANCE =
 			ProtectionLevels.newInstance(
 					ProtectionLevel.REQUIRED_INTEG_AND_CONF,
 					ProtectionLevel.REQUIRED_INTEG,
 					ProtectionLevel.NONE);
+	
+	public static ProtectionLevels getDefault() {
+		return DEFAULT_INSTANCE;
+	}
 	
 	public static ProtectionLevels newInstance(
 			final ProtectionLevel protectionLvl,

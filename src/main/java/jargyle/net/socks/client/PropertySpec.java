@@ -27,7 +27,7 @@ public abstract class PropertySpec<V>
 	public static final PropertySpec<Host> BIND_HOST = 
 			PropertySpecFactoryImpl.getInstance().newHostPropertySpec(
 					"socksClient.bindHost",
-					Host.INET4_ALL_ZEROS_INSTANCE);
+					Host.getInet4AllZerosInstance());
 	
 	public static final PropertySpec<Port> BIND_PORT = 
 			PropertySpecFactoryImpl.getInstance().newPortPropertySpec(
@@ -112,7 +112,7 @@ public abstract class PropertySpec<V>
 	public static final PropertySpec<ProtectionLevels> SOCKS5_GSSAPIAUTH_PROTECTION_LEVELS = 
 			PropertySpecFactoryImpl.getInstance().newProtectionLevelsPropertySpec(
 					"socksClient.socks5.gssapiauth.protectionLevels",
-					ProtectionLevels.DEFAULT_INSTANCE);
+					ProtectionLevels.getDefault());
 	
 	public static final PropertySpec<String> SOCKS5_GSSAPIAUTH_SERVICE_NAME = 
 			PropertySpecFactoryImpl.getInstance().newStringPropertySpec(

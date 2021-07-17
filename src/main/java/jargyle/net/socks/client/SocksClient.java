@@ -57,7 +57,7 @@ public abstract class SocksClient {
 		Optional<SocksClient> client = Optional.ofNullable(chainedClient);
 		NetObjectFactory internalNetObjFactory = (!client.isPresent()) ?
 				NetObjectFactory.newInstance() 
-				: chainedClient.newSocksNetObjectFactory();
+				: client.get().newSocksNetObjectFactory();
 		Optional<SslSocketFactory> sslSockFactory = Optional.ofNullable( 
 				(props.getValue(PropertySpec.SSL_ENABLED).booleanValue()) ?
 						new SslSocketFactoryImpl(this) : null);

@@ -17,7 +17,7 @@ import jargyle.net.socks.server.SettingSpec;
 import jargyle.net.socks.server.Settings;
 import jargyle.net.socks.server.WorkerContext;
 import jargyle.net.socks.transport.v5.Method;
-import jargyle.net.socks.transport.v5.MethodSubnegotiationResult;
+import jargyle.net.socks.transport.v5.MethodEncapsulation;
 import jargyle.net.socks.transport.v5.Methods;
 import jargyle.net.socks.transport.v5.Reply;
 import jargyle.net.socks.transport.v5.Socks5Reply;
@@ -100,7 +100,7 @@ public final class Socks5Worker {
 		return true;
 	}
 	
-	private MethodSubnegotiationResult negotiate() throws IOException {
+	private MethodEncapsulation negotiateMethod() throws IOException {
 		InputStream in = new SequenceInputStream(new ByteArrayInputStream(
 				new byte[] { Version.V5.byteValue() }),
 				this.clientInputStream);
@@ -139,9 +139,9 @@ public final class Socks5Worker {
 		this.socks5WorkerContext.writeThenFlush(smsm.toByteArray());
 		MethodSubnegotiator methodSubnegotiator = 
 				MethodSubnegotiator.valueOfMethod(method);
-		MethodSubnegotiationResult methodSubnegotiationResult = null;
+		MethodEncapsulation methodEncapsulation = null;
 		try {
-			methodSubnegotiationResult = methodSubnegotiator.subnegotiateWith(
+			methodEncapsulation = methodSubnegotiator.subnegotiate(
 					this.clientSocket, this.configuration);
 		} catch (IOException e) {
 			LOGGER.warn( 
@@ -150,7 +150,7 @@ public final class Socks5Worker {
 					e);
 			return null;
 		}
-		return methodSubnegotiationResult;		
+		return methodEncapsulation;		
 	}
 	
 	private Socks5Request newSocks5Request() throws IOException {
@@ -179,10 +179,10 @@ public final class Socks5Worker {
 	public void run() {
 		try {
 			this.clientInputStream = this.clientSocket.getInputStream();
-			MethodSubnegotiationResult methodSubnegotiationResult = 
-					this.negotiate();
-			if (methodSubnegotiationResult == null) { return; }
-			Socket socket = methodSubnegotiationResult.getSocket();
+			MethodEncapsulation methodEncapsulation = 
+					this.negotiateMethod();
+			if (methodEncapsulation == null) { return; }
+			Socket socket = methodEncapsulation.getSocket();
 			this.clientInputStream = socket.getInputStream();
 			this.clientSocket = socket;
 			this.socks5WorkerContext = new Socks5WorkerContext(
@@ -201,7 +201,7 @@ public final class Socks5Worker {
 			Socks5RequestWorkerContext socks5RequestWorkerContext = 
 					new Socks5RequestWorkerContext(
 							this.socks5WorkerContext, 
-							methodSubnegotiationResult, 
+							methodEncapsulation, 
 							socks5Req);
 			Socks5RequestWorkerFactory socks5RequestWorkerFactory =
 					this.settings.getLastValue(

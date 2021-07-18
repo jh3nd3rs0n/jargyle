@@ -1,4 +1,4 @@
-package jargyle.internal.net.socks.server;
+package jargyle.net.socks.server;
 
 import java.io.IOException;
 import java.io.InputStream;

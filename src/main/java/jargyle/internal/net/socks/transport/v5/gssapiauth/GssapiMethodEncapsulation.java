@@ -4,14 +4,14 @@ import java.io.IOException;
 import java.net.DatagramSocket;
 import java.net.Socket;
 
-import jargyle.net.socks.transport.v5.MethodSubnegotiationResult;
+import jargyle.net.socks.transport.v5.MethodEncapsulation;
 
-public final class GssapiMethodSubnegotiationResult 
-	extends MethodSubnegotiationResult {
+public final class GssapiMethodEncapsulation 
+	extends MethodEncapsulation {
 	
 	private final GssSocket socket;
 	
-	public GssapiMethodSubnegotiationResult(final GssSocket sock) {
+	public GssapiMethodEncapsulation(final GssSocket sock) {
 		this.socket = sock;
 	}
 	

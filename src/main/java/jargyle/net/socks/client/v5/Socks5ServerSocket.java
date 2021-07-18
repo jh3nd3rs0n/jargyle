@@ -11,13 +11,13 @@ import java.net.SocketAddress;
 import java.net.SocketException;
 import java.nio.channels.ServerSocketChannel;
 
-import jargyle.internal.net.FilterSocket;
 import jargyle.internal.net.InetAddressHelper;
+import jargyle.net.FilterSocket;
 import jargyle.net.PerformancePreferences;
 import jargyle.net.SocketSettingSpec;
 import jargyle.net.SocketSettings;
 import jargyle.net.socks.transport.v5.Command;
-import jargyle.net.socks.transport.v5.MethodSubnegotiationResult;
+import jargyle.net.socks.transport.v5.MethodEncapsulation;
 import jargyle.net.socks.transport.v5.Reply;
 import jargyle.net.socks.transport.v5.Socks5Reply;
 import jargyle.net.socks.transport.v5.Socks5Request;
@@ -271,9 +271,9 @@ public final class Socks5ServerSocket extends ServerSocket {
 			}
 			Socket sock = this.socks5Client.getConnectedInternalSocket(
 					this.socket, true);
-			MethodSubnegotiationResult methodSubnegotiationResult = 
-					this.socks5Client.negotiateUsing(sock);
-			Socket sck = methodSubnegotiationResult.getSocket();
+			MethodEncapsulation methodEncapsulation = 
+					this.socks5Client.negotiateMethod(sock);
+			Socket sck = methodEncapsulation.getSocket();
 			InputStream inStream = sck.getInputStream();
 			OutputStream outStream = sck.getOutputStream();
 			int prt = port;
@@ -364,7 +364,7 @@ public final class Socks5ServerSocket extends ServerSocket {
 
 	@Override
 	public ServerSocketChannel getChannel() {
-		return null;
+		throw new UnsupportedOperationException();
 	}
 	
 	@Override

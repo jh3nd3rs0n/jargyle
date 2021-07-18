@@ -1,4 +1,4 @@
-package jargyle.internal.net;
+package jargyle.net;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,7 +39,7 @@ public class FilterSocket extends Socket {
 
 	@Override
 	public SocketChannel getChannel() {
-		return null;
+		return this.socket.getChannel();
 	}
 
 	@Override

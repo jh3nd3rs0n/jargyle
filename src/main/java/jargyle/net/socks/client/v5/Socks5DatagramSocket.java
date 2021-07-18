@@ -18,7 +18,7 @@ import java.nio.channels.DatagramChannel;
 import jargyle.internal.net.InetAddressHelper;
 import jargyle.net.Port;
 import jargyle.net.socks.transport.v5.Command;
-import jargyle.net.socks.transport.v5.MethodSubnegotiationResult;
+import jargyle.net.socks.transport.v5.MethodEncapsulation;
 import jargyle.net.socks.transport.v5.Reply;
 import jargyle.net.socks.transport.v5.Socks5Reply;
 import jargyle.net.socks.transport.v5.Socks5Request;
@@ -196,9 +196,9 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			}
 			Socket sock = this.socks5Client.getConnectedInternalSocket(
 					this.socket, true);
-			MethodSubnegotiationResult methodSubnegotiationResult = 
-					this.socks5Client.negotiateUsing(sock);
-			Socket sck = methodSubnegotiationResult.getSocket();
+			MethodEncapsulation methodEncapsulation =
+					this.socks5Client.negotiateMethod(sock);
+			Socket sck = methodEncapsulation.getSocket();
 			if (!this.datagramSocket.equals(this.originalDatagramSocket)) {
 				this.datagramSocket = this.originalDatagramSocket;
 			}
@@ -224,8 +224,8 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 					datagramSock,
 					this.socks5Client.getSocksServerUri().getHost(),
 					socks5Rep.getServerBoundPort());
-			DatagramSocket datagramSck = 
-					methodSubnegotiationResult.getDatagramSocket(datagramSock);
+			DatagramSocket datagramSck = methodEncapsulation.getDatagramSocket(
+					datagramSock);
 			this.datagramSocket = datagramSck;
 			this.udpRelayServerInetAddress = InetAddress.getByName(
 					socks5Rep.getServerBoundAddress());
@@ -310,7 +310,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 
 	@Override
 	public DatagramChannel getChannel() {
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override

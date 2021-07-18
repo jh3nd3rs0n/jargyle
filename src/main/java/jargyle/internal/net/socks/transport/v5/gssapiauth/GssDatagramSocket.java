@@ -4,13 +4,14 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
+import java.nio.channels.DatagramChannel;
 import java.util.Optional;
 
 import org.ietf.jgss.GSSContext;
 import org.ietf.jgss.GSSException;
 import org.ietf.jgss.MessageProp;
 
-import jargyle.internal.net.FilterDatagramSocket;
+import jargyle.net.FilterDatagramSocket;
 
 public final class GssDatagramSocket extends FilterDatagramSocket {
 
@@ -42,6 +43,11 @@ public final class GssDatagramSocket extends FilterDatagramSocket {
 		this.wrapSizeLimit = sizeLimit;		
 	}
 
+	@Override
+	public DatagramChannel getChannel() {
+		throw new UnsupportedOperationException();
+	}
+	
 	public GSSContext getGSSContext() {
 		return this.gssContext;
 	}

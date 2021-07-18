@@ -12,7 +12,7 @@ import java.net.UnknownHostException;
 import java.nio.channels.SocketChannel;
 
 import jargyle.net.socks.transport.v5.Command;
-import jargyle.net.socks.transport.v5.MethodSubnegotiationResult;
+import jargyle.net.socks.transport.v5.MethodEncapsulation;
 import jargyle.net.socks.transport.v5.Reply;
 import jargyle.net.socks.transport.v5.Socks5Reply;
 import jargyle.net.socks.transport.v5.Socks5Request;
@@ -84,9 +84,9 @@ public final class Socks5Socket extends Socket {
 				final Socket connectedSocket,
 				final String address,
 				final int port) throws IOException {
-			MethodSubnegotiationResult methodSubnegotiationResult = 
-					this.socks5Client.negotiateUsing(connectedSocket); 
-			Socket connectedSock = methodSubnegotiationResult.getSocket(); 
+			MethodEncapsulation methodEncapsulation = 
+					this.socks5Client.negotiateMethod(connectedSocket); 
+			Socket connectedSock = methodEncapsulation.getSocket(); 
 			InputStream inputStream = connectedSock.getInputStream();
 			OutputStream outputStream = connectedSock.getOutputStream();
 			Socks5Request socks5Req = Socks5Request.newInstance(
@@ -208,7 +208,7 @@ public final class Socks5Socket extends Socket {
 
 	@Override
 	public SocketChannel getChannel() {
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override

@@ -3,28 +3,28 @@ package jargyle.net.socks.server.v5;
 import java.util.Objects;
 
 import jargyle.net.socks.transport.v5.Command;
-import jargyle.net.socks.transport.v5.MethodSubnegotiationResult;
+import jargyle.net.socks.transport.v5.MethodEncapsulation;
 import jargyle.net.socks.transport.v5.Socks5Request;
 
 public class Socks5RequestWorkerContext extends Socks5WorkerContext {
 
-	private final MethodSubnegotiationResult methodSubnegotiationResult;
+	private final MethodEncapsulation methodEncapsulation;
 	private final Socks5Request socks5Request;
 	
 	public Socks5RequestWorkerContext(final Socks5RequestWorkerContext other) {
 		super(other);
-		this.methodSubnegotiationResult = other.methodSubnegotiationResult;
+		this.methodEncapsulation = other.methodEncapsulation;
 		this.socks5Request = other.socks5Request; 
 	}
 	
 	public Socks5RequestWorkerContext(
 			final Socks5WorkerContext context,
-			final MethodSubnegotiationResult methSubnegotiationResult,
+			final MethodEncapsulation methEncapsulation,
 			final Socks5Request socks5Req) {
 		super(context);
-		Objects.requireNonNull(methSubnegotiationResult);
+		Objects.requireNonNull(methEncapsulation);
 		Objects.requireNonNull(socks5Req);
-		this.methodSubnegotiationResult = methSubnegotiationResult;
+		this.methodEncapsulation = methEncapsulation;
 		this.socks5Request = socks5Req;
 	}
 	
@@ -40,8 +40,8 @@ public class Socks5RequestWorkerContext extends Socks5WorkerContext {
 		return this.socks5Request.getDesiredDestinationPort();
 	}
 	
-	public final MethodSubnegotiationResult getMethodSubnegotiationResult() {
-		return this.methodSubnegotiationResult;
+	public final MethodEncapsulation getMethodEncapsulation() {
+		return this.methodEncapsulation;
 	}
 	
 	public final Socks5Request getSocks5Request() {

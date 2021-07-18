@@ -16,7 +16,7 @@ import jargyle.net.socks.client.PropertySpec;
 import jargyle.net.socks.client.SocksClient;
 import jargyle.net.socks.client.SocksNetObjectFactory;
 import jargyle.net.socks.transport.v5.Method;
-import jargyle.net.socks.transport.v5.MethodSubnegotiationResult;
+import jargyle.net.socks.transport.v5.MethodEncapsulation;
 import jargyle.net.socks.transport.v5.Methods;
 import jargyle.net.ssl.DtlsDatagramSocketFactory;
 
@@ -94,7 +94,7 @@ public final class Socks5Client extends SocksClient {
 				internalSocket, timeout, bindBeforeConnect);
 	}
 	
-	protected MethodSubnegotiationResult negotiateUsing(
+	protected MethodEncapsulation negotiateMethod(
 			final Socket connectedInternalSocket) throws IOException {
 		InputStream inputStream = connectedInternalSocket.getInputStream();
 		OutputStream outputStream = connectedInternalSocket.getOutputStream();
@@ -113,7 +113,7 @@ public final class Socks5Client extends SocksClient {
 		} catch (IllegalArgumentException e) {
 			throw new AssertionError(e);
 		}
-		return methodSubnegotiator.subnegotiateUsing(
+		return methodSubnegotiator.subnegotiate(
 				connectedInternalSocket, this);		
 	}
 	

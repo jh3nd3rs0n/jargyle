@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.SequenceInputStream;
 import java.net.Socket;
+import java.nio.channels.SocketChannel;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -14,7 +15,7 @@ import org.ietf.jgss.GSSContext;
 import org.ietf.jgss.GSSException;
 import org.ietf.jgss.MessageProp;
 
-import jargyle.internal.net.FilterSocket;
+import jargyle.net.FilterSocket;
 
 public final class GssSocket extends FilterSocket {
 
@@ -262,6 +263,11 @@ public final class GssSocket extends FilterSocket {
 			throw new IOException(e);
 		}
 		super.close();
+	}
+
+	@Override
+	public SocketChannel getChannel() {
+		throw new UnsupportedOperationException();
 	}
 	
 	public GSSContext getGSSContext() {

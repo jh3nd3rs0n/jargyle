@@ -11,7 +11,7 @@ import jargyle.net.socks.client.Properties;
 import jargyle.net.socks.client.PropertySpec;
 import jargyle.net.socks.transport.v5.AddressType;
 import jargyle.net.socks.transport.v5.Command;
-import jargyle.net.socks.transport.v5.MethodSubnegotiationResult;
+import jargyle.net.socks.transport.v5.MethodEncapsulation;
 import jargyle.net.socks.transport.v5.Reply;
 import jargyle.net.socks.transport.v5.Socks5Reply;
 import jargyle.net.socks.transport.v5.Socks5Request;
@@ -39,9 +39,9 @@ public final class Socks5HostResolver extends HostResolver {
 		this.socks5Client.configureInternalSocket(socket);
 		Socket sock = this.socks5Client.getConnectedInternalSocket(
 				socket, true);
-		MethodSubnegotiationResult methodSubnegotiationResult = 
-				this.socks5Client.negotiateUsing(sock);
-		Socket sck = methodSubnegotiationResult.getSocket();
+		MethodEncapsulation methodEncapsulation =
+				this.socks5Client.negotiateMethod(sock);
+		Socket sck = methodEncapsulation.getSocket();
 		InputStream inputStream = sck.getInputStream();
 		OutputStream outputStream = sck.getOutputStream();
 		Socks5Request socks5Req = Socks5Request.newInstance(

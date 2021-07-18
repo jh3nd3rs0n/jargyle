@@ -16,16 +16,16 @@ import org.ietf.jgss.GSSName;
 import org.ietf.jgss.MessageProp;
 import org.ietf.jgss.Oid;
 
-import jargyle.internal.net.socks.transport.v5.DefaultMethodSubnegotiationResult;
+import jargyle.internal.net.socks.transport.v5.NullMethodEncapsulation;
 import jargyle.internal.net.socks.transport.v5.gssapiauth.GssSocket;
-import jargyle.internal.net.socks.transport.v5.gssapiauth.GssapiMethodSubnegotiationResult;
+import jargyle.internal.net.socks.transport.v5.gssapiauth.GssapiMethodEncapsulation;
 import jargyle.internal.net.socks.transport.v5.gssapiauth.Message;
 import jargyle.internal.net.socks.transport.v5.gssapiauth.MessageType;
 import jargyle.internal.net.socks.transport.v5.userpassauth.UsernamePasswordRequest;
 import jargyle.internal.net.socks.transport.v5.userpassauth.UsernamePasswordResponse;
 import jargyle.net.socks.client.PropertySpec;
 import jargyle.net.socks.transport.v5.Method;
-import jargyle.net.socks.transport.v5.MethodSubnegotiationResult;
+import jargyle.net.socks.transport.v5.MethodEncapsulation;
 import jargyle.net.socks.transport.v5.gssapiauth.ProtectionLevel;
 import jargyle.net.socks.transport.v5.gssapiauth.ProtectionLevels;
 
@@ -174,7 +174,7 @@ enum MethodSubnegotiator {
 		}
 
 		@Override
-		public MethodSubnegotiationResult subnegotiateUsing(
+		public MethodEncapsulation subnegotiate(
 				final Socket socket, 
 				final Socks5Client socks5Client) throws IOException {
 			GSSContext context = this.newContext(socks5Client);
@@ -185,7 +185,7 @@ enum MethodSubnegotiator {
 			Optional<MessageProp> msgProp = 
 					protectionLevelSelection.getMessageProp();
 			GssSocket gssSocket = new GssSocket(socket, context, msgProp);
-			return new GssapiMethodSubnegotiationResult(gssSocket);
+			return new GssapiMethodEncapsulation(gssSocket);
 		}
 		
 	},
@@ -193,7 +193,7 @@ enum MethodSubnegotiator {
 	NO_ACCEPTABLE_METHODS_METHOD_SUBNEGOTIATOR(Method.NO_ACCEPTABLE_METHODS) {
 
 		@Override
-		public MethodSubnegotiationResult subnegotiateUsing(
+		public MethodEncapsulation subnegotiate(
 				final Socket Socket, 
 				final Socks5Client socks5Client) throws IOException {
 			throw new IOException("no acceptable methods");
@@ -205,10 +205,10 @@ enum MethodSubnegotiator {
 			Method.NO_AUTHENTICATION_REQUIRED) {
 
 		@Override
-		public MethodSubnegotiationResult subnegotiateUsing(
+		public MethodEncapsulation subnegotiate(
 				final Socket socket, 
 				final Socks5Client socks5Client) throws IOException {
-			return new DefaultMethodSubnegotiationResult(socket);
+			return new NullMethodEncapsulation(socket);
 		}
 		
 	},
@@ -216,7 +216,7 @@ enum MethodSubnegotiator {
 	USERNAME_PASSWORD_METHOD_SUBNEGOTIATOR(Method.USERNAME_PASSWORD) {
 
 		@Override
-		public MethodSubnegotiationResult subnegotiateUsing(
+		public MethodEncapsulation subnegotiate(
 				final Socket socket, 
 				final Socks5Client socks5Client) throws IOException {
 			InputStream inputStream = socket.getInputStream();
@@ -236,7 +236,7 @@ enum MethodSubnegotiator {
 					UsernamePasswordResponse.STATUS_SUCCESS) {
 				throw new IOException("invalid username password");
 			}
-			return new DefaultMethodSubnegotiationResult(socket);
+			return new NullMethodEncapsulation(socket);
 		}
 		
 	};
@@ -277,7 +277,7 @@ enum MethodSubnegotiator {
 		return this.methodValue;
 	}
 	
-	public abstract MethodSubnegotiationResult subnegotiateUsing(
+	public abstract MethodEncapsulation subnegotiate(
 			final Socket socket,
 			final Socks5Client socks5Client) throws IOException;
 	

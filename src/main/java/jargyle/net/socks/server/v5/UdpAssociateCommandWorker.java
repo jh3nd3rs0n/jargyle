@@ -14,14 +14,13 @@ import org.slf4j.LoggerFactory;
 
 import jargyle.internal.logging.LoggerHelper;
 import jargyle.internal.net.InetAddressHelper;
-import jargyle.internal.net.socks.server.v5.UdpRelayServer;
 import jargyle.net.Host;
 import jargyle.net.HostResolver;
 import jargyle.net.NetObjectFactory;
 import jargyle.net.SocketSettings;
 import jargyle.net.socks.server.SettingSpec;
 import jargyle.net.socks.server.Settings;
-import jargyle.net.socks.transport.v5.MethodSubnegotiationResult;
+import jargyle.net.socks.transport.v5.MethodEncapsulation;
 import jargyle.net.socks.transport.v5.Reply;
 import jargyle.net.socks.transport.v5.Socks5Reply;
 import jargyle.net.ssl.DtlsDatagramSocketFactory;
@@ -38,7 +37,7 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 	private final CommandWorkerContext commandWorkerContext;
 	private final String desiredDestinationAddress;
 	private final int desiredDestinationPort;
-	private final MethodSubnegotiationResult methodSubnegotiationResult;
+	private final MethodEncapsulation methodEncapsulation;
 	private final NetObjectFactory netObjectFactory;
 	private final Settings settings;
 	
@@ -49,8 +48,8 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 		Socket clientSock = context.getClientSocket();
 		String desiredDestinationAddr =	context.getDesiredDestinationAddress();
 		int desiredDestinationPrt = context.getDesiredDestinationPort();
-		MethodSubnegotiationResult methSubnegotiationResult = 
-				context.getMethodSubnegotiationResult();
+		MethodEncapsulation methEncapsulation = 
+				context.getMethodEncapsulation();
 		NetObjectFactory netObjFactory = context.getNetObjectFactory();
 		Settings sttngs = context.getSettings();
 		this.clientDtlsDatagramSocketFactory = clientDtlsDatagramSockFactory;
@@ -58,7 +57,7 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 		this.commandWorkerContext = context;
 		this.desiredDestinationAddress = desiredDestinationAddr;
 		this.desiredDestinationPort = desiredDestinationPrt;
-		this.methodSubnegotiationResult = methSubnegotiationResult; 
+		this.methodEncapsulation = methEncapsulation; 
 		this.netObjectFactory = netObjFactory;
 		this.settings = sttngs;		
 	}
@@ -387,7 +386,7 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 		}
 		try {
 			clientFacingDatagramSck = 
-					this.methodSubnegotiationResult.getDatagramSocket(
+					this.methodEncapsulation.getDatagramSocket(
 							clientFacingDatagramSck);
 		} catch (IOException e) {
 			LOGGER.warn( 

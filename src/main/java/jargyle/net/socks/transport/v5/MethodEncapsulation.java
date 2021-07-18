@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.DatagramSocket;
 import java.net.Socket;
 
-public abstract class MethodSubnegotiationResult {
+public abstract class MethodEncapsulation {
 
 	public abstract DatagramSocket getDatagramSocket(
 			final DatagramSocket datagramSocket) throws IOException;

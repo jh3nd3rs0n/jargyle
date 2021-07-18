@@ -1,4 +1,4 @@
-package jargyle.internal.net;
+package jargyle.net;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -50,7 +50,7 @@ public class FilterDatagramSocket extends DatagramSocket {
 
 	@Override
 	public DatagramChannel getChannel() {
-		return null;
+		return this.datagramSocket.getChannel();
 	}
 
 	@Override

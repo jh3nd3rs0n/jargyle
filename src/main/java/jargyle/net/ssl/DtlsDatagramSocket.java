@@ -7,6 +7,7 @@ import java.net.SocketAddress;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.nio.ByteBuffer;
+import java.nio.channels.DatagramChannel;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -20,7 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import jargyle.internal.logging.LoggerHelper;
-import jargyle.internal.net.FilterDatagramSocket;
+import jargyle.net.FilterDatagramSocket;
 
 public final class DtlsDatagramSocket extends FilterDatagramSocket {
 	
@@ -45,6 +46,11 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 		this.sslEngine = engine;
 	}
 
+	@Override
+	public DatagramChannel getChannel() {
+		throw new UnsupportedOperationException();
+	}
+	
 	public String[] getEnabledCipherSuites() {
 		return this.sslEngine.getEnabledCipherSuites();
 	}

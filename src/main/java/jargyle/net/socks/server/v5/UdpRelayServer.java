@@ -1,4 +1,4 @@
-package jargyle.internal.net.socks.server.v5;
+package jargyle.net.socks.server.v5;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -72,23 +72,24 @@ public final class UdpRelayServer {
 	
 	public static final class InboundAddressCriteria {
 		
-		private final Criteria allowedCriteria;
-		private final Criteria blockedCriteria;
+		private final Criteria allowedInboundAddressCriteria;
+		private final Criteria blockedInboundAddressCriteria;
 		
 		public InboundAddressCriteria(
-				final Criteria allowCriteria, final Criteria blockCriteria) {
-			Objects.requireNonNull(allowCriteria);
-			Objects.requireNonNull(blockCriteria);
-			this.allowedCriteria = allowCriteria;
-			this.blockedCriteria = blockCriteria;
+				final Criteria allowedInboundAddrCriteria, 
+				final Criteria blockedInboundAddrCriteria) {
+			Objects.requireNonNull(allowedInboundAddrCriteria);
+			Objects.requireNonNull(blockedInboundAddrCriteria);
+			this.allowedInboundAddressCriteria = allowedInboundAddrCriteria;
+			this.blockedInboundAddressCriteria = blockedInboundAddrCriteria;
 		}
 		
-		public Criteria getAllowedCriteria() {
-			return this.allowedCriteria;
+		public Criteria getAllowedInboundAddressCriteria() {
+			return this.allowedInboundAddressCriteria;
 		}
 		
-		public Criteria getBlockedCriteria() {
-			return this.blockedCriteria;
+		public Criteria getBlockedInboundAddressCriteria() {
+			return this.blockedInboundAddressCriteria;
 		}
 		
 	}
@@ -241,23 +242,24 @@ public final class UdpRelayServer {
 	
 	public static final class OutboundAddressCriteria {
 		
-		private final Criteria allowedCriteria;
-		private final Criteria blockedCriteria;
+		private final Criteria allowedOutboundAddressCriteria;
+		private final Criteria blockedOutboundAddressCriteria;
 		
 		public OutboundAddressCriteria(
-				final Criteria allowCriteria, final Criteria blockCriteria) {
-			Objects.requireNonNull(allowCriteria);
-			Objects.requireNonNull(blockCriteria);
-			this.allowedCriteria = allowCriteria;
-			this.blockedCriteria = blockCriteria;
+				final Criteria allowedOutboundAddrCriteria, 
+				final Criteria blockedOutboundAddrCriteria) {
+			Objects.requireNonNull(allowedOutboundAddrCriteria);
+			Objects.requireNonNull(blockedOutboundAddrCriteria);
+			this.allowedOutboundAddressCriteria = allowedOutboundAddrCriteria;
+			this.blockedOutboundAddressCriteria = blockedOutboundAddrCriteria;
 		}
 		
-		public Criteria getAllowedCriteria() {
-			return this.allowedCriteria;
+		public Criteria getAllowedOutboundAddressCriteria() {
+			return this.allowedOutboundAddressCriteria;
 		}
 		
-		public Criteria getBlockedCriteria() {
-			return this.blockedCriteria;
+		public Criteria getBlockedOutboundAddressCriteria() {
+			return this.blockedOutboundAddressCriteria;
 		}
 		
 	}
@@ -669,13 +671,13 @@ public final class UdpRelayServer {
 		Objects.requireNonNull(outboundAddrCriteria);
 		Objects.requireNonNull(settings);
 		this.allowedInboundAddressCriteria = 
-				inboundAddrCriteria.getAllowedCriteria();
+				inboundAddrCriteria.getAllowedInboundAddressCriteria();
 		this.allowedOutboundAddressCriteria =
-				outboundAddrCriteria.getAllowedCriteria();
+				outboundAddrCriteria.getAllowedOutboundAddressCriteria();
 		this.blockedInboundAddressCriteria = 
-				inboundAddrCriteria.getBlockedCriteria();
+				inboundAddrCriteria.getBlockedInboundAddressCriteria();
 		this.blockedOutboundAddressCriteria =
-				outboundAddrCriteria.getBlockedCriteria();
+				outboundAddrCriteria.getBlockedOutboundAddressCriteria();
 		this.bufferSize = settings.getBufferSize();
 		this.clientAddress = clientSockAddr.getAddress();
 		this.clientFacingDatagramSocket = 

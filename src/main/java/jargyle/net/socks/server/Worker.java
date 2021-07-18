@@ -16,20 +16,21 @@ final class Worker implements Runnable {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(Worker.class);
 	
-	private final Socket clientSocket;
+	private final Socket clientFacingSocket;
 	private final WorkerContext workerContext;
 	
 	public Worker(final WorkerContext context) {
-		this.clientSocket = context.getClientSocket();
+		this.clientFacingSocket = context.getClientFacingSocket();
 		this.workerContext = context;
 	}
 	
 	public void run() {
 		try {
-			InputStream clientInputStream = this.clientSocket.getInputStream();
+			InputStream clientFacingInputStream = 
+					this.clientFacingSocket.getInputStream();
 			int version = -1;
 			try {
-				version = clientInputStream.read();
+				version = clientFacingInputStream.read();
 			} catch (IOException e) {
 				LOGGER.warn(
 						LoggerHelper.objectMessage(
@@ -53,9 +54,9 @@ final class Worker implements Runnable {
 					LoggerHelper.objectMessage(this, "Internal server error"), 
 					t);
 		} finally {
-			if (!this.clientSocket.isClosed()) {
+			if (!this.clientFacingSocket.isClosed()) {
 				try {
-					this.clientSocket.close();
+					this.clientFacingSocket.close();
 				} catch (IOException e) {
 					LOGGER.warn(
 							LoggerHelper.objectMessage(

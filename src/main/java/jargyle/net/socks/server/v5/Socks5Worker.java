@@ -29,18 +29,18 @@ public final class Socks5Worker {
 	private static final Logger LOGGER = LoggerFactory.getLogger(
 			Socks5Worker.class);
 
-	private InputStream clientInputStream;
-	private Socket clientSocket;
+	private InputStream clientFacingInputStream;
+	private Socket clientFacingSocket;
 	private final Configuration configuration;
 	private final Settings settings;
 	private Socks5WorkerContext socks5WorkerContext;
 	
 	public Socks5Worker(final Socks5WorkerContext context) {
-		Socket clientSock = context.getClientSocket();
+		Socket clientFacingSock = context.getClientFacingSocket();
 		Configuration config = context.getConfiguration();
 		Settings sttngs = config.getSettings();
-		this.clientInputStream = null;
-		this.clientSocket = clientSock;
+		this.clientFacingInputStream = null;
+		this.clientFacingSocket = clientFacingSock;
 		this.configuration = config;
 		this.settings = sttngs;
 		this.socks5WorkerContext = context;
@@ -103,7 +103,7 @@ public final class Socks5Worker {
 	private MethodEncapsulation negotiateMethod() throws IOException {
 		InputStream in = new SequenceInputStream(new ByteArrayInputStream(
 				new byte[] { Version.V5.byteValue() }),
-				this.clientInputStream);
+				this.clientFacingInputStream);
 		ClientMethodSelectionMessage cmsm = null;
 		try {
 			cmsm = ClientMethodSelectionMessage.newInstanceFrom(in); 
@@ -142,7 +142,7 @@ public final class Socks5Worker {
 		MethodEncapsulation methodEncapsulation = null;
 		try {
 			methodEncapsulation = methodSubnegotiator.subnegotiate(
-					this.clientSocket, this.configuration);
+					this.clientFacingSocket, this.configuration);
 		} catch (IOException e) {
 			LOGGER.warn( 
 					LoggerHelper.objectMessage(
@@ -156,7 +156,8 @@ public final class Socks5Worker {
 	private Socks5Request newSocks5Request() throws IOException {
 		Socks5Request socks5Req = null;
 		try {
-			socks5Req = Socks5Request.newInstanceFrom(this.clientInputStream);
+			socks5Req = Socks5Request.newInstanceFrom(
+					this.clientFacingInputStream);
 		} catch (IOException e) {
 			LOGGER.warn( 
 					LoggerHelper.objectMessage(
@@ -178,23 +179,23 @@ public final class Socks5Worker {
 	
 	public void run() {
 		try {
-			this.clientInputStream = this.clientSocket.getInputStream();
-			MethodEncapsulation methodEncapsulation = 
-					this.negotiateMethod();
+			this.clientFacingInputStream = 
+					this.clientFacingSocket.getInputStream();
+			MethodEncapsulation methodEncapsulation = this.negotiateMethod();
 			if (methodEncapsulation == null) { return; }
 			Socket socket = methodEncapsulation.getSocket();
-			this.clientInputStream = socket.getInputStream();
-			this.clientSocket = socket;
+			this.clientFacingInputStream = socket.getInputStream();
+			this.clientFacingSocket = socket;
 			this.socks5WorkerContext = new Socks5WorkerContext(
 					new WorkerContext(
-							this.clientSocket,
+							this.clientFacingSocket,
 							this.configuration,
 							this.socks5WorkerContext.getNetObjectFactory(),
-							this.socks5WorkerContext.getClientDtlsDatagramSocketFactory()));
+							this.socks5WorkerContext.getClientFacingDtlsDatagramSocketFactory()));
 			Socks5Request socks5Req = this.newSocks5Request();
 			if (socks5Req == null) { return; }
 			if (!this.canAllowSocks5Request(
-					this.clientSocket.getInetAddress().getHostAddress(), 
+					this.clientFacingSocket.getInetAddress().getHostAddress(), 
 					socks5Req)) {
 				return;
 			}
@@ -219,9 +220,9 @@ public final class Socks5Worker {
 					LoggerHelper.objectMessage(this, "Internal server error"), 
 					t);
 		} finally {
-			if (!this.clientSocket.isClosed()) {
+			if (!this.clientFacingSocket.isClosed()) {
 				try {
-					this.clientSocket.close();
+					this.clientFacingSocket.close();
 				} catch (IOException e) {
 					LOGGER.warn( 
 							LoggerHelper.objectMessage(

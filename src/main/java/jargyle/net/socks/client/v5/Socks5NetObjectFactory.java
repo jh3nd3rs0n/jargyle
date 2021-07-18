@@ -12,7 +12,7 @@ import java.net.UnknownHostException;
 import jargyle.net.HostResolver;
 import jargyle.net.socks.client.SocksNetObjectFactory;
 
-public final class Socks5NetObjectFactory extends SocksNetObjectFactory {
+final class Socks5NetObjectFactory extends SocksNetObjectFactory {
 	
 	private final Socks5Client socks5Client;
 

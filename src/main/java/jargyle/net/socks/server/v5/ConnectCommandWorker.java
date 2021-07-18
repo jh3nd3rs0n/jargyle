@@ -25,7 +25,7 @@ final class ConnectCommandWorker extends CommandWorker {
 	private static final Logger LOGGER = LoggerFactory.getLogger(
 			ConnectCommandWorker.class);
 	
-	private final Socket clientSocket;
+	private final Socket clientFacingSocket;
 	private final CommandWorkerContext commandWorkerContext;
 	private final String desiredDestinationAddress;
 	private final int desiredDestinationPort;
@@ -34,12 +34,12 @@ final class ConnectCommandWorker extends CommandWorker {
 	
 	public ConnectCommandWorker(final CommandWorkerContext context) {
 		super(context);
-		Socket clientSock = context.getClientSocket();
+		Socket clientFacingSock = context.getClientFacingSocket();
 		String desiredDestinationAddr =	context.getDesiredDestinationAddress();
 		int desiredDestinationPrt = context.getDesiredDestinationPort();
 		NetObjectFactory netObjFactory = context.getNetObjectFactory();
 		Settings sttngs = context.getSettings();
-		this.clientSocket = clientSock;
+		this.clientFacingSocket = clientFacingSock;
 		this.commandWorkerContext = context;
 		this.desiredDestinationAddress = desiredDestinationAddr;
 		this.desiredDestinationPort = desiredDestinationPrt;
@@ -198,7 +198,7 @@ final class ConnectCommandWorker extends CommandWorker {
 			this.commandWorkerContext.writeThenFlush(socks5Rep.toByteArray());
 			try {
 				TcpBasedCommandWorkerHelper.passData(
-						this.clientSocket,
+						this.clientFacingSocket,
 						serverFacingSocket, 
 						this.settings.getLastValue(
 								SettingSpec.SOCKS5_ON_CONNECT_RELAY_BUFFER_SIZE).intValue(),

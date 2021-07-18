@@ -24,7 +24,7 @@ import jargyle.net.socks.transport.v5.Socks5Request;
 import jargyle.util.NonnegativeInteger;
 import jargyle.util.PositiveInteger;
 
-public final class Socks5ServerSocket extends ServerSocket {
+final class Socks5ServerSocket extends ServerSocket {
 
 	private static final class AcceptedSocks5Socket extends FilterSocket {
 		

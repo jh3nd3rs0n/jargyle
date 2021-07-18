@@ -24,7 +24,7 @@ import jargyle.net.socks.transport.v5.Socks5Reply;
 import jargyle.net.socks.transport.v5.Socks5Request;
 import jargyle.net.socks.transport.v5.UdpRequestHeader;
 
-public final class Socks5DatagramSocket extends DatagramSocket {
+final class Socks5DatagramSocket extends DatagramSocket {
 
 	private static final class Socks5DatagramSocketImpl {
 		

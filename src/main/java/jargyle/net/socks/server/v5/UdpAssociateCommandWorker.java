@@ -32,8 +32,8 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 	private static final Logger LOGGER = LoggerFactory.getLogger(
 			UdpAssociateCommandWorker.class);
 	
-	private final Optional<DtlsDatagramSocketFactory> clientDtlsDatagramSocketFactory;
-	private final Socket clientSocket;
+	private final Optional<DtlsDatagramSocketFactory> clientFacingDtlsDatagramSocketFactory;
+	private final Socket clientFacingSocket;
 	private final CommandWorkerContext commandWorkerContext;
 	private final String desiredDestinationAddress;
 	private final int desiredDestinationPort;
@@ -43,17 +43,17 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 	
 	public UdpAssociateCommandWorker(final CommandWorkerContext context) {
 		super(context);
-		Optional<DtlsDatagramSocketFactory> clientDtlsDatagramSockFactory =
-				context.getClientDtlsDatagramSocketFactory();
-		Socket clientSock = context.getClientSocket();
+		Optional<DtlsDatagramSocketFactory> clientFacingDtlsDatagramSockFactory =
+				context.getClientFacingDtlsDatagramSocketFactory();
+		Socket clientFacingSock = context.getClientFacingSocket();
 		String desiredDestinationAddr =	context.getDesiredDestinationAddress();
 		int desiredDestinationPrt = context.getDesiredDestinationPort();
 		MethodEncapsulation methEncapsulation = 
 				context.getMethodEncapsulation();
 		NetObjectFactory netObjFactory = context.getNetObjectFactory();
 		Settings sttngs = context.getSettings();
-		this.clientDtlsDatagramSocketFactory = clientDtlsDatagramSockFactory;
-		this.clientSocket = clientSock;
+		this.clientFacingDtlsDatagramSocketFactory = clientFacingDtlsDatagramSockFactory;
+		this.clientFacingSocket = clientFacingSock;
 		this.commandWorkerContext = context;
 		this.desiredDestinationAddress = desiredDestinationAddr;
 		this.desiredDestinationPort = desiredDestinationPrt;
@@ -191,14 +191,14 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 	}
 
 	private void passPackets(
-			final UdpRelayServer.ClientSocketAddress clientSocketAddress,
+			final UdpRelayServer.ClientDatagramSocketAddress clientDatagramSocketAddress,
 			final UdpRelayServer.DatagramSockets datagramSockets,
 			final HostResolver hostResolver,
 			final UdpRelayServer.InboundAddressCriteria inboundAddressCriteria,
 			final UdpRelayServer.OutboundAddressCriteria outboundAddressCriteria, 
 			final UdpRelayServer.RelaySettings relaySettings) throws IOException {
 		UdpRelayServer udpRelayServer = new UdpRelayServer(
-				clientSocketAddress,
+				clientDatagramSocketAddress,
 				datagramSockets,
 				hostResolver,
 				inboundAddressCriteria, 
@@ -206,7 +206,7 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 				relaySettings);
 		try {
 			udpRelayServer.start();
-			while (!this.clientSocket.isClosed() 
+			while (!this.clientFacingSocket.isClosed() 
 					&& !udpRelayServer.isStopped()) {
 				try {
 					Thread.sleep(HALF_SECOND);
@@ -227,7 +227,7 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 		String desiredDestinationAddr = this.desiredDestinationAddress;
 		if (InetAddressHelper.isAllZerosHostAddress(desiredDestinationAddr)) {
 			desiredDestinationAddr = 
-					this.clientSocket.getInetAddress().getHostAddress();
+					this.clientFacingSocket.getInetAddress().getHostAddress();
 		}
 		int desiredDestinationPrt = this.desiredDestinationPort;
 		HostResolver hostResolver = this.netObjectFactory.newHostResolver();
@@ -263,7 +263,7 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 					clientFacingDatagramSock.getLocalAddress();
 			String serverBoundAddress = inetAddress.getHostAddress();
 			if (InetAddressHelper.isAllZerosHostAddress(serverBoundAddress)) {
-				inetAddress = this.clientSocket.getLocalAddress();
+				inetAddress = this.clientFacingSocket.getLocalAddress();
 				serverBoundAddress = inetAddress.getHostAddress();
 			}
 			int serverBoundPort = clientFacingDatagramSock.getLocalPort();
@@ -277,7 +277,7 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 			this.commandWorkerContext.writeThenFlush(socks5Rep.toByteArray());
 			try {
 				this.passPackets(
-						new UdpRelayServer.ClientSocketAddress(
+						new UdpRelayServer.ClientDatagramSocketAddress(
 								desiredDestinationAddr, desiredDestinationPrt),
 						new UdpRelayServer.DatagramSockets(
 								clientFacingDatagramSock, 
@@ -353,10 +353,10 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 					udpClientHostInetAddress, udpClientPort);
 		}
 		if (clientFacingDatagramSck.isConnected() 
-				&& this.clientDtlsDatagramSocketFactory.isPresent()) {
+				&& this.clientFacingDtlsDatagramSocketFactory.isPresent()) {
 			try {
 				clientFacingDatagramSck = 
-						this.clientDtlsDatagramSocketFactory.get().newDatagramSocket(
+						this.clientFacingDtlsDatagramSocketFactory.get().newDatagramSocket(
 								clientFacingDatagramSck, 
 								udpClientHost, 
 								udpClientPort);

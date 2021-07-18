@@ -102,8 +102,8 @@ public final class ServerSocketHelper {
 			ExecutorService executor = Executors.newCachedThreadPool();
 			while (true) {
 				try {
-					Socket clientSocket = this.serverSocket.accept();
-					executor.execute(new Worker(this.echoServer, clientSocket));
+					Socket clientFacingSocket = this.serverSocket.accept();
+					executor.execute(new Worker(this.echoServer, clientFacingSocket));
 				} catch (SocketException e) {
 					break;
 				} catch (IOException e) {
@@ -118,18 +118,18 @@ public final class ServerSocketHelper {
 	private static final class Worker implements Runnable {
 		
 		private final EchoServer echoServer;
-		private final Socket clientSocket;
+		private final Socket clientFacingSocket;
 		
-		public Worker(final EchoServer server, final Socket clientSock) {
+		public Worker(final EchoServer server, final Socket clientFacingSock) {
 			this.echoServer = server;
-			this.clientSocket = clientSock;
+			this.clientFacingSocket = clientFacingSock;
 		}
 		
 		public void run() {
 			Socket socket = null;
 			try {
 				BufferedReader reader = new BufferedReader(
-						new InputStreamReader(this.clientSocket.getInputStream()));
+						new InputStreamReader(this.clientFacingSocket.getInputStream()));
 				long startTime = System.currentTimeMillis();
 				String inputLine = reader.readLine();
 				long endTime = System.currentTimeMillis();
@@ -165,7 +165,7 @@ public final class ServerSocketHelper {
 					}
 				}
 				try {
-					this.clientSocket.close();
+					this.clientFacingSocket.close();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}

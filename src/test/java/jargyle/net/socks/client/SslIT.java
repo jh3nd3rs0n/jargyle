@@ -13,7 +13,6 @@ import jargyle.TestStringConstants;
 import jargyle.net.DatagramSocketHelper;
 import jargyle.net.ServerSocketHelper;
 import jargyle.net.SocketHelper;
-import jargyle.net.socks.client.v5.Socks5Client;
 import jargyle.net.socks.client.v5.Socks5ServerUri;
 import jargyle.net.socks.server.Configuration;
 import jargyle.net.socks.server.ImmutableConfiguration;
@@ -116,7 +115,7 @@ public class SslIT {
 								ResourceNameConstants.JARGYLE_SECURITY_CLIENT_KEY_STORE_PASSWORD_FILE))));
 	}
 	
-	private static Socks5Client newSocks5ClientUsingSsl(
+	private static SocksClient newSocks5ClientUsingSsl(
 			final String host, 
 			final Integer port) {
 		Properties properties = Properties.newInstance(
@@ -137,7 +136,7 @@ public class SslIT {
 		return new Socks5ServerUri(host, port).newSocksClient(properties);
 	}
 	
-	private static Socks5Client newSocks5ClientUsingSslAndClientAuth(
+	private static SocksClient newSocks5ClientUsingSslAndClientAuth(
 			final String host, 
 			final Integer port) {
 		Properties properties = Properties.newInstance(

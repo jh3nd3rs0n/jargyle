@@ -1,6 +1,5 @@
 package jargyle.net.socks.client;
 
-import jargyle.net.socks.client.v5.Socks5Client;
 import jargyle.net.socks.client.v5.Socks5ServerUri;
 import jargyle.net.socks.client.v5.userpassauth.UsernamePassword;
 import jargyle.net.socks.transport.v5.Method;
@@ -8,13 +7,13 @@ import jargyle.net.socks.transport.v5.Methods;
 
 public final class SocksClientHelper {
 
-	public static Socks5Client newSocks5Client(
+	public static SocksClient newSocks5Client(
 			final String host, final Integer port) {
 		return new Socks5ServerUri(host, port).newSocksClient(
 				Properties.newInstance());
 	}
 	
-	public static Socks5Client newSocks5Client(
+	public static SocksClient newSocks5Client(
 			final String host, 
 			final Integer port, 
 			final UsernamePassword usernamePassword) {

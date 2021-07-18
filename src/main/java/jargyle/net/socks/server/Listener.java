@@ -23,24 +23,24 @@ final class Listener implements Runnable {
 	private static final Logger LOGGER = LoggerFactory.getLogger(
 			Listener.class);
 	
-	private Optional<DtlsDatagramSocketFactory> clientDtlsDatagramSocketFactory;
+	private Optional<DtlsDatagramSocketFactory> clientFacingDtlsDatagramSocketFactory;
 	private Optional<SslSocketFactory> clientSslSocketFactory;
 	private final Configuration configuration;
 	private final NetObjectFactory netObjectFactory;
 	private final ServerSocket serverSocket;
 			
 	public Listener(final ServerSocket serverSock, final Configuration config) {
-		this.clientDtlsDatagramSocketFactory = Optional.empty();
+		this.clientFacingDtlsDatagramSocketFactory = Optional.empty();
 		this.clientSslSocketFactory = Optional.empty();		
 		this.configuration = config;
 		this.netObjectFactory = new NetObjectFactoryImpl(config);
 		this.serverSocket = serverSock;
 	}
 	
-	private boolean canAllowClientSocket(final Socket clientSocket) {
+	private boolean canAllowClientFacingSocket(final Socket clientFacingSocket) {
 		Settings settings = this.configuration.getSettings();
 		String clientAddress = 
-				clientSocket.getInetAddress().getHostAddress();
+				clientFacingSocket.getInetAddress().getHostAddress();
 		Criteria allowedClientAddressCriteria = settings.getLastValue(
 				SettingSpec.ALLOWED_CLIENT_ADDRESS_CRITERIA);
 		Criterion criterion = allowedClientAddressCriteria.anyEvaluatesTrue(
@@ -66,10 +66,10 @@ final class Listener implements Runnable {
 		return true;
 	}
 	
-	private void closeClientSocket(final Socket clientSocket) {
-		if (!clientSocket.isClosed()) {
+	private void closeClientFacingSocket(final Socket clientFacingSocket) {
+		if (!clientFacingSocket.isClosed()) {
 			try {
-				clientSocket.close();
+				clientFacingSocket.close();
 			} catch (IOException e) {
 				LOGGER.warn( 
 						LoggerHelper.objectMessage(
@@ -79,19 +79,19 @@ final class Listener implements Runnable {
 		}
 	}
 	
-	private Optional<DtlsDatagramSocketFactory> getClientDtlsDatagramSocketFactory() {
+	private Optional<DtlsDatagramSocketFactory> getClientFacingDtlsDatagramSocketFactory() {
 		Settings settings = this.configuration.getSettings();
 		if (settings.getLastValue(SettingSpec.DTLS_ENABLED).booleanValue()) {
-			if (!this.clientDtlsDatagramSocketFactory.isPresent()) {
-				this.clientDtlsDatagramSocketFactory = Optional.of(
+			if (!this.clientFacingDtlsDatagramSocketFactory.isPresent()) {
+				this.clientFacingDtlsDatagramSocketFactory = Optional.of(
 						new DtlsDatagramSocketFactoryImpl(this.configuration));
 			}
 		} else {
-			if (this.clientDtlsDatagramSocketFactory.isPresent()) {
-				this.clientDtlsDatagramSocketFactory = Optional.empty();
+			if (this.clientFacingDtlsDatagramSocketFactory.isPresent()) {
+				this.clientFacingDtlsDatagramSocketFactory = Optional.empty();
 			}
 		}
-		return this.clientDtlsDatagramSocketFactory;
+		return this.clientFacingDtlsDatagramSocketFactory;
 	}
 	
 	private Optional<SslSocketFactory> getClientSslSocketFactory() {
@@ -112,9 +112,9 @@ final class Listener implements Runnable {
 	public void run() {
 		ExecutorService executor = Executors.newCachedThreadPool();
 		while (true) {
-			Socket clientSocket = null;
+			Socket clientFacingSocket = null;
 			try {
-				clientSocket = this.serverSocket.accept();
+				clientFacingSocket = this.serverSocket.accept();
 			} catch (SocketException e) {
 				// closed by SocksServer.stop()
 				break;
@@ -126,28 +126,29 @@ final class Listener implements Runnable {
 				continue;
 			}
 			try {
-				if (!this.canAllowClientSocket(clientSocket)) {
-					this.closeClientSocket(clientSocket);
+				if (!this.canAllowClientFacingSocket(clientFacingSocket)) {
+					this.closeClientFacingSocket(clientFacingSocket);
 					continue;
 				}
-				Socket clientSock = this.wrapClientSocket(clientSocket); 
-				if (clientSock == null) {
-					this.closeClientSocket(clientSocket);
+				Socket clientFacingSock = this.wrapClientFacingSocket(
+						clientFacingSocket); 
+				if (clientFacingSock == null) {
+					this.closeClientFacingSocket(clientFacingSocket);
 					continue; 
 				}
-				clientSocket = clientSock;
+				clientFacingSocket = clientFacingSock;
 			} catch (Throwable t) {
 				LOGGER.warn(
 						LoggerHelper.objectMessage(this, "Internal server error"), 
 						t);
-				this.closeClientSocket(clientSocket);
+				this.closeClientFacingSocket(clientFacingSocket);
 				continue;
 			}
 			WorkerContext workerContext = new WorkerContext(
-					clientSocket,
+					clientFacingSocket,
 					this.configuration,
 					this.netObjectFactory,
-					this.getClientDtlsDatagramSocketFactory());
+					this.getClientFacingDtlsDatagramSocketFactory());
 			executor.execute(new Worker(workerContext));
 		}
 		executor.shutdownNow();
@@ -163,14 +164,14 @@ final class Listener implements Runnable {
 		return builder.toString();
 	}
 	
-	private Socket wrapClientSocket(final Socket clientSocket) {
-		Socket clientSock = clientSocket;
+	private Socket wrapClientFacingSocket(final Socket clientFacingSocket) {
+		Socket clientFacingSock = clientFacingSocket;
 		Optional<SslSocketFactory> clientSslSockFactory = 
 				this.getClientSslSocketFactory();
 		if (clientSslSockFactory.isPresent()) {
 			try {
-				clientSock = clientSslSockFactory.get().newSocket(
-						clientSock, null, true);
+				clientFacingSock = clientSslSockFactory.get().newSocket(
+						clientFacingSock, null, true);
 			} catch (IOException e) {
 				LOGGER.warn(
 						LoggerHelper.objectMessage(
@@ -179,7 +180,7 @@ final class Listener implements Runnable {
 				return null;
 			}
 		}
-		return clientSock;
+		return clientFacingSock;
 	}
 
 }

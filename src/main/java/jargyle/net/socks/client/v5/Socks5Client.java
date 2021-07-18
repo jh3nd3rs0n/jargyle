@@ -20,7 +20,7 @@ import jargyle.net.socks.transport.v5.MethodEncapsulation;
 import jargyle.net.socks.transport.v5.Methods;
 import jargyle.net.ssl.DtlsDatagramSocketFactory;
 
-public final class Socks5Client extends SocksClient {
+final class Socks5Client extends SocksClient {
 
 	private final Optional<DtlsDatagramSocketFactory> dtlsDatagramSocketFactory;
 	

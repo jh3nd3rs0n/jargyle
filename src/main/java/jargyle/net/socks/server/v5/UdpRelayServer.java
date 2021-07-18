@@ -22,12 +22,12 @@ import jargyle.util.Criterion;
 
 public final class UdpRelayServer {
 	
-	public static final class ClientSocketAddress {
+	public static final class ClientDatagramSocketAddress {
 
 		private final String address;
 		private final int port;
 
-		public ClientSocketAddress(final String addr, final int prt) {
+		public ClientDatagramSocketAddress(final String addr, final int prt) {
 			Objects.requireNonNull(addr);
 			if (prt < 0 || prt > Port.MAX_INT_VALUE) {
 				throw new IllegalArgumentException("port is out of range");
@@ -658,13 +658,13 @@ public final class UdpRelayServer {
 	private final int timeout;
 	
 	public UdpRelayServer(		
-			final ClientSocketAddress clientSockAddr,
+			final ClientDatagramSocketAddress clientDatagramSockAddr,
 			final DatagramSockets datagramSocks,
 			final HostResolver resolver, 
 			final InboundAddressCriteria inboundAddrCriteria, 
 			final OutboundAddressCriteria outboundAddrCriteria, 
 			final RelaySettings settings) {
-		Objects.requireNonNull(clientSockAddr);
+		Objects.requireNonNull(clientDatagramSockAddr);
 		Objects.requireNonNull(datagramSocks);
 		Objects.requireNonNull(resolver);		
 		Objects.requireNonNull(inboundAddrCriteria);
@@ -679,10 +679,10 @@ public final class UdpRelayServer {
 		this.blockedOutboundAddressCriteria =
 				outboundAddrCriteria.getBlockedOutboundAddressCriteria();
 		this.bufferSize = settings.getBufferSize();
-		this.clientAddress = clientSockAddr.getAddress();
+		this.clientAddress = clientDatagramSockAddr.getAddress();
 		this.clientFacingDatagramSocket = 
 				datagramSocks.getClientFacingDatagramSocket();
-		this.clientPort = clientSockAddr.getPort();
+		this.clientPort = clientDatagramSockAddr.getPort();
 		this.executor = null;
 		this.firstPacketsWorkerFinished = false;
 		this.hostResolver = resolver;

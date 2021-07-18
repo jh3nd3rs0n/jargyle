@@ -16,7 +16,7 @@ import jargyle.net.socks.transport.v5.Reply;
 import jargyle.net.socks.transport.v5.Socks5Reply;
 import jargyle.net.socks.transport.v5.Socks5Request;
 
-public final class Socks5HostResolver extends HostResolver {
+final class Socks5HostResolver extends HostResolver {
 
 	private final Socks5Client socks5Client;
 	

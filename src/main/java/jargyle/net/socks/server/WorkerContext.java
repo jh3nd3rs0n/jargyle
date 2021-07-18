@@ -11,40 +11,40 @@ import jargyle.net.ssl.DtlsDatagramSocketFactory;
 
 public class WorkerContext {
 
-	private final Optional<DtlsDatagramSocketFactory> clientDtlsDatagramSocketFactory;
-	private Socket clientSocket;
+	private final Optional<DtlsDatagramSocketFactory> clientFacingDtlsDatagramSocketFactory;
+	private Socket clientFacingSocket;
 	private final Configuration configuration;
 	private final NetObjectFactory netObjectFactory;
 	
 	public WorkerContext(
-			final Socket clientSock,
+			final Socket clientFacingSock,
 			final Configuration config,
 			final NetObjectFactory netObjFactory,
-			final Optional<DtlsDatagramSocketFactory> clientDtlsDatagramSockFactory) {
-		Objects.requireNonNull(clientSock);
+			final Optional<DtlsDatagramSocketFactory> clientFacingDtlsDatagramSockFactory) {
+		Objects.requireNonNull(clientFacingSock);
 		Objects.requireNonNull(config);
 		Objects.requireNonNull(netObjFactory);
-		Objects.requireNonNull(clientDtlsDatagramSockFactory);
-		this.clientDtlsDatagramSocketFactory = clientDtlsDatagramSockFactory;
-		this.clientSocket = clientSock;
+		Objects.requireNonNull(clientFacingDtlsDatagramSockFactory);
+		this.clientFacingDtlsDatagramSocketFactory = clientFacingDtlsDatagramSockFactory;
+		this.clientFacingSocket = clientFacingSock;
 		this.configuration = config;
 		this.netObjectFactory = netObjFactory;
 	}
 	
 	public WorkerContext(final WorkerContext other) {
-		this.clientDtlsDatagramSocketFactory = 
-				other.clientDtlsDatagramSocketFactory;
-		this.clientSocket = other.clientSocket;
+		this.clientFacingDtlsDatagramSocketFactory = 
+				other.clientFacingDtlsDatagramSocketFactory;
+		this.clientFacingSocket = other.clientFacingSocket;
 		this.configuration = other.configuration;
 		this.netObjectFactory = other.netObjectFactory;
 	}
 
-	public final Optional<DtlsDatagramSocketFactory> getClientDtlsDatagramSocketFactory() {
-		return this.clientDtlsDatagramSocketFactory;
+	public final Optional<DtlsDatagramSocketFactory> getClientFacingDtlsDatagramSocketFactory() {
+		return this.clientFacingDtlsDatagramSocketFactory;
 	}
 
-	public final Socket getClientSocket() {
-		return this.clientSocket;
+	public final Socket getClientFacingSocket() {
+		return this.clientFacingSocket;
 	}
 
 	public final Configuration getConfiguration() {
@@ -63,16 +63,17 @@ public class WorkerContext {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append(this.getClass().getSimpleName())
-			.append(" [clientSocket=")
-			.append(this.clientSocket)
+			.append(" [clientFacingSocket=")
+			.append(this.clientFacingSocket)
 			.append("]");
 		return builder.toString();
 	}
 	
 	public final void writeThenFlush(final byte[] b) throws IOException {
-		OutputStream clientOutputStream = this.clientSocket.getOutputStream();
-		clientOutputStream.write(b);
-		clientOutputStream.flush();
+		OutputStream clientFacingOutputStream = 
+				this.clientFacingSocket.getOutputStream();
+		clientFacingOutputStream.write(b);
+		clientFacingOutputStream.flush();
 	}
 	
 }

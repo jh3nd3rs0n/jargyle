@@ -17,7 +17,7 @@ import jargyle.net.socks.transport.v5.Reply;
 import jargyle.net.socks.transport.v5.Socks5Reply;
 import jargyle.net.socks.transport.v5.Socks5Request;
 
-public final class Socks5Socket extends Socket {
+final class Socks5Socket extends Socket {
 
 	private static final class Socks5SocketImpl {
 		

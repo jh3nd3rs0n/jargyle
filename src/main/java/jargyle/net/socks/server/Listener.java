@@ -24,14 +24,14 @@ final class Listener implements Runnable {
 			Listener.class);
 	
 	private Optional<DtlsDatagramSocketFactory> clientFacingDtlsDatagramSocketFactory;
-	private Optional<SslSocketFactory> clientSslSocketFactory;
+	private Optional<SslSocketFactory> clientFacingSslSocketFactory;
 	private final Configuration configuration;
 	private final NetObjectFactory netObjectFactory;
 	private final ServerSocket serverSocket;
 			
 	public Listener(final ServerSocket serverSock, final Configuration config) {
 		this.clientFacingDtlsDatagramSocketFactory = Optional.empty();
-		this.clientSslSocketFactory = Optional.empty();		
+		this.clientFacingSslSocketFactory = Optional.empty();		
 		this.configuration = config;
 		this.netObjectFactory = new NetObjectFactoryImpl(config);
 		this.serverSocket = serverSock;
@@ -94,19 +94,19 @@ final class Listener implements Runnable {
 		return this.clientFacingDtlsDatagramSocketFactory;
 	}
 	
-	private Optional<SslSocketFactory> getClientSslSocketFactory() {
+	private Optional<SslSocketFactory> getClientFacingSslSocketFactory() {
 		Settings settings = this.configuration.getSettings();
 		if (settings.getLastValue(SettingSpec.SSL_ENABLED).booleanValue()) {
-			if (!this.clientSslSocketFactory.isPresent()) {
-				this.clientSslSocketFactory = Optional.of(
+			if (!this.clientFacingSslSocketFactory.isPresent()) {
+				this.clientFacingSslSocketFactory = Optional.of(
 						new SslSocketFactoryImpl(this.configuration));
 			}
 		} else {
-			if (this.clientSslSocketFactory.isPresent()) {
-				this.clientSslSocketFactory = Optional.empty();
+			if (this.clientFacingSslSocketFactory.isPresent()) {
+				this.clientFacingSslSocketFactory = Optional.empty();
 			}
 		}
-		return this.clientSslSocketFactory;
+		return this.clientFacingSslSocketFactory;
 	}
 	
 	public void run() {
@@ -166,11 +166,11 @@ final class Listener implements Runnable {
 	
 	private Socket wrapClientFacingSocket(final Socket clientFacingSocket) {
 		Socket clientFacingSock = clientFacingSocket;
-		Optional<SslSocketFactory> clientSslSockFactory = 
-				this.getClientSslSocketFactory();
-		if (clientSslSockFactory.isPresent()) {
+		Optional<SslSocketFactory> clientFacingSslSockFactory = 
+				this.getClientFacingSslSocketFactory();
+		if (clientFacingSslSockFactory.isPresent()) {
 			try {
-				clientFacingSock = clientSslSockFactory.get().newSocket(
+				clientFacingSock = clientFacingSslSockFactory.get().newSocket(
 						clientFacingSock, null, true);
 			} catch (IOException e) {
 				LOGGER.warn(

@@ -16,18 +16,18 @@ import org.ietf.jgss.GSSName;
 import org.ietf.jgss.MessageProp;
 import org.ietf.jgss.Oid;
 
-import jargyle.internal.net.socks.transport.v5.NullMethodEncapsulation;
-import jargyle.internal.net.socks.transport.v5.gssapiauth.GssSocket;
-import jargyle.internal.net.socks.transport.v5.gssapiauth.GssapiMethodEncapsulation;
-import jargyle.internal.net.socks.transport.v5.gssapiauth.Message;
-import jargyle.internal.net.socks.transport.v5.gssapiauth.MessageType;
-import jargyle.internal.net.socks.transport.v5.userpassauth.UsernamePasswordRequest;
-import jargyle.internal.net.socks.transport.v5.userpassauth.UsernamePasswordResponse;
 import jargyle.net.socks.client.PropertySpec;
 import jargyle.net.socks.transport.v5.Method;
 import jargyle.net.socks.transport.v5.MethodEncapsulation;
+import jargyle.net.socks.transport.v5.NullMethodEncapsulation;
+import jargyle.net.socks.transport.v5.gssapiauth.GssSocket;
+import jargyle.net.socks.transport.v5.gssapiauth.GssapiMethodEncapsulation;
+import jargyle.net.socks.transport.v5.gssapiauth.Message;
+import jargyle.net.socks.transport.v5.gssapiauth.MessageType;
 import jargyle.net.socks.transport.v5.gssapiauth.ProtectionLevel;
 import jargyle.net.socks.transport.v5.gssapiauth.ProtectionLevels;
+import jargyle.net.socks.transport.v5.userpassauth.UsernamePasswordRequest;
+import jargyle.net.socks.transport.v5.userpassauth.UsernamePasswordResponse;
 
 enum MethodSubnegotiator {
 	

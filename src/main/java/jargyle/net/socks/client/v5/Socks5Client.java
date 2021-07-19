@@ -9,15 +9,15 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.Optional;
 
-import jargyle.internal.net.socks.transport.v5.ClientMethodSelectionMessage;
-import jargyle.internal.net.socks.transport.v5.ServerMethodSelectionMessage;
 import jargyle.net.socks.client.Properties;
 import jargyle.net.socks.client.PropertySpec;
 import jargyle.net.socks.client.SocksClient;
 import jargyle.net.socks.client.SocksNetObjectFactory;
+import jargyle.net.socks.transport.v5.ClientMethodSelectionMessage;
 import jargyle.net.socks.transport.v5.Method;
 import jargyle.net.socks.transport.v5.MethodEncapsulation;
 import jargyle.net.socks.transport.v5.Methods;
+import jargyle.net.socks.transport.v5.ServerMethodSelectionMessage;
 import jargyle.net.ssl.DtlsDatagramSocketFactory;
 
 final class Socks5Client extends SocksClient {

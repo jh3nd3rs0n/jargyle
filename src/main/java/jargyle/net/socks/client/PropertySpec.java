@@ -7,10 +7,10 @@ import java.util.Objects;
 
 import org.ietf.jgss.Oid;
 
-import jargyle.internal.net.socks.client.propertyspec.impl.PropertySpecFactory;
 import jargyle.net.Host;
 import jargyle.net.Port;
 import jargyle.net.SocketSettings;
+import jargyle.net.socks.client.propertyspec.impl.PropertySpecFactory;
 import jargyle.net.socks.transport.v5.Method;
 import jargyle.net.socks.transport.v5.Methods;
 import jargyle.net.socks.transport.v5.gssapiauth.ProtectionLevels;

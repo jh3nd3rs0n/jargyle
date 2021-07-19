@@ -10,13 +10,13 @@ import java.util.Objects;
 import org.ietf.jgss.Oid;
 
 import jargyle.internal.help.HelpText;
-import jargyle.internal.net.socks.server.settingspec.impl.SettingSpecFactory;
 import jargyle.net.Host;
 import jargyle.net.Port;
 import jargyle.net.SocketSettings;
 import jargyle.net.socks.client.PropertySpec;
 import jargyle.net.socks.client.SocksServerUri;
 import jargyle.net.socks.client.v5.userpassauth.UsernamePassword;
+import jargyle.net.socks.server.settingspec.impl.SettingSpecFactory;
 import jargyle.net.socks.server.v5.Socks5RequestCriteria;
 import jargyle.net.socks.server.v5.Socks5RequestCriterion;
 import jargyle.net.socks.server.v5.Socks5RequestWorkerFactory;

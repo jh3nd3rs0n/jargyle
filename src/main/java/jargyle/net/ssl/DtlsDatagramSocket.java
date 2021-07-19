@@ -38,10 +38,6 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 			final DatagramSocket datagramSock, 
 			final SSLEngine engine) throws SocketException {
 		super(datagramSock);
-		if (!datagramSock.isConnected()) {
-			throw new IllegalArgumentException(
-					"DatagramSocket must be connected");
-		}
 		this.handshakeCompleted = false;
 		this.sslEngine = engine;
 	}
@@ -77,6 +73,11 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 	}
 	
 	private void handshake() throws IOException {
+		if (!super.isConnected()) { 
+			throw new IOException(
+					"DtlsDatagramSocket must be connected before handshake "
+					+ "can be performed");
+		}
 		boolean endLoops = false;
 		int loops = MAX_HANDSHAKE_LOOPS;
 		this.sslEngine.beginHandshake();

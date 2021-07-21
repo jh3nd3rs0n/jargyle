@@ -6,8 +6,7 @@ import java.net.Socket;
 
 import jargyle.net.socks.transport.v5.MethodEncapsulation;
 
-public final class GssapiMethodEncapsulation 
-	extends MethodEncapsulation {
+public final class GssapiMethodEncapsulation extends MethodEncapsulation {
 	
 	private final GssSocket socket;
 	

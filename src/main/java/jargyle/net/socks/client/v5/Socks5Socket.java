@@ -8,8 +8,10 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.net.SocketException;
+import java.net.SocketOption;
 import java.net.UnknownHostException;
 import java.nio.channels.SocketChannel;
+import java.util.Set;
 
 import jargyle.net.socks.transport.v5.Command;
 import jargyle.net.socks.transport.v5.MethodEncapsulation;
@@ -17,7 +19,7 @@ import jargyle.net.socks.transport.v5.Reply;
 import jargyle.net.socks.transport.v5.Socks5Reply;
 import jargyle.net.socks.transport.v5.Socks5Request;
 
-final class Socks5Socket extends Socket {
+public final class Socks5Socket extends Socket {
 
 	private static final class Socks5SocketImpl {
 		
@@ -121,13 +123,13 @@ final class Socks5Socket extends Socket {
 	private final Socks5Client socks5Client;
 	private final Socks5SocketImpl socks5SocketImpl;
 	
-	public Socks5Socket(final Socks5Client client) {
+	Socks5Socket(final Socks5Client client) {
 		this.socks5Client = client;
 		this.socks5SocketImpl = new Socks5SocketImpl(
 				client, client.newInternalSocket(), null); 
 	}
 	
-	public Socks5Socket(
+	Socks5Socket(
 			final Socks5Client client, 
 			final InetAddress address, 
 			final int port) throws IOException {
@@ -137,7 +139,7 @@ final class Socks5Socket extends Socket {
 		this.socks5SocketImpl.socks5Connect(address, port, 0);
 	}
 	
-	public Socks5Socket(
+	Socks5Socket(
 			final Socks5Client client, 
 			final InetAddress address, 
 			final int port, 
@@ -159,7 +161,7 @@ final class Socks5Socket extends Socket {
 		this.socks5SocketImpl = new Socks5SocketImpl(client, originalSock, sock);
 	}
 
-	public Socks5Socket(
+	Socks5Socket(
 			final Socks5Client client, 
 			final String host, 
 			final int port) throws UnknownHostException, IOException {
@@ -171,7 +173,7 @@ final class Socks5Socket extends Socket {
 				connectedInternalSocket, host, port);
 	}
 
-	public Socks5Socket(
+	Socks5Socket(
 			final Socks5Client client, 
 			final String host, 
 			final int port, 
@@ -247,6 +249,11 @@ final class Socks5Socket extends Socket {
 	}
 
 	@Override
+	public <T> T getOption(SocketOption<T> name) throws IOException {
+		return this.socks5SocketImpl.socket.getOption(name);
+	}
+
+	@Override
 	public OutputStream getOutputStream() throws IOException {
 		return this.socks5SocketImpl.socket.getOutputStream();
 	}
@@ -270,12 +277,12 @@ final class Socks5Socket extends Socket {
 	public boolean getReuseAddress() throws SocketException {
 		return this.socks5SocketImpl.socket.getReuseAddress();
 	}
-
+	
 	@Override
 	public synchronized int getSendBufferSize() throws SocketException {
 		return this.socks5SocketImpl.socket.getSendBufferSize();
 	}
-	
+
 	public Socks5Client getSocks5Client() {
 		return this.socks5Client;
 	}
@@ -342,6 +349,13 @@ final class Socks5Socket extends Socket {
 	}
 
 	@Override
+	public <T> Socket setOption(
+			SocketOption<T> name, T value) throws IOException {
+		this.socks5SocketImpl.socket.setOption(name, value);
+		return this;
+	}
+
+	@Override
 	public void setPerformancePreferences(
 			int connectionTime, int latency, int bandwidth) {
 		this.socks5SocketImpl.socket.setPerformancePreferences(
@@ -392,6 +406,11 @@ final class Socks5Socket extends Socket {
 	@Override
 	public void shutdownOutput() throws IOException {
 		this.socks5SocketImpl.socket.shutdownOutput();
+	}
+
+	@Override
+	public Set<SocketOption<?>> supportedOptions() {
+		return this.socks5SocketImpl.socket.supportedOptions();
 	}
 
 	@Override

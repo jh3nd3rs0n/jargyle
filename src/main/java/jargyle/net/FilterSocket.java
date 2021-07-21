@@ -7,7 +7,9 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.net.SocketException;
+import java.net.SocketOption;
 import java.nio.channels.SocketChannel;
+import java.util.Set;
 
 public class FilterSocket extends Socket {
 
@@ -75,6 +77,11 @@ public class FilterSocket extends Socket {
 	@Override
 	public boolean getOOBInline() throws SocketException {
 		return this.socket.getOOBInline();
+	}
+
+	@Override
+	public <T> T getOption(SocketOption<T> name) throws IOException {
+		return this.socket.getOption(name);
 	}
 
 	@Override
@@ -168,6 +175,12 @@ public class FilterSocket extends Socket {
 	}
 
 	@Override
+	public <T> Socket setOption(SocketOption<T> name, T value) throws IOException {
+		this.socket.setOption(name, value);
+		return this;
+	}
+
+	@Override
 	public void setPerformancePreferences(int connectionTime, int latency, int bandwidth) {
 		this.socket.setPerformancePreferences(connectionTime, latency, bandwidth);
 	}
@@ -215,6 +228,11 @@ public class FilterSocket extends Socket {
 	@Override
 	public void shutdownOutput() throws IOException {
 		this.socket.shutdownOutput();
+	}
+
+	@Override
+	public Set<SocketOption<?>> supportedOptions() {
+		return this.socket.supportedOptions();
 	}
 
 	@Override

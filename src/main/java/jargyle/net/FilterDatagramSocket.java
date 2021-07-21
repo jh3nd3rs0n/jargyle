@@ -6,7 +6,9 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketAddress;
 import java.net.SocketException;
+import java.net.SocketOption;
 import java.nio.channels.DatagramChannel;
+import java.util.Set;
 
 public class FilterDatagramSocket extends DatagramSocket {
 
@@ -71,6 +73,11 @@ public class FilterDatagramSocket extends DatagramSocket {
 	@Override
 	public SocketAddress getLocalSocketAddress() {
 		return this.datagramSocket.getLocalSocketAddress();
+	}
+
+	@Override
+	public <T> T getOption(SocketOption<T> name) throws IOException {
+		return this.datagramSocket.getOption(name);
 	}
 
 	@Override
@@ -139,6 +146,13 @@ public class FilterDatagramSocket extends DatagramSocket {
 	}
 
 	@Override
+	public <T> DatagramSocket setOption(
+			SocketOption<T> name, T value) throws IOException {
+		this.datagramSocket.setOption(name, value);
+		return this;
+	}
+
+	@Override
 	public synchronized void setReceiveBufferSize(int size) throws SocketException {
 		this.datagramSocket.setReceiveBufferSize(size);
 	}
@@ -161,6 +175,11 @@ public class FilterDatagramSocket extends DatagramSocket {
 	@Override
 	public synchronized void setTrafficClass(int tc) throws SocketException {
 		this.datagramSocket.setTrafficClass(tc);
+	}
+
+	@Override
+	public Set<SocketOption<?>> supportedOptions() {
+		return this.datagramSocket.supportedOptions();
 	}
 
 	@Override

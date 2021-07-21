@@ -12,8 +12,10 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.net.SocketException;
+import java.net.SocketOption;
 import java.net.UnknownHostException;
 import java.nio.channels.DatagramChannel;
+import java.util.Set;
 
 import jargyle.internal.net.InetAddressHelper;
 import jargyle.net.Port;
@@ -24,7 +26,7 @@ import jargyle.net.socks.transport.v5.Socks5Reply;
 import jargyle.net.socks.transport.v5.Socks5Request;
 import jargyle.net.socks.transport.v5.UdpRequestHeader;
 
-final class Socks5DatagramSocket extends DatagramSocket {
+public final class Socks5DatagramSocket extends DatagramSocket {
 
 	private static final class Socks5DatagramSocketImpl {
 		
@@ -238,8 +240,7 @@ final class Socks5DatagramSocket extends DatagramSocket {
 	private final Socks5Client socks5Client;
 	private final Socks5DatagramSocketImpl socks5DatagramSocketImpl;
 	
-	public Socks5DatagramSocket(
-			final Socks5Client client) throws SocketException {
+	Socks5DatagramSocket(final Socks5Client client) throws SocketException {
 		super((SocketAddress) null);
 		this.socks5Client = client;
 		this.socks5DatagramSocketImpl =	new Socks5DatagramSocketImpl(client);
@@ -247,7 +248,7 @@ final class Socks5DatagramSocket extends DatagramSocket {
 				(InetAddress) null, 0));
 	}
 
-	public Socks5DatagramSocket(
+	Socks5DatagramSocket(
 			final Socks5Client client, final int port) throws SocketException {
 		super((SocketAddress) null);
 		this.socks5Client = client;		
@@ -256,7 +257,7 @@ final class Socks5DatagramSocket extends DatagramSocket {
 				(InetAddress) null, port));
 	}
 
-	public Socks5DatagramSocket(
+	Socks5DatagramSocket(
 			final Socks5Client client, 
 			final int port, 
 			final InetAddress laddr) throws SocketException {
@@ -267,7 +268,7 @@ final class Socks5DatagramSocket extends DatagramSocket {
 				laddr, port));		
 	}
 
-	public Socks5DatagramSocket(
+	Socks5DatagramSocket(
 			final Socks5Client client, 
 			final SocketAddress bindaddr) throws SocketException {
 		super((SocketAddress) null);
@@ -334,6 +335,11 @@ final class Socks5DatagramSocket extends DatagramSocket {
 	}
 
 	@Override
+	public <T> T getOption(SocketOption<T> name) throws IOException {
+		return this.socks5DatagramSocketImpl.datagramSocket.getOption(name);
+	}
+
+	@Override
 	public int getPort() {
 		return this.socks5DatagramSocketImpl.remotePort;
 	}
@@ -357,11 +363,11 @@ final class Socks5DatagramSocket extends DatagramSocket {
 	public synchronized int getSendBufferSize() throws SocketException {
 		return this.socks5DatagramSocketImpl.datagramSocket.getSendBufferSize();
 	}
-
+	
 	public Socks5Client getSocks5Client() {
 		return this.socks5Client;
 	}
-	
+
 	@Override
 	public synchronized int getSoTimeout() throws SocketException {
 		return this.socks5DatagramSocketImpl.datagramSocket.getSoTimeout();
@@ -403,6 +409,13 @@ final class Socks5DatagramSocket extends DatagramSocket {
 	}
 
 	@Override
+	public <T> DatagramSocket setOption(
+			SocketOption<T> name, T value) throws IOException {
+		this.socks5DatagramSocketImpl.datagramSocket.setOption(name, value);
+		return this;
+	}
+
+	@Override
 	public synchronized void setReceiveBufferSize(int size) throws SocketException {
 		this.socks5DatagramSocketImpl.datagramSocket.setReceiveBufferSize(size);
 	}
@@ -425,6 +438,11 @@ final class Socks5DatagramSocket extends DatagramSocket {
 	@Override
 	public synchronized void setTrafficClass(int tc) throws SocketException {
 		this.socks5DatagramSocketImpl.datagramSocket.setTrafficClass(tc);
+	}
+
+	@Override
+	public Set<SocketOption<?>> supportedOptions() {
+		return this.socks5DatagramSocketImpl.datagramSocket.supportedOptions();
 	}
 
 	@Override

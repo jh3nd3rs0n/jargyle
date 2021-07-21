@@ -20,16 +20,15 @@ import jargyle.net.socks.transport.v5.Methods;
 import jargyle.net.socks.transport.v5.ServerMethodSelectionMessage;
 import jargyle.net.ssl.DtlsDatagramSocketFactory;
 
-final class Socks5Client extends SocksClient {
+public final class Socks5Client extends SocksClient {
 
 	private final Optional<DtlsDatagramSocketFactory> dtlsDatagramSocketFactory;
 	
-	public Socks5Client(
-			final Socks5ServerUri serverUri, final Properties props) {
+	Socks5Client(final Socks5ServerUri serverUri, final Properties props) {
 		this(serverUri, props, null);
 	}
 	
-	public Socks5Client(
+	Socks5Client(
 			final Socks5ServerUri serverUri, 
 			final Properties props,
 			final SocksClient chainedClient) {

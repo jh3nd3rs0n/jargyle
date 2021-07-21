@@ -22,6 +22,7 @@ import jargyle.net.ServerSocketHelper;
 import jargyle.net.SocketHelper;
 import jargyle.net.socks.client.Properties;
 import jargyle.net.socks.client.PropertySpec;
+import jargyle.net.socks.client.SocksClient;
 import jargyle.net.socks.server.Configuration;
 import jargyle.net.socks.server.ImmutableConfiguration;
 import jargyle.net.socks.server.SettingSpec;
@@ -71,7 +72,7 @@ public class GssapiAuthIT {
 						Boolean.TRUE)));
 	}
 		
-	private static Socks5Client newSocks5Client(
+	private static SocksClient newSocks5Client(
 			final String host, 
 			final Integer port,
 			final String serviceName,

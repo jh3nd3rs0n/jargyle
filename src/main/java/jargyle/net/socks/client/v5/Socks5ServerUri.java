@@ -12,7 +12,7 @@ public final class Socks5ServerUri extends SocksServerUri {
 	}
 
 	@Override
-	public Socks5Client newSocksClient(final Properties properties) {
+	public SocksClient newSocksClient(final Properties properties) {
 		return new Socks5Client(this, properties);
 	}
 

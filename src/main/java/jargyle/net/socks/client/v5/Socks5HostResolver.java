@@ -16,11 +16,11 @@ import jargyle.net.socks.transport.v5.Reply;
 import jargyle.net.socks.transport.v5.Socks5Reply;
 import jargyle.net.socks.transport.v5.Socks5Request;
 
-final class Socks5HostResolver extends HostResolver {
+public final class Socks5HostResolver extends HostResolver {
 
 	private final Socks5Client socks5Client;
 	
-	public Socks5HostResolver(final Socks5Client client) {
+	Socks5HostResolver(final Socks5Client client) {
 		this.socks5Client = client;
 	}
 	

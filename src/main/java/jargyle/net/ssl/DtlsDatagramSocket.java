@@ -74,7 +74,7 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 	
 	private void handshake() throws IOException {
 		if (!super.isConnected()) { 
-			throw new IOException(
+			throw new IllegalStateException(
 					"DtlsDatagramSocket must be connected before handshake "
 					+ "can be performed");
 		}

@@ -13,4 +13,6 @@ public abstract class SocksNetObjectFactory extends NetObjectFactory {
 		return socksNetObjectFactory;
 	}
 	
+	public abstract SocksClient getSocksClient();
+	
 }

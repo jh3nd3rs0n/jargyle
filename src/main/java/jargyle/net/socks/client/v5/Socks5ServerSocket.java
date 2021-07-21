@@ -136,7 +136,7 @@ public final class Socks5ServerSocket extends ServerSocket {
 				new HashSet<SocketOption<?>>();
 		
 		@SuppressWarnings("unused")
-		private static final ServerSocketOptionHelper<Integer> SO_RCVBUF = new ServerSocketOptionHelper<Integer>(
+		private static final ServerSocketOptionHelper<Integer> SO_RCVBUF_SERVER_SOCKET_OPTION_HELPER = new ServerSocketOptionHelper<Integer>(
 				StandardSocketOptions.SO_RCVBUF) {
 
 					@Override
@@ -156,7 +156,7 @@ public final class Socks5ServerSocket extends ServerSocket {
 		};
 		
 		@SuppressWarnings("unused")
-		private static final ServerSocketOptionHelper<Boolean> SO_REUSEADDR = new ServerSocketOptionHelper<Boolean>(
+		private static final ServerSocketOptionHelper<Boolean> SO_REUSEADDR_SERVER_SOCKET_OPTION_HELPER = new ServerSocketOptionHelper<Boolean>(
 				StandardSocketOptions.SO_REUSEADDR) {
 
 					@Override

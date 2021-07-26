@@ -25,6 +25,8 @@ import argmatey.ArgMatey.Annotations.Ordinal;
 import argmatey.ArgMatey.CLI;
 import argmatey.ArgMatey.IllegalOptionArgException;
 import argmatey.ArgMatey.OptionType;
+import argmatey.ArgMatey.OptionUsageParams;
+import argmatey.ArgMatey.OptionUsageProvider;
 import jargyle.internal.help.HelpText;
 import jargyle.internal.io.ConsoleWrapper;
 import jargyle.net.SocketSettingSpec;
@@ -37,15 +39,35 @@ import jargyle.security.EncryptedPassword;
 
 public final class SocksServerCLI extends CLI {
 	
+	private static final class SettingGnuLongOptionUsageProvider 
+		extends OptionUsageProvider {
+
+		@Override
+		public String getOptionUsage(final OptionUsageParams params) {
+			return String.format("%s=NAME=VALUE", params.getOption());
+		}
+		
+	}
+	
+	private static final class SettingPosixOptionUsageProvider 
+		extends OptionUsageProvider {
+
+		@Override
+		public String getOptionUsage(final OptionUsageParams params) {
+			return String.format("%s NAME=VALUE", params.getOption());
+		}
+		
+	}
+	
 	private static final int CONFIG_FILE_OPTION_GROUP_ORDINAL = 0;
-	private static final int CONFIG_FILE_XSD_OPTION_GROUP_ORDINAL = 1;
+	private static final int CONFIG_FILE_XSD_OPTION_GROUP_ORDINAL = 1;	
 	private static final int ENTER_CHAINING_DTLS_KEY_STORE_PASS_OPTION_GROUP_ORDINAL = 2;
-	private static final int ENTER_CHAINING_DTLS_TRUST_STORE_PASS_OPTION_GROUP_ORDINAL = 3;	
+	private static final int ENTER_CHAINING_DTLS_TRUST_STORE_PASS_OPTION_GROUP_ORDINAL = 3;
 	private static final int ENTER_CHAINING_SOCKS5_USERPASSAUTH_USER_PASS_OPTION_GROUP_ORDINAL = 4;
 	private static final int ENTER_CHAINING_SSL_KEY_STORE_PASS_OPTION_GROUP_ORDINAL = 5;
-	private static final int ENTER_CHAINING_SSL_TRUST_STORE_PASS_OPTION_GROUP_ORDINAL = 6;
+	private static final int ENTER_CHAINING_SSL_TRUST_STORE_PASS_OPTION_GROUP_ORDINAL = 6;	
 	private static final int ENTER_DTLS_KEY_STORE_PASS_OPTION_GROUP_ORDINAL = 7;
-	private static final int ENTER_DTLS_TRUST_STORE_PASS_OPTION_GROUP_ORDINAL = 8;	
+	private static final int ENTER_DTLS_TRUST_STORE_PASS_OPTION_GROUP_ORDINAL = 8;
 	private static final int ENTER_SSL_KEY_STORE_PASS_OPTION_GROUP_ORDINAL = 9;
 	private static final int ENTER_SSL_TRUST_STORE_PASS_OPTION_GROUP_ORDINAL = 10;
 	private static final int HELP_OPTION_GROUP_ORDINAL = 11;
@@ -53,7 +75,9 @@ public final class SocksServerCLI extends CLI {
 	private static final int NEW_CONFIG_FILE_OPTION_GROUP_ORDINAL = 13;
 	private static final int SETTING_OPTION_GROUP_ORDINAL = 14;
 	private static final int SETTINGS_HELP_OPTION_GROUP_ORDINAL = 15;
+	
 	private static final int SOCKS5_USERPASSAUTH_USERS_OPTION_GROUP_ORDINAL = 16;
+	
 	private static final int VERSION_OPTION_GROUP_ORDINAL = 17;
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(
@@ -74,9 +98,8 @@ public final class SocksServerCLI extends CLI {
 	private final boolean posixlyCorrect;
 	private final String programBeginningUsage;
 	private boolean settingsHelpDisplayed;
-	
 	private Optional<Integer> socks5UserpassauthUsersManagementModeStatus;
-		
+	
 	public SocksServerCLI(final String[] args, final boolean posixCorrect) {
 		super(args, posixCorrect);
 		String progName = System.getProperty(
@@ -93,7 +116,7 @@ public final class SocksServerCLI extends CLI {
 		this.programBeginningUsage = progBeginningUsage;
 		this.programName = progName;
 	}
-		
+	
 	@Option(
 			doc = "The configuration file",
 			name = "config-file",
@@ -136,12 +159,12 @@ public final class SocksServerCLI extends CLI {
 			doc = "A setting for the SOCKS server",
 			name = "setting",
 			type = OptionType.GNU_LONG,
-			usage = "${option}=NAME=VALUE"
+			optionUsageProvider = SettingGnuLongOptionUsageProvider.class
 	)
 	@Option(
 			name = "s",
 			type = OptionType.POSIX,
-			usage = "${option} NAME=VALUE"
+			optionUsageProvider = SettingPosixOptionUsageProvider.class
 	)
 	@Ordinal(SETTING_OPTION_GROUP_ORDINAL)
 	private void addSetting(final Setting<? extends Object> sttng) {
@@ -628,6 +651,12 @@ public final class SocksServerCLI extends CLI {
 		this.settingsHelpDisplayed = true;
 	}
 		
+	private EncryptedPassword readEncryptedPassword(final String prompt) {
+		ConsoleWrapper consoleWrapper = new ConsoleWrapper(System.console());
+		return EncryptedPassword.newInstance(consoleWrapper.readPassword(
+				prompt));
+	}
+
 	@Option(
 			doc = "The configuration file to be monitored for any "
 					+ "changes to be applied to the running "
@@ -643,12 +672,6 @@ public final class SocksServerCLI extends CLI {
 	@Ordinal(MONITORED_CONFIG_FILE_OPTION_GROUP_ORDINAL)
 	private void setMonitoredConfigurationFile(final String file) {
 		this.monitoredConfigurationFile = file;
-	}
-
-	private EncryptedPassword readEncryptedPassword(final String prompt) {
-		ConsoleWrapper consoleWrapper = new ConsoleWrapper(System.console());
-		return EncryptedPassword.newInstance(consoleWrapper.readPassword(
-				prompt));
 	}
 	
 	private Optional<Integer> startSocksServer(

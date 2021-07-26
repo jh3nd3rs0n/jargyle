@@ -49,7 +49,6 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -101,14 +100,6 @@ public final class ArgMatey {
 		@Target({ElementType.METHOD})
 		static @interface DisplaysProgramVersion { }
 		
-		@Retention(RetentionPolicy.RUNTIME)
-		@Target({ElementType.METHOD})
-		public static @interface HelpText {
-			
-			String value();
-			
-		}
-		
 		@Repeatable(Options.class)
 		@Retention(RetentionPolicy.RUNTIME)
 		@Target({ElementType.METHOD})
@@ -127,8 +118,6 @@ public final class ArgMatey {
 				default ArgMatey.OptionUsageProvider.class;
 					
 			OptionType type();
-			
-			String usage() default "";
 			
 		}
 
@@ -1472,12 +1461,6 @@ public final class ArgMatey {
 			return this;
 		}
 		
-		@Override
-		public GnuLongOptionBuilder setUsage(final String u) {
-			super.setUsage(u);
-			return this;
-		}
-		
 	}
 
 	static final class GnuLongOptionHandler extends OptionHandler {
@@ -1791,78 +1774,6 @@ public final class ArgMatey {
 		
 	}
 
-	static final class InterpolatedOptionGroupHelpTextProvider 
-		extends OptionGroupHelpTextProvider {
-
-		private final String string;
-		
-		public InterpolatedOptionGroupHelpTextProvider(final String str) {
-			this.string = str;
-		}
-		
-		@Override
-		public String getOptionGroupHelpText(
-				final OptionGroupHelpTextParams params) {
-			Properties properties = new Properties();
-			int index = -1;
-			for (Option option : params.getDisplayableOptions()) {
-				String optionPropertyName = String.format("option%s", ++index);
-				properties.setProperty(optionPropertyName, option.toString());
-				String doc = option.getDoc();
-				if (doc != null) {
-					properties.setProperty(
-							optionPropertyName.concat(".doc"), doc);
-				}
-				properties.setProperty(
-						optionPropertyName.concat(".name"),	option.getName());
-				OptionArgSpec optionArgSpec = option.getOptionArgSpec();
-				if (optionArgSpec != null) {
-					properties.setProperty(
-							optionPropertyName.concat(".optionArgSpec.name"), 
-							optionArgSpec.getName());
-					properties.setProperty(
-							optionPropertyName.concat(".optionArgSpec.separator"), 
-							optionArgSpec.getSeparator());
-				}
-				properties.setProperty(
-						optionPropertyName.concat(".usage"), option.getUsage());
-			}
-			Properties props = new Properties(System.getProperties());
-			PropertiesHelper.copy(properties, props);
-			return StringHelper.interpolate(this.string, props);
-		}
-		
-	}
-	
-	static final class InterpolatedOptionUsageProvider 
-		extends OptionUsageProvider {
-
-		private final String string;
-		
-		public InterpolatedOptionUsageProvider(final String str) {
-			this.string = str;
-		}
-		
-		@Override
-		public String getOptionUsage(final OptionUsageParams params) {
-			Properties properties = new Properties();
-			properties.setProperty("option", params.getOption());
-			OptionArgSpec optionArgSpec = params.getOptionArgSpec();
-			if (optionArgSpec != null) {
-				properties.setProperty(
-						"option.optionArgSpec.name", 
-						optionArgSpec.getName());
-				properties.setProperty(
-						"option.optionArgSpec.separator", 
-						optionArgSpec.getSeparator());
-			}
-			Properties props = new Properties(System.getProperties());
-			PropertiesHelper.copy(properties, props);
-			return StringHelper.interpolate(this.string, props);
-		}
-		
-	}
-	
 	public static final class LongOption extends Option {
 		
 		LongOption(final LongOptionBuilder longOptionBuilder) {
@@ -1905,12 +1816,6 @@ public final class ArgMatey {
 		public LongOptionBuilder setOptionUsageProvider(
 				final OptionUsageProvider optUsageProvider) {
 			super.setOptionUsageProvider(optUsageProvider);
-			return this;
-		}
-		
-		@Override
-		public LongOptionBuilder setUsage(final String u) {
-			super.setUsage(u);
 			return this;
 		}
 		
@@ -1989,16 +1894,9 @@ public final class ArgMatey {
 					optionBuilder.getOptionUsageProvider();
 			boolean optUsageProviderSet = optionBuilder.hasOptionUsageProviderSet();
 			String str = optionBuilder.getString();
-			String u = optionBuilder.getUsage();
-			if (d != null) {
-				d = StringHelper.interpolate(d, System.getProperties());
-			}
 			if (!optUsageProviderSet) {
 				optUsageProvider = OptionUsageProvider.getDefault(
 						this.getClass());
-			}
-			if (u != null) {
-				optUsageProvider = new InterpolatedOptionUsageProvider(u);
 			}
 			this.displayable = display;
 			this.doc = d;
@@ -2427,10 +2325,6 @@ public final class ArgMatey {
 						newOptionUsageProvider(optionUsageProviderClass);
 				optionBuilder.setOptionUsageProvider(optionUsageProvider);
 			}
-			String usage = option.usage();
-			if (!usage.isEmpty()) {
-				optionBuilder.setUsage(usage);
-			}
 			return optionBuilder;
 		}
 		
@@ -2438,11 +2332,6 @@ public final class ArgMatey {
 				final Method method, 
 				final TargetMethodParameterTypesType t) {
 			OptionGroupBuilder optionGroupBuilder = new OptionGroupBuilder();
-			if (method.isAnnotationPresent(Annotations.HelpText.class)) {
-				Annotations.HelpText helpTextAnnotation = method.getAnnotation(
-						Annotations.HelpText.class);
-				optionGroupBuilder.setHelpText(helpTextAnnotation.value());
-			}
 			Annotations.Option[] optionAnnotations = method.getAnnotationsByType(
 					Annotations.Option.class);
 			if (optionAnnotations.length == 0 && method.isAnnotationPresent(
@@ -3069,7 +2958,6 @@ public final class ArgMatey {
 		private OptionUsageProvider optionUsageProvider;
 		private boolean optionUsageProviderSet;
 		private String string;
-		private String usage;
 		
 		OptionBuilder(final String optName, final String opt) {
 			Objects.requireNonNull(optName, "option name must not be null");
@@ -3101,7 +2989,6 @@ public final class ArgMatey {
 			this.optionUsageProvider = null;
 			this.optionUsageProviderSet = false;
 			this.string = opt;
-			this.usage = null;
 		}
 		
 		public abstract Option build();
@@ -3130,10 +3017,6 @@ public final class ArgMatey {
 		
 		public final String getString() {
 			return this.string;
-		}
-		
-		public final String getUsage() {
-			return this.usage;
 		}
 		
 		public final boolean hasDisplayableSet() {
@@ -3170,11 +3053,6 @@ public final class ArgMatey {
 			return this;
 		}
 		
-		public OptionBuilder setUsage(final String u) {
-			this.usage = u;
-			return this;
-		}
-		
 	}
 
 	public static final class OptionGroup {
@@ -3184,7 +3062,6 @@ public final class ArgMatey {
 		private final OptionGroupHelpTextProvider optionGroupHelpTextProvider;
 		
 		OptionGroup(final OptionGroupBuilder optionGroupBuilder) {
-			String h = optionGroupBuilder.getHelpText();
 			List<OptionBuilder> optBuilders = new ArrayList<OptionBuilder>(
 					optionGroupBuilder.getOptionBuilders());
 			OptionGroupHelpTextProvider optGroupHelpTextProvider =
@@ -3221,10 +3098,6 @@ public final class ArgMatey {
 			if (!optGroupHelpTextProviderSet) {
 				optGroupHelpTextProvider = 
 						OptionGroupHelpTextProvider.getDefault();
-			}
-			if (h != null) {
-				optGroupHelpTextProvider = 
-						new InterpolatedOptionGroupHelpTextProvider(h);
 			}
 			this.displayableOptions = new ArrayList<Option>(displayableOpts);
 			this.options = new ArrayList<Option>(opts);
@@ -3269,13 +3142,11 @@ public final class ArgMatey {
 	
 	static final class OptionGroupBuilder {
 		
-		private String helpText;
 		private final List<OptionBuilder> optionBuilders;
 		private OptionGroupHelpTextProvider optionGroupHelpTextProvider;
 		private boolean optionGroupHelpTextProviderSet;
 					
 		public OptionGroupBuilder() {
-			this.helpText = null;
 			this.optionBuilders = new ArrayList<OptionBuilder>();
 			this.optionGroupHelpTextProvider = null;
 			this.optionGroupHelpTextProviderSet = false;
@@ -3283,10 +3154,6 @@ public final class ArgMatey {
 		
 		public OptionGroup build() {
 			return new OptionGroup(this); 
-		}
-		
-		public final String getHelpText() {
-			return this.helpText;
 		}
 		
 		public final List<OptionBuilder> getOptionBuilders() {
@@ -3299,11 +3166,6 @@ public final class ArgMatey {
 		
 		public final boolean hasOptionGroupHelpTextProviderSet() {
 			return this.optionGroupHelpTextProviderSet;
-		}
-		
-		public OptionGroupBuilder setHelpText(final String h) {
-			this.helpText = h;
-			return this;
 		}
 		
 		public OptionGroupBuilder setOptionBuilders(
@@ -3975,12 +3837,6 @@ public final class ArgMatey {
 			super.setOptionUsageProvider(optUsageProvider);
 			return this;
 		}
-		
-		@Override
-		public PosixOptionBuilder setUsage(final String u) {
-			super.setUsage(u);
-			return this;
-		}
 
 	}
 
@@ -4048,22 +3904,6 @@ public final class ArgMatey {
 		}		
 	}
 	
-	static final class PropertiesHelper {
-
-		public static void copy(
-				final Properties source, final Properties destination) {
-			Set<String> sourceStringPropertyNames = 
-					source.stringPropertyNames();
-			for (String sourceStringPropertyName : sourceStringPropertyNames) {
-				String property = source.getProperty(sourceStringPropertyName);
-				destination.setProperty(sourceStringPropertyName, property);
-			}
-		}
-
-		private PropertiesHelper() { }
-
-	}
-	
 	/**
 	 * Converts the provided {@code String} to an {@code Object}.
 	 */
@@ -4085,52 +3925,6 @@ public final class ArgMatey {
 		 * illegal or inappropriate
 		 */
 		public abstract Object convert(String string);
-		
-	}
-	
-	static final class StringHelper {
-		
-		public static String interpolate(
-				final String string, final Properties properties) {
-			StringBuilder sb = new StringBuilder(string);
-			List<Integer> propertyVariableStartIndices = 
-					new ArrayList<Integer>();
-			for (int i = 0; i < sb.length(); i++) {
-				char ch = sb.charAt(i);
-				if (ch == '$' && i + 1 < sb.length()) {
-					char nextCh = sb.charAt(i + 1);
-					switch (nextCh) {
-					case '$':
-						sb.replace(i, i + 2, "$");
-						break;
-					case '{':
-						propertyVariableStartIndices.add(Integer.valueOf(i));
-						i++;
-						continue;
-					case '}':
-						sb.replace(i, i + 2, "}");
-						break;
-					default:
-						break;
-					}
-				} else if (ch == '}' && propertyVariableStartIndices.size() > 0) {
-					int lastIndex = propertyVariableStartIndices.size() - 1;
-					int propertyVariableStartIndex = 
-							propertyVariableStartIndices.get(lastIndex).intValue();
-					String propertyName = sb.substring(
-							propertyVariableStartIndex + 2, i);
-					String property = properties.getProperty(propertyName);
-					if (property != null) {
-						sb.replace(propertyVariableStartIndex, i + 1, property);
-						i = propertyVariableStartIndex + property.length() - 1;
-					}
-					propertyVariableStartIndices.remove(lastIndex);
-				}
-			}
-			return sb.toString();
-		}
-		
-		private StringHelper() { }
 		
 	}
 	

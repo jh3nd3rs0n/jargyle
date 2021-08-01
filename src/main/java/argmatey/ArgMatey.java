@@ -58,38 +58,6 @@ import java.util.TreeSet;
  */
 public final class ArgMatey {
 
-	static abstract class AbstractArgHandler implements ArgHandler {
-
-		private final ArgHandler argHandler;
-		
-		protected AbstractArgHandler(final ArgHandler handler) {
-			ArgHandler h = handler;
-			if (h == null) {
-				h = DefaultArgHandler.INSTANCE;
-			}
-			this.argHandler = h;
-		}
-		
-		public final ArgHandler getArgHandler() {
-			return this.argHandler;
-		}
-		
-		@Override
-		public abstract void handle(
-				final String arg, final ArgHandlerContext context);
-
-		@Override
-		public String toString() {
-			StringBuilder sb = new StringBuilder();
-			sb.append(this.getClass().getSimpleName())
-				.append(" [argHandler=")
-				.append(this.argHandler)
-				.append("]");
-			return sb.toString();
-		}	
-		
-	}
-
 	public static final class Annotations {
 
 		@Retention(RetentionPolicy.RUNTIME)
@@ -164,10 +132,38 @@ public final class ArgMatey {
 		private Annotations() { }
 		
 	}
+
+	static abstract class ArgHandler {
+
+		private final ArgHandler nextArgHandler;
 		
-	static interface ArgHandler {
+		public ArgHandler(final ArgHandler next) {
+			this.nextArgHandler = next;
+		}
 		
-		void handle(String arg, ArgHandlerContext context);
+		protected final ArgHandler getNextArgHandler() {
+			return this.nextArgHandler;
+		}
+		
+		public void handle(final String arg, final ArgHandlerContext context) {
+			if (this.nextArgHandler != null) {
+				this.nextArgHandler.handle(arg, context);
+				return;
+			}
+			ArgHandlerContextProperties properties =
+					new ArgHandlerContextProperties(context);
+			properties.setParseResultHolder(new ParseResultHolder(arg));
+		}
+
+		@Override
+		public String toString() {
+			StringBuilder sb = new StringBuilder();
+			sb.append(this.getClass().getSimpleName())
+				.append(" [nextArgHandler=")
+				.append(this.nextArgHandler)
+				.append("]");
+			return sb.toString();
+		}	
 		
 	}
 	
@@ -937,24 +933,6 @@ public final class ArgMatey {
 		
 	}
 	
-	static enum DefaultArgHandler implements ArgHandler {
-
-		INSTANCE;
-		
-		@Override
-		public void handle(final String arg, final ArgHandlerContext context) {
-			ArgHandlerContextProperties properties =
-					new ArgHandlerContextProperties(context);
-			properties.setParseResultHolder(new ParseResultHolder(arg));
-		}
-		
-		@Override
-		public String toString() {
-			return DefaultArgHandler.class.getSimpleName();
-		}
-		
-	}
-	
 	public static final class DefaultGnuLongOptionUsageProvider 
 		extends OptionUsageProvider {
 
@@ -1349,10 +1327,10 @@ public final class ArgMatey {
 
 	}
 
-	static final class EndOfOptionsArgHandler extends AbstractArgHandler {
+	static final class EndOfOptionsArgHandler extends ArgHandler {
 		
-		public EndOfOptionsArgHandler(final ArgHandler handler) {
-			super(handler);
+		public EndOfOptionsArgHandler(final ArgHandler next) {
+			super(next);
 		}
 		
 		@Override
@@ -1362,7 +1340,7 @@ public final class ArgMatey {
 			if (properties.isOptionHandlingEnabled()) {
 				properties.setOptionHandlingEnabled(false);
 			}
-			this.getArgHandler().handle(arg, context);
+			super.handle(arg, context);
 		}
 		
 	}
@@ -1396,10 +1374,10 @@ public final class ArgMatey {
 
 	}
 	
-	static final class EndOfOptionsDelimiterHandler	extends AbstractArgHandler {
+	static final class EndOfOptionsDelimiterHandler	extends ArgHandler {
 		
-		public EndOfOptionsDelimiterHandler(final ArgHandler argHandler) {
-			super(argHandler);
+		public EndOfOptionsDelimiterHandler(final ArgHandler next) {
+			super(next);
 		}
 		
 		@Override
@@ -1408,7 +1386,7 @@ public final class ArgMatey {
 					new ArgHandlerContextProperties(context);
 			if (!(properties.isOptionHandlingEnabled() && arg.equals(
 					EndOfOptionsDelimiter.INSTANCE.toString()))) {
-				this.getArgHandler().handle(arg, context);
+				super.handle(arg, context);
 				return;
 			}
 			properties.setOptionHandlingEnabled(false);
@@ -1438,13 +1416,6 @@ public final class ArgMatey {
 		}
 		
 		@Override
-		public GnuLongOptionBuilder getOptionArgSpec(
-				final OptionArgSpec optArgSpec) {
-			super.getOptionArgSpec(optArgSpec);
-			return this;
-		}
-		
-		@Override
 		public GnuLongOptionBuilder setDisplayable(final boolean b) {
 			super.setDisplayable(b);
 			return this;
@@ -1453,6 +1424,13 @@ public final class ArgMatey {
 		@Override
 		public GnuLongOptionBuilder setDoc(final String d) {
 			super.setDoc(d);
+			return this;
+		}
+		
+		@Override
+		public GnuLongOptionBuilder setOptionArgSpec(
+				final OptionArgSpec optArgSpec) {
+			super.setOptionArgSpec(optArgSpec);
 			return this;
 		}
 		
@@ -1467,8 +1445,8 @@ public final class ArgMatey {
 
 	static final class GnuLongOptionHandler extends OptionHandler {
 		
-		public GnuLongOptionHandler(final ArgHandler handler) {
-			super(handler, GnuLongOption.class);
+		public GnuLongOptionHandler(final ArgHandler next) {
+			super(next, GnuLongOption.class);
 		}
 
 		@Override
@@ -1796,21 +1774,21 @@ public final class ArgMatey {
 		}
 		
 		@Override
-		public LongOptionBuilder getOptionArgSpec(
-				final OptionArgSpec optArgSpec) {
-			super.getOptionArgSpec(optArgSpec);
-			return this;
-		}
-		
-		@Override
 		public LongOptionBuilder setDisplayable(final boolean b) {
 			super.setDisplayable(b);
 			return this;
 		}
-
+		
 		@Override
 		public LongOptionBuilder setDoc(final String d) {
 			super.setDoc(d);
+			return this;
+		}
+
+		@Override
+		public LongOptionBuilder setOptionArgSpec(
+				final OptionArgSpec optArgSpec) {
+			super.setOptionArgSpec(optArgSpec);
 			return this;
 		}
 		
@@ -1825,8 +1803,8 @@ public final class ArgMatey {
 	
 	static final class LongOptionHandler extends OptionHandler {
 		
-		public LongOptionHandler(final ArgHandler handler) {
-			super(new PosixOptionHandler(handler), LongOption.class);
+		public LongOptionHandler(final ArgHandler next) {
+			super(new PosixOptionHandler(next), LongOption.class);
 		}
 
 		@Override
@@ -1839,7 +1817,7 @@ public final class ArgMatey {
 			Option opt = optionMap.get(option);
 			if (opt == null) {
 				OptionHandler posixOptionHandler = 
-						(PosixOptionHandler) this.getArgHandler();
+						(PosixOptionHandler) this.getNextArgHandler();
 				boolean hasPosixOption = false;
 				for (Option o : optionMap.values()) {
 					if (posixOptionHandler.getOptionClass().isInstance(o)) {
@@ -1894,7 +1872,8 @@ public final class ArgMatey {
 			OptionArgSpec optArgSpec = optionBuilder.getOptionArgSpec();
 			OptionUsageProvider optUsageProvider = 
 					optionBuilder.getOptionUsageProvider();
-			boolean optUsageProviderSet = optionBuilder.hasOptionUsageProviderSet();
+			boolean optUsageProviderSet = 
+					optionBuilder.hasOptionUsageProviderSet();
 			String str = optionBuilder.getString();
 			if (!optUsageProviderSet) {
 				optUsageProvider = OptionUsageProvider.getDefault(
@@ -2312,15 +2291,15 @@ public final class ArgMatey {
 				if (firstInGroup) {
 					Class<?> targetClass = t.getTargetClass(method);
 					if (targetClass != null) {
-						optionBuilder.getOptionArgSpec(newOptionArgSpec(
+						optionBuilder.setOptionArgSpec(newOptionArgSpec(
 								optionArgSpec, method, t));
 					}
 				}
 			} else if (optionArgAllowed.optionalBooleanValue().get().booleanValue()) {
-				optionBuilder.getOptionArgSpec(newOptionArgSpec(
+				optionBuilder.setOptionArgSpec(newOptionArgSpec(
 						optionArgSpec, method, t));
 			} else {
-				optionBuilder.getOptionArgSpec(null);
+				optionBuilder.setOptionArgSpec(null);
 			}
 			Class<?> optionUsageProviderClass = option.optionUsageProvider();
 			if (!optionUsageProviderClass.equals(OptionUsageProvider.class)) {
@@ -3008,12 +2987,6 @@ public final class ArgMatey {
 			return this.optionArgSpec;
 		}
 		
-		public OptionBuilder getOptionArgSpec(final OptionArgSpec optArgSpec) {
-			this.optionArgSpec = optArgSpec;
-			this.optionArgSpecSet = true;
-			return this;
-		}
-		
 		public final OptionUsageProvider getOptionUsageProvider() {
 			return this.optionUsageProvider;
 		}
@@ -3046,6 +3019,12 @@ public final class ArgMatey {
 		
 		public OptionBuilder setDoc(final String d) {
 			this.doc = d;
+			return this;
+		}
+		
+		public OptionBuilder setOptionArgSpec(final OptionArgSpec optArgSpec) {
+			this.optionArgSpec = optArgSpec;
+			this.optionArgSpecSet = true;
 			return this;
 		}
 		
@@ -3086,7 +3065,7 @@ public final class ArgMatey {
 					}
 					if (firstOptBuilder.hasOptionArgSpecSet() 
 							&& !optBuilder.hasOptionArgSpecSet()) {
-						optBuilder.getOptionArgSpec(firstOptBuilder.getOptionArgSpec());
+						optBuilder.setOptionArgSpec(firstOptBuilder.getOptionArgSpec());
 					}
 				}
 				Option opt = optBuilder.build();
@@ -3308,19 +3287,18 @@ public final class ArgMatey {
 		
 	}
 	
-	static abstract class OptionHandler extends AbstractArgHandler {
+	static abstract class OptionHandler extends ArgHandler {
 		
 		private final Class<?> optionClass;
 		
-		protected OptionHandler(
-				final ArgHandler handler, 
-				final Class<? extends Option> optClass) {
-			super(handler);
+		public OptionHandler(
+				final ArgHandler next, final Class<? extends Option> optClass) {
+			super(next);
 			this.optionClass = Objects.requireNonNull(
 					optClass, "Option class must not be null");
 		}
 		
-		public final Class<?> getOptionClass() {
+		protected final Class<?> getOptionClass() {
 			return this.optionClass;
 		}
 		
@@ -3330,7 +3308,7 @@ public final class ArgMatey {
 			ArgHandlerContextProperties properties = 
 					new ArgHandlerContextProperties(context);
 			if (!properties.isOptionHandlingEnabled()) {
-				this.getArgHandler().handle(arg, context);
+				super.handle(arg, context);
 				return;
 			}
 			boolean hasOption = false;
@@ -3342,11 +3320,11 @@ public final class ArgMatey {
 				}
 			}
 			if (!hasOption) {
-				this.getArgHandler().handle(arg, context);
+				super.handle(arg, context);
 				return;
 			}
 			if (!this.isOption(arg, context)) {
-				this.getArgHandler().handle(arg, context);
+				super.handle(arg, context);
 				return;
 			}
 			this.handleOption(arg, context);
@@ -3502,8 +3480,8 @@ public final class ArgMatey {
 			}
 
 			@Override
-			public OptionHandler newOptionHandler(final ArgHandler argHandler) {
-				return new GnuLongOptionHandler(argHandler);
+			public OptionHandler newOptionHandler(final ArgHandler next) {
+				return new GnuLongOptionHandler(next);
 			}
 			
 		},
@@ -3530,8 +3508,8 @@ public final class ArgMatey {
 			}
 
 			@Override
-			public OptionHandler newOptionHandler(final ArgHandler argHandler) {
-				return new LongOptionHandler(argHandler);
+			public OptionHandler newOptionHandler(final ArgHandler next) {
+				return new LongOptionHandler(next);
 			}
 			
 		},
@@ -3564,8 +3542,8 @@ public final class ArgMatey {
 			}
 
 			@Override
-			public OptionHandler newOptionHandler(final ArgHandler argHandler) {
-				return new PosixOptionHandler(argHandler);
+			public OptionHandler newOptionHandler(final ArgHandler next) {
+				return new PosixOptionHandler(next);
 			}
 			
 		};
@@ -3650,14 +3628,13 @@ public final class ArgMatey {
 		 * Returns a new {@code OptionHandler} based on this 
 		 * {@code OptionTypeObjectFactory}.
 		 *  
-		 * @param argHandler the provided {@code ArgHandler} (can be 
+		 * @param next the provided next {@code ArgHandler} (can be 
 		 * {@code null})
 		 * 
 		 * @return a new {@code OptionHandler} based on this 
 		 * {@code OptionTypeObjectFactory}
 		 */
-		public abstract OptionHandler newOptionHandler(
-				final ArgHandler argHandler);
+		public abstract OptionHandler newOptionHandler(final ArgHandler next);
 		
 		/**
 		 * Returns the {@code OptionType} of this 
@@ -3908,13 +3885,6 @@ public final class ArgMatey {
 		}
 		
 		@Override
-		public PosixOptionBuilder getOptionArgSpec(
-				final OptionArgSpec optArgSpec) {
-			super.getOptionArgSpec(optArgSpec);
-			return this;
-		}
-		
-		@Override
 		public PosixOptionBuilder setDisplayable(final boolean b) {
 			super.setDisplayable(b);
 			return this;
@@ -3923,6 +3893,13 @@ public final class ArgMatey {
 		@Override
 		public PosixOptionBuilder setDoc(final String d) {
 			super.setDoc(d);
+			return this;
+		}
+		
+		@Override
+		public PosixOptionBuilder setOptionArgSpec(
+				final OptionArgSpec optArgSpec) {
+			super.setOptionArgSpec(optArgSpec);
 			return this;
 		}
 		
@@ -3937,8 +3914,8 @@ public final class ArgMatey {
 
 	static final class PosixOptionHandler extends OptionHandler {
 
-		public PosixOptionHandler(final ArgHandler handler) {
-			super(handler, PosixOption.class);
+		public PosixOptionHandler(final ArgHandler next) {
+			super(next, PosixOption.class);
 		}
 
 		@Override

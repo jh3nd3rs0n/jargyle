@@ -1,4 +1,4 @@
-package jargyle.net.socks.server;
+package jargyle.net;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import jargyle.internal.logging.LoggerHelper;
 
-public final class TcpRelayServer {
+public final class RelayServer {
 
 	private static final class DataWorker implements Runnable {
 		
@@ -140,19 +140,19 @@ public final class TcpRelayServer {
 		
 		private final Socket inputSocket;
 		private final Socket outputSocket;
-		private final TcpRelayServer tcpRelayServer;
+		private final RelayServer relayServer;
 		
 		public DataWorkerContext(
-				final TcpRelayServer server,
+				final RelayServer server,
 				final Socket inputSock,
 				final Socket outputSock) {
 			this.inputSocket = inputSock;
 			this.outputSocket = outputSock;
-			this.tcpRelayServer = server;
+			this.relayServer = server;
 		}
 		
 		public final int getBufferSize() {
-			return this.tcpRelayServer.bufferSize;
+			return this.relayServer.bufferSize;
 		}
 		
 		public final InputStream getInputSocketInputStream() throws IOException {
@@ -160,7 +160,7 @@ public final class TcpRelayServer {
 		}
 		
 		public final long getLastReadTime() {
-			return this.tcpRelayServer.lastReadTime;
+			return this.relayServer.lastReadTime;
 		}
 		
 		public final OutputStream getOutputSocketOutputStream() throws IOException {
@@ -168,27 +168,27 @@ public final class TcpRelayServer {
 		}
 		
 		public final int getTimeout() {
-			return this.tcpRelayServer.timeout;
+			return this.relayServer.timeout;
 		}
 		
 		public final boolean isFirstDataWorkerFinished() {
-			return this.tcpRelayServer.firstDataWorkerFinished;
+			return this.relayServer.firstDataWorkerFinished;
 		}
 		
 		public final boolean isTcpRelayServerStopped() {
-			return this.tcpRelayServer.stopped;
+			return this.relayServer.stopped;
 		}
 		
 		public final void setFirstDataWorkerFinished(final boolean b) {
-			this.tcpRelayServer.firstDataWorkerFinished = b;
+			this.relayServer.firstDataWorkerFinished = b;
 		}
 		
 		public final void setLastReadTime(final long time) {
-			this.tcpRelayServer.lastReadTime = time;
+			this.relayServer.lastReadTime = time;
 		}
 		
 		public final void stopTcpRelayServer() {
-			this.tcpRelayServer.stop();
+			this.relayServer.stop();
 		}
 
 		@Override
@@ -208,7 +208,7 @@ public final class TcpRelayServer {
 	private static final class InboundDataWorkerContext
 		extends DataWorkerContext {
 		
-		public InboundDataWorkerContext(final TcpRelayServer server) {
+		public InboundDataWorkerContext(final RelayServer server) {
 			super(server, server.serverFacingSocket, server.clientFacingSocket);
 		}
 		
@@ -217,7 +217,7 @@ public final class TcpRelayServer {
 	private static final class OutboundDataWorkerContext 
 		extends DataWorkerContext {
 		
-		public OutboundDataWorkerContext(final TcpRelayServer server) {
+		public OutboundDataWorkerContext(final RelayServer server) {
 			super(server, server.clientFacingSocket, server.serverFacingSocket);
 		}
 		
@@ -233,7 +233,7 @@ public final class TcpRelayServer {
 	private boolean stopped;
 	private final int timeout;
 	
-	public TcpRelayServer(
+	public RelayServer(
 			final Socket clientFacingSock, 
 			final Socket serverFacingSock, 
 			final int bffrSize, 
@@ -271,7 +271,7 @@ public final class TcpRelayServer {
 	
 	public void start() throws IOException {
 		if (this.started) {
-			throw new IllegalStateException("TcpRelayServer already started");
+			throw new IllegalStateException("RelayServer already started");
 		}
 		this.lastReadTime = 0L;
 		this.firstDataWorkerFinished = false;
@@ -286,7 +286,7 @@ public final class TcpRelayServer {
 	
 	public void stop() {
 		if (this.stopped) {
-			throw new IllegalStateException("TcpRelayServer already stopped");
+			throw new IllegalStateException("RelayServer already stopped");
 		}
 		this.lastReadTime = 0L;
 		this.firstDataWorkerFinished = true;

@@ -3,7 +3,7 @@ package jargyle.net.socks.server.v5;
 import java.io.IOException;
 import java.net.Socket;
 
-import jargyle.net.socks.server.TcpRelayServer;
+import jargyle.net.RelayServer;
 
 final class TcpBasedCommandWorkerHelper {
 
@@ -14,14 +14,14 @@ final class TcpBasedCommandWorkerHelper {
 			final Socket serverFacingSocket, 
 			final int bufferSize, 
 			final int timeout) throws IOException {
-		TcpRelayServer tcpRelayServer = new TcpRelayServer(
+		RelayServer relayServer = new RelayServer(
 				clientFacingSocket, 
 				serverFacingSocket, 
 				bufferSize, 
 				timeout);
 		try {
-			tcpRelayServer.start();
-			while (!tcpRelayServer.isStopped()) {
+			relayServer.start();
+			while (!relayServer.isStopped()) {
 				try {
 					Thread.sleep(HALF_SECOND);
 				} catch (InterruptedException e) {
@@ -29,8 +29,8 @@ final class TcpBasedCommandWorkerHelper {
 				}
 			}
 		} finally {
-			if (!tcpRelayServer.isStopped()) {
-				tcpRelayServer.stop();
+			if (!relayServer.isStopped()) {
+				relayServer.stop();
 			}
 		}		
 	}	

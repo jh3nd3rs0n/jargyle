@@ -1147,21 +1147,21 @@ Partial configuration file example:
     
 ```
 
-Also, you will need to have the setting `socks5.userpassauth.usernamePasswordAuthenticator` to specify the name of the class that extends `jargyle.net.socks.server.v5.userpassauth.UsernamePasswordAuthenticator` along with a string value
+Also, you will need to have the setting `socks5.userpassauth.usernamePasswordAuthenticator` to specify the name of the class that extends `com.github.jh3nd3rs0n.jargyle.net.socks.server.v5.userpassauth.UsernamePasswordAuthenticator` along with a string value
 
 The following are two provided classes you can use:
 
--   `jargyle.net.socks.server.v5.userpassauth.StringSourceUsernamePasswordAuthenticator`
--   `jargyle.net.socks.server.v5.userpassauth.XmlFileSourceUsernamePasswordAuthenticator`
+-   `com.github.jh3nd3rs0n.jargyle.net.socks.server.v5.userpassauth.StringSourceUsernamePasswordAuthenticator`
+-   `com.github.jh3nd3rs0n.jargyle.net.socks.server.v5.userpassauth.XmlFileSourceUsernamePasswordAuthenticator`
 
-`jargyle.net.socks.server.v5.userpassauth.StringSourceUsernamePasswordAuthenticator`: This class authenticates the username and password based on the string value of a space separated list of USERNAME:PASSWORD pairs
+`com.github.jh3nd3rs0n.jargyle.net.socks.server.v5.userpassauth.StringSourceUsernamePasswordAuthenticator`: This class authenticates the username and password based on the string value of a space separated list of USERNAME:PASSWORD pairs
 
 Partial command line example:
 
 ```text
     
     "--setting=socks5.methods=USERNAME_PASSWORD" \
-    "--setting=socks5.userpassauth.usernamePasswordAuthenticator=jargyle.net.socks.server.v5.userpassauth.StringSourceUsernamePasswordAuthenticator:Aladdin:opensesame Jasmine:mission%3Aimpossible"
+    "--setting=socks5.userpassauth.usernamePasswordAuthenticator=com.github.jh3nd3rs0n.jargyle.net.socks.server.v5.userpassauth.StringSourceUsernamePasswordAuthenticator:Aladdin:opensesame Jasmine:mission%3Aimpossible"
     
 ```
 
@@ -1177,7 +1177,7 @@ Partial configuration file example:
         <name>socks5.userpassauth.usernamePasswordAuthenticator</name>
         <usernamePasswordAuthenticatorValue>
             <usernamePasswordAuthenticator>
-                <className>jargyle.net.socks.server.v5.userpassauth.StringSourceUsernamePasswordAuthenticator</className>
+                <className>com.github.jh3nd3rs0n.jargyle.net.socks.server.v5.userpassauth.StringSourceUsernamePasswordAuthenticator</className>
                 <value>Aladdin:opensesame Jasmine:mission%3Aimpossible</value>
             </usernamePasswordAuthenticator>
         </usernamePasswordAuthenticatorValue>
@@ -1193,14 +1193,14 @@ If any of the usernames or any of the passwords contain a plus sign character (`
 
 If any of the usernames or any of the passwords contain a percent sign character (`%`) not used for URL encoding, then each percent sign character not used for URL encoding must be replaced with the URL encoding character `%25`.
 
-`jargyle.net.socks.server.v5.userpassauth.XmlFileSourceUsernamePasswordAuthenticator`: This class authenticates the username and password based on the [XML file of users](#4-9-managing-socks5-users-for-username-password-authentication) whose file name is provided as a string value
+`com.github.jh3nd3rs0n.jargyle.net.socks.server.v5.userpassauth.XmlFileSourceUsernamePasswordAuthenticator`: This class authenticates the username and password based on the [XML file of users](#4-9-managing-socks5-users-for-username-password-authentication) whose file name is provided as a string value
 
 Partial command line example:
 
 ```text
     
     --setting=socks5.methods=USERNAME_PASSWORD \
-    --setting=socks5.userpassauth.usernamePasswordAuthenticator=jargyle.net.socks.server.v5.userpassauth.XmlFileSourceUsernamePasswordAuthenticator:users.xml
+    --setting=socks5.userpassauth.usernamePasswordAuthenticator=com.github.jh3nd3rs0n.jargyle.net.socks.server.v5.userpassauth.XmlFileSourceUsernamePasswordAuthenticator:users.xml
     
 ```
 
@@ -1216,7 +1216,7 @@ Partial configuration file example:
         <name>socks5.userpassauth.usernamePasswordAuthenticator</name>
         <usernamePasswordAuthenticatorValue>
             <usernamePasswordAuthenticator>
-                <className>jargyle.net.socks.server.v5.userpassauth.XmlFileSourceUsernamePasswordAuthenticator</className>
+                <className>com.github.jh3nd3rs0n.jargyle.net.socks.server.v5.userpassauth.XmlFileSourceUsernamePasswordAuthenticator</className>
                 <value>users.xml</value>
             </usernamePasswordAuthenticator>
         </usernamePasswordAuthenticatorValue>
@@ -1959,20 +1959,20 @@ By default, the current level is set at `INFO` and up. This means that only logg
 
 The following are the classes that use logging:
 
--   `jargyle.net.RelayServer$DataWorker`
--   `jargyle.net.socks.server.Listener`
--   `jargyle.net.socks.server.SocksServerCLI`
--   `jargyle.net.socks.server.Worker`
--   `jargyle.net.socks.server.XmlFileSourceConfigurationProvider$ConfigurationUpdater`
--   `jargyle.net.socks.server.v5.BindCommandWorker`
--   `jargyle.net.socks.server.v5.ConnectCommandWorker`
--   `jargyle.net.socks.server.v5.ResolveCommandWorker`
--   `jargyle.net.socks.server.v5.Socks5Worker`
--   `jargyle.net.socks.server.v5.UdpAssociateCommandWorker`
--   `jargyle.net.socks.server.v5.UdpRelayServer$InboundPacketsWorker`
--   `jargyle.net.socks.server.v5.UdpRelayServer$OutboundPacketsWorker`
--   `jargyle.net.socks.server.v5.userpassauth.XmlFileSourceUsersProvider$UsersUpdater`
--   `jargyle.net.ssl.DtlsDatagramSocket`
+-   `com.github.jh3nd3rs0n.jargyle.net.RelayServer$DataWorker`
+-   `com.github.jh3nd3rs0n.jargyle.net.socks.server.Listener`
+-   `com.github.jh3nd3rs0n.jargyle.net.socks.server.SocksServerCLI`
+-   `com.github.jh3nd3rs0n.jargyle.net.socks.server.Worker`
+-   `com.github.jh3nd3rs0n.jargyle.net.socks.server.XmlFileSourceConfigurationProvider$ConfigurationUpdater`
+-   `com.github.jh3nd3rs0n.jargyle.net.socks.server.v5.BindCommandWorker`
+-   `com.github.jh3nd3rs0n.jargyle.net.socks.server.v5.ConnectCommandWorker`
+-   `com.github.jh3nd3rs0n.jargyle.net.socks.server.v5.ResolveCommandWorker`
+-   `com.github.jh3nd3rs0n.jargyle.net.socks.server.v5.Socks5Worker`
+-   `com.github.jh3nd3rs0n.jargyle.net.socks.server.v5.UdpAssociateCommandWorker`
+-   `com.github.jh3nd3rs0n.jargyle.net.socks.server.v5.UdpRelayServer$InboundPacketsWorker`
+-   `com.github.jh3nd3rs0n.jargyle.net.socks.server.v5.UdpRelayServer$OutboundPacketsWorker`
+-   `com.github.jh3nd3rs0n.jargyle.net.socks.server.v5.userpassauth.XmlFileSourceUsersProvider$UsersUpdater`
+-   `com.github.jh3nd3rs0n.jargyle.net.ssl.DtlsDatagramSocket`
 
 To configure logging for any of the aforementioned classes, you can use a configuration file to specify the logging properties for any of the classes.
 
@@ -1982,16 +1982,16 @@ The following is a configuration file example of setting the logging level of so
 
 ```text
     
-    jargyle.net.socks.server.Listener.handlers = java.util.logging.ConsoleHandler
-    jargyle.net.socks.server.Listener.level = FINE    
-    jargyle.net.socks.server.SocksServerCLI.handlers = java.util.logging.ConsoleHandler
-    jargyle.net.socks.server.SocksServerCLI.level = FINE
-    jargyle.net.socks.server.Worker.handlers = java.util.logging.ConsoleHandler
-    jargyle.net.socks.server.Worker.level = FINE
-    jargyle.net.socks.server.v5.ConnectCommandWorker.handlers = java.util.logging.ConsoleHandler
-    jargyle.net.socks.server.v5.ConnectCommandWorker.level = FINE
-    jargyle.net.socks.server.v5.Socks5Worker.handlers = java.util.logging.ConsoleHandler
-    jargyle.net.socks.server.v5.Socks5Worker.level = FINE
+    com.github.jh3nd3rs0n.jargyle.net.socks.server.Listener.handlers = java.util.logging.ConsoleHandler
+    com.github.jh3nd3rs0n.jargyle.net.socks.server.Listener.level = FINE    
+    com.github.jh3nd3rs0n.jargyle.net.socks.server.SocksServerCLI.handlers = java.util.logging.ConsoleHandler
+    com.github.jh3nd3rs0n.jargyle.net.socks.server.SocksServerCLI.level = FINE
+    com.github.jh3nd3rs0n.jargyle.net.socks.server.Worker.handlers = java.util.logging.ConsoleHandler
+    com.github.jh3nd3rs0n.jargyle.net.socks.server.Worker.level = FINE
+    com.github.jh3nd3rs0n.jargyle.net.socks.server.v5.ConnectCommandWorker.handlers = java.util.logging.ConsoleHandler
+    com.github.jh3nd3rs0n.jargyle.net.socks.server.v5.ConnectCommandWorker.level = FINE
+    com.github.jh3nd3rs0n.jargyle.net.socks.server.v5.Socks5Worker.handlers = java.util.logging.ConsoleHandler
+    com.github.jh3nd3rs0n.jargyle.net.socks.server.v5.Socks5Worker.level = FINE
     java.util.logging.ConsoleHandler.level = FINE
     
 ```

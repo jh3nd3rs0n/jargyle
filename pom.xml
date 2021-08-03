@@ -2,7 +2,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>jargyle</groupId>
+	<groupId>com.github.jh3nd3rs0n</groupId>
 	<artifactId>jargyle</artifactId>
 	<version>5.0.0-SNAPSHOT</version>
 	<name>Jargyle</name>
@@ -139,7 +139,7 @@
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<version>2.9</version>
 				<configuration>
-					<excludePackageNames>argmatey,jargyle.internal.*</excludePackageNames>
+					<excludePackageNames>com.github.jh3nd3rs0n.argmatey,com.github.jh3nd3rs0n.jargyle.internal.*</excludePackageNames>
 					<source>9</source>
 				</configuration>
 			</plugin>

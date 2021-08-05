@@ -98,7 +98,7 @@ To build and package Jargyle, run the following command:
     
 ```
 
-After running the aforementioned command, the built jar file and its copied dependencies can be found in the following path:
+After running the aforementioned command, the built JAR file and its dependent JAR files can be found in the following path:
 
 ```text
     

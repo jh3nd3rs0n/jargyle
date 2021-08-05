@@ -43,6 +43,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -135,19 +136,19 @@ public final class ArgMatey {
 
 	static abstract class ArgHandler {
 
-		private final ArgHandler nextArgHandler;
+		private final Optional<ArgHandler> nextArgHandler;
 		
 		public ArgHandler(final ArgHandler next) {
-			this.nextArgHandler = next;
+			this.nextArgHandler = Optional.ofNullable(next);
 		}
 		
-		protected final ArgHandler getNextArgHandler() {
+		public final Optional<ArgHandler> getNextArgHandler() {
 			return this.nextArgHandler;
 		}
 		
 		public void handle(final String arg, final ArgHandlerContext context) {
-			if (this.nextArgHandler != null) {
-				this.nextArgHandler.handle(arg, context);
+			if (this.nextArgHandler.isPresent()) {
+				this.nextArgHandler.get().handle(arg, context);
 				return;
 			}
 			ArgHandlerContextProperties properties =
@@ -264,6 +265,8 @@ public final class ArgMatey {
 		
 		private static final class PropertyNameConstants {
 			
+			public static final String OPTION_CLASSES = "OPTION_CLASSES";
+			
 			public static final String OPTION_HANDLING_ENABLED = 
 					"OPTION_HANDLING_ENABLED";
 			
@@ -283,15 +286,26 @@ public final class ArgMatey {
 			this.argHandlerContext = handlerContext;
 		}
 		
+		public Set<Class<? extends Option>> getOptionClasses() {
+			Set<Class<? extends Option>> optionClasses = Collections.emptySet();
+			@SuppressWarnings("unchecked")
+			Set<Class<? extends Option>> value =
+					(Set<Class<? extends Option>>) this.argHandlerContext.getProperty(
+							PropertyNameConstants.OPTION_CLASSES);
+			if (value != null) {
+				optionClasses = Collections.unmodifiableSet(value);
+			}
+			return optionClasses;
+		}
+		
 		public Map<String, Option> getOptionMap() {
-			Map<String, Option> optionMap = null;
+			Map<String, Option> optionMap = Collections.emptyMap();
 			@SuppressWarnings("unchecked")
 			Map<String, Option> value = 
 					(Map<String, Option>) this.argHandlerContext.getProperty(
 							PropertyNameConstants.OPTION_MAP);
 			if (value != null) {
-				optionMap = Collections.unmodifiableMap(
-						new HashMap<String, Option>(value));
+				optionMap = Collections.unmodifiableMap(value);
 			}
 			return optionMap;
 		}
@@ -315,6 +329,12 @@ public final class ArgMatey {
 				optionHandlingEnabled = value.booleanValue();
 			}
 			return optionHandlingEnabled;
+		}
+		
+		public void setOptionClasses(
+				final Set<Class<? extends Option>> optClasses) {
+			this.argHandlerContext.putProperty(
+					PropertyNameConstants.OPTION_CLASSES, optClasses);
 		}
 		
 		public void setOptionHandlingEnabled(
@@ -369,14 +389,18 @@ public final class ArgMatey {
 			ArgHandlerContext handlerContext = new ArgHandlerContext(args);
 			List<OptionGroup> optGroupList = optGroups.toList();
 			if (optGroupList.size() > 0) {
+				Set<Class<? extends Option>> optClasses = 
+						new HashSet<Class<? extends Option>>();
 				Map<String, Option> optMap = new HashMap<String, Option>();
 				for (OptionGroup optGroup : optGroupList) {
 					for (Option opt : optGroup.toList()) {
+						optClasses.add(opt.getClass());
 						optMap.put(opt.toString(), opt);
 					}
 				}
 				ArgHandlerContextProperties properties = 
 						new ArgHandlerContextProperties(handlerContext);
+				properties.setOptionClasses(optClasses);
 				properties.setOptionHandlingEnabled(true);
 				properties.setOptionMap(optMap);
 			}
@@ -1450,6 +1474,12 @@ public final class ArgMatey {
 		}
 
 		@Override
+		protected boolean canHandle(
+				final String arg, final ArgHandlerContext context) {
+			return arg.startsWith("--") && arg.length() > 2;
+		}
+
+		@Override
 		protected void handleOption(
 				final String arg, final ArgHandlerContext context) {
 			String option = arg;
@@ -1478,12 +1508,6 @@ public final class ArgMatey {
 			}
 			properties.setParseResultHolder(new ParseResultHolder(
 					new OptionOccurrence(opt, opt.newOptionArg(optionArg))));
-		}
-
-		@Override
-		protected boolean isOption(
-				final String arg, final ArgHandlerContext context) {
-			return arg.startsWith("--") && arg.length() > 2;
 		}
 		
 	}
@@ -1808,6 +1832,14 @@ public final class ArgMatey {
 		}
 
 		@Override
+		protected boolean canHandle(
+				final String arg, final ArgHandlerContext context) {
+			return arg.length() > 1 
+					&& arg.startsWith("-") 
+					&& !arg.startsWith("--");
+		}
+
+		@Override
 		protected void handleOption(
 				final String arg, final ArgHandlerContext context) {
 			String option = arg;
@@ -1816,17 +1848,10 @@ public final class ArgMatey {
 			Map<String, Option> optionMap = properties.getOptionMap();
 			Option opt = optionMap.get(option);
 			if (opt == null) {
-				OptionHandler posixOptionHandler = 
-						(PosixOptionHandler) this.getNextArgHandler();
-				boolean hasPosixOption = false;
-				for (Option o : optionMap.values()) {
-					if (posixOptionHandler.getOptionClass().isInstance(o)) {
-						hasPosixOption = true;
-						break;
-					}
-				}
-				if (hasPosixOption) {
-					posixOptionHandler.handleOption(arg, context);
+				Set<Class<? extends Option>> optionClasses = 
+						properties.getOptionClasses();
+				if (optionClasses.contains(PosixOption.class)) {
+					super.handle(arg, context);
 					return;
 				}
 				throw new UnknownOptionException(option);
@@ -1844,14 +1869,6 @@ public final class ArgMatey {
 			properties.setParseResultHolder(new ParseResultHolder(
 					new OptionOccurrence(
 							opt, opt.newOptionArg(optionArg))));
-		}
-
-		@Override
-		protected boolean isOption(
-				final String arg, final ArgHandlerContext context) {
-			return arg.length() > 1 
-					&& arg.startsWith("-") 
-					&& !arg.startsWith("--");
 		}
 		
 	}
@@ -3289,7 +3306,7 @@ public final class ArgMatey {
 	
 	static abstract class OptionHandler extends ArgHandler {
 		
-		private final Class<?> optionClass;
+		private final Class<? extends Option> optionClass;
 		
 		public OptionHandler(
 				final ArgHandler next, final Class<? extends Option> optClass) {
@@ -3298,7 +3315,10 @@ public final class ArgMatey {
 					optClass, "Option class must not be null");
 		}
 		
-		protected final Class<?> getOptionClass() {
+		protected abstract boolean canHandle(
+				final String arg, final ArgHandlerContext context);
+		
+		public final Class<? extends Option> getOptionClass() {
 			return this.optionClass;
 		}
 		
@@ -3311,29 +3331,20 @@ public final class ArgMatey {
 				super.handle(arg, context);
 				return;
 			}
-			boolean hasOption = false;
-			Map<String, Option> optionMap = properties.getOptionMap();
-			for (Option option : optionMap.values()) {
-				if (this.optionClass.isInstance(option)) {
-					hasOption = true;
-					break;
-				}
-			}
-			if (!hasOption) {
+			Set<Class<? extends Option>> optionClasses = 
+					properties.getOptionClasses();
+			if (!optionClasses.contains(this.optionClass)) {
 				super.handle(arg, context);
 				return;
 			}
-			if (!this.isOption(arg, context)) {
+			if (!this.canHandle(arg, context)) {
 				super.handle(arg, context);
 				return;
 			}
 			this.handleOption(arg, context);
 		}
-		
-		protected abstract void handleOption(
-				final String arg, final ArgHandlerContext context);
 
-		protected abstract boolean isOption(
+		protected abstract void handleOption(
 				final String arg, final ArgHandlerContext context);
 		
 	}
@@ -3919,6 +3930,14 @@ public final class ArgMatey {
 		}
 
 		@Override
+		protected boolean canHandle(
+				final String arg, final ArgHandlerContext context) {
+			return arg.length() > 1 
+					&& arg.startsWith("-") 
+					&& !arg.startsWith("--");
+		}
+
+		@Override
 		protected void handleOption(
 				final String arg, final ArgHandlerContext context) {
 			int argCharIndex = context.getArgCharIndex();
@@ -3965,14 +3984,6 @@ public final class ArgMatey {
 			}
 			properties.setParseResultHolder(new ParseResultHolder(
 					new OptionOccurrence(opt, opt.newOptionArg(optionArg))));
-		}
-
-		@Override
-		protected boolean isOption(
-				final String arg, final ArgHandlerContext context) {
-			return arg.length() > 1 
-					&& arg.startsWith("-") 
-					&& !arg.startsWith("--");
 		}		
 	}
 	

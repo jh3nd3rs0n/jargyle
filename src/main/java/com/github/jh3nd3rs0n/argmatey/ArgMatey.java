@@ -43,7 +43,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -265,8 +264,6 @@ public final class ArgMatey {
 		
 		private static final class PropertyNameConstants {
 			
-			public static final String OPTION_CLASSES = "OPTION_CLASSES";
-			
 			public static final String OPTION_HANDLING_ENABLED = 
 					"OPTION_HANDLING_ENABLED";
 			
@@ -284,18 +281,6 @@ public final class ArgMatey {
 		public ArgHandlerContextProperties(
 				final ArgHandlerContext handlerContext) {
 			this.argHandlerContext = handlerContext;
-		}
-		
-		public Set<Class<? extends Option>> getOptionClasses() {
-			Set<Class<? extends Option>> optionClasses = Collections.emptySet();
-			@SuppressWarnings("unchecked")
-			Set<Class<? extends Option>> value =
-					(Set<Class<? extends Option>>) this.argHandlerContext.getProperty(
-							PropertyNameConstants.OPTION_CLASSES);
-			if (value != null) {
-				optionClasses = Collections.unmodifiableSet(value);
-			}
-			return optionClasses;
 		}
 		
 		public Map<String, Option> getOptionMap() {
@@ -329,12 +314,6 @@ public final class ArgMatey {
 				optionHandlingEnabled = value.booleanValue();
 			}
 			return optionHandlingEnabled;
-		}
-		
-		public void setOptionClasses(
-				final Set<Class<? extends Option>> optClasses) {
-			this.argHandlerContext.putProperty(
-					PropertyNameConstants.OPTION_CLASSES, optClasses);
 		}
 		
 		public void setOptionHandlingEnabled(
@@ -389,18 +368,14 @@ public final class ArgMatey {
 			ArgHandlerContext handlerContext = new ArgHandlerContext(args);
 			List<OptionGroup> optGroupList = optGroups.toList();
 			if (optGroupList.size() > 0) {
-				Set<Class<? extends Option>> optClasses = 
-						new HashSet<Class<? extends Option>>();
 				Map<String, Option> optMap = new HashMap<String, Option>();
 				for (OptionGroup optGroup : optGroupList) {
 					for (Option opt : optGroup.toList()) {
-						optClasses.add(opt.getClass());
 						optMap.put(opt.toString(), opt);
 					}
 				}
 				ArgHandlerContextProperties properties = 
 						new ArgHandlerContextProperties(handlerContext);
-				properties.setOptionClasses(optClasses);
 				properties.setOptionHandlingEnabled(true);
 				properties.setOptionMap(optMap);
 			}
@@ -1470,7 +1445,7 @@ public final class ArgMatey {
 	static final class GnuLongOptionHandler extends OptionHandler {
 		
 		public GnuLongOptionHandler(final ArgHandler next) {
-			super(next, GnuLongOption.class);
+			super(next);
 		}
 
 		@Override
@@ -1828,7 +1803,7 @@ public final class ArgMatey {
 	static final class LongOptionHandler extends OptionHandler {
 		
 		public LongOptionHandler(final ArgHandler next) {
-			super(new PosixOptionHandler(next), LongOption.class);
+			super(new PosixOptionHandler(next));
 		}
 
 		@Override
@@ -1848,13 +1823,8 @@ public final class ArgMatey {
 			Map<String, Option> optionMap = properties.getOptionMap();
 			Option opt = optionMap.get(option);
 			if (opt == null) {
-				Set<Class<? extends Option>> optionClasses = 
-						properties.getOptionClasses();
-				if (optionClasses.contains(PosixOption.class)) {
-					super.handle(arg, context);
-					return;
-				}
-				throw new UnknownOptionException(option);
+				this.getNextArgHandler().get().handle(arg, context);
+				return;
 			}
 			String optionArg = null;
 			OptionArgSpec optionArgSpec = opt.getOptionArgSpec();
@@ -3306,21 +3276,12 @@ public final class ArgMatey {
 	
 	static abstract class OptionHandler extends ArgHandler {
 		
-		private final Class<? extends Option> optionClass;
-		
-		public OptionHandler(
-				final ArgHandler next, final Class<? extends Option> optClass) {
+		public OptionHandler(final ArgHandler next) {
 			super(next);
-			this.optionClass = Objects.requireNonNull(
-					optClass, "Option class must not be null");
 		}
 		
 		protected abstract boolean canHandle(
 				final String arg, final ArgHandlerContext context);
-		
-		public final Class<? extends Option> getOptionClass() {
-			return this.optionClass;
-		}
 		
 		@Override
 		public final void handle(
@@ -3328,12 +3289,6 @@ public final class ArgMatey {
 			ArgHandlerContextProperties properties = 
 					new ArgHandlerContextProperties(context);
 			if (!properties.isOptionHandlingEnabled()) {
-				super.handle(arg, context);
-				return;
-			}
-			Set<Class<? extends Option>> optionClasses = 
-					properties.getOptionClasses();
-			if (!optionClasses.contains(this.optionClass)) {
 				super.handle(arg, context);
 				return;
 			}
@@ -3926,7 +3881,7 @@ public final class ArgMatey {
 	static final class PosixOptionHandler extends OptionHandler {
 
 		public PosixOptionHandler(final ArgHandler next) {
-			super(next, PosixOption.class);
+			super(next);
 		}
 
 		@Override

@@ -1803,7 +1803,8 @@ public final class ArgMatey {
 	static final class LongOptionHandler extends OptionHandler {
 		
 		public LongOptionHandler(final ArgHandler next) {
-			super(new PosixOptionHandler(next));
+			super(OptionTypeObjectFactory.POSIX_OPTION_TYPE_OBJECT_FACTORY.newOptionHandler(
+					next));
 		}
 
 		@Override

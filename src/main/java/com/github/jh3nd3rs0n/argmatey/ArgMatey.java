@@ -518,13 +518,13 @@ public final class ArgMatey {
 		
 		private ArgsParser argsParser;
 		private final CLIClass cliClass;
+		private boolean displayedProgramHelp;
+		private boolean displayedProgramVersion;
 		private final boolean posixlyCorrect;
 		protected String programDoc;
-		private boolean programHelpDisplayed;
 		protected String programName;
 		protected String programOperandsUsage;
 		protected String programVersion;
-		private boolean programVersionDisplayed;
 		
 		public CLI(final String[] args, final boolean posixCorrect) {
 			CLIClass cls = CLIClass.newInstance(this.getClass());
@@ -532,13 +532,13 @@ public final class ArgMatey {
 					args, cls.getOptionGroups(), posixCorrect);
 			this.argsParser = parser;
 			this.cliClass = cls;
+			this.displayedProgramHelp = false;
+			this.displayedProgramVersion = false;			
 			this.posixlyCorrect = posixCorrect;
 			this.programDoc = null;
-			this.programHelpDisplayed = false;
 			this.programName = null;
 			this.programOperandsUsage = null;
 			this.programVersion = null;
-			this.programVersionDisplayed = false;
 		}
 		
 		protected Optional<Integer> afterHandleArgs() {
@@ -555,6 +555,14 @@ public final class ArgMatey {
 		
 		protected Optional<Integer> beforeHandleNext() {
 			return Optional.empty();
+		}
+		
+		public final boolean displayedProgramHelp() {
+			return this.displayedProgramHelp;
+		}
+		
+		public final boolean displayedProgramVersion() {
+			return this.displayedProgramVersion;
 		}
 		
 		@Annotations.DisplaysProgramHelp
@@ -645,8 +653,8 @@ public final class ArgMatey {
 					this.argsParser.getArgs(), 
 					this.argsParser.getOptionGroups(), 
 					this.posixlyCorrect);
-			this.programHelpDisplayed = false;
-			this.programVersionDisplayed = false;
+			this.displayedProgramHelp = false;
+			this.displayedProgramVersion = false;
 			Optional<Integer> status = this.beforeHandleArgs();
 			if (status.isPresent()) {
 				return status;
@@ -664,7 +672,7 @@ public final class ArgMatey {
 						return status;
 					}
 				}
-				if (this.programHelpDisplayed || this.programVersionDisplayed) {
+				if (this.displayedProgramHelp || this.displayedProgramVersion) {
 					return Optional.of(Integer.valueOf(0));
 				}
 				status = this.afterHandleNext();
@@ -699,11 +707,11 @@ public final class ArgMatey {
 					optionAnnotatedMethod.invoke(this, optionOccurrence);
 					if (optionAnnotatedMethod.toMethod().equals(
 							this.cliClass.getDisplayProgramHelpMethod())) {
-						this.programHelpDisplayed = true;
+						this.displayedProgramHelp = true;
 					}
 					if (optionAnnotatedMethod.toMethod().equals(
 							this.cliClass.getDisplayProgramVersionMethod())) {
-						this.programVersionDisplayed = true;
+						this.displayedProgramVersion = true;
 					}
 				}
 			}
@@ -725,14 +733,6 @@ public final class ArgMatey {
 			return this.argsParser.hasNext();
 		}
 		
-		public final boolean isProgramHelpDisplayed() {
-			return this.programHelpDisplayed;
-		}
-		
-		public final boolean isProgramVersionDisplayed() {
-			return this.programVersionDisplayed;
-		}
-		
 		protected final String next() {
 			return this.argsParser.next();
 		}
@@ -746,22 +746,38 @@ public final class ArgMatey {
 	
 	static final class CLIClass {
 		
-		private static final class MethodComparator 
-			implements Comparator<Method> {
+		private static enum MethodComparator implements Comparator<Method> {
 
-			public MethodComparator() { }
+			INSTANCE;
 			
 			@Override
 			public int compare(final Method arg0, final Method arg1) {
-				return CLIClass.compare(arg0, arg1);
+				int value = arg0.getName().compareTo(arg1.getName());
+				if (value != 0) { return value; }
+				Class<?>[] parameterTypes0 = arg0.getParameterTypes();
+				Class<?>[] parameterTypes1 = arg1.getParameterTypes();
+				int length0 = parameterTypes0.length;
+				int length1 = parameterTypes1.length;
+				int maxLength = (length0 >= length1) ? length0 : length1;
+				for (int i = 0; i < maxLength; i++) {
+					if (i == length0 || i == length1) {
+						return length0 - length1;
+					}
+					Class<?> parameterType0 = parameterTypes0[i];
+					Class<?> parameterType1 = parameterTypes1[i];
+					value = parameterType0.getName().compareTo(
+							parameterType1.getName());
+					if (value != 0) { return value; } 
+				}
+				return 0;
 			}
 			
 		}
 		
-		private static final class OptionAnnotatedMethodComparator 
+		private static enum OptionAnnotatedMethodComparator 
 			implements Comparator<OptionAnnotatedMethod> {
 
-			public OptionAnnotatedMethodComparator() { }
+			INSTANCE;
 			
 			@Override
 			public int compare(
@@ -810,27 +826,6 @@ public final class ArgMatey {
 			DECLARED_DISPLAY_PROGRAM_VERSION_METHOD = displayProgramVersionMethod; 
 		}
 		
-		public static int compare(final Method arg0, final Method arg1) {
-			int value = arg0.getName().compareTo(arg1.getName());
-			if (value != 0) { return value; }
-			Class<?>[] parameterTypes0 = arg0.getParameterTypes();
-			Class<?>[] parameterTypes1 = arg1.getParameterTypes();
-			int length0 = parameterTypes0.length;
-			int length1 = parameterTypes1.length;
-			int maxLength = (length0 >= length1) ? length0 : length1;
-			for (int i = 0; i < maxLength; i++) {
-				if (i == length0 || i == length1) {
-					return length0 - length1;
-				}
-				Class<?> parameterType0 = parameterTypes0[i];
-				Class<?> parameterType1 = parameterTypes1[i];
-				value = parameterType0.getName().compareTo(
-						parameterType1.getName());
-				if (value != 0) { return value; } 
-			}
-			return 0;				
-		}
-		
 		private static List<Class<?>> getHierarchy(final Class<?> cls) {
 			List<Class<?>> hierarchy = new ArrayList<Class<?>>();
 			if (CLI.class.isAssignableFrom(cls)) {
@@ -842,8 +837,8 @@ public final class ArgMatey {
 		
 		private static Set<Method> getMethods(final Class<?> cls) {
 			List<Class<?>> hierarchy = getHierarchy(cls);
-			Comparator<Method> methodComparator = new MethodComparator();
-			Set<Method> methods = new TreeSet<Method>(methodComparator);
+			Set<Method> methods = new TreeSet<Method>(
+					MethodComparator.INSTANCE);
 			for (Class<?> c : hierarchy) {
 				methods.addAll(Arrays.asList(c.getDeclaredMethods()));
 			}
@@ -870,19 +865,19 @@ public final class ArgMatey {
 			Method displayProgVersionMethod = null;
 			Set<Method> methods = getMethods(c);
 			for (Method method : methods) {
-				if (compare(
+				if (MethodComparator.INSTANCE.compare(
 						DECLARED_DISPLAY_PROGRAM_HELP_METHOD, method) == 0) {
 					displayProgHelpMethod = method;
 				}
-				if (compare(
+				if (MethodComparator.INSTANCE.compare(
 						DECLARED_DISPLAY_PROGRAM_VERSION_METHOD, method) == 0) {
 					displayProgVersionMethod = method;
 				}
 				if (method.isAnnotationPresent(Annotations.Option.class)
 						|| method.isAnnotationPresent(Annotations.Options.class)) {
 					method.setAccessible(true);
-					OptionAnnotatedMethod mthd = OptionAnnotatedMethod.newInstance(
-							method);
+					OptionAnnotatedMethod mthd = 
+							OptionAnnotatedMethod.newInstance(method);
 					OptionGroup optGroup = mthd.getOptionGroup();
 					for (Option opt : optGroup.toList()) {
 						optAnnotatedMethodMap.put(opt, mthd);
@@ -891,7 +886,8 @@ public final class ArgMatey {
 				}
 			}
 			Collections.sort(
-					optAnnotatedMethods, new OptionAnnotatedMethodComparator());
+					optAnnotatedMethods, 
+					OptionAnnotatedMethodComparator.INSTANCE);
 			List<OptionGroup> optGroups = new ArrayList<OptionGroup>();
 			for (OptionAnnotatedMethod optAnnotatedMethod : optAnnotatedMethods) {
 				optGroups.add(optAnnotatedMethod.getOptionGroup());
@@ -899,8 +895,9 @@ public final class ArgMatey {
 			this.cls = c;
 			this.displayProgramHelpMethod = displayProgHelpMethod;
 			this.displayProgramVersionMethod = displayProgVersionMethod;
-			this.optionAnnotatedMethodMap = new HashMap<Option, OptionAnnotatedMethod>(
-					optAnnotatedMethodMap);
+			this.optionAnnotatedMethodMap = 
+					new HashMap<Option, OptionAnnotatedMethod>(
+							optAnnotatedMethodMap);
 			this.optionAnnotatedMethods = new ArrayList<OptionAnnotatedMethod>(
 					optAnnotatedMethods);
 			this.optionGroups = OptionGroups.newInstance(optGroups);

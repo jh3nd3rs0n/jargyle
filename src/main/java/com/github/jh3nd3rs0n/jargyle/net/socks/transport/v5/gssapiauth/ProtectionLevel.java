@@ -3,7 +3,6 @@ package com.github.jh3nd3rs0n.jargyle.net.socks.transport.v5.gssapiauth;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
 
 import org.ietf.jgss.MessageProp;
 
@@ -16,8 +15,8 @@ public enum ProtectionLevel {
 	NONE((byte) 0x00) {
 		
 		@Override
-		public Optional<MessageProp> getMessageProp() {
-			return Optional.empty();
+		public MessageProp getMessageProp() {
+			return null;
 		}
 		
 	},
@@ -26,8 +25,8 @@ public enum ProtectionLevel {
 	REQUIRED_INTEG((byte) 0x01) {
 		
 		@Override
-		public Optional<MessageProp> getMessageProp() {
-			return Optional.of(new MessageProp(0, false));
+		public MessageProp getMessageProp() {
+			return new MessageProp(0, false);
 		}
 		
 	},
@@ -39,8 +38,8 @@ public enum ProtectionLevel {
 	REQUIRED_INTEG_AND_CONF((byte) 0x02) {
 		
 		@Override
-		public Optional<MessageProp> getMessageProp() {
-			return Optional.of(new MessageProp(0, true));
+		public MessageProp getMessageProp() {
+			return new MessageProp(0, true);
 		}
 		
 	},
@@ -48,8 +47,8 @@ public enum ProtectionLevel {
 	SELECTIVE_INTEG_OR_CONF((byte) 0x03) {
 		
 		@Override
-		public Optional<MessageProp> getMessageProp() {
-			return Optional.of(new MessageProp(0, true));
+		public MessageProp getMessageProp() {
+			return new MessageProp(0, true);
 		}
 		
 	};
@@ -118,6 +117,6 @@ public enum ProtectionLevel {
 		return this.byteValue;
 	}
 	
-	public abstract Optional<MessageProp> getMessageProp();
+	public abstract MessageProp getMessageProp();
 	
 }

@@ -48,7 +48,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -135,19 +134,19 @@ public final class ArgMatey {
 
 	static abstract class ArgHandler {
 
-		private final Optional<ArgHandler> nextArgHandler;
+		private final ArgHandler nextArgHandler;
 		
 		public ArgHandler(final ArgHandler next) {
-			this.nextArgHandler = Optional.ofNullable(next);
+			this.nextArgHandler = next;
 		}
 		
-		public final Optional<ArgHandler> getNextArgHandler() {
+		public final ArgHandler getNextArgHandler() {
 			return this.nextArgHandler;
 		}
 		
 		public void handle(final String arg, final ArgHandlerContext context) {
-			if (this.nextArgHandler.isPresent()) {
-				this.nextArgHandler.get().handle(arg, context);
+			if (this.nextArgHandler != null) {
+				this.nextArgHandler.handle(arg, context);
 				return;
 			}
 			ArgHandlerContextProperties properties =
@@ -541,20 +540,20 @@ public final class ArgMatey {
 			this.programVersion = null;
 		}
 		
-		protected Optional<Integer> afterHandleArgs() {
-			return Optional.empty();
+		protected Integer afterHandleArgs() {
+			return null;
 		}
 		
-		protected Optional<Integer> afterHandleNext() {
-			return Optional.empty();
+		protected Integer afterHandleNext() {
+			return null;
 		}
 		
-		protected Optional<Integer> beforeHandleArgs() {
-			return Optional.empty();
+		protected Integer beforeHandleArgs() {
+			return null;
 		}
 		
-		protected Optional<Integer> beforeHandleNext() {
-			return Optional.empty();
+		protected Integer beforeHandleNext() {
+			return null;
 		}
 		
 		public final boolean displayedProgramHelp() {
@@ -648,35 +647,35 @@ public final class ArgMatey {
 			return this.argsParser.getParseResultHolder();
 		}
 		
-		public final Optional<Integer> handleArgs() {
+		public final Integer handleArgs() {
 			this.argsParser = ArgsParser.newInstance(
 					this.argsParser.getArgs(), 
 					this.argsParser.getOptionGroups(), 
 					this.posixlyCorrect);
 			this.displayedProgramHelp = false;
 			this.displayedProgramVersion = false;
-			Optional<Integer> status = this.beforeHandleArgs();
-			if (status.isPresent()) {
+			Integer status = this.beforeHandleArgs();
+			if (status != null) {
 				return status;
 			}
 			while (this.hasNext()) {
 				status = this.beforeHandleNext();
-				if (status.isPresent()) {
+				if (status != null) {
 					return status;
 				}
 				try {
 					this.handleNext();
 				} catch (Throwable t) {
 					status = this.handleThrowable(t);
-					if (status.isPresent()) {
+					if (status != null) {
 						return status;
 					}
 				}
 				if (this.displayedProgramHelp || this.displayedProgramVersion) {
-					return Optional.of(Integer.valueOf(0));
+					return Integer.valueOf(0);
 				}
 				status = this.afterHandleNext();
-				if (status.isPresent()) {
+				if (status != null) {
 					return status;
 				}
 			}
@@ -719,14 +718,14 @@ public final class ArgMatey {
 		
 		protected void handleNonparsedArg(final String nonparsedArg) { }
 		
-		protected Optional<Integer> handleThrowable(final Throwable t) {
+		protected Integer handleThrowable(final Throwable t) {
 			String progName = this.programName;
 			if (progName == null) {
 				progName = this.getClass().getName();
 			}
 			System.err.printf("%s: %s%n", progName, t);
 			t.printStackTrace(System.err);
-			return Optional.of(Integer.valueOf(-1));
+			return Integer.valueOf(-1);
 		}
 		
 		protected final boolean hasNext() {
@@ -1821,7 +1820,7 @@ public final class ArgMatey {
 			Map<String, Option> optionMap = properties.getOptionMap();
 			Option opt = optionMap.get(option);
 			if (opt == null) {
-				this.getNextArgHandler().get().handle(arg, context);
+				this.getNextArgHandler().handle(arg, context);
 				return;
 			}
 			String optionArg = null;
@@ -1973,7 +1972,7 @@ public final class ArgMatey {
 		UNSPECIFIED(null);
 		
 		/** The optional {@code Boolean} value. */
-		private final Optional<Boolean> optionalBooleanValue;
+		private final Boolean optionalBooleanValue;
 		
 		/**
 		 * Constructs an {@code OptionalBoolean} based on the provided 
@@ -1983,7 +1982,7 @@ public final class ArgMatey {
 		 * {@code null})
 		 */
 		private OptionalBoolean(final Boolean booleanValue) {
-			this.optionalBooleanValue = Optional.ofNullable(booleanValue);
+			this.optionalBooleanValue = booleanValue;
 		}
 		
 		/**
@@ -1991,7 +1990,7 @@ public final class ArgMatey {
 		 * 
 		 * @return the optional {@code Boolean} value
 		 */
-		public Optional<Boolean> optionalBooleanValue() {
+		public Boolean optionalBooleanValue() {
 			return this.optionalBooleanValue;
 		}
 		
@@ -2229,9 +2228,9 @@ public final class ArgMatey {
 				optionArgSpecBuilder.setName(optionArgSpec.name());
 			}
 			OptionalBoolean required = optionArgSpec.required();
-			if (required.optionalBooleanValue().isPresent()) {
+			if (required.optionalBooleanValue() != null) {
 				optionArgSpecBuilder.setRequired(
-						required.optionalBooleanValue().get().booleanValue());
+						required.optionalBooleanValue().booleanValue());
 			}
 			String separator = optionArgSpec.separator();
 			if (!separator.equals(OptionArgSpec.DEFAULT_SEPARATOR)) {
@@ -2262,9 +2261,9 @@ public final class ArgMatey {
 			OptionBuilder optionBuilder = 
 					optionTypeObjectFactory.newOptionBuilder(name);
 			OptionalBoolean displayable = option.displayable();
-			if (displayable.optionalBooleanValue().isPresent()) {
+			if (displayable.optionalBooleanValue() != null) {
 				optionBuilder.setDisplayable(
-						displayable.optionalBooleanValue().get().booleanValue());
+						displayable.optionalBooleanValue().booleanValue());
 			}
 			String doc = option.doc();
 			if (!doc.isEmpty()) {
@@ -2272,7 +2271,7 @@ public final class ArgMatey {
 			}
 			Annotations.OptionArgSpec optionArgSpec = option.optionArgSpec();
 			OptionalBoolean optionArgAllowed = optionArgSpec.allowed();
-			if (!optionArgAllowed.optionalBooleanValue().isPresent()) {
+			if (optionArgAllowed.optionalBooleanValue() == null) {
 				if (firstInGroup) {
 					Class<?> targetClass = t.getTargetClass(method);
 					if (targetClass != null) {
@@ -2280,7 +2279,7 @@ public final class ArgMatey {
 								optionArgSpec, method, t));
 					}
 				}
-			} else if (optionArgAllowed.optionalBooleanValue().get().booleanValue()) {
+			} else if (optionArgAllowed.optionalBooleanValue().booleanValue()) {
 				optionBuilder.setOptionArgSpec(newOptionArgSpec(
 						optionArgSpec, method, t));
 			} else {

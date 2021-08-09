@@ -7,7 +7,6 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
-import java.util.Optional;
 
 import com.github.jh3nd3rs0n.jargyle.net.socks.client.Properties;
 import com.github.jh3nd3rs0n.jargyle.net.socks.client.PropertySpec;
@@ -22,7 +21,7 @@ import com.github.jh3nd3rs0n.jargyle.net.ssl.DtlsDatagramSocketFactory;
 
 public final class Socks5Client extends SocksClient {
 
-	private final Optional<DtlsDatagramSocketFactory> dtlsDatagramSocketFactory;
+	private final DtlsDatagramSocketFactory dtlsDatagramSocketFactory;
 	
 	Socks5Client(final Socks5ServerUri serverUri, final Properties props) {
 		this(serverUri, props, null);
@@ -33,10 +32,9 @@ public final class Socks5Client extends SocksClient {
 			final Properties props,
 			final SocksClient chainedClient) {
 		super(serverUri, props, chainedClient);
-		Optional<DtlsDatagramSocketFactory> dtlsDatagramSockFactory = 
-				Optional.ofNullable(
-						(props.getValue(PropertySpec.DTLS_ENABLED).booleanValue()) ? 
-								new DtlsDatagramSocketFactoryImpl(this) : null);
+		DtlsDatagramSocketFactory dtlsDatagramSockFactory = 
+				props.getValue(PropertySpec.DTLS_ENABLED).booleanValue() ? 
+						new DtlsDatagramSocketFactoryImpl(this) : null;
 		this.dtlsDatagramSocketFactory = dtlsDatagramSockFactory;
 	}
 	
@@ -54,10 +52,10 @@ public final class Socks5Client extends SocksClient {
 				udpRelayServerHost); 
 		internalDatagramSocket.connect(
 				udpRelayServerHostInetAddress, udpRelayServerPort);
-		if (!this.dtlsDatagramSocketFactory.isPresent()) {
+		if (this.dtlsDatagramSocketFactory == null) {
 			return internalDatagramSocket;
 		}
-		return this.dtlsDatagramSocketFactory.get().newDatagramSocket(
+		return this.dtlsDatagramSocketFactory.newDatagramSocket(
 				internalDatagramSocket,
 				udpRelayServerHost,
 				udpRelayServerPort);

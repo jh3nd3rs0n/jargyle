@@ -13,7 +13,6 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import com.github.jh3nd3rs0n.argmatey.ArgMatey;
 import com.github.jh3nd3rs0n.argmatey.ArgMatey.Annotations.Option;
@@ -241,9 +240,9 @@ public final class UsersCLI extends CLI {
 	
 	public static void main(final String[] args) {
 		UsersCLI usersCLI = new UsersCLI(null, null, args, false);
-		Optional<Integer> status = usersCLI.handleArgs();
-		if (status.isPresent() && status.get().intValue() != 0) { 
-			System.exit(status.get().intValue());
+		Integer status = usersCLI.handleArgs();
+		if (status != null && status.intValue() != 0) { 
+			System.exit(status.intValue());
 		}
 	}
 	
@@ -288,11 +287,11 @@ public final class UsersCLI extends CLI {
 	}
 	
 	@Override
-	protected Optional<Integer> afterHandleArgs() {
+	protected Integer afterHandleArgs() {
 		if (this.command == null) {
 			System.err.printf("%s: command must be provided%n", this.programName);
 			System.err.println(this.suggestion);
-			return Optional.of(Integer.valueOf(-1));
+			return Integer.valueOf(-1);
 		}
 		try {
 			this.command.invoke(this.argList.toArray(
@@ -301,25 +300,25 @@ public final class UsersCLI extends CLI {
 			System.err.printf("%s: %s%n", this.programName, e);
 			System.err.println(this.suggestion);
 			e.printStackTrace(System.err);
-			return Optional.of(Integer.valueOf(-1));
+			return Integer.valueOf(-1);
 		}
-		return Optional.of(Integer.valueOf(0));
+		return Integer.valueOf(0);
 	}
 	
 	@Override
-	protected Optional<Integer> afterHandleNext() {
+	protected Integer afterHandleNext() {
 		if (this.xsdRequested) {
-			return Optional.of(Integer.valueOf(0));
+			return Integer.valueOf(0);
 		}
-		return Optional.empty();
+		return null;
 	}
 	
 	@Override
-	protected Optional<Integer> beforeHandleArgs() {
+	protected Integer beforeHandleArgs() {
 		this.argList = new ArrayList<String>();
 		this.command = null;
 		this.xsdRequested = false;		
-		return Optional.empty();
+		return null;
 	}
 	
 	@Option(
@@ -379,11 +378,11 @@ public final class UsersCLI extends CLI {
 	}
 	
 	@Override
-	protected Optional<Integer> handleThrowable(final Throwable t) {
+	protected Integer handleThrowable(final Throwable t) {
 		System.err.printf("%s: %s%n", this.programName, t);
 		System.err.println(this.suggestion);
 		t.printStackTrace(System.err);
-		return Optional.of(Integer.valueOf(-1));		
+		return Integer.valueOf(-1);		
 	}
 
 	@Option(

@@ -4,15 +4,14 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Objects;
-import java.util.Optional;
 
 import com.github.jh3nd3rs0n.jargyle.net.NetObjectFactory;
 import com.github.jh3nd3rs0n.jargyle.net.ssl.DtlsDatagramSocketFactory;
 
 public class WorkerContext {
 
-	private final Optional<DtlsDatagramSocketFactory> clientFacingDtlsDatagramSocketFactory;
-	private Socket clientFacingSocket;
+	private final DtlsDatagramSocketFactory clientFacingDtlsDatagramSocketFactory;
+	private final Socket clientFacingSocket;
 	private final Configuration configuration;
 	private final NetObjectFactory netObjectFactory;
 	
@@ -20,12 +19,12 @@ public class WorkerContext {
 			final Socket clientFacingSock,
 			final Configuration config,
 			final NetObjectFactory netObjFactory,
-			final Optional<DtlsDatagramSocketFactory> clientFacingDtlsDatagramSockFactory) {
+			final DtlsDatagramSocketFactory clientFacingDtlsDatagramSockFactory) {
 		Objects.requireNonNull(clientFacingSock);
 		Objects.requireNonNull(config);
 		Objects.requireNonNull(netObjFactory);
-		Objects.requireNonNull(clientFacingDtlsDatagramSockFactory);
-		this.clientFacingDtlsDatagramSocketFactory = clientFacingDtlsDatagramSockFactory;
+		this.clientFacingDtlsDatagramSocketFactory = 
+				clientFacingDtlsDatagramSockFactory;
 		this.clientFacingSocket = clientFacingSock;
 		this.configuration = config;
 		this.netObjectFactory = netObjFactory;
@@ -39,7 +38,7 @@ public class WorkerContext {
 		this.netObjectFactory = other.netObjectFactory;
 	}
 
-	public final Optional<DtlsDatagramSocketFactory> getClientFacingDtlsDatagramSocketFactory() {
+	public final DtlsDatagramSocketFactory getClientFacingDtlsDatagramSocketFactory() {
 		return this.clientFacingDtlsDatagramSocketFactory;
 	}
 

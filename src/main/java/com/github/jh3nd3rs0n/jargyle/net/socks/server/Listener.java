@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
-import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -23,15 +22,15 @@ final class Listener implements Runnable {
 	private static final Logger LOGGER = LoggerFactory.getLogger(
 			Listener.class);
 	
-	private Optional<DtlsDatagramSocketFactory> clientFacingDtlsDatagramSocketFactory;
-	private Optional<SslSocketFactory> clientFacingSslSocketFactory;
+	private DtlsDatagramSocketFactory clientFacingDtlsDatagramSocketFactory;
+	private SslSocketFactory clientFacingSslSocketFactory;
 	private final Configuration configuration;
 	private final NetObjectFactory netObjectFactory;
 	private final ServerSocket serverSocket;
 			
 	public Listener(final ServerSocket serverSock, final Configuration config) {
-		this.clientFacingDtlsDatagramSocketFactory = Optional.empty();
-		this.clientFacingSslSocketFactory = Optional.empty();		
+		this.clientFacingDtlsDatagramSocketFactory = null;
+		this.clientFacingSslSocketFactory = null;		
 		this.configuration = config;
 		this.netObjectFactory = new NetObjectFactoryImpl(config);
 		this.serverSocket = serverSock;
@@ -79,31 +78,31 @@ final class Listener implements Runnable {
 		}
 	}
 	
-	private Optional<DtlsDatagramSocketFactory> getClientFacingDtlsDatagramSocketFactory() {
+	private DtlsDatagramSocketFactory getClientFacingDtlsDatagramSocketFactory() {
 		Settings settings = this.configuration.getSettings();
 		if (settings.getLastValue(SettingSpec.DTLS_ENABLED).booleanValue()) {
-			if (!this.clientFacingDtlsDatagramSocketFactory.isPresent()) {
-				this.clientFacingDtlsDatagramSocketFactory = Optional.of(
-						new DtlsDatagramSocketFactoryImpl(this.configuration));
+			if (this.clientFacingDtlsDatagramSocketFactory == null) {
+				this.clientFacingDtlsDatagramSocketFactory = 
+						new DtlsDatagramSocketFactoryImpl(this.configuration);
 			}
 		} else {
-			if (this.clientFacingDtlsDatagramSocketFactory.isPresent()) {
-				this.clientFacingDtlsDatagramSocketFactory = Optional.empty();
+			if (this.clientFacingDtlsDatagramSocketFactory != null) {
+				this.clientFacingDtlsDatagramSocketFactory = null;
 			}
 		}
 		return this.clientFacingDtlsDatagramSocketFactory;
 	}
 	
-	private Optional<SslSocketFactory> getClientFacingSslSocketFactory() {
+	private SslSocketFactory getClientFacingSslSocketFactory() {
 		Settings settings = this.configuration.getSettings();
 		if (settings.getLastValue(SettingSpec.SSL_ENABLED).booleanValue()) {
-			if (!this.clientFacingSslSocketFactory.isPresent()) {
-				this.clientFacingSslSocketFactory = Optional.of(
-						new SslSocketFactoryImpl(this.configuration));
+			if (this.clientFacingSslSocketFactory == null) {
+				this.clientFacingSslSocketFactory = new SslSocketFactoryImpl(
+						this.configuration);
 			}
 		} else {
-			if (this.clientFacingSslSocketFactory.isPresent()) {
-				this.clientFacingSslSocketFactory = Optional.empty();
+			if (this.clientFacingSslSocketFactory != null) {
+				this.clientFacingSslSocketFactory = null;
 			}
 		}
 		return this.clientFacingSslSocketFactory;
@@ -166,11 +165,11 @@ final class Listener implements Runnable {
 	
 	private Socket wrapClientFacingSocket(final Socket clientFacingSocket) {
 		Socket clientFacingSock = clientFacingSocket;
-		Optional<SslSocketFactory> clientFacingSslSockFactory = 
+		SslSocketFactory clientFacingSslSockFactory = 
 				this.getClientFacingSslSocketFactory();
-		if (clientFacingSslSockFactory.isPresent()) {
+		if (clientFacingSslSockFactory != null) {
 			try {
-				clientFacingSock = clientFacingSslSockFactory.get().newSocket(
+				clientFacingSock = clientFacingSslSockFactory.newSocket(
 						clientFacingSock, null, true);
 			} catch (IOException e) {
 				LOGGER.warn(

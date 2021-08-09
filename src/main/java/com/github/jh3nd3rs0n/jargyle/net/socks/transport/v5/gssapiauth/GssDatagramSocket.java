@@ -5,7 +5,6 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
 import java.nio.channels.DatagramChannel;
-import java.util.Optional;
 
 import org.ietf.jgss.GSSContext;
 import org.ietf.jgss.GSSException;
@@ -16,23 +15,22 @@ import com.github.jh3nd3rs0n.jargyle.net.FilterDatagramSocket;
 public final class GssDatagramSocket extends FilterDatagramSocket {
 
 	private final GSSContext gssContext;
-	private final Optional<MessageProp> messageProp;
+	private final MessageProp messageProp;
 	private final int wrapSizeLimit;
 	
 	public GssDatagramSocket(
 			final DatagramSocket datagramSock,
 			final GSSContext context, 
-			final Optional<MessageProp> prop) throws SocketException {
+			final MessageProp prop) throws SocketException {
 		super(datagramSock);
-		Optional<MessageProp> prp = Optional.empty();
+		MessageProp prp = null;
 		int sizeLimit = Message.MAX_TOKEN_LENGTH;
-		if (prop.isPresent()) {
-			prp = Optional.of(new MessageProp(
-					prop.get().getQOP(), prop.get().getPrivacy()));
+		if (prop != null) {
+			prp = new MessageProp(prop.getQOP(), prop.getPrivacy());
 			try {
 				sizeLimit = context.getWrapSizeLimit(
-						prop.get().getQOP(), 
-						prop.get().getPrivacy(), 
+						prop.getQOP(), 
+						prop.getPrivacy(), 
 						Message.MAX_TOKEN_LENGTH);
 			} catch (GSSException e) {
 				throw new AssertionError(e);
@@ -52,19 +50,18 @@ public final class GssDatagramSocket extends FilterDatagramSocket {
 		return this.gssContext;
 	}
 
-	public Optional<MessageProp> getMessageProp() {
-		if (!this.messageProp.isPresent()) {
+	public MessageProp getMessageProp() {
+		if (this.messageProp == null) {
 			return this.messageProp;
 		}
-		return Optional.of(new MessageProp(
-				this.messageProp.get().getQOP(), 
-				this.messageProp.get().getPrivacy()));
+		return new MessageProp(
+				this.messageProp.getQOP(), this.messageProp.getPrivacy());
 	}
 	
 	@Override
 	public synchronized void receive(DatagramPacket p) throws IOException {
 		super.receive(p);
-		if (this.messageProp.isPresent()) {
+		if (this.messageProp != null) {
 			byte[] data = p.getData();
 			Message message = Message.newInstance(data);
 			byte[] token = message.getToken();
@@ -81,7 +78,7 @@ public final class GssDatagramSocket extends FilterDatagramSocket {
 	
 	@Override
 	public void send(DatagramPacket p) throws IOException {
-		if (this.messageProp.isPresent()) {
+		if (this.messageProp != null) {
 			byte[] data = p.getData();
 			int dataLength = data.length;
 			if (dataLength > this.wrapSizeLimit) {
@@ -89,8 +86,8 @@ public final class GssDatagramSocket extends FilterDatagramSocket {
 			}
 			byte[] token;
 			MessageProp prop = new MessageProp(
-					this.messageProp.get().getQOP(), 
-					this.messageProp.get().getPrivacy());
+					this.messageProp.getQOP(), 
+					this.messageProp.getPrivacy());
 			try {
 				token = this.gssContext.wrap(data, 0, dataLength, prop);
 			} catch (GSSException e) {

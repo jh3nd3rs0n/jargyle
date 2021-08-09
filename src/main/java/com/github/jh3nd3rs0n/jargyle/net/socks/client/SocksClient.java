@@ -8,7 +8,6 @@ import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.SslSocketFactory;
 import com.github.jh3nd3rs0n.jargyle.net.HostResolver;
@@ -36,12 +35,12 @@ public abstract class SocksClient {
 		return socksClient;
 	}
 
-	private final Optional<SocksClient> chainedSocksClient;
+	private final SocksClient chainedSocksClient;
 	private final HostResolver internalHostResolver;
 	private final NetObjectFactory internalNetObjectFactory;
 	private final Properties properties;
 	private final SocksServerUri socksServerUri;
-	private final Optional<SslSocketFactory> sslSocketFactory;
+	private final SslSocketFactory sslSocketFactory;
 		
 	public SocksClient(final SocksServerUri serverUri, final Properties props) {
 		this(serverUri, props, null);
@@ -54,14 +53,13 @@ public abstract class SocksClient {
 		Objects.requireNonNull(
 				serverUri, "SOCKS server URI must not be null");
 		Objects.requireNonNull(props, "Properties must not be null");
-		Optional<SocksClient> client = Optional.ofNullable(chainedClient);
-		NetObjectFactory internalNetObjFactory = (!client.isPresent()) ?
+		NetObjectFactory internalNetObjFactory = chainedClient == null ?
 				NetObjectFactory.newInstance() 
-				: client.get().newSocksNetObjectFactory();
-		Optional<SslSocketFactory> sslSockFactory = Optional.ofNullable( 
-				(props.getValue(PropertySpec.SSL_ENABLED).booleanValue()) ?
-						new SslSocketFactoryImpl(this) : null);
-		this.chainedSocksClient = client;
+				: chainedClient.newSocksNetObjectFactory();
+		SslSocketFactory sslSockFactory = 
+				props.getValue(PropertySpec.SSL_ENABLED).booleanValue() ? 
+						new SslSocketFactoryImpl(this) : null;
+		this.chainedSocksClient = chainedClient;
 		this.internalHostResolver = internalNetObjFactory.newHostResolver();
 		this.internalNetObjectFactory = internalNetObjFactory;
 		this.properties = props;
@@ -76,7 +74,7 @@ public abstract class SocksClient {
 		socketSettings.applyTo(internalSocket);
 	}
 	
-	public final Optional<SocksClient> getChainedSocksClient() {
+	public final SocksClient getChainedSocksClient() {
 		return this.chainedSocksClient;
 	}
 	
@@ -124,10 +122,10 @@ public abstract class SocksClient {
 				new InetSocketAddress(
 						socksServerUriHostInetAddress, socksServerUriPort), 
 				timeout);
-		if (!this.sslSocketFactory.isPresent()) {
+		if (this.sslSocketFactory == null) {
 			return internalSocket;
 		}
-		return this.sslSocketFactory.get().newSocket(
+		return this.sslSocketFactory.newSocket(
 				internalSocket, 
 				socksServerUriHost, 
 				socksServerUriPort, 
@@ -160,10 +158,10 @@ public abstract class SocksClient {
 				socksServerUriPort, 
 				localAddr, 
 				localPort);
-		if (!this.sslSocketFactory.isPresent()) {
+		if (this.sslSocketFactory == null) {
 			return internalSocket;
 		}
-		return this.sslSocketFactory.get().newSocket(
+		return this.sslSocketFactory.newSocket(
 				internalSocket, 
 				socksServerUriHost, 
 				socksServerUriPort, 

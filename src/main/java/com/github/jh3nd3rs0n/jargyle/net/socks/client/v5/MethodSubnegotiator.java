@@ -7,7 +7,6 @@ import java.net.Socket;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
 
 import org.ietf.jgss.GSSContext;
 import org.ietf.jgss.GSSException;
@@ -182,8 +181,7 @@ enum MethodSubnegotiator {
 			ProtectionLevel protectionLevelSelection =
 					this.negotiateProtectionLevel(
 							socket, context, socks5Client);
-			Optional<MessageProp> msgProp = 
-					protectionLevelSelection.getMessageProp();
+			MessageProp msgProp = protectionLevelSelection.getMessageProp();
 			GssSocket gssSocket = new GssSocket(socket, context, msgProp);
 			return new GssapiMethodEncapsulation(gssSocket);
 		}

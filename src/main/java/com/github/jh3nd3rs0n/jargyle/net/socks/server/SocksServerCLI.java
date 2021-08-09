@@ -13,7 +13,6 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -85,9 +84,9 @@ public final class SocksServerCLI extends CLI {
 	
 	public static void main(final String[] args) {
 		CLI socksServerCLI = new SocksServerCLI(args, false);
-		Optional<Integer> status = socksServerCLI.handleArgs();
-		if (status.isPresent() && status.get().intValue() != 0) { 
-			System.exit(status.get().intValue());
+		Integer status = socksServerCLI.handleArgs();
+		if (status != null && status.intValue() != 0) { 
+			System.exit(status.intValue());
 		}
 	}
 	
@@ -98,7 +97,7 @@ public final class SocksServerCLI extends CLI {
 	private final boolean posixlyCorrect;
 	private final String programBeginningUsage;
 	private boolean settingsHelpDisplayed;
-	private Optional<Integer> socks5UserpassauthUsersManagementModeStatus;
+	private Integer socks5UserpassauthUsersManagementModeStatus;
 	
 	public SocksServerCLI(final String[] args, final boolean posixCorrect) {
 		super(args, posixCorrect);
@@ -172,34 +171,34 @@ public final class SocksServerCLI extends CLI {
 	}
 	
 	@Override
-	protected Optional<Integer> afterHandleArgs() {
+	protected Integer afterHandleArgs() {
 		Configuration configuration = this.newConfiguration();
-		if (configuration == null) { return Optional.of(Integer.valueOf(-1)); }
+		if (configuration == null) { return Integer.valueOf(-1); }
 		return this.startSocksServer(configuration);
 	}
 	
 	@Override
-	protected Optional<Integer> afterHandleNext() {
+	protected Integer afterHandleNext() {
 		if (this.configurationFileXsdRequested
 				|| this.newConfigurationFileRequested
 				|| this.settingsHelpDisplayed) {
-			return Optional.of(Integer.valueOf(0));
+			return Integer.valueOf(0);
 		}
-		if (this.socks5UserpassauthUsersManagementModeStatus.isPresent()) {
+		if (this.socks5UserpassauthUsersManagementModeStatus != null) {
 			return this.socks5UserpassauthUsersManagementModeStatus;
 		}		
-		return Optional.empty();
+		return null;
 	}
 
 	@Override
-	protected Optional<Integer> beforeHandleArgs() {
+	protected Integer beforeHandleArgs() {
 		this.configurationFileXsdRequested = false;
 		this.modifiableConfiguration = ModifiableConfiguration.newInstance();
 		this.monitoredConfigurationFile = null;
 		this.newConfigurationFileRequested = false;
 		this.settingsHelpDisplayed = false;
-		this.socks5UserpassauthUsersManagementModeStatus = Optional.empty();
-		return Optional.empty();
+		this.socks5UserpassauthUsersManagementModeStatus = null;
+		return null;
 	}
 
 	@Option(
@@ -491,7 +490,7 @@ public final class SocksServerCLI extends CLI {
 	}
 	
 	@Override
-	protected Optional<Integer> handleThrowable(final Throwable t) {
+	protected Integer handleThrowable(final Throwable t) {
 		ArgMatey.OptionGroup settingsOptionGroup = this.getOptionGroups().get(
 				SETTING_OPTION_GROUP_ORDINAL); 
 		ArgMatey.Option settingsHelpOption = this.getOptionGroups().get(
@@ -515,12 +514,12 @@ public final class SocksServerCLI extends CLI {
 			System.err.printf("%s: %s%n", this.programName, e);
 			System.err.println(suggest);
 			e.printStackTrace(System.err);
-			return Optional.of(Integer.valueOf(-1));
+			return Integer.valueOf(-1);
 		}
 		System.err.printf("%s: %s%n", this.programName, t);
 		System.err.println(suggestion);
 		t.printStackTrace(System.err);
-		return Optional.of(Integer.valueOf(-1));
+		return Integer.valueOf(-1);
 	}
 	
 	private Configuration newConfiguration() {
@@ -674,8 +673,7 @@ public final class SocksServerCLI extends CLI {
 		this.monitoredConfigurationFile = file;
 	}
 	
-	private Optional<Integer> startSocksServer(
-			final Configuration configuration) {
+	private Integer startSocksServer(final Configuration configuration) {
 		SocksServer socksServer = new SocksServer(configuration);
 		try {
 			socksServer.start();
@@ -688,16 +686,16 @@ public final class SocksServerCLI extends CLI {
 							configuration.getSettings().getLastValue(
 									SettingSpec.HOST)), 
 					e);
-			return Optional.of(Integer.valueOf(-1));
+			return Integer.valueOf(-1);
 		} catch (IOException e) {
 			LOGGER.error("Error in starting SocksServer", e);
-			return Optional.of(Integer.valueOf(-1));
+			return Integer.valueOf(-1);
 		}
 		LOGGER.info(String.format(
 				"Listening on port %s at %s",
 				socksServer.getPort(),
 				socksServer.getHost()));
-		return Optional.empty();
+		return null;
 	}
 
 }

@@ -7,7 +7,6 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +31,7 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 	private static final Logger LOGGER = LoggerFactory.getLogger(
 			UdpAssociateCommandWorker.class);
 	
-	private final Optional<DtlsDatagramSocketFactory> clientFacingDtlsDatagramSocketFactory;
+	private final DtlsDatagramSocketFactory clientFacingDtlsDatagramSocketFactory;
 	private final Socket clientFacingSocket;
 	private final CommandWorkerContext commandWorkerContext;
 	private final String desiredDestinationAddress;
@@ -43,7 +42,7 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 	
 	public UdpAssociateCommandWorker(final CommandWorkerContext context) {
 		super(context);
-		Optional<DtlsDatagramSocketFactory> clientFacingDtlsDatagramSockFactory =
+		DtlsDatagramSocketFactory clientFacingDtlsDatagramSockFactory =
 				context.getClientFacingDtlsDatagramSocketFactory();
 		Socket clientFacingSock = context.getClientFacingSocket();
 		String desiredDestinationAddr =	context.getDesiredDestinationAddress();
@@ -353,10 +352,10 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 					udpClientHostInetAddress, udpClientPort);
 		}
 		if (clientFacingDatagramSck.isConnected() 
-				&& this.clientFacingDtlsDatagramSocketFactory.isPresent()) {
+				&& this.clientFacingDtlsDatagramSocketFactory != null) {
 			try {
 				clientFacingDatagramSck = 
-						this.clientFacingDtlsDatagramSocketFactory.get().newDatagramSocket(
+						this.clientFacingDtlsDatagramSocketFactory.newDatagramSocket(
 								clientFacingDatagramSck, 
 								udpClientHost, 
 								udpClientPort);

@@ -9,7 +9,6 @@ import java.io.SequenceInputStream;
 import java.net.Socket;
 import java.nio.channels.SocketChannel;
 import java.util.Objects;
-import java.util.Optional;
 
 import org.ietf.jgss.GSSContext;
 import org.ietf.jgss.GSSException;
@@ -235,19 +234,17 @@ public final class GssSocket extends FilterSocket {
 
 	private final GSSContext gssContext;
 	private InputStream inputStream;
-	private Optional<MessageProp> messageProp;
+	private MessageProp messageProp;
 	private OutputStream outputStream;
 	
 	public GssSocket(
 			final Socket sock,
 			final GSSContext context,
-			final Optional<MessageProp> prop) {
+			final MessageProp prop) {
 		super(sock);
-		Optional<MessageProp> prp = Optional.empty();
-		if (prop.isPresent()) {
-			prp = Optional.of(new MessageProp(
-					prop.get().getQOP(), 
-					prop.get().getPrivacy()));
+		MessageProp prp = null;
+		if (prop != null) {
+			prp = new MessageProp(prop.getQOP(), prop.getPrivacy());
 		}
 		this.gssContext = context;
 		this.messageProp = prp;
@@ -280,7 +277,7 @@ public final class GssSocket extends FilterSocket {
 			return this.inputStream;
 		}
 		InputStream inStream = super.getInputStream();
-		if (!this.messageProp.isPresent()) {
+		if (this.messageProp == null) {
 			this.inputStream = inStream;
 		} else {
 			this.inputStream = new GssUnwrappedInputStream(
@@ -289,13 +286,12 @@ public final class GssSocket extends FilterSocket {
 		return this.inputStream;
 	}
 	
-	public Optional<MessageProp> getMessageProp() {
-		if (!this.messageProp.isPresent()) {
+	public MessageProp getMessageProp() {
+		if (this.messageProp == null) {
 			return this.messageProp;
 		}
-		return Optional.of(new MessageProp(
-				this.messageProp.get().getQOP(), 
-				this.messageProp.get().getPrivacy()));
+		return new MessageProp(
+				this.messageProp.getQOP(), this.messageProp.getPrivacy());
 	}
 
 	@Override
@@ -304,11 +300,11 @@ public final class GssSocket extends FilterSocket {
 			return this.outputStream;
 		}
 		OutputStream outStream = super.getOutputStream();
-		if (!this.messageProp.isPresent()) {
+		if (this.messageProp == null) {
 			this.outputStream = outStream;
 		} else {
 			this.outputStream = new GssWrappedOutputStream(
-					this.gssContext, this.messageProp.get(), outStream);
+					this.gssContext, this.messageProp, outStream);
 		}
 		return this.outputStream;		
 	}

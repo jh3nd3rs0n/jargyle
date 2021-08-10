@@ -1820,7 +1820,7 @@ public final class ArgMatey {
 			Map<String, Option> optionMap = properties.getOptionMap();
 			Option opt = optionMap.get(option);
 			if (opt == null) {
-				this.getNextArgHandler().handle(arg, context);
+				this.baseHandle(arg, context);
 				return;
 			}
 			String optionArg = null;
@@ -3277,6 +3277,11 @@ public final class ArgMatey {
 			super(next);
 		}
 		
+		protected final void baseHandle(
+				final String arg, final ArgHandlerContext context) {
+			super.handle(arg, context);
+		}
+		
 		protected abstract boolean canHandle(
 				final String arg, final ArgHandlerContext context);
 		
@@ -3286,11 +3291,11 @@ public final class ArgMatey {
 			ArgHandlerContextProperties properties = 
 					new ArgHandlerContextProperties(context);
 			if (!properties.isOptionHandlingEnabled()) {
-				super.handle(arg, context);
+				this.baseHandle(arg, context);
 				return;
 			}
 			if (!this.canHandle(arg, context)) {
-				super.handle(arg, context);
+				this.baseHandle(arg, context);
 				return;
 			}
 			this.handleOption(arg, context);

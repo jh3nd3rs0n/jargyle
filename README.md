@@ -2096,9 +2096,11 @@ Unless otherwise stated, if a setting of the same name appears more than once on
 
 At the time of this writing, the SOCKS5 RESOLVE command is an additional SOCKS5 command made for Jargyle. It is not a part of the SOCKS5 protocol specification. 
 
-The RESOLVE command in a SOCKS5 request is represented by the byte `0x04`. 
+Any further expressions, names, and terms are based off the SOCKS5 protocol specification described in RFC [1928](https://datatracker.ietf.org/doc/html/rfc1928).
 
-A SOCKS5 request with the RESOLVE command should contain the provided domain name address. The provided port number of the SOCKS5 request can be of any integer value between 0 and 65535 (inclusive). A successful SOCKS5 reply must contain the IPv4 or IPv6 address of the domain name address of the SOCKS5 request. If the SOCKS5 request has an address of IPv4 or IPv6, the SOCKS5 reply must contain the same address of that address of the SOCKS5 request. The port number of the SOCKS5 reply may be 0 or the provided port number of the SOCKS5 request. After the SOCKS5 reply is sent, the connection is then closed.
+A SOCKS request with the RESOLVE command is represented as `X'04'` in the `CMD` field.  In the SOCKS request, the `ATYP` field SHOULD be `X'03'` (DOMAINNAME) and the `DST.ADDR` field SHOULD be a fully-qualified domain name with the first octet containing the number of octets of the name that follows. The `DST.PORT` field in the SOCKS request can be of any value in network octet order (`X'0000'` to `X'FFFF'` inclusive).
+
+In reply to a SOCKS request with the RESOLVE command, the `ATYP` field in the reply MUST be of any value other than `X'03'` (DOMAINNAME) and the `BND.ADDR` field in the reply MUST be the resolved address of the `DST.ADDR` field of the SOCKS request. The `BND.PORT` field in the reply can be of any value in network octet order (`X'0000'` to `X'FFFF'` inclusive). If the `ATYP` field and the `DST.ADDR` field of the SOCKS request is not a fully-qualified domain name, the `ATYP` field and the `BND.ADDR` field in the reply MUST be the same as the `ATYP` field and the `DST.ADDR` field of the SOCKS request. After the reply is sent, the connection between the client and the server is then closed.
 
 ## 6. Contact
 

@@ -15,81 +15,83 @@ import com.github.jh3nd3rs0n.jargyle.util.Criteria;
 import com.github.jh3nd3rs0n.jargyle.util.PositiveInteger;
 import com.github.jh3nd3rs0n.jargyle.util.Strings;
 
-public final class PropertySpecFactory {
+public final class PropertySpecHelper {
 	
-	public PropertySpec<Boolean> newBooleanPropertySpec(
+	public static PropertySpec<Boolean> newBooleanPropertySpec(
 			final String s, final Boolean defaultVal) {
 		return new BooleanPropertySpec(s, defaultVal);
 	}
 
-	public PropertySpec<Criteria> newCriteriaPropertySpec(
+	public static PropertySpec<Criteria> newCriteriaPropertySpec(
 			final String s, final Criteria defaultVal) {
 		return new CriteriaPropertySpec(s, defaultVal);
 	}
 
-	public PropertySpec<EncryptedPassword> newEncryptedPasswordPropertySpec(
+	public static PropertySpec<EncryptedPassword> newEncryptedPasswordPropertySpec(
 			final String s, final EncryptedPassword defaultVal) {
 		return new EncryptedPasswordPropertySpec(s, defaultVal);
 	}
 
-	public PropertySpec<File> newFilePropertySpec(
+	public static PropertySpec<File> newFilePropertySpec(
 			final String s, final File defaultVal) {
 		return new FilePropertySpec(s, defaultVal);
 	}
 
-	public PropertySpec<Host> newHostPropertySpec(
+	public static PropertySpec<Host> newHostPropertySpec(
 			final String s, final Host defaultVal) {
 		return new HostPropertySpec(s, defaultVal);
 	}
 
-	public PropertySpec<Methods> newMethodsPropertySpec(
+	public static PropertySpec<Methods> newMethodsPropertySpec(
 			final String s, final Methods defaultVal) {
 		return new MethodsPropertySpec(s, defaultVal);
 	}
 
-	public PropertySpec<Oid> newOidPropertySpec(
+	public static PropertySpec<Oid> newOidPropertySpec(
 			final String s, final String defaultVal) {
 		return new OidPropertySpec(s, defaultVal);
 	}
 
-	public PropertySpec<Port> newPortPropertySpec(
+	public static PropertySpec<Port> newPortPropertySpec(
 			final String s, final Port defaultVal) {
 		return new PortPropertySpec(s, defaultVal);
 	}
 
-	public PropertySpec<PositiveInteger> newPositiveIntegerPropertySpec(
+	public static PropertySpec<PositiveInteger> newPositiveIntegerPropertySpec(
 			final String s, final PositiveInteger defaultVal) {
 		return new PositiveIntegerPropertySpec(s, defaultVal);
 	}
 
-	public PropertySpec<ProtectionLevels> newProtectionLevelsPropertySpec(
+	public static PropertySpec<ProtectionLevels> newProtectionLevelsPropertySpec(
 			final String s, final ProtectionLevels defaultVal) {
 		return new ProtectionLevelsPropertySpec(s, defaultVal);
 	}
 
-	public PropertySpec<SocketSettings> newSocketSettingsPropertySpec(
+	public static PropertySpec<SocketSettings> newSocketSettingsPropertySpec(
 			final String s, final SocketSettings defaultVal) {
 		return new SocketSettingsPropertySpec(s, defaultVal);
 	}
 
-	public PropertySpec<String> newStringPropertySpec(
+	public static PropertySpec<String> newStringPropertySpec(
 			final String s, final String defaultVal) {
 		return new StringPropertySpec(s, defaultVal);
 	}
 
-	public PropertySpec<Strings> newStringsPropertySpec(
+	public static PropertySpec<Strings> newStringsPropertySpec(
 			final String s, final Strings defaultVal) {
 		return new StringsPropertySpec(s, defaultVal);
 	}
 
-	public PropertySpec<EncryptedPassword> newUserEncryptedPasswordPropertySpec(
+	public static PropertySpec<EncryptedPassword> newUserEncryptedPasswordPropertySpec(
 			final String s, final EncryptedPassword defaultVal) {
 		return new UserEncryptedPasswordPropertySpec(s, defaultVal);
 	}
 
-	public PropertySpec<String> newUsernamePropertySpec(
+	public static PropertySpec<String> newUsernamePropertySpec(
 			final String s, final String defaultVal) {
 		return new UsernamePropertySpec(s, defaultVal);
 	}
+	
+	private PropertySpecHelper() { }
 	
 }

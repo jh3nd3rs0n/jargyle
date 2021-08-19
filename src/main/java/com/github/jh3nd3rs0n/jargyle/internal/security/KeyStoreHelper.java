@@ -9,13 +9,11 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 
-import com.github.jh3nd3rs0n.jargyle.security.EncryptedPassword;
-
 public final class KeyStoreHelper {
 	
 	public static KeyStore getKeyStore(
 			final File keyStoreFile, 
-			final EncryptedPassword keyStorePassword, 
+			final char[] keyStorePassword, 
 			final String keyStoreType) throws IOException {
 		String type = keyStoreType;
 		if (type == null) {
@@ -28,7 +26,7 @@ public final class KeyStoreHelper {
 			throw new IllegalArgumentException(e);
 		}
 		try (InputStream in = new FileInputStream(keyStoreFile)) {
-			keyStore.load(in, keyStorePassword.getPassword());
+			keyStore.load(in, keyStorePassword);
 		} catch (NoSuchAlgorithmException e) {
 			throw new IOException(e);
 		} catch (CertificateException e) {

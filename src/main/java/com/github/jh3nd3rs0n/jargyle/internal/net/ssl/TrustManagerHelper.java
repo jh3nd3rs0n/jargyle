@@ -10,13 +10,12 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 
 import com.github.jh3nd3rs0n.jargyle.internal.security.KeyStoreHelper;
-import com.github.jh3nd3rs0n.jargyle.security.EncryptedPassword;
 
 public final class TrustManagerHelper {
 
 	public static TrustManager[] getTrustManagers(
 			final File trustStoreFile,
-			final EncryptedPassword trustStorePassword, 
+			final char[] trustStorePassword, 
 			final String trustStoreType) throws IOException {
 		TrustManagerFactory trustManagerFactory = null;
 		try {

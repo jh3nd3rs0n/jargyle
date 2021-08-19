@@ -11,13 +11,12 @@ import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
 
 import com.github.jh3nd3rs0n.jargyle.internal.security.KeyStoreHelper;
-import com.github.jh3nd3rs0n.jargyle.security.EncryptedPassword;
 
 public final class KeyManagerHelper {
 
 	public static KeyManager[] getKeyManagers(
 			final File keyStoreFile, 
-			final EncryptedPassword keyStorePassword, 
+			final char[] keyStorePassword, 
 			final String keyStoreType) throws IOException {
 		KeyManagerFactory keyManagerFactory = null;
 		try {
@@ -29,8 +28,7 @@ public final class KeyManagerHelper {
 		KeyStore keyStore = KeyStoreHelper.getKeyStore(
 				keyStoreFile, keyStorePassword, keyStoreType);		
 		try {
-			keyManagerFactory.init(
-					keyStore, keyStorePassword.getPassword());
+			keyManagerFactory.init(keyStore, keyStorePassword);
 		} catch (UnrecoverableKeyException e) {
 			throw new IOException(e);
 		} catch (KeyStoreException e) {

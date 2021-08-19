@@ -44,7 +44,9 @@ final class DtlsDatagramSocketFactoryImpl extends DtlsDatagramSocketFactory {
 			String keyStoreType = properties.getValue(
 					PropertySpec.DTLS_KEY_STORE_TYPE);
 			keyManagers = KeyManagerHelper.getKeyManagers(
-					keyStoreFile, keyStorePassword, keyStoreType);
+					keyStoreFile, 
+					keyStorePassword.getPassword(), 
+					keyStoreType);
 		}
 		File trustStoreFile = properties.getValue(
 				PropertySpec.DTLS_TRUST_STORE_FILE);
@@ -54,7 +56,9 @@ final class DtlsDatagramSocketFactoryImpl extends DtlsDatagramSocketFactory {
 			String trustStoreType = properties.getValue(
 					PropertySpec.DTLS_TRUST_STORE_TYPE);
 			trustManagers = TrustManagerHelper.getTrustManagers(
-					trustStoreFile, trustStorePassword, trustStoreType);
+					trustStoreFile, 
+					trustStorePassword.getPassword(), 
+					trustStoreType);
 		}
 		SSLContext context = null;
 		try {

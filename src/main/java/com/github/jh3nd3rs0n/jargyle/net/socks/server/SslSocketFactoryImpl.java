@@ -43,7 +43,9 @@ final class SslSocketFactoryImpl extends SslSocketFactory {
 			String keyStoreType = settings.getLastValue(
 					SettingSpec.SSL_KEY_STORE_TYPE);
 			keyManagers = KeyManagerHelper.getKeyManagers(
-					keyStoreFile, keyStorePassword, keyStoreType);
+					keyStoreFile, 
+					keyStorePassword.getPassword(), 
+					keyStoreType);
 		}
 		File trustStoreFile = settings.getLastValue(
 				SettingSpec.SSL_TRUST_STORE_FILE);
@@ -53,7 +55,9 @@ final class SslSocketFactoryImpl extends SslSocketFactory {
 			String trustStoreType = settings.getLastValue(
 					SettingSpec.SSL_TRUST_STORE_TYPE);			
 			trustManagers = TrustManagerHelper.getTrustManagers(
-					trustStoreFile, trustStorePassword, trustStoreType);
+					trustStoreFile, 
+					trustStorePassword.getPassword(), 
+					trustStoreType);
 		}
 		SSLContext context = null;
 		try {

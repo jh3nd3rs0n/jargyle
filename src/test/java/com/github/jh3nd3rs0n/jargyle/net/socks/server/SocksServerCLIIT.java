@@ -10,6 +10,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.github.jh3nd3rs0n.argmatey.ArgMatey.CLI;
+import com.github.jh3nd3rs0n.argmatey.ArgMatey.TerminationRequestedException;
 import com.github.jh3nd3rs0n.jargyle.FilesHelper;
 import com.github.jh3nd3rs0n.jargyle.IoHelper;
 import com.github.jh3nd3rs0n.jargyle.ResourceHelper;
@@ -66,7 +68,11 @@ public class SocksServerCLIIT {
 				"--new-config-file=".concat(
 						this.combinedConfigurationFile.toAbsolutePath().toString())
 		};
-		SocksServerCLI.main(args);
+		CLI socksServerCLI = new SocksServerCLI(args, false);
+		try {
+			socksServerCLI.handleArgs();
+		} catch (TerminationRequestedException e) {
+		}
 		String expectedCombinedConfigurationFileContents =
 				ResourceHelper.getResourceAsString(
 						ResourceNameConstants.JARGYLE_NET_SOCKS_SERVER_COMBINED_CONFIGURATION_FILE).replace(
@@ -88,7 +94,11 @@ public class SocksServerCLIIT {
 				"--new-config-file=".concat(
 						this.configurationFile.toAbsolutePath().toString())
 		};
-		SocksServerCLI.main(args);
+		CLI socksServerCLI = new SocksServerCLI(args, false);
+		try {
+			socksServerCLI.handleArgs();
+		} catch (TerminationRequestedException e) {
+		}
 		String expectedConfigurationFileContents =
 				ResourceHelper.getResourceAsString(
 						ResourceNameConstants.JARGYLE_NET_SOCKS_SERVER_CONFIGURATION_FILE).replace(
@@ -107,7 +117,11 @@ public class SocksServerCLIIT {
 				"--new-config-file=".concat(
 						this.emptyConfigurationFile.toAbsolutePath().toString())
 		};
-		SocksServerCLI.main(args);
+		CLI socksServerCLI = new SocksServerCLI(args, false);
+		try {
+			socksServerCLI.handleArgs();
+		} catch (TerminationRequestedException e) {
+		}
 		String expectedEmptyConfigurationFileContents =
 				ResourceHelper.getResourceAsString(
 						ResourceNameConstants.JARGYLE_NET_SOCKS_SERVER_EMPTY_CONFIGURATION_FILE).replace(
@@ -129,7 +143,11 @@ public class SocksServerCLIIT {
 				"--new-config-file=".concat(
 						this.supplementedConfigurationFile.toAbsolutePath().toString())
 		};
-		SocksServerCLI.main(args);
+		CLI socksServerCLI = new SocksServerCLI(args, false);
+		try {
+			socksServerCLI.handleArgs();
+		} catch (TerminationRequestedException e) {
+		}
 		String expectedSupplementedConfigurationFileContents =
 				ResourceHelper.getResourceAsString(
 						ResourceNameConstants.JARGYLE_NET_SOCKS_SERVER_SUPPLEMENTED_CONFIGURATION_FILE).replace(

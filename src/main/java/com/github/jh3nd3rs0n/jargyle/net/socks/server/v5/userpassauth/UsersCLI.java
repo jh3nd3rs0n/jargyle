@@ -19,6 +19,7 @@ import com.github.jh3nd3rs0n.argmatey.ArgMatey.Annotations.Option;
 import com.github.jh3nd3rs0n.argmatey.ArgMatey.Annotations.Ordinal;
 import com.github.jh3nd3rs0n.argmatey.ArgMatey.CLI;
 import com.github.jh3nd3rs0n.argmatey.ArgMatey.OptionType;
+import com.github.jh3nd3rs0n.argmatey.ArgMatey.TerminationRequestedException;
 import com.github.jh3nd3rs0n.jargyle.internal.help.HelpText;
 import com.github.jh3nd3rs0n.jargyle.internal.io.ConsoleWrapper;
 import com.github.jh3nd3rs0n.jargyle.net.socks.server.SystemPropertyNameConstants;
@@ -240,9 +241,10 @@ public final class UsersCLI extends CLI {
 	
 	public static void main(final String[] args) {
 		UsersCLI usersCLI = new UsersCLI(null, null, args, false);
-		Integer status = usersCLI.handleArgs();
-		if (status != null && status.intValue() != 0) { 
-			System.exit(status.intValue());
+		try {
+			usersCLI.handleArgs();
+		} catch (TerminationRequestedException e) {
+			System.exit(e.getExitStatusCode());
 		}
 	}
 	
@@ -250,8 +252,6 @@ public final class UsersCLI extends CLI {
 	private Command command;
 	private final String programBeginningUsage;
 	private final String suggestion;
-	
-	private boolean xsdRequested;
 	
 	public UsersCLI(
 			final String progName, 
@@ -282,43 +282,34 @@ public final class UsersCLI extends CLI {
 				prgBeginningUsage, 
 				helpOption.getUsage());		
 		this.programBeginningUsage = prgBeginningUsage;
-		this.programName = prgName;
 		this.suggestion = suggest;
+		this.setProgramName(prgName);		
 	}
 	
 	@Override
-	protected Integer afterHandleArgs() {
+	protected void afterHandleArgs() throws TerminationRequestedException {
 		if (this.command == null) {
-			System.err.printf("%s: command must be provided%n", this.programName);
+			System.err.printf(
+					"%s: command must be provided%n", this.getProgramName());
 			System.err.println(this.suggestion);
-			return Integer.valueOf(-1);
+			throw new TerminationRequestedException(-1);
 		}
 		try {
 			this.command.invoke(this.argList.toArray(
 					new String[this.argList.size()]));
 		} catch (Exception e) {
-			System.err.printf("%s: %s%n", this.programName, e);
+			System.err.printf("%s: %s%n", this.getProgramName(), e);
 			System.err.println(this.suggestion);
 			e.printStackTrace(System.err);
-			return Integer.valueOf(-1);
+			throw new TerminationRequestedException(-1);
 		}
-		return Integer.valueOf(0);
+		throw new TerminationRequestedException(0);
 	}
 	
 	@Override
-	protected Integer afterHandleNext() {
-		if (this.xsdRequested) {
-			return Integer.valueOf(0);
-		}
-		return null;
-	}
-	
-	@Override
-	protected Integer beforeHandleArgs() {
+	protected void beforeHandleArgs() {
 		this.argList = new ArrayList<String>();
 		this.command = null;
-		this.xsdRequested = false;		
-		return null;
 	}
 	
 	@Option(
@@ -332,7 +323,7 @@ public final class UsersCLI extends CLI {
 	)
 	@Ordinal(HELP_OPTION_GROUP_ORDINAL)
 	@Override
-	protected void displayProgramHelp() {
+	protected void displayProgramHelp() throws TerminationRequestedException {
 		ArgMatey.Option helpOption = this.getOptionGroups().get(
 				HELP_OPTION_GROUP_ORDINAL).get(0);
 		ArgMatey.Option xsdOption = this.getOptionGroups().get(
@@ -360,7 +351,8 @@ public final class UsersCLI extends CLI {
 		System.out.println();
 		System.out.println("OPTIONS:");
 		this.getOptionGroups().printHelpText();
-		System.out.println();		
+		System.out.println();
+		throw new TerminationRequestedException(0);
 	}
 	
 	@Override
@@ -378,11 +370,12 @@ public final class UsersCLI extends CLI {
 	}
 	
 	@Override
-	protected Integer handleThrowable(final Throwable t) {
-		System.err.printf("%s: %s%n", this.programName, t);
+	protected void handleThrowable(final Throwable t) 
+			throws TerminationRequestedException {
+		System.err.printf("%s: %s%n", this.getProgramName(), t);
 		System.err.println(this.suggestion);
 		t.printStackTrace(System.err);
-		return Integer.valueOf(-1);		
+		throw new TerminationRequestedException(-1);
 	}
 
 	@Option(
@@ -395,10 +388,10 @@ public final class UsersCLI extends CLI {
 			type = OptionType.POSIX
 	)
 	@Ordinal(XSD_OPTION_GROUP_ORDINAL)
-	private void printXsd() throws IOException {
+	private void printXsd() throws IOException, TerminationRequestedException {
 		Users.generateXsd(System.out);
 		System.out.flush();
-		this.xsdRequested = true;
+		throw new TerminationRequestedException(0);
 	}
 	
 }

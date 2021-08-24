@@ -26,6 +26,7 @@ import com.github.jh3nd3rs0n.argmatey.ArgMatey.IllegalOptionArgException;
 import com.github.jh3nd3rs0n.argmatey.ArgMatey.OptionType;
 import com.github.jh3nd3rs0n.argmatey.ArgMatey.OptionUsageParams;
 import com.github.jh3nd3rs0n.argmatey.ArgMatey.OptionUsageProvider;
+import com.github.jh3nd3rs0n.argmatey.ArgMatey.TerminationRequestedException;
 import com.github.jh3nd3rs0n.jargyle.internal.help.HelpText;
 import com.github.jh3nd3rs0n.jargyle.internal.io.ConsoleWrapper;
 import com.github.jh3nd3rs0n.jargyle.net.SocketSettingSpec;
@@ -74,9 +75,7 @@ public final class SocksServerCLI extends CLI {
 	private static final int NEW_CONFIG_FILE_OPTION_GROUP_ORDINAL = 13;
 	private static final int SETTING_OPTION_GROUP_ORDINAL = 14;
 	private static final int SETTINGS_HELP_OPTION_GROUP_ORDINAL = 15;
-	
 	private static final int SOCKS5_USERPASSAUTH_USERS_OPTION_GROUP_ORDINAL = 16;
-	
 	private static final int VERSION_OPTION_GROUP_ORDINAL = 17;
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(
@@ -84,20 +83,17 @@ public final class SocksServerCLI extends CLI {
 	
 	public static void main(final String[] args) {
 		CLI socksServerCLI = new SocksServerCLI(args, false);
-		Integer status = socksServerCLI.handleArgs();
-		if (status != null && status.intValue() != 0) { 
-			System.exit(status.intValue());
+		try {
+			socksServerCLI.handleArgs();
+		} catch (TerminationRequestedException e) {
+			System.exit(e.getExitStatusCode());
 		}
 	}
 	
-	private boolean configurationFileXsdRequested;
 	private ModifiableConfiguration modifiableConfiguration;
 	private String monitoredConfigurationFile;
-	private boolean newConfigurationFileRequested;
 	private final boolean posixlyCorrect;
 	private final String programBeginningUsage;
-	private boolean settingsHelpDisplayed;
-	private Integer socks5UserpassauthUsersManagementModeStatus;
 	
 	public SocksServerCLI(final String[] args, final boolean posixCorrect) {
 		super(args, posixCorrect);
@@ -113,7 +109,7 @@ public final class SocksServerCLI extends CLI {
 		}
 		this.posixlyCorrect = posixCorrect;
 		this.programBeginningUsage = progBeginningUsage;
-		this.programName = progName;
+		this.setProgramName(progName);
 	}
 	
 	@Option(
@@ -171,34 +167,15 @@ public final class SocksServerCLI extends CLI {
 	}
 	
 	@Override
-	protected Integer afterHandleArgs() {
+	protected void afterHandleArgs() throws TerminationRequestedException {
 		Configuration configuration = this.newConfiguration();
-		if (configuration == null) { return Integer.valueOf(-1); }
-		return this.startSocksServer(configuration);
-	}
-	
-	@Override
-	protected Integer afterHandleNext() {
-		if (this.configurationFileXsdRequested
-				|| this.newConfigurationFileRequested
-				|| this.settingsHelpDisplayed) {
-			return Integer.valueOf(0);
-		}
-		if (this.socks5UserpassauthUsersManagementModeStatus != null) {
-			return this.socks5UserpassauthUsersManagementModeStatus;
-		}		
-		return null;
+		this.startSocksServer(configuration);
 	}
 
 	@Override
-	protected Integer beforeHandleArgs() {
-		this.configurationFileXsdRequested = false;
+	protected void beforeHandleArgs() {
 		this.modifiableConfiguration = ModifiableConfiguration.newInstance();
 		this.monitoredConfigurationFile = null;
-		this.newConfigurationFileRequested = false;
-		this.settingsHelpDisplayed = false;
-		this.socks5UserpassauthUsersManagementModeStatus = null;
-		return null;
 	}
 
 	@Option(
@@ -212,7 +189,7 @@ public final class SocksServerCLI extends CLI {
 	)
 	@Ordinal(HELP_OPTION_GROUP_ORDINAL)
 	@Override
-	protected void displayProgramHelp() {
+	protected void displayProgramHelp() throws TerminationRequestedException {
 		ArgMatey.Option configFileXsdOption = this.getOptionGroups().get(
 				CONFIG_FILE_XSD_OPTION_GROUP_ORDINAL).get(0);
 		ArgMatey.Option helpOption = this.getOptionGroups().get(
@@ -249,7 +226,8 @@ public final class SocksServerCLI extends CLI {
 		System.out.println();
 		System.out.println("OPTIONS:");
 		this.getOptionGroups().printHelpText();
-		System.out.println();		
+		System.out.println();
+		throw new TerminationRequestedException(0);
 	}
 	
 	@Option(
@@ -263,12 +241,14 @@ public final class SocksServerCLI extends CLI {
 	)
 	@Ordinal(VERSION_OPTION_GROUP_ORDINAL)	
 	@Override
-	protected void displayProgramVersion() { 
+	protected void displayProgramVersion() 
+			throws TerminationRequestedException { 
 		Package pkg = this.getClass().getPackage();
 		System.out.printf(
 				"%s %s%n", 
 				pkg.getSpecificationTitle(), 
-				pkg.getSpecificationVersion());		
+				pkg.getSpecificationVersion());
+		throw new TerminationRequestedException(0);
 	}
 		
 	@Option(
@@ -278,7 +258,8 @@ public final class SocksServerCLI extends CLI {
 			type = OptionType.GNU_LONG
 	)
 	@Ordinal(SOCKS5_USERPASSAUTH_USERS_OPTION_GROUP_ORDINAL)
-	private void doSocks5UserpassauthUsersManagementMode() {
+	private void doSocks5UserpassauthUsersManagementMode() 
+			throws TerminationRequestedException {
 		ArgMatey.Option socks5UserpassauthUsersOption = 
 				this.getOptionGroups().get(
 						SOCKS5_USERPASSAUTH_USERS_OPTION_GROUP_ORDINAL).get(0);
@@ -293,11 +274,11 @@ public final class SocksServerCLI extends CLI {
 		String[] remainingArgs = remainingArgList.toArray(
 				new String[remainingArgList.size()]);
 		CLI usersCLI = new UsersCLI(
-				this.programName, 
+				this.getProgramName(), 
 				newProgramBeginningUsage, 
 				remainingArgs, 
 				this.posixlyCorrect);
-		this.socks5UserpassauthUsersManagementModeStatus = usersCLI.handleArgs();
+		usersCLI.handleArgs();
 	}
 	
 	@Option(
@@ -490,7 +471,8 @@ public final class SocksServerCLI extends CLI {
 	}
 	
 	@Override
-	protected Integer handleThrowable(final Throwable t) {
+	protected void handleThrowable(final Throwable t) 
+			throws TerminationRequestedException {
 		ArgMatey.OptionGroup settingsOptionGroup = this.getOptionGroups().get(
 				SETTING_OPTION_GROUP_ORDINAL); 
 		ArgMatey.Option settingsHelpOption = this.getOptionGroups().get(
@@ -511,18 +493,19 @@ public final class SocksServerCLI extends CLI {
 			if (settingsOptionGroup.toList().contains(e.getOption())) {
 				suggest = settingsHelpSuggestion;
 			}
-			System.err.printf("%s: %s%n", this.programName, e);
+			System.err.printf("%s: %s%n", this.getProgramName(), e);
 			System.err.println(suggest);
 			e.printStackTrace(System.err);
-			return Integer.valueOf(-1);
+			throw new TerminationRequestedException(-1);
 		}
-		System.err.printf("%s: %s%n", this.programName, t);
+		System.err.printf("%s: %s%n", this.getProgramName(), t);
 		System.err.println(suggestion);
 		t.printStackTrace(System.err);
-		return Integer.valueOf(-1);
+		throw new TerminationRequestedException(-1);
 	}
 	
-	private Configuration newConfiguration() {
+	private Configuration newConfiguration() 
+			throws TerminationRequestedException {
 		Configuration configuration = null;
 		if (this.monitoredConfigurationFile == null) {
 			configuration = ImmutableConfiguration.newInstance(
@@ -534,9 +517,9 @@ public final class SocksServerCLI extends CLI {
 				configurationProvider = 
 						XmlFileSourceConfigurationProvider.newInstance(f);
 			} catch (IllegalArgumentException e) {
-				System.err.printf("%s: %s%n", this.programName, e);
+				System.err.printf("%s: %s%n", this.getProgramName(), e);
 				e.printStackTrace(System.err);
-				return null;
+				throw new TerminationRequestedException(-1);
 			}
 			configuration = MutableConfiguration.newInstance(
 					configurationProvider);
@@ -556,7 +539,8 @@ public final class SocksServerCLI extends CLI {
 			type = OptionType.POSIX
 	)
 	@Ordinal(NEW_CONFIG_FILE_OPTION_GROUP_ORDINAL)
-	private void newConfigurationFile(final String file) throws IOException {
+	private void newConfigurationFile(final String file) 
+			throws IOException, TerminationRequestedException {
 		ImmutableConfiguration immutableConfiguration = 
 				ImmutableConfiguration.newInstance(
 						this.modifiableConfiguration);
@@ -591,7 +575,7 @@ public final class SocksServerCLI extends CLI {
 					new File(file).toPath(), 
 					StandardCopyOption.REPLACE_EXISTING);
 		}
-		this.newConfigurationFileRequested = true;
+		throw new TerminationRequestedException(0);
 	}
 	
 	@Option(
@@ -604,10 +588,11 @@ public final class SocksServerCLI extends CLI {
 			type = OptionType.POSIX
 	)
 	@Ordinal(CONFIG_FILE_XSD_OPTION_GROUP_ORDINAL)
-	private void printConfigurationFileXsd() throws IOException {
+	private void printConfigurationFileXsd() 
+			throws IOException, TerminationRequestedException {
 		ImmutableConfiguration.generateXsd(System.out);
 		System.out.flush();
-		this.configurationFileXsdRequested = true;
+		throw new TerminationRequestedException(0);
 	}
 	
 	private void printHelpText(final Class<?> cls) {
@@ -636,7 +621,7 @@ public final class SocksServerCLI extends CLI {
 			type = OptionType.POSIX
 	)
 	@Ordinal(SETTINGS_HELP_OPTION_GROUP_ORDINAL)
-	private void printSettingsHelp() {
+	private void printSettingsHelp() throws TerminationRequestedException {
 		System.out.println("SETTINGS:");
 		this.printHelpText(SettingSpec.class);
 		System.out.println("SCHEMES:");
@@ -647,7 +632,7 @@ public final class SocksServerCLI extends CLI {
 		this.printHelpText(ProtectionLevel.class);
 		System.out.println("SOCKS5_METHODS:");
 		this.printHelpText(Method.class);		
-		this.settingsHelpDisplayed = true;
+		throw new TerminationRequestedException(0);
 	}
 		
 	private EncryptedPassword readEncryptedPassword(final String prompt) {
@@ -673,7 +658,8 @@ public final class SocksServerCLI extends CLI {
 		this.monitoredConfigurationFile = file;
 	}
 	
-	private Integer startSocksServer(final Configuration configuration) {
+	private void startSocksServer(final Configuration configuration) 
+			throws TerminationRequestedException {
 		SocksServer socksServer = new SocksServer(configuration);
 		try {
 			socksServer.start();
@@ -686,16 +672,15 @@ public final class SocksServerCLI extends CLI {
 							configuration.getSettings().getLastValue(
 									SettingSpec.HOST)), 
 					e);
-			return Integer.valueOf(-1);
+			throw new TerminationRequestedException(-1);
 		} catch (IOException e) {
 			LOGGER.error("Error in starting SocksServer", e);
-			return Integer.valueOf(-1);
+			throw new TerminationRequestedException(-1);
 		}
 		LOGGER.info(String.format(
 				"Listening on port %s at %s",
 				socksServer.getPort(),
 				socksServer.getHost()));
-		return null;
 	}
 
 }

@@ -58,14 +58,6 @@ import java.util.TreeSet;
 public final class ArgMatey {
 
 	public static final class Annotations {
-
-		@Retention(RetentionPolicy.RUNTIME)
-		@Target({ElementType.METHOD})
-		static @interface DisplaysProgramHelp { }
-
-		@Retention(RetentionPolicy.RUNTIME)
-		@Target({ElementType.METHOD})
-		static @interface DisplaysProgramVersion { }
 		
 		@Repeatable(Options.class)
 		@Retention(RetentionPolicy.RUNTIME)
@@ -517,60 +509,41 @@ public final class ArgMatey {
 		
 		private ArgsParser argsParser;
 		private final CLIClass cliClass;
-		private boolean displayedProgramHelp;
-		private boolean displayedProgramVersion;
 		private final boolean posixlyCorrect;
-		protected String programDoc;
-		protected String programName;
-		protected String programOperandsUsage;
-		protected String programVersion;
+		private String programDoc;
+		private String programName;
+		private String programOperandsUsage;
+		private String programVersion;
 		
 		public CLI(final String[] args, final boolean posixCorrect) {
-			CLIClass cls = CLIClass.newInstance(this.getClass());
+			Class<? extends CLI> cls = this.getClass();
+			CLIClass cliCls = CLIClass.newInstance(cls);
 			ArgsParser parser = ArgsParser.newInstance(
-					args, cls.getOptionGroups(), posixCorrect);
+					args, cliCls.getOptionGroups(), posixCorrect);
 			this.argsParser = parser;
-			this.cliClass = cls;
-			this.displayedProgramHelp = false;
-			this.displayedProgramVersion = false;			
+			this.cliClass = cliCls;
 			this.posixlyCorrect = posixCorrect;
 			this.programDoc = null;
-			this.programName = null;
+			this.programName = cls.getName();
 			this.programOperandsUsage = null;
-			this.programVersion = null;
+			this.programVersion = cls.getName();
 		}
 		
-		protected Integer afterHandleArgs() {
-			return null;
-		}
-		
-		protected Integer afterHandleNext() {
-			return null;
-		}
-		
-		protected Integer beforeHandleArgs() {
-			return null;
-		}
-		
-		protected Integer beforeHandleNext() {
-			return null;
-		}
-		
-		public final boolean displayedProgramHelp() {
-			return this.displayedProgramHelp;
-		}
-		
-		public final boolean displayedProgramVersion() {
-			return this.displayedProgramVersion;
-		}
-		
-		@Annotations.DisplaysProgramHelp
+		protected void afterHandleArgs() throws TerminationRequestedException { }
+
+		protected void afterHandleNext() throws TerminationRequestedException { }
+
+		protected void beforeHandleArgs() throws TerminationRequestedException { }
+
+		protected void beforeHandleNext() throws TerminationRequestedException { }
+
 		@Annotations.Option(
 				doc = "Display this help and exit",
 				name = "help",
 				type = OptionType.GNU_LONG
 		)
-		protected void displayProgramHelp() {
+		protected void displayProgramHelp() 
+				throws TerminationRequestedException {
 			this.displayProgramUsage();
 			if (this.programDoc != null) {
 				System.out.println(this.programDoc);
@@ -589,14 +562,12 @@ public final class ArgMatey {
 				this.getOptionGroups().printHelpText();
 				System.out.println();
 			}
+			throw new TerminationRequestedException(0);
 		}
-		
-		protected void displayProgramUsage() {
-			String progName = this.programName;
-			if (progName == null) {
-				progName = this.getClass().getName();
-			}
-			System.out.printf("Usage: %s", progName);
+
+		protected void displayProgramUsage() 
+				throws TerminationRequestedException {
+			System.out.printf("Usage: %s", this.getProgramName());
 			int displayableOptionCount = 0;
 			for (OptionGroup optionGroup : this.getOptionGroups().toList()) {
 				displayableOptionCount += optionGroup.toDisplayableList().size();
@@ -609,22 +580,16 @@ public final class ArgMatey {
 			}
 			System.out.println();			
 		}
-		
-		@Annotations.DisplaysProgramVersion
+
 		@Annotations.Option(
 				doc = "Display version information and exit",
 				name = "version",
 				type = OptionType.GNU_LONG
 		)
-		protected void displayProgramVersion() {
-			String progVersion = this.programVersion;
-			if (progVersion == null) {
-				progVersion = this.programName;
-				if (progVersion == null) {
-					progVersion = this.getClass().getName();
-				}
-			}
-			System.out.println(progVersion);
+		protected void displayProgramVersion() 
+				throws TerminationRequestedException {
+			System.out.println(this.getProgramVersion());
+			throw new TerminationRequestedException(0);
 		}
 		
 		protected final int getArgCharIndex() {
@@ -647,42 +612,43 @@ public final class ArgMatey {
 			return this.argsParser.getParseResultHolder();
 		}
 		
-		public final Integer handleArgs() {
+		protected final String getProgramDoc() {
+			return this.programDoc;
+		}
+		
+		protected final String getProgramName() {
+			return this.programName;
+		}
+		
+		protected final String getProgramOperandsUsage() {
+			return this.programOperandsUsage;
+		}
+		
+		protected final String getProgramVersion() {
+			return this.programVersion;
+		}
+		
+		public final void handleArgs() throws TerminationRequestedException {
 			this.argsParser = ArgsParser.newInstance(
 					this.argsParser.getArgs(), 
 					this.argsParser.getOptionGroups(), 
 					this.posixlyCorrect);
-			this.displayedProgramHelp = false;
-			this.displayedProgramVersion = false;
-			Integer status = this.beforeHandleArgs();
-			if (status != null) {
-				return status;
-			}
+			this.beforeHandleArgs();
 			while (this.hasNext()) {
-				status = this.beforeHandleNext();
-				if (status != null) {
-					return status;
-				}
+				this.beforeHandleNext();
 				try {
 					this.handleNext();
+				} catch (TerminationRequestedException e) {
+					throw e;
 				} catch (Throwable t) {
-					status = this.handleThrowable(t);
-					if (status != null) {
-						return status;
-					}
+					this.handleThrowable(t);
 				}
-				if (this.displayedProgramHelp || this.displayedProgramVersion) {
-					return Integer.valueOf(0);
-				}
-				status = this.afterHandleNext();
-				if (status != null) {
-					return status;
-				}
+				this.afterHandleNext();
 			}
-			return this.afterHandleArgs();
+			this.afterHandleArgs(); 
 		}
 		
-		private final void handleNext() {
+		private final void handleNext() throws TerminationRequestedException {
 			this.argsParser.parseNext();
 			ParseResultHolder parseResultHolder = 
 					this.argsParser.getParseResultHolder();
@@ -703,29 +669,33 @@ public final class ArgMatey {
 				OptionAnnotatedMethod optionAnnotatedMethod = 
 						optionAnnotatedMethodMap.get(option);
 				if (optionAnnotatedMethod != null) {
-					optionAnnotatedMethod.invoke(this, optionOccurrence);
-					if (optionAnnotatedMethod.toMethod().equals(
-							this.cliClass.getDisplayProgramHelpMethod())) {
-						this.displayedProgramHelp = true;
-					}
-					if (optionAnnotatedMethod.toMethod().equals(
-							this.cliClass.getDisplayProgramVersionMethod())) {
-						this.displayedProgramVersion = true;
+					try {
+						optionAnnotatedMethod.invoke(this, optionOccurrence);
+					} catch (InvocationTargetException e) {
+						Throwable cause = e.getCause();
+						if (cause instanceof IllegalArgumentException) {
+							throw new IllegalOptionArgException(
+									option, 
+									optionOccurrence.getOptionArg().toString(),
+									cause);
+						}
+						if (cause instanceof TerminationRequestedException) {
+							throw (TerminationRequestedException) cause;
+						}
+						throw new AssertionError(e);
 					}
 				}
 			}
 		}
 		
-		protected void handleNonparsedArg(final String nonparsedArg) { }
+		protected void handleNonparsedArg(final String nonparsedArg) 
+				throws TerminationRequestedException { }
 		
-		protected Integer handleThrowable(final Throwable t) {
-			String progName = this.programName;
-			if (progName == null) {
-				progName = this.getClass().getName();
-			}
-			System.err.printf("%s: %s%n", progName, t);
+		protected void handleThrowable(final Throwable t) 
+				throws TerminationRequestedException {
+			System.err.printf("%s: %s%n", this.getProgramName(), t);
 			t.printStackTrace(System.err);
-			return Integer.valueOf(-1);
+			throw new TerminationRequestedException(-1);
 		}
 		
 		protected final boolean hasNext() {
@@ -734,6 +704,23 @@ public final class ArgMatey {
 		
 		protected final String next() {
 			return this.argsParser.next();
+		}
+		
+		protected final void setProgramDoc(final String progDoc) {
+			this.programDoc = progDoc;
+		}
+		
+		protected final void setProgramName(final String progName) {
+			this.programName = Objects.requireNonNull(progName);
+		}
+		
+		protected final void setProgramOperandsUsage(
+				final String progOperandsUsage) {
+			this.programOperandsUsage = progOperandsUsage;
+		}
+		
+		protected final void setProgramVersion(final String progVersion) {
+			this.programVersion = Objects.requireNonNull(progVersion);
 		}
 		
 		@Override
@@ -757,18 +744,15 @@ public final class ArgMatey {
 				Class<?>[] parameterTypes1 = arg1.getParameterTypes();
 				int length0 = parameterTypes0.length;
 				int length1 = parameterTypes1.length;
-				int maxLength = (length0 >= length1) ? length0 : length1;
-				for (int i = 0; i < maxLength; i++) {
-					if (i == length0 || i == length1) {
-						return length0 - length1;
-					}
+				int minLength = (length0 <= length1) ? length0 : length1;
+				for (int i = 0; i < minLength; i++) {
 					Class<?> parameterType0 = parameterTypes0[i];
 					Class<?> parameterType1 = parameterTypes1[i];
 					value = parameterType0.getName().compareTo(
 							parameterType1.getName());
 					if (value != 0) { return value; } 
 				}
-				return 0;
+				return length0 - length1;
 			}
 			
 		}
@@ -782,47 +766,26 @@ public final class ArgMatey {
 			public int compare(
 					final OptionAnnotatedMethod arg0, 
 					final OptionAnnotatedMethod arg1) {
-				int diff = arg0.getOrdinal() - arg1.getOrdinal();
-				if (diff != 0) { return diff; }
+				int value = arg0.getOrdinal() - arg1.getOrdinal();
+				if (value != 0) { return value; }
 				List<Option> options0 = arg0.getOptionGroup().toDisplayableList();
 				List<Option> options1 = arg1.getOptionGroup().toDisplayableList();
 				int size0 = options0.size();
 				int size1 = options1.size();
-				int maxSize = (size0 >= size1) ? size0 : size1;
-				for (int i = 0; i < maxSize; i++) {
-					if (i == size0 || i == size1) {
-						return size0 - size1;
-					}
+				int minSize = (size0 <= size1) ? size0 : size1;
+				for (int i = 0; i < minSize; i++) {
 					Option option0 = options0.get(i);
 					Option option1 = options1.get(i);
-					int value = option0.getName().compareTo(option1.getName());
+					value = option0.getName().compareTo(option1.getName());
 					if (value != 0) { return value; } 
 				}
-				return 0;
+				value = size0 - size1;
+				if (value != 0) { return value; }
+				Method method0 = arg0.toMethod();
+				Method method1 = arg1.toMethod();
+				return MethodComparator.INSTANCE.compare(method0, method1);
 			}
 			
-		}
-		
-		private static final Method DECLARED_DISPLAY_PROGRAM_HELP_METHOD;
-		private static final Method DECLARED_DISPLAY_PROGRAM_VERSION_METHOD;
-		
-		static {
-			Method displayProgramHelpMethod = null;
-			Method displayProgramVersionMethod = null;
-			List<Method> cliClassDeclaredMethods = Arrays.asList(
-					CLI.class.getDeclaredMethods());
-			for (Method cliClassDeclaredMethod : cliClassDeclaredMethods) {
-				if (cliClassDeclaredMethod.isAnnotationPresent(
-						Annotations.DisplaysProgramHelp.class)) {
-					displayProgramHelpMethod = cliClassDeclaredMethod;
-				}
-				if (cliClassDeclaredMethod.isAnnotationPresent(
-						Annotations.DisplaysProgramVersion.class)) {
-					displayProgramVersionMethod = cliClassDeclaredMethod;
-				}
-			}
-			DECLARED_DISPLAY_PROGRAM_HELP_METHOD = displayProgramHelpMethod;
-			DECLARED_DISPLAY_PROGRAM_VERSION_METHOD = displayProgramVersionMethod; 
 		}
 		
 		private static List<Class<?>> getHierarchy(final Class<?> cls) {
@@ -849,8 +812,6 @@ public final class ArgMatey {
 		}
 		
 		private final Class<? extends CLI> cls;
-		private final Method displayProgramHelpMethod;
-		private final Method displayProgramVersionMethod;
 		private final Map<Option, OptionAnnotatedMethod> optionAnnotatedMethodMap;
 		private final List<OptionAnnotatedMethod> optionAnnotatedMethods;
 		private final OptionGroups optionGroups;
@@ -860,18 +821,8 @@ public final class ArgMatey {
 					new HashMap<Option, OptionAnnotatedMethod>();
 			List<OptionAnnotatedMethod> optAnnotatedMethods = 
 					new ArrayList<OptionAnnotatedMethod>();
-			Method displayProgHelpMethod = null;
-			Method displayProgVersionMethod = null;
 			Set<Method> methods = getMethods(c);
 			for (Method method : methods) {
-				if (MethodComparator.INSTANCE.compare(
-						DECLARED_DISPLAY_PROGRAM_HELP_METHOD, method) == 0) {
-					displayProgHelpMethod = method;
-				}
-				if (MethodComparator.INSTANCE.compare(
-						DECLARED_DISPLAY_PROGRAM_VERSION_METHOD, method) == 0) {
-					displayProgVersionMethod = method;
-				}
 				if (method.isAnnotationPresent(Annotations.Option.class)
 						|| method.isAnnotationPresent(Annotations.Options.class)) {
 					method.setAccessible(true);
@@ -892,22 +843,12 @@ public final class ArgMatey {
 				optGroups.add(optAnnotatedMethod.getOptionGroup());
 			}
 			this.cls = c;
-			this.displayProgramHelpMethod = displayProgHelpMethod;
-			this.displayProgramVersionMethod = displayProgVersionMethod;
 			this.optionAnnotatedMethodMap = 
 					new HashMap<Option, OptionAnnotatedMethod>(
 							optAnnotatedMethodMap);
 			this.optionAnnotatedMethods = new ArrayList<OptionAnnotatedMethod>(
 					optAnnotatedMethods);
 			this.optionGroups = OptionGroups.newInstance(optGroups);
-		}
-		
-		public Method getDisplayProgramHelpMethod() {
-			return this.displayProgramHelpMethod;
-		}
-		
-		public Method getDisplayProgramVersionMethod() {
-			return this.displayProgramVersionMethod;
 		}
 		
 		public Map<Option, OptionAnnotatedMethod> getOptionAnnotatedMethodMap() {
@@ -1398,7 +1339,7 @@ public final class ArgMatey {
 		}
 
 	}
-
+	
 	static final class GnuLongOptionBuilder extends OptionBuilder {
 
 		public GnuLongOptionBuilder(final String optName) {
@@ -1589,7 +1530,7 @@ public final class ArgMatey {
 		}
 		
 	}
-	
+
 	/**
 	 * Thrown when an {@code Option} is provided with a command line option 
 	 * argument that is illegal or inappropriate.
@@ -1748,7 +1689,7 @@ public final class ArgMatey {
 		}
 		
 	}
-
+	
 	public static final class LongOption extends Option {
 		
 		LongOption(final LongOptionBuilder longOptionBuilder) {
@@ -1756,7 +1697,7 @@ public final class ArgMatey {
 		}
 		
 	}
-	
+
 	static final class LongOptionBuilder extends OptionBuilder {
 
 		public LongOptionBuilder(final String optName) {
@@ -1839,7 +1780,7 @@ public final class ArgMatey {
 		}
 		
 	}
-
+	
 	public static abstract class Option {
 		
 		private final boolean displayable;
@@ -1995,7 +1936,7 @@ public final class ArgMatey {
 		}
 		
 	}
-	
+
 	static final class OptionAnnotatedMethod {
 		
 		private static enum TargetMethodParameterTypesType {
@@ -2016,14 +1957,13 @@ public final class ArgMatey {
 				public void invoke(
 						final Object obj, 
 						final Method method, 
-						final OptionOccurrence optionOccurrence) {
+						final OptionOccurrence optionOccurrence)
+						throws InvocationTargetException {
 					try {
 						method.invoke(obj, Boolean.TRUE.booleanValue());
 					} catch (IllegalAccessException e) {
 						throw new AssertionError(e);
 					} catch (IllegalArgumentException e) {
-						throw new AssertionError(e);
-					} catch (InvocationTargetException e) {
 						throw new AssertionError(e);
 					}
 				}
@@ -2067,27 +2007,18 @@ public final class ArgMatey {
 				public void invoke(
 						final Object obj, 
 						final Method method, 
-						final OptionOccurrence optionOccurrence) {
-					Option option = optionOccurrence.getOption();
+						final OptionOccurrence optionOccurrence) 
+						throws InvocationTargetException {
 					OptionArg optionArg = optionOccurrence.getOptionArg();
 					List<Object> objectValues = Collections.emptyList();
-					String optArg = null;
 					if (optionArg != null) {
 						objectValues = optionArg.getObjectValues();
-						optArg = optionArg.toString();
 					}
 					try {
 						method.invoke(obj, objectValues);
 					} catch (IllegalAccessException e) {
 						throw new AssertionError(e);
 					} catch (IllegalArgumentException e) {
-						throw new AssertionError(e);
-					} catch (InvocationTargetException e) {
-						Throwable cause = e.getCause();
-						if (cause instanceof IllegalArgumentException) {
-							throw new IllegalOptionArgException(
-									option, optArg, cause);
-						}
 						throw new AssertionError(e);
 					}
 				}
@@ -2118,14 +2049,13 @@ public final class ArgMatey {
 				public void invoke(
 						final Object obj, 
 						final Method method, 
-						final OptionOccurrence optionOccurrence) {
+						final OptionOccurrence optionOccurrence) 
+						throws InvocationTargetException {
 					try {
 						method.invoke(obj);
 					} catch (IllegalAccessException e) {
 						throw new AssertionError(e);
 					} catch (IllegalArgumentException e) {
-						throw new AssertionError(e);
-					} catch (InvocationTargetException e) {
 						throw new AssertionError(e);
 					}
 				}
@@ -2154,27 +2084,18 @@ public final class ArgMatey {
 				public void invoke(
 						final Object obj, 
 						final Method method, 
-						final OptionOccurrence optionOccurrence) {
-					Option option = optionOccurrence.getOption();
+						final OptionOccurrence optionOccurrence) 
+						throws InvocationTargetException {
 					OptionArg optionArg = optionOccurrence.getOptionArg();
 					Object objectValue = null;
-					String optArg = null;
 					if (optionArg != null) {
 						objectValue = optionArg.getObjectValue();
-						optArg = optionArg.toString();
 					}
 					try {
 						method.invoke(obj, objectValue);
 					} catch (IllegalAccessException e) {
 						throw new AssertionError(e);
 					} catch (IllegalArgumentException e) {
-						throw new AssertionError(e);
-					} catch (InvocationTargetException e) {
-						Throwable cause = e.getCause();
-						if (cause instanceof IllegalArgumentException) {
-							throw new IllegalOptionArgException(
-									option, optArg, cause);
-						}
 						throw new AssertionError(e);
 					}
 				}
@@ -2206,7 +2127,8 @@ public final class ArgMatey {
 			public abstract void invoke(
 					final Object obj, 
 					final Method method, 
-					final OptionOccurrence optionOccurrence);
+					final OptionOccurrence optionOccurrence) 
+					throws InvocationTargetException;
 			
 			public abstract boolean isValueForMethodParameterTypes(
 					final Class<?>[] types);
@@ -2468,7 +2390,8 @@ public final class ArgMatey {
 		
 		public void invoke(
 				final Object obj, 
-				final OptionOccurrence optionOccurrence) {
+				final OptionOccurrence optionOccurrence) 
+				throws InvocationTargetException {
 			this.targetMethodParameterTypesType.invoke(
 					obj, this.method, optionOccurrence);
 		}
@@ -2478,7 +2401,7 @@ public final class ArgMatey {
 		}
 		
 	}
-
+	
 	/**
 	 * Represents a command line option argument.
 	 */
@@ -2665,7 +2588,7 @@ public final class ArgMatey {
 		}
 		
 	}
-	
+
 	/**
 	 * Thrown when an {@code Option} is provided with a command line option 
 	 * argument that is not allowed.
@@ -2709,7 +2632,7 @@ public final class ArgMatey {
 		}
 
 	}
-
+	
 	/**
 	 * Thrown when an {@code Option} is not provided with a required 
 	 * command line option argument.
@@ -2844,7 +2767,7 @@ public final class ArgMatey {
 		}
 
 	}
-	
+
 	static final class OptionArgSpecBuilder {
 				
 		private String name;
@@ -2912,7 +2835,7 @@ public final class ArgMatey {
 		}
 		
 	}
-
+	
 	static abstract class OptionBuilder {
 
 		private boolean displayable;
@@ -3105,7 +3028,7 @@ public final class ArgMatey {
 		}
 		
 	}
-	
+
 	static final class OptionGroupBuilder {
 		
 		private final List<OptionBuilder> optionBuilders;
@@ -3305,7 +3228,7 @@ public final class ArgMatey {
 				final String arg, final ArgHandlerContext context);
 		
 	}
-
+	
 	public static final class OptionOccurrence {
 
 		private final Option option;
@@ -3403,7 +3326,7 @@ public final class ArgMatey {
 		}
 		
 	}
-	
+
 	/**
 	 * Represents all types of command line options.
 	 */
@@ -3674,7 +3597,7 @@ public final class ArgMatey {
 		public abstract String getOptionUsage(OptionUsageParams params);
 		
 	}
-
+	
 	public static final class ParseResultHolder {
 		
 		private final Object parseResult;
@@ -3823,7 +3746,7 @@ public final class ArgMatey {
 		}
 		
 	}
-	
+
 	public static final class PosixOption extends Option {
 		
 		PosixOption(final PosixOptionBuilder posixOptionBuilder) {
@@ -3831,7 +3754,7 @@ public final class ArgMatey {
 		}
 		
 	}
-
+	
 	static final class PosixOptionBuilder extends OptionBuilder {
 
 		private static String toPosixOptionName(final char ch) {
@@ -3943,7 +3866,7 @@ public final class ArgMatey {
 					new OptionOccurrence(opt, opt.newOptionArg(optionArg))));
 		}		
 	}
-	
+
 	/**
 	 * Converts the provided {@code String} to an {@code Object}.
 	 */
@@ -3965,6 +3888,49 @@ public final class ArgMatey {
 		 * illegal or inappropriate
 		 */
 		public abstract Object convert(String string);
+		
+	}
+	
+	/**
+	 * Thrown when termination of the program is requested.
+	 */
+	public static final class TerminationRequestedException	extends Exception {
+		
+		/** The default serial version UID. */
+		private static final long serialVersionUID = 1L;
+		
+		/** The exit status code. */
+		private int exitStatusCode;
+		
+		/**
+		 * Constructs a TerminationRequestedException with the provided exit 
+		 * status code. By convention a non-zero exit status code indicates 
+		 * abnormal termination.
+		 * 
+		 * @param statusCode the provided exit status code
+		 */
+		public TerminationRequestedException(final int statusCode) {
+			this.exitStatusCode = statusCode;
+		}
+		
+		/**
+		 * Returns the exit status code.
+		 * 
+		 * @return the exit status code
+		 */
+		public int getExitStatusCode() {
+			return this.exitStatusCode;
+		}
+
+		@Override
+		public String toString() {
+			StringBuilder builder = new StringBuilder();
+			builder.append(this.getClass().getSimpleName())
+				.append(" [exitStatusCode=")
+				.append(this.exitStatusCode)
+				.append("]");
+			return builder.toString();
+		}
 		
 	}
 	

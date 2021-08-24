@@ -648,7 +648,7 @@ public final class ArgMatey {
 			this.afterHandleArgs(); 
 		}
 		
-		private final void handleNext() throws TerminationRequestedException {
+		private final void handleNext() throws Throwable {
 			this.argsParser.parseNext();
 			ParseResultHolder parseResultHolder = 
 					this.argsParser.getParseResultHolder();
@@ -674,15 +674,15 @@ public final class ArgMatey {
 					} catch (InvocationTargetException e) {
 						Throwable cause = e.getCause();
 						if (cause instanceof IllegalArgumentException) {
-							throw new IllegalOptionArgException(
-									option, 
-									optionOccurrence.getOptionArg().toString(),
-									cause);
+							OptionArg optionArg = optionOccurrence.getOptionArg();
+							if (optionArg != null) {
+								throw new IllegalOptionArgException(
+										option, 
+										optionArg.toString(),
+										cause);								
+							}
 						}
-						if (cause instanceof TerminationRequestedException) {
-							throw (TerminationRequestedException) cause;
-						}
-						throw new AssertionError(e);
+						throw cause;
 					}
 				}
 			}

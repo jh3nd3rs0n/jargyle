@@ -99,16 +99,6 @@ public final class UsersCLI extends CLI {
 			
 		};
 		
-		public static Command getInstance(final String s) {
-			for (Command command : Command.values()) {
-				if (command.toString().equals(s)) {
-					return command;
-				}
-			}
-			throw new IllegalArgumentException(String.format(
-					"no command found for %s", s));
-		}
-		
 		private static Users readUsersFromFile(
 				final String file) throws IOException {
 			InputStream in = null;
@@ -136,7 +126,7 @@ public final class UsersCLI extends CLI {
 			}
 			return users;
 		}
-
+		
 		private static Users readUsersFromPrompt() {
 			Users users = Users.newInstance();
 			ConsoleWrapper consoleWrapper = new ConsoleWrapper(
@@ -184,6 +174,16 @@ public final class UsersCLI extends CLI {
 				addAnotherUser = decision.equals("Y");
 			} while (addAnotherUser);
 			return users;
+		}
+
+		public static Command valueOfString(final String s) {
+			for (Command command : Command.values()) {
+				if (command.toString().equals(s)) {
+					return command;
+				}
+			}
+			throw new IllegalArgumentException(String.format(
+					"no command found for %s", s));
 		}
 		
 		private static void writeUsersToFile(
@@ -363,7 +363,7 @@ public final class UsersCLI extends CLI {
 	@Override
 	protected void handleNonparsedArg(final String nonparsedArg) {
 		if (this.command == null) {
-			this.command = Command.getInstance(nonparsedArg);
+			this.command = Command.valueOfString(nonparsedArg);
 		} else {
 			this.argList.add(nonparsedArg);
 		}

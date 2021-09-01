@@ -8,8 +8,10 @@ final class Socks5RequestCriteriaSettingSpec
 	extends SettingSpec<Socks5RequestCriteria> {
 
 	public Socks5RequestCriteriaSettingSpec(
-			final String s, final Socks5RequestCriteria defaultVal) {
-		super(s, Socks5RequestCriteria.class, defaultVal);
+			final Object permissionObj, 
+			final String s, 
+			final Socks5RequestCriteria defaultVal) {
+		super(permissionObj, s, Socks5RequestCriteria.class, defaultVal);
 	}
 
 	@Override

@@ -7,8 +7,10 @@ import com.github.jh3nd3rs0n.jargyle.net.socks.server.SettingSpec;
 final class SocketSettingsSettingSpec extends SettingSpec<SocketSettings> {
 
 	public SocketSettingsSettingSpec(
-			final String s, final SocketSettings defaultVal) {
-		super(s, SocketSettings.class, defaultVal);
+			final Object permissionObj, 
+			final String s, 
+			final SocketSettings defaultVal) {
+		super(permissionObj, s, SocketSettings.class, defaultVal);
 	}
 
 	@Override

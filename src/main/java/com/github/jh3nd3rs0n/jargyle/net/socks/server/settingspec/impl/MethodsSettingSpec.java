@@ -6,8 +6,11 @@ import com.github.jh3nd3rs0n.jargyle.net.socks.transport.v5.Methods;
 
 final class MethodsSettingSpec extends SettingSpec<Methods> {
 
-	public MethodsSettingSpec(final String s, final Methods defaultVal) {
-		super(s, Methods.class, defaultVal);
+	public MethodsSettingSpec(
+			final Object permissionObj, 
+			final String s, 
+			final Methods defaultVal) {
+		super(permissionObj, s, Methods.class, defaultVal);
 	}
 
 	@Override

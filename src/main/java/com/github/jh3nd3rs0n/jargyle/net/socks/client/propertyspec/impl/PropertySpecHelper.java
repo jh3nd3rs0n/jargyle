@@ -18,78 +18,109 @@ import com.github.jh3nd3rs0n.jargyle.util.Strings;
 public final class PropertySpecHelper {
 	
 	public static PropertySpec<Boolean> newBooleanPropertySpec(
-			final String s, final Boolean defaultVal) {
-		return new BooleanPropertySpec(s, defaultVal);
+			final Object permissionObj, 
+			final String s, 
+			final Boolean defaultVal) {
+		return new BooleanPropertySpec(permissionObj, s, defaultVal);
 	}
 
 	public static PropertySpec<Criteria> newCriteriaPropertySpec(
-			final String s, final Criteria defaultVal) {
-		return new CriteriaPropertySpec(s, defaultVal);
+			final Object permissionObj, 
+			final String s, 
+			final Criteria defaultVal) {
+		return new CriteriaPropertySpec(permissionObj, s, defaultVal);
 	}
 
 	public static PropertySpec<EncryptedPassword> newEncryptedPasswordPropertySpec(
-			final String s, final EncryptedPassword defaultVal) {
-		return new EncryptedPasswordPropertySpec(s, defaultVal);
+			final Object permissionObj, 
+			final String s, 
+			final EncryptedPassword defaultVal) {
+		return new EncryptedPasswordPropertySpec(permissionObj, s, defaultVal);
 	}
 
 	public static PropertySpec<File> newFilePropertySpec(
-			final String s, final File defaultVal) {
-		return new FilePropertySpec(s, defaultVal);
+			final Object permissionObj, 
+			final String s, 
+			final File defaultVal) {
+		return new FilePropertySpec(permissionObj, s, defaultVal);
 	}
 
 	public static PropertySpec<Host> newHostPropertySpec(
-			final String s, final Host defaultVal) {
-		return new HostPropertySpec(s, defaultVal);
+			final Object permissionObj, 
+			final String s, 
+			final Host defaultVal) {
+		return new HostPropertySpec(permissionObj, s, defaultVal);
 	}
 
 	public static PropertySpec<Methods> newMethodsPropertySpec(
-			final String s, final Methods defaultVal) {
-		return new MethodsPropertySpec(s, defaultVal);
+			final Object permissionObj, 
+			final String s, 
+			final Methods defaultVal) {
+		return new MethodsPropertySpec(permissionObj, s, defaultVal);
 	}
 
 	public static PropertySpec<Oid> newOidPropertySpec(
-			final String s, final String defaultVal) {
-		return new OidPropertySpec(s, defaultVal);
+			final Object permissionObj, 
+			final String s, 
+			final String defaultVal) {
+		return new OidPropertySpec(permissionObj, s, defaultVal);
 	}
 
 	public static PropertySpec<Port> newPortPropertySpec(
-			final String s, final Port defaultVal) {
-		return new PortPropertySpec(s, defaultVal);
+			final Object permissionObj, 
+			final String s, 
+			final Port defaultVal) {
+		return new PortPropertySpec(permissionObj, s, defaultVal);
 	}
 
 	public static PropertySpec<PositiveInteger> newPositiveIntegerPropertySpec(
-			final String s, final PositiveInteger defaultVal) {
-		return new PositiveIntegerPropertySpec(s, defaultVal);
+			final Object permissionObj, 
+			final String s, 
+			final PositiveInteger defaultVal) {
+		return new PositiveIntegerPropertySpec(permissionObj, s, defaultVal);
 	}
 
 	public static PropertySpec<ProtectionLevels> newProtectionLevelsPropertySpec(
-			final String s, final ProtectionLevels defaultVal) {
-		return new ProtectionLevelsPropertySpec(s, defaultVal);
+			final Object permissionObj, 
+			final String s, 
+			final ProtectionLevels defaultVal) {
+		return new ProtectionLevelsPropertySpec(permissionObj, s, defaultVal);
 	}
 
 	public static PropertySpec<SocketSettings> newSocketSettingsPropertySpec(
-			final String s, final SocketSettings defaultVal) {
-		return new SocketSettingsPropertySpec(s, defaultVal);
+			final Object permissionObj, 
+			final String s, 
+			final SocketSettings defaultVal) {
+		return new SocketSettingsPropertySpec(permissionObj, s, defaultVal);
 	}
 
 	public static PropertySpec<String> newStringPropertySpec(
-			final String s, final String defaultVal) {
-		return new StringPropertySpec(s, defaultVal);
+			final Object permissionObj, 
+			final String s, 
+			final String defaultVal) {
+		return new StringPropertySpec(permissionObj, s, defaultVal);
 	}
 
 	public static PropertySpec<Strings> newStringsPropertySpec(
-			final String s, final Strings defaultVal) {
-		return new StringsPropertySpec(s, defaultVal);
+			final Object permissionObj, 
+			final String s, 
+			final Strings defaultVal) {
+		return new StringsPropertySpec(permissionObj, s, defaultVal);
 	}
 
 	public static PropertySpec<EncryptedPassword> newUserEncryptedPasswordPropertySpec(
-			final String s, final EncryptedPassword defaultVal) {
-		return new UserEncryptedPasswordPropertySpec(s, defaultVal);
+			final Object permissionObj, 
+			final String s, 
+			final EncryptedPassword defaultVal) {
+		return new UserEncryptedPasswordPropertySpec(
+				permissionObj, s, defaultVal);
 	}
 
 	public static PropertySpec<String> newUsernamePropertySpec(
-			final String s, final String defaultVal) {
-		return new UsernamePropertySpec(s, defaultVal);
+			final Object permissionObj, 
+			final String s, 
+			final String defaultVal) {
+		return new UsernamePropertySpec(permissionObj, s, defaultVal);
 	}
 	
 	private PropertySpecHelper() { }

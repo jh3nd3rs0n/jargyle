@@ -4,12 +4,13 @@ import com.github.jh3nd3rs0n.jargyle.net.socks.client.Property;
 import com.github.jh3nd3rs0n.jargyle.net.socks.client.PropertySpec;
 import com.github.jh3nd3rs0n.jargyle.util.PositiveInteger;
 
-final class PositiveIntegerPropertySpec 
-	extends PropertySpec<PositiveInteger> {
+final class PositiveIntegerPropertySpec extends PropertySpec<PositiveInteger> {
 
 	public PositiveIntegerPropertySpec(
-			final String s, final PositiveInteger defaultVal) {
-		super(s, PositiveInteger.class, defaultVal);
+			final Object permissionObj, 
+			final String s, 
+			final PositiveInteger defaultVal) {
+		super(permissionObj, s, PositiveInteger.class, defaultVal);
 	}
 
 	@Override

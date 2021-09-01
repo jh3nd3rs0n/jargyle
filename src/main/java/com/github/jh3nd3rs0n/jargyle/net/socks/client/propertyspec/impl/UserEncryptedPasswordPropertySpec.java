@@ -19,11 +19,13 @@ final class UserEncryptedPasswordPropertySpec
 	}
 	
 	public UserEncryptedPasswordPropertySpec(
-			final String s, final EncryptedPassword defaultVal) {
+			final Object permissionObj, 
+			final String s, 
+			final EncryptedPassword defaultVal) {
 		super(
+				permissionObj, 
 				s, 
-				EncryptedPassword.class, 
-				getValidatedEncryptedPassword(defaultVal));
+				EncryptedPassword.class, getValidatedEncryptedPassword(defaultVal));
 	}
 
 	@Override

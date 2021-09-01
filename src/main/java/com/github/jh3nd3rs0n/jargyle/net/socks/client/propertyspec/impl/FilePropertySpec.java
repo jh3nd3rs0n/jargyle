@@ -7,8 +7,11 @@ import com.github.jh3nd3rs0n.jargyle.net.socks.client.PropertySpec;
 
 final class FilePropertySpec extends PropertySpec<File> {
 
-	public FilePropertySpec(final String s, final File defaultVal) {
-		super(s, File.class, defaultVal);
+	public FilePropertySpec(
+			final Object permissionObj, 
+			final String s, 
+			final File defaultVal) {
+		super(permissionObj, s, File.class, defaultVal);
 	}
 
 	@Override

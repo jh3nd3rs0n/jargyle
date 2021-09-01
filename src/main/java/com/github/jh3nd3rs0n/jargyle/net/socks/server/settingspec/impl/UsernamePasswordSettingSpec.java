@@ -4,12 +4,13 @@ import com.github.jh3nd3rs0n.jargyle.net.socks.client.v5.userpassauth.UsernamePa
 import com.github.jh3nd3rs0n.jargyle.net.socks.server.Setting;
 import com.github.jh3nd3rs0n.jargyle.net.socks.server.SettingSpec;
 
-final class UsernamePasswordSettingSpec 
-	extends SettingSpec<UsernamePassword> {
+final class UsernamePasswordSettingSpec extends SettingSpec<UsernamePassword> {
 
 	public UsernamePasswordSettingSpec(
-			final String s, final UsernamePassword defaultVal) {
-		super(s, UsernamePassword.class, defaultVal);
+			final Object permissionObj, 
+			final String s, 
+			final UsernamePassword defaultVal) {
+		super(permissionObj, s, UsernamePassword.class, defaultVal);
 	}
 
 	@Override

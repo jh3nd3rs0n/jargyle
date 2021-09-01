@@ -6,8 +6,11 @@ import com.github.jh3nd3rs0n.jargyle.net.socks.client.PropertySpec;
 
 final class PortPropertySpec extends PropertySpec<Port> {
 
-	public PortPropertySpec(final String s, final Port defaultVal) {
-		super(s, Port.class, defaultVal);
+	public PortPropertySpec(
+			final Object permissionObj, 
+			final String s, 
+			final Port defaultVal) {
+		super(permissionObj, s, Port.class, defaultVal);
 	}
 
 	@Override

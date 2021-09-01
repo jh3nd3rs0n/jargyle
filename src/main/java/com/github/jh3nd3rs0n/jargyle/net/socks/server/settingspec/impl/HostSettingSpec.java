@@ -8,8 +8,11 @@ import com.github.jh3nd3rs0n.jargyle.net.socks.server.SettingSpec;
 
 final class HostSettingSpec extends SettingSpec<Host> {
 
-	public HostSettingSpec(final String s, final Host defaultVal) {
-		super(s, Host.class, defaultVal);
+	public HostSettingSpec(
+			final Object permissionObj, 
+			final String s, 
+			final Host defaultVal) {
+		super(permissionObj, s, Host.class, defaultVal);
 	}
 
 	@Override

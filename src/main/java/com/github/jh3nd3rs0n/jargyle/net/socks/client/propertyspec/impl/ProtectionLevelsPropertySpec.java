@@ -8,8 +8,10 @@ final class ProtectionLevelsPropertySpec
 	extends PropertySpec<ProtectionLevels> {
 
 	public ProtectionLevelsPropertySpec(
-			final String s, final ProtectionLevels defaultVal) {
-		super(s, ProtectionLevels.class, defaultVal);
+			final Object permissionObj, 
+			final String s, 
+			final ProtectionLevels defaultVal) {
+		super(permissionObj, s, ProtectionLevels.class, defaultVal);
 	}
 
 	@Override

@@ -8,8 +8,11 @@ import com.github.jh3nd3rs0n.jargyle.net.socks.client.PropertySpec;
 
 final class HostPropertySpec extends PropertySpec<Host> {
 
-	public HostPropertySpec(final String s, final Host defaultVal) {
-		super(s, Host.class, defaultVal);
+	public HostPropertySpec(
+			final Object permissionObj, 
+			final String s, 
+			final Host defaultVal) {
+		super(permissionObj, s, Host.class, defaultVal);
 	}
 
 	@Override

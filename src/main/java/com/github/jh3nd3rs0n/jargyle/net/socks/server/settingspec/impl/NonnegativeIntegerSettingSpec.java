@@ -8,8 +8,10 @@ final class NonnegativeIntegerSettingSpec
 	extends SettingSpec<NonnegativeInteger> {
 
 	public NonnegativeIntegerSettingSpec(
-			final String s, final NonnegativeInteger defaultVal) {
-		super(s, NonnegativeInteger.class, defaultVal);
+			final Object permissionObj, 
+			final String s, 
+			final NonnegativeInteger defaultVal) {
+		super(permissionObj, s, NonnegativeInteger.class, defaultVal);
 	}
 
 	@Override

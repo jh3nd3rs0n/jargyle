@@ -5,8 +5,11 @@ import com.github.jh3nd3rs0n.jargyle.net.socks.server.SettingSpec;
 
 final class StringSettingSpec extends SettingSpec<String> {
 
-	public StringSettingSpec(final String s, final String defaultVal) {
-		super(s, String.class, defaultVal);
+	public StringSettingSpec(
+			final Object permissionObj, 
+			final String s, 
+			final String defaultVal) {
+		super(permissionObj, s, String.class, defaultVal);
 	}
 
 	@Override

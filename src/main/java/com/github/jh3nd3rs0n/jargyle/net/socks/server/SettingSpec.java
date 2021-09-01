@@ -35,6 +35,8 @@ import com.github.jh3nd3rs0n.jargyle.util.Strings;
 public abstract class SettingSpec<V> 
 	implements Comparable<SettingSpec<? extends Object>> {
 	
+	private static final Object PERMISSION_OBJECT = new Object();
+	
 	private static int nextOrdinal = 0;
 	
 	private static final List<SettingSpec<Object>> VALUES = 
@@ -50,6 +52,7 @@ public abstract class SettingSpec<V>
 	)
 	public static final SettingSpec<Criteria> ALLOWED_CLIENT_ADDRESS_CRITERIA = 
 			SettingSpecHelper.newCriteriaSettingSpec(
+					PERMISSION_OBJECT, 
 					"allowedClientAddressCriteria",
 					Criteria.newInstance(Criterion.newInstance(CriterionMethod.MATCHES, ".*")));
 	
@@ -60,6 +63,7 @@ public abstract class SettingSpec<V>
 	)
 	public static final SettingSpec<NonnegativeInteger> BACKLOG = 
 			SettingSpecHelper.newNonnegativeIntegerSettingSpec(
+					PERMISSION_OBJECT, 
 					"backlog",
 					NonnegativeInteger.newInstance(50));
 	
@@ -69,6 +73,7 @@ public abstract class SettingSpec<V>
 	)
 	public static final SettingSpec<Criteria> BLOCKED_CLIENT_ADDRESS_CRITERIA = 
 			SettingSpecHelper.newCriteriaSettingSpec(
+					PERMISSION_OBJECT, 
 					"blockedClientAddressCriteria",
 					Criteria.getEmptyInstance());
 	
@@ -81,6 +86,7 @@ public abstract class SettingSpec<V>
 	)
 	public static final SettingSpec<Host> CHAINING_BIND_HOST = 
 			SettingSpecHelper.newHostSettingSpec(
+					PERMISSION_OBJECT, 
 					"chaining.bindHost",
 					PropertySpec.BIND_HOST.getDefaultProperty().getValue());
 	
@@ -93,6 +99,7 @@ public abstract class SettingSpec<V>
 	)
 	public static final SettingSpec<PositiveInteger> CHAINING_CONNECT_TIMEOUT = 
 			SettingSpecHelper.newPositiveIntegerSettingSpec(
+					PERMISSION_OBJECT, 
 					"chaining.connectTimeout",
 					PropertySpec.CONNECT_TIMEOUT.getDefaultProperty().getValue());
 	
@@ -103,6 +110,7 @@ public abstract class SettingSpec<V>
 	)
 	public static final SettingSpec<Boolean> CHAINING_DTLS_ENABLED = 
 			SettingSpecHelper.newBooleanSettingSpec(
+					PERMISSION_OBJECT, 
 					"chaining.dtls.enabled",
 					PropertySpec.DTLS_ENABLED.getDefaultProperty().getValue());
 	
@@ -114,6 +122,7 @@ public abstract class SettingSpec<V>
 	)
 	public static final SettingSpec<Strings> CHAINING_DTLS_ENABLED_CIPHER_SUITES = 
 			SettingSpecHelper.newStringsSettingSpec(
+					PERMISSION_OBJECT, 
 					"chaining.dtls.enabledCipherSuites",
 					PropertySpec.DTLS_ENABLED_CIPHER_SUITES.getDefaultProperty().getValue());
 	
@@ -125,6 +134,7 @@ public abstract class SettingSpec<V>
 	)	
 	public static final SettingSpec<Strings> CHAINING_DTLS_ENABLED_PROTOCOLS = 
 			SettingSpecHelper.newStringsSettingSpec(
+					PERMISSION_OBJECT, 
 					"chaining.dtls.enabledProtocols",
 					PropertySpec.DTLS_ENABLED_PROTOCOLS.getDefaultProperty().getValue());
 	
@@ -135,6 +145,7 @@ public abstract class SettingSpec<V>
 	)
 	public static final SettingSpec<File> CHAINING_DTLS_KEY_STORE_FILE = 
 			SettingSpecHelper.newFileSettingSpec(
+					PERMISSION_OBJECT, 
 					"chaining.dtls.keyStoreFile",
 					PropertySpec.DTLS_KEY_STORE_FILE.getDefaultProperty().getValue());
 	
@@ -145,6 +156,7 @@ public abstract class SettingSpec<V>
 	)
 	public static final SettingSpec<EncryptedPassword> CHAINING_DTLS_KEY_STORE_PASSWORD = 
 			SettingSpecHelper.newEncryptedPasswordSettingSpec(
+					PERMISSION_OBJECT, 
 					"chaining.dtls.keyStorePassword",
 					PropertySpec.DTLS_KEY_STORE_PASSWORD.getDefaultProperty().getValue());
 	
@@ -155,6 +167,7 @@ public abstract class SettingSpec<V>
 	)	
 	public static final SettingSpec<String> CHAINING_DTLS_KEY_STORE_TYPE = 
 			SettingSpecHelper.newStringSettingSpec(
+					PERMISSION_OBJECT, 
 					"chaining.dtls.keyStoreType",
 					PropertySpec.DTLS_KEY_STORE_TYPE.getDefaultProperty().getValue());
 	
@@ -165,6 +178,7 @@ public abstract class SettingSpec<V>
 	)	
 	public static final SettingSpec<PositiveInteger> CHAINING_DTLS_MAX_PACKET_SIZE = 
 			SettingSpecHelper.newPositiveIntegerSettingSpec(
+					PERMISSION_OBJECT, 
 					"chaining.dtls.maxPacketSize",
 					PropertySpec.DTLS_MAX_PACKET_SIZE.getDefaultProperty().getValue());
 	
@@ -175,6 +189,7 @@ public abstract class SettingSpec<V>
 	)	
 	public static final SettingSpec<String> CHAINING_DTLS_PROTOCOL = 
 			SettingSpecHelper.newStringSettingSpec(
+					PERMISSION_OBJECT, 
 					"chaining.dtls.protocol",
 					PropertySpec.DTLS_PROTOCOL.getDefaultProperty().getValue());
 	
@@ -185,6 +200,7 @@ public abstract class SettingSpec<V>
 	)	
 	public static final SettingSpec<File> CHAINING_DTLS_TRUST_STORE_FILE = 
 			SettingSpecHelper.newFileSettingSpec(
+					PERMISSION_OBJECT, 
 					"chaining.dtls.trustStoreFile",
 					PropertySpec.DTLS_TRUST_STORE_FILE.getDefaultProperty().getValue());
 	
@@ -195,6 +211,7 @@ public abstract class SettingSpec<V>
 	)	
 	public static final SettingSpec<EncryptedPassword> CHAINING_DTLS_TRUST_STORE_PASSWORD = 
 			SettingSpecHelper.newEncryptedPasswordSettingSpec(
+					PERMISSION_OBJECT, 
 					"chaining.dtls.trustStorePassword",
 					PropertySpec.DTLS_TRUST_STORE_PASSWORD.getDefaultProperty().getValue());
 	
@@ -205,6 +222,7 @@ public abstract class SettingSpec<V>
 	)	
 	public static final SettingSpec<String> CHAINING_DTLS_TRUST_STORE_TYPE = 
 			SettingSpecHelper.newStringSettingSpec(
+					PERMISSION_OBJECT, 
 					"chaining.dtls.trustStoreType",
 					PropertySpec.DTLS_TRUST_STORE_TYPE.getDefaultProperty().getValue());	
 	
@@ -217,6 +235,7 @@ public abstract class SettingSpec<V>
 	)
 	public static final SettingSpec<SocketSettings> CHAINING_SOCKET_SETTINGS = 
 			SettingSpecHelper.newSocketSettingsSettingSpec(
+					PERMISSION_OBJECT, 
 					"chaining.socketSettings",
 					PropertySpec.SOCKET_SETTINGS.getDefaultProperty().getValue());
 	
@@ -226,6 +245,7 @@ public abstract class SettingSpec<V>
 	)
 	public static final SettingSpec<SocksServerUri> CHAINING_SOCKS_SERVER_URI = 
 			SettingSpecHelper.newSocksServerUriSettingSpec(
+					PERMISSION_OBJECT, 
 					"chaining.socksServerUri",
 					null);
 	
@@ -236,6 +256,7 @@ public abstract class SettingSpec<V>
 	)
 	public static final SettingSpec<Oid> CHAINING_SOCKS5_GSSAPIAUTH_MECHANISM_OID = 
 			SettingSpecHelper.newOidSettingSpec(
+					PERMISSION_OBJECT, 
 					"chaining.socks5.gssapiauth.mechanismOid",
 					PropertySpec.SOCKS5_GSSAPIAUTH_MECHANISM_OID.getDefaultProperty().getValue());
 	
@@ -248,6 +269,7 @@ public abstract class SettingSpec<V>
 	)
 	public static final SettingSpec<Boolean> CHAINING_SOCKS5_GSSAPIAUTH_NEC_REFERENCE_IMPL = 
 			SettingSpecHelper.newBooleanSettingSpec(
+					PERMISSION_OBJECT, 
 					"chaining.socks5.gssapiauth.necReferenceImpl",
 					PropertySpec.SOCKS5_GSSAPIAUTH_NEC_REFERENCE_IMPL.getDefaultProperty().getValue());
 	
@@ -262,6 +284,7 @@ public abstract class SettingSpec<V>
 	)
 	public static final SettingSpec<ProtectionLevels> CHAINING_SOCKS5_GSSAPIAUTH_PROTECTION_LEVELS = 
 			SettingSpecHelper.newProtectionLevelsSettingSpec(
+					PERMISSION_OBJECT, 
 					"chaining.socks5.gssapiauth.protectionLevels",
 					PropertySpec.SOCKS5_GSSAPIAUTH_PROTECTION_LEVELS.getDefaultProperty().getValue());
 	
@@ -271,6 +294,7 @@ public abstract class SettingSpec<V>
 	)
 	public static final SettingSpec<String> CHAINING_SOCKS5_GSSAPIAUTH_SERVICE_NAME = 
 			SettingSpecHelper.newStringSettingSpec(
+					PERMISSION_OBJECT, 
 					"chaining.socks5.gssapiauth.serviceName",
 					PropertySpec.SOCKS5_GSSAPIAUTH_SERVICE_NAME.getDefaultProperty().getValue());
 	
@@ -282,6 +306,7 @@ public abstract class SettingSpec<V>
 	)
 	public static final SettingSpec<Methods> CHAINING_SOCKS5_METHODS = 
 			SettingSpecHelper.newMethodsSettingSpec(
+					PERMISSION_OBJECT, 
 					"chaining.socks5.methods",
 					PropertySpec.SOCKS5_METHODS.getDefaultProperty().getValue());
 	
@@ -293,6 +318,7 @@ public abstract class SettingSpec<V>
 	)	
 	public static final SettingSpec<Boolean> CHAINING_SOCKS5_RESOLVE_USE_RESOLVE_COMMAND = 
 			SettingSpecHelper.newBooleanSettingSpec(
+					PERMISSION_OBJECT, 
 					"chaining.socks5.resolve.useResolveCommand",
 					PropertySpec.SOCKS5_RESOLVE_USE_RESOLVE_COMMAND.getDefaultProperty().getValue());
 	
@@ -303,6 +329,7 @@ public abstract class SettingSpec<V>
 	)
 	public static final SettingSpec<UsernamePassword> CHAINING_SOCKS5_USERPASSAUTH_USERNAME_PASSWORD = 
 			SettingSpecHelper.newUsernamePasswordSettingSpec(
+					PERMISSION_OBJECT, 
 					"chaining.socks5.userpassauth.usernamePassword",
 					null);
 	
@@ -313,6 +340,7 @@ public abstract class SettingSpec<V>
 	)
 	public static final SettingSpec<Boolean> CHAINING_SSL_ENABLED = 
 			SettingSpecHelper.newBooleanSettingSpec(
+					PERMISSION_OBJECT, 
 					"chaining.ssl.enabled",
 					PropertySpec.SSL_ENABLED.getDefaultProperty().getValue());
 	
@@ -324,6 +352,7 @@ public abstract class SettingSpec<V>
 	)
 	public static final SettingSpec<Strings> CHAINING_SSL_ENABLED_CIPHER_SUITES = 
 			SettingSpecHelper.newStringsSettingSpec(
+					PERMISSION_OBJECT, 
 					"chaining.ssl.enabledCipherSuites",
 					PropertySpec.SSL_ENABLED_CIPHER_SUITES.getDefaultProperty().getValue());
 	
@@ -335,6 +364,7 @@ public abstract class SettingSpec<V>
 	)	
 	public static final SettingSpec<Strings> CHAINING_SSL_ENABLED_PROTOCOLS = 
 			SettingSpecHelper.newStringsSettingSpec(
+					PERMISSION_OBJECT, 
 					"chaining.ssl.enabledProtocols",
 					PropertySpec.SSL_ENABLED_PROTOCOLS.getDefaultProperty().getValue());
 	
@@ -345,6 +375,7 @@ public abstract class SettingSpec<V>
 	)
 	public static final SettingSpec<File> CHAINING_SSL_KEY_STORE_FILE = 
 			SettingSpecHelper.newFileSettingSpec(
+					PERMISSION_OBJECT, 
 					"chaining.ssl.keyStoreFile",
 					PropertySpec.SSL_KEY_STORE_FILE.getDefaultProperty().getValue());
 	
@@ -355,6 +386,7 @@ public abstract class SettingSpec<V>
 	)
 	public static final SettingSpec<EncryptedPassword> CHAINING_SSL_KEY_STORE_PASSWORD = 
 			SettingSpecHelper.newEncryptedPasswordSettingSpec(
+					PERMISSION_OBJECT, 
 					"chaining.ssl.keyStorePassword",
 					PropertySpec.SSL_KEY_STORE_PASSWORD.getDefaultProperty().getValue());
 	
@@ -365,6 +397,7 @@ public abstract class SettingSpec<V>
 	)	
 	public static final SettingSpec<String> CHAINING_SSL_KEY_STORE_TYPE = 
 			SettingSpecHelper.newStringSettingSpec(
+					PERMISSION_OBJECT, 
 					"chaining.ssl.keyStoreType",
 					PropertySpec.SSL_KEY_STORE_TYPE.getDefaultProperty().getValue());
 	
@@ -375,6 +408,7 @@ public abstract class SettingSpec<V>
 	)	
 	public static final SettingSpec<String> CHAINING_SSL_PROTOCOL = 
 			SettingSpecHelper.newStringSettingSpec(
+					PERMISSION_OBJECT, 
 					"chaining.ssl.protocol",
 					PropertySpec.SSL_PROTOCOL.getDefaultProperty().getValue());
 	
@@ -385,6 +419,7 @@ public abstract class SettingSpec<V>
 	)	
 	public static final SettingSpec<File> CHAINING_SSL_TRUST_STORE_FILE = 
 			SettingSpecHelper.newFileSettingSpec(
+					PERMISSION_OBJECT, 
 					"chaining.ssl.trustStoreFile",
 					PropertySpec.SSL_TRUST_STORE_FILE.getDefaultProperty().getValue());
 	
@@ -395,6 +430,7 @@ public abstract class SettingSpec<V>
 	)	
 	public static final SettingSpec<EncryptedPassword> CHAINING_SSL_TRUST_STORE_PASSWORD = 
 			SettingSpecHelper.newEncryptedPasswordSettingSpec(
+					PERMISSION_OBJECT, 
 					"chaining.ssl.trustStorePassword",
 					PropertySpec.SSL_TRUST_STORE_PASSWORD.getDefaultProperty().getValue());
 	
@@ -405,6 +441,7 @@ public abstract class SettingSpec<V>
 	)	
 	public static final SettingSpec<String> CHAINING_SSL_TRUST_STORE_TYPE = 
 			SettingSpecHelper.newStringSettingSpec(
+					PERMISSION_OBJECT, 
 					"chaining.ssl.trustStoreType",
 					PropertySpec.SSL_TRUST_STORE_TYPE.getDefaultProperty().getValue());
 	
@@ -415,6 +452,7 @@ public abstract class SettingSpec<V>
 	)	
 	public static final SettingSpec<Boolean> DTLS_ENABLED = 
 			SettingSpecHelper.newBooleanSettingSpec(
+					PERMISSION_OBJECT, 
 					"dtls.enabled",
 					Boolean.FALSE);
 	
@@ -425,6 +463,7 @@ public abstract class SettingSpec<V>
 	)	
 	public static final SettingSpec<Strings> DTLS_ENABLED_CIPHER_SUITES = 
 			SettingSpecHelper.newStringsSettingSpec(
+					PERMISSION_OBJECT, 
 					"dtls.enabledCipherSuites",
 					Strings.newInstance(new String[] { }));
 	
@@ -435,6 +474,7 @@ public abstract class SettingSpec<V>
 	)	
 	public static final SettingSpec<Strings> DTLS_ENABLED_PROTOCOLS = 
 			SettingSpecHelper.newStringsSettingSpec(
+					PERMISSION_OBJECT, 
 					"dtls.enabledProtocols",
 					Strings.newInstance(new String[] { }));
 	
@@ -445,6 +485,7 @@ public abstract class SettingSpec<V>
 	)	
 	public static final SettingSpec<File> DTLS_KEY_STORE_FILE = 
 			SettingSpecHelper.newFileSettingSpec(
+					PERMISSION_OBJECT, 
 					"dtls.keyStoreFile",
 					null);
 	
@@ -455,6 +496,7 @@ public abstract class SettingSpec<V>
 	)	
 	public static final SettingSpec<EncryptedPassword> DTLS_KEY_STORE_PASSWORD = 
 			SettingSpecHelper.newEncryptedPasswordSettingSpec(
+					PERMISSION_OBJECT, 
 					"dtls.keyStorePassword",
 					EncryptedPassword.newInstance(new char[] { }));
 	
@@ -465,6 +507,7 @@ public abstract class SettingSpec<V>
 	)	
 	public static final SettingSpec<String> DTLS_KEY_STORE_TYPE = 
 			SettingSpecHelper.newStringSettingSpec(
+					PERMISSION_OBJECT, 
 					"dtls.keyStoreType",
 					"PKCS12");
 	
@@ -475,6 +518,7 @@ public abstract class SettingSpec<V>
 	)	
 	public static final SettingSpec<PositiveInteger> DTLS_MAX_PACKET_SIZE = 
 			SettingSpecHelper.newPositiveIntegerSettingSpec(
+					PERMISSION_OBJECT, 
 					"dtls.maxPacketSize",
 					PositiveInteger.newInstance(32768));
 	
@@ -486,6 +530,7 @@ public abstract class SettingSpec<V>
 	)	
 	public static final SettingSpec<Boolean> DTLS_NEED_CLIENT_AUTH = 
 			SettingSpecHelper.newBooleanSettingSpec(
+					PERMISSION_OBJECT, 
 					"dtls.needClientAuth",
 					Boolean.FALSE);
 	
@@ -496,6 +541,7 @@ public abstract class SettingSpec<V>
 	)	
 	public static final SettingSpec<String> DTLS_PROTOCOL = 
 			SettingSpecHelper.newStringSettingSpec(
+					PERMISSION_OBJECT, 
 					"dtls.protocol",
 					"DTLSv1.2");
 	
@@ -506,6 +552,7 @@ public abstract class SettingSpec<V>
 	)	
 	public static final SettingSpec<File> DTLS_TRUST_STORE_FILE = 
 			SettingSpecHelper.newFileSettingSpec(
+					PERMISSION_OBJECT, 
 					"dtls.trustStoreFile",
 					null);
 	
@@ -516,6 +563,7 @@ public abstract class SettingSpec<V>
 	)	
 	public static final SettingSpec<EncryptedPassword> DTLS_TRUST_STORE_PASSWORD = 
 			SettingSpecHelper.newEncryptedPasswordSettingSpec(
+					PERMISSION_OBJECT, 
 					"dtls.trustStorePassword",
 					EncryptedPassword.newInstance(new char[] { }));
 	
@@ -526,6 +574,7 @@ public abstract class SettingSpec<V>
 	)		
 	public static final SettingSpec<String> DTLS_TRUST_STORE_TYPE = 
 			SettingSpecHelper.newStringSettingSpec(
+					PERMISSION_OBJECT, 
 					"dtls.trustStoreType",
 					"PKCS12");
 	
@@ -537,6 +586,7 @@ public abstract class SettingSpec<V>
 	)	
 	public static final SettingSpec<Boolean> DTLS_WANT_CLIENT_AUTH = 
 			SettingSpecHelper.newBooleanSettingSpec(
+					PERMISSION_OBJECT, 
 					"dtls.wantClientAuth",
 					Boolean.FALSE);
 	
@@ -547,6 +597,7 @@ public abstract class SettingSpec<V>
 	)
 	public static final SettingSpec<Host> HOST = 
 			SettingSpecHelper.newHostSettingSpec(
+					PERMISSION_OBJECT, 
 					"host",
 					Host.getInet4AllZerosInstance());
 	
@@ -556,6 +607,7 @@ public abstract class SettingSpec<V>
 	)
 	public static final SettingSpec<Port> PORT = 
 			SettingSpecHelper.newPortSettingSpec(
+					PERMISSION_OBJECT, 
 					"port",
 					Port.newInstance(1080));
 	
@@ -566,17 +618,20 @@ public abstract class SettingSpec<V>
 	)
 	public static final SettingSpec<SocketSettings> SOCKET_SETTINGS = 
 			SettingSpecHelper.newSocketSettingsSettingSpec(
+					PERMISSION_OBJECT, 
 					"socketSettings",
 					SocketSettings.newInstance());
 	
 	public static final SettingSpec<Socks5RequestCriteria> SOCKS5_ALLOWED_SOCKS5_REQUEST_CRITERIA = 
 			SettingSpecHelper.newSocks5RequestCriteriaSettingSpec(
+					PERMISSION_OBJECT, 
 					"socks5.allowedSocks5RequestCriteria",
 					Socks5RequestCriteria.newInstance(
 							new Socks5RequestCriterion.Builder().build()));
 	
 	public static final SettingSpec<Socks5RequestCriteria> SOCKS5_BLOCKED_SOCKS5_REQUEST_CRITERIA = 
 			SettingSpecHelper.newSocks5RequestCriteriaSettingSpec(
+					PERMISSION_OBJECT, 
 					"socks5.blockedSocks5RequestCriteria",
 					Socks5RequestCriteria.getEmptyInstance());
 	
@@ -589,6 +644,7 @@ public abstract class SettingSpec<V>
 	)
 	public static final SettingSpec<Boolean> SOCKS5_GSSAPIAUTH_NEC_REFERENCE_IMPL = 
 			SettingSpecHelper.newBooleanSettingSpec(
+					PERMISSION_OBJECT, 
 					"socks5.gssapiauth.necReferenceImpl",
 					Boolean.FALSE);
 	
@@ -602,6 +658,7 @@ public abstract class SettingSpec<V>
 	)
 	public static final SettingSpec<ProtectionLevels> SOCKS5_GSSAPIAUTH_PROTECTION_LEVELS = 
 			SettingSpecHelper.newProtectionLevelsSettingSpec(
+					PERMISSION_OBJECT, 
 					"socks5.gssapiauth.protectionLevels",
 					ProtectionLevels.getDefault());
 	
@@ -613,6 +670,7 @@ public abstract class SettingSpec<V>
 	)
 	public static final SettingSpec<Methods> SOCKS5_METHODS = 
 			SettingSpecHelper.newMethodsSettingSpec(
+					PERMISSION_OBJECT, 
 					"socks5.methods",
 					Methods.newInstance(Method.NO_AUTHENTICATION_REQUIRED));
 	
@@ -623,6 +681,7 @@ public abstract class SettingSpec<V>
 	)
 	public static final SettingSpec<Criteria> SOCKS5_ON_BIND_ALLOWED_INBOUND_ADDRESS_CRITERIA = 
 			SettingSpecHelper.newCriteriaSettingSpec(
+					PERMISSION_OBJECT, 
 					"socks5.onBind.allowedInboundAddressCriteria",
 					Criteria.newInstance(Criterion.newInstance(
 							CriterionMethod.MATCHES, ".*")));
@@ -634,6 +693,7 @@ public abstract class SettingSpec<V>
 	)
 	public static final SettingSpec<Criteria> SOCKS5_ON_BIND_BLOCKED_INBOUND_ADDRESS_CRITERIA = 
 			SettingSpecHelper.newCriteriaSettingSpec(
+					PERMISSION_OBJECT, 
 					"socks5.onBind.blockedInboundAddressCriteria",
 					Criteria.getEmptyInstance());
 	
@@ -644,6 +704,7 @@ public abstract class SettingSpec<V>
 	)
 	public static final SettingSpec<SocketSettings> SOCKS5_ON_BIND_LISTEN_SOCKET_SETTINGS = 
 			SettingSpecHelper.newSocketSettingsSettingSpec(
+					PERMISSION_OBJECT, 
 					"socks5.onBind.listenSocketSettings",
 					SocketSettings.newInstance());
 	
@@ -654,6 +715,7 @@ public abstract class SettingSpec<V>
 	)
 	public static final SettingSpec<PositiveInteger> SOCKS5_ON_BIND_RELAY_BUFFER_SIZE = 
 			SettingSpecHelper.newPositiveIntegerSettingSpec(
+					PERMISSION_OBJECT, 
 					"socks5.onBind.relayBufferSize",
 					PositiveInteger.newInstance(1024));
 	
@@ -664,6 +726,7 @@ public abstract class SettingSpec<V>
 	)
 	public static final SettingSpec<PositiveInteger> SOCKS5_ON_BIND_RELAY_TIMEOUT = 
 			SettingSpecHelper.newPositiveIntegerSettingSpec(
+					PERMISSION_OBJECT, 
 					"socks5.onBind.relayTimeout",
 					PositiveInteger.newInstance(60000)); // 1 minute
 	
@@ -677,6 +740,7 @@ public abstract class SettingSpec<V>
 	)	
 	public static final SettingSpec<Boolean> SOCKS5_ON_CONNECT_PREPARE_SERVER_FACING_SOCKET = 
 			SettingSpecHelper.newBooleanSettingSpec(
+					PERMISSION_OBJECT, 
 					"socks5.onConnect.prepareServerFacingSocket",
 					Boolean.FALSE);
 	
@@ -687,6 +751,7 @@ public abstract class SettingSpec<V>
 	)
 	public static final SettingSpec<PositiveInteger> SOCKS5_ON_CONNECT_RELAY_BUFFER_SIZE = 
 			SettingSpecHelper.newPositiveIntegerSettingSpec(
+					PERMISSION_OBJECT, 
 					"socks5.onConnect.relayBufferSize",
 					PositiveInteger.newInstance(1024));
 	
@@ -697,6 +762,7 @@ public abstract class SettingSpec<V>
 	)
 	public static final SettingSpec<PositiveInteger> SOCKS5_ON_CONNECT_RELAY_TIMEOUT = 
 			SettingSpecHelper.newPositiveIntegerSettingSpec(
+					PERMISSION_OBJECT, 
 					"socks5.onConnect.relayTimeout",
 					PositiveInteger.newInstance(60000)); // 1 minute
 	
@@ -707,6 +773,7 @@ public abstract class SettingSpec<V>
 	)
 	public static final SettingSpec<Host> SOCKS5_ON_CONNECT_SERVER_FACING_BIND_HOST = 
 			SettingSpecHelper.newHostSettingSpec(
+					PERMISSION_OBJECT, 
 					"socks5.onConnect.serverFacingBindHost",
 					Host.getInet4AllZerosInstance());
 	
@@ -717,6 +784,7 @@ public abstract class SettingSpec<V>
 	)
 	public static final SettingSpec<PositiveInteger> SOCKS5_ON_CONNECT_SERVER_FACING_CONNECT_TIMEOUT = 
 			SettingSpecHelper.newPositiveIntegerSettingSpec(
+					PERMISSION_OBJECT, 
 					"socks5.onConnect.serverFacingConnectTimeout",
 					PositiveInteger.newInstance(60000)); // 1 minute
 	
@@ -727,6 +795,7 @@ public abstract class SettingSpec<V>
 	)
 	public static final SettingSpec<SocketSettings> SOCKS5_ON_CONNECT_SERVER_FACING_SOCKET_SETTINGS = 
 			SettingSpecHelper.newSocketSettingsSettingSpec(
+					PERMISSION_OBJECT, 
 					"socks5.onConnect.serverFacingSocketSettings",
 					SocketSettings.newInstance());
 	
@@ -737,6 +806,7 @@ public abstract class SettingSpec<V>
 	)
 	public static final SettingSpec<Criteria> SOCKS5_ON_UDP_ASSOCIATE_ALLOWED_INBOUND_ADDRESS_CRITERIA = 
 			SettingSpecHelper.newCriteriaSettingSpec(
+					PERMISSION_OBJECT, 
 					"socks5.onUdpAssociate.allowedInboundAddressCriteria",
 					Criteria.newInstance(Criterion.newInstance(
 							CriterionMethod.MATCHES, ".*")));
@@ -748,6 +818,7 @@ public abstract class SettingSpec<V>
 	)
 	public static final SettingSpec<Criteria> SOCKS5_ON_UDP_ASSOCIATE_ALLOWED_OUTBOUND_ADDRESS_CRITERIA = 
 			SettingSpecHelper.newCriteriaSettingSpec(
+					PERMISSION_OBJECT, 
 					"socks5.onUdpAssociate.allowedOutboundAddressCriteria",
 					Criteria.newInstance(Criterion.newInstance(
 							CriterionMethod.MATCHES, ".*")));
@@ -759,6 +830,7 @@ public abstract class SettingSpec<V>
 	)
 	public static final SettingSpec<Criteria> SOCKS5_ON_UDP_ASSOCIATE_BLOCKED_INBOUND_ADDRESS_CRITERIA = 
 			SettingSpecHelper.newCriteriaSettingSpec(
+					PERMISSION_OBJECT, 
 					"socks5.onUdpAssociate.blockedInboundAddressCriteria",
 					Criteria.getEmptyInstance());
 	
@@ -769,6 +841,7 @@ public abstract class SettingSpec<V>
 	)
 	public static final SettingSpec<Criteria> SOCKS5_ON_UDP_ASSOCIATE_BLOCKED_OUTBOUND_ADDRESS_CRITERIA = 
 			SettingSpecHelper.newCriteriaSettingSpec(
+					PERMISSION_OBJECT, 
 					"socks5.onUdpAssociate.blockedOutboundAddressCriteria",
 					Criteria.getEmptyInstance());
 	
@@ -779,6 +852,7 @@ public abstract class SettingSpec<V>
 	)
 	public static final SettingSpec<Host> SOCKS5_ON_UDP_ASSOCIATE_CLIENT_FACING_BIND_HOST = 
 			SettingSpecHelper.newHostSettingSpec(
+					PERMISSION_OBJECT, 
 					"socks5.onUdpAssociate.clientFacingBindHost",
 					Host.getInet4AllZerosInstance());
 	
@@ -789,6 +863,7 @@ public abstract class SettingSpec<V>
 	)
 	public static final SettingSpec<SocketSettings> SOCKS5_ON_UDP_ASSOCIATE_CLIENT_FACING_SOCKET_SETTINGS = 
 			SettingSpecHelper.newSocketSettingsSettingSpec(
+					PERMISSION_OBJECT, 
 					"socks5.onUdpAssociate.clientFacingSocketSettings",
 					SocketSettings.newInstance());
 	
@@ -799,6 +874,7 @@ public abstract class SettingSpec<V>
 	)
 	public static final SettingSpec<PositiveInteger> SOCKS5_ON_UDP_ASSOCIATE_RELAY_BUFFER_SIZE = 
 			SettingSpecHelper.newPositiveIntegerSettingSpec(
+					PERMISSION_OBJECT, 
 					"socks5.onUdpAssociate.relayBufferSize",
 					PositiveInteger.newInstance(32768));
 	
@@ -809,6 +885,7 @@ public abstract class SettingSpec<V>
 	)
 	public static final SettingSpec<PositiveInteger> SOCKS5_ON_UDP_ASSOCIATE_RELAY_TIMEOUT = 
 			SettingSpecHelper.newPositiveIntegerSettingSpec(
+					PERMISSION_OBJECT, 
 					"socks5.onUdpAssociate.relayTimeout",
 					PositiveInteger.newInstance(60000)); // 1 minute
 	
@@ -819,6 +896,7 @@ public abstract class SettingSpec<V>
 	)
 	public static final SettingSpec<Host> SOCKS5_ON_UDP_ASSOCIATE_SERVER_FACING_BIND_HOST = 
 			SettingSpecHelper.newHostSettingSpec(
+					PERMISSION_OBJECT, 
 					"socks5.onUdpAssociate.serverFacingBindHost",
 					Host.getInet4AllZerosInstance());
 	
@@ -829,6 +907,7 @@ public abstract class SettingSpec<V>
 	)
 	public static final SettingSpec<SocketSettings> SOCKS5_ON_UDP_ASSOCIATE_SERVER_FACING_SOCKET_SETTINGS = 
 			SettingSpecHelper.newSocketSettingsSettingSpec(
+					PERMISSION_OBJECT, 
 					"socks5.onUdpAssociate.serverFacingSocketSettings",
 					SocketSettings.newInstance());
 	
@@ -838,6 +917,7 @@ public abstract class SettingSpec<V>
 	)	
 	public static final SettingSpec<Socks5RequestWorkerFactory> SOCKS5_SOCKS5_REQUEST_WORKER_FACTORY = 
 			SettingSpecHelper.newSocks5RequestWorkerFactorySettingSpec(
+					PERMISSION_OBJECT, 
 					"socks5.socks5RequestWorkerFactory",
 					null);
 	
@@ -847,6 +927,7 @@ public abstract class SettingSpec<V>
 	)
 	public static final SettingSpec<UsernamePasswordAuthenticator> SOCKS5_USERPASSAUTH_USERNAME_PASSWORD_AUTHENTICATOR = 
 			SettingSpecHelper.newUsernamePasswordAuthenticatorSettingSpec(
+					PERMISSION_OBJECT, 
 					"socks5.userpassauth.usernamePasswordAuthenticator",
 					null);
 	
@@ -857,6 +938,7 @@ public abstract class SettingSpec<V>
 	)	
 	public static final SettingSpec<Boolean> SSL_ENABLED = 
 			SettingSpecHelper.newBooleanSettingSpec(
+					PERMISSION_OBJECT, 
 					"ssl.enabled",
 					Boolean.FALSE);
 	
@@ -867,6 +949,7 @@ public abstract class SettingSpec<V>
 	)	
 	public static final SettingSpec<Strings> SSL_ENABLED_CIPHER_SUITES = 
 			SettingSpecHelper.newStringsSettingSpec(
+					PERMISSION_OBJECT, 
 					"ssl.enabledCipherSuites",
 					Strings.newInstance(new String[] { }));
 	
@@ -877,6 +960,7 @@ public abstract class SettingSpec<V>
 	)	
 	public static final SettingSpec<Strings> SSL_ENABLED_PROTOCOLS = 
 			SettingSpecHelper.newStringsSettingSpec(
+					PERMISSION_OBJECT, 
 					"ssl.enabledProtocols",
 					Strings.newInstance(new String[] { }));
 	
@@ -887,6 +971,7 @@ public abstract class SettingSpec<V>
 	)	
 	public static final SettingSpec<File> SSL_KEY_STORE_FILE = 
 			SettingSpecHelper.newFileSettingSpec(
+					PERMISSION_OBJECT, 
 					"ssl.keyStoreFile",
 					null);
 	
@@ -897,6 +982,7 @@ public abstract class SettingSpec<V>
 	)	
 	public static final SettingSpec<EncryptedPassword> SSL_KEY_STORE_PASSWORD = 
 			SettingSpecHelper.newEncryptedPasswordSettingSpec(
+					PERMISSION_OBJECT, 
 					"ssl.keyStorePassword",
 					EncryptedPassword.newInstance(new char[] { }));
 	
@@ -907,6 +993,7 @@ public abstract class SettingSpec<V>
 	)	
 	public static final SettingSpec<String> SSL_KEY_STORE_TYPE = 
 			SettingSpecHelper.newStringSettingSpec(
+					PERMISSION_OBJECT, 
 					"ssl.keyStoreType",
 					"PKCS12");
 	
@@ -918,6 +1005,7 @@ public abstract class SettingSpec<V>
 	)	
 	public static final SettingSpec<Boolean> SSL_NEED_CLIENT_AUTH = 
 			SettingSpecHelper.newBooleanSettingSpec(
+					PERMISSION_OBJECT, 
 					"ssl.needClientAuth",
 					Boolean.FALSE);
 	
@@ -928,6 +1016,7 @@ public abstract class SettingSpec<V>
 	)	
 	public static final SettingSpec<String> SSL_PROTOCOL = 
 			SettingSpecHelper.newStringSettingSpec(
+					PERMISSION_OBJECT, 
 					"ssl.protocol",
 					"TLSv1.2");
 	
@@ -938,6 +1027,7 @@ public abstract class SettingSpec<V>
 	)	
 	public static final SettingSpec<File> SSL_TRUST_STORE_FILE = 
 			SettingSpecHelper.newFileSettingSpec(
+					PERMISSION_OBJECT, 
 					"ssl.trustStoreFile",
 					null);
 	
@@ -948,6 +1038,7 @@ public abstract class SettingSpec<V>
 	)	
 	public static final SettingSpec<EncryptedPassword> SSL_TRUST_STORE_PASSWORD = 
 			SettingSpecHelper.newEncryptedPasswordSettingSpec(
+					PERMISSION_OBJECT, 
 					"ssl.trustStorePassword",
 					EncryptedPassword.newInstance(new char[] { }));
 	
@@ -958,6 +1049,7 @@ public abstract class SettingSpec<V>
 	)		
 	public static final SettingSpec<String> SSL_TRUST_STORE_TYPE = 
 			SettingSpecHelper.newStringSettingSpec(
+					PERMISSION_OBJECT, 
 					"ssl.trustStoreType",
 					"PKCS12");
 	
@@ -969,6 +1061,7 @@ public abstract class SettingSpec<V>
 	)	
 	public static final SettingSpec<Boolean> SSL_WANT_CLIENT_AUTH = 
 			SettingSpecHelper.newBooleanSettingSpec(
+					PERMISSION_OBJECT, 
 					"ssl.wantClientAuth",
 					Boolean.FALSE);
 	
@@ -993,10 +1086,18 @@ public abstract class SettingSpec<V>
 	private final String string;
 	private final Class<V> valueType;
 		
-	public SettingSpec(
-			final String s, final Class<V> valType, final V defaultVal) {
+	public SettingSpec( 
+			final Object permissionObj, 
+			final String s, 
+			final Class<V> valType, 
+			final V defaultVal) {
+		Objects.requireNonNull(permissionObj);
 		Objects.requireNonNull(s);
 		Objects.requireNonNull(valType);
+		if (!PERMISSION_OBJECT.equals(permissionObj)) {
+			throw new IllegalArgumentException(
+					"permission object not from SettingSpec");
+		}		
 		this.defaultValue = valType.cast(defaultVal);
 		this.ordinal = nextOrdinal++;
 		this.string = s;

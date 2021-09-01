@@ -7,8 +7,11 @@ import com.github.jh3nd3rs0n.jargyle.net.socks.server.SettingSpec;
 
 final class FileSettingSpec extends SettingSpec<File> {
 
-	public FileSettingSpec(final String s, final File defaultVal) {
-		super(s, File.class, defaultVal);
+	public FileSettingSpec(
+			final Object permissionObj, 
+			final String s, 
+			final File defaultVal) {
+		super(permissionObj, s, File.class, defaultVal);
 	}
 
 	@Override

@@ -4,7 +4,7 @@ import com.github.jh3nd3rs0n.jargyle.net.socks.server.Setting;
 import com.github.jh3nd3rs0n.jargyle.net.socks.server.SettingSpec;
 import com.github.jh3nd3rs0n.jargyle.util.Criteria;
 
-final class CriteriaSettingSpec extends SettingSpec<Criteria> {
+public final class CriteriaSettingSpec extends SettingSpec<Criteria> {
 
 	public CriteriaSettingSpec(
 			final Object permissionObj, 

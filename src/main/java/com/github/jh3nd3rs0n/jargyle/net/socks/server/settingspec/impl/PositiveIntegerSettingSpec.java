@@ -4,7 +4,7 @@ import com.github.jh3nd3rs0n.jargyle.net.socks.server.Setting;
 import com.github.jh3nd3rs0n.jargyle.net.socks.server.SettingSpec;
 import com.github.jh3nd3rs0n.jargyle.util.PositiveInteger;
 
-final class PositiveIntegerSettingSpec extends SettingSpec<PositiveInteger> {
+public final class PositiveIntegerSettingSpec extends SettingSpec<PositiveInteger> {
 
 	public PositiveIntegerSettingSpec(
 			final Object permissionObj, 

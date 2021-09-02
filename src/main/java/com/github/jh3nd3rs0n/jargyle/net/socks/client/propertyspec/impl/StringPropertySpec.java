@@ -3,7 +3,7 @@ package com.github.jh3nd3rs0n.jargyle.net.socks.client.propertyspec.impl;
 import com.github.jh3nd3rs0n.jargyle.net.socks.client.Property;
 import com.github.jh3nd3rs0n.jargyle.net.socks.client.PropertySpec;
 
-final class StringPropertySpec extends PropertySpec<String> {
+public final class StringPropertySpec extends PropertySpec<String> {
 
 	public StringPropertySpec(
 			final Object permissionObj, 

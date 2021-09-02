@@ -6,7 +6,7 @@ import org.ietf.jgss.Oid;
 import com.github.jh3nd3rs0n.jargyle.net.socks.server.Setting;
 import com.github.jh3nd3rs0n.jargyle.net.socks.server.SettingSpec;
 
-final class OidSettingSpec extends SettingSpec<Oid> {
+public final class OidSettingSpec extends SettingSpec<Oid> {
 
 	public OidSettingSpec(
 			final Object permissionObj, 

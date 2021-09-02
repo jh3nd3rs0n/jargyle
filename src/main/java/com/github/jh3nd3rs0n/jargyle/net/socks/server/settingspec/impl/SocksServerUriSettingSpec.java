@@ -4,7 +4,8 @@ import com.github.jh3nd3rs0n.jargyle.net.socks.client.SocksServerUri;
 import com.github.jh3nd3rs0n.jargyle.net.socks.server.Setting;
 import com.github.jh3nd3rs0n.jargyle.net.socks.server.SettingSpec;
 
-final class SocksServerUriSettingSpec extends SettingSpec<SocksServerUri> {
+public final class SocksServerUriSettingSpec 
+	extends SettingSpec<SocksServerUri> {
 
 	public SocksServerUriSettingSpec(
 			final Object permissionObj, 

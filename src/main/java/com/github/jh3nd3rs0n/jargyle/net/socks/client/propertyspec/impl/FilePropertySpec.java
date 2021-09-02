@@ -5,7 +5,7 @@ import java.io.File;
 import com.github.jh3nd3rs0n.jargyle.net.socks.client.Property;
 import com.github.jh3nd3rs0n.jargyle.net.socks.client.PropertySpec;
 
-final class FilePropertySpec extends PropertySpec<File> {
+public final class FilePropertySpec extends PropertySpec<File> {
 
 	public FilePropertySpec(
 			final Object permissionObj, 

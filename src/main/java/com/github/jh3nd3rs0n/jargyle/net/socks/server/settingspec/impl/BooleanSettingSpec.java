@@ -3,7 +3,7 @@ package com.github.jh3nd3rs0n.jargyle.net.socks.server.settingspec.impl;
 import com.github.jh3nd3rs0n.jargyle.net.socks.server.Setting;
 import com.github.jh3nd3rs0n.jargyle.net.socks.server.SettingSpec;
 
-final class BooleanSettingSpec extends SettingSpec<Boolean> {
+public final class BooleanSettingSpec extends SettingSpec<Boolean> {
 
 	public BooleanSettingSpec(
 			final Object permissionObj, 

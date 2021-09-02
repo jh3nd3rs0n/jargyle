@@ -4,7 +4,8 @@ import com.github.jh3nd3rs0n.jargyle.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.net.socks.server.Setting;
 import com.github.jh3nd3rs0n.jargyle.net.socks.server.SettingSpec;
 
-final class SocketSettingsSettingSpec extends SettingSpec<SocketSettings> {
+public final class SocketSettingsSettingSpec 
+	extends SettingSpec<SocketSettings> {
 
 	public SocketSettingsSettingSpec(
 			final Object permissionObj, 

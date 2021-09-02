@@ -4,7 +4,7 @@ import com.github.jh3nd3rs0n.jargyle.net.socks.server.Setting;
 import com.github.jh3nd3rs0n.jargyle.net.socks.server.SettingSpec;
 import com.github.jh3nd3rs0n.jargyle.security.EncryptedPassword;
 
-final class EncryptedPasswordSettingSpec
+public final class EncryptedPasswordSettingSpec
 	extends SettingSpec<EncryptedPassword> {
 
 	public EncryptedPasswordSettingSpec(

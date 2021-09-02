@@ -4,7 +4,7 @@ import com.github.jh3nd3rs0n.jargyle.net.socks.server.Setting;
 import com.github.jh3nd3rs0n.jargyle.net.socks.server.SettingSpec;
 import com.github.jh3nd3rs0n.jargyle.util.NonnegativeInteger;
 
-final class NonnegativeIntegerSettingSpec 
+public final class NonnegativeIntegerSettingSpec 
 	extends SettingSpec<NonnegativeInteger> {
 
 	public NonnegativeIntegerSettingSpec(

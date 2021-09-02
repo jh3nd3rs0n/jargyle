@@ -4,7 +4,7 @@ import com.github.jh3nd3rs0n.jargyle.net.socks.server.Setting;
 import com.github.jh3nd3rs0n.jargyle.net.socks.server.SettingSpec;
 import com.github.jh3nd3rs0n.jargyle.util.Strings;
 
-final class StringsSettingSpec extends SettingSpec<Strings> {
+public final class StringsSettingSpec extends SettingSpec<Strings> {
 
 	public StringsSettingSpec(
 			final Object permissionObj, 

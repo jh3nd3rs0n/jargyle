@@ -4,7 +4,7 @@ import com.github.jh3nd3rs0n.jargyle.net.Port;
 import com.github.jh3nd3rs0n.jargyle.net.socks.server.Setting;
 import com.github.jh3nd3rs0n.jargyle.net.socks.server.SettingSpec;
 
-final class PortSettingSpec extends SettingSpec<Port> {
+public final class PortSettingSpec extends SettingSpec<Port> {
 
 	public PortSettingSpec(
 			final Object permissionObj, 

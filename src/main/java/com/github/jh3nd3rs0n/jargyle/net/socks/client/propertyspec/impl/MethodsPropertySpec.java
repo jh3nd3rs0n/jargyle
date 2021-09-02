@@ -4,7 +4,7 @@ import com.github.jh3nd3rs0n.jargyle.net.socks.client.Property;
 import com.github.jh3nd3rs0n.jargyle.net.socks.client.PropertySpec;
 import com.github.jh3nd3rs0n.jargyle.net.socks.transport.v5.Methods;
 
-final class MethodsPropertySpec extends PropertySpec<Methods> {
+public final class MethodsPropertySpec extends PropertySpec<Methods> {
 
 	public MethodsPropertySpec(
 			final Object permissionObj, 

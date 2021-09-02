@@ -4,7 +4,7 @@ import com.github.jh3nd3rs0n.jargyle.net.socks.client.Property;
 import com.github.jh3nd3rs0n.jargyle.net.socks.client.PropertySpec;
 import com.github.jh3nd3rs0n.jargyle.security.EncryptedPassword;
 
-final class EncryptedPasswordPropertySpec 
+public final class EncryptedPasswordPropertySpec 
 	extends PropertySpec<EncryptedPassword> {
 
 	public EncryptedPasswordPropertySpec(

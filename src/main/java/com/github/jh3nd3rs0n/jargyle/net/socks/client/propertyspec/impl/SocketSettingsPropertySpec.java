@@ -4,7 +4,7 @@ import com.github.jh3nd3rs0n.jargyle.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.net.socks.client.Property;
 import com.github.jh3nd3rs0n.jargyle.net.socks.client.PropertySpec;
 
-final class SocketSettingsPropertySpec 
+public final class SocketSettingsPropertySpec 
 	extends PropertySpec<SocketSettings> {
 
 	public SocketSettingsPropertySpec(

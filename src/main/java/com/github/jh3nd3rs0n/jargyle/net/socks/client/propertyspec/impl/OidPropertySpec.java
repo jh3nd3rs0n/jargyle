@@ -6,7 +6,7 @@ import org.ietf.jgss.Oid;
 import com.github.jh3nd3rs0n.jargyle.net.socks.client.Property;
 import com.github.jh3nd3rs0n.jargyle.net.socks.client.PropertySpec;
 
-final class OidPropertySpec extends PropertySpec<Oid> {
+public final class OidPropertySpec extends PropertySpec<Oid> {
 
 	private static Oid newOid(final String s) {
 		Oid oid = null;

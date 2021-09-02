@@ -4,7 +4,7 @@ import com.github.jh3nd3rs0n.jargyle.net.socks.client.Property;
 import com.github.jh3nd3rs0n.jargyle.net.socks.client.PropertySpec;
 import com.github.jh3nd3rs0n.jargyle.util.Criteria;
 
-final class CriteriaPropertySpec extends PropertySpec<Criteria> {
+public final class CriteriaPropertySpec extends PropertySpec<Criteria> {
 
 	public CriteriaPropertySpec(
 			final Object permissionObj, 

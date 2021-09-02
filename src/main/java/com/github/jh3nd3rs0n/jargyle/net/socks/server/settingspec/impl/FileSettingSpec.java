@@ -5,7 +5,7 @@ import java.io.File;
 import com.github.jh3nd3rs0n.jargyle.net.socks.server.Setting;
 import com.github.jh3nd3rs0n.jargyle.net.socks.server.SettingSpec;
 
-final class FileSettingSpec extends SettingSpec<File> {
+public final class FileSettingSpec extends SettingSpec<File> {
 
 	public FileSettingSpec(
 			final Object permissionObj, 

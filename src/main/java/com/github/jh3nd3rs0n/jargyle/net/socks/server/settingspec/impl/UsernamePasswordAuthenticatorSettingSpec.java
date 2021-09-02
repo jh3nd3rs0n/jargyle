@@ -4,7 +4,7 @@ import com.github.jh3nd3rs0n.jargyle.net.socks.server.Setting;
 import com.github.jh3nd3rs0n.jargyle.net.socks.server.SettingSpec;
 import com.github.jh3nd3rs0n.jargyle.net.socks.server.v5.userpassauth.UsernamePasswordAuthenticator;
 
-final class UsernamePasswordAuthenticatorSettingSpec 
+public final class UsernamePasswordAuthenticatorSettingSpec 
 	extends SettingSpec<UsernamePasswordAuthenticator> {
 
 	public UsernamePasswordAuthenticatorSettingSpec(

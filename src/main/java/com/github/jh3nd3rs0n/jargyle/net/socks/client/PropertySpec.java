@@ -10,7 +10,20 @@ import org.ietf.jgss.Oid;
 import com.github.jh3nd3rs0n.jargyle.net.Host;
 import com.github.jh3nd3rs0n.jargyle.net.Port;
 import com.github.jh3nd3rs0n.jargyle.net.SocketSettings;
-import com.github.jh3nd3rs0n.jargyle.net.socks.client.propertyspec.impl.PropertySpecHelper;
+import com.github.jh3nd3rs0n.jargyle.net.socks.client.propertyspec.impl.BooleanPropertySpec;
+import com.github.jh3nd3rs0n.jargyle.net.socks.client.propertyspec.impl.EncryptedPasswordPropertySpec;
+import com.github.jh3nd3rs0n.jargyle.net.socks.client.propertyspec.impl.FilePropertySpec;
+import com.github.jh3nd3rs0n.jargyle.net.socks.client.propertyspec.impl.HostPropertySpec;
+import com.github.jh3nd3rs0n.jargyle.net.socks.client.propertyspec.impl.MethodsPropertySpec;
+import com.github.jh3nd3rs0n.jargyle.net.socks.client.propertyspec.impl.OidPropertySpec;
+import com.github.jh3nd3rs0n.jargyle.net.socks.client.propertyspec.impl.PortPropertySpec;
+import com.github.jh3nd3rs0n.jargyle.net.socks.client.propertyspec.impl.PositiveIntegerPropertySpec;
+import com.github.jh3nd3rs0n.jargyle.net.socks.client.propertyspec.impl.ProtectionLevelsPropertySpec;
+import com.github.jh3nd3rs0n.jargyle.net.socks.client.propertyspec.impl.SocketSettingsPropertySpec;
+import com.github.jh3nd3rs0n.jargyle.net.socks.client.propertyspec.impl.StringPropertySpec;
+import com.github.jh3nd3rs0n.jargyle.net.socks.client.propertyspec.impl.StringsPropertySpec;
+import com.github.jh3nd3rs0n.jargyle.net.socks.client.propertyspec.impl.UserEncryptedPasswordPropertySpec;
+import com.github.jh3nd3rs0n.jargyle.net.socks.client.propertyspec.impl.UsernamePropertySpec;
 import com.github.jh3nd3rs0n.jargyle.net.socks.transport.v5.Method;
 import com.github.jh3nd3rs0n.jargyle.net.socks.transport.v5.Methods;
 import com.github.jh3nd3rs0n.jargyle.net.socks.transport.v5.gssapiauth.ProtectionLevels;
@@ -29,199 +42,199 @@ public abstract class PropertySpec<V>
 			new ArrayList<PropertySpec<Object>>();
 	
 	public static final PropertySpec<Host> BIND_HOST = 
-			PropertySpecHelper.newHostPropertySpec(
+			new HostPropertySpec(
 					PERMISSION_OBJECT,
 					"socksClient.bindHost",
 					Host.getInet4AllZerosInstance());
 	
 	public static final PropertySpec<Port> BIND_PORT = 
-			PropertySpecHelper.newPortPropertySpec(
+			new PortPropertySpec(
 					PERMISSION_OBJECT,
 					"socksClient.bindPort",
 					Port.newInstance(0));
 	
 	public static final PropertySpec<PositiveInteger> CONNECT_TIMEOUT = 
-			PropertySpecHelper.newPositiveIntegerPropertySpec(
+			new PositiveIntegerPropertySpec(
 					PERMISSION_OBJECT,
 					"socksClient.connectTimeout",
 					PositiveInteger.newInstance(60000)); // 1 minute
 	
 	public static final PropertySpec<Boolean> DTLS_ENABLED = 
-			PropertySpecHelper.newBooleanPropertySpec(
+			new BooleanPropertySpec(
 					PERMISSION_OBJECT,
 					"socksClient.dtls.enabled",
 					Boolean.FALSE);
 	
 	public static final PropertySpec<Strings> DTLS_ENABLED_CIPHER_SUITES = 
-			PropertySpecHelper.newStringsPropertySpec(
+			new StringsPropertySpec(
 					PERMISSION_OBJECT,
 					"socksClient.dtls.enabledCipherSuites",
 					Strings.newInstance(new String[] { }));
 	
 	public static final PropertySpec<Strings> DTLS_ENABLED_PROTOCOLS = 
-			PropertySpecHelper.newStringsPropertySpec(
+			new StringsPropertySpec(
 					PERMISSION_OBJECT,
 					"socksClient.dtls.enabledProtocols",
 					Strings.newInstance(new String[] { }));
 	
 	public static final PropertySpec<File> DTLS_KEY_STORE_FILE = 
-			PropertySpecHelper.newFilePropertySpec(
+			new FilePropertySpec(
 					PERMISSION_OBJECT,
 					"socksClient.dtls.keyStoreFile",
 					null);
 	
 	public static final PropertySpec<EncryptedPassword> DTLS_KEY_STORE_PASSWORD = 
-			PropertySpecHelper.newEncryptedPasswordPropertySpec(
+			new EncryptedPasswordPropertySpec(
 					PERMISSION_OBJECT,
 					"socksClient.dtls.keyStorePassword",
 					EncryptedPassword.newInstance(new char[] { }));
 	
 	public static final PropertySpec<String> DTLS_KEY_STORE_TYPE = 
-			PropertySpecHelper.newStringPropertySpec(
+			new StringPropertySpec(
 					PERMISSION_OBJECT,
 					"socksClient.dtls.keyStoreType",
 					"PKCS12");
 
 	public static final PropertySpec<PositiveInteger> DTLS_MAX_PACKET_SIZE = 
-			PropertySpecHelper.newPositiveIntegerPropertySpec(
+			new PositiveIntegerPropertySpec(
 					PERMISSION_OBJECT,
 					"socksClient.dtls.maxPacketSize",
 					PositiveInteger.newInstance(32768));
 	
 	public static final PropertySpec<String> DTLS_PROTOCOL = 
-			PropertySpecHelper.newStringPropertySpec(
+			new StringPropertySpec(
 					PERMISSION_OBJECT,
 					"socksClient.dtls.protocol",
 					"DTLSv1.2");
 	
 	public static final PropertySpec<File> DTLS_TRUST_STORE_FILE = 
-			PropertySpecHelper.newFilePropertySpec(
+			new FilePropertySpec(
 					PERMISSION_OBJECT,
 					"socksClient.dtls.trustStoreFile",
 					null);
 	
 	public static final PropertySpec<EncryptedPassword> DTLS_TRUST_STORE_PASSWORD = 
-			PropertySpecHelper.newEncryptedPasswordPropertySpec(
+			new EncryptedPasswordPropertySpec(
 					PERMISSION_OBJECT,
 					"socksClient.dtls.trustStorePassword",
 					EncryptedPassword.newInstance(new char[] { }));
 	
 	public static final PropertySpec<String> DTLS_TRUST_STORE_TYPE = 
-			PropertySpecHelper.newStringPropertySpec(
+			new StringPropertySpec(
 					PERMISSION_OBJECT,
 					"socksClient.dtls.trustStoreType",
 					"PKCS12");
 	
 	public static final PropertySpec<SocketSettings> SOCKET_SETTINGS = 
-			PropertySpecHelper.newSocketSettingsPropertySpec(
+			new SocketSettingsPropertySpec(
 					PERMISSION_OBJECT,
 					"socksClient.socketSettings",
 					SocketSettings.newInstance());
 	
 	public static final PropertySpec<Oid> SOCKS5_GSSAPIAUTH_MECHANISM_OID = 
-			PropertySpecHelper.newOidPropertySpec(
+			new OidPropertySpec(
 					PERMISSION_OBJECT,
 					"socksClient.socks5.gssapiauth.mechanismOid",
 					"1.2.840.113554.1.2.2");
 	
 	public static final PropertySpec<Boolean> SOCKS5_GSSAPIAUTH_NEC_REFERENCE_IMPL = 
-			PropertySpecHelper.newBooleanPropertySpec(
+			new BooleanPropertySpec(
 					PERMISSION_OBJECT,
 					"socksClient.socks5.gssapiauth.necReferenceImpl",
 					Boolean.FALSE);
 	
 	public static final PropertySpec<ProtectionLevels> SOCKS5_GSSAPIAUTH_PROTECTION_LEVELS = 
-			PropertySpecHelper.newProtectionLevelsPropertySpec(
+			new ProtectionLevelsPropertySpec(
 					PERMISSION_OBJECT,
 					"socksClient.socks5.gssapiauth.protectionLevels",
 					ProtectionLevels.getDefault());
 	
 	public static final PropertySpec<String> SOCKS5_GSSAPIAUTH_SERVICE_NAME = 
-			PropertySpecHelper.newStringPropertySpec(
+			new StringPropertySpec(
 					PERMISSION_OBJECT,
 					"socksClient.socks5.gssapiauth.serviceName",
 					null);
 	
 	public static final PropertySpec<Methods> SOCKS5_METHODS = 
-			PropertySpecHelper.newMethodsPropertySpec(
+			new MethodsPropertySpec(
 					PERMISSION_OBJECT,
 					"socksClient.socks5.methods",
 					Methods.newInstance(Method.NO_AUTHENTICATION_REQUIRED));
 	
 	public static final PropertySpec<Boolean> SOCKS5_RESOLVE_USE_RESOLVE_COMMAND = 
-			PropertySpecHelper.newBooleanPropertySpec(
+			new BooleanPropertySpec(
 					PERMISSION_OBJECT,
 					"socksClient.socks5.resolve.useResolveCommand",
 					Boolean.FALSE);
 	
 	public static final PropertySpec<EncryptedPassword> SOCKS5_USERPASSAUTH_PASSWORD = 
-			PropertySpecHelper.newUserEncryptedPasswordPropertySpec(
+			new UserEncryptedPasswordPropertySpec(
 					PERMISSION_OBJECT,
 					"socksClient.socks5.userpathauth.password",
 					EncryptedPassword.newInstance(new char[] { }));
 	
 	public static final PropertySpec<String> SOCKS5_USERPASSAUTH_USERNAME = 
-			PropertySpecHelper.newUsernamePropertySpec(
+			new UsernamePropertySpec(
 					PERMISSION_OBJECT,
 					"socksClient.socks5.userpathauth.username",
 					System.getProperty("user.name"));
 	
 	public static final PropertySpec<Boolean> SSL_ENABLED = 
-			PropertySpecHelper.newBooleanPropertySpec(
+			new BooleanPropertySpec(
 					PERMISSION_OBJECT,
 					"socksClient.ssl.enabled",
 					Boolean.FALSE);
 	
 	public static final PropertySpec<Strings> SSL_ENABLED_CIPHER_SUITES = 
-			PropertySpecHelper.newStringsPropertySpec(
+			new StringsPropertySpec(
 					PERMISSION_OBJECT,
 					"socksClient.ssl.enabledCipherSuites",
 					Strings.newInstance(new String[] { }));
 	
 	public static final PropertySpec<Strings> SSL_ENABLED_PROTOCOLS = 
-			PropertySpecHelper.newStringsPropertySpec(
+			new StringsPropertySpec(
 					PERMISSION_OBJECT,
 					"socksClient.ssl.enabledProtocols",
 					Strings.newInstance(new String[] { }));
 	
 	public static final PropertySpec<File> SSL_KEY_STORE_FILE = 
-			PropertySpecHelper.newFilePropertySpec(
+			new FilePropertySpec(
 					PERMISSION_OBJECT,
 					"socksClient.ssl.keyStoreFile",
 					null);
 	
 	public static final PropertySpec<EncryptedPassword> SSL_KEY_STORE_PASSWORD = 
-			PropertySpecHelper.newEncryptedPasswordPropertySpec(
+			new EncryptedPasswordPropertySpec(
 					PERMISSION_OBJECT,
 					"socksClient.ssl.keyStorePassword",
 					EncryptedPassword.newInstance(new char[] { }));
 	
 	public static final PropertySpec<String> SSL_KEY_STORE_TYPE = 
-			PropertySpecHelper.newStringPropertySpec(
+			new StringPropertySpec(
 					PERMISSION_OBJECT,
 					"socksClient.ssl.keyStoreType",
 					"PKCS12");
 	
 	public static final PropertySpec<String> SSL_PROTOCOL = 
-			PropertySpecHelper.newStringPropertySpec(
+			new StringPropertySpec(
 					PERMISSION_OBJECT,
 					"socksClient.ssl.protocol",
 					"TLSv1.2");
 	
 	public static final PropertySpec<File> SSL_TRUST_STORE_FILE = 
-			PropertySpecHelper.newFilePropertySpec(
+			new FilePropertySpec(
 					PERMISSION_OBJECT,
 					"socksClient.ssl.trustStoreFile",
 					null);
 	
 	public static final PropertySpec<EncryptedPassword> SSL_TRUST_STORE_PASSWORD = 
-			PropertySpecHelper.newEncryptedPasswordPropertySpec(
+			new EncryptedPasswordPropertySpec(
 					PERMISSION_OBJECT,
 					"socksClient.ssl.trustStorePassword",
 					EncryptedPassword.newInstance(new char[] { }));
 	
 	public static final PropertySpec<String> SSL_TRUST_STORE_TYPE = 
-			PropertySpecHelper.newStringPropertySpec(
+			new StringPropertySpec(
 					PERMISSION_OBJECT,
 					"socksClient.ssl.trustStoreType",
 					"PKCS12");

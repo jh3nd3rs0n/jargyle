@@ -4,7 +4,8 @@ import com.github.jh3nd3rs0n.jargyle.net.socks.client.Property;
 import com.github.jh3nd3rs0n.jargyle.net.socks.client.PropertySpec;
 import com.github.jh3nd3rs0n.jargyle.util.PositiveInteger;
 
-final class PositiveIntegerPropertySpec extends PropertySpec<PositiveInteger> {
+public final class PositiveIntegerPropertySpec 
+	extends PropertySpec<PositiveInteger> {
 
 	public PositiveIntegerPropertySpec(
 			final Object permissionObj, 

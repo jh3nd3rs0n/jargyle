@@ -4,7 +4,7 @@ import com.github.jh3nd3rs0n.jargyle.net.socks.server.Setting;
 import com.github.jh3nd3rs0n.jargyle.net.socks.server.SettingSpec;
 import com.github.jh3nd3rs0n.jargyle.net.socks.server.v5.Socks5RequestCriteria;
 
-final class Socks5RequestCriteriaSettingSpec 
+public final class Socks5RequestCriteriaSettingSpec 
 	extends SettingSpec<Socks5RequestCriteria> {
 
 	public Socks5RequestCriteriaSettingSpec(

@@ -701,13 +701,12 @@ public final class ArgMatey {
 						optionAnnotatedMethod.invoke(this, optionArg);
 					} catch (InvocationTargetException e) {
 						Throwable cause = e.getCause();
-						if (cause instanceof IllegalArgumentException) {
-							if (optionArg != null) {
-								throw new IllegalOptionArgException(
-										option, 
-										optionArg.toString(),
-										cause);								
-							}
+						if (cause instanceof IllegalArgumentException 
+								&& optionArg != null) {
+							throw new IllegalOptionArgException(
+									option, 
+									optionArg.toString(),
+									cause);
 						}
 						throw cause;
 					}

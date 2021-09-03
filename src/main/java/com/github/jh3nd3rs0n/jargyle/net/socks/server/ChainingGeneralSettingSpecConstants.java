@@ -1,12 +1,12 @@
 package com.github.jh3nd3rs0n.jargyle.net.socks.server;
 
-import java.util.Map;
+import java.util.List;
 
 import com.github.jh3nd3rs0n.jargyle.internal.help.HelpText;
 import com.github.jh3nd3rs0n.jargyle.net.Host;
 import com.github.jh3nd3rs0n.jargyle.net.SocketSettings;
-import com.github.jh3nd3rs0n.jargyle.net.socks.client.SocksServerUri;
 import com.github.jh3nd3rs0n.jargyle.net.socks.client.GeneralPropertySpecConstants;
+import com.github.jh3nd3rs0n.jargyle.net.socks.client.SocksServerUri;
 import com.github.jh3nd3rs0n.jargyle.net.socks.server.settingspec.impl.HostSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.net.socks.server.settingspec.impl.PositiveIntegerSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.net.socks.server.settingspec.impl.SocketSettingsSettingSpec;
@@ -25,7 +25,7 @@ public final class ChainingGeneralSettingSpecConstants {
 			usage = "chaining.bindHost=HOST"
 	)
 	public static final SettingSpec<Host> CHAINING_BIND_HOST = 
-			SETTING_SPECS.putThenGet(new HostSettingSpec(
+			SETTING_SPECS.addThenGet(new HostSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"chaining.bindHost",
 					GeneralPropertySpecConstants.BIND_HOST.getDefaultProperty().getValue()));
@@ -38,7 +38,7 @@ public final class ChainingGeneralSettingSpecConstants {
 			usage = "chaining.connectTimeout=INTEGER_BETWEEN_1_AND_2147483647"
 	)
 	public static final SettingSpec<PositiveInteger> CHAINING_CONNECT_TIMEOUT = 
-			SETTING_SPECS.putThenGet(new PositiveIntegerSettingSpec(
+			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"chaining.connectTimeout",
 					GeneralPropertySpecConstants.CONNECT_TIMEOUT.getDefaultProperty().getValue()));
@@ -51,7 +51,7 @@ public final class ChainingGeneralSettingSpecConstants {
 			usage = "chaining.socketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
 	)
 	public static final SettingSpec<SocketSettings> CHAINING_SOCKET_SETTINGS = 
-			SETTING_SPECS.putThenGet(new SocketSettingsSettingSpec(
+			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"chaining.socketSettings",
 					GeneralPropertySpecConstants.SOCKET_SETTINGS.getDefaultProperty().getValue()));
@@ -61,13 +61,13 @@ public final class ChainingGeneralSettingSpecConstants {
 			usage = "chaining.socksServerUri=SCHEME://HOST[:PORT]"
 	)
 	public static final SettingSpec<SocksServerUri> CHAINING_SOCKS_SERVER_URI = 
-			SETTING_SPECS.putThenGet(new SocksServerUriSettingSpec(
+			SETTING_SPECS.addThenGet(new SocksServerUriSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"chaining.socksServerUri",
 					null));
 	
-	public static Map<String, SettingSpec<Object>> valuesMap() {
-		return SETTING_SPECS.toMap();
+	public static List<SettingSpec<Object>> values() {
+		return SETTING_SPECS.toList();
 	}
 	
 	private ChainingGeneralSettingSpecConstants() { }

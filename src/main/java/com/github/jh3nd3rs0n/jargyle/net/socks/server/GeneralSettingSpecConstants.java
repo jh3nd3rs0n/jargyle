@@ -1,6 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.net.socks.server;
 
-import java.util.Map;
+import java.util.List;
 
 import com.github.jh3nd3rs0n.jargyle.internal.help.HelpText;
 import com.github.jh3nd3rs0n.jargyle.net.Host;
@@ -26,7 +26,7 @@ public final class GeneralSettingSpecConstants {
 			usage = "allowedClientAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
 	)
 	public static final SettingSpec<Criteria> ALLOWED_CLIENT_ADDRESS_CRITERIA = 
-			SETTING_SPECS.putThenGet(new CriteriaSettingSpec(
+			SETTING_SPECS.addThenGet(new CriteriaSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"allowedClientAddressCriteria",
 					Criteria.newInstance(Criterion.newInstance(CriterionMethod.MATCHES, ".*"))));
@@ -37,7 +37,7 @@ public final class GeneralSettingSpecConstants {
 			usage = "backlog=INTEGER_BETWEEN_0_AND_2147483647"
 	)
 	public static final SettingSpec<NonnegativeInteger> BACKLOG = 
-			SETTING_SPECS.putThenGet(new NonnegativeIntegerSettingSpec(
+			SETTING_SPECS.addThenGet(new NonnegativeIntegerSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"backlog",
 					NonnegativeInteger.newInstance(50)));
@@ -47,7 +47,7 @@ public final class GeneralSettingSpecConstants {
 			usage = "blockedClientAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
 	)
 	public static final SettingSpec<Criteria> BLOCKED_CLIENT_ADDRESS_CRITERIA = 
-			SETTING_SPECS.putThenGet(new CriteriaSettingSpec(
+			SETTING_SPECS.addThenGet(new CriteriaSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"blockedClientAddressCriteria",
 					Criteria.getEmptyInstance()));
@@ -58,7 +58,7 @@ public final class GeneralSettingSpecConstants {
 			usage = "host=HOST"
 	)
 	public static final SettingSpec<Host> HOST = 
-			SETTING_SPECS.putThenGet(new HostSettingSpec(
+			SETTING_SPECS.addThenGet(new HostSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"host",
 					Host.getInet4AllZerosInstance()));
@@ -68,7 +68,7 @@ public final class GeneralSettingSpecConstants {
 			usage = "port=INTEGER_BETWEEN_0_AND_65535"
 	)
 	public static final SettingSpec<Port> PORT = 
-			SETTING_SPECS.putThenGet(new PortSettingSpec(
+			SETTING_SPECS.addThenGet(new PortSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"port",
 					Port.newInstance(1080)));
@@ -79,13 +79,13 @@ public final class GeneralSettingSpecConstants {
 			usage = "socketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
 	)
 	public static final SettingSpec<SocketSettings> SOCKET_SETTINGS = 
-			SETTING_SPECS.putThenGet(new SocketSettingsSettingSpec(
+			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"socketSettings",
 					SocketSettings.newInstance()));
 	
-	public static Map<String, SettingSpec<Object>> valuesMap() {
-		return SETTING_SPECS.toMap();
+	public static List<SettingSpec<Object>> values() {
+		return SETTING_SPECS.toList();
 	}
 	
 	private GeneralSettingSpecConstants() { }

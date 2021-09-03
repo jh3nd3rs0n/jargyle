@@ -1,7 +1,7 @@
 package com.github.jh3nd3rs0n.jargyle.net.socks.server;
 
 import java.io.File;
-import java.util.Map;
+import java.util.List;
 
 import com.github.jh3nd3rs0n.jargyle.internal.help.HelpText;
 import com.github.jh3nd3rs0n.jargyle.net.socks.client.DtlsPropertySpecConstants;
@@ -25,7 +25,7 @@ public final class ChainingDtlsSettingSpecConstants {
 			usage = "chaining.dtls.enabled=true|false"
 	)
 	public static final SettingSpec<Boolean> CHAINING_DTLS_ENABLED = 
-			SETTING_SPECS.putThenGet(new BooleanSettingSpec(
+			SETTING_SPECS.addThenGet(new BooleanSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"chaining.dtls.enabled",
 					DtlsPropertySpecConstants.DTLS_ENABLED.getDefaultProperty().getValue()));
@@ -37,7 +37,7 @@ public final class ChainingDtlsSettingSpecConstants {
 			usage = "chaining.dtls.enabledCipherSuites=[DTLS_CIPHER_SUITE1[ DTLS_CIPHER_SUITE2[...]]]"
 	)
 	public static final SettingSpec<Strings> CHAINING_DTLS_ENABLED_CIPHER_SUITES = 
-			SETTING_SPECS.putThenGet(new StringsSettingSpec(
+			SETTING_SPECS.addThenGet(new StringsSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"chaining.dtls.enabledCipherSuites",
 					DtlsPropertySpecConstants.DTLS_ENABLED_CIPHER_SUITES.getDefaultProperty().getValue()));
@@ -49,7 +49,7 @@ public final class ChainingDtlsSettingSpecConstants {
 			usage = "chaining.dtls.enabledProtocols=[DTLS_PROTOCOL1[ DTLS_PROTOCOL2[...]]]"
 	)	
 	public static final SettingSpec<Strings> CHAINING_DTLS_ENABLED_PROTOCOLS = 
-			SETTING_SPECS.putThenGet(new StringsSettingSpec(
+			SETTING_SPECS.addThenGet(new StringsSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"chaining.dtls.enabledProtocols",
 					DtlsPropertySpecConstants.DTLS_ENABLED_PROTOCOLS.getDefaultProperty().getValue()));
@@ -60,7 +60,7 @@ public final class ChainingDtlsSettingSpecConstants {
 			usage = "chaining.dtls.keyStoreFile=FILE"
 	)
 	public static final SettingSpec<File> CHAINING_DTLS_KEY_STORE_FILE = 
-			SETTING_SPECS.putThenGet(new FileSettingSpec(
+			SETTING_SPECS.addThenGet(new FileSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"chaining.dtls.keyStoreFile",
 					DtlsPropertySpecConstants.DTLS_KEY_STORE_FILE.getDefaultProperty().getValue()));
@@ -71,7 +71,7 @@ public final class ChainingDtlsSettingSpecConstants {
 			usage = "chaining.dtls.keyStorePassword=PASSWORD"
 	)
 	public static final SettingSpec<EncryptedPassword> CHAINING_DTLS_KEY_STORE_PASSWORD = 
-			SETTING_SPECS.putThenGet(new EncryptedPasswordSettingSpec(
+			SETTING_SPECS.addThenGet(new EncryptedPasswordSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"chaining.dtls.keyStorePassword",
 					DtlsPropertySpecConstants.DTLS_KEY_STORE_PASSWORD.getDefaultProperty().getValue()));
@@ -82,7 +82,7 @@ public final class ChainingDtlsSettingSpecConstants {
 			usage = "chaining.dtls.keyStoreType=TYPE"
 	)	
 	public static final SettingSpec<String> CHAINING_DTLS_KEY_STORE_TYPE = 
-			SETTING_SPECS.putThenGet(new StringSettingSpec(
+			SETTING_SPECS.addThenGet(new StringSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"chaining.dtls.keyStoreType",
 					DtlsPropertySpecConstants.DTLS_KEY_STORE_TYPE.getDefaultProperty().getValue()));
@@ -93,7 +93,7 @@ public final class ChainingDtlsSettingSpecConstants {
 			usage = "chaining.dtls.maxPacketSize=INTEGER_BETWEEN_1_AND_2147483647"
 	)	
 	public static final SettingSpec<PositiveInteger> CHAINING_DTLS_MAX_PACKET_SIZE = 
-			SETTING_SPECS.putThenGet(new PositiveIntegerSettingSpec(
+			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"chaining.dtls.maxPacketSize",
 					DtlsPropertySpecConstants.DTLS_MAX_PACKET_SIZE.getDefaultProperty().getValue()));
@@ -104,7 +104,7 @@ public final class ChainingDtlsSettingSpecConstants {
 			usage = "chaining.dtls.protocol=PROTOCOL"
 	)	
 	public static final SettingSpec<String> CHAINING_DTLS_PROTOCOL = 
-			SETTING_SPECS.putThenGet(new StringSettingSpec(
+			SETTING_SPECS.addThenGet(new StringSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"chaining.dtls.protocol",
 					DtlsPropertySpecConstants.DTLS_PROTOCOL.getDefaultProperty().getValue()));
@@ -115,7 +115,7 @@ public final class ChainingDtlsSettingSpecConstants {
 			usage = "chaining.dtls.trustStoreFile=FILE"
 	)	
 	public static final SettingSpec<File> CHAINING_DTLS_TRUST_STORE_FILE = 
-			SETTING_SPECS.putThenGet(new FileSettingSpec(
+			SETTING_SPECS.addThenGet(new FileSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"chaining.dtls.trustStoreFile",
 					DtlsPropertySpecConstants.DTLS_TRUST_STORE_FILE.getDefaultProperty().getValue()));
@@ -126,7 +126,7 @@ public final class ChainingDtlsSettingSpecConstants {
 			usage = "chaining.dtls.trustStorePassword=PASSWORD"
 	)	
 	public static final SettingSpec<EncryptedPassword> CHAINING_DTLS_TRUST_STORE_PASSWORD = 
-			SETTING_SPECS.putThenGet(new EncryptedPasswordSettingSpec(
+			SETTING_SPECS.addThenGet(new EncryptedPasswordSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"chaining.dtls.trustStorePassword",
 					DtlsPropertySpecConstants.DTLS_TRUST_STORE_PASSWORD.getDefaultProperty().getValue()));
@@ -137,13 +137,13 @@ public final class ChainingDtlsSettingSpecConstants {
 			usage = "chaining.dtls.trustStoreType=TYPE"
 	)	
 	public static final SettingSpec<String> CHAINING_DTLS_TRUST_STORE_TYPE = 
-			SETTING_SPECS.putThenGet(new StringSettingSpec(
+			SETTING_SPECS.addThenGet(new StringSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"chaining.dtls.trustStoreType",
 					DtlsPropertySpecConstants.DTLS_TRUST_STORE_TYPE.getDefaultProperty().getValue()));
 	
-	public static Map<String, SettingSpec<Object>> valuesMap() {
-		return SETTING_SPECS.toMap();
+	public static List<SettingSpec<Object>> values() {
+		return SETTING_SPECS.toList();
 	}
 	
 	private ChainingDtlsSettingSpecConstants() { }

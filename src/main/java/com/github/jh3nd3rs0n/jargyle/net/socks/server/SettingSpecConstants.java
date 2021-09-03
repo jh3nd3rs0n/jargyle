@@ -1,6 +1,7 @@
 package com.github.jh3nd3rs0n.jargyle.net.socks.server;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 final class SettingSpecConstants {
@@ -10,15 +11,23 @@ final class SettingSpecConstants {
 	static {
 		Map<String, SettingSpec<Object>> valuesMap = 
 				new HashMap<String, SettingSpec<Object>>();
-		valuesMap.putAll(ChainingDtlsSettingSpecConstants.valuesMap());
-		valuesMap.putAll(ChainingSocks5SettingSpecConstants.valuesMap());
-		valuesMap.putAll(ChainingSslSettingSpecConstants.valuesMap());
-		valuesMap.putAll(ChainingGeneralSettingSpecConstants.valuesMap());
-		valuesMap.putAll(DtlsSettingSpecConstants.valuesMap());
-		valuesMap.putAll(Socks5SettingSpecConstants.valuesMap());
-		valuesMap.putAll(SslSettingSpecConstants.valuesMap());
-		valuesMap.putAll(GeneralSettingSpecConstants.valuesMap());
+		putEach(ChainingDtlsSettingSpecConstants.values(), valuesMap);
+		putEach(ChainingGeneralSettingSpecConstants.values(), valuesMap);		
+		putEach(ChainingSocks5SettingSpecConstants.values(), valuesMap);
+		putEach(ChainingSslSettingSpecConstants.values(), valuesMap);
+		putEach(DtlsSettingSpecConstants.values(), valuesMap);
+		putEach(GeneralSettingSpecConstants.values(), valuesMap);
+		putEach(Socks5SettingSpecConstants.values(), valuesMap);
+		putEach(SslSettingSpecConstants.values(), valuesMap);
 		VALUES_MAP = valuesMap;
+	}
+	
+	private static void putEach(
+			final List<SettingSpec<Object>> values,
+			final Map<String, SettingSpec<Object>> valuesMap) {
+		for (SettingSpec<Object> value : values) {
+			valuesMap.put(value.toString(), value);
+		}
 	}
 	
 	public static SettingSpec<Object> valueOf(final String s) {

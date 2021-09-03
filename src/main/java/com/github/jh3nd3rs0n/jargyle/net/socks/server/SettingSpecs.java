@@ -1,26 +1,26 @@
 package com.github.jh3nd3rs0n.jargyle.net.socks.server;
 
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 final class SettingSpecs {
 
-	private final Map<String, SettingSpec<Object>> settingSpecMap;
+	private final List<SettingSpec<Object>> settingSpecs;
 	
 	public SettingSpecs() {
-		this.settingSpecMap = new HashMap<String, SettingSpec<Object>>();
+		this.settingSpecs = new ArrayList<SettingSpec<Object>>();
 	}
 	
-	public <T> SettingSpec<T> putThenGet(final SettingSpec<T> value) {
+	public <T> SettingSpec<T> addThenGet(final SettingSpec<T> value) {
 		@SuppressWarnings("unchecked")
 		SettingSpec<Object> val = (SettingSpec<Object>) value;
-		this.settingSpecMap.put(val.toString(), val);
+		this.settingSpecs.add(val);
 		return value;
 	}
 	
-	public Map<String, SettingSpec<Object>> toMap() {
-		return Collections.unmodifiableMap(this.settingSpecMap);
+	public List<SettingSpec<Object>> toList() {
+		return Collections.unmodifiableList(this.settingSpecs);
 	}
 	
 }

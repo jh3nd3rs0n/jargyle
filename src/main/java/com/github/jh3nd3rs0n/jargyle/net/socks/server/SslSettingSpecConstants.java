@@ -1,7 +1,7 @@
 package com.github.jh3nd3rs0n.jargyle.net.socks.server;
 
 import java.io.File;
-import java.util.Map;
+import java.util.List;
 
 import com.github.jh3nd3rs0n.jargyle.internal.help.HelpText;
 import com.github.jh3nd3rs0n.jargyle.net.socks.server.settingspec.impl.BooleanSettingSpec;
@@ -22,7 +22,7 @@ public final class SslSettingSpecConstants {
 			usage = "ssl.enabled=true|false"
 	)	
 	public static final SettingSpec<Boolean> SSL_ENABLED = 
-			SETTING_SPECS.putThenGet(new BooleanSettingSpec(
+			SETTING_SPECS.addThenGet(new BooleanSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"ssl.enabled",
 					Boolean.FALSE));
@@ -33,7 +33,7 @@ public final class SslSettingSpecConstants {
 			usage = "ssl.enabledCipherSuites=[SSL_CIPHER_SUITE1[ SSL_CIPHER_SUITE2[...]]]"
 	)	
 	public static final SettingSpec<Strings> SSL_ENABLED_CIPHER_SUITES = 
-			SETTING_SPECS.putThenGet(new StringsSettingSpec(
+			SETTING_SPECS.addThenGet(new StringsSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"ssl.enabledCipherSuites",
 					Strings.newInstance(new String[] { })));
@@ -44,7 +44,7 @@ public final class SslSettingSpecConstants {
 			usage = "ssl.enabledProtocols=[SSL_PROTOCOL1[ SSL_PROTOCOL2[...]]]"
 	)	
 	public static final SettingSpec<Strings> SSL_ENABLED_PROTOCOLS = 
-			SETTING_SPECS.putThenGet(new StringsSettingSpec(
+			SETTING_SPECS.addThenGet(new StringsSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"ssl.enabledProtocols",
 					Strings.newInstance(new String[] { })));
@@ -55,7 +55,7 @@ public final class SslSettingSpecConstants {
 			usage = "ssl.keyStoreFile=FILE"
 	)	
 	public static final SettingSpec<File> SSL_KEY_STORE_FILE = 
-			SETTING_SPECS.putThenGet(new FileSettingSpec(
+			SETTING_SPECS.addThenGet(new FileSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"ssl.keyStoreFile",
 					null));
@@ -66,7 +66,7 @@ public final class SslSettingSpecConstants {
 			usage = "ssl.keyStorePassword=PASSWORD"
 	)	
 	public static final SettingSpec<EncryptedPassword> SSL_KEY_STORE_PASSWORD = 
-			SETTING_SPECS.putThenGet(new EncryptedPasswordSettingSpec(
+			SETTING_SPECS.addThenGet(new EncryptedPasswordSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"ssl.keyStorePassword",
 					EncryptedPassword.newInstance(new char[] { })));
@@ -77,7 +77,7 @@ public final class SslSettingSpecConstants {
 			usage = "ssl.keyStoreType=TYPE"
 	)	
 	public static final SettingSpec<String> SSL_KEY_STORE_TYPE = 
-			SETTING_SPECS.putThenGet(new StringSettingSpec(
+			SETTING_SPECS.addThenGet(new StringSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"ssl.keyStoreType",
 					"PKCS12"));
@@ -89,7 +89,7 @@ public final class SslSettingSpecConstants {
 			usage = "ssl.needClientAuth=true|false"
 	)	
 	public static final SettingSpec<Boolean> SSL_NEED_CLIENT_AUTH = 
-			SETTING_SPECS.putThenGet(new BooleanSettingSpec(
+			SETTING_SPECS.addThenGet(new BooleanSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"ssl.needClientAuth",
 					Boolean.FALSE));
@@ -100,7 +100,7 @@ public final class SslSettingSpecConstants {
 			usage = "ssl.protocol=PROTOCOL"
 	)	
 	public static final SettingSpec<String> SSL_PROTOCOL = 
-			SETTING_SPECS.putThenGet(new StringSettingSpec(
+			SETTING_SPECS.addThenGet(new StringSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"ssl.protocol",
 					"TLSv1.2"));
@@ -111,7 +111,7 @@ public final class SslSettingSpecConstants {
 			usage = "ssl.trustStoreFile=FILE"
 	)	
 	public static final SettingSpec<File> SSL_TRUST_STORE_FILE = 
-			SETTING_SPECS.putThenGet(new FileSettingSpec(
+			SETTING_SPECS.addThenGet(new FileSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"ssl.trustStoreFile",
 					null));
@@ -122,7 +122,7 @@ public final class SslSettingSpecConstants {
 			usage = "ssl.trustStorePassword=PASSWORD"
 	)	
 	public static final SettingSpec<EncryptedPassword> SSL_TRUST_STORE_PASSWORD = 
-			SETTING_SPECS.putThenGet(new EncryptedPasswordSettingSpec(
+			SETTING_SPECS.addThenGet(new EncryptedPasswordSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"ssl.trustStorePassword",
 					EncryptedPassword.newInstance(new char[] { })));
@@ -133,7 +133,7 @@ public final class SslSettingSpecConstants {
 			usage = "ssl.trustStoreType=TYPE"
 	)		
 	public static final SettingSpec<String> SSL_TRUST_STORE_TYPE = 
-			SETTING_SPECS.putThenGet(new StringSettingSpec(
+			SETTING_SPECS.addThenGet(new StringSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"ssl.trustStoreType",
 					"PKCS12"));
@@ -145,13 +145,13 @@ public final class SslSettingSpecConstants {
 			usage = "ssl.wantClientAuth=true|false"
 	)	
 	public static final SettingSpec<Boolean> SSL_WANT_CLIENT_AUTH = 
-			SETTING_SPECS.putThenGet(new BooleanSettingSpec(
+			SETTING_SPECS.addThenGet(new BooleanSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"ssl.wantClientAuth",
 					Boolean.FALSE));
 	
-	public static Map<String, SettingSpec<Object>> valuesMap() {
-		return SETTING_SPECS.toMap();
+	public static List<SettingSpec<Object>> values() {
+		return SETTING_SPECS.toList();
 	}
 	
 	private SslSettingSpecConstants() { }

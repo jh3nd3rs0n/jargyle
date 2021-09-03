@@ -12,7 +12,7 @@ final class PropertySpecs {
 		this.propertySpecs = new ArrayList<PropertySpec<Object>>();
 	}
 	
-	public <T> PropertySpec<T> add(final PropertySpec<T> value) {
+	public <T> PropertySpec<T> addThenGet(final PropertySpec<T> value) {
 		@SuppressWarnings("unchecked")
 		PropertySpec<Object> val = (PropertySpec<Object>) value;
 		this.propertySpecs.add(val);

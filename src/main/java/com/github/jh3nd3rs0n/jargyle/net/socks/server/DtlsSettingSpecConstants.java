@@ -24,7 +24,7 @@ public final class DtlsSettingSpecConstants {
 			usage = "dtls.enabled=true|false"
 	)	
 	public static final SettingSpec<Boolean> DTLS_ENABLED = 
-			SETTING_SPECS.add(new BooleanSettingSpec(
+			SETTING_SPECS.putThenGet(new BooleanSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"dtls.enabled",
 					Boolean.FALSE));
@@ -35,7 +35,7 @@ public final class DtlsSettingSpecConstants {
 			usage = "dtls.enabledCipherSuites=[DTLS_CIPHER_SUITE1[ DTLS_CIPHER_SUITE2[...]]]"
 	)	
 	public static final SettingSpec<Strings> DTLS_ENABLED_CIPHER_SUITES = 
-			SETTING_SPECS.add(new StringsSettingSpec(
+			SETTING_SPECS.putThenGet(new StringsSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"dtls.enabledCipherSuites",
 					Strings.newInstance(new String[] { })));
@@ -46,7 +46,7 @@ public final class DtlsSettingSpecConstants {
 			usage = "dtls.enabledProtocols=[DTLS_PROTOCOL1[ DTLS_PROTOCOL2[...]]]"
 	)	
 	public static final SettingSpec<Strings> DTLS_ENABLED_PROTOCOLS = 
-			SETTING_SPECS.add(new StringsSettingSpec(
+			SETTING_SPECS.putThenGet(new StringsSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"dtls.enabledProtocols",
 					Strings.newInstance(new String[] { })));
@@ -57,7 +57,7 @@ public final class DtlsSettingSpecConstants {
 			usage = "dtls.keyStoreFile=FILE"
 	)	
 	public static final SettingSpec<File> DTLS_KEY_STORE_FILE = 
-			SETTING_SPECS.add(new FileSettingSpec(
+			SETTING_SPECS.putThenGet(new FileSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"dtls.keyStoreFile",
 					null));
@@ -68,7 +68,7 @@ public final class DtlsSettingSpecConstants {
 			usage = "dtls.keyStorePassword=PASSWORD"
 	)	
 	public static final SettingSpec<EncryptedPassword> DTLS_KEY_STORE_PASSWORD = 
-			SETTING_SPECS.add(new EncryptedPasswordSettingSpec(
+			SETTING_SPECS.putThenGet(new EncryptedPasswordSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"dtls.keyStorePassword",
 					EncryptedPassword.newInstance(new char[] { })));
@@ -79,7 +79,7 @@ public final class DtlsSettingSpecConstants {
 			usage = "dtls.keyStoreType=TYPE"
 	)	
 	public static final SettingSpec<String> DTLS_KEY_STORE_TYPE = 
-			SETTING_SPECS.add(new StringSettingSpec(
+			SETTING_SPECS.putThenGet(new StringSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"dtls.keyStoreType",
 					"PKCS12"));
@@ -90,7 +90,7 @@ public final class DtlsSettingSpecConstants {
 			usage = "dtls.maxPacketSize=INTEGER_BETWEEN_1_AND_2147483647"
 	)	
 	public static final SettingSpec<PositiveInteger> DTLS_MAX_PACKET_SIZE = 
-			SETTING_SPECS.add(new PositiveIntegerSettingSpec(
+			SETTING_SPECS.putThenGet(new PositiveIntegerSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"dtls.maxPacketSize",
 					PositiveInteger.newInstance(32768)));
@@ -102,7 +102,7 @@ public final class DtlsSettingSpecConstants {
 			usage = "dtls.needClientAuth=true|false"
 	)	
 	public static final SettingSpec<Boolean> DTLS_NEED_CLIENT_AUTH = 
-			SETTING_SPECS.add(new BooleanSettingSpec(
+			SETTING_SPECS.putThenGet(new BooleanSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"dtls.needClientAuth",
 					Boolean.FALSE));
@@ -113,7 +113,7 @@ public final class DtlsSettingSpecConstants {
 			usage = "dtls.protocol=PROTOCOL"
 	)	
 	public static final SettingSpec<String> DTLS_PROTOCOL = 
-			SETTING_SPECS.add(new StringSettingSpec(
+			SETTING_SPECS.putThenGet(new StringSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"dtls.protocol",
 					"DTLSv1.2"));
@@ -124,7 +124,7 @@ public final class DtlsSettingSpecConstants {
 			usage = "dtls.trustStoreFile=FILE"
 	)	
 	public static final SettingSpec<File> DTLS_TRUST_STORE_FILE = 
-			SETTING_SPECS.add(new FileSettingSpec(
+			SETTING_SPECS.putThenGet(new FileSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"dtls.trustStoreFile",
 					null));
@@ -135,7 +135,7 @@ public final class DtlsSettingSpecConstants {
 			usage = "dtls.trustStorePassword=PASSWORD"
 	)	
 	public static final SettingSpec<EncryptedPassword> DTLS_TRUST_STORE_PASSWORD = 
-			SETTING_SPECS.add(new EncryptedPasswordSettingSpec(
+			SETTING_SPECS.putThenGet(new EncryptedPasswordSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"dtls.trustStorePassword",
 					EncryptedPassword.newInstance(new char[] { })));
@@ -146,7 +146,7 @@ public final class DtlsSettingSpecConstants {
 			usage = "dtls.trustStoreType=TYPE"
 	)		
 	public static final SettingSpec<String> DTLS_TRUST_STORE_TYPE = 
-			SETTING_SPECS.add(new StringSettingSpec(
+			SETTING_SPECS.putThenGet(new StringSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"dtls.trustStoreType",
 					"PKCS12"));
@@ -158,7 +158,7 @@ public final class DtlsSettingSpecConstants {
 			usage = "dtls.wantClientAuth=true|false"
 	)	
 	public static final SettingSpec<Boolean> DTLS_WANT_CLIENT_AUTH = 
-			SETTING_SPECS.add(new BooleanSettingSpec(
+			SETTING_SPECS.putThenGet(new BooleanSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"dtls.wantClientAuth",
 					Boolean.FALSE));

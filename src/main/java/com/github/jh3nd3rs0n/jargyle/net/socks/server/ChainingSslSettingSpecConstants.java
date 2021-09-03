@@ -23,7 +23,7 @@ public final class ChainingSslSettingSpecConstants {
 			usage = "chaining.ssl.enabled=true|false"
 	)
 	public static final SettingSpec<Boolean> CHAINING_SSL_ENABLED = 
-			SETTING_SPECS.add(new BooleanSettingSpec(
+			SETTING_SPECS.putThenGet(new BooleanSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"chaining.ssl.enabled",
 					SslPropertySpecConstants.SSL_ENABLED.getDefaultProperty().getValue()));
@@ -35,7 +35,7 @@ public final class ChainingSslSettingSpecConstants {
 			usage = "chaining.ssl.enabledCipherSuites=[SSL_CIPHER_SUITE1[ SSL_CIPHER_SUITE2[...]]]"
 	)
 	public static final SettingSpec<Strings> CHAINING_SSL_ENABLED_CIPHER_SUITES = 
-			SETTING_SPECS.add(new StringsSettingSpec(
+			SETTING_SPECS.putThenGet(new StringsSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"chaining.ssl.enabledCipherSuites",
 					SslPropertySpecConstants.SSL_ENABLED_CIPHER_SUITES.getDefaultProperty().getValue()));
@@ -47,7 +47,7 @@ public final class ChainingSslSettingSpecConstants {
 			usage = "chaining.ssl.enabledProtocols=[SSL_PROTOCOL1[ SSL_PROTOCOL2[...]]]"
 	)	
 	public static final SettingSpec<Strings> CHAINING_SSL_ENABLED_PROTOCOLS = 
-			SETTING_SPECS.add(new StringsSettingSpec(
+			SETTING_SPECS.putThenGet(new StringsSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"chaining.ssl.enabledProtocols",
 					SslPropertySpecConstants.SSL_ENABLED_PROTOCOLS.getDefaultProperty().getValue()));
@@ -58,7 +58,7 @@ public final class ChainingSslSettingSpecConstants {
 			usage = "chaining.ssl.keyStoreFile=FILE"
 	)
 	public static final SettingSpec<File> CHAINING_SSL_KEY_STORE_FILE = 
-			SETTING_SPECS.add(new FileSettingSpec(
+			SETTING_SPECS.putThenGet(new FileSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"chaining.ssl.keyStoreFile",
 					SslPropertySpecConstants.SSL_KEY_STORE_FILE.getDefaultProperty().getValue()));
@@ -69,7 +69,7 @@ public final class ChainingSslSettingSpecConstants {
 			usage = "chaining.ssl.keyStorePassword=PASSWORD"
 	)
 	public static final SettingSpec<EncryptedPassword> CHAINING_SSL_KEY_STORE_PASSWORD = 
-			SETTING_SPECS.add(new EncryptedPasswordSettingSpec(
+			SETTING_SPECS.putThenGet(new EncryptedPasswordSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"chaining.ssl.keyStorePassword",
 					SslPropertySpecConstants.SSL_KEY_STORE_PASSWORD.getDefaultProperty().getValue()));
@@ -80,7 +80,7 @@ public final class ChainingSslSettingSpecConstants {
 			usage = "chaining.ssl.keyStoreType=TYPE"
 	)	
 	public static final SettingSpec<String> CHAINING_SSL_KEY_STORE_TYPE = 
-			SETTING_SPECS.add(new StringSettingSpec(
+			SETTING_SPECS.putThenGet(new StringSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"chaining.ssl.keyStoreType",
 					SslPropertySpecConstants.SSL_KEY_STORE_TYPE.getDefaultProperty().getValue()));
@@ -91,7 +91,7 @@ public final class ChainingSslSettingSpecConstants {
 			usage = "chaining.ssl.protocol=PROTOCOL"
 	)	
 	public static final SettingSpec<String> CHAINING_SSL_PROTOCOL = 
-			SETTING_SPECS.add(new StringSettingSpec(
+			SETTING_SPECS.putThenGet(new StringSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"chaining.ssl.protocol",
 					SslPropertySpecConstants.SSL_PROTOCOL.getDefaultProperty().getValue()));
@@ -102,7 +102,7 @@ public final class ChainingSslSettingSpecConstants {
 			usage = "chaining.ssl.trustStoreFile=FILE"
 	)	
 	public static final SettingSpec<File> CHAINING_SSL_TRUST_STORE_FILE = 
-			SETTING_SPECS.add(new FileSettingSpec(
+			SETTING_SPECS.putThenGet(new FileSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"chaining.ssl.trustStoreFile",
 					SslPropertySpecConstants.SSL_TRUST_STORE_FILE.getDefaultProperty().getValue()));
@@ -113,7 +113,7 @@ public final class ChainingSslSettingSpecConstants {
 			usage = "chaining.ssl.trustStorePassword=PASSWORD"
 	)	
 	public static final SettingSpec<EncryptedPassword> CHAINING_SSL_TRUST_STORE_PASSWORD = 
-			SETTING_SPECS.add(new EncryptedPasswordSettingSpec(
+			SETTING_SPECS.putThenGet(new EncryptedPasswordSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"chaining.ssl.trustStorePassword",
 					SslPropertySpecConstants.SSL_TRUST_STORE_PASSWORD.getDefaultProperty().getValue()));
@@ -124,7 +124,7 @@ public final class ChainingSslSettingSpecConstants {
 			usage = "chaining.ssl.trustStoreType=TYPE"
 	)	
 	public static final SettingSpec<String> CHAINING_SSL_TRUST_STORE_TYPE = 
-			SETTING_SPECS.add(new StringSettingSpec(
+			SETTING_SPECS.putThenGet(new StringSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"chaining.ssl.trustStoreType",
 					SslPropertySpecConstants.SSL_TRUST_STORE_TYPE.getDefaultProperty().getValue()));

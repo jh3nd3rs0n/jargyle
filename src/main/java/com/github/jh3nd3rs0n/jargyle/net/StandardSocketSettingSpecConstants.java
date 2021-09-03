@@ -21,7 +21,7 @@ public final class StandardSocketSettingSpecConstants {
 					+ "header for a TCP or UDP socket", 
 			usage = "IP_TOS=INTEGER_BETWEEN_0_AND_255"
 	)
-	public static final SocketSettingSpec<UnsignedByte> IP_TOS = SOCKET_SETTING_SPECS.add(new SocketSettingSpec<UnsignedByte>(
+	public static final SocketSettingSpec<UnsignedByte> IP_TOS = SOCKET_SETTING_SPECS.putThenGet(new SocketSettingSpec<UnsignedByte>(
 			"IP_TOS", 
 			UnsignedByte.class) {
 		
@@ -54,7 +54,7 @@ public final class StandardSocketSettingSpecConstants {
 					+ "high bandwidth", 
 			usage = "PERF_PREF=3_DIGITS_EACH_BETWEEN_0_AND_2"
 	)
-	public static final SocketSettingSpec<PerformancePreferences> PERF_PREF = SOCKET_SETTING_SPECS.add(new SocketSettingSpec<PerformancePreferences>(
+	public static final SocketSettingSpec<PerformancePreferences> PERF_PREF = SOCKET_SETTING_SPECS.putThenGet(new SocketSettingSpec<PerformancePreferences>(
 			"PERF_PREF", 
 			PerformancePreferences.class) {
 		
@@ -84,7 +84,7 @@ public final class StandardSocketSettingSpecConstants {
 			doc = "Can send broadcast datagrams", 
 			usage = "SO_BROADCAST=true|false"
 	)
-	public static final SocketSettingSpec<Boolean> SO_BROADCAST = SOCKET_SETTING_SPECS.add(new SocketSettingSpec<Boolean>(
+	public static final SocketSettingSpec<Boolean> SO_BROADCAST = SOCKET_SETTING_SPECS.putThenGet(new SocketSettingSpec<Boolean>(
 			"SO_BROADCAST", 
 			Boolean.class) {
 		
@@ -108,7 +108,7 @@ public final class StandardSocketSettingSpecConstants {
 					+ "in either direction", 
 			usage = "SO_KEEPALIVE=true|false"
 	)
-	public static final SocketSettingSpec<Boolean> SO_KEEPALIVE = SOCKET_SETTING_SPECS.add(new SocketSettingSpec<Boolean>(
+	public static final SocketSettingSpec<Boolean> SO_KEEPALIVE = SOCKET_SETTING_SPECS.putThenGet(new SocketSettingSpec<Boolean>(
 			"SO_KEEPALIVE", 
 			Boolean.class) {
 		
@@ -131,7 +131,7 @@ public final class StandardSocketSettingSpecConstants {
 			doc = "Linger on closing the TCP socket in seconds", 
 			usage = "SO_LINGER=INTEGER_BETWEEN_0_AND_2147483647"
 	)
-	public static final SocketSettingSpec<NonnegativeInteger> SO_LINGER = SOCKET_SETTING_SPECS.add(new SocketSettingSpec<NonnegativeInteger>(
+	public static final SocketSettingSpec<NonnegativeInteger> SO_LINGER = SOCKET_SETTING_SPECS.putThenGet(new SocketSettingSpec<NonnegativeInteger>(
 			"SO_LINGER", 
 			NonnegativeInteger.class) {
 		
@@ -154,7 +154,7 @@ public final class StandardSocketSettingSpecConstants {
 			doc = "Can receive TCP urgent data", 
 			usage = "SO_OOBINLINE=true|false"
 	)
-	public static final SocketSettingSpec<Boolean> SO_OOBINLINE = SOCKET_SETTING_SPECS.add(new SocketSettingSpec<Boolean>(
+	public static final SocketSettingSpec<Boolean> SO_OOBINLINE = SOCKET_SETTING_SPECS.putThenGet(new SocketSettingSpec<Boolean>(
 			"SO_OOBINLINE", 
 			Boolean.class) {
 		
@@ -177,7 +177,7 @@ public final class StandardSocketSettingSpecConstants {
 			doc = "The receive buffer size", 
 			usage = "SO_RCVBUF=INTEGER_BETWEEN_1_AND_2147483647"
 	)
-	public static final SocketSettingSpec<PositiveInteger> SO_RCVBUF = SOCKET_SETTING_SPECS.add(new SocketSettingSpec<PositiveInteger>(
+	public static final SocketSettingSpec<PositiveInteger> SO_RCVBUF = SOCKET_SETTING_SPECS.putThenGet(new SocketSettingSpec<PositiveInteger>(
 			"SO_RCVBUF", 
 			PositiveInteger.class) {
 		
@@ -214,7 +214,7 @@ public final class StandardSocketSettingSpecConstants {
 			doc = "Can reuse socket address and port", 
 			usage = "SO_REUSEADDR=true|false"
 	)
-	public static final SocketSettingSpec<Boolean> SO_REUSEADDR = SOCKET_SETTING_SPECS.add(new SocketSettingSpec<Boolean>(
+	public static final SocketSettingSpec<Boolean> SO_REUSEADDR = SOCKET_SETTING_SPECS.putThenGet(new SocketSettingSpec<Boolean>(
 			"SO_REUSEADDR", 
 			Boolean.class) {
 		
@@ -251,7 +251,7 @@ public final class StandardSocketSettingSpecConstants {
 			doc = "The send buffer size", 
 			usage = "SO_SNDBUF=INTEGER_BETWEEN_1_AND_2147483647"
 	)
-	public static final SocketSettingSpec<PositiveInteger> SO_SNDBUF = SOCKET_SETTING_SPECS.add(new SocketSettingSpec<PositiveInteger>(
+	public static final SocketSettingSpec<PositiveInteger> SO_SNDBUF = SOCKET_SETTING_SPECS.putThenGet(new SocketSettingSpec<PositiveInteger>(
 			"SO_SNDBUF", 
 			PositiveInteger.class) {
 		
@@ -281,7 +281,7 @@ public final class StandardSocketSettingSpecConstants {
 			doc = "The timeout in milliseconds on waiting for an idle socket", 
 			usage = "SO_TIMEOUT=INTEGER_BETWEEN_0_AND_2147483647"
 	)
-	public static final SocketSettingSpec<NonnegativeInteger> SO_TIMEOUT = SOCKET_SETTING_SPECS.add(new SocketSettingSpec<NonnegativeInteger>(
+	public static final SocketSettingSpec<NonnegativeInteger> SO_TIMEOUT = SOCKET_SETTING_SPECS.putThenGet(new SocketSettingSpec<NonnegativeInteger>(
 			"SO_TIMEOUT", 
 			NonnegativeInteger.class) {
 		
@@ -318,7 +318,7 @@ public final class StandardSocketSettingSpecConstants {
 			doc = "Disables Nagle's algorithm", 
 			usage = "TCP_NODELAY=true|false"
 	)
-	public static final SocketSettingSpec<Boolean> TCP_NODELAY = SOCKET_SETTING_SPECS.add(new SocketSettingSpec<Boolean>(
+	public static final SocketSettingSpec<Boolean> TCP_NODELAY = SOCKET_SETTING_SPECS.putThenGet(new SocketSettingSpec<Boolean>(
 			"TCP_NODELAY", 
 			Boolean.class) {
 		

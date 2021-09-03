@@ -13,19 +13,12 @@ final class SocketSettingSpecs {
 				new HashMap<String, SocketSettingSpec<Object>>();
 	}
 	
-	public <T> SocketSettingSpec<T> add(final SocketSettingSpec<T> value) {
+	public <T> SocketSettingSpec<T> putThenGet(
+			final SocketSettingSpec<T> value) {
 		@SuppressWarnings("unchecked")
 		SocketSettingSpec<Object> val = (SocketSettingSpec<Object>) value;
 		this.socketSettingSpecMap.put(val.toString(), val);
 		return value;
-	}
-	
-	public boolean containsKey(final String s) {
-		return this.socketSettingSpecMap.containsKey(s);
-	}
-	
-	public SocketSettingSpec<Object> get(final String s) {
-		return this.socketSettingSpecMap.get(s);
 	}
 	
 	public Map<String, SocketSettingSpec<Object>> toMap() {

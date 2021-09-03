@@ -19,7 +19,7 @@ public abstract class SettingSpec<V> {
 		Objects.requireNonNull(valType);
 		if (!NewSettingSpecPermission.INSTANCE.equals(permission)) {
 			throw new IllegalArgumentException(
-					"permission object not from SettingSpec");
+					"invalid new SettingSpec permission");
 		}		
 		this.defaultValue = valType.cast(defaultVal);
 		this.string = s;

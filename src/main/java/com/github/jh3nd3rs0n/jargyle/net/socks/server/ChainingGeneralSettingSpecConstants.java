@@ -25,7 +25,7 @@ public final class ChainingGeneralSettingSpecConstants {
 			usage = "chaining.bindHost=HOST"
 	)
 	public static final SettingSpec<Host> CHAINING_BIND_HOST = 
-			SETTING_SPECS.add(new HostSettingSpec(
+			SETTING_SPECS.putThenGet(new HostSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"chaining.bindHost",
 					GeneralPropertySpecConstants.BIND_HOST.getDefaultProperty().getValue()));
@@ -38,7 +38,7 @@ public final class ChainingGeneralSettingSpecConstants {
 			usage = "chaining.connectTimeout=INTEGER_BETWEEN_1_AND_2147483647"
 	)
 	public static final SettingSpec<PositiveInteger> CHAINING_CONNECT_TIMEOUT = 
-			SETTING_SPECS.add(new PositiveIntegerSettingSpec(
+			SETTING_SPECS.putThenGet(new PositiveIntegerSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"chaining.connectTimeout",
 					GeneralPropertySpecConstants.CONNECT_TIMEOUT.getDefaultProperty().getValue()));
@@ -51,7 +51,7 @@ public final class ChainingGeneralSettingSpecConstants {
 			usage = "chaining.socketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
 	)
 	public static final SettingSpec<SocketSettings> CHAINING_SOCKET_SETTINGS = 
-			SETTING_SPECS.add(new SocketSettingsSettingSpec(
+			SETTING_SPECS.putThenGet(new SocketSettingsSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"chaining.socketSettings",
 					GeneralPropertySpecConstants.SOCKET_SETTINGS.getDefaultProperty().getValue()));
@@ -61,7 +61,7 @@ public final class ChainingGeneralSettingSpecConstants {
 			usage = "chaining.socksServerUri=SCHEME://HOST[:PORT]"
 	)
 	public static final SettingSpec<SocksServerUri> CHAINING_SOCKS_SERVER_URI = 
-			SETTING_SPECS.add(new SocksServerUriSettingSpec(
+			SETTING_SPECS.putThenGet(new SocksServerUriSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"chaining.socksServerUri",
 					null));

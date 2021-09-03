@@ -26,7 +26,7 @@ public final class GeneralSettingSpecConstants {
 			usage = "allowedClientAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
 	)
 	public static final SettingSpec<Criteria> ALLOWED_CLIENT_ADDRESS_CRITERIA = 
-			SETTING_SPECS.add(new CriteriaSettingSpec(
+			SETTING_SPECS.putThenGet(new CriteriaSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"allowedClientAddressCriteria",
 					Criteria.newInstance(Criterion.newInstance(CriterionMethod.MATCHES, ".*"))));
@@ -37,7 +37,7 @@ public final class GeneralSettingSpecConstants {
 			usage = "backlog=INTEGER_BETWEEN_0_AND_2147483647"
 	)
 	public static final SettingSpec<NonnegativeInteger> BACKLOG = 
-			SETTING_SPECS.add(new NonnegativeIntegerSettingSpec(
+			SETTING_SPECS.putThenGet(new NonnegativeIntegerSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"backlog",
 					NonnegativeInteger.newInstance(50)));
@@ -47,7 +47,7 @@ public final class GeneralSettingSpecConstants {
 			usage = "blockedClientAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
 	)
 	public static final SettingSpec<Criteria> BLOCKED_CLIENT_ADDRESS_CRITERIA = 
-			SETTING_SPECS.add(new CriteriaSettingSpec(
+			SETTING_SPECS.putThenGet(new CriteriaSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"blockedClientAddressCriteria",
 					Criteria.getEmptyInstance()));
@@ -58,7 +58,7 @@ public final class GeneralSettingSpecConstants {
 			usage = "host=HOST"
 	)
 	public static final SettingSpec<Host> HOST = 
-			SETTING_SPECS.add(new HostSettingSpec(
+			SETTING_SPECS.putThenGet(new HostSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"host",
 					Host.getInet4AllZerosInstance()));
@@ -68,7 +68,7 @@ public final class GeneralSettingSpecConstants {
 			usage = "port=INTEGER_BETWEEN_0_AND_65535"
 	)
 	public static final SettingSpec<Port> PORT = 
-			SETTING_SPECS.add(new PortSettingSpec(
+			SETTING_SPECS.putThenGet(new PortSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"port",
 					Port.newInstance(1080)));
@@ -79,7 +79,7 @@ public final class GeneralSettingSpecConstants {
 			usage = "socketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
 	)
 	public static final SettingSpec<SocketSettings> SOCKET_SETTINGS = 
-			SETTING_SPECS.add(new SocketSettingsSettingSpec(
+			SETTING_SPECS.putThenGet(new SocketSettingsSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"socketSettings",
 					SocketSettings.newInstance()));

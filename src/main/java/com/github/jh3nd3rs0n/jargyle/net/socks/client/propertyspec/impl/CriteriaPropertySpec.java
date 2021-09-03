@@ -7,10 +7,10 @@ import com.github.jh3nd3rs0n.jargyle.util.Criteria;
 public final class CriteriaPropertySpec extends PropertySpec<Criteria> {
 
 	public CriteriaPropertySpec(
-			final Object permissionObj, 
+			final Object permission, 
 			final String s, 
 			final Criteria defaultVal) {
-		super(permissionObj, s, Criteria.class, defaultVal);
+		super(permission, s, Criteria.class, defaultVal);
 	}
 
 	@Override

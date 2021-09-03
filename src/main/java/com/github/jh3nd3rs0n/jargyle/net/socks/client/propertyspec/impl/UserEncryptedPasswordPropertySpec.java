@@ -19,11 +19,11 @@ public final class UserEncryptedPasswordPropertySpec
 	}
 	
 	public UserEncryptedPasswordPropertySpec(
-			final Object permissionObj, 
+			final Object permission, 
 			final String s, 
 			final EncryptedPassword defaultVal) {
 		super(
-				permissionObj, 
+				permission, 
 				s, 
 				EncryptedPassword.class, getValidatedEncryptedPassword(defaultVal));
 	}

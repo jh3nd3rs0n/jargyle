@@ -13,8 +13,8 @@ import javax.net.ssl.TrustManager;
 import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.KeyManagerHelper;
 import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.SslContextHelper;
 import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.TrustManagerHelper;
+import com.github.jh3nd3rs0n.jargyle.net.socks.client.DtlsPropertySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.net.socks.client.Properties;
-import com.github.jh3nd3rs0n.jargyle.net.socks.client.PropertySpec;
 import com.github.jh3nd3rs0n.jargyle.net.socks.client.SocksClient;
 import com.github.jh3nd3rs0n.jargyle.net.ssl.DtlsDatagramSocket;
 import com.github.jh3nd3rs0n.jargyle.net.ssl.DtlsDatagramSocketFactory;
@@ -37,24 +37,24 @@ final class DtlsDatagramSocketFactoryImpl extends DtlsDatagramSocketFactory {
 		TrustManager[] trustManagers = null;
 		Properties properties = this.socksClient.getProperties();
 		File keyStoreFile = properties.getValue(
-				PropertySpec.DTLS_KEY_STORE_FILE);
+				DtlsPropertySpecConstants.DTLS_KEY_STORE_FILE);
 		if (keyStoreFile != null) {
 			EncryptedPassword keyStorePassword = properties.getValue(
-					PropertySpec.DTLS_KEY_STORE_PASSWORD);
+					DtlsPropertySpecConstants.DTLS_KEY_STORE_PASSWORD);
 			String keyStoreType = properties.getValue(
-					PropertySpec.DTLS_KEY_STORE_TYPE);
+					DtlsPropertySpecConstants.DTLS_KEY_STORE_TYPE);
 			keyManagers = KeyManagerHelper.getKeyManagers(
 					keyStoreFile, 
 					keyStorePassword.getPassword(), 
 					keyStoreType);
 		}
 		File trustStoreFile = properties.getValue(
-				PropertySpec.DTLS_TRUST_STORE_FILE);
+				DtlsPropertySpecConstants.DTLS_TRUST_STORE_FILE);
 		if (trustStoreFile != null) {
 			EncryptedPassword trustStorePassword = properties.getValue(
-					PropertySpec.DTLS_TRUST_STORE_PASSWORD);
+					DtlsPropertySpecConstants.DTLS_TRUST_STORE_PASSWORD);
 			String trustStoreType = properties.getValue(
-					PropertySpec.DTLS_TRUST_STORE_TYPE);
+					DtlsPropertySpecConstants.DTLS_TRUST_STORE_TYPE);
 			trustManagers = TrustManagerHelper.getTrustManagers(
 					trustStoreFile, 
 					trustStorePassword.getPassword(), 
@@ -63,7 +63,8 @@ final class DtlsDatagramSocketFactoryImpl extends DtlsDatagramSocketFactory {
 		SSLContext context = null;
 		try {
 			context = SslContextHelper.getSslContext(
-					properties.getValue(PropertySpec.DTLS_PROTOCOL), 
+					properties.getValue(
+							DtlsPropertySpecConstants.DTLS_PROTOCOL), 
 					keyManagers, 
 					trustManagers);
 		} catch (KeyManagementException e) {
@@ -91,19 +92,19 @@ final class DtlsDatagramSocketFactoryImpl extends DtlsDatagramSocketFactory {
 		dtlsDatagramSocket.setUseClientMode(true);
 		Properties properties = this.socksClient.getProperties();
 		Strings enabledCipherSuites = properties.getValue(
-				PropertySpec.DTLS_ENABLED_CIPHER_SUITES);
+				DtlsPropertySpecConstants.DTLS_ENABLED_CIPHER_SUITES);
 		String[] cipherSuites = enabledCipherSuites.toStringArray();
 		if (cipherSuites.length > 0) {
 			dtlsDatagramSocket.setEnabledCipherSuites(cipherSuites);
 		}
 		Strings enabledProtocols = properties.getValue(
-				PropertySpec.DTLS_ENABLED_PROTOCOLS);
+				DtlsPropertySpecConstants.DTLS_ENABLED_PROTOCOLS);
 		String[] protocols = enabledProtocols.toStringArray();
 		if (protocols.length > 0) {
 			dtlsDatagramSocket.setEnabledProtocols(protocols);
 		}
 		PositiveInteger maxPacketSize = properties.getValue(
-				PropertySpec.DTLS_MAX_PACKET_SIZE);
+				DtlsPropertySpecConstants.DTLS_MAX_PACKET_SIZE);
 		dtlsDatagramSocket.setMaximumPacketSize(maxPacketSize.intValue());
 		return dtlsDatagramSocket;
 	}

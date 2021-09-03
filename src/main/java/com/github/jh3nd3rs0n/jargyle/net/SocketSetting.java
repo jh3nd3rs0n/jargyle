@@ -62,7 +62,7 @@ public final class SocketSetting<V> {
 	
 	private static SocketSetting<Object> newInstance(
 			final String name, final String value) {
-		return SocketSettingSpec.valueOfString(
+		return SocketSettingSpecConstants.valueOf(
 				name).newSocketSettingOfParsableValue(value);
 	}
 	

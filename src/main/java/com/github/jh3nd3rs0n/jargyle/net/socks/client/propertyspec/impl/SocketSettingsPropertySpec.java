@@ -8,10 +8,10 @@ public final class SocketSettingsPropertySpec
 	extends PropertySpec<SocketSettings> {
 
 	public SocketSettingsPropertySpec(
-			final Object permissionObj, 
+			final Object permission, 
 			final String s, 
 			final SocketSettings defaultVal) {
-		super(permissionObj, s, SocketSettings.class, defaultVal);
+		super(permission, s, SocketSettings.class, defaultVal);
 	}
 
 	@Override

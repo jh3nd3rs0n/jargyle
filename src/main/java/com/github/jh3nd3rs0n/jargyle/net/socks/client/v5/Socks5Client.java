@@ -8,8 +8,9 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
 
+import com.github.jh3nd3rs0n.jargyle.net.socks.client.DtlsPropertySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.net.socks.client.Properties;
-import com.github.jh3nd3rs0n.jargyle.net.socks.client.PropertySpec;
+import com.github.jh3nd3rs0n.jargyle.net.socks.client.Socks5PropertySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.net.socks.client.SocksClient;
 import com.github.jh3nd3rs0n.jargyle.net.socks.client.SocksNetObjectFactory;
 import com.github.jh3nd3rs0n.jargyle.net.socks.transport.v5.ClientMethodSelectionMessage;
@@ -33,7 +34,7 @@ public final class Socks5Client extends SocksClient {
 			final SocksClient chainedClient) {
 		super(serverUri, props, chainedClient);
 		DtlsDatagramSocketFactory dtlsDatagramSockFactory = 
-				props.getValue(PropertySpec.DTLS_ENABLED).booleanValue() ? 
+				props.getValue(DtlsPropertySpecConstants.DTLS_ENABLED).booleanValue() ? 
 						new DtlsDatagramSocketFactoryImpl(this) : null;
 		this.dtlsDatagramSocketFactory = dtlsDatagramSockFactory;
 	}
@@ -96,7 +97,7 @@ public final class Socks5Client extends SocksClient {
 		InputStream inputStream = connectedInternalSocket.getInputStream();
 		OutputStream outputStream = connectedInternalSocket.getOutputStream();
 		Methods methods = this.getProperties().getValue(
-				PropertySpec.SOCKS5_METHODS);
+				Socks5PropertySpecConstants.SOCKS5_METHODS);
 		ClientMethodSelectionMessage cmsm = 
 				ClientMethodSelectionMessage.newInstance(methods);
 		outputStream.write(cmsm.toByteArray());

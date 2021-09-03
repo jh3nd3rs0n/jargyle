@@ -36,12 +36,13 @@ final class Listener implements Runnable {
 		this.serverSocket = serverSock;
 	}
 	
-	private boolean canAllowClientFacingSocket(final Socket clientFacingSocket) {
+	private boolean canAllowClientFacingSocket(
+			final Socket clientFacingSocket) {
 		Settings settings = this.configuration.getSettings();
 		String clientAddress = 
 				clientFacingSocket.getInetAddress().getHostAddress();
 		Criteria allowedClientAddressCriteria = settings.getLastValue(
-				SettingSpec.ALLOWED_CLIENT_ADDRESS_CRITERIA);
+				GeneralSettingSpecConstants.ALLOWED_CLIENT_ADDRESS_CRITERIA);
 		Criterion criterion = allowedClientAddressCriteria.anyEvaluatesTrue(
 				clientAddress);
 		if (criterion == null) {
@@ -51,7 +52,7 @@ final class Listener implements Runnable {
 			return false;
 		}
 		Criteria blockedClientAddressCriteria = settings.getLastValue(
-				SettingSpec.BLOCKED_CLIENT_ADDRESS_CRITERIA);
+				GeneralSettingSpecConstants.BLOCKED_CLIENT_ADDRESS_CRITERIA);
 		criterion = blockedClientAddressCriteria.anyEvaluatesTrue(
 				clientAddress);
 		if (criterion != null) {
@@ -80,7 +81,8 @@ final class Listener implements Runnable {
 	
 	private DtlsDatagramSocketFactory getClientFacingDtlsDatagramSocketFactory() {
 		Settings settings = this.configuration.getSettings();
-		if (settings.getLastValue(SettingSpec.DTLS_ENABLED).booleanValue()) {
+		if (settings.getLastValue(
+				DtlsSettingSpecConstants.DTLS_ENABLED).booleanValue()) {
 			if (this.clientFacingDtlsDatagramSocketFactory == null) {
 				this.clientFacingDtlsDatagramSocketFactory = 
 						new DtlsDatagramSocketFactoryImpl(this.configuration);
@@ -95,7 +97,8 @@ final class Listener implements Runnable {
 	
 	private SslSocketFactory getClientFacingSslSocketFactory() {
 		Settings settings = this.configuration.getSettings();
-		if (settings.getLastValue(SettingSpec.SSL_ENABLED).booleanValue()) {
+		if (settings.getLastValue(
+				SslSettingSpecConstants.SSL_ENABLED).booleanValue()) {
 			if (this.clientFacingSslSocketFactory == null) {
 				this.clientFacingSslSocketFactory = new SslSocketFactoryImpl(
 						this.configuration);
@@ -138,7 +141,8 @@ final class Listener implements Runnable {
 				clientFacingSocket = clientFacingSock;
 			} catch (Throwable t) {
 				LOGGER.warn(
-						LoggerHelper.objectMessage(this, "Internal server error"), 
+						LoggerHelper.objectMessage(
+								this, "Internal server error"), 
 						t);
 				this.closeClientFacingSocket(clientFacingSocket);
 				continue;

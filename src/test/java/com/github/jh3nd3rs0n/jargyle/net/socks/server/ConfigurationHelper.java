@@ -16,9 +16,9 @@ public final class ConfigurationHelper {
 		sb.append("Jasmine:mission%3Aimpossible ");
 		sb.append("Abu:safeDriversSave40%25");
 		return ImmutableConfiguration.newInstance(Settings.newInstance(
-				SettingSpec.SOCKS5_METHODS.newSetting(
+				Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
 						Methods.newInstance(Method.USERNAME_PASSWORD)),
-				SettingSpec.SOCKS5_USERPASSAUTH_USERNAME_PASSWORD_AUTHENTICATOR.newSetting(
+				Socks5SettingSpecConstants.SOCKS5_USERPASSAUTH_USERNAME_PASSWORD_AUTHENTICATOR.newSetting(
 						new StringSourceUsernamePasswordAuthenticator(sb.toString()))));
 	}
 	

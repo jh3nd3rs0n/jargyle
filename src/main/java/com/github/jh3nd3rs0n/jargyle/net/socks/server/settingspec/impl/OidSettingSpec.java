@@ -9,10 +9,10 @@ import com.github.jh3nd3rs0n.jargyle.net.socks.server.SettingSpec;
 public final class OidSettingSpec extends SettingSpec<Oid> {
 
 	public OidSettingSpec(
-			final Object permissionObj, 
+			final Object permission, 
 			final String s, 
 			final Oid defaultVal) {
-		super(permissionObj, s, Oid.class, defaultVal);
+		super(permission, s, Oid.class, defaultVal);
 	}
 
 	@Override

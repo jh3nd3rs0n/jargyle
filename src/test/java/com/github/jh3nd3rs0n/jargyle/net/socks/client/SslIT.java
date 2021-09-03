@@ -15,9 +15,10 @@ import com.github.jh3nd3rs0n.jargyle.net.ServerSocketHelper;
 import com.github.jh3nd3rs0n.jargyle.net.SocketHelper;
 import com.github.jh3nd3rs0n.jargyle.net.socks.client.v5.Socks5ServerUri;
 import com.github.jh3nd3rs0n.jargyle.net.socks.server.Configuration;
+import com.github.jh3nd3rs0n.jargyle.net.socks.server.DtlsSettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.net.socks.server.ImmutableConfiguration;
-import com.github.jh3nd3rs0n.jargyle.net.socks.server.SettingSpec;
 import com.github.jh3nd3rs0n.jargyle.net.socks.server.Settings;
+import com.github.jh3nd3rs0n.jargyle.net.socks.server.SslSettingSpecConstants;
 
 public class SslIT {
 
@@ -35,82 +36,86 @@ public class SslIT {
 	
 	private static Configuration newConfigurationUsingSsl() {
 		return ImmutableConfiguration.newInstance(Settings.newInstance(
-				SettingSpec.DTLS_ENABLED.newSetting(Boolean.TRUE),
-				SettingSpec.DTLS_KEY_STORE_FILE.newSetting(
+				DtlsSettingSpecConstants.DTLS_ENABLED.newSetting(Boolean.TRUE),
+				DtlsSettingSpecConstants.DTLS_KEY_STORE_FILE.newSetting(
 						ResourceHelper.getResourceAsFile(
 								ResourceNameConstants.JARGYLE_SECURITY_SERVER_KEY_STORE_FILE)),
-				SettingSpec.DTLS_KEY_STORE_PASSWORD.newSettingOfParsableValue(
+				DtlsSettingSpecConstants.DTLS_KEY_STORE_PASSWORD.newSettingOfParsableValue(
 						ResourceHelper.getResourceAsString(
 								ResourceNameConstants.JARGYLE_SECURITY_SERVER_KEY_STORE_PASSWORD_FILE)),				
-				SettingSpec.SSL_ENABLED.newSetting(Boolean.TRUE),
-				SettingSpec.SSL_KEY_STORE_FILE.newSetting(
+				SslSettingSpecConstants.SSL_ENABLED.newSetting(Boolean.TRUE),
+				SslSettingSpecConstants.SSL_KEY_STORE_FILE.newSetting(
 						ResourceHelper.getResourceAsFile(
 								ResourceNameConstants.JARGYLE_SECURITY_SERVER_KEY_STORE_FILE)),
-				SettingSpec.SSL_KEY_STORE_PASSWORD.newSettingOfParsableValue(
+				SslSettingSpecConstants.SSL_KEY_STORE_PASSWORD.newSettingOfParsableValue(
 						ResourceHelper.getResourceAsString(
 								ResourceNameConstants.JARGYLE_SECURITY_SERVER_KEY_STORE_PASSWORD_FILE))));
 	}
 
 	private static Configuration newConfigurationUsingSslAndRequestedClientAuth() {
 		return ImmutableConfiguration.newInstance(Settings.newInstance(
-				SettingSpec.DTLS_ENABLED.newSetting(Boolean.TRUE),
-				SettingSpec.DTLS_KEY_STORE_FILE.newSetting(
+				DtlsSettingSpecConstants.DTLS_ENABLED.newSetting(Boolean.TRUE),
+				DtlsSettingSpecConstants.DTLS_KEY_STORE_FILE.newSetting(
 						ResourceHelper.getResourceAsFile(
 								ResourceNameConstants.JARGYLE_SECURITY_SERVER_KEY_STORE_FILE)),
-				SettingSpec.DTLS_KEY_STORE_PASSWORD.newSettingOfParsableValue(
+				DtlsSettingSpecConstants.DTLS_KEY_STORE_PASSWORD.newSettingOfParsableValue(
 						ResourceHelper.getResourceAsString(
 								ResourceNameConstants.JARGYLE_SECURITY_SERVER_KEY_STORE_PASSWORD_FILE)),
-				SettingSpec.DTLS_TRUST_STORE_FILE.newSetting(
+				DtlsSettingSpecConstants.DTLS_TRUST_STORE_FILE.newSetting(
 						ResourceHelper.getResourceAsFile(
 								ResourceNameConstants.JARGYLE_SECURITY_CLIENT_KEY_STORE_FILE)),
-				SettingSpec.DTLS_TRUST_STORE_PASSWORD.newSettingOfParsableValue(
+				DtlsSettingSpecConstants.DTLS_TRUST_STORE_PASSWORD.newSettingOfParsableValue(
 						ResourceHelper.getResourceAsString(
 								ResourceNameConstants.JARGYLE_SECURITY_CLIENT_KEY_STORE_PASSWORD_FILE)),
-				SettingSpec.DTLS_WANT_CLIENT_AUTH.newSetting(Boolean.TRUE),				
-				SettingSpec.SSL_ENABLED.newSetting(Boolean.TRUE),
-				SettingSpec.SSL_KEY_STORE_FILE.newSetting(
+				DtlsSettingSpecConstants.DTLS_WANT_CLIENT_AUTH.newSetting(
+						Boolean.TRUE),				
+				SslSettingSpecConstants.SSL_ENABLED.newSetting(Boolean.TRUE),
+				SslSettingSpecConstants.SSL_KEY_STORE_FILE.newSetting(
 						ResourceHelper.getResourceAsFile(
 								ResourceNameConstants.JARGYLE_SECURITY_SERVER_KEY_STORE_FILE)),
-				SettingSpec.SSL_KEY_STORE_PASSWORD.newSettingOfParsableValue(
+				SslSettingSpecConstants.SSL_KEY_STORE_PASSWORD.newSettingOfParsableValue(
 						ResourceHelper.getResourceAsString(
 								ResourceNameConstants.JARGYLE_SECURITY_SERVER_KEY_STORE_PASSWORD_FILE)),
-				SettingSpec.SSL_TRUST_STORE_FILE.newSetting(
+				SslSettingSpecConstants.SSL_TRUST_STORE_FILE.newSetting(
 						ResourceHelper.getResourceAsFile(
 								ResourceNameConstants.JARGYLE_SECURITY_CLIENT_KEY_STORE_FILE)),
-				SettingSpec.SSL_TRUST_STORE_PASSWORD.newSettingOfParsableValue(
+				SslSettingSpecConstants.SSL_TRUST_STORE_PASSWORD.newSettingOfParsableValue(
 						ResourceHelper.getResourceAsString(
 								ResourceNameConstants.JARGYLE_SECURITY_CLIENT_KEY_STORE_PASSWORD_FILE)),
-				SettingSpec.SSL_WANT_CLIENT_AUTH.newSetting(Boolean.TRUE)));
+				SslSettingSpecConstants.SSL_WANT_CLIENT_AUTH.newSetting(
+						Boolean.TRUE)));
 	}
 
 	private static Configuration newConfigurationUsingSslAndRequiredClientAuth() {
 		return ImmutableConfiguration.newInstance(Settings.newInstance(
-				SettingSpec.DTLS_ENABLED.newSetting(Boolean.TRUE),
-				SettingSpec.DTLS_KEY_STORE_FILE.newSetting(
+				DtlsSettingSpecConstants.DTLS_ENABLED.newSetting(Boolean.TRUE),
+				DtlsSettingSpecConstants.DTLS_KEY_STORE_FILE.newSetting(
 						ResourceHelper.getResourceAsFile(
 								ResourceNameConstants.JARGYLE_SECURITY_SERVER_KEY_STORE_FILE)),
-				SettingSpec.DTLS_KEY_STORE_PASSWORD.newSettingOfParsableValue(
+				DtlsSettingSpecConstants.DTLS_KEY_STORE_PASSWORD.newSettingOfParsableValue(
 						ResourceHelper.getResourceAsString(
 								ResourceNameConstants.JARGYLE_SECURITY_SERVER_KEY_STORE_PASSWORD_FILE)),
-				SettingSpec.DTLS_NEED_CLIENT_AUTH.newSetting(Boolean.TRUE),
-				SettingSpec.DTLS_TRUST_STORE_FILE.newSetting(
+				DtlsSettingSpecConstants.DTLS_NEED_CLIENT_AUTH.newSetting(
+						Boolean.TRUE),
+				DtlsSettingSpecConstants.DTLS_TRUST_STORE_FILE.newSetting(
 						ResourceHelper.getResourceAsFile(
 								ResourceNameConstants.JARGYLE_SECURITY_CLIENT_KEY_STORE_FILE)),
-				SettingSpec.DTLS_TRUST_STORE_PASSWORD.newSettingOfParsableValue(
+				DtlsSettingSpecConstants.DTLS_TRUST_STORE_PASSWORD.newSettingOfParsableValue(
 						ResourceHelper.getResourceAsString(
 								ResourceNameConstants.JARGYLE_SECURITY_CLIENT_KEY_STORE_PASSWORD_FILE)),				
-				SettingSpec.SSL_ENABLED.newSetting(Boolean.TRUE),
-				SettingSpec.SSL_KEY_STORE_FILE.newSetting(
+				SslSettingSpecConstants.SSL_ENABLED.newSetting(Boolean.TRUE),
+				SslSettingSpecConstants.SSL_KEY_STORE_FILE.newSetting(
 						ResourceHelper.getResourceAsFile(
 								ResourceNameConstants.JARGYLE_SECURITY_SERVER_KEY_STORE_FILE)),
-				SettingSpec.SSL_KEY_STORE_PASSWORD.newSettingOfParsableValue(
+				SslSettingSpecConstants.SSL_KEY_STORE_PASSWORD.newSettingOfParsableValue(
 						ResourceHelper.getResourceAsString(
 								ResourceNameConstants.JARGYLE_SECURITY_SERVER_KEY_STORE_PASSWORD_FILE)),
-				SettingSpec.SSL_NEED_CLIENT_AUTH.newSetting(Boolean.TRUE),
-				SettingSpec.SSL_TRUST_STORE_FILE.newSetting(
+				SslSettingSpecConstants.SSL_NEED_CLIENT_AUTH.newSetting(
+						Boolean.TRUE),
+				SslSettingSpecConstants.SSL_TRUST_STORE_FILE.newSetting(
 						ResourceHelper.getResourceAsFile(
 								ResourceNameConstants.JARGYLE_SECURITY_CLIENT_KEY_STORE_FILE)),
-				SettingSpec.SSL_TRUST_STORE_PASSWORD.newSettingOfParsableValue(
+				SslSettingSpecConstants.SSL_TRUST_STORE_PASSWORD.newSettingOfParsableValue(
 						ResourceHelper.getResourceAsString(
 								ResourceNameConstants.JARGYLE_SECURITY_CLIENT_KEY_STORE_PASSWORD_FILE))));
 	}
@@ -119,18 +124,20 @@ public class SslIT {
 			final String host, 
 			final Integer port) {
 		Properties properties = Properties.newInstance(
-				PropertySpec.DTLS_ENABLED.newProperty(Boolean.TRUE),
-				PropertySpec.DTLS_TRUST_STORE_FILE.newProperty(
+				DtlsPropertySpecConstants.DTLS_ENABLED.newProperty(
+						Boolean.TRUE),
+				DtlsPropertySpecConstants.DTLS_TRUST_STORE_FILE.newProperty(
 						ResourceHelper.getResourceAsFile(
 								ResourceNameConstants.JARGYLE_SECURITY_SERVER_KEY_STORE_FILE)),
-				PropertySpec.DTLS_TRUST_STORE_PASSWORD.newPropertyOfParsableValue(
+				DtlsPropertySpecConstants.DTLS_TRUST_STORE_PASSWORD.newPropertyOfParsableValue(
 						ResourceHelper.getResourceAsString(
 								ResourceNameConstants.JARGYLE_SECURITY_SERVER_KEY_STORE_PASSWORD_FILE)),				
-				PropertySpec.SSL_ENABLED.newProperty(Boolean.TRUE),
-				PropertySpec.SSL_TRUST_STORE_FILE.newProperty(
+				SslPropertySpecConstants.SSL_ENABLED.newProperty(
+						Boolean.TRUE),
+				SslPropertySpecConstants.SSL_TRUST_STORE_FILE.newProperty(
 						ResourceHelper.getResourceAsFile(
 								ResourceNameConstants.JARGYLE_SECURITY_SERVER_KEY_STORE_FILE)),
-				PropertySpec.SSL_TRUST_STORE_PASSWORD.newPropertyOfParsableValue(
+				SslPropertySpecConstants.SSL_TRUST_STORE_PASSWORD.newPropertyOfParsableValue(
 						ResourceHelper.getResourceAsString(
 								ResourceNameConstants.JARGYLE_SECURITY_SERVER_KEY_STORE_PASSWORD_FILE)));
 		return new Socks5ServerUri(host, port).newSocksClient(properties);
@@ -140,30 +147,31 @@ public class SslIT {
 			final String host, 
 			final Integer port) {
 		Properties properties = Properties.newInstance(
-				PropertySpec.DTLS_ENABLED.newProperty(Boolean.TRUE),
-				PropertySpec.DTLS_KEY_STORE_FILE.newProperty(
+				DtlsPropertySpecConstants.DTLS_ENABLED.newProperty(
+						Boolean.TRUE),
+				DtlsPropertySpecConstants.DTLS_KEY_STORE_FILE.newProperty(
 						ResourceHelper.getResourceAsFile(
 								ResourceNameConstants.JARGYLE_SECURITY_CLIENT_KEY_STORE_FILE)),
-				PropertySpec.DTLS_KEY_STORE_PASSWORD.newPropertyOfParsableValue(
+				DtlsPropertySpecConstants.DTLS_KEY_STORE_PASSWORD.newPropertyOfParsableValue(
 						ResourceHelper.getResourceAsString(
 								ResourceNameConstants.JARGYLE_SECURITY_CLIENT_KEY_STORE_PASSWORD_FILE)),
-				PropertySpec.DTLS_TRUST_STORE_FILE.newProperty(
+				DtlsPropertySpecConstants.DTLS_TRUST_STORE_FILE.newProperty(
 						ResourceHelper.getResourceAsFile(
 								ResourceNameConstants.JARGYLE_SECURITY_SERVER_KEY_STORE_FILE)),
-				PropertySpec.DTLS_TRUST_STORE_PASSWORD.newPropertyOfParsableValue(
+				DtlsPropertySpecConstants.DTLS_TRUST_STORE_PASSWORD.newPropertyOfParsableValue(
 						ResourceHelper.getResourceAsString(
 								ResourceNameConstants.JARGYLE_SECURITY_SERVER_KEY_STORE_PASSWORD_FILE)),
-				PropertySpec.SSL_ENABLED.newProperty(Boolean.TRUE),
-				PropertySpec.SSL_KEY_STORE_FILE.newProperty(
+				SslPropertySpecConstants.SSL_ENABLED.newProperty(Boolean.TRUE),
+				SslPropertySpecConstants.SSL_KEY_STORE_FILE.newProperty(
 						ResourceHelper.getResourceAsFile(
 								ResourceNameConstants.JARGYLE_SECURITY_CLIENT_KEY_STORE_FILE)),
-				PropertySpec.SSL_KEY_STORE_PASSWORD.newPropertyOfParsableValue(
+				SslPropertySpecConstants.SSL_KEY_STORE_PASSWORD.newPropertyOfParsableValue(
 						ResourceHelper.getResourceAsString(
 								ResourceNameConstants.JARGYLE_SECURITY_CLIENT_KEY_STORE_PASSWORD_FILE)),
-				PropertySpec.SSL_TRUST_STORE_FILE.newProperty(
+				SslPropertySpecConstants.SSL_TRUST_STORE_FILE.newProperty(
 						ResourceHelper.getResourceAsFile(
 								ResourceNameConstants.JARGYLE_SECURITY_SERVER_KEY_STORE_FILE)),
-				PropertySpec.SSL_TRUST_STORE_PASSWORD.newPropertyOfParsableValue(
+				SslPropertySpecConstants.SSL_TRUST_STORE_PASSWORD.newPropertyOfParsableValue(
 						ResourceHelper.getResourceAsString(
 								ResourceNameConstants.JARGYLE_SECURITY_SERVER_KEY_STORE_PASSWORD_FILE)));
 		return new Socks5ServerUri(host, port).newSocksClient(properties);

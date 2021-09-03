@@ -18,11 +18,11 @@ public final class SocksClientHelper {
 			final Integer port, 
 			final UsernamePassword usernamePassword) {
 		Properties properties = Properties.newInstance(
-				PropertySpec.SOCKS5_METHODS.newProperty(
+				Socks5PropertySpecConstants.SOCKS5_METHODS.newProperty(
 						Methods.newInstance(Method.USERNAME_PASSWORD)),
-				PropertySpec.SOCKS5_USERPASSAUTH_USERNAME.newProperty(
+				Socks5PropertySpecConstants.SOCKS5_USERPASSAUTH_USERNAME.newProperty(
 						usernamePassword.getUsername()),
-				PropertySpec.SOCKS5_USERPASSAUTH_PASSWORD.newProperty(
+				Socks5PropertySpecConstants.SOCKS5_USERPASSAUTH_PASSWORD.newProperty(
 						usernamePassword.getEncryptedPassword()));
 		return new Socks5ServerUri(host, port).newSocksClient(properties);
 	}

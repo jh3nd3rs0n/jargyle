@@ -176,22 +176,41 @@ The following is a list of available settings for the SOCKS server (displayed wh
 
 ```text
     
-    SETTINGS:
+    GENERAL SETTINGS:
     
       allowedClientAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
           The space separated list of allowed client address criteria (default is matches:.*)
     
       backlog=INTEGER_BETWEEN_0_AND_2147483647
           The maximum length of the queue of incoming connections (default is 50)
-
+    
       blockedClientAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
           The space separated list of blocked client address criteria
+    
+      host=HOST
+          The host name or address for the SOCKS server (default is 0.0.0.0)
+    
+      port=INTEGER_BETWEEN_0_AND_65535
+          The port for the SOCKS server (default is 1080)
+    
+      socketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
+          The space separated list of socket settings for the SOCKS server
+    
+    CHAINING GENERAL SETTINGS:
     
       chaining.bindHost=HOST
           The binding host name or address for the internal socket that is used to connect to the other SOCKS server (used for the SOCKS5 commands RESOLVE, BIND and UDP ASSOCIATE) (default is 0.0.0.0)
     
       chaining.connectTimeout=INTEGER_BETWEEN_1_AND_2147483647
           The timeout in milliseconds on waiting for the internal socket to connect to the other SOCKS server (used for the SOCKS5 commands RESOLVE, BIND and UDP ASSOCIATE) (default is 60000)
+    
+      chaining.socketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
+          The space separated list of socket settings for the internal socket that is used to connect to the other SOCKS server (used for the SOCKS5 command RESOLVE and UDP ASSOCIATE)
+    
+      chaining.socksServerUri=SCHEME://HOST[:PORT]
+          The URI of the other SOCKS server
+    
+    CHAINING DTLS SETTINGS:
     
       chaining.dtls.enabled=true|false
           The boolean value to indicate if DTLS connections to the other SOCKS server are enabled (default is false)
@@ -226,11 +245,7 @@ The following is a list of available settings for the SOCKS server (displayed wh
       chaining.dtls.trustStoreType=TYPE
           The type of trust store file for the DTLS connections to the other SOCKS server (default is PKCS12)
     
-      chaining.socketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
-          The space separated list of socket settings for the internal socket that is used to connect to the other SOCKS server (used for the SOCKS5 commands RESOLVE and UDP ASSOCIATE)
-    
-      chaining.socksServerUri=SCHEME://HOST[:PORT]
-          The URI of the other SOCKS server
+    CHAINING SOCKS5 SETTINGS:
     
       chaining.socks5.gssapiauth.mechanismOid=SOCKS5_GSSAPIAUTH_MECHANISM_OID
           The object ID for the GSS-API authentication mechanism to the other SOCKS5 server (default is 1.2.840.113554.1.2.2)
@@ -252,6 +267,8 @@ The following is a list of available settings for the SOCKS server (displayed wh
     
       chaining.socks5.userpassauth.usernamePassword=USERNAME:PASSWORD
           The username password to be used to access the other SOCKS5 server
+    
+    CHAINING SSL SETTINGS:
     
       chaining.ssl.enabled=true|false
           The boolean value to indicate if SSL/TLS connections to the other SOCKS server are enabled (default is false)
@@ -282,6 +299,8 @@ The following is a list of available settings for the SOCKS server (displayed wh
     
       chaining.ssl.trustStoreType=TYPE
           The type of trust store file for the SSL/TLS connections to the other SOCKS server (default is PKCS12)
+    
+    DTLS SETTINGS:
     
       dtls.enabled=true|false
           The boolean value to indicate if DTLS connections to the SOCKS server are enabled (default is false)
@@ -322,14 +341,7 @@ The following is a list of available settings for the SOCKS server (displayed wh
       dtls.wantClientAuth=true|false
           The boolean value to indicate that client authentication is requested for DTLS connections to the SOCKS server (default is false)
     
-      host=HOST
-          The host name or address for the SOCKS server (default is 0.0.0.0)
-    
-      port=INTEGER_BETWEEN_0_AND_65535
-          The port for the SOCKS server (default is 1080)
-    
-      socketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
-          The space separated list of socket settings for the SOCKS server
+    SOCKS5 SETTINGS:
     
       socks5.gssapiauth.necReferenceImpl=true|false
           The boolean value to indicate if the exchange of the GSS-API protection level negotiation must be unprotected according to the NEC reference implementation (default is false)
@@ -339,7 +351,7 @@ The following is a list of available settings for the SOCKS server (displayed wh
     
       socks5.methods=[SOCKS5_METHOD1[ SOCKS5_METHOD2[...]]]
           The space separated list of acceptable authentication methods in order of preference (default is NO_AUTHENTICATION_REQUIRED)
-        
+    
       socks5.onBind.allowedInboundAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
           The space separated list of allowed inbound address criteria (default is matches:.*)
     
@@ -408,6 +420,8 @@ The following is a list of available settings for the SOCKS server (displayed wh
     
       socks5.userpassauth.usernamePasswordAuthenticator=CLASSNAME[:VALUE]
           The username password authenticator for the SOCKS5 server
+    
+    SSL SETTINGS:
     
       ssl.enabled=true|false
           The boolean value to indicate if SSL/TLS connections to the SOCKS server are enabled (default is false)
@@ -506,7 +520,8 @@ The following is a list of available settings for the SOCKS server (displayed wh
     
       USERNAME_PASSWORD
           Username password authentication
-        
+    
+            
 ```
 
 The following is the command line help for managing SOCKS5 users for username password authentication (displayed when using the command line options `--socks5-userpassauth-users --help`):

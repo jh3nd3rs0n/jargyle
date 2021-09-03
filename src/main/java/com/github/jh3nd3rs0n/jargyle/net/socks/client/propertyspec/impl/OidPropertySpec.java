@@ -19,10 +19,10 @@ public final class OidPropertySpec extends PropertySpec<Oid> {
 	}
 	
 	public OidPropertySpec(
-			final Object permissionObj, 
+			final Object permission, 
 			final String s, 
 			final String defaultVal) {
-		super(permissionObj, s, Oid.class, newOid(defaultVal));
+		super(permission, s, Oid.class, newOid(defaultVal));
 	}
 
 	@Override

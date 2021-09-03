@@ -29,7 +29,7 @@ import com.github.jh3nd3rs0n.argmatey.ArgMatey.OptionUsageProvider;
 import com.github.jh3nd3rs0n.argmatey.ArgMatey.TerminationRequestedException;
 import com.github.jh3nd3rs0n.jargyle.internal.help.HelpText;
 import com.github.jh3nd3rs0n.jargyle.internal.io.ConsoleWrapper;
-import com.github.jh3nd3rs0n.jargyle.net.SocketSettingSpec;
+import com.github.jh3nd3rs0n.jargyle.net.StandardSocketSettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.net.socks.client.Scheme;
 import com.github.jh3nd3rs0n.jargyle.net.socks.client.v5.userpassauth.UsernamePassword;
 import com.github.jh3nd3rs0n.jargyle.net.socks.server.v5.userpassauth.UsersCLI;
@@ -294,7 +294,7 @@ public final class SocksServerCLI extends CLI {
 				+ "DTLS connections to the other SOCKS server: ";
 		EncryptedPassword encryptedPassword = readEncryptedPassword(prompt);
 		Setting<EncryptedPassword> setting = 
-				SettingSpec.CHAINING_DTLS_KEY_STORE_PASSWORD.newSetting(
+				ChainingDtlsSettingSpecConstants.CHAINING_DTLS_KEY_STORE_PASSWORD.newSetting(
 						encryptedPassword);
 		this.modifiableConfiguration.addSetting(setting);
 	}
@@ -312,7 +312,7 @@ public final class SocksServerCLI extends CLI {
 				+ "DTLS connections to the other SOCKS server: ";
 		EncryptedPassword encryptedPassword = readEncryptedPassword(prompt);
 		Setting<EncryptedPassword> setting = 
-				SettingSpec.CHAINING_DTLS_TRUST_STORE_PASSWORD.newSetting(
+				ChainingDtlsSettingSpecConstants.CHAINING_DTLS_TRUST_STORE_PASSWORD.newSetting(
 						encryptedPassword);
 		this.modifiableConfiguration.addSetting(setting);
 	}
@@ -357,7 +357,7 @@ public final class SocksServerCLI extends CLI {
 		UsernamePassword usernamePassword = UsernamePassword.newInstance(
 				username, password);
 		Setting<UsernamePassword> setting = 
-				SettingSpec.CHAINING_SOCKS5_USERPASSAUTH_USERNAME_PASSWORD.newSetting(
+				ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_USERPASSAUTH_USERNAME_PASSWORD.newSetting(
 						usernamePassword);
 		this.modifiableConfiguration.addSetting(setting);
 	}
@@ -375,7 +375,7 @@ public final class SocksServerCLI extends CLI {
 				+ "SSL/TLS connections to the other SOCKS server: ";
 		EncryptedPassword encryptedPassword = readEncryptedPassword(prompt);
 		Setting<EncryptedPassword> setting = 
-				SettingSpec.CHAINING_SSL_KEY_STORE_PASSWORD.newSetting(
+				ChainingSslSettingSpecConstants.CHAINING_SSL_KEY_STORE_PASSWORD.newSetting(
 						encryptedPassword);
 		this.modifiableConfiguration.addSetting(setting);
 	}
@@ -393,7 +393,7 @@ public final class SocksServerCLI extends CLI {
 				+ "SSL/TLS connections to the other SOCKS server: ";
 		EncryptedPassword encryptedPassword = readEncryptedPassword(prompt);
 		Setting<EncryptedPassword> setting = 
-				SettingSpec.CHAINING_SSL_TRUST_STORE_PASSWORD.newSetting(
+				ChainingSslSettingSpecConstants.CHAINING_SSL_TRUST_STORE_PASSWORD.newSetting(
 						encryptedPassword);
 		this.modifiableConfiguration.addSetting(setting);
 	}
@@ -411,7 +411,7 @@ public final class SocksServerCLI extends CLI {
 				+ "DTLS connections to the SOCKS server: ";
 		EncryptedPassword encryptedPassword = readEncryptedPassword(prompt);
 		Setting<EncryptedPassword> setting = 
-				SettingSpec.DTLS_KEY_STORE_PASSWORD.newSetting(
+				DtlsSettingSpecConstants.DTLS_KEY_STORE_PASSWORD.newSetting(
 						encryptedPassword);
 		this.modifiableConfiguration.addSetting(setting);		
 	}
@@ -429,7 +429,7 @@ public final class SocksServerCLI extends CLI {
 				+ "DTLS connections to the SOCKS server: ";
 		EncryptedPassword encryptedPassword = readEncryptedPassword(prompt);
 		Setting<EncryptedPassword> setting = 
-				SettingSpec.DTLS_TRUST_STORE_PASSWORD.newSetting(
+				DtlsSettingSpecConstants.DTLS_TRUST_STORE_PASSWORD.newSetting(
 						encryptedPassword);
 		this.modifiableConfiguration.addSetting(setting);		
 	}
@@ -447,7 +447,7 @@ public final class SocksServerCLI extends CLI {
 				+ "SSL/TLS connections to the SOCKS server: ";
 		EncryptedPassword encryptedPassword = readEncryptedPassword(prompt);
 		Setting<EncryptedPassword> setting = 
-				SettingSpec.SSL_KEY_STORE_PASSWORD.newSetting(
+				SslSettingSpecConstants.SSL_KEY_STORE_PASSWORD.newSetting(
 						encryptedPassword);
 		this.modifiableConfiguration.addSetting(setting);		
 	}
@@ -465,7 +465,7 @@ public final class SocksServerCLI extends CLI {
 				+ "SSL/TLS connections to the SOCKS server: ";
 		EncryptedPassword encryptedPassword = readEncryptedPassword(prompt);
 		Setting<EncryptedPassword> setting = 
-				SettingSpec.SSL_TRUST_STORE_PASSWORD.newSetting(
+				SslSettingSpecConstants.SSL_TRUST_STORE_PASSWORD.newSetting(
 						encryptedPassword);
 		this.modifiableConfiguration.addSetting(setting);		
 	}
@@ -622,12 +622,26 @@ public final class SocksServerCLI extends CLI {
 	)
 	@Ordinal(SETTINGS_HELP_OPTION_GROUP_ORDINAL)
 	private void printSettingsHelp() throws TerminationRequestedException {
-		System.out.println("SETTINGS:");
-		this.printHelpText(SettingSpec.class);
+		System.out.println("GENERAL SETTINGS:");
+		this.printHelpText(GeneralSettingSpecConstants.class);
+		System.out.println("CHAINING GENERAL SETTINGS:");
+		this.printHelpText(ChainingGeneralSettingSpecConstants.class);
+		System.out.println("CHAINING DTLS SETTINGS:");
+		this.printHelpText(ChainingDtlsSettingSpecConstants.class);
+		System.out.println("CHAINING SOCKS5 SETTINGS:");
+		this.printHelpText(ChainingSocks5SettingSpecConstants.class);
+		System.out.println("CHAINING SSL SETTINGS:");
+		this.printHelpText(ChainingSslSettingSpecConstants.class);		
+		System.out.println("DTLS SETTINGS:");
+		this.printHelpText(DtlsSettingSpecConstants.class);
+		System.out.println("SOCKS5 SETTINGS:");
+		this.printHelpText(Socks5SettingSpecConstants.class);
+		System.out.println("SSL SETTINGS:");
+		this.printHelpText(SslSettingSpecConstants.class);		
 		System.out.println("SCHEMES:");
 		this.printHelpText(Scheme.class);
 		System.out.println("SOCKET_SETTINGS:");
-		this.printHelpText(SocketSettingSpec.class);
+		this.printHelpText(StandardSocketSettingSpecConstants.class);
 		System.out.println("SOCKS5_GSSAPIAUTH_PROTECTION_LEVELS:");
 		this.printHelpText(ProtectionLevel.class);
 		System.out.println("SOCKS5_METHODS:");
@@ -668,9 +682,9 @@ public final class SocksServerCLI extends CLI {
 					String.format(
 							"Unable to listen on port %s at %s", 
 							configuration.getSettings().getLastValue(
-									SettingSpec.PORT),
+									GeneralSettingSpecConstants.PORT),
 							configuration.getSettings().getLastValue(
-									SettingSpec.HOST)), 
+									GeneralSettingSpecConstants.HOST)), 
 					e);
 			throw new TerminationRequestedException(-1);
 		} catch (IOException e) {

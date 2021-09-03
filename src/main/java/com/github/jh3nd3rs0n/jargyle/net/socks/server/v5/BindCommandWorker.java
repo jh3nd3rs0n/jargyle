@@ -14,8 +14,8 @@ import com.github.jh3nd3rs0n.jargyle.internal.logging.LoggerHelper;
 import com.github.jh3nd3rs0n.jargyle.net.HostResolver;
 import com.github.jh3nd3rs0n.jargyle.net.NetObjectFactory;
 import com.github.jh3nd3rs0n.jargyle.net.SocketSettings;
-import com.github.jh3nd3rs0n.jargyle.net.socks.server.SettingSpec;
 import com.github.jh3nd3rs0n.jargyle.net.socks.server.Settings;
+import com.github.jh3nd3rs0n.jargyle.net.socks.server.Socks5SettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.net.socks.transport.v5.Reply;
 import com.github.jh3nd3rs0n.jargyle.net.socks.transport.v5.Socks5Reply;
 import com.github.jh3nd3rs0n.jargyle.util.Criteria;
@@ -50,7 +50,7 @@ final class BindCommandWorker extends CommandWorker {
 	
 	private boolean canAllowInboundAddress(final String inboundAddress) {
 		Criteria allowedInboundAddressCriteria = this.settings.getLastValue(
-				SettingSpec.SOCKS5_ON_BIND_ALLOWED_INBOUND_ADDRESS_CRITERIA);
+				Socks5SettingSpecConstants.SOCKS5_ON_BIND_ALLOWED_INBOUND_ADDRESS_CRITERIA);
 		Criterion criterion = allowedInboundAddressCriteria.anyEvaluatesTrue(
 				inboundAddress);
 		if (criterion == null) {
@@ -74,7 +74,7 @@ final class BindCommandWorker extends CommandWorker {
 			return false;
 		}
 		Criteria blockedInboundAddressCriteria = this.settings.getLastValue(
-				SettingSpec.SOCKS5_ON_BIND_BLOCKED_INBOUND_ADDRESS_CRITERIA);
+				Socks5SettingSpecConstants.SOCKS5_ON_BIND_BLOCKED_INBOUND_ADDRESS_CRITERIA);
 		criterion = blockedInboundAddressCriteria.anyEvaluatesTrue(
 				inboundAddress);
 		if (criterion != null) {
@@ -104,7 +104,7 @@ final class BindCommandWorker extends CommandWorker {
 	
 	private boolean configureListenSocket(final ServerSocket listenSocket) {
 		SocketSettings socketSettings = this.settings.getLastValue(
-				SettingSpec.SOCKS5_ON_BIND_LISTEN_SOCKET_SETTINGS);
+				Socks5SettingSpecConstants.SOCKS5_ON_BIND_LISTEN_SOCKET_SETTINGS);
 		try {
 			socketSettings.applyTo(listenSocket);
 		} catch (SocketException e) {
@@ -211,9 +211,9 @@ final class BindCommandWorker extends CommandWorker {
 						this.clientFacingSocket,
 						inboundSocket, 
 						this.settings.getLastValue(
-								SettingSpec.SOCKS5_ON_BIND_RELAY_BUFFER_SIZE).intValue(), 
+								Socks5SettingSpecConstants.SOCKS5_ON_BIND_RELAY_BUFFER_SIZE).intValue(), 
 						this.settings.getLastValue(
-								SettingSpec.SOCKS5_ON_BIND_RELAY_TIMEOUT).intValue());
+								Socks5SettingSpecConstants.SOCKS5_ON_BIND_RELAY_TIMEOUT).intValue());
 			} catch (IOException e) {
 				LOGGER.warn( 
 						LoggerHelper.objectMessage(

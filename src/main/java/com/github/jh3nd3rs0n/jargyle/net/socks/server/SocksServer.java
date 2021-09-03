@@ -24,14 +24,16 @@ public final class SocksServer {
 	
 	public SocksServer(final Configuration config) {
 		this.backlog = config.getSettings().getLastValue(
-				SettingSpec.BACKLOG).intValue();
+				GeneralSettingSpecConstants.BACKLOG).intValue();
 		this.configuration = config;
 		this.executor = null;
-		this.host = config.getSettings().getLastValue(SettingSpec.HOST);
-		this.port = config.getSettings().getLastValue(SettingSpec.PORT);
+		this.host = config.getSettings().getLastValue(
+				GeneralSettingSpecConstants.HOST);
+		this.port = config.getSettings().getLastValue(
+				GeneralSettingSpecConstants.PORT);
 		this.serverSocket = null;
 		this.socketSettings = config.getSettings().getLastValue(
-				SettingSpec.SOCKET_SETTINGS);
+				GeneralSettingSpecConstants.SOCKET_SETTINGS);
 		this.started = false;
 		this.stopped = true;
 	}
@@ -77,13 +79,13 @@ public final class SocksServer {
 			throw new IllegalStateException("SocksServer already stopped");
 		}
 		this.backlog = this.configuration.getSettings().getLastValue(
-				SettingSpec.BACKLOG).intValue();
+				GeneralSettingSpecConstants.BACKLOG).intValue();
 		this.host = this.configuration.getSettings().getLastValue(
-				SettingSpec.HOST);
+				GeneralSettingSpecConstants.HOST);
 		this.port = this.configuration.getSettings().getLastValue(
-				SettingSpec.PORT);
+				GeneralSettingSpecConstants.PORT);
 		this.socketSettings = this.configuration.getSettings().getLastValue(
-				SettingSpec.SOCKET_SETTINGS);
+				GeneralSettingSpecConstants.SOCKET_SETTINGS);
 		this.serverSocket.close();
 		this.serverSocket = null;
 		this.executor.shutdownNow();

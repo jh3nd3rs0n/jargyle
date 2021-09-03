@@ -238,7 +238,8 @@ public final class Setting<V> {
 	
 	private static Setting<Object> newInstance(
 			final String name, final String value) {
-		return SettingSpec.valueOfString(name).newSettingOfParsableValue(value);
+		return SettingSpecConstants.valueOf(
+				name).newSettingOfParsableValue(value);
 	}
 
 	private static Setting<Object> newInstance(
@@ -248,10 +249,12 @@ public final class Setting<V> {
 				setting.getSettingSpec(), setting.getValue(), comment);
 	}
 	
-	private static <V> Setting<V> newInstance(final String name, final V value) {
+	private static <V> Setting<V> newInstance(
+			final String name, final V value) {
 		@SuppressWarnings("unchecked")
 		Setting<V> setting = 
-				(Setting<V>) SettingSpec.valueOfString(name).newSetting(value);
+				(Setting<V>) SettingSpecConstants.valueOf(
+						name).newSetting(value);
 		return setting;
 	}
 	

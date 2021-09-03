@@ -8,7 +8,7 @@ import java.net.Socket;
 
 import com.github.jh3nd3rs0n.jargyle.net.HostResolver;
 import com.github.jh3nd3rs0n.jargyle.net.socks.client.Properties;
-import com.github.jh3nd3rs0n.jargyle.net.socks.client.PropertySpec;
+import com.github.jh3nd3rs0n.jargyle.net.socks.client.Socks5PropertySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.net.socks.transport.v5.AddressType;
 import com.github.jh3nd3rs0n.jargyle.net.socks.transport.v5.Command;
 import com.github.jh3nd3rs0n.jargyle.net.socks.transport.v5.MethodEncapsulation;
@@ -32,7 +32,7 @@ public final class Socks5HostResolver extends HostResolver {
 		Properties properties = this.socks5Client.getProperties();
 		AddressType addressType = AddressType.valueForString(host);
 		if (!addressType.equals(AddressType.DOMAINNAME) || !properties.getValue(
-				PropertySpec.SOCKS5_RESOLVE_USE_RESOLVE_COMMAND).booleanValue()) {
+				Socks5PropertySpecConstants.SOCKS5_RESOLVE_USE_RESOLVE_COMMAND).booleanValue()) {
 			return InetAddress.getByName(host);
 		}
 		Socket socket = this.socks5Client.newInternalSocket();

@@ -8,10 +8,10 @@ public final class EncryptedPasswordPropertySpec
 	extends PropertySpec<EncryptedPassword> {
 
 	public EncryptedPasswordPropertySpec(
-			final Object permissionObj, 
+			final Object permission, 
 			final String s, 
 			final EncryptedPassword defaultVal) {
-		super(permissionObj, s, EncryptedPassword.class, defaultVal);
+		super(permission, s, EncryptedPassword.class, defaultVal);
 	}
 
 	@Override

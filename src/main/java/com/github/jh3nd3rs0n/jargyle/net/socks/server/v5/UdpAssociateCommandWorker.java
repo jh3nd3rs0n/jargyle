@@ -17,8 +17,8 @@ import com.github.jh3nd3rs0n.jargyle.net.Host;
 import com.github.jh3nd3rs0n.jargyle.net.HostResolver;
 import com.github.jh3nd3rs0n.jargyle.net.NetObjectFactory;
 import com.github.jh3nd3rs0n.jargyle.net.SocketSettings;
-import com.github.jh3nd3rs0n.jargyle.net.socks.server.SettingSpec;
 import com.github.jh3nd3rs0n.jargyle.net.socks.server.Settings;
+import com.github.jh3nd3rs0n.jargyle.net.socks.server.Socks5SettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.net.socks.transport.v5.MethodEncapsulation;
 import com.github.jh3nd3rs0n.jargyle.net.socks.transport.v5.Reply;
 import com.github.jh3nd3rs0n.jargyle.net.socks.transport.v5.Socks5Reply;
@@ -64,7 +64,7 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 	private boolean configureClientFacingDatagramSocket(
 			final DatagramSocket clientFacingDatagramSock) {
 		SocketSettings socketSettings = this.settings.getLastValue(
-				SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_CLIENT_FACING_SOCKET_SETTINGS);
+				Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_CLIENT_FACING_SOCKET_SETTINGS);
 		try {
 			socketSettings.applyTo(clientFacingDatagramSock);
 		} catch (SocketException e) {
@@ -95,7 +95,7 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 	private boolean configureServerFacingDatagramSocket(
 			final DatagramSocket serverFacingDatagramSock) {
 		SocketSettings socketSettings = this.settings.getLastValue(
-				SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_SERVER_FACING_SOCKET_SETTINGS);
+				Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_SERVER_FACING_SOCKET_SETTINGS);
 		try {
 			socketSettings.applyTo(serverFacingDatagramSock);
 		} catch (SocketException e) {
@@ -125,7 +125,7 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 	
 	private DatagramSocket newClientFacingDatagramSocket() {
 		Host bindHost = this.settings.getLastValue(
-				SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_CLIENT_FACING_BIND_HOST);
+				Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_CLIENT_FACING_BIND_HOST);
 		InetAddress bindInetAddress = bindHost.toInetAddress();
 		DatagramSocket clientFacingDatagramSock = null;
 		try {
@@ -158,7 +158,7 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 	
 	private DatagramSocket newServerFacingDatagramSocket() {
 		Host bindHost = this.settings.getLastValue(
-				SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_SERVER_FACING_BIND_HOST);
+				Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_SERVER_FACING_BIND_HOST);
 		InetAddress bindInetAddress = bindHost.toInetAddress();
 		DatagramSocket serverFacingDatagramSock = null;
 		try {
@@ -284,19 +284,19 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 						hostResolver, 
 						new UdpRelayServer.InboundAddressCriteria(
 								this.settings.getLastValue(
-										SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_ALLOWED_INBOUND_ADDRESS_CRITERIA), 
+										Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_ALLOWED_INBOUND_ADDRESS_CRITERIA), 
 								this.settings.getLastValue(
-										SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_BLOCKED_INBOUND_ADDRESS_CRITERIA)), 
+										Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_BLOCKED_INBOUND_ADDRESS_CRITERIA)), 
 						new UdpRelayServer.OutboundAddressCriteria(
 								this.settings.getLastValue(
-										SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_ALLOWED_OUTBOUND_ADDRESS_CRITERIA), 
+										Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_ALLOWED_OUTBOUND_ADDRESS_CRITERIA), 
 								this.settings.getLastValue(
-										SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_BLOCKED_OUTBOUND_ADDRESS_CRITERIA)), 
+										Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_BLOCKED_OUTBOUND_ADDRESS_CRITERIA)), 
 						new UdpRelayServer.RelaySettings(
 								this.settings.getLastValue(
-										SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_RELAY_BUFFER_SIZE).intValue(), 
+										Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_RELAY_BUFFER_SIZE).intValue(), 
 								this.settings.getLastValue(
-										SettingSpec.SOCKS5_ON_UDP_ASSOCIATE_RELAY_TIMEOUT).intValue()));
+										Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_RELAY_TIMEOUT).intValue()));
 			} catch (IOException e) {
 				LOGGER.warn( 
 						LoggerHelper.objectMessage(

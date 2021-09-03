@@ -15,7 +15,7 @@ import org.ietf.jgss.GSSName;
 import org.ietf.jgss.MessageProp;
 import org.ietf.jgss.Oid;
 
-import com.github.jh3nd3rs0n.jargyle.net.socks.client.PropertySpec;
+import com.github.jh3nd3rs0n.jargyle.net.socks.client.Socks5PropertySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.net.socks.transport.v5.Method;
 import com.github.jh3nd3rs0n.jargyle.net.socks.transport.v5.MethodEncapsulation;
 import com.github.jh3nd3rs0n.jargyle.net.socks.transport.v5.NullMethodEncapsulation;
@@ -72,10 +72,10 @@ enum MethodSubnegotiator {
 			InputStream inStream = socket.getInputStream();
 			OutputStream outStream = socket.getOutputStream();
 			boolean necReferenceImpl = socks5Client.getProperties().getValue(
-					PropertySpec.SOCKS5_GSSAPIAUTH_NEC_REFERENCE_IMPL).booleanValue();
+					Socks5PropertySpecConstants.SOCKS5_GSSAPIAUTH_NEC_REFERENCE_IMPL).booleanValue();
 			ProtectionLevels protectionLevels = 
 					socks5Client.getProperties().getValue(
-							PropertySpec.SOCKS5_GSSAPIAUTH_PROTECTION_LEVELS);
+							Socks5PropertySpecConstants.SOCKS5_GSSAPIAUTH_PROTECTION_LEVELS);
 			List<ProtectionLevel> protectionLevelList = 
 					protectionLevels.toList(); 
 			ProtectionLevel firstProtectionLevel = protectionLevelList.get(0);
@@ -100,7 +100,8 @@ enum MethodSubnegotiator {
 			outStream.flush();
 			Message message = Message.newInstanceFrom(inStream);
 			if (message.getMessageType().equals(MessageType.ABORT)) {
-				throw new IOException("server aborted protection level negotiation");
+				throw new IOException(
+						"server aborted protection level negotiation");
 			}
 			token = message.getToken();
 			if (!necReferenceImpl) {
@@ -135,7 +136,7 @@ enum MethodSubnegotiator {
 				final Socks5Client socks5Client) throws IOException {
 			GSSManager manager = GSSManager.getInstance();
 			String server = socks5Client.getProperties().getValue(
-					PropertySpec.SOCKS5_GSSAPIAUTH_SERVICE_NAME);
+					Socks5PropertySpecConstants.SOCKS5_GSSAPIAUTH_SERVICE_NAME);
 			GSSName serverName = null;
 			try {
 				serverName = manager.createName(server, null);
@@ -143,7 +144,7 @@ enum MethodSubnegotiator {
 				throw new IOException(e);
 			}
 			Oid mechanismOid = socks5Client.getProperties().getValue(
-					PropertySpec.SOCKS5_GSSAPIAUTH_MECHANISM_OID);
+					Socks5PropertySpecConstants.SOCKS5_GSSAPIAUTH_MECHANISM_OID);
 			GSSContext context = null;
 			try {
 				context = manager.createContext(
@@ -220,9 +221,9 @@ enum MethodSubnegotiator {
 			InputStream inputStream = socket.getInputStream();
 			OutputStream outputStream = socket.getOutputStream();
 			String username = socks5Client.getProperties().getValue(
-					PropertySpec.SOCKS5_USERPASSAUTH_USERNAME);
+					Socks5PropertySpecConstants.SOCKS5_USERPASSAUTH_USERNAME);
 			char[] password = socks5Client.getProperties().getValue(
-					PropertySpec.SOCKS5_USERPASSAUTH_PASSWORD).getPassword();
+					Socks5PropertySpecConstants.SOCKS5_USERPASSAUTH_PASSWORD).getPassword();
 			UsernamePasswordRequest usernamePasswordReq = 
 					UsernamePasswordRequest.newInstance(username, password);
 			outputStream.write(usernamePasswordReq.toByteArray());

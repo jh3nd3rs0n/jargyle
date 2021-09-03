@@ -62,7 +62,8 @@ public class XmlFileSourceConfigurationProviderIT {
 				this.xmlFileSourceConfigurationProvider.getConfiguration();
 		Settings settings = configuration.getSettings();
 		Port expectedPort = Port.newInstance(1234);
-		Port actualPort = settings.getLastValue(SettingSpec.PORT);
+		Port actualPort = settings.getLastValue(
+				GeneralSettingSpecConstants.PORT);
 		assertEquals(expectedPort, actualPort);
 	}
 
@@ -85,7 +86,7 @@ public class XmlFileSourceConfigurationProviderIT {
 		NonnegativeInteger expectedBacklog = NonnegativeInteger.newInstance(
 				100);
 		NonnegativeInteger actualBacklog = settings.getLastValue(
-				SettingSpec.BACKLOG);
+				GeneralSettingSpecConstants.BACKLOG);
 		assertEquals(expectedBacklog, actualBacklog);
 	}
 

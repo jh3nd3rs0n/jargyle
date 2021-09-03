@@ -8,10 +8,10 @@ public final class UsernamePasswordSettingSpec
 	extends SettingSpec<UsernamePassword> {
 
 	public UsernamePasswordSettingSpec(
-			final Object permissionObj, 
+			final Object permission, 
 			final String s, 
 			final UsernamePassword defaultVal) {
-		super(permissionObj, s, UsernamePassword.class, defaultVal);
+		super(permission, s, UsernamePassword.class, defaultVal);
 	}
 
 	@Override

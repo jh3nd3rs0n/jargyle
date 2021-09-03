@@ -9,10 +9,10 @@ import com.github.jh3nd3rs0n.jargyle.net.socks.server.SettingSpec;
 public final class HostSettingSpec extends SettingSpec<Host> {
 
 	public HostSettingSpec(
-			final Object permissionObj, 
+			final Object permission, 
 			final String s, 
 			final Host defaultVal) {
-		super(permissionObj, s, Host.class, defaultVal);
+		super(permission, s, Host.class, defaultVal);
 	}
 
 	@Override

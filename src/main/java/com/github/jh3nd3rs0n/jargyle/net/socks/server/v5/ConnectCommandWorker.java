@@ -15,8 +15,8 @@ import com.github.jh3nd3rs0n.jargyle.net.Host;
 import com.github.jh3nd3rs0n.jargyle.net.HostResolver;
 import com.github.jh3nd3rs0n.jargyle.net.NetObjectFactory;
 import com.github.jh3nd3rs0n.jargyle.net.SocketSettings;
-import com.github.jh3nd3rs0n.jargyle.net.socks.server.SettingSpec;
 import com.github.jh3nd3rs0n.jargyle.net.socks.server.Settings;
+import com.github.jh3nd3rs0n.jargyle.net.socks.server.Socks5SettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.net.socks.transport.v5.Reply;
 import com.github.jh3nd3rs0n.jargyle.net.socks.transport.v5.Socks5Reply;
 
@@ -50,9 +50,9 @@ final class ConnectCommandWorker extends CommandWorker {
 	private boolean configureServerFacingSocket(
 			final Socket serverFacingSocket) {
 		SocketSettings socketSettings = this.settings.getLastValue(
-				SettingSpec.SOCKS5_ON_CONNECT_SERVER_FACING_SOCKET_SETTINGS);
+				Socks5SettingSpecConstants.SOCKS5_ON_CONNECT_SERVER_FACING_SOCKET_SETTINGS);
 		Host bindHost = this.settings.getLastValue(
-				SettingSpec.SOCKS5_ON_CONNECT_SERVER_FACING_BIND_HOST);
+				Socks5SettingSpecConstants.SOCKS5_ON_CONNECT_SERVER_FACING_BIND_HOST);
 		InetAddress bindInetAddress = bindHost.toInetAddress();		
 		try {
 			socketSettings.applyTo(serverFacingSocket);
@@ -106,9 +106,9 @@ final class ConnectCommandWorker extends CommandWorker {
 		HostResolver hostResolver =	this.netObjectFactory.newHostResolver();		
 		Socket serverFacingSocket = null;		
 		int connectTimeout = this.settings.getLastValue(
-				SettingSpec.SOCKS5_ON_CONNECT_SERVER_FACING_CONNECT_TIMEOUT).intValue();		
+				Socks5SettingSpecConstants.SOCKS5_ON_CONNECT_SERVER_FACING_CONNECT_TIMEOUT).intValue();		
 		if (this.settings.getLastValue(
-				SettingSpec.SOCKS5_ON_CONNECT_PREPARE_SERVER_FACING_SOCKET)) {
+				Socks5SettingSpecConstants.SOCKS5_ON_CONNECT_PREPARE_SERVER_FACING_SOCKET)) {
 			serverFacingSocket = netObjectFactory.newSocket();
 			if (!this.configureServerFacingSocket(serverFacingSocket)) {
 				return null;
@@ -142,7 +142,7 @@ final class ConnectCommandWorker extends CommandWorker {
 			}
 		} else {
 			Host bindHost = this.settings.getLastValue(
-					SettingSpec.SOCKS5_ON_CONNECT_SERVER_FACING_BIND_HOST);
+					Socks5SettingSpecConstants.SOCKS5_ON_CONNECT_SERVER_FACING_BIND_HOST);
 			InetAddress bindInetAddress = bindHost.toInetAddress();
 			try {
 				serverFacingSocket = this.netObjectFactory.newSocket(
@@ -201,9 +201,9 @@ final class ConnectCommandWorker extends CommandWorker {
 						this.clientFacingSocket,
 						serverFacingSocket, 
 						this.settings.getLastValue(
-								SettingSpec.SOCKS5_ON_CONNECT_RELAY_BUFFER_SIZE).intValue(),
+								Socks5SettingSpecConstants.SOCKS5_ON_CONNECT_RELAY_BUFFER_SIZE).intValue(),
 						this.settings.getLastValue(
-								SettingSpec.SOCKS5_ON_CONNECT_RELAY_TIMEOUT).intValue());				
+								Socks5SettingSpecConstants.SOCKS5_ON_CONNECT_RELAY_TIMEOUT).intValue());				
 			} catch (IOException e) {
 				LOGGER.warn( 
 						LoggerHelper.objectMessage(

@@ -7,10 +7,10 @@ import com.github.jh3nd3rs0n.jargyle.util.PositiveInteger;
 public final class PositiveIntegerSettingSpec extends SettingSpec<PositiveInteger> {
 
 	public PositiveIntegerSettingSpec(
-			final Object permissionObj, 
+			final Object permission, 
 			final String s, 
 			final PositiveInteger defaultVal) {
-		super(permissionObj, s, PositiveInteger.class, defaultVal);
+		super(permission, s, PositiveInteger.class, defaultVal);
 	}
 
 	@Override

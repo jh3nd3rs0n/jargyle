@@ -22,7 +22,8 @@ public abstract class SocksClient {
 		if (socksServerUri != null) {
 			List<Property<? extends Object>> properties = 
 					new ArrayList<Property<? extends Object>>();
-			for (PropertySpec<Object> propertySpec : PropertySpec.values()) {
+			for (PropertySpec<Object> propertySpec 
+					: PropertySpecConstants.values()) {
 				String property = System.getProperty(propertySpec.toString());
 				if (property != null) {
 					properties.add(propertySpec.newPropertyOfParsableValue(
@@ -56,8 +57,8 @@ public abstract class SocksClient {
 		NetObjectFactory internalNetObjFactory = chainedClient == null ?
 				NetObjectFactory.newInstance() 
 				: chainedClient.newSocksNetObjectFactory();
-		SslSocketFactory sslSockFactory = 
-				props.getValue(PropertySpec.SSL_ENABLED).booleanValue() ? 
+		SslSocketFactory sslSockFactory = props.getValue(
+				SslPropertySpecConstants.SSL_ENABLED).booleanValue() ? 
 						new SslSocketFactoryImpl(this) : null;
 		this.chainedSocksClient = chainedClient;
 		this.internalHostResolver = internalNetObjFactory.newHostResolver();
@@ -70,7 +71,7 @@ public abstract class SocksClient {
 	protected void configureInternalSocket(
 			final Socket internalSocket) throws SocketException {
 		SocketSettings socketSettings = this.properties.getValue(
-				PropertySpec.SOCKET_SETTINGS);
+				GeneralPropertySpecConstants.SOCKET_SETTINGS);
 		socketSettings.applyTo(internalSocket);
 	}
 	
@@ -83,7 +84,7 @@ public abstract class SocksClient {
 		return this.getConnectedInternalSocket(
 				internalSocket, 
 				this.properties.getValue(
-						PropertySpec.CONNECT_TIMEOUT).intValue(), 
+						GeneralPropertySpecConstants.CONNECT_TIMEOUT).intValue(), 
 				false);
 	}
 	
@@ -93,7 +94,7 @@ public abstract class SocksClient {
 		return this.getConnectedInternalSocket(
 				internalSocket, 
 				this.properties.getValue(
-						PropertySpec.CONNECT_TIMEOUT).intValue(), 
+						GeneralPropertySpecConstants.CONNECT_TIMEOUT).intValue(), 
 				bindBeforeConnect);
 	}
 	
@@ -110,9 +111,9 @@ public abstract class SocksClient {
 		if (bindBeforeConnect) {
 			internalSocket.bind(new InetSocketAddress(
 					this.properties.getValue(
-							PropertySpec.BIND_HOST).toInetAddress(), 
+							GeneralPropertySpecConstants.BIND_HOST).toInetAddress(), 
 					this.properties.getValue(
-							PropertySpec.BIND_PORT).intValue()));
+							GeneralPropertySpecConstants.BIND_PORT).intValue()));
 		}
 		String socksServerUriHost = this.socksServerUri.getHost();
 		int socksServerUriPort = this.socksServerUri.getPort();
@@ -143,9 +144,9 @@ public abstract class SocksClient {
 	protected Socket newConnectedInternalSocket() throws IOException {
 		return this.newConnectedInternalSocket(
 				this.properties.getValue(
-						PropertySpec.BIND_HOST).toInetAddress(),
+						GeneralPropertySpecConstants.BIND_HOST).toInetAddress(),
 				this.properties.getValue(
-						PropertySpec.BIND_PORT).intValue());
+						GeneralPropertySpecConstants.BIND_PORT).intValue());
 	}
 	
 	protected Socket newConnectedInternalSocket(

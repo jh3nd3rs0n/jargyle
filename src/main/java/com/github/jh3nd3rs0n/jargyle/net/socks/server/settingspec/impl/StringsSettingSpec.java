@@ -7,10 +7,10 @@ import com.github.jh3nd3rs0n.jargyle.util.Strings;
 public final class StringsSettingSpec extends SettingSpec<Strings> {
 
 	public StringsSettingSpec(
-			final Object permissionObj, 
+			final Object permission, 
 			final String s, 
 			final Strings defaultVal) {
-		super(permissionObj, s, Strings.class, defaultVal);
+		super(permission, s, Strings.class, defaultVal);
 	}
 
 	@Override

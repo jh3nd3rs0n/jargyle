@@ -11,8 +11,8 @@ import org.slf4j.LoggerFactory;
 
 import com.github.jh3nd3rs0n.jargyle.internal.logging.LoggerHelper;
 import com.github.jh3nd3rs0n.jargyle.net.socks.server.Configuration;
-import com.github.jh3nd3rs0n.jargyle.net.socks.server.SettingSpec;
 import com.github.jh3nd3rs0n.jargyle.net.socks.server.Settings;
+import com.github.jh3nd3rs0n.jargyle.net.socks.server.Socks5SettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.net.socks.server.WorkerContext;
 import com.github.jh3nd3rs0n.jargyle.net.socks.transport.v5.ClientMethodSelectionMessage;
 import com.github.jh3nd3rs0n.jargyle.net.socks.transport.v5.Method;
@@ -50,7 +50,7 @@ public final class Socks5Worker {
 			final String clientAddress,	final Socks5Request socks5Req) {
 		Socks5RequestCriteria allowedSocks5RequestCriteria = 
 				this.settings.getLastValue(
-						SettingSpec.SOCKS5_ALLOWED_SOCKS5_REQUEST_CRITERIA);
+						Socks5SettingSpecConstants.SOCKS5_ALLOWED_SOCKS5_REQUEST_CRITERIA);
 		Socks5RequestCriterion socks5RequestCriterion =
 				allowedSocks5RequestCriteria.anyEvaluatesTrue(
 						clientAddress, socks5Req);
@@ -74,7 +74,7 @@ public final class Socks5Worker {
 		}
 		Socks5RequestCriteria blockedSocks5RequestCriteria = 
 				this.settings.getLastValue(
-						SettingSpec.SOCKS5_BLOCKED_SOCKS5_REQUEST_CRITERIA);
+						Socks5SettingSpecConstants.SOCKS5_BLOCKED_SOCKS5_REQUEST_CRITERIA);
 		socks5RequestCriterion =
 				blockedSocks5RequestCriteria.anyEvaluatesTrue(
 						clientAddress, socks5Req);
@@ -121,7 +121,7 @@ public final class Socks5Worker {
 				cmsm.toString())));
 		Method method = null;
 		Methods methods = this.settings.getLastValue(
-				SettingSpec.SOCKS5_METHODS);
+				Socks5SettingSpecConstants.SOCKS5_METHODS);
 		for (Method meth : methods.toList()) {
 			if (cmsm.getMethods().contains(meth)) {
 				method = meth;
@@ -206,7 +206,7 @@ public final class Socks5Worker {
 							socks5Req);
 			Socks5RequestWorkerFactory socks5RequestWorkerFactory =
 					this.settings.getLastValue(
-							SettingSpec.SOCKS5_SOCKS5_REQUEST_WORKER_FACTORY);
+							Socks5SettingSpecConstants.SOCKS5_SOCKS5_REQUEST_WORKER_FACTORY);
 			if (socks5RequestWorkerFactory == null) {
 				socks5RequestWorkerFactory = 
 						Socks5RequestWorkerFactory.newInstance(); 

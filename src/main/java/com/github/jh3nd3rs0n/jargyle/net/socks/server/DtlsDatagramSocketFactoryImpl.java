@@ -36,24 +36,24 @@ final class DtlsDatagramSocketFactoryImpl extends DtlsDatagramSocketFactory {
 		TrustManager[] trustManagers = null;
 		Settings settings = this.configuration.getSettings();
 		File keyStoreFile = settings.getLastValue(
-				SettingSpec.DTLS_KEY_STORE_FILE);
+				DtlsSettingSpecConstants.DTLS_KEY_STORE_FILE);
 		if (keyStoreFile != null) {
 			EncryptedPassword keyStorePassword = settings.getLastValue(
-					SettingSpec.DTLS_KEY_STORE_PASSWORD);
+					DtlsSettingSpecConstants.DTLS_KEY_STORE_PASSWORD);
 			String keyStoreType = settings.getLastValue(
-					SettingSpec.DTLS_KEY_STORE_TYPE);
+					DtlsSettingSpecConstants.DTLS_KEY_STORE_TYPE);
 			keyManagers = KeyManagerHelper.getKeyManagers(
 					keyStoreFile, 
 					keyStorePassword.getPassword(), 
 					keyStoreType);
 		}
 		File trustStoreFile = settings.getLastValue(
-				SettingSpec.DTLS_TRUST_STORE_FILE);
+				DtlsSettingSpecConstants.DTLS_TRUST_STORE_FILE);
 		if (trustStoreFile != null) {
 			EncryptedPassword trustStorePassword = settings.getLastValue(
-					SettingSpec.DTLS_TRUST_STORE_PASSWORD);
+					DtlsSettingSpecConstants.DTLS_TRUST_STORE_PASSWORD);
 			String trustStoreType = settings.getLastValue(
-					SettingSpec.DTLS_TRUST_STORE_TYPE);			
+					DtlsSettingSpecConstants.DTLS_TRUST_STORE_TYPE);			
 			trustManagers = TrustManagerHelper.getTrustManagers(
 					trustStoreFile, 
 					trustStorePassword.getPassword(), 
@@ -62,7 +62,8 @@ final class DtlsDatagramSocketFactoryImpl extends DtlsDatagramSocketFactory {
 		SSLContext context = null;
 		try {
 			context = SslContextHelper.getSslContext(
-					settings.getLastValue(SettingSpec.DTLS_PROTOCOL), 
+					settings.getLastValue(
+							DtlsSettingSpecConstants.DTLS_PROTOCOL), 
 					keyManagers, 
 					trustManagers);
 		} catch (KeyManagementException e) {
@@ -93,26 +94,26 @@ final class DtlsDatagramSocketFactoryImpl extends DtlsDatagramSocketFactory {
 		dtlsDatagramSocket.setUseClientMode(false);
 		Settings settings = this.configuration.getSettings();
 		Strings enabledCipherSuites = settings.getLastValue(
-				SettingSpec.DTLS_ENABLED_CIPHER_SUITES);
+				DtlsSettingSpecConstants.DTLS_ENABLED_CIPHER_SUITES);
 		String[] cipherSuites = enabledCipherSuites.toStringArray();
 		if (cipherSuites.length > 0) {
 			dtlsDatagramSocket.setEnabledCipherSuites(cipherSuites);
 		}
 		Strings enabledProtocols = settings.getLastValue(
-				SettingSpec.DTLS_ENABLED_PROTOCOLS);
+				DtlsSettingSpecConstants.DTLS_ENABLED_PROTOCOLS);
 		String[] protocols = enabledProtocols.toStringArray();
 		if (protocols.length > 0) {
 			dtlsDatagramSocket.setEnabledProtocols(protocols);
 		}
 		PositiveInteger maxPacketSize = settings.getLastValue(
-				SettingSpec.DTLS_MAX_PACKET_SIZE);
+				DtlsSettingSpecConstants.DTLS_MAX_PACKET_SIZE);
 		dtlsDatagramSocket.setMaximumPacketSize(maxPacketSize.intValue());
 		if (settings.getLastValue(
-				SettingSpec.DTLS_NEED_CLIENT_AUTH).booleanValue()) {
+				DtlsSettingSpecConstants.DTLS_NEED_CLIENT_AUTH).booleanValue()) {
 			dtlsDatagramSocket.setNeedClientAuth(true);
 		}
 		if (settings.getLastValue(
-				SettingSpec.DTLS_WANT_CLIENT_AUTH).booleanValue()) {
+				DtlsSettingSpecConstants.DTLS_WANT_CLIENT_AUTH).booleanValue()) {
 			dtlsDatagramSocket.setWantClientAuth(true);
 		}		
 		return dtlsDatagramSocket;

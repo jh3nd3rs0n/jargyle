@@ -15,7 +15,7 @@ import org.ietf.jgss.GSSManager;
 import org.ietf.jgss.MessageProp;
 
 import com.github.jh3nd3rs0n.jargyle.net.socks.server.Configuration;
-import com.github.jh3nd3rs0n.jargyle.net.socks.server.SettingSpec;
+import com.github.jh3nd3rs0n.jargyle.net.socks.server.Socks5SettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.net.socks.server.v5.userpassauth.UsernamePasswordAuthenticator;
 import com.github.jh3nd3rs0n.jargyle.net.socks.transport.v5.Method;
 import com.github.jh3nd3rs0n.jargyle.net.socks.transport.v5.MethodEncapsulation;
@@ -84,7 +84,7 @@ enum MethodSubnegotiator {
 						socket));
 			}
 			boolean necReferenceImpl = configuration.getSettings().getLastValue(
-					SettingSpec.SOCKS5_GSSAPIAUTH_NEC_REFERENCE_IMPL).booleanValue();
+					Socks5SettingSpecConstants.SOCKS5_GSSAPIAUTH_NEC_REFERENCE_IMPL).booleanValue();
 			byte[] token = message.getToken();
 			MessageProp prop = null;
 			if (!necReferenceImpl) {
@@ -108,7 +108,7 @@ enum MethodSubnegotiator {
 			}
 			ProtectionLevels protectionLevels = 
 					configuration.getSettings().getLastValue(
-							SettingSpec.SOCKS5_GSSAPIAUTH_PROTECTION_LEVELS);
+							Socks5SettingSpecConstants.SOCKS5_GSSAPIAUTH_PROTECTION_LEVELS);
 			List<ProtectionLevel> protectionLevelList = 
 					protectionLevels.toList();
 			ProtectionLevel protectionLevelChoice = protectionLevel;
@@ -211,7 +211,7 @@ enum MethodSubnegotiator {
 			char[] password = usernamePasswordReq.getPassword();
 			UsernamePasswordAuthenticator authenticator = 
 					configuration.getSettings().getLastValue(
-							SettingSpec.SOCKS5_USERPASSAUTH_USERNAME_PASSWORD_AUTHENTICATOR);
+							Socks5SettingSpecConstants.SOCKS5_USERPASSAUTH_USERNAME_PASSWORD_AUTHENTICATOR);
 			if (authenticator == null) { 
 				authenticator = UsernamePasswordAuthenticator.newInstance(); 
 			}

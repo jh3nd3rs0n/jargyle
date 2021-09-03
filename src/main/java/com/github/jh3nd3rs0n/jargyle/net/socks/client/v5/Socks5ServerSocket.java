@@ -22,7 +22,7 @@ import java.util.Set;
 import com.github.jh3nd3rs0n.jargyle.internal.net.InetAddressHelper;
 import com.github.jh3nd3rs0n.jargyle.net.FilterSocket;
 import com.github.jh3nd3rs0n.jargyle.net.PerformancePreferences;
-import com.github.jh3nd3rs0n.jargyle.net.SocketSettingSpec;
+import com.github.jh3nd3rs0n.jargyle.net.StandardSocketSettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.net.socks.transport.v5.Command;
 import com.github.jh3nd3rs0n.jargyle.net.socks.transport.v5.MethodEncapsulation;
@@ -347,26 +347,30 @@ public final class Socks5ServerSocket extends ServerSocket {
 						connectionTime, latency, bandwidth);
 				this.socket.setPerformancePreferences(
 						connectionTime, latency, bandwidth);
-				this.socketSettings.putValue(SocketSettingSpec.PERF_PREF, pp);
+				this.socketSettings.putValue(
+						StandardSocketSettingSpecConstants.PERF_PREF, pp);
 			}
 		}
 		
 		public void setReceiveBufferSize(int size) throws SocketException {
 			PositiveInteger i = PositiveInteger.newInstance(size);
 			this.socket.setReceiveBufferSize(size);
-			this.socketSettings.putValue(SocketSettingSpec.SO_RCVBUF, i);
+			this.socketSettings.putValue(
+					StandardSocketSettingSpecConstants.SO_RCVBUF, i);
 		}
 		
 		public void setReuseAddress(boolean on) throws SocketException {
 			Boolean b = Boolean.valueOf(on);
 			this.socket.setReuseAddress(on);
-			this.socketSettings.putValue(SocketSettingSpec.SO_REUSEADDR, b);
+			this.socketSettings.putValue(
+					StandardSocketSettingSpecConstants.SO_REUSEADDR, b);
 		}
 
 		public void setSoTimeout(int timeout) throws SocketException {
 			NonnegativeInteger i = NonnegativeInteger.newInstance(timeout);
 			this.socket.setSoTimeout(timeout);
-			this.socketSettings.putValue(SocketSettingSpec.SO_TIMEOUT, i);
+			this.socketSettings.putValue(
+					StandardSocketSettingSpecConstants.SO_TIMEOUT, i);
 		}
 
 		public void socks5Bind(
@@ -399,7 +403,9 @@ public final class Socks5ServerSocket extends ServerSocket {
 			Socks5Reply socks5Rep = Socks5Reply.newInstanceFrom(inStream);
 			Reply reply = socks5Rep.getReply();
 			if (!reply.equals(Reply.SUCCEEDED)) {
-				throw new IOException(String.format("received reply: %s", reply));
+				throw new IOException(String.format(
+						"received reply: %s", 
+						reply));
 			}
 			this.bound = true;
 			this.localInetAddress = 

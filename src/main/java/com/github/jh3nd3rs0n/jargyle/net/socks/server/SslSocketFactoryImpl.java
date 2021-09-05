@@ -21,13 +21,17 @@ import com.github.jh3nd3rs0n.jargyle.util.Strings;
 
 final class SslSocketFactoryImpl extends SslSocketFactory {
 
+	public static boolean isSslEnabled(final Configuration configuration) {
+		Settings settings = configuration.getSettings();
+		return settings.getLastValue(
+				SslSettingSpecConstants.SSL_ENABLED).booleanValue();
+	}
+	
 	private final Configuration configuration;
-	private Configuration lastConfiguration;
 	private SSLContext sslContext;
 	
 	public SslSocketFactoryImpl(final Configuration config) {
 		this.configuration = config;
-		this.lastConfiguration = null;
 		this.sslContext = null;
 	}
 	
@@ -78,11 +82,8 @@ final class SslSocketFactoryImpl extends SslSocketFactory {
 			final Socket socket, 
 			final InputStream consumed, 
 			final boolean autoClose) throws IOException {
-		if (!ConfigurationsHelper.equals(
-				this.lastConfiguration, this.configuration)) {
+		if (this.sslContext == null) {
 			this.sslContext = this.getSslContext();
-			this.lastConfiguration = ImmutableConfiguration.newInstance(
-					this.configuration);
 		}
 		SslSocketFactory factory = SslSocketFactory.newInstance(
 				this.sslContext);

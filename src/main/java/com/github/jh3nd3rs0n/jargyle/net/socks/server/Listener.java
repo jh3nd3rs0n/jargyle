@@ -11,112 +11,27 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.jh3nd3rs0n.jargyle.internal.logging.LoggerHelper;
-import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.SslSocketFactory;
-import com.github.jh3nd3rs0n.jargyle.net.NetObjectFactory;
-import com.github.jh3nd3rs0n.jargyle.net.ssl.DtlsDatagramSocketFactory;
-import com.github.jh3nd3rs0n.jargyle.util.Criteria;
-import com.github.jh3nd3rs0n.jargyle.util.Criterion;
 
 final class Listener implements Runnable {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(
 			Listener.class);
 	
-	private DtlsDatagramSocketFactory clientFacingDtlsDatagramSocketFactory;
-	private SslSocketFactory clientFacingSslSocketFactory;
-	private final Configuration configuration;
-	private final NetObjectFactory netObjectFactory;
 	private final ServerSocket serverSocket;
+	private final WorkerContextFactory workerContextFactory;
 			
 	public Listener(final ServerSocket serverSock, final Configuration config) {
-		this.clientFacingDtlsDatagramSocketFactory = null;
-		this.clientFacingSslSocketFactory = null;		
-		this.configuration = config;
-		this.netObjectFactory = new NetObjectFactoryImpl(config);
 		this.serverSocket = serverSock;
-	}
-	
-	private boolean canAllowClientFacingSocket(
-			final Socket clientFacingSocket) {
-		Settings settings = this.configuration.getSettings();
-		String clientAddress = 
-				clientFacingSocket.getInetAddress().getHostAddress();
-		Criteria allowedClientAddressCriteria = settings.getLastValue(
-				GeneralSettingSpecConstants.ALLOWED_CLIENT_ADDRESS_CRITERIA);
-		Criterion criterion = allowedClientAddressCriteria.anyEvaluatesTrue(
-				clientAddress);
-		if (criterion == null) {
-			LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
-					"Client address %s not allowed",
-					clientAddress)));
-			return false;
-		}
-		Criteria blockedClientAddressCriteria = settings.getLastValue(
-				GeneralSettingSpecConstants.BLOCKED_CLIENT_ADDRESS_CRITERIA);
-		criterion = blockedClientAddressCriteria.anyEvaluatesTrue(
-				clientAddress);
-		if (criterion != null) {
-			LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
-					"Client address %s blocked based on the following "
-					+ "criterion: %s",
-					clientAddress,
-					criterion)));
-			return false;
-		}
-		return true;
-	}
-	
-	private void closeClientFacingSocket(final Socket clientFacingSocket) {
-		if (!clientFacingSocket.isClosed()) {
-			try {
-				clientFacingSocket.close();
-			} catch (IOException e) {
-				LOGGER.warn( 
-						LoggerHelper.objectMessage(
-								this, "Error in closing the client socket"), 
-						e);
-			}
-		}
-	}
-	
-	private DtlsDatagramSocketFactory getClientFacingDtlsDatagramSocketFactory() {
-		Settings settings = this.configuration.getSettings();
-		if (settings.getLastValue(
-				DtlsSettingSpecConstants.DTLS_ENABLED).booleanValue()) {
-			if (this.clientFacingDtlsDatagramSocketFactory == null) {
-				this.clientFacingDtlsDatagramSocketFactory = 
-						new DtlsDatagramSocketFactoryImpl(this.configuration);
-			}
-		} else {
-			if (this.clientFacingDtlsDatagramSocketFactory != null) {
-				this.clientFacingDtlsDatagramSocketFactory = null;
-			}
-		}
-		return this.clientFacingDtlsDatagramSocketFactory;
-	}
-	
-	private SslSocketFactory getClientFacingSslSocketFactory() {
-		Settings settings = this.configuration.getSettings();
-		if (settings.getLastValue(
-				SslSettingSpecConstants.SSL_ENABLED).booleanValue()) {
-			if (this.clientFacingSslSocketFactory == null) {
-				this.clientFacingSslSocketFactory = new SslSocketFactoryImpl(
-						this.configuration);
-			}
-		} else {
-			if (this.clientFacingSslSocketFactory != null) {
-				this.clientFacingSslSocketFactory = null;
-			}
-		}
-		return this.clientFacingSslSocketFactory;
+		this.workerContextFactory = new WorkerContextFactory(config);
 	}
 	
 	public void run() {
 		ExecutorService executor = Executors.newCachedThreadPool();
 		while (true) {
-			Socket clientFacingSocket = null;
 			try {
-				clientFacingSocket = this.serverSocket.accept();
+				Socket clientFacingSocket = this.serverSocket.accept();
+				executor.execute(new Worker(
+						clientFacingSocket, this.workerContextFactory));
 			} catch (SocketException e) {
 				// closed by SocksServer.stop()
 				break;
@@ -127,32 +42,6 @@ final class Listener implements Runnable {
 						e);
 				continue;
 			}
-			try {
-				if (!this.canAllowClientFacingSocket(clientFacingSocket)) {
-					this.closeClientFacingSocket(clientFacingSocket);
-					continue;
-				}
-				Socket clientFacingSock = this.wrapClientFacingSocket(
-						clientFacingSocket); 
-				if (clientFacingSock == null) {
-					this.closeClientFacingSocket(clientFacingSocket);
-					continue; 
-				}
-				clientFacingSocket = clientFacingSock;
-			} catch (Throwable t) {
-				LOGGER.warn(
-						LoggerHelper.objectMessage(
-								this, "Internal server error"), 
-						t);
-				this.closeClientFacingSocket(clientFacingSocket);
-				continue;
-			}
-			WorkerContext workerContext = new WorkerContext(
-					clientFacingSocket,
-					this.configuration,
-					this.netObjectFactory,
-					this.getClientFacingDtlsDatagramSocketFactory());
-			executor.execute(new Worker(workerContext));
 		}
 		executor.shutdownNow();
 	}
@@ -167,23 +56,4 @@ final class Listener implements Runnable {
 		return builder.toString();
 	}
 	
-	private Socket wrapClientFacingSocket(final Socket clientFacingSocket) {
-		Socket clientFacingSock = clientFacingSocket;
-		SslSocketFactory clientFacingSslSockFactory = 
-				this.getClientFacingSslSocketFactory();
-		if (clientFacingSslSockFactory != null) {
-			try {
-				clientFacingSock = clientFacingSslSockFactory.newSocket(
-						clientFacingSock, null, true);
-			} catch (IOException e) {
-				LOGGER.warn(
-						LoggerHelper.objectMessage(
-								this, "Error in wrapping the client socket"), 
-						e);
-				return null;
-			}
-		}
-		return clientFacingSock;
-	}
-
 }

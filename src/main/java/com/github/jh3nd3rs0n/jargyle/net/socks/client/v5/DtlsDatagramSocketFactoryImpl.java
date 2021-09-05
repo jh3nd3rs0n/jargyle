@@ -24,6 +24,11 @@ import com.github.jh3nd3rs0n.jargyle.util.Strings;
 
 final class DtlsDatagramSocketFactoryImpl extends DtlsDatagramSocketFactory {
 	
+	public static boolean isDtlsEnabled(final Properties props) {
+		return props.getValue(
+				DtlsPropertySpecConstants.DTLS_ENABLED).booleanValue();
+	}
+	
 	private SSLContext dtlsContext;
 	private final SocksClient socksClient;
 		

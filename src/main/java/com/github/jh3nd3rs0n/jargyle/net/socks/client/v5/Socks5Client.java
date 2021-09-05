@@ -8,7 +8,6 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
 
-import com.github.jh3nd3rs0n.jargyle.net.socks.client.DtlsPropertySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.net.socks.client.Properties;
 import com.github.jh3nd3rs0n.jargyle.net.socks.client.Socks5PropertySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.net.socks.client.SocksClient;
@@ -34,7 +33,7 @@ public final class Socks5Client extends SocksClient {
 			final SocksClient chainedClient) {
 		super(serverUri, props, chainedClient);
 		DtlsDatagramSocketFactory dtlsDatagramSockFactory = 
-				props.getValue(DtlsPropertySpecConstants.DTLS_ENABLED).booleanValue() ? 
+				DtlsDatagramSocketFactoryImpl.isDtlsEnabled(props) ? 
 						new DtlsDatagramSocketFactoryImpl(this) : null;
 		this.dtlsDatagramSocketFactory = dtlsDatagramSockFactory;
 	}

@@ -57,8 +57,8 @@ public abstract class SocksClient {
 		NetObjectFactory internalNetObjFactory = chainedClient == null ?
 				NetObjectFactory.newInstance() 
 				: chainedClient.newSocksNetObjectFactory();
-		SslSocketFactory sslSockFactory = props.getValue(
-				SslPropertySpecConstants.SSL_ENABLED).booleanValue() ? 
+		SslSocketFactory sslSockFactory = 
+				SslSocketFactoryImpl.isSslEnabled(props) ? 
 						new SslSocketFactoryImpl(this) : null;
 		this.chainedSocksClient = chainedClient;
 		this.internalHostResolver = internalNetObjFactory.newHostResolver();

@@ -21,14 +21,18 @@ import com.github.jh3nd3rs0n.jargyle.util.Strings;
 
 final class DtlsDatagramSocketFactoryImpl extends DtlsDatagramSocketFactory {
 
+	public static boolean isDtlsEnabled(final Configuration configuration) {
+		Settings settings = configuration.getSettings();
+		return settings.getLastValue(
+				DtlsSettingSpecConstants.DTLS_ENABLED).booleanValue();
+	}
+	
 	private final Configuration configuration;
 	private SSLContext dtlsContext;
-	private Configuration lastConfiguration;
 	
 	public DtlsDatagramSocketFactoryImpl(final Configuration config) { 
 		this.configuration = config;
 		this.dtlsContext = null;
-		this.lastConfiguration = null;
 	}
 	
 	private SSLContext getDtlsContext() throws IOException {
@@ -80,11 +84,8 @@ final class DtlsDatagramSocketFactoryImpl extends DtlsDatagramSocketFactory {
 			final String peerHost, 
 			final int peerPort)
 			throws IOException {
-		if (!ConfigurationsHelper.equals(
-				this.lastConfiguration, this.configuration)) {
+		if (this.dtlsContext == null) {
 			this.dtlsContext = this.getDtlsContext();
-			this.lastConfiguration = ImmutableConfiguration.newInstance(
-					this.configuration);
 		}
 		DtlsDatagramSocketFactory factory = 
 				DtlsDatagramSocketFactory.newInstance(this.dtlsContext);

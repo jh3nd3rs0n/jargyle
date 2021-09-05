@@ -16,16 +16,48 @@ final class Worker implements Runnable {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(Worker.class);
 	
-	private final Socket clientFacingSocket;
-	private final WorkerContext workerContext;
+	private Socket clientFacingSocket;
+	private final WorkerContextFactory workerContextFactory;
 	
-	public Worker(final WorkerContext context) {
-		this.clientFacingSocket = context.getClientFacingSocket();
-		this.workerContext = context;
+	public Worker(
+			final Socket clientFacingSock, 
+			final WorkerContextFactory contextFactory) {
+		this.clientFacingSocket = clientFacingSock;
+		this.workerContextFactory = contextFactory;
+	}
+	
+	private WorkerContext newWorkerContext(final Socket clientFacingSock) {
+		WorkerContext workerContext = null;
+		try {
+			workerContext = this.workerContextFactory.newWorkerContext(
+					clientFacingSock);
+		} catch (IllegalArgumentException e) {
+			LOGGER.warn(
+					LoggerHelper.objectMessage(
+							this, 
+							String.format(
+									"Client address %s is blocked or not allowed", 
+									clientFacingSock.getInetAddress().getHostAddress())), 
+					e);
+			return null;			
+		} catch (IOException e) {
+			LOGGER.warn(
+					LoggerHelper.objectMessage(
+							this, "Error in wrapping the client-facing socket"), 
+					e);
+			return null;
+		}
+		return workerContext;
 	}
 	
 	public void run() {
 		try {
+			WorkerContext workerContext = this.newWorkerContext(
+					this.clientFacingSocket);
+			if (workerContext == null) {
+				return;
+			}
+			this.clientFacingSocket = workerContext.getClientFacingSocket();
 			InputStream clientFacingInputStream = 
 					this.clientFacingSocket.getInputStream();
 			int version = -1;
@@ -42,7 +74,7 @@ final class Worker implements Runnable {
 			}
 			if ((byte) version == Version.V5.byteValue()) {
 				Socks5Worker socks5Worker = new Socks5Worker(
-						new Socks5WorkerContext(this.workerContext));
+						new Socks5WorkerContext(workerContext));
 				socks5Worker.run();
 			} else {
 				LOGGER.warn(LoggerHelper.objectMessage(this, String.format(
@@ -73,8 +105,8 @@ final class Worker implements Runnable {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append(this.getClass().getSimpleName())
-			.append(" [workerContext=")
-			.append(this.workerContext)
+			.append(" [clientFacingSocket=")
+			.append(this.clientFacingSocket)
 			.append("]");
 		return builder.toString();
 	}

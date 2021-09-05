@@ -78,6 +78,62 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 		return SETTING_CONVERTER_MAP;
 	}
 	
+	private static NetObjectFactory newNetObjectFactory(
+			final Configuration configuration) {
+		SocksClient client = newSocksClient(configuration);
+		if (client != null) {
+			return client.newSocksNetObjectFactory();
+		}
+		return NetObjectFactory.newInstance();
+	}
+	
+	private static SocksClient newSocksClient(
+			final Configuration configuration) {
+		Settings settings = configuration.getSettings();
+		Map<SettingSpec<? extends Object>, SettingConverter> settingConverterMap =
+				getSettingConverterMap();
+		SocksServerUri socksServerUri = null;
+		List<Property<? extends Object>> properties = 
+				new ArrayList<Property<? extends Object>>();
+		SocksClient chainedSocksClient = null;
+		for (Setting<Object> setting : settings.toList()) {
+			SettingSpec<Object> settingSpec = setting.getSettingSpec();
+			SettingConverter settingConverter = settingConverterMap.get(
+					settingSpec);
+			if (settingConverter == null) {
+				continue;
+			}
+			Object obj = settingConverter.convert(setting);
+			if (obj instanceof SocksServerUri) {
+				SocksServerUri serverUri = (SocksServerUri) obj;
+				if (socksServerUri != null) {
+					chainedSocksClient = socksServerUri.newSocksClient(
+							Properties.newInstance(properties), 
+							chainedSocksClient);
+					properties.clear();
+				}
+				socksServerUri = serverUri;
+				continue;
+			}
+			if (obj instanceof Property) {
+				@SuppressWarnings("unchecked")
+				Property<Object> prop = (Property<Object>) obj;
+				properties.add(prop);
+				continue;
+			}
+			if (obj instanceof List) {
+				@SuppressWarnings("unchecked")
+				List<Property<Object>> props = (List<Property<Object>>) obj;
+				properties.addAll(props);
+			}
+		}
+		if (socksServerUri == null) {
+			return null;
+		}
+		return socksServerUri.newSocksClient(
+				Properties.newInstance(properties), chainedSocksClient);
+	}
+	
 	private static void putChainingDtlsKeyStoreSettingConverters() {
 		SETTING_CONVERTER_MAP.put(
 				ChainingDtlsSettingSpecConstants.CHAINING_DTLS_KEY_STORE_FILE, 
@@ -461,7 +517,6 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 					
 				});
 	}
-	
 	private static void putChainingSslTrustStoreSettingConverters() {
 		SETTING_CONVERTER_MAP.put(
 				ChainingSslSettingSpecConstants.CHAINING_SSL_TRUST_STORE_FILE, 
@@ -502,76 +557,54 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 				});		
 	}
 	
-	private final Configuration configuration;
-	private Configuration lastConfiguration;
-	private NetObjectFactory netObjectFactory;
-
+	private final NetObjectFactory netObjectFactory;
+	
 	public NetObjectFactoryImpl(final Configuration config) {
-		this.configuration = config;
-		this.lastConfiguration = null;
-		this.netObjectFactory = null;
+		this.netObjectFactory = newNetObjectFactory(config);
 	}
-	
-	private NetObjectFactory getNetObjectFactory() {
-		if (!ConfigurationsHelper.equals(
-				this.lastConfiguration, this.configuration)) {
-			this.netObjectFactory = this.newNetObjectFactory();
-			this.lastConfiguration = ImmutableConfiguration.newInstance(
-					this.configuration);
-		}
-		return this.netObjectFactory;
-	}
-	
+
 	@Override
 	public DatagramSocket newDatagramSocket() throws SocketException {
-		return this.getNetObjectFactory().newDatagramSocket();
+		return this.netObjectFactory.newDatagramSocket();
 	}
 
 	@Override
 	public DatagramSocket newDatagramSocket(
 			final int port) throws SocketException {
-		return this.getNetObjectFactory().newDatagramSocket(port);
+		return this.netObjectFactory.newDatagramSocket(port);
 	}
 
 	@Override
 	public DatagramSocket newDatagramSocket(
 			final int port, final InetAddress laddr) throws SocketException {
-		return this.getNetObjectFactory().newDatagramSocket(port, laddr);
+		return this.netObjectFactory.newDatagramSocket(port, laddr);
 	}
 
 	@Override
 	public DatagramSocket newDatagramSocket(
 			final SocketAddress bindaddr) throws SocketException {
-		return this.getNetObjectFactory().newDatagramSocket(bindaddr);
+		return this.netObjectFactory.newDatagramSocket(bindaddr);
 	}
 
 	@Override
 	public HostResolver newHostResolver() {
-		return this.getNetObjectFactory().newHostResolver();
-	}
-
-	private NetObjectFactory newNetObjectFactory() {
-		SocksClient client = this.newSocksClient();
-		if (client != null) {
-			return client.newSocksNetObjectFactory();
-		}
-		return NetObjectFactory.newInstance();
+		return this.netObjectFactory.newHostResolver();
 	}
 
 	@Override
 	public ServerSocket newServerSocket() throws IOException {
-		return this.getNetObjectFactory().newServerSocket();
+		return this.netObjectFactory.newServerSocket();
 	}
 
 	@Override
 	public ServerSocket newServerSocket(final int port) throws IOException {
-		return this.getNetObjectFactory().newServerSocket(port);
+		return this.netObjectFactory.newServerSocket(port);
 	}
 
 	@Override
 	public ServerSocket newServerSocket(
 			final int port, final int backlog) throws IOException {
-		return this.getNetObjectFactory().newServerSocket(port, backlog);
+		return this.netObjectFactory.newServerSocket(port, backlog);
 	}
 
 	@Override
@@ -579,19 +612,19 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 			final int port, 
 			final int backlog, 
 			final InetAddress bindAddr) throws IOException {
-		return this.getNetObjectFactory().newServerSocket(
+		return this.netObjectFactory.newServerSocket(
 				port, backlog, bindAddr);
 	}
 
 	@Override
 	public Socket newSocket() {
-		return this.getNetObjectFactory().newSocket();
+		return this.netObjectFactory.newSocket();
 	}
 
 	@Override
 	public Socket newSocket(
 			final InetAddress address, final int port) throws IOException {
-		return this.getNetObjectFactory().newSocket(address, port);
+		return this.netObjectFactory.newSocket(address, port);
 	}
 
 	@Override
@@ -600,15 +633,15 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 			final int port, 
 			final InetAddress localAddr, 
 			final int localPort) throws IOException {
-		return this.getNetObjectFactory().newSocket(
+		return this.netObjectFactory.newSocket(
 				address, port, localAddr, localPort);
 	}
-
+	
 	@Override
 	public Socket newSocket(
 			final String host, 
 			final int port) throws UnknownHostException, IOException {
-		return this.getNetObjectFactory().newSocket(host, port);
+		return this.netObjectFactory.newSocket(host, port);
 	}
 	
 	@Override
@@ -617,54 +650,8 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 			final int port, 
 			final InetAddress localAddr, 
 			final int localPort) throws IOException {
-		return this.getNetObjectFactory().newSocket(
+		return this.netObjectFactory.newSocket(
 				host, port, localAddr, localPort);
-	}
-	
-	private SocksClient newSocksClient() {
-		Settings settings = this.configuration.getSettings();
-		Map<SettingSpec<? extends Object>, SettingConverter> settingConverterMap =
-				getSettingConverterMap();
-		SocksServerUri socksServerUri = null;
-		List<Property<? extends Object>> properties = 
-				new ArrayList<Property<? extends Object>>();
-		SocksClient chainedSocksClient = null;
-		for (Setting<Object> setting : settings.toList()) {
-			SettingSpec<Object> settingSpec = setting.getSettingSpec();
-			SettingConverter settingConverter = settingConverterMap.get(
-					settingSpec);
-			if (settingConverter == null) {
-				continue;
-			}
-			Object obj = settingConverter.convert(setting);
-			if (obj instanceof SocksServerUri) {
-				SocksServerUri serverUri = (SocksServerUri) obj;
-				if (socksServerUri != null) {
-					chainedSocksClient = socksServerUri.newSocksClient(
-							Properties.newInstance(properties), 
-							chainedSocksClient);
-					properties.clear();
-				}
-				socksServerUri = serverUri;
-				continue;
-			}
-			if (obj instanceof Property) {
-				@SuppressWarnings("unchecked")
-				Property<Object> prop = (Property<Object>) obj;
-				properties.add(prop);
-				continue;
-			}
-			if (obj instanceof List) {
-				@SuppressWarnings("unchecked")
-				List<Property<Object>> props = (List<Property<Object>>) obj;
-				properties.addAll(props);
-			}
-		}
-		if (socksServerUri == null) {
-			return null;
-		}
-		return socksServerUri.newSocksClient(
-				Properties.newInstance(properties), chainedSocksClient);
 	}
 
 }

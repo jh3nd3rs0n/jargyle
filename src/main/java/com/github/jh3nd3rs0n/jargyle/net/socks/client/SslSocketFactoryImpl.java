@@ -21,6 +21,11 @@ import com.github.jh3nd3rs0n.jargyle.util.Strings;
 
 final class SslSocketFactoryImpl extends SslSocketFactory {
 
+	public static boolean isSslEnabled(final Properties props) {
+		return props.getValue(
+				SslPropertySpecConstants.SSL_ENABLED).booleanValue();
+	}
+	
 	private final SocksClient socksClient;
 	private SSLContext sslContext;
 

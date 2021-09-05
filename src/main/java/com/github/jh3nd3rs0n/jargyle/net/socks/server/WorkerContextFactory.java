@@ -54,26 +54,12 @@ final class WorkerContextFactory {
 		Configuration config = ImmutableConfiguration.newInstance(
 				this.configuration);
 		if (!ConfigurationsHelper.equals(this.lastConfiguration, config)) {
-			if (DtlsDatagramSocketFactoryImpl.isDtlsEnabled(config)) {
-				if (this.clientFacingDtlsDatagramSocketFactory == null) {
-					this.clientFacingDtlsDatagramSocketFactory = 
-							new DtlsDatagramSocketFactoryImpl(config);
-				}				
-			} else {
-				if (this.clientFacingDtlsDatagramSocketFactory != null) {
-					this.clientFacingDtlsDatagramSocketFactory = null;
-				}
-			}
-			if (SslSocketFactoryImpl.isSslEnabled(config)) {
-				if (this.clientFacingSslSocketFactory == null) {
-					this.clientFacingSslSocketFactory = 
-							new SslSocketFactoryImpl(config);
-				}
-			} else {
-				if (this.clientFacingSslSocketFactory != null) {
-					this.clientFacingSslSocketFactory = null;
-				}				
-			}
+			this.clientFacingDtlsDatagramSocketFactory =
+					DtlsDatagramSocketFactoryImpl.isDtlsEnabled(config) ?
+							new DtlsDatagramSocketFactoryImpl(config) : null;
+			this.clientFacingSslSocketFactory =
+					SslSocketFactoryImpl.isSslEnabled(config) ?
+							new SslSocketFactoryImpl(config) : null;
 			this.netObjectFactory = new NetObjectFactoryImpl(config);
 			this.lastConfiguration = config;
 		}

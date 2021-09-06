@@ -177,62 +177,41 @@ public final class Socks5Worker {
 		return socks5Req;
 	}
 	
-	public void run() {
-		try {
-			this.clientFacingInputStream = 
-					this.clientFacingSocket.getInputStream();
-			MethodEncapsulation methodEncapsulation = this.negotiateMethod();
-			if (methodEncapsulation == null) { return; }
-			Socket socket = methodEncapsulation.getSocket();
-			this.clientFacingInputStream = socket.getInputStream();
-			this.clientFacingSocket = socket;
-			this.socks5WorkerContext = new Socks5WorkerContext(
-					new WorkerContext(
-							this.clientFacingSocket,
-							this.configuration,
-							this.socks5WorkerContext.getNetObjectFactory(),
-							this.socks5WorkerContext.getClientFacingDtlsDatagramSocketFactory()));
-			Socks5Request socks5Req = this.newSocks5Request();
-			if (socks5Req == null) { return; }
-			if (!this.canAllowSocks5Request(
-					this.clientFacingSocket.getInetAddress().getHostAddress(), 
-					socks5Req)) {
-				return;
-			}
-			Socks5RequestWorkerContext socks5RequestWorkerContext = 
-					new Socks5RequestWorkerContext(
-							this.socks5WorkerContext, 
-							methodEncapsulation, 
-							socks5Req);
-			Socks5RequestWorkerFactory socks5RequestWorkerFactory =
-					this.settings.getLastValue(
-							Socks5SettingSpecConstants.SOCKS5_SOCKS5_REQUEST_WORKER_FACTORY);
-			if (socks5RequestWorkerFactory == null) {
-				socks5RequestWorkerFactory = 
-						Socks5RequestWorkerFactory.newInstance(); 
-			}
-			Socks5RequestWorker socks5RequestWorker = 
-					socks5RequestWorkerFactory.newSocks5RequestWorker(
-							socks5RequestWorkerContext);
-			socks5RequestWorker.run();
-		} catch (Throwable t) {
-			LOGGER.warn( 
-					LoggerHelper.objectMessage(this, "Internal server error"), 
-					t);
-		} finally {
-			if (!this.clientFacingSocket.isClosed()) {
-				try {
-					this.clientFacingSocket.close();
-				} catch (IOException e) {
-					LOGGER.warn( 
-							LoggerHelper.objectMessage(
-									this, 
-									"Error upon closing connection to the "
-									+ "client"), 
-							e);
-				}
-			}
+	public void run() throws IOException {
+		this.clientFacingInputStream = this.clientFacingSocket.getInputStream();
+		MethodEncapsulation methodEncapsulation = this.negotiateMethod();
+		if (methodEncapsulation == null) { return; }
+		Socket socket = methodEncapsulation.getSocket();
+		this.clientFacingInputStream = socket.getInputStream();
+		this.clientFacingSocket = socket;
+		this.socks5WorkerContext = new Socks5WorkerContext(new WorkerContext(
+				this.clientFacingSocket,
+				this.configuration,
+				this.socks5WorkerContext.getNetObjectFactory(),
+				this.socks5WorkerContext.getClientFacingDtlsDatagramSocketFactory()));
+		Socks5Request socks5Req = this.newSocks5Request();
+		if (socks5Req == null) { return; }
+		if (!this.canAllowSocks5Request(
+				this.clientFacingSocket.getInetAddress().getHostAddress(), 
+				socks5Req)) {
+			return;
 		}
+		Socks5RequestWorkerContext socks5RequestWorkerContext = 
+				new Socks5RequestWorkerContext(
+						this.socks5WorkerContext, 
+						methodEncapsulation, 
+						socks5Req);
+		Socks5RequestWorkerFactory socks5RequestWorkerFactory =
+				this.settings.getLastValue(
+						Socks5SettingSpecConstants.SOCKS5_SOCKS5_REQUEST_WORKER_FACTORY);
+		if (socks5RequestWorkerFactory == null) {
+			socks5RequestWorkerFactory =
+					Socks5RequestWorkerFactory.newInstance(); 
+		}
+		Socks5RequestWorker socks5RequestWorker = 
+				socks5RequestWorkerFactory.newSocks5RequestWorker(
+						socks5RequestWorkerContext);
+		socks5RequestWorker.run();
 	}
 	
 	@Override

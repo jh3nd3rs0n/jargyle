@@ -82,8 +82,10 @@ final class SslSocketFactoryImpl extends SslSocketFactory {
 			final Socket socket, 
 			final InputStream consumed, 
 			final boolean autoClose) throws IOException {
-		if (this.sslContext == null) {
-			this.sslContext = this.getSslContext();
+		synchronized (this) {
+			if (this.sslContext == null) {
+				this.sslContext = this.getSslContext();
+			}
 		}
 		SslSocketFactory factory = SslSocketFactory.newInstance(
 				this.sslContext);

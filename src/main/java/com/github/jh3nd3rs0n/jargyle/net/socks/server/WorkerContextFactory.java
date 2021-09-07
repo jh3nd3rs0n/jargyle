@@ -25,7 +25,7 @@ final class WorkerContextFactory {
 		this.netObjectFactory = null;
 	}
 
-	private void checkIfAllowable(
+	private void checkIfAllowed(
 			final String clientAddress, final Configuration config) {
 		Settings settings = config.getSettings();
 		Criteria allowedClientAddressCriteria = settings.getLastValue(
@@ -53,15 +53,17 @@ final class WorkerContextFactory {
 	private Configuration newConfiguration() {
 		Configuration config = ImmutableConfiguration.newInstance(
 				this.configuration);
-		if (!ConfigurationsHelper.equals(this.lastConfiguration, config)) {
-			this.clientFacingDtlsDatagramSocketFactory =
-					DtlsDatagramSocketFactoryImpl.isDtlsEnabled(config) ?
-							new DtlsDatagramSocketFactoryImpl(config) : null;
-			this.clientFacingSslSocketFactory =
-					SslSocketFactoryImpl.isSslEnabled(config) ?
-							new SslSocketFactoryImpl(config) : null;
-			this.netObjectFactory = new NetObjectFactoryImpl(config);
-			this.lastConfiguration = config;
+		synchronized (this) {
+			if (!ConfigurationsHelper.equals(this.lastConfiguration, config)) {
+				this.clientFacingDtlsDatagramSocketFactory =
+						DtlsDatagramSocketFactoryImpl.isDtlsEnabled(config) ?
+								new DtlsDatagramSocketFactoryImpl(config) : null;
+				this.clientFacingSslSocketFactory =
+						SslSocketFactoryImpl.isSslEnabled(config) ?
+								new SslSocketFactoryImpl(config) : null;
+				this.netObjectFactory = new NetObjectFactoryImpl(config);
+				this.lastConfiguration = config;
+			}
 		}
 		return config;
 	}
@@ -69,7 +71,7 @@ final class WorkerContextFactory {
 	public WorkerContext newWorkerContext(
 			final Socket clientFacingSocket) throws IOException {
 		Configuration config = this.newConfiguration();
-		this.checkIfAllowable(
+		this.checkIfAllowed(
 				clientFacingSocket.getInetAddress().getHostAddress(), config);
 		Socket clientFacingSock = clientFacingSocket;
 		if (this.clientFacingSslSocketFactory != null) {

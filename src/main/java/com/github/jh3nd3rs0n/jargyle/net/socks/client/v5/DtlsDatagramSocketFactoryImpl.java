@@ -86,8 +86,10 @@ final class DtlsDatagramSocketFactoryImpl extends DtlsDatagramSocketFactory {
 			final String peerHost, 
 			final int peerPort)
 			throws IOException {
-		if (this.dtlsContext == null) {
-			this.dtlsContext = this.getDtlsContext();
+		synchronized (this) {
+			if (this.dtlsContext == null) {
+				this.dtlsContext = this.getDtlsContext();
+			}
 		}
 		DtlsDatagramSocketFactory factory = 
 				DtlsDatagramSocketFactory.newInstance(this.dtlsContext);

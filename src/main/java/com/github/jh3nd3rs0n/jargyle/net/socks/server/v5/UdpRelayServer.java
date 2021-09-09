@@ -676,11 +676,11 @@ public final class UdpRelayServer {
 		this.timeout = settings.getTimeout();
 	}
 
-	private int getClientPort() {
+	private synchronized int getClientPort() {
 		return this.clientPort;
 	}
 	
-	private long getLastReceiveTime() {
+	private synchronized long getLastReceiveTime() {
 		return this.lastReceiveTime;
 	}
 	

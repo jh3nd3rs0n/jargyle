@@ -286,7 +286,7 @@ public final class RelayServer {
 		this.timeout = tmt;
 	}
 	
-	private long getLastReadTime() {
+	private synchronized long getLastReadTime() {
 		return this.lastReadTime;
 	}
 	

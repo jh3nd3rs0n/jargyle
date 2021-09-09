@@ -470,7 +470,7 @@ The following is a list of available settings for the SOCKS server (displayed wh
       socks5
           SOCKS protocol version 5
     
-    INTERNAL_SOCKET_SETTINGS:
+    SOCKET_SETTINGS:
     
       IP_TOS=INTEGER_BETWEEN_0_AND_255
           The type-of-service or traffic class field in the IP header for a TCP or UDP socket

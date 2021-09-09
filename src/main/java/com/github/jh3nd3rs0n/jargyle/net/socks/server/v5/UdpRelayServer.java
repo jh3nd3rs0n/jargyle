@@ -233,9 +233,7 @@ public final class UdpRelayServer {
 							t);
 				}
 			}
-			if (!this.packetsWorkerContext.isUdpRelayServerStopped()) {
-				this.packetsWorkerContext.stopUdpRelayServer();
-			}				
+			this.packetsWorkerContext.stopUdpRelayServerIfNotStopped();				
 		}
 		
 	}
@@ -461,9 +459,7 @@ public final class UdpRelayServer {
 							t);
 				}
 			}
-			if (!this.packetsWorkerContext.isUdpRelayServerStopped()) {
-				this.packetsWorkerContext.stopUdpRelayServer();
-			}				
+			this.packetsWorkerContext.stopUdpRelayServerIfNotStopped();				
 		}
 
 	}
@@ -555,7 +551,7 @@ public final class UdpRelayServer {
 		}
 		
 		public final int getClientPort() {
-			return this.udpRelayServer.clientPort;
+			return this.udpRelayServer.getClientPort();
 		}
 		
 		public final HostResolver getHostResolver() {
@@ -563,7 +559,7 @@ public final class UdpRelayServer {
 		}
 		
 		public final long getLastReceiveTime() {
-			return this.udpRelayServer.lastReceiveTime;
+			return this.udpRelayServer.getLastReceiveTime();
 		}
 		
 		public final DatagramSocket getServerFacingDatagramSocket() {
@@ -574,20 +570,16 @@ public final class UdpRelayServer {
 			return this.udpRelayServer.timeout;
 		}
 		
-		public final boolean isUdpRelayServerStopped() {
-			return this.udpRelayServer.stopped;
-		}
-		
 		public final void setClientPort(final int port) {
-			this.udpRelayServer.clientPort = port;
+			this.udpRelayServer.setClientPort(port);
 		}
 		
 		public final void setLastReceiveTime(final long time) {
-			this.udpRelayServer.lastReceiveTime = time;
+			this.udpRelayServer.setLastReceiveTime(time);
 		}
 		
-		public final void stopUdpRelayServer() {
-			this.udpRelayServer.stop();
+		public final void stopUdpRelayServerIfNotStopped() {
+			this.udpRelayServer.stopIfNotStopped();
 		}
 
 		@Override
@@ -637,7 +629,7 @@ public final class UdpRelayServer {
 	private final Criteria blockedInboundAddressCriteria;
 	private final Criteria blockedOutboundAddressCriteria;
 	private final int bufferSize;	
-	private String clientAddress;
+	private final String clientAddress;
 	private final DatagramSocket clientFacingDatagramSocket;	
 	private int clientPort;
 	private ExecutorService executor;
@@ -683,6 +675,14 @@ public final class UdpRelayServer {
 		this.stopped = true;
 		this.timeout = settings.getTimeout();
 	}
+
+	private int getClientPort() {
+		return this.clientPort;
+	}
+	
+	private long getLastReceiveTime() {
+		return this.lastReceiveTime;
+	}
 	
 	public boolean isStarted() {
 		return this.started;
@@ -690,6 +690,14 @@ public final class UdpRelayServer {
 	
 	public boolean isStopped() {
 		return this.stopped;
+	}
+	
+	private synchronized void setClientPort(final int port) {
+		this.clientPort = port;
+	}
+	
+	private synchronized void setLastReceiveTime(final long time) {
+		this.lastReceiveTime = time;
 	}
 	
 	public void start() throws IOException {
@@ -715,6 +723,12 @@ public final class UdpRelayServer {
 		this.executor = null;
 		this.started = false;
 		this.stopped = true;
+	}
+	
+	private synchronized void stopIfNotStopped() {
+		if (!this.stopped) {
+			this.stop();
+		}
 	}
 	
 }

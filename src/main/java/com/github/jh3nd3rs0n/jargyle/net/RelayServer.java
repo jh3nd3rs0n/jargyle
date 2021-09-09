@@ -160,9 +160,7 @@ public final class RelayServer {
 					break;
 				}
 			}
-			if (!this.dataWorkerContext.isTcpRelayServerStopped()) {
-				this.dataWorkerContext.stopTcpRelayServer();
-			}
+			this.dataWorkerContext.stopRelayServerIfNotStopped();
 		}
 
 		@Override
@@ -201,7 +199,7 @@ public final class RelayServer {
 		}
 		
 		public final long getLastReadTime() {
-			return this.relayServer.lastReadTime;
+			return this.relayServer.getLastReadTime();
 		}
 		
 		public final OutputStream getOutputSocketOutputStream() throws IOException {
@@ -212,16 +210,12 @@ public final class RelayServer {
 			return this.relayServer.timeout;
 		}
 		
-		public final boolean isTcpRelayServerStopped() {
-			return this.relayServer.stopped;
-		}
-		
 		public final void setLastReadTime(final long time) {
-			this.relayServer.lastReadTime = time;
+			this.relayServer.setLastReadTime(time);
 		}
 		
-		public final void stopTcpRelayServer() {
-			this.relayServer.stop();
+		public final void stopRelayServerIfNotStopped() {
+			this.relayServer.stopIfNotStopped();
 		}
 
 		@Override
@@ -292,12 +286,20 @@ public final class RelayServer {
 		this.timeout = tmt;
 	}
 	
+	private long getLastReadTime() {
+		return this.lastReadTime;
+	}
+	
 	public boolean isStarted() {
 		return this.started;
 	}
 	
 	public boolean isStopped() {
 		return this.stopped;
+	}
+	
+	private synchronized void setLastReadTime(final long time) {
+		this.lastReadTime = time;
 	}
 	
 	public void start() throws IOException {
@@ -323,6 +325,12 @@ public final class RelayServer {
 		this.executor = null;
 		this.started = false;
 		this.stopped = true;
+	}
+	
+	private synchronized void stopIfNotStopped() {
+		if (!this.stopped) {
+			this.stop();
+		}
 	}
 	
 }

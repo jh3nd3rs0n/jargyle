@@ -282,39 +282,40 @@ final class NetObjectFactoryImpl extends NetObjectFactory {
 	
 	private static void putChainingGeneralSettingConverters() {
 		SETTING_CONVERTER_MAP.put(
-				ChainingGeneralSettingSpecConstants.CHAINING_BIND_HOST, 
+				ChainingGeneralSettingSpecConstants.CHAINING_INTERNAL_BIND_HOST, 
 				new SettingConverter() {
 
 					@Override
 					public Object convert(final Setting<Object> setting) {
-						Host bindHost = (Host) setting.getValue();
-						return GeneralPropertySpecConstants.BIND_HOST.newProperty(bindHost);
+						Host internalBindHost = (Host) setting.getValue();
+						return GeneralPropertySpecConstants.INTERNAL_BIND_HOST.newProperty(
+								internalBindHost);
 					}
 					
 				});
 		SETTING_CONVERTER_MAP.put(
-				ChainingGeneralSettingSpecConstants.CHAINING_CONNECT_TIMEOUT, 
+				ChainingGeneralSettingSpecConstants.CHAINING_INTERNAL_CONNECT_TIMEOUT, 
 				new SettingConverter() {
 
 					@Override
 					public Object convert(final Setting<Object> setting) {
-						PositiveInteger connectTimeout = 
+						PositiveInteger internalConnectTimeout = 
 								(PositiveInteger) setting.getValue();
-						return GeneralPropertySpecConstants.CONNECT_TIMEOUT.newProperty(
-								connectTimeout);
+						return GeneralPropertySpecConstants.INTERNAL_CONNECT_TIMEOUT.newProperty(
+								internalConnectTimeout);
 					} 
 					
 				});
 		SETTING_CONVERTER_MAP.put(
-				ChainingGeneralSettingSpecConstants.CHAINING_SOCKET_SETTINGS, 
+				ChainingGeneralSettingSpecConstants.CHAINING_INTERNAL_SOCKET_SETTINGS, 
 				new SettingConverter() {
 
 					@Override
 					public Object convert(final Setting<Object> setting) {
-						SocketSettings socketSettings = 
+						SocketSettings internalSocketSettings = 
 								(SocketSettings) setting.getValue();
-						return GeneralPropertySpecConstants.SOCKET_SETTINGS.newProperty(
-								socketSettings);
+						return GeneralPropertySpecConstants.INTERNAL_SOCKET_SETTINGS.newProperty(
+								internalSocketSettings);
 					}
 					
 				});

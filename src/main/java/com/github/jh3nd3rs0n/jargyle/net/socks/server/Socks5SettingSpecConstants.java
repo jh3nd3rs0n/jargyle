@@ -105,6 +105,17 @@ public final class Socks5SettingSpecConstants {
 					NewSettingSpecPermission.INSTANCE, 
 					"socks5.onBind.blockedInboundAddressCriteria",
 					Criteria.getEmptyInstance()));
+
+	@HelpText(
+			doc = "The space separated list of socket settings for the inbound "
+					+ "socket", 
+			usage = "socks5.onBind.inboundSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
+	)
+	public static final SettingSpec<SocketSettings> SOCKS5_ON_BIND_INBOUND_SOCKET_SETTINGS = 
+			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
+					NewSettingSpecPermission.INSTANCE, 
+					"socks5.onBind.inboundSocketSettings",
+					SocketSettings.newInstance()));
 	
 	@HelpText(
 			doc = "The space separated list of socket settings for the listen "

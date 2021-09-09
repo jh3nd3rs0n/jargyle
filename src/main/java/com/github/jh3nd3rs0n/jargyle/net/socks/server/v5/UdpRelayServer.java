@@ -180,6 +180,10 @@ public final class UdpRelayServer {
 						long timeSinceReceive = 
 								System.currentTimeMillis() - lastReceiveTime;
 						if (timeSinceReceive >= this.timeout) {
+							LOGGER.trace(
+									LoggerHelper.objectMessage(
+											this, 
+											"Timeout reached!"));							
 							break;
 						}
 						continue;
@@ -229,13 +233,9 @@ public final class UdpRelayServer {
 							t);
 				}
 			}
-			if (!this.packetsWorkerContext.isFirstPacketsWorkerFinished()) {
-				this.packetsWorkerContext.setFirstPacketsWorkerFinished(true);
-			} else {
-				if (!this.packetsWorkerContext.isUdpRelayServerStopped()) {
-					this.packetsWorkerContext.stopUdpRelayServer();
-				}				
-			}
+			if (!this.packetsWorkerContext.isUdpRelayServerStopped()) {
+				this.packetsWorkerContext.stopUdpRelayServer();
+			}				
 		}
 		
 	}
@@ -399,6 +399,10 @@ public final class UdpRelayServer {
 						long timeSinceReceive = 
 								System.currentTimeMillis() - lastReceiveTime;
 						if (timeSinceReceive >= this.timeout) {
+							LOGGER.trace(
+									LoggerHelper.objectMessage(
+											this, 
+											"Timeout reached!"));
 							break;
 						}
 						continue;
@@ -457,13 +461,9 @@ public final class UdpRelayServer {
 							t);
 				}
 			}
-			if (!this.packetsWorkerContext.isFirstPacketsWorkerFinished()) {
-				this.packetsWorkerContext.setFirstPacketsWorkerFinished(true);
-			} else {
-				if (!this.packetsWorkerContext.isUdpRelayServerStopped()) {
-					this.packetsWorkerContext.stopUdpRelayServer();
-				}				
-			}
+			if (!this.packetsWorkerContext.isUdpRelayServerStopped()) {
+				this.packetsWorkerContext.stopUdpRelayServer();
+			}				
 		}
 
 	}
@@ -574,20 +574,12 @@ public final class UdpRelayServer {
 			return this.udpRelayServer.timeout;
 		}
 		
-		public final boolean isFirstPacketsWorkerFinished() {
-			return this.udpRelayServer.firstPacketsWorkerFinished;
-		}
-		
 		public final boolean isUdpRelayServerStopped() {
 			return this.udpRelayServer.stopped;
 		}
 		
 		public final void setClientPort(final int port) {
 			this.udpRelayServer.clientPort = port;
-		}
-		
-		public final void setFirstPacketsWorkerFinished(final boolean b) {
-			this.udpRelayServer.firstPacketsWorkerFinished = b;
 		}
 		
 		public final void setLastReceiveTime(final long time) {
@@ -649,7 +641,6 @@ public final class UdpRelayServer {
 	private final DatagramSocket clientFacingDatagramSocket;	
 	private int clientPort;
 	private ExecutorService executor;
-	private boolean firstPacketsWorkerFinished;
 	private HostResolver hostResolver;
 	private long lastReceiveTime;
 	private final DatagramSocket serverFacingDatagramSocket;
@@ -684,7 +675,6 @@ public final class UdpRelayServer {
 				datagramSocks.getClientFacingDatagramSocket();
 		this.clientPort = clientDatagramSockAddr.getPort();
 		this.executor = null;
-		this.firstPacketsWorkerFinished = false;
 		this.hostResolver = resolver;
 		this.lastReceiveTime = 0L;
 		this.serverFacingDatagramSocket = 
@@ -707,7 +697,6 @@ public final class UdpRelayServer {
 			throw new IllegalStateException("UdpRelayServer already started");
 		}
 		this.lastReceiveTime = 0L;
-		this.firstPacketsWorkerFinished = false;
 		this.executor = Executors.newFixedThreadPool(2);
 		this.executor.execute(new InboundPacketsWorker(
 				new PacketsWorkerContext(this)));
@@ -722,7 +711,6 @@ public final class UdpRelayServer {
 			throw new IllegalStateException("UdpRelayServer already stopped");
 		}
 		this.lastReceiveTime = 0L;
-		this.firstPacketsWorkerFinished = true;
 		this.executor.shutdownNow();
 		this.executor = null;
 		this.started = false;

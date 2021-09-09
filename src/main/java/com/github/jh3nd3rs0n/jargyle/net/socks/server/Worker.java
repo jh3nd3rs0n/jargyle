@@ -3,6 +3,8 @@ package com.github.jh3nd3rs0n.jargyle.net.socks.server;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
+import java.net.SocketException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,12 +19,15 @@ final class Worker implements Runnable {
 	private static final Logger LOGGER = LoggerFactory.getLogger(Worker.class);
 	
 	private Socket clientFacingSocket;
+	private final AtomicInteger totalWorkerCount;
 	private final WorkerContextFactory workerContextFactory;
 	
 	public Worker(
 			final Socket clientFacingSock, 
+			final AtomicInteger workerCount,
 			final WorkerContextFactory contextFactory) {
 		this.clientFacingSocket = clientFacingSock;
+		this.totalWorkerCount = workerCount;
 		this.workerContextFactory = contextFactory;
 	}
 	
@@ -39,6 +44,12 @@ final class Worker implements Runnable {
 									"Client address %s is blocked or not allowed", 
 									clientFacingSock.getInetAddress().getHostAddress())), 
 					e);
+			return null;
+		} catch (SocketException e) {
+			LOGGER.warn(
+					LoggerHelper.objectMessage(
+							this, "Error in setting the client-facing socket"), 
+					e);
 			return null;			
 		} catch (IOException e) {
 			LOGGER.warn(
@@ -51,7 +62,11 @@ final class Worker implements Runnable {
 	}
 	
 	public void run() {
+		long startTime = System.currentTimeMillis();
 		try {
+			LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
+					"Started. Total Worker count: %s",
+					this.totalWorkerCount.incrementAndGet())));
 			WorkerContext workerContext = this.newWorkerContext(
 					this.clientFacingSocket);
 			if (workerContext == null) {
@@ -98,6 +113,10 @@ final class Worker implements Runnable {
 							e);
 				}
 			}
+			LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
+					"Finished in %s ms. Total Worker count: %s",
+					System.currentTimeMillis() - startTime,
+					this.totalWorkerCount.decrementAndGet())));
 		}
 	}
 

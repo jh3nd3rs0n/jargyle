@@ -6,6 +6,7 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,10 +19,12 @@ final class Listener implements Runnable {
 			Listener.class);
 	
 	private final ServerSocket serverSocket;
+	private final AtomicInteger totalWorkerCount;
 	private final WorkerContextFactory workerContextFactory;
 			
 	public Listener(final ServerSocket serverSock, final Configuration config) {
 		this.serverSocket = serverSock;
+		this.totalWorkerCount = new AtomicInteger(0);
 		this.workerContextFactory = new WorkerContextFactory(config);
 	}
 	
@@ -31,7 +34,9 @@ final class Listener implements Runnable {
 			try {
 				Socket clientFacingSocket = this.serverSocket.accept();
 				executor.execute(new Worker(
-						clientFacingSocket, this.workerContextFactory));
+						clientFacingSocket,
+						this.totalWorkerCount,
+						this.workerContextFactory));
 			} catch (SocketException e) {
 				// closed by SocksServer.stop()
 				break;

@@ -102,6 +102,35 @@ final class BindCommandWorker extends CommandWorker {
 		return true;
 	}
 	
+	private boolean configureInboundSocket(final Socket inboundSocket) {
+		SocketSettings socketSettings = this.settings.getLastValue(
+				Socks5SettingSpecConstants.SOCKS5_ON_BIND_INBOUND_SOCKET_SETTINGS);
+		try {
+			socketSettings.applyTo(inboundSocket);
+		} catch (SocketException e) {
+			LOGGER.warn( 
+					LoggerHelper.objectMessage(
+							this, "Error in setting the inbound socket"), 
+					e);
+			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
+					Reply.GENERAL_SOCKS_SERVER_FAILURE);
+			LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
+					"Sending %s",
+					socks5Rep.toString())));
+			try {
+				this.commandWorkerContext.writeThenFlush(
+						socks5Rep.toByteArray());
+			} catch (IOException e1) {
+				LOGGER.warn( 
+						LoggerHelper.objectMessage(
+								this, "Error in writing SOCKS5 reply"), 
+						e1);
+			}
+			return false;
+		}
+		return true;
+	}
+	
 	private boolean configureListenSocket(final ServerSocket listenSocket) {
 		SocketSettings socketSettings = this.settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_BIND_LISTEN_SOCKET_SETTINGS);
@@ -190,6 +219,9 @@ final class BindCommandWorker extends CommandWorker {
 				return;
 			} finally {
 				listenSocket.close();
+			}
+			if (!this.configureInboundSocket(inboundSocket)) {
+				return;
 			}
 			InetAddress inboundInetAddress = inboundSocket.getInetAddress();
 			String inboundAddress = inboundInetAddress.getHostAddress();

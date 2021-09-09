@@ -15,28 +15,28 @@ public final class GeneralPropertySpecConstants {
 
 	private static final PropertySpecs PROPERTY_SPECS = new PropertySpecs();
 	
-	public static final PropertySpec<Host> BIND_HOST = 
+	public static final PropertySpec<Host> INTERNAL_BIND_HOST = 
 			PROPERTY_SPECS.addThenGet(new HostPropertySpec(
 					NewPropertySpecPermission.INSTANCE,
-					"socksClient.bindHost",
+					"socksClient.internalBindHost",
 					Host.getInet4AllZerosInstance()));
 
-	public static final PropertySpec<Port> BIND_PORT = 
+	public static final PropertySpec<Port> INTERNAL_BIND_PORT = 
 			PROPERTY_SPECS.addThenGet(new PortPropertySpec(
 					NewPropertySpecPermission.INSTANCE,
-					"socksClient.bindPort",
+					"socksClient.internalBindPort",
 					Port.newInstance(0)));
 	
-	public static final PropertySpec<PositiveInteger> CONNECT_TIMEOUT = 
+	public static final PropertySpec<PositiveInteger> INTERNAL_CONNECT_TIMEOUT = 
 			PROPERTY_SPECS.addThenGet(new PositiveIntegerPropertySpec(
 					NewPropertySpecPermission.INSTANCE,
-					"socksClient.connectTimeout",
+					"socksClient.internalConnectTimeout",
 					PositiveInteger.newInstance(60000))); // 1 minute
 	
-	public static final PropertySpec<SocketSettings> SOCKET_SETTINGS = 
+	public static final PropertySpec<SocketSettings> INTERNAL_SOCKET_SETTINGS = 
 			PROPERTY_SPECS.addThenGet(new SocketSettingsPropertySpec(
 					NewPropertySpecPermission.INSTANCE,
-					"socksClient.socketSettings",
+					"socksClient.internalSocketSettings",
 					SocketSettings.newInstance()));
 	
 	public static List<PropertySpec<Object>> values() {

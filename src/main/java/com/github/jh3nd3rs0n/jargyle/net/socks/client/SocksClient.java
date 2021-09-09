@@ -71,7 +71,7 @@ public abstract class SocksClient {
 	protected void configureInternalSocket(
 			final Socket internalSocket) throws SocketException {
 		SocketSettings socketSettings = this.properties.getValue(
-				GeneralPropertySpecConstants.SOCKET_SETTINGS);
+				GeneralPropertySpecConstants.INTERNAL_SOCKET_SETTINGS);
 		socketSettings.applyTo(internalSocket);
 	}
 	
@@ -84,7 +84,7 @@ public abstract class SocksClient {
 		return this.getConnectedInternalSocket(
 				internalSocket, 
 				this.properties.getValue(
-						GeneralPropertySpecConstants.CONNECT_TIMEOUT).intValue(), 
+						GeneralPropertySpecConstants.INTERNAL_CONNECT_TIMEOUT).intValue(), 
 				false);
 	}
 	
@@ -94,7 +94,7 @@ public abstract class SocksClient {
 		return this.getConnectedInternalSocket(
 				internalSocket, 
 				this.properties.getValue(
-						GeneralPropertySpecConstants.CONNECT_TIMEOUT).intValue(), 
+						GeneralPropertySpecConstants.INTERNAL_CONNECT_TIMEOUT).intValue(), 
 				bindBeforeConnect);
 	}
 	
@@ -111,9 +111,9 @@ public abstract class SocksClient {
 		if (bindBeforeConnect) {
 			internalSocket.bind(new InetSocketAddress(
 					this.properties.getValue(
-							GeneralPropertySpecConstants.BIND_HOST).toInetAddress(), 
+							GeneralPropertySpecConstants.INTERNAL_BIND_HOST).toInetAddress(), 
 					this.properties.getValue(
-							GeneralPropertySpecConstants.BIND_PORT).intValue()));
+							GeneralPropertySpecConstants.INTERNAL_BIND_PORT).intValue()));
 		}
 		String socksServerUriHost = this.socksServerUri.getHost();
 		int socksServerUriPort = this.socksServerUri.getPort();
@@ -144,9 +144,9 @@ public abstract class SocksClient {
 	protected Socket newConnectedInternalSocket() throws IOException {
 		return this.newConnectedInternalSocket(
 				this.properties.getValue(
-						GeneralPropertySpecConstants.BIND_HOST).toInetAddress(),
+						GeneralPropertySpecConstants.INTERNAL_BIND_HOST).toInetAddress(),
 				this.properties.getValue(
-						GeneralPropertySpecConstants.BIND_PORT).intValue());
+						GeneralPropertySpecConstants.INTERNAL_BIND_PORT).intValue());
 	}
 	
 	protected Socket newConnectedInternalSocket(

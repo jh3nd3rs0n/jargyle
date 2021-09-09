@@ -187,6 +187,9 @@ The following is a list of available settings for the SOCKS server (displayed wh
       blockedClientAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
           The space separated list of blocked client address criteria
     
+      clientFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
+          The space separated list of socket settings for the client-facing socket
+    
       host=HOST
           The host name or address for the SOCKS server (default is 0.0.0.0)
     
@@ -198,13 +201,13 @@ The following is a list of available settings for the SOCKS server (displayed wh
     
     CHAINING GENERAL SETTINGS:
     
-      chaining.bindHost=HOST
+      chaining.internalBindHost=HOST
           The binding host name or address for the internal socket that is used to connect to the other SOCKS server (used for the SOCKS5 commands RESOLVE, BIND and UDP ASSOCIATE) (default is 0.0.0.0)
     
-      chaining.connectTimeout=INTEGER_BETWEEN_1_AND_2147483647
+      chaining.internalConnectTimeout=INTEGER_BETWEEN_1_AND_2147483647
           The timeout in milliseconds on waiting for the internal socket to connect to the other SOCKS server (used for the SOCKS5 commands RESOLVE, BIND and UDP ASSOCIATE) (default is 60000)
     
-      chaining.socketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
+      chaining.internalSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
           The space separated list of socket settings for the internal socket that is used to connect to the other SOCKS server (used for the SOCKS5 command RESOLVE and UDP ASSOCIATE)
     
       chaining.socksServerUri=SCHEME://HOST[:PORT]
@@ -358,6 +361,9 @@ The following is a list of available settings for the SOCKS server (displayed wh
       socks5.onBind.blockedInboundAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
           The space separated list of blocked inbound address criteria
     
+      socks5.onBind.inboundSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
+          The space separated list of socket settings for the inbound socket
+    
       socks5.onBind.listenSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
           The space separated list of socket settings for the listen socket
     
@@ -464,7 +470,7 @@ The following is a list of available settings for the SOCKS server (displayed wh
       socks5
           SOCKS protocol version 5
     
-    SOCKET_SETTINGS:
+    INTERNAL_SOCKET_SETTINGS:
     
       IP_TOS=INTEGER_BETWEEN_0_AND_255
           The type-of-service or traffic class field in the IP header for a TCP or UDP socket

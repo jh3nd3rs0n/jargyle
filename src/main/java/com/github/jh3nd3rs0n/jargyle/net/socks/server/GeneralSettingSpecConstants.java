@@ -53,6 +53,17 @@ public final class GeneralSettingSpecConstants {
 					Criteria.getEmptyInstance()));
 	
 	@HelpText(
+			doc = "The space separated list of socket settings for the "
+					+ "client-facing socket", 
+			usage = "clientFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
+	)
+	public static final SettingSpec<SocketSettings> CLIENT_FACING_SOCKET_SETTINGS = 
+			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
+					NewSettingSpecPermission.INSTANCE, 
+					"clientFacingSocketSettings",
+					SocketSettings.newInstance()));
+	
+	@HelpText(
 			doc = "The host name or address for the SOCKS server (default is "
 					+ "0.0.0.0)", 
 			usage = "host=HOST"

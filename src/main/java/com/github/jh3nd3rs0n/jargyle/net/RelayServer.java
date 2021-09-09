@@ -10,6 +10,8 @@ import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import javax.net.ssl.SSLException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,6 +52,19 @@ public final class RelayServer {
 						LOGGER.trace(LoggerHelper.objectMessage(
 								this, 
 								String.format("Bytes read: %s", bytesRead)));
+					} catch (SSLException e) {
+						Throwable cause = e.getCause();
+						if (cause != null && cause instanceof SocketException) {
+							// socket closed
+							break;
+						}
+						LOGGER.warn(
+								LoggerHelper.objectMessage(
+										this, 
+										"Error occurred in the process of "
+										+ "reading in data"), 
+								e);
+						break;						
 					} catch (SocketException e) {
 						// socket closed
 						break;
@@ -73,12 +88,29 @@ public final class RelayServer {
 						long timeSinceRead = 
 								System.currentTimeMillis() - lastReadTime;
 						if (timeSinceRead >= this.timeout) {
+							LOGGER.trace(
+									LoggerHelper.objectMessage(
+											this, 
+											"Timeout reached!"));
 							break;
 						}
 						continue;
 					}
 					try {
 						this.outputStream.write(buffer, 0, bytesRead);
+					} catch (SSLException e) {
+						Throwable cause = e.getCause();
+						if (cause != null && cause instanceof SocketException) {
+							// socket closed
+							break;
+						}
+						LOGGER.warn(
+								LoggerHelper.objectMessage(
+										this, 
+										"Error occurred in the process of "
+										+ "writing out data"), 
+								e);
+						break;
 					} catch (SocketException e) {
 						// socket closed
 						break;
@@ -93,6 +125,19 @@ public final class RelayServer {
 					}
 					try {
 						this.outputStream.flush();
+					} catch (SSLException e) {
+						Throwable cause = e.getCause();
+						if (cause != null && cause instanceof SocketException) {
+							// socket closed
+							break;
+						}
+						LOGGER.warn(
+								LoggerHelper.objectMessage(
+										this, 
+										"Error occurred in the process of "
+										+ "flushing out any data"), 
+								e);
+						break;
 					} catch (SocketException e) {
 						// socket closed
 						break;
@@ -115,12 +160,8 @@ public final class RelayServer {
 					break;
 				}
 			}
-			if (!this.dataWorkerContext.isFirstDataWorkerFinished()) {
-				this.dataWorkerContext.setFirstDataWorkerFinished(true);
-			} else {
-				if (!this.dataWorkerContext.isTcpRelayServerStopped()) {
-					this.dataWorkerContext.stopTcpRelayServer();
-				}
+			if (!this.dataWorkerContext.isTcpRelayServerStopped()) {
+				this.dataWorkerContext.stopTcpRelayServer();
 			}
 		}
 
@@ -171,16 +212,8 @@ public final class RelayServer {
 			return this.relayServer.timeout;
 		}
 		
-		public final boolean isFirstDataWorkerFinished() {
-			return this.relayServer.firstDataWorkerFinished;
-		}
-		
 		public final boolean isTcpRelayServerStopped() {
 			return this.relayServer.stopped;
-		}
-		
-		public final void setFirstDataWorkerFinished(final boolean b) {
-			this.relayServer.firstDataWorkerFinished = b;
 		}
 		
 		public final void setLastReadTime(final long time) {
@@ -226,7 +259,6 @@ public final class RelayServer {
 	private final Socket clientFacingSocket;
 	private final int bufferSize;
 	private ExecutorService executor;
-	private boolean firstDataWorkerFinished;
 	private long lastReadTime;
 	private final Socket serverFacingSocket;
 	private boolean started;
@@ -253,7 +285,6 @@ public final class RelayServer {
 		this.clientFacingSocket = clientFacingSock;
 		this.bufferSize = bffrSize;
 		this.executor = null;
-		this.firstDataWorkerFinished = false;
 		this.lastReadTime = 0L;
 		this.serverFacingSocket = serverFacingSock;
 		this.started = false;
@@ -274,7 +305,6 @@ public final class RelayServer {
 			throw new IllegalStateException("RelayServer already started");
 		}
 		this.lastReadTime = 0L;
-		this.firstDataWorkerFinished = false;
 		this.executor = Executors.newFixedThreadPool(2);
 		this.executor.execute(new DataWorker(new InboundDataWorkerContext(
 				this)));
@@ -289,7 +319,6 @@ public final class RelayServer {
 			throw new IllegalStateException("RelayServer already stopped");
 		}
 		this.lastReadTime = 0L;
-		this.firstDataWorkerFinished = true;
 		this.executor.shutdownNow();
 		this.executor = null;
 		this.started = false;

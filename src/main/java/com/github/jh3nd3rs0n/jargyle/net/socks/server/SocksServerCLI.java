@@ -640,7 +640,7 @@ public final class SocksServerCLI extends CLI {
 		this.printHelpText(SslSettingSpecConstants.class);		
 		System.out.println("SCHEMES:");
 		this.printHelpText(Scheme.class);
-		System.out.println("SOCKET_SETTINGS:");
+		System.out.println("INTERNAL_SOCKET_SETTINGS:");
 		this.printHelpText(StandardSocketSettingSpecConstants.class);
 		System.out.println("SOCKS5_GSSAPIAUTH_PROTECTION_LEVELS:");
 		this.printHelpText(ProtectionLevel.class);

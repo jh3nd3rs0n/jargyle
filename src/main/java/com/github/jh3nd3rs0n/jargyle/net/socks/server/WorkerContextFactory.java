@@ -2,9 +2,11 @@ package com.github.jh3nd3rs0n.jargyle.net.socks.server;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.net.SocketException;
 
 import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.SslSocketFactory;
 import com.github.jh3nd3rs0n.jargyle.net.NetObjectFactory;
+import com.github.jh3nd3rs0n.jargyle.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.net.ssl.DtlsDatagramSocketFactory;
 import com.github.jh3nd3rs0n.jargyle.util.Criteria;
 import com.github.jh3nd3rs0n.jargyle.util.Criterion;
@@ -50,6 +52,15 @@ final class WorkerContextFactory {
 		}
 	}
 
+	private void configureClientFacingSocket(
+			final Socket clientFacingSock,
+			final Configuration config) throws SocketException {
+		Settings settings = config.getSettings();
+		SocketSettings socketSettings = settings.getLastValue(
+				GeneralSettingSpecConstants.CLIENT_FACING_SOCKET_SETTINGS);
+		socketSettings.applyTo(clientFacingSock);
+	}
+	
 	private Configuration newConfiguration() {
 		Configuration config = ImmutableConfiguration.newInstance(
 				this.configuration);
@@ -71,18 +82,26 @@ final class WorkerContextFactory {
 	public WorkerContext newWorkerContext(
 			final Socket clientFacingSocket) throws IOException {
 		Configuration config = this.newConfiguration();
-		this.checkIfAllowed(
-				clientFacingSocket.getInetAddress().getHostAddress(), config);
 		Socket clientFacingSock = clientFacingSocket;
-		if (this.clientFacingSslSocketFactory != null) {
-			clientFacingSock = this.clientFacingSslSocketFactory.newSocket(
-					clientFacingSock, null, true);
-		}
+		this.checkIfAllowed(
+				clientFacingSock.getInetAddress().getHostAddress(), config);
+		this.configureClientFacingSocket(clientFacingSock, config);
+		clientFacingSock = this.wrapClientFacingSocket(clientFacingSock);
 		return new WorkerContext(
 				clientFacingSock, 
 				config, 
 				this.netObjectFactory, 
 				this.clientFacingDtlsDatagramSocketFactory);
+	}
+	
+	private Socket wrapClientFacingSocket(
+			final Socket clientFacingSock) throws IOException {
+		Socket clientFacingSck = clientFacingSock;
+		if (this.clientFacingSslSocketFactory != null) {
+			clientFacingSck = this.clientFacingSslSocketFactory.newSocket(
+					clientFacingSck, null, true);
+		}		
+		return clientFacingSck;
 	}
 	
 }

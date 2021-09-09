@@ -22,39 +22,39 @@ public final class ChainingGeneralSettingSpecConstants {
 					+ "that is used to connect to the other SOCKS server (used "
 					+ "for the SOCKS5 commands RESOLVE, BIND and UDP ASSOCIATE) "
 					+ "(default is 0.0.0.0)", 
-			usage = "chaining.bindHost=HOST"
+			usage = "chaining.internalBindHost=HOST"
 	)
-	public static final SettingSpec<Host> CHAINING_BIND_HOST = 
+	public static final SettingSpec<Host> CHAINING_INTERNAL_BIND_HOST = 
 			SETTING_SPECS.addThenGet(new HostSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
-					"chaining.bindHost",
-					GeneralPropertySpecConstants.BIND_HOST.getDefaultProperty().getValue()));
+					"chaining.internalBindHost",
+					GeneralPropertySpecConstants.INTERNAL_BIND_HOST.getDefaultProperty().getValue()));
 
 	@HelpText(
 			doc = "The timeout in milliseconds on waiting for the internal "
 					+ "socket to connect to the other SOCKS server (used for "
 					+ "the SOCKS5 commands RESOLVE, BIND and UDP ASSOCIATE) "
 					+ "(default is 60000)", 
-			usage = "chaining.connectTimeout=INTEGER_BETWEEN_1_AND_2147483647"
+			usage = "chaining.internalConnectTimeout=INTEGER_BETWEEN_1_AND_2147483647"
 	)
-	public static final SettingSpec<PositiveInteger> CHAINING_CONNECT_TIMEOUT = 
+	public static final SettingSpec<PositiveInteger> CHAINING_INTERNAL_CONNECT_TIMEOUT = 
 			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
-					"chaining.connectTimeout",
-					GeneralPropertySpecConstants.CONNECT_TIMEOUT.getDefaultProperty().getValue()));
+					"chaining.internalConnectTimeout",
+					GeneralPropertySpecConstants.INTERNAL_CONNECT_TIMEOUT.getDefaultProperty().getValue()));
 	
 	@HelpText(
 			doc = "The space separated list of socket settings for the "
 					+ "internal socket that is used to connect to the other "
 					+ "SOCKS server (used for the SOCKS5 command RESOLVE and "
 					+ "UDP ASSOCIATE)", 
-			usage = "chaining.socketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
+			usage = "chaining.internalSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
 	)
-	public static final SettingSpec<SocketSettings> CHAINING_SOCKET_SETTINGS = 
+	public static final SettingSpec<SocketSettings> CHAINING_INTERNAL_SOCKET_SETTINGS = 
 			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
-					"chaining.socketSettings",
-					GeneralPropertySpecConstants.SOCKET_SETTINGS.getDefaultProperty().getValue()));
+					"chaining.internalSocketSettings",
+					GeneralPropertySpecConstants.INTERNAL_SOCKET_SETTINGS.getDefaultProperty().getValue()));
 	
 	@HelpText(
 			doc = "The URI of the other SOCKS server", 

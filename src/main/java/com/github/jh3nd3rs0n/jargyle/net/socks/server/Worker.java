@@ -13,6 +13,7 @@ import com.github.jh3nd3rs0n.jargyle.internal.logging.LoggerHelper;
 import com.github.jh3nd3rs0n.jargyle.net.socks.server.v5.Socks5Worker;
 import com.github.jh3nd3rs0n.jargyle.net.socks.server.v5.Socks5WorkerContext;
 import com.github.jh3nd3rs0n.jargyle.net.socks.transport.v5.Version;
+import com.github.jh3nd3rs0n.jargyle.util.UnsignedByte;
 
 final class Worker implements Runnable {
 	
@@ -75,9 +76,9 @@ final class Worker implements Runnable {
 			this.clientFacingSocket = workerContext.getClientFacingSocket();
 			InputStream clientFacingInputStream = 
 					this.clientFacingSocket.getInputStream();
-			int version = -1;
+			UnsignedByte version = null;
 			try {
-				version = clientFacingInputStream.read();
+				version = UnsignedByte.newInstanceFrom(clientFacingInputStream);
 			} catch (IOException e) {
 				LOGGER.warn(
 						LoggerHelper.objectMessage(
@@ -86,15 +87,15 @@ final class Worker implements Runnable {
 								+ "client"), 
 						e);
 				return;
-			}
-			if ((byte) version == Version.V5.byteValue()) {
+			}			
+			if (version.byteValue() == Version.V5.byteValue()) {
 				Socks5Worker socks5Worker = new Socks5Worker(
 						new Socks5WorkerContext(workerContext));
 				socks5Worker.run();
 			} else {
 				LOGGER.warn(LoggerHelper.objectMessage(this, String.format(
 						"Unknown SOCKS version: %s",
-						version)));
+						version.intValue())));
 			}
 		} catch (Throwable t) {
 			LOGGER.warn(

@@ -370,7 +370,7 @@ The following is a list of available settings for the SOCKS server (displayed wh
       socks5.onBind.relayBufferSize=INTEGER_BETWEEN_1_AND_2147483647
           The buffer size in bytes for relaying the data (default is 1024)
     
-      socks5.onBind.relayTimeout=INTEGER_BETWEEN_1_AND_2147483647
+      socks5.onBind.relayIdleTimeout=INTEGER_BETWEEN_1_AND_2147483647
           The timeout in milliseconds on relaying no data (default is 60000)
     
       socks5.onConnect.prepareServerFacingSocket=true|false
@@ -379,7 +379,7 @@ The following is a list of available settings for the SOCKS server (displayed wh
       socks5.onConnect.relayBufferSize=INTEGER_BETWEEN_1_AND_2147483647
           The buffer size in bytes for relaying the data (default is 1024)
     
-      socks5.onConnect.relayTimeout=INTEGER_BETWEEN_1_AND_2147483647
+      socks5.onConnect.relayIdleTimeout=INTEGER_BETWEEN_1_AND_2147483647
           The timeout in milliseconds on relaying no data (default is 60000)
     
       socks5.onConnect.serverFacingBindHost=HOST
@@ -412,7 +412,7 @@ The following is a list of available settings for the SOCKS server (displayed wh
       socks5.onUdpAssociate.relayBufferSize=INTEGER_BETWEEN_1_AND_2147483647
           The buffer size in bytes for relaying the data (default is 32768)
     
-      socks5.onUdpAssociate.relayTimeout=INTEGER_BETWEEN_1_AND_2147483647
+      socks5.onUdpAssociate.relayIdleTimeout=INTEGER_BETWEEN_1_AND_2147483647
           The timeout in milliseconds on relaying no data (default is 60000)
     
       socks5.onUdpAssociate.serverFacingBindHost=HOST
@@ -527,7 +527,7 @@ The following is a list of available settings for the SOCKS server (displayed wh
       USERNAME_PASSWORD
           Username password authentication
     
-            
+                
 ```
 
 The following is the command line help for managing SOCKS5 users for username password authentication (displayed when using the command line options `--socks5-userpassauth-users --help`):

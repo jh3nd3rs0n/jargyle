@@ -142,12 +142,12 @@ public final class Socks5SettingSpecConstants {
 	@HelpText(
 			doc = "The timeout in milliseconds on relaying no data (default "
 					+ "is 60000)", 
-			usage = "socks5.onBind.relayTimeout=INTEGER_BETWEEN_1_AND_2147483647"
+			usage = "socks5.onBind.relayIdleTimeout=INTEGER_BETWEEN_1_AND_2147483647"
 	)
-	public static final SettingSpec<PositiveInteger> SOCKS5_ON_BIND_RELAY_TIMEOUT = 
+	public static final SettingSpec<PositiveInteger> SOCKS5_ON_BIND_RELAY_IDLE_TIMEOUT = 
 			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
-					"socks5.onBind.relayTimeout",
+					"socks5.onBind.relayIdleTimeout",
 					PositiveInteger.newInstance(60000))); // 1 minute
 	
 	@HelpText(
@@ -178,12 +178,12 @@ public final class Socks5SettingSpecConstants {
 	@HelpText(
 			doc = "The timeout in milliseconds on relaying no data (default "
 					+ "is 60000)", 
-			usage = "socks5.onConnect.relayTimeout=INTEGER_BETWEEN_1_AND_2147483647"
+			usage = "socks5.onConnect.relayIdleTimeout=INTEGER_BETWEEN_1_AND_2147483647"
 	)
-	public static final SettingSpec<PositiveInteger> SOCKS5_ON_CONNECT_RELAY_TIMEOUT = 
+	public static final SettingSpec<PositiveInteger> SOCKS5_ON_CONNECT_RELAY_IDLE_TIMEOUT = 
 			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
-					"socks5.onConnect.relayTimeout",
+					"socks5.onConnect.relayIdleTimeout",
 					PositiveInteger.newInstance(60000))); // 1 minute
 	
 	@HelpText(
@@ -301,12 +301,12 @@ public final class Socks5SettingSpecConstants {
 	@HelpText(
 			doc = "The timeout in milliseconds on relaying no data (default "
 					+ "is 60000)", 
-			usage = "socks5.onUdpAssociate.relayTimeout=INTEGER_BETWEEN_1_AND_2147483647"
+			usage = "socks5.onUdpAssociate.relayIdleTimeout=INTEGER_BETWEEN_1_AND_2147483647"
 	)
-	public static final SettingSpec<PositiveInteger> SOCKS5_ON_UDP_ASSOCIATE_RELAY_TIMEOUT = 
+	public static final SettingSpec<PositiveInteger> SOCKS5_ON_UDP_ASSOCIATE_RELAY_IDLE_TIMEOUT = 
 			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
-					"socks5.onUdpAssociate.relayTimeout",
+					"socks5.onUdpAssociate.relayIdleTimeout",
 					PositiveInteger.newInstance(60000))); // 1 minute
 	
 	@HelpText(

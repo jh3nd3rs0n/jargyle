@@ -183,7 +183,7 @@ public final class UdpRelayServer {
 							LOGGER.trace(
 									LoggerHelper.objectMessage(
 											this, 
-											"Relay timeout reached!"));							
+											"Timeout reached for idle relay!"));							
 							break;
 						}
 						continue;
@@ -400,7 +400,7 @@ public final class UdpRelayServer {
 							LOGGER.trace(
 									LoggerHelper.objectMessage(
 											this, 
-											"Relay timeout reached!"));
+											"Timeout reached for idle relay!"));
 							break;
 						}
 						continue;

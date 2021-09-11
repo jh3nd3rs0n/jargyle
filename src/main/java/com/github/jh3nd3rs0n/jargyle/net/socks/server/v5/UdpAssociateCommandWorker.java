@@ -296,7 +296,7 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 								this.settings.getLastValue(
 										Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_RELAY_BUFFER_SIZE).intValue(), 
 								this.settings.getLastValue(
-										Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_RELAY_TIMEOUT).intValue()));
+										Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_RELAY_IDLE_TIMEOUT).intValue()));
 			} catch (IOException e) {
 				LOGGER.warn( 
 						LoggerHelper.objectMessage(

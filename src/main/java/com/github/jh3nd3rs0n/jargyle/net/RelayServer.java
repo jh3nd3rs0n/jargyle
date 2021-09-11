@@ -91,7 +91,7 @@ public final class RelayServer {
 							LOGGER.trace(
 									LoggerHelper.objectMessage(
 											this, 
-											"Relay timeout reached!"));
+											"Timeout reached for idle relay!"));
 							break;
 						}
 						continue;

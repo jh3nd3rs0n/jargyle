@@ -163,12 +163,6 @@ public final class Socks5Worker {
 					LoggerHelper.objectMessage(
 							this, "Error in parsing the SOCKS5 request"), 
 					e);
-			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
-					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
-					"Sending %s",
-					socks5Rep.toString())));
-			this.socks5WorkerContext.writeThenFlush(socks5Rep.toByteArray());
 			return null;
 		}
 		LOGGER.debug(LoggerHelper.objectMessage(this, String.format(

@@ -64,7 +64,7 @@ public class SocksServerIT {
 			Port actualPort = socksServer.getPort();
 			assertEquals(expectedPort, actualPort);
 		} finally {
-			if (socksServer.isStarted()) {
+			if (!socksServer.getState().equals(SocksServer.State.STOPPED)) {
 				socksServer.stop();
 			}
 		}

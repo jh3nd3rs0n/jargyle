@@ -620,6 +620,14 @@ public final class UdpRelayServer {
 		
 	}
 	
+	public static enum State {
+		
+		STARTED,
+		
+		STOPPED
+		
+	}
+	
 	private final Criteria allowedInboundAddressCriteria;
 	private final Criteria allowedOutboundAddressCriteria;
 	private final Criteria blockedInboundAddressCriteria;
@@ -632,8 +640,7 @@ public final class UdpRelayServer {
 	private HostResolver hostResolver;
 	private long lastReceiveTime;
 	private final DatagramSocket serverFacingDatagramSocket;
-	private boolean started;
-	private boolean stopped;
+	private State state;
 	private final int timeout;
 	
 	public UdpRelayServer(		
@@ -667,8 +674,7 @@ public final class UdpRelayServer {
 		this.lastReceiveTime = 0L;
 		this.serverFacingDatagramSocket = 
 				datagramSocks.getServerFacingDatagramSocket();
-		this.started = false;
-		this.stopped = true;
+		this.state = State.STOPPED;
 		this.timeout = settings.getTimeout();
 	}
 
@@ -680,12 +686,8 @@ public final class UdpRelayServer {
 		return this.lastReceiveTime;
 	}
 	
-	public boolean isStarted() {
-		return this.started;
-	}
-	
-	public boolean isStopped() {
-		return this.stopped;
+	public State getState() {
+		return this.state;
 	}
 	
 	private synchronized void setClientPort(final int port) {
@@ -697,7 +699,7 @@ public final class UdpRelayServer {
 	}
 	
 	public void start() throws IOException {
-		if (this.started) {
+		if (this.state.equals(State.STARTED)) {
 			throw new IllegalStateException("UdpRelayServer already started");
 		}
 		this.lastReceiveTime = System.currentTimeMillis();
@@ -706,23 +708,21 @@ public final class UdpRelayServer {
 				new PacketsWorkerContext(this)));
 		this.executor.execute(new OutboundPacketsWorker(
 				new PacketsWorkerContext(this)));
-		this.started = true;
-		this.stopped = false;
+		this.state = State.STARTED;
 	}
 	
 	public void stop() {
-		if (this.stopped) {
+		if (this.state.equals(State.STOPPED)) {
 			throw new IllegalStateException("UdpRelayServer already stopped");
 		}
 		this.lastReceiveTime = 0L;
 		this.executor.shutdownNow();
 		this.executor = null;
-		this.started = false;
-		this.stopped = true;
+		this.state = State.STOPPED;
 	}
 	
 	private synchronized void stopIfNotStopped() {
-		if (!this.stopped) {
+		if (!this.state.equals(State.STOPPED)) {
 			this.stop();
 		}
 	}

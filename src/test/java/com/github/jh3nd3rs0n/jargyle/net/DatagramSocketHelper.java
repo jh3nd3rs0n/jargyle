@@ -170,7 +170,8 @@ public final class DatagramSocketHelper {
 			}
 			if (socksServers.size() > 0) {
 				for (SocksServer socksServer : socksServers) {
-					if (socksServer.isStarted()) {
+					if (!socksServer.getState().equals(
+							SocksServer.State.STOPPED)) {
 						socksServer.stop();
 					}
 				}

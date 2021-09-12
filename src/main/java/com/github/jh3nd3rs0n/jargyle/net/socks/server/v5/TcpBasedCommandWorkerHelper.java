@@ -21,7 +21,7 @@ final class TcpBasedCommandWorkerHelper {
 				timeout);
 		try {
 			relayServer.start();
-			while (!relayServer.isStopped()) {
+			while (!relayServer.getState().equals(RelayServer.State.STOPPED)) {
 				try {
 					Thread.sleep(HALF_SECOND);
 				} catch (InterruptedException e) {
@@ -29,7 +29,7 @@ final class TcpBasedCommandWorkerHelper {
 				}
 			}
 		} finally {
-			if (!relayServer.isStopped()) {
+			if (!relayServer.getState().equals(RelayServer.State.STOPPED)) {
 				relayServer.stop();
 			}
 		}		

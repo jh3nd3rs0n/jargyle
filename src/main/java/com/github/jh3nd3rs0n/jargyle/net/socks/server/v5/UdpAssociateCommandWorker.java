@@ -206,7 +206,8 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 		try {
 			udpRelayServer.start();
 			while (!this.clientFacingSocket.isClosed() 
-					&& !udpRelayServer.isStopped()) {
+					&& !udpRelayServer.getState().equals(
+							UdpRelayServer.State.STOPPED)) {
 				try {
 					Thread.sleep(HALF_SECOND);
 				} catch (InterruptedException e) {
@@ -214,7 +215,8 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 				}
 			}
 		} finally {
-			if (!udpRelayServer.isStopped()) {
+			if (!udpRelayServer.getState().equals(
+					UdpRelayServer.State.STOPPED)) {
 				udpRelayServer.stop();
 			}
 		}

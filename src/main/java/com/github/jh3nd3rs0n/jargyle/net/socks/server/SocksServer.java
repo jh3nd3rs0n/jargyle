@@ -12,6 +12,14 @@ import com.github.jh3nd3rs0n.jargyle.net.SocketSettings;
 
 public final class SocksServer {
 	
+	public static enum State {
+		
+		STARTED,
+		
+		STOPPED
+		
+	}
+	
 	private int backlog;
 	private final Configuration configuration;
 	private ExecutorService executor;
@@ -19,8 +27,7 @@ public final class SocksServer {
 	private Port port;
 	private ServerSocket serverSocket;
 	private SocketSettings socketSettings;
-	private boolean started;
-	private boolean stopped;
+	private State state;
 	
 	public SocksServer(final Configuration config) {
 		this.backlog = config.getSettings().getLastValue(
@@ -34,8 +41,7 @@ public final class SocksServer {
 		this.serverSocket = null;
 		this.socketSettings = config.getSettings().getLastValue(
 				GeneralSettingSpecConstants.SOCKET_SETTINGS);
-		this.started = false;
-		this.stopped = true;
+		this.state = State.STOPPED;
 	}
 	
 	public Configuration getConfiguration() {
@@ -50,16 +56,12 @@ public final class SocksServer {
 		return this.port;
 	}
 	
-	public boolean isStarted() {
-		return this.started;
-	}
-	
-	public boolean isStopped() {
-		return this.stopped;
+	public State getState() {
+		return this.state;
 	}
 	
 	public void start() throws IOException {
-		if (this.started) {
+		if (this.state.equals(State.STARTED)) {
 			throw new IllegalStateException("SocksServer already started");
 		}
 		this.serverSocket = new ServerSocket();
@@ -70,12 +72,11 @@ public final class SocksServer {
 		this.executor = Executors.newSingleThreadExecutor();
 		this.executor.execute(new Listener(
 				this.serverSocket, this.configuration));
-		this.started = true;
-		this.stopped = false;
+		this.state = State.STARTED;
 	}
 	
 	public void stop() throws IOException {
-		if (this.stopped) {
+		if (this.state.equals(State.STOPPED)) {
 			throw new IllegalStateException("SocksServer already stopped");
 		}
 		this.backlog = this.configuration.getSettings().getLastValue(
@@ -90,8 +91,7 @@ public final class SocksServer {
 		this.serverSocket = null;
 		this.executor.shutdownNow();
 		this.executor = null;
-		this.started = false;
-		this.stopped = true;
+		this.state = State.STOPPED;
 	}
 
 }

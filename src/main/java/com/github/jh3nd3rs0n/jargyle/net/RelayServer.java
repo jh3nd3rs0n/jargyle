@@ -249,13 +249,20 @@ public final class RelayServer {
 		
 	}
 	
+	public static enum State {
+		
+		STARTED,
+		
+		STOPPED
+		
+	}
+	
 	private final Socket clientFacingSocket;
 	private final int bufferSize;
 	private ExecutorService executor;
 	private long lastReadTime;
 	private final Socket serverFacingSocket;
-	private boolean started;
-	private boolean stopped;
+	private State state;
 	private final int timeout;
 	
 	public RelayServer(
@@ -280,8 +287,7 @@ public final class RelayServer {
 		this.executor = null;
 		this.lastReadTime = 0L;
 		this.serverFacingSocket = serverFacingSock;
-		this.started = false;
-		this.stopped = true;
+		this.state = State.STOPPED;
 		this.timeout = tmt;
 	}
 	
@@ -289,12 +295,8 @@ public final class RelayServer {
 		return this.lastReadTime;
 	}
 	
-	public boolean isStarted() {
-		return this.started;
-	}
-	
-	public boolean isStopped() {
-		return this.stopped;
+	public State getState() {
+		return this.state;
 	}
 	
 	private synchronized void setLastReadTime(final long time) {
@@ -302,7 +304,7 @@ public final class RelayServer {
 	}
 	
 	public void start() throws IOException {
-		if (this.started) {
+		if (this.state.equals(State.STARTED)) {
 			throw new IllegalStateException("RelayServer already started");
 		}
 		this.lastReadTime = System.currentTimeMillis();
@@ -311,23 +313,21 @@ public final class RelayServer {
 				this)));
 		this.executor.execute(new DataWorker(new OutboundDataWorkerContext(
 				this)));
-		this.started = true;
-		this.stopped = false;
+		this.state = State.STARTED;
 	}
 	
 	public void stop() {
-		if (this.stopped) {
+		if (this.state.equals(State.STOPPED)) {
 			throw new IllegalStateException("RelayServer already stopped");
 		}
 		this.lastReadTime = 0L;
 		this.executor.shutdownNow();
 		this.executor = null;
-		this.started = false;
-		this.stopped = true;
+		this.state = State.STOPPED;
 	}
 	
 	private synchronized void stopIfNotStopped() {
-		if (!this.stopped) {
+		if (!this.state.equals(State.STOPPED)) {
 			this.stop();
 		}
 	}

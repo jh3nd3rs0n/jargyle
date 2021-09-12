@@ -26,16 +26,16 @@ public final class RelayServer {
 		
 		private final int bufferSize;
 		private final DataWorkerContext dataWorkerContext;
+		private final int idleTimeout;		
 		private final InputStream inputStream;
 		private final OutputStream outputStream;
-		private final int timeout;
 				
 		public DataWorker(final DataWorkerContext context) throws IOException {
 			this.bufferSize = context.getBufferSize();
 			this.dataWorkerContext = context;
+			this.idleTimeout = context.getIdleTimeout();			
 			this.inputStream = context.getInputSocketInputStream();
 			this.outputStream = context.getOutputSocketOutputStream();
-			this.timeout = context.getTimeout();
 		}
 		
 		@Override
@@ -46,7 +46,7 @@ public final class RelayServer {
 					byte[] buffer = new byte[this.bufferSize];
 					try {
 						bytesRead = this.inputStream.read(buffer);
-						this.dataWorkerContext.setLastReadTime(
+						this.dataWorkerContext.setIdleStartTime(
 								System.currentTimeMillis());
 						LOGGER.trace(LoggerHelper.objectMessage(
 								this, 
@@ -82,11 +82,11 @@ public final class RelayServer {
 						break;
 					}
 					if (bytesRead == 0) {
-						long lastReadTime = 
-								this.dataWorkerContext.getLastReadTime();
-						long timeSinceRead = 
-								System.currentTimeMillis() - lastReadTime;
-						if (timeSinceRead >= this.timeout) {
+						long idleStartTime = 
+								this.dataWorkerContext.getIdleStartTime();
+						long timeSinceIdleStartTime = 
+								System.currentTimeMillis() - idleStartTime;
+						if (timeSinceIdleStartTime >= this.idleTimeout) {
 							LOGGER.trace(
 									LoggerHelper.objectMessage(
 											this, 
@@ -193,24 +193,24 @@ public final class RelayServer {
 			return this.relayServer.bufferSize;
 		}
 		
-		public final InputStream getInputSocketInputStream() throws IOException {
-			return this.inputSocket.getInputStream();
+		public final long getIdleStartTime() {
+			return this.relayServer.getIdleStartTime();
 		}
 		
-		public final long getLastReadTime() {
-			return this.relayServer.getLastReadTime();
+		public final int getIdleTimeout() {
+			return this.relayServer.idleTimeout;
+		}
+		
+		public final InputStream getInputSocketInputStream() throws IOException {
+			return this.inputSocket.getInputStream();
 		}
 		
 		public final OutputStream getOutputSocketOutputStream() throws IOException {
 			return this.outputSocket.getOutputStream();
 		}
 		
-		public final int getTimeout() {
-			return this.relayServer.timeout;
-		}
-		
-		public final void setLastReadTime(final long time) {
-			this.relayServer.setLastReadTime(time);
+		public final void setIdleStartTime(final long time) {
+			this.relayServer.setIdleStartTime(time);
 		}
 		
 		public final void stopRelayServerIfNotStopped() {
@@ -260,16 +260,16 @@ public final class RelayServer {
 	private final Socket clientFacingSocket;
 	private final int bufferSize;
 	private ExecutorService executor;
-	private long lastReadTime;
+	private long idleStartTime;
+	private final int idleTimeout;
 	private final Socket serverFacingSocket;
 	private State state;
-	private final int timeout;
 	
 	public RelayServer(
 			final Socket clientFacingSock, 
 			final Socket serverFacingSock, 
 			final int bffrSize, 
-			final int tmt) {
+			final int idleTmt) {
 		Objects.requireNonNull(
 				clientFacingSock, "client-facing socket must not be null");
 		Objects.requireNonNull(
@@ -278,36 +278,36 @@ public final class RelayServer {
 			throw new IllegalArgumentException(
 					"buffer size must not be less than 1");
 		}
-		if (tmt < 1) {
+		if (idleTmt < 1) {
 			throw new IllegalArgumentException(
-					"timeout must not be less than 1");
+					"idle idleTimeout must not be less than 1");
 		}
 		this.clientFacingSocket = clientFacingSock;
 		this.bufferSize = bffrSize;
 		this.executor = null;
-		this.lastReadTime = 0L;
+		this.idleStartTime = 0L;
+		this.idleTimeout = idleTmt;
 		this.serverFacingSocket = serverFacingSock;
 		this.state = State.STOPPED;
-		this.timeout = tmt;
 	}
 	
-	private synchronized long getLastReadTime() {
-		return this.lastReadTime;
+	private synchronized long getIdleStartTime() {
+		return this.idleStartTime;
 	}
 	
 	public State getState() {
 		return this.state;
 	}
 	
-	private synchronized void setLastReadTime(final long time) {
-		this.lastReadTime = time;
+	private synchronized void setIdleStartTime(final long time) {
+		this.idleStartTime = time;
 	}
 	
 	public void start() throws IOException {
 		if (this.state.equals(State.STARTED)) {
 			throw new IllegalStateException("RelayServer already started");
 		}
-		this.lastReadTime = System.currentTimeMillis();
+		this.idleStartTime = System.currentTimeMillis();
 		this.executor = Executors.newFixedThreadPool(2);
 		this.executor.execute(new DataWorker(new InboundDataWorkerContext(
 				this)));
@@ -320,7 +320,7 @@ public final class RelayServer {
 		if (this.state.equals(State.STOPPED)) {
 			throw new IllegalStateException("RelayServer already stopped");
 		}
-		this.lastReadTime = 0L;
+		this.idleStartTime = 0L;
 		this.executor.shutdownNow();
 		this.executor = null;
 		this.state = State.STOPPED;

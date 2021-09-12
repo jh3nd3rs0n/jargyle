@@ -13,12 +13,12 @@ final class TcpBasedCommandWorkerHelper {
 			final Socket clientFacingSocket,
 			final Socket serverFacingSocket, 
 			final int bufferSize, 
-			final int timeout) throws IOException {
+			final int idleTimeout) throws IOException {
 		RelayServer relayServer = new RelayServer(
 				clientFacingSocket, 
 				serverFacingSocket, 
 				bufferSize, 
-				timeout);
+				idleTimeout);
 		try {
 			relayServer.start();
 			while (!relayServer.getState().equals(RelayServer.State.STOPPED)) {

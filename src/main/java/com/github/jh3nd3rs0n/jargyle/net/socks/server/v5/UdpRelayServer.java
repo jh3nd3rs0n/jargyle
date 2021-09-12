@@ -167,17 +167,17 @@ public final class UdpRelayServer {
 							buffer, buffer.length);
 					try {
 						this.serverFacingDatagramSocket.receive(packet);
-						this.packetsWorkerContext.setLastReceiveTime(
+						this.packetsWorkerContext.setIdleStartTime(
 								System.currentTimeMillis());
 					} catch (SocketException e) {
 						// socket closed
 						break;
 					} catch (SocketTimeoutException e) {
-						long lastReceiveTime = 
-								this.packetsWorkerContext.getLastReceiveTime();
-						long timeSinceReceive = 
-								System.currentTimeMillis() - lastReceiveTime;
-						if (timeSinceReceive >= this.timeout) {
+						long idleStartTime = 
+								this.packetsWorkerContext.getIdleStartTime();
+						long timeSinceIdleStartTime = 
+								System.currentTimeMillis() - idleStartTime;
+						if (timeSinceIdleStartTime >= this.idleTimeout) {
 							LOGGER.trace(
 									LoggerHelper.objectMessage(
 											this, 
@@ -382,17 +382,17 @@ public final class UdpRelayServer {
 							buffer, buffer.length);
 					try {
 						this.clientFacingDatagramSocket.receive(packet);
-						this.packetsWorkerContext.setLastReceiveTime(
+						this.packetsWorkerContext.setIdleStartTime(
 								System.currentTimeMillis());
 					} catch (SocketException e) {
 						// socket closed
 						break;
 					} catch (SocketTimeoutException e) {
-						long lastReceiveTime = 
-								this.packetsWorkerContext.getLastReceiveTime();
-						long timeSinceReceive = 
-								System.currentTimeMillis() - lastReceiveTime;
-						if (timeSinceReceive >= this.timeout) {
+						long idleStartTime = 
+								this.packetsWorkerContext.getIdleStartTime();
+						long timeSinceIdleStartTime = 
+								System.currentTimeMillis() - idleStartTime;
+						if (timeSinceIdleStartTime >= this.idleTimeout) {
 							LOGGER.trace(
 									LoggerHelper.objectMessage(
 											this, 
@@ -470,9 +470,9 @@ public final class UdpRelayServer {
 		protected final String clientAddress;
 		protected final DatagramSocket clientFacingDatagramSocket;
 		protected final HostResolver hostResolver;
+		protected final int idleTimeout;		
 		protected final PacketsWorkerContext packetsWorkerContext;
 		protected final DatagramSocket serverFacingDatagramSocket;
-		protected final int timeout;
 
 		public PacketsWorker(final PacketsWorkerContext context) {
 			this.allowedInboundAddressCriteria =
@@ -488,10 +488,10 @@ public final class UdpRelayServer {
 			this.clientFacingDatagramSocket = 
 					context.getClientFacingDatagramSocket();
 			this.hostResolver = context.getHostResolver();
+			this.idleTimeout = context.getIdleTimeout();			
 			this.packetsWorkerContext = context;
 			this.serverFacingDatagramSocket = 
 					context.getServerFacingDatagramSocket();
-			this.timeout = context.getTimeout();
 		}
 
 		@Override
@@ -554,24 +554,24 @@ public final class UdpRelayServer {
 			return this.udpRelayServer.hostResolver;
 		}
 		
-		public final long getLastReceiveTime() {
-			return this.udpRelayServer.getLastReceiveTime();
+		public final long getIdleStartTime() {
+			return this.udpRelayServer.getIdleStartTime();
+		}
+		
+		public final int getIdleTimeout() {
+			return this.udpRelayServer.idleTimeout;
 		}
 		
 		public final DatagramSocket getServerFacingDatagramSocket() {
 			return this.serverFacingDatagramSocket;
 		}
 		
-		public final int getTimeout() {
-			return this.udpRelayServer.timeout;
-		}
-		
 		public final void setClientPort(final int port) {
 			this.udpRelayServer.setClientPort(port);
 		}
 		
-		public final void setLastReceiveTime(final long time) {
-			this.udpRelayServer.setLastReceiveTime(time);
+		public final void setIdleStartTime(final long time) {
+			this.udpRelayServer.setIdleStartTime(time);
 		}
 		
 		public final void stopUdpRelayServerIfNotStopped() {
@@ -595,27 +595,27 @@ public final class UdpRelayServer {
 	public static final class RelaySettings {
 		
 		private final int bufferSize;
-		private final int timeout;
+		private final int idleTimeout;
 		
-		public RelaySettings(final int bffrSize, final int tmt) {
+		public RelaySettings(final int bffrSize, final int idleTmt) {
 			if (bffrSize < 1) {
 				throw new IllegalArgumentException(
 						"buffer size must not be less than 1");
 			}
-			if (tmt < 1) {
+			if (idleTmt < 1) {
 				throw new IllegalArgumentException(
-						"timeout must not be less than 1");
+						"idle idleTimeout must not be less than 1");
 			}
 			this.bufferSize = bffrSize;
-			this.timeout = tmt;
+			this.idleTimeout = idleTmt;
 		}
 		
 		public int getBufferSize() {
 			return this.bufferSize;
 		}
 		
-		public int getTimeout() {
-			return this.timeout;
+		public int getIdleTimeout() {
+			return this.idleTimeout;
 		}
 		
 	}
@@ -637,11 +637,12 @@ public final class UdpRelayServer {
 	private final DatagramSocket clientFacingDatagramSocket;	
 	private int clientPort;
 	private ExecutorService executor;
-	private HostResolver hostResolver;
-	private long lastReceiveTime;
+	private final HostResolver hostResolver;
+	private long idleStartTime;
+	private final int idleTimeout;
 	private final DatagramSocket serverFacingDatagramSocket;
 	private State state;
-	private final int timeout;
+	
 	
 	public UdpRelayServer(		
 			final ClientDatagramSocketAddress clientDatagramSockAddr,
@@ -671,19 +672,19 @@ public final class UdpRelayServer {
 		this.clientPort = clientDatagramSockAddr.getPort();
 		this.executor = null;
 		this.hostResolver = resolver;
-		this.lastReceiveTime = 0L;
+		this.idleStartTime = 0L;
+		this.idleTimeout = settings.getIdleTimeout();		
 		this.serverFacingDatagramSocket = 
 				datagramSocks.getServerFacingDatagramSocket();
 		this.state = State.STOPPED;
-		this.timeout = settings.getTimeout();
 	}
 
 	private synchronized int getClientPort() {
 		return this.clientPort;
 	}
 	
-	private synchronized long getLastReceiveTime() {
-		return this.lastReceiveTime;
+	private synchronized long getIdleStartTime() {
+		return this.idleStartTime;
 	}
 	
 	public State getState() {
@@ -694,15 +695,15 @@ public final class UdpRelayServer {
 		this.clientPort = port;
 	}
 	
-	private synchronized void setLastReceiveTime(final long time) {
-		this.lastReceiveTime = time;
+	private synchronized void setIdleStartTime(final long time) {
+		this.idleStartTime = time;
 	}
 	
 	public void start() throws IOException {
 		if (this.state.equals(State.STARTED)) {
 			throw new IllegalStateException("UdpRelayServer already started");
 		}
-		this.lastReceiveTime = System.currentTimeMillis();
+		this.idleStartTime = System.currentTimeMillis();
 		this.executor = Executors.newFixedThreadPool(2);
 		this.executor.execute(new InboundPacketsWorker(
 				new PacketsWorkerContext(this)));
@@ -715,7 +716,7 @@ public final class UdpRelayServer {
 		if (this.state.equals(State.STOPPED)) {
 			throw new IllegalStateException("UdpRelayServer already stopped");
 		}
-		this.lastReceiveTime = 0L;
+		this.idleStartTime = 0L;
 		this.executor.shutdownNow();
 		this.executor = null;
 		this.state = State.STOPPED;

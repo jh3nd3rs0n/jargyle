@@ -278,7 +278,7 @@ public final class StandardSocketSettingSpecConstants {
 	});
 	
 	@HelpText(
-			doc = "The timeout in milliseconds on waiting for an idle socket", 
+			doc = "The idleTimeout in milliseconds on waiting for an idle socket", 
 			usage = "SO_TIMEOUT=INTEGER_BETWEEN_0_AND_2147483647"
 	)
 	public static final SocketSettingSpec<NonnegativeInteger> SO_TIMEOUT = SOCKET_SETTING_SPECS.addThenGet(new SocketSettingSpec<NonnegativeInteger>(

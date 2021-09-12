@@ -140,7 +140,7 @@ public final class Socks5SettingSpecConstants {
 					PositiveInteger.newInstance(1024)));
 	
 	@HelpText(
-			doc = "The idleTimeout in milliseconds on relaying no data (default "
+			doc = "The timeout in milliseconds on relaying no data (default "
 					+ "is 60000)", 
 			usage = "socks5.onBind.relayIdleTimeout=INTEGER_BETWEEN_1_AND_2147483647"
 	)
@@ -154,7 +154,7 @@ public final class Socks5SettingSpecConstants {
 			doc = "The boolean value to indicate if the server-facing socket "
 					+ "is to be prepared before connecting (involves applying "
 					+ "the specified socket settings, resolving the target "
-					+ "host name, and setting the specified idleTimeout on waiting "
+					+ "host name, and setting the specified timeout on waiting "
 					+ "to connect) (default is false)", 
 			usage = "socks5.onConnect.prepareServerFacingSocket=true|false"
 	)	
@@ -176,7 +176,7 @@ public final class Socks5SettingSpecConstants {
 					PositiveInteger.newInstance(1024)));
 	
 	@HelpText(
-			doc = "The idleTimeout in milliseconds on relaying no data (default "
+			doc = "The timeout in milliseconds on relaying no data (default "
 					+ "is 60000)", 
 			usage = "socks5.onConnect.relayIdleTimeout=INTEGER_BETWEEN_1_AND_2147483647"
 	)
@@ -198,7 +198,7 @@ public final class Socks5SettingSpecConstants {
 					Host.getInet4AllZerosInstance()));
 	
 	@HelpText(
-			doc = "The idleTimeout in milliseconds on waiting for the "
+			doc = "The timeout in milliseconds on waiting for the "
 					+ "server-facing socket to connect (default is 60000)", 
 			usage = "socks5.onConnect.serverFacingConnectTimeout=INTEGER_BETWEEN_1_AND_2147483647"
 	)
@@ -299,7 +299,7 @@ public final class Socks5SettingSpecConstants {
 					PositiveInteger.newInstance(32768)));
 	
 	@HelpText(
-			doc = "The idleTimeout in milliseconds on relaying no data (default "
+			doc = "The timeout in milliseconds on relaying no data (default "
 					+ "is 60000)", 
 			usage = "socks5.onUdpAssociate.relayIdleTimeout=INTEGER_BETWEEN_1_AND_2147483647"
 	)

@@ -31,7 +31,7 @@ public final class ChainingGeneralSettingSpecConstants {
 					GeneralPropertySpecConstants.INTERNAL_BIND_HOST.getDefaultProperty().getValue()));
 
 	@HelpText(
-			doc = "The idleTimeout in milliseconds on waiting for the internal "
+			doc = "The timeout in milliseconds on waiting for the internal "
 					+ "socket to connect to the other SOCKS server (used for "
 					+ "the SOCKS5 commands RESOLVE, BIND and UDP ASSOCIATE) "
 					+ "(default is 60000)", 

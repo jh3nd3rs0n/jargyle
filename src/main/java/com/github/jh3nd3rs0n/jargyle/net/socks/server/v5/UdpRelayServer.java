@@ -604,7 +604,7 @@ public final class UdpRelayServer {
 			}
 			if (idleTmt < 1) {
 				throw new IllegalArgumentException(
-						"idle idleTimeout must not be less than 1");
+						"idle timeout must not be less than 1");
 			}
 			this.bufferSize = bffrSize;
 			this.idleTimeout = idleTmt;

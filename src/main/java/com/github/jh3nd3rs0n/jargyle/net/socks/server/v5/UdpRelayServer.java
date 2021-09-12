@@ -160,8 +160,6 @@ public final class UdpRelayServer {
 		
 		@Override
 		public void run() {
-			this.packetsWorkerContext.setLastReceiveTime(
-					System.currentTimeMillis());
 			while (true) {
 				try {
 					byte[] buffer = new byte[this.bufferSize];
@@ -377,8 +375,6 @@ public final class UdpRelayServer {
 		
 		@Override
 		public void run() {
-			this.packetsWorkerContext.setLastReceiveTime(
-					System.currentTimeMillis());
 			while (true) {
 				try {
 					byte[] buffer = new byte[this.bufferSize];
@@ -704,7 +700,7 @@ public final class UdpRelayServer {
 		if (this.started) {
 			throw new IllegalStateException("UdpRelayServer already started");
 		}
-		this.lastReceiveTime = 0L;
+		this.lastReceiveTime = System.currentTimeMillis();
 		this.executor = Executors.newFixedThreadPool(2);
 		this.executor.execute(new InboundPacketsWorker(
 				new PacketsWorkerContext(this)));

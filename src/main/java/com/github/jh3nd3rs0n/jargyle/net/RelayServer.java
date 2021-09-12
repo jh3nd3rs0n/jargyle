@@ -40,7 +40,6 @@ public final class RelayServer {
 		
 		@Override
 		public void run() {
-			this.dataWorkerContext.setLastReadTime(System.currentTimeMillis());
 			while (true) {
 				try {
 					int bytesRead = 0;
@@ -306,7 +305,7 @@ public final class RelayServer {
 		if (this.started) {
 			throw new IllegalStateException("RelayServer already started");
 		}
-		this.lastReadTime = 0L;
+		this.lastReadTime = System.currentTimeMillis();
 		this.executor = Executors.newFixedThreadPool(2);
 		this.executor.execute(new DataWorker(new InboundDataWorkerContext(
 				this)));

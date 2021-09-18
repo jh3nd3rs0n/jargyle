@@ -38,7 +38,7 @@ final class Worker implements Runnable {
 			workerContext = this.workerContextFactory.newWorkerContext(
 					clientFacingSock);
 		} catch (IllegalArgumentException e) {
-			LOGGER.warn(
+			LOGGER.debug(
 					LoggerHelper.objectMessage(
 							this, 
 							String.format(

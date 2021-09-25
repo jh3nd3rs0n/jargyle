@@ -7,6 +7,7 @@ Jargyle is a Java SOCKS5 server. It has the following features:
 -   100% implementation of the SOCKS5 protocol specification which includes [username password authentication](#4-10-2-using-username-password-authentication) and [GSS-API authentication](#4-10-3-using-gss-api-authentication)
 -   [SSL/TLS for TCP traffic between Jargyle and its clients](#4-7-using-ssl-tls-for-tcp-traffic-between-jargyle-and-its-clients)
 -   [DTLS for UDP traffic between Jargyle and its clients](#4-8-using-dtls-for-udp-traffic-between-jargyle-and-its-clients)
+-   [Host name resolution](#5-3-the-socks5-resolve-command)
 -   [SOCKS server chaining](#4-11-chaining-to-another-socks-server)
 -   [SSL/TLS for TCP traffic through SOCKS server chaining](#4-11-1-using-ssl-tls-for-tcp-traffic-through-socks-server-chaining)
 -   [DTLS for UDP traffic through SOCKS server chaining](#4-11-2-using-dtls-for-udp-traffic-through-socks-server-chaining)
@@ -2115,7 +2116,7 @@ Unless otherwise stated, if a setting of the same name appears more than once on
 
 ### 5. 3. The SOCKS5 RESOLVE Command
 
-At the time of this writing, the SOCKS5 RESOLVE command is an additional SOCKS5 command made for Jargyle. It is not a part of the SOCKS5 protocol specification. 
+A SOCKS5 request with the RESOLVE command requests the SOCKS5 server to resolve the fully-qualified domain name of the desired destination address and to reply with the resolved IPv4 or IPv6 address. At the time of this writing, the SOCKS5 RESOLVE command is an additional SOCKS5 command made for Jargyle. It is not a part of the SOCKS5 protocol specification. 
 
 The following is the SOCKS5 RESOLVE command specification described in expressions, names, and terms that are based off the SOCKS5 protocol specification described in RFC [1928](https://datatracker.ietf.org/doc/html/rfc1928):
 

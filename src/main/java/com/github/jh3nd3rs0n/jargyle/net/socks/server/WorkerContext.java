@@ -2,9 +2,12 @@ package com.github.jh3nd3rs0n.jargyle.net.socks.server;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.util.Objects;
 
+import com.github.jh3nd3rs0n.jargyle.internal.net.InetAddressHelper;
 import com.github.jh3nd3rs0n.jargyle.net.NetObjectFactory;
 import com.github.jh3nd3rs0n.jargyle.net.ssl.DtlsDatagramSocketFactory;
 
@@ -66,6 +69,29 @@ public class WorkerContext {
 			.append(this.clientFacingSocket)
 			.append("]");
 		return builder.toString();
+	}
+	
+	public DatagramSocket wrapClientFacingDatagramSocket(
+			final DatagramSocket clientFacingDatagramSock, 
+			final String clientHost, 
+			final int clientPort) throws IOException {
+		DatagramSocket clientFacingDatagramSck = clientFacingDatagramSock;
+		if (!InetAddressHelper.isAllZerosHostAddress(clientHost) 
+				&& clientPort > 0) {
+			InetAddress udpClientHostInetAddress = InetAddress.getByName(
+					clientHost);
+			clientFacingDatagramSck.connect(
+					udpClientHostInetAddress, clientPort);
+		}
+		if (clientFacingDatagramSck.isConnected() 
+				&& this.clientFacingDtlsDatagramSocketFactory != null) {
+			clientFacingDatagramSck = 
+					this.clientFacingDtlsDatagramSocketFactory.newDatagramSocket(
+							clientFacingDatagramSck, 
+							clientHost, 
+							clientPort);
+		}
+		return clientFacingDatagramSck;
 	}
 	
 	public final void writeThenFlush(final byte[] b) throws IOException {

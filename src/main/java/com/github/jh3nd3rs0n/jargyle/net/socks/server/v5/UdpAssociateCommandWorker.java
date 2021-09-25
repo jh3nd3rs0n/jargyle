@@ -6,7 +6,6 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketException;
-import java.net.UnknownHostException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,10 +18,8 @@ import com.github.jh3nd3rs0n.jargyle.net.NetObjectFactory;
 import com.github.jh3nd3rs0n.jargyle.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.net.socks.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.net.socks.server.Socks5SettingSpecConstants;
-import com.github.jh3nd3rs0n.jargyle.net.socks.transport.v5.MethodEncapsulation;
 import com.github.jh3nd3rs0n.jargyle.net.socks.transport.v5.Reply;
 import com.github.jh3nd3rs0n.jargyle.net.socks.transport.v5.Socks5Reply;
-import com.github.jh3nd3rs0n.jargyle.net.ssl.DtlsDatagramSocketFactory;
 
 final class UdpAssociateCommandWorker extends CommandWorker {
 
@@ -31,32 +28,24 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 	private static final Logger LOGGER = LoggerFactory.getLogger(
 			UdpAssociateCommandWorker.class);
 	
-	private final DtlsDatagramSocketFactory clientFacingDtlsDatagramSocketFactory;
 	private final Socket clientFacingSocket;
 	private final CommandWorkerContext commandWorkerContext;
 	private final String desiredDestinationAddress;
 	private final int desiredDestinationPort;
-	private final MethodEncapsulation methodEncapsulation;
 	private final NetObjectFactory netObjectFactory;
 	private final Settings settings;
 	
 	public UdpAssociateCommandWorker(final CommandWorkerContext context) {
 		super(context);
-		DtlsDatagramSocketFactory clientFacingDtlsDatagramSockFactory =
-				context.getClientFacingDtlsDatagramSocketFactory();
 		Socket clientFacingSock = context.getClientFacingSocket();
 		String desiredDestinationAddr =	context.getDesiredDestinationAddress();
 		int desiredDestinationPrt = context.getDesiredDestinationPort();
-		MethodEncapsulation methEncapsulation = 
-				context.getMethodEncapsulation();
 		NetObjectFactory netObjFactory = context.getNetObjectFactory();
 		Settings sttngs = context.getSettings();
-		this.clientFacingDtlsDatagramSocketFactory = clientFacingDtlsDatagramSockFactory;
 		this.clientFacingSocket = clientFacingSock;
 		this.commandWorkerContext = context;
 		this.desiredDestinationAddress = desiredDestinationAddr;
 		this.desiredDestinationPort = desiredDestinationPrt;
-		this.methodEncapsulation = methEncapsulation; 
 		this.netObjectFactory = netObjFactory;
 		this.settings = sttngs;		
 	}
@@ -319,82 +308,20 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 	
 	private DatagramSocket wrapClientFacingDatagramSocket(
 			final DatagramSocket clientFacingDatagramSock, 
-			final String udpClientHost, 
-			final int udpClientPort) {
-		DatagramSocket clientFacingDatagramSck = clientFacingDatagramSock;
-		if (!InetAddressHelper.isAllZerosHostAddress(udpClientHost) 
-				&& udpClientPort > 0) {
-			InetAddress udpClientHostInetAddress = null;
-			try {
-				udpClientHostInetAddress = InetAddress.getByName(udpClientHost);
-			} catch (UnknownHostException e) {
-				LOGGER.warn( 
-						LoggerHelper.objectMessage(
-								this, 
-								"Error in determining the IP address for the "
-								+ "client-facing UDP socket to connect"), 
-						e);
-				Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
-						Reply.HOST_UNREACHABLE);
-				LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
-						"Sending %s",
-						socks5Rep.toString())));
-				try {
-					this.commandWorkerContext.writeThenFlush(
-							socks5Rep.toByteArray());
-				} catch (IOException e1) {
-					LOGGER.warn( 
-							LoggerHelper.objectMessage(
-									this, "Error in writing SOCKS5 reply"), 
-							e1);
-				}
-				return null;
-			}
-			clientFacingDatagramSck.connect(
-					udpClientHostInetAddress, udpClientPort);
-		}
-		if (clientFacingDatagramSck.isConnected() 
-				&& this.clientFacingDtlsDatagramSocketFactory != null) {
-			try {
-				clientFacingDatagramSck = 
-						this.clientFacingDtlsDatagramSocketFactory.newDatagramSocket(
-								clientFacingDatagramSck, 
-								udpClientHost, 
-								udpClientPort);
-			} catch (IOException e) {
-				LOGGER.warn( 
-						LoggerHelper.objectMessage(
-								this, 
-								"Error in wrapping the client-facing UDP "
-								+ "socket"), 
-						e);
-				Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
-						Reply.GENERAL_SOCKS_SERVER_FAILURE);
-				LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
-						"Sending %s",
-						socks5Rep.toString())));
-				try {
-					this.commandWorkerContext.writeThenFlush(
-							socks5Rep.toByteArray());
-				} catch (IOException e1) {
-					LOGGER.warn( 
-							LoggerHelper.objectMessage(
-									this, "Error in writing SOCKS5 reply"), 
-							e1);
-				}
-				return null;
-			}
-		}
+			final String clientHost, 
+			final int clientPort) {
+		DatagramSocket clientFacingDatagramSck = null;
 		try {
 			clientFacingDatagramSck = 
-					this.methodEncapsulation.getDatagramSocket(
-							clientFacingDatagramSck);
+					this.commandWorkerContext.wrapClientFacingDatagramSocket(
+							clientFacingDatagramSock, 
+							clientHost, 
+							clientPort);
 		} catch (IOException e) {
 			LOGGER.warn( 
 					LoggerHelper.objectMessage(
 							this, 
-							"Error in wrapping the client-facing UDP "
-							+ "socket"), 
+							"Error in wrapping the client-facing UDP socket"), 
 					e);
 			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
 					Reply.GENERAL_SOCKS_SERVER_FAILURE);
@@ -409,7 +336,7 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 						LoggerHelper.objectMessage(
 								this, "Error in writing SOCKS5 reply"), 
 						e1);
-			}				
+			}
 			return null;
 		}
 		return clientFacingDatagramSck;

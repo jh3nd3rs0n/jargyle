@@ -1,5 +1,7 @@
 package com.github.jh3nd3rs0n.jargyle.net.socks.server.v5;
 
+import java.io.IOException;
+import java.net.DatagramSocket;
 import java.util.Objects;
 
 import com.github.jh3nd3rs0n.jargyle.net.socks.transport.v5.Command;
@@ -46,6 +48,18 @@ public class Socks5RequestWorkerContext extends Socks5WorkerContext {
 	
 	public final Socks5Request getSocks5Request() {
 		return this.socks5Request;
+	}
+	
+	@Override
+	public final DatagramSocket wrapClientFacingDatagramSocket(
+			final DatagramSocket clientFacingDatagramSock, 
+			final String clientHost, 
+			final int clientPort) throws IOException {
+		DatagramSocket clientFacingDatagramSck = 
+				super.wrapClientFacingDatagramSocket(
+						clientFacingDatagramSock, clientHost, clientPort);
+		return this.methodEncapsulation.getDatagramSocket(
+				clientFacingDatagramSck);
 	}
 	
 }

@@ -1495,18 +1495,22 @@ Jargyle uses sockets to interact with the external world.
 
 Jargyle also uses a host resolver to resolve host names for the aforementioned sockets and for [the RESOLVE command](#6-3-the-socks5-resolve-command).
 
-Default host name resolution through SOCKS5 server chaining is somewhat performed but it has the following limitations:
+When Jargyle is chained to another SOCKS5 server, the aforementioned sockets that Jargyle uses become SOCKS5-enabled, meaning that their traffic is routed through the other SOCKS5 server.
+
+It is similar for the host resolver. When Jargyle is chained to another SOCKS5 server, the host resolver that Jargyle uses becomes SOCKS5-enabled, meaning that it can use the other SOCKS5 server to resolve host names provided that the other SOCKS5 server supports the SOCKS5 RESOLVE command. However, this functionality for the host resolver is disabled by default making the host resolver resolve host names through the local system.
+
+Therefore, default host name resolution through SOCKS5 server chaining is performed but has the following limitations:
 
 Default host name resolution through SOCKS5 server chaining OCCURS ONLY...
 
--   ...under the CONNECT command when the server-facing socket makes an extemporaneous outbound connection. Preparation is omitted for the server-facing socket. Such preparation includes applying the specified socket settings for the server-facing socket, resolving the target host name before connecting, and setting the specified timeout in milliseconds on waiting for the server-facing socket to connect. Resolving the target host name is not performed by the host resolver but is instead performed by the other SOCKS5 server.
+-   ...under the CONNECT command when the server-facing socket makes an extemporaneous outbound connection. Preparation is omitted for the server-facing socket. Such preparation includes applying the specified socket settings for the server-facing socket, resolving the target host name before connecting, and setting the specified timeout in milliseconds on waiting for the server-facing socket to connect. The host resolver is not used in resolving the target host name. When the server-facing socket is SOCKS5-enabled, the target host name is resolved by the other SOCKS5 server and not through the local system.
 
 Default host name resolution through SOCKS5 server chaining DOES NOT OCCUR...
 
--   ...under the CONNECT command when the server-facing socket makes a prepared outbound connection. Preparation for the server-facing socket includes resolving the target host name before connecting. Resolving the target host name is performed by the host resolver. By default, the host resolver resolves the target host name through the local system.
--   ...under the BIND command when resolving the binding host name for the listen socket. Resolving the binding host name for the listen socket is performed by the host resolver. By default, the host resolver resolves the binding host name for the listen socket through the local system.
--   ...under the UDP ASSOCIATE command when resolving a host name for an outbound datagram packet. Resolving the host name for an outbound datagram packet is performed by the host resolver. By default, the host resolver resolves the host name for an outbound datagram packet through the local system.
--   ...under the RESOLVE command when resolving the provided host name. Resolving the provided host name is performed by the host resolver. By default, the host resolver resolves the provided host name through the local system.
+-   ...under the CONNECT command when the server-facing socket makes a prepared outbound connection. Preparation for the server-facing socket includes resolving the target host name before connecting. The host resolver is used in resolving the target host name. Because of its default functionality, the host resolver resolves the target host name through the local system.
+-   ...under the BIND command when resolving the binding host name for the listen socket. The host resolver is used in resolving the binding host name for the listen socket. Because of its default functionality, the host resolver resolves the binding host name for the listen socket through the local system.
+-   ...under the UDP ASSOCIATE command when resolving the host name for an outbound datagram packet. The host resolver is used in resolving the host name for an outbound datagram packet. Because of its default functionality, the host resolver resolves the host name for an outbound datagram packet through the local system.
+-   ...under the RESOLVE command when resolving the provided host name. The host resolver is used in resolving the provided host name. Because of its default functionality, the host resolver resolves the provided host name through the local system.
 
 If you prefer to have host name resolution through SOCKS5 server chaining without the aforementioned limitations, you would need to set the setting `chaining.socks5.resolve.useResolveCommand` to `true`. This setting enables the host resolver to use the SOCKS5 RESOLVE command on the other SOCKS5 server to resolve host names. This setting can only be used if the other SOCKS5 server supports the SOCKS5 RESOLVE command.
 
@@ -1534,7 +1538,7 @@ Partial configuration file example:
     
 ```
 
-In addition to using this setting, you can set the setting `socks5.onConnect.prepareServerFacingSocket` to `true` in order for preparation to be performed for the server-facing socket.
+In addition to using this setting, you can set the setting `socks5.onConnect.prepareServerFacingSocket` to `true` to allow preparation to be performed for the server-facing socket.
 
 Partial command line example:
 
@@ -2127,11 +2131,11 @@ Unless otherwise stated, if a setting of the same name appears more than once on
 
 ### 6. 3. The SOCKS5 RESOLVE Command
 
-A client sending a SOCKS5 request with the RESOLVE command is a request to the SOCKS5 server to resolve the provided host name and reply with the resolved IPv4 or IPv6 address. At the time of this writing, the SOCKS5 RESOLVE command is an additional SOCKS5 command made for Jargyle. It is not a part of the SOCKS5 protocol specification. 
+The SOCKS5 RESOLVE command specifies the type of SOCKS5 request sent by the client for the server to perform: to resolve the provided host name and reply with the resolved IPv4 or IPv6 address. At the time of this writing, the SOCKS5 RESOLVE command is an additional SOCKS5 command made for Jargyle. It is not a part of the SOCKS5 protocol specification. 
 
-The following is the SOCKS5 RESOLVE command specification described in expressions, names, and terms that are based off the SOCKS5 protocol specification described in RFC [1928](https://datatracker.ietf.org/doc/html/rfc1928):
+The following is the specification for defining a SOCKS5 request with the RESOLVE command and the reply to that SOCKS5 request. It is described in expressions, names, and terms that are based off of the SOCKS5 protocol specification described in RFC [1928](https://datatracker.ietf.org/doc/html/rfc1928).
 
-A SOCKS request with the RESOLVE command is represented as `X'04'` in the `CMD` field.  In the SOCKS request, the `ATYP` field SHOULD be `X'03'` (DOMAINNAME) and the `DST.ADDR` field SHOULD be a fully-qualified domain name with the first octet containing the number of octets of the name that follows. The `DST.PORT` field in the SOCKS request can be of any value in network octet order (`X'0000'` to `X'FFFF'` inclusive).
+In a SOCKS request, the RESOLVE command is represented as `X'04'` in the `CMD` field.  In the SOCKS request, the `ATYP` field SHOULD be `X'03'` (DOMAINNAME) and the `DST.ADDR` field SHOULD be a fully-qualified domain name with the first octet containing the number of octets of the name that follows. The `DST.PORT` field in the SOCKS request can be of any value in network octet order (`X'0000'` to `X'FFFF'` inclusive).
 
 In reply to a SOCKS request with the RESOLVE command, the `ATYP` field in the reply MUST be of any value other than `X'03'` (DOMAINNAME) and the `BND.ADDR` field in the reply MUST be the resolved address of the `DST.ADDR` field of the SOCKS request. The `BND.PORT` field in the reply can be of any value in network octet order (`X'0000'` to `X'FFFF'` inclusive). If the `ATYP` field and the `DST.ADDR` field of the SOCKS request is not a fully-qualified domain name, the `ATYP` field and the `BND.ADDR` field in the reply MUST be the same as the `ATYP` field and the `DST.ADDR` field of the SOCKS request. After the reply is sent, the connection between the client and the server is then closed.
 

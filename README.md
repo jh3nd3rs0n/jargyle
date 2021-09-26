@@ -4,17 +4,17 @@
 
 Jargyle is a Java SOCKS5 server. It has the following features:
 
--   100% implementation of the SOCKS5 protocol specification which includes [username password authentication](#4-10-2-using-username-password-authentication) and [GSS-API authentication](#4-10-3-using-gss-api-authentication)
--   [SSL/TLS for TCP traffic between Jargyle and its clients](#4-7-using-ssl-tls-for-tcp-traffic-between-jargyle-and-its-clients)
--   [DTLS for UDP traffic between Jargyle and its clients](#4-8-using-dtls-for-udp-traffic-between-jargyle-and-its-clients)
--   [Host name resolution](#5-3-the-socks5-resolve-command)
--   [SOCKS server chaining](#4-11-chaining-to-another-socks-server)
--   [SSL/TLS for TCP traffic through SOCKS server chaining](#4-11-1-using-ssl-tls-for-tcp-traffic-through-socks-server-chaining)
--   [DTLS for UDP traffic through SOCKS server chaining](#4-11-2-using-dtls-for-udp-traffic-through-socks-server-chaining)
--   [Host name resolution through SOCKS5 server chaining](#4-11-3-using-host-name-resolution-through-socks5-server-chaining)
--   [SOCKS server chaining to a specified chain of other SOCKS servers](#4-12-chaining-to-a-specified-chain-of-other-socks-servers)
--   [Allow or block addresses](#4-13-allowing-or-blocking-addresses)
--   [Allow or block SOCKS5 requests](#4-14-allowing-or-blocking-socks5-requests)
+-   100% implementation of the SOCKS5 protocol specification which includes [username password authentication](#5-11-2-using-username-password-authentication) and [GSS-API authentication](#5-11-3-using-gss-api-authentication)
+-   [SSL/TLS for TCP traffic between Jargyle and its clients](#5-7-using-ssl-tls-for-tcp-traffic-between-jargyle-and-its-clients)
+-   [DTLS for UDP traffic between Jargyle and its clients](#5-8-using-dtls-for-udp-traffic-between-jargyle-and-its-clients)
+-   [Host name resolution](#5-9-using-host-name-resolution)
+-   [SOCKS server chaining](#5-12-chaining-to-another-socks-server)
+-   [SSL/TLS for TCP traffic through SOCKS server chaining](#5-12-1-using-ssl-tls-for-tcp-traffic-through-socks-server-chaining)
+-   [DTLS for UDP traffic through SOCKS server chaining](#5-12-2-using-dtls-for-udp-traffic-through-socks-server-chaining)
+-   [Host name resolution through SOCKS5 server chaining](#5-12-3-using-host-name-resolution-through-socks5-server-chaining)
+-   [SOCKS server chaining to a specified chain of other SOCKS servers](#5-13-chaining-to-a-specified-chain-of-other-socks-servers)
+-   [Allow or block addresses](#5-14-allowing-or-blocking-addresses)
+-   [Allow or block SOCKS5 requests](#5-15-allowing-or-blocking-socks5-requests)
 
 Although Jargyle can act as a standalone SOCKS5 server, it can act as a bridge between the following:
 
@@ -26,42 +26,44 @@ Although Jargyle can act as a standalone SOCKS5 server, it can act as a bridge b
 ## Contents
 
 -   [1. Requirements](#1-requirements)
--   [2. Automated Testing](#2-automated-testing)
--   [3. Building](#3-building)
--   [4. Running Jargyle](#4-running-jargyle)
--   [4. 1. Usage](#4-1-usage)
--   [4. 2. Creating a Configuration File](#4-2-creating-a-configuration-file)
--   [4. 3. Supplementing a Configuration File With Command Line Options](#4-3-supplementing-a-configuration-file-with-command-line-options)
--   [4. 4. Combining Configuration Files](#4-4-combining-configuration-files)
--   [4. 5. Running With a Configuration File](#4-5-running-with-a-configuration-file)
--   [4. 6. Running With a Monitored Configuration File](#4-6-running-with-a-monitored-configuration-file)
--   [4. 7. Using SSL/TLS for TCP Traffic Between Jargyle and Its Clients](#4-7-using-ssl-tls-for-tcp-traffic-between-jargyle-and-its-clients)
--   [4. 8. Using DTLS for UDP Traffic Between Jargyle and Its Clients](#4-8-using-dtls-for-udp-traffic-between-jargyle-and-its-clients)
--   [4. 9. Managing SOCKS5 Users (for Username Password Authentication)](#4-9-managing-socks5-users-for-username-password-authentication)
--   [4. 9. 1. Creating a Users File](#4-9-1-creating-a-users-file)
--   [4. 9. 2. Adding Users to an Existing Users File](#4-9-2-adding-users-to-an-existing-users-file)
--   [4. 9. 3. Removing a User From an Existing Users File](#4-9-3-removing-a-user-from-an-existing-users-file)
--   [4. 10. Using SOCKS5 Authentication](#4-10-using-socks5-authentication)
--   [4. 10. 1. Using No Authentication](#4-10-1-using-no-authentication)
--   [4. 10. 2. Using Username Password Authentication](#4-10-2-using-username-password-authentication)
--   [4. 10. 3. Using GSS-API Authentication](#4-10-3-using-gss-api-authentication)
--   [4. 11. Chaining to Another SOCKS Server](#4-11-chaining-to-another-socks-server)
--   [4. 11. 1. Using SSL/TLS for TCP Traffic Through SOCKS Server Chaining](#4-11-1-using-ssl-tls-for-tcp-traffic-through-socks-server-chaining)
--   [4. 11. 2. Using DTLS for UDP Traffic Through SOCKS Server Chaining](#4-11-2-using-dtls-for-udp-traffic-through-socks-server-chaining)
--   [4. 11. 3. Using Host Name Resolution Through SOCKS5 Server Chaining](#4-11-3-using-host-name-resolution-through-socks5-server-chaining)
--   [4. 11. 4. Using SOCKS5 Authentication](#4-11-4-using-socks5-authentication)
--   [4. 11. 4. 1. Using No Authentication](#4-11-4-1-using-no-authentication)
--   [4. 11. 4. 2. Using Username Password Authentication](#4-11-4-2-using-username-password-authentication)
--   [4. 11. 4. 3. Using GSS-API Authentication](#4-11-4-3-using-gss-api-authentication)
--   [4. 12. Chaining to a Specified Chain of Other SOCKS Servers](#4-12-chaining-to-a-specified-chain-of-other-socks-servers)
--   [4. 13. Allowing or Blocking Addresses](#4-13-allowing-or-blocking-addresses)
--   [4. 14. Allowing or Blocking SOCKS5 Requests](#4-14-allowing-or-blocking-socks5-requests)
--   [4. 15. Logging](#4-15-logging)
--   [5. Miscellaneous Notes](#5-miscellaneous-notes)
--   [5. 1. The Comment Attribute](#5-1-the-comment-attribute)
--   [5. 2. Multiple Settings of the Same Name](#5-2-multiple-settings-of-the-same-name)
--   [5. 3. The SOCKS5 RESOLVE Command](#5-3-the-socks5-resolve-command)
--   [6. Contact](#6-contact)
+-   [2. Releases](#2-releases)
+-   [3. Automated Testing](#3-automated-testing)
+-   [4. Building](#4-building)
+-   [5. Running Jargyle](#5-running-jargyle)
+-   [5. 1. Usage](#5-1-usage)
+-   [5. 2. Creating a Configuration File](#5-2-creating-a-configuration-file)
+-   [5. 3. Supplementing a Configuration File With Command Line Options](#5-3-supplementing-a-configuration-file-with-command-line-options)
+-   [5. 4. Combining Configuration Files](#5-4-combining-configuration-files)
+-   [5. 5. Running With a Configuration File](#5-5-running-with-a-configuration-file)
+-   [5. 6. Running With a Monitored Configuration File](#5-6-running-with-a-monitored-configuration-file)
+-   [5. 7. Using SSL/TLS for TCP Traffic Between Jargyle and Its Clients](#5-7-using-ssl-tls-for-tcp-traffic-between-jargyle-and-its-clients)
+-   [5. 8. Using DTLS for UDP Traffic Between Jargyle and Its Clients](#5-8-using-dtls-for-udp-traffic-between-jargyle-and-its-clients)
+-   [5. 9. Using Host Name Resolution](#5-9-using-host-name-resolution)
+-   [5. 10. Managing SOCKS5 Users (for Username Password Authentication)](#5-10-managing-socks5-users-for-username-password-authentication)
+-   [5. 10. 1. Creating a Users File](#5-10-1-creating-a-users-file)
+-   [5. 10. 2. Adding Users to an Existing Users File](#5-10-2-adding-users-to-an-existing-users-file)
+-   [5. 10. 3. Removing a User From an Existing Users File](#5-10-3-removing-a-user-from-an-existing-users-file)
+-   [5. 11. Using SOCKS5 Authentication](#5-11-using-socks5-authentication)
+-   [5. 11. 1. Using No Authentication](#5-11-1-using-no-authentication)
+-   [5. 11. 2. Using Username Password Authentication](#5-11-2-using-username-password-authentication)
+-   [5. 11. 3. Using GSS-API Authentication](#5-11-3-using-gss-api-authentication)
+-   [5. 12. Chaining to Another SOCKS Server](#5-12-chaining-to-another-socks-server)
+-   [5. 12. 1. Using SSL/TLS for TCP Traffic Through SOCKS Server Chaining](#5-12-1-using-ssl-tls-for-tcp-traffic-through-socks-server-chaining)
+-   [5. 12. 2. Using DTLS for UDP Traffic Through SOCKS Server Chaining](#5-12-2-using-dtls-for-udp-traffic-through-socks-server-chaining)
+-   [5. 12. 3. Using Host Name Resolution Through SOCKS5 Server Chaining](#5-12-3-using-host-name-resolution-through-socks5-server-chaining)
+-   [5. 12. 4. Using SOCKS5 Authentication](#5-12-4-using-socks5-authentication)
+-   [5. 12. 4. 1. Using No Authentication](#5-12-4-1-using-no-authentication)
+-   [5. 12. 4. 2. Using Username Password Authentication](#5-12-4-2-using-username-password-authentication)
+-   [5. 12. 4. 3. Using GSS-API Authentication](#5-12-4-3-using-gss-api-authentication)
+-   [5. 13. Chaining to a Specified Chain of Other SOCKS Servers](#5-13-chaining-to-a-specified-chain-of-other-socks-servers)
+-   [5. 14. Allowing or Blocking Addresses](#5-14-allowing-or-blocking-addresses)
+-   [5. 15. Allowing or Blocking SOCKS5 Requests](#5-15-allowing-or-blocking-socks5-requests)
+-   [5. 16. Logging](#5-16-logging)
+-   [6. Miscellaneous Notes](#6-miscellaneous-notes)
+-   [6. 1. The Comment Attribute](#6-1-the-comment-attribute)
+-   [6. 2. Multiple Settings of the Same Name](#6-2-multiple-settings-of-the-same-name)
+-   [6. 3. The SOCKS5 RESOLVE Command](#6-3-the-socks5-resolve-command)
+-   [7. Contact](#7-contact)
 
 ## 1. Requirements
 
@@ -76,7 +78,11 @@ For running Jargyle under the binary distribution:
 
 After installation of the requirements, be sure to have the environment variable `JAVA_HOME` set to the location of the installed Java&#8482; SDK or the installed Java&#8482; Runtime Environment.
 
-## 2. Automated Testing
+## 2. Releases
+
+Releases for the source and binary distributions can be found [here](https://github.com/jh3nd3rs0n/jargyle/releases).
+
+## 3. Automated Testing
 
 To run automated testing, run the following commands:
 
@@ -89,7 +95,7 @@ To run automated testing, run the following commands:
 
 Where `directory-containing-pom.xml` would be the actual directory that contains the file `pom.xml`. This file is used by the Maven command `mvn`.
 
-## 3. Building
+## 4. Building
 
 To build and package Jargyle, run the following command:
 
@@ -107,7 +113,7 @@ After running the aforementioned command, the built JAR file and its dependent J
     
 ```
 
-## 4. Running Jargyle 
+## 5. Running Jargyle 
 
 To run Jargyle without any command line arguments, you can run the following command:
 
@@ -119,7 +125,7 @@ To run Jargyle without any command line arguments, you can run the following com
 
 The aforementioned command will run Jargyle on port 1080 at address 0.0.0.0 using no authentication.
 
-### 4. 1. Usage
+### 5. 1. Usage
 
 The following is the command line help for Jargyle (displayed when using the command line option `--help`):
 
@@ -555,7 +561,7 @@ The following is the command line help for managing SOCKS5 users for username pa
     
 ```
 
-### 4. 2. Creating a Configuration File
+### 5. 2. Creating a Configuration File
 
 You can create a configuration file by using the command line option `--new-config-file`
 
@@ -616,7 +622,7 @@ The following command creates a configuration file with the port number, the num
     
 ```
   
-### 4. 3. Supplementing a Configuration File With Command Line Options
+### 5. 3. Supplementing a Configuration File With Command Line Options
 
 You can supplement an existing configuration file with command line options.
 
@@ -666,7 +672,7 @@ The following command adds one command line option after the existing configurat
     
 ```
 
-### 4. 4. Combining Configuration Files
+### 5. 4. Combining Configuration Files
 
 You can combine multiple configuration files into one configuration file.
 
@@ -728,9 +734,9 @@ The following command combines the two earlier configuration files into one:
     
 ```
 
-Although the redundant settings in the combined configuration file are unnecessary, the result configuration file is for demonstration purposes only. (See [Multiple Settings of the Same Name](#5-2-multiple-settings-of-the-same-name) for more information.)
+Although the redundant settings in the combined configuration file are unnecessary, the result configuration file is for demonstration purposes only. (See [Multiple Settings of the Same Name](#6-2-multiple-settings-of-the-same-name) for more information.)
 
-### 4. 5. Running With a Configuration File
+### 5. 5. Running With a Configuration File
 
 To run Jargyle with a configuration file, you can use the command line option `--config-file`
 
@@ -742,7 +748,7 @@ To run Jargyle with a configuration file, you can use the command line option `-
 
 Also the configuration file can be supplemented with command line options and/or can be combined with multiple configuration files.
 
-### 4. 6. Running With a Monitored Configuration File
+### 5. 6. Running With a Monitored Configuration File
 
 You can run Jargyle with a configuration file to be monitored for any changes to be applied to the running configuration.
 
@@ -765,7 +771,7 @@ The following are the settings in the monitored configuration file that will hav
 
 A restart of Jargyle would be required if you want any of the changed aforementioned settings to be applied to the running configuration.
 
-### 4. 7. Using SSL/TLS for TCP Traffic Between Jargyle and Its Clients
+### 5. 7. Using SSL/TLS for TCP Traffic Between Jargyle and Its Clients
 
 You can use SSL/TLS for TCP traffic between Jargyle and its clients. By default SSL/TLS for TCP traffic between Jargyle and its clients is disabled. To enable SSL/TLS for TCP traffic between Jargyle and its clients, you will need to have the setting `ssl.enabled` set to `true`. In addition, you will need to have the setting `ssl.keyStoreFile` to specify Jargyle's key store file (this file would need to be created by Java's keytool utility). Also, you will need to have the setting `ssl.keyStorePassword` to specify the password for Jargyle's key store file.
 
@@ -817,7 +823,7 @@ If you do not want to have the password appear in any script or in any part of t
     
 ```
 
-### 4. 8. Using DTLS for UDP Traffic Between Jargyle and Its Clients
+### 5. 8. Using DTLS for UDP Traffic Between Jargyle and Its Clients
 
 You can use DTLS for UDP traffic between Jargyle and its clients. By default DTLS for UDP traffic between Jargyle and its clients is disabled. To enable DTLS for UDP traffic between Jargyle and its clients, you will need to have the setting `dtls.enabled` set to `true`. In addition, you will need to have the setting `dtls.keyStoreFile` to specify Jargyle's key store file (this file would need to be created by Java's keytool utility). Also, you will need to have the setting `dtls.keyStorePassword` to specify the password for Jargyle's key store file.
 
@@ -871,11 +877,15 @@ If you do not want to have the password appear in any script or in any part of t
 
 **NOTE**: For a DTLS connection to be established, the client must send a SOCKS5 UDP ASSOCIATE command with a port number of a value greater than zero that the client expects to send and receive datagram packets. If the client sends a SOCKS5 UDP ASSOCIATE command with a port number of zero, a DTLS connection will not be established.
 
-### 4. 9. Managing SOCKS5 Users (for Username Password Authentication)
+### 5. 9. Using Host Name Resolution
 
-You can manage SOCKS5 users stored in an XML file called a users file. A users file can be used for [username password authentication](#4-10-2-using-username-password-authentication).
+Jargyle can be used to resolve host names. For a client to request Jargyle to resolve a host name, it must use [the SOCKS5 RESOLVE command](#6-3-the-socks5-resolve-command).
 
-#### 4. 9. 1. Creating a Users File
+### 5. 10. Managing SOCKS5 Users (for Username Password Authentication)
+
+You can manage SOCKS5 users stored in an XML file called a users file. A users file can be used for [username password authentication](#5-11-2-using-username-password-authentication).
+
+#### 5. 10. 1. Creating a Users File
 
 To create a users file, you would run the following command:
 
@@ -972,7 +982,7 @@ If you want to enter a user, the prompt will ask you for the user's name, passwo
     
 ```
 
-#### 4. 9. 2. Adding Users to an Existing Users File
+#### 5. 10. 2. Adding Users to an Existing Users File
 
 To add users to an existing users file, you would run the following command:
 
@@ -1037,7 +1047,7 @@ Once you have run the command, an interactive prompt will ask you for the new us
     
 ```
 
-#### 4. 9. 3. Removing a User From an Existing Users File
+#### 5. 10. 3. Removing a User From an Existing Users File
 
 To remove a user from an existing users file, you would run the following command:
 
@@ -1090,7 +1100,7 @@ Once you have run the command, the user of the specified name will be removed fr
     
 ```
 
-### 4. 10. Using SOCKS5 Authentication
+### 5. 11. Using SOCKS5 Authentication
 
 Jargyle has the following SOCKS5 authentication methods to choose from:
 
@@ -1121,7 +1131,7 @@ Partial configuration file example:
 
 If not set, the default value for the setting `socks5.methods` is set to `NO_AUTHENTICATION_REQUIRED`
 
-#### 4. 10. 1. Using No Authentication
+#### 5. 11. 1. Using No Authentication
 
 Because the default value for the setting `socks5.methods` is set to `NO_AUTHENTICATION_REQUIRED`, it is not required for `NO_AUTHENTICATION_REQUIRED` to be included in the setting `socks5.methods`.
 
@@ -1146,7 +1156,7 @@ Partial configuration file example:
     
 ```
 
-#### 4. 10. 2. Using Username Password Authentication
+#### 5. 11. 2. Using Username Password Authentication
 
 To use username password authentication, you will need to have the setting `socks5.methods` to have `USERNAME_PASSWORD` included.
 
@@ -1215,7 +1225,7 @@ If any of the usernames or any of the passwords contain a plus sign character (`
 
 If any of the usernames or any of the passwords contain a percent sign character (`%`) not used for URL encoding, then each percent sign character not used for URL encoding must be replaced with the URL encoding character `%25`.
 
-`com.github.jh3nd3rs0n.jargyle.net.socks.server.v5.userpassauth.XmlFileSourceUsernamePasswordAuthenticator`: This class authenticates the username and password based on the [XML file of users](#4-9-managing-socks5-users-for-username-password-authentication) whose file name is provided as a string value
+`com.github.jh3nd3rs0n.jargyle.net.socks.server.v5.userpassauth.XmlFileSourceUsernamePasswordAuthenticator`: This class authenticates the username and password based on the [XML file of users](#5-10-managing-socks5-users-for-username-password-authentication) whose file name is provided as a string value
 
 Partial command line example:
 
@@ -1246,7 +1256,7 @@ Partial configuration file example:
     
 ```
 
-#### 4. 10. 3. Using GSS-API Authentication
+#### 5. 11. 3. Using GSS-API Authentication
 
 To use GSS-API authentication, you will need to have the setting `socks5.methods` to have `GSSAPI` included.
 
@@ -1324,7 +1334,7 @@ The Java system property `-Djava.security.krb5.conf=krb5.conf` provides the Kerb
 
 In `krb5.conf`, a KDC is defined as running at the address `127.0.0.1` on port `12345` with its realm as `EXAMPLE.COM`. (In a production environment, the address `127.0.0.1` should be replaced by the actual address or name of the machine of where the KDC resides. Also, in a production environment, the realm `EXAMPLE.COM` should be replaced by an actual realm provided by a Kerberos administrator.)  
 
-### 4. 11. Chaining to Another SOCKS Server
+### 5. 12. Chaining to Another SOCKS Server
 
 You can have Jargyle chained to another SOCKS server, meaning that its traffic can be routed through another SOCKS server. To have Jargyle chained to another SOCKS server, you will need to specify the other SOCKS server as a URI in the setting `chaining.socksServerUri`
 
@@ -1349,7 +1359,7 @@ Partial configuration file example:
 
 Please note that the scheme in the URI specifies the SOCKS protocol to be used when accessing the other SOCKS server (`socks5`), the address or name of the machine of where the other SOCKS server resides (`127.0.0.1`), and the port number of the other SOCKS server (`23456`). In the aforementioned examples, the SOCKS protocol version 5 is used. At this time, the only supported scheme for the URI format is `socks5`
 
-#### 4. 11. 1. Using SSL/TLS for TCP Traffic Through SOCKS Server Chaining
+#### 5. 12. 1. Using SSL/TLS for TCP Traffic Through SOCKS Server Chaining
 
 You can use SSL/TLS for TCP traffic through SOCKS server chaining under the following condition: 
 
@@ -1411,7 +1421,7 @@ Partial command line example:
     
 ```
 
-#### 4. 11. 2. Using DTLS for UDP Traffic Through SOCKS Server Chaining
+#### 5. 12. 2. Using DTLS for UDP Traffic Through SOCKS Server Chaining
 
 You can use DTLS for UDP traffic through SOCKS server chaining under the following condition: 
 
@@ -1473,7 +1483,7 @@ Partial command line example:
     
 ```
 
-#### 4. 11. 3. Using Host Name Resolution Through SOCKS5 Server Chaining
+#### 5. 12. 3. Using Host Name Resolution Through SOCKS5 Server Chaining
 
 Before discussing host name resolution through SOCKS5 server chaining, a brief explanation of Jargyle's internals:
 
@@ -1483,21 +1493,22 @@ Jargyle uses sockets to interact with the external world.
 -   Under the BIND command, it uses a socket that listens for an inbound socket. In this documentation, this socket is called the listen socket.
 -   Under the UDP ASSOCIATE command, it uses a UDP socket that sends and receives datagram packets to and from server UDP sockets. In this documentation, this UDP socket is called the server-facing UDP socket.
 
-When Jargyle is chained to another SOCKS server, the aforementioned sockets that Jargyle uses become SOCKS-enabled, meaning that their traffic is routed through the other SOCKS server. When Jargyle is specifically chained to another SOCKS5 server, the aforementioned sockets that Jargyle uses become SOCKS5-enabled, meaning that their traffic is routed through the other SOCKS5 server.
+Jargyle also uses a host resolver to resolve host names for the aforementioned sockets and for [the RESOLVE command](#6-3-the-socks5-resolve-command).
 
-By default, host name resolution through SOCKS5 server chaining is somewhat performed but it has the following limitations:
+Default host name resolution through SOCKS5 server chaining is somewhat performed but it has the following limitations:
 
-Host name resolution through SOCKS5 server chaining OCCURS ONLY...
+Default host name resolution through SOCKS5 server chaining OCCURS ONLY...
 
--   ...under the CONNECT command when the server-facing socket makes an extemporaneous outbound connection. Preparation is omitted for the server-facing socket. Such preparation includes applying the specified socket settings for the server-facing socket, resolving the target host name before connecting, and setting the specified timeout in milliseconds on waiting for the server-facing socket to connect. When the server-facing socket is SOCKS5-enabled, the target host name is resolved by the other SOCKS5 server.
+-   ...under the CONNECT command when the server-facing socket makes an extemporaneous outbound connection. Preparation is omitted for the server-facing socket. Such preparation includes applying the specified socket settings for the server-facing socket, resolving the target host name before connecting, and setting the specified timeout in milliseconds on waiting for the server-facing socket to connect. Resolving the target host name is not performed by the host resolver but is instead performed by the other SOCKS5 server.
 
-Host name resolution through SOCKS5 server chaining DOES NOT OCCUR...
+Default host name resolution through SOCKS5 server chaining DOES NOT OCCUR...
 
--   ...under the CONNECT command when the server-facing socket makes a prepared outbound connection. Preparation for the server-facing socket includes resolving the target host name before connecting. When the server-facing socket is SOCKS5-enabled, the target host name is not resolved by the other SOCKS5 server but is instead resolved by the local system.
--   ...under the BIND command when resolving the binding host name for the listen socket. When the listen socket is SOCKS5-enabled, the binding host name for the listen socket is not resolved by the other SOCKS5 server but is instead resolved by the local system.
--   ...under the UDP ASSOCIATE command when resolving a host name for an outbound datagram packet. When the server-facing UDP socket is SOCKS5-enabled, the host name for an outbound datagram packet is not resolved by the other SOCKS5 server but is instead resolved by the local system.
+-   ...under the CONNECT command when the server-facing socket makes a prepared outbound connection. Preparation for the server-facing socket includes resolving the target host name before connecting. Resolving the target host name is performed by the host resolver. By default, the host resolver resolves the target host name through the local system.
+-   ...under the BIND command when resolving the binding host name for the listen socket. Resolving the binding host name for the listen socket is performed by the host resolver. By default, the host resolver resolves the binding host name for the listen socket through the local system.
+-   ...under the UDP ASSOCIATE command when resolving a host name for an outbound datagram packet. Resolving the host name for an outbound datagram packet is performed by the host resolver. By default, the host resolver resolves the host name for an outbound datagram packet through the local system.
+-   ...under the RESOLVE command when resolving a host name. Resolving the host name is performed by the host resolver. By default, the host resolver resolves the host name through the local system.
 
-If you prefer to have host name resolution through SOCKS5 server chaining without the aforementioned limitations, you would need to set the setting `chaining.socks5.resolve.useResolveCommand` to `true`. This setting enables the use of [the SOCKS5 RESOLVE command](#5-3-the-socks5-resolve-command) on the other SOCKS5 server to resolve host names. This setting can only be used if the other SOCKS5 server supports the SOCKS5 RESOLVE command.
+If you prefer to have host name resolution through SOCKS5 server chaining without the aforementioned limitations, you would need to set the setting `chaining.socks5.resolve.useResolveCommand` to `true`. This setting enables the host resolver to use the SOCKS5 RESOLVE command on the other SOCKS5 server to resolve host names. This setting can only be used if the other SOCKS5 server supports the SOCKS5 RESOLVE command.
 
 Partial command line example:
 
@@ -1571,7 +1582,7 @@ Partial configuration file example:
         
 ```
 
-#### 4. 11. 4. Using SOCKS5 Authentication
+#### 5. 12. 4. Using SOCKS5 Authentication
 
 Jargyle has the following SOCKS5 authentication methods to choose from for accessing the other SOCKS5 server:
 
@@ -1602,7 +1613,7 @@ Partial configuration file example:
 
 If not set, the default value for the setting `chaining.socks5.methods` is set to `NO_AUTHENTICATION_REQUIRED`
 
-##### 4. 11. 4. 1. Using No Authentication
+##### 5. 12. 4. 1. Using No Authentication
 
 Because the default value for the setting `chaining.socks5.methods` is set to `NO_AUTHENTICATION_REQUIRED`, it is not required for `NO_AUTHENTICATION_REQUIRED` to be included in the setting `chaining.socks5.methods`.
 
@@ -1627,7 +1638,7 @@ Partial configuration file example:
     
 ```
 
-##### 4. 11. 4. 2. Using Username Password Authentication
+##### 5. 12. 4. 2. Using Username Password Authentication
 
 To use username password authentication, you will need to have the setting `chaining.socks5.methods` to have `USERNAME_PASSWORD` included.
 
@@ -1685,7 +1696,7 @@ Partial command line example:
     
 ```
 
-##### 4. 11. 4. 3. Using GSS-API Authentication
+##### 5. 12. 4. 3. Using GSS-API Authentication
 
 To use GSS-API authentication, you will need to have the setting `chaining.socks5.methods` to have `GSSAPI` included.
 
@@ -1768,7 +1779,7 @@ In `krb5.conf`, a KDC is defined as running at the address `127.0.0.1` on port `
 
 The command line option `--setting=chaining.socks5.gssapiauth.serviceName=rcmd/127.0.0.1` is the GSS-API service name (or the Kerberos service principal) for the other SOCKS5 server residing at the address `127.0.0.1`. (In a production environment, the address `127.0.0.1` should be replaced by the name of the machine of where the other SOCKS5 server resides.)
 
-### 4. 12. Chaining to a Specified Chain of Other SOCKS Servers
+### 5. 13. Chaining to a Specified Chain of Other SOCKS Servers
 
 You can have Jargyle chained to a specified chain of other SOCKS servers, meaning that its traffic can be routed through the specified chain of the other SOCKS servers. To have Jargyle chained to a specified chain of other SOCKS servers, you will need to specify each SOCKS server as a URI in its own separate setting of `chaining.socksServerUri`
 
@@ -1851,7 +1862,7 @@ The known limitations of Jargyle chained to a specified chain of other SOCKS ser
 
 -   Only TCP traffic can be routed through the chain. Jargyle will attempt to route any UDP traffic through the last SOCKS server of the chain.
 
-### 4. 13. Allowing or Blocking Addresses
+### 5. 14. Allowing or Blocking Addresses
 
 You can allow or block the following addresses:
 
@@ -1908,7 +1919,7 @@ Partial configuration file example:
     
 ```
 
-### 4. 14. Allowing or Blocking SOCKS5 Requests
+### 5. 15. Allowing or Blocking SOCKS5 Requests
 
 You can allow or block SOCKS5 requests. To allow or block SOCKS5 requests, you will need to specify the SOCKS5 request or requests in any of the following settings in the configuration file:
 
@@ -1963,7 +1974,7 @@ Partial configuration file example:
     
 ```
 
-### 4. 15. Logging
+### 5. 16. Logging
 
 Jargyle uses Simple Logging Facade for Java (SLF4J) for logging and uses java.util.logging as its underlying framework. 
 
@@ -2029,11 +2040,11 @@ Example:
     
 ```
 
-## 5. Miscellaneous Notes
+## 6. Miscellaneous Notes
 
 The following are miscellaneous notes regarding Jargyle.
 
-### 5. 1. The Comment Attribute
+### 6. 1. The Comment Attribute
 
 When using an existing configuration file to create a new configuration file, any XML comments from the existing configuration file cannot be transferred to the new configuration file. To preserve comments  from one configuration file to the next configuration file, the `comment` attribute can be used in certain XML elements. You can use the `comment` attribute in the following XML elements:
 
@@ -2110,13 +2121,13 @@ Partial configuration file example:
     
 ```
 
-### 5. 2. Multiple Settings of the Same Name
+### 6. 2. Multiple Settings of the Same Name
 
 Unless otherwise stated, if a setting of the same name appears more than once on the command line or in the configuration file, then only the last setting of the same name is recognized. 
 
-### 5. 3. The SOCKS5 RESOLVE Command
+### 6. 3. The SOCKS5 RESOLVE Command
 
-A SOCKS5 request with the RESOLVE command requests the SOCKS5 server to resolve the fully-qualified domain name of the desired destination address and to reply with the resolved IPv4 or IPv6 address. At the time of this writing, the SOCKS5 RESOLVE command is an additional SOCKS5 command made for Jargyle. It is not a part of the SOCKS5 protocol specification. 
+A client sending a SOCKS5 request with the RESOLVE command is a request to the SOCKS5 server to resolve the host name and reply with the resolved IPv4 or IPv6 address. At the time of this writing, the SOCKS5 RESOLVE command is an additional SOCKS5 command made for Jargyle. It is not a part of the SOCKS5 protocol specification. 
 
 The following is the SOCKS5 RESOLVE command specification described in expressions, names, and terms that are based off the SOCKS5 protocol specification described in RFC [1928](https://datatracker.ietf.org/doc/html/rfc1928):
 
@@ -2124,6 +2135,6 @@ A SOCKS request with the RESOLVE command is represented as `X'04'` in the `CMD` 
 
 In reply to a SOCKS request with the RESOLVE command, the `ATYP` field in the reply MUST be of any value other than `X'03'` (DOMAINNAME) and the `BND.ADDR` field in the reply MUST be the resolved address of the `DST.ADDR` field of the SOCKS request. The `BND.PORT` field in the reply can be of any value in network octet order (`X'0000'` to `X'FFFF'` inclusive). If the `ATYP` field and the `DST.ADDR` field of the SOCKS request is not a fully-qualified domain name, the `ATYP` field and the `BND.ADDR` field in the reply MUST be the same as the `ATYP` field and the `DST.ADDR` field of the SOCKS request. After the reply is sent, the connection between the client and the server is then closed.
 
-## 6. Contact
+## 7. Contact
 
 If you have any questions or comments, you can e-mail me at `j0n4th4n.h3nd3rs0n@gmail.com`

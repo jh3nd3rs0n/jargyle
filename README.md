@@ -1506,7 +1506,7 @@ Default host name resolution through SOCKS5 server chaining DOES NOT OCCUR...
 -   ...under the CONNECT command when the server-facing socket makes a prepared outbound connection. Preparation for the server-facing socket includes resolving the target host name before connecting. Resolving the target host name is performed by the host resolver. By default, the host resolver resolves the target host name through the local system.
 -   ...under the BIND command when resolving the binding host name for the listen socket. Resolving the binding host name for the listen socket is performed by the host resolver. By default, the host resolver resolves the binding host name for the listen socket through the local system.
 -   ...under the UDP ASSOCIATE command when resolving a host name for an outbound datagram packet. Resolving the host name for an outbound datagram packet is performed by the host resolver. By default, the host resolver resolves the host name for an outbound datagram packet through the local system.
--   ...under the RESOLVE command when resolving a host name. Resolving the host name is performed by the host resolver. By default, the host resolver resolves the host name through the local system.
+-   ...under the RESOLVE command when resolving the provided host name. Resolving the provided host name is performed by the host resolver. By default, the host resolver resolves the provided host name through the local system.
 
 If you prefer to have host name resolution through SOCKS5 server chaining without the aforementioned limitations, you would need to set the setting `chaining.socks5.resolve.useResolveCommand` to `true`. This setting enables the host resolver to use the SOCKS5 RESOLVE command on the other SOCKS5 server to resolve host names. This setting can only be used if the other SOCKS5 server supports the SOCKS5 RESOLVE command.
 
@@ -2127,7 +2127,7 @@ Unless otherwise stated, if a setting of the same name appears more than once on
 
 ### 6. 3. The SOCKS5 RESOLVE Command
 
-A client sending a SOCKS5 request with the RESOLVE command is a request to the SOCKS5 server to resolve the host name and reply with the resolved IPv4 or IPv6 address. At the time of this writing, the SOCKS5 RESOLVE command is an additional SOCKS5 command made for Jargyle. It is not a part of the SOCKS5 protocol specification. 
+A client sending a SOCKS5 request with the RESOLVE command is a request to the SOCKS5 server to resolve the provided host name and reply with the resolved IPv4 or IPv6 address. At the time of this writing, the SOCKS5 RESOLVE command is an additional SOCKS5 command made for Jargyle. It is not a part of the SOCKS5 protocol specification. 
 
 The following is the SOCKS5 RESOLVE command specification described in expressions, names, and terms that are based off the SOCKS5 protocol specification described in RFC [1928](https://datatracker.ietf.org/doc/html/rfc1928):
 

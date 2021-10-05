@@ -19,7 +19,7 @@ public final class GeneralPropertySpecConstants {
 			PROPERTY_SPECS.addThenGet(new HostPropertySpec(
 					NewPropertySpecPermission.INSTANCE,
 					"socksClient.internalBindHost",
-					Host.getInet4AllZerosInstance()));
+					Host.getAllZerosInet4Instance()));
 
 	public static final PropertySpec<Port> INTERNAL_BIND_PORT = 
 			PROPERTY_SPECS.addThenGet(new PortPropertySpec(

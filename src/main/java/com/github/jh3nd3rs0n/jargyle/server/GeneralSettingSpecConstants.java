@@ -72,7 +72,7 @@ public final class GeneralSettingSpecConstants {
 			SETTING_SPECS.addThenGet(new HostSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"host",
-					Host.getInet4AllZerosInstance()));
+					Host.getAllZerosInet4Instance()));
 	
 	@HelpText(
 			doc = "The port for the SOCKS server (default is 1080)", 

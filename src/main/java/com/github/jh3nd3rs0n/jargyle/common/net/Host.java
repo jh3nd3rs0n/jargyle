@@ -7,18 +7,18 @@ import com.github.jh3nd3rs0n.jargyle.internal.net.AllZerosInetAddressHelper;
 
 public final class Host {
 	
-	private static final Host INET4_ALL_ZEROS_INSTANCE = Host.newInstance(
+	private static final Host ALL_ZEROS_INET4_INSTANCE = Host.newInstance(
 			AllZerosInetAddressHelper.getAllZerosInet4Address());
 	
-	private static final Host INET6_ALL_ZEROS_INSTANCE = Host.newInstance(
+	private static final Host ALL_ZEROS_INET6_INSTANCE = Host.newInstance(
 			AllZerosInetAddressHelper.getAllZerosInet6Address());
 	
-	public static final Host getInet4AllZerosInstance() {
-		return INET4_ALL_ZEROS_INSTANCE;
+	public static final Host getAllZerosInet4Instance() {
+		return ALL_ZEROS_INET4_INSTANCE;
 	}
 	
-	public static final Host getInet6AllZerosInstance() {
-		return INET6_ALL_ZEROS_INSTANCE;
+	public static final Host getAllZerosInet6Instance() {
+		return ALL_ZEROS_INET6_INSTANCE;
 	}
 	
 	private static Host newInstance(final InetAddress inetAddress) {

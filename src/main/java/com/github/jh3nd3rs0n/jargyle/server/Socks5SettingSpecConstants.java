@@ -195,7 +195,7 @@ public final class Socks5SettingSpecConstants {
 			SETTING_SPECS.addThenGet(new HostSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"socks5.onConnect.serverFacingBindHost",
-					Host.getInet4AllZerosInstance()));
+					Host.getAllZerosInet4Instance()));
 	
 	@HelpText(
 			doc = "The timeout in milliseconds on waiting for the "
@@ -274,7 +274,7 @@ public final class Socks5SettingSpecConstants {
 			SETTING_SPECS.addThenGet(new HostSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"socks5.onUdpAssociate.clientFacingBindHost",
-					Host.getInet4AllZerosInstance()));
+					Host.getAllZerosInet4Instance()));
 	
 	@HelpText(
 			doc = "The space separated list of socket settings for the "
@@ -318,7 +318,7 @@ public final class Socks5SettingSpecConstants {
 			SETTING_SPECS.addThenGet(new HostSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"socks5.onUdpAssociate.serverFacingBindHost",
-					Host.getInet4AllZerosInstance()));
+					Host.getAllZerosInet4Instance()));
 	
 	@HelpText(
 			doc = "The space separated list of socket settings for the "

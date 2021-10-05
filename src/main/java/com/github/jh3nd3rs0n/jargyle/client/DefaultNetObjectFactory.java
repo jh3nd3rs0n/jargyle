@@ -9,7 +9,7 @@ import java.net.SocketAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
-public final class DefaultNetObjectFactory extends NetObjectFactory {
+final class DefaultNetObjectFactory extends NetObjectFactory {
 
 	@Override
 	public DatagramSocket newDatagramSocket() throws SocketException {

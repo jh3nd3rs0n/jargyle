@@ -10,7 +10,7 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 
 public abstract class NetObjectFactory {
-
+	
 	public static NetObjectFactory newInstance() {
 		NetObjectFactory netObjectFactory = SocksNetObjectFactory.newInstance();
 		if (netObjectFactory != null) {

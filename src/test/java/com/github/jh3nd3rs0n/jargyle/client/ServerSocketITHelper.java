@@ -1,8 +1,11 @@
-package com.github.jh3nd3rs0n.jargyle.common.net;
+package com.github.jh3nd3rs0n.jargyle.client;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
@@ -15,15 +18,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import javax.net.ServerSocketFactory;
+import javax.net.SocketFactory;
 
 import com.github.jh3nd3rs0n.jargyle.IoHelper;
-import com.github.jh3nd3rs0n.jargyle.client.DefaultNetObjectFactory;
-import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
-import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
 
-public final class SocketHelper {
+public final class ServerSocketITHelper {
 	
 	private static final class EchoServer {
 		
@@ -31,22 +32,38 @@ public final class SocketHelper {
 		private final int port;
 		private ServerSocket serverSocket;
 		private boolean started;
-	
-		public EchoServer(final int prt) {
+		private final String string;
+		private String returningString;
+		
+		public EchoServer(final int prt, final String str) {
 			this.executor = null;
 			this.port = prt;
 			this.serverSocket = null;
 			this.started = false;
+			this.string = str;
+			this.returningString = null;
 		}
-	
+		
 		public int getPort() {
 			return this.port;
 		}
-	
+		
+		public String getReturningString() {
+			return this.returningString;
+		}
+		
+		public String getString() {
+			return this.string;
+		}
+		
 		public boolean isStarted() {
 			return this.started;
 		}
-	
+		
+		public void setReturningString(final String returningStr) {
+			this.returningString = returningStr;
+		}
+		
 		public void start() throws IOException {
 			if (this.started) {
 				throw new IllegalStateException();
@@ -54,10 +71,10 @@ public final class SocketHelper {
 			ServerSocketFactory factory = ServerSocketFactory.getDefault();
 			this.serverSocket = factory.createServerSocket(this.port);
 			this.executor = Executors.newSingleThreadExecutor();
-			this.executor.execute(new Listener(this.serverSocket));
+			this.executor.execute(new Listener(this, this.serverSocket));
 			this.started = true;
 		}
-	
+		
 		public void stop() throws IOException {
 			if (!this.started) {
 				throw new IllegalStateException();
@@ -72,18 +89,20 @@ public final class SocketHelper {
 
 	private static final class Listener implements Runnable {
 		
+		private final EchoServer echoServer;
 		private final ServerSocket serverSocket;
-	
-		public Listener(final ServerSocket serverSock) {
+		
+		public Listener(final EchoServer server, final ServerSocket serverSock) {
+			this.echoServer = server;
 			this.serverSocket = serverSock;
 		}
-	
+		
 		public void run() {
 			ExecutorService executor = Executors.newCachedThreadPool();
 			while (true) {
 				try {
 					Socket clientFacingSocket = this.serverSocket.accept();
-					executor.execute(new Worker(clientFacingSocket));
+					executor.execute(new Worker(this.echoServer, clientFacingSocket));
 				} catch (SocketException e) {
 					break;
 				} catch (IOException e) {
@@ -97,22 +116,53 @@ public final class SocketHelper {
 
 	private static final class Worker implements Runnable {
 		
+		private final EchoServer echoServer;
 		private final Socket clientFacingSocket;
-	
-		public Worker(final Socket clientFacingSock) {
+		
+		public Worker(final EchoServer server, final Socket clientFacingSock) {
+			this.echoServer = server;
 			this.clientFacingSocket = clientFacingSock;
 		}
-	
+		
 		public void run() {
+			Socket socket = null;
 			try {
-				InputStream in = this.clientFacingSocket.getInputStream();
-				OutputStream out = this.clientFacingSocket.getOutputStream();
-				byte[] bytes = IoHelper.readFrom(in);
-				String string = new String(bytes);
-				IoHelper.writeThenFlush(string.getBytes(), out);
+				BufferedReader reader = new BufferedReader(
+						new InputStreamReader(this.clientFacingSocket.getInputStream()));
+				long startTime = System.currentTimeMillis();
+				String inputLine = reader.readLine();
+				long endTime = System.currentTimeMillis();
+				if (inputLine == null) {
+					return;
+				}
+				int index = inputLine.lastIndexOf(':');
+				String host = inputLine.substring(0, index);
+				int port = Integer.parseInt(inputLine.substring(index + 1));
+				SocketFactory factory = SocketFactory.getDefault();
+				socket = factory.createSocket(host, port);
+				InputStream socketIn = socket.getInputStream();
+				OutputStream socketOut = socket.getOutputStream();
+				String string = this.echoServer.getString();
+				try {
+					Thread.sleep(endTime - startTime);
+				} catch (InterruptedException e) {
+					Thread.currentThread().interrupt();
+				}
+				byte[] stringBytes = string.getBytes();
+				IoHelper.writeThenFlush(stringBytes, socketOut);
+				byte[] bytes = IoHelper.readFrom(socketIn);
+				String returningString = new String(bytes);
+				this.echoServer.setReturningString(returningString);
 			} catch (IOException e) {
 				e.printStackTrace();
 			} finally {
+				if (socket != null) {
+					try {
+						socket.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
 				try {
 					this.clientFacingSocket.close();
 				} catch (IOException e) {
@@ -122,26 +172,28 @@ public final class SocketHelper {
 		}
 	}
 
-	private static final int ECHO_SERVER_PORT = 1234;
+	private static final int ECHO_SERVER_PORT = 1024;
+	private static final int SERVER_PORT = 5678;
 	private static final int SLEEP_TIME = 500; // 1/2 second
 
-	public static String echoThroughSocket(
+	public static String echoThroughServerSocket(
 			final String string, 
 			final SocksClient socksClient, 
 			final Configuration... configurations) throws IOException {
-		return echoThroughSocket(
+		return echoThroughServerSocket(
 				string, socksClient, Arrays.asList(configurations));
 	}
 	
-	public static String echoThroughSocket(
+	public static String echoThroughServerSocket(
 			final String string, 
 			final SocksClient socksClient, 
 			final List<Configuration> configurations) throws IOException {
 		int configurationsSize = configurations.size();
-		List<SocksServer> socksServers = new ArrayList<SocksServer>();
+		List<SocksServer> socksServers = new ArrayList<SocksServer>();		
 		EchoServer echoServer = null;
 		Socket echoSocket = null;
-		String returningString = null;
+		Socket socket = null;
+		String returningString = null;		
 		try {
 			if (configurationsSize > 0) {
 				for (int i = configurationsSize - 1; i > -1; i--) {
@@ -151,7 +203,7 @@ public final class SocketHelper {
 					socksServer.start();
 				}
 			}
-			echoServer = new EchoServer(ECHO_SERVER_PORT);
+			echoServer = new EchoServer(ECHO_SERVER_PORT, string);
 			echoServer.start();
 			NetObjectFactory netObjectFactory = new DefaultNetObjectFactory();
 			if (socksClient != null) {
@@ -160,12 +212,29 @@ public final class SocketHelper {
 			echoSocket = netObjectFactory.newSocket();
 			echoSocket.connect(new InetSocketAddress(
 					InetAddress.getLoopbackAddress(), echoServer.getPort()));
-			InputStream in = echoSocket.getInputStream();
 			OutputStream out = echoSocket.getOutputStream();
-			IoHelper.writeThenFlush(string.getBytes(), out);
-			byte[] bytes = IoHelper.readFrom(in);
-			returningString = new String(bytes);
+			PrintWriter writer = new PrintWriter(out, true);
+			ServerSocket serverSocket = netObjectFactory.newServerSocket();
+			serverSocket.bind(new InetSocketAddress(
+					(InetAddress) null, SERVER_PORT));
+			writer.println(String.format(
+					"%s:%s", 
+					serverSocket.getInetAddress().getHostAddress(), 
+					serverSocket.getLocalPort()));
+			try {
+				socket = serverSocket.accept();
+			} finally {
+				serverSocket.close();
+			}
+			InputStream socketIn = socket.getInputStream();
+			OutputStream socketOut = socket.getOutputStream();
+			byte[] bytes = IoHelper.readFrom(socketIn);
+			String str = new String(bytes);
+			IoHelper.writeThenFlush(str.getBytes(), socketOut);
 		} finally {
+			if (socket != null) {
+				socket.close();
+			}
 			if (echoSocket != null) {
 				echoSocket.close();
 			}
@@ -186,9 +255,12 @@ public final class SocketHelper {
 				Thread.currentThread().interrupt();
 			}
 		}
+		if (echoServer != null) {
+			returningString = echoServer.getReturningString();
+		}
 		return returningString;
 	}
 
-	private SocketHelper() { }
+	private ServerSocketITHelper() { }
 	
 }

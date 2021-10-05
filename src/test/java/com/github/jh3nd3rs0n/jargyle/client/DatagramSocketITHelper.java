@@ -1,4 +1,4 @@
-package com.github.jh3nd3rs0n.jargyle.common.net;
+package com.github.jh3nd3rs0n.jargyle.client;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -14,13 +14,10 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import com.github.jh3nd3rs0n.jargyle.client.DefaultNetObjectFactory;
-import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
-import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
 
-public final class DatagramSocketHelper {
+public final class DatagramSocketITHelper {
 	
 	private static final class EchoServer {
 		
@@ -187,6 +184,6 @@ public final class DatagramSocketHelper {
 		return returningString;
 	}
 
-	private DatagramSocketHelper() { }
+	private DatagramSocketITHelper() { }
 	
 }

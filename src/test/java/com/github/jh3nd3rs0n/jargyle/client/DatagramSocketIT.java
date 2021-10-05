@@ -1,4 +1,4 @@
-package com.github.jh3nd3rs0n.jargyle.common.net;
+package com.github.jh3nd3rs0n.jargyle.client;
 
 import static org.junit.Assert.assertEquals;
 
@@ -13,21 +13,21 @@ public class DatagramSocketIT {
 	@Test
 	public void testThroughDatagramSocket01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = DatagramSocketHelper.echoThroughDatagramSocket(string, null);
+		String returningString = DatagramSocketITHelper.echoThroughDatagramSocket(string, null);
 		assertEquals(string, returningString);
 	}
 
 	@Test
 	public void testThroughDatagramSocket02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = DatagramSocketHelper.echoThroughDatagramSocket(string, null);
+		String returningString = DatagramSocketITHelper.echoThroughDatagramSocket(string, null);
 		assertEquals(string, returningString);
 	}
 
 	@Test
 	public void testThroughDatagramSocket03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = DatagramSocketHelper.echoThroughDatagramSocket(string, null);
+		String returningString = DatagramSocketITHelper.echoThroughDatagramSocket(string, null);
 		assertEquals(string, returningString);
 	}
 

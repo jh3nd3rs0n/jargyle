@@ -20,10 +20,10 @@ public final class Setting<V> {
 	}
 
 	public static Setting<Object> newInstance(
-			final String name, final String value, final String comment) {
+			final String name, final String value, final String doc) {
 		Setting<Object> setting = newInstance(name, value);
 		return new Setting<Object>(
-				setting.getSettingSpec(), setting.getValue(), comment);
+				setting.getSettingSpec(), setting.getValue(), doc);
 	}
 	
 	private static <V> Setting<V> newInstance(
@@ -36,26 +36,25 @@ public final class Setting<V> {
 	}
 	
 	public static <V> Setting<V> newInstance(
-			final String name, final V value, final String comment) {
+			final String name, final V value, final String doc) {
 		Setting<V> setting = newInstance(name, value);
 		return new Setting<V>(
-				setting.getSettingSpec(), setting.getValue(), comment);
+				setting.getSettingSpec(), setting.getValue(), doc);
 	}
 	
-	private final String comment;
 	private final SettingSpec<V> settingSpec;
 	private final V value;
-	
+	private final String doc;
+		
 	Setting(final SettingSpec<V> spec, final V val) {
 		this(spec, val, null);
 	}
 	
-	private Setting(
-			final SettingSpec<V> spec, final V val, final String cmmnt) {
+	private Setting(final SettingSpec<V> spec, final V val, final String d) {
 		V v = spec.getValueType().cast(val);
-		this.comment = cmmnt;
 		this.settingSpec = spec;
 		this.value = v;
+		this.doc = d;		
 	}
 
 	@Override
@@ -83,8 +82,8 @@ public final class Setting<V> {
 		return true;
 	}
 
-	public String getComment() {
-		return this.comment;
+	public String getDoc() {
+		return this.doc;
 	}
 	
 	public SettingSpec<V> getSettingSpec() {

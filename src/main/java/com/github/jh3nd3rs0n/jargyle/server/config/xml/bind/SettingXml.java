@@ -4,7 +4,6 @@ import com.github.jh3nd3rs0n.jargyle.server.Setting;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
-import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlElements;
 import jakarta.xml.bind.annotation.XmlType;
@@ -50,13 +49,13 @@ class SettingXml {
 				type = String.class)
 	})
 	protected Object value;
-	@XmlAttribute(name = "comment")
-	protected String comment;
+	@XmlElement(name = "doc")
+	protected String doc;
 	
 	public SettingXml() { 
 		this.name = null;
 		this.value = null;
-		this.comment = null;
+		this.doc = null;
 	}
 	
 	public SettingXml(final Setting<Object> setting) {
@@ -67,19 +66,19 @@ class SettingXml {
 		} catch (IllegalArgumentException e) {
 			newVal = val.toString();
 		}
-		this.comment = setting.getComment();
 		this.name = setting.getSettingSpec().toString();
-		this.value = newVal;			
+		this.value = newVal;
+		this.doc = setting.getDoc();		
 	}
 	
 	public Setting<Object> toSetting() {
 		Object val = this.value;
 		if (val instanceof ValueXml) {
 			ValueXml newVal = (ValueXml) val;
-			return Setting.newInstance(this.name, newVal.toValue(), this.comment);
+			return Setting.newInstance(this.name, newVal.toValue(), this.doc);
 		}
 		String newVal = (String) val;
-		return Setting.newInstance(this.name, newVal, this.comment);			
+		return Setting.newInstance(this.name, newVal, this.doc);			
 	}
 	
 }

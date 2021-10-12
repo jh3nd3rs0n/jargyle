@@ -26,32 +26,28 @@ public final class SocketSetting<V> {
 	}
 	
 	public static SocketSetting<Object> newInstance(
-			final String name, 
-			final String value, 
-			final String comment) {
+			final String name, final String value, final String doc) {
 		SocketSetting<Object> socketSetting = newInstance(name, value);
 		return new SocketSetting<Object>(
 				socketSetting.getSocketSettingSpec(), 
 				socketSetting.getValue(), 
-				comment);
+				doc);
 	}
 	
 	private final SocketSettingSpec<V> socketSettingSpec;
 	private final V value;
-	private final String comment;
+	private final String doc;
 	
 	SocketSetting(final SocketSettingSpec<V> spec, final V val) {
 		this(spec, val, null);
 	}
 	
 	private SocketSetting(
-			final SocketSettingSpec<V> spec, 
-			final V val, 
-			final String cmmnt) {
+			final SocketSettingSpec<V> spec, final V val, final String d) {
 		V v = spec.getValueType().cast(val);
 		this.socketSettingSpec = spec;
 		this.value = v;
-		this.comment = cmmnt;
+		this.doc = d;
 	}
 	
 	public void applyTo(
@@ -93,8 +89,8 @@ public final class SocketSetting<V> {
 		return true;
 	}
 
-	public String getComment() {
-		return this.comment;
+	public String getDoc() {
+		return this.doc;
 	}
 	
 	public SocketSettingSpec<V> getSocketSettingSpec() {

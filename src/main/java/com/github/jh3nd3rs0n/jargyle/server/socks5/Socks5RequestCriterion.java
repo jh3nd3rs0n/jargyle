@@ -11,16 +11,16 @@ public final class Socks5RequestCriterion {
 		
 		private Criterion clientAddressCriterion;
 		private Criterion commandCriterion;
-		private String comment;
 		private Criterion desiredDestinationAddressCriterion;
 		private PortRanges desiredDestinationPortRanges;
+		private String doc;		
 		
 		public Builder() {
 			this.clientAddressCriterion = null;
 			this.commandCriterion = null;
-			this.comment = null;
 			this.desiredDestinationAddressCriterion = null;
 			this.desiredDestinationPortRanges = null;
+			this.doc = null;			
 		}
 		
 		public Socks5RequestCriterion build() {
@@ -38,11 +38,6 @@ public final class Socks5RequestCriterion {
 			return this;
 		}
 		
-		public Builder comment(final String cmmnt) {
-			this.comment = cmmnt;
-			return this;
-		}
-		
 		public Builder desiredDestinationAddressCriterion(
 				final Criterion desiredDestinationAddrCriterion) {
 			this.desiredDestinationAddressCriterion = 
@@ -55,28 +50,33 @@ public final class Socks5RequestCriterion {
 			this.desiredDestinationPortRanges = desiredDestinationPrtRanges;
 			return this;
 		}
+		
+		public Builder doc(final String d) {
+			this.doc = d;
+			return this;
+		}
 	}
 	
 	private final Criterion clientAddressCriterion;
 	private final Criterion commandCriterion;
-	private final String comment;
 	private final Criterion desiredDestinationAddressCriterion;
 	private final PortRanges desiredDestinationPortRanges;
+	private final String doc;
 	
 	private Socks5RequestCriterion(final Builder builder) {
 		Criterion clientAddrCriterion = builder.clientAddressCriterion;
 		Criterion cmdCriterion = builder.commandCriterion;
-		String cmmnt = builder.comment;
 		Criterion desiredDestinationAddrCriterion = 
 				builder.desiredDestinationAddressCriterion;
 		PortRanges desiredDestinationPrtRange = 
 				builder.desiredDestinationPortRanges;
+		String d = builder.doc;		
 		this.clientAddressCriterion = clientAddrCriterion;
 		this.commandCriterion = cmdCriterion;
-		this.comment = cmmnt;		
 		this.desiredDestinationAddressCriterion = 
 				desiredDestinationAddrCriterion;
-		this.desiredDestinationPortRanges = desiredDestinationPrtRange;		
+		this.desiredDestinationPortRanges = desiredDestinationPrtRange;
+		this.doc = d;		
 	}
 	
 	@Override
@@ -158,16 +158,16 @@ public final class Socks5RequestCriterion {
 		return this.commandCriterion;
 	}
 
-	public String getComment() {
-		return this.comment;
-	}
-	
 	public Criterion getDesiredDestinationAddressCriterion() {
 		return this.desiredDestinationAddressCriterion;
 	}
 	
 	public PortRanges getDesiredDestinationPortRanges() {
 		return this.desiredDestinationPortRanges;
+	}
+	
+	public String getDoc() {
+		return this.doc;
 	}
 
 	@Override

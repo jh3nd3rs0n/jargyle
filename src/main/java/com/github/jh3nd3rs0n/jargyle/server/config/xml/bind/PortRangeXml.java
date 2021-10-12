@@ -16,21 +16,21 @@ class PortRangeXml {
 	protected int minPort;
 	@XmlAttribute(name = "maxPort", required = true)
 	protected int maxPort;
-	@XmlAttribute(name = "comment")
-	protected String comment;
+	@XmlAttribute(name = "doc")
+	protected String doc;
 	
 	public PortRangeXml() {	}
 	
 	public PortRangeXml(final PortRange portRange) {
 		this.minPort = portRange.getMinPort().intValue();
 		this.maxPort = portRange.getMaxPort().intValue();
-		this.comment = portRange.getComment();
+		this.doc = portRange.getDoc();
 	}
 	
 	public PortRange toPortRange() {
 		return PortRange.newInstance(
 				Port.newInstance(this.minPort),
 				Port.newInstance(this.maxPort), 
-				this.comment);
+				this.doc);
 	}
 }

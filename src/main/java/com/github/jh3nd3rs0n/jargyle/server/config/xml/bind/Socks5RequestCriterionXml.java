@@ -4,7 +4,6 @@ import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5RequestCriterion;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
-import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
 
@@ -20,15 +19,15 @@ class Socks5RequestCriterionXml {
 	protected CriterionXml desiredDestinationAddressCriterionXml;
 	@XmlElement(name = "desiredDestinationPortRanges")
 	protected PortRangesXml desiredDestinationPortRangesXml;
-	@XmlAttribute(name = "comment")
-	protected String comment;
+	@XmlElement(name = "doc")
+	protected String doc;
 	
 	public Socks5RequestCriterionXml() {
 		this.clientAddressCriterionXml = null;
 		this.commandCriterionXml = null;
 		this.desiredDestinationAddressCriterionXml = null;
 		this.desiredDestinationPortRangesXml = null;
-		this.comment = null;
+		this.doc = null;
 	}
 	
 	public Socks5RequestCriterionXml(
@@ -41,7 +40,7 @@ class Socks5RequestCriterionXml {
 				socks5RequestCriterion.getDesiredDestinationAddressCriterion());
 		this.desiredDestinationPortRangesXml = new PortRangesXml(
 				socks5RequestCriterion.getDesiredDestinationPortRanges());
-		this.comment = socks5RequestCriterion.getComment();			
+		this.doc = socks5RequestCriterion.getDoc();			
 	}
 	
 	public Socks5RequestCriterion toSocks5RequestCriterion() {
@@ -53,7 +52,7 @@ class Socks5RequestCriterionXml {
 						this.desiredDestinationAddressCriterionXml.toCriterion())
 				.desiredDestinationPortRanges(
 						this.desiredDestinationPortRangesXml.toPortRanges())
-				.comment(this.comment)
+				.doc(this.doc)
 				.build();			
 	}
 }

@@ -10,8 +10,8 @@ public final class Criterion {
 	public static Criterion newInstance(
 			final CriterionMethod criterionMethod, 
 			final String value,
-			final String comment) {
-		return new Criterion(criterionMethod, value, comment);
+			final String doc) {
+		return new Criterion(criterionMethod, value, doc);
 	}
 	
 	public static Criterion newInstance(final String s) {
@@ -27,21 +27,19 @@ public final class Criterion {
 		return Criterion.newInstance(criterionMethod, value);
 	}
 	
-	private final String comment;
 	private final CriterionMethod criterionMethod;
 	private final String value;
+	private final String doc;
 	
 	private Criterion(final CriterionMethod method, final String val) {
 		this(method, val, null);
 	}
 	
 	private Criterion(
-			final CriterionMethod method,
-			final String val, 
-			final String cmmnt) {
-		this.comment = cmmnt;
+			final CriterionMethod method, final String val,	final String d) {
 		this.criterionMethod = method;
 		this.value = val;
+		this.doc = d;		
 	} 
 
 	@Override
@@ -73,12 +71,12 @@ public final class Criterion {
 		return this.criterionMethod.evaluatesTrue(arg, this.value);
 	}
 
-	public String getComment() {
-		return this.comment;
-	}
-	
 	public CriterionMethod getCriterionMethod() {
 		return this.criterionMethod;
+	}
+	
+	public String getDoc() {
+		return this.doc;
 	}
 	
 	public String getValue() {

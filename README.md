@@ -60,7 +60,7 @@ Although Jargyle can act as a standalone SOCKS5 server, it can act as a bridge b
 -   [5. 15. Allowing or Blocking SOCKS5 Requests](#5-15-allowing-or-blocking-socks5-requests)
 -   [5. 16. Logging](#5-16-logging)
 -   [6. Miscellaneous Notes](#6-miscellaneous-notes)
--   [6. 1. The Comment Attribute](#6-1-the-comment-attribute)
+-   [6. 1. The Doc Attribute and the Doc Element](#6-1-the-doc-attribute-and-the-doc-element)
 -   [6. 2. Multiple Settings of the Same Name](#6-2-multiple-settings-of-the-same-name)
 -   [6. 3. The SOCKS5 RESOLVE Command](#6-3-the-socks5-resolve-command)
 -   [7. Contact](#7-contact)
@@ -2030,15 +2030,20 @@ Example:
 
 The following are miscellaneous notes regarding Jargyle.
 
-### 6. 1. The Comment Attribute
+### 6. 1. The Doc Attribute and the Doc Element
 
-When using an existing configuration file to create a new configuration file, any XML comments from the existing configuration file cannot be transferred to the new configuration file. To preserve comments  from one configuration file to the next configuration file, the `comment` attribute can be used in certain XML elements. You can use the `comment` attribute in the following XML elements:
+When using an existing configuration file to create a new configuration file, any XML comments from the existing configuration file cannot be transferred to the new configuration file. To preserve comments from one configuration file to the next configuration file, the `doc` attribute and the `doc` element can be used in certain XML elements. 
+
+You can use the `doc` attribute in the following XML elements:
 
 -   `<clientAddressCriterion/>`
 -   `<commandCriterion/>`
 -   `<criterion/>`
 -   `<desiredDestinationAddressCriterion/>`
 -   `<portRange/>`
+
+You can use the `doc` element in the following XML elements:
+
 -   `<setting/>`
 -   `<socketSetting/>`
 -   `<socks5RequestCriterion/>`
@@ -2050,26 +2055,27 @@ Partial configuration file example:
     <setting>
         <name>allowedClientAddressCriteria</name>
         <criteria>
-            <criterion method="equals" value="127.0.0.1" comment="IPv4 loopback address"/>
-            <criterion method="equals" value="0:0:0:0:0:0:0:1" comment="IPv6 loopback address"/>
+            <criterion method="equals" value="127.0.0.1" doc="IPv4 loopback address"/>
+            <criterion method="equals" value="0:0:0:0:0:0:0:1" doc="IPv6 loopback address"/>
         </criteria>
     </setting>
     <setting>
         <name>blockedClientAddressCriteria</name>
         <criteria>
-            <criterion method="matches" value="(?!(127\.0\.0\.1|0:0:0:0:0:0:0:1)).*" comment="block any address that is not a loopback address"/>
+            <criterion method="matches" value="(?!(127\.0\.0\.1|0:0:0:0:0:0:0:1)).*" doc="Block any address that is not a loopback address"/>
         </criteria>
     </setting>
     <setting>
         <name>socks5.allowedSocks5RequestCriteria</name>
         <socks5RequestCriteria>
-            <socks5RequestCriterion comment="allow any client to connect to any address on port 80 or port 443">
+            <socks5RequestCriterion>
+                <doc>Allow any client to connect to any address on port 80 or port 443</doc>
                 <clientAddressCriterion method="matches" value=".*"/>
                 <commandCriterion method="equals" value="CONNECT"/>
                 <desiredDestinationAddressCriterion method="matches" value=".*"/>
                 <desiredDestinationPortRanges>
-                    <portRange minPort="80" maxPort="80" comment="HTTP port"/>
-                    <portRange minPort="443" maxPort="443" comment="HTTPS port"/>
+                    <portRange minPort="80" maxPort="80" doc="HTTP port"/>
+                    <portRange minPort="443" maxPort="443" doc="HTTPS port"/>
                 </desiredDestinationPortRanges>
             </socks5RequestCriterion>
         </socks5RequestCriteria>
@@ -2077,7 +2083,8 @@ Partial configuration file example:
     <setting>
         <name>socks5.blockedSocks5RequestCriteria</name>
         <socks5RequestCriteria>
-            <socks5RequestCriterion comment="block any BIND requests">
+            <socks5RequestCriterion>
+                <doc>Block any BIND requests</doc>
                 <clientAddressCriterion method="matches" value=".*"/>
                 <commandCriterion method="equals" value="BIND"/>
                 <desiredDestinationAddressCriterion method="matches" value=".*"/>
@@ -2085,7 +2092,8 @@ Partial configuration file example:
                     <portRange minPort="0" maxPort="65535"/>
                 </desiredDestinationPortRanges>
             </socks5RequestCriterion>
-            <socks5RequestCriterion comment="block any UDP ASSOCIATE requests">
+            <socks5RequestCriterion>
+                <doc>Block any UDP ASSOCIATE requests</doc>
                 <clientAddressCriterion method="matches" value=".*"/>
                 <commandCriterion method="equals" value="UDP_ASSOCIATE"/>
                 <desiredDestinationAddressCriterion method="matches" value=".*"/>

@@ -15,27 +15,27 @@ class CriterionXml {
 	protected CriterionMethodXml methodXml;
 	@XmlAttribute(name = "value", required = true)
 	protected String value;
-	@XmlAttribute(name = "comment")
-	protected String comment;
+	@XmlAttribute(name = "doc")
+	protected String doc;
 
 	public CriterionXml() {
 		this.methodXml = null;
 		this.value = null;
-		this.comment = null;
+		this.doc = null;
 	}
 	
 	public CriterionXml(final Criterion criterion) {
 		this.methodXml = CriterionMethodXml.valueOfCriterionMethod(
 				criterion.getCriterionMethod());
 		this.value = criterion.getValue();
-		this.comment = criterion.getComment();
+		this.doc = criterion.getDoc();
 	}
 	
 	public Criterion toCriterion() {
 		return Criterion.newInstance(
 				this.methodXml.criterionMethodValue(), 
 				this.value, 
-				this.comment); 
+				this.doc); 
 	}
 	
 }

@@ -19,8 +19,8 @@ public final class PortRange {
 	}
 	
 	public static PortRange newInstance(
-			final Port minPrt, final Port maxPrt, final String cmmnt) {
-		return new PortRange(minPrt, maxPrt, cmmnt);
+			final Port minPrt, final Port maxPrt, final String doc) {
+		return new PortRange(minPrt, maxPrt, doc);
 	}
 	
 	public static PortRange newInstance(final String s) {
@@ -79,21 +79,21 @@ public final class PortRange {
 		return newInstance(minPrt, maxPrt);
 	}
 	
-	private final String comment;
 	private final Port minPort;
 	private final Port maxPort;
+	private final String doc;
 	
 	private PortRange(
-			final Port minPrt, final Port maxPrt, final String cmmnt) {
+			final Port minPrt, final Port maxPrt, final String d) {
 		if (minPrt.compareTo(maxPrt) > 0) {
 			throw new IllegalArgumentException(String.format(
 					"minimum port (%s) must not be greater than maximum port (%s)", 
 					minPrt,
 					maxPrt));
 		}
-		this.comment = cmmnt;
 		this.minPort = minPrt;
 		this.maxPort = maxPrt;
+		this.doc = d;
 	}
 
 	public boolean contains(final Port port) {
@@ -129,8 +129,8 @@ public final class PortRange {
 		return true;
 	}
 
-	public String getComment() {
-		return this.comment;
+	public String getDoc() {
+		return this.doc;
 	}
 	
 	public Port getMaxPort() {

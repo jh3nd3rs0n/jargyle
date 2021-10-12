@@ -14,6 +14,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.xml.transform.Result;
+import javax.xml.transform.stream.StreamResult;
+
 import com.github.jh3nd3rs0n.argmatey.ArgMatey;
 import com.github.jh3nd3rs0n.argmatey.ArgMatey.Annotations.Option;
 import com.github.jh3nd3rs0n.argmatey.ArgMatey.Annotations.Ordinal;
@@ -23,6 +26,10 @@ import com.github.jh3nd3rs0n.argmatey.ArgMatey.TerminationRequestedException;
 import com.github.jh3nd3rs0n.jargyle.internal.help.HelpText;
 import com.github.jh3nd3rs0n.jargyle.internal.io.ConsoleWrapper;
 import com.github.jh3nd3rs0n.jargyle.server.SystemPropertyNameConstants;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.users.xml.bind.UsersXml;
+
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.SchemaOutputResolver;
 
 public final class UsersCLI extends CLI {
 	
@@ -114,8 +121,8 @@ public final class UsersCLI extends CLI {
 			}
 			Users users = null;
 			try {
-				users = Users.newInstanceFromXml(in);
-			} catch (IOException e) { 
+				users = UsersXml.newInstanceFromXml(in).toUsers();
+			} catch (JAXBException e) { 
 				throw new IllegalArgumentException(String.format(
 						"error in reading XML file '%s'", file), 
 						e);
@@ -206,9 +213,12 @@ public final class UsersCLI extends CLI {
 				tempFile.createNewFile();
 				out = new FileOutputStream(tempFile);
 			}
+			UsersXml usersXml = new UsersXml(users);
 			try {
-				users.toXml(out);
+				usersXml.toXml(out);
 				out.flush();
+			} catch (JAXBException e) {
+				throw new IOException(e);
 			} finally {
 				if (out instanceof FileOutputStream) {
 					out.close();
@@ -236,6 +246,24 @@ public final class UsersCLI extends CLI {
 		
 	}
 	
+	private static final class CustomSchemaOutputResolver 
+		extends SchemaOutputResolver {
+	
+		private final Result result;
+		
+		public CustomSchemaOutputResolver(final Result res) {
+			this.result = res;
+		}
+		
+		@Override
+		public Result createOutput(
+				final String namespaceUri, 
+				final String suggestedFileName) throws IOException {
+			return this.result;
+		}
+		
+	}
+
 	private static final int HELP_OPTION_GROUP_ORDINAL = 0;
 	private static final int XSD_OPTION_GROUP_ORDINAL = 1;
 	
@@ -389,7 +417,14 @@ public final class UsersCLI extends CLI {
 	)
 	@Ordinal(XSD_OPTION_GROUP_ORDINAL)
 	private void printXsd() throws IOException, TerminationRequestedException {
-		Users.generateXsd(System.out);
+		StreamResult result = new StreamResult(System.out);
+		result.setSystemId("");
+		try {
+			UsersXml.generateXsd(
+					System.out, new CustomSchemaOutputResolver(result));
+		} catch (JAXBException e) {
+			throw new IOException(e);
+		}
 		System.out.flush();
 		throw new TerminationRequestedException(0);
 	}

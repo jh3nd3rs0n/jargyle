@@ -6,41 +6,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import jakarta.xml.bind.annotation.XmlAccessType;
-import jakarta.xml.bind.annotation.XmlAccessorType;
-import jakarta.xml.bind.annotation.XmlElement;
-import jakarta.xml.bind.annotation.XmlType;
-import jakarta.xml.bind.annotation.adapters.XmlAdapter;
-import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-
-@XmlJavaTypeAdapter(Criteria.CriteriaXmlAdapter.class)
 public final class Criteria {
-
-	@XmlAccessorType(XmlAccessType.NONE)
-	@XmlType(name = "criteria", propOrder = { "criteria" })
-	static class CriteriaXml {
-		@XmlElement(name = "criterion")
-		protected List<Criterion> criteria = new ArrayList<Criterion>();
-	}
-	
-	static final class CriteriaXmlAdapter
-		extends XmlAdapter<CriteriaXml,Criteria> {
-
-		@Override
-		public CriteriaXml marshal(final Criteria v) throws Exception {
-			if (v == null) { return null; }
-			CriteriaXml criteriaXml = new CriteriaXml();
-			criteriaXml.criteria = new ArrayList<Criterion>(v.criteria);
-			return criteriaXml;
-		}
-
-		@Override
-		public Criteria unmarshal(final CriteriaXml v) throws Exception {
-			if (v == null) { return null; }
-			return new Criteria(v.criteria);
-		}
-		
-	}
 
 	private static final Criteria EMPTY_INSTANCE = new Criteria(
 			Collections.emptyList());

@@ -1,14 +1,11 @@
 package com.github.jh3nd3rs0n.jargyle.common.text;
 
-import jakarta.xml.bind.annotation.XmlEnum;
-import jakarta.xml.bind.annotation.XmlEnumValue;
-import jakarta.xml.bind.annotation.XmlType;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
-@XmlType(name = "criterionMethod")
-@XmlEnum(String.class)
 public enum CriterionMethod {
 	
-	@XmlEnumValue("equals")
 	EQUALS("equals") {
 
 		@Override
@@ -19,7 +16,6 @@ public enum CriterionMethod {
 		
 	},
 	
-	@XmlEnumValue("matches")
 	MATCHES("matches") {
 
 		@Override
@@ -29,6 +25,29 @@ public enum CriterionMethod {
 		}
 		
 	};
+
+	public static CriterionMethod valueOfString(final String s) {
+		for (CriterionMethod value : CriterionMethod.values()) {
+			if (value.toString().equals(s)) {
+				return value;
+			}
+		}
+		StringBuilder sb = new StringBuilder();
+		List<CriterionMethod> list = Arrays.asList(CriterionMethod.values());
+		for (Iterator<CriterionMethod> iterator = list.iterator();
+				iterator.hasNext();) {
+			CriterionMethod value = iterator.next();
+			sb.append(value);
+			if (iterator.hasNext()) {
+				sb.append(", ");
+			}
+		}
+		throw new IllegalArgumentException(String.format(
+				"expected criterion method must be one of the following "
+				+ "values: %s. actual value is %s",
+				sb.toString(),
+				s));
+	}
 	
 	private final String string;
 	

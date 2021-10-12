@@ -6,55 +6,17 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import jakarta.xml.bind.annotation.XmlAccessType;
-import jakarta.xml.bind.annotation.XmlAccessorType;
-import jakarta.xml.bind.annotation.XmlAttribute;
-import jakarta.xml.bind.annotation.XmlElement;
-import jakarta.xml.bind.annotation.XmlType;
-import jakarta.xml.bind.annotation.adapters.XmlAdapter;
-import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-
-@XmlJavaTypeAdapter(PortRanges.PortRangesXmlAdapter.class)
 public final class PortRanges {
 	
-	@XmlAccessorType(XmlAccessType.NONE)
-	@XmlType(name = "portRanges", propOrder = { "portRanges" })
-	static class PortRangesXml {
-		@XmlElement(name = "portRange", required = true)
-		protected List<PortRange> portRanges = new ArrayList<PortRange>();
-		@XmlAttribute(name = "comment")
-		protected String comment;		
-	}
-	
-	static final class PortRangesXmlAdapter 
-		extends XmlAdapter<PortRangesXml,PortRanges> {
-
-		@Override
-		public PortRangesXml marshal(final PortRanges v) throws Exception {
-			if (v == null) { return null; } 
-			PortRangesXml portRangesXml = new PortRangesXml();
-			portRangesXml.comment = v.comment;
-			portRangesXml.portRanges = new ArrayList<PortRange>(v.portRanges);
-			return portRangesXml;
-		}
-
-		@Override
-		public PortRanges unmarshal(final PortRangesXml v) throws Exception {
-			if (v == null) { return null; } 
-			return new PortRanges(v.portRanges, v.comment);
-		}
-		
-	}
-	
 	public static final PortRanges DEFAULT_INSTANCE = new PortRanges(
-			Arrays.asList(PortRange.getDefault()), null);
+			Arrays.asList(PortRange.getDefault()));
 	
 	public static PortRanges getDefault() {
 		return DEFAULT_INSTANCE;
 	}
 	
 	public static PortRanges newInstance(final List<PortRange> prtRanges) {
-		return new PortRanges(prtRanges, null);
+		return new PortRanges(prtRanges);
 	}
 	
 	public static PortRanges newInstance(final PortRange... prtRanges) {
@@ -64,20 +26,18 @@ public final class PortRanges {
 	public static PortRanges newInstance(final String s) {
 		List<PortRange> prtRanges = new ArrayList<PortRange>();
 		if (s.isEmpty()) {
-			return new PortRanges(prtRanges, null);
+			return new PortRanges(prtRanges);
 		}
 		String[] sElements = s.split(" ");
 		for (String sElement : sElements) {
 			prtRanges.add(PortRange.newInstance(sElement));
 		}
-		return new PortRanges(prtRanges, null);
+		return new PortRanges(prtRanges);
 	}
 	
-	private final String comment;
 	private final List<PortRange> portRanges;
 	
-	private PortRanges(final List<PortRange> prtRanges, final String cmmnt) {
-		this.comment = cmmnt;
+	private PortRanges(final List<PortRange> prtRanges) {
 		this.portRanges = new ArrayList<PortRange>(prtRanges);
 	}
 

@@ -12,46 +12,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import jakarta.xml.bind.annotation.XmlAccessType;
-import jakarta.xml.bind.annotation.XmlAccessorType;
-import jakarta.xml.bind.annotation.XmlElement;
-import jakarta.xml.bind.annotation.XmlType;
-import jakarta.xml.bind.annotation.adapters.XmlAdapter;
-import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-
-@XmlJavaTypeAdapter(SocketSettings.SocketSettingsXmlAdapter.class)
 public final class SocketSettings {
 
-	@XmlAccessorType(XmlAccessType.NONE)
-	@XmlType(name = "socketSettings", propOrder = { "socketSettings" })
-	static class SocketSettingsXml {
-		@XmlElement(name = "socketSetting")
-		protected List<SocketSetting<? extends Object>> socketSettings = new ArrayList<SocketSetting<? extends Object>>();
-	}
-	
-	static final class SocketSettingsXmlAdapter 
-		extends XmlAdapter<SocketSettingsXml, SocketSettings> {
-
-		@Override
-		public SocketSettingsXml marshal(
-				final SocketSettings v) throws Exception {
-			if (v == null) { return null; }
-			SocketSettingsXml socketSettingsXml = new SocketSettingsXml();
-			socketSettingsXml.socketSettings = 
-					new ArrayList<SocketSetting<? extends Object>>(
-							v.socketSettings.values());
-			return socketSettingsXml;
-		}
-
-		@Override
-		public SocketSettings unmarshal(
-				final SocketSettingsXml v) throws Exception {
-			if (v == null) { return null; }
-			return newInstance(v.socketSettings);
-		}
-		
-	}
-	
 	public static SocketSettings newInstance(
 			final List<SocketSetting<? extends Object>> socketSttngs) {
 		Map<SocketSettingSpec<Object>, SocketSetting<Object>> socketSettings = 

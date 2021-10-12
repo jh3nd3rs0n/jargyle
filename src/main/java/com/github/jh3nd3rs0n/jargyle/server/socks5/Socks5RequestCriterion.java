@@ -5,15 +5,6 @@ import com.github.jh3nd3rs0n.jargyle.common.net.PortRanges;
 import com.github.jh3nd3rs0n.jargyle.common.text.Criterion;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Request;
 
-import jakarta.xml.bind.annotation.XmlAccessType;
-import jakarta.xml.bind.annotation.XmlAccessorType;
-import jakarta.xml.bind.annotation.XmlAttribute;
-import jakarta.xml.bind.annotation.XmlElement;
-import jakarta.xml.bind.annotation.XmlType;
-import jakarta.xml.bind.annotation.adapters.XmlAdapter;
-import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-
-@XmlJavaTypeAdapter(Socks5RequestCriterion.Socks5RequestCriterionXmlAdapter.class)
 public final class Socks5RequestCriterion {
 
 	public static final class Builder {
@@ -47,7 +38,7 @@ public final class Socks5RequestCriterion {
 			return this;
 		}
 		
-		private Builder comment(final String cmmnt) {
+		public Builder comment(final String cmmnt) {
 			this.comment = cmmnt;
 			return this;
 		}
@@ -64,56 +55,6 @@ public final class Socks5RequestCriterion {
 			this.desiredDestinationPortRanges = desiredDestinationPrtRanges;
 			return this;
 		}
-	}
-	
-	@XmlAccessorType(XmlAccessType.NONE)
-	@XmlType(name = "socks5RequestCriterion", propOrder = { })
-	static class Socks5RequestCriterionXml {
-		@XmlElement(name = "clientAddressCriterion")
-		protected Criterion clientAddressCriterion;
-		@XmlElement(name = "commandCriterion")
-		protected Criterion commandCriterion;
-		@XmlElement(name = "desiredDestinationAddressCriterion")
-		protected Criterion desiredDestinationAddressCriterion;
-		@XmlElement(name = "desiredDestinationPortRanges")
-		protected PortRanges desiredDestinationPortRanges;
-		@XmlAttribute(name = "comment")
-		protected String comment;		
-	}
-	
-	static final class Socks5RequestCriterionXmlAdapter 
-		extends XmlAdapter<Socks5RequestCriterionXml, Socks5RequestCriterion> {
-
-		@Override
-		public Socks5RequestCriterionXml marshal(
-				final Socks5RequestCriterion arg) throws Exception {
-			Socks5RequestCriterionXml socks5RequestCriterionXml = 
-					new Socks5RequestCriterionXml();
-			socks5RequestCriterionXml.clientAddressCriterion = 
-					arg.clientAddressCriterion;
-			socks5RequestCriterionXml.commandCriterion = arg.commandCriterion;
-			socks5RequestCriterionXml.comment = arg.comment;
-			socks5RequestCriterionXml.desiredDestinationAddressCriterion = 
-					arg.desiredDestinationAddressCriterion;
-			socks5RequestCriterionXml.desiredDestinationPortRanges = 
-					arg.desiredDestinationPortRanges;
-			return socks5RequestCriterionXml;
-		}
-
-		@Override
-		public Socks5RequestCriterion unmarshal(
-				final Socks5RequestCriterionXml arg) throws Exception {
-			return new Socks5RequestCriterion.Builder()
-					.clientAddressCriterion(arg.clientAddressCriterion)
-					.commandCriterion(arg.commandCriterion)
-					.comment(arg.comment)
-					.desiredDestinationAddressCriterion(
-							arg.desiredDestinationAddressCriterion)
-					.desiredDestinationPortRanges(
-							arg.desiredDestinationPortRanges)
-					.build();
-		}
-		
 	}
 	
 	private final Criterion clientAddressCriterion;
@@ -215,6 +156,10 @@ public final class Socks5RequestCriterion {
 
 	public Criterion getCommandCriterion() {
 		return this.commandCriterion;
+	}
+
+	public String getComment() {
+		return this.comment;
 	}
 	
 	public Criterion getDesiredDestinationAddressCriterion() {

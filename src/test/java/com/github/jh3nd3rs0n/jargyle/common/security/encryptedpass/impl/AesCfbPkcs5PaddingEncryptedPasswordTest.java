@@ -1,4 +1,4 @@
-package com.github.jh3nd3rs0n.jargyle.common.security;
+package com.github.jh3nd3rs0n.jargyle.common.security.encryptedpass.impl;
 
 import static org.junit.Assert.assertArrayEquals;
 

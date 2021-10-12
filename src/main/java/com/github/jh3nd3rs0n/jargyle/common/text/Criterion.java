@@ -1,85 +1,30 @@
 package com.github.jh3nd3rs0n.jargyle.common.text;
 
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-
-import jakarta.xml.bind.annotation.XmlAccessType;
-import jakarta.xml.bind.annotation.XmlAccessorType;
-import jakarta.xml.bind.annotation.XmlAttribute;
-import jakarta.xml.bind.annotation.XmlType;
-import jakarta.xml.bind.annotation.adapters.XmlAdapter;
-import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-
-@XmlJavaTypeAdapter(Criterion.CriterionXmlAdapter.class)
 public final class Criterion {
 
-	@XmlAccessorType(XmlAccessType.NONE)
-	@XmlType(name = "criterion", propOrder = { })
-	static class CriterionXml {
-		@XmlAttribute(name = "method", required = true)
-		protected CriterionMethod method;
-		@XmlAttribute(name = "value", required = true)
-		protected String value;
-		@XmlAttribute(name = "comment")
-		protected String comment;
-	}
-	
-	static final class CriterionXmlAdapter 
-		extends XmlAdapter<CriterionXml, Criterion> {
-
-		@Override
-		public CriterionXml marshal(final Criterion arg) throws Exception {
-			if (arg == null) { return null; }
-			CriterionXml criterionXml = new CriterionXml();
-			criterionXml.comment = arg.comment;
-			criterionXml.method = arg.criterionMethod;
-			criterionXml.value = arg.value;
-			return criterionXml;
-		}
-
-		@Override
-		public Criterion unmarshal(final CriterionXml arg) throws Exception {
-			if (arg == null) { return null; }
-			return new Criterion(arg.method, arg.value, arg.comment);
-		}
-		
-	}
-	
 	public static Criterion newInstance(
 			final CriterionMethod criterionMethod, final String value) {
 		return new Criterion(criterionMethod, value);
 	}
 	
+	public static Criterion newInstance(
+			final CriterionMethod criterionMethod, 
+			final String value,
+			final String comment) {
+		return new Criterion(criterionMethod, value, comment);
+	}
+	
 	public static Criterion newInstance(final String s) {
-		StringBuilder sb = new StringBuilder();
-		List<CriterionMethod> list = Arrays.asList(CriterionMethod.values());
-		for (Iterator<CriterionMethod> iterator = list.iterator();
-				iterator.hasNext();) {
-			CriterionMethod value = iterator.next();
-			String prefix = value.toString().concat(":");
-			sb.append(prefix);
-			if (iterator.hasNext()) {
-				sb.append(" , ");
-			}
-		}
-		String message = String.format(
-				"string is expected to have one of the following "
-				+ "prefixes: %s . actual string is %s",
-				sb.toString(),
-				s);
 		String[] sElements = s.split(":", 2);
 		if (sElements.length != 2) {
-			throw new IllegalArgumentException(message);
+			throw new IllegalArgumentException(
+					"criterion must be in the following format: "
+					+ "CRITERION_METHOD:VALUE");
 		}
-		String criterionOperator = sElements[0];
-		String operand = sElements[1];
-		for (CriterionMethod value : CriterionMethod.values()) {
-			if (value.toString().equals(criterionOperator)) {
-				return new Criterion(value, operand);
-			}
-		}
-		throw new IllegalArgumentException(message);
+		CriterionMethod criterionMethod = CriterionMethod.valueOfString(
+				sElements[0]);
+		String value = sElements[1];
+		return Criterion.newInstance(criterionMethod, value);
 	}
 	
 	private final String comment;
@@ -126,6 +71,10 @@ public final class Criterion {
 	
 	public boolean evaluatesTrue(final String arg) {
 		return this.criterionMethod.evaluatesTrue(arg, this.value);
+	}
+
+	public String getComment() {
+		return this.comment;
 	}
 	
 	public CriterionMethod getCriterionMethod() {

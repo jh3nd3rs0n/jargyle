@@ -6,42 +6,8 @@ import java.util.Objects;
 
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.userpassauth.UsernamePasswordRequest;
 
-import jakarta.xml.bind.annotation.XmlAccessType;
-import jakarta.xml.bind.annotation.XmlAccessorType;
-import jakarta.xml.bind.annotation.XmlElement;
-import jakarta.xml.bind.annotation.XmlType;
-import jakarta.xml.bind.annotation.adapters.XmlAdapter;
-import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+public final class User {
 
-@XmlJavaTypeAdapter(User.UserXmlAdapter.class)
-final class User {
-
-	@XmlAccessorType(XmlAccessType.NONE)
-	@XmlType(name = "user", propOrder = { })
-	static class UserXml {
-		@XmlElement(name = "hashedPassword", required = true)
-		protected HashedPassword hashedPassword;
-		@XmlElement(name = "name", required = true)
-		protected String name;
-	}
-	
-	static final class UserXmlAdapter extends XmlAdapter<UserXml, User> {
-
-		@Override
-		public UserXml marshal(final User v) throws Exception {
-			UserXml userXml = new UserXml();
-			userXml.name = v.name;
-			userXml.hashedPassword = v.hashedPassword;
-			return userXml;
-		}
-
-		@Override
-		public User unmarshal(final UserXml v) throws Exception {
-			return new User(v.name, v.hashedPassword);
-		}
-		
-	}
-	
 	public static final int MAX_NAME_LENGTH = 
 			UsernamePasswordRequest.MAX_UNAME_LENGTH;
 	public static final int MAX_PASSWORD_LENGTH = 
@@ -74,6 +40,11 @@ final class User {
 		validateName(name);
 		validatePassword(password);
 		return new User(name, HashedPassword.newInstance(password));
+	}
+	
+	public static User newInstance(
+			final String name, final HashedPassword hashedPassword) {
+		return new User(name, hashedPassword);
 	}
 	
 	public static void validateName(final String name) {
@@ -135,7 +106,7 @@ final class User {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append(this.getClass().getSimpleName())
-			.append(" [hashedPassword=")
+			.append(" [hashedPasswordXml=")
 			.append(this.hashedPassword)
 			.append(", name=")
 			.append(this.name)

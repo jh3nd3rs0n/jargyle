@@ -1,4 +1,4 @@
-package com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth;
+package com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.hashedpass.impl;
 
 import static org.junit.Assert.assertEquals;
 

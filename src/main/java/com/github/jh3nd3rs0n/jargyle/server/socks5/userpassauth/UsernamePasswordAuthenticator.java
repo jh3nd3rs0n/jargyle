@@ -5,49 +5,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
-import jakarta.xml.bind.annotation.XmlAccessType;
-import jakarta.xml.bind.annotation.XmlAccessorType;
-import jakarta.xml.bind.annotation.XmlElement;
-import jakarta.xml.bind.annotation.XmlType;
-import jakarta.xml.bind.annotation.adapters.XmlAdapter;
-import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-
-@XmlJavaTypeAdapter(UsernamePasswordAuthenticator.UsernamePasswordAuthenticatorXmlAdapter.class)
 public class UsernamePasswordAuthenticator {
 
-	@XmlAccessorType(XmlAccessType.NONE)
-	@XmlType(name = "usernamePasswordAuthenticator", propOrder = { })
-	static class UsernamePasswordAuthenticatorXml {
-		@XmlElement(name = "className", required = true)
-		protected String className;
-		@XmlElement(name = "value")
-		protected String value;
-	}
-	
-	static class UsernamePasswordAuthenticatorXmlAdapter extends 
-	XmlAdapter<UsernamePasswordAuthenticatorXml, UsernamePasswordAuthenticator> {
-
-		@Override
-		public UsernamePasswordAuthenticatorXml marshal(
-				final UsernamePasswordAuthenticator v) throws Exception {
-			if (v == null) { return null; }
-			UsernamePasswordAuthenticatorXml usernamePasswordAuthenticatorXml =
-					new UsernamePasswordAuthenticatorXml();
-			usernamePasswordAuthenticatorXml.className = v.getClass().getName();
-			usernamePasswordAuthenticatorXml.value = v.value;
-			return usernamePasswordAuthenticatorXml;
-		}
-
-		@Override
-		public UsernamePasswordAuthenticator unmarshal(
-				final UsernamePasswordAuthenticatorXml v) throws Exception {
-			if (v == null) { return null; }
-			return UsernamePasswordAuthenticator.newInstance(
-					v.className, v.value);
-		}
-		
-	}
-	
 	public static UsernamePasswordAuthenticator newInstance() {
 		return new UsernamePasswordAuthenticator(null);
 	}
@@ -157,7 +116,7 @@ public class UsernamePasswordAuthenticator {
 		return newInstance(className, value);
 	}
 	
-	private static UsernamePasswordAuthenticator newInstance(
+	public static UsernamePasswordAuthenticator newInstance(
 			final String className, final String value) {
 		Class<?> cls = null;
 		try {

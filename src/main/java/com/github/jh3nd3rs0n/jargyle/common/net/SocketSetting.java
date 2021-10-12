@@ -5,49 +5,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 
-import jakarta.xml.bind.annotation.XmlAccessType;
-import jakarta.xml.bind.annotation.XmlAccessorType;
-import jakarta.xml.bind.annotation.XmlAttribute;
-import jakarta.xml.bind.annotation.XmlElement;
-import jakarta.xml.bind.annotation.XmlType;
-import jakarta.xml.bind.annotation.adapters.XmlAdapter;
-import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-
-@XmlJavaTypeAdapter(SocketSetting.SocketSettingXmlAdapter.class)
 public final class SocketSetting<V> {
 
-	@XmlAccessorType(XmlAccessType.NONE)
-	@XmlType(name = "socketSetting", propOrder = { })
-	static class SocketSettingXml {
-		@XmlElement(name = "name", required = true)
-		protected String name;
-		@XmlElement(name = "value", required = true)
-		protected String value;
-		@XmlAttribute(name = "comment")
-		protected String comment;
-	}
-	
-	static final class SocketSettingXmlAdapter 
-		extends XmlAdapter<SocketSettingXml, SocketSetting<Object>> {
-
-		@Override
-		public SocketSettingXml marshal(
-				final SocketSetting<Object> v) throws Exception {
-			SocketSettingXml socketSettingXml = new SocketSettingXml();
-			socketSettingXml.comment = v.comment;
-			socketSettingXml.name = v.getSocketSettingSpec().toString();
-			socketSettingXml.value = v.getValue().toString();
-			return socketSettingXml;
-		}
-
-		@Override
-		public SocketSetting<Object> unmarshal(
-				final SocketSettingXml v) throws Exception {
-			return newInstance(v.name, v.value, v.comment);
-		}
-		
-	}
-	
 	public static SocketSetting<Object> newInstance(final String s) {
 		String[] sElements = s.split("=", 2);
 		if (sElements.length != 2) {
@@ -66,7 +25,7 @@ public final class SocketSetting<V> {
 				name).newSocketSettingOfParsableValue(value);
 	}
 	
-	private static SocketSetting<Object> newInstance(
+	public static SocketSetting<Object> newInstance(
 			final String name, 
 			final String value, 
 			final String comment) {
@@ -134,6 +93,10 @@ public final class SocketSetting<V> {
 		return true;
 	}
 
+	public String getComment() {
+		return this.comment;
+	}
+	
 	public SocketSettingSpec<V> getSocketSettingSpec() {
 		return this.socketSettingSpec;
 	}

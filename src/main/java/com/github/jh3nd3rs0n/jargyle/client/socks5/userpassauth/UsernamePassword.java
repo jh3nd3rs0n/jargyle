@@ -6,48 +6,8 @@ import java.net.URLDecoder;
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.userpassauth.UsernamePasswordRequest;
 
-import jakarta.xml.bind.annotation.XmlAccessType;
-import jakarta.xml.bind.annotation.XmlAccessorType;
-import jakarta.xml.bind.annotation.XmlElement;
-import jakarta.xml.bind.annotation.XmlType;
-import jakarta.xml.bind.annotation.adapters.XmlAdapter;
-import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-
-@XmlJavaTypeAdapter(UsernamePassword.UsernamePasswordXmlAdapter.class)
 public final class UsernamePassword {
 
-	@XmlAccessorType(XmlAccessType.NONE)
-	@XmlType(name = "usernamePassword", propOrder = { })
-	static class UsernamePasswordXml {
-		@XmlElement(name = "encryptedPassword", required = true)
-		protected EncryptedPassword encryptedPassword;
-		@XmlElement(name = "username", required = true)
-		protected String username;
-	}
-	
-	static final class UsernamePasswordXmlAdapter 
-		extends XmlAdapter<UsernamePasswordXml, UsernamePassword> {
-
-		@Override
-		public UsernamePasswordXml marshal(
-				final UsernamePassword v) throws Exception {
-			if (v == null) { return null; }
-			UsernamePasswordXml usernamePasswordXml = 
-					new UsernamePasswordXml();
-			usernamePasswordXml.encryptedPassword = v.encryptedPassword;
-			usernamePasswordXml.username = v.username;
-			return usernamePasswordXml;
-		}
-
-		@Override
-		public UsernamePassword unmarshal(
-				final UsernamePasswordXml v) throws Exception {
-			if (v == null) { return null; }
-			return new UsernamePassword(v.username, v.encryptedPassword);
-		}
-		
-	}
-	
 	public static final int MAX_PASSWORD_LENGTH = 
 			UsernamePasswordRequest.MAX_PASSWD_LENGTH;
 

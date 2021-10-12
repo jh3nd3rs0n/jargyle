@@ -14,6 +14,9 @@ import org.slf4j.LoggerFactory;
 
 import com.github.jh3nd3rs0n.jargyle.internal.io.FileMonitor;
 import com.github.jh3nd3rs0n.jargyle.internal.io.FileStatusListener;
+import com.github.jh3nd3rs0n.jargyle.server.config.xml.bind.ConfigurationXml;
+
+import jakarta.xml.bind.JAXBException;
 
 public final class XmlFileSourceConfigurationProvider 
 	extends ConfigurationProvider {
@@ -63,7 +66,8 @@ public final class XmlFileSourceConfigurationProvider
 			Configuration config = null;
 			try {
 				in = new FileInputStream(file);
-				config = ImmutableConfiguration.newInstanceFromXml(in);
+				config = ConfigurationXml.newInstanceFromXml(
+						in).toConfiguration();
 			} catch (FileNotFoundException e) {
 				LOGGER.warn(
 						String.format(
@@ -71,7 +75,7 @@ public final class XmlFileSourceConfigurationProvider
 								file), 
 						e);
 				return false;
-			} catch (IOException e) {
+			} catch (JAXBException e) {
 				LOGGER.warn(
 						String.format(
 								"Error in reading file '%s'", 
@@ -115,10 +119,10 @@ public final class XmlFileSourceConfigurationProvider
 		Configuration config = null;
 		try {
 			in = new FileInputStream(file);
-			config = ImmutableConfiguration.newInstanceFromXml(in);
+			config = ConfigurationXml.newInstanceFromXml(in).toConfiguration();
 		} catch (FileNotFoundException e) {
 			throw new IllegalArgumentException(e);
-		} catch (IOException e) {
+		} catch (JAXBException e) {
 			throw new IllegalArgumentException(String.format(
 					"error in reading XML file '%s'", file), 
 					e);

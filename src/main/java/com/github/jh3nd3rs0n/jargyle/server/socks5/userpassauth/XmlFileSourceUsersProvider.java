@@ -14,6 +14,9 @@ import org.slf4j.LoggerFactory;
 
 import com.github.jh3nd3rs0n.jargyle.internal.io.FileMonitor;
 import com.github.jh3nd3rs0n.jargyle.internal.io.FileStatusListener;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.users.xml.bind.UsersXml;
+
+import jakarta.xml.bind.JAXBException;
 
 final class XmlFileSourceUsersProvider extends UsersProvider {
 	
@@ -60,7 +63,7 @@ final class XmlFileSourceUsersProvider extends UsersProvider {
 			Users usrs = null;
 			try {
 				in = new FileInputStream(file);
-				usrs = Users.newInstanceFromXml(in);
+				usrs = UsersXml.newInstanceFromXml(in).toUsers();
 			} catch (FileNotFoundException e) {
 				LOGGER.warn( 
 						String.format(
@@ -68,7 +71,7 @@ final class XmlFileSourceUsersProvider extends UsersProvider {
 								file), 
 						e);
 				return false;
-			} catch (IOException e) {
+			} catch (JAXBException e) {
 				LOGGER.warn( 
 						String.format(
 								"Error in reading file '%s'", 
@@ -113,10 +116,10 @@ final class XmlFileSourceUsersProvider extends UsersProvider {
 		Users usrs = null;
 		try {
 			in = new FileInputStream(f);
-			usrs = Users.newInstanceFromXml(in);
+			usrs = UsersXml.newInstanceFromXml(in).toUsers();
 		} catch (FileNotFoundException e) {
 			throw new IllegalArgumentException(e);
-		} catch (IOException e) {
+		} catch (JAXBException e) {
 			throw new IllegalArgumentException(String.format(
 					"error in reading XML file '%s'", f), 
 					e);

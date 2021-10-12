@@ -1,4 +1,4 @@
-package com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth;
+package com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.hashedpass.impl;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -9,45 +9,9 @@ import java.util.Arrays;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
-import jakarta.xml.bind.annotation.XmlAccessType;
-import jakarta.xml.bind.annotation.XmlAccessorType;
-import jakarta.xml.bind.annotation.XmlElement;
-import jakarta.xml.bind.annotation.XmlType;
-import jakarta.xml.bind.annotation.adapters.XmlAdapter;
-import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.HashedPassword;
 
-@XmlJavaTypeAdapter(Pbkdf2WithHmacSha256HashedPassword.Pbkdf2WithHmacSha256HashedPasswordXmlAdapter.class)
-final class Pbkdf2WithHmacSha256HashedPassword extends HashedPassword {
-
-	@XmlAccessorType(XmlAccessType.NONE)
-	@XmlType(name = "pbkdf2WithHmacSha256HashedPassword", propOrder = { })
-	static class Pbkdf2WithHmacSha256HashedPasswordXml extends HashedPasswordXml {
-		@XmlElement(name = "hash", required = true)
-		protected byte[] hash;
-		@XmlElement(name = "salt", required = true)
-		protected byte[] salt;
-	}
-	
-	static final class Pbkdf2WithHmacSha256HashedPasswordXmlAdapter 
-		extends XmlAdapter<Pbkdf2WithHmacSha256HashedPasswordXml, Pbkdf2WithHmacSha256HashedPassword> {
-
-		@Override
-		public Pbkdf2WithHmacSha256HashedPasswordXml marshal(
-				final Pbkdf2WithHmacSha256HashedPassword arg) throws Exception {
-			Pbkdf2WithHmacSha256HashedPasswordXml hashedPasswordXml = 
-					new Pbkdf2WithHmacSha256HashedPasswordXml();
-			hashedPasswordXml.hash = Arrays.copyOf(arg.hash, arg.hash.length);
-			hashedPasswordXml.salt = Arrays.copyOf(arg.salt, arg.salt.length);
-			return hashedPasswordXml;
-		}
-
-		@Override
-		public Pbkdf2WithHmacSha256HashedPassword unmarshal(
-				final Pbkdf2WithHmacSha256HashedPasswordXml arg) throws Exception {
-			return new Pbkdf2WithHmacSha256HashedPassword(arg.hash, arg.salt);
-		}
-		
-	}
+public final class Pbkdf2WithHmacSha256HashedPassword extends HashedPassword {
 
 	private static final int ITERATION_COUNT = 65536;
 	private static final int KEY_LENGTH = 256;
@@ -55,6 +19,11 @@ final class Pbkdf2WithHmacSha256HashedPassword extends HashedPassword {
 	private static final String SECRET_KEY_FACTORY_ALGORITHM = 
 			"PBKDF2WithHmacSHA256";
 	private static final SecureRandom SECURE_RANDOM = new SecureRandom();
+	
+	public static Pbkdf2WithHmacSha256HashedPassword newInstance(
+			final byte[] hash, final byte[] salt) {
+		return new Pbkdf2WithHmacSha256HashedPassword(hash, salt); 
+	}
 	
 	public static Pbkdf2WithHmacSha256HashedPassword newInstance(
 			final char[] password) {
@@ -80,12 +49,6 @@ final class Pbkdf2WithHmacSha256HashedPassword extends HashedPassword {
 			throw new AssertionError(e);
 		}
 		return new Pbkdf2WithHmacSha256HashedPassword(hsh, slt);
-	}
-	
-	public static Pbkdf2WithHmacSha256HashedPassword newInstance(
-			final Pbkdf2WithHmacSha256HashedPasswordXml hashedPasswordXml) {
-		return new Pbkdf2WithHmacSha256HashedPassword(
-				hashedPasswordXml.hash, hashedPasswordXml.salt);
 	}
 	
 	private static byte[] newSalt() {
@@ -146,12 +109,12 @@ final class Pbkdf2WithHmacSha256HashedPassword extends HashedPassword {
 		return result;
 	}
 
-	public Pbkdf2WithHmacSha256HashedPasswordXml toPbkdf2WithHmacSha256HashedPasswordXml() {
-		Pbkdf2WithHmacSha256HashedPasswordXml hashedPasswordXml = 
-				new Pbkdf2WithHmacSha256HashedPasswordXml();
-		hashedPasswordXml.hash = Arrays.copyOf(this.hash, this.hash.length);
-		hashedPasswordXml.salt = Arrays.copyOf(this.salt, this.salt.length);
-		return hashedPasswordXml;
+	@Override
+	public boolean passwordEquals(final char[] password) {
+		Pbkdf2WithHmacSha256HashedPassword other = 
+				Pbkdf2WithHmacSha256HashedPassword.newInstance(
+						password, this.salt); 
+		return this.equals(other);
 	}
 
 	@Override

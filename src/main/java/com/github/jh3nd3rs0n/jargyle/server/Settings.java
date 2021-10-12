@@ -7,43 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import jakarta.xml.bind.annotation.XmlAccessType;
-import jakarta.xml.bind.annotation.XmlAccessorType;
-import jakarta.xml.bind.annotation.XmlElement;
-import jakarta.xml.bind.annotation.XmlType;
-import jakarta.xml.bind.annotation.adapters.XmlAdapter;
-import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-
-@XmlJavaTypeAdapter(Settings.SettingsXmlAdapter.class)
 public final class Settings {
 
-	@XmlAccessorType(XmlAccessType.NONE)
-	@XmlType(name = "settings", propOrder = { "settings" })
-	static class SettingsXml {
-		@XmlElement(name = "setting")
-		protected List<Setting<? extends Object>> settings = new ArrayList<Setting<? extends Object>>();
-	}
-	
-	static final class SettingsXmlAdapter 
-		extends XmlAdapter<SettingsXml, Settings> {
-
-		@Override
-		public SettingsXml marshal(final Settings v) throws Exception {
-			if (v == null) { return null; }
-			SettingsXml settingsXml = new SettingsXml();
-			settingsXml.settings = new ArrayList<Setting<? extends Object>>(
-					v.settings);
-			return settingsXml;
-		}
-
-		@Override
-		public Settings unmarshal(final SettingsXml v) throws Exception {
-			if (v == null) { return null; }
-			return newInstance(v.settings);
-		}
-		
-	}
-	
 	private static final Settings EMPTY_INSTANCE = new Settings(
 			Collections.emptyList());
 	

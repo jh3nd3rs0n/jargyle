@@ -1,48 +1,7 @@
 package com.github.jh3nd3rs0n.jargyle.common.net;
 
-import jakarta.xml.bind.annotation.XmlAccessType;
-import jakarta.xml.bind.annotation.XmlAccessorType;
-import jakarta.xml.bind.annotation.XmlAttribute;
-import jakarta.xml.bind.annotation.XmlType;
-import jakarta.xml.bind.annotation.adapters.XmlAdapter;
-import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-
-@XmlJavaTypeAdapter(PortRange.PortRangeXmlAdapter.class)
 public final class PortRange {
 
-	@XmlAccessorType(XmlAccessType.NONE)
-	@XmlType(name = "portRange", propOrder = { })
-	static class PortRangeXml {
-		@XmlAttribute(name = "minPort", required = true)
-		protected int minPort;
-		@XmlAttribute(name = "maxPort", required = true)
-		protected int maxPort;
-		@XmlAttribute(name = "comment")
-		protected String comment;
-	}
-	
-	static final class PortRangeXmlAdapter 
-		extends XmlAdapter<PortRangeXml,PortRange> {
-
-		@Override
-		public PortRangeXml marshal(final PortRange arg) throws Exception {
-			PortRangeXml portRangeXml = new PortRangeXml();
-			portRangeXml.comment = arg.comment;
-			portRangeXml.minPort = arg.minPort.intValue();
-			portRangeXml.maxPort = arg.maxPort.intValue();
-			return portRangeXml;
-		}
-
-		@Override
-		public PortRange unmarshal(final PortRangeXml arg) throws Exception {
-			return new PortRange(
-					Port.newInstance(arg.minPort),
-					Port.newInstance(arg.maxPort), 
-					arg.comment);
-		}
-		
-	}
-	
 	private static final PortRange DEFAULT_INSTANCE = PortRange.newInstance(
 			Port.newInstance(Port.MIN_INT_VALUE), 
 			Port.newInstance(Port.MAX_INT_VALUE));
@@ -57,6 +16,11 @@ public final class PortRange {
 	
 	public static PortRange newInstance(final Port minPrt, final Port maxPrt) {
 		return new PortRange(minPrt, maxPrt, null);
+	}
+	
+	public static PortRange newInstance(
+			final Port minPrt, final Port maxPrt, final String cmmnt) {
+		return new PortRange(minPrt, maxPrt, cmmnt);
 	}
 	
 	public static PortRange newInstance(final String s) {
@@ -163,6 +127,10 @@ public final class PortRange {
 			return false;
 		}
 		return true;
+	}
+
+	public String getComment() {
+		return this.comment;
 	}
 	
 	public Port getMaxPort() {

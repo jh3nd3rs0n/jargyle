@@ -27,14 +27,12 @@
         </setting>
         <setting>
             <name>socketSettings</name>
-            <socketSettingsValue>
-                <socketSettings>
-                    <socketSetting>
-                        <name>SO_TIMEOUT</name>
-                        <value>0</value>
-                    </socketSetting>
-                </socketSettings>
-            </socketSettingsValue>
+            <socketSettings>
+                <socketSetting>
+                    <name>SO_TIMEOUT</name>
+                    <value>0</value>
+                </socketSetting>
+            </socketSettings>
         </setting>
     </settings>
 </configuration>

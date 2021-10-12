@@ -14,6 +14,9 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.transform.Result;
+import javax.xml.transform.stream.StreamResult;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,11 +36,33 @@ import com.github.jh3nd3rs0n.jargyle.common.net.StandardSocketSettingSpecConstan
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
 import com.github.jh3nd3rs0n.jargyle.internal.help.HelpText;
 import com.github.jh3nd3rs0n.jargyle.internal.io.ConsoleWrapper;
+import com.github.jh3nd3rs0n.jargyle.server.config.xml.bind.ConfigurationXml;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.UsersCLI;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.gssapiauth.ProtectionLevel;
 
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.SchemaOutputResolver;
+
 public final class SocksServerCLI extends CLI {
+	
+	private static final class CustomSchemaOutputResolver 
+		extends SchemaOutputResolver {
+	
+		private final Result result;
+		
+		public CustomSchemaOutputResolver(final Result res) {
+			this.result = res;
+		}
+		
+		@Override
+		public Result createOutput(
+				final String namespaceUri, 
+				final String suggestedFileName) throws IOException {
+			return this.result;
+		}
+		
+	}
 	
 	private static final class SettingGnuLongOptionUsageProvider 
 		extends OptionUsageProvider {
@@ -58,7 +83,7 @@ public final class SocksServerCLI extends CLI {
 		}
 		
 	}
-	
+
 	private static final int CONFIG_FILE_OPTION_GROUP_ORDINAL = 0;
 	private static final int CONFIG_FILE_XSD_OPTION_GROUP_ORDINAL = 1;	
 	private static final int ENTER_CHAINING_DTLS_KEY_STORE_PASS_OPTION_GROUP_ORDINAL = 2;
@@ -137,8 +162,9 @@ public final class SocksServerCLI extends CLI {
 		}
 		Configuration configuration = null;
 		try {
-			configuration = ImmutableConfiguration.newInstanceFromXml(in);
-		} catch (IOException e) { 
+			configuration = ConfigurationXml.newInstanceFromXml(
+					in).toConfiguration();
+		} catch (JAXBException e) { 
 			throw new IllegalArgumentException(String.format(
 					"possible invalid XML file '%s'", file), 
 					e);
@@ -561,9 +587,13 @@ public final class SocksServerCLI extends CLI {
 			tempFile.createNewFile();
 			out = new FileOutputStream(tempFile);
 		}
+		ConfigurationXml configurationXml = new ConfigurationXml(
+				immutableConfiguration);
 		try {
-			immutableConfiguration.toXml(out);
+			configurationXml.toXml(out);
 			out.flush();
+		} catch (JAXBException e) {
+			throw new IOException(e);
 		} finally {
 			if (out instanceof FileOutputStream) {
 				out.close();
@@ -590,7 +620,14 @@ public final class SocksServerCLI extends CLI {
 	@Ordinal(CONFIG_FILE_XSD_OPTION_GROUP_ORDINAL)
 	private void printConfigurationFileXsd() 
 			throws IOException, TerminationRequestedException {
-		ImmutableConfiguration.generateXsd(System.out);
+		StreamResult result = new StreamResult(System.out);
+		result.setSystemId("");
+		try {
+			ConfigurationXml.generateXsd(
+					System.out, new CustomSchemaOutputResolver(result));
+		} catch (JAXBException e) {
+			throw new IOException(e);
+		}
 		System.out.flush();
 		throw new TerminationRequestedException(0);
 	}

@@ -1,229 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.server;
 
-import com.github.jh3nd3rs0n.jargyle.client.socks5.userpassauth.UsernamePassword;
-import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
-import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
-import com.github.jh3nd3rs0n.jargyle.common.text.Criteria;
-import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5RequestCriteria;
-import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5RequestWorkerFactory;
-import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.UsernamePasswordAuthenticator;
-
-import jakarta.xml.bind.annotation.XmlAccessType;
-import jakarta.xml.bind.annotation.XmlAccessorType;
-import jakarta.xml.bind.annotation.XmlAttribute;
-import jakarta.xml.bind.annotation.XmlElement;
-import jakarta.xml.bind.annotation.XmlElements;
-import jakarta.xml.bind.annotation.XmlType;
-import jakarta.xml.bind.annotation.XmlValue;
-import jakarta.xml.bind.annotation.adapters.XmlAdapter;
-import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-
-@XmlJavaTypeAdapter(Setting.SettingXmlAdapter.class)
 public final class Setting<V> {
-
-	@XmlAccessorType(XmlAccessType.NONE)
-	@XmlType(name = "criteriaValue")
-	static class CriteriaValue {
-		
-		@XmlElement(name = "criteria", required = true)
-		protected Criteria value;
-		
-	}
-	
-	@XmlAccessorType(XmlAccessType.NONE)
-	@XmlType(name = "encryptedPasswordValue")
-	static class EncryptedPasswordValue {
-		
-		@XmlElement(name = "encryptedPassword", required = true)
-		protected EncryptedPassword value;
-		
-	}
-	
-	@XmlAccessorType(XmlAccessType.NONE)
-	@XmlType(name = "setting", propOrder = { })
-	static class SettingXml {
-		@XmlElement(name = "name", required = true)
-		protected String name;
-		@XmlElements({
-			@XmlElement(
-					name = "criteriaValue", 
-					required = true, 
-					type = CriteriaValue.class),
-			@XmlElement(
-					name = "encryptedPasswordValue",
-					required = true,
-					type = EncryptedPasswordValue.class),
-			@XmlElement(
-					name = "socketSettingsValue", 
-					required = true, 
-					type = SocketSettingsValue.class),
-			@XmlElement(
-					name = "socks5RequestCriteriaValue", 
-					required = true, 
-					type = Socks5RequestCriteriaValue.class),
-			@XmlElement(
-					name = "socks5RequestWorkerFactoryValue",
-					required = true,
-					type = Socks5RequestWorkerFactoryValue.class),
-			@XmlElement(
-					name = "usernamePasswordAuthenticatorValue", 
-					required = true, 
-					type = UsernamePasswordAuthenticatorValue.class),
-			@XmlElement(
-					name = "usernamePasswordValue", 
-					required = true, 
-					type = UsernamePasswordValue.class),
-			@XmlElement(
-					name = "value", 
-					required = true, 
-					type = Value.class)
-		})
-		protected Object value;
-		@XmlAttribute(name = "comment")
-		protected String comment;		
-	}
-	
-	static final class SettingXmlAdapter
-		extends XmlAdapter<SettingXml, Setting<Object>> {
-
-		@Override
-		public SettingXml marshal(final Setting<Object> v) throws Exception {
-			SettingXml settingXml = new SettingXml();
-			settingXml.comment = v.comment;
-			settingXml.name = v.getSettingSpec().toString();
-			Object val = v.getValue();
-			if (val instanceof Criteria) {
-				CriteriaValue newVal = new CriteriaValue();
-				newVal.value = (Criteria) val;
-				settingXml.value = newVal;
-			} else if (val instanceof EncryptedPassword) {
-				EncryptedPasswordValue newVal = new EncryptedPasswordValue();
-				newVal.value = (EncryptedPassword) val;
-				settingXml.value = newVal;
-			} else if (val instanceof SocketSettings) {
-				SocketSettingsValue newVal = new SocketSettingsValue();
-				newVal.value = (SocketSettings) val;
-				settingXml.value = newVal;
-			} else if (val instanceof Socks5RequestCriteria) {
-				Socks5RequestCriteriaValue newVal = 
-						new Socks5RequestCriteriaValue();
-				newVal.value = (Socks5RequestCriteria) val;
-				settingXml.value = newVal;
-			} else if (val instanceof Socks5RequestWorkerFactory) {
-				Socks5RequestWorkerFactoryValue newVal = 
-						new Socks5RequestWorkerFactoryValue();
-				newVal.value = (Socks5RequestWorkerFactory) val;
-				settingXml.value = newVal;
-			} else if (val instanceof UsernamePasswordAuthenticator) {
-				UsernamePasswordAuthenticatorValue newVal =
-						new UsernamePasswordAuthenticatorValue();
-				newVal.value = (UsernamePasswordAuthenticator) val;
-				settingXml.value = newVal;
-			} else if (val instanceof UsernamePassword) {
-				UsernamePasswordValue newVal = new UsernamePasswordValue();
-				newVal.value = (UsernamePassword) val;
-				settingXml.value = newVal;
-			} else {
-				Value newVal = new Value();
-				newVal.value = val.toString();
-				settingXml.value = newVal;
-			}
-			return settingXml;
-		}
-
-		@Override
-		public Setting<Object> unmarshal(final SettingXml v) throws Exception {
-			Object val = v.value;
-			if (val instanceof CriteriaValue) {
-				CriteriaValue newVal = (CriteriaValue) val;
-				return newInstance(v.name, newVal.value, v.comment);
-			}
-			if (val instanceof EncryptedPasswordValue) {
-				EncryptedPasswordValue newVal = (EncryptedPasswordValue) val;
-				return newInstance(v.name, newVal.value, v.comment);
-			}
-			if (val instanceof SocketSettingsValue) {
-				SocketSettingsValue newVal = (SocketSettingsValue) val;
-				return newInstance(v.name, newVal.value, v.comment);
-			}
-			if (val instanceof Socks5RequestCriteriaValue) {
-				Socks5RequestCriteriaValue newVal = 
-						(Socks5RequestCriteriaValue) val;
-				return newInstance(v.name, newVal.value, v.comment);
-			}
-			if (val instanceof Socks5RequestWorkerFactoryValue) {
-				Socks5RequestWorkerFactoryValue newVal =
-						(Socks5RequestWorkerFactoryValue) val;
-				return newInstance(v.name, newVal.value, v.comment);
-			}
-			if (val instanceof UsernamePasswordAuthenticatorValue) {
-				UsernamePasswordAuthenticatorValue newVal =
-						(UsernamePasswordAuthenticatorValue) val;
-				return newInstance(v.name, newVal.value, v.comment);
-			}
-			if (val instanceof UsernamePasswordValue) {
-				UsernamePasswordValue newVal = (UsernamePasswordValue) val;
-				return newInstance(v.name, newVal.value, v.comment);
-			} 
-			Value newVal = (Value) val;
-			return newInstance(v.name, newVal.value, v.comment);
-		}
-		
-	}
-
-	@XmlAccessorType(XmlAccessType.NONE)
-	@XmlType(name = "socketSettingsValue")
-	static class SocketSettingsValue {
-		
-		@XmlElement(name = "socketSettings", required = true)
-		protected SocketSettings value;
-		
-	}
-	
-	@XmlAccessorType(XmlAccessType.NONE)
-	@XmlType(name = "socks5RequestCriteriaValue")
-	static class Socks5RequestCriteriaValue {
-		
-		@XmlElement(name = "socks5RequestCriteria", required = true)
-		protected Socks5RequestCriteria value;
-		
-	}
-	
-	@XmlAccessorType(XmlAccessType.NONE)
-	@XmlType(name = "socks5RequestWorkerFactoryValue")
-	static class Socks5RequestWorkerFactoryValue {
-		
-		@XmlElement(name = "socks5RequestWorkerFactory", required = true)
-		protected Socks5RequestWorkerFactory value;
-		
-	}
-	
-	@XmlAccessorType(XmlAccessType.NONE)
-	@XmlType(name = "usernamePasswordAuthenticatorValue")
-	static class UsernamePasswordAuthenticatorValue {
-		
-		@XmlElement(name = "usernamePasswordAuthenticator", required = true)
-		protected UsernamePasswordAuthenticator value;
-		
-	}
-	
-	@XmlAccessorType(XmlAccessType.NONE)
-	@XmlType(name = "usernamePasswordValue")
-	static class UsernamePasswordValue {
-		
-		@XmlElement(name = "usernamePassword", required = true)
-		protected UsernamePassword value;
-		
-	}
-	
-	@XmlAccessorType(XmlAccessType.NONE)
-	@XmlType(name = "value")
-	static class Value {
-		
-		@XmlValue
-		protected String value;
-		
-	}
 	
 	public static Setting<Object> newInstance(final String s) {
 		String[] sElements = s.split("=", 2);
@@ -242,7 +19,7 @@ public final class Setting<V> {
 				name).newSettingOfParsableValue(value);
 	}
 
-	private static Setting<Object> newInstance(
+	public static Setting<Object> newInstance(
 			final String name, final String value, final String comment) {
 		Setting<Object> setting = newInstance(name, value);
 		return new Setting<Object>(
@@ -258,7 +35,7 @@ public final class Setting<V> {
 		return setting;
 	}
 	
-	private static <V> Setting<V> newInstance(
+	public static <V> Setting<V> newInstance(
 			final String name, final V value, final String comment) {
 		Setting<V> setting = newInstance(name, value);
 		return new Setting<V>(
@@ -304,6 +81,10 @@ public final class Setting<V> {
 			return false;
 		}
 		return true;
+	}
+
+	public String getComment() {
+		return this.comment;
 	}
 	
 	public SettingSpec<V> getSettingSpec() {

@@ -18,9 +18,7 @@ final class UsersSourceUsernamePasswordAuthenticator
 		User user = users.get(username);
 		if (user == null) { return false; }
 		HashedPassword hashedPassword = user.getHashedPassword();
-		HashedPassword otherHashedPassword = HashedPassword.newInstance(
-				password, hashedPassword);
-		return hashedPassword.equals(otherHashedPassword);
+		return hashedPassword.passwordEquals(password);
 	}
 	
 }

@@ -1,4 +1,4 @@
-package com.github.jh3nd3rs0n.jargyle.common.security;
+package com.github.jh3nd3rs0n.jargyle.common.security.encryptedpass.impl;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -23,66 +23,13 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import jakarta.xml.bind.annotation.XmlAccessType;
-import jakarta.xml.bind.annotation.XmlAccessorType;
-import jakarta.xml.bind.annotation.XmlElement;
-import jakarta.xml.bind.annotation.XmlType;
-import jakarta.xml.bind.annotation.adapters.XmlAdapter;
-import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
 
-@XmlJavaTypeAdapter(AesCfbPkcs5PaddingEncryptedPassword.AesCfbPkcs5PaddingEncryptedPasswordXmlAdapter.class)
-final class AesCfbPkcs5PaddingEncryptedPassword extends EncryptedPassword {
-
-	@XmlAccessorType(XmlAccessType.NONE)
-	@XmlType(name = "aesCfbPkcs5PaddingEncryptedPassword", propOrder = { })
-	static class AesCfbPkcs5PaddingEncryptedPasswordXml extends EncryptedPasswordXml {
-		@XmlElement(name = "encodedKey", required = true)
-		protected byte[] encodedKey;
-		@XmlElement(name = "encrypted", required = true)
-		protected byte[] encrypted;
-		@XmlElement(name = "initializationVector", required = true)
-		protected byte[] initializationVector;
-	}
-
-	static final class AesCfbPkcs5PaddingEncryptedPasswordXmlAdapter
-			extends XmlAdapter<AesCfbPkcs5PaddingEncryptedPasswordXml, AesCfbPkcs5PaddingEncryptedPassword> {
-
-		@Override
-		public AesCfbPkcs5PaddingEncryptedPasswordXml marshal(
-				final AesCfbPkcs5PaddingEncryptedPassword arg) throws Exception {
-			AesCfbPkcs5PaddingEncryptedPasswordXml encryptedPasswordXml = 
-					new AesCfbPkcs5PaddingEncryptedPasswordXml();
-			encryptedPasswordXml.encodedKey = Arrays.copyOf(
-					arg.encodedKey, arg.encodedKey.length);
-			encryptedPasswordXml.encrypted = Arrays.copyOf(
-					arg.encrypted, arg.encrypted.length);
-			encryptedPasswordXml.initializationVector = Arrays.copyOf(
-					arg.initializationVector, arg.initializationVector.length);
-			return encryptedPasswordXml;
-		}
-
-		@Override
-		public AesCfbPkcs5PaddingEncryptedPassword unmarshal(
-				final AesCfbPkcs5PaddingEncryptedPasswordXml arg) throws Exception {
-			return new AesCfbPkcs5PaddingEncryptedPassword(
-					arg.encodedKey, 
-					arg.encrypted, 
-					arg.initializationVector);
-		}
-
-	}
+public final class AesCfbPkcs5PaddingEncryptedPassword extends EncryptedPassword {
 
 	private static final String CIPHER_ALGORITHM = "AES/CFB/PKCS5Padding";
 	private static final int KEY_LENGTH = 256;
 	private static final String SECRET_KEY_SPEC_ALGORITHM = "AES";
-
-	public static AesCfbPkcs5PaddingEncryptedPassword newInstance(
-			final AesCfbPkcs5PaddingEncryptedPasswordXml encryptedPasswordXml) {
-		return new AesCfbPkcs5PaddingEncryptedPassword(
-				encryptedPasswordXml.encodedKey, 
-				encryptedPasswordXml.encrypted, 
-				encryptedPasswordXml.initializationVector);
-	}
 
 	private static AesCfbPkcs5PaddingEncryptedPassword newInstance(
 			final byte[] secret) {
@@ -129,6 +76,16 @@ final class AesCfbPkcs5PaddingEncryptedPassword extends EncryptedPassword {
 	}
 	
 	public static AesCfbPkcs5PaddingEncryptedPassword newInstance(
+			final byte[] encodedKey,
+			final byte[] encrypted,
+			final byte[] initializationVector) {
+		return new AesCfbPkcs5PaddingEncryptedPassword(
+				encodedKey,
+				encrypted,
+				initializationVector);
+	}
+
+	public static AesCfbPkcs5PaddingEncryptedPassword newInstance(
 			final char[] password) {
 		ByteArrayOutputStream byteArrayOutputStream = 
 				new ByteArrayOutputStream();
@@ -148,7 +105,7 @@ final class AesCfbPkcs5PaddingEncryptedPassword extends EncryptedPassword {
 		byte[] secret = byteArrayOutputStream.toByteArray();
 		return newInstance(secret);
 	}
-
+	
 	private final byte[] encodedKey;
 	private final byte[] encrypted;
 	private final byte[] initializationVector;
@@ -257,18 +214,6 @@ final class AesCfbPkcs5PaddingEncryptedPassword extends EncryptedPassword {
 		result = prime * result + Arrays.hashCode(this.encrypted);
 		result = prime * result + Arrays.hashCode(this.initializationVector);
 		return result;
-	}
-
-	public AesCfbPkcs5PaddingEncryptedPasswordXml toAesCbcPkcs5PaddingEncryptedPasswordXml() {
-		AesCfbPkcs5PaddingEncryptedPasswordXml encryptedPasswordXml = 
-				new AesCfbPkcs5PaddingEncryptedPasswordXml();
-		encryptedPasswordXml.encodedKey = Arrays.copyOf(
-				this.encodedKey, this.encodedKey.length);
-		encryptedPasswordXml.encrypted = Arrays.copyOf(
-				this.encrypted, this.encrypted.length);
-		encryptedPasswordXml.initializationVector = Arrays.copyOf(
-				this.initializationVector, this.initializationVector.length);
-		return encryptedPasswordXml;
 	}
 
 	@Override

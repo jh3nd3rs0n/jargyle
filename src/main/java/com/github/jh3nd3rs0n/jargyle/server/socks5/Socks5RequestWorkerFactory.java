@@ -5,49 +5,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
-import jakarta.xml.bind.annotation.XmlAccessType;
-import jakarta.xml.bind.annotation.XmlAccessorType;
-import jakarta.xml.bind.annotation.XmlElement;
-import jakarta.xml.bind.annotation.XmlType;
-import jakarta.xml.bind.annotation.adapters.XmlAdapter;
-import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-
-@XmlJavaTypeAdapter(Socks5RequestWorkerFactory.Socks5RequestWorkerFactoryXmlAdapter.class)
 public class Socks5RequestWorkerFactory {
 
-	@XmlAccessorType(XmlAccessType.NONE)
-	@XmlType(name = "socks5RequestWorkerFactory", propOrder = { })
-	static class Socks5RequestWorkerFactoryXml {
-		@XmlElement(name = "className", required = true)
-		protected String className;
-		@XmlElement(name = "value")
-		protected String value;
-	}
-	
-	static class Socks5RequestWorkerFactoryXmlAdapter extends 
-		XmlAdapter<Socks5RequestWorkerFactoryXml, Socks5RequestWorkerFactory> {
-
-		@Override
-		public Socks5RequestWorkerFactoryXml marshal(
-				final Socks5RequestWorkerFactory v) throws Exception {
-			if (v == null) { return null; }
-			Socks5RequestWorkerFactoryXml socks5RequestWorkerFactoryXml =
-					new Socks5RequestWorkerFactoryXml();
-			socks5RequestWorkerFactoryXml.className = v.getClass().getName();
-			socks5RequestWorkerFactoryXml.value = v.value;
-			return socks5RequestWorkerFactoryXml;
-		}
-
-		@Override
-		public Socks5RequestWorkerFactory unmarshal(
-				final Socks5RequestWorkerFactoryXml v) throws Exception {
-			if (v == null) { return null; }
-			return Socks5RequestWorkerFactory.newInstance(
-					v.className, v.value);
-		}
-		
-	}
-	
 	public static Socks5RequestWorkerFactory newInstance() {
 		return new Socks5RequestWorkerFactory(null);
 	}
@@ -148,7 +107,7 @@ public class Socks5RequestWorkerFactory {
 		return newInstance(className, value);
 	}
 	
-	private static Socks5RequestWorkerFactory newInstance(
+	public static Socks5RequestWorkerFactory newInstance(
 			final String className, final String value) {
 		Class<?> cls = null;
 		try {

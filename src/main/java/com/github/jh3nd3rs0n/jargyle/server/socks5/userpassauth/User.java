@@ -106,7 +106,7 @@ public final class User {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append(this.getClass().getSimpleName())
-			.append(" [hashedPasswordXml=")
+			.append(" [hashedPassword=")
 			.append(this.hashedPassword)
 			.append(", name=")
 			.append(this.name)

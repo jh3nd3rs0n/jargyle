@@ -18,7 +18,7 @@ import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.users.xml.bind.U
 
 import jakarta.xml.bind.JAXBException;
 
-final class XmlFileSourceUsersProvider extends UsersProvider {
+public final class XmlFileSourceUsersProvider extends UsersProvider {
 	
 	private static final class UsersUpdater implements FileStatusListener {
 		

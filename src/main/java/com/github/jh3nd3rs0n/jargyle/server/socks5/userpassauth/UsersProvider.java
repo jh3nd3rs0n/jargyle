@@ -1,6 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth;
 
-abstract class UsersProvider {
+public abstract class UsersProvider {
 
 	private final String source;
 	

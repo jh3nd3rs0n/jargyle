@@ -1,6 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth;
 
-final class UsersSourceUsernamePasswordAuthenticator 
+public final class UsersSourceUsernamePasswordAuthenticator 
 	extends UsernamePasswordAuthenticator {
 	
 	private final UsersProvider usersProvider;

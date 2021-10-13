@@ -21,10 +21,6 @@ public class UsernamePasswordAuthenticator {
 				StringSourceUsernamePasswordAuthenticator.class)) {
 			usernamePasswordAuthenticator = 
 					new StringSourceUsernamePasswordAuthenticator(value);
-		} else if (cls.equals(
-				XmlFileSourceUsernamePasswordAuthenticator.class)) {
-			usernamePasswordAuthenticator = 
-					new XmlFileSourceUsernamePasswordAuthenticator(value);
 		} else if (UsernamePasswordAuthenticator.class.isAssignableFrom(cls)) {
 			Method method = null;
 			Constructor<?> constructor = null;

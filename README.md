@@ -1180,7 +1180,7 @@ Also, you will need to have the setting `socks5.userpassauth.usernamePasswordAut
 The following are two provided classes you can use:
 
 -   `com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.StringSourceUsernamePasswordAuthenticator`
--   `com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.XmlFileSourceUsernamePasswordAuthenticator`
+-   `com.github.jh3nd3rs0n.jargyle.main.socks5.userpassauth.XmlFileSourceUsernamePasswordAuthenticator`
 
 `com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.StringSourceUsernamePasswordAuthenticator`: This class authenticates the username and password based on the string value of a space separated list of USERNAME:PASSWORD pairs
 
@@ -1219,14 +1219,14 @@ If any of the usernames or any of the passwords contain a plus sign character (`
 
 If any of the usernames or any of the passwords contain a percent sign character (`%`) not used for URL encoding, then each percent sign character not used for URL encoding must be replaced with the URL encoding character `%25`.
 
-`com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.XmlFileSourceUsernamePasswordAuthenticator`: This class authenticates the username and password based on the [XML file of users](#5-10-managing-socks5-users-for-username-password-authentication) whose file name is provided as a string value
+`com.github.jh3nd3rs0n.jargyle.main.socks5.userpassauth.XmlFileSourceUsernamePasswordAuthenticator`: This class authenticates the username and password based on the [XML file of users](#5-10-managing-socks5-users-for-username-password-authentication) whose file name is provided as a string value
 
 Partial command line example:
 
 ```text
     
     --setting=socks5.methods=USERNAME_PASSWORD \
-    --setting=socks5.userpassauth.usernamePasswordAuthenticator=com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.XmlFileSourceUsernamePasswordAuthenticator:users.xml
+    --setting=socks5.userpassauth.usernamePasswordAuthenticator=com.github.jh3nd3rs0n.jargyle.main.socks5.userpassauth.XmlFileSourceUsernamePasswordAuthenticator:users.xml
     
 ```
 
@@ -1241,7 +1241,7 @@ Partial configuration file example:
     <setting>
         <name>socks5.userpassauth.usernamePasswordAuthenticator</name>
         <usernamePasswordAuthenticator>
-            <className>com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.XmlFileSourceUsernamePasswordAuthenticator</className>
+            <className>com.github.jh3nd3rs0n.jargyle.main.socks5.userpassauth.XmlFileSourceUsernamePasswordAuthenticator</className>
             <value>users.xml</value>
         </usernamePasswordAuthenticator>
     </setting>
@@ -1980,10 +1980,11 @@ The following are the classes that use logging:
 
 -   `com.github.jh3nd3rs0n.jargyle.common.net.RelayServer$DataWorker`
 -   `com.github.jh3nd3rs0n.jargyle.common.net.ssl.DtlsDatagramSocket`
+-   `com.github.jh3nd3rs0n.jargyle.main.JargyleCLI`
+-   `com.github.jh3nd3rs0n.jargyle.main.XmlFileSourceConfigurationProvider$ConfigurationUpdater`
+-   `com.github.jh3nd3rs0n.jargyle.main.socks5.userpassauth.XmlFileSourceUsersProvider$UsersUpdater`
 -   `com.github.jh3nd3rs0n.jargyle.server.Listener`
--   `com.github.jh3nd3rs0n.jargyle.server.SocksServerCLI`
 -   `com.github.jh3nd3rs0n.jargyle.server.Worker`
--   `com.github.jh3nd3rs0n.jargyle.server.XmlFileSourceConfigurationProvider$ConfigurationUpdater`
 -   `com.github.jh3nd3rs0n.jargyle.server.socks5.BindCommandWorker`
 -   `com.github.jh3nd3rs0n.jargyle.server.socks5.ConnectCommandWorker`
 -   `com.github.jh3nd3rs0n.jargyle.server.socks5.ResolveCommandWorker`
@@ -1991,7 +1992,6 @@ The following are the classes that use logging:
 -   `com.github.jh3nd3rs0n.jargyle.server.socks5.UdpAssociateCommandWorker`
 -   `com.github.jh3nd3rs0n.jargyle.server.socks5.UdpRelayServer$InboundPacketsWorker`
 -   `com.github.jh3nd3rs0n.jargyle.server.socks5.UdpRelayServer$OutboundPacketsWorker`
--   `com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.XmlFileSourceUsersProvider$UsersUpdater`
 
 To configure logging for any of the aforementioned classes, you can use a configuration file to specify the logging properties for any of the classes.
 
@@ -2001,10 +2001,10 @@ The following is a configuration file example of setting the logging level of so
 
 ```text
     
+    com.github.jh3nd3rs0n.jargyle.main.JargyleCLI.handlers = java.util.logging.ConsoleHandler
+    com.github.jh3nd3rs0n.jargyle.main.JargyleCLI.level = FINE    
     com.github.jh3nd3rs0n.jargyle.server.Listener.handlers = java.util.logging.ConsoleHandler
     com.github.jh3nd3rs0n.jargyle.server.Listener.level = FINE    
-    com.github.jh3nd3rs0n.jargyle.server.SocksServerCLI.handlers = java.util.logging.ConsoleHandler
-    com.github.jh3nd3rs0n.jargyle.server.SocksServerCLI.level = FINE
     com.github.jh3nd3rs0n.jargyle.server.Worker.handlers = java.util.logging.ConsoleHandler
     com.github.jh3nd3rs0n.jargyle.server.Worker.level = FINE
     com.github.jh3nd3rs0n.jargyle.server.socks5.ConnectCommandWorker.handlers = java.util.logging.ConsoleHandler

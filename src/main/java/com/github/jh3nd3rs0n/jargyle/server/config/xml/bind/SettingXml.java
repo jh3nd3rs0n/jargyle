@@ -78,7 +78,7 @@ class SettingXml {
 			return Setting.newInstance(this.name, newVal.toValue(), this.doc);
 		}
 		String newVal = (String) val;
-		return Setting.newInstance(this.name, newVal, this.doc);			
+		return Setting.newInstanceOfParsableValue(this.name, newVal, this.doc);			
 	}
 	
 }

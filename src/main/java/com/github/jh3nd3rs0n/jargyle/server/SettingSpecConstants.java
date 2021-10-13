@@ -1,33 +1,33 @@
 package com.github.jh3nd3rs0n.jargyle.server;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 final class SettingSpecConstants {
 
+	private static final List<SettingSpec<Object>> VALUES;
 	private static final Map<String, SettingSpec<Object>> VALUES_MAP;
 	
 	static {
+		List<SettingSpec<Object>> values = new ArrayList<SettingSpec<Object>>();
+		values.addAll(ChainingDtlsSettingSpecConstants.values());
+		values.addAll(ChainingGeneralSettingSpecConstants.values());		
+		values.addAll(ChainingSocks5SettingSpecConstants.values());
+		values.addAll(ChainingSslSettingSpecConstants.values());
+		values.addAll(DtlsSettingSpecConstants.values());
+		values.addAll(GeneralSettingSpecConstants.values());
+		values.addAll(Socks5SettingSpecConstants.values());
+		values.addAll(SslSettingSpecConstants.values());
 		Map<String, SettingSpec<Object>> valuesMap = 
 				new HashMap<String, SettingSpec<Object>>();
-		putEach(ChainingDtlsSettingSpecConstants.values(), valuesMap);
-		putEach(ChainingGeneralSettingSpecConstants.values(), valuesMap);		
-		putEach(ChainingSocks5SettingSpecConstants.values(), valuesMap);
-		putEach(ChainingSslSettingSpecConstants.values(), valuesMap);
-		putEach(DtlsSettingSpecConstants.values(), valuesMap);
-		putEach(GeneralSettingSpecConstants.values(), valuesMap);
-		putEach(Socks5SettingSpecConstants.values(), valuesMap);
-		putEach(SslSettingSpecConstants.values(), valuesMap);
-		VALUES_MAP = valuesMap;
-	}
-	
-	private static void putEach(
-			final List<SettingSpec<Object>> values,
-			final Map<String, SettingSpec<Object>> valuesMap) {
 		for (SettingSpec<Object> value : values) {
 			valuesMap.put(value.toString(), value);
 		}
+		VALUES = values;
+		VALUES_MAP = valuesMap;
 	}
 	
 	public static SettingSpec<Object> valueOf(final String s) {
@@ -36,6 +36,10 @@ final class SettingSpecConstants {
 		}
 		throw new IllegalArgumentException(String.format(
 				"unknown setting: %s", s));		
+	}
+	
+	public static List<SettingSpec<Object>> values() {
+		return Collections.unmodifiableList(VALUES);
 	}
 	
 	private SettingSpecConstants() { }

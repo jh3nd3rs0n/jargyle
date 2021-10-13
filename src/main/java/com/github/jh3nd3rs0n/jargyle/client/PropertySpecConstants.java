@@ -2,11 +2,14 @@ package com.github.jh3nd3rs0n.jargyle.client;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 final class PropertySpecConstants {
 
 	private static final List<PropertySpec<Object>> VALUES;
+	private static final Map<String, PropertySpec<Object>> VALUES_MAP;
 	
 	static {
 		List<PropertySpec<Object>> values = 
@@ -15,7 +18,21 @@ final class PropertySpecConstants {
 		values.addAll(GeneralPropertySpecConstants.values());
 		values.addAll(Socks5PropertySpecConstants.values());
 		values.addAll(SslPropertySpecConstants.values());
+		Map<String, PropertySpec<Object>> valuesMap = 
+				new HashMap<String, PropertySpec<Object>>();
+		for (PropertySpec<Object> value : values) {
+			valuesMap.put(value.toString(), value);
+		}
 		VALUES = values;
+		VALUES_MAP = valuesMap;
+	}
+	
+	public static PropertySpec<Object> valueOf(final String s) {
+		if (VALUES_MAP.containsKey(s)) {
+			return VALUES_MAP.get(s);
+		}
+		throw new IllegalArgumentException(String.format(
+				"unknown property: %s", s));
 	}
 	
 	public static List<PropertySpec<Object>> values() {

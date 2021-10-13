@@ -31,7 +31,7 @@ class SocketSettingXml {
 	}
 	
 	public SocketSetting<Object> toSocketSetting() {
-		return SocketSetting.newInstance(this.name, this.value, this.doc);
+		return SocketSetting.newInstanceOfParsableValue(this.name, this.value, this.doc);
 	}
 	
 }

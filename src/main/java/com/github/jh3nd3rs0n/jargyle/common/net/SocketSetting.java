@@ -16,18 +16,37 @@ public final class SocketSetting<V> {
 		}
 		String socketSettingSpecString = sElements[0];
 		String value = sElements[1];
-		return newInstance(socketSettingSpecString, value);
+		return newInstanceOfParsableValue(socketSettingSpecString, value);
 	}
 	
-	private static SocketSetting<Object> newInstance(
+	public static <V> SocketSetting<V> newInstance(
+			final String name, final V value) {
+		@SuppressWarnings("unchecked")
+		SocketSetting<V> socketSetting = 
+				(SocketSetting<V>) SocketSettingSpecConstants.valueOf(
+						name).newSocketSetting(value);
+		return socketSetting;
+	}
+	
+	public static <V> SocketSetting<V> newInstance(
+			final String name, final V value, final String doc) {
+		SocketSetting<V> socketSetting = newInstance(name, value);
+		return new SocketSetting<V>(
+				socketSetting.getSocketSettingSpec(),
+				socketSetting.getValue(),
+				doc);
+	}
+	
+	public static SocketSetting<Object> newInstanceOfParsableValue(
 			final String name, final String value) {
 		return SocketSettingSpecConstants.valueOf(
 				name).newSocketSettingOfParsableValue(value);
 	}
 	
-	public static SocketSetting<Object> newInstance(
+	public static SocketSetting<Object> newInstanceOfParsableValue(
 			final String name, final String value, final String doc) {
-		SocketSetting<Object> socketSetting = newInstance(name, value);
+		SocketSetting<Object> socketSetting = newInstanceOfParsableValue(
+				name, value);
 		return new SocketSetting<Object>(
 				socketSetting.getSocketSettingSpec(), 
 				socketSetting.getValue(), 

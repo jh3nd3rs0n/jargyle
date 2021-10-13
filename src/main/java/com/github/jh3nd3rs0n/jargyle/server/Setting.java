@@ -10,35 +10,33 @@ public final class Setting<V> {
 		}
 		String name = sElements[0];
 		String value = sElements[1];
-		return newInstance(name, value);
+		return newInstanceOfParsableValue(name, value);
 	}
 	
-	private static Setting<Object> newInstance(
-			final String name, final String value) {
-		return SettingSpecConstants.valueOf(
-				name).newSettingOfParsableValue(value);
-	}
-
-	public static Setting<Object> newInstance(
-			final String name, final String value, final String doc) {
-		Setting<Object> setting = newInstance(name, value);
-		return new Setting<Object>(
-				setting.getSettingSpec(), setting.getValue(), doc);
-	}
-	
-	private static <V> Setting<V> newInstance(
-			final String name, final V value) {
+	public static <V> Setting<V> newInstance(final String name, final V value) {
 		@SuppressWarnings("unchecked")
-		Setting<V> setting = 
-				(Setting<V>) SettingSpecConstants.valueOf(
-						name).newSetting(value);
+		Setting<V> setting = (Setting<V>) SettingSpecConstants.valueOf(
+				name).newSetting(value);
 		return setting;
 	}
-	
+
 	public static <V> Setting<V> newInstance(
 			final String name, final V value, final String doc) {
 		Setting<V> setting = newInstance(name, value);
 		return new Setting<V>(
+				setting.getSettingSpec(), setting.getValue(), doc);
+	}
+	
+	public static Setting<Object> newInstanceOfParsableValue(
+			final String name, final String value) {
+		return SettingSpecConstants.valueOf(
+				name).newSettingOfParsableValue(value);
+	}
+	
+	public static Setting<Object> newInstanceOfParsableValue(
+			final String name, final String value, final String doc) {
+		Setting<Object> setting = newInstanceOfParsableValue(name, value);
+		return new Setting<Object>(
 				setting.getSettingSpec(), setting.getValue(), doc);
 	}
 	

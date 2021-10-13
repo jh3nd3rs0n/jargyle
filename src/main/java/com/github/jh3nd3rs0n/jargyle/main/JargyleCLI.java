@@ -36,7 +36,6 @@ import com.github.jh3nd3rs0n.jargyle.common.net.StandardSocketSettingSpecConstan
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
 import com.github.jh3nd3rs0n.jargyle.internal.help.HelpText;
 import com.github.jh3nd3rs0n.jargyle.internal.io.ConsoleWrapper;
-import com.github.jh3nd3rs0n.jargyle.main.config.xml.bind.ConfigurationXml;
 import com.github.jh3nd3rs0n.jargyle.main.socks5.userpassauth.UsersCLI;
 import com.github.jh3nd3rs0n.jargyle.server.ChainingDtlsSettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.ChainingGeneralSettingSpecConstants;
@@ -53,6 +52,8 @@ import com.github.jh3nd3rs0n.jargyle.server.Setting;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
 import com.github.jh3nd3rs0n.jargyle.server.SslSettingSpecConstants;
+import com.github.jh3nd3rs0n.jargyle.server.XmlFileSourceConfigurationProvider;
+import com.github.jh3nd3rs0n.jargyle.server.config.xml.bind.ConfigurationXml;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.gssapiauth.ProtectionLevel;
 

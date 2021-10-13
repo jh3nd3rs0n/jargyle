@@ -173,7 +173,7 @@ public final class SocksServerCLI extends CLI {
 				in.close();
 			}
 		}
-		this.modifiableConfiguration.add(configuration);
+		this.modifiableConfiguration.addSettings(configuration.getSettings());
 	}
 	
 	@Option(

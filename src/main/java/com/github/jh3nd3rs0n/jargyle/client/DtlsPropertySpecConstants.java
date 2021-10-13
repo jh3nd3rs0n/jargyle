@@ -2,6 +2,7 @@ package com.github.jh3nd3rs0n.jargyle.client;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 import com.github.jh3nd3rs0n.jargyle.client.propertyspec.impl.BooleanPropertySpec;
 import com.github.jh3nd3rs0n.jargyle.client.propertyspec.impl.EncryptedPasswordPropertySpec;
@@ -85,6 +86,10 @@ public final class DtlsPropertySpecConstants {
 	
 	public static List<PropertySpec<Object>> values() {
 		return PROPERTY_SPECS.toList();
+	}
+	
+	public static Map<String, PropertySpec<Object>> valuesMap() {
+		return PROPERTY_SPECS.toMap();
 	}
 	
 	private DtlsPropertySpecConstants() { }

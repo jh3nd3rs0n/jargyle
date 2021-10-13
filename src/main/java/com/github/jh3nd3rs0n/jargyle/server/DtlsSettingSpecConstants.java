@@ -2,6 +2,7 @@ package com.github.jh3nd3rs0n.jargyle.server;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 import com.github.jh3nd3rs0n.jargyle.common.number.impl.PositiveInteger;
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
@@ -165,6 +166,10 @@ public final class DtlsSettingSpecConstants {
 	
 	public static List<SettingSpec<Object>> values() {
 		return SETTING_SPECS.toList();
+	}
+	
+	public static Map<String, SettingSpec<Object>> valuesMap() {
+		return SETTING_SPECS.toMap();
 	}
 	
 	private DtlsSettingSpecConstants() { }

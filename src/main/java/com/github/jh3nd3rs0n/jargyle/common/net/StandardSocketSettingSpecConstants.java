@@ -5,6 +5,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.List;
+import java.util.Map;
 
 import com.github.jh3nd3rs0n.jargyle.common.number.impl.NonnegativeInteger;
 import com.github.jh3nd3rs0n.jargyle.common.number.impl.PositiveInteger;
@@ -339,6 +340,10 @@ public final class StandardSocketSettingSpecConstants {
 	
 	public static List<SocketSettingSpec<Object>> values() {
 		return SOCKET_SETTING_SPECS.toList();
+	}
+	
+	public static Map<String, SocketSettingSpec<Object>> valuesMap() {
+		return SOCKET_SETTING_SPECS.toMap();
 	}
 	
 	private StandardSocketSettingSpecConstants() { }

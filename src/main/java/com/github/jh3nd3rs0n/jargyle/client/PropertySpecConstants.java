@@ -20,9 +20,10 @@ final class PropertySpecConstants {
 		values.addAll(SslPropertySpecConstants.values());
 		Map<String, PropertySpec<Object>> valuesMap = 
 				new HashMap<String, PropertySpec<Object>>();
-		for (PropertySpec<Object> value : values) {
-			valuesMap.put(value.toString(), value);
-		}
+		valuesMap.putAll(DtlsPropertySpecConstants.valuesMap());
+		valuesMap.putAll(GeneralPropertySpecConstants.valuesMap());
+		valuesMap.putAll(Socks5PropertySpecConstants.valuesMap());
+		valuesMap.putAll(SslPropertySpecConstants.valuesMap());		
 		VALUES = values;
 		VALUES_MAP = valuesMap;
 	}

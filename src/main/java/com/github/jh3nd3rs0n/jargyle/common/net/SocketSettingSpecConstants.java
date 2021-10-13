@@ -17,9 +17,7 @@ final class SocketSettingSpecConstants {
 		values.addAll(StandardSocketSettingSpecConstants.values());
 		Map<String, SocketSettingSpec<Object>> valuesMap = 
 				new HashMap<String, SocketSettingSpec<Object>>();
-		for (SocketSettingSpec<Object> value : values) {
-			valuesMap.put(value.toString(), value);
-		}
+		valuesMap.putAll(StandardSocketSettingSpecConstants.valuesMap());
 		VALUES = values;
 		VALUES_MAP = valuesMap;
 	}

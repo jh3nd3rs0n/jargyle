@@ -1,6 +1,7 @@
 package com.github.jh3nd3rs0n.jargyle.server;
 
 import java.util.List;
+import java.util.Map;
 
 import org.ietf.jgss.Oid;
 
@@ -106,6 +107,10 @@ public final class ChainingSocks5SettingSpecConstants {
 	
 	public static List<SettingSpec<Object>> values() {
 		return SETTING_SPECS.toList();
+	}
+	
+	public static Map<String, SettingSpec<Object>> valuesMap() {
+		return SETTING_SPECS.toMap();
 	}
 	
 	private ChainingSocks5SettingSpecConstants() { }

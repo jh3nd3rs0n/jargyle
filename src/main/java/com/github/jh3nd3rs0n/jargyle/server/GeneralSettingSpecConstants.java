@@ -1,6 +1,7 @@
 package com.github.jh3nd3rs0n.jargyle.server;
 
 import java.util.List;
+import java.util.Map;
 
 import com.github.jh3nd3rs0n.jargyle.common.net.Host;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
@@ -97,6 +98,10 @@ public final class GeneralSettingSpecConstants {
 	
 	public static List<SettingSpec<Object>> values() {
 		return SETTING_SPECS.toList();
+	}
+	
+	public static Map<String, SettingSpec<Object>> valuesMap() {
+		return SETTING_SPECS.toMap();
 	}
 	
 	private GeneralSettingSpecConstants() { }

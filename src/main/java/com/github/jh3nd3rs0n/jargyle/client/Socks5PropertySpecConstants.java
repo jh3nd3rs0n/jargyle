@@ -1,6 +1,7 @@
 package com.github.jh3nd3rs0n.jargyle.client;
 
 import java.util.List;
+import java.util.Map;
 
 import org.ietf.jgss.Oid;
 
@@ -70,6 +71,10 @@ public final class Socks5PropertySpecConstants {
 	
 	public static List<PropertySpec<Object>> values() {
 		return PROPERTY_SPECS.toList();
+	}
+	
+	public static Map<String, PropertySpec<Object>> valuesMap() {
+		return PROPERTY_SPECS.toMap();
 	}
 	
 	private Socks5PropertySpecConstants() { }

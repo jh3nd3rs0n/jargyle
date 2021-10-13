@@ -23,9 +23,14 @@ final class SettingSpecConstants {
 		values.addAll(SslSettingSpecConstants.values());
 		Map<String, SettingSpec<Object>> valuesMap = 
 				new HashMap<String, SettingSpec<Object>>();
-		for (SettingSpec<Object> value : values) {
-			valuesMap.put(value.toString(), value);
-		}
+		valuesMap.putAll(ChainingDtlsSettingSpecConstants.valuesMap());
+		valuesMap.putAll(ChainingGeneralSettingSpecConstants.valuesMap());		
+		valuesMap.putAll(ChainingSocks5SettingSpecConstants.valuesMap());
+		valuesMap.putAll(ChainingSslSettingSpecConstants.valuesMap());
+		valuesMap.putAll(DtlsSettingSpecConstants.valuesMap());
+		valuesMap.putAll(GeneralSettingSpecConstants.valuesMap());
+		valuesMap.putAll(Socks5SettingSpecConstants.valuesMap());
+		valuesMap.putAll(SslSettingSpecConstants.valuesMap());		
 		VALUES = values;
 		VALUES_MAP = valuesMap;
 	}

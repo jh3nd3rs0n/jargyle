@@ -270,9 +270,9 @@ public final class UsersCLI extends CLI {
 	private static final int XSD_OPTION_GROUP_ORDINAL = 1;
 	
 	public static void main(final String[] args) {
-		UsersCLI usersCLI = new UsersCLI(null, null, args, false);
+		CLI cli = new UsersCLI(null, null, args, false);
 		try {
-			usersCLI.handleArgs();
+			cli.handleArgs();
 		} catch (TerminationRequestedException e) {
 			System.exit(e.getExitStatusCode());
 		}

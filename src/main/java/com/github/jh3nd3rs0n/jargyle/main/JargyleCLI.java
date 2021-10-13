@@ -122,9 +122,9 @@ public final class JargyleCLI extends CLI {
 			JargyleCLI.class);
 	
 	public static void main(final String[] args) {
-		CLI socksServerCLI = new JargyleCLI(args, false);
+		CLI cli = new JargyleCLI(args, false);
 		try {
-			socksServerCLI.handleArgs();
+			cli.handleArgs();
 		} catch (TerminationRequestedException e) {
 			System.exit(e.getExitStatusCode());
 		}
@@ -314,12 +314,12 @@ public final class JargyleCLI extends CLI {
 		}
 		String[] remainingArgs = remainingArgList.toArray(
 				new String[remainingArgList.size()]);
-		CLI usersCLI = new UsersCLI(
+		CLI cli = new UsersCLI(
 				this.getProgramName(), 
 				newProgramBeginningUsage, 
 				remainingArgs, 
 				this.posixlyCorrect);
-		usersCLI.handleArgs();
+		cli.handleArgs();
 	}
 	
 	@Option(

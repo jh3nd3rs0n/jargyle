@@ -60,7 +60,7 @@ Although Jargyle can act as a standalone SOCKS5 server, it can act as a bridge b
 -   [5. 15. Allowing or Blocking SOCKS5 Requests](#5-15-allowing-or-blocking-socks5-requests)
 -   [5. 16. Logging](#5-16-logging)
 -   [6. Miscellaneous Notes](#6-miscellaneous-notes)
--   [6. 1. The Doc Attribute and the Doc Element](#6-1-the-doc-attribute-and-the-doc-element)
+-   [6. 1. The Doc XML Attribute and the Doc XML Element](#6-1-the-doc-xml-attribute-and-the-doc-xml-element)
 -   [6. 2. Multiple Settings of the Same Name](#6-2-multiple-settings-of-the-same-name)
 -   [6. 3. The SOCKS5 RESOLVE Command](#6-3-the-socks5-resolve-command)
 -   [7. Contact](#7-contact)
@@ -2030,11 +2030,11 @@ Example:
 
 The following are miscellaneous notes regarding Jargyle.
 
-### 6. 1. The Doc Attribute and the Doc Element
+### 6. 1. The Doc XML Attribute and the Doc XML Element
 
-When using an existing configuration file to create a new configuration file, any XML comments from the existing configuration file cannot be transferred to the new configuration file. To preserve comments from one configuration file to the next configuration file, the `doc` attribute and the `doc` element can be used in certain XML elements. 
+When using an existing configuration file to create a new configuration file, any XML comments from the existing configuration file cannot be transferred to the new configuration file. To preserve comments from one configuration file to the next configuration file, the `doc` XML attribute and the `<doc/>` XML element can be used in certain XML elements. 
 
-You can use the `doc` attribute in the following XML elements:
+You can use the `doc` XML attribute in the following XML elements:
 
 -   `<clientAddressCriterion/>`
 -   `<commandCriterion/>`
@@ -2042,7 +2042,7 @@ You can use the `doc` attribute in the following XML elements:
 -   `<desiredDestinationAddressCriterion/>`
 -   `<portRange/>`
 
-You can use the `doc` element in the following XML elements:
+You can use the `<doc/>` XML element in the following XML elements:
 
 -   `<setting/>`
 -   `<socketSetting/>`

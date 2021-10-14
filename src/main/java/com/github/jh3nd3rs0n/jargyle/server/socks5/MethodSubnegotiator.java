@@ -215,7 +215,9 @@ enum MethodSubnegotiator {
 			if (authenticator == null) { 
 				authenticator = UsernamePasswordAuthenticator.newInstance(); 
 			}
-			if (!authenticator.authenticate(username, password)) {
+			boolean valid = authenticator.authenticate(username, password);
+			Arrays.fill(password, '\0');
+			if (!valid) {
 				usernamePasswordResp = UsernamePasswordResponse.newInstance(
 						(byte) 0x01);
 				outputStream.write(usernamePasswordResp.toByteArray());

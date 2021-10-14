@@ -6,13 +6,13 @@ import java.io.InputStream;
 import java.net.Socket;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.TrustManager;
 
-import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
 import com.github.jh3nd3rs0n.jargyle.common.text.Strings;
 import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.KeyManagerHelper;
 import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.SslContextHelper;
@@ -42,26 +42,24 @@ final class SslSocketFactoryImpl extends SslSocketFactory {
 		File keyStoreFile = settings.getLastValue(
 				SslSettingSpecConstants.SSL_KEY_STORE_FILE);
 		if (keyStoreFile != null) {
-			EncryptedPassword keyStorePassword = settings.getLastValue(
-					SslSettingSpecConstants.SSL_KEY_STORE_PASSWORD);
+			char[] keyStorePassword = settings.getLastValue(
+					SslSettingSpecConstants.SSL_KEY_STORE_PASSWORD).getPassword();
 			String keyStoreType = settings.getLastValue(
 					SslSettingSpecConstants.SSL_KEY_STORE_TYPE);
 			keyManagers = KeyManagerHelper.getKeyManagers(
-					keyStoreFile, 
-					keyStorePassword.getPassword(), 
-					keyStoreType);
+					keyStoreFile, keyStorePassword,	keyStoreType);
+			Arrays.fill(keyStorePassword, '\0');
 		}
 		File trustStoreFile = settings.getLastValue(
 				SslSettingSpecConstants.SSL_TRUST_STORE_FILE);
 		if (trustStoreFile != null) {
-			EncryptedPassword trustStorePassword = settings.getLastValue(
-					SslSettingSpecConstants.SSL_TRUST_STORE_PASSWORD);
+			char[] trustStorePassword = settings.getLastValue(
+					SslSettingSpecConstants.SSL_TRUST_STORE_PASSWORD).getPassword();
 			String trustStoreType = settings.getLastValue(
 					SslSettingSpecConstants.SSL_TRUST_STORE_TYPE);			
 			trustManagers = TrustManagerHelper.getTrustManagers(
-					trustStoreFile, 
-					trustStorePassword.getPassword(), 
-					trustStoreType);
+					trustStoreFile, trustStorePassword,	trustStoreType);
+			Arrays.fill(trustStorePassword, '\0');
 		}
 		SSLContext context = null;
 		try {

@@ -1,5 +1,7 @@
 package com.github.jh3nd3rs0n.jargyle.server.config.xml.bind;
 
+import java.util.Arrays;
+
 import com.github.jh3nd3rs0n.jargyle.client.socks5.userpassauth.UsernamePassword;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -28,9 +30,13 @@ class UsernamePasswordXml extends ValueXml {
 	}
 	
 	public UsernamePassword toUsernamePassword() {
-		return UsernamePassword.newInstance(
+		char[] password = 
+				this.encryptedPasswordXml.toEncryptedPassword().getPassword();
+		UsernamePassword usernamePassword = UsernamePassword.newInstance(
 				this.username, 
-				this.encryptedPasswordXml.toEncryptedPassword().getPassword());
+				password);
+		Arrays.fill(password, '\0');
+		return usernamePassword;
 	}
 
 	@Override

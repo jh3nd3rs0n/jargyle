@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.DatagramSocket;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.SSLContext;
@@ -16,7 +17,6 @@ import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
 import com.github.jh3nd3rs0n.jargyle.common.net.ssl.DtlsDatagramSocket;
 import com.github.jh3nd3rs0n.jargyle.common.net.ssl.DtlsDatagramSocketFactory;
 import com.github.jh3nd3rs0n.jargyle.common.number.impl.PositiveInteger;
-import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
 import com.github.jh3nd3rs0n.jargyle.common.text.Strings;
 import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.KeyManagerHelper;
 import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.SslContextHelper;
@@ -44,26 +44,24 @@ final class DtlsDatagramSocketFactoryImpl extends DtlsDatagramSocketFactory {
 		File keyStoreFile = properties.getValue(
 				DtlsPropertySpecConstants.DTLS_KEY_STORE_FILE);
 		if (keyStoreFile != null) {
-			EncryptedPassword keyStorePassword = properties.getValue(
-					DtlsPropertySpecConstants.DTLS_KEY_STORE_PASSWORD);
+			char[] keyStorePassword = properties.getValue(
+					DtlsPropertySpecConstants.DTLS_KEY_STORE_PASSWORD).getPassword();
 			String keyStoreType = properties.getValue(
 					DtlsPropertySpecConstants.DTLS_KEY_STORE_TYPE);
 			keyManagers = KeyManagerHelper.getKeyManagers(
-					keyStoreFile, 
-					keyStorePassword.getPassword(), 
-					keyStoreType);
+					keyStoreFile, keyStorePassword,	keyStoreType);
+			Arrays.fill(keyStorePassword, '\0');
 		}
 		File trustStoreFile = properties.getValue(
 				DtlsPropertySpecConstants.DTLS_TRUST_STORE_FILE);
 		if (trustStoreFile != null) {
-			EncryptedPassword trustStorePassword = properties.getValue(
-					DtlsPropertySpecConstants.DTLS_TRUST_STORE_PASSWORD);
+			char[] trustStorePassword = properties.getValue(
+					DtlsPropertySpecConstants.DTLS_TRUST_STORE_PASSWORD).getPassword();
 			String trustStoreType = properties.getValue(
 					DtlsPropertySpecConstants.DTLS_TRUST_STORE_TYPE);
 			trustManagers = TrustManagerHelper.getTrustManagers(
-					trustStoreFile, 
-					trustStorePassword.getPassword(), 
-					trustStoreType);
+					trustStoreFile, trustStorePassword,	trustStoreType);
+			Arrays.fill(trustStorePassword, '\0');
 		}
 		SSLContext context = null;
 		try {

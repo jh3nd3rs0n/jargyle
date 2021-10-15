@@ -17,10 +17,6 @@ public class UsernamePasswordAuthenticator {
 		if (cls.equals(UsernamePasswordAuthenticator.class)) {
 			usernamePasswordAuthenticator = new UsernamePasswordAuthenticator(
 					value);
-		} else if (cls.equals(
-				StringSourceUsernamePasswordAuthenticator.class)) {
-			usernamePasswordAuthenticator = 
-					new StringSourceUsernamePasswordAuthenticator(value);
 		} else if (UsernamePasswordAuthenticator.class.isAssignableFrom(cls)) {
 			Method method = null;
 			Constructor<?> constructor = null;

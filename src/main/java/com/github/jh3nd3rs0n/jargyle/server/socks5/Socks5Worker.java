@@ -17,6 +17,7 @@ import com.github.jh3nd3rs0n.jargyle.server.WorkerContext;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.ClientMethodSelectionMessage;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.MethodEncapsulation;
+import com.github.jh3nd3rs0n.jargyle.transport.socks5.MethodSubnegotiationException;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Methods;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Reply;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.ServerMethodSelectionMessage;
@@ -65,7 +66,7 @@ public final class Socks5Worker {
 				this.socks5WorkerContext.writeThenFlush(
 						socks5Rep.toByteArray());
 			} catch (IOException e) {
-				LOGGER.warn(
+				LOGGER.error(
 						LoggerHelper.objectMessage(
 								this, "Error in writing SOCKS5 reply"), 
 						e);
@@ -90,7 +91,7 @@ public final class Socks5Worker {
 			try {
 				this.socks5WorkerContext.writeThenFlush(socks5Rep.toByteArray());
 			} catch (IOException e) {
-				LOGGER.warn( 
+				LOGGER.error( 
 						LoggerHelper.objectMessage(
 								this, "Error in writing SOCKS5 reply"), 
 						e);
@@ -108,7 +109,7 @@ public final class Socks5Worker {
 		try {
 			cmsm = ClientMethodSelectionMessage.newInstanceFrom(in); 
 		} catch (IOException e) {
-			LOGGER.warn( 
+			LOGGER.error( 
 					LoggerHelper.objectMessage(
 							this, 
 							"Error in parsing the method selection message "
@@ -143,8 +144,14 @@ public final class Socks5Worker {
 		try {
 			methodEncapsulation = methodSubnegotiator.subnegotiate(
 					this.clientFacingSocket, this.configuration);
+		} catch (MethodSubnegotiationException e) {
+			LOGGER.debug( 
+					LoggerHelper.objectMessage(
+							this, "Unable to sub-negotiate with the client"), 
+					e);
+			return null;			
 		} catch (IOException e) {
-			LOGGER.warn( 
+			LOGGER.error( 
 					LoggerHelper.objectMessage(
 							this, "Error in sub-negotiating with the client"), 
 					e);
@@ -159,7 +166,7 @@ public final class Socks5Worker {
 			socks5Req = Socks5Request.newInstanceFrom(
 					this.clientFacingInputStream);
 		} catch (IOException e) {
-			LOGGER.warn( 
+			LOGGER.error( 
 					LoggerHelper.objectMessage(
 							this, "Error in parsing the SOCKS5 request"), 
 					e);

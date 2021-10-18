@@ -69,14 +69,14 @@ public final class XmlFileSourceConfigurationProvider
 				config = ConfigurationXml.newInstanceFromXml(
 						in).toConfiguration();
 			} catch (FileNotFoundException e) {
-				LOGGER.warn(
+				LOGGER.error(
 						String.format(
 								"File '%s' not found", 
 								file), 
 						e);
 				return false;
 			} catch (JAXBException e) {
-				LOGGER.warn(
+				LOGGER.error(
 						String.format(
 								"Error in reading file '%s'", 
 								file), 
@@ -87,7 +87,7 @@ public final class XmlFileSourceConfigurationProvider
 					try {
 						in.close();
 					} catch (IOException e) {
-						LOGGER.warn(
+						LOGGER.error(
 								String.format(
 										"Unable to close input stream of file '%s'", 
 										file), 

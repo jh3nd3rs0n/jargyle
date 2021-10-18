@@ -58,7 +58,7 @@ final class ConnectCommandWorker extends CommandWorker {
 			socketSettings.applyTo(serverFacingSocket);
 			serverFacingSocket.bind(new InetSocketAddress(bindInetAddress, 0));
 		} catch (SocketException e) {
-			LOGGER.warn( 
+			LOGGER.error( 
 					LoggerHelper.objectMessage(
 							this, "Error in setting the server-facing socket"), 
 					e);
@@ -71,14 +71,14 @@ final class ConnectCommandWorker extends CommandWorker {
 				this.commandWorkerContext.writeThenFlush(
 						socks5Rep.toByteArray());
 			} catch (IOException e1) {
-				LOGGER.warn( 
+				LOGGER.error( 
 						LoggerHelper.objectMessage(
 								this, "Error in writing SOCKS5 reply"), 
 						e1);
 			}
 			return false;
 		} catch (IOException e) {
-			LOGGER.warn( 
+			LOGGER.error( 
 					LoggerHelper.objectMessage(
 							this, "Error in binding the server-facing socket"), 
 					e);
@@ -91,7 +91,7 @@ final class ConnectCommandWorker extends CommandWorker {
 				this.commandWorkerContext.writeThenFlush(
 						socks5Rep.toByteArray());
 			} catch (IOException e1) {
-				LOGGER.warn( 
+				LOGGER.error( 
 						LoggerHelper.objectMessage(
 								this, "Error in writing SOCKS5 reply"), 
 						e1);
@@ -119,7 +119,7 @@ final class ConnectCommandWorker extends CommandWorker {
 						this.desiredDestinationPort),
 						connectTimeout);
 			} catch (UnknownHostException e) {
-				LOGGER.warn( 
+				LOGGER.error( 
 						LoggerHelper.objectMessage(
 								this, 
 								"Error in connecting the server-facing socket"), 
@@ -133,7 +133,7 @@ final class ConnectCommandWorker extends CommandWorker {
 					this.commandWorkerContext.writeThenFlush(
 							socks5Rep.toByteArray());
 				} catch (IOException e1) {
-					LOGGER.warn( 
+					LOGGER.error( 
 							LoggerHelper.objectMessage(
 									this, "Error in writing SOCKS5 reply"), 
 							e1);					
@@ -151,7 +151,7 @@ final class ConnectCommandWorker extends CommandWorker {
 						bindInetAddress, 
 						0);
 			} catch (UnknownHostException e) {
-				LOGGER.warn( 
+				LOGGER.error( 
 						LoggerHelper.objectMessage(
 								this, 
 								"Error in creating the server-facing socket"), 
@@ -165,7 +165,7 @@ final class ConnectCommandWorker extends CommandWorker {
 					this.commandWorkerContext.writeThenFlush(
 							socks5Rep.toByteArray());
 				} catch (IOException e1) {
-					LOGGER.warn( 
+					LOGGER.error( 
 							LoggerHelper.objectMessage(
 									this, "Error in writing SOCKS5 reply"), 
 							e1);					
@@ -205,7 +205,7 @@ final class ConnectCommandWorker extends CommandWorker {
 						this.settings.getLastValue(
 								Socks5SettingSpecConstants.SOCKS5_ON_CONNECT_RELAY_IDLE_TIMEOUT).intValue());				
 			} catch (IOException e) {
-				LOGGER.warn( 
+				LOGGER.error( 
 						LoggerHelper.objectMessage(
 								this, "Error in starting to pass data"), 
 						e);

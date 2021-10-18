@@ -18,6 +18,7 @@ import org.ietf.jgss.Oid;
 import com.github.jh3nd3rs0n.jargyle.client.Socks5PropertySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.MethodEncapsulation;
+import com.github.jh3nd3rs0n.jargyle.transport.socks5.MethodSubnegotiationException;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.NullMethodEncapsulation;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.gssapiauth.GssSocket;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.gssapiauth.GssapiMethodEncapsulation;
@@ -57,7 +58,7 @@ enum MethodSubnegotiator {
 				if (!context.isEstablished()) {
 					Message message = Message.newInstanceFrom(inStream);
 					if (message.getMessageType().equals(MessageType.ABORT)) {
-						throw new IOException(
+						throw new MethodSubnegotiationException(
 								"server aborted process of context establishment");
 					}
 					token = message.getToken();
@@ -100,7 +101,7 @@ enum MethodSubnegotiator {
 			outStream.flush();
 			Message message = Message.newInstanceFrom(inStream);
 			if (message.getMessageType().equals(MessageType.ABORT)) {
-				throw new IOException(
+				throw new MethodSubnegotiationException(
 						"server aborted protection level negotiation");
 			}
 			token = message.getToken();
@@ -125,7 +126,7 @@ enum MethodSubnegotiator {
 				throw new IOException(e);
 			}
 			if (!protectionLevelList.contains(protectionLevelSelection)) {
-				throw new IOException(String.format(
+				throw new MethodSubnegotiationException(String.format(
 						"server selected %s which is not acceptable by this socket", 
 						protectionLevelSelection));
 			}
@@ -195,7 +196,7 @@ enum MethodSubnegotiator {
 		public MethodEncapsulation subnegotiate(
 				final Socket Socket, 
 				final Socks5Client socks5Client) throws IOException {
-			throw new IOException("no acceptable methods");
+			throw new MethodSubnegotiationException("no acceptable methods");
 		}
 		
 	},
@@ -233,7 +234,8 @@ enum MethodSubnegotiator {
 					UsernamePasswordResponse.newInstanceFrom(inputStream);
 			if (usernamePasswordResp.getStatus() != 
 					UsernamePasswordResponse.STATUS_SUCCESS) {
-				throw new IOException("invalid username password");
+				throw new MethodSubnegotiationException(
+						"invalid username password");
 			}
 			return new NullMethodEncapsulation(socket);
 		}

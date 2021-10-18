@@ -57,7 +57,7 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 		try {
 			socketSettings.applyTo(clientFacingDatagramSock);
 		} catch (SocketException e) {
-			LOGGER.warn( 
+			LOGGER.error( 
 					LoggerHelper.objectMessage(
 							this, 
 							"Error in setting the client-facing UDP socket"), 
@@ -71,7 +71,7 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 				this.commandWorkerContext.writeThenFlush(
 						socks5Rep.toByteArray());
 			} catch (IOException e1) {
-				LOGGER.warn( 
+				LOGGER.error( 
 						LoggerHelper.objectMessage(
 								this, "Error in writing SOCKS5 reply"), 
 						e1);
@@ -88,7 +88,7 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 		try {
 			socketSettings.applyTo(serverFacingDatagramSock);
 		} catch (SocketException e) {
-			LOGGER.warn( 
+			LOGGER.error( 
 					LoggerHelper.objectMessage(
 							this, 
 							"Error in setting the server-facing UDP socket"), 
@@ -102,7 +102,7 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 				this.commandWorkerContext.writeThenFlush(
 						socks5Rep.toByteArray());
 			} catch (IOException e1) {
-				LOGGER.warn( 
+				LOGGER.error( 
 						LoggerHelper.objectMessage(
 								this, "Error in writing SOCKS5 reply"), 
 						e1);
@@ -121,7 +121,7 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 			clientFacingDatagramSock = new DatagramSocket(new InetSocketAddress(
 					bindInetAddress, 0));
 		} catch (SocketException e) {
-			LOGGER.warn( 
+			LOGGER.error( 
 					LoggerHelper.objectMessage(
 							this, 
 							"Error in creating the client-facing UDP socket"), 
@@ -135,7 +135,7 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 				this.commandWorkerContext.writeThenFlush(
 						socks5Rep.toByteArray());
 			} catch (IOException e1) {
-				LOGGER.warn( 
+				LOGGER.error( 
 						LoggerHelper.objectMessage(
 								this, "Error in writing SOCKS5 reply"), 
 						e1);
@@ -154,7 +154,7 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 			serverFacingDatagramSock = this.netObjectFactory.newDatagramSocket(
 					new InetSocketAddress(bindInetAddress, 0));
 		} catch (SocketException e) {
-			LOGGER.warn( 
+			LOGGER.error( 
 					LoggerHelper.objectMessage(
 							this, 
 							"Error in creating the server-facing UDP socket"), 
@@ -168,7 +168,7 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 				this.commandWorkerContext.writeThenFlush(
 						socks5Rep.toByteArray());
 			} catch (IOException e1) {
-				LOGGER.warn( 
+				LOGGER.error( 
 						LoggerHelper.objectMessage(
 								this, "Error in writing SOCKS5 reply"), 
 						e1);
@@ -289,7 +289,7 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 								this.settings.getLastValue(
 										Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_RELAY_IDLE_TIMEOUT).intValue()));
 			} catch (IOException e) {
-				LOGGER.warn( 
+				LOGGER.error( 
 						LoggerHelper.objectMessage(
 								this, "Error in starting the UDP association"), 
 						e);
@@ -318,7 +318,7 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 							clientHost, 
 							clientPort);
 		} catch (IOException e) {
-			LOGGER.warn( 
+			LOGGER.error( 
 					LoggerHelper.objectMessage(
 							this, 
 							"Error in wrapping the client-facing UDP socket"), 
@@ -332,7 +332,7 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 				this.commandWorkerContext.writeThenFlush(
 						socks5Rep.toByteArray());
 			} catch (IOException e1) {
-				LOGGER.warn( 
+				LOGGER.error( 
 						LoggerHelper.objectMessage(
 								this, "Error in writing SOCKS5 reply"), 
 						e1);

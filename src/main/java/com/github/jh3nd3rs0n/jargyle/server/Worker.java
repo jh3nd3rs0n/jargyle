@@ -47,13 +47,13 @@ final class Worker implements Runnable {
 					e);
 			return null;
 		} catch (SocketException e) {
-			LOGGER.warn(
+			LOGGER.error(
 					LoggerHelper.objectMessage(
 							this, "Error in setting the client-facing socket"), 
 					e);
 			return null;			
 		} catch (IOException e) {
-			LOGGER.warn(
+			LOGGER.error(
 					LoggerHelper.objectMessage(
 							this, "Error in wrapping the client-facing socket"), 
 					e);
@@ -80,7 +80,7 @@ final class Worker implements Runnable {
 			try {
 				version = UnsignedByte.newInstanceFrom(clientFacingInputStream);
 			} catch (IOException e) {
-				LOGGER.warn(
+				LOGGER.error(
 						LoggerHelper.objectMessage(
 								this, 
 								"Error in getting the SOCKS version from the "
@@ -93,12 +93,12 @@ final class Worker implements Runnable {
 						new Socks5WorkerContext(workerContext));
 				socks5Worker.run();
 			} else {
-				LOGGER.warn(LoggerHelper.objectMessage(this, String.format(
+				LOGGER.error(LoggerHelper.objectMessage(this, String.format(
 						"Unknown SOCKS version: %s",
 						version.intValue())));
 			}
 		} catch (Throwable t) {
-			LOGGER.warn(
+			LOGGER.error(
 					LoggerHelper.objectMessage(this, "Internal server error"), 
 					t);
 		} finally {
@@ -106,7 +106,7 @@ final class Worker implements Runnable {
 				try {
 					this.clientFacingSocket.close();
 				} catch (IOException e) {
-					LOGGER.warn(
+					LOGGER.error(
 							LoggerHelper.objectMessage(
 									this, 
 									"Error upon closing connection to the "

@@ -19,6 +19,7 @@ import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.UsernamePasswordAuthenticator;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.MethodEncapsulation;
+import com.github.jh3nd3rs0n.jargyle.transport.socks5.MethodSubnegotiationException;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.NullMethodEncapsulation;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.gssapiauth.GssSocket;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.gssapiauth.GssapiMethodEncapsulation;
@@ -43,7 +44,7 @@ enum MethodSubnegotiator {
 			while (!context.isEstablished()) {
 				Message message = Message.newInstanceFrom(inStream);
 				if (message.getMessageType().equals(MessageType.ABORT)) {
-					throw new IOException(String.format(
+					throw new MethodSubnegotiationException(String.format(
 							"client %s aborted process of context establishment",
 							socket));
 				}
@@ -79,7 +80,7 @@ enum MethodSubnegotiator {
 			OutputStream outStream = socket.getOutputStream();
 			Message message = Message.newInstanceFrom(inStream);
 			if (message.getMessageType().equals(MessageType.ABORT)) {
-				throw new IOException(String.format(
+				throw new MethodSubnegotiationException(String.format(
 						"client %s aborted protection level negotiation",
 						socket));
 			}
@@ -136,7 +137,7 @@ enum MethodSubnegotiator {
 					token).toByteArray());
 			outStream.flush();
 			if (socket.isClosed()) {
-				throw new IOException(String.format(
+				throw new MethodSubnegotiationException(String.format(
 						"client %s closed due to client finding choice of "
 						+ "protection level unacceptable",
 						socket));
@@ -177,7 +178,7 @@ enum MethodSubnegotiator {
 		public MethodEncapsulation subnegotiate(
 				final Socket socket, 
 				final Configuration configuration) throws IOException {
-			throw new IOException(String.format(
+			throw new MethodSubnegotiationException(String.format(
 					"no acceptable methods from %s",
 					socket));
 		}
@@ -222,7 +223,7 @@ enum MethodSubnegotiator {
 						(byte) 0x01);
 				outputStream.write(usernamePasswordResp.toByteArray());
 				outputStream.flush();
-				throw new IOException(String.format(
+				throw new MethodSubnegotiationException(String.format(
 						"invalid username password from %s",
 						socket));
 			}

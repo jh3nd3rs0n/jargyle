@@ -153,7 +153,7 @@ public final class FileMonitor implements Runnable {
 		try {
 			watchService = FileSystems.getDefault().newWatchService();
 		} catch (IOException e) {
-			LOGGER.warn(
+			LOGGER.error(
 					"Unable to create WatchService", 
 					e);
 			return null;
@@ -184,7 +184,7 @@ public final class FileMonitor implements Runnable {
 					StandardWatchEventKinds.ENTRY_DELETE,
 					StandardWatchEventKinds.ENTRY_MODIFY);
 		} catch (IOException e) {
-			LOGGER.warn(
+			LOGGER.error(
 					String.format(
 							"Unable to register '%s' to WatchService", 
 							path), 

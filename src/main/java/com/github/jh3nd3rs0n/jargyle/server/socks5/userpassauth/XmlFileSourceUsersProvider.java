@@ -65,14 +65,14 @@ public final class XmlFileSourceUsersProvider extends UsersProvider {
 				in = new FileInputStream(file);
 				usrs = UsersXml.newInstanceFromXml(in).toUsers();
 			} catch (FileNotFoundException e) {
-				LOGGER.warn( 
+				LOGGER.error( 
 						String.format(
 								"File '%s' not found", 
 								file), 
 						e);
 				return false;
 			} catch (JAXBException e) {
-				LOGGER.warn( 
+				LOGGER.error( 
 						String.format(
 								"Error in reading file '%s'", 
 								file), 
@@ -83,7 +83,7 @@ public final class XmlFileSourceUsersProvider extends UsersProvider {
 					try {
 						in.close();
 					} catch (IOException e) {
-						LOGGER.warn( 
+						LOGGER.error( 
 								String.format(
 										"Unable to close input stream of file '%s'", 
 										file), 

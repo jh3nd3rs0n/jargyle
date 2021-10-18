@@ -57,7 +57,7 @@ public final class RelayServer {
 							// socket closed
 							break;
 						}
-						LOGGER.warn(
+						LOGGER.error(
 								LoggerHelper.objectMessage(
 										this, 
 										"Error occurred in the process of "
@@ -70,7 +70,7 @@ public final class RelayServer {
 					} catch (InterruptedIOException e) {
 						bytesRead = 0;
 					} catch (IOException e) {
-						LOGGER.warn(
+						LOGGER.error(
 								LoggerHelper.objectMessage(
 										this, 
 										"Error occurred in the process of "
@@ -103,7 +103,7 @@ public final class RelayServer {
 							// socket closed
 							break;
 						}
-						LOGGER.warn(
+						LOGGER.error(
 								LoggerHelper.objectMessage(
 										this, 
 										"Error occurred in the process of "
@@ -114,7 +114,7 @@ public final class RelayServer {
 						// socket closed
 						break;
 					} catch (IOException e) {
-						LOGGER.warn(
+						LOGGER.error(
 								LoggerHelper.objectMessage(
 										this, 
 										"Error occurred in the process of "
@@ -130,7 +130,7 @@ public final class RelayServer {
 							// socket closed
 							break;
 						}
-						LOGGER.warn(
+						LOGGER.error(
 								LoggerHelper.objectMessage(
 										this, 
 										"Error occurred in the process of "
@@ -141,7 +141,7 @@ public final class RelayServer {
 						// socket closed
 						break;
 					} catch (IOException e) {
-						LOGGER.warn(
+						LOGGER.error(
 								LoggerHelper.objectMessage(
 										this, 
 										"Error occurred in the process of "
@@ -150,7 +150,7 @@ public final class RelayServer {
 						break;
 					}					
 				} catch (Throwable t) {
-					LOGGER.warn(
+					LOGGER.error(
 							LoggerHelper.objectMessage(
 									this, 
 									"Error occurred in the process of "

@@ -133,7 +133,7 @@ public final class UdpRelayServer {
 			try {
 				inetAddress = InetAddress.getByName(this.clientAddress);
 			} catch (IOException e) {
-				LOGGER.warn( 
+				LOGGER.error( 
 						LoggerHelper.objectMessage(
 								this, 
 								"Error in determining the IP address from the "
@@ -186,7 +186,7 @@ public final class UdpRelayServer {
 						}
 						continue;
 					} catch (IOException e) {
-						LOGGER.warn( 
+						LOGGER.error( 
 								LoggerHelper.objectMessage(
 										this, 
 										"Error in receiving the packet from "
@@ -214,7 +214,7 @@ public final class UdpRelayServer {
 						// socket closed
 						break;
 					} catch (IOException e) {
-						LOGGER.warn( 
+						LOGGER.error( 
 								LoggerHelper.objectMessage(
 										this, 
 										"Error in sending the packet to the "
@@ -222,7 +222,7 @@ public final class UdpRelayServer {
 								e);
 					}
 				} catch (Throwable t) {
-					LOGGER.warn( 
+					LOGGER.error( 
 							LoggerHelper.objectMessage(
 									this, 
 									"Error occurred in the process of "
@@ -299,7 +299,7 @@ public final class UdpRelayServer {
 			try {
 				clientInetAddr = InetAddress.getByName(this.clientAddress);
 			} catch (IOException e) {
-				LOGGER.warn( 
+				LOGGER.error( 
 						LoggerHelper.objectMessage(
 								this, 
 								"Error in determining the IP address from the "
@@ -311,7 +311,7 @@ public final class UdpRelayServer {
 			try {
 				inetAddr = InetAddress.getByName(address);
 			} catch (IOException e) {
-				LOGGER.warn( 
+				LOGGER.error( 
 						LoggerHelper.objectMessage(
 								this, 
 								"Error in determining the IP address from the "
@@ -343,7 +343,7 @@ public final class UdpRelayServer {
 				inetAddress = this.hostResolver.resolve(
 						header.getDesiredDestinationAddress());
 			} catch (IOException e) {
-				LOGGER.warn( 
+				LOGGER.error( 
 						LoggerHelper.objectMessage(
 								this, 
 								"Error in determining the IP address from the "
@@ -362,7 +362,7 @@ public final class UdpRelayServer {
 			try {
 				header = UdpRequestHeader.newInstance(packet.getData());
 			} catch (IllegalArgumentException e) {
-				LOGGER.warn( 
+				LOGGER.error( 
 						LoggerHelper.objectMessage(
 								this, 
 								"Error in parsing the UDP header request from "
@@ -401,7 +401,7 @@ public final class UdpRelayServer {
 						}
 						continue;
 					} catch (IOException e) {
-						LOGGER.warn( 
+						LOGGER.error( 
 								LoggerHelper.objectMessage(
 										this, 
 										"Error in receiving packet from the "
@@ -438,7 +438,7 @@ public final class UdpRelayServer {
 						// socket closed
 						break;
 					} catch (IOException e) {
-						LOGGER.warn( 
+						LOGGER.error( 
 								LoggerHelper.objectMessage(
 										this, 
 										"Error in sending the packet to the "
@@ -446,7 +446,7 @@ public final class UdpRelayServer {
 								e);
 					}
 				} catch (Throwable t) {
-					LOGGER.warn( 
+					LOGGER.error( 
 							LoggerHelper.objectMessage(
 									this, 
 									"Error occurred in the process of "

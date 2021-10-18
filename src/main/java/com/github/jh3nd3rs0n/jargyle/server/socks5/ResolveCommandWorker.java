@@ -42,7 +42,7 @@ final class ResolveCommandWorker extends CommandWorker {
 		try {
 			inetAddress = hostResolver.resolve(this.desiredDestinationAddress);
 		} catch (UnknownHostException e) {
-			LOGGER.warn( 
+			LOGGER.error( 
 					LoggerHelper.objectMessage(
 							this, "Error in resolving the hostname"), 
 					e);
@@ -53,7 +53,7 @@ final class ResolveCommandWorker extends CommandWorker {
 			this.commandWorkerContext.writeThenFlush(socks5Rep.toByteArray());
 			return;			
 		} catch (IOException e) {
-			LOGGER.warn( 
+			LOGGER.error( 
 					LoggerHelper.objectMessage(
 							this, "Error in resolving the hostname"), 
 					e);

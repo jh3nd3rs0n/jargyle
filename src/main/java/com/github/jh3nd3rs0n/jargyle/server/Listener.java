@@ -39,7 +39,7 @@ final class Listener implements Runnable {
 						this.totalWorkerCount,
 						this.workerContextFactory));
 			} catch (SocketTimeoutException e) {
-				LOGGER.warn(
+				LOGGER.error(
 						LoggerHelper.objectMessage(
 								this, 
 								"Timeout reached in waiting for a connection!"), 
@@ -49,7 +49,7 @@ final class Listener implements Runnable {
 				// closed by SocksServer.stop()
 				break;
 			} catch (IOException e) {
-				LOGGER.warn(
+				LOGGER.error(
 						LoggerHelper.objectMessage(
 								this, "Error in waiting for a connection"), 
 						e);

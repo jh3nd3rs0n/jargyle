@@ -66,7 +66,7 @@ final class BindCommandWorker extends CommandWorker {
 				this.commandWorkerContext.writeThenFlush(
 						socks5Rep.toByteArray());
 			} catch (IOException e) {
-				LOGGER.warn( 
+				LOGGER.error( 
 						LoggerHelper.objectMessage(
 								this, "Error in writing SOCKS5 reply"), 
 						e);
@@ -92,7 +92,7 @@ final class BindCommandWorker extends CommandWorker {
 				this.commandWorkerContext.writeThenFlush(
 						socks5Rep.toByteArray());
 			} catch (IOException e) {
-				LOGGER.warn( 
+				LOGGER.error( 
 						LoggerHelper.objectMessage(
 								this, "Error in writing SOCKS5 reply"), 
 						e);
@@ -108,7 +108,7 @@ final class BindCommandWorker extends CommandWorker {
 		try {
 			socketSettings.applyTo(inboundSocket);
 		} catch (SocketException e) {
-			LOGGER.warn( 
+			LOGGER.error( 
 					LoggerHelper.objectMessage(
 							this, "Error in setting the inbound socket"), 
 					e);
@@ -121,7 +121,7 @@ final class BindCommandWorker extends CommandWorker {
 				this.commandWorkerContext.writeThenFlush(
 						socks5Rep.toByteArray());
 			} catch (IOException e1) {
-				LOGGER.warn( 
+				LOGGER.error( 
 						LoggerHelper.objectMessage(
 								this, "Error in writing SOCKS5 reply"), 
 						e1);
@@ -137,7 +137,7 @@ final class BindCommandWorker extends CommandWorker {
 		try {
 			socketSettings.applyTo(listenSocket);
 		} catch (SocketException e) {
-			LOGGER.warn( 
+			LOGGER.error( 
 					LoggerHelper.objectMessage(
 							this, "Error in setting the listen socket"), 
 					e);
@@ -150,7 +150,7 @@ final class BindCommandWorker extends CommandWorker {
 				this.commandWorkerContext.writeThenFlush(
 						socks5Rep.toByteArray());
 			} catch (IOException e1) {
-				LOGGER.warn( 
+				LOGGER.error( 
 						LoggerHelper.objectMessage(
 								this, "Error in writing SOCKS5 reply"), 
 						e1);
@@ -176,7 +176,7 @@ final class BindCommandWorker extends CommandWorker {
 						hostResolver.resolve(this.desiredDestinationAddress),
 						this.desiredDestinationPort));
 			} catch (IOException e) {
-				LOGGER.warn( 
+				LOGGER.error( 
 						LoggerHelper.objectMessage(
 								this, "Error in binding the listen socket"), 
 						e);
@@ -203,7 +203,7 @@ final class BindCommandWorker extends CommandWorker {
 			try {
 				inboundSocket = listenSocket.accept();
 			} catch (IOException e) {
-				LOGGER.warn( 
+				LOGGER.error( 
 						LoggerHelper.objectMessage(
 								this, 
 								"Error in waiting for an inbound "
@@ -247,7 +247,7 @@ final class BindCommandWorker extends CommandWorker {
 						this.settings.getLastValue(
 								Socks5SettingSpecConstants.SOCKS5_ON_BIND_RELAY_IDLE_TIMEOUT).intValue());
 			} catch (IOException e) {
-				LOGGER.warn( 
+				LOGGER.error( 
 						LoggerHelper.objectMessage(
 								this, "Error in starting to pass data"), 
 						e);				

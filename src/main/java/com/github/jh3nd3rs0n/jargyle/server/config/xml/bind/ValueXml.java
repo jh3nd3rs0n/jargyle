@@ -5,8 +5,8 @@ import java.util.Objects;
 import com.github.jh3nd3rs0n.jargyle.client.socks5.userpassauth.UsernamePassword;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
-import com.github.jh3nd3rs0n.jargyle.common.text.Criteria;
-import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5RequestCriteria;
+import com.github.jh3nd3rs0n.jargyle.server.Rules;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5RequestRules;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5RequestWorkerFactory;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.UsernamePasswordAuthenticator;
 
@@ -20,15 +20,14 @@ abstract class ValueXml {
 	
 	public static ValueXml newInstance(final Object val) {
 		Objects.requireNonNull(val);
-		if (val instanceof Criteria) {
-			return new CriteriaXml((Criteria) val);
-		} else if (val instanceof EncryptedPassword) {
+		if (val instanceof EncryptedPassword) {
 			return EncryptedPasswordXml.newInstance((EncryptedPassword) val);
+		} else if (val instanceof Rules) {
+			return new RulesXml((Rules) val);
 		} else if (val instanceof SocketSettings) {
 			return new SocketSettingsXml((SocketSettings) val);
-		} else if (val instanceof Socks5RequestCriteria) {
-			return new Socks5RequestCriteriaXml(
-					(Socks5RequestCriteria) val);
+		} else if (val instanceof Socks5RequestRules) {
+			return new Socks5RequestRulesXml((Socks5RequestRules) val);
 		} else if (val instanceof Socks5RequestWorkerFactory) {
 			return new Socks5RequestWorkerFactoryXml(
 					(Socks5RequestWorkerFactory) val);

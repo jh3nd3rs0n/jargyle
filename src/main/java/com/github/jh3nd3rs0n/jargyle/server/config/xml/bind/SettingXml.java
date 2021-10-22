@@ -16,21 +16,21 @@ class SettingXml {
 	protected String name;
 	@XmlElements({
 		@XmlElement(
-				name = "criteria", 
-				required = true, 
-				type = CriteriaXml.class),
-		@XmlElement(
 				name = "encryptedPassword",
 				required = true,
 				type = EncryptedPasswordXml.class),
+		@XmlElement(
+				name = "rules", 
+				required = true, 
+				type = RulesXml.class),
 		@XmlElement(
 				name = "socketSettings", 
 				required = true, 
 				type = SocketSettingsXml.class),
 		@XmlElement(
-				name = "socks5RequestCriteria", 
+				name = "socks5RequestRules", 
 				required = true, 
-				type = Socks5RequestCriteriaXml.class),
+				type = Socks5RequestRulesXml.class),
 		@XmlElement(
 				name = "socks5RequestWorkerFactory",
 				required = true,

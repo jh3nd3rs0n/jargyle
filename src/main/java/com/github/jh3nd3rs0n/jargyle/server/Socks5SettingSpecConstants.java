@@ -6,22 +6,19 @@ import java.util.Map;
 import com.github.jh3nd3rs0n.jargyle.common.net.Host;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.common.number.impl.PositiveInteger;
-import com.github.jh3nd3rs0n.jargyle.common.text.Criteria;
-import com.github.jh3nd3rs0n.jargyle.common.text.Criterion;
-import com.github.jh3nd3rs0n.jargyle.common.text.CriterionMethod;
 import com.github.jh3nd3rs0n.jargyle.internal.help.HelpText;
 import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.BooleanSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.CriteriaSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.HostSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.MethodsSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.PositiveIntegerSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.ProtectionLevelsSettingSpec;
+import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.RulesSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.SocketSettingsSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.Socks5RequestCriteriaSettingSpec;
+import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.Socks5RequestRulesSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.Socks5RequestWorkerFactorySettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.UsernamePasswordAuthenticatorSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5RequestCriteria;
-import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5RequestCriterion;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5RequestRule;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5RequestRules;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5RequestWorkerFactory;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.UsernamePasswordAuthenticator;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
@@ -31,19 +28,6 @@ import com.github.jh3nd3rs0n.jargyle.transport.socks5.gssapiauth.ProtectionLevel
 public final class Socks5SettingSpecConstants {
 
 	private static final SettingSpecs SETTING_SPECS = new SettingSpecs();
-	
-	public static final SettingSpec<Socks5RequestCriteria> SOCKS5_ALLOWED_SOCKS5_REQUEST_CRITERIA =	
-			SETTING_SPECS.addThenGet(new Socks5RequestCriteriaSettingSpec(
-					NewSettingSpecPermission.INSTANCE,
-					"socks5.allowedSocks5RequestCriteria",
-					Socks5RequestCriteria.newInstance(
-							new Socks5RequestCriterion.Builder().build())));
-
-	public static final SettingSpec<Socks5RequestCriteria> SOCKS5_BLOCKED_SOCKS5_REQUEST_CRITERIA =	
-			SETTING_SPECS.addThenGet(new Socks5RequestCriteriaSettingSpec(
-					NewSettingSpecPermission.INSTANCE,
-					"socks5.blockedSocks5RequestCriteria",
-					Socks5RequestCriteria.getEmptyInstance()));
 	
 	@HelpText(
 			doc = "The boolean value to indicate if the exchange of the "
@@ -83,30 +67,20 @@ public final class Socks5SettingSpecConstants {
 					NewSettingSpecPermission.INSTANCE, 
 					"socks5.methods",
 					Methods.newInstance(Method.NO_AUTHENTICATION_REQUIRED)));
-	
-	@HelpText(
-			doc = "The space separated list of allowed inbound address "
-					+ "criteria (default is matches:.*)", 
-			usage = "socks5.onBind.allowedInboundAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
-	)
-	public static final SettingSpec<Criteria> SOCKS5_ON_BIND_ALLOWED_INBOUND_ADDRESS_CRITERIA = 
-			SETTING_SPECS.addThenGet(new CriteriaSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"socks5.onBind.allowedInboundAddressCriteria",
-					Criteria.newInstance(Criterion.newInstance(
-							CriterionMethod.MATCHES, ".*"))));
-	
-	@HelpText(
-			doc = "The space separated list of blocked inbound address "
-					+ "criteria", 
-			usage = "socks5.onBind.blockedInboundAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
-	)
-	public static final SettingSpec<Criteria> SOCKS5_ON_BIND_BLOCKED_INBOUND_ADDRESS_CRITERIA = 
-			SETTING_SPECS.addThenGet(new CriteriaSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"socks5.onBind.blockedInboundAddressCriteria",
-					Criteria.getEmptyInstance()));
 
+	@HelpText(
+			doc = "The space separated list of inbound address rules "
+					+ "(default is allow:matches:.*)", 
+			usage = "socks5.onBind.inboundAddressRules=[RULE1[ RULE2[...]]]"
+	)	
+	public static final SettingSpec<Rules> SOCKS5_ON_BIND_INBOUND_ADDRESS_RULES =
+			SETTING_SPECS.addThenGet(new RulesSettingSpec(
+					NewSettingSpecPermission.INSTANCE,
+					"socks5.onBind.inboundAddressRules",
+					Rules.newInstance(Rule.newInstance(
+							Action.ALLOW, 
+							ConditionPredicate.newInstance(ConditionPredicateMethod.MATCHES, ".*")))));
+	
 	@HelpText(
 			doc = "The space separated list of socket settings for the inbound "
 					+ "socket", 
@@ -221,52 +195,6 @@ public final class Socks5SettingSpecConstants {
 					SocketSettings.newInstance()));
 	
 	@HelpText(
-			doc = "The space separated list of allowed inbound address "
-					+ "criteria (default is matches:.*)", 
-			usage = "socks5.onUdpAssociate.allowedInboundAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
-	)
-	public static final SettingSpec<Criteria> SOCKS5_ON_UDP_ASSOCIATE_ALLOWED_INBOUND_ADDRESS_CRITERIA = 
-			SETTING_SPECS.addThenGet(new CriteriaSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"socks5.onUdpAssociate.allowedInboundAddressCriteria",
-					Criteria.newInstance(Criterion.newInstance(
-							CriterionMethod.MATCHES, ".*"))));
-	
-	@HelpText(
-			doc = "The space separated list of allowed outbound address "
-					+ "criteria (default is matches:.*)", 
-			usage = "socks5.onUdpAssociate.allowedOutboundAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
-	)
-	public static final SettingSpec<Criteria> SOCKS5_ON_UDP_ASSOCIATE_ALLOWED_OUTBOUND_ADDRESS_CRITERIA = 
-			SETTING_SPECS.addThenGet(new CriteriaSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"socks5.onUdpAssociate.allowedOutboundAddressCriteria",
-					Criteria.newInstance(Criterion.newInstance(
-							CriterionMethod.MATCHES, ".*"))));
-	
-	@HelpText(
-			doc = "The space separated list of blocked inbound address "
-					+ "criteria", 
-			usage = "socks5.onUdpAssociate.blockedInboundAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
-	)
-	public static final SettingSpec<Criteria> SOCKS5_ON_UDP_ASSOCIATE_BLOCKED_INBOUND_ADDRESS_CRITERIA = 
-			SETTING_SPECS.addThenGet(new CriteriaSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"socks5.onUdpAssociate.blockedInboundAddressCriteria",
-					Criteria.getEmptyInstance()));
-	
-	@HelpText(
-			doc = "The space separated list of blocked outbound address "
-					+ "criteria", 
-			usage = "socks5.onUdpAssociate.blockedOutboundAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
-	)
-	public static final SettingSpec<Criteria> SOCKS5_ON_UDP_ASSOCIATE_BLOCKED_OUTBOUND_ADDRESS_CRITERIA = 
-			SETTING_SPECS.addThenGet(new CriteriaSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"socks5.onUdpAssociate.blockedOutboundAddressCriteria",
-					Criteria.getEmptyInstance()));
-	
-	@HelpText(
 			doc = "The binding host name or address for the client-facing UDP "
 					+ "socket (default is 0.0.0.0)", 
 			usage = "socks5.onUdpAssociate.clientFacingBindHost=HOST"
@@ -287,6 +215,33 @@ public final class Socks5SettingSpecConstants {
 					NewSettingSpecPermission.INSTANCE, 
 					"socks5.onUdpAssociate.clientFacingSocketSettings",
 					SocketSettings.newInstance()));
+
+	@HelpText(
+			doc = "The space separated list of inbound address rules "
+					+ "(default is allow:matches:.*)", 
+			usage = "socks5.onUdpAssociate.inboundAddressRules=[RULE1[ RULE2[...]]]"
+	)	
+	public static final SettingSpec<Rules> SOCKS5_ON_UDP_ASSOCIATE_INBOUND_ADDRESS_RULES =
+			SETTING_SPECS.addThenGet(new RulesSettingSpec(
+					NewSettingSpecPermission.INSTANCE,
+					"socks5.onUdpAssociate.inboundAddressRules",
+					Rules.newInstance(Rule.newInstance(
+							Action.ALLOW, 
+							ConditionPredicate.newInstance(ConditionPredicateMethod.MATCHES, ".*")))));
+
+	@HelpText(
+			doc = "The space separated list of outbound address rules "
+					+ "(default is allow:matches:.*)", 
+			usage = "socks5.onUdpAssociate.outboundAddressRules=[RULE1[ RULE2[...]]]"
+	)	
+	public static final SettingSpec<Rules> SOCKS5_ON_UDP_ASSOCIATE_OUTBOUND_ADDRESS_RULES =
+			SETTING_SPECS.addThenGet(new RulesSettingSpec(
+					NewSettingSpecPermission.INSTANCE,
+					"socks5.onUdpAssociate.outboundAddressRules",
+					Rules.newInstance(Rule.newInstance(
+							Action.ALLOW, 
+							ConditionPredicate.newInstance(ConditionPredicateMethod.MATCHES, ".*")))));
+	
 	
 	@HelpText(
 			doc = "The buffer size in bytes for relaying the data (default is "
@@ -331,6 +286,13 @@ public final class Socks5SettingSpecConstants {
 					NewSettingSpecPermission.INSTANCE, 
 					"socks5.onUdpAssociate.serverFacingSocketSettings",
 					SocketSettings.newInstance()));
+	
+	public static final SettingSpec<Socks5RequestRules> SOCKS5_SOCKS5_REQUEST_RULES =
+			SETTING_SPECS.addThenGet(new Socks5RequestRulesSettingSpec(
+					NewSettingSpecPermission.INSTANCE,
+					"socks5.socks5RequestRules",
+					Socks5RequestRules.newInstance(
+							new Socks5RequestRule.Builder(Action.ALLOW).build())));
 	
 	@HelpText(
 			doc = "The SOCKS5 request worker factory for the SOCKS5 server", 

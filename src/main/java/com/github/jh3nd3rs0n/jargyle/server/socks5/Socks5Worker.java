@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.jh3nd3rs0n.jargyle.internal.logging.LoggerHelper;
+import com.github.jh3nd3rs0n.jargyle.server.Action;
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
@@ -49,13 +50,11 @@ public final class Socks5Worker {
 	
 	private boolean canAllowSocks5Request(
 			final String clientAddress,	final Socks5Request socks5Req) {
-		Socks5RequestCriteria allowedSocks5RequestCriteria = 
-				this.settings.getLastValue(
-						Socks5SettingSpecConstants.SOCKS5_ALLOWED_SOCKS5_REQUEST_CRITERIA);
-		Socks5RequestCriterion socks5RequestCriterion =
-				allowedSocks5RequestCriteria.anyEvaluatesTrue(
-						clientAddress, socks5Req);
-		if (socks5RequestCriterion == null) {
+		Socks5RequestRules socks5RequestRules = this.settings.getLastValue(
+				Socks5SettingSpecConstants.SOCKS5_SOCKS5_REQUEST_RULES);
+		Socks5RequestRule socks5RequestRule = socks5RequestRules.anyAppliesTo(
+				clientAddress, socks5Req);
+		if (socks5RequestRule == null) {
 			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
 					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
 			LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
@@ -73,20 +72,14 @@ public final class Socks5Worker {
 			}
 			return false;
 		}
-		Socks5RequestCriteria blockedSocks5RequestCriteria = 
-				this.settings.getLastValue(
-						Socks5SettingSpecConstants.SOCKS5_BLOCKED_SOCKS5_REQUEST_CRITERIA);
-		socks5RequestCriterion =
-				blockedSocks5RequestCriteria.anyEvaluatesTrue(
-						clientAddress, socks5Req);
-		if (socks5RequestCriterion != null) {
+		if (socks5RequestRule.getAction().equals(Action.BLOCK)) {
 			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
 					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
 			LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
 					"SOCKS5 request from %s blocked based on the following "
-					+ "criterion: %s. SOCKS5 request: %s",
+					+ "rule: %s. SOCKS5 request: %s",
 					clientAddress,
-					socks5RequestCriterion,
+					socks5RequestRule,
 					socks5Req)));
 			try {
 				this.socks5WorkerContext.writeThenFlush(socks5Rep.toByteArray());

@@ -60,7 +60,7 @@ Although Jargyle can act as a standalone SOCKS5 server, it can act as a bridge b
 -   [5. 15. Allowing or Blocking SOCKS5 Requests](#5-15-allowing-or-blocking-socks5-requests)
 -   [5. 16. Logging](#5-16-logging)
 -   [6. Miscellaneous Notes](#6-miscellaneous-notes)
--   [6. 1. The Doc XML Attribute and the Doc XML Element](#6-1-the-doc-xml-attribute-and-the-doc-xml-element)
+-   [6. 1. The Doc XML Element](#6-1-the-doc-xml-element)
 -   [6. 2. Multiple Settings of the Same Name](#6-2-multiple-settings-of-the-same-name)
 -   [6. 3. The SOCKS5 RESOLVE Command](#6-3-the-socks5-resolve-command)
 -   [7. Contact](#7-contact)
@@ -185,14 +185,11 @@ The following is a list of available settings for the SOCKS server (displayed wh
     
     GENERAL SETTINGS:
     
-      allowedClientAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
-          The space separated list of allowed client address criteria (default is matches:.*)
-    
       backlog=INTEGER_BETWEEN_0_AND_2147483647
           The maximum length of the queue of incoming connections (default is 50)
     
-      blockedClientAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
-          The space separated list of blocked client address criteria
+      clientAddressRules=[RULE1[ RULE2[...]]]
+          The space separated list of client address rules (default is allow:matches:.*)
     
       clientFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
           The space separated list of socket settings for the client-facing socket
@@ -362,11 +359,8 @@ The following is a list of available settings for the SOCKS server (displayed wh
       socks5.methods=[SOCKS5_METHOD1[ SOCKS5_METHOD2[...]]]
           The space separated list of acceptable authentication methods in order of preference (default is NO_AUTHENTICATION_REQUIRED)
     
-      socks5.onBind.allowedInboundAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
-          The space separated list of allowed inbound address criteria (default is matches:.*)
-    
-      socks5.onBind.blockedInboundAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
-          The space separated list of blocked inbound address criteria
+      socks5.onBind.inboundAddressRules=[RULE1[ RULE2[...]]]
+          The space separated list of inbound address rules (default is allow:matches:.*)
     
       socks5.onBind.inboundSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
           The space separated list of socket settings for the inbound socket
@@ -398,23 +392,17 @@ The following is a list of available settings for the SOCKS server (displayed wh
       socks5.onConnect.serverFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
           The space separated list of socket settings for the server-facing socket
     
-      socks5.onUdpAssociate.allowedInboundAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
-          The space separated list of allowed inbound address criteria (default is matches:.*)
-    
-      socks5.onUdpAssociate.allowedOutboundAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
-          The space separated list of allowed outbound address criteria (default is matches:.*)
-    
-      socks5.onUdpAssociate.blockedInboundAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
-          The space separated list of blocked inbound address criteria
-    
-      socks5.onUdpAssociate.blockedOutboundAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]
-          The space separated list of blocked outbound address criteria
-    
       socks5.onUdpAssociate.clientFacingBindHost=HOST
           The binding host name or address for the client-facing UDP socket (default is 0.0.0.0)
     
       socks5.onUdpAssociate.clientFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
           The space separated list of socket settings for the client-facing UDP socket
+    
+      socks5.onUdpAssociate.inboundAddressRules=[RULE1[ RULE2[...]]]
+          The space separated list of inbound address rules (default is allow:matches:.*)
+    
+      socks5.onUdpAssociate.outboundAddressRules=[RULE1[ RULE2[...]]]
+          The space separated list of outbound address rules (default is allow:matches:.*)
     
       socks5.onUdpAssociate.relayBufferSize=INTEGER_BETWEEN_1_AND_2147483647
           The buffer size in bytes for relaying the data (default is 32768)
@@ -534,7 +522,7 @@ The following is a list of available settings for the SOCKS server (displayed wh
       USERNAME_PASSWORD
           Username password authentication
     
-                
+    
 ```
 
 The following is the command line help for managing SOCKS5 users for username password authentication (displayed when using the command line options `--socks5-userpassauth-users --help`):
@@ -1865,98 +1853,95 @@ You can allow or block the following addresses:
 -   Inbound addresses following the SOCKS5 UDP ASSOCIATE command (IPv4 and IPv6)
 -   Outbound addresses following the SOCKS5 UDP ASSOCIATE command (IPv4, IPv6, and domain name)
 
-To allow or block an address or addresses, you will need to specify the address or addresses in any of the following settings:
+To allow or block an address or addresses, you will need to create a rule or rules that will allow or block an address or addresses in any of the following settings:
 
--   `allowedClientAddressCriteria`
--   `blockedClientAddressCriteria`
--   `socks5.onBind.allowedInboundAddressCriteria`
--   `socks5.onBind.blockedInboundAddressCriteria`
--   `socks5.onUdpAssociate.allowedInboundAddressCriteria`
--   `socks5.onUdpAssociate.allowedOutboundAddressCriteria`
--   `socks5.onUdpAssociate.blockedInboundAddressCriteria`
--   `socks5.onUdpAssociate.blockedOutboundAddressCriteria`
+-   `clientAddressRules`
+-   `socks5.onBind.inboundAddressRules`
+-   `socks5.onUdpAssociate.inboundAddressRules`
+-   `socks5.onUdpAssociate.outboundAddressRules`
 
-You can specify an address or addresses in any of the aforementioned settings as a space separated list of each address or addresses as either a literal expression preceded by the prefix `equals:` or a regular expression preceded by the prefix `matches:`.
+You can create a rule using the following syntax:
+
+```text
+    
+    ACTION:CONDITION_PREDICATE_METHOD:VALUE
+    
+```
+
+`ACTION` can be one of the following values:
+
+-   `allow` : allows the address in question
+-   `block` : blocks the address in question
+
+`CONDITION_PREDICATE_METHOD:VALUE` can be one of the following:
+
+-   `equals:LITERAL_EXPRESSION` : the address in question equals the literal expression expressed in `LITERAL_EXPRESSION`
+-   `matches:REGULAR_EXPRESSION` : the address in question matches the regular expression expressed in `REGULAR_EXPRESSION`
+
 
 Partial command line example:
 
 ```text
     
-    "--setting=allowedClientAddressCriteria=equals:127.0.0.1 equals:0:0:0:0:0:0:0:1" \
-    "--setting=blockedClientAddressCriteria=matches:(?!(127\.0\.0\.1|0:0:0:0:0:0:0:1)).*"
+    "--setting=clientAddressRules=allow:equals:127.0.0.1 allow:equals:0:0:0:0:0:0:0:1 block:matches:(?!(127\.0\.0\.1|0:0:0:0:0:0:0:1)).*"
     
 ```
 
-You can specify an address or addresses in any of the aforementioned settings as a sequence of `<criterion/>` XML elements in the configuration file.
+You can specify the rules in any of the aforementioned settings as a sequence of `<rule/>` XML elements in the configuration file.
 
 Partial configuration file example:
 
 ```xml
     
     <setting>
-        <name>allowedClientAddressCriteria</name>
-        <criteria>
-            <criterion method="equals" value="127.0.0.1"/>
-            <criterion method="equals" value="0:0:0:0:0:0:0:1"/>
-        </criteria>
+        <name>clientAddressRules</name>
+        <rules>
+            <rule action="allow">
+                <conditionPredicate method="equals" value="127.0.0.1"/>
+            </rule>
+            <rule action="allow">
+                <conditionPredicate method="equals" value="0:0:0:0:0:0:0:1"/>
+            </rule>
+            <rule action="block">
+                <conditionPredicate method="matches" value="(?!(127\.0\.0\.1|0:0:0:0:0:0:0:1)).*"/>
+            </rule>                        
+        </rules>
     </setting>
-    <setting>
-        <name>blockedClientAddressCriteria</name>
-        <criteria>
-            <criterion method="matches" value="(?!(127\.0\.0\.1|0:0:0:0:0:0:0:1)).*"/>
-        </criteria>
-    </setting>        
     
 ```
 
 ### 5. 15. Allowing or Blocking SOCKS5 Requests
 
-You can allow or block SOCKS5 requests. To allow or block SOCKS5 requests, you will need to specify the SOCKS5 request or requests in any of the following settings in the configuration file:
+You can allow or block SOCKS5 requests. To allow or block SOCKS5 requests, you will need to create a rule or rules that will allow or block the SOCKS5 request or requests in the following setting in the configuration file:
 
--   `socks5.allowedSocks5RequestCriteria`
--   `socks5.blockedSocks5RequestCriteria`
+-   `socks5.socks5RequestRules`
  
-You can specify a SOCKS5 request or requests in any of the aforementioned settings as a sequence of `<socks5RequestCriterion/>` XML elements in the configuration file.
+You can specify the rules in the aforementioned setting as a sequence of `<socks5RequestRule/>` XML elements in the configuration file.
 
 Partial configuration file example:
 
 ```xml
     
     <setting>
-        <name>socks5.allowedSocks5RequestCriteria</name>
-        <socks5RequestCriteria>
-            <socks5RequestCriterion>
-                <clientAddressCriterion method="matches" value=".*"/>
-                <commandCriterion method="equals" value="CONNECT"/>
-                <desiredDestinationAddressCriterion method="matches" value=".*"/>
+        <name>socks5.socks5RequestRules</name>
+        <socks5RequestRules>
+            <socks5RequestRule action="allow">
+                <clientAddressConditionPredicate method="matches" value=".*"/>
+                <commandConditionPredicate method="equals" value="CONNECT"/>
+                <desiredDestinationAddressConditionPredicate method="matches" value=".*"/>
                 <desiredDestinationPortRanges>
                     <portRange minPort="80" maxPort="80"/>
                     <portRange minPort="443" maxPort="443"/>
                 </desiredDestinationPortRanges>
-            </socks5RequestCriterion>
-        </socks5RequestCriteria>
+            </socks5RequestRule>
+            <socks5RequestRule action="block">
+                <commandConditionPredicate method="equals" value="BIND"/>
+            </socks5RequestRule>
+            <socks5RequestRule action="block">
+                <commandConditionPredicate method="equals" value="UDP_ASSOCIATE"/>
+            </socks5RequestRule>            
+        </socks5RequestRules>
     </setting>
-    <setting>
-        <name>socks5.blockedSocks5RequestCriteria</name>
-        <socks5RequestCriteria>
-            <socks5RequestCriterion>
-                <clientAddressCriterion method="matches" value=".*"/>
-                <commandCriterion method="equals" value="BIND"/>
-                <desiredDestinationAddressCriterion method="matches" value=".*"/>
-                <desiredDestinationPortRanges>
-                    <portRange minPort="0" maxPort="65535"/>
-                </desiredDestinationPortRanges>
-            </socks5RequestCriterion>
-            <socks5RequestCriterion>
-                <clientAddressCriterion method="matches" value=".*"/>
-                <commandCriterion method="equals" value="UDP_ASSOCIATE"/>
-                <desiredDestinationAddressCriterion method="matches" value=".*"/>
-                <desiredDestinationPortRanges>
-                    <portRange minPort="0" maxPort="65535"/>
-                </desiredDestinationPortRanges>
-            </socks5RequestCriterion>                    
-        </socks5RequestCriteria>
-    </setting>        
     
 ```
 
@@ -2030,80 +2015,60 @@ Example:
 
 The following are miscellaneous notes regarding Jargyle.
 
-### 6. 1. The Doc XML Attribute and the Doc XML Element
+### 6. 1. The Doc XML Element
 
-When using an existing configuration file to create a new configuration file, any XML comments from the existing configuration file cannot be transferred to the new configuration file. To preserve comments from one configuration file to the next configuration file, the `doc` XML attribute and the `<doc/>` XML element can be used in certain XML elements. 
+When using an existing configuration file to create a new configuration file, any XML comments from the existing configuration file cannot be transferred to the new configuration file. To preserve XML comments from one configuration file to the next configuration file, the `<doc/>` XML element can be used in the following XML elements:
 
-You can use the `doc` XML attribute in the following XML elements:
-
--   `<clientAddressCriterion/>`
--   `<commandCriterion/>`
--   `<criterion/>`
--   `<desiredDestinationAddressCriterion/>`
--   `<portRange/>`
-
-You can use the `<doc/>` XML element in the following XML elements:
-
+-   `<rule/>`
 -   `<setting/>`
 -   `<socketSetting/>`
--   `<socks5RequestCriterion/>`
+-   `<socks5RequestRule/>`
 
 Partial configuration file example:
 
 ```xml
     
     <setting>
-        <name>allowedClientAddressCriteria</name>
-        <criteria>
-            <criterion method="equals" value="127.0.0.1" doc="IPv4 loopback address"/>
-            <criterion method="equals" value="0:0:0:0:0:0:0:1" doc="IPv6 loopback address"/>
-        </criteria>
+        <name>clientAddressRules</name>
+        <rules>
+            <rule action="allow">
+                <conditionPredicate method="equals" value="127.0.0.1"/>
+                <doc>Allow IPv4 loopback address</doc>
+            </rule>
+            <rule action="allow">
+                <conditionPredicate method="equals" value="0:0:0:0:0:0:0:1"/>
+                <doc>Allow IPv6 loopback address</doc>
+            </rule>
+            <rule action="block">
+                <conditionPredicate method="matches" value="(?!(127\.0\.0\.1|0:0:0:0:0:0:0:1)).*"/>
+                <doc>Block any address that is not a loopback address</doc>
+            </rule>                        
+        </rules>
     </setting>
     <setting>
-        <name>blockedClientAddressCriteria</name>
-        <criteria>
-            <criterion method="matches" value="(?!(127\.0\.0\.1|0:0:0:0:0:0:0:1)).*" doc="Block any address that is not a loopback address"/>
-        </criteria>
-    </setting>
-    <setting>
-        <name>socks5.allowedSocks5RequestCriteria</name>
-        <socks5RequestCriteria>
-            <socks5RequestCriterion>
+        <name>socks5.socks5RequestRules</name>
+        <socks5RequestRules>
+            <socks5RequestRule action="allow">
+                <clientAddressConditionPredicate method="matches" value=".*"/>
+                <commandConditionPredicate method="equals" value="CONNECT"/>
+                <desiredDestinationAddressConditionPredicate method="matches" value=".*"/>
+                <desiredDestinationPortRanges>
+                    <portRange minPort="80" maxPort="80"/>
+                    <portRange minPort="443" maxPort="443"/>
+                </desiredDestinationPortRanges>
                 <doc>Allow any client to connect to any address on port 80 or port 443</doc>
-                <clientAddressCriterion method="matches" value=".*"/>
-                <commandCriterion method="equals" value="CONNECT"/>
-                <desiredDestinationAddressCriterion method="matches" value=".*"/>
-                <desiredDestinationPortRanges>
-                    <portRange minPort="80" maxPort="80" doc="HTTP port"/>
-                    <portRange minPort="443" maxPort="443" doc="HTTPS port"/>
-                </desiredDestinationPortRanges>
-            </socks5RequestCriterion>
-        </socks5RequestCriteria>
-    </setting>
-    <setting>
-        <name>socks5.blockedSocks5RequestCriteria</name>
-        <socks5RequestCriteria>
-            <socks5RequestCriterion>
+            </socks5RequestRule>
+            <socks5RequestRule action="block">
+                <commandConditionPredicate method="equals" value="BIND"/>
                 <doc>Block any BIND requests</doc>
-                <clientAddressCriterion method="matches" value=".*"/>
-                <commandCriterion method="equals" value="BIND"/>
-                <desiredDestinationAddressCriterion method="matches" value=".*"/>
-                <desiredDestinationPortRanges>
-                    <portRange minPort="0" maxPort="65535"/>
-                </desiredDestinationPortRanges>
-            </socks5RequestCriterion>
-            <socks5RequestCriterion>
+            </socks5RequestRule>
+            <socks5RequestRule action="block">
+                <commandConditionPredicate method="equals" value="UDP_ASSOCIATE"/>
                 <doc>Block any UDP ASSOCIATE requests</doc>
-                <clientAddressCriterion method="matches" value=".*"/>
-                <commandCriterion method="equals" value="UDP_ASSOCIATE"/>
-                <desiredDestinationAddressCriterion method="matches" value=".*"/>
-                <desiredDestinationPortRanges>
-                    <portRange minPort="0" maxPort="65535"/>
-                </desiredDestinationPortRanges>
-            </socks5RequestCriterion>                    
-        </socks5RequestCriteria>
+            </socks5RequestRule>            
+        </socks5RequestRules>
     </setting>
-    
+        
 ```
 
 ### 6. 2. Multiple Settings of the Same Name

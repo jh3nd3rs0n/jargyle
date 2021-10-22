@@ -13,9 +13,10 @@ import org.slf4j.LoggerFactory;
 import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
 import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
-import com.github.jh3nd3rs0n.jargyle.common.text.Criteria;
-import com.github.jh3nd3rs0n.jargyle.common.text.Criterion;
 import com.github.jh3nd3rs0n.jargyle.internal.logging.LoggerHelper;
+import com.github.jh3nd3rs0n.jargyle.server.Action;
+import com.github.jh3nd3rs0n.jargyle.server.Rule;
+import com.github.jh3nd3rs0n.jargyle.server.Rules;
 import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Reply;
@@ -49,11 +50,10 @@ final class BindCommandWorker extends CommandWorker {
 	}
 	
 	private boolean canAllowInboundAddress(final String inboundAddress) {
-		Criteria allowedInboundAddressCriteria = this.settings.getLastValue(
-				Socks5SettingSpecConstants.SOCKS5_ON_BIND_ALLOWED_INBOUND_ADDRESS_CRITERIA);
-		Criterion criterion = allowedInboundAddressCriteria.anyEvaluatesTrue(
-				inboundAddress);
-		if (criterion == null) {
+		Rules inboundAddressRules = this.settings.getLastValue(
+				Socks5SettingSpecConstants.SOCKS5_ON_BIND_INBOUND_ADDRESS_RULES);
+		Rule inboundAddressRule = inboundAddressRules.anyAppliesTo(inboundAddress);
+		if (inboundAddressRule == null) {
 			LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
 					"Inbound address %s not allowed",
 					inboundAddress)));
@@ -73,16 +73,11 @@ final class BindCommandWorker extends CommandWorker {
 			}
 			return false;
 		}
-		Criteria blockedInboundAddressCriteria = this.settings.getLastValue(
-				Socks5SettingSpecConstants.SOCKS5_ON_BIND_BLOCKED_INBOUND_ADDRESS_CRITERIA);
-		criterion = blockedInboundAddressCriteria.anyEvaluatesTrue(
-				inboundAddress);
-		if (criterion != null) {
+		if (inboundAddressRule.getAction().equals(Action.BLOCK)) {
 			LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
-					"Inbound address %s blocked based on the "
-					+ "following criterion: %s",
+					"Inbound address %s blocked based on the following rule: %s",
 					inboundAddress,
-					criterion)));
+					inboundAddressRule)));
 			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
 					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
 			LOGGER.debug(LoggerHelper.objectMessage(this, String.format(

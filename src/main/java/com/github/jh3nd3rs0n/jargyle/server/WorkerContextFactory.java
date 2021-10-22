@@ -7,8 +7,6 @@ import java.net.SocketException;
 import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.common.net.ssl.DtlsDatagramSocketFactory;
-import com.github.jh3nd3rs0n.jargyle.common.text.Criteria;
-import com.github.jh3nd3rs0n.jargyle.common.text.Criterion;
 import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.SslSocketFactory;
 
 final class WorkerContextFactory {
@@ -30,25 +28,19 @@ final class WorkerContextFactory {
 	private void checkIfAllowed(
 			final String clientAddress, final Configuration config) {
 		Settings settings = config.getSettings();
-		Criteria allowedClientAddressCriteria = settings.getLastValue(
-				GeneralSettingSpecConstants.ALLOWED_CLIENT_ADDRESS_CRITERIA);
-		Criterion criterion = allowedClientAddressCriteria.anyEvaluatesTrue(
-				clientAddress);
-		if (criterion == null) {
+		Rules clientAddressRules = settings.getLastValue(
+				GeneralSettingSpecConstants.CLIENT_ADDRESS_RULES);
+		Rule clientAddressRule = clientAddressRules.anyAppliesTo(clientAddress);
+		if (clientAddressRule == null) {
 			throw new IllegalArgumentException(String.format(
 					"client address %s not allowed",
 					clientAddress));
 		}
-		Criteria blockedClientAddressCriteria = settings.getLastValue(
-				GeneralSettingSpecConstants.BLOCKED_CLIENT_ADDRESS_CRITERIA);
-		criterion = blockedClientAddressCriteria.anyEvaluatesTrue(
-				clientAddress);
-		if (criterion != null) {
+		if (clientAddressRule.getAction().equals(Action.BLOCK)) {
 			throw new IllegalArgumentException(String.format(
-					"client address %s blocked based on the following "
-							+ "criterion: %s",
+					"client address %s blocked based on the following rule: %s",
 							clientAddress,
-							criterion));
+							clientAddressRule));
 		}
 	}
 

@@ -15,9 +15,10 @@ import org.slf4j.LoggerFactory;
 
 import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
-import com.github.jh3nd3rs0n.jargyle.common.text.Criteria;
-import com.github.jh3nd3rs0n.jargyle.common.text.Criterion;
 import com.github.jh3nd3rs0n.jargyle.internal.logging.LoggerHelper;
+import com.github.jh3nd3rs0n.jargyle.server.Action;
+import com.github.jh3nd3rs0n.jargyle.server.Rule;
+import com.github.jh3nd3rs0n.jargyle.server.Rules;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.UdpRequestHeader;
 
 public final class UdpRelayServer {
@@ -70,30 +71,6 @@ public final class UdpRelayServer {
 		
 	}
 	
-	public static final class InboundAddressCriteria {
-		
-		private final Criteria allowedInboundAddressCriteria;
-		private final Criteria blockedInboundAddressCriteria;
-		
-		public InboundAddressCriteria(
-				final Criteria allowedInboundAddrCriteria, 
-				final Criteria blockedInboundAddrCriteria) {
-			Objects.requireNonNull(allowedInboundAddrCriteria);
-			Objects.requireNonNull(blockedInboundAddrCriteria);
-			this.allowedInboundAddressCriteria = allowedInboundAddrCriteria;
-			this.blockedInboundAddressCriteria = blockedInboundAddrCriteria;
-		}
-		
-		public Criteria getAllowedInboundAddressCriteria() {
-			return this.allowedInboundAddressCriteria;
-		}
-		
-		public Criteria getBlockedInboundAddressCriteria() {
-			return this.blockedInboundAddressCriteria;
-		}
-		
-	}
-	
 	private static final class InboundPacketsWorker	extends PacketsWorker {
 		
 		private static final Logger LOGGER = LoggerFactory.getLogger(
@@ -104,23 +81,20 @@ public final class UdpRelayServer {
 		}
 		
 		private boolean canAllowInboundAddress(final String inboundAddress) {
-			Criterion criterion = 
-					this.allowedInboundAddressCriteria.anyEvaluatesTrue(
-							inboundAddress);
-			if (criterion == null) {
+			Rule inboundAddressRule = this.inboundAddressRules.anyAppliesTo(
+					inboundAddress);
+			if (inboundAddressRule == null) {
 				LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
 						"Inbound address %s not allowed",
 						inboundAddress)));
 				return false;
 			}
-			criterion =	this.blockedInboundAddressCriteria.anyEvaluatesTrue(
-					inboundAddress);
-			if (criterion != null) {
+			if (inboundAddressRule.getAction().equals(Action.BLOCK)) {
 				LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
 						"Inbound address %s blocked based on the "
-						+ "following criterion: %s",
+						+ "following rule: %s",
 						inboundAddress,
-						criterion)));
+						inboundAddressRule)));
 				return false;
 			}
 			return true;
@@ -236,30 +210,6 @@ public final class UdpRelayServer {
 		
 	}
 	
-	public static final class OutboundAddressCriteria {
-		
-		private final Criteria allowedOutboundAddressCriteria;
-		private final Criteria blockedOutboundAddressCriteria;
-		
-		public OutboundAddressCriteria(
-				final Criteria allowedOutboundAddrCriteria, 
-				final Criteria blockedOutboundAddrCriteria) {
-			Objects.requireNonNull(allowedOutboundAddrCriteria);
-			Objects.requireNonNull(blockedOutboundAddrCriteria);
-			this.allowedOutboundAddressCriteria = allowedOutboundAddrCriteria;
-			this.blockedOutboundAddressCriteria = blockedOutboundAddrCriteria;
-		}
-		
-		public Criteria getAllowedOutboundAddressCriteria() {
-			return this.allowedOutboundAddressCriteria;
-		}
-		
-		public Criteria getBlockedOutboundAddressCriteria() {
-			return this.blockedOutboundAddressCriteria;
-		}
-		
-	}
-	
 	private static final class OutboundPacketsWorker extends PacketsWorker {
 		
 		private static final Logger LOGGER = LoggerFactory.getLogger(
@@ -270,23 +220,20 @@ public final class UdpRelayServer {
 		}
 		
 		private boolean canAllowOutboundAddress(final String outboundAddress) {
-			Criterion criterion = 
-					this.allowedOutboundAddressCriteria.anyEvaluatesTrue(
-							outboundAddress);
-			if (criterion == null) {
+			Rule outboundAddressRule = this.outboundAddressRules.anyAppliesTo(
+					outboundAddress);
+			if (outboundAddressRule == null) {
 				LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
 						"Outbound address %s not allowed",
 						outboundAddress)));
 				return false;
 			}
-			criterion = this.blockedOutboundAddressCriteria.anyEvaluatesTrue(
-					outboundAddress);
-			if (criterion != null) {
+			if (outboundAddressRule.getAction().equals(Action.BLOCK)) {
 				LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
 						"Outbound address %s blocked based on the "
-						+ "following criterion: %s",
+						+ "following rule: %s",
 						outboundAddress,
-						criterion)));
+						outboundAddressRule)));
 				return false;
 			}
 			return true;
@@ -462,33 +409,25 @@ public final class UdpRelayServer {
 	
 	private static abstract class PacketsWorker implements Runnable {
 		
-		protected final Criteria allowedInboundAddressCriteria;
-		protected final Criteria allowedOutboundAddressCriteria;
-		protected final Criteria blockedInboundAddressCriteria;
-		protected final Criteria blockedOutboundAddressCriteria;
 		protected final int bufferSize;
 		protected final String clientAddress;
 		protected final DatagramSocket clientFacingDatagramSocket;
 		protected final HostResolver hostResolver;
-		protected final int idleTimeout;		
+		protected final int idleTimeout;
+		protected final Rules inboundAddressRules;
+		protected final Rules outboundAddressRules;
 		protected final PacketsWorkerContext packetsWorkerContext;
 		protected final DatagramSocket serverFacingDatagramSocket;
 
 		public PacketsWorker(final PacketsWorkerContext context) {
-			this.allowedInboundAddressCriteria =
-					context.getAllowedInboundAddressCriteria();
-			this.allowedOutboundAddressCriteria =
-					context.getAllowedOutboundAddressCriteria();
-			this.blockedInboundAddressCriteria =
-					context.getBlockedInboundAddressCriteria();
-			this.blockedOutboundAddressCriteria =
-					context.getBlockedOutboundAddressCriteria();
 			this.bufferSize = context.getBufferSize();
 			this.clientAddress = context.getClientAddress();
 			this.clientFacingDatagramSocket = 
 					context.getClientFacingDatagramSocket();
 			this.hostResolver = context.getHostResolver();
-			this.idleTimeout = context.getIdleTimeout();			
+			this.idleTimeout = context.getIdleTimeout();
+			this.inboundAddressRules = context.getInboundAddressRules();
+			this.outboundAddressRules = context.getOutboundAddressRules();
 			this.packetsWorkerContext = context;
 			this.serverFacingDatagramSocket = 
 					context.getServerFacingDatagramSocket();
@@ -518,22 +457,6 @@ public final class UdpRelayServer {
 			this.udpRelayServer = server;
 		}
 		
-		public final Criteria getAllowedInboundAddressCriteria() {
-			return this.udpRelayServer.allowedInboundAddressCriteria;
-		}
-		
-		public final Criteria getAllowedOutboundAddressCriteria() {
-			return this.udpRelayServer.allowedOutboundAddressCriteria;
-		}
-		
-		public final Criteria getBlockedInboundAddressCriteria() {
-			return this.udpRelayServer.blockedInboundAddressCriteria;
-		}
-		
-		public final Criteria getBlockedOutboundAddressCriteria() {
-			return this.udpRelayServer.blockedOutboundAddressCriteria;
-		}
-		
 		public final int getBufferSize() {
 			return this.udpRelayServer.bufferSize;
 		}
@@ -560,6 +483,14 @@ public final class UdpRelayServer {
 		
 		public final int getIdleTimeout() {
 			return this.udpRelayServer.idleTimeout;
+		}
+		
+		public final Rules getInboundAddressRules() {
+			return this.udpRelayServer.inboundAddressRules;
+		}
+		
+		public final Rules getOutboundAddressRules() {
+			return this.udpRelayServer.outboundAddressRules;
 		}
 		
 		public final DatagramSocket getServerFacingDatagramSocket() {
@@ -628,10 +559,6 @@ public final class UdpRelayServer {
 		
 	}
 	
-	private final Criteria allowedInboundAddressCriteria;
-	private final Criteria allowedOutboundAddressCriteria;
-	private final Criteria blockedInboundAddressCriteria;
-	private final Criteria blockedOutboundAddressCriteria;
 	private final int bufferSize;	
 	private final String clientAddress;
 	private final DatagramSocket clientFacingDatagramSocket;	
@@ -640,6 +567,8 @@ public final class UdpRelayServer {
 	private final HostResolver hostResolver;
 	private long idleStartTime;
 	private final int idleTimeout;
+	private final Rules inboundAddressRules;
+	private final Rules outboundAddressRules;
 	private final DatagramSocket serverFacingDatagramSocket;
 	private State state;
 	
@@ -648,23 +577,15 @@ public final class UdpRelayServer {
 			final ClientDatagramSocketAddress clientDatagramSockAddr,
 			final DatagramSockets datagramSocks,
 			final HostResolver resolver, 
-			final InboundAddressCriteria inboundAddrCriteria, 
-			final OutboundAddressCriteria outboundAddrCriteria, 
+			final Rules inboundAddrRules, 
+			final Rules outboundAddrRules, 
 			final RelaySettings settings) {
 		Objects.requireNonNull(clientDatagramSockAddr);
 		Objects.requireNonNull(datagramSocks);
 		Objects.requireNonNull(resolver);		
-		Objects.requireNonNull(inboundAddrCriteria);
-		Objects.requireNonNull(outboundAddrCriteria);
+		Objects.requireNonNull(inboundAddrRules);
+		Objects.requireNonNull(outboundAddrRules);
 		Objects.requireNonNull(settings);
-		this.allowedInboundAddressCriteria = 
-				inboundAddrCriteria.getAllowedInboundAddressCriteria();
-		this.allowedOutboundAddressCriteria =
-				outboundAddrCriteria.getAllowedOutboundAddressCriteria();
-		this.blockedInboundAddressCriteria = 
-				inboundAddrCriteria.getBlockedInboundAddressCriteria();
-		this.blockedOutboundAddressCriteria =
-				outboundAddrCriteria.getBlockedOutboundAddressCriteria();
 		this.bufferSize = settings.getBufferSize();
 		this.clientAddress = clientDatagramSockAddr.getAddress();
 		this.clientFacingDatagramSocket = 
@@ -673,7 +594,9 @@ public final class UdpRelayServer {
 		this.executor = null;
 		this.hostResolver = resolver;
 		this.idleStartTime = 0L;
-		this.idleTimeout = settings.getIdleTimeout();		
+		this.idleTimeout = settings.getIdleTimeout();
+		this.inboundAddressRules = inboundAddrRules;
+		this.outboundAddressRules = outboundAddrRules;
 		this.serverFacingDatagramSocket = 
 				datagramSocks.getServerFacingDatagramSocket();
 		this.state = State.STOPPED;

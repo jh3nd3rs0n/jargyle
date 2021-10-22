@@ -7,30 +7,16 @@ import com.github.jh3nd3rs0n.jargyle.common.net.Host;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.common.number.impl.NonnegativeInteger;
-import com.github.jh3nd3rs0n.jargyle.common.text.Criteria;
-import com.github.jh3nd3rs0n.jargyle.common.text.Criterion;
-import com.github.jh3nd3rs0n.jargyle.common.text.CriterionMethod;
 import com.github.jh3nd3rs0n.jargyle.internal.help.HelpText;
-import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.CriteriaSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.HostSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.NonnegativeIntegerSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.PortSettingSpec;
+import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.RulesSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.SocketSettingsSettingSpec;
 
 public final class GeneralSettingSpecConstants {
 
 	private static final SettingSpecs SETTING_SPECS = new SettingSpecs();
-	
-	@HelpText(
-			doc = "The space separated list of allowed client address "
-					+ "criteria (default is matches:.*)", 
-			usage = "allowedClientAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
-	)
-	public static final SettingSpec<Criteria> ALLOWED_CLIENT_ADDRESS_CRITERIA = 
-			SETTING_SPECS.addThenGet(new CriteriaSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"allowedClientAddressCriteria",
-					Criteria.newInstance(Criterion.newInstance(CriterionMethod.MATCHES, ".*"))));
 
 	@HelpText(
 			doc = "The maximum length of the queue of incoming connections "
@@ -42,16 +28,19 @@ public final class GeneralSettingSpecConstants {
 					NewSettingSpecPermission.INSTANCE, 
 					"backlog",
 					NonnegativeInteger.newInstance(50)));
-	
+
 	@HelpText(
-			doc = "The space separated list of blocked client address criteria", 
-			usage = "blockedClientAddressCriteria=[equals|matches:VALUE1[ equals|matches:VALUE2[...]]]"
-	)
-	public static final SettingSpec<Criteria> BLOCKED_CLIENT_ADDRESS_CRITERIA = 
-			SETTING_SPECS.addThenGet(new CriteriaSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"blockedClientAddressCriteria",
-					Criteria.getEmptyInstance()));
+			doc = "The space separated list of client address rules "
+					+ "(default is allow:matches:.*)", 
+			usage = "clientAddressRules=[RULE1[ RULE2[...]]]"
+	)	
+	public static final SettingSpec<Rules> CLIENT_ADDRESS_RULES =
+			SETTING_SPECS.addThenGet(new RulesSettingSpec(
+					NewSettingSpecPermission.INSTANCE,
+					"clientAddressRules",
+					Rules.newInstance(Rule.newInstance(
+							Action.ALLOW, 
+							ConditionPredicate.newInstance(ConditionPredicateMethod.MATCHES, ".*")))));
 	
 	@HelpText(
 			doc = "The space separated list of socket settings for the "

@@ -16,6 +16,7 @@ import com.github.jh3nd3rs0n.jargyle.common.net.Host;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.internal.logging.LoggerHelper;
 import com.github.jh3nd3rs0n.jargyle.internal.net.AllZerosInetAddressHelper;
+import com.github.jh3nd3rs0n.jargyle.server.Rules;
 import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Reply;
@@ -182,15 +183,15 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 			final UdpRelayServer.ClientDatagramSocketAddress clientDatagramSocketAddress,
 			final UdpRelayServer.DatagramSockets datagramSockets,
 			final HostResolver hostResolver,
-			final UdpRelayServer.InboundAddressCriteria inboundAddressCriteria,
-			final UdpRelayServer.OutboundAddressCriteria outboundAddressCriteria, 
+			final Rules inboundAddressRules,
+			final Rules outboundAddressRules, 
 			final UdpRelayServer.RelaySettings relaySettings) throws IOException {
 		UdpRelayServer udpRelayServer = new UdpRelayServer(
 				clientDatagramSocketAddress,
 				datagramSockets,
 				hostResolver,
-				inboundAddressCriteria, 
-				outboundAddressCriteria,
+				inboundAddressRules, 
+				outboundAddressRules,
 				relaySettings);
 		try {
 			udpRelayServer.start();
@@ -273,16 +274,10 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 								clientFacingDatagramSock, 
 								serverFacingDatagramSock), 
 						hostResolver, 
-						new UdpRelayServer.InboundAddressCriteria(
-								this.settings.getLastValue(
-										Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_ALLOWED_INBOUND_ADDRESS_CRITERIA), 
-								this.settings.getLastValue(
-										Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_BLOCKED_INBOUND_ADDRESS_CRITERIA)), 
-						new UdpRelayServer.OutboundAddressCriteria(
-								this.settings.getLastValue(
-										Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_ALLOWED_OUTBOUND_ADDRESS_CRITERIA), 
-								this.settings.getLastValue(
-										Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_BLOCKED_OUTBOUND_ADDRESS_CRITERIA)), 
+						this.settings.getLastValue(
+								Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_INBOUND_ADDRESS_RULES), 
+						this.settings.getLastValue(
+								Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_OUTBOUND_ADDRESS_RULES), 
 						new UdpRelayServer.RelaySettings(
 								this.settings.getLastValue(
 										Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_RELAY_BUFFER_SIZE).intValue(), 

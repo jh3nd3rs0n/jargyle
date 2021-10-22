@@ -20,8 +20,8 @@ public final class Socks5RequestRule {
 		private String doc;		
 		
 		public Builder(final RuleAction rlAction) {
-			Objects.requireNonNull(rlAction, "action must not be null");
-			this.ruleAction = rlAction;
+			this.ruleAction = Objects.requireNonNull(
+					rlAction, "rule action must not be null");
 			this.clientAddressConditionPredicate = null;
 			this.commandConditionPredicate = null;
 			this.desiredDestinationAddressConditionPredicate = null;

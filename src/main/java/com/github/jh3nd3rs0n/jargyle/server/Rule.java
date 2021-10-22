@@ -1,5 +1,7 @@
 package com.github.jh3nd3rs0n.jargyle.server;
 
+import java.util.Objects;
+
 public final class Rule {
 
 	public static Rule newInstance(
@@ -41,8 +43,10 @@ public final class Rule {
 			final RuleAction rlAction, 
 			final ConditionPredicate condPredicate, 
 			final String d) {
-		this.ruleAction = rlAction;
-		this.conditionPredicate = condPredicate;
+		this.ruleAction = Objects.requireNonNull(
+				rlAction, "rule action must not be null");
+		this.conditionPredicate = Objects.requireNonNull(
+				condPredicate, "condition predicate must not be null");
 		this.doc = d;
 	}
 

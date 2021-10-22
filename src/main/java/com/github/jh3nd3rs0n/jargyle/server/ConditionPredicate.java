@@ -1,5 +1,7 @@
 package com.github.jh3nd3rs0n.jargyle.server;
 
+import java.util.Objects;
+
 public final class ConditionPredicate {
 
 	public static ConditionPredicate newInstance(
@@ -25,9 +27,12 @@ public final class ConditionPredicate {
 	private final String value;
 	
 	private ConditionPredicate(
-			final ConditionPredicateMethod predicateMethod, final String val) {
-		this.conditionPredicateMethod = predicateMethod;
-		this.value = val;
+			final ConditionPredicateMethod condPredicateMethod, 
+			final String val) {
+		this.conditionPredicateMethod = Objects.requireNonNull(
+				condPredicateMethod, 
+				"condition predicate method must not be null");
+		this.value = Objects.requireNonNull(val, "value must not be null");
 	} 
 
 	@Override

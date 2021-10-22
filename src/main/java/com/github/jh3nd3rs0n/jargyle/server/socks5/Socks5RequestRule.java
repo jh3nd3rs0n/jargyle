@@ -4,7 +4,7 @@ import java.util.Objects;
 
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.common.net.PortRanges;
-import com.github.jh3nd3rs0n.jargyle.server.Action;
+import com.github.jh3nd3rs0n.jargyle.server.RuleAction;
 import com.github.jh3nd3rs0n.jargyle.server.ConditionPredicate;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Request;
 
@@ -12,16 +12,16 @@ public final class Socks5RequestRule {
 
 	public static final class Builder {
 		
-		private final Action action;
+		private final RuleAction ruleAction;
 		private ConditionPredicate clientAddressConditionPredicate;
 		private ConditionPredicate commandConditionPredicate;
 		private ConditionPredicate desiredDestinationAddressConditionPredicate;
 		private PortRanges desiredDestinationPortRanges;
 		private String doc;		
 		
-		public Builder(final Action actn) {
-			Objects.requireNonNull(actn, "action must not be null");
-			this.action = actn;
+		public Builder(final RuleAction rlAction) {
+			Objects.requireNonNull(rlAction, "action must not be null");
+			this.ruleAction = rlAction;
 			this.clientAddressConditionPredicate = null;
 			this.commandConditionPredicate = null;
 			this.desiredDestinationAddressConditionPredicate = null;
@@ -65,7 +65,7 @@ public final class Socks5RequestRule {
 		
 	}
 	
-	private final Action action;
+	private final RuleAction ruleAction;
 	private final ConditionPredicate clientAddressConditionPredicate;
 	private final ConditionPredicate commandConditionPredicate;
 	private final ConditionPredicate desiredDestinationAddressConditionPredicate;
@@ -73,22 +73,22 @@ public final class Socks5RequestRule {
 	private final String doc;
 	
 	private Socks5RequestRule(final Builder builder) {
-		Action actn = builder.action;
+		RuleAction rlAction = builder.ruleAction;
 		ConditionPredicate clientAddrConditionPredicate = 
 				builder.clientAddressConditionPredicate;
 		ConditionPredicate cmdConditionPredicate = 
 				builder.commandConditionPredicate;
 		ConditionPredicate desiredDestinationAddrConditionPredicate = 
 				builder.desiredDestinationAddressConditionPredicate;
-		PortRanges desiredDestinationPrtRange = 
+		PortRanges desiredDestinationPrtRanges = 
 				builder.desiredDestinationPortRanges;
 		String d = builder.doc;
-		this.action = actn;
+		this.ruleAction = rlAction;
 		this.clientAddressConditionPredicate = clientAddrConditionPredicate;
 		this.commandConditionPredicate = cmdConditionPredicate;
 		this.desiredDestinationAddressConditionPredicate = 
 				desiredDestinationAddrConditionPredicate;
-		this.desiredDestinationPortRanges = desiredDestinationPrtRange;
+		this.desiredDestinationPortRanges = desiredDestinationPrtRanges;
 		this.doc = d;		
 	}
 	
@@ -129,7 +129,7 @@ public final class Socks5RequestRule {
 			return false;
 		}
 		Socks5RequestRule other = (Socks5RequestRule) obj;
-		if (this.action != other.action) {
+		if (this.ruleAction != other.ruleAction) {
 			return false;
 		}
 		if (this.clientAddressConditionPredicate == null) {
@@ -167,10 +167,6 @@ public final class Socks5RequestRule {
 		return true;
 	}
 	
-	public Action getAction() {
-		return this.action;
-	}
-
 	public ConditionPredicate getClientAddressConditionPredicate() {
 		return this.clientAddressConditionPredicate;
 	}
@@ -178,7 +174,7 @@ public final class Socks5RequestRule {
 	public ConditionPredicate getCommandConditionPredicate() {
 		return this.commandConditionPredicate;
 	}
-	
+
 	public ConditionPredicate getDesiredDestinationAddressConditionPredicate() {
 		return this.desiredDestinationAddressConditionPredicate;
 	}
@@ -186,17 +182,21 @@ public final class Socks5RequestRule {
 	public PortRanges getDesiredDestinationPortRanges() {
 		return this.desiredDestinationPortRanges;
 	}
-
+	
 	public String getDoc() {
 		return this.doc;
+	}
+
+	public RuleAction getRuleAction() {
+		return this.ruleAction;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((this.action == null) ? 
-				0 : this.action.hashCode());
+		result = prime * result + ((this.ruleAction == null) ? 
+				0 : this.ruleAction.hashCode());
 		result = prime * result + ((this.clientAddressConditionPredicate == null) ? 
 				0 : this.clientAddressConditionPredicate.hashCode());
 		result = prime * result + ((this.commandConditionPredicate == null) ? 
@@ -214,8 +214,8 @@ public final class Socks5RequestRule {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append(this.getClass().getSimpleName())
-			.append(" [action=")
-			.append(this.action)
+			.append(" [ruleAction=")
+			.append(this.ruleAction)
 			.append(", clientAddressConditionPredicate=")
 			.append(this.clientAddressConditionPredicate)
 			.append(", commandConditionPredicate=")

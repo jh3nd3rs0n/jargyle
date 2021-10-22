@@ -4,30 +4,30 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-public enum Action {
+public enum RuleAction {
 
 	ALLOW("allow"),
 	
 	BLOCK("block");
 
-	public static Action valueOfString(final String s) {
-		for (Action value : Action.values()) {
+	public static RuleAction valueOfString(final String s) {
+		for (RuleAction value : RuleAction.values()) {
 			if (value.toString().equals(s)) {
 				return value;
 			}
 		}
 		StringBuilder sb = new StringBuilder();
-		List<Action> list = Arrays.asList(Action.values());
-		for (Iterator<Action> iterator = list.iterator();
+		List<RuleAction> list = Arrays.asList(RuleAction.values());
+		for (Iterator<RuleAction> iterator = list.iterator();
 				iterator.hasNext();) {
-			Action value = iterator.next();
+			RuleAction value = iterator.next();
 			sb.append(value);
 			if (iterator.hasNext()) {
 				sb.append(", ");
 			}
 		}
 		throw new IllegalArgumentException(String.format(
-				"expected action must be one of the following values: %s. "
+				"expected rule action must be one of the following values: %s. "
 				+ "actual value is %s",
 				sb.toString(),
 				s));
@@ -35,7 +35,7 @@ public enum Action {
 
 	private final String string;
 	
-	private Action(final String str) {
+	private RuleAction(final String str) {
 		this.string = str;
 	}
 	

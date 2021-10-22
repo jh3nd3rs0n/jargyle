@@ -12,17 +12,17 @@ import jakarta.xml.bind.annotation.XmlType;
 class ConditionPredicateXml {
 	
 	@XmlAttribute(name = "method", required = true)
-	protected ConditionPredicateMethodXml methodXml;
+	protected ConditionPredicateMethodXml conditionPredicateMethodXml;
 	@XmlAttribute(name = "value", required = true)
 	protected String value;
 
 	public ConditionPredicateXml() {
-		this.methodXml = null;
+		this.conditionPredicateMethodXml = null;
 		this.value = null;
 	}
 	
 	public ConditionPredicateXml(final ConditionPredicate conditionPredicate) {
-		this.methodXml = 
+		this.conditionPredicateMethodXml = 
 				ConditionPredicateMethodXml.valueOfConditionPredicateMethod(
 						conditionPredicate.getConditionPredicateMethod());
 		this.value = conditionPredicate.getValue();
@@ -30,7 +30,8 @@ class ConditionPredicateXml {
 	
 	public ConditionPredicate toConditionPredicate() {
 		return ConditionPredicate.newInstance(
-				this.methodXml.conditionPredicateMethodValue(), this.value); 
+				this.conditionPredicateMethodXml.conditionPredicateMethodValue(), 
+				this.value); 
 	}
 
 }

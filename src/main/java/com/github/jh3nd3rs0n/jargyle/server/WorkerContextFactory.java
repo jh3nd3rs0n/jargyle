@@ -36,7 +36,7 @@ final class WorkerContextFactory {
 					"client address %s not allowed",
 					clientAddress));
 		}
-		if (clientAddressRule.getAction().equals(Action.BLOCK)) {
+		if (clientAddressRule.getRuleAction().equals(RuleAction.BLOCK)) {
 			throw new IllegalArgumentException(String.format(
 					"client address %s blocked based on the following rule: %s",
 							clientAddress,

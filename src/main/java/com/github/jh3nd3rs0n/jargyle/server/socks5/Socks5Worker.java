@@ -10,7 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.jh3nd3rs0n.jargyle.internal.logging.LoggerHelper;
-import com.github.jh3nd3rs0n.jargyle.server.Action;
+import com.github.jh3nd3rs0n.jargyle.server.RuleAction;
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
@@ -72,7 +72,7 @@ public final class Socks5Worker {
 			}
 			return false;
 		}
-		if (socks5RequestRule.getAction().equals(Action.BLOCK)) {
+		if (socks5RequestRule.getRuleAction().equals(RuleAction.BLOCK)) {
 			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
 					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
 			LOGGER.debug(LoggerHelper.objectMessage(this, String.format(

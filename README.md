@@ -1864,11 +1864,11 @@ You can create a rule using the following syntax:
 
 ```text
     
-    ACTION:CONDITION_PREDICATE_METHOD:VALUE
+    RULE_ACTION:CONDITION_PREDICATE_METHOD:VALUE
     
 ```
 
-`ACTION` can be one of the following values:
+`RULE_ACTION` can be one of the following values:
 
 -   `allow` : allows the address in question
 -   `block` : blocks the address in question

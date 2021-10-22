@@ -14,7 +14,7 @@ import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
 import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.internal.logging.LoggerHelper;
-import com.github.jh3nd3rs0n.jargyle.server.Action;
+import com.github.jh3nd3rs0n.jargyle.server.RuleAction;
 import com.github.jh3nd3rs0n.jargyle.server.Rule;
 import com.github.jh3nd3rs0n.jargyle.server.Rules;
 import com.github.jh3nd3rs0n.jargyle.server.Settings;
@@ -73,7 +73,7 @@ final class BindCommandWorker extends CommandWorker {
 			}
 			return false;
 		}
-		if (inboundAddressRule.getAction().equals(Action.BLOCK)) {
+		if (inboundAddressRule.getRuleAction().equals(RuleAction.BLOCK)) {
 			LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
 					"Inbound address %s blocked based on the following rule: %s",
 					inboundAddress,

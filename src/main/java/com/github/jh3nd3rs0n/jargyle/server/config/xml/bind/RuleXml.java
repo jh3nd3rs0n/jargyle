@@ -13,20 +13,21 @@ import jakarta.xml.bind.annotation.XmlType;
 class RuleXml {
 	
 	@XmlAttribute(name = "action", required = true)
-	protected ActionXml actionXml;
+	protected RuleActionXml ruleActionXml;
 	@XmlElement(name = "conditionPredicate", required = true)
 	protected ConditionPredicateXml conditionPredicateXml;
 	@XmlElement(name = "doc")
 	protected String doc;
 
 	public RuleXml() {
-		this.actionXml = null;
+		this.ruleActionXml = null;
 		this.conditionPredicateXml = null;
 		this.doc = null;
 	}
 	
 	public RuleXml(final Rule rule) {
-		this.actionXml = ActionXml.valueOfAction(rule.getAction());
+		this.ruleActionXml = RuleActionXml.valueOfRuleAction(
+				rule.getRuleAction());
 		this.conditionPredicateXml = new ConditionPredicateXml(
 				rule.getConditionPredicate());
 		this.doc = rule.getDoc();
@@ -34,7 +35,7 @@ class RuleXml {
 	
 	public Rule toRule() {
 		return Rule.newInstance(
-				this.actionXml.actionValue(), 
+				this.ruleActionXml.ruleActionValue(), 
 				this.conditionPredicateXml.toConditionPredicate(), 
 				this.doc);
 	}

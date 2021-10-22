@@ -52,8 +52,8 @@ enum ConditionPredicateMethodXml {
 	private final ConditionPredicateMethod conditionPredicateMethodValue;
 	
 	private ConditionPredicateMethodXml(
-			final ConditionPredicateMethod predicateMethodValue) {
-		this.conditionPredicateMethodValue = predicateMethodValue;
+			final ConditionPredicateMethod condPredicateMethodValue) {
+		this.conditionPredicateMethodValue = condPredicateMethodValue;
 	}
 	
 	public ConditionPredicateMethod conditionPredicateMethodValue() {

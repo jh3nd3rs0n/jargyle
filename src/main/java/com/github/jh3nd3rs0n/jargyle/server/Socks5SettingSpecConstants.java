@@ -78,7 +78,7 @@ public final class Socks5SettingSpecConstants {
 					NewSettingSpecPermission.INSTANCE,
 					"socks5.onBind.inboundAddressRules",
 					Rules.newInstance(Rule.newInstance(
-							Action.ALLOW, 
+							RuleAction.ALLOW, 
 							ConditionPredicate.newInstance(ConditionPredicateMethod.MATCHES, ".*")))));
 	
 	@HelpText(
@@ -226,7 +226,7 @@ public final class Socks5SettingSpecConstants {
 					NewSettingSpecPermission.INSTANCE,
 					"socks5.onUdpAssociate.inboundAddressRules",
 					Rules.newInstance(Rule.newInstance(
-							Action.ALLOW, 
+							RuleAction.ALLOW, 
 							ConditionPredicate.newInstance(ConditionPredicateMethod.MATCHES, ".*")))));
 
 	@HelpText(
@@ -239,7 +239,7 @@ public final class Socks5SettingSpecConstants {
 					NewSettingSpecPermission.INSTANCE,
 					"socks5.onUdpAssociate.outboundAddressRules",
 					Rules.newInstance(Rule.newInstance(
-							Action.ALLOW, 
+							RuleAction.ALLOW, 
 							ConditionPredicate.newInstance(ConditionPredicateMethod.MATCHES, ".*")))));
 	
 	
@@ -292,7 +292,7 @@ public final class Socks5SettingSpecConstants {
 					NewSettingSpecPermission.INSTANCE,
 					"socks5.socks5RequestRules",
 					Socks5RequestRules.newInstance(
-							new Socks5RequestRule.Builder(Action.ALLOW).build())));
+							new Socks5RequestRule.Builder(RuleAction.ALLOW).build())));
 	
 	@HelpText(
 			doc = "The SOCKS5 request worker factory for the SOCKS5 server", 

@@ -39,7 +39,7 @@ public final class GeneralSettingSpecConstants {
 					NewSettingSpecPermission.INSTANCE,
 					"clientAddressRules",
 					Rules.newInstance(Rule.newInstance(
-							Action.ALLOW, 
+							RuleAction.ALLOW, 
 							ConditionPredicate.newInstance(ConditionPredicateMethod.MATCHES, ".*")))));
 	
 	@HelpText(

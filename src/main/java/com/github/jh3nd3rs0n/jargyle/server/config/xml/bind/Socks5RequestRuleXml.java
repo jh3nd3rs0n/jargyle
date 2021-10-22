@@ -13,7 +13,7 @@ import jakarta.xml.bind.annotation.XmlType;
 class Socks5RequestRuleXml {
 
 	@XmlAttribute(name = "action", required = true)
-	protected ActionXml actionXml;
+	protected RuleActionXml ruleActionXml;
 	@XmlElement(name = "clientAddressConditionPredicate")
 	protected ConditionPredicateXml clientAddressConditionPredicateXml;
 	@XmlElement(name = "commandConditionPredicate")
@@ -26,7 +26,7 @@ class Socks5RequestRuleXml {
 	protected String doc;
 	
 	public Socks5RequestRuleXml() {
-		this.actionXml = null;
+		this.ruleActionXml = null;
 		this.clientAddressConditionPredicateXml = null;
 		this.commandConditionPredicateXml = null;
 		this.desiredDestinationAddressConditionPredicateXml = null;
@@ -35,7 +35,8 @@ class Socks5RequestRuleXml {
 	}
 	
 	public Socks5RequestRuleXml(final Socks5RequestRule socks5RequestRule) {
-		this.actionXml = ActionXml.valueOfAction(socks5RequestRule.getAction());
+		this.ruleActionXml = RuleActionXml.valueOfRuleAction(
+				socks5RequestRule.getRuleAction());
 		this.clientAddressConditionPredicateXml = new ConditionPredicateXml(
 				socks5RequestRule.getClientAddressConditionPredicate());
 		this.commandConditionPredicateXml = new ConditionPredicateXml(
@@ -48,7 +49,7 @@ class Socks5RequestRuleXml {
 	}
 	
 	public Socks5RequestRule toSocks5RequestRule() {
-		return new Socks5RequestRule.Builder(this.actionXml.actionValue())
+		return new Socks5RequestRule.Builder(this.ruleActionXml.ruleActionValue())
 				.clientAddressConditionPredicate(
 						this.clientAddressConditionPredicateXml.toConditionPredicate())
 				.commandConditionPredicate(

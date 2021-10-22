@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.internal.logging.LoggerHelper;
-import com.github.jh3nd3rs0n.jargyle.server.Action;
+import com.github.jh3nd3rs0n.jargyle.server.RuleAction;
 import com.github.jh3nd3rs0n.jargyle.server.Rule;
 import com.github.jh3nd3rs0n.jargyle.server.Rules;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.UdpRequestHeader;
@@ -89,7 +89,7 @@ public final class UdpRelayServer {
 						inboundAddress)));
 				return false;
 			}
-			if (inboundAddressRule.getAction().equals(Action.BLOCK)) {
+			if (inboundAddressRule.getRuleAction().equals(RuleAction.BLOCK)) {
 				LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
 						"Inbound address %s blocked based on the "
 						+ "following rule: %s",
@@ -228,7 +228,7 @@ public final class UdpRelayServer {
 						outboundAddress)));
 				return false;
 			}
-			if (outboundAddressRule.getAction().equals(Action.BLOCK)) {
+			if (outboundAddressRule.getRuleAction().equals(RuleAction.BLOCK)) {
 				LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
 						"Outbound address %s blocked based on the "
 						+ "following rule: %s",

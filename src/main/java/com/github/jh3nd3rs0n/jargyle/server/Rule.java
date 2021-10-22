@@ -3,15 +3,16 @@ package com.github.jh3nd3rs0n.jargyle.server;
 public final class Rule {
 
 	public static Rule newInstance(
-			final Action action, final ConditionPredicate conditionPredicate) {
-		return new Rule(action, conditionPredicate);
+			final RuleAction ruleAction, 
+			final ConditionPredicate conditionPredicate) {
+		return new Rule(ruleAction, conditionPredicate);
 	}
 	
 	public static Rule newInstance(
-			final Action action, 
+			final RuleAction ruleAction, 
 			final ConditionPredicate conditionPredicate, 
 			final String doc) {
-		return new Rule(action, conditionPredicate, doc);
+		return new Rule(ruleAction, conditionPredicate, doc);
 	}
 	
 	public static Rule newInstance(final String s) {
@@ -19,26 +20,29 @@ public final class Rule {
 		if (sElements.length != 2) {
 			throw new IllegalArgumentException(
 					"rule must be in the following format: "
-					+ "ACTION:CONDITION_PREDICATE");
+					+ "RULE_ACTION:CONDITION_PREDICATE");
 		}
-		Action action = Action.valueOfString(sElements[0]);
+		RuleAction ruleAction = RuleAction.valueOfString(sElements[0]);
 		ConditionPredicate conditionPredicate = ConditionPredicate.newInstance(
 				sElements[1]);
-		return newInstance(action, conditionPredicate);
+		return newInstance(ruleAction, conditionPredicate);
 	}
 	
-	private final Action action;
+	private final RuleAction ruleAction;
 	private final ConditionPredicate conditionPredicate;
 	private final String doc;
 	
-	private Rule(final Action actn, final ConditionPredicate cond) {
-		this(actn, cond, null);
+	private Rule(
+			final RuleAction rlAction, final ConditionPredicate condPredicate) {
+		this(rlAction, condPredicate, null);
 	}
 	
 	private Rule(
-			final Action actn, final ConditionPredicate cond, final String d) {
-		this.action = actn;
-		this.conditionPredicate = cond;
+			final RuleAction rlAction, 
+			final ConditionPredicate condPredicate, 
+			final String d) {
+		this.ruleAction = rlAction;
+		this.conditionPredicate = condPredicate;
 		this.doc = d;
 	}
 
@@ -58,7 +62,7 @@ public final class Rule {
 			return false;
 		}
 		Rule other = (Rule) obj;
-		if (this.action != other.action) {
+		if (this.ruleAction != other.ruleAction) {
 			return false;
 		}
 		if (this.conditionPredicate == null) {
@@ -71,10 +75,6 @@ public final class Rule {
 		return true;
 	}
 
-	public Action getAction() {
-		return this.action;
-	}
-
 	public ConditionPredicate getConditionPredicate() {
 		return this.conditionPredicate;
 	}
@@ -83,12 +83,16 @@ public final class Rule {
 		return this.doc;
 	}
 
+	public RuleAction getRuleAction() {
+		return this.ruleAction;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((this.action == null) ? 
-				0 : this.action.hashCode());
+		result = prime * result + ((this.ruleAction == null) ? 
+				0 : this.ruleAction.hashCode());
 		result = prime * result + ((this.conditionPredicate == null) ? 
 				0 : conditionPredicate.hashCode());
 		return result;
@@ -97,7 +101,7 @@ public final class Rule {
 
 	@Override
 	public String toString() {
-		return this.action.toString().concat(":").concat(
+		return this.ruleAction.toString().concat(":").concat(
 				this.conditionPredicate.toString());
 	}
 	

@@ -1878,7 +1878,6 @@ You can create a rule using the following syntax:
 -   `equals:LITERAL_EXPRESSION` : the address in question equals the literal expression expressed in `LITERAL_EXPRESSION`
 -   `matches:REGULAR_EXPRESSION` : the address in question matches the regular expression expressed in `REGULAR_EXPRESSION`
 
-
 Partial command line example:
 
 ```text

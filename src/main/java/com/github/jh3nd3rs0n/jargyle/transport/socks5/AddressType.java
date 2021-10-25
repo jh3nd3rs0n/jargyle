@@ -22,7 +22,7 @@ public enum AddressType {
 		
 		@Override
 		public boolean isValueForString(final String string) {
-			return string.matches(AddressRegexConstants.IPV4_ADDRESS_IN_1_PART_REGEX)
+			return string.matches(AddressRegexConstants.IPV4_ADDRESS_AS_1_PART_REGEX)
 					|| string.matches(AddressRegexConstants.IPV4_ADDRESS_IN_2_PARTS_REGEX)
 					|| string.matches(AddressRegexConstants.IPV4_ADDRESS_IN_3_PARTS_REGEX)
 					|| string.matches(AddressRegexConstants.IPV4_ADDRESS_IN_4_PARTS_REGEX);

@@ -10,9 +10,9 @@ public final class AddressRegexConstants {
 			"^(?<asterisk>\\*\\.)?([a-z0-9]|[a-z0-9][a-z0-9-_]*[a-z0-9])"
 			+ "(\\.([a-z0-9]|[a-z0-9][a-z0-9-_]*[a-z0-9]))*$";
 	
-	public static final String IPV4_ADDRESS_IN_1_PART_REGEX = "^[\\d]{1,10}$";
+	public static final String IPV4_ADDRESS_AS_1_PART_REGEX = "^[\\d]{1,10}$";
 	
-	public static final String IPV4_ADDRESS_IN_1_PART_WITH_OPTIONAL_CIDR_RANGE_REGEX = 
+	public static final String IPV4_ADDRESS_AS_1_PART_WITH_OPTIONAL_CIDR_RANGE_REGEX = 
 			"^[\\d]{1,10}(?<cidrRange>/[\\d]{1,2})?$";
 	
 	public static final String IPV4_ADDRESS_IN_2_PARTS_REGEX =

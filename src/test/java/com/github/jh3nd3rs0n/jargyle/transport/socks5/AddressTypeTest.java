@@ -75,5 +75,76 @@ public class AddressTypeTest {
 		assertEquals(AddressType.IPV6, AddressType.valueForString(
 				"1234:ab:cd:ef:fe:dc:ba:6789"));
 	}
+
+	@Test
+	public void testIsValueForString13() {
+		assertEquals(AddressType.IPV4, AddressType.valueForString("0"));
+	}
+	
+	@Test
+	public void testIsValueForString14() {
+		assertEquals(AddressType.IPV4, AddressType.valueForString(
+				"4294967295"));
+	}
+	
+	@Test
+	public void testIsValueForString15() {
+		assertEquals(AddressType.IPV4, AddressType.valueForString("0.0"));
+	}
+	
+	@Test
+	public void testIsValueForString16() {
+		assertEquals(AddressType.IPV4, AddressType.valueForString(
+				"255.16777215"));
+	}
+	
+	@Test
+	public void testIsValueForString17() {
+		assertEquals(AddressType.IPV4, AddressType.valueForString("0.0.0"));
+	}
+	
+	@Test
+	public void testIsValueForString18() {
+		assertEquals(AddressType.IPV4, AddressType.valueForString(
+				"255.255.65535"));
+	}
+	
+	@Test
+	public void testIsValueForString19() {
+		assertEquals(AddressType.IPV4, AddressType.valueForString("0.0.0.0"));
+	}
+	
+	@Test
+	public void testIsValueForString20() {
+		assertEquals(AddressType.IPV4, AddressType.valueForString(
+				"255.255.255.255"));
+	}
+	
+	@Test
+	public void testIsValueForString21() {
+		assertEquals(AddressType.IPV6, AddressType.valueForString("::"));
+	}
+	
+	@Test
+	public void testIsValueForString22() {
+		assertEquals(AddressType.IPV6, AddressType.valueForString(
+				"FFFF:FFFF:FFFF:FFFF:FFFF:FFFF:FFFF:FFFF"));
+	}
+	
+	@Test
+	public void testIsValueForString23() {
+		assertEquals(AddressType.IPV6, AddressType.valueForString(
+				"1111::1111"));
+	}
+	
+	@Test
+	public void testIsValueForString24() {
+		assertEquals(AddressType.IPV6, AddressType.valueForString("::2222"));
+	}
+	
+	@Test
+	public void testIsValueForString25() {
+		assertEquals(AddressType.IPV6, AddressType.valueForString("3333::"));
+	}
 	
 }

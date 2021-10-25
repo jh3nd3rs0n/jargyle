@@ -12,18 +12,20 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.github.jh3nd3rs0n.jargyle.common.number.impl.UnsignedByte;
+import com.github.jh3nd3rs0n.jargyle.internal.net.AddressRegexConstants;
 
 public enum AddressType {
 
 	IPV4((byte) 0x01) {
 		
 		private static final int ADDRESS_LENGTH = 4;
-		private static final String ADDRESS_REGEX = 
-				"^[\\d]{1,3}(\\.[\\d]{1,3}){0,3}$";
 		
 		@Override
 		public boolean isValueForString(final String string) {
-			return string.matches(ADDRESS_REGEX);
+			return string.matches(AddressRegexConstants.IPV4_ADDRESS_IN_1_PART_REGEX)
+					|| string.matches(AddressRegexConstants.IPV4_ADDRESS_IN_2_PARTS_REGEX)
+					|| string.matches(AddressRegexConstants.IPV4_ADDRESS_IN_3_PARTS_REGEX)
+					|| string.matches(AddressRegexConstants.IPV4_ADDRESS_IN_4_PARTS_REGEX);
 		}
 
 		@Override
@@ -36,7 +38,7 @@ public enum AddressType {
 			try {
 				inetAddress = InetAddress.getByName(string);
 			} catch (UnknownHostException e) {
-				throw new AssertionError(e);
+				throw new IllegalArgumentException(e);
 			}
 			return new Address(this, inetAddress.getAddress(), string);
 		}
@@ -74,12 +76,9 @@ public enum AddressType {
 	
 	DOMAINNAME((byte) 0x03) {
 		
-		private static final String ADDRESS_REGEX = 
-				"^([a-z0-9]|[a-z0-9][a-z0-9-_]*[a-z0-9])(\\.([a-z0-9]|[a-z0-9][a-z0-9-_]*[a-z0-9]))*$";
-		
 		@Override
 		public boolean isValueForString(final String string) {
-			return string.matches(ADDRESS_REGEX);
+			return string.matches(AddressRegexConstants.DOMAINNAME_REGEX);
 		}
 
 		@Override
@@ -134,12 +133,11 @@ public enum AddressType {
 	IPV6((byte) 0x04) {
 		
 		private static final int ADDRESS_LENGTH = 16;
-		private static final String ADDRESS_REGEX = 
-				"^[a-fA-F0-9]{1,4}(:[a-fA-F0-9]{1,4}){7}$";
 		
 		@Override
 		public boolean isValueForString(final String string) {
-			return string.matches(ADDRESS_REGEX);
+			return string.matches(AddressRegexConstants.IPV6_ADDRESS_IN_COMPRESSED_FORM_REGEX)
+					|| string.matches(AddressRegexConstants.IPV6_ADDRESS_IN_FULL_FORM_REGEX);
 		}
 
 		@Override
@@ -152,7 +150,7 @@ public enum AddressType {
 			try {
 				inetAddress = InetAddress.getByName(string);
 			} catch (UnknownHostException e) {
-				throw new AssertionError(e);
+				throw new IllegalArgumentException(e);
 			}
 			return new Address(this, inetAddress.getAddress(), string);
 		}

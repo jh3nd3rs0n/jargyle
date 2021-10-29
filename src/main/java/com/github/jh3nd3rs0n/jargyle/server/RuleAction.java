@@ -6,42 +6,32 @@ import java.util.List;
 
 public enum RuleAction {
 
-	ALLOW("ALLOW"),
+	ALLOW,
 	
-	DENY("DENY");
+	DENY;
 
 	public static RuleAction valueOfString(final String s) {
-		for (RuleAction value : RuleAction.values()) {
-			if (value.toString().equals(s)) {
-				return value;
+		RuleAction ruleAction = null;
+		try {
+			ruleAction = RuleAction.valueOf(s);
+		} catch (IllegalArgumentException e) {
+			StringBuilder sb = new StringBuilder();
+			List<RuleAction> list = Arrays.asList(RuleAction.values());
+			for (Iterator<RuleAction> iterator = list.iterator();
+					iterator.hasNext();) {
+				RuleAction value = iterator.next();
+				sb.append(value);
+				if (iterator.hasNext()) {
+					sb.append(", ");
+				}
 			}
+			throw new IllegalArgumentException(String.format(
+					"expected rule action must be one of the following values: "
+					+ "%s. actual value is %s",
+					sb.toString(),
+					s));			
 		}
-		StringBuilder sb = new StringBuilder();
-		List<RuleAction> list = Arrays.asList(RuleAction.values());
-		for (Iterator<RuleAction> iterator = list.iterator();
-				iterator.hasNext();) {
-			RuleAction value = iterator.next();
-			sb.append(value);
-			if (iterator.hasNext()) {
-				sb.append(", ");
-			}
-		}
-		throw new IllegalArgumentException(String.format(
-				"expected rule action must be one of the following values: %s. "
-				+ "actual value is %s",
-				sb.toString(),
-				s));
-	}
-
-	private final String string;
-	
-	private RuleAction(final String str) {
-		this.string = str;
-	}
-	
-	@Override
-	public String toString() {
-		return this.string;
+		return ruleAction;
 	}
 
 }

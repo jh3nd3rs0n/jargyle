@@ -17,11 +17,9 @@ import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.SocketSettingsSetti
 import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.Socks5RequestRulesSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.Socks5RequestWorkerFactorySettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.UsernamePasswordAuthenticatorSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5RequestRule;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5RequestRules;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5RequestWorkerFactory;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.UsernamePasswordAuthenticator;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Methods;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.gssapiauth.ProtectionLevels;
 
@@ -66,20 +64,13 @@ public final class Socks5SettingSpecConstants {
 			SETTING_SPECS.addThenGet(new MethodsSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"socks5.methods",
-					Methods.newInstance(Method.NO_AUTHENTICATION_REQUIRED)));
+					Methods.getDefault()));
 
-	@HelpText(
-			doc = "The space separated list of inbound address rules "
-					+ "(default is allow:matches:.*)", 
-			usage = "socks5.onBind.inboundAddressRules=[RULE1[ RULE2[...]]]"
-	)	
-	public static final SettingSpec<Rules> SOCKS5_ON_BIND_INBOUND_ADDRESS_RULES =
+	public static final SettingSpec<Rules> SOCKS5_ON_BIND_INBOUND_RULES =
 			SETTING_SPECS.addThenGet(new RulesSettingSpec(
 					NewSettingSpecPermission.INSTANCE,
-					"socks5.onBind.inboundAddressRules",
-					Rules.newInstance(Rule.newInstance(
-							RuleAction.ALLOW, 
-							ConditionPredicate.newInstance(ConditionPredicateMethod.MATCHES, ".*")))));
+					"socks5.onBind.inboundRules",
+					Rules.getDefault()));
 	
 	@HelpText(
 			doc = "The space separated list of socket settings for the inbound "
@@ -216,32 +207,17 @@ public final class Socks5SettingSpecConstants {
 					"socks5.onUdpAssociate.clientFacingSocketSettings",
 					SocketSettings.newInstance()));
 
-	@HelpText(
-			doc = "The space separated list of inbound address rules "
-					+ "(default is allow:matches:.*)", 
-			usage = "socks5.onUdpAssociate.inboundAddressRules=[RULE1[ RULE2[...]]]"
-	)	
-	public static final SettingSpec<Rules> SOCKS5_ON_UDP_ASSOCIATE_INBOUND_ADDRESS_RULES =
+	public static final SettingSpec<Rules> SOCKS5_ON_UDP_ASSOCIATE_INBOUND_RULES =
 			SETTING_SPECS.addThenGet(new RulesSettingSpec(
 					NewSettingSpecPermission.INSTANCE,
-					"socks5.onUdpAssociate.inboundAddressRules",
-					Rules.newInstance(Rule.newInstance(
-							RuleAction.ALLOW, 
-							ConditionPredicate.newInstance(ConditionPredicateMethod.MATCHES, ".*")))));
+					"socks5.onUdpAssociate.inboundRules",
+					Rules.getDefault()));
 
-	@HelpText(
-			doc = "The space separated list of outbound address rules "
-					+ "(default is allow:matches:.*)", 
-			usage = "socks5.onUdpAssociate.outboundAddressRules=[RULE1[ RULE2[...]]]"
-	)	
-	public static final SettingSpec<Rules> SOCKS5_ON_UDP_ASSOCIATE_OUTBOUND_ADDRESS_RULES =
+	public static final SettingSpec<Rules> SOCKS5_ON_UDP_ASSOCIATE_OUTBOUND_RULES =
 			SETTING_SPECS.addThenGet(new RulesSettingSpec(
 					NewSettingSpecPermission.INSTANCE,
-					"socks5.onUdpAssociate.outboundAddressRules",
-					Rules.newInstance(Rule.newInstance(
-							RuleAction.ALLOW, 
-							ConditionPredicate.newInstance(ConditionPredicateMethod.MATCHES, ".*")))));
-	
+					"socks5.onUdpAssociate.outboundRules",
+					Rules.getDefault()));
 	
 	@HelpText(
 			doc = "The buffer size in bytes for relaying the data (default is "
@@ -291,8 +267,7 @@ public final class Socks5SettingSpecConstants {
 			SETTING_SPECS.addThenGet(new Socks5RequestRulesSettingSpec(
 					NewSettingSpecPermission.INSTANCE,
 					"socks5.socks5RequestRules",
-					Socks5RequestRules.newInstance(
-							new Socks5RequestRule.Builder(RuleAction.ALLOW).build())));
+					Socks5RequestRules.getDefault()));
 	
 	@HelpText(
 			doc = "The SOCKS5 request worker factory for the SOCKS5 server", 

@@ -1,10 +1,11 @@
 package com.github.jh3nd3rs0n.jargyle.server.config.xml.bind;
 
+import com.github.jh3nd3rs0n.jargyle.common.net.AddressRange;
 import com.github.jh3nd3rs0n.jargyle.server.Rule;
+import com.github.jh3nd3rs0n.jargyle.server.RuleAction;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
-import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
 
@@ -12,32 +13,48 @@ import jakarta.xml.bind.annotation.XmlType;
 @XmlType(name = "rule", propOrder = { }) 
 class RuleXml {
 	
-	@XmlAttribute(name = "action", required = true)
-	protected RuleActionXml ruleActionXml;
-	@XmlElement(name = "conditionPredicate", required = true)
-	protected ConditionPredicateXml conditionPredicateXml;
+	@XmlElement(name = "action", required = true)
+	protected String ruleAction;
+	@XmlElement(name = "sourceAddressRange")
+	protected String sourceAddressRange;
+	@XmlElement(name = "destinationAddressRange")
+	protected String destinationAddressRange;	
 	@XmlElement(name = "doc")
 	protected String doc;
 
 	public RuleXml() {
-		this.ruleActionXml = null;
-		this.conditionPredicateXml = null;
+		this.ruleAction = null;
+		this.sourceAddressRange = null;
+		this.destinationAddressRange = null;
 		this.doc = null;
 	}
 	
 	public RuleXml(final Rule rule) {
-		this.ruleActionXml = RuleActionXml.valueOfRuleAction(
-				rule.getRuleAction());
-		this.conditionPredicateXml = new ConditionPredicateXml(
-				rule.getConditionPredicate());
+		AddressRange sourceAddrRange = rule.getSourceAddressRange();
+		AddressRange destinationAddrRange = rule.getDestinationAddressRange();
+		this.ruleAction = rule.getRuleAction().toString();
+		this.sourceAddressRange = (sourceAddrRange != null) ?
+				sourceAddrRange.toString() : null;
+		this.destinationAddressRange = (destinationAddrRange != null) ?
+				destinationAddrRange.toString() : null;
 		this.doc = rule.getDoc();
 	}
 	
 	public Rule toRule() {
-		return Rule.newInstance(
-				this.ruleActionXml.ruleActionValue(), 
-				this.conditionPredicateXml.toConditionPredicate(), 
-				this.doc);
+		Rule.Builder builder = new Rule.Builder(RuleAction.valueOfString(
+				this.ruleAction));
+		if (this.sourceAddressRange != null) {
+			builder.sourceAddressRange(AddressRange.newInstance(
+					this.sourceAddressRange));
+		}
+		if (this.destinationAddressRange != null) {
+			builder.destinationAddressRange(AddressRange.newInstance(
+					this.destinationAddressRange));
+		}
+		if (this.doc != null) {
+			builder.doc(this.doc);
+		}
+		return builder.build();
 	}
 	
 }

@@ -26,21 +26,27 @@ final class WorkerContextFactory {
 	}
 
 	private void checkIfAllowed(
-			final String clientAddress, final Configuration config) {
+			final String sourceAddress, 
+			final String destinationAddress, 
+			final Configuration config) {
 		Settings settings = config.getSettings();
-		Rules clientAddressRules = settings.getLastValue(
-				GeneralSettingSpecConstants.CLIENT_ADDRESS_RULES);
-		Rule clientAddressRule = clientAddressRules.anyAppliesTo(clientAddress);
-		if (clientAddressRule == null) {
+		Rules clientRules = settings.getLastValue(
+				GeneralSettingSpecConstants.CLIENT_RULES);
+		Rule clientRule = clientRules.anyAppliesTo(
+				sourceAddress, destinationAddress);
+		if (clientRule == null) {
 			throw new IllegalArgumentException(String.format(
-					"client address %s not allowed",
-					clientAddress));
+					"source address %s to destination address %s not allowed",
+					sourceAddress,
+					destinationAddress));
 		}
-		if (clientAddressRule.getRuleAction().equals(RuleAction.BLOCK)) {
+		if (clientRule.getRuleAction().equals(RuleAction.DENY)) {
 			throw new IllegalArgumentException(String.format(
-					"client address %s blocked based on the following rule: %s",
-							clientAddress,
-							clientAddressRule));
+					"source address %s to destination address %s denied based "
+					+ "on the following rule: %s",
+					sourceAddress,
+					destinationAddress,
+					clientRule));
 		}
 	}
 
@@ -76,7 +82,9 @@ final class WorkerContextFactory {
 		Configuration config = this.newConfiguration();
 		Socket clientFacingSock = clientFacingSocket;
 		this.checkIfAllowed(
-				clientFacingSock.getInetAddress().getHostAddress(), config);
+				clientFacingSock.getInetAddress().getHostAddress(), 
+				clientFacingSock.getLocalAddress().getHostAddress(),
+				config);
 		this.configureClientFacingSocket(clientFacingSock, config);
 		clientFacingSock = this.wrapClientFacingSocket(clientFacingSock);
 		return new WorkerContext(

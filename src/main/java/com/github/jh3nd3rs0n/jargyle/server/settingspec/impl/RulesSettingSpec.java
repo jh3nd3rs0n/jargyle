@@ -15,7 +15,10 @@ public final class RulesSettingSpec extends SettingSpec<Rules> {
 
 	@Override
 	public Setting<Rules> newSettingOfParsableValue(final String value) {
-		return super.newSetting(Rules.newInstance(value));
+		throw new UnsupportedOperationException(String.format(
+				"%s does not accept a String representation of %s",
+				this,
+				Rules.class.getName()));
 	}
 	
 }

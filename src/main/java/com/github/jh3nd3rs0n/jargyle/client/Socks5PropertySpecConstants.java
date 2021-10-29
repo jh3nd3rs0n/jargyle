@@ -13,7 +13,6 @@ import com.github.jh3nd3rs0n.jargyle.client.propertyspec.impl.StringPropertySpec
 import com.github.jh3nd3rs0n.jargyle.client.propertyspec.impl.UserEncryptedPasswordPropertySpec;
 import com.github.jh3nd3rs0n.jargyle.client.propertyspec.impl.UsernamePropertySpec;
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Methods;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.gssapiauth.ProtectionLevels;
 
@@ -49,7 +48,7 @@ public final class Socks5PropertySpecConstants {
 			PROPERTY_SPECS.addThenGet(new MethodsPropertySpec(
 					NewPropertySpecPermission.INSTANCE,
 					"socksClient.socks5.methods",
-					Methods.newInstance(Method.NO_AUTHENTICATION_REQUIRED)));
+					Methods.getDefault()));
 	
 	public static final PropertySpec<Boolean> SOCKS5_RESOLVE_USE_RESOLVE_COMMAND = 
 			PROPERTY_SPECS.addThenGet(new BooleanPropertySpec(

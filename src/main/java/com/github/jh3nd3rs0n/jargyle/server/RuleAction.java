@@ -6,9 +6,9 @@ import java.util.List;
 
 public enum RuleAction {
 
-	ALLOW("allow"),
+	ALLOW("ALLOW"),
 	
-	BLOCK("block");
+	DENY("DENY");
 
 	public static RuleAction valueOfString(final String s) {
 		for (RuleAction value : RuleAction.values()) {

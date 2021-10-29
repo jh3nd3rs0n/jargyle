@@ -2,10 +2,11 @@ package com.github.jh3nd3rs0n.jargyle.server.socks5;
 
 import java.util.Objects;
 
+import com.github.jh3nd3rs0n.jargyle.common.net.AddressRange;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
-import com.github.jh3nd3rs0n.jargyle.common.net.PortRanges;
+import com.github.jh3nd3rs0n.jargyle.common.net.PortRange;
 import com.github.jh3nd3rs0n.jargyle.server.RuleAction;
-import com.github.jh3nd3rs0n.jargyle.server.ConditionPredicate;
+import com.github.jh3nd3rs0n.jargyle.transport.socks5.Command;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Request;
 
 public final class Socks5RequestRule {
@@ -13,19 +14,19 @@ public final class Socks5RequestRule {
 	public static final class Builder {
 		
 		private final RuleAction ruleAction;
-		private ConditionPredicate clientAddressConditionPredicate;
-		private ConditionPredicate commandConditionPredicate;
-		private ConditionPredicate desiredDestinationAddressConditionPredicate;
-		private PortRanges desiredDestinationPortRanges;
+		private AddressRange sourceAddressRange;
+		private Command command;
+		private AddressRange desiredDestinationAddressRange;
+		private PortRange desiredDestinationPortRange;
 		private String doc;		
 		
 		public Builder(final RuleAction rlAction) {
 			this.ruleAction = Objects.requireNonNull(
 					rlAction, "rule action must not be null");
-			this.clientAddressConditionPredicate = null;
-			this.commandConditionPredicate = null;
-			this.desiredDestinationAddressConditionPredicate = null;
-			this.desiredDestinationPortRanges = null;
+			this.sourceAddressRange = null;
+			this.command = null;
+			this.desiredDestinationAddressRange = null;
+			this.desiredDestinationPortRange = null;
 			this.doc = null;			
 		}
 		
@@ -33,28 +34,20 @@ public final class Socks5RequestRule {
 			return new Socks5RequestRule(this);
 		}
 		
-		public Builder clientAddressConditionPredicate(
-				final ConditionPredicate clientAddrConditionPredicate) {
-			this.clientAddressConditionPredicate = clientAddrConditionPredicate;
+		public Builder command(final Command cmd) {
+			this.command = cmd;
 			return this;
 		}
 		
-		public Builder commandConditionPredicate(
-				final ConditionPredicate cmdConditionPredicate) {
-			this.commandConditionPredicate = cmdConditionPredicate;
+		public Builder desiredDestinationAddressRange(
+				final AddressRange desiredDestinationAddrRange) {
+			this.desiredDestinationAddressRange = desiredDestinationAddrRange;
 			return this;
 		}
 		
-		public Builder desiredDestinationAddressConditionPredicate(
-				final ConditionPredicate desiredDestinationAddrConditionPredicate) {
-			this.desiredDestinationAddressConditionPredicate = 
-					desiredDestinationAddrConditionPredicate;
-			return this;
-		}
-		
-		public Builder desiredDestinationPortRanges(
-				final PortRanges desiredDestinationPrtRanges) {
-			this.desiredDestinationPortRanges = desiredDestinationPrtRanges;
+		public Builder desiredDestinationPortRange(
+				final PortRange desiredDestinationPrtRange) {
+			this.desiredDestinationPortRange = desiredDestinationPrtRange;
 			return this;
 		}
 		
@@ -63,55 +56,63 @@ public final class Socks5RequestRule {
 			return this;
 		}
 		
+		public Builder sourceAddressRange(
+				final AddressRange sourceAddrRange) {
+			this.sourceAddressRange = sourceAddrRange;
+			return this;
+		}
+		
+	}
+
+	private static final Socks5RequestRule DEFAULT_INSTANCE = 
+			new Socks5RequestRule.Builder(RuleAction.ALLOW).build();
+	
+	public static Socks5RequestRule getDefault() {
+		return DEFAULT_INSTANCE;
 	}
 	
 	private final RuleAction ruleAction;
-	private final ConditionPredicate clientAddressConditionPredicate;
-	private final ConditionPredicate commandConditionPredicate;
-	private final ConditionPredicate desiredDestinationAddressConditionPredicate;
-	private final PortRanges desiredDestinationPortRanges;
+	private final AddressRange sourceAddressRange;
+	private final Command command;
+	private final AddressRange desiredDestinationAddressRange;
+	private final PortRange desiredDestinationPortRange;
 	private final String doc;
 	
 	private Socks5RequestRule(final Builder builder) {
 		RuleAction rlAction = builder.ruleAction;
-		ConditionPredicate clientAddrConditionPredicate = 
-				builder.clientAddressConditionPredicate;
-		ConditionPredicate cmdConditionPredicate = 
-				builder.commandConditionPredicate;
-		ConditionPredicate desiredDestinationAddrConditionPredicate = 
-				builder.desiredDestinationAddressConditionPredicate;
-		PortRanges desiredDestinationPrtRanges = 
-				builder.desiredDestinationPortRanges;
+		AddressRange sourceAddrRange = builder.sourceAddressRange;
+		Command cmd = builder.command;
+		AddressRange desiredDestinationAddrRange = 
+				builder.desiredDestinationAddressRange;
+		PortRange desiredDestinationPrtRange = 
+				builder.desiredDestinationPortRange;
 		String d = builder.doc;
 		this.ruleAction = rlAction;
-		this.clientAddressConditionPredicate = clientAddrConditionPredicate;
-		this.commandConditionPredicate = cmdConditionPredicate;
-		this.desiredDestinationAddressConditionPredicate = 
-				desiredDestinationAddrConditionPredicate;
-		this.desiredDestinationPortRanges = desiredDestinationPrtRanges;
+		this.sourceAddressRange = sourceAddrRange;
+		this.command = cmd;
+		this.desiredDestinationAddressRange = desiredDestinationAddrRange;
+		this.desiredDestinationPortRange = desiredDestinationPrtRange;
 		this.doc = d;		
 	}
 	
 	public boolean appliesTo(
-			final String clientAddress,	final Socks5Request socks5Req) {
-		if (this.clientAddressConditionPredicate != null 
-				&& !this.clientAddressConditionPredicate.evaluate(
-						clientAddress)) {
+			final String sourceAddress,	final Socks5Request socks5Req) {
+		if (this.sourceAddressRange != null 
+				&& !this.sourceAddressRange.contains(sourceAddress)) {
 			return false;
 		}
-		if (this.commandConditionPredicate != null
-				&& !this.commandConditionPredicate.evaluate(
-						socks5Req.getCommand().toString())) {
+		if (this.command != null
+				&& !this.command.equals(socks5Req.getCommand())) {
 			return false;
 		}
-		if (this.desiredDestinationAddressConditionPredicate != null
-				&& !this.desiredDestinationAddressConditionPredicate.evaluate(
+		if (this.desiredDestinationAddressRange != null
+				&& !this.desiredDestinationAddressRange.contains(
 						socks5Req.getDesiredDestinationAddress())) {
 			return false;
 		}
-		if (this.desiredDestinationPortRanges != null
-				&& !this.desiredDestinationPortRanges.contains(Port.newInstance(
-						socks5Req.getDesiredDestinationPort()))) {
+		if (this.desiredDestinationPortRange != null
+				&& !this.desiredDestinationPortRange.contains(
+						Port.newInstance(socks5Req.getDesiredDestinationPort()))) {
 			return false;
 		}
 		return true;
@@ -132,63 +133,62 @@ public final class Socks5RequestRule {
 		if (this.ruleAction != other.ruleAction) {
 			return false;
 		}
-		if (this.clientAddressConditionPredicate == null) {
-			if (other.clientAddressConditionPredicate != null) {
+		if (this.sourceAddressRange == null) {
+			if (other.sourceAddressRange != null) {
 				return false;
 			}
-		} else if (!this.clientAddressConditionPredicate.equals(
-				other.clientAddressConditionPredicate)) {
+		} else if (!this.sourceAddressRange.equals(
+				other.sourceAddressRange)) {
 			return false;
 		}
-		if (this.commandConditionPredicate == null) {
-			if (other.commandConditionPredicate != null) {
+		if (this.command == null) {
+			if (other.command != null) {
 				return false;
 			}
-		} else if (!this.commandConditionPredicate.equals(
-				other.commandConditionPredicate)) {
+		} else if (!this.command.equals(other.command)) {
 			return false;
 		}
-		if (this.desiredDestinationAddressConditionPredicate == null) {
-			if (other.desiredDestinationAddressConditionPredicate != null) {
+		if (this.desiredDestinationAddressRange == null) {
+			if (other.desiredDestinationAddressRange != null) {
 				return false;
 			}
-		} else if (!this.desiredDestinationAddressConditionPredicate.equals(
-				other.desiredDestinationAddressConditionPredicate)) {
+		} else if (!this.desiredDestinationAddressRange.equals(
+				other.desiredDestinationAddressRange)) {
 			return false;
 		}
-		if (this.desiredDestinationPortRanges == null) {
-			if (other.desiredDestinationPortRanges != null) {
+		if (this.desiredDestinationPortRange == null) {
+			if (other.desiredDestinationPortRange != null) {
 				return false;
 			}
-		} else if (!this.desiredDestinationPortRanges.equals(
-				other.desiredDestinationPortRanges)) {
+		} else if (!this.desiredDestinationPortRange.equals(
+				other.desiredDestinationPortRange)) {
 			return false;
 		}
 		return true;
 	}
 	
-	public ConditionPredicate getClientAddressConditionPredicate() {
-		return this.clientAddressConditionPredicate;
+	public Command getCommand() {
+		return this.command;
 	}
 
-	public ConditionPredicate getCommandConditionPredicate() {
-		return this.commandConditionPredicate;
+	public AddressRange getDesiredDestinationAddressRange() {
+		return this.desiredDestinationAddressRange;
 	}
 
-	public ConditionPredicate getDesiredDestinationAddressConditionPredicate() {
-		return this.desiredDestinationAddressConditionPredicate;
-	}
-	
-	public PortRanges getDesiredDestinationPortRanges() {
-		return this.desiredDestinationPortRanges;
+	public PortRange getDesiredDestinationPortRange() {
+		return this.desiredDestinationPortRange;
 	}
 	
 	public String getDoc() {
 		return this.doc;
 	}
-
+	
 	public RuleAction getRuleAction() {
 		return this.ruleAction;
+	}
+
+	public AddressRange getSourceAddressRange() {
+		return this.sourceAddressRange;
 	}
 
 	@Override
@@ -197,16 +197,16 @@ public final class Socks5RequestRule {
 		int result = 1;
 		result = prime * result + ((this.ruleAction == null) ? 
 				0 : this.ruleAction.hashCode());
-		result = prime * result + ((this.clientAddressConditionPredicate == null) ? 
-				0 : this.clientAddressConditionPredicate.hashCode());
-		result = prime * result + ((this.commandConditionPredicate == null) ? 
-				0 : this.commandConditionPredicate.hashCode());
+		result = prime * result + ((this.sourceAddressRange == null) ? 
+				0 : this.sourceAddressRange.hashCode());
+		result = prime * result + ((this.command == null) ? 
+				0 : this.command.hashCode());
 		result = prime * result
-				+ ((this.desiredDestinationAddressConditionPredicate == null) ? 
-						0 : this.desiredDestinationAddressConditionPredicate.hashCode());
+				+ ((this.desiredDestinationAddressRange == null) ? 
+						0 : this.desiredDestinationAddressRange.hashCode());
 		result = prime * result
-				+ ((this.desiredDestinationPortRanges == null) ? 
-						0 : this.desiredDestinationPortRanges.hashCode());
+				+ ((this.desiredDestinationPortRange == null) ? 
+						0 : this.desiredDestinationPortRange.hashCode());
 		return result;
 	}
 
@@ -216,14 +216,14 @@ public final class Socks5RequestRule {
 		builder.append(this.getClass().getSimpleName())
 			.append(" [ruleAction=")
 			.append(this.ruleAction)
-			.append(", clientAddressConditionPredicate=")
-			.append(this.clientAddressConditionPredicate)
-			.append(", commandConditionPredicate=")
-			.append(this.commandConditionPredicate)
-			.append(", desiredDestinationAddressConditionPredicate=")
-			.append(this.desiredDestinationAddressConditionPredicate)
-			.append(", desiredDestinationPortRanges=")
-			.append(this.desiredDestinationPortRanges)
+			.append(", sourceAddressRange=")
+			.append(this.sourceAddressRange)
+			.append(", command=")
+			.append(this.command)
+			.append(", desiredDestinationAddressRange=")
+			.append(this.desiredDestinationAddressRange)
+			.append(", desiredDestinationPortRange=")
+			.append(this.desiredDestinationPortRange)
 			.append("]");
 		return builder.toString();
 	}

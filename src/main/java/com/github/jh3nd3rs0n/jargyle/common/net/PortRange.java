@@ -19,15 +19,16 @@ public final class PortRange {
 	}
 	
 	public static PortRange newInstance(final String s) {
+		String message = String.format(
+				"port range must be either of the following formats: "
+				+ "INTEGER_BETWEEN_%1$s_and_%2$s, "
+				+ "INTEGER1_BETWEEN_%1$s_and_%2$s-INTEGER2_BETWEEN_%1$s_and_%2$s", 
+				Port.MIN_INT_VALUE,
+				Port.MAX_INT_VALUE);
 		String[] sElements = s.split("-");
 		if (sElements.length < 1 || sElements.length > 2 
 				|| (sElements.length == 1 && s.indexOf('-') != -1)) {
-			throw new IllegalArgumentException(String.format(
-					"port range must be either of the following formats: "
-					+ "INTEGER_BETWEEN_%1$s_and_%2$s, "
-					+ "INTEGER1_BETWEEN_%1$s_and_%2$s-INTEGER2_BETWEEN_%1$s_and_%2$s", 
-					Port.MIN_INT_VALUE,
-					Port.MAX_INT_VALUE));
+			throw new IllegalArgumentException(message);
 		}
 		if (sElements.length == 1) {
 			String sElement = sElements[0];
@@ -35,13 +36,7 @@ public final class PortRange {
 			try { 
 				prt = Port.newInstance(sElement);
 			} catch (IllegalArgumentException e) {
-				throw new IllegalArgumentException(String.format(
-						"port range must be either of the following formats: "
-						+ "INTEGER_BETWEEN_%1$s_and_%2$s, "
-						+ "INTEGER1_BETWEEN_%1$s_and_%2$s-INTEGER2_BETWEEN_%1$s_and_%2$s", 
-						Port.MIN_INT_VALUE,
-						Port.MAX_INT_VALUE),
-						e);
+				throw new IllegalArgumentException(message,	e);
 			}
 			return newInstance(prt); 
 		}
@@ -51,25 +46,13 @@ public final class PortRange {
 		try {
 			minPrt = Port.newInstance(sElement0);
 		} catch (IllegalArgumentException e) {
-			throw new IllegalArgumentException(String.format(
-					"port range must be either of the following formats: "
-					+ "INTEGER_BETWEEN_%1$s_and_%2$s, "
-					+ "INTEGER1_BETWEEN_%1$s_and_%2$s-INTEGER2_BETWEEN_%1$s_and_%2$s", 
-					Port.MIN_INT_VALUE,
-					Port.MAX_INT_VALUE),
-					e);
+			throw new IllegalArgumentException(message, e);
 		}
 		Port maxPrt = null;
 		try { 
 			maxPrt = Port.newInstance(sElement1);
 		} catch (IllegalArgumentException e) {
-			throw new IllegalArgumentException(String.format(
-					"port range must be either of the following formats: "
-					+ "INTEGER_BETWEEN_%1$s_and_%2$s, "
-					+ "INTEGER1_BETWEEN_%1$s_and_%2$s-INTEGER2_BETWEEN_%1$s_and_%2$s", 
-					Port.MIN_INT_VALUE,
-					Port.MAX_INT_VALUE),
-					e);
+			throw new IllegalArgumentException(message, e);
 		}
 		return newInstance(minPrt, maxPrt);
 	}

@@ -13,8 +13,8 @@ Jargyle is a Java SOCKS5 server. It has the following features:
 -   [DTLS for UDP traffic through SOCKS server chaining](#5-12-2-using-dtls-for-udp-traffic-through-socks-server-chaining)
 -   [Host name resolution through SOCKS5 server chaining](#5-12-3-using-host-name-resolution-through-socks5-server-chaining)
 -   [SOCKS server chaining to a specified chain of other SOCKS servers](#5-13-chaining-to-a-specified-chain-of-other-socks-servers)
--   [Allow or block addresses](#5-14-allowing-or-blocking-addresses)
--   [Allow or block SOCKS5 requests](#5-15-allowing-or-blocking-socks5-requests)
+-   [Firewall rules](#5-14-firewall-rules)
+-   [Firewall rules for SOCKS5 requests](#5-15-firewall-rules-for-socks5-requests)
 
 Although Jargyle can act as a standalone SOCKS5 server, it can act as a bridge between the following:
 
@@ -56,9 +56,8 @@ Although Jargyle can act as a standalone SOCKS5 server, it can act as a bridge b
 -   [5. 12. 4. 2. Using Username Password Authentication](#5-12-4-2-using-username-password-authentication)
 -   [5. 12. 4. 3. Using GSS-API Authentication](#5-12-4-3-using-gss-api-authentication)
 -   [5. 13. Chaining to a Specified Chain of Other SOCKS Servers](#5-13-chaining-to-a-specified-chain-of-other-socks-servers)
--   [5. 14. Allowing or Blocking Addresses](#5-14-allowing-or-blocking-addresses)
--   [5. 15. Allowing or Blocking SOCKS5 Requests](#5-15-allowing-or-blocking-socks5-requests)
--   [5. 16. Logging](#5-16-logging)
+-   [5. 14. Firewall Rules](#5-14-firewall-rules)
+-   [5. 15. Firewall Rules for SOCKS5 Requests](#5-15-firewall-rules-for-socks5-requests)
 -   [6. Miscellaneous Notes](#6-miscellaneous-notes)
 -   [6. 1. The Doc XML Element](#6-1-the-doc-xml-element)
 -   [6. 2. Multiple Settings of the Same Name](#6-2-multiple-settings-of-the-same-name)
@@ -187,9 +186,6 @@ The following is a list of available settings for the SOCKS server (displayed wh
     
       backlog=INTEGER_BETWEEN_0_AND_2147483647
           The maximum length of the queue of incoming connections (default is 50)
-    
-      clientAddressRules=[RULE1[ RULE2[...]]]
-          The space separated list of client address rules (default is allow:matches:.*)
     
       clientFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
           The space separated list of socket settings for the client-facing socket
@@ -359,9 +355,6 @@ The following is a list of available settings for the SOCKS server (displayed wh
       socks5.methods=[SOCKS5_METHOD1[ SOCKS5_METHOD2[...]]]
           The space separated list of acceptable authentication methods in order of preference (default is NO_AUTHENTICATION_REQUIRED)
     
-      socks5.onBind.inboundAddressRules=[RULE1[ RULE2[...]]]
-          The space separated list of inbound address rules (default is allow:matches:.*)
-    
       socks5.onBind.inboundSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
           The space separated list of socket settings for the inbound socket
     
@@ -397,12 +390,6 @@ The following is a list of available settings for the SOCKS server (displayed wh
     
       socks5.onUdpAssociate.clientFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
           The space separated list of socket settings for the client-facing UDP socket
-    
-      socks5.onUdpAssociate.inboundAddressRules=[RULE1[ RULE2[...]]]
-          The space separated list of inbound address rules (default is allow:matches:.*)
-    
-      socks5.onUdpAssociate.outboundAddressRules=[RULE1[ RULE2[...]]]
-          The space separated list of outbound address rules (default is allow:matches:.*)
     
       socks5.onUdpAssociate.relayBufferSize=INTEGER_BETWEEN_1_AND_2147483647
           The buffer size in bytes for relaying the data (default is 32768)
@@ -522,7 +509,7 @@ The following is a list of available settings for the SOCKS server (displayed wh
       USERNAME_PASSWORD
           Username password authentication
     
-    
+        
 ```
 
 The following is the command line help for managing SOCKS5 users for username password authentication (displayed when using the command line options `--socks5-userpassauth-users --help`):
@@ -1844,78 +1831,86 @@ The known limitations of Jargyle chained to a specified chain of other SOCKS ser
 
 -   Only TCP traffic can be routed through the chain. Jargyle will attempt to route any UDP traffic through the last SOCKS server of the chain.
 
-### 5. 14. Allowing or Blocking Addresses
+### 5. 14. Firewall Rules
 
-You can allow or block the following addresses:
+You can specify firewall rules for the following traffic types:
 
--   Client addresses (IPv4 and IPv6)
--   Inbound addresses following the SOCKS5 BIND command (IPv4 and IPv6)
--   Inbound addresses following the SOCKS5 UDP ASSOCIATE command (IPv4 and IPv6)
--   Outbound addresses following the SOCKS5 UDP ASSOCIATE command (IPv4, IPv6, and domain name)
+-   Inbound TCP traffic from the client to the SOCKS server
+-   Inbound TCP traffic to the client
+-   Inbound UDP traffic to the client
+-   Outbound UDP traffic from the client
 
-To allow or block an address or addresses, you will need to create a rule or rules that will allow or block an address or addresses in any of the following settings:
+You can specify rules for a particular traffic type in any of the following settings in the configuration file:
 
--   `clientAddressRules`
--   `socks5.onBind.inboundAddressRules`
--   `socks5.onUdpAssociate.inboundAddressRules`
--   `socks5.onUdpAssociate.outboundAddressRules`
+-   `clientRules` : Rules for inbound TCP traffic from the client to the SOCKS server
+-   `socks5.onBind.inboundRules` : Rules for inbound TCP traffic to the client
+-   `socks5.onUdpAssociate.inboundRules` : Rules for inbound UDP traffic to the client
+-   `socks5.onUdpAssociate.outboundRules` : Rules for outbound UDP traffic from the client
 
-You can create a rule using the following syntax:
-
-```text
-    
-    RULE_ACTION:CONDITION_PREDICATE_METHOD:VALUE
-    
-```
-
-`RULE_ACTION` can be one of the following values:
-
--   `allow` : allows the address in question
--   `block` : blocks the address in question
-
-`CONDITION_PREDICATE_METHOD:VALUE` can be one of the following:
-
--   `equals:LITERAL_EXPRESSION` : the address in question equals the literal expression expressed in `LITERAL_EXPRESSION`
--   `matches:REGULAR_EXPRESSION` : the address in question matches the regular expression expressed in `REGULAR_EXPRESSION`
-
-Partial command line example:
-
-```text
-    
-    "--setting=clientAddressRules=allow:equals:127.0.0.1 allow:equals:0:0:0:0:0:0:0:1 block:matches:(?!(127\.0\.0\.1|0:0:0:0:0:0:0:1)).*"
-    
-```
-
-You can specify the rules in any of the aforementioned settings as a sequence of `<rule/>` XML elements in the configuration file.
+You can specify the rules in any of the aforementioned settings as a `<rules/>` XML element containing a sequence of `<rule/>` XML elements.
 
 Partial configuration file example:
 
 ```xml
     
     <setting>
-        <name>clientAddressRules</name>
+        <name>clientRules</name>
         <rules>
-            <rule action="allow">
-                <conditionPredicate method="equals" value="127.0.0.1"/>
+            <rule>
+                <action>ALLOW</action>
+                <sourceAddressRange>127.0.0.1</sourceAddressRange>
+                <doc>Allows IPv4 loopback address</doc>
             </rule>
-            <rule action="allow">
-                <conditionPredicate method="equals" value="0:0:0:0:0:0:0:1"/>
+            <rule>
+                <action>ALLOW</action>
+                <sourceAddressRange>::1</sourceAddressRange>
+                <doc>Allows IPv6 loopback address</doc>
             </rule>
-            <rule action="block">
-                <conditionPredicate method="matches" value="(?!(127\.0\.0\.1|0:0:0:0:0:0:0:1)).*"/>
-            </rule>                        
+            <rule>
+                <action>DENY</action>
+                <sourceAddressRange>0.0.0.0-127.0.0.0</sourceAddressRange>
+                <doc>Denies any address before IPv4 loopback address</doc>
+            </rule>
+            <rule>
+                <action>DENY</action>
+                <sourceAddressRange>127.0.0.2-255.255.255.255</sourceAddressRange>
+                <doc>Denies any address after IPv4 loopback address</doc>
+            </rule>
+            <rule>
+                <action>DENY</action>
+                <sourceAddressRange>::</sourceAddressRange>
+                <doc>Denies any address before IPv6 loopback address</doc>
+            </rule>
+            <rule>
+                <action>DENY</action>
+                <sourceAddressRange>::2-ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff</sourceAddressRange>
+                <doc>Denies any address after IPv6 loopback address</doc>
+            </rule>            
         </rules>
     </setting>
     
 ```
 
-### 5. 15. Allowing or Blocking SOCKS5 Requests
+The `<rule/>` XML element has the following nested XML elements:
 
-You can allow or block SOCKS5 requests. To allow or block SOCKS5 requests, you will need to create a rule or rules that will allow or block the SOCKS5 request or requests in the following setting in the configuration file:
+-   `<action/>` : Specifies the action to take. Value can be either of the following: `ALLOW`, `DENY`. This XML element is required.
+-   `<sourceAddressRange/>` : Specifies the address range for the source address. This XML element is optional.
+-   `<destinationAddressRange/>` : Specifies the address range for the destination address. This XML element is optional.
+-   `<doc/>` : Documentation for the `<rule/>` XML element. This XML element is optional.
+
+Address ranges in the `<sourceAddressRange/>` XML element and the `<destinationAddressRange/>` XML element can be specified in the following formats:
+
+-   `ADDRESS` : Range is limited to a single address expressed in `ADDRESS`
+-   `ADDRESS1-ADDRESS2` : Range is limited to addresses between the address expressed in `ADDRESS1` (inclusive) and the address expressed in `ADDRESS2` (inclusive)
+-   `regex:REGULAR_EXPRESSION` : Range is limited to domain names that match the regular expression expressed in `REGULAR_EXPRESSION`
+
+### 5. 15. Firewall Rules for SOCKS5 Requests
+
+You can specify firewall rules for SOCKS5 requests in the following setting in the configuration file:
 
 -   `socks5.socks5RequestRules`
  
-You can specify the rules in the aforementioned setting as a sequence of `<socks5RequestRule/>` XML elements in the configuration file.
+You can specify the rules in the aforementioned setting as a `<socks5RequestRules/>` XML element containing a sequence of `<socks5RequestRule/>` XML elements.
 
 Partial configuration file example:
 
@@ -1924,91 +1919,52 @@ Partial configuration file example:
     <setting>
         <name>socks5.socks5RequestRules</name>
         <socks5RequestRules>
-            <socks5RequestRule action="allow">
-                <clientAddressConditionPredicate method="matches" value=".*"/>
-                <commandConditionPredicate method="equals" value="CONNECT"/>
-                <desiredDestinationAddressConditionPredicate method="matches" value=".*"/>
-                <desiredDestinationPortRanges>
-                    <portRange minPort="80" maxPort="80"/>
-                    <portRange minPort="443" maxPort="443"/>
-                </desiredDestinationPortRanges>
+            <socks5RequestRule>
+                <action>ALLOW</action>
+                <command>CONNECT</command>
+                <desiredDestinationPortRange>80</desiredDestinationPortRange>
+                <doc>Allow any client to connect to any address on port 80</doc>
             </socks5RequestRule>
-            <socks5RequestRule action="block">
-                <commandConditionPredicate method="equals" value="BIND"/>
+            <socks5RequestRule>
+                <action>ALLOW</action>
+                <command>CONNECT</command>
+                <desiredDestinationPortRange>443</desiredDestinationPortRange>
+                <doc>Allow any client to connect to any address on port 443</doc>
             </socks5RequestRule>
-            <socks5RequestRule action="block">
-                <commandConditionPredicate method="equals" value="UDP_ASSOCIATE"/>
-            </socks5RequestRule>            
+            <socks5RequestRule>
+                <action>DENY</action>
+                <command>BIND</command>
+                <doc>Deny any BIND requests</doc>
+            </socks5RequestRule>
+            <socks5RequestRule>
+                <action>DENY</action>
+                <command>UDP_ASSOCIATE</command>
+                <doc>Deny any UDP ASSOCIATE requests</doc>
+            </socks5RequestRule>
         </socks5RequestRules>
     </setting>
     
 ```
 
-### 5. 16. Logging
+The `<socks5RequestRule/>` XML element has the following nested XML elements:
 
-Jargyle uses Simple Logging Facade for Java (SLF4J) for logging and uses java.util.logging as its underlying framework. 
+-   `<action/>` : Specifies the action to take. Value can be either of the following: `ALLOW`, `DENY`. This XML element is required.
+-   `<sourceAddressRange/>` : Specifies the address range for the source (client) address. This XML element is optional.
+-   `<command/>` : Specifies the command type of the SOCKS5 request. Value can be any of the following: `CONNECT`, `BIND`, `UDP_ASSOCIATE`, `RESOLVE`
+-   `<desiredDestinationAddressRange/>` : Specifies the address range for the desired destination address of the SOCKS5 request. This XML element is optional.
+-   `<desiredDestinationPortRange>` : Specifies the port range for the desired destination port of the SOCKS5 request.
+-   `<doc/>` : Documentation for the `<socks5RequestRule/>` XML element. This XML element is optional.
 
-In java.util.logging, there are seven logging levels in the order of highest priority to the lowest priority:
+Address ranges in the `<sourceAddressRange/>` XML element and the `<desiredDestinationAddressRange/>` XML element can be specified in the following formats:
 
--   `SEVERE`
--   `WARNING`
--   `INFO`
--   `CONFIG`
--   `FINE`
--   `FINER`
--   `FINEST`
+-   `ADDRESS` : Range is limited to a single address expressed in `ADDRESS`
+-   `ADDRESS1-ADDRESS2` : Range is limited to addresses between the address expressed in `ADDRESS1` (inclusive) and the address expressed in `ADDRESS2` (inclusive)
+-   `regex:REGULAR_EXPRESSION` : Range is limited to domain names that match the regular expression expressed in `REGULAR_EXPRESSION`
 
-By default, the current level is set at `INFO` and up. This means that only logging messages of levels `INFO` and up will appear in the output.
+The port range in the `<desiredDestinationPortRange/>` XML element can be specified in the following formats:
 
-The following are the classes that use logging:
-
--   `com.github.jh3nd3rs0n.jargyle.common.net.RelayServer$DataWorker`
--   `com.github.jh3nd3rs0n.jargyle.common.net.ssl.DtlsDatagramSocket`
--   `com.github.jh3nd3rs0n.jargyle.main.JargyleCLI`
--   `com.github.jh3nd3rs0n.jargyle.server.Listener`
--   `com.github.jh3nd3rs0n.jargyle.server.Worker`
--   `com.github.jh3nd3rs0n.jargyle.server.XmlFileSourceConfigurationProvider$ConfigurationUpdater`
--   `com.github.jh3nd3rs0n.jargyle.server.socks5.BindCommandWorker`
--   `com.github.jh3nd3rs0n.jargyle.server.socks5.ConnectCommandWorker`
--   `com.github.jh3nd3rs0n.jargyle.server.socks5.ResolveCommandWorker`
--   `com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5Worker`
--   `com.github.jh3nd3rs0n.jargyle.server.socks5.UdpAssociateCommandWorker`
--   `com.github.jh3nd3rs0n.jargyle.server.socks5.UdpRelayServer$InboundPacketsWorker`
--   `com.github.jh3nd3rs0n.jargyle.server.socks5.UdpRelayServer$OutboundPacketsWorker`
--   `com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.XmlFileSourceUsersProvider$UsersUpdater`
-
-To configure logging for any of the aforementioned classes, you can use a configuration file to specify the logging properties for any of the classes.
-
-The following is a configuration file example of setting the logging level of some of the classes to `FINE` and up:
-
-`logging.properties`:
-
-```text
-    
-    com.github.jh3nd3rs0n.jargyle.main.JargyleCLI.handlers = java.util.logging.ConsoleHandler
-    com.github.jh3nd3rs0n.jargyle.main.JargyleCLI.level = FINE    
-    com.github.jh3nd3rs0n.jargyle.server.Listener.handlers = java.util.logging.ConsoleHandler
-    com.github.jh3nd3rs0n.jargyle.server.Listener.level = FINE    
-    com.github.jh3nd3rs0n.jargyle.server.Worker.handlers = java.util.logging.ConsoleHandler
-    com.github.jh3nd3rs0n.jargyle.server.Worker.level = FINE
-    com.github.jh3nd3rs0n.jargyle.server.socks5.ConnectCommandWorker.handlers = java.util.logging.ConsoleHandler
-    com.github.jh3nd3rs0n.jargyle.server.socks5.ConnectCommandWorker.level = FINE
-    com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5Worker.handlers = java.util.logging.ConsoleHandler
-    com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5Worker.level = FINE
-    java.util.logging.ConsoleHandler.level = FINE
-    
-```
-
-To use the configuration file, you can use the Java system property `java.util.logging.config.file`.
-
-Example:
-
-```bash
-    
-    export JARGYLE_OPTS="-Djava.util.logging.config.file=logging.properties"
-    ./bin/jargyle
-    
-```
+-   `PORT` : Range is limited to a single port number expressed in `PORT`
+-   `PORT1-PORT2` : Range is limited to port numbers between the port number expressed in `PORT1` (inclusive) and the port number expressed in `PORT2` (inclusive)
 
 ## 6. Miscellaneous Notes
 
@@ -2022,53 +1978,6 @@ When using an existing configuration file to create a new configuration file, an
 -   `<setting/>`
 -   `<socketSetting/>`
 -   `<socks5RequestRule/>`
-
-Partial configuration file example:
-
-```xml
-    
-    <setting>
-        <name>clientAddressRules</name>
-        <rules>
-            <rule action="allow">
-                <conditionPredicate method="equals" value="127.0.0.1"/>
-                <doc>Allow IPv4 loopback address</doc>
-            </rule>
-            <rule action="allow">
-                <conditionPredicate method="equals" value="0:0:0:0:0:0:0:1"/>
-                <doc>Allow IPv6 loopback address</doc>
-            </rule>
-            <rule action="block">
-                <conditionPredicate method="matches" value="(?!(127\.0\.0\.1|0:0:0:0:0:0:0:1)).*"/>
-                <doc>Block any address that is not a loopback address</doc>
-            </rule>                        
-        </rules>
-    </setting>
-    <setting>
-        <name>socks5.socks5RequestRules</name>
-        <socks5RequestRules>
-            <socks5RequestRule action="allow">
-                <clientAddressConditionPredicate method="matches" value=".*"/>
-                <commandConditionPredicate method="equals" value="CONNECT"/>
-                <desiredDestinationAddressConditionPredicate method="matches" value=".*"/>
-                <desiredDestinationPortRanges>
-                    <portRange minPort="80" maxPort="80"/>
-                    <portRange minPort="443" maxPort="443"/>
-                </desiredDestinationPortRanges>
-                <doc>Allow any client to connect to any address on port 80 or port 443</doc>
-            </socks5RequestRule>
-            <socks5RequestRule action="block">
-                <commandConditionPredicate method="equals" value="BIND"/>
-                <doc>Block any BIND requests</doc>
-            </socks5RequestRule>
-            <socks5RequestRule action="block">
-                <commandConditionPredicate method="equals" value="UDP_ASSOCIATE"/>
-                <doc>Block any UDP ASSOCIATE requests</doc>
-            </socks5RequestRule>            
-        </socks5RequestRules>
-    </setting>
-        
-```
 
 ### 6. 2. Multiple Settings of the Same Name
 

@@ -8,6 +8,13 @@ import java.util.List;
 
 public final class Methods {
 	
+	private static final Methods DEFAULT_INSTANCE = new Methods(
+			Arrays.asList(Method.NO_AUTHENTICATION_REQUIRED));
+	
+	public static Methods getDefault() {
+		return DEFAULT_INSTANCE;
+	}
+	
 	public static Methods newInstance(final List<Method> meths) {
 		return new Methods(meths);
 	}

@@ -49,14 +49,17 @@ final class BindCommandWorker extends CommandWorker {
 		this.settings = sttngs;
 	}
 	
-	private boolean canAllowInboundAddress(final String inboundAddress) {
-		Rules inboundAddressRules = this.settings.getLastValue(
-				Socks5SettingSpecConstants.SOCKS5_ON_BIND_INBOUND_ADDRESS_RULES);
-		Rule inboundAddressRule = inboundAddressRules.anyAppliesTo(inboundAddress);
-		if (inboundAddressRule == null) {
+	private boolean canAllow(
+			final String sourceAddress, final String destinationAddress) {
+		Rules inboundRules = this.settings.getLastValue(
+				Socks5SettingSpecConstants.SOCKS5_ON_BIND_INBOUND_RULES);
+		Rule inboundRule = inboundRules.anyAppliesTo(
+				sourceAddress, destinationAddress);
+		if (inboundRule == null) {
 			LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
-					"Inbound address %s not allowed",
-					inboundAddress)));
+					"Source address %s to destination address %s not allowed",
+					sourceAddress,
+					destinationAddress)));
 			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
 					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
 			LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
@@ -73,11 +76,13 @@ final class BindCommandWorker extends CommandWorker {
 			}
 			return false;
 		}
-		if (inboundAddressRule.getRuleAction().equals(RuleAction.BLOCK)) {
+		if (inboundRule.getRuleAction().equals(RuleAction.DENY)) {
 			LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
-					"Inbound address %s blocked based on the following rule: %s",
-					inboundAddress,
-					inboundAddressRule)));
+					"Source address %s to destination address %s denied based "
+					+ "on the following rule: %s",
+					sourceAddress,
+					destinationAddress,
+					inboundRule)));
 			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
 					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
 			LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
@@ -218,9 +223,11 @@ final class BindCommandWorker extends CommandWorker {
 			if (!this.configureInboundSocket(inboundSocket)) {
 				return;
 			}
-			InetAddress inboundInetAddress = inboundSocket.getInetAddress();
-			String inboundAddress = inboundInetAddress.getHostAddress();
-			if (!this.canAllowInboundAddress(inboundAddress)) {
+			String inboundAddress = 
+					inboundSocket.getInetAddress().getHostAddress();
+			if (!this.canAllow(
+					inboundAddress, 
+					this.clientFacingSocket.getInetAddress().getHostAddress())) {
 				return;
 			}
 			serverBoundAddress = inboundAddress;

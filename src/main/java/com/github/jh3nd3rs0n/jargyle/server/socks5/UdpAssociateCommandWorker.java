@@ -183,15 +183,15 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 			final UdpRelayServer.ClientDatagramSocketAddress clientDatagramSocketAddress,
 			final UdpRelayServer.DatagramSockets datagramSockets,
 			final HostResolver hostResolver,
-			final Rules inboundAddressRules,
-			final Rules outboundAddressRules, 
+			final Rules inboundRules,
+			final Rules outboundRules, 
 			final UdpRelayServer.RelaySettings relaySettings) throws IOException {
 		UdpRelayServer udpRelayServer = new UdpRelayServer(
 				clientDatagramSocketAddress,
 				datagramSockets,
 				hostResolver,
-				inboundAddressRules, 
-				outboundAddressRules,
+				inboundRules, 
+				outboundRules,
 				relaySettings);
 		try {
 			udpRelayServer.start();
@@ -275,9 +275,9 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 								serverFacingDatagramSock), 
 						hostResolver, 
 						this.settings.getLastValue(
-								Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_INBOUND_ADDRESS_RULES), 
+								Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_INBOUND_RULES), 
 						this.settings.getLastValue(
-								Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_OUTBOUND_ADDRESS_RULES), 
+								Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_OUTBOUND_RULES), 
 						new UdpRelayServer.RelaySettings(
 								this.settings.getLastValue(
 										Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_RELAY_BUFFER_SIZE).intValue(), 

@@ -48,18 +48,18 @@ public final class Socks5Worker {
 		this.socks5WorkerContext = context;
 	}
 	
-	private boolean canAllowSocks5Request(
-			final String clientAddress,	final Socks5Request socks5Req) {
+	private boolean canAllow(
+			final String sourceAddress,	final Socks5Request socks5Req) {
 		Socks5RequestRules socks5RequestRules = this.settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_SOCKS5_REQUEST_RULES);
 		Socks5RequestRule socks5RequestRule = socks5RequestRules.anyAppliesTo(
-				clientAddress, socks5Req);
+				sourceAddress, socks5Req);
 		if (socks5RequestRule == null) {
 			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
 					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
 			LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
 					"SOCKS5 request from %s not allowed. SOCKS5 request: %s",
-					clientAddress,
+					sourceAddress,
 					socks5Req)));
 			try {
 				this.socks5WorkerContext.writeThenFlush(
@@ -72,13 +72,13 @@ public final class Socks5Worker {
 			}
 			return false;
 		}
-		if (socks5RequestRule.getRuleAction().equals(RuleAction.BLOCK)) {
+		if (socks5RequestRule.getRuleAction().equals(RuleAction.DENY)) {
 			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
 					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
 			LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
-					"SOCKS5 request from %s blocked based on the following "
+					"SOCKS5 request from %s denied based on the following "
 					+ "rule: %s. SOCKS5 request: %s",
-					clientAddress,
+					sourceAddress,
 					socks5RequestRule,
 					socks5Req)));
 			try {
@@ -185,7 +185,7 @@ public final class Socks5Worker {
 				this.socks5WorkerContext.getClientFacingDtlsDatagramSocketFactory()));
 		Socks5Request socks5Req = this.newSocks5Request();
 		if (socks5Req == null) { return; }
-		if (!this.canAllowSocks5Request(
+		if (!this.canAllow(
 				this.clientFacingSocket.getInetAddress().getHostAddress(), 
 				socks5Req)) {
 			return;

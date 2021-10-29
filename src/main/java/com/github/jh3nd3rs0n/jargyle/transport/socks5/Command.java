@@ -57,6 +57,32 @@ public enum Command {
 		return command;
 	}
 	
+	public static Command valueOfString(final String s) {
+		Command command = null;
+		try {
+			command = Command.valueOf(s);
+		} catch (IllegalArgumentException e) {
+			StringBuilder sb = new StringBuilder();
+			List<Command> list = Arrays.asList(Command.values());
+			for (Iterator<Command> iterator = list.iterator();
+					iterator.hasNext();) {
+				Command value = iterator.next();
+				sb.append(value);
+				if (iterator.hasNext()) {
+					sb.append(", ");
+				}
+			}
+			throw new IllegalArgumentException(
+					String.format(
+							"expected command must be one of the following "
+							+ "values: %s. actual value is %s",
+							sb.toString(),
+							s), 
+					e);
+		}
+		return command;		
+	}
+	
 	private final byte byteValue;
 	
 	private Command(final byte bValue) {

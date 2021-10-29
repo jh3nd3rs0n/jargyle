@@ -22,10 +22,7 @@ public enum AddressType {
 		
 		@Override
 		public boolean isValueForString(final String string) {
-			return string.matches(AddressRegexConstants.IPV4_ADDRESS_AS_1_PART_REGEX)
-					|| string.matches(AddressRegexConstants.IPV4_ADDRESS_IN_2_PARTS_REGEX)
-					|| string.matches(AddressRegexConstants.IPV4_ADDRESS_IN_3_PARTS_REGEX)
-					|| string.matches(AddressRegexConstants.IPV4_ADDRESS_IN_4_PARTS_REGEX);
+			return AddressRegexConstants.isIpv4Address(string);
 		}
 
 		@Override
@@ -78,7 +75,7 @@ public enum AddressType {
 		
 		@Override
 		public boolean isValueForString(final String string) {
-			return string.matches(AddressRegexConstants.DOMAINNAME_REGEX);
+			return AddressRegexConstants.isDomainname(string);
 		}
 
 		@Override
@@ -136,8 +133,7 @@ public enum AddressType {
 		
 		@Override
 		public boolean isValueForString(final String string) {
-			return string.matches(AddressRegexConstants.IPV6_ADDRESS_IN_COMPRESSED_FORM_REGEX)
-					|| string.matches(AddressRegexConstants.IPV6_ADDRESS_IN_FULL_FORM_REGEX);
+			return AddressRegexConstants.isIpv6Address(string);
 		}
 
 		@Override

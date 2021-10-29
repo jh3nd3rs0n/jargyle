@@ -42,8 +42,10 @@ final class Worker implements Runnable {
 					LoggerHelper.objectMessage(
 							this, 
 							String.format(
-									"Client address %s is blocked or not allowed", 
-									clientFacingSock.getInetAddress().getHostAddress())), 
+									"Source address %s to destination address "
+									+ "%s is denied or not allowed", 
+									clientFacingSock.getInetAddress().getHostAddress(),
+									clientFacingSock.getLocalAddress().getHostAddress())), 
 					e);
 			return null;
 		} catch (SocketException e) {

@@ -28,19 +28,6 @@ public final class GeneralSettingSpecConstants {
 					NewSettingSpecPermission.INSTANCE, 
 					"backlog",
 					NonnegativeInteger.newInstance(50)));
-
-	@HelpText(
-			doc = "The space separated list of client address rules "
-					+ "(default is allow:matches:.*)", 
-			usage = "clientAddressRules=[RULE1[ RULE2[...]]]"
-	)	
-	public static final SettingSpec<Rules> CLIENT_ADDRESS_RULES =
-			SETTING_SPECS.addThenGet(new RulesSettingSpec(
-					NewSettingSpecPermission.INSTANCE,
-					"clientAddressRules",
-					Rules.newInstance(Rule.newInstance(
-							RuleAction.ALLOW, 
-							ConditionPredicate.newInstance(ConditionPredicateMethod.MATCHES, ".*")))));
 	
 	@HelpText(
 			doc = "The space separated list of socket settings for the "
@@ -52,6 +39,12 @@ public final class GeneralSettingSpecConstants {
 					NewSettingSpecPermission.INSTANCE, 
 					"clientFacingSocketSettings",
 					SocketSettings.newInstance()));
+
+	public static final SettingSpec<Rules> CLIENT_RULES =
+			SETTING_SPECS.addThenGet(new RulesSettingSpec(
+					NewSettingSpecPermission.INSTANCE,
+					"clientRules",
+					Rules.getDefault()));
 	
 	@HelpText(
 			doc = "The host name or address for the SOCKS server (default is "

@@ -80,21 +80,24 @@ public final class UdpRelayServer {
 			super(context);
 		}
 		
-		private boolean canAllowInboundAddress(final String inboundAddress) {
-			Rule inboundAddressRule = this.inboundAddressRules.anyAppliesTo(
-					inboundAddress);
-			if (inboundAddressRule == null) {
+		private boolean canAllow(
+				final String sourceAddress, final String destinationAddress) {
+			Rule inboundRule = this.inboundRules.anyAppliesTo(
+					sourceAddress, destinationAddress);
+			if (inboundRule == null) {
 				LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
-						"Inbound address %s not allowed",
-						inboundAddress)));
+						"Source address %s to destination address %s not allowed",
+						sourceAddress,
+						destinationAddress)));
 				return false;
 			}
-			if (inboundAddressRule.getRuleAction().equals(RuleAction.BLOCK)) {
+			if (inboundRule.getRuleAction().equals(RuleAction.DENY)) {
 				LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
-						"Inbound address %s blocked based on the "
-						+ "following rule: %s",
-						inboundAddress,
-						inboundAddressRule)));
+						"Source address %s to destination address %s denied "
+						+ "based on the following rule: %s",
+						sourceAddress,
+						destinationAddress,
+						inboundRule)));
 				return false;
 			}
 			return true;
@@ -171,8 +174,9 @@ public final class UdpRelayServer {
 					LOGGER.trace(LoggerHelper.objectMessage(this, String.format(
 							"Packet data received: %s byte(s)",
 							packet.getLength())));
-					if (!this.canAllowInboundAddress(
-							packet.getAddress().getHostAddress())) {
+					if (!this.canAllow(
+							packet.getAddress().getHostAddress(),
+							this.clientAddress)) {
 						continue;
 					}
 					UdpRequestHeader header = this.newUdpRequestHeader(packet);
@@ -219,21 +223,24 @@ public final class UdpRelayServer {
 			super(context);
 		}
 		
-		private boolean canAllowOutboundAddress(final String outboundAddress) {
-			Rule outboundAddressRule = this.outboundAddressRules.anyAppliesTo(
-					outboundAddress);
-			if (outboundAddressRule == null) {
+		private boolean canAllow(
+				final String sourceAddress, final String destinationAddress) {
+			Rule outboundRule = this.outboundRules.anyAppliesTo(
+					sourceAddress, destinationAddress);
+			if (outboundRule == null) {
 				LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
-						"Outbound address %s not allowed",
-						outboundAddress)));
+						"Source address %s to destination address %s not allowed",
+						sourceAddress,
+						destinationAddress)));
 				return false;
 			}
-			if (outboundAddressRule.getRuleAction().equals(RuleAction.BLOCK)) {
+			if (outboundRule.getRuleAction().equals(RuleAction.DENY)) {
 				LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
-						"Outbound address %s blocked based on the "
-						+ "following rule: %s",
-						outboundAddress,
-						outboundAddressRule)));
+						"Source address %s to destination address %s denied "
+						+ "based on the following rule: %s",
+						sourceAddress,
+						destinationAddress,
+						outboundRule)));
 				return false;
 			}
 			return true;
@@ -371,7 +378,8 @@ public final class UdpRelayServer {
 					if (header.getCurrentFragmentNumber() != 0) {
 						continue;
 					}
-					if (!this.canAllowOutboundAddress(
+					if (!this.canAllow(
+							this.clientAddress,
 							header.getDesiredDestinationAddress())) {
 						continue;
 					}
@@ -414,8 +422,8 @@ public final class UdpRelayServer {
 		protected final DatagramSocket clientFacingDatagramSocket;
 		protected final HostResolver hostResolver;
 		protected final int idleTimeout;
-		protected final Rules inboundAddressRules;
-		protected final Rules outboundAddressRules;
+		protected final Rules inboundRules;
+		protected final Rules outboundRules;
 		protected final PacketsWorkerContext packetsWorkerContext;
 		protected final DatagramSocket serverFacingDatagramSocket;
 
@@ -426,8 +434,8 @@ public final class UdpRelayServer {
 					context.getClientFacingDatagramSocket();
 			this.hostResolver = context.getHostResolver();
 			this.idleTimeout = context.getIdleTimeout();
-			this.inboundAddressRules = context.getInboundAddressRules();
-			this.outboundAddressRules = context.getOutboundAddressRules();
+			this.inboundRules = context.getInboundRules();
+			this.outboundRules = context.getOutboundRules();
 			this.packetsWorkerContext = context;
 			this.serverFacingDatagramSocket = 
 					context.getServerFacingDatagramSocket();
@@ -485,12 +493,12 @@ public final class UdpRelayServer {
 			return this.udpRelayServer.idleTimeout;
 		}
 		
-		public final Rules getInboundAddressRules() {
-			return this.udpRelayServer.inboundAddressRules;
+		public final Rules getInboundRules() {
+			return this.udpRelayServer.inboundRules;
 		}
 		
-		public final Rules getOutboundAddressRules() {
-			return this.udpRelayServer.outboundAddressRules;
+		public final Rules getOutboundRules() {
+			return this.udpRelayServer.outboundRules;
 		}
 		
 		public final DatagramSocket getServerFacingDatagramSocket() {
@@ -567,8 +575,8 @@ public final class UdpRelayServer {
 	private final HostResolver hostResolver;
 	private long idleStartTime;
 	private final int idleTimeout;
-	private final Rules inboundAddressRules;
-	private final Rules outboundAddressRules;
+	private final Rules inboundRules;
+	private final Rules outboundRules;
 	private final DatagramSocket serverFacingDatagramSocket;
 	private State state;
 	
@@ -577,14 +585,14 @@ public final class UdpRelayServer {
 			final ClientDatagramSocketAddress clientDatagramSockAddr,
 			final DatagramSockets datagramSocks,
 			final HostResolver resolver, 
-			final Rules inboundAddrRules, 
-			final Rules outboundAddrRules, 
+			final Rules inboundRls, 
+			final Rules outboundRls, 
 			final RelaySettings settings) {
 		Objects.requireNonNull(clientDatagramSockAddr);
 		Objects.requireNonNull(datagramSocks);
 		Objects.requireNonNull(resolver);		
-		Objects.requireNonNull(inboundAddrRules);
-		Objects.requireNonNull(outboundAddrRules);
+		Objects.requireNonNull(inboundRls);
+		Objects.requireNonNull(outboundRls);
 		Objects.requireNonNull(settings);
 		this.bufferSize = settings.getBufferSize();
 		this.clientAddress = clientDatagramSockAddr.getAddress();
@@ -595,8 +603,8 @@ public final class UdpRelayServer {
 		this.hostResolver = resolver;
 		this.idleStartTime = 0L;
 		this.idleTimeout = settings.getIdleTimeout();
-		this.inboundAddressRules = inboundAddrRules;
-		this.outboundAddressRules = outboundAddrRules;
+		this.inboundRules = inboundRls;
+		this.outboundRules = outboundRls;
 		this.serverFacingDatagramSocket = 
 				datagramSocks.getServerFacingDatagramSocket();
 		this.state = State.STOPPED;

@@ -9,11 +9,11 @@ import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Request;
 
 public final class Socks5RequestRules {
 
-	private static final Socks5RequestRules EMPTY_INSTANCE = 
-			new Socks5RequestRules(Collections.emptyList());
+	private static final Socks5RequestRules DEFAULT_INSTANCE = 
+			new Socks5RequestRules(Arrays.asList(Socks5RequestRule.getDefault()));
 	
-	public static Socks5RequestRules getEmptyInstance() {
-		return EMPTY_INSTANCE;
+	public static Socks5RequestRules getDefault() {
+		return DEFAULT_INSTANCE;
 	}
 	
 	public static Socks5RequestRules newInstance(
@@ -35,9 +35,9 @@ public final class Socks5RequestRules {
 	}
 	
 	public Socks5RequestRule anyAppliesTo(
-			final String clientAddress, final Socks5Request socks5Req) {
+			final String sourceAddress, final Socks5Request socks5Req) {
 		for (Socks5RequestRule socks5RequestRule : this.socks5RequestRules) {
-			if (socks5RequestRule.appliesTo(clientAddress, socks5Req)) {
+			if (socks5RequestRule.appliesTo(sourceAddress, socks5Req)) {
 				return socks5RequestRule;
 			}
 		}

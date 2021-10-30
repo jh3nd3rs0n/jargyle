@@ -41,7 +41,11 @@ public final class Socks5RequestRules {
 				return socks5RequestRule;
 			}
 		}
-		return null;
+		throw new IllegalArgumentException(String.format(
+				"SOCKS5 request from %s does not apply to any rule. SOCKS5 "
+				+ "request: %s",
+				sourceAddress,
+				socks5Req));
 	}
 	
 	@Override

@@ -2,6 +2,7 @@ package com.github.jh3nd3rs0n.jargyle.server.config.xml.bind;
 
 import com.github.jh3nd3rs0n.jargyle.common.net.AddressRange;
 import com.github.jh3nd3rs0n.jargyle.common.net.PortRange;
+import com.github.jh3nd3rs0n.jargyle.server.LogAction;
 import com.github.jh3nd3rs0n.jargyle.server.RuleAction;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5RequestRule;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Command;
@@ -25,6 +26,8 @@ class Socks5RequestRuleXml {
 	protected String desiredDestinationAddressRange;
 	@XmlElement(name = "desiredDestinationPortRange")
 	protected String desiredDestinationPortRange;
+	@XmlElement(name = "logAction")
+	protected String logAction;
 	@XmlElement(name = "doc")
 	protected String doc;
 	
@@ -34,6 +37,7 @@ class Socks5RequestRuleXml {
 		this.command = null;
 		this.desiredDestinationAddressRange = null;
 		this.desiredDestinationPortRange = null;
+		this.logAction = null;
 		this.doc = null;
 	}
 	
@@ -45,6 +49,7 @@ class Socks5RequestRuleXml {
 				socks5RequestRule.getDesiredDestinationAddressRange();
 		PortRange desiredDestinationPrtRange = 
 				socks5RequestRule.getDesiredDestinationPortRange();
+		LogAction lgAction = socks5RequestRule.getLogAction();
 		this.ruleAction = socks5RequestRule.getRuleAction().toString();
 		this.sourceAddressRange = (sourceAddrRange != null) ? 
 				sourceAddrRange.toString() : null;
@@ -55,6 +60,7 @@ class Socks5RequestRuleXml {
 		this.desiredDestinationPortRange = 
 				(desiredDestinationPrtRange != null) ?
 						desiredDestinationPrtRange.toString() : null;
+		this.logAction = (lgAction != null) ? lgAction.toString() : null;
 		this.doc = socks5RequestRule.getDoc();			
 	}
 	
@@ -75,6 +81,9 @@ class Socks5RequestRuleXml {
 		if (this.desiredDestinationPortRange != null) {
 			builder.desiredDestinationPortRange(PortRange.newInstance(
 					this.desiredDestinationPortRange));
+		}
+		if (this.logAction != null) {
+			builder.logAction(LogAction.valueOfString(this.logAction));
 		}
 		if (this.doc != null) {
 			builder.doc(this.doc);

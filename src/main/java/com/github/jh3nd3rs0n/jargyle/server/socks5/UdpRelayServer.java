@@ -16,7 +16,6 @@ import org.slf4j.LoggerFactory;
 import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.internal.logging.LoggerHelper;
-import com.github.jh3nd3rs0n.jargyle.server.RuleAction;
 import com.github.jh3nd3rs0n.jargyle.server.Rule;
 import com.github.jh3nd3rs0n.jargyle.server.Rules;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.UdpRequestHeader;
@@ -82,22 +81,23 @@ public final class UdpRelayServer {
 		
 		private boolean canAllow(
 				final String sourceAddress, final String destinationAddress) {
-			Rule inboundRule = this.inboundRules.anyAppliesTo(
-					sourceAddress, destinationAddress);
-			if (inboundRule == null) {
-				LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
-						"Source address %s to destination address %s not allowed",
-						sourceAddress,
-						destinationAddress)));
+			Rule inboundRule = null; 
+			try {
+				inboundRule = this.inboundRules.anyAppliesTo(
+						sourceAddress, destinationAddress);
+			} catch (IllegalArgumentException e) {
+				LOGGER.error(
+						LoggerHelper.objectMessage(this, String.format(
+								"Error regarding source address %s to "
+								+ "destination address %s",
+								sourceAddress,
+								destinationAddress)),
+						e);
 				return false;
 			}
-			if (inboundRule.getRuleAction().equals(RuleAction.DENY)) {
-				LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
-						"Source address %s to destination address %s denied "
-						+ "based on the following rule: %s",
-						sourceAddress,
-						destinationAddress,
-						inboundRule)));
+			try {
+				inboundRule.applyTo(sourceAddress, destinationAddress);
+			} catch (IllegalArgumentException e) {
 				return false;
 			}
 			return true;
@@ -225,22 +225,23 @@ public final class UdpRelayServer {
 		
 		private boolean canAllow(
 				final String sourceAddress, final String destinationAddress) {
-			Rule outboundRule = this.outboundRules.anyAppliesTo(
-					sourceAddress, destinationAddress);
-			if (outboundRule == null) {
-				LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
-						"Source address %s to destination address %s not allowed",
-						sourceAddress,
-						destinationAddress)));
+			Rule outboundRule = null; 
+			try {
+				outboundRule = this.outboundRules.anyAppliesTo(
+						sourceAddress, destinationAddress);
+			} catch (IllegalArgumentException e) {
+				LOGGER.error(
+						LoggerHelper.objectMessage(this, String.format(
+								"Error regarding source address %s to "
+								+ "destination address %s",
+								sourceAddress,
+								destinationAddress)),
+						e);
 				return false;
 			}
-			if (outboundRule.getRuleAction().equals(RuleAction.DENY)) {
-				LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
-						"Source address %s to destination address %s denied "
-						+ "based on the following rule: %s",
-						sourceAddress,
-						destinationAddress,
-						outboundRule)));
+			try {
+				outboundRule.applyTo(sourceAddress, destinationAddress);
+			} catch (IllegalArgumentException e) {
 				return false;
 			}
 			return true;

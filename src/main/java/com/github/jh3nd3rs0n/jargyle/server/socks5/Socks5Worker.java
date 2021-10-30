@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.jh3nd3rs0n.jargyle.internal.logging.LoggerHelper;
-import com.github.jh3nd3rs0n.jargyle.server.RuleAction;
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
@@ -52,38 +51,45 @@ public final class Socks5Worker {
 			final String sourceAddress,	final Socks5Request socks5Req) {
 		Socks5RequestRules socks5RequestRules = this.settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_SOCKS5_REQUEST_RULES);
-		Socks5RequestRule socks5RequestRule = socks5RequestRules.anyAppliesTo(
-				sourceAddress, socks5Req);
-		if (socks5RequestRule == null) {
+		Socks5RequestRule socks5RequestRule = null;
+		try {
+			socks5RequestRule = socks5RequestRules.anyAppliesTo(
+					sourceAddress, socks5Req);
+		} catch (IllegalArgumentException e) {
+			LOGGER.error(
+					LoggerHelper.objectMessage(this, String.format(
+							"Error regarding SOCKS5 request from %s. "
+							+ "SOCKS5 request: %s",
+							sourceAddress,
+							socks5Req)),
+					e);
 			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
 					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
 			LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
-					"SOCKS5 request from %s not allowed. SOCKS5 request: %s",
-					sourceAddress,
-					socks5Req)));
+					"Sending %s",
+					socks5Rep.toString())));			
 			try {
 				this.socks5WorkerContext.writeThenFlush(
 						socks5Rep.toByteArray());
-			} catch (IOException e) {
+			} catch (IOException ex) {
 				LOGGER.error(
 						LoggerHelper.objectMessage(
 								this, "Error in writing SOCKS5 reply"), 
 						e);
 			}
-			return false;
+			return false;			
 		}
-		if (socks5RequestRule.getRuleAction().equals(RuleAction.DENY)) {
+		try {
+			socks5RequestRule.applyTo(sourceAddress, socks5Req);
+		} catch (IllegalArgumentException e) {
 			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
 					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
 			LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
-					"SOCKS5 request from %s denied based on the following "
-					+ "rule: %s. SOCKS5 request: %s",
-					sourceAddress,
-					socks5RequestRule,
-					socks5Req)));
+					"Sending %s",
+					socks5Rep.toString())));			
 			try {
 				this.socks5WorkerContext.writeThenFlush(socks5Rep.toByteArray());
-			} catch (IOException e) {
+			} catch (IOException ex) {
 				LOGGER.error( 
 						LoggerHelper.objectMessage(
 								this, "Error in writing SOCKS5 reply"), 

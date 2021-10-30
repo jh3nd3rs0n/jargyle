@@ -31,23 +31,36 @@ final class Worker implements Runnable {
 		this.totalWorkerCount = workerCount;
 		this.workerContextFactory = contextFactory;
 	}
+
+	private boolean canAllow(
+			final String sourceAddress, final String destinationAddress) {
+		Rule clientRule = null;
+		try {
+			clientRule = this.workerContextFactory.anyClientRuleApplicableTo(
+					sourceAddress, destinationAddress);
+		} catch (IllegalArgumentException e) {
+			LOGGER.error(
+					LoggerHelper.objectMessage(this, String.format(
+							"Error regarding source address %s to destination "
+							+ "address %s",
+							sourceAddress,
+							destinationAddress)),
+					e);
+			return false;
+		}
+		try {
+			clientRule.applyTo(sourceAddress, destinationAddress);
+		} catch (IllegalArgumentException e) {
+			return false;
+		}
+		return true;
+	}
 	
 	private WorkerContext newWorkerContext(final Socket clientFacingSock) {
 		WorkerContext workerContext = null;
 		try {
 			workerContext = this.workerContextFactory.newWorkerContext(
 					clientFacingSock);
-		} catch (IllegalArgumentException e) {
-			LOGGER.debug(
-					LoggerHelper.objectMessage(
-							this, 
-							String.format(
-									"Source address %s to destination address "
-									+ "%s is denied or not allowed", 
-									clientFacingSock.getInetAddress().getHostAddress(),
-									clientFacingSock.getLocalAddress().getHostAddress())), 
-					e);
-			return null;
 		} catch (SocketException e) {
 			LOGGER.error(
 					LoggerHelper.objectMessage(
@@ -70,6 +83,11 @@ final class Worker implements Runnable {
 			LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
 					"Started. Total Worker count: %s",
 					this.totalWorkerCount.incrementAndGet())));
+			if (!this.canAllow(
+					this.clientFacingSocket.getInetAddress().getHostAddress(), 
+					this.clientFacingSocket.getLocalAddress().getHostAddress())) {
+				return;
+			}
 			WorkerContext workerContext = this.newWorkerContext(
 					this.clientFacingSocket);
 			if (workerContext == null) {

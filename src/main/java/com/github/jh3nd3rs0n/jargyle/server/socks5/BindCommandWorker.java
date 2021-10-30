@@ -14,7 +14,6 @@ import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
 import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.internal.logging.LoggerHelper;
-import com.github.jh3nd3rs0n.jargyle.server.RuleAction;
 import com.github.jh3nd3rs0n.jargyle.server.Rule;
 import com.github.jh3nd3rs0n.jargyle.server.Rules;
 import com.github.jh3nd3rs0n.jargyle.server.Settings;
@@ -53,13 +52,18 @@ final class BindCommandWorker extends CommandWorker {
 			final String sourceAddress, final String destinationAddress) {
 		Rules inboundRules = this.settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_BIND_INBOUND_RULES);
-		Rule inboundRule = inboundRules.anyAppliesTo(
-				sourceAddress, destinationAddress);
-		if (inboundRule == null) {
-			LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
-					"Source address %s to destination address %s not allowed",
-					sourceAddress,
-					destinationAddress)));
+		Rule inboundRule = null;
+		try {
+			inboundRule = inboundRules.anyAppliesTo(
+					sourceAddress, destinationAddress);
+		} catch (IllegalArgumentException e) {
+			LOGGER.error(
+					LoggerHelper.objectMessage(this, String.format(
+							"Error regarding source address %s to destination "
+							+ "address %s",
+							sourceAddress,
+							destinationAddress)),
+					e);
 			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
 					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
 			LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
@@ -68,21 +72,17 @@ final class BindCommandWorker extends CommandWorker {
 			try {
 				this.commandWorkerContext.writeThenFlush(
 						socks5Rep.toByteArray());
-			} catch (IOException e) {
+			} catch (IOException ex) {
 				LOGGER.error( 
 						LoggerHelper.objectMessage(
 								this, "Error in writing SOCKS5 reply"), 
-						e);
+						ex);
 			}
-			return false;
+			return false;			
 		}
-		if (inboundRule.getRuleAction().equals(RuleAction.DENY)) {
-			LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
-					"Source address %s to destination address %s denied based "
-					+ "on the following rule: %s",
-					sourceAddress,
-					destinationAddress,
-					inboundRule)));
+		try {
+			inboundRule.applyTo(sourceAddress, destinationAddress);
+		} catch (IllegalArgumentException e) {
 			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
 					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
 			LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
@@ -91,13 +91,13 @@ final class BindCommandWorker extends CommandWorker {
 			try {
 				this.commandWorkerContext.writeThenFlush(
 						socks5Rep.toByteArray());
-			} catch (IOException e) {
+			} catch (IOException ex) {
 				LOGGER.error( 
 						LoggerHelper.objectMessage(
 								this, "Error in writing SOCKS5 reply"), 
-						e);
+						ex);
 			}
-			return false;
+			return false;			
 		}
 		return true;
 	}

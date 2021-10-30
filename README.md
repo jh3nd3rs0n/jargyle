@@ -13,8 +13,8 @@ Jargyle is a Java SOCKS5 server. It has the following features:
 -   [DTLS for UDP traffic through SOCKS server chaining](#5-12-2-using-dtls-for-udp-traffic-through-socks-server-chaining)
 -   [Host name resolution through SOCKS5 server chaining](#5-12-3-using-host-name-resolution-through-socks5-server-chaining)
 -   [SOCKS server chaining to a specified chain of other SOCKS servers](#5-13-chaining-to-a-specified-chain-of-other-socks-servers)
--   [Firewall rules](#5-14-firewall-rules)
--   [Firewall rules for SOCKS5 requests](#5-15-firewall-rules-for-socks5-requests)
+-   [Firewall rules](#5-14-using-firewall-rules)
+-   [Firewall rules for SOCKS5 requests](#5-15-using-firewall-rules-for-socks5-requests)
 
 Although Jargyle can act as a standalone SOCKS5 server, it can act as a bridge between the following:
 
@@ -56,8 +56,8 @@ Although Jargyle can act as a standalone SOCKS5 server, it can act as a bridge b
 -   [5. 12. 4. 2. Using Username Password Authentication](#5-12-4-2-using-username-password-authentication)
 -   [5. 12. 4. 3. Using GSS-API Authentication](#5-12-4-3-using-gss-api-authentication)
 -   [5. 13. Chaining to a Specified Chain of Other SOCKS Servers](#5-13-chaining-to-a-specified-chain-of-other-socks-servers)
--   [5. 14. Firewall Rules](#5-14-firewall-rules)
--   [5. 15. Firewall Rules for SOCKS5 Requests](#5-15-firewall-rules-for-socks5-requests)
+-   [5. 14. Using Firewall Rules](#5-14-using-firewall-rules)
+-   [5. 15. Using Firewall Rules for SOCKS5 Requests](#5-15-using-firewall-rules-for-socks5-requests)
 -   [6. Miscellaneous Notes](#6-miscellaneous-notes)
 -   [6. 1. The Doc XML Element](#6-1-the-doc-xml-element)
 -   [6. 2. Multiple Settings of the Same Name](#6-2-multiple-settings-of-the-same-name)
@@ -1831,7 +1831,7 @@ The known limitations of Jargyle chained to a specified chain of other SOCKS ser
 
 -   Only TCP traffic can be routed through the chain. Jargyle will attempt to route any UDP traffic through the last SOCKS server of the chain.
 
-### 5. 14. Firewall Rules
+### 5. 14. Using Firewall Rules
 
 You can specify firewall rules for the following traffic types:
 
@@ -1896,6 +1896,7 @@ The `<rule/>` XML element has the following nested XML elements:
 -   `<action/>` : Specifies the action to take. Value can be either of the following: `ALLOW`, `DENY`. This XML element is required.
 -   `<sourceAddressRange/>` : Specifies the address range for the source address. This XML element is optional.
 -   `<destinationAddressRange/>` : Specifies the address range for the destination address. This XML element is optional.
+-   `<logAction/>` : Specifies the logging action to take if the rule applies. Value can be either of the following: `LOG_AS_WARNING`, `LOG_AS_INFO`. This XML element is optional.
 -   `<doc/>` : Documentation for the `<rule/>` XML element. This XML element is optional.
 
 Address ranges in the `<sourceAddressRange/>` XML element and the `<destinationAddressRange/>` XML element can be specified in the following formats:
@@ -1904,7 +1905,7 @@ Address ranges in the `<sourceAddressRange/>` XML element and the `<destinationA
 -   `ADDRESS1-ADDRESS2` : Range is limited to addresses between the address expressed in `ADDRESS1` (inclusive) and the address expressed in `ADDRESS2` (inclusive)
 -   `regex:REGULAR_EXPRESSION` : Range is limited to domain names that match the regular expression expressed in `REGULAR_EXPRESSION`
 
-### 5. 15. Firewall Rules for SOCKS5 Requests
+### 5. 15. Using Firewall Rules for SOCKS5 Requests
 
 You can specify firewall rules for SOCKS5 requests in the following setting in the configuration file:
 
@@ -1953,6 +1954,7 @@ The `<socks5RequestRule/>` XML element has the following nested XML elements:
 -   `<command/>` : Specifies the command type of the SOCKS5 request. Value can be any of the following: `CONNECT`, `BIND`, `UDP_ASSOCIATE`, `RESOLVE`
 -   `<desiredDestinationAddressRange/>` : Specifies the address range for the desired destination address of the SOCKS5 request. This XML element is optional.
 -   `<desiredDestinationPortRange>` : Specifies the port range for the desired destination port of the SOCKS5 request.
+-   `<logAction/>` : Specifies the logging action to take if the rule applies. Value can be either of the following: `LOG_AS_WARNING`, `LOG_AS_INFO`. This XML element is optional.
 -   `<doc/>` : Documentation for the `<socks5RequestRule/>` XML element. This XML element is optional.
 
 Address ranges in the `<sourceAddressRange/>` XML element and the `<desiredDestinationAddressRange/>` XML element can be specified in the following formats:

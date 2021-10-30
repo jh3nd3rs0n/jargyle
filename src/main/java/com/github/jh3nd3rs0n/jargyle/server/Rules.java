@@ -35,7 +35,11 @@ public final class Rules {
 				return rule;
 			}
 		}
-		return null;
+		throw new IllegalArgumentException(String.format(
+				"source address %s to destination address %s does not apply to "
+				+ "any rule",
+				sourceAddress,
+				destinationAddress));
 	}
 	
 	@Override

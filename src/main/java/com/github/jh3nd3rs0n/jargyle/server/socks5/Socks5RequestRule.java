@@ -5,6 +5,7 @@ import java.util.Objects;
 import com.github.jh3nd3rs0n.jargyle.common.net.AddressRange;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.common.net.PortRange;
+import com.github.jh3nd3rs0n.jargyle.server.LogAction;
 import com.github.jh3nd3rs0n.jargyle.server.RuleAction;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Command;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Request;
@@ -18,6 +19,7 @@ public final class Socks5RequestRule {
 		private Command command;
 		private AddressRange desiredDestinationAddressRange;
 		private PortRange desiredDestinationPortRange;
+		private LogAction logAction;
 		private String doc;		
 		
 		public Builder(final RuleAction rlAction) {
@@ -27,6 +29,7 @@ public final class Socks5RequestRule {
 			this.command = null;
 			this.desiredDestinationAddressRange = null;
 			this.desiredDestinationPortRange = null;
+			this.logAction = null;
 			this.doc = null;			
 		}
 		
@@ -56,6 +59,11 @@ public final class Socks5RequestRule {
 			return this;
 		}
 		
+		public Builder logAction(final LogAction lgAction) {
+			this.logAction = lgAction;
+			return this;
+		}
+		
 		public Builder sourceAddressRange(
 				final AddressRange sourceAddrRange) {
 			this.sourceAddressRange = sourceAddrRange;
@@ -76,6 +84,7 @@ public final class Socks5RequestRule {
 	private final Command command;
 	private final AddressRange desiredDestinationAddressRange;
 	private final PortRange desiredDestinationPortRange;
+	private final LogAction logAction;
 	private final String doc;
 	
 	private Socks5RequestRule(final Builder builder) {
@@ -86,12 +95,14 @@ public final class Socks5RequestRule {
 				builder.desiredDestinationAddressRange;
 		PortRange desiredDestinationPrtRange = 
 				builder.desiredDestinationPortRange;
+		LogAction lgAction = builder.logAction;
 		String d = builder.doc;
 		this.ruleAction = rlAction;
 		this.sourceAddressRange = sourceAddrRange;
 		this.command = cmd;
 		this.desiredDestinationAddressRange = desiredDestinationAddrRange;
 		this.desiredDestinationPortRange = desiredDestinationPrtRange;
+		this.logAction = lgAction;
 		this.doc = d;		
 	}
 	
@@ -118,6 +129,34 @@ public final class Socks5RequestRule {
 		return true;
 	}
 
+	public void applyTo(
+			final String sourceAddress,	final Socks5Request socks5Req) {
+		if (this.ruleAction.equals(RuleAction.ALLOW)
+				&& this.logAction != null) {
+			this.logAction.log(String.format(
+					"SOCKS5 request from %s is allowed based on the "
+					+ "following rule: %s. SOCKS5 request: %s",
+					sourceAddress,
+					this,
+					socks5Req));			
+		} else if (this.ruleAction.equals(RuleAction.DENY)) {
+			if (this.logAction != null) {
+				this.logAction.log(String.format(
+						"SOCKS5 request from %s is denied based on the "
+						+ "following rule: %s. SOCKS5 request: %s",
+						sourceAddress,
+						this,
+						socks5Req));				
+			}
+			throw new IllegalArgumentException(String.format(
+					"SOCKS5 request from %s is denied based on the "
+					+ "following rule: %s. SOCKS5 request: %s",
+					sourceAddress,
+					this,
+					socks5Req));
+		}
+	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -182,6 +221,10 @@ public final class Socks5RequestRule {
 	public String getDoc() {
 		return this.doc;
 	}
+
+	public LogAction getLogAction() {
+		return this.logAction;
+	}
 	
 	public RuleAction getRuleAction() {
 		return this.ruleAction;
@@ -224,6 +267,8 @@ public final class Socks5RequestRule {
 			.append(this.desiredDestinationAddressRange)
 			.append(", desiredDestinationPortRange=")
 			.append(this.desiredDestinationPortRange)
+			.append(", logAction=")
+			.append(this.logAction)
 			.append("]");
 		return builder.toString();
 	}

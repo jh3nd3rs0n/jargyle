@@ -1,6 +1,7 @@
 package com.github.jh3nd3rs0n.jargyle.server.config.xml.bind;
 
 import com.github.jh3nd3rs0n.jargyle.common.net.AddressRange;
+import com.github.jh3nd3rs0n.jargyle.server.LogAction;
 import com.github.jh3nd3rs0n.jargyle.server.Rule;
 import com.github.jh3nd3rs0n.jargyle.server.RuleAction;
 
@@ -18,7 +19,9 @@ class RuleXml {
 	@XmlElement(name = "sourceAddressRange")
 	protected String sourceAddressRange;
 	@XmlElement(name = "destinationAddressRange")
-	protected String destinationAddressRange;	
+	protected String destinationAddressRange;
+	@XmlElement(name = "logAction")
+	protected String logAction;
 	@XmlElement(name = "doc")
 	protected String doc;
 
@@ -26,17 +29,20 @@ class RuleXml {
 		this.ruleAction = null;
 		this.sourceAddressRange = null;
 		this.destinationAddressRange = null;
+		this.logAction = null;
 		this.doc = null;
 	}
 	
 	public RuleXml(final Rule rule) {
 		AddressRange sourceAddrRange = rule.getSourceAddressRange();
 		AddressRange destinationAddrRange = rule.getDestinationAddressRange();
+		LogAction lgAction = rule.getLogAction();
 		this.ruleAction = rule.getRuleAction().toString();
 		this.sourceAddressRange = (sourceAddrRange != null) ?
 				sourceAddrRange.toString() : null;
 		this.destinationAddressRange = (destinationAddrRange != null) ?
 				destinationAddrRange.toString() : null;
+		this.logAction = (lgAction != null) ? lgAction.toString() : null;
 		this.doc = rule.getDoc();
 	}
 	
@@ -50,6 +56,9 @@ class RuleXml {
 		if (this.destinationAddressRange != null) {
 			builder.destinationAddressRange(AddressRange.newInstance(
 					this.destinationAddressRange));
+		}
+		if (this.logAction != null) {
+			builder.logAction(LogAction.valueOfString(this.logAction));
 		}
 		if (this.doc != null) {
 			builder.doc(this.doc);

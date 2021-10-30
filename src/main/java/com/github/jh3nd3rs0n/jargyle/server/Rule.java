@@ -11,6 +11,7 @@ public final class Rule {
 		private final RuleAction ruleAction;
 		private AddressRange sourceAddressRange;
 		private AddressRange destinationAddressRange;
+		private LogAction logAction;
 		private String doc;
 		
 		public Builder(final RuleAction rlAction) {
@@ -18,6 +19,7 @@ public final class Rule {
 					rlAction, "rule action must not be null");
 			this.sourceAddressRange = null;
 			this.destinationAddressRange = null;
+			this.logAction = null;
 			this.doc = null;
 		}
 		
@@ -33,6 +35,11 @@ public final class Rule {
 		
 		public Builder doc(final String d) {
 			this.doc = d;
+			return this;
+		}
+		
+		public Builder logAction(final LogAction lgAction) {
+			this.logAction = lgAction;
 			return this;
 		}
 		
@@ -53,16 +60,19 @@ public final class Rule {
 	private final RuleAction ruleAction;
 	private final AddressRange sourceAddressRange;
 	private final AddressRange destinationAddressRange;
+	private final LogAction logAction;
 	private final String doc;
 	
 	private Rule(final Builder builder) {
 		RuleAction rlAction = builder.ruleAction;
 		AddressRange sourceAddrRange = builder.sourceAddressRange;
 		AddressRange destinationAddrRange = builder.destinationAddressRange;
+		LogAction lgAction = builder.logAction;
 		String d = builder.doc;
+		this.ruleAction = rlAction;
 		this.sourceAddressRange = sourceAddrRange;
 		this.destinationAddressRange = destinationAddrRange;
-		this.ruleAction = rlAction;
+		this.logAction = lgAction;
 		this.doc = d;		
 	}
 
@@ -77,6 +87,34 @@ public final class Rule {
 			return false;
 		}
 		return true;
+	}
+	
+	public void applyTo(
+			final String sourceAddress, final String destinationAddress) {
+		if (this.ruleAction.equals(RuleAction.ALLOW) 
+				&& this.logAction != null) {
+			this.logAction.log(String.format(
+					"Source address %s to destination address %s is allowed "
+					+ "based on the following rule: %s", 
+					sourceAddress,
+					destinationAddress,
+					this));
+		} else if (this.ruleAction.equals(RuleAction.DENY)) {
+			if (this.logAction != null) {
+				this.logAction.log(String.format(
+						"Source address %s to destination address %s is denied "
+						+ "based on the following rule: %s", 
+						sourceAddress,
+						destinationAddress,
+						this));				
+			}
+			throw new IllegalArgumentException(String.format(
+					"source address %s to destination address %s is denied "
+					+ "based on the following rule: %s", 
+					sourceAddress,
+					destinationAddress,
+					this));
+		}		
 	}
 	
 	@Override
@@ -121,6 +159,10 @@ public final class Rule {
 		return this.doc;
 	}
 
+	public LogAction getLogAction() {
+		return this.logAction;
+	}
+	
 	public RuleAction getRuleAction() {
 		return this.ruleAction;
 	}
@@ -141,7 +183,7 @@ public final class Rule {
 				0 : this.sourceAddressRange.hashCode());
 		return result;
 	}
-
+	
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -152,6 +194,8 @@ public final class Rule {
 			.append(this.sourceAddressRange)
 			.append(", destinationAddressRange=")
 			.append(this.destinationAddressRange)
+			.append(", logAction=")
+			.append(this.logAction)
 			.append("]");
 		return builder.toString();
 	}

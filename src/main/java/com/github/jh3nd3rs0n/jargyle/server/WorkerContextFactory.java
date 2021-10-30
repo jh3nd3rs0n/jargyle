@@ -25,31 +25,15 @@ final class WorkerContextFactory {
 		this.netObjectFactory = null;
 	}
 
-	private void checkIfAllowed(
-			final String sourceAddress, 
-			final String destinationAddress, 
-			final Configuration config) {
+	public Rule anyClientRuleApplicableTo(
+			final String sourceAddress, final String destinationAddress) {
+		Configuration config = this.newConfiguration();
 		Settings settings = config.getSettings();
 		Rules clientRules = settings.getLastValue(
 				GeneralSettingSpecConstants.CLIENT_RULES);
-		Rule clientRule = clientRules.anyAppliesTo(
-				sourceAddress, destinationAddress);
-		if (clientRule == null) {
-			throw new IllegalArgumentException(String.format(
-					"source address %s to destination address %s not allowed",
-					sourceAddress,
-					destinationAddress));
-		}
-		if (clientRule.getRuleAction().equals(RuleAction.DENY)) {
-			throw new IllegalArgumentException(String.format(
-					"source address %s to destination address %s denied based "
-					+ "on the following rule: %s",
-					sourceAddress,
-					destinationAddress,
-					clientRule));
-		}
+		return clientRules.anyAppliesTo(sourceAddress, destinationAddress);
 	}
-
+	
 	private void configureClientFacingSocket(
 			final Socket clientFacingSock,
 			final Configuration config) throws SocketException {
@@ -81,10 +65,6 @@ final class WorkerContextFactory {
 			final Socket clientFacingSocket) throws IOException {
 		Configuration config = this.newConfiguration();
 		Socket clientFacingSock = clientFacingSocket;
-		this.checkIfAllowed(
-				clientFacingSock.getInetAddress().getHostAddress(), 
-				clientFacingSock.getLocalAddress().getHostAddress(),
-				config);
 		this.configureClientFacingSocket(clientFacingSock, config);
 		clientFacingSock = this.wrapClientFacingSocket(clientFacingSock);
 		return new WorkerContext(

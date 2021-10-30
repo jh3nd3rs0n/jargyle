@@ -108,7 +108,7 @@ public final class Rule {
 						destinationAddress,
 						this));				
 			}
-			throw new IllegalArgumentException(String.format(
+			throw new RuleActionDenyException(String.format(
 					"source address %s to destination address %s is denied "
 					+ "based on the following rule: %s", 
 					sourceAddress,

@@ -10,7 +10,7 @@ import com.github.jh3nd3rs0n.jargyle.common.net.ssl.DtlsDatagramSocketFactory;
 import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.SslSocketFactory;
 
 final class WorkerContextFactory {
-
+	
 	private DtlsDatagramSocketFactory clientFacingDtlsDatagramSocketFactory;
 	private SslSocketFactory clientFacingSslSocketFactory;
 	private final Configuration configuration;
@@ -24,14 +24,19 @@ final class WorkerContextFactory {
 		this.lastConfiguration = null;		
 		this.netObjectFactory = null;
 	}
-
-	public Rule anyClientRuleApplicableTo(
-			final String sourceAddress, final String destinationAddress) {
-		Configuration config = this.newConfiguration();
+	
+	private void checkIfClientFacingSocketAllowed(
+			final Socket clientFacingSock, final Configuration config) {
 		Settings settings = config.getSettings();
 		Rules clientRules = settings.getLastValue(
 				GeneralSettingSpecConstants.CLIENT_RULES);
-		return clientRules.anyAppliesTo(sourceAddress, destinationAddress);
+		String sourceAddress = 
+				clientFacingSock.getInetAddress().getHostAddress();
+		String destinationAddress =
+				clientFacingSock.getLocalAddress().getHostAddress();
+		Rule clientRule = clientRules.anyAppliesTo(
+				sourceAddress, destinationAddress);
+		clientRule.applyTo(sourceAddress, destinationAddress);
 	}
 	
 	private void configureClientFacingSocket(
@@ -65,6 +70,7 @@ final class WorkerContextFactory {
 			final Socket clientFacingSocket) throws IOException {
 		Configuration config = this.newConfiguration();
 		Socket clientFacingSock = clientFacingSocket;
+		this.checkIfClientFacingSocketAllowed(clientFacingSock, config);
 		this.configureClientFacingSocket(clientFacingSock, config);
 		clientFacingSock = this.wrapClientFacingSocket(clientFacingSock);
 		return new WorkerContext(

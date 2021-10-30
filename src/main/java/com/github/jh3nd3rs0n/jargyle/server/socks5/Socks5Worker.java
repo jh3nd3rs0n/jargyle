@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import com.github.jh3nd3rs0n.jargyle.internal.logging.LoggerHelper;
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
+import com.github.jh3nd3rs0n.jargyle.server.RuleActionDenyException;
 import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.WorkerContext;
@@ -81,7 +82,7 @@ public final class Socks5Worker {
 		}
 		try {
 			socks5RequestRule.applyTo(sourceAddress, socks5Req);
-		} catch (IllegalArgumentException e) {
+		} catch (RuleActionDenyException e) {
 			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
 					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
 			LOGGER.debug(LoggerHelper.objectMessage(this, String.format(

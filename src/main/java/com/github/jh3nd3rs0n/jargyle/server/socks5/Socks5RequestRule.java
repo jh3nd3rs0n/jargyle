@@ -7,6 +7,7 @@ import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.common.net.PortRange;
 import com.github.jh3nd3rs0n.jargyle.server.LogAction;
 import com.github.jh3nd3rs0n.jargyle.server.RuleAction;
+import com.github.jh3nd3rs0n.jargyle.server.RuleActionDenyException;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Command;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Request;
 
@@ -148,7 +149,7 @@ public final class Socks5RequestRule {
 						this,
 						socks5Req));				
 			}
-			throw new IllegalArgumentException(String.format(
+			throw new RuleActionDenyException(String.format(
 					"SOCKS5 request from %s is denied based on the "
 					+ "following rule: %s. SOCKS5 request: %s",
 					sourceAddress,

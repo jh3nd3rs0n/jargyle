@@ -15,6 +15,7 @@ import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.internal.logging.LoggerHelper;
 import com.github.jh3nd3rs0n.jargyle.server.Rule;
+import com.github.jh3nd3rs0n.jargyle.server.RuleActionDenyException;
 import com.github.jh3nd3rs0n.jargyle.server.Rules;
 import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
@@ -82,7 +83,7 @@ final class BindCommandWorker extends CommandWorker {
 		}
 		try {
 			inboundRule.applyTo(sourceAddress, destinationAddress);
-		} catch (IllegalArgumentException e) {
+		} catch (RuleActionDenyException e) {
 			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
 					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
 			LOGGER.debug(LoggerHelper.objectMessage(this, String.format(

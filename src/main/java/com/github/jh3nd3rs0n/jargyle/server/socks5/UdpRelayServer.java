@@ -17,6 +17,7 @@ import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.internal.logging.LoggerHelper;
 import com.github.jh3nd3rs0n.jargyle.server.Rule;
+import com.github.jh3nd3rs0n.jargyle.server.RuleActionDenyException;
 import com.github.jh3nd3rs0n.jargyle.server.Rules;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.UdpRequestHeader;
 
@@ -97,7 +98,7 @@ public final class UdpRelayServer {
 			}
 			try {
 				inboundRule.applyTo(sourceAddress, destinationAddress);
-			} catch (IllegalArgumentException e) {
+			} catch (RuleActionDenyException e) {
 				return false;
 			}
 			return true;
@@ -241,7 +242,7 @@ public final class UdpRelayServer {
 			}
 			try {
 				outboundRule.applyTo(sourceAddress, destinationAddress);
-			} catch (IllegalArgumentException e) {
+			} catch (RuleActionDenyException e) {
 				return false;
 			}
 			return true;

@@ -177,7 +177,7 @@ public final class UdpRelayServer {
 							packet.getLength())));
 					if (!this.canAllow(
 							packet.getAddress().getHostAddress(),
-							this.clientAddress)) {
+							this.serverFacingDatagramSocket.getLocalAddress().getHostAddress())) {
 						continue;
 					}
 					UdpRequestHeader header = this.newUdpRequestHeader(packet);
@@ -381,7 +381,7 @@ public final class UdpRelayServer {
 						continue;
 					}
 					if (!this.canAllow(
-							this.clientAddress,
+							this.serverFacingDatagramSocket.getLocalAddress().getHostAddress(),
 							header.getDesiredDestinationAddress())) {
 						continue;
 					}

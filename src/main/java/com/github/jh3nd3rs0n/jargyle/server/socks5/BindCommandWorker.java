@@ -228,7 +228,7 @@ final class BindCommandWorker extends CommandWorker {
 					inboundSocket.getInetAddress().getHostAddress();
 			if (!this.canAllow(
 					inboundAddress, 
-					this.clientFacingSocket.getInetAddress().getHostAddress())) {
+					inboundSocket.getLocalAddress().getHostAddress())) {
 				return;
 			}
 			serverBoundAddress = inboundAddress;

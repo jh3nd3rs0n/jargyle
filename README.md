@@ -1833,19 +1833,19 @@ The known limitations of Jargyle chained to a specified chain of other SOCKS ser
 
 ### 5. 14. Using Firewall Rules
 
-You can specify firewall rules for the following traffic types:
+You can specify firewall rules for the following types of traffic:
 
--   Inbound TCP traffic from the client to the SOCKS server
--   Inbound TCP traffic to the client
--   Inbound UDP traffic to the client
--   Outbound UDP traffic from the client
+-   TCP traffic from a client to the SOCKS server
+-   TCP traffic from an inbound socket to the SOCKS server
+-   UDP traffic from a UDP server to the UDP relay server
+-   UDP traffic from the UDP relay server to a UDP server
 
-You can specify rules for a particular traffic type in any of the following settings in the configuration file:
+You can specify rules for a particular type of traffic in any of the following settings in the configuration file:
 
--   `clientRules` : Rules for inbound TCP traffic from the client to the SOCKS server
--   `socks5.onBind.inboundRules` : Rules for inbound TCP traffic to the client
--   `socks5.onUdpAssociate.inboundRules` : Rules for inbound UDP traffic to the client
--   `socks5.onUdpAssociate.outboundRules` : Rules for outbound UDP traffic from the client
+-   `clientRules` : Rules for TCP traffic from a client to the SOCKS server
+-   `socks5.onBind.inboundRules` : Rules for TCP traffic from an inbound socket to the SOCKS server
+-   `socks5.onUdpAssociate.inboundRules` : Rules for UDP traffic from a UDP server to the UDP relay server
+-   `socks5.onUdpAssociate.outboundRules` : Rules for UDP traffic from the UDP relay server to a UDP server
 
 You can specify the rules in any of the aforementioned settings as a `<rules/>` XML element containing a sequence of `<rule/>` XML elements.
 

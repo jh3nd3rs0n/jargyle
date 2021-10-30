@@ -59,9 +59,9 @@ Although Jargyle can act as a standalone SOCKS5 server, it can act as a bridge b
 -   [5. 14. Using Firewall Rules](#5-14-using-firewall-rules)
 -   [5. 15. Using Firewall Rules for SOCKS5 Requests](#5-15-using-firewall-rules-for-socks5-requests)
 -   [6. Miscellaneous Notes](#6-miscellaneous-notes)
--   [6. 1. The Doc XML Element](#6-1-the-doc-xml-element)
--   [6. 2. Multiple Settings of the Same Name](#6-2-multiple-settings-of-the-same-name)
--   [6. 3. The SOCKS5 RESOLVE Command](#6-3-the-socks5-resolve-command)
+-   [6. 1. Multiple Settings of the Same Name](#6-1-multiple-settings-of-the-same-name)
+-   [6. 2. The SOCKS5 RESOLVE Command](#6-2-the-socks5-resolve-command)
+-   [6. 3. The Doc XML Element](#6-3-the-doc-xml-element)
 -   [7. Contact](#7-contact)
 
 ## 1. Requirements
@@ -705,7 +705,7 @@ The following command combines the two earlier configuration files into one:
     
 ```
 
-Although the redundant settings in the combined configuration file are unnecessary, the result configuration file is for demonstration purposes only. (See [Multiple Settings of the Same Name](#6-2-multiple-settings-of-the-same-name) for more information.)
+Although the redundant settings in the combined configuration file are unnecessary, the result configuration file is for demonstration purposes only. (See [Multiple Settings of the Same Name](#6-1-multiple-settings-of-the-same-name) for more information.)
 
 ### 5. 5. Running With a Configuration File
 
@@ -850,7 +850,7 @@ If you do not want to have the password appear in any script or in any part of t
 
 ### 5. 9. Using Host Name Resolution
 
-Jargyle can be used to resolve host names. For a client to request Jargyle to resolve a host name, it must use [the SOCKS5 RESOLVE command](#6-3-the-socks5-resolve-command).
+Jargyle can be used to resolve host names. For a client to request Jargyle to resolve a host name, it must use [the SOCKS5 RESOLVE command](#6-2-the-socks5-resolve-command).
 
 ### 5. 10. Managing SOCKS5 Users (for Username Password Authentication)
 
@@ -1460,7 +1460,7 @@ Jargyle uses sockets to interact with the external world.
 -   Under the BIND command, it uses a socket that listens for an inbound socket. In this documentation, this socket is called the listen socket.
 -   Under the UDP ASSOCIATE command, it uses a UDP socket that sends and receives datagram packets to and from server UDP sockets. In this documentation, this UDP socket is called the server-facing UDP socket.
 
-Jargyle also uses a host resolver to resolve host names for the aforementioned sockets and for [the RESOLVE command](#6-3-the-socks5-resolve-command).
+Jargyle also uses a host resolver to resolve host names for the aforementioned sockets and for [the RESOLVE command](#6-2-the-socks5-resolve-command).
 
 When Jargyle is chained to another SOCKS5 server, the aforementioned sockets that Jargyle uses become SOCKS5-enabled, meaning that their traffic is routed through the other SOCKS5 server.
 
@@ -1972,20 +1972,11 @@ The port range in the `<desiredDestinationPortRange/>` XML element can be specif
 
 The following are miscellaneous notes regarding Jargyle.
 
-### 6. 1. The Doc XML Element
-
-When using an existing configuration file to create a new configuration file, any XML comments from the existing configuration file cannot be transferred to the new configuration file. To preserve XML comments from one configuration file to the next configuration file, the `<doc/>` XML element can be used in the following XML elements:
-
--   `<rule/>`
--   `<setting/>`
--   `<socketSetting/>`
--   `<socks5RequestRule/>`
-
-### 6. 2. Multiple Settings of the Same Name
+### 6. 1. Multiple Settings of the Same Name
 
 Unless otherwise stated, if a setting of the same name appears more than once on the command line or in the configuration file, then only the last setting of the same name is recognized. 
 
-### 6. 3. The SOCKS5 RESOLVE Command
+### 6. 2. The SOCKS5 RESOLVE Command
 
 The SOCKS5 RESOLVE command specifies the type of SOCKS5 request sent by the client for the server to perform: to resolve the provided host name and reply with the resolved IPv4 or IPv6 address. At the time of this writing, the SOCKS5 RESOLVE command is an additional SOCKS5 command made for Jargyle. It is not a part of the SOCKS5 protocol specification. 
 
@@ -1994,6 +1985,15 @@ The following is the specification for defining a SOCKS5 request with the RESOLV
 In a SOCKS request, the RESOLVE command is represented as `X'04'` in the `CMD` field.  In the SOCKS request, the `ATYP` field SHOULD be `X'03'` (DOMAINNAME) and the `DST.ADDR` field SHOULD be a fully-qualified domain name with the first octet containing the number of octets of the name that follows. The `DST.PORT` field in the SOCKS request can be of any value in network octet order (`X'0000'` to `X'FFFF'` inclusive).
 
 In reply to a SOCKS request with the RESOLVE command, the `ATYP` field in the reply MUST be of any value other than `X'03'` (DOMAINNAME) and the `BND.ADDR` field in the reply MUST be the resolved address of the `DST.ADDR` field of the SOCKS request. The `BND.PORT` field in the reply can be of any value in network octet order (`X'0000'` to `X'FFFF'` inclusive). If the `ATYP` field and the `DST.ADDR` field of the SOCKS request is not a fully-qualified domain name, the `ATYP` field and the `BND.ADDR` field in the reply MUST be the same as the `ATYP` field and the `DST.ADDR` field of the SOCKS request. After the reply is sent, the connection between the client and the server is then closed.
+
+### 6. 3. The Doc XML Element
+
+When using an existing configuration file to create a new configuration file, any XML comments from the existing configuration file cannot be transferred to the new configuration file. To preserve XML comments from one configuration file to the next configuration file, the `<doc/>` XML element can be used in the following XML elements:
+
+-   `<rule/>`
+-   `<setting/>`
+-   `<socketSetting/>`
+-   `<socks5RequestRule/>`
 
 ## 7. Contact
 

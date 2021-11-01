@@ -321,14 +321,20 @@ public final class Rule {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("ruleAction=")
-			.append(this.ruleAction)
-			.append(" sourceAddressRange=")
-			.append(this.sourceAddressRange)
-			.append(" destinationAddressRange=")
-			.append(this.destinationAddressRange)
-			.append(" logAction=")
-			.append(this.logAction);
+		builder.append("ruleAction=");
+		builder.append(this.ruleAction);
+		if (this.sourceAddressRange != null) {
+			builder.append(" sourceAddressRange=");
+			builder.append(this.sourceAddressRange);
+		}
+		if (this.destinationAddressRange != null) {
+			builder.append(" destinationAddressRange=");
+			builder.append(this.destinationAddressRange);
+		}
+		if (this.logAction != null) {
+			builder.append(" logAction=");
+			builder.append(this.logAction);
+		}
 		return builder.toString();
 	}
 

@@ -421,18 +421,28 @@ public final class Socks5RequestRule {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("ruleAction=")
-			.append(this.ruleAction)
-			.append(" sourceAddressRange=")
-			.append(this.sourceAddressRange)
-			.append(" command=")
-			.append(this.command)
-			.append(" desiredDestinationAddressRange=")
-			.append(this.desiredDestinationAddressRange)
-			.append(" desiredDestinationPortRange=")
-			.append(this.desiredDestinationPortRange)
-			.append(" logAction=")
-			.append(this.logAction);
+		builder.append("ruleAction=");
+		builder.append(this.ruleAction);
+		if (this.sourceAddressRange != null) {
+			builder.append(" sourceAddressRange=");
+			builder.append(this.sourceAddressRange);			
+		}
+		if (this.command != null) {
+			builder.append(" command=");
+			builder.append(this.command);
+		}
+		if (this.desiredDestinationAddressRange != null) {
+			builder.append(" desiredDestinationAddressRange=");
+			builder.append(this.desiredDestinationAddressRange);			
+		}
+		if (this.desiredDestinationPortRange != null) {
+			builder.append(" desiredDestinationPortRange=");
+			builder.append(this.desiredDestinationPortRange);
+		}
+		if (this.logAction != null) {
+			builder.append(" logAction=");
+			builder.append(this.logAction);			
+		}
 		return builder.toString();
 	}
 

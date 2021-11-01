@@ -13,10 +13,31 @@ public final class Rule {
 
 	public static final class Builder {
 		
+		@HelpText(
+				doc = "Specifies the action to take. This field starts a new "
+						+ "rule.",
+				usage = "ruleAction=RULE_ACTION"
+		)
 		private final RuleAction ruleAction;
+		
+		@HelpText(
+				doc = "Specifies the address range for the source address",
+				usage = "sourceAddressRange=ADDRESS|ADDRESS1-ADDRESS2|regex:REGULAR_EXPRESSION"
+		)	
 		private AddressRange sourceAddressRange;
+		
+		@HelpText(
+				doc = "Specifies the address range for the destination address",
+				usage = "destinationAddressRange=ADDRESS|ADDRESS1-ADDRESS2|regex:REGULAR_EXPRESSION"
+		)	
 		private AddressRange destinationAddressRange;
+		
+		@HelpText(
+				doc = "Specifies the logging action to take if the rule applies",
+				usage = "logAction=LOG_ACTION"
+		)	
 		private LogAction logAction;
+		
 		private String doc;
 		
 		public Builder(final RuleAction rlAction) {
@@ -171,30 +192,10 @@ public final class Rule {
 		return DEFAULT_INSTANCE;
 	}
 	
-	@HelpText(
-			doc = "Specifies the action to take. This field starts a new rule.",
-			usage = "ruleAction=RULE_ACTION"
-	)
 	private final RuleAction ruleAction;
-	
-	@HelpText(
-			doc = "Specifies the address range for the source address",
-			usage = "sourceAddressRange=ADDRESS|ADDRESS1-ADDRESS2|regex:REGULAR_EXPRESSION"
-	)	
 	private final AddressRange sourceAddressRange;
-	
-	@HelpText(
-			doc = "Specifies the address range for the destination address",
-			usage = "destinationAddressRange=ADDRESS|ADDRESS1-ADDRESS2|regex:REGULAR_EXPRESSION"
-	)	
 	private final AddressRange destinationAddressRange;
-	
-	@HelpText(
-			doc = "Specifies the logging action to take if the rule applies",
-			usage = "logAction=LOG_ACTION"
-	)	
 	private final LogAction logAction;
-	
 	private final String doc;
 	
 	private Rule(final Builder builder) {

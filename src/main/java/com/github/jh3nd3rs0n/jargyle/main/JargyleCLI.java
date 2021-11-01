@@ -704,7 +704,7 @@ public final class JargyleCLI extends CLI {
 		System.out.println("RULE_ACTIONS:");
 		this.printHelpText(RuleAction.class);
 		System.out.println("RULE_FIELDS:");
-		this.printHelpText(Rule.class);
+		this.printHelpText(Rule.Builder.class);
 		System.out.println("SCHEMES:");
 		this.printHelpText(Scheme.class);
 		System.out.println("SOCKET_SETTINGS:");
@@ -716,7 +716,7 @@ public final class JargyleCLI extends CLI {
 		System.out.println("SOCKS5_METHODS:");
 		this.printHelpText(Method.class);
 		System.out.println("SOCKS5_REQUEST_RULE_FIELDS:");
-		this.printHelpText(Socks5RequestRule.class);		
+		this.printHelpText(Socks5RequestRule.Builder.class);		
 		throw new TerminationRequestedException(0);
 	}
 		

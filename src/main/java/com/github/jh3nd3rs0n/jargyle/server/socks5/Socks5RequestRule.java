@@ -19,13 +19,46 @@ import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Request;
 public final class Socks5RequestRule {
 
 	public static final class Builder {
-		
+
+		@HelpText(
+				doc = "Specifies the action to take. This field starts a new "
+						+ "SOCKS5 request rule.",
+				usage = "ruleAction=RULE_ACTION"
+		)	
 		private final RuleAction ruleAction;
+		
+		@HelpText(
+				doc = "Specifies the address range for the source address",
+				usage = "sourceAddressRange=ADDRESS|ADDRESS1-ADDRESS2|regex:REGULAR_EXPRESSION"
+		)	
 		private AddressRange sourceAddressRange;
+		
+		@HelpText(
+				doc = "Specifies the command type of the SOCKS5 request",
+				usage = "command=SOCKS5_COMMAND"
+		)
 		private Command command;
+		
+		@HelpText(
+				doc = "Specifies the address range for the desired destination "
+						+ "address of the SOCKS5 request",
+				usage = "desiredDestinationAddressRange=ADDRESS|ADDRESS1-ADDRESS2|regex:REGULAR_EXPRESSION"
+		)	
 		private AddressRange desiredDestinationAddressRange;
+		
+		@HelpText(
+				doc = "Specifies the port range for the desired destination port "
+						+ "of the SOCKS5 request",
+				usage = "desiredDestinationPortRange=PORT|PORT1-PORT2"
+		)	
 		private PortRange desiredDestinationPortRange;
+		
+		@HelpText(
+				doc = "Specifies the logging action to take if the rule applies",
+				usage = "logAction=LOG_ACTION"
+		)	
 		private LogAction logAction;
+		
 		private String doc;		
 		
 		public Builder(final RuleAction rlAction) {
@@ -211,45 +244,12 @@ public final class Socks5RequestRule {
 		return socks5RequestRules;
 	}
 	
-	@HelpText(
-			doc = "Specifies the action to take. This field starts a new "
-					+ "SOCKS5 request rule.",
-			usage = "ruleAction=RULE_ACTION"
-	)	
 	private final RuleAction ruleAction;
-	
-	@HelpText(
-			doc = "Specifies the address range for the source address",
-			usage = "sourceAddressRange=ADDRESS|ADDRESS1-ADDRESS2|regex:REGULAR_EXPRESSION"
-	)	
 	private final AddressRange sourceAddressRange;
-	
-	@HelpText(
-			doc = "Specifies the command type of the SOCKS5 request",
-			usage = "command=SOCKS5_COMMAND"
-	)
 	private final Command command;
-	
-	@HelpText(
-			doc = "Specifies the address range for the desired destination "
-					+ "address of the SOCKS5 request",
-			usage = "desiredDestinationAddressRange=ADDRESS|ADDRESS1-ADDRESS2|regex:REGULAR_EXPRESSION"
-	)	
 	private final AddressRange desiredDestinationAddressRange;
-	
-	@HelpText(
-			doc = "Specifies the port range for the desired destination port "
-					+ "of the SOCKS5 request",
-			usage = "desiredDestinationPortRange=PORT|PORT1-PORT2"
-	)	
 	private final PortRange desiredDestinationPortRange;
-	
-	@HelpText(
-			doc = "Specifies the logging action to take if the rule applies",
-			usage = "logAction=LOG_ACTION"
-	)	
 	private final LogAction logAction;
-	
 	private final String doc;
 	
 	private Socks5RequestRule(final Builder builder) {

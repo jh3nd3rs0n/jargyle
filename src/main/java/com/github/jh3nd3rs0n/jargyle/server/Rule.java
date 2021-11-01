@@ -1,8 +1,13 @@
 package com.github.jh3nd3rs0n.jargyle.server;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Objects;
 
 import com.github.jh3nd3rs0n.jargyle.common.net.AddressRange;
+import com.github.jh3nd3rs0n.jargyle.internal.help.HelpText;
 
 public final class Rule {
 
@@ -50,6 +55,115 @@ public final class Rule {
 		}
 	}
 	
+	private static enum Field {
+		
+		RULE_ACTION("ruleAction") {
+			@Override
+			public Builder set(final Builder builder, final String value) {
+				return new Rule.Builder(RuleAction.valueOfString(value));
+			}
+		},
+		
+		SOURCE_ADDRESS_RANGE("sourceAddressRange") {
+			@Override
+			public Builder set(final Builder builder, final String value) {
+				return builder.sourceAddressRange(AddressRange.newInstance(
+						value));
+			}
+		},
+		
+		DESTINATION_ADDRESS_RANGE("destinationAddressRange") {
+			@Override
+			public Builder set(final Builder builder, final String value) {
+				return builder.destinationAddressRange(AddressRange.newInstance(
+						value));
+			}
+		},
+		
+		LOG_ACTION("logAction") {
+			@Override
+			public Builder set(final Builder builder, final String value) {
+				return builder.logAction(LogAction.valueOfString(value));
+			}
+		};
+		
+		public static Field valueOfString(final String s) {
+			for (Field value : Field.values()) {
+				if (value.toString().equals(s)) {
+					return value;
+				}
+			}
+			StringBuilder sb = new StringBuilder();
+			List<Field> list = Arrays.asList(Field.values());
+			for (Iterator<Field> iterator = list.iterator(); 
+					iterator.hasNext();) {
+				Field value = iterator.next();
+				sb.append(value);
+				if (iterator.hasNext()) {
+					sb.append(", ");
+				}
+			}
+			throw new IllegalArgumentException(
+					String.format(
+							"expected field must be one of the following "
+							+ "values: %s. actual value is %s",
+							sb.toString(),
+							s));
+		}
+		
+		private final String string;
+		
+		private Field(final String str) {
+			this.string = str;
+		}
+		
+		public abstract Builder set(final Builder builder, final String value);
+		
+		@Override
+		public String toString() {
+			return this.string;
+		}
+		
+	}
+	
+	public static List<Rule> newInstances(final String s) {
+		List<Rule> rules = new ArrayList<Rule>();
+		String[] words = s.split(" ");
+		Builder recentBuilder = null;
+		Builder builder = null;
+		for (Iterator<String> iterator = Arrays.asList(words).iterator();
+				iterator.hasNext();) {
+			String word = iterator.next();
+			String[] wordElements = word.split("=", 2);
+			if (wordElements.length != 2) {
+				throw new IllegalArgumentException(String.format(
+						"field must be in the following format: "
+						+ "NAME=VALUE. actual value is %s",
+						word));
+			}
+			Field field = Field.valueOfString(wordElements[0]);
+			try {
+				builder = field.set(builder, wordElements[1]);
+			} catch (NullPointerException e) {
+				throw new IllegalArgumentException(String.format(
+						"expected field '%s'. actual value is %s", 
+						Field.RULE_ACTION,
+						word));				
+			}
+			if (recentBuilder == null) {
+				recentBuilder = builder;
+			}
+			if (!recentBuilder.equals(builder)) {
+				rules.add(recentBuilder.build());
+				recentBuilder = builder;
+			}
+			if (!iterator.hasNext()) {
+				rules.add(builder.build());
+			}
+		}
+		return rules;
+	}
+	
 	private static final Rule DEFAULT_INSTANCE = new Rule.Builder(
 			RuleAction.ALLOW).build();
 	
@@ -57,10 +171,30 @@ public final class Rule {
 		return DEFAULT_INSTANCE;
 	}
 	
+	@HelpText(
+			doc = "Specifies the action to take. This field starts a new rule.",
+			usage = "ruleAction=RULE_ACTION"
+	)
 	private final RuleAction ruleAction;
+	
+	@HelpText(
+			doc = "Specifies the address range for the source address",
+			usage = "sourceAddressRange=ADDRESS|ADDRESS1-ADDRESS2|regex:REGULAR_EXPRESSION"
+	)	
 	private final AddressRange sourceAddressRange;
+	
+	@HelpText(
+			doc = "Specifies the address range for the destination address",
+			usage = "destinationAddressRange=ADDRESS|ADDRESS1-ADDRESS2|regex:REGULAR_EXPRESSION"
+	)	
 	private final AddressRange destinationAddressRange;
+	
+	@HelpText(
+			doc = "Specifies the logging action to take if the rule applies",
+			usage = "logAction=LOG_ACTION"
+	)	
 	private final LogAction logAction;
+	
 	private final String doc;
 	
 	private Rule(final Builder builder) {
@@ -187,16 +321,14 @@ public final class Rule {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append(this.getClass().getSimpleName())
-			.append(" [ruleAction=")
+		builder.append("ruleAction=")
 			.append(this.ruleAction)
-			.append(", sourceAddressRange=")
+			.append(" sourceAddressRange=")
 			.append(this.sourceAddressRange)
-			.append(", destinationAddressRange=")
+			.append(" destinationAddressRange=")
 			.append(this.destinationAddressRange)
-			.append(", logAction=")
-			.append(this.logAction)
-			.append("]");
+			.append(" logAction=")
+			.append(this.logAction);
 		return builder.toString();
 	}
 

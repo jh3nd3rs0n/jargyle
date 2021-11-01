@@ -3,6 +3,7 @@ package com.github.jh3nd3rs0n.jargyle.server.socks5;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Request;
@@ -24,6 +25,10 @@ public final class Socks5RequestRules {
 	public static Socks5RequestRules newInstance(
 			final Socks5RequestRule... socks5ReqRules) {
 		return newInstance(Arrays.asList(socks5ReqRules));
+	}
+	
+	public static Socks5RequestRules newInstance(final String s) {
+		return newInstance(Socks5RequestRule.newInstances(s));
 	}
 	
 	private final List<Socks5RequestRule> socks5RequestRules;
@@ -86,10 +91,14 @@ public final class Socks5RequestRules {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append(this.getClass().getSimpleName())
-			.append(" [socks5RequestRules=")
-			.append(this.socks5RequestRules)
-			.append("]");
+		for (Iterator<Socks5RequestRule> iterator = this.socks5RequestRules.iterator();
+				iterator.hasNext();) {
+			Socks5RequestRule socks5RequestRule = iterator.next();
+			builder.append(socks5RequestRule);
+			if (iterator.hasNext()) {
+				builder.append(' ');
+			}
+		}
 		return builder.toString();
 	}
 

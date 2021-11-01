@@ -7,15 +7,32 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.github.jh3nd3rs0n.jargyle.common.number.impl.UnsignedByte;
+import com.github.jh3nd3rs0n.jargyle.internal.help.HelpText;
 
 public enum Command {
 	
+	@HelpText(
+			doc = "",
+			usage = "CONNECT"
+	)
 	CONNECT((byte) 0x01),
 	
+	@HelpText(
+			doc = "",
+			usage = "BIND"
+	)	
 	BIND((byte) 0x02),
 	
+	@HelpText(
+			doc = "",
+			usage = "UDP_ASSOCIATE"
+	)	
 	UDP_ASSOCIATE((byte) 0x03),
-
+	
+	@HelpText(
+			doc = "",
+			usage = "RESOLVE"
+	)
 	RESOLVE((byte) 0x04);
 	
 	public static Command valueOfByte(final byte b) {

@@ -14,7 +14,7 @@ import jakarta.xml.bind.annotation.XmlType;
 @XmlType(name = "rule", propOrder = { }) 
 class RuleXml {
 	
-	@XmlElement(name = "action", required = true)
+	@XmlElement(name = "ruleAction", required = true)
 	protected String ruleAction;
 	@XmlElement(name = "sourceAddressRange")
 	protected String sourceAddressRange;

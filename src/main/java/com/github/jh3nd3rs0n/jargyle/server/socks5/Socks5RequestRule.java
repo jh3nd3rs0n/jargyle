@@ -1,10 +1,15 @@
 package com.github.jh3nd3rs0n.jargyle.server.socks5;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Objects;
 
 import com.github.jh3nd3rs0n.jargyle.common.net.AddressRange;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.common.net.PortRange;
+import com.github.jh3nd3rs0n.jargyle.internal.help.HelpText;
 import com.github.jh3nd3rs0n.jargyle.server.LogAction;
 import com.github.jh3nd3rs0n.jargyle.server.RuleAction;
 import com.github.jh3nd3rs0n.jargyle.server.RuleActionDenyException;
@@ -73,6 +78,93 @@ public final class Socks5RequestRule {
 		
 	}
 
+	private static enum Field {
+		
+		RULE_ACTION("ruleAction") {
+			@Override
+			public Builder set(final Builder builder, final String value) {
+				return new Socks5RequestRule.Builder(RuleAction.valueOfString(
+						value));
+			}
+		},
+		
+		SOURCE_ADDRESS_RANGE("sourceAddressRange") {
+			@Override
+			public Builder set(final Builder builder, final String value) {
+				return builder.sourceAddressRange(AddressRange.newInstance(
+						value));
+			}
+		},
+		
+		COMMAND("command") {
+			@Override
+			public Builder set(final Builder builder, final String value) {
+				return builder.command(Command.valueOfString(value));
+			}
+		},
+		
+		DESIRED_DESTINATION_ADDRESS_RANGE("desiredDestinationAddressRange") {
+			@Override
+			public Builder set(final Builder builder, final String value) {
+				return builder.desiredDestinationAddressRange(
+						AddressRange.newInstance(value));
+			}
+		},
+		
+		DESIRED_DESTINATION_PORT_RANGE("desiredDestinationPortRange") {
+			@Override
+			public Builder set(final Builder builder, final String value) {
+				return builder.desiredDestinationPortRange(
+						PortRange.newInstance(value));
+			}
+		},
+		
+		LOG_ACTION("logAction") {
+			@Override
+			public Builder set(final Builder builder, final String value) {
+				return builder.logAction(LogAction.valueOfString(value));
+			}
+		};
+		
+		public static Field valueOfString(final String s) {
+			for (Field value : Field.values()) {
+				if (value.toString().equals(s)) {
+					return value;
+				}
+			}
+			StringBuilder sb = new StringBuilder();
+			List<Field> list = Arrays.asList(Field.values());
+			for (Iterator<Field> iterator = list.iterator(); 
+					iterator.hasNext();) {
+				Field value = iterator.next();
+				sb.append(value);
+				if (iterator.hasNext()) {
+					sb.append(", ");
+				}
+			}
+			throw new IllegalArgumentException(
+					String.format(
+							"expected field must be one of the following "
+							+ "values: %s. actual value is %s",
+							sb.toString(),
+							s));
+		}
+		
+		private final String string;
+		
+		private Field(final String str) {
+			this.string = str;
+		}
+		
+		public abstract Builder set(final Builder builder, final String value);
+		
+		@Override
+		public String toString() {
+			return this.string;
+		}
+		
+	}
+
 	private static final Socks5RequestRule DEFAULT_INSTANCE = 
 			new Socks5RequestRule.Builder(RuleAction.ALLOW).build();
 	
@@ -80,12 +172,84 @@ public final class Socks5RequestRule {
 		return DEFAULT_INSTANCE;
 	}
 	
+	public static List<Socks5RequestRule> newInstances(final String s) {
+		List<Socks5RequestRule> socks5RequestRules = 
+				new ArrayList<Socks5RequestRule>();
+		String[] words = s.split(" ");
+		Builder recentBuilder = null;
+		Builder builder = null;
+		for (Iterator<String> iterator = Arrays.asList(words).iterator();
+				iterator.hasNext();) {
+			String word = iterator.next();
+			String[] wordElements = word.split("=", 2);
+			if (wordElements.length != 2) {
+				throw new IllegalArgumentException(String.format(
+						"field must be in the following format: "
+						+ "NAME=VALUE. actual value is %s",
+						word));
+			}
+			Field field = Field.valueOfString(wordElements[0]);
+			try {
+				builder = field.set(builder, wordElements[1]);
+			} catch (NullPointerException e) {
+				throw new IllegalArgumentException(String.format(
+						"expected field '%s'. actual value is %s", 
+						Field.RULE_ACTION,
+						word));				
+			}
+			if (recentBuilder == null) {
+				recentBuilder = builder;
+			}
+			if (!recentBuilder.equals(builder)) {
+				socks5RequestRules.add(recentBuilder.build());
+				recentBuilder = builder;
+			}
+			if (!iterator.hasNext()) {
+				socks5RequestRules.add(builder.build());
+			}
+		}
+		return socks5RequestRules;
+	}
+	
+	@HelpText(
+			doc = "Specifies the action to take. This field starts a new "
+					+ "SOCKS5 request rule.",
+			usage = "ruleAction=RULE_ACTION"
+	)	
 	private final RuleAction ruleAction;
+	
+	@HelpText(
+			doc = "Specifies the address range for the source address",
+			usage = "sourceAddressRange=ADDRESS|ADDRESS1-ADDRESS2|regex:REGULAR_EXPRESSION"
+	)	
 	private final AddressRange sourceAddressRange;
+	
+	@HelpText(
+			doc = "Specifies the command type of the SOCKS5 request",
+			usage = "command=SOCKS5_COMMAND"
+	)
 	private final Command command;
+	
+	@HelpText(
+			doc = "Specifies the address range for the desired destination "
+					+ "address of the SOCKS5 request",
+			usage = "desiredDestinationAddressRange=ADDRESS|ADDRESS1-ADDRESS2|regex:REGULAR_EXPRESSION"
+	)	
 	private final AddressRange desiredDestinationAddressRange;
+	
+	@HelpText(
+			doc = "Specifies the port range for the desired destination port "
+					+ "of the SOCKS5 request",
+			usage = "desiredDestinationPortRange=PORT|PORT1-PORT2"
+	)	
 	private final PortRange desiredDestinationPortRange;
+	
+	@HelpText(
+			doc = "Specifies the logging action to take if the rule applies",
+			usage = "logAction=LOG_ACTION"
+	)	
 	private final LogAction logAction;
+	
 	private final String doc;
 	
 	private Socks5RequestRule(final Builder builder) {
@@ -257,20 +421,18 @@ public final class Socks5RequestRule {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append(this.getClass().getSimpleName())
-			.append(" [ruleAction=")
+		builder.append("ruleAction=")
 			.append(this.ruleAction)
-			.append(", sourceAddressRange=")
+			.append(" sourceAddressRange=")
 			.append(this.sourceAddressRange)
-			.append(", command=")
+			.append(" command=")
 			.append(this.command)
-			.append(", desiredDestinationAddressRange=")
+			.append(" desiredDestinationAddressRange=")
 			.append(this.desiredDestinationAddressRange)
-			.append(", desiredDestinationPortRange=")
+			.append(" desiredDestinationPortRange=")
 			.append(this.desiredDestinationPortRange)
-			.append(", logAction=")
-			.append(this.logAction)
-			.append("]");
+			.append(" logAction=")
+			.append(this.logAction);
 		return builder.toString();
 	}
 

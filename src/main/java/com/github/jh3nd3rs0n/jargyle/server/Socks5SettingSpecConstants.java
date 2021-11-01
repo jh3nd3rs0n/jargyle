@@ -66,6 +66,12 @@ public final class Socks5SettingSpecConstants {
 					"socks5.methods",
 					Methods.getDefault()));
 
+	@HelpText(
+			doc = "The space separated list of rules for TCP traffic from an "
+					+ "inbound socket to the SOCKS server "
+					+ "(default is ruleAction=ALLOW)", 
+			usage = "socks5.onBind.inboundRules=[RULE_FIELD1[ RULE_FIELD2[...]]]"
+	)	
 	public static final SettingSpec<Rules> SOCKS5_ON_BIND_INBOUND_RULES =
 			SETTING_SPECS.addThenGet(new RulesSettingSpec(
 					NewSettingSpecPermission.INSTANCE,
@@ -207,12 +213,24 @@ public final class Socks5SettingSpecConstants {
 					"socks5.onUdpAssociate.clientFacingSocketSettings",
 					SocketSettings.newInstance()));
 
+	@HelpText(
+			doc = "The space separated list of rules for UDP traffic from a "
+					+ "UDP server to the UDP relay server "
+					+ "(default is ruleAction=ALLOW)", 
+			usage = "socks5.onUdpAssociate.inboundRules=[RULE_FIELD1[ RULE_FIELD2[...]]]"
+	)	
 	public static final SettingSpec<Rules> SOCKS5_ON_UDP_ASSOCIATE_INBOUND_RULES =
 			SETTING_SPECS.addThenGet(new RulesSettingSpec(
 					NewSettingSpecPermission.INSTANCE,
 					"socks5.onUdpAssociate.inboundRules",
 					Rules.getDefault()));
 
+	@HelpText(
+			doc = "The space separated list of rules for UDP traffic from the "
+					+ "UDP relay server to a UDP server "
+					+ "(default is ruleAction=ALLOW)", 
+			usage = "socks5.onUdpAssociate.outboundRules=[RULE_FIELD1[ RULE_FIELD2[...]]]"
+	)	
 	public static final SettingSpec<Rules> SOCKS5_ON_UDP_ASSOCIATE_OUTBOUND_RULES =
 			SETTING_SPECS.addThenGet(new RulesSettingSpec(
 					NewSettingSpecPermission.INSTANCE,
@@ -263,6 +281,11 @@ public final class Socks5SettingSpecConstants {
 					"socks5.onUdpAssociate.serverFacingSocketSettings",
 					SocketSettings.newInstance()));
 	
+	@HelpText(
+			doc = "The space separated list of rules for SOCKS5 requests "
+					+ "(default is ruleAction=ALLOW)", 
+			usage = "socks5.socks5RequestRules=[SOCKS5_REQUEST_RULE_FIELD1[ SOCKS5_REQUEST_RULE_FIELD2[...]]]"
+	)	
 	public static final SettingSpec<Socks5RequestRules> SOCKS5_SOCKS5_REQUEST_RULES =
 			SETTING_SPECS.addThenGet(new Socks5RequestRulesSettingSpec(
 					NewSettingSpecPermission.INSTANCE,

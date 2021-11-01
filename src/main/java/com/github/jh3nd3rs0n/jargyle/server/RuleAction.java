@@ -4,10 +4,20 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import com.github.jh3nd3rs0n.jargyle.internal.help.HelpText;
+
 public enum RuleAction {
 
+	@HelpText(
+			doc = "",
+			usage = "ALLOW"
+	)
 	ALLOW,
 	
+	@HelpText(
+			doc = "",
+			usage = "DENY"
+	)	
 	DENY;
 
 	public static RuleAction valueOfString(final String s) {

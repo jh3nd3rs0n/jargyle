@@ -16,7 +16,7 @@ import jakarta.xml.bind.annotation.XmlType;
 @XmlType(name = "socks5RequestRule", propOrder = { }) 
 class Socks5RequestRuleXml {
 
-	@XmlElement(name = "action", required = true)
+	@XmlElement(name = "ruleAction", required = true)
 	protected String ruleAction;
 	@XmlElement(name = "sourceAddressRange")
 	protected String sourceAddressRange;

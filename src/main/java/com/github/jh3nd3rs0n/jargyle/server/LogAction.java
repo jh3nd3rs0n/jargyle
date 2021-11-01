@@ -7,8 +7,14 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.github.jh3nd3rs0n.jargyle.internal.help.HelpText;
+
 public enum LogAction {
 	
+	@HelpText(
+			doc = "Log at the WARNING level",
+			usage = "LOG_AS_WARNING"
+	)
 	LOG_AS_WARNING {
 		
 		@Override
@@ -18,6 +24,10 @@ public enum LogAction {
 		
 	},
 	
+	@HelpText(
+			doc = "Log at the INFO level",
+			usage = "LOG_AS_INFO"
+	)
 	LOG_AS_INFO {
 		
 		@Override

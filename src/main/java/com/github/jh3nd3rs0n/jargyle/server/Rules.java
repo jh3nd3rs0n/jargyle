@@ -3,6 +3,7 @@ package com.github.jh3nd3rs0n.jargyle.server;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 public final class Rules {
@@ -20,6 +21,10 @@ public final class Rules {
 	
 	public static Rules newInstance(final Rule... rls) {
 		return newInstance(Arrays.asList(rls));
+	}
+	
+	public static Rules newInstance(final String s) {
+		return newInstance(Rule.newInstances(s));
 	}
 	
 	private final List<Rule> rules;
@@ -80,10 +85,14 @@ public final class Rules {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append(this.getClass().getSimpleName())
-			.append(" [rules=")
-			.append(this.rules)
-			.append("]");
+		for (Iterator<Rule> iterator = this.rules.iterator(); 
+				iterator.hasNext();) {
+			Rule rule = iterator.next();
+			builder.append(rule);
+			if (iterator.hasNext()) {
+				builder.append(' ');
+			}
+		}
 		return builder.toString();
 	}
 	

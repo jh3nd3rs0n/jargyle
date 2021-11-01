@@ -40,6 +40,11 @@ public final class GeneralSettingSpecConstants {
 					"clientFacingSocketSettings",
 					SocketSettings.newInstance()));
 
+	@HelpText(
+			doc = "The space separated list of rules for TCP traffic from a "
+					+ "client to the SOCKS server (default is ruleAction=ALLOW)", 
+			usage = "clientRules=[RULE_FIELD1[ RULE_FIELD2[...]]]"
+	)	
 	public static final SettingSpec<Rules> CLIENT_RULES =
 			SETTING_SPECS.addThenGet(new RulesSettingSpec(
 					NewSettingSpecPermission.INSTANCE,

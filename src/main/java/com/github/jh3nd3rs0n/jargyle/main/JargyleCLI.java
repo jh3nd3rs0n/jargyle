@@ -46,14 +46,19 @@ import com.github.jh3nd3rs0n.jargyle.server.ConfigurationProvider;
 import com.github.jh3nd3rs0n.jargyle.server.DtlsSettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.GeneralSettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.ImmutableConfiguration;
+import com.github.jh3nd3rs0n.jargyle.server.LogAction;
 import com.github.jh3nd3rs0n.jargyle.server.ModifiableConfiguration;
 import com.github.jh3nd3rs0n.jargyle.server.MutableConfiguration;
+import com.github.jh3nd3rs0n.jargyle.server.Rule;
+import com.github.jh3nd3rs0n.jargyle.server.RuleAction;
 import com.github.jh3nd3rs0n.jargyle.server.Setting;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
 import com.github.jh3nd3rs0n.jargyle.server.SslSettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.XmlFileSourceConfigurationProvider;
 import com.github.jh3nd3rs0n.jargyle.server.config.xml.bind.ConfigurationXml;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5RequestRule;
+import com.github.jh3nd3rs0n.jargyle.transport.socks5.Command;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.gssapiauth.ProtectionLevel;
 
@@ -656,8 +661,11 @@ public final class JargyleCLI extends CLI {
 			if (helpText != null) {
 				System.out.print("  ");
 				System.out.println(helpText.usage());
-				System.out.print("      ");
-				System.out.println(helpText.doc());
+				String doc = helpText.doc();
+				if (!doc.isEmpty()) {
+					System.out.print("      ");
+					System.out.println(doc);
+				}
 				System.out.println();
 			}
 		}
@@ -690,15 +698,25 @@ public final class JargyleCLI extends CLI {
 		System.out.println("SOCKS5 SETTINGS:");
 		this.printHelpText(Socks5SettingSpecConstants.class);
 		System.out.println("SSL SETTINGS:");
-		this.printHelpText(SslSettingSpecConstants.class);		
+		this.printHelpText(SslSettingSpecConstants.class);
+		System.out.println("LOG_ACTIONS:");
+		this.printHelpText(LogAction.class);
+		System.out.println("RULE_ACTIONS:");
+		this.printHelpText(RuleAction.class);
+		System.out.println("RULE_FIELDS:");
+		this.printHelpText(Rule.class);
 		System.out.println("SCHEMES:");
 		this.printHelpText(Scheme.class);
 		System.out.println("SOCKET_SETTINGS:");
 		this.printHelpText(StandardSocketSettingSpecConstants.class);
+		System.out.println("SOCKS5_COMMANDS:");
+		this.printHelpText(Command.class);		
 		System.out.println("SOCKS5_GSSAPIAUTH_PROTECTION_LEVELS:");
 		this.printHelpText(ProtectionLevel.class);
 		System.out.println("SOCKS5_METHODS:");
-		this.printHelpText(Method.class);		
+		this.printHelpText(Method.class);
+		System.out.println("SOCKS5_REQUEST_RULE_FIELDS:");
+		this.printHelpText(Socks5RequestRule.class);		
 		throw new TerminationRequestedException(0);
 	}
 		

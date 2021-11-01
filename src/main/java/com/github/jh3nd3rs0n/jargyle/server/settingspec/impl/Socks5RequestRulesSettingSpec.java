@@ -17,10 +17,7 @@ public final class Socks5RequestRulesSettingSpec
 	@Override
 	public Setting<Socks5RequestRules> newSettingOfParsableValue(
 			final String value) {
-		throw new UnsupportedOperationException(String.format(
-				"%s does not accept a String representation of %s",
-				this,
-				Socks5RequestRules.class.getName()));
+		return super.newSetting(Socks5RequestRules.newInstance(value));
 	}
 	
 }

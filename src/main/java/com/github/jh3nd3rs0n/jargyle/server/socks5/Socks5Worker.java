@@ -17,7 +17,6 @@ import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.WorkerContext;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.ClientMethodSelectionMessage;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.MethodEncapsulation;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.MethodSubnegotiationException;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Methods;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Reply;
@@ -49,19 +48,25 @@ public final class Socks5Worker {
 	}
 	
 	private boolean canAllow(
-			final String sourceAddress,	final Socks5Request socks5Req) {
+			final String sourceAddress,
+			final MethodSubnegotiationResults methSubnegotiationResults,
+			final Socks5Request socks5Req) {
+		String user = methSubnegotiationResults.getUser();
+		String possibleUser = (user != null) ? 
+				String.format(" (%s)", user) : "";		
 		Socks5RequestRules socks5RequestRules = this.settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_SOCKS5_REQUEST_RULES);
 		Socks5RequestRule socks5RequestRule = null;
 		try {
 			socks5RequestRule = socks5RequestRules.anyAppliesTo(
-					sourceAddress, socks5Req);
+					sourceAddress, methSubnegotiationResults, socks5Req);
 		} catch (IllegalArgumentException e) {
 			LOGGER.error(
 					LoggerHelper.objectMessage(this, String.format(
-							"Error regarding SOCKS5 request from %s. "
+							"Error regarding SOCKS5 request from %s%s. "
 							+ "SOCKS5 request: %s",
 							sourceAddress,
+							possibleUser,
 							socks5Req)),
 					e);
 			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
@@ -81,7 +86,8 @@ public final class Socks5Worker {
 			return false;			
 		}
 		try {
-			socks5RequestRule.applyTo(sourceAddress, socks5Req);
+			socks5RequestRule.applyTo(
+					sourceAddress, methSubnegotiationResults, socks5Req);
 		} catch (RuleActionDenyException e) {
 			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
 					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
@@ -101,7 +107,7 @@ public final class Socks5Worker {
 		return true;
 	}
 	
-	private MethodEncapsulation negotiateMethod() throws IOException {
+	private MethodSubnegotiationResults negotiateMethod() throws IOException {
 		InputStream in = new SequenceInputStream(new ByteArrayInputStream(
 				new byte[] { Version.V5.byteValue() }),
 				this.clientFacingInputStream);
@@ -140,9 +146,9 @@ public final class Socks5Worker {
 		this.socks5WorkerContext.writeThenFlush(smsm.toByteArray());
 		MethodSubnegotiator methodSubnegotiator = 
 				MethodSubnegotiator.valueOfMethod(method);
-		MethodEncapsulation methodEncapsulation = null;
+		MethodSubnegotiationResults methodSubnegotiationResults = null;
 		try {
-			methodEncapsulation = methodSubnegotiator.subnegotiate(
+			methodSubnegotiationResults = methodSubnegotiator.subnegotiate(
 					this.clientFacingSocket, this.configuration);
 		} catch (MethodSubnegotiationException e) {
 			LOGGER.debug( 
@@ -157,13 +163,13 @@ public final class Socks5Worker {
 					e);
 			return null;
 		}
-		return methodEncapsulation;		
+		return methodSubnegotiationResults;		
 	}
 	
 	private Socks5Request newSocks5Request() throws IOException {
-		Socks5Request socks5Req = null;
+		Socks5Request socks5Request = null;
 		try {
-			socks5Req = Socks5Request.newInstanceFrom(
+			socks5Request = Socks5Request.newInstanceFrom(
 					this.clientFacingInputStream);
 		} catch (IOException e) {
 			LOGGER.error( 
@@ -174,15 +180,16 @@ public final class Socks5Worker {
 		}
 		LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
 				"Received %s",
-				socks5Req.toString())));
-		return socks5Req;
+				socks5Request.toString())));
+		return socks5Request;
 	}
 	
 	public void run() throws IOException {
 		this.clientFacingInputStream = this.clientFacingSocket.getInputStream();
-		MethodEncapsulation methodEncapsulation = this.negotiateMethod();
-		if (methodEncapsulation == null) { return; }
-		Socket socket = methodEncapsulation.getSocket();
+		MethodSubnegotiationResults methodSubnegotiationResults = 
+				this.negotiateMethod();
+		if (methodSubnegotiationResults == null) { return; }
+		Socket socket = methodSubnegotiationResults.getSocket();
 		this.clientFacingInputStream = socket.getInputStream();
 		this.clientFacingSocket = socket;
 		this.socks5WorkerContext = new Socks5WorkerContext(new WorkerContext(
@@ -190,18 +197,19 @@ public final class Socks5Worker {
 				this.configuration,
 				this.socks5WorkerContext.getNetObjectFactory(),
 				this.socks5WorkerContext.getClientFacingDtlsDatagramSocketFactory()));
-		Socks5Request socks5Req = this.newSocks5Request();
-		if (socks5Req == null) { return; }
+		Socks5Request socks5Request = this.newSocks5Request();
+		if (socks5Request == null) { return; }
 		if (!this.canAllow(
-				this.clientFacingSocket.getInetAddress().getHostAddress(), 
-				socks5Req)) {
+				this.clientFacingSocket.getInetAddress().getHostAddress(),
+				methodSubnegotiationResults,
+				socks5Request)) {
 			return;
 		}
 		Socks5RequestWorkerContext socks5RequestWorkerContext = 
 				new Socks5RequestWorkerContext(
 						this.socks5WorkerContext, 
-						methodEncapsulation, 
-						socks5Req);
+						methodSubnegotiationResults, 
+						socks5Request);
 		Socks5RequestWorkerFactory socks5RequestWorkerFactory =
 				this.settings.getLastValue(
 						Socks5SettingSpecConstants.SOCKS5_SOCKS5_REQUEST_WORKER_FACTORY);

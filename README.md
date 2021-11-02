@@ -570,6 +570,12 @@ The following is a list of available settings for the SOCKS server (displayed wh
       sourceAddressRange=ADDRESS|ADDRESS1-ADDRESS2|regex:REGULAR_EXPRESSION
           Specifies the address range for the source address
     
+      method=SOCKS5_METHOD
+          Specifies the negotiated SOCKS5 method
+    
+      user=USER
+          Specifies the user if any after the negotiated SOCKS5 method
+    
       command=SOCKS5_COMMAND
           Specifies the command type of the SOCKS5 request
     
@@ -582,7 +588,7 @@ The following is a list of available settings for the SOCKS server (displayed wh
       logAction=LOG_ACTION
           Specifies the logging action to take if the rule applies
     
-            
+    
 ```
 
 The following is the command line help for managing SOCKS5 users for username password authentication (displayed when using the command line options `--socks5-userpassauth-users --help`):
@@ -2020,6 +2026,8 @@ A SOCKS5 request rule has the following fields:
 
 -   `ruleAction` : Specifies the action to take. Value can be either of the following: `ALLOW`, `DENY`. This field is required.
 -   `sourceAddressRange` : Specifies the address range for the source (client) address. This field is optional.
+-   `method` : Specifies the negotiated SOCKS5 method. Value can be any of the following: `NO_AUTHENTICATION_REQUIRED`, `USERNAME_PASSWORD`, `GSSAPI`. This field is optional.
+-   `user` : Specifies the user if any after the negotiated SOCKS5 method. This field is optional.
 -   `command` : Specifies the command type of the SOCKS5 request. Value can be any of the following: `CONNECT`, `BIND`, `UDP_ASSOCIATE`, `RESOLVE`. This field is optional.
 -   `desiredDestinationAddressRange` : Specifies the address range for the desired destination address of the SOCKS5 request. This field is optional.
 -   `desiredDestinationPortRange` : Specifies the port range for the desired destination port of the SOCKS5 request. This field is optional.

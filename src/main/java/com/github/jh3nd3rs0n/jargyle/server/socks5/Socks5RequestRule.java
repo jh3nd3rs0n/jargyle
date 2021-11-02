@@ -14,6 +14,7 @@ import com.github.jh3nd3rs0n.jargyle.server.LogAction;
 import com.github.jh3nd3rs0n.jargyle.server.RuleAction;
 import com.github.jh3nd3rs0n.jargyle.server.RuleActionDenyException;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Command;
+import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Request;
 
 public final class Socks5RequestRule {
@@ -32,6 +33,19 @@ public final class Socks5RequestRule {
 				usage = "sourceAddressRange=ADDRESS|ADDRESS1-ADDRESS2|regex:REGULAR_EXPRESSION"
 		)	
 		private AddressRange sourceAddressRange;
+		
+		@HelpText(
+				doc = "Specifies the negotiated SOCKS5 method",
+				usage = "method=SOCKS5_METHOD"
+		)
+		private Method method;
+		
+		@HelpText(
+				doc = "Specifies the user if any after the negotiated SOCKS5 "
+						+ "method",
+				usage = "user=USER"
+		)
+		private String user;
 		
 		@HelpText(
 				doc = "Specifies the command type of the SOCKS5 request",
@@ -65,6 +79,8 @@ public final class Socks5RequestRule {
 			this.ruleAction = Objects.requireNonNull(
 					rlAction, "rule action must not be null");
 			this.sourceAddressRange = null;
+			this.method = null;
+			this.user = null;
 			this.command = null;
 			this.desiredDestinationAddressRange = null;
 			this.desiredDestinationPortRange = null;
@@ -103,9 +119,19 @@ public final class Socks5RequestRule {
 			return this;
 		}
 		
+		public Builder method(final Method meth) {
+			this.method = meth;
+			return this;
+		}
+		
 		public Builder sourceAddressRange(
 				final AddressRange sourceAddrRange) {
 			this.sourceAddressRange = sourceAddrRange;
+			return this;
+		}
+		
+		public Builder user(final String usr) {
+			this.user = usr;
 			return this;
 		}
 		
@@ -126,6 +152,20 @@ public final class Socks5RequestRule {
 			public Builder set(final Builder builder, final String value) {
 				return builder.sourceAddressRange(AddressRange.newInstance(
 						value));
+			}
+		},
+		
+		METHOD("method") {
+			@Override
+			public Builder set(final Builder builder, final String value) {
+				return builder.method(Method.valueOfString(value));
+			}
+		},
+		
+		USER("user") {
+			@Override
+			public Builder set(final Builder builder, final String value) {
+				return builder.user(value);
 			}
 		},
 		
@@ -246,6 +286,8 @@ public final class Socks5RequestRule {
 	
 	private final RuleAction ruleAction;
 	private final AddressRange sourceAddressRange;
+	private final Method method;
+	private final String user;
 	private final Command command;
 	private final AddressRange desiredDestinationAddressRange;
 	private final PortRange desiredDestinationPortRange;
@@ -255,6 +297,8 @@ public final class Socks5RequestRule {
 	private Socks5RequestRule(final Builder builder) {
 		RuleAction rlAction = builder.ruleAction;
 		AddressRange sourceAddrRange = builder.sourceAddressRange;
+		Method meth = builder.method;
+		String usr = builder.user;
 		Command cmd = builder.command;
 		AddressRange desiredDestinationAddrRange = 
 				builder.desiredDestinationAddressRange;
@@ -264,6 +308,8 @@ public final class Socks5RequestRule {
 		String d = builder.doc;
 		this.ruleAction = rlAction;
 		this.sourceAddressRange = sourceAddrRange;
+		this.method = meth;
+		this.user = usr;
 		this.command = cmd;
 		this.desiredDestinationAddressRange = desiredDestinationAddrRange;
 		this.desiredDestinationPortRange = desiredDestinationPrtRange;
@@ -272,9 +318,19 @@ public final class Socks5RequestRule {
 	}
 	
 	public boolean appliesTo(
-			final String sourceAddress,	final Socks5Request socks5Req) {
+			final String sourceAddress,
+			final MethodSubnegotiationResults methSubnegotiationResults,
+			final Socks5Request socks5Req) {
 		if (this.sourceAddressRange != null 
 				&& !this.sourceAddressRange.contains(sourceAddress)) {
+			return false;
+		}
+		if (this.method != null 
+				&& !this.method.equals(methSubnegotiationResults.getMethod())) {
+			return false;
+		}
+		if (this.user != null 
+				&& !this.user.equals(methSubnegotiationResults.getUser())) {
 			return false;
 		}
 		if (this.command != null
@@ -295,28 +351,36 @@ public final class Socks5RequestRule {
 	}
 
 	public void applyTo(
-			final String sourceAddress,	final Socks5Request socks5Req) {
+			final String sourceAddress,	
+			final MethodSubnegotiationResults methSubnegotiationResults,
+			final Socks5Request socks5Req) {
+		String user = methSubnegotiationResults.getUser();
+		String possibleUser = (user != null) ? 
+				String.format(" (%s)", user) : "";
 		if (this.ruleAction.equals(RuleAction.ALLOW)
 				&& this.logAction != null) {
 			this.logAction.log(String.format(
-					"SOCKS5 request from %s is allowed based on the "
+					"SOCKS5 request from %s%s is allowed based on the "
 					+ "following rule: %s. SOCKS5 request: %s",
 					sourceAddress,
+					possibleUser,
 					this,
 					socks5Req));			
 		} else if (this.ruleAction.equals(RuleAction.DENY)) {
 			if (this.logAction != null) {
 				this.logAction.log(String.format(
-						"SOCKS5 request from %s is denied based on the "
+						"SOCKS5 request from %s%s is denied based on the "
 						+ "following rule: %s. SOCKS5 request: %s",
 						sourceAddress,
+						possibleUser,
 						this,
 						socks5Req));				
 			}
 			throw new RuleActionDenyException(String.format(
-					"SOCKS5 request from %s is denied based on the "
+					"SOCKS5 request from %s%s is denied based on the "
 					+ "following rule: %s. SOCKS5 request: %s",
 					sourceAddress,
+					possibleUser,
 					this,
 					socks5Req));
 		}
@@ -334,22 +398,7 @@ public final class Socks5RequestRule {
 			return false;
 		}
 		Socks5RequestRule other = (Socks5RequestRule) obj;
-		if (this.ruleAction != other.ruleAction) {
-			return false;
-		}
-		if (this.sourceAddressRange == null) {
-			if (other.sourceAddressRange != null) {
-				return false;
-			}
-		} else if (!this.sourceAddressRange.equals(
-				other.sourceAddressRange)) {
-			return false;
-		}
-		if (this.command == null) {
-			if (other.command != null) {
-				return false;
-			}
-		} else if (!this.command.equals(other.command)) {
+		if (this.command != other.command) {
 			return false;
 		}
 		if (this.desiredDestinationAddressRange == null) {
@@ -368,21 +417,44 @@ public final class Socks5RequestRule {
 				other.desiredDestinationPortRange)) {
 			return false;
 		}
+		if (this.logAction != other.logAction) {
+			return false;
+		}
+		if (this.method != other.method) {
+			return false;
+		}
+		if (this.ruleAction != other.ruleAction) {
+			return false;
+		}
+		if (this.sourceAddressRange == null) {
+			if (other.sourceAddressRange != null) {
+				return false;
+			}
+		} else if (!this.sourceAddressRange.equals(other.sourceAddressRange)) {
+			return false;
+		}
+		if (this.user == null) {
+			if (other.user != null) {
+				return false;
+			}
+		} else if (!this.user.equals(other.user)) {
+			return false;
+		}
 		return true;
 	}
-	
+
 	public Command getCommand() {
 		return this.command;
 	}
-
+	
 	public AddressRange getDesiredDestinationAddressRange() {
 		return this.desiredDestinationAddressRange;
 	}
-
+	
 	public PortRange getDesiredDestinationPortRange() {
 		return this.desiredDestinationPortRange;
 	}
-	
+
 	public String getDoc() {
 		return this.doc;
 	}
@@ -391,30 +463,43 @@ public final class Socks5RequestRule {
 		return this.logAction;
 	}
 	
+	public Method getMethod() {
+		return this.method;
+	}
+
 	public RuleAction getRuleAction() {
 		return this.ruleAction;
 	}
-
+	
 	public AddressRange getSourceAddressRange() {
 		return this.sourceAddressRange;
+	}
+
+	public String getUser() {
+		return this.user;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((this.ruleAction == null) ? 
-				0 : this.ruleAction.hashCode());
-		result = prime * result + ((this.sourceAddressRange == null) ? 
-				0 : this.sourceAddressRange.hashCode());
 		result = prime * result + ((this.command == null) ? 
 				0 : this.command.hashCode());
 		result = prime * result
 				+ ((this.desiredDestinationAddressRange == null) ? 
-						0 : this.desiredDestinationAddressRange.hashCode());
-		result = prime * result
-				+ ((this.desiredDestinationPortRange == null) ? 
-						0 : this.desiredDestinationPortRange.hashCode());
+						0 : desiredDestinationAddressRange.hashCode());
+		result = prime * result + ((this.desiredDestinationPortRange == null) ? 
+				0 : desiredDestinationPortRange.hashCode());
+		result = prime * result + ((this.logAction == null) ? 
+				0 : this.logAction.hashCode());
+		result = prime * result + ((this.method == null) ? 
+				0 : this.method.hashCode());
+		result = prime * result + ((this.ruleAction == null) ? 
+				0 : this.ruleAction.hashCode());
+		result = prime * result + ((this.sourceAddressRange == null) ? 
+				0 : this.sourceAddressRange.hashCode());
+		result = prime * result + ((this.user == null) ? 
+				0 : this.user.hashCode());
 		return result;
 	}
 
@@ -426,6 +511,14 @@ public final class Socks5RequestRule {
 		if (this.sourceAddressRange != null) {
 			builder.append(" sourceAddressRange=");
 			builder.append(this.sourceAddressRange);			
+		}
+		if (this.method != null) {
+			builder.append(" method=");
+			builder.append(this.method);			
+		}
+		if (this.user != null) {
+			builder.append(" user=");
+			builder.append(this.user);			
 		}
 		if (this.command != null) {
 			builder.append(" command=");

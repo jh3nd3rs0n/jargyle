@@ -157,7 +157,7 @@ enum MethodSubnegotiator {
 		}
 
 		@Override
-		public MethodEncapsulation subnegotiate(
+		public MethodSubnegotiationResults subnegotiate(
 				final Socket socket, 
 				final Configuration configuration) throws IOException {
 			GSSContext context = this.newContext();
@@ -167,7 +167,16 @@ enum MethodSubnegotiator {
 							socket, context, configuration);
 			MessageProp msgProp = protectionLevelChoice.getMessageProp();
 			GssSocket gssSocket = new GssSocket(socket, context, msgProp);
-			return new GssapiMethodEncapsulation(gssSocket);
+			MethodEncapsulation methodEncapsulation = 
+					new GssapiMethodEncapsulation(gssSocket);
+			String user = null;
+			try {
+				user = context.getSrcName().toString();
+			} catch (GSSException e) {
+				throw new IOException(e);
+			}
+			return new MethodSubnegotiationResults(
+					this.methodValue(), methodEncapsulation, user);
 		}
 		
 	},
@@ -175,7 +184,7 @@ enum MethodSubnegotiator {
 	NO_ACCEPTABLE_METHODS_METHOD_SUBNEGOTIATOR(Method.NO_ACCEPTABLE_METHODS) {
 
 		@Override
-		public MethodEncapsulation subnegotiate(
+		public MethodSubnegotiationResults subnegotiate(
 				final Socket socket, 
 				final Configuration configuration) throws IOException {
 			throw new MethodSubnegotiationException(String.format(
@@ -189,10 +198,13 @@ enum MethodSubnegotiator {
 			Method.NO_AUTHENTICATION_REQUIRED) {
 
 		@Override
-		public MethodEncapsulation subnegotiate(
+		public MethodSubnegotiationResults subnegotiate(
 				final Socket socket, 
 				final Configuration configuration) throws IOException {
-			return new NullMethodEncapsulation(socket);
+			MethodEncapsulation methodEncapsulation = 
+					new NullMethodEncapsulation(socket); 
+			return new MethodSubnegotiationResults(
+					this.methodValue(), methodEncapsulation, null);
 		}
 		
 	},
@@ -200,7 +212,7 @@ enum MethodSubnegotiator {
 	USERNAME_PASSWORD_METHOD_SUBNEGOTIATOR(Method.USERNAME_PASSWORD) {
 
 		@Override
-		public MethodEncapsulation subnegotiate(
+		public MethodSubnegotiationResults subnegotiate(
 				final Socket socket, 
 				final Configuration configuration) throws IOException {
 			InputStream inputStream = socket.getInputStream();
@@ -231,7 +243,10 @@ enum MethodSubnegotiator {
 					UsernamePasswordResponse.STATUS_SUCCESS);
 			outputStream.write(usernamePasswordResp.toByteArray());
 			outputStream.flush();
-			return new NullMethodEncapsulation(socket);
+			MethodEncapsulation methodEncapsulation = 
+					new NullMethodEncapsulation(socket);
+			return new MethodSubnegotiationResults(
+					this.methodValue(), methodEncapsulation, username);
 		}
 		
 	};
@@ -272,7 +287,7 @@ enum MethodSubnegotiator {
 		return this.methodValue;
 	}
 	
-	public abstract MethodEncapsulation subnegotiate(
+	public abstract MethodSubnegotiationResults subnegotiate(
 			final Socket socket,
 			final Configuration configuration) throws IOException;
 	

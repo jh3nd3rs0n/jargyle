@@ -40,16 +40,23 @@ public final class Socks5RequestRules {
 	}
 	
 	public Socks5RequestRule anyAppliesTo(
-			final String sourceAddress, final Socks5Request socks5Req) {
+			final String sourceAddress,
+			final MethodSubnegotiationResults methSubnegotiationResults,
+			final Socks5Request socks5Req) {
 		for (Socks5RequestRule socks5RequestRule : this.socks5RequestRules) {
-			if (socks5RequestRule.appliesTo(sourceAddress, socks5Req)) {
+			if (socks5RequestRule.appliesTo(
+					sourceAddress, methSubnegotiationResults, socks5Req)) {
 				return socks5RequestRule;
 			}
 		}
+		String user = methSubnegotiationResults.getUser();
+		String possibleUser = (user != null) ? 
+				String.format(" (%s)", user) : "";
 		throw new IllegalArgumentException(String.format(
-				"SOCKS5 request from %s does not apply to any rule. SOCKS5 "
+				"SOCKS5 request from %s%s does not apply to any rule. SOCKS5 "
 				+ "request: %s",
 				sourceAddress,
+				possibleUser,
 				socks5Req));
 	}
 	

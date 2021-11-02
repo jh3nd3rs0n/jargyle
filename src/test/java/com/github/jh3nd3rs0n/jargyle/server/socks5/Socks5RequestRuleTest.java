@@ -12,6 +12,7 @@ import com.github.jh3nd3rs0n.jargyle.common.net.PortRange;
 import com.github.jh3nd3rs0n.jargyle.server.LogAction;
 import com.github.jh3nd3rs0n.jargyle.server.RuleAction;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Command;
+import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
 
 public class Socks5RequestRuleTest {
 
@@ -90,6 +91,44 @@ public class Socks5RequestRuleTest {
 				new Socks5RequestRule.Builder(RuleAction.DENY)
 				.command(Command.UDP_ASSOCIATE)
 				.logAction(LogAction.LOG_AS_INFO)
+				.build());
+		assertEquals(expectedSocks5RequestRules, actualSocks5RequestRules);
+	}
+
+	@Test
+	public void testNewInstances04() {
+		List<Socks5RequestRule> expectedSocks5RequestRules = 
+				Socks5RequestRule.newInstances(new StringBuilder()
+				.append("ruleAction=ALLOW ")
+				.append("sourceAddressRange=127.0.0.1 ")
+				.append("command=CONNECT ")
+				.append("desiredDestinationAddressRange=regex:.* ")
+				.append("desiredDestinationPortRange=0-65535 ")
+				.append("ruleAction=DENY ")
+				.append("command=UDP_ASSOCIATE ")
+				.append("logAction=LOG_AS_INFO ")
+				.append("ruleAction=DENY ")
+				.append("command=BIND ")
+				.append("method=USERNAME_PASSWORD ")
+				.append("user=Aladdin ")
+				.append("logAction=LOG_AS_WARNING")
+				.toString()); 
+		List<Socks5RequestRule> actualSocks5RequestRules = Arrays.asList(
+				new Socks5RequestRule.Builder(RuleAction.ALLOW)
+				.sourceAddressRange(AddressRange.newInstance("127.0.0.1"))
+				.command(Command.CONNECT)
+				.desiredDestinationAddressRange(AddressRange.newInstance("regex:.*"))
+				.desiredDestinationPortRange(PortRange.newInstance("0-65535"))
+				.build(),
+				new Socks5RequestRule.Builder(RuleAction.DENY)
+				.command(Command.UDP_ASSOCIATE)
+				.logAction(LogAction.LOG_AS_INFO)
+				.build(),
+				new Socks5RequestRule.Builder(RuleAction.DENY)
+				.command(Command.BIND)
+				.method(Method.USERNAME_PASSWORD)
+				.user("Aladdin")
+				.logAction(LogAction.LOG_AS_WARNING)
 				.build());
 		assertEquals(expectedSocks5RequestRules, actualSocks5RequestRules);
 	}

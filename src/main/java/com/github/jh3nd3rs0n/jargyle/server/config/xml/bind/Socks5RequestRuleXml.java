@@ -6,6 +6,7 @@ import com.github.jh3nd3rs0n.jargyle.server.LogAction;
 import com.github.jh3nd3rs0n.jargyle.server.RuleAction;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5RequestRule;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Command;
+import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -20,6 +21,10 @@ class Socks5RequestRuleXml {
 	protected String ruleAction;
 	@XmlElement(name = "sourceAddressRange")
 	protected String sourceAddressRange;
+	@XmlElement(name = "method")
+	protected String method;
+	@XmlElement(name = "user")
+	protected String user;
 	@XmlElement(name = "command")
 	protected String command;
 	@XmlElement(name = "desiredDestinationAddressRange")
@@ -43,7 +48,9 @@ class Socks5RequestRuleXml {
 	
 	public Socks5RequestRuleXml(final Socks5RequestRule socks5RequestRule) {
 		AddressRange sourceAddrRange = 
-				socks5RequestRule.getSourceAddressRange(); 
+				socks5RequestRule.getSourceAddressRange();
+		Method meth = socks5RequestRule.getMethod();
+		String usr = socks5RequestRule.getUser();
 		Command cmd = socks5RequestRule.getCommand();
 		AddressRange desiredDestinationAddrRange =
 				socks5RequestRule.getDesiredDestinationAddressRange();
@@ -53,6 +60,8 @@ class Socks5RequestRuleXml {
 		this.ruleAction = socks5RequestRule.getRuleAction().toString();
 		this.sourceAddressRange = (sourceAddrRange != null) ? 
 				sourceAddrRange.toString() : null;
+		this.method = (meth != null) ? meth.toString() : null;
+		this.user = usr;
 		this.command = (cmd != null) ? cmd.toString() : null;
 		this.desiredDestinationAddressRange = 
 				(desiredDestinationAddrRange != null) ? 
@@ -70,6 +79,12 @@ class Socks5RequestRuleXml {
 		if (this.sourceAddressRange != null) {
 			builder.sourceAddressRange(AddressRange.newInstance(
 					this.sourceAddressRange));
+		}
+		if (this.method != null) {
+			builder.method(Method.valueOfString(this.method));
+		}
+		if (this.user != null) {
+			builder.user(this.user);
 		}
 		if (this.command != null) {
 			builder.command(Command.valueOfString(this.command));

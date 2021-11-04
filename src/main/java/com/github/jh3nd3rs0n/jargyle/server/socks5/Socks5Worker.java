@@ -48,7 +48,7 @@ public final class Socks5Worker {
 	}
 	
 	private boolean canAllow(
-			final String sourceAddress,
+			final String clientAddress,
 			final MethodSubnegotiationResults methSubnegotiationResults,
 			final Socks5Request socks5Req) {
 		String user = methSubnegotiationResults.getUser();
@@ -59,13 +59,13 @@ public final class Socks5Worker {
 		Socks5RequestRule socks5RequestRule = null;
 		try {
 			socks5RequestRule = socks5RequestRules.anyAppliesTo(
-					sourceAddress, methSubnegotiationResults, socks5Req);
+					clientAddress, methSubnegotiationResults, socks5Req);
 		} catch (IllegalArgumentException e) {
 			LOGGER.error(
 					LoggerHelper.objectMessage(this, String.format(
 							"Error regarding SOCKS5 request from %s%s. "
 							+ "SOCKS5 request: %s",
-							sourceAddress,
+							clientAddress,
 							possibleUser,
 							socks5Req)),
 					e);
@@ -87,7 +87,7 @@ public final class Socks5Worker {
 		}
 		try {
 			socks5RequestRule.applyTo(
-					sourceAddress, methSubnegotiationResults, socks5Req);
+					clientAddress, methSubnegotiationResults, socks5Req);
 		} catch (RuleActionDenyException e) {
 			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
 					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);

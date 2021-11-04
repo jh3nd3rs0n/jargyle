@@ -12,13 +12,16 @@ import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.HostSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.MethodsSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.PositiveIntegerSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.ProtectionLevelsSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.RulesSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.SocketSettingsSettingSpec;
+import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.Socks5ReplyRulesSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.Socks5RequestRulesSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.Socks5RequestWorkerFactorySettingSpec;
+import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.Socks5UdpRulesSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.UsernamePasswordAuthenticatorSettingSpec;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5ReplyRules;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5RequestRules;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5RequestWorkerFactory;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5UdpRules;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.UsernamePasswordAuthenticator;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Methods;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.gssapiauth.ProtectionLevels;
@@ -65,18 +68,6 @@ public final class Socks5SettingSpecConstants {
 					NewSettingSpecPermission.INSTANCE, 
 					"socks5.methods",
 					Methods.getDefault()));
-
-	@HelpText(
-			doc = "The space separated list of rules for TCP traffic from an "
-					+ "inbound socket to the SOCKS server "
-					+ "(default is ruleAction=ALLOW)", 
-			usage = "socks5.onBind.inboundRules=[RULE_FIELD1[ RULE_FIELD2[...]]]"
-	)	
-	public static final SettingSpec<Rules> SOCKS5_ON_BIND_INBOUND_RULES =
-			SETTING_SPECS.addThenGet(new RulesSettingSpec(
-					NewSettingSpecPermission.INSTANCE,
-					"socks5.onBind.inboundRules",
-					Rules.getDefault()));
 	
 	@HelpText(
 			doc = "The space separated list of socket settings for the inbound "
@@ -121,6 +112,17 @@ public final class Socks5SettingSpecConstants {
 					NewSettingSpecPermission.INSTANCE, 
 					"socks5.onBind.relayIdleTimeout",
 					PositiveInteger.newInstance(60000))); // 1 minute
+
+	@HelpText(
+			doc = "The space separated list of rules for a second SOCKS5 "
+					+ "reply to a client (default is ruleAction=ALLOW)", 
+			usage = "socks5.onBind.secondSocks5ReplyRules=[SOCKS5_REPLY_RULE_FIELD1[ SOCKS5_REPLY_RULE_FIELD2[...]]]"
+	)	
+	public static final SettingSpec<Socks5ReplyRules> SOCKS5_ON_BIND_SECOND_SOCKS5_REPLY_RULES =
+			SETTING_SPECS.addThenGet(new Socks5ReplyRulesSettingSpec(
+					NewSettingSpecPermission.INSTANCE,
+					"socks5.onBind.secondSocks5ReplyRules",
+					Socks5ReplyRules.getDefault()));
 	
 	@HelpText(
 			doc = "The boolean value to indicate if the server-facing socket "
@@ -215,27 +217,47 @@ public final class Socks5SettingSpecConstants {
 
 	@HelpText(
 			doc = "The space separated list of rules for UDP traffic from a "
-					+ "UDP server to the UDP relay server "
-					+ "(default is ruleAction=ALLOW)", 
-			usage = "socks5.onUdpAssociate.inboundRules=[RULE_FIELD1[ RULE_FIELD2[...]]]"
+					+ "UDP peer to a UDP client (default is ruleAction=ALLOW)", 
+			usage = "socks5.onUdpAssociate.inboundSocks5UdpRules=[SOCKS5_UDP_RULE_FIELD1[ SOCKS5_UDP_RULE_FIELD2[...]]]"
 	)	
-	public static final SettingSpec<Rules> SOCKS5_ON_UDP_ASSOCIATE_INBOUND_RULES =
-			SETTING_SPECS.addThenGet(new RulesSettingSpec(
+	public static final SettingSpec<Socks5UdpRules> SOCKS5_ON_UDP_ASSOCIATE_INBOUND_SOCKS5_UDP_RULES =
+			SETTING_SPECS.addThenGet(new Socks5UdpRulesSettingSpec(
 					NewSettingSpecPermission.INSTANCE,
-					"socks5.onUdpAssociate.inboundRules",
-					Rules.getDefault()));
+					"socks5.onUdpAssociate.inboundSocks5UdpRules",
+					Socks5UdpRules.getDefault()));
 
 	@HelpText(
-			doc = "The space separated list of rules for UDP traffic from the "
-					+ "UDP relay server to a UDP server "
-					+ "(default is ruleAction=ALLOW)", 
-			usage = "socks5.onUdpAssociate.outboundRules=[RULE_FIELD1[ RULE_FIELD2[...]]]"
+			doc = "The space separated list of rules for UDP traffic from a "
+					+ "UDP client to a UDP peer (default is ruleAction=ALLOW)", 
+			usage = "socks5.onUdpAssociate.outboundSocks5UdpRules=[SOCKS5_UDP_RULE_FIELD1[ SOCKS5_UDP_RULE_FIELD2[...]]]"
 	)	
-	public static final SettingSpec<Rules> SOCKS5_ON_UDP_ASSOCIATE_OUTBOUND_RULES =
-			SETTING_SPECS.addThenGet(new RulesSettingSpec(
+	public static final SettingSpec<Socks5UdpRules> SOCKS5_ON_UDP_ASSOCIATE_OUTBOUND_SOCKS5_UDP_RULES =
+			SETTING_SPECS.addThenGet(new Socks5UdpRulesSettingSpec(
 					NewSettingSpecPermission.INSTANCE,
-					"socks5.onUdpAssociate.outboundRules",
-					Rules.getDefault()));
+					"socks5.onUdpAssociate.outboundSocks5UdpRules",
+					Socks5UdpRules.getDefault()));
+	
+	@HelpText(
+			doc = "The binding host name or address for the peer-facing UDP "
+					+ "socket (default is 0.0.0.0)", 
+			usage = "socks5.onUdpAssociate.peerFacingBindHost=HOST"
+	)
+	public static final SettingSpec<Host> SOCKS5_ON_UDP_ASSOCIATE_PEER_FACING_BIND_HOST = 
+			SETTING_SPECS.addThenGet(new HostSettingSpec(
+					NewSettingSpecPermission.INSTANCE, 
+					"socks5.onUdpAssociate.peerFacingBindHost",
+					Host.getAllZerosInet4Instance()));
+	
+	@HelpText(
+			doc = "The space separated list of socket settings for the "
+					+ "peer-facing UDP socket", 
+			usage = "socks5.onUdpAssociate.peerFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
+	)
+	public static final SettingSpec<SocketSettings> SOCKS5_ON_UDP_ASSOCIATE_PEER_FACING_SOCKET_SETTINGS = 
+			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
+					NewSettingSpecPermission.INSTANCE, 
+					"socks5.onUdpAssociate.peerFacingSocketSettings",
+					SocketSettings.newInstance()));
 	
 	@HelpText(
 			doc = "The buffer size in bytes for relaying the data (default is "
@@ -260,30 +282,19 @@ public final class Socks5SettingSpecConstants {
 					PositiveInteger.newInstance(60000))); // 1 minute
 	
 	@HelpText(
-			doc = "The binding host name or address for the server-facing UDP "
-					+ "socket (default is 0.0.0.0)", 
-			usage = "socks5.onUdpAssociate.serverFacingBindHost=HOST"
-	)
-	public static final SettingSpec<Host> SOCKS5_ON_UDP_ASSOCIATE_SERVER_FACING_BIND_HOST = 
-			SETTING_SPECS.addThenGet(new HostSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"socks5.onUdpAssociate.serverFacingBindHost",
-					Host.getAllZerosInet4Instance()));
+			doc = "The space separated list of rules for a SOCKS5 reply to a "
+					+ "client (default is ruleAction=ALLOW)", 
+			usage = "socks5.socks5ReplyRules=[SOCKS5_REPLY_RULE_FIELD1[ SOCKS5_REPLY_RULE_FIELD2[...]]]"
+	)	
+	public static final SettingSpec<Socks5ReplyRules> SOCKS5_SOCKS5_REPLY_RULES =
+			SETTING_SPECS.addThenGet(new Socks5ReplyRulesSettingSpec(
+					NewSettingSpecPermission.INSTANCE,
+					"socks5.socks5ReplyRules",
+					Socks5ReplyRules.getDefault()));
 	
 	@HelpText(
-			doc = "The space separated list of socket settings for the "
-					+ "server-facing UDP socket", 
-			usage = "socks5.onUdpAssociate.serverFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
-	)
-	public static final SettingSpec<SocketSettings> SOCKS5_ON_UDP_ASSOCIATE_SERVER_FACING_SOCKET_SETTINGS = 
-			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"socks5.onUdpAssociate.serverFacingSocketSettings",
-					SocketSettings.newInstance()));
-	
-	@HelpText(
-			doc = "The space separated list of rules for SOCKS5 requests "
-					+ "(default is ruleAction=ALLOW)", 
+			doc = "The space separated list of rules for a SOCKS5 request "
+					+ "from a client (default is ruleAction=ALLOW)", 
 			usage = "socks5.socks5RequestRules=[SOCKS5_REQUEST_RULE_FIELD1[ SOCKS5_REQUEST_RULE_FIELD2[...]]]"
 	)	
 	public static final SettingSpec<Socks5RequestRules> SOCKS5_SOCKS5_REQUEST_RULES =

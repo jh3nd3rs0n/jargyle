@@ -19,8 +19,9 @@ import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Reply;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Reply;
+import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Request;
 
-final class ConnectCommandWorker extends CommandWorker {
+public final class ConnectCommandWorker extends CommandWorker {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(
 			ConnectCommandWorker.class);
@@ -29,22 +30,29 @@ final class ConnectCommandWorker extends CommandWorker {
 	private final CommandWorkerContext commandWorkerContext;
 	private final String desiredDestinationAddress;
 	private final int desiredDestinationPort;
+	private final MethodSubnegotiationResults methodSubnegotiationResults;
 	private final NetObjectFactory netObjectFactory;
 	private final Settings settings;
+	private final Socks5Request socks5Request;
 	
 	public ConnectCommandWorker(final CommandWorkerContext context) {
 		super(context);
 		Socket clientFacingSock = context.getClientFacingSocket();
 		String desiredDestinationAddr =	context.getDesiredDestinationAddress();
 		int desiredDestinationPrt = context.getDesiredDestinationPort();
+		MethodSubnegotiationResults methSubnegotiationResults =
+				context.getMethodSubnegotiationResults();
 		NetObjectFactory netObjFactory = context.getNetObjectFactory();
 		Settings sttngs = context.getSettings();
+		Socks5Request socks5Req = context.getSocks5Request();
 		this.clientFacingSocket = clientFacingSock;
 		this.commandWorkerContext = context;
 		this.desiredDestinationAddress = desiredDestinationAddr;
 		this.desiredDestinationPort = desiredDestinationPrt;
+		this.methodSubnegotiationResults = methSubnegotiationResults;
 		this.netObjectFactory = netObjFactory;
-		this.settings = sttngs;		
+		this.settings = sttngs;	
+		this.socks5Request = socks5Req;
 	}
 	
 	private boolean configureServerFacingSocket(
@@ -192,6 +200,13 @@ final class ConnectCommandWorker extends CommandWorker {
 					Reply.SUCCEEDED, 
 					serverBoundAddress, 
 					serverBoundPort);
+			if (!this.canAllow(
+					this.clientFacingSocket.getInetAddress().getHostAddress(), 
+					this.methodSubnegotiationResults, 
+					this.socks5Request, 
+					socks5Rep)) {
+				return;
+			}
 			LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
 					"Sending %s", 
 					socks5Rep.toString())));

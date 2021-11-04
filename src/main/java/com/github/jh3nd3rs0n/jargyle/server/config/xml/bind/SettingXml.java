@@ -28,6 +28,10 @@ class SettingXml {
 				required = true, 
 				type = SocketSettingsXml.class),
 		@XmlElement(
+				name = "socks5ReplyRules", 
+				required = true, 
+				type = Socks5ReplyRulesXml.class),		
+		@XmlElement(
 				name = "socks5RequestRules", 
 				required = true, 
 				type = Socks5RequestRulesXml.class),
@@ -35,6 +39,10 @@ class SettingXml {
 				name = "socks5RequestWorkerFactory",
 				required = true,
 				type = Socks5RequestWorkerFactoryXml.class),
+		@XmlElement(
+				name = "socks5UdpRules", 
+				required = true, 
+				type = Socks5UdpRulesXml.class),
 		@XmlElement(
 				name = "usernamePasswordAuthenticator", 
 				required = true, 

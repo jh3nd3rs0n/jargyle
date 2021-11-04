@@ -10,19 +10,18 @@ import java.net.SocketException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
 import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
 import com.github.jh3nd3rs0n.jargyle.common.net.Host;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.internal.logging.LoggerHelper;
 import com.github.jh3nd3rs0n.jargyle.internal.net.AllZerosInetAddressHelper;
-import com.github.jh3nd3rs0n.jargyle.server.Rules;
 import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Reply;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Reply;
+import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Request;
 
-final class UdpAssociateCommandWorker extends CommandWorker {
+public final class UdpAssociateCommandWorker extends CommandWorker {
 
 	private static final int HALF_SECOND = 500;
 
@@ -33,22 +32,29 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 	private final CommandWorkerContext commandWorkerContext;
 	private final String desiredDestinationAddress;
 	private final int desiredDestinationPort;
+	private final MethodSubnegotiationResults methodSubnegotiationResults;	
 	private final NetObjectFactory netObjectFactory;
 	private final Settings settings;
+	private final Socks5Request socks5Request;	
 	
 	public UdpAssociateCommandWorker(final CommandWorkerContext context) {
 		super(context);
 		Socket clientFacingSock = context.getClientFacingSocket();
 		String desiredDestinationAddr =	context.getDesiredDestinationAddress();
 		int desiredDestinationPrt = context.getDesiredDestinationPort();
+		MethodSubnegotiationResults methSubnegotiationResults =
+				context.getMethodSubnegotiationResults();		
 		NetObjectFactory netObjFactory = context.getNetObjectFactory();
 		Settings sttngs = context.getSettings();
+		Socks5Request socks5Req = context.getSocks5Request();		
 		this.clientFacingSocket = clientFacingSock;
 		this.commandWorkerContext = context;
 		this.desiredDestinationAddress = desiredDestinationAddr;
 		this.desiredDestinationPort = desiredDestinationPrt;
+		this.methodSubnegotiationResults = methSubnegotiationResults;		
 		this.netObjectFactory = netObjFactory;
-		this.settings = sttngs;		
+		this.settings = sttngs;
+		this.socks5Request = socks5Req;
 	}
 	
 	private boolean configureClientFacingDatagramSocket(
@@ -82,17 +88,17 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 		return true;
 	}
 	
-	private boolean configureServerFacingDatagramSocket(
-			final DatagramSocket serverFacingDatagramSock) {
+	private boolean configurePeerFacingDatagramSocket(
+			final DatagramSocket peerFacingDatagramSock) {
 		SocketSettings socketSettings = this.settings.getLastValue(
-				Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_SERVER_FACING_SOCKET_SETTINGS);
+				Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_PEER_FACING_SOCKET_SETTINGS);
 		try {
-			socketSettings.applyTo(serverFacingDatagramSock);
+			socketSettings.applyTo(peerFacingDatagramSock);
 		} catch (SocketException e) {
 			LOGGER.error( 
 					LoggerHelper.objectMessage(
 							this, 
-							"Error in setting the server-facing UDP socket"), 
+							"Error in setting the peer-facing UDP socket"), 
 					e);
 			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
 					Reply.GENERAL_SOCKS_SERVER_FAILURE);
@@ -146,19 +152,19 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 		return clientFacingDatagramSock;
 	}
 	
-	private DatagramSocket newServerFacingDatagramSocket() {
+	private DatagramSocket newPeerFacingDatagramSocket() {
 		Host bindHost = this.settings.getLastValue(
-				Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_SERVER_FACING_BIND_HOST);
+				Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_PEER_FACING_BIND_HOST);
 		InetAddress bindInetAddress = bindHost.toInetAddress();
-		DatagramSocket serverFacingDatagramSock = null;
+		DatagramSocket peerFacingDatagramSock = null;
 		try {
-			serverFacingDatagramSock = this.netObjectFactory.newDatagramSocket(
+			peerFacingDatagramSock = this.netObjectFactory.newDatagramSocket(
 					new InetSocketAddress(bindInetAddress, 0));
 		} catch (SocketException e) {
 			LOGGER.error( 
 					LoggerHelper.objectMessage(
 							this, 
-							"Error in creating the server-facing UDP socket"), 
+							"Error in creating the peer-facing UDP socket"), 
 					e);
 			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
 					Reply.GENERAL_SOCKS_SERVER_FAILURE);
@@ -176,23 +182,21 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 			}
 			return null;
 		}
-		return serverFacingDatagramSock;
+		return peerFacingDatagramSock;
 	}
 
 	private void passPackets(
-			final UdpRelayServer.ClientDatagramSocketAddress clientDatagramSocketAddress,
-			final UdpRelayServer.DatagramSockets datagramSockets,
-			final HostResolver hostResolver,
-			final Rules inboundRules,
-			final Rules outboundRules, 
-			final UdpRelayServer.RelaySettings relaySettings) throws IOException {
+			final String clientAddr,
+			final int clientPrt,
+			final DatagramSocket clientFacingDatagramSock,
+			final DatagramSocket peerFacingDatagramSock,
+			final CommandWorkerContext context) throws IOException {
 		UdpRelayServer udpRelayServer = new UdpRelayServer(
-				clientDatagramSocketAddress,
-				datagramSockets,
-				hostResolver,
-				inboundRules, 
-				outboundRules,
-				relaySettings);
+				clientAddr,
+				clientPrt,
+				clientFacingDatagramSock,
+				peerFacingDatagramSock,
+				context);
 		try {
 			udpRelayServer.start();
 			while (!this.clientFacingSocket.isClosed() 
@@ -216,21 +220,21 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 	public void run() throws IOException {
 		Socks5Reply socks5Rep = null;
 		String desiredDestinationAddr = this.desiredDestinationAddress;
-		if (AllZerosInetAddressHelper.isAllZerosHostAddress(desiredDestinationAddr)) {
+		if (AllZerosInetAddressHelper.isAllZerosHostAddress(
+				desiredDestinationAddr)) {
 			desiredDestinationAddr = 
 					this.clientFacingSocket.getInetAddress().getHostAddress();
 		}
 		int desiredDestinationPrt = this.desiredDestinationPort;
-		HostResolver hostResolver = this.netObjectFactory.newHostResolver();
-		DatagramSocket serverFacingDatagramSock = null;
+		DatagramSocket peerFacingDatagramSock = null;
 		DatagramSocket clientFacingDatagramSock = null;
 		try {
-			serverFacingDatagramSock = this.newServerFacingDatagramSocket();
-			if (serverFacingDatagramSock == null) {
+			peerFacingDatagramSock = this.newPeerFacingDatagramSocket();
+			if (peerFacingDatagramSock == null) {
 				return;
 			}
-			if (!this.configureServerFacingDatagramSocket(
-					serverFacingDatagramSock)) {
+			if (!this.configurePeerFacingDatagramSocket(
+					peerFacingDatagramSock)) {
 				return;
 			}
 			clientFacingDatagramSock = this.newClientFacingDatagramSocket();
@@ -253,7 +257,8 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 			InetAddress inetAddress = 
 					clientFacingDatagramSock.getLocalAddress();
 			String serverBoundAddress = inetAddress.getHostAddress();
-			if (AllZerosInetAddressHelper.isAllZerosHostAddress(serverBoundAddress)) {
+			if (AllZerosInetAddressHelper.isAllZerosHostAddress(
+					serverBoundAddress)) {
 				inetAddress = this.clientFacingSocket.getLocalAddress();
 				serverBoundAddress = inetAddress.getHostAddress();
 			}
@@ -262,27 +267,24 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 					Reply.SUCCEEDED, 
 					serverBoundAddress, 
 					serverBoundPort);
+			if (!this.canAllow(
+					this.clientFacingSocket.getInetAddress().getHostAddress(), 
+					this.methodSubnegotiationResults, 
+					this.socks5Request, 
+					socks5Rep)) {
+				return;
+			}			
 			LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
 					"Sending %s",
 					socks5Rep.toString())));
 			this.commandWorkerContext.writeThenFlush(socks5Rep.toByteArray());
 			try {
 				this.passPackets(
-						new UdpRelayServer.ClientDatagramSocketAddress(
-								desiredDestinationAddr, desiredDestinationPrt),
-						new UdpRelayServer.DatagramSockets(
-								clientFacingDatagramSock, 
-								serverFacingDatagramSock), 
-						hostResolver, 
-						this.settings.getLastValue(
-								Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_INBOUND_RULES), 
-						this.settings.getLastValue(
-								Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_OUTBOUND_RULES), 
-						new UdpRelayServer.RelaySettings(
-								this.settings.getLastValue(
-										Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_RELAY_BUFFER_SIZE).intValue(), 
-								this.settings.getLastValue(
-										Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_RELAY_IDLE_TIMEOUT).intValue()));
+						desiredDestinationAddr, 
+						desiredDestinationPrt,
+						clientFacingDatagramSock, 
+						peerFacingDatagramSock, 
+						this.commandWorkerContext);
 			} catch (IOException e) {
 				LOGGER.error( 
 						LoggerHelper.objectMessage(
@@ -294,9 +296,9 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 					&& !clientFacingDatagramSock.isClosed()) {
 				clientFacingDatagramSock.close();
 			}
-			if (serverFacingDatagramSock != null 
-					&& !serverFacingDatagramSock.isClosed()) {
-				serverFacingDatagramSock.close();
+			if (peerFacingDatagramSock != null 
+					&& !peerFacingDatagramSock.isClosed()) {
+				peerFacingDatagramSock.close();
 			}
 		}
 	}

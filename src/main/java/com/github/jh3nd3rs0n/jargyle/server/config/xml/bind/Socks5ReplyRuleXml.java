@@ -4,7 +4,7 @@ import com.github.jh3nd3rs0n.jargyle.common.net.AddressRange;
 import com.github.jh3nd3rs0n.jargyle.common.net.PortRange;
 import com.github.jh3nd3rs0n.jargyle.server.LogAction;
 import com.github.jh3nd3rs0n.jargyle.server.RuleAction;
-import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5RequestRule;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5ReplyRule;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Command;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
 
@@ -14,8 +14,8 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
 
 @XmlAccessorType(XmlAccessType.NONE)
-@XmlType(name = "socks5RequestRule", propOrder = { }) 
-class Socks5RequestRuleXml {
+@XmlType(name = "socks5ReplyRule", propOrder = { }) 
+class Socks5ReplyRuleXml {
 
 	@XmlElement(name = "ruleAction", required = true)
 	protected String ruleAction;
@@ -31,50 +31,64 @@ class Socks5RequestRuleXml {
 	protected String desiredDestinationAddressRange;
 	@XmlElement(name = "desiredDestinationPortRange")
 	protected String desiredDestinationPortRange;
+	@XmlElement(name = "serverBoundAddressRange")
+	protected String serverBoundAddressRange;
+	@XmlElement(name = "serverBoundPortRange")
+	protected String serverBoundPortRange;	
 	@XmlElement(name = "logAction")
 	protected String logAction;
 	@XmlElement(name = "doc")
 	protected String doc;
 	
-	public Socks5RequestRuleXml() {
+	public Socks5ReplyRuleXml() {
 		this.ruleAction = null;
 		this.clientAddressRange = null;
 		this.command = null;
 		this.desiredDestinationAddressRange = null;
 		this.desiredDestinationPortRange = null;
+		this.serverBoundAddressRange = null;
+		this.serverBoundPortRange = null;		
 		this.logAction = null;
 		this.doc = null;
 	}
 	
-	public Socks5RequestRuleXml(final Socks5RequestRule socks5RequestRule) {
+	public Socks5ReplyRuleXml(final Socks5ReplyRule socks5ReplyRule) {
 		AddressRange clientAddrRange = 
-				socks5RequestRule.getClientAddressRange();
-		Method meth = socks5RequestRule.getMethod();
-		String usr = socks5RequestRule.getUser();
-		Command cmd = socks5RequestRule.getCommand();
+				socks5ReplyRule.getClientAddressRange();
+		Method meth = socks5ReplyRule.getMethod();
+		String usr = socks5ReplyRule.getUser();
+		Command cmd = socks5ReplyRule.getCommand();
 		AddressRange desiredDestinationAddrRange =
-				socks5RequestRule.getDesiredDestinationAddressRange();
+				socks5ReplyRule.getDesiredDestinationAddressRange();
 		PortRange desiredDestinationPrtRange = 
-				socks5RequestRule.getDesiredDestinationPortRange();
-		LogAction lgAction = socks5RequestRule.getLogAction();
-		this.ruleAction = socks5RequestRule.getRuleAction().toString();
+				socks5ReplyRule.getDesiredDestinationPortRange();
+		AddressRange serverBoundAddrRange =
+				socks5ReplyRule.getDesiredDestinationAddressRange();
+		PortRange serverBoundPrtRange = 
+				socks5ReplyRule.getDesiredDestinationPortRange();		
+		LogAction lgAction = socks5ReplyRule.getLogAction();
+		this.ruleAction = socks5ReplyRule.getRuleAction().toString();
 		this.clientAddressRange = (clientAddrRange != null) ? 
 				clientAddrRange.toString() : null;
 		this.method = (meth != null) ? meth.toString() : null;
 		this.user = usr;
 		this.command = (cmd != null) ? cmd.toString() : null;
-		this.desiredDestinationAddressRange = 
+		this.desiredDestinationAddressRange =
 				(desiredDestinationAddrRange != null) ? 
 						desiredDestinationAddrRange.toString() : null;
-		this.desiredDestinationPortRange = 
+		this.desiredDestinationPortRange =
 				(desiredDestinationPrtRange != null) ?
 						desiredDestinationPrtRange.toString() : null;
+		this.serverBoundAddressRange = (serverBoundAddrRange != null) ? 
+				serverBoundAddrRange.toString() : null;
+		this.serverBoundPortRange =	(serverBoundPrtRange != null) ?
+				serverBoundPrtRange.toString() : null;		
 		this.logAction = (lgAction != null) ? lgAction.toString() : null;
-		this.doc = socks5RequestRule.getDoc();			
+		this.doc = socks5ReplyRule.getDoc();			
 	}
 	
-	public Socks5RequestRule toSocks5RequestRule() {
-		Socks5RequestRule.Builder builder = new Socks5RequestRule.Builder(
+	public Socks5ReplyRule toSocks5ReplyRule() {
+		Socks5ReplyRule.Builder builder = new Socks5ReplyRule.Builder(
 				RuleAction.valueOfString(this.ruleAction));
 		if (this.clientAddressRange != null) {
 			builder.clientAddressRange(AddressRange.newInstance(
@@ -97,6 +111,14 @@ class Socks5RequestRuleXml {
 			builder.desiredDestinationPortRange(PortRange.newInstance(
 					this.desiredDestinationPortRange));
 		}
+		if (this.serverBoundAddressRange != null) {
+			builder.serverBoundAddressRange(AddressRange.newInstance(
+					this.serverBoundAddressRange));
+		}
+		if (this.serverBoundPortRange != null) {
+			builder.serverBoundPortRange(PortRange.newInstance(
+					this.serverBoundPortRange));
+		}		
 		if (this.logAction != null) {
 			builder.logAction(LogAction.valueOfString(this.logAction));
 		}

@@ -7,23 +7,19 @@ import java.util.List;
 import java.util.Objects;
 
 import com.github.jh3nd3rs0n.jargyle.common.net.AddressRange;
-import com.github.jh3nd3rs0n.jargyle.common.net.Port;
-import com.github.jh3nd3rs0n.jargyle.common.net.PortRange;
 import com.github.jh3nd3rs0n.jargyle.internal.help.HelpText;
 import com.github.jh3nd3rs0n.jargyle.server.LogAction;
 import com.github.jh3nd3rs0n.jargyle.server.RuleAction;
 import com.github.jh3nd3rs0n.jargyle.server.RuleActionDenyException;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.Command;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Request;
 
-public final class Socks5RequestRule {
+public final class Socks5UdpRule {
 
 	public static final class Builder {
 
 		@HelpText(
 				doc = "Specifies the action to take. This field starts a new "
-						+ "SOCKS5 request rule.",
+						+ "SOCKS5 UDP rule.",
 				usage = "ruleAction=RULE_ACTION"
 		)	
 		private final RuleAction ruleAction;
@@ -48,24 +44,10 @@ public final class Socks5RequestRule {
 		private String user;
 		
 		@HelpText(
-				doc = "Specifies the command type of the SOCKS5 request",
-				usage = "command=SOCKS5_COMMAND"
-		)
-		private Command command;
-		
-		@HelpText(
-				doc = "Specifies the address range for the desired destination "
-						+ "address of the SOCKS5 request",
-				usage = "desiredDestinationAddressRange=ADDRESS|ADDRESS1-ADDRESS2|regex:REGULAR_EXPRESSION"
+				doc = "Specifies the address range for the peer address",
+				usage = "peerAddressRange=ADDRESS|ADDRESS1-ADDRESS2|regex:REGULAR_EXPRESSION"
 		)	
-		private AddressRange desiredDestinationAddressRange;
-		
-		@HelpText(
-				doc = "Specifies the port range for the desired destination port "
-						+ "of the SOCKS5 request",
-				usage = "desiredDestinationPortRange=PORT|PORT1-PORT2"
-		)	
-		private PortRange desiredDestinationPortRange;
+		private AddressRange peerAddressRange;
 		
 		@HelpText(
 				doc = "Specifies the logging action to take if the rule applies",
@@ -81,37 +63,17 @@ public final class Socks5RequestRule {
 			this.clientAddressRange = null;
 			this.method = null;
 			this.user = null;
-			this.command = null;
-			this.desiredDestinationAddressRange = null;
-			this.desiredDestinationPortRange = null;
+			this.peerAddressRange = null;
 			this.logAction = null;
 			this.doc = null;			
 		}
 		
-		public Socks5RequestRule build() {
-			return new Socks5RequestRule(this);
+		public Socks5UdpRule build() {
+			return new Socks5UdpRule(this);
 		}
 		
-		public Builder clientAddressRange(
-				final AddressRange clientAddrRange) {
+		public Builder clientAddressRange(final AddressRange clientAddrRange) {
 			this.clientAddressRange = clientAddrRange;
-			return this;
-		}
-		
-		public Builder command(final Command cmd) {
-			this.command = cmd;
-			return this;
-		}
-		
-		public Builder desiredDestinationAddressRange(
-				final AddressRange desiredDestinationAddrRange) {
-			this.desiredDestinationAddressRange = desiredDestinationAddrRange;
-			return this;
-		}
-		
-		public Builder desiredDestinationPortRange(
-				final PortRange desiredDestinationPrtRange) {
-			this.desiredDestinationPortRange = desiredDestinationPrtRange;
 			return this;
 		}
 		
@@ -130,6 +92,11 @@ public final class Socks5RequestRule {
 			return this;
 		}
 		
+		public Builder peerAddressRange(final AddressRange peerAddrRange) {
+			this.peerAddressRange = peerAddrRange;
+			return this;
+		}
+		
 		public Builder user(final String usr) {
 			this.user = usr;
 			return this;
@@ -142,7 +109,7 @@ public final class Socks5RequestRule {
 		RULE_ACTION("ruleAction") {
 			@Override
 			public Builder set(final Builder builder, final String value) {
-				return new Socks5RequestRule.Builder(RuleAction.valueOfString(
+				return new Socks5UdpRule.Builder(RuleAction.valueOfString(
 						value));
 			}
 		},
@@ -169,26 +136,11 @@ public final class Socks5RequestRule {
 			}
 		},
 		
-		COMMAND("command") {
+		PEER_ADDRESS_RANGE("peerAddressRange") {
 			@Override
 			public Builder set(final Builder builder, final String value) {
-				return builder.command(Command.valueOfString(value));
-			}
-		},
-		
-		DESIRED_DESTINATION_ADDRESS_RANGE("desiredDestinationAddressRange") {
-			@Override
-			public Builder set(final Builder builder, final String value) {
-				return builder.desiredDestinationAddressRange(
-						AddressRange.newInstance(value));
-			}
-		},
-		
-		DESIRED_DESTINATION_PORT_RANGE("desiredDestinationPortRange") {
-			@Override
-			public Builder set(final Builder builder, final String value) {
-				return builder.desiredDestinationPortRange(
-						PortRange.newInstance(value));
+				return builder.peerAddressRange(AddressRange.newInstance(
+						value));
 			}
 		},
 		
@@ -238,16 +190,16 @@ public final class Socks5RequestRule {
 		
 	}
 
-	private static final Socks5RequestRule DEFAULT_INSTANCE = 
-			new Socks5RequestRule.Builder(RuleAction.ALLOW).build();
+	private static final Socks5UdpRule DEFAULT_INSTANCE = 
+			new Socks5UdpRule.Builder(RuleAction.ALLOW).build();
 	
-	public static Socks5RequestRule getDefault() {
+	public static Socks5UdpRule getDefault() {
 		return DEFAULT_INSTANCE;
 	}
 	
-	public static List<Socks5RequestRule> newInstances(final String s) {
-		List<Socks5RequestRule> socks5RequestRules = 
-				new ArrayList<Socks5RequestRule>();
+	public static List<Socks5UdpRule> newInstances(final String s) {
+		List<Socks5UdpRule> socks5UdpRules = 
+				new ArrayList<Socks5UdpRule>();
 		String[] words = s.split(" ");
 		Builder recentBuilder = null;
 		Builder builder = null;
@@ -274,45 +226,37 @@ public final class Socks5RequestRule {
 				recentBuilder = builder;
 			}
 			if (!recentBuilder.equals(builder)) {
-				socks5RequestRules.add(recentBuilder.build());
+				socks5UdpRules.add(recentBuilder.build());
 				recentBuilder = builder;
 			}
 			if (!iterator.hasNext()) {
-				socks5RequestRules.add(builder.build());
+				socks5UdpRules.add(builder.build());
 			}
 		}
-		return socks5RequestRules;
+		return socks5UdpRules;
 	}
 	
 	private final RuleAction ruleAction;
 	private final AddressRange clientAddressRange;
 	private final Method method;
 	private final String user;
-	private final Command command;
-	private final AddressRange desiredDestinationAddressRange;
-	private final PortRange desiredDestinationPortRange;
+	private final AddressRange peerAddressRange;
 	private final LogAction logAction;
 	private final String doc;
 	
-	private Socks5RequestRule(final Builder builder) {
+	private Socks5UdpRule(final Builder builder) {
 		RuleAction rlAction = builder.ruleAction;
 		AddressRange clientAddrRange = builder.clientAddressRange;
 		Method meth = builder.method;
 		String usr = builder.user;
-		Command cmd = builder.command;
-		AddressRange desiredDestinationAddrRange = 
-				builder.desiredDestinationAddressRange;
-		PortRange desiredDestinationPrtRange = 
-				builder.desiredDestinationPortRange;
+		AddressRange peerAddrRange = builder.peerAddressRange;
 		LogAction lgAction = builder.logAction;
 		String d = builder.doc;
 		this.ruleAction = rlAction;
 		this.clientAddressRange = clientAddrRange;
 		this.method = meth;
 		this.user = usr;
-		this.command = cmd;
-		this.desiredDestinationAddressRange = desiredDestinationAddrRange;
-		this.desiredDestinationPortRange = desiredDestinationPrtRange;
+		this.peerAddressRange = peerAddrRange;
 		this.logAction = lgAction;
 		this.doc = d;		
 	}
@@ -320,31 +264,21 @@ public final class Socks5RequestRule {
 	public boolean appliesTo(
 			final String clientAddress,
 			final MethodSubnegotiationResults methSubnegotiationResults,
-			final Socks5Request socks5Req) {
-		if (this.clientAddressRange != null 
+			final String peerAddress) {
+		if (this.clientAddressRange != null
 				&& !this.clientAddressRange.contains(clientAddress)) {
 			return false;
 		}
-		if (this.method != null 
-				&& !this.method.equals(methSubnegotiationResults.getMethod())) {
+		if (this.method != null	&& !this.method.equals(
+				methSubnegotiationResults.getMethod())) {
 			return false;
 		}
-		if (this.user != null 
-				&& !this.user.equals(methSubnegotiationResults.getUser())) {
+		if (this.user != null && !this.user.equals(
+				methSubnegotiationResults.getUser())) {
 			return false;
 		}
-		if (this.command != null
-				&& !this.command.equals(socks5Req.getCommand())) {
-			return false;
-		}
-		if (this.desiredDestinationAddressRange != null
-				&& !this.desiredDestinationAddressRange.contains(
-						socks5Req.getDesiredDestinationAddress())) {
-			return false;
-		}
-		if (this.desiredDestinationPortRange != null
-				&& !this.desiredDestinationPortRange.contains(Port.newInstance(
-						socks5Req.getDesiredDestinationPort()))) {
+		if (this.peerAddressRange != null && !this.peerAddressRange.contains(
+				peerAddress)) {
 			return false;
 		}
 		return true;
@@ -353,36 +287,36 @@ public final class Socks5RequestRule {
 	public void applyTo(
 			final String clientAddress,	
 			final MethodSubnegotiationResults methSubnegotiationResults,
-			final Socks5Request socks5Req) {
+			final String peerAddress) {
 		String user = methSubnegotiationResults.getUser();
 		String possibleUser = (user != null) ? 
 				String.format(" (%s)", user) : "";
 		if (this.ruleAction.equals(RuleAction.ALLOW)
 				&& this.logAction != null) {
 			this.logAction.log(String.format(
-					"SOCKS5 request from %s%s is allowed based on the "
-					+ "following rule: %s. SOCKS5 request: %s",
+					"Traffic between client %s%s and peer %s is allowed based "
+					+ "on the following rule: %s",
 					clientAddress,
 					possibleUser,
-					this,
-					socks5Req));			
+					peerAddress,
+					this));			
 		} else if (this.ruleAction.equals(RuleAction.DENY)) {
 			if (this.logAction != null) {
 				this.logAction.log(String.format(
-						"SOCKS5 request from %s%s is denied based on the "
-						+ "following rule: %s. SOCKS5 request: %s",
+						"Traffic between client %s%s and peer %s is denied "
+						+ "based on the following rule: %s",
 						clientAddress,
 						possibleUser,
-						this,
-						socks5Req));				
+						peerAddress,
+						this));				
 			}
 			throw new RuleActionDenyException(String.format(
-					"SOCKS5 request from %s%s is denied based on the "
-					+ "following rule: %s. SOCKS5 request: %s",
+					"traffic between client %s%s and peer %s is denied based "
+					+ "on the following rule: %s",
 					clientAddress,
 					possibleUser,
-					this,
-					socks5Req));
+					peerAddress,
+					this));
 		}
 	}
 	
@@ -397,7 +331,7 @@ public final class Socks5RequestRule {
 		if (this.getClass() != obj.getClass()) {
 			return false;
 		}
-		Socks5RequestRule other = (Socks5RequestRule) obj;
+		Socks5UdpRule other = (Socks5UdpRule) obj;
 		if (this.clientAddressRange == null) {
 			if (other.clientAddressRange != null) {
 				return false;
@@ -405,29 +339,17 @@ public final class Socks5RequestRule {
 		} else if (!this.clientAddressRange.equals(other.clientAddressRange)) {
 			return false;
 		}
-		if (this.command != other.command) {
-			return false;
-		}
-		if (this.desiredDestinationAddressRange == null) {
-			if (other.desiredDestinationAddressRange != null) {
-				return false;
-			}
-		} else if (!this.desiredDestinationAddressRange.equals(
-				other.desiredDestinationAddressRange)) {
-			return false;
-		}
-		if (this.desiredDestinationPortRange == null) {
-			if (other.desiredDestinationPortRange != null) {
-				return false;
-			}
-		} else if (!this.desiredDestinationPortRange.equals(
-				other.desiredDestinationPortRange)) {
-			return false;
-		}
 		if (this.logAction != other.logAction) {
 			return false;
 		}
 		if (this.method != other.method) {
+			return false;
+		}
+		if (this.peerAddressRange == null) {
+			if (other.peerAddressRange != null) {
+				return false;
+			}
+		} else if (!this.peerAddressRange.equals(other.peerAddressRange)) {
 			return false;
 		}
 		if (this.ruleAction != other.ruleAction) {
@@ -447,28 +369,20 @@ public final class Socks5RequestRule {
 		return this.clientAddressRange;
 	}
 	
-	public Command getCommand() {
-		return this.command;
-	}
-	
-	public AddressRange getDesiredDestinationAddressRange() {
-		return this.desiredDestinationAddressRange;
-	}
-
-	public PortRange getDesiredDestinationPortRange() {
-		return this.desiredDestinationPortRange;
-	}
-
 	public String getDoc() {
 		return this.doc;
 	}
-	
+
 	public LogAction getLogAction() {
 		return this.logAction;
 	}
-
+	
 	public Method getMethod() {
 		return this.method;
+	}
+
+	public AddressRange getPeerAddressRange() {
+		return this.peerAddressRange;
 	}
 	
 	public RuleAction getRuleAction() {
@@ -485,17 +399,12 @@ public final class Socks5RequestRule {
 		int result = 1;
 		result = prime * result + ((this.clientAddressRange == null) ? 
 				0 : this.clientAddressRange.hashCode());
-		result = prime * result + ((this.command == null) ? 
-				0 : this.command.hashCode());
-		result = prime * result
-				+ ((this.desiredDestinationAddressRange == null) ? 
-						0 : desiredDestinationAddressRange.hashCode());
-		result = prime * result + ((this.desiredDestinationPortRange == null) ? 
-				0 : desiredDestinationPortRange.hashCode());
 		result = prime * result + ((this.logAction == null) ? 
 				0 : this.logAction.hashCode());
 		result = prime * result + ((this.method == null) ? 
 				0 : this.method.hashCode());
+		result = prime * result	+ ((this.peerAddressRange == null) ? 
+				0 : this.peerAddressRange.hashCode());
 		result = prime * result + ((this.ruleAction == null) ? 
 				0 : this.ruleAction.hashCode());
 		result = prime * result + ((this.user == null) ? 
@@ -520,17 +429,9 @@ public final class Socks5RequestRule {
 			builder.append(" user=");
 			builder.append(this.user);			
 		}
-		if (this.command != null) {
-			builder.append(" command=");
-			builder.append(this.command);
-		}
-		if (this.desiredDestinationAddressRange != null) {
-			builder.append(" desiredDestinationAddressRange=");
-			builder.append(this.desiredDestinationAddressRange);			
-		}
-		if (this.desiredDestinationPortRange != null) {
-			builder.append(" desiredDestinationPortRange=");
-			builder.append(this.desiredDestinationPortRange);
+		if (this.peerAddressRange != null) {
+			builder.append(" peerAddressRange=");
+			builder.append(this.peerAddressRange);			
 		}
 		if (this.logAction != null) {
 			builder.append(" logAction=");

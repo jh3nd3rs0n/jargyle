@@ -11,7 +11,8 @@ import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Request;
 public final class Socks5RequestRules {
 
 	private static final Socks5RequestRules DEFAULT_INSTANCE = 
-			new Socks5RequestRules(Arrays.asList(Socks5RequestRule.getDefault()));
+			new Socks5RequestRules(Arrays.asList(
+					Socks5RequestRule.getDefault()));
 	
 	public static Socks5RequestRules getDefault() {
 		return DEFAULT_INSTANCE;
@@ -40,12 +41,12 @@ public final class Socks5RequestRules {
 	}
 	
 	public Socks5RequestRule anyAppliesTo(
-			final String sourceAddress,
+			final String clientAddress,
 			final MethodSubnegotiationResults methSubnegotiationResults,
 			final Socks5Request socks5Req) {
 		for (Socks5RequestRule socks5RequestRule : this.socks5RequestRules) {
 			if (socks5RequestRule.appliesTo(
-					sourceAddress, methSubnegotiationResults, socks5Req)) {
+					clientAddress, methSubnegotiationResults, socks5Req)) {
 				return socks5RequestRule;
 			}
 		}
@@ -55,7 +56,7 @@ public final class Socks5RequestRules {
 		throw new IllegalArgumentException(String.format(
 				"SOCKS5 request from %s%s does not apply to any rule. SOCKS5 "
 				+ "request: %s",
-				sourceAddress,
+				clientAddress,
 				possibleUser,
 				socks5Req));
 	}

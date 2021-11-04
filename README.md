@@ -13,8 +13,7 @@ Jargyle is a Java SOCKS5 server. It has the following features:
 -   [DTLS for UDP traffic through SOCKS server chaining](#5-12-2-using-dtls-for-udp-traffic-through-socks-server-chaining)
 -   [Host name resolution through SOCKS5 server chaining](#5-12-3-using-host-name-resolution-through-socks5-server-chaining)
 -   [SOCKS server chaining to a specified chain of other SOCKS servers](#5-13-chaining-to-a-specified-chain-of-other-socks-servers)
--   [Firewall rules](#5-14-using-firewall-rules)
--   [Firewall rules for SOCKS5 requests](#5-15-using-firewall-rules-for-socks5-requests)
+-   Firewall rules for [clients](#5-14-using-firewall-rules-for-clients), [SOCKS5 requests](#5-15-using-firewall-rules-for-socks5-requests), [SOCKS5 replies](#5-16-using-firewall-rules-for-socks5-replies), and [SOCKS5 UDP traffic](#5-17-using-firewall-rules-for-socks5-udp-traffic)
 
 Although Jargyle can act as a standalone SOCKS5 server, it can act as a bridge between the following:
 
@@ -56,8 +55,10 @@ Although Jargyle can act as a standalone SOCKS5 server, it can act as a bridge b
 -   [5. 12. 4. 2. Using Username Password Authentication](#5-12-4-2-using-username-password-authentication)
 -   [5. 12. 4. 3. Using GSS-API Authentication](#5-12-4-3-using-gss-api-authentication)
 -   [5. 13. Chaining to a Specified Chain of Other SOCKS Servers](#5-13-chaining-to-a-specified-chain-of-other-socks-servers)
--   [5. 14. Using Firewall Rules](#5-14-using-firewall-rules)
+-   [5. 14. Using Firewall Rules for Clients](#5-14-using-firewall-rules-for-clients)
 -   [5. 15. Using Firewall Rules for SOCKS5 Requests](#5-15-using-firewall-rules-for-socks5-requests)
+-   [5. 16. Using Firewall Rules for SOCKS5 Replies](#5-16-using-firewall-rules-for-socks5-replies)
+-   [5. 17. Using Firewall Rules for SOCKS5 UDP Traffic](#5-17-using-firewall-rules-for-socks5-udp-traffic)
 -   [6. Miscellaneous Notes](#6-miscellaneous-notes)
 -   [6. 1. Multiple Settings of the Same Name](#6-1-multiple-settings-of-the-same-name)
 -   [6. 2. The SOCKS5 RESOLVE Command](#6-2-the-socks5-resolve-command)
@@ -358,9 +359,6 @@ The following is a list of available settings for the SOCKS server (displayed wh
       socks5.methods=[SOCKS5_METHOD1[ SOCKS5_METHOD2[...]]]
           The space separated list of acceptable authentication methods in order of preference (default is NO_AUTHENTICATION_REQUIRED)
     
-      socks5.onBind.inboundRules=[RULE_FIELD1[ RULE_FIELD2[...]]]
-          The space separated list of rules for TCP traffic from an inbound socket to the SOCKS server (default is ruleAction=ALLOW)
-    
       socks5.onBind.inboundSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
           The space separated list of socket settings for the inbound socket
     
@@ -372,6 +370,9 @@ The following is a list of available settings for the SOCKS server (displayed wh
     
       socks5.onBind.relayIdleTimeout=INTEGER_BETWEEN_1_AND_2147483647
           The timeout in milliseconds on relaying no data (default is 60000)
+    
+      socks5.onBind.secondSocks5ReplyRules=[SOCKS5_REPLY_RULE_FIELD1[ SOCKS5_REPLY_RULE_FIELD2[...]]]
+          The space separated list of rules for a second SOCKS5 reply to a client (default is ruleAction=ALLOW)
     
       socks5.onConnect.prepareServerFacingSocket=true|false
           The boolean value to indicate if the server-facing socket is to be prepared before connecting (involves applying the specified socket settings, resolving the target host name, and setting the specified timeout on waiting to connect) (default is false)
@@ -397,11 +398,17 @@ The following is a list of available settings for the SOCKS server (displayed wh
       socks5.onUdpAssociate.clientFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
           The space separated list of socket settings for the client-facing UDP socket
     
-      socks5.onUdpAssociate.inboundRules=[RULE_FIELD1[ RULE_FIELD2[...]]]
-          The space separated list of rules for UDP traffic from a UDP server to the UDP relay server (default is ruleAction=ALLOW)
+      socks5.onUdpAssociate.inboundSocks5UdpRules=[SOCKS5_UDP_RULE_FIELD1[ SOCKS5_UDP_RULE_FIELD2[...]]]
+          The space separated list of rules for UDP traffic from a UDP peer to a UDP client (default is ruleAction=ALLOW)
     
-      socks5.onUdpAssociate.outboundRules=[RULE_FIELD1[ RULE_FIELD2[...]]]
-          The space separated list of rules for UDP traffic from the UDP relay server to a UDP server (default is ruleAction=ALLOW)
+      socks5.onUdpAssociate.outboundSocks5UdpRules=[SOCKS5_UDP_RULE_FIELD1[ SOCKS5_UDP_RULE_FIELD2[...]]]
+          The space separated list of rules for UDP traffic from a UDP client to a UDP peer (default is ruleAction=ALLOW)
+    
+      socks5.onUdpAssociate.peerFacingBindHost=HOST
+          The binding host name or address for the peer-facing UDP socket (default is 0.0.0.0)
+    
+      socks5.onUdpAssociate.peerFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
+          The space separated list of socket settings for the peer-facing UDP socket
     
       socks5.onUdpAssociate.relayBufferSize=INTEGER_BETWEEN_1_AND_2147483647
           The buffer size in bytes for relaying the data (default is 32768)
@@ -409,14 +416,11 @@ The following is a list of available settings for the SOCKS server (displayed wh
       socks5.onUdpAssociate.relayIdleTimeout=INTEGER_BETWEEN_1_AND_2147483647
           The timeout in milliseconds on relaying no data (default is 60000)
     
-      socks5.onUdpAssociate.serverFacingBindHost=HOST
-          The binding host name or address for the server-facing UDP socket (default is 0.0.0.0)
-    
-      socks5.onUdpAssociate.serverFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
-          The space separated list of socket settings for the server-facing UDP socket
+      socks5.socks5ReplyRules=[SOCKS5_REPLY_RULE_FIELD1[ SOCKS5_REPLY_RULE_FIELD2[...]]]
+          The space separated list of rules for a SOCKS5 reply to a client (default is ruleAction=ALLOW)
     
       socks5.socks5RequestRules=[SOCKS5_REQUEST_RULE_FIELD1[ SOCKS5_REQUEST_RULE_FIELD2[...]]]
-          The space separated list of rules for SOCKS5 requests (default is ruleAction=ALLOW)
+          The space separated list of rules for a SOCKS5 request from a client (default is ruleAction=ALLOW)
     
       socks5.socks5RequestWorkerFactory=CLASSNAME[:VALUE]
           The SOCKS5 request worker factory for the SOCKS5 server
@@ -562,13 +566,45 @@ The following is a list of available settings for the SOCKS server (displayed wh
       USERNAME_PASSWORD
           Username password authentication
     
+    SOCKS5_REPLY_RULE_FIELDS:
+    
+      ruleAction=RULE_ACTION
+          Specifies the action to take. This field starts a new SOCKS5 reply rule.
+    
+      clientAddressRange=ADDRESS|ADDRESS1-ADDRESS2|regex:REGULAR_EXPRESSION
+          Specifies the address range for the client address
+    
+      method=SOCKS5_METHOD
+          Specifies the negotiated SOCKS5 method
+    
+      user=USER
+          Specifies the user if any after the negotiated SOCKS5 method
+    
+      command=SOCKS5_COMMAND
+          Specifies the command type of the SOCKS5 request
+    
+      desiredDestinationAddressRange=ADDRESS|ADDRESS1-ADDRESS2|regex:REGULAR_EXPRESSION
+          Specifies the address range for the desired destination address of the SOCKS5 request
+    
+      desiredDestinationPortRange=PORT|PORT1-PORT2
+          Specifies the port range for the desired destination port of the SOCKS5 request
+    
+      serverBoundAddressRange=ADDRESS|ADDRESS1-ADDRESS2|regex:REGULAR_EXPRESSION
+          Specifies the address range for the server bound address of the SOCKS5 reply
+    
+      serverBoundPortRange=PORT|PORT1-PORT2
+          Specifies the port range for the server bound port of the SOCKS5 reply
+    
+      logAction=LOG_ACTION
+          Specifies the logging action to take if the rule applies
+    
     SOCKS5_REQUEST_RULE_FIELDS:
     
       ruleAction=RULE_ACTION
           Specifies the action to take. This field starts a new SOCKS5 request rule.
     
-      sourceAddressRange=ADDRESS|ADDRESS1-ADDRESS2|regex:REGULAR_EXPRESSION
-          Specifies the address range for the source address
+      clientAddressRange=ADDRESS|ADDRESS1-ADDRESS2|regex:REGULAR_EXPRESSION
+          Specifies the address range for the client address
     
       method=SOCKS5_METHOD
           Specifies the negotiated SOCKS5 method
@@ -588,6 +624,25 @@ The following is a list of available settings for the SOCKS server (displayed wh
       logAction=LOG_ACTION
           Specifies the logging action to take if the rule applies
     
+    SOCKS5_UDP_RULE_FIELDS:
+    
+      ruleAction=RULE_ACTION
+          Specifies the action to take. This field starts a new SOCKS5 UDP rule.
+    
+      clientAddressRange=ADDRESS|ADDRESS1-ADDRESS2|regex:REGULAR_EXPRESSION
+          Specifies the address range for the client address
+    
+      method=SOCKS5_METHOD
+          Specifies the negotiated SOCKS5 method
+    
+      user=USER
+          Specifies the user if any after the negotiated SOCKS5 method
+    
+      peerAddressRange=ADDRESS|ADDRESS1-ADDRESS2|regex:REGULAR_EXPRESSION
+          Specifies the address range for the peer address
+    
+      logAction=LOG_ACTION
+          Specifies the logging action to take if the rule applies
     
 ```
 
@@ -1537,7 +1592,7 @@ Jargyle uses sockets to interact with the external world.
 
 -   Under the CONNECT command, it uses a socket that connects to the desired target server. In this documentation, this socket is called the server-facing socket.
 -   Under the BIND command, it uses a socket that listens for an inbound socket. In this documentation, this socket is called the listen socket.
--   Under the UDP ASSOCIATE command, it uses a UDP socket that sends and receives datagram packets to and from server UDP sockets. In this documentation, this UDP socket is called the server-facing UDP socket.
+-   Under the UDP ASSOCIATE command, it uses a UDP socket that sends and receives datagram packets to and from peer UDP sockets. In this documentation, this UDP socket is called the peer-facing UDP socket.
 
 Jargyle also uses a host resolver to resolve host names for the aforementioned sockets and for [the RESOLVE command](#6-2-the-socks5-resolve-command).
 
@@ -1910,21 +1965,11 @@ The known limitations of Jargyle chained to a specified chain of other SOCKS ser
 
 -   Only TCP traffic can be routed through the chain. Jargyle will attempt to route any UDP traffic through the last SOCKS server of the chain.
 
-### 5. 14. Using Firewall Rules
+### 5. 14. Using Firewall Rules for Clients
 
-You can specify firewall rules for the following types of traffic:
+You can specify rules for TCP traffic from a client to the SOCKS server in the following setting:
 
--   TCP traffic from a client to the SOCKS server
--   TCP traffic from an inbound socket to the SOCKS server
--   UDP traffic from a UDP server to the UDP relay server
--   UDP traffic from the UDP relay server to a UDP server
-
-You can specify rules for a particular type of traffic in any of the following settings:
-
--   `clientRules` : Rules for TCP traffic from a client to the SOCKS server
--   `socks5.onBind.inboundRules` : Rules for TCP traffic from an inbound socket to the SOCKS server
--   `socks5.onUdpAssociate.inboundRules` : Rules for UDP traffic from a UDP server to the UDP relay server
--   `socks5.onUdpAssociate.outboundRules` : Rules for UDP traffic from the UDP relay server to a UDP server
+-   `clientRules`
 
 Partial command line example:
 
@@ -1974,7 +2019,7 @@ Address ranges in the `sourceAddressRange` field and the `destinationAddressRang
 
 ### 5. 15. Using Firewall Rules for SOCKS5 Requests
 
-You can specify firewall rules for SOCKS5 requests in the following setting:
+You can specify firewall rules for a SOCKS5 request from a client in the following setting:
 
 -   `socks5.socks5RequestRules`
 
@@ -1982,7 +2027,7 @@ Partial command line example:
 
 ```text
     
-    "--setting=socks5.socks5RequestRules=ruleAction=ALLOW command=CONNECT desiredDestinationPortRange=80 ruleAction=ALLOW command=CONNECT desiredDestinationPortRange=443 ruleAction=DENY command=CONNECT ruleAction=DENY command=BIND ruleAction=DENY command=UDP_ASSOCIATE"
+    "--setting=socks5.socks5RequestRules=ruleAction=ALLOW command=CONNECT desiredDestinationPortRange=80 ruleAction=ALLOW command=CONNECT desiredDestinationPortRange=443 ruleAction=DENY command=CONNECT ruleAction=ALLOW"
      
 ```
  
@@ -2010,12 +2055,7 @@ Partial configuration file example:
                 <command>CONNECT</command>
             </socks5RequestRule>
             <socks5RequestRule>
-                <ruleAction>DENY</ruleAction>
-                <command>BIND</command>
-            </socks5RequestRule>
-            <socks5RequestRule>
-                <ruleAction>DENY</ruleAction>
-                <command>UDP_ASSOCIATE</command>
+                <ruleAction>ALLOW</ruleAction>
             </socks5RequestRule>
         </socks5RequestRules>
     </setting>
@@ -2025,7 +2065,7 @@ Partial configuration file example:
 A SOCKS5 request rule has the following fields:
 
 -   `ruleAction` : Specifies the action to take. Value can be either of the following: `ALLOW`, `DENY`. This field is required.
--   `sourceAddressRange` : Specifies the address range for the source (client) address. This field is optional.
+-   `clientAddressRange` : Specifies the address range for the client address. This field is optional.
 -   `method` : Specifies the negotiated SOCKS5 method. Value can be any of the following: `NO_AUTHENTICATION_REQUIRED`, `USERNAME_PASSWORD`, `GSSAPI`. This field is optional.
 -   `user` : Specifies the user if any after the negotiated SOCKS5 method. This field is optional.
 -   `command` : Specifies the command type of the SOCKS5 request. Value can be any of the following: `CONNECT`, `BIND`, `UDP_ASSOCIATE`, `RESOLVE`. This field is optional.
@@ -2033,7 +2073,7 @@ A SOCKS5 request rule has the following fields:
 -   `desiredDestinationPortRange` : Specifies the port range for the desired destination port of the SOCKS5 request. This field is optional.
 -   `logAction` : Specifies the logging action to take if the rule applies. Value can be either of the following: `LOG_AS_WARNING`, `LOG_AS_INFO`. This field is optional.
 
-Address ranges in the `sourceAddressRange` field and the `desiredDestinationAddressRange` field can be specified in the following formats:
+Address ranges in the `clientAddressRange` field and the `desiredDestinationAddressRange` field can be specified in the following formats:
 
 -   `ADDRESS` : Range is limited to a single address expressed in `ADDRESS`
 -   `ADDRESS1-ADDRESS2` : Range is limited to addresses between the address expressed in `ADDRESS1` (inclusive) and the address expressed in `ADDRESS2` (inclusive)
@@ -2043,6 +2083,123 @@ The port range in the `desiredDestinationPortRange` field can be specified in th
 
 -   `PORT` : Range is limited to a single port number expressed in `PORT`
 -   `PORT1-PORT2` : Range is limited to port numbers between the port number expressed in `PORT1` (inclusive) and the port number expressed in `PORT2` (inclusive)
+
+### 5. 16. Using Firewall Rules for SOCKS5 Replies
+
+You can specify firewall rules for a SOCKS5 reply to a client in either of the following settings:
+
+-   `socks5.onBind.secondSocks5ReplyRules`
+-   `socks5.socks5ReplyRules`
+
+Partial command line example:
+
+```text
+    
+    "--setting=socks5.socks5ReplyRules=ruleAction=DENY command=CONNECT serverBoundAddressRange=127.0.0.1 ruleAction=DENY command=CONNECT serverBoundAddressRange=::1 ruleAction=ALLOW"
+     
+```
+ 
+You can also specify the rules in the aforementioned setting as a `<socks5ReplyRules/>` XML element containing a sequence of `<socks5ReplyRule/>` XML elements.
+
+Partial configuration file example:
+
+```xml
+    
+    <setting>
+        <name>socks5.socks5ReplyRules</name>
+        <socks5ReplyRules>
+            <socks5ReplyRule>
+                <ruleAction>DENY</ruleAction>
+                <command>CONNECT</command>
+                <serverBoundAddressRange>127.0.0.1</serverBoundAddressRange>
+            </socks5ReplyRule>
+            <socks5ReplyRule>
+                <ruleAction>DENY</ruleAction>
+                <command>CONNECT</command>
+                <serverBoundAddressRange>::1</serverBoundAddressRange>
+            </socks5ReplyRule>
+            <socks5ReplyRule>
+                <ruleAction>ALLOW</ruleAction>
+            </socks5ReplyRule>
+        </socks5ReplyRules>
+    </setting>
+    
+```
+
+A SOCKS5 reply rule has the following fields:
+
+-   `ruleAction` : Specifies the action to take. Value can be either of the following: `ALLOW`, `DENY`. This field is required.
+-   `clientAddressRange` : Specifies the address range for the client address. This field is optional.
+-   `method` : Specifies the negotiated SOCKS5 method. Value can be any of the following: `NO_AUTHENTICATION_REQUIRED`, `USERNAME_PASSWORD`, `GSSAPI`. This field is optional.
+-   `user` : Specifies the user if any after the negotiated SOCKS5 method. This field is optional.
+-   `command` : Specifies the command type of the SOCKS5 request. Value can be any of the following: `CONNECT`, `BIND`, `UDP_ASSOCIATE`, `RESOLVE`. This field is optional.
+-   `desiredDestinationAddressRange` : Specifies the address range for the desired destination address of the SOCKS5 request. This field is optional.
+-   `desiredDestinationPortRange` : Specifies the port range for the desired destination port of the SOCKS5 request. This field is optional.
+-   `serverBoundAddressRange` : Specifies the address range for the server bound address of the SOCKS5 reply. This field is optional.
+-   `serverBoundPortRange` : Specifies the port range for the server bound port of the SOCKS5 reply. This field is optional.
+-   `logAction` : Specifies the logging action to take if the rule applies. Value can be either of the following: `LOG_AS_WARNING`, `LOG_AS_INFO`. This field is optional.
+
+Address ranges in the `clientAddressRange` field, the `desiredDestinationAddressRange` field, and the `serverBoundAddressRange` field can be specified in the following formats:
+
+-   `ADDRESS` : Range is limited to a single address expressed in `ADDRESS`
+-   `ADDRESS1-ADDRESS2` : Range is limited to addresses between the address expressed in `ADDRESS1` (inclusive) and the address expressed in `ADDRESS2` (inclusive)
+-   `regex:REGULAR_EXPRESSION` : Range is limited to domain names that match the regular expression expressed in `REGULAR_EXPRESSION`
+
+Port ranges in the `desiredDestinationPortRange` field and the `serverBoundPortRange` field can be specified in the following formats:
+
+-   `PORT` : Range is limited to a single port number expressed in `PORT`
+-   `PORT1-PORT2` : Range is limited to port numbers between the port number expressed in `PORT1` (inclusive) and the port number expressed in `PORT2` (inclusive)
+
+### 5. 17. Using Firewall Rules for SOCKS5 UDP Traffic
+
+You can specify firewall rules for UDP traffic between a UDP client and a UDP peer in either of the following settings:
+
+-   `socks5.onUdpAssociate.inboundSocks5UdpRules`
+-   `socks5.onUdpAssociate.outboundSocks5UdpRules`
+
+Partial command line example:
+
+```text
+    
+    "--setting=socks5.onUdpAssociate.outboundSocks5UdpRules=ruleAction=DENY peerAddressRange=badpeer.com ruleAction=ALLOW"
+     
+```
+ 
+You can also specify the rules in the aforementioned setting as a `<socks5UdpRules/>` XML element containing a sequence of `<socks5UdpRule/>` XML elements.
+
+Partial configuration file example:
+
+```xml
+    
+    <setting>
+        <name>socks5.onUdpAssociate.outboundSocks5UdpRules</name>
+        <socks5UdpRules>
+            <socks5UdpRule>
+                <ruleAction>DENY</ruleAction>
+                <peerAddressRange>badpeer.com</peerAddressRange>
+            </socks5UdpRule>
+            <socks5UdpRule>
+                <ruleAction>ALLOW</ruleAction>
+            </socks5UdpRule>
+        </socks5UdpRules>
+    </setting>
+    
+```
+
+A SOCKS5 UDP rule has the following fields:
+
+-   `ruleAction` : Specifies the action to take. Value can be either of the following: `ALLOW`, `DENY`. This field is required.
+-   `clientAddressRange` : Specifies the address range for the client address. This field is optional.
+-   `method` : Specifies the negotiated SOCKS5 method. Value can be any of the following: `NO_AUTHENTICATION_REQUIRED`, `USERNAME_PASSWORD`, `GSSAPI`. This field is optional.
+-   `user` : Specifies the user if any after the negotiated SOCKS5 method. This field is optional.
+-   `peerAddressRange` : Specifies the address range for the peer address. This field is optional.
+-   `logAction` : Specifies the logging action to take if the rule applies. Value can be either of the following: `LOG_AS_WARNING`, `LOG_AS_INFO`. This field is optional.
+
+Address ranges in the `clientAddressRange` field and the `peerAddressRange` field can be specified in the following formats:
+
+-   `ADDRESS` : Range is limited to a single address expressed in `ADDRESS`
+-   `ADDRESS1-ADDRESS2` : Range is limited to addresses between the address expressed in `ADDRESS1` (inclusive) and the address expressed in `ADDRESS2` (inclusive)
+-   `regex:REGULAR_EXPRESSION` : Range is limited to domain names that match the regular expression expressed in `REGULAR_EXPRESSION`
 
 ## 6. Miscellaneous Notes
 
@@ -2069,7 +2226,9 @@ When using an existing configuration file to create a new configuration file, an
 -   `<rule/>`
 -   `<setting/>`
 -   `<socketSetting/>`
+-   `<socks5ReplyRule>`
 -   `<socks5RequestRule/>`
+-   `<socks5UdpRule>`
 
 Partial configuration file example:
 
@@ -2115,16 +2274,45 @@ Partial configuration file example:
                 <doc>Deny any other CONNECT requests</doc>                
             </socks5RequestRule>
             <socks5RequestRule>
-                <ruleAction>DENY</ruleAction>
-                <command>BIND</command>
-                <doc>Deny any BIND requests</doc>
-            </socks5RequestRule>
-            <socks5RequestRule>
-                <ruleAction>DENY</ruleAction>
-                <command>UDP_ASSOCIATE</command>
-                <doc>Deny any UDP ASSOCIATE requests</doc>
+                <ruleAction>ALLOW</ruleAction>
+                <doc>Allow any other requests</doc>
             </socks5RequestRule>
         </socks5RequestRules>
+    </setting>
+    <setting>
+        <name>socks5.socks5ReplyRules</name>
+        <socks5ReplyRules>
+            <socks5ReplyRule>
+                <ruleAction>DENY</ruleAction>
+                <command>CONNECT</command>
+                <serverBoundAddressRange>127.0.0.1</serverBoundAddressRange>
+                <doc>Deny replies to connecting to the IPv4 loopback address</doc>
+            </socks5ReplyRule>
+            <socks5ReplyRule>
+                <ruleAction>DENY</ruleAction>
+                <command>CONNECT</command>
+                <serverBoundAddressRange>::1</serverBoundAddressRange>
+                <doc>Deny replies to connecting to the IPv6 loopback address</doc>                
+            </socks5ReplyRule>
+            <socks5ReplyRule>
+                <ruleAction>ALLOW</ruleAction>
+                <doc>Allow any other reply</doc>
+            </socks5ReplyRule>
+        </socks5ReplyRules>
+    </setting>
+    <setting>
+        <name>socks5.onUdpAssociate.outboundSocks5UdpRules</name>
+        <socks5UdpRules>
+            <socks5UdpRule>
+                <ruleAction>DENY</ruleAction>
+                <peerAddressRange>badpeer.com</peerAddressRange>
+                <doc>Deny any UDP packets that go to badpeer.com</doc>
+            </socks5UdpRule>
+            <socks5UdpRule>
+                <ruleAction>ALLOW</ruleAction>
+                <doc>Allow any other UDP packets</doc>
+            </socks5UdpRule>
+        </socks5UdpRules>
     </setting>
     
 ```

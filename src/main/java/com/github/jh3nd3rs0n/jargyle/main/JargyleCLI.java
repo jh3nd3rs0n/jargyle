@@ -57,7 +57,9 @@ import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
 import com.github.jh3nd3rs0n.jargyle.server.SslSettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.XmlFileSourceConfigurationProvider;
 import com.github.jh3nd3rs0n.jargyle.server.config.xml.bind.ConfigurationXml;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5ReplyRule;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5RequestRule;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5UdpRule;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Command;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.gssapiauth.ProtectionLevel;
@@ -715,8 +717,12 @@ public final class JargyleCLI extends CLI {
 		this.printHelpText(ProtectionLevel.class);
 		System.out.println("SOCKS5_METHODS:");
 		this.printHelpText(Method.class);
+		System.out.println("SOCKS5_REPLY_RULE_FIELDS:");
+		this.printHelpText(Socks5ReplyRule.Builder.class);		
 		System.out.println("SOCKS5_REQUEST_RULE_FIELDS:");
 		this.printHelpText(Socks5RequestRule.Builder.class);		
+		System.out.println("SOCKS5_UDP_RULE_FIELDS:");
+		this.printHelpText(Socks5UdpRule.Builder.class);		
 		throw new TerminationRequestedException(0);
 	}
 		

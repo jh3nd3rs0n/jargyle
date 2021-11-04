@@ -16,60 +16,12 @@ import org.slf4j.LoggerFactory;
 import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.internal.logging.LoggerHelper;
-import com.github.jh3nd3rs0n.jargyle.server.Rule;
 import com.github.jh3nd3rs0n.jargyle.server.RuleActionDenyException;
-import com.github.jh3nd3rs0n.jargyle.server.Rules;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
+import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.UdpRequestHeader;
 
 public final class UdpRelayServer {
-	
-	public static final class ClientDatagramSocketAddress {
-
-		private final String address;
-		private final int port;
-
-		public ClientDatagramSocketAddress(final String addr, final int prt) {
-			Objects.requireNonNull(addr);
-			if (prt < 0 || prt > Port.MAX_INT_VALUE) {
-				throw new IllegalArgumentException("port is out of range");
-			}
-			this.address = addr;
-			this.port = prt; 	
-		}
-		
-		public String getAddress() {
-			return this.address;
-		}
-		
-		public int getPort() {
-			return this.port;
-		}
-		
-	}
-	
-	public static final class DatagramSockets {
-		
-		private final DatagramSocket clientFacingDatagramSocket;
-		private final DatagramSocket serverFacingDatagramSocket;
-		
-		public DatagramSockets(
-				final DatagramSocket clientFacingDatagramSock,
-				final DatagramSocket serverFacingDatagramSock) {
-			Objects.requireNonNull(clientFacingDatagramSock);
-			Objects.requireNonNull(serverFacingDatagramSock);
-			this.clientFacingDatagramSocket = clientFacingDatagramSock;
-			this.serverFacingDatagramSocket = serverFacingDatagramSock;
-		}
-		
-		public DatagramSocket getClientFacingDatagramSocket() {
-			return this.clientFacingDatagramSocket;
-		}
-		
-		public DatagramSocket getServerFacingDatagramSocket() {
-			return this.serverFacingDatagramSocket;
-		}
-		
-	}
 	
 	private static final class InboundPacketsWorker	extends PacketsWorker {
 		
@@ -81,23 +33,33 @@ public final class UdpRelayServer {
 		}
 		
 		private boolean canAllow(
-				final String sourceAddress, final String destinationAddress) {
-			Rule inboundRule = null; 
+				final String clientAddr,
+				final MethodSubnegotiationResults methSubnegotiationResults,
+				final String peerAddr) {
+			String user = methSubnegotiationResults.getUser();
+			String possibleUser = (user != null) ? 
+					String.format(" (%s)", user) : "";
+			Socks5UdpRule inboundSocks5UdpRule = null; 
 			try {
-				inboundRule = this.inboundRules.anyAppliesTo(
-						sourceAddress, destinationAddress);
+				inboundSocks5UdpRule = 
+						this.inboundSocks5UdpRules.anyAppliesTo(
+								clientAddr, 
+								methSubnegotiationResults,
+								peerAddr);
 			} catch (IllegalArgumentException e) {
 				LOGGER.error(
 						LoggerHelper.objectMessage(this, String.format(
-								"Error regarding source address %s to "
-								+ "destination address %s",
-								sourceAddress,
-								destinationAddress)),
+								"Error regarding the client %s%s and the peer "
+								+ "%s",
+								clientAddr,
+								possibleUser,
+								peerAddr)),
 						e);
 				return false;
 			}
 			try {
-				inboundRule.applyTo(sourceAddress, destinationAddress);
+				inboundSocks5UdpRule.applyTo(
+						clientAddr, methSubnegotiationResults, peerAddr);
 			} catch (RuleActionDenyException e) {
 				return false;
 			}
@@ -144,7 +106,7 @@ public final class UdpRelayServer {
 					DatagramPacket packet = new DatagramPacket(
 							buffer, buffer.length);
 					try {
-						this.serverFacingDatagramSocket.receive(packet);
+						this.peerFacingDatagramSocket.receive(packet);
 						this.packetsWorkerContext.setIdleStartTime(
 								System.currentTimeMillis());
 					} catch (SocketException e) {
@@ -168,7 +130,7 @@ public final class UdpRelayServer {
 								LoggerHelper.objectMessage(
 										this, 
 										"Error in receiving the packet from "
-										+ "the server"), 
+										+ "the peer"), 
 								e);
 						continue;
 					}
@@ -176,8 +138,9 @@ public final class UdpRelayServer {
 							"Packet data received: %s byte(s)",
 							packet.getLength())));
 					if (!this.canAllow(
-							packet.getAddress().getHostAddress(),
-							this.serverFacingDatagramSocket.getLocalAddress().getHostAddress())) {
+							this.clientAddress, 
+							this.methodSubnegotiationResults, 
+							packet.getAddress().getHostAddress())) {
 						continue;
 					}
 					UdpRequestHeader header = this.newUdpRequestHeader(packet);
@@ -205,7 +168,7 @@ public final class UdpRelayServer {
 							LoggerHelper.objectMessage(
 									this, 
 									"Error occurred in the process of "
-									+ "relaying of a packet from the server to "
+									+ "relaying of a packet from the peer to "
 									+ "the client"), 
 							t);
 				}
@@ -225,23 +188,33 @@ public final class UdpRelayServer {
 		}
 		
 		private boolean canAllow(
-				final String sourceAddress, final String destinationAddress) {
-			Rule outboundRule = null; 
+				final String clientAddr,
+				final MethodSubnegotiationResults methSubnegotiationResults,
+				final String peerAddr) {
+			String user = methSubnegotiationResults.getUser();
+			String possibleUser = (user != null) ? 
+					String.format(" (%s)", user) : "";
+			Socks5UdpRule outboundSocks5UdpRule = null; 
 			try {
-				outboundRule = this.outboundRules.anyAppliesTo(
-						sourceAddress, destinationAddress);
+				outboundSocks5UdpRule = 
+						this.outboundSocks5UdpRules.anyAppliesTo(
+								clientAddr, 
+								methSubnegotiationResults,
+								peerAddr);
 			} catch (IllegalArgumentException e) {
 				LOGGER.error(
 						LoggerHelper.objectMessage(this, String.format(
-								"Error regarding source address %s to "
-								+ "destination address %s",
-								sourceAddress,
-								destinationAddress)),
+								"Error regarding the client %s%s and the peer "
+								+ "%s",
+								clientAddr,
+								possibleUser,
+								peerAddr)),
 						e);
 				return false;
 			}
 			try {
-				outboundRule.applyTo(sourceAddress, destinationAddress);
+				outboundSocks5UdpRule.applyTo(
+						clientAddr,	methSubnegotiationResults, peerAddr);
 			} catch (RuleActionDenyException e) {
 				return false;
 			}
@@ -303,7 +276,7 @@ public final class UdpRelayServer {
 						LoggerHelper.objectMessage(
 								this, 
 								"Error in determining the IP address from the "
-								+ "server"), 
+								+ "peer"), 
 						e);
 				return null;
 			}
@@ -381,7 +354,8 @@ public final class UdpRelayServer {
 						continue;
 					}
 					if (!this.canAllow(
-							this.serverFacingDatagramSocket.getLocalAddress().getHostAddress(),
+							this.clientAddress,
+							this.methodSubnegotiationResults,
 							header.getDesiredDestinationAddress())) {
 						continue;
 					}
@@ -390,7 +364,7 @@ public final class UdpRelayServer {
 						continue;
 					}
 					try {
-						this.serverFacingDatagramSocket.send(packet);
+						this.peerFacingDatagramSocket.send(packet);
 					} catch (SocketException e) {
 						// socket closed
 						break;
@@ -399,7 +373,7 @@ public final class UdpRelayServer {
 								LoggerHelper.objectMessage(
 										this, 
 										"Error in sending the packet to the "
-										+ "server"), 
+										+ "peer"), 
 								e);
 					}
 				} catch (Throwable t) {
@@ -408,7 +382,7 @@ public final class UdpRelayServer {
 									this, 
 									"Error occurred in the process of "
 									+ "relaying of a packet from the client to "
-									+ "the server"), 
+									+ "the peer"), 
 							t);
 				}
 			}
@@ -424,23 +398,28 @@ public final class UdpRelayServer {
 		protected final DatagramSocket clientFacingDatagramSocket;
 		protected final HostResolver hostResolver;
 		protected final int idleTimeout;
-		protected final Rules inboundRules;
-		protected final Rules outboundRules;
+		protected final Socks5UdpRules inboundSocks5UdpRules;
+		protected final MethodSubnegotiationResults methodSubnegotiationResults;
+		protected final Socks5UdpRules outboundSocks5UdpRules;
 		protected final PacketsWorkerContext packetsWorkerContext;
-		protected final DatagramSocket serverFacingDatagramSocket;
+		protected final DatagramSocket peerFacingDatagramSocket;
 
 		public PacketsWorker(final PacketsWorkerContext context) {
 			this.bufferSize = context.getBufferSize();
 			this.clientAddress = context.getClientAddress();
 			this.clientFacingDatagramSocket = 
 					context.getClientFacingDatagramSocket();
-			this.hostResolver = context.getHostResolver();
+			this.hostResolver = context.getNetObjectFactory().newHostResolver();
 			this.idleTimeout = context.getIdleTimeout();
-			this.inboundRules = context.getInboundRules();
-			this.outboundRules = context.getOutboundRules();
+			this.inboundSocks5UdpRules = context.getSettings().getLastValue(
+					Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_INBOUND_SOCKS5_UDP_RULES); 
+			this.methodSubnegotiationResults = 
+					context.getMethodSubnegotiationResults();
+			this.outboundSocks5UdpRules = context.getSettings().getLastValue(
+					Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_OUTBOUND_SOCKS5_UDP_RULES);
 			this.packetsWorkerContext = context;
-			this.serverFacingDatagramSocket = 
-					context.getServerFacingDatagramSocket();
+			this.peerFacingDatagramSocket = 
+					context.getPeerFacingDatagramSocket();
 		}
 
 		@Override
@@ -455,15 +434,19 @@ public final class UdpRelayServer {
 		
 	}
 	
-	private static final class PacketsWorkerContext {
+	private static final class PacketsWorkerContext 
+		extends CommandWorkerContext {
 		
 		private final DatagramSocket clientFacingDatagramSocket;
-		private final DatagramSocket serverFacingDatagramSocket;
+		private final DatagramSocket peerFacingDatagramSocket;
 		private final UdpRelayServer udpRelayServer;
 		
-		public PacketsWorkerContext(final UdpRelayServer server) {
+		public PacketsWorkerContext(
+				final CommandWorkerContext context,
+				final UdpRelayServer server) {
+			super(context);
 			this.clientFacingDatagramSocket = server.clientFacingDatagramSocket;
-			this.serverFacingDatagramSocket = server.serverFacingDatagramSocket;
+			this.peerFacingDatagramSocket = server.peerFacingDatagramSocket;
 			this.udpRelayServer = server;
 		}
 		
@@ -483,10 +466,6 @@ public final class UdpRelayServer {
 			return this.udpRelayServer.getClientPort();
 		}
 		
-		public final HostResolver getHostResolver() {
-			return this.udpRelayServer.hostResolver;
-		}
-		
 		public final long getIdleStartTime() {
 			return this.udpRelayServer.getIdleStartTime();
 		}
@@ -495,16 +474,8 @@ public final class UdpRelayServer {
 			return this.udpRelayServer.idleTimeout;
 		}
 		
-		public final Rules getInboundRules() {
-			return this.udpRelayServer.inboundRules;
-		}
-		
-		public final Rules getOutboundRules() {
-			return this.udpRelayServer.outboundRules;
-		}
-		
-		public final DatagramSocket getServerFacingDatagramSocket() {
-			return this.serverFacingDatagramSocket;
+		public final DatagramSocket getPeerFacingDatagramSocket() {
+			return this.peerFacingDatagramSocket;
 		}
 		
 		public final void setClientPort(final int port) {
@@ -525,38 +496,10 @@ public final class UdpRelayServer {
 			builder.append(this.getClass().getSimpleName())
 				.append(" [clientFacingDatagramSocket=")
 				.append(this.clientFacingDatagramSocket)
-				.append(", serverFacingDatagramSocket=")
-				.append(this.serverFacingDatagramSocket)
+				.append(", peerFacingDatagramSocket=")
+				.append(this.peerFacingDatagramSocket)
 				.append("]");
 			return builder.toString();
-		}
-		
-	}
-	
-	public static final class RelaySettings {
-		
-		private final int bufferSize;
-		private final int idleTimeout;
-		
-		public RelaySettings(final int bffrSize, final int idleTmt) {
-			if (bffrSize < 1) {
-				throw new IllegalArgumentException(
-						"buffer size must not be less than 1");
-			}
-			if (idleTmt < 1) {
-				throw new IllegalArgumentException(
-						"idle timeout must not be less than 1");
-			}
-			this.bufferSize = bffrSize;
-			this.idleTimeout = idleTmt;
-		}
-		
-		public int getBufferSize() {
-			return this.bufferSize;
-		}
-		
-		public int getIdleTimeout() {
-			return this.idleTimeout;
 		}
 		
 	}
@@ -573,42 +516,38 @@ public final class UdpRelayServer {
 	private final String clientAddress;
 	private final DatagramSocket clientFacingDatagramSocket;	
 	private int clientPort;
+	private final CommandWorkerContext commandWorkerContext;
 	private ExecutorService executor;
-	private final HostResolver hostResolver;
 	private long idleStartTime;
 	private final int idleTimeout;
-	private final Rules inboundRules;
-	private final Rules outboundRules;
-	private final DatagramSocket serverFacingDatagramSocket;
+	private final DatagramSocket peerFacingDatagramSocket;
 	private State state;
 	
-	
 	public UdpRelayServer(		
-			final ClientDatagramSocketAddress clientDatagramSockAddr,
-			final DatagramSockets datagramSocks,
-			final HostResolver resolver, 
-			final Rules inboundRls, 
-			final Rules outboundRls, 
-			final RelaySettings settings) {
-		Objects.requireNonNull(clientDatagramSockAddr);
-		Objects.requireNonNull(datagramSocks);
-		Objects.requireNonNull(resolver);		
-		Objects.requireNonNull(inboundRls);
-		Objects.requireNonNull(outboundRls);
-		Objects.requireNonNull(settings);
-		this.bufferSize = settings.getBufferSize();
-		this.clientAddress = clientDatagramSockAddr.getAddress();
-		this.clientFacingDatagramSocket = 
-				datagramSocks.getClientFacingDatagramSocket();
-		this.clientPort = clientDatagramSockAddr.getPort();
+			final String clientAddr,
+			final int clientPrt,
+			final DatagramSocket clientFacingDatagramSock,
+			final DatagramSocket peerFacingDatagramSock,
+			final CommandWorkerContext context) {
+		Objects.requireNonNull(clientAddr);
+		Objects.requireNonNull(clientFacingDatagramSock);
+		Objects.requireNonNull(peerFacingDatagramSock);
+		Objects.requireNonNull(context);
+		if (clientPrt < 0 || clientPrt > Port.MAX_INT_VALUE) {
+			throw new IllegalArgumentException("client port is out of range");
+		}
+		Settings settings = context.getSettings();
+		this.bufferSize = settings.getLastValue(
+				Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_RELAY_BUFFER_SIZE).intValue();
+		this.clientAddress = clientAddr;
+		this.clientFacingDatagramSocket = clientFacingDatagramSock;
+		this.clientPort = clientPrt;
+		this.commandWorkerContext = context;
 		this.executor = null;
-		this.hostResolver = resolver;
 		this.idleStartTime = 0L;
-		this.idleTimeout = settings.getIdleTimeout();
-		this.inboundRules = inboundRls;
-		this.outboundRules = outboundRls;
-		this.serverFacingDatagramSocket = 
-				datagramSocks.getServerFacingDatagramSocket();
+		this.idleTimeout = settings.getLastValue(
+				Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_RELAY_IDLE_TIMEOUT).intValue();
+		this.peerFacingDatagramSocket = peerFacingDatagramSock;
 		this.state = State.STOPPED;
 	}
 
@@ -639,9 +578,9 @@ public final class UdpRelayServer {
 		this.idleStartTime = System.currentTimeMillis();
 		this.executor = Executors.newFixedThreadPool(2);
 		this.executor.execute(new InboundPacketsWorker(
-				new PacketsWorkerContext(this)));
+				new PacketsWorkerContext(this.commandWorkerContext, this)));
 		this.executor.execute(new OutboundPacketsWorker(
-				new PacketsWorkerContext(this)));
+				new PacketsWorkerContext(this.commandWorkerContext, this)));
 		this.state = State.STARTED;
 	}
 	

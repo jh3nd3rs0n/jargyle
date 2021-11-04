@@ -6,7 +6,7 @@ import java.util.List;
 
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Command;
 
-enum CommandWorkerFactory {
+public enum CommandWorkerFactory {
 
 	BIND_COMMAND_WORKER_FACTORY(Command.BIND) {
 		

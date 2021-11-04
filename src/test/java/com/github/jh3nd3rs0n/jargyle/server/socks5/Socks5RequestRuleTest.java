@@ -21,14 +21,14 @@ public class Socks5RequestRuleTest {
 		List<Socks5RequestRule> expectedSocks5RequestRules = 
 				Socks5RequestRule.newInstances(new StringBuilder()
 				.append("ruleAction=ALLOW ")
-				.append("sourceAddressRange=127.0.0.1 ")
+				.append("clientAddressRange=127.0.0.1 ")
 				.append("command=CONNECT ")
 				.append("desiredDestinationAddressRange=regex:.* ")
 				.append("desiredDestinationPortRange=0-65535")
 				.toString()); 
 		List<Socks5RequestRule> actualSocks5RequestRules = Arrays.asList(
 				new Socks5RequestRule.Builder(RuleAction.ALLOW)
-				.sourceAddressRange(AddressRange.newInstance("127.0.0.1"))
+				.clientAddressRange(AddressRange.newInstance("127.0.0.1"))
 				.command(Command.CONNECT)
 				.desiredDestinationAddressRange(AddressRange.newInstance("regex:.*"))
 				.desiredDestinationPortRange(PortRange.newInstance("0-65535"))
@@ -41,7 +41,7 @@ public class Socks5RequestRuleTest {
 		List<Socks5RequestRule> expectedSocks5RequestRules = 
 				Socks5RequestRule.newInstances(new StringBuilder()
 				.append("ruleAction=ALLOW ")
-				.append("sourceAddressRange=127.0.0.1 ")
+				.append("clientAddressRange=127.0.0.1 ")
 				.append("command=CONNECT ")
 				.append("desiredDestinationAddressRange=regex:.* ")
 				.append("desiredDestinationPortRange=0-65535 ")
@@ -51,7 +51,7 @@ public class Socks5RequestRuleTest {
 				.toString()); 
 		List<Socks5RequestRule> actualSocks5RequestRules = Arrays.asList(
 				new Socks5RequestRule.Builder(RuleAction.ALLOW)
-				.sourceAddressRange(AddressRange.newInstance("127.0.0.1"))
+				.clientAddressRange(AddressRange.newInstance("127.0.0.1"))
 				.command(Command.CONNECT)
 				.desiredDestinationAddressRange(AddressRange.newInstance("regex:.*"))
 				.desiredDestinationPortRange(PortRange.newInstance("0-65535"))
@@ -68,10 +68,10 @@ public class Socks5RequestRuleTest {
 		List<Socks5RequestRule> expectedSocks5RequestRules = 
 				Socks5RequestRule.newInstances(new StringBuilder()
 				.append("ruleAction=ALLOW ")
-				.append("sourceAddressRange=::1 ")
+				.append("clientAddressRange=::1 ")
 				.append("command=BIND ")
 				.append("desiredDestinationAddressRange=:: ")
-				.append("sourceAddressRange=127.0.0.1 ")
+				.append("clientAddressRange=127.0.0.1 ")
 				.append("command=CONNECT ")
 				.append("desiredDestinationAddressRange=regex:.* ")
 				.append("desiredDestinationPortRange=0-65535 ")
@@ -83,7 +83,7 @@ public class Socks5RequestRuleTest {
 				.toString()); 
 		List<Socks5RequestRule> actualSocks5RequestRules = Arrays.asList(
 				new Socks5RequestRule.Builder(RuleAction.ALLOW)
-				.sourceAddressRange(AddressRange.newInstance("127.0.0.1"))
+				.clientAddressRange(AddressRange.newInstance("127.0.0.1"))
 				.command(Command.CONNECT)
 				.desiredDestinationAddressRange(AddressRange.newInstance("regex:.*"))
 				.desiredDestinationPortRange(PortRange.newInstance("0-65535"))
@@ -100,7 +100,7 @@ public class Socks5RequestRuleTest {
 		List<Socks5RequestRule> expectedSocks5RequestRules = 
 				Socks5RequestRule.newInstances(new StringBuilder()
 				.append("ruleAction=ALLOW ")
-				.append("sourceAddressRange=127.0.0.1 ")
+				.append("clientAddressRange=127.0.0.1 ")
 				.append("command=CONNECT ")
 				.append("desiredDestinationAddressRange=regex:.* ")
 				.append("desiredDestinationPortRange=0-65535 ")
@@ -115,7 +115,7 @@ public class Socks5RequestRuleTest {
 				.toString()); 
 		List<Socks5RequestRule> actualSocks5RequestRules = Arrays.asList(
 				new Socks5RequestRule.Builder(RuleAction.ALLOW)
-				.sourceAddressRange(AddressRange.newInstance("127.0.0.1"))
+				.clientAddressRange(AddressRange.newInstance("127.0.0.1"))
 				.command(Command.CONNECT)
 				.desiredDestinationAddressRange(AddressRange.newInstance("regex:.*"))
 				.desiredDestinationPortRange(PortRange.newInstance("0-65535"))

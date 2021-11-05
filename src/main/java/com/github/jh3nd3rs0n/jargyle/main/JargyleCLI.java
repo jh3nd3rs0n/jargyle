@@ -49,7 +49,7 @@ import com.github.jh3nd3rs0n.jargyle.server.ImmutableConfiguration;
 import com.github.jh3nd3rs0n.jargyle.server.LogAction;
 import com.github.jh3nd3rs0n.jargyle.server.ModifiableConfiguration;
 import com.github.jh3nd3rs0n.jargyle.server.MutableConfiguration;
-import com.github.jh3nd3rs0n.jargyle.server.Rule;
+import com.github.jh3nd3rs0n.jargyle.server.ClientRule;
 import com.github.jh3nd3rs0n.jargyle.server.RuleAction;
 import com.github.jh3nd3rs0n.jargyle.server.Setting;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
@@ -701,12 +701,12 @@ public final class JargyleCLI extends CLI {
 		this.printHelpText(Socks5SettingSpecConstants.class);
 		System.out.println("SSL SETTINGS:");
 		this.printHelpText(SslSettingSpecConstants.class);
+		System.out.println("CLIENT_RULE_FIELDS:");
+		this.printHelpText(ClientRule.Builder.Field.class);
 		System.out.println("LOG_ACTIONS:");
 		this.printHelpText(LogAction.class);
 		System.out.println("RULE_ACTIONS:");
 		this.printHelpText(RuleAction.class);
-		System.out.println("RULE_FIELDS:");
-		this.printHelpText(Rule.Builder.class);
 		System.out.println("SCHEMES:");
 		this.printHelpText(Scheme.class);
 		System.out.println("SOCKET_SETTINGS:");
@@ -718,11 +718,11 @@ public final class JargyleCLI extends CLI {
 		System.out.println("SOCKS5_METHODS:");
 		this.printHelpText(Method.class);
 		System.out.println("SOCKS5_REPLY_RULE_FIELDS:");
-		this.printHelpText(Socks5ReplyRule.Builder.class);		
+		this.printHelpText(Socks5ReplyRule.Builder.Field.class);		
 		System.out.println("SOCKS5_REQUEST_RULE_FIELDS:");
-		this.printHelpText(Socks5RequestRule.Builder.class);		
+		this.printHelpText(Socks5RequestRule.Builder.Field.class);		
 		System.out.println("SOCKS5_UDP_RULE_FIELDS:");
-		this.printHelpText(Socks5UdpRule.Builder.class);		
+		this.printHelpText(Socks5UdpRule.Builder.Field.class);		
 		throw new TerminationRequestedException(0);
 	}
 		

@@ -11,7 +11,7 @@ import com.github.jh3nd3rs0n.jargyle.internal.help.HelpText;
 import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.HostSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.NonnegativeIntegerSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.PortSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.RulesSettingSpec;
+import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.ClientRulesSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.SocketSettingsSettingSpec;
 
 public final class GeneralSettingSpecConstants {
@@ -43,13 +43,13 @@ public final class GeneralSettingSpecConstants {
 	@HelpText(
 			doc = "The space separated list of rules for TCP traffic from a "
 					+ "client to the SOCKS server (default is ruleAction=ALLOW)", 
-			usage = "clientRules=[RULE_FIELD1[ RULE_FIELD2[...]]]"
+			usage = "clientRules=[CLIENT_RULE_FIELD1[ CLIENT_RULE_FIELD2[...]]]"
 	)	
-	public static final SettingSpec<Rules> CLIENT_RULES =
-			SETTING_SPECS.addThenGet(new RulesSettingSpec(
+	public static final SettingSpec<ClientRules> CLIENT_RULES =
+			SETTING_SPECS.addThenGet(new ClientRulesSettingSpec(
 					NewSettingSpecPermission.INSTANCE,
 					"clientRules",
-					Rules.getDefault()));
+					ClientRules.getDefault()));
 	
 	@HelpText(
 			doc = "The host name or address for the SOCKS server (default is "

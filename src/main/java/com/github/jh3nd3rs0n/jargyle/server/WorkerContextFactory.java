@@ -28,15 +28,15 @@ final class WorkerContextFactory {
 	private void checkIfClientFacingSocketAllowed(
 			final Socket clientFacingSock, final Configuration config) {
 		Settings settings = config.getSettings();
-		Rules clientRules = settings.getLastValue(
+		ClientRules clientRules = settings.getLastValue(
 				GeneralSettingSpecConstants.CLIENT_RULES);
-		String sourceAddress = 
+		String clientAddress = 
 				clientFacingSock.getInetAddress().getHostAddress();
-		String destinationAddress =
+		String socksServerAddress =
 				clientFacingSock.getLocalAddress().getHostAddress();
-		Rule clientRule = clientRules.anyAppliesTo(
-				sourceAddress, destinationAddress);
-		clientRule.applyTo(sourceAddress, destinationAddress);
+		ClientRule clientRule = clientRules.anyAppliesTo(
+				clientAddress, socksServerAddress);
+		clientRule.applyTo(clientAddress, socksServerAddress);
 	}
 	
 	private void configureClientFacingSocket(

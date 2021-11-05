@@ -16,13 +16,13 @@ class SettingXml {
 	protected String name;
 	@XmlElements({
 		@XmlElement(
+				name = "clientRules", 
+				required = true, 
+				type = ClientRulesXml.class),
+		@XmlElement(
 				name = "encryptedPassword",
 				required = true,
 				type = EncryptedPasswordXml.class),
-		@XmlElement(
-				name = "rules", 
-				required = true, 
-				type = RulesXml.class),
 		@XmlElement(
 				name = "socketSettings", 
 				required = true, 

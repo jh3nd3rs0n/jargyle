@@ -191,7 +191,7 @@ The following is a list of available settings for the SOCKS server (displayed wh
       clientFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
           The space separated list of socket settings for the client-facing socket
     
-      clientRules=[RULE_FIELD1[ RULE_FIELD2[...]]]
+      clientRules=[CLIENT_RULE_FIELD1[ CLIENT_RULE_FIELD2[...]]]
           The space separated list of rules for TCP traffic from a client to the SOCKS server (default is ruleAction=ALLOW)
     
       host=HOST
@@ -466,6 +466,20 @@ The following is a list of available settings for the SOCKS server (displayed wh
       ssl.wantClientAuth=true|false
           The boolean value to indicate that client authentication is requested for SSL/TLS connections to the SOCKS server (default is false)
     
+    CLIENT_RULE_FIELDS:
+    
+      ruleAction=RULE_ACTION
+          Specifies the action to take. This field starts a new client rule.
+    
+      clientAddressRange=ADDRESS|ADDRESS1-ADDRESS2|regex:REGULAR_EXPRESSION
+          Specifies the address range for the client address
+    
+      socksServerAddressRange=ADDRESS|ADDRESS1-ADDRESS2|regex:REGULAR_EXPRESSION
+          Specifies the address range for the SOCKS server address
+    
+      logAction=LOG_ACTION
+          Specifies the logging action to take if the rule applies
+    
     LOG_ACTIONS:
     
       LOG_AS_WARNING
@@ -479,20 +493,6 @@ The following is a list of available settings for the SOCKS server (displayed wh
       ALLOW
     
       DENY
-    
-    RULE_FIELDS:
-    
-      ruleAction=RULE_ACTION
-          Specifies the action to take. This field starts a new rule.
-    
-      sourceAddressRange=ADDRESS|ADDRESS1-ADDRESS2|regex:REGULAR_EXPRESSION
-          Specifies the address range for the source address
-    
-      destinationAddressRange=ADDRESS|ADDRESS1-ADDRESS2|regex:REGULAR_EXPRESSION
-          Specifies the address range for the destination address
-    
-      logAction=LOG_ACTION
-          Specifies the logging action to take if the rule applies
     
     SCHEMES:
     
@@ -647,6 +647,7 @@ The following is a list of available settings for the SOCKS server (displayed wh
     
       logAction=LOG_ACTION
           Specifies the logging action to take if the rule applies
+    
     
 ```
 
@@ -1979,11 +1980,11 @@ Partial command line example:
 
 ```text
     
-    "--setting=clientRules=ruleAction=ALLOW sourceAddressRange=127.0.0.1 ruleAction=ALLOW sourceAddressRange=::1 ruleAction=DENY"
+    "--setting=clientRules=ruleAction=ALLOW clientAddressRange=127.0.0.1 ruleAction=ALLOW clientAddressRange=::1 ruleAction=DENY"
     
 ```
 
-You can also specify the rules in any of the aforementioned settings as a `<rules/>` XML element containing a sequence of `<rule/>` XML elements.
+You can also specify the rules in any of the aforementioned settings as a `<clientRules/>` XML element containing a sequence of `<clientRule/>` XML elements.
 
 Partial configuration file example:
 
@@ -1991,34 +1992,34 @@ Partial configuration file example:
     
     <setting>
         <name>clientRules</name>
-        <rules>
-            <rule>
+        <clientRules>
+            <clientRule>
                 <ruleAction>ALLOW</ruleAction>
-                <sourceAddressRange>127.0.0.1</sourceAddressRange>
+                <clientAddressRange>127.0.0.1</clientAddressRange>
                 <!-- Allows IPv4 loopback address -->
-            </rule>
-            <rule>
+            </clientRule>
+            <clientRule>
                 <ruleAction>ALLOW</ruleAction>
-                <sourceAddressRange>::1</sourceAddressRange>
+                <clientAddressRange>::1</clientAddressRange>
                 <!-- Allows IPv6 loopback address -->
-            </rule>
-            <rule>
+            </clientRule>
+            <clientRule>
                 <ruleAction>DENY</ruleAction>
-                <!-- Denies any other address -->
-            </rule>
-        </rules>
+                <!-- Denies any other client address -->
+            </clientRule>
+        </clientRules>
     </setting>
     
 ```
 
-A rule has the following fields:
+A client rule has the following fields:
 
 -   `ruleAction` : Specifies the action to take. Value can be either of the following: `ALLOW`, `DENY`. This field is required.
--   `sourceAddressRange` : Specifies the address range for the source address. This field is optional.
--   `destinationAddressRange` : Specifies the address range for the destination address. This field is optional.
+-   `clientAddressRange` : Specifies the address range for the client address. This field is optional.
+-   `socksServerAddressRange` : Specifies the address range for the SOCKS server address. This field is optional.
 -   `logAction` : Specifies the logging action to take if the rule applies. Value can be either of the following: `LOG_AS_WARNING`, `LOG_AS_INFO`. This field is optional.
 
-Address ranges in the `sourceAddressRange` field and the `destinationAddressRange` field can be specified in the following formats:
+Address ranges in the `clientAddressRange` field and the `socksServerAddressRange` field can be specified in the following formats:
 
 -   `ADDRESS` : Range is limited to a single address expressed in `ADDRESS`
 -   `ADDRESS1-ADDRESS2` : Range is limited to addresses between the address expressed in `ADDRESS1` (inclusive) and the address expressed in `ADDRESS2` (inclusive)
@@ -2239,7 +2240,7 @@ In reply to a SOCKS request with the RESOLVE command, the `ATYP` field in the re
 
 When using an existing configuration file to create a new configuration file, any XML comments from the existing configuration file cannot be transferred to the new configuration file. To preserve XML comments from one configuration file to the next configuration file, the `<doc/>` XML element can be used in the following XML elements:
 
--   `<rule/>`
+-   `<clientRule/>`
 -   `<setting/>`
 -   `<socketSetting/>`
 -   `<socks5ReplyRule>`
@@ -2252,22 +2253,22 @@ Partial configuration file example:
     
     <setting>
         <name>clientRules</name>
-        <rules>
-            <rule>
+        <clientRules>
+            <clientRule>
                 <ruleAction>ALLOW</ruleAction>
-                <sourceAddressRange>127.0.0.1</sourceAddressRange>
+                <clientAddressRange>127.0.0.1</clientAddressRange>
                 <doc>Allows IPv4 loopback address</doc>
-            </rule>
-            <rule>
+            </clientRule>
+            <clientRule>
                 <ruleAction>ALLOW</ruleAction>
-                <sourceAddressRange>::1</sourceAddressRange>
+                <clientAddressRange>::1</clientAddressRange>
                 <doc>Allows IPv6 loopback address</doc>
-            </rule>
-            <rule>
+            </clientRule>
+            <clientRule>
                 <ruleAction>DENY</ruleAction>
-                <doc>Denies any other address</doc>
-            </rule>
-        </rules>
+                <doc>Denies any other client address</doc>
+            </clientRule>
+        </clientRules>
     </setting>
     <setting>
         <name>socks5.socks5RequestRules</name>

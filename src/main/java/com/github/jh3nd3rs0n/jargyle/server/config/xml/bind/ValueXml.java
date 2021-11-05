@@ -5,7 +5,7 @@ import java.util.Objects;
 import com.github.jh3nd3rs0n.jargyle.client.socks5.userpassauth.UsernamePassword;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
-import com.github.jh3nd3rs0n.jargyle.server.Rules;
+import com.github.jh3nd3rs0n.jargyle.server.ClientRules;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5ReplyRules;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5RequestRules;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5RequestWorkerFactory;
@@ -22,10 +22,10 @@ abstract class ValueXml {
 	
 	public static ValueXml newInstance(final Object val) {
 		Objects.requireNonNull(val);
-		if (val instanceof EncryptedPassword) {
+		if (val instanceof ClientRules) {
+			return new ClientRulesXml((ClientRules) val);
+		} else if (val instanceof EncryptedPassword) {
 			return EncryptedPasswordXml.newInstance((EncryptedPassword) val);
-		} else if (val instanceof Rules) {
-			return new RulesXml((Rules) val);
 		} else if (val instanceof SocketSettings) {
 			return new SocketSettingsXml((SocketSettings) val);
 		} else if (val instanceof Socks5ReplyRules) {

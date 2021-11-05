@@ -537,12 +537,16 @@ The following is a list of available settings for the SOCKS server (displayed wh
     SOCKS5_COMMANDS:
     
       CONNECT
+          A request to the SOCKS server to connect to another server
     
       BIND
+          A request to the SOCKS server to bind to another address and port in order to receive an inbound connection
     
       UDP_ASSOCIATE
+          A request to the SOCKS server to associate a UDP socket for sending and receiving datagrams
     
       RESOLVE
+          A request to the SOCKS server to resolve a host name
     
     SOCKS5_GSSAPIAUTH_PROTECTION_LEVELS:
     
@@ -1991,13 +1995,16 @@ Partial configuration file example:
             <rule>
                 <ruleAction>ALLOW</ruleAction>
                 <sourceAddressRange>127.0.0.1</sourceAddressRange>
+                <!-- Allows IPv4 loopback address -->
             </rule>
             <rule>
                 <ruleAction>ALLOW</ruleAction>
                 <sourceAddressRange>::1</sourceAddressRange>
+                <!-- Allows IPv6 loopback address -->
             </rule>
             <rule>
                 <ruleAction>DENY</ruleAction>
+                <!-- Denies any other address -->
             </rule>
         </rules>
     </setting>
@@ -2044,18 +2051,22 @@ Partial configuration file example:
                 <ruleAction>ALLOW</ruleAction>
                 <command>CONNECT</command>
                 <desiredDestinationPortRange>80</desiredDestinationPortRange>
+                <!-- Allow any client to connect to any address on port 80 -->
             </socks5RequestRule>
             <socks5RequestRule>
                 <ruleAction>ALLOW</ruleAction>
                 <command>CONNECT</command>
                 <desiredDestinationPortRange>443</desiredDestinationPortRange>
+                <!-- Allow any client to connect to any address on port 443 -->
             </socks5RequestRule>
             <socks5RequestRule>
                 <ruleAction>DENY</ruleAction>
                 <command>CONNECT</command>
+                <!-- Deny any other CONNECT requests -->                
             </socks5RequestRule>
             <socks5RequestRule>
                 <ruleAction>ALLOW</ruleAction>
+                <!-- Allow any other requests -->
             </socks5RequestRule>
         </socks5RequestRules>
     </setting>
@@ -2112,14 +2123,17 @@ Partial configuration file example:
                 <ruleAction>DENY</ruleAction>
                 <command>CONNECT</command>
                 <serverBoundAddressRange>127.0.0.1</serverBoundAddressRange>
+                <!-- Deny replies to connecting to the IPv4 loopback address -->
             </socks5ReplyRule>
             <socks5ReplyRule>
                 <ruleAction>DENY</ruleAction>
                 <command>CONNECT</command>
                 <serverBoundAddressRange>::1</serverBoundAddressRange>
+                <!-- Deny replies to connecting to the IPv6 loopback address -->                
             </socks5ReplyRule>
             <socks5ReplyRule>
                 <ruleAction>ALLOW</ruleAction>
+                <!-- Allow any other reply -->
             </socks5ReplyRule>
         </socks5ReplyRules>
     </setting>
@@ -2177,9 +2191,11 @@ Partial configuration file example:
             <socks5UdpRule>
                 <ruleAction>DENY</ruleAction>
                 <peerAddressRange>badpeer.com</peerAddressRange>
+                <!-- Deny any UDP packets that go to badpeer.com -->
             </socks5UdpRule>
             <socks5UdpRule>
                 <ruleAction>ALLOW</ruleAction>
+                <!-- Allow any other UDP packets -->
             </socks5UdpRule>
         </socks5UdpRules>
     </setting>

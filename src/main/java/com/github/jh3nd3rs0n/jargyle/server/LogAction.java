@@ -18,7 +18,7 @@ public enum LogAction {
 	LOG_AS_WARNING {
 		
 		@Override
-		public void log(final String message) {
+		public void invoke(final String message) {
 			LOGGER.warn(message);
 		}
 		
@@ -31,7 +31,7 @@ public enum LogAction {
 	LOG_AS_INFO {
 		
 		@Override
-		public void log(final String message) {
+		public void invoke(final String message) {
 			LOGGER.info(message);
 		}
 		
@@ -64,6 +64,6 @@ public enum LogAction {
 		return logAction;
 	}
 	
-	public abstract void log(final String message);
+	public abstract void invoke(final String message);
 	
 }

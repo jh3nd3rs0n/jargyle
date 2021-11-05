@@ -422,7 +422,7 @@ public final class Socks5ReplyRule {
 				String.format(" (%s)", user) : "";
 		if (this.ruleAction.equals(RuleAction.ALLOW)
 				&& this.logAction != null) {
-			this.logAction.log(String.format(
+			this.logAction.invoke(String.format(
 					"SOCKS5 reply to %s%s is allowed based on the following "
 					+ "rule: %s. SOCKS5 request: %s. SOCKS5 reply: %s",
 					clientAddress,
@@ -432,7 +432,7 @@ public final class Socks5ReplyRule {
 					socks5Rep));			
 		} else if (this.ruleAction.equals(RuleAction.DENY)) {
 			if (this.logAction != null) {
-				this.logAction.log(String.format(
+				this.logAction.invoke(String.format(
 						"SOCKS5 reply to %s%s is denied based on the following "
 						+ "rule: %s. SOCKS5 request: %s. SOCKS5 reply: %s",
 						clientAddress,

@@ -293,7 +293,7 @@ public final class Socks5UdpRule {
 				String.format(" (%s)", user) : "";
 		if (this.ruleAction.equals(RuleAction.ALLOW)
 				&& this.logAction != null) {
-			this.logAction.log(String.format(
+			this.logAction.invoke(String.format(
 					"Traffic between client %s%s and peer %s is allowed based "
 					+ "on the following rule: %s",
 					clientAddress,
@@ -302,7 +302,7 @@ public final class Socks5UdpRule {
 					this));			
 		} else if (this.ruleAction.equals(RuleAction.DENY)) {
 			if (this.logAction != null) {
-				this.logAction.log(String.format(
+				this.logAction.invoke(String.format(
 						"Traffic between client %s%s and peer %s is denied "
 						+ "based on the following rule: %s",
 						clientAddress,

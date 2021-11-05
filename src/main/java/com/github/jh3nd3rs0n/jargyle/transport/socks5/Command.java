@@ -12,25 +12,27 @@ import com.github.jh3nd3rs0n.jargyle.internal.help.HelpText;
 public enum Command {
 	
 	@HelpText(
-			doc = "",
+			doc = "A request to the SOCKS server to connect to another server",
 			usage = "CONNECT"
 	)
 	CONNECT((byte) 0x01),
 	
 	@HelpText(
-			doc = "",
+			doc = "A request to the SOCKS server to bind to another address "
+					+ "and port in order to receive an inbound connection",
 			usage = "BIND"
 	)	
 	BIND((byte) 0x02),
 	
 	@HelpText(
-			doc = "",
+			doc = "A request to the SOCKS server to associate a UDP socket for "
+					+ "sending and receiving datagrams",
 			usage = "UDP_ASSOCIATE"
 	)	
 	UDP_ASSOCIATE((byte) 0x03),
 	
 	@HelpText(
-			doc = "",
+			doc = "A request to the SOCKS server to resolve a host name",
 			usage = "RESOLVE"
 	)
 	RESOLVE((byte) 0x04);

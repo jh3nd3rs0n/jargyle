@@ -228,7 +228,7 @@ public final class Rule {
 			final String sourceAddress, final String destinationAddress) {
 		if (this.ruleAction.equals(RuleAction.ALLOW) 
 				&& this.logAction != null) {
-			this.logAction.log(String.format(
+			this.logAction.invoke(String.format(
 					"Source address %s to destination address %s is allowed "
 					+ "based on the following rule: %s", 
 					sourceAddress,
@@ -236,7 +236,7 @@ public final class Rule {
 					this));
 		} else if (this.ruleAction.equals(RuleAction.DENY)) {
 			if (this.logAction != null) {
-				this.logAction.log(String.format(
+				this.logAction.invoke(String.format(
 						"Source address %s to destination address %s is denied "
 						+ "based on the following rule: %s", 
 						sourceAddress,

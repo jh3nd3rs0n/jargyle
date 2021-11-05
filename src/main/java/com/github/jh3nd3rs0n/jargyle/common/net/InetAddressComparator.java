@@ -1,9 +1,9 @@
-package com.github.jh3nd3rs0n.jargyle.internal.net;
+package com.github.jh3nd3rs0n.jargyle.common.net;
 
 import java.net.InetAddress;
 import java.util.Comparator;
 
-public enum InetAddressComparator implements Comparator<InetAddress> {
+enum InetAddressComparator implements Comparator<InetAddress> {
 
 	INSTANCE;
 

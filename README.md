@@ -13,7 +13,7 @@ Jargyle is a Java SOCKS5 server. It has the following features:
 -   [DTLS for UDP traffic through SOCKS server chaining](#5-12-2-using-dtls-for-udp-traffic-through-socks-server-chaining)
 -   [Host name resolution through SOCKS5 server chaining](#5-12-3-using-host-name-resolution-through-socks5-server-chaining)
 -   [SOCKS server chaining to a specified chain of other SOCKS servers](#5-13-chaining-to-a-specified-chain-of-other-socks-servers)
--   Firewall rules for [clients](#5-14-using-firewall-rules-for-clients), [SOCKS5 requests](#5-15-using-firewall-rules-for-socks5-requests), [SOCKS5 replies](#5-16-using-firewall-rules-for-socks5-replies), and [SOCKS5 UDP traffic](#5-17-using-firewall-rules-for-socks5-udp-traffic)
+-   [Firewall rules](#5-14-using-firewall-rules) for [clients](#5-14-3-using-firewall-rules-for-clients), [SOCKS5 requests](#5-14-4-using-firewall-rules-for-socks5-requests), [SOCKS5 replies](#5-14-5-using-firewall-rules-for-socks5-replies), and [SOCKS5 UDP traffic](#5-14-6-using-firewall-rules-for-socks5-udp-traffic)
 
 Although Jargyle can act as a standalone SOCKS5 server, it can act as a bridge between the following:
 
@@ -55,10 +55,13 @@ Although Jargyle can act as a standalone SOCKS5 server, it can act as a bridge b
 -   [5. 12. 4. 2. Using Username Password Authentication](#5-12-4-2-using-username-password-authentication)
 -   [5. 12. 4. 3. Using GSS-API Authentication](#5-12-4-3-using-gss-api-authentication)
 -   [5. 13. Chaining to a Specified Chain of Other SOCKS Servers](#5-13-chaining-to-a-specified-chain-of-other-socks-servers)
--   [5. 14. Using Firewall Rules for Clients](#5-14-using-firewall-rules-for-clients)
--   [5. 15. Using Firewall Rules for SOCKS5 Requests](#5-15-using-firewall-rules-for-socks5-requests)
--   [5. 16. Using Firewall Rules for SOCKS5 Replies](#5-16-using-firewall-rules-for-socks5-replies)
--   [5. 17. Using Firewall Rules for SOCKS5 UDP Traffic](#5-17-using-firewall-rules-for-socks5-udp-traffic)
+-   [5. 14. Using Firewall Rules](#5-14-using-firewall-rules)
+-   [5. 14. 1. Using an Address Range](#5-14-1-using-an-address-range)
+-   [5. 14. 2. Using a Port Range](#5-14-2-using-a-port-range)
+-   [5. 14. 3. Using Firewall Rules for Clients](#5-14-3-using-firewall-rules-for-clients)
+-   [5. 14. 4. Using Firewall Rules for SOCKS5 Requests](#5-14-4-using-firewall-rules-for-socks5-requests)
+-   [5. 14. 5. Using Firewall Rules for SOCKS5 Replies](#5-14-5-using-firewall-rules-for-socks5-replies)
+-   [5. 14. 6. Using Firewall Rules for SOCKS5 UDP Traffic](#5-14-6-using-firewall-rules-for-socks5-udp-traffic)
 -   [6. Miscellaneous Notes](#6-miscellaneous-notes)
 -   [6. 1. Multiple Settings of the Same Name](#6-1-multiple-settings-of-the-same-name)
 -   [6. 2. The SOCKS5 RESOLVE Command](#6-2-the-socks5-resolve-command)
@@ -1970,11 +1973,59 @@ The known limitations of Jargyle chained to a specified chain of other SOCKS ser
 
 -   Only TCP traffic can be routed through the chain. Jargyle will attempt to route any UDP traffic through the last SOCKS server of the chain.
 
-### 5. 14. Using Firewall Rules for Clients
+### 5. 14. Using Firewall Rules
 
-You can specify rules for TCP traffic from a client to the SOCKS server in the following setting:
+You can specify firewall rules for traffic of the following types:
+
+-   TCP traffic from a client to the SOCKS server
+-   A SOCKS5 request from a client
+-   A SOCKS5 reply to a client
+-   SOCKS5 UDP traffic between a UDP client and a UDP peer
+
+On the command line, firewall rules for traffic of a particular type consist of a space separated list of fields. Each field consists of the syntax of `NAME=VALUE` where `NAME` is expressed as the name of the field and `VALUE` is expressed as the value assigned to the field.
+
+The following are common firewall rule fields:
+
+-   `ruleAction` : Specifies the action to take. Value can be either of the following: `ALLOW`, `DENY`. This field is required. This field also starts a new firewall rule.
+-   `logAction` : Specifies the logging action to take if the firewall rule is applied. Value can be either of the following: `LOG_AS_WARNING`, `LOG_AS_INFO`. This field is optional.
+
+By default, firewall rules for traffic of a particular type have the default firewall rule:
+
+```text
+    
+    ruleAction=ALLOW
+    
+```
+
+The aforementioned default firewall rule allows all traffic of a particular type.
+
+When a particular instance of traffic of a particular type is matched by the first firewall rule in the space separated list, that firewall rule is applied and the rest of the firewall rules in the space separated list are ignored. Therefore it is best to have more specific firewall rules first in the space separated list and have less specific firewall rules last in the space separated list.
+
+#### 5. 14. 1. Using an Address Range
+
+Some fields in firewall rules require an address range. An address range can be specified in the following formats:
+
+-   `ADDRESS` : Range is limited to a single address expressed in `ADDRESS`. Address can be an IPv4 address, an IPv6 address, or a domain name.
+-   `ADDRESS1-ADDRESS2` : Range is limited to addresses between the address expressed in `ADDRESS1` (inclusive) and the address expressed in `ADDRESS2` (inclusive). `ADDRESS1` and `ADDRESS2` must be of the same address type (IPv4 or IPv6). `ADDRESS1` and `ADDRESS2` cannot be domain names.
+-   `regex:REGULAR_EXPRESSION` : Range is limited to domain names that match the regular expression expressed in `REGULAR_EXPRESSION`
+
+#### 5. 14. 2. Using a Port Range
+
+Some fields in firewall rules require a port range. A port range can be specified in the following formats:
+
+-   `PORT` : Range is limited to a single port number expressed in `PORT`
+-   `PORT1-PORT2` : Range is limited to port numbers between the port number expressed in `PORT1` (inclusive) and the port number expressed in `PORT2` (inclusive)
+
+#### 5. 14. 3. Using Firewall Rules for Clients
+
+You can specify firewall rules for TCP traffic from a client to the SOCKS server in the following setting:
 
 -   `clientRules`
+
+A client rule has the following additional fields:
+
+-   `clientAddressRange` : Specifies the address range for the client address. This field is optional.
+-   `socksServerAddressRange` : Specifies the address range for the SOCKS server address. This field is optional.
 
 Partial command line example:
 
@@ -1984,7 +2035,7 @@ Partial command line example:
     
 ```
 
-You can also specify the rules in any of the aforementioned settings as a `<clientRules/>` XML element containing a sequence of `<clientRule/>` XML elements.
+You can also specify the firewall rules in the aforementioned setting as a `<clientRules/>` XML element containing a sequence of `<clientRule/>` XML elements.
 
 Partial configuration file example:
 
@@ -2012,24 +2063,20 @@ Partial configuration file example:
     
 ```
 
-A client rule has the following fields:
-
--   `ruleAction` : Specifies the action to take. Value can be either of the following: `ALLOW`, `DENY`. This field is required.
--   `clientAddressRange` : Specifies the address range for the client address. This field is optional.
--   `socksServerAddressRange` : Specifies the address range for the SOCKS server address. This field is optional.
--   `logAction` : Specifies the logging action to take if the rule applies. Value can be either of the following: `LOG_AS_WARNING`, `LOG_AS_INFO`. This field is optional.
-
-Address ranges in the `clientAddressRange` field and the `socksServerAddressRange` field can be specified in the following formats:
-
--   `ADDRESS` : Range is limited to a single address expressed in `ADDRESS`
--   `ADDRESS1-ADDRESS2` : Range is limited to addresses between the address expressed in `ADDRESS1` (inclusive) and the address expressed in `ADDRESS2` (inclusive)
--   `regex:REGULAR_EXPRESSION` : Range is limited to domain names that match the regular expression expressed in `REGULAR_EXPRESSION`
-
-### 5. 15. Using Firewall Rules for SOCKS5 Requests
+#### 5. 14. 4. Using Firewall Rules for SOCKS5 Requests
 
 You can specify firewall rules for a SOCKS5 request from a client in the following setting:
 
 -   `socks5.socks5RequestRules`
+
+A SOCKS5 request rule has the following additional fields:
+
+-   `clientAddressRange` : Specifies the address range for the client address. This field is optional.
+-   `method` : Specifies the negotiated SOCKS5 method. Value can be any of the following: `NO_AUTHENTICATION_REQUIRED`, `USERNAME_PASSWORD`, `GSSAPI`. This field is optional.
+-   `user` : Specifies the user if any after the negotiated SOCKS5 method. This field is optional.
+-   `command` : Specifies the command type of the SOCKS5 request. Value can be any of the following: `CONNECT`, `BIND`, `UDP_ASSOCIATE`, `RESOLVE`. This field is optional.
+-   `desiredDestinationAddressRange` : Specifies the address range for the desired destination address of the SOCKS5 request. This field is optional.
+-   `desiredDestinationPortRange` : Specifies the port range for the desired destination port of the SOCKS5 request. This field is optional.
 
 Partial command line example:
 
@@ -2039,7 +2086,7 @@ Partial command line example:
      
 ```
  
-You can also specify the rules in the aforementioned setting as a `<socks5RequestRules/>` XML element containing a sequence of `<socks5RequestRule/>` XML elements.
+You can also specify the firewall rules in the aforementioned setting as a `<socks5RequestRules/>` XML element containing a sequence of `<socks5RequestRule/>` XML elements.
 
 Partial configuration file example:
 
@@ -2074,34 +2121,23 @@ Partial configuration file example:
     
 ```
 
-A SOCKS5 request rule has the following fields:
+#### 5. 14. 5. Using Firewall Rules for SOCKS5 Replies
 
--   `ruleAction` : Specifies the action to take. Value can be either of the following: `ALLOW`, `DENY`. This field is required.
+You can specify firewall rules for a SOCKS5 reply to a client in either of the following settings:
+
+-   `socks5.onBind.secondSocks5ReplyRules`
+-   `socks5.socks5ReplyRules`
+
+A SOCKS5 reply rule has the following additional fields:
+
 -   `clientAddressRange` : Specifies the address range for the client address. This field is optional.
 -   `method` : Specifies the negotiated SOCKS5 method. Value can be any of the following: `NO_AUTHENTICATION_REQUIRED`, `USERNAME_PASSWORD`, `GSSAPI`. This field is optional.
 -   `user` : Specifies the user if any after the negotiated SOCKS5 method. This field is optional.
 -   `command` : Specifies the command type of the SOCKS5 request. Value can be any of the following: `CONNECT`, `BIND`, `UDP_ASSOCIATE`, `RESOLVE`. This field is optional.
 -   `desiredDestinationAddressRange` : Specifies the address range for the desired destination address of the SOCKS5 request. This field is optional.
 -   `desiredDestinationPortRange` : Specifies the port range for the desired destination port of the SOCKS5 request. This field is optional.
--   `logAction` : Specifies the logging action to take if the rule applies. Value can be either of the following: `LOG_AS_WARNING`, `LOG_AS_INFO`. This field is optional.
-
-Address ranges in the `clientAddressRange` field and the `desiredDestinationAddressRange` field can be specified in the following formats:
-
--   `ADDRESS` : Range is limited to a single address expressed in `ADDRESS`
--   `ADDRESS1-ADDRESS2` : Range is limited to addresses between the address expressed in `ADDRESS1` (inclusive) and the address expressed in `ADDRESS2` (inclusive)
--   `regex:REGULAR_EXPRESSION` : Range is limited to domain names that match the regular expression expressed in `REGULAR_EXPRESSION`
-
-The port range in the `desiredDestinationPortRange` field can be specified in the following formats:
-
--   `PORT` : Range is limited to a single port number expressed in `PORT`
--   `PORT1-PORT2` : Range is limited to port numbers between the port number expressed in `PORT1` (inclusive) and the port number expressed in `PORT2` (inclusive)
-
-### 5. 16. Using Firewall Rules for SOCKS5 Replies
-
-You can specify firewall rules for a SOCKS5 reply to a client in either of the following settings:
-
--   `socks5.onBind.secondSocks5ReplyRules`
--   `socks5.socks5ReplyRules`
+-   `serverBoundAddressRange` : Specifies the address range for the server bound address of the SOCKS5 reply. This field is optional.
+-   `serverBoundPortRange` : Specifies the port range for the server bound port of the SOCKS5 reply. This field is optional.
 
 Partial command line example:
 
@@ -2111,7 +2147,7 @@ Partial command line example:
      
 ```
  
-You can also specify the rules in the aforementioned setting as a `<socks5ReplyRules/>` XML element containing a sequence of `<socks5ReplyRule/>` XML elements.
+You can also specify the firewall rules in any of the aforementioned settings as a `<socks5ReplyRules/>` XML element containing a sequence of `<socks5ReplyRule/>` XML elements.
 
 Partial configuration file example:
 
@@ -2141,36 +2177,19 @@ Partial configuration file example:
     
 ```
 
-A SOCKS5 reply rule has the following fields:
-
--   `ruleAction` : Specifies the action to take. Value can be either of the following: `ALLOW`, `DENY`. This field is required.
--   `clientAddressRange` : Specifies the address range for the client address. This field is optional.
--   `method` : Specifies the negotiated SOCKS5 method. Value can be any of the following: `NO_AUTHENTICATION_REQUIRED`, `USERNAME_PASSWORD`, `GSSAPI`. This field is optional.
--   `user` : Specifies the user if any after the negotiated SOCKS5 method. This field is optional.
--   `command` : Specifies the command type of the SOCKS5 request. Value can be any of the following: `CONNECT`, `BIND`, `UDP_ASSOCIATE`, `RESOLVE`. This field is optional.
--   `desiredDestinationAddressRange` : Specifies the address range for the desired destination address of the SOCKS5 request. This field is optional.
--   `desiredDestinationPortRange` : Specifies the port range for the desired destination port of the SOCKS5 request. This field is optional.
--   `serverBoundAddressRange` : Specifies the address range for the server bound address of the SOCKS5 reply. This field is optional.
--   `serverBoundPortRange` : Specifies the port range for the server bound port of the SOCKS5 reply. This field is optional.
--   `logAction` : Specifies the logging action to take if the rule applies. Value can be either of the following: `LOG_AS_WARNING`, `LOG_AS_INFO`. This field is optional.
-
-Address ranges in the `clientAddressRange` field, the `desiredDestinationAddressRange` field, and the `serverBoundAddressRange` field can be specified in the following formats:
-
--   `ADDRESS` : Range is limited to a single address expressed in `ADDRESS`
--   `ADDRESS1-ADDRESS2` : Range is limited to addresses between the address expressed in `ADDRESS1` (inclusive) and the address expressed in `ADDRESS2` (inclusive)
--   `regex:REGULAR_EXPRESSION` : Range is limited to domain names that match the regular expression expressed in `REGULAR_EXPRESSION`
-
-Port ranges in the `desiredDestinationPortRange` field and the `serverBoundPortRange` field can be specified in the following formats:
-
--   `PORT` : Range is limited to a single port number expressed in `PORT`
--   `PORT1-PORT2` : Range is limited to port numbers between the port number expressed in `PORT1` (inclusive) and the port number expressed in `PORT2` (inclusive)
-
-### 5. 17. Using Firewall Rules for SOCKS5 UDP Traffic
+#### 5. 14. 6. Using Firewall Rules for SOCKS5 UDP Traffic
 
 You can specify firewall rules for UDP traffic between a UDP client and a UDP peer in either of the following settings:
 
 -   `socks5.onUdpAssociate.inboundSocks5UdpRules`
 -   `socks5.onUdpAssociate.outboundSocks5UdpRules`
+
+A SOCKS5 UDP rule has the following additional fields:
+
+-   `clientAddressRange` : Specifies the address range for the client address. This field is optional.
+-   `method` : Specifies the negotiated SOCKS5 method. Value can be any of the following: `NO_AUTHENTICATION_REQUIRED`, `USERNAME_PASSWORD`, `GSSAPI`. This field is optional.
+-   `user` : Specifies the user if any after the negotiated SOCKS5 method. This field is optional.
+-   `peerAddressRange` : Specifies the address range for the peer address. This field is optional.
 
 Partial command line example:
 
@@ -2180,7 +2199,7 @@ Partial command line example:
      
 ```
  
-You can also specify the rules in the aforementioned setting as a `<socks5UdpRules/>` XML element containing a sequence of `<socks5UdpRule/>` XML elements.
+You can also specify the firewall rules in any of the aforementioned settings as a `<socks5UdpRules/>` XML element containing a sequence of `<socks5UdpRule/>` XML elements.
 
 Partial configuration file example:
 
@@ -2202,21 +2221,6 @@ Partial configuration file example:
     </setting>
     
 ```
-
-A SOCKS5 UDP rule has the following fields:
-
--   `ruleAction` : Specifies the action to take. Value can be either of the following: `ALLOW`, `DENY`. This field is required.
--   `clientAddressRange` : Specifies the address range for the client address. This field is optional.
--   `method` : Specifies the negotiated SOCKS5 method. Value can be any of the following: `NO_AUTHENTICATION_REQUIRED`, `USERNAME_PASSWORD`, `GSSAPI`. This field is optional.
--   `user` : Specifies the user if any after the negotiated SOCKS5 method. This field is optional.
--   `peerAddressRange` : Specifies the address range for the peer address. This field is optional.
--   `logAction` : Specifies the logging action to take if the rule applies. Value can be either of the following: `LOG_AS_WARNING`, `LOG_AS_INFO`. This field is optional.
-
-Address ranges in the `clientAddressRange` field and the `peerAddressRange` field can be specified in the following formats:
-
--   `ADDRESS` : Range is limited to a single address expressed in `ADDRESS`
--   `ADDRESS1-ADDRESS2` : Range is limited to addresses between the address expressed in `ADDRESS1` (inclusive) and the address expressed in `ADDRESS2` (inclusive)
--   `regex:REGULAR_EXPRESSION` : Range is limited to domain names that match the regular expression expressed in `REGULAR_EXPRESSION`
 
 ## 6. Miscellaneous Notes
 

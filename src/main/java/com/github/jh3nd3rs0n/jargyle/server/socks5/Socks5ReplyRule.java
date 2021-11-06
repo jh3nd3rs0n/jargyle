@@ -154,7 +154,7 @@ public final class Socks5ReplyRule extends Rule {
 			}
 			
 			@Override
-			public boolean isString(final String s) {
+			public boolean isRepresentedBy(final String s) {
 				return this.string.equals(s);
 			}
 			

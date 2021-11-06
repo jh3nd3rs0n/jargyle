@@ -12,13 +12,38 @@ public abstract class Rule {
 
 		public static interface Field<B extends Builder<B, R>, R extends Rule> {
 			
-			public boolean isString(final String s);
+			public boolean isRepresentedBy(final String s);
 			
 			public B set(final B builder, final String value);
 			
 			@Override
 			public String toString();
 			
+		}
+
+		private static <B extends Builder<B, R>, F extends Builder.Field<B, R>, R extends Rule> F getFieldRepresentedBy(
+				final String s,
+				final List<F> fields) {
+			for (F field : fields) {
+				if (field.isRepresentedBy(s)) {
+					return field;
+				}
+			}
+			StringBuilder sb = new StringBuilder();
+			for (Iterator<F> iterator = fields.iterator(); iterator.hasNext();) {
+				F value = iterator.next();
+				sb.append(value);
+				if (iterator.hasNext()) {
+					sb.append(", ");
+				}
+			}
+			throw new IllegalArgumentException(
+					String.format(
+							"expected field must be one of the following "
+							+ "values: %s. actual value is %s",
+							sb.toString(),
+							s));			
+
 		}
 
 		private final RuleAction ruleAction;
@@ -61,7 +86,7 @@ public abstract class Rule {
 		}
 		
 	}
-
+	
 	public static <B extends Builder<B, R>, F extends Builder.Field<B, R>, R extends Rule> List<R> newInstances(
 			final String s, 
 			final F ruleActionField, 
@@ -80,36 +105,14 @@ public abstract class Rule {
 						+ "NAME=VALUE. actual value is %s",
 						word));
 			}
-			F field = null;
-			for (F value : fields) {
-				if (value.isString(wordElements[0])) {
-					field = value;
-					break;
-				}
-			}
-			if (field == null) {
-				StringBuilder sb = new StringBuilder();
-				for (Iterator<F> iter = fields.iterator(); iter.hasNext();) {
-					F value = iter.next();
-					sb.append(value);
-					if (iter.hasNext()) {
-						sb.append(", ");
-					}
-				}
-				throw new IllegalArgumentException(
-						String.format(
-								"expected field must be one of the following "
-								+ "values: %s. actual value is %s",
-								sb.toString(),
-								s));			
-			}
+			F field = Builder.getFieldRepresentedBy(wordElements[0], fields);
 			try {
 				builder = field.set(builder, wordElements[1]);
 			} catch (NullPointerException e) {
 				throw new IllegalArgumentException(String.format(
-						"expected field '%s'. actual value is %s", 
+						"expected field '%s'. actual field is '%s'", 
 						ruleActionField,
-						word));				
+						wordElements[0]));				
 			}
 			if (recentBuilder == null) {
 				recentBuilder = builder;

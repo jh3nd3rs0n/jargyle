@@ -2265,7 +2265,7 @@ Partial configuration file example:
     
 ```
 
-You can also set the setting `routeSelectionLogAction` to specify the [logging action](#5-17-3-log-action) to take if a route is selected from list of all of the route IDs.
+You can also set the setting `routeSelectionLogAction` to specify the [logging action](#5-17-3-log-action) to take if a route is selected from the list of all of the route IDs.
 
 Partial command line example:
 
@@ -2533,8 +2533,8 @@ On the command line, routing rules consist of a space separated list of fields. 
 
 The following are common routing rule fields:
 
--   `routingRule` : This field starts a new routing rule. No value needs to specified (The value can be empty). This field is required.
--   `routeId` : Specifies the ID for a route. This field can be specified multiple times for each ID for a route. This field is optional.
+-   `routingRule` : This field starts a new routing rule. No value needs to specified (the value can be empty). This field is required.
+-   `routeId` : Specifies the [ID for a route](#5-14-chaining-to-multiple-specified-chains-of-other-socks-servers). This field can be specified multiple times for each ID for a route. This field is optional.
 -   `routeIdSelectionStrategy` : Specifies the [selection strategy](#5-17-5-selection-strategy) for the next route ID to use from the list of route IDs. This field is optional.
 -   `logAction` : Specifies the [logging action](#5-17-3-log-action) to take if the route ID is selected from the list of route IDs. This field is optional.
 
@@ -2577,7 +2577,7 @@ Partial configuration file example:
                     <routeId>beta</routeId>
                 </routeIds>
                 <routeIdSelectionStrategy>RANDOM</routeIdSelectionStrategy>
-                <!-- Traffic from IPv4 loopback address will be routed through either alpha or beta -->
+                <!-- Traffic for the IPv4 loopback address will be routed through either alpha or beta -->
             </clientRoutingRule>
             <clientRoutingRule>
                 <clientAddressRange>::1</clientAddressRange>
@@ -2586,7 +2586,7 @@ Partial configuration file example:
                     <routeId>beta</routeId>
                 </routeIds>
                 <routeIdSelectionStrategy>RANDOM</routeIdSelectionStrategy>
-                <!-- Traffic from IPv6 loopback address will be routed through either alpha or beta -->
+                <!-- Traffic for the IPv6 loopback address will be routed through either alpha or beta -->
             </clientRoutingRule>
             <!-- A selected route outside this sequence will be used for any other address -->
         </clientRoutingRules>
@@ -2633,7 +2633,7 @@ Partial configuration file example:
                 <routeIds>
                     <routeId>omega</routeId>
                 </routeIds>
-                <!-- Traffic after the CONNECT command for port 80 will be will be routed through omega --> 
+                <!-- Traffic for the CONNECT command for port 80 will be will be routed through omega --> 
             </socks5RequestRoutingRule>
             <socks5RequestRoutingRule>
                 <command>CONNECT</command>
@@ -2641,7 +2641,7 @@ Partial configuration file example:
                 <routeIds>
                     <routeId>omega</routeId>
                 </routeIds>
-                <!-- Traffic after the CONNECT command for port 443 will be will be routed through omega --> 
+                <!-- Traffic for the CONNECT command for port 443 will be will be routed through omega --> 
             </socks5RequestRoutingRule>
             <!-- A selected route outside this sequence will be used for any other SOCKS5 request -->            
         </socks5RequestRoutingRules>
@@ -2843,7 +2843,7 @@ Partial configuration file example:
                     <routeId>beta</routeId>
                 </routeIds>
                 <routeIdSelectionStrategy>RANDOM</routeIdSelectionStrategy>
-                <doc>Traffic from IPv4 loopback address will be routed through either alpha or beta</doc>
+                <doc>Traffic for the IPv4 loopback address will be routed through either alpha or beta</doc>
             </clientRoutingRule>
             <clientRoutingRule>
                 <clientAddressRange>::1</clientAddressRange>
@@ -2852,7 +2852,7 @@ Partial configuration file example:
                     <routeId>beta</routeId>
                 </routeIds>
                 <routeIdSelectionStrategy>RANDOM</routeIdSelectionStrategy>
-                <doc>Traffic from IPv6 loopback address will be routed through either alpha or beta</doc>
+                <doc>Traffic for the IPv6 loopback address will be routed through either alpha or beta</doc>
             </clientRoutingRule>
         </clientRoutingRules>
     </setting>
@@ -2865,7 +2865,7 @@ Partial configuration file example:
                 <routeIds>
                     <routeId>omega</routeId>
                 </routeIds>
-                <doc>Traffic after the CONNECT command for port 80 will be will be routed through omega</doc> 
+                <doc>Traffic for the CONNECT command for port 80 will be will be routed through omega</doc> 
             </socks5RequestRoutingRule>
             <socks5RequestRoutingRule>
                 <command>CONNECT</command>
@@ -2873,7 +2873,7 @@ Partial configuration file example:
                 <routeIds>
                     <routeId>omega</routeId>
                 </routeIds>
-                <doc>Traffic after the CONNECT command for port 443 will be will be routed through omega</doc> 
+                <doc>Traffic for the CONNECT command for port 443 will be will be routed through omega</doc> 
             </socks5RequestRoutingRule>            
         </socks5RequestRoutingRules>
     </setting>

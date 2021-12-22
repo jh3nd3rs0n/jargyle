@@ -45,7 +45,7 @@ public enum AddressType {
 			byte[] bytes = new byte[ADDRESS_LENGTH];
 			int bytesRead = in.read(bytes);
 			if (bytesRead != ADDRESS_LENGTH) { 
-				throw new IOException(String.format(
+				throw new Socks5Exception(String.format(
 						"expected address length is %s. "
 						+ "actual address length is %s", 
 						ADDRESS_LENGTH, 
@@ -56,14 +56,14 @@ public enum AddressType {
 			try {
 				inetAddress = InetAddress.getByAddress(bytes);
 			} catch (UnknownHostException e) {
-				throw new IOException(String.format(
+				throw new Socks5Exception(String.format(
 						"expected address length is %s. "
 						+ "actual address length is %s", 
 						ADDRESS_LENGTH, 
 						bytesRead));
 			}
 			if (!(inetAddress instanceof Inet4Address)) {
-				throw new IOException(String.format(
+				throw new Socks5Exception(String.format(
 						"raw IP address (%s) not IPv4", inetAddress));
 			}
 			return new Address(this, bytes, inetAddress.getHostAddress());
@@ -106,7 +106,7 @@ public enum AddressType {
 			byte[] bytes = new byte[octetCount.intValue()];
 			int bytesRead = in.read(bytes);
 			if (octetCount.intValue() != bytesRead) {
-				throw new IOException(String.format(
+				throw new Socks5Exception(String.format(
 						"expected address length is %s. "
 						+ "actual address length is %s", 
 						octetCount.intValue(), 
@@ -115,7 +115,7 @@ public enum AddressType {
 			bytes = Arrays.copyOf(bytes, bytes.length);
 			String string = new String(bytes);
 			if (!this.isValueForString(string)) {
-				throw new IOException(String.format(
+				throw new Socks5Exception(String.format(
 						"invalid address: %s", string));
 			}
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -156,7 +156,7 @@ public enum AddressType {
 			byte[] bytes = new byte[ADDRESS_LENGTH];
 			int bytesRead = in.read(bytes);
 			if (bytesRead != ADDRESS_LENGTH) { 
-				throw new IOException(String.format(
+				throw new Socks5Exception(String.format(
 						"expected address length is %s. "
 						+ "actual address length is %s", 
 						ADDRESS_LENGTH, 
@@ -167,14 +167,14 @@ public enum AddressType {
 			try {
 				inetAddress = InetAddress.getByAddress(bytes);
 			} catch (UnknownHostException e) {
-				throw new IOException(String.format(
+				throw new Socks5Exception(String.format(
 						"expected address length is %s. "
 						+ "actual address length is %s", 
 						ADDRESS_LENGTH, 
 						bytesRead));
 			}
 			if (!(inetAddress instanceof Inet6Address)) {
-				throw new IOException(String.format(
+				throw new Socks5Exception(String.format(
 						"raw IP address (%s) not IPv6", inetAddress));
 			}
 			return new Address(this, bytes, inetAddress.getHostAddress());
@@ -231,7 +231,7 @@ public enum AddressType {
 		try {
 			addressType = valueOfByte(b.byteValue());
 		} catch (IllegalArgumentException e) {
-			throw new IOException(e);
+			throw new Socks5Exception(e);
 		}
 		return addressType;
 	}

@@ -28,8 +28,7 @@ final class WorkerContextFactory {
 	}
 	
 	private void checkIfClientFacingSocketAllowed(
-			final FirewallRule.Context context, 
-			final Configuration config) {
+			final Rule.Context context, final Configuration config) {
 		Settings settings = config.getSettings();
 		ClientFirewallRules clientFirewallRules = settings.getLastValue(
 				GeneralSettingSpecConstants.CLIENT_FIREWALL_RULES);
@@ -112,7 +111,7 @@ final class WorkerContextFactory {
 	}
 	
 	private Route selectRoute(
-			final RoutingRule.Context context, final Configuration config) {
+			final Rule.Context context, final Configuration config) {
 		Route route = null;
 		Settings settings = config.getSettings();		
 		ClientRoutingRules clientRoutingRules = settings.getLastValue(

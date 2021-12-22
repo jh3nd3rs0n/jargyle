@@ -9,6 +9,7 @@ import java.util.Objects;
 
 import com.github.jh3nd3rs0n.jargyle.common.number.impl.UnsignedByte;
 import com.github.jh3nd3rs0n.jargyle.internal.number.impl.UnsignedShort;
+import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Exception;
 
 public final class Message {
 
@@ -98,7 +99,7 @@ public final class Message {
 			bytes = new byte[len.intValue()];
 			int bytesRead = in.read(bytes);
 			if (bytesRead != len.intValue()) {
-				throw new IOException(String.format(
+				throw new Socks5Exception(String.format(
 						"expected token length is %s byte(s). "
 						+ "actual token length is %s byte(s)", 
 						len.intValue(), bytesRead));				

@@ -11,6 +11,7 @@ import java.io.Writer;
 import java.util.Arrays;
 
 import com.github.jh3nd3rs0n.jargyle.common.number.impl.UnsignedByte;
+import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Exception;
 
 public final class UsernamePasswordRequest {
 
@@ -108,7 +109,7 @@ public final class UsernamePasswordRequest {
 		byte[] bytes = new byte[ulen.intValue()];
 		int bytesRead = in.read(bytes);
 		if (bytesRead != ulen.intValue()) {
-			throw new IOException(String.format(
+			throw new Socks5Exception(String.format(
 					"expected username length is %s byte(s). "
 					+ "actual username length is %s byte(s)", 
 					ulen.intValue(), bytesRead));
@@ -121,7 +122,7 @@ public final class UsernamePasswordRequest {
 		bytes = new byte[plen.intValue()];
 		bytesRead = in.read(bytes);
 		if (bytesRead != plen.intValue()) {
-			throw new IOException(String.format(
+			throw new Socks5Exception(String.format(
 					"expected password length is %s byte(s). "
 					+ "actual password length is %s byte(s)", 
 					plen.intValue(), bytesRead));

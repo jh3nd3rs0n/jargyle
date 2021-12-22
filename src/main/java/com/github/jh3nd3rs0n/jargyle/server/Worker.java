@@ -37,13 +37,23 @@ final class Worker implements Runnable {
 		try {
 			workerContext = this.workerContextFactory.newWorkerContext(
 					clientFacingSock);
-		} catch (IllegalArgumentException e) {
+		} catch (RouteNotFoundException e) {
 			LOGGER.error(
 					LoggerHelper.objectMessage(
-							this, "Error regarding the client-facing socket"),
+							this, 
+							"Error in finding a particular route for the "
+							+ "client-facing socket"),
 					e);
 			return null;
-		} catch (RuleActionDenyException e) {
+		} catch (FirewallRuleNotFoundException e) {
+			LOGGER.error(
+					LoggerHelper.objectMessage(
+							this, 
+							"Error in finding a firewall rule for the "
+							+ "client-facing socket"),
+					e);
+			return null;
+		} catch (FirewallRuleActionDenyException e) {
 			return null;
 		} catch (SocketException e) {
 			LOGGER.error(
@@ -77,7 +87,10 @@ final class Worker implements Runnable {
 					this.clientFacingSocket.getInputStream();
 			UnsignedByte version = null;
 			try {
-				version = UnsignedByte.newInstanceFrom(clientFacingInputStream);
+				version = UnsignedByte.nullableFrom(clientFacingInputStream);
+			} catch (SocketException e) {
+				// socket closed
+				return;
 			} catch (IOException e) {
 				LOGGER.error(
 						LoggerHelper.objectMessage(
@@ -86,7 +99,10 @@ final class Worker implements Runnable {
 								+ "client"), 
 						e);
 				return;
-			}			
+			}
+			if (version == null) {
+				return;
+			}
 			if (version.byteValue() == Version.V5.byteValue()) {
 				Socks5Worker socks5Worker = new Socks5Worker(
 						new Socks5WorkerContext(workerContext));

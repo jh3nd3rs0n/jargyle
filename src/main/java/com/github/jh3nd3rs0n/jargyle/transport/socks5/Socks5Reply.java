@@ -104,7 +104,7 @@ public final class Socks5Reply {
 		out.write(UnsignedByte.newInstance(rep.byteValue()).intValue());
 		UnsignedByte rsv = UnsignedByte.newInstanceFrom(in);
 		if (rsv.intValue() != RSV) {
-			throw new IOException(String.format(
+			throw new Socks5Exception(String.format(
 					"expected RSV is %s, actual RSV is %s", 
 					RSV, rsv.intValue()));
 		}

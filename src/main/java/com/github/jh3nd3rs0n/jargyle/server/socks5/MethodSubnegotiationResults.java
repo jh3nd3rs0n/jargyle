@@ -13,7 +13,7 @@ public final class MethodSubnegotiationResults {
 	private final MethodEncapsulation methodEncapsulation;
 	private final String user;
 		
-	MethodSubnegotiationResults(
+	public MethodSubnegotiationResults(
 			final Method meth, 
 			final MethodEncapsulation methEncapsulation, 
 			final String usr) {
@@ -30,6 +30,10 @@ public final class MethodSubnegotiationResults {
 	public Method getMethod() {
 		return this.method;
 	}
+
+	public MethodEncapsulation getMethodEncapsulation() {
+		return this.methodEncapsulation;
+	}
 	
 	public Socket getSocket() {
 		return this.methodEncapsulation.getSocket();
@@ -37,6 +41,20 @@ public final class MethodSubnegotiationResults {
 	
 	public String getUser() {
 		return this.user;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append(this.getClass().getSimpleName())
+			.append(" [method=")
+			.append(this.method)
+			.append(", methodEncapsulation=")
+			.append(this.methodEncapsulation)
+			.append(", user=")
+			.append(this.user)
+			.append("]");
+		return builder.toString();
 	}
 	
 }

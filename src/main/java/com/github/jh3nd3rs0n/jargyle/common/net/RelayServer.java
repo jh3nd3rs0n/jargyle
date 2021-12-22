@@ -19,6 +19,50 @@ import com.github.jh3nd3rs0n.jargyle.internal.logging.LoggerHelper;
 
 public final class RelayServer {
 
+	public static final class Builder {
+	
+		public static final int DEFAULT_BUFFER_SIZE = 1024;
+		public static final int DEFAULT_IDLE_TIMEOUT = 60000;
+		
+		private int bufferSize;
+		private final Socket clientFacingSocket;
+		private int idleTimeout;
+		private final Socket serverFacingSocket;
+		
+		public Builder(
+				final Socket clientFacingSock, final Socket serverFacingSock) {
+			Objects.requireNonNull(clientFacingSock);
+			Objects.requireNonNull(serverFacingSock);
+			this.bufferSize = DEFAULT_BUFFER_SIZE;
+			this.clientFacingSocket = clientFacingSock;
+			this.idleTimeout = DEFAULT_IDLE_TIMEOUT;
+			this.serverFacingSocket = serverFacingSock;
+		}
+		
+		public Builder bufferSize(final int bffrSize) {
+			if (bffrSize < 0) {
+				throw new IllegalArgumentException(
+						"buffer size must be greater than 0");
+			}
+			this.bufferSize = bffrSize;
+			return this;
+		}
+		
+		public RelayServer build() {
+			return new RelayServer(this);
+		}
+		
+		public Builder idleTimeout(final int idleTmt) {
+			if (idleTmt < 0) {
+				throw new IllegalArgumentException(
+						"idle timeout must be greater than 0");
+			}
+			this.idleTimeout = idleTmt;
+			return this;
+		}
+		
+	}
+	
 	private static final class DataWorker implements Runnable {
 		
 		private static final Logger LOGGER = LoggerFactory.getLogger(
@@ -265,29 +309,13 @@ public final class RelayServer {
 	private final Socket serverFacingSocket;
 	private State state;
 	
-	public RelayServer(
-			final Socket clientFacingSock, 
-			final Socket serverFacingSock, 
-			final int bffrSize, 
-			final int idleTmt) {
-		Objects.requireNonNull(
-				clientFacingSock, "client-facing socket must not be null");
-		Objects.requireNonNull(
-				serverFacingSock, "server-facing socket must not be null");
-		if (bffrSize < 1) {
-			throw new IllegalArgumentException(
-					"buffer size must not be less than 1");
-		}
-		if (idleTmt < 1) {
-			throw new IllegalArgumentException(
-					"idle timeout must not be less than 1");
-		}
-		this.clientFacingSocket = clientFacingSock;
-		this.bufferSize = bffrSize;
+	private RelayServer(final Builder builder) {
+		this.clientFacingSocket = builder.clientFacingSocket;
+		this.bufferSize = builder.bufferSize;
 		this.executor = null;
 		this.idleStartTime = 0L;
-		this.idleTimeout = idleTmt;
-		this.serverFacingSocket = serverFacingSock;
+		this.idleTimeout = builder.idleTimeout;
+		this.serverFacingSocket = builder.serverFacingSocket;
 		this.state = State.STOPPED;
 	}
 	

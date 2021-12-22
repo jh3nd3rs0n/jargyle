@@ -9,16 +9,8 @@ import java.util.Map;
 
 public final class Users {
 	
-	public static Users newInstance(final List<User> usrs) {
-		Map<String, User> u = new LinkedHashMap<String, User>();
-		for (User usr : usrs) {
-			String name = usr.getName();
-			if (u.containsKey(name)) {
-				u.remove(name);
-			}
-			u.put(name, usr);
-		}
-		return new Users(u);
+	public static Users newInstance(final List<User> users) {
+		return new Users(users);
 	}
 	
 	public static Users newInstance(final String s) {
@@ -34,18 +26,26 @@ public final class Users {
 		return newInstance(users);
 	}
 	
-	public static Users newInstance(final User... usrs) {
-		return newInstance(Arrays.asList(usrs));
+	public static Users newInstance(final User... users) {
+		return newInstance(Arrays.asList(users));
 	}
 	
-	public static Users newInstance(final Users usrs) {
-		return new Users(usrs);
+	public static Users newInstance(final Users users) {
+		return new Users(users);
 	}
 
 	private final Map<String, User> users;
 	
-	private Users(final Map<String, User> usrs) {
-		this.users = new LinkedHashMap<String, User>(usrs);
+	private Users(final List<User> usrs) {
+		Map<String, User> map = new LinkedHashMap<String, User>();
+		for (User usr : usrs) {
+			String name = usr.getName();
+			if (map.containsKey(name)) {
+				map.remove(name);
+			}
+			map.put(name, usr);
+		}
+		this.users = map;
 	}
 	
 	private Users(final Users other) {

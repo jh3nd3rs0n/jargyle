@@ -42,9 +42,18 @@ public final class UnsignedByte {
 	
 	public static UnsignedByte newInstanceFrom(
 			final InputStream in) throws IOException {
+		UnsignedByte b = nullableFrom(in);
+		if (b == null) {
+			throw new IOException("the end of the input stream is reached");
+		}
+		return b;
+	}
+	
+	public static UnsignedByte nullableFrom(
+			final InputStream in) throws IOException {
 		int b = in.read();
 		if (b == -1) {
-			throw new IOException("end of input stream reached");
+			return null;
 		}
 		return newInstance(b);
 	}

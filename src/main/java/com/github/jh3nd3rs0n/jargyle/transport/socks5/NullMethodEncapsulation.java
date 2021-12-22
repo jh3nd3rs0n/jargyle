@@ -23,4 +23,14 @@ public final class NullMethodEncapsulation extends MethodEncapsulation {
 		return this.socket;
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append(this.getClass().getSimpleName())
+			.append(" [socket=")
+			.append(this.socket)
+			.append("]");
+		return builder.toString();
+	}
+
 }

@@ -11,4 +11,7 @@ public abstract class MethodEncapsulation {
 	
 	public abstract Socket getSocket();
 	
+	@Override
+	public abstract String toString();
+	
 }

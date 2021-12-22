@@ -13,6 +13,7 @@ import com.github.jh3nd3rs0n.jargyle.transport.socks5.AddressType;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Command;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.MethodEncapsulation;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Reply;
+import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Exception;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Reply;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Request;
 
@@ -53,7 +54,7 @@ public final class Socks5HostResolver extends HostResolver {
 		Socks5Reply socks5Rep = Socks5Reply.newInstanceFrom(inputStream);
 		Reply reply = socks5Rep.getReply();
 		if (!reply.equals(Reply.SUCCEEDED)) {
-			throw new IOException(String.format(
+			throw new Socks5Exception(String.format(
 					"received reply: %s", 
 					reply));
 		}

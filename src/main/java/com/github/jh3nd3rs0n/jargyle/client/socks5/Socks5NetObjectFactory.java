@@ -115,5 +115,15 @@ public final class Socks5NetObjectFactory extends SocksNetObjectFactory {
 		return new Socks5Socket(
 				this.socks5Client, host, port, localAddr, localPort);
 	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append(this.getClass().getSimpleName())
+			.append(" [socks5Client=")
+			.append(this.socks5Client)
+			.append("]");
+		return builder.toString();
+	}
 	
 }

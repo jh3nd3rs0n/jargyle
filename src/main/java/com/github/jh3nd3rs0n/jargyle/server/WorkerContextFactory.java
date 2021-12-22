@@ -3,8 +3,8 @@ package com.github.jh3nd3rs0n.jargyle.server;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.ArrayList;
 
-import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.common.net.ssl.DtlsDatagramSocketFactory;
 import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.SslSocketFactory;
@@ -14,29 +14,28 @@ final class WorkerContextFactory {
 	private DtlsDatagramSocketFactory clientFacingDtlsDatagramSocketFactory;
 	private SslSocketFactory clientFacingSslSocketFactory;
 	private final Configuration configuration;
-	private Configuration lastConfiguration;	
-	private NetObjectFactory netObjectFactory;
+	private Configuration lastConfiguration;
+	private Routes routes;
+	private Selector<Route> routeSelector;
 	
 	public WorkerContextFactory(final Configuration config) {
 		this.clientFacingDtlsDatagramSocketFactory = null;
 		this.clientFacingSslSocketFactory = null;
 		this.configuration = config;
-		this.lastConfiguration = null;		
-		this.netObjectFactory = null;
+		this.lastConfiguration = null;
+		this.routes = null;
+		this.routeSelector = null;		
 	}
 	
 	private void checkIfClientFacingSocketAllowed(
-			final Socket clientFacingSock, final Configuration config) {
+			final FirewallRule.Context context, 
+			final Configuration config) {
 		Settings settings = config.getSettings();
-		ClientRules clientRules = settings.getLastValue(
-				GeneralSettingSpecConstants.CLIENT_RULES);
-		String clientAddress = 
-				clientFacingSock.getInetAddress().getHostAddress();
-		String socksServerAddress =
-				clientFacingSock.getLocalAddress().getHostAddress();
-		ClientRule clientRule = clientRules.anyAppliesTo(
-				clientAddress, socksServerAddress);
-		clientRule.applyTo(clientAddress, socksServerAddress);
+		ClientFirewallRules clientFirewallRules = settings.getLastValue(
+				GeneralSettingSpecConstants.CLIENT_FIREWALL_RULES);
+		ClientFirewallRule clientFirewallRule = 
+				clientFirewallRules.anyAppliesBasedOn(context);
+		clientFirewallRule.applyBasedOn(context);
 	}
 	
 	private void configureClientFacingSocket(
@@ -59,7 +58,12 @@ final class WorkerContextFactory {
 				this.clientFacingSslSocketFactory =
 						SslSocketFactoryImpl.isSslEnabled(config) ?
 								new SslSocketFactoryImpl(config) : null;
-				this.netObjectFactory = new NetObjectFactoryImpl(config);
+				this.routes = Routes.newInstance(config);
+				SelectionStrategy routeSelectionStrategy = 
+						config.getSettings().getLastValue(
+								GeneralSettingSpecConstants.ROUTE_SELECTION_STRATEGY);
+				this.routeSelector = routeSelectionStrategy.newSelector(
+						new ArrayList<Route>(this.routes.toMap().values()));
 				this.lastConfiguration = config;
 			}
 		}
@@ -70,14 +74,55 @@ final class WorkerContextFactory {
 			final Socket clientFacingSocket) throws IOException {
 		Configuration config = this.newConfiguration();
 		Socket clientFacingSock = clientFacingSocket;
-		this.checkIfClientFacingSocketAllowed(clientFacingSock, config);
+		String clientAddress = 
+				clientFacingSock.getInetAddress().getHostAddress();
+		String socksServerAddress =
+				clientFacingSock.getLocalAddress().getHostAddress();
+		this.checkIfClientFacingSocketAllowed(
+				new ClientFirewallRule.Context(clientAddress, socksServerAddress), 
+				config);
 		this.configureClientFacingSocket(clientFacingSock, config);
 		clientFacingSock = this.wrapClientFacingSocket(clientFacingSock);
+		Route route = this.selectRoute(
+				new ClientRoutingRule.Context(
+						clientAddress, socksServerAddress, this.routes),
+				config);
+		if (route == null) {
+			route = this.selectRoute(config);
+		}
 		return new WorkerContext(
 				clientFacingSock, 
 				config, 
-				this.netObjectFactory, 
+				route,
+				this.routes,
 				this.clientFacingDtlsDatagramSocketFactory);
+	}
+
+	private Route selectRoute(final Configuration config) {
+		Route route = this.routeSelector.select();
+		Settings settings = config.getSettings();
+		LogAction routeSelectionLogAction = settings.getLastValue(
+				GeneralSettingSpecConstants.ROUTE_SELECTION_LOG_ACTION);
+		if (routeSelectionLogAction != null) {
+			routeSelectionLogAction.invoke(String.format(
+					"Route '%s' selected", 
+					route.getRouteId()));
+		}
+		return route;
+	}
+	
+	private Route selectRoute(
+			final RoutingRule.Context context, final Configuration config) {
+		Route route = null;
+		Settings settings = config.getSettings();		
+		ClientRoutingRules clientRoutingRules = settings.getLastValue(
+				GeneralSettingSpecConstants.CLIENT_ROUTING_RULES);
+		ClientRoutingRule clientRoutingRule = 
+				clientRoutingRules.anyAppliesBasedOn(context);
+		if (clientRoutingRule != null) {
+			route = clientRoutingRule.selectRoute(context);
+		}
+		return route;		
 	}
 	
 	private Socket wrapClientFacingSocket(

@@ -13,8 +13,10 @@ import org.slf4j.LoggerFactory;
 import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
 import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
 import com.github.jh3nd3rs0n.jargyle.common.net.Host;
+import com.github.jh3nd3rs0n.jargyle.common.net.RelayServer;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.internal.logging.LoggerHelper;
+import com.github.jh3nd3rs0n.jargyle.server.FirewallRule;
 import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Reply;
@@ -42,7 +44,8 @@ public final class ConnectCommandWorker extends CommandWorker {
 		int desiredDestinationPrt = context.getDesiredDestinationPort();
 		MethodSubnegotiationResults methSubnegotiationResults =
 				context.getMethodSubnegotiationResults();
-		NetObjectFactory netObjFactory = context.getNetObjectFactory();
+		NetObjectFactory netObjFactory = 
+				context.getRoute().getNetObjectFactory();
 		Settings sttngs = context.getSettings();
 		Socks5Request socks5Req = context.getSocks5Request();
 		this.clientFacingSocket = clientFacingSock;
@@ -72,18 +75,7 @@ public final class ConnectCommandWorker extends CommandWorker {
 					e);
 			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
 					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
-					"Sending %s",
-					socks5Rep.toString())));
-			try {
-				this.commandWorkerContext.writeThenFlush(
-						socks5Rep.toByteArray());
-			} catch (IOException e1) {
-				LOGGER.error( 
-						LoggerHelper.objectMessage(
-								this, "Error in writing SOCKS5 reply"), 
-						e1);
-			}
+			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep);
 			return false;
 		} catch (IOException e) {
 			LOGGER.error( 
@@ -92,18 +84,7 @@ public final class ConnectCommandWorker extends CommandWorker {
 					e);
 			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
 					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
-					"Sending %s",
-					socks5Rep.toString())));
-			try {
-				this.commandWorkerContext.writeThenFlush(
-						socks5Rep.toByteArray());
-			} catch (IOException e1) {
-				LOGGER.error( 
-						LoggerHelper.objectMessage(
-								this, "Error in writing SOCKS5 reply"), 
-						e1);
-			}
+			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep);
 			return false;
 		}
 		return true;
@@ -134,18 +115,7 @@ public final class ConnectCommandWorker extends CommandWorker {
 						e);
 				socks5Rep = Socks5Reply.newErrorInstance(
 						Reply.HOST_UNREACHABLE);
-				LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
-						"Sending %s",
-						socks5Rep.toString())));
-				try {
-					this.commandWorkerContext.writeThenFlush(
-							socks5Rep.toByteArray());
-				} catch (IOException e1) {
-					LOGGER.error( 
-							LoggerHelper.objectMessage(
-									this, "Error in writing SOCKS5 reply"), 
-							e1);					
-				}
+				this.commandWorkerContext.sendSocks5Reply(this, socks5Rep);
 				return null;
 			}
 		} else {
@@ -166,18 +136,7 @@ public final class ConnectCommandWorker extends CommandWorker {
 						e);
 				socks5Rep = Socks5Reply.newErrorInstance(
 						Reply.HOST_UNREACHABLE);
-				LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
-						"Sending %s",
-						socks5Rep.toString())));
-				try {
-					this.commandWorkerContext.writeThenFlush(
-							socks5Rep.toByteArray());
-				} catch (IOException e1) {
-					LOGGER.error( 
-							LoggerHelper.objectMessage(
-									this, "Error in writing SOCKS5 reply"), 
-							e1);					
-				}
+				this.commandWorkerContext.sendSocks5Reply(this, socks5Rep);
 				return null;
 			}				
 		}
@@ -200,25 +159,26 @@ public final class ConnectCommandWorker extends CommandWorker {
 					Reply.SUCCEEDED, 
 					serverBoundAddress, 
 					serverBoundPort);
-			if (!this.canAllow(
-					this.clientFacingSocket.getInetAddress().getHostAddress(), 
-					this.methodSubnegotiationResults, 
-					this.socks5Request, 
-					socks5Rep)) {
+			FirewallRule.Context context = new Socks5ReplyFirewallRule.Context(
+					this.clientFacingSocket.getInetAddress().getHostAddress(),
+					this.clientFacingSocket.getLocalAddress().getHostAddress(),
+					this.methodSubnegotiationResults,
+					this.socks5Request,
+					socks5Rep); 
+			if (!this.commandWorkerContext.canAllowSocks5Reply(this, context)) {
 				return;
 			}
-			LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
-					"Sending %s", 
-					socks5Rep.toString())));
-			this.commandWorkerContext.writeThenFlush(socks5Rep.toByteArray());
+			if (!this.commandWorkerContext.sendSocks5Reply(this, socks5Rep)) {
+				return;
+			}
+			RelayServer.Builder builder = new RelayServer.Builder(
+					this.clientFacingSocket, serverFacingSocket);
+			builder.bufferSize(this.settings.getLastValue(
+					Socks5SettingSpecConstants.SOCKS5_ON_CONNECT_RELAY_BUFFER_SIZE).intValue());
+			builder.idleTimeout(this.settings.getLastValue(
+					Socks5SettingSpecConstants.SOCKS5_ON_CONNECT_RELAY_IDLE_TIMEOUT).intValue());
 			try {
-				TcpBasedCommandWorkerHelper.passData(
-						this.clientFacingSocket,
-						serverFacingSocket, 
-						this.settings.getLastValue(
-								Socks5SettingSpecConstants.SOCKS5_ON_CONNECT_RELAY_BUFFER_SIZE).intValue(),
-						this.settings.getLastValue(
-								Socks5SettingSpecConstants.SOCKS5_ON_CONNECT_RELAY_IDLE_TIMEOUT).intValue());				
+				TcpBasedCommandWorkerHelper.passData(builder);				
 			} catch (IOException e) {
 				LOGGER.error( 
 						LoggerHelper.objectMessage(

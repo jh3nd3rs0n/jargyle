@@ -1,8 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.transport.socks5;
 
-import java.io.IOException;
-
-public final class MethodSubnegotiationException extends IOException {
+public final class MethodSubnegotiationException extends Socks5Exception {
 
 	/**
 	 * 

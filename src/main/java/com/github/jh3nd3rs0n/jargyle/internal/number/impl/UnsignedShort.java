@@ -59,8 +59,20 @@ public final class UnsignedShort {
 	
 	public static UnsignedShort newInstanceFrom(
 			final InputStream in) throws IOException {
-		UnsignedByte b0 = UnsignedByte.newInstanceFrom(in);
-		UnsignedByte b1 = UnsignedByte.newInstanceFrom(in);
+		UnsignedShort s = nullableFrom(in);
+		if (s == null) {
+			throw new IOException("the end of the input stream is reached");
+		}
+		return s;
+	}
+	
+	public static UnsignedShort nullableFrom(
+			final InputStream in) throws IOException {
+		UnsignedByte b0 = UnsignedByte.nullableFrom(in);
+		UnsignedByte b1 = UnsignedByte.nullableFrom(in);
+		if (b0 == null || b1 == null) {
+			return null;
+		}
 		return newInstance(new byte[] { b0.byteValue(), b1.byteValue() });
 	}
 	

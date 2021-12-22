@@ -15,19 +15,8 @@ import java.util.Map;
 public final class SocketSettings {
 
 	public static SocketSettings newInstance(
-			final List<SocketSetting<? extends Object>> socketSttngs) {
-		Map<SocketSettingSpec<Object>, SocketSetting<Object>> socketSettings = 
-				new LinkedHashMap<SocketSettingSpec<Object>, SocketSetting<Object>>();
-		for (SocketSetting<? extends Object> socketSttng : socketSttngs) {
-			@SuppressWarnings("unchecked")
-			SocketSetting<Object> sockSttng = (SocketSetting<Object>) socketSttng;
-			SocketSettingSpec<Object> sockSttngSpec = sockSttng.getSocketSettingSpec();
-			if (socketSettings.containsKey(sockSttngSpec)) {
-				socketSettings.remove(sockSttngSpec);
-			}
-			socketSettings.put(sockSttngSpec, sockSttng);
-		}
-		return new SocketSettings(socketSettings);
+			final List<SocketSetting<? extends Object>> socketSettngs) {
+		return new SocketSettings(socketSettngs);
 	}
 	
 	@SafeVarargs
@@ -56,12 +45,23 @@ public final class SocketSettings {
 	}
 	
 	private final Map<SocketSettingSpec<Object>, SocketSetting<Object>> socketSettings;
-	
+
 	private SocketSettings(
-			final Map<SocketSettingSpec<Object>, SocketSetting<Object>> socketSttngs) {
-		this.socketSettings = 
-				new LinkedHashMap<SocketSettingSpec<Object>, SocketSetting<Object>>(
-						socketSttngs);
+			final List<SocketSetting<? extends Object>> socketSttngs) {
+		Map<SocketSettingSpec<Object>, SocketSetting<Object>> map =
+				new LinkedHashMap<SocketSettingSpec<Object>, SocketSetting<Object>>();
+		for (SocketSetting<? extends Object> socketSttng : socketSttngs) {
+			@SuppressWarnings("unchecked")
+			SocketSettingSpec<Object> socketSttngSpec = 
+					(SocketSettingSpec<Object>) socketSttng.getSocketSettingSpec();
+			if (map.containsKey(socketSttngSpec)) {
+				map.remove(socketSttngSpec);
+			}
+			@SuppressWarnings("unchecked")
+			SocketSetting<Object> sockSttng = (SocketSetting<Object>) socketSttng;
+			map.put(socketSttngSpec, sockSttng);
+		}
+		this.socketSettings = map;
 	}
 	
 	private SocketSettings(final SocketSettings other) {

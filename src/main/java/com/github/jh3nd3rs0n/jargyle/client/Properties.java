@@ -10,18 +10,7 @@ public final class Properties {
 
 	public static Properties newInstance(
 			final List<Property<? extends Object>> properties) {
-		Map<PropertySpec<Object>, Property<Object>> props = 
-				new LinkedHashMap<PropertySpec<Object>, Property<Object>>();
-		for (Property<? extends Object> property : properties) {
-			@SuppressWarnings("unchecked")
-			Property<Object> prop = (Property<Object>) property;
-			PropertySpec<Object> propSpec = prop.getPropertySpec();
-			if (props.containsKey(propSpec)) {
-				props.remove(propSpec);
-			}
-			props.put(propSpec, prop);
-		}
-		return new Properties(props);
+		return new Properties(properties);
 	}
 	
 	@SafeVarargs
@@ -32,11 +21,21 @@ public final class Properties {
 	
 	private final Map<PropertySpec<Object>, Property<Object>> properties;
 	
-	private Properties(
-			final Map<PropertySpec<Object>, Property<Object>> props) {
-		this.properties = 
-				new LinkedHashMap<PropertySpec<Object>, Property<Object>>(
-						props);
+	private Properties(final List<Property<? extends Object>> props) {
+		Map<PropertySpec<Object>, Property<Object>> map = 
+				new LinkedHashMap<PropertySpec<Object>, Property<Object>>();
+		for (Property<? extends Object> prop : props) {
+			@SuppressWarnings("unchecked")
+			PropertySpec<Object> propSpec = 
+					(PropertySpec<Object>) prop.getPropertySpec();
+			if (map.containsKey(propSpec)) {
+				map.remove(propSpec);
+			}
+			@SuppressWarnings("unchecked")
+			Property<Object> prp = (Property<Object>) prop;
+			map.put(propSpec, prp);
+		}
+		this.properties = map;
 	}
 	
 	private Properties(final Properties other) {

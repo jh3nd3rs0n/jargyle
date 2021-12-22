@@ -13,7 +13,6 @@ import java.net.Socket;
 import java.net.SocketAddress;
 import java.net.SocketException;
 import java.net.SocketOption;
-import java.net.UnknownHostException;
 import java.nio.channels.DatagramChannel;
 import java.util.Set;
 
@@ -22,6 +21,7 @@ import com.github.jh3nd3rs0n.jargyle.internal.net.AllZerosInetAddressHelper;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Command;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.MethodEncapsulation;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Reply;
+import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Exception;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Reply;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Request;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.UdpRequestHeader;
@@ -144,17 +144,12 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			try {
 				header = UdpRequestHeader.newInstance(p.getData());
 			} catch (IllegalArgumentException e) {
-				throw new IOException(
+				throw new Socks5Exception(
 						"error in parsing UDP header request", e);
 			}
 			byte[] userData = header.getUserData();
-			InetAddress inetAddress = null;
-			try {
-				inetAddress = InetAddress.getByName(
-						header.getDesiredDestinationAddress());
-			} catch (UnknownHostException e) {
-				throw new IOException("error in determining address", e);
-			}
+			InetAddress inetAddress = InetAddress.getByName(
+					header.getDesiredDestinationAddress());
 			int inetPort = header.getDesiredDestinationPort();
 			p.setData(userData, 0, userData.length);
 			p.setLength(userData.length);
@@ -219,7 +214,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			Socks5Reply socks5Rep = Socks5Reply.newInstanceFrom(inputStream);
 			Reply reply = socks5Rep.getReply();
 			if (!reply.equals(Reply.SUCCEEDED)) {
-				throw new IOException(String.format(
+				throw new Socks5Exception(String.format(
 						"received reply: %s", reply));
 			}
 			datagramSock = this.socks5Client.getConnectedInternalDatagramSocket(

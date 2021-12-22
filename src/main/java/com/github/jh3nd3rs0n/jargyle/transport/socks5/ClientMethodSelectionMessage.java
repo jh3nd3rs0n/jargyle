@@ -61,7 +61,7 @@ public final class ClientMethodSelectionMessage {
 		if (methodCount.intValue() > 0) {
 			int bytesRead = in.read(bytes);
 			if (bytesRead != methodCount.intValue()) {
-				throw new IOException(String.format(
+				throw new Socks5Exception(String.format(
 						"expected number of methods is %s. "
 						+ "actual number of methods is %s", 
 						methodCount.intValue(), bytesRead));
@@ -74,7 +74,7 @@ public final class ClientMethodSelectionMessage {
 			try {
 				meth = Method.valueOfByte(by);
 			} catch (IllegalArgumentException e) {
-				throw new IOException(e);
+				throw new Socks5Exception(e);
 			}
 			meths.add(meth);
 			out.write(UnsignedByte.newInstance(by).intValue());

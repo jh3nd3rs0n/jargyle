@@ -4,10 +4,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Objects;
 
 public abstract class Rule {
-
+	
 	public static abstract class Builder<B extends Builder<B, R>, R extends Rule> {
 
 		public static interface Field<B extends Builder<B, R>, R extends Rule> {
@@ -45,14 +44,11 @@ public abstract class Rule {
 							s));			
 
 		}
-
-		private final RuleAction ruleAction;
+		
 		private LogAction logAction;
 		private String doc;
 		
-		public Builder(final RuleAction rlAction) {
-			this.ruleAction = Objects.requireNonNull(
-					rlAction, "rule action must not be null");
+		public Builder() {
 			this.logAction = null;
 			this.doc = null;
 		}
@@ -81,15 +77,18 @@ public abstract class Rule {
 			return builder;
 		}
 		
-		public final RuleAction ruleAction() {
-			return this.ruleAction;
-		}
+	}
+	
+	public static abstract class Context {
+		
+		@Override
+		public abstract String toString();
 		
 	}
 	
 	public static <B extends Builder<B, R>, F extends Builder.Field<B, R>, R extends Rule> List<R> newInstances(
 			final String s, 
-			final F ruleActionField, 
+			final F firstField, 
 			final List<F> fields) {
 		List<R> rules = new ArrayList<R>();
 		String[] words = s.split(" ");
@@ -111,7 +110,7 @@ public abstract class Rule {
 			} catch (NullPointerException e) {
 				throw new IllegalArgumentException(String.format(
 						"expected field '%s'. actual field is '%s'", 
-						ruleActionField,
+						firstField,
 						wordElements[0]));				
 			}
 			if (recentBuilder == null) {
@@ -128,30 +127,24 @@ public abstract class Rule {
 		return rules;		
 	}
 	
-	private final RuleAction ruleAction;
 	private final LogAction logAction;
-
 	private final String doc;
-
-	protected Rule(final Builder<?, ?> builder) {
-		RuleAction rlAction = builder.ruleAction();
+	
+	public Rule(final Builder<?, ?> builder) {
 		LogAction lgAction = builder.logAction();
 		String d = builder.doc();
-		this.ruleAction = rlAction;
 		this.logAction = lgAction;
-		this.doc = d;		
+		this.doc = d;
 	}
+	
+	public abstract boolean appliesBasedOn(final Context context);
 
 	public final String getDoc() {
 		return this.doc;
 	}
-	
+
 	public final LogAction getLogAction() {
 		return this.logAction;
 	}
 
-	public final RuleAction getRuleAction() {
-		return this.ruleAction;
-	}
-	
 }

@@ -13,6 +13,15 @@ public abstract class Rules<R extends Rule> {
 		this.rules = new ArrayList<R>(rls);
 	}
 	
+	public R anyAppliesBasedOn(final Rule.Context context) {
+		for (R rule : this.rules) {
+			if (rule.appliesBasedOn(context)) {
+				return rule; 
+			}
+		}
+		return null;
+	}
+	
 	@Override
 	public final boolean equals(Object obj) {
 		if (this == obj) {
@@ -61,5 +70,5 @@ public abstract class Rules<R extends Rule> {
 		}
 		return builder.toString();
 	}
-	
+
 }

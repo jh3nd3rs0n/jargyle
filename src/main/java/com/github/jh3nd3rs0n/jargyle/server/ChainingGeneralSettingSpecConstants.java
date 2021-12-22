@@ -13,6 +13,7 @@ import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.HostSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.PositiveIntegerSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.SocketSettingsSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.SocksServerUriSettingSpec;
+import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.StringSettingSpec;
 
 public final class ChainingGeneralSettingSpecConstants {
 
@@ -56,6 +57,19 @@ public final class ChainingGeneralSettingSpecConstants {
 					NewSettingSpecPermission.INSTANCE, 
 					"chaining.internalSocketSettings",
 					GeneralPropertySpecConstants.INTERNAL_SOCKET_SETTINGS.getDefaultProperty().getValue()));
+
+	@HelpText(
+			doc = "The ID for a route through a chain of other SOCKS servers. "
+					+ "This setting also marks the current other SOCKS server "
+					+ "as the last SOCKS server in the chain of other SOCKS "
+					+ "servers", 
+			usage = "chaining.routeId=ROUTE_ID"
+	)
+	public static final SettingSpec<String> CHAINING_ROUTE_ID = 
+			SETTING_SPECS.addThenGet(new StringSettingSpec(
+					NewSettingSpecPermission.INSTANCE,
+					"chaining.routeId",
+					null));
 	
 	@HelpText(
 			doc = "The URI of the other SOCKS server", 

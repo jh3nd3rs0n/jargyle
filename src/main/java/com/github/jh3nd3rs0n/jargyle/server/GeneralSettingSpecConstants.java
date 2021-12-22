@@ -8,11 +8,15 @@ import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.common.number.impl.NonnegativeInteger;
 import com.github.jh3nd3rs0n.jargyle.internal.help.HelpText;
+import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.ClientRoutingRulesSettingSpec;
+import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.ClientFirewallRulesSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.HostSettingSpec;
+import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.LogActionSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.NonnegativeIntegerSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.PortSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.ClientRulesSettingSpec;
+import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.SelectionStrategySettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.SocketSettingsSettingSpec;
+import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.StringSettingSpec;
 
 public final class GeneralSettingSpecConstants {
 
@@ -41,15 +45,26 @@ public final class GeneralSettingSpecConstants {
 					SocketSettings.newInstance()));
 
 	@HelpText(
-			doc = "The space separated list of rules for TCP traffic from a "
-					+ "client to the SOCKS server (default is ruleAction=ALLOW)", 
-			usage = "clientRules=[CLIENT_RULE_FIELD1[ CLIENT_RULE_FIELD2[...]]]"
+			doc = "The space separated list of firewall rules for TCP traffic "
+					+ "from a client to the SOCKS server "
+					+ "(default is firewallRuleAction=ALLOW)", 
+			usage = "clientFirewallRules=[CLIENT_FIREWALL_RULE_FIELD1[ CLIENT_FIREWALL_RULE_FIELD2[...]]]"
 	)	
-	public static final SettingSpec<ClientRules> CLIENT_RULES =
-			SETTING_SPECS.addThenGet(new ClientRulesSettingSpec(
+	public static final SettingSpec<ClientFirewallRules> CLIENT_FIREWALL_RULES =
+			SETTING_SPECS.addThenGet(new ClientFirewallRulesSettingSpec(
 					NewSettingSpecPermission.INSTANCE,
-					"clientRules",
-					ClientRules.getDefault()));
+					"clientFirewallRules",
+					ClientFirewallRules.getDefault()));
+	
+	@HelpText(
+			doc = "The space separated list of routing rules for a client", 
+			usage = "clientRoutingRules=[CLIENT_ROUTING_RULE_FIELD1[ CLIENT_ROUTING_RULE_FIELD2[...]]]"
+	)	
+	public static final SettingSpec<ClientRoutingRules> CLIENT_ROUTING_RULES =
+			SETTING_SPECS.addThenGet(new ClientRoutingRulesSettingSpec(
+					NewSettingSpecPermission.INSTANCE,
+					"clientRoutingRules",
+					ClientRoutingRules.getDefault()));
 	
 	@HelpText(
 			doc = "The host name or address for the SOCKS server (default is "
@@ -61,6 +76,17 @@ public final class GeneralSettingSpecConstants {
 					NewSettingSpecPermission.INSTANCE, 
 					"host",
 					Host.getAllZerosInet4Instance()));
+
+	@HelpText(
+			doc = "The ID for the last and unassigned route "
+					+ "(default is lastRoute)", 
+			usage = "lastRouteId=ROUTE_ID"
+	)	
+	public static final SettingSpec<String> LAST_ROUTE_ID = 
+			SETTING_SPECS.addThenGet(new StringSettingSpec(
+					NewSettingSpecPermission.INSTANCE,
+					"lastRouteId",
+					"lastRoute"));
 	
 	@HelpText(
 			doc = "The port for the SOCKS server (default is 1080)", 
@@ -71,6 +97,28 @@ public final class GeneralSettingSpecConstants {
 					NewSettingSpecPermission.INSTANCE, 
 					"port",
 					Port.newInstance(1080)));
+
+	@HelpText(
+			doc = "The logging action to take if a route is selected from the "
+					+ "list of all of the route IDs", 
+			usage = "routeSelectionLogAction=LOG_ACTION"
+	)	
+	public static final SettingSpec<LogAction> ROUTE_SELECTION_LOG_ACTION =
+			SETTING_SPECS.addThenGet(new LogActionSettingSpec(
+					NewSettingSpecPermission.INSTANCE,
+					"routeSelectionLogAction",
+					null));
+	
+	@HelpText(
+			doc = "The selection strategy for the next route to use from the "
+					+ "list of all of the route IDs (default is CYCLICAL)", 
+			usage = "routeSelectionStrategy=SELECTION_STRATEGY"
+	)
+	public static final SettingSpec<SelectionStrategy> ROUTE_SELECTION_STRATEGY =
+			SETTING_SPECS.addThenGet(new SelectionStrategySettingSpec(
+					NewSettingSpecPermission.INSTANCE,
+					"routeSelectionStrategy",
+					SelectionStrategy.CYCLICAL));
 	
 	@HelpText(
 			doc = "The space separated list of socket settings for the SOCKS "

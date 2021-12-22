@@ -5,11 +5,13 @@ import java.util.Objects;
 import com.github.jh3nd3rs0n.jargyle.client.socks5.userpassauth.UsernamePassword;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
-import com.github.jh3nd3rs0n.jargyle.server.ClientRules;
-import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5ReplyRules;
-import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5RequestRules;
+import com.github.jh3nd3rs0n.jargyle.server.ClientRoutingRules;
+import com.github.jh3nd3rs0n.jargyle.server.ClientFirewallRules;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5RequestRoutingRules;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5ReplyFirewallRules;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5RequestFirewallRules;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5RequestWorkerFactory;
-import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5UdpRules;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5UdpFirewallRules;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.UsernamePasswordAuthenticator;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -22,21 +24,28 @@ abstract class ValueXml {
 	
 	public static ValueXml newInstance(final Object val) {
 		Objects.requireNonNull(val);
-		if (val instanceof ClientRules) {
-			return new ClientRulesXml((ClientRules) val);
+		if (val instanceof ClientFirewallRules) {
+			return new ClientFirewallRulesXml((ClientFirewallRules) val);
+		} else if (val instanceof ClientRoutingRules) {
+			return new ClientRoutingRulesXml((ClientRoutingRules) val);
 		} else if (val instanceof EncryptedPassword) {
 			return EncryptedPasswordXml.newInstance((EncryptedPassword) val);
 		} else if (val instanceof SocketSettings) {
 			return new SocketSettingsXml((SocketSettings) val);
-		} else if (val instanceof Socks5ReplyRules) {
-			return new Socks5ReplyRulesXml((Socks5ReplyRules) val);
-		} else if (val instanceof Socks5RequestRules) {
-			return new Socks5RequestRulesXml((Socks5RequestRules) val);
+		} else if (val instanceof Socks5ReplyFirewallRules) {
+			return new Socks5ReplyFirewallRulesXml(
+					(Socks5ReplyFirewallRules) val);
+		} else if (val instanceof Socks5RequestFirewallRules) {
+			return new Socks5RequestFirewallRulesXml(
+					(Socks5RequestFirewallRules) val);
+		} else if (val instanceof Socks5RequestRoutingRules) {
+			return new Socks5RequestRoutingRulesXml(
+					(Socks5RequestRoutingRules) val);
 		} else if (val instanceof Socks5RequestWorkerFactory) {
 			return new Socks5RequestWorkerFactoryXml(
 					(Socks5RequestWorkerFactory) val);
-		} else if (val instanceof Socks5UdpRules) {
-			return new Socks5UdpRulesXml((Socks5UdpRules) val);
+		} else if (val instanceof Socks5UdpFirewallRules) {
+			return new Socks5UdpFirewallRulesXml((Socks5UdpFirewallRules) val);
 		} else if (val instanceof UsernamePasswordAuthenticator) {
 			return new UsernamePasswordAuthenticatorXml(
 					(UsernamePasswordAuthenticator) val);

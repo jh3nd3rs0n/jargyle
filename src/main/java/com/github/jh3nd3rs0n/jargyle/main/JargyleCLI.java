@@ -37,10 +37,12 @@ import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
 import com.github.jh3nd3rs0n.jargyle.internal.help.HelpText;
 import com.github.jh3nd3rs0n.jargyle.internal.io.ConsoleWrapper;
 import com.github.jh3nd3rs0n.jargyle.main.socks5.userpassauth.UsersCLI;
+import com.github.jh3nd3rs0n.jargyle.server.SelectionStrategy;
 import com.github.jh3nd3rs0n.jargyle.server.ChainingDtlsSettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.ChainingGeneralSettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.ChainingSocks5SettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.ChainingSslSettingSpecConstants;
+import com.github.jh3nd3rs0n.jargyle.server.ClientRoutingRule;
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.ConfigurationProvider;
 import com.github.jh3nd3rs0n.jargyle.server.DtlsSettingSpecConstants;
@@ -49,17 +51,18 @@ import com.github.jh3nd3rs0n.jargyle.server.ImmutableConfiguration;
 import com.github.jh3nd3rs0n.jargyle.server.LogAction;
 import com.github.jh3nd3rs0n.jargyle.server.ModifiableConfiguration;
 import com.github.jh3nd3rs0n.jargyle.server.MutableConfiguration;
-import com.github.jh3nd3rs0n.jargyle.server.ClientRule;
-import com.github.jh3nd3rs0n.jargyle.server.RuleAction;
+import com.github.jh3nd3rs0n.jargyle.server.ClientFirewallRule;
+import com.github.jh3nd3rs0n.jargyle.server.FirewallRuleAction;
 import com.github.jh3nd3rs0n.jargyle.server.Setting;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
 import com.github.jh3nd3rs0n.jargyle.server.SslSettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.XmlFileSourceConfigurationProvider;
 import com.github.jh3nd3rs0n.jargyle.server.config.xml.bind.ConfigurationXml;
-import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5ReplyRule;
-import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5RequestRule;
-import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5UdpRule;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5RequestRoutingRule;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5ReplyFirewallRule;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5RequestFirewallRule;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5UdpFirewallRule;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Command;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.gssapiauth.ProtectionLevel;
@@ -661,16 +664,37 @@ public final class JargyleCLI extends CLI {
 		for (Field field : fields) {
 			HelpText helpText = field.getAnnotation(HelpText.class);
 			if (helpText != null) {
-				System.out.print("  ");
+				System.out.print("    ");
 				System.out.println(helpText.usage());
 				String doc = helpText.doc();
 				if (!doc.isEmpty()) {
-					System.out.print("      ");
+					System.out.print("        ");
 					System.out.println(doc);
 				}
 				System.out.println();
 			}
 		}
+	}
+	
+	private void printSettings() {
+		System.out.println("SETTINGS:");
+		System.out.println();		
+		System.out.println("  GENERAL SETTINGS:");
+		this.printHelpText(GeneralSettingSpecConstants.class);
+		System.out.println("  CHAINING GENERAL SETTINGS:");
+		this.printHelpText(ChainingGeneralSettingSpecConstants.class);
+		System.out.println("  CHAINING DTLS SETTINGS:");
+		this.printHelpText(ChainingDtlsSettingSpecConstants.class);
+		System.out.println("  CHAINING SOCKS5 SETTINGS:");
+		this.printHelpText(ChainingSocks5SettingSpecConstants.class);
+		System.out.println("  CHAINING SSL SETTINGS:");
+		this.printHelpText(ChainingSslSettingSpecConstants.class);		
+		System.out.println("  DTLS SETTINGS:");
+		this.printHelpText(DtlsSettingSpecConstants.class);
+		System.out.println("  SOCKS5 SETTINGS:");
+		this.printHelpText(Socks5SettingSpecConstants.class);
+		System.out.println("  SSL SETTINGS:");
+		this.printHelpText(SslSettingSpecConstants.class);
 	}
 	
 	@Option(
@@ -685,45 +709,42 @@ public final class JargyleCLI extends CLI {
 	)
 	@Ordinal(SETTINGS_HELP_OPTION_GROUP_ORDINAL)
 	private void printSettingsHelp() throws TerminationRequestedException {
-		System.out.println("GENERAL SETTINGS:");
-		this.printHelpText(GeneralSettingSpecConstants.class);
-		System.out.println("CHAINING GENERAL SETTINGS:");
-		this.printHelpText(ChainingGeneralSettingSpecConstants.class);
-		System.out.println("CHAINING DTLS SETTINGS:");
-		this.printHelpText(ChainingDtlsSettingSpecConstants.class);
-		System.out.println("CHAINING SOCKS5 SETTINGS:");
-		this.printHelpText(ChainingSocks5SettingSpecConstants.class);
-		System.out.println("CHAINING SSL SETTINGS:");
-		this.printHelpText(ChainingSslSettingSpecConstants.class);		
-		System.out.println("DTLS SETTINGS:");
-		this.printHelpText(DtlsSettingSpecConstants.class);
-		System.out.println("SOCKS5 SETTINGS:");
-		this.printHelpText(Socks5SettingSpecConstants.class);
-		System.out.println("SSL SETTINGS:");
-		this.printHelpText(SslSettingSpecConstants.class);
-		System.out.println("CLIENT_RULE_FIELDS:");
-		this.printHelpText(ClientRule.Builder.Field.class);
-		System.out.println("LOG_ACTIONS:");
-		this.printHelpText(LogAction.class);
-		System.out.println("RULE_ACTIONS:");
-		this.printHelpText(RuleAction.class);
-		System.out.println("SCHEMES:");
-		this.printHelpText(Scheme.class);
-		System.out.println("SOCKET_SETTINGS:");
-		this.printHelpText(StandardSocketSettingSpecConstants.class);
-		System.out.println("SOCKS5_COMMANDS:");
-		this.printHelpText(Command.class);		
-		System.out.println("SOCKS5_GSSAPIAUTH_PROTECTION_LEVELS:");
-		this.printHelpText(ProtectionLevel.class);
-		System.out.println("SOCKS5_METHODS:");
-		this.printHelpText(Method.class);
-		System.out.println("SOCKS5_REPLY_RULE_FIELDS:");
-		this.printHelpText(Socks5ReplyRule.Builder.Field.class);		
-		System.out.println("SOCKS5_REQUEST_RULE_FIELDS:");
-		this.printHelpText(Socks5RequestRule.Builder.Field.class);		
-		System.out.println("SOCKS5_UDP_RULE_FIELDS:");
-		this.printHelpText(Socks5UdpRule.Builder.Field.class);		
+		this.printSettings();
+		this.printSettingValueSyntaxes();
 		throw new TerminationRequestedException(0);
+	}
+	
+	private void printSettingValueSyntaxes() {
+		System.out.println("SETTING VALUE SYNTAXES:");
+		System.out.println();
+		System.out.println("  CLIENT_FIREWALL_RULE_FIELDS:");
+		this.printHelpText(ClientFirewallRule.Builder.Field.class);
+		System.out.println("  CLIENT_ROUTING_RULE_FIELDS:");
+		this.printHelpText(ClientRoutingRule.Builder.Field.class);
+		System.out.println("  FIREWALL_RULE_ACTIONS:");
+		this.printHelpText(FirewallRuleAction.class);
+		System.out.println("  LOG_ACTIONS:");
+		this.printHelpText(LogAction.class);
+		System.out.println("  SCHEMES:");
+		this.printHelpText(Scheme.class);
+		System.out.println("  SELECTION_STRATEGIES:");
+		this.printHelpText(SelectionStrategy.class);
+		System.out.println("  SOCKET_SETTINGS:");
+		this.printHelpText(StandardSocketSettingSpecConstants.class);
+		System.out.println("  SOCKS5_COMMANDS:");
+		this.printHelpText(Command.class);
+		System.out.println("  SOCKS5_GSSAPIAUTH_PROTECTION_LEVELS:");
+		this.printHelpText(ProtectionLevel.class);
+		System.out.println("  SOCKS5_METHODS:");
+		this.printHelpText(Method.class);
+		System.out.println("  SOCKS5_REPLY_FIREWALL_RULE_FIELDS:");
+		this.printHelpText(Socks5ReplyFirewallRule.Builder.Field.class);		
+		System.out.println("  SOCKS5_REQUEST_FIREWALL_RULE_FIELDS:");
+		this.printHelpText(Socks5RequestFirewallRule.Builder.Field.class);
+		System.out.println("  SOCKS5_REQUEST_ROUTING_RULE_FIELDS:");
+		this.printHelpText(Socks5RequestRoutingRule.Builder.Field.class);
+		System.out.println("  SOCKS5_UDP_FIREWALL_RULE_FIELDS:");
+		this.printHelpText(Socks5UdpFirewallRule.Builder.Field.class);		
 	}
 		
 	private EncryptedPassword readEncryptedPassword(final String prompt) {

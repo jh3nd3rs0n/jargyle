@@ -16,9 +16,13 @@ class SettingXml {
 	protected String name;
 	@XmlElements({
 		@XmlElement(
-				name = "clientRules", 
+				name = "clientFirewallRules", 
 				required = true, 
-				type = ClientRulesXml.class),
+				type = ClientFirewallRulesXml.class),
+		@XmlElement(
+				name = "clientRoutingRules", 
+				required = true, 
+				type = ClientRoutingRulesXml.class),
 		@XmlElement(
 				name = "encryptedPassword",
 				required = true,
@@ -28,21 +32,25 @@ class SettingXml {
 				required = true, 
 				type = SocketSettingsXml.class),
 		@XmlElement(
-				name = "socks5ReplyRules", 
+				name = "socks5ReplyFirewallRules", 
 				required = true, 
-				type = Socks5ReplyRulesXml.class),		
+				type = Socks5ReplyFirewallRulesXml.class),		
 		@XmlElement(
-				name = "socks5RequestRules", 
+				name = "socks5RequestFirewallRules", 
 				required = true, 
-				type = Socks5RequestRulesXml.class),
+				type = Socks5RequestFirewallRulesXml.class),
+		@XmlElement(
+				name = "socks5RequestRoutingRules", 
+				required = true, 
+				type = Socks5RequestRoutingRulesXml.class),		
 		@XmlElement(
 				name = "socks5RequestWorkerFactory",
 				required = true,
 				type = Socks5RequestWorkerFactoryXml.class),
 		@XmlElement(
-				name = "socks5UdpRules", 
+				name = "socks5UdpFirewallRules", 
 				required = true, 
-				type = Socks5UdpRulesXml.class),
+				type = Socks5UdpFirewallRulesXml.class),
 		@XmlElement(
 				name = "usernamePasswordAuthenticator", 
 				required = true, 

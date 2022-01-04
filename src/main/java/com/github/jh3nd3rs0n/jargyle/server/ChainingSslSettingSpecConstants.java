@@ -6,13 +6,13 @@ import java.util.Map;
 
 import com.github.jh3nd3rs0n.jargyle.client.SslPropertySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
-import com.github.jh3nd3rs0n.jargyle.common.text.Strings;
+import com.github.jh3nd3rs0n.jargyle.common.text.Words;
 import com.github.jh3nd3rs0n.jargyle.internal.help.HelpText;
 import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.BooleanSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.EncryptedPasswordSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.FileSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.StringSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.StringsSettingSpec;
+import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.WordsSettingSpec;
 
 public final class ChainingSslSettingSpecConstants {
 
@@ -35,8 +35,8 @@ public final class ChainingSslSettingSpecConstants {
 					+ "server",
 			usage = "chaining.ssl.enabledCipherSuites=[SSL_CIPHER_SUITE1[ SSL_CIPHER_SUITE2[...]]]"
 	)
-	public static final SettingSpec<Strings> CHAINING_SSL_ENABLED_CIPHER_SUITES = 
-			SETTING_SPECS.addThenGet(new StringsSettingSpec(
+	public static final SettingSpec<Words> CHAINING_SSL_ENABLED_CIPHER_SUITES = 
+			SETTING_SPECS.addThenGet(new WordsSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"chaining.ssl.enabledCipherSuites",
 					SslPropertySpecConstants.SSL_ENABLED_CIPHER_SUITES.getDefaultProperty().getValue()));
@@ -47,8 +47,8 @@ public final class ChainingSslSettingSpecConstants {
 					+ "server",
 			usage = "chaining.ssl.enabledProtocols=[SSL_PROTOCOL1[ SSL_PROTOCOL2[...]]]"
 	)	
-	public static final SettingSpec<Strings> CHAINING_SSL_ENABLED_PROTOCOLS = 
-			SETTING_SPECS.addThenGet(new StringsSettingSpec(
+	public static final SettingSpec<Words> CHAINING_SSL_ENABLED_PROTOCOLS = 
+			SETTING_SPECS.addThenGet(new WordsSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"chaining.ssl.enabledProtocols",
 					SslPropertySpecConstants.SSL_ENABLED_PROTOCOLS.getDefaultProperty().getValue()));

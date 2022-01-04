@@ -2,7 +2,7 @@ package com.github.jh3nd3rs0n.jargyle.server.config.xml.bind;
 
 import java.util.List;
 
-import com.github.jh3nd3rs0n.jargyle.common.net.AddressRange;
+import com.github.jh3nd3rs0n.jargyle.server.AddressRange;
 import com.github.jh3nd3rs0n.jargyle.server.ClientRoutingRule;
 import com.github.jh3nd3rs0n.jargyle.server.LogAction;
 import com.github.jh3nd3rs0n.jargyle.server.SelectionStrategy;

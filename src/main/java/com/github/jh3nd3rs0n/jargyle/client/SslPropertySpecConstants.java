@@ -8,9 +8,9 @@ import com.github.jh3nd3rs0n.jargyle.client.propertyspec.impl.BooleanPropertySpe
 import com.github.jh3nd3rs0n.jargyle.client.propertyspec.impl.EncryptedPasswordPropertySpec;
 import com.github.jh3nd3rs0n.jargyle.client.propertyspec.impl.FilePropertySpec;
 import com.github.jh3nd3rs0n.jargyle.client.propertyspec.impl.StringPropertySpec;
-import com.github.jh3nd3rs0n.jargyle.client.propertyspec.impl.StringsPropertySpec;
+import com.github.jh3nd3rs0n.jargyle.client.propertyspec.impl.WordsPropertySpec;
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
-import com.github.jh3nd3rs0n.jargyle.common.text.Strings;
+import com.github.jh3nd3rs0n.jargyle.common.text.Words;
 
 public final class SslPropertySpecConstants {
 
@@ -22,17 +22,17 @@ public final class SslPropertySpecConstants {
 					"socksClient.ssl.enabled",
 					Boolean.FALSE));
 
-	public static final PropertySpec<Strings> SSL_ENABLED_CIPHER_SUITES = 
-			PROPERTY_SPECS.addThenGet(new StringsPropertySpec(
+	public static final PropertySpec<Words> SSL_ENABLED_CIPHER_SUITES = 
+			PROPERTY_SPECS.addThenGet(new WordsPropertySpec(
 					NewPropertySpecPermission.INSTANCE,
 					"socksClient.ssl.enabledCipherSuites",
-					Strings.newInstance(new String[] { })));
+					Words.newInstance(new String[] { })));
 	
-	public static final PropertySpec<Strings> SSL_ENABLED_PROTOCOLS = 
-			PROPERTY_SPECS.addThenGet(new StringsPropertySpec(
+	public static final PropertySpec<Words> SSL_ENABLED_PROTOCOLS = 
+			PROPERTY_SPECS.addThenGet(new WordsPropertySpec(
 					NewPropertySpecPermission.INSTANCE,
 					"socksClient.ssl.enabledProtocols",
-					Strings.newInstance(new String[] { })));
+					Words.newInstance(new String[] { })));
 	
 	public static final PropertySpec<File> SSL_KEY_STORE_FILE = 
 			PROPERTY_SPECS.addThenGet(new FilePropertySpec(

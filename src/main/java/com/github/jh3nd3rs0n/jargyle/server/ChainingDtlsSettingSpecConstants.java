@@ -7,14 +7,14 @@ import java.util.Map;
 import com.github.jh3nd3rs0n.jargyle.client.DtlsPropertySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.common.number.impl.PositiveInteger;
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
-import com.github.jh3nd3rs0n.jargyle.common.text.Strings;
+import com.github.jh3nd3rs0n.jargyle.common.text.Words;
 import com.github.jh3nd3rs0n.jargyle.internal.help.HelpText;
 import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.BooleanSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.EncryptedPasswordSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.FileSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.PositiveIntegerSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.StringSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.StringsSettingSpec;
+import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.WordsSettingSpec;
 
 public final class ChainingDtlsSettingSpecConstants {
 
@@ -37,8 +37,8 @@ public final class ChainingDtlsSettingSpecConstants {
 					+ "server",
 			usage = "chaining.dtls.enabledCipherSuites=[DTLS_CIPHER_SUITE1[ DTLS_CIPHER_SUITE2[...]]]"
 	)
-	public static final SettingSpec<Strings> CHAINING_DTLS_ENABLED_CIPHER_SUITES = 
-			SETTING_SPECS.addThenGet(new StringsSettingSpec(
+	public static final SettingSpec<Words> CHAINING_DTLS_ENABLED_CIPHER_SUITES = 
+			SETTING_SPECS.addThenGet(new WordsSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"chaining.dtls.enabledCipherSuites",
 					DtlsPropertySpecConstants.DTLS_ENABLED_CIPHER_SUITES.getDefaultProperty().getValue()));
@@ -49,8 +49,8 @@ public final class ChainingDtlsSettingSpecConstants {
 					+ "server",
 			usage = "chaining.dtls.enabledProtocols=[DTLS_PROTOCOL1[ DTLS_PROTOCOL2[...]]]"
 	)	
-	public static final SettingSpec<Strings> CHAINING_DTLS_ENABLED_PROTOCOLS = 
-			SETTING_SPECS.addThenGet(new StringsSettingSpec(
+	public static final SettingSpec<Words> CHAINING_DTLS_ENABLED_PROTOCOLS = 
+			SETTING_SPECS.addThenGet(new WordsSettingSpec(
 					NewSettingSpecPermission.INSTANCE, 
 					"chaining.dtls.enabledProtocols",
 					DtlsPropertySpecConstants.DTLS_ENABLED_PROTOCOLS.getDefaultProperty().getValue()));

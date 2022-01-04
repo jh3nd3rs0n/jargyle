@@ -1,4 +1,4 @@
-package com.github.jh3nd3rs0n.jargyle.common.net;
+package com.github.jh3nd3rs0n.jargyle.server;
 
 import java.io.IOException;
 import java.io.InputStream;

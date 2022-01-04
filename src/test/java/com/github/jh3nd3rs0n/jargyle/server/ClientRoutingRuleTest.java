@@ -7,8 +7,6 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.github.jh3nd3rs0n.jargyle.common.net.AddressRange;
-
 public class ClientRoutingRuleTest {
 
 	@Test

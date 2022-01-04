@@ -12,12 +12,12 @@ import org.slf4j.LoggerFactory;
 
 import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
 import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
-import com.github.jh3nd3rs0n.jargyle.common.net.RelayServer;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.internal.logging.LoggerHelper;
 import com.github.jh3nd3rs0n.jargyle.server.FirewallRule;
 import com.github.jh3nd3rs0n.jargyle.server.FirewallRuleActionDenyException;
 import com.github.jh3nd3rs0n.jargyle.server.FirewallRuleNotFoundException;
+import com.github.jh3nd3rs0n.jargyle.server.RelayServer;
 import com.github.jh3nd3rs0n.jargyle.server.Rule;
 import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;

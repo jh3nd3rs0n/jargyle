@@ -3,11 +3,11 @@ package com.github.jh3nd3rs0n.jargyle.server.socks5;
 import java.util.Arrays;
 import java.util.List;
 
-import com.github.jh3nd3rs0n.jargyle.common.net.AddressRange;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
-import com.github.jh3nd3rs0n.jargyle.common.net.PortRange;
 import com.github.jh3nd3rs0n.jargyle.internal.help.HelpText;
+import com.github.jh3nd3rs0n.jargyle.server.AddressRange;
 import com.github.jh3nd3rs0n.jargyle.server.LogAction;
+import com.github.jh3nd3rs0n.jargyle.server.PortRange;
 import com.github.jh3nd3rs0n.jargyle.server.Route;
 import com.github.jh3nd3rs0n.jargyle.server.RouteNotFoundException;
 import com.github.jh3nd3rs0n.jargyle.server.Routes;

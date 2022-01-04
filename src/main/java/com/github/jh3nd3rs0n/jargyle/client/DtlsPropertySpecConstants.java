@@ -9,10 +9,10 @@ import com.github.jh3nd3rs0n.jargyle.client.propertyspec.impl.EncryptedPasswordP
 import com.github.jh3nd3rs0n.jargyle.client.propertyspec.impl.FilePropertySpec;
 import com.github.jh3nd3rs0n.jargyle.client.propertyspec.impl.PositiveIntegerPropertySpec;
 import com.github.jh3nd3rs0n.jargyle.client.propertyspec.impl.StringPropertySpec;
-import com.github.jh3nd3rs0n.jargyle.client.propertyspec.impl.StringsPropertySpec;
+import com.github.jh3nd3rs0n.jargyle.client.propertyspec.impl.WordsPropertySpec;
 import com.github.jh3nd3rs0n.jargyle.common.number.impl.PositiveInteger;
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
-import com.github.jh3nd3rs0n.jargyle.common.text.Strings;
+import com.github.jh3nd3rs0n.jargyle.common.text.Words;
 
 public final class DtlsPropertySpecConstants {
 
@@ -24,17 +24,17 @@ public final class DtlsPropertySpecConstants {
 					"socksClient.dtls.enabled",
 					Boolean.FALSE));
 
-	public static final PropertySpec<Strings> DTLS_ENABLED_CIPHER_SUITES = 
-			PROPERTY_SPECS.addThenGet(new StringsPropertySpec(
+	public static final PropertySpec<Words> DTLS_ENABLED_CIPHER_SUITES = 
+			PROPERTY_SPECS.addThenGet(new WordsPropertySpec(
 					NewPropertySpecPermission.INSTANCE,
 					"socksClient.dtls.enabledCipherSuites",
-					Strings.newInstance(new String[] { })));
+					Words.newInstance(new String[] { })));
 	
-	public static final PropertySpec<Strings> DTLS_ENABLED_PROTOCOLS = 
-			PROPERTY_SPECS.addThenGet(new StringsPropertySpec(
+	public static final PropertySpec<Words> DTLS_ENABLED_PROTOCOLS = 
+			PROPERTY_SPECS.addThenGet(new WordsPropertySpec(
 					NewPropertySpecPermission.INSTANCE,
 					"socksClient.dtls.enabledProtocols",
-					Strings.newInstance(new String[] { })));
+					Words.newInstance(new String[] { })));
 	
 	public static final PropertySpec<File> DTLS_KEY_STORE_FILE = 
 			PROPERTY_SPECS.addThenGet(new FilePropertySpec(

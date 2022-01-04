@@ -16,11 +16,6 @@ Jargyle is a Java SOCKS5 server. It has the following features:
 -   [SOCKS server chaining to multiple specified chains of other SOCKS servers](#5-14-chaining-to-multiple-specified-chains-of-other-socks-servers)
 -   [Firewall rules](#5-15-using-firewall-rules) for [clients](#5-15-1-using-firewall-rules-for-clients), [SOCKS5 requests](#5-15-2-using-firewall-rules-for-socks5-requests), [SOCKS5 replies](#5-15-3-using-firewall-rules-for-socks5-replies), and [SOCKS5 UDP traffic](#5-15-4-using-firewall-rules-for-socks5-udp-traffic)
 
-Although Jargyle can act as a standalone SOCKS5 server, it can act as a bridge between the following:
-
--   Clients that access SOCKS5 servers using plaintext connections and no SOCKS5 authentication
--   SOCKS5 servers requiring SSL/TLS/DTLS connections and/or SOCKS5 authentication
-
 **DISCLAIMER**: Jargyle is not production-ready but it aims to be. It is also subject to breaking changes.
 
 ## Contents

@@ -2,9 +2,9 @@ package com.github.jh3nd3rs0n.jargyle.server.config.xml.bind;
 
 import java.util.List;
 
-import com.github.jh3nd3rs0n.jargyle.common.net.AddressRange;
-import com.github.jh3nd3rs0n.jargyle.common.net.PortRange;
+import com.github.jh3nd3rs0n.jargyle.server.AddressRange;
 import com.github.jh3nd3rs0n.jargyle.server.LogAction;
+import com.github.jh3nd3rs0n.jargyle.server.PortRange;
 import com.github.jh3nd3rs0n.jargyle.server.SelectionStrategy;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5RequestRoutingRule;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Command;

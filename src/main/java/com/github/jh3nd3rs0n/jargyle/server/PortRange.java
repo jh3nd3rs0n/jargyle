@@ -1,4 +1,6 @@
-package com.github.jh3nd3rs0n.jargyle.common.net;
+package com.github.jh3nd3rs0n.jargyle.server;
+
+import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 
 public final class PortRange {
 

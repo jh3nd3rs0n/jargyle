@@ -3,7 +3,6 @@ package com.github.jh3nd3rs0n.jargyle.server;
 import java.util.Arrays;
 import java.util.List;
 
-import com.github.jh3nd3rs0n.jargyle.common.net.AddressRange;
 import com.github.jh3nd3rs0n.jargyle.internal.help.HelpText;
 
 public final class ClientRoutingRule extends RoutingRule {

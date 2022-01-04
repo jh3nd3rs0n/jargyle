@@ -24,7 +24,7 @@ import com.github.jh3nd3rs0n.jargyle.common.net.Host;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.common.number.impl.PositiveInteger;
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
-import com.github.jh3nd3rs0n.jargyle.common.text.Strings;
+import com.github.jh3nd3rs0n.jargyle.common.text.Words;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Methods;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.gssapiauth.ProtectionLevels;
 
@@ -211,8 +211,8 @@ public final class Routes {
 
 					@Override
 					public Object convert(final Setting<Object> setting) {
-						Strings dtlsEnabledCipherSuites = 
-								(Strings) setting.getValue();
+						Words dtlsEnabledCipherSuites = 
+								(Words) setting.getValue();
 						return DtlsPropertySpecConstants.DTLS_ENABLED_CIPHER_SUITES.newProperty(
 								dtlsEnabledCipherSuites);
 					}
@@ -224,8 +224,8 @@ public final class Routes {
 
 					@Override
 					public Object convert(final Setting<Object> setting) {
-						Strings dtlsEnabledProtocols = 
-								(Strings) setting.getValue();
+						Words dtlsEnabledProtocols = 
+								(Words) setting.getValue();
 						return DtlsPropertySpecConstants.DTLS_ENABLED_PROTOCOLS.newProperty(
 								dtlsEnabledProtocols);
 					}
@@ -503,8 +503,8 @@ public final class Routes {
 
 					@Override
 					public Object convert(final Setting<Object> setting) {
-						Strings sslEnabledCipherSuites =
-								(Strings) setting.getValue();
+						Words sslEnabledCipherSuites =
+								(Words) setting.getValue();
 						return SslPropertySpecConstants.SSL_ENABLED_CIPHER_SUITES.newProperty(
 								sslEnabledCipherSuites);
 					}
@@ -516,8 +516,8 @@ public final class Routes {
 
 					@Override
 					public Object convert(final Setting<Object> setting) {
-						Strings sslEnabledProtocols = 
-								(Strings) setting.getValue();
+						Words sslEnabledProtocols = 
+								(Words) setting.getValue();
 						return SslPropertySpecConstants.SSL_ENABLED_PROTOCOLS.newProperty(
 								sslEnabledProtocols);
 					}

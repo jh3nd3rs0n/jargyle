@@ -7,9 +7,9 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.github.jh3nd3rs0n.jargyle.common.net.AddressRange;
-import com.github.jh3nd3rs0n.jargyle.common.net.PortRange;
 import com.github.jh3nd3rs0n.jargyle.server.LogAction;
+import com.github.jh3nd3rs0n.jargyle.server.PortRange;
+import com.github.jh3nd3rs0n.jargyle.server.AddressRange;
 import com.github.jh3nd3rs0n.jargyle.server.FirewallRuleAction;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Command;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;

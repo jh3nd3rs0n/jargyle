@@ -3,23 +3,29 @@ package com.github.jh3nd3rs0n.jargyle.common.text;
 import java.util.Arrays;
 import java.util.Iterator;
 
-public final class Strings {
+public final class Words {
 
-	public static Strings newInstance(final String s) {
+	public static Words newInstance(final String s) {
 		if (s.isEmpty()) {
 			return newInstance(new String[] { });
 		}
 		return newInstance(s.split(" "));
 	}
 	
-	public static Strings newInstance(final String[] strs) {
-		return new Strings(strs);
+	public static Words newInstance(final String[] wrds) {
+		return new Words(wrds);
 	}
 	
-	private final String[] strings;
+	private final String[] words;
 	
-	private Strings(final String[] suites) {
-		this.strings = Arrays.copyOf(suites, suites.length);
+	private Words(final String[] wrds) {
+		for (String wrd : wrds) {
+			if (wrd.matches(" ")) {
+				throw new IllegalArgumentException(
+						"word must not contain any spaces");
+			}
+		}
+		this.words = Arrays.copyOf(wrds, wrds.length);
 	}
 	
 	@Override
@@ -33,8 +39,8 @@ public final class Strings {
 		if (this.getClass() != obj.getClass()) {
 			return false;
 		}
-		Strings other = (Strings) obj;
-		if (!Arrays.equals(this.strings, other.strings)) {
+		Words other = (Words) obj;
+		if (!Arrays.equals(this.words, other.words)) {
 			return false;
 		}
 		return true;
@@ -44,14 +50,14 @@ public final class Strings {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + Arrays.hashCode(this.strings);
+		result = prime * result + Arrays.hashCode(this.words);
 		return result;
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		for (Iterator<String> iterator = Arrays.asList(this.strings).iterator(); 
+		for (Iterator<String> iterator = Arrays.asList(this.words).iterator(); 
 				iterator.hasNext();) {
 			String string = iterator.next();
 			builder.append(string);
@@ -63,7 +69,7 @@ public final class Strings {
 	}
 
 	public String[] toStringArray() {
-		return Arrays.copyOf(this.strings, this.strings.length);
+		return Arrays.copyOf(this.words, this.words.length);
 	}
 
 }

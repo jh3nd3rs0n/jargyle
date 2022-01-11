@@ -272,7 +272,9 @@ public final class Socks5ServerSocket extends ServerSocket {
 				Reply reply = socks5Rep.getReply();
 				if (!reply.equals(Reply.SUCCEEDED)) {
 					throw new Socks5Exception(String.format(
-							"received reply: %s", reply));
+							"received reply: %s from %s", 
+							reply, 
+							this.socks5Client));
 				}
 				acceptedSocks5Socket = new AcceptedSocks5Socket(
 						new Socks5Socket(
@@ -405,8 +407,9 @@ public final class Socks5ServerSocket extends ServerSocket {
 			Reply reply = socks5Rep.getReply();
 			if (!reply.equals(Reply.SUCCEEDED)) {
 				throw new Socks5Exception(String.format(
-						"received reply: %s", 
-						reply));
+						"received reply: %s from %s", 
+						reply, 
+						this.socks5Client));
 			}
 			this.bound = true;
 			this.localInetAddress = 

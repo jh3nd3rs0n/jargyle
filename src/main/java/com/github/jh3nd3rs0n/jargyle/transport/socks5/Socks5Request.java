@@ -89,23 +89,49 @@ public final class Socks5Request {
 	public static Socks5Request newInstanceFrom(
 			final InputStream in) throws IOException {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		Version ver = Version.valueOfByteFrom(in);
+		Version ver = null;
+		try {
+			ver = Version.valueOfByteFrom(in);
+		} catch (IOException e) {
+			throw new Socks5Exception("expected version", e);
+		}
 		out.write(UnsignedByte.newInstance(ver.byteValue()).intValue());
-		Command cmd = Command.valueOfByteFrom(in);
+		Command cmd = null;
+		try {
+			cmd = Command.valueOfByteFrom(in);
+		} catch (IOException e) {
+			throw new Socks5Exception("expected command", e);
+		}
 		out.write(UnsignedByte.newInstance(cmd.byteValue()).intValue());
-		UnsignedByte rsv = UnsignedByte.newInstanceFrom(in);
+		UnsignedByte rsv = null;
+		try {
+			rsv = UnsignedByte.newInstanceFrom(in);
+		} catch (IOException e) {
+			throw new Socks5Exception("expected RSV", e);
+		}
 		if (rsv.intValue() != RSV) {
 			throw new Socks5Exception(String.format(
 					"expected RSV is %s, actual RSV is %s", 
 					RSV, rsv.intValue()));
 		}
 		out.write(rsv.intValue());
-		Address addr = Address.newInstanceFrom(in);
+		Address addr = null;
+		try {
+			addr = Address.newInstanceFrom(in);
+		} catch (IOException e) {
+			throw new Socks5Exception(
+					"expected desired destination address type and address", e);
+		}
 		AddressType atyp = addr.getAddressType(); 
 		out.write(UnsignedByte.newInstance(atyp.byteValue()).intValue());
 		String dstAddr = addr.toString(); 
 		out.write(addr.toByteArray());
-		UnsignedShort dstPort = UnsignedShort.newInstanceFrom(in);
+		UnsignedShort dstPort = null;
+		try {
+			dstPort = UnsignedShort.newInstanceFrom(in);
+		} catch (IOException e) {
+			throw new Socks5Exception("expected desired destination port", e);
+		}
 		out.write(dstPort.toByteArray());
 		Params params = new Params();
 		params.version = ver;

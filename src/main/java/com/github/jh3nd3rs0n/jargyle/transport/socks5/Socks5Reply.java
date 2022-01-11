@@ -98,23 +98,49 @@ public final class Socks5Reply {
 	public static Socks5Reply newInstanceFrom(
 			final InputStream in) throws IOException {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		Version ver = Version.valueOfByteFrom(in);
+		Version ver = null;
+		try {
+			ver = Version.valueOfByteFrom(in);
+		} catch (IOException e) {
+			throw new Socks5Exception("expected version", e);
+		}
 		out.write(UnsignedByte.newInstance(ver.byteValue()).intValue());
-		Reply rep = Reply.valueOfByteFrom(in);
+		Reply rep = null;
+		try {
+			rep = Reply.valueOfByteFrom(in);
+		} catch (IOException e) {
+			throw new Socks5Exception("expected reply", e);
+		}
 		out.write(UnsignedByte.newInstance(rep.byteValue()).intValue());
-		UnsignedByte rsv = UnsignedByte.newInstanceFrom(in);
+		UnsignedByte rsv = null;
+		try {
+			rsv = UnsignedByte.newInstanceFrom(in);
+		} catch (IOException e) {
+			throw new Socks5Exception("expected RSV", e);
+		}
 		if (rsv.intValue() != RSV) {
 			throw new Socks5Exception(String.format(
 					"expected RSV is %s, actual RSV is %s", 
 					RSV, rsv.intValue()));
 		}
 		out.write(rsv.intValue());
-		Address addr = Address.newInstanceFrom(in);
+		Address addr = null;
+		try {
+			addr = Address.newInstanceFrom(in);
+		} catch (IOException e) {
+			throw new Socks5Exception(
+					"expected server bound address type and address", e);
+		}
 		AddressType atyp = addr.getAddressType(); 
 		out.write(UnsignedByte.newInstance(atyp.byteValue()).intValue());
 		String bndAddr = addr.toString();
 		out.write(addr.toByteArray());
-		UnsignedShort bndPort = UnsignedShort.newInstanceFrom(in); 
+		UnsignedShort bndPort = null;
+		try {
+			bndPort = UnsignedShort.newInstanceFrom(in);
+		} catch (IOException e) {
+			throw new Socks5Exception("expected server bound port", e);
+		}
 		out.write(bndPort.toByteArray());
 		Params params = new Params();
 		params.version = ver;

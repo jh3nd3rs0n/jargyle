@@ -55,8 +55,9 @@ public final class Socks5HostResolver extends HostResolver {
 		Reply reply = socks5Rep.getReply();
 		if (!reply.equals(Reply.SUCCEEDED)) {
 			throw new Socks5Exception(String.format(
-					"received reply: %s", 
-					reply));
+					"received reply: %s from %s", 
+					reply, 
+					this.socks5Client));
 		}
 		InetAddress inetAddress = InetAddress.getByName(
 				socks5Rep.getServerBoundAddress());

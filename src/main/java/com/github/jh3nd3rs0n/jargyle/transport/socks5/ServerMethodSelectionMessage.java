@@ -39,9 +39,19 @@ public final class ServerMethodSelectionMessage {
 	public static ServerMethodSelectionMessage newInstanceFrom(
 			final InputStream in) throws IOException {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		Version ver = Version.valueOfByteFrom(in);
+		Version ver = null;
+		try {
+			ver = Version.valueOfByteFrom(in);
+		} catch (IOException e) {
+			throw new Socks5Exception("expected version", e);
+		}
 		out.write(UnsignedByte.newInstance(ver.byteValue()).intValue());
-		Method meth = Method.valueOfByteFrom(in);
+		Method meth = null;
+		try {
+			meth = Method.valueOfByteFrom(in);
+		} catch (IOException e) {
+			throw new Socks5Exception("expected method", e);
+		}
 		out.write(UnsignedByte.newInstance(meth.byteValue()).intValue());
 		Params params = new Params();
 		params.version = ver;

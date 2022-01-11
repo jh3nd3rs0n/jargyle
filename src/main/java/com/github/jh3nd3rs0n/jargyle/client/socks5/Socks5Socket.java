@@ -106,8 +106,9 @@ public final class Socks5Socket extends Socket {
 							"unknown host: %s", address));
 				}
 				throw new Socks5Exception(String.format(
-						"received reply: %s", 
-						reply));
+						"received reply: %s from %s", 
+						reply, 
+						this.socks5Client));
 			}
 			this.connected = true;
 			this.remoteInetAddress = 

@@ -53,9 +53,19 @@ public final class ClientMethodSelectionMessage {
 	public static ClientMethodSelectionMessage newInstanceFrom(
 			final InputStream in) throws IOException {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		Version ver = Version.valueOfByteFrom(in);
+		Version ver = null;
+		try {
+			ver = Version.valueOfByteFrom(in);
+		} catch (IOException e) {
+			throw new Socks5Exception("expected version", e);
+		}
 		out.write(UnsignedByte.newInstance(ver.byteValue()).intValue());
-		UnsignedByte methodCount = UnsignedByte.newInstanceFrom(in);
+		UnsignedByte methodCount = null;
+		try {
+			methodCount = UnsignedByte.newInstanceFrom(in);
+		} catch (IOException e) {
+			throw new Socks5Exception("expected number of methods", e);
+		}
 		out.write(methodCount.intValue());
 		byte[] bytes = new byte[methodCount.intValue()];
 		if (methodCount.intValue() > 0) {

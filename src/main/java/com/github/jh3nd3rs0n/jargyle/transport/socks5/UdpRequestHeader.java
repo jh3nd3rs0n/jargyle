@@ -32,7 +32,7 @@ public final class UdpRequestHeader {
 		try {
 			rsv = UnsignedShort.newInstanceFrom(in);
 		} catch (IOException e) {
-			throw new AssertionError(e);
+			throw new IllegalArgumentException("expected RSV", e);
 		}
 		if (rsv.intValue() != RSV) {
 			 throw new IllegalArgumentException(String.format(
@@ -50,7 +50,7 @@ public final class UdpRequestHeader {
 		try {
 			frag = UnsignedByte.newInstanceFrom(in);
 		} catch (IOException e) {
-			throw new AssertionError(e);
+			throw new IllegalArgumentException("expected fragment number", e);
 		}
 		dataStartIndex++;
 		out.write(frag.intValue());
@@ -58,7 +58,8 @@ public final class UdpRequestHeader {
 		try {
 			addr = Address.newInstanceFrom(in);
 		} catch (IOException e) {
-			throw new AssertionError(e);
+			throw new IllegalArgumentException(
+					"expected desired destination address type and address", e);
 		}
 		AddressType atyp = addr.getAddressType();
 		dataStartIndex++;
@@ -75,7 +76,8 @@ public final class UdpRequestHeader {
 		try {
 			dstPort = UnsignedShort.newInstanceFrom(in);
 		} catch (IOException e) {
-			throw new AssertionError(e);
+			throw new IllegalArgumentException(
+					"expected desired destination port", e);
 		}
 		bytes = dstPort.toByteArray();
 		dataStartIndex += bytes.length;

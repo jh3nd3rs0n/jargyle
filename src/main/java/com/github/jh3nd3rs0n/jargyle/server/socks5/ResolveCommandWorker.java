@@ -60,7 +60,7 @@ public final class ResolveCommandWorker extends CommandWorker {
 					LoggerHelper.objectMessage(
 							this, "Error in resolving the hostname"), 
 					e);
-			socks5Rep = Socks5Reply.newErrorInstance(Reply.HOST_UNREACHABLE);
+			socks5Rep = Socks5Reply.newFailureInstance(Reply.HOST_UNREACHABLE);
 			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep);
 			return;			
 		} catch (IOException e) {
@@ -68,7 +68,7 @@ public final class ResolveCommandWorker extends CommandWorker {
 					LoggerHelper.objectMessage(
 							this, "Error in resolving the hostname"), 
 					e);
-			socks5Rep = Socks5Reply.newErrorInstance(
+			socks5Rep = Socks5Reply.newFailureInstance(
 					Reply.GENERAL_SOCKS_SERVER_FAILURE);
 			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep);
 			return;

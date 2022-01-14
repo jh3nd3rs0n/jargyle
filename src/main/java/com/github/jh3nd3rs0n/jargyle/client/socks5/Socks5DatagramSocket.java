@@ -1,8 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.client.socks5;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.DatagramPacket;
@@ -19,6 +17,7 @@ import java.util.Set;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.internal.net.AllZerosInetAddressHelper;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Command;
+import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.MethodEncapsulation;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Reply;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Exception;
@@ -193,8 +192,27 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			}
 			Socket sock = this.socks5Client.getConnectedInternalSocket(
 					this.socket, true);
-			MethodEncapsulation methodEncapsulation =
-					this.socks5Client.negotiateMethod(sock);
+			Method method = null;
+			try {
+				method = this.socks5Client.negotiateMethod(sock);
+			} catch (IOException e) {
+				throw new Socks5NetObjectException(String.format(
+						"from %s: %s", 
+						this.socks5Client,
+						e));				
+			}
+			MethodEncapsulation methodEncapsulation = null;
+			try {
+				methodEncapsulation = 
+						this.socks5Client.performMethodSubnegotiation(
+								method, sock);
+			} catch (IOException e) {
+				throw new Socks5NetObjectException(String.format(
+						"from %s: method %s: %s", 
+						this.socks5Client,
+						method,
+						e));				
+			}
 			Socket sck = methodEncapsulation.getSocket();
 			if (!this.datagramSocket.equals(this.originalDatagramSocket)) {
 				this.datagramSocket = this.originalDatagramSocket;
@@ -203,22 +221,26 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			datagramSock.bind(new InetSocketAddress(inetAddress, port));
 			String address = datagramSock.getLocalAddress().getHostAddress();
 			int prt = datagramSock.getLocalPort();
-			InputStream inputStream = sck.getInputStream();
-			OutputStream outputStream = sck.getOutputStream();
 			Socks5Request socks5Req = Socks5Request.newInstance(
 					Command.UDP_ASSOCIATE, 
 					address, 
 					prt);
-			outputStream.write(socks5Req.toByteArray());
-			outputStream.flush();
-			Socks5Reply socks5Rep = Socks5Reply.newInstanceFrom(inputStream);
+			Socks5Reply socks5Rep = null; 
+			try {
+				socks5Rep = this.socks5Client.sendSocks5Request(socks5Req, sck);
+			} catch (IOException e) {
+				throw new Socks5NetObjectException(String.format(
+						"from %s: %s", 
+						this.socks5Client,
+						e));
+			}
 			Reply reply = socks5Rep.getReply();
 			if (!reply.equals(Reply.SUCCEEDED)) {
-				throw new Socks5Exception(String.format(
-						"received reply: %s from %s", 
+				throw new Socks5NetObjectException(String.format(
+						"received failure reply %s from %s", 
 						reply, 
 						this.socks5Client));
-			}
+			}			
 			datagramSock = this.socks5Client.getConnectedInternalDatagramSocket(
 					datagramSock,
 					this.socks5Client.getSocksServerUri().getHost(),

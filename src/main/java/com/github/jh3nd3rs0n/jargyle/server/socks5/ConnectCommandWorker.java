@@ -73,7 +73,7 @@ public final class ConnectCommandWorker extends CommandWorker {
 					LoggerHelper.objectMessage(
 							this, "Error in setting the server-facing socket"), 
 					e);
-			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
+			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
 					Reply.GENERAL_SOCKS_SERVER_FAILURE);
 			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep);
 			return false;
@@ -82,7 +82,7 @@ public final class ConnectCommandWorker extends CommandWorker {
 					LoggerHelper.objectMessage(
 							this, "Error in binding the server-facing socket"), 
 					e);
-			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
+			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
 					Reply.GENERAL_SOCKS_SERVER_FAILURE);
 			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep);
 			return false;
@@ -113,7 +113,7 @@ public final class ConnectCommandWorker extends CommandWorker {
 								this, 
 								"Error in connecting the server-facing socket"), 
 						e);
-				socks5Rep = Socks5Reply.newErrorInstance(
+				socks5Rep = Socks5Reply.newFailureInstance(
 						Reply.HOST_UNREACHABLE);
 				this.commandWorkerContext.sendSocks5Reply(this, socks5Rep);
 				return null;
@@ -134,7 +134,7 @@ public final class ConnectCommandWorker extends CommandWorker {
 								this, 
 								"Error in creating the server-facing socket"), 
 						e);
-				socks5Rep = Socks5Reply.newErrorInstance(
+				socks5Rep = Socks5Reply.newFailureInstance(
 						Reply.HOST_UNREACHABLE);
 				this.commandWorkerContext.sendSocks5Reply(this, socks5Rep);
 				return null;

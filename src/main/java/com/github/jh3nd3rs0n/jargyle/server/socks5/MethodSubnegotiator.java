@@ -21,7 +21,6 @@ import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.MethodEncapsulation;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.MethodSubnegotiationException;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.NullMethodEncapsulation;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Exception;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.gssapiauth.GssSocket;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.gssapiauth.GssapiMethodEncapsulation;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.gssapiauth.Message;
@@ -57,7 +56,7 @@ enum MethodSubnegotiator {
 							MessageType.ABORT, 
 							null).toByteArray());
 					outStream.flush();
-					throw new Socks5Exception(e);
+					throw new MethodSubnegotiationException(e);
 				}
 				if (token == null) {
 					outStream.write(Message.newInstance(
@@ -99,14 +98,14 @@ enum MethodSubnegotiator {
 							MessageType.ABORT, 
 							null).toByteArray());
 					outStream.flush();
-					throw new Socks5Exception(e);
+					throw new MethodSubnegotiationException(e);
 				}			
 			}
 			ProtectionLevel protectionLevel = null;
 			try {
 				protectionLevel = ProtectionLevel.valueOfByte(token[0]);
 			} catch (IllegalArgumentException e) {
-				throw new Socks5Exception(e);
+				throw new MethodSubnegotiationException(e);
 			}
 			ProtectionLevels protectionLevels = 
 					configuration.getSettings().getLastValue(
@@ -130,7 +129,7 @@ enum MethodSubnegotiator {
 							MessageType.ABORT, 
 							null).toByteArray());
 					outStream.flush();
-					throw new Socks5Exception(e);
+					throw new MethodSubnegotiationException(e);
 				}
 			}
 			outStream.write(Message.newInstance(
@@ -152,7 +151,7 @@ enum MethodSubnegotiator {
 			try {
 				context = manager.createContext((GSSCredential) null);
 			} catch (GSSException e) {
-				throw new Socks5Exception(e);
+				throw new MethodSubnegotiationException(e);
 			}
 			return context;
 		}
@@ -174,7 +173,7 @@ enum MethodSubnegotiator {
 			try {
 				user = context.getSrcName().toString();
 			} catch (GSSException e) {
-				throw new Socks5Exception(e);
+				throw new MethodSubnegotiationException(e);
 			}
 			return new MethodSubnegotiationResults(
 					this.methodValue(), methodEncapsulation, user);

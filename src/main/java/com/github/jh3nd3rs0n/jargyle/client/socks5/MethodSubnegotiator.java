@@ -20,7 +20,6 @@ import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.MethodEncapsulation;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.MethodSubnegotiationException;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.NullMethodEncapsulation;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Exception;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.gssapiauth.GssSocket;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.gssapiauth.GssapiMethodEncapsulation;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.gssapiauth.Message;
@@ -48,7 +47,7 @@ enum MethodSubnegotiator {
 				try {
 					token = context.initSecContext(token, 0, token.length);
 				} catch (GSSException e) {
-					throw new Socks5Exception(e);
+					throw new MethodSubnegotiationException(e);
 				}
 				if (token != null) {
 					outStream.write(Message.newInstance(
@@ -93,7 +92,7 @@ enum MethodSubnegotiator {
 							MessageType.ABORT, 
 							null).toByteArray());
 					outStream.flush();
-					throw new Socks5Exception(e);
+					throw new MethodSubnegotiationException(e);
 				}
 			}
 			outStream.write(Message.newInstance(
@@ -116,7 +115,7 @@ enum MethodSubnegotiator {
 							MessageType.ABORT, 
 							null).toByteArray());
 					outStream.flush();
-					throw new Socks5Exception(e);
+					throw new MethodSubnegotiationException(e);
 				}
 			}
 			ProtectionLevel protectionLevelSelection = null;
@@ -124,7 +123,7 @@ enum MethodSubnegotiator {
 				protectionLevelSelection = ProtectionLevel.valueOfByte(
 						token[0]);
 			} catch (IllegalArgumentException e) {
-				throw new Socks5Exception(e);
+				throw new MethodSubnegotiationException(e);
 			}
 			if (!protectionLevelList.contains(protectionLevelSelection)) {
 				throw new MethodSubnegotiationException(String.format(
@@ -143,7 +142,7 @@ enum MethodSubnegotiator {
 			try {
 				serverName = manager.createName(server, null);
 			} catch (GSSException e) {
-				throw new Socks5Exception(e);
+				throw new MethodSubnegotiationException(e);
 			}
 			Oid mechanismOid = socks5Client.getProperties().getValue(
 					Socks5PropertySpecConstants.SOCKS5_GSSAPIAUTH_MECHANISM_OID);
@@ -155,22 +154,22 @@ enum MethodSubnegotiator {
 				        null,
 				        GSSContext.DEFAULT_LIFETIME);
 			} catch (GSSException e) {
-				throw new Socks5Exception(e);
+				throw new MethodSubnegotiationException(e);
 			}
 			try {
 				context.requestMutualAuth(true);
 			} catch (GSSException e) {
-				throw new Socks5Exception(e);
+				throw new MethodSubnegotiationException(e);
 			}
 			try {
 				context.requestConf(true);
 			} catch (GSSException e) {
-				throw new Socks5Exception(e);
+				throw new MethodSubnegotiationException(e);
 			}
 			try {
 				context.requestInteg(true);
 			} catch (GSSException e) {
-				throw new Socks5Exception(e);
+				throw new MethodSubnegotiationException(e);
 			}
 			return context;
 		}

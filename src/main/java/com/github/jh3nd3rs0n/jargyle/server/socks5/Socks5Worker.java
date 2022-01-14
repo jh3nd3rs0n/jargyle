@@ -67,7 +67,7 @@ public final class Socks5Worker {
 							+ "context: %s",
 							context)),
 					e);
-			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
+			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
 					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
 			this.socks5WorkerContext.sendSocks5Reply(this, socks5Rep);
 			return false;			
@@ -75,7 +75,7 @@ public final class Socks5Worker {
 		try {
 			socks5RequestFirewallRule.applyBasedOn(context);
 		} catch (FirewallRuleActionDenyException e) {
-			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
+			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
 					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
 			this.socks5WorkerContext.sendSocks5Reply(this, socks5Rep);
 			return false;
@@ -83,7 +83,7 @@ public final class Socks5Worker {
 		return true;
 	}
 	
-	private MethodSubnegotiationResults negotiateMethod() throws IOException {
+	private Method negotiateMethod() {
 		InputStream in = new SequenceInputStream(new ByteArrayInputStream(
 				new byte[] { Version.V5.byteValue() }),
 				this.clientFacingInputStream);
@@ -134,32 +134,10 @@ public final class Socks5Worker {
 							+ "the client"), 
 					e);
 		}
-		MethodSubnegotiator methodSubnegotiator = 
-				MethodSubnegotiator.valueOfMethod(method);
-		MethodSubnegotiationResults methodSubnegotiationResults = null;
-		try {
-			methodSubnegotiationResults = methodSubnegotiator.subnegotiate(
-					this.clientFacingSocket, this.configuration);
-		} catch (MethodSubnegotiationException e) {
-			LOGGER.debug( 
-					LoggerHelper.objectMessage(
-							this, "Unable to sub-negotiate with the client"), 
-					e);
-			return null;
-		} catch (SocketException e) {
-			// socket closed
-			return null;
-		} catch (IOException e) {
-			LOGGER.error( 
-					LoggerHelper.objectMessage(
-							this, "Error in sub-negotiating with the client"), 
-					e);
-			return null;
-		}
-		return methodSubnegotiationResults;		
+		return smsm.getMethod();
 	}
 	
-	private Socks5Request newSocks5Request() throws IOException {
+	private Socks5Request newSocks5Request() {
 		Socks5Request socks5Request = null;
 		try {
 			socks5Request = Socks5Request.newInstanceFrom(
@@ -180,10 +158,58 @@ public final class Socks5Worker {
 		return socks5Request;
 	}
 	
+	private MethodSubnegotiationResults performMethodSubnegotiation(
+			final Method method) {
+		MethodSubnegotiator methodSubnegotiator = 
+				MethodSubnegotiator.valueOfMethod(method);
+		MethodSubnegotiationResults methodSubnegotiationResults = null;
+		try {
+			methodSubnegotiationResults = methodSubnegotiator.subnegotiate(
+					this.clientFacingSocket, this.configuration);
+		} catch (MethodSubnegotiationException e) {
+			if (e.getCause() == null) {
+				LOGGER.debug( 
+						LoggerHelper.objectMessage(
+								this, 
+								String.format(
+										"Unable to sub-negotiate with the "
+										+ "client using method %s", 
+										method)), 
+						e);
+				return null;
+			}
+			LOGGER.error( 
+					LoggerHelper.objectMessage(
+							this, 
+							String.format(
+									"Error in sub-negotiating with the client "
+									+ "using method %s", 
+									method)), 
+					e);
+			return null;				
+		} catch (SocketException e) {
+			// socket closed
+			return null;
+		} catch (IOException e) {
+			LOGGER.error( 
+					LoggerHelper.objectMessage(
+							this, 
+							String.format(
+									"Error in sub-negotiating with the client "
+									+ "using method %s", 
+									method)), 
+					e);
+			return null;
+		}
+		return methodSubnegotiationResults;		
+	}
+	
 	public void run() throws IOException {
 		this.clientFacingInputStream = this.clientFacingSocket.getInputStream();
+		Method method = this.negotiateMethod();
+		if (method == null) { return; } 
 		MethodSubnegotiationResults methodSubnegotiationResults = 
-				this.negotiateMethod();
+				this.performMethodSubnegotiation(method);
 		if (methodSubnegotiationResults == null) { return; }
 		Socket socket = methodSubnegotiationResults.getSocket();
 		this.clientFacingInputStream = socket.getInputStream();
@@ -217,7 +243,7 @@ public final class Socks5Worker {
 							this, 
 							"Error in finding a particular SOCKS5 request route"), 
 					e);
-			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
+			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
 					Reply.GENERAL_SOCKS_SERVER_FAILURE);
 			this.socks5WorkerContext.sendSocks5Reply(this, socks5Rep);
 			return;

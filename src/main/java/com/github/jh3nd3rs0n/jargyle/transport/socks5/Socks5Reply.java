@@ -26,9 +26,9 @@ public final class Socks5Reply {
 	private static final int MIN_BND_ADDR_LENGTH = 1;
 	private static final int MAX_BND_ADDR_LENGTH = 255;
 	
-	public static Socks5Reply newErrorInstance(final Reply reply) {
+	public static Socks5Reply newFailureInstance(final Reply reply) {
 		if (reply.equals(Reply.SUCCEEDED)) {
-			throw new IllegalArgumentException("reply must be of an error");
+			throw new IllegalArgumentException("reply must be of a failure");
 		}
 		return newInstance(
 				reply, 

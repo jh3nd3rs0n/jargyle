@@ -56,7 +56,7 @@ public class Socks5RequestWorkerContext extends Socks5WorkerContext {
 							+ "context: %s",
 							context)),
 					e);
-			Socks5Reply rep = Socks5Reply.newErrorInstance(
+			Socks5Reply rep = Socks5Reply.newFailureInstance(
 					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
 			this.sendSocks5Reply(worker, rep);
 			return false;			
@@ -64,7 +64,7 @@ public class Socks5RequestWorkerContext extends Socks5WorkerContext {
 		try {
 			socks5ReplyFirewallRule.applyBasedOn(context);
 		} catch (FirewallRuleActionDenyException e) {
-			Socks5Reply rep = Socks5Reply.newErrorInstance(
+			Socks5Reply rep = Socks5Reply.newFailureInstance(
 					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
 			this.sendSocks5Reply(worker, rep);
 			return false;

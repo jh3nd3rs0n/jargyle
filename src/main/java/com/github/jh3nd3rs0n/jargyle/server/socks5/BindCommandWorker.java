@@ -71,7 +71,7 @@ public final class BindCommandWorker extends CommandWorker {
 							this, 
 							"Error in waiting for an inbound socket"), 
 					e);
-			socks5Rep = Socks5Reply.newErrorInstance(
+			socks5Rep = Socks5Reply.newFailureInstance(
 					Reply.GENERAL_SOCKS_SERVER_FAILURE);
 			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep);
 			return null;
@@ -91,7 +91,7 @@ public final class BindCommandWorker extends CommandWorker {
 					LoggerHelper.objectMessage(
 							this, "Error in binding the listen socket"), 
 					e);
-			socks5Rep = Socks5Reply.newErrorInstance(
+			socks5Rep = Socks5Reply.newFailureInstance(
 					Reply.GENERAL_SOCKS_SERVER_FAILURE);
 			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep);
 			return false;
@@ -114,7 +114,7 @@ public final class BindCommandWorker extends CommandWorker {
 							+ "context: %s",
 							context)),
 					e);
-			Socks5Reply rep = Socks5Reply.newErrorInstance(
+			Socks5Reply rep = Socks5Reply.newFailureInstance(
 					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
 			this.commandWorkerContext.sendSocks5Reply(this, rep);
 			return false;			
@@ -122,7 +122,7 @@ public final class BindCommandWorker extends CommandWorker {
 		try {
 			socks5ReplyFirewallRule.applyBasedOn(context);
 		} catch (FirewallRuleActionDenyException e) {
-			Socks5Reply rep = Socks5Reply.newErrorInstance(
+			Socks5Reply rep = Socks5Reply.newFailureInstance(
 					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
 			this.commandWorkerContext.sendSocks5Reply(this, rep);
 			return false;
@@ -140,7 +140,7 @@ public final class BindCommandWorker extends CommandWorker {
 					LoggerHelper.objectMessage(
 							this, "Error in setting the inbound socket"), 
 					e);
-			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
+			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
 					Reply.GENERAL_SOCKS_SERVER_FAILURE);
 			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep);
 			return false;
@@ -158,7 +158,7 @@ public final class BindCommandWorker extends CommandWorker {
 					LoggerHelper.objectMessage(
 							this, "Error in setting the listen socket"), 
 					e);
-			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
+			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
 					Reply.GENERAL_SOCKS_SERVER_FAILURE);
 			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep);
 			return false;

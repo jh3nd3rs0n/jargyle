@@ -11,4 +11,8 @@ public final class MethodSubnegotiationException extends Socks5Exception {
 		super(message);
 	}
 	
+	public MethodSubnegotiationException(final Throwable cause) {
+		super(cause);
+	}
+	
 }

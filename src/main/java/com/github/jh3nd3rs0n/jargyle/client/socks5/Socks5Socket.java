@@ -14,9 +14,9 @@ import java.nio.channels.SocketChannel;
 import java.util.Set;
 
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Command;
+import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.MethodEncapsulation;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Reply;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Exception;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Reply;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Request;
 
@@ -87,29 +87,49 @@ public final class Socks5Socket extends Socket {
 				final Socket connectedSocket,
 				final String address,
 				final int port) throws IOException {
-			MethodEncapsulation methodEncapsulation = 
-					this.socks5Client.negotiateMethod(connectedSocket); 
+			Method method = null; 
+			try { 
+				method = this.socks5Client.negotiateMethod(connectedSocket);
+			} catch (IOException e) {
+				throw new Socks5NetObjectException(String.format(
+						"from %s: %s", 
+						this.socks5Client,
+						e));
+			}
+			MethodEncapsulation methodEncapsulation = null;
+			try {
+				methodEncapsulation = 
+						this.socks5Client.performMethodSubnegotiation(
+								method, connectedSocket);
+			} catch (IOException e) {
+				throw new Socks5NetObjectException(String.format(
+						"from %s: method %s: %s", 
+						this.socks5Client,
+						method,
+						e));				
+			}
 			Socket connectedSock = methodEncapsulation.getSocket(); 
-			InputStream inputStream = connectedSock.getInputStream();
-			OutputStream outputStream = connectedSock.getOutputStream();
 			Socks5Request socks5Req = Socks5Request.newInstance(
 					Command.CONNECT, 
 					address, 
 					port);
-			outputStream.write(socks5Req.toByteArray());
-			outputStream.flush();
-			Socks5Reply socks5Rep = Socks5Reply.newInstanceFrom(inputStream);
+			Socks5Reply socks5Rep = null;
+			try {
+				socks5Rep = this.socks5Client.sendSocks5Request(
+						socks5Req, connectedSock);
+			} catch (IOException e) {
+				throw new Socks5NetObjectException(String.format(
+						"from %s: %s", 
+						this.socks5Client,
+						e));				
+			}
 			Reply reply = socks5Rep.getReply();
 			if (!reply.equals(Reply.SUCCEEDED)) {
-				if (reply.equals(Reply.HOST_UNREACHABLE)) {
-					throw new UnknownHostException(String.format(
-							"unknown host: %s", address));
-				}
-				throw new Socks5Exception(String.format(
-						"received reply: %s from %s", 
+				throw new Socks5NetObjectException(String.format(
+						"received failure reply %s from %s", 
 						reply, 
 						this.socks5Client));
-			}
+			}			
 			this.connected = true;
 			this.remoteInetAddress = 
 					InetAddress.getByName(socks5Rep.getServerBoundAddress());

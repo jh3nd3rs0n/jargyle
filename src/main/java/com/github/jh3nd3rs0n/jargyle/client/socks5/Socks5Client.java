@@ -18,6 +18,8 @@ import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.MethodEncapsulation;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Methods;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.ServerMethodSelectionMessage;
+import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Reply;
+import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Request;
 
 public final class Socks5Client extends SocksClient {
 
@@ -91,7 +93,7 @@ public final class Socks5Client extends SocksClient {
 				internalSocket, timeout, bindBeforeConnect);
 	}
 	
-	protected MethodEncapsulation negotiateMethod(
+	protected Method negotiateMethod(
 			final Socket connectedInternalSocket) throws IOException {
 		InputStream inputStream = connectedInternalSocket.getInputStream();
 		OutputStream outputStream = connectedInternalSocket.getOutputStream();
@@ -103,15 +105,7 @@ public final class Socks5Client extends SocksClient {
 		outputStream.flush();
 		ServerMethodSelectionMessage smsm =
 				ServerMethodSelectionMessage.newInstanceFrom(inputStream);
-		Method method = smsm.getMethod();
-		MethodSubnegotiator methodSubnegotiator = null;
-		try {
-			methodSubnegotiator = MethodSubnegotiator.valueOfMethod(method);
-		} catch (IllegalArgumentException e) {
-			throw new AssertionError(e);
-		}
-		return methodSubnegotiator.subnegotiate(
-				connectedInternalSocket, this);		
+		return smsm.getMethod();		
 	}
 	
 	@Override
@@ -136,9 +130,27 @@ public final class Socks5Client extends SocksClient {
 		return new Socks5NetObjectFactory(this);
 	}
 	
+	protected MethodEncapsulation performMethodSubnegotiation(
+			final Method method,
+			final Socket connectedInternalSocket) throws IOException {
+		MethodSubnegotiator methodSubnegotiator = 
+				MethodSubnegotiator.valueOfMethod(method);
+		return methodSubnegotiator.subnegotiate(connectedInternalSocket, this);
+	}
+	
 	@Override
 	protected InetAddress resolve(final String host) throws IOException {
 		return super.resolve(host);
+	}
+	
+	protected Socks5Reply sendSocks5Request(
+			final Socks5Request socks5Req, 
+			final Socket connectedInternalSocket) throws IOException {
+		InputStream inputStream = connectedInternalSocket.getInputStream();
+		OutputStream outputStream = connectedInternalSocket.getOutputStream();
+		outputStream.write(socks5Req.toByteArray());
+		outputStream.flush();
+		return Socks5Reply.newInstanceFrom(inputStream);
 	}
 	
 }

@@ -78,7 +78,7 @@ public final class UdpAssociateCommandWorker extends CommandWorker {
 							this, 
 							"Error in setting the client-facing UDP socket"), 
 					e);
-			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
+			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
 					Reply.GENERAL_SOCKS_SERVER_FAILURE);
 			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep);
 			return false;
@@ -98,7 +98,7 @@ public final class UdpAssociateCommandWorker extends CommandWorker {
 							this, 
 							"Error in setting the peer-facing UDP socket"), 
 					e);
-			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
+			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
 					Reply.GENERAL_SOCKS_SERVER_FAILURE);
 			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep);
 			return false;
@@ -120,7 +120,7 @@ public final class UdpAssociateCommandWorker extends CommandWorker {
 							this, 
 							"Error in creating the client-facing UDP socket"), 
 					e);
-			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
+			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
 					Reply.GENERAL_SOCKS_SERVER_FAILURE);
 			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep);
 			return null;
@@ -142,7 +142,7 @@ public final class UdpAssociateCommandWorker extends CommandWorker {
 							this, 
 							"Error in creating the peer-facing UDP socket"), 
 					e);
-			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
+			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
 					Reply.GENERAL_SOCKS_SERVER_FAILURE);
 			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep);
 			return null;
@@ -289,7 +289,7 @@ public final class UdpAssociateCommandWorker extends CommandWorker {
 										"Error in resolving the client host %s", 
 										clientHost)), 
 						e);
-				Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
+				Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
 						Reply.HOST_UNREACHABLE);
 				this.commandWorkerContext.sendSocks5Reply(this, socks5Rep);
 				return null;
@@ -311,7 +311,7 @@ public final class UdpAssociateCommandWorker extends CommandWorker {
 								this, 
 								"Error in wrapping the client-facing UDP socket"), 
 						e);
-				Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
+				Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
 						Reply.GENERAL_SOCKS_SERVER_FAILURE);
 				this.commandWorkerContext.sendSocks5Reply(this, socks5Rep);
 				return null;
@@ -327,7 +327,7 @@ public final class UdpAssociateCommandWorker extends CommandWorker {
 							this, 
 							"Error in wrapping the client-facing UDP socket"), 
 					e);
-			Socks5Reply socks5Rep = Socks5Reply.newErrorInstance(
+			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
 					Reply.GENERAL_SOCKS_SERVER_FAILURE);
 			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep);
 			return null;

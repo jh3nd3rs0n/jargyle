@@ -2,11 +2,15 @@ package com.github.jh3nd3rs0n.jargyle.client.socks5;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InterruptedIOException;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+
+import javax.net.ssl.SSLException;
 
 import org.ietf.jgss.GSSContext;
 import org.ietf.jgss.GSSException;
@@ -186,8 +190,7 @@ enum MethodSubnegotiator {
 		@Override
 		public MethodEncapsulation subnegotiate(
 				final Socket socket, 
-				final Socks5Client socks5Client) 
-				throws MethodSubnegotiationException {
+				final Socks5Client socks5Client) throws IOException {
 			GSSContext context = null;
 			ProtectionLevel protectionLevelSelection = null;
 			try {
@@ -197,6 +200,16 @@ enum MethodSubnegotiator {
 						socket, context, socks5Client);
 			} catch (MethodSubnegotiationException e) {
 				throw e;
+			} catch (SocketException e) {
+				throw e;
+			} catch (InterruptedIOException e) {
+				throw e;
+			} catch (SSLException e) {
+				Throwable cause = e.getCause();
+				if (cause != null && cause instanceof SocketException) {
+					throw (SocketException) cause;
+				}
+				throw new MethodSubnegotiationException(this.methodValue(), e);
 			} catch (IOException e) {
 				throw new MethodSubnegotiationException(this.methodValue(), e);
 			}
@@ -212,8 +225,7 @@ enum MethodSubnegotiator {
 		@Override
 		public MethodEncapsulation subnegotiate(
 				final Socket Socket, 
-				final Socks5Client socks5Client) 
-				throws MethodSubnegotiationException {
+				final Socks5Client socks5Client) throws IOException {
 			throw new MethodSubnegotiationException(
 					this.methodValue(), "no acceptable methods");
 		}
@@ -226,8 +238,7 @@ enum MethodSubnegotiator {
 		@Override
 		public MethodEncapsulation subnegotiate(
 				final Socket socket, 
-				final Socks5Client socks5Client) 
-				throws MethodSubnegotiationException {
+				final Socks5Client socks5Client) throws IOException {
 			return new NullMethodEncapsulation(socket);
 		}
 		
@@ -238,8 +249,7 @@ enum MethodSubnegotiator {
 		@Override
 		public MethodEncapsulation subnegotiate(
 				final Socket socket, 
-				final Socks5Client socks5Client) 
-				throws MethodSubnegotiationException {
+				final Socks5Client socks5Client) throws IOException {
 			byte status = 1;
 			char[] password = null;
 			try {
@@ -256,6 +266,16 @@ enum MethodSubnegotiator {
 				UsernamePasswordResponse usernamePasswordResp = 
 						UsernamePasswordResponse.newInstanceFrom(inputStream);
 				status = usernamePasswordResp.getStatus();
+			} catch (SocketException e) {
+				throw e;
+			} catch (InterruptedIOException e) {
+				throw e;
+			} catch (SSLException e) {
+				Throwable cause = e.getCause();
+				if (cause != null && cause instanceof SocketException) {
+					throw (SocketException) cause;
+				}
+				throw new MethodSubnegotiationException(this.methodValue(), e);
 			} catch (IOException e) {
 				throw new MethodSubnegotiationException(this.methodValue(), e); 
 			} finally {
@@ -308,7 +328,6 @@ enum MethodSubnegotiator {
 	
 	public abstract MethodEncapsulation subnegotiate(
 			final Socket socket,
-			final Socks5Client socks5Client) 
-			throws MethodSubnegotiationException;
+			final Socks5Client socks5Client) throws IOException;
 	
 }

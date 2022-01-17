@@ -7,6 +7,8 @@ import java.io.SequenceInputStream;
 import java.net.Socket;
 import java.net.SocketException;
 
+import javax.net.ssl.SSLException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -92,8 +94,7 @@ public final class Socks5Worker {
 			methodSubnegotiationResults = methodSubnegotiator.subnegotiate(
 					this.clientFacingSocket, this.configuration);
 		} catch (MethodSubnegotiationException e) {
-			Throwable cause = e.getCause();
-			if (cause == null) {
+			if (e.getCause() == null) {
 				LOGGER.debug( 
 						LoggerHelper.objectMessage(
 								this, 
@@ -102,10 +103,6 @@ public final class Socks5Worker {
 										+ "client using method %s", 
 										method)), 
 						e);
-				return null;
-			}
-			if (cause instanceof SocketException) {
-				// socket closed
 				return null;
 			}
 			LOGGER.error( 
@@ -117,6 +114,33 @@ public final class Socks5Worker {
 									method)), 
 					e);
 			return null;				
+		} catch (SocketException e) {
+			// socket closed
+			return null;
+		} catch (SSLException e) {
+			Throwable cause = e.getCause();
+			if (cause != null && cause instanceof SocketException) {
+				// socket closed
+				return null;
+			}
+			LOGGER.error( 
+					LoggerHelper.objectMessage(
+							this, 
+							String.format(
+									"Error in sub-negotiating with the client "
+									+ "using method %s", 
+									method)), 
+					e);
+			return null;
+		} catch (IOException e) {
+			LOGGER.error( 
+					LoggerHelper.objectMessage(
+							this, 
+							String.format(
+									"Error in sub-negotiating with the client "
+									+ "using method %s", 
+									method)), 
+					e);			
 		}
 		return methodSubnegotiationResults;		
 	}
@@ -130,6 +154,19 @@ public final class Socks5Worker {
 			cmsm = ClientMethodSelectionMessage.newInstanceFrom(in);
 		} catch (SocketException e) {
 			// socket closed
+			return null;
+		} catch (SSLException e) {
+			Throwable cause = e.getCause();
+			if (cause != null && cause instanceof SocketException) {
+				// socket closed
+				return null;
+			}
+			LOGGER.error( 
+					LoggerHelper.objectMessage(
+							this, 
+							"Error in parsing the method selection message "
+							+ "from the client"), 
+					e);
 			return null;
 		} catch (IOException e) {
 			LOGGER.error( 
@@ -164,6 +201,19 @@ public final class Socks5Worker {
 			this.socks5WorkerContext.writeThenFlush(smsm.toByteArray());
 		} catch (SocketException e) {
 			// socket closed
+		} catch (SSLException e) {
+			Throwable cause = e.getCause();
+			if (cause != null && cause instanceof SocketException) {
+				// socket closed
+				return null;
+			}
+			LOGGER.error( 
+					LoggerHelper.objectMessage(
+							this, 
+							"Error in writing the method selection message to "
+							+ "the client"), 
+					e);
+			return null;
 		} catch (IOException e) {
 			LOGGER.error( 
 					LoggerHelper.objectMessage(
@@ -182,6 +232,17 @@ public final class Socks5Worker {
 					this.clientFacingInputStream);
 		} catch (SocketException e) {
 			// socket closed
+			return null;
+		} catch (SSLException e) {
+			Throwable cause = e.getCause();
+			if (cause != null && cause instanceof SocketException) {
+				// socket closed
+				return null;
+			}
+			LOGGER.error( 
+					LoggerHelper.objectMessage(
+							this, "Error in parsing the SOCKS5 request"), 
+					e);
 			return null;
 		} catch (IOException e) {
 			LOGGER.error( 

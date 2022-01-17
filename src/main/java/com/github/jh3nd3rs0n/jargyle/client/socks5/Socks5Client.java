@@ -2,11 +2,14 @@ package com.github.jh3nd3rs0n.jargyle.client.socks5;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InterruptedIOException;
 import java.io.OutputStream;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
+
+import javax.net.ssl.SSLException;
 
 import com.github.jh3nd3rs0n.jargyle.client.Properties;
 import com.github.jh3nd3rs0n.jargyle.client.Socks5PropertySpecConstants;
@@ -16,7 +19,6 @@ import com.github.jh3nd3rs0n.jargyle.common.net.ssl.DtlsDatagramSocketFactory;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.ClientMethodSelectionMessage;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.MethodEncapsulation;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.MethodSubnegotiationException;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Methods;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Reply;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.ServerMethodSelectionMessage;
@@ -50,14 +52,24 @@ public final class Socks5Client extends SocksClient {
 	
 	protected MethodEncapsulation doMethodSubnegotiation(
 			final Method method,
-			final Socket connectedInternalSocket) throws Socks5ClientException {
+			final Socket connectedInternalSocket) throws IOException {
 		MethodEncapsulation methodEncapsulation = null;
 		MethodSubnegotiator methodSubnegotiator = 
 				MethodSubnegotiator.valueOfMethod(method);
 		try {
 			methodEncapsulation = methodSubnegotiator.subnegotiate(
 					connectedInternalSocket, this);
-		} catch (MethodSubnegotiationException e) {
+		} catch (SocketException e) {
+			throw e;
+		} catch (InterruptedIOException e) {
+			throw e;
+		} catch (SSLException e) {
+			Throwable cause = e.getCause();
+			if (cause != null && cause instanceof SocketException) {
+				throw (SocketException) cause;
+			}
+			throw new Socks5ClientException(this, e);
+		} catch (IOException e) {
 			throw new Socks5ClientException(this, e);
 		}
 		return methodEncapsulation;
@@ -111,7 +123,7 @@ public final class Socks5Client extends SocksClient {
 	}
 	
 	protected Method negotiateMethod(
-			final Socket connectedInternalSocket) throws Socks5ClientException {
+			final Socket connectedInternalSocket) throws IOException {
 		Method method = null;
 		try {
 			InputStream inputStream = connectedInternalSocket.getInputStream();
@@ -125,6 +137,16 @@ public final class Socks5Client extends SocksClient {
 			ServerMethodSelectionMessage smsm =
 					ServerMethodSelectionMessage.newInstanceFrom(inputStream);
 			method = smsm.getMethod();
+		} catch (SocketException e) {
+			throw e;
+		} catch (InterruptedIOException e) {
+			throw e;
+		} catch (SSLException e) {
+			Throwable cause = e.getCause();
+			if (cause != null && cause instanceof SocketException) {
+				throw (SocketException) cause;
+			}
+			throw new Socks5ClientException(this, e);
 		} catch (IOException e) {
 			throw new Socks5ClientException(this, e);
 		}
@@ -154,11 +176,21 @@ public final class Socks5Client extends SocksClient {
 	}
 	
 	protected Socks5Reply receiveSocks5Reply(
-			final Socket connectedInternalSocket) throws Socks5ClientException {
+			final Socket connectedInternalSocket) throws IOException {
 		Socks5Reply socks5Rep = null;
 		try {
 			InputStream inputStream = connectedInternalSocket.getInputStream();
 			socks5Rep = Socks5Reply.newInstanceFrom(inputStream);
+		} catch (SocketException e) {
+			throw e;
+		} catch (InterruptedIOException e) {
+			throw e;
+		} catch (SSLException e) {
+			Throwable cause = e.getCause();
+			if (cause != null && cause instanceof SocketException) {
+				throw (SocketException) cause;
+			}
+			throw new Socks5ClientException(this, e);
 		} catch (IOException e) {
 			throw new Socks5ClientException(this, e);
 		}
@@ -176,11 +208,21 @@ public final class Socks5Client extends SocksClient {
 	
 	protected void sendSocks5Request(
 			final Socks5Request socks5Req, 
-			final Socket connectedInternalSocket) throws Socks5ClientException {
+			final Socket connectedInternalSocket) throws IOException {
 		try {
 			OutputStream outputStream = connectedInternalSocket.getOutputStream();
 			outputStream.write(socks5Req.toByteArray());
 			outputStream.flush();
+		} catch (SocketException e) {
+			throw e;
+		} catch (InterruptedIOException e) {
+			throw e;
+		} catch (SSLException e) {
+			Throwable cause = e.getCause();
+			if (cause != null && cause instanceof SocketException) {
+				throw (SocketException) cause;
+			}
+			throw new Socks5ClientException(this, e);			
 		} catch (IOException e) {
 			throw new Socks5ClientException(this, e);
 		}

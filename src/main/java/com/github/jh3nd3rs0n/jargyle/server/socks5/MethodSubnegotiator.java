@@ -2,11 +2,15 @@ package com.github.jh3nd3rs0n.jargyle.server.socks5;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InterruptedIOException;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+
+import javax.net.ssl.SSLException;
 
 import org.ietf.jgss.GSSContext;
 import org.ietf.jgss.GSSCredential;
@@ -168,8 +172,7 @@ enum MethodSubnegotiator {
 		@Override
 		public MethodSubnegotiationResults subnegotiate(
 				final Socket socket, 
-				final Configuration configuration) 
-				throws MethodSubnegotiationException {
+				final Configuration configuration) throws IOException {
 			GSSContext context = null;
 			ProtectionLevel protectionLevelChoice = null;
 			try {
@@ -179,6 +182,16 @@ enum MethodSubnegotiator {
 						socket, context, configuration);
 			} catch (MethodSubnegotiationException e) {
 				throw e;
+			} catch (SocketException e) {
+				throw e;
+			} catch (InterruptedIOException e) {
+				throw e;
+			} catch (SSLException e) {
+				Throwable cause = e.getCause();
+				if (cause != null && cause instanceof SocketException) {
+					throw (SocketException) cause;
+				}
+				throw new MethodSubnegotiationException(this.methodValue(), e);
 			} catch (IOException e) {
 				throw new MethodSubnegotiationException(this.methodValue(), e);
 			}
@@ -203,8 +216,7 @@ enum MethodSubnegotiator {
 		@Override
 		public MethodSubnegotiationResults subnegotiate(
 				final Socket socket, 
-				final Configuration configuration) 
-				throws MethodSubnegotiationException {
+				final Configuration configuration) throws IOException {
 			throw new MethodSubnegotiationException(
 					this.methodValue(), 
 					String.format("no acceptable methods from %s", socket));
@@ -218,8 +230,7 @@ enum MethodSubnegotiator {
 		@Override
 		public MethodSubnegotiationResults subnegotiate(
 				final Socket socket, 
-				final Configuration configuration) 
-				throws MethodSubnegotiationException {
+				final Configuration configuration) throws IOException {
 			MethodEncapsulation methodEncapsulation = 
 					new NullMethodEncapsulation(socket); 
 			return new MethodSubnegotiationResults(
@@ -233,8 +244,7 @@ enum MethodSubnegotiator {
 		@Override
 		public MethodSubnegotiationResults subnegotiate(
 				final Socket socket, 
-				final Configuration configuration) 
-				throws MethodSubnegotiationException {
+				final Configuration configuration) throws IOException {
 			String username = null;
 			char[] password = null;
 			try {
@@ -266,6 +276,16 @@ enum MethodSubnegotiator {
 						UsernamePasswordResponse.STATUS_SUCCESS);
 				outputStream.write(usernamePasswordResp.toByteArray());
 				outputStream.flush();
+			} catch (SocketException e) {
+				throw e;
+			} catch (InterruptedIOException e) {
+				throw e;
+			} catch (SSLException e) {
+				Throwable cause = e.getCause();
+				if (cause != null && cause instanceof SocketException) {
+					throw (SocketException) cause;
+				}
+				throw new MethodSubnegotiationException(this.methodValue(), e);
 			} catch (IOException e) {
 				throw new MethodSubnegotiationException(this.methodValue(), e);
 			} finally {
@@ -317,7 +337,6 @@ enum MethodSubnegotiator {
 	
 	public abstract MethodSubnegotiationResults subnegotiate(
 			final Socket socket,
-			final Configuration configuration) 
-			throws MethodSubnegotiationException;
+			final Configuration configuration) throws IOException;
 	
 }

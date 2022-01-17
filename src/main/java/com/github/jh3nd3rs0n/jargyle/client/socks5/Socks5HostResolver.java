@@ -3,6 +3,7 @@ package com.github.jh3nd3rs0n.jargyle.client.socks5;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.UnknownHostException;
 
 import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
 import com.github.jh3nd3rs0n.jargyle.client.Properties;
@@ -11,6 +12,7 @@ import com.github.jh3nd3rs0n.jargyle.transport.socks5.AddressType;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Command;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.MethodEncapsulation;
+import com.github.jh3nd3rs0n.jargyle.transport.socks5.Reply;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Reply;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Request;
 
@@ -43,14 +45,24 @@ public final class Socks5HostResolver extends HostResolver {
 				socket, true);
 		Method method = this.socks5Client.negotiateMethod(sock);
 		MethodEncapsulation methodEncapsulation = 
-				this.socks5Client.performMethodSubnegotiation(method, sock);
+				this.socks5Client.doMethodSubnegotiation(method, sock);
 		Socket sck = methodEncapsulation.getSocket();
 		Socks5Request socks5Req = Socks5Request.newInstance(
 				Command.RESOLVE, 
 				host, 
 				0);
 		this.socks5Client.sendSocks5Request(socks5Req, sck);
-		Socks5Reply socks5Rep = this.socks5Client.receiveSocks5Reply(sck);
+		Socks5Reply socks5Rep = null;
+		try {
+			socks5Rep = this.socks5Client.receiveSocks5Reply(sck);
+		} catch (FailureSocks5ReplyException e) {
+			Reply reply = e.getFailureSocks5Reply().getReply();
+			if (reply.equals(Reply.HOST_UNREACHABLE)) {
+				throw new UnknownHostException(host);
+			} else {
+				throw e;
+			}
+		}
 		InetAddress inetAddress = InetAddress.getByName(
 				socks5Rep.getServerBoundAddress());
 		return InetAddress.getByAddress(host, inetAddress.getAddress());

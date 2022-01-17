@@ -16,6 +16,7 @@ import com.github.jh3nd3rs0n.jargyle.common.net.ssl.DtlsDatagramSocketFactory;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.ClientMethodSelectionMessage;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.MethodEncapsulation;
+import com.github.jh3nd3rs0n.jargyle.transport.socks5.MethodSubnegotiationException;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Methods;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Reply;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.ServerMethodSelectionMessage;
@@ -47,6 +48,21 @@ public final class Socks5Client extends SocksClient {
 		super.configureInternalSocket(internalSocket);
 	}
 	
+	protected MethodEncapsulation doMethodSubnegotiation(
+			final Method method,
+			final Socket connectedInternalSocket) throws Socks5ClientException {
+		MethodEncapsulation methodEncapsulation = null;
+		MethodSubnegotiator methodSubnegotiator = 
+				MethodSubnegotiator.valueOfMethod(method);
+		try {
+			methodEncapsulation = methodSubnegotiator.subnegotiate(
+					connectedInternalSocket, this);
+		} catch (MethodSubnegotiationException e) {
+			throw new Socks5ClientException(this, e);
+		}
+		return methodEncapsulation;
+	}
+	
 	protected DatagramSocket getConnectedInternalDatagramSocket(
 			final DatagramSocket internalDatagramSocket,
 			final String udpRelayServerHost,
@@ -63,13 +79,13 @@ public final class Socks5Client extends SocksClient {
 				udpRelayServerHost,
 				udpRelayServerPort);
 	}
-	
+
 	@Override
 	protected Socket getConnectedInternalSocket(
 			final Socket internalSocket) throws IOException {
 		return super.getConnectedInternalSocket(internalSocket);
 	}
-
+	
 	@Override
 	protected Socket getConnectedInternalSocket(
 			final Socket internalSocket, 
@@ -135,21 +151,6 @@ public final class Socks5Client extends SocksClient {
 	@Override
 	public SocksNetObjectFactory newSocksNetObjectFactory() {
 		return new Socks5NetObjectFactory(this);
-	}
-	
-	protected MethodEncapsulation performMethodSubnegotiation(
-			final Method method,
-			final Socket connectedInternalSocket) throws Socks5ClientException {
-		MethodEncapsulation methodEncapsulation = null;
-		try {
-			MethodSubnegotiator methodSubnegotiator = 
-					MethodSubnegotiator.valueOfMethod(method);
-			methodEncapsulation = methodSubnegotiator.subnegotiate(
-					connectedInternalSocket, this);
-		} catch (IOException e) {
-			throw new Socks5ClientException(this, e);
-		}
-		return methodEncapsulation;
 	}
 	
 	protected Socks5Reply receiveSocks5Reply(

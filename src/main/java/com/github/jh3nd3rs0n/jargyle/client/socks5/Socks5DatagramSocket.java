@@ -193,8 +193,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 					this.socket, true);
 			Method method = this.socks5Client.negotiateMethod(sock);
 			MethodEncapsulation methodEncapsulation = 
-					this.socks5Client.performMethodSubnegotiation(
-							method, sock);
+					this.socks5Client.doMethodSubnegotiation(method, sock);
 			Socket sck = methodEncapsulation.getSocket();
 			if (!this.datagramSocket.equals(this.originalDatagramSocket)) {
 				this.datagramSocket = this.originalDatagramSocket;

@@ -375,8 +375,7 @@ public final class Socks5ServerSocket extends ServerSocket {
 					this.socket, true);
 			Method method = this.socks5Client.negotiateMethod(sock);
 			MethodEncapsulation methodEncapsulation = 
-					this.socks5Client.performMethodSubnegotiation(
-							method, sock);
+					this.socks5Client.doMethodSubnegotiation(method, sock);
 			Socket sck = methodEncapsulation.getSocket();
 			int prt = port;
 			if (prt == -1) {

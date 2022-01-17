@@ -89,7 +89,7 @@ public final class Socks5Socket extends Socket {
 				final int port) throws IOException {
 			Method method = this.socks5Client.negotiateMethod(connectedSocket); 
 			MethodEncapsulation methodEncapsulation = 
-					this.socks5Client.performMethodSubnegotiation(
+					this.socks5Client.doMethodSubnegotiation(
 							method, connectedSocket);
 			Socket connectedSock = methodEncapsulation.getSocket(); 
 			Socks5Request socks5Req = Socks5Request.newInstance(

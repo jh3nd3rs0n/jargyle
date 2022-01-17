@@ -83,6 +83,44 @@ public final class Socks5Worker {
 		return true;
 	}
 	
+	private MethodSubnegotiationResults doMethodSubnegotiation(
+			final Method method) {
+		MethodSubnegotiator methodSubnegotiator = 
+				MethodSubnegotiator.valueOfMethod(method);
+		MethodSubnegotiationResults methodSubnegotiationResults = null;
+		try {
+			methodSubnegotiationResults = methodSubnegotiator.subnegotiate(
+					this.clientFacingSocket, this.configuration);
+		} catch (MethodSubnegotiationException e) {
+			Throwable cause = e.getCause();
+			if (cause == null) {
+				LOGGER.debug( 
+						LoggerHelper.objectMessage(
+								this, 
+								String.format(
+										"Unable to sub-negotiate with the "
+										+ "client using method %s", 
+										method)), 
+						e);
+				return null;
+			}
+			if (cause instanceof SocketException) {
+				// socket closed
+				return null;
+			}
+			LOGGER.error( 
+					LoggerHelper.objectMessage(
+							this, 
+							String.format(
+									"Error in sub-negotiating with the client "
+									+ "using method %s", 
+									method)), 
+					e);
+			return null;				
+		}
+		return methodSubnegotiationResults;		
+	}
+	
 	private Method negotiateMethod() {
 		InputStream in = new SequenceInputStream(new ByteArrayInputStream(
 				new byte[] { Version.V5.byteValue() }),
@@ -158,58 +196,12 @@ public final class Socks5Worker {
 		return socks5Request;
 	}
 	
-	private MethodSubnegotiationResults performMethodSubnegotiation(
-			final Method method) {
-		MethodSubnegotiator methodSubnegotiator = 
-				MethodSubnegotiator.valueOfMethod(method);
-		MethodSubnegotiationResults methodSubnegotiationResults = null;
-		try {
-			methodSubnegotiationResults = methodSubnegotiator.subnegotiate(
-					this.clientFacingSocket, this.configuration);
-		} catch (MethodSubnegotiationException e) {
-			if (e.getCause() == null) {
-				LOGGER.debug( 
-						LoggerHelper.objectMessage(
-								this, 
-								String.format(
-										"Unable to sub-negotiate with the "
-										+ "client using method %s", 
-										method)), 
-						e);
-				return null;
-			}
-			LOGGER.error( 
-					LoggerHelper.objectMessage(
-							this, 
-							String.format(
-									"Error in sub-negotiating with the client "
-									+ "using method %s", 
-									method)), 
-					e);
-			return null;				
-		} catch (SocketException e) {
-			// socket closed
-			return null;
-		} catch (IOException e) {
-			LOGGER.error( 
-					LoggerHelper.objectMessage(
-							this, 
-							String.format(
-									"Error in sub-negotiating with the client "
-									+ "using method %s", 
-									method)), 
-					e);
-			return null;
-		}
-		return methodSubnegotiationResults;		
-	}
-	
 	public void run() throws IOException {
 		this.clientFacingInputStream = this.clientFacingSocket.getInputStream();
 		Method method = this.negotiateMethod();
 		if (method == null) { return; } 
 		MethodSubnegotiationResults methodSubnegotiationResults = 
-				this.performMethodSubnegotiation(method);
+				this.doMethodSubnegotiation(method);
 		if (methodSubnegotiationResults == null) { return; }
 		Socket socket = methodSubnegotiationResults.getSocket();
 		this.clientFacingInputStream = socket.getInputStream();

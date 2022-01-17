@@ -168,12 +168,20 @@ enum MethodSubnegotiator {
 		@Override
 		public MethodSubnegotiationResults subnegotiate(
 				final Socket socket, 
-				final Configuration configuration) throws IOException {
-			GSSContext context = this.newContext();
-			this.establishContext(socket, context, configuration);
-			ProtectionLevel protectionLevelChoice =
-					this.negotiateProtectionLevel(
-							socket, context, configuration);
+				final Configuration configuration) 
+				throws MethodSubnegotiationException {
+			GSSContext context = null;
+			ProtectionLevel protectionLevelChoice = null;
+			try {
+				context = this.newContext();
+				this.establishContext(socket, context, configuration);
+				protectionLevelChoice =	this.negotiateProtectionLevel(
+						socket, context, configuration);
+			} catch (MethodSubnegotiationException e) {
+				throw e;
+			} catch (IOException e) {
+				throw new MethodSubnegotiationException(this.methodValue(), e);
+			}
 			MessageProp msgProp = protectionLevelChoice.getMessageProp();
 			GssSocket gssSocket = new GssSocket(socket, context, msgProp);
 			MethodEncapsulation methodEncapsulation = 
@@ -195,7 +203,8 @@ enum MethodSubnegotiator {
 		@Override
 		public MethodSubnegotiationResults subnegotiate(
 				final Socket socket, 
-				final Configuration configuration) throws IOException {
+				final Configuration configuration) 
+				throws MethodSubnegotiationException {
 			throw new MethodSubnegotiationException(
 					this.methodValue(), 
 					String.format("no acceptable methods from %s", socket));
@@ -209,7 +218,8 @@ enum MethodSubnegotiator {
 		@Override
 		public MethodSubnegotiationResults subnegotiate(
 				final Socket socket, 
-				final Configuration configuration) throws IOException {
+				final Configuration configuration) 
+				throws MethodSubnegotiationException {
 			MethodEncapsulation methodEncapsulation = 
 					new NullMethodEncapsulation(socket); 
 			return new MethodSubnegotiationResults(
@@ -223,37 +233,44 @@ enum MethodSubnegotiator {
 		@Override
 		public MethodSubnegotiationResults subnegotiate(
 				final Socket socket, 
-				final Configuration configuration) throws IOException {
-			InputStream inputStream = socket.getInputStream();
-			OutputStream outputStream = socket.getOutputStream();
-			UsernamePasswordRequest usernamePasswordReq = 
-					UsernamePasswordRequest.newInstanceFrom(inputStream);
-			UsernamePasswordResponse usernamePasswordResp = null;
-			String username = usernamePasswordReq.getUsername();
-			char[] password = usernamePasswordReq.getPassword();
-			UsernamePasswordAuthenticator authenticator = 
-					configuration.getSettings().getLastValue(
-							Socks5SettingSpecConstants.SOCKS5_USERPASSAUTH_USERNAME_PASSWORD_AUTHENTICATOR);
-			if (authenticator == null) { 
-				authenticator = UsernamePasswordAuthenticator.newInstance(); 
-			}
-			boolean valid = authenticator.authenticate(username, password);
-			Arrays.fill(password, '\0');
-			if (!valid) {
+				final Configuration configuration) 
+				throws MethodSubnegotiationException {
+			String username = null;
+			char[] password = null;
+			try {
+				InputStream inputStream = socket.getInputStream();
+				OutputStream outputStream = socket.getOutputStream();
+				UsernamePasswordRequest usernamePasswordReq = 
+						UsernamePasswordRequest.newInstanceFrom(inputStream);
+				UsernamePasswordResponse usernamePasswordResp = null;
+				username = usernamePasswordReq.getUsername();
+				password = usernamePasswordReq.getPassword();
+				UsernamePasswordAuthenticator authenticator = 
+						configuration.getSettings().getLastValue(
+								Socks5SettingSpecConstants.SOCKS5_USERPASSAUTH_USERNAME_PASSWORD_AUTHENTICATOR);
+				if (authenticator == null) { 
+					authenticator = UsernamePasswordAuthenticator.newInstance(); 
+				}
+				if (!authenticator.authenticate(username, password)) {
+					usernamePasswordResp = UsernamePasswordResponse.newInstance(
+							(byte) 0x01);
+					outputStream.write(usernamePasswordResp.toByteArray());
+					outputStream.flush();
+					throw new MethodSubnegotiationException(
+							this.methodValue(), 
+							String.format(
+									"invalid username password from %s",
+									socket));
+				}
 				usernamePasswordResp = UsernamePasswordResponse.newInstance(
-						(byte) 0x01);
+						UsernamePasswordResponse.STATUS_SUCCESS);
 				outputStream.write(usernamePasswordResp.toByteArray());
 				outputStream.flush();
-				throw new MethodSubnegotiationException(
-						this.methodValue(), 
-						String.format(
-								"invalid username password from %s",
-								socket));
+			} catch (IOException e) {
+				throw new MethodSubnegotiationException(this.methodValue(), e);
+			} finally {
+				if (password != null) { Arrays.fill(password, '\0'); } 
 			}
-			usernamePasswordResp = UsernamePasswordResponse.newInstance(
-					UsernamePasswordResponse.STATUS_SUCCESS);
-			outputStream.write(usernamePasswordResp.toByteArray());
-			outputStream.flush();
 			MethodEncapsulation methodEncapsulation = 
 					new NullMethodEncapsulation(socket);
 			return new MethodSubnegotiationResults(
@@ -300,6 +317,7 @@ enum MethodSubnegotiator {
 	
 	public abstract MethodSubnegotiationResults subnegotiate(
 			final Socket socket,
-			final Configuration configuration) throws IOException;
+			final Configuration configuration) 
+			throws MethodSubnegotiationException;
 	
 }

@@ -87,49 +87,27 @@ public final class Socks5Socket extends Socket {
 				final Socket connectedSocket,
 				final String address,
 				final int port) throws IOException {
-			Method method = null; 
-			try { 
-				method = this.socks5Client.negotiateMethod(connectedSocket);
-			} catch (IOException e) {
-				throw new Socks5NetObjectException(String.format(
-						"from %s: %s", 
-						this.socks5Client,
-						e));
-			}
-			MethodEncapsulation methodEncapsulation = null;
-			try {
-				methodEncapsulation = 
-						this.socks5Client.performMethodSubnegotiation(
-								method, connectedSocket);
-			} catch (IOException e) {
-				throw new Socks5NetObjectException(String.format(
-						"from %s: method %s: %s", 
-						this.socks5Client,
-						method,
-						e));				
-			}
+			Method method = this.socks5Client.negotiateMethod(connectedSocket); 
+			MethodEncapsulation methodEncapsulation = 
+					this.socks5Client.performMethodSubnegotiation(
+							method, connectedSocket);
 			Socket connectedSock = methodEncapsulation.getSocket(); 
 			Socks5Request socks5Req = Socks5Request.newInstance(
 					Command.CONNECT, 
 					address, 
 					port);
+			this.socks5Client.sendSocks5Request(socks5Req, connectedSock);
 			Socks5Reply socks5Rep = null;
 			try {
-				socks5Rep = this.socks5Client.sendSocks5Request(
-						socks5Req, connectedSock);
-			} catch (IOException e) {
-				throw new Socks5NetObjectException(String.format(
-						"from %s: %s", 
-						this.socks5Client,
-						e));				
+				socks5Rep = this.socks5Client.receiveSocks5Reply(connectedSock);
+			} catch (FailureSocks5ReplyException e) {
+				Reply reply = e.getFailureSocks5Reply().getReply();
+				if (reply.equals(Reply.HOST_UNREACHABLE)) {
+					throw new UnknownHostException(address);
+				} else {
+					throw e;
+				}
 			}
-			Reply reply = socks5Rep.getReply();
-			if (!reply.equals(Reply.SUCCEEDED)) {
-				throw new Socks5NetObjectException(String.format(
-						"received failure reply %s from %s", 
-						reply, 
-						this.socks5Client));
-			}			
 			this.connected = true;
 			this.remoteInetAddress = 
 					InetAddress.getByName(socks5Rep.getServerBoundAddress());

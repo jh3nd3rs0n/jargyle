@@ -47,7 +47,8 @@ enum MethodSubnegotiator {
 				try {
 					token = context.initSecContext(token, 0, token.length);
 				} catch (GSSException e) {
-					throw new MethodSubnegotiationException(e);
+					throw new MethodSubnegotiationException(
+							this.methodValue(), e);
 				}
 				if (token != null) {
 					outStream.write(Message.newInstance(
@@ -59,7 +60,9 @@ enum MethodSubnegotiator {
 					Message message = Message.newInstanceFrom(inStream);
 					if (message.getMessageType().equals(MessageType.ABORT)) {
 						throw new MethodSubnegotiationException(
-								"server aborted process of context establishment");
+								this.methodValue(), 
+								"server aborted process of context "
+								+ "establishment");
 					}
 					token = message.getToken();
 				}
@@ -92,7 +95,8 @@ enum MethodSubnegotiator {
 							MessageType.ABORT, 
 							null).toByteArray());
 					outStream.flush();
-					throw new MethodSubnegotiationException(e);
+					throw new MethodSubnegotiationException(
+							this.methodValue(), e);
 				}
 			}
 			outStream.write(Message.newInstance(
@@ -102,6 +106,7 @@ enum MethodSubnegotiator {
 			Message message = Message.newInstanceFrom(inStream);
 			if (message.getMessageType().equals(MessageType.ABORT)) {
 				throw new MethodSubnegotiationException(
+						this.methodValue(), 
 						"server aborted protection level negotiation");
 			}
 			token = message.getToken();
@@ -115,7 +120,8 @@ enum MethodSubnegotiator {
 							MessageType.ABORT, 
 							null).toByteArray());
 					outStream.flush();
-					throw new MethodSubnegotiationException(e);
+					throw new MethodSubnegotiationException(
+							this.methodValue(), e);
 				}
 			}
 			ProtectionLevel protectionLevelSelection = null;
@@ -123,12 +129,15 @@ enum MethodSubnegotiator {
 				protectionLevelSelection = ProtectionLevel.valueOfByte(
 						token[0]);
 			} catch (IllegalArgumentException e) {
-				throw new MethodSubnegotiationException(e);
+				throw new MethodSubnegotiationException(this.methodValue(), e);
 			}
 			if (!protectionLevelList.contains(protectionLevelSelection)) {
-				throw new MethodSubnegotiationException(String.format(
-						"server selected %s which is not acceptable by this socket", 
-						protectionLevelSelection));
+				throw new MethodSubnegotiationException(
+						this.methodValue(), 
+						String.format(
+								"server selected %s which is not acceptable "
+								+ "by this socket",
+								protectionLevelSelection));
 			}
 			return protectionLevelSelection;
 		}
@@ -142,7 +151,7 @@ enum MethodSubnegotiator {
 			try {
 				serverName = manager.createName(server, null);
 			} catch (GSSException e) {
-				throw new MethodSubnegotiationException(e);
+				throw new MethodSubnegotiationException(this.methodValue(), e);
 			}
 			Oid mechanismOid = socks5Client.getProperties().getValue(
 					Socks5PropertySpecConstants.SOCKS5_GSSAPIAUTH_MECHANISM_OID);
@@ -154,22 +163,22 @@ enum MethodSubnegotiator {
 				        null,
 				        GSSContext.DEFAULT_LIFETIME);
 			} catch (GSSException e) {
-				throw new MethodSubnegotiationException(e);
+				throw new MethodSubnegotiationException(this.methodValue(), e);
 			}
 			try {
 				context.requestMutualAuth(true);
 			} catch (GSSException e) {
-				throw new MethodSubnegotiationException(e);
+				throw new MethodSubnegotiationException(this.methodValue(), e);
 			}
 			try {
 				context.requestConf(true);
 			} catch (GSSException e) {
-				throw new MethodSubnegotiationException(e);
+				throw new MethodSubnegotiationException(this.methodValue(), e);
 			}
 			try {
 				context.requestInteg(true);
 			} catch (GSSException e) {
-				throw new MethodSubnegotiationException(e);
+				throw new MethodSubnegotiationException(this.methodValue(), e);
 			}
 			return context;
 		}
@@ -196,7 +205,8 @@ enum MethodSubnegotiator {
 		public MethodEncapsulation subnegotiate(
 				final Socket Socket, 
 				final Socks5Client socks5Client) throws IOException {
-			throw new MethodSubnegotiationException("no acceptable methods");
+			throw new MethodSubnegotiationException(
+					this.methodValue(), "no acceptable methods");
 		}
 		
 	},
@@ -235,7 +245,7 @@ enum MethodSubnegotiator {
 			if (usernamePasswordResp.getStatus() != 
 					UsernamePasswordResponse.STATUS_SUCCESS) {
 				throw new MethodSubnegotiationException(
-						"invalid username password");
+						this.methodValue(), "invalid username password");
 			}
 			return new NullMethodEncapsulation(socket);
 		}

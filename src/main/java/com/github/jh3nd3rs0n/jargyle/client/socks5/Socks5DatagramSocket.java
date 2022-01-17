@@ -19,7 +19,6 @@ import com.github.jh3nd3rs0n.jargyle.internal.net.AllZerosInetAddressHelper;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Command;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.MethodEncapsulation;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.Reply;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Exception;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Reply;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Request;
@@ -192,27 +191,10 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			}
 			Socket sock = this.socks5Client.getConnectedInternalSocket(
 					this.socket, true);
-			Method method = null;
-			try {
-				method = this.socks5Client.negotiateMethod(sock);
-			} catch (IOException e) {
-				throw new Socks5NetObjectException(String.format(
-						"from %s: %s", 
-						this.socks5Client,
-						e));				
-			}
-			MethodEncapsulation methodEncapsulation = null;
-			try {
-				methodEncapsulation = 
-						this.socks5Client.performMethodSubnegotiation(
-								method, sock);
-			} catch (IOException e) {
-				throw new Socks5NetObjectException(String.format(
-						"from %s: method %s: %s", 
-						this.socks5Client,
-						method,
-						e));				
-			}
+			Method method = this.socks5Client.negotiateMethod(sock);
+			MethodEncapsulation methodEncapsulation = 
+					this.socks5Client.performMethodSubnegotiation(
+							method, sock);
 			Socket sck = methodEncapsulation.getSocket();
 			if (!this.datagramSocket.equals(this.originalDatagramSocket)) {
 				this.datagramSocket = this.originalDatagramSocket;
@@ -225,22 +207,8 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 					Command.UDP_ASSOCIATE, 
 					address, 
 					prt);
-			Socks5Reply socks5Rep = null; 
-			try {
-				socks5Rep = this.socks5Client.sendSocks5Request(socks5Req, sck);
-			} catch (IOException e) {
-				throw new Socks5NetObjectException(String.format(
-						"from %s: %s", 
-						this.socks5Client,
-						e));
-			}
-			Reply reply = socks5Rep.getReply();
-			if (!reply.equals(Reply.SUCCEEDED)) {
-				throw new Socks5NetObjectException(String.format(
-						"received failure reply %s from %s", 
-						reply, 
-						this.socks5Client));
-			}			
+			this.socks5Client.sendSocks5Request(socks5Req, sck);
+			Socks5Reply socks5Rep = this.socks5Client.receiveSocks5Reply(sck); 
 			datagramSock = this.socks5Client.getConnectedInternalDatagramSocket(
 					datagramSock,
 					this.socks5Client.getSocksServerUri().getHost(),

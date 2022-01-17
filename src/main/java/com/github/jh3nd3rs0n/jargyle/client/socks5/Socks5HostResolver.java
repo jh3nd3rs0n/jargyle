@@ -11,7 +11,6 @@ import com.github.jh3nd3rs0n.jargyle.transport.socks5.AddressType;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Command;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.MethodEncapsulation;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.Reply;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Reply;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Request;
 
@@ -21,6 +20,10 @@ public final class Socks5HostResolver extends HostResolver {
 	
 	Socks5HostResolver(final Socks5Client client) {
 		this.socks5Client = client;
+	}
+	
+	public Socks5Client getSocks5Client() {
+		return this.socks5Client;
 	}
 	
 	@Override
@@ -38,47 +41,16 @@ public final class Socks5HostResolver extends HostResolver {
 		this.socks5Client.configureInternalSocket(socket);
 		Socket sock = this.socks5Client.getConnectedInternalSocket(
 				socket, true);
-		Method method = null;
-		try {
-			method = this.socks5Client.negotiateMethod(sock);
-		} catch (IOException e) {
-			throw new Socks5NetObjectException(String.format(
-					"from %s: %s", 
-					this.socks5Client,
-					e));			
-		}
-		MethodEncapsulation methodEncapsulation = null;
-		try {
-			methodEncapsulation = 
-					this.socks5Client.performMethodSubnegotiation(method, sock);
-		} catch (IOException e) {
-			throw new Socks5NetObjectException(String.format(
-					"from %s: method %s: %s", 
-					this.socks5Client,
-					method,
-					e));			
-		}
+		Method method = this.socks5Client.negotiateMethod(sock);
+		MethodEncapsulation methodEncapsulation = 
+				this.socks5Client.performMethodSubnegotiation(method, sock);
 		Socket sck = methodEncapsulation.getSocket();
 		Socks5Request socks5Req = Socks5Request.newInstance(
 				Command.RESOLVE, 
 				host, 
 				0);
-		Socks5Reply socks5Rep = null;
-		try {
-			socks5Rep = this.socks5Client.sendSocks5Request(socks5Req, sck);
-		} catch (IOException e) {
-			throw new Socks5NetObjectException(String.format(
-					"from %s: %s", 
-					this.socks5Client,
-					e));			
-		}
-		Reply reply = socks5Rep.getReply();
-		if (!reply.equals(Reply.SUCCEEDED)) {
-			throw new Socks5NetObjectException(String.format(
-					"received failure reply %s from %s", 
-					reply, 
-					this.socks5Client));
-		}		
+		this.socks5Client.sendSocks5Request(socks5Req, sck);
+		Socks5Reply socks5Rep = this.socks5Client.receiveSocks5Reply(sck);
 		InetAddress inetAddress = InetAddress.getByName(
 				socks5Rep.getServerBoundAddress());
 		return InetAddress.getByAddress(host, inetAddress.getAddress());

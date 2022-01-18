@@ -14,7 +14,7 @@ import org.ietf.jgss.GSSException;
 import org.ietf.jgss.GSSManager;
 import org.ietf.jgss.MessageProp;
 
-import com.github.jh3nd3rs0n.jargyle.internal.net.IOExceptionHelper;
+import com.github.jh3nd3rs0n.jargyle.internal.net.IOExceptionHandler;
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.UsernamePasswordAuthenticator;
@@ -178,7 +178,7 @@ enum MethodSubnegotiator {
 				protectionLevelChoice =	this.negotiateProtectionLevel(
 						socket, context, configuration);
 			} catch (IOException e) {
-				IOExceptionHelper.handle(
+				IOExceptionHandler.INSTANCE.handle(
 						e, 
 						new MethodSubnegotiationException(
 								this.methodValue(), e));
@@ -265,7 +265,7 @@ enum MethodSubnegotiator {
 				outputStream.write(usernamePasswordResp.toByteArray());
 				outputStream.flush();
 			} catch (IOException e) {
-				IOExceptionHelper.handle(
+				IOExceptionHandler.INSTANCE.handle(
 						e, 
 						new MethodSubnegotiationException(
 								this.methodValue(), e));

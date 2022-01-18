@@ -10,7 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.jh3nd3rs0n.jargyle.internal.logging.LoggerHelper;
-import com.github.jh3nd3rs0n.jargyle.internal.net.IOExceptionHelper;
+import com.github.jh3nd3rs0n.jargyle.internal.net.IOExceptionHandler;
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.FirewallRuleActionDenyException;
 import com.github.jh3nd3rs0n.jargyle.server.FirewallRuleNotFoundException;
@@ -113,7 +113,7 @@ public final class Socks5Worker {
 					e);
 			return null;				
 		} catch (IOException e) {
-			IOExceptionHelper.handle(
+			IOExceptionHandler.INSTANCE.handle(
 					e,
 					LOGGER,
 					LoggerHelper.objectMessage(
@@ -135,7 +135,7 @@ public final class Socks5Worker {
 		try {
 			cmsm = ClientMethodSelectionMessage.newInstanceFrom(in);
 		} catch (IOException e) {
-			IOExceptionHelper.handle(
+			IOExceptionHandler.INSTANCE.handle(
 					e,
 					LOGGER,
 					LoggerHelper.objectMessage(
@@ -167,7 +167,7 @@ public final class Socks5Worker {
 		try {
 			this.socks5WorkerContext.writeThenFlush(smsm.toByteArray());
 		} catch (IOException e) {
-			IOExceptionHelper.handle(
+			IOExceptionHandler.INSTANCE.handle(
 					e,
 					LOGGER,
 					LoggerHelper.objectMessage(
@@ -185,7 +185,7 @@ public final class Socks5Worker {
 			socks5Request = Socks5Request.newInstanceFrom(
 					this.clientFacingInputStream);
 		} catch (IOException e) {
-			IOExceptionHelper.handle(
+			IOExceptionHandler.INSTANCE.handle(
 					e, 
 					LOGGER,
 					LoggerHelper.objectMessage(

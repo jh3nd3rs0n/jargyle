@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.github.jh3nd3rs0n.jargyle.common.number.impl.UnsignedByte;
+import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Exception;
 
 public enum Version {
 
@@ -46,7 +47,7 @@ public enum Version {
 		try {
 			version = valueOfByte(b.byteValue());
 		} catch (IllegalArgumentException e) {
-			throw new IOException(e);
+			throw new Socks5Exception(e);
 		}
 		return version;
 	}

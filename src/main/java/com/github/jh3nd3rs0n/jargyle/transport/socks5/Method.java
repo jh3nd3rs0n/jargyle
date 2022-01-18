@@ -56,7 +56,7 @@ public enum Method {
 		try {
 			method = valueOfByte(b.byteValue());
 		} catch (IllegalArgumentException e) {
-			throw new IOException(e);
+			throw new Socks5Exception(e);
 		}
 		return method;
 	}

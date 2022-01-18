@@ -7,7 +7,7 @@ import java.io.InputStream;
 import java.util.Arrays;
 
 import com.github.jh3nd3rs0n.jargyle.common.number.impl.UnsignedByte;
-import com.github.jh3nd3rs0n.jargyle.internal.net.IOExceptionHelper;
+import com.github.jh3nd3rs0n.jargyle.internal.net.IOExceptionHandler;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Exception;
 
 public final class UsernamePasswordResponse {
@@ -51,7 +51,7 @@ public final class UsernamePasswordResponse {
 		try {
 			ver = Version.valueOfByteFrom(in);
 		} catch (IOException e) {
-			IOExceptionHelper.handle(
+			IOExceptionHandler.INSTANCE.handle(
 					e, new Socks5Exception("expected version", e));			
 		}
 		out.write(UnsignedByte.newInstance(ver.byteValue()).intValue());
@@ -59,7 +59,7 @@ public final class UsernamePasswordResponse {
 		try {
 			status = UnsignedByte.newInstanceFrom(in);
 		} catch (IOException e) {
-			IOExceptionHelper.handle(
+			IOExceptionHandler.INSTANCE.handle(
 					e, new Socks5Exception("expected status", e));			
 		}
 		out.write(status.intValue());

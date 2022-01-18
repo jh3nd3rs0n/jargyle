@@ -46,7 +46,7 @@ public enum Version {
 		try {
 			version = valueOfByte(b.byteValue());
 		} catch (IllegalArgumentException e) {
-			throw new IOException(e);
+			throw new Socks5Exception(e);
 		}
 		return version;
 	}

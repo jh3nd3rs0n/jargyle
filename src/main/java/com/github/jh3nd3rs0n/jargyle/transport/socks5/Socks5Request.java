@@ -7,7 +7,7 @@ import java.io.InputStream;
 import java.util.Arrays;
 
 import com.github.jh3nd3rs0n.jargyle.common.number.impl.UnsignedByte;
-import com.github.jh3nd3rs0n.jargyle.internal.net.IOExceptionHelper;
+import com.github.jh3nd3rs0n.jargyle.internal.net.IOExceptionHandler;
 import com.github.jh3nd3rs0n.jargyle.internal.number.impl.UnsignedShort;
 
 public final class Socks5Request {
@@ -94,7 +94,7 @@ public final class Socks5Request {
 		try {
 			ver = Version.valueOfByteFrom(in);
 		} catch (IOException e) {
-			IOExceptionHelper.handle(
+			IOExceptionHandler.INSTANCE.handle(
 					e, new Socks5Exception("expected version", e));
 		}
 		out.write(UnsignedByte.newInstance(ver.byteValue()).intValue());
@@ -102,7 +102,7 @@ public final class Socks5Request {
 		try {
 			cmd = Command.valueOfByteFrom(in);
 		} catch (IOException e) {
-			IOExceptionHelper.handle(
+			IOExceptionHandler.INSTANCE.handle(
 					e, new Socks5Exception("expected command", e));
 		}
 		out.write(UnsignedByte.newInstance(cmd.byteValue()).intValue());
@@ -110,7 +110,8 @@ public final class Socks5Request {
 		try {
 			rsv = UnsignedByte.newInstanceFrom(in);
 		} catch (IOException e) {
-			IOExceptionHelper.handle(e, new Socks5Exception("expected RSV", e));
+			IOExceptionHandler.INSTANCE.handle(
+					e, new Socks5Exception("expected RSV", e));
 		}
 		if (rsv.intValue() != RSV) {
 			throw new Socks5Exception(String.format(
@@ -122,7 +123,7 @@ public final class Socks5Request {
 		try {
 			addr = Address.newInstanceFrom(in);
 		} catch (IOException e) {
-			IOExceptionHelper.handle(
+			IOExceptionHandler.INSTANCE.handle(
 					e, 
 					new Socks5Exception(
 							"expected desired destination address type and "
@@ -137,7 +138,7 @@ public final class Socks5Request {
 		try {
 			dstPort = UnsignedShort.newInstanceFrom(in);
 		} catch (IOException e) {
-			IOExceptionHelper.handle(
+			IOExceptionHandler.INSTANCE.handle(
 					e, 
 					new Socks5Exception("expected desired destination port", e));
 		}

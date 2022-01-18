@@ -61,7 +61,7 @@ public enum Reply {
 		try {
 			reply = valueOfByte(b.byteValue());
 		} catch (IllegalArgumentException e) {
-			throw new IOException(e);
+			throw new Socks5Exception(e);
 		}
 		return reply;
 	}

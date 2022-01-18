@@ -8,9 +8,11 @@ import javax.net.ssl.SSLException;
 
 import org.slf4j.Logger;
 
-public final class IOExceptionHelper {
+public enum IOExceptionHandler {
 
-	public static void handle(
+	INSTANCE;
+	
+	public void handle(
 			final IOException e, 
 			final IOException defaultException) throws IOException {
 		if (e instanceof SocketException) {
@@ -22,7 +24,7 @@ public final class IOExceptionHelper {
 		if (e instanceof SSLException) {
 			Throwable cause = e.getCause();
 			if (cause == null) {
-				throw defaultException;
+				throw e;
 			}
 			if (cause instanceof SocketException) {
 				throw (SocketException) cause;
@@ -34,7 +36,7 @@ public final class IOExceptionHelper {
 		throw defaultException;		
 	}
 
-	public static void handle(
+	public void handle(
 			final IOException e, 
 			final Logger logger, 
 			final String logMessage) {
@@ -43,7 +45,7 @@ public final class IOExceptionHelper {
 			return;
 		}
 		if (e instanceof SocketTimeoutException) {
-			logger.debug(logMessage, e);
+			logger.error(logMessage, e);
 			return;
 		}
 		if (e instanceof SSLException) {
@@ -57,13 +59,11 @@ public final class IOExceptionHelper {
 				return;
 			}
 			if (cause instanceof SocketTimeoutException) {
-				logger.debug(logMessage, e);
+				logger.error(logMessage, e);
 				return;
 			}
 		}
 		logger.error(logMessage, e);		
 	}
-	
-	private IOExceptionHelper() { }
 
 }

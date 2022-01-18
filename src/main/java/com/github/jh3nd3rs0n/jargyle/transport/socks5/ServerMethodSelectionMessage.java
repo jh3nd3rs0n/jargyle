@@ -7,7 +7,7 @@ import java.io.InputStream;
 import java.util.Arrays;
 
 import com.github.jh3nd3rs0n.jargyle.common.number.impl.UnsignedByte;
-import com.github.jh3nd3rs0n.jargyle.internal.net.IOExceptionHelper;
+import com.github.jh3nd3rs0n.jargyle.internal.net.IOExceptionHandler;
 
 public final class ServerMethodSelectionMessage {
 
@@ -44,7 +44,7 @@ public final class ServerMethodSelectionMessage {
 		try {
 			ver = Version.valueOfByteFrom(in);
 		} catch (IOException e) {
-			IOExceptionHelper.handle(
+			IOExceptionHandler.INSTANCE.handle(
 					e, new Socks5Exception("expected version", e));
 		}
 		out.write(UnsignedByte.newInstance(ver.byteValue()).intValue());
@@ -52,7 +52,7 @@ public final class ServerMethodSelectionMessage {
 		try {
 			meth = Method.valueOfByteFrom(in);
 		} catch (IOException e) {
-			IOExceptionHelper.handle(
+			IOExceptionHandler.INSTANCE.handle(
 					e, new Socks5Exception("expected method", e));
 		}
 		out.write(UnsignedByte.newInstance(meth.byteValue()).intValue());

@@ -13,7 +13,7 @@ import com.github.jh3nd3rs0n.jargyle.client.Socks5PropertySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
 import com.github.jh3nd3rs0n.jargyle.client.SocksNetObjectFactory;
 import com.github.jh3nd3rs0n.jargyle.common.net.ssl.DtlsDatagramSocketFactory;
-import com.github.jh3nd3rs0n.jargyle.internal.net.IOExceptionHelper;
+import com.github.jh3nd3rs0n.jargyle.internal.net.IOExceptionHandler;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.ClientMethodSelectionMessage;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.MethodEncapsulation;
@@ -58,7 +58,8 @@ public final class Socks5Client extends SocksClient {
 			methodEncapsulation = methodSubnegotiator.subnegotiate(
 					connectedInternalSocket, this);
 		} catch (IOException e) {
-			IOExceptionHelper.handle(e, new Socks5ClientException(this, e));
+			IOExceptionHandler.INSTANCE.handle(
+					e, new Socks5ClientException(this, e));
 		}
 		return methodEncapsulation;
 	}
@@ -126,7 +127,8 @@ public final class Socks5Client extends SocksClient {
 					ServerMethodSelectionMessage.newInstanceFrom(inputStream);
 			method = smsm.getMethod();
 		} catch (IOException e) {
-			IOExceptionHelper.handle(e, new Socks5ClientException(this, e));
+			IOExceptionHandler.INSTANCE.handle(
+					e, new Socks5ClientException(this, e));
 		}
 		return method;		
 	}
@@ -160,7 +162,8 @@ public final class Socks5Client extends SocksClient {
 			InputStream inputStream = connectedInternalSocket.getInputStream();
 			socks5Rep = Socks5Reply.newInstanceFrom(inputStream);
 		} catch (IOException e) {
-			IOExceptionHelper.handle(e, new Socks5ClientException(this, e));
+			IOExceptionHandler.INSTANCE.handle(
+					e, new Socks5ClientException(this, e));
 		}
 		Reply reply = socks5Rep.getReply();
 		if (!reply.equals(Reply.SUCCEEDED)) {
@@ -182,7 +185,8 @@ public final class Socks5Client extends SocksClient {
 			outputStream.write(socks5Req.toByteArray());
 			outputStream.flush();
 		} catch (IOException e) {
-			IOExceptionHelper.handle(e, new Socks5ClientException(this, e));
+			IOExceptionHandler.INSTANCE.handle(
+					e, new Socks5ClientException(this, e));
 		}
 	}
 	

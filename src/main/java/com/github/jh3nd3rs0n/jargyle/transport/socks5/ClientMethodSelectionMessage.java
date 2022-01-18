@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.github.jh3nd3rs0n.jargyle.common.number.impl.UnsignedByte;
-import com.github.jh3nd3rs0n.jargyle.internal.net.IOExceptionHelper;
+import com.github.jh3nd3rs0n.jargyle.internal.net.IOExceptionHandler;
 
 public final class ClientMethodSelectionMessage {
 	
@@ -58,7 +58,7 @@ public final class ClientMethodSelectionMessage {
 		try {
 			ver = Version.valueOfByteFrom(in);
 		} catch (IOException e) {
-			IOExceptionHelper.handle(
+			IOExceptionHandler.INSTANCE.handle(
 					e, new Socks5Exception("expected version", e));
 		}
 		out.write(UnsignedByte.newInstance(ver.byteValue()).intValue());
@@ -66,7 +66,7 @@ public final class ClientMethodSelectionMessage {
 		try {
 			methodCount = UnsignedByte.newInstanceFrom(in);
 		} catch (IOException e) {
-			IOExceptionHelper.handle(
+			IOExceptionHandler.INSTANCE.handle(
 					e, new Socks5Exception("expected number of methods", e));
 		}
 		out.write(methodCount.intValue());

@@ -11,7 +11,7 @@ import java.io.Writer;
 import java.util.Arrays;
 
 import com.github.jh3nd3rs0n.jargyle.common.number.impl.UnsignedByte;
-import com.github.jh3nd3rs0n.jargyle.internal.net.IOExceptionHelper;
+import com.github.jh3nd3rs0n.jargyle.internal.net.IOExceptionHandler;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Exception;
 
 public final class UsernamePasswordRequest {
@@ -107,7 +107,7 @@ public final class UsernamePasswordRequest {
 		try {
 			ver = Version.valueOfByteFrom(in);
 		} catch (IOException e) {
-			IOExceptionHelper.handle(
+			IOExceptionHandler.INSTANCE.handle(
 					e, new Socks5Exception("expected version", e));
 		}
 		out.write(UnsignedByte.newInstance(ver.byteValue()).intValue());
@@ -115,7 +115,7 @@ public final class UsernamePasswordRequest {
 		try {
 			ulen = UnsignedByte.newInstanceFrom(in);
 		} catch (IOException e) {
-			IOExceptionHelper.handle(
+			IOExceptionHandler.INSTANCE.handle(
 					e, new Socks5Exception("expected username length", e));			
 		}
 		out.write(ulen.intValue());
@@ -134,7 +134,7 @@ public final class UsernamePasswordRequest {
 		try {
 			plen = UnsignedByte.newInstanceFrom(in);
 		} catch (IOException e) {
-			IOExceptionHelper.handle(
+			IOExceptionHandler.INSTANCE.handle(
 					e, new Socks5Exception("expected password length", e));			
 		}
 		out.write(plen.intValue());

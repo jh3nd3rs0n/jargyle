@@ -71,7 +71,7 @@ public enum Command {
 		try {
 			command = valueOfByte(b.byteValue());
 		} catch (IllegalArgumentException e) {
-			throw new IOException(e);
+			throw new Socks5Exception(e);
 		}
 		return command;
 	}

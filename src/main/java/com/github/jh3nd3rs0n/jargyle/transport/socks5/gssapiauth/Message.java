@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Objects;
 
 import com.github.jh3nd3rs0n.jargyle.common.number.impl.UnsignedByte;
+import com.github.jh3nd3rs0n.jargyle.internal.net.IOExceptionHelper;
 import com.github.jh3nd3rs0n.jargyle.internal.number.impl.UnsignedShort;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Exception;
 
@@ -83,16 +84,34 @@ public final class Message {
 			final InputStream in) throws IOException {
 		int tknStartIndex = -1;
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		Version ver = Version.valueOfByteFrom(in);
+		Version ver = null;
+		try {
+			ver = Version.valueOfByteFrom(in);
+		} catch (IOException e) {
+			IOExceptionHelper.handle(
+					e, new Socks5Exception("expected version", e));
+		}
 		tknStartIndex++;
 		out.write(UnsignedByte.newInstance(ver.byteValue()).intValue());
-		MessageType mType = MessageType.valueOfByteFrom(in);
+		MessageType mType = null;
+		try {
+			mType = MessageType.valueOfByteFrom(in);
+		} catch (IOException e) {
+			IOExceptionHelper.handle(
+					e, new Socks5Exception("expected message type", e));			
+		}
 		tknStartIndex++;
 		out.write(UnsignedByte.newInstance(mType.byteValue()).intValue());
 		if (mType.equals(MessageType.ABORT)) {
 			tknStartIndex++;
 		} else {
-			UnsignedShort len = UnsignedShort.newInstanceFrom(in);
+			UnsignedShort len = null;
+			try {
+				len = UnsignedShort.newInstanceFrom(in);
+			} catch (IOException e) {
+				IOExceptionHelper.handle(
+						e, new Socks5Exception("expected message length", e));				
+			}
 			byte[] bytes = len.toByteArray();
 			tknStartIndex += bytes.length;
 			out.write(bytes);

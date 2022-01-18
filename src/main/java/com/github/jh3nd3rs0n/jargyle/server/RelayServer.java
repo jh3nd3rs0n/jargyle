@@ -2,10 +2,10 @@ package com.github.jh3nd3rs0n.jargyle.server;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InterruptedIOException;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -95,24 +95,37 @@ public final class RelayServer {
 						LOGGER.trace(LoggerHelper.objectMessage(
 								this, 
 								String.format("Bytes read: %s", bytesRead)));
-					} catch (SSLException e) {
-						Throwable cause = e.getCause();
-						if (cause != null && cause instanceof SocketException) {
-							// socket closed
-							break;
-						}
-						LOGGER.error(
-								LoggerHelper.objectMessage(
-										this, 
-										"Error occurred in the process of "
-										+ "reading in data"), 
-								e);
-						break;						
 					} catch (SocketException e) {
 						// socket closed
 						break;
-					} catch (InterruptedIOException e) {
+					} catch (SocketTimeoutException e) {
 						bytesRead = 0;
+					} catch (SSLException e) {
+						Throwable cause = e.getCause();
+						if (cause != null) {
+							if (cause instanceof SocketException) {
+								// socket closed
+								break;
+							} else if (cause instanceof SocketTimeoutException) {
+								bytesRead = 0;
+							} else {
+								LOGGER.error(
+										LoggerHelper.objectMessage(
+												this, 
+												"Error occurred in the process "
+												+ "of reading in data"), 
+										e);
+								break;
+							}
+						} else {
+							LOGGER.error(
+									LoggerHelper.objectMessage(
+											this, 
+											"Error occurred in the process of "
+											+ "reading in data"), 
+									e);
+							break;
+						}
 					} catch (IOException e) {
 						LOGGER.error(
 								LoggerHelper.objectMessage(

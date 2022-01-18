@@ -75,7 +75,7 @@ public final class ConnectCommandWorker extends CommandWorker {
 					e);
 			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
 					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep);
+			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep, LOGGER);
 			return false;
 		} catch (IOException e) {
 			LOGGER.error( 
@@ -84,7 +84,7 @@ public final class ConnectCommandWorker extends CommandWorker {
 					e);
 			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
 					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep);
+			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep, LOGGER);
 			return false;
 		}
 		return true;
@@ -115,7 +115,8 @@ public final class ConnectCommandWorker extends CommandWorker {
 						e);
 				socks5Rep = Socks5Reply.newFailureInstance(
 						Reply.HOST_UNREACHABLE);
-				this.commandWorkerContext.sendSocks5Reply(this, socks5Rep);
+				this.commandWorkerContext.sendSocks5Reply(
+						this, socks5Rep, LOGGER);
 				return null;
 			}
 		} else {
@@ -136,7 +137,8 @@ public final class ConnectCommandWorker extends CommandWorker {
 						e);
 				socks5Rep = Socks5Reply.newFailureInstance(
 						Reply.HOST_UNREACHABLE);
-				this.commandWorkerContext.sendSocks5Reply(this, socks5Rep);
+				this.commandWorkerContext.sendSocks5Reply(
+						this, socks5Rep, LOGGER);
 				return null;
 			}				
 		}
@@ -165,10 +167,12 @@ public final class ConnectCommandWorker extends CommandWorker {
 					this.methodSubnegotiationResults,
 					this.socks5Request,
 					socks5Rep); 
-			if (!this.commandWorkerContext.canAllowSocks5Reply(this, context)) {
+			if (!this.commandWorkerContext.canAllowSocks5Reply(
+					this, context, LOGGER)) {
 				return;
 			}
-			if (!this.commandWorkerContext.sendSocks5Reply(this, socks5Rep)) {
+			if (!this.commandWorkerContext.sendSocks5Reply(
+					this, socks5Rep, LOGGER)) {
 				return;
 			}
 			RelayServer.Builder builder = new RelayServer.Builder(

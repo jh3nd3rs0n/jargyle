@@ -73,7 +73,7 @@ public final class BindCommandWorker extends CommandWorker {
 					e);
 			socks5Rep = Socks5Reply.newFailureInstance(
 					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep);
+			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep, LOGGER);
 			return null;
 		}
 		return inboundSocket;
@@ -93,7 +93,7 @@ public final class BindCommandWorker extends CommandWorker {
 					e);
 			socks5Rep = Socks5Reply.newFailureInstance(
 					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep);
+			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep, LOGGER);
 			return false;
 		}
 		return true;
@@ -116,7 +116,7 @@ public final class BindCommandWorker extends CommandWorker {
 					e);
 			Socks5Reply rep = Socks5Reply.newFailureInstance(
 					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
-			this.commandWorkerContext.sendSocks5Reply(this, rep);
+			this.commandWorkerContext.sendSocks5Reply(this, rep, LOGGER);
 			return false;			
 		}
 		try {
@@ -124,7 +124,7 @@ public final class BindCommandWorker extends CommandWorker {
 		} catch (FirewallRuleActionDenyException e) {
 			Socks5Reply rep = Socks5Reply.newFailureInstance(
 					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
-			this.commandWorkerContext.sendSocks5Reply(this, rep);
+			this.commandWorkerContext.sendSocks5Reply(this, rep, LOGGER);
 			return false;
 		}
 		return true;
@@ -142,7 +142,7 @@ public final class BindCommandWorker extends CommandWorker {
 					e);
 			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
 					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep);
+			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep, LOGGER);
 			return false;
 		}
 		return true;
@@ -160,7 +160,7 @@ public final class BindCommandWorker extends CommandWorker {
 					e);
 			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
 					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep);
+			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep, LOGGER);
 			return false;
 		}
 		return true;
@@ -192,10 +192,12 @@ public final class BindCommandWorker extends CommandWorker {
 					this.methodSubnegotiationResults,
 					this.socks5Request,
 					socks5Rep); 
-			if (!this.commandWorkerContext.canAllowSocks5Reply(this, context)) {
+			if (!this.commandWorkerContext.canAllowSocks5Reply(
+					this, context, LOGGER)) {
 				return;
 			}
-			if (!this.commandWorkerContext.sendSocks5Reply(this, socks5Rep)) {
+			if (!this.commandWorkerContext.sendSocks5Reply(
+					this, socks5Rep, LOGGER)) {
 				return;
 			}
 			inboundSocket = this.acceptInboundSocketFrom(listenSocket);
@@ -222,7 +224,8 @@ public final class BindCommandWorker extends CommandWorker {
 			if (!this.canAllowSecondSocks5Reply(context)) {
 				return;
 			}			
-			if (!this.commandWorkerContext.sendSocks5Reply(this, socks5Rep)) {
+			if (!this.commandWorkerContext.sendSocks5Reply(
+					this, socks5Rep, LOGGER)) {
 				return;
 			}
 			RelayServer.Builder builder = new RelayServer.Builder(

@@ -8,6 +8,7 @@ import java.util.Arrays;
 
 import com.github.jh3nd3rs0n.jargyle.common.number.impl.UnsignedByte;
 import com.github.jh3nd3rs0n.jargyle.internal.net.AllZerosInetAddressHelper;
+import com.github.jh3nd3rs0n.jargyle.internal.net.IOExceptionHelper;
 import com.github.jh3nd3rs0n.jargyle.internal.number.impl.UnsignedShort;
 
 public final class Socks5Reply {
@@ -102,21 +103,23 @@ public final class Socks5Reply {
 		try {
 			ver = Version.valueOfByteFrom(in);
 		} catch (IOException e) {
-			throw new Socks5Exception("expected version", e);
+			IOExceptionHelper.handle(
+					e, new Socks5Exception("expected version", e));
 		}
 		out.write(UnsignedByte.newInstance(ver.byteValue()).intValue());
 		Reply rep = null;
 		try {
 			rep = Reply.valueOfByteFrom(in);
 		} catch (IOException e) {
-			throw new Socks5Exception("expected reply", e);
+			IOExceptionHelper.handle(
+					e, new Socks5Exception("expected reply", e));
 		}
 		out.write(UnsignedByte.newInstance(rep.byteValue()).intValue());
 		UnsignedByte rsv = null;
 		try {
 			rsv = UnsignedByte.newInstanceFrom(in);
 		} catch (IOException e) {
-			throw new Socks5Exception("expected RSV", e);
+			IOExceptionHelper.handle(e, new Socks5Exception("expected RSV", e));
 		}
 		if (rsv.intValue() != RSV) {
 			throw new Socks5Exception(String.format(
@@ -128,8 +131,11 @@ public final class Socks5Reply {
 		try {
 			addr = Address.newInstanceFrom(in);
 		} catch (IOException e) {
-			throw new Socks5Exception(
-					"expected server bound address type and address", e);
+			IOExceptionHelper.handle(
+					e, 
+					new Socks5Exception(
+							"expected server bound address type and address", 
+							e));
 		}
 		AddressType atyp = addr.getAddressType(); 
 		out.write(UnsignedByte.newInstance(atyp.byteValue()).intValue());
@@ -139,7 +145,8 @@ public final class Socks5Reply {
 		try {
 			bndPort = UnsignedShort.newInstanceFrom(in);
 		} catch (IOException e) {
-			throw new Socks5Exception("expected server bound port", e);
+			IOExceptionHelper.handle(
+					e, new Socks5Exception("expected server bound port", e));
 		}
 		out.write(bndPort.toByteArray());
 		Params params = new Params();

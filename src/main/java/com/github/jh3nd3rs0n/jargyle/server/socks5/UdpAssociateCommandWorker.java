@@ -80,7 +80,7 @@ public final class UdpAssociateCommandWorker extends CommandWorker {
 					e);
 			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
 					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep);
+			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep, LOGGER);
 			return false;
 		}
 		return true;
@@ -100,7 +100,7 @@ public final class UdpAssociateCommandWorker extends CommandWorker {
 					e);
 			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
 					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep);
+			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep, LOGGER);
 			return false;
 		}
 		return true;
@@ -122,7 +122,7 @@ public final class UdpAssociateCommandWorker extends CommandWorker {
 					e);
 			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
 					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep);
+			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep, LOGGER);
 			return null;
 		}
 		return clientFacingDatagramSock;
@@ -144,7 +144,7 @@ public final class UdpAssociateCommandWorker extends CommandWorker {
 					e);
 			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
 					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep);
+			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep, LOGGER);
 			return null;
 		}
 		return peerFacingDatagramSock;
@@ -229,10 +229,12 @@ public final class UdpAssociateCommandWorker extends CommandWorker {
 					this.methodSubnegotiationResults,
 					this.socks5Request,
 					socks5Rep); 
-			if (!this.commandWorkerContext.canAllowSocks5Reply(this, context)) {
+			if (!this.commandWorkerContext.canAllowSocks5Reply(
+					this, context, LOGGER)) {
 				return;
 			}			
-			if (!this.commandWorkerContext.sendSocks5Reply(this, socks5Rep)) {
+			if (!this.commandWorkerContext.sendSocks5Reply(
+					this, socks5Rep, LOGGER)) {
 				return;
 			}
 			UdpRelayServer.Builder builder = new UdpRelayServer.Builder(
@@ -291,7 +293,8 @@ public final class UdpAssociateCommandWorker extends CommandWorker {
 						e);
 				Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
 						Reply.HOST_UNREACHABLE);
-				this.commandWorkerContext.sendSocks5Reply(this, socks5Rep);
+				this.commandWorkerContext.sendSocks5Reply(
+						this, socks5Rep, LOGGER);
 				return null;
 			}
 			clientFacingDatagramSck.connect(
@@ -313,7 +316,8 @@ public final class UdpAssociateCommandWorker extends CommandWorker {
 						e);
 				Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
 						Reply.GENERAL_SOCKS_SERVER_FAILURE);
-				this.commandWorkerContext.sendSocks5Reply(this, socks5Rep);
+				this.commandWorkerContext.sendSocks5Reply(
+						this, socks5Rep, LOGGER);
 				return null;
 			}
 		}
@@ -329,7 +333,7 @@ public final class UdpAssociateCommandWorker extends CommandWorker {
 					e);
 			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
 					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep);
+			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep, LOGGER);
 			return null;
 		}
 		return clientFacingDatagramSck;

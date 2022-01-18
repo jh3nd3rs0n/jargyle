@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.util.Arrays;
 
 import com.github.jh3nd3rs0n.jargyle.common.number.impl.UnsignedByte;
+import com.github.jh3nd3rs0n.jargyle.internal.net.IOExceptionHelper;
 import com.github.jh3nd3rs0n.jargyle.internal.number.impl.UnsignedShort;
 
 public final class Socks5Request {
@@ -93,21 +94,23 @@ public final class Socks5Request {
 		try {
 			ver = Version.valueOfByteFrom(in);
 		} catch (IOException e) {
-			throw new Socks5Exception("expected version", e);
+			IOExceptionHelper.handle(
+					e, new Socks5Exception("expected version", e));
 		}
 		out.write(UnsignedByte.newInstance(ver.byteValue()).intValue());
 		Command cmd = null;
 		try {
 			cmd = Command.valueOfByteFrom(in);
 		} catch (IOException e) {
-			throw new Socks5Exception("expected command", e);
+			IOExceptionHelper.handle(
+					e, new Socks5Exception("expected command", e));
 		}
 		out.write(UnsignedByte.newInstance(cmd.byteValue()).intValue());
 		UnsignedByte rsv = null;
 		try {
 			rsv = UnsignedByte.newInstanceFrom(in);
 		} catch (IOException e) {
-			throw new Socks5Exception("expected RSV", e);
+			IOExceptionHelper.handle(e, new Socks5Exception("expected RSV", e));
 		}
 		if (rsv.intValue() != RSV) {
 			throw new Socks5Exception(String.format(
@@ -119,8 +122,12 @@ public final class Socks5Request {
 		try {
 			addr = Address.newInstanceFrom(in);
 		} catch (IOException e) {
-			throw new Socks5Exception(
-					"expected desired destination address type and address", e);
+			IOExceptionHelper.handle(
+					e, 
+					new Socks5Exception(
+							"expected desired destination address type and "
+							+ "address", 
+							e));
 		}
 		AddressType atyp = addr.getAddressType(); 
 		out.write(UnsignedByte.newInstance(atyp.byteValue()).intValue());
@@ -130,7 +137,9 @@ public final class Socks5Request {
 		try {
 			dstPort = UnsignedShort.newInstanceFrom(in);
 		} catch (IOException e) {
-			throw new Socks5Exception("expected desired destination port", e);
+			IOExceptionHelper.handle(
+					e, 
+					new Socks5Exception("expected desired destination port", e));
 		}
 		out.write(dstPort.toByteArray());
 		Params params = new Params();

@@ -61,7 +61,7 @@ public final class ResolveCommandWorker extends CommandWorker {
 							this, "Error in resolving the hostname"), 
 					e);
 			socks5Rep = Socks5Reply.newFailureInstance(Reply.HOST_UNREACHABLE);
-			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep);
+			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep, LOGGER);
 			return;			
 		} catch (IOException e) {
 			LOGGER.error( 
@@ -70,7 +70,7 @@ public final class ResolveCommandWorker extends CommandWorker {
 					e);
 			socks5Rep = Socks5Reply.newFailureInstance(
 					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep);
+			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep, LOGGER);
 			return;
 		}
 		String serverBoundAddress = inetAddress.getHostAddress();
@@ -85,10 +85,11 @@ public final class ResolveCommandWorker extends CommandWorker {
 				this.methodSubnegotiationResults,
 				this.socks5Request,
 				socks5Rep); 
-		if (!this.commandWorkerContext.canAllowSocks5Reply(this, context)) {
+		if (!this.commandWorkerContext.canAllowSocks5Reply(
+				this, context, LOGGER)) {
 			return;
 		}		
-		this.commandWorkerContext.sendSocks5Reply(this, socks5Rep);
+		this.commandWorkerContext.sendSocks5Reply(this, socks5Rep, LOGGER);
 	}
 	
 }

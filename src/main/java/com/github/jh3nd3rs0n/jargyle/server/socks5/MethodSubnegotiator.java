@@ -2,15 +2,11 @@ package com.github.jh3nd3rs0n.jargyle.server.socks5;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InterruptedIOException;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.net.SocketException;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-
-import javax.net.ssl.SSLException;
 
 import org.ietf.jgss.GSSContext;
 import org.ietf.jgss.GSSCredential;
@@ -18,6 +14,7 @@ import org.ietf.jgss.GSSException;
 import org.ietf.jgss.GSSManager;
 import org.ietf.jgss.MessageProp;
 
+import com.github.jh3nd3rs0n.jargyle.internal.net.IOExceptionHelper;
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.UsernamePasswordAuthenticator;
@@ -180,20 +177,11 @@ enum MethodSubnegotiator {
 				this.establishContext(socket, context, configuration);
 				protectionLevelChoice =	this.negotiateProtectionLevel(
 						socket, context, configuration);
-			} catch (MethodSubnegotiationException e) {
-				throw e;
-			} catch (SocketException e) {
-				throw e;
-			} catch (InterruptedIOException e) {
-				throw e;
-			} catch (SSLException e) {
-				Throwable cause = e.getCause();
-				if (cause != null && cause instanceof SocketException) {
-					throw (SocketException) cause;
-				}
-				throw new MethodSubnegotiationException(this.methodValue(), e);
 			} catch (IOException e) {
-				throw new MethodSubnegotiationException(this.methodValue(), e);
+				IOExceptionHelper.handle(
+						e, 
+						new MethodSubnegotiationException(
+								this.methodValue(), e));
 			}
 			MessageProp msgProp = protectionLevelChoice.getMessageProp();
 			GssSocket gssSocket = new GssSocket(socket, context, msgProp);
@@ -276,18 +264,11 @@ enum MethodSubnegotiator {
 						UsernamePasswordResponse.STATUS_SUCCESS);
 				outputStream.write(usernamePasswordResp.toByteArray());
 				outputStream.flush();
-			} catch (SocketException e) {
-				throw e;
-			} catch (InterruptedIOException e) {
-				throw e;
-			} catch (SSLException e) {
-				Throwable cause = e.getCause();
-				if (cause != null && cause instanceof SocketException) {
-					throw (SocketException) cause;
-				}
-				throw new MethodSubnegotiationException(this.methodValue(), e);
 			} catch (IOException e) {
-				throw new MethodSubnegotiationException(this.methodValue(), e);
+				IOExceptionHelper.handle(
+						e, 
+						new MethodSubnegotiationException(
+								this.methodValue(), e));
 			} finally {
 				if (password != null) { Arrays.fill(password, '\0'); } 
 			}

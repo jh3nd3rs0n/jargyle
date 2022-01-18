@@ -11,6 +11,7 @@ import java.io.Writer;
 import java.util.Arrays;
 
 import com.github.jh3nd3rs0n.jargyle.common.number.impl.UnsignedByte;
+import com.github.jh3nd3rs0n.jargyle.internal.net.IOExceptionHelper;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Exception;
 
 public final class UsernamePasswordRequest {
@@ -102,9 +103,21 @@ public final class UsernamePasswordRequest {
 	public static UsernamePasswordRequest newInstanceFrom(
 			final InputStream in) throws IOException {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		Version ver = Version.valueOfByteFrom(in);
+		Version ver = null;
+		try {
+			ver = Version.valueOfByteFrom(in);
+		} catch (IOException e) {
+			IOExceptionHelper.handle(
+					e, new Socks5Exception("expected version", e));
+		}
 		out.write(UnsignedByte.newInstance(ver.byteValue()).intValue());
-		UnsignedByte ulen = UnsignedByte.newInstanceFrom(in);
+		UnsignedByte ulen = null;
+		try {
+			ulen = UnsignedByte.newInstanceFrom(in);
+		} catch (IOException e) {
+			IOExceptionHelper.handle(
+					e, new Socks5Exception("expected username length", e));			
+		}
 		out.write(ulen.intValue());
 		byte[] bytes = new byte[ulen.intValue()];
 		int bytesRead = in.read(bytes);
@@ -117,7 +130,13 @@ public final class UsernamePasswordRequest {
 		bytes = Arrays.copyOf(bytes, bytesRead);
 		String uname = new String(bytes);
 		out.write(bytes);
-		UnsignedByte plen = UnsignedByte.newInstanceFrom(in);
+		UnsignedByte plen = null; 
+		try {
+			plen = UnsignedByte.newInstanceFrom(in);
+		} catch (IOException e) {
+			IOExceptionHelper.handle(
+					e, new Socks5Exception("expected password length", e));			
+		}
 		out.write(plen.intValue());
 		bytes = new byte[plen.intValue()];
 		bytesRead = in.read(bytes);

@@ -24,7 +24,7 @@ public enum IOExceptionHandler {
 		if (e instanceof SSLException) {
 			Throwable cause = e.getCause();
 			if (cause == null) {
-				throw e;
+				throw defaultException;
 			}
 			if (cause instanceof SocketException) {
 				throw (SocketException) cause;

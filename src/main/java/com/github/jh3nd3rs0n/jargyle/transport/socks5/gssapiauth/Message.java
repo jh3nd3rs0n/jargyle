@@ -84,22 +84,10 @@ public final class Message {
 			final InputStream in) throws IOException {
 		int tknStartIndex = -1;
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		Version ver = null;
-		try {
-			ver = Version.valueOfByteFrom(in);
-		} catch (IOException e) {
-			IOExceptionHandler.INSTANCE.handle(
-					e, new Socks5Exception("expected version", e));
-		}
+		Version ver = Version.valueOfByteFrom(in);
 		tknStartIndex++;
 		out.write(UnsignedByte.newInstance(ver.byteValue()).intValue());
-		MessageType mType = null;
-		try {
-			mType = MessageType.valueOfByteFrom(in);
-		} catch (IOException e) {
-			IOExceptionHandler.INSTANCE.handle(
-					e, new Socks5Exception("expected message type", e));			
-		}
+		MessageType mType = MessageType.valueOfByteFrom(in);
 		tknStartIndex++;
 		out.write(UnsignedByte.newInstance(mType.byteValue()).intValue());
 		if (mType.equals(MessageType.ABORT)) {

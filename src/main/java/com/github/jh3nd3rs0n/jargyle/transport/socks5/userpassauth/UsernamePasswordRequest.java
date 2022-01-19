@@ -103,13 +103,7 @@ public final class UsernamePasswordRequest {
 	public static UsernamePasswordRequest newInstanceFrom(
 			final InputStream in) throws IOException {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		Version ver = null;
-		try {
-			ver = Version.valueOfByteFrom(in);
-		} catch (IOException e) {
-			IOExceptionHandler.INSTANCE.handle(
-					e, new Socks5Exception("expected version", e));
-		}
+		Version ver = Version.valueOfByteFrom(in);
 		out.write(UnsignedByte.newInstance(ver.byteValue()).intValue());
 		UnsignedByte ulen = null;
 		try {

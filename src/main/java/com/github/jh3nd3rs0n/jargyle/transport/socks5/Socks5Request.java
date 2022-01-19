@@ -90,21 +90,9 @@ public final class Socks5Request {
 	public static Socks5Request newInstanceFrom(
 			final InputStream in) throws IOException {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		Version ver = null;
-		try {
-			ver = Version.valueOfByteFrom(in);
-		} catch (IOException e) {
-			IOExceptionHandler.INSTANCE.handle(
-					e, new Socks5Exception("expected version", e));
-		}
+		Version ver = Version.valueOfByteFrom(in);
 		out.write(UnsignedByte.newInstance(ver.byteValue()).intValue());
-		Command cmd = null;
-		try {
-			cmd = Command.valueOfByteFrom(in);
-		} catch (IOException e) {
-			IOExceptionHandler.INSTANCE.handle(
-					e, new Socks5Exception("expected command", e));
-		}
+		Command cmd = Command.valueOfByteFrom(in);
 		out.write(UnsignedByte.newInstance(cmd.byteValue()).intValue());
 		UnsignedByte rsv = null;
 		try {
@@ -119,17 +107,7 @@ public final class Socks5Request {
 					RSV, rsv.intValue()));
 		}
 		out.write(rsv.intValue());
-		Address addr = null;
-		try {
-			addr = Address.newInstanceFrom(in);
-		} catch (IOException e) {
-			IOExceptionHandler.INSTANCE.handle(
-					e, 
-					new Socks5Exception(
-							"expected desired destination address type and "
-							+ "address", 
-							e));
-		}
+		Address addr = Address.newInstanceFrom(in);
 		AddressType atyp = addr.getAddressType(); 
 		out.write(UnsignedByte.newInstance(atyp.byteValue()).intValue());
 		String dstAddr = addr.toString(); 

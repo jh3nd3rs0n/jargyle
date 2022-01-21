@@ -55,11 +55,11 @@ public enum IOExceptionHandler {
 				return;
 			}
 			if (cause instanceof SocketException) {
-				logger.debug(logMessage, e);
+				logger.debug(logMessage, cause);
 				return;
 			}
 			if (cause instanceof SocketTimeoutException) {
-				logger.error(logMessage, e);
+				logger.error(logMessage, cause);
 				return;
 			}
 		}

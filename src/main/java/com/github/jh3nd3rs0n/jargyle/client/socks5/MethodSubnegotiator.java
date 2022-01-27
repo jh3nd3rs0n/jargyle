@@ -5,8 +5,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.ietf.jgss.GSSContext;
 import org.ietf.jgss.GSSException;
@@ -277,24 +277,15 @@ enum MethodSubnegotiator {
 				return value;
 			}
 		}
-		StringBuilder sb = new StringBuilder();
-		List<MethodSubnegotiator> list = Arrays.asList(
-				MethodSubnegotiator.values());
-		for (Iterator<MethodSubnegotiator> iterator = list.iterator();
-				iterator.hasNext();) {
-			MethodSubnegotiator value = iterator.next();
-			Method method = value.methodValue();
-			sb.append(method);
-			if (iterator.hasNext()) {
-				sb.append(", ");
-			}
-		}
-		throw new IllegalArgumentException(
-				String.format(
-						"expected method must be one of the following values: "
-						+ "%s. actual value is %s",
-						sb.toString(),
-						meth));
+		String str = Arrays.stream(MethodSubnegotiator.values())
+				.map(MethodSubnegotiator::methodValue)
+				.map(Method::toString)
+				.collect(Collectors.joining(", "));
+		throw new IllegalArgumentException(String.format(
+				"expected method must be one of the following values: %s. "
+				+ "actual value is %s",
+				str,
+				meth));
 	}
 	
 	private final Method methodValue;

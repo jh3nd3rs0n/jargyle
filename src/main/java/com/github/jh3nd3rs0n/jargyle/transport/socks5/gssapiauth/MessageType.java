@@ -3,8 +3,7 @@ package com.github.jh3nd3rs0n.jargyle.transport.socks5.gssapiauth;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.util.stream.Collectors;
 
 import com.github.jh3nd3rs0n.jargyle.common.number.impl.UnsignedByte;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Exception;
@@ -25,25 +24,16 @@ public enum MessageType {
 				return messageType;
 			}
 		}
-		StringBuilder sb = new StringBuilder();
-		List<MessageType> list = Arrays.asList(MessageType.values());
-		for (Iterator<MessageType> iterator = list.iterator(); 
-				iterator.hasNext();) {
-			MessageType value = iterator.next();
-			byte byteValue = value.byteValue();
-			sb.append(Integer.toHexString(
-					UnsignedByte.newInstance(byteValue).intValue()));
-			if (iterator.hasNext()) {
-				sb.append(", ");
-			}
-		}
-		throw new IllegalArgumentException(
-				String.format(
-						"expected message type must be one of the following "
-						+ "values: %s. actual value is %s",
-						sb.toString(),
-						Integer.toHexString(
-								UnsignedByte.newInstance(b).intValue())));
+		String str = Arrays.stream(MessageType.values())
+				.map(MessageType::byteValue)
+				.map(bv -> UnsignedByte.newInstance(bv).intValue())
+				.map(i -> Integer.toHexString(i))
+				.collect(Collectors.joining(", "));
+		throw new IllegalArgumentException(String.format(
+				"expected message type must be one of the following values: "
+				+ "%s. actual value is %s",
+				str,
+				Integer.toHexString(UnsignedByte.newInstance(b).intValue())));
 	}
 	
 	public static MessageType valueOfByteFrom(

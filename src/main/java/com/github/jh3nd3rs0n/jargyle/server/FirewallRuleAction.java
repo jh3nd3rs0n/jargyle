@@ -1,8 +1,7 @@
 package com.github.jh3nd3rs0n.jargyle.server;
 
 import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.util.stream.Collectors;
 
 import com.github.jh3nd3rs0n.jargyle.internal.help.HelpText;
 
@@ -25,21 +24,13 @@ public enum FirewallRuleAction {
 		try {
 			firewallRuleAction = FirewallRuleAction.valueOf(s);
 		} catch (IllegalArgumentException e) {
-			StringBuilder sb = new StringBuilder();
-			List<FirewallRuleAction> list = Arrays.asList(
-					FirewallRuleAction.values());
-			for (Iterator<FirewallRuleAction> iterator = list.iterator();
-					iterator.hasNext();) {
-				FirewallRuleAction value = iterator.next();
-				sb.append(value);
-				if (iterator.hasNext()) {
-					sb.append(", ");
-				}
-			}
+			String str = Arrays.stream(FirewallRuleAction.values())
+					.map(FirewallRuleAction::toString)
+					.collect(Collectors.joining(", "));
 			throw new IllegalArgumentException(String.format(
 					"expected firewall rule action must be one of the "
 					+ "following values: %s. actual value is %s",
-					sb.toString(),
+					str,
 					s));			
 		}
 		return firewallRuleAction;

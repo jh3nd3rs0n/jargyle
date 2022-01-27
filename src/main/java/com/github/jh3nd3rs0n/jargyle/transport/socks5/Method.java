@@ -3,8 +3,7 @@ package com.github.jh3nd3rs0n.jargyle.transport.socks5;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.util.stream.Collectors;
 
 import com.github.jh3nd3rs0n.jargyle.common.number.impl.UnsignedByte;
 import com.github.jh3nd3rs0n.jargyle.internal.help.HelpText;
@@ -28,25 +27,16 @@ public enum Method {
 				return method;
 			}
 		}
-		StringBuilder sb = new StringBuilder();
-		List<Method> list = Arrays.asList(Method.values());
-		for (Iterator<Method> iterator = list.iterator(); 
-				iterator.hasNext();) {
-			Method value = iterator.next();
-			byte byteValue = value.byteValue();
-			sb.append(Integer.toHexString(
-					UnsignedByte.newInstance(byteValue).intValue()));
-			if (iterator.hasNext()) {
-				sb.append(", ");
-			}
-		}
-		throw new IllegalArgumentException(
-				String.format(
-						"expected method must be one of the following values: "
-						+ "%s. actual value is %s",
-						sb.toString(),
-						Integer.toHexString(
-								UnsignedByte.newInstance(b).intValue())));
+		String str = Arrays.stream(Method.values())
+				.map(Method::byteValue)
+				.map(bv -> UnsignedByte.newInstance(bv).intValue())
+				.map(i -> Integer.toHexString(i))
+				.collect(Collectors.joining(", "));
+		throw new IllegalArgumentException(String.format(
+				"expected method must be one of the following values: %s. "
+				+ "actual value is %s",
+				str,
+				Integer.toHexString(UnsignedByte.newInstance(b).intValue())));
 	}
 	
 	public static Method valueOfByteFrom(
@@ -66,23 +56,14 @@ public enum Method {
 		try {
 			method = Method.valueOf(s);
 		} catch (IllegalArgumentException e) {
-			StringBuilder sb = new StringBuilder();
-			List<Method> list = Arrays.asList(Method.values());
-			for (Iterator<Method> iterator = list.iterator();
-					iterator.hasNext();) {
-				Method value = iterator.next();
-				sb.append(value);
-				if (iterator.hasNext()) {
-					sb.append(", ");
-				}
-			}
-			throw new IllegalArgumentException(
-					String.format(
-							"expected method must be one of the following "
-							+ "values: %s. actual value is %s",
-							sb.toString(),
-							s), 
-					e);
+			String str = Arrays.stream(Method.values())
+					.map(Method::toString)
+					.collect(Collectors.joining(", "));
+			throw new IllegalArgumentException(String.format(
+					"expected method must be one of the following values: %s. "
+					+ "actual value is %s",
+					str,
+					s));
 		}
 		return method;
 	}

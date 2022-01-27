@@ -1,8 +1,7 @@
 package com.github.jh3nd3rs0n.jargyle.server;
 
 import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,20 +44,13 @@ public enum LogAction {
 		try {
 			logAction = LogAction.valueOf(s);
 		} catch (IllegalArgumentException e) {
-			StringBuilder sb = new StringBuilder();
-			List<LogAction> list = Arrays.asList(LogAction.values());
-			for (Iterator<LogAction> iterator = list.iterator();
-					iterator.hasNext();) {
-				LogAction value = iterator.next();
-				sb.append(value);
-				if (iterator.hasNext()) {
-					sb.append(", ");
-				}
-			}
+			String str = Arrays.stream(LogAction.values())
+					.map(LogAction::toString)
+					.collect(Collectors.joining(", "));
 			throw new IllegalArgumentException(String.format(
 					"expected log action must be one of the following values: "
 					+ "%s. actual value is %s",
-					sb.toString(),
+					str,
 					s));
 		}
 		return logAction;

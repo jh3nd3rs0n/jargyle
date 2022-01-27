@@ -1,8 +1,7 @@
 package com.github.jh3nd3rs0n.jargyle.server.socks5;
 
 import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.util.stream.Collectors;
 
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Command;
 
@@ -53,24 +52,15 @@ public enum CommandWorkerFactory {
 				return value;
 			}
 		}
-		StringBuilder sb = new StringBuilder();
-		List<CommandWorkerFactory> list = Arrays.asList(
-				CommandWorkerFactory.values());
-		for (Iterator<CommandWorkerFactory> iterator = list.iterator();
-				iterator.hasNext();) {
-			CommandWorkerFactory value = iterator.next();
-			Command command = value.commandValue();
-			sb.append(command);
-			if (iterator.hasNext()) {
-				sb.append(", ");
-			}
-		}
-		throw new IllegalArgumentException(
-				String.format(
-						"expected command must be one of the following values: "
-						+ "%s. actual value is %s",
-						sb.toString(),
-						cmd));		
+		String str = Arrays.stream(CommandWorkerFactory.values())
+				.map(CommandWorkerFactory::commandValue)
+				.map(Command::toString)
+				.collect(Collectors.joining(", "));
+		throw new IllegalArgumentException(String.format(
+				"expected command must be one of the following values: %s. "
+				+ "actual value is %s",
+				str,
+				cmd));		
 	}
 	
 	private final Command command;

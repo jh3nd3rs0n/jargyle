@@ -8,8 +8,7 @@ import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.util.stream.Collectors;
 
 import com.github.jh3nd3rs0n.jargyle.common.number.impl.UnsignedByte;
 import com.github.jh3nd3rs0n.jargyle.internal.net.AddressRegexConstants;
@@ -203,25 +202,16 @@ public enum AddressType {
 				return addressType;
 			}
 		}
-		StringBuilder sb = new StringBuilder();
-		List<AddressType> list = Arrays.asList(AddressType.values());
-		for (Iterator<AddressType> iterator = list.iterator();
-				iterator.hasNext();) {
-			AddressType value = iterator.next();
-			byte byteValue = value.byteValue();
-			sb.append(Integer.toHexString(
-					UnsignedByte.newInstance(byteValue).intValue()));
-			if (iterator.hasNext()) {
-				sb.append(", ");
-			}
-		}
-		throw new IllegalArgumentException(
-				String.format(
-						"expected address type must be one of the following "
-						+ "values: %s. actual value is %s",
-						sb.toString(),
-						Integer.toHexString(
-								UnsignedByte.newInstance(b).intValue())));
+		String str = Arrays.stream(AddressType.values())
+				.map(AddressType::byteValue)
+				.map(bv -> UnsignedByte.newInstance(bv).intValue())
+				.map(i -> Integer.toHexString(i))
+				.collect(Collectors.joining(", "));
+		throw new IllegalArgumentException(String.format(
+				"expected address type must be one of the following values: "
+				+ "%s. actual value is %s",
+				str,
+				Integer.toHexString(UnsignedByte.newInstance(b).intValue())));
 	}
 	
 	public static AddressType valueOfByteFrom(

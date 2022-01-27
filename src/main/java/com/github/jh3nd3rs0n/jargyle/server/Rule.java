@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public abstract class Rule {
 	
@@ -28,21 +29,14 @@ public abstract class Rule {
 					return field;
 				}
 			}
-			StringBuilder sb = new StringBuilder();
-			for (Iterator<F> iterator = fields.iterator(); iterator.hasNext();) {
-				F value = iterator.next();
-				sb.append(value);
-				if (iterator.hasNext()) {
-					sb.append(", ");
-				}
-			}
-			throw new IllegalArgumentException(
-					String.format(
-							"expected field must be one of the following "
-							+ "values: %s. actual value is %s",
-							sb.toString(),
-							s));			
-
+			String str = fields.stream()
+					.map(f -> f.toString())
+					.collect(Collectors.joining(", "));
+			throw new IllegalArgumentException(String.format(
+					"expected field must be one of the following values: %s. "
+					+ "actual value is %s",
+					str,
+					s));			
 		}
 		
 		private LogAction logAction;

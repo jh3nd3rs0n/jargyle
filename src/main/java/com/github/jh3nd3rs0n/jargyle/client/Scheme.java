@@ -1,8 +1,7 @@
 package com.github.jh3nd3rs0n.jargyle.client;
 
 import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.util.stream.Collectors;
 
 import com.github.jh3nd3rs0n.jargyle.client.socks5.Socks5ServerUri;
 import com.github.jh3nd3rs0n.jargyle.internal.help.HelpText;
@@ -26,22 +25,14 @@ public enum Scheme {
 				return value;
 			}
 		}
-		StringBuilder sb = new StringBuilder();
-		List<Scheme> list = Arrays.asList(Scheme.values());
-		for (Iterator<Scheme> iterator = list.iterator(); 
-				iterator.hasNext();) {
-			Scheme value = iterator.next();
-			sb.append(value);
-			if (iterator.hasNext()) {
-				sb.append(", ");
-			}
-		}
-		throw new IllegalArgumentException(
-				String.format(
-						"expected scheme must be one of the following values: "
-						+ "%s. actual value is %s",
-						sb.toString(),
-						s));
+		String str = Arrays.stream(Scheme.values())
+				.map(Scheme::toString)
+				.collect(Collectors.joining(", "));
+		throw new IllegalArgumentException(String.format(
+				"expected scheme must be one of the following values: %s. "
+				+ "actual value is %s",
+				str,
+				s));
 	}
 	
 	private final String string;

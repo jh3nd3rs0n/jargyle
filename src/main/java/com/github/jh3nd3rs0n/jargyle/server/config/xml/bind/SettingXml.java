@@ -1,6 +1,19 @@
 package com.github.jh3nd3rs0n.jargyle.server.config.xml.bind;
 
+import java.util.Objects;
+
+import com.github.jh3nd3rs0n.jargyle.client.socks5.userpassauth.UsernamePassword;
+import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
+import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
+import com.github.jh3nd3rs0n.jargyle.server.ClientFirewallRules;
+import com.github.jh3nd3rs0n.jargyle.server.ClientRoutingRules;
 import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5ReplyFirewallRules;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5RequestFirewallRules;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5RequestRoutingRules;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5RequestWorkerFactory;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5UdpFirewallRules;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.UsernamePasswordAuthenticator;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -11,6 +24,52 @@ import jakarta.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlType(name = "setting", propOrder = { }) 
 class SettingXml {
+	
+	private static ValueXml newValueXml(final Object val) {
+		Objects.requireNonNull(val);
+		if (val instanceof ClientFirewallRules) {
+			return new ClientFirewallRulesXml((ClientFirewallRules) val);
+		}
+		if (val instanceof ClientRoutingRules) {
+			return new ClientRoutingRulesXml((ClientRoutingRules) val);
+		}
+		if (val instanceof EncryptedPassword) {
+			return EncryptedPasswordXml.newInstance((EncryptedPassword) val);
+		}
+		if (val instanceof SocketSettings) {
+			return new SocketSettingsXml((SocketSettings) val);
+		}
+		if (val instanceof Socks5ReplyFirewallRules) {
+			return new Socks5ReplyFirewallRulesXml(
+					(Socks5ReplyFirewallRules) val);
+		}
+		if (val instanceof Socks5RequestFirewallRules) {
+			return new Socks5RequestFirewallRulesXml(
+					(Socks5RequestFirewallRules) val);
+		}
+		if (val instanceof Socks5RequestRoutingRules) {
+			return new Socks5RequestRoutingRulesXml(
+					(Socks5RequestRoutingRules) val);
+		}
+		if (val instanceof Socks5RequestWorkerFactory) {
+			return new Socks5RequestWorkerFactoryXml(
+					(Socks5RequestWorkerFactory) val);
+		}
+		if (val instanceof Socks5UdpFirewallRules) {
+			return new Socks5UdpFirewallRulesXml((Socks5UdpFirewallRules) val);
+		}
+		if (val instanceof UsernamePasswordAuthenticator) {
+			return new UsernamePasswordAuthenticatorXml(
+					(UsernamePasswordAuthenticator) val);
+		}
+		if (val instanceof UsernamePassword) {
+			return new UsernamePasswordXml((UsernamePassword) val);
+		}
+		throw new IllegalArgumentException(String.format(
+				"no %s for %s", 
+				ValueXml.class.getName(),
+				val.getClass().getName()));
+	}
 	
 	@XmlElement(name = "name", required = true)
 	protected String name;
@@ -65,6 +124,7 @@ class SettingXml {
 				type = String.class)
 	})
 	protected Object value;
+	
 	@XmlElement(name = "doc")
 	protected String doc;
 	
@@ -78,7 +138,7 @@ class SettingXml {
 		Object val = setting.getValue();
 		Object newVal = null;
 		try {
-			newVal = ValueXml.newInstance(val);  
+			newVal = newValueXml(val);  
 		} catch (IllegalArgumentException e) {
 			newVal = val.toString();
 		}
@@ -86,7 +146,7 @@ class SettingXml {
 		this.value = newVal;
 		this.doc = setting.getDoc();		
 	}
-	
+
 	public Setting<Object> toSetting() {
 		Object val = this.value;
 		if (val instanceof ValueXml) {

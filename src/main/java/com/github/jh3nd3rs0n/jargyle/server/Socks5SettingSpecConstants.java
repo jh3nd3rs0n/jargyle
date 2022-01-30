@@ -19,11 +19,11 @@ import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.Socks5RequestFirewa
 import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.Socks5RequestWorkerFactorySettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.Socks5UdpFirewallRulesSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.UsernamePasswordAuthenticatorSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5RequestRoutingRules;
-import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5ReplyFirewallRules;
-import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5RequestFirewallRules;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5RequestWorkerFactory;
-import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5UdpFirewallRules;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.rules.impl.Socks5ReplyFirewallRules;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.rules.impl.Socks5RequestFirewallRules;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.rules.impl.Socks5RequestRoutingRules;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.rules.impl.Socks5UdpFirewallRules;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.UsernamePasswordAuthenticator;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Methods;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.gssapiauth.ProtectionLevels;

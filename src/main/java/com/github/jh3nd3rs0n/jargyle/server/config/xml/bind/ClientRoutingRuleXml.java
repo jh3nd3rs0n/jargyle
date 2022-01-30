@@ -2,10 +2,10 @@ package com.github.jh3nd3rs0n.jargyle.server.config.xml.bind;
 
 import java.util.List;
 
-import com.github.jh3nd3rs0n.jargyle.server.AddressRange;
-import com.github.jh3nd3rs0n.jargyle.server.ClientRoutingRule;
 import com.github.jh3nd3rs0n.jargyle.server.LogAction;
 import com.github.jh3nd3rs0n.jargyle.server.SelectionStrategy;
+import com.github.jh3nd3rs0n.jargyle.server.rules.impl.AddressRange;
+import com.github.jh3nd3rs0n.jargyle.server.rules.impl.ClientRoutingRule;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;

@@ -19,7 +19,6 @@ import com.github.jh3nd3rs0n.jargyle.client.Socks5PropertySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
 import com.github.jh3nd3rs0n.jargyle.client.SocksServerUri;
 import com.github.jh3nd3rs0n.jargyle.client.SslPropertySpecConstants;
-import com.github.jh3nd3rs0n.jargyle.client.socks5.userpassauth.UsernamePassword;
 import com.github.jh3nd3rs0n.jargyle.common.net.Host;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.common.number.impl.PositiveInteger;
@@ -116,12 +115,6 @@ public final class Routes {
 				@SuppressWarnings("unchecked")
 				Property<Object> prop = (Property<Object>) obj;
 				properties.add(prop);
-				continue;
-			}
-			if (obj instanceof List) {
-				@SuppressWarnings("unchecked")
-				List<Property<Object>> props = (List<Property<Object>>) obj;
-				properties.addAll(props);
 			}
 		}
 		String lastRouteId = settings.getLastValue(
@@ -417,28 +410,27 @@ public final class Routes {
 					
 				});
 		SETTING_CONVERTER_MAP.put(
-				ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_USERPASSAUTH_USERNAME_PASSWORD, 
+				ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_USERPASSAUTH_PASSWORD, 
 				new SettingConverter() {
 
 					@Override
 					public Object convert(final Setting<Object> setting) {
-						List<Property<Object>> properties = 
-								new ArrayList<Property<Object>>();
-						UsernamePassword usernamePassword = 
-								(UsernamePassword) setting.getValue();
-						Property<? extends Object> username = 
-								Socks5PropertySpecConstants.SOCKS5_USERPASSAUTH_USERNAME.newProperty(
-										usernamePassword.getUsername());
-						Property<? extends Object> password =
-								Socks5PropertySpecConstants.SOCKS5_USERPASSAUTH_PASSWORD.newProperty(
-										usernamePassword.getEncryptedPassword());
-						@SuppressWarnings("unchecked")
-						Property<Object> usrnm = (Property<Object>) username;
-						@SuppressWarnings("unchecked")
-						Property<Object> psswrd = (Property<Object>) password;
-						properties.add(usrnm);
-						properties.add(psswrd);
-						return properties;
+						EncryptedPassword password = 
+								(EncryptedPassword) setting.getValue();
+						return Socks5PropertySpecConstants.SOCKS5_USERPASSAUTH_PASSWORD.newProperty(
+								password);
+					}
+					
+				});
+		SETTING_CONVERTER_MAP.put(
+				ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_USERPASSAUTH_USERNAME, 
+				new SettingConverter() {
+
+					@Override
+					public Object convert(final Setting<Object> setting) {
+						String username = (String) setting.getValue();
+						return Socks5PropertySpecConstants.SOCKS5_USERPASSAUTH_USERNAME.newProperty(
+								username);
 					}
 					
 				});

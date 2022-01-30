@@ -1,7 +1,7 @@
 package com.github.jh3nd3rs0n.jargyle.client;
 
 import com.github.jh3nd3rs0n.jargyle.client.socks5.Socks5ServerUri;
-import com.github.jh3nd3rs0n.jargyle.client.socks5.userpassauth.UsernamePassword;
+import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Methods;
 
@@ -15,16 +15,17 @@ public final class SocksClientHelper {
 	
 	public static SocksClient newSocks5Client(
 			final String host, 
-			final Integer port, 
-			final UsernamePassword usernamePassword) {
+			final Integer port,
+			final String username,
+			final char[] password) {
 		Properties properties = Properties.newInstance(
 				Socks5PropertySpecConstants.SOCKS5_METHODS.newProperty(
 						Methods.newInstance(Method.USERNAME_PASSWORD)),
 				Socks5PropertySpecConstants.SOCKS5_USERPASSAUTH_USERNAME.newProperty(
-						usernamePassword.getUsername()),
+						username),
 				Socks5PropertySpecConstants.SOCKS5_USERPASSAUTH_PASSWORD.newProperty(
-						usernamePassword.getEncryptedPassword()));
-		return new Socks5ServerUri(host, port).newSocksClient(properties);
+						EncryptedPassword.newInstance(password)));
+		return new Socks5ServerUri(host, port).newSocksClient(properties);		
 	}
 	
 	private SocksClientHelper() { }

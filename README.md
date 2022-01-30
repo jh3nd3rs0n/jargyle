@@ -68,7 +68,6 @@ Jargyle is a Java SOCKS5 server. It has the following features:
 -   [5. 17. 5. Selection Strategy](#5-17-5-selection-strategy)
 -   [5. 17. 6. SOCKS5 Command](#5-17-6-socks5-command)
 -   [5. 17. 7. SOCKS5 Method](#5-17-7-socks5-method)
--   [5. 17. 8. Username Password](#5-17-8-username-password)
 -   [5. 18. Miscellaneous Notes](#5-18-miscellaneous-notes)
 -   [5. 18. 1. Multiple Settings of the Same Name](#5-18-1-multiple-settings-of-the-same-name)
 -   [5. 18. 2. The SOCKS5 RESOLVE Command](#5-18-2-the-socks5-resolve-command)
@@ -158,8 +157,8 @@ The following is the command line help for Jargyle (displayed when using the com
           Enter through an interactive prompt the password for the key store for the DTLS connections to the other SOCKS server
       --enter-chaining-dtls-trust-store-pass
           Enter through an interactive prompt the password for the trust store for the DTLS connections to the other SOCKS server
-      --enter-chaining-socks5-userpassauth-user-pass
-          Enter through an interactive prompt the username password to be used to access the other SOCKS5 server
+      --enter-chaining-socks5-userpassauth-pass
+          Enter through an interactive prompt the password to be used to access the other SOCKS5 server
       --enter-chaining-ssl-key-store-pass
           Enter through an interactive prompt the password for the key store for the SSL/TLS connections to the other SOCKS server
       --enter-chaining-ssl-trust-store-pass
@@ -299,8 +298,11 @@ The following is a list of available settings for the SOCKS server (displayed wh
         chaining.socks5.resolve.useResolveCommand=true|false
             The boolean value to indicate that the RESOLVE command is to be used on the other SOCKS5 server for resolving host names (default is false)
     
-        chaining.socks5.userpassauth.usernamePassword=USERNAME:PASSWORD
-            The username password to be used to access the other SOCKS5 server
+        chaining.socks5.userpassauth.password=PASSWORD
+            The password to be used to access the other SOCKS5 server
+    
+        chaining.socks5.userpassauth.username=USERNAME
+            The username to be used to access the other SOCKS5 server
     
       CHAINING SSL SETTINGS:
     
@@ -1397,7 +1399,25 @@ The following are two provided classes you can use:
 -   `com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.StringSourceUsernamePasswordAuthenticator`
 -   `com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.XmlFileSourceUsernamePasswordAuthenticator`
 
-`com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.StringSourceUsernamePasswordAuthenticator`: This class authenticates the username and password based on the string value of a space separated list of [username password values](#5-17-8-username-password)
+`com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.StringSourceUsernamePasswordAuthenticator`: This class authenticates the username and password based on the string value of a space separated list of username password values.
+
+Each username password value in the space separated list must be of the following format:
+
+```text
+    
+    USERNAME:PASSWORD
+    
+```
+
+Where `USERNAME` is the username and `PASSWORD` is the password.
+
+If the username or the password contains a colon character (`:`), then each colon character must be replaced with the URL encoding character `%3A`.
+
+If the username or the password contains a space character, then each space character must be replaced with the URL encoding character `+` or `%20`.
+
+If the username or the password contains a plus sign character (`+`) not used for URL encoding, then each plus sign character not used for URL encoding must be replaced with the URL encoding character `%2B`.
+
+If the username or the password contains a percent sign character (`%`) not used for URL encoding, then each percent sign character not used for URL encoding must be replaced with the URL encoding character `%25`.
 
 Partial command line example:
 
@@ -1426,7 +1446,7 @@ Partial configuration file example:
     
 ```
 
-`com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.XmlFileSourceUsernamePasswordAuthenticator`: This class authenticates the username and password based on the [XML file of users](#5-10-managing-socks5-users-for-username-password-authentication) whose file name is provided as a string value
+`com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.XmlFileSourceUsernamePasswordAuthenticator`: This class authenticates the username and password based on the [XML file of users](#5-10-managing-socks5-users-for-username-password-authentication) whose file name is provided as a string value.
 
 Partial command line example:
 
@@ -1841,7 +1861,7 @@ Partial configuration file example:
 
 ##### 5. 12. 4. 2. Using Username Password Authentication
 
-To use username password authentication, you will need to have the setting `chaining.socks5.methods` to have `USERNAME_PASSWORD` included.
+To use username password authentication, you will need to have the setting `chaining.socks5.methods` to have `USERNAME_PASSWORD` included. 
 
 Partial command line example:
 
@@ -1862,30 +1882,29 @@ Partial configuration file example:
     
 ```
 
-To provide a username and password for the other SOCKS5 server, you can use either of the following command line options:
-
--   `--setting=chaining.socks5.userpassauth.usernamePassword=USERNAME:PASSWORD`
--   `--enter-chaining-socks5-userpassauth-user-pass`
-
-The command line option `--setting=chaining.socks5.userpassauth.usernamePassword=USERNAME:PASSWORD` requires a [username password value](#5-17-8-username-password).
+Also, you will need to have the settings `chaining.socks5.userpassauth.username` and `chaining.socks5.userpassauth.password` respectively specify the username and password for the other SOCKS5 server.
 
 Partial command line example:
 
 ```text
     
+    --setting=chaining.socksServerUri=socks5://127.0.0.1:23456 \
     --setting=chaining.socks5.methods=USERNAME_PASSWORD \
-    --setting=chaining.socks5.userpassauth.usernamePassword=Aladdin:opensesame
+    --setting=chaining.socks5.userpassauth.username=Aladdin \
+    --setting=chaining.socks5.userpassauth.password=opensesame
     
 ```
 
-The command line option `--enter-chaining-socks5-userpassauth-user-pass` provides an interactive prompt for you to enter the username and password. This command line option is used for when you do not want to have the username and password appear in any script or in any part of the command line history for security reasons.
+If you do not want to have the password appear in any script or in any part of the command line history for security reasons, you can use the command line option `--enter-chaining-socks5-userpassauth-pass` instead. It will provide an interactive prompt for you to enter the password.
 
 Partial command line example:
 
 ```text
     
+    --setting=chaining.socksServerUri=socks5://127.0.0.1:23456 \
     --setting=chaining.socks5.methods=USERNAME_PASSWORD \
-    --enter-chaining-socks5-userpassauth-user-pass
+    --setting=chaining.socks5.userpassauth.username=Aladdin \
+    --enter-chaining-socks5-userpassauth-pass
     
 ```
 
@@ -2698,20 +2717,6 @@ A SOCKS5 method can be one of the following values:
 -   `NO_AUTHENTICATION_REQUIRED`
 -   `USERNAME_PASSWORD`
 -   `GSSAPI`
-
-#### 5. 17. 8. Username Password
-
-A username and a password must be in the following format:
-
--   `USERNAME:PASSWORD` : The username expressed in `USERNAME` and the password expressed in `PASSWORD`
-
-If the username or the password contains a colon character (`:`), then each colon character must be replaced with the URL encoding character `%3A`.
-
-If the username or the password contains a space character, then each space character must be replaced with the URL encoding character `+` or `%20`.
-
-If the username or the password contains a plus sign character (`+`) not used for URL encoding, then each plus sign character not used for URL encoding must be replaced with the URL encoding character `%2B`.
-
-If the username or the password contains a percent sign character (`%`) not used for URL encoding, then each percent sign character not used for URL encoding must be replaced with the URL encoding character `%25`.
 
 ### 5. 18. Miscellaneous Notes
 

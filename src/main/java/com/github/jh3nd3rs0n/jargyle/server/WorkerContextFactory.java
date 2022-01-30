@@ -8,6 +8,10 @@ import java.util.ArrayList;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.common.net.ssl.DtlsDatagramSocketFactory;
 import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.SslSocketFactory;
+import com.github.jh3nd3rs0n.jargyle.server.rules.impl.ClientFirewallRule;
+import com.github.jh3nd3rs0n.jargyle.server.rules.impl.ClientFirewallRules;
+import com.github.jh3nd3rs0n.jargyle.server.rules.impl.ClientRoutingRule;
+import com.github.jh3nd3rs0n.jargyle.server.rules.impl.ClientRoutingRules;
 
 final class WorkerContextFactory {
 	

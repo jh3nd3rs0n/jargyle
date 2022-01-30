@@ -9,7 +9,6 @@ import org.junit.Test;
 import com.github.jh3nd3rs0n.jargyle.TestStringConstants;
 import com.github.jh3nd3rs0n.jargyle.client.ServerSocketITHelper;
 import com.github.jh3nd3rs0n.jargyle.client.SocksClientHelper;
-import com.github.jh3nd3rs0n.jargyle.client.socks5.userpassauth.UsernamePassword;
 import com.github.jh3nd3rs0n.jargyle.server.ConfigurationHelper;
 
 public class Socks5ServerSocketIT {
@@ -55,7 +54,8 @@ public class Socks5ServerSocketIT {
 				SocksClientHelper.newSocks5Client(
 						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null,
-						UsernamePassword.newInstance("Aladdin", "opensesame".toCharArray())),
+						"Aladdin", 
+						"opensesame".toCharArray()),
 				ConfigurationHelper.newConfigurationUsingSocks5UserpassAuth());
 		assertEquals(string, returningString);
 	}
@@ -68,7 +68,8 @@ public class Socks5ServerSocketIT {
 				SocksClientHelper.newSocks5Client(
 						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null,
-						UsernamePassword.newInstance("Jasmine", "mission:impossible".toCharArray())),
+						"Jasmine", 
+						"mission:impossible".toCharArray()),
 				ConfigurationHelper.newConfigurationUsingSocks5UserpassAuth());
 		assertEquals(string, returningString);
 	}
@@ -81,7 +82,8 @@ public class Socks5ServerSocketIT {
 				SocksClientHelper.newSocks5Client(
 						InetAddress.getLoopbackAddress().getHostAddress(), 
 						null,
-						UsernamePassword.newInstance("Abu", "safeDriversSave40%".toCharArray())),
+						"Abu", 
+						"safeDriversSave40%".toCharArray()),
 				ConfigurationHelper.newConfigurationUsingSocks5UserpassAuth());
 		assertEquals(string, returningString);
 	}

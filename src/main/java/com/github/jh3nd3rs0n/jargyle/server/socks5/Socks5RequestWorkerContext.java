@@ -5,10 +5,12 @@ import java.util.Objects;
 import org.slf4j.Logger;
 
 import com.github.jh3nd3rs0n.jargyle.internal.logging.LoggerHelper;
-import com.github.jh3nd3rs0n.jargyle.server.FirewallRuleActionDenyException;
-import com.github.jh3nd3rs0n.jargyle.server.FirewallRuleNotFoundException;
 import com.github.jh3nd3rs0n.jargyle.server.Rule;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
+import com.github.jh3nd3rs0n.jargyle.server.rules.impl.FirewallRuleActionDenyException;
+import com.github.jh3nd3rs0n.jargyle.server.rules.impl.FirewallRuleNotFoundException;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.rules.impl.Socks5ReplyFirewallRule;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.rules.impl.Socks5ReplyFirewallRules;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Command;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Reply;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Reply;

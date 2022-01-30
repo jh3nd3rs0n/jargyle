@@ -3,8 +3,8 @@ package com.github.jh3nd3rs0n.jargyle.server.config.xml.bind;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.jh3nd3rs0n.jargyle.server.ClientFirewallRule;
-import com.github.jh3nd3rs0n.jargyle.server.ClientFirewallRules;
+import com.github.jh3nd3rs0n.jargyle.server.rules.impl.ClientFirewallRule;
+import com.github.jh3nd3rs0n.jargyle.server.rules.impl.ClientFirewallRules;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;

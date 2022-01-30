@@ -1,9 +1,9 @@
 package com.github.jh3nd3rs0n.jargyle.server.config.xml.bind;
 
 import com.github.jh3nd3rs0n.jargyle.server.LogAction;
-import com.github.jh3nd3rs0n.jargyle.server.AddressRange;
-import com.github.jh3nd3rs0n.jargyle.server.ClientFirewallRule;
-import com.github.jh3nd3rs0n.jargyle.server.FirewallRuleAction;
+import com.github.jh3nd3rs0n.jargyle.server.rules.impl.AddressRange;
+import com.github.jh3nd3rs0n.jargyle.server.rules.impl.ClientFirewallRule;
+import com.github.jh3nd3rs0n.jargyle.server.rules.impl.FirewallRuleAction;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;

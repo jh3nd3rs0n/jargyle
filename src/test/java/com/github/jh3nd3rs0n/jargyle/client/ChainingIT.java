@@ -10,7 +10,6 @@ import java.util.List;
 import org.junit.Test;
 
 import com.github.jh3nd3rs0n.jargyle.TestStringConstants;
-import com.github.jh3nd3rs0n.jargyle.client.socks5.userpassauth.UsernamePassword;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
 import com.github.jh3nd3rs0n.jargyle.server.ChainingGeneralSettingSpecConstants;
@@ -60,8 +59,10 @@ public class ChainingIT {
 										Integer.valueOf(65432))),
 						ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_METHODS.newSetting(
 								Methods.newInstance(Method.USERNAME_PASSWORD)),
-						ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_USERPASSAUTH_USERNAME_PASSWORD.newSetting(
-								UsernamePassword.newInstance("Jasmine:mission%3Aimpossible")))),
+						ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_USERPASSAUTH_USERNAME.newSetting(
+								"Jasmine"),
+						ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_USERPASSAUTH_PASSWORD.newSetting(
+								EncryptedPassword.newInstance("mission:impossible".toCharArray())))),
 				ImmutableConfiguration.newInstance(Settings.newInstance(
 						GeneralSettingSpecConstants.PORT.newSetting(
 								Port.newInstance(65432)),
@@ -76,8 +77,10 @@ public class ChainingIT {
 										Integer.valueOf(34567))),
 						ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_METHODS.newSetting(
 								Methods.newInstance(Method.USERNAME_PASSWORD)),
-						ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_USERPASSAUTH_USERNAME_PASSWORD.newSetting(
-								UsernamePassword.newInstance("Abu:safeDriversSave40%25")))),
+						ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_USERPASSAUTH_USERNAME.newSetting(
+								"Abu"),
+						ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_USERPASSAUTH_PASSWORD.newSetting(
+								EncryptedPassword.newInstance("safeDriversSave40%".toCharArray())))),
 				ImmutableConfiguration.newInstance(Settings.newInstance(
 						GeneralSettingSpecConstants.PORT.newSetting(
 								Port.newInstance(34567)),

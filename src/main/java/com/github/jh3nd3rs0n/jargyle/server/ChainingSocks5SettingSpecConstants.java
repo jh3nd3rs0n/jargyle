@@ -6,14 +6,15 @@ import java.util.Map;
 import org.ietf.jgss.Oid;
 
 import com.github.jh3nd3rs0n.jargyle.client.Socks5PropertySpecConstants;
-import com.github.jh3nd3rs0n.jargyle.client.socks5.userpassauth.UsernamePassword;
+import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
 import com.github.jh3nd3rs0n.jargyle.internal.help.HelpText;
 import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.BooleanSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.MethodsSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.OidSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.ProtectionLevelsSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.StringSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.UsernamePasswordSettingSpec;
+import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.UserEncryptedPasswordSettingSpec;
+import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.UsernameSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Methods;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.gssapiauth.ProtectionLevels;
 
@@ -93,17 +94,26 @@ public final class ChainingSocks5SettingSpecConstants {
 					NewSettingSpecPermission.INSTANCE, 
 					"chaining.socks5.resolve.useResolveCommand",
 					Socks5PropertySpecConstants.SOCKS5_RESOLVE_USE_RESOLVE_COMMAND.getDefaultProperty().getValue()));
+
+	@HelpText(
+			doc = "The password to be used to access the other SOCKS5 server", 
+			usage = "chaining.socks5.userpassauth.password=PASSWORD"
+	)
+	public static final SettingSpec<EncryptedPassword> CHAINING_SOCKS5_USERPASSAUTH_PASSWORD =
+			SETTING_SPECS.addThenGet(new UserEncryptedPasswordSettingSpec(
+					NewSettingSpecPermission.INSTANCE,
+					"chaining.socks5.userpassauth.password",
+					Socks5PropertySpecConstants.SOCKS5_USERPASSAUTH_PASSWORD.getDefaultProperty().getValue()));
 	
 	@HelpText(
-			doc = "The username password to be used to access the other "
-					+ "SOCKS5 server", 
-			usage = "chaining.socks5.userpassauth.usernamePassword=USERNAME:PASSWORD"
+			doc = "The username to be used to access the other SOCKS5 server", 
+			usage = "chaining.socks5.userpassauth.username=USERNAME"
 	)
-	public static final SettingSpec<UsernamePassword> CHAINING_SOCKS5_USERPASSAUTH_USERNAME_PASSWORD = 
-			SETTING_SPECS.addThenGet(new UsernamePasswordSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"chaining.socks5.userpassauth.usernamePassword",
-					null));
+	public static final SettingSpec<String> CHAINING_SOCKS5_USERPASSAUTH_USERNAME =
+			SETTING_SPECS.addThenGet(new UsernameSettingSpec(
+					NewSettingSpecPermission.INSTANCE,
+					"chaining.socks5.userpassauth.username",
+					Socks5PropertySpecConstants.SOCKS5_USERPASSAUTH_USERNAME.getDefaultProperty().getValue()));
 	
 	public static List<SettingSpec<Object>> values() {
 		return SETTING_SPECS.toList();

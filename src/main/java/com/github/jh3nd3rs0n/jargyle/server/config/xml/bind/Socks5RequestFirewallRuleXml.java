@@ -1,10 +1,10 @@
 package com.github.jh3nd3rs0n.jargyle.server.config.xml.bind;
 
 import com.github.jh3nd3rs0n.jargyle.server.LogAction;
-import com.github.jh3nd3rs0n.jargyle.server.PortRange;
-import com.github.jh3nd3rs0n.jargyle.server.AddressRange;
-import com.github.jh3nd3rs0n.jargyle.server.FirewallRuleAction;
-import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5RequestFirewallRule;
+import com.github.jh3nd3rs0n.jargyle.server.rules.impl.AddressRange;
+import com.github.jh3nd3rs0n.jargyle.server.rules.impl.FirewallRuleAction;
+import com.github.jh3nd3rs0n.jargyle.server.rules.impl.PortRange;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.rules.impl.Socks5RequestFirewallRule;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Command;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
 

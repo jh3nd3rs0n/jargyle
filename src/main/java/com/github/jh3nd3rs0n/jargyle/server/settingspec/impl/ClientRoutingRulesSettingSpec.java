@@ -1,8 +1,8 @@
 package com.github.jh3nd3rs0n.jargyle.server.settingspec.impl;
 
-import com.github.jh3nd3rs0n.jargyle.server.ClientRoutingRules;
 import com.github.jh3nd3rs0n.jargyle.server.Setting;
 import com.github.jh3nd3rs0n.jargyle.server.SettingSpec;
+import com.github.jh3nd3rs0n.jargyle.server.rules.impl.ClientRoutingRules;
 
 public final class ClientRoutingRulesSettingSpec 
 	extends SettingSpec<ClientRoutingRules> {

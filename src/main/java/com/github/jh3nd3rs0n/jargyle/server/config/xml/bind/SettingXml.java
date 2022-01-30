@@ -2,17 +2,16 @@ package com.github.jh3nd3rs0n.jargyle.server.config.xml.bind;
 
 import java.util.Objects;
 
-import com.github.jh3nd3rs0n.jargyle.client.socks5.userpassauth.UsernamePassword;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
-import com.github.jh3nd3rs0n.jargyle.server.ClientFirewallRules;
-import com.github.jh3nd3rs0n.jargyle.server.ClientRoutingRules;
 import com.github.jh3nd3rs0n.jargyle.server.Setting;
-import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5ReplyFirewallRules;
-import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5RequestFirewallRules;
-import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5RequestRoutingRules;
+import com.github.jh3nd3rs0n.jargyle.server.rules.impl.ClientFirewallRules;
+import com.github.jh3nd3rs0n.jargyle.server.rules.impl.ClientRoutingRules;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5RequestWorkerFactory;
-import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5UdpFirewallRules;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.rules.impl.Socks5ReplyFirewallRules;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.rules.impl.Socks5RequestFirewallRules;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.rules.impl.Socks5RequestRoutingRules;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.rules.impl.Socks5UdpFirewallRules;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.UsernamePasswordAuthenticator;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -61,9 +60,6 @@ class SettingXml {
 		if (val instanceof UsernamePasswordAuthenticator) {
 			return new UsernamePasswordAuthenticatorXml(
 					(UsernamePasswordAuthenticator) val);
-		}
-		if (val instanceof UsernamePassword) {
-			return new UsernamePasswordXml((UsernamePassword) val);
 		}
 		throw new IllegalArgumentException(String.format(
 				"no %s for %s", 
@@ -114,10 +110,6 @@ class SettingXml {
 				name = "usernamePasswordAuthenticator", 
 				required = true, 
 				type = UsernamePasswordAuthenticatorXml.class),
-		@XmlElement(
-				name = "usernamePassword", 
-				required = true, 
-				type = UsernamePasswordXml.class),
 		@XmlElement(
 				name = "value", 
 				required = true, 

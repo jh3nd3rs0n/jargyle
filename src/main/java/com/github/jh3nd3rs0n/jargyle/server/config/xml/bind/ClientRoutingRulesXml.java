@@ -3,8 +3,8 @@ package com.github.jh3nd3rs0n.jargyle.server.config.xml.bind;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.jh3nd3rs0n.jargyle.server.ClientRoutingRule;
-import com.github.jh3nd3rs0n.jargyle.server.ClientRoutingRules;
+import com.github.jh3nd3rs0n.jargyle.server.rules.impl.ClientRoutingRule;
+import com.github.jh3nd3rs0n.jargyle.server.rules.impl.ClientRoutingRules;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;

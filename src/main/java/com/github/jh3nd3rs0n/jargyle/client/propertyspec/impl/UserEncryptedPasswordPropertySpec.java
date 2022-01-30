@@ -4,8 +4,8 @@ import java.util.Arrays;
 
 import com.github.jh3nd3rs0n.jargyle.client.Property;
 import com.github.jh3nd3rs0n.jargyle.client.PropertySpec;
-import com.github.jh3nd3rs0n.jargyle.client.socks5.userpassauth.UsernamePassword;
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
+import com.github.jh3nd3rs0n.jargyle.transport.socks5.userpassauth.UsernamePasswordRequest;
 
 public final class UserEncryptedPasswordPropertySpec
 	extends PropertySpec<EncryptedPassword> {
@@ -13,7 +13,7 @@ public final class UserEncryptedPasswordPropertySpec
 	private static EncryptedPassword getValidatedEncryptedPassword(
 			final EncryptedPassword encryptedPassword) {
 		char[] password = encryptedPassword.getPassword();
-		UsernamePassword.validatePassword(password);
+		UsernamePasswordRequest.validatePassword(password);
 		Arrays.fill(password, '\0');
 		return encryptedPassword;
 	}
@@ -25,7 +25,8 @@ public final class UserEncryptedPasswordPropertySpec
 		super(
 				permission, 
 				s, 
-				EncryptedPassword.class, getValidatedEncryptedPassword(defaultVal));
+				EncryptedPassword.class, 
+				getValidatedEncryptedPassword(defaultVal));
 	}
 
 	@Override

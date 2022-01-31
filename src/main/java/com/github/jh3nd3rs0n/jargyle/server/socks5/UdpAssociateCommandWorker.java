@@ -16,7 +16,7 @@ import com.github.jh3nd3rs0n.jargyle.common.net.Host;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.common.net.ssl.DtlsDatagramSocketFactory;
 import com.github.jh3nd3rs0n.jargyle.internal.logging.LoggerHelper;
-import com.github.jh3nd3rs0n.jargyle.internal.net.AllZerosInetAddressHelper;
+import com.github.jh3nd3rs0n.jargyle.internal.net.AllZerosAddressConstants;
 import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.rules.impl.FirewallRule;
@@ -177,7 +177,7 @@ public final class UdpAssociateCommandWorker extends CommandWorker {
 	public void run() throws IOException {
 		Socks5Reply socks5Rep = null;
 		String desiredDestinationAddr = this.desiredDestinationAddress;
-		if (AllZerosInetAddressHelper.isAllZerosHostAddress(
+		if (AllZerosAddressConstants.isAllZerosAddress(
 				desiredDestinationAddr)) {
 			desiredDestinationAddr = 
 					this.clientFacingSocket.getInetAddress().getHostAddress();
@@ -214,7 +214,7 @@ public final class UdpAssociateCommandWorker extends CommandWorker {
 			InetAddress inetAddress = 
 					clientFacingDatagramSock.getLocalAddress();
 			String serverBoundAddress = inetAddress.getHostAddress();
-			if (AllZerosInetAddressHelper.isAllZerosHostAddress(
+			if (AllZerosAddressConstants.isAllZerosAddress(
 					serverBoundAddress)) {
 				inetAddress = this.clientFacingSocket.getLocalAddress();
 				serverBoundAddress = inetAddress.getHostAddress();
@@ -278,7 +278,7 @@ public final class UdpAssociateCommandWorker extends CommandWorker {
 			final String clientHost, 
 			final int clientPort) {
 		DatagramSocket clientFacingDatagramSck = clientFacingDatagramSock;
-		if (!AllZerosInetAddressHelper.isAllZerosHostAddress(clientHost) 
+		if (!AllZerosAddressConstants.isAllZerosAddress(clientHost) 
 				&& clientPort > 0) {
 			InetAddress udpClientHostInetAddress = null;
 			try {

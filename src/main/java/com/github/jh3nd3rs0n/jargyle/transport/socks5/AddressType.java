@@ -10,7 +10,7 @@ import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-import com.github.jh3nd3rs0n.jargyle.common.number.impl.UnsignedByte;
+import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
 import com.github.jh3nd3rs0n.jargyle.internal.net.AddressRegexConstants;
 
 public enum AddressType {

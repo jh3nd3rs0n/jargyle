@@ -2,7 +2,7 @@ package com.github.jh3nd3rs0n.jargyle.client.propertyspec.impl;
 
 import com.github.jh3nd3rs0n.jargyle.client.Property;
 import com.github.jh3nd3rs0n.jargyle.client.PropertySpec;
-import com.github.jh3nd3rs0n.jargyle.common.number.impl.PositiveInteger;
+import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
 
 public final class PositiveIntegerPropertySpec 
 	extends PropertySpec<PositiveInteger> {

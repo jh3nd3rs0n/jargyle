@@ -15,7 +15,7 @@ import java.nio.channels.DatagramChannel;
 import java.util.Set;
 
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
-import com.github.jh3nd3rs0n.jargyle.internal.net.AllZerosInetAddressHelper;
+import com.github.jh3nd3rs0n.jargyle.internal.net.AllZerosAddressConstants;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Command;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.MethodEncapsulation;
@@ -64,7 +64,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			}
 			int port = 0;
 			InetAddress inetAddress = 
-					AllZerosInetAddressHelper.getAllZerosInet4Address();
+					AllZerosAddressConstants.getInet4Address();
 			if (addr != null) {
 				if (!(addr instanceof InetSocketAddress)) {
 					throw new IllegalArgumentException(

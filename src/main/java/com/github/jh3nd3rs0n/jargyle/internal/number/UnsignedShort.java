@@ -1,10 +1,10 @@
-package com.github.jh3nd3rs0n.jargyle.internal.number.impl;
+package com.github.jh3nd3rs0n.jargyle.internal.number;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 
-import com.github.jh3nd3rs0n.jargyle.common.number.impl.UnsignedByte;
+import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
 
 public final class UnsignedShort {
 

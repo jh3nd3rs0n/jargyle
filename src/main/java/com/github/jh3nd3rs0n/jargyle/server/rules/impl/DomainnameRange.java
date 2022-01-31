@@ -4,7 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.github.jh3nd3rs0n.jargyle.internal.net.AddressRegexConstants;
-import com.github.jh3nd3rs0n.jargyle.internal.util.regex.RegexHelper;
+import com.github.jh3nd3rs0n.jargyle.internal.regex.RegexHelper;
 
 public final class DomainnameRange extends AddressRange {
 

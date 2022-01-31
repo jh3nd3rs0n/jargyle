@@ -1,6 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.internal.net;
 
-import com.github.jh3nd3rs0n.jargyle.internal.util.regex.RegexHelper;
+import com.github.jh3nd3rs0n.jargyle.internal.regex.RegexHelper;
 
 public final class AddressRegexConstants {
 

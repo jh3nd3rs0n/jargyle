@@ -10,7 +10,7 @@ import com.github.jh3nd3rs0n.jargyle.client.propertyspec.impl.SocketSettingsProp
 import com.github.jh3nd3rs0n.jargyle.common.net.Host;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
-import com.github.jh3nd3rs0n.jargyle.common.number.impl.PositiveInteger;
+import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
 
 public final class GeneralPropertySpecConstants {
 

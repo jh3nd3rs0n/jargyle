@@ -16,7 +16,7 @@ import com.github.jh3nd3rs0n.jargyle.ResourceHelper;
 import com.github.jh3nd3rs0n.jargyle.ResourceNameConstants;
 import com.github.jh3nd3rs0n.jargyle.ThreadHelper;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
-import com.github.jh3nd3rs0n.jargyle.common.number.impl.NonnegativeInteger;
+import com.github.jh3nd3rs0n.jargyle.common.number.NonnegativeInteger;
 
 public class XmlFileSourceConfigurationProviderIT {
 	

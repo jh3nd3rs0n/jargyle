@@ -3,15 +3,15 @@ package com.github.jh3nd3rs0n.jargyle.common.net;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-import com.github.jh3nd3rs0n.jargyle.internal.net.AllZerosInetAddressHelper;
+import com.github.jh3nd3rs0n.jargyle.internal.net.AllZerosAddressConstants;
 
 public final class Host {
 	
 	private static final Host ALL_ZEROS_INET4_INSTANCE = Host.newInstance(
-			AllZerosInetAddressHelper.getAllZerosInet4Address());
+			AllZerosAddressConstants.getInet4Address());
 	
 	private static final Host ALL_ZEROS_INET6_INSTANCE = Host.newInstance(
-			AllZerosInetAddressHelper.getAllZerosInet6Address());
+			AllZerosAddressConstants.getInet6Address());
 	
 	public static final Host getAllZerosInet4Instance() {
 		return ALL_ZEROS_INET4_INSTANCE;

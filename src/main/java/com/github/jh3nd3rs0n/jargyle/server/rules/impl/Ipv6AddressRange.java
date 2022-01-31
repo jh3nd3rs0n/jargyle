@@ -4,7 +4,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 import com.github.jh3nd3rs0n.jargyle.internal.net.AddressRegexConstants;
-import com.github.jh3nd3rs0n.jargyle.internal.util.regex.RegexHelper;
+import com.github.jh3nd3rs0n.jargyle.internal.regex.RegexHelper;
 
 public final class Ipv6AddressRange extends AddressRange {
 

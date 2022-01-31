@@ -21,9 +21,9 @@ import com.github.jh3nd3rs0n.jargyle.common.net.FilterSocket;
 import com.github.jh3nd3rs0n.jargyle.common.net.PerformancePreferences;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.common.net.StandardSocketSettingSpecConstants;
-import com.github.jh3nd3rs0n.jargyle.common.number.impl.NonnegativeInteger;
-import com.github.jh3nd3rs0n.jargyle.common.number.impl.PositiveInteger;
-import com.github.jh3nd3rs0n.jargyle.internal.net.AllZerosInetAddressHelper;
+import com.github.jh3nd3rs0n.jargyle.common.number.NonnegativeInteger;
+import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
+import com.github.jh3nd3rs0n.jargyle.internal.net.AllZerosAddressConstants;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Command;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.MethodEncapsulation;
@@ -68,7 +68,7 @@ public final class Socks5ServerSocket extends ServerSocket {
 		@Override
 		public synchronized void close() throws IOException {
 			super.close();
-			this.localInetAddress = AllZerosInetAddressHelper.getAllZerosInet4Address();
+			this.localInetAddress = AllZerosAddressConstants.getInet4Address();
 			this.localPort = -1;
 			this.localSocketAddress = null;
 			this.remoteInetAddress = null;
@@ -383,7 +383,7 @@ public final class Socks5ServerSocket extends ServerSocket {
 			}
 			InetAddress bAddr = bindAddr;
 			if (bAddr == null) {
-				bAddr = AllZerosInetAddressHelper.getAllZerosInet4Address();
+				bAddr = AllZerosAddressConstants.getInet4Address();
 			}
 			String address = bAddr.getHostAddress();
 			Socks5Request socks5Req = Socks5Request.newInstance(

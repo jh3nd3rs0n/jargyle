@@ -7,9 +7,9 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Objects;
 
-import com.github.jh3nd3rs0n.jargyle.common.number.impl.UnsignedByte;
+import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
 import com.github.jh3nd3rs0n.jargyle.internal.net.IOExceptionHandler;
-import com.github.jh3nd3rs0n.jargyle.internal.number.impl.UnsignedShort;
+import com.github.jh3nd3rs0n.jargyle.internal.number.UnsignedShort;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Exception;
 
 public final class Message {

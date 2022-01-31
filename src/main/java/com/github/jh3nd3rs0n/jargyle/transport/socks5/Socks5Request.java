@@ -6,9 +6,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 
-import com.github.jh3nd3rs0n.jargyle.common.number.impl.UnsignedByte;
+import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
 import com.github.jh3nd3rs0n.jargyle.internal.net.IOExceptionHandler;
-import com.github.jh3nd3rs0n.jargyle.internal.number.impl.UnsignedShort;
+import com.github.jh3nd3rs0n.jargyle.internal.number.UnsignedShort;
 
 public final class Socks5Request {
 

@@ -1,4 +1,4 @@
-package com.github.jh3nd3rs0n.jargyle.internal.util.regex;
+package com.github.jh3nd3rs0n.jargyle.internal.regex;
 
 public final class RegexHelper {
 

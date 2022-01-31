@@ -1,6 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.server.settingspec.impl;
 
-import com.github.jh3nd3rs0n.jargyle.common.number.impl.NonnegativeInteger;
+import com.github.jh3nd3rs0n.jargyle.common.number.NonnegativeInteger;
 import com.github.jh3nd3rs0n.jargyle.server.Setting;
 import com.github.jh3nd3rs0n.jargyle.server.SettingSpec;
 

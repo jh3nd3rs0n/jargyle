@@ -10,7 +10,7 @@ import com.github.jh3nd3rs0n.jargyle.client.propertyspec.impl.FilePropertySpec;
 import com.github.jh3nd3rs0n.jargyle.client.propertyspec.impl.PositiveIntegerPropertySpec;
 import com.github.jh3nd3rs0n.jargyle.client.propertyspec.impl.StringPropertySpec;
 import com.github.jh3nd3rs0n.jargyle.client.propertyspec.impl.WordsPropertySpec;
-import com.github.jh3nd3rs0n.jargyle.common.number.impl.PositiveInteger;
+import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
 import com.github.jh3nd3rs0n.jargyle.common.text.Words;
 

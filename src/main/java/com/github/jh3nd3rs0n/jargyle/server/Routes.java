@@ -21,7 +21,7 @@ import com.github.jh3nd3rs0n.jargyle.client.SocksServerUri;
 import com.github.jh3nd3rs0n.jargyle.client.SslPropertySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.common.net.Host;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
-import com.github.jh3nd3rs0n.jargyle.common.number.impl.PositiveInteger;
+import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
 import com.github.jh3nd3rs0n.jargyle.common.text.Words;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Methods;

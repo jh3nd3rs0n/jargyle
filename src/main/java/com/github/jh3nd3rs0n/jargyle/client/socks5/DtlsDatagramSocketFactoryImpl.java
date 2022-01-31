@@ -16,7 +16,7 @@ import com.github.jh3nd3rs0n.jargyle.client.Properties;
 import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
 import com.github.jh3nd3rs0n.jargyle.common.net.ssl.DtlsDatagramSocket;
 import com.github.jh3nd3rs0n.jargyle.common.net.ssl.DtlsDatagramSocketFactory;
-import com.github.jh3nd3rs0n.jargyle.common.number.impl.PositiveInteger;
+import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
 import com.github.jh3nd3rs0n.jargyle.common.text.Words;
 import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.KeyManagerHelper;
 import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.SslContextHelper;

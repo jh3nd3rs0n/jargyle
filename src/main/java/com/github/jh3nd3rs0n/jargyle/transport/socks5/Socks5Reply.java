@@ -6,10 +6,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 
-import com.github.jh3nd3rs0n.jargyle.common.number.impl.UnsignedByte;
-import com.github.jh3nd3rs0n.jargyle.internal.net.AllZerosInetAddressHelper;
+import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
+import com.github.jh3nd3rs0n.jargyle.internal.net.AllZerosAddressConstants;
 import com.github.jh3nd3rs0n.jargyle.internal.net.IOExceptionHandler;
-import com.github.jh3nd3rs0n.jargyle.internal.number.impl.UnsignedShort;
+import com.github.jh3nd3rs0n.jargyle.internal.number.UnsignedShort;
 
 public final class Socks5Reply {
 
@@ -33,7 +33,7 @@ public final class Socks5Reply {
 		}
 		return newInstance(
 				reply, 
-				AllZerosInetAddressHelper.ALL_ZEROS_INET4_HOST_ADDRESS,
+				AllZerosAddressConstants.IPV4_ADDRESS,
 				0);
 	}
 	

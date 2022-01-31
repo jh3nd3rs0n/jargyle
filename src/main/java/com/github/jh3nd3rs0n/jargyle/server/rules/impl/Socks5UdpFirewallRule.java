@@ -1,4 +1,4 @@
-package com.github.jh3nd3rs0n.jargyle.server.socks5.rules.impl;
+package com.github.jh3nd3rs0n.jargyle.server.rules.impl;
 
 import java.util.Arrays;
 import java.util.List;
@@ -6,10 +6,6 @@ import java.util.List;
 import com.github.jh3nd3rs0n.jargyle.internal.help.HelpText;
 import com.github.jh3nd3rs0n.jargyle.server.LogAction;
 import com.github.jh3nd3rs0n.jargyle.server.Rule;
-import com.github.jh3nd3rs0n.jargyle.server.rules.impl.AddressRange;
-import com.github.jh3nd3rs0n.jargyle.server.rules.impl.FirewallRule;
-import com.github.jh3nd3rs0n.jargyle.server.rules.impl.FirewallRuleAction;
-import com.github.jh3nd3rs0n.jargyle.server.rules.impl.FirewallRuleActionDenyException;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.MethodSubnegotiationResults;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
 

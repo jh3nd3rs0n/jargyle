@@ -1,4 +1,4 @@
-package com.github.jh3nd3rs0n.jargyle.server.socks5.rules.impl;
+package com.github.jh3nd3rs0n.jargyle.server.rules.impl;
 
 import java.util.Arrays;
 import java.util.List;
@@ -6,38 +6,33 @@ import java.util.List;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.internal.help.HelpText;
 import com.github.jh3nd3rs0n.jargyle.server.LogAction;
+import com.github.jh3nd3rs0n.jargyle.server.Route;
+import com.github.jh3nd3rs0n.jargyle.server.Routes;
 import com.github.jh3nd3rs0n.jargyle.server.Rule;
-import com.github.jh3nd3rs0n.jargyle.server.rules.impl.AddressRange;
-import com.github.jh3nd3rs0n.jargyle.server.rules.impl.FirewallRule;
-import com.github.jh3nd3rs0n.jargyle.server.rules.impl.FirewallRuleAction;
-import com.github.jh3nd3rs0n.jargyle.server.rules.impl.FirewallRuleActionDenyException;
-import com.github.jh3nd3rs0n.jargyle.server.rules.impl.PortRange;
+import com.github.jh3nd3rs0n.jargyle.server.SelectionStrategy;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.MethodSubnegotiationResults;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Command;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Reply;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Request;
 
-public final class Socks5ReplyFirewallRule extends FirewallRule {
+public final class Socks5RequestRoutingRule extends RoutingRule {
 
 	public static final class Builder 
-		extends FirewallRule.Builder<Builder, Socks5ReplyFirewallRule> {
+		extends RoutingRule.Builder<Builder, Socks5RequestRoutingRule> {
 
 		public static enum Field 
-			implements FirewallRule.Builder.Field<Builder, Socks5ReplyFirewallRule>{
-
+			implements RoutingRule.Builder.Field<Builder, Socks5RequestRoutingRule> {
+			
 			@HelpText(
-					doc = "Specifies the action to take. This field starts a "
-							+ "new SOCKS5 reply firewall rule.",
-					usage = "firewallRuleAction=FIREWALL_RULE_ACTION"
-			)	
-			FIREWALL_RULE_ACTION("firewallRuleAction") {
+					doc = "This field starts a new SOCKS5 request routing rule",
+					usage = "routingRule="
+			)			
+			ROUTING_RULE("routingRule") {
 				@Override
 				public Builder set(final Builder builder, final String value) {
-					return new Socks5ReplyFirewallRule.Builder(
-							FirewallRuleAction.valueOfString(value));
+					return new Builder();
 				}
-			},
+			},			
 			
 			@HelpText(
 					doc = "Specifies the address range for the client address",
@@ -50,7 +45,7 @@ public final class Socks5ReplyFirewallRule extends FirewallRule {
 							value));
 				}
 			},
-
+			
 			@HelpText(
 					doc = "Specifies the address range for the SOCKS server "
 							+ "address",
@@ -123,36 +118,36 @@ public final class Socks5ReplyFirewallRule extends FirewallRule {
 							PortRange.newInstance(value));
 				}
 			},
-
+			
 			@HelpText(
-					doc = "Specifies the address range for the server bound "
-							+ "address of the SOCKS5 reply",
-					usage = "serverBoundAddressRange=ADDRESS|ADDRESS1-ADDRESS2|regex:REGULAR_EXPRESSION"
-			)		
-			SERVER_BOUND_ADDRESS_RANGE("serverBoundAddressRange") {
+					doc = "Specifies the ID for a route. This field can be "
+							+ "specified multiple times for each ID for a "
+							+ "route.",
+					usage = "routeId=ROUTE_ID"
+			)			
+			ROUTE_ID("routeId") {
 				@Override
 				public Builder set(final Builder builder, final String value) {
-					return builder.serverBoundAddressRange(
-							AddressRange.newInstance(value));
+					return builder.addRouteId(value);
 				}
 			},
 			
 			@HelpText(
-					doc = "Specifies the port range for the server bound port "
-							+ "of the SOCKS5 reply",
-					usage = "serverBoundPortRange=PORT|PORT1-PORT2"
-			)		
-			SERVER_BOUND_PORT_RANGE("serverBoundPortRange") {
+					doc = "Specifies the selection strategy for the next "
+							+ "route ID to use from the list of route IDs",
+					usage = "routeIdSelectionStrategy=SELECTION_STRATEGY"
+			)			
+			ROUTE_ID_SELECTION_STRATEGY("routeIdSelectionStrategy") {
 				@Override
 				public Builder set(final Builder builder, final String value) {
-					return builder.serverBoundPortRange(PortRange.newInstance(
-							value));
+					return builder.routeIdSelectionStrategy(
+							SelectionStrategy.valueOfString(value));
 				}
 			},
 			
 			@HelpText(
-					doc = "Specifies the logging action to take if the "
-							+ "firewall rule is applied",
+					doc = "Specifies the logging action to take if a route is "
+							+ "selected from the list of route IDs",
 					usage = "logAction=LOG_ACTION"
 			)	
 			LOG_ACTION("logAction") {
@@ -179,7 +174,7 @@ public final class Socks5ReplyFirewallRule extends FirewallRule {
 			}
 			
 		}
-		
+
 		private AddressRange clientAddressRange;
 		private AddressRange socksServerAddressRange;
 		private Method method;
@@ -187,11 +182,8 @@ public final class Socks5ReplyFirewallRule extends FirewallRule {
 		private Command command;
 		private AddressRange desiredDestinationAddressRange;
 		private PortRange desiredDestinationPortRange;
-		private AddressRange serverBoundAddressRange;
-		private PortRange serverBoundPortRange;
 		
-		public Builder(final FirewallRuleAction firewallRlAction) {
-			super(firewallRlAction);
+		public Builder() {
 			this.clientAddressRange = null;
 			this.socksServerAddressRange = null;
 			this.method = null;
@@ -199,13 +191,17 @@ public final class Socks5ReplyFirewallRule extends FirewallRule {
 			this.command = null;
 			this.desiredDestinationAddressRange = null;
 			this.desiredDestinationPortRange = null;
-			this.serverBoundAddressRange = null;
-			this.serverBoundPortRange = null;
 		}
 
 		@Override
-		public Socks5ReplyFirewallRule build() {
-			return new Socks5ReplyFirewallRule(this);
+		public Builder addRouteId(final String id) {
+			super.addRouteId(id);
+			return this;
+		}
+		
+		@Override
+		public Socks5RequestRoutingRule build() {
+			return new Socks5RequestRoutingRule(this);
 		}
 		
 		public Builder clientAddressRange(final AddressRange clientAddrRange) {
@@ -241,21 +237,16 @@ public final class Socks5ReplyFirewallRule extends FirewallRule {
 			super.logAction(lgAction);
 			return this;
 		}
-		
+
 		public Builder method(final Method meth) {
 			this.method = meth;
 			return this;
 		}
 		
-		public Builder serverBoundAddressRange(
-				final AddressRange serverBoundAddrRange) {
-			this.serverBoundAddressRange = serverBoundAddrRange;
-			return this;
-		}
-		
-		public Builder serverBoundPortRange(
-				final PortRange serverBoundPrtRange) {
-			this.serverBoundPortRange = serverBoundPrtRange;
+		@Override
+		public Builder routeIdSelectionStrategy(
+				final SelectionStrategy selectionStrategy) {
+			super.routeIdSelectionStrategy(selectionStrategy);
 			return this;
 		}
 		
@@ -269,28 +260,27 @@ public final class Socks5ReplyFirewallRule extends FirewallRule {
 			this.user = usr;
 			return this;
 		}
-		
+ 
 	}
 
-	public static final class Context extends FirewallRule.Context {
+	public static final class Context extends RoutingRule.Context {
 		
 		private final String clientAddress;
-		private final String socksServerAddress;		
+		private final String socksServerAddress;
 		private final MethodSubnegotiationResults methodSubnegotiationResults;
 		private final Socks5Request socks5Request;
-		private final Socks5Reply socks5Reply;
 		
 		public Context(
 				final String clientAddr,
 				final String socksServerAddr,
 				final MethodSubnegotiationResults methSubnegotiationResults,
 				final Socks5Request socks5Req,
-				final Socks5Reply socks5Rep) {
+				final Routes routes) {
+			super(routes);
 			this.clientAddress = clientAddr;
 			this.socksServerAddress = socksServerAddr;
 			this.methodSubnegotiationResults = methSubnegotiationResults;
 			this.socks5Request = socks5Req;
-			this.socks5Reply = socks5Rep;
 		}
 
 		public String getClientAddress() {
@@ -299,10 +289,6 @@ public final class Socks5ReplyFirewallRule extends FirewallRule {
 
 		public MethodSubnegotiationResults getMethodSubnegotiationResults() {
 			return this.methodSubnegotiationResults;
-		}
-
-		public Socks5Reply getSocks5Reply() {
-			return this.socks5Reply;
 		}
 
 		public Socks5Request getSocks5Request() {
@@ -325,26 +311,18 @@ public final class Socks5ReplyFirewallRule extends FirewallRule {
 				.append(this.methodSubnegotiationResults)
 				.append(", socks5Request=")
 				.append(this.socks5Request)
-				.append(", socks5Reply=")
-				.append(this.socks5Reply)
+				.append(", routes=")
+				.append(this.getRoutes())
 				.append("]");
 			return builder.toString();
 		}
 		
 	}
 	
-	private static final Socks5ReplyFirewallRule DEFAULT_INSTANCE = 
-			new Socks5ReplyFirewallRule.Builder(
-					FirewallRuleAction.ALLOW).build();
-	
-	public static Socks5ReplyFirewallRule getDefault() {
-		return DEFAULT_INSTANCE;
-	}
-	
-	public static List<Socks5ReplyFirewallRule> newInstances(final String s) {
+	public static List<Socks5RequestRoutingRule> newInstances(final String s) {
 		return Rule.newInstances(
 				s, 
-				Builder.Field.FIREWALL_RULE_ACTION, 
+				Builder.Field.ROUTING_RULE, 
 				Arrays.asList(Builder.Field.values()));
 	}
 	
@@ -355,10 +333,8 @@ public final class Socks5ReplyFirewallRule extends FirewallRule {
 	private final Command command;
 	private final AddressRange desiredDestinationAddressRange;
 	private final PortRange desiredDestinationPortRange;
-	private final AddressRange serverBoundAddressRange;
-	private final PortRange serverBoundPortRange;
-	
-	private Socks5ReplyFirewallRule(final Builder builder) {
+
+	private Socks5RequestRoutingRule(final Builder builder) {
 		super(builder);
 		AddressRange clientAddrRange = builder.clientAddressRange;
 		AddressRange socksServerAddrRange = builder.socksServerAddressRange;
@@ -369,8 +345,6 @@ public final class Socks5ReplyFirewallRule extends FirewallRule {
 				builder.desiredDestinationAddressRange;
 		PortRange desiredDestinationPrtRange = 
 				builder.desiredDestinationPortRange;
-		AddressRange serverBoundAddrRange = builder.serverBoundAddressRange;
-		PortRange serverBoundPrtRange = builder.serverBoundPortRange;
 		this.clientAddressRange = clientAddrRange;
 		this.socksServerAddressRange = socksServerAddrRange;
 		this.method = meth;
@@ -378,10 +352,8 @@ public final class Socks5ReplyFirewallRule extends FirewallRule {
 		this.command = cmd;
 		this.desiredDestinationAddressRange = desiredDestinationAddrRange;
 		this.desiredDestinationPortRange = desiredDestinationPrtRange;
-		this.serverBoundAddressRange = serverBoundAddrRange;
-		this.serverBoundPortRange = serverBoundPrtRange;
 	}
-	
+
 	@Override
 	public boolean appliesBasedOn(final Rule.Context context) {
 		if (!(context instanceof Context)) {
@@ -391,7 +363,6 @@ public final class Socks5ReplyFirewallRule extends FirewallRule {
 		MethodSubnegotiationResults methSubnegotiationResults =
 				cntxt.getMethodSubnegotiationResults();
 		Socks5Request socks5Req = cntxt.getSocks5Request();
-		Socks5Reply socks5Rep = cntxt.getSocks5Reply();
 		if (this.clientAddressRange != null 
 				&& !this.clientAddressRange.contains(
 						cntxt.getClientAddress())) {
@@ -420,57 +391,13 @@ public final class Socks5ReplyFirewallRule extends FirewallRule {
 			return false;
 		}
 		if (this.desiredDestinationPortRange != null
-				&& !this.desiredDestinationPortRange.contains(
-						Port.newInstance(socks5Req.getDesiredDestinationPort()))) {
-			return false;
-		}
-		if (this.serverBoundAddressRange != null
-				&& !this.serverBoundAddressRange.contains(
-						socks5Rep.getServerBoundAddress())) {
-			return false;
-		}
-		if (this.serverBoundPortRange != null 
-				&& !this.serverBoundPortRange.contains(Port.newInstance(
-						socks5Rep.getServerBoundPort()))) {
+				&& !this.desiredDestinationPortRange.contains(Port.newInstance(
+						socks5Req.getDesiredDestinationPort()))) {
 			return false;
 		}
 		return true;
 	}
 
-	@Override
-	public void applyBasedOn(final Rule.Context context) {
-		FirewallRuleAction firewallRuleAction = this.getFirewallRuleAction();
-		LogAction logAction = this.getLogAction();
-		Context cntxt = (Context) context;		
-		String clientAddress = cntxt.getClientAddress();
-		MethodSubnegotiationResults methSubnegotiationResults = 
-				cntxt.getMethodSubnegotiationResults();
-		String user = methSubnegotiationResults.getUser();
-		String possibleUser = (user != null) ? 
-				String.format(" (%s)", user) : "";
-		if (firewallRuleAction.equals(FirewallRuleAction.ALLOW)	
-				&& logAction != null) {
-			logAction.invoke(String.format(
-					"SOCKS5 reply to %s%s is allowed based on the following "
-					+ "firewall rule and context: %s, %s",
-					clientAddress,
-					possibleUser,
-					this,
-					context));			
-		} else if (firewallRuleAction.equals(FirewallRuleAction.DENY)) {
-			if (logAction != null) {
-				logAction.invoke(String.format(
-						"SOCKS5 reply to %s%s is denied based on the following "
-						+ "firewall rule and context: %s, %s",
-						clientAddress,
-						possibleUser,
-						this,
-						context));				
-			}
-			throw new FirewallRuleActionDenyException(this, cntxt);
-		}
-	}
-	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -482,7 +409,7 @@ public final class Socks5ReplyFirewallRule extends FirewallRule {
 		if (this.getClass() != obj.getClass()) {
 			return false;
 		}
-		Socks5ReplyFirewallRule other = (Socks5ReplyFirewallRule) obj;
+		Socks5RequestRoutingRule other = (Socks5RequestRoutingRule) obj;
 		if (this.clientAddressRange == null) {
 			if (other.clientAddressRange != null) {
 				return false;
@@ -509,29 +436,20 @@ public final class Socks5ReplyFirewallRule extends FirewallRule {
 				other.desiredDestinationPortRange)) {
 			return false;
 		}
-		if (this.getFirewallRuleAction() != other.getFirewallRuleAction()) {
-			return false;
-		}
 		if (this.getLogAction() != other.getLogAction()) {
 			return false;
 		}
 		if (this.method != other.method) {
 			return false;
 		}
-		if (this.serverBoundAddressRange == null) {
-			if (other.serverBoundAddressRange != null) {
+		if (this.getRouteIds() == null) {
+			if (other.getRouteIds() != null) {
 				return false;
 			}
-		} else if (!this.serverBoundAddressRange.equals(
-				other.serverBoundAddressRange)) {
+		} else if (!this.getRouteIds().equals(other.getRouteIds())) {
 			return false;
 		}
-		if (this.serverBoundPortRange == null) {
-			if (other.serverBoundPortRange != null) {
-				return false;
-			}
-		} else if (!this.serverBoundPortRange.equals(
-				other.serverBoundPortRange)) {
+		if (this.getRouteIdSelectionStrategy() != other.getRouteIdSelectionStrategy()) {
 			return false;
 		}
 		if (this.socksServerAddressRange == null) {
@@ -567,17 +485,9 @@ public final class Socks5ReplyFirewallRule extends FirewallRule {
 	public PortRange getDesiredDestinationPortRange() {
 		return this.desiredDestinationPortRange;
 	}
-	
+
 	public Method getMethod() {
 		return this.method;
-	}
-	
-	public AddressRange getServerBoundAddressRange() {
-		return this.serverBoundAddressRange;
-	}
-
-	public PortRange getServerBoundPortRange() {
-		return this.serverBoundPortRange;
 	}
 	
 	public AddressRange getSocksServerAddressRange() {
@@ -587,7 +497,7 @@ public final class Socks5ReplyFirewallRule extends FirewallRule {
 	public String getUser() {
 		return this.user;
 	}
-
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -597,20 +507,18 @@ public final class Socks5ReplyFirewallRule extends FirewallRule {
 		result = prime * result + ((this.command == null) ? 
 				0 : this.command.hashCode());
 		result = prime * result
-				+ ((this.desiredDestinationAddressRange == null) ? 0 : 
-					this.desiredDestinationAddressRange.hashCode());
+				+ ((this.desiredDestinationAddressRange == null) ? 
+						0 : this.desiredDestinationAddressRange.hashCode());
 		result = prime * result + ((this.desiredDestinationPortRange == null) ? 
 				0 : this.desiredDestinationPortRange.hashCode());
-		result = prime * result + ((this.getFirewallRuleAction() == null) ? 
-				0 : this.getFirewallRuleAction().hashCode());
 		result = prime * result + ((this.getLogAction() == null) ? 
 				0 : this.getLogAction().hashCode());
 		result = prime * result + ((this.method == null) ? 
 				0 : this.method.hashCode());
-		result = prime * result + ((this.serverBoundAddressRange == null) ? 
-				0 : this.serverBoundAddressRange.hashCode());
-		result = prime * result + ((this.serverBoundPortRange == null) ? 
-				0 : this.serverBoundPortRange.hashCode());
+		result = prime * result + ((this.getRouteIds() == null) ? 
+				0 : this.getRouteIds().hashCode());
+		result = prime * result + ((this.getRouteIdSelectionStrategy() == null) ? 
+				0 : this.getRouteIdSelectionStrategy().hashCode());
 		result = prime * result + ((this.socksServerAddressRange == null) ? 
 				0 : this.socksServerAddressRange.hashCode());
 		result = prime * result + ((this.user == null) ? 
@@ -619,10 +527,41 @@ public final class Socks5ReplyFirewallRule extends FirewallRule {
 	}
 
 	@Override
+	public Route selectRoute(final Rule.Context context) {
+		String routeId = this.getRouteIdSelector().select();
+		Route route = null;
+		if (routeId != null) {
+			Context cntxt = (Context) context;
+			Routes routes = cntxt.getRoutes();
+			route = routes.get(routeId);
+			if (route == null) {
+				throw new RouteNotFoundException(routeId);
+			}
+			LogAction logAction = this.getLogAction();
+			if (logAction != null) {
+				String clientAddress = cntxt.getClientAddress();
+				MethodSubnegotiationResults methSubnegotiationResults =
+						cntxt.getMethodSubnegotiationResults();
+				String user = methSubnegotiationResults.getUser();
+				String possibleUser = (user != null) ? 
+						String.format(" (%s)", user) : "";
+				logAction.invoke(String.format(
+						"SOCKS5 request route '%s' for %s%s is selected from "
+						+ "the following routing rule and context: %s, %s", 
+						routeId,
+						clientAddress,
+						possibleUser,
+						this,
+						context));
+			}
+		}
+		return route;
+	}
+
+	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("firewallRuleAction=");
-		builder.append(this.getFirewallRuleAction());
+		builder.append("routingRule=");
 		if (this.clientAddressRange != null) {
 			builder.append(" clientAddressRange=");
 			builder.append(this.clientAddressRange);			
@@ -651,13 +590,18 @@ public final class Socks5ReplyFirewallRule extends FirewallRule {
 			builder.append(" desiredDestinationPortRange=");
 			builder.append(this.desiredDestinationPortRange);
 		}
-		if (this.serverBoundAddressRange != null) {
-			builder.append(" serverBoundAddressRange=");
-			builder.append(this.serverBoundAddressRange);			
+		List<String> routeIds = this.getRouteIds();
+		if (routeIds.size() > 0) {
+			for (String routeId : routeIds) {
+				builder.append(" routeId=");
+				builder.append(routeId);
+			}
 		}
-		if (this.serverBoundPortRange != null) {
-			builder.append(" serverBoundPortRange=");
-			builder.append(this.serverBoundPortRange);
+		SelectionStrategy routeIdSelectionStrategy = 
+				this.getRouteIdSelectionStrategy();
+		if (routeIdSelectionStrategy != null) {
+			builder.append(" routeIdSelectionStrategy=");
+			builder.append(routeIdSelectionStrategy);
 		}
 		LogAction logAction = this.getLogAction();
 		if (logAction != null) {
@@ -666,5 +610,5 @@ public final class Socks5ReplyFirewallRule extends FirewallRule {
 		}
 		return builder.toString();
 	}
-
+	
 }

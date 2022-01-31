@@ -20,7 +20,7 @@ import com.github.jh3nd3rs0n.jargyle.internal.net.AllZerosInetAddressHelper;
 import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.rules.impl.FirewallRule;
-import com.github.jh3nd3rs0n.jargyle.server.socks5.rules.impl.Socks5ReplyFirewallRule;
+import com.github.jh3nd3rs0n.jargyle.server.rules.impl.Socks5ReplyFirewallRule;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Reply;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Reply;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Request;

@@ -12,7 +12,7 @@ import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
 import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
 import com.github.jh3nd3rs0n.jargyle.internal.logging.LoggerHelper;
 import com.github.jh3nd3rs0n.jargyle.server.rules.impl.FirewallRule;
-import com.github.jh3nd3rs0n.jargyle.server.socks5.rules.impl.Socks5ReplyFirewallRule;
+import com.github.jh3nd3rs0n.jargyle.server.rules.impl.Socks5ReplyFirewallRule;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Reply;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Reply;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Request;

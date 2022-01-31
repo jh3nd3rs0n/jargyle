@@ -1,9 +1,7 @@
-package com.github.jh3nd3rs0n.jargyle.server.socks5.rules.impl;
+package com.github.jh3nd3rs0n.jargyle.server.rules.impl;
 
 import java.util.Arrays;
 import java.util.List;
-
-import com.github.jh3nd3rs0n.jargyle.server.rules.impl.FirewallRules;
 
 public final class Socks5RequestFirewallRules extends FirewallRules<Socks5RequestFirewallRule> {
 

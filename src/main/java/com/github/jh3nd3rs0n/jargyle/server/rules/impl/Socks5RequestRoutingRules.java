@@ -1,10 +1,8 @@
-package com.github.jh3nd3rs0n.jargyle.server.socks5.rules.impl;
+package com.github.jh3nd3rs0n.jargyle.server.rules.impl;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
-import com.github.jh3nd3rs0n.jargyle.server.rules.impl.RoutingRules;
 
 public final class Socks5RequestRoutingRules 
 	extends RoutingRules<Socks5RequestRoutingRule> {

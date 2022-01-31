@@ -2,7 +2,7 @@ package com.github.jh3nd3rs0n.jargyle.server.settingspec.impl;
 
 import com.github.jh3nd3rs0n.jargyle.server.Setting;
 import com.github.jh3nd3rs0n.jargyle.server.SettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.socks5.rules.impl.Socks5ReplyFirewallRules;
+import com.github.jh3nd3rs0n.jargyle.server.rules.impl.Socks5ReplyFirewallRules;
 
 public final class Socks5ReplyFirewallRulesSettingSpec 
 	extends SettingSpec<Socks5ReplyFirewallRules> {

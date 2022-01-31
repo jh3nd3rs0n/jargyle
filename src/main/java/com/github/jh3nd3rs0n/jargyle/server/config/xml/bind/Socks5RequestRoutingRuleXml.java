@@ -6,7 +6,7 @@ import com.github.jh3nd3rs0n.jargyle.server.LogAction;
 import com.github.jh3nd3rs0n.jargyle.server.SelectionStrategy;
 import com.github.jh3nd3rs0n.jargyle.server.rules.impl.AddressRange;
 import com.github.jh3nd3rs0n.jargyle.server.rules.impl.PortRange;
-import com.github.jh3nd3rs0n.jargyle.server.socks5.rules.impl.Socks5RequestRoutingRule;
+import com.github.jh3nd3rs0n.jargyle.server.rules.impl.Socks5RequestRoutingRule;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Command;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
 

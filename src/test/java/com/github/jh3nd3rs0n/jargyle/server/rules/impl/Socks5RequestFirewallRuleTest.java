@@ -1,4 +1,4 @@
-package com.github.jh3nd3rs0n.jargyle.server.socks5.rules.impl;
+package com.github.jh3nd3rs0n.jargyle.server.rules.impl;
 
 import static org.junit.Assert.assertEquals;
 
@@ -8,9 +8,6 @@ import java.util.List;
 import org.junit.Test;
 
 import com.github.jh3nd3rs0n.jargyle.server.LogAction;
-import com.github.jh3nd3rs0n.jargyle.server.rules.impl.AddressRange;
-import com.github.jh3nd3rs0n.jargyle.server.rules.impl.FirewallRuleAction;
-import com.github.jh3nd3rs0n.jargyle.server.rules.impl.PortRange;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Command;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
 

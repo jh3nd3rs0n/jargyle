@@ -189,7 +189,7 @@ The following is the command line help for the command `manage-socks5-users` (di
 
 The following is the command line help for the command `new-server-config-file` (displayed when using the command `new-server-config-file --help`):
 
-```
+```text
     
     Usage: jargyle new-server-config-file [OPTIONS] FILE
            jargyle new-server-config-file --config-file-xsd
@@ -232,7 +232,7 @@ The following is the command line help for the command `new-server-config-file` 
 
 The following is the command line help for the command `start-server` (displayed when using the command `start-server --help`):
 
-```
+```text
     
     Usage: jargyle start-server [OPTIONS] [MONITORED_CONFIG_FILE]
            jargyle start-server --config-file-xsd
@@ -1049,7 +1049,7 @@ A restart of Jargyle would be required if you want any of the changed aforementi
 
 You can use SSL/TLS for TCP traffic between Jargyle and its clients. By default SSL/TLS for TCP traffic between Jargyle and its clients is disabled. To enable SSL/TLS for TCP traffic between Jargyle and its clients, you will need to have the setting `ssl.enabled` set to `true`. In addition, you will need to have the setting `ssl.keyStoreFile` to specify Jargyle's key store file (this file would need to be created by Java's keytool utility). Also, you will need to have the setting `ssl.keyStorePassword` to specify the password for Jargyle's key store file.
 
-```text
+```bash
     
     ./bin/jargyle start-server \
         --setting=ssl.enabled=true \
@@ -1060,7 +1060,7 @@ You can use SSL/TLS for TCP traffic between Jargyle and its clients. By default 
 
 If you do not want to have the password appear in any script or in any part of the command line history for security reasons, you can use the command line option `--enter-ssl-key-store-pass` instead. It will provide an interactive prompt for you to enter the password.
 
-```text
+```bash
     
     ./bin/jargyle start-server \
         --setting=ssl.enabled=true \
@@ -1071,7 +1071,7 @@ If you do not want to have the password appear in any script or in any part of t
 
 If you want to have the client authenticate using SSL/TLS, you will need to have the setting `ssl.needClientAuth` set to `true`. In addition, you will need to have the setting `ssl.trustStoreFile` to specify the client's key store file to be used as a trust store (this file would need to be created by Java's keytool utility). Also, you will need to have the setting `ssl.trustStorePassword` to specify the password for the client's trust store file.
 
-```text
+```bash
     
     ./bin/jargyle start-server \
         --setting=ssl.enabled=true \
@@ -1085,7 +1085,7 @@ If you want to have the client authenticate using SSL/TLS, you will need to have
 
 If you do not want to have the password appear in any script or in any part of the command line history for security reasons, you can use the command line option `--enter-ssl-trust-store-pass` instead. It will provide an interactive prompt for you to enter the password.
 
-```text
+```bash
     
     ./bin/jargyle start-server \
         --setting=ssl.enabled=true \
@@ -1101,7 +1101,7 @@ If you do not want to have the password appear in any script or in any part of t
 
 You can use DTLS for UDP traffic between Jargyle and its clients. By default DTLS for UDP traffic between Jargyle and its clients is disabled. To enable DTLS for UDP traffic between Jargyle and its clients, you will need to have the setting `dtls.enabled` set to `true`. In addition, you will need to have the setting `dtls.keyStoreFile` to specify Jargyle's key store file (this file would need to be created by Java's keytool utility). Also, you will need to have the setting `dtls.keyStorePassword` to specify the password for Jargyle's key store file.
 
-```text
+```bash
     
     ./bin/jargyle start-server \
         --setting=dtls.enabled=true \
@@ -1112,7 +1112,7 @@ You can use DTLS for UDP traffic between Jargyle and its clients. By default DTL
 
 If you do not want to have the password appear in any script or in any part of the command line history for security reasons, you can use the command line option `--enter-dtls-key-store-pass` instead. It will provide an interactive prompt for you to enter the password.
 
-```text
+```bash
     
     ./bin/jargyle start-server \
         --setting=dtls.enabled=true \
@@ -1123,7 +1123,7 @@ If you do not want to have the password appear in any script or in any part of t
 
 If you want to have the client authenticate using DTLS, you will need to have the setting `dtls.needClientAuth` set to `true`. In addition, you will need to have the setting `dtls.trustStoreFile` to specify the client's key store file to be used as a trust store (this file would need to be created by Java's keytool utility). Also, you will need to have the setting `dtls.trustStorePassword` to specify the password for the client's trust store file.
 
-```text
+```bash
     
     ./bin/jargyle start-server \
         --setting=dtls.enabled=true \
@@ -1137,7 +1137,7 @@ If you want to have the client authenticate using DTLS, you will need to have th
 
 If you do not want to have the password appear in any script or in any part of the command line history for security reasons, you can use the command line option `--enter-dtls-trust-store-pass` instead. It will provide an interactive prompt for you to enter the password.
 
-```text
+```bash
     
     ./bin/jargyle start-server \
         --setting=dtls.enabled=true \
@@ -1165,7 +1165,7 @@ To create a users file, you would run the following command:
 
 ```bash
     
-    ./bin/jargyle manage-socks5-users create-new-file FILE
+    ./bin/jargyle manage-socks5-users new-file FILE
     
 ```
 
@@ -1175,7 +1175,7 @@ Once you have run the command, an interactive prompt will ask you if you want to
 
 ```text
     
-    ./bin/jargyle manage-socks5-users create-new-file users.xml
+    ./bin/jargyle manage-socks5-users new-file users.xml
     Would you like to enter a user? ('Y' for yes): 
     
 ```

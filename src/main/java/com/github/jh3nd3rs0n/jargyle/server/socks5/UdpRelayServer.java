@@ -17,9 +17,8 @@ import org.slf4j.LoggerFactory;
 import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.internal.logging.LoggerHelper;
-import com.github.jh3nd3rs0n.jargyle.server.Rule;
-import com.github.jh3nd3rs0n.jargyle.server.rules.impl.FirewallRuleActionDenyException;
-import com.github.jh3nd3rs0n.jargyle.server.rules.impl.FirewallRuleNotFoundException;
+import com.github.jh3nd3rs0n.jargyle.server.rules.impl.FirewallRule;
+import com.github.jh3nd3rs0n.jargyle.server.rules.impl.FirewallRuleAction;
 import com.github.jh3nd3rs0n.jargyle.server.rules.impl.Socks5UdpFirewallRule;
 import com.github.jh3nd3rs0n.jargyle.server.rules.impl.Socks5UdpFirewallRules;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
@@ -134,27 +133,10 @@ public final class UdpRelayServer {
 			super(context);
 		}
 		
-		private boolean canAllowPacket(final Rule.Context context) {
-			Socks5UdpFirewallRule inboundSocks5UdpFirewallRule = null; 
-			try {
-				inboundSocks5UdpFirewallRule = 
-						this.inboundSocks5UdpFirewallRules.anyAppliesBasedOn(
-								context);
-			} catch (FirewallRuleNotFoundException e) {
-				LOGGER.error(
-						LoggerHelper.objectMessage(this, String.format(
-								"Firewall rule not found for the following "
-								+ "context: %s",
-								context)),
-						e);
-				return false;
-			}
-			try {
-				inboundSocks5UdpFirewallRule.applyBasedOn(context);
-			} catch (FirewallRuleActionDenyException e) {
-				return false;
-			}
-			return true;
+		private boolean canAllowPacket(final FirewallRule.Context context) {
+			this.inboundSocks5UdpFirewallRules.applyTo(context);
+			return FirewallRuleAction.ALLOW.equals(
+					context.getFirewallRuleAction());
 		}
 
 		private DatagramPacket newDatagramPacket(
@@ -278,27 +260,10 @@ public final class UdpRelayServer {
 			super(context);
 		}
 		
-		private boolean canAllowPacket(final Rule.Context context) {
-			Socks5UdpFirewallRule outboundSocks5UdpFirewallRule = null; 
-			try {
-				outboundSocks5UdpFirewallRule = 
-						this.outboundSocks5UdpFirewallRules.anyAppliesBasedOn(
-								context);
-			} catch (FirewallRuleNotFoundException e) {
-				LOGGER.error(
-						LoggerHelper.objectMessage(this, String.format(
-								"Firewall rule not found for the following "
-								+ "context: %s",
-								context)),
-						e);
-				return false;
-			}
-			try {
-				outboundSocks5UdpFirewallRule.applyBasedOn(context);
-			} catch (FirewallRuleActionDenyException e) {
-				return false;
-			}
-			return true;
+		private boolean canAllowPacket(final FirewallRule.Context context) {
+			this.outboundSocks5UdpFirewallRules.applyTo(context);
+			return FirewallRuleAction.ALLOW.equals(
+					context.getFirewallRuleAction());
 		}
 		
 		private boolean canForwardDatagramPacket(final DatagramPacket packet) {

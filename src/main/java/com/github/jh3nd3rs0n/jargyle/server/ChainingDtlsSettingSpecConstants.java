@@ -27,8 +27,7 @@ public final class ChainingDtlsSettingSpecConstants {
 	)
 	public static final SettingSpec<Boolean> CHAINING_DTLS_ENABLED = 
 			SETTING_SPECS.addThenGet(new BooleanSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"chaining.dtls.enabled",
+					"chaining.dtls.enabled", 
 					DtlsPropertySpecConstants.DTLS_ENABLED.getDefaultProperty().getValue()));
 
 	@HelpText(
@@ -39,8 +38,7 @@ public final class ChainingDtlsSettingSpecConstants {
 	)
 	public static final SettingSpec<Words> CHAINING_DTLS_ENABLED_CIPHER_SUITES = 
 			SETTING_SPECS.addThenGet(new WordsSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"chaining.dtls.enabledCipherSuites",
+					"chaining.dtls.enabledCipherSuites", 
 					DtlsPropertySpecConstants.DTLS_ENABLED_CIPHER_SUITES.getDefaultProperty().getValue()));
 	
 	@HelpText(
@@ -51,8 +49,7 @@ public final class ChainingDtlsSettingSpecConstants {
 	)	
 	public static final SettingSpec<Words> CHAINING_DTLS_ENABLED_PROTOCOLS = 
 			SETTING_SPECS.addThenGet(new WordsSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"chaining.dtls.enabledProtocols",
+					"chaining.dtls.enabledProtocols", 
 					DtlsPropertySpecConstants.DTLS_ENABLED_PROTOCOLS.getDefaultProperty().getValue()));
 	
 	@HelpText(
@@ -62,8 +59,7 @@ public final class ChainingDtlsSettingSpecConstants {
 	)
 	public static final SettingSpec<File> CHAINING_DTLS_KEY_STORE_FILE = 
 			SETTING_SPECS.addThenGet(new FileSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"chaining.dtls.keyStoreFile",
+					"chaining.dtls.keyStoreFile", 
 					DtlsPropertySpecConstants.DTLS_KEY_STORE_FILE.getDefaultProperty().getValue()));
 	
 	@HelpText(
@@ -73,8 +69,7 @@ public final class ChainingDtlsSettingSpecConstants {
 	)
 	public static final SettingSpec<EncryptedPassword> CHAINING_DTLS_KEY_STORE_PASSWORD = 
 			SETTING_SPECS.addThenGet(new EncryptedPasswordSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"chaining.dtls.keyStorePassword",
+					"chaining.dtls.keyStorePassword", 
 					DtlsPropertySpecConstants.DTLS_KEY_STORE_PASSWORD.getDefaultProperty().getValue()));
 	
 	@HelpText(
@@ -84,8 +79,7 @@ public final class ChainingDtlsSettingSpecConstants {
 	)	
 	public static final SettingSpec<String> CHAINING_DTLS_KEY_STORE_TYPE = 
 			SETTING_SPECS.addThenGet(new StringSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"chaining.dtls.keyStoreType",
+					"chaining.dtls.keyStoreType", 
 					DtlsPropertySpecConstants.DTLS_KEY_STORE_TYPE.getDefaultProperty().getValue()));
 	
 	@HelpText(
@@ -95,8 +89,7 @@ public final class ChainingDtlsSettingSpecConstants {
 	)	
 	public static final SettingSpec<PositiveInteger> CHAINING_DTLS_MAX_PACKET_SIZE = 
 			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"chaining.dtls.maxPacketSize",
+					"chaining.dtls.maxPacketSize", 
 					DtlsPropertySpecConstants.DTLS_MAX_PACKET_SIZE.getDefaultProperty().getValue()));
 	
 	@HelpText(
@@ -106,8 +99,7 @@ public final class ChainingDtlsSettingSpecConstants {
 	)	
 	public static final SettingSpec<String> CHAINING_DTLS_PROTOCOL = 
 			SETTING_SPECS.addThenGet(new StringSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"chaining.dtls.protocol",
+					"chaining.dtls.protocol", 
 					DtlsPropertySpecConstants.DTLS_PROTOCOL.getDefaultProperty().getValue()));
 	
 	@HelpText(
@@ -117,8 +109,7 @@ public final class ChainingDtlsSettingSpecConstants {
 	)	
 	public static final SettingSpec<File> CHAINING_DTLS_TRUST_STORE_FILE = 
 			SETTING_SPECS.addThenGet(new FileSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"chaining.dtls.trustStoreFile",
+					"chaining.dtls.trustStoreFile", 
 					DtlsPropertySpecConstants.DTLS_TRUST_STORE_FILE.getDefaultProperty().getValue()));
 	
 	@HelpText(
@@ -128,8 +119,7 @@ public final class ChainingDtlsSettingSpecConstants {
 	)	
 	public static final SettingSpec<EncryptedPassword> CHAINING_DTLS_TRUST_STORE_PASSWORD = 
 			SETTING_SPECS.addThenGet(new EncryptedPasswordSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"chaining.dtls.trustStorePassword",
+					"chaining.dtls.trustStorePassword", 
 					DtlsPropertySpecConstants.DTLS_TRUST_STORE_PASSWORD.getDefaultProperty().getValue()));
 	
 	@HelpText(
@@ -139,8 +129,7 @@ public final class ChainingDtlsSettingSpecConstants {
 	)	
 	public static final SettingSpec<String> CHAINING_DTLS_TRUST_STORE_TYPE = 
 			SETTING_SPECS.addThenGet(new StringSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"chaining.dtls.trustStoreType",
+					"chaining.dtls.trustStoreType", 
 					DtlsPropertySpecConstants.DTLS_TRUST_STORE_TYPE.getDefaultProperty().getValue()));
 	
 	public static List<SettingSpec<Object>> values() {

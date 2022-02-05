@@ -11,11 +11,8 @@ public final class UsernameSettingSpec extends SettingSpec<String> {
 		return s;
 	}
 
-	public UsernameSettingSpec(
-			final Object permission, 
-			final String s, 
-			final String defaultVal) {
-		super(permission, s, String.class, getValidatedUsername(defaultVal));
+	public UsernameSettingSpec(final String s, final String defaultVal) {
+		super(s, String.class, getValidatedUsername(defaultVal));
 	}
 
 	@Override

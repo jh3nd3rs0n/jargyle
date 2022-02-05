@@ -12,9 +12,6 @@ import org.slf4j.LoggerFactory;
 import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
 import com.github.jh3nd3rs0n.jargyle.internal.logging.LoggerHelper;
 import com.github.jh3nd3rs0n.jargyle.internal.net.IOExceptionHandler;
-import com.github.jh3nd3rs0n.jargyle.server.rules.impl.FirewallRuleActionDenyException;
-import com.github.jh3nd3rs0n.jargyle.server.rules.impl.FirewallRuleNotFoundException;
-import com.github.jh3nd3rs0n.jargyle.server.rules.impl.RouteNotFoundException;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5Worker;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5WorkerContext;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Version;
@@ -41,23 +38,7 @@ final class Worker implements Runnable {
 		try {
 			workerContext = this.workerContextFactory.newWorkerContext(
 					clientFacingSock);
-		} catch (RouteNotFoundException e) {
-			LOGGER.error(
-					LoggerHelper.objectMessage(
-							this, 
-							"Error in finding a particular route for the "
-							+ "client-facing socket"),
-					e);
-			return null;
-		} catch (FirewallRuleNotFoundException e) {
-			LOGGER.error(
-					LoggerHelper.objectMessage(
-							this, 
-							"Error in finding a firewall rule for the "
-							+ "client-facing socket"),
-					e);
-			return null;
-		} catch (FirewallRuleActionDenyException e) {
+		} catch (IllegalArgumentException e) {
 			return null;
 		} catch (SocketException e) {
 			LOGGER.error(

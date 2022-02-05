@@ -19,11 +19,8 @@ public final class UserEncryptedPasswordSettingSpec
 	}
 
 	public UserEncryptedPasswordSettingSpec(
-			final Object permission, 
-			final String s, 
-			final EncryptedPassword defaultVal) {
+			final String s, final EncryptedPassword defaultVal) {
 		super(
-				permission, 
 				s, 
 				EncryptedPassword.class, 
 				getValidatedEncryptedPassword(defaultVal));

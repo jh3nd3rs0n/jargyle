@@ -25,8 +25,7 @@ public final class ChainingSslSettingSpecConstants {
 	)
 	public static final SettingSpec<Boolean> CHAINING_SSL_ENABLED = 
 			SETTING_SPECS.addThenGet(new BooleanSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"chaining.ssl.enabled",
+					"chaining.ssl.enabled", 
 					SslPropertySpecConstants.SSL_ENABLED.getDefaultProperty().getValue()));
 
 	@HelpText(
@@ -37,8 +36,7 @@ public final class ChainingSslSettingSpecConstants {
 	)
 	public static final SettingSpec<Words> CHAINING_SSL_ENABLED_CIPHER_SUITES = 
 			SETTING_SPECS.addThenGet(new WordsSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"chaining.ssl.enabledCipherSuites",
+					"chaining.ssl.enabledCipherSuites", 
 					SslPropertySpecConstants.SSL_ENABLED_CIPHER_SUITES.getDefaultProperty().getValue()));
 	
 	@HelpText(
@@ -49,8 +47,7 @@ public final class ChainingSslSettingSpecConstants {
 	)	
 	public static final SettingSpec<Words> CHAINING_SSL_ENABLED_PROTOCOLS = 
 			SETTING_SPECS.addThenGet(new WordsSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"chaining.ssl.enabledProtocols",
+					"chaining.ssl.enabledProtocols", 
 					SslPropertySpecConstants.SSL_ENABLED_PROTOCOLS.getDefaultProperty().getValue()));
 	
 	@HelpText(
@@ -60,8 +57,7 @@ public final class ChainingSslSettingSpecConstants {
 	)
 	public static final SettingSpec<File> CHAINING_SSL_KEY_STORE_FILE = 
 			SETTING_SPECS.addThenGet(new FileSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"chaining.ssl.keyStoreFile",
+					"chaining.ssl.keyStoreFile", 
 					SslPropertySpecConstants.SSL_KEY_STORE_FILE.getDefaultProperty().getValue()));
 	
 	@HelpText(
@@ -71,8 +67,7 @@ public final class ChainingSslSettingSpecConstants {
 	)
 	public static final SettingSpec<EncryptedPassword> CHAINING_SSL_KEY_STORE_PASSWORD = 
 			SETTING_SPECS.addThenGet(new EncryptedPasswordSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"chaining.ssl.keyStorePassword",
+					"chaining.ssl.keyStorePassword", 
 					SslPropertySpecConstants.SSL_KEY_STORE_PASSWORD.getDefaultProperty().getValue()));
 	
 	@HelpText(
@@ -82,8 +77,7 @@ public final class ChainingSslSettingSpecConstants {
 	)	
 	public static final SettingSpec<String> CHAINING_SSL_KEY_STORE_TYPE = 
 			SETTING_SPECS.addThenGet(new StringSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"chaining.ssl.keyStoreType",
+					"chaining.ssl.keyStoreType", 
 					SslPropertySpecConstants.SSL_KEY_STORE_TYPE.getDefaultProperty().getValue()));
 	
 	@HelpText(
@@ -93,8 +87,7 @@ public final class ChainingSslSettingSpecConstants {
 	)	
 	public static final SettingSpec<String> CHAINING_SSL_PROTOCOL = 
 			SETTING_SPECS.addThenGet(new StringSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"chaining.ssl.protocol",
+					"chaining.ssl.protocol", 
 					SslPropertySpecConstants.SSL_PROTOCOL.getDefaultProperty().getValue()));
 	
 	@HelpText(
@@ -104,8 +97,7 @@ public final class ChainingSslSettingSpecConstants {
 	)	
 	public static final SettingSpec<File> CHAINING_SSL_TRUST_STORE_FILE = 
 			SETTING_SPECS.addThenGet(new FileSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"chaining.ssl.trustStoreFile",
+					"chaining.ssl.trustStoreFile", 
 					SslPropertySpecConstants.SSL_TRUST_STORE_FILE.getDefaultProperty().getValue()));
 	
 	@HelpText(
@@ -115,8 +107,7 @@ public final class ChainingSslSettingSpecConstants {
 	)	
 	public static final SettingSpec<EncryptedPassword> CHAINING_SSL_TRUST_STORE_PASSWORD = 
 			SETTING_SPECS.addThenGet(new EncryptedPasswordSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"chaining.ssl.trustStorePassword",
+					"chaining.ssl.trustStorePassword", 
 					SslPropertySpecConstants.SSL_TRUST_STORE_PASSWORD.getDefaultProperty().getValue()));
 	
 	@HelpText(
@@ -126,8 +117,7 @@ public final class ChainingSslSettingSpecConstants {
 	)	
 	public static final SettingSpec<String> CHAINING_SSL_TRUST_STORE_TYPE = 
 			SETTING_SPECS.addThenGet(new StringSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"chaining.ssl.trustStoreType",
+					"chaining.ssl.trustStoreType", 
 					SslPropertySpecConstants.SSL_TRUST_STORE_TYPE.getDefaultProperty().getValue()));
 	
 	public static List<SettingSpec<Object>> values() {

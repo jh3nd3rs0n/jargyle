@@ -180,7 +180,7 @@ public final class ClientFirewallRule extends FirewallRule {
 	}
 	
 	@Override
-	public boolean appliesBasedOn(final Rule.Context context) {
+	public boolean appliesTo(final Rule.Context context) {
 		if (!(context instanceof Context)) {
 			return false;
 		}
@@ -199,14 +199,20 @@ public final class ClientFirewallRule extends FirewallRule {
 	}
 
 	@Override
-	public void applyBasedOn(final Rule.Context context) {
+	public void applyTo(final Rule.Context context) {
+		Context cntxt = (Context) context;
+		if (cntxt.getFirewallRuleAction() != null) {
+			return;
+		}
 		FirewallRuleAction firewallRuleAction = this.getFirewallRuleAction();
+		cntxt.setFirewallRuleAction(firewallRuleAction);
 		LogAction logAction = this.getLogAction();
-		Context cntxt = (Context) context;		
+		if (logAction == null) {
+			return;
+		}
 		String clientAddress = cntxt.getClientAddress();
 		String socksServerAddress = cntxt.getSocksServerAddress();
-		if (firewallRuleAction.equals(FirewallRuleAction.ALLOW)	
-				&& logAction != null) {
+		if (firewallRuleAction.equals(FirewallRuleAction.ALLOW)) {
 			logAction.invoke(String.format(
 					"Client address %s to SOCKS server address %s is allowed "
 					+ "based on the following firewall rule and context: %s, "
@@ -216,20 +222,17 @@ public final class ClientFirewallRule extends FirewallRule {
 					this,
 					context));
 		} else if (firewallRuleAction.equals(FirewallRuleAction.DENY)) {
-			if (logAction != null) {
-				logAction.invoke(String.format(
-						"Client address %s to SOCKS server address %s is "
-						+ "denied based on the following firewall rule and "
-						+ "context: %s, %s", 
-						clientAddress,
-						socksServerAddress,
-						this,
-						context));				
-			}
-			throw new FirewallRuleActionDenyException(this, cntxt);
-		}		
+			logAction.invoke(String.format(
+					"Client address %s to SOCKS server address %s is denied "
+					+ "based on the following firewall rule and context: %s, "
+					+ "%s", 
+					clientAddress,
+					socksServerAddress,
+					this,
+					context));
+		}
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -266,11 +269,11 @@ public final class ClientFirewallRule extends FirewallRule {
 		}
 		return true;
 	}
-
+	
 	public AddressRange getClientAddressRange() {
 		return this.clientAddressRange;
 	}
-	
+
 	public AddressRange getSocksServerAddressRange() {
 		return this.socksServerAddressRange;
 	}

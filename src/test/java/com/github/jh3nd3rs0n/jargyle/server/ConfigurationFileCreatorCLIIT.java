@@ -17,7 +17,7 @@ import com.github.jh3nd3rs0n.jargyle.IoHelper;
 import com.github.jh3nd3rs0n.jargyle.ResourceHelper;
 import com.github.jh3nd3rs0n.jargyle.ResourceNameConstants;
 
-public class SocksServerCLIIT {
+public class ConfigurationFileCreatorCLIIT {
 	
 	private Path baseDir = null;
 	private Path combinedConfigurationFile = null;
@@ -65,12 +65,11 @@ public class SocksServerCLIIT {
 						ResourceNameConstants.JARGYLE_SERVER_CONFIGURATION_FILE).getAbsolutePath()),
 				"--config-file=".concat(ResourceHelper.getResourceAsFile(
 						ResourceNameConstants.JARGYLE_SERVER_SUPPLEMENTED_CONFIGURATION_FILE).getAbsolutePath()),
-				"--new-config-file=".concat(
-						this.combinedConfigurationFile.toAbsolutePath().toString())
+				this.combinedConfigurationFile.toAbsolutePath().toString()
 		};
-		CLI socksServerCLI = new SocksServerCLI(args, false);
+		CLI cli = new ConfigurationFileCreatorCLI(null, null, args, false);
 		try {
-			socksServerCLI.handleArgs();
+			cli.handleArgs();
 		} catch (TerminationRequestedException e) {
 		}
 		String expectedCombinedConfigurationFileContents =
@@ -91,12 +90,11 @@ public class SocksServerCLIIT {
 				"--setting=port=1234",
 				"--setting=backlog=100",
 				"--setting=socks5.methods=NO_AUTHENTICATION_REQUIRED",
-				"--new-config-file=".concat(
-						this.configurationFile.toAbsolutePath().toString())
+				this.configurationFile.toAbsolutePath().toString()
 		};
-		CLI socksServerCLI = new SocksServerCLI(args, false);
+		CLI cli = new ConfigurationFileCreatorCLI(null, null, args, false);
 		try {
-			socksServerCLI.handleArgs();
+			cli.handleArgs();
 		} catch (TerminationRequestedException e) {
 		}
 		String expectedConfigurationFileContents =
@@ -114,12 +112,11 @@ public class SocksServerCLIIT {
 	@Test
 	public void testMainForCreatingAnEmptyConfigurationFile() throws IOException {
 		String[] args = new String[] {
-				"--new-config-file=".concat(
-						this.emptyConfigurationFile.toAbsolutePath().toString())
+				this.emptyConfigurationFile.toAbsolutePath().toString()
 		};
-		CLI socksServerCLI = new SocksServerCLI(args, false);
+		CLI cli = new ConfigurationFileCreatorCLI(null, null, args, false);
 		try {
-			socksServerCLI.handleArgs();
+			cli.handleArgs();
 		} catch (TerminationRequestedException e) {
 		}
 		String expectedEmptyConfigurationFileContents =
@@ -140,12 +137,11 @@ public class SocksServerCLIIT {
 				"--config-file=".concat(ResourceHelper.getResourceAsFile(
 						ResourceNameConstants.JARGYLE_SERVER_CONFIGURATION_FILE).getAbsolutePath()),
 				"--setting=socketSettings=SO_TIMEOUT=0",
-				"--new-config-file=".concat(
-						this.supplementedConfigurationFile.toAbsolutePath().toString())
+				this.supplementedConfigurationFile.toAbsolutePath().toString()
 		};
-		CLI socksServerCLI = new SocksServerCLI(args, false);
+		CLI cli = new ConfigurationFileCreatorCLI(null, null, args, false);
 		try {
-			socksServerCLI.handleArgs();
+			cli.handleArgs();
 		} catch (TerminationRequestedException e) {
 		}
 		String expectedSupplementedConfigurationFileContents =

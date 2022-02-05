@@ -5,11 +5,8 @@ import com.github.jh3nd3rs0n.jargyle.server.SettingSpec;
 
 public final class BooleanSettingSpec extends SettingSpec<Boolean> {
 
-	public BooleanSettingSpec(
-			final Object permission, 
-			final String s, 
-			final Boolean defaultVal) {
-		super(permission, s, Boolean.class, defaultVal);
+	public BooleanSettingSpec(final String s, final Boolean defaultVal) {
+		super(s, Boolean.class, defaultVal);
 	}
 
 	@Override

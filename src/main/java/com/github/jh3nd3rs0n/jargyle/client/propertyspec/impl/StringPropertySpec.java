@@ -5,11 +5,8 @@ import com.github.jh3nd3rs0n.jargyle.client.PropertySpec;
 
 public final class StringPropertySpec extends PropertySpec<String> {
 
-	public StringPropertySpec(
-			final Object permission, 
-			final String s, 
-			final String defaultVal) {
-		super(permission, s, String.class, defaultVal);
+	public StringPropertySpec(final String s, final String defaultVal) {
+		super(s, String.class, defaultVal);
 	}
 
 	@Override

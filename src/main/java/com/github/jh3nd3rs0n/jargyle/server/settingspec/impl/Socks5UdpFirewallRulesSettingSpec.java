@@ -8,10 +8,8 @@ public final class Socks5UdpFirewallRulesSettingSpec
 		extends SettingSpec<Socks5UdpFirewallRules> {
 
 	public Socks5UdpFirewallRulesSettingSpec(
-			final Object permission, 
-			final String s, 
-			final Socks5UdpFirewallRules defaultVal) {
-		super(permission, s, Socks5UdpFirewallRules.class, defaultVal);
+			final String s, final Socks5UdpFirewallRules defaultVal) {
+		super(s, Socks5UdpFirewallRules.class, defaultVal);
 	}
 
 	@Override

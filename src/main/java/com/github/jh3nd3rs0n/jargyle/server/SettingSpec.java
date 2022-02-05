@@ -9,18 +9,10 @@ public abstract class SettingSpec<V> {
 	private final String string;
 	private final Class<V> valueType;
 		
-	public SettingSpec( 
-			final Object permission, 
-			final String s, 
-			final Class<V> valType, 
-			final V defaultVal) {
-		Objects.requireNonNull(permission);
+	public SettingSpec(
+			final String s, final Class<V> valType,	final V defaultVal) {
 		Objects.requireNonNull(s);
 		Objects.requireNonNull(valType);
-		if (!NewSettingSpecPermission.INSTANCE.equals(permission)) {
-			throw new IllegalArgumentException(
-					"invalid new SettingSpec permission");
-		}		
 		this.defaultValue = valType.cast(defaultVal);
 		this.string = s;
 		this.valueType = valType;

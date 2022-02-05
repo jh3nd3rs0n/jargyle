@@ -6,11 +6,8 @@ import com.github.jh3nd3rs0n.jargyle.server.SettingSpec;
 
 public final class PortSettingSpec extends SettingSpec<Port> {
 
-	public PortSettingSpec(
-			final Object permission, 
-			final String s, 
-			final Port defaultVal) {
-		super(permission, s, Port.class, defaultVal);
+	public PortSettingSpec(final String s, final Port defaultVal) {
+		super(s, Port.class, defaultVal);
 	}
 
 	@Override

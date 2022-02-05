@@ -31,8 +31,7 @@ public final class GeneralSettingSpecConstants {
 	)
 	public static final SettingSpec<NonnegativeInteger> BACKLOG = 
 			SETTING_SPECS.addThenGet(new NonnegativeIntegerSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"backlog",
+					"backlog", 
 					NonnegativeInteger.newInstance(50)));
 	
 	@HelpText(
@@ -42,8 +41,7 @@ public final class GeneralSettingSpecConstants {
 	)
 	public static final SettingSpec<SocketSettings> CLIENT_FACING_SOCKET_SETTINGS = 
 			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"clientFacingSocketSettings",
+					"clientFacingSocketSettings", 
 					SocketSettings.newInstance()));
 
 	@HelpText(
@@ -54,7 +52,6 @@ public final class GeneralSettingSpecConstants {
 	)	
 	public static final SettingSpec<ClientFirewallRules> CLIENT_FIREWALL_RULES =
 			SETTING_SPECS.addThenGet(new ClientFirewallRulesSettingSpec(
-					NewSettingSpecPermission.INSTANCE,
 					"clientFirewallRules",
 					ClientFirewallRules.getDefault()));
 	
@@ -64,7 +61,6 @@ public final class GeneralSettingSpecConstants {
 	)	
 	public static final SettingSpec<ClientRoutingRules> CLIENT_ROUTING_RULES =
 			SETTING_SPECS.addThenGet(new ClientRoutingRulesSettingSpec(
-					NewSettingSpecPermission.INSTANCE,
 					"clientRoutingRules",
 					ClientRoutingRules.getDefault()));
 	
@@ -75,8 +71,7 @@ public final class GeneralSettingSpecConstants {
 	)
 	public static final SettingSpec<Host> HOST = 
 			SETTING_SPECS.addThenGet(new HostSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"host",
+					"host", 
 					Host.getAllZerosInet4Instance()));
 
 	@HelpText(
@@ -86,7 +81,6 @@ public final class GeneralSettingSpecConstants {
 	)	
 	public static final SettingSpec<String> LAST_ROUTE_ID = 
 			SETTING_SPECS.addThenGet(new StringSettingSpec(
-					NewSettingSpecPermission.INSTANCE,
 					"lastRouteId",
 					"lastRoute"));
 	
@@ -96,8 +90,7 @@ public final class GeneralSettingSpecConstants {
 	)
 	public static final SettingSpec<Port> PORT = 
 			SETTING_SPECS.addThenGet(new PortSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"port",
+					"port", 
 					Port.newInstance(1080)));
 
 	@HelpText(
@@ -107,7 +100,6 @@ public final class GeneralSettingSpecConstants {
 	)	
 	public static final SettingSpec<LogAction> ROUTE_SELECTION_LOG_ACTION =
 			SETTING_SPECS.addThenGet(new LogActionSettingSpec(
-					NewSettingSpecPermission.INSTANCE,
 					"routeSelectionLogAction",
 					null));
 	
@@ -118,7 +110,6 @@ public final class GeneralSettingSpecConstants {
 	)
 	public static final SettingSpec<SelectionStrategy> ROUTE_SELECTION_STRATEGY =
 			SETTING_SPECS.addThenGet(new SelectionStrategySettingSpec(
-					NewSettingSpecPermission.INSTANCE,
 					"routeSelectionStrategy",
 					SelectionStrategy.CYCLICAL));
 	
@@ -129,8 +120,7 @@ public final class GeneralSettingSpecConstants {
 	)
 	public static final SettingSpec<SocketSettings> SOCKET_SETTINGS = 
 			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"socketSettings",
+					"socketSettings", 
 					SocketSettings.newInstance()));
 	
 	public static List<SettingSpec<Object>> values() {

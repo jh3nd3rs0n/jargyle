@@ -24,8 +24,7 @@ public final class SslSettingSpecConstants {
 	)	
 	public static final SettingSpec<Boolean> SSL_ENABLED = 
 			SETTING_SPECS.addThenGet(new BooleanSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"ssl.enabled",
+					"ssl.enabled", 
 					Boolean.FALSE));
 
 	@HelpText(
@@ -35,8 +34,7 @@ public final class SslSettingSpecConstants {
 	)	
 	public static final SettingSpec<Words> SSL_ENABLED_CIPHER_SUITES = 
 			SETTING_SPECS.addThenGet(new WordsSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"ssl.enabledCipherSuites",
+					"ssl.enabledCipherSuites", 
 					Words.newInstance(new String[] { })));
 	
 	@HelpText(
@@ -46,8 +44,7 @@ public final class SslSettingSpecConstants {
 	)	
 	public static final SettingSpec<Words> SSL_ENABLED_PROTOCOLS = 
 			SETTING_SPECS.addThenGet(new WordsSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"ssl.enabledProtocols",
+					"ssl.enabledProtocols", 
 					Words.newInstance(new String[] { })));
 	
 	@HelpText(
@@ -57,8 +54,7 @@ public final class SslSettingSpecConstants {
 	)	
 	public static final SettingSpec<File> SSL_KEY_STORE_FILE = 
 			SETTING_SPECS.addThenGet(new FileSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"ssl.keyStoreFile",
+					"ssl.keyStoreFile", 
 					null));
 	
 	@HelpText(
@@ -68,8 +64,7 @@ public final class SslSettingSpecConstants {
 	)	
 	public static final SettingSpec<EncryptedPassword> SSL_KEY_STORE_PASSWORD = 
 			SETTING_SPECS.addThenGet(new EncryptedPasswordSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"ssl.keyStorePassword",
+					"ssl.keyStorePassword", 
 					EncryptedPassword.newInstance(new char[] { })));
 	
 	@HelpText(
@@ -79,8 +74,7 @@ public final class SslSettingSpecConstants {
 	)	
 	public static final SettingSpec<String> SSL_KEY_STORE_TYPE = 
 			SETTING_SPECS.addThenGet(new StringSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"ssl.keyStoreType",
+					"ssl.keyStoreType", 
 					"PKCS12"));
 	
 	@HelpText(
@@ -91,8 +85,7 @@ public final class SslSettingSpecConstants {
 	)	
 	public static final SettingSpec<Boolean> SSL_NEED_CLIENT_AUTH = 
 			SETTING_SPECS.addThenGet(new BooleanSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"ssl.needClientAuth",
+					"ssl.needClientAuth", 
 					Boolean.FALSE));
 	
 	@HelpText(
@@ -102,8 +95,7 @@ public final class SslSettingSpecConstants {
 	)	
 	public static final SettingSpec<String> SSL_PROTOCOL = 
 			SETTING_SPECS.addThenGet(new StringSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"ssl.protocol",
+					"ssl.protocol", 
 					"TLSv1.2"));
 	
 	@HelpText(
@@ -113,8 +105,7 @@ public final class SslSettingSpecConstants {
 	)	
 	public static final SettingSpec<File> SSL_TRUST_STORE_FILE = 
 			SETTING_SPECS.addThenGet(new FileSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"ssl.trustStoreFile",
+					"ssl.trustStoreFile", 
 					null));
 	
 	@HelpText(
@@ -124,8 +115,7 @@ public final class SslSettingSpecConstants {
 	)	
 	public static final SettingSpec<EncryptedPassword> SSL_TRUST_STORE_PASSWORD = 
 			SETTING_SPECS.addThenGet(new EncryptedPasswordSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"ssl.trustStorePassword",
+					"ssl.trustStorePassword", 
 					EncryptedPassword.newInstance(new char[] { })));
 	
 	@HelpText(
@@ -135,8 +125,7 @@ public final class SslSettingSpecConstants {
 	)		
 	public static final SettingSpec<String> SSL_TRUST_STORE_TYPE = 
 			SETTING_SPECS.addThenGet(new StringSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"ssl.trustStoreType",
+					"ssl.trustStoreType", 
 					"PKCS12"));
 	
 	@HelpText(
@@ -147,8 +136,7 @@ public final class SslSettingSpecConstants {
 	)	
 	public static final SettingSpec<Boolean> SSL_WANT_CLIENT_AUTH = 
 			SETTING_SPECS.addThenGet(new BooleanSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"ssl.wantClientAuth",
+					"ssl.wantClientAuth", 
 					Boolean.FALSE));
 	
 	public static List<SettingSpec<Object>> values() {

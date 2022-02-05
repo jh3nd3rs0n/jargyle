@@ -8,10 +8,8 @@ public final class ClientRoutingRulesSettingSpec
 	extends SettingSpec<ClientRoutingRules> {
 
 	public ClientRoutingRulesSettingSpec(
-			final Object permission, 
-			final String s,
-			final ClientRoutingRules defaultVal) {
-		super(permission, s, ClientRoutingRules.class, defaultVal);
+			final String s, final ClientRoutingRules defaultVal) {
+		super(s, ClientRoutingRules.class, defaultVal);
 	}
 
 	@Override

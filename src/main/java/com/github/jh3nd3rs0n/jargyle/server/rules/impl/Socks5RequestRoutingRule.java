@@ -355,7 +355,7 @@ public final class Socks5RequestRoutingRule extends RoutingRule {
 	}
 
 	@Override
-	public boolean appliesBasedOn(final Rule.Context context) {
+	public boolean appliesTo(final Rule.Context context) {
 		if (!(context instanceof Context)) {
 			return false;
 		}
@@ -398,6 +398,42 @@ public final class Socks5RequestRoutingRule extends RoutingRule {
 		return true;
 	}
 
+	@Override
+	public void applyTo(final Rule.Context context) {
+		Context cntxt = (Context) context;
+		if (cntxt.getRoute() != null) {
+			return;
+		}		
+		String routeId = this.getRouteIdSelector().select();
+		if (routeId == null) {
+			return;
+		}
+		Routes routes = cntxt.getRoutes();
+		Route route = routes.get(routeId);
+		if (route == null) {
+			return;
+		}
+		cntxt.setRoute(route);
+		LogAction logAction = this.getLogAction();
+		if (logAction == null) {
+			return;
+		}
+		String clientAddress = cntxt.getClientAddress();
+		MethodSubnegotiationResults methSubnegotiationResults =
+				cntxt.getMethodSubnegotiationResults();
+		String user = methSubnegotiationResults.getUser();
+		String possibleUser = (user != null) ? 
+				String.format(" (%s)", user) : "";
+		logAction.invoke(String.format(
+				"SOCKS5 request route '%s' for %s%s is selected from the "
+				+ "following routing rule and context: %s, %s", 
+				routeId,
+				clientAddress,
+				possibleUser,
+				this,
+				context));
+	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -469,7 +505,7 @@ public final class Socks5RequestRoutingRule extends RoutingRule {
 		}
 		return true;
 	}
-	
+
 	public AddressRange getClientAddressRange() {
 		return this.clientAddressRange;
 	}
@@ -485,19 +521,19 @@ public final class Socks5RequestRoutingRule extends RoutingRule {
 	public PortRange getDesiredDestinationPortRange() {
 		return this.desiredDestinationPortRange;
 	}
-
+	
 	public Method getMethod() {
 		return this.method;
 	}
-	
+
 	public AddressRange getSocksServerAddressRange() {
 		return this.socksServerAddressRange;
 	}
-
+	
 	public String getUser() {
 		return this.user;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -524,38 +560,6 @@ public final class Socks5RequestRoutingRule extends RoutingRule {
 		result = prime * result + ((this.user == null) ? 
 				0 : this.user.hashCode());
 		return result;
-	}
-
-	@Override
-	public Route selectRoute(final Rule.Context context) {
-		String routeId = this.getRouteIdSelector().select();
-		Route route = null;
-		if (routeId != null) {
-			Context cntxt = (Context) context;
-			Routes routes = cntxt.getRoutes();
-			route = routes.get(routeId);
-			if (route == null) {
-				throw new RouteNotFoundException(routeId);
-			}
-			LogAction logAction = this.getLogAction();
-			if (logAction != null) {
-				String clientAddress = cntxt.getClientAddress();
-				MethodSubnegotiationResults methSubnegotiationResults =
-						cntxt.getMethodSubnegotiationResults();
-				String user = methSubnegotiationResults.getUser();
-				String possibleUser = (user != null) ? 
-						String.format(" (%s)", user) : "";
-				logAction.invoke(String.format(
-						"SOCKS5 request route '%s' for %s%s is selected from "
-						+ "the following routing rule and context: %s, %s", 
-						routeId,
-						clientAddress,
-						possibleUser,
-						this,
-						context));
-			}
-		}
-		return route;
 	}
 
 	@Override

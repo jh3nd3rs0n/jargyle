@@ -6,11 +6,8 @@ import com.github.jh3nd3rs0n.jargyle.common.text.Words;
 
 public final class WordsPropertySpec extends PropertySpec<Words> {
 
-	public WordsPropertySpec(
-			final Object permission, 
-			final String s, 
-			final Words defaultVal) {
-		super(permission, s, Words.class, defaultVal);
+	public WordsPropertySpec(final String s, final Words defaultVal) {
+		super(s, Words.class, defaultVal);
 	}
 
 	@Override

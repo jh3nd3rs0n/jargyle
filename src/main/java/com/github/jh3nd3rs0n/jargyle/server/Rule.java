@@ -131,8 +131,10 @@ public abstract class Rule {
 		this.doc = d;
 	}
 	
-	public abstract boolean appliesBasedOn(final Context context);
+	public abstract boolean appliesTo(final Context context);
 
+	public abstract void applyTo(final Context context);
+	
 	public final String getDoc() {
 		return this.doc;
 	}

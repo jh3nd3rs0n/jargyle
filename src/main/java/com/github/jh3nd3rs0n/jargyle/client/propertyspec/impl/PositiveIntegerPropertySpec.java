@@ -8,10 +8,8 @@ public final class PositiveIntegerPropertySpec
 	extends PropertySpec<PositiveInteger> {
 
 	public PositiveIntegerPropertySpec(
-			final Object permission, 
-			final String s, 
-			final PositiveInteger defaultVal) {
-		super(permission, s, PositiveInteger.class, defaultVal);
+			final String s, final PositiveInteger defaultVal) {
+		super(s, PositiveInteger.class, defaultVal);
 	}
 
 	@Override

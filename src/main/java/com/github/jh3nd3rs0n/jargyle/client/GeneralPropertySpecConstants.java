@@ -18,25 +18,21 @@ public final class GeneralPropertySpecConstants {
 	
 	public static final PropertySpec<Host> INTERNAL_BIND_HOST = 
 			PROPERTY_SPECS.addThenGet(new HostPropertySpec(
-					NewPropertySpecPermission.INSTANCE,
 					"socksClient.internalBindHost",
 					Host.getAllZerosInet4Instance()));
 
 	public static final PropertySpec<Port> INTERNAL_BIND_PORT = 
 			PROPERTY_SPECS.addThenGet(new PortPropertySpec(
-					NewPropertySpecPermission.INSTANCE,
 					"socksClient.internalBindPort",
 					Port.newInstance(0)));
 	
 	public static final PropertySpec<PositiveInteger> INTERNAL_CONNECT_TIMEOUT = 
 			PROPERTY_SPECS.addThenGet(new PositiveIntegerPropertySpec(
-					NewPropertySpecPermission.INSTANCE,
 					"socksClient.internalConnectTimeout",
 					PositiveInteger.newInstance(60000))); // 1 minute
 	
 	public static final PropertySpec<SocketSettings> INTERNAL_SOCKET_SETTINGS = 
 			PROPERTY_SPECS.addThenGet(new SocketSettingsPropertySpec(
-					NewPropertySpecPermission.INSTANCE,
 					"socksClient.internalSocketSettings",
 					SocketSettings.newInstance()));
 	

@@ -28,8 +28,7 @@ public final class ChainingGeneralSettingSpecConstants {
 	)
 	public static final SettingSpec<Host> CHAINING_INTERNAL_BIND_HOST = 
 			SETTING_SPECS.addThenGet(new HostSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"chaining.internalBindHost",
+					"chaining.internalBindHost", 
 					GeneralPropertySpecConstants.INTERNAL_BIND_HOST.getDefaultProperty().getValue()));
 
 	@HelpText(
@@ -41,8 +40,7 @@ public final class ChainingGeneralSettingSpecConstants {
 	)
 	public static final SettingSpec<PositiveInteger> CHAINING_INTERNAL_CONNECT_TIMEOUT = 
 			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"chaining.internalConnectTimeout",
+					"chaining.internalConnectTimeout", 
 					GeneralPropertySpecConstants.INTERNAL_CONNECT_TIMEOUT.getDefaultProperty().getValue()));
 	
 	@HelpText(
@@ -54,8 +52,7 @@ public final class ChainingGeneralSettingSpecConstants {
 	)
 	public static final SettingSpec<SocketSettings> CHAINING_INTERNAL_SOCKET_SETTINGS = 
 			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"chaining.internalSocketSettings",
+					"chaining.internalSocketSettings", 
 					GeneralPropertySpecConstants.INTERNAL_SOCKET_SETTINGS.getDefaultProperty().getValue()));
 
 	@HelpText(
@@ -67,7 +64,6 @@ public final class ChainingGeneralSettingSpecConstants {
 	)
 	public static final SettingSpec<String> CHAINING_ROUTE_ID = 
 			SETTING_SPECS.addThenGet(new StringSettingSpec(
-					NewSettingSpecPermission.INSTANCE,
 					"chaining.routeId",
 					null));
 	
@@ -77,8 +73,7 @@ public final class ChainingGeneralSettingSpecConstants {
 	)
 	public static final SettingSpec<SocksServerUri> CHAINING_SOCKS_SERVER_URI = 
 			SETTING_SPECS.addThenGet(new SocksServerUriSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"chaining.socksServerUri",
+					"chaining.socksServerUri", 
 					null));
 	
 	public static List<SettingSpec<Object>> values() {

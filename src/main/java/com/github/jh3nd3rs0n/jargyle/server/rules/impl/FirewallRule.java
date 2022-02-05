@@ -10,6 +10,11 @@ public abstract class FirewallRule extends Rule {
 	public static abstract class Builder<B extends Builder<B, R>, R extends FirewallRule> 
 		extends Rule.Builder<B, R> {
 
+		public static interface Field<B extends Builder<B, R>, R extends FirewallRule>
+			extends Rule.Builder.Field<B, R> {
+			
+		}
+		
 		private final FirewallRuleAction firewallRuleAction;
 		
 		public Builder(final FirewallRuleAction firewallRlAction) {
@@ -39,6 +44,25 @@ public abstract class FirewallRule extends Rule {
 		
 	}
 	
+	public static abstract class Context extends Rule.Context {
+
+		private FirewallRuleAction firewallRuleAction;
+		
+		public Context() {
+			this.firewallRuleAction = null;
+		}
+		
+		public final FirewallRuleAction getFirewallRuleAction() {
+			return this.firewallRuleAction;
+		}
+		
+		public final void setFirewallRuleAction(
+				final FirewallRuleAction firewallRlAction) {
+			this.firewallRuleAction = firewallRlAction;
+		}
+		
+	}
+	
 	private final FirewallRuleAction firewallRuleAction;
 
 	protected FirewallRule(final Builder<?, ?> builder) {
@@ -46,8 +70,6 @@ public abstract class FirewallRule extends Rule {
 		FirewallRuleAction firewallRlAction = builder.firewallRuleAction();
 		this.firewallRuleAction = firewallRlAction;
 	}
-	
-	public abstract void applyBasedOn(final Rule.Context context);
 	
 	public final FirewallRuleAction getFirewallRuleAction() {
 		return this.firewallRuleAction;

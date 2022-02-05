@@ -15,12 +15,10 @@ import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.internal.logging.LoggerHelper;
 import com.github.jh3nd3rs0n.jargyle.server.RelayServer;
-import com.github.jh3nd3rs0n.jargyle.server.Rule;
 import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.rules.impl.FirewallRule;
-import com.github.jh3nd3rs0n.jargyle.server.rules.impl.FirewallRuleActionDenyException;
-import com.github.jh3nd3rs0n.jargyle.server.rules.impl.FirewallRuleNotFoundException;
+import com.github.jh3nd3rs0n.jargyle.server.rules.impl.FirewallRuleAction;
 import com.github.jh3nd3rs0n.jargyle.server.rules.impl.Socks5ReplyFirewallRule;
 import com.github.jh3nd3rs0n.jargyle.server.rules.impl.Socks5ReplyFirewallRules;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Reply;
@@ -101,35 +99,19 @@ public final class BindCommandWorker extends CommandWorker {
 		return true;
 	}
 	
-	private boolean canAllowSecondSocks5Reply(final Rule.Context context) {
+	private boolean canAllowSecondSocks5Reply(
+			final FirewallRule.Context context) {
 		Socks5ReplyFirewallRules socks5ReplyFirewallRules = 
 				this.settings.getLastValue(
 						Socks5SettingSpecConstants.SOCKS5_ON_BIND_SECOND_SOCKS5_REPLY_FIREWALL_RULES);
-		Socks5ReplyFirewallRule socks5ReplyFirewallRule = null;
-		try {
-			socks5ReplyFirewallRule = 
-					socks5ReplyFirewallRules.anyAppliesBasedOn(context);
-		} catch (FirewallRuleNotFoundException e) {
-			LOGGER.error(
-					LoggerHelper.objectMessage(this, String.format(
-							"Firewall rule not found for the following "
-							+ "context: %s",
-							context)),
-					e);
-			Socks5Reply rep = Socks5Reply.newFailureInstance(
-					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
-			this.commandWorkerContext.sendSocks5Reply(this, rep, LOGGER);
-			return false;			
+		socks5ReplyFirewallRules.applyTo(context);
+		if (FirewallRuleAction.ALLOW.equals(context.getFirewallRuleAction())) {
+			return true;
 		}
-		try {
-			socks5ReplyFirewallRule.applyBasedOn(context);
-		} catch (FirewallRuleActionDenyException e) {
-			Socks5Reply rep = Socks5Reply.newFailureInstance(
-					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
-			this.commandWorkerContext.sendSocks5Reply(this, rep, LOGGER);
-			return false;
-		}
-		return true;
+		Socks5Reply rep = Socks5Reply.newFailureInstance(
+				Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
+		this.commandWorkerContext.sendSocks5Reply(this, rep, LOGGER);
+		return false;
 	}
 
 	private boolean configureInboundSocket(final Socket inboundSocket) {

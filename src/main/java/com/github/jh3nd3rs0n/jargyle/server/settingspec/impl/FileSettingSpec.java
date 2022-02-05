@@ -7,11 +7,8 @@ import com.github.jh3nd3rs0n.jargyle.server.SettingSpec;
 
 public final class FileSettingSpec extends SettingSpec<File> {
 
-	public FileSettingSpec(
-			final Object permission, 
-			final String s, 
-			final File defaultVal) {
-		super(permission, s, File.class, defaultVal);
+	public FileSettingSpec(final String s, final File defaultVal) {
+		super(s, File.class, defaultVal);
 	}
 
 	@Override

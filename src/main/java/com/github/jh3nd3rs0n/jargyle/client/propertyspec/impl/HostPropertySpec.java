@@ -8,11 +8,8 @@ import com.github.jh3nd3rs0n.jargyle.common.net.Host;
 
 public final class HostPropertySpec extends PropertySpec<Host> {
 
-	public HostPropertySpec(
-			final Object permission, 
-			final String s, 
-			final Host defaultVal) {
-		super(permission, s, Host.class, defaultVal);
+	public HostPropertySpec(final String s, final Host defaultVal) {
+		super(s, Host.class, defaultVal);
 	}
 
 	@Override

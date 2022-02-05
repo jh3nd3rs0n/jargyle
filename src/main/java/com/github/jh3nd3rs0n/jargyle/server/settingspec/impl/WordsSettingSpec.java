@@ -6,11 +6,8 @@ import com.github.jh3nd3rs0n.jargyle.server.SettingSpec;
 
 public final class WordsSettingSpec extends SettingSpec<Words> {
 
-	public WordsSettingSpec(
-			final Object permission, 
-			final String s, 
-			final Words defaultVal) {
-		super(permission, s, Words.class, defaultVal);
+	public WordsSettingSpec(final String s,	final Words defaultVal) {
+		super(s, Words.class, defaultVal);
 	}
 
 	@Override

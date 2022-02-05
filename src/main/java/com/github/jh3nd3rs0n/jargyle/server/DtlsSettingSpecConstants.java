@@ -26,8 +26,7 @@ public final class DtlsSettingSpecConstants {
 	)	
 	public static final SettingSpec<Boolean> DTLS_ENABLED = 
 			SETTING_SPECS.addThenGet(new BooleanSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"dtls.enabled",
+					"dtls.enabled", 
 					Boolean.FALSE));
 
 	@HelpText(
@@ -37,8 +36,7 @@ public final class DtlsSettingSpecConstants {
 	)	
 	public static final SettingSpec<Words> DTLS_ENABLED_CIPHER_SUITES = 
 			SETTING_SPECS.addThenGet(new WordsSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"dtls.enabledCipherSuites",
+					"dtls.enabledCipherSuites", 
 					Words.newInstance(new String[] { })));
 	
 	@HelpText(
@@ -48,8 +46,7 @@ public final class DtlsSettingSpecConstants {
 	)	
 	public static final SettingSpec<Words> DTLS_ENABLED_PROTOCOLS = 
 			SETTING_SPECS.addThenGet(new WordsSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"dtls.enabledProtocols",
+					"dtls.enabledProtocols", 
 					Words.newInstance(new String[] { })));
 	
 	@HelpText(
@@ -59,8 +56,7 @@ public final class DtlsSettingSpecConstants {
 	)	
 	public static final SettingSpec<File> DTLS_KEY_STORE_FILE = 
 			SETTING_SPECS.addThenGet(new FileSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"dtls.keyStoreFile",
+					"dtls.keyStoreFile", 
 					null));
 	
 	@HelpText(
@@ -70,8 +66,7 @@ public final class DtlsSettingSpecConstants {
 	)	
 	public static final SettingSpec<EncryptedPassword> DTLS_KEY_STORE_PASSWORD = 
 			SETTING_SPECS.addThenGet(new EncryptedPasswordSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"dtls.keyStorePassword",
+					"dtls.keyStorePassword", 
 					EncryptedPassword.newInstance(new char[] { })));
 	
 	@HelpText(
@@ -81,8 +76,7 @@ public final class DtlsSettingSpecConstants {
 	)	
 	public static final SettingSpec<String> DTLS_KEY_STORE_TYPE = 
 			SETTING_SPECS.addThenGet(new StringSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"dtls.keyStoreType",
+					"dtls.keyStoreType", 
 					"PKCS12"));
 	
 	@HelpText(
@@ -92,8 +86,7 @@ public final class DtlsSettingSpecConstants {
 	)	
 	public static final SettingSpec<PositiveInteger> DTLS_MAX_PACKET_SIZE = 
 			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"dtls.maxPacketSize",
+					"dtls.maxPacketSize", 
 					PositiveInteger.newInstance(32768)));
 	
 	@HelpText(
@@ -104,8 +97,7 @@ public final class DtlsSettingSpecConstants {
 	)	
 	public static final SettingSpec<Boolean> DTLS_NEED_CLIENT_AUTH = 
 			SETTING_SPECS.addThenGet(new BooleanSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"dtls.needClientAuth",
+					"dtls.needClientAuth", 
 					Boolean.FALSE));
 	
 	@HelpText(
@@ -115,8 +107,7 @@ public final class DtlsSettingSpecConstants {
 	)	
 	public static final SettingSpec<String> DTLS_PROTOCOL = 
 			SETTING_SPECS.addThenGet(new StringSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"dtls.protocol",
+					"dtls.protocol", 
 					"DTLSv1.2"));
 	
 	@HelpText(
@@ -126,8 +117,7 @@ public final class DtlsSettingSpecConstants {
 	)	
 	public static final SettingSpec<File> DTLS_TRUST_STORE_FILE = 
 			SETTING_SPECS.addThenGet(new FileSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"dtls.trustStoreFile",
+					"dtls.trustStoreFile", 
 					null));
 	
 	@HelpText(
@@ -137,8 +127,7 @@ public final class DtlsSettingSpecConstants {
 	)	
 	public static final SettingSpec<EncryptedPassword> DTLS_TRUST_STORE_PASSWORD = 
 			SETTING_SPECS.addThenGet(new EncryptedPasswordSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"dtls.trustStorePassword",
+					"dtls.trustStorePassword", 
 					EncryptedPassword.newInstance(new char[] { })));
 	
 	@HelpText(
@@ -148,8 +137,7 @@ public final class DtlsSettingSpecConstants {
 	)		
 	public static final SettingSpec<String> DTLS_TRUST_STORE_TYPE = 
 			SETTING_SPECS.addThenGet(new StringSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"dtls.trustStoreType",
+					"dtls.trustStoreType", 
 					"PKCS12"));
 	
 	@HelpText(
@@ -160,8 +148,7 @@ public final class DtlsSettingSpecConstants {
 	)	
 	public static final SettingSpec<Boolean> DTLS_WANT_CLIENT_AUTH = 
 			SETTING_SPECS.addThenGet(new BooleanSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"dtls.wantClientAuth",
+					"dtls.wantClientAuth", 
 					Boolean.FALSE));
 	
 	public static List<SettingSpec<Object>> values() {

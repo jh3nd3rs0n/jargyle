@@ -234,7 +234,7 @@ public final class Socks5UdpFirewallRule extends FirewallRule {
 	}
 	
 	@Override
-	public boolean appliesBasedOn(final Rule.Context context) {
+	public boolean appliesTo(final Rule.Context context) {
 		if (!(context instanceof Context)) {
 			return false;
 		}
@@ -263,10 +263,17 @@ public final class Socks5UdpFirewallRule extends FirewallRule {
 	}
 
 	@Override
-	public void applyBasedOn(final Rule.Context context) {
-		FirewallRuleAction firewallRuleAction = this.getFirewallRuleAction();
-		LogAction logAction = this.getLogAction();
+	public void applyTo(final Rule.Context context) {
 		Context cntxt = (Context) context;
+		if (cntxt.getFirewallRuleAction() != null) {
+			return;
+		}
+		FirewallRuleAction firewallRuleAction = this.getFirewallRuleAction();
+		cntxt.setFirewallRuleAction(firewallRuleAction);
+		LogAction logAction = this.getLogAction();
+		if (logAction == null) {
+			return;
+		}
 		String clientAddress = cntxt.getClientAddress();
 		MethodSubnegotiationResults methSubnegotiationResults =
 				cntxt.getMethodSubnegotiationResults();
@@ -274,7 +281,7 @@ public final class Socks5UdpFirewallRule extends FirewallRule {
 		String user = methSubnegotiationResults.getUser();
 		String possibleUser = (user != null) ? 
 				String.format(" (%s)", user) : "";
-		if (firewallRuleAction.equals(FirewallRuleAction.ALLOW)	&& logAction != null) {
+		if (firewallRuleAction.equals(FirewallRuleAction.ALLOW)) {
 			logAction.invoke(String.format(
 					"Traffic between client %s%s and peer %s is allowed based "
 					+ "on the following firewall rule and context: %s, %s",
@@ -284,19 +291,15 @@ public final class Socks5UdpFirewallRule extends FirewallRule {
 					this,
 					context));			
 		} else if (firewallRuleAction.equals(FirewallRuleAction.DENY)) {
-			if (logAction != null) {
-				logAction.invoke(String.format(
-						"Traffic between client %s%s and peer %s is denied "
-						+ "based on the following firewall rule and context: "
-						+ "%s, %s",
-						clientAddress,
-						possibleUser,
-						peerAddress,
-						this,
-						context));				
-			}
-			throw new FirewallRuleActionDenyException(this, cntxt);
-		}		
+			logAction.invoke(String.format(
+					"Traffic between client %s%s and peer %s is denied based "
+					+ "on the following firewall rule and context: %s, %s",
+					clientAddress,
+					possibleUser,
+					peerAddress,
+					this,
+					context));
+		}
 	}
 	
 	@Override

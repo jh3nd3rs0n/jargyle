@@ -29,8 +29,7 @@ public final class ChainingSocks5SettingSpecConstants {
 	)
 	public static final SettingSpec<Oid> CHAINING_SOCKS5_GSSAPIAUTH_MECHANISM_OID = 
 			SETTING_SPECS.addThenGet(new OidSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"chaining.socks5.gssapiauth.mechanismOid",
+					"chaining.socks5.gssapiauth.mechanismOid", 
 					Socks5PropertySpecConstants.SOCKS5_GSSAPIAUTH_MECHANISM_OID.getDefaultProperty().getValue()));
 
 	@HelpText(
@@ -42,8 +41,7 @@ public final class ChainingSocks5SettingSpecConstants {
 	)
 	public static final SettingSpec<Boolean> CHAINING_SOCKS5_GSSAPIAUTH_NEC_REFERENCE_IMPL = 
 			SETTING_SPECS.addThenGet(new BooleanSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"chaining.socks5.gssapiauth.necReferenceImpl",
+					"chaining.socks5.gssapiauth.necReferenceImpl", 
 					Socks5PropertySpecConstants.SOCKS5_GSSAPIAUTH_NEC_REFERENCE_IMPL.getDefaultProperty().getValue()));
 	
 	@HelpText(
@@ -57,8 +55,7 @@ public final class ChainingSocks5SettingSpecConstants {
 	)
 	public static final SettingSpec<ProtectionLevels> CHAINING_SOCKS5_GSSAPIAUTH_PROTECTION_LEVELS = 
 			SETTING_SPECS.addThenGet(new ProtectionLevelsSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"chaining.socks5.gssapiauth.protectionLevels",
+					"chaining.socks5.gssapiauth.protectionLevels", 
 					Socks5PropertySpecConstants.SOCKS5_GSSAPIAUTH_PROTECTION_LEVELS.getDefaultProperty().getValue()));
 	
 	@HelpText(
@@ -67,8 +64,7 @@ public final class ChainingSocks5SettingSpecConstants {
 	)
 	public static final SettingSpec<String> CHAINING_SOCKS5_GSSAPIAUTH_SERVICE_NAME = 
 			SETTING_SPECS.addThenGet(new StringSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"chaining.socks5.gssapiauth.serviceName",
+					"chaining.socks5.gssapiauth.serviceName", 
 					Socks5PropertySpecConstants.SOCKS5_GSSAPIAUTH_SERVICE_NAME.getDefaultProperty().getValue()));
 	
 	@HelpText(
@@ -79,8 +75,7 @@ public final class ChainingSocks5SettingSpecConstants {
 	)
 	public static final SettingSpec<Methods> CHAINING_SOCKS5_METHODS = 
 			SETTING_SPECS.addThenGet(new MethodsSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"chaining.socks5.methods",
+					"chaining.socks5.methods", 
 					Socks5PropertySpecConstants.SOCKS5_METHODS.getDefaultProperty().getValue()));
 	
 	@HelpText(
@@ -91,8 +86,7 @@ public final class ChainingSocks5SettingSpecConstants {
 	)	
 	public static final SettingSpec<Boolean> CHAINING_SOCKS5_RESOLVE_USE_RESOLVE_COMMAND = 
 			SETTING_SPECS.addThenGet(new BooleanSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"chaining.socks5.resolve.useResolveCommand",
+					"chaining.socks5.resolve.useResolveCommand", 
 					Socks5PropertySpecConstants.SOCKS5_RESOLVE_USE_RESOLVE_COMMAND.getDefaultProperty().getValue()));
 
 	@HelpText(
@@ -101,7 +95,6 @@ public final class ChainingSocks5SettingSpecConstants {
 	)
 	public static final SettingSpec<EncryptedPassword> CHAINING_SOCKS5_USERPASSAUTH_PASSWORD =
 			SETTING_SPECS.addThenGet(new UserEncryptedPasswordSettingSpec(
-					NewSettingSpecPermission.INSTANCE,
 					"chaining.socks5.userpassauth.password",
 					Socks5PropertySpecConstants.SOCKS5_USERPASSAUTH_PASSWORD.getDefaultProperty().getValue()));
 	
@@ -111,7 +104,6 @@ public final class ChainingSocks5SettingSpecConstants {
 	)
 	public static final SettingSpec<String> CHAINING_SOCKS5_USERPASSAUTH_USERNAME =
 			SETTING_SPECS.addThenGet(new UsernameSettingSpec(
-					NewSettingSpecPermission.INSTANCE,
 					"chaining.socks5.userpassauth.username",
 					Socks5PropertySpecConstants.SOCKS5_USERPASSAUTH_USERNAME.getDefaultProperty().getValue()));
 	

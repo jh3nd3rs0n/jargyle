@@ -8,10 +8,8 @@ public final class Socks5ReplyFirewallRulesSettingSpec
 	extends SettingSpec<Socks5ReplyFirewallRules> {
 
 	public Socks5ReplyFirewallRulesSettingSpec(
-			final Object permission,
-			final String s,
-			final Socks5ReplyFirewallRules defaultVal) {
-		super(permission, s, Socks5ReplyFirewallRules.class, defaultVal);
+			final String s, final Socks5ReplyFirewallRules defaultVal) {
+		super(s, Socks5ReplyFirewallRules.class, defaultVal);
 	}
 	
 	@Override

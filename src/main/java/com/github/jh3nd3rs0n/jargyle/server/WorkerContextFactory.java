@@ -12,6 +12,9 @@ import com.github.jh3nd3rs0n.jargyle.server.rules.impl.ClientFirewallRule;
 import com.github.jh3nd3rs0n.jargyle.server.rules.impl.ClientFirewallRules;
 import com.github.jh3nd3rs0n.jargyle.server.rules.impl.ClientRoutingRule;
 import com.github.jh3nd3rs0n.jargyle.server.rules.impl.ClientRoutingRules;
+import com.github.jh3nd3rs0n.jargyle.server.rules.impl.FirewallRule;
+import com.github.jh3nd3rs0n.jargyle.server.rules.impl.FirewallRuleAction;
+import com.github.jh3nd3rs0n.jargyle.server.rules.impl.RoutingRule;
 
 final class WorkerContextFactory {
 	
@@ -31,14 +34,13 @@ final class WorkerContextFactory {
 		this.routeSelector = null;		
 	}
 	
-	private void checkIfClientFacingSocketAllowed(
-			final Rule.Context context, final Configuration config) {
+	private boolean canAllowClientFacingSocket(
+			final FirewallRule.Context context, final Configuration config) {
 		Settings settings = config.getSettings();
 		ClientFirewallRules clientFirewallRules = settings.getLastValue(
 				GeneralSettingSpecConstants.CLIENT_FIREWALL_RULES);
-		ClientFirewallRule clientFirewallRule = 
-				clientFirewallRules.anyAppliesBasedOn(context);
-		clientFirewallRule.applyBasedOn(context);
+		clientFirewallRules.applyTo(context);
+		return FirewallRuleAction.ALLOW.equals(context.getFirewallRuleAction());
 	}
 	
 	private void configureClientFacingSocket(
@@ -81,18 +83,19 @@ final class WorkerContextFactory {
 				clientFacingSock.getInetAddress().getHostAddress();
 		String socksServerAddress =
 				clientFacingSock.getLocalAddress().getHostAddress();
-		this.checkIfClientFacingSocketAllowed(
-				new ClientFirewallRule.Context(clientAddress, socksServerAddress), 
-				config);
+		if (!this.canAllowClientFacingSocket(
+				new ClientFirewallRule.Context(
+						clientAddress, socksServerAddress), 
+				config)) {
+			throw new IllegalArgumentException(
+					"client-facing socket not allowed");
+		}
 		this.configureClientFacingSocket(clientFacingSock, config);
 		clientFacingSock = this.wrapClientFacingSocket(clientFacingSock);
 		Route route = this.selectRoute(
 				new ClientRoutingRule.Context(
 						clientAddress, socksServerAddress, this.routes),
 				config);
-		if (route == null) {
-			route = this.selectRoute(config);
-		}
 		return new WorkerContext(
 				clientFacingSock, 
 				config, 
@@ -100,32 +103,25 @@ final class WorkerContextFactory {
 				this.routes,
 				this.clientFacingDtlsDatagramSocketFactory);
 	}
-
-	private Route selectRoute(final Configuration config) {
-		Route route = this.routeSelector.select();
-		Settings settings = config.getSettings();
-		LogAction routeSelectionLogAction = settings.getLastValue(
-				GeneralSettingSpecConstants.ROUTE_SELECTION_LOG_ACTION);
-		if (routeSelectionLogAction != null) {
-			routeSelectionLogAction.invoke(String.format(
-					"Route '%s' selected", 
-					route.getRouteId()));
-		}
-		return route;
-	}
 	
 	private Route selectRoute(
-			final Rule.Context context, final Configuration config) {
-		Route route = null;
+			final RoutingRule.Context context, final Configuration config) {
 		Settings settings = config.getSettings();		
 		ClientRoutingRules clientRoutingRules = settings.getLastValue(
 				GeneralSettingSpecConstants.CLIENT_ROUTING_RULES);
-		ClientRoutingRule clientRoutingRule = 
-				clientRoutingRules.anyAppliesBasedOn(context);
-		if (clientRoutingRule != null) {
-			route = clientRoutingRule.selectRoute(context);
+		clientRoutingRules.applyTo(context);
+		Route route = context.getRoute();
+		if (route == null) {
+			route = this.routeSelector.select();
+			LogAction routeSelectionLogAction = settings.getLastValue(
+					GeneralSettingSpecConstants.ROUTE_SELECTION_LOG_ACTION);
+			if (routeSelectionLogAction != null) {
+				routeSelectionLogAction.invoke(String.format(
+						"Route '%s' selected", 
+						route.getRouteId()));
+			}
 		}
-		return route;		
+		return route;
 	}
 	
 	private Socket wrapClientFacingSocket(

@@ -9,17 +9,16 @@ public abstract class Rules<R extends Rule> {
 
 	private final List<R> rules;
 	
-	protected Rules(final List<? extends R> rls) {
+	public Rules(final List<? extends R> rls) {
 		this.rules = new ArrayList<R>(rls);
 	}
 	
-	public R anyAppliesBasedOn(final Rule.Context context) {
+	public final void applyTo(final Rule.Context context) {
 		for (R rule : this.rules) {
-			if (rule.appliesBasedOn(context)) {
-				return rule; 
+			if (rule.appliesTo(context)) {
+				rule.applyTo(context);
 			}
 		}
-		return null;
 	}
 	
 	@Override

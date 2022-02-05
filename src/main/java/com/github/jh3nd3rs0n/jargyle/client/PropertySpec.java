@@ -10,17 +10,9 @@ public abstract class PropertySpec<V> {
 	private final Class<V> valueType;
 	
 	public PropertySpec(
-			final Object permission, 
-			final String s, 
-			final Class<V> valType, 
-			final V defaultVal) {
-		Objects.requireNonNull(permission);
+			final String s, final Class<V> valType,	final V defaultVal) {
 		Objects.requireNonNull(s);
 		Objects.requireNonNull(valType);
-		if (!NewPropertySpecPermission.INSTANCE.equals(permission)) {
-			throw new IllegalArgumentException(
-					"invalid new PropertySpec permission");
-		}
 		this.defaultValue = valType.cast(defaultVal);
 		this.string = s;
 		this.valueType = valType;

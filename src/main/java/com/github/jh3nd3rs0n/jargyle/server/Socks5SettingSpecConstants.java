@@ -41,8 +41,7 @@ public final class Socks5SettingSpecConstants {
 	)
 	public static final SettingSpec<Boolean> SOCKS5_GSSAPIAUTH_NEC_REFERENCE_IMPL = 
 			SETTING_SPECS.addThenGet(new BooleanSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"socks5.gssapiauth.necReferenceImpl",
+					"socks5.gssapiauth.necReferenceImpl", 
 					Boolean.FALSE));
 	
 	@HelpText(
@@ -55,8 +54,7 @@ public final class Socks5SettingSpecConstants {
 	)
 	public static final SettingSpec<ProtectionLevels> SOCKS5_GSSAPIAUTH_PROTECTION_LEVELS = 
 			SETTING_SPECS.addThenGet(new ProtectionLevelsSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"socks5.gssapiauth.protectionLevels",
+					"socks5.gssapiauth.protectionLevels", 
 					ProtectionLevels.getDefault()));
 	
 	@HelpText(
@@ -67,8 +65,7 @@ public final class Socks5SettingSpecConstants {
 	)
 	public static final SettingSpec<Methods> SOCKS5_METHODS = 
 			SETTING_SPECS.addThenGet(new MethodsSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"socks5.methods",
+					"socks5.methods", 
 					Methods.getDefault()));
 	
 	@HelpText(
@@ -78,8 +75,7 @@ public final class Socks5SettingSpecConstants {
 	)
 	public static final SettingSpec<SocketSettings> SOCKS5_ON_BIND_INBOUND_SOCKET_SETTINGS = 
 			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"socks5.onBind.inboundSocketSettings",
+					"socks5.onBind.inboundSocketSettings", 
 					SocketSettings.newInstance()));
 	
 	@HelpText(
@@ -89,8 +85,7 @@ public final class Socks5SettingSpecConstants {
 	)
 	public static final SettingSpec<SocketSettings> SOCKS5_ON_BIND_LISTEN_SOCKET_SETTINGS = 
 			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"socks5.onBind.listenSocketSettings",
+					"socks5.onBind.listenSocketSettings", 
 					SocketSettings.newInstance()));
 	
 	@HelpText(
@@ -100,8 +95,7 @@ public final class Socks5SettingSpecConstants {
 	)
 	public static final SettingSpec<PositiveInteger> SOCKS5_ON_BIND_RELAY_BUFFER_SIZE = 
 			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"socks5.onBind.relayBufferSize",
+					"socks5.onBind.relayBufferSize", 
 					PositiveInteger.newInstance(1024)));
 	
 	@HelpText(
@@ -111,8 +105,7 @@ public final class Socks5SettingSpecConstants {
 	)
 	public static final SettingSpec<PositiveInteger> SOCKS5_ON_BIND_RELAY_IDLE_TIMEOUT = 
 			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"socks5.onBind.relayIdleTimeout",
+					"socks5.onBind.relayIdleTimeout", 
 					PositiveInteger.newInstance(60000))); // 1 minute
 
 	@HelpText(
@@ -123,7 +116,6 @@ public final class Socks5SettingSpecConstants {
 	)	
 	public static final SettingSpec<Socks5ReplyFirewallRules> SOCKS5_ON_BIND_SECOND_SOCKS5_REPLY_FIREWALL_RULES =
 			SETTING_SPECS.addThenGet(new Socks5ReplyFirewallRulesSettingSpec(
-					NewSettingSpecPermission.INSTANCE,
 					"socks5.onBind.secondSocks5ReplyFirewallRules",
 					Socks5ReplyFirewallRules.getDefault()));
 	
@@ -137,8 +129,7 @@ public final class Socks5SettingSpecConstants {
 	)	
 	public static final SettingSpec<Boolean> SOCKS5_ON_CONNECT_PREPARE_SERVER_FACING_SOCKET = 
 			SETTING_SPECS.addThenGet(new BooleanSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"socks5.onConnect.prepareServerFacingSocket",
+					"socks5.onConnect.prepareServerFacingSocket", 
 					Boolean.FALSE));
 	
 	@HelpText(
@@ -148,8 +139,7 @@ public final class Socks5SettingSpecConstants {
 	)
 	public static final SettingSpec<PositiveInteger> SOCKS5_ON_CONNECT_RELAY_BUFFER_SIZE = 
 			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"socks5.onConnect.relayBufferSize",
+					"socks5.onConnect.relayBufferSize", 
 					PositiveInteger.newInstance(1024)));
 	
 	@HelpText(
@@ -159,8 +149,7 @@ public final class Socks5SettingSpecConstants {
 	)
 	public static final SettingSpec<PositiveInteger> SOCKS5_ON_CONNECT_RELAY_IDLE_TIMEOUT = 
 			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"socks5.onConnect.relayIdleTimeout",
+					"socks5.onConnect.relayIdleTimeout", 
 					PositiveInteger.newInstance(60000))); // 1 minute
 	
 	@HelpText(
@@ -170,8 +159,7 @@ public final class Socks5SettingSpecConstants {
 	)
 	public static final SettingSpec<Host> SOCKS5_ON_CONNECT_SERVER_FACING_BIND_HOST = 
 			SETTING_SPECS.addThenGet(new HostSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"socks5.onConnect.serverFacingBindHost",
+					"socks5.onConnect.serverFacingBindHost", 
 					Host.getAllZerosInet4Instance()));
 	
 	@HelpText(
@@ -181,8 +169,7 @@ public final class Socks5SettingSpecConstants {
 	)
 	public static final SettingSpec<PositiveInteger> SOCKS5_ON_CONNECT_SERVER_FACING_CONNECT_TIMEOUT = 
 			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"socks5.onConnect.serverFacingConnectTimeout",
+					"socks5.onConnect.serverFacingConnectTimeout", 
 					PositiveInteger.newInstance(60000))); // 1 minute
 	
 	@HelpText(
@@ -192,8 +179,7 @@ public final class Socks5SettingSpecConstants {
 	)
 	public static final SettingSpec<SocketSettings> SOCKS5_ON_CONNECT_SERVER_FACING_SOCKET_SETTINGS = 
 			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"socks5.onConnect.serverFacingSocketSettings",
+					"socks5.onConnect.serverFacingSocketSettings", 
 					SocketSettings.newInstance()));
 	
 	@HelpText(
@@ -203,8 +189,7 @@ public final class Socks5SettingSpecConstants {
 	)
 	public static final SettingSpec<Host> SOCKS5_ON_UDP_ASSOCIATE_CLIENT_FACING_BIND_HOST = 
 			SETTING_SPECS.addThenGet(new HostSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"socks5.onUdpAssociate.clientFacingBindHost",
+					"socks5.onUdpAssociate.clientFacingBindHost", 
 					Host.getAllZerosInet4Instance()));
 	
 	@HelpText(
@@ -214,8 +199,7 @@ public final class Socks5SettingSpecConstants {
 	)
 	public static final SettingSpec<SocketSettings> SOCKS5_ON_UDP_ASSOCIATE_CLIENT_FACING_SOCKET_SETTINGS = 
 			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"socks5.onUdpAssociate.clientFacingSocketSettings",
+					"socks5.onUdpAssociate.clientFacingSocketSettings", 
 					SocketSettings.newInstance()));
 
 	@HelpText(
@@ -226,7 +210,6 @@ public final class Socks5SettingSpecConstants {
 	)	
 	public static final SettingSpec<Socks5UdpFirewallRules> SOCKS5_ON_UDP_ASSOCIATE_INBOUND_SOCKS5_UDP_FIREWALL_RULES =
 			SETTING_SPECS.addThenGet(new Socks5UdpFirewallRulesSettingSpec(
-					NewSettingSpecPermission.INSTANCE,
 					"socks5.onUdpAssociate.inboundSocks5UdpFirewallRules",
 					Socks5UdpFirewallRules.getDefault()));
 
@@ -238,7 +221,6 @@ public final class Socks5SettingSpecConstants {
 	)	
 	public static final SettingSpec<Socks5UdpFirewallRules> SOCKS5_ON_UDP_ASSOCIATE_OUTBOUND_SOCKS5_UDP_FIREWALL_RULES =
 			SETTING_SPECS.addThenGet(new Socks5UdpFirewallRulesSettingSpec(
-					NewSettingSpecPermission.INSTANCE,
 					"socks5.onUdpAssociate.outboundSocks5UdpFirewallRules",
 					Socks5UdpFirewallRules.getDefault()));
 	
@@ -249,8 +231,7 @@ public final class Socks5SettingSpecConstants {
 	)
 	public static final SettingSpec<Host> SOCKS5_ON_UDP_ASSOCIATE_PEER_FACING_BIND_HOST = 
 			SETTING_SPECS.addThenGet(new HostSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"socks5.onUdpAssociate.peerFacingBindHost",
+					"socks5.onUdpAssociate.peerFacingBindHost", 
 					Host.getAllZerosInet4Instance()));
 	
 	@HelpText(
@@ -260,8 +241,7 @@ public final class Socks5SettingSpecConstants {
 	)
 	public static final SettingSpec<SocketSettings> SOCKS5_ON_UDP_ASSOCIATE_PEER_FACING_SOCKET_SETTINGS = 
 			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"socks5.onUdpAssociate.peerFacingSocketSettings",
+					"socks5.onUdpAssociate.peerFacingSocketSettings", 
 					SocketSettings.newInstance()));
 	
 	@HelpText(
@@ -271,8 +251,7 @@ public final class Socks5SettingSpecConstants {
 	)
 	public static final SettingSpec<PositiveInteger> SOCKS5_ON_UDP_ASSOCIATE_RELAY_BUFFER_SIZE = 
 			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"socks5.onUdpAssociate.relayBufferSize",
+					"socks5.onUdpAssociate.relayBufferSize", 
 					PositiveInteger.newInstance(32768)));
 	
 	@HelpText(
@@ -282,8 +261,7 @@ public final class Socks5SettingSpecConstants {
 	)
 	public static final SettingSpec<PositiveInteger> SOCKS5_ON_UDP_ASSOCIATE_RELAY_IDLE_TIMEOUT = 
 			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"socks5.onUdpAssociate.relayIdleTimeout",
+					"socks5.onUdpAssociate.relayIdleTimeout", 
 					PositiveInteger.newInstance(60000))); // 1 minute
 	
 	@HelpText(
@@ -293,7 +271,6 @@ public final class Socks5SettingSpecConstants {
 	)	
 	public static final SettingSpec<Socks5ReplyFirewallRules> SOCKS5_SOCKS5_REPLY_FIREWALL_RULES =
 			SETTING_SPECS.addThenGet(new Socks5ReplyFirewallRulesSettingSpec(
-					NewSettingSpecPermission.INSTANCE,
 					"socks5.socks5ReplyFirewallRules",
 					Socks5ReplyFirewallRules.getDefault()));
 	
@@ -304,7 +281,6 @@ public final class Socks5SettingSpecConstants {
 	)	
 	public static final SettingSpec<Socks5RequestFirewallRules> SOCKS5_SOCKS5_REQUEST_FIREWALL_RULES =
 			SETTING_SPECS.addThenGet(new Socks5RequestFirewallRulesSettingSpec(
-					NewSettingSpecPermission.INSTANCE,
 					"socks5.socks5RequestFirewallRules",
 					Socks5RequestFirewallRules.getDefault()));
 	
@@ -315,7 +291,6 @@ public final class Socks5SettingSpecConstants {
 	)	
 	public static final SettingSpec<Socks5RequestRoutingRules> SOCKS5_SOCKS5_REQUEST_ROUTING_RULES =
 			SETTING_SPECS.addThenGet(new Socks5RequestRoutingRulesSettingSpec(
-					NewSettingSpecPermission.INSTANCE,
 					"socks5.socks5RequestRoutingRules",
 					Socks5RequestRoutingRules.getDefault()));
 	
@@ -325,8 +300,7 @@ public final class Socks5SettingSpecConstants {
 	)	
 	public static final SettingSpec<Socks5RequestWorkerFactory> SOCKS5_SOCKS5_REQUEST_WORKER_FACTORY = 
 			SETTING_SPECS.addThenGet(new Socks5RequestWorkerFactorySettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"socks5.socks5RequestWorkerFactory",
+					"socks5.socks5RequestWorkerFactory", 
 					null));
 	
 	@HelpText(
@@ -335,8 +309,7 @@ public final class Socks5SettingSpecConstants {
 	)
 	public static final SettingSpec<UsernamePasswordAuthenticator> SOCKS5_USERPASSAUTH_USERNAME_PASSWORD_AUTHENTICATOR = 
 			SETTING_SPECS.addThenGet(new UsernamePasswordAuthenticatorSettingSpec(
-					NewSettingSpecPermission.INSTANCE, 
-					"socks5.userpassauth.usernamePasswordAuthenticator",
+					"socks5.userpassauth.usernamePasswordAuthenticator", 
 					null));
 	
 	public static List<SettingSpec<Object>> values() {

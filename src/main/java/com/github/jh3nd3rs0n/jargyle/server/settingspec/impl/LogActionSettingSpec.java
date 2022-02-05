@@ -6,11 +6,8 @@ import com.github.jh3nd3rs0n.jargyle.server.SettingSpec;
 
 public final class LogActionSettingSpec extends SettingSpec<LogAction> {
 
-	public LogActionSettingSpec(
-			final Object permission, 
-			final String s, 
-			final LogAction defaultVal) {
-		super(permission, s, LogAction.class, defaultVal);
+	public LogActionSettingSpec(final String s,	final LogAction defaultVal) {
+		super(s, LogAction.class, defaultVal);
 	}
 
 	@Override

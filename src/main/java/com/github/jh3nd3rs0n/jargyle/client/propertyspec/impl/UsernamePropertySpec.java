@@ -11,11 +11,8 @@ public final class UsernamePropertySpec extends PropertySpec<String> {
 		return s;
 	}
 	
-	public UsernamePropertySpec(
-			final Object permission, 
-			final String s, 
-			final String defaultVal) {
-		super(permission, s, String.class, getValidatedUsername(defaultVal));
+	public UsernamePropertySpec(final String s,	final String defaultVal) {
+		super(s, String.class, getValidatedUsername(defaultVal));
 	}
 
 	@Override

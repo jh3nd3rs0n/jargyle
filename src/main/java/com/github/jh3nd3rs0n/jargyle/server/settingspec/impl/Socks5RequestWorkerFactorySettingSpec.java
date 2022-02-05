@@ -8,10 +8,8 @@ public final class Socks5RequestWorkerFactorySettingSpec
 	extends SettingSpec<Socks5RequestWorkerFactory> {
 
 	public Socks5RequestWorkerFactorySettingSpec(
-			final Object permission, 
-			final String s, 
-			final Socks5RequestWorkerFactory defaultVal) {
-		super(permission, s, Socks5RequestWorkerFactory.class, defaultVal);
+			final String s, final Socks5RequestWorkerFactory defaultVal) {
+		super(s, Socks5RequestWorkerFactory.class, defaultVal);
 	}
 
 	@Override

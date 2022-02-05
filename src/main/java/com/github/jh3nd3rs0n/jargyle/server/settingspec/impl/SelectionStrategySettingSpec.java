@@ -8,10 +8,8 @@ public final class SelectionStrategySettingSpec
 	extends SettingSpec<SelectionStrategy> {
 
 	public SelectionStrategySettingSpec(
-			final Object permission, 
-			final String s,
-			final SelectionStrategy defaultVal) {
-		super(permission, s, SelectionStrategy.class, defaultVal);
+			final String s, final SelectionStrategy defaultVal) {
+		super(s, SelectionStrategy.class, defaultVal);
 	}
 
 	@Override

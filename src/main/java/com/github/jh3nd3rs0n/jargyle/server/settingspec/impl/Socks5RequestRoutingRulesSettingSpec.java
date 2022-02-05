@@ -8,10 +8,8 @@ public final class Socks5RequestRoutingRulesSettingSpec
 	extends SettingSpec<Socks5RequestRoutingRules> {
 
 	public Socks5RequestRoutingRulesSettingSpec(
-			final Object permission, 
-			final String s,
-			final Socks5RequestRoutingRules defaultVal) {
-		super(permission, s, Socks5RequestRoutingRules.class, defaultVal);
+			final String s, final Socks5RequestRoutingRules defaultVal) {
+		super(s, Socks5RequestRoutingRules.class, defaultVal);
 	}
 
 	@Override

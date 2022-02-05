@@ -8,10 +8,8 @@ public final class ClientFirewallRulesSettingSpec
 	extends SettingSpec<ClientFirewallRules> {
 
 	public ClientFirewallRulesSettingSpec(
-			final Object permission, 
-			final String s,
-			final ClientFirewallRules defaultVal) {
-		super(permission, s, ClientFirewallRules.class, defaultVal);
+			final String s, final ClientFirewallRules defaultVal) {
+		super(s, ClientFirewallRules.class, defaultVal);
 	}
 
 	@Override

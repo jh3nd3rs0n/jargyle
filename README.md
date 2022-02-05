@@ -128,7 +128,7 @@ To run Jargyle without any command line arguments, you can run the following com
 
 ```bash
     
-    ./bin/jargyle
+    ./bin/jargyle start-server
     
 ```
 
@@ -140,17 +140,65 @@ The following is the command line help for Jargyle (displayed when using the com
 
 ```text
     
-    Usage: jargyle [OPTIONS]
-           jargyle --config-file-xsd
+    Usage: jargyle COMMAND
            jargyle --help
-           jargyle --monitored-config-file=FILE
-           jargyle [OPTIONS] --new-config-file=FILE
-           jargyle --settings-help
-           jargyle --socks5-userpassauth-users ARGS
+           jargyle --version
+    
+    COMMANDS:
+      manage-socks5-users COMMAND
+          Manage SOCKS5 users
+      new-server-config-file [OPTIONS] FILE
+          Create a new server configuration file based on the provided options
+      start-server [OPTIONS] [MONITORED_CONFIG_FILE]
+          Start the SOCKS server
+    
+    OPTIONS:
+      --help, -h
+          Print this help and exit
+      --version, -V
+          Print version information and exit
+    
+    
+    
+```
+
+The following is the command line help for the command `manage-socks5-users` (displayed when using the command `manage-socks5-users --help`):
+
+```text
+    
+    Usage: jargyle manage-socks5-users COMMAND
+           jargyle manage-socks5-users --help
+    
+    COMMANDS:
+      add-users-to-file FILE
+          Add users to an existing file through an interactive prompt
+      new-file FILE
+          Create a new file of zero or more users through an interactive prompt
+      print-xsd
+          Print the XSD
+      remove-user NAME FILE
+          Remove user by name from an existing file
+    
+    OPTIONS:
+      --help, -h
+          Print this help and exit
+    
+    
+    
+```
+
+The following is the command line help for the command `new-server-config-file` (displayed when using the command `new-server-config-file --help`):
+
+```
+    
+    Usage: jargyle new-server-config-file [OPTIONS] FILE
+           jargyle new-server-config-file --config-file-xsd
+           jargyle new-server-config-file --help
+           jargyle new-server-config-file --settings-help
     
     OPTIONS:
       --config-file=FILE, -f FILE
-          The configuration file
+          A configuration file
       --config-file-xsd, -x
           Print the configuration file XSD and exit
       --enter-chaining-dtls-key-store-pass
@@ -173,22 +221,59 @@ The following is the command line help for Jargyle (displayed when using the com
           Enter through an interactive prompt the password for the trust store for the SSL/TLS connections to the SOCKS server
       --help, -h
           Print this help and exit
-      --monitored-config-file=FILE, -m FILE
-          The configuration file to be monitored for any changes to be applied to the running configuration
-      --new-config-file=FILE, -n FILE
-          Create a new configuration file based on the preceding options and exit
       --setting=NAME=VALUE, -s NAME=VALUE
           A setting for the SOCKS server
       --settings-help, -H
           Print the list of available settings for the SOCKS server and exit
-      --socks5-userpassauth-users
-          Mode for managing SOCKS5 users (add --help for more information)
-      --version, -v
-          Print version information and exit
+    
+    
     
 ```
 
-The following is a list of available settings for the SOCKS server (displayed when using the command line option `--settings-help`):
+The following is the command line help for the command `start-server` (displayed when using the command `start-server --help`):
+
+```
+    
+    Usage: jargyle start-server [OPTIONS] [MONITORED_CONFIG_FILE]
+           jargyle start-server --config-file-xsd
+           jargyle start-server --help
+           jargyle start-server --settings-help
+    
+    OPTIONS:
+      --config-file=FILE, -f FILE
+          A configuration file
+      --config-file-xsd, -x
+          Print the configuration file XSD and exit
+      --enter-chaining-dtls-key-store-pass
+          Enter through an interactive prompt the password for the key store for the DTLS connections to the other SOCKS server
+      --enter-chaining-dtls-trust-store-pass
+          Enter through an interactive prompt the password for the trust store for the DTLS connections to the other SOCKS server
+      --enter-chaining-socks5-userpassauth-pass
+          Enter through an interactive prompt the password to be used to access the other SOCKS5 server
+      --enter-chaining-ssl-key-store-pass
+          Enter through an interactive prompt the password for the key store for the SSL/TLS connections to the other SOCKS server
+      --enter-chaining-ssl-trust-store-pass
+          Enter through an interactive prompt the password for the trust store for the SSL/TLS connections to the other SOCKS server
+      --enter-dtls-key-store-pass
+          Enter through an interactive prompt the password for the key store for the DTLS connections to the SOCKS server
+      --enter-dtls-trust-store-pass
+          Enter through an interactive prompt the password for the trust store for the DTLS connections to the SOCKS server
+      --enter-ssl-key-store-pass
+          Enter through an interactive prompt the password for the key store for the SSL/TLS connections to the SOCKS server
+      --enter-ssl-trust-store-pass
+          Enter through an interactive prompt the password for the trust store for the SSL/TLS connections to the SOCKS server
+      --help, -h
+          Print this help and exit
+      --setting=NAME=VALUE, -s NAME=VALUE
+          A setting for the SOCKS server
+      --settings-help, -H
+          Print the list of available settings for the SOCKS server and exit
+    
+    
+    
+```
+
+The following is a list of available settings for the SOCKS server (displayed when using either the commands `new-server-config-file --settings-help` or `start-server --settings-help`):
 
 ```text
     
@@ -752,41 +837,19 @@ The following is a list of available settings for the SOCKS server (displayed wh
             Specifies the logging action to take if the firewall rule is applied
     
     
-```
-
-The following is the command line help for managing SOCKS5 users for username password authentication (displayed when using the command line options `--socks5-userpassauth-users --help`):
-
-```text
     
-    Usage: jargyle --socks5-userpassauth-users COMMAND
-           jargyle --socks5-userpassauth-users --help
-           jargyle --socks5-userpassauth-users --xsd
-    
-    COMMANDS:
-      add-users-to-file FILE
-          Add users to an existing file through an interactive prompt
-      create-new-file FILE
-          Create a new file of zero or more users through an interactive prompt
-      remove-user NAME FILE
-          Remove user by name from an existing file
-    
-    OPTIONS:
-      --help, -h
-          Print this help and exit
-      --xsd, -x
-          Print the XSD and exit
     
 ```
 
 ### 5. 2. Creating a Configuration File
 
-You can create a configuration file by using the command line option `--new-config-file`
+You can create a configuration file by using the command `new-server-config-file`
 
 The following command creates an empty configuration file:
 
 ```bash
     
-    ./bin/jargyle --new-config-file=empty_configuration.xml
+    ./bin/jargyle new-server-config-file empty_configuration.xml
     
 ```
 
@@ -801,17 +864,15 @@ The following command creates an empty configuration file:
     
 ```
 
-Any preceding command line options that do not terminate before the command line option `--new-config-file` will be set in the new configuration file.
-
 The following command creates a configuration file with the port number, the number of allowed backlogged connections, and no authentication required:
 
 ```bash
     
-    ./bin/jargyle \
+    ./bin/jargyle new-server-config-file \
         --setting=port=1234 \
         --setting=backlog=100 \
         --setting=socks5.methods=NO_AUTHENTICATION_REQUIRED \
-        --new-config-file=configuration.xml
+        configuration.xml
     
 ```
 
@@ -847,10 +908,10 @@ The following command adds one command line option after the existing configurat
 
 ```bash
     
-    ./bin/jargyle \
+    ./bin/jargyle new-server-config-file \
         --config-file=configuration.xml \
         --setting=socketSettings=SO_TIMEOUT=0 \
-        --new-config-file=supplemented_configuration.xml
+        supplemented_configuration.xml
     
 ```
 
@@ -895,10 +956,10 @@ The following command combines the two earlier configuration files into one:
 
 ```bash
     
-    ./bin/jargyle \
+    ./bin/jargyle new-server-config-file \
         --config-file=configuration.xml \
         --config-file=supplemented_configuration.xml \
-        --new-config-file=combined_configuration.xml
+        combined_configuration.xml
     
 ```
 
@@ -951,11 +1012,11 @@ Although the redundant settings in the combined configuration file are unnecessa
 
 ### 5. 5. Running With a Configuration File
 
-To run Jargyle with a configuration file, you can use the command line option `--config-file`
+To run Jargyle with a configuration file, you can use the following command:
 
 ```bash
     
-    ./bin/jargyle --config-file=configuration.xml
+    ./bin/jargyle start-server --config-file=configuration.xml
     
 ```
 
@@ -965,11 +1026,11 @@ Also the configuration file can be supplemented with command line options and/or
 
 You can run Jargyle with a configuration file to be monitored for any changes to be applied to the running configuration.
 
-To run Jargyle with a monitored configuration file, you can use the command line option `--monitored-config-file`
+To run Jargyle with a monitored configuration file, you can use the following command:
 
 ```bash
     
-    ./bin/jargyle --monitored-config-file=configuration.xml
+    ./bin/jargyle start-server configuration.xml
     
 ```
 
@@ -990,7 +1051,7 @@ You can use SSL/TLS for TCP traffic between Jargyle and its clients. By default 
 
 ```text
     
-    ./bin/jargyle \
+    ./bin/jargyle start-server \
         --setting=ssl.enabled=true \
         --setting=ssl.keyStoreFile=server.jks \
         --setting=ssl.keyStorePassword=password
@@ -1001,7 +1062,7 @@ If you do not want to have the password appear in any script or in any part of t
 
 ```text
     
-    ./bin/jargyle \
+    ./bin/jargyle start-server \
         --setting=ssl.enabled=true \
         --setting=ssl.keyStoreFile=server.jks \
         --enter-ssl-key-store-pass
@@ -1012,7 +1073,7 @@ If you want to have the client authenticate using SSL/TLS, you will need to have
 
 ```text
     
-    ./bin/jargyle \
+    ./bin/jargyle start-server \
         --setting=ssl.enabled=true \
         --setting=ssl.keyStoreFile=server.jks \
         --setting=ssl.keyStorePassword=password \
@@ -1026,7 +1087,7 @@ If you do not want to have the password appear in any script or in any part of t
 
 ```text
     
-    ./bin/jargyle \
+    ./bin/jargyle start-server \
         --setting=ssl.enabled=true \
         --setting=ssl.keyStoreFile=server.jks \
         --enter-ssl-key-store-pass \
@@ -1042,7 +1103,7 @@ You can use DTLS for UDP traffic between Jargyle and its clients. By default DTL
 
 ```text
     
-    ./bin/jargyle \
+    ./bin/jargyle start-server \
         --setting=dtls.enabled=true \
         --setting=dtls.keyStoreFile=server.jks \
         --setting=dtls.keyStorePassword=password
@@ -1053,7 +1114,7 @@ If you do not want to have the password appear in any script or in any part of t
 
 ```text
     
-    ./bin/jargyle \
+    ./bin/jargyle start-server \
         --setting=dtls.enabled=true \
         --setting=dtls.keyStoreFile=server.jks \
         --enter-dtls-key-store-pass
@@ -1064,7 +1125,7 @@ If you want to have the client authenticate using DTLS, you will need to have th
 
 ```text
     
-    ./bin/jargyle \
+    ./bin/jargyle start-server \
         --setting=dtls.enabled=true \
         --setting=dtls.keyStoreFile=server.jks \
         --setting=dtls.keyStorePassword=password \
@@ -1078,7 +1139,7 @@ If you do not want to have the password appear in any script or in any part of t
 
 ```text
     
-    ./bin/jargyle \
+    ./bin/jargyle start-server \
         --setting=dtls.enabled=true \
         --setting=dtls.keyStoreFile=server.jks \
         --enter-dtls-key-store-pass \
@@ -1104,7 +1165,7 @@ To create a users file, you would run the following command:
 
 ```bash
     
-    ./bin/jargyle --socks5-userpassauth-users create-new-file FILE
+    ./bin/jargyle manage-socks5-users create-new-file FILE
     
 ```
 
@@ -1114,7 +1175,7 @@ Once you have run the command, an interactive prompt will ask you if you want to
 
 ```text
     
-    ./bin/jargyle --socks5-userpassauth-users create-new-file users.xml
+    ./bin/jargyle manage-socks5-users create-new-file users.xml
     Would you like to enter a user? ('Y' for yes): 
     
 ```
@@ -1201,7 +1262,7 @@ To add users to an existing users file, you would run the following command:
 
 ```bash
     
-    ./bin/jargyle --socks5-userpassauth-users add-users-to-file FILE
+    ./bin/jargyle manage-socks5-users add-users-to-file FILE
     
 ```
 
@@ -1211,7 +1272,7 @@ Once you have run the command, an interactive prompt will ask you for the new us
 
 ```text
     
-    ./bin/jargyle --socks5-userpassauth-users add-users-to-file users.xml
+    ./bin/jargyle manage-socks5-users add-users-to-file users.xml
     User
     Name: Jafar
     Password: 
@@ -1266,7 +1327,7 @@ To remove a user from an existing users file, you would run the following comman
 
 ```bash
     
-    ./bin/jargyle --socks5-userpassauth-users remove-user NAME FILE
+    ./bin/jargyle manage-socks5-users remove-user NAME FILE
     
 ```
 
@@ -1276,7 +1337,7 @@ Once you have run the command, the user of the specified name will be removed fr
 
 ```text
     
-    ./bin/jargyle --socks5-userpassauth-users remove-user Jafar users.xml
+    ./bin/jargyle manage-socks5-users remove-user Jafar users.xml
     User 'Jafar' removed
     Writing to 'users.xml'...
     
@@ -1505,7 +1566,7 @@ The following is a sufficient example of using the Kerberos security mechanism:
 ```bash
     
     export JARGYLE_OPTS="-Djavax.security.auth.useSubjectCredsOnly=false -Djava.security.auth.login.config=login.conf -Djava.security.krb5.conf=krb5.conf"
-    ./bin/jargyle --setting=socks5.methods=GSSAPI 
+    ./bin/jargyle start-server --setting=socks5.methods=GSSAPI 
     
 ```
 
@@ -1938,7 +1999,7 @@ The following is a sufficient example of using the Kerberos security mechanism:
 ```bash
     
     export JARGYLE_OPTS="-Djavax.security.auth.useSubjectCredsOnly=false -Djava.security.auth.login.config=login.conf -Djava.security.krb5.conf=krb5.conf"
-    ./bin/jargyle \
+    ./bin/jargyle start-server \
         --setting=chaining.socksServerUri=socks5://127.0.0.1:23456 \
         --setting=chaining.socks5.methods=GSSAPI \
         --setting=chaining.socks5.gssapiauth.serviceName=rcmd/127.0.0.1 

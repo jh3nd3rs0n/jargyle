@@ -22,49 +22,41 @@ public final class Socks5PropertySpecConstants {
 	
 	public static final PropertySpec<Oid> SOCKS5_GSSAPIAUTH_MECHANISM_OID = 
 			PROPERTY_SPECS.addThenGet(new OidPropertySpec(
-					NewPropertySpecPermission.INSTANCE,
 					"socksClient.socks5.gssapiauth.mechanismOid",
 					"1.2.840.113554.1.2.2"));
 
 	public static final PropertySpec<Boolean> SOCKS5_GSSAPIAUTH_NEC_REFERENCE_IMPL = 
 			PROPERTY_SPECS.addThenGet(new BooleanPropertySpec(
-					NewPropertySpecPermission.INSTANCE,
 					"socksClient.socks5.gssapiauth.necReferenceImpl",
 					Boolean.FALSE));
 	
 	public static final PropertySpec<ProtectionLevels> SOCKS5_GSSAPIAUTH_PROTECTION_LEVELS = 
 			PROPERTY_SPECS.addThenGet(new ProtectionLevelsPropertySpec(
-					NewPropertySpecPermission.INSTANCE,
 					"socksClient.socks5.gssapiauth.protectionLevels",
 					ProtectionLevels.getDefault()));
 	
 	public static final PropertySpec<String> SOCKS5_GSSAPIAUTH_SERVICE_NAME = 
 			PROPERTY_SPECS.addThenGet(new StringPropertySpec(
-					NewPropertySpecPermission.INSTANCE,
 					"socksClient.socks5.gssapiauth.serviceName",
 					null));
 	
 	public static final PropertySpec<Methods> SOCKS5_METHODS = 
 			PROPERTY_SPECS.addThenGet(new MethodsPropertySpec(
-					NewPropertySpecPermission.INSTANCE,
 					"socksClient.socks5.methods",
 					Methods.getDefault()));
 	
 	public static final PropertySpec<Boolean> SOCKS5_RESOLVE_USE_RESOLVE_COMMAND = 
 			PROPERTY_SPECS.addThenGet(new BooleanPropertySpec(
-					NewPropertySpecPermission.INSTANCE,
 					"socksClient.socks5.resolve.useResolveCommand",
 					Boolean.FALSE));
 	
 	public static final PropertySpec<EncryptedPassword> SOCKS5_USERPASSAUTH_PASSWORD =
 			PROPERTY_SPECS.addThenGet(new UserEncryptedPasswordPropertySpec(
-					NewPropertySpecPermission.INSTANCE,
 					"socksClient.socks5.userpathauth.password",
 					EncryptedPassword.newInstance(new char[] { })));
 	
 	public static final PropertySpec<String> SOCKS5_USERPASSAUTH_USERNAME = 
 			PROPERTY_SPECS.addThenGet(new UsernamePropertySpec(
-					NewPropertySpecPermission.INSTANCE,
 					"socksClient.socks5.userpathauth.username",
 					System.getProperty("user.name")));
 	

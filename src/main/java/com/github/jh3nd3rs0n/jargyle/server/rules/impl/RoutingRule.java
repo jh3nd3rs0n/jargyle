@@ -16,6 +16,11 @@ public abstract class RoutingRule extends Rule {
 	public static abstract class Builder<B extends Builder<B, R>, R extends RoutingRule> 
 		extends Rule.Builder<B, R> {
 		
+		public static interface Field<B extends Builder<B, R>, R extends RoutingRule> 
+			extends Rule.Builder.Field<B, R> {
+			
+		}
+		
 		private final List<String> routeIds;
 		private SelectionStrategy routeIdSelectionStrategy;
 		
@@ -67,16 +72,26 @@ public abstract class RoutingRule extends Rule {
 	
 	public static abstract class Context extends Rule.Context {
 		
+		private Route route;
 		private final Routes routes;
 		
 		public Context(final Routes rtes) {
+			this.route = null;
 			this.routes = rtes;
+		}
+		
+		public final Route getRoute() {
+			return this.route;
 		}
 		
 		public final Routes getRoutes() {
 			return this.routes;
 		}
 
+		public final void setRoute(final Route rte) {
+			this.route = rte;
+		}
+		
 		@Override
 		public String toString() {
 			StringBuilder builder = new StringBuilder();
@@ -114,7 +129,5 @@ public abstract class RoutingRule extends Rule {
 	protected final Selector<String> getRouteIdSelector() {
 		return this.routeIdSelector;
 	}
-	
-	public abstract Route selectRoute(final Rule.Context context);
 	
 }

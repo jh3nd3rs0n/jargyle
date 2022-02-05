@@ -25,15 +25,14 @@ import com.github.jh3nd3rs0n.argmatey.ArgMatey.OptionType;
 import com.github.jh3nd3rs0n.argmatey.ArgMatey.TerminationRequestedException;
 import com.github.jh3nd3rs0n.jargyle.internal.help.HelpText;
 import com.github.jh3nd3rs0n.jargyle.internal.io.ConsoleWrapper;
-import com.github.jh3nd3rs0n.jargyle.server.SystemPropertyNameConstants;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.users.xml.bind.UsersXml;
 
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.SchemaOutputResolver;
 
-public final class UsersCLI extends CLI {
+public final class UsersFileManagerCLI extends CLI {
 	
-	private enum Command {
+	private static enum Command {
 		
 		@HelpText(
 				doc = "Add users to an existing file through an interactive "
@@ -58,9 +57,9 @@ public final class UsersCLI extends CLI {
 		@HelpText(
 				doc = "Create a new file of zero or more users through an "
 						+ "interactive prompt", 
-				usage = "create-new-file FILE"
+				usage = "new-file FILE"
 		)
-		CREATE_NEW_FILE("create-new-file") {
+		NEW_FILE("new-file") {
 
 			@Override
 			public void invoke(final String[] args) throws Exception {
@@ -77,6 +76,28 @@ public final class UsersCLI extends CLI {
 					addedUsers.putAll(readUsersFromPrompt());
 				}
 				writeUsersToFile(addedUsers, file);
+			}
+			
+		},
+		@HelpText(
+				doc = "Print the XSD", 
+				usage = "print-xsd"
+		)		
+		PRINT_XSD("print-xsd") {
+			
+			@Override
+			public void invoke(final String[] args) throws Exception {
+				// TODO Auto-generated method stub
+				StreamResult result = new StreamResult(System.out);
+				result.setSystemId("");
+				try {
+					UsersXml.generateXsd(
+							System.out, new CustomSchemaOutputResolver(result));
+				} catch (JAXBException e) {
+					throw new IOException(e);
+				}
+				System.out.flush();
+				throw new TerminationRequestedException(0);				
 			}
 			
 		},
@@ -265,10 +286,9 @@ public final class UsersCLI extends CLI {
 	}
 
 	private static final int HELP_OPTION_GROUP_ORDINAL = 0;
-	private static final int XSD_OPTION_GROUP_ORDINAL = 1;
 	
 	public static void main(final String[] args) {
-		CLI cli = new UsersCLI(null, null, args, false);
+		CLI cli = new UsersFileManagerCLI(null, null, args, false);
 		try {
 			cli.handleArgs();
 		} catch (TerminationRequestedException e) {
@@ -276,12 +296,11 @@ public final class UsersCLI extends CLI {
 		}
 	}
 	
-	private List<String> argList;
 	private Command command;
 	private final String programBeginningUsage;
 	private final String suggestion;
 	
-	public UsersCLI(
+	public UsersFileManagerCLI(
 			final String progName, 
 			final String progBeginningUsage, 
 			final String[] args, 
@@ -289,19 +308,11 @@ public final class UsersCLI extends CLI {
 		super(args, posixlyCorrect);
 		String prgName = progName;
 		if (prgName == null) {
-			prgName = System.getProperty(
-					SystemPropertyNameConstants.PROGRAM_NAME);
-		}
-		if (prgName == null) {
-			prgName = Users.class.getName();
+			prgName = this.getClass().getName();
 		}
 		String prgBeginningUsage = progBeginningUsage;
 		if (prgBeginningUsage == null) {
-			prgBeginningUsage = System.getProperty(
-					SystemPropertyNameConstants.PROGRAM_BEGINNING_USAGE);
-		}
-		if (prgBeginningUsage == null) {
-			prgBeginningUsage = progName;
+			prgBeginningUsage = prgName;
 		}
 		ArgMatey.Option helpOption = this.getOptionGroups().get(
 				HELP_OPTION_GROUP_ORDINAL).get(0);
@@ -322,21 +333,10 @@ public final class UsersCLI extends CLI {
 			System.err.println(this.suggestion);
 			throw new TerminationRequestedException(-1);
 		}
-		try {
-			this.command.invoke(this.argList.toArray(
-					new String[this.argList.size()]));
-		} catch (Exception e) {
-			System.err.printf("%s: %s%n", this.getProgramName(), e);
-			System.err.println(this.suggestion);
-			e.printStackTrace(System.err);
-			throw new TerminationRequestedException(-1);
-		}
-		throw new TerminationRequestedException(0);
 	}
 	
 	@Override
 	protected void beforeHandleArgs() {
-		this.argList = new ArrayList<String>();
 		this.command = null;
 	}
 	
@@ -354,16 +354,10 @@ public final class UsersCLI extends CLI {
 	protected void displayProgramHelp() throws TerminationRequestedException {
 		ArgMatey.Option helpOption = this.getOptionGroups().get(
 				HELP_OPTION_GROUP_ORDINAL).get(0);
-		ArgMatey.Option xsdOption = this.getOptionGroups().get(
-				XSD_OPTION_GROUP_ORDINAL).get(0);
 		System.out.printf("Usage: %s COMMAND%n", this.programBeginningUsage);
 		System.out.printf("       %s %s%n", 
 				this.programBeginningUsage, 
 				helpOption.getUsage());
-		System.out.printf("       %s %s", 
-				this.programBeginningUsage, 
-				xsdOption.getUsage());
-		System.out.println();
 		System.out.println();
 		System.out.println("COMMANDS:");
 		Field[] fields = Command.class.getDeclaredFields();
@@ -389,12 +383,25 @@ public final class UsersCLI extends CLI {
 	}
 	
 	@Override
-	protected void handleNonparsedArg(final String nonparsedArg) {
-		if (this.command == null) {
-			this.command = Command.valueOfString(nonparsedArg);
-		} else {
-			this.argList.add(nonparsedArg);
+	protected void handleNonparsedArg(
+			final String nonparsedArg) throws TerminationRequestedException {
+		this.command = Command.valueOfString(nonparsedArg);
+		List<String> remainingArgList = new ArrayList<String>();
+		while (this.hasNext()) {
+			remainingArgList.add(this.next());
 		}
+		try {
+			this.command.invoke(remainingArgList.toArray(
+					new String[remainingArgList.size()]));
+		} catch (TerminationRequestedException e) {
+			throw e;
+		} catch (Exception e) {
+			System.err.printf("%s: %s%n", this.getProgramName(), e);
+			System.err.println(this.suggestion);
+			e.printStackTrace(System.err);
+			throw new TerminationRequestedException(-1);
+		}
+		throw new TerminationRequestedException(0);
 	}
 	
 	@Override
@@ -404,29 +411,6 @@ public final class UsersCLI extends CLI {
 		System.err.println(this.suggestion);
 		t.printStackTrace(System.err);
 		throw new TerminationRequestedException(-1);
-	}
-
-	@Option(
-			doc = "Print the XSD and exit",
-			name = "xsd",
-			type = OptionType.GNU_LONG
-	)
-	@Option(
-			name = "x",
-			type = OptionType.POSIX
-	)
-	@Ordinal(XSD_OPTION_GROUP_ORDINAL)
-	private void printXsd() throws IOException, TerminationRequestedException {
-		StreamResult result = new StreamResult(System.out);
-		result.setSystemId("");
-		try {
-			UsersXml.generateXsd(
-					System.out, new CustomSchemaOutputResolver(result));
-		} catch (JAXBException e) {
-			throw new IOException(e);
-		}
-		System.out.flush();
-		throw new TerminationRequestedException(0);
 	}
 	
 }

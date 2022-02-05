@@ -8,14 +8,8 @@ public final class UsernamePasswordAuthenticatorSettingSpec
 	extends SettingSpec<UsernamePasswordAuthenticator> {
 
 	public UsernamePasswordAuthenticatorSettingSpec(
-			final Object permission, 
-			final String s, 
-			final UsernamePasswordAuthenticator defaultVal) {
-		super(
-				permission, 
-				s, 
-				UsernamePasswordAuthenticator.class, 
-				defaultVal);
+			final String s, final UsernamePasswordAuthenticator defaultVal) {
+		super(s, UsernamePasswordAuthenticator.class, defaultVal);
 	}
 
 	@Override

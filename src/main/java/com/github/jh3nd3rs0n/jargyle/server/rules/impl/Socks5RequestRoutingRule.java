@@ -360,6 +360,9 @@ public final class Socks5RequestRoutingRule extends RoutingRule {
 			return false;
 		}
 		Context cntxt = (Context) context;
+		if (cntxt.getRoute() != null) {
+			return false;
+		}		
 		MethodSubnegotiationResults methSubnegotiationResults =
 				cntxt.getMethodSubnegotiationResults();
 		Socks5Request socks5Req = cntxt.getSocks5Request();
@@ -400,14 +403,11 @@ public final class Socks5RequestRoutingRule extends RoutingRule {
 
 	@Override
 	public void applyTo(final Rule.Context context) {
-		Context cntxt = (Context) context;
-		if (cntxt.getRoute() != null) {
-			return;
-		}		
 		String routeId = this.getRouteIdSelector().select();
 		if (routeId == null) {
 			return;
 		}
+		Context cntxt = (Context) context;
 		Routes routes = cntxt.getRoutes();
 		Route route = routes.get(routeId);
 		if (route == null) {

@@ -185,6 +185,9 @@ public final class ClientFirewallRule extends FirewallRule {
 			return false;
 		}
 		Context cntxt = (Context) context;
+		if (cntxt.getFirewallRuleAction() != null) {
+			return false;
+		}
 		if (this.clientAddressRange != null
 				&& !this.clientAddressRange.contains(
 						cntxt.getClientAddress())) {
@@ -200,11 +203,8 @@ public final class ClientFirewallRule extends FirewallRule {
 
 	@Override
 	public void applyTo(final Rule.Context context) {
-		Context cntxt = (Context) context;
-		if (cntxt.getFirewallRuleAction() != null) {
-			return;
-		}
 		FirewallRuleAction firewallRuleAction = this.getFirewallRuleAction();
+		Context cntxt = (Context) context;
 		cntxt.setFirewallRuleAction(firewallRuleAction);
 		LogAction logAction = this.getLogAction();
 		if (logAction == null) {

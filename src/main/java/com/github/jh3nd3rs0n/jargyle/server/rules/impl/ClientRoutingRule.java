@@ -222,6 +222,9 @@ public final class ClientRoutingRule extends RoutingRule {
 			return false;
 		}
 		ClientRoutingRule.Context cntxt = (ClientRoutingRule.Context) context;
+		if (cntxt.getRoute() != null) {
+			return false;
+		}
 		if (this.clientAddressRange != null
 				&& !this.clientAddressRange.contains(
 						cntxt.getClientAddress())) {
@@ -237,14 +240,11 @@ public final class ClientRoutingRule extends RoutingRule {
 
 	@Override
 	public void applyTo(final Rule.Context context) {
-		Context cntxt = (Context) context;
-		if (cntxt.getRoute() != null) {
-			return;
-		}
 		String routeId = this.getRouteIdSelector().select();
 		if (routeId == null) {
 			return;
 		}
+		Context cntxt = (Context) context;
 		Routes routes = cntxt.getRoutes();
 		Route route = routes.get(routeId);
 		if (route == null) {

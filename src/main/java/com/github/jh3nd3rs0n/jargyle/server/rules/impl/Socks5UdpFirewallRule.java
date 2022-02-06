@@ -239,6 +239,9 @@ public final class Socks5UdpFirewallRule extends FirewallRule {
 			return false;
 		}
 		Context cntxt = (Context) context;
+		if (cntxt.getFirewallRuleAction() != null) {
+			return false;
+		}
 		String clientAddress = cntxt.getClientAddress();
 		MethodSubnegotiationResults methSubnegotiationResults =
 				cntxt.getMethodSubnegotiationResults();
@@ -264,11 +267,8 @@ public final class Socks5UdpFirewallRule extends FirewallRule {
 
 	@Override
 	public void applyTo(final Rule.Context context) {
-		Context cntxt = (Context) context;
-		if (cntxt.getFirewallRuleAction() != null) {
-			return;
-		}
 		FirewallRuleAction firewallRuleAction = this.getFirewallRuleAction();
+		Context cntxt = (Context) context;
 		cntxt.setFirewallRuleAction(firewallRuleAction);
 		LogAction logAction = this.getLogAction();
 		if (logAction == null) {

@@ -383,6 +383,9 @@ public final class Socks5ReplyFirewallRule extends FirewallRule {
 			return false;
 		}
 		Context cntxt = (Context) context;
+		if (cntxt.getFirewallRuleAction() != null) {
+			return false;
+		}
 		MethodSubnegotiationResults methSubnegotiationResults =
 				cntxt.getMethodSubnegotiationResults();
 		Socks5Request socks5Req = cntxt.getSocks5Request();
@@ -434,11 +437,8 @@ public final class Socks5ReplyFirewallRule extends FirewallRule {
 
 	@Override
 	public void applyTo(final Rule.Context context) {
-		Context cntxt = (Context) context;
-		if (cntxt.getFirewallRuleAction() != null) {
-			return;
-		}
 		FirewallRuleAction firewallRuleAction = this.getFirewallRuleAction();
+		Context cntxt = (Context) context;
 		cntxt.setFirewallRuleAction(firewallRuleAction);
 		LogAction logAction = this.getLogAction();
 		if (logAction == null) {

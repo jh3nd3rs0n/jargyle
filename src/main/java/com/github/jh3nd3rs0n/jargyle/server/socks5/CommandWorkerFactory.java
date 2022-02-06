@@ -1,13 +1,19 @@
 package com.github.jh3nd3rs0n.jargyle.server.socks5;
 
-import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Command;
 
-public enum CommandWorkerFactory {
+public abstract class CommandWorkerFactory {
 
-	BIND_COMMAND_WORKER_FACTORY(Command.BIND) {
+	private static final Map<Command, CommandWorkerFactory> COMMAND_WORKER_FACTORY_MAP =
+			new HashMap<Command, CommandWorkerFactory>();
+	
+	@SuppressWarnings("unused")
+	private static final CommandWorkerFactory BIND_COMMAND_WORKER_FACTORY = new CommandWorkerFactory(
+			Command.BIND) {
 		
 		@Override
 		public CommandWorker newCommandWorker(
@@ -15,9 +21,11 @@ public enum CommandWorkerFactory {
 			return new BindCommandWorker(context);
 		}
 		
-	},
+	};
 	
-	CONNECT_COMMAND_WORKER_FACTORY(Command.CONNECT) {
+	@SuppressWarnings("unused")
+	private static final CommandWorkerFactory CONNECT_COMMAND_WORKER_FACTORY = new CommandWorkerFactory(
+			Command.CONNECT) {
 		
 		@Override
 		public CommandWorker newCommandWorker(
@@ -25,9 +33,11 @@ public enum CommandWorkerFactory {
 			return new ConnectCommandWorker(context);
 		}
 		
-	},
+	};
 	
-	RESOLVE_COMMAND_WORKER_FACTORY(Command.RESOLVE) {
+	@SuppressWarnings("unused")
+	private static final CommandWorkerFactory RESOLVE_COMMAND_WORKER_FACTORY = new CommandWorkerFactory(
+			Command.RESOLVE) {
 		
 		@Override
 		public CommandWorker newCommandWorker(
@@ -35,9 +45,11 @@ public enum CommandWorkerFactory {
 			return new ResolveCommandWorker(context);
 		}
 		
-	},
+	};
 	
-	UDP_ASSOCIATE_COMMAND_WORKER_FACTORY(Command.UDP_ASSOCIATE) {
+	@SuppressWarnings("unused")
+	private static final CommandWorkerFactory UDP_ASSOCIATE_COMMAND_WORKER_FACTORY = new CommandWorkerFactory(
+			Command.UDP_ASSOCIATE) {
 		
 		@Override
 		public CommandWorker newCommandWorker(
@@ -46,14 +58,13 @@ public enum CommandWorkerFactory {
 		}
 	};
 	
-	public static CommandWorkerFactory valueOfCommand(final Command cmd) {
-		for (CommandWorkerFactory value : CommandWorkerFactory.values()) {
-			if (value.commandValue().equals(cmd)) {
-				return value;
-			}
+	public static CommandWorkerFactory getInstance(final Command cmd) {
+		CommandWorkerFactory commandWorkerFactory = 
+				COMMAND_WORKER_FACTORY_MAP.get(cmd);
+		if (commandWorkerFactory != null) {
+			return commandWorkerFactory;
 		}
-		String str = Arrays.stream(CommandWorkerFactory.values())
-				.map(CommandWorkerFactory::commandValue)
+		String str = COMMAND_WORKER_FACTORY_MAP.keySet().stream()
 				.map(Command::toString)
 				.collect(Collectors.joining(", "));
 		throw new IllegalArgumentException(String.format(
@@ -67,9 +78,10 @@ public enum CommandWorkerFactory {
 	
 	private CommandWorkerFactory(final Command cmd) {
 		this.command = cmd;
+		COMMAND_WORKER_FACTORY_MAP.put(cmd, this);
 	}
 	
-	public Command commandValue() {
+	public Command getCommand() {
 		return this.command;
 	}
 	

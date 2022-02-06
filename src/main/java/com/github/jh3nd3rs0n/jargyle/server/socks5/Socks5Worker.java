@@ -72,7 +72,7 @@ public final class Socks5Worker {
 	private MethodSubnegotiationResults doMethodSubnegotiation(
 			final Method method) {
 		MethodSubnegotiator methodSubnegotiator = 
-				MethodSubnegotiator.valueOfMethod(method);
+				MethodSubnegotiator.getInstance(method);
 		MethodSubnegotiationResults methodSubnegotiationResults = null;
 		try {
 			methodSubnegotiationResults = methodSubnegotiator.subnegotiate(

@@ -53,7 +53,7 @@ public final class Socks5Client extends SocksClient {
 			final Socket connectedInternalSocket) throws IOException {
 		MethodEncapsulation methodEncapsulation = null;
 		MethodSubnegotiator methodSubnegotiator = 
-				MethodSubnegotiator.valueOfMethod(method);
+				MethodSubnegotiator.getInstance(method);
 		try {
 			methodEncapsulation = methodSubnegotiator.subnegotiate(
 					connectedInternalSocket, this);

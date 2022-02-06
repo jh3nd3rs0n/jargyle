@@ -28,7 +28,7 @@ public class Socks5RequestWorker {
 	public void run() throws IOException {
 		Command command = this.socks5RequestWorkerContext.getCommand();
 		CommandWorkerFactory commandWorkerFactory = 
-				CommandWorkerFactory.valueOfCommand(command);
+				CommandWorkerFactory.getInstance(command);
 		CommandWorkerContext commandWorkerContext = new CommandWorkerContext(
 				this.socks5RequestWorkerContext);
 		CommandWorker commandWorker = commandWorkerFactory.newCommandWorker(

@@ -5,7 +5,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.ietf.jgss.GSSContext;
@@ -30,9 +32,14 @@ import com.github.jh3nd3rs0n.jargyle.transport.socks5.gssapiauth.ProtectionLevel
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.userpassauth.UsernamePasswordRequest;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.userpassauth.UsernamePasswordResponse;
 
-enum MethodSubnegotiator {
+abstract class MethodSubnegotiator {
 	
-	GSSAPI_METHOD_SUBNEGOTIATOR(Method.GSSAPI) {
+	private static final Map<Method, MethodSubnegotiator> METHOD_SUBNEGOTIATOR_MAP =
+			new HashMap<Method, MethodSubnegotiator>();
+	
+	@SuppressWarnings("unused")
+	private static final MethodSubnegotiator GSSAPI_METHOD_SUBNEGOTIATOR = new MethodSubnegotiator(
+			Method.GSSAPI) {
 		
 		private void establishContext(
 				final Socket socket,
@@ -49,7 +56,7 @@ enum MethodSubnegotiator {
 					token = context.initSecContext(token, 0, token.length);
 				} catch (GSSException e) {
 					throw new MethodSubnegotiationException(
-							this.methodValue(), e);
+							this.getMethod(), e);
 				}
 				if (token != null) {
 					outStream.write(Message.newInstance(
@@ -61,7 +68,7 @@ enum MethodSubnegotiator {
 					Message message = Message.newInstanceFrom(inStream);
 					if (message.getMessageType().equals(MessageType.ABORT)) {
 						throw new MethodSubnegotiationException(
-								this.methodValue(), 
+								this.getMethod(), 
 								"server aborted process of context "
 								+ "establishment");
 					}
@@ -97,7 +104,7 @@ enum MethodSubnegotiator {
 							null).toByteArray());
 					outStream.flush();
 					throw new MethodSubnegotiationException(
-							this.methodValue(), e);
+							this.getMethod(), e);
 				}
 			}
 			outStream.write(Message.newInstance(
@@ -107,7 +114,7 @@ enum MethodSubnegotiator {
 			Message message = Message.newInstanceFrom(inStream);
 			if (message.getMessageType().equals(MessageType.ABORT)) {
 				throw new MethodSubnegotiationException(
-						this.methodValue(), 
+						this.getMethod(), 
 						"server aborted protection level negotiation");
 			}
 			token = message.getToken();
@@ -122,7 +129,7 @@ enum MethodSubnegotiator {
 							null).toByteArray());
 					outStream.flush();
 					throw new MethodSubnegotiationException(
-							this.methodValue(), e);
+							this.getMethod(), e);
 				}
 			}
 			ProtectionLevel protectionLevelSelection = null;
@@ -130,11 +137,11 @@ enum MethodSubnegotiator {
 				protectionLevelSelection = ProtectionLevel.valueOfByte(
 						token[0]);
 			} catch (IllegalArgumentException e) {
-				throw new MethodSubnegotiationException(this.methodValue(), e);
+				throw new MethodSubnegotiationException(this.getMethod(), e);
 			}
 			if (!protectionLevelList.contains(protectionLevelSelection)) {
 				throw new MethodSubnegotiationException(
-						this.methodValue(), 
+						this.getMethod(), 
 						String.format(
 								"server selected %s which is not acceptable "
 								+ "by this socket",
@@ -152,7 +159,7 @@ enum MethodSubnegotiator {
 			try {
 				serverName = manager.createName(server, null);
 			} catch (GSSException e) {
-				throw new MethodSubnegotiationException(this.methodValue(), e);
+				throw new MethodSubnegotiationException(this.getMethod(), e);
 			}
 			Oid mechanismOid = socks5Client.getProperties().getValue(
 					Socks5PropertySpecConstants.SOCKS5_GSSAPIAUTH_MECHANISM_OID);
@@ -164,22 +171,22 @@ enum MethodSubnegotiator {
 				        null,
 				        GSSContext.DEFAULT_LIFETIME);
 			} catch (GSSException e) {
-				throw new MethodSubnegotiationException(this.methodValue(), e);
+				throw new MethodSubnegotiationException(this.getMethod(), e);
 			}
 			try {
 				context.requestMutualAuth(true);
 			} catch (GSSException e) {
-				throw new MethodSubnegotiationException(this.methodValue(), e);
+				throw new MethodSubnegotiationException(this.getMethod(), e);
 			}
 			try {
 				context.requestConf(true);
 			} catch (GSSException e) {
-				throw new MethodSubnegotiationException(this.methodValue(), e);
+				throw new MethodSubnegotiationException(this.getMethod(), e);
 			}
 			try {
 				context.requestInteg(true);
 			} catch (GSSException e) {
-				throw new MethodSubnegotiationException(this.methodValue(), e);
+				throw new MethodSubnegotiationException(this.getMethod(), e);
 			}
 			return context;
 		}
@@ -199,28 +206,31 @@ enum MethodSubnegotiator {
 				IOExceptionHandler.INSTANCE.handle(
 						e, 
 						new MethodSubnegotiationException(
-								this.methodValue(), e)); 
+								this.getMethod(), e)); 
 			}
 			MessageProp msgProp = protectionLevelSelection.getMessageProp();
 			GssSocket gssSocket = new GssSocket(socket, context, msgProp);
 			return new GssapiMethodEncapsulation(gssSocket);
 		}
 		
-	},
+	};
 	
-	NO_ACCEPTABLE_METHODS_METHOD_SUBNEGOTIATOR(Method.NO_ACCEPTABLE_METHODS) {
+	@SuppressWarnings("unused")
+	private static final MethodSubnegotiator NO_ACCEPTABLE_METHODS_METHOD_SUBNEGOTIATOR = new MethodSubnegotiator(
+			Method.NO_ACCEPTABLE_METHODS) {
 
 		@Override
 		public MethodEncapsulation subnegotiate(
 				final Socket Socket, 
 				final Socks5Client socks5Client) throws IOException {
 			throw new MethodSubnegotiationException(
-					this.methodValue(), "no acceptable methods");
+					this.getMethod(), "no acceptable methods");
 		}
 		
-	},
+	};
 	
-	NO_AUTHENTICATION_REQUIRED_METHOD_SUBNEGOTIATOR(
+	@SuppressWarnings("unused")
+	private static final MethodSubnegotiator NO_AUTHENTICATION_REQUIRED_METHOD_SUBNEGOTIATOR = new MethodSubnegotiator(
 			Method.NO_AUTHENTICATION_REQUIRED) {
 
 		@Override
@@ -230,9 +240,11 @@ enum MethodSubnegotiator {
 			return new NullMethodEncapsulation(socket);
 		}
 		
-	},
+	};
 	
-	USERNAME_PASSWORD_METHOD_SUBNEGOTIATOR(Method.USERNAME_PASSWORD) {
+	@SuppressWarnings("unused")
+	private static final MethodSubnegotiator USERNAME_PASSWORD_METHOD_SUBNEGOTIATOR = new MethodSubnegotiator(
+			Method.USERNAME_PASSWORD) {
 
 		@Override
 		public MethodEncapsulation subnegotiate(
@@ -258,27 +270,26 @@ enum MethodSubnegotiator {
 				IOExceptionHandler.INSTANCE.handle(
 						e, 
 						new MethodSubnegotiationException(
-								this.methodValue(), e)); 
+								this.getMethod(), e)); 
 			} finally {
 				if (password != null) { Arrays.fill(password, '\0'); }
 			}
 			if (status != UsernamePasswordResponse.STATUS_SUCCESS) {
 				throw new MethodSubnegotiationException(
-						this.methodValue(), "invalid username password");
+						this.getMethod(), "invalid username password");
 			}
 			return new NullMethodEncapsulation(socket);
 		}
 		
 	};
 	
-	public static MethodSubnegotiator valueOfMethod(final Method meth) {
-		for (MethodSubnegotiator value : MethodSubnegotiator.values()) {
-			if (value.methodValue().equals(meth)) {
-				return value;
-			}
+	public static MethodSubnegotiator getInstance(final Method meth) {
+		MethodSubnegotiator methodSubnegotiator = METHOD_SUBNEGOTIATOR_MAP.get(
+				meth);
+		if (methodSubnegotiator != null) {
+			return methodSubnegotiator;
 		}
-		String str = Arrays.stream(MethodSubnegotiator.values())
-				.map(MethodSubnegotiator::methodValue)
+		String str = METHOD_SUBNEGOTIATOR_MAP.keySet().stream()
 				.map(Method::toString)
 				.collect(Collectors.joining(", "));
 		throw new IllegalArgumentException(String.format(
@@ -288,14 +299,15 @@ enum MethodSubnegotiator {
 				meth));
 	}
 	
-	private final Method methodValue;
+	private final Method method;
 	
-	private MethodSubnegotiator(final Method methValue) {
-		this.methodValue = methValue;
+	private MethodSubnegotiator(final Method meth) {
+		this.method = meth;
+		METHOD_SUBNEGOTIATOR_MAP.put(meth, this);
 	}
 	
-	public Method methodValue() {
-		return this.methodValue;
+	public Method getMethod() {
+		return this.method;
 	}
 	
 	public abstract MethodEncapsulation subnegotiate(

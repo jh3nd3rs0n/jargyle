@@ -7,6 +7,94 @@ import org.junit.Test;
 public class ClientMethodSelectionMessageTest {
 
 	@Test
+	public void testNewInstanceByteArray01() {
+		ClientMethodSelectionMessage cmsm1 = 
+				ClientMethodSelectionMessage.newInstance(new byte[] { 
+						(byte) 0x05,
+						(byte) 0x01,
+						(byte) 0x00 });
+		ClientMethodSelectionMessage cmsm2 =
+				ClientMethodSelectionMessage.newInstance(Methods.newInstance(
+						Method.NO_AUTHENTICATION_REQUIRED));
+		assertEquals(cmsm1, cmsm2);
+	}
+
+	@Test
+	public void testNewInstanceByteArray02() {
+		ClientMethodSelectionMessage cmsm1 = 
+				ClientMethodSelectionMessage.newInstance(new byte[] { 
+						(byte) 0x05,
+						(byte) 0x02,
+						(byte) 0x01,
+						(byte) 0x00 });
+		ClientMethodSelectionMessage cmsm2 =
+				ClientMethodSelectionMessage.newInstance(Methods.newInstance(
+						Method.GSSAPI,
+						Method.NO_AUTHENTICATION_REQUIRED));
+		assertEquals(cmsm1, cmsm2);
+	}
+
+	@Test
+	public void testNewInstanceByteArray03() {
+		ClientMethodSelectionMessage cmsm1 = 
+				ClientMethodSelectionMessage.newInstance(new byte[] { 
+						(byte) 0x05,
+						(byte) 0x03,
+						(byte) 0x01,
+						(byte) 0x00,
+						(byte) 0x02, });
+		ClientMethodSelectionMessage cmsm2 =
+				ClientMethodSelectionMessage.newInstance(Methods.newInstance(
+						Method.GSSAPI,
+						Method.NO_AUTHENTICATION_REQUIRED,
+						Method.USERNAME_PASSWORD));
+		assertEquals(cmsm1, cmsm2);
+	}
+
+	@Test
+	public void testNewInstanceByteArray04() {
+		ClientMethodSelectionMessage cmsm1 = 
+				ClientMethodSelectionMessage.newInstance(new byte[] { 
+						(byte) 0x05,
+						(byte) 0x06,
+						(byte) 0x01,
+						(byte) 0x00,
+						(byte) 0x02,
+						(byte) 0x01,
+						(byte) 0x00,
+						(byte) 0x02 });
+		ClientMethodSelectionMessage cmsm2 =
+				ClientMethodSelectionMessage.newInstance(Methods.newInstance(
+						Method.GSSAPI,
+						Method.NO_AUTHENTICATION_REQUIRED,
+						Method.USERNAME_PASSWORD,
+						Method.GSSAPI,
+						Method.NO_AUTHENTICATION_REQUIRED,
+						Method.USERNAME_PASSWORD));
+		assertEquals(cmsm1, cmsm2);
+	}
+
+	@Test
+	public void testNewInstanceByteArray05() {
+		ClientMethodSelectionMessage cmsm1 = 
+				ClientMethodSelectionMessage.newInstance(new byte[] { 
+						(byte) 0x05,
+						(byte) 0x06,
+						(byte) 0x01,
+						(byte) 0xaa,
+						(byte) 0x02,
+						(byte) 0xbb,
+						(byte) 0x00,
+						(byte) 0xcc });
+		ClientMethodSelectionMessage cmsm2 =
+				ClientMethodSelectionMessage.newInstance(Methods.newInstance(
+						Method.GSSAPI,
+						Method.USERNAME_PASSWORD,
+						Method.NO_AUTHENTICATION_REQUIRED));
+		assertEquals(cmsm1, cmsm2);
+	}
+
+	@Test
 	public void testNewInstanceMethods01() {
 		ClientMethodSelectionMessage cmsm1 = 
 				ClientMethodSelectionMessage.newInstance(

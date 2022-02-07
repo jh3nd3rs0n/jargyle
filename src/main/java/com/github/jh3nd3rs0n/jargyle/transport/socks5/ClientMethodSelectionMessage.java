@@ -63,28 +63,19 @@ public final class ClientMethodSelectionMessage {
 			IOExceptionHandler.INSTANCE.handle(
 					e, new Socks5Exception("expected number of methods", e));
 		}
-		out.write(methodCount.intValue());
-		byte[] bytes = new byte[methodCount.intValue()];
-		if (methodCount.intValue() > 0) {
-			int bytesRead = in.read(bytes);
-			if (bytesRead != methodCount.intValue()) {
-				throw new Socks5Exception(String.format(
-						"expected number of methods is %s. "
-						+ "actual number of methods is %s", 
-						methodCount.intValue(), bytesRead));
-			}
-			bytes = Arrays.copyOf(bytes, bytesRead);			
-		}
 		List<Method> meths = new ArrayList<Method>();
-		for (byte by : bytes) {
+		for (int i = 0; i < methodCount.intValue(); i++) {
 			Method meth = null;
 			try {
-				meth = Method.valueOfByte(by);
-			} catch (IllegalArgumentException e) {
-				throw new Socks5Exception(e);
+				meth = Method.valueOfByteFrom(in);
+			} catch (Socks5Exception e) {
+				continue;
 			}
 			meths.add(meth);
-			out.write(UnsignedByte.newInstance(by).intValue());
+		}
+		out.write(meths.size());
+		for (Method meth : meths) {
+			out.write(UnsignedByte.newInstance(meth.byteValue()).intValue());
 		}
 		Params params = new Params();
 		params.version = ver;

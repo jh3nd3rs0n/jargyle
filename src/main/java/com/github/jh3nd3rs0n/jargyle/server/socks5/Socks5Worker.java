@@ -31,6 +31,7 @@ import com.github.jh3nd3rs0n.jargyle.transport.socks5.MethodSubnegotiationExcept
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Methods;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Reply;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.ServerMethodSelectionMessage;
+import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Exception;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Reply;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Request;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Version;
@@ -122,6 +123,13 @@ public final class Socks5Worker {
 		ClientMethodSelectionMessage cmsm = null;
 		try {
 			cmsm = ClientMethodSelectionMessage.newInstanceFrom(in);
+		} catch (Socks5Exception e) {
+			LOGGER.debug( 
+					LoggerHelper.objectMessage(
+							this, 
+							"Unable to parse the method selection message "
+							+ "from the client"), 
+					e);
 		} catch (IOException e) {
 			IOExceptionHandler.INSTANCE.handle(
 					e,
@@ -173,24 +181,38 @@ public final class Socks5Worker {
 			socks5Request = Socks5Request.newInstanceFrom(
 					this.clientFacingInputStream);
 		} catch (AddressTypeNotSupportedException e) {
+			LOGGER.debug( 
+					LoggerHelper.objectMessage(
+							this, "Unable to parse the SOCKS5 request"), 
+					e);
 			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
 					Reply.ADDRESS_TYPE_NOT_SUPPORTED);
 			this.socks5WorkerContext.sendSocks5Reply(this, socks5Rep, LOGGER);
 			return null;
 		} catch (CommandNotSupportedException e) {
+			LOGGER.debug( 
+					LoggerHelper.objectMessage(
+							this, "Unable to parse the SOCKS5 request"), 
+					e);
 			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
 					Reply.COMMAND_NOT_SUPPORTED);
 			this.socks5WorkerContext.sendSocks5Reply(this, socks5Rep, LOGGER);
 			return null;
+		} catch (Socks5Exception e) {
+			LOGGER.debug( 
+					LoggerHelper.objectMessage(
+							this, "Unable to parse the SOCKS5 request"), 
+					e);
+			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
+					Reply.GENERAL_SOCKS_SERVER_FAILURE);
+			this.socks5WorkerContext.sendSocks5Reply(this, socks5Rep, LOGGER);
+			return null;			
 		} catch (IOException e) {
 			IOExceptionHandler.INSTANCE.handle(
 					e, 
 					LOGGER,
 					LoggerHelper.objectMessage(
 							this, "Error in parsing the SOCKS5 request"));
-			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
-					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			this.socks5WorkerContext.sendSocks5Reply(this, socks5Rep, LOGGER);
 			return null;
 		}
 		LOGGER.debug(LoggerHelper.objectMessage(this, String.format(

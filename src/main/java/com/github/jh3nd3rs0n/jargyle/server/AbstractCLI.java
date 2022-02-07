@@ -98,7 +98,7 @@ public abstract class AbstractCLI extends CLI {
 	private ModifiableConfiguration modifiableConfiguration;
 	private final String programBeginningUsage;
 	
-	public AbstractCLI(
+	AbstractCLI(
 			final String progName, 
 			final String progBeginningUsage,
 			final String[] args, 

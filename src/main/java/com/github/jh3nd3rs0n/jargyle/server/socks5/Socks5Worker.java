@@ -203,9 +203,6 @@ public final class Socks5Worker {
 					LoggerHelper.objectMessage(
 							this, "Unable to parse the SOCKS5 request"), 
 					e);
-			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
-					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			this.socks5WorkerContext.sendSocks5Reply(this, socks5Rep, LOGGER);
 			return null;			
 		} catch (IOException e) {
 			IOExceptionHandler.INSTANCE.handle(

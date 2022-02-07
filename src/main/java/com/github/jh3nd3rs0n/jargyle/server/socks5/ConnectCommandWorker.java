@@ -85,7 +85,8 @@ public final class ConnectCommandWorker extends CommandWorker {
 					e);
 			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
 					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep, LOGGER);
+			this.commandWorkerContext.sendSocks5Reply(
+					this, socks5Rep, LOGGER);
 			return false;
 		}
 		return true;

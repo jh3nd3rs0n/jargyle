@@ -61,7 +61,7 @@ public enum Command {
 		try {
 			command = valueOfByte(b.byteValue());
 		} catch (IllegalArgumentException e) {
-			throw new Socks5Exception(e);
+			throw new CommandNotSupportedException(b);
 		}
 		return command;
 	}

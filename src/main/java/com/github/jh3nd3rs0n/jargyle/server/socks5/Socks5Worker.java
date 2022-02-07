@@ -23,7 +23,9 @@ import com.github.jh3nd3rs0n.jargyle.server.rules.impl.Socks5RequestFirewallRule
 import com.github.jh3nd3rs0n.jargyle.server.rules.impl.Socks5RequestFirewallRules;
 import com.github.jh3nd3rs0n.jargyle.server.rules.impl.Socks5RequestRoutingRule;
 import com.github.jh3nd3rs0n.jargyle.server.rules.impl.Socks5RequestRoutingRules;
+import com.github.jh3nd3rs0n.jargyle.transport.socks5.AddressTypeNotSupportedException;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.ClientMethodSelectionMessage;
+import com.github.jh3nd3rs0n.jargyle.transport.socks5.CommandNotSupportedException;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.MethodSubnegotiationException;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Methods;
@@ -170,12 +172,25 @@ public final class Socks5Worker {
 		try {
 			socks5Request = Socks5Request.newInstanceFrom(
 					this.clientFacingInputStream);
+		} catch (AddressTypeNotSupportedException e) {
+			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
+					Reply.ADDRESS_TYPE_NOT_SUPPORTED);
+			this.socks5WorkerContext.sendSocks5Reply(this, socks5Rep, LOGGER);
+			return null;
+		} catch (CommandNotSupportedException e) {
+			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
+					Reply.COMMAND_NOT_SUPPORTED);
+			this.socks5WorkerContext.sendSocks5Reply(this, socks5Rep, LOGGER);
+			return null;
 		} catch (IOException e) {
 			IOExceptionHandler.INSTANCE.handle(
 					e, 
 					LOGGER,
 					LoggerHelper.objectMessage(
 							this, "Error in parsing the SOCKS5 request"));
+			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
+					Reply.GENERAL_SOCKS_SERVER_FAILURE);
+			this.socks5WorkerContext.sendSocks5Reply(this, socks5Rep, LOGGER);
 			return null;
 		}
 		LOGGER.debug(LoggerHelper.objectMessage(this, String.format(

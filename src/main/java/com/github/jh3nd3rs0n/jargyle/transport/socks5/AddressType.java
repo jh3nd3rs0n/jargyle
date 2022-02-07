@@ -221,7 +221,7 @@ public enum AddressType {
 		try {
 			addressType = valueOfByte(b.byteValue());
 		} catch (IllegalArgumentException e) {
-			throw new Socks5Exception(e);
+			throw new AddressTypeNotSupportedException(b);
 		}
 		return addressType;
 	}

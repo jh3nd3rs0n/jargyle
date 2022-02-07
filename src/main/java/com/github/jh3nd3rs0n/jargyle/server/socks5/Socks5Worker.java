@@ -130,6 +130,7 @@ public final class Socks5Worker {
 							"Unable to parse the method selection message "
 							+ "from the client"), 
 					e);
+			return null;
 		} catch (IOException e) {
 			IOExceptionHandler.INSTANCE.handle(
 					e,

@@ -36,6 +36,18 @@ public final class SocksServerCLI extends AbstractCLI {
 	}
 
 	@Override
+	protected void afterHandleArgs() throws TerminationRequestedException {
+		Configuration configuration = this.newConfiguration();
+		this.startSocksServer(configuration);
+	}
+	
+	@Override
+	protected void beforeHandleArgs() {
+		super.beforeHandleArgs();
+		this.monitoredConfigurationFile = null;
+	}
+
+	@Override
 	protected void handleNonparsedArg(
 			final String nonparsedArg) throws TerminationRequestedException {
 		if (this.monitoredConfigurationFile != null) {
@@ -43,18 +55,6 @@ public final class SocksServerCLI extends AbstractCLI {
 					"extra operand `%s'", nonparsedArg));
 		}
 		this.monitoredConfigurationFile = nonparsedArg;
-	}
-	
-	@Override
-	protected void afterHandleArgs() throws TerminationRequestedException {
-		Configuration configuration = this.newConfiguration();
-		this.startSocksServer(configuration);
-	}
-
-	@Override
-	protected void beforeHandleArgs() {
-		super.beforeHandleArgs();
-		this.monitoredConfigurationFile = null;
 	}
 	
 	private Configuration newConfiguration() 

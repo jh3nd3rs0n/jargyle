@@ -219,6 +219,18 @@ public final class Socks5Worker {
 		return socks5Request;
 	}
 	
+	private Socks5RequestWorker newSocks5RequestWorker(
+			final Socks5RequestWorkerContext context) {
+		Socks5RequestWorkerFactory socks5RequestWorkerFactory =
+				this.settings.getLastValue(
+						Socks5SettingSpecConstants.SOCKS5_SOCKS5_REQUEST_WORKER_FACTORY);
+		if (socks5RequestWorkerFactory == null) {
+			socks5RequestWorkerFactory =
+					Socks5RequestWorkerFactory.newInstance(); 
+		}
+		return socks5RequestWorkerFactory.newSocks5RequestWorker(context);
+	}
+	
 	public void run() throws IOException {
 		this.clientFacingInputStream = this.clientFacingSocket.getInputStream();
 		Method method = this.negotiateMethod();
@@ -262,16 +274,8 @@ public final class Socks5Worker {
 						this.socks5WorkerContext, 
 						methodSubnegotiationResults, 
 						socks5Request);
-		Socks5RequestWorkerFactory socks5RequestWorkerFactory =
-				this.settings.getLastValue(
-						Socks5SettingSpecConstants.SOCKS5_SOCKS5_REQUEST_WORKER_FACTORY);
-		if (socks5RequestWorkerFactory == null) {
-			socks5RequestWorkerFactory =
-					Socks5RequestWorkerFactory.newInstance(); 
-		}
-		Socks5RequestWorker socks5RequestWorker = 
-				socks5RequestWorkerFactory.newSocks5RequestWorker(
-						socks5RequestWorkerContext);
+		Socks5RequestWorker socks5RequestWorker = this.newSocks5RequestWorker(
+				socks5RequestWorkerContext);
 		socks5RequestWorker.run();
 	}
 	

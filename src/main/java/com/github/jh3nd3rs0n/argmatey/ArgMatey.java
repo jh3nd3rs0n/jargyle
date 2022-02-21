@@ -2214,7 +2214,7 @@ public final class ArgMatey {
 				final TargetMethodParameterTypesType t) {
 			OptionType type = option.type();
 			OptionTypeObjectFactory optionTypeObjectFactory = 
-					OptionTypeObjectFactory.valueOfOptionType(type);
+					OptionTypeObjectFactory.getInstance(type);
 			String name = option.name();
 			OptionBuilder optionBuilder = 
 					optionTypeObjectFactory.newOptionBuilder(name);
@@ -3404,16 +3404,23 @@ public final class ArgMatey {
 	}
 	
 	/**
-	 * Represents all factories each producing {@code Object}s relating to a 
-	 * particular type of command line option.
+	 * Factory producing {@code Object}s relating to a particular type of 
+	 * command line option.
 	 */
-	static enum OptionTypeObjectFactory {
+	static abstract class OptionTypeObjectFactory {
+		
+		private static final List<OptionTypeObjectFactory> OPTION_TYPE_OBJECT_FACTORIES =
+				new ArrayList<OptionTypeObjectFactory>();
+		
+		private static final Map<OptionType, OptionTypeObjectFactory> OPTION_TYPE_OBJECT_FACTORY_MAP =
+				new HashMap<OptionType, OptionTypeObjectFactory>();
 		
 		/**
 		 * Factory producing {@code Object}s relating to GNU long command line 
 		 * option types.
 		 */
-		GNU_LONG_OPTION_TYPE_OBJECT_FACTORY(OptionType.GNU_LONG) {
+		public static final OptionTypeObjectFactory GNU_LONG_OPTION_TYPE_OBJECT_FACTORY = 
+				new OptionTypeObjectFactory(OptionType.GNU_LONG) {
 			
 			@Override
 			public Class<? extends Option> getOptionClass() {
@@ -3435,13 +3442,14 @@ public final class ArgMatey {
 				return new GnuLongOptionHandler(next);
 			}
 			
-		},
+		};
 		
 		/**
 		 * Factory producing {@code Object}s relating to long command line 
 		 * option types.
 		 */		
-		LONG_OPTION_TYPE_OBJECT_FACTORY(OptionType.LONG) {
+		public static final OptionTypeObjectFactory LONG_OPTION_TYPE_OBJECT_FACTORY = 
+				new OptionTypeObjectFactory(OptionType.LONG) {
 			
 			@Override
 			public Class<? extends Option> getOptionClass() {
@@ -3463,13 +3471,14 @@ public final class ArgMatey {
 				return new LongOptionHandler(next);
 			}
 			
-		},
+		};
 		
 		/**
 		 * Factory producing {@code Object}s relating to POSIX command line 
 		 * option types.
 		 */		
-		POSIX_OPTION_TYPE_OBJECT_FACTORY(OptionType.POSIX) {
+		public static final OptionTypeObjectFactory POSIX_OPTION_TYPE_OBJECT_FACTORY = 
+				new OptionTypeObjectFactory(OptionType.POSIX) {
 			
 			@Override
 			public Class<? extends Option> getOptionClass() {
@@ -3500,31 +3509,44 @@ public final class ArgMatey {
 		};
 		
 		/**
-		 * Returns the enum constant of the specified {@code OptionType}.
+		 * Returns an {@code OptionTypeObjectFactory} based on the specified 
+		 * {@code OptionType}.
 		 * 
 		 * @param optType the specified {@code OptionType}
 		 * 
-		 * @return the enum constant of the specified {@code OptionType}
+		 * @return an {@code OptionTypeObjectFactory} based on the specified 
+		 * {@code OptionType}
 		 * 
-		 * @throws IllegalArgumentException if the specified {@code OptionType} 
-		 * is of none of the enum constants
+		 * @throws IllegalArgumentException if there is no 
+		 * {@code OptionTypeObjectFactory} based on the specified 
+		 * {@code OptionType}
 		 * 
 		 * @throws NullPointerException if the specified {@code OptionType} is 
 		 * {@code null}  
 		 */
-		public static OptionTypeObjectFactory valueOfOptionType(
+		public static OptionTypeObjectFactory getInstance(
 				final OptionType optType) {
 			Objects.requireNonNull(optType);
-			for (OptionTypeObjectFactory optionTypeObjectFactory 
-					: OptionTypeObjectFactory.values()) {
-				if (optionTypeObjectFactory.optionTypeValue().equals(optType)) {
-					return optionTypeObjectFactory;
-				}
+			OptionTypeObjectFactory optionTypeObjectFactory = 
+					OPTION_TYPE_OBJECT_FACTORY_MAP.get(optType);
+			if (optionTypeObjectFactory != null) {
+				return optionTypeObjectFactory;
 			}
 			throw new IllegalArgumentException(String.format(
 					"unknown %s: %s", 
 					OptionType.class.getSimpleName(),
 					optType));
+		}
+		
+		/**
+		 * Returns an unmodifiable {@code List} of instances of 
+		 * {@code OptionTypeObjectFactory}.
+		 * 
+		 * @return an unmodifiable {@code List} of all instances of 
+		 * {@code OptionTypeObjectFactory}
+		 */
+		public static List<OptionTypeObjectFactory> getInstances() {
+			return Collections.unmodifiableList(OPTION_TYPE_OBJECT_FACTORIES);
 		}
 		
 		/** The {@code OptionType} of this {@code OptionTypeObjectFactory}. */
@@ -3538,6 +3560,8 @@ public final class ArgMatey {
 		 */
 		private OptionTypeObjectFactory(final OptionType optType) {
 			this.optionType = optType;
+			OPTION_TYPE_OBJECT_FACTORIES.add(this);
+			OPTION_TYPE_OBJECT_FACTORY_MAP.put(optType, this);
 		}
 		
 		/**
@@ -3548,6 +3572,17 @@ public final class ArgMatey {
 		 * {@code OptionTypeObjectFactory}
 		 */
 		public abstract Class<? extends Option> getOptionClass();
+		
+		/**
+		 * Returns the {@code OptionType} of this 
+		 * {@code OptionTypeObjectFactory}.
+		 * 
+		 * @return the {@code OptionType} of this
+		 * {@code OptionTypeObjectFactory}
+		 */
+		public final OptionType getOptionType() {
+			return this.optionType;
+		}
 		
 		/**
 		 * Returns a new default {@code OptionUsageProvider} based on this 
@@ -3587,17 +3622,6 @@ public final class ArgMatey {
 		 */
 		public abstract OptionHandler newOptionHandler(final ArgHandler next);
 		
-		/**
-		 * Returns the {@code OptionType} of this 
-		 * {@code OptionTypeObjectFactory}.
-		 * 
-		 * @return the {@code OptionType} of this
-		 * {@code OptionTypeObjectFactory}
-		 */
-		public OptionType optionTypeValue() {
-			return this.optionType;
-		}
-		
 	}
 	
 	public static final class OptionUsageParams {
@@ -3625,7 +3649,7 @@ public final class ArgMatey {
 
 		static {
 			for (OptionTypeObjectFactory optionTypeObjectFactory 
-					: OptionTypeObjectFactory.values()) {
+					: OptionTypeObjectFactory.getInstances()) {
 				DEFAULT_INSTANCES.put(
 						optionTypeObjectFactory.getOptionClass(), 
 						optionTypeObjectFactory.newDefaultOptionUsageProvider());

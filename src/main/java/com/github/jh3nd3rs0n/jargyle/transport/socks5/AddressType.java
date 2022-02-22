@@ -1,6 +1,7 @@
 package com.github.jh3nd3rs0n.jargyle.transport.socks5;
 
 import java.io.ByteArrayOutputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Inet4Address;
@@ -44,7 +45,7 @@ public enum AddressType {
 			byte[] bytes = new byte[ADDRESS_LENGTH];
 			int bytesRead = in.read(bytes);
 			if (bytesRead != ADDRESS_LENGTH) { 
-				throw new Socks5Exception(String.format(
+				throw new EOFException(String.format(
 						"expected address length is %s. "
 						+ "actual address length is %s", 
 						ADDRESS_LENGTH, 
@@ -105,7 +106,7 @@ public enum AddressType {
 			byte[] bytes = new byte[octetCount.intValue()];
 			int bytesRead = in.read(bytes);
 			if (octetCount.intValue() != bytesRead) {
-				throw new Socks5Exception(String.format(
+				throw new EOFException(String.format(
 						"expected address length is %s. "
 						+ "actual address length is %s", 
 						octetCount.intValue(), 
@@ -155,7 +156,7 @@ public enum AddressType {
 			byte[] bytes = new byte[ADDRESS_LENGTH];
 			int bytesRead = in.read(bytes);
 			if (bytesRead != ADDRESS_LENGTH) { 
-				throw new Socks5Exception(String.format(
+				throw new EOFException(String.format(
 						"expected address length is %s. "
 						+ "actual address length is %s", 
 						ADDRESS_LENGTH, 

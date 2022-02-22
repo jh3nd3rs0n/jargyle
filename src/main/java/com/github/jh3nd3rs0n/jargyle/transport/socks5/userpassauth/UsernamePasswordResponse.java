@@ -7,8 +7,6 @@ import java.io.InputStream;
 import java.util.Arrays;
 
 import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
-import com.github.jh3nd3rs0n.jargyle.internal.net.IOExceptionHandler;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Exception;
 
 public final class UsernamePasswordResponse {
 
@@ -49,13 +47,7 @@ public final class UsernamePasswordResponse {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		Version ver = Version.valueOfByteFrom(in);
 		out.write(UnsignedByte.newInstance(ver.byteValue()).intValue());
-		UnsignedByte status = null; 
-		try {
-			status = UnsignedByte.newInstanceFrom(in);
-		} catch (IOException e) {
-			IOExceptionHandler.INSTANCE.handle(
-					e, new Socks5Exception("expected status", e));			
-		}
+		UnsignedByte status = UnsignedByte.newInstanceFrom(in); 
 		out.write(status.intValue());
 		Params params = new Params();
 		params.version = ver;

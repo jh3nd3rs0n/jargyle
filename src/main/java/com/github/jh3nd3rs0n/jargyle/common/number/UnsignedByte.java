@@ -1,5 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.common.number;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -44,7 +45,7 @@ public final class UnsignedByte {
 			final InputStream in) throws IOException {
 		UnsignedByte b = nullableFrom(in);
 		if (b == null) {
-			throw new IOException("the end of the input stream is reached");
+			throw new EOFException("the end of the input stream is reached");
 		}
 		return b;
 	}

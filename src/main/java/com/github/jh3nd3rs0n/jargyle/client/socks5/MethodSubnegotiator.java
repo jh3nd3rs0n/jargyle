@@ -18,7 +18,6 @@ import org.ietf.jgss.MessageProp;
 import org.ietf.jgss.Oid;
 
 import com.github.jh3nd3rs0n.jargyle.client.Socks5PropertySpecConstants;
-import com.github.jh3nd3rs0n.jargyle.internal.net.IOExceptionHandler;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.MethodEncapsulation;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.MethodSubnegotiationException;
@@ -44,7 +43,7 @@ abstract class MethodSubnegotiator {
 		private void establishContext(
 				final Socket socket,
 				final GSSContext context,
-				final Socks5Client socks5Client) throws IOException {
+				final Socks5Client socks5Client) throws IOException, GSSException {
 			InputStream inStream = socket.getInputStream();
 			OutputStream outStream = socket.getOutputStream();
 			byte[] token = new byte[] { };
@@ -52,12 +51,7 @@ abstract class MethodSubnegotiator {
 				if (token == null) {
 					token = new byte[] { };
 				}
-				try {
-					token = context.initSecContext(token, 0, token.length);
-				} catch (GSSException e) {
-					throw new MethodSubnegotiationException(
-							this.getMethod(), e);
-				}
+				token = context.initSecContext(token, 0, token.length);
 				if (token != null) {
 					outStream.write(Message.newInstance(
 							MessageType.AUTHENTICATION, 
@@ -80,7 +74,7 @@ abstract class MethodSubnegotiator {
 		private ProtectionLevel negotiateProtectionLevel(
 				final Socket socket,
 				final GSSContext context,
-				final Socks5Client socks5Client) throws IOException {
+				final Socks5Client socks5Client) throws IOException, GSSException {
 			InputStream inStream = socket.getInputStream();
 			OutputStream outStream = socket.getOutputStream();
 			boolean necReferenceImpl = socks5Client.getProperties().getValue(
@@ -103,8 +97,7 @@ abstract class MethodSubnegotiator {
 							MessageType.ABORT, 
 							null).toByteArray());
 					outStream.flush();
-					throw new MethodSubnegotiationException(
-							this.getMethod(), e);
+					throw e;
 				}
 			}
 			outStream.write(Message.newInstance(
@@ -128,8 +121,7 @@ abstract class MethodSubnegotiator {
 							MessageType.ABORT, 
 							null).toByteArray());
 					outStream.flush();
-					throw new MethodSubnegotiationException(
-							this.getMethod(), e);
+					throw e;
 				}
 			}
 			ProtectionLevel protectionLevelSelection = null;
@@ -151,43 +143,21 @@ abstract class MethodSubnegotiator {
 		}
 		
 		private GSSContext newContext(
-				final Socks5Client socks5Client) throws IOException {
+				final Socks5Client socks5Client) throws GSSException {
 			GSSManager manager = GSSManager.getInstance();
 			String server = socks5Client.getProperties().getValue(
 					Socks5PropertySpecConstants.SOCKS5_GSSAPIAUTH_SERVICE_NAME);
-			GSSName serverName = null;
-			try {
-				serverName = manager.createName(server, null);
-			} catch (GSSException e) {
-				throw new MethodSubnegotiationException(this.getMethod(), e);
-			}
+			GSSName serverName = manager.createName(server, null);
 			Oid mechanismOid = socks5Client.getProperties().getValue(
 					Socks5PropertySpecConstants.SOCKS5_GSSAPIAUTH_MECHANISM_OID);
-			GSSContext context = null;
-			try {
-				context = manager.createContext(
-						serverName, 
-						mechanismOid,
-				        null,
-				        GSSContext.DEFAULT_LIFETIME);
-			} catch (GSSException e) {
-				throw new MethodSubnegotiationException(this.getMethod(), e);
-			}
-			try {
-				context.requestMutualAuth(true);
-			} catch (GSSException e) {
-				throw new MethodSubnegotiationException(this.getMethod(), e);
-			}
-			try {
-				context.requestConf(true);
-			} catch (GSSException e) {
-				throw new MethodSubnegotiationException(this.getMethod(), e);
-			}
-			try {
-				context.requestInteg(true);
-			} catch (GSSException e) {
-				throw new MethodSubnegotiationException(this.getMethod(), e);
-			}
+			GSSContext context = manager.createContext(
+					serverName, 
+					mechanismOid,
+			        null,
+			        GSSContext.DEFAULT_LIFETIME);
+			context.requestMutualAuth(true);
+			context.requestConf(true);
+			context.requestInteg(true);			
 			return context;
 		}
 
@@ -203,10 +173,25 @@ abstract class MethodSubnegotiator {
 				protectionLevelSelection = this.negotiateProtectionLevel(
 						socket, context, socks5Client);
 			} catch (IOException e) {
-				IOExceptionHandler.INSTANCE.handle(
-						e, 
-						new MethodSubnegotiationException(
-								this.getMethod(), e)); 
+				if (context != null) {
+					try {
+						context.dispose();
+					} catch (GSSException ex) {
+						throw new MethodSubnegotiationException(
+								this.getMethod(), ex);
+					}
+				}
+				throw e;
+			} catch (GSSException e) {
+				if (context != null) {
+					try {
+						context.dispose();
+					} catch (GSSException ex) {
+						throw new MethodSubnegotiationException(
+								this.getMethod(), ex);
+					}
+				}
+				throw new MethodSubnegotiationException(this.getMethod(), e);				
 			}
 			MessageProp msgProp = protectionLevelSelection.getMessageProp();
 			GssSocket gssSocket = new GssSocket(socket, context, msgProp);
@@ -266,11 +251,6 @@ abstract class MethodSubnegotiator {
 				UsernamePasswordResponse usernamePasswordResp = 
 						UsernamePasswordResponse.newInstanceFrom(inputStream);
 				status = usernamePasswordResp.getStatus();
-			} catch (IOException e) {
-				IOExceptionHandler.INSTANCE.handle(
-						e, 
-						new MethodSubnegotiationException(
-								this.getMethod(), e)); 
 			} finally {
 				if (password != null) { Arrays.fill(password, '\0'); }
 			}

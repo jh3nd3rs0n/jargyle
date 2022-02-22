@@ -10,12 +10,11 @@ import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import javax.net.ssl.SSLException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.jh3nd3rs0n.jargyle.internal.logging.LoggerHelper;
+import com.github.jh3nd3rs0n.jargyle.internal.throwable.ThrowableHelper;
 
 public final class RelayServer {
 
@@ -88,6 +87,7 @@ public final class RelayServer {
 				try {
 					int bytesRead = 0;
 					byte[] buffer = new byte[this.bufferSize];
+					IOException ioe = null;
 					try {
 						bytesRead = this.inputStream.read(buffer);
 						this.dataWorkerContext.setIdleStartTime(
@@ -95,45 +95,28 @@ public final class RelayServer {
 						LOGGER.trace(LoggerHelper.objectMessage(
 								this, 
 								String.format("Bytes read: %s", bytesRead)));
-					} catch (SocketException e) {
-						// socket closed
-						break;
-					} catch (SocketTimeoutException e) {
-						bytesRead = 0;
-					} catch (SSLException e) {
-						Throwable cause = e.getCause();
-						if (cause != null) {
-							if (cause instanceof SocketException) {
-								// socket closed
-								break;
-							} else if (cause instanceof SocketTimeoutException) {
-								bytesRead = 0;
-							} else {
-								LOGGER.error(
-										LoggerHelper.objectMessage(
-												this, 
-												"Error occurred in the process "
-												+ "of reading in data"), 
-										e);
-								break;
-							}
+					} catch (IOException e) {
+						ioe = e;
+					}
+					if (ioe != null) {
+						if (ioe instanceof SocketException 
+								|| ThrowableHelper.getRecentCause(
+										ioe, SocketException.class) != null) {
+							// socket closed
+							break;
+						} else if (ioe instanceof SocketTimeoutException 
+								|| ThrowableHelper.getRecentCause(
+										ioe, SocketTimeoutException.class) != null) {
+							bytesRead = 0;
 						} else {
 							LOGGER.error(
 									LoggerHelper.objectMessage(
 											this, 
 											"Error occurred in the process of "
 											+ "reading in data"), 
-									e);
+									ioe);
 							break;
 						}
-					} catch (IOException e) {
-						LOGGER.error(
-								LoggerHelper.objectMessage(
-										this, 
-										"Error occurred in the process of "
-										+ "reading in data"), 
-								e);
-						break;
 					}
 					if (bytesRead == -1) {
 						break;
@@ -152,59 +135,49 @@ public final class RelayServer {
 						}
 						continue;
 					}
+					ioe = null;
 					try {
 						this.outputStream.write(buffer, 0, bytesRead);
-					} catch (SSLException e) {
-						Throwable cause = e.getCause();
-						if (cause != null && cause instanceof SocketException) {
+					} catch (IOException e) {
+						ioe = e;
+					}
+					if (ioe != null) {
+						if (ioe instanceof SocketException 
+								|| ThrowableHelper.getRecentCause(
+										ioe, SocketException.class) != null) {
 							// socket closed
 							break;
-						}
-						LOGGER.error(
-								LoggerHelper.objectMessage(
-										this, 
-										"Error occurred in the process of "
-										+ "writing out data"), 
-								e);
-						break;
-					} catch (SocketException e) {
-						// socket closed
-						break;
-					} catch (IOException e) {
-						LOGGER.error(
-								LoggerHelper.objectMessage(
-										this, 
-										"Error occurred in the process of "
-										+ "writing out data"), 
-								e);
-						break;
+						} else {
+							LOGGER.error(
+									LoggerHelper.objectMessage(
+											this, 
+											"Error occurred in the process of " 
+											+ "writing out data"), 
+									ioe);
+							break;
+						}						
 					}
+					ioe = null;
 					try {
 						this.outputStream.flush();
-					} catch (SSLException e) {
-						Throwable cause = e.getCause();
-						if (cause != null && cause instanceof SocketException) {
+					} catch (IOException e) {
+						ioe = e;
+					}
+					if (ioe != null) {
+						if (ioe instanceof SocketException 
+								|| ThrowableHelper.getRecentCause(
+										ioe, SocketException.class) != null) {
 							// socket closed
 							break;
-						}
-						LOGGER.error(
-								LoggerHelper.objectMessage(
-										this, 
-										"Error occurred in the process of "
-										+ "flushing out any data"), 
-								e);
-						break;
-					} catch (SocketException e) {
-						// socket closed
-						break;
-					} catch (IOException e) {
-						LOGGER.error(
-								LoggerHelper.objectMessage(
-										this, 
-										"Error occurred in the process of "
-										+ "flushing out any data"), 
-								e);
-						break;
+						} else {
+							LOGGER.error(
+									LoggerHelper.objectMessage(
+											this, 
+											"Error occurred in the process of " 
+											+ "flushing out any data"), 
+									ioe);
+							break;
+						}						
 					}					
 				} catch (Throwable t) {
 					LOGGER.error(

@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
 import com.github.jh3nd3rs0n.jargyle.internal.logging.LoggerHelper;
-import com.github.jh3nd3rs0n.jargyle.internal.net.IOExceptionHandler;
+import com.github.jh3nd3rs0n.jargyle.internal.net.ClientFacingIOExceptionHelper;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5Worker;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5WorkerContext;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Version;
@@ -74,13 +74,13 @@ final class Worker implements Runnable {
 			try {
 				version = UnsignedByte.newInstanceFrom(clientFacingInputStream);
 			} catch (IOException e) {
-				IOExceptionHandler.INSTANCE.handle(
-						e, 
+				ClientFacingIOExceptionHelper.log(
 						LOGGER, 
 						LoggerHelper.objectMessage(
 								this, 
 								"Error in getting the SOCKS version from the "
-								+ "client"));
+								+ "client"), 
+						e);
 				return;
 			}
 			if (version.byteValue() == Version.V5.byteValue()) {

@@ -7,7 +7,6 @@ import java.io.InputStream;
 import java.util.Arrays;
 
 import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
-import com.github.jh3nd3rs0n.jargyle.internal.net.IOExceptionHandler;
 import com.github.jh3nd3rs0n.jargyle.internal.number.UnsignedShort;
 
 public final class Socks5Request {
@@ -94,13 +93,7 @@ public final class Socks5Request {
 		out.write(UnsignedByte.newInstance(ver.byteValue()).intValue());
 		Command cmd = Command.valueOfByteFrom(in);
 		out.write(UnsignedByte.newInstance(cmd.byteValue()).intValue());
-		UnsignedByte rsv = null;
-		try {
-			rsv = UnsignedByte.newInstanceFrom(in);
-		} catch (IOException e) {
-			IOExceptionHandler.INSTANCE.handle(
-					e, new Socks5Exception("expected RSV", e));
-		}
+		UnsignedByte rsv = UnsignedByte.newInstanceFrom(in);
 		if (rsv.intValue() != RSV) {
 			throw new Socks5Exception(String.format(
 					"expected RSV is %s, actual RSV is %s", 
@@ -112,14 +105,7 @@ public final class Socks5Request {
 		out.write(UnsignedByte.newInstance(atyp.byteValue()).intValue());
 		String dstAddr = addr.toString(); 
 		out.write(addr.toByteArray());
-		UnsignedShort dstPort = null;
-		try {
-			dstPort = UnsignedShort.newInstanceFrom(in);
-		} catch (IOException e) {
-			IOExceptionHandler.INSTANCE.handle(
-					e, 
-					new Socks5Exception("expected desired destination port", e));
-		}
+		UnsignedShort dstPort = UnsignedShort.newInstanceFrom(in);
 		out.write(dstPort.toByteArray());
 		Params params = new Params();
 		params.version = ver;

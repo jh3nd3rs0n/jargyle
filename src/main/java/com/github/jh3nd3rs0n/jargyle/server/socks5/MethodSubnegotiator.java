@@ -16,7 +16,6 @@ import org.ietf.jgss.GSSException;
 import org.ietf.jgss.GSSManager;
 import org.ietf.jgss.MessageProp;
 
-import com.github.jh3nd3rs0n.jargyle.internal.net.IOExceptionHandler;
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.UsernamePasswordAuthenticator;
@@ -45,7 +44,7 @@ abstract class MethodSubnegotiator {
 		private void establishContext(
 				final Socket socket,
 				final GSSContext context,
-				final Configuration configuration) throws IOException {
+				final Configuration configuration) throws IOException, GSSException {
 			InputStream inStream = socket.getInputStream();
 			OutputStream outStream = socket.getOutputStream();
 			byte[] token = null;
@@ -67,7 +66,7 @@ abstract class MethodSubnegotiator {
 							MessageType.ABORT, 
 							null).toByteArray());
 					outStream.flush();
-					throw new MethodSubnegotiationException(this.getMethod(), e);
+					throw e;
 				}
 				if (token == null) {
 					outStream.write(Message.newInstance(
@@ -86,7 +85,7 @@ abstract class MethodSubnegotiator {
 		private ProtectionLevel negotiateProtectionLevel(
 				final Socket socket, 
 				final GSSContext context,
-				final Configuration configuration) throws IOException {
+				final Configuration configuration) throws IOException, GSSException {
 			InputStream inStream = socket.getInputStream();
 			OutputStream outStream = socket.getOutputStream();
 			Message message = Message.newInstanceFrom(inStream);
@@ -111,8 +110,7 @@ abstract class MethodSubnegotiator {
 							MessageType.ABORT, 
 							null).toByteArray());
 					outStream.flush();
-					throw new MethodSubnegotiationException(
-							this.getMethod(), e);
+					throw e;
 				}			
 			}
 			ProtectionLevel protectionLevel = null;
@@ -143,8 +141,7 @@ abstract class MethodSubnegotiator {
 							MessageType.ABORT, 
 							null).toByteArray());
 					outStream.flush();
-					throw new MethodSubnegotiationException(
-							this.getMethod(), e);
+					throw e;
 				}
 			}
 			outStream.write(Message.newInstance(
@@ -162,15 +159,9 @@ abstract class MethodSubnegotiator {
 			return protectionLevelChoice;
 		}
 		
-		private GSSContext newContext() throws IOException {
+		private GSSContext newContext() throws GSSException {
 			GSSManager manager = GSSManager.getInstance();
-			GSSContext context = null;
-			try {
-				context = manager.createContext((GSSCredential) null);
-			} catch (GSSException e) {
-				throw new MethodSubnegotiationException(this.getMethod(), e);
-			}
-			return context;
+			return manager.createContext((GSSCredential) null);
 		}
 
 		@Override
@@ -179,27 +170,38 @@ abstract class MethodSubnegotiator {
 				final Configuration configuration) throws IOException {
 			GSSContext context = null;
 			ProtectionLevel protectionLevelChoice = null;
+			String user = null;
 			try {
 				context = this.newContext();
 				this.establishContext(socket, context, configuration);
 				protectionLevelChoice =	this.negotiateProtectionLevel(
 						socket, context, configuration);
+				user = context.getSrcName().toString();				
 			} catch (IOException e) {
-				IOExceptionHandler.INSTANCE.handle(
-						e, 
-						new MethodSubnegotiationException(
-								this.getMethod(), e));
+				if (context != null) {
+					try {
+						context.dispose();
+					} catch (GSSException ex) {
+						throw new MethodSubnegotiationException(
+								this.getMethod(), ex);
+					}
+				}
+				throw e;
+			} catch (GSSException e) {
+				if (context != null) {
+					try {
+						context.dispose();
+					} catch (GSSException ex) {
+						throw new MethodSubnegotiationException(
+								this.getMethod(), ex);
+					}
+				}
+				throw new MethodSubnegotiationException(this.getMethod(), e);				
 			}
 			MessageProp msgProp = protectionLevelChoice.getMessageProp();
 			GssSocket gssSocket = new GssSocket(socket, context, msgProp);
 			MethodEncapsulation methodEncapsulation = 
 					new GssapiMethodEncapsulation(gssSocket);
-			String user = null;
-			try {
-				user = context.getSrcName().toString();
-			} catch (GSSException e) {
-				throw new MethodSubnegotiationException(this.getMethod(), e);
-			}
 			return new MethodSubnegotiationResults(
 					this.getMethod(), methodEncapsulation, user);
 		}
@@ -276,11 +278,6 @@ abstract class MethodSubnegotiator {
 						UsernamePasswordResponse.STATUS_SUCCESS);
 				outputStream.write(usernamePasswordResp.toByteArray());
 				outputStream.flush();
-			} catch (IOException e) {
-				IOExceptionHandler.INSTANCE.handle(
-						e, 
-						new MethodSubnegotiationException(
-								this.getMethod(), e));
 			} finally {
 				if (password != null) { Arrays.fill(password, '\0'); } 
 			}

@@ -10,7 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.jh3nd3rs0n.jargyle.internal.logging.LoggerHelper;
-import com.github.jh3nd3rs0n.jargyle.internal.net.IOExceptionHandler;
+import com.github.jh3nd3rs0n.jargyle.internal.net.ClientFacingIOExceptionHelper;
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.Route;
 import com.github.jh3nd3rs0n.jargyle.server.Settings;
@@ -31,7 +31,6 @@ import com.github.jh3nd3rs0n.jargyle.transport.socks5.MethodSubnegotiationExcept
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Methods;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Reply;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.ServerMethodSelectionMessage;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Exception;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Reply;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Request;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Version;
@@ -102,15 +101,15 @@ public final class Socks5Worker {
 					e);
 			return null;				
 		} catch (IOException e) {
-			IOExceptionHandler.INSTANCE.handle(
-					e,
+			ClientFacingIOExceptionHelper.log(
 					LOGGER,
 					LoggerHelper.objectMessage(
 							this, 
 							String.format(
 									"Error in sub-negotiating with the client "
 									+ "using method %s", 
-									method)));
+									method)),
+					e);
 			return null;
 		}
 		return methodSubnegotiationResults;		
@@ -123,22 +122,14 @@ public final class Socks5Worker {
 		ClientMethodSelectionMessage cmsm = null;
 		try {
 			cmsm = ClientMethodSelectionMessage.newInstanceFrom(in);
-		} catch (Socks5Exception e) {
-			LOGGER.debug( 
-					LoggerHelper.objectMessage(
-							this, 
-							"Unable to parse the method selection message "
-							+ "from the client"), 
-					e);
-			return null;
 		} catch (IOException e) {
-			IOExceptionHandler.INSTANCE.handle(
-					e,
+			ClientFacingIOExceptionHelper.log(
 					LOGGER,
 					LoggerHelper.objectMessage(
 							this, 
 							"Error in parsing the method selection message "
-							+ "from the client"));
+							+ "from the client"),
+					e);
 			return null;
 		}
 		LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
@@ -164,13 +155,13 @@ public final class Socks5Worker {
 		try {
 			this.socks5WorkerContext.writeThenFlush(smsm.toByteArray());
 		} catch (IOException e) {
-			IOExceptionHandler.INSTANCE.handle(
-					e,
+			ClientFacingIOExceptionHelper.log(
 					LOGGER,
 					LoggerHelper.objectMessage(
 							this, 
 							"Error in writing the method selection message to "
-							+ "the client"));
+							+ "the client"),
+					e);
 			return null;
 		}
 		return smsm.getMethod();
@@ -199,18 +190,12 @@ public final class Socks5Worker {
 					Reply.COMMAND_NOT_SUPPORTED);
 			this.socks5WorkerContext.sendSocks5Reply(this, socks5Rep, LOGGER);
 			return null;
-		} catch (Socks5Exception e) {
-			LOGGER.debug( 
-					LoggerHelper.objectMessage(
-							this, "Unable to parse the SOCKS5 request"), 
-					e);
-			return null;			
 		} catch (IOException e) {
-			IOExceptionHandler.INSTANCE.handle(
-					e, 
-					LOGGER,
+			ClientFacingIOExceptionHelper.log(
+					LOGGER, 
 					LoggerHelper.objectMessage(
-							this, "Error in parsing the SOCKS5 request"));
+							this, "Error in parsing the SOCKS5 request"),
+					e);
 			return null;
 		}
 		LOGGER.debug(LoggerHelper.objectMessage(this, String.format(

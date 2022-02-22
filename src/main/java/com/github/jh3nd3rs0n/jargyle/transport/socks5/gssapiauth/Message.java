@@ -2,15 +2,14 @@ package com.github.jh3nd3rs0n.jargyle.transport.socks5.gssapiauth;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Objects;
 
 import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
-import com.github.jh3nd3rs0n.jargyle.internal.net.IOExceptionHandler;
 import com.github.jh3nd3rs0n.jargyle.internal.number.UnsignedShort;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Exception;
 
 public final class Message {
 
@@ -93,20 +92,14 @@ public final class Message {
 		if (mType.equals(MessageType.ABORT)) {
 			tknStartIndex++;
 		} else {
-			UnsignedShort len = null;
-			try {
-				len = UnsignedShort.newInstanceFrom(in);
-			} catch (IOException e) {
-				IOExceptionHandler.INSTANCE.handle(
-						e, new Socks5Exception("expected message length", e));				
-			}
+			UnsignedShort len = UnsignedShort.newInstanceFrom(in);
 			byte[] bytes = len.toByteArray();
 			tknStartIndex += bytes.length;
 			out.write(bytes);
 			bytes = new byte[len.intValue()];
 			int bytesRead = in.read(bytes);
 			if (bytesRead != len.intValue()) {
-				throw new Socks5Exception(String.format(
+				throw new EOFException(String.format(
 						"expected token length is %s byte(s). "
 						+ "actual token length is %s byte(s)", 
 						len.intValue(), bytesRead));				

@@ -8,7 +8,6 @@ import java.util.Arrays;
 
 import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
 import com.github.jh3nd3rs0n.jargyle.internal.net.AllZerosAddressConstants;
-import com.github.jh3nd3rs0n.jargyle.internal.net.IOExceptionHandler;
 import com.github.jh3nd3rs0n.jargyle.internal.number.UnsignedShort;
 
 public final class Socks5Reply {
@@ -103,13 +102,7 @@ public final class Socks5Reply {
 		out.write(UnsignedByte.newInstance(ver.byteValue()).intValue());
 		Reply rep = Reply.valueOfByteFrom(in);
 		out.write(UnsignedByte.newInstance(rep.byteValue()).intValue());
-		UnsignedByte rsv = null;
-		try {
-			rsv = UnsignedByte.newInstanceFrom(in);
-		} catch (IOException e) {
-			IOExceptionHandler.INSTANCE.handle(
-					e, new Socks5Exception("expected RSV", e));
-		}
+		UnsignedByte rsv = UnsignedByte.newInstanceFrom(in);
 		if (rsv.intValue() != RSV) {
 			throw new Socks5Exception(String.format(
 					"expected RSV is %s, actual RSV is %s", 
@@ -121,13 +114,7 @@ public final class Socks5Reply {
 		out.write(UnsignedByte.newInstance(atyp.byteValue()).intValue());
 		String bndAddr = addr.toString();
 		out.write(addr.toByteArray());
-		UnsignedShort bndPort = null;
-		try {
-			bndPort = UnsignedShort.newInstanceFrom(in);
-		} catch (IOException e) {
-			IOExceptionHandler.INSTANCE.handle(
-					e, new Socks5Exception("expected server bound port", e));
-		}
+		UnsignedShort bndPort = UnsignedShort.newInstanceFrom(in);
 		out.write(bndPort.toByteArray());
 		Params params = new Params();
 		params.version = ver;

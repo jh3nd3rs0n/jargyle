@@ -9,7 +9,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
-import com.github.jh3nd3rs0n.jargyle.internal.net.IOExceptionHandler;
 
 public final class ClientMethodSelectionMessage {
 	
@@ -56,13 +55,7 @@ public final class ClientMethodSelectionMessage {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		Version ver = Version.valueOfByteFrom(in);
 		out.write(UnsignedByte.newInstance(ver.byteValue()).intValue());
-		UnsignedByte methodCount = null;
-		try {
-			methodCount = UnsignedByte.newInstanceFrom(in);
-		} catch (IOException e) {
-			IOExceptionHandler.INSTANCE.handle(
-					e, new Socks5Exception("expected number of methods", e));
-		}
+		UnsignedByte methodCount = UnsignedByte.newInstanceFrom(in);
 		List<Method> meths = new ArrayList<Method>();
 		for (int i = 0; i < methodCount.intValue(); i++) {
 			Method meth = null;

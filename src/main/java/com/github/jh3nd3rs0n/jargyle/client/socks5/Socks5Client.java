@@ -13,7 +13,6 @@ import com.github.jh3nd3rs0n.jargyle.client.Socks5PropertySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
 import com.github.jh3nd3rs0n.jargyle.client.SocksNetObjectFactory;
 import com.github.jh3nd3rs0n.jargyle.common.net.ssl.DtlsDatagramSocketFactory;
-import com.github.jh3nd3rs0n.jargyle.internal.net.IOExceptionHandler;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.ClientMethodSelectionMessage;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.MethodEncapsulation;
@@ -51,17 +50,9 @@ public final class Socks5Client extends SocksClient {
 	protected MethodEncapsulation doMethodSubnegotiation(
 			final Method method,
 			final Socket connectedInternalSocket) throws IOException {
-		MethodEncapsulation methodEncapsulation = null;
-		MethodSubnegotiator methodSubnegotiator = 
+		MethodSubnegotiator methodSubnegotiator =
 				MethodSubnegotiator.getInstance(method);
-		try {
-			methodEncapsulation = methodSubnegotiator.subnegotiate(
-					connectedInternalSocket, this);
-		} catch (IOException e) {
-			IOExceptionHandler.INSTANCE.handle(
-					e, new Socks5ClientException(this, e));
-		}
-		return methodEncapsulation;
+		return methodSubnegotiator.subnegotiate(connectedInternalSocket, this);
 	}
 	
 	protected DatagramSocket getConnectedInternalDatagramSocket(
@@ -113,24 +104,17 @@ public final class Socks5Client extends SocksClient {
 	
 	protected Method negotiateMethod(
 			final Socket connectedInternalSocket) throws IOException {
-		Method method = null;
-		try {
-			InputStream inputStream = connectedInternalSocket.getInputStream();
-			OutputStream outputStream = connectedInternalSocket.getOutputStream();
-			Methods methods = this.getProperties().getValue(
-					Socks5PropertySpecConstants.SOCKS5_METHODS);
-			ClientMethodSelectionMessage cmsm = 
-					ClientMethodSelectionMessage.newInstance(methods);
-			outputStream.write(cmsm.toByteArray());
-			outputStream.flush();
-			ServerMethodSelectionMessage smsm =
-					ServerMethodSelectionMessage.newInstanceFrom(inputStream);
-			method = smsm.getMethod();
-		} catch (IOException e) {
-			IOExceptionHandler.INSTANCE.handle(
-					e, new Socks5ClientException(this, e));
-		}
-		return method;		
+		InputStream inputStream = connectedInternalSocket.getInputStream();
+		OutputStream outputStream = connectedInternalSocket.getOutputStream();
+		Methods methods = this.getProperties().getValue(
+				Socks5PropertySpecConstants.SOCKS5_METHODS);
+		ClientMethodSelectionMessage cmsm = 
+				ClientMethodSelectionMessage.newInstance(methods);
+		outputStream.write(cmsm.toByteArray());
+		outputStream.flush();
+		ServerMethodSelectionMessage smsm =
+				ServerMethodSelectionMessage.newInstanceFrom(inputStream);
+		return smsm.getMethod();		
 	}
 	
 	@Override
@@ -157,14 +141,8 @@ public final class Socks5Client extends SocksClient {
 	
 	protected Socks5Reply receiveSocks5Reply(
 			final Socket connectedInternalSocket) throws IOException {
-		Socks5Reply socks5Rep = null;
-		try {
-			InputStream inputStream = connectedInternalSocket.getInputStream();
-			socks5Rep = Socks5Reply.newInstanceFrom(inputStream);
-		} catch (IOException e) {
-			IOExceptionHandler.INSTANCE.handle(
-					e, new Socks5ClientException(this, e));
-		}
+		InputStream inputStream = connectedInternalSocket.getInputStream();
+		Socks5Reply socks5Rep = Socks5Reply.newInstanceFrom(inputStream);
 		Reply reply = socks5Rep.getReply();
 		if (!reply.equals(Reply.SUCCEEDED)) {
 			throw new FailureSocks5ReplyException(this, socks5Rep);			
@@ -180,14 +158,9 @@ public final class Socks5Client extends SocksClient {
 	protected void sendSocks5Request(
 			final Socks5Request socks5Req, 
 			final Socket connectedInternalSocket) throws IOException {
-		try {
-			OutputStream outputStream = connectedInternalSocket.getOutputStream();
-			outputStream.write(socks5Req.toByteArray());
-			outputStream.flush();
-		} catch (IOException e) {
-			IOExceptionHandler.INSTANCE.handle(
-					e, new Socks5ClientException(this, e));
-		}
+		OutputStream outputStream = connectedInternalSocket.getOutputStream();
+		outputStream.write(socks5Req.toByteArray());
+		outputStream.flush();
 	}
 	
 }

@@ -2,6 +2,7 @@ package com.github.jh3nd3rs0n.jargyle.transport.socks5.userpassauth;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -11,8 +12,6 @@ import java.io.Writer;
 import java.util.Arrays;
 
 import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
-import com.github.jh3nd3rs0n.jargyle.internal.net.IOExceptionHandler;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Exception;
 
 public final class UsernamePasswordRequest {
 
@@ -105,18 +104,12 @@ public final class UsernamePasswordRequest {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		Version ver = Version.valueOfByteFrom(in);
 		out.write(UnsignedByte.newInstance(ver.byteValue()).intValue());
-		UnsignedByte ulen = null;
-		try {
-			ulen = UnsignedByte.newInstanceFrom(in);
-		} catch (IOException e) {
-			IOExceptionHandler.INSTANCE.handle(
-					e, new Socks5Exception("expected username length", e));			
-		}
+		UnsignedByte ulen = UnsignedByte.newInstanceFrom(in);
 		out.write(ulen.intValue());
 		byte[] bytes = new byte[ulen.intValue()];
 		int bytesRead = in.read(bytes);
 		if (bytesRead != ulen.intValue()) {
-			throw new Socks5Exception(String.format(
+			throw new EOFException(String.format(
 					"expected username length is %s byte(s). "
 					+ "actual username length is %s byte(s)", 
 					ulen.intValue(), bytesRead));
@@ -124,18 +117,12 @@ public final class UsernamePasswordRequest {
 		bytes = Arrays.copyOf(bytes, bytesRead);
 		String uname = new String(bytes);
 		out.write(bytes);
-		UnsignedByte plen = null; 
-		try {
-			plen = UnsignedByte.newInstanceFrom(in);
-		} catch (IOException e) {
-			IOExceptionHandler.INSTANCE.handle(
-					e, new Socks5Exception("expected password length", e));			
-		}
+		UnsignedByte plen = UnsignedByte.newInstanceFrom(in); 
 		out.write(plen.intValue());
 		bytes = new byte[plen.intValue()];
 		bytesRead = in.read(bytes);
 		if (bytesRead != plen.intValue()) {
-			throw new Socks5Exception(String.format(
+			throw new EOFException(String.format(
 					"expected password length is %s byte(s). "
 					+ "actual password length is %s byte(s)", 
 					plen.intValue(), bytesRead));

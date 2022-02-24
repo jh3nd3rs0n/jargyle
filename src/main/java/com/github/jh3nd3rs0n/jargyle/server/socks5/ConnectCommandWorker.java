@@ -14,7 +14,7 @@ import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
 import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
 import com.github.jh3nd3rs0n.jargyle.common.net.Host;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
-import com.github.jh3nd3rs0n.jargyle.internal.logging.LoggerHelper;
+import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
 import com.github.jh3nd3rs0n.jargyle.server.RelayServer;
 import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
@@ -71,7 +71,7 @@ public final class ConnectCommandWorker extends CommandWorker {
 			serverFacingSocket.bind(new InetSocketAddress(bindInetAddress, 0));
 		} catch (SocketException e) {
 			LOGGER.error( 
-					LoggerHelper.objectMessage(
+					ObjectLogMessageHelper.objectLogMessage(
 							this, "Error in setting the server-facing socket"), 
 					e);
 			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
@@ -80,7 +80,7 @@ public final class ConnectCommandWorker extends CommandWorker {
 			return false;
 		} catch (IOException e) {
 			LOGGER.error( 
-					LoggerHelper.objectMessage(
+					ObjectLogMessageHelper.objectLogMessage(
 							this, "Error in binding the server-facing socket"), 
 					e);
 			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
@@ -111,7 +111,7 @@ public final class ConnectCommandWorker extends CommandWorker {
 						connectTimeout);
 			} catch (UnknownHostException e) {
 				LOGGER.error( 
-						LoggerHelper.objectMessage(
+						ObjectLogMessageHelper.objectLogMessage(
 								this, 
 								"Error in connecting the server-facing socket"), 
 						e);
@@ -133,7 +133,7 @@ public final class ConnectCommandWorker extends CommandWorker {
 						0);
 			} catch (UnknownHostException e) {
 				LOGGER.error( 
-						LoggerHelper.objectMessage(
+						ObjectLogMessageHelper.objectLogMessage(
 								this, 
 								"Error in creating the server-facing socket"), 
 						e);
@@ -187,7 +187,7 @@ public final class ConnectCommandWorker extends CommandWorker {
 				TcpBasedCommandWorkerHelper.passData(builder);				
 			} catch (IOException e) {
 				LOGGER.error( 
-						LoggerHelper.objectMessage(
+						ObjectLogMessageHelper.objectLogMessage(
 								this, "Error in starting to pass data"), 
 						e);
 			}

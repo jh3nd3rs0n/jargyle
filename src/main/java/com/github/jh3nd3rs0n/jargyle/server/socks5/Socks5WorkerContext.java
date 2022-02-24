@@ -4,8 +4,8 @@ import java.io.IOException;
 
 import org.slf4j.Logger;
 
-import com.github.jh3nd3rs0n.jargyle.internal.logging.LoggerHelper;
-import com.github.jh3nd3rs0n.jargyle.internal.net.ClientFacingIOExceptionHelper;
+import com.github.jh3nd3rs0n.jargyle.internal.logging.ClientFacingIOExceptionLoggingHelper;
+import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
 import com.github.jh3nd3rs0n.jargyle.server.WorkerContext;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Reply;
 
@@ -19,15 +19,15 @@ public class Socks5WorkerContext extends WorkerContext {
 			final Object worker, 
 			final Socks5Reply socks5Rep, 
 			final Logger logger) {
-		logger.debug(LoggerHelper.objectMessage(worker, String.format(
-				"Sending %s",
-				socks5Rep.toString())));		
+		logger.debug(ObjectLogMessageHelper.objectLogMessage(
+				worker, 
+				String.format("Sending %s",	socks5Rep.toString())));		
 		try {
 			this.writeThenFlush(socks5Rep.toByteArray());
 		} catch (IOException e) {
-			ClientFacingIOExceptionHelper.log(
+			ClientFacingIOExceptionLoggingHelper.log(
 					logger, 
-					LoggerHelper.objectMessage(
+					ObjectLogMessageHelper.objectLogMessage(
 							worker, "Error in writing SOCKS5 reply"), 
 					e);
 			return false;

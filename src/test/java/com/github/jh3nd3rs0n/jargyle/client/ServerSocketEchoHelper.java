@@ -24,7 +24,7 @@ import com.github.jh3nd3rs0n.jargyle.IoHelper;
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
 
-public final class ServerSocketITHelper {
+public final class ServerSocketEchoHelper {
 	
 	private static final class EchoServer {
 		
@@ -261,6 +261,6 @@ public final class ServerSocketITHelper {
 		return returningString;
 	}
 
-	private ServerSocketITHelper() { }
+	private ServerSocketEchoHelper() { }
 	
 }

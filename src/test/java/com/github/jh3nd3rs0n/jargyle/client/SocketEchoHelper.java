@@ -20,7 +20,7 @@ import com.github.jh3nd3rs0n.jargyle.IoHelper;
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
 
-public final class SocketITHelper {
+public final class SocketEchoHelper {
 	
 	private static final class EchoServer {
 		
@@ -186,6 +186,6 @@ public final class SocketITHelper {
 		return returningString;
 	}
 
-	private SocketITHelper() { }
+	private SocketEchoHelper() { }
 	
 }

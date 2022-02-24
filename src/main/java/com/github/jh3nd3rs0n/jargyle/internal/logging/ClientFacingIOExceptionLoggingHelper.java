@@ -1,4 +1,4 @@
-package com.github.jh3nd3rs0n.jargyle.internal.net;
+package com.github.jh3nd3rs0n.jargyle.internal.logging;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -10,7 +10,7 @@ import org.slf4j.Logger;
 import com.github.jh3nd3rs0n.jargyle.internal.throwable.ThrowableHelper;
 import com.github.jh3nd3rs0n.jargyle.transport.socks.SocksException;
 
-public final class ClientFacingIOExceptionHelper {
+public final class ClientFacingIOExceptionLoggingHelper {
 
 	public static void log(
 			final Logger logger, final String message, final IOException e) {
@@ -41,6 +41,6 @@ public final class ClientFacingIOExceptionHelper {
 		logger.error(message, e);
 	}
 	
-	private ClientFacingIOExceptionHelper() { }
+	private ClientFacingIOExceptionLoggingHelper() { }
 	
 }

@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
 import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
-import com.github.jh3nd3rs0n.jargyle.internal.logging.LoggerHelper;
+import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
 import com.github.jh3nd3rs0n.jargyle.server.RelayServer;
 import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
@@ -67,7 +67,7 @@ public final class BindCommandWorker extends CommandWorker {
 			inboundSocket = listenSocket.accept();
 		} catch (IOException e) {
 			LOGGER.error( 
-					LoggerHelper.objectMessage(
+					ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Error in waiting for an inbound socket"), 
 					e);
@@ -88,7 +88,7 @@ public final class BindCommandWorker extends CommandWorker {
 					this.desiredDestinationPort));
 		} catch (IOException e) {
 			LOGGER.error( 
-					LoggerHelper.objectMessage(
+					ObjectLogMessageHelper.objectLogMessage(
 							this, "Error in binding the listen socket"), 
 					e);
 			socks5Rep = Socks5Reply.newFailureInstance(
@@ -121,7 +121,7 @@ public final class BindCommandWorker extends CommandWorker {
 			socketSettings.applyTo(inboundSocket);
 		} catch (SocketException e) {
 			LOGGER.error( 
-					LoggerHelper.objectMessage(
+					ObjectLogMessageHelper.objectLogMessage(
 							this, "Error in setting the inbound socket"), 
 					e);
 			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
@@ -139,7 +139,7 @@ public final class BindCommandWorker extends CommandWorker {
 			socketSettings.applyTo(listenSocket);
 		} catch (SocketException e) {
 			LOGGER.error( 
-					LoggerHelper.objectMessage(
+					ObjectLogMessageHelper.objectLogMessage(
 							this, "Error in setting the listen socket"), 
 					e);
 			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
@@ -222,7 +222,7 @@ public final class BindCommandWorker extends CommandWorker {
 				TcpBasedCommandWorkerHelper.passData(builder);
 			} catch (IOException e) {
 				LOGGER.error( 
-						LoggerHelper.objectMessage(
+						ObjectLogMessageHelper.objectLogMessage(
 								this, "Error in starting to pass data"), 
 						e);				
 			}

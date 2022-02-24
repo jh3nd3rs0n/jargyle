@@ -213,7 +213,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5DatagramSocketUsingChainedSocks5ClientToConfigurations01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = DatagramSocketITHelper.echoThroughDatagramSocket(
+		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
 				newChainedSocks5ClientToConfigurations(), 
 				newConfigurations());
@@ -223,7 +223,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5DatagramSocketUsingChainedSocks5ClientToConfigurations02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = DatagramSocketITHelper.echoThroughDatagramSocket(
+		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
 				newChainedSocks5ClientToConfigurations(), 
 				newConfigurations());
@@ -233,7 +233,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5DatagramSocketUsingChainedSocks5ClientToConfigurations03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = DatagramSocketITHelper.echoThroughDatagramSocket(
+		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
 				newChainedSocks5ClientToConfigurations(), 
 				newConfigurations());
@@ -243,7 +243,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5DatagramSocketUsingChainedSocks5ClientToConfigurationsEachUsingUserpassAuth01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = DatagramSocketITHelper.echoThroughDatagramSocket(
+		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
 				newChainedSocks5ClientToConfigurationsEachUsingUserpassAuth(), 
 				newConfigurationsEachUsingUserpassAuth());
@@ -253,7 +253,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5DatagramSocketUsingChainedSocks5ClientToConfigurationsEachUsingUserpassAuth02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = DatagramSocketITHelper.echoThroughDatagramSocket(
+		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
 				newChainedSocks5ClientToConfigurationsEachUsingUserpassAuth(), 
 				newConfigurationsEachUsingUserpassAuth());
@@ -263,7 +263,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5DatagramSocketUsingChainedSocks5ClientToConfigurationsEachUsingUserpassAuth03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = DatagramSocketITHelper.echoThroughDatagramSocket(
+		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
 				newChainedSocks5ClientToConfigurationsEachUsingUserpassAuth(), 
 				newConfigurationsEachUsingUserpassAuth());
@@ -273,7 +273,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurations01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = DatagramSocketITHelper.echoThroughDatagramSocket(
+		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
 				newSocks5ClientToChainedConfigurations(), 
 				newChainedConfigurations());
@@ -283,7 +283,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurations02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = DatagramSocketITHelper.echoThroughDatagramSocket(
+		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
 				newSocks5ClientToChainedConfigurations(), 
 				newChainedConfigurations());
@@ -293,7 +293,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurations03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = DatagramSocketITHelper.echoThroughDatagramSocket(
+		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
 				newSocks5ClientToChainedConfigurations(), 
 				newChainedConfigurations());
@@ -303,7 +303,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsEachUsingUserpassAuth01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = DatagramSocketITHelper.echoThroughDatagramSocket(
+		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
 				newSocks5ClientToChainedConfigurationsEachUsingUserpassAuth(), 
 				newChainedConfigurationsEachUsingUserpassAuth());
@@ -313,7 +313,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsEachUsingUserpassAuth02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = DatagramSocketITHelper.echoThroughDatagramSocket(
+		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
 				newSocks5ClientToChainedConfigurationsEachUsingUserpassAuth(), 
 				newChainedConfigurationsEachUsingUserpassAuth());
@@ -323,7 +323,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsEachUsingUserpassAuth03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = DatagramSocketITHelper.echoThroughDatagramSocket(
+		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
 				newSocks5ClientToChainedConfigurationsEachUsingUserpassAuth(), 
 				newChainedConfigurationsEachUsingUserpassAuth());
@@ -335,7 +335,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingChainedSocks5ClientToConfigurations01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = ServerSocketITHelper.echoThroughServerSocket(
+		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
 				newChainedSocks5ClientToConfigurations(), 
 				newConfigurations());
@@ -345,7 +345,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingChainedSocks5ClientToConfigurations02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = ServerSocketITHelper.echoThroughServerSocket(
+		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
 				newChainedSocks5ClientToConfigurations(), 
 				newConfigurations());
@@ -355,7 +355,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingChainedSocks5ClientToConfigurations03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = ServerSocketITHelper.echoThroughServerSocket(
+		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
 				newChainedSocks5ClientToConfigurations(), 
 				newConfigurations());
@@ -365,7 +365,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingChainedSocks5ClientToConfigurationsEachUsingUserpassAuth01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = ServerSocketITHelper.echoThroughServerSocket(
+		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
 				newChainedSocks5ClientToConfigurationsEachUsingUserpassAuth(), 
 				newConfigurationsEachUsingUserpassAuth());
@@ -375,7 +375,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingChainedSocks5ClientToConfigurationsEachUsingUserpassAuth02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = ServerSocketITHelper.echoThroughServerSocket(
+		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
 				newChainedSocks5ClientToConfigurationsEachUsingUserpassAuth(), 
 				newConfigurationsEachUsingUserpassAuth());
@@ -385,7 +385,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingChainedSocks5ClientToConfigurationsEachUsingUserpassAuth03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = ServerSocketITHelper.echoThroughServerSocket(
+		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
 				newChainedSocks5ClientToConfigurationsEachUsingUserpassAuth(), 
 				newConfigurationsEachUsingUserpassAuth());
@@ -395,7 +395,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingSocks5ClientToChainedConfigurations01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = ServerSocketITHelper.echoThroughServerSocket(
+		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
 				newSocks5ClientToChainedConfigurations(), 
 				newChainedConfigurations());
@@ -405,7 +405,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingSocks5ClientToChainedConfigurations02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = ServerSocketITHelper.echoThroughServerSocket(
+		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
 				newSocks5ClientToChainedConfigurations(), 
 				newChainedConfigurations());
@@ -415,7 +415,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingSocks5ClientToChainedConfigurations03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = ServerSocketITHelper.echoThroughServerSocket(
+		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
 				newSocks5ClientToChainedConfigurations(), 
 				newChainedConfigurations());
@@ -425,7 +425,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingSocks5ClientToChainedConfigurationsEachUsingUserpassAuth01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = ServerSocketITHelper.echoThroughServerSocket(
+		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
 				newSocks5ClientToChainedConfigurationsEachUsingUserpassAuth(), 
 				newChainedConfigurationsEachUsingUserpassAuth());
@@ -435,7 +435,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingSocks5ClientToChainedConfigurationsEachUsingUserpassAuth02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = ServerSocketITHelper.echoThroughServerSocket(
+		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
 				newSocks5ClientToChainedConfigurationsEachUsingUserpassAuth(), 
 				newChainedConfigurationsEachUsingUserpassAuth());
@@ -445,7 +445,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingSocks5ClientToChainedConfigurationsEachUsingUserpassAuth03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = ServerSocketITHelper.echoThroughServerSocket(
+		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
 				newSocks5ClientToChainedConfigurationsEachUsingUserpassAuth(), 
 				newChainedConfigurationsEachUsingUserpassAuth());
@@ -457,7 +457,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5SocketUsingChainedSocks5ClientToConfigurations01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = SocketITHelper.echoThroughSocket(
+		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
 				newChainedSocks5ClientToConfigurations(), 
 				newConfigurations());
@@ -467,7 +467,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5SocketUsingChainedSocks5ClientToConfigurations02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = SocketITHelper.echoThroughSocket(
+		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
 				newChainedSocks5ClientToConfigurations(), 
 				newConfigurations());
@@ -477,7 +477,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5SocketUsingChainedSocks5ClientToConfigurations03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = SocketITHelper.echoThroughSocket(
+		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
 				newChainedSocks5ClientToConfigurations(), 
 				newConfigurations());
@@ -487,7 +487,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5SocketUsingChainedSocks5ClientToConfigurationsEachUsingUserpassAuth01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = SocketITHelper.echoThroughSocket(
+		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
 				newChainedSocks5ClientToConfigurationsEachUsingUserpassAuth(), 
 				newConfigurationsEachUsingUserpassAuth());
@@ -497,7 +497,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5SocketUsingChainedSocks5ClientToConfigurationsEachUsingUserpassAuth02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = SocketITHelper.echoThroughSocket(
+		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
 				newChainedSocks5ClientToConfigurationsEachUsingUserpassAuth(), 
 				newConfigurationsEachUsingUserpassAuth());
@@ -507,7 +507,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5SocketUsingChainedSocks5ClientToConfigurationsEachUsingUserpassAuth03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = SocketITHelper.echoThroughSocket(
+		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
 				newChainedSocks5ClientToConfigurationsEachUsingUserpassAuth(), 
 				newConfigurationsEachUsingUserpassAuth());
@@ -517,7 +517,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5SocketUsingSocks5ClientToChainedConfigurations01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = SocketITHelper.echoThroughSocket(
+		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
 				newSocks5ClientToChainedConfigurations(), 
 				newChainedConfigurations());
@@ -527,7 +527,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5SocketUsingSocks5ClientToChainedConfigurations02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = SocketITHelper.echoThroughSocket(
+		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
 				newSocks5ClientToChainedConfigurations(), 
 				newChainedConfigurations());
@@ -537,7 +537,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5SocketUsingSocks5ClientToChainedConfigurations03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = SocketITHelper.echoThroughSocket(
+		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
 				newSocks5ClientToChainedConfigurations(), 
 				newChainedConfigurations());
@@ -547,7 +547,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5SocketUsingSocks5ClientToChainedConfigurationsEachUsingUserpassAuth01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = SocketITHelper.echoThroughSocket(
+		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
 				newSocks5ClientToChainedConfigurationsEachUsingUserpassAuth(), 
 				newChainedConfigurationsEachUsingUserpassAuth());
@@ -557,7 +557,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5SocketUsingSocks5ClientToChainedConfigurationsEachUsingUserpassAuth02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = SocketITHelper.echoThroughSocket(
+		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
 				newSocks5ClientToChainedConfigurationsEachUsingUserpassAuth(), 
 				newChainedConfigurationsEachUsingUserpassAuth());
@@ -567,7 +567,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5SocketUsingSocks5ClientToChainedConfigurationsEachUsingUserpassAuth03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = SocketITHelper.echoThroughSocket(
+		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
 				newSocks5ClientToChainedConfigurationsEachUsingUserpassAuth(), 
 				newChainedConfigurationsEachUsingUserpassAuth());

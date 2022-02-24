@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.jh3nd3rs0n.jargyle.internal.logging.LoggerHelper;
+import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
 
 final class Listener implements Runnable {
 
@@ -40,7 +40,7 @@ final class Listener implements Runnable {
 						this.workerContextFactory));
 			} catch (SocketTimeoutException e) {
 				LOGGER.error(
-						LoggerHelper.objectMessage(
+						ObjectLogMessageHelper.objectLogMessage(
 								this, 
 								"Timeout reached in waiting for a connection!"), 
 						e);
@@ -50,7 +50,7 @@ final class Listener implements Runnable {
 				break;
 			} catch (IOException e) {
 				LOGGER.error(
-						LoggerHelper.objectMessage(
+						ObjectLogMessageHelper.objectLogMessage(
 								this, "Error in waiting for a connection"), 
 						e);
 				continue;

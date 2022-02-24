@@ -10,8 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
-import com.github.jh3nd3rs0n.jargyle.internal.logging.LoggerHelper;
-import com.github.jh3nd3rs0n.jargyle.internal.net.ClientFacingIOExceptionHelper;
+import com.github.jh3nd3rs0n.jargyle.internal.logging.ClientFacingIOExceptionLoggingHelper;
+import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5Worker;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5WorkerContext;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Version;
@@ -42,13 +42,13 @@ final class Worker implements Runnable {
 			return null;
 		} catch (SocketException e) {
 			LOGGER.error(
-					LoggerHelper.objectMessage(
+					ObjectLogMessageHelper.objectLogMessage(
 							this, "Error in setting the client-facing socket"), 
 					e);
 			return null;			
 		} catch (IOException e) {
 			LOGGER.error(
-					LoggerHelper.objectMessage(
+					ObjectLogMessageHelper.objectLogMessage(
 							this, "Error in wrapping the client-facing socket"), 
 					e);
 			return null;
@@ -59,9 +59,11 @@ final class Worker implements Runnable {
 	public void run() {
 		long startTime = System.currentTimeMillis();
 		try {
-			LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
-					"Started. Total Worker count: %s",
-					this.totalWorkerCount.incrementAndGet())));
+			LOGGER.debug(ObjectLogMessageHelper.objectLogMessage(
+					this, 
+					String.format(
+							"Started. Total Worker count: %s",
+							this.totalWorkerCount.incrementAndGet())));
 			WorkerContext workerContext = this.newWorkerContext(
 					this.clientFacingSocket);
 			if (workerContext == null) {
@@ -74,9 +76,9 @@ final class Worker implements Runnable {
 			try {
 				version = UnsignedByte.newInstanceFrom(clientFacingInputStream);
 			} catch (IOException e) {
-				ClientFacingIOExceptionHelper.log(
+				ClientFacingIOExceptionLoggingHelper.log(
 						LOGGER, 
-						LoggerHelper.objectMessage(
+						ObjectLogMessageHelper.objectLogMessage(
 								this, 
 								"Error in getting the SOCKS version from the "
 								+ "client"), 
@@ -88,13 +90,16 @@ final class Worker implements Runnable {
 						new Socks5WorkerContext(workerContext));
 				socks5Worker.run();
 			} else {
-				LOGGER.error(LoggerHelper.objectMessage(this, String.format(
-						"Unknown SOCKS version: %s",
-						version.intValue())));
+				LOGGER.error(ObjectLogMessageHelper.objectLogMessage(
+						this, 
+						String.format(
+								"Unknown SOCKS version: %s",
+								version.intValue())));
 			}
 		} catch (Throwable t) {
 			LOGGER.error(
-					LoggerHelper.objectMessage(this, "Internal server error"), 
+					ObjectLogMessageHelper.objectLogMessage(
+							this, "Internal server error"), 
 					t);
 		} finally {
 			if (!this.clientFacingSocket.isClosed()) {
@@ -102,17 +107,19 @@ final class Worker implements Runnable {
 					this.clientFacingSocket.close();
 				} catch (IOException e) {
 					LOGGER.error(
-							LoggerHelper.objectMessage(
+							ObjectLogMessageHelper.objectLogMessage(
 									this, 
 									"Error upon closing connection to the "
 									+ "client"), 
 							e);
 				}
 			}
-			LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
-					"Finished in %s ms. Total Worker count: %s",
-					System.currentTimeMillis() - startTime,
-					this.totalWorkerCount.decrementAndGet())));
+			LOGGER.debug(ObjectLogMessageHelper.objectLogMessage(
+					this, 
+					String.format(
+							"Finished in %s ms. Total Worker count: %s",
+							System.currentTimeMillis() - startTime,
+							this.totalWorkerCount.decrementAndGet())));
 		}
 	}
 

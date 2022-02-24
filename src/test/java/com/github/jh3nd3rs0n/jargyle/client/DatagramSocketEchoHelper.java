@@ -17,7 +17,7 @@ import java.util.concurrent.Executors;
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
 
-public final class DatagramSocketITHelper {
+public final class DatagramSocketEchoHelper {
 	
 	private static final class EchoServer {
 		
@@ -184,6 +184,6 @@ public final class DatagramSocketITHelper {
 		return returningString;
 	}
 
-	private DatagramSocketITHelper() { }
+	private DatagramSocketEchoHelper() { }
 	
 }

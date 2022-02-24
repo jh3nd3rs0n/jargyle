@@ -13,7 +13,7 @@ import java.util.concurrent.Executors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.jh3nd3rs0n.jargyle.internal.logging.LoggerHelper;
+import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
 import com.github.jh3nd3rs0n.jargyle.internal.throwable.ThrowableHelper;
 
 public final class RelayServer {
@@ -92,7 +92,7 @@ public final class RelayServer {
 						bytesRead = this.inputStream.read(buffer);
 						this.dataWorkerContext.setIdleStartTime(
 								System.currentTimeMillis());
-						LOGGER.trace(LoggerHelper.objectMessage(
+						LOGGER.trace(ObjectLogMessageHelper.objectLogMessage(
 								this, 
 								String.format("Bytes read: %s", bytesRead)));
 					} catch (IOException e) {
@@ -110,7 +110,7 @@ public final class RelayServer {
 							bytesRead = 0;
 						} else {
 							LOGGER.error(
-									LoggerHelper.objectMessage(
+									ObjectLogMessageHelper.objectLogMessage(
 											this, 
 											"Error occurred in the process of "
 											+ "reading in data"), 
@@ -128,7 +128,7 @@ public final class RelayServer {
 								System.currentTimeMillis() - idleStartTime;
 						if (timeSinceIdleStartTime >= this.idleTimeout) {
 							LOGGER.trace(
-									LoggerHelper.objectMessage(
+									ObjectLogMessageHelper.objectLogMessage(
 											this, 
 											"Timeout reached for idle relay!"));
 							break;
@@ -149,7 +149,7 @@ public final class RelayServer {
 							break;
 						} else {
 							LOGGER.error(
-									LoggerHelper.objectMessage(
+									ObjectLogMessageHelper.objectLogMessage(
 											this, 
 											"Error occurred in the process of " 
 											+ "writing out data"), 
@@ -171,7 +171,7 @@ public final class RelayServer {
 							break;
 						} else {
 							LOGGER.error(
-									LoggerHelper.objectMessage(
+									ObjectLogMessageHelper.objectLogMessage(
 											this, 
 											"Error occurred in the process of " 
 											+ "flushing out any data"), 
@@ -181,7 +181,7 @@ public final class RelayServer {
 					}					
 				} catch (Throwable t) {
 					LOGGER.error(
-							LoggerHelper.objectMessage(
+							ObjectLogMessageHelper.objectLogMessage(
 									this, 
 									"Error occurred in the process of "
 									+ "relaying the data"), 

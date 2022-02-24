@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
 import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
-import com.github.jh3nd3rs0n.jargyle.internal.logging.LoggerHelper;
+import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
 import com.github.jh3nd3rs0n.jargyle.server.rules.impl.FirewallRule;
 import com.github.jh3nd3rs0n.jargyle.server.rules.impl.Socks5ReplyFirewallRule;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Reply;
@@ -58,7 +58,7 @@ public final class ResolveCommandWorker extends CommandWorker {
 			inetAddress = hostResolver.resolve(this.desiredDestinationAddress);
 		} catch (UnknownHostException e) {
 			LOGGER.error( 
-					LoggerHelper.objectMessage(
+					ObjectLogMessageHelper.objectLogMessage(
 							this, "Error in resolving the hostname"), 
 					e);
 			socks5Rep = Socks5Reply.newFailureInstance(Reply.HOST_UNREACHABLE);
@@ -66,7 +66,7 @@ public final class ResolveCommandWorker extends CommandWorker {
 			return;			
 		} catch (IOException e) {
 			LOGGER.error( 
-					LoggerHelper.objectMessage(
+					ObjectLogMessageHelper.objectLogMessage(
 							this, "Error in resolving the hostname"), 
 					e);
 			socks5Rep = Socks5Reply.newFailureInstance(

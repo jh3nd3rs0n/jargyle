@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
-import com.github.jh3nd3rs0n.jargyle.internal.logging.LoggerHelper;
+import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
 import com.github.jh3nd3rs0n.jargyle.server.rules.impl.FirewallRule;
 import com.github.jh3nd3rs0n.jargyle.server.rules.impl.FirewallRuleAction;
 import com.github.jh3nd3rs0n.jargyle.server.rules.impl.Socks5UdpFirewallRule;
@@ -63,7 +63,8 @@ public final class UdpRelayServer {
 			Objects.requireNonNull(clientFacingDatagramSock);
 			Objects.requireNonNull(peerFacingDatagramSock);
 			if (clientPrt < 0 || clientPrt > Port.MAX_INT_VALUE) {
-				throw new IllegalArgumentException("client port is out of range");
+				throw new IllegalArgumentException(
+						"client port is out of range");
 			}
 			this.bufferSize = DEFAULT_BUFFER_SIZE;
 			this.clientAddress = clientAddr;
@@ -71,9 +72,12 @@ public final class UdpRelayServer {
 			this.clientPort = clientPrt;
 			this.hostResolver = DEFAULT_HOST_RESOLVER;
 			this.idleTimeout = DEFAULT_IDLE_TIMEOUT;
-			this.inboundSocks5UdpFirewallRules = DEFAULT_INBOUND_SOCKS5_UDP_FIREWALL_RULES;
-			this.methodSubnegotiationResults = DEFAULT_METHOD_SUBNEGOTIATION_RESULTS;			
-			this.outboundSocks5UdpFirewallRules = DEFAULT_OUTBOUND_SOCKS5_UDP_FIREWALL_RULES;
+			this.inboundSocks5UdpFirewallRules = 
+					DEFAULT_INBOUND_SOCKS5_UDP_FIREWALL_RULES;
+			this.methodSubnegotiationResults = 
+					DEFAULT_METHOD_SUBNEGOTIATION_RESULTS;			
+			this.outboundSocks5UdpFirewallRules = 
+					DEFAULT_OUTBOUND_SOCKS5_UDP_FIREWALL_RULES;
 			this.peerFacingDatagramSocket = peerFacingDatagramSock;
 		}
 		
@@ -106,7 +110,8 @@ public final class UdpRelayServer {
 		
 		public Builder inboundSocks5UdpFirewallRules(
 				final Socks5UdpFirewallRules socks5UdpFirewallRules) {
-			this.inboundSocks5UdpFirewallRules = Objects.requireNonNull(socks5UdpFirewallRules);
+			this.inboundSocks5UdpFirewallRules = Objects.requireNonNull(
+					socks5UdpFirewallRules);
 			return this;
 		}
 		
@@ -118,7 +123,8 @@ public final class UdpRelayServer {
 		
 		public Builder outboundSocks5UdpFirewallRules(
 				final Socks5UdpFirewallRules socks5UdpFirewallRules) {
-			this.outboundSocks5UdpFirewallRules = Objects.requireNonNull(socks5UdpFirewallRules);
+			this.outboundSocks5UdpFirewallRules = Objects.requireNonNull(
+					socks5UdpFirewallRules);
 			return this;
 		}
 		
@@ -147,7 +153,7 @@ public final class UdpRelayServer {
 				inetAddress = InetAddress.getByName(this.clientAddress);
 			} catch (IOException e) {
 				LOGGER.error( 
-						LoggerHelper.objectMessage(
+						ObjectLogMessageHelper.objectLogMessage(
 								this, 
 								"Error in determining the IP address from the "
 								+ "client"), 
@@ -192,7 +198,7 @@ public final class UdpRelayServer {
 								System.currentTimeMillis() - idleStartTime;
 						if (timeSinceIdleStartTime >= this.idleTimeout) {
 							LOGGER.trace(
-									LoggerHelper.objectMessage(
+									ObjectLogMessageHelper.objectLogMessage(
 											this, 
 											"Timeout reached for idle relay!"));							
 							break;
@@ -200,16 +206,18 @@ public final class UdpRelayServer {
 						continue;
 					} catch (IOException e) {
 						LOGGER.error( 
-								LoggerHelper.objectMessage(
+								ObjectLogMessageHelper.objectLogMessage(
 										this, 
 										"Error in receiving the packet from "
 										+ "the peer"), 
 								e);
 						continue;
 					}
-					LOGGER.trace(LoggerHelper.objectMessage(this, String.format(
-							"Packet data received: %s byte(s)",
-							packet.getLength())));
+					LOGGER.trace(ObjectLogMessageHelper.objectLogMessage(
+							this, 
+							String.format(
+									"Packet data received: %s byte(s)",
+									packet.getLength())));
 					if (!this.canAllowPacket(new Socks5UdpFirewallRule.Context(
 							this.clientAddress, 
 							this.methodSubnegotiationResults, 
@@ -217,7 +225,7 @@ public final class UdpRelayServer {
 						continue;
 					}
 					UdpRequestHeader header = this.newUdpRequestHeader(packet);
-					LOGGER.trace(LoggerHelper.objectMessage(
+					LOGGER.trace(ObjectLogMessageHelper.objectLogMessage(
 							this, header.toString()));
 					packet = this.newDatagramPacket(header);
 					if (packet == null) {
@@ -230,7 +238,7 @@ public final class UdpRelayServer {
 						break;
 					} catch (IOException e) {
 						LOGGER.error( 
-								LoggerHelper.objectMessage(
+								ObjectLogMessageHelper.objectLogMessage(
 										this, 
 										"Error in sending the packet to the "
 										+ "client"), 
@@ -238,7 +246,7 @@ public final class UdpRelayServer {
 					}
 				} catch (Throwable t) {
 					LOGGER.error( 
-							LoggerHelper.objectMessage(
+							ObjectLogMessageHelper.objectLogMessage(
 									this, 
 									"Error occurred in the process of "
 									+ "relaying of a packet from the peer to "
@@ -274,7 +282,7 @@ public final class UdpRelayServer {
 				clientInetAddr = InetAddress.getByName(this.clientAddress);
 			} catch (IOException e) {
 				LOGGER.error( 
-						LoggerHelper.objectMessage(
+						ObjectLogMessageHelper.objectLogMessage(
 								this, 
 								"Error in determining the IP address from the "
 								+ "client"), 
@@ -286,7 +294,7 @@ public final class UdpRelayServer {
 				inetAddr = InetAddress.getByName(address);
 			} catch (IOException e) {
 				LOGGER.error( 
-						LoggerHelper.objectMessage(
+						ObjectLogMessageHelper.objectLogMessage(
 								this, 
 								"Error in determining the IP address from the "
 								+ "client"), 
@@ -318,7 +326,7 @@ public final class UdpRelayServer {
 						header.getDesiredDestinationAddress());
 			} catch (IOException e) {
 				LOGGER.error( 
-						LoggerHelper.objectMessage(
+						ObjectLogMessageHelper.objectLogMessage(
 								this, 
 								"Error in determining the IP address from the "
 								+ "peer"), 
@@ -337,7 +345,7 @@ public final class UdpRelayServer {
 				header = UdpRequestHeader.newInstance(packet.getData());
 			} catch (IllegalArgumentException e) {
 				LOGGER.error( 
-						LoggerHelper.objectMessage(
+						ObjectLogMessageHelper.objectLogMessage(
 								this, 
 								"Error in parsing the UDP header request from "
 								+ "the client"), 
@@ -368,7 +376,7 @@ public final class UdpRelayServer {
 								System.currentTimeMillis() - idleStartTime;
 						if (timeSinceIdleStartTime >= this.idleTimeout) {
 							LOGGER.trace(
-									LoggerHelper.objectMessage(
+									ObjectLogMessageHelper.objectLogMessage(
 											this, 
 											"Timeout reached for idle relay!"));
 							break;
@@ -376,16 +384,18 @@ public final class UdpRelayServer {
 						continue;
 					} catch (IOException e) {
 						LOGGER.error( 
-								LoggerHelper.objectMessage(
+								ObjectLogMessageHelper.objectLogMessage(
 										this, 
 										"Error in receiving packet from the "
 										+ "client"), 
 								e);
 						continue;
 					}
-					LOGGER.trace(LoggerHelper.objectMessage(this, String.format(
-							"Packet data received: %s byte(s)",
-							packet.getLength())));					
+					LOGGER.trace(ObjectLogMessageHelper.objectLogMessage(
+							this, 
+							String.format(
+									"Packet data received: %s byte(s)",
+									packet.getLength())));					
 					if (!this.canForwardDatagramPacket(packet)) {
 						continue;
 					}
@@ -393,7 +403,7 @@ public final class UdpRelayServer {
 					if (header == null) {
 						continue;
 					}
-					LOGGER.trace(LoggerHelper.objectMessage(
+					LOGGER.trace(ObjectLogMessageHelper.objectLogMessage(
 							this, header.toString()));
 					if (header.getCurrentFragmentNumber() != 0) {
 						continue;
@@ -415,7 +425,7 @@ public final class UdpRelayServer {
 						break;
 					} catch (IOException e) {
 						LOGGER.error( 
-								LoggerHelper.objectMessage(
+								ObjectLogMessageHelper.objectLogMessage(
 										this, 
 										"Error in sending the packet to the "
 										+ "peer"), 
@@ -423,7 +433,7 @@ public final class UdpRelayServer {
 					}
 				} catch (Throwable t) {
 					LOGGER.error( 
-							LoggerHelper.objectMessage(
+							ObjectLogMessageHelper.objectLogMessage(
 									this, 
 									"Error occurred in the process of "
 									+ "relaying of a packet from the client to "

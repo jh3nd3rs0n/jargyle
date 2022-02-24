@@ -9,8 +9,8 @@ import java.net.Socket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.jh3nd3rs0n.jargyle.internal.logging.LoggerHelper;
-import com.github.jh3nd3rs0n.jargyle.internal.net.ClientFacingIOExceptionHelper;
+import com.github.jh3nd3rs0n.jargyle.internal.logging.ClientFacingIOExceptionLoggingHelper;
+import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.Route;
 import com.github.jh3nd3rs0n.jargyle.server.Settings;
@@ -82,7 +82,7 @@ public final class Socks5Worker {
 		} catch (MethodSubnegotiationException e) {
 			if (e.getCause() == null) {
 				LOGGER.debug( 
-						LoggerHelper.objectMessage(
+						ObjectLogMessageHelper.objectLogMessage(
 								this, 
 								String.format(
 										"Unable to sub-negotiate with the "
@@ -92,7 +92,7 @@ public final class Socks5Worker {
 				return null;
 			}
 			LOGGER.error( 
-					LoggerHelper.objectMessage(
+					ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							String.format(
 									"Error in sub-negotiating with the client "
@@ -101,9 +101,9 @@ public final class Socks5Worker {
 					e);
 			return null;				
 		} catch (IOException e) {
-			ClientFacingIOExceptionHelper.log(
+			ClientFacingIOExceptionLoggingHelper.log(
 					LOGGER,
-					LoggerHelper.objectMessage(
+					ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							String.format(
 									"Error in sub-negotiating with the client "
@@ -123,18 +123,18 @@ public final class Socks5Worker {
 		try {
 			cmsm = ClientMethodSelectionMessage.newInstanceFrom(in);
 		} catch (IOException e) {
-			ClientFacingIOExceptionHelper.log(
+			ClientFacingIOExceptionLoggingHelper.log(
 					LOGGER,
-					LoggerHelper.objectMessage(
+					ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Error in parsing the method selection message "
 							+ "from the client"),
 					e);
 			return null;
 		}
-		LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
-				"Received %s", 
-				cmsm.toString())));
+		LOGGER.debug(ObjectLogMessageHelper.objectLogMessage(
+				this, 
+				String.format("Received %s", cmsm.toString())));
 		Method method = null;
 		Methods methods = this.settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_METHODS);
@@ -149,15 +149,15 @@ public final class Socks5Worker {
 		}
 		ServerMethodSelectionMessage smsm = 
 				ServerMethodSelectionMessage.newInstance(method);
-		LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
-				"Sending %s", 
-				smsm.toString())));
+		LOGGER.debug(ObjectLogMessageHelper.objectLogMessage(
+				this, 
+				String.format("Sending %s", smsm.toString())));
 		try {
 			this.socks5WorkerContext.writeThenFlush(smsm.toByteArray());
 		} catch (IOException e) {
-			ClientFacingIOExceptionHelper.log(
+			ClientFacingIOExceptionLoggingHelper.log(
 					LOGGER,
-					LoggerHelper.objectMessage(
+					ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Error in writing the method selection message to "
 							+ "the client"),
@@ -174,7 +174,7 @@ public final class Socks5Worker {
 					this.clientFacingInputStream);
 		} catch (AddressTypeNotSupportedException e) {
 			LOGGER.debug( 
-					LoggerHelper.objectMessage(
+					ObjectLogMessageHelper.objectLogMessage(
 							this, "Unable to parse the SOCKS5 request"), 
 					e);
 			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
@@ -183,7 +183,7 @@ public final class Socks5Worker {
 			return null;
 		} catch (CommandNotSupportedException e) {
 			LOGGER.debug( 
-					LoggerHelper.objectMessage(
+					ObjectLogMessageHelper.objectLogMessage(
 							this, "Unable to parse the SOCKS5 request"), 
 					e);
 			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
@@ -191,16 +191,16 @@ public final class Socks5Worker {
 			this.socks5WorkerContext.sendSocks5Reply(this, socks5Rep, LOGGER);
 			return null;
 		} catch (IOException e) {
-			ClientFacingIOExceptionHelper.log(
+			ClientFacingIOExceptionLoggingHelper.log(
 					LOGGER, 
-					LoggerHelper.objectMessage(
+					ObjectLogMessageHelper.objectLogMessage(
 							this, "Error in parsing the SOCKS5 request"),
 					e);
 			return null;
 		}
-		LOGGER.debug(LoggerHelper.objectMessage(this, String.format(
-				"Received %s",
-				socks5Request.toString())));
+		LOGGER.debug(ObjectLogMessageHelper.objectLogMessage(
+				this, 
+				String.format("Received %s", socks5Request.toString())));
 		return socks5Request;
 	}
 	

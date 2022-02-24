@@ -15,7 +15,7 @@ import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
 import com.github.jh3nd3rs0n.jargyle.common.net.Host;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.common.net.ssl.DtlsDatagramSocketFactory;
-import com.github.jh3nd3rs0n.jargyle.internal.logging.LoggerHelper;
+import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
 import com.github.jh3nd3rs0n.jargyle.internal.net.AllZerosAddressConstants;
 import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
@@ -75,7 +75,7 @@ public final class UdpAssociateCommandWorker extends CommandWorker {
 			socketSettings.applyTo(clientFacingDatagramSock);
 		} catch (SocketException e) {
 			LOGGER.error( 
-					LoggerHelper.objectMessage(
+					ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Error in setting the client-facing UDP socket"), 
 					e);
@@ -95,7 +95,7 @@ public final class UdpAssociateCommandWorker extends CommandWorker {
 			socketSettings.applyTo(peerFacingDatagramSock);
 		} catch (SocketException e) {
 			LOGGER.error( 
-					LoggerHelper.objectMessage(
+					ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Error in setting the peer-facing UDP socket"), 
 					e);
@@ -117,7 +117,7 @@ public final class UdpAssociateCommandWorker extends CommandWorker {
 					bindInetAddress, 0));
 		} catch (SocketException e) {
 			LOGGER.error( 
-					LoggerHelper.objectMessage(
+					ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Error in creating the client-facing UDP socket"), 
 					e);
@@ -139,7 +139,7 @@ public final class UdpAssociateCommandWorker extends CommandWorker {
 					new InetSocketAddress(bindInetAddress, 0));
 		} catch (SocketException e) {
 			LOGGER.error( 
-					LoggerHelper.objectMessage(
+					ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Error in creating the peer-facing UDP socket"), 
 					e);
@@ -257,7 +257,7 @@ public final class UdpAssociateCommandWorker extends CommandWorker {
 				this.passPackets(builder);
 			} catch (IOException e) {
 				LOGGER.error( 
-						LoggerHelper.objectMessage(
+						ObjectLogMessageHelper.objectLogMessage(
 								this, "Error in starting the UDP association"), 
 						e);
 			}
@@ -286,7 +286,7 @@ public final class UdpAssociateCommandWorker extends CommandWorker {
 						clientHost);
 			} catch (UnknownHostException e) {
 				LOGGER.error( 
-						LoggerHelper.objectMessage(
+						ObjectLogMessageHelper.objectLogMessage(
 								this, 
 								String.format(
 										"Error in resolving the client host %s", 
@@ -311,7 +311,7 @@ public final class UdpAssociateCommandWorker extends CommandWorker {
 								clientPort);
 			} catch (IOException e) {
 				LOGGER.error( 
-						LoggerHelper.objectMessage(
+						ObjectLogMessageHelper.objectLogMessage(
 								this, 
 								"Error in wrapping the client-facing UDP socket"), 
 						e);
@@ -328,7 +328,7 @@ public final class UdpAssociateCommandWorker extends CommandWorker {
 							clientFacingDatagramSck);
 		} catch (IOException e) {
 			LOGGER.error( 
-					LoggerHelper.objectMessage(
+					ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Error in wrapping the client-facing UDP socket"), 
 					e);

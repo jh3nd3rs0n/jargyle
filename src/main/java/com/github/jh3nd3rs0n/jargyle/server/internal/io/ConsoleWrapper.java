@@ -1,4 +1,4 @@
-package com.github.jh3nd3rs0n.jargyle.internal.io;
+package com.github.jh3nd3rs0n.jargyle.server.internal.io;
 
 import java.io.BufferedReader;
 import java.io.Console;

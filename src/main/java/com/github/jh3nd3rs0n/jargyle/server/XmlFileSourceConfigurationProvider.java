@@ -12,9 +12,9 @@ import java.util.concurrent.Executors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.jh3nd3rs0n.jargyle.internal.io.FileMonitor;
-import com.github.jh3nd3rs0n.jargyle.internal.io.FileStatusListener;
 import com.github.jh3nd3rs0n.jargyle.server.config.xml.bind.ConfigurationXml;
+import com.github.jh3nd3rs0n.jargyle.server.internal.io.FileMonitor;
+import com.github.jh3nd3rs0n.jargyle.server.internal.io.FileStatusListener;
 
 import jakarta.xml.bind.JAXBException;
 

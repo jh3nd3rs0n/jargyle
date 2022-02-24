@@ -4,9 +4,9 @@ import java.io.IOException;
 
 import org.slf4j.Logger;
 
-import com.github.jh3nd3rs0n.jargyle.internal.logging.ClientFacingIOExceptionLoggingHelper;
 import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
 import com.github.jh3nd3rs0n.jargyle.server.WorkerContext;
+import com.github.jh3nd3rs0n.jargyle.server.internal.logging.ClientFacingIOExceptionLoggingHelper;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Reply;
 
 public class Socks5WorkerContext extends WorkerContext {

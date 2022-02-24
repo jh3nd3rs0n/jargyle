@@ -10,8 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
-import com.github.jh3nd3rs0n.jargyle.internal.logging.ClientFacingIOExceptionLoggingHelper;
 import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
+import com.github.jh3nd3rs0n.jargyle.server.internal.logging.ClientFacingIOExceptionLoggingHelper;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5Worker;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5WorkerContext;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Version;

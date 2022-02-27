@@ -1,5 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.server;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -99,7 +100,12 @@ public final class RelayServer {
 						ioe = e;
 					}
 					if (ioe != null) {
-						if (ioe instanceof SocketException 
+						if (ioe instanceof EOFException
+								|| ThrowableHelper.getRecentCause(
+										ioe, EOFException.class) != null) {
+							// end of input stream reached
+							break;
+						} else if (ioe instanceof SocketException 
 								|| ThrowableHelper.getRecentCause(
 										ioe, SocketException.class) != null) {
 							// socket closed

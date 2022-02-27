@@ -16,6 +16,7 @@ import com.github.jh3nd3rs0n.jargyle.common.net.ssl.DtlsDatagramSocketFactory;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.ClientMethodSelectionMessage;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.MethodEncapsulation;
+import com.github.jh3nd3rs0n.jargyle.transport.socks5.MethodSubnegotiationException;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Methods;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Reply;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.ServerMethodSelectionMessage;
@@ -52,7 +53,14 @@ public final class Socks5Client extends SocksClient {
 			final Socket connectedInternalSocket) throws IOException {
 		MethodSubnegotiator methodSubnegotiator =
 				MethodSubnegotiator.getInstance(method);
-		return methodSubnegotiator.subnegotiate(connectedInternalSocket, this);
+		MethodEncapsulation methodEncapsulation = null;
+		try {
+			methodEncapsulation = methodSubnegotiator.subnegotiate(
+					connectedInternalSocket, this);
+		} catch (MethodSubnegotiationException e) {
+			throw new Socks5ClientException(this, e);
+		}
+		return methodEncapsulation;
 	}
 	
 	protected DatagramSocket getConnectedInternalDatagramSocket(

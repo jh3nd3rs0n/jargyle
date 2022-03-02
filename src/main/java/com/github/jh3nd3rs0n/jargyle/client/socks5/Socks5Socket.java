@@ -91,7 +91,7 @@ public final class Socks5Socket extends Socket {
 			MethodEncapsulation methodEncapsulation = 
 					this.socks5Client.doMethodSubnegotiation(
 							method, connectedSocket);
-			Socket connectedSock = methodEncapsulation.getSocket(); 
+			Socket connectedSock = methodEncapsulation.getSocket();
 			Socks5Request socks5Req = Socks5Request.newInstance(
 					Command.CONNECT, 
 					address, 

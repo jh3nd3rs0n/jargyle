@@ -60,7 +60,8 @@ public final class Socks5Client extends SocksClient {
 		} catch (MethodSubnegotiationException e) {
 			throw new Socks5ClientException(this, e);
 		}
-		return methodEncapsulation;
+		return new SocksClientExceptionThrowingMethodEncapsulation(
+				this, methodEncapsulation);
 	}
 	
 	protected DatagramSocket getConnectedInternalDatagramSocket(

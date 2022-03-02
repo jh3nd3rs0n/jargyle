@@ -26,7 +26,7 @@ public class SocksClientException extends IOException {
 	}
 	
 	private final SocksClient socksClient;
-	
+
 	public SocksClientException(
 			final SocksClient client, final String message) {
 		super(getMessage(client, message, null));

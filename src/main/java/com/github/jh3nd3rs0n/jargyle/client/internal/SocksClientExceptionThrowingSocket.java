@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.net.SocketAddress;
+import java.net.SocketOption;
 
 import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
 import com.github.jh3nd3rs0n.jargyle.common.net.FilterSocket;
@@ -155,25 +157,132 @@ public final class SocksClientExceptionThrowingSocket extends FilterSocket {
 		this.outputStream = null;
 		this.socksClient = client;
 	}
-	
+
+	@Override
+	public void bind(SocketAddress bindpoint) throws IOException {
+		try {
+			super.bind(bindpoint);
+		} catch (IOException e) {
+			SocksClientExceptionThrowingHelper.throwAsSocksClientException(
+					e, this.socksClient);
+		}
+	}
+
+	@Override
+	public synchronized void close() throws IOException {
+		try {
+			super.close();
+		} catch (IOException e) {
+			SocksClientExceptionThrowingHelper.throwAsSocksClientException(
+					e, this.socksClient);
+		}
+	}
+
+	@Override
+	public void connect(SocketAddress endpoint) throws IOException {
+		try {
+			super.connect(endpoint);
+		} catch (IOException e) {
+			SocksClientExceptionThrowingHelper.throwAsSocksClientException(
+					e, this.socksClient);
+		}
+	}
+
+	@Override
+	public void connect(SocketAddress endpoint, int timeout) throws IOException {
+		try {
+			super.connect(endpoint, timeout);
+		} catch (IOException e) {
+			SocksClientExceptionThrowingHelper.throwAsSocksClientException(
+					e, this.socksClient);
+		}
+	}
+
 	@Override
 	public InputStream getInputStream() throws IOException {
 		if (this.inputStream != null) {
 			return this.inputStream;
 		}
+		InputStream inStream = null;
+		try {
+			inStream = super.getInputStream();
+		} catch (IOException e) {
+			SocksClientExceptionThrowingHelper.throwAsSocksClientException(
+					e, this.socksClient);
+		}
 		this.inputStream = new SocksClientExceptionThrowingSocketInputStream(
-				this.socksClient, super.getInputStream());
+				this.socksClient, inStream);
 		return this.inputStream;
 	}
-	
+
+	@Override
+	public <T> T getOption(SocketOption<T> name) throws IOException {
+		T value = null;
+		try {
+			value = super.getOption(name);
+		} catch (IOException e) {
+			SocksClientExceptionThrowingHelper.throwAsSocksClientException(
+					e, this.socksClient);
+		}
+		return value;
+	}
+
 	@Override
 	public OutputStream getOutputStream() throws IOException {
 		if (this.outputStream != null) {
 			return this.outputStream;
 		}
+		OutputStream outStream = null;
+		try {
+			outStream = super.getOutputStream();
+		} catch (IOException e) {
+			SocksClientExceptionThrowingHelper.throwAsSocksClientException(
+					e, this.socksClient);
+		}
 		this.outputStream = new SocksClientExceptionThrowingSocketOutputStream(
-				this.socksClient, super.getOutputStream());
+				this.socksClient, outStream);
 		return this.outputStream;
+	}
+
+	@Override
+	public void sendUrgentData(int data) throws IOException {
+		try {
+			super.sendUrgentData(data);
+		} catch (IOException e) {
+			SocksClientExceptionThrowingHelper.throwAsSocksClientException(
+					e, this.socksClient);
+		}
+	}
+
+	@Override
+	public <T> Socket setOption(SocketOption<T> name, T value) throws IOException {
+		try {
+			super.setOption(name, value);
+		} catch (IOException e) {
+			SocksClientExceptionThrowingHelper.throwAsSocksClientException(
+					e, this.socksClient);
+		}
+		return this;
+	}
+	
+	@Override
+	public void shutdownInput() throws IOException {
+		try {
+			super.shutdownInput();
+		} catch (IOException e) {
+			SocksClientExceptionThrowingHelper.throwAsSocksClientException(
+					e, this.socksClient);
+		}
+	}
+	
+	@Override
+	public void shutdownOutput() throws IOException {
+		try {
+			super.shutdownOutput();
+		} catch (IOException e) {
+			SocksClientExceptionThrowingHelper.throwAsSocksClientException(
+					e, this.socksClient);
+		}
 	}
 	
 	@Override

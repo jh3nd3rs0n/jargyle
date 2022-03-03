@@ -161,7 +161,7 @@ public final class SocksClientExceptionThrowingSocket extends FilterSocket {
 	@Override
 	public void bind(SocketAddress bindpoint) throws IOException {
 		try {
-			super.bind(bindpoint);
+			this.socket.bind(bindpoint);
 		} catch (IOException e) {
 			SocksClientExceptionThrowingHelper.throwAsSocksClientException(
 					e, this.socksClient);
@@ -171,7 +171,7 @@ public final class SocksClientExceptionThrowingSocket extends FilterSocket {
 	@Override
 	public synchronized void close() throws IOException {
 		try {
-			super.close();
+			this.socket.close();
 		} catch (IOException e) {
 			SocksClientExceptionThrowingHelper.throwAsSocksClientException(
 					e, this.socksClient);
@@ -181,7 +181,7 @@ public final class SocksClientExceptionThrowingSocket extends FilterSocket {
 	@Override
 	public void connect(SocketAddress endpoint) throws IOException {
 		try {
-			super.connect(endpoint);
+			this.socket.connect(endpoint);
 		} catch (IOException e) {
 			SocksClientExceptionThrowingHelper.throwAsSocksClientException(
 					e, this.socksClient);
@@ -191,7 +191,7 @@ public final class SocksClientExceptionThrowingSocket extends FilterSocket {
 	@Override
 	public void connect(SocketAddress endpoint, int timeout) throws IOException {
 		try {
-			super.connect(endpoint, timeout);
+			this.socket.connect(endpoint, timeout);
 		} catch (IOException e) {
 			SocksClientExceptionThrowingHelper.throwAsSocksClientException(
 					e, this.socksClient);
@@ -205,7 +205,7 @@ public final class SocksClientExceptionThrowingSocket extends FilterSocket {
 		}
 		InputStream inStream = null;
 		try {
-			inStream = super.getInputStream();
+			inStream = this.socket.getInputStream();
 		} catch (IOException e) {
 			SocksClientExceptionThrowingHelper.throwAsSocksClientException(
 					e, this.socksClient);
@@ -219,7 +219,7 @@ public final class SocksClientExceptionThrowingSocket extends FilterSocket {
 	public <T> T getOption(SocketOption<T> name) throws IOException {
 		T value = null;
 		try {
-			value = super.getOption(name);
+			value = this.socket.getOption(name);
 		} catch (IOException e) {
 			SocksClientExceptionThrowingHelper.throwAsSocksClientException(
 					e, this.socksClient);
@@ -234,7 +234,7 @@ public final class SocksClientExceptionThrowingSocket extends FilterSocket {
 		}
 		OutputStream outStream = null;
 		try {
-			outStream = super.getOutputStream();
+			outStream = this.socket.getOutputStream();
 		} catch (IOException e) {
 			SocksClientExceptionThrowingHelper.throwAsSocksClientException(
 					e, this.socksClient);
@@ -247,7 +247,7 @@ public final class SocksClientExceptionThrowingSocket extends FilterSocket {
 	@Override
 	public void sendUrgentData(int data) throws IOException {
 		try {
-			super.sendUrgentData(data);
+			this.socket.sendUrgentData(data);
 		} catch (IOException e) {
 			SocksClientExceptionThrowingHelper.throwAsSocksClientException(
 					e, this.socksClient);
@@ -257,7 +257,7 @@ public final class SocksClientExceptionThrowingSocket extends FilterSocket {
 	@Override
 	public <T> Socket setOption(SocketOption<T> name, T value) throws IOException {
 		try {
-			super.setOption(name, value);
+			this.socket.setOption(name, value);
 		} catch (IOException e) {
 			SocksClientExceptionThrowingHelper.throwAsSocksClientException(
 					e, this.socksClient);
@@ -268,7 +268,7 @@ public final class SocksClientExceptionThrowingSocket extends FilterSocket {
 	@Override
 	public void shutdownInput() throws IOException {
 		try {
-			super.shutdownInput();
+			this.socket.shutdownInput();
 		} catch (IOException e) {
 			SocksClientExceptionThrowingHelper.throwAsSocksClientException(
 					e, this.socksClient);
@@ -278,7 +278,7 @@ public final class SocksClientExceptionThrowingSocket extends FilterSocket {
 	@Override
 	public void shutdownOutput() throws IOException {
 		try {
-			super.shutdownOutput();
+			this.socket.shutdownOutput();
 		} catch (IOException e) {
 			SocksClientExceptionThrowingHelper.throwAsSocksClientException(
 					e, this.socksClient);

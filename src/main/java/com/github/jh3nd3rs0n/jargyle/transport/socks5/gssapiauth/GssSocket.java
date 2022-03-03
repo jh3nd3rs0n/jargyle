@@ -259,7 +259,7 @@ public final class GssSocket extends FilterSocket {
 		} catch (GSSException e) {
 			throw new IOException(e);
 		}
-		super.close();
+		this.socket.close();
 	}
 
 	@Override
@@ -276,7 +276,7 @@ public final class GssSocket extends FilterSocket {
 		if (this.inputStream != null) {
 			return this.inputStream;
 		}
-		InputStream inStream = super.getInputStream();
+		InputStream inStream = this.socket.getInputStream();
 		if (this.messageProp == null) {
 			this.inputStream = inStream;
 		} else {
@@ -299,7 +299,7 @@ public final class GssSocket extends FilterSocket {
 		if (this.outputStream != null) {
 			return this.outputStream;
 		}
-		OutputStream outStream = super.getOutputStream();
+		OutputStream outStream = this.socket.getOutputStream();
 		if (this.messageProp == null) {
 			this.outputStream = outStream;
 		} else {

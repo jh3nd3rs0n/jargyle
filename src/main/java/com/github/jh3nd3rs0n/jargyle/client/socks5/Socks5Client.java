@@ -12,11 +12,11 @@ import com.github.jh3nd3rs0n.jargyle.client.Properties;
 import com.github.jh3nd3rs0n.jargyle.client.Socks5PropertySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
 import com.github.jh3nd3rs0n.jargyle.client.SocksNetObjectFactory;
+import com.github.jh3nd3rs0n.jargyle.client.internal.SocksClientExceptionThrowingHelper;
 import com.github.jh3nd3rs0n.jargyle.common.net.ssl.DtlsDatagramSocketFactory;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.ClientMethodSelectionMessage;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.MethodEncapsulation;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.MethodSubnegotiationException;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Methods;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Reply;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.ServerMethodSelectionMessage;
@@ -57,8 +57,9 @@ public final class Socks5Client extends SocksClient {
 		try {
 			methodEncapsulation = methodSubnegotiator.subnegotiate(
 					connectedInternalSocket, this);
-		} catch (MethodSubnegotiationException e) {
-			throw new Socks5ClientException(this, e);
+		} catch (IOException e) {
+			SocksClientExceptionThrowingHelper.throwAsSocksClientException(
+					e, this);
 		}
 		return new SocksClientExceptionThrowingMethodEncapsulation(
 				this, methodEncapsulation);
@@ -113,17 +114,25 @@ public final class Socks5Client extends SocksClient {
 	
 	protected Method negotiateMethod(
 			final Socket connectedInternalSocket) throws IOException {
-		InputStream inputStream = connectedInternalSocket.getInputStream();
-		OutputStream outputStream = connectedInternalSocket.getOutputStream();
 		Methods methods = this.getProperties().getValue(
 				Socks5PropertySpecConstants.SOCKS5_METHODS);
 		ClientMethodSelectionMessage cmsm = 
 				ClientMethodSelectionMessage.newInstance(methods);
-		outputStream.write(cmsm.toByteArray());
-		outputStream.flush();
-		ServerMethodSelectionMessage smsm =
-				ServerMethodSelectionMessage.newInstanceFrom(inputStream);
-		return smsm.getMethod();		
+		Method method = null;
+		try {
+			InputStream inputStream = connectedInternalSocket.getInputStream();
+			OutputStream outputStream = 
+					connectedInternalSocket.getOutputStream();
+			outputStream.write(cmsm.toByteArray());
+			outputStream.flush();
+			ServerMethodSelectionMessage smsm =
+					ServerMethodSelectionMessage.newInstanceFrom(inputStream);
+			method = smsm.getMethod();
+		} catch (IOException e) {
+			SocksClientExceptionThrowingHelper.throwAsSocksClientException(
+					e, this);
+		}
+		return method;		
 	}
 	
 	@Override
@@ -150,8 +159,14 @@ public final class Socks5Client extends SocksClient {
 	
 	protected Socks5Reply receiveSocks5Reply(
 			final Socket connectedInternalSocket) throws IOException {
-		InputStream inputStream = connectedInternalSocket.getInputStream();
-		Socks5Reply socks5Rep = Socks5Reply.newInstanceFrom(inputStream);
+		Socks5Reply socks5Rep = null;
+		try {
+			InputStream inputStream = connectedInternalSocket.getInputStream();
+			socks5Rep = Socks5Reply.newInstanceFrom(inputStream);
+		} catch (IOException e) {
+			SocksClientExceptionThrowingHelper.throwAsSocksClientException(
+					e, this);
+		}
 		Reply reply = socks5Rep.getReply();
 		if (!reply.equals(Reply.SUCCEEDED)) {
 			throw new FailureSocks5ReplyException(this, socks5Rep);			
@@ -167,9 +182,15 @@ public final class Socks5Client extends SocksClient {
 	protected void sendSocks5Request(
 			final Socks5Request socks5Req, 
 			final Socket connectedInternalSocket) throws IOException {
-		OutputStream outputStream = connectedInternalSocket.getOutputStream();
-		outputStream.write(socks5Req.toByteArray());
-		outputStream.flush();
+		try {
+			OutputStream outputStream = 
+					connectedInternalSocket.getOutputStream();
+			outputStream.write(socks5Req.toByteArray());
+			outputStream.flush();
+		} catch (IOException e) {
+			SocksClientExceptionThrowingHelper.throwAsSocksClientException(
+					e, this);
+		}
 	}
 	
 }

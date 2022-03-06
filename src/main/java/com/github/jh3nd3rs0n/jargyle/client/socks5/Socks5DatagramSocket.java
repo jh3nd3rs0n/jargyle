@@ -1,8 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.client.socks5;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -15,7 +13,6 @@ import java.nio.channels.DatagramChannel;
 import java.util.Set;
 
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
-import com.github.jh3nd3rs0n.jargyle.internal.net.AllZerosAddressConstants;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Command;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.MethodEncapsulation;
@@ -28,6 +25,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 
 	private static final class Socks5DatagramSocketImpl {
 		
+		private boolean associated;
 		private boolean connected;
 		private DatagramSocket datagramSocket;
 		private DatagramSocket originalDatagramSocket;
@@ -45,6 +43,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			DatagramSocket originalDatagramSock = new DatagramSocket(null);
 			Socket originalSock = new Socket();
 			client.configureInternalSocket(originalSock);
+			this.associated = false;
 			this.connected = false;
 			this.datagramSocket = originalDatagramSock;
 			this.originalDatagramSocket = originalDatagramSock;
@@ -59,36 +58,14 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 		}
 		
 		public void bind(SocketAddress addr) throws SocketException {
-			if (this.datagramSocket.isBound()) {
-				throw new SocketException("socket is already bound");
-			}
-			int port = 0;
-			InetAddress inetAddress = 
-					AllZerosAddressConstants.getInet4Address();
-			if (addr != null) {
-				if (!(addr instanceof InetSocketAddress)) {
-					throw new IllegalArgumentException(
-							"bind address must be an instance of InetSocketAddress");
-				}
-				InetSocketAddress inetSocketAddress = (InetSocketAddress) addr;
-				port = inetSocketAddress.getPort();
-				inetAddress = inetSocketAddress.getAddress();
-			}
-			try {
-				this.socks5UdpAssociate(port, inetAddress);
-			} catch (IOException e) {
-				StringBuilder sb = new StringBuilder(e.toString());
-				sb.append(String.format("%n"));
-				StringWriter sw = new StringWriter();
-				PrintWriter pw = new PrintWriter(sw);
-				e.printStackTrace(pw);
-				pw.flush();
-				sb.append(sw.toString());
-				throw new SocketException(sb.toString());
-			}
+			this.datagramSocket.bind(addr);
+			this.associated = false;
+			this.udpRelayServerInetAddress = null;
+			this.udpRelayServerPort = -1;			
 		}
 		
 		public void close() {
+			this.associated = false;
 			this.datagramSocket.close();
 			this.udpRelayServerInetAddress = null;
 			this.udpRelayServerPort = -1;
@@ -137,6 +114,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			if (!this.datagramSocket.isBound()) {
 				throw new SocketException("socket is not bound");
 			}
+			this.socks5UdpAssociateIfNotAssociated();			
 			this.datagramSocket.receive(p);
 			UdpRequestHeader header = null; 
 			try {
@@ -169,6 +147,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 				throw new IllegalArgumentException(
 						"packet address and connected socket address must be the same");
 			}
+			this.socks5UdpAssociateIfNotAssociated();
 			String address = p.getAddress().getHostAddress();
 			int port = p.getPort();
 			byte[] headerBytes = UdpRequestHeader.newInstance(
@@ -183,9 +162,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			this.datagramSocket.send(p);
 		}
 		
-		public void socks5UdpAssociate(
-				final int port, 
-				final InetAddress inetAddress) throws IOException {
+		public void socks5UdpAssociate() throws IOException {
 			if (!this.socket.equals(this.originalSocket)) {
 				this.socket = this.originalSocket;
 			}
@@ -199,7 +176,6 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 				this.datagramSocket = this.originalDatagramSocket;
 			}
 			DatagramSocket datagramSock = this.datagramSocket;
-			datagramSock.bind(new InetSocketAddress(inetAddress, port));
 			String address = datagramSock.getLocalAddress().getHostAddress();
 			int prt = datagramSock.getLocalPort();
 			Socks5Request socks5Req = Socks5Request.newInstance(
@@ -214,11 +190,18 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 					socks5Rep.getServerBoundPort());
 			DatagramSocket datagramSck = methodEncapsulation.getDatagramSocket(
 					datagramSock);
+			this.associated = true;
 			this.datagramSocket = datagramSck;
 			this.udpRelayServerInetAddress = InetAddress.getByName(
 					socks5Rep.getServerBoundAddress());
 			this.udpRelayServerPort = socks5Rep.getServerBoundPort();
 			this.socket = sck;
+		}		
+		
+		public synchronized void socks5UdpAssociateIfNotAssociated() throws IOException {
+			if (!this.associated) {
+				this.socks5UdpAssociate();
+			}
 		}
 		
 	}

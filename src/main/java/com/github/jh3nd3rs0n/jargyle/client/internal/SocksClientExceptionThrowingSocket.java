@@ -7,7 +7,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.SocketAddress;
-import java.net.SocketOption;
 
 import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
 import com.github.jh3nd3rs0n.jargyle.common.net.FilterSocket;
@@ -148,7 +147,7 @@ public final class SocksClientExceptionThrowingSocket extends FilterSocket {
 	
 	private InputStream inputStream;
 	private OutputStream outputStream;
-	private SocksClient socksClient;
+	private final SocksClient socksClient;
 	
 	public SocksClientExceptionThrowingSocket(
 			final SocksClient client, final Socket sock) {
@@ -216,18 +215,6 @@ public final class SocksClientExceptionThrowingSocket extends FilterSocket {
 	}
 
 	@Override
-	public <T> T getOption(SocketOption<T> name) throws IOException {
-		T value = null;
-		try {
-			value = this.socket.getOption(name);
-		} catch (IOException e) {
-			SocksClientExceptionThrowingHelper.throwAsSocksClientException(
-					e, this.socksClient);
-		}
-		return value;
-	}
-
-	@Override
 	public OutputStream getOutputStream() throws IOException {
 		if (this.outputStream != null) {
 			return this.outputStream;
@@ -252,17 +239,6 @@ public final class SocksClientExceptionThrowingSocket extends FilterSocket {
 			SocksClientExceptionThrowingHelper.throwAsSocksClientException(
 					e, this.socksClient);
 		}
-	}
-
-	@Override
-	public <T> Socket setOption(SocketOption<T> name, T value) throws IOException {
-		try {
-			this.socket.setOption(name, value);
-		} catch (IOException e) {
-			SocksClientExceptionThrowingHelper.throwAsSocksClientException(
-					e, this.socksClient);
-		}
-		return this;
 	}
 	
 	@Override

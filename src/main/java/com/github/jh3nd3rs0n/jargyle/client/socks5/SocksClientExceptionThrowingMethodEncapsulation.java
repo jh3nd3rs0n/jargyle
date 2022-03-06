@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.DatagramSocket;
 import java.net.Socket;
 
+import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
+import com.github.jh3nd3rs0n.jargyle.client.internal.SocksClientExceptionThrowingDatagramSocket;
 import com.github.jh3nd3rs0n.jargyle.client.internal.SocksClientExceptionThrowingSocket;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.MethodEncapsulation;
 
@@ -12,19 +14,23 @@ final class SocksClientExceptionThrowingMethodEncapsulation
 
 	private final MethodEncapsulation methodEncapsulation;
 	private final Socket socket;
+	private final SocksClient socksClient;
 	
 	public SocksClientExceptionThrowingMethodEncapsulation(
-			final Socks5Client socks5Client,
+			final SocksClient client,
 			final MethodEncapsulation methEncapsulation) {
 		this.methodEncapsulation = methEncapsulation;
 		this.socket = new SocksClientExceptionThrowingSocket(
-				socks5Client, methEncapsulation.getSocket());
+				client, methEncapsulation.getSocket());
+		this.socksClient = client;
 	}
 
 	@Override
 	public DatagramSocket getDatagramSocket(
 			final DatagramSocket datagramSocket) throws IOException {
-		return this.methodEncapsulation.getDatagramSocket(datagramSocket);
+		return new SocksClientExceptionThrowingDatagramSocket(
+				this.socksClient,
+				this.methodEncapsulation.getDatagramSocket(datagramSocket));
 	}
 
 	@Override

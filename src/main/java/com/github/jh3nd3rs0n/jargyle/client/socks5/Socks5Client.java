@@ -3,6 +3,7 @@ package com.github.jh3nd3rs0n.jargyle.client.socks5;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UncheckedIOException;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -12,6 +13,7 @@ import com.github.jh3nd3rs0n.jargyle.client.Properties;
 import com.github.jh3nd3rs0n.jargyle.client.Socks5PropertySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
 import com.github.jh3nd3rs0n.jargyle.client.SocksNetObjectFactory;
+import com.github.jh3nd3rs0n.jargyle.client.internal.SocksClientExceptionThrowingDatagramSocket;
 import com.github.jh3nd3rs0n.jargyle.client.internal.SocksClientExceptionThrowingHelper;
 import com.github.jh3nd3rs0n.jargyle.common.net.ssl.DtlsDatagramSocketFactory;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.ClientMethodSelectionMessage;
@@ -69,17 +71,32 @@ public final class Socks5Client extends SocksClient {
 			final DatagramSocket internalDatagramSocket,
 			final String udpRelayServerHost,
 			final int udpRelayServerPort) throws IOException {
-		InetAddress udpRelayServerHostInetAddress = InetAddress.getByName(
-				udpRelayServerHost); 
-		internalDatagramSocket.connect(
-				udpRelayServerHostInetAddress, udpRelayServerPort);
-		if (this.dtlsDatagramSocketFactory == null) {
-			return internalDatagramSocket;
+		DatagramSocket internalDatagramSock = internalDatagramSocket;
+		try {
+			InetAddress udpRelayServerHostInetAddress = InetAddress.getByName(
+					udpRelayServerHost); 
+			internalDatagramSock.connect(
+					udpRelayServerHostInetAddress, udpRelayServerPort);
+			if (this.dtlsDatagramSocketFactory == null) {
+				return new SocksClientExceptionThrowingDatagramSocket(
+						this, internalDatagramSock);
+			}
+			internalDatagramSock = 
+					this.dtlsDatagramSocketFactory.newDatagramSocket(
+							internalDatagramSock,
+							udpRelayServerHost,
+							udpRelayServerPort);
+			internalDatagramSock = 
+					new SocksClientExceptionThrowingDatagramSocket(
+							this, internalDatagramSock);
+		} catch (UncheckedIOException e) {
+			SocksClientExceptionThrowingHelper.throwAsSocksClientException(
+					e, this);			
+		} catch (IOException e) {
+			SocksClientExceptionThrowingHelper.throwAsSocksClientException(
+					e, this);
 		}
-		return this.dtlsDatagramSocketFactory.newDatagramSocket(
-				internalDatagramSocket,
-				udpRelayServerHost,
-				udpRelayServerPort);
+		return internalDatagramSock;
 	}
 
 	@Override

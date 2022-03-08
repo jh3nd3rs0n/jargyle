@@ -265,6 +265,12 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 		this.handshakeCompleted = true;
 	}
 	
+	private void handshakeIfNotCompleted() throws IOException {
+		if (!this.handshakeCompleted) {
+			this.handshake();
+		}
+	}
+	
 	private List<DatagramPacket> produceApplicationPackets(
 			final ByteBuffer outAppData, 
 			final SocketAddress peerSocketAddr) throws IOException {
@@ -394,9 +400,7 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 	
 	@Override
 	public synchronized void receive(final DatagramPacket p) throws IOException {
-		if (!this.getUseClientMode() && !this.handshakeCompleted) { 
-			this.handshake(); 
-		}
+		this.handshakeIfNotCompleted();
 		int loops = MAX_APP_READ_LOOPS;
 		while (true) {
 			if (--loops < 0) {
@@ -446,9 +450,7 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 
 	@Override
 	public void send(final DatagramPacket p) throws IOException {
-		if (this.getUseClientMode() && !this.handshakeCompleted) { 
-			this.handshake(); 
-		}
+		this.handshakeIfNotCompleted();		
 		ByteBuffer outAppData = ByteBuffer.wrap(p.getData());
 		// Note: have not considered the packet losses
 		List<DatagramPacket> packets = this.produceApplicationPackets(

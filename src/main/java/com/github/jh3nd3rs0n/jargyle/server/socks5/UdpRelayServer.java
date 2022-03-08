@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
+import com.github.jh3nd3rs0n.jargyle.server.internal.throwable.ThrowableHelper;
 import com.github.jh3nd3rs0n.jargyle.server.rules.impl.FirewallRule;
 import com.github.jh3nd3rs0n.jargyle.server.rules.impl.FirewallRuleAction;
 import com.github.jh3nd3rs0n.jargyle.server.rules.impl.Socks5UdpFirewallRule;
@@ -184,34 +185,44 @@ public final class UdpRelayServer {
 					byte[] buffer = new byte[this.bufferSize];
 					DatagramPacket packet = new DatagramPacket(
 							buffer, buffer.length);
+					IOException ioe = null;
 					try {
 						this.peerFacingDatagramSocket.receive(packet);
 						this.packetsWorkerContext.setIdleStartTime(
 								System.currentTimeMillis());
-					} catch (SocketException e) {
-						// socket closed
-						break;
-					} catch (SocketTimeoutException e) {
-						long idleStartTime = 
-								this.packetsWorkerContext.getIdleStartTime();
-						long timeSinceIdleStartTime = 
-								System.currentTimeMillis() - idleStartTime;
-						if (timeSinceIdleStartTime >= this.idleTimeout) {
-							LOGGER.trace(
+					} catch (IOException e) {
+						ioe = e;
+					}
+					if (ioe != null) {
+						if (ioe instanceof SocketException
+								|| ThrowableHelper.getRecentCause(
+										ioe, SocketException.class) != null) {
+							// socket closed
+							break;
+						} else if (ioe instanceof SocketTimeoutException 
+								|| ThrowableHelper.getRecentCause(
+										ioe, SocketTimeoutException.class) != null) {
+							long idleStartTime = 
+									this.packetsWorkerContext.getIdleStartTime();
+							long timeSinceIdleStartTime = 
+									System.currentTimeMillis() - idleStartTime;
+							if (timeSinceIdleStartTime >= this.idleTimeout) {
+								LOGGER.trace(
+										ObjectLogMessageHelper.objectLogMessage(
+												this, 
+												"Timeout reached for idle relay!"));							
+								break;
+							}
+							continue;
+						} else {
+							LOGGER.error( 
 									ObjectLogMessageHelper.objectLogMessage(
 											this, 
-											"Timeout reached for idle relay!"));							
-							break;
+											"Error in receiving the packet from "
+											+ "the peer"), 
+									ioe);
+							continue;
 						}
-						continue;
-					} catch (IOException e) {
-						LOGGER.error( 
-								ObjectLogMessageHelper.objectLogMessage(
-										this, 
-										"Error in receiving the packet from "
-										+ "the peer"), 
-								e);
-						continue;
 					}
 					LOGGER.trace(ObjectLogMessageHelper.objectLogMessage(
 							this, 
@@ -231,18 +242,26 @@ public final class UdpRelayServer {
 					if (packet == null) {
 						continue;
 					}
+					ioe = null;
 					try {
 						this.clientFacingDatagramSocket.send(packet);
-					} catch (SocketException e) {
-						// socket closed
-						break;
 					} catch (IOException e) {
-						LOGGER.error( 
-								ObjectLogMessageHelper.objectLogMessage(
-										this, 
-										"Error in sending the packet to the "
-										+ "client"), 
-								e);
+						ioe = e;
+					}
+					if (ioe != null) {
+						if (ioe instanceof SocketException
+								|| ThrowableHelper.getRecentCause(
+										ioe, SocketException.class) != null) {
+							// socket closed
+							break;
+						} else {
+							LOGGER.error( 
+									ObjectLogMessageHelper.objectLogMessage(
+											this, 
+											"Error in sending the packet to the "
+											+ "client"), 
+									ioe);
+						}
 					}
 				} catch (Throwable t) {
 					LOGGER.error( 
@@ -362,34 +381,44 @@ public final class UdpRelayServer {
 					byte[] buffer = new byte[this.bufferSize];
 					DatagramPacket packet = new DatagramPacket(
 							buffer, buffer.length);
+					IOException ioe = null;
 					try {
 						this.clientFacingDatagramSocket.receive(packet);
 						this.packetsWorkerContext.setIdleStartTime(
 								System.currentTimeMillis());
-					} catch (SocketException e) {
-						// socket closed
-						break;
-					} catch (SocketTimeoutException e) {
-						long idleStartTime = 
-								this.packetsWorkerContext.getIdleStartTime();
-						long timeSinceIdleStartTime = 
-								System.currentTimeMillis() - idleStartTime;
-						if (timeSinceIdleStartTime >= this.idleTimeout) {
-							LOGGER.trace(
+					} catch (IOException e) {
+						ioe = e;
+					}
+					if (ioe != null) {
+						if (ioe instanceof SocketException
+								|| ThrowableHelper.getRecentCause(
+										ioe, SocketException.class) != null) {
+							// socket closed
+							break;							
+						} else if (ioe instanceof SocketTimeoutException
+								|| ThrowableHelper.getRecentCause(
+										ioe, SocketTimeoutException.class) != null) {
+							long idleStartTime = 
+									this.packetsWorkerContext.getIdleStartTime();
+							long timeSinceIdleStartTime = 
+									System.currentTimeMillis() - idleStartTime;
+							if (timeSinceIdleStartTime >= this.idleTimeout) {
+								LOGGER.trace(
+										ObjectLogMessageHelper.objectLogMessage(
+												this, 
+												"Timeout reached for idle relay!"));
+								break;
+							}
+							continue;							
+						} else {
+							LOGGER.error( 
 									ObjectLogMessageHelper.objectLogMessage(
 											this, 
-											"Timeout reached for idle relay!"));
-							break;
+											"Error in receiving packet from the "
+											+ "client"), 
+									ioe);
+							continue;							
 						}
-						continue;
-					} catch (IOException e) {
-						LOGGER.error( 
-								ObjectLogMessageHelper.objectLogMessage(
-										this, 
-										"Error in receiving packet from the "
-										+ "client"), 
-								e);
-						continue;
 					}
 					LOGGER.trace(ObjectLogMessageHelper.objectLogMessage(
 							this, 
@@ -418,18 +447,26 @@ public final class UdpRelayServer {
 					if (packet == null) {
 						continue;
 					}
+					ioe = null;
 					try {
 						this.peerFacingDatagramSocket.send(packet);
-					} catch (SocketException e) {
-						// socket closed
-						break;
 					} catch (IOException e) {
-						LOGGER.error( 
-								ObjectLogMessageHelper.objectLogMessage(
-										this, 
-										"Error in sending the packet to the "
-										+ "peer"), 
-								e);
+						ioe = e;
+					}
+					if (ioe != null) {
+						if (ioe instanceof SocketException
+								|| ThrowableHelper.getRecentCause(
+										ioe, SocketException.class) != null) {
+							// socket closed
+							break;							
+						} else {
+							LOGGER.error( 
+									ObjectLogMessageHelper.objectLogMessage(
+											this, 
+											"Error in sending the packet to the "
+											+ "peer"), 
+									ioe);							
+						}
 					}
 				} catch (Throwable t) {
 					LOGGER.error( 

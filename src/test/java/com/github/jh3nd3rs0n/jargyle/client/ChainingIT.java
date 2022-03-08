@@ -9,16 +9,22 @@ import java.util.List;
 
 import org.junit.Test;
 
+import com.github.jh3nd3rs0n.jargyle.ResourceHelper;
+import com.github.jh3nd3rs0n.jargyle.ResourceNameConstants;
 import com.github.jh3nd3rs0n.jargyle.TestStringConstants;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
+import com.github.jh3nd3rs0n.jargyle.server.ChainingDtlsSettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.ChainingGeneralSettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.ChainingSocks5SettingSpecConstants;
+import com.github.jh3nd3rs0n.jargyle.server.ChainingSslSettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
+import com.github.jh3nd3rs0n.jargyle.server.DtlsSettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.GeneralSettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.ImmutableConfiguration;
 import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
+import com.github.jh3nd3rs0n.jargyle.server.SslSettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.StringSourceUsernamePasswordAuthenticator;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Methods;
@@ -28,19 +34,22 @@ public class ChainingIT {
 	private static List<Configuration> newChainedConfigurations() {
 		return Arrays.asList(
 				ImmutableConfiguration.newInstance(Settings.newInstance(
-						GeneralSettingSpecConstants.PORT.newSetting(Port.newInstance(23456)),
+						GeneralSettingSpecConstants.PORT.newSetting(
+								Port.newInstance(23456)),
 						ChainingGeneralSettingSpecConstants.CHAINING_SOCKS_SERVER_URI.newSetting(
 								Scheme.SOCKS5.newSocksServerUri(
 										InetAddress.getLoopbackAddress().getHostAddress(), 
 										Integer.valueOf(65432))))),
 				ImmutableConfiguration.newInstance(Settings.newInstance(
-						GeneralSettingSpecConstants.PORT.newSetting(Port.newInstance(65432)),
+						GeneralSettingSpecConstants.PORT.newSetting(
+								Port.newInstance(65432)),
 						ChainingGeneralSettingSpecConstants.CHAINING_SOCKS_SERVER_URI.newSetting(
 								Scheme.SOCKS5.newSocksServerUri(
 										InetAddress.getLoopbackAddress().getHostAddress(), 
 										Integer.valueOf(34567))))),
 				ImmutableConfiguration.newInstance(Settings.newInstance(
-						GeneralSettingSpecConstants.PORT.newSetting(Port.newInstance(34567)))));
+						GeneralSettingSpecConstants.PORT.newSetting(
+								Port.newInstance(34567)))));
 	}
 	
 	private static List<Configuration> newChainedConfigurationsEachUsingUserpassAuth() {
@@ -89,6 +98,48 @@ public class ChainingIT {
 						Socks5SettingSpecConstants.SOCKS5_USERPASSAUTH_USERNAME_PASSWORD_AUTHENTICATOR.newSetting(
 								new StringSourceUsernamePasswordAuthenticator(
 										"Abu:safeDriversSave40%25")))));
+	}
+	
+	private static List<Configuration> newChainedConfigurationsUsingSsl() {
+		return Arrays.asList(
+				ImmutableConfiguration.newInstance(Settings.newInstance(
+						GeneralSettingSpecConstants.PORT.newSetting(
+								Port.newInstance(23456)),
+						ChainingGeneralSettingSpecConstants.CHAINING_SOCKS_SERVER_URI.newSetting(
+								Scheme.SOCKS5.newSocksServerUri(
+										InetAddress.getLoopbackAddress().getHostAddress(), 
+										Integer.valueOf(65432))),
+						ChainingDtlsSettingSpecConstants.CHAINING_DTLS_ENABLED.newSetting(Boolean.TRUE),
+						ChainingDtlsSettingSpecConstants.CHAINING_DTLS_TRUST_STORE_FILE.newSetting(
+								ResourceHelper.getResourceAsFile(
+										ResourceNameConstants.JARGYLE_COMMON_SECURITY_SERVER_KEY_STORE_FILE)),
+						ChainingDtlsSettingSpecConstants.CHAINING_DTLS_TRUST_STORE_PASSWORD.newSettingOfParsableValue(
+								ResourceHelper.getResourceAsString(
+										ResourceNameConstants.JARGYLE_COMMON_SECURITY_SERVER_KEY_STORE_PASSWORD_FILE)),				
+						ChainingSslSettingSpecConstants.CHAINING_SSL_ENABLED.newSetting(Boolean.TRUE),
+						ChainingSslSettingSpecConstants.CHAINING_SSL_TRUST_STORE_FILE.newSetting(
+								ResourceHelper.getResourceAsFile(
+										ResourceNameConstants.JARGYLE_COMMON_SECURITY_SERVER_KEY_STORE_FILE)),
+						ChainingSslSettingSpecConstants.CHAINING_SSL_TRUST_STORE_PASSWORD.newSettingOfParsableValue(
+								ResourceHelper.getResourceAsString(
+										ResourceNameConstants.JARGYLE_COMMON_SECURITY_SERVER_KEY_STORE_PASSWORD_FILE)))),
+				ImmutableConfiguration.newInstance(Settings.newInstance(
+						GeneralSettingSpecConstants.PORT.newSetting(
+								Port.newInstance(65432)),
+						DtlsSettingSpecConstants.DTLS_ENABLED.newSetting(Boolean.TRUE),
+						DtlsSettingSpecConstants.DTLS_KEY_STORE_FILE.newSetting(
+								ResourceHelper.getResourceAsFile(
+										ResourceNameConstants.JARGYLE_COMMON_SECURITY_SERVER_KEY_STORE_FILE)),
+						DtlsSettingSpecConstants.DTLS_KEY_STORE_PASSWORD.newSettingOfParsableValue(
+								ResourceHelper.getResourceAsString(
+										ResourceNameConstants.JARGYLE_COMMON_SECURITY_SERVER_KEY_STORE_PASSWORD_FILE)),				
+						SslSettingSpecConstants.SSL_ENABLED.newSetting(Boolean.TRUE),
+						SslSettingSpecConstants.SSL_KEY_STORE_FILE.newSetting(
+								ResourceHelper.getResourceAsFile(
+										ResourceNameConstants.JARGYLE_COMMON_SECURITY_SERVER_KEY_STORE_FILE)),
+						SslSettingSpecConstants.SSL_KEY_STORE_PASSWORD.newSettingOfParsableValue(
+								ResourceHelper.getResourceAsString(
+										ResourceNameConstants.JARGYLE_COMMON_SECURITY_SERVER_KEY_STORE_PASSWORD_FILE)))));		
 	}
 	
 	private static SocksClient newChainedSocks5ClientToConfigurations() {
@@ -146,6 +197,35 @@ public class ChainingIT {
 		return client3;
 	}
 	
+	private static SocksClient newChainedSocks5ClientToConfigurationsUsingSsl() {
+		SocksClient client1 = Scheme.SOCKS5.newSocksServerUri(
+				InetAddress.getLoopbackAddress().getHostAddress(), 
+				Integer.valueOf(23456))
+				.newSocksClient(Properties.newInstance());
+		SocksClient client2 = Scheme.SOCKS5.newSocksServerUri(
+				InetAddress.getLoopbackAddress().getHostAddress(), 
+				Integer.valueOf(65432))
+				.newSocksClient(Properties.newInstance(
+						DtlsPropertySpecConstants.DTLS_ENABLED.newProperty(
+								Boolean.TRUE),
+						DtlsPropertySpecConstants.DTLS_TRUST_STORE_FILE.newProperty(
+								ResourceHelper.getResourceAsFile(
+										ResourceNameConstants.JARGYLE_COMMON_SECURITY_SERVER_KEY_STORE_FILE)),
+						DtlsPropertySpecConstants.DTLS_TRUST_STORE_PASSWORD.newPropertyOfParsableValue(
+								ResourceHelper.getResourceAsString(
+										ResourceNameConstants.JARGYLE_COMMON_SECURITY_SERVER_KEY_STORE_PASSWORD_FILE)),				
+						SslPropertySpecConstants.SSL_ENABLED.newProperty(
+								Boolean.TRUE),
+						SslPropertySpecConstants.SSL_TRUST_STORE_FILE.newProperty(
+								ResourceHelper.getResourceAsFile(
+										ResourceNameConstants.JARGYLE_COMMON_SECURITY_SERVER_KEY_STORE_FILE)),
+						SslPropertySpecConstants.SSL_TRUST_STORE_PASSWORD.newPropertyOfParsableValue(
+								ResourceHelper.getResourceAsString(
+										ResourceNameConstants.JARGYLE_COMMON_SECURITY_SERVER_KEY_STORE_PASSWORD_FILE))), 
+						client1);
+		return client2;
+	}
+	
 	private static List<Configuration> newConfigurations() {
 		return Arrays.asList(
 				ImmutableConfiguration.newInstance(Settings.newInstance(
@@ -187,6 +267,30 @@ public class ChainingIT {
 										"Abu:safeDriversSave40%25")))));
 	}
 	
+	private static List<Configuration> newConfigurationsUsingSsl() {
+		return Arrays.asList(
+				ImmutableConfiguration.newInstance(Settings.newInstance(
+						GeneralSettingSpecConstants.PORT.newSetting(
+								Port.newInstance(23456)))),
+				ImmutableConfiguration.newInstance(Settings.newInstance(
+						GeneralSettingSpecConstants.PORT.newSetting(
+								Port.newInstance(65432)),
+						DtlsSettingSpecConstants.DTLS_ENABLED.newSetting(Boolean.TRUE),
+						DtlsSettingSpecConstants.DTLS_KEY_STORE_FILE.newSetting(
+								ResourceHelper.getResourceAsFile(
+										ResourceNameConstants.JARGYLE_COMMON_SECURITY_SERVER_KEY_STORE_FILE)),
+						DtlsSettingSpecConstants.DTLS_KEY_STORE_PASSWORD.newSettingOfParsableValue(
+								ResourceHelper.getResourceAsString(
+										ResourceNameConstants.JARGYLE_COMMON_SECURITY_SERVER_KEY_STORE_PASSWORD_FILE)),				
+						SslSettingSpecConstants.SSL_ENABLED.newSetting(Boolean.TRUE),
+						SslSettingSpecConstants.SSL_KEY_STORE_FILE.newSetting(
+								ResourceHelper.getResourceAsFile(
+										ResourceNameConstants.JARGYLE_COMMON_SECURITY_SERVER_KEY_STORE_FILE)),
+						SslSettingSpecConstants.SSL_KEY_STORE_PASSWORD.newSettingOfParsableValue(
+								ResourceHelper.getResourceAsString(
+										ResourceNameConstants.JARGYLE_COMMON_SECURITY_SERVER_KEY_STORE_PASSWORD_FILE)))));
+	}
+	
 	private static SocksClient newSocks5ClientToChainedConfigurations() {
 		return Scheme.SOCKS5.newSocksServerUri(
 				InetAddress.getLoopbackAddress().getHostAddress(), 
@@ -206,6 +310,13 @@ public class ChainingIT {
 						Socks5PropertySpecConstants.SOCKS5_USERPASSAUTH_PASSWORD.newProperty(
 								EncryptedPassword.newInstance(
 										"opensesame".toCharArray()))));
+	}
+	
+	private static SocksClient newSocks5ClientToChainedConfigurationsUsingSsl() {
+		return Scheme.SOCKS5.newSocksServerUri(
+				InetAddress.getLoopbackAddress().getHostAddress(), 
+				Integer.valueOf(23456))
+				.newSocksClient(Properties.newInstance());
 	}
 	
 	// Socks5DatagramSocket
@@ -271,6 +382,36 @@ public class ChainingIT {
 	}
 	
 	@Test
+	public void testThroughSocks5DatagramSocketUsingChainedSocks5ClientToConfigurationsUsingSsl01() throws IOException {
+		String string = TestStringConstants.STRING_01;
+		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
+				string, 
+				newChainedSocks5ClientToConfigurationsUsingSsl(), 
+				newConfigurationsUsingSsl());
+		assertEquals(string, returningString);
+	}
+	
+	@Test
+	public void testThroughSocks5DatagramSocketUsingChainedSocks5ClientToConfigurationsUsingSsl02() throws IOException {
+		String string = TestStringConstants.STRING_02;
+		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
+				string, 
+				newChainedSocks5ClientToConfigurationsUsingSsl(), 
+				newConfigurationsUsingSsl());
+		assertEquals(string, returningString);
+	}
+	
+	@Test
+	public void testThroughSocks5DatagramSocketUsingChainedSocks5ClientToConfigurationsUsingSsl03() throws IOException {
+		String string = TestStringConstants.STRING_03;
+		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
+				string, 
+				newChainedSocks5ClientToConfigurationsUsingSsl(), 
+				newConfigurationsUsingSsl());
+		assertEquals(string, returningString);
+	}
+	
+	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurations01() throws IOException {
 		String string = TestStringConstants.STRING_01;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
@@ -327,6 +468,36 @@ public class ChainingIT {
 				string, 
 				newSocks5ClientToChainedConfigurationsEachUsingUserpassAuth(), 
 				newChainedConfigurationsEachUsingUserpassAuth());
+		assertEquals(string, returningString);
+	}
+	
+	@Test
+	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsUsingSsl01() throws IOException {
+		String string = TestStringConstants.STRING_01;
+		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
+				string, 
+				newSocks5ClientToChainedConfigurationsUsingSsl(), 
+				newChainedConfigurationsUsingSsl());
+		assertEquals(string, returningString);
+	}
+	
+	@Test
+	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsUsingSsl02() throws IOException {
+		String string = TestStringConstants.STRING_02;
+		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
+				string, 
+				newSocks5ClientToChainedConfigurationsUsingSsl(), 
+				newChainedConfigurationsUsingSsl());
+		assertEquals(string, returningString);
+	}
+	
+	@Test
+	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsUsingSsl03() throws IOException {
+		String string = TestStringConstants.STRING_03;
+		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
+				string, 
+				newSocks5ClientToChainedConfigurationsUsingSsl(), 
+				newChainedConfigurationsUsingSsl());
 		assertEquals(string, returningString);
 	}
 
@@ -391,6 +562,35 @@ public class ChainingIT {
 				newConfigurationsEachUsingUserpassAuth());
 		assertEquals(string, returningString);		
 	}
+	@Test
+	public void testThroughSocks5ServerSocketUsingChainedSocks5ClientToConfigurationsUsingSsl01() throws IOException {
+		String string = TestStringConstants.STRING_01;
+		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
+				string, 
+				newChainedSocks5ClientToConfigurationsUsingSsl(), 
+				newConfigurationsUsingSsl());
+		assertEquals(string, returningString);
+	}
+	
+	@Test
+	public void testThroughSocks5ServerSocketUsingChainedSocks5ClientToConfigurationsUsingSsl02() throws IOException {
+		String string = TestStringConstants.STRING_02;
+		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
+				string, 
+				newChainedSocks5ClientToConfigurationsUsingSsl(), 
+				newConfigurationsUsingSsl());
+		assertEquals(string, returningString);
+	}
+	
+	@Test
+	public void testThroughSocks5ServerSocketUsingChainedSocks5ClientToConfigurationsUsingSsl03() throws IOException {
+		String string = TestStringConstants.STRING_03;
+		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
+				string, 
+				newChainedSocks5ClientToConfigurationsUsingSsl(), 
+				newConfigurationsUsingSsl());
+		assertEquals(string, returningString);
+	}
 	
 	@Test
 	public void testThroughSocks5ServerSocketUsingSocks5ClientToChainedConfigurations01() throws IOException {
@@ -449,6 +649,36 @@ public class ChainingIT {
 				string, 
 				newSocks5ClientToChainedConfigurationsEachUsingUserpassAuth(), 
 				newChainedConfigurationsEachUsingUserpassAuth());
+		assertEquals(string, returningString);
+	}
+	
+	@Test
+	public void testThroughSocks5ServerSocketUsingSocks5ClientToChainedConfigurationsUsingSsl01() throws IOException {
+		String string = TestStringConstants.STRING_01;
+		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
+				string, 
+				newSocks5ClientToChainedConfigurationsUsingSsl(), 
+				newChainedConfigurationsUsingSsl());
+		assertEquals(string, returningString);
+	}
+	
+	@Test
+	public void testThroughSocks5ServerSocketUsingSocks5ClientToChainedConfigurationsUsingSsl02() throws IOException {
+		String string = TestStringConstants.STRING_02;
+		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
+				string, 
+				newSocks5ClientToChainedConfigurationsUsingSsl(), 
+				newChainedConfigurationsUsingSsl());
+		assertEquals(string, returningString);
+	}
+	
+	@Test
+	public void testThroughSocks5ServerSocketUsingSocks5ClientToChainedConfigurationsUsingSsl03() throws IOException {
+		String string = TestStringConstants.STRING_03;
+		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
+				string, 
+				newSocks5ClientToChainedConfigurationsUsingSsl(), 
+				newChainedConfigurationsUsingSsl());
 		assertEquals(string, returningString);
 	}
 	
@@ -515,6 +745,36 @@ public class ChainingIT {
 	}
 	
 	@Test
+	public void testThroughSocks5SocketUsingChainedSocks5ClientToConfigurationsUsingSsl01() throws IOException {
+		String string = TestStringConstants.STRING_01;
+		String returningString = SocketEchoHelper.echoThroughSocket(
+				string, 
+				newChainedSocks5ClientToConfigurationsUsingSsl(), 
+				newConfigurationsUsingSsl());
+		assertEquals(string, returningString);
+	}
+	
+	@Test
+	public void testThroughSocks5SocketUsingChainedSocks5ClientToConfigurationsUsingSsl02() throws IOException {
+		String string = TestStringConstants.STRING_02;
+		String returningString = SocketEchoHelper.echoThroughSocket(
+				string, 
+				newChainedSocks5ClientToConfigurationsUsingSsl(), 
+				newConfigurationsUsingSsl());
+		assertEquals(string, returningString);
+	}
+	
+	@Test
+	public void testThroughSocks5SocketUsingChainedSocks5ClientToConfigurationsUsingSsl03() throws IOException {
+		String string = TestStringConstants.STRING_03;
+		String returningString = SocketEchoHelper.echoThroughSocket(
+				string, 
+				newChainedSocks5ClientToConfigurationsUsingSsl(), 
+				newConfigurationsUsingSsl());
+		assertEquals(string, returningString);
+	}
+	
+	@Test
 	public void testThroughSocks5SocketUsingSocks5ClientToChainedConfigurations01() throws IOException {
 		String string = TestStringConstants.STRING_01;
 		String returningString = SocketEchoHelper.echoThroughSocket(
@@ -571,6 +831,36 @@ public class ChainingIT {
 				string, 
 				newSocks5ClientToChainedConfigurationsEachUsingUserpassAuth(), 
 				newChainedConfigurationsEachUsingUserpassAuth());
+		assertEquals(string, returningString);
+	}
+	
+	@Test
+	public void testThroughSocks5SocketUsingSocks5ClientToChainedConfigurationsUsingSsl01() throws IOException {
+		String string = TestStringConstants.STRING_01;
+		String returningString = SocketEchoHelper.echoThroughSocket(
+				string, 
+				newSocks5ClientToChainedConfigurationsUsingSsl(), 
+				newChainedConfigurationsUsingSsl());
+		assertEquals(string, returningString);
+	}
+	
+	@Test
+	public void testThroughSocks5SocketUsingSocks5ClientToChainedConfigurationsUsingSsl02() throws IOException {
+		String string = TestStringConstants.STRING_02;
+		String returningString = SocketEchoHelper.echoThroughSocket(
+				string, 
+				newSocks5ClientToChainedConfigurationsUsingSsl(), 
+				newChainedConfigurationsUsingSsl());
+		assertEquals(string, returningString);
+	}
+	
+	@Test
+	public void testThroughSocks5SocketUsingSocks5ClientToChainedConfigurationsUsingSsl03() throws IOException {
+		String string = TestStringConstants.STRING_03;
+		String returningString = SocketEchoHelper.echoThroughSocket(
+				string, 
+				newSocks5ClientToChainedConfigurationsUsingSsl(), 
+				newChainedConfigurationsUsingSsl());
 		assertEquals(string, returningString);
 	}
 	

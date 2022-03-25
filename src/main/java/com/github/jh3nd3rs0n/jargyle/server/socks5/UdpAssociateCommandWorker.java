@@ -288,9 +288,8 @@ public final class UdpAssociateCommandWorker extends CommandWorker {
 				LOGGER.error( 
 						ObjectLogMessageHelper.objectLogMessage(
 								this, 
-								String.format(
-										"Error in resolving the client host %s", 
-										clientHost)), 
+								"Error in resolving the client host %s", 
+								clientHost), 
 						e);
 				Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
 						Reply.HOST_UNREACHABLE);

@@ -21,7 +21,8 @@ public class Socks5WorkerContext extends WorkerContext {
 			final Logger logger) {
 		logger.debug(ObjectLogMessageHelper.objectLogMessage(
 				worker, 
-				String.format("Sending %s",	socks5Rep.toString())));		
+				"Sending %s",
+				socks5Rep.toString()));		
 		try {
 			this.writeThenFlush(socks5Rep.toByteArray());
 		} catch (IOException e) {

@@ -84,20 +84,18 @@ public final class Socks5Worker {
 				LOGGER.debug( 
 						ObjectLogMessageHelper.objectLogMessage(
 								this, 
-								String.format(
-										"Unable to sub-negotiate with the "
-										+ "client using method %s", 
-										method)), 
+								"Unable to sub-negotiate with the client "
+								+ "using method %s",
+								method), 
 						e);
 				return null;
 			}
 			LOGGER.error( 
 					ObjectLogMessageHelper.objectLogMessage(
 							this, 
-							String.format(
-									"Error in sub-negotiating with the client "
-									+ "using method %s", 
-									method)), 
+							"Error in sub-negotiating with the client using "
+							+ "method %s",
+							method), 
 					e);
 			return null;				
 		} catch (IOException e) {
@@ -105,10 +103,9 @@ public final class Socks5Worker {
 					LOGGER,
 					ObjectLogMessageHelper.objectLogMessage(
 							this, 
-							String.format(
-									"Error in sub-negotiating with the client "
-									+ "using method %s", 
-									method)),
+							"Error in sub-negotiating with the client using "
+							+ "method %s",
+							method),
 					e);
 			return null;
 		}
@@ -134,7 +131,8 @@ public final class Socks5Worker {
 		}
 		LOGGER.debug(ObjectLogMessageHelper.objectLogMessage(
 				this, 
-				String.format("Received %s", cmsm.toString())));
+				"Received %s", 
+				cmsm.toString()));
 		Method method = null;
 		Methods methods = this.settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_METHODS);
@@ -151,7 +149,8 @@ public final class Socks5Worker {
 				ServerMethodSelectionMessage.newInstance(method);
 		LOGGER.debug(ObjectLogMessageHelper.objectLogMessage(
 				this, 
-				String.format("Sending %s", smsm.toString())));
+				"Sending %s", 
+				smsm.toString()));
 		try {
 			this.socks5WorkerContext.writeThenFlush(smsm.toByteArray());
 		} catch (IOException e) {
@@ -200,7 +199,8 @@ public final class Socks5Worker {
 		}
 		LOGGER.debug(ObjectLogMessageHelper.objectLogMessage(
 				this, 
-				String.format("Received %s", socks5Request.toString())));
+				"Received %s", 
+				socks5Request.toString()));
 		return socks5Request;
 	}
 	

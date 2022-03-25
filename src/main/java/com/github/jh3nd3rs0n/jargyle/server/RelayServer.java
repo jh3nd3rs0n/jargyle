@@ -95,7 +95,8 @@ public final class RelayServer {
 								System.currentTimeMillis());
 						LOGGER.trace(ObjectLogMessageHelper.objectLogMessage(
 								this, 
-								String.format("Bytes read: %s", bytesRead)));
+								"Bytes read: %s", 
+								bytesRead));
 					} catch (IOException e) {
 						ioe = e;
 					}

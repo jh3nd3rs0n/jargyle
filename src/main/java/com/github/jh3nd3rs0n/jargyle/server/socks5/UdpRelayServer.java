@@ -226,9 +226,8 @@ public final class UdpRelayServer {
 					}
 					LOGGER.trace(ObjectLogMessageHelper.objectLogMessage(
 							this, 
-							String.format(
-									"Packet data received: %s byte(s)",
-									packet.getLength())));
+							"Packet data received: %s byte(s)",
+							packet.getLength()));
 					if (!this.canAllowPacket(new Socks5UdpFirewallRule.Context(
 							this.clientAddress, 
 							this.methodSubnegotiationResults, 
@@ -422,9 +421,8 @@ public final class UdpRelayServer {
 					}
 					LOGGER.trace(ObjectLogMessageHelper.objectLogMessage(
 							this, 
-							String.format(
-									"Packet data received: %s byte(s)",
-									packet.getLength())));					
+							"Packet data received: %s byte(s)",
+							packet.getLength()));					
 					if (!this.canForwardDatagramPacket(packet)) {
 						continue;
 					}
@@ -433,7 +431,7 @@ public final class UdpRelayServer {
 						continue;
 					}
 					LOGGER.trace(ObjectLogMessageHelper.objectLogMessage(
-							this, header.toString()));
+							this, header.toString(), new Object[]{}));
 					if (header.getCurrentFragmentNumber() != 0) {
 						continue;
 					}

@@ -39,6 +39,10 @@ final class Worker implements Runnable {
 			workerContext = this.workerContextFactory.newWorkerContext(
 					clientFacingSock);
 		} catch (IllegalArgumentException e) {
+			LOGGER.debug(
+					ObjectLogMessageHelper.objectLogMessage(
+							this, "Invalid client-facing socket"), 
+					e);			
 			return null;
 		} catch (SocketException e) {
 			LOGGER.error(
@@ -61,9 +65,8 @@ final class Worker implements Runnable {
 		try {
 			LOGGER.debug(ObjectLogMessageHelper.objectLogMessage(
 					this, 
-					String.format(
-							"Started. Total Worker count: %s",
-							this.totalWorkerCount.incrementAndGet())));
+					"Started. Total Worker count: %s",
+					this.totalWorkerCount.incrementAndGet()));
 			WorkerContext workerContext = this.newWorkerContext(
 					this.clientFacingSocket);
 			if (workerContext == null) {
@@ -92,9 +95,8 @@ final class Worker implements Runnable {
 			} else {
 				LOGGER.error(ObjectLogMessageHelper.objectLogMessage(
 						this, 
-						String.format(
-								"Unknown SOCKS version: %s",
-								version.intValue())));
+						"Unknown SOCKS version: %s",
+						version.intValue()));
 			}
 		} catch (Throwable t) {
 			LOGGER.error(
@@ -116,10 +118,9 @@ final class Worker implements Runnable {
 			}
 			LOGGER.debug(ObjectLogMessageHelper.objectLogMessage(
 					this, 
-					String.format(
-							"Finished in %s ms. Total Worker count: %s",
-							System.currentTimeMillis() - startTime,
-							this.totalWorkerCount.decrementAndGet())));
+					"Finished in %s ms. Total Worker count: %s",
+					System.currentTimeMillis() - startTime,
+					this.totalWorkerCount.decrementAndGet()));
 		}
 	}
 

@@ -7,6 +7,7 @@ import java.net.InetAddress;
 import java.util.Arrays;
 import java.util.List;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.github.jh3nd3rs0n.jargyle.ResourceHelper;
@@ -29,6 +30,7 @@ import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.StringSourceUser
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Methods;
 
+@Ignore
 public class ChainingIT {
 
 	private static List<Configuration> newChainedConfigurations() {

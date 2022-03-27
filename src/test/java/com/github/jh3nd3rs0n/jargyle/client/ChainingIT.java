@@ -489,7 +489,7 @@ public class ChainingIT {
 				newChainedConfigurationsEachUsingUserpassAuth());
 		assertEquals(string, returningString);
 	}
-	
+/*	
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsUsingSsl01() throws IOException {
 		LOGGER.info("Starting integration test...");
@@ -522,7 +522,8 @@ public class ChainingIT {
 				newChainedConfigurationsUsingSsl());
 		assertEquals(string, returningString);
 	}
-
+*/
+	
 	// Socks5ServerSocket
 	
 	@Test

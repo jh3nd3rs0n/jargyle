@@ -8,8 +8,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.github.jh3nd3rs0n.jargyle.ResourceHelper;
 import com.github.jh3nd3rs0n.jargyle.ResourceNameConstants;
@@ -32,8 +30,6 @@ import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Methods;
 
 public class ChainingIT {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(ChainingIT.class);
 	
 	private static List<Configuration> newChainedConfigurations() {
 		return Arrays.asList(
@@ -327,7 +323,6 @@ public class ChainingIT {
 	
 	@Test
 	public void testThroughSocks5DatagramSocketUsingChainedSocks5ClientToConfigurations01() throws IOException {
-		LOGGER.info("Starting integration test...");
 		String string = TestStringConstants.STRING_01;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
@@ -338,7 +333,6 @@ public class ChainingIT {
 	
 	@Test
 	public void testThroughSocks5DatagramSocketUsingChainedSocks5ClientToConfigurations02() throws IOException {
-		LOGGER.info("Starting integration test...");
 		String string = TestStringConstants.STRING_02;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
@@ -349,7 +343,6 @@ public class ChainingIT {
 	
 	@Test
 	public void testThroughSocks5DatagramSocketUsingChainedSocks5ClientToConfigurations03() throws IOException {
-		LOGGER.info("Starting integration test...");
 		String string = TestStringConstants.STRING_03;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
@@ -360,7 +353,6 @@ public class ChainingIT {
 	
 	@Test
 	public void testThroughSocks5DatagramSocketUsingChainedSocks5ClientToConfigurationsEachUsingUserpassAuth01() throws IOException {
-		LOGGER.info("Starting integration test...");
 		String string = TestStringConstants.STRING_01;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
@@ -371,7 +363,6 @@ public class ChainingIT {
 	
 	@Test
 	public void testThroughSocks5DatagramSocketUsingChainedSocks5ClientToConfigurationsEachUsingUserpassAuth02() throws IOException {
-		LOGGER.info("Starting integration test...");
 		String string = TestStringConstants.STRING_02;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
@@ -382,7 +373,6 @@ public class ChainingIT {
 	
 	@Test
 	public void testThroughSocks5DatagramSocketUsingChainedSocks5ClientToConfigurationsEachUsingUserpassAuth03() throws IOException {
-		LOGGER.info("Starting integration test...");
 		String string = TestStringConstants.STRING_03;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
@@ -393,7 +383,6 @@ public class ChainingIT {
 	
 	@Test
 	public void testThroughSocks5DatagramSocketUsingChainedSocks5ClientToConfigurationsUsingSsl01() throws IOException {
-		LOGGER.info("Starting integration test...");
 		String string = TestStringConstants.STRING_01;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
@@ -404,7 +393,6 @@ public class ChainingIT {
 	
 	@Test
 	public void testThroughSocks5DatagramSocketUsingChainedSocks5ClientToConfigurationsUsingSsl02() throws IOException {
-		LOGGER.info("Starting integration test...");
 		String string = TestStringConstants.STRING_02;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
@@ -415,7 +403,6 @@ public class ChainingIT {
 	
 	@Test
 	public void testThroughSocks5DatagramSocketUsingChainedSocks5ClientToConfigurationsUsingSsl03() throws IOException {
-		LOGGER.info("Starting integration test...");
 		String string = TestStringConstants.STRING_03;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
@@ -426,7 +413,6 @@ public class ChainingIT {
 	
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurations01() throws IOException {
-		LOGGER.info("Starting integration test...");
 		String string = TestStringConstants.STRING_01;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
@@ -437,7 +423,6 @@ public class ChainingIT {
 	
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurations02() throws IOException {
-		LOGGER.info("Starting integration test...");
 		String string = TestStringConstants.STRING_02;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
@@ -448,7 +433,6 @@ public class ChainingIT {
 	
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurations03() throws IOException {
-		LOGGER.info("Starting integration test...");
 		String string = TestStringConstants.STRING_03;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
@@ -459,7 +443,6 @@ public class ChainingIT {
 	
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsEachUsingUserpassAuth01() throws IOException {
-		LOGGER.info("Starting integration test...");
 		String string = TestStringConstants.STRING_01;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
@@ -470,7 +453,6 @@ public class ChainingIT {
 	
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsEachUsingUserpassAuth02() throws IOException {
-		LOGGER.info("Starting integration test...");
 		String string = TestStringConstants.STRING_02;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
@@ -481,7 +463,6 @@ public class ChainingIT {
 	
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsEachUsingUserpassAuth03() throws IOException {
-		LOGGER.info("Starting integration test...");
 		String string = TestStringConstants.STRING_03;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
@@ -489,10 +470,9 @@ public class ChainingIT {
 				newChainedConfigurationsEachUsingUserpassAuth());
 		assertEquals(string, returningString);
 	}
-/*	
+	
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsUsingSsl01() throws IOException {
-		LOGGER.info("Starting integration test...");
 		String string = TestStringConstants.STRING_01;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
@@ -503,7 +483,6 @@ public class ChainingIT {
 	
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsUsingSsl02() throws IOException {
-		LOGGER.info("Starting integration test...");
 		String string = TestStringConstants.STRING_02;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
@@ -514,7 +493,6 @@ public class ChainingIT {
 	
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsUsingSsl03() throws IOException {
-		LOGGER.info("Starting integration test...");
 		String string = TestStringConstants.STRING_03;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
@@ -522,13 +500,11 @@ public class ChainingIT {
 				newChainedConfigurationsUsingSsl());
 		assertEquals(string, returningString);
 	}
-*/
 	
 	// Socks5ServerSocket
 	
 	@Test
 	public void testThroughSocks5ServerSocketUsingChainedSocks5ClientToConfigurations01() throws IOException {
-		LOGGER.info("Starting integration test...");
 		String string = TestStringConstants.STRING_01;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
@@ -539,7 +515,6 @@ public class ChainingIT {
 	
 	@Test
 	public void testThroughSocks5ServerSocketUsingChainedSocks5ClientToConfigurations02() throws IOException {
-		LOGGER.info("Starting integration test...");
 		String string = TestStringConstants.STRING_02;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
@@ -550,7 +525,6 @@ public class ChainingIT {
 	
 	@Test
 	public void testThroughSocks5ServerSocketUsingChainedSocks5ClientToConfigurations03() throws IOException {
-		LOGGER.info("Starting integration test...");
 		String string = TestStringConstants.STRING_03;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
@@ -561,7 +535,6 @@ public class ChainingIT {
 	
 	@Test
 	public void testThroughSocks5ServerSocketUsingChainedSocks5ClientToConfigurationsEachUsingUserpassAuth01() throws IOException {
-		LOGGER.info("Starting integration test...");
 		String string = TestStringConstants.STRING_01;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
@@ -572,7 +545,6 @@ public class ChainingIT {
 	
 	@Test
 	public void testThroughSocks5ServerSocketUsingChainedSocks5ClientToConfigurationsEachUsingUserpassAuth02() throws IOException {
-		LOGGER.info("Starting integration test...");
 		String string = TestStringConstants.STRING_02;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
@@ -583,7 +555,6 @@ public class ChainingIT {
 	
 	@Test
 	public void testThroughSocks5ServerSocketUsingChainedSocks5ClientToConfigurationsEachUsingUserpassAuth03() throws IOException {
-		LOGGER.info("Starting integration test...");
 		String string = TestStringConstants.STRING_03;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
@@ -593,7 +564,6 @@ public class ChainingIT {
 	}
 	@Test
 	public void testThroughSocks5ServerSocketUsingChainedSocks5ClientToConfigurationsUsingSsl01() throws IOException {
-		LOGGER.info("Starting integration test...");
 		String string = TestStringConstants.STRING_01;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
@@ -604,7 +574,6 @@ public class ChainingIT {
 	
 	@Test
 	public void testThroughSocks5ServerSocketUsingChainedSocks5ClientToConfigurationsUsingSsl02() throws IOException {
-		LOGGER.info("Starting integration test...");
 		String string = TestStringConstants.STRING_02;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
@@ -615,7 +584,6 @@ public class ChainingIT {
 	
 	@Test
 	public void testThroughSocks5ServerSocketUsingChainedSocks5ClientToConfigurationsUsingSsl03() throws IOException {
-		LOGGER.info("Starting integration test...");
 		String string = TestStringConstants.STRING_03;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
@@ -626,7 +594,6 @@ public class ChainingIT {
 	
 	@Test
 	public void testThroughSocks5ServerSocketUsingSocks5ClientToChainedConfigurations01() throws IOException {
-		LOGGER.info("Starting integration test...");
 		String string = TestStringConstants.STRING_01;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
@@ -637,7 +604,6 @@ public class ChainingIT {
 	
 	@Test
 	public void testThroughSocks5ServerSocketUsingSocks5ClientToChainedConfigurations02() throws IOException {
-		LOGGER.info("Starting integration test...");
 		String string = TestStringConstants.STRING_02;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
@@ -648,7 +614,6 @@ public class ChainingIT {
 	
 	@Test
 	public void testThroughSocks5ServerSocketUsingSocks5ClientToChainedConfigurations03() throws IOException {
-		LOGGER.info("Starting integration test...");
 		String string = TestStringConstants.STRING_03;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
@@ -659,7 +624,6 @@ public class ChainingIT {
 	
 	@Test
 	public void testThroughSocks5ServerSocketUsingSocks5ClientToChainedConfigurationsEachUsingUserpassAuth01() throws IOException {
-		LOGGER.info("Starting integration test...");
 		String string = TestStringConstants.STRING_01;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
@@ -670,7 +634,6 @@ public class ChainingIT {
 	
 	@Test
 	public void testThroughSocks5ServerSocketUsingSocks5ClientToChainedConfigurationsEachUsingUserpassAuth02() throws IOException {
-		LOGGER.info("Starting integration test...");
 		String string = TestStringConstants.STRING_02;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
@@ -681,7 +644,6 @@ public class ChainingIT {
 	
 	@Test
 	public void testThroughSocks5ServerSocketUsingSocks5ClientToChainedConfigurationsEachUsingUserpassAuth03() throws IOException {
-		LOGGER.info("Starting integration test...");
 		String string = TestStringConstants.STRING_03;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
@@ -692,7 +654,6 @@ public class ChainingIT {
 	
 	@Test
 	public void testThroughSocks5ServerSocketUsingSocks5ClientToChainedConfigurationsUsingSsl01() throws IOException {
-		LOGGER.info("Starting integration test...");
 		String string = TestStringConstants.STRING_01;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
@@ -703,7 +664,6 @@ public class ChainingIT {
 	
 	@Test
 	public void testThroughSocks5ServerSocketUsingSocks5ClientToChainedConfigurationsUsingSsl02() throws IOException {
-		LOGGER.info("Starting integration test...");
 		String string = TestStringConstants.STRING_02;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
@@ -714,7 +674,6 @@ public class ChainingIT {
 	
 	@Test
 	public void testThroughSocks5ServerSocketUsingSocks5ClientToChainedConfigurationsUsingSsl03() throws IOException {
-		LOGGER.info("Starting integration test...");
 		String string = TestStringConstants.STRING_03;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
@@ -727,7 +686,6 @@ public class ChainingIT {
 	
 	@Test
 	public void testThroughSocks5SocketUsingChainedSocks5ClientToConfigurations01() throws IOException {
-		LOGGER.info("Starting integration test...");
 		String string = TestStringConstants.STRING_01;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
@@ -738,7 +696,6 @@ public class ChainingIT {
 	
 	@Test
 	public void testThroughSocks5SocketUsingChainedSocks5ClientToConfigurations02() throws IOException {
-		LOGGER.info("Starting integration test...");
 		String string = TestStringConstants.STRING_02;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
@@ -749,7 +706,6 @@ public class ChainingIT {
 	
 	@Test
 	public void testThroughSocks5SocketUsingChainedSocks5ClientToConfigurations03() throws IOException {
-		LOGGER.info("Starting integration test...");
 		String string = TestStringConstants.STRING_03;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
@@ -760,7 +716,6 @@ public class ChainingIT {
 	
 	@Test
 	public void testThroughSocks5SocketUsingChainedSocks5ClientToConfigurationsEachUsingUserpassAuth01() throws IOException {
-		LOGGER.info("Starting integration test...");
 		String string = TestStringConstants.STRING_01;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
@@ -771,7 +726,6 @@ public class ChainingIT {
 	
 	@Test
 	public void testThroughSocks5SocketUsingChainedSocks5ClientToConfigurationsEachUsingUserpassAuth02() throws IOException {
-		LOGGER.info("Starting integration test...");
 		String string = TestStringConstants.STRING_02;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
@@ -782,7 +736,6 @@ public class ChainingIT {
 	
 	@Test
 	public void testThroughSocks5SocketUsingChainedSocks5ClientToConfigurationsEachUsingUserpassAuth03() throws IOException {
-		LOGGER.info("Starting integration test...");
 		String string = TestStringConstants.STRING_03;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
@@ -793,7 +746,6 @@ public class ChainingIT {
 	
 	@Test
 	public void testThroughSocks5SocketUsingChainedSocks5ClientToConfigurationsUsingSsl01() throws IOException {
-		LOGGER.info("Starting integration test...");
 		String string = TestStringConstants.STRING_01;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
@@ -804,7 +756,6 @@ public class ChainingIT {
 	
 	@Test
 	public void testThroughSocks5SocketUsingChainedSocks5ClientToConfigurationsUsingSsl02() throws IOException {
-		LOGGER.info("Starting integration test...");
 		String string = TestStringConstants.STRING_02;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
@@ -815,7 +766,6 @@ public class ChainingIT {
 	
 	@Test
 	public void testThroughSocks5SocketUsingChainedSocks5ClientToConfigurationsUsingSsl03() throws IOException {
-		LOGGER.info("Starting integration test...");
 		String string = TestStringConstants.STRING_03;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
@@ -826,7 +776,6 @@ public class ChainingIT {
 	
 	@Test
 	public void testThroughSocks5SocketUsingSocks5ClientToChainedConfigurations01() throws IOException {
-		LOGGER.info("Starting integration test...");
 		String string = TestStringConstants.STRING_01;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
@@ -837,7 +786,6 @@ public class ChainingIT {
 	
 	@Test
 	public void testThroughSocks5SocketUsingSocks5ClientToChainedConfigurations02() throws IOException {
-		LOGGER.info("Starting integration test...");
 		String string = TestStringConstants.STRING_02;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
@@ -848,7 +796,6 @@ public class ChainingIT {
 	
 	@Test
 	public void testThroughSocks5SocketUsingSocks5ClientToChainedConfigurations03() throws IOException {
-		LOGGER.info("Starting integration test...");
 		String string = TestStringConstants.STRING_03;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
@@ -859,7 +806,6 @@ public class ChainingIT {
 	
 	@Test
 	public void testThroughSocks5SocketUsingSocks5ClientToChainedConfigurationsEachUsingUserpassAuth01() throws IOException {
-		LOGGER.info("Starting integration test...");
 		String string = TestStringConstants.STRING_01;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
@@ -870,7 +816,6 @@ public class ChainingIT {
 	
 	@Test
 	public void testThroughSocks5SocketUsingSocks5ClientToChainedConfigurationsEachUsingUserpassAuth02() throws IOException {
-		LOGGER.info("Starting integration test...");
 		String string = TestStringConstants.STRING_02;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
@@ -881,7 +826,6 @@ public class ChainingIT {
 	
 	@Test
 	public void testThroughSocks5SocketUsingSocks5ClientToChainedConfigurationsEachUsingUserpassAuth03() throws IOException {
-		LOGGER.info("Starting integration test...");
 		String string = TestStringConstants.STRING_03;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
@@ -892,7 +836,6 @@ public class ChainingIT {
 	
 	@Test
 	public void testThroughSocks5SocketUsingSocks5ClientToChainedConfigurationsUsingSsl01() throws IOException {
-		LOGGER.info("Starting integration test...");
 		String string = TestStringConstants.STRING_01;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
@@ -903,7 +846,6 @@ public class ChainingIT {
 	
 	@Test
 	public void testThroughSocks5SocketUsingSocks5ClientToChainedConfigurationsUsingSsl02() throws IOException {
-		LOGGER.info("Starting integration test...");
 		String string = TestStringConstants.STRING_02;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
@@ -914,7 +856,6 @@ public class ChainingIT {
 	
 	@Test
 	public void testThroughSocks5SocketUsingSocks5ClientToChainedConfigurationsUsingSsl03() throws IOException {
-		LOGGER.info("Starting integration test...");
 		String string = TestStringConstants.STRING_03;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 

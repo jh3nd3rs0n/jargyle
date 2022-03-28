@@ -672,9 +672,9 @@ public final class UdpRelayServer {
 		}
 		this.idleStartTime = System.currentTimeMillis();
 		this.executor = Executors.newFixedThreadPool(2);
-		this.executor.execute(new InboundPacketsWorker(
-				new PacketsWorkerContext(this)));
 		this.executor.execute(new OutboundPacketsWorker(
+				new PacketsWorkerContext(this)));
+		this.executor.execute(new InboundPacketsWorker(
 				new PacketsWorkerContext(this)));
 		this.state = State.STARTED;
 	}

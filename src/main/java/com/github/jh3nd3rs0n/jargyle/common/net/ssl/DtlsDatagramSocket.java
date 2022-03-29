@@ -14,6 +14,7 @@ import java.util.List;
 
 import javax.net.ssl.SSLEngine;
 import javax.net.ssl.SSLEngineResult;
+import javax.net.ssl.SSLException;
 import javax.net.ssl.SSLParameters;
 import javax.net.ssl.SSLSession;
 
@@ -84,7 +85,7 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 		this.sslEngine.beginHandshake();
 		while (!endLoops) {
 			if (--loops < 0) {
-				throw new IOException(
+				throw new SSLException(
 						"Too many loops to produce handshake packets");
 			}
 			SSLEngineResult.HandshakeStatus hs = 
@@ -165,7 +166,7 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 							"BUFFER_OVERFLOW, handshake status is %s",
 							hs));
 					// the client maximum fragment size config does not work?
-					throw new IOException("Buffer overflow: incorrect client "
+					throw new SSLException("Buffer overflow: incorrect client "
 							+ "maximum fragment size");
 				} else if (rs.equals(SSLEngineResult.Status.BUFFER_UNDERFLOW)) {
 					LOGGER.debug(ObjectLogMessageHelper.objectLogMessage(
@@ -175,15 +176,15 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 					// bad packet, or the client maximum fragment size
 					// config does not work?
 					if (!hs.equals(SSLEngineResult.HandshakeStatus.NOT_HANDSHAKING)) {
-						throw new IOException("Buffer underflow: incorrect "
+						throw new SSLException("Buffer underflow: incorrect "
 								+ "client maximum fragment size");
 					} // otherwise, ignore this packet
 				} else if (rs.equals(SSLEngineResult.Status.CLOSED)) {
-					throw new IOException(String.format(
+					throw new SSLException(String.format(
 							"SSL engine closed, handshake status is %s", 
 							hs));
 				} else {
-					throw new IOException(String.format(
+					throw new SSLException(String.format(
 							"Can't reach here, result is %s", 
 							rs));
 				}
@@ -220,11 +221,11 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 						"Handshake status is NOT_HANDSHAKING, finish the loop"));
 				endLoops = true;
 			} else if (hs.equals(SSLEngineResult.HandshakeStatus.FINISHED)) {
-				throw new IOException(
+				throw new SSLException(
 						"Unexpected status, SSLEngine.getHandshakeStatus() "
 						+ "shouldn't return FINISHED");
 			} else {
-				throw new IOException(String.format(
+				throw new SSLException(String.format(
 						"Can't reach here, handshake status is %s", 
 						hs));
 			}
@@ -235,12 +236,12 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 				"Handshake finished, status is %s", 
 				hs));
 		if (this.sslEngine.getHandshakeSession() != null) {
-			throw new IOException(
+			throw new SSLException(
 					"Handshake finished, but handshake session is not null");
 		}
 		SSLSession session = this.sslEngine.getSession();
 		if (session == null) {
-			throw new IOException("Handshake finished, but session is null");
+			throw new SSLException("Handshake finished, but session is null");
 		}
 		LOGGER.debug(ObjectLogMessageHelper.objectLogMessage(
 				this, 
@@ -255,7 +256,7 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 		// According to the spec, SSLEngine.getHandshakeStatus() can't
 		// return FINISHED.
 		if (!hs.equals(SSLEngineResult.HandshakeStatus.NOT_HANDSHAKING)) {
-			throw new IOException(String.format(
+			throw new SSLException(String.format(
 					"Unexpected handshake status %s", hs));
 		}
 		this.handshakeCompleted = true;
@@ -276,15 +277,15 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 		outNetData.flip();
 		SSLEngineResult.Status rs = r.getStatus();
 		if (rs.equals(SSLEngineResult.Status.BUFFER_OVERFLOW)) {
-			throw new IOException("Buffer overflow during wrapping");
+			throw new SSLException("Buffer overflow during wrapping");
 		} else if (rs.equals(SSLEngineResult.Status.BUFFER_UNDERFLOW)) {
-			throw new IOException("Buffer underflow during wrapping");
+			throw new SSLException("Buffer underflow during wrapping");
 		} else if (rs.equals(SSLEngineResult.Status.CLOSED)) {
-			throw new IOException("SSLEngine has closed");
+			throw new SSLException("SSLEngine has closed");
 		} else if (rs.equals(SSLEngineResult.Status.OK)) {
 			// OK
 		} else {
-			throw new IOException(String.format(
+			throw new SSLException(String.format(
 					"Can't reach here, result is %s", 
 					rs));
 		}
@@ -306,7 +307,7 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 		int loops = MAX_HANDSHAKE_LOOPS / 2;
 		while (!endLoops) {
 			if (--loops < 0) {
-				throw new IOException(
+				throw new SSLException(
 						"Too many loops to produce handshake packets");
 			}
 			ByteBuffer outAppData = ByteBuffer.allocate(0);
@@ -325,7 +326,7 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 					hs));
 			if (rs.equals(SSLEngineResult.Status.BUFFER_OVERFLOW)) {
 				// the client maximum fragment size config does not work?
-				throw new IOException("Buffer overflow: incorrect server "
+				throw new SSLException("Buffer overflow: incorrect server "
 						+ "maximum fragment size");
 			} else if (rs.equals(SSLEngineResult.Status.BUFFER_UNDERFLOW)) {
 				LOGGER.debug(ObjectLogMessageHelper.objectLogMessage(
@@ -338,15 +339,15 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 				// bad packet, or the client maximum fragment size
 				// config does not work?
 				if (!hs.equals(SSLEngineResult.HandshakeStatus.NOT_HANDSHAKING)) {
-					throw new IOException("Buffer underflow: incorrect server "
+					throw new SSLException("Buffer underflow: incorrect server "
 							+ "maximum fragment size");
 				} // otherwise, ignore this packet
 			} else if (rs.equals(SSLEngineResult.Status.CLOSED)) {
-				throw new IOException("SSLEngine has closed");
+				throw new SSLException("SSLEngine has closed");
 			} else if (rs.equals(SSLEngineResult.Status.OK)) {
 				// OK
 			} else {
-				throw new IOException(String.format(
+				throw new SSLException(String.format(
 						"Can't reach here, result is %s", 
 						rs));
 			}
@@ -378,11 +379,11 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 				} else if (nhs.equals(SSLEngineResult.HandshakeStatus.NEED_WRAP)) {
 					endInnerLoop = true;
 				} else if (nhs.equals(SSLEngineResult.HandshakeStatus.FINISHED)) {
-					throw new IOException("Unexpected status, "
+					throw new SSLException("Unexpected status, "
 							+ "SSLEngine.getHandshakeStatus() shouldn't return "
 							+ "FINISHED");
 				} else {
-					throw new IOException(String.format(
+					throw new SSLException(String.format(
 							"Can't reach here, handshake status is %s", 
 							nhs));
 				}
@@ -402,7 +403,7 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 		int loops = MAX_APP_READ_LOOPS;
 		while (true) {
 			if (--loops < 0) {
-				throw new IOException(
+				throw new SSLException(
 						"Too many loops to receive application data");
 			}
 			byte[] buffer = new byte[this.getMaximumPacketSize()];
@@ -442,13 +443,19 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 		}
 		SSLEngineResult.HandshakeStatus hs = this.sslEngine.getHandshakeStatus();
 		if (hs.equals(SSLEngineResult.HandshakeStatus.NEED_TASK)) {
-			throw new IOException("Handshake shouldn't need additional tasks");
+			throw new SSLException("Handshake shouldn't need additional tasks");
 		}
 	}
 
 	@Override
 	public void send(final DatagramPacket p) throws IOException {
-		this.handshakeIfNotCompleted();
+		if (!this.getUseClientMode() && !this.handshakeCompleted) {
+			throw new IllegalStateException(
+					"Handshake must be initiated and completed by receive() "
+					+ "before invoking send()");
+		} else {
+			this.handshakeIfNotCompleted();
+		}
 		ByteBuffer outAppData = ByteBuffer.wrap(p.getData());
 		// Note: have not considered the packet losses
 		List<DatagramPacket> packets = this.produceApplicationPackets(
@@ -506,12 +513,12 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 			} catch (InterruptedException e) {
 				Thread.currentThread().interrupt();
 			}
-			if (soTimeout > 0) { continue; }
+			if (soTimeout == 0) { continue; }
 			long timeSinceWaitStartTime = 
 					System.currentTimeMillis() - waitStartTime;
 			if (timeSinceWaitStartTime >= soTimeout) {
 				throw new SocketTimeoutException(
-						"timeout for waiting for completed handshake has been "
+						"Timeout for waiting for completed handshake has been "
 						+ "reached");
 			}
 		}

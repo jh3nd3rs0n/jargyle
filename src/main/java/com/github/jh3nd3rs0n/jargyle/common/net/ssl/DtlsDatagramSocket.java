@@ -28,6 +28,7 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 	private static final Logger LOGGER = LoggerFactory.getLogger(
 			DtlsDatagramSocket.class);
 
+	private static final int HALF_SECOND = 500;
 	private static final int MAX_APP_READ_LOOPS = 60;
 	private static final int MAX_HANDSHAKE_LOOPS = 200;
 	
@@ -393,7 +394,11 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 	
 	@Override
 	public synchronized void receive(final DatagramPacket p) throws IOException {
-		this.handshakeIfNotCompleted();
+		if (this.getUseClientMode()) {
+			this.waitForCompletedHandshake();
+		} else {
+			this.handshakeIfNotCompleted();
+		}
 		int loops = MAX_APP_READ_LOOPS;
 		while (true) {
 			if (--loops < 0) {
@@ -443,7 +448,7 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 
 	@Override
 	public void send(final DatagramPacket p) throws IOException {
-		this.handshakeIfNotCompleted();		
+		this.handshakeIfNotCompleted();
 		ByteBuffer outAppData = ByteBuffer.wrap(p.getData());
 		// Note: have not considered the packet losses
 		List<DatagramPacket> packets = this.produceApplicationPackets(
@@ -490,6 +495,26 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 			.append(this.getUseClientMode())
 			.append("]");
 		return builder.toString();
+	}
+	
+	private void waitForCompletedHandshake() throws IOException {
+		int soTimeout = super.getSoTimeout();
+		long waitStartTime = System.currentTimeMillis();
+		while (!this.handshakeCompleted) {
+			try {
+				Thread.sleep(HALF_SECOND);
+			} catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
+			}
+			if (soTimeout > 0) { continue; }
+			long timeSinceWaitStartTime = 
+					System.currentTimeMillis() - waitStartTime;
+			if (timeSinceWaitStartTime >= soTimeout) {
+				throw new SocketTimeoutException(
+						"timeout for waiting for completed handshake has been "
+						+ "reached");
+			}
+		}
 	}
 
 }

@@ -7,7 +7,6 @@ import java.net.InetAddress;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.github.jh3nd3rs0n.jargyle.ResourceHelper;
@@ -472,15 +471,6 @@ public class ChainingIT {
 		assertEquals(string, returningString);
 	}
 	
-	/* 
-	 * KNOWN ISSUE: Tests stall for the following workflows:
-	 * 
-	 * Java CI with Maven (Ubuntu Latest)
-	 * Java CI with Maven (Windows Latest)
-	 * 
-	 */ 
-	
-	@Ignore
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsUsingSsl01() throws IOException {
 		String string = TestStringConstants.STRING_01;
@@ -491,7 +481,6 @@ public class ChainingIT {
 		assertEquals(string, returningString);
 	}
 	
-	@Ignore
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsUsingSsl02() throws IOException {
 		String string = TestStringConstants.STRING_02;
@@ -502,7 +491,6 @@ public class ChainingIT {
 		assertEquals(string, returningString);
 	}
 	
-	@Ignore
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsUsingSsl03() throws IOException {
 		String string = TestStringConstants.STRING_03;

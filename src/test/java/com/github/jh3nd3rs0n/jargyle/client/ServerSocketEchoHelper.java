@@ -129,12 +129,7 @@ public final class ServerSocketEchoHelper {
 			try {
 				BufferedReader reader = new BufferedReader(
 						new InputStreamReader(this.clientFacingSocket.getInputStream()));
-				long startTime = System.currentTimeMillis();
 				String inputLine = reader.readLine();
-				long endTime = System.currentTimeMillis();
-				if (inputLine == null) {
-					return;
-				}
 				int index = inputLine.lastIndexOf(':');
 				String host = inputLine.substring(0, index);
 				int port = Integer.parseInt(inputLine.substring(index + 1));
@@ -143,11 +138,6 @@ public final class ServerSocketEchoHelper {
 				InputStream socketIn = socket.getInputStream();
 				OutputStream socketOut = socket.getOutputStream();
 				String string = this.echoServer.getString();
-				try {
-					Thread.sleep(endTime - startTime);
-				} catch (InterruptedException e) {
-					Thread.currentThread().interrupt();
-				}
 				byte[] stringBytes = string.getBytes();
 				IoHelper.writeThenFlush(stringBytes, socketOut);
 				byte[] bytes = IoHelper.readFrom(socketIn);
@@ -231,6 +221,13 @@ public final class ServerSocketEchoHelper {
 			byte[] bytes = IoHelper.readFrom(socketIn);
 			String str = new String(bytes);
 			IoHelper.writeThenFlush(str.getBytes(), socketOut);
+			while ((returningString = echoServer.getReturningString()) == null) {
+				try {
+					Thread.sleep(SLEEP_TIME);
+				} catch (InterruptedException e) {
+					Thread.currentThread().interrupt();
+				}				
+			}
 		} finally {
 			if (socket != null) {
 				socket.close();
@@ -254,9 +251,6 @@ public final class ServerSocketEchoHelper {
 			} catch (InterruptedException e) {
 				Thread.currentThread().interrupt();
 			}
-		}
-		if (echoServer != null) {
-			returningString = echoServer.getReturningString();
 		}
 		return returningString;
 	}

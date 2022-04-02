@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-public class SocksReplyTest {
+public class Socks5ReplyTest {
 
 	@Test
 	public void testNewInstanceReplyStringInt01() {

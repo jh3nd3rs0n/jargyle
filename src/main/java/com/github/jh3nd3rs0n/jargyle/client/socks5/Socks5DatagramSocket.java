@@ -13,6 +13,9 @@ import java.net.SocketOption;
 import java.nio.channels.DatagramChannel;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Command;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
@@ -33,6 +36,9 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 		}
 		
 		private static final int HALF_SECOND = 500;
+		
+		private static final Logger LOGGER = LoggerFactory.getLogger(
+				Socks5DatagramSocketImpl.class);
 		
 		private AssociationStatus associationStatus;
 		private boolean connected;
@@ -114,7 +120,17 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			if (!this.datagramSocket.isBound()) {
 				throw new SocketException("socket is not bound");
 			}
-			this.socks5UdpAssociateIfNotAssociated();
+			// this.socks5UdpAssociateIfNotAssociated();
+			if (this.associationStatus.equals(AssociationStatus.ASSOCIATING)) {
+				LOGGER.info("{}: Waiting for completed association", this.datagramSocket.getLocalSocketAddress());
+				this.waitForCompleteAssociation();
+				LOGGER.info("{}: Finished waiting for completed association", this.datagramSocket.getLocalSocketAddress());
+			} else if (this.associationStatus.equals(
+					AssociationStatus.UNASSOCIATED)) {
+				LOGGER.info("{}: Associating...", this.datagramSocket.getLocalSocketAddress());
+				this.socks5UdpAssociate();
+				LOGGER.info("{}: ...Associated", this.datagramSocket.getLocalSocketAddress());
+			}
 			this.datagramSocket.receive(p);
 			UdpRequestHeader header = null; 
 			try {
@@ -147,7 +163,17 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 				throw new IllegalArgumentException(
 						"packet address and connected socket address must be the same");
 			}
-			this.socks5UdpAssociateIfNotAssociated();
+			// this.socks5UdpAssociateIfNotAssociated();
+			if (this.associationStatus.equals(AssociationStatus.ASSOCIATING)) {
+				LOGGER.info("{}: Waiting for completed association", this.datagramSocket.getLocalSocketAddress());
+				this.waitForCompleteAssociation();
+				LOGGER.info("{}: Finished waiting for completed association", this.datagramSocket.getLocalSocketAddress());
+			} else if (this.associationStatus.equals(
+					AssociationStatus.UNASSOCIATED)) {
+				LOGGER.info("{}: Associating...", this.datagramSocket.getLocalSocketAddress());
+				this.socks5UdpAssociate();
+				LOGGER.info("{}: ...Associated", this.datagramSocket.getLocalSocketAddress());
+			}
 			String address = p.getAddress().getHostAddress();
 			int port = p.getPort();
 			byte[] headerBytes = UdpRequestHeader.newInstance(

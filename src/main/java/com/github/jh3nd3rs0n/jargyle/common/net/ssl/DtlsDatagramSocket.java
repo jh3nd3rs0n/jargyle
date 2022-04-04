@@ -26,6 +26,12 @@ import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
 
 public final class DtlsDatagramSocket extends FilterDatagramSocket {
 	
+	private static enum HandshakeStatus {
+		UNINITIATED,
+		INITIATED,
+		COMPLETED
+	}
+	
 	private static final Logger LOGGER = LoggerFactory.getLogger(
 			DtlsDatagramSocket.class);
 
@@ -33,14 +39,14 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 	private static final int MAX_APP_READ_LOOPS = 60;
 	private static final int MAX_HANDSHAKE_LOOPS = 200;
 	
-	private boolean handshakeCompleted;
+	private HandshakeStatus handshakeStatus;
 	private final SSLEngine sslEngine;
 
 	DtlsDatagramSocket(
 			final DatagramSocket datagramSock, 
 			final SSLEngine engine) throws SocketException {
 		super(datagramSock);
-		this.handshakeCompleted = false;
+		this.handshakeStatus = HandshakeStatus.UNINITIATED;
 		this.sslEngine = engine;
 	}
 
@@ -80,6 +86,7 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 					"DtlsDatagramSocket must be connected before handshake "
 					+ "can be performed");
 		}
+		this.handshakeStatus = HandshakeStatus.INITIATED;
 		boolean endLoops = false;
 		int loops = MAX_HANDSHAKE_LOOPS;
 		this.sslEngine.beginHandshake();
@@ -259,11 +266,13 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 			throw new SSLException(String.format(
 					"Unexpected handshake status %s", hs));
 		}
-		this.handshakeCompleted = true;
+		this.handshakeStatus = HandshakeStatus.COMPLETED;
 	}
 	
 	private void handshakeIfNotCompleted() throws IOException {
-		if (!this.handshakeCompleted) {
+		if (this.handshakeStatus.equals(HandshakeStatus.INITIATED)) {
+			this.waitForCompletedHandshake();
+		} else if (this.handshakeStatus.equals(HandshakeStatus.UNINITIATED)) {
 			this.handshake();
 		}
 	}
@@ -395,11 +404,7 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 	
 	@Override
 	public synchronized void receive(final DatagramPacket p) throws IOException {
-		if (this.getUseClientMode()) {
-			this.waitForCompletedHandshake();
-		} else {
-			this.handshakeIfNotCompleted();
-		}
+		this.handshakeIfNotCompleted();
 		int loops = MAX_APP_READ_LOOPS;
 		while (true) {
 			if (--loops < 0) {
@@ -449,13 +454,7 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 
 	@Override
 	public void send(final DatagramPacket p) throws IOException {
-		if (!this.getUseClientMode() && !this.handshakeCompleted) {
-			throw new IllegalStateException(
-					"Handshake must be initiated and completed by receive() "
-					+ "before invoking send()");
-		} else {
-			this.handshakeIfNotCompleted();
-		}
+		this.handshakeIfNotCompleted();
 		ByteBuffer outAppData = ByteBuffer.wrap(p.getData());
 		// Note: have not considered the packet losses
 		List<DatagramPacket> packets = this.produceApplicationPackets(
@@ -507,7 +506,7 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 	private void waitForCompletedHandshake() throws IOException {
 		int soTimeout = super.getSoTimeout();
 		long waitStartTime = System.currentTimeMillis();
-		while (!this.handshakeCompleted) {
+		while (!this.handshakeStatus.equals(HandshakeStatus.COMPLETED)) {
 			try {
 				Thread.sleep(HALF_SECOND);
 			} catch (InterruptedException e) {
@@ -517,7 +516,7 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 			long timeSinceWaitStartTime = 
 					System.currentTimeMillis() - waitStartTime;
 			if (timeSinceWaitStartTime >= soTimeout) {
-				throw new SocketTimeoutException(
+				throw new SSLException(
 						"Timeout for waiting for completed handshake has been "
 						+ "reached");
 			}

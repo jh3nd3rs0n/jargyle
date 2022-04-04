@@ -202,9 +202,8 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 		private void socks5UdpAssociateIfNotAssociated() throws IOException {
 			if (this.associationStatus.equals(AssociationStatus.ASSOCIATING)) {
 				this.waitForCompleteAssociation();
-				return;
-			}
-			if (this.associationStatus.equals(AssociationStatus.UNASSOCIATED)) {
+			} else if (this.associationStatus.equals(
+					AssociationStatus.UNASSOCIATED)) {
 				this.socks5UdpAssociate();
 			}
 		}

@@ -78,6 +78,7 @@ public final class Routes {
 		SocksServerUri socksServerUri = null;
 		List<Property<? extends Object>> properties = 
 				new ArrayList<Property<? extends Object>>();
+		properties.add(Socks5PropertySpecConstants.SOCKS5_UDP_ASSOCIATE_USE_CLIENT_MODE.newProperty(Boolean.FALSE));		
 		SocksClient chainedSocksClient = null;
 		String routeId = null;
 		for (Setting<Object> setting : settings.toList()) {

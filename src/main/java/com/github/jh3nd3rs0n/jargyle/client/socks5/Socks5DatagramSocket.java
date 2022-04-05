@@ -11,11 +11,16 @@ import java.net.SocketAddress;
 import java.net.SocketException;
 import java.net.SocketOption;
 import java.nio.channels.DatagramChannel;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.github.jh3nd3rs0n.jargyle.client.Socks5PropertySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Command;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
@@ -35,12 +40,39 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			ASSOCIATED
 		}
 		
+		private static final class AssociationStatusHelper {
+			
+			private static final Map<UUID, AssociationStatus> MAP =
+					Collections.synchronizedMap(new HashMap<UUID, AssociationStatus>());
+			
+			public static boolean has(
+					final UUID uuid, final AssociationStatus associationStatus) {
+				if (!MAP.containsKey(uuid)) {
+					return false;
+				}
+				AssociationStatus value = MAP.get(uuid);
+				return value.equals(associationStatus);
+			}
+			
+			public static void put(
+					final UUID uuid, final AssociationStatus associationStatus) {
+				MAP.put(uuid, associationStatus);
+			}
+			
+			public static void remove(final UUID uuid) {
+				MAP.remove(uuid);
+			}
+			
+			private AssociationStatusHelper() { }
+			
+		}
+		
 		private static final int HALF_SECOND = 500;
 		
 		private static final Logger LOGGER = LoggerFactory.getLogger(
 				Socks5DatagramSocketImpl.class);
 		
-		private AssociationStatus associationStatus;
+		private UUID associationStatusUuid;
 		private boolean connected;
 		private DatagramSocket datagramSocket;
 		private DatagramSocket originalDatagramSocket;
@@ -58,7 +90,9 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			DatagramSocket originalDatagramSock = new DatagramSocket(null);
 			Socket originalSock = new Socket();
 			client.configureInternalSocket(originalSock);
-			this.associationStatus = AssociationStatus.UNASSOCIATED;
+			UUID statusUuid = UUID.randomUUID();
+			AssociationStatusHelper.put(statusUuid, AssociationStatus.UNASSOCIATED);
+			this.associationStatusUuid = statusUuid;
 			this.connected = false;
 			this.datagramSocket = originalDatagramSock;
 			this.originalDatagramSocket = originalDatagramSock;
@@ -73,7 +107,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 		}
 		
 		public void close() {
-			this.associationStatus = AssociationStatus.UNASSOCIATED;
+			AssociationStatusHelper.remove(this.associationStatusUuid);
 			this.datagramSocket.close();
 			try {
 				this.socket.close();
@@ -121,15 +155,24 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 				throw new SocketException("socket is not bound");
 			}
 			// this.socks5UdpAssociateIfNotAssociated();
-			if (this.associationStatus.equals(AssociationStatus.ASSOCIATING)) {
+			if (this.socks5Client.getProperties().getValue(
+					Socks5PropertySpecConstants.SOCKS5_UDP_ASSOCIATE_USE_CLIENT_MODE).booleanValue()) {
 				LOGGER.info("{}: Waiting for completed association", this.datagramSocket.getLocalSocketAddress());
 				this.waitForCompleteAssociation();
 				LOGGER.info("{}: Finished waiting for completed association", this.datagramSocket.getLocalSocketAddress());
-			} else if (this.associationStatus.equals(
-					AssociationStatus.UNASSOCIATED)) {
-				LOGGER.info("{}: Associating...", this.datagramSocket.getLocalSocketAddress());
-				this.socks5UdpAssociate();
-				LOGGER.info("{}: ...Associated", this.datagramSocket.getLocalSocketAddress());
+			} else {
+				if (AssociationStatusHelper.has(
+						this.associationStatusUuid, AssociationStatus.ASSOCIATING)) {
+					LOGGER.info("{}: Waiting for completed association", this.datagramSocket.getLocalSocketAddress());
+					this.waitForCompleteAssociation();
+					LOGGER.info("{}: Finished waiting for completed association", this.datagramSocket.getLocalSocketAddress());
+				} 
+				else if (AssociationStatusHelper.has(
+						this.associationStatusUuid, AssociationStatus.UNASSOCIATED)) {
+					LOGGER.info("{}: Associating...", this.datagramSocket.getLocalSocketAddress());
+					this.socks5UdpAssociate();
+					LOGGER.info("{}: ...Associated", this.datagramSocket.getLocalSocketAddress());
+				}
 			}
 			this.datagramSocket.receive(p);
 			UdpRequestHeader header = null; 
@@ -164,15 +207,23 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 						"packet address and connected socket address must be the same");
 			}
 			// this.socks5UdpAssociateIfNotAssociated();
-			if (this.associationStatus.equals(AssociationStatus.ASSOCIATING)) {
+			if (this.socks5Client.getProperties().getValue(
+					Socks5PropertySpecConstants.SOCKS5_UDP_ASSOCIATE_USE_CLIENT_MODE).booleanValue()) {
+				if (AssociationStatusHelper.has(
+						this.associationStatusUuid, AssociationStatus.ASSOCIATING)) {
+					LOGGER.info("{}: Waiting for completed association", this.datagramSocket.getLocalSocketAddress());
+					this.waitForCompleteAssociation();
+					LOGGER.info("{}: Finished waiting for completed association", this.datagramSocket.getLocalSocketAddress());
+				} else if (AssociationStatusHelper.has(
+						this.associationStatusUuid, AssociationStatus.UNASSOCIATED)) {
+					LOGGER.info("{}: Associating...", this.datagramSocket.getLocalSocketAddress());
+					this.socks5UdpAssociate();
+					LOGGER.info("{}: ...Associated", this.datagramSocket.getLocalSocketAddress());
+				}
+			} else {
 				LOGGER.info("{}: Waiting for completed association", this.datagramSocket.getLocalSocketAddress());
 				this.waitForCompleteAssociation();
-				LOGGER.info("{}: Finished waiting for completed association", this.datagramSocket.getLocalSocketAddress());
-			} else if (this.associationStatus.equals(
-					AssociationStatus.UNASSOCIATED)) {
-				LOGGER.info("{}: Associating...", this.datagramSocket.getLocalSocketAddress());
-				this.socks5UdpAssociate();
-				LOGGER.info("{}: ...Associated", this.datagramSocket.getLocalSocketAddress());
+				LOGGER.info("{}: Finished waiting for completed association", this.datagramSocket.getLocalSocketAddress());				
 			}
 			String address = p.getAddress().getHostAddress();
 			int port = p.getPort();
@@ -189,7 +240,8 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 		}
 		
 		public void socks5UdpAssociate() throws IOException {
-			this.associationStatus = AssociationStatus.ASSOCIATING;
+			AssociationStatusHelper.put(
+					this.associationStatusUuid, AssociationStatus.ASSOCIATING);
 			if (!this.socket.equals(this.originalSocket)) {
 				this.socket = this.originalSocket;
 			}
@@ -217,7 +269,8 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 					socks5Rep.getServerBoundPort());
 			DatagramSocket datagramSck = methodEncapsulation.getDatagramSocket(
 					datagramSock);
-			this.associationStatus = AssociationStatus.ASSOCIATED;
+			AssociationStatusHelper.put(
+					this.associationStatusUuid, AssociationStatus.ASSOCIATED);
 			this.datagramSocket = datagramSck;
 			this.udpRelayServerInetAddress = InetAddress.getByName(
 					socks5Rep.getServerBoundAddress());
@@ -226,10 +279,11 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 		}
 		
 		private void socks5UdpAssociateIfNotAssociated() throws IOException {
-			if (this.associationStatus.equals(AssociationStatus.ASSOCIATING)) {
+			if (AssociationStatusHelper.has(
+					this.associationStatusUuid, AssociationStatus.ASSOCIATING)) {
 				this.waitForCompleteAssociation();
-			} else if (this.associationStatus.equals(
-					AssociationStatus.UNASSOCIATED)) {
+			} else if (AssociationStatusHelper.has(
+					this.associationStatusUuid, AssociationStatus.UNASSOCIATED)) {
 				this.socks5UdpAssociate();
 			}
 		}
@@ -237,8 +291,8 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 		private void waitForCompleteAssociation() throws IOException {
 			int soTimeout = this.socket.getSoTimeout();
 			long waitStartTime = System.currentTimeMillis();
-			while (!this.associationStatus.equals(
-					AssociationStatus.ASSOCIATED)) {
+			while (!AssociationStatusHelper.has(
+					this.associationStatusUuid, AssociationStatus.ASSOCIATED)) {
 				try {
 					Thread.sleep(HALF_SECOND);
 				} catch (InterruptedException e) {

@@ -10,6 +10,7 @@ import java.net.Socket;
 import java.net.SocketAddress;
 import java.net.SocketException;
 import java.net.SocketOption;
+import java.net.SocketTimeoutException;
 import java.nio.channels.DatagramChannel;
 import java.util.Collections;
 import java.util.HashMap;
@@ -154,6 +155,10 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			this.remoteSocketAddress = null;
 		}
 		
+		public synchronized boolean isAssociated() {
+			return this.associated;
+		}
+		
 		public void receive(final DatagramPacket p) throws IOException {
 			if (this.datagramSocket.isClosed()) {
 				throw new SocketException("socket is closed");
@@ -177,9 +182,19 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 				}				
 			}
 			*/
+			/*
 			LOGGER.info("{}: Waiting for completed association", this.datagramSocket.getLocalSocketAddress());
 			this.waitForCompleteAssociation();
 			LOGGER.info("{}: Finished waiting for completed association", this.datagramSocket.getLocalSocketAddress());
+			*/
+			/*
+			if (!this.isAssociated()) {
+				LOGGER.info("{}: Associating...", this.datagramSocket.getLocalSocketAddress());
+				this.socks5UdpAssociate();
+				LOGGER.info("{}: ...Associated", this.datagramSocket.getLocalSocketAddress());
+			}
+			*/
+			this.waitForCompleteAssociation();
 			this.datagramSocket.receive(p);
 			UdpRequestHeader header = null; 
 			try {
@@ -269,9 +284,12 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			if (!this.socket.equals(this.originalSocket)) {
 				this.socket = this.originalSocket;
 			}
+			LOGGER.info("{}: Connecting to SOCKS server...", this.datagramSocket.getLocalSocketAddress());
 			Socket sock = this.socks5Client.getConnectedInternalSocket(
 					this.socket, true);
+			LOGGER.info("{}: Negotiating method...", this.datagramSocket.getLocalSocketAddress());
 			Method method = this.socks5Client.negotiateMethod(sock);
+			LOGGER.info("{}: Performing method subnegotiation...", this.datagramSocket.getLocalSocketAddress());
 			MethodEncapsulation methodEncapsulation = 
 					this.socks5Client.doMethodSubnegotiation(method, sock);
 			Socket sck = methodEncapsulation.getSocket();
@@ -285,12 +303,16 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 					Command.UDP_ASSOCIATE, 
 					address, 
 					prt);
+			LOGGER.info("{}: Sending UDP ASSOCIATE request...", this.datagramSocket.getLocalSocketAddress());
 			this.socks5Client.sendSocks5Request(socks5Req, sck);
+			LOGGER.info("{}: Receiving UDP ASSOCIATE request...", this.datagramSocket.getLocalSocketAddress());
 			Socks5Reply socks5Rep = this.socks5Client.receiveSocks5Reply(sck); 
+			LOGGER.info("{}: Received UDP ASSOCIATE request...", this.datagramSocket.getLocalSocketAddress());
 			datagramSock = this.socks5Client.getConnectedInternalDatagramSocket(
 					datagramSock,
 					this.socks5Client.getSocksServerUri().getHost(),
 					socks5Rep.getServerBoundPort());
+			LOGGER.info("{}: Connected DatagramSocket to UDP relay server...", this.datagramSocket.getLocalSocketAddress());
 			DatagramSocket datagramSck = methodEncapsulation.getDatagramSocket(
 					datagramSock);
 			/*
@@ -353,12 +375,13 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 				long timeSinceWaitStartTime = 
 						System.currentTimeMillis() - waitStartTime;
 				if (timeSinceWaitStartTime >= soTimeout) {
-					throw new IOException(
+					throw new SocketTimeoutException(
 							"timeout for waiting for complete UDP association "
 							+ "has been reached");
 				}
 			}			
 		}
+		
 	}
 	
 	private final Socks5Client socks5Client;

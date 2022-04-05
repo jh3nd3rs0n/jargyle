@@ -467,9 +467,11 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 	public synchronized void receive(final DatagramPacket p) throws IOException {
 		// this.handshakeIfNotCompleted();
 		if (this.getUseClientMode()) {
+			/*
 			LOGGER.info("{}: Waiting for handshaked to be completed", this.getLocalSocketAddress());
 			this.waitForCompletedHandshake();
 			LOGGER.info("{}: Finished waiting for handshaked to be completed", this.getLocalSocketAddress());
+			*/
 		} else {
 			/*
 			if (HandshakeStatusHelper.has(
@@ -577,11 +579,13 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 			this.waitForCompletedHandshake();
 			LOGGER.info("{}: Finished waiting for handshaked to be completed", this.getLocalSocketAddress());
 			*/
+			/*
 			if (!this.handshakeCompleted) {
 				throw new IllegalStateException(
 						"Handshake must be initiated and completed by receive() "
 						+ "before invoking send()");
 			}
+			*/
 		}
 		ByteBuffer outAppData = ByteBuffer.wrap(p.getData());
 		// Note: have not considered the packet losses

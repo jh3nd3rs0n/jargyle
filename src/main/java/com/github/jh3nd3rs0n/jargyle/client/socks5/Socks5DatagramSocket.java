@@ -76,7 +76,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 				Socks5DatagramSocketImpl.class);
 		
 		// private UUID associationStatusUuid;
-		private boolean associated;
+		private volatile boolean associated;
 		private boolean connected;
 		private DatagramSocket datagramSocket;
 		private DatagramSocket originalDatagramSocket;

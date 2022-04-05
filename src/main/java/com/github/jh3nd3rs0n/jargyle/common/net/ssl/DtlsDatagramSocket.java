@@ -74,7 +74,7 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 	private static final int MAX_HANDSHAKE_LOOPS = 200;
 	
 	// private UUID handshakeStatusUuid;
-	private boolean handshakeCompleted;
+	private volatile boolean handshakeCompleted;
 	private final SSLEngine sslEngine;
 
 	DtlsDatagramSocket(

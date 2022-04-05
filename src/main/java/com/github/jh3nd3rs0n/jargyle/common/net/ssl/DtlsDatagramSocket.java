@@ -126,8 +126,10 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 					"DtlsDatagramSocket must be connected before handshake "
 					+ "can be performed");
 		}
+		/*
 		HandshakeStatusHelper.put(
 				this.handshakeStatusUuid, HandshakeStatus.INITIATED);
+		*/
 		boolean endLoops = false;
 		int loops = MAX_HANDSHAKE_LOOPS;
 		this.sslEngine.beginHandshake();
@@ -454,6 +456,7 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 			this.waitForCompletedHandshake();
 			LOGGER.info("{}: Finished waiting for handshaked to be completed", this.getLocalSocketAddress());
 		} else {
+			/*
 			if (HandshakeStatusHelper.has(
 					this.handshakeStatusUuid, HandshakeStatus.INITIATED)) {
 				LOGGER.info("{}: Waiting for handshaked to be completed", this.getLocalSocketAddress());
@@ -465,6 +468,13 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 				this.handshake();
 				LOGGER.info("{}: Handshake completed", this.getLocalSocketAddress());
 			}
+			*/
+			if (!HandshakeStatusHelper.has(
+					this.handshakeStatusUuid, HandshakeStatus.COMPLETED)) {
+				LOGGER.info("{}: Initiating handshake", this.getLocalSocketAddress());
+				this.handshake();
+				LOGGER.info("{}: Handshake completed", this.getLocalSocketAddress());
+			}			
 		}
 		int loops = MAX_APP_READ_LOOPS;
 		while (true) {
@@ -517,6 +527,7 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 	public void send(final DatagramPacket p) throws IOException {
 		// this.handshakeIfNotCompleted();
 		if (this.getUseClientMode()) {
+			/*
 			if (HandshakeStatusHelper.has(
 					this.handshakeStatusUuid, HandshakeStatus.INITIATED)) {
 				LOGGER.info("{}: Waiting for handshaked to be completed", this.getLocalSocketAddress());
@@ -528,7 +539,14 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 				this.handshake();
 				LOGGER.info("{}: Handshake completed", this.getLocalSocketAddress());
 			}
-		}
+			*/
+			if (!HandshakeStatusHelper.has(
+					this.handshakeStatusUuid, HandshakeStatus.COMPLETED)) {
+				LOGGER.info("{}: Initiating handshake", this.getLocalSocketAddress());
+				this.handshake();
+				LOGGER.info("{}: Handshake completed", this.getLocalSocketAddress());
+			}
+		} 
 		/*
 		else {
 			LOGGER.info("{}: Waiting for handshaked to be completed", this.getLocalSocketAddress());

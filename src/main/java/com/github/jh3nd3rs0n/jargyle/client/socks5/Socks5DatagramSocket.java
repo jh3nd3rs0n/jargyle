@@ -161,18 +161,25 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 				this.waitForCompleteAssociation();
 				LOGGER.info("{}: Finished waiting for completed association", this.datagramSocket.getLocalSocketAddress());
 			} else {
+				/*
 				if (AssociationStatusHelper.has(
 						this.associationStatusUuid, AssociationStatus.ASSOCIATING)) {
 					LOGGER.info("{}: Waiting for completed association", this.datagramSocket.getLocalSocketAddress());
 					this.waitForCompleteAssociation();
 					LOGGER.info("{}: Finished waiting for completed association", this.datagramSocket.getLocalSocketAddress());
-				} 
-				else if (AssociationStatusHelper.has(
+				} else if (AssociationStatusHelper.has(
 						this.associationStatusUuid, AssociationStatus.UNASSOCIATED)) {
 					LOGGER.info("{}: Associating...", this.datagramSocket.getLocalSocketAddress());
 					this.socks5UdpAssociate();
 					LOGGER.info("{}: ...Associated", this.datagramSocket.getLocalSocketAddress());
 				}
+				*/
+				if (!AssociationStatusHelper.has(
+						this.associationStatusUuid, AssociationStatus.ASSOCIATED)) {
+					LOGGER.info("{}: Associating...", this.datagramSocket.getLocalSocketAddress());
+					this.socks5UdpAssociate();
+					LOGGER.info("{}: ...Associated", this.datagramSocket.getLocalSocketAddress());
+				}				
 			}
 			this.datagramSocket.receive(p);
 			UdpRequestHeader header = null; 
@@ -209,17 +216,26 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			// this.socks5UdpAssociateIfNotAssociated();
 			if (this.socks5Client.getProperties().getValue(
 					Socks5PropertySpecConstants.SOCKS5_UDP_ASSOCIATE_USE_CLIENT_MODE).booleanValue()) {
+				/*
 				if (AssociationStatusHelper.has(
 						this.associationStatusUuid, AssociationStatus.ASSOCIATING)) {
 					LOGGER.info("{}: Waiting for completed association", this.datagramSocket.getLocalSocketAddress());
 					this.waitForCompleteAssociation();
 					LOGGER.info("{}: Finished waiting for completed association", this.datagramSocket.getLocalSocketAddress());
-				} else if (AssociationStatusHelper.has(
+				} else
+					if (AssociationStatusHelper.has(
 						this.associationStatusUuid, AssociationStatus.UNASSOCIATED)) {
 					LOGGER.info("{}: Associating...", this.datagramSocket.getLocalSocketAddress());
 					this.socks5UdpAssociate();
 					LOGGER.info("{}: ...Associated", this.datagramSocket.getLocalSocketAddress());
 				}
+				*/
+				if (!AssociationStatusHelper.has(
+						this.associationStatusUuid, AssociationStatus.ASSOCIATED)) {
+					LOGGER.info("{}: Associating...", this.datagramSocket.getLocalSocketAddress());
+					this.socks5UdpAssociate();
+					LOGGER.info("{}: ...Associated", this.datagramSocket.getLocalSocketAddress());
+				}				
 			} else {
 				LOGGER.info("{}: Waiting for completed association", this.datagramSocket.getLocalSocketAddress());
 				this.waitForCompleteAssociation();
@@ -240,8 +256,10 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 		}
 		
 		public void socks5UdpAssociate() throws IOException {
+			/*
 			AssociationStatusHelper.put(
 					this.associationStatusUuid, AssociationStatus.ASSOCIATING);
+			*/
 			if (!this.socket.equals(this.originalSocket)) {
 				this.socket = this.originalSocket;
 			}

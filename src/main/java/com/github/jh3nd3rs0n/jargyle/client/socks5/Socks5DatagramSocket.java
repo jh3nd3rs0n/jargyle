@@ -194,7 +194,10 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 				LOGGER.info("{}: ...Associated", this.datagramSocket.getLocalSocketAddress());
 			}
 			*/
+			// allow for internal datagram socket to connect before invoking receive()
+			LOGGER.info("{}: Waiting for completed association", this.datagramSocket.getLocalSocketAddress());
 			this.waitForCompleteAssociation();
+			LOGGER.info("{}: Finished waiting for completed association", this.datagramSocket.getLocalSocketAddress());
 			this.datagramSocket.receive(p);
 			UdpRequestHeader header = null; 
 			try {
@@ -343,7 +346,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 		}
 		
 		private void waitForCompleteAssociation() throws IOException {
-			int soTimeout = this.socket.getSoTimeout();
+			int soTimeout = this.datagramSocket.getSoTimeout();
 			long waitStartTime = System.currentTimeMillis();
 			/*
 			while (!AssociationStatusHelper.has(

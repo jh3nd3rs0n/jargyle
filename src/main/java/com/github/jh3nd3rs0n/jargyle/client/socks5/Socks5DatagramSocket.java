@@ -31,16 +31,16 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 		
 		private volatile boolean associated;
 		private boolean connected;
-		private DatagramSocket datagramSocket;
-		private DatagramSocket originalDatagramSocket;
-		private Socket originalSocket;
-		private InetAddress remoteInetAddress;
-		private int remotePort;
-		private SocketAddress remoteSocketAddress;
-		private Socket socket;
+		private volatile DatagramSocket datagramSocket;
+		private volatile DatagramSocket originalDatagramSocket;
+		private volatile Socket originalSocket;
+		private volatile InetAddress remoteInetAddress;
+		private volatile int remotePort;
+		private volatile SocketAddress remoteSocketAddress;
+		private volatile Socket socket;
 		private final Socks5Client socks5Client;
-		private InetAddress udpRelayServerInetAddress;
-		private int udpRelayServerPort;
+		private volatile InetAddress udpRelayServerInetAddress;
+		private volatile int udpRelayServerPort;
 		
 		public Socks5DatagramSocketImpl(
 				final Socks5Client client) throws SocketException {

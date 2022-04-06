@@ -147,7 +147,7 @@ public final class XmlFileSourceConfigurationProvider
 	
 	private void startMonitoringXmlFile() {
 		this.executor = Executors.newSingleThreadExecutor();
-		this.executor.execute(new FileMonitor(
+		this.executor.execute(FileMonitor.newInstance(
 				this.xmlFile, 
 				new ConfigurationUpdater(this)));
 	}

@@ -144,7 +144,7 @@ public final class XmlFileSourceUsersProvider extends UsersProvider {
 	
 	private void startMonitoringXmlFile() {
 		this.executor = Executors.newSingleThreadExecutor();
-		this.executor.execute(new FileMonitor(
+		this.executor.execute(FileMonitor.newInstance(
 				this.xmlFile, new UsersUpdater(this)));
 	}
 	

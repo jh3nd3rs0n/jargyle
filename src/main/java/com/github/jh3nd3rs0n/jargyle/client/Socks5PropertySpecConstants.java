@@ -50,11 +50,6 @@ public final class Socks5PropertySpecConstants {
 					"socksClient.socks5.resolve.useResolveCommand",
 					Boolean.FALSE));
 	
-	public static final PropertySpec<Boolean> SOCKS5_UDP_ASSOCIATE_USE_CLIENT_MODE =
-			PROPERTY_SPECS.addThenGet(new BooleanPropertySpec(
-					"socksClient.socks5.udpAssociate.useClientMode",
-					Boolean.TRUE));
-	
 	public static final PropertySpec<EncryptedPassword> SOCKS5_USERPASSAUTH_PASSWORD =
 			PROPERTY_SPECS.addThenGet(new UserEncryptedPasswordPropertySpec(
 					"socksClient.socks5.userpathauth.password",

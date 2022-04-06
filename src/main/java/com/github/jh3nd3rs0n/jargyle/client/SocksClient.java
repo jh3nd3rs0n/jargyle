@@ -9,9 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.github.jh3nd3rs0n.jargyle.client.internal.SocksClientExceptionThrowingHelper;
 import com.github.jh3nd3rs0n.jargyle.client.internal.SocksClientExceptionThrowingSocket;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
@@ -107,8 +104,6 @@ public abstract class SocksClient {
 		return this.getConnectedInternalSocket(internalSocket, timeout, false);
 	}
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(SocksClient.class);
-	
 	protected Socket getConnectedInternalSocket(
 			final Socket internalSocket, 
 			final int timeout, 
@@ -118,24 +113,18 @@ public abstract class SocksClient {
 		Socket internalSock = internalSocket;
 		try {
 			if (bindBeforeConnect) {
-				LOGGER.info("{}: Binding internal socket...", this);
 				internalSock.bind(new InetSocketAddress(
 						this.properties.getValue(
 								GeneralPropertySpecConstants.INTERNAL_BIND_HOST).toInetAddress(), 
 						this.properties.getValue(
 								GeneralPropertySpecConstants.INTERNAL_BIND_PORT).intValue()));
-				LOGGER.info("{}: Bound internal socket", this);
 			}
-			LOGGER.info("{}: Resolving SOCKS server host...", this);
 			InetAddress socksServerUriHostInetAddress =	this.resolve(
 					socksServerUriHost);
-			LOGGER.info("{}: Resolved SOCKS server host", this);
-			LOGGER.info("{}: Connecting internal socket to SOCKS server...", this);
 			internalSock.connect(
 					new InetSocketAddress(
 							socksServerUriHostInetAddress, socksServerUriPort), 
 					timeout);
-			LOGGER.info("{}: Connected internal socket to SOCKS server", this);
 			if (this.sslSocketFactory == null) {
 				return new SocksClientExceptionThrowingSocket(
 						this, internalSock);

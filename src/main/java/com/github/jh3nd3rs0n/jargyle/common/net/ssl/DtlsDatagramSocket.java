@@ -10,11 +10,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 import javax.net.ssl.SSLEngine;
 import javax.net.ssl.SSLEngineResult;
@@ -30,50 +26,12 @@ import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
 
 public final class DtlsDatagramSocket extends FilterDatagramSocket {
 	
-	private static enum HandshakeStatus {
-		UNINITIATED,
-		INITIATED,
-		COMPLETED
-	}
-	
-	
-	private static final class HandshakeStatusHelper {
-		
-		private static final Map<UUID, HandshakeStatus> MAP =
-				Collections.synchronizedMap(new HashMap<UUID, HandshakeStatus>());
-		
-		public static boolean has(
-				final UUID uuid, final HandshakeStatus associationStatus) {
-			System.out.printf("Getting handshake status%n");
-			if (!MAP.containsKey(uuid)) {
-				return false;
-			}
-			HandshakeStatus value = MAP.get(uuid);
-			System.out.printf("Handshake status is %s%n", value);
-			return value.equals(associationStatus);
-		}
-		
-		public static void put(
-				final UUID uuid, final HandshakeStatus associationStatus) {
-			MAP.put(uuid, associationStatus);
-		}
-		
-		public static void remove(final UUID uuid) {
-			MAP.remove(uuid);
-		}
-		
-		private HandshakeStatusHelper() { }
-		
-	}
-	
 	private static final Logger LOGGER = LoggerFactory.getLogger(
 			DtlsDatagramSocket.class);
 
-	private static final int HALF_SECOND = 500;
 	private static final int MAX_APP_READ_LOOPS = 60;
 	private static final int MAX_HANDSHAKE_LOOPS = 200;
 	
-	// private UUID handshakeStatusUuid;
 	private volatile boolean handshakeCompleted;
 	private final SSLEngine sslEngine;
 
@@ -81,18 +39,12 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 			final DatagramSocket datagramSock, 
 			final SSLEngine engine) throws SocketException {
 		super(datagramSock);
-		/*
-		UUID statusUuid = UUID.randomUUID();
-		HandshakeStatusHelper.put(statusUuid, HandshakeStatus.UNINITIATED);
-		this.handshakeStatusUuid = statusUuid;
-		*/
 		this.handshakeCompleted = false;
 		this.sslEngine = engine;
 	}
 
 	@Override
 	public void close() {
-		// HandshakeStatusHelper.remove(this.handshakeStatusUuid);
 		this.handshakeCompleted = false;
 		super.close();
 	}
@@ -133,10 +85,6 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 					"DtlsDatagramSocket must be connected before handshake "
 					+ "can be performed");
 		}
-		/*
-		HandshakeStatusHelper.put(
-				this.handshakeStatusUuid, HandshakeStatus.INITIATED);
-		*/
 		boolean endLoops = false;
 		int loops = MAX_HANDSHAKE_LOOPS;
 		this.sslEngine.beginHandshake();
@@ -316,23 +264,10 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 			throw new SSLException(String.format(
 					"Unexpected handshake status %s", hs));
 		}
-		/*
-		HandshakeStatusHelper.put(
-				this.handshakeStatusUuid, HandshakeStatus.COMPLETED);
-		*/
 		this.handshakeCompleted = true;
 	}
 	
 	private void handshakeIfNotCompleted() throws IOException {
-		/*
-		if (HandshakeStatusHelper.has(
-				this.handshakeStatusUuid, HandshakeStatus.INITIATED)) {
-			this.waitForCompletedHandshake();
-		} else if (HandshakeStatusHelper.has(
-				this.handshakeStatusUuid, HandshakeStatus.UNINITIATED)) {
-			this.handshake();
-		}
-		*/
 		if (!this.handshakeCompleted) {
 			this.handshake();
 		}
@@ -465,38 +400,8 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 	
 	@Override
 	public synchronized void receive(final DatagramPacket p) throws IOException {
-		// this.handshakeIfNotCompleted();
-		if (this.getUseClientMode()) {
-			/*
-			LOGGER.info("{}: Waiting for handshaked to be completed", this.getLocalSocketAddress());
-			this.waitForCompletedHandshake();
-			LOGGER.info("{}: Finished waiting for handshaked to be completed", this.getLocalSocketAddress());
-			*/
-		} else {
-			/*
-			if (HandshakeStatusHelper.has(
-					this.handshakeStatusUuid, HandshakeStatus.INITIATED)) {
-				LOGGER.info("{}: Waiting for handshaked to be completed", this.getLocalSocketAddress());
-				this.waitForCompletedHandshake();
-				LOGGER.info("{}: Finished waiting for handshaked to be completed", this.getLocalSocketAddress());
-			} else if (HandshakeStatusHelper.has(
-					this.handshakeStatusUuid, HandshakeStatus.UNINITIATED)) {
-				LOGGER.info("{}: Initiating handshake", this.getLocalSocketAddress());
-				this.handshake();
-				LOGGER.info("{}: Handshake completed", this.getLocalSocketAddress());
-			}
-			*/
-			/*
-			if (!HandshakeStatusHelper.has(
-					this.handshakeStatusUuid, HandshakeStatus.COMPLETED)) {
-				LOGGER.info("{}: Initiating handshake", this.getLocalSocketAddress());
-				this.handshake();
-				LOGGER.info("{}: Handshake completed", this.getLocalSocketAddress());
-			}
-			*/
-			if (!this.handshakeCompleted) {
-				this.handshake();
-			}
+		if (!this.getUseClientMode()) {
+			this.handshakeIfNotCompleted();
 		}
 		int loops = MAX_APP_READ_LOOPS;
 		while (true) {
@@ -547,45 +452,8 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 
 	@Override
 	public void send(final DatagramPacket p) throws IOException {
-		// this.handshakeIfNotCompleted();
 		if (this.getUseClientMode()) {
-			/*
-			if (HandshakeStatusHelper.has(
-					this.handshakeStatusUuid, HandshakeStatus.INITIATED)) {
-				LOGGER.info("{}: Waiting for handshaked to be completed", this.getLocalSocketAddress());
-				this.waitForCompletedHandshake();
-				LOGGER.info("{}: Finished waiting for handshaked to be completed", this.getLocalSocketAddress());
-			} else if (HandshakeStatusHelper.has(
-					this.handshakeStatusUuid, HandshakeStatus.UNINITIATED)) {
-				LOGGER.info("{}: Initiating handshake", this.getLocalSocketAddress());
-				this.handshake();
-				LOGGER.info("{}: Handshake completed", this.getLocalSocketAddress());
-			}
-			*/
-			/*
-			if (!HandshakeStatusHelper.has(
-					this.handshakeStatusUuid, HandshakeStatus.COMPLETED)) {
-				LOGGER.info("{}: Initiating handshake", this.getLocalSocketAddress());
-				this.handshake();
-				LOGGER.info("{}: Handshake completed", this.getLocalSocketAddress());
-			}
-			*/
-			if (!this.handshakeCompleted) {
-				this.handshake();
-			}
-		} else {
-			/*
-			LOGGER.info("{}: Waiting for handshaked to be completed", this.getLocalSocketAddress());
-			this.waitForCompletedHandshake();
-			LOGGER.info("{}: Finished waiting for handshaked to be completed", this.getLocalSocketAddress());
-			*/
-			/*
-			if (!this.handshakeCompleted) {
-				throw new IllegalStateException(
-						"Handshake must be initiated and completed by receive() "
-						+ "before invoking send()");
-			}
-			*/
+			this.handshakeIfNotCompleted();
 		}
 		ByteBuffer outAppData = ByteBuffer.wrap(p.getData());
 		// Note: have not considered the packet losses
@@ -633,46 +501,6 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 			.append(this.getUseClientMode())
 			.append("]");
 		return builder.toString();
-	}
-	
-	private void waitForCompletedHandshake() throws IOException {
-		int soTimeout = super.getSoTimeout();
-		long waitStartTime = System.currentTimeMillis();
-		/*
-		while (!HandshakeStatusHelper.has(
-				this.handshakeStatusUuid, HandshakeStatus.COMPLETED)) {
-			LOGGER.info("Waiting for completed handshake...");
-			try {
-				Thread.sleep(HALF_SECOND);
-			} catch (InterruptedException e) {
-				Thread.currentThread().interrupt();
-			}
-			if (soTimeout == 0) { continue; }
-			long timeSinceWaitStartTime = 
-					System.currentTimeMillis() - waitStartTime;
-			if (timeSinceWaitStartTime >= soTimeout) {
-				throw new SSLException(
-						"Timeout for waiting for completed handshake has been "
-						+ "reached");
-			}
-		}
-		*/
-		while (!this.handshakeCompleted) {
-			LOGGER.info("Waiting for completed handshake...");
-			try {
-				Thread.sleep(HALF_SECOND);
-			} catch (InterruptedException e) {
-				Thread.currentThread().interrupt();
-			}
-			if (soTimeout == 0) { continue; }
-			long timeSinceWaitStartTime = 
-					System.currentTimeMillis() - waitStartTime;
-			if (timeSinceWaitStartTime >= soTimeout) {
-				throw new SSLException(
-						"Timeout for waiting for completed handshake has been "
-						+ "reached");
-			}
-		}		
 	}
 
 }

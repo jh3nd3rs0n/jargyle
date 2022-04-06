@@ -200,7 +200,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 		}
 		
 		private void waitForCompleteAssociation() throws IOException {
-			int soTimeout = this.datagramSocket.getSoTimeout();
+			final int soTimeout = 60000;
 			long waitStartTime = System.currentTimeMillis();
 			while (!this.associated) {
 				try {
@@ -208,7 +208,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 				} catch (InterruptedException e) {
 					Thread.currentThread().interrupt();
 				}
-				if (soTimeout == 0) { continue; }
+				// if (soTimeout == 0) { continue; }
 				long timeSinceWaitStartTime = 
 						System.currentTimeMillis() - waitStartTime;
 				if (timeSinceWaitStartTime >= soTimeout) {

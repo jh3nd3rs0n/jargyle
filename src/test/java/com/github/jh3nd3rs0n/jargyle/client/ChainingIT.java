@@ -413,92 +413,110 @@ public class ChainingIT {
 	
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurations01() throws IOException {
+		System.out.println("Test testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurations01() starting");
 		String string = TestStringConstants.STRING_01;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
 				newSocks5ClientToChainedConfigurations(), 
 				newChainedConfigurations());
 		assertEquals(string, returningString);
+		System.out.println("Test testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurations01() finished");
 	}
 	
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurations02() throws IOException {
+		System.out.println("Test testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurations02() starting");
 		String string = TestStringConstants.STRING_02;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
 				newSocks5ClientToChainedConfigurations(), 
 				newChainedConfigurations());
 		assertEquals(string, returningString);
+		System.out.println("Test testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurations02() finished");
 	}
 	
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurations03() throws IOException {
+		System.out.println("Test testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurations03() starting");
 		String string = TestStringConstants.STRING_03;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
 				newSocks5ClientToChainedConfigurations(), 
 				newChainedConfigurations());
 		assertEquals(string, returningString);
+		System.out.println("Test testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurations03() finished");
 	}
 	
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsEachUsingUserpassAuth01() throws IOException {
+		System.out.println("Test testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsEachUsingUserpassAuth01() starting");
 		String string = TestStringConstants.STRING_01;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
 				newSocks5ClientToChainedConfigurationsEachUsingUserpassAuth(), 
 				newChainedConfigurationsEachUsingUserpassAuth());
 		assertEquals(string, returningString);
+		System.out.println("Test testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsEachUsingUserpassAuth01() finished");
 	}
 	
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsEachUsingUserpassAuth02() throws IOException {
+		System.out.println("Test testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsEachUsingUserpassAuth02() starting");		
 		String string = TestStringConstants.STRING_02;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
 				newSocks5ClientToChainedConfigurationsEachUsingUserpassAuth(), 
 				newChainedConfigurationsEachUsingUserpassAuth());
 		assertEquals(string, returningString);
+		System.out.println("Test testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsEachUsingUserpassAuth02() finished");
 	}
 	
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsEachUsingUserpassAuth03() throws IOException {
+		System.out.println("Test testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsEachUsingUserpassAuth03() starting");
 		String string = TestStringConstants.STRING_03;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
 				newSocks5ClientToChainedConfigurationsEachUsingUserpassAuth(), 
 				newChainedConfigurationsEachUsingUserpassAuth());
 		assertEquals(string, returningString);
+		System.out.println("Test testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsEachUsingUserpassAuth03() finished");
 	}
 	
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsUsingSsl01() throws IOException {
+		System.out.println("Test testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsUsingSsl01() starting");
 		String string = TestStringConstants.STRING_01;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
 				newSocks5ClientToChainedConfigurationsUsingSsl(), 
 				newChainedConfigurationsUsingSsl());
 		assertEquals(string, returningString);
+		System.out.println("Test testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsUsingSsl01() finished");
 	}
 	
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsUsingSsl02() throws IOException {
+		System.out.println("Test testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsUsingSsl02() starting");
 		String string = TestStringConstants.STRING_02;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
 				newSocks5ClientToChainedConfigurationsUsingSsl(), 
 				newChainedConfigurationsUsingSsl());
 		assertEquals(string, returningString);
+		System.out.println("Test testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsUsingSsl02() finished");
 	}
 	
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsUsingSsl03() throws IOException {
+		System.out.println("Test testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsUsingSsl03() starting");
 		String string = TestStringConstants.STRING_03;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
 				newSocks5ClientToChainedConfigurationsUsingSsl(), 
 				newChainedConfigurationsUsingSsl());
 		assertEquals(string, returningString);
+		System.out.println("Test testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsUsingSsl03() finished");
 	}
 	
 	// Socks5ServerSocket

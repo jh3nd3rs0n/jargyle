@@ -30,7 +30,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 		private static final int HALF_SECOND = 500;
 		
 		private volatile boolean associated;
-		private boolean connected;
+		private volatile boolean connected;
 		private volatile DatagramSocket datagramSocket;
 		private volatile DatagramSocket originalDatagramSocket;
 		private volatile Socket originalSocket;
@@ -113,7 +113,9 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			 * allow for internal datagram socket to connect before invoking
 			 * receive() 
 			 */
+			System.out.printf("%s: Waiting for complete association%n", this.socks5Client);
 			this.waitForCompleteAssociation();
+			System.out.printf("%s: Finished waiting for complete association%n", this.socks5Client);
 			this.datagramSocket.receive(p);
 			UdpRequestHeader header = null; 
 			try {
@@ -147,7 +149,9 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 						"packet address and connected socket address must be the same");
 			}
 			if (!this.associated) {
+				System.out.printf("%s: Starting UDP association%n", this.socks5Client);
 				this.socks5UdpAssociate();
+				System.out.printf("%s: Completed UDP association%n", this.socks5Client);
 			}
 			String address = p.getAddress().getHostAddress();
 			int port = p.getPort();
@@ -167,11 +171,17 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			if (!this.socket.equals(this.originalSocket)) {
 				this.socket = this.originalSocket;
 			}
+			System.out.printf("%s: Connecting to the SOCKS server%n", this.socks5Client);
 			Socket sock = this.socks5Client.getConnectedInternalSocket(
 					this.socket, true);
+			System.out.printf("%s: Finished connecting to the SOCKS server%n", this.socks5Client);
+			System.out.printf("%s: Negotiating method%n", this.socks5Client);
 			Method method = this.socks5Client.negotiateMethod(sock);
+			System.out.printf("%s: Finished negotiating method%n", this.socks5Client);
+			System.out.printf("%s: Performing method sub-negotiation%n", this.socks5Client);
 			MethodEncapsulation methodEncapsulation = 
 					this.socks5Client.doMethodSubnegotiation(method, sock);
+			System.out.printf("%s: Finished performing method sub-negotiation%n", this.socks5Client);
 			Socket sck = methodEncapsulation.getSocket();
 			if (!this.datagramSocket.equals(this.originalDatagramSocket)) {
 				this.datagramSocket = this.originalDatagramSocket;
@@ -183,12 +193,18 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 					Command.UDP_ASSOCIATE, 
 					address, 
 					prt);
+			System.out.printf("%s: Sending SOCKS5 request%n", this.socks5Client);
 			this.socks5Client.sendSocks5Request(socks5Req, sck);
-			Socks5Reply socks5Rep = this.socks5Client.receiveSocks5Reply(sck); 
+			System.out.printf("%s: Finished sending SOCKS5 request%n", this.socks5Client);
+			System.out.printf("%s: Receiving SOCKS5 reply%n", this.socks5Client);
+			Socks5Reply socks5Rep = this.socks5Client.receiveSocks5Reply(sck);
+			System.out.printf("%s: Finished receiving SOCKS5 reply%n", this.socks5Client);
+			System.out.printf("%s: Connecting internal datagram socket%n", this.socks5Client);
 			datagramSock = this.socks5Client.getConnectedInternalDatagramSocket(
 					datagramSock,
 					this.socks5Client.getSocksServerUri().getHost(),
 					socks5Rep.getServerBoundPort());
+			System.out.printf("%s: Finished connecting internal datagram socket%n", this.socks5Client);
 			DatagramSocket datagramSck = methodEncapsulation.getDatagramSocket(
 					datagramSock);
 			this.associated = true;
@@ -200,7 +216,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 		}
 		
 		private void waitForCompleteAssociation() throws IOException {
-			final int soTimeout = 60000;
+			int soTimeout = this.datagramSocket.getSoTimeout();
 			long waitStartTime = System.currentTimeMillis();
 			while (!this.associated) {
 				try {
@@ -208,7 +224,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 				} catch (InterruptedException e) {
 					Thread.currentThread().interrupt();
 				}
-				// if (soTimeout == 0) { continue; }
+				if (soTimeout == 0) { continue; }
 				long timeSinceWaitStartTime = 
 						System.currentTimeMillis() - waitStartTime;
 				if (timeSinceWaitStartTime >= soTimeout) {

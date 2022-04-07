@@ -516,7 +516,7 @@ public class ChainingIT {
 		System.out.printf("Test %s finished%n", name);
 	}
 	
-	@org.junit.Ignore
+	// @org.junit.Ignore
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsUsingSsl01() throws IOException {
 		String name = new Object(){}.getClass().getEnclosingMethod().getName();
@@ -530,7 +530,7 @@ public class ChainingIT {
 		System.out.printf("Test %s finished%n", name);
 	}
 	
-	@org.junit.Ignore
+	// @org.junit.Ignore
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsUsingSsl02() throws IOException {
 		String name = new Object(){}.getClass().getEnclosingMethod().getName();
@@ -544,7 +544,7 @@ public class ChainingIT {
 		System.out.printf("Test %s finished%n", name);
 	}
 	
-	@org.junit.Ignore
+	// @org.junit.Ignore
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsUsingSsl03() throws IOException {
 		String name = new Object(){}.getClass().getEnclosingMethod().getName();

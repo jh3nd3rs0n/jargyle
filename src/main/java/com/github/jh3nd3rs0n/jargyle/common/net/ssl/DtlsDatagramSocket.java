@@ -28,7 +28,8 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(
 			DtlsDatagramSocket.class);
-
+	
+	private static final int HALF_SECOND = 500;
 	private static final int MAX_APP_READ_LOOPS = 60;
 	private static final int MAX_HANDSHAKE_LOOPS = 200;
 	
@@ -402,6 +403,8 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 	public synchronized void receive(final DatagramPacket p) throws IOException {
 		if (!this.getUseClientMode()) {
 			this.handshakeIfNotCompleted();
+		} else {
+			this.waitForCompletedHandshake();
 		}
 		int loops = MAX_APP_READ_LOOPS;
 		while (true) {
@@ -501,6 +504,26 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 			.append(this.getUseClientMode())
 			.append("]");
 		return builder.toString();
+	}
+	
+	private void waitForCompletedHandshake() throws IOException {
+		int soTimeout = this.datagramSocket.getSoTimeout();
+		long waitStartTime = System.currentTimeMillis();
+		while (!this.handshakeCompleted) {
+			try {
+				Thread.sleep(HALF_SECOND);
+			} catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
+			}
+			if (soTimeout == 0) { continue; }
+			long timeSinceWaitStartTime = 
+					System.currentTimeMillis() - waitStartTime;
+			if (timeSinceWaitStartTime >= soTimeout) {
+				throw new SocketTimeoutException(
+						"Timeout for waiting for completed handshake has been "
+						+ "reached");
+			}			
+		}
 	}
 
 }

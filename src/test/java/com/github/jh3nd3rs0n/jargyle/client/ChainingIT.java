@@ -29,6 +29,7 @@ import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.StringSourceUser
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Methods;
 
+@org.junit.Ignore
 public class ChainingIT {
 	
 	private static List<Configuration> newChainedConfigurations() {

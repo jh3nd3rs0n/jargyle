@@ -323,563 +323,707 @@ public class ChainingIT {
 	
 	@Test
 	public void testThroughSocks5DatagramSocketUsingChainedSocks5ClientToConfigurations01() throws IOException {
+		String name = new Object(){}.getClass().getEnclosingMethod().getName();
+		System.out.printf("Test %s starting%n", name);
 		String string = TestStringConstants.STRING_01;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
 				newChainedSocks5ClientToConfigurations(), 
 				newConfigurations());
 		assertEquals(string, returningString);
+		System.out.printf("Test %s finished%n", name);
 	}
 	
 	@Test
 	public void testThroughSocks5DatagramSocketUsingChainedSocks5ClientToConfigurations02() throws IOException {
+		String name = new Object(){}.getClass().getEnclosingMethod().getName();
+		System.out.printf("Test %s starting%n", name);
 		String string = TestStringConstants.STRING_02;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
 				newChainedSocks5ClientToConfigurations(), 
 				newConfigurations());
 		assertEquals(string, returningString);
+		System.out.printf("Test %s finished%n", name);
 	}
 	
 	@Test
 	public void testThroughSocks5DatagramSocketUsingChainedSocks5ClientToConfigurations03() throws IOException {
+		String name = new Object(){}.getClass().getEnclosingMethod().getName();
+		System.out.printf("Test %s starting%n", name);
 		String string = TestStringConstants.STRING_03;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
 				newChainedSocks5ClientToConfigurations(), 
 				newConfigurations());
 		assertEquals(string, returningString);
+		System.out.printf("Test %s finished%n", name);
 	}
 	
 	@Test
 	public void testThroughSocks5DatagramSocketUsingChainedSocks5ClientToConfigurationsEachUsingUserpassAuth01() throws IOException {
+		String name = new Object(){}.getClass().getEnclosingMethod().getName();
+		System.out.printf("Test %s starting%n", name);
 		String string = TestStringConstants.STRING_01;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
 				newChainedSocks5ClientToConfigurationsEachUsingUserpassAuth(), 
 				newConfigurationsEachUsingUserpassAuth());
-		assertEquals(string, returningString);		
+		assertEquals(string, returningString);
+		System.out.printf("Test %s finished%n", name);
 	}
 	
 	@Test
 	public void testThroughSocks5DatagramSocketUsingChainedSocks5ClientToConfigurationsEachUsingUserpassAuth02() throws IOException {
+		String name = new Object(){}.getClass().getEnclosingMethod().getName();
+		System.out.printf("Test %s starting%n", name);
 		String string = TestStringConstants.STRING_02;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
 				newChainedSocks5ClientToConfigurationsEachUsingUserpassAuth(), 
 				newConfigurationsEachUsingUserpassAuth());
-		assertEquals(string, returningString);		
+		assertEquals(string, returningString);
+		System.out.printf("Test %s finished%n", name);
 	}
 	
 	@Test
 	public void testThroughSocks5DatagramSocketUsingChainedSocks5ClientToConfigurationsEachUsingUserpassAuth03() throws IOException {
+		String name = new Object(){}.getClass().getEnclosingMethod().getName();
+		System.out.printf("Test %s starting%n", name);
 		String string = TestStringConstants.STRING_03;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
 				newChainedSocks5ClientToConfigurationsEachUsingUserpassAuth(), 
 				newConfigurationsEachUsingUserpassAuth());
-		assertEquals(string, returningString);		
+		assertEquals(string, returningString);
+		System.out.printf("Test %s finished%n", name);
 	}
 	
 	@Test
 	public void testThroughSocks5DatagramSocketUsingChainedSocks5ClientToConfigurationsUsingSsl01() throws IOException {
+		String name = new Object(){}.getClass().getEnclosingMethod().getName();
+		System.out.printf("Test %s starting%n", name);
 		String string = TestStringConstants.STRING_01;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
 				newChainedSocks5ClientToConfigurationsUsingSsl(), 
 				newConfigurationsUsingSsl());
 		assertEquals(string, returningString);
+		System.out.printf("Test %s finished%n", name);
 	}
 	
 	@Test
 	public void testThroughSocks5DatagramSocketUsingChainedSocks5ClientToConfigurationsUsingSsl02() throws IOException {
+		String name = new Object(){}.getClass().getEnclosingMethod().getName();
+		System.out.printf("Test %s starting%n", name);
 		String string = TestStringConstants.STRING_02;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
 				newChainedSocks5ClientToConfigurationsUsingSsl(), 
 				newConfigurationsUsingSsl());
 		assertEquals(string, returningString);
+		System.out.printf("Test %s finished%n", name);
 	}
 	
 	@Test
 	public void testThroughSocks5DatagramSocketUsingChainedSocks5ClientToConfigurationsUsingSsl03() throws IOException {
+		String name = new Object(){}.getClass().getEnclosingMethod().getName();
+		System.out.printf("Test %s starting%n", name);
 		String string = TestStringConstants.STRING_03;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
 				newChainedSocks5ClientToConfigurationsUsingSsl(), 
 				newConfigurationsUsingSsl());
 		assertEquals(string, returningString);
+		System.out.printf("Test %s finished%n", name);
 	}
 	
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurations01() throws IOException {
-		System.out.println("Test testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurations01() starting");
+		String name = new Object(){}.getClass().getEnclosingMethod().getName();
+		System.out.printf("Test %s starting%n", name);
 		String string = TestStringConstants.STRING_01;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
 				newSocks5ClientToChainedConfigurations(), 
 				newChainedConfigurations());
 		assertEquals(string, returningString);
-		System.out.println("Test testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurations01() finished");
+		System.out.printf("Test %s finished%n", name);
 	}
 	
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurations02() throws IOException {
-		System.out.println("Test testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurations02() starting");
+		String name = new Object(){}.getClass().getEnclosingMethod().getName();
+		System.out.printf("Test %s starting%n", name);
 		String string = TestStringConstants.STRING_02;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
 				newSocks5ClientToChainedConfigurations(), 
 				newChainedConfigurations());
 		assertEquals(string, returningString);
-		System.out.println("Test testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurations02() finished");
+		System.out.printf("Test %s finished%n", name);
 	}
 	
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurations03() throws IOException {
-		System.out.println("Test testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurations03() starting");
+		String name = new Object(){}.getClass().getEnclosingMethod().getName();
+		System.out.printf("Test %s starting%n", name);
 		String string = TestStringConstants.STRING_03;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
 				newSocks5ClientToChainedConfigurations(), 
 				newChainedConfigurations());
 		assertEquals(string, returningString);
-		System.out.println("Test testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurations03() finished");
+		System.out.printf("Test %s finished%n", name);
 	}
 	
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsEachUsingUserpassAuth01() throws IOException {
-		System.out.println("Test testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsEachUsingUserpassAuth01() starting");
+		String name = new Object(){}.getClass().getEnclosingMethod().getName();
+		System.out.printf("Test %s starting%n", name);
 		String string = TestStringConstants.STRING_01;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
 				newSocks5ClientToChainedConfigurationsEachUsingUserpassAuth(), 
 				newChainedConfigurationsEachUsingUserpassAuth());
 		assertEquals(string, returningString);
-		System.out.println("Test testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsEachUsingUserpassAuth01() finished");
+		System.out.printf("Test %s finished%n", name);
 	}
 	
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsEachUsingUserpassAuth02() throws IOException {
-		System.out.println("Test testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsEachUsingUserpassAuth02() starting");		
+		String name = new Object(){}.getClass().getEnclosingMethod().getName();
+		System.out.printf("Test %s starting%n", name);		
 		String string = TestStringConstants.STRING_02;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
 				newSocks5ClientToChainedConfigurationsEachUsingUserpassAuth(), 
 				newChainedConfigurationsEachUsingUserpassAuth());
 		assertEquals(string, returningString);
-		System.out.println("Test testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsEachUsingUserpassAuth02() finished");
+		System.out.printf("Test %s finished%n", name);
 	}
 	
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsEachUsingUserpassAuth03() throws IOException {
-		System.out.println("Test testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsEachUsingUserpassAuth03() starting");
+		String name = new Object(){}.getClass().getEnclosingMethod().getName();
+		System.out.printf("Test %s starting%n", name);
 		String string = TestStringConstants.STRING_03;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
 				newSocks5ClientToChainedConfigurationsEachUsingUserpassAuth(), 
 				newChainedConfigurationsEachUsingUserpassAuth());
 		assertEquals(string, returningString);
-		System.out.println("Test testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsEachUsingUserpassAuth03() finished");
+		System.out.printf("Test %s finished%n", name);
 	}
 	
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsUsingSsl01() throws IOException {
-		System.out.println("Test testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsUsingSsl01() starting");
+		String name = new Object(){}.getClass().getEnclosingMethod().getName();
+		System.out.printf("Test %s starting%n", name);
 		String string = TestStringConstants.STRING_01;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
 				newSocks5ClientToChainedConfigurationsUsingSsl(), 
 				newChainedConfigurationsUsingSsl());
 		assertEquals(string, returningString);
-		System.out.println("Test testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsUsingSsl01() finished");
+		System.out.printf("Test %s finished%n", name);
 	}
 	
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsUsingSsl02() throws IOException {
-		System.out.println("Test testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsUsingSsl02() starting");
+		String name = new Object(){}.getClass().getEnclosingMethod().getName();
+		System.out.printf("Test %s starting%n", name);
 		String string = TestStringConstants.STRING_02;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
 				newSocks5ClientToChainedConfigurationsUsingSsl(), 
 				newChainedConfigurationsUsingSsl());
 		assertEquals(string, returningString);
-		System.out.println("Test testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsUsingSsl02() finished");
+		System.out.printf("Test %s finished%n", name);
 	}
 	
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsUsingSsl03() throws IOException {
-		System.out.println("Test testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsUsingSsl03() starting");
+		String name = new Object(){}.getClass().getEnclosingMethod().getName();
+		System.out.printf("Test %s starting%n", name);
 		String string = TestStringConstants.STRING_03;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
 				newSocks5ClientToChainedConfigurationsUsingSsl(), 
 				newChainedConfigurationsUsingSsl());
 		assertEquals(string, returningString);
-		System.out.println("Test testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsUsingSsl03() finished");
+		System.out.printf("Test %s finished%n", name);
 	}
 	
 	// Socks5ServerSocket
 	
 	@Test
 	public void testThroughSocks5ServerSocketUsingChainedSocks5ClientToConfigurations01() throws IOException {
+		String name = new Object(){}.getClass().getEnclosingMethod().getName();
+		System.out.printf("Test %s starting%n", name);
 		String string = TestStringConstants.STRING_01;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
 				newChainedSocks5ClientToConfigurations(), 
 				newConfigurations());
 		assertEquals(string, returningString);
+		System.out.printf("Test %s finished%n", name);
 	}
 	
 	@Test
 	public void testThroughSocks5ServerSocketUsingChainedSocks5ClientToConfigurations02() throws IOException {
+		String name = new Object(){}.getClass().getEnclosingMethod().getName();
+		System.out.printf("Test %s starting%n", name);
 		String string = TestStringConstants.STRING_02;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
 				newChainedSocks5ClientToConfigurations(), 
 				newConfigurations());
 		assertEquals(string, returningString);
+		System.out.printf("Test %s finished%n", name);
 	}
 	
 	@Test
 	public void testThroughSocks5ServerSocketUsingChainedSocks5ClientToConfigurations03() throws IOException {
+		String name = new Object(){}.getClass().getEnclosingMethod().getName();
+		System.out.printf("Test %s starting%n", name);
 		String string = TestStringConstants.STRING_03;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
 				newChainedSocks5ClientToConfigurations(), 
 				newConfigurations());
 		assertEquals(string, returningString);
+		System.out.printf("Test %s finished%n", name);
 	}
 	
 	@Test
 	public void testThroughSocks5ServerSocketUsingChainedSocks5ClientToConfigurationsEachUsingUserpassAuth01() throws IOException {
+		String name = new Object(){}.getClass().getEnclosingMethod().getName();
+		System.out.printf("Test %s starting%n", name);
 		String string = TestStringConstants.STRING_01;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
 				newChainedSocks5ClientToConfigurationsEachUsingUserpassAuth(), 
 				newConfigurationsEachUsingUserpassAuth());
-		assertEquals(string, returningString);		
+		assertEquals(string, returningString);
+		System.out.printf("Test %s finished%n", name);
 	}
 	
 	@Test
 	public void testThroughSocks5ServerSocketUsingChainedSocks5ClientToConfigurationsEachUsingUserpassAuth02() throws IOException {
+		String name = new Object(){}.getClass().getEnclosingMethod().getName();
+		System.out.printf("Test %s starting%n", name);
 		String string = TestStringConstants.STRING_02;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
 				newChainedSocks5ClientToConfigurationsEachUsingUserpassAuth(), 
 				newConfigurationsEachUsingUserpassAuth());
-		assertEquals(string, returningString);		
+		assertEquals(string, returningString);
+		System.out.printf("Test %s finished%n", name);
 	}
 	
 	@Test
 	public void testThroughSocks5ServerSocketUsingChainedSocks5ClientToConfigurationsEachUsingUserpassAuth03() throws IOException {
+		String name = new Object(){}.getClass().getEnclosingMethod().getName();
+		System.out.printf("Test %s starting%n", name);
 		String string = TestStringConstants.STRING_03;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
 				newChainedSocks5ClientToConfigurationsEachUsingUserpassAuth(), 
 				newConfigurationsEachUsingUserpassAuth());
-		assertEquals(string, returningString);		
+		assertEquals(string, returningString);
+		System.out.printf("Test %s finished%n", name);
 	}
 	@Test
 	public void testThroughSocks5ServerSocketUsingChainedSocks5ClientToConfigurationsUsingSsl01() throws IOException {
+		String name = new Object(){}.getClass().getEnclosingMethod().getName();
+		System.out.printf("Test %s starting%n", name);
 		String string = TestStringConstants.STRING_01;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
 				newChainedSocks5ClientToConfigurationsUsingSsl(), 
 				newConfigurationsUsingSsl());
 		assertEquals(string, returningString);
+		System.out.printf("Test %s finished%n", name);
 	}
 	
 	@Test
 	public void testThroughSocks5ServerSocketUsingChainedSocks5ClientToConfigurationsUsingSsl02() throws IOException {
+		String name = new Object(){}.getClass().getEnclosingMethod().getName();
+		System.out.printf("Test %s starting%n", name);
 		String string = TestStringConstants.STRING_02;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
 				newChainedSocks5ClientToConfigurationsUsingSsl(), 
 				newConfigurationsUsingSsl());
 		assertEquals(string, returningString);
+		System.out.printf("Test %s finished%n", name);
 	}
 	
 	@Test
 	public void testThroughSocks5ServerSocketUsingChainedSocks5ClientToConfigurationsUsingSsl03() throws IOException {
+		String name = new Object(){}.getClass().getEnclosingMethod().getName();
+		System.out.printf("Test %s starting%n", name);
 		String string = TestStringConstants.STRING_03;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
 				newChainedSocks5ClientToConfigurationsUsingSsl(), 
 				newConfigurationsUsingSsl());
 		assertEquals(string, returningString);
+		System.out.printf("Test %s finished%n", name);
 	}
 	
 	@Test
 	public void testThroughSocks5ServerSocketUsingSocks5ClientToChainedConfigurations01() throws IOException {
+		String name = new Object(){}.getClass().getEnclosingMethod().getName();
+		System.out.printf("Test %s starting%n", name);
 		String string = TestStringConstants.STRING_01;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
 				newSocks5ClientToChainedConfigurations(), 
 				newChainedConfigurations());
 		assertEquals(string, returningString);
+		System.out.printf("Test %s finished%n", name);
 	}
 	
 	@Test
 	public void testThroughSocks5ServerSocketUsingSocks5ClientToChainedConfigurations02() throws IOException {
+		String name = new Object(){}.getClass().getEnclosingMethod().getName();
+		System.out.printf("Test %s starting%n", name);
 		String string = TestStringConstants.STRING_02;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
 				newSocks5ClientToChainedConfigurations(), 
 				newChainedConfigurations());
 		assertEquals(string, returningString);
+		System.out.printf("Test %s finished%n", name);
 	}
 	
 	@Test
 	public void testThroughSocks5ServerSocketUsingSocks5ClientToChainedConfigurations03() throws IOException {
+		String name = new Object(){}.getClass().getEnclosingMethod().getName();
+		System.out.printf("Test %s starting%n", name);
 		String string = TestStringConstants.STRING_03;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
 				newSocks5ClientToChainedConfigurations(), 
 				newChainedConfigurations());
 		assertEquals(string, returningString);
+		System.out.printf("Test %s finished%n", name);
 	}
 	
 	@Test
 	public void testThroughSocks5ServerSocketUsingSocks5ClientToChainedConfigurationsEachUsingUserpassAuth01() throws IOException {
+		String name = new Object(){}.getClass().getEnclosingMethod().getName();
+		System.out.printf("Test %s starting%n", name);
 		String string = TestStringConstants.STRING_01;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
 				newSocks5ClientToChainedConfigurationsEachUsingUserpassAuth(), 
 				newChainedConfigurationsEachUsingUserpassAuth());
 		assertEquals(string, returningString);
+		System.out.printf("Test %s finished%n", name);
 	}
 	
 	@Test
 	public void testThroughSocks5ServerSocketUsingSocks5ClientToChainedConfigurationsEachUsingUserpassAuth02() throws IOException {
+		String name = new Object(){}.getClass().getEnclosingMethod().getName();
+		System.out.printf("Test %s starting%n", name);
 		String string = TestStringConstants.STRING_02;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
 				newSocks5ClientToChainedConfigurationsEachUsingUserpassAuth(), 
 				newChainedConfigurationsEachUsingUserpassAuth());
 		assertEquals(string, returningString);
+		System.out.printf("Test %s finished%n", name);
 	}
 	
 	@Test
 	public void testThroughSocks5ServerSocketUsingSocks5ClientToChainedConfigurationsEachUsingUserpassAuth03() throws IOException {
+		String name = new Object(){}.getClass().getEnclosingMethod().getName();
+		System.out.printf("Test %s starting%n", name);
 		String string = TestStringConstants.STRING_03;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
 				newSocks5ClientToChainedConfigurationsEachUsingUserpassAuth(), 
 				newChainedConfigurationsEachUsingUserpassAuth());
 		assertEquals(string, returningString);
+		System.out.printf("Test %s finished%n", name);
 	}
 	
 	@Test
 	public void testThroughSocks5ServerSocketUsingSocks5ClientToChainedConfigurationsUsingSsl01() throws IOException {
+		String name = new Object(){}.getClass().getEnclosingMethod().getName();
+		System.out.printf("Test %s starting%n", name);
 		String string = TestStringConstants.STRING_01;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
 				newSocks5ClientToChainedConfigurationsUsingSsl(), 
 				newChainedConfigurationsUsingSsl());
 		assertEquals(string, returningString);
+		System.out.printf("Test %s finished%n", name);
 	}
 	
 	@Test
 	public void testThroughSocks5ServerSocketUsingSocks5ClientToChainedConfigurationsUsingSsl02() throws IOException {
+		String name = new Object(){}.getClass().getEnclosingMethod().getName();
+		System.out.printf("Test %s starting%n", name);
 		String string = TestStringConstants.STRING_02;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
 				newSocks5ClientToChainedConfigurationsUsingSsl(), 
 				newChainedConfigurationsUsingSsl());
 		assertEquals(string, returningString);
+		System.out.printf("Test %s finished%n", name);
 	}
 	
 	@Test
 	public void testThroughSocks5ServerSocketUsingSocks5ClientToChainedConfigurationsUsingSsl03() throws IOException {
+		String name = new Object(){}.getClass().getEnclosingMethod().getName();
+		System.out.printf("Test %s starting%n", name);
 		String string = TestStringConstants.STRING_03;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
 				newSocks5ClientToChainedConfigurationsUsingSsl(), 
 				newChainedConfigurationsUsingSsl());
 		assertEquals(string, returningString);
+		System.out.printf("Test %s finished%n", name);
 	}
 	
 	// Socks5Socket
 	
 	@Test
 	public void testThroughSocks5SocketUsingChainedSocks5ClientToConfigurations01() throws IOException {
+		String name = new Object(){}.getClass().getEnclosingMethod().getName();
+		System.out.printf("Test %s starting%n", name);
 		String string = TestStringConstants.STRING_01;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
 				newChainedSocks5ClientToConfigurations(), 
 				newConfigurations());
 		assertEquals(string, returningString);
+		System.out.printf("Test %s finished%n", name);
 	}
 	
 	@Test
 	public void testThroughSocks5SocketUsingChainedSocks5ClientToConfigurations02() throws IOException {
+		String name = new Object(){}.getClass().getEnclosingMethod().getName();
+		System.out.printf("Test %s starting%n", name);
 		String string = TestStringConstants.STRING_02;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
 				newChainedSocks5ClientToConfigurations(), 
 				newConfigurations());
 		assertEquals(string, returningString);
+		System.out.printf("Test %s finished%n", name);
 	}
 	
 	@Test
 	public void testThroughSocks5SocketUsingChainedSocks5ClientToConfigurations03() throws IOException {
+		String name = new Object(){}.getClass().getEnclosingMethod().getName();
+		System.out.printf("Test %s starting%n", name);
 		String string = TestStringConstants.STRING_03;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
 				newChainedSocks5ClientToConfigurations(), 
 				newConfigurations());
 		assertEquals(string, returningString);
+		System.out.printf("Test %s finished%n", name);
 	}
 	
 	@Test
 	public void testThroughSocks5SocketUsingChainedSocks5ClientToConfigurationsEachUsingUserpassAuth01() throws IOException {
+		String name = new Object(){}.getClass().getEnclosingMethod().getName();
+		System.out.printf("Test %s starting%n", name);
 		String string = TestStringConstants.STRING_01;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
 				newChainedSocks5ClientToConfigurationsEachUsingUserpassAuth(), 
 				newConfigurationsEachUsingUserpassAuth());
-		assertEquals(string, returningString);		
+		assertEquals(string, returningString);
+		System.out.printf("Test %s finished%n", name);
 	}
 	
 	@Test
 	public void testThroughSocks5SocketUsingChainedSocks5ClientToConfigurationsEachUsingUserpassAuth02() throws IOException {
+		String name = new Object(){}.getClass().getEnclosingMethod().getName();
+		System.out.printf("Test %s starting%n", name);
 		String string = TestStringConstants.STRING_02;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
 				newChainedSocks5ClientToConfigurationsEachUsingUserpassAuth(), 
 				newConfigurationsEachUsingUserpassAuth());
-		assertEquals(string, returningString);		
+		assertEquals(string, returningString);
+		System.out.printf("Test %s finished%n", name);
 	}
 	
 	@Test
 	public void testThroughSocks5SocketUsingChainedSocks5ClientToConfigurationsEachUsingUserpassAuth03() throws IOException {
+		String name = new Object(){}.getClass().getEnclosingMethod().getName();
+		System.out.printf("Test %s starting%n", name);
 		String string = TestStringConstants.STRING_03;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
 				newChainedSocks5ClientToConfigurationsEachUsingUserpassAuth(), 
 				newConfigurationsEachUsingUserpassAuth());
-		assertEquals(string, returningString);		
+		assertEquals(string, returningString);
+		System.out.printf("Test %s finished%n", name);
 	}
 	
 	@Test
 	public void testThroughSocks5SocketUsingChainedSocks5ClientToConfigurationsUsingSsl01() throws IOException {
+		String name = new Object(){}.getClass().getEnclosingMethod().getName();
+		System.out.printf("Test %s starting%n", name);
 		String string = TestStringConstants.STRING_01;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
 				newChainedSocks5ClientToConfigurationsUsingSsl(), 
 				newConfigurationsUsingSsl());
 		assertEquals(string, returningString);
+		System.out.printf("Test %s finished%n", name);
 	}
 	
 	@Test
 	public void testThroughSocks5SocketUsingChainedSocks5ClientToConfigurationsUsingSsl02() throws IOException {
+		String name = new Object(){}.getClass().getEnclosingMethod().getName();
+		System.out.printf("Test %s starting%n", name);
 		String string = TestStringConstants.STRING_02;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
 				newChainedSocks5ClientToConfigurationsUsingSsl(), 
 				newConfigurationsUsingSsl());
 		assertEquals(string, returningString);
+		System.out.printf("Test %s finished%n", name);
 	}
 	
 	@Test
 	public void testThroughSocks5SocketUsingChainedSocks5ClientToConfigurationsUsingSsl03() throws IOException {
+		String name = new Object(){}.getClass().getEnclosingMethod().getName();
+		System.out.printf("Test %s starting%n", name);
 		String string = TestStringConstants.STRING_03;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
 				newChainedSocks5ClientToConfigurationsUsingSsl(), 
 				newConfigurationsUsingSsl());
 		assertEquals(string, returningString);
+		System.out.printf("Test %s finished%n", name);
 	}
 	
 	@Test
 	public void testThroughSocks5SocketUsingSocks5ClientToChainedConfigurations01() throws IOException {
+		String name = new Object(){}.getClass().getEnclosingMethod().getName();
+		System.out.printf("Test %s starting%n", name);
 		String string = TestStringConstants.STRING_01;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
 				newSocks5ClientToChainedConfigurations(), 
 				newChainedConfigurations());
 		assertEquals(string, returningString);
+		System.out.printf("Test %s finished%n", name);
 	}
 	
 	@Test
 	public void testThroughSocks5SocketUsingSocks5ClientToChainedConfigurations02() throws IOException {
+		String name = new Object(){}.getClass().getEnclosingMethod().getName();
+		System.out.printf("Test %s starting%n", name);
 		String string = TestStringConstants.STRING_02;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
 				newSocks5ClientToChainedConfigurations(), 
 				newChainedConfigurations());
 		assertEquals(string, returningString);
+		System.out.printf("Test %s finished%n", name);
 	}
 	
 	@Test
 	public void testThroughSocks5SocketUsingSocks5ClientToChainedConfigurations03() throws IOException {
+		String name = new Object(){}.getClass().getEnclosingMethod().getName();
+		System.out.printf("Test %s starting%n", name);
 		String string = TestStringConstants.STRING_03;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
 				newSocks5ClientToChainedConfigurations(), 
 				newChainedConfigurations());
 		assertEquals(string, returningString);
+		System.out.printf("Test %s finished%n", name);
 	}
 	
 	@Test
 	public void testThroughSocks5SocketUsingSocks5ClientToChainedConfigurationsEachUsingUserpassAuth01() throws IOException {
+		String name = new Object(){}.getClass().getEnclosingMethod().getName();
+		System.out.printf("Test %s starting%n", name);
 		String string = TestStringConstants.STRING_01;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
 				newSocks5ClientToChainedConfigurationsEachUsingUserpassAuth(), 
 				newChainedConfigurationsEachUsingUserpassAuth());
 		assertEquals(string, returningString);
+		System.out.printf("Test %s finished%n", name);
 	}
 	
 	@Test
 	public void testThroughSocks5SocketUsingSocks5ClientToChainedConfigurationsEachUsingUserpassAuth02() throws IOException {
+		String name = new Object(){}.getClass().getEnclosingMethod().getName();
+		System.out.printf("Test %s starting%n", name);
 		String string = TestStringConstants.STRING_02;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
 				newSocks5ClientToChainedConfigurationsEachUsingUserpassAuth(), 
 				newChainedConfigurationsEachUsingUserpassAuth());
 		assertEquals(string, returningString);
+		System.out.printf("Test %s finished%n", name);
 	}
 	
 	@Test
 	public void testThroughSocks5SocketUsingSocks5ClientToChainedConfigurationsEachUsingUserpassAuth03() throws IOException {
+		String name = new Object(){}.getClass().getEnclosingMethod().getName();
+		System.out.printf("Test %s starting%n", name);
 		String string = TestStringConstants.STRING_03;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
 				newSocks5ClientToChainedConfigurationsEachUsingUserpassAuth(), 
 				newChainedConfigurationsEachUsingUserpassAuth());
 		assertEquals(string, returningString);
+		System.out.printf("Test %s finished%n", name);
 	}
 	
 	@Test
 	public void testThroughSocks5SocketUsingSocks5ClientToChainedConfigurationsUsingSsl01() throws IOException {
+		String name = new Object(){}.getClass().getEnclosingMethod().getName();
+		System.out.printf("Test %s starting%n", name);
 		String string = TestStringConstants.STRING_01;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
 				newSocks5ClientToChainedConfigurationsUsingSsl(), 
 				newChainedConfigurationsUsingSsl());
 		assertEquals(string, returningString);
+		System.out.printf("Test %s finished%n", name);
 	}
 	
 	@Test
 	public void testThroughSocks5SocketUsingSocks5ClientToChainedConfigurationsUsingSsl02() throws IOException {
+		String name = new Object(){}.getClass().getEnclosingMethod().getName();
+		System.out.printf("Test %s starting%n", name);
 		String string = TestStringConstants.STRING_02;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
 				newSocks5ClientToChainedConfigurationsUsingSsl(), 
 				newChainedConfigurationsUsingSsl());
 		assertEquals(string, returningString);
+		System.out.printf("Test %s finished%n", name);
 	}
 	
 	@Test
 	public void testThroughSocks5SocketUsingSocks5ClientToChainedConfigurationsUsingSsl03() throws IOException {
+		String name = new Object(){}.getClass().getEnclosingMethod().getName();
+		System.out.printf("Test %s starting%n", name);
 		String string = TestStringConstants.STRING_03;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
 				newSocks5ClientToChainedConfigurationsUsingSsl(), 
 				newChainedConfigurationsUsingSsl());
 		assertEquals(string, returningString);
+		System.out.printf("Test %s finished%n", name);
 	}
 	
 }

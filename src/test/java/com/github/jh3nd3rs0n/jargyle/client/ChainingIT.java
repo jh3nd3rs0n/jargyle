@@ -29,7 +29,6 @@ import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.StringSourceUser
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Methods;
 
-@org.junit.Ignore
 public class ChainingIT {
 	
 	private static List<Configuration> newChainedConfigurations() {
@@ -438,7 +437,8 @@ public class ChainingIT {
 		assertEquals(string, returningString);
 		System.out.printf("Test %s finished%n", name);
 	}
-	
+
+	@org.junit.Ignore
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurations01() throws IOException {
 		String name = new Object(){}.getClass().getEnclosingMethod().getName();
@@ -451,7 +451,8 @@ public class ChainingIT {
 		assertEquals(string, returningString);
 		System.out.printf("Test %s finished%n", name);
 	}
-	
+
+	@org.junit.Ignore
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurations02() throws IOException {
 		String name = new Object(){}.getClass().getEnclosingMethod().getName();
@@ -465,6 +466,7 @@ public class ChainingIT {
 		System.out.printf("Test %s finished%n", name);
 	}
 	
+	@org.junit.Ignore
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurations03() throws IOException {
 		String name = new Object(){}.getClass().getEnclosingMethod().getName();
@@ -478,6 +480,7 @@ public class ChainingIT {
 		System.out.printf("Test %s finished%n", name);
 	}
 	
+	@org.junit.Ignore
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsEachUsingUserpassAuth01() throws IOException {
 		String name = new Object(){}.getClass().getEnclosingMethod().getName();
@@ -491,6 +494,7 @@ public class ChainingIT {
 		System.out.printf("Test %s finished%n", name);
 	}
 	
+	@org.junit.Ignore
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsEachUsingUserpassAuth02() throws IOException {
 		String name = new Object(){}.getClass().getEnclosingMethod().getName();
@@ -504,6 +508,7 @@ public class ChainingIT {
 		System.out.printf("Test %s finished%n", name);
 	}
 	
+	@org.junit.Ignore
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsEachUsingUserpassAuth03() throws IOException {
 		String name = new Object(){}.getClass().getEnclosingMethod().getName();
@@ -530,6 +535,7 @@ public class ChainingIT {
 		System.out.printf("Test %s finished%n", name);
 	}
 	
+	@org.junit.Ignore
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsUsingSsl02() throws IOException {
 		String name = new Object(){}.getClass().getEnclosingMethod().getName();
@@ -543,6 +549,7 @@ public class ChainingIT {
 		System.out.printf("Test %s finished%n", name);
 	}
 	
+	@org.junit.Ignore
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsUsingSsl03() throws IOException {
 		String name = new Object(){}.getClass().getEnclosingMethod().getName();

@@ -1,6 +1,7 @@
 package com.github.jh3nd3rs0n.jargyle.transport.socks5.gssapiauth;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
@@ -40,7 +41,17 @@ public final class GssDatagramSocket extends FilterDatagramSocket {
 		this.messageProp = prp;
 		this.wrapSizeLimit = sizeLimit;		
 	}
-
+	
+	@Override
+	public void close() {
+		try {
+			this.gssContext.dispose();
+		} catch (GSSException e) {
+			throw new UncheckedIOException(new IOException(e));
+		}
+		super.close();
+	}
+	
 	@Override
 	public DatagramChannel getChannel() {
 		throw new UnsupportedOperationException();

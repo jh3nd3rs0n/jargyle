@@ -33,7 +33,7 @@ public final class ServerSocketEchoHelper {
 		private ServerSocket serverSocket;
 		private boolean started;
 		private final String string;
-		private String returningString;
+		private volatile String returningString;
 		
 		public EchoServer(final int prt, final String str) {
 			this.executor = null;

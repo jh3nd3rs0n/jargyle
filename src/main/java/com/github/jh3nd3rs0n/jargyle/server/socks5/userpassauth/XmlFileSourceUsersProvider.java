@@ -105,7 +105,7 @@ public final class XmlFileSourceUsersProvider extends UsersProvider {
 	}
 	
 	private ExecutorService executor;
-	private Users users;
+	private volatile Users users;
 	private final File xmlFile;
 	
 	private XmlFileSourceUsersProvider(final String file) {

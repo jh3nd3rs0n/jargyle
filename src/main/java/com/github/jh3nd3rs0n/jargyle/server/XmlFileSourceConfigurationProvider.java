@@ -109,7 +109,7 @@ public final class XmlFileSourceConfigurationProvider
 		return configurationProvider;
 	}
 	
-	private Configuration configuration;
+	private volatile Configuration configuration;
 	private ExecutorService executor;
 	private final File xmlFile;
 	

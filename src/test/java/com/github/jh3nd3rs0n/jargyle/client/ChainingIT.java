@@ -31,32 +31,36 @@ import com.github.jh3nd3rs0n.jargyle.transport.socks5.Methods;
 
 public class ChainingIT {
 	
+	private static final int SERVER_PORT_1 = 23456;
+	private static final int SERVER_PORT_2 = 65432;
+	private static final int SERVER_PORT_3 = 34567;
+	
 	private static List<Configuration> newChainedConfigurations() {
 		return Arrays.asList(
 				ImmutableConfiguration.newInstance(Settings.newInstance(
 						GeneralSettingSpecConstants.PORT.newSetting(
-								Port.newInstance(23456)),
+								Port.newInstance(SERVER_PORT_1)),
 						ChainingGeneralSettingSpecConstants.CHAINING_SOCKS_SERVER_URI.newSetting(
 								Scheme.SOCKS5.newSocksServerUri(
 										InetAddress.getLoopbackAddress().getHostAddress(), 
-										Integer.valueOf(65432))))),
+										Integer.valueOf(SERVER_PORT_2))))),
 				ImmutableConfiguration.newInstance(Settings.newInstance(
 						GeneralSettingSpecConstants.PORT.newSetting(
-								Port.newInstance(65432)),
+								Port.newInstance(SERVER_PORT_2)),
 						ChainingGeneralSettingSpecConstants.CHAINING_SOCKS_SERVER_URI.newSetting(
 								Scheme.SOCKS5.newSocksServerUri(
 										InetAddress.getLoopbackAddress().getHostAddress(), 
-										Integer.valueOf(34567))))),
+										Integer.valueOf(SERVER_PORT_3))))),
 				ImmutableConfiguration.newInstance(Settings.newInstance(
 						GeneralSettingSpecConstants.PORT.newSetting(
-								Port.newInstance(34567)))));
+								Port.newInstance(SERVER_PORT_3)))));
 	}
 	
 	private static List<Configuration> newChainedConfigurationsEachUsingUserpassAuth() {
 		return Arrays.asList(
 				ImmutableConfiguration.newInstance(Settings.newInstance(
 						GeneralSettingSpecConstants.PORT.newSetting(
-								Port.newInstance(23456)),
+								Port.newInstance(SERVER_PORT_1)),
 						Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
 								Methods.newInstance(Method.USERNAME_PASSWORD)),
 						Socks5SettingSpecConstants.SOCKS5_USERPASSAUTH_USERNAME_PASSWORD_AUTHENTICATOR.newSetting(
@@ -65,7 +69,7 @@ public class ChainingIT {
 						ChainingGeneralSettingSpecConstants.CHAINING_SOCKS_SERVER_URI.newSetting(
 								Scheme.SOCKS5.newSocksServerUri(
 										InetAddress.getLoopbackAddress().getHostAddress(), 
-										Integer.valueOf(65432))),
+										Integer.valueOf(SERVER_PORT_2))),
 						ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_METHODS.newSetting(
 								Methods.newInstance(Method.USERNAME_PASSWORD)),
 						ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_USERPASSAUTH_USERNAME.newSetting(
@@ -74,7 +78,7 @@ public class ChainingIT {
 								EncryptedPassword.newInstance("mission:impossible".toCharArray())))),
 				ImmutableConfiguration.newInstance(Settings.newInstance(
 						GeneralSettingSpecConstants.PORT.newSetting(
-								Port.newInstance(65432)),
+								Port.newInstance(SERVER_PORT_2)),
 						Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
 								Methods.newInstance(Method.USERNAME_PASSWORD)),
 						Socks5SettingSpecConstants.SOCKS5_USERPASSAUTH_USERNAME_PASSWORD_AUTHENTICATOR.newSetting(
@@ -83,7 +87,7 @@ public class ChainingIT {
 						ChainingGeneralSettingSpecConstants.CHAINING_SOCKS_SERVER_URI.newSetting(
 								Scheme.SOCKS5.newSocksServerUri(
 										InetAddress.getLoopbackAddress().getHostAddress(), 
-										Integer.valueOf(34567))),
+										Integer.valueOf(SERVER_PORT_3))),
 						ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_METHODS.newSetting(
 								Methods.newInstance(Method.USERNAME_PASSWORD)),
 						ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_USERPASSAUTH_USERNAME.newSetting(
@@ -92,7 +96,7 @@ public class ChainingIT {
 								EncryptedPassword.newInstance("safeDriversSave40%".toCharArray())))),
 				ImmutableConfiguration.newInstance(Settings.newInstance(
 						GeneralSettingSpecConstants.PORT.newSetting(
-								Port.newInstance(34567)),
+								Port.newInstance(SERVER_PORT_3)),
 						Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
 								Methods.newInstance(Method.USERNAME_PASSWORD)),
 						Socks5SettingSpecConstants.SOCKS5_USERPASSAUTH_USERNAME_PASSWORD_AUTHENTICATOR.newSetting(
@@ -104,11 +108,11 @@ public class ChainingIT {
 		return Arrays.asList(
 				ImmutableConfiguration.newInstance(Settings.newInstance(
 						GeneralSettingSpecConstants.PORT.newSetting(
-								Port.newInstance(23456)),
+								Port.newInstance(SERVER_PORT_1)),
 						ChainingGeneralSettingSpecConstants.CHAINING_SOCKS_SERVER_URI.newSetting(
 								Scheme.SOCKS5.newSocksServerUri(
 										InetAddress.getLoopbackAddress().getHostAddress(), 
-										Integer.valueOf(65432))),
+										Integer.valueOf(SERVER_PORT_2))),
 						ChainingDtlsSettingSpecConstants.CHAINING_DTLS_ENABLED.newSetting(Boolean.TRUE),
 						ChainingDtlsSettingSpecConstants.CHAINING_DTLS_TRUST_STORE_FILE.newSetting(
 								ResourceHelper.getResourceAsFile(
@@ -125,7 +129,7 @@ public class ChainingIT {
 										ResourceNameConstants.JARGYLE_COMMON_SECURITY_SERVER_KEY_STORE_PASSWORD_FILE)))),
 				ImmutableConfiguration.newInstance(Settings.newInstance(
 						GeneralSettingSpecConstants.PORT.newSetting(
-								Port.newInstance(65432)),
+								Port.newInstance(SERVER_PORT_2)),
 						DtlsSettingSpecConstants.DTLS_ENABLED.newSetting(Boolean.TRUE),
 						DtlsSettingSpecConstants.DTLS_KEY_STORE_FILE.newSetting(
 								ResourceHelper.getResourceAsFile(
@@ -145,15 +149,15 @@ public class ChainingIT {
 	private static SocksClient newChainedSocks5ClientToConfigurations() {
 		SocksClient client1 = Scheme.SOCKS5.newSocksServerUri(
 				InetAddress.getLoopbackAddress().getHostAddress(), 
-				Integer.valueOf(23456))
+				Integer.valueOf(SERVER_PORT_1))
 				.newSocksClient(Properties.newInstance());
 		SocksClient client2 = Scheme.SOCKS5.newSocksServerUri(
 				InetAddress.getLoopbackAddress().getHostAddress(), 
-				Integer.valueOf(65432))
+				Integer.valueOf(SERVER_PORT_2))
 				.newSocksClient(Properties.newInstance(), client1);
 		SocksClient client3 = Scheme.SOCKS5.newSocksServerUri(
 				InetAddress.getLoopbackAddress().getHostAddress(), 
-				Integer.valueOf(34567))
+				Integer.valueOf(SERVER_PORT_3))
 				.newSocksClient(Properties.newInstance(), client2);
 		return client3;
 	}
@@ -161,7 +165,7 @@ public class ChainingIT {
 	private static SocksClient newChainedSocks5ClientToConfigurationsEachUsingUserpassAuth() {
 		SocksClient client1 = Scheme.SOCKS5.newSocksServerUri(
 				InetAddress.getLoopbackAddress().getHostAddress(), 
-				Integer.valueOf(23456))
+				Integer.valueOf(SERVER_PORT_1))
 				.newSocksClient(Properties.newInstance(
 						Socks5PropertySpecConstants.SOCKS5_METHODS.newProperty(
 								Methods.newInstance(Method.USERNAME_PASSWORD)),
@@ -172,7 +176,7 @@ public class ChainingIT {
 										"opensesame".toCharArray()))));
 		SocksClient client2 = Scheme.SOCKS5.newSocksServerUri(
 				InetAddress.getLoopbackAddress().getHostAddress(), 
-				Integer.valueOf(65432))
+				Integer.valueOf(SERVER_PORT_2))
 				.newSocksClient(Properties.newInstance(
 						Socks5PropertySpecConstants.SOCKS5_METHODS.newProperty(
 								Methods.newInstance(Method.USERNAME_PASSWORD)),
@@ -184,7 +188,7 @@ public class ChainingIT {
 						client1);
 		SocksClient client3 = Scheme.SOCKS5.newSocksServerUri(
 				InetAddress.getLoopbackAddress().getHostAddress(), 
-				Integer.valueOf(34567))
+				Integer.valueOf(SERVER_PORT_3))
 				.newSocksClient(Properties.newInstance(
 						Socks5PropertySpecConstants.SOCKS5_METHODS.newProperty(
 								Methods.newInstance(Method.USERNAME_PASSWORD)),
@@ -200,11 +204,11 @@ public class ChainingIT {
 	private static SocksClient newChainedSocks5ClientToConfigurationsUsingSsl() {
 		SocksClient client1 = Scheme.SOCKS5.newSocksServerUri(
 				InetAddress.getLoopbackAddress().getHostAddress(), 
-				Integer.valueOf(23456))
+				Integer.valueOf(SERVER_PORT_1))
 				.newSocksClient(Properties.newInstance());
 		SocksClient client2 = Scheme.SOCKS5.newSocksServerUri(
 				InetAddress.getLoopbackAddress().getHostAddress(), 
-				Integer.valueOf(65432))
+				Integer.valueOf(SERVER_PORT_2))
 				.newSocksClient(Properties.newInstance(
 						DtlsPropertySpecConstants.DTLS_ENABLED.newProperty(
 								Boolean.TRUE),
@@ -230,20 +234,20 @@ public class ChainingIT {
 		return Arrays.asList(
 				ImmutableConfiguration.newInstance(Settings.newInstance(
 						GeneralSettingSpecConstants.PORT.newSetting(
-								Port.newInstance(23456)))),
+								Port.newInstance(SERVER_PORT_1)))),
 				ImmutableConfiguration.newInstance(Settings.newInstance(
 						GeneralSettingSpecConstants.PORT.newSetting(
-								Port.newInstance(65432)))),
+								Port.newInstance(SERVER_PORT_2)))),
 				ImmutableConfiguration.newInstance(Settings.newInstance(
 						GeneralSettingSpecConstants.PORT.newSetting(
-								Port.newInstance(34567)))));
+								Port.newInstance(SERVER_PORT_3)))));
 	}
 	
 	private static List<Configuration> newConfigurationsEachUsingUserpassAuth() {
 		return Arrays.asList(
 				ImmutableConfiguration.newInstance(Settings.newInstance(
 						GeneralSettingSpecConstants.PORT.newSetting(
-								Port.newInstance(23456)),
+								Port.newInstance(SERVER_PORT_1)),
 						Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
 								Methods.newInstance(Method.USERNAME_PASSWORD)),
 						Socks5SettingSpecConstants.SOCKS5_USERPASSAUTH_USERNAME_PASSWORD_AUTHENTICATOR.newSetting(
@@ -251,7 +255,7 @@ public class ChainingIT {
 										"Aladdin:opensesame")))),
 				ImmutableConfiguration.newInstance(Settings.newInstance(
 						GeneralSettingSpecConstants.PORT.newSetting(
-								Port.newInstance(65432)),
+								Port.newInstance(SERVER_PORT_2)),
 						Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
 								Methods.newInstance(Method.USERNAME_PASSWORD)),
 						Socks5SettingSpecConstants.SOCKS5_USERPASSAUTH_USERNAME_PASSWORD_AUTHENTICATOR.newSetting(
@@ -259,7 +263,7 @@ public class ChainingIT {
 										"Jasmine:mission%3Aimpossible")))),
 				ImmutableConfiguration.newInstance(Settings.newInstance(
 						GeneralSettingSpecConstants.PORT.newSetting(
-								Port.newInstance(34567)),
+								Port.newInstance(SERVER_PORT_3)),
 						Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
 								Methods.newInstance(Method.USERNAME_PASSWORD)),
 						Socks5SettingSpecConstants.SOCKS5_USERPASSAUTH_USERNAME_PASSWORD_AUTHENTICATOR.newSetting(
@@ -271,10 +275,10 @@ public class ChainingIT {
 		return Arrays.asList(
 				ImmutableConfiguration.newInstance(Settings.newInstance(
 						GeneralSettingSpecConstants.PORT.newSetting(
-								Port.newInstance(23456)))),
+								Port.newInstance(SERVER_PORT_1)))),
 				ImmutableConfiguration.newInstance(Settings.newInstance(
 						GeneralSettingSpecConstants.PORT.newSetting(
-								Port.newInstance(65432)),
+								Port.newInstance(SERVER_PORT_2)),
 						DtlsSettingSpecConstants.DTLS_ENABLED.newSetting(Boolean.TRUE),
 						DtlsSettingSpecConstants.DTLS_KEY_STORE_FILE.newSetting(
 								ResourceHelper.getResourceAsFile(
@@ -294,14 +298,14 @@ public class ChainingIT {
 	private static SocksClient newSocks5ClientToChainedConfigurations() {
 		return Scheme.SOCKS5.newSocksServerUri(
 				InetAddress.getLoopbackAddress().getHostAddress(), 
-				Integer.valueOf(23456))
+				Integer.valueOf(SERVER_PORT_1))
 				.newSocksClient(Properties.newInstance());
 	}
 	
 	private static SocksClient newSocks5ClientToChainedConfigurationsEachUsingUserpassAuth() {
 		return Scheme.SOCKS5.newSocksServerUri(
 				InetAddress.getLoopbackAddress().getHostAddress(), 
-				Integer.valueOf(23456))
+				Integer.valueOf(SERVER_PORT_1))
 				.newSocksClient(Properties.newInstance(
 						Socks5PropertySpecConstants.SOCKS5_METHODS.newProperty(
 								Methods.newInstance(Method.USERNAME_PASSWORD)),
@@ -315,7 +319,7 @@ public class ChainingIT {
 	private static SocksClient newSocks5ClientToChainedConfigurationsUsingSsl() {
 		return Scheme.SOCKS5.newSocksServerUri(
 				InetAddress.getLoopbackAddress().getHostAddress(), 
-				Integer.valueOf(23456))
+				Integer.valueOf(SERVER_PORT_1))
 				.newSocksClient(Properties.newInstance());
 	}
 	

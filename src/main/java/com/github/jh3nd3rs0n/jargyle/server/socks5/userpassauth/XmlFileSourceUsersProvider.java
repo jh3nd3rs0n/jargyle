@@ -91,7 +91,7 @@ public final class XmlFileSourceUsersProvider extends UsersProvider {
 					}
 				}
 			}
-			this.usersProvider.users = usrs;
+			this.usersProvider.setUsers(usrs);
 			return true;
 		}
 		
@@ -105,7 +105,7 @@ public final class XmlFileSourceUsersProvider extends UsersProvider {
 	}
 	
 	private ExecutorService executor;
-	private volatile Users users;
+	private Users users;
 	private final File xmlFile;
 	
 	private XmlFileSourceUsersProvider(final String file) {
@@ -138,8 +138,12 @@ public final class XmlFileSourceUsersProvider extends UsersProvider {
 	}
 	
 	@Override
-	public Users getUsers() {
+	public synchronized Users getUsers() {
 		return Users.newInstance(this.users);
+	}
+	
+	private synchronized void setUsers(final Users usrs) {
+		this.users = Users.newInstance(usrs);
 	}
 	
 	private void startMonitoringXmlFile() {

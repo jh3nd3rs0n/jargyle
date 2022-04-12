@@ -95,7 +95,7 @@ public final class XmlFileSourceConfigurationProvider
 					}
 				}
 			}
-			this.configurationProvider.configuration = config;
+			this.configurationProvider.setConfiguration(config);
 			return true;
 		}
 		
@@ -109,7 +109,7 @@ public final class XmlFileSourceConfigurationProvider
 		return configurationProvider;
 	}
 	
-	private volatile Configuration configuration;
+	private Configuration configuration;
 	private ExecutorService executor;
 	private final File xmlFile;
 	
@@ -141,8 +141,12 @@ public final class XmlFileSourceConfigurationProvider
 	}
 	
 	@Override
-	public Configuration getConfiguration() {
+	public synchronized Configuration getConfiguration() {
 		return this.configuration;
+	}
+	
+	private synchronized void setConfiguration(final Configuration config) {
+		this.configuration = config;
 	}
 	
 	private void startMonitoringXmlFile() {

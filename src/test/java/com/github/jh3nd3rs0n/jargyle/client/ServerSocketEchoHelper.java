@@ -33,7 +33,7 @@ public final class ServerSocketEchoHelper {
 		private ServerSocket serverSocket;
 		private boolean started;
 		private final String string;
-		private volatile String returningString;
+		private String returningString;
 		
 		public EchoServer(final int prt, final String str) {
 			this.executor = null;
@@ -48,7 +48,7 @@ public final class ServerSocketEchoHelper {
 			return this.port;
 		}
 		
-		public String getReturningString() {
+		public synchronized String getReturningString() {
 			return this.returningString;
 		}
 		
@@ -60,7 +60,7 @@ public final class ServerSocketEchoHelper {
 			return this.started;
 		}
 		
-		public void setReturningString(final String returningStr) {
+		public synchronized void setReturningString(final String returningStr) {
 			this.returningString = returningStr;
 		}
 		
@@ -221,13 +221,13 @@ public final class ServerSocketEchoHelper {
 			byte[] bytes = IoHelper.readFrom(socketIn);
 			String str = new String(bytes);
 			IoHelper.writeThenFlush(str.getBytes(), socketOut);
-			while ((returningString = echoServer.getReturningString()) == null) {
+			do {
 				try {
 					Thread.sleep(SLEEP_TIME);
 				} catch (InterruptedException e) {
 					Thread.currentThread().interrupt();
 				}				
-			}
+			} while ((returningString = echoServer.getReturningString()) == null);
 		} finally {
 			if (socket != null) {
 				socket.close();

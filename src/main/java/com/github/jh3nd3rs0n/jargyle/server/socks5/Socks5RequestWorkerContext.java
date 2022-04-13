@@ -17,11 +17,14 @@ public class Socks5RequestWorkerContext extends Socks5WorkerContext {
 
 	private final MethodSubnegotiationResults methodSubnegotiationResults;
 	private final Socks5Request socks5Request;
+	private final Socks5RequestWorkerContext socks5RequestWorkerContext;
 	
-	public Socks5RequestWorkerContext(final Socks5RequestWorkerContext other) {
-		super(other);
-		this.methodSubnegotiationResults = other.methodSubnegotiationResults;
-		this.socks5Request = other.socks5Request; 
+	protected Socks5RequestWorkerContext(
+			final Socks5RequestWorkerContext context) {
+		super(context);
+		this.methodSubnegotiationResults = null;
+		this.socks5Request = null;
+		this.socks5RequestWorkerContext = context;
 	}
 	
 	public Socks5RequestWorkerContext(
@@ -33,6 +36,7 @@ public class Socks5RequestWorkerContext extends Socks5WorkerContext {
 		Objects.requireNonNull(socks5Req);
 		this.methodSubnegotiationResults = methSubnegotiationResults;
 		this.socks5Request = socks5Req;
+		this.socks5RequestWorkerContext = null;
 	}
 	
 	public final boolean canAllowSocks5Reply(
@@ -53,22 +57,37 @@ public class Socks5RequestWorkerContext extends Socks5WorkerContext {
 	}
 	
 	public final Command getCommand() {
+		if (this.socks5RequestWorkerContext != null) {
+			return this.socks5RequestWorkerContext.getCommand();
+		}
 		return this.socks5Request.getCommand();
 	}
 	
 	public final String getDesiredDestinationAddress() {
+		if (this.socks5RequestWorkerContext != null) {
+			return this.socks5RequestWorkerContext.getDesiredDestinationAddress();
+		}
 		return this.socks5Request.getDesiredDestinationAddress();
 	}
 	
 	public final int getDesiredDestinationPort() {
+		if (this.socks5RequestWorkerContext != null) {
+			return this.socks5RequestWorkerContext.getDesiredDestinationPort();
+		}
 		return this.socks5Request.getDesiredDestinationPort();
 	}
 	
 	public final MethodSubnegotiationResults getMethodSubnegotiationResults() {
+		if (this.socks5RequestWorkerContext != null) {
+			return this.socks5RequestWorkerContext.getMethodSubnegotiationResults();
+		}
 		return this.methodSubnegotiationResults;
 	}
 	
 	public final Socks5Request getSocks5Request() {
+		if (this.socks5RequestWorkerContext != null) {
+			return this.socks5RequestWorkerContext.getSocks5Request();
+		}
 		return this.socks5Request;
 	}
 	

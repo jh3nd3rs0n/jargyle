@@ -14,7 +14,6 @@ import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.Route;
 import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
-import com.github.jh3nd3rs0n.jargyle.server.WorkerContext;
 import com.github.jh3nd3rs0n.jargyle.server.internal.logging.ClientFacingIOExceptionLoggingHelper;
 import com.github.jh3nd3rs0n.jargyle.server.rules.impl.FirewallRule;
 import com.github.jh3nd3rs0n.jargyle.server.rules.impl.FirewallRuleAction;
@@ -226,12 +225,7 @@ public final class Socks5Worker {
 		Socket socket = methodSubnegotiationResults.getSocket();
 		this.clientFacingInputStream = socket.getInputStream();
 		this.clientFacingSocket = socket;
-		this.socks5WorkerContext = new Socks5WorkerContext(new WorkerContext(
-				this.clientFacingSocket,
-				this.socks5WorkerContext.getConfiguration(),
-				this.socks5WorkerContext.getRoute(),
-				this.socks5WorkerContext.getRoutes(),
-				this.socks5WorkerContext.getClientFacingDtlsDatagramSocketFactory()));
+		this.socks5WorkerContext.setClientFacingSocket(this.clientFacingSocket);
 		Socks5Request socks5Request = this.newSocks5Request();
 		if (socks5Request == null) { return; }
 		if (!this.canAllowSocks5Request(new Socks5RequestFirewallRule.Context(
@@ -248,12 +242,7 @@ public final class Socks5Worker {
 				socks5Request,
 				this.socks5WorkerContext.getRoutes()));
 		if (route == null) { return; }
-		this.socks5WorkerContext = new Socks5WorkerContext(new WorkerContext(
-				this.socks5WorkerContext.getClientFacingSocket(),
-				this.socks5WorkerContext.getConfiguration(),
-				route,
-				this.socks5WorkerContext.getRoutes(),
-				this.socks5WorkerContext.getClientFacingDtlsDatagramSocketFactory()));		
+		this.socks5WorkerContext.setRoute(route);
 		Socks5RequestWorkerContext socks5RequestWorkerContext = 
 				new Socks5RequestWorkerContext(
 						this.socks5WorkerContext, 

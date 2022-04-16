@@ -92,7 +92,7 @@ public final class ConnectCommandWorker extends CommandWorker {
 		return true;
 	}
 
-	private Socket newServerFacingSocket() throws IOException {
+	private Socket newServerFacingSocket() {
 		Socks5Reply socks5Rep = null;
 		HostResolver hostResolver =	this.netObjectFactory.newHostResolver();		
 		Socket serverFacingSocket = null;		
@@ -120,6 +120,28 @@ public final class ConnectCommandWorker extends CommandWorker {
 				this.commandWorkerContext.sendSocks5Reply(
 						this, socks5Rep, LOGGER);
 				return null;
+			} catch (SocketException e) {
+				LOGGER.error( 
+						ObjectLogMessageHelper.objectLogMessage(
+								this, 
+								"Error in connecting the server-facing socket"), 
+						e);
+				socks5Rep = Socks5Reply.newFailureInstance(
+						Reply.NETWORK_UNREACHABLE);
+				this.commandWorkerContext.sendSocks5Reply(
+						this, socks5Rep, LOGGER);
+				return null;				
+			} catch (IOException e) {
+				LOGGER.error( 
+						ObjectLogMessageHelper.objectLogMessage(
+								this, 
+								"Error in connecting the server-facing socket"), 
+						e);
+				socks5Rep = Socks5Reply.newFailureInstance(
+						Reply.GENERAL_SOCKS_SERVER_FAILURE);
+				this.commandWorkerContext.sendSocks5Reply(
+						this, socks5Rep, LOGGER);
+				return null;
 			}
 		} else {
 			Host bindHost = this.settings.getLastValue(
@@ -139,6 +161,28 @@ public final class ConnectCommandWorker extends CommandWorker {
 						e);
 				socks5Rep = Socks5Reply.newFailureInstance(
 						Reply.HOST_UNREACHABLE);
+				this.commandWorkerContext.sendSocks5Reply(
+						this, socks5Rep, LOGGER);
+				return null;
+			} catch (SocketException e) {
+				LOGGER.error( 
+						ObjectLogMessageHelper.objectLogMessage(
+								this, 
+								"Error in connecting the server-facing socket"), 
+						e);
+				socks5Rep = Socks5Reply.newFailureInstance(
+						Reply.NETWORK_UNREACHABLE);
+				this.commandWorkerContext.sendSocks5Reply(
+						this, socks5Rep, LOGGER);
+				return null;				
+			} catch (IOException e) {
+				LOGGER.error( 
+						ObjectLogMessageHelper.objectLogMessage(
+								this, 
+								"Error in connecting the server-facing socket"), 
+						e);
+				socks5Rep = Socks5Reply.newFailureInstance(
+						Reply.GENERAL_SOCKS_SERVER_FAILURE);
 				this.commandWorkerContext.sendSocks5Reply(
 						this, socks5Rep, LOGGER);
 				return null;

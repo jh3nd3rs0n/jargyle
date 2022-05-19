@@ -2261,7 +2261,6 @@ Rule conditions within a rule are evaluated as true if each group of one or more
 
 Partial configuration file examples:
 
-
 ```xml
     
     <ruleConditions>

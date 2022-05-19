@@ -148,7 +148,7 @@ public final class XmlFileSourceConfigurationRepository
 	}
 	
 	@Override
-	public synchronized Configuration get() {
+	public Configuration get() {
 		return this.configuration;
 	}
 	

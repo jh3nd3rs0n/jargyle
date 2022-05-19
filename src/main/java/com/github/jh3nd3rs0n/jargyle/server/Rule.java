@@ -1,146 +1,225 @@
 package com.github.jh3nd3rs0n.jargyle.server;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
-public abstract class Rule {
-	
-	public static abstract class Builder<B extends Builder<B, R>, R extends Rule> {
+public final class Rule {
 
-		public static interface Field<B extends Builder<B, R>, R extends Rule> {
-			
-			public boolean isRepresentedBy(final String s);
-			
-			public B set(final B builder, final String value);
-			
-			@Override
-			public String toString();
-			
-		}
-
-		private static <B extends Builder<B, R>, F extends Builder.Field<B, R>, R extends Rule> F getFieldRepresentedBy(
-				final String s,
-				final List<F> fields) {
-			for (F field : fields) {
-				if (field.isRepresentedBy(s)) {
-					return field;
-				}
-			}
-			String str = fields.stream()
-					.map(f -> f.toString())
-					.collect(Collectors.joining(", "));
-			throw new IllegalArgumentException(String.format(
-					"expected field must be one of the following values: %s. "
-					+ "actual value is %s",
-					str,
-					s));			
-		}
+	public static final class Builder {
 		
-		private LogAction logAction;
-		private String doc;
+		private final List<RuleCondition<Object, Object>> ruleConditions;
+		private final List<RuleResult<Object>> ruleResults;
 		
 		public Builder() {
-			this.logAction = null;
-			this.doc = null;
+			this.ruleConditions = new ArrayList<RuleCondition<Object, Object>>();
+			this.ruleResults = new ArrayList<RuleResult<Object>>();
 		}
 		
-		public abstract R build();
+		public Builder addRuleCondition(
+				final RuleCondition<? extends Object, ? extends Object> ruleCondition) {
+			@SuppressWarnings("unchecked")
+			RuleCondition<Object, Object> rlCondition = 
+					(RuleCondition<Object, Object>) ruleCondition;
+			this.ruleConditions.add(rlCondition);
+			return this;
+		}
+		
+		public Builder addRuleResult(
+				final RuleResult<? extends Object> ruleResult) {
+			@SuppressWarnings("unchecked")
+			RuleResult<Object> rlResult = (RuleResult<Object>) ruleResult;
+			this.ruleResults.add(rlResult);
+			return this;
+		}
+		
+		public Rule build() {
+			return new Rule(this);
+		}
+		
+	}
 
-		public final String doc() {
-			return this.doc;
-		}
-		
-		public B doc(final String d) {
-			this.doc = d;
-			@SuppressWarnings("unchecked")
-			B builder = (B) this;
-			return builder;		
-		}
-		
-		public final LogAction logAction() {
-			return this.logAction;
-		}
-		
-		public B logAction(final LogAction lgAction) {
-			this.logAction = lgAction;
-			@SuppressWarnings("unchecked")
-			B builder = (B) this;
-			return builder;
-		}
-		
+	private static final Rule DEFAULT_INSTANCE = new Rule.Builder()
+			.addRuleResult(GeneralRuleResultSpecConstants.FIREWALL_ACTION.newRuleResult(FirewallAction.ALLOW))
+			.build();
+	
+	public static Rule getDefault() {
+		return DEFAULT_INSTANCE;
 	}
 	
-	public static abstract class Context {
-		
-		@Override
-		public abstract String toString();
-		
-	}
-	
-	public static <B extends Builder<B, R>, F extends Builder.Field<B, R>, R extends Rule> List<R> newInstances(
-			final String s, 
-			final F firstField, 
-			final List<F> fields) {
-		List<R> rules = new ArrayList<R>();
+	public static Rule newInstance(final String s) {
 		String[] words = s.split(" ");
-		B recentBuilder = null;
-		B builder = null;
-		for (Iterator<String> iterator = Arrays.asList(words).iterator();
-				iterator.hasNext();) {
-			String word = iterator.next();
-			String[] wordElements = word.split("=", 2);
-			if (wordElements.length != 2) {
-				throw new IllegalArgumentException(String.format(
-						"field must be in the following format: "
-						+ "NAME=VALUE. actual value is %s",
-						word));
-			}
-			F field = Builder.getFieldRepresentedBy(wordElements[0], fields);
+		Builder builder = new Builder();
+		for (String word : words) {
+			IllegalArgumentException e1 = null;
+			IllegalArgumentException e2 = null;
 			try {
-				builder = field.set(builder, wordElements[1]);
-			} catch (NullPointerException e) {
+				builder.addRuleCondition(RuleCondition.newInstance(word));
+				continue;
+			} catch (IllegalArgumentException e) {
+				e1 = e;
+			}
+			try {
+				builder.addRuleResult(RuleResult.newInstance(word));
+			} catch (IllegalArgumentException e) {
+				e2 = e;
+			}
+			if (e1 != null && e2 != null) {
 				throw new IllegalArgumentException(String.format(
-						"expected field '%s'. actual field is '%s'", 
-						firstField,
-						wordElements[0]));				
+						"invalid rule condition or rule result: %s", 
+						word));
+			}			
+		}
+		return builder.build();
+	}
+	
+	private final Map<RuleConditionSpec<Object, Object>, List<RuleCondition<Object, Object>>> ruleConditionListMap;
+	private final List<RuleCondition<Object, Object>> ruleConditions;
+	private final Map<RuleResultSpec<Object>, List<RuleResult<Object>>> ruleResultListMap;
+	private final List<RuleResult<Object>> ruleResults;
+	
+	private Rule(final Builder builder) {
+		List<RuleCondition<Object, Object>> rlConditions = 
+				new ArrayList<RuleCondition<Object, Object>>(
+						builder.ruleConditions);
+		Map<RuleConditionSpec<Object, Object>, List<RuleCondition<Object, Object>>> rlConditionListMap =
+				new LinkedHashMap<RuleConditionSpec<Object, Object>, List<RuleCondition<Object, Object>>>();
+		for (RuleCondition<Object, Object> rlCondition : rlConditions) {
+			RuleConditionSpec<Object, Object> rlConditionSpec = 
+					rlCondition.getRuleConditionSpec();
+			List<RuleCondition<Object, Object>> conditions = 
+					rlConditionListMap.get(rlConditionSpec);
+			if (conditions == null) {
+				conditions = new ArrayList<RuleCondition<Object, Object>>();
+				rlConditionListMap.put(rlConditionSpec, conditions);
 			}
-			if (recentBuilder == null) {
-				recentBuilder = builder;
+			conditions.add(rlCondition);
+		}
+		List<RuleResult<Object>> rlResults = 
+				new ArrayList<RuleResult<Object>>(builder.ruleResults);
+		Map<RuleResultSpec<Object>, List<RuleResult<Object>>> rlResultListMap = 
+				new LinkedHashMap<RuleResultSpec<Object>, List<RuleResult<Object>>>();
+		for (RuleResult<Object> rlResult : rlResults) {
+			RuleResultSpec<Object> rlResultSpec = rlResult.getRuleResultSpec();
+			List<RuleResult<Object>> results = rlResultListMap.get(rlResultSpec);
+			if (results == null) {
+				results = new ArrayList<RuleResult<Object>>();
+				rlResultListMap.put(rlResultSpec, results);
 			}
-			if (!recentBuilder.equals(builder)) {
-				rules.add(recentBuilder.build());
-				recentBuilder = builder;
+			results.add(rlResult);
+		}
+		this.ruleConditionListMap = rlConditionListMap;
+		this.ruleConditions = rlConditions;
+		this.ruleResultListMap = rlResultListMap;
+		this.ruleResults = rlResults;
+	}
+	
+	public boolean appliesTo(final RuleContext context) {
+		for (List<RuleCondition<Object, Object>> ruleConditionList 
+				: this.ruleConditionListMap.values()) {
+			boolean anyRuleConditionEvaluatesTrue = false;
+			for (RuleCondition<Object, Object> ruleCondition : ruleConditionList) {
+				if (ruleCondition.evaluatesTrue(context)) {
+					anyRuleConditionEvaluatesTrue = true;
+					break;
+				}
 			}
-			if (!iterator.hasNext()) {
-				rules.add(builder.build());
+			if (!anyRuleConditionEvaluatesTrue) {
+				return false;
 			}
 		}
-		return rules;		
-	}
-	
-	private final LogAction logAction;
-	private final String doc;
-	
-	public Rule(final Builder<?, ?> builder) {
-		LogAction lgAction = builder.logAction();
-		String d = builder.doc();
-		this.logAction = lgAction;
-		this.doc = d;
-	}
-	
-	public abstract boolean appliesTo(final Context context);
-
-	public abstract void applyTo(final Context context);
-	
-	public final String getDoc() {
-		return this.doc;
+		return true;
 	}
 
-	public final LogAction getLogAction() {
-		return this.logAction;
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (this.getClass() != obj.getClass()) {
+			return false;
+		}
+		Rule other = (Rule) obj;
+		if (this.ruleConditions == null) {
+			if (other.ruleConditions != null) {
+				return false;
+			}
+		} else if (!this.ruleConditions.equals(other.ruleConditions)) {
+			return false;
+		}
+		if (this.ruleResults == null) {
+			if (other.ruleResults != null) {
+				return false;
+			}
+		} else if (!this.ruleResults.equals(other.ruleResults)) {
+			return false;
+		}
+		return true;
+	}
+	
+	public <V> V getLastRuleResultValue(final RuleResultSpec<V> ruleResultSpec) {
+		List<RuleResult<Object>> ruleResultList = this.ruleResultListMap.get(
+				ruleResultSpec);
+		V value = null;
+		if (ruleResultList != null && ruleResultList.size() > 0) {
+			RuleResult<Object> ruleResult = ruleResultList.get(
+					ruleResultList.size() - 1);
+			value = ruleResultSpec.getValueType().cast(ruleResult.getValue());
+		}
+		return value;
 	}
 
+	public List<RuleCondition<Object, Object>> getRuleConditions() {
+		return Collections.unmodifiableList(this.ruleConditions);
+	}
+	
+	public List<RuleResult<Object>> getRuleResults() {
+		return Collections.unmodifiableList(this.ruleResults);
+	}
+	
+	public <V> List<V> getRuleResultValues(final RuleResultSpec<V> ruleResultSpec) {
+		List<RuleResult<Object>> ruleResultList = this.ruleResultListMap.get(
+				ruleResultSpec);
+		List<V> values = new ArrayList<V>();
+		if (ruleResultList != null) {
+			for (RuleResult<Object> ruleResult : ruleResultList) {
+				values.add(ruleResultSpec.getValueType().cast(
+						ruleResult.getValue()));
+			}
+		}
+		return Collections.unmodifiableList(values);
+	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((this.ruleConditions == null) ? 
+				0 : this.ruleConditions.hashCode());
+		result = prime * result + ((this.ruleResults == null) ? 
+				0 : this.ruleResults.hashCode());
+		return result;
+	}
+	
+	public boolean hasRuleCondition(
+			final RuleConditionSpec<? extends Object, ? extends Object> ruleConditionSpec) {
+		return this.ruleConditionListMap.containsKey(ruleConditionSpec);
+	}
+
+	@Override
+	public String toString() {
+		List<Object> list = new ArrayList<Object>();
+		list.addAll(this.ruleConditions);
+		list.addAll(this.ruleResults);
+		return list.stream()
+				.map(Object::toString)
+				.collect(Collectors.joining(" "));
+	}
+	
 }

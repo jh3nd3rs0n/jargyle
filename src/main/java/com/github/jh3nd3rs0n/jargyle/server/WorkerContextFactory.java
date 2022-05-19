@@ -4,52 +4,143 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.github.jh3nd3rs0n.jargyle.common.net.SocketSetting;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.common.net.ssl.DtlsDatagramSocketFactory;
 import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.SslSocketFactory;
-import com.github.jh3nd3rs0n.jargyle.server.rules.impl.ClientFirewallRule;
-import com.github.jh3nd3rs0n.jargyle.server.rules.impl.ClientFirewallRules;
-import com.github.jh3nd3rs0n.jargyle.server.rules.impl.ClientRoutingRule;
-import com.github.jh3nd3rs0n.jargyle.server.rules.impl.ClientRoutingRules;
-import com.github.jh3nd3rs0n.jargyle.server.rules.impl.FirewallRule;
-import com.github.jh3nd3rs0n.jargyle.server.rules.impl.FirewallRuleAction;
-import com.github.jh3nd3rs0n.jargyle.server.rules.impl.RoutingRule;
 
 final class WorkerContextFactory {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(
+			WorkerContextFactory.class);
 	
 	private DtlsDatagramSocketFactory clientFacingDtlsDatagramSocketFactory;
 	private SslSocketFactory clientFacingSslSocketFactory;
 	private final Configuration configuration;
 	private Configuration lastConfiguration;
+	private SelectionStrategy routeIdSelectionStrategy;
 	private Routes routes;
-	private Selector<Route> routeSelector;
+	private Rules rules;
 	
 	public WorkerContextFactory(final Configuration config) {
 		this.clientFacingDtlsDatagramSocketFactory = null;
 		this.clientFacingSslSocketFactory = null;
 		this.configuration = config;
 		this.lastConfiguration = null;
+		this.routeIdSelectionStrategy = null;
 		this.routes = null;
-		this.routeSelector = null;		
+		this.rules = null;
 	}
 	
 	private boolean canAllowClientFacingSocket(
-			final FirewallRule.Context context, final Configuration config) {
-		Settings settings = config.getSettings();
-		ClientFirewallRules clientFirewallRules = settings.getLastValue(
-				GeneralSettingSpecConstants.CLIENT_FIREWALL_RULES);
-		clientFirewallRules.applyTo(context);
-		return FirewallRuleAction.ALLOW.equals(context.getFirewallRuleAction());
+			final Rule applicableRule,
+			final RuleContext clientRuleContext,
+			final Set<Rule> belowAllowLimitRules) {
+		if (applicableRule == null) {
+			return false;
+		}
+		FirewallAction firewallAction = applicableRule.getLastRuleResultValue(
+				GeneralRuleResultSpecConstants.FIREWALL_ACTION);
+		if (firewallAction == null) {
+			return false;
+		}
+		NonnegativeIntegerLimit firewallActionAllowLimit =
+				applicableRule.getLastRuleResultValue(
+						GeneralRuleResultSpecConstants.FIREWALL_ACTION_ALLOW_LIMIT);
+		LogAction firewallActionAllowLimitReachedLogAction =
+				applicableRule.getLastRuleResultValue(
+						GeneralRuleResultSpecConstants.FIREWALL_ACTION_ALLOW_LIMIT_REACHED_LOG_ACTION);
+		LogAction firewallActionLogAction = 
+				applicableRule.getLastRuleResultValue(
+						GeneralRuleResultSpecConstants.FIREWALL_ACTION_LOG_ACTION);
+		String clientAddress = clientRuleContext.getRuleArgValue(
+				GeneralRuleArgSpecConstants.CLIENT_ADDRESS);
+		String socksServerAddress = clientRuleContext.getRuleArgValue(
+				GeneralRuleArgSpecConstants.SOCKS_SERVER_ADDRESS);		
+		if (firewallAction.equals(FirewallAction.ALLOW)) {
+			if (firewallActionAllowLimit != null) {
+				if (firewallActionAllowLimit.hasBeenReached()) {
+					if (firewallActionAllowLimitReachedLogAction != null) {
+						firewallActionAllowLimitReachedLogAction.invoke(
+								LOGGER, 
+								String.format(
+										"Allowed limit has been reached based "
+										+ "on the following rule and context: "
+										+ "rule: %s context: %s",
+										applicableRule,
+										clientRuleContext));
+					}
+					return false;
+				}
+				firewallActionAllowLimit.incrementCurrentCount();
+				belowAllowLimitRules.add(applicableRule);				
+			}
+			if (firewallActionLogAction != null) {
+				firewallActionLogAction.invoke(LOGGER, String.format(
+						"Client (%s) to SOCKS server (%s) allowed based on "
+						+ "the following rule and context: rule: %s context: "
+						+ "%s",
+						clientAddress,
+						socksServerAddress,
+						applicableRule,
+						clientRuleContext));
+			}
+		} else if (firewallAction.equals(FirewallAction.DENY)
+				&& firewallActionLogAction != null) {
+			firewallActionLogAction.invoke(LOGGER, String.format(
+					"Client (%s) to SOCKS server (%s) denied based on the "
+					+ "following rule and context: rule: %s context: %s",
+					clientAddress,
+					socksServerAddress,
+					applicableRule,
+					clientRuleContext));				
+		}
+		return FirewallAction.ALLOW.equals(firewallAction);
 	}
 	
 	private void configureClientFacingSocket(
 			final Socket clientFacingSock,
+			final Rule applicableRule,
 			final Configuration config) throws SocketException {
-		Settings settings = config.getSettings();
-		SocketSettings socketSettings = settings.getLastValue(
-				GeneralSettingSpecConstants.CLIENT_FACING_SOCKET_SETTINGS);
+		SocketSettings socketSettings = this.getClientFacingSocketSettings(
+				applicableRule, config);
 		socketSettings.applyTo(clientFacingSock);
+	}
+	
+	private SocketSettings getClientFacingSocketSettings(
+			final Rule applicableRule,
+			final Configuration config) {
+		List<SocketSetting<Object>> socketSettings = 
+				applicableRule.getRuleResultValues(
+						GeneralRuleResultSpecConstants.CLIENT_FACING_SOCKET_SETTING);
+		if (socketSettings.size() > 0) {
+			List<SocketSetting<? extends Object>> socketSttngs = 
+					new ArrayList<SocketSetting<? extends Object>>(
+							socketSettings); 
+			return SocketSettings.newInstance(socketSttngs);
+		}
+		Settings settings = config.getSettings();
+		return settings.getLastValue(
+				GeneralSettingSpecConstants.CLIENT_FACING_SOCKET_SETTINGS);
+	}
+	
+	private RuleContext newClientRuleContext(final Socket clientFacingSock) {
+		RuleContext clientRuleContext = new RuleContext();
+		clientRuleContext.putRuleArgValue(
+				GeneralRuleArgSpecConstants.CLIENT_ADDRESS, 
+				clientFacingSock.getInetAddress().getHostAddress());
+		clientRuleContext.putRuleArgValue(
+				GeneralRuleArgSpecConstants.SOCKS_SERVER_ADDRESS, 
+				clientFacingSock.getLocalAddress().getHostAddress());
+		return clientRuleContext;
 	}
 	
 	private Configuration newConfiguration() {
@@ -63,12 +154,11 @@ final class WorkerContextFactory {
 				this.clientFacingSslSocketFactory =
 						SslSocketFactoryImpl.isSslEnabled(config) ?
 								new SslSocketFactoryImpl(config) : null;
-				this.routes = Routes.newInstance(config);
-				SelectionStrategy routeSelectionStrategy = 
+				this.routeIdSelectionStrategy = 
 						config.getSettings().getLastValue(
-								GeneralSettingSpecConstants.ROUTE_SELECTION_STRATEGY);
-				this.routeSelector = routeSelectionStrategy.newSelector(
-						new ArrayList<Route>(this.routes.toMap().values()));
+								GeneralSettingSpecConstants.ROUTE_ID_SELECTION_STRATEGY);
+				this.routes = Routes.newInstance(config);
+				this.rules = Rules.newInstance(config);
 				this.lastConfiguration = config;
 			}
 		}
@@ -79,49 +169,76 @@ final class WorkerContextFactory {
 			final Socket clientFacingSocket) throws IOException {
 		Configuration config = this.newConfiguration();
 		Socket clientFacingSock = clientFacingSocket;
-		String clientAddress = 
-				clientFacingSock.getInetAddress().getHostAddress();
-		String socksServerAddress =
-				clientFacingSock.getLocalAddress().getHostAddress();
+		RuleContext clientRuleContext = this.newClientRuleContext(
+				clientFacingSock);
+		Rule applicableRule = this.rules.firstAppliesTo(clientRuleContext);
+		Set<Rule> belowAllowLimitRules = new HashSet<Rule>();
 		if (!this.canAllowClientFacingSocket(
-				new ClientFirewallRule.Context(
-						clientAddress, socksServerAddress), 
-				config)) {
+				applicableRule, clientRuleContext, belowAllowLimitRules)) {
 			throw new IllegalArgumentException(
 					"client-facing socket not allowed");
 		}
-		this.configureClientFacingSocket(clientFacingSock, config);
+		this.configureClientFacingSocket(
+				clientFacingSock, applicableRule, config);
 		clientFacingSock = this.wrapClientFacingSocket(clientFacingSock);
-		Route route = this.selectRoute(
-				new ClientRoutingRule.Context(
-						clientAddress, socksServerAddress, this.routes),
-				config);
-		return new WorkerContext(
+		Route selectedRoute = this.selectRoute(
+				applicableRule, clientRuleContext, config);
+		WorkerContext workerContext = new WorkerContext(
 				clientFacingSock, 
-				config, 
-				route,
+				config,
+				this.rules,
 				this.routes,
+				selectedRoute,
 				this.clientFacingDtlsDatagramSocketFactory);
+		// should only be one below allow limit rule
+		for (Rule belowAllowLimitRule : belowAllowLimitRules) {
+			workerContext.addBelowAllowLimitRule(belowAllowLimitRule);
+		}
+		return workerContext;
 	}
 	
 	private Route selectRoute(
-			final RoutingRule.Context context, final Configuration config) {
-		Settings settings = config.getSettings();		
-		ClientRoutingRules clientRoutingRules = settings.getLastValue(
-				GeneralSettingSpecConstants.CLIENT_ROUTING_RULES);
-		clientRoutingRules.applyTo(context);
-		Route route = context.getRoute();
-		if (route == null) {
-			route = this.routeSelector.select();
-			LogAction routeSelectionLogAction = settings.getLastValue(
-					GeneralSettingSpecConstants.ROUTE_SELECTION_LOG_ACTION);
-			if (routeSelectionLogAction != null) {
-				routeSelectionLogAction.invoke(String.format(
-						"Route '%s' selected", 
-						route.getRouteId()));
+			final Rule applicableRule,
+			final RuleContext clientRuleContext,
+			final Configuration config) {
+		List<String> rteIds = applicableRule.getRuleResultValues(
+				GeneralRuleResultSpecConstants.ROUTE_ID);
+		SelectionStrategy rteIdSelectionStrategy = 
+				applicableRule.getLastRuleResultValue(
+						GeneralRuleResultSpecConstants.ROUTE_ID_SELECTION_STRATEGY);
+		LogAction rteIdSelectionLogAction = 
+				applicableRule.getLastRuleResultValue(
+						GeneralRuleResultSpecConstants.ROUTE_ID_SELECTION_LOG_ACTION);
+		Route selectedRte = null;
+		if (rteIds.size() > 0 && rteIdSelectionStrategy != null) {
+			String selectedRteId = rteIdSelectionStrategy.selectFrom(rteIds);
+			selectedRte = this.routes.get(selectedRteId);
+			if (selectedRte != null && rteIdSelectionLogAction != null) {
+				rteIdSelectionLogAction.invoke(LOGGER, String.format(
+						"Route '%s' selected based on the following rule "
+						+ "and context: rule: %s context: %s",
+						selectedRteId,
+						applicableRule,
+						clientRuleContext));				
 			}
 		}
-		return route;
+		if (selectedRte != null) {
+			return selectedRte;
+		}
+		List<String> routeIds = this.routes.toMap().keySet().stream().collect(
+				Collectors.toList());
+		String selectedRouteId = this.routeIdSelectionStrategy.selectFrom(
+				routeIds);
+		Route selectedRoute = this.routes.get(selectedRouteId);
+		Settings settings = config.getSettings();
+		LogAction routeIdSelectionLogAction = settings.getLastValue(
+				GeneralSettingSpecConstants.ROUTE_ID_SELECTION_LOG_ACTION);
+		if (routeIdSelectionLogAction != null) {
+			routeIdSelectionLogAction.invoke(LOGGER, String.format(
+					"Route '%s' selected", 
+					selectedRouteId));
+		}
+		return selectedRoute;
 	}
 	
 	private Socket wrapClientFacingSocket(

@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.DatagramSocket;
 
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLEngine;
 
 final class DefaultDtlsDatagramSocketFactory extends DtlsDatagramSocketFactory {
 
@@ -16,12 +15,8 @@ final class DefaultDtlsDatagramSocketFactory extends DtlsDatagramSocketFactory {
 	
 	@Override
 	public DatagramSocket newDatagramSocket(
-			final DatagramSocket datagramSocket, 
-			final String peerHost, 
-			final int peerPort) throws IOException {
-		SSLEngine sslEngine = this.dtlsContext.createSSLEngine(
-				peerHost, peerPort);
-		return new DtlsDatagramSocket(datagramSocket, sslEngine);
+			final DatagramSocket datagramSocket) throws IOException {
+		return new DtlsDatagramSocket(datagramSocket, this.dtlsContext);
 	}
 
 }

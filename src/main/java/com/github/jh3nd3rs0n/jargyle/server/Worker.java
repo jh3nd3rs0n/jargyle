@@ -62,13 +62,13 @@ final class Worker implements Runnable {
 	
 	public void run() {
 		long startTime = System.currentTimeMillis();
+		WorkerContext workerContext = null;
 		try {
 			LOGGER.debug(ObjectLogMessageHelper.objectLogMessage(
 					this, 
 					"Started. Total Worker count: %s",
 					this.totalWorkerCount.incrementAndGet()));
-			WorkerContext workerContext = this.newWorkerContext(
-					this.clientFacingSocket);
+			workerContext = this.newWorkerContext(this.clientFacingSocket);
 			if (workerContext == null) {
 				return;
 			}
@@ -104,6 +104,17 @@ final class Worker implements Runnable {
 							this, "Internal server error"), 
 					t);
 		} finally {
+			if (workerContext != null && !workerContext.isClosed()) {
+				try {
+					workerContext.close();
+				} catch (IOException e) {
+					LOGGER.error(
+							ObjectLogMessageHelper.objectLogMessage(
+									this, 
+									"Error upon closing the worker context"), 
+							e);
+				}
+			}
 			if (!this.clientFacingSocket.isClosed()) {
 				try {
 					this.clientFacingSocket.close();

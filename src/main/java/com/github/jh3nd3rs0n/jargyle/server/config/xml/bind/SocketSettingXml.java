@@ -9,7 +9,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlType(name = "socketSetting", propOrder = { }) 
-class SocketSettingXml {
+class SocketSettingXml extends ValueXml {
 	
 	@XmlElement(name = "name", required = true)
 	protected String name;
@@ -32,6 +32,11 @@ class SocketSettingXml {
 	
 	public SocketSetting<Object> toSocketSetting() {
 		return SocketSetting.newInstanceOfParsableValue(this.name, this.value, this.doc);
+	}
+
+	@Override
+	public Object toValue() {
+		return this.toSocketSetting();
 	}
 	
 }

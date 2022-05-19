@@ -13,15 +13,31 @@ import com.github.jh3nd3rs0n.argmatey.ArgMatey.TerminationRequestedException;
 import com.github.jh3nd3rs0n.jargyle.internal.help.HelpText;
 import com.github.jh3nd3rs0n.jargyle.server.ConfigurationFileCreatorCLI;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServerCLI;
-import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.UsersFileManagerCLI;
+import com.github.jh3nd3rs0n.jargyle.server.config.xml.bind.ConfigurationXsd;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.UserManagerCLI;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.users.xml.bind.UsersXsd;
 
 public final class JargyleCLI extends CLI {
 
 	private static enum Command {
 		
+		CONFIGURATION_XSD("configuration-xsd") {
+			
+			@Override
+			public void invoke(
+					final String progName, 
+					final String progBeginningUsage, 
+					final String[] args, 
+					final boolean posixCorrect)
+					throws TerminationRequestedException {
+				ConfigurationXsd.main(new String[] { });
+			}
+			
+		},
+		
 		@HelpText(
 				doc = "Manage SOCKS5 users", 
-				usage = "manage-socks5-users COMMAND"
+				usage = "manage-socks5-users USER_REPOSITORY_CLASS_NAME:INITIALIZATION_VALUE COMMAND"
 		)
 		MANAGE_SOCKS5_USERS("manage-socks5-users") {
 			
@@ -30,8 +46,9 @@ public final class JargyleCLI extends CLI {
 					final String progName, 
 					final String progBeginningUsage, 
 					final String[] args, 
-					final boolean posixCorrect) throws Exception {
-				CLI cli = new UsersFileManagerCLI(
+					final boolean posixCorrect) 
+					throws TerminationRequestedException {
+				CLI cli = new UserManagerCLI(
 						progName,
 						progBeginningUsage,
 						args,
@@ -53,7 +70,8 @@ public final class JargyleCLI extends CLI {
 					final String progName, 
 					final String progBeginningUsage, 
 					final String[] args, 
-					final boolean posixCorrect)	throws Exception {
+					final boolean posixCorrect)	
+					throws TerminationRequestedException {
 				CLI cli = new ConfigurationFileCreatorCLI(
 						progName,
 						progBeginningUsage,
@@ -74,13 +92,28 @@ public final class JargyleCLI extends CLI {
 					final String progName, 
 					final String progBeginningUsage, 
 					final String[] args, 
-					final boolean posixCorrect) throws Exception {
+					final boolean posixCorrect) 
+					throws TerminationRequestedException {
 				CLI cli = new SocksServerCLI(
 						progName,
 						progBeginningUsage,
 						args,
 						posixCorrect);
 				cli.handleArgs();
+			}
+			
+		},
+		
+		USERS_XSD("users-xsd") {
+			
+			@Override
+			public void invoke(
+					final String progName, 
+					final String progBeginningUsage, 
+					final String[] args, 
+					final boolean posixCorrect)
+					throws TerminationRequestedException {
+				UsersXsd.main(new String[] { });
 			}
 			
 		};
@@ -105,7 +138,8 @@ public final class JargyleCLI extends CLI {
 				final String progName, 
 				final String progBeginningUsage, 
 				final String[] args, 
-				final boolean posixCorrect) throws Exception;
+				final boolean posixCorrect)
+				throws TerminationRequestedException;
 		
 		public String toString() {
 			return this.value;
@@ -251,20 +285,11 @@ public final class JargyleCLI extends CLI {
 		while (this.hasNext()) {
 			remainingArgList.add(this.next());
 		}
-		try {
-			this.command.invoke(
-					this.getProgramName(),
-					newProgramBeginningUsage,
-					remainingArgList.toArray(new String[remainingArgList.size()]),
-					this.posixlyCorrect);
-		} catch (TerminationRequestedException e) {
-			throw e;
-		} catch (Exception e) {
-			System.err.printf("%s: %s%n", this.getProgramName(), e);
-			System.err.println(this.suggestion);
-			e.printStackTrace(System.err);
-			throw new TerminationRequestedException(-1);
-		}
+		this.command.invoke(
+				this.getProgramName(),
+				newProgramBeginningUsage,
+				remainingArgList.toArray(new String[remainingArgList.size()]),
+				this.posixlyCorrect);
 	}
 	
 	@Override

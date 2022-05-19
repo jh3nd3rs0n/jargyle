@@ -7,7 +7,7 @@ import java.net.Socket;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.MethodEncapsulation;
 
-public final class MethodSubnegotiationResults {
+final class MethodSubnegotiationResults {
 
 	private final Method method;
 	private final MethodEncapsulation methodEncapsulation;

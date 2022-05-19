@@ -47,22 +47,6 @@ public final class AllZerosAddressConstants {
 		return inet6Address;
 	}
 	
-	public static boolean isAllZerosAddress(final String address) {
-		return isAllZerosIpv4Address(address) || isAllZerosIpv6Address(address);
-	}
-	
-	public static boolean isAllZerosIpv4Address(final String address) {
-		return IPV4_ADDRESS_AS_1_PART.equals(address)
-				|| IPV4_ADDRESS_IN_2_PARTS.equals(address)
-				|| IPV4_ADDRESS_IN_3_PARTS.equals(address)
-				|| IPV4_ADDRESS_IN_4_PARTS.equals(address);
-	}
-	
-	public static boolean isAllZerosIpv6Address(final String address) {
-		return IPV6_ADDRESS_IN_COMPRESSED_FORM.equals(address)
-				|| IPV6_ADDRESS_IN_FULL_FORM.equals(address);
-	}
-	
 	private AllZerosAddressConstants() { }
 	
 }

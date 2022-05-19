@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
-import com.github.jh3nd3rs0n.jargyle.internal.net.AddressRegexConstants;
+import com.github.jh3nd3rs0n.jargyle.internal.net.AddressHelper;
 
 public enum AddressType {
 
@@ -22,7 +22,7 @@ public enum AddressType {
 		
 		@Override
 		public boolean isValueForString(final String string) {
-			return AddressRegexConstants.isIpv4Address(string);
+			return AddressHelper.isIpv4Address(string);
 		}
 
 		@Override
@@ -75,7 +75,7 @@ public enum AddressType {
 		
 		@Override
 		public boolean isValueForString(final String string) {
-			return AddressRegexConstants.isDomainname(string);
+			return AddressHelper.isDomainname(string);
 		}
 
 		@Override
@@ -133,7 +133,7 @@ public enum AddressType {
 		
 		@Override
 		public boolean isValueForString(final String string) {
-			return AddressRegexConstants.isIpv6Address(string);
+			return AddressHelper.isIpv6Address(string);
 		}
 
 		@Override

@@ -13,6 +13,8 @@ import java.net.UnknownHostException;
 import java.nio.channels.SocketChannel;
 import java.util.Set;
 
+import com.github.jh3nd3rs0n.jargyle.common.net.Port;
+import com.github.jh3nd3rs0n.jargyle.transport.socks5.AddressType;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Command;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.MethodEncapsulation;
@@ -108,10 +110,29 @@ public final class Socks5Socket extends Socket {
 					throw e;
 				}
 			}
+			String serverBoundAddress = socks5Rep.getServerBoundAddress();
+			int serverBoundPort = socks5Rep.getServerBoundPort();
+			AddressType addressType = AddressType.valueForString(
+					serverBoundAddress);
+			if (addressType.equals(AddressType.DOMAINNAME)) {
+				throw new Socks5ClientException(
+						this.socks5Client, 
+						String.format(
+								"server bound address is not an IP address. "
+								+ "actual server bound address is %s", 
+								serverBoundAddress));
+			}
+			if (serverBoundPort < 0 || serverBoundPort > Port.MAX_INT_VALUE) {
+				throw new Socks5ClientException(
+						this.socks5Client, 
+						String.format(
+								"server bound port is out of range. "
+								+ "actual server bound port is %s", 
+								serverBoundPort));				
+			}
 			this.connected = true;
-			this.remoteInetAddress = 
-					InetAddress.getByName(socks5Rep.getServerBoundAddress());
-			this.remotePort = socks5Rep.getServerBoundPort();
+			this.remoteInetAddress = InetAddress.getByName(serverBoundAddress);
+			this.remotePort = serverBoundPort;
 			this.remoteSocketAddress = new InetSocketAddress(
 					this.remoteInetAddress,
 					this.remotePort);

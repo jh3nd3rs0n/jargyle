@@ -2,7 +2,7 @@ package com.github.jh3nd3rs0n.jargyle.server.socks5;
 
 import java.io.IOException;
 
-public abstract class CommandWorker {
+abstract class CommandWorker {
 
 	private final CommandWorkerContext commandWorkerContext;
 	

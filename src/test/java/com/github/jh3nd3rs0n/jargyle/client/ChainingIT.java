@@ -25,7 +25,7 @@ import com.github.jh3nd3rs0n.jargyle.server.ImmutableConfiguration;
 import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.SslSettingSpecConstants;
-import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.StringSourceUsernamePasswordAuthenticator;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.StringSourceUserRepository;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Methods;
 
@@ -63,8 +63,8 @@ public class ChainingIT {
 								Port.newInstance(SERVER_PORT_1)),
 						Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
 								Methods.newInstance(Method.USERNAME_PASSWORD)),
-						Socks5SettingSpecConstants.SOCKS5_USERPASSAUTH_USERNAME_PASSWORD_AUTHENTICATOR.newSetting(
-								new StringSourceUsernamePasswordAuthenticator(
+						Socks5SettingSpecConstants.SOCKS5_USERPASSAUTH_USER_REPOSITORY.newSetting(
+								new StringSourceUserRepository(
 										"Aladdin:opensesame")),
 						ChainingGeneralSettingSpecConstants.CHAINING_SOCKS_SERVER_URI.newSetting(
 								Scheme.SOCKS5.newSocksServerUri(
@@ -81,8 +81,8 @@ public class ChainingIT {
 								Port.newInstance(SERVER_PORT_2)),
 						Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
 								Methods.newInstance(Method.USERNAME_PASSWORD)),
-						Socks5SettingSpecConstants.SOCKS5_USERPASSAUTH_USERNAME_PASSWORD_AUTHENTICATOR.newSetting(
-								new StringSourceUsernamePasswordAuthenticator(
+						Socks5SettingSpecConstants.SOCKS5_USERPASSAUTH_USER_REPOSITORY.newSetting(
+								new StringSourceUserRepository(
 										"Jasmine:mission%3Aimpossible")),
 						ChainingGeneralSettingSpecConstants.CHAINING_SOCKS_SERVER_URI.newSetting(
 								Scheme.SOCKS5.newSocksServerUri(
@@ -99,8 +99,8 @@ public class ChainingIT {
 								Port.newInstance(SERVER_PORT_3)),
 						Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
 								Methods.newInstance(Method.USERNAME_PASSWORD)),
-						Socks5SettingSpecConstants.SOCKS5_USERPASSAUTH_USERNAME_PASSWORD_AUTHENTICATOR.newSetting(
-								new StringSourceUsernamePasswordAuthenticator(
+						Socks5SettingSpecConstants.SOCKS5_USERPASSAUTH_USER_REPOSITORY.newSetting(
+								new StringSourceUserRepository(
 										"Abu:safeDriversSave40%25")))));
 	}
 	
@@ -250,24 +250,24 @@ public class ChainingIT {
 								Port.newInstance(SERVER_PORT_1)),
 						Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
 								Methods.newInstance(Method.USERNAME_PASSWORD)),
-						Socks5SettingSpecConstants.SOCKS5_USERPASSAUTH_USERNAME_PASSWORD_AUTHENTICATOR.newSetting(
-								new StringSourceUsernamePasswordAuthenticator(
+						Socks5SettingSpecConstants.SOCKS5_USERPASSAUTH_USER_REPOSITORY.newSetting(
+								new StringSourceUserRepository(
 										"Aladdin:opensesame")))),
 				ImmutableConfiguration.newInstance(Settings.newInstance(
 						GeneralSettingSpecConstants.PORT.newSetting(
 								Port.newInstance(SERVER_PORT_2)),
 						Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
 								Methods.newInstance(Method.USERNAME_PASSWORD)),
-						Socks5SettingSpecConstants.SOCKS5_USERPASSAUTH_USERNAME_PASSWORD_AUTHENTICATOR.newSetting(
-								new StringSourceUsernamePasswordAuthenticator(
+						Socks5SettingSpecConstants.SOCKS5_USERPASSAUTH_USER_REPOSITORY.newSetting(
+								new StringSourceUserRepository(
 										"Jasmine:mission%3Aimpossible")))),
 				ImmutableConfiguration.newInstance(Settings.newInstance(
 						GeneralSettingSpecConstants.PORT.newSetting(
 								Port.newInstance(SERVER_PORT_3)),
 						Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
 								Methods.newInstance(Method.USERNAME_PASSWORD)),
-						Socks5SettingSpecConstants.SOCKS5_USERPASSAUTH_USERNAME_PASSWORD_AUTHENTICATOR.newSetting(
-								new StringSourceUsernamePasswordAuthenticator(
+						Socks5SettingSpecConstants.SOCKS5_USERPASSAUTH_USER_REPOSITORY.newSetting(
+								new StringSourceUserRepository(
 										"Abu:safeDriversSave40%25")))));
 	}
 	

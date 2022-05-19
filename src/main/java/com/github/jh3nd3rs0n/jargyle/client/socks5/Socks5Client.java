@@ -83,9 +83,7 @@ public final class Socks5Client extends SocksClient {
 			}
 			internalDatagramSock = 
 					this.dtlsDatagramSocketFactory.newDatagramSocket(
-							internalDatagramSock,
-							udpRelayServerHost,
-							udpRelayServerPort);
+							internalDatagramSock);
 			internalDatagramSock = 
 					new SocksClientExceptionThrowingDatagramSocket(
 							this, internalDatagramSock);

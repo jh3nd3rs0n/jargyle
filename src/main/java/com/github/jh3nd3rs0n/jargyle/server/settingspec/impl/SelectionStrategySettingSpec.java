@@ -15,7 +15,8 @@ public final class SelectionStrategySettingSpec
 	@Override
 	public Setting<SelectionStrategy> newSettingOfParsableValue(
 			final String value) {
-		return super.newSetting(SelectionStrategy.valueOfString(value));
+		return super.newSetting(
+				SelectionStrategy.valueOf(value).newMutableInstance());
 	}
 
 }

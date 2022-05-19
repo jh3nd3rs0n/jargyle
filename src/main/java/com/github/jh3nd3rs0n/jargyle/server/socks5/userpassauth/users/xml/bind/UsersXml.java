@@ -1,6 +1,5 @@
 package com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.users.xml.bind;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -12,7 +11,6 @@ import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.Users;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Marshaller;
-import jakarta.xml.bind.SchemaOutputResolver;
 import jakarta.xml.bind.Unmarshaller;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -25,14 +23,6 @@ import jakarta.xml.bind.helpers.DefaultValidationEventHandler;
 @XmlRootElement(name = "users")
 @XmlType(name = "users", propOrder = { "usersXml" }) 
 public class UsersXml {
-
-	public static void generateXsd(
-			final OutputStream out,
-			final SchemaOutputResolver resolver) 
-			throws JAXBException, IOException {
-		JAXBContext jaxbContext = JAXBContext.newInstance(UsersXml.class);
-		jaxbContext.generateSchema(resolver);
-	}
 
 	public static UsersXml newInstanceFromXml(
 			final InputStream in) throws JAXBException {

@@ -18,6 +18,7 @@ import org.ietf.jgss.MessageProp;
 
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.UserRepository;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.UsernamePasswordAuthenticator;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.MethodEncapsulation;
@@ -257,12 +258,11 @@ abstract class MethodSubnegotiator {
 				UsernamePasswordResponse usernamePasswordResp = null;
 				username = usernamePasswordReq.getUsername();
 				password = usernamePasswordReq.getPassword();
-				UsernamePasswordAuthenticator authenticator = 
+				UserRepository userRepository = 
 						configuration.getSettings().getLastValue(
-								Socks5SettingSpecConstants.SOCKS5_USERPASSAUTH_USERNAME_PASSWORD_AUTHENTICATOR);
-				if (authenticator == null) { 
-					authenticator = UsernamePasswordAuthenticator.newInstance(); 
-				}
+								Socks5SettingSpecConstants.SOCKS5_USERPASSAUTH_USER_REPOSITORY);
+				UsernamePasswordAuthenticator authenticator = 
+						new UsernamePasswordAuthenticator(userRepository);
 				if (!authenticator.authenticate(username, password)) {
 					usernamePasswordResp = UsernamePasswordResponse.newInstance(
 							(byte) 0x01);

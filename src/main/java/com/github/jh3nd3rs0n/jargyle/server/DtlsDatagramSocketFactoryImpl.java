@@ -78,10 +78,7 @@ final class DtlsDatagramSocketFactoryImpl extends DtlsDatagramSocketFactory {
 	
 	@Override
 	public DatagramSocket newDatagramSocket(
-			final DatagramSocket datagramSocket, 
-			final String peerHost, 
-			final int peerPort)
-			throws IOException {
+			final DatagramSocket datagramSocket) throws IOException {
 		synchronized (this) {
 			if (this.dtlsContext == null) {
 				this.dtlsContext = this.getDtlsContext();
@@ -90,8 +87,7 @@ final class DtlsDatagramSocketFactoryImpl extends DtlsDatagramSocketFactory {
 		DtlsDatagramSocketFactory factory = 
 				DtlsDatagramSocketFactory.newInstance(this.dtlsContext);
 		DtlsDatagramSocket dtlsDatagramSocket = 
-				(DtlsDatagramSocket) factory.newDatagramSocket(
-						datagramSocket, peerHost, peerPort);		
+				(DtlsDatagramSocket) factory.newDatagramSocket(datagramSocket);		
 		dtlsDatagramSocket.setUseClientMode(false);
 		Settings settings = this.configuration.getSettings();
 		Words enabledCipherSuites = settings.getLastValue(

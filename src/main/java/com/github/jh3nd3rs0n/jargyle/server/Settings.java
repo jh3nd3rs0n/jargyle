@@ -81,7 +81,7 @@ public final class Settings {
 		List<Setting<Object>> settingList = this.settingListMap.get(
 				settingSpec);
 		V value = null;
-		if (settingList != null) {
+		if (settingList != null && settingList.size() > 0) {
 			Setting<Object> setting = settingList.get(settingList.size() - 1);
 			value = settingSpec.getValueType().cast(setting.getValue());
 		}
@@ -105,7 +105,9 @@ public final class Settings {
 		if (values.isEmpty()) {
 			Setting<V> defaultSetting = settingSpec.getDefaultSetting();
 			V value = defaultSetting.getValue();
-			values.add(value);
+			if (value != null) {
+				values.add(value);
+			}
 		}
 		return Collections.unmodifiableList(values);
 	}

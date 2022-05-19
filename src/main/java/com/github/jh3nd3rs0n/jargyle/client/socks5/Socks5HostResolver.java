@@ -63,8 +63,17 @@ public final class Socks5HostResolver extends HostResolver {
 				throw e;
 			}
 		}
-		InetAddress inetAddress = InetAddress.getByName(
-				socks5Rep.getServerBoundAddress());
+		String serverBoundAddress = socks5Rep.getServerBoundAddress();
+		addressType = AddressType.valueForString(serverBoundAddress);
+		if (addressType.equals(AddressType.DOMAINNAME)) {
+			throw new Socks5ClientException(
+					this.socks5Client, 
+					String.format(
+							"server bound address is not an IP address. "
+							+ "actual server bound address is %s", 
+							serverBoundAddress));
+		}
+		InetAddress inetAddress = InetAddress.getByName(serverBoundAddress);
 		return InetAddress.getByAddress(host, inetAddress.getAddress());
 	}
 

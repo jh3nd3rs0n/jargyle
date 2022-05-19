@@ -13,8 +13,6 @@ public abstract class DtlsDatagramSocketFactory {
 	}
 	
 	public abstract DatagramSocket newDatagramSocket(
-			final DatagramSocket datagramSocket,
-			final String peerHost,
-			final int peerPort) throws IOException;
+			final DatagramSocket datagramSocket) throws IOException;
 	
 }

@@ -10,11 +10,13 @@ import java.net.Socket;
 import java.net.SocketAddress;
 import java.net.SocketException;
 import java.net.SocketOption;
-import java.net.SocketTimeoutException;
 import java.nio.channels.DatagramChannel;
 import java.util.Set;
 
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
+import com.github.jh3nd3rs0n.jargyle.internal.net.AddressHelper;
+import com.github.jh3nd3rs0n.jargyle.internal.net.AllZerosAddressConstants;
+import com.github.jh3nd3rs0n.jargyle.transport.socks5.AddressType;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Command;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.MethodEncapsulation;
@@ -27,9 +29,6 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 
 	private static final class Socks5DatagramSocketImpl {
 		
-		private static final int HALF_SECOND = 500;
-		
-		private volatile boolean associated;
 		private volatile boolean connected;
 		private volatile DatagramSocket datagramSocket;
 		private volatile DatagramSocket originalDatagramSocket;
@@ -47,7 +46,6 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			DatagramSocket originalDatagramSock = new DatagramSocket(null);
 			Socket originalSock = new Socket();
 			client.configureInternalSocket(originalSock);
-			this.associated = false;
 			this.connected = false;
 			this.datagramSocket = originalDatagramSock;
 			this.originalDatagramSocket = originalDatagramSock;
@@ -60,9 +58,17 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			this.udpRelayServerInetAddress = null;
 			this.udpRelayServerPort = -1;
 		}
+	
+		public void bind(SocketAddress addr) throws SocketException {
+			this.datagramSocket.bind(addr);
+			try {
+				this.socks5UdpAssociate();
+			} catch (IOException e) {
+				throw new UncheckedIOException(e);
+			}
+		}
 		
 		public void close() {
-			this.associated = false;
 			this.datagramSocket.close();
 			this.udpRelayServerInetAddress = null;
 			this.udpRelayServerPort = -1;
@@ -111,11 +117,6 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			if (!this.datagramSocket.isBound()) {
 				throw new SocketException("socket is not bound");
 			}
-			/*
-			 * allow for internal datagram socket to connect before invoking
-			 * receive() 
-			 */
-			this.waitForCompleteAssociation();
 			this.datagramSocket.receive(p);
 			UdpRequestHeader header = null; 
 			try {
@@ -148,9 +149,6 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 				throw new IllegalArgumentException(
 						"packet address and connected socket address must be the same");
 			}
-			if (!this.associated) {
-				this.socks5UdpAssociate();
-			}
 			String address = p.getAddress().getHostAddress();
 			int port = p.getPort();
 			byte[] headerBytes = UdpRequestHeader.newInstance(
@@ -179,46 +177,49 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 				this.datagramSocket = this.originalDatagramSocket;
 			}
 			DatagramSocket datagramSock = this.datagramSocket;
-			String address = datagramSock.getLocalAddress().getHostAddress();
-			int prt = datagramSock.getLocalPort();
+			String address = AllZerosAddressConstants.IPV4_ADDRESS;
+			int port = 0;
 			Socks5Request socks5Req = Socks5Request.newInstance(
 					Command.UDP_ASSOCIATE, 
 					address, 
-					prt);
+					port);
 			this.socks5Client.sendSocks5Request(socks5Req, sck);
 			Socks5Reply socks5Rep = this.socks5Client.receiveSocks5Reply(sck);
+			String serverBoundAddress = socks5Rep.getServerBoundAddress();
+			int serverBoundPort = socks5Rep.getServerBoundPort();
+			AddressType addressType = AddressType.valueForString(
+					serverBoundAddress);
+			if (addressType.equals(AddressType.DOMAINNAME)) {
+				throw new Socks5ClientException(
+						this.socks5Client, 
+						String.format(
+								"server bound address is not an IP address. "
+								+ "actual server bound address is %s", 
+								serverBoundAddress));
+			}
+			if (serverBoundPort < 0 || serverBoundPort > Port.MAX_INT_VALUE) {
+				throw new Socks5ClientException(
+						this.socks5Client, 
+						String.format(
+								"server bound port is out of range. "
+								+ "actual server bound port is %s", 
+								serverBoundPort));				
+			}
+			if (AddressHelper.isAllZerosAddress(serverBoundAddress)) {
+				serverBoundAddress = 
+						this.socks5Client.getSocksServerUri().getHost();
+			}
 			datagramSock = this.socks5Client.getConnectedInternalDatagramSocket(
 					datagramSock,
-					this.socks5Client.getSocksServerUri().getHost(),
-					socks5Rep.getServerBoundPort());
+					serverBoundAddress,
+					serverBoundPort);
 			DatagramSocket datagramSck = methodEncapsulation.getDatagramSocket(
 					datagramSock);
-			this.associated = true;
 			this.datagramSocket = datagramSck;
 			this.udpRelayServerInetAddress = InetAddress.getByName(
-					socks5Rep.getServerBoundAddress());
-			this.udpRelayServerPort = socks5Rep.getServerBoundPort();
+					serverBoundAddress);
+			this.udpRelayServerPort = serverBoundPort;
 			this.socket = sck;
-		}
-		
-		private void waitForCompleteAssociation() throws IOException {
-			int soTimeout = this.datagramSocket.getSoTimeout();
-			long waitStartTime = System.currentTimeMillis();
-			while (!this.associated) {
-				try {
-					Thread.sleep(HALF_SECOND);
-				} catch (InterruptedException e) {
-					Thread.currentThread().interrupt();
-				}
-				if (soTimeout == 0) { continue; }
-				long timeSinceWaitStartTime = 
-						System.currentTimeMillis() - waitStartTime;
-				if (timeSinceWaitStartTime >= soTimeout) {
-					throw new SocketTimeoutException(
-							"timeout for waiting for complete UDP association "
-							+ "has been reached");
-				}
-			}			
 		}
 		
 	}
@@ -230,7 +231,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 		super((SocketAddress) null);
 		this.socks5Client = client;
 		this.socks5DatagramSocketImpl =	new Socks5DatagramSocketImpl(client);
-		this.socks5DatagramSocketImpl.datagramSocket.bind(new InetSocketAddress(
+		this.socks5DatagramSocketImpl.bind(new InetSocketAddress(
 				(InetAddress) null, 0));
 	}
 
@@ -239,7 +240,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 		super((SocketAddress) null);
 		this.socks5Client = client;		
 		this.socks5DatagramSocketImpl = new Socks5DatagramSocketImpl(client);
-		this.socks5DatagramSocketImpl.datagramSocket.bind(new InetSocketAddress(
+		this.socks5DatagramSocketImpl.bind(new InetSocketAddress(
 				(InetAddress) null, port));
 	}
 
@@ -250,8 +251,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 		super((SocketAddress) null);
 		this.socks5Client = client;		
 		this.socks5DatagramSocketImpl = new Socks5DatagramSocketImpl(client);
-		this.socks5DatagramSocketImpl.datagramSocket.bind(new InetSocketAddress(
-				laddr, port));		
+		this.socks5DatagramSocketImpl.bind(new InetSocketAddress(laddr, port));		
 	}
 
 	Socks5DatagramSocket(
@@ -261,13 +261,13 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 		this.socks5Client = client;		
 		this.socks5DatagramSocketImpl = new Socks5DatagramSocketImpl(client);
 		if (bindaddr != null) {
-			this.socks5DatagramSocketImpl.datagramSocket.bind(bindaddr);
+			this.socks5DatagramSocketImpl.bind(bindaddr);
 		}
 	}
 	
 	@Override
 	public synchronized void bind(SocketAddress addr) throws SocketException {
-		this.socks5DatagramSocketImpl.datagramSocket.bind(addr);
+		this.socks5DatagramSocketImpl.bind(addr);
 	}
 
 	@Override

@@ -8,14 +8,11 @@ import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.common.number.NonnegativeInteger;
 import com.github.jh3nd3rs0n.jargyle.internal.help.HelpText;
-import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.ClientRoutingRulesSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.rules.impl.ClientFirewallRules;
-import com.github.jh3nd3rs0n.jargyle.server.rules.impl.ClientRoutingRules;
-import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.ClientFirewallRulesSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.HostSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.LogActionSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.NonnegativeIntegerSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.PortSettingSpec;
+import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.RuleSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.SelectionStrategySettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.SocketSettingsSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.StringSettingSpec;
@@ -44,26 +41,6 @@ public final class GeneralSettingSpecConstants {
 					"clientFacingSocketSettings", 
 					SocketSettings.newInstance()));
 
-	@HelpText(
-			doc = "The space separated list of firewall rules for TCP traffic "
-					+ "from a client to the SOCKS server "
-					+ "(default is firewallRuleAction=ALLOW)", 
-			usage = "clientFirewallRules=[CLIENT_FIREWALL_RULE_FIELD1[ CLIENT_FIREWALL_RULE_FIELD2[...]]]"
-	)	
-	public static final SettingSpec<ClientFirewallRules> CLIENT_FIREWALL_RULES =
-			SETTING_SPECS.addThenGet(new ClientFirewallRulesSettingSpec(
-					"clientFirewallRules",
-					ClientFirewallRules.getDefault()));
-	
-	@HelpText(
-			doc = "The space separated list of routing rules for a client", 
-			usage = "clientRoutingRules=[CLIENT_ROUTING_RULE_FIELD1[ CLIENT_ROUTING_RULE_FIELD2[...]]]"
-	)	
-	public static final SettingSpec<ClientRoutingRules> CLIENT_ROUTING_RULES =
-			SETTING_SPECS.addThenGet(new ClientRoutingRulesSettingSpec(
-					"clientRoutingRules",
-					ClientRoutingRules.getDefault()));
-	
 	@HelpText(
 			doc = "The host name or address for the SOCKS server (default is "
 					+ "0.0.0.0)", 
@@ -94,24 +71,34 @@ public final class GeneralSettingSpecConstants {
 					Port.newInstance(1080)));
 
 	@HelpText(
-			doc = "The logging action to take if a route is selected from the "
-					+ "list of all of the route IDs", 
-			usage = "routeSelectionLogAction=LOG_ACTION"
+			doc = "The logging action to take if a route ID is selected from "
+					+ "the list of all of the route IDs", 
+			usage = "routeIdSelectionLogAction=LOG_ACTION"
 	)	
-	public static final SettingSpec<LogAction> ROUTE_SELECTION_LOG_ACTION =
+	public static final SettingSpec<LogAction> ROUTE_ID_SELECTION_LOG_ACTION =
 			SETTING_SPECS.addThenGet(new LogActionSettingSpec(
-					"routeSelectionLogAction",
+					"routeIdSelectionLogAction",
 					null));
 	
 	@HelpText(
-			doc = "The selection strategy for the next route to use from the "
-					+ "list of all of the route IDs (default is CYCLICAL)", 
-			usage = "routeSelectionStrategy=SELECTION_STRATEGY"
+			doc = "The selection strategy for the next route ID to use from "
+					+ "the list of all of the route IDs (default is CYCLICAL)", 
+			usage = "routeIdSelectionStrategy=SELECTION_STRATEGY"
 	)
-	public static final SettingSpec<SelectionStrategy> ROUTE_SELECTION_STRATEGY =
+	public static final SettingSpec<SelectionStrategy> ROUTE_ID_SELECTION_STRATEGY =
 			SETTING_SPECS.addThenGet(new SelectionStrategySettingSpec(
-					"routeSelectionStrategy",
-					SelectionStrategy.CYCLICAL));
+					"routeIdSelectionStrategy",
+					SelectionStrategy.CYCLICAL.newMutableInstance()));
+	
+	@HelpText(
+			doc = "A rule for the SOCKS server "
+					+ "(default is firewallAction=ALLOW)", 
+			usage = "rule=[RULE_CONDITION1[ RULE_CONDITION2[...]]] [RULE_RESULT1[ RULE_RESULT2[...]]]"
+	)	
+	public static final SettingSpec<Rule> RULE = 
+			SETTING_SPECS.addThenGet(new RuleSettingSpec(
+					"rule",
+					Rule.getDefault()));
 	
 	@HelpText(
 			doc = "The space separated list of socket settings for the SOCKS "

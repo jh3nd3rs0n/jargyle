@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Command;
 
-public abstract class CommandWorkerFactory {
+abstract class CommandWorkerFactory {
 
 	private static final Map<Command, CommandWorkerFactory> COMMAND_WORKER_FACTORY_MAP =
 			new HashMap<Command, CommandWorkerFactory>();

@@ -23,10 +23,11 @@ class SettingsXml {
 	}
 	
 	public SettingsXml(final Settings settings) {
-		this.settingsXml = new ArrayList<SettingXml>();
+		List<SettingXml> sttngsXml = new ArrayList<SettingXml>();
 		for (Setting<Object> setting : settings.toList()) {
-			this.settingsXml.add(new SettingXml(setting));
+			sttngsXml.add(new SettingXml(setting));
 		}
+		this.settingsXml = sttngsXml;
 	}
 	
 	public Settings toSettings() {

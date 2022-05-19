@@ -1,14 +1,7 @@
 package com.github.jh3nd3rs0n.jargyle.server;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.Field;
-
-import javax.xml.transform.Result;
-import javax.xml.transform.stream.StreamResult;
 
 import com.github.jh3nd3rs0n.argmatey.ArgMatey;
 import com.github.jh3nd3rs0n.argmatey.ArgMatey.Annotations.Option;
@@ -24,41 +17,12 @@ import com.github.jh3nd3rs0n.jargyle.client.Scheme;
 import com.github.jh3nd3rs0n.jargyle.common.net.StandardSocketSettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
 import com.github.jh3nd3rs0n.jargyle.internal.help.HelpText;
-import com.github.jh3nd3rs0n.jargyle.server.config.xml.bind.ConfigurationXml;
 import com.github.jh3nd3rs0n.jargyle.server.internal.io.ConsoleWrapper;
-import com.github.jh3nd3rs0n.jargyle.server.rules.impl.ClientFirewallRule;
-import com.github.jh3nd3rs0n.jargyle.server.rules.impl.ClientRoutingRule;
-import com.github.jh3nd3rs0n.jargyle.server.rules.impl.FirewallRuleAction;
-import com.github.jh3nd3rs0n.jargyle.server.rules.impl.Socks5ReplyFirewallRule;
-import com.github.jh3nd3rs0n.jargyle.server.rules.impl.Socks5RequestFirewallRule;
-import com.github.jh3nd3rs0n.jargyle.server.rules.impl.Socks5RequestRoutingRule;
-import com.github.jh3nd3rs0n.jargyle.server.rules.impl.Socks5UdpFirewallRule;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Command;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.gssapiauth.ProtectionLevel;
 
-import jakarta.xml.bind.JAXBException;
-import jakarta.xml.bind.SchemaOutputResolver;
-
 public abstract class AbstractCLI extends CLI {
-	
-	private static final class CustomSchemaOutputResolver 
-		extends SchemaOutputResolver {
-	
-		private final Result result;
-		
-		public CustomSchemaOutputResolver(final Result res) {
-			this.result = res;
-		}
-		
-		@Override
-		public Result createOutput(
-				final String namespaceUri, 
-				final String suggestedFileName) throws IOException {
-			return this.result;
-		}
-		
-	}
 	
 	private static final class SettingGnuLongOptionUsageProvider 
 		extends OptionUsageProvider {
@@ -81,19 +45,18 @@ public abstract class AbstractCLI extends CLI {
 	}
 	
 	private static final int CONFIG_FILE_OPTION_GROUP_ORDINAL = 0;
-	private static final int CONFIG_FILE_XSD_OPTION_GROUP_ORDINAL = 1;	
-	private static final int ENTER_CHAINING_DTLS_KEY_STORE_PASS_OPTION_GROUP_ORDINAL = 2;
-	private static final int ENTER_CHAINING_DTLS_TRUST_STORE_PASS_OPTION_GROUP_ORDINAL = 3;
-	private static final int ENTER_CHAINING_SOCKS5_USERPASSAUTH_PASS_OPTION_GROUP_ORDINAL = 4;
-	private static final int ENTER_CHAINING_SSL_KEY_STORE_PASS_OPTION_GROUP_ORDINAL = 5;
-	private static final int ENTER_CHAINING_SSL_TRUST_STORE_PASS_OPTION_GROUP_ORDINAL = 6;	
-	private static final int ENTER_DTLS_KEY_STORE_PASS_OPTION_GROUP_ORDINAL = 7;
-	private static final int ENTER_DTLS_TRUST_STORE_PASS_OPTION_GROUP_ORDINAL = 8;
-	private static final int ENTER_SSL_KEY_STORE_PASS_OPTION_GROUP_ORDINAL = 9;
-	private static final int ENTER_SSL_TRUST_STORE_PASS_OPTION_GROUP_ORDINAL = 10;
-	private static final int HELP_OPTION_GROUP_ORDINAL = 11;
-	private static final int SETTING_OPTION_GROUP_ORDINAL = 12;
-	private static final int SETTINGS_HELP_OPTION_GROUP_ORDINAL = 13;
+	private static final int ENTER_CHAINING_DTLS_KEY_STORE_PASS_OPTION_GROUP_ORDINAL = 1;
+	private static final int ENTER_CHAINING_DTLS_TRUST_STORE_PASS_OPTION_GROUP_ORDINAL = 2;
+	private static final int ENTER_CHAINING_SOCKS5_USERPASSAUTH_PASS_OPTION_GROUP_ORDINAL = 3;
+	private static final int ENTER_CHAINING_SSL_KEY_STORE_PASS_OPTION_GROUP_ORDINAL = 4;
+	private static final int ENTER_CHAINING_SSL_TRUST_STORE_PASS_OPTION_GROUP_ORDINAL = 5;	
+	private static final int ENTER_DTLS_KEY_STORE_PASS_OPTION_GROUP_ORDINAL = 6;
+	private static final int ENTER_DTLS_TRUST_STORE_PASS_OPTION_GROUP_ORDINAL = 7;
+	private static final int ENTER_SSL_KEY_STORE_PASS_OPTION_GROUP_ORDINAL = 8;
+	private static final int ENTER_SSL_TRUST_STORE_PASS_OPTION_GROUP_ORDINAL = 9;
+	private static final int HELP_OPTION_GROUP_ORDINAL = 10;
+	private static final int SETTING_OPTION_GROUP_ORDINAL = 11;
+	private static final int SETTINGS_HELP_OPTION_GROUP_ORDINAL = 12;
 	
 	private ModifiableConfiguration modifiableConfiguration;
 	private final String programBeginningUsage;
@@ -127,31 +90,21 @@ public abstract class AbstractCLI extends CLI {
 			type = OptionType.POSIX
 	)
 	@Ordinal(CONFIG_FILE_OPTION_GROUP_ORDINAL)
-	protected void addConfigurationFile(final String file) throws IOException {
-		InputStream in = null;
-		if (file.equals("-")) {
-			in = System.in;
-		} else {
-			File f = new File(file);
-			try {
-				in = new FileInputStream(f);
-			} catch (FileNotFoundException e) {
-				throw new IllegalArgumentException(e);
-			}
-		}
-		Configuration configuration = null;
-		try {
-			configuration = ConfigurationXml.newInstanceFromXml(
-					in).toConfiguration();
-		} catch (JAXBException e) { 
+	protected void addConfigurationFile(final String file) {
+		File f = new File(file);
+		if (!f.exists()) {
 			throw new IllegalArgumentException(String.format(
-					"possible invalid XML file '%s'", file), 
-					e);
-		}  finally {
-			if (in instanceof FileInputStream) {
-				in.close();
-			}
+					"`%s' not found", 
+					file));
 		}
+		if (!f.isFile()) {
+			throw new IllegalArgumentException(String.format(
+					"`%s' not a file", 
+					file));			
+		}
+		ConfigurationRepository configurationRepository =
+				ConfigurationRepository.newInstance(f);
+		Configuration configuration = configurationRepository.get();
 		this.modifiableConfiguration.addSettings(configuration.getSettings());
 	}
 	
@@ -189,8 +142,6 @@ public abstract class AbstractCLI extends CLI {
 	@Override
 	protected void displayProgramHelp() throws TerminationRequestedException {
 		String progOperandsUsage = this.getProgramOperandsUsage();
-		ArgMatey.Option configFileXsdOption = this.getOptionGroups().get(
-				CONFIG_FILE_XSD_OPTION_GROUP_ORDINAL).get(0);
 		ArgMatey.Option helpOption = this.getOptionGroups().get(
 				HELP_OPTION_GROUP_ORDINAL).get(0);
 		ArgMatey.Option settingsHelpOption = this.getOptionGroups().get(
@@ -201,9 +152,6 @@ public abstract class AbstractCLI extends CLI {
 			System.out.printf(" %s", progOperandsUsage);
 		}
 		System.out.println();
-		System.out.printf("       %s %s%n", 
-				this.programBeginningUsage, 
-				configFileXsdOption.getUsage());
 		System.out.printf("       %s %s%n", 
 				this.programBeginningUsage, 
 				helpOption.getUsage());
@@ -423,30 +371,6 @@ public abstract class AbstractCLI extends CLI {
 		throw new TerminationRequestedException(-1);
 	}
 	
-	@Option(
-			doc = "Print the configuration file XSD and exit",
-			name = "config-file-xsd",
-			type = OptionType.GNU_LONG
-	)
-	@Option(
-			name = "x",
-			type = OptionType.POSIX
-	)
-	@Ordinal(CONFIG_FILE_XSD_OPTION_GROUP_ORDINAL)
-	protected void printConfigurationFileXsd() 
-			throws IOException, TerminationRequestedException {
-		StreamResult result = new StreamResult(System.out);
-		result.setSystemId("");
-		try {
-			ConfigurationXml.generateXsd(
-					System.out, new CustomSchemaOutputResolver(result));
-		} catch (JAXBException e) {
-			throw new IOException(e);
-		}
-		System.out.flush();
-		throw new TerminationRequestedException(0);
-	}
-	
 	private void printHelpText(final Class<?> cls) {
 		System.out.println();
 		Field[] fields = cls.getDeclaredFields();
@@ -506,12 +430,12 @@ public abstract class AbstractCLI extends CLI {
 	private void printSettingValueSyntaxes() {
 		System.out.println("SETTING VALUE SYNTAXES:");
 		System.out.println();
-		System.out.println("  CLIENT_FIREWALL_RULE_FIELDS:");
-		this.printHelpText(ClientFirewallRule.Builder.Field.class);
-		System.out.println("  CLIENT_ROUTING_RULE_FIELDS:");
-		this.printHelpText(ClientRoutingRule.Builder.Field.class);
-		System.out.println("  FIREWALL_RULE_ACTIONS:");
-		this.printHelpText(FirewallRuleAction.class);
+		System.out.println("  FIREWALL_ACTIONS:");
+		this.printHelpText(FirewallAction.class);
+		System.out.println("  GENERAL_RULE_CONDITIONS:");
+		this.printHelpText(GeneralRuleConditionSpecConstants.class);
+		System.out.println("  GENERAL_RULE_RESULTS:");
+		this.printHelpText(GeneralRuleResultSpecConstants.class);
 		System.out.println("  LOG_ACTIONS:");
 		this.printHelpText(LogAction.class);
 		System.out.println("  SCHEMES:");
@@ -526,14 +450,10 @@ public abstract class AbstractCLI extends CLI {
 		this.printHelpText(ProtectionLevel.class);
 		System.out.println("  SOCKS5_METHODS:");
 		this.printHelpText(Method.class);
-		System.out.println("  SOCKS5_REPLY_FIREWALL_RULE_FIELDS:");
-		this.printHelpText(Socks5ReplyFirewallRule.Builder.Field.class);		
-		System.out.println("  SOCKS5_REQUEST_FIREWALL_RULE_FIELDS:");
-		this.printHelpText(Socks5RequestFirewallRule.Builder.Field.class);
-		System.out.println("  SOCKS5_REQUEST_ROUTING_RULE_FIELDS:");
-		this.printHelpText(Socks5RequestRoutingRule.Builder.Field.class);
-		System.out.println("  SOCKS5_UDP_FIREWALL_RULE_FIELDS:");
-		this.printHelpText(Socks5UdpFirewallRule.Builder.Field.class);		
+		System.out.println("  SOCKS5_RULE_CONDITIONS:");
+		this.printHelpText(Socks5RuleConditionSpecConstants.class);		
+		System.out.println("  SOCKS5_RULE_RESULTS:");
+		this.printHelpText(Socks5RuleResultSpecConstants.class);
 	}
 	
 	private EncryptedPassword readEncryptedPassword(final String prompt) {

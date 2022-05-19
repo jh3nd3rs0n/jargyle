@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.Objects;
@@ -17,32 +16,28 @@ import org.slf4j.LoggerFactory;
 import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
+import com.github.jh3nd3rs0n.jargyle.internal.net.AddressAndPortHelper;
+import com.github.jh3nd3rs0n.jargyle.internal.net.AddressHelper;
+import com.github.jh3nd3rs0n.jargyle.server.FirewallAction;
+import com.github.jh3nd3rs0n.jargyle.server.GeneralRuleResultSpecConstants;
+import com.github.jh3nd3rs0n.jargyle.server.LogAction;
+import com.github.jh3nd3rs0n.jargyle.server.Rule;
+import com.github.jh3nd3rs0n.jargyle.server.RuleContext;
+import com.github.jh3nd3rs0n.jargyle.server.Rules;
+import com.github.jh3nd3rs0n.jargyle.server.Socks5RuleArgSpecConstants;
+import com.github.jh3nd3rs0n.jargyle.server.Socks5RuleConditionSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.internal.throwable.ThrowableHelper;
-import com.github.jh3nd3rs0n.jargyle.server.rules.impl.FirewallRule;
-import com.github.jh3nd3rs0n.jargyle.server.rules.impl.FirewallRuleAction;
-import com.github.jh3nd3rs0n.jargyle.server.rules.impl.Socks5UdpFirewallRule;
-import com.github.jh3nd3rs0n.jargyle.server.rules.impl.Socks5UdpFirewallRules;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.NullMethodEncapsulation;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.UdpRequestHeader;
 
-public final class UdpRelayServer {
+final class UdpRelayServer {
 	
 	public static final class Builder {
-	
+
 		public static final int DEFAULT_BUFFER_SIZE = 32768;
-		public static final HostResolver DEFAULT_HOST_RESOLVER = 
-				new HostResolver();
+		public static final HostResolver DEFAULT_HOST_RESOLVER = new HostResolver();
 		public static final int DEFAULT_IDLE_TIMEOUT = 60000;
-		public static final Socks5UdpFirewallRules DEFAULT_INBOUND_SOCKS5_UDP_FIREWALL_RULES =
-				Socks5UdpFirewallRules.getDefault();
-		public static final MethodSubnegotiationResults DEFAULT_METHOD_SUBNEGOTIATION_RESULTS =
-				new MethodSubnegotiationResults(
-						Method.NO_AUTHENTICATION_REQUIRED, 
-						new NullMethodEncapsulation(new Socket()),
-						null);
-		public static final Socks5UdpFirewallRules DEFAULT_OUTBOUND_SOCKS5_UDP_FIREWALL_RULES =
-				Socks5UdpFirewallRules.getDefault();
+		public static final RuleContext DEFAULT_RULE_CONTEXT = new RuleContext();
+		public static final Rules DEFAULT_RULES = Rules.newInstance(Rule.getDefault());
 		
 		private int bufferSize;
 		private final String clientAddress;
@@ -50,10 +45,9 @@ public final class UdpRelayServer {
 		private final int clientPort;
 		private HostResolver hostResolver;
 		private int idleTimeout;
-		private Socks5UdpFirewallRules inboundSocks5UdpFirewallRules;
-		private MethodSubnegotiationResults methodSubnegotiationResults;		
-		private Socks5UdpFirewallRules outboundSocks5UdpFirewallRules;
 		private final DatagramSocket peerFacingDatagramSocket;
+		private RuleContext ruleContext;
+		private Rules rules;
 		
 		public Builder(
 				final String clientAddr,
@@ -63,6 +57,10 @@ public final class UdpRelayServer {
 			Objects.requireNonNull(clientAddr);
 			Objects.requireNonNull(clientFacingDatagramSock);
 			Objects.requireNonNull(peerFacingDatagramSock);
+			if (AddressHelper.isAllZerosAddress(clientAddr)) {
+				throw new IllegalArgumentException(
+						"client address must not be all zeros");
+			}
 			if (clientPrt < 0 || clientPrt > Port.MAX_INT_VALUE) {
 				throw new IllegalArgumentException(
 						"client port is out of range");
@@ -73,13 +71,9 @@ public final class UdpRelayServer {
 			this.clientPort = clientPrt;
 			this.hostResolver = DEFAULT_HOST_RESOLVER;
 			this.idleTimeout = DEFAULT_IDLE_TIMEOUT;
-			this.inboundSocks5UdpFirewallRules = 
-					DEFAULT_INBOUND_SOCKS5_UDP_FIREWALL_RULES;
-			this.methodSubnegotiationResults = 
-					DEFAULT_METHOD_SUBNEGOTIATION_RESULTS;			
-			this.outboundSocks5UdpFirewallRules = 
-					DEFAULT_OUTBOUND_SOCKS5_UDP_FIREWALL_RULES;
 			this.peerFacingDatagramSocket = peerFacingDatagramSock;
+			this.ruleContext = new RuleContext(DEFAULT_RULE_CONTEXT);
+			this.rules = DEFAULT_RULES;
 		}
 		
 		public Builder bufferSize(final int bffrSize) {
@@ -109,23 +103,13 @@ public final class UdpRelayServer {
 			return this;
 		}
 		
-		public Builder inboundSocks5UdpFirewallRules(
-				final Socks5UdpFirewallRules socks5UdpFirewallRules) {
-			this.inboundSocks5UdpFirewallRules = Objects.requireNonNull(
-					socks5UdpFirewallRules);
+		public Builder ruleContext(final RuleContext context) {
+			this.ruleContext = context;
 			return this;
 		}
 		
-		public Builder methodSubnegotiationResults(
-				final MethodSubnegotiationResults methSubnegotiationResults) {
-			this.methodSubnegotiationResults = methSubnegotiationResults;
-			return this;
-		}
-		
-		public Builder outboundSocks5UdpFirewallRules(
-				final Socks5UdpFirewallRules socks5UdpFirewallRules) {
-			this.outboundSocks5UdpFirewallRules = Objects.requireNonNull(
-					socks5UdpFirewallRules);
+		public Builder rules(final Rules rls) {
+			this.rules = rls;
 			return this;
 		}
 		
@@ -140,10 +124,89 @@ public final class UdpRelayServer {
 			super(context);
 		}
 		
-		private boolean canAllowPacket(final FirewallRule.Context context) {
-			this.inboundSocks5UdpFirewallRules.applyTo(context);
-			return FirewallRuleAction.ALLOW.equals(
-					context.getFirewallRuleAction());
+		private boolean canForwardDatagramPacket(
+				final Rule applicableRule,
+				final RuleContext inboundRuleContext) {
+			if (applicableRule == null) {
+				return false;
+			}
+			boolean hasDesiredDestinationAddressRuleCondition =
+					applicableRule.hasRuleCondition(
+							Socks5RuleConditionSpecConstants.SOCKS5_UDP_INBOUND_DESIRED_DESTINATION_ADDRESS);
+			boolean hasDesiredDestinationPortRuleCondition =
+					applicableRule.hasRuleCondition(
+							Socks5RuleConditionSpecConstants.SOCKS5_UDP_INBOUND_DESIRED_DESTINATION_PORT);
+			boolean hasSourceAddressRuleCondition =
+					applicableRule.hasRuleCondition(
+							Socks5RuleConditionSpecConstants.SOCKS5_UDP_INBOUND_SOURCE_ADDRESS);
+			boolean hasSourcePortRuleCondition =
+					applicableRule.hasRuleCondition(
+							Socks5RuleConditionSpecConstants.SOCKS5_UDP_INBOUND_SOURCE_PORT);
+			if (!hasDesiredDestinationAddressRuleCondition
+					&& !hasDesiredDestinationPortRuleCondition
+					&& !hasSourceAddressRuleCondition
+					&& !hasSourcePortRuleCondition) {
+				return true;
+			}
+			FirewallAction firewallAction = 
+					applicableRule.getLastRuleResultValue(
+							GeneralRuleResultSpecConstants.FIREWALL_ACTION);
+			if (firewallAction == null) {
+				return false;
+			}
+			LogAction firewallActionLogAction = 
+					applicableRule.getLastRuleResultValue(
+							GeneralRuleResultSpecConstants.FIREWALL_ACTION_LOG_ACTION);
+			String desiredDestinationAddress = 
+					inboundRuleContext.getRuleArgValue(
+							Socks5RuleArgSpecConstants.SOCKS5_UDP_INBOUND_DESIRED_DESTINATION_ADDRESS);
+			Port desiredDestinationPort =
+					inboundRuleContext.getRuleArgValue(
+							Socks5RuleArgSpecConstants.SOCKS5_UDP_INBOUND_DESIRED_DESTINATION_PORT);
+			String sourceAddress =
+					inboundRuleContext.getRuleArgValue(
+							Socks5RuleArgSpecConstants.SOCKS5_UDP_INBOUND_SOURCE_ADDRESS);
+			Port sourcePort =
+					inboundRuleContext.getRuleArgValue(
+							Socks5RuleArgSpecConstants.SOCKS5_UDP_INBOUND_SOURCE_PORT);
+			if (firewallAction.equals(FirewallAction.ALLOW)
+					&& firewallActionLogAction != null) {
+				firewallActionLogAction.invoke(
+						LOGGER, 
+						ObjectLogMessageHelper.objectLogMessage(
+								this,
+								"UDP inbound source address and port (%s) to "
+								+ "UDP inbound desired destination address and "
+								+ "port (%s) allowed based on the following "
+								+ "rule and context: rule: %s context: %s",
+								AddressAndPortHelper.toString(
+										sourceAddress, 
+										sourcePort.intValue()),
+								AddressAndPortHelper.toString(
+										desiredDestinationAddress,
+										desiredDestinationPort.intValue()),
+								applicableRule,
+								inboundRuleContext));				
+			} else if (firewallAction.equals(FirewallAction.DENY)
+					&& firewallActionLogAction != null) {
+				firewallActionLogAction.invoke(
+						LOGGER, 
+						ObjectLogMessageHelper.objectLogMessage(
+								this,
+								"UDP inbound source address and port (%s) to "
+								+ "UDP inbound desired destination address and "
+								+ "port (%s) denied based on the following "
+								+ "rule and context: rule: %s context: %s",
+								AddressAndPortHelper.toString(
+										sourceAddress, 
+										sourcePort.intValue()),
+								AddressAndPortHelper.toString(
+										desiredDestinationAddress,
+										desiredDestinationPort.intValue()),
+								applicableRule,
+								inboundRuleContext));				
+			}
+			return FirewallAction.ALLOW.equals(firewallAction);
 		}
 
 		private DatagramPacket newDatagramPacket(
@@ -164,6 +227,27 @@ public final class UdpRelayServer {
 			int inetPort = this.packetsWorkerContext.getClientPort();
 			return new DatagramPacket(
 					headerBytes, headerBytes.length, inetAddress, inetPort);
+		}
+		
+		private RuleContext newInboundRuleContext(
+				final String peerAddr,
+				final int peerPrt,
+				final String clientAddr,
+				final int clientPrt) {
+			RuleContext inboundRuleContext = new RuleContext(this.ruleContext);
+			inboundRuleContext.putRuleArgValue(
+					Socks5RuleArgSpecConstants.SOCKS5_UDP_INBOUND_DESIRED_DESTINATION_ADDRESS, 
+					clientAddr);
+			inboundRuleContext.putRuleArgValue(
+					Socks5RuleArgSpecConstants.SOCKS5_UDP_INBOUND_DESIRED_DESTINATION_PORT, 
+					Port.newInstance(clientPrt));
+			inboundRuleContext.putRuleArgValue(
+					Socks5RuleArgSpecConstants.SOCKS5_UDP_INBOUND_SOURCE_ADDRESS, 
+					peerAddr);
+			inboundRuleContext.putRuleArgValue(
+					Socks5RuleArgSpecConstants.SOCKS5_UDP_INBOUND_SOURCE_PORT, 
+					Port.newInstance(peerPrt));
+			return inboundRuleContext;
 		}
 		
 		private UdpRequestHeader newUdpRequestHeader(
@@ -228,10 +312,15 @@ public final class UdpRelayServer {
 							this, 
 							"Packet data received: %s byte(s)",
 							packet.getLength()));
-					if (!this.canAllowPacket(new Socks5UdpFirewallRule.Context(
-							this.clientAddress, 
-							this.methodSubnegotiationResults, 
-							packet.getAddress().getHostAddress()))) {
+					RuleContext inboundRuleContext = this.newInboundRuleContext(
+							packet.getAddress().getHostAddress(),
+							packet.getPort(),
+							this.clientAddress,
+							this.packetsWorkerContext.getClientPort());
+					Rule applicableRule = this.rules.firstAppliesTo(
+							inboundRuleContext);
+					if (!this.canForwardDatagramPacket(
+							applicableRule, inboundRuleContext)) {
 						continue;
 					}
 					UdpRequestHeader header = this.newUdpRequestHeader(packet);
@@ -286,24 +375,19 @@ public final class UdpRelayServer {
 			super(context);
 		}
 		
-		private boolean canAllowPacket(final FirewallRule.Context context) {
-			this.outboundSocks5UdpFirewallRules.applyTo(context);
-			return FirewallRuleAction.ALLOW.equals(
-					context.getFirewallRuleAction());
-		}
-		
-		private boolean canForwardDatagramPacket(final DatagramPacket packet) {
+		private boolean canAllowDatagramPacket(final DatagramPacket packet) {
 			String address = packet.getAddress().getHostAddress();
 			int port = packet.getPort();
+			String clientAddr = this.clientAddress;
 			InetAddress clientInetAddr = null;
 			try {
-				clientInetAddr = InetAddress.getByName(this.clientAddress);
+				clientInetAddr = InetAddress.getByName(clientAddr);
 			} catch (IOException e) {
 				LOGGER.error( 
 						ObjectLogMessageHelper.objectLogMessage(
 								this, 
-								"Error in determining the IP address from the "
-								+ "client"), 
+								"Error in determining the IP address from "
+								+ "the client"), 
 						e);
 				return false;
 			}
@@ -314,8 +398,8 @@ public final class UdpRelayServer {
 				LOGGER.error( 
 						ObjectLogMessageHelper.objectLogMessage(
 								this, 
-								"Error in determining the IP address from the "
-								+ "client"), 
+								"Error in determining the IP address from "
+								+ "the client"), 
 						e);
 				return false;
 			}
@@ -333,6 +417,93 @@ public final class UdpRelayServer {
 				}
 			}
 			return true;
+		}
+		
+		private boolean canForwardDatagramPacket(
+				final Rule applicableRule,
+				final RuleContext outboundRuleContext) {
+			if (applicableRule == null) {
+				return false;
+			}
+			boolean hasDesiredDestinationAddressRuleCondition =
+					applicableRule.hasRuleCondition(
+							Socks5RuleConditionSpecConstants.SOCKS5_UDP_OUTBOUND_DESIRED_DESTINATION_ADDRESS);
+			boolean hasDesiredDestinationPortRuleCondition =
+					applicableRule.hasRuleCondition(
+							Socks5RuleConditionSpecConstants.SOCKS5_UDP_OUTBOUND_DESIRED_DESTINATION_PORT);
+			boolean hasSourceAddressRuleCondition =
+					applicableRule.hasRuleCondition(
+							Socks5RuleConditionSpecConstants.SOCKS5_UDP_OUTBOUND_SOURCE_ADDRESS);
+			boolean hasSourcePortRuleCondition =
+					applicableRule.hasRuleCondition(
+							Socks5RuleConditionSpecConstants.SOCKS5_UDP_OUTBOUND_SOURCE_PORT);
+			if (!hasDesiredDestinationAddressRuleCondition
+					&& !hasDesiredDestinationPortRuleCondition
+					&& !hasSourceAddressRuleCondition
+					&& !hasSourcePortRuleCondition) {
+				return true;
+			}
+			FirewallAction firewallAction = 
+					applicableRule.getLastRuleResultValue(
+							GeneralRuleResultSpecConstants.FIREWALL_ACTION);
+			if (firewallAction == null) {
+				return false;
+			}
+			LogAction firewallActionLogAction = 
+					applicableRule.getLastRuleResultValue(
+							GeneralRuleResultSpecConstants.FIREWALL_ACTION_LOG_ACTION);
+			String desiredDestinationAddress = 
+					outboundRuleContext.getRuleArgValue(
+							Socks5RuleArgSpecConstants.SOCKS5_UDP_OUTBOUND_DESIRED_DESTINATION_ADDRESS);
+			Port desiredDestinationPort =
+					outboundRuleContext.getRuleArgValue(
+							Socks5RuleArgSpecConstants.SOCKS5_UDP_OUTBOUND_DESIRED_DESTINATION_PORT);
+			String sourceAddress =
+					outboundRuleContext.getRuleArgValue(
+							Socks5RuleArgSpecConstants.SOCKS5_UDP_OUTBOUND_SOURCE_ADDRESS);
+			Port sourcePort =
+					outboundRuleContext.getRuleArgValue(
+							Socks5RuleArgSpecConstants.SOCKS5_UDP_OUTBOUND_SOURCE_PORT);
+			if (firewallAction.equals(FirewallAction.ALLOW)
+					&& firewallActionLogAction != null) {
+				firewallActionLogAction.invoke(
+						LOGGER, 
+						ObjectLogMessageHelper.objectLogMessage(
+								this,
+								"UDP outbound source address and port (%s) to "
+								+ "UDP outbound desired destination address "
+								+ "and port (%s) allowed based on the "
+								+ "following rule and context: rule: %s "
+								+ "context: %s",
+								AddressAndPortHelper.toString(
+										sourceAddress, 
+										sourcePort.intValue()),
+								AddressAndPortHelper.toString(
+										desiredDestinationAddress, 
+										desiredDestinationPort.intValue()),
+								applicableRule,
+								outboundRuleContext));				
+			} else if (firewallAction.equals(FirewallAction.DENY)
+					&& firewallActionLogAction != null) {
+				firewallActionLogAction.invoke(
+						LOGGER, 
+						ObjectLogMessageHelper.objectLogMessage(
+								this,
+								"UDP outbound source address and port (%s) to "
+								+ "UDP outbound desired destination address "
+								+ "and port (%s) denied based on the "
+								+ "following rule and context: rule: %s "
+								+ "context: %s",
+								AddressAndPortHelper.toString(
+										sourceAddress, 
+										sourcePort.intValue()),
+								AddressAndPortHelper.toString(
+										desiredDestinationAddress, 
+										desiredDestinationPort.intValue()),
+								applicableRule,
+								outboundRuleContext));				
+			}
+			return FirewallAction.ALLOW.equals(firewallAction);
 		}
 		
 		private DatagramPacket newDatagramPacket(
@@ -354,6 +525,27 @@ public final class UdpRelayServer {
 			int inetPort = header.getDesiredDestinationPort();
 			return new DatagramPacket(
 					userData, userData.length, inetAddress, inetPort);
+		}
+		
+		private RuleContext newOutboundRuleContext(
+				final String clientAddr,
+				final int clientPrt,
+				final String peerAddr,
+				final int peerPrt) {
+			RuleContext outboundRuleContext = new RuleContext(this.ruleContext);
+			outboundRuleContext.putRuleArgValue(
+					Socks5RuleArgSpecConstants.SOCKS5_UDP_OUTBOUND_DESIRED_DESTINATION_ADDRESS, 
+					peerAddr);
+			outboundRuleContext.putRuleArgValue(
+					Socks5RuleArgSpecConstants.SOCKS5_UDP_OUTBOUND_DESIRED_DESTINATION_PORT, 
+					Port.newInstance(peerPrt));
+			outboundRuleContext.putRuleArgValue(
+					Socks5RuleArgSpecConstants.SOCKS5_UDP_OUTBOUND_SOURCE_ADDRESS, 
+					clientAddr);
+			outboundRuleContext.putRuleArgValue(
+					Socks5RuleArgSpecConstants.SOCKS5_UDP_OUTBOUND_SOURCE_PORT, 
+					Port.newInstance(clientPrt));
+			return outboundRuleContext;
 		}
 		
 		private UdpRequestHeader newUdpRequestHeader(
@@ -423,7 +615,7 @@ public final class UdpRelayServer {
 							this, 
 							"Packet data received: %s byte(s)",
 							packet.getLength()));					
-					if (!this.canForwardDatagramPacket(packet)) {
+					if (!this.canAllowDatagramPacket(packet)) {
 						continue;
 					}
 					UdpRequestHeader header = this.newUdpRequestHeader(packet);
@@ -435,10 +627,16 @@ public final class UdpRelayServer {
 					if (header.getCurrentFragmentNumber() != 0) {
 						continue;
 					}
-					if (!this.canAllowPacket(new Socks5UdpFirewallRule.Context(
-							this.clientAddress,
-							this.methodSubnegotiationResults,
-							header.getDesiredDestinationAddress()))) {
+					RuleContext outboundRuleContext =
+							this.newOutboundRuleContext(
+									this.clientAddress,
+									this.packetsWorkerContext.getClientPort(),
+									header.getDesiredDestinationAddress(),
+									header.getDesiredDestinationPort());
+					Rule applicableRule = this.rules.firstAppliesTo(
+							outboundRuleContext);
+					if (!this.canForwardDatagramPacket(
+							applicableRule,	outboundRuleContext)) {
 						continue;
 					}
 					packet = this.newDatagramPacket(header);
@@ -488,11 +686,10 @@ public final class UdpRelayServer {
 		protected final DatagramSocket clientFacingDatagramSocket;
 		protected final HostResolver hostResolver;
 		protected final int idleTimeout;
-		protected final Socks5UdpFirewallRules inboundSocks5UdpFirewallRules;
-		protected final MethodSubnegotiationResults methodSubnegotiationResults;
-		protected final Socks5UdpFirewallRules outboundSocks5UdpFirewallRules;
 		protected final PacketsWorkerContext packetsWorkerContext;
 		protected final DatagramSocket peerFacingDatagramSocket;
+		protected final RuleContext ruleContext;
+		protected final Rules rules;
 
 		public PacketsWorker(final PacketsWorkerContext context) {
 			this.bufferSize = context.getBufferSize();
@@ -501,15 +698,11 @@ public final class UdpRelayServer {
 					context.getClientFacingDatagramSocket();
 			this.hostResolver = context.getHostResolver();
 			this.idleTimeout = context.getIdleTimeout();
-			this.inboundSocks5UdpFirewallRules = 
-					context.getInboundSocks5UdpFirewallRules(); 
-			this.methodSubnegotiationResults = 
-					context.getMethodSubnegotiationResults();
-			this.outboundSocks5UdpFirewallRules = 
-					context.getOutboundSocks5UdpFirewallRules();
 			this.packetsWorkerContext = context;
 			this.peerFacingDatagramSocket = 
 					context.getPeerFacingDatagramSocket();
+			this.ruleContext = context.getRuleContext();
+			this.rules = context.getRules();
 		}
 
 		@Override
@@ -564,20 +757,16 @@ public final class UdpRelayServer {
 			return this.udpRelayServer.idleTimeout;
 		}
 		
-		public final Socks5UdpFirewallRules getInboundSocks5UdpFirewallRules() {
-			return this.udpRelayServer.inboundSocks5UdpFirewallRules;
-		}
-		
-		public final MethodSubnegotiationResults getMethodSubnegotiationResults() {
-			return this.udpRelayServer.methodSubnegotiationResults;
-		}
-		
-		public final Socks5UdpFirewallRules getOutboundSocks5UdpFirewallRules() {
-			return this.udpRelayServer.outboundSocks5UdpFirewallRules;
-		}
-		
 		public final DatagramSocket getPeerFacingDatagramSocket() {
 			return this.peerFacingDatagramSocket;
+		}
+		
+		public final RuleContext getRuleContext() {
+			return this.udpRelayServer.ruleContext;
+		}
+		
+		public final Rules getRules() {
+			return this.udpRelayServer.rules;
 		}
 		
 		public final void setClientPort(final int port) {
@@ -622,10 +811,9 @@ public final class UdpRelayServer {
 	private final HostResolver hostResolver;
 	private long idleStartTime;
 	private final int idleTimeout;
-	private final Socks5UdpFirewallRules inboundSocks5UdpFirewallRules;
-	private final MethodSubnegotiationResults methodSubnegotiationResults;	
-	private final Socks5UdpFirewallRules outboundSocks5UdpFirewallRules;
 	private final DatagramSocket peerFacingDatagramSocket;
+	private final RuleContext ruleContext;
+	private final Rules rules;
 	private State state;
 	
 	private UdpRelayServer(final Builder builder) {
@@ -637,15 +825,12 @@ public final class UdpRelayServer {
 		this.hostResolver = builder.hostResolver;
 		this.idleStartTime = 0L;
 		this.idleTimeout = builder.idleTimeout;
-		this.inboundSocks5UdpFirewallRules = 
-				builder.inboundSocks5UdpFirewallRules;
-		this.methodSubnegotiationResults = builder.methodSubnegotiationResults;		
-		this.outboundSocks5UdpFirewallRules = 
-				builder.outboundSocks5UdpFirewallRules;
 		this.peerFacingDatagramSocket = builder.peerFacingDatagramSocket;
+		this.ruleContext = builder.ruleContext;
+		this.rules = builder.rules;
 		this.state = State.STOPPED;
 	}
-
+	
 	private synchronized int getClientPort() {
 		return this.clientPort;
 	}

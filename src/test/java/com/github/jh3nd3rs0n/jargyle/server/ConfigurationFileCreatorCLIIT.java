@@ -16,6 +16,7 @@ import com.github.jh3nd3rs0n.jargyle.FilesHelper;
 import com.github.jh3nd3rs0n.jargyle.IoHelper;
 import com.github.jh3nd3rs0n.jargyle.ResourceHelper;
 import com.github.jh3nd3rs0n.jargyle.ResourceNameConstants;
+import com.github.jh3nd3rs0n.jargyle.ThreadHelper;
 
 public class ConfigurationFileCreatorCLIIT {
 	
@@ -26,7 +27,7 @@ public class ConfigurationFileCreatorCLIIT {
 	private Path supplementedConfigurationFile = null;
 	
 	@Before
-	public void setUpBeforeClass() throws Exception {
+	public void setUp() throws Exception {
 		this.baseDir = Files.createTempDirectory("com.github.jh3nd3rs0n.jargyle-");
 		this.combinedConfigurationFile = this.baseDir.resolve("combined_configuration.xml");
 		this.configurationFile = this.baseDir.resolve("configuration.xml");
@@ -35,7 +36,7 @@ public class ConfigurationFileCreatorCLIIT {
 	}
 
 	@After
-	public void tearDownAfterClass() throws Exception {
+	public void tearDown() throws Exception {
 		if (this.supplementedConfigurationFile != null) {
 			FilesHelper.attemptsToDeleteIfExists(this.supplementedConfigurationFile);
 			this.supplementedConfigurationFile = null;
@@ -72,6 +73,7 @@ public class ConfigurationFileCreatorCLIIT {
 			cli.handleArgs();
 		} catch (TerminationRequestedException e) {
 		}
+		ThreadHelper.sleepForThreeSeconds();		
 		String expectedCombinedConfigurationFileContents =
 				ResourceHelper.getResourceAsString(
 						ResourceNameConstants.JARGYLE_SERVER_COMBINED_CONFIGURATION_FILE).replace(
@@ -97,6 +99,7 @@ public class ConfigurationFileCreatorCLIIT {
 			cli.handleArgs();
 		} catch (TerminationRequestedException e) {
 		}
+		ThreadHelper.sleepForThreeSeconds();		
 		String expectedConfigurationFileContents =
 				ResourceHelper.getResourceAsString(
 						ResourceNameConstants.JARGYLE_SERVER_CONFIGURATION_FILE).replace(
@@ -119,6 +122,7 @@ public class ConfigurationFileCreatorCLIIT {
 			cli.handleArgs();
 		} catch (TerminationRequestedException e) {
 		}
+		ThreadHelper.sleepForThreeSeconds();		
 		String expectedEmptyConfigurationFileContents =
 				ResourceHelper.getResourceAsString(
 						ResourceNameConstants.JARGYLE_SERVER_EMPTY_CONFIGURATION_FILE).replace(
@@ -144,6 +148,7 @@ public class ConfigurationFileCreatorCLIIT {
 			cli.handleArgs();
 		} catch (TerminationRequestedException e) {
 		}
+		ThreadHelper.sleepForThreeSeconds();		
 		String expectedSupplementedConfigurationFileContents =
 				ResourceHelper.getResourceAsString(
 						ResourceNameConstants.JARGYLE_SERVER_SUPPLEMENTED_CONFIGURATION_FILE).replace(

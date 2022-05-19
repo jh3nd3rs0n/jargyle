@@ -1,6 +1,5 @@
 package com.github.jh3nd3rs0n.jargyle.server.config.xml.bind;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -10,7 +9,6 @@ import com.github.jh3nd3rs0n.jargyle.server.ImmutableConfiguration;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Marshaller;
-import jakarta.xml.bind.SchemaOutputResolver;
 import jakarta.xml.bind.Unmarshaller;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -23,15 +21,6 @@ import jakarta.xml.bind.helpers.DefaultValidationEventHandler;
 @XmlType(name = "configuration", propOrder = { })
 @XmlRootElement(name = "configuration") 
 public class ConfigurationXml {
-
-	public static void generateXsd(
-			final OutputStream out, 
-			final SchemaOutputResolver resolver) 
-			throws JAXBException, IOException {
-		JAXBContext jaxbContext = JAXBContext.newInstance(
-				ConfigurationXml.class);
-		jaxbContext.generateSchema(resolver);			
-	}
 
 	public static ConfigurationXml newInstanceFromXml(
 			final InputStream in) throws JAXBException {

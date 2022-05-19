@@ -1,147 +1,19 @@
 package com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-
-public class UsernamePasswordAuthenticator {
-
-	public static UsernamePasswordAuthenticator newInstance() {
-		return new UsernamePasswordAuthenticator(null);
-	}
+public final class UsernamePasswordAuthenticator {
 	
-	public static UsernamePasswordAuthenticator newInstance(
-			final Class<?> cls, final String value) {
-		UsernamePasswordAuthenticator usernamePasswordAuthenticator = null;
-		if (cls.equals(UsernamePasswordAuthenticator.class)) {
-			usernamePasswordAuthenticator = new UsernamePasswordAuthenticator(
-					value);
-		} else if (UsernamePasswordAuthenticator.class.isAssignableFrom(cls)) {
-			Method method = null;
-			Constructor<?> constructor = null;
-			for (Method meth : cls.getDeclaredMethods()) {
-				int modifiers = meth.getModifiers();
-				Class<?> returnType = meth.getReturnType();
-				Class<?>[] parameterTypes = meth.getParameterTypes();
-				boolean isPublic = Modifier.isPublic(modifiers);
-				boolean isStatic = Modifier.isStatic(modifiers);
-				boolean isReturnTypeClass = returnType.equals(cls);
-				boolean isParameterTypeString = parameterTypes.length == 1 
-						&& parameterTypes[0].equals(String.class);
-				if (isPublic 
-						&& isStatic 
-						&& isReturnTypeClass 
-						&& isParameterTypeString) {
-					method = meth;
-					break;
-				}
-			}
-			if (method == null) {
-				for (Constructor<?> ctor : cls.getDeclaredConstructors()) {
-					int modifiers = ctor.getModifiers();
-					Class<?>[] parameterTypes = ctor.getParameterTypes();
-					boolean isPublic = Modifier.isPublic(modifiers);
-					boolean isInstantiatable = !Modifier.isAbstract(modifiers)
-							&& !Modifier.isInterface(modifiers);
-					boolean isParameterTypeString = parameterTypes.length == 1 
-							&& parameterTypes[0].equals(String.class);
-					if (isPublic && isInstantiatable && isParameterTypeString) {
-						constructor = ctor;
-						break;
-					}
-				}
-			}
-			if (method != null) {
-				method.setAccessible(true);
-				try {
-					usernamePasswordAuthenticator = 
-							(UsernamePasswordAuthenticator) method.invoke(
-									null, value);
-				} catch (IllegalAccessException e) {
-					throw new AssertionError(e);
-				} catch (IllegalArgumentException e) {
-					throw new AssertionError(e);
-				} catch (InvocationTargetException e) {
-					throw new AssertionError(e); 
-				}
-			} else if (constructor != null) {
-				constructor.setAccessible(true);
-				try {
-					usernamePasswordAuthenticator = 
-							(UsernamePasswordAuthenticator) constructor.newInstance(
-									value);
-				} catch (InstantiationException e) {
-					throw new AssertionError(e);
-				} catch (IllegalAccessException e) {
-					throw new AssertionError(e);
-				} catch (IllegalArgumentException e) {
-					throw new AssertionError(e);
-				} catch (InvocationTargetException e) {
-					throw new AssertionError(e); 
-				}
-			} else {
-				throw new IllegalArgumentException(String.format(
-						"class %1$s does not have either a static method that "
-						+ "has one method parameter of type %2$s and a method "
-						+ "return type of the provided type nor an "
-						+ "instantiatable constructor that has one constructor "
-						+ "parameter of type %2$s",
-						cls,
-						String.class.getName()));
-			}
-		} else {
-			throw new IllegalArgumentException(String.format(
-					"class must be or must extend '%s'", 
-					UsernamePasswordAuthenticator.class.getName()));
-		}
-		return usernamePasswordAuthenticator;
-	}
+	private final UserRepository userRepository;
 	
-	public static UsernamePasswordAuthenticator newInstance(final String s) {
-		String[] sElements = s.split(":", 2);
-		String className = sElements[0];
-		String value = null;
-		if (sElements.length == 2) {
-			value = sElements[1];
-		}
-		return newInstance(className, value);
-	}
-	
-	public static UsernamePasswordAuthenticator newInstance(
-			final String className, final String value) {
-		Class<?> cls = null;
-		try {
-			cls = Class.forName(className);
-		} catch (ClassNotFoundException e) {
-			throw new IllegalArgumentException(e);
-		}
-		return newInstance(cls, value);
-	}
-	
-	private final String value;
-	
-	protected UsernamePasswordAuthenticator(final String val) {
-		this.value = val;
+	public UsernamePasswordAuthenticator(final UserRepository repository) {
+		this.userRepository = repository;
 	}
 	
 	public boolean authenticate(
 			final String username, final char[] password) {
-		return false;
-	}
-	
-	public final String getValue() {
-		return this.value;
-	}
-
-	@Override
-	public final String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append(this.getClass().getName());
-		if (this.value != null) {
-			builder.append(":").append(this.value);
-		}
-		return builder.toString();
+		User user = this.userRepository.get(username);
+		if (user == null) { return false; }
+		HashedPassword hashedPassword = user.getHashedPassword();
+		return hashedPassword.passwordEquals(password);
 	}
 	
 }

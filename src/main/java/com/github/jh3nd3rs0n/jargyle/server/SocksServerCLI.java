@@ -2,6 +2,7 @@ package com.github.jh3nd3rs0n.jargyle.server;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.net.BindException;
 
 import org.slf4j.Logger;
@@ -65,17 +66,29 @@ public final class SocksServerCLI extends AbstractCLI {
 					this.getConfiguration());
 		} else {
 			File f = new File(this.monitoredConfigurationFile);
-			ConfigurationProvider configurationProvider = null;
+			if (!f.exists()) {
+				System.err.printf("%s: `%s' not found%n", 
+						this.getProgramName(), 
+						this.monitoredConfigurationFile);
+				throw new TerminationRequestedException(-1);
+			}
+			if (!f.isFile()) {
+				System.err.printf("%s: `%s' not a file%n", 
+						this.getProgramName(), 
+						this.monitoredConfigurationFile);
+				throw new TerminationRequestedException(-1);			
+			}			
+			ConfigurationRepository configurationRepository = null;
 			try {
-				configurationProvider = 
-						XmlFileSourceConfigurationProvider.newInstance(f);
-			} catch (IllegalArgumentException e) {
+				configurationRepository = 
+						ConfigurationRepository.newInstance(f);
+			} catch (UncheckedIOException e) {
 				System.err.printf("%s: %s%n", this.getProgramName(), e);
 				e.printStackTrace(System.err);
 				throw new TerminationRequestedException(-1);
 			}
 			configuration = MutableConfiguration.newInstance(
-					configurationProvider);
+					configurationRepository);
 		}
 		return configuration;
 	}

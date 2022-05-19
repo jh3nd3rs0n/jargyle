@@ -1,6 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.server;
 
-import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.StringSourceUsernamePasswordAuthenticator;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.StringSourceUserRepository;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Methods;
 
@@ -18,8 +18,8 @@ public final class ConfigurationHelper {
 		return ImmutableConfiguration.newInstance(Settings.newInstance(
 				Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
 						Methods.newInstance(Method.USERNAME_PASSWORD)),
-				Socks5SettingSpecConstants.SOCKS5_USERPASSAUTH_USERNAME_PASSWORD_AUTHENTICATOR.newSetting(
-						new StringSourceUsernamePasswordAuthenticator(sb.toString()))));
+				Socks5SettingSpecConstants.SOCKS5_USERPASSAUTH_USER_REPOSITORY.newSetting(
+						new StringSourceUserRepository(sb.toString()))));
 	}
 	
 	private ConfigurationHelper() { }

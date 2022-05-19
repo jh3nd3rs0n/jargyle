@@ -1,28 +1,34 @@
 package com.github.jh3nd3rs0n.jargyle.server;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public abstract class Rules<R extends Rule> {
-
-	private final List<R> rules;
+public final class Rules {
 	
-	public Rules(final List<? extends R> rls) {
-		this.rules = new ArrayList<R>(rls);
+	public static Rules newInstance(final Configuration configuration) {
+		return Rules.newInstance(configuration.getSettings().getValues(
+				GeneralSettingSpecConstants.RULE));
 	}
 	
-	public final void applyTo(final Rule.Context context) {
-		for (R rule : this.rules) {
-			if (rule.appliesTo(context)) {
-				rule.applyTo(context);
-			}
-		}
+	public static Rules newInstance(final List<Rule> rls) {
+		return new Rules(rls);
 	}
 	
+	public static Rules newInstance(final Rule... rls) {
+		return new Rules(Arrays.asList(rls));
+	}
+	
+	private final List<Rule> rules;
+
+	private Rules(final List<Rule> rls) {
+		this.rules = new ArrayList<Rule>(rls);
+	}
+
 	@Override
-	public final boolean equals(Object obj) {
+	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
 		}
@@ -32,7 +38,7 @@ public abstract class Rules<R extends Rule> {
 		if (this.getClass() != obj.getClass()) {
 			return false;
 		}
-		Rules<?> other = (Rules<?>) obj;
+		Rules other = (Rules) obj;
 		if (this.rules == null) {
 			if (other.rules != null) {
 				return false;
@@ -42,32 +48,31 @@ public abstract class Rules<R extends Rule> {
 		}
 		return true;
 	}
-	
+
+	public Rule firstAppliesTo(final RuleContext context) {
+		for (Rule rule : this.rules) {
+			if (rule.appliesTo(context)) {
+				return rule;
+			}
+		}
+		return null;
+	}
+
 	@Override
-	public final int hashCode() {
+	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((this.rules == null) ? 
 				0 : this.rules.hashCode());
 		return result;
 	}
-
-	public final List<R> toList() {
+	
+	public List<Rule> toList() {
 		return Collections.unmodifiableList(this.rules);
 	}
 
 	@Override
-	public final String toString() {
-		StringBuilder builder = new StringBuilder();
-		for (Iterator<R> iterator = this.rules.iterator();
-				iterator.hasNext();) {
-			R rule = iterator.next();
-			builder.append(rule);
-			if (iterator.hasNext()) {
-				builder.append(' ');
-			}
-		}
-		return builder.toString();
+	public String toString() {
+		return this.rules.stream().map(Rule::toString).collect(Collectors.joining(" "));
 	}
-
 }

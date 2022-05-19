@@ -7,24 +7,14 @@ import com.github.jh3nd3rs0n.jargyle.common.net.Host;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
 import com.github.jh3nd3rs0n.jargyle.internal.help.HelpText;
-import com.github.jh3nd3rs0n.jargyle.server.rules.impl.Socks5ReplyFirewallRules;
-import com.github.jh3nd3rs0n.jargyle.server.rules.impl.Socks5RequestFirewallRules;
-import com.github.jh3nd3rs0n.jargyle.server.rules.impl.Socks5RequestRoutingRules;
-import com.github.jh3nd3rs0n.jargyle.server.rules.impl.Socks5UdpFirewallRules;
 import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.BooleanSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.HostSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.MethodsSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.PositiveIntegerSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.ProtectionLevelsSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.SocketSettingsSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.Socks5RequestRoutingRulesSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.Socks5ReplyFirewallRulesSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.Socks5RequestFirewallRulesSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.Socks5RequestWorkerFactorySettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.Socks5UdpFirewallRulesSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.UsernamePasswordAuthenticatorSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.socks5.Socks5RequestWorkerFactory;
-import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.UsernamePasswordAuthenticator;
+import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.UserRepositorySettingSpec;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.UserRepository;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Methods;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.gssapiauth.ProtectionLevels;
 
@@ -109,17 +99,6 @@ public final class Socks5SettingSpecConstants {
 					PositiveInteger.newInstance(60000))); // 1 minute
 
 	@HelpText(
-			doc = "The space separated list of firewall rules for a second "
-					+ "SOCKS5 reply to a client "
-					+ "(default is firewallRuleAction=ALLOW)", 
-			usage = "socks5.onBind.secondSocks5ReplyFirewallRules=[SOCKS5_REPLY_FIREWALL_RULE_FIELD1[ SOCKS5_REPLY_FIREWALL_RULE_FIELD2[...]]]"
-	)	
-	public static final SettingSpec<Socks5ReplyFirewallRules> SOCKS5_ON_BIND_SECOND_SOCKS5_REPLY_FIREWALL_RULES =
-			SETTING_SPECS.addThenGet(new Socks5ReplyFirewallRulesSettingSpec(
-					"socks5.onBind.secondSocks5ReplyFirewallRules",
-					Socks5ReplyFirewallRules.getDefault()));
-	
-	@HelpText(
 			doc = "The boolean value to indicate if the server-facing socket "
 					+ "is to be prepared before connecting (involves applying "
 					+ "the specified socket settings, resolving the target "
@@ -203,28 +182,6 @@ public final class Socks5SettingSpecConstants {
 					SocketSettings.newInstance()));
 
 	@HelpText(
-			doc = "The space separated list of firewall rules for UDP traffic "
-					+ "from a UDP peer to a UDP client "
-					+ "(default is firewallRuleAction=ALLOW)", 
-			usage = "socks5.onUdpAssociate.inboundSocks5UdpFirewallRules=[SOCKS5_UDP_FIREWALL_RULE_FIELD1[ SOCKS5_UDP_FIREWALL_RULE_FIELD2[...]]]"
-	)	
-	public static final SettingSpec<Socks5UdpFirewallRules> SOCKS5_ON_UDP_ASSOCIATE_INBOUND_SOCKS5_UDP_FIREWALL_RULES =
-			SETTING_SPECS.addThenGet(new Socks5UdpFirewallRulesSettingSpec(
-					"socks5.onUdpAssociate.inboundSocks5UdpFirewallRules",
-					Socks5UdpFirewallRules.getDefault()));
-
-	@HelpText(
-			doc = "The space separated list of firewall rules for UDP traffic "
-					+ "from a UDP client to a UDP peer "
-					+ "(default is firewallRuleAction=ALLOW)", 
-			usage = "socks5.onUdpAssociate.outboundSocks5UdpFirewallRules=[SOCKS5_UDP_FIREWALL_RULE_FIELD1[ SOCKS5_UDP_FIREWALL_RULE_FIELD2[...]]]"
-	)	
-	public static final SettingSpec<Socks5UdpFirewallRules> SOCKS5_ON_UDP_ASSOCIATE_OUTBOUND_SOCKS5_UDP_FIREWALL_RULES =
-			SETTING_SPECS.addThenGet(new Socks5UdpFirewallRulesSettingSpec(
-					"socks5.onUdpAssociate.outboundSocks5UdpFirewallRules",
-					Socks5UdpFirewallRules.getDefault()));
-	
-	@HelpText(
 			doc = "The binding host name or address for the peer-facing UDP "
 					+ "socket (default is 0.0.0.0)", 
 			usage = "socks5.onUdpAssociate.peerFacingBindHost=HOST"
@@ -265,52 +222,13 @@ public final class Socks5SettingSpecConstants {
 					PositiveInteger.newInstance(60000))); // 1 minute
 	
 	@HelpText(
-			doc = "The space separated list of firewall rules for a SOCKS5 "
-					+ "reply to a client (default is firewallRuleAction=ALLOW)", 
-			usage = "socks5.socks5ReplyFirewallRules=[SOCKS5_REPLY_FIREWALL_RULE_FIELD1[ SOCKS5_REPLY_FIREWALL_RULE_FIELD2[...]]]"
+			doc = "The user repository used for username password authentication", 
+			usage = "socks5.userpassauth.userRepository=CLASS_NAME:INITIALIZATION_VALUE"
 	)	
-	public static final SettingSpec<Socks5ReplyFirewallRules> SOCKS5_SOCKS5_REPLY_FIREWALL_RULES =
-			SETTING_SPECS.addThenGet(new Socks5ReplyFirewallRulesSettingSpec(
-					"socks5.socks5ReplyFirewallRules",
-					Socks5ReplyFirewallRules.getDefault()));
-	
-	@HelpText(
-			doc = "The space separated list of firewall rules for a SOCKS5 "
-					+ "request from a client (default is firewallRuleAction=ALLOW)", 
-			usage = "socks5.socks5RequestFirewallRules=[SOCKS5_REQUEST_FIREWALL_RULE_FIELD1[ SOCKS5_REQUEST_FIREWALL_RULE_FIELD2[...]]]"
-	)	
-	public static final SettingSpec<Socks5RequestFirewallRules> SOCKS5_SOCKS5_REQUEST_FIREWALL_RULES =
-			SETTING_SPECS.addThenGet(new Socks5RequestFirewallRulesSettingSpec(
-					"socks5.socks5RequestFirewallRules",
-					Socks5RequestFirewallRules.getDefault()));
-	
-	@HelpText(
-			doc = "The space separated list of routing rules for a SOCKS5 "
-					+ "request", 
-			usage = "socks5.socks5RequestRoutingRules=[SOCKS5_REQUEST_ROUTING_RULE_FIELD1[ SOCKS5_REQUEST_ROUTING_RULE_FIELD2[...]]]"
-	)	
-	public static final SettingSpec<Socks5RequestRoutingRules> SOCKS5_SOCKS5_REQUEST_ROUTING_RULES =
-			SETTING_SPECS.addThenGet(new Socks5RequestRoutingRulesSettingSpec(
-					"socks5.socks5RequestRoutingRules",
-					Socks5RequestRoutingRules.getDefault()));
-	
-	@HelpText(
-			doc = "The SOCKS5 request worker factory for the SOCKS5 server", 
-			usage = "socks5.socks5RequestWorkerFactory=CLASSNAME[:VALUE]"
-	)	
-	public static final SettingSpec<Socks5RequestWorkerFactory> SOCKS5_SOCKS5_REQUEST_WORKER_FACTORY = 
-			SETTING_SPECS.addThenGet(new Socks5RequestWorkerFactorySettingSpec(
-					"socks5.socks5RequestWorkerFactory", 
-					null));
-	
-	@HelpText(
-			doc = "The username password authenticator for the SOCKS5 server", 
-			usage = "socks5.userpassauth.usernamePasswordAuthenticator=CLASSNAME[:VALUE]"
-	)
-	public static final SettingSpec<UsernamePasswordAuthenticator> SOCKS5_USERPASSAUTH_USERNAME_PASSWORD_AUTHENTICATOR = 
-			SETTING_SPECS.addThenGet(new UsernamePasswordAuthenticatorSettingSpec(
-					"socks5.userpassauth.usernamePasswordAuthenticator", 
-					null));
+	public static final SettingSpec<UserRepository> SOCKS5_USERPASSAUTH_USER_REPOSITORY = 
+			SETTING_SPECS.addThenGet(new UserRepositorySettingSpec(
+					"socks5.userpassauth.userRepository",
+					UserRepository.newInstance()));
 	
 	public static List<SettingSpec<Object>> values() {
 		return SETTING_SPECS.toList();

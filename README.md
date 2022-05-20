@@ -49,8 +49,9 @@ Jargyle is a Java SOCKS5 server with SSL/TLS/DTLS and SOCKS server chaining with
 -   [5. 15. 2. 1. Rule Results for Allowing or Denying Traffic](#5-15-2-1-rule-results-for-allowing-or-denying-traffic)
 -   [5. 15. 2. 2. Rule Results for Allowing a Limited Number of Simultaneous Instances of Traffic](#5-15-2-2-rule-results-for-allowing-a-limited-number-of-simultaneous-instances-of-traffic)
 -   [5. 15. 2. 3. Rule Results for Routing Traffic](#5-15-2-3-rule-results-for-routing-traffic)
--   [5. 15. 2. 4. Rule Results for Limiting Bandwidth](#5-15-2-4-rule-results-for-limiting-bandwidth)
--   [5. 15. 2. 5. Rule Results for Configuring Sockets](#5-15-2-5-rule-results-for-configuring-sockets)
+-   [5. 15. 2. 4. Rule Results for Redirecting the Desired Destination](#5-15-2-4-rule-results-for-redirecting-the-desired-destination)
+-   [5. 15. 2. 5. Rule Results for Limiting Bandwidth](#5-15-2-5-rule-results-for-limiting-bandwidth)
+-   [5. 15. 2. 6. Rule Results for Configuring Sockets](#5-15-2-6-rule-results-for-configuring-sockets)
 -   [5. 16. Miscellaneous Notes](#5-16-miscellaneous-notes)
 -   [5. 16. 1. Multiple Settings of the Same Name](#5-16-1-multiple-settings-of-the-same-name)
 -   [5. 16. 2. The SOCKS5 RESOLVE Command](#5-16-2-the-socks5-resolve-command)
@@ -128,7 +129,7 @@ The following is the command line help for Jargyle (displayed when using the com
            jargyle --version
     
     COMMANDS:
-      manage-socks5-users COMMAND
+      manage-socks5-users USER_REPOSITORY_CLASS_NAME:INITIALIZATION_VALUE COMMAND
           Manage SOCKS5 users
       new-server-config-file [OPTIONS] FILE
           Create a new server configuration file based on the provided options
@@ -2088,13 +2089,13 @@ Partial configuration file example:
     
 ```
 
-You can also set the setting `routeSelectionStrategy` to specify the selection strategy for the next route to use from the list of all of the route IDs. The default is `CYCLICAL`.
+You can also set the setting `routeIdSelectionStrategy` to specify the selection strategy for the next route ID to use from the list of all of the route IDs. The default is `CYCLICAL`.
 
 Partial command line example:
 
 ```text
     
-    --setting=routeSelectionStrategy=RANDOM
+    --setting=routeIdSelectionStrategy=RANDOM
     
 ```
 
@@ -2103,19 +2104,19 @@ Partial configuration file example:
 ```xml
     
     <setting>
-        <name>routeSelectionStrategy</name>
+        <name>routeIdSelectionStrategy</name>
         <value>RANDOM</value>
     </setting>
     
 ```
 
-You can also set the setting `routeSelectionLogAction` to specify the logging action to take if a route is selected from the list of all of the route IDs.
+You can also set the setting `routeIdSelectionLogAction` to specify the logging action to take if a route ID is selected from the list of all of the route IDs.
 
 Partial command line example:
 
 ```text
     
-    --setting=routeSelectionLogAction=LOG_AS_INFO
+    --setting=routeIdSelectionLogAction=LOG_AS_INFO
     
 ```
 
@@ -2124,7 +2125,7 @@ Partial configuration file example:
 ```xml
     
     <setting>
-        <name>routeSelectionLogAction</name>
+        <name>routeIdSelectionLogAction</name>
         <value>LOG_AS_INFO</value>
     </setting>
     
@@ -2364,9 +2365,11 @@ A complete listing of rule results can be found in the settings help.
 
 ##### 5. 15. 2. 3. Rule Results for Routing Traffic
 
-##### 5. 15. 2. 4. Rule Results for Limiting Bandwidth
+##### 5. 15. 2. 4. Rule Results for Redirecting the Desired Destination
 
-##### 5. 15. 2. 5. Rule Results for Configuring Sockets
+##### 5. 15. 2. 5. Rule Results for Limiting Bandwidth
+
+##### 5. 15. 2. 6. Rule Results for Configuring Sockets
 
 ### 5. 16. Miscellaneous Notes
 

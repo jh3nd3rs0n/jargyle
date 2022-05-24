@@ -80,10 +80,10 @@ public final class XmlFileSourceConfigurationRepository
 	
 	public static XmlFileSourceConfigurationRepository newInstance(
 			final File xmlFile) {
-		XmlFileSourceConfigurationRepository configurationProvider = 
+		XmlFileSourceConfigurationRepository xmlFileSourceConfigurationRepository = 
 				new XmlFileSourceConfigurationRepository(xmlFile);
-		configurationProvider.startMonitoringXmlFile();
-		return configurationProvider;
+		xmlFileSourceConfigurationRepository.startMonitoringXmlFile();
+		return xmlFileSourceConfigurationRepository;
 	}
 	
 	private static Configuration readConfigurationFrom(final File xmlFile) {

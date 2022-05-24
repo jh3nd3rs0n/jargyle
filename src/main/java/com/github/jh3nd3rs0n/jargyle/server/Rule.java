@@ -54,24 +54,31 @@ public final class Rule {
 		String[] words = s.split(" ");
 		Builder builder = new Builder();
 		for (String word : words) {
-			IllegalArgumentException e1 = null;
-			IllegalArgumentException e2 = null;
+			String[] wordElements = word.split("=", 2);
+			String name = wordElements[0];
+			IllegalArgumentException ex = null;
 			try {
+				RuleConditionSpecConstants.valueOf(name);
+			} catch (IllegalArgumentException e) {
+				ex = e;
+			}
+			if (ex == null) {
 				builder.addRuleCondition(RuleCondition.newInstance(word));
 				continue;
-			} catch (IllegalArgumentException e) {
-				e1 = e;
 			}
+			ex = null;
 			try {
-				builder.addRuleResult(RuleResult.newInstance(word));
+				RuleResultSpecConstants.valueOf(name);
 			} catch (IllegalArgumentException e) {
-				e2 = e;
+				ex = e;
 			}
-			if (e1 != null && e2 != null) {
-				throw new IllegalArgumentException(String.format(
-						"invalid rule condition or rule result: %s", 
-						word));
-			}			
+			if (ex == null) {
+				builder.addRuleResult(RuleResult.newInstance(word));
+				continue;
+			}
+			throw new IllegalArgumentException(String.format(
+					"unknown rule condition or rule result: %s", 
+					name));			
 		}
 		return builder.build();
 	}

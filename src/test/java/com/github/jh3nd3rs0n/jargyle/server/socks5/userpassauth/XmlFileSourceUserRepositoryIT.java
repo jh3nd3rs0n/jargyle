@@ -48,6 +48,7 @@ public class XmlFileSourceUserRepositoryIT {
 		IoHelper.writeStringToFile(ResourceHelper.getResourceAsString(
 				ResourceNameConstants.JARGYLE_SERVER_SOCKS5_USERPASSAUTH_EMPTY_USERS_XML_FILE), 
 				this.usersXmlFile.toFile());
+		ThreadHelper.sleepForThreeSeconds();
 		this.xmlFileSourceUserRepository = 
 				XmlFileSourceUserRepository.newInstance(
 						this.usersXmlFile.toString());
@@ -65,6 +66,7 @@ public class XmlFileSourceUserRepositoryIT {
 		IoHelper.writeStringToFile(ResourceHelper.getResourceAsString(
 				ResourceNameConstants.JARGYLE_SERVER_SOCKS5_USERPASSAUTH_USERS_XML_FILE), 
 				this.usersXmlFile.toFile());
+		ThreadHelper.sleepForThreeSeconds();
 		this.xmlFileSourceUserRepository = 
 				XmlFileSourceUserRepository.newInstance(
 						this.usersXmlFile.toString());

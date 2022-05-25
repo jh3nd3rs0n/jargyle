@@ -5,13 +5,13 @@ import java.util.Map;
 
 import org.ietf.jgss.Oid;
 
-import com.github.jh3nd3rs0n.jargyle.client.propertyspec.impl.BooleanPropertySpec;
-import com.github.jh3nd3rs0n.jargyle.client.propertyspec.impl.MethodsPropertySpec;
-import com.github.jh3nd3rs0n.jargyle.client.propertyspec.impl.OidPropertySpec;
-import com.github.jh3nd3rs0n.jargyle.client.propertyspec.impl.ProtectionLevelsPropertySpec;
-import com.github.jh3nd3rs0n.jargyle.client.propertyspec.impl.StringPropertySpec;
-import com.github.jh3nd3rs0n.jargyle.client.propertyspec.impl.UserEncryptedPasswordPropertySpec;
-import com.github.jh3nd3rs0n.jargyle.client.propertyspec.impl.UsernamePropertySpec;
+import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.BooleanPropertySpec;
+import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.MethodsPropertySpec;
+import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.OidPropertySpec;
+import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.ProtectionLevelsPropertySpec;
+import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.StringPropertySpec;
+import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.UserEncryptedPasswordPropertySpec;
+import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.UsernamePropertySpec;
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Methods;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.gssapiauth.ProtectionLevels;

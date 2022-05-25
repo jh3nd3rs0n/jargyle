@@ -8,13 +8,13 @@ import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSetting;
 import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
 import com.github.jh3nd3rs0n.jargyle.internal.help.HelpText;
-import com.github.jh3nd3rs0n.jargyle.server.rules.impl.AddressRuleResultSpec;
-import com.github.jh3nd3rs0n.jargyle.server.rules.impl.BooleanRuleResultSpec;
-import com.github.jh3nd3rs0n.jargyle.server.rules.impl.HostRuleResultSpec;
-import com.github.jh3nd3rs0n.jargyle.server.rules.impl.LogActionRuleResultSpec;
-import com.github.jh3nd3rs0n.jargyle.server.rules.impl.PortRuleResultSpec;
-import com.github.jh3nd3rs0n.jargyle.server.rules.impl.PositiveIntegerRuleResultSpec;
-import com.github.jh3nd3rs0n.jargyle.server.rules.impl.SocketSettingRuleResultSpec;
+import com.github.jh3nd3rs0n.jargyle.server.internal.rules.impl.AddressRuleResultSpec;
+import com.github.jh3nd3rs0n.jargyle.server.internal.rules.impl.BooleanRuleResultSpec;
+import com.github.jh3nd3rs0n.jargyle.server.internal.rules.impl.HostRuleResultSpec;
+import com.github.jh3nd3rs0n.jargyle.server.internal.rules.impl.LogActionRuleResultSpec;
+import com.github.jh3nd3rs0n.jargyle.server.internal.rules.impl.PortRuleResultSpec;
+import com.github.jh3nd3rs0n.jargyle.server.internal.rules.impl.PositiveIntegerRuleResultSpec;
+import com.github.jh3nd3rs0n.jargyle.server.internal.rules.impl.SocketSettingRuleResultSpec;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Address;
 
 public final class Socks5RuleResultSpecConstants {

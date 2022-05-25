@@ -8,12 +8,12 @@ import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
 import com.github.jh3nd3rs0n.jargyle.common.text.Words;
 import com.github.jh3nd3rs0n.jargyle.internal.help.HelpText;
-import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.BooleanSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.EncryptedPasswordSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.FileSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.PositiveIntegerSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.StringSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.WordsSettingSpec;
+import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.BooleanSettingSpec;
+import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.EncryptedPasswordSettingSpec;
+import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.FileSettingSpec;
+import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.PositiveIntegerSettingSpec;
+import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.StringSettingSpec;
+import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.WordsSettingSpec;
 
 public final class DtlsSettingSpecConstants {
 

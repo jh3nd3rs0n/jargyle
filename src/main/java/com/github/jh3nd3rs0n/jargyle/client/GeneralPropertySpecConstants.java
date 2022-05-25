@@ -3,10 +3,10 @@ package com.github.jh3nd3rs0n.jargyle.client;
 import java.util.List;
 import java.util.Map;
 
-import com.github.jh3nd3rs0n.jargyle.client.propertyspec.impl.HostPropertySpec;
-import com.github.jh3nd3rs0n.jargyle.client.propertyspec.impl.PortPropertySpec;
-import com.github.jh3nd3rs0n.jargyle.client.propertyspec.impl.PositiveIntegerPropertySpec;
-import com.github.jh3nd3rs0n.jargyle.client.propertyspec.impl.SocketSettingsPropertySpec;
+import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.HostPropertySpec;
+import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.PortPropertySpec;
+import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.PositiveIntegerPropertySpec;
+import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.SocketSettingsPropertySpec;
 import com.github.jh3nd3rs0n.jargyle.common.net.Host;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;

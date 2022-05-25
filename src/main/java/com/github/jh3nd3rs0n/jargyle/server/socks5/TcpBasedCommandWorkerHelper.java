@@ -2,7 +2,7 @@ package com.github.jh3nd3rs0n.jargyle.server.socks5;
 
 import java.io.IOException;
 
-import com.github.jh3nd3rs0n.jargyle.server.RelayServer;
+import com.github.jh3nd3rs0n.jargyle.server.internal.net.RelayServer;
 
 final class TcpBasedCommandWorkerHelper {
 

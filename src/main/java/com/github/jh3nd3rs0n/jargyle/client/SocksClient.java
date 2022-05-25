@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import com.github.jh3nd3rs0n.jargyle.client.internal.SocksClientExceptionThrowingHelper;
-import com.github.jh3nd3rs0n.jargyle.client.internal.SocksClientExceptionThrowingSocket;
+import com.github.jh3nd3rs0n.jargyle.client.internal.net.SocksClientExceptionThrowingSocket;
+import com.github.jh3nd3rs0n.jargyle.client.internal.throwable.ThrowableHelper;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.SslSocketFactory;
 
@@ -137,7 +137,7 @@ public abstract class SocksClient {
 			internalSock = new SocksClientExceptionThrowingSocket(
 					this, internalSock);
 		} catch (IOException e) {
-			SocksClientExceptionThrowingHelper.throwAsSocksClientException(
+			ThrowableHelper.throwAsSocksClientException(
 					e, this);
 		}
 		return internalSock;
@@ -183,7 +183,7 @@ public abstract class SocksClient {
 			internalSocket = new SocksClientExceptionThrowingSocket(
 					this, internalSocket);
 		} catch (IOException e) {
-			SocksClientExceptionThrowingHelper.throwAsSocksClientException(
+			ThrowableHelper.throwAsSocksClientException(
 					e, this);
 		}
 		return internalSocket;

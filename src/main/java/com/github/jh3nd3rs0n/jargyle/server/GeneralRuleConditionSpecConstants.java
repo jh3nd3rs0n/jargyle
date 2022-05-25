@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.github.jh3nd3rs0n.jargyle.internal.help.HelpText;
-import com.github.jh3nd3rs0n.jargyle.server.rules.impl.AddressRangeContainsAddressRuleConditionSpec;
+import com.github.jh3nd3rs0n.jargyle.server.internal.rules.impl.AddressRangeContainsAddressRuleConditionSpec;
 
 public final class GeneralRuleConditionSpecConstants {
 

@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import com.github.jh3nd3rs0n.jargyle.server.internal.io.FileMonitor;
 import com.github.jh3nd3rs0n.jargyle.server.internal.io.FileStatusListener;
-import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.users.xml.bind.UsersXml;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.internal.users.xml.bind.UsersXml;
 
 import jakarta.xml.bind.JAXBException;
 

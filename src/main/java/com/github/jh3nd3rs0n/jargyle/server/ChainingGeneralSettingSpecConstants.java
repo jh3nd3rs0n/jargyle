@@ -9,11 +9,11 @@ import com.github.jh3nd3rs0n.jargyle.common.net.Host;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
 import com.github.jh3nd3rs0n.jargyle.internal.help.HelpText;
-import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.HostSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.PositiveIntegerSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.SocketSettingsSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.SocksServerUriSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.StringSettingSpec;
+import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.HostSettingSpec;
+import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.PositiveIntegerSettingSpec;
+import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.SocketSettingsSettingSpec;
+import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.SocksServerUriSettingSpec;
+import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.StringSettingSpec;
 
 public final class ChainingGeneralSettingSpecConstants {
 

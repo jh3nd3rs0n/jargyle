@@ -13,8 +13,8 @@ import com.github.jh3nd3rs0n.jargyle.client.Properties;
 import com.github.jh3nd3rs0n.jargyle.client.Socks5PropertySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
 import com.github.jh3nd3rs0n.jargyle.client.SocksNetObjectFactory;
-import com.github.jh3nd3rs0n.jargyle.client.internal.SocksClientExceptionThrowingDatagramSocket;
-import com.github.jh3nd3rs0n.jargyle.client.internal.SocksClientExceptionThrowingHelper;
+import com.github.jh3nd3rs0n.jargyle.client.internal.net.SocksClientExceptionThrowingDatagramSocket;
+import com.github.jh3nd3rs0n.jargyle.client.internal.throwable.ThrowableHelper;
 import com.github.jh3nd3rs0n.jargyle.common.net.ssl.DtlsDatagramSocketFactory;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.ClientMethodSelectionMessage;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
@@ -60,7 +60,7 @@ public final class Socks5Client extends SocksClient {
 			methodEncapsulation = methodSubnegotiator.subnegotiate(
 					connectedInternalSocket, this);
 		} catch (IOException e) {
-			SocksClientExceptionThrowingHelper.throwAsSocksClientException(
+			ThrowableHelper.throwAsSocksClientException(
 					e, this);
 		}
 		return new SocksClientExceptionThrowingMethodEncapsulation(
@@ -88,10 +88,10 @@ public final class Socks5Client extends SocksClient {
 					new SocksClientExceptionThrowingDatagramSocket(
 							this, internalDatagramSock);
 		} catch (UncheckedIOException e) {
-			SocksClientExceptionThrowingHelper.throwAsSocksClientException(
+			ThrowableHelper.throwAsSocksClientException(
 					e, this);			
 		} catch (IOException e) {
-			SocksClientExceptionThrowingHelper.throwAsSocksClientException(
+			ThrowableHelper.throwAsSocksClientException(
 					e, this);
 		}
 		return internalDatagramSock;
@@ -144,7 +144,7 @@ public final class Socks5Client extends SocksClient {
 					ServerMethodSelectionMessage.newInstanceFrom(inputStream);
 			method = smsm.getMethod();
 		} catch (IOException e) {
-			SocksClientExceptionThrowingHelper.throwAsSocksClientException(
+			ThrowableHelper.throwAsSocksClientException(
 					e, this);
 		}
 		return method;		
@@ -179,7 +179,7 @@ public final class Socks5Client extends SocksClient {
 			InputStream inputStream = connectedInternalSocket.getInputStream();
 			socks5Rep = Socks5Reply.newInstanceFrom(inputStream);
 		} catch (IOException e) {
-			SocksClientExceptionThrowingHelper.throwAsSocksClientException(
+			ThrowableHelper.throwAsSocksClientException(
 					e, this);
 		}
 		Reply reply = socks5Rep.getReply();
@@ -203,7 +203,7 @@ public final class Socks5Client extends SocksClient {
 			outputStream.write(socks5Req.toByteArray());
 			outputStream.flush();
 		} catch (IOException e) {
-			SocksClientExceptionThrowingHelper.throwAsSocksClientException(
+			ThrowableHelper.throwAsSocksClientException(
 					e, this);
 		}
 	}

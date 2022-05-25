@@ -19,13 +19,13 @@ import com.github.jh3nd3rs0n.jargyle.common.net.SocketSetting;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
 import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
-import com.github.jh3nd3rs0n.jargyle.server.RelayServer;
 import com.github.jh3nd3rs0n.jargyle.server.Rule;
 import com.github.jh3nd3rs0n.jargyle.server.RuleContext;
 import com.github.jh3nd3rs0n.jargyle.server.Rules;
 import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5RuleResultSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
+import com.github.jh3nd3rs0n.jargyle.server.internal.net.RelayServer;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Reply;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Reply;
 

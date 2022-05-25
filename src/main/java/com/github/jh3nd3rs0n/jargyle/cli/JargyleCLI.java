@@ -13,9 +13,9 @@ import com.github.jh3nd3rs0n.argmatey.ArgMatey.TerminationRequestedException;
 import com.github.jh3nd3rs0n.jargyle.internal.help.HelpText;
 import com.github.jh3nd3rs0n.jargyle.server.ConfigurationFileCreatorCLI;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServerCLI;
-import com.github.jh3nd3rs0n.jargyle.server.config.xml.bind.ConfigurationXsd;
+import com.github.jh3nd3rs0n.jargyle.server.internal.config.xml.bind.ConfigurationXsd;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.UserManagerCLI;
-import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.users.xml.bind.UsersXsd;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.internal.users.xml.bind.UsersXsd;
 
 public final class JargyleCLI extends CLI {
 

@@ -8,14 +8,14 @@ import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.common.number.NonnegativeInteger;
 import com.github.jh3nd3rs0n.jargyle.internal.help.HelpText;
-import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.HostSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.LogActionSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.NonnegativeIntegerSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.PortSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.RuleSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.SelectionStrategySettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.SocketSettingsSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.settingspec.impl.StringSettingSpec;
+import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.HostSettingSpec;
+import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.LogActionSettingSpec;
+import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.NonnegativeIntegerSettingSpec;
+import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.PortSettingSpec;
+import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.RuleSettingSpec;
+import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.SelectionStrategySettingSpec;
+import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.SocketSettingsSettingSpec;
+import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.StringSettingSpec;
 
 public final class GeneralSettingSpecConstants {
 

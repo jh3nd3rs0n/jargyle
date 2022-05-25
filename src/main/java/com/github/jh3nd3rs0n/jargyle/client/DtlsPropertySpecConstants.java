@@ -4,12 +4,12 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 
-import com.github.jh3nd3rs0n.jargyle.client.propertyspec.impl.BooleanPropertySpec;
-import com.github.jh3nd3rs0n.jargyle.client.propertyspec.impl.EncryptedPasswordPropertySpec;
-import com.github.jh3nd3rs0n.jargyle.client.propertyspec.impl.FilePropertySpec;
-import com.github.jh3nd3rs0n.jargyle.client.propertyspec.impl.PositiveIntegerPropertySpec;
-import com.github.jh3nd3rs0n.jargyle.client.propertyspec.impl.StringPropertySpec;
-import com.github.jh3nd3rs0n.jargyle.client.propertyspec.impl.WordsPropertySpec;
+import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.BooleanPropertySpec;
+import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.EncryptedPasswordPropertySpec;
+import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.FilePropertySpec;
+import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.PositiveIntegerPropertySpec;
+import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.StringPropertySpec;
+import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.WordsPropertySpec;
 import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
 import com.github.jh3nd3rs0n.jargyle.common.text.Words;

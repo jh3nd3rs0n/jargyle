@@ -1,9 +1,9 @@
-package com.github.jh3nd3rs0n.jargyle.client.internal.throwable;
+package com.github.jh3nd3rs0n.jargyle.client.internal.net;
 
 import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
 import com.github.jh3nd3rs0n.jargyle.client.SocksClientException;
 
-public final class ThrowableHelper {
+public final class SocksClientExceptionThrowingHelper {
 	
 	public static void throwAsSocksClientException(
 			final Throwable t,
@@ -14,6 +14,6 @@ public final class ThrowableHelper {
 		throw new SocksClientException(socksClient, t);
 	}
 
-	private ThrowableHelper() { }
+	private SocksClientExceptionThrowingHelper() { }
 	
 }

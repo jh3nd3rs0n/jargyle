@@ -9,7 +9,6 @@ import java.net.Socket;
 import java.net.SocketAddress;
 
 import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
-import com.github.jh3nd3rs0n.jargyle.client.internal.throwable.ThrowableHelper;
 import com.github.jh3nd3rs0n.jargyle.common.net.FilterSocket;
 
 public final class SocksClientExceptionThrowingSocket extends FilterSocket {
@@ -31,7 +30,7 @@ public final class SocksClientExceptionThrowingSocket extends FilterSocket {
 			try {
 				available = this.in.available();
 			} catch (IOException e) {
-				ThrowableHelper.throwAsSocksClientException(
+				SocksClientExceptionThrowingHelper.throwAsSocksClientException(
 						e, this.socksClient);
 			}
 			return available;
@@ -42,7 +41,7 @@ public final class SocksClientExceptionThrowingSocket extends FilterSocket {
 			try {
 				this.in.close();
 			} catch (IOException e) {
-				ThrowableHelper.throwAsSocksClientException(
+				SocksClientExceptionThrowingHelper.throwAsSocksClientException(
 						e, this.socksClient);
 			}		
 		}
@@ -53,7 +52,7 @@ public final class SocksClientExceptionThrowingSocket extends FilterSocket {
 			try {
 				b = this.in.read();
 			} catch (IOException e) {
-				ThrowableHelper.throwAsSocksClientException(
+				SocksClientExceptionThrowingHelper.throwAsSocksClientException(
 						e, this.socksClient);
 			}
 			return b;
@@ -65,7 +64,7 @@ public final class SocksClientExceptionThrowingSocket extends FilterSocket {
 			try {
 				bytesRead = this.in.read(b);
 			} catch (IOException e) {
-				ThrowableHelper.throwAsSocksClientException(
+				SocksClientExceptionThrowingHelper.throwAsSocksClientException(
 						e, this.socksClient);
 			}
 			return bytesRead;
@@ -77,7 +76,7 @@ public final class SocksClientExceptionThrowingSocket extends FilterSocket {
 			try {
 				bytesRead = this.in.read(b, off, len);
 			} catch (IOException e) {
-				ThrowableHelper.throwAsSocksClientException(
+				SocksClientExceptionThrowingHelper.throwAsSocksClientException(
 						e, this.socksClient);
 			}
 			return bytesRead;
@@ -100,7 +99,7 @@ public final class SocksClientExceptionThrowingSocket extends FilterSocket {
 			try {
 				this.out.close();
 			} catch (IOException e) {
-				ThrowableHelper.throwAsSocksClientException(
+				SocksClientExceptionThrowingHelper.throwAsSocksClientException(
 						e, this.socksClient);
 			}
 		}
@@ -110,7 +109,7 @@ public final class SocksClientExceptionThrowingSocket extends FilterSocket {
 			try {
 				this.out.flush();
 			} catch (IOException e) {
-				ThrowableHelper.throwAsSocksClientException(
+				SocksClientExceptionThrowingHelper.throwAsSocksClientException(
 						e, this.socksClient);
 			}
 		}
@@ -120,7 +119,7 @@ public final class SocksClientExceptionThrowingSocket extends FilterSocket {
 			try {
 				this.out.write(b);
 			} catch (IOException e) {
-				ThrowableHelper.throwAsSocksClientException(
+				SocksClientExceptionThrowingHelper.throwAsSocksClientException(
 						e, this.socksClient);
 			}
 		}
@@ -130,7 +129,7 @@ public final class SocksClientExceptionThrowingSocket extends FilterSocket {
 			try {
 				this.out.write(b, off, len);
 			} catch (IOException e) {
-				ThrowableHelper.throwAsSocksClientException(
+				SocksClientExceptionThrowingHelper.throwAsSocksClientException(
 						e, this.socksClient);
 			}			
 		}
@@ -140,7 +139,7 @@ public final class SocksClientExceptionThrowingSocket extends FilterSocket {
 			try {
 				this.out.write(b);
 			} catch (IOException e) {
-				ThrowableHelper.throwAsSocksClientException(
+				SocksClientExceptionThrowingHelper.throwAsSocksClientException(
 						e, this.socksClient);
 			}
 		}
@@ -163,7 +162,7 @@ public final class SocksClientExceptionThrowingSocket extends FilterSocket {
 		try {
 			this.socket.bind(bindpoint);
 		} catch (IOException e) {
-			ThrowableHelper.throwAsSocksClientException(
+			SocksClientExceptionThrowingHelper.throwAsSocksClientException(
 					e, this.socksClient);
 		}
 	}
@@ -173,7 +172,7 @@ public final class SocksClientExceptionThrowingSocket extends FilterSocket {
 		try {
 			this.socket.close();
 		} catch (IOException e) {
-			ThrowableHelper.throwAsSocksClientException(
+			SocksClientExceptionThrowingHelper.throwAsSocksClientException(
 					e, this.socksClient);
 		}
 	}
@@ -183,7 +182,7 @@ public final class SocksClientExceptionThrowingSocket extends FilterSocket {
 		try {
 			this.socket.connect(endpoint);
 		} catch (IOException e) {
-			ThrowableHelper.throwAsSocksClientException(
+			SocksClientExceptionThrowingHelper.throwAsSocksClientException(
 					e, this.socksClient);
 		}
 	}
@@ -193,7 +192,7 @@ public final class SocksClientExceptionThrowingSocket extends FilterSocket {
 		try {
 			this.socket.connect(endpoint, timeout);
 		} catch (IOException e) {
-			ThrowableHelper.throwAsSocksClientException(
+			SocksClientExceptionThrowingHelper.throwAsSocksClientException(
 					e, this.socksClient);
 		}
 	}
@@ -207,7 +206,7 @@ public final class SocksClientExceptionThrowingSocket extends FilterSocket {
 		try {
 			inStream = this.socket.getInputStream();
 		} catch (IOException e) {
-			ThrowableHelper.throwAsSocksClientException(
+			SocksClientExceptionThrowingHelper.throwAsSocksClientException(
 					e, this.socksClient);
 		}
 		this.inputStream = new SocksClientExceptionThrowingSocketInputStream(
@@ -224,7 +223,7 @@ public final class SocksClientExceptionThrowingSocket extends FilterSocket {
 		try {
 			outStream = this.socket.getOutputStream();
 		} catch (IOException e) {
-			ThrowableHelper.throwAsSocksClientException(
+			SocksClientExceptionThrowingHelper.throwAsSocksClientException(
 					e, this.socksClient);
 		}
 		this.outputStream = new SocksClientExceptionThrowingSocketOutputStream(
@@ -237,7 +236,7 @@ public final class SocksClientExceptionThrowingSocket extends FilterSocket {
 		try {
 			this.socket.sendUrgentData(data);
 		} catch (IOException e) {
-			ThrowableHelper.throwAsSocksClientException(
+			SocksClientExceptionThrowingHelper.throwAsSocksClientException(
 					e, this.socksClient);
 		}
 	}
@@ -247,7 +246,7 @@ public final class SocksClientExceptionThrowingSocket extends FilterSocket {
 		try {
 			this.socket.shutdownInput();
 		} catch (IOException e) {
-			ThrowableHelper.throwAsSocksClientException(
+			SocksClientExceptionThrowingHelper.throwAsSocksClientException(
 					e, this.socksClient);
 		}
 	}
@@ -257,7 +256,7 @@ public final class SocksClientExceptionThrowingSocket extends FilterSocket {
 		try {
 			this.socket.shutdownOutput();
 		} catch (IOException e) {
-			ThrowableHelper.throwAsSocksClientException(
+			SocksClientExceptionThrowingHelper.throwAsSocksClientException(
 					e, this.socksClient);
 		}
 	}

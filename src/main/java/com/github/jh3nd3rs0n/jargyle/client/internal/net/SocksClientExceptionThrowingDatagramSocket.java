@@ -6,7 +6,6 @@ import java.net.DatagramSocket;
 import java.net.SocketException;
 
 import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
-import com.github.jh3nd3rs0n.jargyle.client.internal.throwable.ThrowableHelper;
 import com.github.jh3nd3rs0n.jargyle.common.net.FilterDatagramSocket;
 
 public final class SocksClientExceptionThrowingDatagramSocket 
@@ -26,7 +25,8 @@ public final class SocksClientExceptionThrowingDatagramSocket
 		try {
 			this.datagramSocket.receive(p);
 		} catch (IOException e) {
-			ThrowableHelper.throwAsSocksClientException(e, this.socksClient);
+			SocksClientExceptionThrowingHelper.throwAsSocksClientException(
+					e, this.socksClient);
 		}
 	}
 
@@ -35,7 +35,8 @@ public final class SocksClientExceptionThrowingDatagramSocket
 		try {
 			this.datagramSocket.send(p);
 		} catch (IOException e) {
-			ThrowableHelper.throwAsSocksClientException(e, this.socksClient);
+			SocksClientExceptionThrowingHelper.throwAsSocksClientException(
+					e, this.socksClient);
 		}
 	}
 

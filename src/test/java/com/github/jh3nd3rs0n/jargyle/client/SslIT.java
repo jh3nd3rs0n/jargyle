@@ -10,7 +10,6 @@ import org.junit.Test;
 import com.github.jh3nd3rs0n.jargyle.ResourceHelper;
 import com.github.jh3nd3rs0n.jargyle.ResourceNameConstants;
 import com.github.jh3nd3rs0n.jargyle.TestStringConstants;
-import com.github.jh3nd3rs0n.jargyle.client.socks5.Socks5ServerUri;
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.DtlsSettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.ImmutableConfiguration;
@@ -137,7 +136,8 @@ public class SslIT {
 				SslPropertySpecConstants.SSL_TRUST_STORE_PASSWORD.newPropertyOfParsableValue(
 						ResourceHelper.getResourceAsString(
 								ResourceNameConstants.JARGYLE_COMMON_SECURITY_SERVER_KEY_STORE_PASSWORD_FILE)));
-		return new Socks5ServerUri(host, port).newSocksClient(properties);
+		return Scheme.SOCKS5.newSocksServerUri(host, port).newSocksClient(
+				properties);
 	}
 	
 	private static SocksClient newSocks5ClientUsingSslAndClientAuth(
@@ -171,7 +171,8 @@ public class SslIT {
 				SslPropertySpecConstants.SSL_TRUST_STORE_PASSWORD.newPropertyOfParsableValue(
 						ResourceHelper.getResourceAsString(
 								ResourceNameConstants.JARGYLE_COMMON_SECURITY_SERVER_KEY_STORE_PASSWORD_FILE)));
-		return new Socks5ServerUri(host, port).newSocksClient(properties);
+		return Scheme.SOCKS5.newSocksServerUri(host, port).newSocksClient(
+				properties);
 	}
 	
 	@Test

@@ -19,6 +19,7 @@ import com.github.jh3nd3rs0n.jargyle.FilesHelper;
 import com.github.jh3nd3rs0n.jargyle.TestStringConstants;
 import com.github.jh3nd3rs0n.jargyle.client.DatagramSocketEchoHelper;
 import com.github.jh3nd3rs0n.jargyle.client.Properties;
+import com.github.jh3nd3rs0n.jargyle.client.Scheme;
 import com.github.jh3nd3rs0n.jargyle.client.ServerSocketEchoHelper;
 import com.github.jh3nd3rs0n.jargyle.client.SocketEchoHelper;
 import com.github.jh3nd3rs0n.jargyle.client.Socks5PropertySpecConstants;
@@ -87,7 +88,8 @@ public class GssapiAuthIT {
 						protectionLevels),
 				Socks5PropertySpecConstants.SOCKS5_GSSAPIAUTH_NEC_REFERENCE_IMPL.newProperty(
 						Boolean.valueOf(necReferenceImpl)));
-		return new Socks5ServerUri(host, port).newSocksClient(properties);
+		return Scheme.SOCKS5.newSocksServerUri(host, port).newSocksClient(
+				properties);
 	}
 
 	@BeforeClass

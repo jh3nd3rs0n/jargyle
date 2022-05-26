@@ -132,11 +132,10 @@ public final class XmlFileSourceUserRepository extends UserRepository {
 	}
 	
 	private ExecutorService executor;
-	private Users users;
+	private volatile Users users;
 	private final File xmlFile;
 	
-	private XmlFileSourceUserRepository(
-			final String initializationVal) {
+	private XmlFileSourceUserRepository(final String initializationVal) {
 		super(initializationVal);
 		File file = new File(initializationVal);
 		Users usrs = readUsersFrom(file);

@@ -135,7 +135,7 @@ public final class XmlFileSourceConfigurationRepository
 		}
 	}
 	
-	private Configuration configuration;
+	private volatile Configuration configuration;
 	private ExecutorService executor;
 	private final File xmlFile;
 	

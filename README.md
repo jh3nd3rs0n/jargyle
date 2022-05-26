@@ -21,7 +21,7 @@ Jargyle is a Java SOCKS5 server with SSL/TLS/DTLS and SOCKS server chaining with
 -   [5. 6. Running With a Monitored Configuration File](#5-6-running-with-a-monitored-configuration-file)
 -   [5. 7. Using SSL/TLS for TCP Traffic Between Jargyle and Its Clients](#5-7-using-ssl-tls-for-tcp-traffic-between-jargyle-and-its-clients)
 -   [5. 8. Using DTLS for UDP Traffic Between Jargyle and Its Clients](#5-8-using-dtls-for-udp-traffic-between-jargyle-and-its-clients)
--   [5. 9. Using Host Name Resolution](#5-9-using-host-name-resolution)
+-   [5. 9. Resolving Host Names](#5-9-resolving-host-names)
 -   [5. 10. Managing SOCKS5 Users (for Username Password Authentication)](#5-10-managing-socks5-users-for-username-password-authentication)
 -   [5. 10. 1. Adding Users](#5-10-1-adding-users)
 -   [5. 10. 2. List All Users](#5-10-2-list-all-users)
@@ -33,7 +33,7 @@ Jargyle is a Java SOCKS5 server with SSL/TLS/DTLS and SOCKS server chaining with
 -   [5. 12. Chaining to Another SOCKS Server](#5-12-chaining-to-another-socks-server)
 -   [5. 12. 1. Using SSL/TLS for TCP Traffic Through SOCKS Server Chaining](#5-12-1-using-ssl-tls-for-tcp-traffic-through-socks-server-chaining)
 -   [5. 12. 2. Using DTLS for UDP Traffic Through SOCKS Server Chaining](#5-12-2-using-dtls-for-udp-traffic-through-socks-server-chaining)
--   [5. 12. 3. Using Host Name Resolution Through SOCKS5 Server Chaining](#5-12-3-using-host-name-resolution-through-socks5-server-chaining)
+-   [5. 12. 3. Resolving Host Names Through SOCKS5 Server Chaining](#5-12-3-resolving-host-names-through-socks5-server-chaining)
 -   [5. 12. 4. Using SOCKS5 Authentication](#5-12-4-using-socks5-authentication)
 -   [5. 12. 4. 1. Using No Authentication](#5-12-4-1-using-no-authentication)
 -   [5. 12. 4. 2. Using Username Password Authentication](#5-12-4-2-using-username-password-authentication)
@@ -1089,7 +1089,7 @@ If you do not want to have the password appear in any script or in any part of t
     
 ```
 
-### 5. 9. Using Host Name Resolution
+### 5. 9. Resolving Host Names
 
 Jargyle can be used to resolve host names. For a client to request Jargyle to resolve a host name, it must use [the SOCKS5 RESOLVE command](#5-16-2-the-socks5-resolve-command).
 
@@ -1135,7 +1135,7 @@ Once you have run the command, an interactive prompt will ask you for the new us
     Password: 
     Re-type password:
     User 'Abu' added.
-    Would you like to enter another user? ('Y' for yes): n
+    Would you like to enter another user? ('Y' for yes): Y
     User
     Name: Jafar
     Password: 
@@ -1579,7 +1579,7 @@ Partial command line example:
     
 ```
 
-#### 5. 12. 3. Using Host Name Resolution Through SOCKS5 Server Chaining
+#### 5. 12. 3. Resolving Host Names Through SOCKS5 Server Chaining
 
 Before discussing host name resolution through SOCKS5 server chaining, a brief explanation of Jargyle's internals:
 
@@ -2138,7 +2138,7 @@ A rule consists of the following:
 -   Rule conditions: fields that altogether evaluate as true if they match a specific instance of traffic
 -   Rule results: fields that are applied if the aforementioned rule conditions evaluate as true for matching a specific instance of traffic
 
-On the command line, a rule consists of a space separated list of both rule conditions and rule results. In the configuration file, a rule is expressed as a `<rule/>` XML element with a `<ruleConditions>` XML element and a `<ruleResults>` XML element. See [Rule Conditions](#5-15-1-rule-conditions) and [Rule Results](#5-15-2-rule-results) for more information.
+On the command line, a rule consists of a space separated list of both rule conditions and rule results. In the configuration file, a rule is expressed as a `<rule/>` XML element with a `<ruleConditions/>` XML element and a `<ruleResults/>` XML element. See [Rule Conditions](#5-15-1-rule-conditions) and [Rule Results](#5-15-2-rule-results) for more information.
 
 To specify a rule, you would need to have the setting `rule` specify the rule. 
 

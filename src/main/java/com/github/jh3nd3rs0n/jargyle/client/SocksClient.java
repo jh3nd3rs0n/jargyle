@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import com.github.jh3nd3rs0n.jargyle.client.internal.net.SocksClientExceptionThrowingHelper;
-import com.github.jh3nd3rs0n.jargyle.client.internal.net.SocksClientExceptionThrowingSocket;
+import com.github.jh3nd3rs0n.jargyle.client.internal.client.SocksClientExceptionThrowingHelper;
+import com.github.jh3nd3rs0n.jargyle.client.internal.client.SocksClientExceptionThrowingSocket;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.SslSocketFactory;
 

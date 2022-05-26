@@ -1,4 +1,4 @@
-package com.github.jh3nd3rs0n.jargyle.client.internal.net;
+package com.github.jh3nd3rs0n.jargyle.client.internal.client;
 
 import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
 import com.github.jh3nd3rs0n.jargyle.client.SocksClientException;

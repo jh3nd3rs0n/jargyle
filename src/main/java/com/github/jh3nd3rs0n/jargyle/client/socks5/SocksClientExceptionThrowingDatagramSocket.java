@@ -1,4 +1,4 @@
-package com.github.jh3nd3rs0n.jargyle.client.internal.net;
+package com.github.jh3nd3rs0n.jargyle.client.socks5;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -6,9 +6,10 @@ import java.net.DatagramSocket;
 import java.net.SocketException;
 
 import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
+import com.github.jh3nd3rs0n.jargyle.client.internal.client.SocksClientExceptionThrowingHelper;
 import com.github.jh3nd3rs0n.jargyle.common.net.FilterDatagramSocket;
 
-public final class SocksClientExceptionThrowingDatagramSocket 
+final class SocksClientExceptionThrowingDatagramSocket 
 	extends FilterDatagramSocket {
 
 	private final SocksClient socksClient;

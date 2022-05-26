@@ -5,8 +5,7 @@ import java.net.DatagramSocket;
 import java.net.Socket;
 
 import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
-import com.github.jh3nd3rs0n.jargyle.client.internal.net.SocksClientExceptionThrowingDatagramSocket;
-import com.github.jh3nd3rs0n.jargyle.client.internal.net.SocksClientExceptionThrowingSocket;
+import com.github.jh3nd3rs0n.jargyle.client.internal.client.SocksClientExceptionThrowingSocket;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.MethodEncapsulation;
 
 final class SocksClientExceptionThrowingMethodEncapsulation 

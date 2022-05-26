@@ -15,7 +15,7 @@ import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
 import com.github.jh3nd3rs0n.jargyle.client.SocksNetObjectFactory;
 import com.github.jh3nd3rs0n.jargyle.client.internal.net.SocksClientExceptionThrowingDatagramSocket;
 import com.github.jh3nd3rs0n.jargyle.client.internal.net.SocksClientExceptionThrowingHelper;
-import com.github.jh3nd3rs0n.jargyle.common.net.ssl.DtlsDatagramSocketFactory;
+import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.DtlsDatagramSocketFactory;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.ClientMethodSelectionMessage;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.MethodEncapsulation;

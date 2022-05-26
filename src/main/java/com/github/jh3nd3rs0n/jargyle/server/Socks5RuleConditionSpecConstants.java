@@ -5,11 +5,11 @@ import java.util.Map;
 
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.internal.help.HelpText;
-import com.github.jh3nd3rs0n.jargyle.server.internal.rules.impl.AddressRangeContainsAddressRuleConditionSpec;
-import com.github.jh3nd3rs0n.jargyle.server.internal.rules.impl.CommandEqualsCommandRuleConditionSpec;
-import com.github.jh3nd3rs0n.jargyle.server.internal.rules.impl.MethodEqualsMethodRuleConditionSpec;
-import com.github.jh3nd3rs0n.jargyle.server.internal.rules.impl.PortRangeContainsPortRuleConditionSpec;
-import com.github.jh3nd3rs0n.jargyle.server.internal.rules.impl.StringEqualsStringRuleConditionSpec;
+import com.github.jh3nd3rs0n.jargyle.server.internal.ruleconditionspec.impl.AddressRangeContainsAddressRuleConditionSpec;
+import com.github.jh3nd3rs0n.jargyle.server.internal.ruleconditionspec.impl.CommandEqualsCommandRuleConditionSpec;
+import com.github.jh3nd3rs0n.jargyle.server.internal.ruleconditionspec.impl.MethodEqualsMethodRuleConditionSpec;
+import com.github.jh3nd3rs0n.jargyle.server.internal.ruleconditionspec.impl.PortRangeContainsPortRuleConditionSpec;
+import com.github.jh3nd3rs0n.jargyle.server.internal.ruleconditionspec.impl.StringEqualsStringRuleConditionSpec;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Command;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
 

@@ -9,6 +9,7 @@ import java.util.concurrent.Executors;
 import com.github.jh3nd3rs0n.jargyle.common.net.Host;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
+import com.github.jh3nd3rs0n.jargyle.server.internal.server.Listener;
 
 public final class SocksServer {
 	

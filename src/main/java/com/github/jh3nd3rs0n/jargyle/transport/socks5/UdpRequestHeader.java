@@ -280,8 +280,6 @@ public final class UdpRequestHeader {
 			.append(this.desiredDestinationAddress)
 			.append(", desiredDestinationPort=")
 			.append(this.desiredDestinationPort)
-			.append(", userDataStartIndex=")
-			.append(this.userDataStartIndex)
 			.append("]");
 		return builder.toString();
 	}

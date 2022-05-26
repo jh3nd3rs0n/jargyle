@@ -1,6 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.server.internal.config.xml.bind;
 
-import com.github.jh3nd3rs0n.jargyle.internal.security.encryptedpass.impl.AesCfbPkcs5PaddingEncryptedPassword;
+import com.github.jh3nd3rs0n.jargyle.common.security.internal.encryptedpass.impl.AesCfbPkcs5PaddingEncryptedPassword;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;

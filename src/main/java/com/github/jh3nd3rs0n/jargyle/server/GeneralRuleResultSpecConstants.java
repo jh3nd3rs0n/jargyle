@@ -5,12 +5,12 @@ import java.util.Map;
 
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSetting;
 import com.github.jh3nd3rs0n.jargyle.internal.help.HelpText;
-import com.github.jh3nd3rs0n.jargyle.server.internal.rules.impl.FirewallActionRuleResultSpec;
-import com.github.jh3nd3rs0n.jargyle.server.internal.rules.impl.LogActionRuleResultSpec;
-import com.github.jh3nd3rs0n.jargyle.server.internal.rules.impl.NonnegativeIntegerLimitRuleResultSpec;
-import com.github.jh3nd3rs0n.jargyle.server.internal.rules.impl.SelectionStrategyRuleResultSpec;
-import com.github.jh3nd3rs0n.jargyle.server.internal.rules.impl.SocketSettingRuleResultSpec;
-import com.github.jh3nd3rs0n.jargyle.server.internal.rules.impl.StringRuleResultSpec;
+import com.github.jh3nd3rs0n.jargyle.server.internal.ruleresultspec.impl.FirewallActionRuleResultSpec;
+import com.github.jh3nd3rs0n.jargyle.server.internal.ruleresultspec.impl.LogActionRuleResultSpec;
+import com.github.jh3nd3rs0n.jargyle.server.internal.ruleresultspec.impl.NonnegativeIntegerLimitRuleResultSpec;
+import com.github.jh3nd3rs0n.jargyle.server.internal.ruleresultspec.impl.SelectionStrategyRuleResultSpec;
+import com.github.jh3nd3rs0n.jargyle.server.internal.ruleresultspec.impl.SocketSettingRuleResultSpec;
+import com.github.jh3nd3rs0n.jargyle.server.internal.ruleresultspec.impl.StringRuleResultSpec;
 
 public final class GeneralRuleResultSpecConstants {
 	

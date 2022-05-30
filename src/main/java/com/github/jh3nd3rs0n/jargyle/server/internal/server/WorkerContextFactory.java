@@ -65,12 +65,6 @@ final class WorkerContextFactory {
 		if (firewallAction == null) {
 			return false;
 		}
-		NonnegativeIntegerLimit firewallActionAllowLimit =
-				applicableRule.getLastRuleResultValue(
-						GeneralRuleResultSpecConstants.FIREWALL_ACTION_ALLOW_LIMIT);
-		LogAction firewallActionAllowLimitReachedLogAction =
-				applicableRule.getLastRuleResultValue(
-						GeneralRuleResultSpecConstants.FIREWALL_ACTION_ALLOW_LIMIT_REACHED_LOG_ACTION);
 		LogAction firewallActionLogAction = 
 				applicableRule.getLastRuleResultValue(
 						GeneralRuleResultSpecConstants.FIREWALL_ACTION_LOG_ACTION);
@@ -79,22 +73,9 @@ final class WorkerContextFactory {
 		String socksServerAddress = clientRuleContext.getRuleArgValue(
 				GeneralRuleArgSpecConstants.SOCKS_SERVER_ADDRESS);		
 		if (firewallAction.equals(FirewallAction.ALLOW)) {
-			if (firewallActionAllowLimit != null) {
-				if (firewallActionAllowLimit.hasBeenReached()) {
-					if (firewallActionAllowLimitReachedLogAction != null) {
-						firewallActionAllowLimitReachedLogAction.invoke(
-								LOGGER, 
-								String.format(
-										"Allowed limit has been reached based "
-										+ "on the following rule and context: "
-										+ "rule: %s context: %s",
-										applicableRule,
-										clientRuleContext));
-					}
-					return false;
-				}
-				firewallActionAllowLimit.incrementCurrentCount();
-				belowAllowLimitRules.add(applicableRule);				
+			if (!this.canAllowClientFacingSocketWithinLimit(
+					applicableRule, clientRuleContext, belowAllowLimitRules)) {
+				return false;
 			}
 			if (firewallActionLogAction != null) {
 				firewallActionLogAction.invoke(LOGGER, String.format(
@@ -117,6 +98,36 @@ final class WorkerContextFactory {
 					clientRuleContext));				
 		}
 		return FirewallAction.ALLOW.equals(firewallAction);
+	}
+	
+	private boolean canAllowClientFacingSocketWithinLimit(
+			final Rule applicableRule,
+			final RuleContext clientRuleContext,
+			final Set<Rule> belowAllowLimitRules) {
+		NonnegativeIntegerLimit firewallActionAllowLimit =
+				applicableRule.getLastRuleResultValue(
+						GeneralRuleResultSpecConstants.FIREWALL_ACTION_ALLOW_LIMIT);
+		LogAction firewallActionAllowLimitReachedLogAction =
+				applicableRule.getLastRuleResultValue(
+						GeneralRuleResultSpecConstants.FIREWALL_ACTION_ALLOW_LIMIT_REACHED_LOG_ACTION);
+		if (firewallActionAllowLimit != null) {
+			if (firewallActionAllowLimit.hasBeenReached()) {
+				if (firewallActionAllowLimitReachedLogAction != null) {
+					firewallActionAllowLimitReachedLogAction.invoke(
+							LOGGER, 
+							String.format(
+									"Allowed limit has been reached based on "
+									+ "the following rule and context: rule: "
+									+ "%s context: %s",
+									applicableRule,
+									clientRuleContext));
+				}
+				return false;
+			}
+			firewallActionAllowLimit.incrementCurrentCount();
+			belowAllowLimitRules.add(applicableRule);				
+		}		
+		return true;
 	}
 	
 	private void configureClientFacingSocket(

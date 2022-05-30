@@ -145,12 +145,6 @@ final class BindCommandWorker extends CommandWorker {
 			this.commandWorkerContext.sendSocks5Reply(this, rep, LOGGER);
 			return false;
 		}
-		NonnegativeIntegerLimit firewallActionAllowLimit =
-				applicableRule.getLastRuleResultValue(
-						GeneralRuleResultSpecConstants.FIREWALL_ACTION_ALLOW_LIMIT);
-		LogAction firewallActionAllowLimitReachedLogAction =
-				applicableRule.getLastRuleResultValue(
-						GeneralRuleResultSpecConstants.FIREWALL_ACTION_ALLOW_LIMIT_REACHED_LOG_ACTION);
 		LogAction firewallActionLogAction = 
 				applicableRule.getLastRuleResultValue(
 						GeneralRuleResultSpecConstants.FIREWALL_ACTION_LOG_ACTION);
@@ -161,27 +155,9 @@ final class BindCommandWorker extends CommandWorker {
 				secondSocks5ReplyRuleContext.getRuleArgValue(
 						Socks5RuleArgSpecConstants.SOCKS5_SECOND_SERVER_BOUND_PORT);
 		if (firewallAction.equals(FirewallAction.ALLOW)) {
-			if (firewallActionAllowLimit != null) {
-				if (firewallActionAllowLimit.hasBeenReached()) {
-					if (firewallActionAllowLimitReachedLogAction != null) {
-						firewallActionAllowLimitReachedLogAction.invoke(
-								LOGGER, 
-								ObjectLogMessageHelper.objectLogMessage(
-										this,
-										"Allowed limit has been reached based "
-										+ "on the following rule and context: "
-										+ "rule: %s context: %s",
-										applicableRule,
-										secondSocks5ReplyRuleContext));
-					}
-					Socks5Reply rep = Socks5Reply.newFailureInstance(
-							Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
-					this.commandWorkerContext.sendSocks5Reply(this, rep, LOGGER);
-					return false;				
-				}
-				firewallActionAllowLimit.incrementCurrentCount();
-				this.commandWorkerContext.addBelowAllowLimitRule(
-						applicableRule);
+			if (!this.canAllowSecondSocks5ReplyWithinLimit(
+					applicableRule, secondSocks5ReplyRuleContext)) {
+				return false;
 			}
 			if (firewallActionLogAction != null) {
 				firewallActionLogAction.invoke(
@@ -219,6 +195,39 @@ final class BindCommandWorker extends CommandWorker {
 				Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
 		this.commandWorkerContext.sendSocks5Reply(this, rep, LOGGER);
 		return false;
+	}
+	
+	private boolean canAllowSecondSocks5ReplyWithinLimit(
+			final Rule applicableRule,
+			final RuleContext secondSocks5ReplyRuleContext) {
+		NonnegativeIntegerLimit firewallActionAllowLimit =
+				applicableRule.getLastRuleResultValue(
+						GeneralRuleResultSpecConstants.FIREWALL_ACTION_ALLOW_LIMIT);
+		LogAction firewallActionAllowLimitReachedLogAction =
+				applicableRule.getLastRuleResultValue(
+						GeneralRuleResultSpecConstants.FIREWALL_ACTION_ALLOW_LIMIT_REACHED_LOG_ACTION);
+		if (firewallActionAllowLimit != null) {
+			if (firewallActionAllowLimit.hasBeenReached()) {
+				if (firewallActionAllowLimitReachedLogAction != null) {
+					firewallActionAllowLimitReachedLogAction.invoke(
+							LOGGER, 
+							ObjectLogMessageHelper.objectLogMessage(
+									this,
+									"Allowed limit has been reached based on "
+									+ "the following rule and context: rule: "
+									+ "%s context: %s",
+									applicableRule,
+									secondSocks5ReplyRuleContext));
+				}
+				Socks5Reply rep = Socks5Reply.newFailureInstance(
+						Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
+				this.commandWorkerContext.sendSocks5Reply(this, rep, LOGGER);
+				return false;				
+			}
+			firewallActionAllowLimit.incrementCurrentCount();
+			this.commandWorkerContext.addBelowAllowLimitRule(applicableRule);
+		}
+		return true;
 	}
 
 	private boolean configureInboundSocket(final Socket inboundSocket) {

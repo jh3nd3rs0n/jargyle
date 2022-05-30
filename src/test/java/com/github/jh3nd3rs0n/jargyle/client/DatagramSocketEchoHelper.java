@@ -106,7 +106,7 @@ public final class DatagramSocketEchoHelper {
 
 	// big enough for any message size under GSS-API authentication
 	private static final int BUFFER_SIZE = 65535;
-	private static final int ECHO_SERVER_PORT = 1234;
+	private static final int ECHO_SERVER_PORT = 1081;
 	private static final int SLEEP_TIME = 500; // 1/2 second
 
 	public static String echoThroughDatagramSocket(

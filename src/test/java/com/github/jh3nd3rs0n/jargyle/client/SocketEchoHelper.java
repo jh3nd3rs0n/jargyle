@@ -119,7 +119,7 @@ public final class SocketEchoHelper {
 		}
 	}
 
-	private static final int ECHO_SERVER_PORT = 1234;
+	private static final int ECHO_SERVER_PORT = 1081;
 	private static final int SLEEP_TIME = 500; // 1/2 second
 
 	public static String echoThroughSocket(

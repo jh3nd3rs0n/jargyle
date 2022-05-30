@@ -162,8 +162,8 @@ public final class ServerSocketEchoHelper {
 		}
 	}
 
-	private static final int ECHO_SERVER_PORT = 1024;
-	private static final int SERVER_PORT = 5678;
+	private static final int ECHO_SERVER_PORT = 1081;
+	private static final int SERVER_PORT = 1082;
 	private static final int SLEEP_TIME = 500; // 1/2 second
 
 	public static String echoThroughServerSocket(

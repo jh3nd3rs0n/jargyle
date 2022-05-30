@@ -38,7 +38,7 @@ public class GssapiAuthIT {
 	private static final String KDC_REALM = "EXAMPLE.COM";
 	private static final String KDC_HOST = 
 			InetAddress.getLoopbackAddress().getHostAddress();
-	private static final int KDC_PORT = 12345;
+	private static final int KDC_PORT = 1234;
 	
 	private static final String ALICE_PRINCIPAL = "alice";
 	private static final String RCMD_SERVICE_PRINCIPAL = String.format(

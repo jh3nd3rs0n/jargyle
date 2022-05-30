@@ -31,9 +31,9 @@ import com.github.jh3nd3rs0n.jargyle.transport.socks5.Methods;
 
 public class ChainingIT {
 	
-	private static final int SERVER_PORT_1 = 23456;
-	private static final int SERVER_PORT_2 = 65432;
-	private static final int SERVER_PORT_3 = 34567;
+	private static final int SERVER_PORT_1 = 1234;
+	private static final int SERVER_PORT_2 = 2345;
+	private static final int SERVER_PORT_3 = 3456;
 	
 	private static List<Configuration> newChainedConfigurations() {
 		return Arrays.asList(

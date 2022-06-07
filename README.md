@@ -2,63 +2,88 @@
 
 [![CodeQL](https://github.com/jh3nd3rs0n/jargyle/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/jh3nd3rs0n/jargyle/actions/workflows/codeql-analysis.yml) [![Java CI with Maven (Mac OS Latest)](https://github.com/jh3nd3rs0n/jargyle/actions/workflows/maven_macos_latest.yml/badge.svg)](https://github.com/jh3nd3rs0n/jargyle/actions/workflows/maven_macos_latest.yml) [![Java CI with Maven (Ubuntu Latest)](https://github.com/jh3nd3rs0n/jargyle/actions/workflows/maven_ubuntu_latest.yml/badge.svg)](https://github.com/jh3nd3rs0n/jargyle/actions/workflows/maven_ubuntu_latest.yml) [![Java CI with Maven (Windows Latest)](https://github.com/jh3nd3rs0n/jargyle/actions/workflows/maven_windows_latest.yml/badge.svg)](https://github.com/jh3nd3rs0n/jargyle/actions/workflows/maven_windows_latest.yml) [![Total alerts](https://img.shields.io/lgtm/alerts/g/jh3nd3rs0n/jargyle.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/jh3nd3rs0n/jargyle/alerts/) [![Language grade: Java](https://img.shields.io/lgtm/grade/java/g/jh3nd3rs0n/jargyle.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/jh3nd3rs0n/jargyle/context:java) [![Codacy Badge](https://app.codacy.com/project/badge/Grade/581706f82bf945df84bc397da4cecee5)](https://www.codacy.com/gh/jh3nd3rs0n/jargyle/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=jh3nd3rs0n/jargyle&amp;utm_campaign=Badge_Grade)
 
-Jargyle is a Java SOCKS5 server with SSL/TLS/DTLS and SOCKS server chaining with one or more SOCKS servers.
+Jargyle is a Java SOCKS5 server.
 
 **DISCLAIMER**: Jargyle is not production-ready but it aims to be. It is also subject to breaking changes.
 
 ## Contents
 
--   [1. Requirements](#1-requirements)
--   [2. Releases](#2-releases)
--   [3. Automated Testing](#3-automated-testing)
--   [4. Building](#4-building)
--   [5. Running Jargyle](#5-running-jargyle)
--   [5. 1. Usage](#5-1-usage)
--   [5. 2. Creating a Configuration File](#5-2-creating-a-configuration-file)
--   [5. 3. Supplementing a Configuration File With Command Line Options](#5-3-supplementing-a-configuration-file-with-command-line-options)
--   [5. 4. Combining Configuration Files](#5-4-combining-configuration-files)
--   [5. 5. Running With a Configuration File](#5-5-running-with-a-configuration-file)
--   [5. 6. Running With a Monitored Configuration File](#5-6-running-with-a-monitored-configuration-file)
--   [5. 7. Using SSL/TLS for TCP Traffic Between Jargyle and Its Clients](#5-7-using-ssl-tls-for-tcp-traffic-between-jargyle-and-its-clients)
--   [5. 8. Using DTLS for UDP Traffic Between Jargyle and Its Clients](#5-8-using-dtls-for-udp-traffic-between-jargyle-and-its-clients)
--   [5. 9. Resolving Host Names](#5-9-resolving-host-names)
--   [5. 10. Managing SOCKS5 Users (for Username Password Authentication)](#5-10-managing-socks5-users-for-username-password-authentication)
--   [5. 10. 1. Adding Users](#5-10-1-adding-users)
--   [5. 10. 2. List All Users](#5-10-2-list-all-users)
--   [5. 10. 3. Removing a User](#5-10-3-removing-a-user)
--   [5. 11. Using SOCKS5 Authentication](#5-11-using-socks5-authentication)
--   [5. 11. 1. Using No Authentication](#5-11-1-using-no-authentication)
--   [5. 11. 2. Using Username Password Authentication](#5-11-2-using-username-password-authentication)
--   [5. 11. 3. Using GSS-API Authentication](#5-11-3-using-gss-api-authentication)
--   [5. 12. Chaining to Another SOCKS Server](#5-12-chaining-to-another-socks-server)
--   [5. 12. 1. Using SSL/TLS for TCP Traffic Through SOCKS Server Chaining](#5-12-1-using-ssl-tls-for-tcp-traffic-through-socks-server-chaining)
--   [5. 12. 2. Using DTLS for UDP Traffic Through SOCKS Server Chaining](#5-12-2-using-dtls-for-udp-traffic-through-socks-server-chaining)
--   [5. 12. 3. Resolving Host Names Through SOCKS5 Server Chaining](#5-12-3-resolving-host-names-through-socks5-server-chaining)
--   [5. 12. 4. Using SOCKS5 Authentication](#5-12-4-using-socks5-authentication)
--   [5. 12. 4. 1. Using No Authentication](#5-12-4-1-using-no-authentication)
--   [5. 12. 4. 2. Using Username Password Authentication](#5-12-4-2-using-username-password-authentication)
--   [5. 12. 4. 3. Using GSS-API Authentication](#5-12-4-3-using-gss-api-authentication)
--   [5. 13. Chaining to a Specified Chain of Other SOCKS Servers](#5-13-chaining-to-a-specified-chain-of-other-socks-servers)
--   [5. 14. Chaining to Multiple Specified Chains of Other SOCKS Servers](#5-14-chaining-to-multiple-specified-chains-of-other-socks-servers)
--   [5. 15. Using Rules to Manage Traffic](#5-15-using-rules-to-manage-traffic)
--   [5. 15. 1. Rule Conditions](#5-15-1-rule-conditions)
--   [5. 15. 1. 1. Common Rule Condition Value Syntaxes](#5-15-1-1-common-rule-condition-value-syntaxes)
--   [5. 15. 1. 1. 1. Address Range](#5-15-1-1-1-address-range)
--   [5. 15. 1. 1. 2. Port Range](#5-15-1-1-2-port-range)
--   [5. 15. 2. Rule Results](#5-15-2-rule-results)
--   [5. 15. 2. 1. Rule Results for Allowing or Denying Traffic](#5-15-2-1-rule-results-for-allowing-or-denying-traffic)
--   [5. 15. 2. 2. Rule Results for Allowing a Limited Number of Simultaneous Instances of Traffic](#5-15-2-2-rule-results-for-allowing-a-limited-number-of-simultaneous-instances-of-traffic)
--   [5. 15. 2. 3. Rule Results for Routing Traffic](#5-15-2-3-rule-results-for-routing-traffic)
--   [5. 15. 2. 4. Rule Results for Redirecting the Desired Destination](#5-15-2-4-rule-results-for-redirecting-the-desired-destination)
--   [5. 15. 2. 5. Rule Results for Limiting Bandwidth](#5-15-2-5-rule-results-for-limiting-bandwidth)
--   [5. 15. 2. 6. Rule Results for Configuring Sockets](#5-15-2-6-rule-results-for-configuring-sockets)
--   [5. 16. Miscellaneous Notes](#5-16-miscellaneous-notes)
--   [5. 16. 1. Multiple Settings of the Same Name](#5-16-1-multiple-settings-of-the-same-name)
--   [5. 16. 2. The SOCKS5 RESOLVE Command](#5-16-2-the-socks5-resolve-command)
--   [5. 16. 3. The Doc XML Element](#5-16-3-the-doc-xml-element)
--   [6. Contact](#6-contact)
+-   [1. Introduction](#1-introduction)
+-   [2. Requirements](#2-requirements)
+-   [3. Releases](#3-releases)
+-   [4. Automated Testing](#4-automated-testing)
+-   [5. Building](#5-building)
+-   [6. Running Jargyle](#6-running-jargyle)
+-   [6. 1. Usage](#6-1-usage)
+-   [6. 1. 1. manage-socks5-users Usage](#6-1-1-manage-socks5-users-usage)
+-   [6. 1. 2. new-server-config-file Usage](#6-1-2-new-server-config-file-usage)
+-   [6. 1. 3. start-server Usage](#6-1-3-start-server-usage)
+-   [6. 1. 4. Settings Help](#6-1-4-settings-help)
+-   [6. 2. Creating a Configuration File](#6-2-creating-a-configuration-file)
+-   [6. 3. Supplementing a Configuration File With Command Line Options](#6-3-supplementing-a-configuration-file-with-command-line-options)
+-   [6. 4. Combining Configuration Files](#6-4-combining-configuration-files)
+-   [6. 5. Running With a Configuration File](#6-5-running-with-a-configuration-file)
+-   [6. 6. Running With a Monitored Configuration File](#6-6-running-with-a-monitored-configuration-file)
+-   [6. 7. Using SSL/TLS for TCP Traffic Between Jargyle and Its Clients](#6-7-using-ssl-tls-for-tcp-traffic-between-jargyle-and-its-clients)
+-   [6. 8. Using DTLS for UDP Traffic Between Jargyle and Its Clients](#6-8-using-dtls-for-udp-traffic-between-jargyle-and-its-clients)
+-   [6. 9. Using SOCKS5 Authentication](#6-9-using-socks5-authentication)
+-   [6. 9. 1. Using No Authentication](#6-9-1-using-no-authentication)
+-   [6. 9. 2. Using Username Password Authentication](#6-9-2-using-username-password-authentication)
+-   [6. 9. 2. 1. Managing Users](#6-9-2-1-managing-users)
+-   [6. 9. 2. 1. 1. Adding Users](#6-9-2-1-1-adding-users)
+-   [6. 9. 2. 1. 2. List All Users](#6-9-2-1-2-list-all-users)
+-   [6. 9. 2. 1. 3. Removing a User](#6-9-2-1-3-removing-a-user)
+-   [6. 9. 3. Using GSS-API Authentication](#6-9-3-using-gss-api-authentication)
+-   [6. 10. Chaining to Another SOCKS Server](#6-10-chaining-to-another-socks-server)
+-   [6. 10. 1. Using SSL/TLS for TCP Traffic Through SOCKS Server Chaining](#6-10-1-using-ssl-tls-for-tcp-traffic-through-socks-server-chaining)
+-   [6. 10. 2. Using DTLS for UDP Traffic Through SOCKS Server Chaining](#6-10-2-using-dtls-for-udp-traffic-through-socks-server-chaining)
+-   [6. 10. 3. Using SOCKS5 Authentication](#6-10-3-using-socks5-authentication)
+-   [6. 10. 3. 1. Using No Authentication](#6-10-3-1-using-no-authentication)
+-   [6. 10. 3. 2. Using Username Password Authentication](#6-10-3-2-using-username-password-authentication)
+-   [6. 10. 3. 3. Using GSS-API Authentication](#6-10-3-3-using-gss-api-authentication)
+-   [6. 10. 4. Resolving Host Names Through SOCKS5 Server Chaining](#6-10-4-resolving-host-names-through-socks5-server-chaining)
+-   [6. 11. Chaining to a Specified Chain of Other SOCKS Servers](#6-11-chaining-to-a-specified-chain-of-other-socks-servers)
+-   [6. 12. Chaining to Multiple Specified Chains of Other SOCKS Servers](#6-12-chaining-to-multiple-specified-chains-of-other-socks-servers)
+-   [6. 13. Using Rules to Manage Traffic](#6-13-using-rules-to-manage-traffic)
+-   [6. 13. 1. Rule Conditions](#6-13-1-rule-conditions)
+-   [6. 13. 1. 1. Common Rule Condition Value Syntaxes](#6-13-1-1-common-rule-condition-value-syntaxes)
+-   [6. 13. 1. 1. 1. Address Range](#6-13-1-1-1-address-range)
+-   [6. 13. 1. 1. 2. Port Range](#6-13-1-1-2-port-range)
+-   [6. 13. 2. Rule Results](#6-13-2-rule-results)
+-   [6. 13. 2. 1. Rule Results for Allowing or Denying Traffic](#6-13-2-1-rule-results-for-allowing-or-denying-traffic)
+-   [6. 13. 2. 2. Rule Results for Allowing a Limited Number of Simultaneous Instances of Traffic](#6-13-2-2-rule-results-for-allowing-a-limited-number-of-simultaneous-instances-of-traffic)
+-   [6. 13. 2. 3. Rule Results for Routing Traffic](#6-13-2-3-rule-results-for-routing-traffic)
+-   [6. 13. 2. 4. Rule Results for Redirecting the Desired Destination](#6-13-2-4-rule-results-for-redirecting-the-desired-destination)
+-   [6. 13. 2. 5. Rule Results for Limiting Bandwidth](#6-13-2-5-rule-results-for-limiting-bandwidth)
+-   [6. 13. 2. 6. Rule Results for Configuring Sockets](#6-13-2-6-rule-results-for-configuring-sockets)
+-   [6. 14. Miscellaneous Notes](#6-14-miscellaneous-notes)
+-   [6. 14. 1. Multiple Settings of the Same Name](#6-14-1-multiple-settings-of-the-same-name)
+-   [6. 14. 2. The SOCKS5 RESOLVE Command](#6-14-2-the-socks5-resolve-command)
+-   [6. 14. 3. The Doc XML Element](#6-14-3-the-doc-xml-element)
+-   [7. Contact](#7-contact)
 
-## 1. Requirements
+## 1. Introduction
+
+Jargyle is a Java SOCKS5 server that has the following implemented:
+
+SOCKS5 methods:
+
+-   No authentication
+-   Username password authentication
+-   GSSAPI authentication
+
+SOCKS5 commands:
+
+-   CONNECT
+-   BIND
+-   UDP ASSOCIATE
+
+It also has the following additional features:
+
+-   SOCKS server chaining to multiple SOCKS servers
+-   SSL/TLS/DTLS between clients and chained SOCKS servers
+
+## 2. Requirements
 
 For automated testing, building, and running Jargyle under the source distribution:
 
@@ -71,11 +96,11 @@ For running Jargyle under the binary distribution:
 
 After installation of the requirements, be sure to have the environment variable `JAVA_HOME` set to the location of the installed Java&#8482; SDK or the installed Java&#8482; Runtime Environment.
 
-## 2. Releases
+## 3. Releases
 
 Releases for the source and binary distributions can be found [here](https://github.com/jh3nd3rs0n/jargyle/releases).
 
-## 3. Automated Testing
+## 4. Automated Testing
 
 To run automated testing, run the following commands:
 
@@ -88,7 +113,7 @@ To run automated testing, run the following commands:
 
 Where `directory-containing-pom.xml` would be the actual directory that contains the file `pom.xml`. This file is used by the Maven command `mvn`.
 
-## 4. Building
+## 5. Building
 
 To build and package Jargyle, run the following command:
 
@@ -106,7 +131,7 @@ After running the aforementioned command, the built JAR file and its dependent J
     
 ```
 
-## 5. Running Jargyle 
+## 6. Running Jargyle 
 
 To run Jargyle without any command line arguments, you can run the following command:
 
@@ -118,7 +143,7 @@ To run Jargyle without any command line arguments, you can run the following com
 
 The aforementioned command will run Jargyle on port 1080 at address 0.0.0.0 using no authentication.
 
-### 5. 1. Usage
+### 6. 1. Usage
 
 The following is the command line help for Jargyle (displayed when using the command line option `--help`):
 
@@ -146,6 +171,8 @@ The following is the command line help for Jargyle (displayed when using the com
     
 ```
 
+#### 6. 1. 1. manage-socks5-users Usage
+
 The following is the command line help for the command `manage-socks5-users` (displayed when using the command `manage-socks5-users --help`):
 
 ```text
@@ -167,6 +194,8 @@ The following is the command line help for the command `manage-socks5-users` (di
     
     
 ```
+
+#### 6. 1. 2. new-server-config-file Usage
 
 The following is the command line help for the command `new-server-config-file` (displayed when using the command `new-server-config-file --help`):
 
@@ -207,6 +236,8 @@ The following is the command line help for the command `new-server-config-file` 
     
 ```
 
+#### 6. 1. 3. start-server Usage
+
 The following is the command line help for the command `start-server` (displayed when using the command `start-server --help`):
 
 ```text
@@ -245,6 +276,8 @@ The following is the command line help for the command `start-server` (displayed
     
     
 ```
+
+#### 6. 1. 4. Settings Help
 
 The following is a list of available settings for the SOCKS server (displayed when using either the commands `new-server-config-file --settings-help` or `start-server --settings-help`):
 
@@ -455,6 +488,12 @@ The following is a list of available settings for the SOCKS server (displayed wh
         socks5.onBind.relayIdleTimeout=INTEGER_BETWEEN_1_AND_2147483647
             The timeout in milliseconds on relaying no data (default is 60000)
     
+        socks5.onBind.relayInboundBandwidthLimit=INTEGER_BETWEEN_1_AND_2147483647
+            The upper limit on bandwidth in bytes per second of receiving inbound data to be relayed
+    
+        socks5.onBind.relayOutboundBandwidthLimit=INTEGER_BETWEEN_1_AND_2147483647
+            The upper limit on bandwidth in bytes per second of receiving outbound data to be relayed
+    
         socks5.onConnect.prepareServerFacingSocket=true|false
             The boolean value to indicate if the server-facing socket is to be prepared before connecting (involves applying the specified socket settings, resolving the target host name, and setting the specified timeout on waiting to connect) (default is false)
     
@@ -463,6 +502,12 @@ The following is a list of available settings for the SOCKS server (displayed wh
     
         socks5.onConnect.relayIdleTimeout=INTEGER_BETWEEN_1_AND_2147483647
             The timeout in milliseconds on relaying no data (default is 60000)
+    
+        socks5.onConnect.relayInboundBandwidthLimit=INTEGER_BETWEEN_1_AND_2147483647
+            The upper limit on bandwidth in bytes per second of receiving inbound data to be relayed
+    
+        socks5.onConnect.relayOutboundBandwidthLimit=INTEGER_BETWEEN_1_AND_2147483647
+            The upper limit on bandwidth in bytes per second of receiving outbound data to be relayed
     
         socks5.onConnect.serverFacingBindHost=HOST
             The binding host name or address for the server-facing socket (default is 0.0.0.0)
@@ -490,6 +535,12 @@ The following is a list of available settings for the SOCKS server (displayed wh
     
         socks5.onUdpAssociate.relayIdleTimeout=INTEGER_BETWEEN_1_AND_2147483647
             The timeout in milliseconds on relaying no data (default is 60000)
+    
+        socks5.onUdpAssociate.relayInboundBandwidthLimit=INTEGER_BETWEEN_1_AND_2147483647
+            The upper limit on bandwidth in bytes per second of receiving inbound data to be relayed
+    
+        socks5.onUdpAssociate.relayOutboundBandwidthLimit=INTEGER_BETWEEN_1_AND_2147483647
+            The upper limit on bandwidth in bytes per second of receiving outbound data to be relayed
     
         socks5.userpassauth.userRepository=CLASS_NAME:INITIALIZATION_VALUE
             The user repository used for username password authentication
@@ -742,6 +793,12 @@ The following is a list of available settings for the SOCKS server (displayed wh
         socks5.onBind.relayIdleTimeout=INTEGER_BETWEEN_1_AND_2147483647
             Specifies the timeout in milliseconds on relaying no data
     
+        socks5.onBind.relayInboundBandwidthLimit=INTEGER_BETWEEN_1_AND_2147483647
+            Specifies the upper limit on bandwidth in bytes per second of receiving inbound data to be relayed
+    
+        socks5.onBind.relayOutboundBandwidthLimit=INTEGER_BETWEEN_1_AND_2147483647
+            Specifies the upper limit on bandwidth in bytes per second of receiving outbound data to be relayed
+    
         socks5.onConnect.prepareServerFacingSocket=true|false
             Specifies the boolean value to indicate if the server-facing socket is to be prepared before connecting (involves applying the specified socket settings, resolving the target host name, and setting the specified timeout on waiting to connect)
     
@@ -750,6 +807,12 @@ The following is a list of available settings for the SOCKS server (displayed wh
     
         socks5.onConnect.relayIdleTimeout=INTEGER_BETWEEN_1_AND_2147483647
             Specifies the timeout in milliseconds on relaying no data
+    
+        socks5.onConnect.relayInboundBandwidthLimit=INTEGER_BETWEEN_1_AND_2147483647
+            Specifies the upper limit on bandwidth in bytes per second of receiving inbound data to be relayed
+    
+        socks5.onConnect.relayOutboundBandwidthLimit=INTEGER_BETWEEN_1_AND_2147483647
+            Specifies the upper limit on bandwidth in bytes per second of receiving outbound data to be relayed
     
         socks5.onConnect.serverFacingBindHost=HOST
             Specifies the binding host name or address for the server-facing socket
@@ -778,10 +841,16 @@ The following is a list of available settings for the SOCKS server (displayed wh
         socks5.onUdpAssociate.relayIdleTimeout=INTEGER_BETWEEN_1_AND_2147483647
             Specifies the timeout in milliseconds on relaying no data
     
+        socks5.onUdpAssociate.relayInboundBandwidthLimit=INTEGER_BETWEEN_1_AND_2147483647
+            Specifies the upper limit on bandwidth in bytes per second of receiving inbound data to be relayed
+    
+        socks5.onUdpAssociate.relayOutboundBandwidthLimit=INTEGER_BETWEEN_1_AND_2147483647
+            Specifies the upper limit on bandwidth in bytes per second of receiving outbound data to be relayed
+    
     
 ```
 
-### 5. 2. Creating a Configuration File
+### 6. 2. Creating a Configuration File
 
 You can create a configuration file by using the command `new-server-config-file`
 
@@ -840,7 +909,7 @@ The following command creates a configuration file with the port number, the num
     
 ```
   
-### 5. 3. Supplementing a Configuration File With Command Line Options
+### 6. 3. Supplementing a Configuration File With Command Line Options
 
 You can supplement an existing configuration file with command line options.
 
@@ -888,7 +957,7 @@ The following command adds one command line option after the existing configurat
     
 ```
 
-### 5. 4. Combining Configuration Files
+### 6. 4. Combining Configuration Files
 
 You can combine multiple configuration files into one configuration file.
 
@@ -948,9 +1017,9 @@ The following command combines the two earlier configuration files into one:
     
 ```
 
-Although the redundant settings in the combined configuration file are unnecessary, the result configuration file is for demonstration purposes only. (See [Multiple Settings of the Same Name](#5-16-1-multiple-settings-of-the-same-name) for more information.)
+Although the redundant settings in the combined configuration file are unnecessary, the result configuration file is for demonstration purposes only. (See [Multiple Settings of the Same Name](#6-14-1-multiple-settings-of-the-same-name) for more information.)
 
-### 5. 5. Running With a Configuration File
+### 6. 5. Running With a Configuration File
 
 To run Jargyle with a configuration file, you can use the following command:
 
@@ -962,7 +1031,7 @@ To run Jargyle with a configuration file, you can use the following command:
 
 Also the configuration file can be supplemented with command line options and/or can be combined with multiple configuration files.
 
-### 5. 6. Running With a Monitored Configuration File
+### 6. 6. Running With a Monitored Configuration File
 
 You can run Jargyle with a configuration file to be monitored for any changes to be applied to the running configuration.
 
@@ -985,7 +1054,7 @@ The following are the settings in the monitored configuration file that will hav
 
 A restart of Jargyle would be required if you want any of the changed aforementioned settings to be applied to the running configuration.
 
-### 5. 7. Using SSL/TLS for TCP Traffic Between Jargyle and Its Clients
+### 6. 7. Using SSL/TLS for TCP Traffic Between Jargyle and Its Clients
 
 You can use SSL/TLS for TCP traffic between Jargyle and its clients. By default SSL/TLS for TCP traffic between Jargyle and its clients is disabled. To enable SSL/TLS for TCP traffic between Jargyle and its clients, you will need to have the setting `ssl.enabled` set to `true`. In addition, you will need to have the setting `ssl.keyStoreFile` to specify Jargyle's key store file (this file would need to be created by Java's keytool utility). Also, you will need to have the setting `ssl.keyStorePassword` to specify the password for Jargyle's key store file.
 
@@ -1037,7 +1106,7 @@ If you do not want to have the password appear in any script or in any part of t
     
 ```
 
-### 5. 8. Using DTLS for UDP Traffic Between Jargyle and Its Clients
+### 6. 8. Using DTLS for UDP Traffic Between Jargyle and Its Clients
 
 You can use DTLS for UDP traffic between Jargyle and its clients. By default DTLS for UDP traffic between Jargyle and its clients is disabled. To enable DTLS for UDP traffic between Jargyle and its clients, you will need to have the setting `dtls.enabled` set to `true`. In addition, you will need to have the setting `dtls.keyStoreFile` to specify Jargyle's key store file (this file would need to be created by Java's keytool utility). Also, you will need to have the setting `dtls.keyStorePassword` to specify the password for Jargyle's key store file.
 
@@ -1089,108 +1158,7 @@ If you do not want to have the password appear in any script or in any part of t
     
 ```
 
-### 5. 9. Resolving Host Names
-
-Jargyle can be used to resolve host names. For a client to request Jargyle to resolve a host name, it must use [the SOCKS5 RESOLVE command](#5-16-2-the-socks5-resolve-command).
-
-### 5. 10. Managing SOCKS5 Users (for Username Password Authentication)
-
-You can manage SOCKS5 users by first specifying a user repository that handles the storage of the SOCKS5 users. To specify a user repository, you will have to specify the name of the class that extends `com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.UserRepository` along with an initialization string value.
-
-The following is one provided class you can use:
-
--   `com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.XmlFileSourceUserRepository`: This class handles the storage of the SOCKS5 users from an XML file whose name is provided as an initialization string value. The SOCKS5 users from the XML file are loaded onto memory. Because of this, you will need at least as much memory as the size of the XML file. If the XML file does not exist, it will be created and used. If the XML file does exist, the existing XML file will be used. 
-
-#### 5. 10. 1. Adding Users
-
-To add users to a user repository, you would run the following command:
-
-```bash
-    
-    ./bin/jargyle manage-socks5-users USER_REPOSITORY_CLASS_NAME:INITIALIZATION_VALUE add
-    
-```
-
-Where `USER_REPOSITORY_CLASS_NAME` is the name of the class that extends `com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.UserRepository` and `INITIALIZATION_VALUE` is the initialization string value.
-
-Once you have run the command, an interactive prompt will ask you for the new user's name, password, and re-typed password. It will repeat the process to add another user if you want to continue to enter another user. If you do not want to enter any more users, the new users will be saved.
-
-```text
-    
-    ./bin/jargyle manage-socks5-users com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.XmlFileSourceUserRepository:users.xml add
-    User
-    Name: Aladdin
-    Password: 
-    Re-type password:
-    User 'Aladdin' added.
-    Would you like to enter another user? ('Y' for yes): Y
-    User
-    Name: Jasmine
-    Password: 
-    Re-type password:
-    User 'Jasmine' added.
-    Would you like to enter another user? ('Y' for yes): Y
-    User
-    Name: Abu
-    Password: 
-    Re-type password:
-    User 'Abu' added.
-    Would you like to enter another user? ('Y' for yes): Y
-    User
-    Name: Jafar
-    Password: 
-    Re-type password:
-    User 'Jafar' added.
-    Would you like to enter another user? ('Y' for yes): n
-    
-```
-
-#### 5. 10. 2. List All Users
-
-To list all users from a user repository, you would run the following command:
-
-```bash
-    
-    ./bin/jargyle manage-socks5-users USER_REPOSITORY_CLASS_NAME:INITIALIZATION_VALUE list
-    
-```
-
-Where `USER_REPOSITORY_CLASS_NAME` is the name of the class that extends `com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.UserRepository` and `INITIALIZATION_VALUE` is the initialization string value.
-
-Once you have run the command, it will list all the users from the user repository.
-
-```text
-    
-    ./bin/jargyle manage-socks5-users com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.XmlFileSourceUserRepository:users.xml list
-    Aladdin
-    Jasmine
-    Abu
-    Jafar
-    
-```
-
-#### 5. 10. 3. Removing a User
-
-To remove a user from a user repository, you would run the following command:
-
-```bash
-    
-    ./bin/jargyle manage-socks5-users USER_REPOSITORY_CLASS_NAME:INITIALIZATION_VALUE remove NAME
-    
-```
-
-Where `USER_REPOSITORY_CLASS_NAME` is the name of the class that extends `com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.UserRepository`, `INITIALIZATION_VALUE` is the initialization string value, and `NAME` is the specified name of the user to be removed from the user repository.
-
-Once you have run the command, the user of the specified name will be removed from the user repository.
-
-```text
-    
-    ./bin/jargyle manage-socks5-users com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.XmlFileSourceUserRepository:users.xml remove Jafar
-    User 'Jafar' removed
-    
-```
-
-### 5. 11. Using SOCKS5 Authentication
+### 6. 9. Using SOCKS5 Authentication
 
 Jargyle has the following SOCKS5 authentication methods to choose from:
 
@@ -1221,7 +1189,7 @@ Partial configuration file example:
 
 If not set, the default value for the setting `socks5.methods` is set to `NO_AUTHENTICATION_REQUIRED`
 
-#### 5. 11. 1. Using No Authentication
+#### 6. 9. 1. Using No Authentication
 
 Because the default value for the setting `socks5.methods` is set to `NO_AUTHENTICATION_REQUIRED`, it is not required for `NO_AUTHENTICATION_REQUIRED` to be included in the setting `socks5.methods`.
 
@@ -1246,7 +1214,7 @@ Partial configuration file example:
     
 ```
 
-#### 5. 11. 2. Using Username Password Authentication
+#### 6. 9. 2. Using Username Password Authentication
 
 To use username password authentication, you will need to have the setting `socks5.methods` to have `USERNAME_PASSWORD` included.
 
@@ -1276,7 +1244,7 @@ The following are two provided classes you can use:
 -   `com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.StringSourceUserRepository`
 -   `com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.XmlFileSourceUserRepository`
 
-`com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.StringSourceUserRepository`: This class handles the storage of the SOCKS5 users from the initialization string value of a space separated list of username password values.
+`com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.StringSourceUserRepository`: This class handles the storage of the users from the initialization string value of a space separated list of username password values.
 
 Each username password value in the space separated list must be of the following format:
 
@@ -1323,7 +1291,7 @@ Partial configuration file example:
     
 ```
 
-`com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.XmlFileSourceUserRepository`: This class handles the storage of the SOCKS5 users from an XML file whose name is provided as an initialization string value. The SOCKS5 users from the XML file are loaded onto memory. Because of this, you will need at least as much memory as the size of the XML file. If the XML file does not exist, it will be created and used. If the XML file does exist, the existing XML file will be used. To manage SOCKS5 users under this user repository, see [Managing SOCKS5 Users](#5-10-managing-socks5-users-for-username-password-authentication).
+`com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.XmlFileSourceUserRepository`: This class handles the storage of the users from an XML file whose name is provided as an initialization string value. The users from the XML file are loaded onto memory. Because of this, you will need at least as much memory as the size of the XML file. If the XML file does not exist, it will be created and used. If the XML file does exist, the existing XML file will be used. To manage users under this user repository, see [Managing Users](#6-9-2-1-managing-users).
 
 Partial command line example:
 
@@ -1352,7 +1320,104 @@ Partial configuration file example:
     
 ```
 
-#### 5. 11. 3. Using GSS-API Authentication
+#### 6. 9. 2. 1. Managing Users
+
+You can manage users by first specifying a user repository that handles the storage of the users. To specify a user repository, you will have to specify the name of the class that extends `com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.UserRepository` along with an initialization string value.
+
+The following is one provided class you can use:
+
+-   `com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.XmlFileSourceUserRepository`: This class handles the storage of the users from an XML file whose name is provided as an initialization string value. The users from the XML file are loaded onto memory. Because of this, you will need at least as much memory as the size of the XML file. If the XML file does not exist, it will be created and used. If the XML file does exist, the existing XML file will be used. 
+
+##### 6. 9. 2. 1. 1. Adding Users
+
+To add users to a user repository, you would run the following command:
+
+```bash
+    
+    ./bin/jargyle manage-socks5-users USER_REPOSITORY_CLASS_NAME:INITIALIZATION_VALUE add
+    
+```
+
+Where `USER_REPOSITORY_CLASS_NAME` is the name of the class that extends `com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.UserRepository` and `INITIALIZATION_VALUE` is the initialization string value.
+
+Once you have run the command, an interactive prompt will ask you for the new user's name, password, and re-typed password. It will repeat the process to add another user if you want to continue to enter another user. If you do not want to enter any more users, the new users will be saved.
+
+```text
+    
+    ./bin/jargyle manage-socks5-users com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.XmlFileSourceUserRepository:users.xml add
+    User
+    Name: Aladdin
+    Password: 
+    Re-type password:
+    User 'Aladdin' added.
+    Would you like to enter another user? ('Y' for yes): Y
+    User
+    Name: Jasmine
+    Password: 
+    Re-type password:
+    User 'Jasmine' added.
+    Would you like to enter another user? ('Y' for yes): Y
+    User
+    Name: Abu
+    Password: 
+    Re-type password:
+    User 'Abu' added.
+    Would you like to enter another user? ('Y' for yes): Y
+    User
+    Name: Jafar
+    Password: 
+    Re-type password:
+    User 'Jafar' added.
+    Would you like to enter another user? ('Y' for yes): n
+    
+```
+
+##### 6. 9. 2. 1. 2. List All Users
+
+To list all users from a user repository, you would run the following command:
+
+```bash
+    
+    ./bin/jargyle manage-socks5-users USER_REPOSITORY_CLASS_NAME:INITIALIZATION_VALUE list
+    
+```
+
+Where `USER_REPOSITORY_CLASS_NAME` is the name of the class that extends `com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.UserRepository` and `INITIALIZATION_VALUE` is the initialization string value.
+
+Once you have run the command, it will list all the users from the user repository.
+
+```text
+    
+    ./bin/jargyle manage-socks5-users com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.XmlFileSourceUserRepository:users.xml list
+    Aladdin
+    Jasmine
+    Abu
+    Jafar
+    
+```
+
+##### 6. 9. 2. 1. 3. Removing a User
+
+To remove a user from a user repository, you would run the following command:
+
+```bash
+    
+    ./bin/jargyle manage-socks5-users USER_REPOSITORY_CLASS_NAME:INITIALIZATION_VALUE remove NAME
+    
+```
+
+Where `USER_REPOSITORY_CLASS_NAME` is the name of the class that extends `com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.UserRepository`, `INITIALIZATION_VALUE` is the initialization string value, and `NAME` is the specified name of the user to be removed from the user repository.
+
+Once you have run the command, the user of the specified name will be removed from the user repository.
+
+```text
+    
+    ./bin/jargyle manage-socks5-users com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.XmlFileSourceUserRepository:users.xml remove Jafar
+    User 'Jafar' removed
+    
+```
+
+#### 6. 9. 3. Using GSS-API Authentication
 
 To use GSS-API authentication, you will need to have the setting `socks5.methods` to have `GSSAPI` included.
 
@@ -1430,7 +1495,7 @@ The Java system property `-Djava.security.krb5.conf=krb5.conf` provides the Kerb
 
 In `krb5.conf`, a KDC is defined as running at the address `127.0.0.1` on port `12345` with its realm as `EXAMPLE.COM`. (In a production environment, the address `127.0.0.1` should be replaced by the actual address or name of the machine of where the KDC resides. Also, in a production environment, the realm `EXAMPLE.COM` should be replaced by an actual realm provided by a Kerberos administrator.)  
 
-### 5. 12. Chaining to Another SOCKS Server
+### 6. 10. Chaining to Another SOCKS Server
 
 You can have Jargyle chained to another SOCKS server, meaning that its traffic can be routed through another SOCKS server. To have Jargyle chained to another SOCKS server, you will need to specify the other SOCKS server as a URI in the setting `chaining.socksServerUri`
 
@@ -1455,7 +1520,7 @@ Partial configuration file example:
 
 Please note that the scheme in the URI specifies the SOCKS protocol to be used when accessing the other SOCKS server (`socks5`), the address or name of the machine of where the other SOCKS server resides (`127.0.0.1`), and the port number of the other SOCKS server (`23456`). In the aforementioned examples, the SOCKS protocol version 5 is used. At this time, the only supported scheme for the URI format is `socks5`
 
-#### 5. 12. 1. Using SSL/TLS for TCP Traffic Through SOCKS Server Chaining
+#### 6. 10. 1. Using SSL/TLS for TCP Traffic Through SOCKS Server Chaining
 
 You can use SSL/TLS for TCP traffic through SOCKS server chaining under the following condition: 
 
@@ -1517,7 +1582,7 @@ Partial command line example:
     
 ```
 
-#### 5. 12. 2. Using DTLS for UDP Traffic Through SOCKS Server Chaining
+#### 6. 10. 2. Using DTLS for UDP Traffic Through SOCKS Server Chaining
 
 You can use DTLS for UDP traffic through SOCKS server chaining under the following condition: 
 
@@ -1579,62 +1644,7 @@ Partial command line example:
     
 ```
 
-#### 5. 12. 3. Resolving Host Names Through SOCKS5 Server Chaining
-
-Before discussing host name resolution through SOCKS5 server chaining, a brief explanation of Jargyle's internals:
-
-Jargyle uses sockets to interact with the external world.
-
--   Under the CONNECT command, it uses a socket that connects to the desired target server. In this documentation, this socket is called the server-facing socket.
--   Under the BIND command, it uses a socket that listens for an inbound socket. In this documentation, this socket is called the listen socket.
--   Under the UDP ASSOCIATE command, it uses a UDP socket that sends and receives datagram packets to and from peer UDP sockets. In this documentation, this UDP socket is called the peer-facing UDP socket.
-
-Jargyle also uses a host resolver to resolve host names for the aforementioned sockets and for [the RESOLVE command](#5-16-2-the-socks5-resolve-command).
-
-When Jargyle is chained to another SOCKS5 server, the aforementioned sockets that Jargyle uses become SOCKS5-enabled, meaning that their traffic is routed through the other SOCKS5 server.
-
-It is similar for the host resolver. When Jargyle is chained to another SOCKS5 server, the host resolver that Jargyle uses becomes SOCKS5-enabled, meaning that it can use the other SOCKS5 server to resolve host names provided that the other SOCKS5 server supports the SOCKS5 RESOLVE command. However, this functionality for the host resolver is disabled by default making the host resolver resolve host names through the local system.
-
-Therefore, default host name resolution through SOCKS5 server chaining is performed but has the following limitations:
-
-Default host name resolution through SOCKS5 server chaining OCCURS ONLY...
-
--   ...under the CONNECT command when the server-facing socket makes an extemporaneous outbound connection. Preparation is omitted for the server-facing socket. Such preparation includes applying the specified socket settings for the server-facing socket, resolving the target host name before connecting, and setting the specified timeout in milliseconds on waiting for the server-facing socket to connect. The host resolver is not used in resolving the target host name. When the server-facing socket is SOCKS5-enabled, the target host name is resolved by the other SOCKS5 server and not through the local system.
-
-Default host name resolution through SOCKS5 server chaining DOES NOT OCCUR...
-
--   ...under the CONNECT command when the server-facing socket makes a prepared outbound connection. Preparation for the server-facing socket includes resolving the target host name before connecting. The host resolver is used in resolving the target host name. Because of its default functionality, the host resolver resolves the target host name through the local system.
--   ...under the BIND command when resolving the binding host name for the listen socket. The host resolver is used in resolving the binding host name for the listen socket. Because of its default functionality, the host resolver resolves the binding host name for the listen socket through the local system.
--   ...under the UDP ASSOCIATE command when resolving the host name for an outbound datagram packet. The host resolver is used in resolving the host name for an outbound datagram packet. Because of its default functionality, the host resolver resolves the host name for an outbound datagram packet through the local system.
--   ...under the RESOLVE command when resolving the provided host name. The host resolver is used in resolving the provided host name. Because of its default functionality, the host resolver resolves the provided host name through the local system.
-
-If you prefer to have host name resolution through SOCKS5 server chaining without the aforementioned limitations, you would need to set the setting `chaining.socks5.resolve.useResolveCommand` to `true`. This setting enables the host resolver to use the SOCKS5 RESOLVE command on the other SOCKS5 server to resolve host names. This setting can only be used if the other SOCKS5 server supports the SOCKS5 RESOLVE command.
-
-Partial command line example:
-
-```text
-    
-    --setting=chaining.socksServerUri=socks5://127.0.0.1:23456 \
-    --setting=chaining.socks5.resolve.useResolveCommand=true
-    
-```
-
-Partial configuration file example:
-
-```xml
-    
-    <setting>
-        <name>chaining.socksServerUri</name>
-        <value>socks5://127.0.0.1:23456</value>
-    </setting>
-    <setting>
-        <name>chaining.socks5.resolve.useResolveCommand</name>
-        <value>true</value>
-    </setting>
-    
-```
-
-#### 5. 12. 4. Using SOCKS5 Authentication
+#### 6. 10. 3. Using SOCKS5 Authentication
 
 Jargyle has the following SOCKS5 authentication methods to choose from for accessing the other SOCKS5 server:
 
@@ -1665,7 +1675,7 @@ Partial configuration file example:
 
 If not set, the default value for the setting `chaining.socks5.methods` is set to `NO_AUTHENTICATION_REQUIRED`
 
-##### 5. 12. 4. 1. Using No Authentication
+##### 6. 10. 3. 1. Using No Authentication
 
 Because the default value for the setting `chaining.socks5.methods` is set to `NO_AUTHENTICATION_REQUIRED`, it is not required for `NO_AUTHENTICATION_REQUIRED` to be included in the setting `chaining.socks5.methods`.
 
@@ -1690,7 +1700,7 @@ Partial configuration file example:
     
 ```
 
-##### 5. 12. 4. 2. Using Username Password Authentication
+##### 6. 10. 3. 2. Using Username Password Authentication
 
 To use username password authentication, you will need to have the setting `chaining.socks5.methods` to have `USERNAME_PASSWORD` included. 
 
@@ -1739,7 +1749,7 @@ Partial command line example:
     
 ```
 
-##### 5. 12. 4. 3. Using GSS-API Authentication
+##### 6. 10. 3. 3. Using GSS-API Authentication
 
 To use GSS-API authentication, you will need to have the setting `chaining.socks5.methods` to have `GSSAPI` included.
 
@@ -1822,7 +1832,62 @@ In `krb5.conf`, a KDC is defined as running at the address `127.0.0.1` on port `
 
 The command line option `--setting=chaining.socks5.gssapiauth.serviceName=rcmd/127.0.0.1` is the GSS-API service name (or the Kerberos service principal) for the other SOCKS5 server residing at the address `127.0.0.1`. (In a production environment, the address `127.0.0.1` should be replaced by the name of the machine of where the other SOCKS5 server resides.)
 
-### 5. 13. Chaining to a Specified Chain of Other SOCKS Servers
+#### 6. 10. 4. Resolving Host Names Through SOCKS5 Server Chaining
+
+Before discussing host name resolution through SOCKS5 server chaining, a brief explanation of Jargyle's internals:
+
+Jargyle uses sockets to interact with the external world.
+
+-   Under the CONNECT command, it uses a socket that connects to the desired target server. In this documentation, this socket is called the server-facing socket.
+-   Under the BIND command, it uses a socket that listens for an inbound socket. In this documentation, this socket is called the listen socket.
+-   Under the UDP ASSOCIATE command, it uses a UDP socket that sends and receives datagram packets to and from peer UDP sockets. In this documentation, this UDP socket is called the peer-facing UDP socket.
+
+Jargyle also uses a host resolver to resolve host names for the aforementioned sockets and for [the RESOLVE command](#6-14-2-the-socks5-resolve-command).
+
+When Jargyle is chained to another SOCKS5 server, the aforementioned sockets that Jargyle uses become SOCKS5-enabled, meaning that their traffic is routed through the other SOCKS5 server.
+
+It is similar for the host resolver. When Jargyle is chained to another SOCKS5 server, the host resolver that Jargyle uses becomes SOCKS5-enabled, meaning that it can use the other SOCKS5 server to resolve host names provided that the other SOCKS5 server supports the SOCKS5 RESOLVE command. However, this functionality for the host resolver is disabled by default making the host resolver resolve host names through the local system.
+
+Therefore, default host name resolution through SOCKS5 server chaining is performed but has the following limitations:
+
+Default host name resolution through SOCKS5 server chaining OCCURS ONLY...
+
+-   ...under the CONNECT command when the server-facing socket makes an extemporaneous outbound connection. Preparation is omitted for the server-facing socket. Such preparation includes applying the specified socket settings for the server-facing socket, resolving the target host name before connecting, and setting the specified timeout in milliseconds on waiting for the server-facing socket to connect. The host resolver is not used in resolving the target host name. When the server-facing socket is SOCKS5-enabled, the target host name is resolved by the other SOCKS5 server and not through the local system.
+
+Default host name resolution through SOCKS5 server chaining DOES NOT OCCUR...
+
+-   ...under the CONNECT command when the server-facing socket makes a prepared outbound connection. Preparation for the server-facing socket includes resolving the target host name before connecting. The host resolver is used in resolving the target host name. Because of its default functionality, the host resolver resolves the target host name through the local system.
+-   ...under the BIND command when resolving the binding host name for the listen socket. The host resolver is used in resolving the binding host name for the listen socket. Because of its default functionality, the host resolver resolves the binding host name for the listen socket through the local system.
+-   ...under the UDP ASSOCIATE command when resolving the host name for an outbound datagram packet. The host resolver is used in resolving the host name for an outbound datagram packet. Because of its default functionality, the host resolver resolves the host name for an outbound datagram packet through the local system.
+-   ...under the RESOLVE command when resolving the provided host name. The host resolver is used in resolving the provided host name. Because of its default functionality, the host resolver resolves the provided host name through the local system.
+
+If you prefer to have host name resolution through SOCKS5 server chaining without the aforementioned limitations, you would need to set the setting `chaining.socks5.resolve.useResolveCommand` to `true`. This setting enables the host resolver to use the SOCKS5 RESOLVE command on the other SOCKS5 server to resolve host names. This setting can only be used if the other SOCKS5 server supports the SOCKS5 RESOLVE command.
+
+Partial command line example:
+
+```text
+    
+    --setting=chaining.socksServerUri=socks5://127.0.0.1:23456 \
+    --setting=chaining.socks5.resolve.useResolveCommand=true
+    
+```
+
+Partial configuration file example:
+
+```xml
+    
+    <setting>
+        <name>chaining.socksServerUri</name>
+        <value>socks5://127.0.0.1:23456</value>
+    </setting>
+    <setting>
+        <name>chaining.socks5.resolve.useResolveCommand</name>
+        <value>true</value>
+    </setting>
+    
+```
+
+### 6. 11. Chaining to a Specified Chain of Other SOCKS Servers
 
 You can have Jargyle chained to a specified chain of other SOCKS servers, meaning that its traffic can be routed through the specified chain of the other SOCKS servers. To have Jargyle chained to a specified chain of other SOCKS servers, you will need to have the setting `chaining.socksServerUri` specified multiple times to specify each SOCKS server as a URI.
 
@@ -1905,9 +1970,9 @@ The known limitations of Jargyle chained to a specified chain of other SOCKS ser
 
 -   Only TCP traffic can be routed through the chain. Jargyle will attempt to route any UDP traffic through the last SOCKS server of the chain.
 
-### 5. 14. Chaining to Multiple Specified Chains of Other SOCKS Servers
+### 6. 12. Chaining to Multiple Specified Chains of Other SOCKS Servers
 
-You can have Jargyle chained to multiple specified chains of other SOCKS servers, meaning that its traffic can be routed through one of the specified chains of other SOCKS servers. To have Jargyle chained to multiple specified chains of other SOCKS servers, you will need to have a route ID assigned at the end of each [chain](#5-13-chaining-to-a-specified-chain-of-other-socks-servers) by using the setting `chaining.routeId`
+You can have Jargyle chained to multiple specified chains of other SOCKS servers, meaning that its traffic can be routed through one of the specified chains of other SOCKS servers. To have Jargyle chained to multiple specified chains of other SOCKS servers, you will need to have a route ID assigned at the end of each [chain](#6-11-chaining-to-a-specified-chain-of-other-socks-servers) by using the setting `chaining.routeId`
 
 Partial command line example:
 
@@ -2131,14 +2196,14 @@ Partial configuration file example:
     
 ```
 
-### 5. 15. Using Rules to Manage Traffic
+### 6. 13. Using Rules to Manage Traffic
 
 A rule consists of the following:
 
 -   Rule conditions: fields that altogether evaluate as true if they match a specific instance of traffic
 -   Rule results: fields that are applied if the aforementioned rule conditions evaluate as true for matching a specific instance of traffic
 
-On the command line, a rule consists of a space separated list of both rule conditions and rule results. In the configuration file, a rule is expressed as a `<rule/>` XML element with a `<ruleConditions/>` XML element and a `<ruleResults/>` XML element. See [Rule Conditions](#5-15-1-rule-conditions) and [Rule Results](#5-15-2-rule-results) for more information.
+On the command line, a rule consists of a space separated list of both rule conditions and rule results. In the configuration file, a rule is expressed as a `<rule/>` XML element with a `<ruleConditions/>` XML element and a `<ruleResults/>` XML element. See [Rule Conditions](#6-13-1-rule-conditions) and [Rule Results](#6-13-2-rule-results) for more information.
 
 To specify a rule, you would need to have the setting `rule` specify the rule. 
 
@@ -2229,7 +2294,7 @@ Partial configuration file example:
 
 When a specific instance of traffic is matched by the first rule, that rule is applied and the rest of the rules are ignored. Therefore it is best to have more specific rules specified first and have less specific rules specified last.
 
-#### 5. 15. 1. Rule Conditions
+#### 6. 13. 1. Rule Conditions
 
 On the command line, rule conditions consist of a space separated list of rule conditions. Each rule condition consists of the syntax of `NAME=VALUE` where `NAME` is expressed as the name of the rule condition and `VALUE` is expressed as the value assigned to the rule condition. In the configuration file, rule conditions are expressed in a `<ruleConditions/>` XML element with zero to many `<ruleCondition/>` XML elements. Each `<ruleCondition/>` XML element contains a `<name/>` XML element for the name of the rule condition and the `<value/>` XML element of the value assigned to the rule condition.
 
@@ -2305,13 +2370,13 @@ Partial configuration file examples:
     
 ```
 
-A complete listing of rule conditions can be found in the settings help.
+A complete listing of rule conditions can be found in the [settings help](#6-1-4-settings-help) under `SETTING VALUE SYNTAXES` > `GENERAL_RULE_CONDITIONS` and `SETTING VALUE SYNTAXES` > `SOCKS5_RULE_CONDITIONS`.
 
-##### 5. 15. 1. 1. Common Rule Condition Value Syntaxes
+##### 6. 13. 1. 1. Common Rule Condition Value Syntaxes
 
 The following are some common rule condition value syntaxes.
 
-###### 5. 15. 1. 1. 1. Address Range
+###### 6. 13. 1. 1. 1. Address Range
 
 An address range can be specified in the following formats:
 
@@ -2319,14 +2384,14 @@ An address range can be specified in the following formats:
 -   `ADDRESS1-ADDRESS2` : Range is limited to addresses between the address expressed in `ADDRESS1` (inclusive) and the address expressed in `ADDRESS2` (inclusive). `ADDRESS1` and `ADDRESS2` must be of the same address type (IPv4 or IPv6). `ADDRESS1` and `ADDRESS2` cannot be domain names.
 -   `regex:REGULAR_EXPRESSION` : Range is limited to domain names that match the regular expression expressed in `REGULAR_EXPRESSION`
 
-###### 5. 15. 1. 1. 2. Port Range
+###### 6. 13. 1. 1. 2. Port Range
 
 A port range can be specified in the following formats:
 
 -   `PORT` : Range is limited to a single port number expressed in `PORT`
 -   `PORT1-PORT2` : Range is limited to port numbers between the port number expressed in `PORT1` (inclusive) and the port number expressed in `PORT2` (inclusive)
 
-#### 5. 15. 2. Rule Results
+#### 6. 13. 2. Rule Results
 
 On the command line, rule results consist of a space separated list of rule results. Each rule result consists of the syntax of `NAME=VALUE` where `NAME` is expressed as the name of the rule result and `VALUE` is expressed as the value assigned to the rule result. In the configuration file, rule result are expressed in a `<ruleResults/>` XML element with zero to many `<ruleResult/>` XML elements. Each `<ruleResult/>` XML element contains a `<name/>` XML element for the name of the rule result and the `<value/>` XML element of the value assigned to the rule result.
 
@@ -2357,29 +2422,553 @@ Partial configuration file example:
 
 Unless otherwise stated, if a rule result of the same name appears more than once in the space separated list or in the `<ruleResults/>` XML element, then only the last rule result of the same name is recognized.
 
-A complete listing of rule results can be found in the settings help.
+A complete listing of rule results can be found in the [settings help](#6-1-4-settings-help) under `SETTING VALUE SYNTAXES` > `GENERAL_RULE_RESULTS` and `SETTING VALUE SYNTAXES` > `SOCKS5_RULE_RESULTS`.
 
-##### 5. 15. 2. 1. Rule Results for Allowing or Denying Traffic
+##### 6. 13. 2. 1. Rule Results for Allowing or Denying Traffic
 
-##### 5. 15. 2. 2. Rule Results for Allowing a Limited Number of Simultaneous Instances of Traffic
+To allow or deny a specific instance of traffic, you will need the following rule result:
 
-##### 5. 15. 2. 3. Rule Results for Routing Traffic
+-   `firewallAction`
 
-##### 5. 15. 2. 4. Rule Results for Redirecting the Desired Destination
+The value given to the rule result must be either of the following values:
 
-##### 5. 15. 2. 5. Rule Results for Limiting Bandwidth
+-   `ALLOW`
+-   `DENY`
 
-##### 5. 15. 2. 6. Rule Results for Configuring Sockets
+This rule result can be used with the following rule conditions:
 
-### 5. 16. Miscellaneous Notes
+-   `clientAddress`
+-   `socks5.command`
+-   `socks5.desiredDestinationAddress`
+-   `socks5.desiredDestinationPort`
+-   `socks5.method`
+-   `socks5.secondServerBoundAddress`
+-   `socks5.secondServerBoundPort`
+-   `socks5.serverBoundAddress`
+-   `socks5.serverBoundPort`
+-   `socks5.udp.inbound.desiredDestinationAddress`
+-   `socks5.udp.inbound.desiredDestinationPort`
+-   `socks5.udp.inbound.sourceAddress`
+-   `socks5.udp.inbound.sourcePort`
+-   `socks5.udp.outbound.desiredDestinationAddress`
+-   `socks5.udp.outbound.desiredDestinationPort`
+-   `socks5.udp.outbound.sourceAddress`
+-   `socks5.udp.outbound.sourcePort`
+-   `socks5.user`
+-   `socksServerAddress`
+
+**Note**: for any other rule results to be applied, the rule result `firewallAction` with the value of `ALLOW` must be present.
+
+You can also specify the logging action to take if the rule result `firewallAction` is applied by adding the following rule result:
+
+-   `firewallActionLogAction`
+
+The rule result `firewallActionLogAction` is optional.
+
+Partial command line example:
+
+```text
+    
+    "--setting=rule=socks5.command=BIND socks5.command=UDP_ASSOCIATE  firewallAction=DENY firewallActionLogAction=LOG_AS_WARNING" \
+    --setting=rule=firewallAction=ALLOW
+    
+```
+
+Partial configuration file example:
+
+```xml
+    
+    <setting>
+        <name>rule</name>
+        <rule>
+            <ruleConditions>
+                <ruleCondition>
+                    <name>socks5.command</name>
+                    <value>BIND</value>
+                </ruleCondition>
+                <ruleCondition>
+                    <name>socks5.command</name>
+                    <value>UDP_ASSOCIATE</value>
+                </ruleCondition>
+            </ruleConditions>
+            <ruleResults>
+                <ruleResult>
+                    <name>firewallAction</name>
+                    <value>DENY</value>
+                </ruleResult>
+                <ruleResult>
+                    <name>firewallActionLogAction</name>
+                    <value>LOG_AS_WARNING</value>
+                </ruleResult>                
+            </ruleResults>
+        </rule>
+        <!-- Deny any BIND or UDP ASSOCIATE commands and log at the warning level if they are denied -->
+    </setting>
+    <setting>
+        <name>rule</name>
+        <rule>
+            <ruleConditions/>
+            <ruleResults>
+                <ruleResult>
+                    <name>firewallAction</name>
+                    <value>ALLOW</value>
+                </ruleResult>
+            </ruleResults>
+        </rule>
+        <!-- Allow anything else -->
+    </setting>    
+    
+```
+
+##### 6. 13. 2. 2. Rule Results for Allowing a Limited Number of Simultaneous Instances of Traffic
+
+To allow a limited number of simultaneous specific instances of traffic, you will need the following rule result:
+
+-   `firewallActionAllowLimit`
+
+The value given to the rule result must be an integer between 0 (inclusive) and 2147483647 (inclusive)
+
+This rule result can be used with the following rule conditions:
+
+-   `clientAddress`
+-   `socks5.command`
+-   `socks5.desiredDestinationAddress`
+-   `socks5.desiredDestinationPort`
+-   `socks5.method`
+-   `socks5.secondServerBoundAddress`
+-   `socks5.secondServerBoundPort`
+-   `socks5.serverBoundAddress`
+-   `socks5.serverBoundPort`
+-   `socks5.user`
+-   `socksServerAddress`
+
+You can also specify the logging action to take if the limit on the number of simultaneous specific instances of traffic has been reached by adding the following rule result:
+
+-   `firewallActionAllowLimitReachedLogAction`
+
+The rule result `firewallActionAllowLimitReachedLogAction` is optional.
+
+Partial command line example:
+
+```text
+    
+    "--setting=rule=socks5.method=USERNAME_PASSWORD socks5.user=guest firewallAction=ALLOW firewallActionAllowLimit=50 firewallActionAllowLimitReachedLogAction=LOG_AS_INFO" \
+    --setting=rule=firewallAction=ALLOW
+    
+```
+
+Partial configuration file example:
+
+```xml
+    
+    <setting>
+        <name>rule</name>
+        <rule>
+            <ruleConditions>
+                <ruleCondition>
+                    <name>socks5.method</name>
+                    <value>USERNAME_PASSWORD</value>
+                </ruleCondition>
+                <ruleCondition>
+                    <name>socks5.user</name>
+                    <value>guest</value>
+                </ruleCondition>
+            </ruleConditions>
+            <ruleResults>
+                <ruleResult>
+                    <name>firewallAction</name>
+                    <value>ALLOW</value>
+                </ruleResult>
+                <ruleResult>
+                    <name>firewallActionAllowLimit</name>
+                    <value>50</value>
+                </ruleResult>                
+                <ruleResult>
+                    <name>firewallActionAllowLimitReachedLogAction</name>
+                    <value>LOG_AS_INFO</value>
+                </ruleResult>
+            </ruleResults>
+        </rule>
+        <!-- Allow the user 'guest' from username password authentication 50 simultaneous connections and log at the info level to know if the limit has been reached -->
+    </setting>
+    <setting>
+        <name>rule</name>
+        <rule>
+            <ruleConditions/>
+            <ruleResults>
+                <ruleResult>
+                    <name>firewallAction</name>
+                    <value>ALLOW</value>
+                </ruleResult>
+            </ruleResults>
+        </rule>
+        <!-- Allow anything else -->
+    </setting>    
+    
+```
+
+##### 6. 13. 2. 3. Rule Results for Routing Traffic
+
+To route traffic, you will need the following rule results:
+
+-   `routeId`: Specifies the ID for a [route](#6-12-chaining-to-multiple-specified-chains-of-other-socks-servers) (This rule result can be specified multiple times for each route ID)
+-   `routeIdSelectionStrategy`: Specifies the selection strategy for the next route ID to use from the list of route IDs
+
+These rule results can be used with the following rule conditions:
+
+-   `clientAddress`
+-   `socks5.command`
+-   `socks5.desiredDestinationAddress`
+-   `socks5.desiredDestinationPort`
+-   `socks5.method`
+-   `socks5.user`
+-   `socksServerAddress`
+
+You can also specify the logging action to take if a route ID is selected from the list of the route IDs by adding the following rule result:
+
+-   `routeIdSelectionLogAction`
+
+The rule result `routeIdSelectionLogAction` is optional.
+
+Partial command line example:
+
+```text
+    
+    "--setting=rule=socks5.command=CONNECT firewallAction=ALLOW routeId=alpha routeId=beta routeId=delta routeIdSelectionStrategy=RANDOM routeIdSelectionLogAction=LOG_AS_INFO" \
+    "--setting=rule=firewallAction=ALLOW routeId=omega routeIdSelectionStrategy=CYCLICAL"
+    
+```
+
+Partial configuration file example:
+
+```xml
+    
+    <setting>
+        <name>rule</name>
+        <rule>
+            <ruleConditions>
+                <ruleCondition>
+                    <name>socks5.command</name>
+                    <value>CONNECT</value>
+                </ruleCondition>
+            </ruleConditions>
+            <ruleResults>
+                <ruleResult>
+                    <name>firewallAction</name>
+                    <value>ALLOW</value>
+                </ruleResult>
+                <ruleResult>
+                    <name>routeId</name>
+                    <value>alpha</value>
+                </ruleResult>
+                <ruleResult>
+                    <name>routeId</name>
+                    <value>beta</value>
+                </ruleResult>
+                <ruleResult>
+                    <name>routeId</name>
+                    <value>delta</value>
+                </ruleResult>
+                <ruleResult>
+                    <name>routeIdSelectionStrategy</name>
+                    <value>RANDOM</value>
+                </ruleResult>
+                <ruleResult>
+                    <name>routeIdSelectionLogAction</name>
+                    <value>LOG_AS_INFO</value>
+                </ruleResult>
+            </ruleResults>
+        </rule>
+        <!-- Randomly select either route 'alpha', 'beta' or 'delta' when allowing the CONNECT command and log at the info level to know which route has been selected -->
+    </setting>
+    <setting>
+        <name>rule</name>
+        <rule>
+            <ruleConditions/>
+            <ruleResults>
+                <ruleResult>
+                    <name>firewallAction</name>
+                    <value>ALLOW</value>
+                </ruleResult>
+                <ruleResult>
+                    <name>routeId</name>
+                    <value>omega</value>
+                </ruleResult>
+                <ruleResult>
+                    <name>routeIdSelectionStrategy</name>
+                    <value>CYCLICAL</value>
+                </ruleResult>
+            </ruleResults>
+        </rule>
+        <!-- Allow anything else to go through route 'omega' -->
+    </setting>    
+    
+```
+
+##### 6. 13. 2. 4. Rule Results for Redirecting the Desired Destination
+
+To redirect the desired destination, you will need either or both of the following rule results:
+
+-   `socks5.desiredDestinationAddressRedirect`: Specifies the desired destination address redirect
+-   `socks5.desiredDestinationPortRedirect`: Specifies the desired destination port redirect
+
+These rule results can be used with the following rule conditions:
+
+-   `clientAddress`
+-   `socks5.command`
+-   `socks5.desiredDestinationAddress`
+-   `socks5.desiredDestinationPort`
+-   `socks5.method`
+-   `socks5.user`
+-   `socksServerAddress`
+
+You can also specify the logging action to take if the desired destination is redirected by adding the following rule result:
+
+-   `socks5.desiredDestinationRedirectLogAction`
+
+The rule result `socks5.desiredDestinationRedirectLogAction` is optional.
+
+Partial command line example:
+
+```text
+    
+    "--setting=rule=socks5.desiredDestinationAddress=discontinuedserver.com firewallAction=ALLOW socks5.desiredDestinationAddressRedirect=newserver.com socks5.desiredDestinationRedirectLogAction=LOG_AS_INFO" \
+    --setting=rule=firewallAction=ALLOW
+    
+```
+
+Partial configuration file example:
+
+```xml
+    
+    <setting>
+        <name>rule</name>
+        <rule>
+            <ruleConditions>
+                <ruleCondition>
+                    <name>socks5.desiredDestinationAddress</name>
+                    <value>discontinuedserver.com</value>
+                </ruleCondition>
+            </ruleConditions>
+            <ruleResults>
+                <ruleResult>
+                    <name>firewallAction</name>
+                    <value>ALLOW</value>
+                </ruleResult>
+                <ruleResult>
+                    <name>socks5.desiredDestinationAddressRedirect</name>
+                    <value>newserver.com</value>
+                </ruleResult>
+                <ruleResult>
+                    <name>socks5.desiredDestinationRedirectLogAction</name>
+                    <value>LOG_AS_INFO</value>
+                </ruleResult>
+            </ruleResults>
+        </rule>
+        <!-- Redirect desired destination 'discontinuedserver.com' to 'newserver.com' and log at the info level the redirection -->
+    </setting>
+    <setting>
+        <name>rule</name>
+        <rule>
+            <ruleConditions/>
+            <ruleResults>
+                <ruleResult>
+                    <name>firewallAction</name>
+                    <value>ALLOW</value>
+                </ruleResult>
+            </ruleResults>
+        </rule>
+        <!-- Allow anything else -->
+    </setting>    
+    
+```
+
+##### 6. 13. 2. 5. Rule Results for Limiting Bandwidth
+
+To limit the bandwidth, you will need any of the following rule results:
+
+-   `socks5.onBind.relayInboundBandwidthLimit`: Specifies the upper limit on bandwidth in bytes per second of receiving inbound data to be relayed
+-   `socks5.onBind.relayOutboundBandwidthLimit`: Specifies the upper limit on bandwidth in bytes per second of receiving outbound data to be relayed
+-   `socks5.onConnect.relayInboundBandwidthLimit`: Specifies the upper limit on bandwidth in bytes per second of receiving inbound data to be relayed
+-   `socks5.onConnect.relayOutboundBandwidthLimit`: Specifies the upper limit on bandwidth in bytes per second of receiving outbound data to be relayed
+-   `socks5.onUdpAssociate.relayInboundBandwidthLimit`: Specifies the upper limit on bandwidth in bytes per second of receiving inbound data to be relayed
+-   `socks5.onUdpAssociate.relayOutboundBandwidthLimit`: Specifies the upper limit on bandwidth in bytes per second of receiving outbound data to be relayed
+
+The value given to any of the rule results must be an integer between 1 (inclusive) and 2147483647 (inclusive)
+
+These rule results can be used with the following rule conditions:
+
+-   `clientAddress`
+-   `socks5.command`
+-   `socks5.desiredDestinationAddress`
+-   `socks5.desiredDestinationPort`
+-   `socks5.method`
+-   `socks5.secondServerBoundAddress`
+-   `socks5.secondServerBoundPort`
+-   `socks5.serverBoundAddress`
+-   `socks5.serverBoundPort`
+-   `socks5.user`
+-   `socksServerAddress`
+
+Partial command line example:
+
+```text
+    
+    "--setting=rule=socks5.command=CONNECT socks5.desiredDestinationAddress=regex:.*streamingwebsite.* firewallAction=ALLOW socks5.onConnect.relayInboundBandwidthLimit=1024000" \
+    --setting=rule=firewallAction=ALLOW
+    
+```
+
+Partial configuration file example:
+
+```xml
+    
+    <setting>
+        <name>rule</name>
+        <rule>
+            <ruleConditions>
+                <ruleCondition>
+                    <name>socks5.command</name>
+                    <value>CONNECT</value>
+                </ruleCondition>            
+                <ruleCondition>
+                    <name>socks5.desiredDestinationAddress</name>
+                    <value>regex:.*streamingwebsite.*</value>
+                </ruleCondition>
+            </ruleConditions>
+            <ruleResults>
+                <ruleResult>
+                    <name>firewallAction</name>
+                    <value>ALLOW</value>
+                </ruleResult>
+                <ruleResult>
+                    <name>socks5.onConnect.relayInboundBandwidthLimit</name>
+                    <value>1024000</value>
+                </ruleResult>
+            </ruleResults>
+        </rule>
+        <!-- Allow the CONNECT command to connect to any address containing the phrase 'streamingwebsite' with an upper limit on bandwidth of 1024000 bytes per second on receiving inbound data -->
+    </setting>
+    <setting>
+        <name>rule</name>
+        <rule>
+            <ruleConditions/>
+            <ruleResults>
+                <ruleResult>
+                    <name>firewallAction</name>
+                    <value>ALLOW</value>
+                </ruleResult>
+            </ruleResults>
+        </rule>
+        <!-- Allow anything else -->
+    </setting>    
+    
+```
+
+##### 6. 13. 2. 6. Rule Results for Configuring Sockets
+
+To configure the sockets, you will need any of the following rule results:
+
+-   `socks5.onBind.inboundSocketSetting`: Specifies the socket setting for the inbound socket (This rule result can be specified multiple times for each socket setting)
+-   `socks5.onBind.listenSocketSetting`: Specifies the socket setting for the listen socket (This rule result can be specified multiple times for each socket setting)
+-   `socks5.onBind.relayBufferSize`: Specifies the buffer size in bytes for relaying the data (Value must be an integer between 1 (inclusive) and 2147483647(inclusive))
+-   `socks5.onBind.relayIdleTimeout`: Specifies the timeout in milliseconds on relaying no data (Value must be an integer between 1 (inclusive) and 2147483647(inclusive))
+-   `socks5.onConnect.prepareServerFacingSocket`: Specifies the boolean value to indicate if the server-facing socket is to be prepared before connecting (involves applying the specified socket settings, resolving the target host name, and setting the specified timeout on waiting to connect)
+-   `socks5.onConnect.relayBufferSize`: Specifies the buffer size in bytes for relaying the data (Value must be an integer between 1 (inclusive) and 2147483647(inclusive))
+-   `socks5.onConnect.relayIdleTimeout`: Specifies the timeout in milliseconds on relaying no data (Value must be an integer between 1 (inclusive) and 2147483647(inclusive))
+-   `socks5.onConnect.serverFacingBindHost`: Specifies the binding host name or address for the server-facing socket
+-   `socks5.onConnect.serverFacingConnectTimeout`: Specifies the timeout in milliseconds on waiting for the server-facing socket to connect (Value must be an integer between 1 (inclusive) and 2147483647(inclusive))
+-   `socks5.onConnect.serverFacingSocketSetting`: Specifies the socket setting for the server-facing socket (This rule result can be specified multiple times for each socket setting)
+-   `socks5.onUdpAssociate.clientFacingBindHost`: Specifies the binding host name or address for the client-facing UDP socket
+-   `socks5.onUdpAssociate.clientFacingSocketSetting`: Specifies the socket setting for the client-facing UDP socket (This rule result can be specified multiple times for each socket setting)
+-   `socks5.onUdpAssociate.peerFacingBindHost`: Specifies the binding host name or address for the peer-facing UDP socket
+-   `socks5.onUdpAssociate.peerFacingSocketSetting`: Specifies the socket setting for the peer-facing UDP socket (This rule result can be specified multiple times for each socket setting)
+-   `socks5.onUdpAssociate.relayBufferSize`: Specifies the buffer size in bytes for relaying the data (Value must be an integer between 1 (inclusive) and 2147483647(inclusive))
+-   `socks5.onUdpAssociate.relayIdleTimeout`: Specifies the timeout in milliseconds on relaying no data (Value must be an integer between 1 (inclusive) and 2147483647(inclusive))
+
+These rule results can be used with the following rule conditions:
+
+-   `clientAddress`
+-   `socks5.command`
+-   `socks5.desiredDestinationAddress`
+-   `socks5.desiredDestinationPort`
+-   `socks5.method`
+-   `socks5.secondServerBoundAddress`
+-   `socks5.secondServerBoundPort`
+-   `socks5.serverBoundAddress`
+-   `socks5.serverBoundPort`
+-   `socks5.user`
+-   `socksServerAddress`
+
+Partial command line example:
+
+```text
+    
+    "--setting=rule=firewallAction=ALLOW socks5.onBind.inboundSocketSetting=SO_RCVBUF=256 socks5.onBind.inboundSocketSetting=SO_SNDBUF=256 socks5.onConnect.prepareServerFacingSocket=true socks5.onConnect.serverFacingSocketSetting=SO_RCVBUF=256 socks5.onConnect.serverFacingSocketSetting=SO_SNDBUF=256"
+    
+```
+
+Partial configuration file example:
+
+```xml
+    
+    <setting>
+        <name>rule</name>
+        <rule>
+            <ruleConditions/>
+            <ruleResults>
+                <ruleResult>
+                    <name>firewallAction</name>
+                    <value>ALLOW</value>
+                </ruleResult>
+                <ruleResult>
+                    <name>socks5.onBind.inboundSocketSetting</name>
+                    <socketSetting>
+                        <name>SO_RCVBUF</name>
+                        <value>256</value>
+                    </socketSetting>
+                </ruleResult>
+                <ruleResult>
+                    <name>socks5.onBind.inboundSocketSetting</name>
+                    <socketSetting>
+                        <name>SO_SNDBUF</name>
+                        <value>256</value>
+                    </socketSetting>
+                </ruleResult>
+                <ruleResult>
+                    <name>socks5.onConnect.prepareServerFacingSocket</name>
+                    <value>true</value>
+                </ruleResult>
+                <ruleResult>
+                    <name>socks5.onConnect.serverFacingSocketSetting</name>
+                    <socketSetting>
+                        <name>SO_RCVBUF</name>
+                        <value>256</value>
+                    </socketSetting>
+                </ruleResult>
+                <ruleResult>
+                    <name>socks5.onConnect.serverFacingSocketSetting</name>
+                    <socketSetting>
+                        <name>SO_SNDBUF</name>
+                        <value>256</value>
+                    </socketSetting>
+                </ruleResult>
+            </ruleResults>
+        </rule>
+        <!-- Configure the inbound socket for the BIND command and the server-facing socket for the CONNECT command -->
+    </setting>    
+    
+```
+
+### 6. 14. Miscellaneous Notes
 
 The following are miscellaneous notes regarding Jargyle.
 
-#### 5. 16. 1. Multiple Settings of the Same Name
+#### 6. 14. 1. Multiple Settings of the Same Name
 
 Unless otherwise stated, if a setting of the same name appears more than once on the command line or in the configuration file, then only the last setting of the same name is recognized. 
 
-#### 5. 16. 2. The SOCKS5 RESOLVE Command
+#### 6. 14. 2. The SOCKS5 RESOLVE Command
 
 The SOCKS5 RESOLVE command specifies the type of SOCKS5 request sent by the client for the server to perform: to resolve the provided host name and reply with the resolved IPv4 or IPv6 address. At the time of this writing, the SOCKS5 RESOLVE command is an additional SOCKS5 command made for Jargyle. It is not a part of the SOCKS5 protocol specification. 
 
@@ -2389,7 +2978,7 @@ In a SOCKS request, the RESOLVE command is represented as `X'04'` in the `CMD` f
 
 In reply to a SOCKS request with the RESOLVE command, the `ATYP` field in the reply MUST be of any value other than `X'03'` (DOMAINNAME) and the `BND.ADDR` field in the reply MUST be the resolved address of the `DST.ADDR` field of the SOCKS request. The `BND.PORT` field in the reply can be of any value in network octet order (`X'0000'` to `X'FFFF'` inclusive). If the `ATYP` field and the `DST.ADDR` field of the SOCKS request is not a fully-qualified domain name, the `ATYP` field and the `BND.ADDR` field in the reply MUST be the same as the `ATYP` field and the `DST.ADDR` field of the SOCKS request. After the reply is sent, the connection between the client and the server is then closed.
 
-#### 5. 16. 3. The Doc XML Element
+#### 6. 14. 3. The Doc XML Element
 
 When using an existing configuration file to create a new configuration file, any XML comments from the existing configuration file cannot be transferred to the new configuration file. To preserve XML comments from one configuration file to the next configuration file, the `<doc/>` XML element can be used in the following XML elements:
 
@@ -2423,6 +3012,6 @@ Configuration file example:
     
 ```
 
-## 6. Contact
+## 7. Contact
 
 If you have any questions or comments, you can e-mail me at `j0n4th4n.h3nd3rs0n@gmail.com`

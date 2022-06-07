@@ -72,6 +72,22 @@ public final class Socks5RuleResultSpecConstants {
 			"socks5.onBind.relayIdleTimeout"));
 
 	@HelpText(
+			doc = "Specifies the upper limit on bandwidth in bytes per second "
+					+ "of receiving inbound data to be relayed",
+			usage = "socks5.onBind.relayInboundBandwidthLimit=INTEGER_BETWEEN_1_AND_2147483647"
+	)
+	public static final RuleResultSpec<PositiveInteger> SOCKS5_ON_BIND_RELAY_INBOUND_BANDWIDTH_LIMIT = RULE_RESULT_SPECS.addThenGet(new PositiveIntegerRuleResultSpec(
+			"socks5.onBind.relayInboundBandwidthLimit"));
+
+	@HelpText(
+			doc = "Specifies the upper limit on bandwidth in bytes per second "
+					+ "of receiving outbound data to be relayed",
+			usage = "socks5.onBind.relayOutboundBandwidthLimit=INTEGER_BETWEEN_1_AND_2147483647"
+	)
+	public static final RuleResultSpec<PositiveInteger> SOCKS5_ON_BIND_RELAY_OUTBOUND_BANDWIDTH_LIMIT = RULE_RESULT_SPECS.addThenGet(new PositiveIntegerRuleResultSpec(
+			"socks5.onBind.relayOutboundBandwidthLimit"));
+	
+	@HelpText(
 			doc = "Specifies the boolean value to indicate if the "
 					+ "server-facing socket is to be prepared before "
 					+ "connecting (involves applying the specified socket "
@@ -95,6 +111,22 @@ public final class Socks5RuleResultSpecConstants {
 	)	
 	public static final RuleResultSpec<PositiveInteger> SOCKS5_ON_CONNECT_RELAY_IDLE_TIMEOUT = RULE_RESULT_SPECS.addThenGet(new PositiveIntegerRuleResultSpec(
 			"socks5.onConnect.relayIdleTimeout"));
+
+	@HelpText(
+			doc = "Specifies the upper limit on bandwidth in bytes per second "
+					+ "of receiving inbound data to be relayed",
+			usage = "socks5.onConnect.relayInboundBandwidthLimit=INTEGER_BETWEEN_1_AND_2147483647"
+	)
+	public static final RuleResultSpec<PositiveInteger> SOCKS5_ON_CONNECT_RELAY_INBOUND_BANDWIDTH_LIMIT = RULE_RESULT_SPECS.addThenGet(new PositiveIntegerRuleResultSpec(
+			"socks5.onConnect.relayInboundBandwidthLimit"));
+
+	@HelpText(
+			doc = "Specifies the upper limit on bandwidth in bytes per second "
+					+ "of receiving outbound data to be relayed",
+			usage = "socks5.onConnect.relayOutboundBandwidthLimit=INTEGER_BETWEEN_1_AND_2147483647"
+	)
+	public static final RuleResultSpec<PositiveInteger> SOCKS5_ON_CONNECT_RELAY_OUTBOUND_BANDWIDTH_LIMIT = RULE_RESULT_SPECS.addThenGet(new PositiveIntegerRuleResultSpec(
+			"socks5.onConnect.relayOutboundBandwidthLimit"));
 	
 	@HelpText(
 			doc = "Specifies the binding host name or address for the "
@@ -164,6 +196,22 @@ public final class Socks5RuleResultSpecConstants {
 	)	
 	public static final RuleResultSpec<PositiveInteger> SOCKS5_ON_UDP_ASSOCIATE_RELAY_IDLE_TIMEOUT = RULE_RESULT_SPECS.addThenGet(new PositiveIntegerRuleResultSpec(
 			"socks5.onUdpAssociate.relayIdleTimeout"));
+
+	@HelpText(
+			doc = "Specifies the upper limit on bandwidth in bytes per second "
+					+ "of receiving inbound data to be relayed",
+			usage = "socks5.onUdpAssociate.relayInboundBandwidthLimit=INTEGER_BETWEEN_1_AND_2147483647"
+	)
+	public static final RuleResultSpec<PositiveInteger> SOCKS5_ON_UDP_ASSOCIATE_RELAY_INBOUND_BANDWIDTH_LIMIT = RULE_RESULT_SPECS.addThenGet(new PositiveIntegerRuleResultSpec(
+			"socks5.onUdpAssociate.relayInboundBandwidthLimit"));
+
+	@HelpText(
+			doc = "Specifies the upper limit on bandwidth in bytes per second "
+					+ "of receiving outbound data to be relayed",
+			usage = "socks5.onUdpAssociate.relayOutboundBandwidthLimit=INTEGER_BETWEEN_1_AND_2147483647"
+	)
+	public static final RuleResultSpec<PositiveInteger> SOCKS5_ON_UDP_ASSOCIATE_RELAY_OUTBOUND_BANDWIDTH_LIMIT = RULE_RESULT_SPECS.addThenGet(new PositiveIntegerRuleResultSpec(
+			"socks5.onUdpAssociate.relayOutboundBandwidthLimit"));
 	
 	public static List<RuleResultSpec<Object>> values() {
 		return RULE_RESULT_SPECS.toList();

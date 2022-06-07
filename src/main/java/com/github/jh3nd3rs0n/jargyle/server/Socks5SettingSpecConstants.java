@@ -97,6 +97,26 @@ public final class Socks5SettingSpecConstants {
 			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
 					"socks5.onBind.relayIdleTimeout", 
 					PositiveInteger.newInstance(60000))); // 1 minute
+	
+	@HelpText(
+			doc = "The upper limit on bandwidth in bytes per second of "
+					+ "receiving inbound data to be relayed",
+			usage = "socks5.onBind.relayInboundBandwidthLimit=INTEGER_BETWEEN_1_AND_2147483647"
+	)
+	public static final SettingSpec<PositiveInteger> SOCKS5_ON_BIND_RELAY_INBOUND_BANDWIDTH_LIMIT =
+			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
+					"socks5.onBind.relayInboundBandwidthLimit",
+					null));
+	
+	@HelpText(
+			doc = "The upper limit on bandwidth in bytes per second of "
+					+ "receiving outbound data to be relayed",
+			usage = "socks5.onBind.relayOutboundBandwidthLimit=INTEGER_BETWEEN_1_AND_2147483647"
+	)
+	public static final SettingSpec<PositiveInteger> SOCKS5_ON_BIND_RELAY_OUTBOUND_BANDWIDTH_LIMIT =
+			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
+					"socks5.onBind.relayOutboundBandwidthLimit",
+					null));
 
 	@HelpText(
 			doc = "The boolean value to indicate if the server-facing socket "
@@ -130,6 +150,26 @@ public final class Socks5SettingSpecConstants {
 			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
 					"socks5.onConnect.relayIdleTimeout", 
 					PositiveInteger.newInstance(60000))); // 1 minute
+	
+	@HelpText(
+			doc = "The upper limit on bandwidth in bytes per second of "
+					+ "receiving inbound data to be relayed",
+			usage = "socks5.onConnect.relayInboundBandwidthLimit=INTEGER_BETWEEN_1_AND_2147483647"
+	)
+	public static final SettingSpec<PositiveInteger> SOCKS5_ON_CONNECT_RELAY_INBOUND_BANDWIDTH_LIMIT =
+			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
+					"socks5.onConnect.relayInboundBandwidthLimit",
+					null));
+	
+	@HelpText(
+			doc = "The upper limit on bandwidth in bytes per second of "
+					+ "receiving outbound data to be relayed",
+			usage = "socks5.onConnect.relayOutboundBandwidthLimit=INTEGER_BETWEEN_1_AND_2147483647"
+	)
+	public static final SettingSpec<PositiveInteger> SOCKS5_ON_CONNECT_RELAY_OUTBOUND_BANDWIDTH_LIMIT =
+			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
+					"socks5.onConnect.relayOutboundBandwidthLimit",
+					null));
 	
 	@HelpText(
 			doc = "The binding host name or address for the server-facing "
@@ -220,6 +260,26 @@ public final class Socks5SettingSpecConstants {
 			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
 					"socks5.onUdpAssociate.relayIdleTimeout", 
 					PositiveInteger.newInstance(60000))); // 1 minute
+	
+	@HelpText(
+			doc = "The upper limit on bandwidth in bytes per second of "
+					+ "receiving inbound data to be relayed",
+			usage = "socks5.onUdpAssociate.relayInboundBandwidthLimit=INTEGER_BETWEEN_1_AND_2147483647"
+	)
+	public static final SettingSpec<PositiveInteger> SOCKS5_ON_UDP_ASSOCIATE_RELAY_INBOUND_BANDWIDTH_LIMIT =
+			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
+					"socks5.onUdpAssociate.relayInboundBandwidthLimit",
+					null));
+	
+	@HelpText(
+			doc = "The upper limit on bandwidth in bytes per second of "
+					+ "receiving outbound data to be relayed",
+			usage = "socks5.onUdpAssociate.relayOutboundBandwidthLimit=INTEGER_BETWEEN_1_AND_2147483647"
+	)
+	public static final SettingSpec<PositiveInteger> SOCKS5_ON_UDP_ASSOCIATE_RELAY_OUTBOUND_BANDWIDTH_LIMIT =
+			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
+					"socks5.onUdpAssociate.relayOutboundBandwidthLimit",
+					null));
 	
 	@HelpText(
 			doc = "The user repository used for username password authentication", 

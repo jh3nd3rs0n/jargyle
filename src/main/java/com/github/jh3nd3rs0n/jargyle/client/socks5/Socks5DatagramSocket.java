@@ -11,6 +11,7 @@ import java.net.SocketAddress;
 import java.net.SocketException;
 import java.net.SocketOption;
 import java.nio.channels.DatagramChannel;
+import java.util.Arrays;
 import java.util.Set;
 
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
@@ -120,7 +121,8 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			this.datagramSocket.receive(p);
 			UdpRequestHeader header = null; 
 			try {
-				header = UdpRequestHeader.newInstance(p.getData());
+				header = UdpRequestHeader.newInstance(Arrays.copyOfRange(
+						p.getData(), 0, p.getLength()));
 			} catch (IllegalArgumentException e) {
 				throw new Socks5Exception(
 						"error in parsing UDP header request", e);
@@ -155,7 +157,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 					0,
 					address,
 					port,
-					p.getData()).toByteArray();
+					Arrays.copyOfRange(p.getData(), 0, p.getLength())).toByteArray();
 			p.setData(headerBytes, 0, headerBytes.length);
 			p.setLength(headerBytes.length);
 			p.setAddress(this.udpRelayServerInetAddress);

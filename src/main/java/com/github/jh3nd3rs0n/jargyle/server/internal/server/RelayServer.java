@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
 import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
 
 public final class RelayServer {
-
+	
 	public static final class Builder {
 	
 		public static final int DEFAULT_BUFFER_SIZE = 1024;

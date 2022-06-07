@@ -186,6 +186,36 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 		return relayIdleTimeout.intValue();
 	}
 	
+	private Integer getRelayInboundBandwidthLimit() {
+		PositiveInteger relayInboundBandwidthLimit =
+				this.applicableRule.getLastRuleResultValue(
+						Socks5RuleResultSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_RELAY_INBOUND_BANDWIDTH_LIMIT);
+		if (relayInboundBandwidthLimit != null) {
+			return Integer.valueOf(relayInboundBandwidthLimit.intValue());
+		}
+		relayInboundBandwidthLimit = this.settings.getLastValue(
+				Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_RELAY_INBOUND_BANDWIDTH_LIMIT);
+		if (relayInboundBandwidthLimit != null) {
+			return Integer.valueOf(relayInboundBandwidthLimit.intValue());
+		}
+		return null;
+	}
+	
+	private Integer getRelayOutboundBandwidthLimit() {
+		PositiveInteger relayOutboundBandwidthLimit =
+				this.applicableRule.getLastRuleResultValue(
+						Socks5RuleResultSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_RELAY_OUTBOUND_BANDWIDTH_LIMIT);
+		if (relayOutboundBandwidthLimit != null) {
+			return Integer.valueOf(relayOutboundBandwidthLimit.intValue());
+		}
+		relayOutboundBandwidthLimit = this.settings.getLastValue(
+				Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_RELAY_OUTBOUND_BANDWIDTH_LIMIT);
+		if (relayOutboundBandwidthLimit != null) {
+			return Integer.valueOf(relayOutboundBandwidthLimit.intValue());
+		}
+		return null;
+	}
+	
 	private DatagramSocket newClientFacingDatagramSocket() {
 		Host bindHost = this.getClientFacingBindHost();
 		InetAddress bindInetAddress = bindHost.toInetAddress();
@@ -308,6 +338,18 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 			if (!this.commandWorkerContext.sendSocks5Reply(
 					this, socks5Rep, LOGGER)) {
 				return;
+			}
+			Integer inboundBandwidthLimit = this.getRelayInboundBandwidthLimit();
+			Integer outboundBandwidthLimit = this.getRelayOutboundBandwidthLimit();
+			if (outboundBandwidthLimit != null) {
+				clientFacingDatagramSock = new BandwidthLimitedDatagramSocket(
+						clientFacingDatagramSock, 
+						outboundBandwidthLimit.intValue());
+			}
+			if (inboundBandwidthLimit != null) {
+				peerFacingDatagramSock = new BandwidthLimitedDatagramSocket(
+						peerFacingDatagramSock,
+						inboundBandwidthLimit.intValue());
 			}
 			UdpRelayServer.Builder builder = new UdpRelayServer.Builder(
 					desiredDestinationAddr, 

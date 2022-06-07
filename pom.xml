@@ -6,7 +6,7 @@
 	<artifactId>jargyle</artifactId>
 	<version>5.0.0-SNAPSHOT</version>
 	<name>Jargyle</name>
-	<description>A Java SOCKS5 server with SSL/TLS/DTLS and SOCKS server chaining with one or more SOCKS servers</description>
+	<description>A Java SOCKS5 server</description>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>

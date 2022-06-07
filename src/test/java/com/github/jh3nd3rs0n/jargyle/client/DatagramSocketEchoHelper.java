@@ -1,9 +1,5 @@
 package com.github.jh3nd3rs0n.jargyle.client;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -80,16 +76,9 @@ public final class DatagramSocketEchoHelper {
 					this.serverSocket.receive(packet);
 					InetAddress address = packet.getAddress();
 					int port = packet.getPort();
-					DataInputStream dataInputStream = new DataInputStream(
-							new ByteArrayInputStream(packet.getData()));
-					String string = dataInputStream.readUTF();
-					ByteArrayOutputStream byteArrayOutputStream = 
-							new ByteArrayOutputStream();
-					DataOutputStream dataOutputStream = 
-							new DataOutputStream(byteArrayOutputStream);
-					dataOutputStream.writeUTF(string);
-					dataOutputStream.flush();
-					byte[] stringBytes = byteArrayOutputStream.toByteArray();
+					String string = new String(Arrays.copyOfRange(
+							packet.getData(), 0, packet.getLength()));
+					byte[] stringBytes = string.getBytes();
 					packet = new DatagramPacket(
 							stringBytes, stringBytes.length, address, port);
 					this.serverSocket.send(packet);
@@ -144,22 +133,15 @@ public final class DatagramSocketEchoHelper {
 			}
 			echoDatagramSocket = netObjectFactory.newDatagramSocket(0);
 			echoDatagramSocket.connect(InetAddress.getLoopbackAddress(), port);
-			ByteArrayOutputStream byteArrayOutputStream = 
-					new ByteArrayOutputStream();
-			DataOutputStream dataOutputStream =	new DataOutputStream(
-					byteArrayOutputStream);
-			dataOutputStream.writeUTF(string);
-			dataOutputStream.flush();
-			byte[] buffer = byteArrayOutputStream.toByteArray();
+			byte[] buffer = string.getBytes();
 			DatagramPacket packet = new DatagramPacket(
 					buffer, buffer.length, InetAddress.getLoopbackAddress(), port);
 			echoDatagramSocket.send(packet);
 			buffer = new byte[BUFFER_SIZE];
 			packet = new DatagramPacket(buffer, buffer.length);
 			echoDatagramSocket.receive(packet);
-			DataInputStream dataInputStream = new DataInputStream(
-					new ByteArrayInputStream(packet.getData()));
-			returningString = dataInputStream.readUTF();
+			returningString = new String(Arrays.copyOfRange(
+					packet.getData(), 0, packet.getLength()));
 		} finally {
 			if (echoDatagramSocket != null) {
 				echoDatagramSocket.close();

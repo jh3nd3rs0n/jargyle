@@ -6,6 +6,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -258,7 +259,7 @@ final class UdpRelayServer {
 					0,
 					address,
 					port,
-					packet.getData());
+					Arrays.copyOfRange(packet.getData(), 0, packet.getLength()));
 			return header;
 		}
 		
@@ -552,7 +553,8 @@ final class UdpRelayServer {
 				final DatagramPacket packet) {
 			UdpRequestHeader header = null; 
 			try {
-				header = UdpRequestHeader.newInstance(packet.getData());
+				header = UdpRequestHeader.newInstance(Arrays.copyOfRange(
+						packet.getData(), 0, packet.getLength()));
 			} catch (IllegalArgumentException e) {
 				LOGGER.error( 
 						ObjectLogMessageHelper.objectLogMessage(

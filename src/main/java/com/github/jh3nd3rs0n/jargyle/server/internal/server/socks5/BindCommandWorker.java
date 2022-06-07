@@ -32,6 +32,7 @@ import com.github.jh3nd3rs0n.jargyle.server.Socks5RuleArgSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5RuleConditionSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5RuleResultSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
+import com.github.jh3nd3rs0n.jargyle.server.internal.server.BandwidthLimitedSocket;
 import com.github.jh3nd3rs0n.jargyle.server.internal.server.RelayServer;
 import com.github.jh3nd3rs0n.jargyle.server.internal.server.Rules;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Reply;
@@ -314,6 +315,36 @@ final class BindCommandWorker extends CommandWorker {
 		return relayIdleTimeout.intValue();
 	}
 	
+	private Integer getRelayInboundBandwidthLimit() {
+		PositiveInteger relayInboundBandwidthLimit =
+				this.applicableRule.getLastRuleResultValue(
+						Socks5RuleResultSpecConstants.SOCKS5_ON_BIND_RELAY_INBOUND_BANDWIDTH_LIMIT);
+		if (relayInboundBandwidthLimit != null) {
+			return Integer.valueOf(relayInboundBandwidthLimit.intValue());
+		}
+		relayInboundBandwidthLimit = this.settings.getLastValue(
+				Socks5SettingSpecConstants.SOCKS5_ON_BIND_RELAY_INBOUND_BANDWIDTH_LIMIT);
+		if (relayInboundBandwidthLimit != null) {
+			return Integer.valueOf(relayInboundBandwidthLimit.intValue());
+		}
+		return null;
+	}
+	
+	private Integer getRelayOutboundBandwidthLimit() {
+		PositiveInteger relayOutboundBandwidthLimit =
+				this.applicableRule.getLastRuleResultValue(
+						Socks5RuleResultSpecConstants.SOCKS5_ON_BIND_RELAY_OUTBOUND_BANDWIDTH_LIMIT);
+		if (relayOutboundBandwidthLimit != null) {
+			return Integer.valueOf(relayOutboundBandwidthLimit.intValue());
+		}
+		relayOutboundBandwidthLimit = this.settings.getLastValue(
+				Socks5SettingSpecConstants.SOCKS5_ON_BIND_RELAY_OUTBOUND_BANDWIDTH_LIMIT);
+		if (relayOutboundBandwidthLimit != null) {
+			return Integer.valueOf(relayOutboundBandwidthLimit.intValue());
+		}
+		return null;
+	}
+	
 	private RuleContext newSecondSocks5ReplyRuleContext(
 			final Socks5Reply socks5Rep,
 			final Socks5Reply secondSocks5Rep) {
@@ -419,8 +450,20 @@ final class BindCommandWorker extends CommandWorker {
 					this, socks5Rep, LOGGER)) {
 				return;
 			}
+			Integer inboundBandwidthLimit = this.getRelayInboundBandwidthLimit();
+			Integer outboundBandwidthLimit = this.getRelayOutboundBandwidthLimit();
+			Socket clientFacingSock = this.clientFacingSocket;
+			Socket inboundSock = inboundSocket;
+			if (outboundBandwidthLimit != null) {
+				clientFacingSock = new BandwidthLimitedSocket(
+						clientFacingSock, outboundBandwidthLimit.intValue());
+			}
+			if (inboundBandwidthLimit != null) {
+				inboundSock = new BandwidthLimitedSocket(
+						inboundSock, inboundBandwidthLimit.intValue());
+			}
 			RelayServer.Builder builder = new RelayServer.Builder(
-					this.clientFacingSocket, inboundSocket);
+					clientFacingSock, inboundSock);
 			builder.bufferSize(this.getRelayBufferSize());
 			builder.idleTimeout(this.getRelayIdleTimeout());
 			try {

@@ -10,7 +10,7 @@ import com.github.jh3nd3rs0n.jargyle.internal.help.HelpText;
 public enum LogAction {
 	
 	@HelpText(
-			doc = "Log at the WARNING level",
+			doc = "Log message as a warning message",
 			usage = "LOG_AS_WARNING"
 	)
 	LOG_AS_WARNING {
@@ -23,7 +23,7 @@ public enum LogAction {
 	},
 	
 	@HelpText(
-			doc = "Log at the INFO level",
+			doc = "Log message as an informational message",
 			usage = "LOG_AS_INFO"
 	)
 	LOG_AS_INFO {

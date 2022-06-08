@@ -50,12 +50,12 @@ Jargyle is a Java SOCKS5 server.
 -   [6. 13. 1. 1. 1. Address Range](#6-13-1-1-1-address-range)
 -   [6. 13. 1. 1. 2. Port Range](#6-13-1-1-2-port-range)
 -   [6. 13. 2. Rule Results](#6-13-2-rule-results)
--   [6. 13. 2. 1. Rule Results for Allowing or Denying Traffic](#6-13-2-1-rule-results-for-allowing-or-denying-traffic)
--   [6. 13. 2. 2. Rule Results for Allowing a Limited Number of Simultaneous Instances of Traffic](#6-13-2-2-rule-results-for-allowing-a-limited-number-of-simultaneous-instances-of-traffic)
--   [6. 13. 2. 3. Rule Results for Routing Traffic](#6-13-2-3-rule-results-for-routing-traffic)
--   [6. 13. 2. 4. Rule Results for Redirecting the Desired Destination](#6-13-2-4-rule-results-for-redirecting-the-desired-destination)
--   [6. 13. 2. 5. Rule Results for Limiting Bandwidth](#6-13-2-5-rule-results-for-limiting-bandwidth)
--   [6. 13. 2. 6. Rule Results for Configuring Sockets](#6-13-2-6-rule-results-for-configuring-sockets)
+-   [6. 13. 3. Allowing or Denying Traffic](#6-13-3-allowing-or-denying-traffic)
+-   [6. 13. 4. Allowing a Limited Number of Simultaneous Instances of Traffic](#6-13-4-allowing-a-limited-number-of-simultaneous-instances-of-traffic)
+-   [6. 13. 5. Routing Traffic](#6-13-5-routing-traffic)
+-   [6. 13. 6. Redirecting the Desired Destination](#6-13-6-redirecting-the-desired-destination)
+-   [6. 13. 7. Limiting Bandwidth](#6-13-7-limiting-bandwidth)
+-   [6. 13. 8. Configuring Sockets](#6-13-8-configuring-sockets)
 -   [6. 14. Miscellaneous Notes](#6-14-miscellaneous-notes)
 -   [6. 14. 1. Multiple Settings of the Same Name](#6-14-1-multiple-settings-of-the-same-name)
 -   [6. 14. 2. The SOCKS5 RESOLVE Command](#6-14-2-the-socks5-resolve-command)
@@ -628,10 +628,10 @@ The following is a list of available settings for the SOCKS server (displayed wh
       LOG_ACTIONS:
     
         LOG_AS_WARNING
-            Log at the WARNING level
+            Log message as a warning message
     
         LOG_AS_INFO
-            Log at the INFO level
+            Log message as an informational message
     
       SCHEMES:
     
@@ -2424,7 +2424,7 @@ Unless otherwise stated, if a rule result of the same name appears more than onc
 
 A complete listing of rule results can be found in the [settings help](#6-1-4-settings-help) under `SETTING VALUE SYNTAXES` > `GENERAL_RULE_RESULTS` and `SETTING VALUE SYNTAXES` > `SOCKS5_RULE_RESULTS`.
 
-##### 6. 13. 2. 1. Rule Results for Allowing or Denying Traffic
+#### 6. 13. 3. Allowing or Denying Traffic
 
 To allow or deny a specific instance of traffic, you will need the following rule result:
 
@@ -2502,7 +2502,7 @@ Partial configuration file example:
                 </ruleResult>                
             </ruleResults>
         </rule>
-        <!-- Deny any BIND or UDP ASSOCIATE commands and log at the warning level if they are denied -->
+        <!-- Deny any BIND or UDP ASSOCIATE commands and log as a warning message if they are denied -->
     </setting>
     <setting>
         <name>rule</name>
@@ -2520,7 +2520,7 @@ Partial configuration file example:
     
 ```
 
-##### 6. 13. 2. 2. Rule Results for Allowing a Limited Number of Simultaneous Instances of Traffic
+#### 6. 13. 4. Allowing a Limited Number of Simultaneous Instances of Traffic
 
 To allow a limited number of simultaneous specific instances of traffic, you will need the following rule result:
 
@@ -2589,7 +2589,7 @@ Partial configuration file example:
                 </ruleResult>
             </ruleResults>
         </rule>
-        <!-- Allow the user 'guest' from username password authentication 50 simultaneous connections and log at the info level to know if the limit has been reached -->
+        <!-- Allow the user 'guest' from username password authentication 50 simultaneous connections and log as an informational message that the limit has been reached -->
     </setting>
     <setting>
         <name>rule</name>
@@ -2607,7 +2607,7 @@ Partial configuration file example:
     
 ```
 
-##### 6. 13. 2. 3. Rule Results for Routing Traffic
+#### 6. 13. 5. Routing Traffic
 
 To route traffic, you will need the following rule results:
 
@@ -2679,7 +2679,7 @@ Partial configuration file example:
                 </ruleResult>
             </ruleResults>
         </rule>
-        <!-- Randomly select either route 'alpha', 'beta' or 'delta' when allowing the CONNECT command and log at the info level to know which route has been selected -->
+        <!-- Randomly select either route 'alpha', 'beta' or 'delta' when allowing the CONNECT command and log as an informational message the route that has been selected -->
     </setting>
     <setting>
         <name>rule</name>
@@ -2705,7 +2705,7 @@ Partial configuration file example:
     
 ```
 
-##### 6. 13. 2. 4. Rule Results for Redirecting the Desired Destination
+#### 6. 13. 6. Redirecting the Desired Destination
 
 To redirect the desired destination, you will need either or both of the following rule results:
 
@@ -2765,7 +2765,7 @@ Partial configuration file example:
                 </ruleResult>
             </ruleResults>
         </rule>
-        <!-- Redirect desired destination 'discontinuedserver.com' to 'newserver.com' and log at the info level the redirection -->
+        <!-- Redirect desired destination 'discontinuedserver.com' to 'newserver.com' and log as an informational message the redirection -->
     </setting>
     <setting>
         <name>rule</name>
@@ -2783,7 +2783,7 @@ Partial configuration file example:
     
 ```
 
-##### 6. 13. 2. 5. Rule Results for Limiting Bandwidth
+#### 6. 13. 7. Limiting Bandwidth
 
 To limit the bandwidth, you will need any of the following rule results:
 
@@ -2869,7 +2869,7 @@ Partial configuration file example:
     
 ```
 
-##### 6. 13. 2. 6. Rule Results for Configuring Sockets
+#### 6. 13. 8. Configuring Sockets
 
 To configure the sockets, you will need any of the following rule results:
 

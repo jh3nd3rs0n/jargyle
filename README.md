@@ -2366,7 +2366,7 @@ Partial configuration file examples:
 ```xml
     
     <ruleConditions/>
-    <!-- evaluates as true since there are no rule conditions are given -->
+    <!-- evaluates as true since there are no rule conditions given -->
     
 ```
 

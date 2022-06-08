@@ -2833,7 +2833,7 @@ Partial configuration file example:
                 </ruleCondition>            
                 <ruleCondition>
                     <name>socks5.desiredDestinationAddress</name>
-                    <value>regex:.*streamingwebsite.*</value>
+                    <value>streamingwebsite.com</value>
                 </ruleCondition>
             </ruleConditions>
             <ruleResults>
@@ -2845,9 +2845,13 @@ Partial configuration file example:
                     <name>socks5.onConnect.relayInboundBandwidthLimit</name>
                     <value>1024000</value>
                 </ruleResult>
+                <ruleResult>
+                    <name>socks5.onConnect.relayOutboundBandwidthLimit</name>
+                    <value>1024000</value>
+                </ruleResult>                
             </ruleResults>
         </rule>
-        <!-- Allow the CONNECT command to connect to any address containing the phrase 'streamingwebsite' with an upper limit on bandwidth of 1024000 bytes per second on receiving inbound data -->
+        <!-- Allow the CONNECT command to connect to 'streamingwebsite.com' with an upper limit on bandwidth of 1024000 bytes per second -->
     </setting>
     <setting>
         <name>rule</name>
@@ -2879,7 +2883,7 @@ To configure the sockets, you will need any of the following rule results:
 
 -   `socks5.onConnect.prepareServerFacingSocket`: Specifies the boolean value to indicate if the server-facing socket is to be prepared before connecting (involves applying the specified socket settings, resolving the target host name, and setting the specified timeout on waiting to connect)
 
--   `socks5.onConnect.relayBufferSize`: Specifies the buffer size in bytes for relaying the data (Value must be an integer between 1 (inclusive) and 2147483647(inclusive))
+-   `socks5.onConnect.relayBufferSize`: Specifies the buffer size in bytes for relaying the data (Value must be an integer between 1 (inclusive) and 2147483647 (inclusive))
 
 -   `socks5.onConnect.relayIdleTimeout`: Specifies the timeout in milliseconds on relaying no data (Value must be an integer between 1 (inclusive) and 2147483647
 (inclusive))

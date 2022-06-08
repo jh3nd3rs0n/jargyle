@@ -2814,7 +2814,7 @@ Partial command line example:
 
 ```text
     
-    "--setting=rule=socks5.command=CONNECT socks5.desiredDestinationAddress=regex:.*streamingwebsite.* firewallAction=ALLOW socks5.onConnect.relayInboundBandwidthLimit=1024000" \
+    "--setting=rule=socks5.command=CONNECT socks5.desiredDestinationAddress=streamingwebsite.com firewallAction=ALLOW socks5.onConnect.relayInboundBandwidthLimit=1024000 socks5.onConnect.relayOutboundBandwidthLimit=1024000" \
     --setting=rule=firewallAction=ALLOW
     
 ```
@@ -2924,7 +2924,8 @@ Partial command line example:
 
 ```text
     
-    "--setting=rule=firewallAction=ALLOW socks5.onBind.inboundSocketSetting=SO_RCVBUF=256 socks5.onBind.inboundSocketSetting=SO_SNDBUF=256 socks5.onConnect.prepareServerFacingSocket=true socks5.onConnect.serverFacingSocketSetting=SO_RCVBUF=256 socks5.onConnect.serverFacingSocketSetting=SO_SNDBUF=256"
+    "--setting=rule=socks5.command=CONNECT socks5.desiredDestinationAddress=specialserver.com firewallAction=ALLOW socks5.onConnect.prepareServerFacingSocket=true socks5.onConnect.serverFacingSocketSetting=SO_RCVBUF=256 socks5.onConnect.serverFacingSocketSetting=SO_SNDBUF=256" \
+    --setting=rule=firewallAction=ALLOW
     
 ```
 
@@ -2935,25 +2936,20 @@ Partial configuration file example:
     <setting>
         <name>rule</name>
         <rule>
-            <ruleConditions/>
+            <ruleConditions>
+                <ruleCondition>
+                    <name>socks5.command</name>
+                    <value>CONNECT</value>
+                </ruleCondition>            
+                <ruleCondition>
+                    <name>socks5.desiredDestinationAddress</name>
+                    <value>specialserver.com</value>
+                </ruleCondition>
+            </ruleConditions>
             <ruleResults>
                 <ruleResult>
                     <name>firewallAction</name>
                     <value>ALLOW</value>
-                </ruleResult>
-                <ruleResult>
-                    <name>socks5.onBind.inboundSocketSetting</name>
-                    <socketSetting>
-                        <name>SO_RCVBUF</name>
-                        <value>256</value>
-                    </socketSetting>
-                </ruleResult>
-                <ruleResult>
-                    <name>socks5.onBind.inboundSocketSetting</name>
-                    <socketSetting>
-                        <name>SO_SNDBUF</name>
-                        <value>256</value>
-                    </socketSetting>
                 </ruleResult>
                 <ruleResult>
                     <name>socks5.onConnect.prepareServerFacingSocket</name>
@@ -2975,8 +2971,21 @@ Partial configuration file example:
                 </ruleResult>
             </ruleResults>
         </rule>
-        <!-- Configure the inbound socket for the BIND command and the server-facing socket for the CONNECT command -->
-    </setting>    
+        <!-- Allow the CONNECT command to connect to 'specialserver.com' and configure the server-facing socket for the CONNECT command -->
+    </setting>
+    <setting>
+        <name>rule</name>
+        <rule>
+            <ruleConditions/>
+            <ruleResults>
+                <ruleResult>
+                    <name>firewallAction</name>
+                    <value>ALLOW</value>
+                </ruleResult>
+            </ruleResults>
+        </rule>
+        <!-- Allow anything else -->
+    </setting>
     
 ```
 

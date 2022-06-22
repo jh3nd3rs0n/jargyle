@@ -1242,7 +1242,7 @@ Also, you will need to have the setting `socks5.userpassauth.userRepository` to 
 The following are two provided classes you can use:
 
 -   `com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.StringSourceUserRepository`
--   `com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.XmlFileSourceUserRepository`
+-   `com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.CsvFileSourceUserRepository`
 
 `com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.StringSourceUserRepository`: This class handles the storage of the users from the initialization string value of a space separated list of username password values.
 
@@ -1291,14 +1291,14 @@ Partial configuration file example:
     
 ```
 
-`com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.XmlFileSourceUserRepository`: This class handles the storage of the users from an XML file whose name is provided as an initialization string value. The users from the XML file are loaded onto memory. Because of this, you will need at least as much memory as the size of the XML file. If the XML file does not exist, it will be created and used. If the XML file does exist, the existing XML file will be used. To manage users under this user repository, see [Managing Users](#6-9-2-1-managing-users).
+`com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.CsvFileSourceUserRepository`: This class handles the storage of the users from a CSV file whose name is provided as an initialization string value. The users from the CSV file are loaded onto memory. Because of this, you will need at least as much memory as the size of the CSV file. If the CSV file does not exist, it will be created and used. If the CSV file does exist, the existing CSV file will be used. To manage users under a user repository, see [Managing Users](#6-9-2-1-managing-users).
 
 Partial command line example:
 
 ```text
     
     --setting=socks5.methods=USERNAME_PASSWORD \
-    --setting=socks5.userpassauth.userRepository=com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.XmlFileSourceUserRepository:users.xml
+    --setting=socks5.userpassauth.userRepository=com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.CsvFileSourceUserRepository:users.csv
     
 ```
 
@@ -1313,8 +1313,8 @@ Partial configuration file example:
     <setting>
         <name>socks5.userpassauth.userRepository</name>
         <userRepository>
-            <className>com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.XmlFileSourceUserRepository</className>
-            <initializationValue>users.xml</initializationValue>
+            <className>com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.CsvFileSourceUserRepository</className>
+            <initializationValue>users.csv</initializationValue>
         </userRepository>
     </setting>
     
@@ -1326,7 +1326,7 @@ You can manage users by first specifying a user repository that handles the stor
 
 The following is one provided class you can use:
 
--   `com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.XmlFileSourceUserRepository`: This class handles the storage of the users from an XML file whose name is provided as an initialization string value. The users from the XML file are loaded onto memory. Because of this, you will need at least as much memory as the size of the XML file. If the XML file does not exist, it will be created and used. If the XML file does exist, the existing XML file will be used. 
+-   `com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.CsvFileSourceUserRepository`: This class handles the storage of the users from a CSV file whose name is provided as an initialization string value. The users from the CSV file are loaded onto memory. Because of this, you will need at least as much memory as the size of the CSV file. If the CSV file does not exist, it will be created and used. If the CSV file does exist, the existing CSV file will be used. 
 
 ##### 6. 9. 2. 1. 1. Adding Users
 
@@ -1344,7 +1344,7 @@ Once you have run the command, an interactive prompt will ask you for the new us
 
 ```text
     
-    ./bin/jargyle manage-socks5-users com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.XmlFileSourceUserRepository:users.xml add
+    ./bin/jargyle manage-socks5-users com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.CsvFileSourceUserRepository:users.csv add
     User
     Name: Aladdin
     Password: 
@@ -1388,7 +1388,7 @@ Once you have run the command, it will list all the users from the user reposito
 
 ```text
     
-    ./bin/jargyle manage-socks5-users com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.XmlFileSourceUserRepository:users.xml list
+    ./bin/jargyle manage-socks5-users com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.CsvFileSourceUserRepository:users.csv list
     Aladdin
     Jasmine
     Abu
@@ -1412,7 +1412,7 @@ Once you have run the command, the user of the specified name will be removed fr
 
 ```text
     
-    ./bin/jargyle manage-socks5-users com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.XmlFileSourceUserRepository:users.xml remove Jafar
+    ./bin/jargyle manage-socks5-users com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.CsvFileSourceUserRepository:users.csv remove Jafar
     User 'Jafar' removed
     
 ```

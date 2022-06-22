@@ -15,25 +15,10 @@ import com.github.jh3nd3rs0n.jargyle.server.ConfigurationFileCreatorCLI;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServerCLI;
 import com.github.jh3nd3rs0n.jargyle.server.internal.config.xml.bind.ConfigurationXsd;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.UserManagerCLI;
-import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.internal.users.xml.bind.UsersXsd;
 
 public final class JargyleCLI extends CLI {
 
 	private static enum Command {
-		
-		CONFIGURATION_XSD("configuration-xsd") {
-			
-			@Override
-			public void invoke(
-					final String progName, 
-					final String progBeginningUsage, 
-					final String[] args, 
-					final boolean posixCorrect)
-					throws TerminationRequestedException {
-				ConfigurationXsd.main(new String[] { });
-			}
-			
-		},
 		
 		@HelpText(
 				doc = "Manage SOCKS5 users", 
@@ -81,6 +66,20 @@ public final class JargyleCLI extends CLI {
 			}
 		},
 		
+		SERVER_CONFIG_FILE_SCHEMA("server-config-file-schema") {
+			
+			@Override
+			public void invoke(
+					final String progName, 
+					final String progBeginningUsage, 
+					final String[] args, 
+					final boolean posixCorrect)
+					throws TerminationRequestedException {
+				ConfigurationXsd.main(new String[] { });
+			}
+			
+		},
+		
 		@HelpText(
 				doc = "Start the SOCKS server", 
 				usage = "start-server [OPTIONS] [MONITORED_CONFIG_FILE]"
@@ -100,20 +99,6 @@ public final class JargyleCLI extends CLI {
 						args,
 						posixCorrect);
 				cli.handleArgs();
-			}
-			
-		},
-		
-		USERS_XSD("users-xsd") {
-			
-			@Override
-			public void invoke(
-					final String progName, 
-					final String progBeginningUsage, 
-					final String[] args, 
-					final boolean posixCorrect)
-					throws TerminationRequestedException {
-				UsersXsd.main(new String[] { });
 			}
 			
 		};

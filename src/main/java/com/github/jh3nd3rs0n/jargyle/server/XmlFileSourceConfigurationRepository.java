@@ -116,9 +116,9 @@ public final class XmlFileSourceConfigurationRepository
 			final File xmlFile, final Configuration configuration) {
 		FileOutputStream out = null;
 		try {
-			out = new FileOutputStream(xmlFile);
 			ConfigurationXml configurationXml = new ConfigurationXml(
 					configuration);			
+			out = new FileOutputStream(xmlFile);
 			configurationXml.toXml(out);
 		} catch (FileNotFoundException e) {
 			throw new UncheckedIOException(e);
@@ -154,8 +154,7 @@ public final class XmlFileSourceConfigurationRepository
 	
 	@Override
 	public void set(final Configuration config) {
-		this.configuration = config;
-		writeConfigurationTo(this.xmlFile, this.configuration);
+		writeConfigurationTo(this.xmlFile, config);
 	}
 	
 	private void startMonitoringXmlFile() {

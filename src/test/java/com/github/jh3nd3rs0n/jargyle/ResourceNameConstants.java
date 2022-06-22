@@ -26,14 +26,14 @@ public final class ResourceNameConstants {
 	public static final String JARGYLE_SERVER_SUPPLEMENTED_CONFIGURATION_FILE = 
 			"com/github/jh3nd3rs0n/jargyle/server/supplemented_configuration.xml";
 	
-	public static final String JARGYLE_SERVER_SOCKS5_USERPASSAUTH_ADDED_USER_TO_USERS_XML_FILE =
-			"com/github/jh3nd3rs0n/jargyle/server/socks5/userpassauth/added_user_to_users.xml";
+	public static final String JARGYLE_SERVER_SOCKS5_USERPASSAUTH_ADDED_USER_TO_USERS_CSV_FILE =
+			"com/github/jh3nd3rs0n/jargyle/server/socks5/userpassauth/added_user_to_users.csv";
 	
-	public static final String JARGYLE_SERVER_SOCKS5_USERPASSAUTH_EMPTY_USERS_XML_FILE = 
-			"com/github/jh3nd3rs0n/jargyle/server/socks5/userpassauth/empty_users.xml";
+	public static final String JARGYLE_SERVER_SOCKS5_USERPASSAUTH_EMPTY_USERS_CSV_FILE = 
+			"com/github/jh3nd3rs0n/jargyle/server/socks5/userpassauth/empty_users.csv";
 	
-	public static final String JARGYLE_SERVER_SOCKS5_USERPASSAUTH_USERS_XML_FILE = 
-			"com/github/jh3nd3rs0n/jargyle/server/socks5/userpassauth/users.xml";
+	public static final String JARGYLE_SERVER_SOCKS5_USERPASSAUTH_USERS_CSV_FILE = 
+			"com/github/jh3nd3rs0n/jargyle/server/socks5/userpassauth/users.csv";
 	
 	private ResourceNameConstants() { }
 	

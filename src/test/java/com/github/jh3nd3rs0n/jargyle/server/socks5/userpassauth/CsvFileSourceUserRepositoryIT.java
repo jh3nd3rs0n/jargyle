@@ -16,26 +16,26 @@ import com.github.jh3nd3rs0n.jargyle.ResourceHelper;
 import com.github.jh3nd3rs0n.jargyle.ResourceNameConstants;
 import com.github.jh3nd3rs0n.jargyle.ThreadHelper;
 
-public class XmlFileSourceUserRepositoryIT {
+public class CsvFileSourceUserRepositoryIT {
 
 	private Path baseDir = null;
-	private Path usersXmlFile = null;
-	private XmlFileSourceUserRepository xmlFileSourceUserRepository = null;
+	private Path usersCsvFile = null;
+	private CsvFileSourceUserRepository csvFileSourceUserRepository = null;
 	
 	@Before
 	public void setUp() throws Exception {
 		this.baseDir = Files.createTempDirectory("com.github.jh3nd3rs0n.jargyle-");
-		this.usersXmlFile = this.baseDir.resolve("users.xml");
+		this.usersCsvFile = this.baseDir.resolve("users.csv");
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		if (this.xmlFileSourceUserRepository != null) {
-			this.xmlFileSourceUserRepository = null;
+		if (this.csvFileSourceUserRepository != null) {
+			this.csvFileSourceUserRepository = null;
 		}
-		if (this.usersXmlFile != null) {
-			FilesHelper.attemptsToDeleteIfExists(this.usersXmlFile);
-			this.usersXmlFile = null;
+		if (this.usersCsvFile != null) {
+			FilesHelper.attemptsToDeleteIfExists(this.usersCsvFile);
+			this.usersCsvFile = null;
 		}
 		if (this.baseDir != null) {
 			FilesHelper.attemptsToDeleteIfExists(this.baseDir);
@@ -44,40 +44,39 @@ public class XmlFileSourceUserRepositoryIT {
 	}
 
 	@Test
-	public void testForUpdatedUsersXmlFile01() throws IOException {
+	public void testForUpdatedUsersCsvFile01() throws IOException {
 		IoHelper.writeStringToFile(ResourceHelper.getResourceAsString(
-				ResourceNameConstants.JARGYLE_SERVER_SOCKS5_USERPASSAUTH_EMPTY_USERS_XML_FILE), 
-				this.usersXmlFile.toFile());
+				ResourceNameConstants.JARGYLE_SERVER_SOCKS5_USERPASSAUTH_EMPTY_USERS_CSV_FILE), 
+				this.usersCsvFile.toFile());
 		ThreadHelper.sleepForThreeSeconds();
-		this.xmlFileSourceUserRepository = 
-				XmlFileSourceUserRepository.newInstance(
-						this.usersXmlFile.toString());
+		this.csvFileSourceUserRepository = 
+				CsvFileSourceUserRepository.newInstance(
+						this.usersCsvFile.toString());
 		ThreadHelper.sleepForThreeSeconds();
 		IoHelper.writeStringToFile(ResourceHelper.getResourceAsString(
-				ResourceNameConstants.JARGYLE_SERVER_SOCKS5_USERPASSAUTH_USERS_XML_FILE), 
-				this.usersXmlFile.toFile());
+				ResourceNameConstants.JARGYLE_SERVER_SOCKS5_USERPASSAUTH_USERS_CSV_FILE), 
+				this.usersCsvFile.toFile());
 		ThreadHelper.sleepForThreeSeconds();
 		final int numOfUsersAdded = 3; 
-		assertTrue(this.xmlFileSourceUserRepository.getAll().toMap().size() == numOfUsersAdded);
+		assertTrue(this.csvFileSourceUserRepository.getAll().toMap().size() == numOfUsersAdded);
 	}
 
 	@Test
-	public void testForUpdatedUsersXmlFile02() throws IOException {
+	public void testForUpdatedUsersCsvFile02() throws IOException {
 		IoHelper.writeStringToFile(ResourceHelper.getResourceAsString(
-				ResourceNameConstants.JARGYLE_SERVER_SOCKS5_USERPASSAUTH_USERS_XML_FILE), 
-				this.usersXmlFile.toFile());
+				ResourceNameConstants.JARGYLE_SERVER_SOCKS5_USERPASSAUTH_USERS_CSV_FILE), 
+				this.usersCsvFile.toFile());
 		ThreadHelper.sleepForThreeSeconds();
-		this.xmlFileSourceUserRepository = 
-				XmlFileSourceUserRepository.newInstance(
-						this.usersXmlFile.toString());
+		this.csvFileSourceUserRepository = 
+				CsvFileSourceUserRepository.newInstance(
+						this.usersCsvFile.toString());
 		ThreadHelper.sleepForThreeSeconds();
 		IoHelper.writeStringToFile(ResourceHelper.getResourceAsString(
-				ResourceNameConstants.JARGYLE_SERVER_SOCKS5_USERPASSAUTH_ADDED_USER_TO_USERS_XML_FILE), 
-				this.usersXmlFile.toFile());
+				ResourceNameConstants.JARGYLE_SERVER_SOCKS5_USERPASSAUTH_ADDED_USER_TO_USERS_CSV_FILE), 
+				this.usersCsvFile.toFile());
 		ThreadHelper.sleepForThreeSeconds();
 		final int numOfUsersAdded = 4; 
-		assertTrue(this.xmlFileSourceUserRepository.getAll().toMap().size() == numOfUsersAdded);
+		assertTrue(this.csvFileSourceUserRepository.getAll().toMap().size() == numOfUsersAdded);
 	}
-
 
 }

@@ -10,6 +10,7 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.UncheckedIOException;
 import java.io.Writer;
+import java.nio.file.Files;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -115,10 +116,11 @@ public final class CsvFileSourceUserRepository extends UserRepository {
 	
 	private static void writeUsersTo(
 			final File csvFile, final Users users) {
+		File tempCsvFile = new File(csvFile.toString().concat(".tmp"));
 		Writer writer = null;
 		try {
 			UsersCsvTable usersCsvTable = UsersCsvTable.newInstance(users);
-			writer = new OutputStreamWriter(new FileOutputStream(csvFile));
+			writer = new OutputStreamWriter(new FileOutputStream(tempCsvFile));
 			usersCsvTable.toCsv(writer);
 		} catch (FileNotFoundException e) {
 			throw new UncheckedIOException(e);
@@ -134,6 +136,11 @@ public final class CsvFileSourceUserRepository extends UserRepository {
 					throw new UncheckedIOException(e);
 				}
 			}
+		}
+		try {
+			Files.move(tempCsvFile.toPath(), csvFile.toPath());
+		} catch (IOException e) {
+			throw new UncheckedIOException(e);
 		}
 	}
 	
@@ -190,9 +197,7 @@ public final class CsvFileSourceUserRepository extends UserRepository {
 	
 	private void update() {
 		Users usrs = readUsersFrom(this.csvFile);
-		if (!this.users.equals(usrs)) {
-			this.users = usrs;
-		}
+		this.users = usrs;
 	}
 
 }

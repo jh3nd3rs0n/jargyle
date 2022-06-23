@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.nio.file.Files;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -114,11 +115,12 @@ public final class XmlFileSourceConfigurationRepository
 	
 	private static void writeConfigurationTo(
 			final File xmlFile, final Configuration configuration) {
+		File tempXmlFile = new File(xmlFile.toString().concat(".tmp"));
 		FileOutputStream out = null;
 		try {
 			ConfigurationXml configurationXml = new ConfigurationXml(
 					configuration);			
-			out = new FileOutputStream(xmlFile);
+			out = new FileOutputStream(tempXmlFile);
 			configurationXml.toXml(out);
 		} catch (FileNotFoundException e) {
 			throw new UncheckedIOException(e);
@@ -132,6 +134,11 @@ public final class XmlFileSourceConfigurationRepository
 					throw new UncheckedIOException(e);
 				}				
 			}
+		}
+		try {
+			Files.move(tempXmlFile.toPath(), xmlFile.toPath());
+		} catch (IOException e) {
+			throw new UncheckedIOException(e);
 		}
 	}
 	
@@ -166,9 +173,7 @@ public final class XmlFileSourceConfigurationRepository
 
 	private void update() {
 		Configuration config = readConfigurationFrom(this.xmlFile);
-		if (!ConfigurationsHelper.equals(this.configuration, config)) {
-			this.configuration = config;
-		}
+		this.configuration = config;
 	}
 
 }

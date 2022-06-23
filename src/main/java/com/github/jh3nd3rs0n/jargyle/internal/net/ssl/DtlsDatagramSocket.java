@@ -499,7 +499,7 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 				this.handshake();
 			}
 			ByteBuffer outAppData = ByteBuffer.wrap(Arrays.copyOfRange(
-					p.getData(), 0, p.getLength()));
+					p.getData(), p.getOffset(), p.getLength()));
 			// Note: have not considered the packet losses
 			List<DatagramPacket> packets = this.produceApplicationPackets(
 					outAppData, p.getSocketAddress());

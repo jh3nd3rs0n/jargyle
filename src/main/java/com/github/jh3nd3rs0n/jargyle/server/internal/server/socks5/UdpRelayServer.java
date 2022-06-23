@@ -259,7 +259,10 @@ final class UdpRelayServer {
 					0,
 					address,
 					port,
-					Arrays.copyOfRange(packet.getData(), 0, packet.getLength()));
+					Arrays.copyOfRange(
+							packet.getData(), 
+							packet.getOffset(), 
+							packet.getLength()));
 			return header;
 		}
 		
@@ -554,7 +557,9 @@ final class UdpRelayServer {
 			UdpRequestHeader header = null; 
 			try {
 				header = UdpRequestHeader.newInstance(Arrays.copyOfRange(
-						packet.getData(), 0, packet.getLength()));
+						packet.getData(), 
+						packet.getOffset(), 
+						packet.getLength()));
 			} catch (IllegalArgumentException e) {
 				LOGGER.error( 
 						ObjectLogMessageHelper.objectLogMessage(

@@ -122,7 +122,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			UdpRequestHeader header = null; 
 			try {
 				header = UdpRequestHeader.newInstance(Arrays.copyOfRange(
-						p.getData(), 0, p.getLength()));
+						p.getData(), p.getOffset(), p.getLength()));
 			} catch (IllegalArgumentException e) {
 				throw new Socks5Exception(
 						"error in parsing UDP header request", e);
@@ -157,7 +157,10 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 					0,
 					address,
 					port,
-					Arrays.copyOfRange(p.getData(), 0, p.getLength())).toByteArray();
+					Arrays.copyOfRange(
+							p.getData(), 
+							p.getOffset(), 
+							p.getLength())).toByteArray();
 			p.setData(headerBytes, 0, headerBytes.length);
 			p.setLength(headerBytes.length);
 			p.setAddress(this.udpRelayServerInetAddress);

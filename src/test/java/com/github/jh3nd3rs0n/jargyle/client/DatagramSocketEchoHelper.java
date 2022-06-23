@@ -77,7 +77,9 @@ public final class DatagramSocketEchoHelper {
 					InetAddress address = packet.getAddress();
 					int port = packet.getPort();
 					String string = new String(Arrays.copyOfRange(
-							packet.getData(), 0, packet.getLength()));
+							packet.getData(), 
+							packet.getOffset(), 
+							packet.getLength()));
 					byte[] stringBytes = string.getBytes();
 					packet = new DatagramPacket(
 							stringBytes, stringBytes.length, address, port);
@@ -141,7 +143,7 @@ public final class DatagramSocketEchoHelper {
 			packet = new DatagramPacket(buffer, buffer.length);
 			echoDatagramSocket.receive(packet);
 			returningString = new String(Arrays.copyOfRange(
-					packet.getData(), 0, packet.getLength()));
+					packet.getData(), packet.getOffset(), packet.getLength()));
 		} finally {
 			if (echoDatagramSocket != null) {
 				echoDatagramSocket.close();

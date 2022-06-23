@@ -74,7 +74,8 @@ public final class GssDatagramSocket extends FilterDatagramSocket {
 	public synchronized void receive(DatagramPacket p) throws IOException {
 		super.receive(p);
 		if (this.messageProp != null) {
-			byte[] data = Arrays.copyOfRange(p.getData(), 0, p.getLength());
+			byte[] data = Arrays.copyOfRange(
+					p.getData(), p.getOffset(), p.getLength());
 			Message message = Message.newInstance(data);
 			byte[] token = message.getToken();
 			MessageProp prop = new MessageProp(0, false);
@@ -91,7 +92,8 @@ public final class GssDatagramSocket extends FilterDatagramSocket {
 	@Override
 	public void send(DatagramPacket p) throws IOException {
 		if (this.messageProp != null) {
-			byte[] data = Arrays.copyOfRange(p.getData(), 0, p.getLength());
+			byte[] data = Arrays.copyOfRange(
+					p.getData(), p.getOffset(), p.getLength());
 			int dataLength = data.length;
 			if (dataLength > this.wrapSizeLimit) {
 				dataLength = this.wrapSizeLimit;

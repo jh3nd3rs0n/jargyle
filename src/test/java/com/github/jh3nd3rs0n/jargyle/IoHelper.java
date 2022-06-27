@@ -13,6 +13,8 @@ import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 
 public final class IoHelper {
 
@@ -90,10 +92,16 @@ public final class IoHelper {
 	
 	public static void writeStringToFile(
 			final String string, final File file) throws IOException {
+		File tempFile = new File(file.toString().concat(".tmp"));
 		try (Writer writer = new OutputStreamWriter(
-				new FileOutputStream(file), Charset.forName("UTF-8"))) {
+				new FileOutputStream(tempFile), Charset.forName("UTF-8"))) {
 			writeStringThenFlush(string, writer);
 		}
+		Files.move(
+				tempFile.toPath(), 
+				file.toPath(),
+				StandardCopyOption.ATOMIC_MOVE, 
+				StandardCopyOption.REPLACE_EXISTING);
 	}
 	
 	public static void writeThenFlush(

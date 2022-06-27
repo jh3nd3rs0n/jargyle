@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -136,7 +137,11 @@ public final class XmlFileSourceConfigurationRepository
 			}
 		}
 		try {
-			Files.move(tempXmlFile.toPath(), xmlFile.toPath());
+			Files.move(
+					tempXmlFile.toPath(), 
+					xmlFile.toPath(),
+					StandardCopyOption.ATOMIC_MOVE, 
+					StandardCopyOption.REPLACE_EXISTING);
 		} catch (IOException e) {
 			throw new UncheckedIOException(e);
 		}

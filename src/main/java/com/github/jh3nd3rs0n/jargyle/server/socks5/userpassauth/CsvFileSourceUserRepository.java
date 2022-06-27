@@ -11,6 +11,7 @@ import java.io.Reader;
 import java.io.UncheckedIOException;
 import java.io.Writer;
 import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -138,7 +139,11 @@ public final class CsvFileSourceUserRepository extends UserRepository {
 			}
 		}
 		try {
-			Files.move(tempCsvFile.toPath(), csvFile.toPath());
+			Files.move(
+					tempCsvFile.toPath(), 
+					csvFile.toPath(),
+					StandardCopyOption.ATOMIC_MOVE,
+					StandardCopyOption.REPLACE_EXISTING);
 		} catch (IOException e) {
 			throw new UncheckedIOException(e);
 		}

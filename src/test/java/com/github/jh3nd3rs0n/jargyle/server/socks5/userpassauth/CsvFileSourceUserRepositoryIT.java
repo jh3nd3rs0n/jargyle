@@ -2,6 +2,7 @@ package com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth;
 
 import static org.junit.Assert.assertTrue;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -45,42 +46,50 @@ public class CsvFileSourceUserRepositoryIT {
 
 	@Test
 	public void testForUpdatedUsersCsvFile01() throws IOException {
+		File usrsCsvFile = this.usersCsvFile.toFile();
 		IoHelper.writeStringToFile(ResourceHelper.getResourceAsString(
 				ResourceNameConstants.JARGYLE_SERVER_SOCKS5_USERPASSAUTH_EMPTY_USERS_CSV_FILE), 
-				this.usersCsvFile.toFile());
+				usrsCsvFile);
 		ThreadHelper.sleepForThreeSeconds();
 		this.csvFileSourceUserRepository = 
-				CsvFileSourceUserRepository.newInstance(
-						this.usersCsvFile.toString());
+				CsvFileSourceUserRepository.newInstance(usrsCsvFile.toString());
 		ThreadHelper.sleepForThreeSeconds();
 		IoHelper.writeStringToFile(ResourceHelper.getResourceAsString(
 				ResourceNameConstants.JARGYLE_SERVER_SOCKS5_USERPASSAUTH_USERS_CSV_FILE), 
-				this.usersCsvFile.toFile());
+				usrsCsvFile);
 		ThreadHelper.sleepForThreeSeconds();
-		this.usersCsvFile.toFile().setLastModified(System.currentTimeMillis());
+		/* 
+		 * get FileMonitor to recognize file has been modified if it hasn't already
+		 * (occurs intermittently in Windows) 
+		 */
+		usrsCsvFile.setLastModified(System.currentTimeMillis());
 		ThreadHelper.sleepForThreeSeconds();
-		final int numOfUsersAdded = 3; 
-		assertTrue(this.csvFileSourceUserRepository.getAll().toMap().size() == numOfUsersAdded);
+		final int userCount = 3; 
+		assertTrue(this.csvFileSourceUserRepository.getAll().toMap().size() == userCount);
 	}
 
 	@Test
 	public void testForUpdatedUsersCsvFile02() throws IOException {
+		File usrsCsvFile = this.usersCsvFile.toFile();
 		IoHelper.writeStringToFile(ResourceHelper.getResourceAsString(
 				ResourceNameConstants.JARGYLE_SERVER_SOCKS5_USERPASSAUTH_USERS_CSV_FILE), 
-				this.usersCsvFile.toFile());
+				usrsCsvFile);
 		ThreadHelper.sleepForThreeSeconds();
 		this.csvFileSourceUserRepository = 
-				CsvFileSourceUserRepository.newInstance(
-						this.usersCsvFile.toString());
+				CsvFileSourceUserRepository.newInstance(usrsCsvFile.toString());
 		ThreadHelper.sleepForThreeSeconds();
 		IoHelper.writeStringToFile(ResourceHelper.getResourceAsString(
 				ResourceNameConstants.JARGYLE_SERVER_SOCKS5_USERPASSAUTH_ADDED_USER_TO_USERS_CSV_FILE), 
-				this.usersCsvFile.toFile());
+				usrsCsvFile);
 		ThreadHelper.sleepForThreeSeconds();
-		this.usersCsvFile.toFile().setLastModified(System.currentTimeMillis());
+		/* 
+		 * get FileMonitor to recognize file has been modified if it hasn't already
+		 * (occurs intermittently in Windows) 
+		 */		
+		usrsCsvFile.setLastModified(System.currentTimeMillis());
 		ThreadHelper.sleepForThreeSeconds();		
-		final int numOfUsersAdded = 4; 
-		assertTrue(this.csvFileSourceUserRepository.getAll().toMap().size() == numOfUsersAdded);
+		final int userCount = 4; 
+		assertTrue(this.csvFileSourceUserRepository.getAll().toMap().size() == userCount);
 	}
 
 }

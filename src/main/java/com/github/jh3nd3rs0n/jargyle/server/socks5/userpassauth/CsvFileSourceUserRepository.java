@@ -203,12 +203,12 @@ public final class CsvFileSourceUserRepository extends UserRepository {
 				new UsersFileStatusListener(this)));
 	}
 	
-	private void updateFrom(final Users usrs) {
+	private synchronized void updateFrom(final Users usrs) {
 		writeUsersTo(this.csvFile, usrs);
 		this.updateUsers(usrs);
 	}
 	
-	private void updateFromCsvFile() {
+	private synchronized void updateFromCsvFile() {
 		if (this.csvFile.exists() 
 				&& this.csvFile.lastModified() > this.lastUpdated.longValue()) {
 			Users usrs = readUsersFrom(this.csvFile);

@@ -2,6 +2,7 @@ package com.github.jh3nd3rs0n.jargyle.server;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -47,19 +48,23 @@ public class XmlFileSourceConfigurationRepositoryIT {
 
 	@Test
 	public void testForUpdatedConfigurationFile01() throws IOException {
+		File configFile = this.configurationFile.toFile();
 		IoHelper.writeStringToFile(ResourceHelper.getResourceAsString(
 				ResourceNameConstants.JARGYLE_SERVER_EMPTY_CONFIGURATION_FILE), 
-				this.configurationFile.toFile());
+				configFile);
 		ThreadHelper.sleepForThreeSeconds();		
 		this.xmlFileSourceConfigurationRepository = 
-				XmlFileSourceConfigurationRepository.newInstance(
-						this.configurationFile.toFile());
+				XmlFileSourceConfigurationRepository.newInstance(configFile);
 		ThreadHelper.sleepForThreeSeconds();
 		IoHelper.writeStringToFile(ResourceHelper.getResourceAsString(
 				ResourceNameConstants.JARGYLE_SERVER_CONFIGURATION_FILE), 
-				this.configurationFile.toFile());
+				configFile);
 		ThreadHelper.sleepForThreeSeconds();
-		this.configurationFile.toFile().setLastModified(System.currentTimeMillis());
+		/* 
+		 * get FileMonitor to recognize file has been modified if it hasn't already
+		 * (occurs intermittently in Windows) 
+		 */
+		configFile.setLastModified(System.currentTimeMillis());
 		ThreadHelper.sleepForThreeSeconds();
 		Configuration configuration = 
 				this.xmlFileSourceConfigurationRepository.get();
@@ -72,19 +77,23 @@ public class XmlFileSourceConfigurationRepositoryIT {
 
 	@Test
 	public void testForUpdatedConfigurationFile02() throws IOException {
+		File configFile = this.configurationFile.toFile();
 		IoHelper.writeStringToFile(ResourceHelper.getResourceAsString(
 				ResourceNameConstants.JARGYLE_SERVER_EMPTY_CONFIGURATION_FILE), 
-				this.configurationFile.toFile());
+				configFile);
 		ThreadHelper.sleepForThreeSeconds();		
 		this.xmlFileSourceConfigurationRepository = 
-				XmlFileSourceConfigurationRepository.newInstance(
-						this.configurationFile.toFile());
+				XmlFileSourceConfigurationRepository.newInstance(configFile);
 		ThreadHelper.sleepForThreeSeconds();
 		IoHelper.writeStringToFile(ResourceHelper.getResourceAsString(
 				ResourceNameConstants.JARGYLE_SERVER_CONFIGURATION_FILE), 
-				this.configurationFile.toFile());
+				configFile);
 		ThreadHelper.sleepForThreeSeconds();
-		this.configurationFile.toFile().setLastModified(System.currentTimeMillis());		
+		/* 
+		 * get FileMonitor to recognize file has been modified if it hasn't already
+		 * (occurs intermittently in Windows) 
+		 */		
+		configFile.setLastModified(System.currentTimeMillis());		
 		ThreadHelper.sleepForThreeSeconds();
 		Configuration configuration = 
 				this.xmlFileSourceConfigurationRepository.get();

@@ -184,12 +184,12 @@ public final class XmlFileSourceConfigurationRepository
 		this.lastUpdated.set(System.currentTimeMillis());
 	}
 	
-	private void updateFrom(final Configuration config) {
+	private synchronized void updateFrom(final Configuration config) {
 		writeConfigurationTo(this.xmlFile, config);		
 		this.updateConfiguration(config);
 	}
 
-	private void updateFromXmlFile() {
+	private synchronized void updateFromXmlFile() {
 		if (this.xmlFile.exists() 
 				&& this.xmlFile.lastModified() > this.lastUpdated.longValue()) {
 			Configuration config = readConfigurationFrom(this.xmlFile);

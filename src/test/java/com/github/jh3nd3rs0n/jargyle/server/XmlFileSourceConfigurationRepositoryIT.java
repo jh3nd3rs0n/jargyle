@@ -59,6 +59,8 @@ public class XmlFileSourceConfigurationRepositoryIT {
 				ResourceNameConstants.JARGYLE_SERVER_CONFIGURATION_FILE), 
 				this.configurationFile.toFile());
 		ThreadHelper.sleepForThreeSeconds();
+		this.configurationFile.toFile().setLastModified(System.currentTimeMillis());
+		ThreadHelper.sleepForThreeSeconds();
 		Configuration configuration = 
 				this.xmlFileSourceConfigurationRepository.get();
 		Settings settings = configuration.getSettings();
@@ -81,6 +83,8 @@ public class XmlFileSourceConfigurationRepositoryIT {
 		IoHelper.writeStringToFile(ResourceHelper.getResourceAsString(
 				ResourceNameConstants.JARGYLE_SERVER_CONFIGURATION_FILE), 
 				this.configurationFile.toFile());
+		ThreadHelper.sleepForThreeSeconds();
+		this.configurationFile.toFile().setLastModified(System.currentTimeMillis());		
 		ThreadHelper.sleepForThreeSeconds();
 		Configuration configuration = 
 				this.xmlFileSourceConfigurationRepository.get();

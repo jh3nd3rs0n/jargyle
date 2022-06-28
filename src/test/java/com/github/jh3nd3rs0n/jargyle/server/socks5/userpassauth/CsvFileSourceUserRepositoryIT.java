@@ -57,6 +57,8 @@ public class CsvFileSourceUserRepositoryIT {
 				ResourceNameConstants.JARGYLE_SERVER_SOCKS5_USERPASSAUTH_USERS_CSV_FILE), 
 				this.usersCsvFile.toFile());
 		ThreadHelper.sleepForThreeSeconds();
+		this.usersCsvFile.toFile().setLastModified(System.currentTimeMillis());
+		ThreadHelper.sleepForThreeSeconds();
 		final int numOfUsersAdded = 3; 
 		assertTrue(this.csvFileSourceUserRepository.getAll().toMap().size() == numOfUsersAdded);
 	}
@@ -75,6 +77,8 @@ public class CsvFileSourceUserRepositoryIT {
 				ResourceNameConstants.JARGYLE_SERVER_SOCKS5_USERPASSAUTH_ADDED_USER_TO_USERS_CSV_FILE), 
 				this.usersCsvFile.toFile());
 		ThreadHelper.sleepForThreeSeconds();
+		this.usersCsvFile.toFile().setLastModified(System.currentTimeMillis());
+		ThreadHelper.sleepForThreeSeconds();		
 		final int numOfUsersAdded = 4; 
 		assertTrue(this.csvFileSourceUserRepository.getAll().toMap().size() == numOfUsersAdded);
 	}

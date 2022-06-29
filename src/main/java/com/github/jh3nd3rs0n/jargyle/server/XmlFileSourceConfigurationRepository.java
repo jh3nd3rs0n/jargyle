@@ -43,9 +43,7 @@ public final class XmlFileSourceConfigurationRepository
 			LOGGER.info(String.format(
 					"File '%s' created",
 					file));
-			if (this.updateConfigurationRepositoryFrom(file)) {
-				LOGGER.info("In-memory copy is up to date");
-			}
+			this.updateConfigurationRepositoryFrom(file);
 		}
 
 		@Override
@@ -60,23 +58,20 @@ public final class XmlFileSourceConfigurationRepository
 			LOGGER.info(String.format(
 					"File '%s' modified",
 					file));
-			if (this.updateConfigurationRepositoryFrom(file)) {
-				LOGGER.info("In-memory copy is up to date");
-			}
+			this.updateConfigurationRepositoryFrom(file);
 		}
 		
-		private boolean updateConfigurationRepositoryFrom(final File file) {
+		private void updateConfigurationRepositoryFrom(final File file) {
 			try {
 				this.configurationRepository.updateFromXmlFile();
+				LOGGER.info("In-memory copy is up to date");
 			} catch (UncheckedIOException e) {
 				LOGGER.error(
 						String.format(
 								"Error in reading file '%s'", 
 								file), 
 						e);
-				return false;
 			}
-			return true;
 		}
 		
 	}

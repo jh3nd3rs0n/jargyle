@@ -43,9 +43,7 @@ public final class CsvFileSourceUserRepository extends UserRepository {
 			LOGGER.info(String.format(
 					"File '%s' created",
 					file));
-			if (this.updateUserRepositoryFrom(file)) {
-				LOGGER.info("In-memory copy is up to date");
-			}
+			this.updateUserRepositoryFrom(file);
 		}
 		
 		@Override
@@ -60,23 +58,20 @@ public final class CsvFileSourceUserRepository extends UserRepository {
 			LOGGER.info(String.format(
 					"File '%s' modified",
 					file));
-			if (this.updateUserRepositoryFrom(file)) {
-				LOGGER.info("In-memory copy is up to date");
-			}
+			this.updateUserRepositoryFrom(file);
 		}
 		
-		private boolean updateUserRepositoryFrom(final File file) {
+		private void updateUserRepositoryFrom(final File file) {
 			try {
 				this.userRepository.updateFromCsvFile();
+				LOGGER.info("In-memory copy is up to date");
 			} catch (UncheckedIOException e) {
 				LOGGER.error( 
 						String.format(
 								"Error in reading file '%s'", 
 								file), 
 						e);
-				return false;				
 			}
-			return true;
 		}
 		
 	}

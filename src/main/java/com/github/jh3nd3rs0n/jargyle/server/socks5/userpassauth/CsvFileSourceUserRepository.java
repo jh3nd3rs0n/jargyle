@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
 
 import com.github.jh3nd3rs0n.jargyle.server.internal.io.FileMonitor;
 import com.github.jh3nd3rs0n.jargyle.server.internal.io.FileStatusListener;
-import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.internal.users.csv.bind.UsersCsvTable;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.internal.users.csv.bind.UsersCsvTableHelper;
 
 public final class CsvFileSourceUserRepository extends UserRepository {
 	
@@ -89,10 +89,10 @@ public final class CsvFileSourceUserRepository extends UserRepository {
 			return Users.newInstance();
 		}
 		Reader reader = null;
-		UsersCsvTable usersCsvTable = null;
+		Users users = null;
 		try {
 			reader = new InputStreamReader(new FileInputStream(csvFile));
-			usersCsvTable = UsersCsvTable.newInstanceFrom(reader);
+			users = UsersCsvTableHelper.newUsersFrom(reader);
 		} catch (FileNotFoundException e) {
 			throw new UncheckedIOException(e);
 		} catch (IOException e) {
@@ -108,7 +108,7 @@ public final class CsvFileSourceUserRepository extends UserRepository {
 				}
 			}
 		}
-		return usersCsvTable.toUsers();
+		return users;
 	}
 	
 	private static void writeUsersTo(
@@ -116,9 +116,8 @@ public final class CsvFileSourceUserRepository extends UserRepository {
 		File tempCsvFile = new File(csvFile.toString().concat(".tmp"));
 		Writer writer = null;
 		try {
-			UsersCsvTable usersCsvTable = UsersCsvTable.newInstance(users);
 			writer = new OutputStreamWriter(new FileOutputStream(tempCsvFile));
-			usersCsvTable.toCsv(writer);
+			UsersCsvTableHelper.toCsvTable(users, writer);
 		} catch (FileNotFoundException e) {
 			throw new UncheckedIOException(e);
 		} catch (IOException e) {

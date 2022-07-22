@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
 
 import com.github.jh3nd3rs0n.jargyle.server.internal.io.FileMonitor;
 import com.github.jh3nd3rs0n.jargyle.server.internal.io.FileStatusListener;
-import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.internal.users.csv.bind.UsersCsvTableHelper;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.internal.users.csv.bind.UsersCsvTableConversionHelper;
 
 public final class CsvFileSourceUserRepository extends UserRepository {
 	
@@ -92,7 +92,7 @@ public final class CsvFileSourceUserRepository extends UserRepository {
 		Users users = null;
 		try {
 			reader = new InputStreamReader(new FileInputStream(csvFile));
-			users = UsersCsvTableHelper.newUsersFrom(reader);
+			users = UsersCsvTableConversionHelper.newUsersFrom(reader);
 		} catch (FileNotFoundException e) {
 			throw new UncheckedIOException(e);
 		} catch (IOException e) {
@@ -117,7 +117,7 @@ public final class CsvFileSourceUserRepository extends UserRepository {
 		Writer writer = null;
 		try {
 			writer = new OutputStreamWriter(new FileOutputStream(tempCsvFile));
-			UsersCsvTableHelper.toCsvTable(users, writer);
+			UsersCsvTableConversionHelper.toCsvTable(users, writer);
 		} catch (FileNotFoundException e) {
 			throw new UncheckedIOException(e);
 		} catch (IOException e) {

@@ -6,7 +6,7 @@ import java.util.List;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.HashedPassword;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.User;
 
-final class UserCsvRowHelper {
+final class UserCsvRowConversionHelper {
 
 	public static User newUserFrom(
 			final CsvParser csvParser) throws IOException {
@@ -16,7 +16,8 @@ final class UserCsvRowHelper {
 		}
 		String name = values.get(0);
 		HashedPassword hashedPassword = 
-				HashedPasswordValueHelper.toHashedPassword(values.get(1));
+				HashedPasswordValueConversionHelper.toHashedPassword(
+						values.get(1));
 		return User.newInstance(name, hashedPassword);
 	}
 	
@@ -30,10 +31,11 @@ final class UserCsvRowHelper {
 		}
 		sb.append(name);
 		sb.append(',');
-		sb.append(HashedPasswordValueHelper.toValue(user.getHashedPassword()));
+		sb.append(HashedPasswordValueConversionHelper.toValue(
+				user.getHashedPassword()));
 		return sb.toString();
 	}
 	
-	private UserCsvRowHelper() { }
+	private UserCsvRowConversionHelper() { }
 	
 }

@@ -6,7 +6,7 @@ import java.util.Base64.Encoder;
 
 import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.internal.hashedpass.impl.Pbkdf2WithHmacSha256HashedPassword;
 
-final class Pbkdf2WithHmacSha256HashedPasswordValueHelper {
+final class Pbkdf2WithHmacSha256HashedPasswordValueConversionHelper {
 
 	public static Pbkdf2WithHmacSha256HashedPassword toHashedPassword(
 			final String value) {
@@ -48,6 +48,6 @@ final class Pbkdf2WithHmacSha256HashedPasswordValueHelper {
 				encoder.encodeToString(hashedPassword.getSalt()));
 	}
 	
-	private Pbkdf2WithHmacSha256HashedPasswordValueHelper() { }
+	private Pbkdf2WithHmacSha256HashedPasswordValueConversionHelper() { }
 	
 }

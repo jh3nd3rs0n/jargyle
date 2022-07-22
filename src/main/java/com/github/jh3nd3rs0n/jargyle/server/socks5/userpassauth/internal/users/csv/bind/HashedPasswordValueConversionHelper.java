@@ -5,7 +5,7 @@ import java.util.Objects;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.HashedPassword;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.internal.hashedpass.impl.Pbkdf2WithHmacSha256HashedPassword;
 
-final class HashedPasswordValueHelper {
+final class HashedPasswordValueConversionHelper {
 
 	public static HashedPassword toHashedPassword(final String value) {
 		String[] valueElements = value.split(":", 2);
@@ -19,25 +19,25 @@ final class HashedPasswordValueHelper {
 					className));
 		}
 		if (cls.equals(Pbkdf2WithHmacSha256HashedPassword.class)) {
-			return Pbkdf2WithHmacSha256HashedPasswordValueHelper.toHashedPassword(
+			return Pbkdf2WithHmacSha256HashedPasswordValueConversionHelper.toHashedPassword(
 					value);
 		}
 		throw new IllegalArgumentException(String.format(
-				"no value helper for %s",
+				"no value conversion helper for %s",
 				cls.getName()));		
 	}
 	
 	public static String toValue(final HashedPassword hashedPassword) {
 		Objects.requireNonNull(hashedPassword);
 		if (hashedPassword instanceof Pbkdf2WithHmacSha256HashedPassword) {
-			return Pbkdf2WithHmacSha256HashedPasswordValueHelper.toValue((
+			return Pbkdf2WithHmacSha256HashedPasswordValueConversionHelper.toValue((
 					(Pbkdf2WithHmacSha256HashedPassword) hashedPassword)); 
 		}
 		throw new IllegalArgumentException(String.format(
-				"no value helper for %s",
+				"no value conversion helper for %s",
 				hashedPassword.getClass().getName()));
 	}
 	
-	private HashedPasswordValueHelper() { }
+	private HashedPasswordValueConversionHelper() { }
 	
 }

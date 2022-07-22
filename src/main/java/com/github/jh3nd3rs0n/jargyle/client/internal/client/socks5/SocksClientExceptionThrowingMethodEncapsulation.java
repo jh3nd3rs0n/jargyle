@@ -1,4 +1,4 @@
-package com.github.jh3nd3rs0n.jargyle.client.socks5;
+package com.github.jh3nd3rs0n.jargyle.client.internal.client.socks5;
 
 import java.io.IOException;
 import java.net.DatagramSocket;
@@ -9,7 +9,7 @@ import com.github.jh3nd3rs0n.jargyle.client.internal.client.SocksClientException
 import com.github.jh3nd3rs0n.jargyle.client.internal.client.SocksClientExceptionThrowingSocket;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.MethodEncapsulation;
 
-final class SocksClientExceptionThrowingMethodEncapsulation 
+public final class SocksClientExceptionThrowingMethodEncapsulation 
 	extends MethodEncapsulation {
 
 	private final MethodEncapsulation methodEncapsulation;

@@ -1,4 +1,4 @@
-package com.github.jh3nd3rs0n.jargyle.server.internal.server.socks5;
+package com.github.jh3nd3rs0n.jargyle.server.internal.net;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -7,7 +7,7 @@ import java.net.SocketException;
 
 import com.github.jh3nd3rs0n.jargyle.common.net.FilterDatagramSocket;
 
-final class BandwidthLimitedDatagramSocket extends FilterDatagramSocket {
+public final class BandwidthLimitedDatagramSocket extends FilterDatagramSocket {
 
 	private static final long ONE_SECOND = 1000;
 	

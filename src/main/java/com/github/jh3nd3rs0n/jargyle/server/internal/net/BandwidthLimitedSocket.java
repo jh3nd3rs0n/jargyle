@@ -1,4 +1,4 @@
-package com.github.jh3nd3rs0n.jargyle.server.internal.server;
+package com.github.jh3nd3rs0n.jargyle.server.internal.net;
 
 import java.io.FilterInputStream;
 import java.io.IOException;

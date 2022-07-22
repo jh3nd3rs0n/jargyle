@@ -27,7 +27,7 @@ import com.github.jh3nd3rs0n.jargyle.server.RuleContext;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5RuleArgSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5RuleConditionSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.internal.server.Rules;
-import com.github.jh3nd3rs0n.jargyle.server.internal.server.ThrowableHelper;
+import com.github.jh3nd3rs0n.jargyle.server.internal.throwable.ThrowableHelper;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.UdpRequestHeader;
 
 final class UdpRelayServer {

@@ -33,12 +33,12 @@ public final class GeneralSettingSpecConstants {
 	
 	@HelpText(
 			doc = "The space separated list of socket settings for the "
-					+ "client-facing socket", 
-			usage = "clientFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
+					+ "client socket", 
+			usage = "clientSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
 	)
-	public static final SettingSpec<SocketSettings> CLIENT_FACING_SOCKET_SETTINGS = 
+	public static final SettingSpec<SocketSettings> CLIENT_SOCKET_SETTINGS = 
 			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
-					"clientFacingSocketSettings", 
+					"clientSocketSettings", 
 					SocketSettings.newInstance()));
 
 	@HelpText(

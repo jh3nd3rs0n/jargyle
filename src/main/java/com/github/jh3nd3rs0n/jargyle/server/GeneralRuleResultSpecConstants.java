@@ -17,11 +17,11 @@ public final class GeneralRuleResultSpecConstants {
 	private static final RuleResultSpecs RULE_RESULT_SPECS = new RuleResultSpecs();
 
 	@HelpText(
-			doc = "Specifies the socket setting for the client-facing socket",
-			usage = "clientFacingSocketSetting=SOCKET_SETTING"
+			doc = "Specifies the socket setting for the client socket",
+			usage = "clientSocketSetting=SOCKET_SETTING"
 	)	
-	public static final RuleResultSpec<SocketSetting<Object>> CLIENT_FACING_SOCKET_SETTING = RULE_RESULT_SPECS.addThenGet(new SocketSettingRuleResultSpec(
-			"clientFacingSocketSetting"));
+	public static final RuleResultSpec<SocketSetting<Object>> CLIENT_SOCKET_SETTING = RULE_RESULT_SPECS.addThenGet(new SocketSettingRuleResultSpec(
+			"clientSocketSetting"));
 	
 	@HelpText(
 			doc = "Specifies the firewall action to take",

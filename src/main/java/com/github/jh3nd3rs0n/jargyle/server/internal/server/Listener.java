@@ -34,9 +34,9 @@ public final class Listener implements Runnable {
 		ExecutorService executor = Executors.newCachedThreadPool();
 		while (true) {
 			try {
-				Socket clientFacingSocket = this.serverSocket.accept();
+				Socket clientSocket = this.serverSocket.accept();
 				executor.execute(new Worker(
-						clientFacingSocket,
+						clientSocket,
 						this.totalWorkerCount,
 						this.workerContextFactory));
 			} catch (SocketTimeoutException e) {

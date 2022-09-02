@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.github.jh3nd3rs0n.jargyle.common.net.Host;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
+import com.github.jh3nd3rs0n.jargyle.common.net.PortRange;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSetting;
 import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
 import com.github.jh3nd3rs0n.jargyle.internal.help.HelpText;
@@ -12,6 +13,7 @@ import com.github.jh3nd3rs0n.jargyle.server.internal.ruleresultspec.impl.Address
 import com.github.jh3nd3rs0n.jargyle.server.internal.ruleresultspec.impl.BooleanRuleResultSpec;
 import com.github.jh3nd3rs0n.jargyle.server.internal.ruleresultspec.impl.HostRuleResultSpec;
 import com.github.jh3nd3rs0n.jargyle.server.internal.ruleresultspec.impl.LogActionRuleResultSpec;
+import com.github.jh3nd3rs0n.jargyle.server.internal.ruleresultspec.impl.PortRangeRuleResultSpec;
 import com.github.jh3nd3rs0n.jargyle.server.internal.ruleresultspec.impl.PortRuleResultSpec;
 import com.github.jh3nd3rs0n.jargyle.server.internal.ruleresultspec.impl.PositiveIntegerRuleResultSpec;
 import com.github.jh3nd3rs0n.jargyle.server.internal.ruleresultspec.impl.SocketSettingRuleResultSpec;
@@ -137,6 +139,14 @@ public final class Socks5RuleResultSpecConstants {
 			"socks5.onConnect.serverFacingBindHost"));
 	
 	@HelpText(
+			doc = "Specifies the binding port range for the server-facing "
+					+ "socket", 
+			usage = "socks5.onConnect.serverFacingBindPortRange=PORT|PORT1-PORT2"
+	)	
+	public static final RuleResultSpec<PortRange> SOCKS5_ON_CONNECT_SERVER_FACING_BIND_PORT_RANGE = RULE_RESULT_SPECS.addThenGet(new PortRangeRuleResultSpec(
+			"socks5.onConnect.serverFacingBindPortRange"));
+	
+	@HelpText(
 			doc = "Specifies the timeout in milliseconds on waiting for the "
 					+ "server-facing socket to connect", 
 			usage = "socks5.onConnect.serverFacingConnectTimeout=INTEGER_BETWEEN_1_AND_2147483647"
@@ -160,6 +170,14 @@ public final class Socks5RuleResultSpecConstants {
 			"socks5.onUdpAssociate.clientFacingBindHost"));
 	
 	@HelpText(
+			doc = "Specifies the binding port range for the client-facing UDP "
+					+ "socket", 
+			usage = "socks5.onUdpAssociate.clientFacingBindPortRange=PORT|PORT1-PORT2"
+	)	
+	public static final RuleResultSpec<PortRange> SOCKS5_ON_UDP_ASSOCIATE_CLIENT_FACING_BIND_PORT_RANGE = RULE_RESULT_SPECS.addThenGet(new PortRangeRuleResultSpec(
+			"socks5.onUdpAssociate.clientFacingBindPortRange"));
+	
+	@HelpText(
 			doc = "Specifies the socket setting for the client-facing UDP "
 					+ "socket",
 			usage = "socks5.onUdpAssociate.clientFacingSocketSetting=SOCKET_SETTING"
@@ -174,6 +192,14 @@ public final class Socks5RuleResultSpecConstants {
 	)	
 	public static final RuleResultSpec<Host> SOCKS5_ON_UDP_ASSOCIATE_PEER_FACING_BIND_HOST = RULE_RESULT_SPECS.addThenGet(new HostRuleResultSpec(
 			"socks5.onUdpAssociate.peerFacingBindHost"));
+
+	@HelpText(
+			doc = "Specifies the binding port range for the peer-facing UDP "
+					+ "socket", 
+			usage = "socks5.onUdpAssociate.peerFacingBindPortRange=PORT|PORT1-PORT2"
+	)	
+	public static final RuleResultSpec<PortRange> SOCKS5_ON_UDP_ASSOCIATE_PEER_FACING_BIND_PORT_RANGE = RULE_RESULT_SPECS.addThenGet(new PortRangeRuleResultSpec(
+			"socks5.onUdpAssociate.peerFacingBindPortRange"));
 	
 	@HelpText(
 			doc = "Specifies the socket setting for the peer-facing UDP "

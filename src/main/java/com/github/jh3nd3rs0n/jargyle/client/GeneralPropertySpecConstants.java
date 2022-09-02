@@ -4,11 +4,11 @@ import java.util.List;
 import java.util.Map;
 
 import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.HostPropertySpec;
-import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.PortPropertySpec;
+import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.PortRangesPropertySpec;
 import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.PositiveIntegerPropertySpec;
 import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.SocketSettingsPropertySpec;
 import com.github.jh3nd3rs0n.jargyle.common.net.Host;
-import com.github.jh3nd3rs0n.jargyle.common.net.Port;
+import com.github.jh3nd3rs0n.jargyle.common.net.PortRanges;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
 
@@ -20,11 +20,11 @@ public final class GeneralPropertySpecConstants {
 			PROPERTY_SPECS.addThenGet(new HostPropertySpec(
 					"socksClient.internalBindHost",
 					Host.getAllZerosInet4Instance()));
-
-	public static final PropertySpec<Port> INTERNAL_BIND_PORT = 
-			PROPERTY_SPECS.addThenGet(new PortPropertySpec(
-					"socksClient.internalBindPort",
-					Port.newInstance(0)));
+	
+	public static final PropertySpec<PortRanges> INTERNAL_BIND_PORT_RANGES =
+			PROPERTY_SPECS.addThenGet(new PortRangesPropertySpec(
+					"socksClient.internalBindPortRanges",
+					PortRanges.getDefault()));
 	
 	public static final PropertySpec<PositiveInteger> INTERNAL_CONNECT_TIMEOUT = 
 			PROPERTY_SPECS.addThenGet(new PositiveIntegerPropertySpec(

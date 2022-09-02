@@ -7,22 +7,22 @@ import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public final class SocketSettings {
 
 	public static SocketSettings newInstance(
-			final List<SocketSetting<? extends Object>> socketSettngs) {
-		return new SocketSettings(socketSettngs);
+			final List<SocketSetting<? extends Object>> socketSttngs) {
+		return new SocketSettings(socketSttngs);
 	}
 	
 	@SafeVarargs
 	public static SocketSettings newInstance(
-			final SocketSetting<? extends Object>... socketSettings) {
-		return newInstance(Arrays.asList(socketSettings));
+			final SocketSetting<? extends Object>... socketSttngs) {
+		return newInstance(Arrays.asList(socketSttngs));
 	}
 	
 	public static SocketSettings newInstance(final SocketSettings other) {
@@ -167,15 +167,8 @@ public final class SocketSettings {
 
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		for (Iterator<SocketSetting<Object>> iterator = 
-				this.socketSettings.values().iterator(); iterator.hasNext();) {
-			SocketSetting<Object> socketSetting = iterator.next();
-			builder.append(socketSetting);
-			if (iterator.hasNext()) {
-				builder.append(' ');
-			}
-		}
-		return builder.toString();
+		return this.socketSettings.values().stream()
+				.map(SocketSetting::toString)
+				.collect(Collectors.joining(" "));
 	}
 }

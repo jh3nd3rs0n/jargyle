@@ -1,10 +1,8 @@
-package com.github.jh3nd3rs0n.jargyle.server;
+package com.github.jh3nd3rs0n.jargyle.common.net;
 
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
-
-import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 
 public class PortRangeTest {
 

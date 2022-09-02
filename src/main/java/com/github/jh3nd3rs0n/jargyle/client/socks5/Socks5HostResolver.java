@@ -8,6 +8,7 @@ import java.net.UnknownHostException;
 import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
 import com.github.jh3nd3rs0n.jargyle.client.Properties;
 import com.github.jh3nd3rs0n.jargyle.client.Socks5PropertySpecConstants;
+import com.github.jh3nd3rs0n.jargyle.client.SocksClient.InternalSocketConnectParams;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.AddressType;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Command;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
@@ -39,28 +40,43 @@ public final class Socks5HostResolver extends HostResolver {
 				Socks5PropertySpecConstants.SOCKS5_RESOLVE_USE_RESOLVE_COMMAND).booleanValue()) {
 			return InetAddress.getByName(host);
 		}
-		Socket socket = this.socks5Client.newInternalSocket();
-		this.socks5Client.configureInternalSocket(socket);
-		Socket sock = this.socks5Client.getConnectedInternalSocket(
-				socket, true);
-		Method method = this.socks5Client.negotiateMethod(sock);
-		MethodEncapsulation methodEncapsulation = 
-				this.socks5Client.doMethodSubnegotiation(method, sock);
-		Socket sck = methodEncapsulation.getSocket();
-		Socks5Request socks5Req = Socks5Request.newInstance(
-				Command.RESOLVE, 
-				host, 
-				0);
-		this.socks5Client.sendSocks5Request(socks5Req, sck);
+		Socket socket = null;
+		Socket sock = null;
+		Socket sck = null;
 		Socks5Reply socks5Rep = null;
 		try {
-			socks5Rep = this.socks5Client.receiveSocks5Reply(sck);
-		} catch (FailureSocks5ReplyException e) {
-			Reply reply = e.getFailureSocks5Reply().getReply();
-			if (reply.equals(Reply.HOST_UNREACHABLE)) {
-				throw new UnknownHostException(host);
-			} else {
-				throw e;
+			socket = this.socks5Client.newInternalSocket();
+			InternalSocketConnectParams params = new InternalSocketConnectParams();
+			sock = this.socks5Client.getConnectedInternalSocket(
+					socket, params);
+			Method method = this.socks5Client.negotiateMethod(sock);
+			MethodEncapsulation methodEncapsulation = 
+					this.socks5Client.doMethodSubnegotiation(method, sock);
+			sck = methodEncapsulation.getSocket();
+			Socks5Request socks5Req = Socks5Request.newInstance(
+					Command.RESOLVE, 
+					host, 
+					0);
+			this.socks5Client.sendSocks5Request(socks5Req, sck);
+			try {
+				socks5Rep = this.socks5Client.receiveSocks5Reply(sck);
+			} catch (FailureSocks5ReplyException e) {
+				Reply reply = e.getFailureSocks5Reply().getReply();
+				if (reply.equals(Reply.HOST_UNREACHABLE)) {
+					throw new UnknownHostException(host);
+				} else {
+					throw e;
+				}
+			}
+		} finally {
+			if (sck != null && !sck.isClosed()) {
+				sck.close();
+			}
+			if (sock != null && !sock.isClosed()) {
+				sock.close();
+			}
+			if (socket != null && !socket.isClosed()) {
+				socket.close();
 			}
 		}
 		String serverBoundAddress = socks5Rep.getServerBoundAddress();

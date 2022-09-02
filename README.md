@@ -46,9 +46,6 @@ Jargyle is a Java SOCKS5 server.
 -   [6. 12. Chaining to Multiple Specified Chains of Other SOCKS Servers](#6-12-chaining-to-multiple-specified-chains-of-other-socks-servers)
 -   [6. 13. Using Rules to Manage Traffic](#6-13-using-rules-to-manage-traffic)
 -   [6. 13. 1. Rule Conditions](#6-13-1-rule-conditions)
--   [6. 13. 1. 1. Common Rule Condition Value Syntaxes](#6-13-1-1-common-rule-condition-value-syntaxes)
--   [6. 13. 1. 1. 1. Address Range](#6-13-1-1-1-address-range)
--   [6. 13. 1. 1. 2. Port Range](#6-13-1-1-2-port-range)
 -   [6. 13. 2. Rule Results](#6-13-2-rule-results)
 -   [6. 13. 3. Allowing or Denying Traffic](#6-13-3-allowing-or-denying-traffic)
 -   [6. 13. 4. Allowing a Limited Number of Simultaneous Instances of Traffic](#6-13-4-allowing-a-limited-number-of-simultaneous-instances-of-traffic)
@@ -56,10 +53,13 @@ Jargyle is a Java SOCKS5 server.
 -   [6. 13. 6. Redirecting the Desired Destination](#6-13-6-redirecting-the-desired-destination)
 -   [6. 13. 7. Limiting Bandwidth](#6-13-7-limiting-bandwidth)
 -   [6. 13. 8. Configuring Sockets](#6-13-8-configuring-sockets)
--   [6. 14. Miscellaneous Notes](#6-14-miscellaneous-notes)
--   [6. 14. 1. Multiple Settings of the Same Name](#6-14-1-multiple-settings-of-the-same-name)
--   [6. 14. 2. The SOCKS5 RESOLVE Command](#6-14-2-the-socks5-resolve-command)
--   [6. 14. 3. The Doc XML Element](#6-14-3-the-doc-xml-element)
+-   [6. 14. Common Value Syntaxes](#6-14-common-value-syntaxes)
+-   [6. 14. 1. Address Range](#6-14-1-address-range)
+-   [6. 14. 2. Port Range](#6-14-2-port-range)
+-   [6. 15. Miscellaneous Notes](#6-15-miscellaneous-notes)
+-   [6. 15. 1. Multiple Settings of the Same Name](#6-15-1-multiple-settings-of-the-same-name)
+-   [6. 15. 2. The SOCKS5 RESOLVE Command](#6-15-2-the-socks5-resolve-command)
+-   [6. 15. 3. The Doc XML Element](#6-15-3-the-doc-xml-element)
 -   [7. Contact](#7-contact)
 
 ## 1. Introduction
@@ -290,8 +290,8 @@ The following is a list of available settings for the SOCKS server (displayed wh
         backlog=INTEGER_BETWEEN_0_AND_2147483647
             The maximum length of the queue of incoming connections (default is 50)
     
-        clientFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
-            The space separated list of socket settings for the client-facing socket
+        clientSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
+            The space separated list of socket settings for the client socket
     
         host=HOST
             The host name or address for the SOCKS server (default is 0.0.0.0)
@@ -318,6 +318,9 @@ The following is a list of available settings for the SOCKS server (displayed wh
     
         chaining.internalBindHost=HOST
             The binding host name or address for the internal socket that is used to connect to the other SOCKS server (used for the SOCKS5 commands RESOLVE, BIND and UDP ASSOCIATE) (default is 0.0.0.0)
+    
+        chaining.internalBindPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]
+            The space separated list of binding port ranges for the internal socket that is used to connect to the other SOCKS server (used for the SOCKS5 commands RESOLVE, BIND and UDP ASSOCIATE) (default is 0)
     
         chaining.internalConnectTimeout=INTEGER_BETWEEN_1_AND_2147483647
             The timeout in milliseconds on waiting for the internal socket to connect to the other SOCKS server (used for the SOCKS5 commands RESOLVE, BIND and UDP ASSOCIATE) (default is 60000)
@@ -512,6 +515,9 @@ The following is a list of available settings for the SOCKS server (displayed wh
         socks5.onConnect.serverFacingBindHost=HOST
             The binding host name or address for the server-facing socket (default is 0.0.0.0)
     
+        socks5.onConnect.serverFacingBindPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]
+            The space separated list of binding port ranges for the server-facing socket (default is 0)
+    
         socks5.onConnect.serverFacingConnectTimeout=INTEGER_BETWEEN_1_AND_2147483647
             The timeout in milliseconds on waiting for the server-facing socket to connect (default is 60000)
     
@@ -521,11 +527,17 @@ The following is a list of available settings for the SOCKS server (displayed wh
         socks5.onUdpAssociate.clientFacingBindHost=HOST
             The binding host name or address for the client-facing UDP socket (default is 0.0.0.0)
     
+        socks5.onUdpAssociate.clientFacingBindPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]
+            The space separated list of binding port ranges for the client-facing UDP socket (default is 0)
+    
         socks5.onUdpAssociate.clientFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
             The space separated list of socket settings for the client-facing UDP socket
     
         socks5.onUdpAssociate.peerFacingBindHost=HOST
             The binding host name or address for the peer-facing UDP socket (default is 0.0.0.0)
+    
+        socks5.onUdpAssociate.peerFacingBindPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]
+            The space separated list of binding port ranges for the peer-facing UDP socket (default is 0)
     
         socks5.onUdpAssociate.peerFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
             The space separated list of socket settings for the peer-facing UDP socket
@@ -601,8 +613,8 @@ The following is a list of available settings for the SOCKS server (displayed wh
     
       GENERAL_RULE_RESULTS:
     
-        clientFacingSocketSetting=SOCKET_SETTING
-            Specifies the socket setting for the client-facing socket
+        clientSocketSetting=SOCKET_SETTING
+            Specifies the socket setting for the client socket
     
         firewallAction=FIREWALL_ACTION
             Specifies the firewall action to take
@@ -817,6 +829,9 @@ The following is a list of available settings for the SOCKS server (displayed wh
         socks5.onConnect.serverFacingBindHost=HOST
             Specifies the binding host name or address for the server-facing socket
     
+        socks5.onConnect.serverFacingBindPortRange=PORT|PORT1-PORT2
+            Specifies the binding port range for the server-facing socket
+    
         socks5.onConnect.serverFacingConnectTimeout=INTEGER_BETWEEN_1_AND_2147483647
             Specifies the timeout in milliseconds on waiting for the server-facing socket to connect
     
@@ -826,11 +841,17 @@ The following is a list of available settings for the SOCKS server (displayed wh
         socks5.onUdpAssociate.clientFacingBindHost=HOST
             Specifies the binding host name or address for the client-facing UDP socket
     
+        socks5.onUdpAssociate.clientFacingBindPortRange=PORT|PORT1-PORT2
+            Specifies the binding port range for the client-facing UDP socket
+    
         socks5.onUdpAssociate.clientFacingSocketSetting=SOCKET_SETTING
             Specifies the socket setting for the client-facing UDP socket
     
         socks5.onUdpAssociate.peerFacingBindHost=HOST
             Specifies the binding host name or address for the peer-facing UDP socket
+    
+        socks5.onUdpAssociate.peerFacingBindPortRange=PORT|PORT1-PORT2
+            Specifies the binding port range for the peer-facing UDP socket
     
         socks5.onUdpAssociate.peerFacingSocketSetting=SOCKET_SETTING
             Specifies the socket setting for the peer-facing UDP socket
@@ -1017,7 +1038,7 @@ The following command combines the two earlier configuration files into one:
     
 ```
 
-Although the redundant settings in the combined configuration file are unnecessary, the result configuration file is for demonstration purposes only. (See [Multiple Settings of the Same Name](#6-14-1-multiple-settings-of-the-same-name) for more information.)
+Although the redundant settings in the combined configuration file are unnecessary, the result configuration file is for demonstration purposes only. (See [Multiple Settings of the Same Name](#6-15-1-multiple-settings-of-the-same-name) for more information.)
 
 ### 6. 5. Running With a Configuration File
 
@@ -1842,7 +1863,7 @@ Jargyle uses sockets to interact with the external world.
 -   Under the BIND command, it uses a socket that listens for an inbound socket. In this documentation, this socket is called the listen socket.
 -   Under the UDP ASSOCIATE command, it uses a UDP socket that sends and receives datagram packets to and from peer UDP sockets. In this documentation, this UDP socket is called the peer-facing UDP socket.
 
-Jargyle also uses a host resolver to resolve host names for the aforementioned sockets and for [the RESOLVE command](#6-14-2-the-socks5-resolve-command).
+Jargyle also uses a host resolver to resolve host names for the aforementioned sockets and for [the RESOLVE command](#6-15-2-the-socks5-resolve-command).
 
 When Jargyle is chained to another SOCKS5 server, the aforementioned sockets that Jargyle uses become SOCKS5-enabled, meaning that their traffic is routed through the other SOCKS5 server.
 
@@ -2372,25 +2393,6 @@ Partial configuration file examples:
 
 A complete listing of rule conditions can be found in the [settings help](#6-1-4-settings-help) under `SETTING VALUE SYNTAXES` > `GENERAL_RULE_CONDITIONS` and `SETTING VALUE SYNTAXES` > `SOCKS5_RULE_CONDITIONS`.
 
-##### 6. 13. 1. 1. Common Rule Condition Value Syntaxes
-
-The following are some common rule condition value syntaxes.
-
-###### 6. 13. 1. 1. 1. Address Range
-
-An address range can be specified in the following formats:
-
--   `ADDRESS` : Range is limited to a single address expressed in `ADDRESS`. Address can be an IPv4 address, an IPv6 address, or a domain name.
--   `ADDRESS1-ADDRESS2` : Range is limited to addresses between the address expressed in `ADDRESS1` (inclusive) and the address expressed in `ADDRESS2` (inclusive). `ADDRESS1` and `ADDRESS2` must be of the same address type (IPv4 or IPv6). `ADDRESS1` and `ADDRESS2` cannot be domain names.
--   `regex:REGULAR_EXPRESSION` : Range is limited to domain names that match the regular expression expressed in `REGULAR_EXPRESSION`
-
-###### 6. 13. 1. 1. 2. Port Range
-
-A port range can be specified in the following formats:
-
--   `PORT` : Range is limited to a single port number expressed in `PORT`
--   `PORT1-PORT2` : Range is limited to port numbers between the port number expressed in `PORT1` (inclusive) and the port number expressed in `PORT2` (inclusive)
-
 #### 6. 13. 2. Rule Results
 
 On the command line, rule results consist of a space separated list of rule results. Each rule result consists of the syntax of `NAME=VALUE` where `NAME` is expressed as the name of the rule result and `VALUE` is expressed as the value assigned to the rule result. In the configuration file, rule result are expressed in a `<ruleResults/>` XML element with zero to many `<ruleResult/>` XML elements. Each `<ruleResult/>` XML element contains a `<name/>` XML element for the name of the rule result and the `<value/>` XML element of the value assigned to the rule result.
@@ -2890,15 +2892,21 @@ To configure the sockets, you will need any of the following rule results:
 
 -   `socks5.onConnect.serverFacingBindHost`: Specifies the binding host name or address for the server-facing socket
 
+-   `socks5.onConnect.serverFacingBindPortRange`: Specifies the binding [port range](#6-14-2-port-range) for the server-facing socket (This rule result can be specified multiple times for each port range)
+
 -   `socks5.onConnect.serverFacingConnectTimeout`: Specifies the timeout in milliseconds on waiting for the server-facing socket to connect (Value must be an integer between 1 (inclusive) and 2147483647 (inclusive))
 
 -   `socks5.onConnect.serverFacingSocketSetting`: Specifies the socket setting for the server-facing socket (This rule result can be specified multiple times for each socket setting)
 
 -   `socks5.onUdpAssociate.clientFacingBindHost`: Specifies the binding host name or address for the client-facing UDP socket
 
+-   `socks5.onUdpAssociate.clientFacingBindPortRange`: Specifies the binding [port range](#6-14-2-port-range) for the client-facing UDP socket (This rule result can be specified multiple times for each port range)
+
 -   `socks5.onUdpAssociate.clientFacingSocketSetting`: Specifies the socket setting for the client-facing UDP socket (This rule result can be specified multiple times for each socket setting)
 
 -   `socks5.onUdpAssociate.peerFacingBindHost`: Specifies the binding host name or address for the peer-facing UDP socket
+
+-   `socks5.onUdpAssociate.peerFacingBindPortRange`: Specifies the binding [port range](#6-14-2-port-range) for the peer-facing UDP socket (This rule result can be specified multiple times for each port range)
 
 -   `socks5.onUdpAssociate.peerFacingSocketSetting`: Specifies the socket setting for the peer-facing UDP socket (This rule result can be specified multiple times for each socket setting)
 
@@ -2989,15 +2997,34 @@ Partial configuration file example:
     
 ```
 
-### 6. 14. Miscellaneous Notes
+### 6. 14. Common Value Syntaxes
+
+The following are some common value syntaxes.
+
+#### 6. 14. 1. Address Range
+
+An address range can be specified in the following formats:
+
+-   `ADDRESS` : Range is limited to a single address expressed in `ADDRESS`. Address can be an IPv4 address, an IPv6 address, or a domain name.
+-   `ADDRESS1-ADDRESS2` : Range is limited to addresses between the address expressed in `ADDRESS1` (inclusive) and the address expressed in `ADDRESS2` (inclusive). `ADDRESS1` and `ADDRESS2` must be of the same address type (IPv4 or IPv6). `ADDRESS1` and `ADDRESS2` cannot be domain names.
+-   `regex:REGULAR_EXPRESSION` : Range is limited to domain names that match the regular expression expressed in `REGULAR_EXPRESSION`
+
+#### 6. 14. 2. Port Range
+
+A port range can be specified in the following formats:
+
+-   `PORT` : Range is limited to a single port number expressed in `PORT`
+-   `PORT1-PORT2` : Range is limited to port numbers between the port number expressed in `PORT1` (inclusive) and the port number expressed in `PORT2` (inclusive)
+
+### 6. 15. Miscellaneous Notes
 
 The following are miscellaneous notes regarding Jargyle.
 
-#### 6. 14. 1. Multiple Settings of the Same Name
+#### 6. 15. 1. Multiple Settings of the Same Name
 
 Unless otherwise stated, if a setting of the same name appears more than once on the command line or in the configuration file, then only the last setting of the same name is recognized. 
 
-#### 6. 14. 2. The SOCKS5 RESOLVE Command
+#### 6. 15. 2. The SOCKS5 RESOLVE Command
 
 The SOCKS5 RESOLVE command specifies the type of SOCKS5 request sent by the client for the server to perform: to resolve the provided host name and reply with the resolved IPv4 or IPv6 address. At the time of this writing, the SOCKS5 RESOLVE command is an additional SOCKS5 command made for Jargyle. It is not a part of the SOCKS5 protocol specification. 
 
@@ -3007,7 +3034,7 @@ In a SOCKS request, the RESOLVE command is represented as `X'04'` in the `CMD` f
 
 In reply to a SOCKS request with the RESOLVE command, the `ATYP` field in the reply MUST be of any value other than `X'03'` (DOMAINNAME) and the `BND.ADDR` field in the reply MUST be the resolved address of the `DST.ADDR` field of the SOCKS request. The `BND.PORT` field in the reply can be of any value in network octet order (`X'0000'` to `X'FFFF'` inclusive). If the `ATYP` field and the `DST.ADDR` field of the SOCKS request is not a fully-qualified domain name, the `ATYP` field and the `BND.ADDR` field in the reply MUST be the same as the `ATYP` field and the `DST.ADDR` field of the SOCKS request. After the reply is sent, the connection between the client and the server is then closed.
 
-#### 6. 14. 3. The Doc XML Element
+#### 6. 15. 3. The Doc XML Element
 
 When using an existing configuration file to create a new configuration file, any XML comments from the existing configuration file cannot be transferred to the new configuration file. To preserve XML comments from one configuration file to the next configuration file, the `<doc/>` XML element can be used in the following XML elements:
 

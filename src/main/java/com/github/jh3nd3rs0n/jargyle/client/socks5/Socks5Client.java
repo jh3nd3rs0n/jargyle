@@ -67,7 +67,7 @@ public final class Socks5Client extends SocksClient {
 		return new SocksClientExceptionThrowingMethodEncapsulation(
 				this, methodEncapsulation);
 	}
-	
+
 	protected DatagramSocket getConnectedInternalDatagramSocket(
 			final DatagramSocket internalDatagramSocket,
 			final String udpRelayServerHost,
@@ -97,35 +97,12 @@ public final class Socks5Client extends SocksClient {
 		}
 		return internalDatagramSock;
 	}
-
-	@Override
-	protected Socket getConnectedInternalSocket(
-			final Socket internalSocket) throws IOException {
-		return super.getConnectedInternalSocket(internalSocket);
-	}
 	
 	@Override
 	protected Socket getConnectedInternalSocket(
 			final Socket internalSocket, 
-			final boolean bindBeforeConnect) throws IOException {
-		return super.getConnectedInternalSocket(
-				internalSocket, bindBeforeConnect);
-	}
-	
-	@Override
-	protected Socket getConnectedInternalSocket(
-			final Socket internalSocket, 
-			final int timeout) throws IOException {
-		return super.getConnectedInternalSocket(internalSocket, timeout);
-	}
-	
-	@Override
-	protected Socket getConnectedInternalSocket(
-			final Socket internalSocket, 
-			final int timeout, 
-			final boolean bindBeforeConnect) throws IOException {
-		return super.getConnectedInternalSocket(
-				internalSocket, timeout, bindBeforeConnect);
+			final InternalSocketConnectParams params) throws IOException {
+		return super.getConnectedInternalSocket(internalSocket, params);
 	}
 	
 	protected Method negotiateMethod(

@@ -20,6 +20,7 @@ import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
 import com.github.jh3nd3rs0n.jargyle.client.SocksServerUri;
 import com.github.jh3nd3rs0n.jargyle.client.SslPropertySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.common.net.Host;
+import com.github.jh3nd3rs0n.jargyle.common.net.PortRanges;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
@@ -129,7 +130,7 @@ public final class Routes {
 		String lastRouteId = settings.getLastValue(
 				GeneralSettingSpecConstants.LAST_ROUTE_ID);
 		if (socksServerUri == null) {
-			routes.add(new Route(lastRouteId, NetObjectFactory.newInstance()));
+			routes.add(new Route(lastRouteId, NetObjectFactory.getInstance()));
 		} else {
 			SocksClient socksClient = socksServerUri.newSocksClient(
 					Properties.newInstance(properties), chainedSocksClient);
@@ -140,7 +141,7 @@ public final class Routes {
 				routes.add(new Route(
 						routeId, socksClient.newSocksNetObjectFactory()));
 				routes.add(new Route(
-						lastRouteId, NetObjectFactory.newInstance()));				
+						lastRouteId, NetObjectFactory.getInstance()));				
 			}
 		}
 		return newInstance(routes);
@@ -310,6 +311,19 @@ public final class Routes {
 						Host internalBindHost = (Host) setting.getValue();
 						return GeneralPropertySpecConstants.INTERNAL_BIND_HOST.newProperty(
 								internalBindHost);
+					}
+					
+				});
+		SETTING_CONVERTER_MAP.put(
+				ChainingGeneralSettingSpecConstants.CHAINING_INTERNAL_BIND_PORT_RANGES, 
+				new SettingConverter() {
+
+					@Override
+					public Object convert(final Setting<Object> setting) {
+						PortRanges internalBindPortRanges = 
+								(PortRanges) setting.getValue();
+						return GeneralPropertySpecConstants.INTERNAL_BIND_PORT_RANGES.newProperty(
+								internalBindPortRanges);
 					}
 					
 				});

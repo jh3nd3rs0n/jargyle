@@ -7,10 +7,10 @@ import java.net.SocketTimeoutException;
 
 import org.slf4j.Logger;
 
-import com.github.jh3nd3rs0n.jargyle.server.internal.throwable.ThrowableHelper;
+import com.github.jh3nd3rs0n.jargyle.internal.throwable.ThrowableHelper;
 import com.github.jh3nd3rs0n.jargyle.transport.socks.SocksException;
 
-public final class ClientFacingIOExceptionLoggingHelper {
+public final class ClientIOExceptionLoggingHelper {
 
 	public static void log(
 			final Logger logger, final String message, final IOException e) {
@@ -41,6 +41,6 @@ public final class ClientFacingIOExceptionLoggingHelper {
 		logger.error(message, e);
 	}
 	
-	private ClientFacingIOExceptionLoggingHelper() { }
+	private ClientIOExceptionLoggingHelper() { }
 	
 }

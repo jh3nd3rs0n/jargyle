@@ -15,7 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
-import com.github.jh3nd3rs0n.jargyle.server.internal.throwable.ThrowableHelper;
+import com.github.jh3nd3rs0n.jargyle.internal.throwable.ThrowableHelper;
 
 public final class RelayServer {
 	
@@ -25,18 +25,17 @@ public final class RelayServer {
 		public static final int DEFAULT_IDLE_TIMEOUT = 60000;
 		
 		private int bufferSize;
-		private final Socket clientFacingSocket;
+		private final Socket clientSocket;
+		private final Socket externalSocket;		
 		private int idleTimeout;
-		private final Socket serverFacingSocket;
 		
-		public Builder(
-				final Socket clientFacingSock, final Socket serverFacingSock) {
-			Objects.requireNonNull(clientFacingSock);
-			Objects.requireNonNull(serverFacingSock);
+		public Builder(final Socket clientSock, final Socket externalSock) {
+			Objects.requireNonNull(clientSock);
+			Objects.requireNonNull(externalSock);
 			this.bufferSize = DEFAULT_BUFFER_SIZE;
-			this.clientFacingSocket = clientFacingSock;
+			this.clientSocket = clientSock;
+			this.externalSocket = externalSock;			
 			this.idleTimeout = DEFAULT_IDLE_TIMEOUT;
-			this.serverFacingSocket = serverFacingSock;
 		}
 		
 		public Builder bufferSize(final int bffrSize) {
@@ -272,7 +271,7 @@ public final class RelayServer {
 		extends DataWorkerContext {
 		
 		public InboundDataWorkerContext(final RelayServer server) {
-			super(server, server.serverFacingSocket, server.clientFacingSocket);
+			super(server, server.externalSocket, server.clientSocket);
 		}
 		
 	}
@@ -281,7 +280,7 @@ public final class RelayServer {
 		extends DataWorkerContext {
 		
 		public OutboundDataWorkerContext(final RelayServer server) {
-			super(server, server.clientFacingSocket, server.serverFacingSocket);
+			super(server, server.clientSocket, server.externalSocket);
 		}
 		
 	}
@@ -294,21 +293,21 @@ public final class RelayServer {
 		
 	}
 	
-	private final Socket clientFacingSocket;
+	private final Socket clientSocket;
 	private final int bufferSize;
 	private ExecutorService executor;
+	private final Socket externalSocket;	
 	private long idleStartTime;
 	private final int idleTimeout;
-	private final Socket serverFacingSocket;
 	private State state;
 	
 	private RelayServer(final Builder builder) {
-		this.clientFacingSocket = builder.clientFacingSocket;
+		this.clientSocket = builder.clientSocket;
 		this.bufferSize = builder.bufferSize;
 		this.executor = null;
+		this.externalSocket = builder.externalSocket;		
 		this.idleStartTime = 0L;
 		this.idleTimeout = builder.idleTimeout;
-		this.serverFacingSocket = builder.serverFacingSocket;
 		this.state = State.STOPPED;
 	}
 	

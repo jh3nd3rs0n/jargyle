@@ -191,16 +191,16 @@ final class CommandWorkerContext extends Socks5WorkerContext {
 	public RuleContext newSocks5ReplyRuleContext(
 			final Socks5Reply socks5Rep) {
 		RuleContext socks5ReplyRuleContext = new RuleContext();
-		Socket clientFacingSock = this.getClientFacingSocket();
+		Socket clientSock = this.getClientSocket();
 		MethodSubnegotiationResults methSubnegotiationResults = 
 				this.getMethodSubnegotiationResults();
 		Socks5Request socks5Req = this.getSocks5Request();
 		socks5ReplyRuleContext.putRuleArgValue(
 				GeneralRuleArgSpecConstants.CLIENT_ADDRESS, 
-				clientFacingSock.getInetAddress().getHostAddress());
+				clientSock.getInetAddress().getHostAddress());
 		socks5ReplyRuleContext.putRuleArgValue(
 				GeneralRuleArgSpecConstants.SOCKS_SERVER_ADDRESS, 
-				clientFacingSock.getLocalAddress().getHostAddress());
+				clientSock.getLocalAddress().getHostAddress());
 		socks5ReplyRuleContext.putRuleArgValue(
 				Socks5RuleArgSpecConstants.SOCKS5_METHOD, 
 				methSubnegotiationResults.getMethod());

@@ -6,10 +6,12 @@ import java.util.Map;
 import com.github.jh3nd3rs0n.jargyle.client.GeneralPropertySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.client.SocksServerUri;
 import com.github.jh3nd3rs0n.jargyle.common.net.Host;
+import com.github.jh3nd3rs0n.jargyle.common.net.PortRanges;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
 import com.github.jh3nd3rs0n.jargyle.internal.help.HelpText;
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.HostSettingSpec;
+import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.PortRangesSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.PositiveIntegerSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.SocketSettingsSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.SocksServerUriSettingSpec;
@@ -31,6 +33,18 @@ public final class ChainingGeneralSettingSpecConstants {
 					"chaining.internalBindHost", 
 					GeneralPropertySpecConstants.INTERNAL_BIND_HOST.getDefaultProperty().getValue()));
 
+	@HelpText(
+			doc = "The space separated list of binding port ranges for the "
+					+ "internal socket that is used to connect to the other "
+					+ "SOCKS server (used for the SOCKS5 commands RESOLVE, "
+					+ "BIND and UDP ASSOCIATE) (default is 0)", 
+			usage = "chaining.internalBindPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]"
+	)
+	public static final SettingSpec<PortRanges> CHAINING_INTERNAL_BIND_PORT_RANGES =
+			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
+					"chaining.internalBindPortRanges",
+					GeneralPropertySpecConstants.INTERNAL_BIND_PORT_RANGES.getDefaultProperty().getValue()));
+	
 	@HelpText(
 			doc = "The timeout in milliseconds on waiting for the internal "
 					+ "socket to connect to the other SOCKS server (used for "

@@ -13,6 +13,7 @@ import java.net.UnknownHostException;
 import java.nio.channels.SocketChannel;
 import java.util.Set;
 
+import com.github.jh3nd3rs0n.jargyle.client.SocksClient.InternalSocketConnectParams;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.AddressType;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Command;
@@ -27,23 +28,18 @@ public final class Socks5Socket extends Socket {
 	private static final class Socks5SocketImpl {
 		
 		private boolean connected;
-		private Socket originalSocket;
 		private InetAddress remoteInetAddress;
 		private int remotePort;
 		private SocketAddress remoteSocketAddress;
 		private Socket socket;
 		private final Socks5Client socks5Client;
 		
-		public Socks5SocketImpl(
-				final Socks5Client client,
-				final Socket originalSock,
-				final Socket sock) {
-			this.connected = originalSock.isConnected();
-			this.originalSocket = originalSock;
-			this.remoteInetAddress = originalSock.getInetAddress();
-			this.remotePort = originalSock.getPort();
-			this.remoteSocketAddress = originalSock.getRemoteSocketAddress();
-			this.socket = (sock == null) ? originalSock : sock;
+		public Socks5SocketImpl(final Socks5Client client, final Socket sock) {
+			this.connected = sock.isConnected();
+			this.remoteInetAddress = sock.getInetAddress();
+			this.remotePort = sock.getPort();
+			this.remoteSocketAddress = sock.getRemoteSocketAddress();
+			this.socket = sock;
 			this.socks5Client = client;
 		}
 		
@@ -61,6 +57,9 @@ public final class Socks5Socket extends Socket {
 		
 		public void connect(
 				SocketAddress endpoint,	int timeout) throws IOException {
+			if (this.connected) {
+				throw new SocketException("socket is already connected");
+			}
 			if (endpoint == null || !(endpoint instanceof InetSocketAddress)) {
 				throw new IllegalArgumentException(
 						"endpoint must be an instance of InetSocketAddress");
@@ -76,11 +75,11 @@ public final class Socks5Socket extends Socket {
 				final InetAddress inetAddress,
 				final int port,
 				final int timeout) throws IOException {
-			if (!this.socket.equals(this.originalSocket)) {
-				this.socket = this.originalSocket;
-			}
+			InternalSocketConnectParams params = new InternalSocketConnectParams();
+			params.setMustBindBeforeConnect(false);
+			params.setConnectTimeout(Integer.valueOf(timeout));
 			Socket sock = this.socks5Client.getConnectedInternalSocket(
-					this.socket, timeout);
+					this.socket, params);
 			String address = inetAddress.getHostAddress();
 			this.socks5Connect(sock, address, port);
 		}
@@ -147,7 +146,7 @@ public final class Socks5Socket extends Socket {
 	Socks5Socket(final Socks5Client client) {
 		this.socks5Client = client;
 		this.socks5SocketImpl = new Socks5SocketImpl(
-				client, client.newInternalSocket(), null); 
+				client, client.newInternalSocket()); 
 	}
 	
 	Socks5Socket(
@@ -156,7 +155,7 @@ public final class Socks5Socket extends Socket {
 			final int port) throws IOException {
 		this.socks5Client = client;
 		this.socks5SocketImpl = new Socks5SocketImpl(
-				client, client.newInternalSocket(), null);
+				client, client.newInternalSocket());
 		this.socks5SocketImpl.socks5Connect(address, port, 0);
 	}
 	
@@ -168,18 +167,15 @@ public final class Socks5Socket extends Socket {
 			final int localPort) throws IOException {
 		this.socks5Client = client;
 		this.socks5SocketImpl = new Socks5SocketImpl(
-				client, client.newInternalSocket(), null);
+				client, client.newInternalSocket());
 		this.socks5SocketImpl.socket.bind(
 				new InetSocketAddress(localAddr, localPort));
 		this.socks5SocketImpl.socks5Connect(address, port, 0);
 	}
 
-	Socks5Socket(
-			final Socks5Client client, 
-			final Socket originalSock, 
-			final Socket sock) {
+	Socks5Socket(final Socks5Client client, final Socket sock) {
 		this.socks5Client = client;
-		this.socks5SocketImpl = new Socks5SocketImpl(client, originalSock, sock);
+		this.socks5SocketImpl = new Socks5SocketImpl(client, sock);
 	}
 
 	Socks5Socket(
@@ -189,7 +185,7 @@ public final class Socks5Socket extends Socket {
 		Socket connectedInternalSocket = client.newConnectedInternalSocket();
 		this.socks5Client = client;
 		this.socks5SocketImpl = new Socks5SocketImpl(
-				client, connectedInternalSocket, null);
+				client, connectedInternalSocket);
 		this.socks5SocketImpl.socks5Connect(
 				connectedInternalSocket, host, port);
 	}
@@ -204,7 +200,7 @@ public final class Socks5Socket extends Socket {
 				localAddr, localPort);
 		this.socks5Client = client;
 		this.socks5SocketImpl = new Socks5SocketImpl(
-				client, connectedInternalSocket, null);
+				client, connectedInternalSocket);
 		this.socks5SocketImpl.socks5Connect(
 				connectedInternalSocket, host, port);
 	}

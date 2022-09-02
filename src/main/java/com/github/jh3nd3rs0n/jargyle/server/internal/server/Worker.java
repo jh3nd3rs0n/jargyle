@@ -19,40 +19,40 @@ final class Worker implements Runnable {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(Worker.class);
 	
-	private Socket clientFacingSocket;
+	private Socket clientSocket;
 	private final AtomicInteger totalWorkerCount;
 	private final WorkerContextFactory workerContextFactory;
 	
 	public Worker(
-			final Socket clientFacingSock, 
+			final Socket clientSock, 
 			final AtomicInteger workerCount,
 			final WorkerContextFactory contextFactory) {
-		this.clientFacingSocket = clientFacingSock;
+		this.clientSocket = clientSock;
 		this.totalWorkerCount = workerCount;
 		this.workerContextFactory = contextFactory;
 	}
 	
-	private WorkerContext newWorkerContext(final Socket clientFacingSock) {
+	private WorkerContext newWorkerContext(final Socket clientSock) {
 		WorkerContext workerContext = null;
 		try {
 			workerContext = this.workerContextFactory.newWorkerContext(
-					clientFacingSock);
+					clientSock);
 		} catch (IllegalArgumentException e) {
 			LOGGER.debug(
 					ObjectLogMessageHelper.objectLogMessage(
-							this, "Invalid client-facing socket"), 
+							this, "Invalid client socket"), 
 					e);			
 			return null;
 		} catch (SocketException e) {
 			LOGGER.error(
 					ObjectLogMessageHelper.objectLogMessage(
-							this, "Error in setting the client-facing socket"), 
+							this, "Error in setting the client socket"), 
 					e);
 			return null;			
 		} catch (IOException e) {
 			LOGGER.error(
 					ObjectLogMessageHelper.objectLogMessage(
-							this, "Error in wrapping the client-facing socket"), 
+							this, "Error in wrapping the client socket"), 
 					e);
 			return null;
 		}
@@ -67,18 +67,17 @@ final class Worker implements Runnable {
 					this, 
 					"Started. Total Worker count: %s",
 					this.totalWorkerCount.incrementAndGet()));
-			workerContext = this.newWorkerContext(this.clientFacingSocket);
+			workerContext = this.newWorkerContext(this.clientSocket);
 			if (workerContext == null) {
 				return;
 			}
-			this.clientFacingSocket = workerContext.getClientFacingSocket();
-			InputStream clientFacingInputStream = 
-					this.clientFacingSocket.getInputStream();
+			this.clientSocket = workerContext.getClientSocket();
+			InputStream clientInputStream =	this.clientSocket.getInputStream();
 			UnsignedByte version = null;
 			try {
-				version = UnsignedByte.newInstanceFrom(clientFacingInputStream);
+				version = UnsignedByte.newInstanceFrom(clientInputStream);
 			} catch (IOException e) {
-				ClientFacingIOExceptionLoggingHelper.log(
+				ClientIOExceptionLoggingHelper.log(
 						LOGGER, 
 						ObjectLogMessageHelper.objectLogMessage(
 								this, 
@@ -114,9 +113,9 @@ final class Worker implements Runnable {
 							e);
 				}
 			}
-			if (!this.clientFacingSocket.isClosed()) {
+			if (!this.clientSocket.isClosed()) {
 				try {
-					this.clientFacingSocket.close();
+					this.clientSocket.close();
 				} catch (IOException e) {
 					LOGGER.error(
 							ObjectLogMessageHelper.objectLogMessage(
@@ -138,8 +137,8 @@ final class Worker implements Runnable {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append(this.getClass().getSimpleName())
-			.append(" [clientFacingSocket=")
-			.append(this.clientFacingSocket)
+			.append(" [clientSocket=")
+			.append(this.clientSocket)
 			.append("]");
 		return builder.toString();
 	}

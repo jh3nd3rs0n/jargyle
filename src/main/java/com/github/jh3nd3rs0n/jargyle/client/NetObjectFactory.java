@@ -11,12 +11,19 @@ import java.net.UnknownHostException;
 
 public abstract class NetObjectFactory {
 	
-	public static NetObjectFactory newInstance() {
+	private static final NetObjectFactory DEFAULT_INSTANCE = 
+			new DefaultNetObjectFactory();
+	
+	public static NetObjectFactory getDefault() {
+		return DEFAULT_INSTANCE;
+	}
+	
+	public static NetObjectFactory getInstance() {
 		NetObjectFactory netObjectFactory = SocksNetObjectFactory.newInstance();
 		if (netObjectFactory != null) {
 			return netObjectFactory;
 		}
-		return new DefaultNetObjectFactory();
+		return DEFAULT_INSTANCE;
 	}
 	
 	public abstract DatagramSocket newDatagramSocket() throws SocketException;

@@ -1,12 +1,12 @@
-package com.github.jh3nd3rs0n.jargyle.server;
+package com.github.jh3nd3rs0n.jargyle.common.net;
 
-import com.github.jh3nd3rs0n.jargyle.common.net.Port;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
-public final class PortRange {
-
+public final class PortRange implements Iterable<Port> {
+	
 	private static final PortRange DEFAULT_INSTANCE = PortRange.newInstance(
-			Port.newInstance(Port.MIN_INT_VALUE), 
-			Port.newInstance(Port.MAX_INT_VALUE));
+			Port.newInstance(0));
 	
 	public static PortRange getDefault() {
 		return DEFAULT_INSTANCE;
@@ -58,10 +58,10 @@ public final class PortRange {
 		}
 		return newInstance(minPrt, maxPrt);
 	}
-	
 	private final Port minPort;
-	private final Port maxPort;
 	
+	private final Port maxPort;
+
 	private PortRange(final Port minPrt, final Port maxPrt) {
 		if (minPrt.compareTo(maxPrt) > 0) {
 			throw new IllegalArgumentException(String.format(
@@ -72,7 +72,7 @@ public final class PortRange {
 		this.minPort = minPrt;
 		this.maxPort = maxPrt;
 	}
-
+	
 	public boolean contains(final Port port) {
 		return this.minPort.compareTo(port) <= 0 && this.maxPort.compareTo(port) >= 0;
 	}
@@ -105,11 +105,11 @@ public final class PortRange {
 		}
 		return true;
 	}
-	
+
 	public Port getMaxPort() {
 		return this.maxPort;
 	}
-
+	
 	public Port getMinPort() {
 		return this.minPort;
 	}
@@ -121,6 +121,30 @@ public final class PortRange {
 		result = prime * result + ((this.maxPort == null) ? 0 : this.maxPort.hashCode());
 		result = prime * result + ((this.minPort == null) ? 0 : this.minPort.hashCode());
 		return result;
+	}
+	
+	@Override
+	public Iterator<Port> iterator() {
+		PortRange prtRange = this;
+		return new Iterator<Port>() {
+			
+			private final int end = prtRange.getMaxPort().intValue();
+			private int index = prtRange.getMinPort().intValue() - 1;
+			
+			@Override
+			public boolean hasNext() {
+				return this.index < this.end;
+			}
+
+			@Override
+			public Port next() {
+				if (!this.hasNext()) {
+					throw new NoSuchElementException();
+				}
+				return Port.newInstance(++this.index);
+			}
+			
+		};
 	}
 	
 	@Override

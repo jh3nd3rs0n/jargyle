@@ -1,6 +1,7 @@
 package com.github.jh3nd3rs0n.jargyle.server.internal.server.socks5;
 
 import java.io.IOException;
+import java.net.BindException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -15,10 +16,14 @@ import org.slf4j.LoggerFactory;
 import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
 import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
 import com.github.jh3nd3rs0n.jargyle.common.net.Host;
+import com.github.jh3nd3rs0n.jargyle.common.net.Port;
+import com.github.jh3nd3rs0n.jargyle.common.net.PortRange;
+import com.github.jh3nd3rs0n.jargyle.common.net.PortRanges;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSetting;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
 import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
+import com.github.jh3nd3rs0n.jargyle.internal.throwable.ThrowableHelper;
 import com.github.jh3nd3rs0n.jargyle.server.Rule;
 import com.github.jh3nd3rs0n.jargyle.server.RuleContext;
 import com.github.jh3nd3rs0n.jargyle.server.Settings;
@@ -36,7 +41,7 @@ final class ConnectCommandWorker extends CommandWorker {
 			ConnectCommandWorker.class);
 
 	private Rule applicableRule;
-	private final Socket clientFacingSocket;
+	private final Socket clientSocket;
 	private final CommandWorkerContext commandWorkerContext;
 	private final String desiredDestinationAddress;
 	private final int desiredDestinationPort;
@@ -47,7 +52,7 @@ final class ConnectCommandWorker extends CommandWorker {
 	public ConnectCommandWorker(final CommandWorkerContext context) {
 		super(context);
 		Rule applicableRl = context.getApplicableRule();
-		Socket clientFacingSock = context.getClientFacingSocket();
+		Socket clientSock = context.getClientSocket();
 		String desiredDestinationAddr =	context.getDesiredDestinationAddress();
 		int desiredDestinationPrt = context.getDesiredDestinationPort();
 		NetObjectFactory netObjFactory = 
@@ -55,7 +60,7 @@ final class ConnectCommandWorker extends CommandWorker {
 		Rules rls = context.getRules();
 		Settings sttngs = context.getSettings();
 		this.applicableRule = applicableRl;
-		this.clientFacingSocket = clientFacingSock;
+		this.clientSocket = clientSock;
 		this.commandWorkerContext = context;
 		this.desiredDestinationAddress = desiredDestinationAddr;
 		this.desiredDestinationPort = desiredDestinationPrt;
@@ -78,11 +83,8 @@ final class ConnectCommandWorker extends CommandWorker {
 	private boolean configureServerFacingSocket(
 			final Socket serverFacingSocket) {
 		SocketSettings socketSettings = this.getServerFacingSocketSettings();
-		Host bindHost = this.getServerFacingBindHost();
-		InetAddress bindInetAddress = bindHost.toInetAddress();		
 		try {
 			socketSettings.applyTo(serverFacingSocket);
-			serverFacingSocket.bind(new InetSocketAddress(bindInetAddress, 0));
 		} catch (SocketException e) {
 			LOGGER.error( 
 					ObjectLogMessageHelper.objectLogMessage(
@@ -91,16 +93,6 @@ final class ConnectCommandWorker extends CommandWorker {
 			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
 					Reply.GENERAL_SOCKS_SERVER_FAILURE);
 			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep, LOGGER);
-			return false;
-		} catch (IOException e) {
-			LOGGER.error( 
-					ObjectLogMessageHelper.objectLogMessage(
-							this, "Error in binding the server-facing socket"), 
-					e);
-			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
-					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			this.commandWorkerContext.sendSocks5Reply(
-					this, socks5Rep, LOGGER);
 			return false;
 		}
 		return true;
@@ -171,6 +163,16 @@ final class ConnectCommandWorker extends CommandWorker {
 		return host;
 	}
 	
+	private PortRanges getServerFacingBindPortRanges() {
+		List<PortRange> portRanges = this.applicableRule.getRuleResultValues(
+				Socks5RuleResultSpecConstants.SOCKS5_ON_CONNECT_SERVER_FACING_BIND_PORT_RANGE);
+		if (portRanges.size() > 0) {
+			return PortRanges.newInstance(portRanges);
+		}
+		return this.settings.getLastValue(
+				Socks5SettingSpecConstants.SOCKS5_ON_CONNECT_SERVER_FACING_BIND_PORT_RANGES);
+	}
+	
 	private int getServerFacingConnectTimeout() {
 		PositiveInteger connectTimeout =
 				this.applicableRule.getLastRuleResultValue(
@@ -196,101 +198,261 @@ final class ConnectCommandWorker extends CommandWorker {
 		return this.settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_CONNECT_SERVER_FACING_SOCKET_SETTINGS);
 	}
-	
-	private Socket newServerFacingSocket() {
+
+	private Socket newExtemporaneousServerFacingSocket(
+			final InetAddress bindInetAddress, 
+			final PortRanges bindPortRanges) {
 		Socks5Reply socks5Rep = null;
-		HostResolver hostResolver =	this.netObjectFactory.newHostResolver();		
-		Socket serverFacingSocket = null;		
-		int connectTimeout = this.getServerFacingConnectTimeout();		
-		if (this.canPrepareServerFacingSocket()) {
-			serverFacingSocket = netObjectFactory.newSocket();
-			if (!this.configureServerFacingSocket(serverFacingSocket)) {
-				return null;
+		Socket serverFacingSocket = null;
+		boolean serverFacingSocketBound = false;
+		for (PortRange bindPortRange : bindPortRanges.toList()) {
+			for (Port bindPort : bindPortRange) {
+				try {
+					serverFacingSocket = this.netObjectFactory.newSocket(
+							this.desiredDestinationAddress, 
+							this.desiredDestinationPort, 
+							bindInetAddress, 
+							bindPort.intValue());
+				} catch (UnknownHostException e) {
+					LOGGER.error( 
+							ObjectLogMessageHelper.objectLogMessage(
+									this, 
+									"Error in creating the server-facing "
+									+ "socket"), 
+							e);
+					socks5Rep = Socks5Reply.newFailureInstance(
+							Reply.HOST_UNREACHABLE);
+					this.commandWorkerContext.sendSocks5Reply(
+							this, socks5Rep, LOGGER);
+					return null;
+				} catch (IOException e) {
+					if (e instanceof BindException 
+							|| ThrowableHelper.getRecentCause(
+									e, BindException.class) != null) {
+						continue;
+					}
+					if (e instanceof SocketException
+							|| ThrowableHelper.getRecentCause(
+									e, SocketException.class) != null) {
+						LOGGER.error( 
+								ObjectLogMessageHelper.objectLogMessage(
+										this, 
+										"Error in connecting the server-facing "
+										+ "socket"), 
+								e);
+						socks5Rep = Socks5Reply.newFailureInstance(
+								Reply.NETWORK_UNREACHABLE);
+						this.commandWorkerContext.sendSocks5Reply(
+								this, socks5Rep, LOGGER);
+						return null;						
+					}
+					LOGGER.error( 
+							ObjectLogMessageHelper.objectLogMessage(
+									this, 
+									"Error in connecting the server-facing "
+									+ "socket"), 
+							e);
+					socks5Rep = Socks5Reply.newFailureInstance(
+							Reply.GENERAL_SOCKS_SERVER_FAILURE);
+					this.commandWorkerContext.sendSocks5Reply(
+							this, socks5Rep, LOGGER);
+					return null;
+				}
+				serverFacingSocketBound = true;
+				break;
 			}
-			try {
-				serverFacingSocket.connect(new InetSocketAddress(
-						hostResolver.resolve(this.desiredDestinationAddress),
-						this.desiredDestinationPort),
-						connectTimeout);
-			} catch (UnknownHostException e) {
-				LOGGER.error( 
-						ObjectLogMessageHelper.objectLogMessage(
-								this, 
-								"Error in connecting the server-facing socket"), 
-						e);
-				socks5Rep = Socks5Reply.newFailureInstance(
-						Reply.HOST_UNREACHABLE);
-				this.commandWorkerContext.sendSocks5Reply(
-						this, socks5Rep, LOGGER);
-				return null;
-			} catch (SocketException e) {
-				LOGGER.error( 
-						ObjectLogMessageHelper.objectLogMessage(
-								this, 
-								"Error in connecting the server-facing socket"), 
-						e);
-				socks5Rep = Socks5Reply.newFailureInstance(
-						Reply.NETWORK_UNREACHABLE);
-				this.commandWorkerContext.sendSocks5Reply(
-						this, socks5Rep, LOGGER);
-				return null;				
-			} catch (IOException e) {
-				LOGGER.error( 
-						ObjectLogMessageHelper.objectLogMessage(
-								this, 
-								"Error in connecting the server-facing socket"), 
-						e);
-				socks5Rep = Socks5Reply.newFailureInstance(
-						Reply.GENERAL_SOCKS_SERVER_FAILURE);
-				this.commandWorkerContext.sendSocks5Reply(
-						this, socks5Rep, LOGGER);
-				return null;
+			if (serverFacingSocketBound) {
+				break;
 			}
-		} else {
-			Host bindHost = this.getServerFacingBindHost();
-			InetAddress bindInetAddress = bindHost.toInetAddress();
-			try {
-				serverFacingSocket = this.netObjectFactory.newSocket(
-						this.desiredDestinationAddress, 
-						this.desiredDestinationPort, 
-						bindInetAddress, 
-						0);
-			} catch (UnknownHostException e) {
-				LOGGER.error( 
-						ObjectLogMessageHelper.objectLogMessage(
-								this, 
-								"Error in creating the server-facing socket"), 
-						e);
-				socks5Rep = Socks5Reply.newFailureInstance(
-						Reply.HOST_UNREACHABLE);
-				this.commandWorkerContext.sendSocks5Reply(
-						this, socks5Rep, LOGGER);
-				return null;
-			} catch (SocketException e) {
-				LOGGER.error( 
-						ObjectLogMessageHelper.objectLogMessage(
-								this, 
-								"Error in connecting the server-facing socket"), 
-						e);
-				socks5Rep = Socks5Reply.newFailureInstance(
-						Reply.NETWORK_UNREACHABLE);
-				this.commandWorkerContext.sendSocks5Reply(
-						this, socks5Rep, LOGGER);
-				return null;				
-			} catch (IOException e) {
-				LOGGER.error( 
-						ObjectLogMessageHelper.objectLogMessage(
-								this, 
-								"Error in connecting the server-facing socket"), 
-						e);
-				socks5Rep = Socks5Reply.newFailureInstance(
-						Reply.GENERAL_SOCKS_SERVER_FAILURE);
-				this.commandWorkerContext.sendSocks5Reply(
-						this, socks5Rep, LOGGER);
-				return null;
-			}				
+		}
+		if (!serverFacingSocketBound) {
+			LOGGER.error( 
+					ObjectLogMessageHelper.objectLogMessage(
+							this, 
+							"Unable to bind the server-facing socket to the "
+							+ "following address and port ranges: %s %s",
+							bindInetAddress,
+							bindPortRanges));
+			socks5Rep = Socks5Reply.newFailureInstance(
+					Reply.GENERAL_SOCKS_SERVER_FAILURE);
+			this.commandWorkerContext.sendSocks5Reply(
+					this, socks5Rep, LOGGER);
+			return null;			
 		}
 		return serverFacingSocket;
+	}
+	
+	private Socket newPreparedServerFacingSocket(
+			final InetAddress bindInetAddress, 
+			final PortRanges bindPortRanges) {
+		Socks5Reply socks5Rep = null;
+		InetAddress desiredDestinationInetAddress = 
+				this.resolveDesiredDestinationAddress(
+						this.desiredDestinationAddress);
+		if (desiredDestinationInetAddress == null) {
+			return null;
+		}
+		Socket serverFacingSocket = null;
+		int connectTimeout = this.getServerFacingConnectTimeout();		
+		boolean serverFacingSocketBound = false;
+		for (PortRange bindPortRange : bindPortRanges.toList()) {
+			for (Port bindPort : bindPortRange) {
+				serverFacingSocket = netObjectFactory.newSocket();
+				if (!this.configureServerFacingSocket(serverFacingSocket)) {
+					return null;
+				}
+				try {
+					serverFacingSocket.bind(new InetSocketAddress(
+							bindInetAddress, bindPort.intValue()));
+				} catch (SocketException e) {
+					try {
+						serverFacingSocket.close();
+					} catch (IOException ex) {
+						throw new AssertionError(ex);
+					}
+					continue;
+				} catch (IOException e) {
+					try {
+						serverFacingSocket.close();
+					} catch (IOException ex) {
+						throw new AssertionError(ex);
+					}					
+					LOGGER.error( 
+							ObjectLogMessageHelper.objectLogMessage(
+									this, 
+									"Error in binding the server-facing "
+									+ "socket"), 
+							e);
+					socks5Rep = Socks5Reply.newFailureInstance(
+							Reply.GENERAL_SOCKS_SERVER_FAILURE);
+					this.commandWorkerContext.sendSocks5Reply(
+							this, socks5Rep, LOGGER);
+					return null;
+				}				
+				try {
+					serverFacingSocket.connect(new InetSocketAddress(
+							desiredDestinationInetAddress,
+							this.desiredDestinationPort),
+							connectTimeout);
+				} catch (IOException e) {
+					if (e instanceof BindException 
+							|| ThrowableHelper.getRecentCause(
+									e, BindException.class) != null) {
+						try {
+							serverFacingSocket.close();
+						} catch (IOException ex) {
+							throw new AssertionError(ex);
+						}
+						continue;
+					}
+					if (e instanceof SocketException
+							|| ThrowableHelper.getRecentCause(
+									e, SocketException.class) != null) {
+						try {
+							serverFacingSocket.close();
+						} catch (IOException ex) {
+							throw new AssertionError(ex);
+						}						
+						LOGGER.error( 
+								ObjectLogMessageHelper.objectLogMessage(
+										this, 
+										"Error in connecting the server-facing "
+										+ "socket"), 
+								e);
+						socks5Rep = Socks5Reply.newFailureInstance(
+								Reply.NETWORK_UNREACHABLE);
+						this.commandWorkerContext.sendSocks5Reply(
+								this, socks5Rep, LOGGER);
+						return null;						
+					}
+					try {
+						serverFacingSocket.close();
+					} catch (IOException ex) {
+						throw new AssertionError(ex);
+					}
+					LOGGER.error( 
+							ObjectLogMessageHelper.objectLogMessage(
+									this, 
+									"Error in connecting the server-facing "
+									+ "socket"), 
+							e);
+					socks5Rep = Socks5Reply.newFailureInstance(
+							Reply.GENERAL_SOCKS_SERVER_FAILURE);
+					this.commandWorkerContext.sendSocks5Reply(
+							this, socks5Rep, LOGGER);
+					return null;
+				}				
+				serverFacingSocketBound = true;
+				break;
+			}
+			if (serverFacingSocketBound) {
+				break;
+			}
+		}
+		if (!serverFacingSocketBound) {
+			LOGGER.error( 
+					ObjectLogMessageHelper.objectLogMessage(
+							this, 
+							"Unable to bind the server-facing socket to the "
+							+ "following address and port ranges: %s %s",
+							bindInetAddress,
+							bindPortRanges));
+			socks5Rep = Socks5Reply.newFailureInstance(
+					Reply.GENERAL_SOCKS_SERVER_FAILURE);
+			this.commandWorkerContext.sendSocks5Reply(
+					this, socks5Rep, LOGGER);
+			return null;			
+		}
+		return serverFacingSocket;
+	}
+	
+	private Socket newServerFacingSocket() {
+		Host bindHost = this.getServerFacingBindHost();
+		InetAddress bindInetAddress = bindHost.toInetAddress();
+		PortRanges bindPortRanges = this.getServerFacingBindPortRanges();
+		return this.canPrepareServerFacingSocket() ? 
+				this.newPreparedServerFacingSocket(
+						bindInetAddress, bindPortRanges)	
+				: this.newExtemporaneousServerFacingSocket(
+						bindInetAddress, bindPortRanges);
+	}
+	
+	private InetAddress resolveDesiredDestinationAddress(
+			final String desiredDestinationAddress) {
+		Socks5Reply socks5Rep = null;
+		HostResolver hostResolver =	this.netObjectFactory.newHostResolver();
+		InetAddress desiredDestinationInetAddress = null;
+		try {
+			desiredDestinationInetAddress = hostResolver.resolve(
+					desiredDestinationAddress);
+		} catch (UnknownHostException e) {
+			LOGGER.error( 
+					ObjectLogMessageHelper.objectLogMessage(
+							this, 
+							"Unable to resolve the desired destination "
+							+ "address for the server-facing socket: %s",
+							desiredDestinationAddress), 
+					e);
+			socks5Rep = Socks5Reply.newFailureInstance(
+					Reply.HOST_UNREACHABLE);
+			this.commandWorkerContext.sendSocks5Reply(
+					this, socks5Rep, LOGGER);
+			return null;
+		} catch (IOException e) {
+			LOGGER.error( 
+					ObjectLogMessageHelper.objectLogMessage(
+							this, 
+							"Error in resolving the desired destination "
+							+ "address for the server-facing socket: %s",
+							desiredDestinationAddress), 
+					e);
+			socks5Rep = Socks5Reply.newFailureInstance(
+					Reply.HOST_UNREACHABLE);
+			this.commandWorkerContext.sendSocks5Reply(
+					this, socks5Rep, LOGGER);
+			return null;
+		}
+		return desiredDestinationInetAddress;
 	}
 	
 	@Override
@@ -327,18 +489,18 @@ final class ConnectCommandWorker extends CommandWorker {
 			}
 			Integer inboundBandwidthLimit = this.getRelayInboundBandwidthLimit();
 			Integer outboundBandwidthLimit = this.getRelayOutboundBandwidthLimit();
-			Socket clientFacingSock = this.clientFacingSocket;
+			Socket clientSock = this.clientSocket;
 			Socket serverFacingSock = serverFacingSocket;
 			if (outboundBandwidthLimit != null) {
-				clientFacingSock = new BandwidthLimitedSocket(
-						clientFacingSock, outboundBandwidthLimit.intValue());
+				clientSock = new BandwidthLimitedSocket(
+						clientSock, outboundBandwidthLimit.intValue());
 			}
 			if (inboundBandwidthLimit != null) {
 				serverFacingSock = new BandwidthLimitedSocket(
 						serverFacingSock, inboundBandwidthLimit.intValue());
 			}			
 			RelayServer.Builder builder = new RelayServer.Builder(
-					clientFacingSock, serverFacingSock);
+					clientSock, serverFacingSock);
 			builder.bufferSize(this.getRelayBufferSize());
 			builder.idleTimeout(this.getRelayIdleTimeout());
 			try {

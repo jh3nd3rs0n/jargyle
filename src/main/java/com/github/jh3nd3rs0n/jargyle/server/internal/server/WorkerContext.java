@@ -21,7 +21,7 @@ public class WorkerContext implements Closeable {
 
 	private final Set<Rule> belowAllowLimitRules;
 	private final DtlsDatagramSocketFactory clientFacingDtlsDatagramSocketFactory;
-	private Socket clientFacingSocket;
+	private Socket clientSocket;
 	private boolean closed;
 	private final Configuration configuration;
 	private final Routes routes;
@@ -30,13 +30,13 @@ public class WorkerContext implements Closeable {
 	private final WorkerContext workerContext;
 	
 	WorkerContext(
-			final Socket clientFacingSock,
+			final Socket clientSock,
 			final Configuration config,
 			final Rules rls,
 			final Routes rtes,
 			final Route selectedRte,
 			final DtlsDatagramSocketFactory clientFacingDtlsDatagramSockFactory) {
-		Objects.requireNonNull(clientFacingSock);
+		Objects.requireNonNull(clientSock);
 		Objects.requireNonNull(config);
 		Objects.requireNonNull(rls);
 		Objects.requireNonNull(rtes);
@@ -44,7 +44,7 @@ public class WorkerContext implements Closeable {
 		this.belowAllowLimitRules = new HashSet<Rule>();
 		this.clientFacingDtlsDatagramSocketFactory = 
 				clientFacingDtlsDatagramSockFactory;
-		this.clientFacingSocket = clientFacingSock;
+		this.clientSocket = clientSock;
 		this.closed = false;
 		this.configuration = config;
 		this.routes = rtes;
@@ -57,7 +57,7 @@ public class WorkerContext implements Closeable {
 		Objects.requireNonNull(context);
 		this.belowAllowLimitRules = null;
 		this.clientFacingDtlsDatagramSocketFactory = null;
-		this.clientFacingSocket = null;
+		this.clientSocket = null;
 		this.closed = false;
 		this.configuration = null;
 		this.routes = null;
@@ -114,7 +114,7 @@ public class WorkerContext implements Closeable {
 				firewallActionAllowLimit.decrementCurrentCount();
 			}
 		}
-		this.clientFacingSocket.close();
+		this.clientSocket.close();
 		this.closed = true;
 	}
 	
@@ -132,11 +132,11 @@ public class WorkerContext implements Closeable {
 		return this.clientFacingDtlsDatagramSocketFactory;
 	}
 	
-	public final Socket getClientFacingSocket() {
+	public final Socket getClientSocket() {
 		if (this.workerContext != null) {
-			return this.workerContext.getClientFacingSocket();
+			return this.workerContext.getClientSocket();
 		}
-		return this.clientFacingSocket;
+		return this.clientSocket;
 	}
 
 	public final Configuration getConfiguration() {
@@ -181,12 +181,12 @@ public class WorkerContext implements Closeable {
 		return this.closed;
 	}
 	
-	public final void setClientFacingSocket(final Socket clientFacingSock) {
+	public final void setClientSocket(final Socket clientSock) {
 		if (this.workerContext != null) {
-			this.workerContext.setClientFacingSocket(clientFacingSock);
+			this.workerContext.setClientSocket(clientSock);
 			return;
 		}
-		this.clientFacingSocket = Objects.requireNonNull(clientFacingSock);
+		this.clientSocket = Objects.requireNonNull(clientSock);
 	}
 	
 	public final void setSelectedRoute(final Route selectedRte) {
@@ -201,8 +201,8 @@ public class WorkerContext implements Closeable {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append(this.getClass().getSimpleName())
-			.append(" [getClientFacingSocket()=")
-			.append(this.getClientFacingSocket())
+			.append(" [getClientSocket()=")
+			.append(this.getClientSocket())
 			.append("]");
 		return builder.toString();
 	}
@@ -213,7 +213,7 @@ public class WorkerContext implements Closeable {
 			return;
 		}
 		OutputStream clientFacingOutputStream = 
-				this.clientFacingSocket.getOutputStream();
+				this.clientSocket.getOutputStream();
 		clientFacingOutputStream.write(b);
 		clientFacingOutputStream.flush();
 	}

@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+import com.github.jh3nd3rs0n.jargyle.client.SocksClient.InternalSocketConnectParams;
 import com.github.jh3nd3rs0n.jargyle.common.net.FilterSocket;
 import com.github.jh3nd3rs0n.jargyle.common.net.PerformancePreferences;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
@@ -233,7 +234,6 @@ public final class Socks5ServerSocket extends ServerSocket {
 		private InetAddress localInetAddress;
 		private int localPort;
 		private SocketAddress localSocketAddress;
-		private Socket originalSocket;
 		private Socket socket;
 		private SocketSettings socketSettings;
 		private boolean socks5Bound;
@@ -241,14 +241,13 @@ public final class Socks5ServerSocket extends ServerSocket {
 		
 		public Socks5ServerSocketImpl(
 				final Socks5Client client) throws IOException {
-			Socket originalSock = client.newInternalSocket();
+			Socket sock = client.newInternalSocket();
 			this.bound = false;
 			this.closed = false;
 			this.localInetAddress = null;
 			this.localPort = -1;
 			this.localSocketAddress = null;
-			this.originalSocket = originalSock;
-			this.socket = originalSock;
+			this.socket = sock;
 			this.socketSettings = SocketSettings.newInstance();
 			this.socks5Client = client;
 			this.socks5Bound = false;
@@ -291,18 +290,14 @@ public final class Socks5ServerSocket extends ServerSocket {
 									serverBoundPort));				
 				}				
 				acceptedSocks5Socket = new AcceptedSocks5Socket(
-						new Socks5Socket(
-								this.socks5Client, 
-								this.originalSocket, 
-								this.socket),
+						new Socks5Socket(this.socks5Client, this.socket),
 						InetAddress.getByName(serverBoundAddress),
 						serverBoundPort,
 						this.localInetAddress,
 						this.localPort);
-				Socket newOriginalSocket = this.socks5Client.newInternalSocket();
-				this.socketSettings.applyTo(newOriginalSocket);
-				this.originalSocket = newOriginalSocket;
-				this.socket = newOriginalSocket;
+				Socket newSocket = this.socks5Client.newInternalSocket();
+				this.socketSettings.applyTo(newSocket);
+				this.socket = newSocket;
 			} finally {
 				this.socks5Bound = false;
 			}
@@ -391,11 +386,10 @@ public final class Socks5ServerSocket extends ServerSocket {
 
 		public void socks5Bind(
 				final int port, final InetAddress bindAddr) throws IOException {
-			if (!this.socket.equals(this.originalSocket)) {
-				this.socket = this.originalSocket;
-			}
+			InternalSocketConnectParams params = new InternalSocketConnectParams();
+			params.setSocketSettings(this.socketSettings);
 			Socket sock = this.socks5Client.getConnectedInternalSocket(
-					this.socket, true);
+					this.socket, params);
 			Method method = this.socks5Client.negotiateMethod(sock);
 			MethodEncapsulation methodEncapsulation = 
 					this.socks5Client.doMethodSubnegotiation(method, sock);

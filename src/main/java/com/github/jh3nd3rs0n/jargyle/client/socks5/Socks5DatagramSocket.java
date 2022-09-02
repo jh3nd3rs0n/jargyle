@@ -15,6 +15,8 @@ import java.nio.channels.DatagramChannel;
 import java.util.Arrays;
 import java.util.Set;
 
+import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
+import com.github.jh3nd3rs0n.jargyle.client.SocksClient.InternalSocketConnectParams;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.internal.net.AddressHelper;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.AddressType;
@@ -35,8 +37,6 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 		private volatile boolean associated;
 		private volatile boolean connected;
 		private volatile DatagramSocket datagramSocket;
-		private volatile DatagramSocket originalDatagramSocket;
-		private volatile Socket originalSocket;
 		private volatile InetAddress remoteInetAddress;
 		private volatile int remotePort;
 		private volatile SocketAddress remoteSocketAddress;
@@ -47,18 +47,16 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 		
 		public Socks5DatagramSocketImpl(
 				final Socks5Client client) throws SocketException {
-			DatagramSocket originalDatagramSock = new DatagramSocket(null);
-			Socket originalSock = new Socket();
-			client.configureInternalSocket(originalSock);
+			DatagramSocket datagramSock = new DatagramSocket(null);
+			Socket sock = new Socket();
+			client.configureInternalSocket(sock);
 			this.associated = false;
 			this.connected = false;
-			this.datagramSocket = originalDatagramSock;
-			this.originalDatagramSocket = originalDatagramSock;
-			this.originalSocket = originalSock;
+			this.datagramSocket = datagramSock;
 			this.remoteInetAddress = null;
 			this.remotePort = -1;
 			this.remoteSocketAddress = null;
-			this.socket = originalSock;
+			this.socket = sock;
 			this.socks5Client = client;
 			this.udpRelayServerInetAddress = null;
 			this.udpRelayServerPort = -1;
@@ -173,18 +171,14 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 		}
 		
 		public void socks5UdpAssociate() throws IOException {
-			if (!this.socket.equals(this.originalSocket)) {
-				this.socket = this.originalSocket;
-			}
+			InternalSocketConnectParams params = new InternalSocketConnectParams();
+			params.setNetObjectFactory(NetObjectFactory.getDefault());
 			Socket sock = this.socks5Client.getConnectedInternalSocket(
-					this.socket, true);
+					this.socket, params);
 			Method method = this.socks5Client.negotiateMethod(sock);
 			MethodEncapsulation methodEncapsulation = 
 					this.socks5Client.doMethodSubnegotiation(method, sock);
 			Socket sck = methodEncapsulation.getSocket();
-			if (!this.datagramSocket.equals(this.originalDatagramSocket)) {
-				this.datagramSocket = this.originalDatagramSocket;
-			}
 			DatagramSocket datagramSock = this.datagramSocket;
 			String address = datagramSock.getLocalAddress().getHostAddress();
 			int port = datagramSock.getLocalPort();
@@ -281,7 +275,8 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 		super((SocketAddress) null);
 		this.socks5Client = client;		
 		this.socks5DatagramSocketImpl = new Socks5DatagramSocketImpl(client);
-		this.socks5DatagramSocketImpl.datagramSocket.bind(new InetSocketAddress(laddr, port));		
+		this.socks5DatagramSocketImpl.datagramSocket.bind(
+				new InetSocketAddress(laddr, port));		
 	}
 
 	Socks5DatagramSocket(

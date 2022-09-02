@@ -6,6 +6,7 @@ import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,7 +46,7 @@ final class BindCommandWorker extends CommandWorker {
 			BindCommandWorker.class);
 	
 	private Rule applicableRule;
-	private final Socket clientFacingSocket;
+	private final Socket clientSocket;
 	private final CommandWorkerContext commandWorkerContext;
 	private final String desiredDestinationAddress;
 	private final int desiredDestinationPort;
@@ -58,7 +59,7 @@ final class BindCommandWorker extends CommandWorker {
 	public BindCommandWorker(final CommandWorkerContext context) {
 		super(context);
 		Rule applicableRl = context.getApplicableRule();
-		Socket clientFacingSock = context.getClientFacingSocket();
+		Socket clientSock = context.getClientSocket();
 		String desiredDestinationAddr =	context.getDesiredDestinationAddress();
 		int desiredDestinationPrt = context.getDesiredDestinationPort();
 		MethodSubnegotiationResults methSubnegotiationResults =
@@ -69,7 +70,7 @@ final class BindCommandWorker extends CommandWorker {
 		Settings sttngs = context.getSettings();
 		Socks5Request socks5Req = context.getSocks5Request();
 		this.applicableRule = applicableRl;
-		this.clientFacingSocket = clientFacingSock;
+		this.clientSocket = clientSock;
 		this.commandWorkerContext = context;
 		this.desiredDestinationAddress = desiredDestinationAddr;
 		this.desiredDestinationPort = desiredDestinationPrt;
@@ -101,10 +102,15 @@ final class BindCommandWorker extends CommandWorker {
 	
 	private boolean bindListenSocket(final ServerSocket listenSocket) {
 		Socks5Reply socks5Rep = null;
-		HostResolver hostResolver =	this.netObjectFactory.newHostResolver();		
+		InetAddress desiredDestinationInetAddress = 
+				this.resolveDesiredDestinationAddress(
+						this.desiredDestinationAddress);
+		if (desiredDestinationInetAddress == null) {
+			return false;
+		}		
 		try {
 			listenSocket.bind(new InetSocketAddress(
-					hostResolver.resolve(this.desiredDestinationAddress),
+					desiredDestinationInetAddress,
 					this.desiredDestinationPort));
 		} catch (IOException e) {
 			LOGGER.error( 
@@ -230,7 +236,7 @@ final class BindCommandWorker extends CommandWorker {
 		}
 		return true;
 	}
-
+	
 	private boolean configureInboundSocket(final Socket inboundSocket) {
 		SocketSettings socketSettings = this.getInboundSocketSettings();
 		try {
@@ -264,7 +270,7 @@ final class BindCommandWorker extends CommandWorker {
 		}
 		return true;
 	}
-	
+
 	private SocketSettings getInboundSocketSettings() {
 		List<SocketSetting<Object>> socketSettings = 
 				this.applicableRule.getRuleResultValues(
@@ -351,10 +357,10 @@ final class BindCommandWorker extends CommandWorker {
 		RuleContext secondSocks5ReplyRuleContext = new RuleContext();
 		secondSocks5ReplyRuleContext.putRuleArgValue(
 				GeneralRuleArgSpecConstants.CLIENT_ADDRESS, 
-				this.clientFacingSocket.getInetAddress().getHostAddress());
+				this.clientSocket.getInetAddress().getHostAddress());
 		secondSocks5ReplyRuleContext.putRuleArgValue(
 				GeneralRuleArgSpecConstants.SOCKS_SERVER_ADDRESS, 
-				this.clientFacingSocket.getLocalAddress().getHostAddress());
+				this.clientSocket.getLocalAddress().getHostAddress());
 		secondSocks5ReplyRuleContext.putRuleArgValue(
 				Socks5RuleArgSpecConstants.SOCKS5_METHOD, 
 				this.methodSubnegotiationResults.getMethod());
@@ -383,6 +389,44 @@ final class BindCommandWorker extends CommandWorker {
 				Socks5RuleArgSpecConstants.SOCKS5_SECOND_SERVER_BOUND_PORT, 
 				Port.newInstance(secondSocks5Rep.getServerBoundPort()));		
 		return secondSocks5ReplyRuleContext;
+	}
+	
+	private InetAddress resolveDesiredDestinationAddress(
+			final String desiredDestinationAddress) {
+		Socks5Reply socks5Rep = null;
+		HostResolver hostResolver =	this.netObjectFactory.newHostResolver();
+		InetAddress desiredDestinationInetAddress = null;
+		try {
+			desiredDestinationInetAddress = hostResolver.resolve(
+					desiredDestinationAddress);
+		} catch (UnknownHostException e) {
+			LOGGER.error( 
+					ObjectLogMessageHelper.objectLogMessage(
+							this, 
+							"Unable to resolve the desired destination "
+							+ "address for the listen socket: %s",
+							desiredDestinationAddress), 
+					e);
+			socks5Rep = Socks5Reply.newFailureInstance(
+					Reply.HOST_UNREACHABLE);
+			this.commandWorkerContext.sendSocks5Reply(
+					this, socks5Rep, LOGGER);
+			return null;
+		} catch (IOException e) {
+			LOGGER.error( 
+					ObjectLogMessageHelper.objectLogMessage(
+							this, 
+							"Error in resolving the desired destination "
+							+ "address for the listen socket: %s",
+							desiredDestinationAddress), 
+					e);
+			socks5Rep = Socks5Reply.newFailureInstance(
+					Reply.HOST_UNREACHABLE);
+			this.commandWorkerContext.sendSocks5Reply(
+					this, socks5Rep, LOGGER);
+			return null;
+		}
+		return desiredDestinationInetAddress;
 	}
 	
 	@Override
@@ -452,18 +496,18 @@ final class BindCommandWorker extends CommandWorker {
 			}
 			Integer inboundBandwidthLimit = this.getRelayInboundBandwidthLimit();
 			Integer outboundBandwidthLimit = this.getRelayOutboundBandwidthLimit();
-			Socket clientFacingSock = this.clientFacingSocket;
+			Socket clientSock = this.clientSocket;
 			Socket inboundSock = inboundSocket;
 			if (outboundBandwidthLimit != null) {
-				clientFacingSock = new BandwidthLimitedSocket(
-						clientFacingSock, outboundBandwidthLimit.intValue());
+				clientSock = new BandwidthLimitedSocket(
+						clientSock, outboundBandwidthLimit.intValue());
 			}
 			if (inboundBandwidthLimit != null) {
 				inboundSock = new BandwidthLimitedSocket(
 						inboundSock, inboundBandwidthLimit.intValue());
 			}
 			RelayServer.Builder builder = new RelayServer.Builder(
-					clientFacingSock, inboundSock);
+					clientSock, inboundSock);
 			builder.bufferSize(this.getRelayBufferSize());
 			builder.idleTimeout(this.getRelayIdleTimeout());
 			try {

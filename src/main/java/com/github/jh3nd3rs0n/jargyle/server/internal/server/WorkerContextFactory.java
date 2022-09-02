@@ -36,7 +36,7 @@ final class WorkerContextFactory {
 			WorkerContextFactory.class);
 	
 	private DtlsDatagramSocketFactory clientFacingDtlsDatagramSocketFactory;
-	private SslSocketFactory clientFacingSslSocketFactory;
+	private SslSocketFactory clientSslSocketFactory;
 	private final Configuration configuration;
 	private Configuration lastConfiguration;
 	private SelectionStrategy routeIdSelectionStrategy;
@@ -45,7 +45,7 @@ final class WorkerContextFactory {
 	
 	public WorkerContextFactory(final Configuration config) {
 		this.clientFacingDtlsDatagramSocketFactory = null;
-		this.clientFacingSslSocketFactory = null;
+		this.clientSslSocketFactory = null;
 		this.configuration = config;
 		this.lastConfiguration = null;
 		this.routeIdSelectionStrategy = null;
@@ -53,7 +53,7 @@ final class WorkerContextFactory {
 		this.rules = null;
 	}
 	
-	private boolean canAllowClientFacingSocket(
+	private boolean canAllowClientSocket(
 			final Rule applicableRule,
 			final RuleContext clientRuleContext,
 			final Set<Rule> belowAllowLimitRules) {
@@ -73,7 +73,7 @@ final class WorkerContextFactory {
 		String socksServerAddress = clientRuleContext.getRuleArgValue(
 				GeneralRuleArgSpecConstants.SOCKS_SERVER_ADDRESS);		
 		if (firewallAction.equals(FirewallAction.ALLOW)) {
-			if (!this.canAllowClientFacingSocketWithinLimit(
+			if (!this.canAllowClientSocketWithinLimit(
 					applicableRule, clientRuleContext, belowAllowLimitRules)) {
 				return false;
 			}
@@ -100,7 +100,7 @@ final class WorkerContextFactory {
 		return FirewallAction.ALLOW.equals(firewallAction);
 	}
 	
-	private boolean canAllowClientFacingSocketWithinLimit(
+	private boolean canAllowClientSocketWithinLimit(
 			final Rule applicableRule,
 			final RuleContext clientRuleContext,
 			final Set<Rule> belowAllowLimitRules) {
@@ -130,21 +130,20 @@ final class WorkerContextFactory {
 		return true;
 	}
 	
-	private void configureClientFacingSocket(
-			final Socket clientFacingSock,
+	private void configureClientSocket(
+			final Socket clientSock,
 			final Rule applicableRule,
 			final Configuration config) throws SocketException {
-		SocketSettings socketSettings = this.getClientFacingSocketSettings(
+		SocketSettings socketSettings = this.getClientSocketSettings(
 				applicableRule, config);
-		socketSettings.applyTo(clientFacingSock);
+		socketSettings.applyTo(clientSock);
 	}
 	
-	private SocketSettings getClientFacingSocketSettings(
-			final Rule applicableRule,
-			final Configuration config) {
+	private SocketSettings getClientSocketSettings(
+			final Rule applicableRule, final Configuration config) {
 		List<SocketSetting<Object>> socketSettings = 
 				applicableRule.getRuleResultValues(
-						GeneralRuleResultSpecConstants.CLIENT_FACING_SOCKET_SETTING);
+						GeneralRuleResultSpecConstants.CLIENT_SOCKET_SETTING);
 		if (socketSettings.size() > 0) {
 			List<SocketSetting<? extends Object>> socketSttngs = 
 					new ArrayList<SocketSetting<? extends Object>>(
@@ -153,17 +152,17 @@ final class WorkerContextFactory {
 		}
 		Settings settings = config.getSettings();
 		return settings.getLastValue(
-				GeneralSettingSpecConstants.CLIENT_FACING_SOCKET_SETTINGS);
+				GeneralSettingSpecConstants.CLIENT_SOCKET_SETTINGS);
 	}
 	
-	private RuleContext newClientRuleContext(final Socket clientFacingSock) {
+	private RuleContext newClientRuleContext(final Socket clientSock) {
 		RuleContext clientRuleContext = new RuleContext();
 		clientRuleContext.putRuleArgValue(
 				GeneralRuleArgSpecConstants.CLIENT_ADDRESS, 
-				clientFacingSock.getInetAddress().getHostAddress());
+				clientSock.getInetAddress().getHostAddress());
 		clientRuleContext.putRuleArgValue(
 				GeneralRuleArgSpecConstants.SOCKS_SERVER_ADDRESS, 
-				clientFacingSock.getLocalAddress().getHostAddress());
+				clientSock.getLocalAddress().getHostAddress());
 		return clientRuleContext;
 	}
 	
@@ -175,7 +174,7 @@ final class WorkerContextFactory {
 				this.clientFacingDtlsDatagramSocketFactory =
 						DtlsDatagramSocketFactoryImpl.isDtlsEnabled(config) ?
 								new DtlsDatagramSocketFactoryImpl(config) : null;
-				this.clientFacingSslSocketFactory =
+				this.clientSslSocketFactory =
 						SslSocketFactoryImpl.isSslEnabled(config) ?
 								new SslSocketFactoryImpl(config) : null;
 				this.routeIdSelectionStrategy = 
@@ -190,25 +189,24 @@ final class WorkerContextFactory {
 	}
 	
 	public WorkerContext newWorkerContext(
-			final Socket clientFacingSocket) throws IOException {
+			final Socket clientSocket) throws IOException {
 		Configuration config = this.newConfiguration();
-		Socket clientFacingSock = clientFacingSocket;
+		Socket clientSock = clientSocket;
 		RuleContext clientRuleContext = this.newClientRuleContext(
-				clientFacingSock);
+				clientSock);
 		Rule applicableRule = this.rules.firstAppliesTo(clientRuleContext);
 		Set<Rule> belowAllowLimitRules = new HashSet<Rule>();
-		if (!this.canAllowClientFacingSocket(
+		if (!this.canAllowClientSocket(
 				applicableRule, clientRuleContext, belowAllowLimitRules)) {
 			throw new IllegalArgumentException(
-					"client-facing socket not allowed");
+					"client socket not allowed");
 		}
-		this.configureClientFacingSocket(
-				clientFacingSock, applicableRule, config);
-		clientFacingSock = this.wrapClientFacingSocket(clientFacingSock);
+		this.configureClientSocket(clientSock, applicableRule, config);
+		clientSock = this.wrapClientSocket(clientSock);
 		Route selectedRoute = this.selectRoute(
 				applicableRule, clientRuleContext, config);
 		WorkerContext workerContext = new WorkerContext(
-				clientFacingSock, 
+				clientSock, 
 				config,
 				this.rules,
 				this.routes,
@@ -265,14 +263,14 @@ final class WorkerContextFactory {
 		return selectedRoute;
 	}
 	
-	private Socket wrapClientFacingSocket(
-			final Socket clientFacingSock) throws IOException {
-		Socket clientFacingSck = clientFacingSock;
-		if (this.clientFacingSslSocketFactory != null) {
-			clientFacingSck = this.clientFacingSslSocketFactory.newSocket(
-					clientFacingSck, null, true);
+	private Socket wrapClientSocket(
+			final Socket clientSock) throws IOException {
+		Socket clientSck = clientSock;
+		if (this.clientSslSocketFactory != null) {
+			clientSck = this.clientSslSocketFactory.newSocket(
+					clientSck, null, true);
 		}		
-		return clientFacingSck;
+		return clientSck;
 	}
 	
 }

@@ -79,8 +79,8 @@ public final class SocketEchoHelper {
 			ExecutorService executor = Executors.newCachedThreadPool();
 			while (true) {
 				try {
-					Socket clientFacingSocket = this.serverSocket.accept();
-					executor.execute(new Worker(clientFacingSocket));
+					Socket clientSocket = this.serverSocket.accept();
+					executor.execute(new Worker(clientSocket));
 				} catch (SocketException e) {
 					break;
 				} catch (IOException e) {
@@ -94,16 +94,16 @@ public final class SocketEchoHelper {
 
 	private static final class Worker implements Runnable {
 		
-		private final Socket clientFacingSocket;
+		private final Socket clientSocket;
 	
-		public Worker(final Socket clientFacingSock) {
-			this.clientFacingSocket = clientFacingSock;
+		public Worker(final Socket clientSock) {
+			this.clientSocket = clientSock;
 		}
 	
 		public void run() {
 			try {
-				InputStream in = this.clientFacingSocket.getInputStream();
-				OutputStream out = this.clientFacingSocket.getOutputStream();
+				InputStream in = this.clientSocket.getInputStream();
+				OutputStream out = this.clientSocket.getOutputStream();
 				byte[] bytes = IoHelper.readFrom(in);
 				String string = new String(bytes);
 				IoHelper.writeThenFlush(string.getBytes(), out);
@@ -111,7 +111,7 @@ public final class SocketEchoHelper {
 				e.printStackTrace();
 			} finally {
 				try {
-					this.clientFacingSocket.close();
+					this.clientSocket.close();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}

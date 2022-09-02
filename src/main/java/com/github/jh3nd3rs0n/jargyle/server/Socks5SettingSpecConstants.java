@@ -4,12 +4,14 @@ import java.util.List;
 import java.util.Map;
 
 import com.github.jh3nd3rs0n.jargyle.common.net.Host;
+import com.github.jh3nd3rs0n.jargyle.common.net.PortRanges;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
 import com.github.jh3nd3rs0n.jargyle.internal.help.HelpText;
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.BooleanSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.HostSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.MethodsSettingSpec;
+import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.PortRangesSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.PositiveIntegerSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.ProtectionLevelsSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.SocketSettingsSettingSpec;
@@ -182,6 +184,16 @@ public final class Socks5SettingSpecConstants {
 					Host.getAllZerosInet4Instance()));
 	
 	@HelpText(
+			doc = "The space separated list of binding port ranges for the "
+					+ "server-facing socket (default is 0)", 
+			usage = "socks5.onConnect.serverFacingBindPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]"
+	)	
+	public static final SettingSpec<PortRanges> SOCKS5_ON_CONNECT_SERVER_FACING_BIND_PORT_RANGES =
+			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
+					"socks5.onConnect.serverFacingBindPortRanges",
+					PortRanges.getDefault()));
+	
+	@HelpText(
 			doc = "The timeout in milliseconds on waiting for the "
 					+ "server-facing socket to connect (default is 60000)", 
 			usage = "socks5.onConnect.serverFacingConnectTimeout=INTEGER_BETWEEN_1_AND_2147483647"
@@ -212,6 +224,16 @@ public final class Socks5SettingSpecConstants {
 					Host.getAllZerosInet4Instance()));
 	
 	@HelpText(
+			doc = "The space separated list of binding port ranges for the "
+					+ "client-facing UDP socket (default is 0)", 
+			usage = "socks5.onUdpAssociate.clientFacingBindPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]"
+	)	
+	public static final SettingSpec<PortRanges> SOCKS5_ON_UDP_ASSOCIATE_CLIENT_FACING_BIND_PORT_RANGES =
+			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
+					"socks5.onUdpAssociate.clientFacingBindPortRanges",
+					PortRanges.getDefault()));
+	
+	@HelpText(
 			doc = "The space separated list of socket settings for the "
 					+ "client-facing UDP socket", 
 			usage = "socks5.onUdpAssociate.clientFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
@@ -230,6 +252,16 @@ public final class Socks5SettingSpecConstants {
 			SETTING_SPECS.addThenGet(new HostSettingSpec(
 					"socks5.onUdpAssociate.peerFacingBindHost", 
 					Host.getAllZerosInet4Instance()));
+	
+	@HelpText(
+			doc = "The space separated list of binding port ranges for the "
+					+ "peer-facing UDP socket (default is 0)", 
+			usage = "socks5.onUdpAssociate.peerFacingBindPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]"
+	)	
+	public static final SettingSpec<PortRanges> SOCKS5_ON_UDP_ASSOCIATE_PEER_FACING_BIND_PORT_RANGES =
+			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
+					"socks5.onUdpAssociate.peerFacingBindPortRanges",
+					PortRanges.getDefault()));
 	
 	@HelpText(
 			doc = "The space separated list of socket settings for the "

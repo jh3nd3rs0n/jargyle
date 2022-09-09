@@ -303,53 +303,53 @@ public final class Routes {
 	
 	private static void putChainingGeneralSettingConverters() {
 		SETTING_CONVERTER_MAP.put(
-				ChainingGeneralSettingSpecConstants.CHAINING_INTERNAL_BIND_HOST, 
+				ChainingGeneralSettingSpecConstants.CHAINING_CLIENT_BIND_HOST, 
 				new SettingConverter() {
 
 					@Override
 					public Object convert(final Setting<Object> setting) {
-						Host internalBindHost = (Host) setting.getValue();
-						return GeneralPropertySpecConstants.INTERNAL_BIND_HOST.newProperty(
-								internalBindHost);
+						Host clientBindHost = (Host) setting.getValue();
+						return GeneralPropertySpecConstants.CLIENT_BIND_HOST.newProperty(
+								clientBindHost);
 					}
 					
 				});
 		SETTING_CONVERTER_MAP.put(
-				ChainingGeneralSettingSpecConstants.CHAINING_INTERNAL_BIND_PORT_RANGES, 
+				ChainingGeneralSettingSpecConstants.CHAINING_CLIENT_BIND_PORT_RANGES, 
 				new SettingConverter() {
 
 					@Override
 					public Object convert(final Setting<Object> setting) {
-						PortRanges internalBindPortRanges = 
+						PortRanges clientBindPortRanges = 
 								(PortRanges) setting.getValue();
-						return GeneralPropertySpecConstants.INTERNAL_BIND_PORT_RANGES.newProperty(
-								internalBindPortRanges);
+						return GeneralPropertySpecConstants.CLIENT_BIND_PORT_RANGES.newProperty(
+								clientBindPortRanges);
 					}
 					
 				});
 		SETTING_CONVERTER_MAP.put(
-				ChainingGeneralSettingSpecConstants.CHAINING_INTERNAL_CONNECT_TIMEOUT, 
+				ChainingGeneralSettingSpecConstants.CHAINING_CLIENT_CONNECT_TIMEOUT, 
 				new SettingConverter() {
 
 					@Override
 					public Object convert(final Setting<Object> setting) {
-						PositiveInteger internalConnectTimeout = 
+						PositiveInteger clientConnectTimeout = 
 								(PositiveInteger) setting.getValue();
-						return GeneralPropertySpecConstants.INTERNAL_CONNECT_TIMEOUT.newProperty(
-								internalConnectTimeout);
+						return GeneralPropertySpecConstants.CLIENT_CONNECT_TIMEOUT.newProperty(
+								clientConnectTimeout);
 					} 
 					
 				});
 		SETTING_CONVERTER_MAP.put(
-				ChainingGeneralSettingSpecConstants.CHAINING_INTERNAL_SOCKET_SETTINGS, 
+				ChainingGeneralSettingSpecConstants.CHAINING_CLIENT_SOCKET_SETTINGS, 
 				new SettingConverter() {
 
 					@Override
 					public Object convert(final Setting<Object> setting) {
-						SocketSettings internalSocketSettings = 
+						SocketSettings clientSocketSettings = 
 								(SocketSettings) setting.getValue();
-						return GeneralPropertySpecConstants.INTERNAL_SOCKET_SETTINGS.newProperty(
-								internalSocketSettings);
+						return GeneralPropertySpecConstants.CLIENT_SOCKET_SETTINGS.newProperty(
+								clientSocketSettings);
 					}
 					
 				});
@@ -420,14 +420,14 @@ public final class Routes {
 					
 				});
 		SETTING_CONVERTER_MAP.put(
-				ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_RESOLVE_USE_RESOLVE_COMMAND, 
+				ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_USE_RESOLVE_COMMAND, 
 				new SettingConverter() {
 
 					@Override
 					public Object convert(final Setting<Object> setting) {
 						Boolean useResolveCommand =
 								(Boolean) setting.getValue();
-						return Socks5PropertySpecConstants.SOCKS5_RESOLVE_USE_RESOLVE_COMMAND.newProperty(
+						return Socks5PropertySpecConstants.SOCKS5_USE_RESOLVE_COMMAND.newProperty(
 								useResolveCommand);
 					}
 					

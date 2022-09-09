@@ -21,14 +21,14 @@ import com.github.jh3nd3rs0n.jargyle.internal.throwable.ThrowableHelper;
 
 public abstract class SocksClient {
 
-	public static final class InternalSocketConnectParams {
+	public static final class ClientSocketConnectParams {
 		
 		private Integer connectTimeout;
 		private boolean mustBindBeforeConnect;		
 		private NetObjectFactory netObjectFactory;
 		private SocketSettings socketSettings;
 		
-		public InternalSocketConnectParams() {
+		public ClientSocketConnectParams() {
 			this.connectTimeout = null;
 			this.mustBindBeforeConnect = true;
 			this.netObjectFactory = null;
@@ -90,8 +90,8 @@ public abstract class SocksClient {
 	}
 	
 	private final SocksClient chainedSocksClient;
-	private final HostResolver internalHostResolver;
-	private final NetObjectFactory internalNetObjectFactory;
+	private final HostResolver hostResolver;
+	private final NetObjectFactory netObjectFactory;	
 	private final Properties properties;
 	private final SocksServerUri socksServerUri;
 	private final SslSocketFactory sslSocketFactory;
@@ -107,75 +107,75 @@ public abstract class SocksClient {
 		Objects.requireNonNull(
 				serverUri, "SOCKS server URI must not be null");
 		Objects.requireNonNull(props, "Properties must not be null");
-		NetObjectFactory internalNetObjFactory = chainedClient == null ?
+		NetObjectFactory netObjFactory = chainedClient == null ?
 				NetObjectFactory.getInstance() 
 				: chainedClient.newSocksNetObjectFactory();
 		SslSocketFactory sslSockFactory = 
 				SslSocketFactoryImpl.isSslEnabled(props) ? 
 						new SslSocketFactoryImpl(this) : null;
 		this.chainedSocksClient = chainedClient;
-		this.internalHostResolver = internalNetObjFactory.newHostResolver();
-		this.internalNetObjectFactory = internalNetObjFactory;
+		this.hostResolver = netObjFactory.newHostResolver();
+		this.netObjectFactory = netObjFactory;
 		this.properties = props;
 		this.socksServerUri = serverUri;
 		this.sslSocketFactory = sslSockFactory;
 	}
 
-	protected void configureInternalSocket(
-			final Socket internalSocket) throws SocketException {
+	protected void configureClientSocket(
+			final Socket clientSocket) throws SocketException {
 		SocketSettings socketSettings = this.properties.getValue(
-				GeneralPropertySpecConstants.INTERNAL_SOCKET_SETTINGS);
-		socketSettings.applyTo(internalSocket);
+				GeneralPropertySpecConstants.CLIENT_SOCKET_SETTINGS);
+		socketSettings.applyTo(clientSocket);
 	}
 	
 	public final SocksClient getChainedSocksClient() {
 		return this.chainedSocksClient;
 	}
 	
-	protected Socket getConnectedInternalSocket(
-			final Socket internalSocket, 
-			final InternalSocketConnectParams params) throws IOException {
+	protected Socket getConnectedClientSocket(
+			final Socket clientSocket, 
+			final ClientSocketConnectParams params) throws IOException {
 		String socksServerUriHost = this.socksServerUri.getHost();
 		int socksServerUriPort = this.socksServerUri.getPort();
-		Socket internalSock = internalSocket;
+		Socket clientSock = clientSocket;
 		Integer connectTimeout = params.getConnectTimeout();
 		if (connectTimeout == null) {
 			connectTimeout = Integer.valueOf(this.properties.getValue(
-					GeneralPropertySpecConstants.INTERNAL_CONNECT_TIMEOUT).intValue());
+					GeneralPropertySpecConstants.CLIENT_CONNECT_TIMEOUT).intValue());
 		}
 		try {
 			InetAddress socksServerUriHostInetAddress =	this.resolve(
 					socksServerUriHost);
 			if (params.getMustBindBeforeConnect()) {
-				InetAddress internalBindHostInetAddress = 
+				InetAddress clientBindHostInetAddress = 
 						this.properties.getValue(
-								GeneralPropertySpecConstants.INTERNAL_BIND_HOST).toInetAddress();
-				PortRanges internalBindPortRanges =	this.properties.getValue(
-						GeneralPropertySpecConstants.INTERNAL_BIND_PORT_RANGES);
-				NetObjectFactory netObjectFactory = params.getNetObjectFactory();
-				if (netObjectFactory == null) {
-					netObjectFactory = this.internalNetObjectFactory;
+								GeneralPropertySpecConstants.CLIENT_BIND_HOST).toInetAddress();
+				PortRanges clientBindPortRanges =	this.properties.getValue(
+						GeneralPropertySpecConstants.CLIENT_BIND_PORT_RANGES);
+				NetObjectFactory netObjFactory = params.getNetObjectFactory();
+				if (netObjFactory == null) {
+					netObjFactory = this.netObjectFactory;
 				}
-				SocketSettings socketSettings = params.getSocketSettings();
-				if (socketSettings == null) {
-					socketSettings = this.properties.getValue(
-							GeneralPropertySpecConstants.INTERNAL_SOCKET_SETTINGS);
+				SocketSettings socketSttngs = params.getSocketSettings();
+				if (socketSttngs == null) {
+					socketSttngs = this.properties.getValue(
+							GeneralPropertySpecConstants.CLIENT_SOCKET_SETTINGS);
 				}
-				boolean internalSocketBound = false;
-				for (PortRange internalBindPortRange : internalBindPortRanges.toList()) {
-					for (Port internalBindPort : internalBindPortRange) {
+				boolean clientSocketBound = false;
+				for (PortRange clientBindPortRange : clientBindPortRanges.toList()) {
+					for (Port clientBindPort : clientBindPortRange) {
 						try {
-							internalSock.bind(new InetSocketAddress(
-									internalBindHostInetAddress, 
-									internalBindPort.intValue()));
+							clientSock.bind(new InetSocketAddress(
+									clientBindHostInetAddress, 
+									clientBindPort.intValue()));
 						} catch (SocketException e) {
-							internalSock.close();
-							internalSock = netObjectFactory.newSocket();
-							socketSettings.applyTo(internalSock);
+							clientSock.close();
+							clientSock = netObjFactory.newSocket();
+							socketSttngs.applyTo(clientSock);
 							continue;
 						}
 						try {
-							internalSock.connect(new InetSocketAddress(
+							clientSock.connect(new InetSocketAddress(
 									socksServerUriHostInetAddress,
 									socksServerUriPort), 
 									connectTimeout);
@@ -183,29 +183,29 @@ public abstract class SocksClient {
 							if (e instanceof BindException 
 									|| ThrowableHelper.getRecentCause(
 											e, BindException.class) != null) {
-								internalSock.close();
-								internalSock = netObjectFactory.newSocket();
-								socketSettings.applyTo(internalSock);
+								clientSock.close();
+								clientSock = netObjFactory.newSocket();
+								socketSttngs.applyTo(clientSock);
 								continue;
 							}
 							throw e;
 						}
-						internalSocketBound = true;
+						clientSocketBound = true;
 						break;
 					}
-					if (internalSocketBound) {
+					if (clientSocketBound) {
 						break;
 					}
 				}
-				if (!internalSocketBound) {
+				if (!clientSocketBound) {
 					throw new BindException(String.format(
 							"unable to bind to the following address and port "
 							+ "ranges: %s %s",
-							internalBindHostInetAddress,
-							internalBindPortRanges));
+							clientBindHostInetAddress,
+							clientBindPortRanges));
 				}
 			} else {
-				internalSock.connect(
+				clientSock.connect(
 						new InetSocketAddress(
 								socksServerUriHostInetAddress, 
 								socksServerUriPort), 
@@ -213,20 +213,20 @@ public abstract class SocksClient {
 			}
 			if (this.sslSocketFactory == null) {
 				return new SocksClientExceptionThrowingSocket(
-						this, internalSock);
+						this, clientSock);
 			}
-			internalSock = this.sslSocketFactory.newSocket(
-					internalSock, 
+			clientSock = this.sslSocketFactory.newSocket(
+					clientSock, 
 					socksServerUriHost, 
 					socksServerUriPort, 
 					true);
-			internalSock = new SocksClientExceptionThrowingSocket(
-					this, internalSock);
+			clientSock = new SocksClientExceptionThrowingSocket(
+					this, clientSock);
 		} catch (IOException e) {
 			SocksClientExceptionThrowingHelper.throwAsSocksClientException(
 					e, this);
 		}
-		return internalSock;		
+		return clientSock;		
 	}
 	
 	public final Properties getProperties() {
@@ -237,18 +237,22 @@ public abstract class SocksClient {
 		return this.socksServerUri;
 	}
 	
-	protected Socket newConnectedInternalSocket() throws IOException {
-		InetAddress internalBindHostInetAddress = this.properties.getValue(
-				GeneralPropertySpecConstants.INTERNAL_BIND_HOST).toInetAddress();
-		PortRanges internalBindPortRanges = this.properties.getValue(
-				GeneralPropertySpecConstants.INTERNAL_BIND_PORT_RANGES);
-		for (PortRange internalBindPortRange : internalBindPortRanges.toList()) {
-			for (Port internalBindPort : internalBindPortRange) {
-				Socket internalSocket = null;
+	protected Socket newClientSocket() {
+		return this.netObjectFactory.newSocket();
+	}
+	
+	protected Socket newConnectedClientSocket() throws IOException {
+		InetAddress clientBindHostInetAddress = this.properties.getValue(
+				GeneralPropertySpecConstants.CLIENT_BIND_HOST).toInetAddress();
+		PortRanges clientBindPortRanges = this.properties.getValue(
+				GeneralPropertySpecConstants.CLIENT_BIND_PORT_RANGES);
+		for (PortRange clientBindPortRange : clientBindPortRanges.toList()) {
+			for (Port clientBindPort : clientBindPortRange) {
+				Socket clientSocket = null;
 				try {
-					internalSocket = this.newConnectedInternalSocket(
-							internalBindHostInetAddress, 
-							internalBindPort.intValue());
+					clientSocket = this.newConnectedClientSocket(
+							clientBindHostInetAddress, 
+							clientBindPort.intValue());
 				} catch (IOException e) {
 					if (e instanceof BindException 
 							|| ThrowableHelper.getRecentCause(
@@ -257,53 +261,49 @@ public abstract class SocksClient {
 					}
 					throw e;
 				}
-				return internalSocket;
+				return clientSocket;
 			}
 		}
 		throw new BindException(String.format(
 				"unable to bind to the following address and port ranges: %s %s",
-				internalBindHostInetAddress,
-				internalBindPortRanges));
+				clientBindHostInetAddress,
+				clientBindPortRanges));
 	}
 	
-	protected Socket newConnectedInternalSocket(
+	protected Socket newConnectedClientSocket(
 			final InetAddress localAddr, 
 			final int localPort) throws IOException {
 		String socksServerUriHost = this.socksServerUri.getHost();
 		int socksServerUriPort = this.socksServerUri.getPort();
-		Socket internalSocket = null;
+		Socket clientSocket = null;
 		try {
-			internalSocket = this.internalNetObjectFactory.newSocket(
+			clientSocket = this.netObjectFactory.newSocket(
 					socksServerUriHost, 
 					socksServerUriPort, 
 					localAddr, 
 					localPort);
 			if (this.sslSocketFactory == null) {
 				return new SocksClientExceptionThrowingSocket(
-						this, internalSocket);
+						this, clientSocket);
 			}
-			internalSocket = this.sslSocketFactory.newSocket(
-					internalSocket, 
+			clientSocket = this.sslSocketFactory.newSocket(
+					clientSocket, 
 					socksServerUriHost, 
 					socksServerUriPort, 
 					true);
-			internalSocket = new SocksClientExceptionThrowingSocket(
-					this, internalSocket);
+			clientSocket = new SocksClientExceptionThrowingSocket(
+					this, clientSocket);
 		} catch (IOException e) {
 			SocksClientExceptionThrowingHelper.throwAsSocksClientException(
 					e, this);
 		}
-		return internalSocket;
-	}
-	
-	protected Socket newInternalSocket() {
-		return this.internalNetObjectFactory.newSocket();
+		return clientSocket;
 	}
 	
 	public abstract SocksNetObjectFactory newSocksNetObjectFactory();
 	
 	protected InetAddress resolve(final String host) throws IOException {
-		return this.internalHostResolver.resolve(host);
+		return this.hostResolver.resolve(host);
 	}
 	
 	@Override

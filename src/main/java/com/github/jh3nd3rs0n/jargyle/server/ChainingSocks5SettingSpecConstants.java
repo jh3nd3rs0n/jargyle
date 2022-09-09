@@ -82,12 +82,12 @@ public final class ChainingSocks5SettingSpecConstants {
 			doc = "The boolean value to indicate that the RESOLVE command is "
 					+ "to be used on the other SOCKS5 server for resolving "
 					+ "host names (default is false)", 
-			usage = "chaining.socks5.resolve.useResolveCommand=true|false"
+			usage = "chaining.socks5.useResolveCommand=true|false"
 	)	
-	public static final SettingSpec<Boolean> CHAINING_SOCKS5_RESOLVE_USE_RESOLVE_COMMAND = 
+	public static final SettingSpec<Boolean> CHAINING_SOCKS5_USE_RESOLVE_COMMAND = 
 			SETTING_SPECS.addThenGet(new BooleanSettingSpec(
-					"chaining.socks5.resolve.useResolveCommand", 
-					Socks5PropertySpecConstants.SOCKS5_RESOLVE_USE_RESOLVE_COMMAND.getDefaultProperty().getValue()));
+					"chaining.socks5.useResolveCommand", 
+					Socks5PropertySpecConstants.SOCKS5_USE_RESOLVE_COMMAND.getDefaultProperty().getValue()));
 
 	@HelpText(
 			doc = "The password to be used to access the other SOCKS5 server", 

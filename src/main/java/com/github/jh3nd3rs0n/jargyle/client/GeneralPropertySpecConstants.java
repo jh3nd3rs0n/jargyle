@@ -16,24 +16,24 @@ public final class GeneralPropertySpecConstants {
 
 	private static final PropertySpecs PROPERTY_SPECS = new PropertySpecs();
 	
-	public static final PropertySpec<Host> INTERNAL_BIND_HOST = 
+	public static final PropertySpec<Host> CLIENT_BIND_HOST = 
 			PROPERTY_SPECS.addThenGet(new HostPropertySpec(
-					"socksClient.internalBindHost",
+					"socksClient.clientBindHost",
 					Host.getAllZerosInet4Instance()));
 	
-	public static final PropertySpec<PortRanges> INTERNAL_BIND_PORT_RANGES =
+	public static final PropertySpec<PortRanges> CLIENT_BIND_PORT_RANGES =
 			PROPERTY_SPECS.addThenGet(new PortRangesPropertySpec(
-					"socksClient.internalBindPortRanges",
+					"socksClient.clientBindPortRanges",
 					PortRanges.getDefault()));
 	
-	public static final PropertySpec<PositiveInteger> INTERNAL_CONNECT_TIMEOUT = 
+	public static final PropertySpec<PositiveInteger> CLIENT_CONNECT_TIMEOUT = 
 			PROPERTY_SPECS.addThenGet(new PositiveIntegerPropertySpec(
-					"socksClient.internalConnectTimeout",
+					"socksClient.clientConnectTimeout",
 					PositiveInteger.newInstance(60000))); // 1 minute
 	
-	public static final PropertySpec<SocketSettings> INTERNAL_SOCKET_SETTINGS = 
+	public static final PropertySpec<SocketSettings> CLIENT_SOCKET_SETTINGS = 
 			PROPERTY_SPECS.addThenGet(new SocketSettingsPropertySpec(
-					"socksClient.internalSocketSettings",
+					"socksClient.clientSocketSettings",
 					SocketSettings.newInstance()));
 	
 	public static List<PropertySpec<Object>> values() {

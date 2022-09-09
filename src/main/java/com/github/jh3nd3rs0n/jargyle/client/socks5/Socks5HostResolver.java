@@ -8,7 +8,7 @@ import java.net.UnknownHostException;
 import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
 import com.github.jh3nd3rs0n.jargyle.client.Properties;
 import com.github.jh3nd3rs0n.jargyle.client.Socks5PropertySpecConstants;
-import com.github.jh3nd3rs0n.jargyle.client.SocksClient.InternalSocketConnectParams;
+import com.github.jh3nd3rs0n.jargyle.client.SocksClient.ClientSocketConnectParams;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.AddressType;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Command;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
@@ -37,7 +37,7 @@ public final class Socks5HostResolver extends HostResolver {
 		Properties properties = this.socks5Client.getProperties();
 		AddressType addressType = AddressType.valueForString(host);
 		if (!addressType.equals(AddressType.DOMAINNAME) || !properties.getValue(
-				Socks5PropertySpecConstants.SOCKS5_RESOLVE_USE_RESOLVE_COMMAND).booleanValue()) {
+				Socks5PropertySpecConstants.SOCKS5_USE_RESOLVE_COMMAND).booleanValue()) {
 			return InetAddress.getByName(host);
 		}
 		Socket socket = null;
@@ -45,9 +45,9 @@ public final class Socks5HostResolver extends HostResolver {
 		Socket sck = null;
 		Socks5Reply socks5Rep = null;
 		try {
-			socket = this.socks5Client.newInternalSocket();
-			InternalSocketConnectParams params = new InternalSocketConnectParams();
-			sock = this.socks5Client.getConnectedInternalSocket(
+			socket = this.socks5Client.newClientSocket();
+			ClientSocketConnectParams params = new ClientSocketConnectParams();
+			sock = this.socks5Client.getConnectedClientSocket(
 					socket, params);
 			Method method = this.socks5Client.negotiateMethod(sock);
 			MethodEncapsulation methodEncapsulation = 

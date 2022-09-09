@@ -45,9 +45,9 @@ public final class Socks5PropertySpecConstants {
 					"socksClient.socks5.methods",
 					Methods.getDefault()));
 	
-	public static final PropertySpec<Boolean> SOCKS5_RESOLVE_USE_RESOLVE_COMMAND = 
+	public static final PropertySpec<Boolean> SOCKS5_USE_RESOLVE_COMMAND = 
 			PROPERTY_SPECS.addThenGet(new BooleanPropertySpec(
-					"socksClient.socks5.resolve.useResolveCommand",
+					"socksClient.socks5.useResolveCommand",
 					Boolean.FALSE));
 	
 	public static final PropertySpec<EncryptedPassword> SOCKS5_USERPASSAUTH_PASSWORD =

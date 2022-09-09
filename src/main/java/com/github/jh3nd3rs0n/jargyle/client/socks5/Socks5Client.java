@@ -46,20 +46,20 @@ public final class Socks5Client extends SocksClient {
 	}
 	
 	@Override
-	protected void configureInternalSocket(
-			final Socket internalSocket) throws SocketException {
-		super.configureInternalSocket(internalSocket);
+	protected void configureClientSocket(
+			final Socket clientSocket) throws SocketException {
+		super.configureClientSocket(clientSocket);
 	}
 	
 	protected MethodEncapsulation doMethodSubnegotiation(
 			final Method method,
-			final Socket connectedInternalSocket) throws IOException {
+			final Socket connectedClientSocket) throws IOException {
 		MethodSubnegotiator methodSubnegotiator =
 				MethodSubnegotiator.getInstance(method);
 		MethodEncapsulation methodEncapsulation = null;
 		try {
 			methodEncapsulation = methodSubnegotiator.subnegotiate(
-					connectedInternalSocket, this);
+					connectedClientSocket, this);
 		} catch (IOException e) {
 			SocksClientExceptionThrowingHelper.throwAsSocksClientException(
 					e, this);
@@ -68,26 +68,26 @@ public final class Socks5Client extends SocksClient {
 				this, methodEncapsulation);
 	}
 
-	protected DatagramSocket getConnectedInternalDatagramSocket(
-			final DatagramSocket internalDatagramSocket,
+	protected DatagramSocket getConnectedClientDatagramSocket(
+			final DatagramSocket clientDatagramSocket,
 			final String udpRelayServerHost,
 			final int udpRelayServerPort) throws IOException {
-		DatagramSocket internalDatagramSock = internalDatagramSocket;
+		DatagramSocket clientDatagramSock = clientDatagramSocket;
 		try {
 			InetAddress udpRelayServerHostInetAddress = InetAddress.getByName(
 					udpRelayServerHost); 
-			internalDatagramSock.connect(
+			clientDatagramSock.connect(
 					udpRelayServerHostInetAddress, udpRelayServerPort);
 			if (this.dtlsDatagramSocketFactory == null) {
 				return new SocksClientExceptionThrowingDatagramSocket(
-						this, internalDatagramSock);
+						this, clientDatagramSock);
 			}
-			internalDatagramSock = 
+			clientDatagramSock = 
 					this.dtlsDatagramSocketFactory.newDatagramSocket(
-							internalDatagramSock);
-			internalDatagramSock = 
+							clientDatagramSock);
+			clientDatagramSock = 
 					new SocksClientExceptionThrowingDatagramSocket(
-							this, internalDatagramSock);
+							this, clientDatagramSock);
 		} catch (UncheckedIOException e) {
 			SocksClientExceptionThrowingHelper.throwAsSocksClientException(
 					e, this);			
@@ -95,27 +95,27 @@ public final class Socks5Client extends SocksClient {
 			SocksClientExceptionThrowingHelper.throwAsSocksClientException(
 					e, this);
 		}
-		return internalDatagramSock;
+		return clientDatagramSock;
 	}
 	
 	@Override
-	protected Socket getConnectedInternalSocket(
-			final Socket internalSocket, 
-			final InternalSocketConnectParams params) throws IOException {
-		return super.getConnectedInternalSocket(internalSocket, params);
+	protected Socket getConnectedClientSocket(
+			final Socket clientSocket, 
+			final ClientSocketConnectParams params) throws IOException {
+		return super.getConnectedClientSocket(clientSocket, params);
 	}
 	
 	protected Method negotiateMethod(
-			final Socket connectedInternalSocket) throws IOException {
+			final Socket connectedClientSocket) throws IOException {
 		Methods methods = this.getProperties().getValue(
 				Socks5PropertySpecConstants.SOCKS5_METHODS);
 		ClientMethodSelectionMessage cmsm = 
 				ClientMethodSelectionMessage.newInstance(methods);
 		Method method = null;
 		try {
-			InputStream inputStream = connectedInternalSocket.getInputStream();
+			InputStream inputStream = connectedClientSocket.getInputStream();
 			OutputStream outputStream = 
-					connectedInternalSocket.getOutputStream();
+					connectedClientSocket.getOutputStream();
 			outputStream.write(cmsm.toByteArray());
 			outputStream.flush();
 			ServerMethodSelectionMessage smsm =
@@ -129,20 +129,20 @@ public final class Socks5Client extends SocksClient {
 	}
 	
 	@Override
-	protected Socket newConnectedInternalSocket() throws IOException {
-		return super.newConnectedInternalSocket();
+	protected Socket newClientSocket() {
+		return super.newClientSocket();
 	}
 	
 	@Override
-	protected Socket newConnectedInternalSocket(
+	protected Socket newConnectedClientSocket() throws IOException {
+		return super.newConnectedClientSocket();
+	}
+	
+	@Override
+	protected Socket newConnectedClientSocket(
 			final InetAddress localAddr, 
 			final int localPort) throws IOException {
-		return super.newConnectedInternalSocket(localAddr, localPort);
-	}
-	
-	@Override
-	protected Socket newInternalSocket() {
-		return super.newInternalSocket();
+		return super.newConnectedClientSocket(localAddr, localPort);
 	}
 	
 	@Override
@@ -151,10 +151,10 @@ public final class Socks5Client extends SocksClient {
 	}
 	
 	protected Socks5Reply receiveSocks5Reply(
-			final Socket connectedInternalSocket) throws IOException {
+			final Socket connectedClientSocket) throws IOException {
 		Socks5Reply socks5Rep = null;
 		try {
-			InputStream inputStream = connectedInternalSocket.getInputStream();
+			InputStream inputStream = connectedClientSocket.getInputStream();
 			socks5Rep = Socks5Reply.newInstanceFrom(inputStream);
 		} catch (IOException e) {
 			SocksClientExceptionThrowingHelper.throwAsSocksClientException(
@@ -174,10 +174,10 @@ public final class Socks5Client extends SocksClient {
 	
 	protected void sendSocks5Request(
 			final Socks5Request socks5Req, 
-			final Socket connectedInternalSocket) throws IOException {
+			final Socket connectedClientSocket) throws IOException {
 		try {
 			OutputStream outputStream = 
-					connectedInternalSocket.getOutputStream();
+					connectedClientSocket.getOutputStream();
 			outputStream.write(socks5Req.toByteArray());
 			outputStream.flush();
 		} catch (IOException e) {

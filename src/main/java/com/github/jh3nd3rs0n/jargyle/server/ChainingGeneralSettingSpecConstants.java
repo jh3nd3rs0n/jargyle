@@ -22,52 +22,52 @@ public final class ChainingGeneralSettingSpecConstants {
 	private static final SettingSpecs SETTING_SPECS = new SettingSpecs();
 	
 	@HelpText(
-			doc = "The binding host name or address for the internal socket "
+			doc = "The binding host name or address for the client socket "
 					+ "that is used to connect to the other SOCKS server (used "
 					+ "for the SOCKS5 commands RESOLVE, BIND and UDP ASSOCIATE) "
 					+ "(default is 0.0.0.0)", 
-			usage = "chaining.internalBindHost=HOST"
+			usage = "chaining.clientBindHost=HOST"
 	)
-	public static final SettingSpec<Host> CHAINING_INTERNAL_BIND_HOST = 
+	public static final SettingSpec<Host> CHAINING_CLIENT_BIND_HOST = 
 			SETTING_SPECS.addThenGet(new HostSettingSpec(
-					"chaining.internalBindHost", 
-					GeneralPropertySpecConstants.INTERNAL_BIND_HOST.getDefaultProperty().getValue()));
+					"chaining.clientBindHost", 
+					GeneralPropertySpecConstants.CLIENT_BIND_HOST.getDefaultProperty().getValue()));
 
 	@HelpText(
 			doc = "The space separated list of binding port ranges for the "
-					+ "internal socket that is used to connect to the other "
+					+ "client socket that is used to connect to the other "
 					+ "SOCKS server (used for the SOCKS5 commands RESOLVE, "
 					+ "BIND and UDP ASSOCIATE) (default is 0)", 
-			usage = "chaining.internalBindPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]"
+			usage = "chaining.clientBindPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]"
 	)
-	public static final SettingSpec<PortRanges> CHAINING_INTERNAL_BIND_PORT_RANGES =
+	public static final SettingSpec<PortRanges> CHAINING_CLIENT_BIND_PORT_RANGES =
 			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
-					"chaining.internalBindPortRanges",
-					GeneralPropertySpecConstants.INTERNAL_BIND_PORT_RANGES.getDefaultProperty().getValue()));
+					"chaining.clientBindPortRanges",
+					GeneralPropertySpecConstants.CLIENT_BIND_PORT_RANGES.getDefaultProperty().getValue()));
 	
 	@HelpText(
-			doc = "The timeout in milliseconds on waiting for the internal "
+			doc = "The timeout in milliseconds on waiting for the client "
 					+ "socket to connect to the other SOCKS server (used for "
 					+ "the SOCKS5 commands RESOLVE, BIND and UDP ASSOCIATE) "
 					+ "(default is 60000)", 
-			usage = "chaining.internalConnectTimeout=INTEGER_BETWEEN_1_AND_2147483647"
+			usage = "chaining.clientConnectTimeout=INTEGER_BETWEEN_1_AND_2147483647"
 	)
-	public static final SettingSpec<PositiveInteger> CHAINING_INTERNAL_CONNECT_TIMEOUT = 
+	public static final SettingSpec<PositiveInteger> CHAINING_CLIENT_CONNECT_TIMEOUT = 
 			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
-					"chaining.internalConnectTimeout", 
-					GeneralPropertySpecConstants.INTERNAL_CONNECT_TIMEOUT.getDefaultProperty().getValue()));
+					"chaining.clientConnectTimeout", 
+					GeneralPropertySpecConstants.CLIENT_CONNECT_TIMEOUT.getDefaultProperty().getValue()));
 	
 	@HelpText(
 			doc = "The space separated list of socket settings for the "
-					+ "internal socket that is used to connect to the other "
+					+ "client socket that is used to connect to the other "
 					+ "SOCKS server (used for the SOCKS5 command RESOLVE and "
 					+ "UDP ASSOCIATE)", 
-			usage = "chaining.internalSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
+			usage = "chaining.clientSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
 	)
-	public static final SettingSpec<SocketSettings> CHAINING_INTERNAL_SOCKET_SETTINGS = 
+	public static final SettingSpec<SocketSettings> CHAINING_CLIENT_SOCKET_SETTINGS = 
 			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
-					"chaining.internalSocketSettings", 
-					GeneralPropertySpecConstants.INTERNAL_SOCKET_SETTINGS.getDefaultProperty().getValue()));
+					"chaining.clientSocketSettings", 
+					GeneralPropertySpecConstants.CLIENT_SOCKET_SETTINGS.getDefaultProperty().getValue()));
 
 	@HelpText(
 			doc = "The ID for a route through a chain of other SOCKS servers. "

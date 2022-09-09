@@ -16,7 +16,7 @@ import java.util.Arrays;
 import java.util.Set;
 
 import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
-import com.github.jh3nd3rs0n.jargyle.client.SocksClient.InternalSocketConnectParams;
+import com.github.jh3nd3rs0n.jargyle.client.SocksClient.ClientSocketConnectParams;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.internal.net.AddressHelper;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.AddressType;
@@ -49,7 +49,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 				final Socks5Client client) throws SocketException {
 			DatagramSocket datagramSock = new DatagramSocket(null);
 			Socket sock = new Socket();
-			client.configureInternalSocket(sock);
+			client.configureClientSocket(sock);
 			this.associated = false;
 			this.connected = false;
 			this.datagramSocket = datagramSock;
@@ -171,9 +171,9 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 		}
 		
 		public void socks5UdpAssociate() throws IOException {
-			InternalSocketConnectParams params = new InternalSocketConnectParams();
+			ClientSocketConnectParams params = new ClientSocketConnectParams();
 			params.setNetObjectFactory(NetObjectFactory.getDefault());
-			Socket sock = this.socks5Client.getConnectedInternalSocket(
+			Socket sock = this.socks5Client.getConnectedClientSocket(
 					this.socket, params);
 			Method method = this.socks5Client.negotiateMethod(sock);
 			MethodEncapsulation methodEncapsulation = 
@@ -212,7 +212,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 				serverBoundAddress = 
 						this.socks5Client.getSocksServerUri().getHost();
 			}
-			datagramSock = this.socks5Client.getConnectedInternalDatagramSocket(
+			datagramSock = this.socks5Client.getConnectedClientDatagramSocket(
 					datagramSock,
 					serverBoundAddress,
 					serverBoundPort);

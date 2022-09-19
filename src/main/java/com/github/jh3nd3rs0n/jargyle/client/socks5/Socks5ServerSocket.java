@@ -130,51 +130,75 @@ public final class Socks5ServerSocket extends ServerSocket {
 	
 	private static abstract class ServerSocketOptionHelper<T> {
 		
-		private static final Map<SocketOption<?>, ServerSocketOptionHelper<?>> SERVER_SOCKET_OPTION_HELPER_MAP =
-				new HashMap<SocketOption<?>, ServerSocketOptionHelper<?>>();
-		
-		private static final Set<SocketOption<?>> SUPPORTED_SOCKET_OPTIONS =
-				new HashSet<SocketOption<?>>();
-		
-		@SuppressWarnings("unused")
-		private static final ServerSocketOptionHelper<Integer> SO_RCVBUF_SERVER_SOCKET_OPTION_HELPER = new ServerSocketOptionHelper<Integer>(
-				StandardSocketOptions.SO_RCVBUF) {
-
-					@Override
-					public Integer getOption(
-							final ServerSocket serverSocket) throws IOException {
-						return Integer.valueOf(serverSocket.getReceiveBufferSize());
-					}
-
-					@Override
-					public ServerSocket setOption(
-							final Integer value,
-							final ServerSocket serverSocket) throws IOException {
-						serverSocket.setReceiveBufferSize(value.intValue());
-						return serverSocket;
-					}
+		private static final class SoRcvbufServerSocketOptionHelper 
+			extends ServerSocketOptionHelper<Integer> {
 			
-		};
-		
-		@SuppressWarnings("unused")
-		private static final ServerSocketOptionHelper<Boolean> SO_REUSEADDR_SERVER_SOCKET_OPTION_HELPER = new ServerSocketOptionHelper<Boolean>(
-				StandardSocketOptions.SO_REUSEADDR) {
-
-					@Override
-					public Boolean getOption(
-							final ServerSocket serverSocket) throws IOException {
-						return Boolean.valueOf(serverSocket.getReuseAddress());
-					}
-
-					@Override
-					public ServerSocket setOption(
-							final Boolean value,
-							final ServerSocket serverSocket) throws IOException {
-						serverSocket.setReuseAddress(value.booleanValue());
-						return serverSocket;
-					}
+			public SoRcvbufServerSocketOptionHelper() {
+				super(StandardSocketOptions.SO_RCVBUF);
+			}
 			
-		};
+			@Override
+			public Integer getOption(
+					final ServerSocket serverSocket) throws IOException {
+				return Integer.valueOf(serverSocket.getReceiveBufferSize());
+			}
+
+			@Override
+			public ServerSocket setOption(
+					final Integer value,
+					final ServerSocket serverSocket) throws IOException {
+				serverSocket.setReceiveBufferSize(value.intValue());
+				return serverSocket;
+			}
+			
+		}
+		
+		private static final class SoReuseaddrServerSocketOptionHelper 
+			extends ServerSocketOptionHelper<Boolean> {
+			
+			public SoReuseaddrServerSocketOptionHelper() {
+				super(StandardSocketOptions.SO_REUSEADDR);
+			}
+			
+			@Override
+			public Boolean getOption(
+					final ServerSocket serverSocket) throws IOException {
+				return Boolean.valueOf(serverSocket.getReuseAddress());
+			}
+
+			@Override
+			public ServerSocket setOption(
+					final Boolean value,
+					final ServerSocket serverSocket) throws IOException {
+				serverSocket.setReuseAddress(value.booleanValue());
+				return serverSocket;
+			}
+			
+		}
+		
+		private static final Map<SocketOption<?>, ServerSocketOptionHelper<?>> SERVER_SOCKET_OPTION_HELPER_MAP;
+		
+		private static final Set<SocketOption<?>> SUPPORTED_SOCKET_OPTIONS;
+		
+		static {
+			SERVER_SOCKET_OPTION_HELPER_MAP =
+					new HashMap<SocketOption<?>, ServerSocketOptionHelper<?>>();
+			SUPPORTED_SOCKET_OPTIONS = new HashSet<SocketOption<?>>();
+			ServerSocketOptionHelper<Integer> soRcvbufServerSocketOptionHelper =
+					new SoRcvbufServerSocketOptionHelper();
+			SERVER_SOCKET_OPTION_HELPER_MAP.put(
+					soRcvbufServerSocketOptionHelper.getSocketOption(), 
+					soRcvbufServerSocketOptionHelper);
+			SUPPORTED_SOCKET_OPTIONS.add(
+					soRcvbufServerSocketOptionHelper.getSocketOption());
+			ServerSocketOptionHelper<Boolean> soReuseaddrServerSocketOptionHelper =
+					new SoReuseaddrServerSocketOptionHelper();
+			SERVER_SOCKET_OPTION_HELPER_MAP.put(
+					soReuseaddrServerSocketOptionHelper.getSocketOption(), 
+					soReuseaddrServerSocketOptionHelper);
+			SUPPORTED_SOCKET_OPTIONS.add(
+					soReuseaddrServerSocketOptionHelper.getSocketOption());
+		}
 		
 		public static <T> T getSocketOption(
 				final SocketOption<T> name,
@@ -211,13 +235,18 @@ public final class Socks5ServerSocket extends ServerSocket {
 			return Collections.unmodifiableSet(SUPPORTED_SOCKET_OPTIONS);
 		}
 		
+		private final SocketOption<T> socketOption;
+		
 		private ServerSocketOptionHelper(final SocketOption<T> sockOption) {
-			SERVER_SOCKET_OPTION_HELPER_MAP.put(sockOption, this);
-			SUPPORTED_SOCKET_OPTIONS.add(sockOption);
+			this.socketOption = sockOption;
 		}
 		
 		public abstract T getOption(
 				final ServerSocket serverSocket) throws IOException;
+		
+		public SocketOption<T> getSocketOption() {
+			return this.socketOption;
+		}
 		
 		public abstract ServerSocket setOption(
 				final T value,

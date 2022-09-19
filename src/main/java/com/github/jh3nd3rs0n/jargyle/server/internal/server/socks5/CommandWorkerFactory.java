@@ -8,12 +8,12 @@ import com.github.jh3nd3rs0n.jargyle.transport.socks5.Command;
 
 abstract class CommandWorkerFactory {
 
-	private static final Map<Command, CommandWorkerFactory> COMMAND_WORKER_FACTORY_MAP =
-			new HashMap<Command, CommandWorkerFactory>();
-	
-	@SuppressWarnings("unused")
-	private static final CommandWorkerFactory BIND_COMMAND_WORKER_FACTORY = new CommandWorkerFactory(
-			Command.BIND) {
+	private static final class BindCommandWorkerFactory 
+		extends CommandWorkerFactory {
+		
+		public BindCommandWorkerFactory() {
+			super(Command.BIND);
+		}
 		
 		@Override
 		public CommandWorker newCommandWorker(
@@ -21,11 +21,14 @@ abstract class CommandWorkerFactory {
 			return new BindCommandWorker(context);
 		}
 		
-	};
+	}
 	
-	@SuppressWarnings("unused")
-	private static final CommandWorkerFactory CONNECT_COMMAND_WORKER_FACTORY = new CommandWorkerFactory(
-			Command.CONNECT) {
+	private static final class ConnectCommandWorkerFactory 
+		extends CommandWorkerFactory {
+		
+		public ConnectCommandWorkerFactory() {
+			super(Command.CONNECT);
+		}
 		
 		@Override
 		public CommandWorker newCommandWorker(
@@ -33,11 +36,14 @@ abstract class CommandWorkerFactory {
 			return new ConnectCommandWorker(context);
 		}
 		
-	};
-	
-	@SuppressWarnings("unused")
-	private static final CommandWorkerFactory RESOLVE_COMMAND_WORKER_FACTORY = new CommandWorkerFactory(
-			Command.RESOLVE) {
+	}
+
+	private static final class ResolveCommandWorkerFactory 
+		extends CommandWorkerFactory {
+		
+		public ResolveCommandWorkerFactory() {
+			super(Command.RESOLVE);
+		}
 		
 		@Override
 		public CommandWorker newCommandWorker(
@@ -45,18 +51,49 @@ abstract class CommandWorkerFactory {
 			return new ResolveCommandWorker(context);
 		}
 		
-	};
-	
-	@SuppressWarnings("unused")
-	private static final CommandWorkerFactory UDP_ASSOCIATE_COMMAND_WORKER_FACTORY = new CommandWorkerFactory(
-			Command.UDP_ASSOCIATE) {
+	}
+
+	private static final class UdpAssociateCommandWorkerFactory 
+		extends CommandWorkerFactory {
+		
+		public UdpAssociateCommandWorkerFactory() {
+			super(Command.UDP_ASSOCIATE);
+		}
 		
 		@Override
 		public CommandWorker newCommandWorker(
 				final CommandWorkerContext context) {
 			return new UdpAssociateCommandWorker(context);
 		}
-	};
+		
+	}
+	
+	private static final Map<Command, CommandWorkerFactory> COMMAND_WORKER_FACTORY_MAP;
+	
+	static {
+		COMMAND_WORKER_FACTORY_MAP = 
+				new HashMap<Command, CommandWorkerFactory>();
+		CommandWorkerFactory bindCommandWorkerFactory = 
+				new BindCommandWorkerFactory();
+		COMMAND_WORKER_FACTORY_MAP.put(
+				bindCommandWorkerFactory.getCommand(), 
+				bindCommandWorkerFactory);
+		CommandWorkerFactory connectCommandWorkerFactory =
+				new ConnectCommandWorkerFactory();
+		COMMAND_WORKER_FACTORY_MAP.put(
+				connectCommandWorkerFactory.getCommand(), 
+				connectCommandWorkerFactory);
+		CommandWorkerFactory resolveCommandWorkerFactory =
+				new ResolveCommandWorkerFactory();
+		COMMAND_WORKER_FACTORY_MAP.put(
+				resolveCommandWorkerFactory.getCommand(), 
+				resolveCommandWorkerFactory);
+		CommandWorkerFactory udpAssociateCommandWorkerFactory =
+				new UdpAssociateCommandWorkerFactory();
+		COMMAND_WORKER_FACTORY_MAP.put(
+				udpAssociateCommandWorkerFactory.getCommand(), 
+				udpAssociateCommandWorkerFactory);
+	}
 	
 	public static CommandWorkerFactory getInstance(final Command cmd) {
 		CommandWorkerFactory commandWorkerFactory = 
@@ -78,7 +115,6 @@ abstract class CommandWorkerFactory {
 	
 	private CommandWorkerFactory(final Command cmd) {
 		this.command = cmd;
-		COMMAND_WORKER_FACTORY_MAP.put(cmd, this);
 	}
 	
 	public Command getCommand() {

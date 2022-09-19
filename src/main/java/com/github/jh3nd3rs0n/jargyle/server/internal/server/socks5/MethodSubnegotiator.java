@@ -36,17 +36,18 @@ import com.github.jh3nd3rs0n.jargyle.transport.socks5.userpassauth.UsernamePassw
 
 abstract class MethodSubnegotiator {
 	
-	private static final Map<Method, MethodSubnegotiator> METHOD_SUBNEGOTIATOR_MAP =
-			new HashMap<Method, MethodSubnegotiator>();
-
-	@SuppressWarnings("unused")
-	private static final MethodSubnegotiator GSSAPI_METHOD_SUBNEGOTIATOR = new MethodSubnegotiator(
-			Method.GSSAPI) {
+	private static final class GssapiMethodSubnegotiator 
+		extends MethodSubnegotiator {
+		
+		public GssapiMethodSubnegotiator() {
+			super(Method.GSSAPI);
+		}
 		
 		private void establishContext(
 				final Socket socket,
 				final GSSContext context,
-				final Configuration configuration) throws IOException, GSSException {
+				final Configuration configuration) 
+				throws IOException, GSSException {
 			InputStream inStream = socket.getInputStream();
 			OutputStream outStream = socket.getOutputStream();
 			byte[] token = null;
@@ -87,7 +88,8 @@ abstract class MethodSubnegotiator {
 		private ProtectionLevel negotiateProtectionLevel(
 				final Socket socket, 
 				final GSSContext context,
-				final Configuration configuration) throws IOException, GSSException {
+				final Configuration configuration) 
+				throws IOException, GSSException {
 			InputStream inStream = socket.getInputStream();
 			OutputStream outStream = socket.getOutputStream();
 			Message message = Message.newInstanceFrom(inStream);
@@ -208,11 +210,14 @@ abstract class MethodSubnegotiator {
 					this.getMethod(), methodEncapsulation, user);
 		}
 		
-	};
-	
-	@SuppressWarnings("unused")
-	private static final MethodSubnegotiator NO_ACCEPTABLE_METHODS_METHOD_SUBNEGOTIATOR = new MethodSubnegotiator(
-			Method.NO_ACCEPTABLE_METHODS) {
+	}
+
+	private static final class NoAcceptableMethodsMethodSubnegotiator
+		extends MethodSubnegotiator {
+		
+		public NoAcceptableMethodsMethodSubnegotiator() {
+			super(Method.NO_ACCEPTABLE_METHODS);
+		}
 
 		@Override
 		public MethodSubnegotiationResults subnegotiate(
@@ -223,12 +228,15 @@ abstract class MethodSubnegotiator {
 					String.format("no acceptable methods from %s", socket));
 		}
 		
-	};
-	
-	@SuppressWarnings("unused")
-	private static final MethodSubnegotiator NO_AUTHENTICATION_REQUIRED_METHOD_SUBNEGOTIATOR = new MethodSubnegotiator(
-			Method.NO_AUTHENTICATION_REQUIRED) {
+	}
 
+	private static final class NoAuthenticationRequiredMethodSubnegotiator
+		extends MethodSubnegotiator {
+
+		public NoAuthenticationRequiredMethodSubnegotiator() {
+			super(Method.NO_AUTHENTICATION_REQUIRED);
+		}
+		
 		@Override
 		public MethodSubnegotiationResults subnegotiate(
 				final Socket socket, 
@@ -239,11 +247,14 @@ abstract class MethodSubnegotiator {
 					this.getMethod(), methodEncapsulation, null);
 		}
 		
-	};
-	
-	@SuppressWarnings("unused")
-	private static final MethodSubnegotiator USERNAME_PASSWORD_METHOD_SUBNEGOTIATOR = new MethodSubnegotiator(
-			Method.USERNAME_PASSWORD) {
+	}
+
+	private static final class UsernamePasswordMethodSubnegotiator 
+		extends MethodSubnegotiator {
+		
+		public UsernamePasswordMethodSubnegotiator() {
+			super(Method.USERNAME_PASSWORD);
+		}
 
 		@Override
 		public MethodSubnegotiationResults subnegotiate(
@@ -299,7 +310,33 @@ abstract class MethodSubnegotiator {
 					this.getMethod(), methodEncapsulation, username);
 		}
 		
-	};
+	}
+	
+	private static final Map<Method, MethodSubnegotiator> METHOD_SUBNEGOTIATOR_MAP;
+
+	static {
+		METHOD_SUBNEGOTIATOR_MAP = new HashMap<Method, MethodSubnegotiator>();
+		MethodSubnegotiator gssapiMethodSubnegotiator =
+				new GssapiMethodSubnegotiator();
+		METHOD_SUBNEGOTIATOR_MAP.put(
+				gssapiMethodSubnegotiator.getMethod(), 
+				gssapiMethodSubnegotiator);
+		MethodSubnegotiator noAcceptableMethodsMethodSubnegotiator =
+				new NoAcceptableMethodsMethodSubnegotiator();
+		METHOD_SUBNEGOTIATOR_MAP.put(
+				noAcceptableMethodsMethodSubnegotiator.getMethod(), 
+				noAcceptableMethodsMethodSubnegotiator);
+		MethodSubnegotiator noAuthenticationRequiredMethodSubnegotiator =
+				new NoAuthenticationRequiredMethodSubnegotiator();
+		METHOD_SUBNEGOTIATOR_MAP.put(
+				noAuthenticationRequiredMethodSubnegotiator.getMethod(), 
+				noAuthenticationRequiredMethodSubnegotiator);
+		MethodSubnegotiator usernamePasswordMethodSubnegotiator =
+				new UsernamePasswordMethodSubnegotiator();
+		METHOD_SUBNEGOTIATOR_MAP.put(
+				usernamePasswordMethodSubnegotiator.getMethod(), 
+				usernamePasswordMethodSubnegotiator);
+	}
 	
 	public static MethodSubnegotiator getInstance(final Method meth) {
 		MethodSubnegotiator methodSubnegotiator = METHOD_SUBNEGOTIATOR_MAP.get(
@@ -321,7 +358,6 @@ abstract class MethodSubnegotiator {
 	
 	private MethodSubnegotiator(final Method meth) {
 		this.method = meth;
-		METHOD_SUBNEGOTIATOR_MAP.put(meth, this);
 	}
 	
 	public Method getMethod() {

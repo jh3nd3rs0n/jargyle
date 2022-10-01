@@ -23,6 +23,17 @@ public final class ChainingSocks5SettingSpecConstants {
 	private static final SettingSpecs SETTING_SPECS = new SettingSpecs();
 	
 	@HelpText(
+			doc = "The boolean value to indicate that the client UDP address "
+					+ "and port for sending UDP datagrams to the other SOCKS5 "
+					+ "server is unknown (default is false)",
+			usage = "chaining.socks5.clientUdpAddressAndPortUnknown=true|false"
+	)
+	public static final SettingSpec<Boolean> CHAINING_SOCKS5_CLIENT_UDP_ADDRESS_AND_PORT_UNKNOWN =
+			SETTING_SPECS.addThenGet(new BooleanSettingSpec(
+					"chaining.socks5.clientUdpAddressAndPortUnknown",
+					Socks5PropertySpecConstants.SOCKS5_CLIENT_UDP_ADDRESS_AND_PORT_UNKNOWN.getDefaultProperty().getValue()));
+	
+	@HelpText(
 			doc = "The object ID for the GSS-API authentication mechanism to "
 					+ "the other SOCKS5 server (default is 1.2.840.113554.1.2.2)", 
 			usage = "chaining.socks5.gssapiauth.mechanismOid=SOCKS5_GSSAPIAUTH_MECHANISM_OID"

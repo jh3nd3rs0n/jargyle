@@ -371,6 +371,9 @@ The following is a list of available settings for the SOCKS server (displayed wh
     
       CHAINING SOCKS5 SETTINGS:
     
+        chaining.socks5.clientUdpAddressAndPortUnknown=true|false
+            The boolean value to indicate that the client UDP address and port for sending UDP datagrams to the other SOCKS5 server is unknown (default is false)
+    
         chaining.socks5.gssapiauth.mechanismOid=SOCKS5_GSSAPIAUTH_MECHANISM_OID
             The object ID for the GSS-API authentication mechanism to the other SOCKS5 server (default is 1.2.840.113554.1.2.2)
     

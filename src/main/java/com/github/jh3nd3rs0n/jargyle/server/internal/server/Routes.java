@@ -409,6 +409,19 @@ public final class Routes {
 	
 	private static void putChainingSocks5SettingConverters() {
 		SETTING_CONVERTER_MAP.put(
+				ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_CLIENT_UDP_ADDRESS_AND_PORT_UNKNOWN, 
+				new SettingConverter() {
+
+					@Override
+					public Object convert(final Setting<Object> setting) {
+						Boolean clientUdpAddressAndPortUnknown = 
+								(Boolean) setting.getValue();
+						return Socks5PropertySpecConstants.SOCKS5_CLIENT_UDP_ADDRESS_AND_PORT_UNKNOWN.newProperty(
+								clientUdpAddressAndPortUnknown);
+					}
+					
+				});
+		SETTING_CONVERTER_MAP.put(
 				ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_METHODS, 
 				new SettingConverter() {
 

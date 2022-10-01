@@ -16,9 +16,12 @@ import java.util.Arrays;
 import java.util.Set;
 
 import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
+import com.github.jh3nd3rs0n.jargyle.client.Properties;
+import com.github.jh3nd3rs0n.jargyle.client.Socks5PropertySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.client.SocksClient.ClientSocketConnectParams;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.internal.net.AddressHelper;
+import com.github.jh3nd3rs0n.jargyle.internal.net.AllZerosAddressConstants;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.AddressType;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Command;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
@@ -182,6 +185,12 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			DatagramSocket datagramSock = this.datagramSocket;
 			String address = datagramSock.getLocalAddress().getHostAddress();
 			int port = datagramSock.getLocalPort();
+			Properties properties = this.socks5Client.getProperties();
+			if (properties.getValue(
+					Socks5PropertySpecConstants.SOCKS5_CLIENT_UDP_ADDRESS_AND_PORT_UNKNOWN).booleanValue()) {
+				address = AllZerosAddressConstants.IPV4_ADDRESS;
+				port = 0;
+			}
 			Socks5Request socks5Req = Socks5Request.newInstance(
 					Command.UDP_ASSOCIATE, 
 					address, 

@@ -20,6 +20,11 @@ public final class Socks5PropertySpecConstants {
 
 	private static final PropertySpecs PROPERTY_SPECS = new PropertySpecs();
 	
+	public static final PropertySpec<Boolean> SOCKS5_CLIENT_UDP_ADDRESS_AND_PORT_UNKNOWN =
+			PROPERTY_SPECS.addThenGet(new BooleanPropertySpec(
+					"socksClient.socks5.clientUdpAddressAndPortUnknown",
+					Boolean.FALSE));
+	
 	public static final PropertySpec<Oid> SOCKS5_GSSAPIAUTH_MECHANISM_OID = 
 			PROPERTY_SPECS.addThenGet(new OidPropertySpec(
 					"socksClient.socks5.gssapiauth.mechanismOid",

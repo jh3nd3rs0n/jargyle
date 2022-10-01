@@ -22,7 +22,6 @@ import com.github.jh3nd3rs0n.jargyle.common.net.SocketSetting;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
 import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
-import com.github.jh3nd3rs0n.jargyle.internal.net.AddressHelper;
 import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.DtlsDatagramSocketFactory;
 import com.github.jh3nd3rs0n.jargyle.server.Rule;
 import com.github.jh3nd3rs0n.jargyle.server.RuleContext;
@@ -372,12 +371,6 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 		DatagramSocket peerFacingDatagramSock = null;
 		DatagramSocket clientFacingDatagramSock = null;		
 		Socks5Reply socks5Rep = null;
-		String desiredDestinationAddr = this.desiredDestinationAddress;
-		if (AddressHelper.isAllZerosAddress(desiredDestinationAddr)) {
-			desiredDestinationAddr = 
-					this.clientSocket.getInetAddress().getHostAddress();
-		}
-		int desiredDestinationPrt = this.desiredDestinationPort;
 		try {
 			peerFacingDatagramSock = this.newPeerFacingDatagramSocket();
 			if (peerFacingDatagramSock == null) {
@@ -439,8 +432,8 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 						inboundBandwidthLimit.intValue());
 			}
 			UdpRelayServer.Builder builder = new UdpRelayServer.Builder(
-					desiredDestinationAddr, 
-					desiredDestinationPrt,
+					this.desiredDestinationAddress, 
+					this.desiredDestinationPort,
 					clientFacingDatagramSock, 
 					peerFacingDatagramSock);
 			builder.bufferSize(this.getRelayBufferSize());

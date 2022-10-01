@@ -58,10 +58,6 @@ final class UdpRelayServer {
 			Objects.requireNonNull(clientAddr);
 			Objects.requireNonNull(clientFacingDatagramSock);
 			Objects.requireNonNull(peerFacingDatagramSock);
-			if (AddressHelper.isAllZerosAddress(clientAddr)) {
-				throw new IllegalArgumentException(
-						"client address must not be all zeros");
-			}
 			if (clientPrt < 0 || clientPrt > Port.MAX_INT_VALUE) {
 				throw new IllegalArgumentException(
 						"client port is out of range");
@@ -215,7 +211,8 @@ final class UdpRelayServer {
 			byte[] headerBytes = header.toByteArray();
 			InetAddress inetAddress = null;
 			try {
-				inetAddress = InetAddress.getByName(this.clientAddress);
+				inetAddress = InetAddress.getByName(
+						this.packetsWorkerContext.getClientAddress());
 			} catch (IOException e) {
 				LOGGER.error( 
 						ObjectLogMessageHelper.objectLogMessage(
@@ -319,7 +316,7 @@ final class UdpRelayServer {
 					RuleContext inboundRuleContext = this.newInboundRuleContext(
 							packet.getAddress().getHostAddress(),
 							packet.getPort(),
-							this.clientAddress,
+							this.packetsWorkerContext.getClientAddress(),
 							this.packetsWorkerContext.getClientPort());
 					Rule applicableRule = this.rules.firstAppliesTo(
 							inboundRuleContext);
@@ -382,35 +379,39 @@ final class UdpRelayServer {
 		private boolean canAllowDatagramPacket(final DatagramPacket packet) {
 			String address = packet.getAddress().getHostAddress();
 			int port = packet.getPort();
-			String clientAddr = this.clientAddress;
-			InetAddress clientInetAddr = null;
-			try {
-				clientInetAddr = InetAddress.getByName(clientAddr);
-			} catch (IOException e) {
-				LOGGER.error( 
-						ObjectLogMessageHelper.objectLogMessage(
-								this, 
-								"Error in determining the IP address from "
-								+ "the client"), 
-						e);
-				return false;
-			}
-			InetAddress inetAddr = null;
-			try {
-				inetAddr = InetAddress.getByName(address);
-			} catch (IOException e) {
-				LOGGER.error( 
-						ObjectLogMessageHelper.objectLogMessage(
-								this, 
-								"Error in determining the IP address from "
-								+ "the client"), 
-						e);
-				return false;
-			}
-			if ((!clientInetAddr.isLoopbackAddress() 
-					|| !inetAddr.isLoopbackAddress())
-					&& !clientInetAddr.equals(inetAddr)) {
-				return false;
+			String clientAddr = this.packetsWorkerContext.getClientAddress();
+			if (AddressHelper.isAllZerosAddress(clientAddr)) {
+				this.packetsWorkerContext.setClientAddress(address);
+			} else {
+				InetAddress clientInetAddr = null;
+				try {
+					clientInetAddr = InetAddress.getByName(clientAddr);
+				} catch (IOException e) {
+					LOGGER.error( 
+							ObjectLogMessageHelper.objectLogMessage(
+									this, 
+									"Error in determining the IP address from "
+									+ "the client"), 
+							e);
+					return false;
+				}
+				InetAddress inetAddr = null;
+				try {
+					inetAddr = InetAddress.getByName(address);
+				} catch (IOException e) {
+					LOGGER.error( 
+							ObjectLogMessageHelper.objectLogMessage(
+									this, 
+									"Error in determining the IP address from "
+									+ "the client"), 
+							e);
+					return false;
+				}
+				if ((!clientInetAddr.isLoopbackAddress() 
+						|| !inetAddr.isLoopbackAddress())
+						&& !clientInetAddr.equals(inetAddr)) {
+					return false;
+				}
 			}
 			int clientPrt = this.packetsWorkerContext.getClientPort();
 			if (clientPrt == 0) {
@@ -636,7 +637,7 @@ final class UdpRelayServer {
 					}
 					RuleContext outboundRuleContext =
 							this.newOutboundRuleContext(
-									this.clientAddress,
+									this.packetsWorkerContext.getClientAddress(),
 									this.packetsWorkerContext.getClientPort(),
 									header.getDesiredDestinationAddress(),
 									header.getDesiredDestinationPort());
@@ -689,7 +690,6 @@ final class UdpRelayServer {
 	private static abstract class PacketsWorker implements Runnable {
 		
 		protected final int bufferSize;
-		protected final String clientAddress;
 		protected final DatagramSocket clientFacingDatagramSocket;
 		protected final HostResolver hostResolver;
 		protected final int idleTimeout;
@@ -700,7 +700,6 @@ final class UdpRelayServer {
 
 		public PacketsWorker(final PacketsWorkerContext context) {
 			this.bufferSize = context.getBufferSize();
-			this.clientAddress = context.getClientAddress();
 			this.clientFacingDatagramSocket = 
 					context.getClientFacingDatagramSocket();
 			this.hostResolver = context.getHostResolver();
@@ -741,7 +740,7 @@ final class UdpRelayServer {
 		}
 		
 		public final String getClientAddress() {
-			return this.udpRelayServer.clientAddress;
+			return this.udpRelayServer.getClientAddress();
 		}
 		
 		public final DatagramSocket getClientFacingDatagramSocket() {
@@ -774,6 +773,10 @@ final class UdpRelayServer {
 		
 		public final Rules getRules() {
 			return this.udpRelayServer.rules;
+		}
+		
+		public final void setClientAddress(final String address) {
+			this.udpRelayServer.setClientAddress(address);
 		}
 		
 		public final void setClientPort(final int port) {
@@ -811,7 +814,7 @@ final class UdpRelayServer {
 	}
 	
 	private final int bufferSize;	
-	private final String clientAddress;
+	private String clientAddress;
 	private final DatagramSocket clientFacingDatagramSocket;	
 	private int clientPort;
 	private ExecutorService executor;
@@ -838,6 +841,10 @@ final class UdpRelayServer {
 		this.state = State.STOPPED;
 	}
 	
+	private synchronized String getClientAddress() {
+		return this.clientAddress;
+	}
+	
 	private synchronized int getClientPort() {
 		return this.clientPort;
 	}
@@ -848,6 +855,10 @@ final class UdpRelayServer {
 	
 	public State getState() {
 		return this.state;
+	}
+	
+	private synchronized void setClientAddress(final String address) {
+		this.clientAddress = address;
 	}
 	
 	private synchronized void setClientPort(final int port) {

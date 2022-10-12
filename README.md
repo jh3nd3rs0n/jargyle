@@ -1955,7 +1955,7 @@ Partial command line example:
     --setting=chaining.socks5.methods=GSSAPI \
     --setting=chaining.socks5.gssapiauth.serviceName=rcmd/127.0.0.1 \
     --setting=chaining.socksServerUri=socks5://127.0.0.1:34567 \
-    --setting=chaining.socks5.resolve.useResolveCommand=true
+    --setting=chaining.socks5.useResolveCommand=true
     
 ```
 
@@ -1984,7 +1984,7 @@ Partial configuration file example:
         <value>socks5://127.0.0.1:34567</value>
     </setting>        
     <setting>
-        <name>chaining.socks5.resolve.useResolveCommand</name>
+        <name>chaining.socks5.useResolveCommand</name>
         <value>true</value>
     </setting>    
     

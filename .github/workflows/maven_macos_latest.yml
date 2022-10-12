@@ -21,8 +21,8 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@main
         with:
+          distribution: 'temurin'
           java-version: ${{ matrix.java }}
-          distribution: temurin
       - name: Cache Maven packages
         uses: actions/cache@main
         with:

@@ -1,4 +1,4 @@
-package com.github.jh3nd3rs0n.jargyle.transport.socks;
+package com.github.jh3nd3rs0n.jargyle.transport;
 
 import java.io.IOException;
 

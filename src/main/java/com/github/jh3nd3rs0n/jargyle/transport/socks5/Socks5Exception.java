@@ -1,6 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.transport.socks5;
 
-import com.github.jh3nd3rs0n.jargyle.transport.socks.SocksException;
+import com.github.jh3nd3rs0n.jargyle.transport.SocksException;
 
 public class Socks5Exception extends SocksException {
 

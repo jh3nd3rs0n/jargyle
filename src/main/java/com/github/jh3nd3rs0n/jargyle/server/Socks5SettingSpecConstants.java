@@ -275,13 +275,13 @@ public final class Socks5SettingSpecConstants {
 	
 	@HelpText(
 			doc = "The buffer size in bytes for relaying the data (default is "
-					+ "32768)", 
+					+ "1024)", 
 			usage = "socks5.onUdpAssociate.relayBufferSize=INTEGER_BETWEEN_1_AND_2147483647"
 	)
 	public static final SettingSpec<PositiveInteger> SOCKS5_ON_UDP_ASSOCIATE_RELAY_BUFFER_SIZE = 
 			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
 					"socks5.onUdpAssociate.relayBufferSize", 
-					PositiveInteger.newInstance(32768)));
+					PositiveInteger.newInstance(1024)));
 	
 	@HelpText(
 			doc = "The timeout in milliseconds on relaying no data (default "

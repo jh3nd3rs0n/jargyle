@@ -546,7 +546,7 @@ The following is a list of available settings for the SOCKS server (displayed wh
             The space separated list of socket settings for the peer-facing UDP socket
     
         socks5.onUdpAssociate.relayBufferSize=INTEGER_BETWEEN_1_AND_2147483647
-            The buffer size in bytes for relaying the data (default is 32768)
+            The buffer size in bytes for relaying the data (default is 1024)
     
         socks5.onUdpAssociate.relayIdleTimeout=INTEGER_BETWEEN_1_AND_2147483647
             The timeout in milliseconds on relaying no data (default is 60000)

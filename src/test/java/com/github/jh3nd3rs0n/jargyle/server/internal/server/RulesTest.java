@@ -19,8 +19,8 @@ public class RulesTest {
 	@Test
 	public void testAnyAppliesTo01() {
 		Rule expectedRule = new Rule.Builder()
-				.addRuleCondition(Socks5RuleConditionSpecConstants.SOCKS5_COMMAND.newRuleCondition(Command.BIND))
-				.addRuleCondition(Socks5RuleConditionSpecConstants.SOCKS5_COMMAND.newRuleCondition(Command.UDP_ASSOCIATE))
+				.addRuleCondition(Socks5RuleConditionSpecConstants.SOCKS5_COMMAND.newRuleCondition(Command.BIND.toString()))
+				.addRuleCondition(Socks5RuleConditionSpecConstants.SOCKS5_COMMAND.newRuleCondition(Command.UDP_ASSOCIATE.toString()))
 				.addRuleResult(GeneralRuleResultSpecConstants.FIREWALL_ACTION.newRuleResult(FirewallAction.DENY))
 				.build(); 
 		Rules rules = Rules.newInstance(
@@ -35,7 +35,7 @@ public class RulesTest {
 				.addRuleResult(GeneralRuleResultSpecConstants.FIREWALL_ACTION_LOG_ACTION.newRuleResult(LogAction.LOG_AS_WARNING))
 				.build());
 		RuleContext ruleContext = new RuleContext();
-		ruleContext.putRuleArgValue(Socks5RuleArgSpecConstants.SOCKS5_COMMAND, Command.UDP_ASSOCIATE);
+		ruleContext.putRuleArgValue(Socks5RuleArgSpecConstants.SOCKS5_COMMAND, Command.UDP_ASSOCIATE.toString());
 		Rule actualRule = rules.firstAppliesTo(ruleContext);
 		assertEquals(expectedRule, actualRule);
 	}

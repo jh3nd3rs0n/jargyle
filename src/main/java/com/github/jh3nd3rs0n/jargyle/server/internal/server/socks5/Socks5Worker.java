@@ -92,8 +92,9 @@ public final class Socks5Worker {
 		LogAction firewallActionLogAction =
 				applicableRule.getLastRuleResultValue(
 						GeneralRuleResultSpecConstants.FIREWALL_ACTION_LOG_ACTION);
-		Command command = socks5RequestRuleContext.getRuleArgValue(
-				Socks5RuleArgSpecConstants.SOCKS5_COMMAND);
+		Command command = Command.valueOfString(
+				socks5RequestRuleContext.getRuleArgValue(
+						Socks5RuleArgSpecConstants.SOCKS5_COMMAND));
 		String desiredDestinationAddress = 
 				socks5RequestRuleContext.getRuleArgValue(
 						Socks5RuleArgSpecConstants.SOCKS5_DESIRED_DESTINATION_ADDRESS);
@@ -346,13 +347,13 @@ public final class Socks5Worker {
 				clientSock.getLocalAddress().getHostAddress());
 		socks5RequestRuleContext.putRuleArgValue(
 				Socks5RuleArgSpecConstants.SOCKS5_METHOD, 
-				methSubnegotiationResults.getMethod());
+				methSubnegotiationResults.getMethod().toString());
 		socks5RequestRuleContext.putRuleArgValue(
 				Socks5RuleArgSpecConstants.SOCKS5_USER, 
 				methSubnegotiationResults.getUser());
 		socks5RequestRuleContext.putRuleArgValue(
 				Socks5RuleArgSpecConstants.SOCKS5_COMMAND, 
-				socks5Req.getCommand());
+				socks5Req.getCommand().toString());
 		socks5RequestRuleContext.putRuleArgValue(
 				Socks5RuleArgSpecConstants.SOCKS5_DESIRED_DESTINATION_ADDRESS, 
 				socks5Req.getDesiredDestinationAddress());

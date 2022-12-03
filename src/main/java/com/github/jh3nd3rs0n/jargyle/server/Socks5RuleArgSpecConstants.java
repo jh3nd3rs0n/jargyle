@@ -4,16 +4,14 @@ import java.util.List;
 import java.util.Map;
 
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.Command;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
 
 public final class Socks5RuleArgSpecConstants {
 	
 	private static final RuleArgSpecs RULE_ARG_SPECS = new RuleArgSpecs();
 	
-	public static final RuleArgSpec<Command> SOCKS5_COMMAND = RULE_ARG_SPECS.addThenGet(new RuleArgSpec<Command>(
+	public static final RuleArgSpec<String> SOCKS5_COMMAND = RULE_ARG_SPECS.addThenGet(new RuleArgSpec<String>(
 			"socks5.command", 
-			Command.class));
+			String.class));
 
 	public static final RuleArgSpec<String> SOCKS5_DESIRED_DESTINATION_ADDRESS = RULE_ARG_SPECS.addThenGet(new RuleArgSpec<String>(
 			"socks5.desiredDestinationAddress", 
@@ -23,9 +21,9 @@ public final class Socks5RuleArgSpecConstants {
 			"socks5.desiredDestinationPort", 
 			Port.class));
 	
-	public static final RuleArgSpec<Method> SOCKS5_METHOD = RULE_ARG_SPECS.addThenGet(new RuleArgSpec<Method>(
+	public static final RuleArgSpec<String> SOCKS5_METHOD = RULE_ARG_SPECS.addThenGet(new RuleArgSpec<String>(
 			"socks5.method", 
-			Method.class));
+			String.class));
 
 	public static final RuleArgSpec<String> SOCKS5_SECOND_SERVER_BOUND_ADDRESS = RULE_ARG_SPECS.addThenGet(new RuleArgSpec<String>(
 			"socks5.secondServerBoundAddress", 

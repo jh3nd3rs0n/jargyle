@@ -363,13 +363,13 @@ final class BindCommandWorker extends CommandWorker {
 				this.clientSocket.getLocalAddress().getHostAddress());
 		secondSocks5ReplyRuleContext.putRuleArgValue(
 				Socks5RuleArgSpecConstants.SOCKS5_METHOD, 
-				this.methodSubnegotiationResults.getMethod());
+				this.methodSubnegotiationResults.getMethod().toString());
 		secondSocks5ReplyRuleContext.putRuleArgValue(
 				Socks5RuleArgSpecConstants.SOCKS5_USER, 
 				this.methodSubnegotiationResults.getUser());
 		secondSocks5ReplyRuleContext.putRuleArgValue(
 				Socks5RuleArgSpecConstants.SOCKS5_COMMAND, 
-				this.socks5Request.getCommand());
+				this.socks5Request.getCommand().toString());
 		secondSocks5ReplyRuleContext.putRuleArgValue(
 				Socks5RuleArgSpecConstants.SOCKS5_DESIRED_DESTINATION_ADDRESS, 
 				this.socks5Request.getDesiredDestinationAddress());

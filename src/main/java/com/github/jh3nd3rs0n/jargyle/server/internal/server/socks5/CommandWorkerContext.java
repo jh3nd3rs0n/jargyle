@@ -203,13 +203,13 @@ final class CommandWorkerContext extends Socks5WorkerContext {
 				clientSock.getLocalAddress().getHostAddress());
 		socks5ReplyRuleContext.putRuleArgValue(
 				Socks5RuleArgSpecConstants.SOCKS5_METHOD, 
-				methSubnegotiationResults.getMethod());
+				methSubnegotiationResults.getMethod().toString());
 		socks5ReplyRuleContext.putRuleArgValue(
 				Socks5RuleArgSpecConstants.SOCKS5_USER, 
 				methSubnegotiationResults.getUser());
 		socks5ReplyRuleContext.putRuleArgValue(
 				Socks5RuleArgSpecConstants.SOCKS5_COMMAND, 
-				socks5Req.getCommand());
+				socks5Req.getCommand().toString());
 		socks5ReplyRuleContext.putRuleArgValue(
 				Socks5RuleArgSpecConstants.SOCKS5_DESIRED_DESTINATION_ADDRESS, 
 				socks5Req.getDesiredDestinationAddress());

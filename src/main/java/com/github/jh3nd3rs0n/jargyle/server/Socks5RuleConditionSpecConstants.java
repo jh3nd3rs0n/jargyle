@@ -7,12 +7,8 @@ import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.common.net.PortRange;
 import com.github.jh3nd3rs0n.jargyle.internal.help.HelpText;
 import com.github.jh3nd3rs0n.jargyle.server.internal.ruleconditionspec.impl.AddressRangeContainsAddressRuleConditionSpec;
-import com.github.jh3nd3rs0n.jargyle.server.internal.ruleconditionspec.impl.CommandEqualsCommandRuleConditionSpec;
-import com.github.jh3nd3rs0n.jargyle.server.internal.ruleconditionspec.impl.MethodEqualsMethodRuleConditionSpec;
 import com.github.jh3nd3rs0n.jargyle.server.internal.ruleconditionspec.impl.PortRangeContainsPortRuleConditionSpec;
 import com.github.jh3nd3rs0n.jargyle.server.internal.ruleconditionspec.impl.StringEqualsStringRuleConditionSpec;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.Command;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
 
 public final class Socks5RuleConditionSpecConstants {
 	
@@ -22,7 +18,7 @@ public final class Socks5RuleConditionSpecConstants {
 			doc = "Specifies the SOCKS5 command",
 			usage = "socks5.command=SOCKS5_COMMAND"
 	)	
-	public static final RuleConditionSpec<Command, Command> SOCKS5_COMMAND = RULE_CONDITION_SPECS.addThenGet(new CommandEqualsCommandRuleConditionSpec(
+	public static final RuleConditionSpec<String, String> SOCKS5_COMMAND = RULE_CONDITION_SPECS.addThenGet(new StringEqualsStringRuleConditionSpec(
 			"socks5.command",
 			Socks5RuleArgSpecConstants.SOCKS5_COMMAND));
 
@@ -46,7 +42,7 @@ public final class Socks5RuleConditionSpecConstants {
 			doc = "Specifies the negotiated SOCKS5 method",
 			usage = "socks5.method=SOCKS5_METHOD"
 	)
-	public static final RuleConditionSpec<Method, Method> SOCKS5_METHOD = RULE_CONDITION_SPECS.addThenGet(new MethodEqualsMethodRuleConditionSpec(
+	public static final RuleConditionSpec<String, String> SOCKS5_METHOD = RULE_CONDITION_SPECS.addThenGet(new StringEqualsStringRuleConditionSpec(
 			"socks5.method",
 			Socks5RuleArgSpecConstants.SOCKS5_METHOD));
 	

@@ -2767,7 +2767,6 @@ To route traffic, you will need the following rule results:
 -   `routeSelectionStrategy`: Specifies the selection strategy for the next route
 -   `selectableRouteId`: Specifies the ID for a selectable [route](#6-12-chaining-to-multiple-specified-chains-of-other-socks-servers) (This rule result is optional. This rule result can be specified multiple times for additional routes.)
 
-
 These rule results can be used with the following rule conditions:
 
 -   `clientAddress`

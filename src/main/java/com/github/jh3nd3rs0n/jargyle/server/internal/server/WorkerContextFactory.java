@@ -3,7 +3,6 @@ package com.github.jh3nd3rs0n.jargyle.server.internal.server;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -39,7 +38,6 @@ final class WorkerContextFactory {
 	private SslSocketFactory clientSslSocketFactory;
 	private final Configuration configuration;
 	private Configuration lastConfiguration;
-	private SelectionStrategy routeIdSelectionStrategy;
 	private Routes routes;
 	private Rules rules;
 	
@@ -48,7 +46,6 @@ final class WorkerContextFactory {
 		this.clientSslSocketFactory = null;
 		this.configuration = config;
 		this.lastConfiguration = null;
-		this.routeIdSelectionStrategy = null;
 		this.routes = null;
 		this.rules = null;
 	}
@@ -68,10 +65,6 @@ final class WorkerContextFactory {
 		LogAction firewallActionLogAction = 
 				applicableRule.getLastRuleResultValue(
 						GeneralRuleResultSpecConstants.FIREWALL_ACTION_LOG_ACTION);
-		String clientAddress = clientRuleContext.getRuleArgValue(
-				GeneralRuleArgSpecConstants.CLIENT_ADDRESS);
-		String socksServerAddress = clientRuleContext.getRuleArgValue(
-				GeneralRuleArgSpecConstants.SOCKS_SERVER_ADDRESS);		
 		if (firewallAction.equals(FirewallAction.ALLOW)) {
 			if (!this.canAllowClientSocketWithinLimit(
 					applicableRule, clientRuleContext, belowAllowLimitRules)) {
@@ -79,21 +72,16 @@ final class WorkerContextFactory {
 			}
 			if (firewallActionLogAction != null) {
 				firewallActionLogAction.invoke(LOGGER, String.format(
-						"Client (%s) to SOCKS server (%s) allowed based on "
-						+ "the following rule and context: rule: %s context: "
-						+ "%s",
-						clientAddress,
-						socksServerAddress,
+						"Client allowed based on the following rule and "
+						+ "context: rule: %s context: %s",
 						applicableRule,
 						clientRuleContext));
 			}
 		} else if (firewallAction.equals(FirewallAction.DENY)
 				&& firewallActionLogAction != null) {
 			firewallActionLogAction.invoke(LOGGER, String.format(
-					"Client (%s) to SOCKS server (%s) denied based on the "
-					+ "following rule and context: rule: %s context: %s",
-					clientAddress,
-					socksServerAddress,
+					"Client denied based on the following rule and context: "
+					+ "rule: %s context: %s",
 					applicableRule,
 					clientRuleContext));				
 		}
@@ -145,14 +133,50 @@ final class WorkerContextFactory {
 				applicableRule.getRuleResultValues(
 						GeneralRuleResultSpecConstants.CLIENT_SOCKET_SETTING);
 		if (socketSettings.size() > 0) {
-			List<SocketSetting<? extends Object>> socketSttngs = 
-					new ArrayList<SocketSetting<? extends Object>>(
-							socketSettings); 
-			return SocketSettings.newInstance(socketSttngs);
+			return SocketSettings.newInstance(
+					socketSettings.stream().collect(Collectors.toList()));
+		}
+		socketSettings = applicableRule.getRuleResultValues(
+				GeneralRuleResultSpecConstants.SOCKET_SETTING);
+		if (socketSettings.size() > 0) {
+			return SocketSettings.newInstance(
+					socketSettings.stream().collect(Collectors.toList()));
 		}
 		Settings settings = config.getSettings();
-		return settings.getLastValue(
+		SocketSettings socketSttngs = settings.getLastValue(
 				GeneralSettingSpecConstants.CLIENT_SOCKET_SETTINGS);
+		if (socketSttngs.toMap().size() > 0) {
+			return socketSttngs;
+		}
+		socketSttngs = settings.getLastValue(
+				GeneralSettingSpecConstants.SOCKET_SETTINGS);
+		return socketSttngs;
+	}
+	
+	private Routes getRoutes(final Rule applicableRule) {
+		List<Route> rtes = applicableRule.getRuleResultValues(
+				GeneralRuleResultSpecConstants.SELECTABLE_ROUTE_ID)
+				.stream()
+				.map(rteId -> this.routes.get(rteId))
+				.filter(rte -> rte != null)
+				.collect(Collectors.toList());
+		if (rtes.size() > 0) {
+			return Routes.newInstance(rtes);
+		}
+		return this.routes;
+	}
+	
+	private LogAction getRouteSelectionLogAction(
+			final Rule applicableRule,
+			final Configuration config) {
+		LogAction routeSelectionLogAction = 
+				applicableRule.getLastRuleResultValue(
+						GeneralRuleResultSpecConstants.ROUTE_SELECTION_LOG_ACTION);
+		if (routeSelectionLogAction != null) {
+			return routeSelectionLogAction;
+		}
+		return config.getSettings().getLastValue(
+				GeneralSettingSpecConstants.ROUTE_SELECTION_LOG_ACTION);
 	}
 	
 	private RuleContext newClientRuleContext(final Socket clientSock) {
@@ -177,9 +201,6 @@ final class WorkerContextFactory {
 				this.clientSslSocketFactory =
 						SslSocketFactoryImpl.isSslEnabled(config) ?
 								new SslSocketFactoryImpl(config) : null;
-				this.routeIdSelectionStrategy = 
-						config.getSettings().getLastValue(
-								GeneralSettingSpecConstants.ROUTE_ID_SELECTION_STRATEGY);
 				this.routes = Routes.newInstance(config);
 				this.rules = Rules.newInstance(config);
 				this.lastConfiguration = config;
@@ -223,44 +244,39 @@ final class WorkerContextFactory {
 			final Rule applicableRule,
 			final RuleContext clientRuleContext,
 			final Configuration config) {
-		List<String> rteIds = applicableRule.getRuleResultValues(
-				GeneralRuleResultSpecConstants.ROUTE_ID);
-		SelectionStrategy rteIdSelectionStrategy = 
+		SelectionStrategy rteSelectionStrategy = 
 				applicableRule.getLastRuleResultValue(
-						GeneralRuleResultSpecConstants.ROUTE_ID_SELECTION_STRATEGY);
-		LogAction rteIdSelectionLogAction = 
-				applicableRule.getLastRuleResultValue(
-						GeneralRuleResultSpecConstants.ROUTE_ID_SELECTION_LOG_ACTION);
-		Route selectedRte = null;
-		if (rteIds.size() > 0 && rteIdSelectionStrategy != null) {
-			String selectedRteId = rteIdSelectionStrategy.selectFrom(rteIds);
-			selectedRte = this.routes.get(selectedRteId);
-			if (selectedRte != null && rteIdSelectionLogAction != null) {
-				rteIdSelectionLogAction.invoke(LOGGER, String.format(
-						"Route '%s' selected based on the following rule "
-						+ "and context: rule: %s context: %s",
-						selectedRteId,
-						applicableRule,
-						clientRuleContext));				
-			}
+						GeneralRuleResultSpecConstants.ROUTE_SELECTION_STRATEGY);
+		Routes rtes = null;
+		LogAction rteSelectionLogAction = null;
+		String rteSelectionLogMessageFormat = null;
+		if (rteSelectionStrategy != null) {
+			rtes = this.getRoutes(applicableRule);
+			rteSelectionLogAction =	this.getRouteSelectionLogAction(
+					applicableRule, config);
+			rteSelectionLogMessageFormat = String.format(
+					"Route '%s' selected based on the following rule "
+					+ "and context: rule: %s context: %s",
+					"%s",
+					applicableRule,
+					clientRuleContext);
+		} else {
+			Settings settings = config.getSettings();
+			rteSelectionStrategy = settings.getLastValue(
+					GeneralSettingSpecConstants.ROUTE_SELECTION_STRATEGY);
+			rtes = this.routes;
+			rteSelectionLogAction = settings.getLastValue(
+					GeneralSettingSpecConstants.ROUTE_SELECTION_LOG_ACTION);
+			rteSelectionLogMessageFormat = "Route '%s' selected";
 		}
-		if (selectedRte != null) {
-			return selectedRte;
+		Route selectedRte = rteSelectionStrategy.selectFrom(
+				rtes.toMap().values().stream().collect(Collectors.toList()));
+		if (rteSelectionLogAction != null) {
+			rteSelectionLogAction.invoke(LOGGER, String.format(
+					rteSelectionLogMessageFormat, 
+					selectedRte.getId()));
 		}
-		List<String> routeIds = this.routes.toMap().keySet().stream().collect(
-				Collectors.toList());
-		String selectedRouteId = this.routeIdSelectionStrategy.selectFrom(
-				routeIds);
-		Route selectedRoute = this.routes.get(selectedRouteId);
-		Settings settings = config.getSettings();
-		LogAction routeIdSelectionLogAction = settings.getLastValue(
-				GeneralSettingSpecConstants.ROUTE_ID_SELECTION_LOG_ACTION);
-		if (routeIdSelectionLogAction != null) {
-			routeIdSelectionLogAction.invoke(LOGGER, String.format(
-					"Route '%s' selected", 
-					selectedRouteId));
-		}
-		return selectedRoute;
+		return selectedRte;		
 	}
 	
 	private Socket wrapClientSocket(

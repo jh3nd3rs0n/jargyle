@@ -81,24 +81,22 @@ public final class Socks5SettingSpecConstants {
 					SocketSettings.newInstance()));
 	
 	@HelpText(
-			doc = "The buffer size in bytes for relaying the data (default is "
-					+ "1024)", 
+			doc = "The buffer size in bytes for relaying the data", 
 			usage = "socks5.onBind.relayBufferSize=INTEGER_BETWEEN_1_AND_2147483647"
 	)
 	public static final SettingSpec<PositiveInteger> SOCKS5_ON_BIND_RELAY_BUFFER_SIZE = 
 			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
 					"socks5.onBind.relayBufferSize", 
-					PositiveInteger.newInstance(1024)));
+					null));
 	
 	@HelpText(
-			doc = "The timeout in milliseconds on relaying no data (default "
-					+ "is 60000)", 
+			doc = "The timeout in milliseconds on relaying no data", 
 			usage = "socks5.onBind.relayIdleTimeout=INTEGER_BETWEEN_1_AND_2147483647"
 	)
 	public static final SettingSpec<PositiveInteger> SOCKS5_ON_BIND_RELAY_IDLE_TIMEOUT = 
 			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
 					"socks5.onBind.relayIdleTimeout", 
-					PositiveInteger.newInstance(60000))); // 1 minute
+					null));
 	
 	@HelpText(
 			doc = "The upper limit on bandwidth in bytes per second of "
@@ -121,6 +119,126 @@ public final class Socks5SettingSpecConstants {
 					null));
 
 	@HelpText(
+			doc = "The binding host name or address for all external-facing "
+					+ "sockets",
+			usage = "socks5.onCommand.externalFacingBindHost=HOST"
+	)
+	public static final SettingSpec<Host> SOCKS5_ON_COMMAND_EXTERNAL_FACING_BIND_HOST =
+			SETTING_SPECS.addThenGet(new HostSettingSpec(
+					"socks5.onCommand.externalFacingBindHost",
+					null));
+	
+	@HelpText(
+			doc = "The space separated list of binding port ranges for all "
+					+ "external-facing TCP sockets",
+			usage = "socks5.onCommand.externalFacingBindTcpPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]"
+	)
+	public static final SettingSpec<PortRanges> SOCKS5_ON_COMMAND_EXTERNAL_FACING_BIND_TCP_PORT_RANGES =
+			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
+					"socks5.onCommand.externalFacingBindTcpPortRanges",
+					PortRanges.newInstance()));
+			
+	@HelpText(
+			doc = "The space separated list of binding port ranges for all "
+					+ "external-facing UDP sockets",
+			usage = "socks5.onCommand.externalFacingBindUdpPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]"
+	)
+	public static final SettingSpec<PortRanges> SOCKS5_ON_COMMAND_EXTERNAL_FACING_BIND_UDP_PORT_RANGES =
+			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
+					"socks5.onCommand.externalFacingBindUdpPortRanges",
+					PortRanges.newInstance()));
+	
+	@HelpText(
+			doc = "The space separated list of socket settings for all "
+					+ "external-facing sockets",
+			usage = "socks5.onCommand.externalFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
+	)
+	public static final SettingSpec<SocketSettings> SOCKS5_ON_COMMAND_EXTERNAL_FACING_SOCKET_SETTINGS =
+			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
+					"socks5.onCommand.externalFacingSocketSettings", 
+					SocketSettings.newInstance()));
+
+	@HelpText(
+			doc = "The binding host name or address for all internal-facing "
+					+ "sockets",
+			usage = "socks5.onCommand.internalFacingBindHost=HOST"
+	)
+	public static final SettingSpec<Host> SOCKS5_ON_COMMAND_INTERNAL_FACING_BIND_HOST =
+			SETTING_SPECS.addThenGet(new HostSettingSpec(
+					"socks5.onCommand.internalFacingBindHost",
+					null));
+	
+	@HelpText(
+			doc = "The space separated list of binding port ranges for all "
+					+ "internal-facing TCP sockets",
+			usage = "socks5.onCommand.internalFacingBindTcpPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]"
+	)
+	public static final SettingSpec<PortRanges> SOCKS5_ON_COMMAND_INTERNAL_FACING_BIND_TCP_PORT_RANGES =
+			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
+					"socks5.onCommand.internalFacingBindTcpPortRanges",
+					PortRanges.newInstance()));
+			
+	@HelpText(
+			doc = "The space separated list of binding port ranges for all "
+					+ "internal-facing UDP sockets",
+			usage = "socks5.onCommand.internalFacingBindUdpPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]"
+	)
+	public static final SettingSpec<PortRanges> SOCKS5_ON_COMMAND_INTERNAL_FACING_BIND_UDP_PORT_RANGES =
+			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
+					"socks5.onCommand.internalFacingBindUdpPortRanges",
+					PortRanges.newInstance()));
+	
+	@HelpText(
+			doc = "The space separated list of socket settings for all "
+					+ "internal-facing sockets",
+			usage = "socks5.onCommand.internalFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
+	)
+	public static final SettingSpec<SocketSettings> SOCKS5_ON_COMMAND_INTERNAL_FACING_SOCKET_SETTINGS =
+			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
+					"socks5.onCommand.internalFacingSocketSettings", 
+					SocketSettings.newInstance()));
+	
+	@HelpText(
+			doc = "The buffer size in bytes for relaying the data (default is "
+					+ "1024)", 
+			usage = "socks5.onCommand.relayBufferSize=INTEGER_BETWEEN_1_AND_2147483647"
+	)
+	public static final SettingSpec<PositiveInteger> SOCKS5_ON_COMMAND_RELAY_BUFFER_SIZE =
+			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
+					"socks5.onCommand.relayBufferSize",
+					PositiveInteger.newInstance(1024)));
+	
+	@HelpText(
+			doc = "The timeout in milliseconds on relaying no data (default is "
+					+ "60000", 
+			usage = "socks5.onCommand.relayIdleTimeout=INTEGER_BETWEEN_1_AND_2147483647"
+	)	
+	public static final SettingSpec<PositiveInteger> SOCKS5_ON_COMMAND_RELAY_IDLE_TIMEOUT =
+			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
+					"socks5.onCommand.relayIdleTimeout",
+					PositiveInteger.newInstance(60000)));
+	
+	@HelpText(
+			doc = "The upper limit on bandwidth in bytes per second of "
+					+ "receiving inbound data to be relayed",
+			usage = "socks5.onCommand.relayInboundBandwidthLimit=INTEGER_BETWEEN_1_AND_2147483647"
+	)	
+	public static final SettingSpec<PositiveInteger> SOCKS5_ON_COMMAND_RELAY_INBOUND_BANDWIDTH_LIMIT =
+			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
+					"socks5.onCommand.relayInboundBandwidthLimit",
+					null));
+	
+	@HelpText(
+			doc = "The upper limit on bandwidth in bytes per second of "
+					+ "receiving outbound data to be relayed",
+			usage = "socks5.onCommand.relayOutboundBandwidthLimit=INTEGER_BETWEEN_1_AND_2147483647"
+	)	
+	public static final SettingSpec<PositiveInteger> SOCKS5_ON_COMMAND_RELAY_OUTBOUND_BANDWIDTH_LIMIT =
+			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
+					"socks5.onCommand.relayOutboundBandwidthLimit",
+					null));	
+	
+	@HelpText(
 			doc = "The boolean value to indicate if the server-facing socket "
 					+ "is to be prepared before connecting (involves applying "
 					+ "the specified socket settings, resolving the target "
@@ -134,24 +252,22 @@ public final class Socks5SettingSpecConstants {
 					Boolean.FALSE));
 	
 	@HelpText(
-			doc = "The buffer size in bytes for relaying the data (default is "
-					+ "1024)", 
+			doc = "The buffer size in bytes for relaying the data", 
 			usage = "socks5.onConnect.relayBufferSize=INTEGER_BETWEEN_1_AND_2147483647"
 	)
 	public static final SettingSpec<PositiveInteger> SOCKS5_ON_CONNECT_RELAY_BUFFER_SIZE = 
 			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
 					"socks5.onConnect.relayBufferSize", 
-					PositiveInteger.newInstance(1024)));
+					null));
 	
 	@HelpText(
-			doc = "The timeout in milliseconds on relaying no data (default "
-					+ "is 60000)", 
+			doc = "The timeout in milliseconds on relaying no data", 
 			usage = "socks5.onConnect.relayIdleTimeout=INTEGER_BETWEEN_1_AND_2147483647"
 	)
 	public static final SettingSpec<PositiveInteger> SOCKS5_ON_CONNECT_RELAY_IDLE_TIMEOUT = 
 			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
 					"socks5.onConnect.relayIdleTimeout", 
-					PositiveInteger.newInstance(60000))); // 1 minute
+					null));
 	
 	@HelpText(
 			doc = "The upper limit on bandwidth in bytes per second of "
@@ -175,23 +291,23 @@ public final class Socks5SettingSpecConstants {
 	
 	@HelpText(
 			doc = "The binding host name or address for the server-facing "
-					+ "socket (default is 0.0.0.0)", 
+					+ "socket", 
 			usage = "socks5.onConnect.serverFacingBindHost=HOST"
 	)
 	public static final SettingSpec<Host> SOCKS5_ON_CONNECT_SERVER_FACING_BIND_HOST = 
 			SETTING_SPECS.addThenGet(new HostSettingSpec(
 					"socks5.onConnect.serverFacingBindHost", 
-					Host.getAllZerosInet4Instance()));
+					null));
 	
 	@HelpText(
 			doc = "The space separated list of binding port ranges for the "
-					+ "server-facing socket (default is 0)", 
+					+ "server-facing socket", 
 			usage = "socks5.onConnect.serverFacingBindPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]"
 	)	
 	public static final SettingSpec<PortRanges> SOCKS5_ON_CONNECT_SERVER_FACING_BIND_PORT_RANGES =
 			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
 					"socks5.onConnect.serverFacingBindPortRanges",
-					PortRanges.getDefault()));
+					PortRanges.newInstance()));
 	
 	@HelpText(
 			doc = "The timeout in milliseconds on waiting for the "
@@ -201,7 +317,7 @@ public final class Socks5SettingSpecConstants {
 	public static final SettingSpec<PositiveInteger> SOCKS5_ON_CONNECT_SERVER_FACING_CONNECT_TIMEOUT = 
 			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
 					"socks5.onConnect.serverFacingConnectTimeout", 
-					PositiveInteger.newInstance(60000))); // 1 minute
+					PositiveInteger.newInstance(60000)));
 	
 	@HelpText(
 			doc = "The space separated list of socket settings for the "
@@ -215,23 +331,23 @@ public final class Socks5SettingSpecConstants {
 	
 	@HelpText(
 			doc = "The binding host name or address for the client-facing UDP "
-					+ "socket (default is 0.0.0.0)", 
+					+ "socket", 
 			usage = "socks5.onUdpAssociate.clientFacingBindHost=HOST"
 	)
 	public static final SettingSpec<Host> SOCKS5_ON_UDP_ASSOCIATE_CLIENT_FACING_BIND_HOST = 
 			SETTING_SPECS.addThenGet(new HostSettingSpec(
 					"socks5.onUdpAssociate.clientFacingBindHost", 
-					Host.getAllZerosInet4Instance()));
+					null));
 	
 	@HelpText(
 			doc = "The space separated list of binding port ranges for the "
-					+ "client-facing UDP socket (default is 0)", 
+					+ "client-facing UDP socket", 
 			usage = "socks5.onUdpAssociate.clientFacingBindPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]"
 	)	
 	public static final SettingSpec<PortRanges> SOCKS5_ON_UDP_ASSOCIATE_CLIENT_FACING_BIND_PORT_RANGES =
 			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
 					"socks5.onUdpAssociate.clientFacingBindPortRanges",
-					PortRanges.getDefault()));
+					PortRanges.newInstance()));
 	
 	@HelpText(
 			doc = "The space separated list of socket settings for the "
@@ -245,23 +361,23 @@ public final class Socks5SettingSpecConstants {
 
 	@HelpText(
 			doc = "The binding host name or address for the peer-facing UDP "
-					+ "socket (default is 0.0.0.0)", 
+					+ "socket", 
 			usage = "socks5.onUdpAssociate.peerFacingBindHost=HOST"
 	)
 	public static final SettingSpec<Host> SOCKS5_ON_UDP_ASSOCIATE_PEER_FACING_BIND_HOST = 
 			SETTING_SPECS.addThenGet(new HostSettingSpec(
 					"socks5.onUdpAssociate.peerFacingBindHost", 
-					Host.getAllZerosInet4Instance()));
+					null));
 	
 	@HelpText(
 			doc = "The space separated list of binding port ranges for the "
-					+ "peer-facing UDP socket (default is 0)", 
+					+ "peer-facing UDP socket", 
 			usage = "socks5.onUdpAssociate.peerFacingBindPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]"
 	)	
 	public static final SettingSpec<PortRanges> SOCKS5_ON_UDP_ASSOCIATE_PEER_FACING_BIND_PORT_RANGES =
 			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
 					"socks5.onUdpAssociate.peerFacingBindPortRanges",
-					PortRanges.getDefault()));
+					PortRanges.newInstance()));
 	
 	@HelpText(
 			doc = "The space separated list of socket settings for the "
@@ -274,24 +390,22 @@ public final class Socks5SettingSpecConstants {
 					SocketSettings.newInstance()));
 	
 	@HelpText(
-			doc = "The buffer size in bytes for relaying the data (default is "
-					+ "1024)", 
+			doc = "The buffer size in bytes for relaying the data", 
 			usage = "socks5.onUdpAssociate.relayBufferSize=INTEGER_BETWEEN_1_AND_2147483647"
 	)
 	public static final SettingSpec<PositiveInteger> SOCKS5_ON_UDP_ASSOCIATE_RELAY_BUFFER_SIZE = 
 			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
 					"socks5.onUdpAssociate.relayBufferSize", 
-					PositiveInteger.newInstance(1024)));
+					null));
 	
 	@HelpText(
-			doc = "The timeout in milliseconds on relaying no data (default "
-					+ "is 60000)", 
+			doc = "The timeout in milliseconds on relaying no data", 
 			usage = "socks5.onUdpAssociate.relayIdleTimeout=INTEGER_BETWEEN_1_AND_2147483647"
 	)
 	public static final SettingSpec<PositiveInteger> SOCKS5_ON_UDP_ASSOCIATE_RELAY_IDLE_TIMEOUT = 
 			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
 					"socks5.onUdpAssociate.relayIdleTimeout", 
-					PositiveInteger.newInstance(60000))); // 1 minute
+					null));
 	
 	@HelpText(
 			doc = "The upper limit on bandwidth in bytes per second of "

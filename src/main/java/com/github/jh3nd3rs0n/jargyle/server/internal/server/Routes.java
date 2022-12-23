@@ -610,11 +610,11 @@ public final class Routes {
 	private Routes(final List<Route> rtes) {
 		Map<String, Route> map = new LinkedHashMap<String, Route>();
 		for (Route rte : rtes) {
-			String rteId = rte.getRouteId();
-			if (map.containsKey(rteId)) {
-				map.remove(rteId);
+			String id = rte.getId();
+			if (map.containsKey(id)) {
+				map.remove(id);
 			}
-			map.put(rteId, rte);
+			map.put(id, rte);
 		}
 		this.routes = map;
 	}
@@ -623,8 +623,8 @@ public final class Routes {
 		this.routes = new LinkedHashMap<String, Route>(other.routes); 
 	}
 
-	public Route get(final String routeId) {
-		return this.routes.get(routeId);
+	public Route get(final String id) {
+		return this.routes.get(id);
 	}
 
 	public Map<String, Route> toMap() {

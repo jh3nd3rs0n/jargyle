@@ -17,7 +17,6 @@ import org.slf4j.LoggerFactory;
 import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
-import com.github.jh3nd3rs0n.jargyle.internal.net.AddressAndPortHelper;
 import com.github.jh3nd3rs0n.jargyle.internal.net.AddressHelper;
 import com.github.jh3nd3rs0n.jargyle.internal.throwable.ThrowableHelper;
 import com.github.jh3nd3rs0n.jargyle.server.FirewallAction;
@@ -121,28 +120,33 @@ final class UdpRelayServer {
 			super(context);
 		}
 		
+		private boolean canApplyRule(final Rule applicableRule) {
+			if (applicableRule.hasRuleCondition(
+					Socks5RuleConditionSpecConstants.SOCKS5_UDP_INBOUND_DESIRED_DESTINATION_ADDRESS)) {
+				return true;
+			}
+			if (applicableRule.hasRuleCondition(
+					Socks5RuleConditionSpecConstants.SOCKS5_UDP_INBOUND_DESIRED_DESTINATION_PORT)) {
+				return true;
+			}
+			if (applicableRule.hasRuleCondition(
+					Socks5RuleConditionSpecConstants.SOCKS5_UDP_INBOUND_SOURCE_ADDRESS)) {
+				return true;
+			}
+			if (applicableRule.hasRuleCondition(
+					Socks5RuleConditionSpecConstants.SOCKS5_UDP_INBOUND_SOURCE_PORT)) {
+				return true;
+			}
+			return false;
+		}
+		
 		private boolean canForwardDatagramPacket(
 				final Rule applicableRule,
 				final RuleContext inboundRuleContext) {
 			if (applicableRule == null) {
 				return false;
 			}
-			boolean hasDesiredDestinationAddressRuleCondition =
-					applicableRule.hasRuleCondition(
-							Socks5RuleConditionSpecConstants.SOCKS5_UDP_INBOUND_DESIRED_DESTINATION_ADDRESS);
-			boolean hasDesiredDestinationPortRuleCondition =
-					applicableRule.hasRuleCondition(
-							Socks5RuleConditionSpecConstants.SOCKS5_UDP_INBOUND_DESIRED_DESTINATION_PORT);
-			boolean hasSourceAddressRuleCondition =
-					applicableRule.hasRuleCondition(
-							Socks5RuleConditionSpecConstants.SOCKS5_UDP_INBOUND_SOURCE_ADDRESS);
-			boolean hasSourcePortRuleCondition =
-					applicableRule.hasRuleCondition(
-							Socks5RuleConditionSpecConstants.SOCKS5_UDP_INBOUND_SOURCE_PORT);
-			if (!hasDesiredDestinationAddressRuleCondition
-					&& !hasDesiredDestinationPortRuleCondition
-					&& !hasSourceAddressRuleCondition
-					&& !hasSourcePortRuleCondition) {
+			if (!this.canApplyRule(applicableRule)) {
 				return true;
 			}
 			FirewallAction firewallAction = 
@@ -154,34 +158,15 @@ final class UdpRelayServer {
 			LogAction firewallActionLogAction = 
 					applicableRule.getLastRuleResultValue(
 							GeneralRuleResultSpecConstants.FIREWALL_ACTION_LOG_ACTION);
-			String desiredDestinationAddress = 
-					inboundRuleContext.getRuleArgValue(
-							Socks5RuleArgSpecConstants.SOCKS5_UDP_INBOUND_DESIRED_DESTINATION_ADDRESS);
-			Port desiredDestinationPort =
-					inboundRuleContext.getRuleArgValue(
-							Socks5RuleArgSpecConstants.SOCKS5_UDP_INBOUND_DESIRED_DESTINATION_PORT);
-			String sourceAddress =
-					inboundRuleContext.getRuleArgValue(
-							Socks5RuleArgSpecConstants.SOCKS5_UDP_INBOUND_SOURCE_ADDRESS);
-			Port sourcePort =
-					inboundRuleContext.getRuleArgValue(
-							Socks5RuleArgSpecConstants.SOCKS5_UDP_INBOUND_SOURCE_PORT);
 			if (firewallAction.equals(FirewallAction.ALLOW)
 					&& firewallActionLogAction != null) {
 				firewallActionLogAction.invoke(
 						LOGGER, 
 						ObjectLogMessageHelper.objectLogMessage(
 								this,
-								"UDP inbound source address and port (%s) to "
-								+ "UDP inbound desired destination address and "
-								+ "port (%s) allowed based on the following "
-								+ "rule and context: rule: %s context: %s",
-								AddressAndPortHelper.toString(
-										sourceAddress, 
-										sourcePort.intValue()),
-								AddressAndPortHelper.toString(
-										desiredDestinationAddress,
-										desiredDestinationPort.intValue()),
+								"Inbound UDP packet allowed based on the "
+								+ "following rule and context: rule: %s "
+								+ "context: %s",
 								applicableRule,
 								inboundRuleContext));				
 			} else if (firewallAction.equals(FirewallAction.DENY)
@@ -190,16 +175,9 @@ final class UdpRelayServer {
 						LOGGER, 
 						ObjectLogMessageHelper.objectLogMessage(
 								this,
-								"UDP inbound source address and port (%s) to "
-								+ "UDP inbound desired destination address and "
-								+ "port (%s) denied based on the following "
-								+ "rule and context: rule: %s context: %s",
-								AddressAndPortHelper.toString(
-										sourceAddress, 
-										sourcePort.intValue()),
-								AddressAndPortHelper.toString(
-										desiredDestinationAddress,
-										desiredDestinationPort.intValue()),
+								"Inbound UDP packet denied based on the "
+								+ "following rule and context: rule: %s "
+								+ "context: %s",
 								applicableRule,
 								inboundRuleContext));				
 			}
@@ -424,28 +402,33 @@ final class UdpRelayServer {
 			return true;
 		}
 		
+		private boolean canApplyRule(final Rule applicableRule) {
+			if (applicableRule.hasRuleCondition(
+					Socks5RuleConditionSpecConstants.SOCKS5_UDP_OUTBOUND_DESIRED_DESTINATION_ADDRESS)) {
+				return true;
+			}
+			if (applicableRule.hasRuleCondition(
+					Socks5RuleConditionSpecConstants.SOCKS5_UDP_OUTBOUND_DESIRED_DESTINATION_PORT)) {
+				return true;
+			}
+			if (applicableRule.hasRuleCondition(
+					Socks5RuleConditionSpecConstants.SOCKS5_UDP_OUTBOUND_SOURCE_ADDRESS)) {
+				return true;
+			}
+			if (applicableRule.hasRuleCondition(
+					Socks5RuleConditionSpecConstants.SOCKS5_UDP_OUTBOUND_SOURCE_PORT)) {
+				return true;
+			}
+			return false;
+		}
+		
 		private boolean canForwardDatagramPacket(
 				final Rule applicableRule,
 				final RuleContext outboundRuleContext) {
 			if (applicableRule == null) {
 				return false;
 			}
-			boolean hasDesiredDestinationAddressRuleCondition =
-					applicableRule.hasRuleCondition(
-							Socks5RuleConditionSpecConstants.SOCKS5_UDP_OUTBOUND_DESIRED_DESTINATION_ADDRESS);
-			boolean hasDesiredDestinationPortRuleCondition =
-					applicableRule.hasRuleCondition(
-							Socks5RuleConditionSpecConstants.SOCKS5_UDP_OUTBOUND_DESIRED_DESTINATION_PORT);
-			boolean hasSourceAddressRuleCondition =
-					applicableRule.hasRuleCondition(
-							Socks5RuleConditionSpecConstants.SOCKS5_UDP_OUTBOUND_SOURCE_ADDRESS);
-			boolean hasSourcePortRuleCondition =
-					applicableRule.hasRuleCondition(
-							Socks5RuleConditionSpecConstants.SOCKS5_UDP_OUTBOUND_SOURCE_PORT);
-			if (!hasDesiredDestinationAddressRuleCondition
-					&& !hasDesiredDestinationPortRuleCondition
-					&& !hasSourceAddressRuleCondition
-					&& !hasSourcePortRuleCondition) {
+			if (!this.canApplyRule(applicableRule)) {
 				return true;
 			}
 			FirewallAction firewallAction = 
@@ -457,35 +440,15 @@ final class UdpRelayServer {
 			LogAction firewallActionLogAction = 
 					applicableRule.getLastRuleResultValue(
 							GeneralRuleResultSpecConstants.FIREWALL_ACTION_LOG_ACTION);
-			String desiredDestinationAddress = 
-					outboundRuleContext.getRuleArgValue(
-							Socks5RuleArgSpecConstants.SOCKS5_UDP_OUTBOUND_DESIRED_DESTINATION_ADDRESS);
-			Port desiredDestinationPort =
-					outboundRuleContext.getRuleArgValue(
-							Socks5RuleArgSpecConstants.SOCKS5_UDP_OUTBOUND_DESIRED_DESTINATION_PORT);
-			String sourceAddress =
-					outboundRuleContext.getRuleArgValue(
-							Socks5RuleArgSpecConstants.SOCKS5_UDP_OUTBOUND_SOURCE_ADDRESS);
-			Port sourcePort =
-					outboundRuleContext.getRuleArgValue(
-							Socks5RuleArgSpecConstants.SOCKS5_UDP_OUTBOUND_SOURCE_PORT);
 			if (firewallAction.equals(FirewallAction.ALLOW)
 					&& firewallActionLogAction != null) {
 				firewallActionLogAction.invoke(
 						LOGGER, 
 						ObjectLogMessageHelper.objectLogMessage(
 								this,
-								"UDP outbound source address and port (%s) to "
-								+ "UDP outbound desired destination address "
-								+ "and port (%s) allowed based on the "
+								"Outbound UDP packet allowed based on the "
 								+ "following rule and context: rule: %s "
 								+ "context: %s",
-								AddressAndPortHelper.toString(
-										sourceAddress, 
-										sourcePort.intValue()),
-								AddressAndPortHelper.toString(
-										desiredDestinationAddress, 
-										desiredDestinationPort.intValue()),
 								applicableRule,
 								outboundRuleContext));				
 			} else if (firewallAction.equals(FirewallAction.DENY)
@@ -494,17 +457,9 @@ final class UdpRelayServer {
 						LOGGER, 
 						ObjectLogMessageHelper.objectLogMessage(
 								this,
-								"UDP outbound source address and port (%s) to "
-								+ "UDP outbound desired destination address "
-								+ "and port (%s) denied based on the "
+								"Outbound UDP packet denied based on the "
 								+ "following rule and context: rule: %s "
 								+ "context: %s",
-								AddressAndPortHelper.toString(
-										sourceAddress, 
-										sourcePort.intValue()),
-								AddressAndPortHelper.toString(
-										desiredDestinationAddress, 
-										desiredDestinationPort.intValue()),
 								applicableRule,
 								outboundRuleContext));				
 			}

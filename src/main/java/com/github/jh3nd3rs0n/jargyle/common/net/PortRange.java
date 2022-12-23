@@ -23,8 +23,8 @@ public final class PortRange implements Iterable<Port> {
 	public static PortRange newInstance(final String s) {
 		String message = String.format(
 				"port range must be either of the following formats: "
-				+ "INTEGER_BETWEEN_%1$s_and_%2$s, "
-				+ "INTEGER1_BETWEEN_%1$s_and_%2$s-INTEGER2_BETWEEN_%1$s_and_%2$s", 
+				+ "INTEGER_BETWEEN_%1$s_AND_%2$s, "
+				+ "INTEGER1_BETWEEN_%1$s_AND_%2$s-INTEGER2_BETWEEN_%1$s_AND_%2$s", 
 				Port.MIN_INT_VALUE,
 				Port.MAX_INT_VALUE);
 		String[] sElements = s.split("-");

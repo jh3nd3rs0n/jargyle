@@ -6,17 +6,18 @@ import java.io.InputStream;
 import java.io.SequenceInputStream;
 import java.net.Socket;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
-import com.github.jh3nd3rs0n.jargyle.internal.net.AddressAndPortHelper;
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.FirewallAction;
 import com.github.jh3nd3rs0n.jargyle.server.GeneralRuleArgSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.GeneralRuleResultSpecConstants;
+import com.github.jh3nd3rs0n.jargyle.server.GeneralSettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.LogAction;
 import com.github.jh3nd3rs0n.jargyle.server.NonnegativeIntegerLimit;
 import com.github.jh3nd3rs0n.jargyle.server.Rule;
@@ -29,11 +30,11 @@ import com.github.jh3nd3rs0n.jargyle.server.Socks5RuleResultSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.internal.server.ClientIOExceptionLoggingHelper;
 import com.github.jh3nd3rs0n.jargyle.server.internal.server.Route;
+import com.github.jh3nd3rs0n.jargyle.server.internal.server.Routes;
 import com.github.jh3nd3rs0n.jargyle.server.internal.server.Rules;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Address;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.AddressTypeNotSupportedException;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.ClientMethodSelectionMessage;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.Command;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.CommandNotSupportedException;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.MethodSubnegotiationException;
@@ -52,6 +53,7 @@ public final class Socks5Worker {
 	private InputStream clientInputStream;
 	private Socket clientSocket;
 	private final Configuration configuration;
+	private final Routes routes;
 	private final Rules rules;
 	private final Settings settings;
 	private Socks5WorkerContext socks5WorkerContext;
@@ -59,11 +61,13 @@ public final class Socks5Worker {
 	public Socks5Worker(final Socks5WorkerContext context) {
 		Socket clientSock = context.getClientSocket();
 		Configuration config = context.getConfiguration();
+		Routes rtes = context.getRoutes();
 		Rules rls = context.getRules();
 		Settings sttngs = config.getSettings();
 		this.clientInputStream = null;
 		this.clientSocket = clientSock;
 		this.configuration = config;
+		this.routes = rtes;
 		this.rules = rls;
 		this.settings = sttngs;
 		this.socks5WorkerContext = context;
@@ -92,15 +96,6 @@ public final class Socks5Worker {
 		LogAction firewallActionLogAction =
 				applicableRule.getLastRuleResultValue(
 						GeneralRuleResultSpecConstants.FIREWALL_ACTION_LOG_ACTION);
-		Command command = Command.valueOfString(
-				socks5RequestRuleContext.getRuleArgValue(
-						Socks5RuleArgSpecConstants.SOCKS5_COMMAND));
-		String desiredDestinationAddress = 
-				socks5RequestRuleContext.getRuleArgValue(
-						Socks5RuleArgSpecConstants.SOCKS5_DESIRED_DESTINATION_ADDRESS);
-		Port desiredDestinationPort =
-				socks5RequestRuleContext.getRuleArgValue(
-						Socks5RuleArgSpecConstants.SOCKS5_DESIRED_DESTINATION_PORT);			
 		if (firewallAction.equals(FirewallAction.ALLOW)) {
 			if (!this.canAllowSocks5RequestWithinLimit(
 					applicableRule, socks5RequestRuleContext)) {
@@ -111,12 +106,8 @@ public final class Socks5Worker {
 						LOGGER, 
 						ObjectLogMessageHelper.objectLogMessage(
 								this,
-								"'%s %s' allowed based on the following rule "
-								+ "and context: rule: %s context: %s",
-								command,
-								AddressAndPortHelper.toString(
-										desiredDestinationAddress,
-										desiredDestinationPort.intValue()),
+								"SOCKS5 request allowed based on the following "
+								+ "rule and context: rule: %s context: %s",
 								applicableRule,
 								socks5RequestRuleContext));
 			}
@@ -126,12 +117,8 @@ public final class Socks5Worker {
 					LOGGER, 
 					ObjectLogMessageHelper.objectLogMessage(
 							this,
-							"'%s %s' denied based on the following rule and "
-							+ "context: rule: %s context: %s",
-							command,
-							AddressAndPortHelper.toString(
-									desiredDestinationAddress,
-									desiredDestinationPort.intValue()),
+							"SOCKS5 request denied based on the following "
+							+ "rule and context: rule: %s context: %s",
 							applicableRule,
 							socks5RequestRuleContext));				
 		}
@@ -179,26 +166,27 @@ public final class Socks5Worker {
 	}
 	
 	private boolean canApplyRule(final Rule applicableRule) {
-		boolean hasMethodRuleCondition =
-				applicableRule.hasRuleCondition(
-						Socks5RuleConditionSpecConstants.SOCKS5_METHOD);
-		boolean hasUserRuleCondition =
-				applicableRule.hasRuleCondition(
-						Socks5RuleConditionSpecConstants.SOCKS5_USER);
-		boolean hasCommandRuleCondition =
-				applicableRule.hasRuleCondition(
-						Socks5RuleConditionSpecConstants.SOCKS5_COMMAND);
-		boolean hasDesiredDestinationAddressRuleCondition =
-				applicableRule.hasRuleCondition(
-						Socks5RuleConditionSpecConstants.SOCKS5_DESIRED_DESTINATION_ADDRESS);
-		boolean hasDesiredDestinationPortRuleCondition =
-				applicableRule.hasRuleCondition(
-						Socks5RuleConditionSpecConstants.SOCKS5_DESIRED_DESTINATION_PORT);
-		return hasMethodRuleCondition
-				|| hasUserRuleCondition
-				|| hasCommandRuleCondition
-				|| hasDesiredDestinationAddressRuleCondition
-				|| hasDesiredDestinationPortRuleCondition;
+		if (applicableRule.hasRuleCondition(
+				Socks5RuleConditionSpecConstants.SOCKS5_METHOD)) {
+			return true;
+		}
+		if (applicableRule.hasRuleCondition(
+				Socks5RuleConditionSpecConstants.SOCKS5_USER)) {
+			return true;
+		}
+		if (applicableRule.hasRuleCondition(
+				Socks5RuleConditionSpecConstants.SOCKS5_COMMAND)) {
+			return true;
+		}
+		if (applicableRule.hasRuleCondition(
+				Socks5RuleConditionSpecConstants.SOCKS5_DESIRED_DESTINATION_ADDRESS)) {
+			return true;
+		}
+		if (applicableRule.hasRuleCondition(
+				Socks5RuleConditionSpecConstants.SOCKS5_DESIRED_DESTINATION_PORT)) {
+			return true;
+		}
+		return false;
 	}
 	
 	private MethodSubnegotiationResults doMethodSubnegotiation(
@@ -240,6 +228,48 @@ public final class Socks5Worker {
 			return null;
 		}
 		return methodSubnegotiationResults;		
+	}
+	
+	private Address getDesiredDestinationAddressRedirect(
+			final Rule applicableRule) {
+		return applicableRule.getLastRuleResultValue(
+				Socks5RuleResultSpecConstants.SOCKS5_DESIRED_DESTINATION_ADDRESS_REDIRECT);
+	}
+	
+	private Port getDesiredDestinationPortRedirect(
+			final Rule applicableRule) {
+		return applicableRule.getLastRuleResultValue(
+				Socks5RuleResultSpecConstants.SOCKS5_DESIRED_DESTINATION_PORT_REDIRECT);
+	}
+	
+	private LogAction getDesiredDestinationRedirectLogAction(
+			final Rule applicableRule) {
+		return applicableRule.getLastRuleResultValue(
+				Socks5RuleResultSpecConstants.SOCKS5_DESIRED_DESTINATION_REDIRECT_LOG_ACTION);
+	}
+	
+	private Routes getRoutes(final Rule applicableRule) {
+		List<Route> rtes = applicableRule.getRuleResultValues(
+				GeneralRuleResultSpecConstants.SELECTABLE_ROUTE_ID)
+				.stream()
+				.map(rteId -> this.routes.get(rteId))
+				.filter(rte -> rte != null)
+				.collect(Collectors.toList());
+		if (rtes.size() > 0) {
+			return Routes.newInstance(rtes);
+		}
+		return this.routes;
+	}
+	
+	private LogAction getRouteSelectionLogAction(final Rule applicableRule) {
+		LogAction routeSelectionLogAction = 
+				applicableRule.getLastRuleResultValue(
+						GeneralRuleResultSpecConstants.ROUTE_SELECTION_LOG_ACTION);
+		if (routeSelectionLogAction != null) {
+			return routeSelectionLogAction;
+		}
+		return settings.getLastValue(
+				GeneralSettingSpecConstants.ROUTE_SELECTION_LOG_ACTION);
 	}
 	
 	private Method negotiateMethod() {
@@ -368,35 +398,28 @@ public final class Socks5Worker {
 			final Rule applicableRule,
 			final RuleContext socks5RequestRuleContext) {
 		Socks5Request req = socks5Req;
-		Address address = applicableRule.getLastRuleResultValue(
-				Socks5RuleResultSpecConstants.SOCKS5_DESIRED_DESTINATION_ADDRESS_REDIRECT);
+		Address address = this.getDesiredDestinationAddressRedirect(
+				applicableRule);
 		if (address != null) {
 			req = Socks5Request.newInstance(
 					req.getCommand(), 
 					address.toString(), 
 					req.getDesiredDestinationPort());
 		}
-		Port port = applicableRule.getLastRuleResultValue(
-				Socks5RuleResultSpecConstants.SOCKS5_DESIRED_DESTINATION_PORT_REDIRECT);
+		Port port = this.getDesiredDestinationPortRedirect(applicableRule);
 		if (port != null) {
 			req = Socks5Request.newInstance(
 					req.getCommand(), 
 					req.getDesiredDestinationAddress(), 
 					port.intValue());
 		}
-		LogAction logAction = applicableRule.getLastRuleResultValue(
-				Socks5RuleResultSpecConstants.SOCKS5_DESIRED_DESTINATION_REDIRECT_LOG_ACTION);
+		LogAction logAction = this.getDesiredDestinationRedirectLogAction(
+				applicableRule);
 		if ((address != null || port != null) && logAction != null) {
 			logAction.invoke(LOGGER, ObjectLogMessageHelper.objectLogMessage(
 					this, 
-					"Redirecting desired destination %s to %s based on the "
-					+ "following rule and context: rule: %s context: %s", 
-					AddressAndPortHelper.toString(
-							socks5Req.getDesiredDestinationAddress(), 
-							socks5Req.getDesiredDestinationPort()),
-					AddressAndPortHelper.toString(
-							req.getDesiredDestinationAddress(), 
-							req.getDesiredDestinationPort()),
+					"Redirecting desired destination based on the following "
+					+ "rule and context: rule: %s context: %s", 
 					applicableRule,
 					socks5RequestRuleContext));
 		}
@@ -448,39 +471,33 @@ public final class Socks5Worker {
 	private Route selectRoute(
 			final Rule applicableRule, 
 			final RuleContext socks5RequestRuleContext) {
+		Route selectedRte = this.socks5WorkerContext.getSelectedRoute();
 		if (!this.canApplyRule(applicableRule)) {
-			return this.socks5WorkerContext.getSelectedRoute();
+			return selectedRte;
 		}
-		List<String> routeIds = applicableRule.getRuleResultValues(
-				GeneralRuleResultSpecConstants.ROUTE_ID);
-		SelectionStrategy routeIdSelectionStrategy = 
+		SelectionStrategy rteSelectionStrategy = 
 				applicableRule.getLastRuleResultValue(
-						GeneralRuleResultSpecConstants.ROUTE_ID_SELECTION_STRATEGY);
-		LogAction routeIdSelectionLogAction = 
-				applicableRule.getLastRuleResultValue(
-						GeneralRuleResultSpecConstants.ROUTE_ID_SELECTION_LOG_ACTION);
-		Route selectedRoute = null;
-		if (routeIds.size() > 0 && routeIdSelectionStrategy != null) {
-			String selectedRouteId = routeIdSelectionStrategy.selectFrom(
-					routeIds);
-			selectedRoute = this.socks5WorkerContext.getRoutes().get(
-					selectedRouteId);
-			if (selectedRoute != null && routeIdSelectionLogAction != null) {
-				routeIdSelectionLogAction.invoke(
-						LOGGER, 
-						ObjectLogMessageHelper.objectLogMessage(
-								this,
-								"Route '%s' selected based on the following "
-								+ "rule and context: rule: %s context: %s",
-								selectedRouteId,
-								applicableRule,
-								socks5RequestRuleContext));				
-			}
+						GeneralRuleResultSpecConstants.ROUTE_SELECTION_STRATEGY);
+		if (rteSelectionStrategy == null) {
+			return selectedRte;
 		}
-		if (selectedRoute != null) {
-			return selectedRoute;
+		Routes rtes = this.getRoutes(applicableRule);
+		selectedRte = rteSelectionStrategy.selectFrom(
+				rtes.toMap().values().stream().collect(Collectors.toList()));
+		LogAction rteSelectionLogAction =
+				this.getRouteSelectionLogAction(applicableRule);
+		if (rteSelectionLogAction != null) {
+			rteSelectionLogAction.invoke(
+					LOGGER, 
+					ObjectLogMessageHelper.objectLogMessage(
+							this,
+							"Route '%s' selected based on the following "
+							+ "rule and context: rule: %s context: %s",
+							selectedRte.getId(),
+							applicableRule,
+							socks5RequestRuleContext));
 		}
-		return this.socks5WorkerContext.getSelectedRoute();
+		return selectedRte;
 	}
 	
 	@Override

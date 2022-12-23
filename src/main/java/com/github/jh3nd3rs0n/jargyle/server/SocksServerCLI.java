@@ -3,7 +3,6 @@ package com.github.jh3nd3rs0n.jargyle.server;
 import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.net.BindException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -98,16 +97,6 @@ public final class SocksServerCLI extends AbstractCLI {
 		SocksServer socksServer = new SocksServer(configuration);
 		try {
 			socksServer.start();
-		} catch (BindException e) {
-			LOGGER.error(
-					String.format(
-							"Unable to listen on port %s at %s", 
-							configuration.getSettings().getLastValue(
-									GeneralSettingSpecConstants.PORT),
-							configuration.getSettings().getLastValue(
-									GeneralSettingSpecConstants.HOST)), 
-					e);
-			throw new TerminationRequestedException(-1);
 		} catch (IOException e) {
 			LOGGER.error("Error in starting SocksServer", e);
 			throw new TerminationRequestedException(-1);

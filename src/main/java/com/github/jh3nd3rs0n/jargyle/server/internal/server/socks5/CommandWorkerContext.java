@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
-import com.github.jh3nd3rs0n.jargyle.internal.net.AddressAndPortHelper;
 import com.github.jh3nd3rs0n.jargyle.server.FirewallAction;
 import com.github.jh3nd3rs0n.jargyle.server.GeneralRuleArgSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.GeneralRuleResultSpecConstants;
@@ -57,14 +56,7 @@ final class CommandWorkerContext extends Socks5WorkerContext {
 			this.sendSocks5Reply(worker, rep, logger);
 			return false;
 		}
-		boolean hasServerBoundAddressRuleCondition =
-				applicableRule.hasRuleCondition(
-						Socks5RuleConditionSpecConstants.SOCKS5_SERVER_BOUND_ADDRESS);
-		boolean hasServerBoundPortRuleCondition =
-				applicableRule.hasRuleCondition(
-						Socks5RuleConditionSpecConstants.SOCKS5_SECOND_SERVER_BOUND_PORT);
-		if (!hasServerBoundAddressRuleCondition 
-				&& !hasServerBoundPortRuleCondition) {
+		if (!this.canApplyRule(applicableRule)) {
 			return true;
 		}
 		FirewallAction firewallAction = applicableRule.getLastRuleResultValue(
@@ -78,10 +70,6 @@ final class CommandWorkerContext extends Socks5WorkerContext {
 		LogAction firewallActionLogAction = 
 				applicableRule.getLastRuleResultValue(
 						GeneralRuleResultSpecConstants.FIREWALL_ACTION_LOG_ACTION);
-		String serverBoundAddress = socks5ReplyRuleContext.getRuleArgValue(
-				Socks5RuleArgSpecConstants.SOCKS5_SERVER_BOUND_ADDRESS);
-		Port serverBoundPort = socks5ReplyRuleContext.getRuleArgValue(
-				Socks5RuleArgSpecConstants.SOCKS5_SERVER_BOUND_PORT);		
 		if (firewallAction.equals(FirewallAction.ALLOW)) {
 			if (!this.canAllowSocks5ReplyWithinLimit(
 					worker, applicableRule, socks5ReplyRuleContext, logger)) {
@@ -92,12 +80,8 @@ final class CommandWorkerContext extends Socks5WorkerContext {
 						logger, 
 						ObjectLogMessageHelper.objectLogMessage(
 								worker,
-								"Server bound address and port (%s) allowed "
-								+ "based on the following rule and context: "
-								+ "rule: %s context: %s",
-								AddressAndPortHelper.toString(
-										serverBoundAddress,
-										serverBoundPort.intValue()),
+								"SOCKS5 reply allowed based on the following "
+								+ "rule and context: rule: %s context: %s",
 								applicableRule,
 								socks5ReplyRuleContext));					
 			}
@@ -107,12 +91,8 @@ final class CommandWorkerContext extends Socks5WorkerContext {
 					logger, 
 					ObjectLogMessageHelper.objectLogMessage(
 							worker,
-							"Server bound address and port (%s) denied based "
-							+ "on the following rule and context: rule: %s "
-							+ "context: %s",
-							AddressAndPortHelper.toString(
-									serverBoundAddress,
-									serverBoundPort.intValue()),
+							"SOCKS5 reply denied based on the following "
+							+ "rule and context: rule: %s context: %s",
 							applicableRule,
 							socks5ReplyRuleContext));				
 		}
@@ -158,6 +138,18 @@ final class CommandWorkerContext extends Socks5WorkerContext {
 			this.addBelowAllowLimitRule(applicableRule);				
 		}		
 		return true;
+	}
+	
+	private boolean canApplyRule(final Rule applicableRule) {
+		if (applicableRule.hasRuleCondition(
+				Socks5RuleConditionSpecConstants.SOCKS5_SERVER_BOUND_ADDRESS)) {
+			return true;
+		}
+		if (applicableRule.hasRuleCondition(
+				Socks5RuleConditionSpecConstants.SOCKS5_SERVER_BOUND_PORT)) {
+			return true;
+		}
+		return false;
 	}
 	
 	public Rule getApplicableRule() {

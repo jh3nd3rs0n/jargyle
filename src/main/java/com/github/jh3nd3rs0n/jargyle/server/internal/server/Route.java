@@ -4,11 +4,11 @@ import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
 
 public final class Route {
 
-	private final String routeId;
+	private final String id;
 	private final NetObjectFactory netObjectFactory;
 	
 	public Route(final String id, final NetObjectFactory netObjFactory) {
-		this.routeId = id;
+		this.id = id;
 		this.netObjectFactory = netObjFactory;
 	}
 
@@ -16,16 +16,16 @@ public final class Route {
 		return this.netObjectFactory;
 	}
 	
-	public String getRouteId() {
-		return this.routeId;
+	public String getId() {
+		return this.id;
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append(this.getClass().getSimpleName())
-			.append(" [routeId=")
-			.append(this.routeId)
+			.append(" [id=")
+			.append(this.id)
 			.append(", netObjectFactory=")
 			.append(this.netObjectFactory)
 			.append("]");

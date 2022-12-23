@@ -288,31 +288,70 @@ The following is a list of available settings for the SOCKS server (displayed wh
       GENERAL SETTINGS:
     
         backlog=INTEGER_BETWEEN_0_AND_2147483647
-            The maximum length of the queue of incoming connections (default is 50)
+            The maximum length of the queue of incoming client connections to the SOCKS server (default is 50)
+    
+        bindHost=HOST
+            The default binding host name or address for all sockets (default is 0.0.0.0)
+    
+        bindTcpPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]
+            The space separated list of default binding port ranges for all TCP sockets (default is 0)
+    
+        bindUdpPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]
+            The space separated list of default binding port ranges for all UDP sockets (default is 0)
     
         clientSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
             The space separated list of socket settings for the client socket
     
-        host=HOST
-            The host name or address for the SOCKS server (default is 0.0.0.0)
+        externalFacingBindHost=HOST
+            The default binding host name or address for all external-facing sockets
+    
+        externalFacingBindTcpPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]
+            The space separated list of default binding port ranges for all external-facing TCP sockets
+    
+        externalFacingBindUdpPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]
+            The space separated list of default binding port ranges for all external-facing UDP sockets
+    
+        externalFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
+            The space separated list of default socket settings for all external-facing sockets
+    
+        internalFacingBindHost=HOST
+            The default binding host name or address for all internal-facing sockets
+    
+        internalFacingBindTcpPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]
+            The space separated list of default binding port ranges for all internal-facing TCP sockets
+    
+        internalFacingBindUdpPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]
+            The space separated list of default binding port ranges for all internal-facing UDP sockets
+    
+        internalFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
+            The space separated list of default socket settings for all internal-facing sockets
     
         lastRouteId=ROUTE_ID
             The ID for the last and unassigned route (default is lastRoute)
     
         port=INTEGER_BETWEEN_0_AND_65535
-            The port for the SOCKS server (default is 1080)
+            The port for the SOCKS server
     
-        routeIdSelectionLogAction=LOG_ACTION
-            The logging action to take if a route ID is selected from the list of all of the route IDs
+        routeSelectionLogAction=LOG_ACTION
+            The logging action to take if a route is selected
     
-        routeIdSelectionStrategy=SELECTION_STRATEGY
-            The selection strategy for the next route ID to use from the list of all of the route IDs (default is CYCLICAL)
+        routeSelectionStrategy=SELECTION_STRATEGY
+            The selection strategy for the next route (default is CYCLICAL)
     
         rule=[RULE_CONDITION1[ RULE_CONDITION2[...]]] [RULE_RESULT1[ RULE_RESULT2[...]]]
             A rule for the SOCKS server (default is firewallAction=ALLOW)
     
         socketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
-            The space separated list of socket settings for the SOCKS server
+            The space separated list of default socket settings for all sockets
+    
+        socksServerBindHost=HOST
+            The binding host name or address for the SOCKS server socket
+    
+        socksServerBindPortRanges[PORT_RANGE1[ PORT_RANGE2[ ...]]]
+            The space separated list of binding port ranges for the SOCKS server socket
+    
+        socksServerSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
+            The space separated list of socket settings for the SOCKS server socket
     
       CHAINING GENERAL SETTINGS:
     
@@ -489,10 +528,10 @@ The following is a list of available settings for the SOCKS server (displayed wh
             The space separated list of socket settings for the listen socket
     
         socks5.onBind.relayBufferSize=INTEGER_BETWEEN_1_AND_2147483647
-            The buffer size in bytes for relaying the data (default is 1024)
+            The buffer size in bytes for relaying the data
     
         socks5.onBind.relayIdleTimeout=INTEGER_BETWEEN_1_AND_2147483647
-            The timeout in milliseconds on relaying no data (default is 60000)
+            The timeout in milliseconds on relaying no data
     
         socks5.onBind.relayInboundBandwidthLimit=INTEGER_BETWEEN_1_AND_2147483647
             The upper limit on bandwidth in bytes per second of receiving inbound data to be relayed
@@ -500,14 +539,50 @@ The following is a list of available settings for the SOCKS server (displayed wh
         socks5.onBind.relayOutboundBandwidthLimit=INTEGER_BETWEEN_1_AND_2147483647
             The upper limit on bandwidth in bytes per second of receiving outbound data to be relayed
     
+        socks5.onCommand.externalFacingBindHost=HOST
+            The binding host name or address for all external-facing sockets
+    
+        socks5.onCommand.externalFacingBindTcpPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]
+            The space separated list of binding port ranges for all external-facing TCP sockets
+    
+        socks5.onCommand.externalFacingBindUdpPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]
+            The space separated list of binding port ranges for all external-facing UDP sockets
+    
+        socks5.onCommand.externalFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
+            The space separated list of socket settings for all external-facing sockets
+    
+        socks5.onCommand.internalFacingBindHost=HOST
+            The binding host name or address for all internal-facing sockets
+    
+        socks5.onCommand.internalFacingBindTcpPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]
+            The space separated list of binding port ranges for all internal-facing TCP sockets
+    
+        socks5.onCommand.internalFacingBindUdpPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]
+            The space separated list of binding port ranges for all internal-facing UDP sockets
+    
+        socks5.onCommand.internalFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
+            The space separated list of socket settings for all internal-facing sockets
+    
+        socks5.onCommand.relayBufferSize=INTEGER_BETWEEN_1_AND_2147483647
+            The buffer size in bytes for relaying the data (default is 1024)
+    
+        socks5.onCommand.relayIdleTimeout=INTEGER_BETWEEN_1_AND_2147483647
+            The timeout in milliseconds on relaying no data (default is 60000
+    
+        socks5.onCommand.relayInboundBandwidthLimit=INTEGER_BETWEEN_1_AND_2147483647
+            The upper limit on bandwidth in bytes per second of receiving inbound data to be relayed
+    
+        socks5.onCommand.relayOutboundBandwidthLimit=INTEGER_BETWEEN_1_AND_2147483647
+            The upper limit on bandwidth in bytes per second of receiving outbound data to be relayed
+    
         socks5.onConnect.prepareServerFacingSocket=true|false
             The boolean value to indicate if the server-facing socket is to be prepared before connecting (involves applying the specified socket settings, resolving the target host name, and setting the specified timeout on waiting to connect) (default is false)
     
         socks5.onConnect.relayBufferSize=INTEGER_BETWEEN_1_AND_2147483647
-            The buffer size in bytes for relaying the data (default is 1024)
+            The buffer size in bytes for relaying the data
     
         socks5.onConnect.relayIdleTimeout=INTEGER_BETWEEN_1_AND_2147483647
-            The timeout in milliseconds on relaying no data (default is 60000)
+            The timeout in milliseconds on relaying no data
     
         socks5.onConnect.relayInboundBandwidthLimit=INTEGER_BETWEEN_1_AND_2147483647
             The upper limit on bandwidth in bytes per second of receiving inbound data to be relayed
@@ -516,10 +591,10 @@ The following is a list of available settings for the SOCKS server (displayed wh
             The upper limit on bandwidth in bytes per second of receiving outbound data to be relayed
     
         socks5.onConnect.serverFacingBindHost=HOST
-            The binding host name or address for the server-facing socket (default is 0.0.0.0)
+            The binding host name or address for the server-facing socket
     
         socks5.onConnect.serverFacingBindPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]
-            The space separated list of binding port ranges for the server-facing socket (default is 0)
+            The space separated list of binding port ranges for the server-facing socket
     
         socks5.onConnect.serverFacingConnectTimeout=INTEGER_BETWEEN_1_AND_2147483647
             The timeout in milliseconds on waiting for the server-facing socket to connect (default is 60000)
@@ -528,28 +603,28 @@ The following is a list of available settings for the SOCKS server (displayed wh
             The space separated list of socket settings for the server-facing socket
     
         socks5.onUdpAssociate.clientFacingBindHost=HOST
-            The binding host name or address for the client-facing UDP socket (default is 0.0.0.0)
+            The binding host name or address for the client-facing UDP socket
     
         socks5.onUdpAssociate.clientFacingBindPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]
-            The space separated list of binding port ranges for the client-facing UDP socket (default is 0)
+            The space separated list of binding port ranges for the client-facing UDP socket
     
         socks5.onUdpAssociate.clientFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
             The space separated list of socket settings for the client-facing UDP socket
     
         socks5.onUdpAssociate.peerFacingBindHost=HOST
-            The binding host name or address for the peer-facing UDP socket (default is 0.0.0.0)
+            The binding host name or address for the peer-facing UDP socket
     
         socks5.onUdpAssociate.peerFacingBindPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]
-            The space separated list of binding port ranges for the peer-facing UDP socket (default is 0)
+            The space separated list of binding port ranges for the peer-facing UDP socket
     
         socks5.onUdpAssociate.peerFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
             The space separated list of socket settings for the peer-facing UDP socket
     
         socks5.onUdpAssociate.relayBufferSize=INTEGER_BETWEEN_1_AND_2147483647
-            The buffer size in bytes for relaying the data (default is 1024)
+            The buffer size in bytes for relaying the data
     
         socks5.onUdpAssociate.relayIdleTimeout=INTEGER_BETWEEN_1_AND_2147483647
-            The timeout in milliseconds on relaying no data (default is 60000)
+            The timeout in milliseconds on relaying no data
     
         socks5.onUdpAssociate.relayInboundBandwidthLimit=INTEGER_BETWEEN_1_AND_2147483647
             The upper limit on bandwidth in bytes per second of receiving inbound data to be relayed
@@ -616,8 +691,29 @@ The following is a list of available settings for the SOCKS server (displayed wh
     
       GENERAL_RULE_RESULTS:
     
+        bindHost=HOST
+            Specifies the binding host name or address for all sockets
+    
+        bindTcpPortRange=PORT|PORT1-PORT2
+            Specifies the binding port range for all TCP sockets (can be specified multiple times for additional port ranges)
+    
+        bindUdpPortRange=PORT|PORT1-PORT2
+            Specifies the binding port range for all UDP sockets (can be specified multiple times for additional port ranges)
+    
         clientSocketSetting=SOCKET_SETTING
-            Specifies the socket setting for the client socket
+            Specifies the socket setting for the client socket (can be specified multiple times for additional socket settings)
+    
+        externalFacingBindHost=HOST
+            Specifies the binding host name or address for all external-facing sockets
+    
+        externalFacingBindTcpPortRange=PORT|PORT1-PORT2
+            Specifies the binding port range for all external-facing TCP sockets (can be specified multiple times for additional port ranges)
+    
+        externalFacingBindUdpPortRange=PORT|PORT1-PORT2
+            Specifies the binding port range for all external-facing UDP sockets (can be specified multiple times for additional port ranges)
+    
+        externalFacingSocketSetting=SOCKET_SETTING
+            Specifies the socket setting for all external-facing sockets (can be specified multiple times for additional socket settings)
     
         firewallAction=FIREWALL_ACTION
             Specifies the firewall action to take
@@ -631,14 +727,29 @@ The following is a list of available settings for the SOCKS server (displayed wh
         firewallActionLogAction=LOG_ACTION
             Specifies the logging action to take if the firewall action is applied
     
-        routeId=ROUTE_ID
-            Specifies the ID for a route
+        internalFacingBindHost=HOST
+            Specifies the binding host name or address for all internal-facing sockets
     
-        routeIdSelectionLogAction=LOG_ACTION
-            Specifies the logging action to take if a route ID is selected from the list of the route IDs
+        internalFacingBindTcpPortRange=PORT|PORT1-PORT2
+            Specifies the binding port range for all internal-facing TCP sockets (can be specified multiple times for additional port ranges)
     
-        routeIdSelectionStrategy=SELECTION_STRATEGY
-            Specifies the selection strategy for the next route ID to use from the list of route IDs
+        internalFacingBindUdpPortRange=PORT|PORT1-PORT2
+            Specifies the binding port range for all internal-facing UDP sockets (can be specified multiple times for additional port ranges)
+    
+        internalFacingSocketSetting=SOCKET_SETTING
+            Specifies the socket setting for all internal-facing sockets (can be specified multiple times for additional socket settings)
+    
+        routeSelectionLogAction=LOG_ACTION
+            Specifies the logging action to take if a route ID is selected
+    
+        routeSelectionStrategy=SELECTION_STRATEGY
+            Specifies the selection strategy for the next route ID
+    
+        selectableRouteId=ROUTE_ID
+            Specifies the ID for a selectable route (can be specified multiple times for additional routes)
+    
+        socketSetting=SOCKET_SETTING
+            Specifies the socket setting for all sockets (can be specified multiple times for additional socket settings)
     
       LOG_ACTIONS:
     
@@ -797,10 +908,10 @@ The following is a list of available settings for the SOCKS server (displayed wh
             Specifies the logging action to take if the desired destination is redirected
     
         socks5.onBind.inboundSocketSetting=SOCKET_SETTING
-            Specifies the socket setting for the inbound socket
+            Specifies the socket setting for the inbound socket (can be specified multiple times for additional socket settings)
     
         socks5.onBind.listenSocketSetting=SOCKET_SETTING
-            Specifies the socket setting for the listen socket
+            Specifies the socket setting for the listen socket (can be specified multiple times for additional socket settings)
     
         socks5.onBind.relayBufferSize=INTEGER_BETWEEN_1_AND_2147483647
             Specifies the buffer size in bytes for relaying the data
@@ -812,6 +923,42 @@ The following is a list of available settings for the SOCKS server (displayed wh
             Specifies the upper limit on bandwidth in bytes per second of receiving inbound data to be relayed
     
         socks5.onBind.relayOutboundBandwidthLimit=INTEGER_BETWEEN_1_AND_2147483647
+            Specifies the upper limit on bandwidth in bytes per second of receiving outbound data to be relayed
+    
+        socks5.onCommand.externalFacingBindHost=HOST
+            Specifies the binding host name or address for all external-facing sockets
+    
+        socks5.onCommand.externalFacingBindTcpPortRange=PORT|PORT1-PORT2
+            Specifies the binding port range for all external-facing TCP sockets (can be specified multiple times for additional port ranges)
+    
+        socks5.onCommand.externalFacingBindUdpPortRange=PORT|PORT1-PORT2
+            Specifies the binding port range for all external-facing UDP sockets (can be specified multiple times for additional port ranges)
+    
+        socks5.onCommand.externalFacingSocketSetting=SOCKET_SETTING
+            Specifies the socket setting for all external-facing sockets (can be specified multiple times for additional socket settings)
+    
+        socks5.onCommand.internalFacingBindHost=HOST
+            Specifies the binding host name or address for all internal-facing sockets
+    
+        socks5.onCommand.internalFacingBindTcpPortRange=PORT|PORT1-PORT2
+            Specifies the binding port range for all internal-facing TCP sockets (can be specified multiple times for additional port ranges)
+    
+        socks5.onCommand.internalFacingBindUdpPortRange=PORT|PORT1-PORT2
+            Specifies the binding port range for all internal-facing UDP sockets (can be specified multiple times for additional port ranges)
+    
+        socks5.onCommand.internalFacingSocketSetting=SOCKET_SETTING
+            Specifies the socket setting for all internal-facing sockets (can be specified multiple times for additional socket settings)
+    
+        socks5.onCommand.relayBufferSize=INTEGER_BETWEEN_1_AND_2147483647
+            Specifies the buffer size in bytes for relaying the data
+    
+        socks5.onCommand.relayIdleTimeout=INTEGER_BETWEEN_1_AND_2147483647
+            Specifies the timeout in milliseconds on relaying no data
+    
+        socks5.onCommand.relayInboundBandwidthLimit=INTEGER_BETWEEN_1_AND_2147483647
+            Specifies the upper limit on bandwidth in bytes per second of receiving inbound data to be relayed
+    
+        socks5.onCommand.relayOutboundBandwidthLimit=INTEGER_BETWEEN_1_AND_2147483647
             Specifies the upper limit on bandwidth in bytes per second of receiving outbound data to be relayed
     
         socks5.onConnect.prepareServerFacingSocket=true|false
@@ -833,31 +980,31 @@ The following is a list of available settings for the SOCKS server (displayed wh
             Specifies the binding host name or address for the server-facing socket
     
         socks5.onConnect.serverFacingBindPortRange=PORT|PORT1-PORT2
-            Specifies the binding port range for the server-facing socket
+            Specifies the binding port range for the server-facing socket (can be specified multiple times for additional port ranges)
     
         socks5.onConnect.serverFacingConnectTimeout=INTEGER_BETWEEN_1_AND_2147483647
             Specifies the timeout in milliseconds on waiting for the server-facing socket to connect
     
         socks5.onConnect.serverFacingSocketSetting=SOCKET_SETTING
-            Specifies the socket setting for the server-facing socket
+            Specifies the socket setting for the server-facing socket (can be specified multiple times for additional socket settings)
     
         socks5.onUdpAssociate.clientFacingBindHost=HOST
             Specifies the binding host name or address for the client-facing UDP socket
     
         socks5.onUdpAssociate.clientFacingBindPortRange=PORT|PORT1-PORT2
-            Specifies the binding port range for the client-facing UDP socket
+            Specifies the binding port range for the client-facing UDP socket (can be specified multiple times for additional port ranges)
     
         socks5.onUdpAssociate.clientFacingSocketSetting=SOCKET_SETTING
-            Specifies the socket setting for the client-facing UDP socket
+            Specifies the socket setting for the client-facing UDP socket (can be specified multiple times for additional socket settings)
     
         socks5.onUdpAssociate.peerFacingBindHost=HOST
             Specifies the binding host name or address for the peer-facing UDP socket
     
         socks5.onUdpAssociate.peerFacingBindPortRange=PORT|PORT1-PORT2
-            Specifies the binding port range for the peer-facing UDP socket
+            Specifies the binding port range for the peer-facing UDP socket (can be specified multiple times for additional port ranges)
     
         socks5.onUdpAssociate.peerFacingSocketSetting=SOCKET_SETTING
-            Specifies the socket setting for the peer-facing UDP socket
+            Specifies the socket setting for the peer-facing UDP socket (can be specified multiple times for additional socket settings)
     
         socks5.onUdpAssociate.relayBufferSize=INTEGER_BETWEEN_1_AND_2147483647
             Specifies the buffer size in bytes for relaying the data
@@ -943,7 +1090,7 @@ The following command adds one command line option after the existing configurat
     
     ./bin/jargyle new-server-config-file \
         --config-file=configuration.xml \
-        --setting=socketSettings=SO_TIMEOUT=0 \
+        --setting=socksServerSocketSettings=SO_TIMEOUT=0 \
         supplemented_configuration.xml
     
 ```
@@ -968,7 +1115,7 @@ The following command adds one command line option after the existing configurat
                 <value>NO_AUTHENTICATION_REQUIRED</value>
             </setting>
             <setting>
-                <name>socketSettings</name>
+                <name>socksServerSocketSettings</name>
                 <socketSettings>
                     <socketSetting>
                         <name>SO_TIMEOUT</name>
@@ -1028,7 +1175,7 @@ The following command combines the two earlier configuration files into one:
                 <value>NO_AUTHENTICATION_REQUIRED</value>
             </setting>
             <setting>
-                <name>socketSettings</name>
+                <name>socksServerSocketSettings</name>
                 <socketSettings>
                     <socketSetting>
                         <name>SO_TIMEOUT</name>
@@ -1072,9 +1219,10 @@ Unlike the command line option `--config-file`, the monitored configuration file
 The following are the settings in the monitored configuration file that will have no effect if changed during the running configuration:
 
 -   `backlog`
--   `host`
 -   `port`
--   `socketSettings`
+-   `socksServerBindHost`
+-   `socksServerBindPortRanges`
+-   `socksServerSocketSettings`
 
 A restart of Jargyle would be required if you want any of the changed aforementioned settings to be applied to the running configuration.
 
@@ -1913,7 +2061,7 @@ Partial configuration file example:
 
 ### 6. 11. Chaining to a Specified Chain of Other SOCKS Servers
 
-You can have Jargyle chained to a specified chain of other SOCKS servers, meaning that its traffic can be routed through the specified chain of the other SOCKS servers. To have Jargyle chained to a specified chain of other SOCKS servers, you will need to have the setting `chaining.socksServerUri` specified multiple times to specify each SOCKS server as a URI.
+You can have Jargyle chained to a specified chain of other SOCKS servers, meaning that its traffic can be routed through the specified chain of the other SOCKS servers. To have Jargyle chained to a specified chain of other SOCKS servers, you will need to have the setting `chaining.socksServerUri` specified multiple times with each setting specifying a SOCKS server as a URI.
 
 Partial command line example:
 
@@ -1944,7 +2092,7 @@ Partial configuration file example:
     
 ```
 
-To specify the settings regarding each SOCKS server in the chain, the settings regarding each SOCKS server will need to be placed after each specified SOCKS server.
+To specify the settings regarding a SOCKS server in the chain, the settings regarding a SOCKS server will need to be placed after that specified SOCKS server but before the next specified SOCKS server if any.
 
 Partial command line example:
 
@@ -2178,13 +2326,13 @@ Partial configuration file example:
     
 ```
 
-You can also set the setting `routeIdSelectionStrategy` to specify the selection strategy for the next route ID to use from the list of all of the route IDs. The default is `CYCLICAL`.
+You can also set the setting `routeSelectionStrategy` to specify the selection strategy for the next route. The default is `CYCLICAL`.
 
 Partial command line example:
 
 ```text
     
-    --setting=routeIdSelectionStrategy=RANDOM
+    --setting=routeSelectionStrategy=RANDOM
     
 ```
 
@@ -2193,19 +2341,19 @@ Partial configuration file example:
 ```xml
     
     <setting>
-        <name>routeIdSelectionStrategy</name>
+        <name>routeSelectionStrategy</name>
         <value>RANDOM</value>
     </setting>
     
 ```
 
-You can also set the setting `routeIdSelectionLogAction` to specify the logging action to take if a route ID is selected from the list of all of the route IDs.
+You can also set the setting `routeSelectionLogAction` to specify the logging action to take if a route is selected.
 
 Partial command line example:
 
 ```text
     
-    --setting=routeIdSelectionLogAction=LOG_AS_INFO
+    --setting=routeSelectionLogAction=LOG_AS_INFO
     
 ```
 
@@ -2214,7 +2362,7 @@ Partial configuration file example:
 ```xml
     
     <setting>
-        <name>routeIdSelectionLogAction</name>
+        <name>routeSelectionLogAction</name>
         <value>LOG_AS_INFO</value>
     </setting>
     
@@ -2616,8 +2764,9 @@ Partial configuration file example:
 
 To route traffic, you will need the following rule results:
 
--   `routeId`: Specifies the ID for a [route](#6-12-chaining-to-multiple-specified-chains-of-other-socks-servers) (This rule result can be specified multiple times for each route ID)
--   `routeIdSelectionStrategy`: Specifies the selection strategy for the next route ID to use from the list of route IDs
+-   `routeSelectionStrategy`: Specifies the selection strategy for the next route
+-   `selectableRouteId`: Specifies the ID for a selectable [route](#6-12-chaining-to-multiple-specified-chains-of-other-socks-servers) (This rule result is optional. This rule result can be specified multiple times for additional routes.)
+
 
 These rule results can be used with the following rule conditions:
 
@@ -2629,18 +2778,18 @@ These rule results can be used with the following rule conditions:
 -   `socks5.user`
 -   `socksServerAddress`
 
-You can also specify the logging action to take if a route ID is selected from the list of the route IDs by adding the following rule result:
+You can also specify the logging action to take if a route is selected by adding the following rule result:
 
--   `routeIdSelectionLogAction`
+-   `routeSelectionLogAction`
 
-The rule result `routeIdSelectionLogAction` is optional.
+The rule result `routeSelectionLogAction` is optional.
 
 Partial command line example:
 
 ```text
     
-    "--setting=rule=socks5.command=CONNECT firewallAction=ALLOW routeId=alpha routeId=beta routeId=delta routeIdSelectionStrategy=RANDOM routeIdSelectionLogAction=LOG_AS_INFO" \
-    "--setting=rule=firewallAction=ALLOW routeId=omega routeIdSelectionStrategy=CYCLICAL"
+    "--setting=rule=socks5.command=CONNECT firewallAction=ALLOW routeSelectionStrategy=RANDOM selectableRouteId=alpha selectableRouteId=beta selectableRouteId=delta routeSelectionLogAction=LOG_AS_INFO" \
+    "--setting=rule=firewallAction=ALLOW routeSelectionStrategy=CYCLICAL selectableRouteId=omega "
     
 ```
 
@@ -2663,23 +2812,23 @@ Partial configuration file example:
                     <value>ALLOW</value>
                 </ruleResult>
                 <ruleResult>
-                    <name>routeId</name>
-                    <value>alpha</value>
-                </ruleResult>
-                <ruleResult>
-                    <name>routeId</name>
-                    <value>beta</value>
-                </ruleResult>
-                <ruleResult>
-                    <name>routeId</name>
-                    <value>delta</value>
-                </ruleResult>
-                <ruleResult>
-                    <name>routeIdSelectionStrategy</name>
+                    <name>routeSelectionStrategy</name>
                     <value>RANDOM</value>
                 </ruleResult>
                 <ruleResult>
-                    <name>routeIdSelectionLogAction</name>
+                    <name>selectableRouteId</name>
+                    <value>alpha</value>
+                </ruleResult>
+                <ruleResult>
+                    <name>selectableRouteId</name>
+                    <value>beta</value>
+                </ruleResult>
+                <ruleResult>
+                    <name>selectableRouteId</name>
+                    <value>delta</value>
+                </ruleResult>
+                <ruleResult>
+                    <name>routeSelectionLogAction</name>
                     <value>LOG_AS_INFO</value>
                 </ruleResult>
             </ruleResults>
@@ -2696,12 +2845,12 @@ Partial configuration file example:
                     <value>ALLOW</value>
                 </ruleResult>
                 <ruleResult>
-                    <name>routeId</name>
-                    <value>omega</value>
+                    <name>routeSelectionStrategy</name>
+                    <value>CYCLICAL</value>
                 </ruleResult>
                 <ruleResult>
-                    <name>routeIdSelectionStrategy</name>
-                    <value>CYCLICAL</value>
+                    <name>selectableRouteId</name>
+                    <value>omega</value>
                 </ruleResult>
             </ruleResults>
         </rule>
@@ -2794,6 +2943,8 @@ To limit the bandwidth, you will need any of the following rule results:
 
 -   `socks5.onBind.relayInboundBandwidthLimit`: Specifies the upper limit on bandwidth in bytes per second of receiving inbound data to be relayed
 -   `socks5.onBind.relayOutboundBandwidthLimit`: Specifies the upper limit on bandwidth in bytes per second of receiving outbound data to be relayed
+-   `socks5.onCommand.relayInboundBandwidthLimit`: Specifies the upper limit on bandwidth in bytes per second of receiving inbound data to be relayed
+-   `socks5.onCommand.relayOutboundBandwidthLimit`: Specifies the upper limit on bandwidth in bytes per second of receiving outbound data to be relayed
 -   `socks5.onConnect.relayInboundBandwidthLimit`: Specifies the upper limit on bandwidth in bytes per second of receiving inbound data to be relayed
 -   `socks5.onConnect.relayOutboundBandwidthLimit`: Specifies the upper limit on bandwidth in bytes per second of receiving outbound data to be relayed
 -   `socks5.onUdpAssociate.relayInboundBandwidthLimit`: Specifies the upper limit on bandwidth in bytes per second of receiving inbound data to be relayed
@@ -2878,13 +3029,59 @@ Partial configuration file example:
 
 To configure the sockets, you will need any of the following rule results:
 
--   `socks5.onBind.inboundSocketSetting`: Specifies the socket setting for the inbound socket (This rule result can be specified multiple times for each socket setting)
+-   `bindHost`: Specifies the binding host name or address for all sockets
+ 
+-   `bindTcpPortRange`: Specifies the binding [port range](#6-14-2-port-range) for all TCP sockets (This rule result can be specified multiple times for additional port ranges)
 
--   `socks5.onBind.listenSocketSetting`: Specifies the socket setting for the listen socket (This rule result can be specified multiple times for each socket setting)
+-   `bindUdpPortRange`: Specifies the binding [port range](#6-14-2-port-range) for all UDP sockets (This rule result can be specified multiple times for additional port ranges)
+
+-   `clientSocketSetting`: Specifies the socket setting for the client socket (This rule result can be specified multiple times for additional socket settings)
+
+-   `externalFacingBindHost`: Specifies the binding host name or address for all external-facing sockets
+ 
+-   `externalFacingBindTcpPortRange`: Specifies the binding [port range](#6-14-2-port-range) for all external-facing TCP sockets (This rule result can be specified multiple times for additional port ranges)
+
+-   `externalFacingBindUdpPortRange`: Specifies the binding [port range](#6-14-2-port-range) for all external-facing UDP sockets (This rule result can be specified multiple times for additional port ranges)
+
+-   `externalFacingSocketSetting`: Specifies the socket setting for all external-facing sockets (This rule result can be specified multiple times for additional socket settings)
+
+-   `internalFacingBindHost`: Specifies the binding host name or address for all internal-facing sockets
+
+-   `internalFacingBindTcpPortRange`: Specifies the binding [port range](#6-14-2-port-range) for all internal-facing TCP sockets (This rule result can be specified multiple times for additional port ranges)
+
+-   `internalFacingBindUdpPortRange`: Specifies the binding [port range](#6-14-2-port-range) for all internal-facing UDP sockets (This rule result can be specified multiple times for additional port ranges)
+
+-   `internalFacingSocketSetting`: Specifies the socket setting for all internal-facing sockets (This rule result can be specified multiple times for additional socket settings)
+
+-   `socketSetting`: Specifies the socket setting for all sockets (This rule result can be specified multiple times for additional socket settings)
+
+-   `socks5.onBind.inboundSocketSetting`: Specifies the socket setting for the inbound socket (This rule result can be specified multiple times for additional socket settings)
+
+-   `socks5.onBind.listenSocketSetting`: Specifies the socket setting for the listen socket (This rule result can be specified multiple times for additional socket settings)
 
 -   `socks5.onBind.relayBufferSize`: Specifies the buffer size in bytes for relaying the data (Value must be an integer between 1 (inclusive) and 2147483647  (inclusive))
 
 -   `socks5.onBind.relayIdleTimeout`: Specifies the timeout in milliseconds on relaying no data (Value must be an integer between 1 (inclusive) and 2147483647 (inclusive))
+
+-   `socks5.onCommand.externalFacingBindHost`: Specifies the binding host name or address for all external-facing sockets
+ 
+-   `socks5.onCommand.externalFacingBindTcpPortRange`: Specifies the binding [port range](#6-14-2-port-range) for all external-facing TCP sockets (This rule result can be specified multiple times for additional port ranges)
+
+-   `socks5.onCommand.externalFacingBindUdpPortRange`: Specifies the binding [port range](#6-14-2-port-range) for all external-facing UDP sockets (This rule result can be specified multiple times for additional port ranges)
+
+-   `socks5.onCommand.externalFacingSocketSetting`: Specifies the socket setting for all external-facing sockets (This rule result can be specified multiple times for additional socket settings)
+
+-   `socks5.onCommand.internalFacingBindHost`: Specifies the binding host name or address for all internal-facing sockets
+
+-   `socks5.onCommand.internalFacingBindTcpPortRange`: Specifies the binding [port range](#6-14-2-port-range) for all internal-facing TCP sockets (This rule result can be specified multiple times for additional port ranges)
+
+-   `socks5.onCommand.internalFacingBindUdpPortRange`: Specifies the binding [port range](#6-14-2-port-range) for all internal-facing UDP sockets (This rule result can be specified multiple times for additional port ranges)
+
+-   `socks5.onCommand.internalFacingSocketSetting`: Specifies the socket setting for all internal-facing sockets (This rule result can be specified multiple times for additional socket settings)
+
+-   `socks5.onCommand.relayBufferSize`: Specifies the buffer size in bytes for relaying the data (Value must be an integer between 1 (inclusive) and 2147483647  (inclusive))
+
+-   `socks5.onCommand.relayIdleTimeout`: Specifies the timeout in milliseconds on relaying no data (Value must be an integer between 1 (inclusive) and 2147483647 (inclusive))
 
 -   `socks5.onConnect.prepareServerFacingSocket`: Specifies the boolean value to indicate if the server-facing socket is to be prepared before connecting (involves applying the specified socket settings, resolving the target host name, and setting the specified timeout on waiting to connect)
 
@@ -2895,23 +3092,23 @@ To configure the sockets, you will need any of the following rule results:
 
 -   `socks5.onConnect.serverFacingBindHost`: Specifies the binding host name or address for the server-facing socket
 
--   `socks5.onConnect.serverFacingBindPortRange`: Specifies the binding [port range](#6-14-2-port-range) for the server-facing socket (This rule result can be specified multiple times for each port range)
+-   `socks5.onConnect.serverFacingBindPortRange`: Specifies the binding [port range](#6-14-2-port-range) for the server-facing socket (This rule result can be specified multiple times for additional port ranges)
 
 -   `socks5.onConnect.serverFacingConnectTimeout`: Specifies the timeout in milliseconds on waiting for the server-facing socket to connect (Value must be an integer between 1 (inclusive) and 2147483647 (inclusive))
 
--   `socks5.onConnect.serverFacingSocketSetting`: Specifies the socket setting for the server-facing socket (This rule result can be specified multiple times for each socket setting)
+-   `socks5.onConnect.serverFacingSocketSetting`: Specifies the socket setting for the server-facing socket (This rule result can be specified multiple times for additional socket settings)
 
 -   `socks5.onUdpAssociate.clientFacingBindHost`: Specifies the binding host name or address for the client-facing UDP socket
 
--   `socks5.onUdpAssociate.clientFacingBindPortRange`: Specifies the binding [port range](#6-14-2-port-range) for the client-facing UDP socket (This rule result can be specified multiple times for each port range)
+-   `socks5.onUdpAssociate.clientFacingBindPortRange`: Specifies the binding [port range](#6-14-2-port-range) for the client-facing UDP socket (This rule result can be specified multiple times for additional port ranges)
 
--   `socks5.onUdpAssociate.clientFacingSocketSetting`: Specifies the socket setting for the client-facing UDP socket (This rule result can be specified multiple times for each socket setting)
+-   `socks5.onUdpAssociate.clientFacingSocketSetting`: Specifies the socket setting for the client-facing UDP socket (This rule result can be specified multiple times for additional socket settings)
 
 -   `socks5.onUdpAssociate.peerFacingBindHost`: Specifies the binding host name or address for the peer-facing UDP socket
 
--   `socks5.onUdpAssociate.peerFacingBindPortRange`: Specifies the binding [port range](#6-14-2-port-range) for the peer-facing UDP socket (This rule result can be specified multiple times for each port range)
+-   `socks5.onUdpAssociate.peerFacingBindPortRange`: Specifies the binding [port range](#6-14-2-port-range) for the peer-facing UDP socket (This rule result can be specified multiple times for additional port ranges)
 
--   `socks5.onUdpAssociate.peerFacingSocketSetting`: Specifies the socket setting for the peer-facing UDP socket (This rule result can be specified multiple times for each socket setting)
+-   `socks5.onUdpAssociate.peerFacingSocketSetting`: Specifies the socket setting for the peer-facing UDP socket (This rule result can be specified multiple times for additional socket settings)
 
 -   `socks5.onUdpAssociate.relayBufferSize`: Specifies the buffer size in bytes for relaying the data (Value must be an integer between 1 (inclusive) and 2147483647 (inclusive))
 
@@ -3057,7 +3254,7 @@ Configuration file example:
                 <doc>Allow for 100 backlogged connections</doc>
             </setting>
             <setting>
-                <name>socketSettings</name>
+                <name>socksServerSocketSettings</name>
                 <socketSettings>
                     <socketSetting>
                         <name>SO_TIMEOUT</name>

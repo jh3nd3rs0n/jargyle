@@ -18,10 +18,10 @@ public class SocksServerTest {
 		SocksServer socksServer = new SocksServer(configuration);
 		try {
 			socksServer.start();
-			configuration.addSetting(GeneralSettingSpecConstants.HOST.newSetting(
+			configuration.addSetting(GeneralSettingSpecConstants.SOCKS_SERVER_BIND_HOST.newSetting(
 					Host.newInstance("127.0.0.1")));
 			Host expectedHost = 
-					GeneralSettingSpecConstants.HOST.getDefaultSetting().getValue();
+					GeneralSettingSpecConstants.BIND_HOST.getDefaultSetting().getValue();
 			Host actualHost = socksServer.getHost();
 			assertEquals(expectedHost, actualHost);
 		} finally {
@@ -40,8 +40,7 @@ public class SocksServerTest {
 			socksServer.start();
 			configuration.addSetting(GeneralSettingSpecConstants.PORT.newSetting(
 					Port.newInstance(3000)));
-			Port expectedPort = 
-					GeneralSettingSpecConstants.PORT.getDefaultSetting().getValue();
+			Port expectedPort = SocksServer.DEFAULT_PORT;
 			Port actualPort = socksServer.getPort();
 			assertEquals(expectedPort, actualPort);
 		} finally {

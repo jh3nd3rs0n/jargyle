@@ -1,6 +1,8 @@
 package com.github.jh3nd3rs0n.jargyle.server;
 
 import java.io.IOException;
+import java.net.BindException;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.util.concurrent.ExecutorService;
@@ -8,6 +10,8 @@ import java.util.concurrent.Executors;
 
 import com.github.jh3nd3rs0n.jargyle.common.net.Host;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
+import com.github.jh3nd3rs0n.jargyle.common.net.PortRange;
+import com.github.jh3nd3rs0n.jargyle.common.net.PortRanges;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.server.internal.server.Listener;
 
@@ -21,28 +25,70 @@ public final class SocksServer {
 		
 	}
 	
-	private int backlog;
+	public static final int DEFAULT_PORT_INT_VALUE = 1080;
+	public static final Port DEFAULT_PORT = Port.newInstance(
+			DEFAULT_PORT_INT_VALUE);
+	
 	private final Configuration configuration;
 	private ExecutorService executor;
 	private Host host;
 	private Port port;
 	private ServerSocket serverSocket;
-	private SocketSettings socketSettings;
 	private State state;
 	
 	public SocksServer(final Configuration config) {
-		this.backlog = config.getSettings().getLastValue(
-				GeneralSettingSpecConstants.BACKLOG).intValue();
 		this.configuration = config;
 		this.executor = null;
-		this.host = config.getSettings().getLastValue(
-				GeneralSettingSpecConstants.HOST);
-		this.port = config.getSettings().getLastValue(
-				GeneralSettingSpecConstants.PORT);
+		this.host = null;
+		this.port = null;
 		this.serverSocket = null;
-		this.socketSettings = config.getSettings().getLastValue(
-				GeneralSettingSpecConstants.SOCKET_SETTINGS);
 		this.state = State.STOPPED;
+	}
+	
+	private int getBacklog() {
+		return this.configuration.getSettings().getLastValue(
+				GeneralSettingSpecConstants.BACKLOG).intValue();
+	}
+	
+	private Host getBindHost() {
+		Settings settings = this.configuration.getSettings();
+		Host host = settings.getLastValue(
+				GeneralSettingSpecConstants.SOCKS_SERVER_BIND_HOST);
+		if (host != null) {
+			return host;
+		}
+		host = settings.getLastValue(
+				GeneralSettingSpecConstants.INTERNAL_FACING_BIND_HOST);
+		if (host != null) {
+			return host;
+		}
+		host = settings.getLastValue(
+				GeneralSettingSpecConstants.BIND_HOST);
+		return host;
+	}
+	
+	private PortRanges getBindPortRanges() {
+		Settings settings = this.configuration.getSettings();
+		Port port = settings.getLastValue(GeneralSettingSpecConstants.PORT);
+		if (port != null) {
+			return PortRanges.newInstance(PortRange.newInstance(port));
+		}
+		PortRanges portRanges = settings.getLastValue(
+				GeneralSettingSpecConstants.SOCKS_SERVER_BIND_PORT_RANGES);
+		if (portRanges.toList().size() > 0) {
+			return portRanges;
+		}
+		portRanges = settings.getLastValue(
+				GeneralSettingSpecConstants.INTERNAL_FACING_BIND_TCP_PORT_RANGES);
+		if (portRanges.toList().size() > 0) {
+			return portRanges;
+		}
+		portRanges = settings.getLastValue(
+				GeneralSettingSpecConstants.BIND_TCP_PORT_RANGES);
+		if (portRanges.equals(PortRanges.getDefault())) {
+			return PortRanges.newInstance(PortRange.newInstance(DEFAULT_PORT));
+		}
+		return portRanges;
 	}
 	
 	public Configuration getConfiguration() {
@@ -57,18 +103,78 @@ public final class SocksServer {
 		return this.port;
 	}
 	
+	private SocketSettings getSocketSettings() {
+		Settings settings = this.configuration.getSettings();
+		SocketSettings socketSettings =	settings.getLastValue(
+				GeneralSettingSpecConstants.SOCKS_SERVER_SOCKET_SETTINGS);
+		if (socketSettings.toMap().size() > 0) {
+			return socketSettings;
+		}
+		socketSettings = settings.getLastValue(
+				GeneralSettingSpecConstants.INTERNAL_FACING_SOCKET_SETTINGS);
+		if (socketSettings.toMap().size() > 0) {
+			return socketSettings;
+		}
+		socketSettings = settings.getLastValue(
+				GeneralSettingSpecConstants.SOCKET_SETTINGS);
+		return socketSettings;
+	}
+	
 	public State getState() {
 		return this.state;
+	}
+	
+	private ServerSocket newServerSocket(
+			final InetAddress bindInetAddress,
+			final PortRanges bindPortRanges,
+			final SocketSettings socketSettings,
+			final int backlog) throws IOException {
+		ServerSocket serverSock = null;
+		boolean serverSocketBound = false;
+		for (PortRange bindPortRange : bindPortRanges.toList()) {
+			for (Port bindPort : bindPortRange) {
+				serverSock = new ServerSocket();
+				socketSettings.applyTo(serverSock);
+				try {
+					serverSock.bind(
+							new InetSocketAddress(
+									bindInetAddress, 
+									bindPort.intValue()), 
+							backlog);
+				} catch (BindException e) {
+					continue;
+				}
+				serverSocketBound = true;
+				break;
+			}
+			if (serverSocketBound) {
+				break;
+			}
+		}
+		if (!serverSocketBound) {
+			throw new BindException(String.format(
+					"unable to bind following address and port (range(s)): "
+					+ "%s %s", 
+					bindInetAddress,
+					bindPortRanges));
+		}
+		return serverSock;
 	}
 	
 	public void start() throws IOException {
 		if (this.state.equals(State.STARTED)) {
 			throw new IllegalStateException("SocksServer already started");
 		}
-		this.serverSocket = new ServerSocket();
-		this.socketSettings.applyTo(this.serverSocket);
-		this.serverSocket.bind(new InetSocketAddress(
-				this.host.toInetAddress(), this.port.intValue()), this.backlog);
+		Host bindHost = this.getBindHost();
+		PortRanges bindPortRanges = this.getBindPortRanges();
+		SocketSettings socketSettings = this.getSocketSettings();
+		int backlog = this.getBacklog();
+		this.serverSocket = newServerSocket(
+				bindHost.toInetAddress(),
+				bindPortRanges,
+				socketSettings,
+				backlog);
+		this.host = bindHost;
 		this.port = Port.newInstance(this.serverSocket.getLocalPort());
 		this.executor = Executors.newSingleThreadExecutor();
 		this.executor.execute(new Listener(
@@ -80,14 +186,8 @@ public final class SocksServer {
 		if (this.state.equals(State.STOPPED)) {
 			throw new IllegalStateException("SocksServer already stopped");
 		}
-		this.backlog = this.configuration.getSettings().getLastValue(
-				GeneralSettingSpecConstants.BACKLOG).intValue();
-		this.host = this.configuration.getSettings().getLastValue(
-				GeneralSettingSpecConstants.HOST);
-		this.port = this.configuration.getSettings().getLastValue(
-				GeneralSettingSpecConstants.PORT);
-		this.socketSettings = this.configuration.getSettings().getLastValue(
-				GeneralSettingSpecConstants.SOCKET_SETTINGS);
+		this.host = null;
+		this.port = null;
 		this.serverSocket.close();
 		this.serverSocket = null;
 		this.executor.shutdownNow();

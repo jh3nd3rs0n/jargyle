@@ -140,7 +140,7 @@ public class ConfigurationFileCreatorCLIIT {
 		String[] args = new String[] {
 				"--config-file=".concat(ResourceHelper.getResourceAsFile(
 						ResourceNameConstants.JARGYLE_SERVER_CONFIGURATION_FILE).getAbsolutePath()),
-				"--setting=socketSettings=SO_TIMEOUT=0",
+				"--setting=socksServerSocketSettings=SO_TIMEOUT=0",
 				this.supplementedConfigurationFile.toAbsolutePath().toString()
 		};
 		CLI cli = new ConfigurationFileCreatorCLI(null, null, args, false);

@@ -14,7 +14,7 @@
             <value>NO_AUTHENTICATION_REQUIRED</value>
         </setting>
         <setting>
-            <name>socketSettings</name>
+            <name>socksServerSocketSettings</name>
             <socketSettings>
                 <socketSetting>
                     <name>SO_TIMEOUT</name>

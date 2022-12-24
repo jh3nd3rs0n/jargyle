@@ -273,6 +273,12 @@ final class BindCommandWorker extends CommandWorker {
 					socketSettings.stream().collect(Collectors.toList()));
 		}
 		socketSettings = this.applicableRule.getRuleResultValues(
+				Socks5RuleResultSpecConstants.SOCKS5_ON_COMMAND_SOCKET_SETTING);
+		if (socketSettings.size() > 0) {
+			return SocketSettings.newInstance(
+					socketSettings.stream().collect(Collectors.toList()));
+		}
+		socketSettings = this.applicableRule.getRuleResultValues(
 				GeneralRuleResultSpecConstants.SOCKET_SETTING);
 		if (socketSettings.size() > 0) {
 			return SocketSettings.newInstance(
@@ -280,6 +286,11 @@ final class BindCommandWorker extends CommandWorker {
 		}
 		SocketSettings socketSttngs = this.settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_BIND_INBOUND_SOCKET_SETTINGS);
+		if (socketSttngs.toMap().size() > 0) {
+			return socketSttngs;
+		}
+		socketSttngs = this.settings.getLastValue(
+				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_SOCKET_SETTINGS);
 		if (socketSttngs.toMap().size() > 0) {
 			return socketSttngs;
 		}
@@ -303,6 +314,12 @@ final class BindCommandWorker extends CommandWorker {
 					socketSettings.stream().collect(Collectors.toList()));
 		}
 		socketSettings = this.applicableRule.getRuleResultValues(
+				Socks5RuleResultSpecConstants.SOCKS5_ON_COMMAND_SOCKET_SETTING);
+		if (socketSettings.size() > 0) {
+			return SocketSettings.newInstance(
+					socketSettings.stream().collect(Collectors.toList()));
+		}
+		socketSettings = this.applicableRule.getRuleResultValues(
 				GeneralRuleResultSpecConstants.EXTERNAL_FACING_SOCKET_SETTING);
 		if (socketSettings.size() > 0) {
 			return SocketSettings.newInstance(
@@ -321,6 +338,11 @@ final class BindCommandWorker extends CommandWorker {
 		}
 		socketSttngs = this.settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_EXTERNAL_FACING_SOCKET_SETTINGS);
+		if (socketSttngs.toMap().size() > 0) {
+			return socketSttngs;
+		}
+		socketSttngs = this.settings.getLastValue(
+				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_SOCKET_SETTINGS);
 		if (socketSttngs.toMap().size() > 0) {
 			return socketSttngs;
 		}

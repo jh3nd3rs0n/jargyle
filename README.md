@@ -539,6 +539,15 @@ The following is a list of available settings for the SOCKS server (displayed wh
         socks5.onBind.relayOutboundBandwidthLimit=INTEGER_BETWEEN_1_AND_2147483647
             The upper limit on bandwidth in bytes per second of receiving outbound data to be relayed
     
+        socks5.onCommand.bindHost=HOST
+            The binding host name or address for all sockets
+    
+        socks5.onCommand.bindTcpPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]
+            The space separated list of binding port ranges for all TCP sockets
+    
+        socks5.onCommand.bindUdpPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]
+            The space separated list of binding port ranges for all UDP sockets
+    
         socks5.onCommand.externalFacingBindHost=HOST
             The binding host name or address for all external-facing sockets
     
@@ -574,6 +583,9 @@ The following is a list of available settings for the SOCKS server (displayed wh
     
         socks5.onCommand.relayOutboundBandwidthLimit=INTEGER_BETWEEN_1_AND_2147483647
             The upper limit on bandwidth in bytes per second of receiving outbound data to be relayed
+    
+        socks5.onCommand.socketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
+            The space separated list of socket settings for all sockets
     
         socks5.onConnect.prepareServerFacingSocket=true|false
             The boolean value to indicate if the server-facing socket is to be prepared before connecting (involves applying the specified socket settings, resolving the target host name, and setting the specified timeout on waiting to connect) (default is false)
@@ -695,25 +707,25 @@ The following is a list of available settings for the SOCKS server (displayed wh
             Specifies the binding host name or address for all sockets
     
         bindTcpPortRange=PORT|PORT1-PORT2
-            Specifies the binding port range for all TCP sockets (can be specified multiple times for additional port ranges)
+            Specifies a binding port range for all TCP sockets (can be specified multiple times with each rule result specifying another port range)
     
         bindUdpPortRange=PORT|PORT1-PORT2
-            Specifies the binding port range for all UDP sockets (can be specified multiple times for additional port ranges)
+            Specifies a binding port range for all UDP sockets (can be specified multiple times with each rule result specifying another port ranges)
     
         clientSocketSetting=SOCKET_SETTING
-            Specifies the socket setting for the client socket (can be specified multiple times for additional socket settings)
+            Specifies a socket setting for the client socket (can be specified multiple times with each rule result specifying another socket setting)
     
         externalFacingBindHost=HOST
             Specifies the binding host name or address for all external-facing sockets
     
         externalFacingBindTcpPortRange=PORT|PORT1-PORT2
-            Specifies the binding port range for all external-facing TCP sockets (can be specified multiple times for additional port ranges)
+            Specifies a binding port range for all external-facing TCP sockets (can be specified multiple times with each rule result specifying another port range)
     
         externalFacingBindUdpPortRange=PORT|PORT1-PORT2
-            Specifies the binding port range for all external-facing UDP sockets (can be specified multiple times for additional port ranges)
+            Specifies a binding port range for all external-facing UDP sockets (can be specified multiple times with each rule result specifying another port range)
     
         externalFacingSocketSetting=SOCKET_SETTING
-            Specifies the socket setting for all external-facing sockets (can be specified multiple times for additional socket settings)
+            Specifies a socket setting for all external-facing sockets (can be specified multiple times with each rule result specifying another socket setting)
     
         firewallAction=FIREWALL_ACTION
             Specifies the firewall action to take
@@ -731,13 +743,13 @@ The following is a list of available settings for the SOCKS server (displayed wh
             Specifies the binding host name or address for all internal-facing sockets
     
         internalFacingBindTcpPortRange=PORT|PORT1-PORT2
-            Specifies the binding port range for all internal-facing TCP sockets (can be specified multiple times for additional port ranges)
+            Specifies a binding port range for all internal-facing TCP sockets (can be specified multiple times with each rule result specifying another port range)
     
         internalFacingBindUdpPortRange=PORT|PORT1-PORT2
-            Specifies the binding port range for all internal-facing UDP sockets (can be specified multiple times for additional port ranges)
+            Specifies a binding port range for all internal-facing UDP sockets (can be specified multiple times with each rule result specifying another port range)
     
         internalFacingSocketSetting=SOCKET_SETTING
-            Specifies the socket setting for all internal-facing sockets (can be specified multiple times for additional socket settings)
+            Specifies a socket setting for all internal-facing sockets (can be specified multiple times with each rule result specifying another socket setting)
     
         routeSelectionLogAction=LOG_ACTION
             Specifies the logging action to take if a route ID is selected
@@ -746,10 +758,10 @@ The following is a list of available settings for the SOCKS server (displayed wh
             Specifies the selection strategy for the next route ID
     
         selectableRouteId=ROUTE_ID
-            Specifies the ID for a selectable route (can be specified multiple times for additional routes)
+            Specifies the ID for a selectable route (can be specified multiple times with each rule result specifying another route)
     
         socketSetting=SOCKET_SETTING
-            Specifies the socket setting for all sockets (can be specified multiple times for additional socket settings)
+            Specifies a socket setting for all sockets (can be specified multiple times with each rule result specifying another socket setting)
     
       LOG_ACTIONS:
     
@@ -908,10 +920,10 @@ The following is a list of available settings for the SOCKS server (displayed wh
             Specifies the logging action to take if the desired destination is redirected
     
         socks5.onBind.inboundSocketSetting=SOCKET_SETTING
-            Specifies the socket setting for the inbound socket (can be specified multiple times for additional socket settings)
+            Specifies a socket setting for the inbound socket (can be specified multiple times with each rule result specifying another socket setting)
     
         socks5.onBind.listenSocketSetting=SOCKET_SETTING
-            Specifies the socket setting for the listen socket (can be specified multiple times for additional socket settings)
+            Specifies a socket setting for the listen socket (can be specified multiple times with each rule result specifying another socket setting)
     
         socks5.onBind.relayBufferSize=INTEGER_BETWEEN_1_AND_2147483647
             Specifies the buffer size in bytes for relaying the data
@@ -925,29 +937,38 @@ The following is a list of available settings for the SOCKS server (displayed wh
         socks5.onBind.relayOutboundBandwidthLimit=INTEGER_BETWEEN_1_AND_2147483647
             Specifies the upper limit on bandwidth in bytes per second of receiving outbound data to be relayed
     
+        socks5.onCommand.bindHost=HOST
+            Specifies the binding host name or address for all sockets
+    
+        socks5.onCommand.bindTcpPortRange=PORT|PORT1-PORT2
+            Specifies a binding port range for all TCP sockets (can be specified multiple times with each rule result specifying another port range)
+    
+        socks5.onCommand.bindUdpPortRange=PORT|PORT1-PORT2
+            Specifies a binding port range for all UDP sockets (can be specified multiple times with each rule result specifying another port range)
+    
         socks5.onCommand.externalFacingBindHost=HOST
             Specifies the binding host name or address for all external-facing sockets
     
         socks5.onCommand.externalFacingBindTcpPortRange=PORT|PORT1-PORT2
-            Specifies the binding port range for all external-facing TCP sockets (can be specified multiple times for additional port ranges)
+            Specifies a binding port range for all external-facing TCP sockets (can be specified multiple times with each rule result specifying another port range)
     
         socks5.onCommand.externalFacingBindUdpPortRange=PORT|PORT1-PORT2
-            Specifies the binding port range for all external-facing UDP sockets (can be specified multiple times for additional port ranges)
+            Specifies a binding port range for all external-facing UDP sockets (can be specified multiple times with each rule result specifying another port range)
     
         socks5.onCommand.externalFacingSocketSetting=SOCKET_SETTING
-            Specifies the socket setting for all external-facing sockets (can be specified multiple times for additional socket settings)
+            Specifies a socket setting for all external-facing sockets (can be specified multiple times with each rule result specifying another socket setting)
     
         socks5.onCommand.internalFacingBindHost=HOST
             Specifies the binding host name or address for all internal-facing sockets
     
         socks5.onCommand.internalFacingBindTcpPortRange=PORT|PORT1-PORT2
-            Specifies the binding port range for all internal-facing TCP sockets (can be specified multiple times for additional port ranges)
+            Specifies a binding port range for all internal-facing TCP sockets (can be specified multiple times with each rule result specifying another port range)
     
         socks5.onCommand.internalFacingBindUdpPortRange=PORT|PORT1-PORT2
-            Specifies the binding port range for all internal-facing UDP sockets (can be specified multiple times for additional port ranges)
+            Specifies a binding port range for all internal-facing UDP sockets (can be specified multiple times with each rule result specifying another port range)
     
         socks5.onCommand.internalFacingSocketSetting=SOCKET_SETTING
-            Specifies the socket setting for all internal-facing sockets (can be specified multiple times for additional socket settings)
+            Specifies a socket setting for all internal-facing sockets (can be specified multiple times with each rule result specifying another socket setting)
     
         socks5.onCommand.relayBufferSize=INTEGER_BETWEEN_1_AND_2147483647
             Specifies the buffer size in bytes for relaying the data
@@ -960,6 +981,9 @@ The following is a list of available settings for the SOCKS server (displayed wh
     
         socks5.onCommand.relayOutboundBandwidthLimit=INTEGER_BETWEEN_1_AND_2147483647
             Specifies the upper limit on bandwidth in bytes per second of receiving outbound data to be relayed
+    
+        socks5.onCommand.socketSetting=SOCKET_SETTING
+            Specifies a socket setting for all sockets (can be specified multiple times with each rule result specifying another socket setting)
     
         socks5.onConnect.prepareServerFacingSocket=true|false
             Specifies the boolean value to indicate if the server-facing socket is to be prepared before connecting (involves applying the specified socket settings, resolving the target host name, and setting the specified timeout on waiting to connect)
@@ -980,31 +1004,31 @@ The following is a list of available settings for the SOCKS server (displayed wh
             Specifies the binding host name or address for the server-facing socket
     
         socks5.onConnect.serverFacingBindPortRange=PORT|PORT1-PORT2
-            Specifies the binding port range for the server-facing socket (can be specified multiple times for additional port ranges)
+            Specifies a binding port range for the server-facing socket (can be specified multiple times with each rule result specifying another port range)
     
         socks5.onConnect.serverFacingConnectTimeout=INTEGER_BETWEEN_1_AND_2147483647
             Specifies the timeout in milliseconds on waiting for the server-facing socket to connect
     
         socks5.onConnect.serverFacingSocketSetting=SOCKET_SETTING
-            Specifies the socket setting for the server-facing socket (can be specified multiple times for additional socket settings)
+            Specifies a socket setting for the server-facing socket (can be specified multiple times with each rule result specifying another socket setting)
     
         socks5.onUdpAssociate.clientFacingBindHost=HOST
             Specifies the binding host name or address for the client-facing UDP socket
     
         socks5.onUdpAssociate.clientFacingBindPortRange=PORT|PORT1-PORT2
-            Specifies the binding port range for the client-facing UDP socket (can be specified multiple times for additional port ranges)
+            Specifies a binding port range for the client-facing UDP socket (can be specified multiple times with each rule result specifying another port range)
     
         socks5.onUdpAssociate.clientFacingSocketSetting=SOCKET_SETTING
-            Specifies the socket setting for the client-facing UDP socket (can be specified multiple times for additional socket settings)
+            Specifies a socket setting for the client-facing UDP socket (can be specified multiple times with each rule result specifying another socket setting)
     
         socks5.onUdpAssociate.peerFacingBindHost=HOST
             Specifies the binding host name or address for the peer-facing UDP socket
     
         socks5.onUdpAssociate.peerFacingBindPortRange=PORT|PORT1-PORT2
-            Specifies the binding port range for the peer-facing UDP socket (can be specified multiple times for additional port ranges)
+            Specifies a binding port range for the peer-facing UDP socket (can be specified multiple times with each rule result specifying another port range)
     
         socks5.onUdpAssociate.peerFacingSocketSetting=SOCKET_SETTING
-            Specifies the socket setting for the peer-facing UDP socket (can be specified multiple times for additional socket settings)
+            Specifies a socket setting for the peer-facing UDP socket (can be specified multiple times with each rule result specifying another socket setting)
     
         socks5.onUdpAssociate.relayBufferSize=INTEGER_BETWEEN_1_AND_2147483647
             Specifies the buffer size in bytes for relaying the data
@@ -1044,7 +1068,7 @@ The following command creates an empty configuration file:
     
 ```
 
-The following command creates a configuration file with the port number, the number of allowed backlogged connections, and no authentication required:
+The following command creates a configuration file with the port number, the number of allowed backlogged incoming client connections, and no authentication required:
 
 ```bash
     
@@ -2407,7 +2431,7 @@ Partial configuration file example:
     
 ```
 
-To specify multiple rules, you would need to have the setting `rule` specified multiple times to specify each rule.
+To specify multiple rules, you would need to have the setting `rule` specified multiple times with each setting specifying another rule.
 
 Partial command line example:
 
@@ -3030,57 +3054,65 @@ To configure the sockets, you will need any of the following rule results:
 
 -   `bindHost`: Specifies the binding host name or address for all sockets
  
--   `bindTcpPortRange`: Specifies the binding [port range](#6-14-2-port-range) for all TCP sockets (This rule result can be specified multiple times for additional port ranges)
+-   `bindTcpPortRange`: Specifies a binding [port range](#6-14-2-port-range) for all TCP sockets (This rule result can be specified multiple times with each rule result specifying another port range)
 
--   `bindUdpPortRange`: Specifies the binding [port range](#6-14-2-port-range) for all UDP sockets (This rule result can be specified multiple times for additional port ranges)
+-   `bindUdpPortRange`: Specifies a binding [port range](#6-14-2-port-range) for all UDP sockets (This rule result can be specified multiple times with each rule result specifying another port range)
 
--   `clientSocketSetting`: Specifies the socket setting for the client socket (This rule result can be specified multiple times for additional socket settings)
+-   `clientSocketSetting`: Specifies a socket setting for the client socket (This rule result can be specified multiple times with each rule result specifying another socket setting)
 
 -   `externalFacingBindHost`: Specifies the binding host name or address for all external-facing sockets
  
--   `externalFacingBindTcpPortRange`: Specifies the binding [port range](#6-14-2-port-range) for all external-facing TCP sockets (This rule result can be specified multiple times for additional port ranges)
+-   `externalFacingBindTcpPortRange`: Specifies a binding [port range](#6-14-2-port-range) for all external-facing TCP sockets (This rule result can be specified multiple times with each rule result specifying another port range)
 
--   `externalFacingBindUdpPortRange`: Specifies the binding [port range](#6-14-2-port-range) for all external-facing UDP sockets (This rule result can be specified multiple times for additional port ranges)
+-   `externalFacingBindUdpPortRange`: Specifies a binding [port range](#6-14-2-port-range) for all external-facing UDP sockets (This rule result can be specified multiple times with each rule result specifying another port range)
 
--   `externalFacingSocketSetting`: Specifies the socket setting for all external-facing sockets (This rule result can be specified multiple times for additional socket settings)
+-   `externalFacingSocketSetting`: Specifies a socket setting for all external-facing sockets (This rule result can be specified multiple times with each rule result specifying another socket setting)
 
 -   `internalFacingBindHost`: Specifies the binding host name or address for all internal-facing sockets
 
--   `internalFacingBindTcpPortRange`: Specifies the binding [port range](#6-14-2-port-range) for all internal-facing TCP sockets (This rule result can be specified multiple times for additional port ranges)
+-   `internalFacingBindTcpPortRange`: Specifies a binding [port range](#6-14-2-port-range) for all internal-facing TCP sockets (This rule result can be specified multiple times with each rule result specifying another port range)
 
--   `internalFacingBindUdpPortRange`: Specifies the binding [port range](#6-14-2-port-range) for all internal-facing UDP sockets (This rule result can be specified multiple times for additional port ranges)
+-   `internalFacingBindUdpPortRange`: Specifies a binding [port range](#6-14-2-port-range) for all internal-facing UDP sockets (This rule result can be specified multiple times with each rule result specifying another port range)
 
--   `internalFacingSocketSetting`: Specifies the socket setting for all internal-facing sockets (This rule result can be specified multiple times for additional socket settings)
+-   `internalFacingSocketSetting`: Specifies a socket setting for all internal-facing sockets (This rule result can be specified multiple times with each rule result specifying another socket setting)
 
--   `socketSetting`: Specifies the socket setting for all sockets (This rule result can be specified multiple times for additional socket settings)
+-   `socketSetting`: Specifies a socket setting for all sockets (This rule result can be specified multiple times with each rule result specifying another socket setting)
 
--   `socks5.onBind.inboundSocketSetting`: Specifies the socket setting for the inbound socket (This rule result can be specified multiple times for additional socket settings)
+-   `socks5.onBind.inboundSocketSetting`: Specifies a socket setting for the inbound socket (This rule result can be specified multiple times with each rule result specifying another socket setting)
 
--   `socks5.onBind.listenSocketSetting`: Specifies the socket setting for the listen socket (This rule result can be specified multiple times for additional socket settings)
+-   `socks5.onBind.listenSocketSetting`: Specifies a socket setting for the listen socket (This rule result can be specified multiple times with each rule result specifying another socket setting)
 
 -   `socks5.onBind.relayBufferSize`: Specifies the buffer size in bytes for relaying the data (Value must be an integer between 1 (inclusive) and 2147483647  (inclusive))
 
 -   `socks5.onBind.relayIdleTimeout`: Specifies the timeout in milliseconds on relaying no data (Value must be an integer between 1 (inclusive) and 2147483647 (inclusive))
 
+-   `socks5.onCommand.bindHost`: Specifies the binding host name or address for all sockets
+ 
+-   `socks5.onCommand.bindTcpPortRange`: Specifies a binding [port range](#6-14-2-port-range) for all TCP sockets (This rule result can be specified multiple times with each rule result specifying another port range)
+
+-   `socks5.onCommand.bindUdpPortRange`: Specifies a binding [port range](#6-14-2-port-range) for all UDP sockets (This rule result can be specified multiple times with each rule result specifying another port range)
+
 -   `socks5.onCommand.externalFacingBindHost`: Specifies the binding host name or address for all external-facing sockets
  
--   `socks5.onCommand.externalFacingBindTcpPortRange`: Specifies the binding [port range](#6-14-2-port-range) for all external-facing TCP sockets (This rule result can be specified multiple times for additional port ranges)
+-   `socks5.onCommand.externalFacingBindTcpPortRange`: Specifies a binding [port range](#6-14-2-port-range) for all external-facing TCP sockets (This rule result can be specified multiple times with each rule result specifying another port range)
 
--   `socks5.onCommand.externalFacingBindUdpPortRange`: Specifies the binding [port range](#6-14-2-port-range) for all external-facing UDP sockets (This rule result can be specified multiple times for additional port ranges)
+-   `socks5.onCommand.externalFacingBindUdpPortRange`: Specifies a binding [port range](#6-14-2-port-range) for all external-facing UDP sockets (This rule result can be specified multiple times with each rule result specifying another port range)
 
--   `socks5.onCommand.externalFacingSocketSetting`: Specifies the socket setting for all external-facing sockets (This rule result can be specified multiple times for additional socket settings)
+-   `socks5.onCommand.externalFacingSocketSetting`: Specifies a socket setting for all external-facing sockets (This rule result can be specified multiple times with each rule result specifying another socket setting)
 
 -   `socks5.onCommand.internalFacingBindHost`: Specifies the binding host name or address for all internal-facing sockets
 
--   `socks5.onCommand.internalFacingBindTcpPortRange`: Specifies the binding [port range](#6-14-2-port-range) for all internal-facing TCP sockets (This rule result can be specified multiple times for additional port ranges)
+-   `socks5.onCommand.internalFacingBindTcpPortRange`: Specifies a binding [port range](#6-14-2-port-range) for all internal-facing TCP sockets (This rule result can be specified multiple times with each rule result specifying another port range)
 
--   `socks5.onCommand.internalFacingBindUdpPortRange`: Specifies the binding [port range](#6-14-2-port-range) for all internal-facing UDP sockets (This rule result can be specified multiple times for additional port ranges)
+-   `socks5.onCommand.internalFacingBindUdpPortRange`: Specifies a binding [port range](#6-14-2-port-range) for all internal-facing UDP sockets (This rule result can be specified multiple times with each rule result specifying another port range)
 
--   `socks5.onCommand.internalFacingSocketSetting`: Specifies the socket setting for all internal-facing sockets (This rule result can be specified multiple times for additional socket settings)
+-   `socks5.onCommand.internalFacingSocketSetting`: Specifies a socket setting for all internal-facing sockets (This rule result can be specified multiple times with each rule result specifying another socket setting)
 
 -   `socks5.onCommand.relayBufferSize`: Specifies the buffer size in bytes for relaying the data (Value must be an integer between 1 (inclusive) and 2147483647  (inclusive))
 
 -   `socks5.onCommand.relayIdleTimeout`: Specifies the timeout in milliseconds on relaying no data (Value must be an integer between 1 (inclusive) and 2147483647 (inclusive))
+
+-   `socks5.onCommand.socketSetting`: Specifies a socket setting for all sockets (This rule result can be specified multiple times with each rule result specifying another socket setting)
 
 -   `socks5.onConnect.prepareServerFacingSocket`: Specifies the boolean value to indicate if the server-facing socket is to be prepared before connecting (involves applying the specified socket settings, resolving the target host name, and setting the specified timeout on waiting to connect)
 
@@ -3091,23 +3123,23 @@ To configure the sockets, you will need any of the following rule results:
 
 -   `socks5.onConnect.serverFacingBindHost`: Specifies the binding host name or address for the server-facing socket
 
--   `socks5.onConnect.serverFacingBindPortRange`: Specifies the binding [port range](#6-14-2-port-range) for the server-facing socket (This rule result can be specified multiple times for additional port ranges)
+-   `socks5.onConnect.serverFacingBindPortRange`: Specifies a binding [port range](#6-14-2-port-range) for the server-facing socket (This rule result can be specified multiple times with each rule result specifying another port range)
 
 -   `socks5.onConnect.serverFacingConnectTimeout`: Specifies the timeout in milliseconds on waiting for the server-facing socket to connect (Value must be an integer between 1 (inclusive) and 2147483647 (inclusive))
 
--   `socks5.onConnect.serverFacingSocketSetting`: Specifies the socket setting for the server-facing socket (This rule result can be specified multiple times for additional socket settings)
+-   `socks5.onConnect.serverFacingSocketSetting`: Specifies a socket setting for the server-facing socket (This rule result can be specified multiple times with each rule result specifying another socket setting)
 
 -   `socks5.onUdpAssociate.clientFacingBindHost`: Specifies the binding host name or address for the client-facing UDP socket
 
--   `socks5.onUdpAssociate.clientFacingBindPortRange`: Specifies the binding [port range](#6-14-2-port-range) for the client-facing UDP socket (This rule result can be specified multiple times for additional port ranges)
+-   `socks5.onUdpAssociate.clientFacingBindPortRange`: Specifies a binding [port range](#6-14-2-port-range) for the client-facing UDP socket (This rule result can be specified multiple times with each rule result specifying another port range)
 
--   `socks5.onUdpAssociate.clientFacingSocketSetting`: Specifies the socket setting for the client-facing UDP socket (This rule result can be specified multiple times for additional socket settings)
+-   `socks5.onUdpAssociate.clientFacingSocketSetting`: Specifies a socket setting for the client-facing UDP socket (This rule result can be specified multiple times with each rule result specifying another socket setting)
 
 -   `socks5.onUdpAssociate.peerFacingBindHost`: Specifies the binding host name or address for the peer-facing UDP socket
 
--   `socks5.onUdpAssociate.peerFacingBindPortRange`: Specifies the binding [port range](#6-14-2-port-range) for the peer-facing UDP socket (This rule result can be specified multiple times for additional port ranges)
+-   `socks5.onUdpAssociate.peerFacingBindPortRange`: Specifies a binding [port range](#6-14-2-port-range) for the peer-facing UDP socket (This rule result can be specified multiple times with each rule result specifying another port range)
 
--   `socks5.onUdpAssociate.peerFacingSocketSetting`: Specifies the socket setting for the peer-facing UDP socket (This rule result can be specified multiple times for additional socket settings)
+-   `socks5.onUdpAssociate.peerFacingSocketSetting`: Specifies a socket setting for the peer-facing UDP socket (This rule result can be specified multiple times with each rule result specifying another socket setting)
 
 -   `socks5.onUdpAssociate.relayBufferSize`: Specifies the buffer size in bytes for relaying the data (Value must be an integer between 1 (inclusive) and 2147483647 (inclusive))
 
@@ -3250,7 +3282,7 @@ Configuration file example:
             <setting>
                 <name>backlog</name>
                 <value>100</value>
-                <doc>Allow for 100 backlogged connections</doc>
+                <doc>Allow for 100 backlogged incoming client connections</doc>
             </setting>
             <setting>
                 <name>socksServerSocketSettings</name>

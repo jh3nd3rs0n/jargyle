@@ -117,6 +117,35 @@ public final class Socks5SettingSpecConstants {
 			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
 					"socks5.onBind.relayOutboundBandwidthLimit",
 					null));
+	
+	@HelpText(
+			doc = "The binding host name or address for all sockets",
+			usage = "socks5.onCommand.bindHost=HOST"
+	)
+	public static final SettingSpec<Host> SOCKS5_ON_COMMAND_BIND_HOST =
+			SETTING_SPECS.addThenGet(new HostSettingSpec(
+					"socks5.onCommand.bindHost",
+					null));
+	
+	@HelpText(
+			doc = "The space separated list of binding port ranges for all TCP "
+					+ "sockets",
+			usage = "socks5.onCommand.bindTcpPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]"
+	)
+	public static final SettingSpec<PortRanges> SOCKS5_ON_COMMAND_BIND_TCP_PORT_RANGES =
+			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
+					"socks5.onCommand.bindTcpPortRanges",
+					PortRanges.newInstance()));
+			
+	@HelpText(
+			doc = "The space separated list of binding port ranges for all UDP "
+					+ "sockets",
+			usage = "socks5.onCommand.bindUdpPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]"
+	)
+	public static final SettingSpec<PortRanges> SOCKS5_ON_COMMAND_BIND_UDP_PORT_RANGES =
+			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
+					"socks5.onCommand.bindUdpPortRanges",
+					PortRanges.newInstance()));
 
 	@HelpText(
 			doc = "The binding host name or address for all external-facing "
@@ -237,6 +266,15 @@ public final class Socks5SettingSpecConstants {
 			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
 					"socks5.onCommand.relayOutboundBandwidthLimit",
 					null));	
+	
+	@HelpText(
+			doc = "The space separated list of socket settings for all sockets",
+			usage = "socks5.onCommand.socketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
+	)
+	public static final SettingSpec<SocketSettings> SOCKS5_ON_COMMAND_SOCKET_SETTINGS =
+			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
+					"socks5.onCommand.socketSettings", 
+					SocketSettings.newInstance()));
 	
 	@HelpText(
 			doc = "The boolean value to indicate if the server-facing socket "

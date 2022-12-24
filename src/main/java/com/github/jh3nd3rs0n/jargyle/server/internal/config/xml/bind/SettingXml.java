@@ -2,7 +2,6 @@ package com.github.jh3nd3rs0n.jargyle.server.internal.config.xml.bind;
 
 import java.util.Objects;
 
-import com.github.jh3nd3rs0n.jargyle.common.net.PortRanges;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
 import com.github.jh3nd3rs0n.jargyle.server.Rule;
@@ -26,9 +25,6 @@ class SettingXml {
 		}
 		if (val instanceof Rule) {
 			return new RuleXml((Rule) val);
-		}
-		if (val instanceof PortRanges) {
-			return new PortRangesXml((PortRanges) val);
 		}
 		if (val instanceof SocketSettings) {
 			return new SocketSettingsXml((SocketSettings) val);
@@ -54,10 +50,6 @@ class SettingXml {
 				name = "rule",
 				required = true,
 				type = RuleXml.class),
-		@XmlElement(
-				name = "portRanges",
-				required = true,
-				type = PortRangesXml.class),
 		@XmlElement(
 				name = "socketSettings", 
 				required = true, 

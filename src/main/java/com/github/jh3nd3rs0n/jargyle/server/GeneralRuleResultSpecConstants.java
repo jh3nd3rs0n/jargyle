@@ -28,24 +28,27 @@ public final class GeneralRuleResultSpecConstants {
 			"bindHost"));
 	
 	@HelpText(
-			doc = "Specifies the binding port range for all TCP sockets (can "
-					+ "be specified multiple times for additional port ranges)",
+			doc = "Specifies a binding port range for all TCP sockets (can be "
+					+ "specified multiple times with each rule result "
+					+ "specifying another port range)",
 			usage = "bindTcpPortRange=PORT|PORT1-PORT2"
 	)
 	public static final RuleResultSpec<PortRange> BIND_TCP_PORT_RANGE = RULE_RESULT_SPECS.addThenGet(new PortRangeRuleResultSpec(
 			"bindTcpPortRange"));
 	
 	@HelpText(
-			doc = "Specifies the binding port range for all UDP sockets (can "
-					+ "be specified multiple times for additional port ranges)",
+			doc = "Specifies a binding port range for all UDP sockets (can be "
+					+ "specified multiple times with each rule result "
+					+ "specifying another port ranges)",
 			usage = "bindUdpPortRange=PORT|PORT1-PORT2"
 	)
 	public static final RuleResultSpec<PortRange> BIND_UDP_PORT_RANGE = RULE_RESULT_SPECS.addThenGet(new PortRangeRuleResultSpec(
 			"bindUdpPortRange"));
 	
 	@HelpText(
-			doc = "Specifies the socket setting for the client socket (can be "
-					+ "specified multiple times for additional socket settings)",
+			doc = "Specifies a socket setting for the client socket (can be "
+					+ "specified multiple times with each rule result "
+					+ "specifying another socket setting)",
 			usage = "clientSocketSetting=SOCKET_SETTING"
 	)	
 	public static final RuleResultSpec<SocketSetting<Object>> CLIENT_SOCKET_SETTING = RULE_RESULT_SPECS.addThenGet(new SocketSettingRuleResultSpec(
@@ -60,27 +63,27 @@ public final class GeneralRuleResultSpecConstants {
 			"externalFacingBindHost"));
 	
 	@HelpText(
-			doc = "Specifies the binding port range for all external-facing "
-					+ "TCP sockets (can be specified multiple times for "
-					+ "additional port ranges)",
+			doc = "Specifies a binding port range for all external-facing TCP "
+					+ "sockets (can be specified multiple times with each "
+					+ "rule result specifying another port range)",
 			usage = "externalFacingBindTcpPortRange=PORT|PORT1-PORT2"
 	)
 	public static final RuleResultSpec<PortRange> EXTERNAL_FACING_BIND_TCP_PORT_RANGE = RULE_RESULT_SPECS.addThenGet(new PortRangeRuleResultSpec(
 			"externalFacingBindTcpPortRange"));
 	
 	@HelpText(
-			doc = "Specifies the binding port range for all external-facing "
-					+ "UDP sockets (can be specified multiple times for "
-					+ "additional port ranges)",
+			doc = "Specifies a binding port range for all external-facing UDP "
+					+ "sockets (can be specified multiple times with each "
+					+ "rule result specifying another port range)",
 			usage = "externalFacingBindUdpPortRange=PORT|PORT1-PORT2"
 	)
 	public static final RuleResultSpec<PortRange> EXTERNAL_FACING_BIND_UDP_PORT_RANGE = RULE_RESULT_SPECS.addThenGet(new PortRangeRuleResultSpec(
 			"externalFacingBindUdpPortRange"));
 	
 	@HelpText(
-			doc = "Specifies the socket setting for all external-facing "
-					+ "sockets (can be specified multiple times for additional "
-					+ "socket settings)",
+			doc = "Specifies a socket setting for all external-facing sockets "
+					+ "(can be specified multiple times with each rule result "
+					+ "specifying another socket setting)",
 			usage = "externalFacingSocketSetting=SOCKET_SETTING"
 	)
 	public static final RuleResultSpec<SocketSetting<Object>> EXTERNAL_FACING_SOCKET_SETTING = RULE_RESULT_SPECS.addThenGet(new SocketSettingRuleResultSpec(
@@ -127,27 +130,27 @@ public final class GeneralRuleResultSpecConstants {
 			"internalFacingBindHost"));
 	
 	@HelpText(
-			doc = "Specifies the binding port range for all internal-facing "
-					+ "TCP sockets (can be specified multiple times for "
-					+ "additional port ranges)",
+			doc = "Specifies a binding port range for all internal-facing TCP "
+					+ "sockets (can be specified multiple times with each rule "
+					+ "result specifying another port range)",
 			usage = "internalFacingBindTcpPortRange=PORT|PORT1-PORT2"
 	)
 	public static final RuleResultSpec<PortRange> INTERNAL_FACING_BIND_TCP_PORT_RANGE = RULE_RESULT_SPECS.addThenGet(new PortRangeRuleResultSpec(
 			"internalFacingBindTcpPortRange"));
 	
 	@HelpText(
-			doc = "Specifies the binding port range for all internal-facing "
-					+ "UDP sockets (can be specified multiple times for "
-					+ "additional port ranges)",
+			doc = "Specifies a binding port range for all internal-facing UDP "
+					+ "sockets (can be specified multiple times with each rule "
+					+ "result specifying another port range)",
 			usage = "internalFacingBindUdpPortRange=PORT|PORT1-PORT2"
 	)
 	public static final RuleResultSpec<PortRange> INTERNAL_FACING_BIND_UDP_PORT_RANGE = RULE_RESULT_SPECS.addThenGet(new PortRangeRuleResultSpec(
 			"internalFacingBindUdpPortRange"));
 	
 	@HelpText(
-			doc = "Specifies the socket setting for all internal-facing "
-					+ "sockets (can be specified multiple times for additional "
-					+ "socket settings)",
+			doc = "Specifies a socket setting for all internal-facing sockets "
+					+ "(can be specified multiple times with each rule result "
+					+ "specifying another socket setting)",
 			usage = "internalFacingSocketSetting=SOCKET_SETTING"
 	)
 	public static final RuleResultSpec<SocketSetting<Object>> INTERNAL_FACING_SOCKET_SETTING = RULE_RESULT_SPECS.addThenGet(new SocketSettingRuleResultSpec(
@@ -170,15 +173,17 @@ public final class GeneralRuleResultSpecConstants {
 	
 	@HelpText(
 			doc = "Specifies the ID for a selectable route (can be specified "
-					+ "multiple times for additional routes)",
+					+ "multiple times with each rule result specifying another "
+					+ "route)",
 			usage = "selectableRouteId=ROUTE_ID"
 	)
 	public static final RuleResultSpec<String> SELECTABLE_ROUTE_ID = RULE_RESULT_SPECS.addThenGet(new StringRuleResultSpec(
 			"selectableRouteId"));
 	
 	@HelpText(
-			doc = "Specifies the socket setting for all sockets (can be "
-					+ "specified multiple times for additional socket settings)",
+			doc = "Specifies a socket setting for all sockets (can be "
+					+ "specified multiple times with each rule result "
+					+ "specifying another socket setting)",
 			usage = "socketSetting=SOCKET_SETTING"
 	)
 	public static final RuleResultSpec<SocketSetting<Object>> SOCKET_SETTING = RULE_RESULT_SPECS.addThenGet(new SocketSettingRuleResultSpec(

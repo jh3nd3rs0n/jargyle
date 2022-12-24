@@ -207,6 +207,11 @@ final class ConnectCommandWorker extends CommandWorker {
 			return host;
 		}
 		host = this.applicableRule.getLastRuleResultValue(
+				Socks5RuleResultSpecConstants.SOCKS5_ON_COMMAND_BIND_HOST);
+		if (host != null) {
+			return host;
+		}
+		host = this.applicableRule.getLastRuleResultValue(
 				GeneralRuleResultSpecConstants.EXTERNAL_FACING_BIND_HOST);
 		if (host != null) {
 			return host;
@@ -223,6 +228,11 @@ final class ConnectCommandWorker extends CommandWorker {
 		}
 		host = this.settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_EXTERNAL_FACING_BIND_HOST);
+		if (host != null) {
+			return host;
+		}
+		host = this.settings.getLastValue(
+				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_BIND_HOST);
 		if (host != null) {
 			return host;
 		}
@@ -248,6 +258,11 @@ final class ConnectCommandWorker extends CommandWorker {
 			return PortRanges.newInstance(portRanges);
 		}
 		portRanges = this.applicableRule.getRuleResultValues(
+				Socks5RuleResultSpecConstants.SOCKS5_ON_COMMAND_BIND_TCP_PORT_RANGE);
+		if (portRanges.size() > 0) {
+			return PortRanges.newInstance(portRanges);
+		}
+		portRanges = this.applicableRule.getRuleResultValues(
 				GeneralRuleResultSpecConstants.EXTERNAL_FACING_BIND_TCP_PORT_RANGE);
 		if (portRanges.size() > 0) {
 			return PortRanges.newInstance(portRanges);
@@ -266,7 +281,12 @@ final class ConnectCommandWorker extends CommandWorker {
 				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_EXTERNAL_FACING_BIND_TCP_PORT_RANGES);
 		if (prtRanges.toList().size() > 0) {
 			return prtRanges;
-		}		
+		}
+		prtRanges = this.settings.getLastValue(
+				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_BIND_TCP_PORT_RANGES);
+		if (prtRanges.toList().size() > 0) {
+			return prtRanges;
+		}
 		prtRanges = this.settings.getLastValue(
 				GeneralSettingSpecConstants.EXTERNAL_FACING_BIND_TCP_PORT_RANGES);
 		if (prtRanges.toList().size() > 0) {
@@ -304,6 +324,12 @@ final class ConnectCommandWorker extends CommandWorker {
 					socketSettings.stream().collect(Collectors.toList()));
 		}
 		socketSettings = this.applicableRule.getRuleResultValues(
+				Socks5RuleResultSpecConstants.SOCKS5_ON_COMMAND_SOCKET_SETTING);
+		if (socketSettings.size() > 0) {
+			return SocketSettings.newInstance(
+					socketSettings.stream().collect(Collectors.toList()));
+		}
+		socketSettings = this.applicableRule.getRuleResultValues(
 				GeneralRuleResultSpecConstants.EXTERNAL_FACING_SOCKET_SETTING);
 		if (socketSettings.size() > 0) {
 			return SocketSettings.newInstance(
@@ -322,6 +348,11 @@ final class ConnectCommandWorker extends CommandWorker {
 		}
 		socketSttngs = this.settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_EXTERNAL_FACING_SOCKET_SETTINGS);
+		if (socketSttngs.toMap().size() > 0) {
+			return socketSttngs;
+		}
+		socketSttngs = this.settings.getLastValue(
+				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_SOCKET_SETTINGS);
 		if (socketSttngs.toMap().size() > 0) {
 			return socketSttngs;
 		}

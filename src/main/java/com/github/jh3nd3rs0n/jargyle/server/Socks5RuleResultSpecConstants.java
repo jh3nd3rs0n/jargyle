@@ -46,16 +46,18 @@ public final class Socks5RuleResultSpecConstants {
 			"socks5.desiredDestinationRedirectLogAction"));
 	
 	@HelpText(
-			doc = "Specifies the socket setting for the inbound socket (can be "
-					+ "specified multiple times for additional socket settings)",
+			doc = "Specifies a socket setting for the inbound socket (can be "
+					+ "specified multiple times with each rule result "
+					+ "specifying another socket setting)",
 			usage = "socks5.onBind.inboundSocketSetting=SOCKET_SETTING"
 	)	
 	public static final RuleResultSpec<SocketSetting<Object>> SOCKS5_ON_BIND_INBOUND_SOCKET_SETTING = RULE_RESULT_SPECS.addThenGet(new SocketSettingRuleResultSpec(
 			"socks5.onBind.inboundSocketSetting"));
 	
 	@HelpText(
-			doc = "Specifies the socket setting for the listen socket (can be "
-					+ "specified multiple times for additional socket settings)",
+			doc = "Specifies a socket setting for the listen socket (can be "
+					+ "specified multiple times with each rule result "
+					+ "specifying another socket setting)",
 			usage = "socks5.onBind.listenSocketSetting=SOCKET_SETTING"
 	)	
 	public static final RuleResultSpec<SocketSetting<Object>> SOCKS5_ON_BIND_LISTEN_SOCKET_SETTING = RULE_RESULT_SPECS.addThenGet(new SocketSettingRuleResultSpec(
@@ -92,6 +94,31 @@ public final class Socks5RuleResultSpecConstants {
 			"socks5.onBind.relayOutboundBandwidthLimit"));
 
 	@HelpText(
+			doc = "Specifies the binding host name or address for all sockets",
+			usage = "socks5.onCommand.bindHost=HOST"
+	)
+	public static final RuleResultSpec<Host> SOCKS5_ON_COMMAND_BIND_HOST = RULE_RESULT_SPECS.addThenGet(new HostRuleResultSpec(
+			"socks5.onCommand.bindHost"));
+	
+	@HelpText(
+			doc = "Specifies a binding port range for all TCP sockets (can be "
+					+ "specified multiple times with each rule result "
+					+ "specifying another port range)",
+			usage = "socks5.onCommand.bindTcpPortRange=PORT|PORT1-PORT2"
+	)
+	public static final RuleResultSpec<PortRange> SOCKS5_ON_COMMAND_BIND_TCP_PORT_RANGE = RULE_RESULT_SPECS.addThenGet(new PortRangeRuleResultSpec(
+			"socks5.onCommand.bindTcpPortRange"));
+	
+	@HelpText(
+			doc = "Specifies a binding port range for all UDP sockets (can be "
+					+ "specified multiple times with each rule result "
+					+ "specifying another port range)",
+			usage = "socks5.onCommand.bindUdpPortRange=PORT|PORT1-PORT2"
+	)
+	public static final RuleResultSpec<PortRange> SOCKS5_ON_COMMAND_BIND_UDP_PORT_RANGE = RULE_RESULT_SPECS.addThenGet(new PortRangeRuleResultSpec(
+			"socks5.onCommand.bindUdpPortRange"));
+
+	@HelpText(
 			doc = "Specifies the binding host name or address for all "
 					+ "external-facing sockets",
 			usage = "socks5.onCommand.externalFacingBindHost=HOST"
@@ -100,27 +127,27 @@ public final class Socks5RuleResultSpecConstants {
 			"socks5.onCommand.externalFacingBindHost"));
 	
 	@HelpText(
-			doc = "Specifies the binding port range for all external-facing "
-					+ "TCP sockets (can be specified multiple times for "
-					+ "additional port ranges)",
+			doc = "Specifies a binding port range for all external-facing TCP "
+					+ "sockets (can be specified multiple times with each rule "
+					+ "result specifying another port range)",
 			usage = "socks5.onCommand.externalFacingBindTcpPortRange=PORT|PORT1-PORT2"
 	)
 	public static final RuleResultSpec<PortRange> SOCKS5_ON_COMMAND_EXTERNAL_FACING_BIND_TCP_PORT_RANGE = RULE_RESULT_SPECS.addThenGet(new PortRangeRuleResultSpec(
 			"socks5.onCommand.externalFacingBindTcpPortRange"));
 	
 	@HelpText(
-			doc = "Specifies the binding port range for all external-facing "
-					+ "UDP sockets (can be specified multiple times for "
-					+ "additional port ranges)",
+			doc = "Specifies a binding port range for all external-facing UDP "
+					+ "sockets (can be specified multiple times with each rule "
+					+ "result specifying another port range)",
 			usage = "socks5.onCommand.externalFacingBindUdpPortRange=PORT|PORT1-PORT2"
 	)
 	public static final RuleResultSpec<PortRange> SOCKS5_ON_COMMAND_EXTERNAL_FACING_BIND_UDP_PORT_RANGE = RULE_RESULT_SPECS.addThenGet(new PortRangeRuleResultSpec(
 			"socks5.onCommand.externalFacingBindUdpPortRange"));
 	
 	@HelpText(
-			doc = "Specifies the socket setting for all external-facing "
-					+ "sockets (can be specified multiple times for additional "
-					+ "socket settings)",
+			doc = "Specifies a socket setting for all external-facing sockets "
+					+ "(can be specified multiple times with each rule result "
+					+ "specifying another socket setting)",
 			usage = "socks5.onCommand.externalFacingSocketSetting=SOCKET_SETTING"
 	)
 	public static final RuleResultSpec<SocketSetting<Object>> SOCKS5_ON_COMMAND_EXTERNAL_FACING_SOCKET_SETTING = RULE_RESULT_SPECS.addThenGet(new SocketSettingRuleResultSpec(
@@ -135,27 +162,27 @@ public final class Socks5RuleResultSpecConstants {
 			"socks5.onCommand.internalFacingBindHost"));
 	
 	@HelpText(
-			doc = "Specifies the binding port range for all internal-facing "
-					+ "TCP sockets (can be specified multiple times for "
-					+ "additional port ranges)",
+			doc = "Specifies a binding port range for all internal-facing TCP "
+					+ "sockets (can be specified multiple times with each rule "
+					+ "result specifying another port range)",
 			usage = "socks5.onCommand.internalFacingBindTcpPortRange=PORT|PORT1-PORT2"
 	)
 	public static final RuleResultSpec<PortRange> SOCKS5_ON_COMMAND_INTERNAL_FACING_BIND_TCP_PORT_RANGE = RULE_RESULT_SPECS.addThenGet(new PortRangeRuleResultSpec(
 			"socks5.onCommand.internalFacingBindTcpPortRange"));
 	
 	@HelpText(
-			doc = "Specifies the binding port range for all internal-facing "
-					+ "UDP sockets (can be specified multiple times for "
-					+ "additional port ranges)",
+			doc = "Specifies a binding port range for all internal-facing UDP "
+					+ "sockets (can be specified multiple times with each rule "
+					+ "result specifying another port range)",
 			usage = "socks5.onCommand.internalFacingBindUdpPortRange=PORT|PORT1-PORT2"
 	)
 	public static final RuleResultSpec<PortRange> SOCKS5_ON_COMMAND_INTERNAL_FACING_BIND_UDP_PORT_RANGE = RULE_RESULT_SPECS.addThenGet(new PortRangeRuleResultSpec(
 			"socks5.onCommand.internalFacingBindUdpPortRange"));
 	
 	@HelpText(
-			doc = "Specifies the socket setting for all internal-facing "
-					+ "sockets (can be specified multiple times for additional "
-					+ "socket settings)",
+			doc = "Specifies a socket setting for all internal-facing sockets "
+					+ "(can be specified multiple times with each rule result "
+					+ "specifying another socket setting)",
 			usage = "socks5.onCommand.internalFacingSocketSetting=SOCKET_SETTING"
 	)
 	public static final RuleResultSpec<SocketSetting<Object>> SOCKS5_ON_COMMAND_INTERNAL_FACING_SOCKET_SETTING = RULE_RESULT_SPECS.addThenGet(new SocketSettingRuleResultSpec(
@@ -190,6 +217,15 @@ public final class Socks5RuleResultSpecConstants {
 	)
 	public static final RuleResultSpec<PositiveInteger> SOCKS5_ON_COMMAND_RELAY_OUTBOUND_BANDWIDTH_LIMIT = RULE_RESULT_SPECS.addThenGet(new PositiveIntegerRuleResultSpec(
 			"socks5.onCommand.relayOutboundBandwidthLimit"));
+	
+	@HelpText(
+			doc = "Specifies a socket setting for all sockets (can be "
+					+ "specified multiple times with each rule result "
+					+ "specifying another socket setting)",
+			usage = "socks5.onCommand.socketSetting=SOCKET_SETTING"
+	)
+	public static final RuleResultSpec<SocketSetting<Object>> SOCKS5_ON_COMMAND_SOCKET_SETTING = RULE_RESULT_SPECS.addThenGet(new SocketSettingRuleResultSpec(
+			"socks5.onCommand.socketSetting"));
 	
 	@HelpText(
 			doc = "Specifies the boolean value to indicate if the "
@@ -241,9 +277,9 @@ public final class Socks5RuleResultSpecConstants {
 			"socks5.onConnect.serverFacingBindHost"));
 	
 	@HelpText(
-			doc = "Specifies the binding port range for the server-facing "
-					+ "socket (can be specified multiple times for additional "
-					+ "port ranges)", 
+			doc = "Specifies a binding port range for the server-facing socket "
+					+ "(can be specified multiple times with each rule result "
+					+ "specifying another port range)", 
 			usage = "socks5.onConnect.serverFacingBindPortRange=PORT|PORT1-PORT2"
 	)	
 	public static final RuleResultSpec<PortRange> SOCKS5_ON_CONNECT_SERVER_FACING_BIND_PORT_RANGE = RULE_RESULT_SPECS.addThenGet(new PortRangeRuleResultSpec(
@@ -258,9 +294,9 @@ public final class Socks5RuleResultSpecConstants {
 			"socks5.onConnect.serverFacingConnectTimeout"));
 	
 	@HelpText(
-			doc = "Specifies the socket setting for the server-facing socket "
-					+ "(can be specified multiple times for additional socket "
-					+ "settings)",
+			doc = "Specifies a socket setting for the server-facing socket "
+					+ "(can be specified multiple times with each rule result "
+					+ "specifying another socket setting)",
 			usage = "socks5.onConnect.serverFacingSocketSetting=SOCKET_SETTING"
 	)	
 	public static final RuleResultSpec<SocketSetting<Object>> SOCKS5_ON_CONNECT_SERVER_FACING_SOCKET_SETTING = RULE_RESULT_SPECS.addThenGet(new SocketSettingRuleResultSpec(
@@ -275,18 +311,18 @@ public final class Socks5RuleResultSpecConstants {
 			"socks5.onUdpAssociate.clientFacingBindHost"));
 	
 	@HelpText(
-			doc = "Specifies the binding port range for the client-facing UDP "
-					+ "socket (can be specified multiple times for additional "
-					+ "port ranges)", 
+			doc = "Specifies a binding port range for the client-facing UDP "
+					+ "socket (can be specified multiple times with each rule "
+					+ "result specifying another port range)", 
 			usage = "socks5.onUdpAssociate.clientFacingBindPortRange=PORT|PORT1-PORT2"
 	)	
 	public static final RuleResultSpec<PortRange> SOCKS5_ON_UDP_ASSOCIATE_CLIENT_FACING_BIND_PORT_RANGE = RULE_RESULT_SPECS.addThenGet(new PortRangeRuleResultSpec(
 			"socks5.onUdpAssociate.clientFacingBindPortRange"));
 	
 	@HelpText(
-			doc = "Specifies the socket setting for the client-facing UDP "
-					+ "socket (can be specified multiple times for additional "
-					+ "socket settings)",
+			doc = "Specifies a socket setting for the client-facing UDP socket "
+					+ "(can be specified multiple times with each rule result "
+					+ "specifying another socket setting)",
 			usage = "socks5.onUdpAssociate.clientFacingSocketSetting=SOCKET_SETTING"
 	)	
 	public static final RuleResultSpec<SocketSetting<Object>> SOCKS5_ON_UDP_ASSOCIATE_CLIENT_FACING_SOCKET_SETTING = RULE_RESULT_SPECS.addThenGet(new SocketSettingRuleResultSpec(
@@ -301,18 +337,18 @@ public final class Socks5RuleResultSpecConstants {
 			"socks5.onUdpAssociate.peerFacingBindHost"));
 
 	@HelpText(
-			doc = "Specifies the binding port range for the peer-facing UDP "
-					+ "socket (can be specified multiple times for additional "
-					+ "port ranges)", 
+			doc = "Specifies a binding port range for the peer-facing UDP "
+					+ "socket (can be specified multiple times with each rule "
+					+ "result specifying another port range)", 
 			usage = "socks5.onUdpAssociate.peerFacingBindPortRange=PORT|PORT1-PORT2"
 	)	
 	public static final RuleResultSpec<PortRange> SOCKS5_ON_UDP_ASSOCIATE_PEER_FACING_BIND_PORT_RANGE = RULE_RESULT_SPECS.addThenGet(new PortRangeRuleResultSpec(
 			"socks5.onUdpAssociate.peerFacingBindPortRange"));
 	
 	@HelpText(
-			doc = "Specifies the socket setting for the peer-facing UDP "
-					+ "socket (can be specified multiple times for additional "
-					+ "socket settings)",
+			doc = "Specifies a socket setting for the peer-facing UDP socket "
+					+ "(can be specified multiple times with each rule result "
+					+ "specifying another socket setting)",
 			usage = "socks5.onUdpAssociate.peerFacingSocketSetting=SOCKET_SETTING"
 	)	
 	public static final RuleResultSpec<SocketSetting<Object>> SOCKS5_ON_UDP_ASSOCIATE_PEER_FACING_SOCKET_SETTING = RULE_RESULT_SPECS.addThenGet(new SocketSettingRuleResultSpec(

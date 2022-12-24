@@ -174,7 +174,7 @@ public final class GeneralRuleResultSpecConstants {
 	@HelpText(
 			doc = "Specifies the ID for a selectable route (can be specified "
 					+ "multiple times with each rule result specifying another "
-					+ "route)",
+					+ "ID for a selectable route)",
 			usage = "selectableRouteId=ROUTE_ID"
 	)
 	public static final RuleResultSpec<String> SELECTABLE_ROUTE_ID = RULE_RESULT_SPECS.addThenGet(new StringRuleResultSpec(

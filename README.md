@@ -758,7 +758,7 @@ The following is a list of available settings for the SOCKS server (displayed wh
             Specifies the selection strategy for the next route ID
     
         selectableRouteId=ROUTE_ID
-            Specifies the ID for a selectable route (can be specified multiple times with each rule result specifying another route)
+            Specifies the ID for a selectable route (can be specified multiple times with each rule result specifying another ID for a selectable route)
     
         socketSetting=SOCKET_SETTING
             Specifies a socket setting for all sockets (can be specified multiple times with each rule result specifying another socket setting)
@@ -2789,7 +2789,7 @@ Partial configuration file example:
 To route traffic, you will need the following rule results:
 
 -   `routeSelectionStrategy`: Specifies the selection strategy for the next route
--   `selectableRouteId`: Specifies the ID for a selectable [route](#6-12-chaining-to-multiple-specified-chains-of-other-socks-servers) (This rule result is optional. This rule result can be specified multiple times for additional routes.)
+-   `selectableRouteId`: Specifies the ID for a selectable [route](#6-12-chaining-to-multiple-specified-chains-of-other-socks-servers) (This rule result is optional. This rule result can be specified multiple times with each rule result specifying another ID for a selectable route.)
 
 These rule results can be used with the following rule conditions:
 

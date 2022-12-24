@@ -67,7 +67,7 @@ public final class Socks5NetObjectFactory extends SocksNetObjectFactory {
 	@Override
 	public ServerSocket newServerSocket(
 			final int port, final int backlog) throws IOException {
-		return new Socks5ServerSocket(this.socks5Client, port, backlog);
+		return new Socks5ServerSocket(this.socks5Client, port);
 	}
 	
 	@Override
@@ -75,7 +75,7 @@ public final class Socks5NetObjectFactory extends SocksNetObjectFactory {
 			final int port, 
 			final int backlog, 
 			final InetAddress bindAddr) throws IOException {
-		return new Socks5ServerSocket(this.socks5Client, port, backlog, bindAddr);
+		return new Socks5ServerSocket(this.socks5Client, port, bindAddr);
 	}
 
 	@Override

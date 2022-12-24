@@ -44,9 +44,7 @@ abstract class MethodSubnegotiator {
 		}
 		
 		private void establishContext(
-				final Socket socket,
-				final GSSContext context,
-				final Configuration configuration) 
+				final Socket socket, final GSSContext context) 
 				throws IOException, GSSException {
 			InputStream inStream = socket.getInputStream();
 			OutputStream outStream = socket.getOutputStream();
@@ -177,7 +175,7 @@ abstract class MethodSubnegotiator {
 			String user = null;
 			try {
 				context = this.newContext();
-				this.establishContext(socket, context, configuration);
+				this.establishContext(socket, context);
 				protectionLevelChoice =	this.negotiateProtectionLevel(
 						socket, context, configuration);
 				user = context.getSrcName().toString();				

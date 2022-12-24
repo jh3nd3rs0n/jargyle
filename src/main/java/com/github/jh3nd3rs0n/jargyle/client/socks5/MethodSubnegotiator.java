@@ -41,9 +41,7 @@ abstract class MethodSubnegotiator {
 		}
 		
 		private void establishContext(
-				final Socket socket,
-				final GSSContext context,
-				final Socks5Client socks5Client) 
+				final Socket socket, final GSSContext context) 
 				throws IOException, GSSException {
 			InputStream inStream = socket.getInputStream();
 			OutputStream outStream = socket.getOutputStream();
@@ -171,7 +169,7 @@ abstract class MethodSubnegotiator {
 			ProtectionLevel protectionLevelSelection = null;
 			try {
 				context = this.newContext(socks5Client);
-				this.establishContext(socket, context, socks5Client);
+				this.establishContext(socket, context);
 				protectionLevelSelection = this.negotiateProtectionLevel(
 						socket, context, socks5Client);
 			} catch (IOException e) {

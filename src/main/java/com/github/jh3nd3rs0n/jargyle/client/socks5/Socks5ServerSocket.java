@@ -488,14 +488,6 @@ public final class Socks5ServerSocket extends ServerSocket {
 	Socks5ServerSocket(
 			final Socks5Client client, 
 			final int port, 
-			final int backlog) throws IOException {
-		this(client, port);
-	}
-
-	Socks5ServerSocket(
-			final Socks5Client client, 
-			final int port, 
-			final int backlog,
 			final InetAddress bindAddr) throws IOException {
 		this.socks5Client = client;
 		this.socks5ServerSocketImpl = new Socks5ServerSocketImpl(client);

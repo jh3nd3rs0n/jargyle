@@ -7,6 +7,7 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
@@ -147,10 +148,10 @@ public abstract class SocksClient {
 			InetAddress socksServerUriHostInetAddress =	this.resolve(
 					socksServerUriHost);
 			if (params.getMustBindBeforeConnect()) {
-				InetAddress clientBindHostInetAddress = 
+				InetAddress clientBindHostInetAddress =
 						this.properties.getValue(
 								GeneralPropertySpecConstants.CLIENT_BIND_HOST).toInetAddress();
-				PortRanges clientBindPortRanges =	this.properties.getValue(
+				PortRanges clientBindPortRanges = this.properties.getValue(
 						GeneralPropertySpecConstants.CLIENT_BIND_PORT_RANGES);
 				NetObjectFactory netObjFactory = params.getNetObjectFactory();
 				if (netObjFactory == null) {
@@ -162,8 +163,12 @@ public abstract class SocksClient {
 							GeneralPropertySpecConstants.CLIENT_SOCKET_SETTINGS);
 				}
 				boolean clientSocketBound = false;
-				for (PortRange clientBindPortRange : clientBindPortRanges.toList()) {
-					for (Port clientBindPort : clientBindPortRange) {
+				for (Iterator<PortRange> iterator = clientBindPortRanges.toList().iterator();
+						!clientSocketBound && iterator.hasNext();) {
+					PortRange clientBindPortRange = iterator.next();
+					for (Iterator<Port> iter = clientBindPortRange.iterator();
+							!clientSocketBound && iter.hasNext();) {
+						Port clientBindPort = iter.next();
 						try {
 							clientSock.bind(new InetSocketAddress(
 									clientBindHostInetAddress, 
@@ -191,10 +196,6 @@ public abstract class SocksClient {
 							throw e;
 						}
 						clientSocketBound = true;
-						break;
-					}
-					if (clientSocketBound) {
-						break;
 					}
 				}
 				if (!clientSocketBound) {
@@ -246,9 +247,14 @@ public abstract class SocksClient {
 				GeneralPropertySpecConstants.CLIENT_BIND_HOST).toInetAddress();
 		PortRanges clientBindPortRanges = this.properties.getValue(
 				GeneralPropertySpecConstants.CLIENT_BIND_PORT_RANGES);
-		for (PortRange clientBindPortRange : clientBindPortRanges.toList()) {
-			for (Port clientBindPort : clientBindPortRange) {
-				Socket clientSocket = null;
+		Socket clientSocket = null;
+		boolean clientSocketBound = false;
+		for (Iterator<PortRange> iterator = clientBindPortRanges.toList().iterator();
+				!clientSocketBound && iterator.hasNext();) {
+			PortRange clientBindPortRange = iterator.next();
+			for (Iterator<Port> iter = clientBindPortRange.iterator();
+					!clientSocketBound && iter.hasNext();) {
+				Port clientBindPort = iter.next();
 				try {
 					clientSocket = this.newConnectedClientSocket(
 							clientBindHostInetAddress, 
@@ -261,13 +267,17 @@ public abstract class SocksClient {
 					}
 					throw e;
 				}
-				return clientSocket;
+				clientSocketBound = true;
 			}
 		}
-		throw new BindException(String.format(
-				"unable to bind to the following address and port ranges: %s %s",
-				clientBindHostInetAddress,
-				clientBindPortRanges));
+		if (!clientSocketBound) {
+			throw new BindException(String.format(
+					"unable to bind to the following address and port ranges: "
+					+ "%s %s",
+					clientBindHostInetAddress,
+					clientBindPortRanges));			
+		}
+		return clientSocket;
 	}
 	
 	protected Socket newConnectedClientSocket(

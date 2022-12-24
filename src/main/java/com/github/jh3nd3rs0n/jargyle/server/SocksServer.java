@@ -5,6 +5,7 @@ import java.net.BindException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
+import java.util.Iterator;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -130,9 +131,13 @@ public final class SocksServer {
 			final SocketSettings socketSettings,
 			final int backlog) throws IOException {
 		ServerSocket serverSock = null;
-		boolean serverSocketBound = false;
-		for (PortRange bindPortRange : bindPortRanges.toList()) {
-			for (Port bindPort : bindPortRange) {
+		boolean serverSockBound = false;
+		for (Iterator<PortRange> iterator = bindPortRanges.toList().iterator();
+				!serverSockBound && iterator.hasNext();) {
+			PortRange bindPortRange = iterator.next();
+			for (Iterator<Port> iter = bindPortRange.iterator();
+					!serverSockBound && iter.hasNext();) {
+				Port bindPort = iter.next();
 				serverSock = new ServerSocket();
 				socketSettings.applyTo(serverSock);
 				try {
@@ -144,19 +149,15 @@ public final class SocksServer {
 				} catch (BindException e) {
 					continue;
 				}
-				serverSocketBound = true;
-				break;
-			}
-			if (serverSocketBound) {
-				break;
+				serverSockBound = true;
 			}
 		}
-		if (!serverSocketBound) {
+		if (!serverSockBound) {
 			throw new BindException(String.format(
 					"unable to bind following address and port (range(s)): "
 					+ "%s %s", 
 					bindInetAddress,
-					bindPortRanges));
+					bindPortRanges));			
 		}
 		return serverSock;
 	}

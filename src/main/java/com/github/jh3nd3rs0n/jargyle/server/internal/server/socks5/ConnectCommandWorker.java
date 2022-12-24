@@ -7,6 +7,7 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -371,8 +372,12 @@ final class ConnectCommandWorker extends CommandWorker {
 		Socks5Reply socks5Rep = null;
 		Socket serverFacingSocket = null;
 		boolean serverFacingSocketBound = false;
-		for (PortRange bindPortRange : bindPortRanges.toList()) {
-			for (Port bindPort : bindPortRange) {
+		for (Iterator<PortRange> iterator = bindPortRanges.toList().iterator();
+				!serverFacingSocketBound && iterator.hasNext();) {
+			PortRange bindPortRange = iterator.next();
+			for (Iterator<Port> iter = bindPortRange.iterator();
+					!serverFacingSocketBound && iter.hasNext();) {
+				Port bindPort = iter.next();
 				try {
 					serverFacingSocket = this.netObjectFactory.newSocket(
 							this.desiredDestinationAddress, 
@@ -425,10 +430,6 @@ final class ConnectCommandWorker extends CommandWorker {
 					return null;
 				}
 				serverFacingSocketBound = true;
-				break;
-			}
-			if (serverFacingSocketBound) {
-				break;
 			}
 		}
 		if (!serverFacingSocketBound) {
@@ -441,8 +442,7 @@ final class ConnectCommandWorker extends CommandWorker {
 							bindPortRanges));
 			socks5Rep = Socks5Reply.newFailureInstance(
 					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			this.commandWorkerContext.sendSocks5Reply(
-					this, socks5Rep, LOGGER);
+			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep, LOGGER);
 			return null;			
 		}
 		return serverFacingSocket;
@@ -458,11 +458,15 @@ final class ConnectCommandWorker extends CommandWorker {
 		if (desiredDestinationInetAddress == null) {
 			return null;
 		}
+		int connectTimeout = this.getServerFacingConnectTimeout();
 		Socket serverFacingSocket = null;
-		int connectTimeout = this.getServerFacingConnectTimeout();		
 		boolean serverFacingSocketBound = false;
-		for (PortRange bindPortRange : bindPortRanges.toList()) {
-			for (Port bindPort : bindPortRange) {
+		for (Iterator<PortRange> iterator = bindPortRanges.toList().iterator();
+				!serverFacingSocketBound && iterator.hasNext();) {
+			PortRange bindPortRange = iterator.next();
+			for (Iterator<Port> iter = bindPortRange.iterator();
+					!serverFacingSocketBound && iter.hasNext();) {
+				Port bindPort = iter.next();
 				serverFacingSocket = netObjectFactory.newSocket();
 				if (!this.configureServerFacingSocket(serverFacingSocket)) {
 					return null;
@@ -549,10 +553,6 @@ final class ConnectCommandWorker extends CommandWorker {
 					return null;
 				}				
 				serverFacingSocketBound = true;
-				break;
-			}
-			if (serverFacingSocketBound) {
-				break;
 			}
 		}
 		if (!serverFacingSocketBound) {
@@ -565,9 +565,8 @@ final class ConnectCommandWorker extends CommandWorker {
 							bindPortRanges));
 			socks5Rep = Socks5Reply.newFailureInstance(
 					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			this.commandWorkerContext.sendSocks5Reply(
-					this, socks5Rep, LOGGER);
-			return null;			
+			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep, LOGGER);
+			return null;
 		}
 		return serverFacingSocket;
 	}

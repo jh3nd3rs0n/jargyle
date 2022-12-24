@@ -7,6 +7,7 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -537,8 +538,12 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 		PortRanges bindPortRanges = this.getClientFacingBindPortRanges();
 		DatagramSocket clientFacingDatagramSock = null;
 		boolean clientFacingDatagramSockBound = false;
-		for (PortRange bindPortRange : bindPortRanges.toList()) {
-			for (Port bindPort : bindPortRange) {
+		for (Iterator<PortRange> iterator = bindPortRanges.toList().iterator();
+				!clientFacingDatagramSockBound && iterator.hasNext();) {
+			PortRange bindPortRange = iterator.next();
+			for (Iterator<Port> iter = bindPortRange.iterator();
+					!clientFacingDatagramSockBound && iter.hasNext();) {
+				Port bindPort = iter.next();
 				try {
 					clientFacingDatagramSock = new DatagramSocket(
 							new InetSocketAddress(
@@ -559,10 +564,6 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 					return null;
 				}
 				clientFacingDatagramSockBound = true;
-				break;
-			}
-			if (clientFacingDatagramSockBound) {
-				break;
 			}
 		}
 		if (!clientFacingDatagramSockBound) {
@@ -589,8 +590,12 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 		PortRanges bindPortRanges = this.getPeerFacingBindPortRanges();
 		DatagramSocket peerFacingDatagramSock = null;
 		boolean peerFacingDatagramSockBound = false;
-		for (PortRange bindPortRange : bindPortRanges.toList()) {
-			for (Port bindPort : bindPortRange) {
+		for (Iterator<PortRange> iterator = bindPortRanges.toList().iterator();
+				!peerFacingDatagramSockBound && iterator.hasNext();) {
+			PortRange bindPortRange = iterator.next();
+			for (Iterator<Port> iter = bindPortRange.iterator();
+					!peerFacingDatagramSockBound && iter.hasNext();) {
+				Port bindPort = iter.next();
 				try {
 					peerFacingDatagramSock = 
 							this.netObjectFactory.newDatagramSocket(
@@ -613,10 +618,6 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 					return null;
 				}
 				peerFacingDatagramSockBound = true;
-				break;
-			}
-			if (peerFacingDatagramSockBound) {
-				break;
 			}
 		}
 		if (!peerFacingDatagramSockBound) {
@@ -629,9 +630,8 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 							bindPortRanges));
 			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
 					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			this.commandWorkerContext.sendSocks5Reply(
-					this, socks5Rep, LOGGER);
-			return null;
+			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep, LOGGER);
+			return null;			
 		}
 		return peerFacingDatagramSock;
 	}

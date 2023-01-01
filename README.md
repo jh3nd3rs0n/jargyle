@@ -2438,7 +2438,8 @@ Partial command line example:
 ```text
     
     "--setting=rule=socks5.command=CONNECT socks5.desiredDestinationPort=80 socks5.desiredDestinationPort=443 firewallAction=ALLOW" \
-    --setting=rule=firewallAction=DENY
+    "--setting=rule=socks5.command=CONNECT firewallAction=DENY" \
+    --setting=rule=firewallAction=ALLOW
     
 ```
 
@@ -2475,7 +2476,12 @@ Partial configuration file example:
     <setting>
         <name>rule</name>
         <rule>
-            <ruleConditions/>
+            <ruleConditions>
+                <ruleCondition>
+                    <name>socks5.command</name>
+                    <value>CONNECT</value>
+                </ruleCondition>
+            </ruleConditions>
             <ruleResults>
                 <ruleResult>
                     <name>firewallAction</name>
@@ -2483,7 +2489,20 @@ Partial configuration file example:
                 </ruleResult>
             </ruleResults>
         </rule>
-        <!-- Denies everything else -->
+        <!-- Denies the CONNECT command to any server on any other port -->
+    </setting>
+    <setting>
+        <name>rule</name>
+        <rule>
+            <ruleConditions/>
+            <ruleResults>
+                <ruleResult>
+                    <name>firewallAction</name>
+                    <value>ALLOW</value>
+                </ruleResult>
+            </ruleResults>
+        </rule>
+        <!-- Allow anything else -->
     </setting>    
     
 ```

@@ -4,11 +4,23 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.github.jh3nd3rs0n.jargyle.TestStringConstants;
 
 public class DatagramSocketIT {
+	
+	@BeforeClass
+	public static void setUpBeforeClass() throws IOException {
+		DatagramSocketEchoHelper.startEchoServer();
+	}
+	
+	@AfterClass
+	public static void tearDownAfterClass() throws IOException {
+		DatagramSocketEchoHelper.stopEchoServer();
+	}
 
 	@Test
 	public void testThroughDatagramSocket01() throws IOException {

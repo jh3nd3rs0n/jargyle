@@ -9,13 +9,13 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
 import com.github.jh3nd3rs0n.jargyle.internal.throwable.ThrowableHelper;
+import com.github.jh3nd3rs0n.jargyle.server.internal.concurrent.ExecutorHelper;
 
 public final class RelayServer {
 	
@@ -328,7 +328,7 @@ public final class RelayServer {
 			throw new IllegalStateException("RelayServer already started");
 		}
 		this.idleStartTime = System.currentTimeMillis();
-		this.executor = Executors.newFixedThreadPool(2);
+		this.executor = ExecutorHelper.newExecutor();
 		this.executor.execute(new DataWorker(new InboundDataWorkerContext(
 				this)));
 		this.executor.execute(new DataWorker(new OutboundDataWorkerContext(

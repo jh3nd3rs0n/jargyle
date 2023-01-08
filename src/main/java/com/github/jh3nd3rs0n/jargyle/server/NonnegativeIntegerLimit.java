@@ -1,6 +1,7 @@
 package com.github.jh3nd3rs0n.jargyle.server;
 
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.ReentrantLock;
 
 import com.github.jh3nd3rs0n.jargyle.common.number.NonnegativeInteger;
 
@@ -16,19 +17,26 @@ public final class NonnegativeIntegerLimit {
 	}
 	
 	private AtomicInteger currentCount;
+	private final ReentrantLock lock;
 	private final NonnegativeInteger nonnegativeIntegerValue;
 	
 	private NonnegativeIntegerLimit(final NonnegativeInteger value) {
 		this.currentCount = new AtomicInteger(0);
+		lock = new ReentrantLock();
 		this.nonnegativeIntegerValue = value;
 	}
 	
-	public synchronized void decrementCurrentCount() {
-		if (this.currentCount.intValue() == 0) {
-			throw new IllegalStateException(
-					"cannot decrement current count below zero");
+	public void decrementCurrentCount() {
+		this.lock.lock();
+		try {
+			if (this.currentCount.intValue() == 0) {
+				throw new IllegalStateException(
+						"cannot decrement current count below zero");
+			}
+			this.currentCount.decrementAndGet();
+		} finally {
+			this.lock.unlock();
 		}
-		this.currentCount.decrementAndGet();
 	}
 	
 	@Override
@@ -54,8 +62,16 @@ public final class NonnegativeIntegerLimit {
 		return true;
 	}
 	
-	public synchronized boolean hasBeenReached() {
-		return this.currentCount.intValue() >= this.nonnegativeIntegerValue.intValue();
+	public boolean hasBeenReached() {
+		boolean hasBeenReached = false;
+		this.lock.lock();
+		try {
+			hasBeenReached = 
+					this.currentCount.intValue() >= this.nonnegativeIntegerValue.intValue(); 
+		} finally {
+			this.lock.unlock();
+		}
+		return hasBeenReached;
 	}
 	
 	@Override
@@ -67,8 +83,13 @@ public final class NonnegativeIntegerLimit {
 		return result;
 	}
 	
-	public synchronized void incrementCurrentCount() {
-		this.currentCount.incrementAndGet();
+	public void incrementCurrentCount() {
+		this.lock.lock();
+		try {
+			this.currentCount.incrementAndGet();
+		} finally {
+			this.lock.unlock();
+		}
 	}
 
 	public NonnegativeInteger nonnegativeIntegerValue() {

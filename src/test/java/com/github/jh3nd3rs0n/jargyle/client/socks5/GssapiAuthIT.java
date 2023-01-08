@@ -145,7 +145,9 @@ public class GssapiAuthIT {
 		System.setProperty(USE_SUBJECT_CREDS_ONLY_PROPERTY_NAME, "false");
 		System.setProperty(
 				LOGIN_CONFIG_PROPERTY_NAME, loginConf.toAbsolutePath().toString());
-				
+		
+		DatagramSocketEchoHelper.startEchoServer();
+		SocketEchoHelper.startEchoServer();
 	}
 
 	@AfterClass
@@ -177,8 +179,10 @@ public class GssapiAuthIT {
 		System.clearProperty(KRB5_CONF_PROPERTY_NAME);
 		System.clearProperty(USE_SUBJECT_CREDS_ONLY_PROPERTY_NAME);
 		System.clearProperty(LOGIN_CONFIG_PROPERTY_NAME);
+		DatagramSocketEchoHelper.stopEchoServer();
+		SocketEchoHelper.stopEchoServer();
 	}
-
+	
 	@Test
 	public void testThroughSocks5DatagramSocketUsingGssapiAuth01() throws IOException {
 		String string = TestStringConstants.STRING_01;
@@ -412,7 +416,7 @@ public class GssapiAuthIT {
 				GssapiAuthIT.newConfigurationUsingSocks5GssapiAuth());
 		assertEquals(string, returningString);
 	}
-
+	
 	@Test
 	public void testThroughSocks5DatagramSocketUsingGssapiAuthWithIntegProtection01() throws IOException {
 		String string = TestStringConstants.STRING_01;
@@ -460,7 +464,7 @@ public class GssapiAuthIT {
 				GssapiAuthIT.newConfigurationUsingSocks5GssapiAuth());
 		assertEquals(string, returningString);
 	}
-
+	
 	@Test
 	public void testThroughSocks5ServerSocketUsingGssapiAuth01() throws IOException {
 		String string = TestStringConstants.STRING_01;

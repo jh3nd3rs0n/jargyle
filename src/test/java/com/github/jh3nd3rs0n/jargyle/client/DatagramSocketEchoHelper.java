@@ -4,14 +4,15 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.util.ArrayList;
+import java.net.SocketException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
+import com.github.jh3nd3rs0n.jargyle.server.SocksServerHelper;
+import com.github.jh3nd3rs0n.jargyle.server.internal.concurrent.ExecutorHelper;
 
 public final class DatagramSocketEchoHelper {
 	
@@ -42,8 +43,8 @@ public final class DatagramSocketEchoHelper {
 				throw new IllegalStateException();
 			}
 			this.serverSocket = new DatagramSocket(this.port);
-			this.executor = Executors.newSingleThreadExecutor();
-			this.executor.execute(new Worker(this.serverSocket));
+			this.executor = ExecutorHelper.newExecutor();
+			this.executor.execute(new Listener(this.serverSocket));
 			this.started = true;
 		}
 	
@@ -59,46 +60,72 @@ public final class DatagramSocketEchoHelper {
 		}
 	}
 
-	private static final class Worker implements Runnable {
+	private static final class Listener implements Runnable {
 		
 		private final DatagramSocket serverSocket;
-	
-		public Worker(final DatagramSocket serverSock) {
+		
+		public Listener(final DatagramSocket serverSock) {
 			this.serverSocket = serverSock;
 		}
-	
+		
 		public void run() {
+			ExecutorService executor = ExecutorHelper.newExecutor();
 			while (true) {
 				try {
 					byte[] buffer = new byte[BUFFER_SIZE];
 					DatagramPacket packet = new DatagramPacket(
 							buffer, buffer.length);
 					this.serverSocket.receive(packet);
-					InetAddress address = packet.getAddress();
-					int port = packet.getPort();
-					String string = new String(Arrays.copyOfRange(
-							packet.getData(), 
-							packet.getOffset(), 
-							packet.getLength()));
-					byte[] stringBytes = string.getBytes();
-					packet = new DatagramPacket(
-							stringBytes, stringBytes.length, address, port);
-					this.serverSocket.send(packet);
+					executor.execute(new Worker(this.serverSocket, packet));
+				} catch (SocketException e) {
+					break;
 				} catch (IOException e) {
-					if (this.serverSocket.isClosed()) {
-						break;
-					}
 					e.printStackTrace();
+					break;
 				}
+			}
+			executor.shutdownNow();
+		}
+		
+	}
+	
+	private static final class Worker implements Runnable {
+		
+		private final DatagramPacket packet;
+		private final DatagramSocket serverSocket;
+	
+		public Worker(
+				final DatagramSocket serverSock, final DatagramPacket pckt) {
+			this.packet = pckt;
+			this.serverSocket = serverSock;
+		}
+	
+		public void run() {
+			InetAddress address = this.packet.getAddress();
+			int port = this.packet.getPort();
+			String string = new String(Arrays.copyOfRange(
+					this.packet.getData(), 
+					this.packet.getOffset(), 
+					this.packet.getLength()));
+			byte[] stringBytes = string.getBytes();
+			DatagramPacket newPacket = new DatagramPacket(
+					stringBytes, stringBytes.length, address, port);
+			try {
+				this.serverSocket.send(newPacket);
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 		}
 	
 	}
 
 	private static final int BUFFER_SIZE = 1024;
+	private static final int ECHO_CLIENT_TIMEOUT = 30000;
 	private static final int ECHO_SERVER_PORT = 1081;
 	private static final int SLEEP_TIME = 500; // 1/2 second
-
+	private static final EchoServer ECHO_SERVER = new EchoServer(
+			ECHO_SERVER_PORT);
+	
 	public static String echoThroughDatagramSocket(
 			final String string, 
 			final SocksClient socksClient, 
@@ -111,52 +138,36 @@ public final class DatagramSocketEchoHelper {
 			final String string, 
 			final SocksClient socksClient, 
 			final List<Configuration> configurations) throws IOException {
-		int configurationsSize = configurations.size();
-		List<SocksServer> socksServers = new ArrayList<SocksServer>();
-		EchoServer echoServer = null;
-		DatagramSocket echoDatagramSocket = null;
+		List<SocksServer> socksServers = null;
+		DatagramSocket echoClient = null;
 		String returningString = null;
 		try {
-			if (configurationsSize > 0) {
-				for (int i = configurationsSize - 1; i > -1; i--) {
-					Configuration configuration = configurations.get(i);
-					SocksServer socksServer = new SocksServer(configuration);
-					socksServers.add(0, socksServer);
-					socksServer.start();
-				}
-			}
-			echoServer = new EchoServer(ECHO_SERVER_PORT);
-			echoServer.start();
-			int port = echoServer.getPort();
+			socksServers = SocksServerHelper.newStartedSocksServers(
+					configurations);
+			int port = ECHO_SERVER.getPort();
 			NetObjectFactory netObjectFactory = new DefaultNetObjectFactory();
 			if (socksClient != null) {
 				netObjectFactory = socksClient.newSocksNetObjectFactory();
 			}
-			echoDatagramSocket = netObjectFactory.newDatagramSocket(0);
-			echoDatagramSocket.connect(InetAddress.getLoopbackAddress(), port);
+			echoClient = netObjectFactory.newDatagramSocket(null);
+			echoClient.setSoTimeout(ECHO_CLIENT_TIMEOUT);
+			echoClient.bind(null);
+			echoClient.connect(InetAddress.getLoopbackAddress(), port);
 			byte[] buffer = string.getBytes();
 			DatagramPacket packet = new DatagramPacket(
 					buffer, buffer.length, InetAddress.getLoopbackAddress(), port);
-			echoDatagramSocket.send(packet);
+			echoClient.send(packet);
 			buffer = new byte[BUFFER_SIZE];
 			packet = new DatagramPacket(buffer, buffer.length);
-			echoDatagramSocket.receive(packet);
+			echoClient.receive(packet);
 			returningString = new String(Arrays.copyOfRange(
 					packet.getData(), packet.getOffset(), packet.getLength()));
 		} finally {
-			if (echoDatagramSocket != null) {
-				echoDatagramSocket.close();
+			if (echoClient != null) {
+				echoClient.close();
 			}
-			if (echoServer != null && echoServer.isStarted()) {
-				echoServer.stop();
-			}
-			if (socksServers.size() > 0) {
-				for (SocksServer socksServer : socksServers) {
-					if (!socksServer.getState().equals(
-							SocksServer.State.STOPPED)) {
-						socksServer.stop();
-					}
-				}
+			if (socksServers != null) {
+				SocksServerHelper.stopSocksServers(socksServers);
 			}
 			try {
 				Thread.sleep(SLEEP_TIME);
@@ -165,6 +176,16 @@ public final class DatagramSocketEchoHelper {
 			}
 		}
 		return returningString;
+	}
+
+	public static void startEchoServer() throws IOException {
+		ECHO_SERVER.start();
+	}
+	
+	public static void stopEchoServer() throws IOException {
+		if (ECHO_SERVER.isStarted()) {
+			ECHO_SERVER.stop();
+		}
 	}
 
 	private DatagramSocketEchoHelper() { }

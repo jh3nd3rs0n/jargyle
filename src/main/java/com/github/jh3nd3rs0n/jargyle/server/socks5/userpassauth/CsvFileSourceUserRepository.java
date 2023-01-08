@@ -13,12 +13,13 @@ import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.github.jh3nd3rs0n.jargyle.server.internal.concurrent.ExecutorHelper;
 import com.github.jh3nd3rs0n.jargyle.server.internal.io.FileMonitor;
 import com.github.jh3nd3rs0n.jargyle.server.internal.io.FileStatusListener;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.internal.users.csv.bind.UsersCsvTableConversionHelper;
@@ -147,6 +148,7 @@ public final class CsvFileSourceUserRepository extends UserRepository {
 	private final File csvFile;
 	private ExecutorService executor;
 	private final AtomicLong lastUpdated;
+	private final ReentrantLock lock;	
 	private volatile Users users;
 	
 	private CsvFileSourceUserRepository(final String initializationVal) {
@@ -156,42 +158,72 @@ public final class CsvFileSourceUserRepository extends UserRepository {
 		this.csvFile = file;
 		this.executor = null;
 		this.lastUpdated = new AtomicLong(System.currentTimeMillis());
+		this.lock = new ReentrantLock();
 		this.users = usrs;
 	}
 	
 	@Override
 	public User get(final String name) {
-		return this.users.get(name);
+		User user = null;
+		this.lock.lock();
+		try {
+			user = this.users.get(name);
+		} finally {
+			this.lock.unlock();
+		}
+		return user;
 	}
 	
 	@Override
 	public Users getAll() {
-		return Users.newInstance(this.users);
+		Users users = null;
+		this.lock.lock();
+		try {
+			users = Users.newInstance(this.users);
+		} finally {
+			this.lock.unlock();
+		}
+		return users;
 	}
 
 	@Override
 	public void put(final User user) {
-		Users usrs = Users.newInstance(this.users);
-		usrs.put(user);
-		this.updateFrom(usrs);
+		this.lock.lock();
+		try {
+			Users usrs = Users.newInstance(this.users);
+			usrs.put(user);
+			this.updateFrom(usrs);
+		} finally {
+			this.lock.unlock();
+		}
 	}
 	
 	@Override
 	public void putAll(final Users users) {
-		Users usrs = Users.newInstance(this.users);
-		usrs.putAll(users);
-		this.updateFrom(usrs);
+		this.lock.lock();
+		try {
+			Users usrs = Users.newInstance(this.users);
+			usrs.putAll(users);
+			this.updateFrom(usrs);			
+		} finally {
+			this.lock.unlock();
+		}
 	}
 
 	@Override
 	public void remove(final String name) {
-		Users usrs = Users.newInstance(this.users);
-		usrs.remove(name);
-		this.updateFrom(usrs);
+		this.lock.lock();
+		try {
+			Users usrs = Users.newInstance(this.users);
+			usrs.remove(name);
+			this.updateFrom(usrs);			
+		} finally {
+			this.lock.unlock();
+		}
 	}
 
 	private void startMonitoringCsvFile() {
-		this.executor = Executors.newSingleThreadExecutor();
+		this.executor = ExecutorHelper.newExecutor();
 		this.executor.execute(FileMonitor.newInstance(
 				this.csvFile, 
 				new UsersFileStatusListener(this)));

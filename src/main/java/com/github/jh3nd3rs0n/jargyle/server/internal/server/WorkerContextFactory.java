@@ -6,6 +6,7 @@ import java.net.SocketException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -38,6 +39,7 @@ final class WorkerContextFactory {
 	private SslSocketFactory clientSslSocketFactory;
 	private final Configuration configuration;
 	private Configuration lastConfiguration;
+	private final ReentrantLock lock;
 	private Routes routes;
 	private Rules rules;
 	
@@ -46,6 +48,7 @@ final class WorkerContextFactory {
 		this.clientSslSocketFactory = null;
 		this.configuration = config;
 		this.lastConfiguration = null;
+		this.lock = new ReentrantLock();
 		this.routes = null;
 		this.rules = null;
 	}
@@ -193,7 +196,8 @@ final class WorkerContextFactory {
 	private Configuration newConfiguration() {
 		Configuration config = ImmutableConfiguration.newInstance(
 				this.configuration);
-		synchronized (this) {
+		this.lock.lock();
+		try {
 			if (!ConfigurationsHelper.equals(this.lastConfiguration, config)) {
 				this.clientFacingDtlsDatagramSocketFactory =
 						DtlsDatagramSocketFactoryImpl.isDtlsEnabled(config) ?
@@ -204,7 +208,9 @@ final class WorkerContextFactory {
 				this.routes = Routes.newInstance(config);
 				this.rules = Rules.newInstance(config);
 				this.lastConfiguration = config;
-			}
+			}			
+		} finally {
+			this.lock.unlock();
 		}
 		return config;
 	}

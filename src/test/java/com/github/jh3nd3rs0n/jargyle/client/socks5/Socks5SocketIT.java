@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 import java.io.IOException;
 import java.net.InetAddress;
 
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.github.jh3nd3rs0n.jargyle.TestStringConstants;
@@ -12,6 +14,16 @@ import com.github.jh3nd3rs0n.jargyle.client.SocksClientHelper;
 import com.github.jh3nd3rs0n.jargyle.server.ConfigurationHelper;
 
 public class Socks5SocketIT {
+
+	@BeforeClass
+	public static void setUpBeforeClass() throws IOException {
+		SocketEchoHelper.startEchoServer();
+	}
+	
+	@AfterClass
+	public static void tearDownAfterClass() throws IOException {
+		SocketEchoHelper.stopEchoServer();
+	}
 	
 	@Test
 	public void testThroughSocks5Socket01() throws IOException {

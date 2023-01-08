@@ -641,14 +641,15 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 		UdpRelayServer udpRelayServer = builder.build();
 		try {
 			udpRelayServer.start();
-			while (!this.clientSocket.isClosed() 
-					&& !udpRelayServer.getState().equals(
-							UdpRelayServer.State.STOPPED)) {
-				try {
-					Thread.sleep(HALF_SECOND);
-				} catch (InterruptedException e) {
-					Thread.currentThread().interrupt();
+			try {
+				while (this.clientSocket.getInputStream().read() != -1) {
+					try {
+						Thread.sleep(HALF_SECOND);
+					} catch (InterruptedException e) {
+						Thread.currentThread().interrupt();
+					}
 				}
+			} catch (IOException e) {
 			}
 		} finally {
 			if (!udpRelayServer.getState().equals(

@@ -5,6 +5,8 @@ import static org.junit.Assert.assertEquals;
 import java.io.IOException;
 import java.net.InetAddress;
 
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.github.jh3nd3rs0n.jargyle.ResourceHelper;
@@ -17,18 +19,20 @@ import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.SslSettingSpecConstants;
 
 public class SslIT {
-
-/*	
-	@org.junit.BeforeClass
-	public static void setUp() {
-		System.setProperty("javax.net.debug", "ssl,handshake");
+	
+	@BeforeClass
+	public static void setUpBeforeClass() throws IOException {
+		// System.setProperty("javax.net.debug", "ssl,handshake");
+		DatagramSocketEchoHelper.startEchoServer();
+		SocketEchoHelper.startEchoServer();
 	}
 	
-	@org.junit.AfterClass
-	public static void tearDown() {
-		System.clearProperty("javax.net.debug");
+	@AfterClass
+	public static void tearDownAfterClass() throws IOException {
+		// System.clearProperty("javax.net.debug");
+		DatagramSocketEchoHelper.stopEchoServer();
+		SocketEchoHelper.stopEchoServer();
 	}
-*/
 	
 	private static Configuration newConfigurationUsingSsl() {
 		return ImmutableConfiguration.newInstance(Settings.newInstance(
@@ -282,7 +286,7 @@ public class SslIT {
 				SslIT.newConfigurationUsingSslAndRequiredClientAuth());
 		assertEquals(string, returningString);
 	}
-
+	
 	@Test
 	public void testThroughSocks5ServerSocketUsingSsl01() throws IOException {
 		String string = TestStringConstants.STRING_01;

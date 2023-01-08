@@ -11,11 +11,9 @@ import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import javax.net.ServerSocketFactory;
 import javax.net.SocketFactory;
@@ -23,6 +21,8 @@ import javax.net.SocketFactory;
 import com.github.jh3nd3rs0n.jargyle.IoHelper;
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
+import com.github.jh3nd3rs0n.jargyle.server.SocksServerHelper;
+import com.github.jh3nd3rs0n.jargyle.server.internal.concurrent.ExecutorHelper;
 
 public final class ServerSocketEchoHelper {
 	
@@ -70,7 +70,7 @@ public final class ServerSocketEchoHelper {
 			}
 			ServerSocketFactory factory = ServerSocketFactory.getDefault();
 			this.serverSocket = factory.createServerSocket(this.port);
-			this.executor = Executors.newSingleThreadExecutor();
+			this.executor = ExecutorHelper.newExecutor();
 			this.executor.execute(new Listener(this, this.serverSocket));
 			this.started = true;
 		}
@@ -98,7 +98,7 @@ public final class ServerSocketEchoHelper {
 		}
 		
 		public void run() {
-			ExecutorService executor = Executors.newCachedThreadPool();
+			ExecutorService executor = ExecutorHelper.newExecutor();
 			while (true) {
 				try {
 					Socket clientSocket = this.serverSocket.accept();
@@ -162,8 +162,9 @@ public final class ServerSocketEchoHelper {
 		}
 	}
 
-	private static final int ECHO_SERVER_PORT = 1081;
-	private static final int SERVER_PORT = 1082;
+	private static final int ECHO_CLIENT_TIMEOUT = 30000;
+	private static final int ECHO_SERVER_PORT = 1082;
+	private static final int SERVER_PORT = 1083;
 	private static final int SLEEP_TIME = 500; // 1/2 second
 
 	public static String echoThroughServerSocket(
@@ -178,33 +179,28 @@ public final class ServerSocketEchoHelper {
 			final String string, 
 			final SocksClient socksClient, 
 			final List<Configuration> configurations) throws IOException {
-		int configurationsSize = configurations.size();
-		List<SocksServer> socksServers = new ArrayList<SocksServer>();		
+		List<SocksServer> socksServers = null;		
 		EchoServer echoServer = null;
-		Socket echoSocket = null;
+		Socket echoClient = null;
 		Socket socket = null;
 		String returningString = null;		
 		try {
-			if (configurationsSize > 0) {
-				for (int i = configurationsSize - 1; i > -1; i--) {
-					Configuration configuration = configurations.get(i);
-					SocksServer socksServer = new SocksServer(configuration);
-					socksServers.add(0, socksServer);
-					socksServer.start();
-				}
-			}
+			socksServers = SocksServerHelper.newStartedSocksServers(
+					configurations);
 			echoServer = new EchoServer(ECHO_SERVER_PORT, string);
 			echoServer.start();
 			NetObjectFactory netObjectFactory = new DefaultNetObjectFactory();
 			if (socksClient != null) {
 				netObjectFactory = socksClient.newSocksNetObjectFactory();
 			}
-			echoSocket = netObjectFactory.newSocket();
-			echoSocket.connect(new InetSocketAddress(
+			echoClient = netObjectFactory.newSocket();
+			echoClient.setSoTimeout(ECHO_CLIENT_TIMEOUT);
+			echoClient.connect(new InetSocketAddress(
 					InetAddress.getLoopbackAddress(), echoServer.getPort()));
-			OutputStream out = echoSocket.getOutputStream();
+			OutputStream out = echoClient.getOutputStream();
 			PrintWriter writer = new PrintWriter(out, true);
 			ServerSocket serverSocket = netObjectFactory.newServerSocket();
+			serverSocket.setSoTimeout(ECHO_CLIENT_TIMEOUT);
 			serverSocket.bind(new InetSocketAddress(
 					(InetAddress) null, SERVER_PORT));
 			writer.println(String.format(
@@ -232,19 +228,14 @@ public final class ServerSocketEchoHelper {
 			if (socket != null) {
 				socket.close();
 			}
-			if (echoSocket != null) {
-				echoSocket.close();
+			if (echoClient != null) {
+				echoClient.close();
 			}
 			if (echoServer != null && echoServer.isStarted()) {
 				echoServer.stop();
 			}
-			if (socksServers.size() > 0) {
-				for (SocksServer socksServer : socksServers) {
-					if (!socksServer.getState().equals(
-							SocksServer.State.STOPPED)) {
-						socksServer.stop();
-					}
-				}
+			if (socksServers != null) {
+				SocksServerHelper.stopSocksServers(socksServers);
 			}
 			try {
 				Thread.sleep(SLEEP_TIME);

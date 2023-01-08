@@ -1,37 +1,70 @@
 package com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth;
 
+import java.util.concurrent.locks.ReentrantLock;
+
 public final class StringSourceUserRepository extends UserRepository {
 
+	private final ReentrantLock lock;
 	private final Users users;
 	
 	public StringSourceUserRepository(final String initializationVal) {
 		super(initializationVal);
+		this.lock = new ReentrantLock();
 		this.users = Users.newInstance(initializationVal);
 	}
 
 	@Override
 	public User get(final String name) {
-		return this.users.get(name);
+		User user = null;
+		this.lock.lock();
+		try {
+			user = this.users.get(name); 
+		} finally {
+			this.lock.unlock();
+		}
+		return user;
 	}
 
 	@Override
 	public Users getAll() {
-		return Users.newInstance(users);
+		Users users = null;
+		this.lock.lock();
+		try {
+			users = Users.newInstance(users);
+		} finally {
+			this.lock.unlock();
+		}
+		return users;
 	}
 
 	@Override
 	public void put(final User user) {
-		this.users.put(user);
+		this.lock.lock();
+		try {
+			this.users.put(user);
+		} finally {
+			this.lock.unlock();
+		}
 	}
 
 	@Override
 	public void putAll(final Users users) {
-		this.users.putAll(users);
+		this.lock.lock();
+		try {
+			this.users.putAll(users);
+		} finally {
+			this.lock.unlock();
+		}
 	}
 
 	@Override
 	public void remove(final String name) {
-		this.users.remove(name);
+		this.lock.lock();
+		try {
+			this.users.remove(name);
+		} finally {
+			this.lock.unlock();
+		}
 	}
 
 }

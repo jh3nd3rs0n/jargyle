@@ -7,6 +7,8 @@ import java.net.InetAddress;
 import java.util.Arrays;
 import java.util.List;
 
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.github.jh3nd3rs0n.jargyle.ResourceHelper;
@@ -321,6 +323,18 @@ public class ChainingIT {
 				InetAddress.getLoopbackAddress().getHostAddress(), 
 				Integer.valueOf(SERVER_PORT_1))
 				.newSocksClient(Properties.newInstance());
+	}
+	
+	@BeforeClass
+	public static void setUpBeforeClass() throws IOException {
+		DatagramSocketEchoHelper.startEchoServer();
+		SocketEchoHelper.startEchoServer();
+	}
+	
+	@AfterClass
+	public static void tearDownAfterClass() throws IOException {
+		DatagramSocketEchoHelper.stopEchoServer();
+		SocketEchoHelper.stopEchoServer();
 	}
 	
 	// Socks5DatagramSocket

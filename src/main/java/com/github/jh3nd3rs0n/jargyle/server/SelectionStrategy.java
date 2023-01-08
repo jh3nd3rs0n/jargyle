@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 import com.github.jh3nd3rs0n.jargyle.internal.help.HelpText;
@@ -15,21 +16,26 @@ public abstract class SelectionStrategy {
 	private static final class CyclicalSelectionStrategy extends SelectionStrategy {
 
 		private int index;
+		private final ReentrantLock lock;
 		
 		private CyclicalSelectionStrategy(final String str, final boolean mut) {
 			super(str, mut);
 			this.index = 0;
+			this.lock = new ReentrantLock();
 		}
 		
 		@Override
 		protected <T> T implSelectFrom(final List<? extends T> list) {
 			T selected = null;
-			synchronized (this) {
+			this.lock.lock();
+			try {
 				if (this.index > list.size() - 1) {
 					this.index = 0;
 				}
 				selected = list.get(this.index);
 				this.index++;
+			} finally {
+				this.lock.unlock();
 			}
 			return selected;
 		}
@@ -43,18 +49,23 @@ public abstract class SelectionStrategy {
 	
 	private static final class RandomSelectionStrategy extends SelectionStrategy {
 
+		private final ReentrantLock lock;
 		private final Random random;
 		
 		private RandomSelectionStrategy(final String str, final boolean mut) {
 			super(str, mut);
+			this.lock = new ReentrantLock();
 			this.random = (mut) ? new Random() : null;
 		}
 
 		@Override
 		protected <T> T implSelectFrom(final List<? extends T> list) {
 			T selected = null;
-			synchronized (this) {
+			this.lock.lock();
+			try {
 				selected = list.get(this.random.nextInt(list.size()));
+			} finally {
+				this.lock.unlock();
 			}
 			return selected;
 		}

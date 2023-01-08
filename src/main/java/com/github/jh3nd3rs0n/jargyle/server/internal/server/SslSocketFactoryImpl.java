@@ -7,6 +7,7 @@ import java.net.Socket;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.SSLContext;
@@ -31,10 +32,12 @@ final class SslSocketFactoryImpl extends SslSocketFactory {
 	}
 	
 	private final Configuration configuration;
+	private final ReentrantLock lock;
 	private SSLContext sslContext;
 	
 	public SslSocketFactoryImpl(final Configuration config) {
 		this.configuration = config;
+		this.lock = new ReentrantLock();
 		this.sslContext = null;
 	}
 	
@@ -83,10 +86,13 @@ final class SslSocketFactoryImpl extends SslSocketFactory {
 			final Socket socket, 
 			final InputStream consumed, 
 			final boolean autoClose) throws IOException {
-		synchronized (this) {
+		this.lock.lock();
+		try {
 			if (this.sslContext == null) {
 				this.sslContext = this.getSslContext();
 			}
+		} finally {
+			this.lock.unlock();
 		}
 		SslSocketFactory factory = SslSocketFactory.newInstance(
 				this.sslContext);

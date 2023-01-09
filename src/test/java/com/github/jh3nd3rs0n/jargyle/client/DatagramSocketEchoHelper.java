@@ -6,12 +6,8 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 
-import com.github.jh3nd3rs0n.jargyle.server.Configuration;
-import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
-import com.github.jh3nd3rs0n.jargyle.server.SocksServerHelper;
 import com.github.jh3nd3rs0n.jargyle.server.internal.concurrent.ExecutorHelper;
 
 public final class DatagramSocketEchoHelper {
@@ -122,34 +118,21 @@ public final class DatagramSocketEchoHelper {
 	private static final int BUFFER_SIZE = 1024;
 	private static final int ECHO_CLIENT_TIMEOUT = 30000;
 	private static final int ECHO_SERVER_PORT = 1081;
-	private static final int SLEEP_TIME = 500; // 1/2 second
 	private static final EchoServer ECHO_SERVER = new EchoServer(
 			ECHO_SERVER_PORT);
 	
 	public static String echoThroughDatagramSocket(
 			final String string, 
-			final SocksClient socksClient, 
-			final Configuration... configurations) throws IOException {
-		return echoThroughDatagramSocket(
-				string, socksClient, Arrays.asList(configurations));
-	}
-	
-	public static String echoThroughDatagramSocket(
-			final String string, 
-			final SocksClient socksClient, 
-			final List<Configuration> configurations) throws IOException {
-		List<SocksServer> socksServers = null;
+			final NetObjectFactory netObjectFactory) throws IOException {
 		DatagramSocket echoClient = null;
 		String returningString = null;
 		try {
-			socksServers = SocksServerHelper.newStartedSocksServers(
-					configurations);
 			int port = ECHO_SERVER.getPort();
-			NetObjectFactory netObjectFactory = new DefaultNetObjectFactory();
-			if (socksClient != null) {
-				netObjectFactory = socksClient.newSocksNetObjectFactory();
+			NetObjectFactory netObjFactory = netObjectFactory; 
+			if (netObjFactory == null) {
+				netObjFactory = new DefaultNetObjectFactory();
 			}
-			echoClient = netObjectFactory.newDatagramSocket(null);
+			echoClient = netObjFactory.newDatagramSocket(null);
 			echoClient.setSoTimeout(ECHO_CLIENT_TIMEOUT);
 			echoClient.bind(null);
 			echoClient.connect(InetAddress.getLoopbackAddress(), port);
@@ -165,14 +148,6 @@ public final class DatagramSocketEchoHelper {
 		} finally {
 			if (echoClient != null) {
 				echoClient.close();
-			}
-			if (socksServers != null) {
-				SocksServerHelper.stopSocksServers(socksServers);
-			}
-			try {
-				Thread.sleep(SLEEP_TIME);
-			} catch (InterruptedException e) {
-				Thread.currentThread().interrupt();
 			}
 		}
 		return returningString;

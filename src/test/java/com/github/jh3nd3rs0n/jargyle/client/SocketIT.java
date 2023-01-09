@@ -9,6 +9,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.github.jh3nd3rs0n.jargyle.TestStringConstants;
+import com.github.jh3nd3rs0n.jargyle.ThreadHelper;
 
 public class SocketIT {
 
@@ -20,6 +21,7 @@ public class SocketIT {
 	@AfterClass
 	public static void tearDownAfterClass() throws IOException {
 		SocketEchoHelper.stopEchoServer();
+		ThreadHelper.sleepForThreeSeconds();
 	}
 	
 	@Test

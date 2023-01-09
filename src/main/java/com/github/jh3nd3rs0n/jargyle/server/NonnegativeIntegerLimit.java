@@ -1,6 +1,5 @@
 package com.github.jh3nd3rs0n.jargyle.server;
 
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantLock;
 
 import com.github.jh3nd3rs0n.jargyle.common.number.NonnegativeInteger;
@@ -16,24 +15,24 @@ public final class NonnegativeIntegerLimit {
 		return newInstance(NonnegativeInteger.newInstance(s));
 	}
 	
-	private AtomicInteger currentCount;
+	private int currentCount;
 	private final ReentrantLock lock;
 	private final NonnegativeInteger nonnegativeIntegerValue;
 	
 	private NonnegativeIntegerLimit(final NonnegativeInteger value) {
-		this.currentCount = new AtomicInteger(0);
-		lock = new ReentrantLock();
+		this.currentCount = 0;
+		this.lock = new ReentrantLock();
 		this.nonnegativeIntegerValue = value;
 	}
 	
 	public void decrementCurrentCount() {
 		this.lock.lock();
 		try {
-			if (this.currentCount.intValue() == 0) {
+			if (this.currentCount == 0) {
 				throw new IllegalStateException(
 						"cannot decrement current count below zero");
 			}
-			this.currentCount.decrementAndGet();
+			this.currentCount--;
 		} finally {
 			this.lock.unlock();
 		}
@@ -67,7 +66,7 @@ public final class NonnegativeIntegerLimit {
 		this.lock.lock();
 		try {
 			hasBeenReached = 
-					this.currentCount.intValue() >= this.nonnegativeIntegerValue.intValue(); 
+					this.currentCount >= this.nonnegativeIntegerValue.intValue(); 
 		} finally {
 			this.lock.unlock();
 		}
@@ -86,7 +85,11 @@ public final class NonnegativeIntegerLimit {
 	public void incrementCurrentCount() {
 		this.lock.lock();
 		try {
-			this.currentCount.incrementAndGet();
+			if (this.currentCount >= this.nonnegativeIntegerValue.intValue()) {
+				throw new IllegalStateException(
+						"cannot increment current count any further");
+			}
+			this.currentCount++;			
 		} finally {
 			this.lock.unlock();
 		}

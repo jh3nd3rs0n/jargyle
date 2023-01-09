@@ -8,16 +8,11 @@ import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
-import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 
 import javax.net.ServerSocketFactory;
 
 import com.github.jh3nd3rs0n.jargyle.IoHelper;
-import com.github.jh3nd3rs0n.jargyle.server.Configuration;
-import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
-import com.github.jh3nd3rs0n.jargyle.server.SocksServerHelper;
 import com.github.jh3nd3rs0n.jargyle.server.internal.concurrent.ExecutorHelper;
 
 public final class SocketEchoHelper {
@@ -123,33 +118,20 @@ public final class SocketEchoHelper {
 
 	private static final int ECHO_CLIENT_TIMEOUT = 30000;
 	private static final int ECHO_SERVER_PORT = 1084;
-	private static final int SLEEP_TIME = 500; // 1/2 second
 	private static final EchoServer ECHO_SERVER = new EchoServer(
 			ECHO_SERVER_PORT);
-
-	public static String echoThroughSocket(
-			final String string, 
-			final SocksClient socksClient, 
-			final Configuration... configurations) throws IOException {
-		return echoThroughSocket(
-				string, socksClient, Arrays.asList(configurations));
-	}
 	
 	public static String echoThroughSocket(
 			final String string, 
-			final SocksClient socksClient, 
-			final List<Configuration> configurations) throws IOException {
-		List<SocksServer> socksServers = null;
+			final NetObjectFactory netObjectFactory) throws IOException {
 		Socket echoClient = null;
 		String returningString = null;
 		try {
-			socksServers = SocksServerHelper.newStartedSocksServers(
-					configurations);
-			NetObjectFactory netObjectFactory = new DefaultNetObjectFactory();
-			if (socksClient != null) {
-				netObjectFactory = socksClient.newSocksNetObjectFactory();
+			NetObjectFactory netObjFactory = netObjectFactory;
+			if (netObjFactory == null) {
+				netObjFactory = new DefaultNetObjectFactory();
 			}
-			echoClient = netObjectFactory.newSocket();
+			echoClient = netObjFactory.newSocket();
 			echoClient.setSoTimeout(ECHO_CLIENT_TIMEOUT);
 			echoClient.connect(new InetSocketAddress(
 					InetAddress.getLoopbackAddress(), ECHO_SERVER.getPort()));
@@ -161,14 +143,6 @@ public final class SocketEchoHelper {
 		} finally {
 			if (echoClient != null) {
 				echoClient.close();
-			}
-			if (socksServers != null) {
-				SocksServerHelper.stopSocksServers(socksServers);
-			}
-			try {
-				Thread.sleep(SLEEP_TIME);
-			} catch (InterruptedException e) {
-				Thread.currentThread().interrupt();
 			}
 		}
 		return returningString;

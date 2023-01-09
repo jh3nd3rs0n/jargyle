@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.util.Arrays;
+import java.util.List;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -12,19 +14,41 @@ import org.junit.Test;
 import com.github.jh3nd3rs0n.jargyle.ResourceHelper;
 import com.github.jh3nd3rs0n.jargyle.ResourceNameConstants;
 import com.github.jh3nd3rs0n.jargyle.TestStringConstants;
+import com.github.jh3nd3rs0n.jargyle.ThreadHelper;
+import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.DtlsSettingSpecConstants;
+import com.github.jh3nd3rs0n.jargyle.server.GeneralSettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.ImmutableConfiguration;
 import com.github.jh3nd3rs0n.jargyle.server.Settings;
+import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
+import com.github.jh3nd3rs0n.jargyle.server.SocksServerHelper;
 import com.github.jh3nd3rs0n.jargyle.server.SslSettingSpecConstants;
 
 public class SslIT {
+	
+	private static final int SERVER_PORT_USING_SSL = 9100;
+	private static final int SERVER_PORT_USING_SSL_AND_REQUESTED_CLIENT_AUTH = 9200;
+	private static final int SERVER_PORT_USING_SSL_AND_REQUIRED_CLIENT_AUTH = 9300;
+	
+	private static List<SocksServer> socksServersUsingSsl;
+	private static List<SocksServer> socksServersUsingSslAndRequestedClientAuth;
+	private static List<SocksServer> socksServersUsingSslAndRequiredClientAuth;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws IOException {
 		// System.setProperty("javax.net.debug", "ssl,handshake");
 		DatagramSocketEchoHelper.startEchoServer();
 		SocketEchoHelper.startEchoServer();
+		socksServersUsingSsl = 
+				SocksServerHelper.newStartedSocksServers(Arrays.asList(
+						newConfigurationUsingSsl()));
+		socksServersUsingSslAndRequestedClientAuth =
+				SocksServerHelper.newStartedSocksServers(Arrays.asList(
+						newConfigurationUsingSslAndRequestedClientAuth()));
+		socksServersUsingSslAndRequiredClientAuth =
+				SocksServerHelper.newStartedSocksServers(Arrays.asList(
+						newConfigurationUsingSslAndRequiredClientAuth()));
 	}
 	
 	@AfterClass
@@ -32,10 +56,18 @@ public class SslIT {
 		// System.clearProperty("javax.net.debug");
 		DatagramSocketEchoHelper.stopEchoServer();
 		SocketEchoHelper.stopEchoServer();
+		SocksServerHelper.stopSocksServers(socksServersUsingSsl);
+		SocksServerHelper.stopSocksServers(
+				socksServersUsingSslAndRequestedClientAuth);
+		SocksServerHelper.stopSocksServers(
+				socksServersUsingSslAndRequiredClientAuth);
+		ThreadHelper.sleepForThreeSeconds();
 	}
 	
 	private static Configuration newConfigurationUsingSsl() {
 		return ImmutableConfiguration.newInstance(Settings.newInstance(
+				GeneralSettingSpecConstants.PORT.newSetting(
+						Port.newInstance(SERVER_PORT_USING_SSL)),
 				DtlsSettingSpecConstants.DTLS_ENABLED.newSetting(Boolean.TRUE),
 				DtlsSettingSpecConstants.DTLS_KEY_STORE_FILE.newSetting(
 						ResourceHelper.getResourceAsFile(
@@ -54,6 +86,9 @@ public class SslIT {
 
 	private static Configuration newConfigurationUsingSslAndRequestedClientAuth() {
 		return ImmutableConfiguration.newInstance(Settings.newInstance(
+				GeneralSettingSpecConstants.PORT.newSetting(
+						Port.newInstance(
+								SERVER_PORT_USING_SSL_AND_REQUESTED_CLIENT_AUTH)),
 				DtlsSettingSpecConstants.DTLS_ENABLED.newSetting(Boolean.TRUE),
 				DtlsSettingSpecConstants.DTLS_KEY_STORE_FILE.newSetting(
 						ResourceHelper.getResourceAsFile(
@@ -88,6 +123,9 @@ public class SslIT {
 
 	private static Configuration newConfigurationUsingSslAndRequiredClientAuth() {
 		return ImmutableConfiguration.newInstance(Settings.newInstance(
+				GeneralSettingSpecConstants.PORT.newSetting(
+						Port.newInstance(
+								SERVER_PORT_USING_SSL_AND_REQUIRED_CLIENT_AUTH)),
 				DtlsSettingSpecConstants.DTLS_ENABLED.newSetting(Boolean.TRUE),
 				DtlsSettingSpecConstants.DTLS_KEY_STORE_FILE.newSetting(
 						ResourceHelper.getResourceAsFile(
@@ -120,9 +158,7 @@ public class SslIT {
 								ResourceNameConstants.JARGYLE_COMMON_SECURITY_CLIENT_KEY_STORE_PASSWORD_FILE))));
 	}
 	
-	private static SocksClient newSocks5ClientUsingSsl(
-			final String host, 
-			final Integer port) {
+	private static SocksClient newSocks5ClientUsingSsl() {
 		Properties properties = Properties.newInstance(
 				DtlsPropertySpecConstants.DTLS_ENABLED.newProperty(
 						Boolean.TRUE),
@@ -140,13 +176,13 @@ public class SslIT {
 				SslPropertySpecConstants.SSL_TRUST_STORE_PASSWORD.newPropertyOfParsableValue(
 						ResourceHelper.getResourceAsString(
 								ResourceNameConstants.JARGYLE_COMMON_SECURITY_SERVER_KEY_STORE_PASSWORD_FILE)));
-		return Scheme.SOCKS5.newSocksServerUri(host, port).newSocksClient(
-				properties);
+		return Scheme.SOCKS5.newSocksServerUri(
+				InetAddress.getLoopbackAddress().getHostAddress(), 
+				SERVER_PORT_USING_SSL)
+				.newSocksClient(properties);
 	}
 	
-	private static SocksClient newSocks5ClientUsingSslAndClientAuth(
-			final String host, 
-			final Integer port) {
+	private static SocksClient newSocks5ClientUsingSslAndRequestedClientAuth() {
 		Properties properties = Properties.newInstance(
 				DtlsPropertySpecConstants.DTLS_ENABLED.newProperty(
 						Boolean.TRUE),
@@ -175,8 +211,45 @@ public class SslIT {
 				SslPropertySpecConstants.SSL_TRUST_STORE_PASSWORD.newPropertyOfParsableValue(
 						ResourceHelper.getResourceAsString(
 								ResourceNameConstants.JARGYLE_COMMON_SECURITY_SERVER_KEY_STORE_PASSWORD_FILE)));
-		return Scheme.SOCKS5.newSocksServerUri(host, port).newSocksClient(
-				properties);
+		return Scheme.SOCKS5.newSocksServerUri(
+				InetAddress.getLoopbackAddress().getHostAddress(), 
+				SERVER_PORT_USING_SSL_AND_REQUESTED_CLIENT_AUTH)
+				.newSocksClient(properties);
+	}
+	
+	private static SocksClient newSocks5ClientUsingSslAndRequiredClientAuth() {
+		Properties properties = Properties.newInstance(
+				DtlsPropertySpecConstants.DTLS_ENABLED.newProperty(
+						Boolean.TRUE),
+				DtlsPropertySpecConstants.DTLS_KEY_STORE_FILE.newProperty(
+						ResourceHelper.getResourceAsFile(
+								ResourceNameConstants.JARGYLE_COMMON_SECURITY_CLIENT_KEY_STORE_FILE)),
+				DtlsPropertySpecConstants.DTLS_KEY_STORE_PASSWORD.newPropertyOfParsableValue(
+						ResourceHelper.getResourceAsString(
+								ResourceNameConstants.JARGYLE_COMMON_SECURITY_CLIENT_KEY_STORE_PASSWORD_FILE)),
+				DtlsPropertySpecConstants.DTLS_TRUST_STORE_FILE.newProperty(
+						ResourceHelper.getResourceAsFile(
+								ResourceNameConstants.JARGYLE_COMMON_SECURITY_SERVER_KEY_STORE_FILE)),
+				DtlsPropertySpecConstants.DTLS_TRUST_STORE_PASSWORD.newPropertyOfParsableValue(
+						ResourceHelper.getResourceAsString(
+								ResourceNameConstants.JARGYLE_COMMON_SECURITY_SERVER_KEY_STORE_PASSWORD_FILE)),
+				SslPropertySpecConstants.SSL_ENABLED.newProperty(Boolean.TRUE),
+				SslPropertySpecConstants.SSL_KEY_STORE_FILE.newProperty(
+						ResourceHelper.getResourceAsFile(
+								ResourceNameConstants.JARGYLE_COMMON_SECURITY_CLIENT_KEY_STORE_FILE)),
+				SslPropertySpecConstants.SSL_KEY_STORE_PASSWORD.newPropertyOfParsableValue(
+						ResourceHelper.getResourceAsString(
+								ResourceNameConstants.JARGYLE_COMMON_SECURITY_CLIENT_KEY_STORE_PASSWORD_FILE)),
+				SslPropertySpecConstants.SSL_TRUST_STORE_FILE.newProperty(
+						ResourceHelper.getResourceAsFile(
+								ResourceNameConstants.JARGYLE_COMMON_SECURITY_SERVER_KEY_STORE_FILE)),
+				SslPropertySpecConstants.SSL_TRUST_STORE_PASSWORD.newPropertyOfParsableValue(
+						ResourceHelper.getResourceAsString(
+								ResourceNameConstants.JARGYLE_COMMON_SECURITY_SERVER_KEY_STORE_PASSWORD_FILE)));
+		return Scheme.SOCKS5.newSocksServerUri(
+				InetAddress.getLoopbackAddress().getHostAddress(), 
+				SERVER_PORT_USING_SSL_AND_REQUIRED_CLIENT_AUTH)
+				.newSocksClient(properties);
 	}
 	
 	@Test
@@ -184,10 +257,7 @@ public class SslIT {
 		String string = TestStringConstants.STRING_01;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string,
-				SslIT.newSocks5ClientUsingSsl(
-						InetAddress.getLoopbackAddress().getHostAddress(), 
-						null),
-				SslIT.newConfigurationUsingSsl());
+				SslIT.newSocks5ClientUsingSsl().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 	
@@ -196,10 +266,7 @@ public class SslIT {
 		String string = TestStringConstants.STRING_02;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string,
-				SslIT.newSocks5ClientUsingSsl(
-						InetAddress.getLoopbackAddress().getHostAddress(), 
-						null),
-				SslIT.newConfigurationUsingSsl());
+				SslIT.newSocks5ClientUsingSsl().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 	
@@ -208,10 +275,7 @@ public class SslIT {
 		String string = TestStringConstants.STRING_03;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string,
-				SslIT.newSocks5ClientUsingSsl(
-						InetAddress.getLoopbackAddress().getHostAddress(), 
-						null),
-				SslIT.newConfigurationUsingSsl());
+				SslIT.newSocks5ClientUsingSsl().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 	
@@ -220,10 +284,7 @@ public class SslIT {
 		String string = TestStringConstants.STRING_01;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string,
-				SslIT.newSocks5ClientUsingSsl(
-						InetAddress.getLoopbackAddress().getHostAddress(), 
-						null),
-				SslIT.newConfigurationUsingSslAndRequestedClientAuth());
+				SslIT.newSocks5ClientUsingSslAndRequestedClientAuth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 	
@@ -232,10 +293,7 @@ public class SslIT {
 		String string = TestStringConstants.STRING_02;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string,
-				SslIT.newSocks5ClientUsingSsl(
-						InetAddress.getLoopbackAddress().getHostAddress(), 
-						null),
-				SslIT.newConfigurationUsingSslAndRequestedClientAuth());
+				SslIT.newSocks5ClientUsingSslAndRequestedClientAuth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 	
@@ -244,10 +302,7 @@ public class SslIT {
 		String string = TestStringConstants.STRING_03;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string,
-				SslIT.newSocks5ClientUsingSsl(
-						InetAddress.getLoopbackAddress().getHostAddress(), 
-						null),
-				SslIT.newConfigurationUsingSslAndRequestedClientAuth());
+				SslIT.newSocks5ClientUsingSslAndRequestedClientAuth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 	
@@ -256,10 +311,7 @@ public class SslIT {
 		String string = TestStringConstants.STRING_01;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string,
-				SslIT.newSocks5ClientUsingSslAndClientAuth(
-						InetAddress.getLoopbackAddress().getHostAddress(), 
-						null),
-				SslIT.newConfigurationUsingSslAndRequiredClientAuth());
+				SslIT.newSocks5ClientUsingSslAndRequiredClientAuth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 	
@@ -268,10 +320,7 @@ public class SslIT {
 		String string = TestStringConstants.STRING_02;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string,
-				SslIT.newSocks5ClientUsingSslAndClientAuth(
-						InetAddress.getLoopbackAddress().getHostAddress(), 
-						null),
-				SslIT.newConfigurationUsingSslAndRequiredClientAuth());
+				SslIT.newSocks5ClientUsingSslAndRequiredClientAuth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 
@@ -280,10 +329,7 @@ public class SslIT {
 		String string = TestStringConstants.STRING_03;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string,
-				SslIT.newSocks5ClientUsingSslAndClientAuth(
-						InetAddress.getLoopbackAddress().getHostAddress(), 
-						null),
-				SslIT.newConfigurationUsingSslAndRequiredClientAuth());
+				SslIT.newSocks5ClientUsingSslAndRequiredClientAuth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 	
@@ -292,10 +338,7 @@ public class SslIT {
 		String string = TestStringConstants.STRING_01;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string,
-				SslIT.newSocks5ClientUsingSsl(
-						InetAddress.getLoopbackAddress().getHostAddress(), 
-						null),
-				SslIT.newConfigurationUsingSsl());
+				SslIT.newSocks5ClientUsingSsl().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 	
@@ -304,10 +347,7 @@ public class SslIT {
 		String string = TestStringConstants.STRING_02;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string,
-				SslIT.newSocks5ClientUsingSsl(
-						InetAddress.getLoopbackAddress().getHostAddress(), 
-						null),
-				SslIT.newConfigurationUsingSsl());
+				SslIT.newSocks5ClientUsingSsl().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 	
@@ -316,10 +356,7 @@ public class SslIT {
 		String string = TestStringConstants.STRING_03;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string,
-				SslIT.newSocks5ClientUsingSsl(
-						InetAddress.getLoopbackAddress().getHostAddress(), 
-						null),
-				SslIT.newConfigurationUsingSsl());
+				SslIT.newSocks5ClientUsingSsl().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 	
@@ -328,10 +365,7 @@ public class SslIT {
 		String string = TestStringConstants.STRING_01;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string,
-				SslIT.newSocks5ClientUsingSsl(
-						InetAddress.getLoopbackAddress().getHostAddress(), 
-						null),
-				SslIT.newConfigurationUsingSslAndRequestedClientAuth());
+				SslIT.newSocks5ClientUsingSslAndRequestedClientAuth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 	
@@ -340,10 +374,7 @@ public class SslIT {
 		String string = TestStringConstants.STRING_02;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string,
-				SslIT.newSocks5ClientUsingSsl(
-						InetAddress.getLoopbackAddress().getHostAddress(), 
-						null),
-				SslIT.newConfigurationUsingSslAndRequestedClientAuth());
+				SslIT.newSocks5ClientUsingSslAndRequestedClientAuth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 	
@@ -352,10 +383,7 @@ public class SslIT {
 		String string = TestStringConstants.STRING_03;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string,
-				SslIT.newSocks5ClientUsingSsl(
-						InetAddress.getLoopbackAddress().getHostAddress(), 
-						null),
-				SslIT.newConfigurationUsingSslAndRequestedClientAuth());
+				SslIT.newSocks5ClientUsingSslAndRequestedClientAuth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 	
@@ -364,10 +392,7 @@ public class SslIT {
 		String string = TestStringConstants.STRING_01;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string,
-				SslIT.newSocks5ClientUsingSslAndClientAuth(
-						InetAddress.getLoopbackAddress().getHostAddress(), 
-						null),
-				SslIT.newConfigurationUsingSslAndRequiredClientAuth());
+				SslIT.newSocks5ClientUsingSslAndRequiredClientAuth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 	
@@ -376,10 +401,7 @@ public class SslIT {
 		String string = TestStringConstants.STRING_02;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string,
-				SslIT.newSocks5ClientUsingSslAndClientAuth(
-						InetAddress.getLoopbackAddress().getHostAddress(), 
-						null),
-				SslIT.newConfigurationUsingSslAndRequiredClientAuth());
+				SslIT.newSocks5ClientUsingSslAndRequiredClientAuth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 
@@ -388,10 +410,7 @@ public class SslIT {
 		String string = TestStringConstants.STRING_03;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string,
-				SslIT.newSocks5ClientUsingSslAndClientAuth(
-						InetAddress.getLoopbackAddress().getHostAddress(), 
-						null),
-				SslIT.newConfigurationUsingSslAndRequiredClientAuth());
+				SslIT.newSocks5ClientUsingSslAndRequiredClientAuth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 
@@ -400,10 +419,7 @@ public class SslIT {
 		String string = TestStringConstants.STRING_01;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string,
-				SslIT.newSocks5ClientUsingSsl(
-						InetAddress.getLoopbackAddress().getHostAddress(), 
-						null),
-				SslIT.newConfigurationUsingSsl());
+				SslIT.newSocks5ClientUsingSsl().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 	
@@ -412,10 +428,7 @@ public class SslIT {
 		String string = TestStringConstants.STRING_02;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string,
-				SslIT.newSocks5ClientUsingSsl(
-						InetAddress.getLoopbackAddress().getHostAddress(), 
-						null),
-				SslIT.newConfigurationUsingSsl());
+				SslIT.newSocks5ClientUsingSsl().newSocksNetObjectFactory());
 		assertEquals(string, returningString);		
 	}
 	
@@ -424,10 +437,7 @@ public class SslIT {
 		String string = TestStringConstants.STRING_03;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string,
-				SslIT.newSocks5ClientUsingSsl(
-						InetAddress.getLoopbackAddress().getHostAddress(), 
-						null),
-				SslIT.newConfigurationUsingSsl());
+				SslIT.newSocks5ClientUsingSsl().newSocksNetObjectFactory());
 		assertEquals(string, returningString);		
 	}
 	
@@ -436,10 +446,7 @@ public class SslIT {
 		String string = TestStringConstants.STRING_01;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string,
-				SslIT.newSocks5ClientUsingSsl(
-						InetAddress.getLoopbackAddress().getHostAddress(), 
-						null),
-				SslIT.newConfigurationUsingSslAndRequestedClientAuth());
+				SslIT.newSocks5ClientUsingSslAndRequestedClientAuth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 
@@ -448,10 +455,7 @@ public class SslIT {
 		String string = TestStringConstants.STRING_02;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string,
-				SslIT.newSocks5ClientUsingSsl(
-						InetAddress.getLoopbackAddress().getHostAddress(), 
-						null),
-				SslIT.newConfigurationUsingSslAndRequestedClientAuth());
+				SslIT.newSocks5ClientUsingSsl().newSocksNetObjectFactory());
 		assertEquals(string, returningString);		
 	}
 
@@ -460,10 +464,7 @@ public class SslIT {
 		String string = TestStringConstants.STRING_03;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string,
-				SslIT.newSocks5ClientUsingSsl(
-						InetAddress.getLoopbackAddress().getHostAddress(), 
-						null),
-				SslIT.newConfigurationUsingSslAndRequestedClientAuth());
+				SslIT.newSocks5ClientUsingSslAndRequestedClientAuth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);		
 	}
 
@@ -472,10 +473,7 @@ public class SslIT {
 		String string = TestStringConstants.STRING_01;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string,
-				SslIT.newSocks5ClientUsingSslAndClientAuth(
-						InetAddress.getLoopbackAddress().getHostAddress(), 
-						null),
-				SslIT.newConfigurationUsingSslAndRequiredClientAuth());
+				SslIT.newSocks5ClientUsingSslAndRequiredClientAuth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 
@@ -484,10 +482,7 @@ public class SslIT {
 		String string = TestStringConstants.STRING_02;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string,
-				SslIT.newSocks5ClientUsingSslAndClientAuth(
-						InetAddress.getLoopbackAddress().getHostAddress(), 
-						null),
-				SslIT.newConfigurationUsingSslAndRequiredClientAuth());
+				SslIT.newSocks5ClientUsingSslAndRequiredClientAuth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);		
 	}
 
@@ -496,10 +491,7 @@ public class SslIT {
 		String string = TestStringConstants.STRING_03;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string,
-				SslIT.newSocks5ClientUsingSslAndClientAuth(
-						InetAddress.getLoopbackAddress().getHostAddress(), 
-						null),
-				SslIT.newConfigurationUsingSslAndRequiredClientAuth());
+				SslIT.newSocks5ClientUsingSslAndRequiredClientAuth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);		
 	}
 	

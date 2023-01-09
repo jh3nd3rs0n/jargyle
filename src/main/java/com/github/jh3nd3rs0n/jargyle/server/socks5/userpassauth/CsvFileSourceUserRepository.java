@@ -13,13 +13,13 @@ import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.ReentrantLock;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.jh3nd3rs0n.jargyle.server.internal.concurrent.ExecutorHelper;
 import com.github.jh3nd3rs0n.jargyle.server.internal.io.FileMonitor;
 import com.github.jh3nd3rs0n.jargyle.server.internal.io.FileStatusListener;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.internal.users.csv.bind.UsersCsvTableConversionHelper;
@@ -223,7 +223,7 @@ public final class CsvFileSourceUserRepository extends UserRepository {
 	}
 
 	private void startMonitoringCsvFile() {
-		this.executor = ExecutorHelper.newExecutor();
+		this.executor = Executors.newSingleThreadExecutor();
 		this.executor.execute(FileMonitor.newInstance(
 				this.csvFile, 
 				new UsersFileStatusListener(this)));

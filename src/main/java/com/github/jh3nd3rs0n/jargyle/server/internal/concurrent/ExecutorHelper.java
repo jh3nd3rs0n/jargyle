@@ -56,13 +56,15 @@ public final class ExecutorHelper {
 				throw new AssertionError(e);
 			} catch (InvocationTargetException e) {
 				if (e.getCause() instanceof UnsupportedOperationException) {
-					LOGGER.warn(String.format(
-							"Using platform threads instead of virtual "
-							+ "threads. Use the JVM option --enable-preview "
-							+ "to enable virtual threads. (Or use -D%s=false "
-							+ "to disable this warning.)",
-							USE_VIRTUAL_THREADS_SYSTEM_PROPERTY_NAME));
-					CAN_CREATE_VIRTUAL_THREAD_PER_TASK_EXECUTOR.set(false);
+					if (CAN_CREATE_VIRTUAL_THREAD_PER_TASK_EXECUTOR.compareAndSet(
+							true, false)) {
+						LOGGER.warn(String.format(
+								"Using platform threads instead of virtual "
+								+ "threads. Use the JVM option "
+								+ "--enable-preview to enable virtual threads. "
+								+ "(Or use -D%s=false to disable this warning.)",
+								USE_VIRTUAL_THREADS_SYSTEM_PROPERTY_NAME));
+					}
 				} else {
 					throw new AssertionError(e);
 				}

@@ -7,13 +7,13 @@ import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.util.Iterator;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import com.github.jh3nd3rs0n.jargyle.common.net.Host;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.common.net.PortRange;
 import com.github.jh3nd3rs0n.jargyle.common.net.PortRanges;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
-import com.github.jh3nd3rs0n.jargyle.server.internal.concurrent.ExecutorHelper;
 import com.github.jh3nd3rs0n.jargyle.server.internal.server.Listener;
 
 public final class SocksServer {
@@ -177,7 +177,7 @@ public final class SocksServer {
 				backlog);
 		this.host = bindHost;
 		this.port = Port.newInstance(this.serverSocket.getLocalPort());
-		this.executor = ExecutorHelper.newExecutor();
+		this.executor = Executors.newSingleThreadExecutor();
 		this.executor.execute(new Listener(
 				this.serverSocket, this.configuration));
 		this.state = State.STARTED;

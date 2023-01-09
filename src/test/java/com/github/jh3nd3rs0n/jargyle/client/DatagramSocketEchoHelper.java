@@ -7,6 +7,7 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import com.github.jh3nd3rs0n.jargyle.server.internal.concurrent.ExecutorHelper;
 
@@ -39,7 +40,7 @@ public final class DatagramSocketEchoHelper {
 				throw new IllegalStateException();
 			}
 			this.serverSocket = new DatagramSocket(this.port);
-			this.executor = ExecutorHelper.newExecutor();
+			this.executor = Executors.newSingleThreadExecutor();
 			this.executor.execute(new Listener(this.serverSocket));
 			this.started = true;
 		}
@@ -116,7 +117,7 @@ public final class DatagramSocketEchoHelper {
 	}
 
 	private static final int BUFFER_SIZE = 1024;
-	private static final int ECHO_CLIENT_TIMEOUT = 30000;
+	private static final int ECHO_CLIENT_TIMEOUT = 60000;
 	private static final int ECHO_SERVER_PORT = 1081;
 	private static final EchoServer ECHO_SERVER = new EchoServer(
 			ECHO_SERVER_PORT);

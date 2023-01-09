@@ -105,7 +105,6 @@ public final class SocksServerCLI extends AbstractCLI {
 				"Listening on port %s at %s",
 				socksServer.getPort(),
 				socksServer.getHost()));
-		while (!socksServer.getState().equals(SocksServer.State.STOPPED));
 	}
 
 }

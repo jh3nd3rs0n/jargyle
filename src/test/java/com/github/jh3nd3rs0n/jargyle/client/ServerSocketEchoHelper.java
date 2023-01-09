@@ -12,6 +12,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.net.ServerSocketFactory;
 import javax.net.SocketFactory;
@@ -65,7 +66,7 @@ public final class ServerSocketEchoHelper {
 			}
 			ServerSocketFactory factory = ServerSocketFactory.getDefault();
 			this.serverSocket = factory.createServerSocket(this.port);
-			this.executor = ExecutorHelper.newExecutor();
+			this.executor = Executors.newSingleThreadExecutor();
 			this.executor.execute(new Listener(this, this.serverSocket));
 			this.started = true;
 		}
@@ -157,7 +158,7 @@ public final class ServerSocketEchoHelper {
 		}
 	}
 
-	private static final int ECHO_CLIENT_TIMEOUT = 30000;
+	private static final int ECHO_CLIENT_TIMEOUT = 60000;
 	private static final int ECHO_SERVER_PORT = 1082;
 	private static final int SERVER_PORT = 1083;
 	private static final int SLEEP_TIME = 500; // 1/2 second

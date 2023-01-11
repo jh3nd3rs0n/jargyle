@@ -141,7 +141,7 @@ public final class Socks5Worker {
 				applicableRule.getLastRuleResultValue(
 						GeneralRuleResultSpecConstants.FIREWALL_ACTION_ALLOW_LIMIT_REACHED_LOG_ACTION);
 		if (firewallActionAllowLimit != null) {
-			if (firewallActionAllowLimit.hasBeenReached()) {
+			if (!firewallActionAllowLimit.tryIncrementCurrentCount()) {
 				if (firewallActionAllowLimitReachedLogAction != null) {
 					firewallActionAllowLimitReachedLogAction.invoke(
 							LOGGER, 
@@ -159,7 +159,6 @@ public final class Socks5Worker {
 						this, socks5Rep, LOGGER);
 				return false;
 			}
-			firewallActionAllowLimit.incrementCurrentCount();
 			this.socks5WorkerContext.addBelowAllowLimitRule(applicableRule);
 		}
 		return true;

@@ -102,7 +102,7 @@ final class WorkerContextFactory {
 				applicableRule.getLastRuleResultValue(
 						GeneralRuleResultSpecConstants.FIREWALL_ACTION_ALLOW_LIMIT_REACHED_LOG_ACTION);
 		if (firewallActionAllowLimit != null) {
-			if (firewallActionAllowLimit.hasBeenReached()) {
+			if (!firewallActionAllowLimit.tryIncrementCurrentCount()) {
 				if (firewallActionAllowLimitReachedLogAction != null) {
 					firewallActionAllowLimitReachedLogAction.invoke(
 							LOGGER, 
@@ -115,7 +115,6 @@ final class WorkerContextFactory {
 				}
 				return false;
 			}
-			firewallActionAllowLimit.incrementCurrentCount();
 			belowAllowLimitRules.add(applicableRule);				
 		}		
 		return true;

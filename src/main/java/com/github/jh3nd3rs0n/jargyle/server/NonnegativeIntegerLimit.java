@@ -1,6 +1,7 @@
 package com.github.jh3nd3rs0n.jargyle.server;
 
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.github.jh3nd3rs0n.jargyle.common.number.NonnegativeInteger;
 
@@ -15,27 +16,27 @@ public final class NonnegativeIntegerLimit {
 		return newInstance(NonnegativeInteger.newInstance(s));
 	}
 	
-	private int currentCount;
-	private final ReentrantLock lock;
+	private final AtomicInteger currentCount;
 	private final NonnegativeInteger nonnegativeIntegerValue;
+	private final Semaphore semaphore;
 	
 	private NonnegativeIntegerLimit(final NonnegativeInteger value) {
-		this.currentCount = 0;
-		this.lock = new ReentrantLock();
+		this.currentCount = new AtomicInteger(0);
 		this.nonnegativeIntegerValue = value;
+		this.semaphore = new Semaphore(value.intValue(), true);
+	}
+	
+	public int currentCount() {
+		return this.currentCount.intValue();
 	}
 	
 	public void decrementCurrentCount() {
-		this.lock.lock();
-		try {
-			if (this.currentCount == 0) {
-				throw new IllegalStateException(
-						"cannot decrement current count below zero");
-			}
-			this.currentCount--;
-		} finally {
-			this.lock.unlock();
+		if (this.currentCount.intValue() == 0) {
+			throw new IllegalStateException(
+					"cannot decrement current count below zero");
 		}
+		this.currentCount.decrementAndGet();
+		this.semaphore.release();
 	}
 	
 	@Override
@@ -61,18 +62,6 @@ public final class NonnegativeIntegerLimit {
 		return true;
 	}
 	
-	public boolean hasBeenReached() {
-		boolean hasBeenReached = false;
-		this.lock.lock();
-		try {
-			hasBeenReached = 
-					this.currentCount >= this.nonnegativeIntegerValue.intValue(); 
-		} finally {
-			this.lock.unlock();
-		}
-		return hasBeenReached;
-	}
-	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -81,27 +70,22 @@ public final class NonnegativeIntegerLimit {
 				0 : this.nonnegativeIntegerValue.hashCode());
 		return result;
 	}
-	
-	public void incrementCurrentCount() {
-		this.lock.lock();
-		try {
-			if (this.currentCount >= this.nonnegativeIntegerValue.intValue()) {
-				throw new IllegalStateException(
-						"cannot increment current count any further");
-			}
-			this.currentCount++;			
-		} finally {
-			this.lock.unlock();
-		}
-	}
 
 	public NonnegativeInteger nonnegativeIntegerValue() {
 		return this.nonnegativeIntegerValue;
 	}
-
+	
 	@Override
 	public String toString() {
 		return this.nonnegativeIntegerValue.toString();
+	}
+
+	public boolean tryIncrementCurrentCount() {
+		if (this.semaphore.tryAcquire()) {
+			this.currentCount.incrementAndGet();
+			return true;
+		}
+		return false;
 	}
 	
 }

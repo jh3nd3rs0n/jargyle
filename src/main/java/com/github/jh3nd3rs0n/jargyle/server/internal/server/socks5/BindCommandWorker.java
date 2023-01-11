@@ -195,7 +195,7 @@ final class BindCommandWorker extends CommandWorker {
 				applicableRule.getLastRuleResultValue(
 						GeneralRuleResultSpecConstants.FIREWALL_ACTION_ALLOW_LIMIT_REACHED_LOG_ACTION);
 		if (firewallActionAllowLimit != null) {
-			if (firewallActionAllowLimit.hasBeenReached()) {
+			if (!firewallActionAllowLimit.tryIncrementCurrentCount()) {
 				if (firewallActionAllowLimitReachedLogAction != null) {
 					firewallActionAllowLimitReachedLogAction.invoke(
 							LOGGER, 
@@ -212,7 +212,6 @@ final class BindCommandWorker extends CommandWorker {
 				this.commandWorkerContext.sendSocks5Reply(this, rep, LOGGER);
 				return false;				
 			}
-			firewallActionAllowLimit.incrementCurrentCount();
 			this.commandWorkerContext.addBelowAllowLimitRule(applicableRule);
 		}
 		return true;

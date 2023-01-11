@@ -58,8 +58,8 @@ public class GssapiAuthIT {
 	private static final String LOGIN_CONFIG_PROPERTY_NAME = 
 			"java.security.auth.login.config";
 	
-	private static final int SERVER_PORT_USING_SOCKS5_GSSAPI_AUTH = 8100;
-	private static final int SERVER_PORT_USING_SOCKS5_GSSAPI_AUTH_NEC_REFERENCE_IMPL = 8200;
+	private static final int SOCKS_SERVER_PORT_USING_SOCKS5_GSSAPI_AUTH = 8100;
+	private static final int SOCKS_SERVER_PORT_USING_SOCKS5_GSSAPI_AUTH_NEC_REFERENCE_IMPL = 8200;
 	
 	private static Path baseDir = null;
 	private static Path aliceKeytab = null;
@@ -75,7 +75,7 @@ public class GssapiAuthIT {
 	private static Configuration newConfigurationUsingSocks5GssapiAuth() {
 		return ImmutableConfiguration.newInstance(Settings.newInstance(
 				GeneralSettingSpecConstants.PORT.newSetting(
-						Port.newInstance(SERVER_PORT_USING_SOCKS5_GSSAPI_AUTH)),
+						Port.newInstance(SOCKS_SERVER_PORT_USING_SOCKS5_GSSAPI_AUTH)),
 				Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
 						Methods.newInstance(Method.GSSAPI))));
 	}
@@ -84,7 +84,7 @@ public class GssapiAuthIT {
 		return ImmutableConfiguration.newInstance(Settings.newInstance(
 				GeneralSettingSpecConstants.PORT.newSetting(
 						Port.newInstance(
-								SERVER_PORT_USING_SOCKS5_GSSAPI_AUTH_NEC_REFERENCE_IMPL)),
+								SOCKS_SERVER_PORT_USING_SOCKS5_GSSAPI_AUTH_NEC_REFERENCE_IMPL)),
 				Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
 						Methods.newInstance(Method.GSSAPI)),
 				Socks5SettingSpecConstants.SOCKS5_GSSAPIAUTH_NEC_REFERENCE_IMPL.newSetting(
@@ -104,7 +104,7 @@ public class GssapiAuthIT {
 						Boolean.valueOf(false)));
 		return Scheme.SOCKS5.newSocksServerUri(
 				InetAddress.getLoopbackAddress().getHostAddress(), 
-				SERVER_PORT_USING_SOCKS5_GSSAPI_AUTH)
+				SOCKS_SERVER_PORT_USING_SOCKS5_GSSAPI_AUTH)
 				.newSocksClient(properties);		
 	}
 	
@@ -121,7 +121,7 @@ public class GssapiAuthIT {
 						Boolean.valueOf(true)));
 		return Scheme.SOCKS5.newSocksServerUri(
 				InetAddress.getLoopbackAddress().getHostAddress(), 
-				SERVER_PORT_USING_SOCKS5_GSSAPI_AUTH_NEC_REFERENCE_IMPL)
+				SOCKS_SERVER_PORT_USING_SOCKS5_GSSAPI_AUTH_NEC_REFERENCE_IMPL)
 				.newSocksClient(properties);		
 	}
 	@BeforeClass

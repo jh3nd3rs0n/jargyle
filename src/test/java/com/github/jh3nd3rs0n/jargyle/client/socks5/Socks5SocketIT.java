@@ -20,7 +20,7 @@ import com.github.jh3nd3rs0n.jargyle.server.SocksServerHelper;
 public class Socks5SocketIT {
 
 	private static final int SERVER_PORT = 30100;
-	private static final int SERVER_PORT_USING_SOCKS5_USERPASS_AUTH = 30200;
+	private static final int SOCKS_SERVER_PORT_USING_SOCKS5_USERPASS_AUTH = 30200;
 	
 	private static List<SocksServer> socksServers;
 	private static List<SocksServer> socksServersUsingSocks5UserpassAuth;
@@ -33,7 +33,7 @@ public class Socks5SocketIT {
 		socksServersUsingSocks5UserpassAuth = 
 				SocksServerHelper.newStartedSocksServers(Arrays.asList(
 						ConfigurationHelper.newConfigurationUsingSocks5UserpassAuth(
-								SERVER_PORT_USING_SOCKS5_USERPASS_AUTH)));		
+								SOCKS_SERVER_PORT_USING_SOCKS5_USERPASS_AUTH)));		
 	}
 	
 	@AfterClass
@@ -77,7 +77,7 @@ public class Socks5SocketIT {
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
 				SocksClientHelper.newSocks5ClientUsingSocks5UserpassAuth(
-						SERVER_PORT_USING_SOCKS5_USERPASS_AUTH, 
+						SOCKS_SERVER_PORT_USING_SOCKS5_USERPASS_AUTH, 
 						"Aladdin",
 						"opensesame".toCharArray()).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -89,7 +89,7 @@ public class Socks5SocketIT {
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
 				SocksClientHelper.newSocks5ClientUsingSocks5UserpassAuth(
-						SERVER_PORT_USING_SOCKS5_USERPASS_AUTH, 
+						SOCKS_SERVER_PORT_USING_SOCKS5_USERPASS_AUTH, 
 						"Jasmine",
 						"mission:impossible".toCharArray()).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -101,7 +101,7 @@ public class Socks5SocketIT {
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
 				SocksClientHelper.newSocks5ClientUsingSocks5UserpassAuth(
-						SERVER_PORT_USING_SOCKS5_USERPASS_AUTH, 
+						SOCKS_SERVER_PORT_USING_SOCKS5_USERPASS_AUTH, 
 						"Abu",
 						"safeDriversSave40%".toCharArray()).newSocksNetObjectFactory());
 		assertEquals(string, returningString);

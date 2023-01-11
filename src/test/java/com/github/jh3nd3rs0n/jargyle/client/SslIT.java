@@ -27,9 +27,9 @@ import com.github.jh3nd3rs0n.jargyle.server.SslSettingSpecConstants;
 
 public class SslIT {
 	
-	private static final int SERVER_PORT_USING_SSL = 9100;
-	private static final int SERVER_PORT_USING_SSL_AND_REQUESTED_CLIENT_AUTH = 9200;
-	private static final int SERVER_PORT_USING_SSL_AND_REQUIRED_CLIENT_AUTH = 9300;
+	private static final int SOCKS_SERVER_PORT_USING_SSL = 9100;
+	private static final int SOCKS_SERVER_PORT_USING_SSL_AND_REQUESTED_CLIENT_AUTH = 9200;
+	private static final int SOCKS_SERVER_PORT_USING_SSL_AND_REQUIRED_CLIENT_AUTH = 9300;
 	
 	private static List<SocksServer> socksServersUsingSsl;
 	private static List<SocksServer> socksServersUsingSslAndRequestedClientAuth;
@@ -67,7 +67,7 @@ public class SslIT {
 	private static Configuration newConfigurationUsingSsl() {
 		return ImmutableConfiguration.newInstance(Settings.newInstance(
 				GeneralSettingSpecConstants.PORT.newSetting(
-						Port.newInstance(SERVER_PORT_USING_SSL)),
+						Port.newInstance(SOCKS_SERVER_PORT_USING_SSL)),
 				DtlsSettingSpecConstants.DTLS_ENABLED.newSetting(Boolean.TRUE),
 				DtlsSettingSpecConstants.DTLS_KEY_STORE_FILE.newSetting(
 						ResourceHelper.getResourceAsFile(
@@ -88,7 +88,7 @@ public class SslIT {
 		return ImmutableConfiguration.newInstance(Settings.newInstance(
 				GeneralSettingSpecConstants.PORT.newSetting(
 						Port.newInstance(
-								SERVER_PORT_USING_SSL_AND_REQUESTED_CLIENT_AUTH)),
+								SOCKS_SERVER_PORT_USING_SSL_AND_REQUESTED_CLIENT_AUTH)),
 				DtlsSettingSpecConstants.DTLS_ENABLED.newSetting(Boolean.TRUE),
 				DtlsSettingSpecConstants.DTLS_KEY_STORE_FILE.newSetting(
 						ResourceHelper.getResourceAsFile(
@@ -125,7 +125,7 @@ public class SslIT {
 		return ImmutableConfiguration.newInstance(Settings.newInstance(
 				GeneralSettingSpecConstants.PORT.newSetting(
 						Port.newInstance(
-								SERVER_PORT_USING_SSL_AND_REQUIRED_CLIENT_AUTH)),
+								SOCKS_SERVER_PORT_USING_SSL_AND_REQUIRED_CLIENT_AUTH)),
 				DtlsSettingSpecConstants.DTLS_ENABLED.newSetting(Boolean.TRUE),
 				DtlsSettingSpecConstants.DTLS_KEY_STORE_FILE.newSetting(
 						ResourceHelper.getResourceAsFile(
@@ -178,7 +178,7 @@ public class SslIT {
 								ResourceNameConstants.JARGYLE_COMMON_SECURITY_SERVER_KEY_STORE_PASSWORD_FILE)));
 		return Scheme.SOCKS5.newSocksServerUri(
 				InetAddress.getLoopbackAddress().getHostAddress(), 
-				SERVER_PORT_USING_SSL)
+				SOCKS_SERVER_PORT_USING_SSL)
 				.newSocksClient(properties);
 	}
 	
@@ -213,7 +213,7 @@ public class SslIT {
 								ResourceNameConstants.JARGYLE_COMMON_SECURITY_SERVER_KEY_STORE_PASSWORD_FILE)));
 		return Scheme.SOCKS5.newSocksServerUri(
 				InetAddress.getLoopbackAddress().getHostAddress(), 
-				SERVER_PORT_USING_SSL_AND_REQUESTED_CLIENT_AUTH)
+				SOCKS_SERVER_PORT_USING_SSL_AND_REQUESTED_CLIENT_AUTH)
 				.newSocksClient(properties);
 	}
 	
@@ -248,7 +248,7 @@ public class SslIT {
 								ResourceNameConstants.JARGYLE_COMMON_SECURITY_SERVER_KEY_STORE_PASSWORD_FILE)));
 		return Scheme.SOCKS5.newSocksServerUri(
 				InetAddress.getLoopbackAddress().getHostAddress(), 
-				SERVER_PORT_USING_SSL_AND_REQUIRED_CLIENT_AUTH)
+				SOCKS_SERVER_PORT_USING_SSL_AND_REQUIRED_CLIENT_AUTH)
 				.newSocksClient(properties);
 	}
 	

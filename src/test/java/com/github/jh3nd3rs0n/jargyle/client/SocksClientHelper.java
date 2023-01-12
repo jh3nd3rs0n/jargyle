@@ -15,7 +15,7 @@ public final class SocksClientHelper {
 				.newSocksClient(Properties.newInstance());
 	}
 	
-	public static SocksClient newSocks5ClientUsingSocks5UserpassAuth(
+	public static SocksClient newSocks5ClientUsingSocks5Userpassauth(
 			final int port, 
 			final String username,
 			final char[] password) {

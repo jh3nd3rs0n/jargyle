@@ -40,9 +40,9 @@ public class ChainingIT {
 	private static final int CHAINED_SOCKS_SERVER_PORT_2 = 2200;
 	private static final int CHAINED_SOCKS_SERVER_PORT_3 = 2300;
 	
-	private static final int CHAINED_SOCKS_SERVER_PORT_1_USING_SOCKS5_USERPASS_AUTH = 3100;
-	private static final int CHAINED_SOCKS_SERVER_PORT_2_USING_SOCKS5_USERPASS_AUTH = 3200;
-	private static final int CHAINED_SOCKS_SERVER_PORT_3_USING_SOCKS5_USERPASS_AUTH = 3300;
+	private static final int CHAINED_SOCKS_SERVER_PORT_1_USING_SOCKS5_USERPASSAUTH = 3100;
+	private static final int CHAINED_SOCKS_SERVER_PORT_2_USING_SOCKS5_USERPASSAUTH = 3200;
+	private static final int CHAINED_SOCKS_SERVER_PORT_3_USING_SOCKS5_USERPASSAUTH = 3300;
 	
 	private static final int CHAINED_SOCKS_SERVER_PORT_1_USING_SSL = 4100;
 	private static final int CHAINED_SOCKS_SERVER_PORT_2_USING_SSL = 4200;
@@ -51,19 +51,19 @@ public class ChainingIT {
 	private static final int SOCKS_SERVER_PORT_2 = 5200;
 	private static final int SOCKS_SERVER_PORT_3 = 5300;
 	
-	private static final int SOCKS_SERVER_PORT_1_USING_SOCKS5_USERPASS_AUTH = 6100;
-	private static final int SOCKS_SERVER_PORT_2_USING_SOCKS5_USERPASS_AUTH = 6200;
-	private static final int SOCKS_SERVER_PORT_3_USING_SOCKS5_USERPASS_AUTH = 6300;
+	private static final int SOCKS_SERVER_PORT_1_USING_SOCKS5_USERPASSAUTH = 6100;
+	private static final int SOCKS_SERVER_PORT_2_USING_SOCKS5_USERPASSAUTH = 6200;
+	private static final int SOCKS_SERVER_PORT_3_USING_SOCKS5_USERPASSAUTH = 6300;
 	
 	private static final int SOCKS_SERVER_PORT_1_USING_SSL = 7100;
 	private static final int SOCKS_SERVER_PORT_2_USING_SSL = 7200;
 
 	private static List<SocksServer> chainedSocksServers;
-	private static List<SocksServer> chainedSocksServersUsingSocks5UserpassAuth;
+	private static List<SocksServer> chainedSocksServersUsingSocks5Userpassauth;
 	private static List<SocksServer> chainedSocksServersUsingSsl;
 	
 	private static List<SocksServer> socksServers;
-	private static List<SocksServer> socksServersUsingSocks5UserpassAuth;
+	private static List<SocksServer> socksServersUsingSocks5Userpassauth;
 	private static List<SocksServer> socksServersUsingSsl;
 	
 	private static List<Configuration> newChainedConfigurations() {
@@ -87,11 +87,11 @@ public class ChainingIT {
 								Port.newInstance(CHAINED_SOCKS_SERVER_PORT_3)))));
 	}
 	
-	private static List<Configuration> newChainedConfigurationsUsingSocks5UserpassAuth() {
+	private static List<Configuration> newChainedConfigurationsUsingSocks5Userpassauth() {
 		return Arrays.asList(
 				ImmutableConfiguration.newInstance(Settings.newInstance(
 						GeneralSettingSpecConstants.PORT.newSetting(
-								Port.newInstance(CHAINED_SOCKS_SERVER_PORT_1_USING_SOCKS5_USERPASS_AUTH)),
+								Port.newInstance(CHAINED_SOCKS_SERVER_PORT_1_USING_SOCKS5_USERPASSAUTH)),
 						Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
 								Methods.newInstance(Method.USERNAME_PASSWORD)),
 						Socks5SettingSpecConstants.SOCKS5_USERPASSAUTH_USER_REPOSITORY.newSetting(
@@ -100,7 +100,7 @@ public class ChainingIT {
 						ChainingGeneralSettingSpecConstants.CHAINING_SOCKS_SERVER_URI.newSetting(
 								Scheme.SOCKS5.newSocksServerUri(
 										InetAddress.getLoopbackAddress().getHostAddress(), 
-										Integer.valueOf(CHAINED_SOCKS_SERVER_PORT_2_USING_SOCKS5_USERPASS_AUTH))),
+										Integer.valueOf(CHAINED_SOCKS_SERVER_PORT_2_USING_SOCKS5_USERPASSAUTH))),
 						ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_METHODS.newSetting(
 								Methods.newInstance(Method.USERNAME_PASSWORD)),
 						ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_USERPASSAUTH_USERNAME.newSetting(
@@ -109,7 +109,7 @@ public class ChainingIT {
 								EncryptedPassword.newInstance("mission:impossible".toCharArray())))),
 				ImmutableConfiguration.newInstance(Settings.newInstance(
 						GeneralSettingSpecConstants.PORT.newSetting(
-								Port.newInstance(CHAINED_SOCKS_SERVER_PORT_2_USING_SOCKS5_USERPASS_AUTH)),
+								Port.newInstance(CHAINED_SOCKS_SERVER_PORT_2_USING_SOCKS5_USERPASSAUTH)),
 						Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
 								Methods.newInstance(Method.USERNAME_PASSWORD)),
 						Socks5SettingSpecConstants.SOCKS5_USERPASSAUTH_USER_REPOSITORY.newSetting(
@@ -118,7 +118,7 @@ public class ChainingIT {
 						ChainingGeneralSettingSpecConstants.CHAINING_SOCKS_SERVER_URI.newSetting(
 								Scheme.SOCKS5.newSocksServerUri(
 										InetAddress.getLoopbackAddress().getHostAddress(), 
-										Integer.valueOf(CHAINED_SOCKS_SERVER_PORT_3_USING_SOCKS5_USERPASS_AUTH))),
+										Integer.valueOf(CHAINED_SOCKS_SERVER_PORT_3_USING_SOCKS5_USERPASSAUTH))),
 						ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_METHODS.newSetting(
 								Methods.newInstance(Method.USERNAME_PASSWORD)),
 						ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_USERPASSAUTH_USERNAME.newSetting(
@@ -127,7 +127,7 @@ public class ChainingIT {
 								EncryptedPassword.newInstance("safeDriversSave40%".toCharArray())))),
 				ImmutableConfiguration.newInstance(Settings.newInstance(
 						GeneralSettingSpecConstants.PORT.newSetting(
-								Port.newInstance(CHAINED_SOCKS_SERVER_PORT_3_USING_SOCKS5_USERPASS_AUTH)),
+								Port.newInstance(CHAINED_SOCKS_SERVER_PORT_3_USING_SOCKS5_USERPASSAUTH)),
 						Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
 								Methods.newInstance(Method.USERNAME_PASSWORD)),
 						Socks5SettingSpecConstants.SOCKS5_USERPASSAUTH_USER_REPOSITORY.newSetting(
@@ -193,10 +193,10 @@ public class ChainingIT {
 		return client3;
 	}
 	
-	private static SocksClient newChainedSocks5ClientToConfigurationsUsingSocks5UserpassAuth() {
+	private static SocksClient newChainedSocks5ClientToConfigurationsUsingSocks5Userpassauth() {
 		SocksClient client1 = Scheme.SOCKS5.newSocksServerUri(
 				InetAddress.getLoopbackAddress().getHostAddress(), 
-				Integer.valueOf(SOCKS_SERVER_PORT_1_USING_SOCKS5_USERPASS_AUTH))
+				Integer.valueOf(SOCKS_SERVER_PORT_1_USING_SOCKS5_USERPASSAUTH))
 				.newSocksClient(Properties.newInstance(
 						Socks5PropertySpecConstants.SOCKS5_METHODS.newProperty(
 								Methods.newInstance(Method.USERNAME_PASSWORD)),
@@ -207,7 +207,7 @@ public class ChainingIT {
 										"opensesame".toCharArray()))));
 		SocksClient client2 = Scheme.SOCKS5.newSocksServerUri(
 				InetAddress.getLoopbackAddress().getHostAddress(), 
-				Integer.valueOf(SOCKS_SERVER_PORT_2_USING_SOCKS5_USERPASS_AUTH))
+				Integer.valueOf(SOCKS_SERVER_PORT_2_USING_SOCKS5_USERPASSAUTH))
 				.newSocksClient(Properties.newInstance(
 						Socks5PropertySpecConstants.SOCKS5_METHODS.newProperty(
 								Methods.newInstance(Method.USERNAME_PASSWORD)),
@@ -219,7 +219,7 @@ public class ChainingIT {
 						client1);
 		SocksClient client3 = Scheme.SOCKS5.newSocksServerUri(
 				InetAddress.getLoopbackAddress().getHostAddress(), 
-				Integer.valueOf(SOCKS_SERVER_PORT_3_USING_SOCKS5_USERPASS_AUTH))
+				Integer.valueOf(SOCKS_SERVER_PORT_3_USING_SOCKS5_USERPASSAUTH))
 				.newSocksClient(Properties.newInstance(
 						Socks5PropertySpecConstants.SOCKS5_METHODS.newProperty(
 								Methods.newInstance(Method.USERNAME_PASSWORD)),
@@ -274,11 +274,11 @@ public class ChainingIT {
 								Port.newInstance(SOCKS_SERVER_PORT_3)))));
 	}
 	
-	private static List<Configuration> newConfigurationsUsingSocks5UserpassAuth() {
+	private static List<Configuration> newConfigurationsUsingSocks5Userpassauth() {
 		return Arrays.asList(
 				ImmutableConfiguration.newInstance(Settings.newInstance(
 						GeneralSettingSpecConstants.PORT.newSetting(
-								Port.newInstance(SOCKS_SERVER_PORT_1_USING_SOCKS5_USERPASS_AUTH)),
+								Port.newInstance(SOCKS_SERVER_PORT_1_USING_SOCKS5_USERPASSAUTH)),
 						Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
 								Methods.newInstance(Method.USERNAME_PASSWORD)),
 						Socks5SettingSpecConstants.SOCKS5_USERPASSAUTH_USER_REPOSITORY.newSetting(
@@ -286,7 +286,7 @@ public class ChainingIT {
 										"Aladdin:opensesame")))),
 				ImmutableConfiguration.newInstance(Settings.newInstance(
 						GeneralSettingSpecConstants.PORT.newSetting(
-								Port.newInstance(SOCKS_SERVER_PORT_2_USING_SOCKS5_USERPASS_AUTH)),
+								Port.newInstance(SOCKS_SERVER_PORT_2_USING_SOCKS5_USERPASSAUTH)),
 						Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
 								Methods.newInstance(Method.USERNAME_PASSWORD)),
 						Socks5SettingSpecConstants.SOCKS5_USERPASSAUTH_USER_REPOSITORY.newSetting(
@@ -294,7 +294,7 @@ public class ChainingIT {
 										"Jasmine:mission%3Aimpossible")))),
 				ImmutableConfiguration.newInstance(Settings.newInstance(
 						GeneralSettingSpecConstants.PORT.newSetting(
-								Port.newInstance(SOCKS_SERVER_PORT_3_USING_SOCKS5_USERPASS_AUTH)),
+								Port.newInstance(SOCKS_SERVER_PORT_3_USING_SOCKS5_USERPASSAUTH)),
 						Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
 								Methods.newInstance(Method.USERNAME_PASSWORD)),
 						Socks5SettingSpecConstants.SOCKS5_USERPASSAUTH_USER_REPOSITORY.newSetting(
@@ -333,10 +333,10 @@ public class ChainingIT {
 				.newSocksClient(Properties.newInstance());
 	}
 	
-	private static SocksClient newSocks5ClientToChainedConfigurationsUsingSocks5UserpassAuth() {
+	private static SocksClient newSocks5ClientToChainedConfigurationsUsingSocks5Userpassauth() {
 		return Scheme.SOCKS5.newSocksServerUri(
 				InetAddress.getLoopbackAddress().getHostAddress(), 
-				Integer.valueOf(CHAINED_SOCKS_SERVER_PORT_1_USING_SOCKS5_USERPASS_AUTH))
+				Integer.valueOf(CHAINED_SOCKS_SERVER_PORT_1_USING_SOCKS5_USERPASSAUTH))
 				.newSocksClient(Properties.newInstance(
 						Socks5PropertySpecConstants.SOCKS5_METHODS.newProperty(
 								Methods.newInstance(Method.USERNAME_PASSWORD)),
@@ -360,16 +360,16 @@ public class ChainingIT {
 		SocketEchoHelper.startEchoServer();
 		chainedSocksServers = SocksServerHelper.newStartedSocksServers(
 				newChainedConfigurations());
-		chainedSocksServersUsingSocks5UserpassAuth = 
+		chainedSocksServersUsingSocks5Userpassauth = 
 				SocksServerHelper.newStartedSocksServers(
-						newChainedConfigurationsUsingSocks5UserpassAuth());
+						newChainedConfigurationsUsingSocks5Userpassauth());
 		chainedSocksServersUsingSsl = SocksServerHelper.newStartedSocksServers(
 				newChainedConfigurationsUsingSsl());
 		socksServers = SocksServerHelper.newStartedSocksServers(
 				newConfigurations());
-		socksServersUsingSocks5UserpassAuth = 
+		socksServersUsingSocks5Userpassauth = 
 				SocksServerHelper.newStartedSocksServers(
-						newConfigurationsUsingSocks5UserpassAuth());
+						newConfigurationsUsingSocks5Userpassauth());
 		socksServersUsingSsl = SocksServerHelper.newStartedSocksServers(
 				newConfigurationsUsingSsl());		
 	}
@@ -379,10 +379,10 @@ public class ChainingIT {
 		DatagramSocketEchoHelper.stopEchoServer();
 		SocketEchoHelper.stopEchoServer();
 		SocksServerHelper.stopSocksServers(chainedSocksServers);
-		SocksServerHelper.stopSocksServers(chainedSocksServersUsingSocks5UserpassAuth);
+		SocksServerHelper.stopSocksServers(chainedSocksServersUsingSocks5Userpassauth);
 		SocksServerHelper.stopSocksServers(chainedSocksServersUsingSsl);
 		SocksServerHelper.stopSocksServers(socksServers);
-		SocksServerHelper.stopSocksServers(socksServersUsingSocks5UserpassAuth);
+		SocksServerHelper.stopSocksServers(socksServersUsingSocks5Userpassauth);
 		SocksServerHelper.stopSocksServers(socksServersUsingSsl);
 		ThreadHelper.sleepForThreeSeconds();
 	}
@@ -417,29 +417,29 @@ public class ChainingIT {
 	}
 	
 	@Test
-	public void testThroughSocks5DatagramSocketUsingChainedSocks5ClientToConfigurationsUsingSocks5UserpassAuth01() throws IOException {
+	public void testThroughSocks5DatagramSocketUsingChainedSocks5ClientToConfigurationsUsingSocks5Userpassauth01() throws IOException {
 		String string = TestStringConstants.STRING_01;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
-				newChainedSocks5ClientToConfigurationsUsingSocks5UserpassAuth().newSocksNetObjectFactory());
+				newChainedSocks5ClientToConfigurationsUsingSocks5Userpassauth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 	
 	@Test
-	public void testThroughSocks5DatagramSocketUsingChainedSocks5ClientToConfigurationsUsingSocks5UserpassAuth02() throws IOException {
+	public void testThroughSocks5DatagramSocketUsingChainedSocks5ClientToConfigurationsUsingSocks5Userpassauth02() throws IOException {
 		String string = TestStringConstants.STRING_02;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
-				newChainedSocks5ClientToConfigurationsUsingSocks5UserpassAuth().newSocksNetObjectFactory());
+				newChainedSocks5ClientToConfigurationsUsingSocks5Userpassauth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 	
 	@Test
-	public void testThroughSocks5DatagramSocketUsingChainedSocks5ClientToConfigurationsUsingSocks5UserpassAuth03() throws IOException {
+	public void testThroughSocks5DatagramSocketUsingChainedSocks5ClientToConfigurationsUsingSocks5Userpassauth03() throws IOException {
 		String string = TestStringConstants.STRING_03;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
-				newChainedSocks5ClientToConfigurationsUsingSocks5UserpassAuth().newSocksNetObjectFactory());
+				newChainedSocks5ClientToConfigurationsUsingSocks5Userpassauth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 	
@@ -498,29 +498,29 @@ public class ChainingIT {
 	}
 	
 	@Test
-	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsUsingSocks5UserpassAuth01() throws IOException {
+	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsUsingSocks5Userpassauth01() throws IOException {
 		String string = TestStringConstants.STRING_01;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
-				newSocks5ClientToChainedConfigurationsUsingSocks5UserpassAuth().newSocksNetObjectFactory());
+				newSocks5ClientToChainedConfigurationsUsingSocks5Userpassauth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 	
 	@Test
-	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsUsingSocks5UserpassAuth02() throws IOException {
+	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsUsingSocks5Userpassauth02() throws IOException {
 		String string = TestStringConstants.STRING_02;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
-				newSocks5ClientToChainedConfigurationsUsingSocks5UserpassAuth().newSocksNetObjectFactory());
+				newSocks5ClientToChainedConfigurationsUsingSocks5Userpassauth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 	
 	@Test
-	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsUsingSocks5UserpassAuth03() throws IOException {
+	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsUsingSocks5Userpassauth03() throws IOException {
 		String string = TestStringConstants.STRING_03;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
-				newSocks5ClientToChainedConfigurationsUsingSocks5UserpassAuth().newSocksNetObjectFactory());
+				newSocks5ClientToChainedConfigurationsUsingSocks5Userpassauth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 	
@@ -581,29 +581,29 @@ public class ChainingIT {
 	}
 	
 	@Test
-	public void testThroughSocks5ServerSocketUsingChainedSocks5ClientToConfigurationsUsingSocks5UserpassAuth01() throws IOException {
+	public void testThroughSocks5ServerSocketUsingChainedSocks5ClientToConfigurationsUsingSocks5Userpassauth01() throws IOException {
 		String string = TestStringConstants.STRING_01;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
-				newChainedSocks5ClientToConfigurationsUsingSocks5UserpassAuth().newSocksNetObjectFactory());
+				newChainedSocks5ClientToConfigurationsUsingSocks5Userpassauth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 	
 	@Test
-	public void testThroughSocks5ServerSocketUsingChainedSocks5ClientToConfigurationsUsingSocks5UserpassAuth02() throws IOException {
+	public void testThroughSocks5ServerSocketUsingChainedSocks5ClientToConfigurationsUsingSocks5Userpassauth02() throws IOException {
 		String string = TestStringConstants.STRING_02;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
-				newChainedSocks5ClientToConfigurationsUsingSocks5UserpassAuth().newSocksNetObjectFactory());
+				newChainedSocks5ClientToConfigurationsUsingSocks5Userpassauth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 	
 	@Test
-	public void testThroughSocks5ServerSocketUsingChainedSocks5ClientToConfigurationsUsingSocks5UserpassAuth03() throws IOException {
+	public void testThroughSocks5ServerSocketUsingChainedSocks5ClientToConfigurationsUsingSocks5Userpassauth03() throws IOException {
 		String string = TestStringConstants.STRING_03;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
-				newChainedSocks5ClientToConfigurationsUsingSocks5UserpassAuth().newSocksNetObjectFactory());
+				newChainedSocks5ClientToConfigurationsUsingSocks5Userpassauth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 	@Test
@@ -661,29 +661,29 @@ public class ChainingIT {
 	}
 	
 	@Test
-	public void testThroughSocks5ServerSocketUsingSocks5ClientToChainedConfigurationsUsingSocks5UserpassAuth01() throws IOException {
+	public void testThroughSocks5ServerSocketUsingSocks5ClientToChainedConfigurationsUsingSocks5Userpassauth01() throws IOException {
 		String string = TestStringConstants.STRING_01;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
-				newSocks5ClientToChainedConfigurationsUsingSocks5UserpassAuth().newSocksNetObjectFactory());
+				newSocks5ClientToChainedConfigurationsUsingSocks5Userpassauth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 	
 	@Test
-	public void testThroughSocks5ServerSocketUsingSocks5ClientToChainedConfigurationsUsingSocks5UserpassAuth02() throws IOException {
+	public void testThroughSocks5ServerSocketUsingSocks5ClientToChainedConfigurationsUsingSocks5Userpassauth02() throws IOException {
 		String string = TestStringConstants.STRING_02;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
-				newSocks5ClientToChainedConfigurationsUsingSocks5UserpassAuth().newSocksNetObjectFactory());
+				newSocks5ClientToChainedConfigurationsUsingSocks5Userpassauth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 	
 	@Test
-	public void testThroughSocks5ServerSocketUsingSocks5ClientToChainedConfigurationsUsingSocks5UserpassAuth03() throws IOException {
+	public void testThroughSocks5ServerSocketUsingSocks5ClientToChainedConfigurationsUsingSocks5Userpassauth03() throws IOException {
 		String string = TestStringConstants.STRING_03;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
-				newSocks5ClientToChainedConfigurationsUsingSocks5UserpassAuth().newSocksNetObjectFactory());
+				newSocks5ClientToChainedConfigurationsUsingSocks5Userpassauth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 	
@@ -744,29 +744,29 @@ public class ChainingIT {
 	}
 	
 	@Test
-	public void testThroughSocks5SocketUsingChainedSocks5ClientToConfigurationsUsingSocks5UserpassAuth01() throws IOException {
+	public void testThroughSocks5SocketUsingChainedSocks5ClientToConfigurationsUsingSocks5Userpassauth01() throws IOException {
 		String string = TestStringConstants.STRING_01;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
-				newChainedSocks5ClientToConfigurationsUsingSocks5UserpassAuth().newSocksNetObjectFactory());
+				newChainedSocks5ClientToConfigurationsUsingSocks5Userpassauth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 	
 	@Test
-	public void testThroughSocks5SocketUsingChainedSocks5ClientToConfigurationsUsingSocks5UserpassAuth02() throws IOException {
+	public void testThroughSocks5SocketUsingChainedSocks5ClientToConfigurationsUsingSocks5Userpassauth02() throws IOException {
 		String string = TestStringConstants.STRING_02;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
-				newChainedSocks5ClientToConfigurationsUsingSocks5UserpassAuth().newSocksNetObjectFactory());
+				newChainedSocks5ClientToConfigurationsUsingSocks5Userpassauth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 	
 	@Test
-	public void testThroughSocks5SocketUsingChainedSocks5ClientToConfigurationsUsingSocks5UserpassAuth03() throws IOException {
+	public void testThroughSocks5SocketUsingChainedSocks5ClientToConfigurationsUsingSocks5Userpassauth03() throws IOException {
 		String string = TestStringConstants.STRING_03;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
-				newChainedSocks5ClientToConfigurationsUsingSocks5UserpassAuth().newSocksNetObjectFactory());
+				newChainedSocks5ClientToConfigurationsUsingSocks5Userpassauth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 	
@@ -825,29 +825,29 @@ public class ChainingIT {
 	}
 	
 	@Test
-	public void testThroughSocks5SocketUsingSocks5ClientToChainedConfigurationsUsingSocks5UserpassAuth01() throws IOException {
+	public void testThroughSocks5SocketUsingSocks5ClientToChainedConfigurationsUsingSocks5Userpassauth01() throws IOException {
 		String string = TestStringConstants.STRING_01;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
-				newSocks5ClientToChainedConfigurationsUsingSocks5UserpassAuth().newSocksNetObjectFactory());
+				newSocks5ClientToChainedConfigurationsUsingSocks5Userpassauth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 	
 	@Test
-	public void testThroughSocks5SocketUsingSocks5ClientToChainedConfigurationsUsingSocks5UserpassAuth02() throws IOException {
+	public void testThroughSocks5SocketUsingSocks5ClientToChainedConfigurationsUsingSocks5Userpassauth02() throws IOException {
 		String string = TestStringConstants.STRING_02;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
-				newSocks5ClientToChainedConfigurationsUsingSocks5UserpassAuth().newSocksNetObjectFactory());
+				newSocks5ClientToChainedConfigurationsUsingSocks5Userpassauth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 	
 	@Test
-	public void testThroughSocks5SocketUsingSocks5ClientToChainedConfigurationsUsingSocks5UserpassAuth03() throws IOException {
+	public void testThroughSocks5SocketUsingSocks5ClientToChainedConfigurationsUsingSocks5Userpassauth03() throws IOException {
 		String string = TestStringConstants.STRING_03;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
-				newSocks5ClientToChainedConfigurationsUsingSocks5UserpassAuth().newSocksNetObjectFactory());
+				newSocks5ClientToChainedConfigurationsUsingSocks5Userpassauth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 	

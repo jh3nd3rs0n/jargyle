@@ -13,7 +13,7 @@ public final class ConfigurationHelper {
 						Port.newInstance(port))));
 	}
 	
-	public static Configuration newConfigurationUsingSocks5UserpassAuth(
+	public static Configuration newConfigurationUsingSocks5Userpassauth(
 			final int port) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Aladdin:opensesame ");

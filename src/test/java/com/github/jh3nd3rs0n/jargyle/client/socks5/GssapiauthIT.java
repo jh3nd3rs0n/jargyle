@@ -40,7 +40,7 @@ import com.github.jh3nd3rs0n.jargyle.transport.socks5.Methods;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.gssapiauth.ProtectionLevel;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.gssapiauth.ProtectionLevels;
 
-public class GssapiAuthIT {
+public class GssapiauthIT {
 	
 	private static final String KDC_REALM = "EXAMPLE.COM";
 	private static final String KDC_HOST = 
@@ -58,8 +58,8 @@ public class GssapiAuthIT {
 	private static final String LOGIN_CONFIG_PROPERTY_NAME = 
 			"java.security.auth.login.config";
 	
-	private static final int SOCKS_SERVER_PORT_USING_SOCKS5_GSSAPI_AUTH = 8100;
-	private static final int SOCKS_SERVER_PORT_USING_SOCKS5_GSSAPI_AUTH_NEC_REFERENCE_IMPL = 8200;
+	private static final int SOCKS_SERVER_PORT_USING_SOCKS5_GSSAPIAUTH = 8100;
+	private static final int SOCKS_SERVER_PORT_USING_SOCKS5_GSSAPIAUTH_NEC_REFERENCE_IMPL = 8200;
 	
 	private static Path baseDir = null;
 	private static Path aliceKeytab = null;
@@ -69,29 +69,29 @@ public class GssapiAuthIT {
 	
 	private static SimpleKdcServer kerbyServer = null;
 
-	private static List<SocksServer> socksServersUsingSocks5GssapiAuth;
-	private static List<SocksServer> socksServersUsingSocks5GssapiAuthNecReferenceImpl;
+	private static List<SocksServer> socksServersUsingSocks5Gssapiauth;
+	private static List<SocksServer> socksServersUsingSocks5GssapiauthNecReferenceImpl;
 	
-	private static Configuration newConfigurationUsingSocks5GssapiAuth() {
+	private static Configuration newConfigurationUsingSocks5Gssapiauth() {
 		return ImmutableConfiguration.newInstance(Settings.newInstance(
 				GeneralSettingSpecConstants.PORT.newSetting(
-						Port.newInstance(SOCKS_SERVER_PORT_USING_SOCKS5_GSSAPI_AUTH)),
+						Port.newInstance(SOCKS_SERVER_PORT_USING_SOCKS5_GSSAPIAUTH)),
 				Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
 						Methods.newInstance(Method.GSSAPI))));
 	}
 	
-	private static Configuration newConfigurationUsingSocks5GssapiAuthNecReferenceImpl() {
+	private static Configuration newConfigurationUsingSocks5GssapiauthNecReferenceImpl() {
 		return ImmutableConfiguration.newInstance(Settings.newInstance(
 				GeneralSettingSpecConstants.PORT.newSetting(
 						Port.newInstance(
-								SOCKS_SERVER_PORT_USING_SOCKS5_GSSAPI_AUTH_NEC_REFERENCE_IMPL)),
+								SOCKS_SERVER_PORT_USING_SOCKS5_GSSAPIAUTH_NEC_REFERENCE_IMPL)),
 				Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
 						Methods.newInstance(Method.GSSAPI)),
 				Socks5SettingSpecConstants.SOCKS5_GSSAPIAUTH_NEC_REFERENCE_IMPL.newSetting(
 						Boolean.TRUE)));
 	}
 	
-	private static SocksClient newSocks5ClientUsingSocks5GssapiAuth(
+	private static SocksClient newSocks5ClientUsingSocks5Gssapiauth(
 			final ProtectionLevels protectionLevels) {
 		Properties properties = Properties.newInstance(
 				Socks5PropertySpecConstants.SOCKS5_METHODS.newProperty(
@@ -104,11 +104,11 @@ public class GssapiAuthIT {
 						Boolean.valueOf(false)));
 		return Scheme.SOCKS5.newSocksServerUri(
 				InetAddress.getLoopbackAddress().getHostAddress(), 
-				SOCKS_SERVER_PORT_USING_SOCKS5_GSSAPI_AUTH)
+				SOCKS_SERVER_PORT_USING_SOCKS5_GSSAPIAUTH)
 				.newSocksClient(properties);		
 	}
 	
-	private static SocksClient newSocks5ClientUsingSocks5GssapiAuthNecReferenceImpl(
+	private static SocksClient newSocks5ClientUsingSocks5GssapiauthNecReferenceImpl(
 			final ProtectionLevels protectionLevels) {
 		Properties properties = Properties.newInstance(
 				Socks5PropertySpecConstants.SOCKS5_METHODS.newProperty(
@@ -121,7 +121,7 @@ public class GssapiAuthIT {
 						Boolean.valueOf(true)));
 		return Scheme.SOCKS5.newSocksServerUri(
 				InetAddress.getLoopbackAddress().getHostAddress(), 
-				SOCKS_SERVER_PORT_USING_SOCKS5_GSSAPI_AUTH_NEC_REFERENCE_IMPL)
+				SOCKS_SERVER_PORT_USING_SOCKS5_GSSAPIAUTH_NEC_REFERENCE_IMPL)
 				.newSocksClient(properties);		
 	}
 	@BeforeClass
@@ -180,12 +180,12 @@ public class GssapiAuthIT {
 		
 		DatagramSocketEchoHelper.startEchoServer();
 		SocketEchoHelper.startEchoServer();
-		socksServersUsingSocks5GssapiAuth = 
+		socksServersUsingSocks5Gssapiauth = 
 				SocksServerHelper.newStartedSocksServers(Arrays.asList(
-						newConfigurationUsingSocks5GssapiAuth()));
-		socksServersUsingSocks5GssapiAuthNecReferenceImpl =
+						newConfigurationUsingSocks5Gssapiauth()));
+		socksServersUsingSocks5GssapiauthNecReferenceImpl =
 				SocksServerHelper.newStartedSocksServers(Arrays.asList(
-						newConfigurationUsingSocks5GssapiAuthNecReferenceImpl()));
+						newConfigurationUsingSocks5GssapiauthNecReferenceImpl()));
 	}
 
 	@AfterClass
@@ -219,583 +219,583 @@ public class GssapiAuthIT {
 		System.clearProperty(LOGIN_CONFIG_PROPERTY_NAME);
 		DatagramSocketEchoHelper.stopEchoServer();
 		SocketEchoHelper.stopEchoServer();
-		SocksServerHelper.stopSocksServers(socksServersUsingSocks5GssapiAuth);
+		SocksServerHelper.stopSocksServers(socksServersUsingSocks5Gssapiauth);
 		SocksServerHelper.stopSocksServers(
-				socksServersUsingSocks5GssapiAuthNecReferenceImpl);
+				socksServersUsingSocks5GssapiauthNecReferenceImpl);
 		ThreadHelper.sleepForThreeSeconds();
 	}
 	
 	@Test
-	public void testThroughSocks5DatagramSocketUsingSocks5GssapiAuth01() throws IOException {
+	public void testThroughSocks5DatagramSocketUsingSocks5Gssapiauth01() throws IOException {
 		String string = TestStringConstants.STRING_01;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
-				GssapiAuthIT.newSocks5ClientUsingSocks5GssapiAuth(
+				GssapiauthIT.newSocks5ClientUsingSocks5Gssapiauth(
 						ProtectionLevels.newInstance(ProtectionLevel.NONE)).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testThroughSocks5DatagramSocketUsingSocks5GssapiAuth02() throws IOException {
+	public void testThroughSocks5DatagramSocketUsingSocks5Gssapiauth02() throws IOException {
 		String string = TestStringConstants.STRING_02;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
-				GssapiAuthIT.newSocks5ClientUsingSocks5GssapiAuth(
+				GssapiauthIT.newSocks5ClientUsingSocks5Gssapiauth(
 						ProtectionLevels.newInstance(ProtectionLevel.NONE)).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testThroughSocks5DatagramSocketUsingSocks5GssapiAuth03() throws IOException {
+	public void testThroughSocks5DatagramSocketUsingSocks5Gssapiauth03() throws IOException {
 		String string = TestStringConstants.STRING_03;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
-				GssapiAuthIT.newSocks5ClientUsingSocks5GssapiAuth(
+				GssapiauthIT.newSocks5ClientUsingSocks5Gssapiauth(
 						ProtectionLevels.newInstance(ProtectionLevel.NONE)).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testThroughSocks5DatagramSocketUsingSocks5GssapiAuthNecReferenceImpl01() throws IOException {
+	public void testThroughSocks5DatagramSocketUsingSocks5GssapiauthNecReferenceImpl01() throws IOException {
 		String string = TestStringConstants.STRING_01;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
-				GssapiAuthIT.newSocks5ClientUsingSocks5GssapiAuthNecReferenceImpl(
+				GssapiauthIT.newSocks5ClientUsingSocks5GssapiauthNecReferenceImpl(
 						ProtectionLevels.newInstance(ProtectionLevel.NONE)).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testThroughSocks5DatagramSocketUsingSocks5GssapiAuthNecReferenceImpl02() throws IOException {
+	public void testThroughSocks5DatagramSocketUsingSocks5GssapiauthNecReferenceImpl02() throws IOException {
 		String string = TestStringConstants.STRING_02;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
-				GssapiAuthIT.newSocks5ClientUsingSocks5GssapiAuthNecReferenceImpl(
+				GssapiauthIT.newSocks5ClientUsingSocks5GssapiauthNecReferenceImpl(
 						ProtectionLevels.newInstance(ProtectionLevel.NONE)).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testThroughSocks5DatagramSocketUsingSocks5GssapiAuthNecReferenceImpl03() throws IOException {
+	public void testThroughSocks5DatagramSocketUsingSocks5GssapiauthNecReferenceImpl03() throws IOException {
 		String string = TestStringConstants.STRING_03;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
-				GssapiAuthIT.newSocks5ClientUsingSocks5GssapiAuthNecReferenceImpl(
+				GssapiauthIT.newSocks5ClientUsingSocks5GssapiauthNecReferenceImpl(
 						ProtectionLevels.newInstance(ProtectionLevel.NONE)).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testThroughSocks5DatagramSocketUsingSocks5GssapiAuthNecReferenceImplWithIntegAndConfProtection01() throws IOException {
+	public void testThroughSocks5DatagramSocketUsingSocks5GssapiauthNecReferenceImplWithIntegAndConfProtection01() throws IOException {
 		String string = TestStringConstants.STRING_01;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
-				GssapiAuthIT.newSocks5ClientUsingSocks5GssapiAuthNecReferenceImpl(
+				GssapiauthIT.newSocks5ClientUsingSocks5GssapiauthNecReferenceImpl(
 						ProtectionLevels.newInstance(
 								ProtectionLevel.REQUIRED_INTEG_AND_CONF)).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testThroughSocks5DatagramSocketUsingSocks5GssapiAuthNecReferenceImplWithIntegAndConfProtection02() throws IOException {
+	public void testThroughSocks5DatagramSocketUsingSocks5GssapiauthNecReferenceImplWithIntegAndConfProtection02() throws IOException {
 		String string = TestStringConstants.STRING_02;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
-				GssapiAuthIT.newSocks5ClientUsingSocks5GssapiAuthNecReferenceImpl(
+				GssapiauthIT.newSocks5ClientUsingSocks5GssapiauthNecReferenceImpl(
 						ProtectionLevels.newInstance(
 								ProtectionLevel.REQUIRED_INTEG_AND_CONF)).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testThroughSocks5DatagramSocketUsingSocks5GssapiAuthNecReferenceImplWithIntegAndConfProtection03() throws IOException {
+	public void testThroughSocks5DatagramSocketUsingSocks5GssapiauthNecReferenceImplWithIntegAndConfProtection03() throws IOException {
 		String string = TestStringConstants.STRING_03;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
-				GssapiAuthIT.newSocks5ClientUsingSocks5GssapiAuthNecReferenceImpl(
+				GssapiauthIT.newSocks5ClientUsingSocks5GssapiauthNecReferenceImpl(
 						ProtectionLevels.newInstance(
 								ProtectionLevel.REQUIRED_INTEG_AND_CONF)).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testThroughSocks5DatagramSocketUsingSocks5GssapiAuthNecReferenceImplWithIntegProtection01() throws IOException {
+	public void testThroughSocks5DatagramSocketUsingSocks5GssapiauthNecReferenceImplWithIntegProtection01() throws IOException {
 		String string = TestStringConstants.STRING_01;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
-				GssapiAuthIT.newSocks5ClientUsingSocks5GssapiAuthNecReferenceImpl(
+				GssapiauthIT.newSocks5ClientUsingSocks5GssapiauthNecReferenceImpl(
 						ProtectionLevels.newInstance(
 								ProtectionLevel.REQUIRED_INTEG)).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testThroughSocks5DatagramSocketUsingSocks5GssapiAuthNecReferenceImplWithIntegProtection02() throws IOException {
+	public void testThroughSocks5DatagramSocketUsingSocks5GssapiauthNecReferenceImplWithIntegProtection02() throws IOException {
 		String string = TestStringConstants.STRING_02;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
-				GssapiAuthIT.newSocks5ClientUsingSocks5GssapiAuthNecReferenceImpl(
+				GssapiauthIT.newSocks5ClientUsingSocks5GssapiauthNecReferenceImpl(
 						ProtectionLevels.newInstance(
 								ProtectionLevel.REQUIRED_INTEG)).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testThroughSocks5DatagramSocketUsingSocks5GssapiAuthNecReferenceImplWithIntegProtection03() throws IOException {
+	public void testThroughSocks5DatagramSocketUsingSocks5GssapiauthNecReferenceImplWithIntegProtection03() throws IOException {
 		String string = TestStringConstants.STRING_03;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
-				GssapiAuthIT.newSocks5ClientUsingSocks5GssapiAuthNecReferenceImpl(
+				GssapiauthIT.newSocks5ClientUsingSocks5GssapiauthNecReferenceImpl(
 						ProtectionLevels.newInstance(
 								ProtectionLevel.REQUIRED_INTEG)).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testThroughSocks5DatagramSocketUsingSocks5GssapiAuthWithIntegAndConfProtection01() throws IOException {
+	public void testThroughSocks5DatagramSocketUsingSocks5GssapiauthWithIntegAndConfProtection01() throws IOException {
 		String string = TestStringConstants.STRING_01;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
-				GssapiAuthIT.newSocks5ClientUsingSocks5GssapiAuth(
+				GssapiauthIT.newSocks5ClientUsingSocks5Gssapiauth(
 						ProtectionLevels.newInstance(
 								ProtectionLevel.REQUIRED_INTEG_AND_CONF)).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testThroughSocks5DatagramSocketUsingSocks5GssapiAuthWithIntegAndConfProtection02() throws IOException {
+	public void testThroughSocks5DatagramSocketUsingSocks5GssapiauthWithIntegAndConfProtection02() throws IOException {
 		String string = TestStringConstants.STRING_02;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
-				GssapiAuthIT.newSocks5ClientUsingSocks5GssapiAuth(
+				GssapiauthIT.newSocks5ClientUsingSocks5Gssapiauth(
 						ProtectionLevels.newInstance(
 								ProtectionLevel.REQUIRED_INTEG_AND_CONF)).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testThroughSocks5DatagramSocketUsingSocks5GssapiAuthWithIntegAndConfProtection03() throws IOException {
+	public void testThroughSocks5DatagramSocketUsingSocks5GssapiauthWithIntegAndConfProtection03() throws IOException {
 		String string = TestStringConstants.STRING_03;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
-				GssapiAuthIT.newSocks5ClientUsingSocks5GssapiAuth(
+				GssapiauthIT.newSocks5ClientUsingSocks5Gssapiauth(
 						ProtectionLevels.newInstance(
 								ProtectionLevel.REQUIRED_INTEG_AND_CONF)).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 	
 	@Test
-	public void testThroughSocks5DatagramSocketUsingSocks5GssapiAuthWithIntegProtection01() throws IOException {
+	public void testThroughSocks5DatagramSocketUsingSocks5GssapiauthWithIntegProtection01() throws IOException {
 		String string = TestStringConstants.STRING_01;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
-				GssapiAuthIT.newSocks5ClientUsingSocks5GssapiAuth(
+				GssapiauthIT.newSocks5ClientUsingSocks5Gssapiauth(
 						ProtectionLevels.newInstance(
 								ProtectionLevel.REQUIRED_INTEG)).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testThroughSocks5DatagramSocketUsingSocks5GssapiAuthWithIntegProtection02() throws IOException {
+	public void testThroughSocks5DatagramSocketUsingSocks5GssapiauthWithIntegProtection02() throws IOException {
 		String string = TestStringConstants.STRING_02;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
-				GssapiAuthIT.newSocks5ClientUsingSocks5GssapiAuth(
+				GssapiauthIT.newSocks5ClientUsingSocks5Gssapiauth(
 						ProtectionLevels.newInstance(
 								ProtectionLevel.REQUIRED_INTEG)).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testThroughSocks5DatagramSocketUsingSocks5GssapiAuthWithIntegProtection03() throws IOException {
+	public void testThroughSocks5DatagramSocketUsingSocks5GssapiauthWithIntegProtection03() throws IOException {
 		String string = TestStringConstants.STRING_03;
 		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
 				string, 
-				GssapiAuthIT.newSocks5ClientUsingSocks5GssapiAuth(
+				GssapiauthIT.newSocks5ClientUsingSocks5Gssapiauth(
 						ProtectionLevels.newInstance(
 								ProtectionLevel.REQUIRED_INTEG)).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 	
 	@Test
-	public void testThroughSocks5ServerSocketUsingSocks5GssapiAuth01() throws IOException {
+	public void testThroughSocks5ServerSocketUsingSocks5Gssapiauth01() throws IOException {
 		String string = TestStringConstants.STRING_01;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
-				GssapiAuthIT.newSocks5ClientUsingSocks5GssapiAuth(
+				GssapiauthIT.newSocks5ClientUsingSocks5Gssapiauth(
 						ProtectionLevels.newInstance(ProtectionLevel.NONE)).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testThroughSocks5ServerSocketUsingSocks5GssapiAuth02() throws IOException {
+	public void testThroughSocks5ServerSocketUsingSocks5Gssapiauth02() throws IOException {
 		String string = TestStringConstants.STRING_02;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
-				GssapiAuthIT.newSocks5ClientUsingSocks5GssapiAuth(
+				GssapiauthIT.newSocks5ClientUsingSocks5Gssapiauth(
 						ProtectionLevels.newInstance(ProtectionLevel.NONE)).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testThroughSocks5ServerSocketUsingSocks5GssapiAuth03() throws IOException {
+	public void testThroughSocks5ServerSocketUsingSocks5Gssapiauth03() throws IOException {
 		String string = TestStringConstants.STRING_03;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
-				GssapiAuthIT.newSocks5ClientUsingSocks5GssapiAuth(
+				GssapiauthIT.newSocks5ClientUsingSocks5Gssapiauth(
 						ProtectionLevels.newInstance(ProtectionLevel.NONE)).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testThroughSocks5ServerSocketUsingSocks5GssapiAuthNecReferenceImpl01() throws IOException {
+	public void testThroughSocks5ServerSocketUsingSocks5GssapiauthNecReferenceImpl01() throws IOException {
 		String string = TestStringConstants.STRING_01;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
-				GssapiAuthIT.newSocks5ClientUsingSocks5GssapiAuthNecReferenceImpl(
+				GssapiauthIT.newSocks5ClientUsingSocks5GssapiauthNecReferenceImpl(
 						ProtectionLevels.newInstance(ProtectionLevel.NONE)).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testThroughSocks5ServerSocketUsingSocks5GssapiAuthNecReferenceImpl02() throws IOException {
+	public void testThroughSocks5ServerSocketUsingSocks5GssapiauthNecReferenceImpl02() throws IOException {
 		String string = TestStringConstants.STRING_02;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
-				GssapiAuthIT.newSocks5ClientUsingSocks5GssapiAuthNecReferenceImpl(
+				GssapiauthIT.newSocks5ClientUsingSocks5GssapiauthNecReferenceImpl(
 						ProtectionLevels.newInstance(ProtectionLevel.NONE)).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testThroughSocks5ServerSocketUsingSocks5GssapiAuthNecReferenceImpl03() throws IOException {
+	public void testThroughSocks5ServerSocketUsingSocks5GssapiauthNecReferenceImpl03() throws IOException {
 		String string = TestStringConstants.STRING_03;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
-				GssapiAuthIT.newSocks5ClientUsingSocks5GssapiAuthNecReferenceImpl(
+				GssapiauthIT.newSocks5ClientUsingSocks5GssapiauthNecReferenceImpl(
 						ProtectionLevels.newInstance(ProtectionLevel.NONE)).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 	
 	@Test
-	public void testThroughSocks5ServerSocketUsingSocks5GssapiAuthNecReferenceImplWithIntegAndConfProtection01() throws IOException {
+	public void testThroughSocks5ServerSocketUsingSocks5GssapiauthNecReferenceImplWithIntegAndConfProtection01() throws IOException {
 		String string = TestStringConstants.STRING_01;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
-				GssapiAuthIT.newSocks5ClientUsingSocks5GssapiAuthNecReferenceImpl(
+				GssapiauthIT.newSocks5ClientUsingSocks5GssapiauthNecReferenceImpl(
 						ProtectionLevels.newInstance(
 								ProtectionLevel.REQUIRED_INTEG_AND_CONF)).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testThroughSocks5ServerSocketUsingSocks5GssapiAuthNecReferenceImplWithIntegAndConfProtection02() throws IOException {
+	public void testThroughSocks5ServerSocketUsingSocks5GssapiauthNecReferenceImplWithIntegAndConfProtection02() throws IOException {
 		String string = TestStringConstants.STRING_02;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
-				GssapiAuthIT.newSocks5ClientUsingSocks5GssapiAuthNecReferenceImpl(
+				GssapiauthIT.newSocks5ClientUsingSocks5GssapiauthNecReferenceImpl(
 						ProtectionLevels.newInstance(
 								ProtectionLevel.REQUIRED_INTEG_AND_CONF)).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testThroughSocks5ServerSocketUsingSocks5GssapiAuthNecReferenceImplWithIntegAndConfProtection03() throws IOException {
+	public void testThroughSocks5ServerSocketUsingSocks5GssapiauthNecReferenceImplWithIntegAndConfProtection03() throws IOException {
 		String string = TestStringConstants.STRING_03;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
-				GssapiAuthIT.newSocks5ClientUsingSocks5GssapiAuthNecReferenceImpl(
+				GssapiauthIT.newSocks5ClientUsingSocks5GssapiauthNecReferenceImpl(
 						ProtectionLevels.newInstance(
 								ProtectionLevel.REQUIRED_INTEG_AND_CONF)).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testThroughSocks5ServerSocketUsingSocks5GssapiAuthNecReferenceImplWithIntegProtection01() throws IOException {
+	public void testThroughSocks5ServerSocketUsingSocks5GssapiauthNecReferenceImplWithIntegProtection01() throws IOException {
 		String string = TestStringConstants.STRING_01;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
-				GssapiAuthIT.newSocks5ClientUsingSocks5GssapiAuthNecReferenceImpl(
+				GssapiauthIT.newSocks5ClientUsingSocks5GssapiauthNecReferenceImpl(
 						ProtectionLevels.newInstance(
 								ProtectionLevel.REQUIRED_INTEG)).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testThroughSocks5ServerSocketUsingSocks5GssapiAuthNecReferenceImplWithIntegProtection02() throws IOException {
+	public void testThroughSocks5ServerSocketUsingSocks5GssapiauthNecReferenceImplWithIntegProtection02() throws IOException {
 		String string = TestStringConstants.STRING_02;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
-				GssapiAuthIT.newSocks5ClientUsingSocks5GssapiAuthNecReferenceImpl(
+				GssapiauthIT.newSocks5ClientUsingSocks5GssapiauthNecReferenceImpl(
 						ProtectionLevels.newInstance(
 								ProtectionLevel.REQUIRED_INTEG)).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testThroughSocks5ServerSocketUsingSocks5GssapiAuthNecReferenceImplWithIntegProtection03() throws IOException {
+	public void testThroughSocks5ServerSocketUsingSocks5GssapiauthNecReferenceImplWithIntegProtection03() throws IOException {
 		String string = TestStringConstants.STRING_03;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
-				GssapiAuthIT.newSocks5ClientUsingSocks5GssapiAuthNecReferenceImpl(
+				GssapiauthIT.newSocks5ClientUsingSocks5GssapiauthNecReferenceImpl(
 						ProtectionLevels.newInstance(
 								ProtectionLevel.REQUIRED_INTEG)).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testThroughSocks5ServerSocketUsingSocks5GssapiAuthWithIntegAndConfProtection01() throws IOException {
+	public void testThroughSocks5ServerSocketUsingSocks5GssapiauthWithIntegAndConfProtection01() throws IOException {
 		String string = TestStringConstants.STRING_01;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
-				GssapiAuthIT.newSocks5ClientUsingSocks5GssapiAuth(
+				GssapiauthIT.newSocks5ClientUsingSocks5Gssapiauth(
 						ProtectionLevels.newInstance(
 								ProtectionLevel.REQUIRED_INTEG_AND_CONF)).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testThroughSocks5ServerSocketUsingSocks5GssapiAuthWithIntegAndConfProtection02() throws IOException {
+	public void testThroughSocks5ServerSocketUsingSocks5GssapiauthWithIntegAndConfProtection02() throws IOException {
 		String string = TestStringConstants.STRING_02;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
-				GssapiAuthIT.newSocks5ClientUsingSocks5GssapiAuth(
+				GssapiauthIT.newSocks5ClientUsingSocks5Gssapiauth(
 						ProtectionLevels.newInstance(
 								ProtectionLevel.REQUIRED_INTEG_AND_CONF)).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testThroughSocks5ServerSocketUsingSocks5GssapiAuthWithIntegAndConfProtection03() throws IOException {
+	public void testThroughSocks5ServerSocketUsingSocks5GssapiauthWithIntegAndConfProtection03() throws IOException {
 		String string = TestStringConstants.STRING_03;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
-				GssapiAuthIT.newSocks5ClientUsingSocks5GssapiAuth(
+				GssapiauthIT.newSocks5ClientUsingSocks5Gssapiauth(
 						ProtectionLevels.newInstance(
 								ProtectionLevel.REQUIRED_INTEG_AND_CONF)).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testThroughSocks5ServerSocketUsingSocks5GssapiAuthWithIntegProtection01() throws IOException {
+	public void testThroughSocks5ServerSocketUsingSocks5GssapiauthWithIntegProtection01() throws IOException {
 		String string = TestStringConstants.STRING_01;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
-				GssapiAuthIT.newSocks5ClientUsingSocks5GssapiAuth(
+				GssapiauthIT.newSocks5ClientUsingSocks5Gssapiauth(
 						ProtectionLevels.newInstance(
 								ProtectionLevel.REQUIRED_INTEG)).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testThroughSocks5ServerSocketUsingSocks5GssapiAuthWithIntegProtection02() throws IOException {
+	public void testThroughSocks5ServerSocketUsingSocks5GssapiauthWithIntegProtection02() throws IOException {
 		String string = TestStringConstants.STRING_02;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
-				GssapiAuthIT.newSocks5ClientUsingSocks5GssapiAuth(
+				GssapiauthIT.newSocks5ClientUsingSocks5Gssapiauth(
 						ProtectionLevels.newInstance(
 								ProtectionLevel.REQUIRED_INTEG)).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testThroughSocks5ServerSocketUsingSocks5GssapiAuthWithIntegProtection03() throws IOException {
+	public void testThroughSocks5ServerSocketUsingSocks5GssapiauthWithIntegProtection03() throws IOException {
 		String string = TestStringConstants.STRING_03;
 		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
 				string, 
-				GssapiAuthIT.newSocks5ClientUsingSocks5GssapiAuth(
+				GssapiauthIT.newSocks5ClientUsingSocks5Gssapiauth(
 						ProtectionLevels.newInstance(
 								ProtectionLevel.REQUIRED_INTEG)).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testThroughSocks5SocketUsingSocks5GssapiAuth01() throws IOException {
+	public void testThroughSocks5SocketUsingSocks5Gssapiauth01() throws IOException {
 		String string = TestStringConstants.STRING_01;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
-				GssapiAuthIT.newSocks5ClientUsingSocks5GssapiAuth(
+				GssapiauthIT.newSocks5ClientUsingSocks5Gssapiauth(
 						ProtectionLevels.newInstance(ProtectionLevel.NONE)).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testThroughSocks5SocketUsingSocks5GssapiAuth02() throws IOException {
+	public void testThroughSocks5SocketUsingSocks5Gssapiauth02() throws IOException {
 		String string = TestStringConstants.STRING_02;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
-				GssapiAuthIT.newSocks5ClientUsingSocks5GssapiAuth(
+				GssapiauthIT.newSocks5ClientUsingSocks5Gssapiauth(
 						ProtectionLevels.newInstance(ProtectionLevel.NONE)).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testThroughSocks5SocketUsingSocks5GssapiAuth03() throws IOException {
+	public void testThroughSocks5SocketUsingSocks5Gssapiauth03() throws IOException {
 		String string = TestStringConstants.STRING_03;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
-				GssapiAuthIT.newSocks5ClientUsingSocks5GssapiAuth(
+				GssapiauthIT.newSocks5ClientUsingSocks5Gssapiauth(
 						ProtectionLevels.newInstance(ProtectionLevel.NONE)).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testThroughSocks5SocketUsingSocks5GssapiAuthNecReferenceImpl01() throws IOException {
+	public void testThroughSocks5SocketUsingSocks5GssapiauthNecReferenceImpl01() throws IOException {
 		String string = TestStringConstants.STRING_01;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
-				GssapiAuthIT.newSocks5ClientUsingSocks5GssapiAuthNecReferenceImpl(
+				GssapiauthIT.newSocks5ClientUsingSocks5GssapiauthNecReferenceImpl(
 						ProtectionLevels.newInstance(ProtectionLevel.NONE)).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testThroughSocks5SocketUsingSocks5GssapiAuthNecReferenceImpl02() throws IOException {
+	public void testThroughSocks5SocketUsingSocks5GssapiauthNecReferenceImpl02() throws IOException {
 		String string = TestStringConstants.STRING_02;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
-				GssapiAuthIT.newSocks5ClientUsingSocks5GssapiAuthNecReferenceImpl(
+				GssapiauthIT.newSocks5ClientUsingSocks5GssapiauthNecReferenceImpl(
 						ProtectionLevels.newInstance(ProtectionLevel.NONE)).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testThroughSocks5SocketUsingSocks5GssapiAuthNecReferenceImpl03() throws IOException {
+	public void testThroughSocks5SocketUsingSocks5GssapiauthNecReferenceImpl03() throws IOException {
 		String string = TestStringConstants.STRING_03;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
-				GssapiAuthIT.newSocks5ClientUsingSocks5GssapiAuthNecReferenceImpl(
+				GssapiauthIT.newSocks5ClientUsingSocks5GssapiauthNecReferenceImpl(
 						ProtectionLevels.newInstance(ProtectionLevel.NONE)).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testThroughSocks5SocketUsingSocks5GssapiAuthNecReferenceImplWithIntegAndConfProtection01() throws IOException {
+	public void testThroughSocks5SocketUsingSocks5GssapiauthNecReferenceImplWithIntegAndConfProtection01() throws IOException {
 		String string = TestStringConstants.STRING_01;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
-				GssapiAuthIT.newSocks5ClientUsingSocks5GssapiAuthNecReferenceImpl(
+				GssapiauthIT.newSocks5ClientUsingSocks5GssapiauthNecReferenceImpl(
 						ProtectionLevels.newInstance(
 								ProtectionLevel.REQUIRED_INTEG_AND_CONF)).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testThroughSocks5SocketUsingSocks5GssapiAuthNecReferenceImplWithIntegAndConfProtection02() throws IOException {
+	public void testThroughSocks5SocketUsingSocks5GssapiauthNecReferenceImplWithIntegAndConfProtection02() throws IOException {
 		String string = TestStringConstants.STRING_02;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
-				GssapiAuthIT.newSocks5ClientUsingSocks5GssapiAuthNecReferenceImpl(
+				GssapiauthIT.newSocks5ClientUsingSocks5GssapiauthNecReferenceImpl(
 						ProtectionLevels.newInstance(
 								ProtectionLevel.REQUIRED_INTEG_AND_CONF)).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testThroughSocks5SocketUsingSocks5GssapiAuthNecReferenceImplWithIntegAndConfProtection03() throws IOException {
+	public void testThroughSocks5SocketUsingSocks5GssapiauthNecReferenceImplWithIntegAndConfProtection03() throws IOException {
 		String string = TestStringConstants.STRING_03;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
-				GssapiAuthIT.newSocks5ClientUsingSocks5GssapiAuthNecReferenceImpl(
+				GssapiauthIT.newSocks5ClientUsingSocks5GssapiauthNecReferenceImpl(
 						ProtectionLevels.newInstance(
 								ProtectionLevel.REQUIRED_INTEG_AND_CONF)).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testThroughSocks5SocketUsingSocks5GssapiAuthNecReferenceImplWithIntegProtection01() throws IOException {
+	public void testThroughSocks5SocketUsingSocks5GssapiauthNecReferenceImplWithIntegProtection01() throws IOException {
 		String string = TestStringConstants.STRING_01;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
-				GssapiAuthIT.newSocks5ClientUsingSocks5GssapiAuthNecReferenceImpl(
+				GssapiauthIT.newSocks5ClientUsingSocks5GssapiauthNecReferenceImpl(
 						ProtectionLevels.newInstance(
 								ProtectionLevel.REQUIRED_INTEG)).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testThroughSocks5SocketUsingSocks5GssapiAuthNecReferenceImplWithIntegProtection02() throws IOException {
+	public void testThroughSocks5SocketUsingSocks5GssapiauthNecReferenceImplWithIntegProtection02() throws IOException {
 		String string = TestStringConstants.STRING_02;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
-				GssapiAuthIT.newSocks5ClientUsingSocks5GssapiAuthNecReferenceImpl(
+				GssapiauthIT.newSocks5ClientUsingSocks5GssapiauthNecReferenceImpl(
 						ProtectionLevels.newInstance(
 								ProtectionLevel.REQUIRED_INTEG)).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testThroughSocks5SocketUsingSocks5GssapiAuthNecReferenceImplWithIntegProtection03() throws IOException {
+	public void testThroughSocks5SocketUsingSocks5GssapiauthNecReferenceImplWithIntegProtection03() throws IOException {
 		String string = TestStringConstants.STRING_03;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
-				GssapiAuthIT.newSocks5ClientUsingSocks5GssapiAuthNecReferenceImpl(
+				GssapiauthIT.newSocks5ClientUsingSocks5GssapiauthNecReferenceImpl(
 						ProtectionLevels.newInstance(
 								ProtectionLevel.REQUIRED_INTEG)).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testThroughSocks5SocketUsingSocks5GssapiAuthWithIntegAndConfProtection01() throws IOException {
+	public void testThroughSocks5SocketUsingSocks5GssapiauthWithIntegAndConfProtection01() throws IOException {
 		String string = TestStringConstants.STRING_01;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
-				GssapiAuthIT.newSocks5ClientUsingSocks5GssapiAuth(
+				GssapiauthIT.newSocks5ClientUsingSocks5Gssapiauth(
 						ProtectionLevels.newInstance(
 								ProtectionLevel.REQUIRED_INTEG_AND_CONF)).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testThroughSocks5SocketUsingSocks5GssapiAuthWithIntegAndConfProtection02() throws IOException {
+	public void testThroughSocks5SocketUsingSocks5GssapiauthWithIntegAndConfProtection02() throws IOException {
 		String string = TestStringConstants.STRING_02;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
-				GssapiAuthIT.newSocks5ClientUsingSocks5GssapiAuth(
+				GssapiauthIT.newSocks5ClientUsingSocks5Gssapiauth(
 						ProtectionLevels.newInstance(
 								ProtectionLevel.REQUIRED_INTEG_AND_CONF)).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testThroughSocks5SocketUsingSocks5GssapiAuthWithIntegAndConfProtection03() throws IOException {
+	public void testThroughSocks5SocketUsingSocks5GssapiauthWithIntegAndConfProtection03() throws IOException {
 		String string = TestStringConstants.STRING_03;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
-				GssapiAuthIT.newSocks5ClientUsingSocks5GssapiAuth(
+				GssapiauthIT.newSocks5ClientUsingSocks5Gssapiauth(
 						ProtectionLevels.newInstance(
 								ProtectionLevel.REQUIRED_INTEG_AND_CONF)).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testThroughSocks5SocketUsingSocks5GssapiAuthWithIntegProtection01() throws IOException {
+	public void testThroughSocks5SocketUsingSocks5GssapiauthWithIntegProtection01() throws IOException {
 		String string = TestStringConstants.STRING_01;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
-				GssapiAuthIT.newSocks5ClientUsingSocks5GssapiAuth(
+				GssapiauthIT.newSocks5ClientUsingSocks5Gssapiauth(
 						ProtectionLevels.newInstance(
 								ProtectionLevel.REQUIRED_INTEG)).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testThroughSocks5SocketUsingSocks5GssapiAuthWithIntegProtection02() throws IOException {
+	public void testThroughSocks5SocketUsingSocks5GssapiauthWithIntegProtection02() throws IOException {
 		String string = TestStringConstants.STRING_02;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
-				GssapiAuthIT.newSocks5ClientUsingSocks5GssapiAuth(
+				GssapiauthIT.newSocks5ClientUsingSocks5Gssapiauth(
 						ProtectionLevels.newInstance(
 								ProtectionLevel.REQUIRED_INTEG)).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testThroughSocks5SocketUsingSocks5GssapiAuthWithIntegProtection03() throws IOException {
+	public void testThroughSocks5SocketUsingSocks5GssapiauthWithIntegProtection03() throws IOException {
 		String string = TestStringConstants.STRING_03;
 		String returningString = SocketEchoHelper.echoThroughSocket(
 				string, 
-				GssapiAuthIT.newSocks5ClientUsingSocks5GssapiAuth(
+				GssapiauthIT.newSocks5ClientUsingSocks5Gssapiauth(
 						ProtectionLevels.newInstance(
 								ProtectionLevel.REQUIRED_INTEG)).newSocksNetObjectFactory());
 		assertEquals(string, returningString);

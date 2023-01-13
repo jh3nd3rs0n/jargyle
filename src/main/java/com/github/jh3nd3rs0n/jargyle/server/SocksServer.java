@@ -147,6 +147,7 @@ public final class SocksServer {
 									bindPort.intValue()), 
 							backlog);
 				} catch (BindException e) {
+					serverSock.close();
 					continue;
 				}
 				serverSockBound = true;

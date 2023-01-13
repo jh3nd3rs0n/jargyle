@@ -524,6 +524,12 @@ The following is a list of available settings for the SOCKS server (displayed wh
         socks5.onBind.inboundSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
             The space separated list of socket settings for the inbound socket
     
+        socks5.onBind.listenBindHost=HOST
+            The binding host name or address for the listen socket if the provided host address is all zeros
+    
+        socks5.onBind.listenBindPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]
+            The space separated list of binding port ranges for the listen socket if the provided port is zero
+    
         socks5.onBind.listenSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
             The space separated list of socket settings for the listen socket
     
@@ -921,6 +927,12 @@ The following is a list of available settings for the SOCKS server (displayed wh
     
         socks5.onBind.inboundSocketSetting=SOCKET_SETTING
             Specifies a socket setting for the inbound socket (can be specified multiple times with each rule result specifying another socket setting)
+    
+        socks5.onBind.listenBindHost=HOST
+            Specifies the binding host name or address for the listen socket if the provided host address is all zeros
+    
+        socks5.onBind.listenBindPortRange=PORT|PORT1-PORT2
+            Specifies a binding port range for the listen socket if the provided port is zero (can be specified multiple times with each rule result specifying another port range)
     
         socks5.onBind.listenSocketSetting=SOCKET_SETTING
             Specifies a socket setting for the listen socket (can be specified multiple times with each rule result specifying another socket setting)
@@ -3098,6 +3110,10 @@ To configure the sockets, you will need any of the following rule results:
 -   `socketSetting`: Specifies a socket setting for all sockets (This rule result can be specified multiple times with each rule result specifying another socket setting)
 
 -   `socks5.onBind.inboundSocketSetting`: Specifies a socket setting for the inbound socket (This rule result can be specified multiple times with each rule result specifying another socket setting)
+
+-   `socks5.onBind.listenBindHost`: Specifies the binding host name or address for the listen socket if the provided host address is all zeros
+
+-   `socks5.onBind.listenBindPortRange`: Specifies a binding [port range](#6-14-2-port-range) for the listen socket if the provided port is zero (This rule result can be specified multiple times with each rule result specifying another port range)
 
 -   `socks5.onBind.listenSocketSetting`: Specifies a socket setting for the listen socket (This rule result can be specified multiple times with each rule result specifying another socket setting)
 

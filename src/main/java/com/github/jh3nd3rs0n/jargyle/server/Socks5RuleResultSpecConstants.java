@@ -53,6 +53,24 @@ public final class Socks5RuleResultSpecConstants {
 	)	
 	public static final RuleResultSpec<SocketSetting<Object>> SOCKS5_ON_BIND_INBOUND_SOCKET_SETTING = RULE_RESULT_SPECS.addThenGet(new SocketSettingRuleResultSpec(
 			"socks5.onBind.inboundSocketSetting"));
+
+	@HelpText(
+			doc = "Specifies the binding host name or address for the listen "
+					+ "socket if the provided host address is all zeros",
+			usage = "socks5.onBind.listenBindHost=HOST"
+	)
+	public static final RuleResultSpec<Host> SOCKS5_ON_BIND_LISTEN_BIND_HOST = RULE_RESULT_SPECS.addThenGet(new HostRuleResultSpec(
+			"socks5.onBind.listenBindHost"));
+	
+	@HelpText(
+			doc = "Specifies a binding port range for the listen socket if "
+					+ "the provided port is zero (can be specified multiple "
+					+ "times with each rule result specifying another port "
+					+ "range)",
+			usage = "socks5.onBind.listenBindPortRange=PORT|PORT1-PORT2"
+	)
+	public static final RuleResultSpec<PortRange> SOCKS5_ON_BIND_LISTEN_BIND_PORT_RANGE = RULE_RESULT_SPECS.addThenGet(new PortRangeRuleResultSpec(
+			"socks5.onBind.listenBindPortRange"));
 	
 	@HelpText(
 			doc = "Specifies a socket setting for the listen socket (can be "

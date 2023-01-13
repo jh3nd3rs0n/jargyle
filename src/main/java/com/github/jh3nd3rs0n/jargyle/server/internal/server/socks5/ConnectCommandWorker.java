@@ -467,7 +467,7 @@ final class ConnectCommandWorker extends CommandWorker {
 			for (Iterator<Port> iter = bindPortRange.iterator();
 					!serverFacingSocketBound && iter.hasNext();) {
 				Port bindPort = iter.next();
-				serverFacingSocket = netObjectFactory.newSocket();
+				serverFacingSocket = this.netObjectFactory.newSocket();
 				if (!this.configureServerFacingSocket(serverFacingSocket)) {
 					return null;
 				}

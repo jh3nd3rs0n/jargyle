@@ -1,12 +1,14 @@
 package com.github.jh3nd3rs0n.jargyle.server.internal.server.socks5;
 
 import java.io.IOException;
+import java.net.BindException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,11 +17,15 @@ import org.slf4j.LoggerFactory;
 
 import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
 import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
+import com.github.jh3nd3rs0n.jargyle.common.net.Host;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
+import com.github.jh3nd3rs0n.jargyle.common.net.PortRange;
+import com.github.jh3nd3rs0n.jargyle.common.net.PortRanges;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSetting;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
 import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
+import com.github.jh3nd3rs0n.jargyle.internal.net.AddressHelper;
 import com.github.jh3nd3rs0n.jargyle.server.FirewallAction;
 import com.github.jh3nd3rs0n.jargyle.server.GeneralRuleArgSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.GeneralRuleResultSpecConstants;
@@ -98,31 +104,6 @@ final class BindCommandWorker extends CommandWorker {
 			return null;
 		}
 		return inboundSocket;
-	}
-	
-	private boolean bindListenSocket(final ServerSocket listenSocket) {
-		Socks5Reply socks5Rep = null;
-		InetAddress desiredDestinationInetAddress = 
-				this.resolveDesiredDestinationAddress(
-						this.desiredDestinationAddress);
-		if (desiredDestinationInetAddress == null) {
-			return false;
-		}		
-		try {
-			listenSocket.bind(new InetSocketAddress(
-					desiredDestinationInetAddress,
-					this.desiredDestinationPort));
-		} catch (IOException e) {
-			LOGGER.error( 
-					ObjectLogMessageHelper.objectLogMessage(
-							this, "Error in binding the listen socket"), 
-					e);
-			socks5Rep = Socks5Reply.newFailureInstance(
-					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep, LOGGER);
-			return false;
-		}
-		return true;
 	}
 	
 	private boolean canAllowSecondSocks5Reply(
@@ -298,6 +279,108 @@ final class BindCommandWorker extends CommandWorker {
 		return socketSttngs;
 	}
 	
+	private Host getListenBindHost() {
+		Host host = this.applicableRule.getLastRuleResultValue(
+				Socks5RuleResultSpecConstants.SOCKS5_ON_BIND_LISTEN_BIND_HOST);
+		if (host != null) {
+			return host;
+		}
+		host = this.applicableRule.getLastRuleResultValue(
+				Socks5RuleResultSpecConstants.SOCKS5_ON_COMMAND_EXTERNAL_FACING_BIND_HOST);
+		if (host != null) {
+			return host;
+		}
+		host = this.applicableRule.getLastRuleResultValue(
+				Socks5RuleResultSpecConstants.SOCKS5_ON_COMMAND_BIND_HOST);
+		if (host != null) {
+			return host;
+		}
+		host = this.applicableRule.getLastRuleResultValue(
+				GeneralRuleResultSpecConstants.EXTERNAL_FACING_BIND_HOST);
+		if (host != null) {
+			return host;
+		}
+		host = this.applicableRule.getLastRuleResultValue(
+				GeneralRuleResultSpecConstants.BIND_HOST);
+		if (host != null) {
+			return host;
+		}
+		host = this.settings.getLastValue(
+				Socks5SettingSpecConstants.SOCKS5_ON_BIND_LISTEN_BIND_HOST);
+		if (host != null) {
+			return host;
+		}
+		host = this.settings.getLastValue(
+				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_EXTERNAL_FACING_BIND_HOST);
+		if (host != null) {
+			return host;
+		}
+		host = this.settings.getLastValue(
+				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_BIND_HOST);
+		if (host != null) {
+			return host;
+		}
+		host = this.settings.getLastValue(
+				GeneralSettingSpecConstants.EXTERNAL_FACING_BIND_HOST);
+		if (host != null) {
+			return host;
+		}
+		host = this.settings.getLastValue(
+				GeneralSettingSpecConstants.BIND_HOST);
+		return host;
+	}
+	
+	private PortRanges getListenBindPortRanges() {
+		List<PortRange> portRanges = this.applicableRule.getRuleResultValues(
+				Socks5RuleResultSpecConstants.SOCKS5_ON_BIND_LISTEN_BIND_PORT_RANGE);
+		if (portRanges.size() > 0) {
+			return PortRanges.newInstance(portRanges);
+		}
+		portRanges = this.applicableRule.getRuleResultValues(
+				Socks5RuleResultSpecConstants.SOCKS5_ON_COMMAND_EXTERNAL_FACING_BIND_TCP_PORT_RANGE);
+		if (portRanges.size() > 0) {
+			return PortRanges.newInstance(portRanges);
+		}
+		portRanges = this.applicableRule.getRuleResultValues(
+				Socks5RuleResultSpecConstants.SOCKS5_ON_COMMAND_BIND_TCP_PORT_RANGE);
+		if (portRanges.size() > 0) {
+			return PortRanges.newInstance(portRanges);
+		}
+		portRanges = this.applicableRule.getRuleResultValues(
+				GeneralRuleResultSpecConstants.EXTERNAL_FACING_BIND_TCP_PORT_RANGE);
+		if (portRanges.size() > 0) {
+			return PortRanges.newInstance(portRanges);
+		}
+		portRanges = this.applicableRule.getRuleResultValues(
+				GeneralRuleResultSpecConstants.BIND_TCP_PORT_RANGE);
+		if (portRanges.size() > 0) {
+			return PortRanges.newInstance(portRanges);
+		}
+		PortRanges prtRanges = this.settings.getLastValue(
+				Socks5SettingSpecConstants.SOCKS5_ON_BIND_LISTEN_BIND_PORT_RANGES);
+		if (prtRanges.toList().size() > 0) {
+			return prtRanges;
+		}
+		prtRanges = this.settings.getLastValue(
+				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_EXTERNAL_FACING_BIND_TCP_PORT_RANGES);
+		if (prtRanges.toList().size() > 0) {
+			return prtRanges;
+		}
+		prtRanges = this.settings.getLastValue(
+				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_BIND_TCP_PORT_RANGES);
+		if (prtRanges.toList().size() > 0) {
+			return prtRanges;
+		}
+		prtRanges = this.settings.getLastValue(
+				GeneralSettingSpecConstants.EXTERNAL_FACING_BIND_TCP_PORT_RANGES);
+		if (prtRanges.toList().size() > 0) {
+			return prtRanges;
+		}
+		prtRanges = this.settings.getLastValue(
+				GeneralSettingSpecConstants.BIND_TCP_PORT_RANGES);
+		return prtRanges;
+	}
+	
 	private SocketSettings getListenSocketSettings() {
 		List<SocketSetting<Object>> socketSettings = 
 				this.applicableRule.getRuleResultValues(
@@ -450,6 +533,93 @@ final class BindCommandWorker extends CommandWorker {
 		return null;
 	}
 	
+	private ServerSocket newListenSocket() {
+		Socks5Reply socks5Rep = null;
+		InetAddress desiredDestinationInetAddress = 
+				this.resolveDesiredDestinationAddress(
+						this.desiredDestinationAddress);
+		if (desiredDestinationInetAddress == null) {
+			return null;
+		}
+		InetAddress bindInetAddress = (AddressHelper.isAllZerosAddress(
+				desiredDestinationInetAddress.getHostAddress())) ?
+						this.getListenBindHost().toInetAddress() 
+						: desiredDestinationInetAddress;
+		PortRanges bindPortRanges = (this.desiredDestinationPort == 0) ?
+				this.getListenBindPortRanges() : PortRanges.newInstance(
+						PortRange.newInstance(Port.newInstance(
+								this.desiredDestinationPort)));
+		ServerSocket listenSocket = null;
+		boolean listenSocketBound = false;
+		for (Iterator<PortRange> iterator = bindPortRanges.toList().iterator();
+				!listenSocketBound && iterator.hasNext();) {
+			PortRange bindPortRange = iterator.next();
+			for (Iterator<Port> iter = bindPortRange.iterator();
+					!listenSocketBound && iter.hasNext();) {
+				Port bindPort = iter.next();
+				try {
+					listenSocket = this.netObjectFactory.newServerSocket();
+				} catch (IOException e) {
+					LOGGER.error( 
+							ObjectLogMessageHelper.objectLogMessage(
+									this, 
+									"Error in creating the listen socket"), 
+							e);
+					socks5Rep = Socks5Reply.newFailureInstance(
+							Reply.GENERAL_SOCKS_SERVER_FAILURE);
+					this.commandWorkerContext.sendSocks5Reply(
+							this, socks5Rep, LOGGER);
+					return null;
+				}
+				if (!this.configureListenSocket(listenSocket)) {
+					return null;
+				}
+				try {
+					listenSocket.bind(new InetSocketAddress(
+							bindInetAddress, bindPort.intValue()));
+				} catch (BindException e) {
+					try {
+						listenSocket.close();
+					} catch (IOException ex) {
+						throw new AssertionError(ex);
+					}
+					continue;
+				} catch (IOException e) {
+					try {
+						listenSocket.close();
+					} catch (IOException ex) {
+						throw new AssertionError(ex);
+					}
+					LOGGER.error( 
+							ObjectLogMessageHelper.objectLogMessage(
+									this, 
+									"Error in binding the listen socket"), 
+							e);
+					socks5Rep = Socks5Reply.newFailureInstance(
+							Reply.GENERAL_SOCKS_SERVER_FAILURE);
+					this.commandWorkerContext.sendSocks5Reply(
+							this, socks5Rep, LOGGER);
+					return null;
+				}
+				listenSocketBound = true;
+			}
+		}
+		if (!listenSocketBound) {
+			LOGGER.error( 
+					ObjectLogMessageHelper.objectLogMessage(
+							this, 
+							"Unable to bind the listen socket to the "
+							+ "following address and port (range(s)): %s %s",
+							bindInetAddress,
+							bindPortRanges));
+			socks5Rep = Socks5Reply.newFailureInstance(
+					Reply.GENERAL_SOCKS_SERVER_FAILURE);
+			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep, LOGGER);
+			return null;
+		}
+		return listenSocket;
+	}
+	
 	private RuleContext newSecondSocks5ReplyRuleContext(
 			final Socks5Reply socks5Rep,
 			final Socks5Reply secondSocks5Rep) {
@@ -535,11 +705,8 @@ final class BindCommandWorker extends CommandWorker {
 		Socket inboundSocket = null;
 		Socks5Reply secondSocks5Rep = null;
 		try {
-			listenSocket = this.netObjectFactory.newServerSocket();
-			if (!this.configureListenSocket(listenSocket)) {
-				return;
-			}
-			if (!this.bindListenSocket(listenSocket)) {
+			listenSocket = this.newListenSocket();
+			if (listenSocket == null) {
 				return;
 			}
 			InetAddress inetAddress = listenSocket.getInetAddress();

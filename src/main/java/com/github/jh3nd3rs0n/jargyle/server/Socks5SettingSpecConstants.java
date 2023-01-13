@@ -71,6 +71,26 @@ public final class Socks5SettingSpecConstants {
 					SocketSettings.newInstance()));
 	
 	@HelpText(
+			doc = "The binding host name or address for the listen socket if "
+					+ "the provided host address is all zeros",
+			usage = "socks5.onBind.listenBindHost=HOST"
+	)
+	public static final SettingSpec<Host> SOCKS5_ON_BIND_LISTEN_BIND_HOST =
+			SETTING_SPECS.addThenGet(new HostSettingSpec(
+					"socks5.onBind.listenBindHost",
+					null));
+	
+	@HelpText(
+			doc = "The space separated list of binding port ranges for the "
+					+ "listen socket if the provided port is zero",
+			usage = "socks5.onBind.listenBindPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]"
+	)
+	public static final SettingSpec<PortRanges> SOCKS5_ON_BIND_LISTEN_BIND_PORT_RANGES =
+			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
+					"socks5.onBind.listenBindPortRanges",
+					PortRanges.newInstance()));
+	
+	@HelpText(
 			doc = "The space separated list of socket settings for the listen "
 					+ "socket", 
 			usage = "socks5.onBind.listenSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"

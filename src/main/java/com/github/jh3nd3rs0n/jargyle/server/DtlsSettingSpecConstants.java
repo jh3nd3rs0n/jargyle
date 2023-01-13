@@ -32,7 +32,7 @@ public final class DtlsSettingSpecConstants {
 	@HelpText(
 			doc = "The space separated list of acceptable cipher suites "
 					+ "enabled for DTLS connections to the SOCKS server",
-			usage = "dtls.enabledCipherSuites=[DTLS_CIPHER_SUITE1[ DTLS_CIPHER_SUITE2[...]]]"
+			usage = "dtls.enabledCipherSuites=[DTLS_CIPHER_SUITE1[ DTLS_CIPHER_SUITE2[ ...]]]"
 	)	
 	public static final SettingSpec<Words> DTLS_ENABLED_CIPHER_SUITES = 
 			SETTING_SPECS.addThenGet(new WordsSettingSpec(
@@ -42,7 +42,7 @@ public final class DtlsSettingSpecConstants {
 	@HelpText(
 			doc = "The space separated list of acceptable protocol versions "
 					+ "enabled for DTLS connections to the SOCKS server",
-			usage = "dtls.enabledProtocols=[DTLS_PROTOCOL1[ DTLS_PROTOCOL2[...]]]"
+			usage = "dtls.enabledProtocols=[DTLS_PROTOCOL1[ DTLS_PROTOCOL2[ ...]]]"
 	)	
 	public static final SettingSpec<Words> DTLS_ENABLED_PROTOCOLS = 
 			SETTING_SPECS.addThenGet(new WordsSettingSpec(

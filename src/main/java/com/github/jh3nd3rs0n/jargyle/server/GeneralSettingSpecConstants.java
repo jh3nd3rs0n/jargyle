@@ -66,7 +66,7 @@ public final class GeneralSettingSpecConstants {
 	@HelpText(
 			doc = "The space separated list of socket settings for the "
 					+ "client socket", 
-			usage = "clientSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
+			usage = "clientSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[ ...]]]"
 	)
 	public static final SettingSpec<SocketSettings> CLIENT_SOCKET_SETTINGS = 
 			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
@@ -106,7 +106,7 @@ public final class GeneralSettingSpecConstants {
 	@HelpText(
 			doc = "The space separated list of default socket settings for all "
 					+ "external-facing sockets",
-			usage = "externalFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
+			usage = "externalFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[ ...]]]"
 	)
 	public static final SettingSpec<SocketSettings> EXTERNAL_FACING_SOCKET_SETTINGS =
 			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
@@ -146,7 +146,7 @@ public final class GeneralSettingSpecConstants {
 	@HelpText(
 			doc = "The space separated list of default socket settings for all "
 					+ "internal-facing sockets",
-			usage = "internalFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
+			usage = "internalFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[ ...]]]"
 	)
 	public static final SettingSpec<SocketSettings> INTERNAL_FACING_SOCKET_SETTINGS =
 			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
@@ -194,7 +194,7 @@ public final class GeneralSettingSpecConstants {
 	@HelpText(
 			doc = "A rule for the SOCKS server "
 					+ "(default is firewallAction=ALLOW)", 
-			usage = "rule=[RULE_CONDITION1[ RULE_CONDITION2[...]]] [RULE_RESULT1[ RULE_RESULT2[...]]]"
+			usage = "rule=[RULE_CONDITION1[ RULE_CONDITION2[ ...]]] [RULE_RESULT1[ RULE_RESULT2[ ...]]]"
 	)	
 	public static final SettingSpec<Rule> RULE = 
 			SETTING_SPECS.addThenGet(new RuleSettingSpec(
@@ -204,7 +204,7 @@ public final class GeneralSettingSpecConstants {
 	@HelpText(
 			doc = "The space separated list of default socket settings for all "
 					+ "sockets", 
-			usage = "socketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
+			usage = "socketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[ ...]]]"
 	)
 	public static final SettingSpec<SocketSettings> SOCKET_SETTINGS = 
 			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
@@ -234,7 +234,7 @@ public final class GeneralSettingSpecConstants {
 	@HelpText(
 			doc = "The space separated list of socket settings for the SOCKS "
 					+ "server socket",
-			usage = "socksServerSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
+			usage = "socksServerSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[ ...]]]"
 	)
 	public static final SettingSpec<SocketSettings> SOCKS_SERVER_SOCKET_SETTINGS =
 			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(

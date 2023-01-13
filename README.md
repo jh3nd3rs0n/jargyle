@@ -299,7 +299,7 @@ The following is a list of available settings for the SOCKS server (displayed wh
         bindUdpPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]
             The space separated list of default binding port ranges for all UDP sockets (default is 0)
     
-        clientSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
+        clientSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[ ...]]]
             The space separated list of socket settings for the client socket
     
         externalFacingBindHost=HOST
@@ -311,7 +311,7 @@ The following is a list of available settings for the SOCKS server (displayed wh
         externalFacingBindUdpPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]
             The space separated list of default binding port ranges for all external-facing UDP sockets
     
-        externalFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
+        externalFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[ ...]]]
             The space separated list of default socket settings for all external-facing sockets
     
         internalFacingBindHost=HOST
@@ -323,7 +323,7 @@ The following is a list of available settings for the SOCKS server (displayed wh
         internalFacingBindUdpPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]
             The space separated list of default binding port ranges for all internal-facing UDP sockets
     
-        internalFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
+        internalFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[ ...]]]
             The space separated list of default socket settings for all internal-facing sockets
     
         lastRouteId=ROUTE_ID
@@ -338,10 +338,10 @@ The following is a list of available settings for the SOCKS server (displayed wh
         routeSelectionStrategy=SELECTION_STRATEGY
             The selection strategy for the next route (default is CYCLICAL)
     
-        rule=[RULE_CONDITION1[ RULE_CONDITION2[...]]] [RULE_RESULT1[ RULE_RESULT2[...]]]
+        rule=[RULE_CONDITION1[ RULE_CONDITION2[ ...]]] [RULE_RESULT1[ RULE_RESULT2[ ...]]]
             A rule for the SOCKS server (default is firewallAction=ALLOW)
     
-        socketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
+        socketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[ ...]]]
             The space separated list of default socket settings for all sockets
     
         socksServerBindHost=HOST
@@ -350,7 +350,7 @@ The following is a list of available settings for the SOCKS server (displayed wh
         socksServerBindPortRanges[PORT_RANGE1[ PORT_RANGE2[ ...]]]
             The space separated list of binding port ranges for the SOCKS server socket
     
-        socksServerSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
+        socksServerSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[ ...]]]
             The space separated list of socket settings for the SOCKS server socket
     
       CHAINING GENERAL SETTINGS:
@@ -364,7 +364,7 @@ The following is a list of available settings for the SOCKS server (displayed wh
         chaining.clientConnectTimeout=INTEGER_BETWEEN_1_AND_2147483647
             The timeout in milliseconds on waiting for the client socket to connect to the other SOCKS server (used for the SOCKS5 commands RESOLVE, BIND and UDP ASSOCIATE) (default is 60000)
     
-        chaining.clientSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
+        chaining.clientSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[ ...]]]
             The space separated list of socket settings for the client socket that is used to connect to the other SOCKS server (used for the SOCKS5 command RESOLVE and UDP ASSOCIATE)
     
         chaining.routeId=ROUTE_ID
@@ -378,10 +378,10 @@ The following is a list of available settings for the SOCKS server (displayed wh
         chaining.dtls.enabled=true|false
             The boolean value to indicate if DTLS connections to the other SOCKS server are enabled (default is false)
     
-        chaining.dtls.enabledCipherSuites=[DTLS_CIPHER_SUITE1[ DTLS_CIPHER_SUITE2[...]]]
+        chaining.dtls.enabledCipherSuites=[DTLS_CIPHER_SUITE1[ DTLS_CIPHER_SUITE2[ ...]]]
             The space separated list of acceptable cipher suites enabled for DTLS connections to the other SOCKS server
     
-        chaining.dtls.enabledProtocols=[DTLS_PROTOCOL1[ DTLS_PROTOCOL2[...]]]
+        chaining.dtls.enabledProtocols=[DTLS_PROTOCOL1[ DTLS_PROTOCOL2[ ...]]]
             The space separated list of acceptable protocol versions enabled for DTLS connections to the other SOCKS server
     
         chaining.dtls.keyStoreFile=FILE
@@ -419,13 +419,13 @@ The following is a list of available settings for the SOCKS server (displayed wh
         chaining.socks5.gssapiauth.necReferenceImpl=true|false
             The boolean value to indicate if the exchange of the GSS-API protection level negotiation must be unprotected should the other SOCKS5 server use the NEC reference implementation (default is false)
     
-        chaining.socks5.gssapiauth.protectionLevels=SOCKS5_GSSAPIAUTH_PROTECTION_LEVEL1[ SOCKS5_GSSAPIAUTH_PROTECTION_LEVEL2[...]]
+        chaining.socks5.gssapiauth.protectionLevels=SOCKS5_GSSAPIAUTH_PROTECTION_LEVEL1[ SOCKS5_GSSAPIAUTH_PROTECTION_LEVEL2[ ...]]
             The space separated list of acceptable protection levels after GSS-API authentication with the other SOCKS5 server (The first is preferred. The remaining are acceptable if the server does not accept the first.) (default is REQUIRED_INTEG_AND_CONF REQUIRED_INTEG NONE)
     
         chaining.socks5.gssapiauth.serviceName=SOCKS5_GSSAPIAUTH_SERVICE_NAME
             The GSS-API service name for the other SOCKS5 server
     
-        chaining.socks5.methods=[SOCKS5_METHOD1[ SOCKS5_METHOD2[...]]]
+        chaining.socks5.methods=[SOCKS5_METHOD1[ SOCKS5_METHOD2[ ...]]]
             The space separated list of acceptable authentication methods to the other SOCKS5 server (default is NO_AUTHENTICATION_REQUIRED)
     
         chaining.socks5.useResolveCommand=true|false
@@ -442,10 +442,10 @@ The following is a list of available settings for the SOCKS server (displayed wh
         chaining.ssl.enabled=true|false
             The boolean value to indicate if SSL/TLS connections to the other SOCKS server are enabled (default is false)
     
-        chaining.ssl.enabledCipherSuites=[SSL_CIPHER_SUITE1[ SSL_CIPHER_SUITE2[...]]]
+        chaining.ssl.enabledCipherSuites=[SSL_CIPHER_SUITE1[ SSL_CIPHER_SUITE2[ ...]]]
             The space separated list of acceptable cipher suites enabled for SSL/TLS connections to the other SOCKS server
     
-        chaining.ssl.enabledProtocols=[SSL_PROTOCOL1[ SSL_PROTOCOL2[...]]]
+        chaining.ssl.enabledProtocols=[SSL_PROTOCOL1[ SSL_PROTOCOL2[ ...]]]
             The space separated list of acceptable protocol versions enabled for SSL/TLS connections to the other SOCKS server
     
         chaining.ssl.keyStoreFile=FILE
@@ -474,10 +474,10 @@ The following is a list of available settings for the SOCKS server (displayed wh
         dtls.enabled=true|false
             The boolean value to indicate if DTLS connections to the SOCKS server are enabled (default is false)
     
-        dtls.enabledCipherSuites=[DTLS_CIPHER_SUITE1[ DTLS_CIPHER_SUITE2[...]]]
+        dtls.enabledCipherSuites=[DTLS_CIPHER_SUITE1[ DTLS_CIPHER_SUITE2[ ...]]]
             The space separated list of acceptable cipher suites enabled for DTLS connections to the SOCKS server
     
-        dtls.enabledProtocols=[DTLS_PROTOCOL1[ DTLS_PROTOCOL2[...]]]
+        dtls.enabledProtocols=[DTLS_PROTOCOL1[ DTLS_PROTOCOL2[ ...]]]
             The space separated list of acceptable protocol versions enabled for DTLS connections to the SOCKS server
     
         dtls.keyStoreFile=FILE
@@ -515,13 +515,13 @@ The following is a list of available settings for the SOCKS server (displayed wh
         socks5.gssapiauth.necReferenceImpl=true|false
             The boolean value to indicate if the exchange of the GSS-API protection level negotiation must be unprotected according to the NEC reference implementation (default is false)
     
-        socks5.gssapiauth.protectionLevels=SOCKS5_GSSAPIAUTH_PROTECTION_LEVEL1[ SOCKS5_GSSAPIAUTH_PROTECTION_LEVEL2[...]]
+        socks5.gssapiauth.protectionLevels=SOCKS5_GSSAPIAUTH_PROTECTION_LEVEL1[ SOCKS5_GSSAPIAUTH_PROTECTION_LEVEL2[ ...]]
             The space separated list of acceptable protection levels after GSS-API authentication (The first is preferred if the client does not provide a protection level that is acceptable.) (default is REQUIRED_INTEG_AND_CONF REQUIRED_INTEG NONE)
     
-        socks5.methods=[SOCKS5_METHOD1[ SOCKS5_METHOD2[...]]]
+        socks5.methods=[SOCKS5_METHOD1[ SOCKS5_METHOD2[ ...]]]
             The space separated list of acceptable authentication methods in order of preference (default is NO_AUTHENTICATION_REQUIRED)
     
-        socks5.onBind.inboundSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
+        socks5.onBind.inboundSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[ ...]]]
             The space separated list of socket settings for the inbound socket
     
         socks5.onBind.listenBindHost=HOST
@@ -530,7 +530,7 @@ The following is a list of available settings for the SOCKS server (displayed wh
         socks5.onBind.listenBindPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]
             The space separated list of binding port ranges for the listen socket if the provided port is zero
     
-        socks5.onBind.listenSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
+        socks5.onBind.listenSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[ ...]]]
             The space separated list of socket settings for the listen socket
     
         socks5.onBind.relayBufferSize=INTEGER_BETWEEN_1_AND_2147483647
@@ -563,7 +563,7 @@ The following is a list of available settings for the SOCKS server (displayed wh
         socks5.onCommand.externalFacingBindUdpPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]
             The space separated list of binding port ranges for all external-facing UDP sockets
     
-        socks5.onCommand.externalFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
+        socks5.onCommand.externalFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[ ...]]]
             The space separated list of socket settings for all external-facing sockets
     
         socks5.onCommand.internalFacingBindHost=HOST
@@ -575,7 +575,7 @@ The following is a list of available settings for the SOCKS server (displayed wh
         socks5.onCommand.internalFacingBindUdpPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]
             The space separated list of binding port ranges for all internal-facing UDP sockets
     
-        socks5.onCommand.internalFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
+        socks5.onCommand.internalFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[ ...]]]
             The space separated list of socket settings for all internal-facing sockets
     
         socks5.onCommand.relayBufferSize=INTEGER_BETWEEN_1_AND_2147483647
@@ -590,7 +590,7 @@ The following is a list of available settings for the SOCKS server (displayed wh
         socks5.onCommand.relayOutboundBandwidthLimit=INTEGER_BETWEEN_1_AND_2147483647
             The upper limit on bandwidth in bytes per second of receiving outbound data to be relayed
     
-        socks5.onCommand.socketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
+        socks5.onCommand.socketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[ ...]]]
             The space separated list of socket settings for all sockets
     
         socks5.onConnect.prepareServerFacingSocket=true|false
@@ -617,7 +617,7 @@ The following is a list of available settings for the SOCKS server (displayed wh
         socks5.onConnect.serverFacingConnectTimeout=INTEGER_BETWEEN_1_AND_2147483647
             The timeout in milliseconds on waiting for the server-facing socket to connect (default is 60000)
     
-        socks5.onConnect.serverFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
+        socks5.onConnect.serverFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[ ...]]]
             The space separated list of socket settings for the server-facing socket
     
         socks5.onUdpAssociate.clientFacingBindHost=HOST
@@ -626,7 +626,7 @@ The following is a list of available settings for the SOCKS server (displayed wh
         socks5.onUdpAssociate.clientFacingBindPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]
             The space separated list of binding port ranges for the client-facing UDP socket
     
-        socks5.onUdpAssociate.clientFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
+        socks5.onUdpAssociate.clientFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[ ...]]]
             The space separated list of socket settings for the client-facing UDP socket
     
         socks5.onUdpAssociate.peerFacingBindHost=HOST
@@ -635,7 +635,7 @@ The following is a list of available settings for the SOCKS server (displayed wh
         socks5.onUdpAssociate.peerFacingBindPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]
             The space separated list of binding port ranges for the peer-facing UDP socket
     
-        socks5.onUdpAssociate.peerFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]
+        socks5.onUdpAssociate.peerFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[ ...]]]
             The space separated list of socket settings for the peer-facing UDP socket
     
         socks5.onUdpAssociate.relayBufferSize=INTEGER_BETWEEN_1_AND_2147483647
@@ -658,10 +658,10 @@ The following is a list of available settings for the SOCKS server (displayed wh
         ssl.enabled=true|false
             The boolean value to indicate if SSL/TLS connections to the SOCKS server are enabled (default is false)
     
-        ssl.enabledCipherSuites=[SSL_CIPHER_SUITE1[ SSL_CIPHER_SUITE2[...]]]
+        ssl.enabledCipherSuites=[SSL_CIPHER_SUITE1[ SSL_CIPHER_SUITE2[ ...]]]
             The space separated list of acceptable cipher suites enabled for SSL/TLS connections to the SOCKS server
     
-        ssl.enabledProtocols=[SSL_PROTOCOL1[ SSL_PROTOCOL2[...]]]
+        ssl.enabledProtocols=[SSL_PROTOCOL1[ SSL_PROTOCOL2[ ...]]]
             The space separated list of acceptable protocol versions enabled for SSL/TLS connections to the SOCKS server
     
         ssl.keyStoreFile=FILE

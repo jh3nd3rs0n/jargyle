@@ -34,7 +34,7 @@ public final class ChainingDtlsSettingSpecConstants {
 			doc = "The space separated list of acceptable cipher suites "
 					+ "enabled for DTLS connections to the other SOCKS "
 					+ "server",
-			usage = "chaining.dtls.enabledCipherSuites=[DTLS_CIPHER_SUITE1[ DTLS_CIPHER_SUITE2[...]]]"
+			usage = "chaining.dtls.enabledCipherSuites=[DTLS_CIPHER_SUITE1[ DTLS_CIPHER_SUITE2[ ...]]]"
 	)
 	public static final SettingSpec<Words> CHAINING_DTLS_ENABLED_CIPHER_SUITES = 
 			SETTING_SPECS.addThenGet(new WordsSettingSpec(
@@ -45,7 +45,7 @@ public final class ChainingDtlsSettingSpecConstants {
 			doc = "The space separated list of acceptable protocol versions "
 					+ "enabled for DTLS connections to the other SOCKS "
 					+ "server",
-			usage = "chaining.dtls.enabledProtocols=[DTLS_PROTOCOL1[ DTLS_PROTOCOL2[...]]]"
+			usage = "chaining.dtls.enabledProtocols=[DTLS_PROTOCOL1[ DTLS_PROTOCOL2[ ...]]]"
 	)	
 	public static final SettingSpec<Words> CHAINING_DTLS_ENABLED_PROTOCOLS = 
 			SETTING_SPECS.addThenGet(new WordsSettingSpec(

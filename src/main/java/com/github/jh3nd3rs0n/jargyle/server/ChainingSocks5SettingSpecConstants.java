@@ -62,7 +62,7 @@ public final class ChainingSocks5SettingSpecConstants {
 					+ "acceptable if the server does not accept the first.) "
 					+ "(default is "
 					+ "REQUIRED_INTEG_AND_CONF REQUIRED_INTEG NONE)", 
-			usage = "chaining.socks5.gssapiauth.protectionLevels=SOCKS5_GSSAPIAUTH_PROTECTION_LEVEL1[ SOCKS5_GSSAPIAUTH_PROTECTION_LEVEL2[...]]"
+			usage = "chaining.socks5.gssapiauth.protectionLevels=SOCKS5_GSSAPIAUTH_PROTECTION_LEVEL1[ SOCKS5_GSSAPIAUTH_PROTECTION_LEVEL2[ ...]]"
 	)
 	public static final SettingSpec<ProtectionLevels> CHAINING_SOCKS5_GSSAPIAUTH_PROTECTION_LEVELS = 
 			SETTING_SPECS.addThenGet(new ProtectionLevelsSettingSpec(
@@ -82,7 +82,7 @@ public final class ChainingSocks5SettingSpecConstants {
 			doc = "The space separated list of acceptable authentication "
 					+ "methods to the other SOCKS5 server (default is "
 					+ "NO_AUTHENTICATION_REQUIRED)", 
-			usage = "chaining.socks5.methods=[SOCKS5_METHOD1[ SOCKS5_METHOD2[...]]]"
+			usage = "chaining.socks5.methods=[SOCKS5_METHOD1[ SOCKS5_METHOD2[ ...]]]"
 	)
 	public static final SettingSpec<Methods> CHAINING_SOCKS5_METHODS = 
 			SETTING_SPECS.addThenGet(new MethodsSettingSpec(

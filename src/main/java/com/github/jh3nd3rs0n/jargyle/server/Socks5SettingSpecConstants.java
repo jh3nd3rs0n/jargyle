@@ -42,7 +42,7 @@ public final class Socks5SettingSpecConstants {
 					+ "if the client does not provide a protection level that "
 					+ "is acceptable.) (default is REQUIRED_INTEG_AND_CONF "
 					+ "REQUIRED_INTEG NONE)", 
-			usage = "socks5.gssapiauth.protectionLevels=SOCKS5_GSSAPIAUTH_PROTECTION_LEVEL1[ SOCKS5_GSSAPIAUTH_PROTECTION_LEVEL2[...]]"
+			usage = "socks5.gssapiauth.protectionLevels=SOCKS5_GSSAPIAUTH_PROTECTION_LEVEL1[ SOCKS5_GSSAPIAUTH_PROTECTION_LEVEL2[ ...]]"
 	)
 	public static final SettingSpec<ProtectionLevels> SOCKS5_GSSAPIAUTH_PROTECTION_LEVELS = 
 			SETTING_SPECS.addThenGet(new ProtectionLevelsSettingSpec(
@@ -53,7 +53,7 @@ public final class Socks5SettingSpecConstants {
 			doc = "The space separated list of acceptable authentication "
 					+ "methods in order of preference (default is "
 					+ "NO_AUTHENTICATION_REQUIRED)", 
-			usage = "socks5.methods=[SOCKS5_METHOD1[ SOCKS5_METHOD2[...]]]"
+			usage = "socks5.methods=[SOCKS5_METHOD1[ SOCKS5_METHOD2[ ...]]]"
 	)
 	public static final SettingSpec<Methods> SOCKS5_METHODS = 
 			SETTING_SPECS.addThenGet(new MethodsSettingSpec(
@@ -63,7 +63,7 @@ public final class Socks5SettingSpecConstants {
 	@HelpText(
 			doc = "The space separated list of socket settings for the inbound "
 					+ "socket", 
-			usage = "socks5.onBind.inboundSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
+			usage = "socks5.onBind.inboundSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[ ...]]]"
 	)
 	public static final SettingSpec<SocketSettings> SOCKS5_ON_BIND_INBOUND_SOCKET_SETTINGS = 
 			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
@@ -93,7 +93,7 @@ public final class Socks5SettingSpecConstants {
 	@HelpText(
 			doc = "The space separated list of socket settings for the listen "
 					+ "socket", 
-			usage = "socks5.onBind.listenSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
+			usage = "socks5.onBind.listenSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[ ...]]]"
 	)
 	public static final SettingSpec<SocketSettings> SOCKS5_ON_BIND_LISTEN_SOCKET_SETTINGS = 
 			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
@@ -200,7 +200,7 @@ public final class Socks5SettingSpecConstants {
 	@HelpText(
 			doc = "The space separated list of socket settings for all "
 					+ "external-facing sockets",
-			usage = "socks5.onCommand.externalFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
+			usage = "socks5.onCommand.externalFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[ ...]]]"
 	)
 	public static final SettingSpec<SocketSettings> SOCKS5_ON_COMMAND_EXTERNAL_FACING_SOCKET_SETTINGS =
 			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
@@ -240,7 +240,7 @@ public final class Socks5SettingSpecConstants {
 	@HelpText(
 			doc = "The space separated list of socket settings for all "
 					+ "internal-facing sockets",
-			usage = "socks5.onCommand.internalFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
+			usage = "socks5.onCommand.internalFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[ ...]]]"
 	)
 	public static final SettingSpec<SocketSettings> SOCKS5_ON_COMMAND_INTERNAL_FACING_SOCKET_SETTINGS =
 			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
@@ -289,7 +289,7 @@ public final class Socks5SettingSpecConstants {
 	
 	@HelpText(
 			doc = "The space separated list of socket settings for all sockets",
-			usage = "socks5.onCommand.socketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
+			usage = "socks5.onCommand.socketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[ ...]]]"
 	)
 	public static final SettingSpec<SocketSettings> SOCKS5_ON_COMMAND_SOCKET_SETTINGS =
 			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
@@ -380,7 +380,7 @@ public final class Socks5SettingSpecConstants {
 	@HelpText(
 			doc = "The space separated list of socket settings for the "
 					+ "server-facing socket", 
-			usage = "socks5.onConnect.serverFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
+			usage = "socks5.onConnect.serverFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[ ...]]]"
 	)
 	public static final SettingSpec<SocketSettings> SOCKS5_ON_CONNECT_SERVER_FACING_SOCKET_SETTINGS = 
 			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
@@ -410,7 +410,7 @@ public final class Socks5SettingSpecConstants {
 	@HelpText(
 			doc = "The space separated list of socket settings for the "
 					+ "client-facing UDP socket", 
-			usage = "socks5.onUdpAssociate.clientFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
+			usage = "socks5.onUdpAssociate.clientFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[ ...]]]"
 	)
 	public static final SettingSpec<SocketSettings> SOCKS5_ON_UDP_ASSOCIATE_CLIENT_FACING_SOCKET_SETTINGS = 
 			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
@@ -440,7 +440,7 @@ public final class Socks5SettingSpecConstants {
 	@HelpText(
 			doc = "The space separated list of socket settings for the "
 					+ "peer-facing UDP socket", 
-			usage = "socks5.onUdpAssociate.peerFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
+			usage = "socks5.onUdpAssociate.peerFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[ ...]]]"
 	)
 	public static final SettingSpec<SocketSettings> SOCKS5_ON_UDP_ASSOCIATE_PEER_FACING_SOCKET_SETTINGS = 
 			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(

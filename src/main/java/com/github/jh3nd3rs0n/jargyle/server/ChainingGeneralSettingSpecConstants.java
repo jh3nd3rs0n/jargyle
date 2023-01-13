@@ -62,7 +62,7 @@ public final class ChainingGeneralSettingSpecConstants {
 					+ "client socket that is used to connect to the other "
 					+ "SOCKS server (used for the SOCKS5 command RESOLVE and "
 					+ "UDP ASSOCIATE)", 
-			usage = "chaining.clientSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[...]]]"
+			usage = "chaining.clientSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[ ...]]]"
 	)
 	public static final SettingSpec<SocketSettings> CHAINING_CLIENT_SOCKET_SETTINGS = 
 			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(

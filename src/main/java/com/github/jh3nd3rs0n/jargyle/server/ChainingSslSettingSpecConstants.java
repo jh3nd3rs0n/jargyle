@@ -32,7 +32,7 @@ public final class ChainingSslSettingSpecConstants {
 			doc = "The space separated list of acceptable cipher suites "
 					+ "enabled for SSL/TLS connections to the other SOCKS "
 					+ "server",
-			usage = "chaining.ssl.enabledCipherSuites=[SSL_CIPHER_SUITE1[ SSL_CIPHER_SUITE2[...]]]"
+			usage = "chaining.ssl.enabledCipherSuites=[SSL_CIPHER_SUITE1[ SSL_CIPHER_SUITE2[ ...]]]"
 	)
 	public static final SettingSpec<Words> CHAINING_SSL_ENABLED_CIPHER_SUITES = 
 			SETTING_SPECS.addThenGet(new WordsSettingSpec(
@@ -43,7 +43,7 @@ public final class ChainingSslSettingSpecConstants {
 			doc = "The space separated list of acceptable protocol versions "
 					+ "enabled for SSL/TLS connections to the other SOCKS "
 					+ "server",
-			usage = "chaining.ssl.enabledProtocols=[SSL_PROTOCOL1[ SSL_PROTOCOL2[...]]]"
+			usage = "chaining.ssl.enabledProtocols=[SSL_PROTOCOL1[ SSL_PROTOCOL2[ ...]]]"
 	)	
 	public static final SettingSpec<Words> CHAINING_SSL_ENABLED_PROTOCOLS = 
 			SETTING_SPECS.addThenGet(new WordsSettingSpec(

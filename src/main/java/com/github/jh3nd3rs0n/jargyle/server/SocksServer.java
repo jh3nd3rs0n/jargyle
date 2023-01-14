@@ -5,6 +5,7 @@ import java.net.BindException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
+import java.net.SocketException;
 import java.util.Iterator;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -139,7 +140,15 @@ public final class SocksServer {
 					!serverSockBound && iter.hasNext();) {
 				Port bindPort = iter.next();
 				serverSock = new ServerSocket();
-				socketSettings.applyTo(serverSock);
+				try {
+					socketSettings.applyTo(serverSock);
+				} catch (UnsupportedOperationException e) {
+					serverSock.close();
+					throw e;
+				} catch (SocketException e) {
+					serverSock.close();
+					throw e;
+				}
 				try {
 					serverSock.bind(
 							new InetSocketAddress(
@@ -149,6 +158,9 @@ public final class SocksServer {
 				} catch (BindException e) {
 					serverSock.close();
 					continue;
+				} catch (IOException e) {
+					serverSock.close();
+					throw e;
 				}
 				serverSockBound = true;
 			}

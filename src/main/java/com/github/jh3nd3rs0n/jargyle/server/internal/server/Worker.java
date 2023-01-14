@@ -43,6 +43,12 @@ final class Worker implements Runnable {
 							this, "Invalid client socket"), 
 					e);			
 			return null;
+		} catch (UnsupportedOperationException e) {
+			LOGGER.error(
+					ObjectLogMessageHelper.objectLogMessage(
+							this, "Error in setting the client socket"), 
+					e);
+			return null;			
 		} catch (SocketException e) {
 			LOGGER.error(
 					ObjectLogMessageHelper.objectLogMessage(

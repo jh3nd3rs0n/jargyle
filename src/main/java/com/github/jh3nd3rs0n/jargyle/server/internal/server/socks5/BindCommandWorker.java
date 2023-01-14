@@ -214,6 +214,15 @@ final class BindCommandWorker extends CommandWorker {
 		SocketSettings socketSettings = this.getInboundSocketSettings();
 		try {
 			socketSettings.applyTo(inboundSocket);
+		} catch (UnsupportedOperationException e) {
+			LOGGER.error( 
+					ObjectLogMessageHelper.objectLogMessage(
+							this, "Error in setting the inbound socket"), 
+					e);
+			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
+					Reply.GENERAL_SOCKS_SERVER_FAILURE);
+			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep, LOGGER);
+			return false;			
 		} catch (SocketException e) {
 			LOGGER.error( 
 					ObjectLogMessageHelper.objectLogMessage(
@@ -231,6 +240,15 @@ final class BindCommandWorker extends CommandWorker {
 		SocketSettings socketSettings = this.getListenSocketSettings();
 		try {
 			socketSettings.applyTo(listenSocket);
+		} catch (UnsupportedOperationException e) {
+			LOGGER.error( 
+					ObjectLogMessageHelper.objectLogMessage(
+							this, "Error in setting the listen socket"), 
+					e);
+			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
+					Reply.GENERAL_SOCKS_SERVER_FAILURE);
+			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep, LOGGER);
+			return false;			
 		} catch (SocketException e) {
 			LOGGER.error( 
 					ObjectLogMessageHelper.objectLogMessage(
@@ -572,6 +590,11 @@ final class BindCommandWorker extends CommandWorker {
 					return null;
 				}
 				if (!this.configureListenSocket(listenSocket)) {
+					try {
+						listenSocket.close();
+					} catch (IOException e) {
+						throw new AssertionError(e);
+					}
 					return null;
 				}
 				try {
@@ -585,11 +608,6 @@ final class BindCommandWorker extends CommandWorker {
 					}
 					continue;
 				} catch (IOException e) {
-					try {
-						listenSocket.close();
-					} catch (IOException ex) {
-						throw new AssertionError(ex);
-					}
 					LOGGER.error( 
 							ObjectLogMessageHelper.objectLogMessage(
 									this, 
@@ -599,6 +617,11 @@ final class BindCommandWorker extends CommandWorker {
 							Reply.GENERAL_SOCKS_SERVER_FAILURE);
 					this.commandWorkerContext.sendSocks5Reply(
 							this, socks5Rep, LOGGER);
+					try {
+						listenSocket.close();
+					} catch (IOException ex) {
+						throw new AssertionError(ex);
+					}
 					return null;
 				}
 				listenSocketBound = true;

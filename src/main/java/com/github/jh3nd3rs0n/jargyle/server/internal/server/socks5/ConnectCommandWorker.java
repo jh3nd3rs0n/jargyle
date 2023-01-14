@@ -88,6 +88,15 @@ final class ConnectCommandWorker extends CommandWorker {
 		SocketSettings socketSettings = this.getServerFacingSocketSettings();
 		try {
 			socketSettings.applyTo(serverFacingSocket);
+		} catch (UnsupportedOperationException e) {
+			LOGGER.error( 
+					ObjectLogMessageHelper.objectLogMessage(
+							this, "Error in setting the server-facing socket"), 
+					e);
+			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
+					Reply.GENERAL_SOCKS_SERVER_FAILURE);
+			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep, LOGGER);
+			return false;			
 		} catch (SocketException e) {
 			LOGGER.error( 
 					ObjectLogMessageHelper.objectLogMessage(
@@ -469,6 +478,11 @@ final class ConnectCommandWorker extends CommandWorker {
 				Port bindPort = iter.next();
 				serverFacingSocket = this.netObjectFactory.newSocket();
 				if (!this.configureServerFacingSocket(serverFacingSocket)) {
+					try {
+						serverFacingSocket.close();
+					} catch (IOException e) {
+						throw new AssertionError(e);
+					}
 					return null;
 				}
 				try {
@@ -482,11 +496,6 @@ final class ConnectCommandWorker extends CommandWorker {
 					}
 					continue;
 				} catch (IOException e) {
-					try {
-						serverFacingSocket.close();
-					} catch (IOException ex) {
-						throw new AssertionError(ex);
-					}					
 					LOGGER.error( 
 							ObjectLogMessageHelper.objectLogMessage(
 									this, 
@@ -497,6 +506,11 @@ final class ConnectCommandWorker extends CommandWorker {
 							Reply.GENERAL_SOCKS_SERVER_FAILURE);
 					this.commandWorkerContext.sendSocks5Reply(
 							this, socks5Rep, LOGGER);
+					try {
+						serverFacingSocket.close();
+					} catch (IOException ex) {
+						throw new AssertionError(ex);
+					}					
 					return null;
 				}				
 				try {
@@ -518,11 +532,6 @@ final class ConnectCommandWorker extends CommandWorker {
 					if (e instanceof SocketException
 							|| ThrowableHelper.getRecentCause(
 									e, SocketException.class) != null) {
-						try {
-							serverFacingSocket.close();
-						} catch (IOException ex) {
-							throw new AssertionError(ex);
-						}						
 						LOGGER.error( 
 								ObjectLogMessageHelper.objectLogMessage(
 										this, 
@@ -533,12 +542,12 @@ final class ConnectCommandWorker extends CommandWorker {
 								Reply.NETWORK_UNREACHABLE);
 						this.commandWorkerContext.sendSocks5Reply(
 								this, socks5Rep, LOGGER);
+						try {
+							serverFacingSocket.close();
+						} catch (IOException ex) {
+							throw new AssertionError(ex);
+						}						
 						return null;						
-					}
-					try {
-						serverFacingSocket.close();
-					} catch (IOException ex) {
-						throw new AssertionError(ex);
 					}
 					LOGGER.error( 
 							ObjectLogMessageHelper.objectLogMessage(
@@ -550,6 +559,11 @@ final class ConnectCommandWorker extends CommandWorker {
 							Reply.GENERAL_SOCKS_SERVER_FAILURE);
 					this.commandWorkerContext.sendSocks5Reply(
 							this, socks5Rep, LOGGER);
+					try {
+						serverFacingSocket.close();
+					} catch (IOException ex) {
+						throw new AssertionError(ex);
+					}
 					return null;
 				}				
 				serverFacingSocketBound = true;

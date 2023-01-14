@@ -86,6 +86,16 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 		SocketSettings socketSettings = this.getClientFacingSocketSettings();
 		try {
 			socketSettings.applyTo(clientFacingDatagramSock);
+		} catch (UnsupportedOperationException e) {
+			LOGGER.error( 
+					ObjectLogMessageHelper.objectLogMessage(
+							this, 
+							"Error in setting the client-facing UDP socket"), 
+					e);
+			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
+					Reply.GENERAL_SOCKS_SERVER_FAILURE);
+			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep, LOGGER);
+			return false;			
 		} catch (SocketException e) {
 			LOGGER.error( 
 					ObjectLogMessageHelper.objectLogMessage(
@@ -105,6 +115,16 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 		SocketSettings socketSettings = this.getPeerFacingSocketSettings();
 		try {
 			socketSettings.applyTo(peerFacingDatagramSock);
+		} catch (UnsupportedOperationException e) {
+			LOGGER.error( 
+					ObjectLogMessageHelper.objectLogMessage(
+							this, 
+							"Error in setting the peer-facing UDP socket"), 
+					e);
+			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
+					Reply.GENERAL_SOCKS_SERVER_FAILURE);
+			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep, LOGGER);
+			return false;			
 		} catch (SocketException e) {
 			LOGGER.error( 
 					ObjectLogMessageHelper.objectLogMessage(
@@ -545,11 +565,7 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 					!clientFacingDatagramSockBound && iter.hasNext();) {
 				Port bindPort = iter.next();
 				try {
-					clientFacingDatagramSock = new DatagramSocket(
-							new InetSocketAddress(
-									bindInetAddress, bindPort.intValue()));
-				} catch (BindException e) {
-					continue;
+					clientFacingDatagramSock = new DatagramSocket(null);
 				} catch (SocketException e) {
 					LOGGER.error( 
 							ObjectLogMessageHelper.objectLogMessage(
@@ -561,6 +577,35 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 							Reply.GENERAL_SOCKS_SERVER_FAILURE);
 					this.commandWorkerContext.sendSocks5Reply(
 							this, socks5Rep, LOGGER);
+					if (clientFacingDatagramSock != null 
+							&& !clientFacingDatagramSock.isClosed()) {
+						clientFacingDatagramSock.close();
+					}
+					return null;
+				}
+				if (!this.configureClientFacingDatagramSocket(
+						clientFacingDatagramSock)) {
+					clientFacingDatagramSock.close();
+					return null;
+				}
+				try {
+					clientFacingDatagramSock.bind(new InetSocketAddress(
+							bindInetAddress, bindPort.intValue()));
+				} catch (BindException e) {
+					clientFacingDatagramSock.close();
+					continue;
+				} catch (SocketException e) {
+					LOGGER.error( 
+							ObjectLogMessageHelper.objectLogMessage(
+									this, 
+									"Error in binding the client-facing UDP "
+									+ "socket"), 
+							e);
+					Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
+							Reply.GENERAL_SOCKS_SERVER_FAILURE);
+					this.commandWorkerContext.sendSocks5Reply(
+							this, socks5Rep, LOGGER);
+					clientFacingDatagramSock.close();
 					return null;
 				}
 				clientFacingDatagramSockBound = true;
@@ -598,12 +643,7 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 				Port bindPort = iter.next();
 				try {
 					peerFacingDatagramSock = 
-							this.netObjectFactory.newDatagramSocket(
-									new InetSocketAddress(
-											bindInetAddress, 
-											bindPort.intValue()));
-				} catch (BindException e) {
-					continue;
+							this.netObjectFactory.newDatagramSocket(null);
 				} catch (SocketException e) {
 					LOGGER.error( 
 							ObjectLogMessageHelper.objectLogMessage(
@@ -615,6 +655,35 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 							Reply.GENERAL_SOCKS_SERVER_FAILURE);
 					this.commandWorkerContext.sendSocks5Reply(
 							this, socks5Rep, LOGGER);
+					if (peerFacingDatagramSock != null 
+							&& !peerFacingDatagramSock.isClosed()) {
+						peerFacingDatagramSock.close();
+					}
+					return null;
+				}
+				if (!this.configurePeerFacingDatagramSocket(
+						peerFacingDatagramSock)) {
+					peerFacingDatagramSock.close();
+					return null;
+				}
+				try {
+					peerFacingDatagramSock.bind(new InetSocketAddress(
+							bindInetAddress, bindPort.intValue()));
+				} catch (BindException e) {
+					peerFacingDatagramSock.close();
+					continue;
+				} catch (SocketException e) {
+					LOGGER.error( 
+							ObjectLogMessageHelper.objectLogMessage(
+									this, 
+									"Error in binding the peer-facing UDP "
+									+ "socket"), 
+							e);
+					Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
+							Reply.GENERAL_SOCKS_SERVER_FAILURE);
+					this.commandWorkerContext.sendSocks5Reply(
+							this, socks5Rep, LOGGER);
+					peerFacingDatagramSock.close();
 					return null;
 				}
 				peerFacingDatagramSockBound = true;
@@ -669,16 +738,8 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 			if (peerFacingDatagramSock == null) {
 				return;
 			}
-			if (!this.configurePeerFacingDatagramSocket(
-					peerFacingDatagramSock)) {
-				return;
-			}
 			clientFacingDatagramSock = this.newClientFacingDatagramSocket();
 			if (clientFacingDatagramSock == null) {
-				return;
-			}
-			if (!this.configureClientFacingDatagramSocket(
-					clientFacingDatagramSock)) {
 				return;
 			}
 			DatagramSocket clientFacingDatagramSck = 

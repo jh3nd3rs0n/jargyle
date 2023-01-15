@@ -303,7 +303,8 @@ public class StressIT {
 				e.printStackTrace();
 			}
 		}
-		List<Long> completedTimesList = completedTimes.stream().sorted().toList();
+		List<Long> completedTimesList = 
+				completedTimes.stream().sorted().collect(Collectors.toList());
 		int completedTimesListSize = completedTimesList.size();
 		long combinedTime = 0L;
 		for (Long completedTime : completedTimesList) {
@@ -376,7 +377,8 @@ public class StressIT {
 				e.printStackTrace();
 			}
 		}
-		List<Long> completedTimesList = completedTimes.stream().sorted().toList();
+		List<Long> completedTimesList = 
+				completedTimes.stream().sorted().collect(Collectors.toList());
 		int completedTimesListSize = completedTimesList.size();
 		long combinedTime = 0L;
 		for (Long completedTime : completedTimesList) {
@@ -447,7 +449,8 @@ public class StressIT {
 				e.printStackTrace();
 			}
 		}
-		List<Long> completedTimesList = completedTimes.stream().sorted().toList();
+		List<Long> completedTimesList = 
+				completedTimes.stream().sorted().collect(Collectors.toList());
 		int completedTimesListSize = completedTimesList.size();
 		long combinedTime = 0L;
 		for (Long completedTime : completedTimesList) {
@@ -520,7 +523,8 @@ public class StressIT {
 				e.printStackTrace();
 			}
 		}
-		List<Long> completedTimesList = completedTimes.stream().sorted().toList();
+		List<Long> completedTimesList = 
+				completedTimes.stream().sorted().collect(Collectors.toList());
 		int completedTimesListSize = completedTimesList.size();
 		long combinedTime = 0L;
 		for (Long completedTime : completedTimesList) {
@@ -591,7 +595,8 @@ public class StressIT {
 				e.printStackTrace();
 			}
 		}
-		List<Long> completedTimesList = completedTimes.stream().sorted().toList();
+		List<Long> completedTimesList = 
+				completedTimes.stream().sorted().collect(Collectors.toList());
 		int completedTimesListSize = completedTimesList.size();
 		long combinedTime = 0L;
 		for (Long completedTime : completedTimesList) {
@@ -664,7 +669,8 @@ public class StressIT {
 				e.printStackTrace();
 			}
 		}
-		List<Long> completedTimesList = completedTimes.stream().sorted().toList();
+		List<Long> completedTimesList = 
+				completedTimes.stream().sorted().collect(Collectors.toList());
 		int completedTimesListSize = completedTimesList.size();
 		long combinedTime = 0L;
 		for (Long completedTime : completedTimesList) {
@@ -735,7 +741,8 @@ public class StressIT {
 				e.printStackTrace();
 			}
 		}
-		List<Long> completedTimesList = completedTimes.stream().sorted().toList();
+		List<Long> completedTimesList = 
+				completedTimes.stream().sorted().collect(Collectors.toList());
 		int completedTimesListSize = completedTimesList.size();
 		long combinedTime = 0L;
 		for (Long completedTime : completedTimesList) {
@@ -808,7 +815,8 @@ public class StressIT {
 				e.printStackTrace();
 			}
 		}
-		List<Long> completedTimesList = completedTimes.stream().sorted().toList();
+		List<Long> completedTimesList = 
+				completedTimes.stream().sorted().collect(Collectors.toList());
 		int completedTimesListSize = completedTimesList.size();
 		long combinedTime = 0L;
 		for (Long completedTime : completedTimesList) {

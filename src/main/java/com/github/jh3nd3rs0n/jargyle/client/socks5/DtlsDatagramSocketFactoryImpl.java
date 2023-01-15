@@ -6,6 +6,7 @@ import java.net.DatagramSocket;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.SSLContext;
@@ -30,10 +31,12 @@ final class DtlsDatagramSocketFactoryImpl extends DtlsDatagramSocketFactory {
 	}
 	
 	private SSLContext dtlsContext;
+	private final ReentrantLock lock;
 	private final SocksClient socksClient;
 		
 	public DtlsDatagramSocketFactoryImpl(final SocksClient client) {
 		this.dtlsContext = null;
+		this.lock = new ReentrantLock();
 		this.socksClient = client;
 	}
 	
@@ -81,10 +84,13 @@ final class DtlsDatagramSocketFactoryImpl extends DtlsDatagramSocketFactory {
 	@Override
 	public DatagramSocket newDatagramSocket(
 			final DatagramSocket datagramSocket) throws IOException {
-		synchronized (this) {
+		this.lock.lock();
+		try {
 			if (this.dtlsContext == null) {
 				this.dtlsContext = this.getDtlsContext();
 			}
+		} finally {
+			this.lock.unlock();
 		}
 		DtlsDatagramSocketFactory factory = 
 				DtlsDatagramSocketFactory.newInstance(this.dtlsContext);

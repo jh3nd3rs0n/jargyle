@@ -9,6 +9,8 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -297,58 +299,60 @@ public final class RelayServer {
 	private final int bufferSize;
 	private ExecutorService executor;
 	private final Socket externalSocket;	
-	private long idleStartTime;
+	private final AtomicLong idleStartTime;
 	private final int idleTimeout;
-	private State state;
+	private final AtomicReference<State> state;
 	
 	private RelayServer(final Builder builder) {
 		this.clientSocket = builder.clientSocket;
 		this.bufferSize = builder.bufferSize;
 		this.executor = null;
 		this.externalSocket = builder.externalSocket;		
-		this.idleStartTime = 0L;
+		this.idleStartTime = new AtomicLong(0L);
 		this.idleTimeout = builder.idleTimeout;
-		this.state = State.STOPPED;
+		this.state = new AtomicReference<State>(State.STOPPED);
 	}
 	
-	private synchronized long getIdleStartTime() {
-		return this.idleStartTime;
+	private long getIdleStartTime() {
+		return this.idleStartTime.get();
 	}
 	
 	public State getState() {
-		return this.state;
+		return this.state.get();
 	}
 	
-	private synchronized void setIdleStartTime(final long time) {
-		this.idleStartTime = time;
+	private void setIdleStartTime(final long time) {
+		this.idleStartTime.set(time);
 	}
 	
 	public void start() throws IOException {
-		if (this.state.equals(State.STARTED)) {
+		if (!this.state.compareAndSet(State.STOPPED, State.STARTED)) {
 			throw new IllegalStateException("RelayServer already started");
 		}
-		this.idleStartTime = System.currentTimeMillis();
+		this.idleStartTime.set(System.currentTimeMillis());
 		this.executor = ExecutorHelper.newExecutor();
 		this.executor.execute(new DataWorker(new InboundDataWorkerContext(
 				this)));
 		this.executor.execute(new DataWorker(new OutboundDataWorkerContext(
 				this)));
-		this.state = State.STARTED;
 	}
 	
 	public void stop() {
-		if (this.state.equals(State.STOPPED)) {
+		if (!this.state.compareAndSet(State.STARTED, State.STOPPED)) {
 			throw new IllegalStateException("RelayServer already stopped");
 		}
-		this.idleStartTime = 0L;
+		this.idleStartTime.set(0L);
 		this.executor.shutdownNow();
 		this.executor = null;
-		this.state = State.STOPPED;
 	}
 	
-	private synchronized void stopIfNotStopped() {
-		if (!this.state.equals(State.STOPPED)) {
-			this.stop();
+	private void stopIfNotStopped() {
+		if (!this.state.get().equals(State.STOPPED)) {
+			try {
+				this.stop();
+			} catch (IllegalStateException e) {
+				// the other thread stopped the relay server
+			}
 		}
 	}
 	

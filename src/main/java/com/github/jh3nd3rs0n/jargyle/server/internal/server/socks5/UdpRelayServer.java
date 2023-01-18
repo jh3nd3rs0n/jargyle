@@ -9,6 +9,9 @@ import java.net.SocketTimeoutException;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -120,27 +123,7 @@ final class UdpRelayServer {
 			super(context);
 		}
 		
-		private boolean canApplyRule(final Rule applicableRule) {
-			if (applicableRule.hasRuleCondition(
-					Socks5RuleConditionSpecConstants.SOCKS5_UDP_INBOUND_DESIRED_DESTINATION_ADDRESS)) {
-				return true;
-			}
-			if (applicableRule.hasRuleCondition(
-					Socks5RuleConditionSpecConstants.SOCKS5_UDP_INBOUND_DESIRED_DESTINATION_PORT)) {
-				return true;
-			}
-			if (applicableRule.hasRuleCondition(
-					Socks5RuleConditionSpecConstants.SOCKS5_UDP_INBOUND_SOURCE_ADDRESS)) {
-				return true;
-			}
-			if (applicableRule.hasRuleCondition(
-					Socks5RuleConditionSpecConstants.SOCKS5_UDP_INBOUND_SOURCE_PORT)) {
-				return true;
-			}
-			return false;
-		}
-		
-		private boolean canForwardDatagramPacket(
+		private boolean canAllowDatagramPacket(
 				final Rule applicableRule,
 				final RuleContext inboundRuleContext) {
 			if (applicableRule == null) {
@@ -183,7 +166,33 @@ final class UdpRelayServer {
 			}
 			return FirewallAction.ALLOW.equals(firewallAction);
 		}
+		
+		private boolean canApplyRule(final Rule applicableRule) {
+			if (applicableRule.hasRuleCondition(
+					Socks5RuleConditionSpecConstants.SOCKS5_UDP_INBOUND_DESIRED_DESTINATION_ADDRESS)) {
+				return true;
+			}
+			if (applicableRule.hasRuleCondition(
+					Socks5RuleConditionSpecConstants.SOCKS5_UDP_INBOUND_DESIRED_DESTINATION_PORT)) {
+				return true;
+			}
+			if (applicableRule.hasRuleCondition(
+					Socks5RuleConditionSpecConstants.SOCKS5_UDP_INBOUND_SOURCE_ADDRESS)) {
+				return true;
+			}
+			if (applicableRule.hasRuleCondition(
+					Socks5RuleConditionSpecConstants.SOCKS5_UDP_INBOUND_SOURCE_PORT)) {
+				return true;
+			}
+			return false;
+		}
 
+		private boolean canSendDatagramPacket() {
+			return !AddressHelper.isAllZerosAddress(
+					this.packetsWorkerContext.getClientAddress())
+					&& this.packetsWorkerContext.getClientPort() != 0;
+		}
+		
 		private DatagramPacket newDatagramPacket(
 				final UdpRequestHeader header) {
 			byte[] headerBytes = header.toByteArray();
@@ -298,8 +307,11 @@ final class UdpRelayServer {
 							this.packetsWorkerContext.getClientPort());
 					Rule applicableRule = this.rules.firstAppliesTo(
 							inboundRuleContext);
-					if (!this.canForwardDatagramPacket(
+					if (!this.canAllowDatagramPacket(
 							applicableRule, inboundRuleContext)) {
+						continue;
+					}
+					if (!this.canSendDatagramPacket()) {
 						continue;
 					}
 					UdpRequestHeader header = this.newUdpRequestHeader(packet);
@@ -354,7 +366,7 @@ final class UdpRelayServer {
 			super(context);
 		}
 		
-		private boolean canAllowDatagramPacket(final DatagramPacket packet) {
+		private boolean canAcceptDatagramPacket(final DatagramPacket packet) {
 			String address = packet.getAddress().getHostAddress();
 			int port = packet.getPort();
 			String clientAddr = this.packetsWorkerContext.getClientAddress();
@@ -402,27 +414,7 @@ final class UdpRelayServer {
 			return true;
 		}
 		
-		private boolean canApplyRule(final Rule applicableRule) {
-			if (applicableRule.hasRuleCondition(
-					Socks5RuleConditionSpecConstants.SOCKS5_UDP_OUTBOUND_DESIRED_DESTINATION_ADDRESS)) {
-				return true;
-			}
-			if (applicableRule.hasRuleCondition(
-					Socks5RuleConditionSpecConstants.SOCKS5_UDP_OUTBOUND_DESIRED_DESTINATION_PORT)) {
-				return true;
-			}
-			if (applicableRule.hasRuleCondition(
-					Socks5RuleConditionSpecConstants.SOCKS5_UDP_OUTBOUND_SOURCE_ADDRESS)) {
-				return true;
-			}
-			if (applicableRule.hasRuleCondition(
-					Socks5RuleConditionSpecConstants.SOCKS5_UDP_OUTBOUND_SOURCE_PORT)) {
-				return true;
-			}
-			return false;
-		}
-		
-		private boolean canForwardDatagramPacket(
+		private boolean canAllowDatagramPacket(
 				final Rule applicableRule,
 				final RuleContext outboundRuleContext) {
 			if (applicableRule == null) {
@@ -464,6 +456,26 @@ final class UdpRelayServer {
 								outboundRuleContext));				
 			}
 			return FirewallAction.ALLOW.equals(firewallAction);
+		}
+		
+		private boolean canApplyRule(final Rule applicableRule) {
+			if (applicableRule.hasRuleCondition(
+					Socks5RuleConditionSpecConstants.SOCKS5_UDP_OUTBOUND_DESIRED_DESTINATION_ADDRESS)) {
+				return true;
+			}
+			if (applicableRule.hasRuleCondition(
+					Socks5RuleConditionSpecConstants.SOCKS5_UDP_OUTBOUND_DESIRED_DESTINATION_PORT)) {
+				return true;
+			}
+			if (applicableRule.hasRuleCondition(
+					Socks5RuleConditionSpecConstants.SOCKS5_UDP_OUTBOUND_SOURCE_ADDRESS)) {
+				return true;
+			}
+			if (applicableRule.hasRuleCondition(
+					Socks5RuleConditionSpecConstants.SOCKS5_UDP_OUTBOUND_SOURCE_PORT)) {
+				return true;
+			}
+			return false;
 		}
 		
 		private DatagramPacket newDatagramPacket(
@@ -578,7 +590,7 @@ final class UdpRelayServer {
 							this, 
 							"Packet data received: %s byte(s)",
 							packet.getLength()));					
-					if (!this.canAllowDatagramPacket(packet)) {
+					if (!this.canAcceptDatagramPacket(packet)) {
 						continue;
 					}
 					UdpRequestHeader header = this.newUdpRequestHeader(packet);
@@ -598,7 +610,7 @@ final class UdpRelayServer {
 									header.getDesiredDestinationPort());
 					Rule applicableRule = this.rules.firstAppliesTo(
 							outboundRuleContext);
-					if (!this.canForwardDatagramPacket(
+					if (!this.canAllowDatagramPacket(
 							applicableRule,	outboundRuleContext)) {
 						continue;
 					}
@@ -769,87 +781,89 @@ final class UdpRelayServer {
 	}
 	
 	private final int bufferSize;	
-	private String clientAddress;
+	private final AtomicReference<String> clientAddress;
 	private final DatagramSocket clientFacingDatagramSocket;	
-	private int clientPort;
+	private final AtomicInteger clientPort;
 	private ExecutorService executor;
 	private final HostResolver hostResolver;
-	private long idleStartTime;
+	private final AtomicLong idleStartTime;
 	private final int idleTimeout;
 	private final DatagramSocket peerFacingDatagramSocket;
 	private final RuleContext ruleContext;
 	private final Rules rules;
-	private State state;
+	private final AtomicReference<State> state;
 	
 	private UdpRelayServer(final Builder builder) {
 		this.bufferSize = builder.bufferSize;
-		this.clientAddress = builder.clientAddress;
+		this.clientAddress = new AtomicReference<String>(builder.clientAddress);
 		this.clientFacingDatagramSocket = builder.clientFacingDatagramSocket;
-		this.clientPort = builder.clientPort;
+		this.clientPort = new AtomicInteger(builder.clientPort);
 		this.executor = null;
 		this.hostResolver = builder.hostResolver;
-		this.idleStartTime = 0L;
+		this.idleStartTime = new AtomicLong(0L);
 		this.idleTimeout = builder.idleTimeout;
 		this.peerFacingDatagramSocket = builder.peerFacingDatagramSocket;
 		this.ruleContext = builder.ruleContext;
 		this.rules = builder.rules;
-		this.state = State.STOPPED;
+		this.state = new AtomicReference<State>(State.STOPPED);
 	}
 	
-	private synchronized String getClientAddress() {
-		return this.clientAddress;
+	private String getClientAddress() {
+		return this.clientAddress.get();
 	}
 	
-	private synchronized int getClientPort() {
-		return this.clientPort;
+	private int getClientPort() {
+		return this.clientPort.get();
 	}
 	
-	private synchronized long getIdleStartTime() {
-		return this.idleStartTime;
+	private long getIdleStartTime() {
+		return this.idleStartTime.get();
 	}
 	
 	public State getState() {
-		return this.state;
+		return this.state.get();
 	}
 	
-	private synchronized void setClientAddress(final String address) {
-		this.clientAddress = address;
+	private void setClientAddress(final String address) {
+		this.clientAddress.set(address);
 	}
 	
-	private synchronized void setClientPort(final int port) {
-		this.clientPort = port;
+	private void setClientPort(final int port) {
+		this.clientPort.set(port);
 	}
 	
-	private synchronized void setIdleStartTime(final long time) {
-		this.idleStartTime = time;
+	private void setIdleStartTime(final long time) {
+		this.idleStartTime.set(time);
 	}
 	
 	public void start() throws IOException {
-		if (this.state.equals(State.STARTED)) {
+		if (!this.state.compareAndSet(State.STOPPED, State.STARTED)) {
 			throw new IllegalStateException("UdpRelayServer already started");
 		}
-		this.idleStartTime = System.currentTimeMillis();
+		this.idleStartTime.set(System.currentTimeMillis());
 		this.executor = ExecutorHelper.newExecutor();
 		this.executor.execute(new InboundPacketsWorker(
 				new PacketsWorkerContext(this)));
 		this.executor.execute(new OutboundPacketsWorker(
 				new PacketsWorkerContext(this)));
-		this.state = State.STARTED;
 	}
 	
 	public void stop() {
-		if (this.state.equals(State.STOPPED)) {
+		if (!this.state.compareAndSet(State.STARTED, State.STOPPED)) {
 			throw new IllegalStateException("UdpRelayServer already stopped");
 		}
-		this.idleStartTime = 0L;
+		this.idleStartTime.set(0L);
 		this.executor.shutdownNow();
 		this.executor = null;
-		this.state = State.STOPPED;
 	}
 	
-	private synchronized void stopIfNotStopped() {
-		if (!this.state.equals(State.STOPPED)) {
-			this.stop();
+	private void stopIfNotStopped() {
+		if (!this.state.get().equals(State.STOPPED)) {
+			try {
+				this.stop();
+			} catch (IllegalStateException e) {
+				// the other thread stopped the UDP relay server
+			}
 		}
 	}
 	

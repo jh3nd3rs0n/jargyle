@@ -1,4 +1,4 @@
-package com.github.jh3nd3rs0n.jargyle.server;
+package com.github.jh3nd3rs0n.jargyle.cli;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -17,12 +17,32 @@ import com.github.jh3nd3rs0n.jargyle.client.Scheme;
 import com.github.jh3nd3rs0n.jargyle.common.net.StandardSocketSettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
 import com.github.jh3nd3rs0n.jargyle.internal.help.HelpText;
+import com.github.jh3nd3rs0n.jargyle.server.ChainingDtlsSettingSpecConstants;
+import com.github.jh3nd3rs0n.jargyle.server.ChainingGeneralSettingSpecConstants;
+import com.github.jh3nd3rs0n.jargyle.server.ChainingSocks5SettingSpecConstants;
+import com.github.jh3nd3rs0n.jargyle.server.ChainingSslSettingSpecConstants;
+import com.github.jh3nd3rs0n.jargyle.server.Configuration;
+import com.github.jh3nd3rs0n.jargyle.server.ConfigurationRepository;
+import com.github.jh3nd3rs0n.jargyle.server.DtlsSettingSpecConstants;
+import com.github.jh3nd3rs0n.jargyle.server.FirewallAction;
+import com.github.jh3nd3rs0n.jargyle.server.GeneralRuleConditionSpecConstants;
+import com.github.jh3nd3rs0n.jargyle.server.GeneralRuleResultSpecConstants;
+import com.github.jh3nd3rs0n.jargyle.server.GeneralSettingSpecConstants;
+import com.github.jh3nd3rs0n.jargyle.server.ImmutableConfiguration;
+import com.github.jh3nd3rs0n.jargyle.server.LogAction;
+import com.github.jh3nd3rs0n.jargyle.server.ModifiableConfiguration;
+import com.github.jh3nd3rs0n.jargyle.server.SelectionStrategy;
+import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Socks5RuleConditionSpecConstants;
+import com.github.jh3nd3rs0n.jargyle.server.Socks5RuleResultSpecConstants;
+import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
+import com.github.jh3nd3rs0n.jargyle.server.SslSettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.internal.io.ConsoleWrapper;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Command;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.gssapiauth.ProtectionLevel;
 
-public abstract class AbstractCLI extends CLI {
+public abstract class ServerConfigurationCLI extends CLI {
 	
 	private static final class SettingGnuLongOptionUsageProvider 
 		extends OptionUsageProvider {
@@ -61,7 +81,7 @@ public abstract class AbstractCLI extends CLI {
 	private ModifiableConfiguration modifiableConfiguration;
 	private final String programBeginningUsage;
 	
-	AbstractCLI(
+	ServerConfigurationCLI(
 			final String progName, 
 			final String progBeginningUsage,
 			final String[] args, 

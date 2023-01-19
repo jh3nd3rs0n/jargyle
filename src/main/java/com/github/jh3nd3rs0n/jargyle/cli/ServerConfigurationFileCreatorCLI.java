@@ -1,15 +1,16 @@
-package com.github.jh3nd3rs0n.jargyle.server;
+package com.github.jh3nd3rs0n.jargyle.cli;
 
 import java.io.File;
 import java.io.UncheckedIOException;
 
 import com.github.jh3nd3rs0n.argmatey.ArgMatey.CLI;
 import com.github.jh3nd3rs0n.argmatey.ArgMatey.TerminationRequestedException;
+import com.github.jh3nd3rs0n.jargyle.server.ConfigurationRepository;
 
-public final class ConfigurationFileCreatorCLI extends AbstractCLI {
+public final class ServerConfigurationFileCreatorCLI extends ServerConfigurationCLI {
 	
 	public static void main(final String[] args) {
-		CLI cli = new ConfigurationFileCreatorCLI(null, null, args, false);
+		CLI cli = new ServerConfigurationFileCreatorCLI(null, null, args, false);
 		try {
 			cli.handleArgs();
 		} catch (TerminationRequestedException e) {
@@ -19,7 +20,7 @@ public final class ConfigurationFileCreatorCLI extends AbstractCLI {
 
 	private String newConfigurationFile;
 	
-	public ConfigurationFileCreatorCLI(
+	public ServerConfigurationFileCreatorCLI(
 			final String progName, 
 			final String progBeginningUsage, 
 			final String[] args, 

@@ -1,4 +1,4 @@
-package com.github.jh3nd3rs0n.jargyle.server;
+package com.github.jh3nd3rs0n.jargyle.cli;
 
 import static org.junit.Assert.assertEquals;
 
@@ -18,7 +18,7 @@ import com.github.jh3nd3rs0n.jargyle.ResourceHelper;
 import com.github.jh3nd3rs0n.jargyle.ResourceNameConstants;
 import com.github.jh3nd3rs0n.jargyle.ThreadHelper;
 
-public class ConfigurationFileCreatorCLIIT {
+public class ServerConfigurationFileCreatorCLIIT {
 	
 	private Path baseDir = null;
 	private Path combinedConfigurationFile = null;
@@ -68,7 +68,7 @@ public class ConfigurationFileCreatorCLIIT {
 						ResourceNameConstants.JARGYLE_SERVER_SUPPLEMENTED_CONFIGURATION_FILE).getAbsolutePath()),
 				this.combinedConfigurationFile.toAbsolutePath().toString()
 		};
-		CLI cli = new ConfigurationFileCreatorCLI(null, null, args, false);
+		CLI cli = new ServerConfigurationFileCreatorCLI(null, null, args, false);
 		try {
 			cli.handleArgs();
 		} catch (TerminationRequestedException e) {
@@ -94,7 +94,7 @@ public class ConfigurationFileCreatorCLIIT {
 				"--setting=socks5.methods=NO_AUTHENTICATION_REQUIRED",
 				this.configurationFile.toAbsolutePath().toString()
 		};
-		CLI cli = new ConfigurationFileCreatorCLI(null, null, args, false);
+		CLI cli = new ServerConfigurationFileCreatorCLI(null, null, args, false);
 		try {
 			cli.handleArgs();
 		} catch (TerminationRequestedException e) {
@@ -117,7 +117,7 @@ public class ConfigurationFileCreatorCLIIT {
 		String[] args = new String[] {
 				this.emptyConfigurationFile.toAbsolutePath().toString()
 		};
-		CLI cli = new ConfigurationFileCreatorCLI(null, null, args, false);
+		CLI cli = new ServerConfigurationFileCreatorCLI(null, null, args, false);
 		try {
 			cli.handleArgs();
 		} catch (TerminationRequestedException e) {
@@ -143,7 +143,7 @@ public class ConfigurationFileCreatorCLIIT {
 				"--setting=socksServerSocketSettings=SO_TIMEOUT=0",
 				this.supplementedConfigurationFile.toAbsolutePath().toString()
 		};
-		CLI cli = new ConfigurationFileCreatorCLI(null, null, args, false);
+		CLI cli = new ServerConfigurationFileCreatorCLI(null, null, args, false);
 		try {
 			cli.handleArgs();
 		} catch (TerminationRequestedException e) {

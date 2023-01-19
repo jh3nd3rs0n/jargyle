@@ -1,4 +1,4 @@
-package com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth;
+package com.github.jh3nd3rs0n.jargyle.cli;
 
 import java.io.UncheckedIOException;
 import java.lang.reflect.Field;
@@ -15,8 +15,11 @@ import com.github.jh3nd3rs0n.argmatey.ArgMatey.OptionType;
 import com.github.jh3nd3rs0n.argmatey.ArgMatey.TerminationRequestedException;
 import com.github.jh3nd3rs0n.jargyle.internal.help.HelpText;
 import com.github.jh3nd3rs0n.jargyle.server.internal.io.ConsoleWrapper;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.User;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.UserRepository;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.Users;
 
-public final class UserManagerCLI extends CLI {
+public final class Socks5UserManagerCLI extends CLI {
 	
 	private static enum Command {
 		
@@ -161,7 +164,7 @@ public final class UserManagerCLI extends CLI {
 	private static final int HELP_OPTION_GROUP_ORDINAL = 0;
 	
 	public static void main(final String[] args) {
-		CLI cli = new UserManagerCLI(null, null, args, false);
+		CLI cli = new Socks5UserManagerCLI(null, null, args, false);
 		try {
 			cli.handleArgs();
 		} catch (TerminationRequestedException e) {
@@ -173,7 +176,7 @@ public final class UserManagerCLI extends CLI {
 	private final String suggestion;
 	private UserRepository userRepository;
 	
-	public UserManagerCLI(
+	public Socks5UserManagerCLI(
 			final String progName, 
 			final String progBeginningUsage, 
 			final String[] args, 

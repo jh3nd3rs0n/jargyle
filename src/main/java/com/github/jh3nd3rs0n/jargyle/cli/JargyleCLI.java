@@ -11,10 +11,7 @@ import com.github.jh3nd3rs0n.argmatey.ArgMatey.CLI;
 import com.github.jh3nd3rs0n.argmatey.ArgMatey.OptionType;
 import com.github.jh3nd3rs0n.argmatey.ArgMatey.TerminationRequestedException;
 import com.github.jh3nd3rs0n.jargyle.internal.help.HelpText;
-import com.github.jh3nd3rs0n.jargyle.server.ConfigurationFileCreatorCLI;
-import com.github.jh3nd3rs0n.jargyle.server.SocksServerCLI;
 import com.github.jh3nd3rs0n.jargyle.server.internal.config.xml.bind.ConfigurationXsd;
-import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.UserManagerCLI;
 
 public final class JargyleCLI extends CLI {
 
@@ -33,7 +30,7 @@ public final class JargyleCLI extends CLI {
 					final String[] args, 
 					final boolean posixCorrect) 
 					throws TerminationRequestedException {
-				CLI cli = new UserManagerCLI(
+				CLI cli = new Socks5UserManagerCLI(
 						progName,
 						progBeginningUsage,
 						args,
@@ -57,7 +54,7 @@ public final class JargyleCLI extends CLI {
 					final String[] args, 
 					final boolean posixCorrect)	
 					throws TerminationRequestedException {
-				CLI cli = new ConfigurationFileCreatorCLI(
+				CLI cli = new ServerConfigurationFileCreatorCLI(
 						progName,
 						progBeginningUsage,
 						args,
@@ -93,7 +90,7 @@ public final class JargyleCLI extends CLI {
 					final String[] args, 
 					final boolean posixCorrect) 
 					throws TerminationRequestedException {
-				CLI cli = new SocksServerCLI(
+				CLI cli = new ServerStarterCLI(
 						progName,
 						progBeginningUsage,
 						args,

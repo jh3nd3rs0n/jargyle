@@ -1,4 +1,4 @@
-package com.github.jh3nd3rs0n.jargyle.server;
+package com.github.jh3nd3rs0n.jargyle.cli;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,14 +9,19 @@ import org.slf4j.LoggerFactory;
 
 import com.github.jh3nd3rs0n.argmatey.ArgMatey.CLI;
 import com.github.jh3nd3rs0n.argmatey.ArgMatey.TerminationRequestedException;
+import com.github.jh3nd3rs0n.jargyle.server.Configuration;
+import com.github.jh3nd3rs0n.jargyle.server.ConfigurationRepository;
+import com.github.jh3nd3rs0n.jargyle.server.ImmutableConfiguration;
+import com.github.jh3nd3rs0n.jargyle.server.MutableConfiguration;
+import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
 
-public final class SocksServerCLI extends AbstractCLI {
+public final class ServerStarterCLI extends ServerConfigurationCLI {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(
-			SocksServerCLI.class);
+			ServerStarterCLI.class);
 	
 	public static void main(final String[] args) {
-		CLI cli = new SocksServerCLI(null, null, args, false);
+		CLI cli = new ServerStarterCLI(null, null, args, false);
 		try {
 			cli.handleArgs();
 		} catch (TerminationRequestedException e) {
@@ -26,7 +31,7 @@ public final class SocksServerCLI extends AbstractCLI {
 	
 	private String monitoredConfigurationFile;
 	
-	public SocksServerCLI(
+	public ServerStarterCLI(
 			final String progName, 
 			final String progBeginningUsage,
 			final String[] args, 

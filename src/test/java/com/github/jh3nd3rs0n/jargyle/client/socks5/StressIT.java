@@ -79,6 +79,11 @@ import com.github.jh3nd3rs0n.jargyle.transport.socks5.Methods;
  * 100 are the number of threads (virtual and platform) that can run 
  * successfully on my machine.
  * 
+ * To run this integration test, run the following command in the project's 
+ * directory:
+ * 
+ * mvn clean verify
+ *  
  */
 @org.junit.Ignore
 public class StressIT {

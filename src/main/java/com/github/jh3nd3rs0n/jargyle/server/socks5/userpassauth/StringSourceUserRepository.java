@@ -27,14 +27,14 @@ public final class StringSourceUserRepository extends UserRepository {
 
 	@Override
 	public Users getAll() {
-		Users users = null;
+		Users usrs = null;
 		this.lock.lock();
 		try {
-			users = Users.newInstance(users);
+			usrs = Users.newInstance(this.users);
 		} finally {
 			this.lock.unlock();
 		}
-		return users;
+		return usrs;
 	}
 
 	@Override

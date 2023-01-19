@@ -42,7 +42,7 @@ public final class CsvFileSourceUserRepository extends UserRepository {
 		@Override
 		public void onFileCreated(final File file) {
 			LOGGER.info(String.format(
-					"File '%s' created",
+					"File created: %s",
 					file));
 			this.updateUserRepositoryFrom(file);
 		}
@@ -50,26 +50,26 @@ public final class CsvFileSourceUserRepository extends UserRepository {
 		@Override
 		public void onFileDeleted(final File file) {
 			LOGGER.info(String.format(
-					"File '%s' deleted (using in-memory copy)",
+					"File deleted (using in-memory copy): %s",
 					file));
 		}
 
 		@Override
 		public void onFileModified(final File file) {
 			LOGGER.info(String.format(
-					"File '%s' modified",
+					"File modified: %s",
 					file));
 			this.updateUserRepositoryFrom(file);
 		}
 		
 		private void updateUserRepositoryFrom(final File file) {
 			try {
-				this.userRepository.updateFromCsvFile();
+				this.userRepository.updateUsersFromCsvFile();
 				LOGGER.info("In-memory copy is up to date");
 			} catch (UncheckedIOException e) {
 				LOGGER.error( 
 						String.format(
-								"Error in reading file '%s'", 
+								"Error in reading file: %s", 
 								file), 
 						e);
 			}
@@ -176,14 +176,14 @@ public final class CsvFileSourceUserRepository extends UserRepository {
 	
 	@Override
 	public Users getAll() {
-		Users users = null;
+		Users usrs = null;
 		this.lock.lock();
 		try {
-			users = Users.newInstance(this.users);
+			usrs = Users.newInstance(this.users);
 		} finally {
 			this.lock.unlock();
 		}
-		return users;
+		return usrs;
 	}
 
 	@Override
@@ -192,7 +192,8 @@ public final class CsvFileSourceUserRepository extends UserRepository {
 		try {
 			Users usrs = Users.newInstance(this.users);
 			usrs.put(user);
-			this.updateFrom(usrs);
+			this.updateCsvFileFrom(usrs);
+			this.updateUsersFrom(usrs);			
 		} finally {
 			this.lock.unlock();
 		}
@@ -204,7 +205,8 @@ public final class CsvFileSourceUserRepository extends UserRepository {
 		try {
 			Users usrs = Users.newInstance(this.users);
 			usrs.putAll(users);
-			this.updateFrom(usrs);			
+			this.updateCsvFileFrom(usrs);
+			this.updateUsersFrom(usrs);			
 		} finally {
 			this.lock.unlock();
 		}
@@ -216,7 +218,8 @@ public final class CsvFileSourceUserRepository extends UserRepository {
 		try {
 			Users usrs = Users.newInstance(this.users);
 			usrs.remove(name);
-			this.updateFrom(usrs);			
+			this.updateCsvFileFrom(usrs);
+			this.updateUsersFrom(usrs);			
 		} finally {
 			this.lock.unlock();
 		}
@@ -229,22 +232,26 @@ public final class CsvFileSourceUserRepository extends UserRepository {
 				new UsersFileStatusListener(this)));
 	}
 	
-	private synchronized void updateFrom(final Users usrs) {
+	private void updateCsvFileFrom(final Users usrs) {
 		writeUsersTo(this.csvFile, usrs);
-		this.updateUsers(usrs);
 	}
 	
-	private synchronized void updateFromCsvFile() {
-		if (this.csvFile.exists() 
-				&& this.csvFile.lastModified() > this.lastUpdated.longValue()) {
-			Users usrs = readUsersFrom(this.csvFile);
-			this.updateUsers(usrs);
-		}
-	}
-	
-	private void updateUsers(final Users usrs) {
+	private void updateUsersFrom(final Users usrs) {
 		this.users = usrs;
 		this.lastUpdated.set(System.currentTimeMillis());
+	}
+	
+	private void updateUsersFromCsvFile() {
+		this.lock.lock();
+		try {
+			if (this.csvFile.exists() 
+					&& this.csvFile.lastModified() > this.lastUpdated.longValue()) {
+				Users usrs = readUsersFrom(this.csvFile);
+				this.updateUsersFrom(usrs);
+			}
+		} finally {
+			this.lock.unlock();
+		}
 	}
 
 }

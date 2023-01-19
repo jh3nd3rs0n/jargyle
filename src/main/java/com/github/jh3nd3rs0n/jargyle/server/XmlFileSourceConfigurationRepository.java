@@ -12,6 +12,7 @@ import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +42,7 @@ public final class XmlFileSourceConfigurationRepository
 		@Override
 		public void onFileCreated(final File file) {
 			LOGGER.info(String.format(
-					"File '%s' created",
+					"File created: %s",
 					file));
 			this.updateConfigurationRepositoryFrom(file);
 		}
@@ -49,26 +50,26 @@ public final class XmlFileSourceConfigurationRepository
 		@Override
 		public void onFileDeleted(final File file) {
 			LOGGER.info(String.format(
-					"File '%s' deleted (using in-memory copy)",
+					"File deleted (using in-memory copy): %s",
 					file));
 		}
 
 		@Override
 		public void onFileModified(final File file) {
 			LOGGER.info(String.format(
-					"File '%s' modified",
+					"File modified: %s",
 					file));
 			this.updateConfigurationRepositoryFrom(file);
 		}
 		
 		private void updateConfigurationRepositoryFrom(final File file) {
 			try {
-				this.configurationRepository.updateFromXmlFile();
+				this.configurationRepository.updateConfigurationFromXmlFile();
 				LOGGER.info("In-memory copy is up to date");
 			} catch (UncheckedIOException e) {
 				LOGGER.error(
 						String.format(
-								"Error in reading file '%s'", 
+								"Error in reading file: %s", 
 								file), 
 						e);
 			}
@@ -146,6 +147,7 @@ public final class XmlFileSourceConfigurationRepository
 	private volatile Configuration configuration;
 	private ExecutorService executor;
 	private final AtomicLong lastUpdated;
+	private final ReentrantLock lock;	
 	private final File xmlFile;
 	
 	private XmlFileSourceConfigurationRepository(final File file) {
@@ -154,17 +156,31 @@ public final class XmlFileSourceConfigurationRepository
 		this.configuration = config;
 		this.executor = null;
 		this.lastUpdated = new AtomicLong(System.currentTimeMillis());
+		this.lock = new ReentrantLock();
 		this.xmlFile = file;
 	}
 	
 	@Override
 	public Configuration get() {
-		return this.configuration;
+		Configuration config = null;
+		this.lock.lock();
+		try {
+			config = ImmutableConfiguration.newInstance(this.configuration);
+		} finally {
+			this.lock.unlock();
+		}
+		return config;
 	}
 	
 	@Override
 	public void set(final Configuration config) {
-		this.updateFrom(config);
+		this.lock.lock();
+		try {
+			this.updateXmlFileFrom(config);
+			this.updateConfigurationFrom(config);
+		} finally {
+			this.lock.unlock();
+		}
 	}
 	
 	private void startMonitoringXmlFile() {
@@ -174,21 +190,25 @@ public final class XmlFileSourceConfigurationRepository
 				new ConfigurationFileStatusListener(this)));
 	}
 
-	private void updateConfiguration(final Configuration config) {
+	private void updateConfigurationFrom(final Configuration config) {
 		this.configuration = config;
 		this.lastUpdated.set(System.currentTimeMillis());
 	}
 	
-	private synchronized void updateFrom(final Configuration config) {
-		writeConfigurationTo(this.xmlFile, config);		
-		this.updateConfiguration(config);
+	private void updateConfigurationFromXmlFile() {
+		this.lock.lock();
+		try {
+			if (this.xmlFile.exists() 
+					&& this.xmlFile.lastModified() > this.lastUpdated.longValue()) {
+				Configuration config = readConfigurationFrom(this.xmlFile);
+				this.updateConfigurationFrom(config);
+			}
+		} finally {
+			this.lock.unlock();
+		}
 	}
 
-	private synchronized void updateFromXmlFile() {
-		if (this.xmlFile.exists() 
-				&& this.xmlFile.lastModified() > this.lastUpdated.longValue()) {
-			Configuration config = readConfigurationFrom(this.xmlFile);
-			this.updateConfiguration(config);
-		}
+	private void updateXmlFileFrom(final Configuration config) {
+		writeConfigurationTo(this.xmlFile, config);		
 	}
 }

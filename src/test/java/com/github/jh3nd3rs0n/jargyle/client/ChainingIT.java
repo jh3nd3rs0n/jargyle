@@ -62,6 +62,9 @@ public class ChainingIT {
 	private static List<SocksServer> chainedSocksServersUsingSocks5Userpassauth;
 	private static List<SocksServer> chainedSocksServersUsingSsl;
 	
+	private static DatagramEchoServer datagramEchoServer;
+	private static EchoServer echoServer;
+	
 	private static List<SocksServer> socksServers;
 	private static List<SocksServer> socksServersUsingSocks5Userpassauth;
 	private static List<SocksServer> socksServersUsingSsl;
@@ -356,8 +359,10 @@ public class ChainingIT {
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws IOException {
-		DatagramSocketEchoHelper.startEchoServer();
-		SocketEchoHelper.startEchoServer();
+		datagramEchoServer = new DatagramEchoServer();
+		echoServer = new EchoServer();
+		datagramEchoServer.start();
+		echoServer.start();
 		chainedSocksServers = SocksServerHelper.newStartedSocksServers(
 				newChainedConfigurations());
 		chainedSocksServersUsingSocks5Userpassauth = 
@@ -376,8 +381,8 @@ public class ChainingIT {
 	
 	@AfterClass
 	public static void tearDownAfterClass() throws IOException {
-		DatagramSocketEchoHelper.stopEchoServer();
-		SocketEchoHelper.stopEchoServer();
+		datagramEchoServer.stop();
+		echoServer.stop();
 		SocksServerHelper.stopSocksServers(chainedSocksServers);
 		SocksServerHelper.stopSocksServers(chainedSocksServersUsingSocks5Userpassauth);
 		SocksServerHelper.stopSocksServers(chainedSocksServersUsingSsl);
@@ -392,7 +397,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5DatagramSocketUsingChainedSocks5ClientToConfigurations01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
+		String returningString = DatagramEchoClientHelper.echoThroughNewDatagramSocket(
 				string, 
 				newChainedSocks5ClientToConfigurations().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -401,7 +406,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5DatagramSocketUsingChainedSocks5ClientToConfigurations02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
+		String returningString = DatagramEchoClientHelper.echoThroughNewDatagramSocket(
 				string, 
 				newChainedSocks5ClientToConfigurations().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -410,7 +415,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5DatagramSocketUsingChainedSocks5ClientToConfigurations03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
+		String returningString = DatagramEchoClientHelper.echoThroughNewDatagramSocket(
 				string, 
 				newChainedSocks5ClientToConfigurations().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -419,7 +424,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5DatagramSocketUsingChainedSocks5ClientToConfigurationsUsingSocks5Userpassauth01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
+		String returningString = DatagramEchoClientHelper.echoThroughNewDatagramSocket(
 				string, 
 				newChainedSocks5ClientToConfigurationsUsingSocks5Userpassauth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -428,7 +433,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5DatagramSocketUsingChainedSocks5ClientToConfigurationsUsingSocks5Userpassauth02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
+		String returningString = DatagramEchoClientHelper.echoThroughNewDatagramSocket(
 				string, 
 				newChainedSocks5ClientToConfigurationsUsingSocks5Userpassauth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -437,7 +442,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5DatagramSocketUsingChainedSocks5ClientToConfigurationsUsingSocks5Userpassauth03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
+		String returningString = DatagramEchoClientHelper.echoThroughNewDatagramSocket(
 				string, 
 				newChainedSocks5ClientToConfigurationsUsingSocks5Userpassauth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -446,7 +451,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5DatagramSocketUsingChainedSocks5ClientToConfigurationsUsingSsl01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
+		String returningString = DatagramEchoClientHelper.echoThroughNewDatagramSocket(
 				string, 
 				newChainedSocks5ClientToConfigurationsUsingSsl().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -455,7 +460,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5DatagramSocketUsingChainedSocks5ClientToConfigurationsUsingSsl02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
+		String returningString = DatagramEchoClientHelper.echoThroughNewDatagramSocket(
 				string, 
 				newChainedSocks5ClientToConfigurationsUsingSsl().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -464,7 +469,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5DatagramSocketUsingChainedSocks5ClientToConfigurationsUsingSsl03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
+		String returningString = DatagramEchoClientHelper.echoThroughNewDatagramSocket(
 				string, 
 				newChainedSocks5ClientToConfigurationsUsingSsl().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -473,7 +478,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurations01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
+		String returningString = DatagramEchoClientHelper.echoThroughNewDatagramSocket(
 				string, 
 				newSocks5ClientToChainedConfigurations().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -482,7 +487,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurations02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
+		String returningString = DatagramEchoClientHelper.echoThroughNewDatagramSocket(
 				string, 
 				newSocks5ClientToChainedConfigurations().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -491,7 +496,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurations03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
+		String returningString = DatagramEchoClientHelper.echoThroughNewDatagramSocket(
 				string, 
 				newSocks5ClientToChainedConfigurations().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -500,7 +505,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsUsingSocks5Userpassauth01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
+		String returningString = DatagramEchoClientHelper.echoThroughNewDatagramSocket(
 				string, 
 				newSocks5ClientToChainedConfigurationsUsingSocks5Userpassauth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -509,7 +514,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsUsingSocks5Userpassauth02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
+		String returningString = DatagramEchoClientHelper.echoThroughNewDatagramSocket(
 				string, 
 				newSocks5ClientToChainedConfigurationsUsingSocks5Userpassauth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -518,7 +523,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsUsingSocks5Userpassauth03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
+		String returningString = DatagramEchoClientHelper.echoThroughNewDatagramSocket(
 				string, 
 				newSocks5ClientToChainedConfigurationsUsingSocks5Userpassauth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -527,7 +532,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsUsingSsl01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
+		String returningString = DatagramEchoClientHelper.echoThroughNewDatagramSocket(
 				string, 
 				newSocks5ClientToChainedConfigurationsUsingSsl().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -536,7 +541,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsUsingSsl02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
+		String returningString = DatagramEchoClientHelper.echoThroughNewDatagramSocket(
 				string, 
 				newSocks5ClientToChainedConfigurationsUsingSsl().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -545,7 +550,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5ClientToChainedConfigurationsUsingSsl03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
+		String returningString = DatagramEchoClientHelper.echoThroughNewDatagramSocket(
 				string, 
 				newSocks5ClientToChainedConfigurationsUsingSsl().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -556,7 +561,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingChainedSocks5ClientToConfigurations01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
+		String returningString = EchoClientHelper.echoThroughNewServerSocket(
 				string, 
 				newChainedSocks5ClientToConfigurations().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -565,7 +570,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingChainedSocks5ClientToConfigurations02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
+		String returningString = EchoClientHelper.echoThroughNewServerSocket(
 				string, 
 				newChainedSocks5ClientToConfigurations().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -574,7 +579,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingChainedSocks5ClientToConfigurations03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
+		String returningString = EchoClientHelper.echoThroughNewServerSocket(
 				string, 
 				newChainedSocks5ClientToConfigurations().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -583,7 +588,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingChainedSocks5ClientToConfigurationsUsingSocks5Userpassauth01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
+		String returningString = EchoClientHelper.echoThroughNewServerSocket(
 				string, 
 				newChainedSocks5ClientToConfigurationsUsingSocks5Userpassauth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -592,7 +597,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingChainedSocks5ClientToConfigurationsUsingSocks5Userpassauth02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
+		String returningString = EchoClientHelper.echoThroughNewServerSocket(
 				string, 
 				newChainedSocks5ClientToConfigurationsUsingSocks5Userpassauth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -601,7 +606,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingChainedSocks5ClientToConfigurationsUsingSocks5Userpassauth03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
+		String returningString = EchoClientHelper.echoThroughNewServerSocket(
 				string, 
 				newChainedSocks5ClientToConfigurationsUsingSocks5Userpassauth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -609,7 +614,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingChainedSocks5ClientToConfigurationsUsingSsl01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
+		String returningString = EchoClientHelper.echoThroughNewServerSocket(
 				string, 
 				newChainedSocks5ClientToConfigurationsUsingSsl().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -618,7 +623,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingChainedSocks5ClientToConfigurationsUsingSsl02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
+		String returningString = EchoClientHelper.echoThroughNewServerSocket(
 				string, 
 				newChainedSocks5ClientToConfigurationsUsingSsl().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -627,7 +632,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingChainedSocks5ClientToConfigurationsUsingSsl03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
+		String returningString = EchoClientHelper.echoThroughNewServerSocket(
 				string, 
 				newChainedSocks5ClientToConfigurationsUsingSsl().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -636,7 +641,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingSocks5ClientToChainedConfigurations01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
+		String returningString = EchoClientHelper.echoThroughNewServerSocket(
 				string, 
 				newSocks5ClientToChainedConfigurations().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -645,7 +650,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingSocks5ClientToChainedConfigurations02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
+		String returningString = EchoClientHelper.echoThroughNewServerSocket(
 				string, 
 				newSocks5ClientToChainedConfigurations().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -654,7 +659,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingSocks5ClientToChainedConfigurations03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
+		String returningString = EchoClientHelper.echoThroughNewServerSocket(
 				string, 
 				newSocks5ClientToChainedConfigurations().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -663,7 +668,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingSocks5ClientToChainedConfigurationsUsingSocks5Userpassauth01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
+		String returningString = EchoClientHelper.echoThroughNewServerSocket(
 				string, 
 				newSocks5ClientToChainedConfigurationsUsingSocks5Userpassauth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -672,7 +677,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingSocks5ClientToChainedConfigurationsUsingSocks5Userpassauth02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
+		String returningString = EchoClientHelper.echoThroughNewServerSocket(
 				string, 
 				newSocks5ClientToChainedConfigurationsUsingSocks5Userpassauth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -681,7 +686,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingSocks5ClientToChainedConfigurationsUsingSocks5Userpassauth03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
+		String returningString = EchoClientHelper.echoThroughNewServerSocket(
 				string, 
 				newSocks5ClientToChainedConfigurationsUsingSocks5Userpassauth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -690,7 +695,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingSocks5ClientToChainedConfigurationsUsingSsl01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
+		String returningString = EchoClientHelper.echoThroughNewServerSocket(
 				string, 
 				newSocks5ClientToChainedConfigurationsUsingSsl().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -699,7 +704,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingSocks5ClientToChainedConfigurationsUsingSsl02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
+		String returningString = EchoClientHelper.echoThroughNewServerSocket(
 				string, 
 				newSocks5ClientToChainedConfigurationsUsingSsl().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -708,7 +713,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingSocks5ClientToChainedConfigurationsUsingSsl03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
+		String returningString = EchoClientHelper.echoThroughNewServerSocket(
 				string, 
 				newSocks5ClientToChainedConfigurationsUsingSsl().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -719,7 +724,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5SocketUsingChainedSocks5ClientToConfigurations01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = SocketEchoHelper.echoThroughSocket(
+		String returningString = EchoClientHelper.echoThroughNewSocket(
 				string, 
 				newChainedSocks5ClientToConfigurations().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -728,7 +733,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5SocketUsingChainedSocks5ClientToConfigurations02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = SocketEchoHelper.echoThroughSocket(
+		String returningString = EchoClientHelper.echoThroughNewSocket(
 				string, 
 				newChainedSocks5ClientToConfigurations().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -737,7 +742,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5SocketUsingChainedSocks5ClientToConfigurations03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = SocketEchoHelper.echoThroughSocket(
+		String returningString = EchoClientHelper.echoThroughNewSocket(
 				string, 
 				newChainedSocks5ClientToConfigurations().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -746,7 +751,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5SocketUsingChainedSocks5ClientToConfigurationsUsingSocks5Userpassauth01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = SocketEchoHelper.echoThroughSocket(
+		String returningString = EchoClientHelper.echoThroughNewSocket(
 				string, 
 				newChainedSocks5ClientToConfigurationsUsingSocks5Userpassauth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -755,7 +760,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5SocketUsingChainedSocks5ClientToConfigurationsUsingSocks5Userpassauth02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = SocketEchoHelper.echoThroughSocket(
+		String returningString = EchoClientHelper.echoThroughNewSocket(
 				string, 
 				newChainedSocks5ClientToConfigurationsUsingSocks5Userpassauth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -764,7 +769,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5SocketUsingChainedSocks5ClientToConfigurationsUsingSocks5Userpassauth03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = SocketEchoHelper.echoThroughSocket(
+		String returningString = EchoClientHelper.echoThroughNewSocket(
 				string, 
 				newChainedSocks5ClientToConfigurationsUsingSocks5Userpassauth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -773,7 +778,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5SocketUsingChainedSocks5ClientToConfigurationsUsingSsl01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = SocketEchoHelper.echoThroughSocket(
+		String returningString = EchoClientHelper.echoThroughNewSocket(
 				string, 
 				newChainedSocks5ClientToConfigurationsUsingSsl().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -782,7 +787,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5SocketUsingChainedSocks5ClientToConfigurationsUsingSsl02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = SocketEchoHelper.echoThroughSocket(
+		String returningString = EchoClientHelper.echoThroughNewSocket(
 				string, 
 				newChainedSocks5ClientToConfigurationsUsingSsl().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -791,7 +796,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5SocketUsingChainedSocks5ClientToConfigurationsUsingSsl03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = SocketEchoHelper.echoThroughSocket(
+		String returningString = EchoClientHelper.echoThroughNewSocket(
 				string, 
 				newChainedSocks5ClientToConfigurationsUsingSsl().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -800,7 +805,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5SocketUsingSocks5ClientToChainedConfigurations01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = SocketEchoHelper.echoThroughSocket(
+		String returningString = EchoClientHelper.echoThroughNewSocket(
 				string, 
 				newSocks5ClientToChainedConfigurations().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -809,7 +814,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5SocketUsingSocks5ClientToChainedConfigurations02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = SocketEchoHelper.echoThroughSocket(
+		String returningString = EchoClientHelper.echoThroughNewSocket(
 				string, 
 				newSocks5ClientToChainedConfigurations().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -818,7 +823,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5SocketUsingSocks5ClientToChainedConfigurations03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = SocketEchoHelper.echoThroughSocket(
+		String returningString = EchoClientHelper.echoThroughNewSocket(
 				string, 
 				newSocks5ClientToChainedConfigurations().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -827,7 +832,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5SocketUsingSocks5ClientToChainedConfigurationsUsingSocks5Userpassauth01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = SocketEchoHelper.echoThroughSocket(
+		String returningString = EchoClientHelper.echoThroughNewSocket(
 				string, 
 				newSocks5ClientToChainedConfigurationsUsingSocks5Userpassauth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -836,7 +841,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5SocketUsingSocks5ClientToChainedConfigurationsUsingSocks5Userpassauth02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = SocketEchoHelper.echoThroughSocket(
+		String returningString = EchoClientHelper.echoThroughNewSocket(
 				string, 
 				newSocks5ClientToChainedConfigurationsUsingSocks5Userpassauth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -845,7 +850,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5SocketUsingSocks5ClientToChainedConfigurationsUsingSocks5Userpassauth03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = SocketEchoHelper.echoThroughSocket(
+		String returningString = EchoClientHelper.echoThroughNewSocket(
 				string, 
 				newSocks5ClientToChainedConfigurationsUsingSocks5Userpassauth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -854,7 +859,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5SocketUsingSocks5ClientToChainedConfigurationsUsingSsl01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = SocketEchoHelper.echoThroughSocket(
+		String returningString = EchoClientHelper.echoThroughNewSocket(
 				string, 
 				newSocks5ClientToChainedConfigurationsUsingSsl().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -863,7 +868,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5SocketUsingSocks5ClientToChainedConfigurationsUsingSsl02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = SocketEchoHelper.echoThroughSocket(
+		String returningString = EchoClientHelper.echoThroughNewSocket(
 				string, 
 				newSocks5ClientToChainedConfigurationsUsingSsl().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -872,7 +877,7 @@ public class ChainingIT {
 	@Test
 	public void testThroughSocks5SocketUsingSocks5ClientToChainedConfigurationsUsingSsl03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = SocketEchoHelper.echoThroughSocket(
+		String returningString = EchoClientHelper.echoThroughNewSocket(
 				string, 
 				newSocks5ClientToChainedConfigurationsUsingSsl().newSocksNetObjectFactory());
 		assertEquals(string, returningString);

@@ -9,25 +9,25 @@ import org.junit.Test;
 import com.github.jh3nd3rs0n.jargyle.TestStringConstants;
 
 public class ServerSocketIT {
-
+	
 	@Test
 	public void testThroughServerSocket01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(string, null);
+		String returningString = EchoClientHelper.echoThroughNewServerSocket(string, null);
 		assertEquals(string, returningString);
 	}
 
 	@Test
 	public void testThroughServerSocket02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(string, null);
+		String returningString = EchoClientHelper.echoThroughNewServerSocket(string, null);
 		assertEquals(string, returningString);
 	}
 
 	@Test
 	public void testThroughServerSocket03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(string, null);
+		String returningString = EchoClientHelper.echoThroughNewServerSocket(string, null);
 		assertEquals(string, returningString);
 	}
 

@@ -42,7 +42,7 @@ public final class XmlFileSourceConfigurationRepository
 		@Override
 		public void onFileCreated(final File file) {
 			LOGGER.info(String.format(
-					"File created: %s",
+					"Created file: %s",
 					file));
 			this.updateConfigurationRepositoryFrom(file);
 		}
@@ -50,14 +50,14 @@ public final class XmlFileSourceConfigurationRepository
 		@Override
 		public void onFileDeleted(final File file) {
 			LOGGER.info(String.format(
-					"File deleted (using in-memory copy): %s",
+					"Relying on in-memory copy of deleted file: %s",
 					file));
 		}
 
 		@Override
 		public void onFileModified(final File file) {
 			LOGGER.info(String.format(
-					"File modified: %s",
+					"Modified file: %s",
 					file));
 			this.updateConfigurationRepositoryFrom(file);
 		}

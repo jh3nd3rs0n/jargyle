@@ -20,11 +20,12 @@ import org.junit.Test;
 import com.github.jh3nd3rs0n.jargyle.FilesHelper;
 import com.github.jh3nd3rs0n.jargyle.TestStringConstants;
 import com.github.jh3nd3rs0n.jargyle.ThreadHelper;
-import com.github.jh3nd3rs0n.jargyle.client.DatagramSocketEchoHelper;
+import com.github.jh3nd3rs0n.jargyle.client.DatagramEchoServer;
+import com.github.jh3nd3rs0n.jargyle.client.DatagramEchoClientHelper;
+import com.github.jh3nd3rs0n.jargyle.client.EchoServer;
 import com.github.jh3nd3rs0n.jargyle.client.Properties;
 import com.github.jh3nd3rs0n.jargyle.client.Scheme;
-import com.github.jh3nd3rs0n.jargyle.client.ServerSocketEchoHelper;
-import com.github.jh3nd3rs0n.jargyle.client.SocketEchoHelper;
+import com.github.jh3nd3rs0n.jargyle.client.EchoClientHelper;
 import com.github.jh3nd3rs0n.jargyle.client.Socks5PropertySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
@@ -68,6 +69,9 @@ public class GssapiauthIT {
 	private static Path krb5Conf = null;
 	
 	private static SimpleKdcServer kerbyServer = null;
+	
+	private static DatagramEchoServer datagramEchoServer;
+	private static EchoServer echoServer;
 
 	private static List<SocksServer> socksServersUsingSocks5Gssapiauth;
 	private static List<SocksServer> socksServersUsingSocks5GssapiauthNecReferenceImpl;
@@ -178,8 +182,10 @@ public class GssapiauthIT {
 		System.setProperty(
 				LOGIN_CONFIG_PROPERTY_NAME, loginConf.toAbsolutePath().toString());
 		
-		DatagramSocketEchoHelper.startEchoServer();
-		SocketEchoHelper.startEchoServer();
+		datagramEchoServer = new DatagramEchoServer();
+		echoServer = new EchoServer();
+		datagramEchoServer.start();
+		echoServer.start();
 		socksServersUsingSocks5Gssapiauth = 
 				SocksServerHelper.newStartedSocksServers(Arrays.asList(
 						newConfigurationUsingSocks5Gssapiauth()));
@@ -217,8 +223,8 @@ public class GssapiauthIT {
 		System.clearProperty(KRB5_CONF_PROPERTY_NAME);
 		System.clearProperty(USE_SUBJECT_CREDS_ONLY_PROPERTY_NAME);
 		System.clearProperty(LOGIN_CONFIG_PROPERTY_NAME);
-		DatagramSocketEchoHelper.stopEchoServer();
-		SocketEchoHelper.stopEchoServer();
+		datagramEchoServer.stop();
+		echoServer.stop();
 		SocksServerHelper.stopSocksServers(socksServersUsingSocks5Gssapiauth);
 		SocksServerHelper.stopSocksServers(
 				socksServersUsingSocks5GssapiauthNecReferenceImpl);
@@ -228,7 +234,7 @@ public class GssapiauthIT {
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5Gssapiauth01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
+		String returningString = DatagramEchoClientHelper.echoThroughNewDatagramSocket(
 				string, 
 				GssapiauthIT.newSocks5ClientUsingSocks5Gssapiauth(
 						ProtectionLevels.newInstance(ProtectionLevel.NONE)).newSocksNetObjectFactory());
@@ -238,7 +244,7 @@ public class GssapiauthIT {
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5Gssapiauth02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
+		String returningString = DatagramEchoClientHelper.echoThroughNewDatagramSocket(
 				string, 
 				GssapiauthIT.newSocks5ClientUsingSocks5Gssapiauth(
 						ProtectionLevels.newInstance(ProtectionLevel.NONE)).newSocksNetObjectFactory());
@@ -248,7 +254,7 @@ public class GssapiauthIT {
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5Gssapiauth03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
+		String returningString = DatagramEchoClientHelper.echoThroughNewDatagramSocket(
 				string, 
 				GssapiauthIT.newSocks5ClientUsingSocks5Gssapiauth(
 						ProtectionLevels.newInstance(ProtectionLevel.NONE)).newSocksNetObjectFactory());
@@ -258,7 +264,7 @@ public class GssapiauthIT {
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5GssapiauthNecReferenceImpl01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
+		String returningString = DatagramEchoClientHelper.echoThroughNewDatagramSocket(
 				string, 
 				GssapiauthIT.newSocks5ClientUsingSocks5GssapiauthNecReferenceImpl(
 						ProtectionLevels.newInstance(ProtectionLevel.NONE)).newSocksNetObjectFactory());
@@ -268,7 +274,7 @@ public class GssapiauthIT {
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5GssapiauthNecReferenceImpl02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
+		String returningString = DatagramEchoClientHelper.echoThroughNewDatagramSocket(
 				string, 
 				GssapiauthIT.newSocks5ClientUsingSocks5GssapiauthNecReferenceImpl(
 						ProtectionLevels.newInstance(ProtectionLevel.NONE)).newSocksNetObjectFactory());
@@ -278,7 +284,7 @@ public class GssapiauthIT {
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5GssapiauthNecReferenceImpl03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
+		String returningString = DatagramEchoClientHelper.echoThroughNewDatagramSocket(
 				string, 
 				GssapiauthIT.newSocks5ClientUsingSocks5GssapiauthNecReferenceImpl(
 						ProtectionLevels.newInstance(ProtectionLevel.NONE)).newSocksNetObjectFactory());
@@ -288,7 +294,7 @@ public class GssapiauthIT {
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5GssapiauthNecReferenceImplWithIntegAndConfProtection01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
+		String returningString = DatagramEchoClientHelper.echoThroughNewDatagramSocket(
 				string, 
 				GssapiauthIT.newSocks5ClientUsingSocks5GssapiauthNecReferenceImpl(
 						ProtectionLevels.newInstance(
@@ -299,7 +305,7 @@ public class GssapiauthIT {
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5GssapiauthNecReferenceImplWithIntegAndConfProtection02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
+		String returningString = DatagramEchoClientHelper.echoThroughNewDatagramSocket(
 				string, 
 				GssapiauthIT.newSocks5ClientUsingSocks5GssapiauthNecReferenceImpl(
 						ProtectionLevels.newInstance(
@@ -310,7 +316,7 @@ public class GssapiauthIT {
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5GssapiauthNecReferenceImplWithIntegAndConfProtection03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
+		String returningString = DatagramEchoClientHelper.echoThroughNewDatagramSocket(
 				string, 
 				GssapiauthIT.newSocks5ClientUsingSocks5GssapiauthNecReferenceImpl(
 						ProtectionLevels.newInstance(
@@ -321,7 +327,7 @@ public class GssapiauthIT {
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5GssapiauthNecReferenceImplWithIntegProtection01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
+		String returningString = DatagramEchoClientHelper.echoThroughNewDatagramSocket(
 				string, 
 				GssapiauthIT.newSocks5ClientUsingSocks5GssapiauthNecReferenceImpl(
 						ProtectionLevels.newInstance(
@@ -332,7 +338,7 @@ public class GssapiauthIT {
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5GssapiauthNecReferenceImplWithIntegProtection02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
+		String returningString = DatagramEchoClientHelper.echoThroughNewDatagramSocket(
 				string, 
 				GssapiauthIT.newSocks5ClientUsingSocks5GssapiauthNecReferenceImpl(
 						ProtectionLevels.newInstance(
@@ -343,7 +349,7 @@ public class GssapiauthIT {
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5GssapiauthNecReferenceImplWithIntegProtection03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
+		String returningString = DatagramEchoClientHelper.echoThroughNewDatagramSocket(
 				string, 
 				GssapiauthIT.newSocks5ClientUsingSocks5GssapiauthNecReferenceImpl(
 						ProtectionLevels.newInstance(
@@ -354,7 +360,7 @@ public class GssapiauthIT {
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5GssapiauthWithIntegAndConfProtection01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
+		String returningString = DatagramEchoClientHelper.echoThroughNewDatagramSocket(
 				string, 
 				GssapiauthIT.newSocks5ClientUsingSocks5Gssapiauth(
 						ProtectionLevels.newInstance(
@@ -365,7 +371,7 @@ public class GssapiauthIT {
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5GssapiauthWithIntegAndConfProtection02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
+		String returningString = DatagramEchoClientHelper.echoThroughNewDatagramSocket(
 				string, 
 				GssapiauthIT.newSocks5ClientUsingSocks5Gssapiauth(
 						ProtectionLevels.newInstance(
@@ -376,7 +382,7 @@ public class GssapiauthIT {
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5GssapiauthWithIntegAndConfProtection03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
+		String returningString = DatagramEchoClientHelper.echoThroughNewDatagramSocket(
 				string, 
 				GssapiauthIT.newSocks5ClientUsingSocks5Gssapiauth(
 						ProtectionLevels.newInstance(
@@ -387,7 +393,7 @@ public class GssapiauthIT {
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5GssapiauthWithIntegProtection01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
+		String returningString = DatagramEchoClientHelper.echoThroughNewDatagramSocket(
 				string, 
 				GssapiauthIT.newSocks5ClientUsingSocks5Gssapiauth(
 						ProtectionLevels.newInstance(
@@ -398,7 +404,7 @@ public class GssapiauthIT {
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5GssapiauthWithIntegProtection02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
+		String returningString = DatagramEchoClientHelper.echoThroughNewDatagramSocket(
 				string, 
 				GssapiauthIT.newSocks5ClientUsingSocks5Gssapiauth(
 						ProtectionLevels.newInstance(
@@ -409,7 +415,7 @@ public class GssapiauthIT {
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5GssapiauthWithIntegProtection03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
+		String returningString = DatagramEchoClientHelper.echoThroughNewDatagramSocket(
 				string, 
 				GssapiauthIT.newSocks5ClientUsingSocks5Gssapiauth(
 						ProtectionLevels.newInstance(
@@ -420,7 +426,7 @@ public class GssapiauthIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingSocks5Gssapiauth01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
+		String returningString = EchoClientHelper.echoThroughNewServerSocket(
 				string, 
 				GssapiauthIT.newSocks5ClientUsingSocks5Gssapiauth(
 						ProtectionLevels.newInstance(ProtectionLevel.NONE)).newSocksNetObjectFactory());
@@ -430,7 +436,7 @@ public class GssapiauthIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingSocks5Gssapiauth02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
+		String returningString = EchoClientHelper.echoThroughNewServerSocket(
 				string, 
 				GssapiauthIT.newSocks5ClientUsingSocks5Gssapiauth(
 						ProtectionLevels.newInstance(ProtectionLevel.NONE)).newSocksNetObjectFactory());
@@ -440,7 +446,7 @@ public class GssapiauthIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingSocks5Gssapiauth03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
+		String returningString = EchoClientHelper.echoThroughNewServerSocket(
 				string, 
 				GssapiauthIT.newSocks5ClientUsingSocks5Gssapiauth(
 						ProtectionLevels.newInstance(ProtectionLevel.NONE)).newSocksNetObjectFactory());
@@ -450,7 +456,7 @@ public class GssapiauthIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingSocks5GssapiauthNecReferenceImpl01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
+		String returningString = EchoClientHelper.echoThroughNewServerSocket(
 				string, 
 				GssapiauthIT.newSocks5ClientUsingSocks5GssapiauthNecReferenceImpl(
 						ProtectionLevels.newInstance(ProtectionLevel.NONE)).newSocksNetObjectFactory());
@@ -460,7 +466,7 @@ public class GssapiauthIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingSocks5GssapiauthNecReferenceImpl02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
+		String returningString = EchoClientHelper.echoThroughNewServerSocket(
 				string, 
 				GssapiauthIT.newSocks5ClientUsingSocks5GssapiauthNecReferenceImpl(
 						ProtectionLevels.newInstance(ProtectionLevel.NONE)).newSocksNetObjectFactory());
@@ -470,7 +476,7 @@ public class GssapiauthIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingSocks5GssapiauthNecReferenceImpl03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
+		String returningString = EchoClientHelper.echoThroughNewServerSocket(
 				string, 
 				GssapiauthIT.newSocks5ClientUsingSocks5GssapiauthNecReferenceImpl(
 						ProtectionLevels.newInstance(ProtectionLevel.NONE)).newSocksNetObjectFactory());
@@ -480,7 +486,7 @@ public class GssapiauthIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingSocks5GssapiauthNecReferenceImplWithIntegAndConfProtection01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
+		String returningString = EchoClientHelper.echoThroughNewServerSocket(
 				string, 
 				GssapiauthIT.newSocks5ClientUsingSocks5GssapiauthNecReferenceImpl(
 						ProtectionLevels.newInstance(
@@ -491,7 +497,7 @@ public class GssapiauthIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingSocks5GssapiauthNecReferenceImplWithIntegAndConfProtection02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
+		String returningString = EchoClientHelper.echoThroughNewServerSocket(
 				string, 
 				GssapiauthIT.newSocks5ClientUsingSocks5GssapiauthNecReferenceImpl(
 						ProtectionLevels.newInstance(
@@ -502,7 +508,7 @@ public class GssapiauthIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingSocks5GssapiauthNecReferenceImplWithIntegAndConfProtection03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
+		String returningString = EchoClientHelper.echoThroughNewServerSocket(
 				string, 
 				GssapiauthIT.newSocks5ClientUsingSocks5GssapiauthNecReferenceImpl(
 						ProtectionLevels.newInstance(
@@ -513,7 +519,7 @@ public class GssapiauthIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingSocks5GssapiauthNecReferenceImplWithIntegProtection01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
+		String returningString = EchoClientHelper.echoThroughNewServerSocket(
 				string, 
 				GssapiauthIT.newSocks5ClientUsingSocks5GssapiauthNecReferenceImpl(
 						ProtectionLevels.newInstance(
@@ -524,7 +530,7 @@ public class GssapiauthIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingSocks5GssapiauthNecReferenceImplWithIntegProtection02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
+		String returningString = EchoClientHelper.echoThroughNewServerSocket(
 				string, 
 				GssapiauthIT.newSocks5ClientUsingSocks5GssapiauthNecReferenceImpl(
 						ProtectionLevels.newInstance(
@@ -535,7 +541,7 @@ public class GssapiauthIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingSocks5GssapiauthNecReferenceImplWithIntegProtection03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
+		String returningString = EchoClientHelper.echoThroughNewServerSocket(
 				string, 
 				GssapiauthIT.newSocks5ClientUsingSocks5GssapiauthNecReferenceImpl(
 						ProtectionLevels.newInstance(
@@ -546,7 +552,7 @@ public class GssapiauthIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingSocks5GssapiauthWithIntegAndConfProtection01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
+		String returningString = EchoClientHelper.echoThroughNewServerSocket(
 				string, 
 				GssapiauthIT.newSocks5ClientUsingSocks5Gssapiauth(
 						ProtectionLevels.newInstance(
@@ -557,7 +563,7 @@ public class GssapiauthIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingSocks5GssapiauthWithIntegAndConfProtection02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
+		String returningString = EchoClientHelper.echoThroughNewServerSocket(
 				string, 
 				GssapiauthIT.newSocks5ClientUsingSocks5Gssapiauth(
 						ProtectionLevels.newInstance(
@@ -568,7 +574,7 @@ public class GssapiauthIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingSocks5GssapiauthWithIntegAndConfProtection03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
+		String returningString = EchoClientHelper.echoThroughNewServerSocket(
 				string, 
 				GssapiauthIT.newSocks5ClientUsingSocks5Gssapiauth(
 						ProtectionLevels.newInstance(
@@ -579,7 +585,7 @@ public class GssapiauthIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingSocks5GssapiauthWithIntegProtection01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
+		String returningString = EchoClientHelper.echoThroughNewServerSocket(
 				string, 
 				GssapiauthIT.newSocks5ClientUsingSocks5Gssapiauth(
 						ProtectionLevels.newInstance(
@@ -590,7 +596,7 @@ public class GssapiauthIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingSocks5GssapiauthWithIntegProtection02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
+		String returningString = EchoClientHelper.echoThroughNewServerSocket(
 				string, 
 				GssapiauthIT.newSocks5ClientUsingSocks5Gssapiauth(
 						ProtectionLevels.newInstance(
@@ -601,7 +607,7 @@ public class GssapiauthIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingSocks5GssapiauthWithIntegProtection03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
+		String returningString = EchoClientHelper.echoThroughNewServerSocket(
 				string, 
 				GssapiauthIT.newSocks5ClientUsingSocks5Gssapiauth(
 						ProtectionLevels.newInstance(
@@ -612,7 +618,7 @@ public class GssapiauthIT {
 	@Test
 	public void testThroughSocks5SocketUsingSocks5Gssapiauth01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = SocketEchoHelper.echoThroughSocket(
+		String returningString = EchoClientHelper.echoThroughNewSocket(
 				string, 
 				GssapiauthIT.newSocks5ClientUsingSocks5Gssapiauth(
 						ProtectionLevels.newInstance(ProtectionLevel.NONE)).newSocksNetObjectFactory());
@@ -622,7 +628,7 @@ public class GssapiauthIT {
 	@Test
 	public void testThroughSocks5SocketUsingSocks5Gssapiauth02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = SocketEchoHelper.echoThroughSocket(
+		String returningString = EchoClientHelper.echoThroughNewSocket(
 				string, 
 				GssapiauthIT.newSocks5ClientUsingSocks5Gssapiauth(
 						ProtectionLevels.newInstance(ProtectionLevel.NONE)).newSocksNetObjectFactory());
@@ -632,7 +638,7 @@ public class GssapiauthIT {
 	@Test
 	public void testThroughSocks5SocketUsingSocks5Gssapiauth03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = SocketEchoHelper.echoThroughSocket(
+		String returningString = EchoClientHelper.echoThroughNewSocket(
 				string, 
 				GssapiauthIT.newSocks5ClientUsingSocks5Gssapiauth(
 						ProtectionLevels.newInstance(ProtectionLevel.NONE)).newSocksNetObjectFactory());
@@ -642,7 +648,7 @@ public class GssapiauthIT {
 	@Test
 	public void testThroughSocks5SocketUsingSocks5GssapiauthNecReferenceImpl01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = SocketEchoHelper.echoThroughSocket(
+		String returningString = EchoClientHelper.echoThroughNewSocket(
 				string, 
 				GssapiauthIT.newSocks5ClientUsingSocks5GssapiauthNecReferenceImpl(
 						ProtectionLevels.newInstance(ProtectionLevel.NONE)).newSocksNetObjectFactory());
@@ -652,7 +658,7 @@ public class GssapiauthIT {
 	@Test
 	public void testThroughSocks5SocketUsingSocks5GssapiauthNecReferenceImpl02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = SocketEchoHelper.echoThroughSocket(
+		String returningString = EchoClientHelper.echoThroughNewSocket(
 				string, 
 				GssapiauthIT.newSocks5ClientUsingSocks5GssapiauthNecReferenceImpl(
 						ProtectionLevels.newInstance(ProtectionLevel.NONE)).newSocksNetObjectFactory());
@@ -662,7 +668,7 @@ public class GssapiauthIT {
 	@Test
 	public void testThroughSocks5SocketUsingSocks5GssapiauthNecReferenceImpl03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = SocketEchoHelper.echoThroughSocket(
+		String returningString = EchoClientHelper.echoThroughNewSocket(
 				string, 
 				GssapiauthIT.newSocks5ClientUsingSocks5GssapiauthNecReferenceImpl(
 						ProtectionLevels.newInstance(ProtectionLevel.NONE)).newSocksNetObjectFactory());
@@ -672,7 +678,7 @@ public class GssapiauthIT {
 	@Test
 	public void testThroughSocks5SocketUsingSocks5GssapiauthNecReferenceImplWithIntegAndConfProtection01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = SocketEchoHelper.echoThroughSocket(
+		String returningString = EchoClientHelper.echoThroughNewSocket(
 				string, 
 				GssapiauthIT.newSocks5ClientUsingSocks5GssapiauthNecReferenceImpl(
 						ProtectionLevels.newInstance(
@@ -683,7 +689,7 @@ public class GssapiauthIT {
 	@Test
 	public void testThroughSocks5SocketUsingSocks5GssapiauthNecReferenceImplWithIntegAndConfProtection02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = SocketEchoHelper.echoThroughSocket(
+		String returningString = EchoClientHelper.echoThroughNewSocket(
 				string, 
 				GssapiauthIT.newSocks5ClientUsingSocks5GssapiauthNecReferenceImpl(
 						ProtectionLevels.newInstance(
@@ -694,7 +700,7 @@ public class GssapiauthIT {
 	@Test
 	public void testThroughSocks5SocketUsingSocks5GssapiauthNecReferenceImplWithIntegAndConfProtection03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = SocketEchoHelper.echoThroughSocket(
+		String returningString = EchoClientHelper.echoThroughNewSocket(
 				string, 
 				GssapiauthIT.newSocks5ClientUsingSocks5GssapiauthNecReferenceImpl(
 						ProtectionLevels.newInstance(
@@ -705,7 +711,7 @@ public class GssapiauthIT {
 	@Test
 	public void testThroughSocks5SocketUsingSocks5GssapiauthNecReferenceImplWithIntegProtection01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = SocketEchoHelper.echoThroughSocket(
+		String returningString = EchoClientHelper.echoThroughNewSocket(
 				string, 
 				GssapiauthIT.newSocks5ClientUsingSocks5GssapiauthNecReferenceImpl(
 						ProtectionLevels.newInstance(
@@ -716,7 +722,7 @@ public class GssapiauthIT {
 	@Test
 	public void testThroughSocks5SocketUsingSocks5GssapiauthNecReferenceImplWithIntegProtection02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = SocketEchoHelper.echoThroughSocket(
+		String returningString = EchoClientHelper.echoThroughNewSocket(
 				string, 
 				GssapiauthIT.newSocks5ClientUsingSocks5GssapiauthNecReferenceImpl(
 						ProtectionLevels.newInstance(
@@ -727,7 +733,7 @@ public class GssapiauthIT {
 	@Test
 	public void testThroughSocks5SocketUsingSocks5GssapiauthNecReferenceImplWithIntegProtection03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = SocketEchoHelper.echoThroughSocket(
+		String returningString = EchoClientHelper.echoThroughNewSocket(
 				string, 
 				GssapiauthIT.newSocks5ClientUsingSocks5GssapiauthNecReferenceImpl(
 						ProtectionLevels.newInstance(
@@ -738,7 +744,7 @@ public class GssapiauthIT {
 	@Test
 	public void testThroughSocks5SocketUsingSocks5GssapiauthWithIntegAndConfProtection01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = SocketEchoHelper.echoThroughSocket(
+		String returningString = EchoClientHelper.echoThroughNewSocket(
 				string, 
 				GssapiauthIT.newSocks5ClientUsingSocks5Gssapiauth(
 						ProtectionLevels.newInstance(
@@ -749,7 +755,7 @@ public class GssapiauthIT {
 	@Test
 	public void testThroughSocks5SocketUsingSocks5GssapiauthWithIntegAndConfProtection02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = SocketEchoHelper.echoThroughSocket(
+		String returningString = EchoClientHelper.echoThroughNewSocket(
 				string, 
 				GssapiauthIT.newSocks5ClientUsingSocks5Gssapiauth(
 						ProtectionLevels.newInstance(
@@ -760,7 +766,7 @@ public class GssapiauthIT {
 	@Test
 	public void testThroughSocks5SocketUsingSocks5GssapiauthWithIntegAndConfProtection03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = SocketEchoHelper.echoThroughSocket(
+		String returningString = EchoClientHelper.echoThroughNewSocket(
 				string, 
 				GssapiauthIT.newSocks5ClientUsingSocks5Gssapiauth(
 						ProtectionLevels.newInstance(
@@ -771,7 +777,7 @@ public class GssapiauthIT {
 	@Test
 	public void testThroughSocks5SocketUsingSocks5GssapiauthWithIntegProtection01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = SocketEchoHelper.echoThroughSocket(
+		String returningString = EchoClientHelper.echoThroughNewSocket(
 				string, 
 				GssapiauthIT.newSocks5ClientUsingSocks5Gssapiauth(
 						ProtectionLevels.newInstance(
@@ -782,7 +788,7 @@ public class GssapiauthIT {
 	@Test
 	public void testThroughSocks5SocketUsingSocks5GssapiauthWithIntegProtection02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = SocketEchoHelper.echoThroughSocket(
+		String returningString = EchoClientHelper.echoThroughNewSocket(
 				string, 
 				GssapiauthIT.newSocks5ClientUsingSocks5Gssapiauth(
 						ProtectionLevels.newInstance(
@@ -793,7 +799,7 @@ public class GssapiauthIT {
 	@Test
 	public void testThroughSocks5SocketUsingSocks5GssapiauthWithIntegProtection03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = SocketEchoHelper.echoThroughSocket(
+		String returningString = EchoClientHelper.echoThroughNewSocket(
 				string, 
 				GssapiauthIT.newSocks5ClientUsingSocks5Gssapiauth(
 						ProtectionLevels.newInstance(

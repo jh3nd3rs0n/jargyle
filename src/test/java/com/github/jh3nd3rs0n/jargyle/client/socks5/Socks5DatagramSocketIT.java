@@ -11,7 +11,8 @@ import org.junit.Test;
 
 import com.github.jh3nd3rs0n.jargyle.TestStringConstants;
 import com.github.jh3nd3rs0n.jargyle.ThreadHelper;
-import com.github.jh3nd3rs0n.jargyle.client.DatagramSocketEchoHelper;
+import com.github.jh3nd3rs0n.jargyle.client.DatagramEchoServer;
+import com.github.jh3nd3rs0n.jargyle.client.DatagramEchoClientHelper;
 import com.github.jh3nd3rs0n.jargyle.client.SocksClientHelper;
 import com.github.jh3nd3rs0n.jargyle.server.ConfigurationHelper;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
@@ -22,12 +23,15 @@ public class Socks5DatagramSocketIT {
 	private static final int SOCKS_SERVER_PORT = 10100;
 	private static final int SOCKS_SERVER_PORT_USING_SOCKS5_USERPASSAUTH = 10200;
 	
+	private static DatagramEchoServer datagramEchoServer;
+	
 	private static List<SocksServer> socksServers;
 	private static List<SocksServer> socksServersUsingSocks5Userpassauth;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws IOException {
-		DatagramSocketEchoHelper.startEchoServer();
+		datagramEchoServer = new DatagramEchoServer();
+		datagramEchoServer.start();
 		socksServers = SocksServerHelper.newStartedSocksServers(Arrays.asList(
 				ConfigurationHelper.newConfiguration(SOCKS_SERVER_PORT)));
 		socksServersUsingSocks5Userpassauth = 
@@ -38,7 +42,7 @@ public class Socks5DatagramSocketIT {
 	
 	@AfterClass
 	public static void tearDownAfterClass() throws IOException {
-		DatagramSocketEchoHelper.stopEchoServer();
+		datagramEchoServer.stop();
 		SocksServerHelper.stopSocksServers(socksServers);
 		SocksServerHelper.stopSocksServers(socksServersUsingSocks5Userpassauth);
 		ThreadHelper.sleepForThreeSeconds();
@@ -47,7 +51,7 @@ public class Socks5DatagramSocketIT {
 	@Test
 	public void testThroughSocks5DatagramSocket01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
+		String returningString = DatagramEchoClientHelper.echoThroughNewDatagramSocket(
 				string, 
 				SocksClientHelper.newSocks5Client(SOCKS_SERVER_PORT).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -56,7 +60,7 @@ public class Socks5DatagramSocketIT {
 	@Test
 	public void testThroughSocks5DatagramSocket02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
+		String returningString = DatagramEchoClientHelper.echoThroughNewDatagramSocket(
 				string, 
 				SocksClientHelper.newSocks5Client(SOCKS_SERVER_PORT).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -65,7 +69,7 @@ public class Socks5DatagramSocketIT {
 	@Test
 	public void testThroughSocks5DatagramSocket03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
+		String returningString = DatagramEchoClientHelper.echoThroughNewDatagramSocket(
 				string, 
 				SocksClientHelper.newSocks5Client(SOCKS_SERVER_PORT).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -74,7 +78,7 @@ public class Socks5DatagramSocketIT {
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5Userpassauth01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
+		String returningString = DatagramEchoClientHelper.echoThroughNewDatagramSocket(
 				string, 
 				SocksClientHelper.newSocks5ClientUsingSocks5Userpassauth(
 						SOCKS_SERVER_PORT_USING_SOCKS5_USERPASSAUTH, 
@@ -86,7 +90,7 @@ public class Socks5DatagramSocketIT {
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5Userpassauth02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
+		String returningString = DatagramEchoClientHelper.echoThroughNewDatagramSocket(
 				string, 
 				SocksClientHelper.newSocks5ClientUsingSocks5Userpassauth(
 						SOCKS_SERVER_PORT_USING_SOCKS5_USERPASSAUTH, 
@@ -98,7 +102,7 @@ public class Socks5DatagramSocketIT {
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSocks5Userpassauth03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = DatagramSocketEchoHelper.echoThroughDatagramSocket(
+		String returningString = DatagramEchoClientHelper.echoThroughNewDatagramSocket(
 				string, 
 				SocksClientHelper.newSocks5ClientUsingSocks5Userpassauth(
 						SOCKS_SERVER_PORT_USING_SOCKS5_USERPASSAUTH, 

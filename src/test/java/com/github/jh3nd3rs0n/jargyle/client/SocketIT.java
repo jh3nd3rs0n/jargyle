@@ -13,35 +13,38 @@ import com.github.jh3nd3rs0n.jargyle.ThreadHelper;
 
 public class SocketIT {
 
+	private static EchoServer echoServer;
+
 	@BeforeClass
 	public static void setUpBeforeClass() throws IOException {
-		SocketEchoHelper.startEchoServer();
+		echoServer = new EchoServer();
+		echoServer.start();
 	}
 	
 	@AfterClass
 	public static void tearDownAfterClass() throws IOException {
-		SocketEchoHelper.stopEchoServer();
+		echoServer.stop();
 		ThreadHelper.sleepForThreeSeconds();
 	}
 	
 	@Test
 	public void testThroughSocket01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = SocketEchoHelper.echoThroughSocket(string, null);
+		String returningString = EchoClientHelper.echoThroughNewSocket(string, null);
 		assertEquals(string, returningString);
 	}
 
 	@Test
 	public void testThroughSocket02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = SocketEchoHelper.echoThroughSocket(string, null);
+		String returningString = EchoClientHelper.echoThroughNewSocket(string, null);
 		assertEquals(string, returningString);
 	}
 
 	@Test
 	public void testThroughSocket03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = SocketEchoHelper.echoThroughSocket(string, null);
+		String returningString = EchoClientHelper.echoThroughNewSocket(string, null);
 		assertEquals(string, returningString);
 	}
 

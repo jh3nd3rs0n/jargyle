@@ -11,7 +11,7 @@ import org.junit.Test;
 
 import com.github.jh3nd3rs0n.jargyle.TestStringConstants;
 import com.github.jh3nd3rs0n.jargyle.ThreadHelper;
-import com.github.jh3nd3rs0n.jargyle.client.ServerSocketEchoHelper;
+import com.github.jh3nd3rs0n.jargyle.client.EchoClientHelper;
 import com.github.jh3nd3rs0n.jargyle.client.SocksClientHelper;
 import com.github.jh3nd3rs0n.jargyle.server.ConfigurationHelper;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
@@ -37,6 +37,9 @@ public class Socks5ServerSocketIT {
 	
 	@AfterClass
 	public static void tearDownAfterClass() throws IOException {
+		/*
+		echoServer.stop();
+		*/
 		SocksServerHelper.stopSocksServers(socksServers);
 		SocksServerHelper.stopSocksServers(socksServersUsingSocks5Userpassauth);
 		ThreadHelper.sleepForThreeSeconds();
@@ -45,7 +48,7 @@ public class Socks5ServerSocketIT {
 	@Test
 	public void testThroughSocks5ServerSocket01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
+		String returningString = EchoClientHelper.echoThroughNewServerSocket(
 				string, 
 				SocksClientHelper.newSocks5Client(SOCKS_SERVER_PORT).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -54,7 +57,7 @@ public class Socks5ServerSocketIT {
 	@Test
 	public void testThroughSocks5ServerSocket02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
+		String returningString = EchoClientHelper.echoThroughNewServerSocket(
 				string, 
 				SocksClientHelper.newSocks5Client(SOCKS_SERVER_PORT).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -63,7 +66,7 @@ public class Socks5ServerSocketIT {
 	@Test
 	public void testThroughSocks5ServerSocket03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
+		String returningString = EchoClientHelper.echoThroughNewServerSocket(
 				string, 
 				SocksClientHelper.newSocks5Client(SOCKS_SERVER_PORT).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -72,7 +75,7 @@ public class Socks5ServerSocketIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingSocks5Userpassauth01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
+		String returningString = EchoClientHelper.echoThroughNewServerSocket(
 				string, 
 				SocksClientHelper.newSocks5ClientUsingSocks5Userpassauth(
 						SOCKS_SERVER_PORT_USING_SOCKS5_USERPASSAUTH, 
@@ -84,7 +87,7 @@ public class Socks5ServerSocketIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingSocks5Userpassauth02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
+		String returningString = EchoClientHelper.echoThroughNewServerSocket(
 				string, 
 				SocksClientHelper.newSocks5ClientUsingSocks5Userpassauth(
 						SOCKS_SERVER_PORT_USING_SOCKS5_USERPASSAUTH, 
@@ -96,7 +99,7 @@ public class Socks5ServerSocketIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingSocks5Userpassauth03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = ServerSocketEchoHelper.echoThroughServerSocket(
+		String returningString = EchoClientHelper.echoThroughNewServerSocket(
 				string, 
 				SocksClientHelper.newSocks5ClientUsingSocks5Userpassauth(
 						SOCKS_SERVER_PORT_USING_SOCKS5_USERPASSAUTH, 

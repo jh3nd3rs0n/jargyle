@@ -11,7 +11,8 @@ import org.junit.Test;
 
 import com.github.jh3nd3rs0n.jargyle.TestStringConstants;
 import com.github.jh3nd3rs0n.jargyle.ThreadHelper;
-import com.github.jh3nd3rs0n.jargyle.client.SocketEchoHelper;
+import com.github.jh3nd3rs0n.jargyle.client.EchoServer;
+import com.github.jh3nd3rs0n.jargyle.client.EchoClientHelper;
 import com.github.jh3nd3rs0n.jargyle.client.SocksClientHelper;
 import com.github.jh3nd3rs0n.jargyle.server.ConfigurationHelper;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
@@ -22,12 +23,15 @@ public class Socks5SocketIT {
 	private static final int SOCKS_SERVER_PORT = 30100;
 	private static final int SOCKS_SERVER_PORT_USING_SOCKS5_USERPASSAUTH = 30200;
 	
+	private static EchoServer echoServer;
+	
 	private static List<SocksServer> socksServers;
 	private static List<SocksServer> socksServersUsingSocks5Userpassauth;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws IOException {
-		SocketEchoHelper.startEchoServer();
+		echoServer = new EchoServer();
+		echoServer.start();
 		socksServers = SocksServerHelper.newStartedSocksServers(Arrays.asList(
 				ConfigurationHelper.newConfiguration(SOCKS_SERVER_PORT)));
 		socksServersUsingSocks5Userpassauth = 
@@ -38,7 +42,7 @@ public class Socks5SocketIT {
 	
 	@AfterClass
 	public static void tearDownAfterClass() throws IOException {
-		SocketEchoHelper.stopEchoServer();
+		echoServer.stop();
 		SocksServerHelper.stopSocksServers(socksServers);
 		SocksServerHelper.stopSocksServers(socksServersUsingSocks5Userpassauth);
 		ThreadHelper.sleepForThreeSeconds();
@@ -47,7 +51,7 @@ public class Socks5SocketIT {
 	@Test
 	public void testThroughSocks5Socket01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = SocketEchoHelper.echoThroughSocket(
+		String returningString = EchoClientHelper.echoThroughNewSocket(
 				string, 
 				SocksClientHelper.newSocks5Client(SOCKS_SERVER_PORT).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -56,7 +60,7 @@ public class Socks5SocketIT {
 	@Test
 	public void testThroughSocks5Socket02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = SocketEchoHelper.echoThroughSocket(
+		String returningString = EchoClientHelper.echoThroughNewSocket(
 				string, 
 				SocksClientHelper.newSocks5Client(SOCKS_SERVER_PORT).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -65,7 +69,7 @@ public class Socks5SocketIT {
 	@Test
 	public void testThroughSocks5Socket03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = SocketEchoHelper.echoThroughSocket(
+		String returningString = EchoClientHelper.echoThroughNewSocket(
 				string, 
 				SocksClientHelper.newSocks5Client(SOCKS_SERVER_PORT).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -74,7 +78,7 @@ public class Socks5SocketIT {
 	@Test
 	public void testThroughSocks5SocketUsingSocks5Userpassauth01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = SocketEchoHelper.echoThroughSocket(
+		String returningString = EchoClientHelper.echoThroughNewSocket(
 				string, 
 				SocksClientHelper.newSocks5ClientUsingSocks5Userpassauth(
 						SOCKS_SERVER_PORT_USING_SOCKS5_USERPASSAUTH, 
@@ -86,7 +90,7 @@ public class Socks5SocketIT {
 	@Test
 	public void testThroughSocks5SocketUsingSocks5Userpassauth02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = SocketEchoHelper.echoThroughSocket(
+		String returningString = EchoClientHelper.echoThroughNewSocket(
 				string, 
 				SocksClientHelper.newSocks5ClientUsingSocks5Userpassauth(
 						SOCKS_SERVER_PORT_USING_SOCKS5_USERPASSAUTH, 
@@ -98,7 +102,7 @@ public class Socks5SocketIT {
 	@Test
 	public void testThroughSocks5SocketUsingSocks5Userpassauth03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = SocketEchoHelper.echoThroughSocket(
+		String returningString = EchoClientHelper.echoThroughNewSocket(
 				string, 
 				SocksClientHelper.newSocks5ClientUsingSocks5Userpassauth(
 						SOCKS_SERVER_PORT_USING_SOCKS5_USERPASSAUTH, 

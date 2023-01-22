@@ -10,7 +10,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import com.github.jh3nd3rs0n.jargyle.IoHelper;
-import com.github.jh3nd3rs0n.jargyle.internal.throwable.ThrowableHelper;
+import com.github.jh3nd3rs0n.jargyle.common.throwable.ThrowableHelper;
 import com.github.jh3nd3rs0n.jargyle.server.internal.concurrent.ExecutorHelper;
 
 public final class EchoServer {
@@ -30,9 +30,8 @@ public final class EchoServer {
 					Socket clientSocket = this.serverSocket.accept();
 					executor.execute(new Worker(clientSocket));
 				} catch (IOException e) {
-					if (e instanceof SocketException 
-							|| ThrowableHelper.getRecentCause(
-									e, SocketException.class) != null) {
+					if (ThrowableHelper.isOrHasInstanceOf(
+							e, SocketException.class)) {
 						break;
 					}
 					e.printStackTrace();

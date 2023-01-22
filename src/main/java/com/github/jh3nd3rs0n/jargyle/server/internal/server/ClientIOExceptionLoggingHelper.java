@@ -7,34 +7,27 @@ import java.net.SocketTimeoutException;
 
 import org.slf4j.Logger;
 
-import com.github.jh3nd3rs0n.jargyle.internal.throwable.ThrowableHelper;
+import com.github.jh3nd3rs0n.jargyle.common.throwable.ThrowableHelper;
 import com.github.jh3nd3rs0n.jargyle.transport.SocksException;
 
 public final class ClientIOExceptionLoggingHelper {
 
 	public static void log(
 			final Logger logger, final String message, final IOException e) {
-		if (e instanceof EOFException 
-				|| ThrowableHelper.getRecentCause(
-						e, EOFException.class) != null) {
+		if (ThrowableHelper.isOrHasInstanceOf(e, EOFException.class)) {
 			logger.debug(message, e);
 			return;
 		}
-		if (e instanceof SocketException
-				|| ThrowableHelper.getRecentCause(
-						e, SocketException.class) != null) {
+		if (ThrowableHelper.isOrHasInstanceOf(e, SocketException.class)) {
 			logger.debug(message, e);
 			return;
 		}
-		if (e instanceof SocketTimeoutException 
-				|| ThrowableHelper.getRecentCause(
-						e, SocketTimeoutException.class) != null) {
+		if (ThrowableHelper.isOrHasInstanceOf(
+				e, SocketTimeoutException.class)) {
 			logger.debug(message, e);
 			return;
 		}
-		if (e instanceof SocksException
-				|| ThrowableHelper.getRecentCause(
-						e, SocksException.class) != null) {
+		if (ThrowableHelper.isOrHasInstanceOf(e, SocksException.class)) {
 			logger.debug(message, e);
 			return;
 		}

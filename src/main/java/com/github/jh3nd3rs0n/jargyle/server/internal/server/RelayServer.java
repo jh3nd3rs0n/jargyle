@@ -15,8 +15,8 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.github.jh3nd3rs0n.jargyle.common.throwable.ThrowableHelper;
 import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
-import com.github.jh3nd3rs0n.jargyle.internal.throwable.ThrowableHelper;
 import com.github.jh3nd3rs0n.jargyle.server.internal.concurrent.ExecutorHelper;
 
 public final class RelayServer {
@@ -102,19 +102,16 @@ public final class RelayServer {
 						ioe = e;
 					}
 					if (ioe != null) {
-						if (ioe instanceof EOFException
-								|| ThrowableHelper.getRecentCause(
-										ioe, EOFException.class) != null) {
+						if (ThrowableHelper.isOrHasInstanceOf(
+								ioe, EOFException.class)) {
 							// end of input stream reached
 							break;
-						} else if (ioe instanceof SocketException 
-								|| ThrowableHelper.getRecentCause(
-										ioe, SocketException.class) != null) {
+						} else if (ThrowableHelper.isOrHasInstanceOf(
+								ioe, SocketException.class)) {
 							// socket closed
 							break;
-						} else if (ioe instanceof SocketTimeoutException 
-								|| ThrowableHelper.getRecentCause(
-										ioe, SocketTimeoutException.class) != null) {
+						} else if (ThrowableHelper.isOrHasInstanceOf(
+								ioe, SocketTimeoutException.class)) {
 							bytesRead = 0;
 						} else {
 							LOGGER.error(
@@ -150,9 +147,8 @@ public final class RelayServer {
 						ioe = e;
 					}
 					if (ioe != null) {
-						if (ioe instanceof SocketException 
-								|| ThrowableHelper.getRecentCause(
-										ioe, SocketException.class) != null) {
+						if (ThrowableHelper.isOrHasInstanceOf(
+								ioe, SocketException.class)) {
 							// socket closed
 							break;
 						} else {
@@ -172,9 +168,8 @@ public final class RelayServer {
 						ioe = e;
 					}
 					if (ioe != null) {
-						if (ioe instanceof SocketException 
-								|| ThrowableHelper.getRecentCause(
-										ioe, SocketException.class) != null) {
+						if (ThrowableHelper.isOrHasInstanceOf(
+								ioe, SocketException.class)) {
 							// socket closed
 							break;
 						} else {

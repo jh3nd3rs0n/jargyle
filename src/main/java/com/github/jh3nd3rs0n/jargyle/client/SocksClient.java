@@ -17,8 +17,8 @@ import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.common.net.PortRange;
 import com.github.jh3nd3rs0n.jargyle.common.net.PortRanges;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
+import com.github.jh3nd3rs0n.jargyle.common.throwable.ThrowableHelper;
 import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.SslSocketFactory;
-import com.github.jh3nd3rs0n.jargyle.internal.throwable.ThrowableHelper;
 
 public abstract class SocksClient {
 
@@ -185,9 +185,8 @@ public abstract class SocksClient {
 									socksServerUriPort), 
 									connectTimeout);
 						} catch (IOException e) {
-							if (e instanceof BindException 
-									|| ThrowableHelper.getRecentCause(
-											e, BindException.class) != null) {
+							if (ThrowableHelper.isOrHasInstanceOf(
+									e, BindException.class)) {
 								clientSock.close();
 								clientSock = netObjFactory.newSocket();
 								socketSttngs.applyTo(clientSock);
@@ -260,9 +259,8 @@ public abstract class SocksClient {
 							clientBindHostInetAddress, 
 							clientBindPort.intValue());
 				} catch (IOException e) {
-					if (e instanceof BindException 
-							|| ThrowableHelper.getRecentCause(
-									e, BindException.class) != null) {
+					if (ThrowableHelper.isOrHasInstanceOf(
+							e, BindException.class)) {
 						continue;
 					}
 					throw e;

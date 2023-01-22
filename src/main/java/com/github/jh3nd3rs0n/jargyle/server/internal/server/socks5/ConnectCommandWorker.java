@@ -23,8 +23,8 @@ import com.github.jh3nd3rs0n.jargyle.common.net.PortRanges;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSetting;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
+import com.github.jh3nd3rs0n.jargyle.common.throwable.ThrowableHelper;
 import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
-import com.github.jh3nd3rs0n.jargyle.internal.throwable.ThrowableHelper;
 import com.github.jh3nd3rs0n.jargyle.server.GeneralRuleResultSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.GeneralSettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.Rule;
@@ -406,14 +406,12 @@ final class ConnectCommandWorker extends CommandWorker {
 							this, socks5Rep, LOGGER);
 					return null;
 				} catch (IOException e) {
-					if (e instanceof BindException 
-							|| ThrowableHelper.getRecentCause(
-									e, BindException.class) != null) {
+					if (ThrowableHelper.isOrHasInstanceOf(
+							e, BindException.class)) {
 						continue;
 					}
-					if (e instanceof SocketException
-							|| ThrowableHelper.getRecentCause(
-									e, SocketException.class) != null) {
+					if (ThrowableHelper.isOrHasInstanceOf(
+							e, SocketException.class)) {
 						LOGGER.error( 
 								ObjectLogMessageHelper.objectLogMessage(
 										this, 
@@ -519,9 +517,8 @@ final class ConnectCommandWorker extends CommandWorker {
 							this.desiredDestinationPort),
 							connectTimeout);
 				} catch (IOException e) {
-					if (e instanceof BindException 
-							|| ThrowableHelper.getRecentCause(
-									e, BindException.class) != null) {
+					if (ThrowableHelper.isOrHasInstanceOf(
+							e, BindException.class)) {
 						try {
 							serverFacingSocket.close();
 						} catch (IOException ex) {
@@ -529,9 +526,8 @@ final class ConnectCommandWorker extends CommandWorker {
 						}
 						continue;
 					}
-					if (e instanceof SocketException
-							|| ThrowableHelper.getRecentCause(
-									e, SocketException.class) != null) {
+					if (ThrowableHelper.isOrHasInstanceOf(
+							e, SocketException.class)) {
 						LOGGER.error( 
 								ObjectLogMessageHelper.objectLogMessage(
 										this, 

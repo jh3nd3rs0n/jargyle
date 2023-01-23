@@ -6,13 +6,9 @@ public final class ThrowableHelper {
 			final Throwable t, final Class<? extends Throwable> cls) {
 		if (cls.isInstance(t)) {
 			return true;
-		} else {
-			Throwable cause = t.getCause();
-			if (cause != null && isOrHasInstanceOf(cause, cls)) {
-				return true;
-			}
 		}
-		return false;
+		Throwable cause = t.getCause();
+		return cause != null && isOrHasInstanceOf(cause, cls);
 	}
 	
 	private ThrowableHelper() { }

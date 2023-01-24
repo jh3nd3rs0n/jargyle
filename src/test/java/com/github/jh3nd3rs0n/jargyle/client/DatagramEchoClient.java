@@ -6,11 +6,13 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.Arrays;
 
-public final class DatagramEchoClientHelper {
+import com.github.jh3nd3rs0n.jargyle.server.DatagramEchoServer;
+
+public final class DatagramEchoClient {
 	
-	private static final int ECHO_CLIENT_TIMEOUT = 60000;
+	private static final int SO_TIMEOUT = 60000;
 	
-	public static String echoThroughNewDatagramSocket(
+	public String echoThroughNewDatagramSocket(
 			final String string, 
 			final NetObjectFactory netObjectFactory) throws IOException {
 		NetObjectFactory netObjFactory = netObjectFactory; 
@@ -21,7 +23,7 @@ public final class DatagramEchoClientHelper {
 		String returningString = null;
 		try {
 			echoClient = netObjFactory.newDatagramSocket(null);
-			echoClient.setSoTimeout(ECHO_CLIENT_TIMEOUT);
+			echoClient.setSoTimeout(SO_TIMEOUT);
 			echoClient.bind(null);
 			echoClient.connect(
 					InetAddress.getLoopbackAddress(), DatagramEchoServer.PORT);
@@ -45,6 +47,4 @@ public final class DatagramEchoClientHelper {
 		return returningString;
 	}
 
-	private DatagramEchoClientHelper() { }
-	
 }

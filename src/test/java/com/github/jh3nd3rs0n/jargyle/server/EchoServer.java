@@ -1,4 +1,4 @@
-package com.github.jh3nd3rs0n.jargyle.client;
+package com.github.jh3nd3rs0n.jargyle.server;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,6 +10,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import com.github.jh3nd3rs0n.jargyle.IoHelper;
+import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
 import com.github.jh3nd3rs0n.jargyle.common.throwable.ThrowableHelper;
 import com.github.jh3nd3rs0n.jargyle.server.internal.concurrent.ExecutorHelper;
 
@@ -77,9 +78,11 @@ public final class EchoServer {
 		}
 	}
 	
+	public static final int BACKLOG = 50;
 	public static final int PORT = 1084;
 	
 	private int actualPort;
+	private final int backlog;
 	private ExecutorService executor;
 	private final int expectedPort;	
 	private final NetObjectFactory netObjectFactory;
@@ -87,11 +90,15 @@ public final class EchoServer {
 	private State state;
 
 	public EchoServer() {
-		this(new DefaultNetObjectFactory(), PORT);
+		this(NetObjectFactory.getDefault(), PORT, BACKLOG);
 	}
 	
-	public EchoServer(final NetObjectFactory netObjFactory, final int prt) {
+	public EchoServer(
+			final NetObjectFactory netObjFactory, 
+			final int prt, 
+			final int bklog) {
 		this.actualPort = -1;
+		this.backlog = bklog;
 		this.executor = null;
 		this.expectedPort = prt;
 		this.netObjectFactory = netObjFactory;
@@ -109,7 +116,7 @@ public final class EchoServer {
 	
 	public void start() throws IOException {
 		this.serverSocket = this.netObjectFactory.newServerSocket(
-				this.expectedPort);
+				this.expectedPort, this.backlog);
 		this.actualPort = this.serverSocket.getLocalPort();
 		this.executor = Executors.newSingleThreadExecutor();
 		this.executor.execute(new Listener(this.serverSocket));

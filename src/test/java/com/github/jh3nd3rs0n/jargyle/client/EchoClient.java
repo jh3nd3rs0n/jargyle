@@ -8,25 +8,27 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 
 import com.github.jh3nd3rs0n.jargyle.IoHelper;
+import com.github.jh3nd3rs0n.jargyle.server.EchoServer;
 
-public final class EchoClientHelper {
+public final class EchoClient {
 	
-	private static final int ECHO_CLIENT_TIMEOUT = 60000;
+	private static final int SO_TIMEOUT = 60000;
 
-	public static String echoThroughNewServerSocket(
+	public String echoThroughNewServerSocket(
 			final String string, 
 			final NetObjectFactory netObjectFactory) throws IOException {
 		NetObjectFactory netObjFactory = netObjectFactory;
 		if (netObjFactory == null) {
 			netObjFactory = new DefaultNetObjectFactory();
 		}
-		EchoServer echoServer = new EchoServer(netObjFactory, 0);
+		EchoServer echoServer = new EchoServer(
+				netObjFactory, 0, EchoServer.BACKLOG);
 		Socket echoClient = null;
 		String returningString = null;		
 		try {
 			echoServer.start();
 			echoClient = new DefaultNetObjectFactory().newSocket();
-			echoClient.setSoTimeout(ECHO_CLIENT_TIMEOUT);
+			echoClient.setSoTimeout(SO_TIMEOUT);
 			echoClient.connect(new InetSocketAddress(
 					InetAddress.getLoopbackAddress(), echoServer.getPort()));
 			InputStream in = echoClient.getInputStream();
@@ -45,7 +47,7 @@ public final class EchoClientHelper {
 		return returningString;
 	}
 	
-	public static String echoThroughNewSocket(
+	public String echoThroughNewSocket(
 			final String string, 
 			final NetObjectFactory netObjectFactory) throws IOException {
 		NetObjectFactory netObjFactory = netObjectFactory;
@@ -56,7 +58,7 @@ public final class EchoClientHelper {
 		String returningString = null;
 		try {
 			echoClient = netObjFactory.newSocket();
-			echoClient.setSoTimeout(ECHO_CLIENT_TIMEOUT);
+			echoClient.setSoTimeout(SO_TIMEOUT);
 			echoClient.connect(new InetSocketAddress(
 					InetAddress.getLoopbackAddress(), EchoServer.PORT));
 			InputStream in = echoClient.getInputStream();
@@ -71,7 +73,5 @@ public final class EchoClientHelper {
 		}
 		return returningString;
 	}
-	
-	private EchoClientHelper() { }
-	
+
 }

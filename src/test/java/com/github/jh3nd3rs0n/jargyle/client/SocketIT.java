@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import com.github.jh3nd3rs0n.jargyle.TestStringConstants;
 import com.github.jh3nd3rs0n.jargyle.ThreadHelper;
+import com.github.jh3nd3rs0n.jargyle.server.EchoServer;
 
 public class SocketIT {
 
@@ -23,28 +24,30 @@ public class SocketIT {
 	
 	@AfterClass
 	public static void tearDownAfterClass() throws IOException {
-		echoServer.stop();
+		if (!echoServer.getState().equals(EchoServer.State.STOPPED)) {
+			echoServer.stop();
+		}
 		ThreadHelper.sleepForThreeSeconds();
 	}
 	
 	@Test
 	public void testThroughSocket01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = EchoClientHelper.echoThroughNewSocket(string, null);
+		String returningString = new EchoClient().echoThroughNewSocket(string, null);
 		assertEquals(string, returningString);
 	}
 
 	@Test
 	public void testThroughSocket02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = EchoClientHelper.echoThroughNewSocket(string, null);
+		String returningString = new EchoClient().echoThroughNewSocket(string, null);
 		assertEquals(string, returningString);
 	}
 
 	@Test
 	public void testThroughSocket03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = EchoClientHelper.echoThroughNewSocket(string, null);
+		String returningString = new EchoClient().echoThroughNewSocket(string, null);
 		assertEquals(string, returningString);
 	}
 

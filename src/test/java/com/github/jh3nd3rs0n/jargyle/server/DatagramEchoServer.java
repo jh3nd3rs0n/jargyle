@@ -1,4 +1,4 @@
-package com.github.jh3nd3rs0n.jargyle.client;
+package com.github.jh3nd3rs0n.jargyle.server;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -41,6 +41,14 @@ public final class DatagramEchoServer {
 		}
 		
 	}
+
+	public static enum State {
+		
+		STARTED,
+		
+		STOPPED;
+		
+	}
 	
 	private static final class Worker implements Runnable {
 		
@@ -78,16 +86,23 @@ public final class DatagramEchoServer {
 	
 	private ExecutorService executor;
 	private DatagramSocket serverSocket;
+	private State state;
 
 	public DatagramEchoServer() {
 		this.executor = null;
 		this.serverSocket = null;
+		this.state = State.STOPPED;
+	}
+	
+	public State getState() {
+		return this.state;
 	}
 
 	public void start() throws IOException {
 		this.serverSocket = new DatagramSocket(PORT);
 		this.executor = Executors.newSingleThreadExecutor();
 		this.executor.execute(new Listener(this.serverSocket));
+		this.state = State.STARTED;
 	}
 
 	public void stop() throws IOException {
@@ -95,5 +110,6 @@ public final class DatagramEchoServer {
 		this.serverSocket = null;
 		this.executor.shutdownNow();
 		this.executor = null;
+		this.state = State.STOPPED;
 	}
 }

@@ -2,8 +2,6 @@ package com.github.jh3nd3rs0n.jargyle.client.socks5;
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -11,44 +9,45 @@ import org.junit.Test;
 
 import com.github.jh3nd3rs0n.jargyle.TestStringConstants;
 import com.github.jh3nd3rs0n.jargyle.ThreadHelper;
-import com.github.jh3nd3rs0n.jargyle.client.EchoClientHelper;
+import com.github.jh3nd3rs0n.jargyle.client.EchoClient;
 import com.github.jh3nd3rs0n.jargyle.client.SocksClientHelper;
 import com.github.jh3nd3rs0n.jargyle.server.ConfigurationHelper;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
-import com.github.jh3nd3rs0n.jargyle.server.SocksServerHelper;
 
 public class Socks5ServerSocketIT {
 
 	private static final int SOCKS_SERVER_PORT = 20100;
 	private static final int SOCKS_SERVER_PORT_USING_SOCKS5_USERPASSAUTH = 20200;
 	
-	private static List<SocksServer> socksServers;
-	private static List<SocksServer> socksServersUsingSocks5Userpassauth;
+	private static SocksServer socksServer;
+	private static SocksServer socksServerUsingSocks5Userpassauth;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws IOException {
-		socksServers = SocksServerHelper.newStartedSocksServers(Arrays.asList(
-				ConfigurationHelper.newConfiguration(SOCKS_SERVER_PORT)));
-		socksServersUsingSocks5Userpassauth = 
-				SocksServerHelper.newStartedSocksServers(Arrays.asList(
-						ConfigurationHelper.newConfigurationUsingSocks5Userpassauth(
-								SOCKS_SERVER_PORT_USING_SOCKS5_USERPASSAUTH)));
+		socksServer = new SocksServer(
+				ConfigurationHelper.newConfiguration(SOCKS_SERVER_PORT));
+		socksServer.start();
+		socksServerUsingSocks5Userpassauth = new SocksServer(
+				ConfigurationHelper.newConfigurationUsingSocks5Userpassauth(
+						SOCKS_SERVER_PORT_USING_SOCKS5_USERPASSAUTH));
+		socksServerUsingSocks5Userpassauth.start();
 	}
 	
 	@AfterClass
 	public static void tearDownAfterClass() throws IOException {
-		/*
-		echoServer.stop();
-		*/
-		SocksServerHelper.stopSocksServers(socksServers);
-		SocksServerHelper.stopSocksServers(socksServersUsingSocks5Userpassauth);
+		if (!socksServer.getState().equals(SocksServer.State.STOPPED)) {
+			socksServer.stop();
+		}
+		if (!socksServerUsingSocks5Userpassauth.getState().equals(SocksServer.State.STOPPED)) {
+			socksServerUsingSocks5Userpassauth.stop();
+		}
 		ThreadHelper.sleepForThreeSeconds();
 	}
 	
 	@Test
 	public void testThroughSocks5ServerSocket01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = EchoClientHelper.echoThroughNewServerSocket(
+		String returningString = new EchoClient().echoThroughNewServerSocket(
 				string, 
 				SocksClientHelper.newSocks5Client(SOCKS_SERVER_PORT).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -57,7 +56,7 @@ public class Socks5ServerSocketIT {
 	@Test
 	public void testThroughSocks5ServerSocket02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = EchoClientHelper.echoThroughNewServerSocket(
+		String returningString = new EchoClient().echoThroughNewServerSocket(
 				string, 
 				SocksClientHelper.newSocks5Client(SOCKS_SERVER_PORT).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -66,7 +65,7 @@ public class Socks5ServerSocketIT {
 	@Test
 	public void testThroughSocks5ServerSocket03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = EchoClientHelper.echoThroughNewServerSocket(
+		String returningString = new EchoClient().echoThroughNewServerSocket(
 				string, 
 				SocksClientHelper.newSocks5Client(SOCKS_SERVER_PORT).newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -75,7 +74,7 @@ public class Socks5ServerSocketIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingSocks5Userpassauth01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = EchoClientHelper.echoThroughNewServerSocket(
+		String returningString = new EchoClient().echoThroughNewServerSocket(
 				string, 
 				SocksClientHelper.newSocks5ClientUsingSocks5Userpassauth(
 						SOCKS_SERVER_PORT_USING_SOCKS5_USERPASSAUTH, 
@@ -87,7 +86,7 @@ public class Socks5ServerSocketIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingSocks5Userpassauth02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = EchoClientHelper.echoThroughNewServerSocket(
+		String returningString = new EchoClient().echoThroughNewServerSocket(
 				string, 
 				SocksClientHelper.newSocks5ClientUsingSocks5Userpassauth(
 						SOCKS_SERVER_PORT_USING_SOCKS5_USERPASSAUTH, 
@@ -99,7 +98,7 @@ public class Socks5ServerSocketIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingSocks5Userpassauth03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = EchoClientHelper.echoThroughNewServerSocket(
+		String returningString = new EchoClient().echoThroughNewServerSocket(
 				string, 
 				SocksClientHelper.newSocks5ClientUsingSocks5Userpassauth(
 						SOCKS_SERVER_PORT_USING_SOCKS5_USERPASSAUTH, 

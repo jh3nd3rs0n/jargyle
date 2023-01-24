@@ -4,8 +4,6 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.net.InetAddress;
-import java.util.Arrays;
-import java.util.List;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -17,12 +15,13 @@ import com.github.jh3nd3rs0n.jargyle.TestStringConstants;
 import com.github.jh3nd3rs0n.jargyle.ThreadHelper;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
+import com.github.jh3nd3rs0n.jargyle.server.DatagramEchoServer;
 import com.github.jh3nd3rs0n.jargyle.server.DtlsSettingSpecConstants;
+import com.github.jh3nd3rs0n.jargyle.server.EchoServer;
 import com.github.jh3nd3rs0n.jargyle.server.GeneralSettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.ImmutableConfiguration;
 import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
-import com.github.jh3nd3rs0n.jargyle.server.SocksServerHelper;
 import com.github.jh3nd3rs0n.jargyle.server.SslSettingSpecConstants;
 
 public class SslIT {
@@ -34,38 +33,45 @@ public class SslIT {
 	private static DatagramEchoServer datagramEchoServer;
 	private static EchoServer echoServer;
 	
-	private static List<SocksServer> socksServersUsingSsl;
-	private static List<SocksServer> socksServersUsingSslAndRequestedClientAuth;
-	private static List<SocksServer> socksServersUsingSslAndRequiredClientAuth;
+	private static SocksServer socksServerUsingSsl;
+	private static SocksServer socksServerUsingSslAndRequestedClientAuth;
+	private static SocksServer socksServerUsingSslAndRequiredClientAuth;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws IOException {
 		// System.setProperty("javax.net.debug", "ssl,handshake");
 		datagramEchoServer = new DatagramEchoServer();
-		echoServer = new EchoServer();
 		datagramEchoServer.start();
+		echoServer = new EchoServer();
 		echoServer.start();
-		socksServersUsingSsl = 
-				SocksServerHelper.newStartedSocksServers(Arrays.asList(
-						newConfigurationUsingSsl()));
-		socksServersUsingSslAndRequestedClientAuth =
-				SocksServerHelper.newStartedSocksServers(Arrays.asList(
-						newConfigurationUsingSslAndRequestedClientAuth()));
-		socksServersUsingSslAndRequiredClientAuth =
-				SocksServerHelper.newStartedSocksServers(Arrays.asList(
-						newConfigurationUsingSslAndRequiredClientAuth()));
+		socksServerUsingSsl = new SocksServer(newConfigurationUsingSsl());
+		socksServerUsingSsl.start();
+		socksServerUsingSslAndRequestedClientAuth = new SocksServer(
+				newConfigurationUsingSslAndRequestedClientAuth());
+		socksServerUsingSslAndRequestedClientAuth.start();
+		socksServerUsingSslAndRequiredClientAuth = new SocksServer(
+				newConfigurationUsingSslAndRequiredClientAuth());
+		socksServerUsingSslAndRequiredClientAuth.start();
 	}
 	
 	@AfterClass
 	public static void tearDownAfterClass() throws IOException {
 		// System.clearProperty("javax.net.debug");
-		datagramEchoServer.stop();
-		echoServer.stop();
-		SocksServerHelper.stopSocksServers(socksServersUsingSsl);
-		SocksServerHelper.stopSocksServers(
-				socksServersUsingSslAndRequestedClientAuth);
-		SocksServerHelper.stopSocksServers(
-				socksServersUsingSslAndRequiredClientAuth);
+		if (!datagramEchoServer.getState().equals(DatagramEchoServer.State.STOPPED)) {
+			datagramEchoServer.stop();
+		}
+		if (!echoServer.getState().equals(EchoServer.State.STOPPED)) {
+			echoServer.stop();
+		}
+		if (!socksServerUsingSsl.getState().equals(SocksServer.State.STOPPED)) {
+			socksServerUsingSsl.stop();
+		}
+		if (!socksServerUsingSslAndRequestedClientAuth.getState().equals(SocksServer.State.STOPPED)) {
+			socksServerUsingSslAndRequestedClientAuth.stop();
+		}
+		if (!socksServerUsingSslAndRequiredClientAuth.getState().equals(SocksServer.State.STOPPED)) {
+			socksServerUsingSslAndRequiredClientAuth.stop();
+		}
 		ThreadHelper.sleepForThreeSeconds();
 	}
 	
@@ -260,7 +266,7 @@ public class SslIT {
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSsl01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = DatagramEchoClientHelper.echoThroughNewDatagramSocket(
+		String returningString = new DatagramEchoClient().echoThroughNewDatagramSocket(
 				string,
 				SslIT.newSocks5ClientUsingSsl().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -269,7 +275,7 @@ public class SslIT {
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSsl02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = DatagramEchoClientHelper.echoThroughNewDatagramSocket(
+		String returningString = new DatagramEchoClient().echoThroughNewDatagramSocket(
 				string,
 				SslIT.newSocks5ClientUsingSsl().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -278,7 +284,7 @@ public class SslIT {
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSsl03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = DatagramEchoClientHelper.echoThroughNewDatagramSocket(
+		String returningString = new DatagramEchoClient().echoThroughNewDatagramSocket(
 				string,
 				SslIT.newSocks5ClientUsingSsl().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -287,7 +293,7 @@ public class SslIT {
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSslAndRequestedClientAuth01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = DatagramEchoClientHelper.echoThroughNewDatagramSocket(
+		String returningString = new DatagramEchoClient().echoThroughNewDatagramSocket(
 				string,
 				SslIT.newSocks5ClientUsingSslAndRequestedClientAuth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -296,7 +302,7 @@ public class SslIT {
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSslAndRequestedClientAuth02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = DatagramEchoClientHelper.echoThroughNewDatagramSocket(
+		String returningString = new DatagramEchoClient().echoThroughNewDatagramSocket(
 				string,
 				SslIT.newSocks5ClientUsingSslAndRequestedClientAuth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -305,7 +311,7 @@ public class SslIT {
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSslAndRequestedClientAuth03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = DatagramEchoClientHelper.echoThroughNewDatagramSocket(
+		String returningString = new DatagramEchoClient().echoThroughNewDatagramSocket(
 				string,
 				SslIT.newSocks5ClientUsingSslAndRequestedClientAuth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -314,7 +320,7 @@ public class SslIT {
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSslAndRequiredClientAuth01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = DatagramEchoClientHelper.echoThroughNewDatagramSocket(
+		String returningString = new DatagramEchoClient().echoThroughNewDatagramSocket(
 				string,
 				SslIT.newSocks5ClientUsingSslAndRequiredClientAuth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -323,7 +329,7 @@ public class SslIT {
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSslAndRequiredClientAuth02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = DatagramEchoClientHelper.echoThroughNewDatagramSocket(
+		String returningString = new DatagramEchoClient().echoThroughNewDatagramSocket(
 				string,
 				SslIT.newSocks5ClientUsingSslAndRequiredClientAuth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -332,7 +338,7 @@ public class SslIT {
 	@Test
 	public void testThroughSocks5DatagramSocketUsingSslAndRequiredClientAuth03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = DatagramEchoClientHelper.echoThroughNewDatagramSocket(
+		String returningString = new DatagramEchoClient().echoThroughNewDatagramSocket(
 				string,
 				SslIT.newSocks5ClientUsingSslAndRequiredClientAuth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -341,7 +347,7 @@ public class SslIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingSsl01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = EchoClientHelper.echoThroughNewServerSocket(
+		String returningString = new EchoClient().echoThroughNewServerSocket(
 				string,
 				SslIT.newSocks5ClientUsingSsl().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -350,7 +356,7 @@ public class SslIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingSsl02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = EchoClientHelper.echoThroughNewServerSocket(
+		String returningString = new EchoClient().echoThroughNewServerSocket(
 				string,
 				SslIT.newSocks5ClientUsingSsl().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -359,7 +365,7 @@ public class SslIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingSsl03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = EchoClientHelper.echoThroughNewServerSocket(
+		String returningString = new EchoClient().echoThroughNewServerSocket(
 				string,
 				SslIT.newSocks5ClientUsingSsl().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -368,7 +374,7 @@ public class SslIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingSslAndRequestedClientAuth01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = EchoClientHelper.echoThroughNewServerSocket(
+		String returningString = new EchoClient().echoThroughNewServerSocket(
 				string,
 				SslIT.newSocks5ClientUsingSslAndRequestedClientAuth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -377,7 +383,7 @@ public class SslIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingSslAndRequestedClientAuth02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = EchoClientHelper.echoThroughNewServerSocket(
+		String returningString = new EchoClient().echoThroughNewServerSocket(
 				string,
 				SslIT.newSocks5ClientUsingSslAndRequestedClientAuth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -386,7 +392,7 @@ public class SslIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingSslAndRequestedClientAuth03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = EchoClientHelper.echoThroughNewServerSocket(
+		String returningString = new EchoClient().echoThroughNewServerSocket(
 				string,
 				SslIT.newSocks5ClientUsingSslAndRequestedClientAuth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -395,7 +401,7 @@ public class SslIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingSslAndRequiredClientAuth01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = EchoClientHelper.echoThroughNewServerSocket(
+		String returningString = new EchoClient().echoThroughNewServerSocket(
 				string,
 				SslIT.newSocks5ClientUsingSslAndRequiredClientAuth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -404,7 +410,7 @@ public class SslIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingSslAndRequiredClientAuth02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = EchoClientHelper.echoThroughNewServerSocket(
+		String returningString = new EchoClient().echoThroughNewServerSocket(
 				string,
 				SslIT.newSocks5ClientUsingSslAndRequiredClientAuth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -413,7 +419,7 @@ public class SslIT {
 	@Test
 	public void testThroughSocks5ServerSocketUsingSslAndRequiredClientAuth03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = EchoClientHelper.echoThroughNewServerSocket(
+		String returningString = new EchoClient().echoThroughNewServerSocket(
 				string,
 				SslIT.newSocks5ClientUsingSslAndRequiredClientAuth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -422,7 +428,7 @@ public class SslIT {
 	@Test
 	public void testThroughSocks5SocketUsingSsl01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = EchoClientHelper.echoThroughNewSocket(
+		String returningString = new EchoClient().echoThroughNewSocket(
 				string,
 				SslIT.newSocks5ClientUsingSsl().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -431,7 +437,7 @@ public class SslIT {
 	@Test
 	public void testThroughSocks5SocketUsingSsl02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = EchoClientHelper.echoThroughNewSocket(
+		String returningString = new EchoClient().echoThroughNewSocket(
 				string,
 				SslIT.newSocks5ClientUsingSsl().newSocksNetObjectFactory());
 		assertEquals(string, returningString);		
@@ -440,7 +446,7 @@ public class SslIT {
 	@Test
 	public void testThroughSocks5SocketUsingSsl03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = EchoClientHelper.echoThroughNewSocket(
+		String returningString = new EchoClient().echoThroughNewSocket(
 				string,
 				SslIT.newSocks5ClientUsingSsl().newSocksNetObjectFactory());
 		assertEquals(string, returningString);		
@@ -449,7 +455,7 @@ public class SslIT {
 	@Test
 	public void testThroughSocks5SocketUsingSslAndRequestedClientAuth01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = EchoClientHelper.echoThroughNewSocket(
+		String returningString = new EchoClient().echoThroughNewSocket(
 				string,
 				SslIT.newSocks5ClientUsingSslAndRequestedClientAuth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -458,7 +464,7 @@ public class SslIT {
 	@Test
 	public void testThroughSocks5SocketUsingSslAndRequestedClientAuth02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = EchoClientHelper.echoThroughNewSocket(
+		String returningString = new EchoClient().echoThroughNewSocket(
 				string,
 				SslIT.newSocks5ClientUsingSsl().newSocksNetObjectFactory());
 		assertEquals(string, returningString);		
@@ -467,7 +473,7 @@ public class SslIT {
 	@Test
 	public void testThroughSocks5SocketUsingSslAndRequestedClientAuth03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = EchoClientHelper.echoThroughNewSocket(
+		String returningString = new EchoClient().echoThroughNewSocket(
 				string,
 				SslIT.newSocks5ClientUsingSslAndRequestedClientAuth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);		
@@ -476,7 +482,7 @@ public class SslIT {
 	@Test
 	public void testThroughSocks5SocketUsingSslAndRequiredClientAuth01() throws IOException {
 		String string = TestStringConstants.STRING_01;
-		String returningString = EchoClientHelper.echoThroughNewSocket(
+		String returningString = new EchoClient().echoThroughNewSocket(
 				string,
 				SslIT.newSocks5ClientUsingSslAndRequiredClientAuth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);
@@ -485,7 +491,7 @@ public class SslIT {
 	@Test
 	public void testThroughSocks5SocketUsingSslAndRequiredClientAuth02() throws IOException {
 		String string = TestStringConstants.STRING_02;
-		String returningString = EchoClientHelper.echoThroughNewSocket(
+		String returningString = new EchoClient().echoThroughNewSocket(
 				string,
 				SslIT.newSocks5ClientUsingSslAndRequiredClientAuth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);		
@@ -494,7 +500,7 @@ public class SslIT {
 	@Test
 	public void testThroughSocks5SocketUsingSslAndRequiredClientAuth03() throws IOException {
 		String string = TestStringConstants.STRING_03;
-		String returningString = EchoClientHelper.echoThroughNewSocket(
+		String returningString = new EchoClient().echoThroughNewSocket(
 				string,
 				SslIT.newSocks5ClientUsingSslAndRequiredClientAuth().newSocksNetObjectFactory());
 		assertEquals(string, returningString);		

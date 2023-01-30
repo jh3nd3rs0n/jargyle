@@ -64,8 +64,7 @@ public final class EchoServer {
 				InputStream in = this.clientSocket.getInputStream();
 				OutputStream out = this.clientSocket.getOutputStream();
 				byte[] bytes = IoHelper.readFrom(in);
-				String string = new String(bytes);
-				IoHelper.writeThenFlush(string.getBytes(), out);
+				IoHelper.writeThenFlush(bytes, out);
 			} catch (IOException e) {
 				e.printStackTrace();
 			} finally {

@@ -3,9 +3,7 @@ package com.github.jh3nd3rs0n.jargyle.server;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.InetAddress;
 import java.net.SocketException;
-import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -63,17 +61,13 @@ public final class DatagramEchoServer {
 		}
 	
 		public void run() {
-			InetAddress address = this.packet.getAddress();
-			int port = this.packet.getPort();
-			String string = new String(Arrays.copyOfRange(
-					this.packet.getData(), 
-					this.packet.getOffset(), 
-					this.packet.getLength()));
-			byte[] stringBytes = string.getBytes();
-			DatagramPacket newPacket = new DatagramPacket(
-					stringBytes, stringBytes.length, address, port);
 			try {
-				this.serverSocket.send(newPacket);
+				this.serverSocket.send(new DatagramPacket(
+						this.packet.getData(), 
+						this.packet.getOffset(), 
+						this.packet.getLength(), 
+						this.packet.getAddress(), 
+						this.packet.getPort()));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

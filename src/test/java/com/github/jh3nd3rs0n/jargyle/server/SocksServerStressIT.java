@@ -7,7 +7,6 @@ import java.net.InetAddress;
 
 import org.junit.Test;
 
-import com.github.jh3nd3rs0n.jargyle.IoStressor;
 import com.github.jh3nd3rs0n.jargyle.ResourceHelper;
 import com.github.jh3nd3rs0n.jargyle.ResourceNameConstants;
 import com.github.jh3nd3rs0n.jargyle.TestStringConstants;

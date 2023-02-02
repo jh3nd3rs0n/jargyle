@@ -6,7 +6,6 @@ import java.io.IOException;
 
 import org.junit.Test;
 
-import com.github.jh3nd3rs0n.jargyle.IoStressor;
 import com.github.jh3nd3rs0n.jargyle.TestStringConstants;
 import com.github.jh3nd3rs0n.jargyle.ThreadHelper;
 import com.github.jh3nd3rs0n.jargyle.client.EchoClient;

@@ -2,7 +2,7 @@
 
 [![CodeQL](https://github.com/jh3nd3rs0n/jargyle/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/jh3nd3rs0n/jargyle/actions/workflows/codeql-analysis.yml) [![Java CI with Maven (Mac OS Latest)](https://github.com/jh3nd3rs0n/jargyle/actions/workflows/maven_macos_latest.yml/badge.svg)](https://github.com/jh3nd3rs0n/jargyle/actions/workflows/maven_macos_latest.yml) [![Java CI with Maven (Ubuntu Latest)](https://github.com/jh3nd3rs0n/jargyle/actions/workflows/maven_ubuntu_latest.yml/badge.svg)](https://github.com/jh3nd3rs0n/jargyle/actions/workflows/maven_ubuntu_latest.yml) [![Java CI with Maven (Windows Latest)](https://github.com/jh3nd3rs0n/jargyle/actions/workflows/maven_windows_latest.yml/badge.svg)](https://github.com/jh3nd3rs0n/jargyle/actions/workflows/maven_windows_latest.yml) [![Codacy Badge](https://app.codacy.com/project/badge/Grade/581706f82bf945df84bc397da4cecee5)](https://www.codacy.com/gh/jh3nd3rs0n/jargyle/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=jh3nd3rs0n/jargyle&amp;utm_campaign=Badge_Grade)
 
-Jargyle is a Java SOCKS5 server.
+Jargyle is a SOCKS5 server.
 
 **DISCLAIMER**: Jargyle is not production-ready but it aims to be. It is also subject to breaking changes.
 
@@ -64,7 +64,7 @@ Jargyle is a Java SOCKS5 server.
 
 ## 1. Introduction
 
-Jargyle is a Java SOCKS5 server that has the following implemented:
+Jargyle is a SOCKS5 server that has the following implemented:
 
 SOCKS5 methods:
 
@@ -80,7 +80,7 @@ SOCKS5 commands:
 
 It also has the following additional features:
 
--   SOCKS server chaining to multiple SOCKS servers
+-   SOCKS server chaining to multiple chains of SOCKS servers
 -   SSL/TLS/DTLS between clients and chained SOCKS servers
 
 ## 2. Requirements

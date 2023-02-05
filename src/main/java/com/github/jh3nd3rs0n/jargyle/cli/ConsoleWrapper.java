@@ -1,4 +1,4 @@
-package com.github.jh3nd3rs0n.jargyle.server.internal.io;
+package com.github.jh3nd3rs0n.jargyle.cli;
 
 import java.io.BufferedReader;
 import java.io.Console;
@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-public final class ConsoleWrapper {
+final class ConsoleWrapper {
 
 	private static final class NullInputStream extends InputStream {
 		

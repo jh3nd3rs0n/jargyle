@@ -6,7 +6,7 @@
 	<artifactId>jargyle</artifactId>
 	<version>5.0.0-SNAPSHOT</version>
 	<name>Jargyle</name>
-	<description>A SOCKS5 server</description>
+	<description>A complete SOCKS5 server that can route traffic through multiple specified chains of SOCKS servers and can have SSL/TLS and DTLS enabled for TCP and UDP traffic from clients and SOCKS servers</description>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>

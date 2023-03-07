@@ -2,7 +2,7 @@
 
 [![CodeQL](https://github.com/jh3nd3rs0n/jargyle/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/jh3nd3rs0n/jargyle/actions/workflows/codeql-analysis.yml) [![Java CI with Maven (Mac OS Latest)](https://github.com/jh3nd3rs0n/jargyle/actions/workflows/maven_macos_latest.yml/badge.svg)](https://github.com/jh3nd3rs0n/jargyle/actions/workflows/maven_macos_latest.yml) [![Java CI with Maven (Ubuntu Latest)](https://github.com/jh3nd3rs0n/jargyle/actions/workflows/maven_ubuntu_latest.yml/badge.svg)](https://github.com/jh3nd3rs0n/jargyle/actions/workflows/maven_ubuntu_latest.yml) [![Java CI with Maven (Windows Latest)](https://github.com/jh3nd3rs0n/jargyle/actions/workflows/maven_windows_latest.yml/badge.svg)](https://github.com/jh3nd3rs0n/jargyle/actions/workflows/maven_windows_latest.yml) [![Codacy Badge](https://app.codacy.com/project/badge/Grade/581706f82bf945df84bc397da4cecee5)](https://www.codacy.com/gh/jh3nd3rs0n/jargyle/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=jh3nd3rs0n/jargyle&amp;utm_campaign=Badge_Grade)
 
-Jargyle is a complete SOCKS5 server that can route traffic through multiple specified chains of SOCKS servers and can have SSL/TLS and DTLS enabled for TCP and UDP traffic from clients and SOCKS servers.
+Jargyle is a complete SOCKS5 server that can route traffic through multiple specified chains of SOCKS servers and can have SSL/TLS and DTLS for TCP and UDP traffic from clients and SOCKS servers.
 
 **DISCLAIMER**: Jargyle is not production-ready but it aims to be. It is also subject to breaking changes.
 
@@ -64,7 +64,7 @@ Jargyle is a complete SOCKS5 server that can route traffic through multiple spec
 
 ## 1. Introduction
 
-Jargyle is a complete SOCKS5 server that can route traffic through multiple specified chains of SOCKS servers and can have SSL/TLS and DTLS enabled for TCP and UDP traffic from clients and SOCKS servers.
+Jargyle is a complete SOCKS5 server that can route traffic through multiple specified chains of SOCKS servers and can have SSL/TLS and DTLS for TCP and UDP traffic from clients and SOCKS servers.
 
 It can resolve host names using an additional unofficial SOCKS5 command called RESOLVE.
 

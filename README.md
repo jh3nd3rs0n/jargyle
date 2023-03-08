@@ -67,10 +67,10 @@ Jargyle is a complete SOCKS5 server.
 Jargyle is a complete SOCKS5 server that has the following features:
 
 -   Route traffic through multiple specified chains of SOCKS servers
--   SSL/TLS and DTLS for TCP and UDP traffic from clients and SOCKS servers
+-   Use SSL/TLS and DTLS for TCP and UDP traffic from clients and SOCKS servers
 -   Resolve host names through an additional unofficial SOCKS5 command called RESOLVE
 
-It also has a rule system that allows you to manage the following traffic:
+It also has a rule system that allows you to manage traffic in the following ways:
 
 -   Allow or deny traffic
 -   Allow a limited number of simultaneous instances of traffic

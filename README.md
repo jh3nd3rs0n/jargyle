@@ -2,13 +2,9 @@
 
 [![CodeQL](https://github.com/jh3nd3rs0n/jargyle/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/jh3nd3rs0n/jargyle/actions/workflows/codeql-analysis.yml) [![Java CI with Maven (Mac OS Latest)](https://github.com/jh3nd3rs0n/jargyle/actions/workflows/maven_macos_latest.yml/badge.svg)](https://github.com/jh3nd3rs0n/jargyle/actions/workflows/maven_macos_latest.yml) [![Java CI with Maven (Ubuntu Latest)](https://github.com/jh3nd3rs0n/jargyle/actions/workflows/maven_ubuntu_latest.yml/badge.svg)](https://github.com/jh3nd3rs0n/jargyle/actions/workflows/maven_ubuntu_latest.yml) [![Java CI with Maven (Windows Latest)](https://github.com/jh3nd3rs0n/jargyle/actions/workflows/maven_windows_latest.yml/badge.svg)](https://github.com/jh3nd3rs0n/jargyle/actions/workflows/maven_windows_latest.yml) [![Codacy Badge](https://app.codacy.com/project/badge/Grade/581706f82bf945df84bc397da4cecee5)](https://www.codacy.com/gh/jh3nd3rs0n/jargyle/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=jh3nd3rs0n/jargyle&amp;utm_campaign=Badge_Grade)
 
-Jargyle is a complete SOCKS5 server.
-
-**DISCLAIMER**: Jargyle is not production-ready but it aims to be. It is also subject to breaking changes.
-
 ## Contents
 
--   [1. Introduction](#1-introduction)
+-   [1. About](#1-about)
 -   [2. License](#2-license)
 -   [3. Requirements](#3-requirements)
 -   [4. Releases](#4-releases)
@@ -62,11 +58,13 @@ Jargyle is a complete SOCKS5 server.
 -   [7. 15. 2. The SOCKS5 RESOLVE Command](#7-15-2-the-socks5-resolve-command)
 -   [7. 15. 3. The Doc XML Element](#7-15-3-the-doc-xml-element)
 
-## 1. Introduction
+## 1. About
 
-Jargyle is a complete SOCKS5 server that has the following features:
+Jargyle is a complete SOCKS5 server. It is complete in the sense that it completely follows the specification for [SOCKS5](https://www.rfc-editor.org/rfc/rfc1928). It also completely follows the specification for the [username password authentication for SOCKS5](https://www.rfc-editor.org/rfc/rfc1929) and the specification for the [GSS-API authentication method for SOCKS5](https://www.rfc-editor.org/rfc/rfc1961).
 
--   Route traffic through multiple specified chains of SOCKS servers
+It has the following additional features:
+
+-   Chain to multiple specified chains of SOCKS servers
 -   Use SSL/TLS and DTLS for TCP and UDP traffic from clients and SOCKS servers
 -   Resolve host names through an additional unofficial SOCKS5 command called RESOLVE
 
@@ -79,6 +77,16 @@ It also has a rule system that allows you to manage traffic in the following way
 -   Limit bandwidth
 -   Configure sockets
 
+**DISCLAIMER**: Although Jargyle has been tested continuously, it has yet to be tested in a real world setting. If you have thought about using Jargyle or have used Jargyle at some point, whether you continue to use it or not, please let me know by email at `j0n4th4n.h3nd3rs0n@gmail.com`. Any feedback would be welcomed. If you have found an issue with Jargyle or its documentation, please post the issue on GitHub. There might be others experiencing the same issue as you are.
+
+**IMPLEMENTATION DETAIL**: Jargyle uses multiple threads for handling client connections. Under Java 19, it can use virtual threads instead of OS threads. To enable the use of virtual threads under Java 19, add the command line option `--enable-preview` to environment variable `JARGYLE_OPTS`
+
+```bash
+    
+    export JARGYLE_OPTS="--enable-preview"
+    
+```
+
 ## 2. License
 
 Jargyle is licensed under the [MIT license](https://github.com/jh3nd3rs0n/jargyle/blob/master/LICENSE). Licenses of third party dependencies are listed [here](https://github.com/jh3nd3rs0n/jargyle/blob/master/LICENSE_3RD_PARTY).
@@ -88,11 +96,11 @@ Jargyle is licensed under the [MIT license](https://github.com/jh3nd3rs0n/jargyl
 For automated testing, building, and running Jargyle under the source distribution:
 
 -   Apache Maven&#8482; 3.3.9 or higher 
--   Java&#8482; SDK 1.9 or higher
+-   Java&#8482; SDK 9 or higher
 
 For running Jargyle under the binary distribution:
 
--   Java&#8482; Runtime Environment 1.9 or higher
+-   Java&#8482; Runtime Environment 9 or higher
 
 After installation of the requirements, be sure to have the environment variable `JAVA_HOME` set to the location of the installed Java&#8482; SDK or the installed Java&#8482; Runtime Environment.
 

@@ -10,12 +10,12 @@ import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
 import com.github.jh3nd3rs0n.jargyle.internal.help.HelpText;
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.BooleanSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.HostSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.MethodsSettingSpec;
+import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.Socks5MethodsSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.PortRangesSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.PositiveIntegerSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.ProtectionLevelsSettingSpec;
+import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.Socks5GssapiauthProtectionLevelsSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.SocketSettingsSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.UserRepositorySettingSpec;
+import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.Socks5UserpassauthUserRepositorySettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.UserRepository;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Methods;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.gssapiauth.ProtectionLevels;
@@ -45,7 +45,7 @@ public final class Socks5SettingSpecConstants {
 			usage = "socks5.gssapiauth.protectionLevels=SOCKS5_GSSAPIAUTH_PROTECTION_LEVEL1[ SOCKS5_GSSAPIAUTH_PROTECTION_LEVEL2[ ...]]"
 	)
 	public static final SettingSpec<ProtectionLevels> SOCKS5_GSSAPIAUTH_PROTECTION_LEVELS = 
-			SETTING_SPECS.addThenGet(new ProtectionLevelsSettingSpec(
+			SETTING_SPECS.addThenGet(new Socks5GssapiauthProtectionLevelsSettingSpec(
 					"socks5.gssapiauth.protectionLevels", 
 					ProtectionLevels.getDefault()));
 	
@@ -56,7 +56,7 @@ public final class Socks5SettingSpecConstants {
 			usage = "socks5.methods=[SOCKS5_METHOD1[ SOCKS5_METHOD2[ ...]]]"
 	)
 	public static final SettingSpec<Methods> SOCKS5_METHODS = 
-			SETTING_SPECS.addThenGet(new MethodsSettingSpec(
+			SETTING_SPECS.addThenGet(new Socks5MethodsSettingSpec(
 					"socks5.methods", 
 					Methods.getDefault()));
 	
@@ -490,7 +490,7 @@ public final class Socks5SettingSpecConstants {
 			usage = "socks5.userpassauth.userRepository=CLASS_NAME:INITIALIZATION_VALUE"
 	)	
 	public static final SettingSpec<UserRepository> SOCKS5_USERPASSAUTH_USER_REPOSITORY = 
-			SETTING_SPECS.addThenGet(new UserRepositorySettingSpec(
+			SETTING_SPECS.addThenGet(new Socks5UserpassauthUserRepositorySettingSpec(
 					"socks5.userpassauth.userRepository",
 					UserRepository.newInstance()));
 	

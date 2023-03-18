@@ -4,10 +4,10 @@ import com.github.jh3nd3rs0n.jargyle.client.Property;
 import com.github.jh3nd3rs0n.jargyle.client.PropertySpec;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.gssapiauth.ProtectionLevels;
 
-public final class ProtectionLevelsPropertySpec 
+public final class Socks5GssapiauthProtectionLevelsPropertySpec 
 	extends PropertySpec<ProtectionLevels> {
 
-	public ProtectionLevelsPropertySpec(
+	public Socks5GssapiauthProtectionLevelsPropertySpec(
 			final String s, final ProtectionLevels defaultVal) {
 		super(s, ProtectionLevels.class, defaultVal);
 	}

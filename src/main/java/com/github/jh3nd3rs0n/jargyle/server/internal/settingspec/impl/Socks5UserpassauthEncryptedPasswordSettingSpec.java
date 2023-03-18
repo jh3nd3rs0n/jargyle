@@ -7,7 +7,7 @@ import com.github.jh3nd3rs0n.jargyle.server.Setting;
 import com.github.jh3nd3rs0n.jargyle.server.SettingSpec;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.userpassauth.UsernamePasswordRequest;
 
-public final class UserEncryptedPasswordSettingSpec 
+public final class Socks5UserpassauthEncryptedPasswordSettingSpec 
 	extends SettingSpec<EncryptedPassword> {
 
 	private static EncryptedPassword getValidatedEncryptedPassword(
@@ -18,7 +18,7 @@ public final class UserEncryptedPasswordSettingSpec
 		return encryptedPassword;
 	}
 
-	public UserEncryptedPasswordSettingSpec(
+	public Socks5UserpassauthEncryptedPasswordSettingSpec(
 			final String s, final EncryptedPassword defaultVal) {
 		super(
 				s, 

@@ -4,14 +4,14 @@ import com.github.jh3nd3rs0n.jargyle.server.Setting;
 import com.github.jh3nd3rs0n.jargyle.server.SettingSpec;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.userpassauth.UsernamePasswordRequest;
 
-public final class UsernameSettingSpec extends SettingSpec<String> {
+public final class Socks5UserpassauthUsernameSettingSpec extends SettingSpec<String> {
 
 	private static String getValidatedUsername(final String s) {
 		UsernamePasswordRequest.validateUsername(s);
 		return s;
 	}
 
-	public UsernameSettingSpec(final String s, final String defaultVal) {
+	public Socks5UserpassauthUsernameSettingSpec(final String s, final String defaultVal) {
 		super(s, String.class, getValidatedUsername(defaultVal));
 	}
 

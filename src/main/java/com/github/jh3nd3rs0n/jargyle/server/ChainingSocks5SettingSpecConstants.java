@@ -9,12 +9,12 @@ import com.github.jh3nd3rs0n.jargyle.client.Socks5PropertySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
 import com.github.jh3nd3rs0n.jargyle.internal.help.HelpText;
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.BooleanSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.MethodsSettingSpec;
+import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.Socks5MethodsSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.OidSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.ProtectionLevelsSettingSpec;
+import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.Socks5GssapiauthProtectionLevelsSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.StringSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.UserEncryptedPasswordSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.UsernameSettingSpec;
+import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.Socks5UserpassauthEncryptedPasswordSettingSpec;
+import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.Socks5UserpassauthUsernameSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Methods;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.gssapiauth.ProtectionLevels;
 
@@ -65,7 +65,7 @@ public final class ChainingSocks5SettingSpecConstants {
 			usage = "chaining.socks5.gssapiauth.protectionLevels=SOCKS5_GSSAPIAUTH_PROTECTION_LEVEL1[ SOCKS5_GSSAPIAUTH_PROTECTION_LEVEL2[ ...]]"
 	)
 	public static final SettingSpec<ProtectionLevels> CHAINING_SOCKS5_GSSAPIAUTH_PROTECTION_LEVELS = 
-			SETTING_SPECS.addThenGet(new ProtectionLevelsSettingSpec(
+			SETTING_SPECS.addThenGet(new Socks5GssapiauthProtectionLevelsSettingSpec(
 					"chaining.socks5.gssapiauth.protectionLevels", 
 					Socks5PropertySpecConstants.SOCKS5_GSSAPIAUTH_PROTECTION_LEVELS.getDefaultProperty().getValue()));
 	
@@ -85,7 +85,7 @@ public final class ChainingSocks5SettingSpecConstants {
 			usage = "chaining.socks5.methods=[SOCKS5_METHOD1[ SOCKS5_METHOD2[ ...]]]"
 	)
 	public static final SettingSpec<Methods> CHAINING_SOCKS5_METHODS = 
-			SETTING_SPECS.addThenGet(new MethodsSettingSpec(
+			SETTING_SPECS.addThenGet(new Socks5MethodsSettingSpec(
 					"chaining.socks5.methods", 
 					Socks5PropertySpecConstants.SOCKS5_METHODS.getDefaultProperty().getValue()));
 	
@@ -105,7 +105,7 @@ public final class ChainingSocks5SettingSpecConstants {
 			usage = "chaining.socks5.userpassauth.password=PASSWORD"
 	)
 	public static final SettingSpec<EncryptedPassword> CHAINING_SOCKS5_USERPASSAUTH_PASSWORD =
-			SETTING_SPECS.addThenGet(new UserEncryptedPasswordSettingSpec(
+			SETTING_SPECS.addThenGet(new Socks5UserpassauthEncryptedPasswordSettingSpec(
 					"chaining.socks5.userpassauth.password",
 					Socks5PropertySpecConstants.SOCKS5_USERPASSAUTH_PASSWORD.getDefaultProperty().getValue()));
 	
@@ -114,7 +114,7 @@ public final class ChainingSocks5SettingSpecConstants {
 			usage = "chaining.socks5.userpassauth.username=USERNAME"
 	)
 	public static final SettingSpec<String> CHAINING_SOCKS5_USERPASSAUTH_USERNAME =
-			SETTING_SPECS.addThenGet(new UsernameSettingSpec(
+			SETTING_SPECS.addThenGet(new Socks5UserpassauthUsernameSettingSpec(
 					"chaining.socks5.userpassauth.username",
 					Socks5PropertySpecConstants.SOCKS5_USERPASSAUTH_USERNAME.getDefaultProperty().getValue()));
 	

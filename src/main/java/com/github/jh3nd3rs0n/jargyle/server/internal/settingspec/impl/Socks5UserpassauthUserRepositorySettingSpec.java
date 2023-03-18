@@ -4,10 +4,10 @@ import com.github.jh3nd3rs0n.jargyle.server.Setting;
 import com.github.jh3nd3rs0n.jargyle.server.SettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.UserRepository;
 
-public final class UserRepositorySettingSpec 
+public final class Socks5UserpassauthUserRepositorySettingSpec 
 	extends SettingSpec<UserRepository> {
 
-	public UserRepositorySettingSpec(
+	public Socks5UserpassauthUserRepositorySettingSpec(
 			final String s, final UserRepository defaultVal) {
 		super(s, UserRepository.class, defaultVal);
 	}

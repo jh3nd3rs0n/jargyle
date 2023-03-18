@@ -4,9 +4,9 @@ import com.github.jh3nd3rs0n.jargyle.client.Property;
 import com.github.jh3nd3rs0n.jargyle.client.PropertySpec;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Methods;
 
-public final class MethodsPropertySpec extends PropertySpec<Methods> {
+public final class Socks5MethodsPropertySpec extends PropertySpec<Methods> {
 
-	public MethodsPropertySpec(final String s, final Methods defaultVal) {
+	public Socks5MethodsPropertySpec(final String s, final Methods defaultVal) {
 		super(s, Methods.class, defaultVal);
 	}
 

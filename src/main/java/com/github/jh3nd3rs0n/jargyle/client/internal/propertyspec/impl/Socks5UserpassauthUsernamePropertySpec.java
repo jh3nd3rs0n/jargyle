@@ -4,14 +4,14 @@ import com.github.jh3nd3rs0n.jargyle.client.Property;
 import com.github.jh3nd3rs0n.jargyle.client.PropertySpec;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.userpassauth.UsernamePasswordRequest;
 
-public final class UsernamePropertySpec extends PropertySpec<String> {
+public final class Socks5UserpassauthUsernamePropertySpec extends PropertySpec<String> {
 
 	private static String getValidatedUsername(final String s) {
 		UsernamePasswordRequest.validateUsername(s);
 		return s;
 	}
 	
-	public UsernamePropertySpec(final String s,	final String defaultVal) {
+	public Socks5UserpassauthUsernamePropertySpec(final String s,	final String defaultVal) {
 		super(s, String.class, getValidatedUsername(defaultVal));
 	}
 

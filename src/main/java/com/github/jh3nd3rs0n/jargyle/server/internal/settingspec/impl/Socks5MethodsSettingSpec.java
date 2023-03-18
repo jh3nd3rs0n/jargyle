@@ -4,9 +4,9 @@ import com.github.jh3nd3rs0n.jargyle.server.Setting;
 import com.github.jh3nd3rs0n.jargyle.server.SettingSpec;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Methods;
 
-public final class MethodsSettingSpec extends SettingSpec<Methods> {
+public final class Socks5MethodsSettingSpec extends SettingSpec<Methods> {
 
-	public MethodsSettingSpec(final String s, final Methods defaultVal) {
+	public Socks5MethodsSettingSpec(final String s, final Methods defaultVal) {
 		super(s, Methods.class, defaultVal);
 	}
 

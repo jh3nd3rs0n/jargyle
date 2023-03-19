@@ -1499,10 +1499,10 @@ Partial configuration file example:
     </setting>
     <setting>
         <name>socks5.userpassauth.userRepository</name>
-        <userRepository>
+        <socks5.userpassauth.userRepository>
             <className>com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.StringSourceUserRepository</className>
             <initializationValue>Aladdin:opensesame Jasmine:mission%3Aimpossible</initializationValue>
-        </userRepository>
+        </socks5.userpassauth.userRepository>
     </setting>
     
 ```
@@ -1528,10 +1528,10 @@ Partial configuration file example:
     </setting>    
     <setting>
         <name>socks5.userpassauth.userRepository</name>
-        <userRepository>
+        <socks5.userpassauth.userRepository>
             <className>com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.CsvFileSourceUserRepository</className>
             <initializationValue>users.csv</initializationValue>
-        </userRepository>
+        </socks5.userpassauth.userRepository>
     </setting>
     
 ```

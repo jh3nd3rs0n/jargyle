@@ -30,7 +30,7 @@ class SettingXml {
 			return new SocketSettingsXml((SocketSettings) val);
 		}
 		if (val instanceof UserRepository) {
-			return new UserRepositoryXml((UserRepository) val);
+			return new Socks5UserpassauthUserRepositoryXml((UserRepository) val);
 		}
 		throw new IllegalArgumentException(String.format(
 				"no %s for %s", 
@@ -55,9 +55,9 @@ class SettingXml {
 				required = true, 
 				type = SocketSettingsXml.class),
 		@XmlElement(
-				name = "userRepository", 
+				name = "socks5.userpassauth.userRepository", 
 				required = true, 
-				type = UserRepositoryXml.class),
+				type = Socks5UserpassauthUserRepositoryXml.class),
 		@XmlElement(
 				name = "value", 
 				required = true, 

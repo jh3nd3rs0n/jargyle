@@ -60,7 +60,7 @@
 
 ## 1. About
 
-Jargyle is a complete SOCKS5 server. It is complete in the sense that it completely follows the specification for [SOCKS5](https://www.rfc-editor.org/rfc/rfc1928). It also completely follows the specification for the [username password authentication for SOCKS5](https://www.rfc-editor.org/rfc/rfc1929) and the specification for the [GSS-API authentication method for SOCKS5](https://www.rfc-editor.org/rfc/rfc1961).
+Jargyle is a complete SOCKS5 server. It is complete in the sense that it completely follows the specifications for [SOCKS5](https://www.rfc-editor.org/rfc/rfc1928), the [username password authentication for SOCKS5](https://www.rfc-editor.org/rfc/rfc1929), and the [GSS-API authentication method for SOCKS5](https://www.rfc-editor.org/rfc/rfc1961).
 
 It has the following additional features:
 

@@ -6,12 +6,12 @@ import java.util.Map;
 import org.ietf.jgss.Oid;
 
 import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.BooleanPropertySpec;
-import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.Socks5MethodsPropertySpec;
 import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.OidPropertySpec;
 import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.Socks5GssapiauthProtectionLevelsPropertySpec;
-import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.StringPropertySpec;
+import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.Socks5MethodsPropertySpec;
 import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.Socks5UserpassauthEncryptedPasswordPropertySpec;
 import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.Socks5UserpassauthUsernamePropertySpec;
+import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.StringPropertySpec;
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Methods;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.gssapiauth.ProtectionLevels;

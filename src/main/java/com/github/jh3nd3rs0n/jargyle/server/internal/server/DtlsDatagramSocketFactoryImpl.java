@@ -13,7 +13,7 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 
 import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
-import com.github.jh3nd3rs0n.jargyle.common.text.Words;
+import com.github.jh3nd3rs0n.jargyle.common.text.Values;
 import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.DtlsDatagramSocket;
 import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.DtlsDatagramSocketFactory;
 import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.KeyManagerHelper;
@@ -99,13 +99,13 @@ final class DtlsDatagramSocketFactoryImpl extends DtlsDatagramSocketFactory {
 				(DtlsDatagramSocket) factory.newDatagramSocket(datagramSocket);		
 		dtlsDatagramSocket.setUseClientMode(false);
 		Settings settings = this.configuration.getSettings();
-		Words enabledCipherSuites = settings.getLastValue(
+		Values enabledCipherSuites = settings.getLastValue(
 				DtlsSettingSpecConstants.DTLS_ENABLED_CIPHER_SUITES);
 		String[] cipherSuites = enabledCipherSuites.toStringArray();
 		if (cipherSuites.length > 0) {
 			dtlsDatagramSocket.setEnabledCipherSuites(cipherSuites);
 		}
-		Words enabledProtocols = settings.getLastValue(
+		Values enabledProtocols = settings.getLastValue(
 				DtlsSettingSpecConstants.DTLS_ENABLED_PROTOCOLS);
 		String[] protocols = enabledProtocols.toStringArray();
 		if (protocols.length > 0) {

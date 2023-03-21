@@ -1117,7 +1117,9 @@ The following command creates a configuration file with the port number, the num
             </setting>
             <setting>
                 <name>socks5.methods</name>
-                <value>NO_AUTHENTICATION_REQUIRED</value>
+                <socks5.methods>
+                    <socks5.method>NO_AUTHENTICATION_REQUIRED</socks5.method>
+                </socks5.methods>
             </setting>
         </settings>
     </configuration>
@@ -1156,7 +1158,9 @@ The following command adds one command line option after the existing configurat
             </setting>
             <setting>
                 <name>socks5.methods</name>
-                <value>NO_AUTHENTICATION_REQUIRED</value>
+                <socks5.methods>
+                    <socks5.method>NO_AUTHENTICATION_REQUIRED</socks5.method>
+                </socks5.methods>
             </setting>
             <setting>
                 <name>socksServerSocketSettings</name>
@@ -1204,7 +1208,9 @@ The following command combines the two earlier configuration files into one:
             </setting>
             <setting>
                 <name>socks5.methods</name>
-                <value>NO_AUTHENTICATION_REQUIRED</value>
+                <socks5.methods>
+                    <socks5.method>NO_AUTHENTICATION_REQUIRED</socks5.method>
+                </socks5.methods>
             </setting>
             <setting>
                 <name>port</name>
@@ -1216,7 +1222,9 @@ The following command combines the two earlier configuration files into one:
             </setting>
             <setting>
                 <name>socks5.methods</name>
-                <value>NO_AUTHENTICATION_REQUIRED</value>
+                <socks5.methods>
+                    <socks5.method>NO_AUTHENTICATION_REQUIRED</socks5.method>
+                </socks5.methods>
             </setting>
             <setting>
                 <name>socksServerSocketSettings</name>
@@ -1382,7 +1390,7 @@ Jargyle has the following SOCKS5 authentication methods to choose from:
 -   `GSSAPI`: GSS-API authentication
 -   `USERNAME_PASSWORD`: Username password authentication
 
-You can have one or more of the aforementioned authentication methods set in the setting `socks5.methods` as a space separated list.
+On the command line, you can have one or more of the aforementioned authentication methods set in the setting `socks5.methods` as a space separated list. In the configuration file, you can have one or more of the aforementioned authentication methods set in the setting `socks5.methods` as a `<socks5.methods/>` XML element with one or more `<socks5.method/>` XML elements each specifying an authentication method.
 
 Partial command line example:
 
@@ -1398,7 +1406,10 @@ Partial configuration file example:
     
     <setting>
         <name>socks5.methods</name>
-        <value>GSSAPI USERNAME_PASSWORD</value>
+        <socks5.methods>
+            <socks5.method>GSSAPI</socks5.method>
+            <socks5.method>USERNAME_PASSWORD</socks5.method>
+        </socks5.methods>
     </setting>
     
 ```
@@ -1425,7 +1436,11 @@ Partial configuration file example:
     
     <setting>
         <name>socks5.methods</name>
-        <value>NO_AUTHENTICATION_REQUIRED GSSAPI USERNAME_PASSWORD</value>
+        <socks5.methods>
+            <socks5.method>NO_AUTHENTICATION_REQUIRED</socks5.method>
+            <socks5.method>GSSAPI</socks5.method>
+            <socks5.method>USERNAME_PASSWORD</socks5.method>
+        </socks5.methods>
     </setting>
     
 ```
@@ -1448,7 +1463,9 @@ Partial configuration file example:
     
     <setting>
         <name>socks5.methods</name>
-        <value>USERNAME_PASSWORD</value>
+        <socks5.methods>
+            <socks5.method>USERNAME_PASSWORD</socks5.method>
+        </socks5.methods>
     </setting>
     
 ```
@@ -1495,7 +1512,9 @@ Partial configuration file example:
     
     <setting>
         <name>socks5.methods</name>
-        <value>USERNAME_PASSWORD</value>
+        <socks5.methods>
+            <socks5.method>USERNAME_PASSWORD</socks5.method>
+        </socks5.methods>
     </setting>
     <setting>
         <name>socks5.userpassauth.userRepository</name>
@@ -1524,7 +1543,9 @@ Partial configuration file example:
     
     <setting>
         <name>socks5.methods</name>
-        <value>USERNAME_PASSWORD</value>
+        <socks5.methods>
+            <socks5.method>USERNAME_PASSWORD</socks5.method>
+        </socks5.methods>
     </setting>    
     <setting>
         <name>socks5.userpassauth.userRepository</name>
@@ -1651,7 +1672,9 @@ Partial configuration file example:
     
     <setting>
         <name>socks5.methods</name>
-        <value>GSSAPI</value>
+        <socks5.methods>
+            <socks5.method>GSSAPI</socks5.method>
+        </socks5.methods>
     </setting>
     
 ```
@@ -1868,7 +1891,7 @@ Jargyle has the following SOCKS5 authentication methods to choose from for acces
 -   `GSSAPI`: GSS-API authentication
 -   `USERNAME_PASSWORD`: Username password authentication
 
-You can have one or more of the aforementioned authentication methods set in the setting `chaining.socks5.methods` as a space separated list.
+On the command line, you can have one or more of the aforementioned authentication methods set in the setting `chaining.socks5.methods` as a space separated list. In the configuration file, you can have one or more of the aforementioned authentication methods set in the setting `chaining.socks5.methods` as a `<socks5.methods/>` XML element with one or more `<socks5.method/>` XML elements each specifying an authentication method.
 
 Partial command line example:
 
@@ -1884,7 +1907,10 @@ Partial configuration file example:
     
     <setting>
         <name>chaining.socks5.methods</name>
-        <value>GSSAPI USERNAME_PASSWORD</value>
+        <socks5.methods>
+            <socks5.method>GSSAPI</socks5.method>
+            <socks5.method>USERNAME_PASSWORD</socks5.method>
+        </socks5.methods>
     </setting>
     
 ```
@@ -1911,7 +1937,11 @@ Partial configuration file example:
     
     <setting>
         <name>chaining.socks5.methods</name>
-        <value>NO_AUTHENTICATION_REQUIRED GSSAPI USERNAME_PASSWORD</value>
+        <socks5.methods>
+            <socks5.method>NO_AUTHENTICATION_REQUIRED</socks5.method>
+            <socks5.method>GSSAPI</socks5.method>
+            <socks5.method>USERNAME_PASSWORD</socks5.method>
+        </socks5.methods>
     </setting>
     
 ```
@@ -1934,7 +1964,9 @@ Partial configuration file example:
     
     <setting>
         <name>chaining.socks5.methods</name>
-        <value>USERNAME_PASSWORD</value>
+        <socks5.methods>
+            <socks5.method>USERNAME_PASSWORD</socks5.method>
+        </socks5.methods>
     </setting>
     
 ```
@@ -1983,7 +2015,9 @@ Partial configuration file example:
     
     <setting>
         <name>chaining.socks5.methods</name>
-        <value>GSSAPI</value>
+        <socks5.methods>
+            <socks5.method>GSSAPI</socks5.method>
+        </socks5.methods>
     </setting>
     
 ```
@@ -2165,7 +2199,9 @@ Partial configuration file example:
     </setting>
     <setting>
         <name>chaining.socks5.methods</name>
-        <value>GSSAPI</value>
+        <socks5.methods>
+            <socks5.method>GSSAPI</socks5.method>
+        </socks5.methods>
     </setting>
     <setting>
         <name>chaining.socks5.gssapiauth.serviceName</name>

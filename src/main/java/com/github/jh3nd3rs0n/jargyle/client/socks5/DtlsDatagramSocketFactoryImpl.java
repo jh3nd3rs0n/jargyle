@@ -16,7 +16,7 @@ import com.github.jh3nd3rs0n.jargyle.client.DtlsPropertySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.client.Properties;
 import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
 import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
-import com.github.jh3nd3rs0n.jargyle.common.text.Words;
+import com.github.jh3nd3rs0n.jargyle.common.text.Values;
 import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.DtlsDatagramSocket;
 import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.DtlsDatagramSocketFactory;
 import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.KeyManagerHelper;
@@ -98,13 +98,13 @@ final class DtlsDatagramSocketFactoryImpl extends DtlsDatagramSocketFactory {
 				(DtlsDatagramSocket) factory.newDatagramSocket(datagramSocket);
 		dtlsDatagramSocket.setUseClientMode(true);
 		Properties properties = this.socksClient.getProperties();
-		Words enabledCipherSuites = properties.getValue(
+		Values enabledCipherSuites = properties.getValue(
 				DtlsPropertySpecConstants.DTLS_ENABLED_CIPHER_SUITES);
 		String[] cipherSuites = enabledCipherSuites.toStringArray();
 		if (cipherSuites.length > 0) {
 			dtlsDatagramSocket.setEnabledCipherSuites(cipherSuites);
 		}
-		Words enabledProtocols = properties.getValue(
+		Values enabledProtocols = properties.getValue(
 				DtlsPropertySpecConstants.DTLS_ENABLED_PROTOCOLS);
 		String[] protocols = enabledProtocols.toStringArray();
 		if (protocols.length > 0) {

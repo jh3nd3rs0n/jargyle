@@ -2,11 +2,15 @@ package com.github.jh3nd3rs0n.jargyle.server.internal.config.xml.bind;
 
 import java.util.Objects;
 
+import com.github.jh3nd3rs0n.jargyle.common.net.PortRanges;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
+import com.github.jh3nd3rs0n.jargyle.common.text.Values;
 import com.github.jh3nd3rs0n.jargyle.server.Rule;
 import com.github.jh3nd3rs0n.jargyle.server.Setting;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.UserRepository;
+import com.github.jh3nd3rs0n.jargyle.transport.socks5.Methods;
+import com.github.jh3nd3rs0n.jargyle.transport.socks5.gssapiauth.ProtectionLevels;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -23,6 +27,15 @@ class SettingXml {
 		if (val instanceof EncryptedPassword) {
 			return EncryptedPasswordXml.newInstance((EncryptedPassword) val);
 		}
+		if (val instanceof Methods) {
+			return new Socks5MethodsXml((Methods) val);
+		}
+		if (val instanceof PortRanges) {
+			return new PortRangesXml((PortRanges) val);
+		}
+		if (val instanceof ProtectionLevels) {
+			return new Socks5GssapiauthProtectionLevelsXml((ProtectionLevels) val);
+		}
 		if (val instanceof Rule) {
 			return new RuleXml((Rule) val);
 		}
@@ -31,6 +44,9 @@ class SettingXml {
 		}
 		if (val instanceof UserRepository) {
 			return new Socks5UserpassauthUserRepositoryXml((UserRepository) val);
+		}
+		if (val instanceof Values) {
+			return new ValuesXml((Values) val);
 		}
 		throw new IllegalArgumentException(String.format(
 				"no %s for %s", 
@@ -47,6 +63,10 @@ class SettingXml {
 				required = true,
 				type = EncryptedPasswordXml.class),
 		@XmlElement(
+				name = "portRanges",
+				required = true,
+				type = PortRangesXml.class),		
+		@XmlElement(
 				name = "rule",
 				required = true,
 				type = RuleXml.class),
@@ -55,13 +75,25 @@ class SettingXml {
 				required = true, 
 				type = SocketSettingsXml.class),
 		@XmlElement(
+				name = "socks5.gssapiauth.protectionLevels", 
+				required = true, 
+				type = Socks5GssapiauthProtectionLevelsXml.class),
+		@XmlElement(
+				name = "socks5.methods", 
+				required = true, 
+				type = Socks5MethodsXml.class),
+		@XmlElement(
 				name = "socks5.userpassauth.userRepository", 
 				required = true, 
 				type = Socks5UserpassauthUserRepositoryXml.class),
 		@XmlElement(
 				name = "value", 
 				required = true, 
-				type = String.class)
+				type = String.class),
+		@XmlElement(
+				name = "values", 
+				required = true, 
+				type = ValuesXml.class)
 	})
 	protected Object value;
 	

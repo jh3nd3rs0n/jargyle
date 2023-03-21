@@ -11,7 +11,9 @@
         </setting>
         <setting>
             <name>socks5.methods</name>
-            <value>NO_AUTHENTICATION_REQUIRED</value>
+            <socks5.methods>
+                <socks5.method>NO_AUTHENTICATION_REQUIRED</socks5.method>
+            </socks5.methods>
         </setting>
     </settings>
 </configuration>

@@ -22,7 +22,7 @@ public abstract class SocketSettingSpec<V> {
 			final V value,
 			final DatagramSocket datagramSocket) throws SocketException {
 		throw new UnsupportedOperationException(String.format(
-				"socket setting spec %s is not supported for %s", 
+				"socket setting spec %s does not support application to a %s", 
 				this.name, DatagramSocket.class.getName()));
 	}
 	
@@ -30,7 +30,7 @@ public abstract class SocketSettingSpec<V> {
 			final V value, 
 			final ServerSocket serverSocket) throws SocketException {
 		throw new UnsupportedOperationException(String.format(
-				"socket setting spec %s is not supported for %s", 
+				"socket setting spec %s does not support application to a %s", 
 				this.name, ServerSocket.class.getName()));
 	}
 	
@@ -38,7 +38,7 @@ public abstract class SocketSettingSpec<V> {
 			final V value, 
 			final Socket socket) throws SocketException {
 		throw new UnsupportedOperationException(String.format(
-				"socket setting spec %s is not supported for %s", 
+				"socket setting spec %s does not support application to a %s", 
 				this.name, Socket.class.getName()));
 	}
 

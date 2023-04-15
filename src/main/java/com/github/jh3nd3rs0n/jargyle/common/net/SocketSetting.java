@@ -89,7 +89,7 @@ public final class SocketSetting<V> {
 			this.socketSettingSpec.apply(this.value, datagramSocket);
 		} catch (UnsupportedOperationException e) {
 			throw new UnsupportedOperationException(String.format(
-					"socket setting %s is not supported for %s", 
+					"socket setting %s does not support application to a %s", 
 					this.name, DatagramSocket.class.getName()), e);			
 		}
 	}
@@ -100,7 +100,7 @@ public final class SocketSetting<V> {
 			this.socketSettingSpec.apply(this.value, serverSocket);
 		} catch (UnsupportedOperationException e) {
 			throw new UnsupportedOperationException(String.format(
-					"socket setting %s is not supported for %s", 
+					"socket setting %s does not support application to a %s", 
 					this.name, ServerSocket.class.getName()), e);			
 		}
 	}
@@ -110,7 +110,7 @@ public final class SocketSetting<V> {
 			this.socketSettingSpec.apply(this.value, socket);
 		} catch (UnsupportedOperationException e) {
 			throw new UnsupportedOperationException(String.format(
-					"socket setting %s is not supported for %s", 
+					"socket setting %s does not support application to a %s", 
 					this.name, Socket.class.getName()), e);			
 		}
 	}

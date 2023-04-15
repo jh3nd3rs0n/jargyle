@@ -15,17 +15,29 @@ public final class RuleResult<V> {
 	
 	public static <V> RuleResult<V> newInstance(
 			final String name, final V value) {
+		RuleResultSpec<Object> ruleResultSpec = null;
+		try {
+			ruleResultSpec = RuleResultSpecConstants.valueOfName(name);
+		} catch (IllegalArgumentException e) {
+			throw new IllegalArgumentException(String.format(
+					"unknown rule result: %s", name), e);
+		}
 		@SuppressWarnings("unchecked")
-		RuleResult<V> ruleResult = 
-				(RuleResult<V>) RuleResultSpecConstants.valueOfName(
-						name).newRuleResult(value);
+		RuleResult<V> ruleResult = (RuleResult<V>) ruleResultSpec.newRuleResult(
+				value);
 		return ruleResult;
 	}
 	
 	public static RuleResult<Object> newInstanceOfParsableValue(
 			final String name, final String value) {
-		return RuleResultSpecConstants.valueOfName(
-				name).newRuleResultOfParsableValue(value);
+		RuleResultSpec<Object> ruleResultSpec = null;
+		try {
+			ruleResultSpec = RuleResultSpecConstants.valueOfName(name);
+		} catch (IllegalArgumentException e) {
+			throw new IllegalArgumentException(String.format(
+					"unknown rule result: %s", name), e);
+		}		
+		return ruleResultSpec.newRuleResultOfParsableValue(value);
 	}
 	
 	private final String name;

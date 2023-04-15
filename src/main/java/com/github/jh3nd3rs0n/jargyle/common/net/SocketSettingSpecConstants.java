@@ -27,7 +27,7 @@ final class SocketSettingSpecConstants {
 			return VALUES_MAP.get(name);
 		}
 		throw new IllegalArgumentException(String.format(
-				"unknown socket setting: %s", name));
+				"unknown socket setting spec: %s", name));
 	}
 	
 	public static List<SocketSettingSpec<Object>> values() {

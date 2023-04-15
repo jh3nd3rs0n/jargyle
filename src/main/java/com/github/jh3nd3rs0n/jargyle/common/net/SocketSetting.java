@@ -21,10 +21,16 @@ public final class SocketSetting<V> {
 	
 	public static <V> SocketSetting<V> newInstance(
 			final String name, final V value) {
+		SocketSettingSpec<Object> socketSettingSpec = null;
+		try {
+			socketSettingSpec = SocketSettingSpecConstants.valueOfName(name); 
+		} catch (IllegalArgumentException e) {
+			throw new IllegalArgumentException(String.format(
+					"unknown socket setting: %s", name), e);
+		}
 		@SuppressWarnings("unchecked")
 		SocketSetting<V> socketSetting = 
-				(SocketSetting<V>) SocketSettingSpecConstants.valueOfName(
-						name).newSocketSetting(value);
+				(SocketSetting<V>) socketSettingSpec.newSocketSetting(value);
 		return socketSetting;
 	}
 	
@@ -39,8 +45,14 @@ public final class SocketSetting<V> {
 	
 	public static SocketSetting<Object> newInstanceOfParsableValue(
 			final String name, final String value) {
-		return SocketSettingSpecConstants.valueOfName(
-				name).newSocketSettingOfParsableValue(value);
+		SocketSettingSpec<Object> socketSettingSpec = null;
+		try {
+			socketSettingSpec = SocketSettingSpecConstants.valueOfName(name); 
+		} catch (IllegalArgumentException e) {
+			throw new IllegalArgumentException(String.format(
+					"unknown socket setting: %s", name), e);
+		}		
+		return socketSettingSpec.newSocketSettingOfParsableValue(value);
 	}
 	
 	public static SocketSetting<Object> newInstanceOfParsableValue(
@@ -73,16 +85,34 @@ public final class SocketSetting<V> {
 	
 	public void applyTo(
 			final DatagramSocket datagramSocket) throws SocketException {
-		this.socketSettingSpec.apply(this.value, datagramSocket);
+		try {
+			this.socketSettingSpec.apply(this.value, datagramSocket);
+		} catch (UnsupportedOperationException e) {
+			throw new UnsupportedOperationException(String.format(
+					"socket setting %s is not supported for %s", 
+					this.name, DatagramSocket.class.getName()), e);			
+		}
 	}
 	
 	public void applyTo(
 			final ServerSocket serverSocket) throws SocketException {
-		this.socketSettingSpec.apply(this.value, serverSocket);
+		try {
+			this.socketSettingSpec.apply(this.value, serverSocket);
+		} catch (UnsupportedOperationException e) {
+			throw new UnsupportedOperationException(String.format(
+					"socket setting %s is not supported for %s", 
+					this.name, ServerSocket.class.getName()), e);			
+		}
 	}
 	
 	public void applyTo(final Socket socket) throws SocketException {
-		this.socketSettingSpec.apply(this.value, socket);
+		try {
+			this.socketSettingSpec.apply(this.value, socket);
+		} catch (UnsupportedOperationException e) {
+			throw new UnsupportedOperationException(String.format(
+					"socket setting %s is not supported for %s", 
+					this.name, Socket.class.getName()), e);			
+		}
 	}
 	
 	@Override

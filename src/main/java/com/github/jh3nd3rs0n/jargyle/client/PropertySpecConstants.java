@@ -33,7 +33,7 @@ final class PropertySpecConstants {
 			return VALUES_MAP.get(name);
 		}
 		throw new IllegalArgumentException(String.format(
-				"unknown property: %s", name));
+				"unknown property spec: %s", name));
 	}
 	
 	public static List<PropertySpec<Object>> values() {

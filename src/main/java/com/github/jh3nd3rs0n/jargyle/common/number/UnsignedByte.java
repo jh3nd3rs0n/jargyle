@@ -77,7 +77,7 @@ public final class UnsignedByte {
 		if (obj == null) {
 			return false;
 		}
-		if (!(obj instanceof UnsignedByte)) {
+		if (this.getClass() != obj.getClass()) {
 			return false;
 		}
 		UnsignedByte other = (UnsignedByte) obj;

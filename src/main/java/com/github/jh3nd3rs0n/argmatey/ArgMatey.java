@@ -2495,7 +2495,7 @@ public final class ArgMatey {
 			if (this == obj) {
 				return true;
 			}
-			if (!(obj instanceof OptionArg)) {
+			if (this.getClass() != obj.getClass()) {
 				return false;
 			}
 			OptionArg other = (OptionArg) obj;
@@ -3307,7 +3307,7 @@ public final class ArgMatey {
 			if (obj == null) {
 				return false;
 			}
-			if (!(obj instanceof OptionOccurrence)) {
+			if (this.getClass() != obj.getClass()) {
 				return false;
 			}
 			OptionOccurrence other = (OptionOccurrence) obj;
@@ -3698,7 +3698,7 @@ public final class ArgMatey {
 			if (obj == null) {
 				return false;
 			}
-			if (!(obj instanceof ParseResultHolder)) {
+			if (this.getClass() != obj.getClass()) {
 				return false;
 			}
 			ParseResultHolder other = (ParseResultHolder) obj;

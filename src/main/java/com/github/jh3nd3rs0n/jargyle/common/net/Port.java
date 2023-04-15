@@ -52,7 +52,7 @@ public final class Port implements Comparable<Port> {
 		if (obj == null) {
 			return false;
 		}
-		if (!(obj instanceof Port)) {
+		if (this.getClass() != obj.getClass()) {
 			return false;
 		}
 		Port other = (Port) obj;

@@ -57,7 +57,7 @@ public final class ProtectionLevels {
 		if (obj == null) {
 			return false;
 		}
-		if (!(obj instanceof ProtectionLevels)) {
+		if (this.getClass() != obj.getClass()) {
 			return false;
 		}
 		ProtectionLevels other = (ProtectionLevels) obj;

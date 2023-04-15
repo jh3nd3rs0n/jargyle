@@ -90,7 +90,7 @@ public final class UnsignedShort {
 		if (obj == null) {
 			return false;
 		}
-		if (!(obj instanceof UnsignedShort)) {
+		if (this.getClass() != obj.getClass()) {
 			return false;
 		}
 		UnsignedShort other = (UnsignedShort) obj;

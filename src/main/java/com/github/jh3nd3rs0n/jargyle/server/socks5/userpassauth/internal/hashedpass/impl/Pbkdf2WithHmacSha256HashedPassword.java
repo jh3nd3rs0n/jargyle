@@ -78,7 +78,7 @@ public final class Pbkdf2WithHmacSha256HashedPassword extends HashedPassword {
 		if (obj == null) {
 			return false;
 		}
-		if (!(obj instanceof Pbkdf2WithHmacSha256HashedPassword)) {
+		if (this.getClass() != obj.getClass()) {
 			return false;
 		}
 		Pbkdf2WithHmacSha256HashedPassword other = 

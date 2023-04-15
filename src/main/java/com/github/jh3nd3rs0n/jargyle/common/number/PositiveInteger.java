@@ -47,7 +47,7 @@ public final class PositiveInteger {
 		if (obj == null) {
 			return false;
 		}
-		if (!(obj instanceof PositiveInteger)) {
+		if (this.getClass() != obj.getClass()) {
 			return false;
 		}
 		PositiveInteger other = (PositiveInteger) obj;

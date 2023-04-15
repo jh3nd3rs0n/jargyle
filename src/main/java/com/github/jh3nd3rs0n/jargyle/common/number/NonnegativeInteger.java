@@ -47,7 +47,7 @@ public final class NonnegativeInteger {
 		if (obj == null) {
 			return false;
 		}
-		if (!(obj instanceof NonnegativeInteger)) {
+		if (this.getClass() != obj.getClass()) {
 			return false;
 		}
 		NonnegativeInteger other = (NonnegativeInteger) obj;

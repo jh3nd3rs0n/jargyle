@@ -85,7 +85,7 @@ public final class PortRange implements Iterable<Port> {
 		if (obj == null) {
 			return false;
 		}
-		if (!(obj instanceof PortRange)) {
+		if (this.getClass() != obj.getClass()) {
 			return false;
 		}
 		PortRange other = (PortRange) obj;

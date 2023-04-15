@@ -53,7 +53,7 @@ public final class Methods {
 		if (obj == null) {
 			return false;
 		}
-		if (!(obj instanceof Methods)) {
+		if (this.getClass() != obj.getClass()) {
 			return false;
 		}
 		Methods other = (Methods) obj;

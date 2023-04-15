@@ -100,7 +100,7 @@ public final class PerformancePreferences {
 		if (obj == null) {
 			return false;
 		}
-		if (!(obj instanceof PerformancePreferences)) {
+		if (this.getClass() != obj.getClass()) {
 			return false;
 		}
 		PerformancePreferences other = (PerformancePreferences) obj;

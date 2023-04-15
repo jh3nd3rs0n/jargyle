@@ -6,8 +6,8 @@ import com.github.jh3nd3rs0n.jargyle.common.text.Values;
 
 public final class ValuesPropertySpec extends PropertySpec<Values> {
 
-	public ValuesPropertySpec(final String s, final Values defaultVal) {
-		super(s, Values.class, defaultVal);
+	public ValuesPropertySpec(final String n, final Values defaultVal) {
+		super(n, Values.class, defaultVal);
 	}
 
 	@Override

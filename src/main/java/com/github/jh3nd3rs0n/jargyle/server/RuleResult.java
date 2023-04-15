@@ -17,23 +17,26 @@ public final class RuleResult<V> {
 			final String name, final V value) {
 		@SuppressWarnings("unchecked")
 		RuleResult<V> ruleResult = 
-				(RuleResult<V>) RuleResultSpecConstants.valueOf(
+				(RuleResult<V>) RuleResultSpecConstants.valueOfName(
 						name).newRuleResult(value);
 		return ruleResult;
 	}
 	
 	public static RuleResult<Object> newInstanceOfParsableValue(
 			final String name, final String value) {
-		return RuleResultSpecConstants.valueOf(
+		return RuleResultSpecConstants.valueOfName(
 				name).newRuleResultOfParsableValue(value);
 	}
 	
+	private final String name;
 	private final RuleResultSpec<V> ruleResultSpec;
 	private final V value;
 	
 	RuleResult(final RuleResultSpec<V> spec, final V val) {
+		V v = spec.getValueType().cast(val);
+		this.name = spec.getName();
 		this.ruleResultSpec = spec;
-		this.value = val;
+		this.value = v;
 	}
 
 	@Override
@@ -48,11 +51,11 @@ public final class RuleResult<V> {
 			return false;
 		}
 		RuleResult<?> other = (RuleResult<?>) obj;
-		if (this.ruleResultSpec == null) {
-			if (other.ruleResultSpec != null) {
+		if (this.name == null) {
+			if (other.name != null) {
 				return false;
 			}
-		} else if (!this.ruleResultSpec.equals(other.ruleResultSpec)) {
+		} else if (!this.name.equals(other.name)) {
 			return false;
 		}
 		if (this.value == null) {
@@ -63,6 +66,10 @@ public final class RuleResult<V> {
 			return false;
 		}
 		return true;
+	}
+	
+	public String getName() {
+		return this.name;
 	}
 	
 	public RuleResultSpec<V> getRuleResultSpec() {
@@ -77,8 +84,8 @@ public final class RuleResult<V> {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((this.ruleResultSpec == null) ? 
-				0 : this.ruleResultSpec.hashCode());
+		result = prime * result + ((this.name == null) ? 
+				0 : this.name.hashCode());
 		result = prime * result + ((this.value == null) ? 
 				0 : this.value.hashCode());
 		return result;
@@ -86,7 +93,7 @@ public final class RuleResult<V> {
 
 	@Override
 	public String toString() {
-		return String.format("%s=%s", this.ruleResultSpec, this.value);
+		return String.format("%s=%s", this.name, this.value);
 	}
 
 }

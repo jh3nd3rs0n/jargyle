@@ -8,8 +8,8 @@ import com.github.jh3nd3rs0n.jargyle.server.SettingSpec;
 
 public final class OidSettingSpec extends SettingSpec<Oid> {
 
-	public OidSettingSpec(final String s, final Oid defaultVal) {
-		super(s, Oid.class, defaultVal);
+	public OidSettingSpec(final String n, final Oid defaultVal) {
+		super(n, Oid.class, defaultVal);
 	}
 
 	@Override

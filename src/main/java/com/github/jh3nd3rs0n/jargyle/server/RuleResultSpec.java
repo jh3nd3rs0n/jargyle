@@ -4,13 +4,13 @@ import java.util.Objects;
 
 public abstract class RuleResultSpec<V> {
 
-	private final String string;
+	private final String name;
 	private final Class<V> valueType;
 	
-	public RuleResultSpec(final String s, final Class<V> valType) {
-		Objects.requireNonNull(s);
+	public RuleResultSpec(final String n, final Class<V> valType) {
+		Objects.requireNonNull(n);
 		Objects.requireNonNull(valType);
-		this.string = s;
+		this.name = n;
 		this.valueType = valType;		
 	}
 	
@@ -26,14 +26,18 @@ public abstract class RuleResultSpec<V> {
 			return false;
 		}
 		RuleResultSpec<?> other = (RuleResultSpec<?>) obj;
-		if (this.string == null) {
-			if (other.string != null) {
+		if (this.name == null) {
+			if (other.name != null) {
 				return false;
 			}
-		} else if (!this.string.equals(other.string)) {
+		} else if (!this.name.equals(other.name)) {
 			return false;
 		}
 		return true;
+	}
+	
+	public final String getName() {
+		return this.name;
 	}
 	
 	public final Class<V> getValueType() {
@@ -44,8 +48,8 @@ public abstract class RuleResultSpec<V> {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((this.string == null) ? 
-				0 : this.string.hashCode());
+		result = prime * result + ((this.name == null) ? 
+				0 : this.name.hashCode());
 		return result;
 	}
 	
@@ -58,7 +62,12 @@ public abstract class RuleResultSpec<V> {
 	
 	@Override
 	public final String toString() {
-		return this.string;
+		StringBuilder builder = new StringBuilder();
+		builder.append(this.getClass().getSimpleName())
+			.append(" [name=")
+			.append(this.name)
+			.append("]");
+		return builder.toString();
 	}
 
 }

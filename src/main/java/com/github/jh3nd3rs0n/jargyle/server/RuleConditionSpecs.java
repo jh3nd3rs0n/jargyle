@@ -24,7 +24,7 @@ final class RuleConditionSpecs {
 		RuleConditionSpec<Object, Object> val = 
 			(RuleConditionSpec<Object, Object>) value;
 		this.ruleConditionSpecs.add(val);
-		this.ruleConditionSpecsMap.put(val.toString(), val);
+		this.ruleConditionSpecsMap.put(val.getName(), val);
 		return value;
 	}
 	

@@ -7,8 +7,8 @@ import com.github.jh3nd3rs0n.jargyle.server.RuleResultSpec;
 public final class PositiveIntegerRuleResultSpec 
 	extends RuleResultSpec<PositiveInteger> {
 
-	public PositiveIntegerRuleResultSpec(final String s) {
-		super(s, PositiveInteger.class);
+	public PositiveIntegerRuleResultSpec(final String n) {
+		super(n, PositiveInteger.class);
 	}
 
 	@Override

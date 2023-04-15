@@ -35,12 +35,12 @@ final class SettingSpecConstants {
 		VALUES_MAP = valuesMap;
 	}
 	
-	public static SettingSpec<Object> valueOf(final String s) {
-		if (VALUES_MAP.containsKey(s)) {
-			return VALUES_MAP.get(s);
+	public static SettingSpec<Object> valueOfName(final String name) {
+		if (VALUES_MAP.containsKey(name)) {
+			return VALUES_MAP.get(name);
 		}
 		throw new IllegalArgumentException(String.format(
-				"unknown setting: %s", s));		
+				"unknown setting: %s", name));		
 	}
 	
 	public static List<SettingSpec<Object>> values() {

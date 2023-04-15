@@ -6,8 +6,8 @@ import com.github.jh3nd3rs0n.jargyle.server.SettingSpec;
 
 public final class PortRangesSettingSpec extends SettingSpec<PortRanges> {
 
-	public PortRangesSettingSpec(final String s, final PortRanges defaultVal) {
-		super(s, PortRanges.class, defaultVal);
+	public PortRangesSettingSpec(final String n, final PortRanges defaultVal) {
+		super(n, PortRanges.class, defaultVal);
 	}
 
 	@Override

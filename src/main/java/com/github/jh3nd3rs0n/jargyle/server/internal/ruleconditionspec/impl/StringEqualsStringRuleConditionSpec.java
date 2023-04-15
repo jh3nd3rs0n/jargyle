@@ -8,9 +8,9 @@ public final class StringEqualsStringRuleConditionSpec
 	extends RuleConditionSpec<String, String> {
 
 	public StringEqualsStringRuleConditionSpec(
-			final String s, final RuleArgSpec<String> rlArgSpec) {
+			final String n, final RuleArgSpec<String> rlArgSpec) {
 		super(
-				s, 
+				n, 
 				String.class, 
 				new ValueEqualsValueRuleConditionEvaluator<String>(), 
 				rlArgSpec);

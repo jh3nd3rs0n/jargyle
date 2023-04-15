@@ -5,8 +5,8 @@ import com.github.jh3nd3rs0n.jargyle.client.PropertySpec;
 
 public final class BooleanPropertySpec extends PropertySpec<Boolean> {
 
-	public BooleanPropertySpec(final String s, final Boolean defaultVal) {
-		super(s, Boolean.class, defaultVal);
+	public BooleanPropertySpec(final String n, final Boolean defaultVal) {
+		super(n, Boolean.class, defaultVal);
 	}
 
 	@Override

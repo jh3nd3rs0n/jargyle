@@ -28,12 +28,12 @@ final class PropertySpecConstants {
 		VALUES_MAP = valuesMap;
 	}
 	
-	public static PropertySpec<Object> valueOf(final String s) {
-		if (VALUES_MAP.containsKey(s)) {
-			return VALUES_MAP.get(s);
+	public static PropertySpec<Object> valueOfName(final String name) {
+		if (VALUES_MAP.containsKey(name)) {
+			return VALUES_MAP.get(name);
 		}
 		throw new IllegalArgumentException(String.format(
-				"unknown property: %s", s));
+				"unknown property: %s", name));
 	}
 	
 	public static List<PropertySpec<Object>> values() {

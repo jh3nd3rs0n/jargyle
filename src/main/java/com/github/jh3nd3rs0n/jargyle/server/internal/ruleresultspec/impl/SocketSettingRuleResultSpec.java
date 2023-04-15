@@ -19,8 +19,8 @@ public final class SocketSettingRuleResultSpec
 		return vType;
 	}
 	
-	public SocketSettingRuleResultSpec(final String s) {
-		super(s, valueType());
+	public SocketSettingRuleResultSpec(final String n) {
+		super(n, valueType());
 	}
 
 	@Override

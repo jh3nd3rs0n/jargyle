@@ -8,8 +8,8 @@ public final class SelectionStrategySettingSpec
 	extends SettingSpec<SelectionStrategy> {
 
 	public SelectionStrategySettingSpec(
-			final String s, final SelectionStrategy defaultVal) {
-		super(s, SelectionStrategy.class, defaultVal);
+			final String n, final SelectionStrategy defaultVal) {
+		super(n, SelectionStrategy.class, defaultVal);
 	}
 
 	@Override

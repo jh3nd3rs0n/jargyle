@@ -7,8 +7,8 @@ import com.github.jh3nd3rs0n.jargyle.server.SelectionStrategy;
 public final class SelectionStrategyRuleResultSpec 
 	extends RuleResultSpec<SelectionStrategy> {
 
-	public SelectionStrategyRuleResultSpec(final String s) {
-		super(s, SelectionStrategy.class);
+	public SelectionStrategyRuleResultSpec(final String n) {
+		super(n, SelectionStrategy.class);
 	}
 
 	@Override

@@ -6,8 +6,8 @@ import com.github.jh3nd3rs0n.jargyle.transport.socks5.Methods;
 
 public final class Socks5MethodsSettingSpec extends SettingSpec<Methods> {
 
-	public Socks5MethodsSettingSpec(final String s, final Methods defaultVal) {
-		super(s, Methods.class, defaultVal);
+	public Socks5MethodsSettingSpec(final String n, final Methods defaultVal) {
+		super(n, Methods.class, defaultVal);
 	}
 
 	@Override

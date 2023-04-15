@@ -8,8 +8,8 @@ import com.github.jh3nd3rs0n.jargyle.server.SettingSpec;
 
 public final class HostSettingSpec extends SettingSpec<Host> {
 
-	public HostSettingSpec(final String s, final Host defaultVal) {
-		super(s, Host.class, defaultVal);
+	public HostSettingSpec(final String n, final Host defaultVal) {
+		super(n, Host.class, defaultVal);
 	}
 
 	@Override

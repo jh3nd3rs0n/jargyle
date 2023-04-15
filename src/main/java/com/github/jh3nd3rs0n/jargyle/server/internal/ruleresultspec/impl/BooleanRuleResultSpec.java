@@ -5,8 +5,8 @@ import com.github.jh3nd3rs0n.jargyle.server.RuleResultSpec;
 
 public final class BooleanRuleResultSpec extends RuleResultSpec<Boolean> {
 
-	public BooleanRuleResultSpec(final String s) {
-		super(s, Boolean.class);
+	public BooleanRuleResultSpec(final String n) {
+		super(n, Boolean.class);
 	}
 
 	@Override

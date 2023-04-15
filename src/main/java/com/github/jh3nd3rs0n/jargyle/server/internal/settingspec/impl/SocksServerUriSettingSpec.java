@@ -8,8 +8,8 @@ public final class SocksServerUriSettingSpec
 	extends SettingSpec<SocksServerUri> {
 
 	public SocksServerUriSettingSpec(
-			final String s, final SocksServerUri defaultVal) {
-		super(s, SocksServerUri.class, defaultVal);
+			final String n, final SocksServerUri defaultVal) {
+		super(n, SocksServerUri.class, defaultVal);
 	}
 
 	@Override

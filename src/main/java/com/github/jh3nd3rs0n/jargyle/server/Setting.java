@@ -15,7 +15,7 @@ public final class Setting<V> {
 	
 	public static <V> Setting<V> newInstance(final String name, final V value) {
 		@SuppressWarnings("unchecked")
-		Setting<V> setting = (Setting<V>) SettingSpecConstants.valueOf(
+		Setting<V> setting = (Setting<V>) SettingSpecConstants.valueOfName(
 				name).newSetting(value);
 		return setting;
 	}
@@ -29,7 +29,7 @@ public final class Setting<V> {
 	
 	public static Setting<Object> newInstanceOfParsableValue(
 			final String name, final String value) {
-		return SettingSpecConstants.valueOf(
+		return SettingSpecConstants.valueOfName(
 				name).newSettingOfParsableValue(value);
 	}
 	
@@ -40,6 +40,7 @@ public final class Setting<V> {
 				setting.getSettingSpec(), setting.getValue(), doc);
 	}
 	
+	private final String name;
 	private final SettingSpec<V> settingSpec;
 	private final V value;
 	private final String doc;
@@ -50,6 +51,7 @@ public final class Setting<V> {
 	
 	private Setting(final SettingSpec<V> spec, final V val, final String d) {
 		V v = spec.getValueType().cast(val);
+		this.name = spec.getName();
 		this.settingSpec = spec;
 		this.value = v;
 		this.doc = d;		
@@ -63,11 +65,15 @@ public final class Setting<V> {
 		if (obj == null) {
 			return false;
 		}
-		if (!(obj instanceof Setting)) {
+		if (this.getClass() != obj.getClass()) {
 			return false;
 		}
 		Setting<?> other = (Setting<?>) obj;
-		if (this.settingSpec != other.settingSpec) {
+		if (this.name == null) {
+			if (other.name != null) {
+				return false;
+			}
+		} else if (!this.name.equals(other.name)) {
 			return false;
 		}
 		if (this.value == null) {
@@ -84,6 +90,10 @@ public final class Setting<V> {
 		return this.doc;
 	}
 	
+	public String getName() {
+		return this.name;
+	}
+	
 	public SettingSpec<V> getSettingSpec() {
 		return this.settingSpec;
 	}
@@ -96,8 +106,8 @@ public final class Setting<V> {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((this.settingSpec == null) ? 
-				0 : this.settingSpec.hashCode());
+		result = prime * result + ((this.name == null) ? 
+				0 : this.name.hashCode());
 		result = prime * result + ((this.value == null) ? 
 				0 : this.value.hashCode());
 		return result;
@@ -105,7 +115,7 @@ public final class Setting<V> {
 
 	@Override
 	public String toString() {
-		return String.format("%s=%s", this.settingSpec, this.value);
+		return String.format("%s=%s", this.name, this.value);
 	}
 	
 }

@@ -20,7 +20,7 @@ final class SettingSpecs {
 		@SuppressWarnings("unchecked")
 		SettingSpec<Object> val = (SettingSpec<Object>) value;
 		this.settingSpecs.add(val);
-		this.settingSpecsMap.put(val.toString(), val);
+		this.settingSpecsMap.put(val.getName(), val);
 		return value;
 	}
 	

@@ -56,7 +56,7 @@ class RuleResultXml {
 		} catch (IllegalArgumentException e) {
 			newVal = val.toString();
 		}
-		this.name = ruleResult.getRuleResultSpec().toString();
+		this.name = ruleResult.getName();
 		this.value = newVal;
 	}
 	

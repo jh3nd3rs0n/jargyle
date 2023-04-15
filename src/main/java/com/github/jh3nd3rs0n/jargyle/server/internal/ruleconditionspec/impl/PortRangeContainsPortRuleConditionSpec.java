@@ -10,9 +10,9 @@ public final class PortRangeContainsPortRuleConditionSpec
 	extends RuleConditionSpec<PortRange, Port> {
 
 	public PortRangeContainsPortRuleConditionSpec(
-			final String s, final RuleArgSpec<Port> rlArgSpec) {
+			final String n, final RuleArgSpec<Port> rlArgSpec) {
 		super(
-				s, 
+				n, 
 				PortRange.class, 
 				new PortRangeContainsPortRuleConditionEvaluator(), 
 				rlArgSpec);

@@ -24,12 +24,12 @@ final class RuleResultSpecConstants {
 		VALUES_MAP = valuesMap;
 	}
 	
-	public static RuleResultSpec<Object> valueOf(final String s) {
-		if (VALUES_MAP.containsKey(s)) {
-			return VALUES_MAP.get(s);
+	public static RuleResultSpec<Object> valueOfName(final String name) {
+		if (VALUES_MAP.containsKey(name)) {
+			return VALUES_MAP.get(name);
 		}
 		throw new IllegalArgumentException(String.format(
-				"unknown rule result: %s", s));
+				"unknown rule result: %s", name));
 	}
 	
 	public static List<RuleResultSpec<Object>> values() {

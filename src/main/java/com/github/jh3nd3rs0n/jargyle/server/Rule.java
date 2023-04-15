@@ -58,7 +58,7 @@ public final class Rule {
 			String name = wordElements[0];
 			IllegalArgumentException ex = null;
 			try {
-				RuleConditionSpecConstants.valueOf(name);
+				RuleConditionSpecConstants.valueOfName(name);
 			} catch (IllegalArgumentException e) {
 				ex = e;
 			}
@@ -68,7 +68,7 @@ public final class Rule {
 			}
 			ex = null;
 			try {
-				RuleResultSpecConstants.valueOf(name);
+				RuleResultSpecConstants.valueOfName(name);
 			} catch (IllegalArgumentException e) {
 				ex = e;
 			}

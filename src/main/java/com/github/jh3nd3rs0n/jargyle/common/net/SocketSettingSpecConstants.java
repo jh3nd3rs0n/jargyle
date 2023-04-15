@@ -22,12 +22,12 @@ final class SocketSettingSpecConstants {
 		VALUES_MAP = valuesMap;
 	}
 	
-	public static SocketSettingSpec<Object> valueOf(final String s) {
-		if (VALUES_MAP.containsKey(s)) {
-			return VALUES_MAP.get(s);
+	public static SocketSettingSpec<Object> valueOfName(final String name) {
+		if (VALUES_MAP.containsKey(name)) {
+			return VALUES_MAP.get(name);
 		}
 		throw new IllegalArgumentException(String.format(
-				"unknown socket setting: %s", s));
+				"unknown socket setting: %s", name));
 	}
 	
 	public static List<SocketSettingSpec<Object>> values() {

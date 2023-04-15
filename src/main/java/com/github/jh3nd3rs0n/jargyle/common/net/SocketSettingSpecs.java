@@ -22,7 +22,7 @@ final class SocketSettingSpecs {
 		@SuppressWarnings("unchecked")
 		SocketSettingSpec<Object> val = (SocketSettingSpec<Object>) value;
 		this.socketSettingSpecs.add(val);
-		this.socketSettingSpecsMap.put(val.toString(), val);
+		this.socketSettingSpecsMap.put(val.getName(), val);
 		return value;		
 	}
 	

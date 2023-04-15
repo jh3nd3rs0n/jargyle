@@ -25,13 +25,14 @@ class SocketSettingXml extends ValueXml {
 	}
 	
 	public SocketSettingXml(final SocketSetting<Object> socketSetting) {
-		this.name = socketSetting.getSocketSettingSpec().toString();
+		this.name = socketSetting.getName();
 		this.value = socketSetting.getValue().toString();
 		this.doc = socketSetting.getDoc();		
 	}
 	
 	public SocketSetting<Object> toSocketSetting() {
-		return SocketSetting.newInstanceOfParsableValue(this.name, this.value, this.doc);
+		return SocketSetting.newInstanceOfParsableValue(
+				this.name, this.value, this.doc);
 	}
 
 	@Override

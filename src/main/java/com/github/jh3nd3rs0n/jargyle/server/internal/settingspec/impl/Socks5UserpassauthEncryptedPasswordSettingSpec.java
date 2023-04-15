@@ -19,9 +19,9 @@ public final class Socks5UserpassauthEncryptedPasswordSettingSpec
 	}
 
 	public Socks5UserpassauthEncryptedPasswordSettingSpec(
-			final String s, final EncryptedPassword defaultVal) {
+			final String n, final EncryptedPassword defaultVal) {
 		super(
-				s, 
+				n, 
 				EncryptedPassword.class, 
 				getValidatedEncryptedPassword(defaultVal));
 	}

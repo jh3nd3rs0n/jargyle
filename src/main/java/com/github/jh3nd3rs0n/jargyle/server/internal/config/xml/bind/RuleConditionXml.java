@@ -23,7 +23,7 @@ class RuleConditionXml {
 	
 	public RuleConditionXml(
 			final RuleCondition<? extends Object, ? extends Object> ruleCondition) {
-		this.name = ruleCondition.getRuleConditionSpec().toString();
+		this.name = ruleCondition.getName();
 		this.value = ruleCondition.getValue().toString();
 	}
 	

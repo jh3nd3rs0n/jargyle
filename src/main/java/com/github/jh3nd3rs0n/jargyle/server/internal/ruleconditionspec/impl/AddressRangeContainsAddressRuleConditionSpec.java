@@ -9,9 +9,9 @@ public final class AddressRangeContainsAddressRuleConditionSpec
 	extends RuleConditionSpec<AddressRange, String> {
 
 	public AddressRangeContainsAddressRuleConditionSpec(
-			final String s, final RuleArgSpec<String> rlArgSpec) {
+			final String n, final RuleArgSpec<String> rlArgSpec) {
 		super(
-				s, 
+				n, 
 				AddressRange.class, 
 				new AddressRangeContainsAddressRuleConditionEvaluator(), 
 				rlArgSpec);

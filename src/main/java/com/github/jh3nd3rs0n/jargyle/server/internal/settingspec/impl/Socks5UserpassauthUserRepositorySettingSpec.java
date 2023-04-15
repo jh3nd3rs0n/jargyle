@@ -8,8 +8,8 @@ public final class Socks5UserpassauthUserRepositorySettingSpec
 	extends SettingSpec<UserRepository> {
 
 	public Socks5UserpassauthUserRepositorySettingSpec(
-			final String s, final UserRepository defaultVal) {
-		super(s, UserRepository.class, defaultVal);
+			final String n, final UserRepository defaultVal) {
+		super(n, UserRepository.class, defaultVal);
 	}
 
 	@Override

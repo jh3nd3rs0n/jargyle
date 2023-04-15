@@ -114,7 +114,7 @@ class SettingXml {
 		} catch (IllegalArgumentException e) {
 			newVal = val.toString();
 		}
-		this.name = setting.getSettingSpec().toString();
+		this.name = setting.getName();
 		this.value = newVal;
 		this.doc = setting.getDoc();		
 	}

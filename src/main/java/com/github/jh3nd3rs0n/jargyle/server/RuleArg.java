@@ -2,12 +2,15 @@ package com.github.jh3nd3rs0n.jargyle.server;
 
 public final class RuleArg<V> {
 	
+	private final String name;
 	private final RuleArgSpec<V> ruleArgSpec;
 	private final V value;
 	
 	RuleArg(final RuleArgSpec<V> spec, final V val) {
+		V v = spec.getValueType().cast(val);
+		this.name = spec.getName();
 		this.ruleArgSpec = spec;
-		this.value = val;
+		this.value = v;
 	}
 
 	@Override
@@ -22,11 +25,11 @@ public final class RuleArg<V> {
 			return false;
 		}
 		RuleArg<?> other = (RuleArg<?>) obj;
-		if (this.ruleArgSpec == null) {
-			if (other.ruleArgSpec != null) {
+		if (this.name == null) {
+			if (other.name != null) {
 				return false;
 			}
-		} else if (!this.ruleArgSpec.equals(other.ruleArgSpec)) {
+		} else if (!this.name.equals(other.name)) {
 			return false;
 		}
 		if (this.value == null) {
@@ -37,6 +40,10 @@ public final class RuleArg<V> {
 			return false;
 		}
 		return true;
+	}
+	
+	public String getName() {
+		return this.name;
 	}
 	
 	public RuleArgSpec<V> getRuleArgSpec() {
@@ -51,8 +58,8 @@ public final class RuleArg<V> {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((this.ruleArgSpec == null) ? 
-				0 : this.ruleArgSpec.hashCode());
+		result = prime * result + ((this.name == null) ? 
+				0 : this.name.hashCode());
 		result = prime * result + ((this.value == null) ? 
 				0 : this.value.hashCode());
 		return result;
@@ -60,7 +67,7 @@ public final class RuleArg<V> {
 
 	@Override
 	public String toString() {
-		return String.format("%s=%s", this.ruleArgSpec, this.value);
+		return String.format("%s=%s", this.name, this.value);
 	}
 
 }

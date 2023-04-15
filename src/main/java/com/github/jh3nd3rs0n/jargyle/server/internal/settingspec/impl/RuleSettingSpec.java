@@ -6,8 +6,8 @@ import com.github.jh3nd3rs0n.jargyle.server.SettingSpec;
 
 public final class RuleSettingSpec extends SettingSpec<Rule> {
 
-	public RuleSettingSpec(final String s, final Rule defaultVal) {
-		super(s, Rule.class, defaultVal);
+	public RuleSettingSpec(final String n, final Rule defaultVal) {
+		super(n, Rule.class, defaultVal);
 	}
 
 	@Override

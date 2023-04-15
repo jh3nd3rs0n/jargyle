@@ -18,8 +18,8 @@ public final class OidPropertySpec extends PropertySpec<Oid> {
 		return oid;
 	}
 	
-	public OidPropertySpec(final String s, final String defaultVal) {
-		super(s, Oid.class, newOid(defaultVal));
+	public OidPropertySpec(final String n, final String defaultVal) {
+		super(n, Oid.class, newOid(defaultVal));
 	}
 
 	@Override

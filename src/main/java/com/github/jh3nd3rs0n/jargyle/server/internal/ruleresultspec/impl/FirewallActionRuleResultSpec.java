@@ -7,8 +7,8 @@ import com.github.jh3nd3rs0n.jargyle.server.RuleResultSpec;
 public final class FirewallActionRuleResultSpec 
 	extends RuleResultSpec<FirewallAction> {
 
-	public FirewallActionRuleResultSpec(final String s) {
-		super(s, FirewallAction.class);
+	public FirewallActionRuleResultSpec(final String n) {
+		super(n, FirewallAction.class);
 	}
 
 	@Override

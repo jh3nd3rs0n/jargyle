@@ -8,8 +8,8 @@ public final class PositiveIntegerSettingSpec
 	extends SettingSpec<PositiveInteger> {
 
 	public PositiveIntegerSettingSpec(
-			final String s, final PositiveInteger defaultVal) {
-		super(s, PositiveInteger.class, defaultVal);
+			final String n, final PositiveInteger defaultVal) {
+		super(n, PositiveInteger.class, defaultVal);
 	}
 
 	@Override

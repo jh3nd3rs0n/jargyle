@@ -8,8 +8,8 @@ public final class SocketSettingsSettingSpec
 	extends SettingSpec<SocketSettings> {
 
 	public SocketSettingsSettingSpec(
-			final String s,	final SocketSettings defaultVal) {
-		super(s, SocketSettings.class, defaultVal);
+			final String n, final SocketSettings defaultVal) {
+		super(n, SocketSettings.class, defaultVal);
 	}
 
 	@Override

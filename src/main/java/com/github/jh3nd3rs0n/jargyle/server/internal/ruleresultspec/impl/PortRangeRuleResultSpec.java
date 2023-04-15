@@ -6,8 +6,8 @@ import com.github.jh3nd3rs0n.jargyle.server.RuleResultSpec;
 
 public final class PortRangeRuleResultSpec extends RuleResultSpec<PortRange> {
 
-	public PortRangeRuleResultSpec(final String s) {
-		super(s, PortRange.class);
+	public PortRangeRuleResultSpec(final String n) {
+		super(n, PortRange.class);
 	}
 
 	@Override

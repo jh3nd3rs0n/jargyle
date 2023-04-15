@@ -7,8 +7,8 @@ import com.github.jh3nd3rs0n.jargyle.server.RuleResultSpec;
 public final class NonnegativeIntegerLimitRuleResultSpec 
 	extends RuleResultSpec<NonnegativeIntegerLimit> {
 
-	public NonnegativeIntegerLimitRuleResultSpec(final String s) {
-		super(s, NonnegativeIntegerLimit.class);
+	public NonnegativeIntegerLimitRuleResultSpec(final String n) {
+		super(n, NonnegativeIntegerLimit.class);
 	}
 
 	@Override

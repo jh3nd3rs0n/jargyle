@@ -20,7 +20,7 @@ final class RuleResultSpecs {
 		@SuppressWarnings("unchecked")
 		RuleResultSpec<Object> val = (RuleResultSpec<Object>) value;
 		this.ruleResultSpecs.add(val);
-		this.ruleResultSpecsMap.put(val.toString(), val);
+		this.ruleResultSpecsMap.put(val.getName(), val);
 		return value;
 	}
 	

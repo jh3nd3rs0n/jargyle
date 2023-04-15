@@ -17,17 +17,18 @@ public final class RuleCondition<V1, V2> {
 			final String name, final V1 value) {
 		@SuppressWarnings("unchecked")
 		RuleCondition<V1, V2> ruleCondition = 
-				(RuleCondition<V1, V2>) RuleConditionSpecConstants.valueOf(
+				(RuleCondition<V1, V2>) RuleConditionSpecConstants.valueOfName(
 						name).newRuleCondition(value);
 		return ruleCondition;
 	}
 	
 	public static RuleCondition<Object, Object> newInstanceOfParsableValue(
 			final String name, final String value) {
-		return RuleConditionSpecConstants.valueOf(
+		return RuleConditionSpecConstants.valueOfName(
 				name).newRuleConditionOfParsableValue(value);
 	}
 	
+	private final String name;
 	private final RuleArgSpec<V2> ruleArgSpec;	
 	private final RuleConditionEvaluator<V1, V2> ruleConditionEvaluator;
 	private final RuleConditionSpec<V1, V2> ruleConditionSpec;
@@ -38,10 +39,12 @@ public final class RuleCondition<V1, V2> {
 			final V1 val,
 			final RuleConditionEvaluator<V1, V2> evaluator, 
 			final RuleArgSpec<V2> rlArgSpec) {
+		V1 v = spec.getValueType().cast(val);
+		this.name = spec.getName();
 		this.ruleArgSpec = rlArgSpec;		
 		this.ruleConditionEvaluator = evaluator;
 		this.ruleConditionSpec = spec;
-		this.value = val;
+		this.value = v;
 	}
 
 	@Override
@@ -56,11 +59,11 @@ public final class RuleCondition<V1, V2> {
 			return false;
 		}
 		RuleCondition<?, ?> other = (RuleCondition<?, ?>) obj;
-		if (this.ruleConditionSpec == null) {
-			if (other.ruleConditionSpec != null) {
+		if (this.name == null) {
+			if (other.name != null) {
 				return false;
 			}
-		} else if (!this.ruleConditionSpec.equals(other.ruleConditionSpec)) {
+		} else if (!this.name.equals(other.name)) {
 			return false;
 		}
 		if (this.value == null) {
@@ -79,6 +82,10 @@ public final class RuleCondition<V1, V2> {
 		}
 		return this.ruleConditionEvaluator.evaluate(
 				this.value, ruleContext.getRuleArgValue(this.ruleArgSpec));
+	}
+
+	public String getName() {
+		return this.name;
 	}
 	
 	public RuleArgSpec<V2> getRuleArgSpec() {
@@ -101,15 +108,16 @@ public final class RuleCondition<V1, V2> {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((this.ruleConditionSpec == null) ? 
-				0 : this.ruleConditionSpec.hashCode());
-		result = prime * result + ((this.value == null) ? 0 : value.hashCode());
+		result = prime * result + ((this.name == null) ? 
+				0 : this.name.hashCode());
+		result = prime * result + ((this.value == null) ? 
+				0 : this.value.hashCode());
 		return result;
 	}
 
 	@Override
 	public String toString() {
-		return String.format("%s=%s", this.ruleConditionSpec, this.value);
+		return String.format("%s=%s", this.name, this.value);
 	}
 	
 }

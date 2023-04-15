@@ -20,7 +20,7 @@ final class PropertySpecs {
 		@SuppressWarnings("unchecked")
 		PropertySpec<Object> val = (PropertySpec<Object>) value;
 		this.propertySpecs.add(val);
-		this.propertySpecsMap.put(val.toString(), val);
+		this.propertySpecsMap.put(val.getName(), val);
 		return value;
 	}
 	

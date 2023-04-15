@@ -8,8 +8,8 @@ public final class EncryptedPasswordSettingSpec
 	extends SettingSpec<EncryptedPassword> {
 
 	public EncryptedPasswordSettingSpec(
-			final String s, final EncryptedPassword defaultVal) {
-		super(s, EncryptedPassword.class, defaultVal);
+			final String n, final EncryptedPassword defaultVal) {
+		super(n, EncryptedPassword.class, defaultVal);
 	}
 
 	@Override

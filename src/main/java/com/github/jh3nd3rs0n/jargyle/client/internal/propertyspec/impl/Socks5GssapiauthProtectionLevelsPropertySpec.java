@@ -8,8 +8,8 @@ public final class Socks5GssapiauthProtectionLevelsPropertySpec
 	extends PropertySpec<ProtectionLevels> {
 
 	public Socks5GssapiauthProtectionLevelsPropertySpec(
-			final String s, final ProtectionLevels defaultVal) {
-		super(s, ProtectionLevels.class, defaultVal);
+			final String n, final ProtectionLevels defaultVal) {
+		super(n, ProtectionLevels.class, defaultVal);
 	}
 
 	@Override

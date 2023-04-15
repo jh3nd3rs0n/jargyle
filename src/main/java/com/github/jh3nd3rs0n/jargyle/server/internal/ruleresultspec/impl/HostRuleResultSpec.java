@@ -8,8 +8,8 @@ import com.github.jh3nd3rs0n.jargyle.server.RuleResultSpec;
 
 public final class HostRuleResultSpec extends RuleResultSpec<Host> {
 
-	public HostRuleResultSpec(final String s) {
-		super(s, Host.class);
+	public HostRuleResultSpec(final String n) {
+		super(n, Host.class);
 	}
 
 	@Override

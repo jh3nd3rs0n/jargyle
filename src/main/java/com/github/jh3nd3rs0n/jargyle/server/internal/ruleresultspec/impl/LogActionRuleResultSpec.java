@@ -6,8 +6,8 @@ import com.github.jh3nd3rs0n.jargyle.server.RuleResultSpec;
 
 public final class LogActionRuleResultSpec extends RuleResultSpec<LogAction> {
 
-	public LogActionRuleResultSpec(final String s) {
-		super(s, LogAction.class);
+	public LogActionRuleResultSpec(final String n) {
+		super(n, LogAction.class);
 	}
 
 	@Override

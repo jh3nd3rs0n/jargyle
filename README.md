@@ -2177,9 +2177,9 @@ Partial command line example:
 ```text
     
     --setting=chaining.socksServerUri=socks5://127.0.0.1:23456 \
-    --setting=chaining.socksServerUri=socks5://127.0.0.1:65432 \
     --setting=chaining.socks5.methods=GSSAPI \
     --setting=chaining.socks5.gssapiauth.serviceName=rcmd/127.0.0.1 \
+    --setting=chaining.socksServerUri=socks5://127.0.0.1:65432 \
     --setting=chaining.socksServerUri=socks5://127.0.0.1:34567 \
     --setting=chaining.socks5.useResolveCommand=true
     
@@ -2194,10 +2194,6 @@ Partial configuration file example:
         <value>socks5://127.0.0.1:23456</value>
     </setting>
     <setting>
-        <name>chaining.socksServerUri</name>
-        <value>socks5://127.0.0.1:65432</value>
-    </setting>
-    <setting>
         <name>chaining.socks5.methods</name>
         <socks5.methods>
             <socks5.method>GSSAPI</socks5.method>
@@ -2206,6 +2202,10 @@ Partial configuration file example:
     <setting>
         <name>chaining.socks5.gssapiauth.serviceName</name>
         <value>rcmd/127.0.0.1</value>
+    </setting>
+    <setting>
+        <name>chaining.socksServerUri</name>
+        <value>socks5://127.0.0.1:65432</value>
     </setting>
     <setting>
         <name>chaining.socksServerUri</name>

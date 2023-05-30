@@ -3,9 +3,7 @@ package com.github.jh3nd3rs0n.jargyle.server.internal.server;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
@@ -32,6 +30,10 @@ import com.github.jh3nd3rs0n.jargyle.server.Settings;
 
 final class WorkerContextFactory {
 	
+	private static final class RuleHolder {
+		private Rule rule;
+	}
+	
 	private static final Logger LOGGER = LoggerFactory.getLogger(
 			WorkerContextFactory.class);
 	
@@ -56,7 +58,7 @@ final class WorkerContextFactory {
 	private boolean canAllowClientSocket(
 			final Rule applicableRule,
 			final RuleContext clientRuleContext,
-			final Set<Rule> belowAllowLimitRules) {
+			final RuleHolder belowAllowLimitRuleHolder) {
 		if (applicableRule == null) {
 			return false;
 		}
@@ -70,7 +72,9 @@ final class WorkerContextFactory {
 						GeneralRuleResultSpecConstants.FIREWALL_ACTION_LOG_ACTION);
 		if (firewallAction.equals(FirewallAction.ALLOW)) {
 			if (!this.canAllowClientSocketWithinLimit(
-					applicableRule, clientRuleContext, belowAllowLimitRules)) {
+					applicableRule, 
+					clientRuleContext, 
+					belowAllowLimitRuleHolder)) {
 				return false;
 			}
 			if (firewallActionLogAction != null) {
@@ -94,7 +98,7 @@ final class WorkerContextFactory {
 	private boolean canAllowClientSocketWithinLimit(
 			final Rule applicableRule,
 			final RuleContext clientRuleContext,
-			final Set<Rule> belowAllowLimitRules) {
+			final RuleHolder belowAllowLimitRuleHolder) {
 		NonnegativeIntegerLimit firewallActionAllowLimit =
 				applicableRule.getLastRuleResultValue(
 						GeneralRuleResultSpecConstants.FIREWALL_ACTION_ALLOW_LIMIT);
@@ -115,7 +119,7 @@ final class WorkerContextFactory {
 				}
 				return false;
 			}
-			belowAllowLimitRules.add(applicableRule);				
+			belowAllowLimitRuleHolder.rule = applicableRule;
 		}		
 		return true;
 	}
@@ -221,9 +225,9 @@ final class WorkerContextFactory {
 		RuleContext clientRuleContext = this.newClientRuleContext(
 				clientSock);
 		Rule applicableRule = this.rules.firstAppliesTo(clientRuleContext);
-		Set<Rule> belowAllowLimitRules = new HashSet<Rule>();
+		RuleHolder belowAllowLimitRuleHolder = new RuleHolder();
 		if (!this.canAllowClientSocket(
-				applicableRule, clientRuleContext, belowAllowLimitRules)) {
+				applicableRule, clientRuleContext, belowAllowLimitRuleHolder)) {
 			throw new IllegalArgumentException(
 					"client socket not allowed");
 		}
@@ -238,8 +242,8 @@ final class WorkerContextFactory {
 				this.routes,
 				selectedRoute,
 				this.clientFacingDtlsDatagramSocketFactory);
-		// should only be one below allow limit rule
-		for (Rule belowAllowLimitRule : belowAllowLimitRules) {
+		Rule belowAllowLimitRule = belowAllowLimitRuleHolder.rule;
+		if (belowAllowLimitRule != null) {
 			workerContext.addBelowAllowLimitRule(belowAllowLimitRule);
 		}
 		return workerContext;

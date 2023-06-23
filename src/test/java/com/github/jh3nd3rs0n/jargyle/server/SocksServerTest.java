@@ -8,14 +8,12 @@ import org.junit.Test;
 
 import com.github.jh3nd3rs0n.jargyle.common.net.Host;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
-import com.github.jh3nd3rs0n.jargyle.server.internal.config.impl.ModifiableConfiguration;
 
 public class SocksServerTest {
 
 	@Test
 	public void testGetHostForChangingConfiguration() throws IOException {
-		ModifiableConfiguration configuration = 
-				ModifiableConfiguration.newInstance();
+		Configuration configuration = Configuration.newModifiableInstance();
 		SocksServer socksServer = new SocksServer(configuration);
 		try {
 			socksServer.start();
@@ -34,8 +32,7 @@ public class SocksServerTest {
 
 	@Test
 	public void testGetPortForChangingConfiguration() throws IOException {
-		ModifiableConfiguration configuration = 
-				ModifiableConfiguration.newInstance();
+		Configuration configuration = Configuration.newModifiableInstance();
 		SocksServer socksServer = new SocksServer(configuration);
 		try {
 			socksServer.start();

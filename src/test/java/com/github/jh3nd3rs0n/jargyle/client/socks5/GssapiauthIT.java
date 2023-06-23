@@ -19,17 +19,16 @@ import com.github.jh3nd3rs0n.jargyle.FilesHelper;
 import com.github.jh3nd3rs0n.jargyle.TestStringConstants;
 import com.github.jh3nd3rs0n.jargyle.ThreadHelper;
 import com.github.jh3nd3rs0n.jargyle.client.DatagramEchoClient;
+import com.github.jh3nd3rs0n.jargyle.client.DatagramEchoServer;
 import com.github.jh3nd3rs0n.jargyle.client.EchoClient;
+import com.github.jh3nd3rs0n.jargyle.client.EchoServer;
 import com.github.jh3nd3rs0n.jargyle.client.Properties;
 import com.github.jh3nd3rs0n.jargyle.client.Scheme;
 import com.github.jh3nd3rs0n.jargyle.client.Socks5PropertySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
-import com.github.jh3nd3rs0n.jargyle.server.DatagramEchoServer;
-import com.github.jh3nd3rs0n.jargyle.server.EchoServer;
 import com.github.jh3nd3rs0n.jargyle.server.GeneralSettingSpecConstants;
-import com.github.jh3nd3rs0n.jargyle.server.ImmutableConfiguration;
 import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
@@ -74,7 +73,7 @@ public class GssapiauthIT {
 	private static SocksServer socksServerUsingSocks5GssapiauthNecReferenceImpl;
 	
 	private static Configuration newConfigurationUsingSocks5Gssapiauth() {
-		return ImmutableConfiguration.newInstance(Settings.newInstance(
+		return Configuration.newUnmodifiableInstance(Settings.newInstance(
 				GeneralSettingSpecConstants.PORT.newSetting(
 						Port.newInstance(SOCKS_SERVER_PORT_USING_SOCKS5_GSSAPIAUTH)),
 				Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
@@ -82,7 +81,7 @@ public class GssapiauthIT {
 	}
 	
 	private static Configuration newConfigurationUsingSocks5GssapiauthNecReferenceImpl() {
-		return ImmutableConfiguration.newInstance(Settings.newInstance(
+		return Configuration.newUnmodifiableInstance(Settings.newInstance(
 				GeneralSettingSpecConstants.PORT.newSetting(
 						Port.newInstance(
 								SOCKS_SERVER_PORT_USING_SOCKS5_GSSAPIAUTH_NEC_REFERENCE_IMPL)),

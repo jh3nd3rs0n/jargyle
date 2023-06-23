@@ -6,8 +6,6 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.Arrays;
 
-import com.github.jh3nd3rs0n.jargyle.server.DatagramEchoServer;
-
 public final class DatagramEchoClient {
 	
 	private static final int SO_TIMEOUT = 60000;

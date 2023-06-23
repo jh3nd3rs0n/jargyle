@@ -6,6 +6,10 @@ import java.net.Socket;
 
 public abstract class MethodEncapsulation {
 
+	public static MethodEncapsulation newNullInstance(final Socket sock) {
+		return new NullMethodEncapsulation(sock);
+	}
+	
 	public abstract DatagramSocket getDatagramSocket(
 			final DatagramSocket datagramSocket) throws IOException;
 	

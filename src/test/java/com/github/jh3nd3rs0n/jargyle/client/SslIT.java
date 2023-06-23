@@ -15,11 +15,8 @@ import com.github.jh3nd3rs0n.jargyle.TestStringConstants;
 import com.github.jh3nd3rs0n.jargyle.ThreadHelper;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
-import com.github.jh3nd3rs0n.jargyle.server.DatagramEchoServer;
 import com.github.jh3nd3rs0n.jargyle.server.DtlsSettingSpecConstants;
-import com.github.jh3nd3rs0n.jargyle.server.EchoServer;
 import com.github.jh3nd3rs0n.jargyle.server.GeneralSettingSpecConstants;
-import com.github.jh3nd3rs0n.jargyle.server.ImmutableConfiguration;
 import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
 import com.github.jh3nd3rs0n.jargyle.server.SslSettingSpecConstants;
@@ -76,7 +73,7 @@ public class SslIT {
 	}
 	
 	private static Configuration newConfigurationUsingSsl() {
-		return ImmutableConfiguration.newInstance(Settings.newInstance(
+		return Configuration.newUnmodifiableInstance(Settings.newInstance(
 				GeneralSettingSpecConstants.PORT.newSetting(
 						Port.newInstance(SOCKS_SERVER_PORT_USING_SSL)),
 				DtlsSettingSpecConstants.DTLS_ENABLED.newSetting(Boolean.TRUE),
@@ -96,7 +93,7 @@ public class SslIT {
 	}
 
 	private static Configuration newConfigurationUsingSslAndRequestedClientAuth() {
-		return ImmutableConfiguration.newInstance(Settings.newInstance(
+		return Configuration.newUnmodifiableInstance(Settings.newInstance(
 				GeneralSettingSpecConstants.PORT.newSetting(
 						Port.newInstance(
 								SOCKS_SERVER_PORT_USING_SSL_AND_REQUESTED_CLIENT_AUTH)),
@@ -133,7 +130,7 @@ public class SslIT {
 	}
 
 	private static Configuration newConfigurationUsingSslAndRequiredClientAuth() {
-		return ImmutableConfiguration.newInstance(Settings.newInstance(
+		return Configuration.newUnmodifiableInstance(Settings.newInstance(
 				GeneralSettingSpecConstants.PORT.newSetting(
 						Port.newInstance(
 								SOCKS_SERVER_PORT_USING_SSL_AND_REQUIRED_CLIENT_AUTH)),

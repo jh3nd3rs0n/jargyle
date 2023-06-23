@@ -11,8 +11,6 @@ import com.github.jh3nd3rs0n.argmatey.ArgMatey.CLI;
 import com.github.jh3nd3rs0n.argmatey.ArgMatey.TerminationRequestedException;
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.ConfigurationRepository;
-import com.github.jh3nd3rs0n.jargyle.server.ImmutableConfiguration;
-import com.github.jh3nd3rs0n.jargyle.server.MutableConfiguration;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
 
 public final class ServerStarterCLI extends ServerConfigurationCLI {
@@ -66,7 +64,7 @@ public final class ServerStarterCLI extends ServerConfigurationCLI {
 			throws TerminationRequestedException {
 		Configuration configuration = null;
 		if (this.monitoredConfigurationFile == null) {
-			configuration = ImmutableConfiguration.newInstance(
+			configuration = Configuration.newUnmodifiableInstance(
 					this.getConfiguration());
 		} else {
 			File f = new File(this.monitoredConfigurationFile);
@@ -85,13 +83,13 @@ public final class ServerStarterCLI extends ServerConfigurationCLI {
 			ConfigurationRepository configurationRepository = null;
 			try {
 				configurationRepository = 
-						ConfigurationRepository.newInstance(f);
+						ConfigurationRepositoryHelper.newConfigurationRepository(f);
 			} catch (UncheckedIOException e) {
 				System.err.printf("%s: %s%n", this.getProgramName(), e);
 				e.printStackTrace(System.err);
 				throw new TerminationRequestedException(-1);
 			}
-			configuration = MutableConfiguration.newInstance(
+			configuration = Configuration.newUpdatedInstance(
 					configurationRepository);
 		}
 		return configuration;

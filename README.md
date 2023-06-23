@@ -77,8 +77,6 @@ It also has a rule system that allows you to manage traffic in the following way
 -   Limit bandwidth
 -   Configure sockets
 
-**DISCLAIMER**: Although Jargyle has been tested continuously, it has yet to be tested in a real world setting. If you have thought about using Jargyle or have used Jargyle at some point, whether you continue to use it or not, please let me know by email at `j0n4th4n.h3nd3rs0n@gmail.com`. Any feedback would be welcomed. If you have found an issue with Jargyle or its documentation, please post the issue on GitHub. There might be others experiencing the same issue as you are.
-
 **IMPLEMENTATION DETAIL**: Jargyle uses multiple threads for handling client connections. Under Java 19, it can use virtual threads instead of OS threads. To enable the use of virtual threads under Java 19, add the command line option `--enable-preview` to environment variable `JARGYLE_OPTS`
 
 ```bash
@@ -1474,10 +1472,10 @@ Also, you will need to have the setting `socks5.userpassauth.userRepository` to 
 
 The following are two provided classes you can use:
 
--   `com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.StringSourceUserRepository`
--   `com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.CsvFileSourceUserRepository`
+-   `com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.userrepo.impl.StringSourceUserRepository`
+-   `com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.userrepo.impl.CsvFileSourceUserRepository`
 
-`com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.StringSourceUserRepository`: This class handles the storage of the users from the initialization string value of a space separated list of username password values.
+`com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.userrepo.impl.StringSourceUserRepository`: This class handles the storage of the users from the initialization string value of a space separated list of username password values.
 
 Each username password value in the space separated list must be of the following format:
 
@@ -1502,7 +1500,7 @@ Partial command line example:
 ```text
     
     "--setting=socks5.methods=USERNAME_PASSWORD" \
-    "--setting=socks5.userpassauth.userRepository=com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.StringSourceUserRepository:Aladdin:opensesame Jasmine:mission%3Aimpossible"
+    "--setting=socks5.userpassauth.userRepository=com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.userrepo.impl.StringSourceUserRepository:Aladdin:opensesame Jasmine:mission%3Aimpossible"
     
 ```
 
@@ -1519,21 +1517,21 @@ Partial configuration file example:
     <setting>
         <name>socks5.userpassauth.userRepository</name>
         <socks5.userpassauth.userRepository>
-            <className>com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.StringSourceUserRepository</className>
+            <className>com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.userrepo.impl.StringSourceUserRepository</className>
             <initializationValue>Aladdin:opensesame Jasmine:mission%3Aimpossible</initializationValue>
         </socks5.userpassauth.userRepository>
     </setting>
     
 ```
 
-`com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.CsvFileSourceUserRepository`: This class handles the storage of the users from a CSV file whose name is provided as an initialization string value. The users from the CSV file are loaded onto memory. Because of this, you will need at least as much memory as the size of the CSV file. If the CSV file does not exist, it will be created and used. If the CSV file does exist, the existing CSV file will be used. To manage users under a user repository, see [Managing Users](#7-9-2-1-managing-users).
+`com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.userrepo.impl.CsvFileSourceUserRepository`: This class handles the storage of the users from a CSV file whose name is provided as an initialization string value. The users from the CSV file are loaded onto memory. Because of this, you will need at least as much memory as the size of the CSV file. If the CSV file does not exist, it will be created and used. If the CSV file does exist, the existing CSV file will be used. To manage users under a user repository, see [Managing Users](#7-9-2-1-managing-users).
 
 Partial command line example:
 
 ```text
     
     --setting=socks5.methods=USERNAME_PASSWORD \
-    --setting=socks5.userpassauth.userRepository=com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.CsvFileSourceUserRepository:users.csv
+    --setting=socks5.userpassauth.userRepository=com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.userrepo.impl.CsvFileSourceUserRepository:users.csv
     
 ```
 
@@ -1550,7 +1548,7 @@ Partial configuration file example:
     <setting>
         <name>socks5.userpassauth.userRepository</name>
         <socks5.userpassauth.userRepository>
-            <className>com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.CsvFileSourceUserRepository</className>
+            <className>com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.userrepo.impl.CsvFileSourceUserRepository</className>
             <initializationValue>users.csv</initializationValue>
         </socks5.userpassauth.userRepository>
     </setting>
@@ -1563,7 +1561,7 @@ You can manage users by first specifying a user repository that handles the stor
 
 The following is one provided class you can use:
 
--   `com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.CsvFileSourceUserRepository`: This class handles the storage of the users from a CSV file whose name is provided as an initialization string value. The users from the CSV file are loaded onto memory. Because of this, you will need at least as much memory as the size of the CSV file. If the CSV file does not exist, it will be created and used. If the CSV file does exist, the existing CSV file will be used. 
+-   `com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.userrepo.impl.CsvFileSourceUserRepository`: This class handles the storage of the users from a CSV file whose name is provided as an initialization string value. The users from the CSV file are loaded onto memory. Because of this, you will need at least as much memory as the size of the CSV file. If the CSV file does not exist, it will be created and used. If the CSV file does exist, the existing CSV file will be used. 
 
 ##### 7. 9. 2. 1. 1. Adding Users
 
@@ -1581,7 +1579,7 @@ Once you have run the command, an interactive prompt will ask you for the new us
 
 ```text
     
-    ./bin/jargyle manage-socks5-users com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.CsvFileSourceUserRepository:users.csv add
+    ./bin/jargyle manage-socks5-users com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.userrepo.impl.CsvFileSourceUserRepository:users.csv add
     User
     Name: Aladdin
     Password: 
@@ -1625,7 +1623,7 @@ Once you have run the command, it will list all the users from the user reposito
 
 ```text
     
-    ./bin/jargyle manage-socks5-users com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.CsvFileSourceUserRepository:users.csv list
+    ./bin/jargyle manage-socks5-users com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.userrepo.impl.CsvFileSourceUserRepository:users.csv list
     Aladdin
     Jasmine
     Abu
@@ -1649,7 +1647,7 @@ Once you have run the command, the user of the specified name will be removed fr
 
 ```text
     
-    ./bin/jargyle manage-socks5-users com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.CsvFileSourceUserRepository:users.csv remove Jafar
+    ./bin/jargyle manage-socks5-users com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.userrepo.impl.CsvFileSourceUserRepository:users.csv remove Jafar
     User 'Jafar' removed
     
 ```

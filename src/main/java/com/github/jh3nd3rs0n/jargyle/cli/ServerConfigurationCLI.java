@@ -28,9 +28,7 @@ import com.github.jh3nd3rs0n.jargyle.server.FirewallAction;
 import com.github.jh3nd3rs0n.jargyle.server.GeneralRuleConditionSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.GeneralRuleResultSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.GeneralSettingSpecConstants;
-import com.github.jh3nd3rs0n.jargyle.server.ImmutableConfiguration;
 import com.github.jh3nd3rs0n.jargyle.server.LogAction;
-import com.github.jh3nd3rs0n.jargyle.server.ModifiableConfiguration;
 import com.github.jh3nd3rs0n.jargyle.server.SelectionStrategy;
 import com.github.jh3nd3rs0n.jargyle.server.Setting;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5RuleConditionSpecConstants;
@@ -77,7 +75,7 @@ public abstract class ServerConfigurationCLI extends CLI {
 	private static final int SETTING_OPTION_GROUP_ORDINAL = 11;
 	private static final int SETTINGS_HELP_OPTION_GROUP_ORDINAL = 12;
 	
-	private ModifiableConfiguration modifiableConfiguration;
+	private Configuration configuration;
 	private final String programBeginningUsage;
 	
 	ServerConfigurationCLI(
@@ -122,9 +120,9 @@ public abstract class ServerConfigurationCLI extends CLI {
 					file));			
 		}
 		ConfigurationRepository configurationRepository =
-				ConfigurationRepository.newInstance(f);
+				ConfigurationRepositoryHelper.newConfigurationRepository(f);
 		Configuration configuration = configurationRepository.get();
-		this.modifiableConfiguration.addSettings(configuration.getSettings());
+		this.configuration.addSettings(configuration.getSettings());
 	}
 	
 	@Option(
@@ -140,12 +138,12 @@ public abstract class ServerConfigurationCLI extends CLI {
 	)
 	@Ordinal(SETTING_OPTION_GROUP_ORDINAL)
 	protected void addSetting(final Setting<? extends Object> sttng) {
-		this.modifiableConfiguration.addSetting(sttng);
+		this.configuration.addSetting(sttng);
 	}
 
 	@Override
 	protected void beforeHandleArgs() {
-		this.modifiableConfiguration = ModifiableConfiguration.newInstance();
+		this.configuration = Configuration.newModifiableInstance();
 	}
 
 	@Option(
@@ -205,7 +203,7 @@ public abstract class ServerConfigurationCLI extends CLI {
 		Setting<EncryptedPassword> setting = 
 				ChainingDtlsSettingSpecConstants.CHAINING_DTLS_KEY_STORE_PASSWORD.newSetting(
 						encryptedPassword);
-		this.modifiableConfiguration.addSetting(setting);
+		this.configuration.addSetting(setting);
 	}
 	
 	@Option(
@@ -223,7 +221,7 @@ public abstract class ServerConfigurationCLI extends CLI {
 		Setting<EncryptedPassword> setting = 
 				ChainingDtlsSettingSpecConstants.CHAINING_DTLS_TRUST_STORE_PASSWORD.newSetting(
 						encryptedPassword);
-		this.modifiableConfiguration.addSetting(setting);
+		this.configuration.addSetting(setting);
 	}
 	
 	@Option(
@@ -240,7 +238,7 @@ public abstract class ServerConfigurationCLI extends CLI {
 		Setting<EncryptedPassword> setting = 
 				ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_USERPASSAUTH_PASSWORD.newSetting(
 						encryptedPassword);
-		this.modifiableConfiguration.addSetting(setting);		
+		this.configuration.addSetting(setting);		
 	}
 	
 	@Option(
@@ -258,7 +256,7 @@ public abstract class ServerConfigurationCLI extends CLI {
 		Setting<EncryptedPassword> setting = 
 				ChainingSslSettingSpecConstants.CHAINING_SSL_KEY_STORE_PASSWORD.newSetting(
 						encryptedPassword);
-		this.modifiableConfiguration.addSetting(setting);
+		this.configuration.addSetting(setting);
 	}
 
 	@Option(
@@ -276,7 +274,7 @@ public abstract class ServerConfigurationCLI extends CLI {
 		Setting<EncryptedPassword> setting = 
 				ChainingSslSettingSpecConstants.CHAINING_SSL_TRUST_STORE_PASSWORD.newSetting(
 						encryptedPassword);
-		this.modifiableConfiguration.addSetting(setting);
+		this.configuration.addSetting(setting);
 	}
 		
 	@Option(
@@ -294,7 +292,7 @@ public abstract class ServerConfigurationCLI extends CLI {
 		Setting<EncryptedPassword> setting = 
 				DtlsSettingSpecConstants.DTLS_KEY_STORE_PASSWORD.newSetting(
 						encryptedPassword);
-		this.modifiableConfiguration.addSetting(setting);		
+		this.configuration.addSetting(setting);		
 	}
 	
 	@Option(
@@ -312,7 +310,7 @@ public abstract class ServerConfigurationCLI extends CLI {
 		Setting<EncryptedPassword> setting = 
 				DtlsSettingSpecConstants.DTLS_TRUST_STORE_PASSWORD.newSetting(
 						encryptedPassword);
-		this.modifiableConfiguration.addSetting(setting);		
+		this.configuration.addSetting(setting);		
 	}
 		
 	@Option(
@@ -330,7 +328,7 @@ public abstract class ServerConfigurationCLI extends CLI {
 		Setting<EncryptedPassword> setting = 
 				SslSettingSpecConstants.SSL_KEY_STORE_PASSWORD.newSetting(
 						encryptedPassword);
-		this.modifiableConfiguration.addSetting(setting);		
+		this.configuration.addSetting(setting);		
 	}
 	
 	@Option(
@@ -348,12 +346,11 @@ public abstract class ServerConfigurationCLI extends CLI {
 		Setting<EncryptedPassword> setting = 
 				SslSettingSpecConstants.SSL_TRUST_STORE_PASSWORD.newSetting(
 						encryptedPassword);
-		this.modifiableConfiguration.addSetting(setting);		
+		this.configuration.addSetting(setting);		
 	}
 	
 	protected final Configuration getConfiguration() {
-		return ImmutableConfiguration.newInstance(
-				this.modifiableConfiguration.getSettings());
+		return Configuration.newUnmodifiableInstance(this.configuration);
 	}
 	
 	@Override

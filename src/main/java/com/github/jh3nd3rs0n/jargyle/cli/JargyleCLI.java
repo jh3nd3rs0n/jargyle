@@ -1,5 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.cli;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +12,6 @@ import com.github.jh3nd3rs0n.argmatey.ArgMatey.CLI;
 import com.github.jh3nd3rs0n.argmatey.ArgMatey.OptionType;
 import com.github.jh3nd3rs0n.argmatey.ArgMatey.TerminationRequestedException;
 import com.github.jh3nd3rs0n.jargyle.internal.help.HelpText;
-import com.github.jh3nd3rs0n.jargyle.server.internal.config.xml.bind.ConfigurationXsd;
 
 public final class JargyleCLI extends CLI {
 
@@ -72,7 +72,12 @@ public final class JargyleCLI extends CLI {
 					final String[] args, 
 					final boolean posixCorrect)
 					throws TerminationRequestedException {
-				ConfigurationXsd.main(new String[] { });
+				try {
+					ConfigurationRepositoryHelper.writeConfigurationSchemaTo(
+							System.out);
+				} catch (IOException e) {
+					throw new AssertionError(e);
+				}
 			}
 			
 		},

@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.DatagramSocket;
 import java.net.Socket;
 
-public final class NullMethodEncapsulation extends MethodEncapsulation {
+final class NullMethodEncapsulation extends MethodEncapsulation {
 	
 	private final Socket socket;
 	

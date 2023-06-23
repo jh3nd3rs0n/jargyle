@@ -9,10 +9,10 @@ import org.junit.Test;
 
 import com.github.jh3nd3rs0n.jargyle.TestStringConstants;
 import com.github.jh3nd3rs0n.jargyle.ThreadHelper;
+import com.github.jh3nd3rs0n.jargyle.client.ConfigurationHelper;
 import com.github.jh3nd3rs0n.jargyle.client.DatagramEchoClient;
+import com.github.jh3nd3rs0n.jargyle.client.DatagramEchoServer;
 import com.github.jh3nd3rs0n.jargyle.client.SocksClientHelper;
-import com.github.jh3nd3rs0n.jargyle.server.ConfigurationHelper;
-import com.github.jh3nd3rs0n.jargyle.server.DatagramEchoServer;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
 
 public class Socks5DatagramSocketIT {

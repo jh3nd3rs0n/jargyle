@@ -21,7 +21,6 @@ import com.github.jh3nd3rs0n.jargyle.client.Socks5PropertySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.MethodEncapsulation;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.MethodSubnegotiationException;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.NullMethodEncapsulation;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.gssapiauth.GssSocket;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.gssapiauth.GssapiMethodEncapsulation;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.gssapiauth.Message;
@@ -228,7 +227,7 @@ abstract class MethodSubnegotiator {
 		public MethodEncapsulation subnegotiate(
 				final Socket socket, 
 				final Socks5Client socks5Client) throws IOException {
-			return new NullMethodEncapsulation(socket);
+			return MethodEncapsulation.newNullInstance(socket);
 		}
 		
 	}
@@ -267,7 +266,7 @@ abstract class MethodSubnegotiator {
 				throw new MethodSubnegotiationException(
 						this.getMethod(), "invalid username password");
 			}
-			return new NullMethodEncapsulation(socket);
+			return MethodEncapsulation.newNullInstance(socket);
 		}
 		
 	}

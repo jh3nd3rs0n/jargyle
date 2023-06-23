@@ -24,16 +24,13 @@ import com.github.jh3nd3rs0n.jargyle.server.ChainingGeneralSettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.ChainingSocks5SettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.ChainingSslSettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
-import com.github.jh3nd3rs0n.jargyle.server.DatagramEchoServer;
 import com.github.jh3nd3rs0n.jargyle.server.DtlsSettingSpecConstants;
-import com.github.jh3nd3rs0n.jargyle.server.EchoServer;
 import com.github.jh3nd3rs0n.jargyle.server.GeneralSettingSpecConstants;
-import com.github.jh3nd3rs0n.jargyle.server.ImmutableConfiguration;
 import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
 import com.github.jh3nd3rs0n.jargyle.server.SslSettingSpecConstants;
-import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.StringSourceUserRepository;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.userrepo.impl.StringSourceUserRepository;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Methods;
 
@@ -74,28 +71,28 @@ public class ChainingIT {
 	
 	private static List<Configuration> newChainedConfigurations() {
 		return Arrays.asList(
-				ImmutableConfiguration.newInstance(Settings.newInstance(
+				Configuration.newUnmodifiableInstance(Settings.newInstance(
 						GeneralSettingSpecConstants.PORT.newSetting(
 								Port.newInstance(CHAINED_SOCKS_SERVER_PORT_1)),
 						ChainingGeneralSettingSpecConstants.CHAINING_SOCKS_SERVER_URI.newSetting(
 								Scheme.SOCKS5.newSocksServerUri(
 										InetAddress.getLoopbackAddress().getHostAddress(), 
 										Integer.valueOf(CHAINED_SOCKS_SERVER_PORT_2))))),
-				ImmutableConfiguration.newInstance(Settings.newInstance(
+				Configuration.newUnmodifiableInstance(Settings.newInstance(
 						GeneralSettingSpecConstants.PORT.newSetting(
 								Port.newInstance(CHAINED_SOCKS_SERVER_PORT_2)),
 						ChainingGeneralSettingSpecConstants.CHAINING_SOCKS_SERVER_URI.newSetting(
 								Scheme.SOCKS5.newSocksServerUri(
 										InetAddress.getLoopbackAddress().getHostAddress(), 
 										Integer.valueOf(CHAINED_SOCKS_SERVER_PORT_3))))),
-				ImmutableConfiguration.newInstance(Settings.newInstance(
+				Configuration.newUnmodifiableInstance(Settings.newInstance(
 						GeneralSettingSpecConstants.PORT.newSetting(
 								Port.newInstance(CHAINED_SOCKS_SERVER_PORT_3)))));
 	}
 	
 	private static List<Configuration> newChainedConfigurationsUsingSocks5Userpassauth() {
 		return Arrays.asList(
-				ImmutableConfiguration.newInstance(Settings.newInstance(
+				Configuration.newUnmodifiableInstance(Settings.newInstance(
 						GeneralSettingSpecConstants.PORT.newSetting(
 								Port.newInstance(CHAINED_SOCKS_SERVER_PORT_1_USING_SOCKS5_USERPASSAUTH)),
 						Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
@@ -113,7 +110,7 @@ public class ChainingIT {
 								"Jasmine"),
 						ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_USERPASSAUTH_PASSWORD.newSetting(
 								EncryptedPassword.newInstance("mission:impossible".toCharArray())))),
-				ImmutableConfiguration.newInstance(Settings.newInstance(
+				Configuration.newUnmodifiableInstance(Settings.newInstance(
 						GeneralSettingSpecConstants.PORT.newSetting(
 								Port.newInstance(CHAINED_SOCKS_SERVER_PORT_2_USING_SOCKS5_USERPASSAUTH)),
 						Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
@@ -131,7 +128,7 @@ public class ChainingIT {
 								"Abu"),
 						ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_USERPASSAUTH_PASSWORD.newSetting(
 								EncryptedPassword.newInstance("safeDriversSave40%".toCharArray())))),
-				ImmutableConfiguration.newInstance(Settings.newInstance(
+				Configuration.newUnmodifiableInstance(Settings.newInstance(
 						GeneralSettingSpecConstants.PORT.newSetting(
 								Port.newInstance(CHAINED_SOCKS_SERVER_PORT_3_USING_SOCKS5_USERPASSAUTH)),
 						Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
@@ -143,7 +140,7 @@ public class ChainingIT {
 	
 	private static List<Configuration> newChainedConfigurationsUsingSsl() {
 		return Arrays.asList(
-				ImmutableConfiguration.newInstance(Settings.newInstance(
+				Configuration.newUnmodifiableInstance(Settings.newInstance(
 						GeneralSettingSpecConstants.PORT.newSetting(
 								Port.newInstance(CHAINED_SOCKS_SERVER_PORT_1_USING_SSL)),
 						ChainingGeneralSettingSpecConstants.CHAINING_SOCKS_SERVER_URI.newSetting(
@@ -164,7 +161,7 @@ public class ChainingIT {
 						ChainingSslSettingSpecConstants.CHAINING_SSL_TRUST_STORE_PASSWORD.newSettingOfParsableValue(
 								ResourceHelper.getResourceAsString(
 										ResourceNameConstants.JARGYLE_COMMON_SECURITY_SERVER_KEY_STORE_PASSWORD_FILE)))),
-				ImmutableConfiguration.newInstance(Settings.newInstance(
+				Configuration.newUnmodifiableInstance(Settings.newInstance(
 						GeneralSettingSpecConstants.PORT.newSetting(
 								Port.newInstance(CHAINED_SOCKS_SERVER_PORT_2_USING_SSL)),
 						DtlsSettingSpecConstants.DTLS_ENABLED.newSetting(Boolean.TRUE),
@@ -269,20 +266,20 @@ public class ChainingIT {
 	
 	private static List<Configuration> newConfigurations() {
 		return Arrays.asList(
-				ImmutableConfiguration.newInstance(Settings.newInstance(
+				Configuration.newUnmodifiableInstance(Settings.newInstance(
 						GeneralSettingSpecConstants.PORT.newSetting(
 								Port.newInstance(SOCKS_SERVER_PORT_1)))),
-				ImmutableConfiguration.newInstance(Settings.newInstance(
+				Configuration.newUnmodifiableInstance(Settings.newInstance(
 						GeneralSettingSpecConstants.PORT.newSetting(
 								Port.newInstance(SOCKS_SERVER_PORT_2)))),
-				ImmutableConfiguration.newInstance(Settings.newInstance(
+				Configuration.newUnmodifiableInstance(Settings.newInstance(
 						GeneralSettingSpecConstants.PORT.newSetting(
 								Port.newInstance(SOCKS_SERVER_PORT_3)))));
 	}
 	
 	private static List<Configuration> newConfigurationsUsingSocks5Userpassauth() {
 		return Arrays.asList(
-				ImmutableConfiguration.newInstance(Settings.newInstance(
+				Configuration.newUnmodifiableInstance(Settings.newInstance(
 						GeneralSettingSpecConstants.PORT.newSetting(
 								Port.newInstance(SOCKS_SERVER_PORT_1_USING_SOCKS5_USERPASSAUTH)),
 						Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
@@ -290,7 +287,7 @@ public class ChainingIT {
 						Socks5SettingSpecConstants.SOCKS5_USERPASSAUTH_USER_REPOSITORY.newSetting(
 								new StringSourceUserRepository(
 										"Aladdin:opensesame")))),
-				ImmutableConfiguration.newInstance(Settings.newInstance(
+				Configuration.newUnmodifiableInstance(Settings.newInstance(
 						GeneralSettingSpecConstants.PORT.newSetting(
 								Port.newInstance(SOCKS_SERVER_PORT_2_USING_SOCKS5_USERPASSAUTH)),
 						Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
@@ -298,7 +295,7 @@ public class ChainingIT {
 						Socks5SettingSpecConstants.SOCKS5_USERPASSAUTH_USER_REPOSITORY.newSetting(
 								new StringSourceUserRepository(
 										"Jasmine:mission%3Aimpossible")))),
-				ImmutableConfiguration.newInstance(Settings.newInstance(
+				Configuration.newUnmodifiableInstance(Settings.newInstance(
 						GeneralSettingSpecConstants.PORT.newSetting(
 								Port.newInstance(SOCKS_SERVER_PORT_3_USING_SOCKS5_USERPASSAUTH)),
 						Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
@@ -310,10 +307,10 @@ public class ChainingIT {
 	
 	private static List<Configuration> newConfigurationsUsingSsl() {
 		return Arrays.asList(
-				ImmutableConfiguration.newInstance(Settings.newInstance(
+				Configuration.newUnmodifiableInstance(Settings.newInstance(
 						GeneralSettingSpecConstants.PORT.newSetting(
 								Port.newInstance(SOCKS_SERVER_PORT_1_USING_SSL)))),
-				ImmutableConfiguration.newInstance(Settings.newInstance(
+				Configuration.newUnmodifiableInstance(Settings.newInstance(
 						GeneralSettingSpecConstants.PORT.newSetting(
 								Port.newInstance(SOCKS_SERVER_PORT_2_USING_SSL)),
 						DtlsSettingSpecConstants.DTLS_ENABLED.newSetting(Boolean.TRUE),

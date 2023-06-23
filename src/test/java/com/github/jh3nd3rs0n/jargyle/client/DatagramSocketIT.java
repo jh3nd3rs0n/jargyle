@@ -10,7 +10,6 @@ import org.junit.Test;
 
 import com.github.jh3nd3rs0n.jargyle.TestStringConstants;
 import com.github.jh3nd3rs0n.jargyle.ThreadHelper;
-import com.github.jh3nd3rs0n.jargyle.server.DatagramEchoServer;
 
 public class DatagramSocketIT {
 	

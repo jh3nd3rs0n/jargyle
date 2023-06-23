@@ -139,7 +139,7 @@
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<version>2.9</version>
 				<configuration>
-					<excludePackageNames>com.github.jh3nd3rs0n.argmatey,com.github.jh3nd3rs0n.jargyle.client.internal.*,com.github.jh3nd3rs0n.jargyle.internal.*,com.github.jh3nd3rs0n.jargyle.common.security.internal.*,com.github.jh3nd3rs0n.jargyle.server.internal.*,com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.internal.*</excludePackageNames>
+					<excludePackageNames>com.github.jh3nd3rs0n.argmatey,*.internal</excludePackageNames>
 					<source>9</source>
 				</configuration>
 			</plugin>

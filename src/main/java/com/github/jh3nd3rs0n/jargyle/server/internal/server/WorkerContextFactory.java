@@ -20,7 +20,6 @@ import com.github.jh3nd3rs0n.jargyle.server.FirewallAction;
 import com.github.jh3nd3rs0n.jargyle.server.GeneralRuleArgSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.GeneralRuleResultSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.GeneralSettingSpecConstants;
-import com.github.jh3nd3rs0n.jargyle.server.ImmutableConfiguration;
 import com.github.jh3nd3rs0n.jargyle.server.LogAction;
 import com.github.jh3nd3rs0n.jargyle.server.NonnegativeIntegerLimit;
 import com.github.jh3nd3rs0n.jargyle.server.Rule;
@@ -197,7 +196,7 @@ final class WorkerContextFactory {
 	}
 	
 	private Configuration newConfiguration() {
-		Configuration config = ImmutableConfiguration.newInstance(
+		Configuration config = Configuration.newUnmodifiableInstance(
 				this.configuration);
 		this.lock.lock();
 		try {

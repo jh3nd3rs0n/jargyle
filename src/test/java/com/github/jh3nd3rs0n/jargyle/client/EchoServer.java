@@ -10,7 +10,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import com.github.jh3nd3rs0n.jargyle.IoHelper;
-import com.github.jh3nd3rs0n.jargyle.common.throwable.ThrowableHelper;
+import com.github.jh3nd3rs0n.jargyle.internal.throwable.ThrowableHelper;
 import com.github.jh3nd3rs0n.jargyle.server.internal.concurrent.ExecutorHelper;
 
 public final class EchoServer {

@@ -17,8 +17,8 @@ import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.common.net.PortRange;
 import com.github.jh3nd3rs0n.jargyle.common.net.PortRanges;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
-import com.github.jh3nd3rs0n.jargyle.common.throwable.ThrowableHelper;
 import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.SslSocketFactory;
+import com.github.jh3nd3rs0n.jargyle.internal.throwable.ThrowableHelper;
 
 public abstract class SocksClient {
 

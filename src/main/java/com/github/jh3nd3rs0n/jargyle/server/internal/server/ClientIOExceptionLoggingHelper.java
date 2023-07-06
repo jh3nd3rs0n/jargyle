@@ -7,7 +7,7 @@ import java.net.SocketTimeoutException;
 
 import org.slf4j.Logger;
 
-import com.github.jh3nd3rs0n.jargyle.common.throwable.ThrowableHelper;
+import com.github.jh3nd3rs0n.jargyle.internal.throwable.ThrowableHelper;
 import com.github.jh3nd3rs0n.jargyle.transport.SocksException;
 
 public final class ClientIOExceptionLoggingHelper {

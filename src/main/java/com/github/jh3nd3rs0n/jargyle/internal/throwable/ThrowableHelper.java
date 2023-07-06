@@ -1,4 +1,4 @@
-package com.github.jh3nd3rs0n.jargyle.common.throwable;
+package com.github.jh3nd3rs0n.jargyle.internal.throwable;
 
 public final class ThrowableHelper {
 	

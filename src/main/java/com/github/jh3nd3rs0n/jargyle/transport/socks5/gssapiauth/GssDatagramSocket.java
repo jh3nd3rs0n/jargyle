@@ -12,9 +12,9 @@ import org.ietf.jgss.GSSContext;
 import org.ietf.jgss.GSSException;
 import org.ietf.jgss.MessageProp;
 
-import com.github.jh3nd3rs0n.jargyle.common.net.FilterDatagramSocket;
+import com.github.jh3nd3rs0n.jargyle.internal.net.FilterDatagramSocket;
 
-public final class GssDatagramSocket extends FilterDatagramSocket {
+final class GssDatagramSocket extends FilterDatagramSocket {
 
 	private final GSSContext gssContext;
 	private final MessageProp messageProp;

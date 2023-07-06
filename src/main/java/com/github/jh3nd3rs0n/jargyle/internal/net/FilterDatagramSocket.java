@@ -1,4 +1,4 @@
-package com.github.jh3nd3rs0n.jargyle.common.net;
+package com.github.jh3nd3rs0n.jargyle.internal.net;
 
 import java.io.IOException;
 import java.net.DatagramPacket;

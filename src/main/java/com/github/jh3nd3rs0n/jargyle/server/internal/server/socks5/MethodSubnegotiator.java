@@ -24,7 +24,6 @@ import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.UserRepository;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.MethodEncapsulation;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.MethodSubnegotiationException;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.gssapiauth.GssSocket;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.gssapiauth.GssapiMethodEncapsulation;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.gssapiauth.Message;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.gssapiauth.MessageType;
@@ -200,9 +199,8 @@ abstract class MethodSubnegotiator {
 				throw new MethodSubnegotiationException(this.getMethod(), e);				
 			}
 			MessageProp msgProp = protectionLevelChoice.getMessageProp();
-			GssSocket gssSocket = new GssSocket(socket, context, msgProp);
 			MethodEncapsulation methodEncapsulation = 
-					new GssapiMethodEncapsulation(gssSocket);
+					new GssapiMethodEncapsulation(socket, context, msgProp);
 			return new MethodSubnegotiationResults(
 					this.getMethod(), methodEncapsulation, user);
 		}

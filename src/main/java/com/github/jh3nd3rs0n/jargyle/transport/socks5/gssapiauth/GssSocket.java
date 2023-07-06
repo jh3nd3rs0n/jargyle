@@ -14,9 +14,9 @@ import org.ietf.jgss.GSSContext;
 import org.ietf.jgss.GSSException;
 import org.ietf.jgss.MessageProp;
 
-import com.github.jh3nd3rs0n.jargyle.common.net.FilterSocket;
+import com.github.jh3nd3rs0n.jargyle.internal.net.FilterSocket;
 
-public final class GssSocket extends FilterSocket {
+final class GssSocket extends FilterSocket {
 
 	private static final class GssUnwrappedInputStream extends InputStream {
 		

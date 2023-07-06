@@ -9,7 +9,7 @@ import java.net.Socket;
 import java.net.SocketAddress;
 
 import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
-import com.github.jh3nd3rs0n.jargyle.common.net.FilterSocket;
+import com.github.jh3nd3rs0n.jargyle.internal.net.FilterSocket;
 
 public final class SocksClientExceptionThrowingSocket extends FilterSocket {
 

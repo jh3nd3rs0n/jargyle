@@ -5,7 +5,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
 
-import com.github.jh3nd3rs0n.jargyle.common.net.FilterDatagramSocket;
+import com.github.jh3nd3rs0n.jargyle.internal.net.FilterDatagramSocket;
 
 public final class BandwidthLimitedDatagramSocket extends FilterDatagramSocket {
 

@@ -12,6 +12,7 @@ import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Marshaller;
+import jakarta.xml.bind.PropertyException;
 import jakarta.xml.bind.SchemaOutputResolver;
 import jakarta.xml.bind.Unmarshaller;
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -27,18 +28,38 @@ import jakarta.xml.bind.helpers.DefaultValidationEventHandler;
 public class ConfigurationXml {
 
 	public static ConfigurationXml newInstanceFromXml(
-			final InputStream in) throws JAXBException {
-		JAXBContext jaxbContext = JAXBContext.newInstance(
-				ConfigurationXml.class);
-		Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-		unmarshaller.setEventHandler(new DefaultValidationEventHandler());
-		return (ConfigurationXml) unmarshaller.unmarshal(in);
+			final InputStream in) throws IOException {
+		JAXBContext jaxbContext = null;
+		try {
+			jaxbContext = JAXBContext.newInstance(ConfigurationXml.class);
+		} catch (JAXBException e) {
+			throw new AssertionError(e);
+		}
+		Unmarshaller unmarshaller = null;
+		try {
+			unmarshaller = jaxbContext.createUnmarshaller();
+		} catch (JAXBException e) {
+			throw new AssertionError(e);
+		}
+		try {
+			unmarshaller.setEventHandler(new DefaultValidationEventHandler());
+		} catch (JAXBException e) {
+			throw new AssertionError(e);
+		}
+		try {
+			return (ConfigurationXml) unmarshaller.unmarshal(in);
+		} catch (JAXBException e) {
+			throw new IOException(e);
+		}
 	}
 	
-	public static void writeXsdTo(
-			final OutputStream out) throws JAXBException, IOException {
-		JAXBContext jaxbContext = JAXBContext.newInstance(
-				ConfigurationXml.class);
+	public static void writeXsdTo(final OutputStream out) throws IOException {
+		JAXBContext jaxbContext = null;
+		try {
+			jaxbContext = JAXBContext.newInstance(ConfigurationXml.class);
+		} catch (JAXBException e) {
+			throw new AssertionError(e);
+		}
 		jaxbContext.generateSchema(new SchemaOutputResolver() {
 
 			@Override
@@ -67,12 +88,29 @@ public class ConfigurationXml {
 				this.settingsXml.toSettings());
 	}
 	
-	public void toXml(final OutputStream out) throws JAXBException {
-		JAXBContext jaxbContext = JAXBContext.newInstance(
-				ConfigurationXml.class);
-		Marshaller marshaller = jaxbContext.createMarshaller();
-		marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-		marshaller.marshal(this, out);
+	public void toXml(final OutputStream out) throws IOException {
+		JAXBContext jaxbContext = null;
+		try {
+			jaxbContext = JAXBContext.newInstance(ConfigurationXml.class);
+		} catch (JAXBException e) {
+			throw new AssertionError(e);
+		}
+		Marshaller marshaller = null;
+		try {
+			marshaller = jaxbContext.createMarshaller();
+		} catch (JAXBException e) {
+			throw new AssertionError(e);
+		}
+		try {
+			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+		} catch (PropertyException e) {
+			throw new AssertionError(e);
+		}
+		try {
+			marshaller.marshal(this, out);
+		} catch (JAXBException e) {
+			throw new IOException(e);
+		}
 	}
 	
 }

@@ -120,7 +120,7 @@ public abstract class ServerConfigurationCLI extends CLI {
 					file));			
 		}
 		ConfigurationRepository configurationRepository =
-				ConfigurationRepositoryHelper.newConfigurationRepository(f);
+				ConfigurationRepositoryHelper.newFileSourceConfigurationRepository(f);
 		Configuration configuration = configurationRepository.get();
 		this.configuration.addSettings(configuration.getSettings());
 	}

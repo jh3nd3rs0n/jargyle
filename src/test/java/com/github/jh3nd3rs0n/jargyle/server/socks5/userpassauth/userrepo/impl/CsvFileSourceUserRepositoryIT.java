@@ -48,14 +48,14 @@ public class CsvFileSourceUserRepositoryIT {
 	public void testForUpdatedUsersCsvFile01() throws IOException {
 		File usrsCsvFile = this.usersCsvFile.toFile();
 		IoHelper.writeStringToFile(ResourceHelper.getResourceAsString(
-				ResourceNameConstants.JARGYLE_SERVER_SOCKS5_USERPASSAUTH_EMPTY_USERS_CSV_FILE), 
+				ResourceNameConstants.JARGYLE_SERVER_SOCKS5_USERPASSAUTH_USERREPO_IMPL_EMPTY_USERS_CSV_FILE), 
 				usrsCsvFile);
 		ThreadHelper.sleepForThreeSeconds();
 		this.csvFileSourceUserRepository = 
 				CsvFileSourceUserRepository.newInstance(usrsCsvFile.toString());
 		ThreadHelper.sleepForThreeSeconds();
 		IoHelper.writeStringToFile(ResourceHelper.getResourceAsString(
-				ResourceNameConstants.JARGYLE_SERVER_SOCKS5_USERPASSAUTH_USERS_CSV_FILE), 
+				ResourceNameConstants.JARGYLE_SERVER_SOCKS5_USERPASSAUTH_USERREPO_IMPL_USERS_CSV_FILE), 
 				usrsCsvFile);
 		ThreadHelper.sleepForThreeSeconds();
 		/* 
@@ -72,14 +72,14 @@ public class CsvFileSourceUserRepositoryIT {
 	public void testForUpdatedUsersCsvFile02() throws IOException {
 		File usrsCsvFile = this.usersCsvFile.toFile();
 		IoHelper.writeStringToFile(ResourceHelper.getResourceAsString(
-				ResourceNameConstants.JARGYLE_SERVER_SOCKS5_USERPASSAUTH_USERS_CSV_FILE), 
+				ResourceNameConstants.JARGYLE_SERVER_SOCKS5_USERPASSAUTH_USERREPO_IMPL_USERS_CSV_FILE), 
 				usrsCsvFile);
 		ThreadHelper.sleepForThreeSeconds();
 		this.csvFileSourceUserRepository = 
 				CsvFileSourceUserRepository.newInstance(usrsCsvFile.toString());
 		ThreadHelper.sleepForThreeSeconds();
 		IoHelper.writeStringToFile(ResourceHelper.getResourceAsString(
-				ResourceNameConstants.JARGYLE_SERVER_SOCKS5_USERPASSAUTH_ADDED_USER_TO_USERS_CSV_FILE), 
+				ResourceNameConstants.JARGYLE_SERVER_SOCKS5_USERPASSAUTH_USERREPO_IMPL_ADDED_USER_TO_USERS_CSV_FILE), 
 				usrsCsvFile);
 		ThreadHelper.sleepForThreeSeconds();
 		/* 

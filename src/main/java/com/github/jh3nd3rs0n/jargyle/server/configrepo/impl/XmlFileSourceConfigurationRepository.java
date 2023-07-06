@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
@@ -24,8 +23,6 @@ import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.configrepo.impl.internal.config.xml.bind.ConfigurationXml;
 import com.github.jh3nd3rs0n.jargyle.server.internal.io.FileMonitor;
 import com.github.jh3nd3rs0n.jargyle.server.internal.io.FileStatusListener;
-
-import jakarta.xml.bind.JAXBException;
 
 public final class XmlFileSourceConfigurationRepository 
 	extends ConfigurationRepository {
@@ -101,8 +98,8 @@ public final class XmlFileSourceConfigurationRepository
 			configurationXml = ConfigurationXml.newInstanceFromXml(in);
 		} catch (FileNotFoundException e) {
 			throw new UncheckedIOException(e);
-		} catch (JAXBException e) {
-			throw new UncheckedIOException(new IOException(e));
+		} catch (IOException e) {
+			throw new UncheckedIOException(e);
 		} finally {
 			if (in != null) {
 				try {
@@ -126,8 +123,8 @@ public final class XmlFileSourceConfigurationRepository
 			configurationXml.toXml(out);
 		} catch (FileNotFoundException e) {
 			throw new UncheckedIOException(e);
-		} catch (JAXBException e) {
-			throw new UncheckedIOException(new IOException(e));
+		} catch (IOException e) {
+			throw new UncheckedIOException(e);
 		} finally {
 			if (out != null) {
 				try {
@@ -145,15 +142,6 @@ public final class XmlFileSourceConfigurationRepository
 					StandardCopyOption.REPLACE_EXISTING);
 		} catch (IOException e) {
 			throw new UncheckedIOException(e);
-		}
-	}
-	
-	public static void writeSchemaTo(
-			final OutputStream out) throws IOException {
-		try {
-			ConfigurationXml.writeXsdTo(out);
-		} catch (JAXBException e) {
-			throw new AssertionError(e);
 		}
 	}
 	

@@ -63,9 +63,9 @@ public class ServerConfigurationFileCreatorCLIIT {
 	public void testMainForCombiningConfigurationFiles() throws IOException {
 		String[] args = new String[] {
 				"--config-file=".concat(ResourceHelper.getResourceAsFile(
-						ResourceNameConstants.JARGYLE_SERVER_CONFIGURATION_FILE).getAbsolutePath()),
+						ResourceNameConstants.JARGYLE_SERVER_CONFIGREPO_IMPL_CONFIGURATION_FILE).getAbsolutePath()),
 				"--config-file=".concat(ResourceHelper.getResourceAsFile(
-						ResourceNameConstants.JARGYLE_SERVER_SUPPLEMENTED_CONFIGURATION_FILE).getAbsolutePath()),
+						ResourceNameConstants.JARGYLE_SERVER_CONFIGREPO_IMPL_SUPPLEMENTED_CONFIGURATION_FILE).getAbsolutePath()),
 				this.combinedConfigurationFile.toAbsolutePath().toString()
 		};
 		CLI cli = new ServerConfigurationFileCreatorCLI(null, null, args, false);
@@ -76,7 +76,7 @@ public class ServerConfigurationFileCreatorCLIIT {
 		ThreadHelper.sleepForThreeSeconds();		
 		String expectedCombinedConfigurationFileContents =
 				ResourceHelper.getResourceAsString(
-						ResourceNameConstants.JARGYLE_SERVER_COMBINED_CONFIGURATION_FILE).replace(
+						ResourceNameConstants.JARGYLE_SERVER_CONFIGREPO_IMPL_COMBINED_CONFIGURATION_FILE).replace(
 								"\r\n", "\n").trim();
 		String actualCombinedConfigurationFileContents =
 				IoHelper.readStringFrom(this.combinedConfigurationFile.toFile()).replace(
@@ -102,7 +102,7 @@ public class ServerConfigurationFileCreatorCLIIT {
 		ThreadHelper.sleepForThreeSeconds();		
 		String expectedConfigurationFileContents =
 				ResourceHelper.getResourceAsString(
-						ResourceNameConstants.JARGYLE_SERVER_CONFIGURATION_FILE).replace(
+						ResourceNameConstants.JARGYLE_SERVER_CONFIGREPO_IMPL_CONFIGURATION_FILE).replace(
 								"\r\n", "\n").trim();
 		String actualConfigurationFileContents =
 				IoHelper.readStringFrom(this.configurationFile.toFile()).replace(
@@ -125,7 +125,7 @@ public class ServerConfigurationFileCreatorCLIIT {
 		ThreadHelper.sleepForThreeSeconds();		
 		String expectedEmptyConfigurationFileContents =
 				ResourceHelper.getResourceAsString(
-						ResourceNameConstants.JARGYLE_SERVER_EMPTY_CONFIGURATION_FILE).replace(
+						ResourceNameConstants.JARGYLE_SERVER_CONFIGREPO_IMPL_EMPTY_CONFIGURATION_FILE).replace(
 								"\r\n", "\n").trim();
 		String actualEmptyConfigurationFileContents =
 				IoHelper.readStringFrom(this.emptyConfigurationFile.toFile()).replace(
@@ -139,7 +139,7 @@ public class ServerConfigurationFileCreatorCLIIT {
 	public void testMainForSupplementingAConfigurationFile() throws IOException {
 		String[] args = new String[] {
 				"--config-file=".concat(ResourceHelper.getResourceAsFile(
-						ResourceNameConstants.JARGYLE_SERVER_CONFIGURATION_FILE).getAbsolutePath()),
+						ResourceNameConstants.JARGYLE_SERVER_CONFIGREPO_IMPL_CONFIGURATION_FILE).getAbsolutePath()),
 				"--setting=socksServerSocketSettings=SO_TIMEOUT=0",
 				this.supplementedConfigurationFile.toAbsolutePath().toString()
 		};
@@ -151,7 +151,7 @@ public class ServerConfigurationFileCreatorCLIIT {
 		ThreadHelper.sleepForThreeSeconds();		
 		String expectedSupplementedConfigurationFileContents =
 				ResourceHelper.getResourceAsString(
-						ResourceNameConstants.JARGYLE_SERVER_SUPPLEMENTED_CONFIGURATION_FILE).replace(
+						ResourceNameConstants.JARGYLE_SERVER_CONFIGREPO_IMPL_SUPPLEMENTED_CONFIGURATION_FILE).replace(
 								"\r\n", "\n").trim();
 		String actualSupplementedConfigurationFileContents =
 				IoHelper.readStringFrom(this.supplementedConfigurationFile.toFile()).replace(

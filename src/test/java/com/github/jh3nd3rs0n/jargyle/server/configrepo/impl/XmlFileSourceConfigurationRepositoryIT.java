@@ -53,14 +53,14 @@ public class XmlFileSourceConfigurationRepositoryIT {
 	public void testForUpdatedConfigurationFile01() throws IOException {
 		File configFile = this.configurationFile.toFile();
 		IoHelper.writeStringToFile(ResourceHelper.getResourceAsString(
-				ResourceNameConstants.JARGYLE_SERVER_EMPTY_CONFIGURATION_FILE), 
+				ResourceNameConstants.JARGYLE_SERVER_CONFIGREPO_IMPL_EMPTY_CONFIGURATION_FILE), 
 				configFile);
 		ThreadHelper.sleepForThreeSeconds();		
 		this.xmlFileSourceConfigurationRepository = 
 				XmlFileSourceConfigurationRepository.newInstance(configFile);
 		ThreadHelper.sleepForThreeSeconds();
 		IoHelper.writeStringToFile(ResourceHelper.getResourceAsString(
-				ResourceNameConstants.JARGYLE_SERVER_CONFIGURATION_FILE), 
+				ResourceNameConstants.JARGYLE_SERVER_CONFIGREPO_IMPL_CONFIGURATION_FILE), 
 				configFile);
 		ThreadHelper.sleepForThreeSeconds();
 		/* 
@@ -82,14 +82,14 @@ public class XmlFileSourceConfigurationRepositoryIT {
 	public void testForUpdatedConfigurationFile02() throws IOException {
 		File configFile = this.configurationFile.toFile();
 		IoHelper.writeStringToFile(ResourceHelper.getResourceAsString(
-				ResourceNameConstants.JARGYLE_SERVER_EMPTY_CONFIGURATION_FILE), 
+				ResourceNameConstants.JARGYLE_SERVER_CONFIGREPO_IMPL_EMPTY_CONFIGURATION_FILE), 
 				configFile);
 		ThreadHelper.sleepForThreeSeconds();		
 		this.xmlFileSourceConfigurationRepository = 
 				XmlFileSourceConfigurationRepository.newInstance(configFile);
 		ThreadHelper.sleepForThreeSeconds();
 		IoHelper.writeStringToFile(ResourceHelper.getResourceAsString(
-				ResourceNameConstants.JARGYLE_SERVER_CONFIGURATION_FILE), 
+				ResourceNameConstants.JARGYLE_SERVER_CONFIGREPO_IMPL_CONFIGURATION_FILE), 
 				configFile);
 		ThreadHelper.sleepForThreeSeconds();
 		/* 

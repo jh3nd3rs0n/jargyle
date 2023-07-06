@@ -12,6 +12,7 @@ import com.github.jh3nd3rs0n.argmatey.ArgMatey.CLI;
 import com.github.jh3nd3rs0n.argmatey.ArgMatey.OptionType;
 import com.github.jh3nd3rs0n.argmatey.ArgMatey.TerminationRequestedException;
 import com.github.jh3nd3rs0n.jargyle.internal.help.HelpText;
+import com.github.jh3nd3rs0n.jargyle.server.configrepo.impl.internal.config.xml.bind.ConfigurationXml;
 
 public final class JargyleCLI extends CLI {
 
@@ -73,8 +74,7 @@ public final class JargyleCLI extends CLI {
 					final boolean posixCorrect)
 					throws TerminationRequestedException {
 				try {
-					ConfigurationRepositoryHelper.writeConfigurationSchemaTo(
-							System.out);
+					ConfigurationXml.writeXsdTo(System.out);
 				} catch (IOException e) {
 					throw new AssertionError(e);
 				}

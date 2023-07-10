@@ -1,4 +1,4 @@
-package com.github.jh3nd3rs0n.jargyle.common.number;
+package com.github.jh3nd3rs0n.jargyle.common.lang;
 
 public final class NonnegativeInteger {
 

@@ -1,9 +1,10 @@
 package com.github.jh3nd3rs0n.jargyle.server.configrepo.impl.internal.config.xml.bind;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import com.github.jh3nd3rs0n.jargyle.common.text.Values;
+import com.github.jh3nd3rs0n.jargyle.common.lang.Strings;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -21,24 +22,18 @@ class ValuesXml extends ValueXml {
 		this.values = new ArrayList<String>();
 	}
 	
-	public ValuesXml(final Values vals) {
-		this.values = new ArrayList<String>();
-		for (String val : vals.toStringArray()) {
-			this.values.add(val);
-		}
+	public ValuesXml(final Strings vals) {
+		this.values = new ArrayList<String>(Arrays.asList(vals.toArray()));
 	}
 	
-	public Values toValues() {
-		List<String> vals = new ArrayList<String>();
-		for (String value : this.values) {
-			vals.add(value);
-		}
-		return Values.newInstance(vals.toArray(new String[vals.size()]));
+	public Strings toStrings() {
+		return Strings.newInstance(this.values.toArray(
+				new String[this.values.size()]));
 	}
 	
 	@Override
 	public Object toValue() {
-		return this.toValues();
+		return this.toStrings();
 	}
 
 }

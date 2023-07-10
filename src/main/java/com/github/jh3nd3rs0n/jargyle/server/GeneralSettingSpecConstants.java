@@ -3,11 +3,11 @@ package com.github.jh3nd3rs0n.jargyle.server;
 import java.util.List;
 import java.util.Map;
 
+import com.github.jh3nd3rs0n.jargyle.common.lang.NonnegativeInteger;
 import com.github.jh3nd3rs0n.jargyle.common.net.Host;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.common.net.PortRanges;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
-import com.github.jh3nd3rs0n.jargyle.common.number.NonnegativeInteger;
 import com.github.jh3nd3rs0n.jargyle.internal.help.HelpText;
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.HostSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.LogActionSettingSpec;

@@ -18,12 +18,12 @@ import java.util.Objects;
 import java.util.Set;
 
 import com.github.jh3nd3rs0n.jargyle.client.SocksClient.ClientSocketConnectParams;
+import com.github.jh3nd3rs0n.jargyle.common.lang.NonnegativeInteger;
+import com.github.jh3nd3rs0n.jargyle.common.lang.PositiveInteger;
 import com.github.jh3nd3rs0n.jargyle.common.net.PerformancePreferences;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.common.net.StandardSocketSettingSpecConstants;
-import com.github.jh3nd3rs0n.jargyle.common.number.NonnegativeInteger;
-import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
 import com.github.jh3nd3rs0n.jargyle.internal.net.AllZerosAddressConstants;
 import com.github.jh3nd3rs0n.jargyle.internal.net.FilterSocket;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.AddressType;

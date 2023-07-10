@@ -1,19 +1,11 @@
-package com.github.jh3nd3rs0n.jargyle.common.number;
+package com.github.jh3nd3rs0n.jargyle.common.lang;
 
-import java.io.EOFException;
-import java.io.IOException;
-import java.io.InputStream;
+public final class PositiveInteger {
 
-public final class UnsignedByte {
-
-	public static final int MAX_INT_VALUE = 0xff;
-	public static final int MIN_INT_VALUE = 0;
+	public static final int MAX_INT_VALUE = Integer.MAX_VALUE;
+	public static final int MIN_INT_VALUE = 1;
 	
-	public static UnsignedByte newInstance(final byte b) {
-		return newInstance(b & MAX_INT_VALUE);
-	}
-	
-	public static UnsignedByte newInstance(final int i) {
+	public static PositiveInteger newInstance(final int i) {
 		if (i < MIN_INT_VALUE || i > MAX_INT_VALUE) {
 			throw new IllegalArgumentException(String.format(
 					"expected an integer between %s and %s (inclusive). "
@@ -22,10 +14,10 @@ public final class UnsignedByte {
 					MAX_INT_VALUE,
 					i));
 		}
-		return new UnsignedByte(i);
+		return new PositiveInteger(i);
 	}
 	
-	public static UnsignedByte newInstance(final String s) {
+	public static PositiveInteger newInstance(final String s) {
 		int i;
 		try {
 			i = Integer.parseInt(s);
@@ -41,32 +33,10 @@ public final class UnsignedByte {
 		return newInstance(i);
 	}
 	
-	public static UnsignedByte newInstanceFrom(
-			final InputStream in) throws IOException {
-		UnsignedByte b = nullableFrom(in);
-		if (b == null) {
-			throw new EOFException("the end of the input stream is reached");
-		}
-		return b;
-	}
-	
-	public static UnsignedByte nullableFrom(
-			final InputStream in) throws IOException {
-		int b = in.read();
-		if (b == -1) {
-			return null;
-		}
-		return newInstance(b);
-	}
-	
 	private final int intValue;
 	
-	private UnsignedByte(final int i) {
+	private PositiveInteger(final int i) {
 		this.intValue = i;
-	}
-	
-	public byte byteValue() {
-		return (byte) this.intValue;
 	}
 	
 	@Override
@@ -80,7 +50,7 @@ public final class UnsignedByte {
 		if (this.getClass() != obj.getClass()) {
 			return false;
 		}
-		UnsignedByte other = (UnsignedByte) obj;
+		PositiveInteger other = (PositiveInteger) obj;
 		if (this.intValue != other.intValue) {
 			return false;
 		}
@@ -102,5 +72,5 @@ public final class UnsignedByte {
 	@Override
 	public String toString() {
 		return Integer.toString(this.intValue);
-	}	
+	}
 }

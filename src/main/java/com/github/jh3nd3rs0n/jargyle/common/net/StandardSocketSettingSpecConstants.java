@@ -7,9 +7,9 @@ import java.net.SocketException;
 import java.util.List;
 import java.util.Map;
 
-import com.github.jh3nd3rs0n.jargyle.common.number.NonnegativeInteger;
-import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
-import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
+import com.github.jh3nd3rs0n.jargyle.common.lang.NonnegativeInteger;
+import com.github.jh3nd3rs0n.jargyle.common.lang.PositiveInteger;
+import com.github.jh3nd3rs0n.jargyle.common.lang.UnsignedByte;
 import com.github.jh3nd3rs0n.jargyle.internal.help.HelpText;
 
 public final class StandardSocketSettingSpecConstants {

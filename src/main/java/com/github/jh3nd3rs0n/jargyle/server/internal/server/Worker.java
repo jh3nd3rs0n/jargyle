@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
+import com.github.jh3nd3rs0n.jargyle.common.lang.UnsignedByte;
 import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
 import com.github.jh3nd3rs0n.jargyle.server.internal.server.socks5.Socks5Worker;
 import com.github.jh3nd3rs0n.jargyle.server.internal.server.socks5.Socks5WorkerContext;

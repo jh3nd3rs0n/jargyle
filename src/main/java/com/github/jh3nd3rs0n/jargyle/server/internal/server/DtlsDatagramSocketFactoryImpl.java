@@ -12,8 +12,8 @@ import javax.net.ssl.KeyManager;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 
-import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
-import com.github.jh3nd3rs0n.jargyle.common.text.Values;
+import com.github.jh3nd3rs0n.jargyle.common.lang.PositiveInteger;
+import com.github.jh3nd3rs0n.jargyle.common.lang.Strings;
 import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.DtlsDatagramSocket;
 import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.DtlsDatagramSocketFactory;
 import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.KeyManagerHelper;
@@ -99,15 +99,15 @@ final class DtlsDatagramSocketFactoryImpl extends DtlsDatagramSocketFactory {
 				(DtlsDatagramSocket) factory.newDatagramSocket(datagramSocket);		
 		dtlsDatagramSocket.setUseClientMode(false);
 		Settings settings = this.configuration.getSettings();
-		Values enabledCipherSuites = settings.getLastValue(
+		Strings enabledCipherSuites = settings.getLastValue(
 				DtlsSettingSpecConstants.DTLS_ENABLED_CIPHER_SUITES);
-		String[] cipherSuites = enabledCipherSuites.toStringArray();
+		String[] cipherSuites = enabledCipherSuites.toArray();
 		if (cipherSuites.length > 0) {
 			dtlsDatagramSocket.setEnabledCipherSuites(cipherSuites);
 		}
-		Values enabledProtocols = settings.getLastValue(
+		Strings enabledProtocols = settings.getLastValue(
 				DtlsSettingSpecConstants.DTLS_ENABLED_PROTOCOLS);
-		String[] protocols = enabledProtocols.toStringArray();
+		String[] protocols = enabledProtocols.toArray();
 		if (protocols.length > 0) {
 			dtlsDatagramSocket.setEnabledProtocols(protocols);
 		}

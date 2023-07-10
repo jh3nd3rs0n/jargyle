@@ -11,7 +11,7 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.Arrays;
 
-import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
+import com.github.jh3nd3rs0n.jargyle.common.lang.UnsignedByte;
 
 public final class UsernamePasswordRequest {
 

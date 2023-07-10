@@ -1,6 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.transport.socks5;
 
-import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
+import com.github.jh3nd3rs0n.jargyle.common.lang.UnsignedByte;
 
 public final class CommandNotSupportedException extends Socks5Exception {
 

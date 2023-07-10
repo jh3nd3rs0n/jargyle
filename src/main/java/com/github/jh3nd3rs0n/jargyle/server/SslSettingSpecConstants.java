@@ -4,14 +4,14 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 
+import com.github.jh3nd3rs0n.jargyle.common.lang.Strings;
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
-import com.github.jh3nd3rs0n.jargyle.common.text.Values;
 import com.github.jh3nd3rs0n.jargyle.internal.help.HelpText;
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.BooleanSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.EncryptedPasswordSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.FileSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.StringSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.ValuesSettingSpec;
+import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.StringsSettingSpec;
 
 public final class SslSettingSpecConstants {
 
@@ -32,20 +32,20 @@ public final class SslSettingSpecConstants {
 					+ "enabled for SSL/TLS connections to the SOCKS server",
 			usage = "ssl.enabledCipherSuites=[SSL_CIPHER_SUITE1[ SSL_CIPHER_SUITE2[ ...]]]"
 	)	
-	public static final SettingSpec<Values> SSL_ENABLED_CIPHER_SUITES = 
-			SETTING_SPECS.addThenGet(new ValuesSettingSpec(
+	public static final SettingSpec<Strings> SSL_ENABLED_CIPHER_SUITES = 
+			SETTING_SPECS.addThenGet(new StringsSettingSpec(
 					"ssl.enabledCipherSuites", 
-					Values.newInstance(new String[] { })));
+					Strings.newInstance(new String[] { })));
 	
 	@HelpText(
 			doc = "The space separated list of acceptable protocol versions "
 					+ "enabled for SSL/TLS connections to the SOCKS server",
 			usage = "ssl.enabledProtocols=[SSL_PROTOCOL1[ SSL_PROTOCOL2[ ...]]]"
 	)	
-	public static final SettingSpec<Values> SSL_ENABLED_PROTOCOLS = 
-			SETTING_SPECS.addThenGet(new ValuesSettingSpec(
+	public static final SettingSpec<Strings> SSL_ENABLED_PROTOCOLS = 
+			SETTING_SPECS.addThenGet(new StringsSettingSpec(
 					"ssl.enabledProtocols", 
-					Values.newInstance(new String[] { })));
+					Strings.newInstance(new String[] { })));
 	
 	@HelpText(
 			doc = "The key store file for the SSL/TLS connections to the SOCKS "

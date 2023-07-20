@@ -1,8 +1,9 @@
-package com.github.jh3nd3rs0n.jargyle.client;
+package com.github.jh3nd3rs0n.jargyle.clientserver;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
@@ -10,6 +11,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import com.github.jh3nd3rs0n.jargyle.IoHelper;
+import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
+import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
+import com.github.jh3nd3rs0n.jargyle.common.net.StandardSocketSettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.internal.lang.ThrowableHelper;
 import com.github.jh3nd3rs0n.jargyle.server.internal.concurrent.ExecutorHelper;
 
@@ -77,35 +81,62 @@ public final class EchoServer {
 	}
 	
 	public static final int BACKLOG = 50;
+	public static final InetAddress INET_ADDRESS = InetAddress.getLoopbackAddress();
 	public static final int PORT = 1084;
+	public static final SocketSettings SOCKET_SETTINGS = SocketSettings.newInstance(
+			StandardSocketSettingSpecConstants.SO_REUSEADDR.newSocketSetting(Boolean.TRUE));
 	
-	private int actualPort;
 	private final int backlog;
+	private final InetAddress bindInetAddress;
 	private ExecutorService executor;
-	private final int expectedPort;	
 	private final NetObjectFactory netObjectFactory;
+	private int port;
 	private ServerSocket serverSocket;
+	private final SocketSettings socketSettings;
+	private final int specifiedPort;
 	private State state;
 
 	public EchoServer() {
-		this(NetObjectFactory.getDefault(), PORT, BACKLOG);
+		this(
+				NetObjectFactory.getDefault(), 
+				PORT, 
+				BACKLOG, 
+				INET_ADDRESS, 
+				SOCKET_SETTINGS);
+	}
+	
+	public EchoServer(final NetObjectFactory netObjFactory, final int prt) {
+		this(
+				netObjFactory, 
+				prt, 
+				BACKLOG, 
+				INET_ADDRESS, 
+				SOCKET_SETTINGS);
 	}
 	
 	public EchoServer(
 			final NetObjectFactory netObjFactory, 
 			final int prt, 
-			final int bklog) {
-		this.actualPort = -1;
+			final int bklog,
+			final InetAddress bindInetAddr,
+			final SocketSettings socketSttngs) {
 		this.backlog = bklog;
+		this.bindInetAddress = bindInetAddr;
 		this.executor = null;
-		this.expectedPort = prt;
 		this.netObjectFactory = netObjFactory;
+		this.port = -1;
 		this.serverSocket = null;
+		this.socketSettings = socketSttngs;
+		this.specifiedPort = prt;
 		this.state = State.STOPPED;
 	}
 
+	public InetAddress getInetAddress() {
+		return this.bindInetAddress;
+	}
+	
 	public int getPort() {
-		return this.actualPort;
+		return this.port;
 	}
 	
 	public State getState() {
@@ -114,17 +145,30 @@ public final class EchoServer {
 	
 	public void start() throws IOException {
 		this.serverSocket = this.netObjectFactory.newServerSocket(
-				this.expectedPort, this.backlog);
-		this.actualPort = this.serverSocket.getLocalPort();
+				this.specifiedPort, this.backlog, this.bindInetAddress);
+		this.socketSettings.applyTo(this.serverSocket);
+		this.port = this.serverSocket.getLocalPort();
 		this.executor = Executors.newSingleThreadExecutor();
 		this.executor.execute(new Listener(this.serverSocket));
 		this.state = State.STARTED;
+	}
+	
+	public void startThenExecuteThenStop(
+			final IoRunnable runnable) throws IOException {
+		this.start();
+		try {
+			runnable.run();
+		} finally {
+			if (!this.state.equals(EchoServer.State.STOPPED)) {
+				this.stop();
+			}
+		}
 	}
 
 	public void stop() throws IOException {
 		this.serverSocket.close();
 		this.serverSocket = null;
-		this.actualPort = -1;
+		this.port = -1;
 		this.executor.shutdownNow();
 		this.executor = null;
 		this.state = State.STOPPED;

@@ -1,4 +1,4 @@
-package com.github.jh3nd3rs0n.jargyle.client;
+package com.github.jh3nd3rs0n.jargyle.clientserver;
 
 import static org.junit.Assert.assertEquals;
 
@@ -10,7 +10,13 @@ import org.junit.Test;
 import com.github.jh3nd3rs0n.jargyle.ResourceHelper;
 import com.github.jh3nd3rs0n.jargyle.ResourceNameConstants;
 import com.github.jh3nd3rs0n.jargyle.TestStringConstants;
-import com.github.jh3nd3rs0n.jargyle.ThreadHelper;
+import com.github.jh3nd3rs0n.jargyle.client.DtlsPropertySpecConstants;
+import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
+import com.github.jh3nd3rs0n.jargyle.client.Properties;
+import com.github.jh3nd3rs0n.jargyle.client.Scheme;
+import com.github.jh3nd3rs0n.jargyle.client.Socks5PropertySpecConstants;
+import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
+import com.github.jh3nd3rs0n.jargyle.client.SslPropertySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.common.lang.NonnegativeInteger;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
@@ -226,7 +232,7 @@ public class SocksServerStressIT {
 	
 	//@org.junit.Ignore
 	@Test
-	public void testSocks5DatagramSockets() throws IOException {
+	public void testDatagramEchoClientsBehindSocks5Server() throws IOException {
 		System.out.printf("Running %s%n", Thread.currentThread().getStackTrace()[1].getMethodName());
 		SocksServer socksServer = new SocksServer(newConfiguration());
 		DatagramEchoServer datagramEchoServer = new DatagramEchoServer();
@@ -235,9 +241,9 @@ public class SocksServerStressIT {
 			datagramEchoServer.start();
 			IoStressor ioStressor = new IoStressor(DATAGRAM_ECHO_CLIENT_THREAD_COUNT);			
 			IoStressor.Stats stats = ioStressor.executeForEachThread(() -> {
-				new DatagramEchoClient().echoThroughNewDatagramSocket(
-						TestStringConstants.STRING_01, 
-						newSocks5Client().newSocksNetObjectFactory());
+				DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
+						newSocks5Client().newSocksNetObjectFactory()); 
+				datagramEchoClient.echo(TestStringConstants.STRING_01);
 			});
 			stats.print();
 			assertEquals(DATAGRAM_ECHO_CLIENT_THREAD_COUNT, stats.getActualSuccessfulThreadCount());
@@ -248,13 +254,12 @@ public class SocksServerStressIT {
 			if (!socksServer.getState().equals(SocksServer.State.STOPPED)) {
 				socksServer.stop();
 			}
-			ThreadHelper.sleepForThreeSeconds();
 		}
 	}	
 	
 	//@org.junit.Ignore
 	@Test
-	public void testSocks5DatagramSocketsUsingSocks5Userpassauth() throws IOException {
+	public void testDatagramEchoClientsBehindSocks5ServerUsingSocks5Userpassauth() throws IOException {
 		System.out.printf("Running %s%n", Thread.currentThread().getStackTrace()[1].getMethodName());
 		SocksServer socksServerUsingSocks5Userpassauth = new SocksServer(
 				newConfigurationUsingSocks5Userpassauth());
@@ -264,11 +269,11 @@ public class SocksServerStressIT {
 			datagramEchoServer.start();			
 			IoStressor ioStressor = new IoStressor(DATAGRAM_ECHO_CLIENT_THREAD_COUNT);
 			IoStressor.Stats stats = ioStressor.executeForEachThread(() -> {
-				new DatagramEchoClient().echoThroughNewDatagramSocket(
-						TestStringConstants.STRING_01, 
+				DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
 						newSocks5ClientUsingSocks5Userpassauth(
 								"Aladdin",
-								"opensesame".toCharArray()).newSocksNetObjectFactory());
+								"opensesame".toCharArray()).newSocksNetObjectFactory()); 
+				datagramEchoClient.echo(TestStringConstants.STRING_01);
 			});
 			stats.print();
 			assertEquals(DATAGRAM_ECHO_CLIENT_THREAD_COUNT, stats.getActualSuccessfulThreadCount());			
@@ -279,13 +284,12 @@ public class SocksServerStressIT {
 			if (!socksServerUsingSocks5Userpassauth.getState().equals(SocksServer.State.STOPPED)) {
 				socksServerUsingSocks5Userpassauth.stop();
 			}
-			ThreadHelper.sleepForThreeSeconds();
 		}
 	}
 	
 	//@org.junit.Ignore
 	@Test
-	public void testSocks5DatagramSocketsUsingSsl() throws IOException {
+	public void testDatagramEchoClientsBehindSocks5ServerUsingSsl() throws IOException {
 		System.out.printf("Running %s%n", Thread.currentThread().getStackTrace()[1].getMethodName());
 		SocksServer socksServerUsingSsl = new SocksServer(
 				newConfigurationUsingSsl());
@@ -295,9 +299,9 @@ public class SocksServerStressIT {
 			datagramEchoServer.start();
 			IoStressor ioStressor = new IoStressor(DATAGRAM_ECHO_CLIENT_THREAD_COUNT);			
 			IoStressor.Stats stats = ioStressor.executeForEachThread(() -> {
-				new DatagramEchoClient().echoThroughNewDatagramSocket(
-						TestStringConstants.STRING_01, 
-						newSocks5ClientUsingSsl().newSocksNetObjectFactory());
+				DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
+						newSocks5ClientUsingSsl().newSocksNetObjectFactory()); 
+				datagramEchoClient.echo(TestStringConstants.STRING_01);
 			});
 			stats.print();
 			assertEquals(DATAGRAM_ECHO_CLIENT_THREAD_COUNT, stats.getActualSuccessfulThreadCount());			
@@ -308,13 +312,12 @@ public class SocksServerStressIT {
 			if (!socksServerUsingSsl.getState().equals(SocksServer.State.STOPPED)) {
 				socksServerUsingSsl.stop();
 			}
-			ThreadHelper.sleepForThreeSeconds();
 		}
 	}
 	
 	//@org.junit.Ignore
 	@Test
-	public void testSocks5DatagramSocketsUsingSslAndSocks5Userpassauth() throws IOException {
+	public void testDatagramEchoClientsBehindSocks5ServerUsingSslAndSocks5Userpassauth() throws IOException {
 		System.out.printf("Running %s%n", Thread.currentThread().getStackTrace()[1].getMethodName());
 		SocksServer socksServerUsingSslAndSocks5Userpassauth = new SocksServer(
 				newConfigurationUsingSslAndSocks5Userpassauth());
@@ -324,11 +327,11 @@ public class SocksServerStressIT {
 			datagramEchoServer.start();
 			IoStressor ioStressor = new IoStressor(DATAGRAM_ECHO_CLIENT_THREAD_COUNT);
 			IoStressor.Stats stats = ioStressor.executeForEachThread(() -> {
-				new DatagramEchoClient().echoThroughNewDatagramSocket(
-						TestStringConstants.STRING_01, 
+				DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
 						newSocks5ClientUsingSslAndSocks5Userpassauth(
 								"Aladdin",
-								"opensesame".toCharArray()).newSocksNetObjectFactory());
+								"opensesame".toCharArray()).newSocksNetObjectFactory()); 
+				datagramEchoClient.echo(TestStringConstants.STRING_01);
 			});
 			stats.print();
 			assertEquals(DATAGRAM_ECHO_CLIENT_THREAD_COUNT, stats.getActualSuccessfulThreadCount());			
@@ -339,26 +342,29 @@ public class SocksServerStressIT {
 			if (!socksServerUsingSslAndSocks5Userpassauth.getState().equals(SocksServer.State.STOPPED)) {
 				socksServerUsingSslAndSocks5Userpassauth.stop();
 			}
-			ThreadHelper.sleepForThreeSeconds();
 		}
 		
 	}
 
 	//@org.junit.Ignore
 	@Test
-	public void testSocks5Sockets() throws IOException {
+	public void testEchoClientsBehindSocks5Server() throws IOException {
 		System.out.printf("Running %s%n", Thread.currentThread().getStackTrace()[1].getMethodName());
 		SocksServer socksServer = new SocksServer(newConfiguration());
 		EchoServer echoServer = new EchoServer(
-				NetObjectFactory.getDefault(), EchoServer.PORT, BACKLOG);
+				NetObjectFactory.getDefault(), 
+				EchoServer.PORT, 
+				BACKLOG,
+				EchoServer.INET_ADDRESS,
+				EchoServer.SOCKET_SETTINGS);
 		try {
 			socksServer.start();			
 			echoServer.start();			
 			IoStressor ioStressor = new IoStressor(ECHO_CLIENT_THREAD_COUNT);			
 			IoStressor.Stats stats = ioStressor.executeForEachThread(() -> {
-				new EchoClient().echoThroughNewSocket(
-						TestStringConstants.STRING_01, 
-						newSocks5Client().newSocksNetObjectFactory());
+				EchoClient echoClient = new EchoClient(
+						newSocks5Client().newSocksNetObjectFactory()); 
+				echoClient.echo(TestStringConstants.STRING_01);
 			});
 			stats.print();
 			assertEquals(ECHO_CLIENT_THREAD_COUNT, stats.getActualSuccessfulThreadCount());			
@@ -369,28 +375,31 @@ public class SocksServerStressIT {
 			if (!socksServer.getState().equals(SocksServer.State.STOPPED)) {
 				socksServer.stop();
 			}
-			ThreadHelper.sleepForThreeSeconds();
 		}
 	}	
 	
 	//@org.junit.Ignore
 	@Test
-	public void testSocks5SocketsUsingSocks5Userpassauth() throws IOException {
+	public void testEchoClientsBehindSocks5ServerUsingSocks5Userpassauth() throws IOException {
 		System.out.printf("Running %s%n", Thread.currentThread().getStackTrace()[1].getMethodName());
 		SocksServer socksServerUsingSocks5Userpassauth = new SocksServer(
 				newConfigurationUsingSocks5Userpassauth());
 		EchoServer echoServer = new EchoServer(
-				NetObjectFactory.getDefault(), EchoServer.PORT, BACKLOG);
+				NetObjectFactory.getDefault(), 
+				EchoServer.PORT, 
+				BACKLOG,
+				EchoServer.INET_ADDRESS,
+				EchoServer.SOCKET_SETTINGS);
 		try {
 			socksServerUsingSocks5Userpassauth.start();
 			echoServer.start();			
 			IoStressor ioStressor = new IoStressor(ECHO_CLIENT_THREAD_COUNT);			
 			IoStressor.Stats stats = ioStressor.executeForEachThread(() -> {
-				new EchoClient().echoThroughNewSocket(
-						TestStringConstants.STRING_01, 
+				EchoClient echoClient = new EchoClient(
 						newSocks5ClientUsingSocks5Userpassauth(
 								"Aladdin",
-								"opensesame".toCharArray()).newSocksNetObjectFactory());
+								"opensesame".toCharArray()).newSocksNetObjectFactory()); 
+				echoClient.echo(TestStringConstants.STRING_01);
 			});
 			stats.print();
 			assertEquals(ECHO_CLIENT_THREAD_COUNT, stats.getActualSuccessfulThreadCount());			
@@ -401,26 +410,29 @@ public class SocksServerStressIT {
 			if (!socksServerUsingSocks5Userpassauth.getState().equals(SocksServer.State.STOPPED)) {
 				socksServerUsingSocks5Userpassauth.stop();
 			}
-			ThreadHelper.sleepForThreeSeconds();
 		}
 	}
 	
 	//@org.junit.Ignore
 	@Test
-	public void testSocks5SocketsUsingSsl() throws IOException {
+	public void testEchoClientsBehindSocks5ServerUsingSsl() throws IOException {
 		System.out.printf("Running %s%n", Thread.currentThread().getStackTrace()[1].getMethodName());
 		SocksServer socksServerUsingSsl = new SocksServer(
 				newConfigurationUsingSsl());
 		EchoServer echoServer = new EchoServer(
-				NetObjectFactory.getDefault(), EchoServer.PORT, BACKLOG);
+				NetObjectFactory.getDefault(), 
+				EchoServer.PORT, 
+				BACKLOG,
+				EchoServer.INET_ADDRESS,
+				EchoServer.SOCKET_SETTINGS);
 		try {
 			socksServerUsingSsl.start();
 			echoServer.start();			
 			IoStressor ioStressor = new IoStressor(ECHO_CLIENT_THREAD_COUNT);			
 			IoStressor.Stats stats = ioStressor.executeForEachThread(() -> {
-				new EchoClient().echoThroughNewSocket(
-						TestStringConstants.STRING_01, 
-						newSocks5ClientUsingSsl().newSocksNetObjectFactory());
+				EchoClient echoClient = new EchoClient(
+						newSocks5ClientUsingSsl().newSocksNetObjectFactory()); 
+				echoClient.echo(TestStringConstants.STRING_01);
 			});
 			stats.print();
 			assertEquals(ECHO_CLIENT_THREAD_COUNT, stats.getActualSuccessfulThreadCount());			
@@ -431,28 +443,31 @@ public class SocksServerStressIT {
 			if (!socksServerUsingSsl.getState().equals(SocksServer.State.STOPPED)) {
 				socksServerUsingSsl.stop();
 			}
-			ThreadHelper.sleepForThreeSeconds();
 		}
 	}
 	
 	//@org.junit.Ignore
 	@Test
-	public void testSocks5SocketsUsingSslAndSocks5Userpassauth() throws IOException {
+	public void testEchoClientsBehindSocks5ServerUsingSslAndSocks5Userpassauth() throws IOException {
 		System.out.printf("Running %s%n", Thread.currentThread().getStackTrace()[1].getMethodName());
 		SocksServer socksServerUsingSslAndSocks5Userpassauth = new SocksServer(
 				newConfigurationUsingSslAndSocks5Userpassauth());
 		EchoServer echoServer = new EchoServer(
-				NetObjectFactory.getDefault(), EchoServer.PORT, BACKLOG);
+				NetObjectFactory.getDefault(), 
+				EchoServer.PORT, 
+				BACKLOG,
+				EchoServer.INET_ADDRESS,
+				EchoServer.SOCKET_SETTINGS);
 		try {
 			socksServerUsingSslAndSocks5Userpassauth.start();
 			echoServer.start();			
 			IoStressor ioStressor = new IoStressor(ECHO_CLIENT_THREAD_COUNT);			
 			IoStressor.Stats stats = ioStressor.executeForEachThread(() -> {
-				new EchoClient().echoThroughNewSocket(
-						TestStringConstants.STRING_01, 
+				EchoClient echoClient = new EchoClient(
 						newSocks5ClientUsingSslAndSocks5Userpassauth(
 								"Aladdin",
-								"opensesame".toCharArray()).newSocksNetObjectFactory());
+								"opensesame".toCharArray()).newSocksNetObjectFactory()); 
+				echoClient.echo(TestStringConstants.STRING_01);
 			});
 			stats.print();
 			assertEquals(ECHO_CLIENT_THREAD_COUNT, stats.getActualSuccessfulThreadCount());			
@@ -463,7 +478,6 @@ public class SocksServerStressIT {
 			if (!socksServerUsingSslAndSocks5Userpassauth.getState().equals(SocksServer.State.STOPPED)) {
 				socksServerUsingSslAndSocks5Userpassauth.stop();
 			}
-			ThreadHelper.sleepForThreeSeconds();
 		}
 	}
 	

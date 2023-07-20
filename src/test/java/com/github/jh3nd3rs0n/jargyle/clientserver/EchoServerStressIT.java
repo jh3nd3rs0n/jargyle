@@ -1,4 +1,4 @@
-package com.github.jh3nd3rs0n.jargyle.client;
+package com.github.jh3nd3rs0n.jargyle.clientserver;
 
 import static org.junit.Assert.assertEquals;
 
@@ -7,7 +7,7 @@ import java.io.IOException;
 import org.junit.Test;
 
 import com.github.jh3nd3rs0n.jargyle.TestStringConstants;
-import com.github.jh3nd3rs0n.jargyle.ThreadHelper;
+import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
 
 /*
  * This integration test is ignored due to its success being dependent on the 
@@ -34,36 +34,41 @@ import com.github.jh3nd3rs0n.jargyle.ThreadHelper;
  *     <!-- ... -->
  * <plugin>
  * 
- * Then comment out the Ignore annotation for the class DatagramEchoServerStressIT 
- * below.
+ * Then comment out the Ignore annotation for the class EchoServerStressIT below.
+ * 
+ * You can also adjust the constant value of BACKLOG to the desired number of 
+ * backlogged inbound TCP connections.  
  * 
  * You can also adjust the constant value of THREAD_COUNT to the desired 
  * number of threads for testing.
  * 
  */
 @org.junit.Ignore
-public class DatagramEchoServerStressIT {
+public class EchoServerStressIT {
 	
-	private static final int THREAD_COUNT = 500;
+	private static final int BACKLOG = 100;
+	private static final int THREAD_COUNT = 100;
 	
 	@Test
 	public void test() throws IOException {
-		DatagramEchoServer datagramEchoServer = new DatagramEchoServer();
+		EchoServer echoServer = new EchoServer(
+				NetObjectFactory.getDefault(), 
+				EchoServer.PORT,
+				BACKLOG,
+				EchoServer.INET_ADDRESS,
+				EchoServer.SOCKET_SETTINGS);
 		try {
-			datagramEchoServer.start();
+			echoServer.start();
 			IoStressor ioStressor = new IoStressor(THREAD_COUNT);
 			IoStressor.Stats stats = ioStressor.executeForEachThread(() -> {
-				new DatagramEchoClient().echoThroughNewDatagramSocket(
-						TestStringConstants.STRING_01, null);
+				new EchoClient().echo(TestStringConstants.STRING_01);
 			});
 			stats.print();
 			assertEquals(THREAD_COUNT, stats.getActualSuccessfulThreadCount());
 		} finally {
-			if (!datagramEchoServer.getState().equals(DatagramEchoServer.State.STOPPED)) {
-				datagramEchoServer.stop();
+			if (!echoServer.getState().equals(EchoServer.State.STOPPED)) {
+				echoServer.stop();
 			}
-			ThreadHelper.sleepForThreeSeconds();
 		}
 	}
-	
 }

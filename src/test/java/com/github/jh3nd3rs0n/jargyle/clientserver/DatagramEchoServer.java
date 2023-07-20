@@ -1,8 +1,9 @@
-package com.github.jh3nd3rs0n.jargyle.client;
+package com.github.jh3nd3rs0n.jargyle.clientserver;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.SocketException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -76,6 +77,7 @@ public final class DatagramEchoServer {
 	}
 	
 	public static final int BUFFER_SIZE = 1024;
+	public static final InetAddress INET_ADDRESS = InetAddress.getLoopbackAddress();
 	public static final int PORT = 1081;
 	
 	private ExecutorService executor;
@@ -93,7 +95,7 @@ public final class DatagramEchoServer {
 	}
 
 	public void start() throws IOException {
-		this.serverSocket = new DatagramSocket(PORT);
+		this.serverSocket = new DatagramSocket(PORT, INET_ADDRESS);
 		this.executor = Executors.newSingleThreadExecutor();
 		this.executor.execute(new Listener(this.serverSocket));
 		this.state = State.STARTED;

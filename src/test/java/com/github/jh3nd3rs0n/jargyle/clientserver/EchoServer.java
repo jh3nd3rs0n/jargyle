@@ -10,7 +10,6 @@ import java.net.SocketException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import com.github.jh3nd3rs0n.jargyle.IoHelper;
 import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.common.net.StandardSocketSettingSpecConstants;
@@ -66,8 +65,8 @@ public final class EchoServer {
 			try {
 				InputStream in = this.clientSocket.getInputStream();
 				OutputStream out = this.clientSocket.getOutputStream();
-				byte[] bytes = IoHelper.readFrom(in);
-				IoHelper.writeThenFlush(bytes, out);
+				byte[] bytes = MeasuredIoHelper.readFrom(in);
+				MeasuredIoHelper.writeThenFlush(bytes, out);
 			} catch (IOException e) {
 				e.printStackTrace();
 			} finally {

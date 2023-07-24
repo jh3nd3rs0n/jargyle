@@ -7,7 +7,6 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
-import com.github.jh3nd3rs0n.jargyle.IoHelper;
 import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
 import com.github.jh3nd3rs0n.jargyle.common.lang.NonnegativeInteger;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
@@ -55,8 +54,8 @@ public final class EchoClient {
 					echoServerInetAddress, echoServerPort));
 			InputStream in = socket.getInputStream();
 			OutputStream out = socket.getOutputStream();
-			IoHelper.writeThenFlush(string.getBytes(), out);
-			byte[] bytes = IoHelper.readFrom(in);
+			MeasuredIoHelper.writeThenFlush(string.getBytes(), out);
+			byte[] bytes = MeasuredIoHelper.readFrom(in);
 			returningString = new String(bytes);
 		} finally {
 			if (socket != null) {

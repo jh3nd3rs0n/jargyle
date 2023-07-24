@@ -12,7 +12,6 @@ import java.util.concurrent.Executors;
 
 import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
-import com.github.jh3nd3rs0n.jargyle.common.net.StandardSocketSettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.internal.lang.ThrowableHelper;
 import com.github.jh3nd3rs0n.jargyle.server.internal.concurrent.ExecutorHelper;
 
@@ -82,8 +81,7 @@ public final class EchoServer {
 	public static final int BACKLOG = 50;
 	public static final InetAddress INET_ADDRESS = InetAddress.getLoopbackAddress();
 	public static final int PORT = 1084;
-	public static final SocketSettings SOCKET_SETTINGS = SocketSettings.newInstance(
-			StandardSocketSettingSpecConstants.SO_REUSEADDR.newSocketSetting(Boolean.TRUE));
+	public static final SocketSettings SOCKET_SETTINGS = SocketSettings.newInstance();
 	
 	private final int backlog;
 	private final InetAddress bindInetAddress;

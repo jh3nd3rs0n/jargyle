@@ -10,6 +10,7 @@ public final class FilesHelper {
 	
 	public static void attemptsToDeleteIfExists(
 			final Path path) throws IOException {
+		/*
 		int numOfRemainingAttempts = MAX_NUM_OF_REMAINING_ATTEMPTS;
 		while (path.toFile().exists() 
 				&& --numOfRemainingAttempts > 0 
@@ -22,6 +23,8 @@ public final class FilesHelper {
 					path,
 					MAX_NUM_OF_REMAINING_ATTEMPTS));
 		}
+		*/
+		Files.deleteIfExists(path);
 	}
 	
 	private FilesHelper() { }

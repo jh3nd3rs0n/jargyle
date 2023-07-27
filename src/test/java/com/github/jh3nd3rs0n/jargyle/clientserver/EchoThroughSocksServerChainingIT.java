@@ -13,6 +13,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.github.jh3nd3rs0n.jargyle.TestResourceConstants;
 import com.github.jh3nd3rs0n.jargyle.TestStringConstants;
 import com.github.jh3nd3rs0n.jargyle.ThreadHelper;
 import com.github.jh3nd3rs0n.jargyle.client.DtlsPropertySpecConstants;
@@ -153,27 +154,27 @@ public class EchoThroughSocksServerChainingIT {
 										Integer.valueOf(CHAINED_SOCKS_SERVER_PORT_2_USING_SSL))),
 						ChainingDtlsSettingSpecConstants.CHAINING_DTLS_ENABLED.newSetting(Boolean.TRUE),
 						ChainingDtlsSettingSpecConstants.CHAINING_DTLS_TRUST_STORE_FILE.newSetting(
-								TestResourceConstants.JARGYLE_CLIENTSERVER_SERVER_KEY_STORE_FILE.asFile()),
+								TestResourceConstants.JARGYLE_CLIENTSERVER_SERVER_KEY_STORE_FILE.getFile()),
 						ChainingDtlsSettingSpecConstants.CHAINING_DTLS_TRUST_STORE_PASSWORD.newSettingOfParsableValue(
-								TestResourceConstants.JARGYLE_CLIENTSERVER_SERVER_KEY_STORE_PASSWORD_FILE.asString()),				
+								TestResourceConstants.JARGYLE_CLIENTSERVER_SERVER_KEY_STORE_PASSWORD_FILE.getContentAsString()),				
 						ChainingSslSettingSpecConstants.CHAINING_SSL_ENABLED.newSetting(Boolean.TRUE),
 						ChainingSslSettingSpecConstants.CHAINING_SSL_TRUST_STORE_FILE.newSetting(
-								TestResourceConstants.JARGYLE_CLIENTSERVER_SERVER_KEY_STORE_FILE.asFile()),
+								TestResourceConstants.JARGYLE_CLIENTSERVER_SERVER_KEY_STORE_FILE.getFile()),
 						ChainingSslSettingSpecConstants.CHAINING_SSL_TRUST_STORE_PASSWORD.newSettingOfParsableValue(
-								TestResourceConstants.JARGYLE_CLIENTSERVER_SERVER_KEY_STORE_PASSWORD_FILE.asString()))),
+								TestResourceConstants.JARGYLE_CLIENTSERVER_SERVER_KEY_STORE_PASSWORD_FILE.getContentAsString()))),
 				Configuration.newUnmodifiableInstance(Settings.newInstance(
 						GeneralSettingSpecConstants.PORT.newSetting(
 								Port.newInstance(CHAINED_SOCKS_SERVER_PORT_2_USING_SSL)),
 						DtlsSettingSpecConstants.DTLS_ENABLED.newSetting(Boolean.TRUE),
 						DtlsSettingSpecConstants.DTLS_KEY_STORE_FILE.newSetting(
-								TestResourceConstants.JARGYLE_CLIENTSERVER_SERVER_KEY_STORE_FILE.asFile()),
+								TestResourceConstants.JARGYLE_CLIENTSERVER_SERVER_KEY_STORE_FILE.getFile()),
 						DtlsSettingSpecConstants.DTLS_KEY_STORE_PASSWORD.newSettingOfParsableValue(
-								TestResourceConstants.JARGYLE_CLIENTSERVER_SERVER_KEY_STORE_PASSWORD_FILE.asString()),				
+								TestResourceConstants.JARGYLE_CLIENTSERVER_SERVER_KEY_STORE_PASSWORD_FILE.getContentAsString()),				
 						SslSettingSpecConstants.SSL_ENABLED.newSetting(Boolean.TRUE),
 						SslSettingSpecConstants.SSL_KEY_STORE_FILE.newSetting(
-								TestResourceConstants.JARGYLE_CLIENTSERVER_SERVER_KEY_STORE_FILE.asFile()),
+								TestResourceConstants.JARGYLE_CLIENTSERVER_SERVER_KEY_STORE_FILE.getFile()),
 						SslSettingSpecConstants.SSL_KEY_STORE_PASSWORD.newSettingOfParsableValue(
-								TestResourceConstants.JARGYLE_CLIENTSERVER_SERVER_KEY_STORE_PASSWORD_FILE.asString()))));		
+								TestResourceConstants.JARGYLE_CLIENTSERVER_SERVER_KEY_STORE_PASSWORD_FILE.getContentAsString()))));		
 	}
 	
 	private static SocksClient newChainedSocks5ClientToConfigurations() {
@@ -243,15 +244,15 @@ public class EchoThroughSocksServerChainingIT {
 						DtlsPropertySpecConstants.DTLS_ENABLED.newProperty(
 								Boolean.TRUE),
 						DtlsPropertySpecConstants.DTLS_TRUST_STORE_FILE.newProperty(
-								TestResourceConstants.JARGYLE_CLIENTSERVER_SERVER_KEY_STORE_FILE.asFile()),
+								TestResourceConstants.JARGYLE_CLIENTSERVER_SERVER_KEY_STORE_FILE.getFile()),
 						DtlsPropertySpecConstants.DTLS_TRUST_STORE_PASSWORD.newPropertyOfParsableValue(
-								TestResourceConstants.JARGYLE_CLIENTSERVER_SERVER_KEY_STORE_PASSWORD_FILE.asString()),				
+								TestResourceConstants.JARGYLE_CLIENTSERVER_SERVER_KEY_STORE_PASSWORD_FILE.getContentAsString()),				
 						SslPropertySpecConstants.SSL_ENABLED.newProperty(
 								Boolean.TRUE),
 						SslPropertySpecConstants.SSL_TRUST_STORE_FILE.newProperty(
-								TestResourceConstants.JARGYLE_CLIENTSERVER_SERVER_KEY_STORE_FILE.asFile()),
+								TestResourceConstants.JARGYLE_CLIENTSERVER_SERVER_KEY_STORE_FILE.getFile()),
 						SslPropertySpecConstants.SSL_TRUST_STORE_PASSWORD.newPropertyOfParsableValue(
-								TestResourceConstants.JARGYLE_CLIENTSERVER_SERVER_KEY_STORE_PASSWORD_FILE.asString())), 
+								TestResourceConstants.JARGYLE_CLIENTSERVER_SERVER_KEY_STORE_PASSWORD_FILE.getContentAsString())), 
 						client1);
 		return client2;
 	}
@@ -307,14 +308,14 @@ public class EchoThroughSocksServerChainingIT {
 								Port.newInstance(SOCKS_SERVER_PORT_2_USING_SSL)),
 						DtlsSettingSpecConstants.DTLS_ENABLED.newSetting(Boolean.TRUE),
 						DtlsSettingSpecConstants.DTLS_KEY_STORE_FILE.newSetting(
-								TestResourceConstants.JARGYLE_CLIENTSERVER_SERVER_KEY_STORE_FILE.asFile()),
+								TestResourceConstants.JARGYLE_CLIENTSERVER_SERVER_KEY_STORE_FILE.getFile()),
 						DtlsSettingSpecConstants.DTLS_KEY_STORE_PASSWORD.newSettingOfParsableValue(
-								TestResourceConstants.JARGYLE_CLIENTSERVER_SERVER_KEY_STORE_PASSWORD_FILE.asString()),				
+								TestResourceConstants.JARGYLE_CLIENTSERVER_SERVER_KEY_STORE_PASSWORD_FILE.getContentAsString()),				
 						SslSettingSpecConstants.SSL_ENABLED.newSetting(Boolean.TRUE),
 						SslSettingSpecConstants.SSL_KEY_STORE_FILE.newSetting(
-								TestResourceConstants.JARGYLE_CLIENTSERVER_SERVER_KEY_STORE_FILE.asFile()),
+								TestResourceConstants.JARGYLE_CLIENTSERVER_SERVER_KEY_STORE_FILE.getFile()),
 						SslSettingSpecConstants.SSL_KEY_STORE_PASSWORD.newSettingOfParsableValue(
-								TestResourceConstants.JARGYLE_CLIENTSERVER_SERVER_KEY_STORE_PASSWORD_FILE.asString()))));
+								TestResourceConstants.JARGYLE_CLIENTSERVER_SERVER_KEY_STORE_PASSWORD_FILE.getContentAsString()))));
 	}
 	
 	private static SocksClient newSocks5ClientToChainedConfigurations() {

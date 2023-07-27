@@ -7,6 +7,7 @@ import java.net.InetAddress;
 
 import org.junit.Test;
 
+import com.github.jh3nd3rs0n.jargyle.TestResourceConstants;
 import com.github.jh3nd3rs0n.jargyle.TestStringConstants;
 import com.github.jh3nd3rs0n.jargyle.client.DtlsPropertySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
@@ -109,14 +110,14 @@ public class SocksServerStressIT {
 						NonnegativeInteger.newInstance(BACKLOG)),
 				DtlsSettingSpecConstants.DTLS_ENABLED.newSetting(Boolean.TRUE),
 				DtlsSettingSpecConstants.DTLS_KEY_STORE_FILE.newSetting(
-						TestResourceConstants.JARGYLE_CLIENTSERVER_SERVER_KEY_STORE_FILE.asFile()),
+						TestResourceConstants.JARGYLE_CLIENTSERVER_SERVER_KEY_STORE_FILE.getFile()),
 				DtlsSettingSpecConstants.DTLS_KEY_STORE_PASSWORD.newSettingOfParsableValue(
-						TestResourceConstants.JARGYLE_CLIENTSERVER_SERVER_KEY_STORE_PASSWORD_FILE.asString()),				
+						TestResourceConstants.JARGYLE_CLIENTSERVER_SERVER_KEY_STORE_PASSWORD_FILE.getContentAsString()),				
 				SslSettingSpecConstants.SSL_ENABLED.newSetting(Boolean.TRUE),
 				SslSettingSpecConstants.SSL_KEY_STORE_FILE.newSetting(
-						TestResourceConstants.JARGYLE_CLIENTSERVER_SERVER_KEY_STORE_FILE.asFile()),
+						TestResourceConstants.JARGYLE_CLIENTSERVER_SERVER_KEY_STORE_FILE.getFile()),
 				SslSettingSpecConstants.SSL_KEY_STORE_PASSWORD.newSettingOfParsableValue(
-						TestResourceConstants.JARGYLE_CLIENTSERVER_SERVER_KEY_STORE_PASSWORD_FILE.asString())));
+						TestResourceConstants.JARGYLE_CLIENTSERVER_SERVER_KEY_STORE_PASSWORD_FILE.getContentAsString())));
 	}
 	
 	private static Configuration newConfigurationUsingSslAndSocks5Userpassauth() {
@@ -127,14 +128,14 @@ public class SocksServerStressIT {
 						NonnegativeInteger.newInstance(BACKLOG)),
 				DtlsSettingSpecConstants.DTLS_ENABLED.newSetting(Boolean.TRUE),
 				DtlsSettingSpecConstants.DTLS_KEY_STORE_FILE.newSetting(
-						TestResourceConstants.JARGYLE_CLIENTSERVER_SERVER_KEY_STORE_FILE.asFile()),
+						TestResourceConstants.JARGYLE_CLIENTSERVER_SERVER_KEY_STORE_FILE.getFile()),
 				DtlsSettingSpecConstants.DTLS_KEY_STORE_PASSWORD.newSettingOfParsableValue(
-						TestResourceConstants.JARGYLE_CLIENTSERVER_SERVER_KEY_STORE_PASSWORD_FILE.asString()),				
+						TestResourceConstants.JARGYLE_CLIENTSERVER_SERVER_KEY_STORE_PASSWORD_FILE.getContentAsString()),				
 				SslSettingSpecConstants.SSL_ENABLED.newSetting(Boolean.TRUE),
 				SslSettingSpecConstants.SSL_KEY_STORE_FILE.newSetting(
-						TestResourceConstants.JARGYLE_CLIENTSERVER_SERVER_KEY_STORE_FILE.asFile()),
+						TestResourceConstants.JARGYLE_CLIENTSERVER_SERVER_KEY_STORE_FILE.getFile()),
 				SslSettingSpecConstants.SSL_KEY_STORE_PASSWORD.newSettingOfParsableValue(
-						TestResourceConstants.JARGYLE_CLIENTSERVER_SERVER_KEY_STORE_PASSWORD_FILE.asString()),
+						TestResourceConstants.JARGYLE_CLIENTSERVER_SERVER_KEY_STORE_PASSWORD_FILE.getContentAsString()),
 				Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
 						Methods.newInstance(Method.USERNAME_PASSWORD)),
 				Socks5SettingSpecConstants.SOCKS5_USERPASSAUTH_USER_REPOSITORY.newSetting(
@@ -169,15 +170,15 @@ public class SocksServerStressIT {
 				DtlsPropertySpecConstants.DTLS_ENABLED.newProperty(
 						Boolean.TRUE),
 				DtlsPropertySpecConstants.DTLS_TRUST_STORE_FILE.newProperty(
-						TestResourceConstants.JARGYLE_CLIENTSERVER_SERVER_KEY_STORE_FILE.asFile()),
+						TestResourceConstants.JARGYLE_CLIENTSERVER_SERVER_KEY_STORE_FILE.getFile()),
 				DtlsPropertySpecConstants.DTLS_TRUST_STORE_PASSWORD.newPropertyOfParsableValue(
-						TestResourceConstants.JARGYLE_CLIENTSERVER_SERVER_KEY_STORE_PASSWORD_FILE.asString()),				
+						TestResourceConstants.JARGYLE_CLIENTSERVER_SERVER_KEY_STORE_PASSWORD_FILE.getContentAsString()),				
 				SslPropertySpecConstants.SSL_ENABLED.newProperty(
 						Boolean.TRUE),
 				SslPropertySpecConstants.SSL_TRUST_STORE_FILE.newProperty(
-						TestResourceConstants.JARGYLE_CLIENTSERVER_SERVER_KEY_STORE_FILE.asFile()),
+						TestResourceConstants.JARGYLE_CLIENTSERVER_SERVER_KEY_STORE_FILE.getFile()),
 				SslPropertySpecConstants.SSL_TRUST_STORE_PASSWORD.newPropertyOfParsableValue(
-						TestResourceConstants.JARGYLE_CLIENTSERVER_SERVER_KEY_STORE_PASSWORD_FILE.asString()));
+						TestResourceConstants.JARGYLE_CLIENTSERVER_SERVER_KEY_STORE_PASSWORD_FILE.getContentAsString()));
 		return Scheme.SOCKS5.newSocksServerUri(
 				InetAddress.getLoopbackAddress().getHostAddress(), 
 				Integer.valueOf(SOCKS_SERVER_PORT_USING_SSL))
@@ -191,15 +192,15 @@ public class SocksServerStressIT {
 				DtlsPropertySpecConstants.DTLS_ENABLED.newProperty(
 						Boolean.TRUE),
 				DtlsPropertySpecConstants.DTLS_TRUST_STORE_FILE.newProperty(
-						TestResourceConstants.JARGYLE_CLIENTSERVER_SERVER_KEY_STORE_FILE.asFile()),
+						TestResourceConstants.JARGYLE_CLIENTSERVER_SERVER_KEY_STORE_FILE.getFile()),
 				DtlsPropertySpecConstants.DTLS_TRUST_STORE_PASSWORD.newPropertyOfParsableValue(
-						TestResourceConstants.JARGYLE_CLIENTSERVER_SERVER_KEY_STORE_PASSWORD_FILE.asString()),				
+						TestResourceConstants.JARGYLE_CLIENTSERVER_SERVER_KEY_STORE_PASSWORD_FILE.getContentAsString()),				
 				SslPropertySpecConstants.SSL_ENABLED.newProperty(
 						Boolean.TRUE),
 				SslPropertySpecConstants.SSL_TRUST_STORE_FILE.newProperty(
-						TestResourceConstants.JARGYLE_CLIENTSERVER_SERVER_KEY_STORE_FILE.asFile()),
+						TestResourceConstants.JARGYLE_CLIENTSERVER_SERVER_KEY_STORE_FILE.getFile()),
 				SslPropertySpecConstants.SSL_TRUST_STORE_PASSWORD.newPropertyOfParsableValue(
-						TestResourceConstants.JARGYLE_CLIENTSERVER_SERVER_KEY_STORE_PASSWORD_FILE.asString()),
+						TestResourceConstants.JARGYLE_CLIENTSERVER_SERVER_KEY_STORE_PASSWORD_FILE.getContentAsString()),
 				Socks5PropertySpecConstants.SOCKS5_METHODS.newProperty(
 						Methods.newInstance(Method.USERNAME_PASSWORD)),
 				Socks5PropertySpecConstants.SOCKS5_USERPASSAUTH_USERNAME.newProperty(

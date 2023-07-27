@@ -13,8 +13,7 @@ import org.junit.Test;
 
 import com.github.jh3nd3rs0n.jargyle.FilesHelper;
 import com.github.jh3nd3rs0n.jargyle.IoHelper;
-import com.github.jh3nd3rs0n.jargyle.ResourceHelper;
-import com.github.jh3nd3rs0n.jargyle.ResourceNameConstants;
+import com.github.jh3nd3rs0n.jargyle.TestResourceConstants;
 import com.github.jh3nd3rs0n.jargyle.ThreadHelper;
 import com.github.jh3nd3rs0n.jargyle.common.lang.NonnegativeInteger;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
@@ -52,15 +51,15 @@ public class XmlFileSourceConfigurationRepositoryIT {
 	@Test
 	public void testForUpdatedConfigurationFile01() throws IOException {
 		File configFile = this.configurationFile.toFile();
-		IoHelper.writeStringToFile(ResourceHelper.getResourceAsString(
-				ResourceNameConstants.JARGYLE_SERVER_CONFIGREPO_IMPL_EMPTY_CONFIGURATION_FILE), 
+		IoHelper.writeStringToFile(
+				TestResourceConstants.JARGYLE_SERVER_CONFIGREPO_IMPL_EMPTY_CONFIGURATION_FILE.getContentAsString(), 
 				configFile);
 		ThreadHelper.sleepForThreeSeconds();		
 		this.xmlFileSourceConfigurationRepository = 
 				XmlFileSourceConfigurationRepository.newInstance(configFile);
 		ThreadHelper.sleepForThreeSeconds();
-		IoHelper.writeStringToFile(ResourceHelper.getResourceAsString(
-				ResourceNameConstants.JARGYLE_SERVER_CONFIGREPO_IMPL_CONFIGURATION_FILE), 
+		IoHelper.writeStringToFile(
+				TestResourceConstants.JARGYLE_SERVER_CONFIGREPO_IMPL_CONFIGURATION_FILE.getContentAsString(), 
 				configFile);
 		ThreadHelper.sleepForThreeSeconds();
 		/* 
@@ -81,15 +80,15 @@ public class XmlFileSourceConfigurationRepositoryIT {
 	@Test
 	public void testForUpdatedConfigurationFile02() throws IOException {
 		File configFile = this.configurationFile.toFile();
-		IoHelper.writeStringToFile(ResourceHelper.getResourceAsString(
-				ResourceNameConstants.JARGYLE_SERVER_CONFIGREPO_IMPL_EMPTY_CONFIGURATION_FILE), 
+		IoHelper.writeStringToFile(
+				TestResourceConstants.JARGYLE_SERVER_CONFIGREPO_IMPL_EMPTY_CONFIGURATION_FILE.getContentAsString(), 
 				configFile);
 		ThreadHelper.sleepForThreeSeconds();		
 		this.xmlFileSourceConfigurationRepository = 
 				XmlFileSourceConfigurationRepository.newInstance(configFile);
 		ThreadHelper.sleepForThreeSeconds();
-		IoHelper.writeStringToFile(ResourceHelper.getResourceAsString(
-				ResourceNameConstants.JARGYLE_SERVER_CONFIGREPO_IMPL_CONFIGURATION_FILE), 
+		IoHelper.writeStringToFile(
+				TestResourceConstants.JARGYLE_SERVER_CONFIGREPO_IMPL_CONFIGURATION_FILE.getContentAsString(), 
 				configFile);
 		ThreadHelper.sleepForThreeSeconds();
 		/* 

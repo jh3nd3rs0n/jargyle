@@ -12,10 +12,8 @@ import org.junit.Test;
 
 import com.github.jh3nd3rs0n.argmatey.ArgMatey.CLI;
 import com.github.jh3nd3rs0n.argmatey.ArgMatey.TerminationRequestedException;
-import com.github.jh3nd3rs0n.jargyle.FilesHelper;
 import com.github.jh3nd3rs0n.jargyle.IoHelper;
 import com.github.jh3nd3rs0n.jargyle.TestResourceConstants;
-import com.github.jh3nd3rs0n.jargyle.ThreadHelper;
 
 public class ServerConfigurationFileCreatorCLIIT {
 	
@@ -37,23 +35,23 @@ public class ServerConfigurationFileCreatorCLIIT {
 	@After
 	public void tearDown() throws Exception {
 		if (this.supplementedConfigurationFile != null) {
-			FilesHelper.attemptsToDeleteIfExists(this.supplementedConfigurationFile);
+			Files.deleteIfExists(this.supplementedConfigurationFile);
 			this.supplementedConfigurationFile = null;
 		}
 		if (this.emptyConfigurationFile != null) {
-			FilesHelper.attemptsToDeleteIfExists(this.emptyConfigurationFile);
+			Files.deleteIfExists(this.emptyConfigurationFile);
 			this.emptyConfigurationFile = null;
 		}
 		if (this.configurationFile != null) {
-			FilesHelper.attemptsToDeleteIfExists(this.configurationFile);
+			Files.deleteIfExists(this.configurationFile);
 			this.configurationFile = null;
 		}
 		if (this.combinedConfigurationFile != null) {
-			FilesHelper.attemptsToDeleteIfExists(this.combinedConfigurationFile);
+			Files.deleteIfExists(this.combinedConfigurationFile);
 			this.combinedConfigurationFile = null;
 		}
 		if (this.baseDir != null) {
-			FilesHelper.attemptsToDeleteIfExists(this.baseDir);
+			Files.deleteIfExists(this.baseDir);
 			this.baseDir = null;
 		}
 	}
@@ -72,7 +70,6 @@ public class ServerConfigurationFileCreatorCLIIT {
 			cli.handleArgs();
 		} catch (TerminationRequestedException e) {
 		}
-		// ThreadHelper.sleepForThreeSeconds();		
 		String expectedCombinedConfigurationFileContents =
 				TestResourceConstants.JARGYLE_SERVER_CONFIGREPO_IMPL_COMBINED_CONFIGURATION_FILE.getContentAsString().replace(
 						"\r\n", "\n").trim();
@@ -97,7 +94,6 @@ public class ServerConfigurationFileCreatorCLIIT {
 			cli.handleArgs();
 		} catch (TerminationRequestedException e) {
 		}
-		// ThreadHelper.sleepForThreeSeconds();		
 		String expectedConfigurationFileContents =
 				TestResourceConstants.JARGYLE_SERVER_CONFIGREPO_IMPL_CONFIGURATION_FILE.getContentAsString().replace(
 						"\r\n", "\n").trim();
@@ -119,7 +115,6 @@ public class ServerConfigurationFileCreatorCLIIT {
 			cli.handleArgs();
 		} catch (TerminationRequestedException e) {
 		}
-		// ThreadHelper.sleepForThreeSeconds();		
 		String expectedEmptyConfigurationFileContents =
 				TestResourceConstants.JARGYLE_SERVER_CONFIGREPO_IMPL_EMPTY_CONFIGURATION_FILE.getContentAsString().replace(
 						"\r\n", "\n").trim();
@@ -144,7 +139,6 @@ public class ServerConfigurationFileCreatorCLIIT {
 			cli.handleArgs();
 		} catch (TerminationRequestedException e) {
 		}
-		// ThreadHelper.sleepForThreeSeconds();		
 		String expectedSupplementedConfigurationFileContents =
 				TestResourceConstants.JARGYLE_SERVER_CONFIGREPO_IMPL_SUPPLEMENTED_CONFIGURATION_FILE.getContentAsString().replace(
 						"\r\n", "\n").trim();

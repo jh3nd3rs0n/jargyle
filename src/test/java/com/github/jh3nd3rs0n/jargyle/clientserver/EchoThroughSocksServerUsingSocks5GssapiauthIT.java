@@ -15,7 +15,6 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.github.jh3nd3rs0n.jargyle.FilesHelper;
 import com.github.jh3nd3rs0n.jargyle.TestStringConstants;
 import com.github.jh3nd3rs0n.jargyle.ThreadHelper;
 import com.github.jh3nd3rs0n.jargyle.client.Properties;
@@ -193,23 +192,23 @@ public class EchoThroughSocksServerUsingSocks5GssapiauthIT {
 			kerbyServer = null;
 		}
 		if (krb5Conf != null) {
-			FilesHelper.attemptsToDeleteIfExists(krb5Conf);
+			Files.deleteIfExists(krb5Conf);
 			krb5Conf = null;
 		}
 		if (aliceKeytab != null) {
-			FilesHelper.attemptsToDeleteIfExists(aliceKeytab);
+			Files.deleteIfExists(aliceKeytab);
 			aliceKeytab = null;
 		}
 		if (rcmdKeytab != null) {
-			FilesHelper.attemptsToDeleteIfExists(rcmdKeytab);
+			Files.deleteIfExists(rcmdKeytab);
 			rcmdKeytab = null;
 		}
 		if (loginConf != null) {
-			FilesHelper.attemptsToDeleteIfExists(loginConf);
+			Files.deleteIfExists(loginConf);
 			loginConf = null;
 		}
 		if (baseDir != null) {
-			FilesHelper.attemptsToDeleteIfExists(baseDir);
+			Files.deleteIfExists(baseDir);
 			baseDir = null;
 		}
 		System.clearProperty(KRB5_CONF_PROPERTY_NAME);

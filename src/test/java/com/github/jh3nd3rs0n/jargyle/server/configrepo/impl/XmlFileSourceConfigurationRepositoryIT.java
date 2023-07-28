@@ -11,7 +11,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.github.jh3nd3rs0n.jargyle.FilesHelper;
 import com.github.jh3nd3rs0n.jargyle.IoHelper;
 import com.github.jh3nd3rs0n.jargyle.TestResourceConstants;
 import com.github.jh3nd3rs0n.jargyle.ThreadHelper;
@@ -39,11 +38,11 @@ public class XmlFileSourceConfigurationRepositoryIT {
 			this.xmlFileSourceConfigurationRepository = null;
 		}
 		if (this.configurationFile != null) {
-			FilesHelper.attemptsToDeleteIfExists(this.configurationFile);
+			Files.deleteIfExists(this.configurationFile);
 			this.configurationFile = null;
 		}
 		if (this.baseDir != null) {
-			FilesHelper.attemptsToDeleteIfExists(this.baseDir);
+			Files.deleteIfExists(this.baseDir);
 			this.baseDir = null;
 		}
 	}
@@ -54,10 +53,8 @@ public class XmlFileSourceConfigurationRepositoryIT {
 		IoHelper.writeStringToFile(
 				TestResourceConstants.JARGYLE_SERVER_CONFIGREPO_IMPL_EMPTY_CONFIGURATION_FILE.getContentAsString(), 
 				configFile);
-		// ThreadHelper.sleepForThreeSeconds();		
 		this.xmlFileSourceConfigurationRepository = 
 				XmlFileSourceConfigurationRepository.newInstance(configFile);
-		// ThreadHelper.sleepForThreeSeconds();
 		IoHelper.writeStringToFile(
 				TestResourceConstants.JARGYLE_SERVER_CONFIGREPO_IMPL_CONFIGURATION_FILE.getContentAsString(), 
 				configFile);
@@ -83,10 +80,8 @@ public class XmlFileSourceConfigurationRepositoryIT {
 		IoHelper.writeStringToFile(
 				TestResourceConstants.JARGYLE_SERVER_CONFIGREPO_IMPL_EMPTY_CONFIGURATION_FILE.getContentAsString(), 
 				configFile);
-		// ThreadHelper.sleepForThreeSeconds();		
 		this.xmlFileSourceConfigurationRepository = 
 				XmlFileSourceConfigurationRepository.newInstance(configFile);
-		// ThreadHelper.sleepForThreeSeconds();
 		IoHelper.writeStringToFile(
 				TestResourceConstants.JARGYLE_SERVER_CONFIGREPO_IMPL_CONFIGURATION_FILE.getContentAsString(), 
 				configFile);

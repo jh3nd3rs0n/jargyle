@@ -32,7 +32,7 @@ public class EchoIT {
 		if (!echoServer.getState().equals(EchoServer.State.STOPPED)) {
 			echoServer.stop();
 		}		
-		ThreadHelper.sleepForThreeSeconds();
+		// ThreadHelper.sleepForThreeSeconds();
 	}
 	
 	@Test

@@ -15,7 +15,7 @@ public final class FilesHelper {
 		while (path.toFile().exists() 
 				&& --numOfRemainingAttempts > 0 
 				&& !Files.deleteIfExists(path)) {
-			ThreadHelper.sleepForThreeSeconds();
+			// ThreadHelper.sleepForThreeSeconds();
 		}
 		if (path.toFile().exists() && numOfRemainingAttempts == 0) {
 			throw new IOException(String.format(

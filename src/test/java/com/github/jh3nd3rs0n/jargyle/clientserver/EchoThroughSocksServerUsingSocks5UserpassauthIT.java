@@ -88,7 +88,7 @@ public class EchoThroughSocksServerUsingSocks5UserpassauthIT {
 		if (!socksServerUsingSocks5Userpassauth.getState().equals(SocksServer.State.STOPPED)) {
 			socksServerUsingSocks5Userpassauth.stop();
 		}
-		ThreadHelper.sleepForThreeSeconds();
+		// ThreadHelper.sleepForThreeSeconds();
 	}
 	
 	@Test

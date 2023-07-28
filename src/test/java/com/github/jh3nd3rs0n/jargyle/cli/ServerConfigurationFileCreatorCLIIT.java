@@ -72,7 +72,7 @@ public class ServerConfigurationFileCreatorCLIIT {
 			cli.handleArgs();
 		} catch (TerminationRequestedException e) {
 		}
-		ThreadHelper.sleepForThreeSeconds();		
+		// ThreadHelper.sleepForThreeSeconds();		
 		String expectedCombinedConfigurationFileContents =
 				TestResourceConstants.JARGYLE_SERVER_CONFIGREPO_IMPL_COMBINED_CONFIGURATION_FILE.getContentAsString().replace(
 						"\r\n", "\n").trim();
@@ -97,7 +97,7 @@ public class ServerConfigurationFileCreatorCLIIT {
 			cli.handleArgs();
 		} catch (TerminationRequestedException e) {
 		}
-		ThreadHelper.sleepForThreeSeconds();		
+		// ThreadHelper.sleepForThreeSeconds();		
 		String expectedConfigurationFileContents =
 				TestResourceConstants.JARGYLE_SERVER_CONFIGREPO_IMPL_CONFIGURATION_FILE.getContentAsString().replace(
 						"\r\n", "\n").trim();
@@ -119,7 +119,7 @@ public class ServerConfigurationFileCreatorCLIIT {
 			cli.handleArgs();
 		} catch (TerminationRequestedException e) {
 		}
-		ThreadHelper.sleepForThreeSeconds();		
+		// ThreadHelper.sleepForThreeSeconds();		
 		String expectedEmptyConfigurationFileContents =
 				TestResourceConstants.JARGYLE_SERVER_CONFIGREPO_IMPL_EMPTY_CONFIGURATION_FILE.getContentAsString().replace(
 						"\r\n", "\n").trim();
@@ -144,7 +144,7 @@ public class ServerConfigurationFileCreatorCLIIT {
 			cli.handleArgs();
 		} catch (TerminationRequestedException e) {
 		}
-		ThreadHelper.sleepForThreeSeconds();		
+		// ThreadHelper.sleepForThreeSeconds();		
 		String expectedSupplementedConfigurationFileContents =
 				TestResourceConstants.JARGYLE_SERVER_CONFIGREPO_IMPL_SUPPLEMENTED_CONFIGURATION_FILE.getContentAsString().replace(
 						"\r\n", "\n").trim();

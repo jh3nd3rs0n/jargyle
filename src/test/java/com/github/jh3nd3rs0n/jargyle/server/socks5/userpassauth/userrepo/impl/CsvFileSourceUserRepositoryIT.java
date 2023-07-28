@@ -56,7 +56,7 @@ public class CsvFileSourceUserRepositoryIT {
 		IoHelper.writeStringToFile(
 				TestResourceConstants.JARGYLE_SERVER_SOCKS5_USERPASSAUTH_USERREPO_IMPL_USERS_CSV_FILE.getContentAsString(), 
 				usrsCsvFile);
-		// ThreadHelper.sleepForThreeSeconds();
+		ThreadHelper.sleepForThreeSeconds();
 		/* 
 		 * get FileMonitor to recognize file has been modified if it hasn't already
 		 * (occurs intermittently in Windows) 
@@ -80,7 +80,7 @@ public class CsvFileSourceUserRepositoryIT {
 		IoHelper.writeStringToFile(
 				TestResourceConstants.JARGYLE_SERVER_SOCKS5_USERPASSAUTH_USERREPO_IMPL_ADDED_USER_TO_USERS_CSV_FILE.getContentAsString(), 
 				usrsCsvFile);
-		// ThreadHelper.sleepForThreeSeconds();
+		ThreadHelper.sleepForThreeSeconds();
 		/* 
 		 * get FileMonitor to recognize file has been modified if it hasn't already
 		 * (occurs intermittently in Windows) 

@@ -61,7 +61,7 @@ public class XmlFileSourceConfigurationRepositoryIT {
 		IoHelper.writeStringToFile(
 				TestResourceConstants.JARGYLE_SERVER_CONFIGREPO_IMPL_CONFIGURATION_FILE.getContentAsString(), 
 				configFile);
-		// ThreadHelper.sleepForThreeSeconds();
+		ThreadHelper.sleepForThreeSeconds();
 		/* 
 		 * get FileMonitor to recognize file has been modified if it hasn't already
 		 * (occurs intermittently in Windows) 
@@ -90,7 +90,7 @@ public class XmlFileSourceConfigurationRepositoryIT {
 		IoHelper.writeStringToFile(
 				TestResourceConstants.JARGYLE_SERVER_CONFIGREPO_IMPL_CONFIGURATION_FILE.getContentAsString(), 
 				configFile);
-		// ThreadHelper.sleepForThreeSeconds();
+		ThreadHelper.sleepForThreeSeconds();
 		/* 
 		 * get FileMonitor to recognize file has been modified if it hasn't already
 		 * (occurs intermittently in Windows) 

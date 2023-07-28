@@ -227,7 +227,7 @@ public class EchoThroughSocksServerUsingSocks5GssapiauthIT {
 		if (!socksServerUsingSocks5GssapiauthNecReferenceImpl.getState().equals(SocksServer.State.STOPPED)) {
 			socksServerUsingSocks5GssapiauthNecReferenceImpl.stop();
 		}
-		// ThreadHelper.sleepForThreeSeconds();
+		ThreadHelper.sleepForThreeSeconds();
 	}
 	
 	@Test

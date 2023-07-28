@@ -63,7 +63,7 @@ public class EchoThroughSocksServerIT {
 		if (!socksServer.getState().equals(SocksServer.State.STOPPED)) {
 			socksServer.stop();
 		}
-		// ThreadHelper.sleepForThreeSeconds();
+		ThreadHelper.sleepForThreeSeconds();
 	}
 
 	@Test

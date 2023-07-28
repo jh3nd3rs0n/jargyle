@@ -402,7 +402,7 @@ public class EchoThroughSocksServerChainingIT {
 		stopSocksServers(socksServers);
 		stopSocksServers(socksServersUsingSocks5Userpassauth);
 		stopSocksServers(socksServersUsingSsl);
-		// ThreadHelper.sleepForThreeSeconds();
+		ThreadHelper.sleepForThreeSeconds();
 	}
 	
 	@Test

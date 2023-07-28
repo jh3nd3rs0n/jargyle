@@ -221,7 +221,7 @@ public class EchoThroughSocksServerUsingSslIT {
 		if (!socksServerUsingSslAndRequiredClientAuth.getState().equals(SocksServer.State.STOPPED)) {
 			socksServerUsingSslAndRequiredClientAuth.stop();
 		}
-		// ThreadHelper.sleepForThreeSeconds();
+		ThreadHelper.sleepForThreeSeconds();
 	}
 	
 	@Test

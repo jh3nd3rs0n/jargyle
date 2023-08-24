@@ -112,12 +112,10 @@ To run automated testing, run the following commands:
 
 ```bash
     
-    cd directory-containing-pom.xml
+    cd jargyle
     mvn clean verify
     
 ```
-
-Where `directory-containing-pom.xml` would be the actual directory that contains the file `pom.xml`. This file is used by the Maven command `mvn`.
 
 ## 6. Building
 
@@ -129,13 +127,15 @@ To build and package Jargyle, run the following command:
     
 ```
 
-After running the aforementioned command, the built JAR file and its dependent JAR files can be found in the following path:
+After running the aforementioned command, the built binary distribution can be found in the following path:
 
 ```text
     
-    target/
+    jargyle-distribution/target/jargyle-distribution-VERSION-bin
     
 ```
+
+`VERSION` is replaced by the actual version.
 
 ## 7. Running Jargyle 
 

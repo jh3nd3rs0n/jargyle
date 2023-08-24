@@ -30,4 +30,4 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
       - name: Test with Maven
-        run: mvn --batch-mode --file=pom.xml --update-snapshots verify
+        run: mvn --batch-mode --file=pom.xml --update-snapshots --projects=\!jargyle-distribution verify

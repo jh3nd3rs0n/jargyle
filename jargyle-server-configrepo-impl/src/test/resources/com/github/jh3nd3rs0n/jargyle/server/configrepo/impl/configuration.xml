@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configuration>
+    <settings>
+        <setting>
+            <name>port</name>
+            <value>1234</value>
+        </setting>
+        <setting>
+            <name>backlog</name>
+            <value>100</value>
+        </setting>
+        <setting>
+            <name>socks5.methods</name>
+            <socks5.methods>
+                <socks5.method>NO_AUTHENTICATION_REQUIRED</socks5.method>
+            </socks5.methods>
+        </setting>
+    </settings>
+</configuration>

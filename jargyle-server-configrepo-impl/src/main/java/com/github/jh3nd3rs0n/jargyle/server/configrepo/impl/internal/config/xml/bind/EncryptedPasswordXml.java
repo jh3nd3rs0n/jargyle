@@ -3,7 +3,7 @@ package com.github.jh3nd3rs0n.jargyle.server.configrepo.impl.internal.config.xml
 import java.util.Objects;
 
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
-import com.github.jh3nd3rs0n.jargyle.common.security.internal.encryptedpass.impl.AesCfbPkcs5PaddingEncryptedPassword;
+import com.github.jh3nd3rs0n.jargyle.common.security.encryptedpass.impl.AesCfbPkcs5PaddingEncryptedPassword;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;

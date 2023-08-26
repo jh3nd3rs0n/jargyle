@@ -131,11 +131,11 @@ After running the aforementioned command, the built binary distribution can be f
 
 ```text
     
-    jargyle-distribution/target/jargyle-distribution-VERSION-bin
+    jargyle-distribution/target/jargyle-distribution-VERSION-bin/
     
 ```
 
-`VERSION` is replaced by the actual version.
+Where `VERSION` is the actual version.
 
 ## 7. Running Jargyle 
 

@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
@@ -143,6 +144,11 @@ public final class XmlFileSourceConfigurationRepository
 		} catch (IOException e) {
 			throw new UncheckedIOException(e);
 		}
+	}
+	
+	public static void xsd(final OutputStream out) throws IOException {
+		ConfigurationXml.xsd(out);
+		return;
 	}
 	
 	private volatile Configuration configuration;

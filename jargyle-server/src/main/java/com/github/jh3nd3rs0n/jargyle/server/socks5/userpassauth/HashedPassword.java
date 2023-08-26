@@ -1,6 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth;
 
-import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.internal.hashedpass.impl.Pbkdf2WithHmacSha256HashedPassword;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.hashedpass.impl.Pbkdf2WithHmacSha256HashedPassword;
 
 public abstract class HashedPassword {
 

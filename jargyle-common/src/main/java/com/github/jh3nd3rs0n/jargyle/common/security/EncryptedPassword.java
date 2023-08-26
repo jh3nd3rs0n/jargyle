@@ -1,6 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.common.security;
 
-import com.github.jh3nd3rs0n.jargyle.common.security.internal.encryptedpass.impl.AesCfbPkcs5PaddingEncryptedPassword;
+import com.github.jh3nd3rs0n.jargyle.common.security.encryptedpass.impl.AesCfbPkcs5PaddingEncryptedPassword;
 
 public abstract class EncryptedPassword {
 	

@@ -10,6 +10,7 @@
 	<name>jargyle</name>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.javadoc.skippedModules>echo,jargyle-cli,jargyle-internal,jargyle-server-test,jargyle-server-configrepo-impl,jargyle-server-configrepo-impl-test,test-help</maven.javadoc.skippedModules>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -37,6 +38,19 @@
 						<source>1.9</source>
 						<target>1.9</target>
 					</configuration>
+				</plugin>
+				<plugin>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>3.5.0</version>
+					<executions>
+						<execution>
+							<id>aggregate</id>
+							<goals>
+								<goal>aggregate</goal>
+							</goals>
+							<phase>site</phase>
+						</execution>
+					</executions>
 				</plugin>
 				<plugin>
 					<artifactId>maven-surefire-plugin</artifactId>
@@ -107,8 +121,10 @@
 		<module>jargyle-transport</module>
 		<module>jargyle-client</module>
 		<module>jargyle-server</module>
+		<module>jargyle-server-test</module>
 		<module>echo</module>
 		<module>jargyle-server-configrepo-impl</module>
+		<module>jargyle-server-configrepo-impl-test</module>
 		<module>jargyle-cli</module>
 		<module>jargyle-distribution</module>
 	</modules>

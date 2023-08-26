@@ -13,8 +13,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
-import com.github.jh3nd3rs0n.jargyle.server.internal.concurrent.ExecutorHelper;
-
 public final class IoStressor {
 	
 	public static final class Stats {

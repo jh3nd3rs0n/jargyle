@@ -4,7 +4,7 @@ import java.util.Base64;
 import java.util.Base64.Decoder;
 import java.util.Base64.Encoder;
 
-import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.internal.hashedpass.impl.Pbkdf2WithHmacSha256HashedPassword;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.hashedpass.impl.Pbkdf2WithHmacSha256HashedPassword;
 
 final class Pbkdf2WithHmacSha256HashedPasswordValueConversionHelper {
 

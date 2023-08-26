@@ -12,7 +12,7 @@ import com.github.jh3nd3rs0n.argmatey.ArgMatey.CLI;
 import com.github.jh3nd3rs0n.argmatey.ArgMatey.OptionType;
 import com.github.jh3nd3rs0n.argmatey.ArgMatey.TerminationRequestedException;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.HelpText;
-import com.github.jh3nd3rs0n.jargyle.server.configrepo.impl.internal.config.xml.bind.ConfigurationXml;
+import com.github.jh3nd3rs0n.jargyle.server.configrepo.impl.XmlFileSourceConfigurationRepository;
 
 public final class JargyleCLI extends CLI {
 
@@ -74,7 +74,7 @@ public final class JargyleCLI extends CLI {
 					final boolean posixCorrect)
 					throws TerminationRequestedException {
 				try {
-					ConfigurationXml.writeXsdTo(System.out);
+					XmlFileSourceConfigurationRepository.xsd(System.out);
 				} catch (IOException e) {
 					throw new AssertionError(e);
 				}

@@ -22,43 +22,37 @@
 		</dependency>
 		<dependency>
 			<groupId>com.github.jh3nd3rs0n</groupId>
-			<artifactId>jargyle-internal</artifactId>
+			<artifactId>jargyle-server</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.github.jh3nd3rs0n</groupId>
-			<artifactId>jargyle-server</artifactId>
+			<artifactId>test-help</artifactId>
 			<version>${project.parent.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.kerby</groupId>
 			<artifactId>kerb-client-api-all</artifactId>
-			<version>2.0.0</version>			
-			<scope>test</scope>
+			<version>2.0.0</version>
+			<scope>test</scope>			
 		</dependency>
 		<dependency>
 			<groupId>org.apache.kerby</groupId>
 			<artifactId>kerb-server-api-all</artifactId>
-			<version>2.0.0</version>			
-			<scope>test</scope>
+			<version>2.0.0</version>
+			<scope>test</scope>			
 		</dependency>
 		<dependency>
 			<groupId>org.apache.kerby</groupId>
 			<artifactId>kerb-simplekdc</artifactId>
-			<version>2.0.0</version>			
-			<scope>test</scope>
+			<version>2.0.0</version>
+			<scope>test</scope>			
 		</dependency>
 		<dependency>
 			<groupId>org.apache.kerby</groupId>
 			<artifactId>kerby-asn1</artifactId>
 			<version>2.0.0</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.github.jh3nd3rs0n</groupId>
-			<artifactId>test-help</artifactId>
-			<version>${project.parent.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

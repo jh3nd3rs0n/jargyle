@@ -30,7 +30,7 @@ final class UserCsvRowConversionHelper {
 		}
 		sb.append(name);
 		sb.append(',');
-		sb.append(user.getHashedPassword().toValue());
+		sb.append(user.getHashedPassword().getArgumentsValue());
 		return sb.toString();
 	}
 	

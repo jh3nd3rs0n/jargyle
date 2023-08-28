@@ -110,20 +110,20 @@ public final class AesCfbPkcs5PaddingEncryptedPassword extends EncryptedPassword
 	}
 	
 	public static AesCfbPkcs5PaddingEncryptedPassword newInstance(
-			final String value) {
-		String[] valueElements = value.split(";", 3);
-		if (valueElements.length != 3) {
+			final String argumentsValue) {
+		String[] argumentsValueElements = argumentsValue.split(";", 3);
+		if (argumentsValueElements.length != 3) {
 			throw new IllegalArgumentException(String.format(
-					"value must be in the following format: " 
+					"arguments value must be in the following format: " 
 					+ "ENCODED_KEY_BASE_64_STRING;"
 					+ "ENCRYPTED_BASE_64_STRING;"
 					+ "INITIALIZATION_VECTOR_BASE_64_STRING "
-					+ "actual value is %s",
-					value));
+					+ "actual arguments value is %s",
+					argumentsValue));
 		}
-		String encodedKeyBase64String = valueElements[0];
-		String encryptedBase64String = valueElements[1];
-		String initializationVectorBase64String = valueElements[2];
+		String encodedKeyBase64String = argumentsValueElements[0];
+		String encryptedBase64String = argumentsValueElements[1];
+		String initializationVectorBase64String = argumentsValueElements[2];
 		Decoder decoder = Base64.getDecoder();
 		byte[] encodedKey = decoder.decode(encodedKeyBase64String);
 		byte[] encrypted = decoder.decode(encryptedBase64String);
@@ -171,6 +171,16 @@ public final class AesCfbPkcs5PaddingEncryptedPassword extends EncryptedPassword
 		return true;
 	}
 	
+	@Override
+	public String getArgumentsValue() {
+		Encoder encoder = Base64.getEncoder();
+		return String.format(
+				"%s;%s;%s", 
+				encoder.encodeToString(this.encodedKey),
+				encoder.encodeToString(this.encrypted),
+				encoder.encodeToString(this.initializationVector));
+	}
+	
 	public byte[] getEncodedKey() {
 		return Arrays.copyOf(this.encodedKey, this.encodedKey.length);
 	}
@@ -178,7 +188,7 @@ public final class AesCfbPkcs5PaddingEncryptedPassword extends EncryptedPassword
 	public byte[] getEncrypted() {
 		return Arrays.copyOf(this.encrypted, this.encrypted.length);
 	}
-	
+
 	public byte[] getInitializationVector() {
 		return Arrays.copyOf(
 				this.initializationVector, this.initializationVector.length);
@@ -231,7 +241,7 @@ public final class AesCfbPkcs5PaddingEncryptedPassword extends EncryptedPassword
 		} while (ch != -1);
 		return password;
 	}
-
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -240,16 +250,6 @@ public final class AesCfbPkcs5PaddingEncryptedPassword extends EncryptedPassword
 		result = prime * result + Arrays.hashCode(this.encrypted);
 		result = prime * result + Arrays.hashCode(this.initializationVector);
 		return result;
-	}
-	
-	@Override
-	public String toValue() {
-		Encoder encoder = Base64.getEncoder();
-		return String.format(
-				"%s;%s;%s", 
-				encoder.encodeToString(this.encodedKey),
-				encoder.encodeToString(this.encrypted),
-				encoder.encodeToString(this.initializationVector));
 	}
 
 }

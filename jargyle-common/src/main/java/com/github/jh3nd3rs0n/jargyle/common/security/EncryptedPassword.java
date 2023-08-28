@@ -8,8 +8,8 @@ public abstract class EncryptedPassword {
 		return AesCfbPkcs5PaddingEncryptedPassword.newInstance(password);
 	}
 	
-	public static EncryptedPassword newInstance(
-			final Class<?> cls, final String value) {
+	private static EncryptedPassword newInstance(
+			final Class<?> cls, final String argumentsValue) {
 		if (cls.equals(EncryptedPassword.class) 
 				|| !EncryptedPassword.class.isAssignableFrom(cls)) {
 			throw new IllegalArgumentException(String.format(
@@ -17,7 +17,8 @@ public abstract class EncryptedPassword {
 					EncryptedPassword.class.getName()));			
 		}
 		if (cls.equals(AesCfbPkcs5PaddingEncryptedPassword.class)) {
-			return AesCfbPkcs5PaddingEncryptedPassword.newInstance(value);
+			return AesCfbPkcs5PaddingEncryptedPassword.newInstance(
+					argumentsValue);
 		}
 		throw new IllegalArgumentException(String.format(
 				"unknown EncryptedPassword: %s",
@@ -25,33 +26,32 @@ public abstract class EncryptedPassword {
 	}
 	
 	public static EncryptedPassword newInstance(
-			final String className, final String value) {
+			final String className, final String argumentsValue) {
 		Class<?> cls = null;
 		try {
 			cls = Class.forName(className);
 		} catch (ClassNotFoundException e) {
 			throw new IllegalArgumentException(e);
 		}
-		return newInstance(cls, value);		
+		return newInstance(cls, argumentsValue);		
 	}
 
 	@Override
 	public abstract boolean equals(Object obj);
 	
-	public abstract char[] getPassword();
+	public abstract String getArgumentsValue();
 
+	public abstract char[] getPassword();
+	
 	@Override
 	public abstract int hashCode();
 	
-	
 	@Override
-	public String toString() {
+	public final String toString() {
 		return String.format(
 				"%s:%s", 
 				this.getClass().getName(), 
-				this.toValue());
+				this.getArgumentsValue());
 	}
-	
-	public abstract String toValue();
 	
 }

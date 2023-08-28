@@ -55,17 +55,17 @@ public final class Pbkdf2WithHmacSha256HashedPassword extends HashedPassword {
 	}
 	
 	public static Pbkdf2WithHmacSha256HashedPassword newInstance(
-			final String value) {
-		String[] valueElements = value.split(";", 2);
-		if (valueElements.length != 2) {
+			final String argumentsValue) {
+		String[] argumentsValueElements = argumentsValue.split(";", 2);
+		if (argumentsValueElements.length != 2) {
 			throw new IllegalArgumentException(String.format(
-					"value must be in the following format: "
+					"arguments value must be in the following format: "
 					+ "HASH_BASE_64_STRING;SALT_BASE_64_STRING "
-					+ "actual value is %s",
-					value));
+					+ "actual arguments value is %s",
+					argumentsValue));
 		}
-		String hashBase64String = valueElements[0];
-		String saltBase64String = valueElements[1];
+		String hashBase64String = argumentsValueElements[0];
+		String saltBase64String = argumentsValueElements[1];
 		Decoder decoder = Base64.getDecoder();
 		byte[] hash = decoder.decode(hashBase64String);
 		byte[] salt = decoder.decode(saltBase64String);
@@ -113,6 +113,16 @@ public final class Pbkdf2WithHmacSha256HashedPassword extends HashedPassword {
 		return true;
 	}
 	
+	@Override
+	public String getArgumentsValue() {
+		Encoder encoder = Base64.getEncoder();
+		return String.format(
+				"%s;%s", 
+				this.getClass().getName(),
+				encoder.encodeToString(this.hash),
+				encoder.encodeToString(this.salt));		
+	}
+
 	public byte[] getHash() {
 		return Arrays.copyOf(this.hash, this.hash.length);
 	}
@@ -129,23 +139,13 @@ public final class Pbkdf2WithHmacSha256HashedPassword extends HashedPassword {
 		result = prime * result + Arrays.hashCode(this.salt);
 		return result;
 	}
-
+	
 	@Override
 	public boolean passwordEquals(final char[] password) {
 		Pbkdf2WithHmacSha256HashedPassword other = 
 				Pbkdf2WithHmacSha256HashedPassword.newInstance(
 						password, this.salt); 
 		return this.equals(other);
-	}
-	
-	@Override
-	public String toValue() {
-		Encoder encoder = Base64.getEncoder();
-		return String.format(
-				"%s;%s", 
-				this.getClass().getName(),
-				encoder.encodeToString(this.hash),
-				encoder.encodeToString(this.salt));		
 	}
 	
 }

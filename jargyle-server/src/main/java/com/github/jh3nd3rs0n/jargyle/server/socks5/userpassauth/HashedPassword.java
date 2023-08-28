@@ -8,8 +8,8 @@ public abstract class HashedPassword {
 		return Pbkdf2WithHmacSha256HashedPassword.newInstance(password);
 	}
 	
-	public static HashedPassword newInstance(
-			final Class<?> cls, final String value) {
+	private static HashedPassword newInstance(
+			final Class<?> cls, final String argumentsValue) {
 		if (cls.equals(HashedPassword.class) 
 				|| !HashedPassword.class.isAssignableFrom(cls)) {
 			throw new IllegalArgumentException(String.format(
@@ -17,7 +17,8 @@ public abstract class HashedPassword {
 					HashedPassword.class.getName()));			
 		}
 		if (cls.equals(Pbkdf2WithHmacSha256HashedPassword.class)) {
-			return Pbkdf2WithHmacSha256HashedPassword.newInstance(value);
+			return Pbkdf2WithHmacSha256HashedPassword.newInstance(
+					argumentsValue);
 		}
 		throw new IllegalArgumentException(String.format(
 				"unknown HashedPassword: %s",
@@ -28,11 +29,11 @@ public abstract class HashedPassword {
 		String[] sElements = s.split(":", 2);
 		if (sElements.length != 2) {
 			throw new IllegalArgumentException(
-					"user repository must be in the following format: "
-					+ "CLASS_NAME:VALUE");
+					"hashed password must be in the following format: "
+					+ "CLASS_NAME:ARGUMENTS_VALUE");
 		}
 		String className = sElements[0];
-		String value = sElements[1];
+		String argumentsValue = sElements[1];
 		Class<?> cls = null;
 		try {
 			cls = Class.forName(className);
@@ -41,25 +42,25 @@ public abstract class HashedPassword {
 					"%s not found", 
 					className));
 		}
-		return newInstance(cls, value);		
+		return newInstance(cls, argumentsValue);		
 	}
 
 	@Override
 	public abstract boolean equals(Object obj);
 	
+	public abstract String getArgumentsValue();
+
 	@Override
 	public abstract int hashCode();
-
+	
 	public abstract boolean passwordEquals(final char[] password);
 	
 	@Override
-	public String toString() {
+	public final String toString() {
 		return String.format(
 				"%s:%s", 
 				this.getClass().getName(), 
-				this.toValue());
+				this.getArgumentsValue());
 	}
-	
-	public abstract String toValue();
 	
 }

@@ -118,7 +118,6 @@ public final class Pbkdf2WithHmacSha256HashedPassword extends HashedPassword {
 		Encoder encoder = Base64.getEncoder();
 		return String.format(
 				"%s;%s", 
-				this.getClass().getName(),
 				encoder.encodeToString(this.hash),
 				encoder.encodeToString(this.salt));		
 	}

@@ -1,4 +1,4 @@
-package com.github.jh3nd3rs0n.jargyle.common.security.encryptedpass.impl;
+package com.github.jh3nd3rs0n.jargyle.common.security.internal.encryptedpass.impl;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -13,6 +13,9 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidParameterSpecException;
 import java.util.Arrays;
+import java.util.Base64;
+import java.util.Base64.Decoder;
+import java.util.Base64.Encoder;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -104,6 +107,29 @@ public final class AesCfbPkcs5PaddingEncryptedPassword extends EncryptedPassword
 		}
 		byte[] secret = byteArrayOutputStream.toByteArray();
 		return newInstance(secret);
+	}
+	
+	public static AesCfbPkcs5PaddingEncryptedPassword newInstance(
+			final String value) {
+		String[] valueElements = value.split(";", 3);
+		if (valueElements.length != 3) {
+			throw new IllegalArgumentException(String.format(
+					"value must be in the following format: " 
+					+ "ENCODED_KEY_BASE_64_STRING;"
+					+ "ENCRYPTED_BASE_64_STRING;"
+					+ "INITIALIZATION_VECTOR_BASE_64_STRING "
+					+ "actual value is %s",
+					value));
+		}
+		String encodedKeyBase64String = valueElements[0];
+		String encryptedBase64String = valueElements[1];
+		String initializationVectorBase64String = valueElements[2];
+		Decoder decoder = Base64.getDecoder();
+		byte[] encodedKey = decoder.decode(encodedKeyBase64String);
+		byte[] encrypted = decoder.decode(encryptedBase64String);
+		byte[] initializationVector = decoder.decode(
+				initializationVectorBase64String);
+		return newInstance(encodedKey, encrypted, initializationVector);
 	}
 	
 	private final byte[] encodedKey;
@@ -215,19 +241,15 @@ public final class AesCfbPkcs5PaddingEncryptedPassword extends EncryptedPassword
 		result = prime * result + Arrays.hashCode(this.initializationVector);
 		return result;
 	}
-
+	
 	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append(this.getClass().getSimpleName())
-			.append(" [encodedKey=")
-			.append(Arrays.toString(this.encodedKey))
-			.append(", encrypted=")
-			.append(Arrays.toString(this.encrypted))
-			.append(", initializationVector=")
-			.append(Arrays.toString(this.initializationVector))
-			.append("]");
-		return builder.toString();
+	public String toValue() {
+		Encoder encoder = Base64.getEncoder();
+		return String.format(
+				"%s;%s;%s", 
+				encoder.encodeToString(this.encodedKey),
+				encoder.encodeToString(this.encrypted),
+				encoder.encodeToString(this.initializationVector));
 	}
 
 }

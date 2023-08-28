@@ -11,6 +11,7 @@ module com.github.jh3nd3rs0n.jargyle.server {
 	// export Rules to RulesTest
 	exports com.github.jh3nd3rs0n.jargyle.server.internal.server to com.github.jh3nd3rs0n.jargyle.server.test;
 	exports com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth;
+	// export Pbkdf2WithHmacSha256HashedPassword to Pbkdf2WithHmacSha256HashedPasswordTest
+	exports com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.internal.hashedpass.impl to com.github.jh3nd3rs0n.jargyle.server.test;
 	exports com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.userrepo.impl;
-	exports com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.hashedpass.impl;
 }

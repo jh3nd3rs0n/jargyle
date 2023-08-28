@@ -1,10 +1,13 @@
-package com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.hashedpass.impl;
+package com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.internal.hashedpass.impl;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.util.Arrays;
+import java.util.Base64;
+import java.util.Base64.Decoder;
+import java.util.Base64.Encoder;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
@@ -49,6 +52,24 @@ public final class Pbkdf2WithHmacSha256HashedPassword extends HashedPassword {
 			throw new AssertionError(e);
 		}
 		return new Pbkdf2WithHmacSha256HashedPassword(hsh, slt);
+	}
+	
+	public static Pbkdf2WithHmacSha256HashedPassword newInstance(
+			final String value) {
+		String[] valueElements = value.split(";", 2);
+		if (valueElements.length != 2) {
+			throw new IllegalArgumentException(String.format(
+					"value must be in the following format: "
+					+ "HASH_BASE_64_STRING;SALT_BASE_64_STRING "
+					+ "actual value is %s",
+					value));
+		}
+		String hashBase64String = valueElements[0];
+		String saltBase64String = valueElements[1];
+		Decoder decoder = Base64.getDecoder();
+		byte[] hash = decoder.decode(hashBase64String);
+		byte[] salt = decoder.decode(saltBase64String);
+		return Pbkdf2WithHmacSha256HashedPassword.newInstance(hash, salt);		
 	}
 	
 	private static byte[] newSalt() {
@@ -116,17 +137,15 @@ public final class Pbkdf2WithHmacSha256HashedPassword extends HashedPassword {
 						password, this.salt); 
 		return this.equals(other);
 	}
-
+	
 	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append(this.getClass().getSimpleName())
-			.append(" [hash=")
-			.append(Arrays.toString(this.hash))
-			.append(", salt=")
-			.append(Arrays.toString(this.salt))
-			.append("]");
-		return builder.toString();
+	public String toValue() {
+		Encoder encoder = Base64.getEncoder();
+		return String.format(
+				"%s;%s", 
+				this.getClass().getName(),
+				encoder.encodeToString(this.hash),
+				encoder.encodeToString(this.salt));		
 	}
 	
 }

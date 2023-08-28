@@ -1,10 +1,10 @@
-package com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.hashedpass.impl.test;
+package com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.internal.hashedpass.impl.test;
 
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.hashedpass.impl.Pbkdf2WithHmacSha256HashedPassword;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.internal.hashedpass.impl.Pbkdf2WithHmacSha256HashedPassword;
 
 public class Pbkdf2WithHmacSha256HashedPasswordTest {
 

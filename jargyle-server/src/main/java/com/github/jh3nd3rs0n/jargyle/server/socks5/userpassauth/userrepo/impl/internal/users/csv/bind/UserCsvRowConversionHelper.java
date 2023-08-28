@@ -15,9 +15,8 @@ final class UserCsvRowConversionHelper {
 			return null;
 		}
 		String name = values.get(0);
-		HashedPassword hashedPassword = 
-				HashedPasswordValueConversionHelper.toHashedPassword(
-						values.get(1));
+		HashedPassword hashedPassword = HashedPassword.newInstance(
+				values.get(1));
 		return User.newInstance(name, hashedPassword);
 	}
 	
@@ -31,8 +30,7 @@ final class UserCsvRowConversionHelper {
 		}
 		sb.append(name);
 		sb.append(',');
-		sb.append(HashedPasswordValueConversionHelper.toValue(
-				user.getHashedPassword()));
+		sb.append(user.getHashedPassword().toValue());
 		return sb.toString();
 	}
 	

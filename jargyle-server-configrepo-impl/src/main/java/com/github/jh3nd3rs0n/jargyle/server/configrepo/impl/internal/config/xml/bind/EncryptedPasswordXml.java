@@ -1,33 +1,38 @@
 package com.github.jh3nd3rs0n.jargyle.server.configrepo.impl.internal.config.xml.bind;
 
-import java.util.Objects;
-
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
-import com.github.jh3nd3rs0n.jargyle.common.security.encryptedpass.impl.AesCfbPkcs5PaddingEncryptedPassword;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
-import jakarta.xml.bind.annotation.XmlSeeAlso;
+import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
 
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlType(name = "encryptedPassword", propOrder = { })
-@XmlSeeAlso(value = { AesCfbPkcs5PaddingEncryptedPasswordXml.class })
-abstract class EncryptedPasswordXml extends ValueXml { 
+class EncryptedPasswordXml extends ValueXml { 
+
+	@XmlElement(name = "className", required = true)
+	protected String className;
+	@XmlElement(name = "value", required = true)
+	protected String value;
 	
-	public static EncryptedPasswordXml newInstance(
-			final EncryptedPassword encryptedPassword) {
-		Objects.requireNonNull(encryptedPassword);
-		if (encryptedPassword instanceof AesCfbPkcs5PaddingEncryptedPassword) {
-			return new AesCfbPkcs5PaddingEncryptedPasswordXml(
-					(AesCfbPkcs5PaddingEncryptedPassword) encryptedPassword);
-		}
-		throw new IllegalArgumentException(String.format(
-				"no %s for %s", 
-				EncryptedPasswordXml.class.getName(),
-				encryptedPassword.getClass().getName()));
+	public EncryptedPasswordXml() {
+		this.className = null;
+		this.value = null;
 	}
 	
-	public abstract EncryptedPassword toEncryptedPassword();
+	public EncryptedPasswordXml(final EncryptedPassword encryptedPassword) {
+		this.className = encryptedPassword.getClass().getName();
+		this.value = encryptedPassword.toValue();
+	}
+	
+	public EncryptedPassword toEncryptedPassword() {
+		return EncryptedPassword.newInstance(this.className, this.value);
+	}
+	
+	@Override
+	public Object toValue() {
+		return this.toEncryptedPassword();
+	}
 	
 }

@@ -25,7 +25,7 @@ class SettingXml {
 	private static ValueXml newValueXml(final Object val) {
 		Objects.requireNonNull(val);
 		if (val instanceof EncryptedPassword) {
-			return EncryptedPasswordXml.newInstance((EncryptedPassword) val);
+			return new EncryptedPasswordXml((EncryptedPassword) val);
 		}
 		if (val instanceof Methods) {
 			return new Socks5MethodsXml((Methods) val);

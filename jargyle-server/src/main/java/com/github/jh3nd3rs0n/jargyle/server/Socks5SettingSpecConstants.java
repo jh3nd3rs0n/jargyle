@@ -487,7 +487,7 @@ public final class Socks5SettingSpecConstants {
 	
 	@HelpText(
 			doc = "The user repository used for username password authentication", 
-			usage = "socks5.userpassauth.userRepository=CLASS_NAME:INITIALIZATION_VALUE"
+			usage = "socks5.userpassauth.userRepository=CLASS_NAME:INITIALIZATION_STRING"
 	)	
 	public static final SettingSpec<UserRepository> SOCKS5_USERPASSAUTH_USER_REPOSITORY = 
 			SETTING_SPECS.addThenGet(new Socks5UserpassauthUserRepositorySettingSpec(

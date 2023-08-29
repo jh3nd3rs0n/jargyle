@@ -9,7 +9,7 @@ public abstract class HashedPassword {
 	}
 	
 	private static HashedPassword newInstance(
-			final Class<?> cls, final String argumentsValue) {
+			final Class<?> cls, final String argumentsString) {
 		if (cls.equals(HashedPassword.class) 
 				|| !HashedPassword.class.isAssignableFrom(cls)) {
 			throw new IllegalArgumentException(String.format(
@@ -18,7 +18,7 @@ public abstract class HashedPassword {
 		}
 		if (cls.equals(Pbkdf2WithHmacSha256HashedPassword.class)) {
 			return Pbkdf2WithHmacSha256HashedPassword.newInstance(
-					argumentsValue);
+					argumentsString);
 		}
 		throw new IllegalArgumentException(String.format(
 				"unknown HashedPassword: %s",
@@ -30,10 +30,10 @@ public abstract class HashedPassword {
 		if (sElements.length != 2) {
 			throw new IllegalArgumentException(
 					"hashed password must be in the following format: "
-					+ "CLASS_NAME:ARGUMENTS_VALUE");
+					+ "CLASS_NAME:ARGUMENTS_STRING");
 		}
 		String className = sElements[0];
-		String argumentsValue = sElements[1];
+		String argumentsString = sElements[1];
 		Class<?> cls = null;
 		try {
 			cls = Class.forName(className);
@@ -42,13 +42,13 @@ public abstract class HashedPassword {
 					"%s not found", 
 					className));
 		}
-		return newInstance(cls, argumentsValue);		
+		return newInstance(cls, argumentsString);		
 	}
 
 	@Override
 	public abstract boolean equals(Object obj);
 	
-	public abstract String getArgumentsValue();
+	public abstract String getArgumentsString();
 
 	@Override
 	public abstract int hashCode();
@@ -60,7 +60,7 @@ public abstract class HashedPassword {
 		return String.format(
 				"%s:%s", 
 				this.getClass().getName(), 
-				this.getArgumentsValue());
+				this.getArgumentsString());
 	}
 	
 }

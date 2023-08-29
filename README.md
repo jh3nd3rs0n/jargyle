@@ -160,7 +160,7 @@ The following is the command line help for Jargyle (displayed when using the com
            jargyle --version
     
     COMMANDS:
-      manage-socks5-users USER_REPOSITORY_CLASS_NAME:INITIALIZATION_VALUE COMMAND
+      manage-socks5-users USER_REPOSITORY_CLASS_NAME:INITIALIZATION_STRING COMMAND
           Manage SOCKS5 users
       new-server-config-file [OPTIONS] FILE
           Create a new server configuration file based on the provided options
@@ -183,7 +183,7 @@ The following is the command line help for the command `manage-socks5-users` (di
 
 ```text
     
-    Usage: jargyle manage-socks5-users USER_REPOSITORY_CLASS_NAME:INITIALIZATION_VALUE COMMAND
+    Usage: jargyle manage-socks5-users USER_REPOSITORY_CLASS_NAME:INITIALIZATION_STRING COMMAND
            jargyle manage-socks5-users --help
     
     COMMANDS:
@@ -656,7 +656,7 @@ The following is a list of available settings for the SOCKS server (displayed wh
         socks5.onUdpAssociate.relayOutboundBandwidthLimit=INTEGER_BETWEEN_1_AND_2147483647
             The upper limit on bandwidth in bytes per second of receiving outbound data to be relayed
     
-        socks5.userpassauth.userRepository=CLASS_NAME:INITIALIZATION_VALUE
+        socks5.userpassauth.userRepository=CLASS_NAME:INITIALIZATION_STRING
             The user repository used for username password authentication
     
       SSL SETTINGS:
@@ -1518,7 +1518,7 @@ Partial configuration file example:
         <name>socks5.userpassauth.userRepository</name>
         <socks5.userpassauth.userRepository>
             <className>com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.userrepo.impl.StringSourceUserRepository</className>
-            <initializationValue>Aladdin:opensesame Jasmine:mission%3Aimpossible</initializationValue>
+            <initializationString>Aladdin:opensesame Jasmine:mission%3Aimpossible</initializationString>
         </socks5.userpassauth.userRepository>
     </setting>
     
@@ -1549,7 +1549,7 @@ Partial configuration file example:
         <name>socks5.userpassauth.userRepository</name>
         <socks5.userpassauth.userRepository>
             <className>com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.userrepo.impl.CsvFileSourceUserRepository</className>
-            <initializationValue>users.csv</initializationValue>
+            <initializationString>users.csv</initializationString>
         </socks5.userpassauth.userRepository>
     </setting>
     
@@ -1569,11 +1569,11 @@ To add users to a user repository, you would run the following command:
 
 ```bash
     
-    ./bin/jargyle manage-socks5-users USER_REPOSITORY_CLASS_NAME:INITIALIZATION_VALUE add
+    ./bin/jargyle manage-socks5-users USER_REPOSITORY_CLASS_NAME:INITIALIZATION_STRING add
     
 ```
 
-Where `USER_REPOSITORY_CLASS_NAME` is the name of the class that extends `com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.UserRepository` and `INITIALIZATION_VALUE` is the initialization string value.
+Where `USER_REPOSITORY_CLASS_NAME` is the name of the class that extends `com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.UserRepository` and `INITIALIZATION_STRING` is the initialization string value.
 
 Once you have run the command, an interactive prompt will ask you for the new user's name, password, and re-typed password. It will repeat the process to add another user if you want to continue to enter another user. If you do not want to enter any more users, the new users will be saved.
 
@@ -1613,11 +1613,11 @@ To list all users from a user repository, you would run the following command:
 
 ```bash
     
-    ./bin/jargyle manage-socks5-users USER_REPOSITORY_CLASS_NAME:INITIALIZATION_VALUE list
+    ./bin/jargyle manage-socks5-users USER_REPOSITORY_CLASS_NAME:INITIALIZATION_STRING list
     
 ```
 
-Where `USER_REPOSITORY_CLASS_NAME` is the name of the class that extends `com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.UserRepository` and `INITIALIZATION_VALUE` is the initialization string value.
+Where `USER_REPOSITORY_CLASS_NAME` is the name of the class that extends `com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.UserRepository` and `INITIALIZATION_STRING` is the initialization string value.
 
 Once you have run the command, it will list all the users from the user repository.
 
@@ -1637,11 +1637,11 @@ To remove a user from a user repository, you would run the following command:
 
 ```bash
     
-    ./bin/jargyle manage-socks5-users USER_REPOSITORY_CLASS_NAME:INITIALIZATION_VALUE remove NAME
+    ./bin/jargyle manage-socks5-users USER_REPOSITORY_CLASS_NAME:INITIALIZATION_STRING remove NAME
     
 ```
 
-Where `USER_REPOSITORY_CLASS_NAME` is the name of the class that extends `com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.UserRepository`, `INITIALIZATION_VALUE` is the initialization string value, and `NAME` is the specified name of the user to be removed from the user repository.
+Where `USER_REPOSITORY_CLASS_NAME` is the name of the class that extends `com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.UserRepository`, `INITIALIZATION_STRING` is the initialization string value, and `NAME` is the specified name of the user to be removed from the user repository.
 
 Once you have run the command, the user of the specified name will be removed from the user repository.
 

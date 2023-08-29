@@ -15,7 +15,7 @@ public abstract class UserRepository {
 	}
 	
 	public static UserRepository newInstance(
-			final Class<?> cls, final String initializationValue) {
+			final Class<?> cls, final String initializationString) {
 		if (cls.equals(UserRepository.class) 
 				|| !UserRepository.class.isAssignableFrom(cls)) {
 			throw new IllegalArgumentException(String.format(
@@ -24,10 +24,10 @@ public abstract class UserRepository {
 		}
 		UserRepository userRepository = 
 				newInstanceFromStaticStringConversionMethod(
-						cls, initializationValue);
+						cls, initializationString);
 		if (userRepository == null) {
 			userRepository = newInstanceFromStringConversionConstructor(
-					cls, initializationValue);
+					cls, initializationString);
 		}
 		if (userRepository == null) {
 			throw new IllegalArgumentException(String.format(
@@ -47,26 +47,26 @@ public abstract class UserRepository {
 		if (sElements.length != 2) {
 			throw new IllegalArgumentException(
 					"user repository must be in the following format: "
-					+ "CLASS_NAME:INITIALIZATION_VALUE");
+					+ "CLASS_NAME:INITIALIZATION_STRING");
 		}
 		String className = sElements[0];
-		String initializationValue = sElements[1];
-		return newInstance(className, initializationValue);
+		String initializationString = sElements[1];
+		return newInstance(className, initializationString);
 	}
 	
 	public static UserRepository newInstance(
-			final String className, final String initializationValue) {
+			final String className, final String initializationString) {
 		Class<?> cls = null;
 		try {
 			cls = Class.forName(className);
 		} catch (ClassNotFoundException e) {
 			throw new IllegalArgumentException(e);
 		}
-		return newInstance(cls, initializationValue);
+		return newInstance(cls, initializationString);
 	}
 	
 	private static UserRepository newInstanceFromStaticStringConversionMethod(
-			final Class<?> cls, final String initializationValue) {
+			final Class<?> cls, final String initializationString) {
 		Method method = null;
 		for (Method meth : cls.getDeclaredMethods()) {
 			int modifiers = meth.getModifiers();
@@ -90,7 +90,7 @@ public abstract class UserRepository {
 			method.setAccessible(true);
 			try {
 				userRepository = (UserRepository) method.invoke(
-						null, initializationValue);
+						null, initializationString);
 			} catch (IllegalAccessException e) {
 				throw new AssertionError(e);
 			} catch (IllegalArgumentException e) {
@@ -103,7 +103,7 @@ public abstract class UserRepository {
 	}
 	
 	private static UserRepository newInstanceFromStringConversionConstructor(
-			final Class<?> cls, final String initializationValue) {
+			final Class<?> cls, final String initializationString) {
 		Constructor<?> constructor = null;
 		for (Constructor<?> ctor : cls.getDeclaredConstructors()) {
 			int modifiers = ctor.getModifiers();
@@ -123,7 +123,7 @@ public abstract class UserRepository {
 			constructor.setAccessible(true);
 			try {
 				userRepository = (UserRepository) constructor.newInstance(
-						initializationValue);
+						initializationString);
 			} catch (InstantiationException e) {
 				throw new AssertionError(e);
 			} catch (IllegalAccessException e) {
@@ -137,20 +137,20 @@ public abstract class UserRepository {
 		return userRepository;
 	}
 
-	private final String initializationValue;
+	private final String initializationString;
 	
-	public UserRepository(final String initializationVal) {
+	public UserRepository(final String initializationStr) {
 		Objects.requireNonNull(
-				initializationVal, "initialization value must not be null");
-		this.initializationValue = initializationVal;
+				initializationStr, "initialization string must not be null");
+		this.initializationString = initializationStr;
 	}
 	
 	public abstract User get(final String name);
 	
 	public abstract Users getAll();
 	
-	public final String getInitializationValue() {
-		return this.initializationValue;
+	public final String getInitializationString() {
+		return this.initializationString;
 	}
 	
 	public abstract void put(final User user);
@@ -164,7 +164,7 @@ public abstract class UserRepository {
 		StringBuilder builder = new StringBuilder();
 		builder.append(this.getClass().getName())
 			.append(':')
-			.append(this.initializationValue);
+			.append(this.initializationString);
 		return builder.toString();
 	}
 	

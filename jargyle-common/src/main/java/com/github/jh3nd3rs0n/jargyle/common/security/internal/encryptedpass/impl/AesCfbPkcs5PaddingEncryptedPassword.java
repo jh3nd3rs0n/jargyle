@@ -110,25 +110,41 @@ public final class AesCfbPkcs5PaddingEncryptedPassword extends EncryptedPassword
 	}
 	
 	public static AesCfbPkcs5PaddingEncryptedPassword newInstance(
-			final String argumentsValue) {
-		String[] argumentsValueElements = argumentsValue.split(";", 3);
-		if (argumentsValueElements.length != 3) {
-			throw new IllegalArgumentException(String.format(
-					"arguments value must be in the following format: " 
-					+ "ENCODED_KEY_BASE_64_STRING;"
-					+ "ENCRYPTED_BASE_64_STRING;"
-					+ "INITIALIZATION_VECTOR_BASE_64_STRING "
-					+ "actual arguments value is %s",
-					argumentsValue));
+			final String argumentsString) {
+		String message = String.format(
+				"arguments string must be in the following format: " 
+				+ "ENCODED_KEY_BASE_64_STRING;"
+				+ "ENCRYPTED_BASE_64_STRING;"
+				+ "INITIALIZATION_VECTOR_BASE_64_STRING "
+				+ "actual arguments string is %s",
+				argumentsString);
+		String[] arguments = argumentsString.split(";", 3);
+		if (arguments.length != 3) {
+			throw new IllegalArgumentException(message);
 		}
-		String encodedKeyBase64String = argumentsValueElements[0];
-		String encryptedBase64String = argumentsValueElements[1];
-		String initializationVectorBase64String = argumentsValueElements[2];
+		String encodedKeyBase64String = arguments[0];
+		String encryptedBase64String = arguments[1];
+		String initializationVectorBase64String = arguments[2];
 		Decoder decoder = Base64.getDecoder();
-		byte[] encodedKey = decoder.decode(encodedKeyBase64String);
-		byte[] encrypted = decoder.decode(encryptedBase64String);
-		byte[] initializationVector = decoder.decode(
-				initializationVectorBase64String);
+		byte[] encodedKey = null;
+		try {
+			encodedKey = decoder.decode(encodedKeyBase64String);
+		} catch (IllegalArgumentException e) {
+			throw new IllegalArgumentException(message, e);
+		}
+		byte[] encrypted = null;
+		try {
+			encrypted = decoder.decode(encryptedBase64String);
+		} catch (IllegalArgumentException e) {
+			throw new IllegalArgumentException(message, e);
+		}
+		byte[] initializationVector = null; 
+		try {
+			initializationVector = decoder.decode(
+					initializationVectorBase64String);
+		} catch (IllegalArgumentException e) {
+			throw new IllegalArgumentException(message, e);
+		}
 		return newInstance(encodedKey, encrypted, initializationVector);
 	}
 	
@@ -172,7 +188,7 @@ public final class AesCfbPkcs5PaddingEncryptedPassword extends EncryptedPassword
 	}
 	
 	@Override
-	public String getArgumentsValue() {
+	public String getArgumentsString() {
 		Encoder encoder = Base64.getEncoder();
 		return String.format(
 				"%s;%s;%s", 

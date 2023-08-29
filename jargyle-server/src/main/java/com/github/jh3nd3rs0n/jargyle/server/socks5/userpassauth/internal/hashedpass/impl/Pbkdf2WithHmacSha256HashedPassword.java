@@ -55,20 +55,31 @@ public final class Pbkdf2WithHmacSha256HashedPassword extends HashedPassword {
 	}
 	
 	public static Pbkdf2WithHmacSha256HashedPassword newInstance(
-			final String argumentsValue) {
-		String[] argumentsValueElements = argumentsValue.split(";", 2);
-		if (argumentsValueElements.length != 2) {
-			throw new IllegalArgumentException(String.format(
-					"arguments value must be in the following format: "
-					+ "HASH_BASE_64_STRING;SALT_BASE_64_STRING "
-					+ "actual arguments value is %s",
-					argumentsValue));
+			final String argumentsString) {
+		String message = String.format(
+				"arguments string must be in the following format: "
+				+ "HASH_BASE_64_STRING;SALT_BASE_64_STRING "
+				+ "actual arguments string is %s",
+				argumentsString);
+		String[] arguments = argumentsString.split(";", 2);
+		if (arguments.length != 2) {
+			throw new IllegalArgumentException(message);
 		}
-		String hashBase64String = argumentsValueElements[0];
-		String saltBase64String = argumentsValueElements[1];
+		String hashBase64String = arguments[0];
+		String saltBase64String = arguments[1];
 		Decoder decoder = Base64.getDecoder();
-		byte[] hash = decoder.decode(hashBase64String);
-		byte[] salt = decoder.decode(saltBase64String);
+		byte[] hash = null;
+		try { 
+			hash = decoder.decode(hashBase64String);
+		} catch (IllegalArgumentException e) {
+			throw new IllegalArgumentException(message, e);
+		}
+		byte[] salt = null;
+		try {
+			salt = decoder.decode(saltBase64String);
+		} catch (IllegalArgumentException e) {
+			throw new IllegalArgumentException(message, e);
+		}
 		return Pbkdf2WithHmacSha256HashedPassword.newInstance(hash, salt);		
 	}
 	
@@ -114,7 +125,7 @@ public final class Pbkdf2WithHmacSha256HashedPassword extends HashedPassword {
 	}
 	
 	@Override
-	public String getArgumentsValue() {
+	public String getArgumentsString() {
 		Encoder encoder = Base64.getEncoder();
 		return String.format(
 				"%s;%s", 

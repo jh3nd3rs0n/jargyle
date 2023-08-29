@@ -9,7 +9,7 @@ public abstract class EncryptedPassword {
 	}
 	
 	private static EncryptedPassword newInstance(
-			final Class<?> cls, final String argumentsValue) {
+			final Class<?> cls, final String argumentsString) {
 		if (cls.equals(EncryptedPassword.class) 
 				|| !EncryptedPassword.class.isAssignableFrom(cls)) {
 			throw new IllegalArgumentException(String.format(
@@ -18,7 +18,7 @@ public abstract class EncryptedPassword {
 		}
 		if (cls.equals(AesCfbPkcs5PaddingEncryptedPassword.class)) {
 			return AesCfbPkcs5PaddingEncryptedPassword.newInstance(
-					argumentsValue);
+					argumentsString);
 		}
 		throw new IllegalArgumentException(String.format(
 				"unknown EncryptedPassword: %s",
@@ -26,20 +26,20 @@ public abstract class EncryptedPassword {
 	}
 	
 	public static EncryptedPassword newInstance(
-			final String className, final String argumentsValue) {
+			final String className, final String argumentsString) {
 		Class<?> cls = null;
 		try {
 			cls = Class.forName(className);
 		} catch (ClassNotFoundException e) {
 			throw new IllegalArgumentException(e);
 		}
-		return newInstance(cls, argumentsValue);		
+		return newInstance(cls, argumentsString);		
 	}
 
 	@Override
 	public abstract boolean equals(Object obj);
 	
-	public abstract String getArgumentsValue();
+	public abstract String getArgumentsString();
 
 	public abstract char[] getPassword();
 	
@@ -51,7 +51,7 @@ public abstract class EncryptedPassword {
 		return String.format(
 				"%s:%s", 
 				this.getClass().getName(), 
-				this.getArgumentsValue());
+				this.getArgumentsString());
 	}
 	
 }

@@ -81,9 +81,9 @@ public final class CsvFileSourceUserRepository extends UserRepository {
 	}
 
 	public static CsvFileSourceUserRepository newInstance(
-			final String initializationVal) {
+			final String initializationStr) {
 		CsvFileSourceUserRepository csvFileSourceUserRepository =
-				new CsvFileSourceUserRepository(initializationVal);
+				new CsvFileSourceUserRepository(initializationStr);
 		csvFileSourceUserRepository.startMonitoringCsvFile();
 		return csvFileSourceUserRepository;
 	}
@@ -154,9 +154,9 @@ public final class CsvFileSourceUserRepository extends UserRepository {
 	private final ReentrantLock lock;	
 	private volatile Users users;
 	
-	private CsvFileSourceUserRepository(final String initializationVal) {
-		super(initializationVal);
-		File file = new File(initializationVal);
+	private CsvFileSourceUserRepository(final String initializationStr) {
+		super(initializationStr);
+		File file = new File(initializationStr);
 		Users usrs = readUsersFrom(file);
 		this.csvFile = file;
 		this.executor = null;

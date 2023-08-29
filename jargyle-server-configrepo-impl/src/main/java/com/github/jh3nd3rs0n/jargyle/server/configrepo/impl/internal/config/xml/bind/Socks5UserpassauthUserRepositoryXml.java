@@ -13,23 +13,23 @@ class Socks5UserpassauthUserRepositoryXml extends ValueXml {
 
 	@XmlElement(name = "className", required = true)
 	protected String className;
-	@XmlElement(name = "initializationValue", required = true)
-	protected String initializationValue;
+	@XmlElement(name = "initializationString", required = true)
+	protected String initializationString;
 	
 	public Socks5UserpassauthUserRepositoryXml() {
 		this.className = null;
-		this.initializationValue = null;
+		this.initializationString = null;
 	}
 	
 	public Socks5UserpassauthUserRepositoryXml(
 			final UserRepository userRepository) {
 		this.className = userRepository.getClass().getName();
-		this.initializationValue = userRepository.getInitializationValue();
+		this.initializationString = userRepository.getInitializationString();
 	}
 
 	public UserRepository toUserRepository() {
 		return UserRepository.newInstance(
-				this.className, this.initializationValue);
+				this.className, this.initializationString);
 	}
 	
 	@Override

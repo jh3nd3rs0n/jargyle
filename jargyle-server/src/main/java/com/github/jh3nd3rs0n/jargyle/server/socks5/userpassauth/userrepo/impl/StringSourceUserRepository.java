@@ -11,10 +11,10 @@ public final class StringSourceUserRepository extends UserRepository {
 	private final ReentrantLock lock;
 	private final Users users;
 	
-	public StringSourceUserRepository(final String initializationVal) {
-		super(initializationVal);
+	public StringSourceUserRepository(final String initializationStr) {
+		super(initializationStr);
 		this.lock = new ReentrantLock();
-		this.users = Users.newInstance(initializationVal);
+		this.users = Users.newInstance(initializationStr);
 	}
 
 	@Override

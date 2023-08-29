@@ -103,7 +103,6 @@ public final class Socks5Worker {
 			}
 			if (firewallActionLogAction != null) {
 				firewallActionLogAction.invoke(
-						LOGGER, 
 						ObjectLogMessageHelper.objectLogMessage(
 								this,
 								"SOCKS5 request allowed based on the following "
@@ -114,7 +113,6 @@ public final class Socks5Worker {
 		} else if (firewallAction.equals(FirewallAction.DENY)
 				&& firewallActionLogAction != null) {
 			firewallActionLogAction.invoke(
-					LOGGER, 
 					ObjectLogMessageHelper.objectLogMessage(
 							this,
 							"SOCKS5 request denied based on the following "
@@ -144,7 +142,6 @@ public final class Socks5Worker {
 			if (!firewallActionAllowLimit.tryIncrementCurrentCount()) {
 				if (firewallActionAllowLimitReachedLogAction != null) {
 					firewallActionAllowLimitReachedLogAction.invoke(
-							LOGGER, 
 							ObjectLogMessageHelper.objectLogMessage(
 									this,
 									"Allowed limit has been reached based on "
@@ -415,7 +412,7 @@ public final class Socks5Worker {
 		LogAction logAction = this.getDesiredDestinationRedirectLogAction(
 				applicableRule);
 		if ((address != null || port != null) && logAction != null) {
-			logAction.invoke(LOGGER, ObjectLogMessageHelper.objectLogMessage(
+			logAction.invoke(ObjectLogMessageHelper.objectLogMessage(
 					this, 
 					"Redirecting desired destination based on the following "
 					+ "rule and context: rule: %s context: %s", 
@@ -487,7 +484,6 @@ public final class Socks5Worker {
 				this.getRouteSelectionLogAction(applicableRule);
 		if (rteSelectionLogAction != null) {
 			rteSelectionLogAction.invoke(
-					LOGGER, 
 					ObjectLogMessageHelper.objectLogMessage(
 							this,
 							"Route '%s' selected based on the following "

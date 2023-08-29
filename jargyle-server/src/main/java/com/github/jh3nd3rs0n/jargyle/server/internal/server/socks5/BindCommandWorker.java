@@ -136,7 +136,6 @@ final class BindCommandWorker extends CommandWorker {
 			}
 			if (firewallActionLogAction != null) {
 				firewallActionLogAction.invoke(
-						LOGGER, 
 						ObjectLogMessageHelper.objectLogMessage(
 								this,
 								"Second SOCKS5 reply allowed based on the "
@@ -148,7 +147,6 @@ final class BindCommandWorker extends CommandWorker {
 		} else if (firewallAction.equals(FirewallAction.DENY)
 				&& firewallActionLogAction != null) {
 			firewallActionLogAction.invoke(
-					LOGGER, 
 					ObjectLogMessageHelper.objectLogMessage(
 							this,
 							"Second SOCKS5 reply denied based on the "
@@ -179,7 +177,6 @@ final class BindCommandWorker extends CommandWorker {
 			if (!firewallActionAllowLimit.tryIncrementCurrentCount()) {
 				if (firewallActionAllowLimitReachedLogAction != null) {
 					firewallActionAllowLimitReachedLogAction.invoke(
-							LOGGER, 
 							ObjectLogMessageHelper.objectLogMessage(
 									this,
 									"Allowed limit has been reached based on "

@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.HelpText;
 
@@ -16,8 +17,8 @@ public enum LogAction {
 	LOG_AS_WARNING {
 		
 		@Override
-		public void invoke(final Logger logger, final String message) {
-			logger.warn(message);
+		public void invoke(final String message) {
+			LOGGER.warn(message);
 		}
 		
 	},
@@ -29,11 +30,14 @@ public enum LogAction {
 	LOG_AS_INFO {
 		
 		@Override
-		public void invoke(final Logger logger, final String message) {
-			logger.info(message);
+		public void invoke(final String message) {
+			LOGGER.info(message);
 		}
 		
 	};
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(
+			LogAction.class);
 	
 	public static LogAction valueOfString(final String s) {
 		LogAction logAction = null;
@@ -52,6 +56,6 @@ public enum LogAction {
 		return logAction;
 	}
 	
-	public abstract void invoke(final Logger logger, final String message);
+	public abstract void invoke(final String message);
 	
 }

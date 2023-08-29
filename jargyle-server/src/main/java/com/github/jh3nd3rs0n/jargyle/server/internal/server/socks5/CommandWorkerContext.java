@@ -77,7 +77,6 @@ final class CommandWorkerContext extends Socks5WorkerContext {
 			}
 			if (firewallActionLogAction != null) {
 				firewallActionLogAction.invoke(
-						logger, 
 						ObjectLogMessageHelper.objectLogMessage(
 								worker,
 								"SOCKS5 reply allowed based on the following "
@@ -88,7 +87,6 @@ final class CommandWorkerContext extends Socks5WorkerContext {
 		} else if (firewallAction.equals(FirewallAction.DENY)
 				&& firewallActionLogAction != null) {
 			firewallActionLogAction.invoke(
-					logger, 
 					ObjectLogMessageHelper.objectLogMessage(
 							worker,
 							"SOCKS5 reply denied based on the following "
@@ -120,7 +118,6 @@ final class CommandWorkerContext extends Socks5WorkerContext {
 			if (!firewallActionAllowLimit.tryIncrementCurrentCount()) {
 				if (firewallActionAllowLimitReachedLogAction != null) {
 					firewallActionAllowLimitReachedLogAction.invoke(
-							logger, 
 							ObjectLogMessageHelper.objectLogMessage(
 									worker,
 									"Allowed limit has been reached based on "

@@ -7,9 +7,6 @@ import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSetting;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.DtlsDatagramSocketFactory;
@@ -32,9 +29,6 @@ final class WorkerContextFactory {
 	private static final class RuleHolder {
 		private Rule rule;
 	}
-	
-	private static final Logger LOGGER = LoggerFactory.getLogger(
-			WorkerContextFactory.class);
 	
 	private DtlsDatagramSocketFactory clientFacingDtlsDatagramSocketFactory;
 	private SslSocketFactory clientSslSocketFactory;
@@ -77,7 +71,7 @@ final class WorkerContextFactory {
 				return false;
 			}
 			if (firewallActionLogAction != null) {
-				firewallActionLogAction.invoke(LOGGER, String.format(
+				firewallActionLogAction.invoke(String.format(
 						"Client allowed based on the following rule and "
 						+ "context: rule: %s context: %s",
 						applicableRule,
@@ -85,7 +79,7 @@ final class WorkerContextFactory {
 			}
 		} else if (firewallAction.equals(FirewallAction.DENY)
 				&& firewallActionLogAction != null) {
-			firewallActionLogAction.invoke(LOGGER, String.format(
+			firewallActionLogAction.invoke(String.format(
 					"Client denied based on the following rule and context: "
 					+ "rule: %s context: %s",
 					applicableRule,
@@ -108,7 +102,6 @@ final class WorkerContextFactory {
 			if (!firewallActionAllowLimit.tryIncrementCurrentCount()) {
 				if (firewallActionAllowLimitReachedLogAction != null) {
 					firewallActionAllowLimitReachedLogAction.invoke(
-							LOGGER, 
 							String.format(
 									"Allowed limit has been reached based on "
 									+ "the following rule and context: rule: "
@@ -280,7 +273,7 @@ final class WorkerContextFactory {
 		Route selectedRte = rteSelectionStrategy.selectFrom(
 				rtes.toMap().values().stream().collect(Collectors.toList()));
 		if (rteSelectionLogAction != null) {
-			rteSelectionLogAction.invoke(LOGGER, String.format(
+			rteSelectionLogAction.invoke(String.format(
 					rteSelectionLogMessageFormat, 
 					selectedRte.getId()));
 		}

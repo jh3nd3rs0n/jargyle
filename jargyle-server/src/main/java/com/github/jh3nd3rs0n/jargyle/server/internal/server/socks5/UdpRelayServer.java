@@ -144,7 +144,6 @@ final class UdpRelayServer {
 			if (firewallAction.equals(FirewallAction.ALLOW)
 					&& firewallActionLogAction != null) {
 				firewallActionLogAction.invoke(
-						LOGGER, 
 						ObjectLogMessageHelper.objectLogMessage(
 								this,
 								"Inbound UDP packet allowed based on the "
@@ -155,7 +154,6 @@ final class UdpRelayServer {
 			} else if (firewallAction.equals(FirewallAction.DENY)
 					&& firewallActionLogAction != null) {
 				firewallActionLogAction.invoke(
-						LOGGER, 
 						ObjectLogMessageHelper.objectLogMessage(
 								this,
 								"Inbound UDP packet denied based on the "
@@ -432,7 +430,6 @@ final class UdpRelayServer {
 			if (firewallAction.equals(FirewallAction.ALLOW)
 					&& firewallActionLogAction != null) {
 				firewallActionLogAction.invoke(
-						LOGGER, 
 						ObjectLogMessageHelper.objectLogMessage(
 								this,
 								"Outbound UDP packet allowed based on the "
@@ -443,7 +440,6 @@ final class UdpRelayServer {
 			} else if (firewallAction.equals(FirewallAction.DENY)
 					&& firewallActionLogAction != null) {
 				firewallActionLogAction.invoke(
-						LOGGER, 
 						ObjectLogMessageHelper.objectLogMessage(
 								this,
 								"Outbound UDP packet denied based on the "

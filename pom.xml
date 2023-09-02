@@ -11,7 +11,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.javadoc.skippedModules>
-			echo,jargyle-cli,jargyle-internal,jargyle-server-configrepo-impl,test-help</maven.javadoc.skippedModules>
+			echo,jargyle-cli,jargyle-internal,test-help</maven.javadoc.skippedModules>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -133,7 +133,6 @@
 		<module>jargyle-client</module>
 		<module>jargyle-server</module>
 		<module>echo</module>
-		<module>jargyle-server-configrepo-impl</module>
 		<module>jargyle-cli</module>
 		<module>jargyle-distribution</module>
 	</modules>

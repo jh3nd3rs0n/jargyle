@@ -33,11 +33,6 @@
 		</dependency>
 		<dependency>
 			<groupId>com.github.jh3nd3rs0n</groupId>
-			<artifactId>jargyle-server-configrepo-impl</artifactId>
-			<version>${project.parent.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.github.jh3nd3rs0n</groupId>
 			<artifactId>jargyle-transport</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>

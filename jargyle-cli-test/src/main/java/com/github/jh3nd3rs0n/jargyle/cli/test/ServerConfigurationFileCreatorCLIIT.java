@@ -1,4 +1,4 @@
-package com.github.jh3nd3rs0n.jargyle.cli;
+package com.github.jh3nd3rs0n.jargyle.cli.test;
 
 import static org.junit.Assert.assertEquals;
 
@@ -12,8 +12,9 @@ import org.junit.Test;
 
 import com.github.jh3nd3rs0n.argmatey.ArgMatey.CLI;
 import com.github.jh3nd3rs0n.argmatey.ArgMatey.TerminationRequestedException;
+import com.github.jh3nd3rs0n.jargyle.cli.ServerConfigurationFileCreatorCLI;
 import com.github.jh3nd3rs0n.test.help.IoHelper;
-import com.github.jh3nd3rs0n.test.help.TestResourceConstants;
+import com.github.jh3nd3rs0n.test.help.constants.TestResourceConstants;
 
 public class ServerConfigurationFileCreatorCLIIT {
 	

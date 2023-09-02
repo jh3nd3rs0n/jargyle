@@ -1,4 +1,6 @@
-package com.github.jh3nd3rs0n.test.help;
+package com.github.jh3nd3rs0n.test.help.constants;
+
+import com.github.jh3nd3rs0n.test.help.TestResource;
 
 public final class TestResourceConstants {
 	

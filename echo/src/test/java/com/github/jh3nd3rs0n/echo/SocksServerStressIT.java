@@ -27,8 +27,8 @@ import com.github.jh3nd3rs0n.jargyle.server.SslSettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.userrepo.impl.StringSourceUserRepository;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Methods;
-import com.github.jh3nd3rs0n.test.help.TestResourceConstants;
 import com.github.jh3nd3rs0n.test.help.TestStringConstants;
+import com.github.jh3nd3rs0n.test.help.constants.TestResourceConstants;
 
 /*
  * This integration test is ignored due to its success being dependent on the 

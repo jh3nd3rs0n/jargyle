@@ -21,9 +21,9 @@ import com.github.jh3nd3rs0n.jargyle.server.GeneralSettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
 import com.github.jh3nd3rs0n.jargyle.server.SslSettingSpecConstants;
-import com.github.jh3nd3rs0n.test.help.TestResourceConstants;
 import com.github.jh3nd3rs0n.test.help.TestStringConstants;
 import com.github.jh3nd3rs0n.test.help.ThreadHelper;
+import com.github.jh3nd3rs0n.test.help.constants.TestResourceConstants;
 
 public class EchoThroughSocksServerUsingSslIT {
 	

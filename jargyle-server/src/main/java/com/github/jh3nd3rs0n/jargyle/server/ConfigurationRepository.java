@@ -6,7 +6,7 @@ import com.github.jh3nd3rs0n.jargyle.server.configrepo.impl.XmlFileSourceConfigu
 
 public abstract class ConfigurationRepository {
 
-	public static ConfigurationRepository newFileSourceConfigurationRepository(
+	public static ConfigurationRepository newFileSourceInstance(
 			final File file) {
 		return XmlFileSourceConfigurationRepository.newInstance(file);
 	}

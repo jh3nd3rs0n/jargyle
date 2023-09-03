@@ -65,7 +65,7 @@ public final class ServerConfigurationFileCreatorCLI extends ServerConfiguration
 	private void newConfigurationFile(final String file) {
 		File f = new File(file);
 		ConfigurationRepository configurationRepository =
-				ConfigurationRepository.newFileSourceConfigurationRepository(f);
+				ConfigurationRepository.newFileSourceInstance(f);
 		configurationRepository.set(this.getConfiguration());
 	}
 	

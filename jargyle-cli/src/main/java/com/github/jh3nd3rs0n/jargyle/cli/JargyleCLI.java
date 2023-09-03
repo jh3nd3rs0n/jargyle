@@ -74,7 +74,7 @@ public final class JargyleCLI extends CLI {
 					final boolean posixCorrect)
 					throws TerminationRequestedException {
 				try {
-					XmlFileSourceConfigurationRepository.xsd(System.out);
+					XmlFileSourceConfigurationRepository.writeXsdTo(System.out);
 				} catch (IOException e) {
 					throw new AssertionError(e);
 				}

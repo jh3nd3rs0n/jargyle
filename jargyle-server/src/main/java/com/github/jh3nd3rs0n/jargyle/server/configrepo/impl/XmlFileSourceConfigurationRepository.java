@@ -146,8 +146,8 @@ public final class XmlFileSourceConfigurationRepository
 		}
 	}
 	
-	public static void xsd(final OutputStream out) throws IOException {
-		ConfigurationXml.xsd(out);
+	public static void writeXsdTo(final OutputStream out) throws IOException {
+		ConfigurationXml.writeXsdTo(out);
 		return;
 	}
 	

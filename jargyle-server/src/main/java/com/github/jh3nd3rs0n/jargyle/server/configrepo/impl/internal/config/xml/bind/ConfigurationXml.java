@@ -53,7 +53,7 @@ public class ConfigurationXml {
 		}
 	}
 	
-	public static void xsd(final OutputStream out) throws IOException {
+	public static void writeXsdTo(final OutputStream out) throws IOException {
 		JAXBContext jaxbContext = null;
 		try {
 			jaxbContext = JAXBContext.newInstance(ConfigurationXml.class);

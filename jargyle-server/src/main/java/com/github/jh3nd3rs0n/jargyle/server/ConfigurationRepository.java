@@ -1,6 +1,15 @@
 package com.github.jh3nd3rs0n.jargyle.server;
 
+import java.io.File;
+
+import com.github.jh3nd3rs0n.jargyle.server.configrepo.impl.XmlFileSourceConfigurationRepository;
+
 public abstract class ConfigurationRepository {
+
+	public static ConfigurationRepository newFileSourceConfigurationRepository(
+			final File file) {
+		return XmlFileSourceConfigurationRepository.newInstance(file);
+	}
 	
 	public abstract Configuration get();
 	

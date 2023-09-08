@@ -72,6 +72,7 @@ public final class RelayServer {
 		private final InputStream inputStream;
 		private final Logger logger;
 		private final OutputStream outputStream;
+		private final RelayServer relayServer;
 				
 		public DataWorker(final DataWorkerContext context) throws IOException {
 			this.bufferSize = context.getBufferSize();
@@ -80,6 +81,7 @@ public final class RelayServer {
 			this.inputStream = context.getInputSocketInputStream();
 			this.logger = LoggerFactory.getLogger(DataWorker.class);
 			this.outputStream = context.getOutputSocketOutputStream();
+			this.relayServer = context.getRelayServer();
 		}
 		
 		@Override
@@ -191,7 +193,7 @@ public final class RelayServer {
 					break;
 				}
 			}
-			this.dataWorkerContext.stopRelayServerIfNotStopped();
+			this.relayServer.stopIfNotStopped();
 		}
 
 		@Override
@@ -241,12 +243,12 @@ public final class RelayServer {
 			return this.outputSocket.getOutputStream();
 		}
 		
-		public final void setIdleStartTime(final long time) {
-			this.relayServer.setIdleStartTime(time);
+		public final RelayServer getRelayServer() {
+			return this.relayServer;
 		}
 		
-		public final void stopRelayServerIfNotStopped() {
-			this.relayServer.stopIfNotStopped();
+		public final void setIdleStartTime(final long time) {
+			this.relayServer.setIdleStartTime(time);
 		}
 
 		@Override

@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.SequenceInputStream;
+import java.io.UncheckedIOException;
 import java.net.Socket;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,10 +29,10 @@ import com.github.jh3nd3rs0n.jargyle.server.Socks5RuleArgSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5RuleConditionSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5RuleResultSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
-import com.github.jh3nd3rs0n.jargyle.server.internal.server.ClientIOExceptionLoggingHelper;
 import com.github.jh3nd3rs0n.jargyle.server.internal.server.Route;
 import com.github.jh3nd3rs0n.jargyle.server.internal.server.Routes;
 import com.github.jh3nd3rs0n.jargyle.server.internal.server.Rules;
+import com.github.jh3nd3rs0n.jargyle.server.internal.server.Worker;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Address;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.AddressTypeNotSupportedException;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.ClientMethodSelectionMessage;
@@ -45,25 +46,24 @@ import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Reply;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Request;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Version;
 
-public final class Socks5Worker {
+public class Socks5Worker extends Worker {
 
 	private InputStream clientInputStream;
-	private Socket clientSocket;
 	private final Configuration configuration;
 	private final Logger logger;
 	private final Routes routes;
 	private final Rules rules;
 	private final Settings settings;
-	private Socks5WorkerContext socks5WorkerContext;
+	private final Socks5WorkerContext socks5WorkerContext;
 	
-	public Socks5Worker(final Socks5WorkerContext context) {
-		Socket clientSock = context.getClientSocket();
+	public Socks5Worker(
+			final Socket clientSocket, final Socks5WorkerContext context) {
+		super(clientSocket);
 		Configuration config = context.getConfiguration();
 		Routes rtes = context.getRoutes();
 		Rules rls = context.getRules();
 		Settings sttngs = config.getSettings();
 		this.clientInputStream = null;
-		this.clientSocket = clientSock;
 		this.configuration = config;
 		this.logger = LoggerFactory.getLogger(Socks5Worker.class);
 		this.routes = rtes;
@@ -78,7 +78,7 @@ public final class Socks5Worker {
 		if (applicableRule == null) {
 			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
 					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
-			this.socks5WorkerContext.sendSocks5Reply(this, socks5Rep, this.logger);
+			this.sendSocks5Reply(socks5Rep);
 			return false;
 		}
 		if (!this.canApplyRule(applicableRule)) {
@@ -89,7 +89,7 @@ public final class Socks5Worker {
 		if (firewallAction == null) {
 			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
 					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
-			this.socks5WorkerContext.sendSocks5Reply(this, socks5Rep, this.logger);
+			this.sendSocks5Reply(socks5Rep);
 			return false;
 		}
 		LogAction firewallActionLogAction =
@@ -124,7 +124,7 @@ public final class Socks5Worker {
 		}
 		Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
 				Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
-		this.socks5WorkerContext.sendSocks5Reply(this, socks5Rep, this.logger);
+		this.sendSocks5Reply(socks5Rep);
 		return false;
 	}
 	
@@ -151,8 +151,7 @@ public final class Socks5Worker {
 				}
 				Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
 						Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
-				this.socks5WorkerContext.sendSocks5Reply(
-						this, socks5Rep, this.logger);
+				this.sendSocks5Reply(socks5Rep);
 				return false;
 			}
 			this.socks5WorkerContext.addBelowAllowLimitRule(applicableRule);
@@ -191,7 +190,7 @@ public final class Socks5Worker {
 		MethodSubnegotiationResults methodSubnegotiationResults = null;
 		try {
 			methodSubnegotiationResults = methodSubnegotiator.subnegotiate(
-					this.clientSocket, this.configuration);
+					this.getClientSocket(), this.configuration);
 		} catch (MethodSubnegotiationException e) {
 			if (e.getCause() == null) {
 				this.logger.debug( 
@@ -212,8 +211,7 @@ public final class Socks5Worker {
 					e);
 			return null;				
 		} catch (IOException e) {
-			ClientIOExceptionLoggingHelper.log(
-					this.logger,
+			this.logClientIoException(
 					ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Error in sub-negotiating with the client using "
@@ -275,8 +273,7 @@ public final class Socks5Worker {
 		try {
 			cmsm = ClientMethodSelectionMessage.newInstanceFrom(in);
 		} catch (IOException e) {
-			ClientIOExceptionLoggingHelper.log(
-					this.logger,
+			this.logClientIoException(
 					ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Error in parsing the method selection message "
@@ -307,10 +304,9 @@ public final class Socks5Worker {
 				"Sending %s", 
 				smsm.toString()));
 		try {
-			this.socks5WorkerContext.writeThenFlush(smsm.toByteArray());
+			this.sendToClient(smsm.toByteArray());
 		} catch (IOException e) {
-			ClientIOExceptionLoggingHelper.log(
-					this.logger,
+			this.logClientIoException(
 					ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Error in writing the method selection message to "
@@ -333,7 +329,7 @@ public final class Socks5Worker {
 					e);
 			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
 					Reply.ADDRESS_TYPE_NOT_SUPPORTED);
-			this.socks5WorkerContext.sendSocks5Reply(this, socks5Rep, this.logger);
+			this.sendSocks5Reply(socks5Rep);
 			return null;
 		} catch (CommandNotSupportedException e) {
 			this.logger.debug( 
@@ -342,11 +338,10 @@ public final class Socks5Worker {
 					e);
 			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
 					Reply.COMMAND_NOT_SUPPORTED);
-			this.socks5WorkerContext.sendSocks5Reply(this, socks5Rep, this.logger);
+			this.sendSocks5Reply(socks5Rep);
 			return null;
 		} catch (IOException e) {
-			ClientIOExceptionLoggingHelper.log(
-					this.logger, 
+			this.logClientIoException(
 					ObjectLogMessageHelper.objectLogMessage(
 							this, "Error in parsing the SOCKS5 request"),
 					e);
@@ -360,16 +355,15 @@ public final class Socks5Worker {
 	}
 	
 	private RuleContext newSocks5RequestRuleContext(
-			final Socket clientSock, 
 			final MethodSubnegotiationResults methSubnegotiationResults, 
 			final Socks5Request socks5Req) {
 		RuleContext socks5RequestRuleContext = new RuleContext();
 		socks5RequestRuleContext.putRuleArgValue(
 				GeneralRuleArgSpecConstants.CLIENT_ADDRESS, 
-				clientSock.getInetAddress().getHostAddress());
+				this.getClientSocket().getInetAddress().getHostAddress());
 		socks5RequestRuleContext.putRuleArgValue(
 				GeneralRuleArgSpecConstants.SOCKS_SERVER_ADDRESS, 
-				clientSock.getLocalAddress().getHostAddress());
+				this.getClientSocket().getLocalAddress().getHostAddress());
 		socks5RequestRuleContext.putRuleArgValue(
 				Socks5RuleArgSpecConstants.SOCKS5_METHOD, 
 				methSubnegotiationResults.getMethod().toString());
@@ -421,46 +415,50 @@ public final class Socks5Worker {
 		return req;
 	}
 	
-	public void run() throws IOException {
-		this.clientInputStream = this.clientSocket.getInputStream();
-		Method method = this.negotiateMethod();
-		if (method == null) { return; } 
-		MethodSubnegotiationResults methodSubnegotiationResults = 
-				this.doMethodSubnegotiation(method);
-		if (methodSubnegotiationResults == null) { return; }
-		Socket socket = methodSubnegotiationResults.getSocket();
-		this.clientInputStream = socket.getInputStream();
-		this.clientSocket = socket;
-		this.socks5WorkerContext.setClientSocket(this.clientSocket);
-		Socks5Request socks5Request = this.newSocks5Request();
-		if (socks5Request == null) { return; }
-		RuleContext socks5RequestRuleContext = this.newSocks5RequestRuleContext(
-				this.clientSocket,
-				methodSubnegotiationResults,
-				socks5Request);
-		Rule applicableRule = this.rules.firstAppliesTo(
-				socks5RequestRuleContext);
-		if (!this.canAllowSocks5Request(
-				applicableRule, socks5RequestRuleContext)) {
-			return;
+	@Override
+	public void run() {
+		try {
+			this.clientInputStream = this.getClientSocket().getInputStream();
+			Method method = this.negotiateMethod();
+			if (method == null) { return; } 
+			MethodSubnegotiationResults methodSubnegotiationResults = 
+					this.doMethodSubnegotiation(method);
+			if (methodSubnegotiationResults == null) { return; }
+			Socket socket = methodSubnegotiationResults.getSocket();
+			this.clientInputStream = socket.getInputStream();
+			this.setClientSocket(socket);
+			Socks5Request socks5Request = this.newSocks5Request();
+			if (socks5Request == null) { return; }
+			RuleContext socks5RequestRuleContext = 
+					this.newSocks5RequestRuleContext(
+							methodSubnegotiationResults, socks5Request);
+			Rule applicableRule = this.rules.firstAppliesTo(
+					socks5RequestRuleContext);
+			if (!this.canAllowSocks5Request(
+					applicableRule, socks5RequestRuleContext)) {
+				return;
+			}
+			Route selectedRoute = this.selectRoute(
+					applicableRule, socks5RequestRuleContext);
+			this.socks5WorkerContext.setSelectedRoute(selectedRoute);
+			socks5Request = this.redirectSocks5RequestIfSpecified(
+					socks5Request, applicableRule, socks5RequestRuleContext);
+			CommandWorkerFactory commandWorkerFactory =
+					CommandWorkerFactory.getInstance(
+							socks5Request.getCommand());
+			CommandWorkerContext commandWorkerContext =	
+					new CommandWorkerContext(
+							this.socks5WorkerContext,
+							methodSubnegotiationResults,
+							socks5Request,
+							applicableRule,
+							socks5RequestRuleContext);
+			CommandWorker commandWorker = commandWorkerFactory.newCommandWorker(
+					this.getClientSocket(), commandWorkerContext);
+			commandWorker.run();			
+		} catch (IOException e) {
+			throw new UncheckedIOException(e);
 		}
-		Route selectedRoute = this.selectRoute(
-				applicableRule, socks5RequestRuleContext);
-		this.socks5WorkerContext.setSelectedRoute(selectedRoute);
-		socks5Request = this.redirectSocks5RequestIfSpecified(
-				socks5Request, applicableRule, socks5RequestRuleContext);
-		CommandWorkerFactory commandWorkerFactory =
-				CommandWorkerFactory.getInstance(
-						socks5Request.getCommand());
-		CommandWorkerContext commandWorkerContext =	new CommandWorkerContext(
-				this.socks5WorkerContext,
-				methodSubnegotiationResults,
-				socks5Request,
-				applicableRule,
-				socks5RequestRuleContext);
-		CommandWorker commandWorker = commandWorkerFactory.newCommandWorker(
-				commandWorkerContext);
-		commandWorker.run();			
 	}
 	
 	private Route selectRoute(
@@ -494,11 +492,30 @@ public final class Socks5Worker {
 		return selectedRte;
 	}
 	
+	protected final boolean sendSocks5Reply(final Socks5Reply socks5Rep) {
+		this.logger.debug(ObjectLogMessageHelper.objectLogMessage(
+				this, 
+				"Sending %s",
+				socks5Rep.toString()));		
+		try {
+			this.sendToClient(socks5Rep.toByteArray());
+		} catch (IOException e) {
+			this.logClientIoException(
+					ObjectLogMessageHelper.objectLogMessage(
+							this, "Error in writing SOCKS5 reply"), 
+					e);
+			return false;
+		}
+		return true;
+	}
+	
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append(this.getClass().getSimpleName())
-			.append(" [socks5WorkerContext=")
+			.append(" [getClientSocket()=")
+			.append(this.getClientSocket())
+			.append(", socks5WorkerContext=")
 			.append(this.socks5WorkerContext)
 			.append("]");
 		return builder.toString();

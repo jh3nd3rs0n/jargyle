@@ -1,6 +1,7 @@
 package com.github.jh3nd3rs0n.jargyle.server.internal.server.socks5;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.net.BindException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -38,11 +39,9 @@ import com.github.jh3nd3rs0n.jargyle.server.internal.server.Rules;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Reply;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Reply;
 
-final class ConnectCommandWorker extends CommandWorker {
+final class ConnectCommandWorker extends TcpBasedCommandWorker {
 
 	private Rule applicableRule;
-	private final Socket clientSocket;
-	private final CommandWorkerContext commandWorkerContext;
 	private final String desiredDestinationAddress;
 	private final int desiredDestinationPort;
 	private final Logger logger;
@@ -50,10 +49,10 @@ final class ConnectCommandWorker extends CommandWorker {
 	private final Rules rules;
 	private final Settings settings;
 	
-	public ConnectCommandWorker(final CommandWorkerContext context) {
-		super(context);
+	public ConnectCommandWorker(
+			final Socket clientSocket, final CommandWorkerContext context) {
+		super(clientSocket, context);
 		Rule applicableRl = context.getApplicableRule();
-		Socket clientSock = context.getClientSocket();
 		String desiredDestinationAddr =	context.getDesiredDestinationAddress();
 		int desiredDestinationPrt = context.getDesiredDestinationPort();
 		NetObjectFactory netObjFactory = 
@@ -61,8 +60,6 @@ final class ConnectCommandWorker extends CommandWorker {
 		Rules rls = context.getRules();
 		Settings sttngs = context.getSettings();
 		this.applicableRule = applicableRl;
-		this.clientSocket = clientSock;
-		this.commandWorkerContext = context;
 		this.desiredDestinationAddress = desiredDestinationAddr;
 		this.desiredDestinationPort = desiredDestinationPrt;
 		this.logger = LoggerFactory.getLogger(ConnectCommandWorker.class);
@@ -94,7 +91,7 @@ final class ConnectCommandWorker extends CommandWorker {
 					e);
 			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
 					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep, this.logger);
+			this.sendSocks5Reply(socks5Rep);
 			return false;			
 		} catch (SocketException e) {
 			this.logger.error( 
@@ -103,7 +100,7 @@ final class ConnectCommandWorker extends CommandWorker {
 					e);
 			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
 					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep, this.logger);
+			this.sendSocks5Reply(socks5Rep);
 			return false;
 		}
 		return true;
@@ -374,6 +371,26 @@ final class ConnectCommandWorker extends CommandWorker {
 				GeneralSettingSpecConstants.SOCKET_SETTINGS);
 	}
 
+	private Socket limitClientSocket(final Socket clientSocket) {
+		Socket clientSock = clientSocket;
+		Integer outboundBandwidthLimit = this.getRelayOutboundBandwidthLimit();
+		if (outboundBandwidthLimit != null) {
+			clientSock = new BandwidthLimitedSocket(
+					clientSock, outboundBandwidthLimit.intValue());
+		}
+		return clientSock;
+	}
+	
+	private Socket limitServerFacingSocket(final Socket serverFacingSocket) {
+		Socket serverFacingSock = serverFacingSocket;
+		Integer inboundBandwidthLimit = this.getRelayInboundBandwidthLimit();
+		if (inboundBandwidthLimit != null) {
+			serverFacingSock = new BandwidthLimitedSocket(
+					serverFacingSock, inboundBandwidthLimit.intValue());
+		}
+		return serverFacingSock;
+	}
+	
 	private Socket newExtemporaneousServerFacingSocket(
 			final InetAddress bindInetAddress, 
 			final PortRanges bindPortRanges) {
@@ -401,8 +418,7 @@ final class ConnectCommandWorker extends CommandWorker {
 							e);
 					socks5Rep = Socks5Reply.newFailureInstance(
 							Reply.HOST_UNREACHABLE);
-					this.commandWorkerContext.sendSocks5Reply(
-							this, socks5Rep, this.logger);
+					this.sendSocks5Reply(socks5Rep);
 					return null;
 				} catch (IOException e) {
 					if (ThrowableHelper.isOrHasInstanceOf(
@@ -419,8 +435,7 @@ final class ConnectCommandWorker extends CommandWorker {
 								e);
 						socks5Rep = Socks5Reply.newFailureInstance(
 								Reply.NETWORK_UNREACHABLE);
-						this.commandWorkerContext.sendSocks5Reply(
-								this, socks5Rep, this.logger);
+						this.sendSocks5Reply(socks5Rep);
 						return null;						
 					}
 					this.logger.error( 
@@ -431,8 +446,7 @@ final class ConnectCommandWorker extends CommandWorker {
 							e);
 					socks5Rep = Socks5Reply.newFailureInstance(
 							Reply.GENERAL_SOCKS_SERVER_FAILURE);
-					this.commandWorkerContext.sendSocks5Reply(
-							this, socks5Rep, this.logger);
+					this.sendSocks5Reply(socks5Rep);
 					return null;
 				}
 				serverFacingSocketBound = true;
@@ -448,7 +462,7 @@ final class ConnectCommandWorker extends CommandWorker {
 							bindPortRanges));
 			socks5Rep = Socks5Reply.newFailureInstance(
 					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep, this.logger);
+			this.sendSocks5Reply(socks5Rep);
 			return null;			
 		}
 		return serverFacingSocket;
@@ -501,8 +515,7 @@ final class ConnectCommandWorker extends CommandWorker {
 							e);
 					socks5Rep = Socks5Reply.newFailureInstance(
 							Reply.GENERAL_SOCKS_SERVER_FAILURE);
-					this.commandWorkerContext.sendSocks5Reply(
-							this, socks5Rep, this.logger);
+					this.sendSocks5Reply(socks5Rep);
 					try {
 						serverFacingSocket.close();
 					} catch (IOException ex) {
@@ -535,8 +548,7 @@ final class ConnectCommandWorker extends CommandWorker {
 								e);
 						socks5Rep = Socks5Reply.newFailureInstance(
 								Reply.NETWORK_UNREACHABLE);
-						this.commandWorkerContext.sendSocks5Reply(
-								this, socks5Rep, this.logger);
+						this.sendSocks5Reply(socks5Rep);
 						try {
 							serverFacingSocket.close();
 						} catch (IOException ex) {
@@ -552,8 +564,7 @@ final class ConnectCommandWorker extends CommandWorker {
 							e);
 					socks5Rep = Socks5Reply.newFailureInstance(
 							Reply.GENERAL_SOCKS_SERVER_FAILURE);
-					this.commandWorkerContext.sendSocks5Reply(
-							this, socks5Rep, this.logger);
+					this.sendSocks5Reply(socks5Rep);
 					try {
 						serverFacingSocket.close();
 					} catch (IOException ex) {
@@ -574,7 +585,7 @@ final class ConnectCommandWorker extends CommandWorker {
 							bindPortRanges));
 			socks5Rep = Socks5Reply.newFailureInstance(
 					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep, this.logger);
+			this.sendSocks5Reply(socks5Rep);
 			return null;
 		}
 		return serverFacingSocket;
@@ -609,8 +620,7 @@ final class ConnectCommandWorker extends CommandWorker {
 					e);
 			socks5Rep = Socks5Reply.newFailureInstance(
 					Reply.HOST_UNREACHABLE);
-			this.commandWorkerContext.sendSocks5Reply(
-					this, socks5Rep, this.logger);
+			this.sendSocks5Reply(socks5Rep);
 			return null;
 		} catch (IOException e) {
 			this.logger.error( 
@@ -622,22 +632,27 @@ final class ConnectCommandWorker extends CommandWorker {
 					e);
 			socks5Rep = Socks5Reply.newFailureInstance(
 					Reply.HOST_UNREACHABLE);
-			this.commandWorkerContext.sendSocks5Reply(
-					this, socks5Rep, this.logger);
+			this.sendSocks5Reply(socks5Rep);
 			return null;
 		}
 		return desiredDestinationInetAddress;
 	}
 	
 	@Override
-	public void run() throws IOException {
+	public void run() {
 		Socket serverFacingSocket = null;
+		Socket clientSocket = this.getClientSocket();		
 		Socks5Reply socks5Rep = null;
 		try {
 			serverFacingSocket = this.newServerFacingSocket();
 			if (serverFacingSocket == null) {
 				return;
 			}
+			Socket serverFacingSock = this.limitServerFacingSocket(
+					serverFacingSocket);
+			serverFacingSocket = serverFacingSock;
+			Socket clientSock = this.limitClientSocket(clientSocket);
+			clientSocket = clientSock;
 			String serverBoundAddress = 
 					serverFacingSocket.getInetAddress().getHostAddress();
 			int serverBoundPort = serverFacingSocket.getPort();
@@ -645,40 +660,24 @@ final class ConnectCommandWorker extends CommandWorker {
 					Reply.SUCCEEDED, 
 					serverBoundAddress, 
 					serverBoundPort);
-			RuleContext socks5ReplyRuleContext = 
-					this.commandWorkerContext.newSocks5ReplyRuleContext(
-							socks5Rep);
+			RuleContext socks5ReplyRuleContext = this.newSocks5ReplyRuleContext(
+					socks5Rep);
 			this.applicableRule = this.rules.firstAppliesTo(
 					socks5ReplyRuleContext);
-			if (!this.commandWorkerContext.canAllowSocks5Reply(
-					this, 
-					this.applicableRule, 
-					socks5ReplyRuleContext, 
-					this.logger)) {
+			if (!this.canAllowSocks5Reply(
+					this.applicableRule, socks5ReplyRuleContext)) {
 				return;
 			}
-			if (!this.commandWorkerContext.sendSocks5Reply(
-					this, socks5Rep, this.logger)) {
+			if (!this.sendSocks5Reply(socks5Rep)) {
 				return;
 			}
-			Integer inboundBandwidthLimit = this.getRelayInboundBandwidthLimit();
-			Integer outboundBandwidthLimit = this.getRelayOutboundBandwidthLimit();
-			Socket clientSock = this.clientSocket;
-			Socket serverFacingSock = serverFacingSocket;
-			if (outboundBandwidthLimit != null) {
-				clientSock = new BandwidthLimitedSocket(
-						clientSock, outboundBandwidthLimit.intValue());
-			}
-			if (inboundBandwidthLimit != null) {
-				serverFacingSock = new BandwidthLimitedSocket(
-						serverFacingSock, inboundBandwidthLimit.intValue());
-			}			
 			RelayServer.Builder builder = new RelayServer.Builder(
-					clientSock, serverFacingSock);
+					clientSocket, serverFacingSocket);
 			builder.bufferSize(this.getRelayBufferSize());
 			builder.idleTimeout(this.getRelayIdleTimeout());
+			RelayServer relayServer = builder.build();
 			try {
-				TcpBasedCommandWorkerHelper.passData(builder);				
+				this.passData(relayServer);				
 			} catch (IOException e) {
 				this.logger.error( 
 						ObjectLogMessageHelper.objectLogMessage(
@@ -687,7 +686,11 @@ final class ConnectCommandWorker extends CommandWorker {
 			}
 		} finally {
 			if (serverFacingSocket != null && !serverFacingSocket.isClosed()) {
-				serverFacingSocket.close();
+				try {
+					serverFacingSocket.close();
+				} catch (IOException e) {
+					throw new UncheckedIOException(e);
+				}
 			}
 		}
 	}

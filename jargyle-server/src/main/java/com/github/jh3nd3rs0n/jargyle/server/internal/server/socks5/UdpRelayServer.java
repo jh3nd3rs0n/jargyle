@@ -347,7 +347,7 @@ final class UdpRelayServer {
 							t);
 				}
 			}
-			this.packetsWorkerContext.stopUdpRelayServerIfNotStopped();				
+			this.udpRelayServer.stopIfNotStopped();				
 		}
 		
 	}
@@ -639,7 +639,7 @@ final class UdpRelayServer {
 							t);
 				}
 			}
-			this.packetsWorkerContext.stopUdpRelayServerIfNotStopped();				
+			this.udpRelayServer.stopIfNotStopped();				
 		}
 
 	}
@@ -654,6 +654,7 @@ final class UdpRelayServer {
 		protected final DatagramSocket peerFacingDatagramSocket;
 		protected final RuleContext ruleContext;
 		protected final Rules rules;
+		protected final UdpRelayServer udpRelayServer;
 
 		public PacketsWorker(final PacketsWorkerContext context) {
 			this.bufferSize = context.getBufferSize();
@@ -666,6 +667,7 @@ final class UdpRelayServer {
 					context.getPeerFacingDatagramSocket();
 			this.ruleContext = context.getRuleContext();
 			this.rules = context.getRules();
+			this.udpRelayServer = context.getUdpRelayServer();
 		}
 
 		@Override
@@ -732,6 +734,10 @@ final class UdpRelayServer {
 			return this.udpRelayServer.rules;
 		}
 		
+		public final UdpRelayServer getUdpRelayServer() {
+			return this.udpRelayServer;
+		}
+		
 		public final void setClientAddress(final String address) {
 			this.udpRelayServer.setClientAddress(address);
 		}
@@ -742,10 +748,6 @@ final class UdpRelayServer {
 		
 		public final void setIdleStartTime(final long time) {
 			this.udpRelayServer.setIdleStartTime(time);
-		}
-		
-		public final void stopUdpRelayServerIfNotStopped() {
-			this.udpRelayServer.stopIfNotStopped();
 		}
 
 		@Override

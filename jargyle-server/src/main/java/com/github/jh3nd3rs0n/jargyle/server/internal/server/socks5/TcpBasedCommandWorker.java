@@ -1,16 +1,20 @@
 package com.github.jh3nd3rs0n.jargyle.server.internal.server.socks5;
 
 import java.io.IOException;
+import java.net.Socket;
 
 import com.github.jh3nd3rs0n.jargyle.server.internal.server.RelayServer;
 
-final class TcpBasedCommandWorkerHelper {
+class TcpBasedCommandWorker extends CommandWorker {
 
 	private static final int HALF_SECOND = 500;
 
-	public static void passData(
-			final RelayServer.Builder builder) throws IOException {
-		RelayServer relayServer = builder.build();
+	public TcpBasedCommandWorker(
+			final Socket clientSocket, final CommandWorkerContext context) {
+		super(clientSocket, context);
+	}
+
+	protected void passData(final RelayServer relayServer) throws IOException {
 		try {
 			relayServer.start();
 			while (!relayServer.getState().equals(RelayServer.State.STOPPED)) {
@@ -26,7 +30,5 @@ final class TcpBasedCommandWorkerHelper {
 			}
 		}		
 	}	
-	
-	private TcpBasedCommandWorkerHelper() { }
-	
+
 }

@@ -1,5 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.server.internal.server.socks5;
 
+import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -17,8 +18,8 @@ abstract class CommandWorkerFactory {
 		
 		@Override
 		public CommandWorker newCommandWorker(
-				final CommandWorkerContext context) {
-			return new BindCommandWorker(context);
+				final Socket clientSocket, final CommandWorkerContext context) {
+			return new BindCommandWorker(clientSocket, context);
 		}
 		
 	}
@@ -32,8 +33,8 @@ abstract class CommandWorkerFactory {
 		
 		@Override
 		public CommandWorker newCommandWorker(
-				final CommandWorkerContext context) {
-			return new ConnectCommandWorker(context);
+				final Socket clientSocket, final CommandWorkerContext context) {
+			return new ConnectCommandWorker(clientSocket, context);
 		}
 		
 	}
@@ -47,8 +48,8 @@ abstract class CommandWorkerFactory {
 		
 		@Override
 		public CommandWorker newCommandWorker(
-				final CommandWorkerContext context) {
-			return new ResolveCommandWorker(context);
+				final Socket clientSocket, final CommandWorkerContext context) {
+			return new ResolveCommandWorker(clientSocket, context);
 		}
 		
 	}
@@ -62,8 +63,8 @@ abstract class CommandWorkerFactory {
 		
 		@Override
 		public CommandWorker newCommandWorker(
-				final CommandWorkerContext context) {
-			return new UdpAssociateCommandWorker(context);
+				final Socket clientSocket, final CommandWorkerContext context) {
+			return new UdpAssociateCommandWorker(clientSocket, context);
 		}
 		
 	}
@@ -122,6 +123,6 @@ abstract class CommandWorkerFactory {
 	}
 	
 	public abstract CommandWorker newCommandWorker(
-			final CommandWorkerContext context);
+			final Socket clientSocket, final CommandWorkerContext context);
 	
 }

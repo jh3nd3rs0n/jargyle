@@ -65,7 +65,7 @@ public class Socks5Worker extends Worker {
 		Settings sttngs = config.getSettings();
 		this.clientInputStream = null;
 		this.configuration = config;
-		this.logger = LoggerFactory.getLogger(Socks5Worker.class);
+		this.logger = LoggerFactory.getLogger(this.getClass());
 		this.routes = rtes;
 		this.rules = rls;
 		this.settings = sttngs;

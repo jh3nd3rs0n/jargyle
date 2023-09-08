@@ -57,7 +57,7 @@ public class Worker implements Runnable {
 		this.clientSocket = clientSock;
 		this.clientSslSocketFactory = null;
 		this.configuration = null;
-		this.logger = LoggerFactory.getLogger(Worker.class);
+		this.logger = LoggerFactory.getLogger(this.getClass());
 		this.routes = null;
 		this.rules = null;
 		this.totalWorkerCount = null;

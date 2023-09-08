@@ -52,7 +52,7 @@ public class Worker implements Runnable {
 	private final Rules rules;	
 	private final AtomicInteger totalWorkerCount;
 	
-	public Worker(final Socket clientSock) {
+	protected Worker(final Socket clientSock) {
 		this.clientFacingDtlsDatagramSocketFactory = null;
 		this.clientSocket = clientSock;
 		this.clientSslSocketFactory = null;

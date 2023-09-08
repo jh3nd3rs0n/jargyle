@@ -9,7 +9,7 @@ class TcpBasedCommandWorker extends CommandWorker {
 
 	private static final int HALF_SECOND = 500;
 
-	public TcpBasedCommandWorker(
+	protected TcpBasedCommandWorker(
 			final Socket clientSocket, final CommandWorkerContext context) {
 		super(clientSocket, context);
 	}

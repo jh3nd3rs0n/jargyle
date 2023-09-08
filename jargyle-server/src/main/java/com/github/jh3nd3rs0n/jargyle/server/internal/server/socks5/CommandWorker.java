@@ -21,7 +21,7 @@ class CommandWorker extends Socks5Worker {
 
 	private final CommandWorkerContext commandWorkerContext;
 	
-	public CommandWorker(
+	protected CommandWorker(
 			final Socket clientSocket, final CommandWorkerContext context) {
 		super(clientSocket, context);
 		this.commandWorkerContext = context;

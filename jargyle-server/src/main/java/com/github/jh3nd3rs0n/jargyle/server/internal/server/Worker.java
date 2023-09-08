@@ -249,12 +249,13 @@ public class Worker implements Runnable {
 	
 	private RuleContext newClientRuleContext() {
 		RuleContext clientRuleContext = new RuleContext();
+		Socket clientSocket = this.getClientSocket();
 		clientRuleContext.putRuleArgValue(
 				GeneralRuleArgSpecConstants.CLIENT_ADDRESS, 
-				this.getClientSocket().getInetAddress().getHostAddress());
+				clientSocket.getInetAddress().getHostAddress());
 		clientRuleContext.putRuleArgValue(
 				GeneralRuleArgSpecConstants.SOCKS_SERVER_ADDRESS, 
-				this.getClientSocket().getLocalAddress().getHostAddress());
+				clientSocket.getLocalAddress().getHostAddress());
 		return clientRuleContext;
 	}
 	

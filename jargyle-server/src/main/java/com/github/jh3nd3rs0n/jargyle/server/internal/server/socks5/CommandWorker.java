@@ -129,16 +129,16 @@ class CommandWorker extends Socks5Worker {
 	protected final RuleContext newSocks5ReplyRuleContext(
 			final Socks5Reply socks5Rep) {
 		RuleContext socks5ReplyRuleContext = new RuleContext();
-		Socket clientSock = this.getClientSocket();
+		Socket clientSocket = this.getClientSocket();
 		MethodSubnegotiationResults methSubnegotiationResults = 
 				this.commandWorkerContext.getMethodSubnegotiationResults();
 		Socks5Request socks5Req = this.commandWorkerContext.getSocks5Request();
 		socks5ReplyRuleContext.putRuleArgValue(
 				GeneralRuleArgSpecConstants.CLIENT_ADDRESS, 
-				clientSock.getInetAddress().getHostAddress());
+				clientSocket.getInetAddress().getHostAddress());
 		socks5ReplyRuleContext.putRuleArgValue(
 				GeneralRuleArgSpecConstants.SOCKS_SERVER_ADDRESS, 
-				clientSock.getLocalAddress().getHostAddress());
+				clientSocket.getLocalAddress().getHostAddress());
 		socks5ReplyRuleContext.putRuleArgValue(
 				Socks5RuleArgSpecConstants.SOCKS5_METHOD, 
 				methSubnegotiationResults.getMethod().toString());
@@ -161,18 +161,6 @@ class CommandWorker extends Socks5Worker {
 				Socks5RuleArgSpecConstants.SOCKS5_SERVER_BOUND_PORT, 
 				Port.newInstance(socks5Rep.getServerBoundPort()));
 		return socks5ReplyRuleContext;
-	}
-	
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append(this.getClass().getSimpleName())
-			.append(" [getClientSocket()=")
-			.append(this.getClientSocket())
-			.append(", commandWorkerContext=")
-			.append(this.commandWorkerContext)
-			.append("]");
-		return builder.toString();
 	}
 	
 }

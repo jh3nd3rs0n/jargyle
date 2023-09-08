@@ -660,12 +660,13 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 			final Socks5Reply socks5Rep,
 			final Socks5Reply secondSocks5Rep) {
 		RuleContext secondSocks5ReplyRuleContext = new RuleContext();
+		Socket clientSocket = this.getClientSocket();
 		secondSocks5ReplyRuleContext.putRuleArgValue(
 				GeneralRuleArgSpecConstants.CLIENT_ADDRESS, 
-				this.getClientSocket().getInetAddress().getHostAddress());
+				clientSocket.getInetAddress().getHostAddress());
 		secondSocks5ReplyRuleContext.putRuleArgValue(
 				GeneralRuleArgSpecConstants.SOCKS_SERVER_ADDRESS, 
-				this.getClientSocket().getLocalAddress().getHostAddress());
+				clientSocket.getLocalAddress().getHostAddress());
 		secondSocks5ReplyRuleContext.putRuleArgValue(
 				Socks5RuleArgSpecConstants.SOCKS5_METHOD, 
 				this.methodSubnegotiationResults.getMethod().toString());

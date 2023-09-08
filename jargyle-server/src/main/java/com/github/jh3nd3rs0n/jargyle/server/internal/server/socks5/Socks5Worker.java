@@ -358,12 +358,13 @@ public class Socks5Worker extends Worker {
 			final MethodSubnegotiationResults methSubnegotiationResults, 
 			final Socks5Request socks5Req) {
 		RuleContext socks5RequestRuleContext = new RuleContext();
+		Socket clientSocket = this.getClientSocket();
 		socks5RequestRuleContext.putRuleArgValue(
 				GeneralRuleArgSpecConstants.CLIENT_ADDRESS, 
-				this.getClientSocket().getInetAddress().getHostAddress());
+				clientSocket.getInetAddress().getHostAddress());
 		socks5RequestRuleContext.putRuleArgValue(
 				GeneralRuleArgSpecConstants.SOCKS_SERVER_ADDRESS, 
-				this.getClientSocket().getLocalAddress().getHostAddress());
+				clientSocket.getLocalAddress().getHostAddress());
 		socks5RequestRuleContext.putRuleArgValue(
 				Socks5RuleArgSpecConstants.SOCKS5_METHOD, 
 				methSubnegotiationResults.getMethod().toString());
@@ -507,18 +508,6 @@ public class Socks5Worker extends Worker {
 			return false;
 		}
 		return true;
-	}
-	
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append(this.getClass().getSimpleName())
-			.append(" [getClientSocket()=")
-			.append(this.getClientSocket())
-			.append(", socks5WorkerContext=")
-			.append(this.socks5WorkerContext)
-			.append("]");
-		return builder.toString();
 	}
 	
 }

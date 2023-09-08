@@ -116,11 +116,11 @@ final class UdpRelayServer {
 	
 	private static final class InboundPacketsWorker	extends PacketsWorker {
 		
-		private static final Logger LOGGER = LoggerFactory.getLogger(
-				InboundPacketsWorker.class);
+		private final Logger logger;
 		
 		public InboundPacketsWorker(final PacketsWorkerContext context) {
 			super(context);
+			this.logger = LoggerFactory.getLogger(InboundPacketsWorker.class);
 		}
 		
 		private boolean canAllowDatagramPacket(
@@ -199,7 +199,7 @@ final class UdpRelayServer {
 				inetAddress = InetAddress.getByName(
 						this.packetsWorkerContext.getClientAddress());
 			} catch (IOException e) {
-				LOGGER.error( 
+				this.logger.error( 
 						ObjectLogMessageHelper.objectLogMessage(
 								this, 
 								"Error in determining the IP address from the "
@@ -275,7 +275,7 @@ final class UdpRelayServer {
 							long timeSinceIdleStartTime = 
 									System.currentTimeMillis() - idleStartTime;
 							if (timeSinceIdleStartTime >= this.idleTimeout) {
-								LOGGER.trace(
+								this.logger.trace(
 										ObjectLogMessageHelper.objectLogMessage(
 												this, 
 												"Timeout reached for idle relay!"));							
@@ -283,7 +283,7 @@ final class UdpRelayServer {
 							}
 							continue;
 						} else {
-							LOGGER.error( 
+							this.logger.error( 
 									ObjectLogMessageHelper.objectLogMessage(
 											this, 
 											"Error in receiving the packet from "
@@ -292,7 +292,7 @@ final class UdpRelayServer {
 							continue;
 						}
 					}
-					LOGGER.trace(ObjectLogMessageHelper.objectLogMessage(
+					this.logger.trace(ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Packet data received: %s byte(s)",
 							packet.getLength()));
@@ -311,7 +311,7 @@ final class UdpRelayServer {
 						continue;
 					}
 					UdpRequestHeader header = this.newUdpRequestHeader(packet);
-					LOGGER.trace(ObjectLogMessageHelper.objectLogMessage(
+					this.logger.trace(ObjectLogMessageHelper.objectLogMessage(
 							this, header.toString()));
 					packet = this.newDatagramPacket(header);
 					if (packet == null) {
@@ -329,7 +329,7 @@ final class UdpRelayServer {
 							// socket closed
 							break;
 						} else {
-							LOGGER.error( 
+							this.logger.error( 
 									ObjectLogMessageHelper.objectLogMessage(
 											this, 
 											"Error in sending the packet to the "
@@ -338,7 +338,7 @@ final class UdpRelayServer {
 						}
 					}
 				} catch (Throwable t) {
-					LOGGER.error( 
+					this.logger.error( 
 							ObjectLogMessageHelper.objectLogMessage(
 									this, 
 									"Error occurred in the process of "
@@ -354,11 +354,11 @@ final class UdpRelayServer {
 	
 	private static final class OutboundPacketsWorker extends PacketsWorker {
 		
-		private static final Logger LOGGER = LoggerFactory.getLogger(
-				OutboundPacketsWorker.class);
+		private final Logger logger;
 		
 		public OutboundPacketsWorker(final PacketsWorkerContext context) {
 			super(context);
+			this.logger = LoggerFactory.getLogger(OutboundPacketsWorker.class);
 		}
 		
 		private boolean canAcceptDatagramPacket(final DatagramPacket packet) {
@@ -372,7 +372,7 @@ final class UdpRelayServer {
 				try {
 					clientInetAddr = InetAddress.getByName(clientAddr);
 				} catch (IOException e) {
-					LOGGER.error( 
+					this.logger.error( 
 							ObjectLogMessageHelper.objectLogMessage(
 									this, 
 									"Error in determining the IP address from "
@@ -384,7 +384,7 @@ final class UdpRelayServer {
 				try {
 					inetAddr = InetAddress.getByName(address);
 				} catch (IOException e) {
-					LOGGER.error( 
+					this.logger.error( 
 							ObjectLogMessageHelper.objectLogMessage(
 									this, 
 									"Error in determining the IP address from "
@@ -479,7 +479,7 @@ final class UdpRelayServer {
 				inetAddress = this.hostResolver.resolve(
 						header.getDesiredDestinationAddress());
 			} catch (IOException e) {
-				LOGGER.error( 
+				this.logger.error( 
 						ObjectLogMessageHelper.objectLogMessage(
 								this, 
 								"Error in determining the IP address from the "
@@ -522,7 +522,7 @@ final class UdpRelayServer {
 						packet.getOffset(), 
 						packet.getLength()));
 			} catch (IllegalArgumentException e) {
-				LOGGER.error( 
+				this.logger.error( 
 						ObjectLogMessageHelper.objectLogMessage(
 								this, 
 								"Error in parsing the UDP header request from "
@@ -560,7 +560,7 @@ final class UdpRelayServer {
 							long timeSinceIdleStartTime = 
 									System.currentTimeMillis() - idleStartTime;
 							if (timeSinceIdleStartTime >= this.idleTimeout) {
-								LOGGER.trace(
+								this.logger.trace(
 										ObjectLogMessageHelper.objectLogMessage(
 												this, 
 												"Timeout reached for idle relay!"));
@@ -568,7 +568,7 @@ final class UdpRelayServer {
 							}
 							continue;							
 						} else {
-							LOGGER.error( 
+							this.logger.error( 
 									ObjectLogMessageHelper.objectLogMessage(
 											this, 
 											"Error in receiving packet from the "
@@ -577,7 +577,7 @@ final class UdpRelayServer {
 							continue;							
 						}
 					}
-					LOGGER.trace(ObjectLogMessageHelper.objectLogMessage(
+					this.logger.trace(ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Packet data received: %s byte(s)",
 							packet.getLength()));					
@@ -588,7 +588,7 @@ final class UdpRelayServer {
 					if (header == null) {
 						continue;
 					}
-					LOGGER.trace(ObjectLogMessageHelper.objectLogMessage(
+					this.logger.trace(ObjectLogMessageHelper.objectLogMessage(
 							this, header.toString(), new Object[]{}));
 					if (header.getCurrentFragmentNumber() != 0) {
 						continue;
@@ -621,7 +621,7 @@ final class UdpRelayServer {
 							// socket closed
 							break;							
 						} else {
-							LOGGER.error( 
+							this.logger.error( 
 									ObjectLogMessageHelper.objectLogMessage(
 											this, 
 											"Error in sending the packet to the "
@@ -630,7 +630,7 @@ final class UdpRelayServer {
 						}
 					}
 				} catch (Throwable t) {
-					LOGGER.error( 
+					this.logger.error( 
 							ObjectLogMessageHelper.objectLogMessage(
 									this, 
 									"Error occurred in the process of "

@@ -31,20 +31,20 @@ public final class CsvFileSourceUserRepository extends UserRepository {
 	
 	private static final class UsersFileStatusListener 
 		implements FileStatusListener {
-		
-		public static final Logger LOGGER = LoggerFactory.getLogger(
-				UsersFileStatusListener.class);
 
+		private final Logger logger;
 		private final CsvFileSourceUserRepository userRepository;
 
 		public UsersFileStatusListener(
 				final CsvFileSourceUserRepository repository) {
+			this.logger = LoggerFactory.getLogger(
+					UsersFileStatusListener.class);
 			this.userRepository = repository;
 		}
 		
 		@Override
 		public void onFileCreated(final File file) {
-			LOGGER.info(String.format(
+			this.logger.info(String.format(
 					"Created file: %s",
 					file));
 			this.updateUserRepositoryFrom(file);
@@ -52,14 +52,14 @@ public final class CsvFileSourceUserRepository extends UserRepository {
 		
 		@Override
 		public void onFileDeleted(final File file) {
-			LOGGER.info(String.format(
+			this.logger.info(String.format(
 					"Relying on in-memory copy of deleted file: %s",
 					file));
 		}
 
 		@Override
 		public void onFileModified(final File file) {
-			LOGGER.info(String.format(
+			this.logger.info(String.format(
 					"Modified file: %s",
 					file));
 			this.updateUserRepositoryFrom(file);
@@ -68,9 +68,9 @@ public final class CsvFileSourceUserRepository extends UserRepository {
 		private void updateUserRepositoryFrom(final File file) {
 			try {
 				this.userRepository.updateUsersFromCsvFile();
-				LOGGER.info("In-memory copy is up to date");
+				this.logger.info("In-memory copy is up to date");
 			} catch (UncheckedIOException e) {
-				LOGGER.error( 
+				this.logger.error( 
 						String.format(
 								"Error in reading file: %s", 
 								file), 

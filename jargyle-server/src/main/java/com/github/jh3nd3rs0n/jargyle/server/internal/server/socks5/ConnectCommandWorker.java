@@ -40,14 +40,12 @@ import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Reply;
 
 final class ConnectCommandWorker extends CommandWorker {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(
-			ConnectCommandWorker.class);
-
 	private Rule applicableRule;
 	private final Socket clientSocket;
 	private final CommandWorkerContext commandWorkerContext;
 	private final String desiredDestinationAddress;
 	private final int desiredDestinationPort;
+	private final Logger logger;
 	private final NetObjectFactory netObjectFactory;
 	private final Rules rules;
 	private final Settings settings;
@@ -67,6 +65,7 @@ final class ConnectCommandWorker extends CommandWorker {
 		this.commandWorkerContext = context;
 		this.desiredDestinationAddress = desiredDestinationAddr;
 		this.desiredDestinationPort = desiredDestinationPrt;
+		this.logger = LoggerFactory.getLogger(ConnectCommandWorker.class);
 		this.netObjectFactory = netObjFactory;
 		this.rules = rls;
 		this.settings = sttngs;	
@@ -89,22 +88,22 @@ final class ConnectCommandWorker extends CommandWorker {
 		try {
 			socketSettings.applyTo(serverFacingSocket);
 		} catch (UnsupportedOperationException e) {
-			LOGGER.error( 
+			this.logger.error( 
 					ObjectLogMessageHelper.objectLogMessage(
 							this, "Error in setting the server-facing socket"), 
 					e);
 			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
 					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep, LOGGER);
+			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep, this.logger);
 			return false;			
 		} catch (SocketException e) {
-			LOGGER.error( 
+			this.logger.error( 
 					ObjectLogMessageHelper.objectLogMessage(
 							this, "Error in setting the server-facing socket"), 
 					e);
 			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
 					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep, LOGGER);
+			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep, this.logger);
 			return false;
 		}
 		return true;
@@ -394,7 +393,7 @@ final class ConnectCommandWorker extends CommandWorker {
 							bindInetAddress, 
 							bindPort.intValue());
 				} catch (UnknownHostException e) {
-					LOGGER.error( 
+					this.logger.error( 
 							ObjectLogMessageHelper.objectLogMessage(
 									this, 
 									"Error in creating the server-facing "
@@ -403,7 +402,7 @@ final class ConnectCommandWorker extends CommandWorker {
 					socks5Rep = Socks5Reply.newFailureInstance(
 							Reply.HOST_UNREACHABLE);
 					this.commandWorkerContext.sendSocks5Reply(
-							this, socks5Rep, LOGGER);
+							this, socks5Rep, this.logger);
 					return null;
 				} catch (IOException e) {
 					if (ThrowableHelper.isOrHasInstanceOf(
@@ -412,7 +411,7 @@ final class ConnectCommandWorker extends CommandWorker {
 					}
 					if (ThrowableHelper.isOrHasInstanceOf(
 							e, SocketException.class)) {
-						LOGGER.error( 
+						this.logger.error( 
 								ObjectLogMessageHelper.objectLogMessage(
 										this, 
 										"Error in connecting the server-facing "
@@ -421,10 +420,10 @@ final class ConnectCommandWorker extends CommandWorker {
 						socks5Rep = Socks5Reply.newFailureInstance(
 								Reply.NETWORK_UNREACHABLE);
 						this.commandWorkerContext.sendSocks5Reply(
-								this, socks5Rep, LOGGER);
+								this, socks5Rep, this.logger);
 						return null;						
 					}
-					LOGGER.error( 
+					this.logger.error( 
 							ObjectLogMessageHelper.objectLogMessage(
 									this, 
 									"Error in connecting the server-facing "
@@ -433,14 +432,14 @@ final class ConnectCommandWorker extends CommandWorker {
 					socks5Rep = Socks5Reply.newFailureInstance(
 							Reply.GENERAL_SOCKS_SERVER_FAILURE);
 					this.commandWorkerContext.sendSocks5Reply(
-							this, socks5Rep, LOGGER);
+							this, socks5Rep, this.logger);
 					return null;
 				}
 				serverFacingSocketBound = true;
 			}
 		}
 		if (!serverFacingSocketBound) {
-			LOGGER.error( 
+			this.logger.error( 
 					ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Unable to bind the server-facing socket to the "
@@ -449,7 +448,7 @@ final class ConnectCommandWorker extends CommandWorker {
 							bindPortRanges));
 			socks5Rep = Socks5Reply.newFailureInstance(
 					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep, LOGGER);
+			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep, this.logger);
 			return null;			
 		}
 		return serverFacingSocket;
@@ -494,7 +493,7 @@ final class ConnectCommandWorker extends CommandWorker {
 					}
 					continue;
 				} catch (IOException e) {
-					LOGGER.error( 
+					this.logger.error( 
 							ObjectLogMessageHelper.objectLogMessage(
 									this, 
 									"Error in binding the server-facing "
@@ -503,7 +502,7 @@ final class ConnectCommandWorker extends CommandWorker {
 					socks5Rep = Socks5Reply.newFailureInstance(
 							Reply.GENERAL_SOCKS_SERVER_FAILURE);
 					this.commandWorkerContext.sendSocks5Reply(
-							this, socks5Rep, LOGGER);
+							this, socks5Rep, this.logger);
 					try {
 						serverFacingSocket.close();
 					} catch (IOException ex) {
@@ -528,7 +527,7 @@ final class ConnectCommandWorker extends CommandWorker {
 					}
 					if (ThrowableHelper.isOrHasInstanceOf(
 							e, SocketException.class)) {
-						LOGGER.error( 
+						this.logger.error( 
 								ObjectLogMessageHelper.objectLogMessage(
 										this, 
 										"Error in connecting the server-facing "
@@ -537,7 +536,7 @@ final class ConnectCommandWorker extends CommandWorker {
 						socks5Rep = Socks5Reply.newFailureInstance(
 								Reply.NETWORK_UNREACHABLE);
 						this.commandWorkerContext.sendSocks5Reply(
-								this, socks5Rep, LOGGER);
+								this, socks5Rep, this.logger);
 						try {
 							serverFacingSocket.close();
 						} catch (IOException ex) {
@@ -545,7 +544,7 @@ final class ConnectCommandWorker extends CommandWorker {
 						}						
 						return null;						
 					}
-					LOGGER.error( 
+					this.logger.error( 
 							ObjectLogMessageHelper.objectLogMessage(
 									this, 
 									"Error in connecting the server-facing "
@@ -554,7 +553,7 @@ final class ConnectCommandWorker extends CommandWorker {
 					socks5Rep = Socks5Reply.newFailureInstance(
 							Reply.GENERAL_SOCKS_SERVER_FAILURE);
 					this.commandWorkerContext.sendSocks5Reply(
-							this, socks5Rep, LOGGER);
+							this, socks5Rep, this.logger);
 					try {
 						serverFacingSocket.close();
 					} catch (IOException ex) {
@@ -566,7 +565,7 @@ final class ConnectCommandWorker extends CommandWorker {
 			}
 		}
 		if (!serverFacingSocketBound) {
-			LOGGER.error( 
+			this.logger.error( 
 					ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Unable to bind the server-facing socket to the "
@@ -575,7 +574,7 @@ final class ConnectCommandWorker extends CommandWorker {
 							bindPortRanges));
 			socks5Rep = Socks5Reply.newFailureInstance(
 					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep, LOGGER);
+			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep, this.logger);
 			return null;
 		}
 		return serverFacingSocket;
@@ -601,7 +600,7 @@ final class ConnectCommandWorker extends CommandWorker {
 			desiredDestinationInetAddress = hostResolver.resolve(
 					desiredDestinationAddress);
 		} catch (UnknownHostException e) {
-			LOGGER.error( 
+			this.logger.error( 
 					ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Unable to resolve the desired destination "
@@ -611,10 +610,10 @@ final class ConnectCommandWorker extends CommandWorker {
 			socks5Rep = Socks5Reply.newFailureInstance(
 					Reply.HOST_UNREACHABLE);
 			this.commandWorkerContext.sendSocks5Reply(
-					this, socks5Rep, LOGGER);
+					this, socks5Rep, this.logger);
 			return null;
 		} catch (IOException e) {
-			LOGGER.error( 
+			this.logger.error( 
 					ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Error in resolving the desired destination "
@@ -624,7 +623,7 @@ final class ConnectCommandWorker extends CommandWorker {
 			socks5Rep = Socks5Reply.newFailureInstance(
 					Reply.HOST_UNREACHABLE);
 			this.commandWorkerContext.sendSocks5Reply(
-					this, socks5Rep, LOGGER);
+					this, socks5Rep, this.logger);
 			return null;
 		}
 		return desiredDestinationInetAddress;
@@ -655,11 +654,11 @@ final class ConnectCommandWorker extends CommandWorker {
 					this, 
 					this.applicableRule, 
 					socks5ReplyRuleContext, 
-					LOGGER)) {
+					this.logger)) {
 				return;
 			}
 			if (!this.commandWorkerContext.sendSocks5Reply(
-					this, socks5Rep, LOGGER)) {
+					this, socks5Rep, this.logger)) {
 				return;
 			}
 			Integer inboundBandwidthLimit = this.getRelayInboundBandwidthLimit();
@@ -681,7 +680,7 @@ final class ConnectCommandWorker extends CommandWorker {
 			try {
 				TcpBasedCommandWorkerHelper.passData(builder);				
 			} catch (IOException e) {
-				LOGGER.error( 
+				this.logger.error( 
 						ObjectLogMessageHelper.objectLogMessage(
 								this, "Error in starting to pass data"), 
 						e);

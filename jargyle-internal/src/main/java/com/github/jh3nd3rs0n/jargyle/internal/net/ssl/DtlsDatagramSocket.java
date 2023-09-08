@@ -32,15 +32,13 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 	
 	private static final class Connection {
 		
-		private static final Logger LOGGER = LoggerFactory.getLogger(
-				Connection.class);
-		
 		private static final int MAX_APP_READ_LOOPS = 60;
 		private static final int MAX_HANDSHAKE_LOOPS = 200;
 		
 		private final DatagramSocket datagramSocket;
 		private final DtlsDatagramSocket dtlsDatagramSocket;
 		private volatile boolean established;
+		private final Logger logger;
 		private final int maximumPacketSize;
 		private final SocketAddress peerSocketAddress;
 		private final SSLEngine sslEngine;
@@ -71,6 +69,7 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 			this.datagramSocket = dtlsDatagramSock.datagramSocket;
 			this.dtlsDatagramSocket = dtlsDatagramSock;
 			this.established = false;
+			this.logger = LoggerFactory.getLogger(Connection.class);
 			this.maximumPacketSize = maxPacketSize;
 			this.peerSocketAddress = peerSocketAddr;
 			this.sslEngine = engine;
@@ -96,14 +95,14 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 				}
 				SSLEngineResult.HandshakeStatus hs = 
 						this.sslEngine.getHandshakeStatus();
-				LOGGER.debug(ObjectLogMessageHelper.objectLogMessage(
+				this.logger.debug(ObjectLogMessageHelper.objectLogMessage(
 						this, 
 						"Handshaking (iteration ID: %s, status: %s)",
 						loops,
 						hs));
 				if (hs.equals(SSLEngineResult.HandshakeStatus.NEED_UNWRAP)
 						|| hs.equals(SSLEngineResult.HandshakeStatus.NEED_UNWRAP_AGAIN)) {
-					LOGGER.debug(ObjectLogMessageHelper.objectLogMessage(
+					this.logger.debug(ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Receive DTLS records, handshake status is %s",
 							hs));
@@ -120,7 +119,7 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 							try {
 								this.datagramSocket.receive(packet);
 							} catch (SocketTimeoutException ste) {
-								LOGGER.debug(
+								this.logger.debug(
 										ObjectLogMessageHelper.objectLogMessage(
 												this,
 												"Warning: %s",
@@ -130,7 +129,7 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 								boolean finished = this.reproduceHandshakePackets(
 										packets, 
 										this.peerSocketAddress);
-								LOGGER.debug(
+								this.logger.debug(
 										ObjectLogMessageHelper.objectLogMessage(
 												this,
 												"Reproduced %s packets",
@@ -139,7 +138,7 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 									this.datagramSocket.send(p);
 								}
 								if (finished) {
-									LOGGER.debug(
+									this.logger.debug(
 											ObjectLogMessageHelper.objectLogMessage(
 													this,
 													"Handshake status is FINISHED "
@@ -148,7 +147,7 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 													+ "finish the loop"));
 									endLoops = true;
 								}
-								LOGGER.debug(
+								this.logger.debug(
 										ObjectLogMessageHelper.objectLogMessage(
 												this,
 												"New handshake status is %s",
@@ -176,7 +175,7 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 						// OK
 					} else if (rs.equals(
 							SSLEngineResult.Status.BUFFER_OVERFLOW)) {
-						LOGGER.debug(ObjectLogMessageHelper.objectLogMessage(
+						this.logger.debug(ObjectLogMessageHelper.objectLogMessage(
 								this, 
 								"BUFFER_OVERFLOW, handshake status is %s",
 								hs));
@@ -185,7 +184,7 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 								+ "client maximum fragment size");
 					} else if (rs.equals(
 							SSLEngineResult.Status.BUFFER_UNDERFLOW)) {
-						LOGGER.debug(ObjectLogMessageHelper.objectLogMessage(
+						this.logger.debug(ObjectLogMessageHelper.objectLogMessage(
 								this, 
 								"BUFFER_UNDERFLOW, handshake status is %s",
 								hs));
@@ -206,7 +205,7 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 								rs));
 					}
 					if (hs.equals(SSLEngineResult.HandshakeStatus.FINISHED)) {
-						LOGGER.debug(ObjectLogMessageHelper.objectLogMessage(
+						this.logger.debug(ObjectLogMessageHelper.objectLogMessage(
 								this, 
 								"Handshake status is FINISHED, finish the "
 								+ "loop"));
@@ -218,7 +217,7 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 					boolean finished = this.produceHandshakePackets(
 							packets, 
 							this.peerSocketAddress);
-					LOGGER.debug(ObjectLogMessageHelper.objectLogMessage(
+					this.logger.debug(ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Produced %s packets", 
 							packets.size()));
@@ -226,7 +225,7 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 						this.datagramSocket.send(p);
 					}
 					if (finished) {
-						LOGGER.debug(ObjectLogMessageHelper.objectLogMessage(
+						this.logger.debug(ObjectLogMessageHelper.objectLogMessage(
 								this, 
 								"Handshake status is FINISHED after producing "
 								+ "handshake packets, finish the loop"));
@@ -237,7 +236,7 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 					this.runDelegatedTasks();
 				} else if (hs.equals(
 						SSLEngineResult.HandshakeStatus.NOT_HANDSHAKING)) {
-					LOGGER.debug(ObjectLogMessageHelper.objectLogMessage(
+					this.logger.debug(ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Handshake status is NOT_HANDSHAKING, finish the "
 							+ "loop"));
@@ -255,7 +254,7 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 			}
 			SSLEngineResult.HandshakeStatus hs = 
 					this.sslEngine.getHandshakeStatus();
-			LOGGER.debug(ObjectLogMessageHelper.objectLogMessage(
+			this.logger.debug(ObjectLogMessageHelper.objectLogMessage(
 					this, 
 					"Handshake finished, status is %s", 
 					hs));
@@ -269,11 +268,11 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 				throw new SSLException("Handshake finished, but session is "
 						+ "null");
 			}
-			LOGGER.debug(ObjectLogMessageHelper.objectLogMessage(
+			this.logger.debug(ObjectLogMessageHelper.objectLogMessage(
 					this, 
 					"Negotiated protocol is %s", 
 					session.getProtocol()));
-			LOGGER.debug(ObjectLogMessageHelper.objectLogMessage(
+			this.logger.debug(ObjectLogMessageHelper.objectLogMessage(
 					this, 
 					"Negotiated cipher suite is %s", 
 					session.getCipherSuite()));
@@ -341,7 +340,7 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 				outNetData.flip();
 				SSLEngineResult.Status rs = r.getStatus();
 				SSLEngineResult.HandshakeStatus hs = r.getHandshakeStatus();
-				LOGGER.debug(ObjectLogMessageHelper.objectLogMessage(
+				this.logger.debug(ObjectLogMessageHelper.objectLogMessage(
 						this, 
 						"Producing handshake packet (iteration ID: %s, result "
 						+ "status: %s, handshake status: %s)",
@@ -354,11 +353,11 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 							+ "maximum fragment size");
 				} else if (rs.equals(
 						SSLEngineResult.Status.BUFFER_UNDERFLOW)) {
-					LOGGER.debug(ObjectLogMessageHelper.objectLogMessage(
+					this.logger.debug(ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Produce handshake packets: BUFFER_UNDERFLOW "
 							+ "occured"));
-					LOGGER.debug(ObjectLogMessageHelper.objectLogMessage(
+					this.logger.debug(ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Produce handshake packets: Handshake status: %s",
 							hs));
@@ -387,7 +386,7 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 					packets.add(packet);
 				}
 				if (hs.equals(SSLEngineResult.HandshakeStatus.FINISHED)) {
-					LOGGER.debug(ObjectLogMessageHelper.objectLogMessage(
+					this.logger.debug(ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Produce handshake packets: "
 							+ "Handshake status is FINISHED, finish the loop"));

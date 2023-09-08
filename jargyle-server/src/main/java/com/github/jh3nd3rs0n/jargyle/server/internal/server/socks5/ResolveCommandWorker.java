@@ -18,12 +18,10 @@ import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Reply;
 
 final class ResolveCommandWorker extends CommandWorker {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(
-			ResolveCommandWorker.class);
-
 	private final CommandWorkerContext commandWorkerContext;
 	private final String desiredDestinationAddress;
 	private final int desiredDestinationPort;
+	private final Logger logger;
 	private final NetObjectFactory netObjectFactory;
 	private final Rules rules;
 	
@@ -37,6 +35,7 @@ final class ResolveCommandWorker extends CommandWorker {
 		this.commandWorkerContext = context;
 		this.desiredDestinationAddress = desiredDestinationAddr;
 		this.desiredDestinationPort = desiredDestinationPrt;
+		this.logger = LoggerFactory.getLogger(ResolveCommandWorker.class);
 		this.netObjectFactory = netObjFactory;
 		this.rules = rls;
 	}
@@ -50,21 +49,21 @@ final class ResolveCommandWorker extends CommandWorker {
 		try {
 			inetAddress = hostResolver.resolve(this.desiredDestinationAddress);
 		} catch (UnknownHostException e) {
-			LOGGER.error( 
+			this.logger.error( 
 					ObjectLogMessageHelper.objectLogMessage(
 							this, "Error in resolving the hostname"), 
 					e);
 			socks5Rep = Socks5Reply.newFailureInstance(Reply.HOST_UNREACHABLE);
-			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep, LOGGER);
+			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep, this.logger);
 			return;			
 		} catch (IOException e) {
-			LOGGER.error( 
+			this.logger.error( 
 					ObjectLogMessageHelper.objectLogMessage(
 							this, "Error in resolving the hostname"), 
 					e);
 			socks5Rep = Socks5Reply.newFailureInstance(
 					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep, LOGGER);
+			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep, this.logger);
 			return;
 		}
 		String serverBoundAddress = inetAddress.getHostAddress();
@@ -78,10 +77,10 @@ final class ResolveCommandWorker extends CommandWorker {
 						socks5Rep);
 		applicableRule = this.rules.firstAppliesTo(socks5ReplyRuleContext);
 		if (!this.commandWorkerContext.canAllowSocks5Reply(
-				this, applicableRule, socks5ReplyRuleContext, LOGGER)) {
+				this, applicableRule, socks5ReplyRuleContext, this.logger)) {
 			return;
 		}		
-		this.commandWorkerContext.sendSocks5Reply(this, socks5Rep, LOGGER);			
+		this.commandWorkerContext.sendSocks5Reply(this, socks5Rep, this.logger);			
 	}
 	
 }

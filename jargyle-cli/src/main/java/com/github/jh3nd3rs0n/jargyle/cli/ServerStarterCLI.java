@@ -15,9 +15,6 @@ import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
 
 public final class ServerStarterCLI extends ServerConfigurationCLI {
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(
-			ServerStarterCLI.class);
-	
 	public static void main(final String[] args) {
 		CLI cli = new ServerStarterCLI(null, null, args, false);
 		try {
@@ -27,6 +24,7 @@ public final class ServerStarterCLI extends ServerConfigurationCLI {
 		}
 	}
 	
+	private final Logger logger;
 	private String monitoredConfigurationFile;
 	
 	public ServerStarterCLI(
@@ -36,6 +34,7 @@ public final class ServerStarterCLI extends ServerConfigurationCLI {
 			final boolean posixCorrect) {
 		super(progName, progBeginningUsage, args, posixCorrect);
 		this.setProgramOperandsUsage("[MONITORED_CONFIG_FILE]");
+		this.logger = LoggerFactory.getLogger(ServerStarterCLI.class);
 	}
 
 	@Override
@@ -101,10 +100,10 @@ public final class ServerStarterCLI extends ServerConfigurationCLI {
 		try {
 			socksServer.start();
 		} catch (IOException e) {
-			LOGGER.error("Error in starting SocksServer", e);
+			this.logger.error("Error in starting SocksServer", e);
 			throw new TerminationRequestedException(-1);
 		}
-		LOGGER.info(String.format(
+		this.logger.info(String.format(
 				"Listening on port %s at %s",
 				socksServer.getPort(),
 				socksServer.getHost()));

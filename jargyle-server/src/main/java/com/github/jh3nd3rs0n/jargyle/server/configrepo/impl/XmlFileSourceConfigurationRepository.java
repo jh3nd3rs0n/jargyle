@@ -30,20 +30,20 @@ public final class XmlFileSourceConfigurationRepository
 
 	private static final class ConfigurationFileStatusListener 
 		implements FileStatusListener {
-		
-		private static final Logger LOGGER = LoggerFactory.getLogger(
-				ConfigurationFileStatusListener.class);
 
 		private final XmlFileSourceConfigurationRepository configurationRepository;
+		private final Logger logger;
 		
 		public ConfigurationFileStatusListener(
 				final XmlFileSourceConfigurationRepository repository) {
 			this.configurationRepository = repository;
+			this.logger = LoggerFactory.getLogger(
+					ConfigurationFileStatusListener.class);
 		}
 		
 		@Override
 		public void onFileCreated(final File file) {
-			LOGGER.info(String.format(
+			this.logger.info(String.format(
 					"Created file: %s",
 					file));
 			this.updateConfigurationRepositoryFrom(file);
@@ -51,14 +51,14 @@ public final class XmlFileSourceConfigurationRepository
 
 		@Override
 		public void onFileDeleted(final File file) {
-			LOGGER.info(String.format(
+			this.logger.info(String.format(
 					"Relying on in-memory copy of deleted file: %s",
 					file));
 		}
 
 		@Override
 		public void onFileModified(final File file) {
-			LOGGER.info(String.format(
+			this.logger.info(String.format(
 					"Modified file: %s",
 					file));
 			this.updateConfigurationRepositoryFrom(file);
@@ -67,9 +67,9 @@ public final class XmlFileSourceConfigurationRepository
 		private void updateConfigurationRepositoryFrom(final File file) {
 			try {
 				this.configurationRepository.updateConfigurationFromXmlFile();
-				LOGGER.info("In-memory copy is up to date");
+				this.logger.info("In-memory copy is up to date");
 			} catch (UncheckedIOException e) {
-				LOGGER.error(
+				this.logger.error(
 						String.format(
 								"Error in reading file: %s", 
 								file), 

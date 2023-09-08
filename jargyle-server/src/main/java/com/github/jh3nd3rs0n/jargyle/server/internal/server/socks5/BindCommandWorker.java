@@ -47,15 +47,13 @@ import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Reply;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Request;
 
 final class BindCommandWorker extends CommandWorker {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(
-			BindCommandWorker.class);
 	
 	private Rule applicableRule;
 	private final Socket clientSocket;
 	private final CommandWorkerContext commandWorkerContext;
 	private final String desiredDestinationAddress;
 	private final int desiredDestinationPort;
+	private final Logger logger;
 	private final MethodSubnegotiationResults methodSubnegotiationResults;
 	private final NetObjectFactory netObjectFactory;
 	private final Rules rules;
@@ -80,6 +78,7 @@ final class BindCommandWorker extends CommandWorker {
 		this.commandWorkerContext = context;
 		this.desiredDestinationAddress = desiredDestinationAddr;
 		this.desiredDestinationPort = desiredDestinationPrt;
+		this.logger = LoggerFactory.getLogger(BindCommandWorker.class);
 		this.methodSubnegotiationResults = methSubnegotiationResults;
 		this.netObjectFactory = netObjFactory;
 		this.rules = rls;
@@ -93,14 +92,14 @@ final class BindCommandWorker extends CommandWorker {
 		try {
 			inboundSocket = listenSocket.accept();
 		} catch (IOException e) {
-			LOGGER.error( 
+			this.logger.error( 
 					ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Error in waiting for an inbound socket"), 
 					e);
 			socks5Rep = Socks5Reply.newFailureInstance(
 					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep, LOGGER);
+			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep, this.logger);
 			return null;
 		}
 		return inboundSocket;
@@ -112,7 +111,7 @@ final class BindCommandWorker extends CommandWorker {
 		if (applicableRule == null) {
 			Socks5Reply rep = Socks5Reply.newFailureInstance(
 					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
-			this.commandWorkerContext.sendSocks5Reply(this, rep, LOGGER);
+			this.commandWorkerContext.sendSocks5Reply(this, rep, this.logger);
 			return false;
 		}
 		if (!this.canApplyRule(applicableRule)) {
@@ -123,7 +122,7 @@ final class BindCommandWorker extends CommandWorker {
 		if (firewallAction == null) {
 			Socks5Reply rep = Socks5Reply.newFailureInstance(
 					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
-			this.commandWorkerContext.sendSocks5Reply(this, rep, LOGGER);
+			this.commandWorkerContext.sendSocks5Reply(this, rep, this.logger);
 			return false;
 		}
 		LogAction firewallActionLogAction = 
@@ -160,7 +159,7 @@ final class BindCommandWorker extends CommandWorker {
 		}
 		Socks5Reply rep = Socks5Reply.newFailureInstance(
 				Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
-		this.commandWorkerContext.sendSocks5Reply(this, rep, LOGGER);
+		this.commandWorkerContext.sendSocks5Reply(this, rep, this.logger);
 		return false;
 	}
 	
@@ -187,7 +186,7 @@ final class BindCommandWorker extends CommandWorker {
 				}
 				Socks5Reply rep = Socks5Reply.newFailureInstance(
 						Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
-				this.commandWorkerContext.sendSocks5Reply(this, rep, LOGGER);
+				this.commandWorkerContext.sendSocks5Reply(this, rep, this.logger);
 				return false;				
 			}
 			this.commandWorkerContext.addBelowAllowLimitRule(applicableRule);
@@ -212,22 +211,22 @@ final class BindCommandWorker extends CommandWorker {
 		try {
 			socketSettings.applyTo(inboundSocket);
 		} catch (UnsupportedOperationException e) {
-			LOGGER.error( 
+			this.logger.error( 
 					ObjectLogMessageHelper.objectLogMessage(
 							this, "Error in setting the inbound socket"), 
 					e);
 			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
 					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep, LOGGER);
+			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep, this.logger);
 			return false;			
 		} catch (SocketException e) {
-			LOGGER.error( 
+			this.logger.error( 
 					ObjectLogMessageHelper.objectLogMessage(
 							this, "Error in setting the inbound socket"), 
 					e);
 			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
 					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep, LOGGER);
+			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep, this.logger);
 			return false;
 		}
 		return true;
@@ -238,22 +237,22 @@ final class BindCommandWorker extends CommandWorker {
 		try {
 			socketSettings.applyTo(listenSocket);
 		} catch (UnsupportedOperationException e) {
-			LOGGER.error( 
+			this.logger.error( 
 					ObjectLogMessageHelper.objectLogMessage(
 							this, "Error in setting the listen socket"), 
 					e);
 			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
 					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep, LOGGER);
+			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep, this.logger);
 			return false;			
 		} catch (SocketException e) {
-			LOGGER.error( 
+			this.logger.error( 
 					ObjectLogMessageHelper.objectLogMessage(
 							this, "Error in setting the listen socket"), 
 					e);
 			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
 					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep, LOGGER);
+			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep, this.logger);
 			return false;
 		}
 		return true;
@@ -575,7 +574,7 @@ final class BindCommandWorker extends CommandWorker {
 				try {
 					listenSocket = this.netObjectFactory.newServerSocket();
 				} catch (IOException e) {
-					LOGGER.error( 
+					this.logger.error( 
 							ObjectLogMessageHelper.objectLogMessage(
 									this, 
 									"Error in creating the listen socket"), 
@@ -583,7 +582,7 @@ final class BindCommandWorker extends CommandWorker {
 					socks5Rep = Socks5Reply.newFailureInstance(
 							Reply.GENERAL_SOCKS_SERVER_FAILURE);
 					this.commandWorkerContext.sendSocks5Reply(
-							this, socks5Rep, LOGGER);
+							this, socks5Rep, this.logger);
 					return null;
 				}
 				if (!this.configureListenSocket(listenSocket)) {
@@ -605,7 +604,7 @@ final class BindCommandWorker extends CommandWorker {
 					}
 					continue;
 				} catch (IOException e) {
-					LOGGER.error( 
+					this.logger.error( 
 							ObjectLogMessageHelper.objectLogMessage(
 									this, 
 									"Error in binding the listen socket"), 
@@ -613,7 +612,7 @@ final class BindCommandWorker extends CommandWorker {
 					socks5Rep = Socks5Reply.newFailureInstance(
 							Reply.GENERAL_SOCKS_SERVER_FAILURE);
 					this.commandWorkerContext.sendSocks5Reply(
-							this, socks5Rep, LOGGER);
+							this, socks5Rep, this.logger);
 					try {
 						listenSocket.close();
 					} catch (IOException ex) {
@@ -625,7 +624,7 @@ final class BindCommandWorker extends CommandWorker {
 			}
 		}
 		if (!listenSocketBound) {
-			LOGGER.error( 
+			this.logger.error( 
 					ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Unable to bind the listen socket to the "
@@ -634,7 +633,7 @@ final class BindCommandWorker extends CommandWorker {
 							bindPortRanges));
 			socks5Rep = Socks5Reply.newFailureInstance(
 					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep, LOGGER);
+			this.commandWorkerContext.sendSocks5Reply(this, socks5Rep, this.logger);
 			return null;
 		}
 		return listenSocket;
@@ -689,7 +688,7 @@ final class BindCommandWorker extends CommandWorker {
 			desiredDestinationInetAddress = hostResolver.resolve(
 					desiredDestinationAddress);
 		} catch (UnknownHostException e) {
-			LOGGER.error( 
+			this.logger.error( 
 					ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Unable to resolve the desired destination "
@@ -699,10 +698,10 @@ final class BindCommandWorker extends CommandWorker {
 			socks5Rep = Socks5Reply.newFailureInstance(
 					Reply.HOST_UNREACHABLE);
 			this.commandWorkerContext.sendSocks5Reply(
-					this, socks5Rep, LOGGER);
+					this, socks5Rep, this.logger);
 			return null;
 		} catch (IOException e) {
-			LOGGER.error( 
+			this.logger.error( 
 					ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Error in resolving the desired destination "
@@ -712,7 +711,7 @@ final class BindCommandWorker extends CommandWorker {
 			socks5Rep = Socks5Reply.newFailureInstance(
 					Reply.HOST_UNREACHABLE);
 			this.commandWorkerContext.sendSocks5Reply(
-					this, socks5Rep, LOGGER);
+					this, socks5Rep, this.logger);
 			return null;
 		}
 		return desiredDestinationInetAddress;
@@ -745,11 +744,11 @@ final class BindCommandWorker extends CommandWorker {
 					this, 
 					this.applicableRule, 
 					socks5ReplyRuleContext, 
-					LOGGER)) {
+					this.logger)) {
 				return;
 			}
 			if (!this.commandWorkerContext.sendSocks5Reply(
-					this, socks5Rep, LOGGER)) {
+					this, socks5Rep, this.logger)) {
 				return;
 			}
 			inboundSocket = this.acceptInboundSocketFrom(listenSocket);
@@ -777,7 +776,7 @@ final class BindCommandWorker extends CommandWorker {
 				return;
 			}
 			if (!this.commandWorkerContext.sendSocks5Reply(
-					this, socks5Rep, LOGGER)) {
+					this, socks5Rep, this.logger)) {
 				return;
 			}
 			Integer inboundBandwidthLimit = this.getRelayInboundBandwidthLimit();
@@ -799,7 +798,7 @@ final class BindCommandWorker extends CommandWorker {
 			try {
 				TcpBasedCommandWorkerHelper.passData(builder);
 			} catch (IOException e) {
-				LOGGER.error( 
+				this.logger.error( 
 						ObjectLogMessageHelper.objectLogMessage(
 								this, "Error in starting to pass data"), 
 						e);				

@@ -16,15 +16,14 @@ import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.internal.concurrent.ExecutorHelper;
 
 public final class Listener implements Runnable {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(
-			Listener.class);
 	
+	private final Logger logger;
 	private final ServerSocket serverSocket;
 	private final AtomicInteger totalWorkerCount;
 	private final WorkerContextFactory workerContextFactory;
 			
 	public Listener(final ServerSocket serverSock, final Configuration config) {
+		this.logger = LoggerFactory.getLogger(Listener.class);
 		this.serverSocket = serverSock;
 		this.totalWorkerCount = new AtomicInteger(0);
 		this.workerContextFactory = new WorkerContextFactory(config);
@@ -40,7 +39,7 @@ public final class Listener implements Runnable {
 						this.totalWorkerCount,
 						this.workerContextFactory));
 			} catch (SocketTimeoutException e) {
-				LOGGER.error(
+				this.logger.error(
 						ObjectLogMessageHelper.objectLogMessage(
 								this, 
 								"Timeout reached in waiting for a connection!"), 
@@ -50,7 +49,7 @@ public final class Listener implements Runnable {
 				// closed by SocksServer.stop()
 				break;
 			} catch (IOException e) {
-				LOGGER.error(
+				this.logger.error(
 						ObjectLogMessageHelper.objectLogMessage(
 								this, "Error in waiting for a connection"), 
 						e);

@@ -66,13 +66,11 @@ public final class RelayServer {
 	
 	private static final class DataWorker implements Runnable {
 		
-		private static final Logger LOGGER = LoggerFactory.getLogger(
-				DataWorker.class);
-		
 		private final int bufferSize;
 		private final DataWorkerContext dataWorkerContext;
 		private final int idleTimeout;		
 		private final InputStream inputStream;
+		private final Logger logger;
 		private final OutputStream outputStream;
 				
 		public DataWorker(final DataWorkerContext context) throws IOException {
@@ -80,6 +78,7 @@ public final class RelayServer {
 			this.dataWorkerContext = context;
 			this.idleTimeout = context.getIdleTimeout();			
 			this.inputStream = context.getInputSocketInputStream();
+			this.logger = LoggerFactory.getLogger(DataWorker.class);
 			this.outputStream = context.getOutputSocketOutputStream();
 		}
 		
@@ -94,7 +93,7 @@ public final class RelayServer {
 						bytesRead = this.inputStream.read(buffer);
 						this.dataWorkerContext.setIdleStartTime(
 								System.currentTimeMillis());
-						LOGGER.trace(ObjectLogMessageHelper.objectLogMessage(
+						this.logger.trace(ObjectLogMessageHelper.objectLogMessage(
 								this, 
 								"Bytes read: %s", 
 								bytesRead));
@@ -114,7 +113,7 @@ public final class RelayServer {
 								ioe, SocketTimeoutException.class)) {
 							bytesRead = 0;
 						} else {
-							LOGGER.error(
+							this.logger.error(
 									ObjectLogMessageHelper.objectLogMessage(
 											this, 
 											"Error occurred in the process of "
@@ -132,7 +131,7 @@ public final class RelayServer {
 						long timeSinceIdleStartTime = 
 								System.currentTimeMillis() - idleStartTime;
 						if (timeSinceIdleStartTime >= this.idleTimeout) {
-							LOGGER.trace(
+							this.logger.trace(
 									ObjectLogMessageHelper.objectLogMessage(
 											this, 
 											"Timeout reached for idle relay!"));
@@ -152,7 +151,7 @@ public final class RelayServer {
 							// socket closed
 							break;
 						} else {
-							LOGGER.error(
+							this.logger.error(
 									ObjectLogMessageHelper.objectLogMessage(
 											this, 
 											"Error occurred in the process of " 
@@ -173,7 +172,7 @@ public final class RelayServer {
 							// socket closed
 							break;
 						} else {
-							LOGGER.error(
+							this.logger.error(
 									ObjectLogMessageHelper.objectLogMessage(
 											this, 
 											"Error occurred in the process of " 
@@ -183,7 +182,7 @@ public final class RelayServer {
 						}						
 					}					
 				} catch (Throwable t) {
-					LOGGER.error(
+					this.logger.error(
 							ObjectLogMessageHelper.objectLogMessage(
 									this, 
 									"Error occurred in the process of "

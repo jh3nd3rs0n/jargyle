@@ -14,12 +14,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 final class NioFileMonitor extends FileMonitor {
-	
-	private static final Logger LOGGER = LoggerFactory.getLogger(
-			NioFileMonitor.class);
 
+	private final Logger logger;
+	
 	public NioFileMonitor(final File f, final FileStatusListener listener) {
 		super(f, listener);
+		this.logger = LoggerFactory.getLogger(NioFileMonitor.class);
 	}
 	
 	private WatchService newWatchService() {
@@ -27,7 +27,7 @@ final class NioFileMonitor extends FileMonitor {
 		try {
 			watchService = FileSystems.getDefault().newWatchService();
 		} catch (IOException e) {
-			LOGGER.error(
+			this.logger.error(
 					"Unable to create WatchService", 
 					e);
 			return null;
@@ -59,7 +59,7 @@ final class NioFileMonitor extends FileMonitor {
 					StandardWatchEventKinds.ENTRY_DELETE,
 					StandardWatchEventKinds.ENTRY_MODIFY);
 		} catch (IOException e) {
-			LOGGER.error(
+			this.logger.error(
 					String.format(
 							"Unable to register '%s' to WatchService", 
 							path), 

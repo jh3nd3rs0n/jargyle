@@ -14,7 +14,8 @@ class TcpBasedCommandWorker extends CommandWorker {
 		super(clientSocket, context);
 	}
 
-	protected void passData(final RelayServer relayServer) throws IOException {
+	protected final void passData(
+			final RelayServer relayServer) throws IOException {
 		try {
 			relayServer.start();
 			while (!relayServer.getState().equals(RelayServer.State.STOPPED)) {

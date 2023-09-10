@@ -105,18 +105,18 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 	}
 	
 	private boolean canAllowSecondSocks5Reply(
-			final Rule applicableRule,
+			final Rule applicableRl,
 			final RuleContext secondSocks5ReplyRuleContext) {
-		if (applicableRule == null) {
+		if (applicableRl == null) {
 			Socks5Reply rep = Socks5Reply.newFailureInstance(
 					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
 			this.sendSocks5Reply(rep);
 			return false;
 		}
-		if (!this.canApplyRule(applicableRule)) {
+		if (!this.canApplyRule(applicableRl)) {
 			return true;
 		}
-		FirewallAction firewallAction = applicableRule.getLastRuleResultValue(
+		FirewallAction firewallAction = applicableRl.getLastRuleResultValue(
 				GeneralRuleResultSpecConstants.FIREWALL_ACTION);
 		if (firewallAction == null) {
 			Socks5Reply rep = Socks5Reply.newFailureInstance(
@@ -125,11 +125,11 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 			return false;
 		}
 		LogAction firewallActionLogAction = 
-				applicableRule.getLastRuleResultValue(
+				applicableRl.getLastRuleResultValue(
 						GeneralRuleResultSpecConstants.FIREWALL_ACTION_LOG_ACTION);
 		if (firewallAction.equals(FirewallAction.ALLOW)) {
 			if (!this.canAllowSecondSocks5ReplyWithinLimit(
-					applicableRule, secondSocks5ReplyRuleContext)) {
+					applicableRl, secondSocks5ReplyRuleContext)) {
 				return false;
 			}
 			if (firewallActionLogAction != null) {
@@ -139,7 +139,7 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 								"Second SOCKS5 reply allowed based on the "
 								+ "following rule and context: rule: %s "
 								+ "context: %s",
-								applicableRule,
+								applicableRl,
 								secondSocks5ReplyRuleContext));					
 			}
 		} else if (firewallAction.equals(FirewallAction.DENY)
@@ -150,7 +150,7 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 							"Second SOCKS5 reply denied based on the "
 							+ "following rule and context: rule: %s "
 							+ "context: %s",
-							applicableRule,
+							applicableRl,
 							secondSocks5ReplyRuleContext));				
 		}
 		if (FirewallAction.ALLOW.equals(firewallAction)) {
@@ -163,13 +163,13 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 	}
 	
 	private boolean canAllowSecondSocks5ReplyWithinLimit(
-			final Rule applicableRule,
+			final Rule applicableRl,
 			final RuleContext secondSocks5ReplyRuleContext) {
 		NonnegativeIntegerLimit firewallActionAllowLimit =
-				applicableRule.getLastRuleResultValue(
+				applicableRl.getLastRuleResultValue(
 						GeneralRuleResultSpecConstants.FIREWALL_ACTION_ALLOW_LIMIT);
 		LogAction firewallActionAllowLimitReachedLogAction =
-				applicableRule.getLastRuleResultValue(
+				applicableRl.getLastRuleResultValue(
 						GeneralRuleResultSpecConstants.FIREWALL_ACTION_ALLOW_LIMIT_REACHED_LOG_ACTION);
 		if (firewallActionAllowLimit != null) {
 			if (!firewallActionAllowLimit.tryIncrementCurrentCount()) {
@@ -180,7 +180,7 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 									"Allowed limit has been reached based on "
 									+ "the following rule and context: rule: "
 									+ "%s context: %s",
-									applicableRule,
+									applicableRl,
 									secondSocks5ReplyRuleContext));
 				}
 				Socks5Reply rep = Socks5Reply.newFailureInstance(
@@ -188,17 +188,17 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 				this.sendSocks5Reply(rep);
 				return false;				
 			}
-			this.commandWorkerContext.addBelowAllowLimitRule(applicableRule);
+			this.commandWorkerContext.addBelowAllowLimitRule(applicableRl);
 		}
 		return true;
 	}
 	
-	private boolean canApplyRule(final Rule applicableRule) {
-		if (applicableRule.hasRuleCondition(
+	private boolean canApplyRule(final Rule applicableRl) {
+		if (applicableRl.hasRuleCondition(
 				Socks5RuleConditionSpecConstants.SOCKS5_SECOND_SERVER_BOUND_ADDRESS)) {
 			return true;
 		}
-		if (applicableRule.hasRuleCondition(
+		if (applicableRl.hasRuleCondition(
 				Socks5RuleConditionSpecConstants.SOCKS5_SECOND_SERVER_BOUND_PORT)) {
 			return true;
 		}

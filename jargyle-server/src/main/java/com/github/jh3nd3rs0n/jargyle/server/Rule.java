@@ -218,6 +218,11 @@ public final class Rule {
 			final RuleConditionSpec<? extends Object, ? extends Object> ruleConditionSpec) {
 		return this.ruleConditionListMap.containsKey(ruleConditionSpec);
 	}
+	
+	public boolean hasRuleResult(
+			final RuleResultSpec<? extends Object> ruleResultSpec) {
+		return this.ruleResultListMap.containsKey(ruleResultSpec);
+	}
 
 	@Override
 	public String toString() {

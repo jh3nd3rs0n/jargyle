@@ -15,6 +15,7 @@ import com.github.jh3nd3rs0n.jargyle.server.Settings;
 
 public class WorkerContext {
 
+	private Rule applicableRule;
 	private final Set<Rule> belowAllowLimitRules;
 	private final DtlsDatagramSocketFactory clientFacingDtlsDatagramSocketFactory;
 	private final Configuration configuration;
@@ -31,6 +32,7 @@ public class WorkerContext {
 		Objects.requireNonNull(config);
 		Objects.requireNonNull(rls);
 		Objects.requireNonNull(rtes);
+		this.applicableRule = null;
 		this.belowAllowLimitRules = new HashSet<Rule>();
 		this.clientFacingDtlsDatagramSocketFactory = 
 				clientFacingDtlsDatagramSockFactory;
@@ -43,6 +45,7 @@ public class WorkerContext {
 	
 	protected WorkerContext(final WorkerContext context) {
 		Objects.requireNonNull(context);
+		this.applicableRule = null;
 		this.belowAllowLimitRules = null;
 		this.clientFacingDtlsDatagramSocketFactory = null;
 		this.configuration = null;
@@ -78,9 +81,9 @@ public class WorkerContext {
 				belowAllowLimitRl));
 	}
 	
-	public final void decrementCurrentAllowCount() {
+	public final void decrementCurrentAllowCounts() {
 		if (this.workerContext != null) {
-			this.workerContext.decrementCurrentAllowCount();
+			this.workerContext.decrementCurrentAllowCounts();
 			return;
 		}
 		for (Rule belowAllowLimitRule : this.belowAllowLimitRules) {
@@ -96,6 +99,13 @@ public class WorkerContext {
 				firewallActionAllowLimit.decrementCurrentCount();
 			}
 		}		
+	}
+	
+	public final Rule getApplicableRule() {
+		if (this.workerContext != null) {
+			return this.workerContext.getApplicableRule();
+		}
+		return this.applicableRule;
 	}
 	
 	public final Set<Rule> getBelowAllowLimitRules() {
@@ -145,6 +155,14 @@ public class WorkerContext {
 			return this.workerContext.getSettings();
 		}
 		return this.configuration.getSettings();
+	}
+	
+	public final void setApplicableRule(final Rule applicableRl) {
+		if (this.workerContext != null) {
+			this.workerContext.setApplicableRule(applicableRl);
+			return;
+		}
+		this.applicableRule = Objects.requireNonNull(applicableRl);
 	}
 	
 	public final void setSelectedRoute(final Route selectedRte) {

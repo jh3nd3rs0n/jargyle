@@ -2,14 +2,12 @@ package com.github.jh3nd3rs0n.jargyle.server.internal.server.socks5;
 
 import java.util.Objects;
 
-import com.github.jh3nd3rs0n.jargyle.server.Rule;
 import com.github.jh3nd3rs0n.jargyle.server.RuleContext;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Command;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Request;
 
 final class CommandWorkerContext extends Socks5WorkerContext {
 
-	private final Rule applicableRule;
 	private final MethodSubnegotiationResults methodSubnegotiationResults;
 	private final Socks5Request socks5Request;
 	private final RuleContext socks5RequestRuleContext;
@@ -18,21 +16,14 @@ final class CommandWorkerContext extends Socks5WorkerContext {
 			final Socks5WorkerContext context,
 			final MethodSubnegotiationResults methSubnegotiationResults,
 			final Socks5Request socks5Req,
-			final Rule applicableRl,
 			final RuleContext socks5ReqRuleContext) {
 		super(context);
 		Objects.requireNonNull(methSubnegotiationResults);
 		Objects.requireNonNull(socks5Req);
-		Objects.requireNonNull(applicableRl);
 		Objects.requireNonNull(socks5ReqRuleContext);
 		this.methodSubnegotiationResults = methSubnegotiationResults;
 		this.socks5Request = socks5Req;
-		this.applicableRule = applicableRl;
 		this.socks5RequestRuleContext = socks5ReqRuleContext;		
-	}
-	
-	public Rule getApplicableRule() {
-		return this.applicableRule;
 	}
 	
 	public Command getCommand() {

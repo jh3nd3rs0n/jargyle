@@ -549,12 +549,11 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 	
 	private DatagramSocket limitClientFacingDatagramSocket(
 			final DatagramSocket clientFacingDatagramSock) {
-		DatagramSocket clientFacingDatagramSck = clientFacingDatagramSock;		
 		Integer outboundBandwidthLimit = this.getRelayOutboundBandwidthLimit();
 		if (outboundBandwidthLimit != null) {
 			try {
-				clientFacingDatagramSck = new BandwidthLimitedDatagramSocket(
-						clientFacingDatagramSck, 
+				return new BandwidthLimitedDatagramSocket(
+						clientFacingDatagramSock, 
 						outboundBandwidthLimit.intValue());
 			} catch (SocketException e) {
 				this.logger.error( 
@@ -563,23 +562,19 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 								"Error in creating the bandwidth-limited "
 								+ "client-facing UDP socket"), 
 						e);
-				Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
-						Reply.GENERAL_SOCKS_SERVER_FAILURE);
-				this.sendSocks5Reply(socks5Rep);
 				return null;
 			}
 		}		
-		return clientFacingDatagramSck;
+		return clientFacingDatagramSock;
 	}
 	
 	private DatagramSocket limitPeerFacingDatagramSocket(
 			final DatagramSocket peerFacingDatagramSock) {
-		DatagramSocket peerFacingDatagramSck = peerFacingDatagramSock;
 		Integer inboundBandwidthLimit = this.getRelayInboundBandwidthLimit();
 		if (inboundBandwidthLimit != null) {
 			try {
-				peerFacingDatagramSck = new BandwidthLimitedDatagramSocket(
-						peerFacingDatagramSck,
+				return new BandwidthLimitedDatagramSocket(
+						peerFacingDatagramSock,
 						inboundBandwidthLimit.intValue());
 			} catch (SocketException e) {
 				this.logger.error( 
@@ -588,13 +583,10 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 								"Error in creating the bandwidth-limited "
 								+ "peer-facing UDP socket"), 
 						e);
-				Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
-						Reply.GENERAL_SOCKS_SERVER_FAILURE);
-				this.sendSocks5Reply(socks5Rep);
 				return null;
 			}
 		}		
-		return peerFacingDatagramSck;
+		return peerFacingDatagramSock;
 	}
 	
 	private DatagramSocket newClientFacingDatagramSocket() {
@@ -777,24 +769,17 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 			if (peerFacingDatagramSock == null) {
 				return;
 			}
-			DatagramSocket peerFacingDatagramSck = 
-					this.limitPeerFacingDatagramSocket(peerFacingDatagramSock);
-			if (peerFacingDatagramSck == null) {
-				return;
-			}
-			peerFacingDatagramSock = peerFacingDatagramSck;
 			clientFacingDatagramSock = this.newClientFacingDatagramSocket();
 			if (clientFacingDatagramSock == null) {
 				return;
 			}
+			/*
+			 * Create a temporary variable to avoid the resource-never-closed warning
+			 * (The resource will get closed)
+			 */
 			DatagramSocket clientFacingDatagramSck = 
 					this.wrapClientFacingDatagramSocket(
-							clientFacingDatagramSock); 
-			if (clientFacingDatagramSck == null) {
-				return;
-			}
-			clientFacingDatagramSck = this.limitClientFacingDatagramSocket(
-					clientFacingDatagramSck);
+							clientFacingDatagramSock);
 			if (clientFacingDatagramSck == null) {
 				return;
 			}
@@ -816,6 +801,22 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 				return;
 			}			
 			if (!this.sendSocks5Reply(socks5Rep)) {
+				return;
+			}
+			/*
+			 * Create a temporary variable to avoid the resource-never-closed warning
+			 * (The resource will get closed)
+			 */
+			DatagramSocket peerFacingDatagramSck = 
+					this.limitPeerFacingDatagramSocket(
+							peerFacingDatagramSock);
+			if (peerFacingDatagramSck == null) {
+				return;
+			}
+			peerFacingDatagramSock = peerFacingDatagramSck; 
+			clientFacingDatagramSock = this.limitClientFacingDatagramSocket(
+					clientFacingDatagramSock);
+			if (clientFacingDatagramSock == null) {
 				return;
 			}
 			UdpRelayServer.Builder builder = new UdpRelayServer.Builder(

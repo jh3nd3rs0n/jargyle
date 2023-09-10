@@ -547,23 +547,21 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 	}
 
 	private Socket limitClientSocket(final Socket clientSocket) {
-		Socket clientSock = clientSocket;
 		Integer outboundBandwidthLimit = this.getRelayOutboundBandwidthLimit();
 		if (outboundBandwidthLimit != null) {
-			clientSock = new BandwidthLimitedSocket(
-					clientSock, outboundBandwidthLimit.intValue());
+			return new BandwidthLimitedSocket(
+					clientSocket, outboundBandwidthLimit.intValue());
 		}
-		return clientSock;
+		return clientSocket;
 	}
 	
 	private Socket limitInboundSocket(final Socket inboundSocket) {
-		Socket inboundSock = inboundSocket;
 		Integer inboundBandwidthLimit = this.getRelayInboundBandwidthLimit();
 		if (inboundBandwidthLimit != null) {
-			inboundSock = new BandwidthLimitedSocket(
-					inboundSock, inboundBandwidthLimit.intValue());
+			return new BandwidthLimitedSocket(
+					inboundSocket, inboundBandwidthLimit.intValue());
 		}
-		return inboundSock;
+		return inboundSocket;
 	}
 	
 	private ServerSocket newListenSocket() {
@@ -764,17 +762,24 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 				return;
 			}
 			inboundSocket = this.acceptInboundSocketFrom(listenSocket);
-			listenSocket.close();
+			try {
+				listenSocket.close();
+			} catch (IOException e) {
+				this.logger.error( 
+						ObjectLogMessageHelper.objectLogMessage(
+								this, "Error in closing the listen socket"), 
+						e);
+				secondSocks5Rep = Socks5Reply.newFailureInstance(
+						Reply.GENERAL_SOCKS_SERVER_FAILURE);
+				this.sendSocks5Reply(secondSocks5Rep);
+				return;
+			}
 			if (inboundSocket == null) {
 				return;
 			}
 			if (!this.configureInboundSocket(inboundSocket)) {
 				return;
 			}
-			Socket inboundSock = this.limitInboundSocket(inboundSocket);
-			inboundSocket = inboundSock;
-			Socket clientSock = this.limitClientSocket(clientSocket);
-			clientSocket = clientSock;
 			serverBoundAddress = 
 					inboundSocket.getInetAddress().getHostAddress();
 			serverBoundPort = inboundSocket.getPort();
@@ -794,6 +799,8 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 			if (!this.sendSocks5Reply(socks5Rep)) {
 				return;
 			}
+			inboundSocket = this.limitInboundSocket(inboundSocket);
+			clientSocket = this.limitClientSocket(clientSocket);
 			RelayServer.Builder builder = new RelayServer.Builder(
 					clientSocket, inboundSocket);
 			builder.bufferSize(this.getRelayBufferSize());
@@ -807,8 +814,6 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 								this, "Error in starting to pass data"), 
 						e);				
 			}
-		} catch (IOException e) {
-			throw new UncheckedIOException(e);
 		} finally {
 			if (inboundSocket != null && !inboundSocket.isClosed()) {
 				try {

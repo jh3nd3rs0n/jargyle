@@ -372,23 +372,21 @@ final class ConnectCommandWorker extends TcpBasedCommandWorker {
 	}
 
 	private Socket limitClientSocket(final Socket clientSocket) {
-		Socket clientSock = clientSocket;
 		Integer outboundBandwidthLimit = this.getRelayOutboundBandwidthLimit();
 		if (outboundBandwidthLimit != null) {
-			clientSock = new BandwidthLimitedSocket(
-					clientSock, outboundBandwidthLimit.intValue());
+			return new BandwidthLimitedSocket(
+					clientSocket, outboundBandwidthLimit.intValue());
 		}
-		return clientSock;
+		return clientSocket;
 	}
 	
 	private Socket limitServerFacingSocket(final Socket serverFacingSocket) {
-		Socket serverFacingSock = serverFacingSocket;
 		Integer inboundBandwidthLimit = this.getRelayInboundBandwidthLimit();
 		if (inboundBandwidthLimit != null) {
-			serverFacingSock = new BandwidthLimitedSocket(
-					serverFacingSock, inboundBandwidthLimit.intValue());
+			return new BandwidthLimitedSocket(
+					serverFacingSocket, inboundBandwidthLimit.intValue());
 		}
-		return serverFacingSock;
+		return serverFacingSocket;
 	}
 	
 	private Socket newExtemporaneousServerFacingSocket(
@@ -648,11 +646,6 @@ final class ConnectCommandWorker extends TcpBasedCommandWorker {
 			if (serverFacingSocket == null) {
 				return;
 			}
-			Socket serverFacingSock = this.limitServerFacingSocket(
-					serverFacingSocket);
-			serverFacingSocket = serverFacingSock;
-			Socket clientSock = this.limitClientSocket(clientSocket);
-			clientSocket = clientSock;
 			String serverBoundAddress = 
 					serverFacingSocket.getInetAddress().getHostAddress();
 			int serverBoundPort = serverFacingSocket.getPort();
@@ -671,6 +664,14 @@ final class ConnectCommandWorker extends TcpBasedCommandWorker {
 			if (!this.sendSocks5Reply(socks5Rep)) {
 				return;
 			}
+			/*
+			 * Create a temporary variable to avoid the resource-never-closed warning
+			 * (The resource will get closed)
+			 */
+			Socket serverFacingSock = this.limitServerFacingSocket(
+					serverFacingSocket);
+			serverFacingSocket = serverFacingSock;
+			clientSocket = this.limitClientSocket(clientSocket);
 			RelayServer.Builder builder = new RelayServer.Builder(
 					clientSocket, serverFacingSocket);
 			builder.bufferSize(this.getRelayBufferSize());

@@ -112,7 +112,7 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 			this.sendSocks5Reply(rep);
 			return false;
 		}
-		if (!this.isSecondSocks5ReplyRule(rule)) {
+		if (!this.hasSecondSocks5ReplyRule(rule)) {
 			return true;
 		}
 		FirewallAction firewallAction = rule.getLastRuleResultValue(
@@ -531,7 +531,7 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 		return null;
 	}
 	
-	private boolean isSecondSocks5ReplyRule(final Rule rule) {
+	private boolean hasSecondSocks5ReplyRule(final Rule rule) {
 		if (rule.hasRuleCondition(
 				Socks5RuleConditionSpecConstants.SOCKS5_SECOND_SERVER_BOUND_ADDRESS)) {
 			return true;

@@ -83,7 +83,7 @@ public class Socks5Worker extends Worker {
 			this.sendSocks5Reply(socks5Rep);
 			return false;
 		}
-		if (!this.isSocks5RequestRule(rule)) {
+		if (!this.hasSocks5RequestRule(rule)) {
 			return true;
 		}
 		FirewallAction firewallAction = rule.getLastRuleResultValue(
@@ -249,7 +249,7 @@ public class Socks5Worker extends Worker {
 				GeneralSettingSpecConstants.ROUTE_SELECTION_STRATEGY);
 	}
 	
-	private boolean isSocks5RequestRule(final Rule rule) {
+	private boolean hasSocks5RequestRule(final Rule rule) {
 		if (rule.hasRuleCondition(
 				Socks5RuleConditionSpecConstants.SOCKS5_METHOD)) {
 			return true;
@@ -473,7 +473,7 @@ public class Socks5Worker extends Worker {
 	private Route selectRoute(
 			final Rule rule, final RuleContext socks5RequestRuleContext) {
 		Route selectedRte = this.socks5WorkerContext.getSelectedRoute();
-		if (!this.isSocks5RequestRule(rule)) {
+		if (!this.hasSocks5RequestRule(rule)) {
 			return selectedRte;
 		}
 		SelectionStrategy rteSelectionStrategy = 

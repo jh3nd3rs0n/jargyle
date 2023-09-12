@@ -128,7 +128,7 @@ final class UdpRelayServer {
 			if (rule == null) {
 				return false;
 			}
-			if (!this.isInboundRule(rule)) {
+			if (!this.hasInboundRule(rule)) {
 				return true;
 			}
 			FirewallAction firewallAction = rule.getLastRuleResultValue(
@@ -168,7 +168,7 @@ final class UdpRelayServer {
 					&& this.packetsWorkerContext.getClientPort() != 0;
 		}
 
-		private boolean isInboundRule(final Rule rule) {
+		private boolean hasInboundRule(final Rule rule) {
 			if (rule.hasRuleCondition(
 					Socks5RuleConditionSpecConstants.SOCKS5_UDP_INBOUND_DESIRED_DESTINATION_ADDRESS)) {
 				return true;
@@ -411,7 +411,7 @@ final class UdpRelayServer {
 			if (rule == null) {
 				return false;
 			}
-			if (!this.isOutboundRule(rule)) {
+			if (!this.hasOutboundRule(rule)) {
 				return true;
 			}
 			FirewallAction firewallAction =	rule.getLastRuleResultValue(
@@ -445,7 +445,7 @@ final class UdpRelayServer {
 			return FirewallAction.ALLOW.equals(firewallAction);
 		}
 		
-		private boolean isOutboundRule(final Rule rule) {
+		private boolean hasOutboundRule(final Rule rule) {
 			if (rule.hasRuleCondition(
 					Socks5RuleConditionSpecConstants.SOCKS5_UDP_OUTBOUND_DESIRED_DESTINATION_ADDRESS)) {
 				return true;

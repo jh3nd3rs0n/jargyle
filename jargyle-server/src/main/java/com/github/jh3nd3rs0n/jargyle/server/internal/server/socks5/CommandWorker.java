@@ -35,7 +35,7 @@ class CommandWorker extends Socks5Worker {
 			this.sendSocks5Reply(rep);
 			return false;
 		}
-		if (!this.isSocks5ReplyRule(rule)) {
+		if (!this.hasSocks5ReplyRule(rule)) {
 			return true;
 		}
 		FirewallAction firewallAction = rule.getLastRuleResultValue(
@@ -111,7 +111,7 @@ class CommandWorker extends Socks5Worker {
 		return true;
 	}
 	
-	private boolean isSocks5ReplyRule(final Rule rule) {
+	private boolean hasSocks5ReplyRule(final Rule rule) {
 		if (rule.hasRuleCondition(
 				Socks5RuleConditionSpecConstants.SOCKS5_SERVER_BOUND_ADDRESS)) {
 			return true;

@@ -124,23 +124,20 @@ final class UdpRelayServer {
 		}
 		
 		private boolean canAllowDatagramPacket(
-				final Rule applicableRule,
-				final RuleContext inboundRuleContext) {
-			if (applicableRule == null) {
+				final Rule rule, final RuleContext inboundRuleContext) {
+			if (rule == null) {
 				return false;
 			}
-			if (!this.canApplyRule(applicableRule)) {
+			if (!this.isInboundRule(rule)) {
 				return true;
 			}
-			FirewallAction firewallAction = 
-					applicableRule.getLastRuleResultValue(
-							GeneralRuleResultSpecConstants.FIREWALL_ACTION);
+			FirewallAction firewallAction = rule.getLastRuleResultValue(
+					GeneralRuleResultSpecConstants.FIREWALL_ACTION);
 			if (firewallAction == null) {
 				return false;
 			}
-			LogAction firewallActionLogAction = 
-					applicableRule.getLastRuleResultValue(
-							GeneralRuleResultSpecConstants.FIREWALL_ACTION_LOG_ACTION);
+			LogAction firewallActionLogAction =	rule.getLastRuleResultValue(
+					GeneralRuleResultSpecConstants.FIREWALL_ACTION_LOG_ACTION);
 			if (firewallAction.equals(FirewallAction.ALLOW)
 					&& firewallActionLogAction != null) {
 				firewallActionLogAction.invoke(
@@ -149,7 +146,7 @@ final class UdpRelayServer {
 								"Inbound UDP packet allowed based on the "
 								+ "following rule and context: rule: %s "
 								+ "context: %s",
-								applicableRule,
+								rule,
 								inboundRuleContext));				
 			} else if (firewallAction.equals(FirewallAction.DENY)
 					&& firewallActionLogAction != null) {
@@ -159,36 +156,36 @@ final class UdpRelayServer {
 								"Inbound UDP packet denied based on the "
 								+ "following rule and context: rule: %s "
 								+ "context: %s",
-								applicableRule,
+								rule,
 								inboundRuleContext));				
 			}
 			return FirewallAction.ALLOW.equals(firewallAction);
 		}
 		
-		private boolean canApplyRule(final Rule applicableRule) {
-			if (applicableRule.hasRuleCondition(
-					Socks5RuleConditionSpecConstants.SOCKS5_UDP_INBOUND_DESIRED_DESTINATION_ADDRESS)) {
-				return true;
-			}
-			if (applicableRule.hasRuleCondition(
-					Socks5RuleConditionSpecConstants.SOCKS5_UDP_INBOUND_DESIRED_DESTINATION_PORT)) {
-				return true;
-			}
-			if (applicableRule.hasRuleCondition(
-					Socks5RuleConditionSpecConstants.SOCKS5_UDP_INBOUND_SOURCE_ADDRESS)) {
-				return true;
-			}
-			if (applicableRule.hasRuleCondition(
-					Socks5RuleConditionSpecConstants.SOCKS5_UDP_INBOUND_SOURCE_PORT)) {
-				return true;
-			}
-			return false;
-		}
-
 		private boolean canSendDatagramPacket() {
 			return !AddressHelper.isAllZerosAddress(
 					this.packetsWorkerContext.getClientAddress())
 					&& this.packetsWorkerContext.getClientPort() != 0;
+		}
+
+		private boolean isInboundRule(final Rule rule) {
+			if (rule.hasRuleCondition(
+					Socks5RuleConditionSpecConstants.SOCKS5_UDP_INBOUND_DESIRED_DESTINATION_ADDRESS)) {
+				return true;
+			}
+			if (rule.hasRuleCondition(
+					Socks5RuleConditionSpecConstants.SOCKS5_UDP_INBOUND_DESIRED_DESTINATION_PORT)) {
+				return true;
+			}
+			if (rule.hasRuleCondition(
+					Socks5RuleConditionSpecConstants.SOCKS5_UDP_INBOUND_SOURCE_ADDRESS)) {
+				return true;
+			}
+			if (rule.hasRuleCondition(
+					Socks5RuleConditionSpecConstants.SOCKS5_UDP_INBOUND_SOURCE_PORT)) {
+				return true;
+			}
+			return false;
 		}
 		
 		private DatagramPacket newDatagramPacket(
@@ -410,23 +407,20 @@ final class UdpRelayServer {
 		}
 		
 		private boolean canAllowDatagramPacket(
-				final Rule applicableRule,
-				final RuleContext outboundRuleContext) {
-			if (applicableRule == null) {
+				final Rule rule, final RuleContext outboundRuleContext) {
+			if (rule == null) {
 				return false;
 			}
-			if (!this.canApplyRule(applicableRule)) {
+			if (!this.isOutboundRule(rule)) {
 				return true;
 			}
-			FirewallAction firewallAction = 
-					applicableRule.getLastRuleResultValue(
-							GeneralRuleResultSpecConstants.FIREWALL_ACTION);
+			FirewallAction firewallAction =	rule.getLastRuleResultValue(
+					GeneralRuleResultSpecConstants.FIREWALL_ACTION);
 			if (firewallAction == null) {
 				return false;
 			}
-			LogAction firewallActionLogAction = 
-					applicableRule.getLastRuleResultValue(
-							GeneralRuleResultSpecConstants.FIREWALL_ACTION_LOG_ACTION);
+			LogAction firewallActionLogAction =	rule.getLastRuleResultValue(
+					GeneralRuleResultSpecConstants.FIREWALL_ACTION_LOG_ACTION);
 			if (firewallAction.equals(FirewallAction.ALLOW)
 					&& firewallActionLogAction != null) {
 				firewallActionLogAction.invoke(
@@ -435,7 +429,7 @@ final class UdpRelayServer {
 								"Outbound UDP packet allowed based on the "
 								+ "following rule and context: rule: %s "
 								+ "context: %s",
-								applicableRule,
+								rule,
 								outboundRuleContext));				
 			} else if (firewallAction.equals(FirewallAction.DENY)
 					&& firewallActionLogAction != null) {
@@ -445,26 +439,26 @@ final class UdpRelayServer {
 								"Outbound UDP packet denied based on the "
 								+ "following rule and context: rule: %s "
 								+ "context: %s",
-								applicableRule,
+								rule,
 								outboundRuleContext));				
 			}
 			return FirewallAction.ALLOW.equals(firewallAction);
 		}
 		
-		private boolean canApplyRule(final Rule applicableRule) {
-			if (applicableRule.hasRuleCondition(
+		private boolean isOutboundRule(final Rule rule) {
+			if (rule.hasRuleCondition(
 					Socks5RuleConditionSpecConstants.SOCKS5_UDP_OUTBOUND_DESIRED_DESTINATION_ADDRESS)) {
 				return true;
 			}
-			if (applicableRule.hasRuleCondition(
+			if (rule.hasRuleCondition(
 					Socks5RuleConditionSpecConstants.SOCKS5_UDP_OUTBOUND_DESIRED_DESTINATION_PORT)) {
 				return true;
 			}
-			if (applicableRule.hasRuleCondition(
+			if (rule.hasRuleCondition(
 					Socks5RuleConditionSpecConstants.SOCKS5_UDP_OUTBOUND_SOURCE_ADDRESS)) {
 				return true;
 			}
-			if (applicableRule.hasRuleCondition(
+			if (rule.hasRuleCondition(
 					Socks5RuleConditionSpecConstants.SOCKS5_UDP_OUTBOUND_SOURCE_PORT)) {
 				return true;
 			}

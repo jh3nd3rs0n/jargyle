@@ -105,18 +105,17 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 	}
 	
 	private boolean canAllowSecondSocks5Reply(
-			final Rule applicableRl,
-			final RuleContext secondSocks5ReplyRuleContext) {
-		if (applicableRl == null) {
+			final Rule rule, final RuleContext secondSocks5ReplyRuleContext) {
+		if (rule == null) {
 			Socks5Reply rep = Socks5Reply.newFailureInstance(
 					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
 			this.sendSocks5Reply(rep);
 			return false;
 		}
-		if (!this.canApplyRule(applicableRl)) {
+		if (!this.isSecondSocks5ReplyRule(rule)) {
 			return true;
 		}
-		FirewallAction firewallAction = applicableRl.getLastRuleResultValue(
+		FirewallAction firewallAction = rule.getLastRuleResultValue(
 				GeneralRuleResultSpecConstants.FIREWALL_ACTION);
 		if (firewallAction == null) {
 			Socks5Reply rep = Socks5Reply.newFailureInstance(
@@ -124,12 +123,11 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 			this.sendSocks5Reply(rep);
 			return false;
 		}
-		LogAction firewallActionLogAction = 
-				applicableRl.getLastRuleResultValue(
-						GeneralRuleResultSpecConstants.FIREWALL_ACTION_LOG_ACTION);
+		LogAction firewallActionLogAction = rule.getLastRuleResultValue(
+				GeneralRuleResultSpecConstants.FIREWALL_ACTION_LOG_ACTION);
 		if (firewallAction.equals(FirewallAction.ALLOW)) {
 			if (!this.canAllowSecondSocks5ReplyWithinLimit(
-					applicableRl, secondSocks5ReplyRuleContext)) {
+					rule, secondSocks5ReplyRuleContext)) {
 				return false;
 			}
 			if (firewallActionLogAction != null) {
@@ -139,7 +137,7 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 								"Second SOCKS5 reply allowed based on the "
 								+ "following rule and context: rule: %s "
 								+ "context: %s",
-								applicableRl,
+								rule,
 								secondSocks5ReplyRuleContext));					
 			}
 		} else if (firewallAction.equals(FirewallAction.DENY)
@@ -150,7 +148,7 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 							"Second SOCKS5 reply denied based on the "
 							+ "following rule and context: rule: %s "
 							+ "context: %s",
-							applicableRl,
+							rule,
 							secondSocks5ReplyRuleContext));				
 		}
 		if (FirewallAction.ALLOW.equals(firewallAction)) {
@@ -163,13 +161,12 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 	}
 	
 	private boolean canAllowSecondSocks5ReplyWithinLimit(
-			final Rule applicableRl,
-			final RuleContext secondSocks5ReplyRuleContext) {
+			final Rule rule, final RuleContext secondSocks5ReplyRuleContext) {
 		NonnegativeIntegerLimit firewallActionAllowLimit =
-				applicableRl.getLastRuleResultValue(
+				rule.getLastRuleResultValue(
 						GeneralRuleResultSpecConstants.FIREWALL_ACTION_ALLOW_LIMIT);
 		LogAction firewallActionAllowLimitReachedLogAction =
-				applicableRl.getLastRuleResultValue(
+				rule.getLastRuleResultValue(
 						GeneralRuleResultSpecConstants.FIREWALL_ACTION_ALLOW_LIMIT_REACHED_LOG_ACTION);
 		if (firewallActionAllowLimit != null) {
 			if (!firewallActionAllowLimit.tryIncrementCurrentCount()) {
@@ -180,7 +177,7 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 									"Allowed limit has been reached based on "
 									+ "the following rule and context: rule: "
 									+ "%s context: %s",
-									applicableRl,
+									rule,
 									secondSocks5ReplyRuleContext));
 				}
 				Socks5Reply rep = Socks5Reply.newFailureInstance(
@@ -188,21 +185,9 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 				this.sendSocks5Reply(rep);
 				return false;				
 			}
-			this.commandWorkerContext.addBelowAllowLimitRule(applicableRl);
+			this.commandWorkerContext.addBelowAllowLimitRule(rule);
 		}
 		return true;
-	}
-	
-	private boolean canApplyRule(final Rule applicableRl) {
-		if (applicableRl.hasRuleCondition(
-				Socks5RuleConditionSpecConstants.SOCKS5_SECOND_SERVER_BOUND_ADDRESS)) {
-			return true;
-		}
-		if (applicableRl.hasRuleCondition(
-				Socks5RuleConditionSpecConstants.SOCKS5_SECOND_SERVER_BOUND_PORT)) {
-			return true;
-		}
-		return false;
 	}
 	
 	private boolean configureInboundSocket(final Socket inboundSocket) {
@@ -230,7 +215,7 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 		}
 		return true;
 	}
-
+	
 	private boolean configureListenSocket(final ServerSocket listenSocket) {
 		SocketSettings socketSettings = this.getListenSocketSettings();
 		try {
@@ -291,7 +276,7 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 				GeneralSettingSpecConstants.SOCKET_SETTINGS);
 		return socketSttngs;
 	}
-	
+
 	private Host getListenBindHost() {
 		Host host = this.applicableRule.getLastRuleResultValue(
 				Socks5RuleResultSpecConstants.SOCKS5_ON_BIND_LISTEN_BIND_HOST);
@@ -544,6 +529,18 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 			return Integer.valueOf(relayOutboundBandwidthLimit.intValue());
 		}
 		return null;
+	}
+	
+	private boolean isSecondSocks5ReplyRule(final Rule rule) {
+		if (rule.hasRuleCondition(
+				Socks5RuleConditionSpecConstants.SOCKS5_SECOND_SERVER_BOUND_ADDRESS)) {
+			return true;
+		}
+		if (rule.hasRuleCondition(
+				Socks5RuleConditionSpecConstants.SOCKS5_SECOND_SERVER_BOUND_PORT)) {
+			return true;
+		}
+		return false;
 	}
 
 	private Socket limitClientSocket(final Socket clientSocket) {

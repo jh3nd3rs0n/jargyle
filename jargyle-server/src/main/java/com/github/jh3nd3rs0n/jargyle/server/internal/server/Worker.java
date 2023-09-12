@@ -85,32 +85,29 @@ public class Worker implements Runnable {
 	}
 	
 	private boolean canAllowClientSocket(
-			final Rule applicableRl,
+			final Rule rule,
 			final RuleContext clientRuleContext,
 			final RuleHolder belowAllowLimitRuleHolder) {
-		if (applicableRl == null) {
+		if (rule == null) {
 			return false;
 		}
-		FirewallAction firewallAction = applicableRl.getLastRuleResultValue(
+		FirewallAction firewallAction = rule.getLastRuleResultValue(
 				GeneralRuleResultSpecConstants.FIREWALL_ACTION);
 		if (firewallAction == null) {
 			return false;
 		}
-		LogAction firewallActionLogAction = 
-				applicableRl.getLastRuleResultValue(
-						GeneralRuleResultSpecConstants.FIREWALL_ACTION_LOG_ACTION);
+		LogAction firewallActionLogAction = rule.getLastRuleResultValue(
+				GeneralRuleResultSpecConstants.FIREWALL_ACTION_LOG_ACTION);
 		if (firewallAction.equals(FirewallAction.ALLOW)) {
 			if (!this.canAllowClientSocketWithinLimit(
-					applicableRl, 
-					clientRuleContext, 
-					belowAllowLimitRuleHolder)) {
+					rule, clientRuleContext, belowAllowLimitRuleHolder)) {
 				return false;
 			}
 			if (firewallActionLogAction != null) {
 				firewallActionLogAction.invoke(String.format(
 						"Client allowed based on the following rule and "
 						+ "context: rule: %s context: %s",
-						applicableRl,
+						rule,
 						clientRuleContext));
 			}
 		} else if (firewallAction.equals(FirewallAction.DENY)
@@ -118,21 +115,21 @@ public class Worker implements Runnable {
 			firewallActionLogAction.invoke(String.format(
 					"Client denied based on the following rule and context: "
 					+ "rule: %s context: %s",
-					applicableRl,
+					rule,
 					clientRuleContext));				
 		}
 		return FirewallAction.ALLOW.equals(firewallAction);
 	}
 	
 	private boolean canAllowClientSocketWithinLimit(
-			final Rule applicableRl,
+			final Rule rule,
 			final RuleContext clientRuleContext,
 			final RuleHolder belowAllowLimitRuleHolder) {
 		NonnegativeIntegerLimit firewallActionAllowLimit =
-				applicableRl.getLastRuleResultValue(
+				rule.getLastRuleResultValue(
 						GeneralRuleResultSpecConstants.FIREWALL_ACTION_ALLOW_LIMIT);
 		LogAction firewallActionAllowLimitReachedLogAction =
-				applicableRl.getLastRuleResultValue(
+				rule.getLastRuleResultValue(
 						GeneralRuleResultSpecConstants.FIREWALL_ACTION_ALLOW_LIMIT_REACHED_LOG_ACTION);
 		if (firewallActionAllowLimit != null) {
 			if (!firewallActionAllowLimit.tryIncrementCurrentCount()) {
@@ -142,12 +139,12 @@ public class Worker implements Runnable {
 									"Allowed limit has been reached based on "
 									+ "the following rule and context: rule: "
 									+ "%s context: %s",
-									applicableRl,
+									rule,
 									clientRuleContext));
 				}
 				return false;
 			}
-			belowAllowLimitRuleHolder.rule = applicableRl;
+			belowAllowLimitRuleHolder.rule = rule;
 		}		
 		return true;
 	}
@@ -365,7 +362,7 @@ public class Worker implements Runnable {
 	}
 	
 	private Route selectRoute(
-			final Rule applicableRl, final RuleContext clientRuleContext) {
+			final Rule rule, final RuleContext clientRuleContext) {
 		SelectionStrategy rteSelectionStrategy = 
 				this.getRouteSelectionStrategy();
 		Routes rtes = this.getRoutes();
@@ -373,11 +370,11 @@ public class Worker implements Runnable {
 		Route selectedRte = rteSelectionStrategy.selectFrom(
 				rtes.toMap().values().stream().collect(Collectors.toList()));
 		if (rteSelectionLogAction != null) {
-			if (applicableRl.hasRuleResult(
+			if (rule.hasRuleResult(
 					GeneralRuleResultSpecConstants.ROUTE_SELECTION_LOG_ACTION)
-					|| applicableRl.hasRuleResult(
+					|| rule.hasRuleResult(
 							GeneralRuleResultSpecConstants.ROUTE_SELECTION_STRATEGY)
-					|| applicableRl.hasRuleResult(
+					|| rule.hasRuleResult(
 							GeneralRuleResultSpecConstants.SELECTABLE_ROUTE_ID)) {
 				rteSelectionLogAction.invoke(
 						ObjectLogMessageHelper.objectLogMessage(
@@ -385,7 +382,7 @@ public class Worker implements Runnable {
 								"Route '%s' selected based on the following "
 								+ "rule and context: rule: %s context: %s",
 								selectedRte.getId(),
-								applicableRl,
+								rule,
 								clientRuleContext));
 			} else {
 				rteSelectionLogAction.invoke(

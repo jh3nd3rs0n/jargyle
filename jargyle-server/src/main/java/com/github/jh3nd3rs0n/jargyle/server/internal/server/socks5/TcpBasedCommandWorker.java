@@ -3,7 +3,7 @@ package com.github.jh3nd3rs0n.jargyle.server.internal.server.socks5;
 import java.io.IOException;
 import java.net.Socket;
 
-import com.github.jh3nd3rs0n.jargyle.server.internal.server.RelayServer;
+import com.github.jh3nd3rs0n.jargyle.server.internal.server.Relay;
 
 class TcpBasedCommandWorker extends CommandWorker {
 
@@ -14,11 +14,10 @@ class TcpBasedCommandWorker extends CommandWorker {
 		super(clientSocket, context);
 	}
 
-	protected final void passData(
-			final RelayServer relayServer) throws IOException {
+	protected final void passData(final Relay relay) throws IOException {
 		try {
-			relayServer.start();
-			while (!relayServer.getState().equals(RelayServer.State.STOPPED)) {
+			relay.start();
+			while (!relay.getState().equals(Relay.State.STOPPED)) {
 				try {
 					Thread.sleep(HALF_SECOND);
 				} catch (InterruptedException e) {
@@ -26,8 +25,8 @@ class TcpBasedCommandWorker extends CommandWorker {
 				}
 			}
 		} finally {
-			if (!relayServer.getState().equals(RelayServer.State.STOPPED)) {
-				relayServer.stop();
+			if (!relay.getState().equals(Relay.State.STOPPED)) {
+				relay.stop();
 			}
 		}		
 	}	

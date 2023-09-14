@@ -14,8 +14,12 @@ public final class RuleContext {
 	}
 	
 	public RuleContext(final RuleContext other) {
+		RuleContext oth = other;
+		if (oth == null) {
+			oth = new RuleContext();
+		}
 		this.ruleArgMap = new LinkedHashMap<RuleArgSpec<Object>, RuleArg<Object>>(
-				other.ruleArgMap);
+				oth.ruleArgMap);
 	}
 	
 	public <V> boolean containsRuleArgSpecKey(

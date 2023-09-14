@@ -5,7 +5,6 @@ import java.net.Socket;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
 import com.github.jh3nd3rs0n.jargyle.server.FirewallAction;
-import com.github.jh3nd3rs0n.jargyle.server.GeneralRuleArgSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.GeneralRuleResultSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.LogAction;
 import com.github.jh3nd3rs0n.jargyle.server.NonnegativeIntegerLimit;
@@ -15,7 +14,6 @@ import com.github.jh3nd3rs0n.jargyle.server.Socks5RuleArgSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5RuleConditionSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Reply;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Reply;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Request;
 
 class CommandWorker extends Socks5Worker {
 
@@ -27,18 +25,13 @@ class CommandWorker extends Socks5Worker {
 		this.commandWorkerContext = context;
 	}
 	
-	protected final boolean canAllowSocks5Reply(
-			final Rule rule, final RuleContext socks5ReplyRuleContext) {
-		if (rule == null) {
-			Socks5Reply rep = Socks5Reply.newFailureInstance(
-					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
-			this.sendSocks5Reply(rep);
-			return false;
-		}
-		if (!this.hasSocks5ReplyRule(rule)) {
+	protected final boolean canAllowSocks5Reply() {
+		Rule applicableRule = this.commandWorkerContext.getApplicableRule();
+		RuleContext ruleContext = this.commandWorkerContext.getRuleContext();
+		if (!this.hasSocks5ReplyRuleCondition()) {
 			return true;
 		}
-		FirewallAction firewallAction = rule.getLastRuleResultValue(
+		FirewallAction firewallAction = applicableRule.getLastRuleResultValue(
 				GeneralRuleResultSpecConstants.FIREWALL_ACTION);
 		if (firewallAction == null) {
 			Socks5Reply rep = Socks5Reply.newFailureInstance(
@@ -46,11 +39,11 @@ class CommandWorker extends Socks5Worker {
 			this.sendSocks5Reply(rep);
 			return false;			
 		}
-		LogAction firewallActionLogAction =	rule.getLastRuleResultValue(
-				GeneralRuleResultSpecConstants.FIREWALL_ACTION_LOG_ACTION);
+		LogAction firewallActionLogAction =	
+				applicableRule.getLastRuleResultValue(
+						GeneralRuleResultSpecConstants.FIREWALL_ACTION_LOG_ACTION);
 		if (firewallAction.equals(FirewallAction.ALLOW)) {
-			if (!this.canAllowSocks5ReplyWithinLimit(
-					rule, socks5ReplyRuleContext)) {
+			if (!this.canAllowSocks5ReplyWithinLimit()) {
 				return false;
 			}
 			if (firewallActionLogAction != null) {
@@ -59,8 +52,8 @@ class CommandWorker extends Socks5Worker {
 								this,
 								"SOCKS5 reply allowed based on the following "
 								+ "rule and context: rule: %s context: %s",
-								rule,
-								socks5ReplyRuleContext));					
+								applicableRule,
+								ruleContext));					
 			}
 		} else if (firewallAction.equals(FirewallAction.DENY)
 				&& firewallActionLogAction != null) {
@@ -69,8 +62,8 @@ class CommandWorker extends Socks5Worker {
 							this,
 							"SOCKS5 reply denied based on the following "
 							+ "rule and context: rule: %s context: %s",
-							rule,
-							socks5ReplyRuleContext));				
+							applicableRule,
+							ruleContext));				
 		}
 		if (FirewallAction.ALLOW.equals(firewallAction)) {
 			return true;
@@ -81,13 +74,14 @@ class CommandWorker extends Socks5Worker {
 		return false;
 	}
 	
-	private boolean canAllowSocks5ReplyWithinLimit(
-			final Rule rule, final RuleContext socks5ReplyRuleContext) {
+	private boolean canAllowSocks5ReplyWithinLimit() {
+		Rule applicableRule = this.commandWorkerContext.getApplicableRule();
+		RuleContext ruleContext = this.commandWorkerContext.getRuleContext();
 		NonnegativeIntegerLimit firewallActionAllowLimit =
-				rule.getLastRuleResultValue(
+				applicableRule.getLastRuleResultValue(
 						GeneralRuleResultSpecConstants.FIREWALL_ACTION_ALLOW_LIMIT);
 		LogAction firewallActionAllowLimitReachedLogAction =
-				rule.getLastRuleResultValue(
+				applicableRule.getLastRuleResultValue(
 						GeneralRuleResultSpecConstants.FIREWALL_ACTION_ALLOW_LIMIT_REACHED_LOG_ACTION);
 		if (firewallActionAllowLimit != null) {
 			if (!firewallActionAllowLimit.tryIncrementCurrentCount()) {
@@ -98,25 +92,26 @@ class CommandWorker extends Socks5Worker {
 									"Allowed limit has been reached based on "
 									+ "the following rule and context: rule: "
 									+ "%s context: %s",
-									rule,
-									socks5ReplyRuleContext));
+									applicableRule,
+									ruleContext));
 				}
 				Socks5Reply rep = Socks5Reply.newFailureInstance(
 						Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
 				this.sendSocks5Reply(rep);
 				return false;				
 			}
-			this.commandWorkerContext.addBelowAllowLimitRule(rule);				
+			this.commandWorkerContext.addBelowAllowLimitRule(applicableRule);				
 		}		
 		return true;
 	}
 	
-	private boolean hasSocks5ReplyRule(final Rule rule) {
-		if (rule.hasRuleCondition(
+	private boolean hasSocks5ReplyRuleCondition() {
+		Rule applicableRule = this.commandWorkerContext.getApplicableRule();
+		if (applicableRule.hasRuleCondition(
 				Socks5RuleConditionSpecConstants.SOCKS5_SERVER_BOUND_ADDRESS)) {
 			return true;
 		}
-		if (rule.hasRuleCondition(
+		if (applicableRule.hasRuleCondition(
 				Socks5RuleConditionSpecConstants.SOCKS5_SERVER_BOUND_PORT)) {
 			return true;
 		}
@@ -125,32 +120,8 @@ class CommandWorker extends Socks5Worker {
 	
 	protected final RuleContext newSocks5ReplyRuleContext(
 			final Socks5Reply socks5Rep) {
-		RuleContext socks5ReplyRuleContext = new RuleContext();
-		Socket clientSocket = this.getClientSocket();
-		MethodSubnegotiationResults methSubnegotiationResults = 
-				this.commandWorkerContext.getMethodSubnegotiationResults();
-		Socks5Request socks5Req = this.commandWorkerContext.getSocks5Request();
-		socks5ReplyRuleContext.putRuleArgValue(
-				GeneralRuleArgSpecConstants.CLIENT_ADDRESS, 
-				clientSocket.getInetAddress().getHostAddress());
-		socks5ReplyRuleContext.putRuleArgValue(
-				GeneralRuleArgSpecConstants.SOCKS_SERVER_ADDRESS, 
-				clientSocket.getLocalAddress().getHostAddress());
-		socks5ReplyRuleContext.putRuleArgValue(
-				Socks5RuleArgSpecConstants.SOCKS5_METHOD, 
-				methSubnegotiationResults.getMethod().toString());
-		socks5ReplyRuleContext.putRuleArgValue(
-				Socks5RuleArgSpecConstants.SOCKS5_USER, 
-				methSubnegotiationResults.getUser());
-		socks5ReplyRuleContext.putRuleArgValue(
-				Socks5RuleArgSpecConstants.SOCKS5_COMMAND, 
-				socks5Req.getCommand().toString());
-		socks5ReplyRuleContext.putRuleArgValue(
-				Socks5RuleArgSpecConstants.SOCKS5_DESIRED_DESTINATION_ADDRESS, 
-				socks5Req.getDesiredDestinationAddress());
-		socks5ReplyRuleContext.putRuleArgValue(
-				Socks5RuleArgSpecConstants.SOCKS5_DESIRED_DESTINATION_PORT, 
-				Port.newInstance(socks5Req.getDesiredDestinationPort()));		
+		RuleContext socks5ReplyRuleContext = new RuleContext(
+				this.commandWorkerContext.getRuleContext());
 		socks5ReplyRuleContext.putRuleArgValue(
 				Socks5RuleArgSpecConstants.SOCKS5_SERVER_BOUND_ADDRESS, 
 				socks5Rep.getServerBoundAddress());

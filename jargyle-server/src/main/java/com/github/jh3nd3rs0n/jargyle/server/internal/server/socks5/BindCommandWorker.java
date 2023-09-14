@@ -28,7 +28,6 @@ import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
 import com.github.jh3nd3rs0n.jargyle.internal.net.AddressHelper;
 import com.github.jh3nd3rs0n.jargyle.server.FirewallAction;
-import com.github.jh3nd3rs0n.jargyle.server.GeneralRuleArgSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.GeneralRuleResultSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.GeneralSettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.LogAction;
@@ -41,48 +40,37 @@ import com.github.jh3nd3rs0n.jargyle.server.Socks5RuleConditionSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5RuleResultSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.internal.net.BandwidthLimitedSocket;
-import com.github.jh3nd3rs0n.jargyle.server.internal.server.RelayServer;
+import com.github.jh3nd3rs0n.jargyle.server.internal.server.Relay;
 import com.github.jh3nd3rs0n.jargyle.server.internal.server.Rules;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Reply;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Reply;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Request;
 
 final class BindCommandWorker extends TcpBasedCommandWorker {
 	
-	private Rule applicableRule;
 	private final CommandWorkerContext commandWorkerContext;
 	private final String desiredDestinationAddress;
 	private final int desiredDestinationPort;
 	private final Logger logger;
-	private final MethodSubnegotiationResults methodSubnegotiationResults;
 	private final NetObjectFactory netObjectFactory;
 	private final Rules rules;
 	private final Settings settings;
-	private final Socks5Request socks5Request;
 		
 	public BindCommandWorker(
 			final Socket clientSocket, final CommandWorkerContext context) {
 		super(clientSocket, context);
-		Rule applicableRl = context.getApplicableRule();
 		String desiredDestinationAddr =	context.getDesiredDestinationAddress();
 		int desiredDestinationPrt = context.getDesiredDestinationPort();
-		MethodSubnegotiationResults methSubnegotiationResults =
-				context.getMethodSubnegotiationResults();
 		NetObjectFactory netObjFactory = 
 				context.getSelectedRoute().getNetObjectFactory();
 		Rules rls = context.getRules();
 		Settings sttngs = context.getSettings();
-		Socks5Request socks5Req = context.getSocks5Request();
-		this.applicableRule = applicableRl;
 		this.commandWorkerContext = context;
 		this.desiredDestinationAddress = desiredDestinationAddr;
 		this.desiredDestinationPort = desiredDestinationPrt;
 		this.logger = LoggerFactory.getLogger(BindCommandWorker.class);
-		this.methodSubnegotiationResults = methSubnegotiationResults;
 		this.netObjectFactory = netObjFactory;
 		this.rules = rls;
 		this.settings = sttngs;
-		this.socks5Request = socks5Req;
 	}
 	
 	private Socket acceptInboundSocketFrom(final ServerSocket listenSocket) {
@@ -104,18 +92,13 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 		return inboundSocket;
 	}
 	
-	private boolean canAllowSecondSocks5Reply(
-			final Rule rule, final RuleContext secondSocks5ReplyRuleContext) {
-		if (rule == null) {
-			Socks5Reply rep = Socks5Reply.newFailureInstance(
-					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
-			this.sendSocks5Reply(rep);
-			return false;
-		}
-		if (!this.hasSecondSocks5ReplyRule(rule)) {
+	private boolean canAllowSecondSocks5Reply() {
+		Rule applicableRule = this.commandWorkerContext.getApplicableRule();
+		RuleContext ruleContext = this.commandWorkerContext.getRuleContext();
+		if (!this.hasSecondSocks5ReplyRuleCondition()) {
 			return true;
 		}
-		FirewallAction firewallAction = rule.getLastRuleResultValue(
+		FirewallAction firewallAction = applicableRule.getLastRuleResultValue(
 				GeneralRuleResultSpecConstants.FIREWALL_ACTION);
 		if (firewallAction == null) {
 			Socks5Reply rep = Socks5Reply.newFailureInstance(
@@ -123,11 +106,11 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 			this.sendSocks5Reply(rep);
 			return false;
 		}
-		LogAction firewallActionLogAction = rule.getLastRuleResultValue(
-				GeneralRuleResultSpecConstants.FIREWALL_ACTION_LOG_ACTION);
+		LogAction firewallActionLogAction = 
+				applicableRule.getLastRuleResultValue(
+						GeneralRuleResultSpecConstants.FIREWALL_ACTION_LOG_ACTION);
 		if (firewallAction.equals(FirewallAction.ALLOW)) {
-			if (!this.canAllowSecondSocks5ReplyWithinLimit(
-					rule, secondSocks5ReplyRuleContext)) {
+			if (!this.canAllowSecondSocks5ReplyWithinLimit()) {
 				return false;
 			}
 			if (firewallActionLogAction != null) {
@@ -137,8 +120,8 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 								"Second SOCKS5 reply allowed based on the "
 								+ "following rule and context: rule: %s "
 								+ "context: %s",
-								rule,
-								secondSocks5ReplyRuleContext));					
+								applicableRule,
+								ruleContext));					
 			}
 		} else if (firewallAction.equals(FirewallAction.DENY)
 				&& firewallActionLogAction != null) {
@@ -148,8 +131,8 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 							"Second SOCKS5 reply denied based on the "
 							+ "following rule and context: rule: %s "
 							+ "context: %s",
-							rule,
-							secondSocks5ReplyRuleContext));				
+							applicableRule,
+							ruleContext));				
 		}
 		if (FirewallAction.ALLOW.equals(firewallAction)) {
 			return true;
@@ -160,13 +143,14 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 		return false;
 	}
 	
-	private boolean canAllowSecondSocks5ReplyWithinLimit(
-			final Rule rule, final RuleContext secondSocks5ReplyRuleContext) {
+	private boolean canAllowSecondSocks5ReplyWithinLimit() {
+		Rule applicableRule = this.commandWorkerContext.getApplicableRule();
+		RuleContext ruleContext = this.commandWorkerContext.getRuleContext();
 		NonnegativeIntegerLimit firewallActionAllowLimit =
-				rule.getLastRuleResultValue(
+				applicableRule.getLastRuleResultValue(
 						GeneralRuleResultSpecConstants.FIREWALL_ACTION_ALLOW_LIMIT);
 		LogAction firewallActionAllowLimitReachedLogAction =
-				rule.getLastRuleResultValue(
+				applicableRule.getLastRuleResultValue(
 						GeneralRuleResultSpecConstants.FIREWALL_ACTION_ALLOW_LIMIT_REACHED_LOG_ACTION);
 		if (firewallActionAllowLimit != null) {
 			if (!firewallActionAllowLimit.tryIncrementCurrentCount()) {
@@ -177,15 +161,15 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 									"Allowed limit has been reached based on "
 									+ "the following rule and context: rule: "
 									+ "%s context: %s",
-									rule,
-									secondSocks5ReplyRuleContext));
+									applicableRule,
+									ruleContext));
 				}
 				Socks5Reply rep = Socks5Reply.newFailureInstance(
 						Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
 				this.sendSocks5Reply(rep);
 				return false;				
 			}
-			this.commandWorkerContext.addBelowAllowLimitRule(rule);
+			this.commandWorkerContext.addBelowAllowLimitRule(applicableRule);
 		}
 		return true;
 	}
@@ -243,20 +227,21 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 	}
 
 	private SocketSettings getInboundSocketSettings() {
+		Rule applicableRule = this.commandWorkerContext.getApplicableRule();
 		List<SocketSetting<Object>> socketSettings = 
-				this.applicableRule.getRuleResultValues(
+				applicableRule.getRuleResultValues(
 						Socks5RuleResultSpecConstants.SOCKS5_ON_BIND_INBOUND_SOCKET_SETTING);
 		if (socketSettings.size() > 0) {
 			return SocketSettings.newInstance(
 					socketSettings.stream().collect(Collectors.toList()));
 		}
-		socketSettings = this.applicableRule.getRuleResultValues(
+		socketSettings = applicableRule.getRuleResultValues(
 				Socks5RuleResultSpecConstants.SOCKS5_ON_COMMAND_SOCKET_SETTING);
 		if (socketSettings.size() > 0) {
 			return SocketSettings.newInstance(
 					socketSettings.stream().collect(Collectors.toList()));
 		}
-		socketSettings = this.applicableRule.getRuleResultValues(
+		socketSettings = applicableRule.getRuleResultValues(
 				GeneralRuleResultSpecConstants.SOCKET_SETTING);
 		if (socketSettings.size() > 0) {
 			return SocketSettings.newInstance(
@@ -278,27 +263,28 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 	}
 
 	private Host getListenBindHost() {
-		Host host = this.applicableRule.getLastRuleResultValue(
+		Rule applicableRule = this.commandWorkerContext.getApplicableRule();
+		Host host = applicableRule.getLastRuleResultValue(
 				Socks5RuleResultSpecConstants.SOCKS5_ON_BIND_LISTEN_BIND_HOST);
 		if (host != null) {
 			return host;
 		}
-		host = this.applicableRule.getLastRuleResultValue(
+		host = applicableRule.getLastRuleResultValue(
 				Socks5RuleResultSpecConstants.SOCKS5_ON_COMMAND_EXTERNAL_FACING_BIND_HOST);
 		if (host != null) {
 			return host;
 		}
-		host = this.applicableRule.getLastRuleResultValue(
+		host = applicableRule.getLastRuleResultValue(
 				Socks5RuleResultSpecConstants.SOCKS5_ON_COMMAND_BIND_HOST);
 		if (host != null) {
 			return host;
 		}
-		host = this.applicableRule.getLastRuleResultValue(
+		host = applicableRule.getLastRuleResultValue(
 				GeneralRuleResultSpecConstants.EXTERNAL_FACING_BIND_HOST);
 		if (host != null) {
 			return host;
 		}
-		host = this.applicableRule.getLastRuleResultValue(
+		host = applicableRule.getLastRuleResultValue(
 				GeneralRuleResultSpecConstants.BIND_HOST);
 		if (host != null) {
 			return host;
@@ -329,27 +315,28 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 	}
 	
 	private PortRanges getListenBindPortRanges() {
-		List<PortRange> portRanges = this.applicableRule.getRuleResultValues(
+		Rule applicableRule = this.commandWorkerContext.getApplicableRule();
+		List<PortRange> portRanges = applicableRule.getRuleResultValues(
 				Socks5RuleResultSpecConstants.SOCKS5_ON_BIND_LISTEN_BIND_PORT_RANGE);
 		if (portRanges.size() > 0) {
 			return PortRanges.newInstance(portRanges);
 		}
-		portRanges = this.applicableRule.getRuleResultValues(
+		portRanges = applicableRule.getRuleResultValues(
 				Socks5RuleResultSpecConstants.SOCKS5_ON_COMMAND_EXTERNAL_FACING_BIND_TCP_PORT_RANGE);
 		if (portRanges.size() > 0) {
 			return PortRanges.newInstance(portRanges);
 		}
-		portRanges = this.applicableRule.getRuleResultValues(
+		portRanges = applicableRule.getRuleResultValues(
 				Socks5RuleResultSpecConstants.SOCKS5_ON_COMMAND_BIND_TCP_PORT_RANGE);
 		if (portRanges.size() > 0) {
 			return PortRanges.newInstance(portRanges);
 		}
-		portRanges = this.applicableRule.getRuleResultValues(
+		portRanges = applicableRule.getRuleResultValues(
 				GeneralRuleResultSpecConstants.EXTERNAL_FACING_BIND_TCP_PORT_RANGE);
 		if (portRanges.size() > 0) {
 			return PortRanges.newInstance(portRanges);
 		}
-		portRanges = this.applicableRule.getRuleResultValues(
+		portRanges = applicableRule.getRuleResultValues(
 				GeneralRuleResultSpecConstants.BIND_TCP_PORT_RANGE);
 		if (portRanges.size() > 0) {
 			return PortRanges.newInstance(portRanges);
@@ -380,32 +367,33 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 	}
 	
 	private SocketSettings getListenSocketSettings() {
+		Rule applicableRule = this.commandWorkerContext.getApplicableRule();
 		List<SocketSetting<Object>> socketSettings = 
-				this.applicableRule.getRuleResultValues(
+				applicableRule.getRuleResultValues(
 						Socks5RuleResultSpecConstants.SOCKS5_ON_BIND_LISTEN_SOCKET_SETTING);
 		if (socketSettings.size() > 0) {
 			return SocketSettings.newInstance(
 					socketSettings.stream().collect(Collectors.toList()));
 		}
-		socketSettings = this.applicableRule.getRuleResultValues(
+		socketSettings = applicableRule.getRuleResultValues(
 				Socks5RuleResultSpecConstants.SOCKS5_ON_COMMAND_EXTERNAL_FACING_SOCKET_SETTING);
 		if (socketSettings.size() > 0) {
 			return SocketSettings.newInstance(
 					socketSettings.stream().collect(Collectors.toList()));
 		}
-		socketSettings = this.applicableRule.getRuleResultValues(
+		socketSettings = applicableRule.getRuleResultValues(
 				Socks5RuleResultSpecConstants.SOCKS5_ON_COMMAND_SOCKET_SETTING);
 		if (socketSettings.size() > 0) {
 			return SocketSettings.newInstance(
 					socketSettings.stream().collect(Collectors.toList()));
 		}
-		socketSettings = this.applicableRule.getRuleResultValues(
+		socketSettings = applicableRule.getRuleResultValues(
 				GeneralRuleResultSpecConstants.EXTERNAL_FACING_SOCKET_SETTING);
 		if (socketSettings.size() > 0) {
 			return SocketSettings.newInstance(
 					socketSettings.stream().collect(Collectors.toList()));
 		}
-		socketSettings = this.applicableRule.getRuleResultValues(
+		socketSettings = applicableRule.getRuleResultValues(
 				GeneralRuleResultSpecConstants.SOCKET_SETTING);
 		if (socketSettings.size() > 0) {
 			return SocketSettings.newInstance(
@@ -437,13 +425,14 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 	}
 	
 	private int getRelayBufferSize() {
+		Rule applicableRule = this.commandWorkerContext.getApplicableRule();
 		PositiveInteger relayBufferSize = 
-				this.applicableRule.getLastRuleResultValue(
+				applicableRule.getLastRuleResultValue(
 						Socks5RuleResultSpecConstants.SOCKS5_ON_BIND_RELAY_BUFFER_SIZE);
 		if (relayBufferSize != null) {
 			return relayBufferSize.intValue();
 		}
-		relayBufferSize = this.applicableRule.getLastRuleResultValue(
+		relayBufferSize = applicableRule.getLastRuleResultValue(
 				Socks5RuleResultSpecConstants.SOCKS5_ON_COMMAND_RELAY_BUFFER_SIZE);
 		if (relayBufferSize != null) {
 			return relayBufferSize.intValue();
@@ -459,13 +448,14 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 	}
 	
 	private int getRelayIdleTimeout() {
+		Rule applicableRule = this.commandWorkerContext.getApplicableRule();
 		PositiveInteger relayIdleTimeout =
-				this.applicableRule.getLastRuleResultValue(
+				applicableRule.getLastRuleResultValue(
 						Socks5RuleResultSpecConstants.SOCKS5_ON_BIND_RELAY_IDLE_TIMEOUT);
 		if (relayIdleTimeout != null) {
 			return relayIdleTimeout.intValue();
 		}
-		relayIdleTimeout = this.applicableRule.getLastRuleResultValue(
+		relayIdleTimeout = applicableRule.getLastRuleResultValue(
 				Socks5RuleResultSpecConstants.SOCKS5_ON_COMMAND_RELAY_IDLE_TIMEOUT);
 		if (relayIdleTimeout != null) {
 			return relayIdleTimeout.intValue();
@@ -481,13 +471,14 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 	}
 	
 	private Integer getRelayInboundBandwidthLimit() {
+		Rule applicableRule = this.commandWorkerContext.getApplicableRule();
 		PositiveInteger relayInboundBandwidthLimit =
-				this.applicableRule.getLastRuleResultValue(
+				applicableRule.getLastRuleResultValue(
 						Socks5RuleResultSpecConstants.SOCKS5_ON_BIND_RELAY_INBOUND_BANDWIDTH_LIMIT);
 		if (relayInboundBandwidthLimit != null) {
 			return Integer.valueOf(relayInboundBandwidthLimit.intValue());
 		}
-		relayInboundBandwidthLimit = this.applicableRule.getLastRuleResultValue(
+		relayInboundBandwidthLimit = applicableRule.getLastRuleResultValue(
 				Socks5RuleResultSpecConstants.SOCKS5_ON_COMMAND_RELAY_INBOUND_BANDWIDTH_LIMIT);
 		if (relayInboundBandwidthLimit != null) {
 			return Integer.valueOf(relayInboundBandwidthLimit.intValue());
@@ -506,14 +497,15 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 	}
 	
 	private Integer getRelayOutboundBandwidthLimit() {
+		Rule applicableRule = this.commandWorkerContext.getApplicableRule();
 		PositiveInteger relayOutboundBandwidthLimit =
-				this.applicableRule.getLastRuleResultValue(
+				applicableRule.getLastRuleResultValue(
 						Socks5RuleResultSpecConstants.SOCKS5_ON_BIND_RELAY_OUTBOUND_BANDWIDTH_LIMIT);
 		if (relayOutboundBandwidthLimit != null) {
 			return Integer.valueOf(relayOutboundBandwidthLimit.intValue());
 		}
 		relayOutboundBandwidthLimit = 
-				this.applicableRule.getLastRuleResultValue(
+				applicableRule.getLastRuleResultValue(
 						Socks5RuleResultSpecConstants.SOCKS5_ON_COMMAND_RELAY_OUTBOUND_BANDWIDTH_LIMIT);
 		if (relayOutboundBandwidthLimit != null) {
 			return Integer.valueOf(relayOutboundBandwidthLimit.intValue());
@@ -531,12 +523,13 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 		return null;
 	}
 	
-	private boolean hasSecondSocks5ReplyRule(final Rule rule) {
-		if (rule.hasRuleCondition(
+	private boolean hasSecondSocks5ReplyRuleCondition() {
+		Rule applicableRule = this.commandWorkerContext.getApplicableRule();
+		if (applicableRule.hasRuleCondition(
 				Socks5RuleConditionSpecConstants.SOCKS5_SECOND_SERVER_BOUND_ADDRESS)) {
 			return true;
 		}
-		if (rule.hasRuleCondition(
+		if (applicableRule.hasRuleCondition(
 				Socks5RuleConditionSpecConstants.SOCKS5_SECOND_SERVER_BOUND_PORT)) {
 			return true;
 		}
@@ -652,37 +645,9 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 	}
 	
 	private RuleContext newSecondSocks5ReplyRuleContext(
-			final Socks5Reply socks5Rep,
 			final Socks5Reply secondSocks5Rep) {
-		RuleContext secondSocks5ReplyRuleContext = new RuleContext();
-		Socket clientSocket = this.getClientSocket();
-		secondSocks5ReplyRuleContext.putRuleArgValue(
-				GeneralRuleArgSpecConstants.CLIENT_ADDRESS, 
-				clientSocket.getInetAddress().getHostAddress());
-		secondSocks5ReplyRuleContext.putRuleArgValue(
-				GeneralRuleArgSpecConstants.SOCKS_SERVER_ADDRESS, 
-				clientSocket.getLocalAddress().getHostAddress());
-		secondSocks5ReplyRuleContext.putRuleArgValue(
-				Socks5RuleArgSpecConstants.SOCKS5_METHOD, 
-				this.methodSubnegotiationResults.getMethod().toString());
-		secondSocks5ReplyRuleContext.putRuleArgValue(
-				Socks5RuleArgSpecConstants.SOCKS5_USER, 
-				this.methodSubnegotiationResults.getUser());
-		secondSocks5ReplyRuleContext.putRuleArgValue(
-				Socks5RuleArgSpecConstants.SOCKS5_COMMAND, 
-				this.socks5Request.getCommand().toString());
-		secondSocks5ReplyRuleContext.putRuleArgValue(
-				Socks5RuleArgSpecConstants.SOCKS5_DESIRED_DESTINATION_ADDRESS, 
-				this.socks5Request.getDesiredDestinationAddress());
-		secondSocks5ReplyRuleContext.putRuleArgValue(
-				Socks5RuleArgSpecConstants.SOCKS5_DESIRED_DESTINATION_PORT, 
-				Port.newInstance(this.socks5Request.getDesiredDestinationPort()));		
-		secondSocks5ReplyRuleContext.putRuleArgValue(
-				Socks5RuleArgSpecConstants.SOCKS5_SERVER_BOUND_ADDRESS, 
-				socks5Rep.getServerBoundAddress());
-		secondSocks5ReplyRuleContext.putRuleArgValue(
-				Socks5RuleArgSpecConstants.SOCKS5_SERVER_BOUND_PORT, 
-				Port.newInstance(socks5Rep.getServerBoundPort()));
+		RuleContext secondSocks5ReplyRuleContext = new RuleContext(
+				this.commandWorkerContext.getRuleContext());
 		secondSocks5ReplyRuleContext.putRuleArgValue(
 				Socks5RuleArgSpecConstants.SOCKS5_SECOND_SERVER_BOUND_ADDRESS, 
 				secondSocks5Rep.getServerBoundAddress());
@@ -747,12 +712,23 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 					Reply.SUCCEEDED, 
 					serverBoundAddress, 
 					serverBoundPort);
-			RuleContext socks5ReplyRuleContext = 
-					this.newSocks5ReplyRuleContext(socks5Rep);
-			this.applicableRule = this.rules.firstAppliesTo(
-					socks5ReplyRuleContext);
-			if (!this.canAllowSocks5Reply(
-					this.applicableRule, socks5ReplyRuleContext)) {
+			RuleContext ruleContext = this.newSocks5ReplyRuleContext(socks5Rep);
+			this.commandWorkerContext.setRuleContext(ruleContext);
+			Rule applicableRule = this.rules.firstAppliesTo(
+					this.commandWorkerContext.getRuleContext());
+			if (applicableRule == null) {
+				this.logger.error(ObjectLogMessageHelper.objectLogMessage(
+						this, 
+						"No applicable rule found based on the following "
+						+ "context: %s",
+						this.commandWorkerContext.getRuleContext()));				
+				socks5Rep = Socks5Reply.newFailureInstance(
+						Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
+				this.sendSocks5Reply(socks5Rep);
+				return;
+			}			
+			this.commandWorkerContext.setApplicableRule(applicableRule);
+			if (!this.canAllowSocks5Reply()) {
 				return;
 			}
 			if (!this.sendSocks5Reply(socks5Rep)) {
@@ -784,27 +760,38 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 					Reply.SUCCEEDED, 
 					serverBoundAddress, 
 					serverBoundPort);
-			RuleContext secondSocks5ReplyRuleContext = 
-					this.newSecondSocks5ReplyRuleContext(
-							socks5Rep, secondSocks5Rep);
-			this.applicableRule = this.rules.firstAppliesTo(
-					secondSocks5ReplyRuleContext);
-			if (!this.canAllowSecondSocks5Reply(
-					this.applicableRule, secondSocks5ReplyRuleContext)) {
+			ruleContext = this.newSecondSocks5ReplyRuleContext(
+					secondSocks5Rep);
+			this.commandWorkerContext.setRuleContext(ruleContext);
+			applicableRule = this.rules.firstAppliesTo(
+					this.commandWorkerContext.getRuleContext());
+			if (applicableRule == null) {
+				this.logger.error(ObjectLogMessageHelper.objectLogMessage(
+						this, 
+						"No applicable rule found based on the following "
+						+ "context: %s",
+						this.commandWorkerContext.getRuleContext()));				
+				secondSocks5Rep = Socks5Reply.newFailureInstance(
+						Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
+				this.sendSocks5Reply(secondSocks5Rep);
+				return;
+			}			
+			this.commandWorkerContext.setApplicableRule(applicableRule);
+			if (!this.canAllowSecondSocks5Reply()) {
 				return;
 			}
-			if (!this.sendSocks5Reply(socks5Rep)) {
+			if (!this.sendSocks5Reply(secondSocks5Rep)) {
 				return;
 			}
 			inboundSocket = this.limitInboundSocket(inboundSocket);
 			clientSocket = this.limitClientSocket(clientSocket);
-			RelayServer.Builder builder = new RelayServer.Builder(
+			Relay.Builder builder = new Relay.Builder(
 					clientSocket, inboundSocket);
 			builder.bufferSize(this.getRelayBufferSize());
 			builder.idleTimeout(this.getRelayIdleTimeout());
-			RelayServer relayServer = builder.build();
+			Relay relay = builder.build();
 			try {
-				this.passData(relayServer);
+				this.passData(relay);
 			} catch (IOException e) {
 				this.logger.error( 
 						ObjectLogMessageHelper.objectLogMessage(

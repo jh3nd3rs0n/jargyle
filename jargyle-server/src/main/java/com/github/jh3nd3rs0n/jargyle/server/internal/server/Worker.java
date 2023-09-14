@@ -39,28 +39,28 @@ import com.github.jh3nd3rs0n.jargyle.transport.socks5.Version;
 
 public class Worker implements Runnable {
 	
-	private static final class RuleHolder {
-		private Rule rule;
-	}
-	
 	private Rule applicableRule;
+	private Rule belowAllowLimitRule;
 	private final DtlsDatagramSocketFactory clientFacingDtlsDatagramSocketFactory;
 	private Socket clientSocket;
 	private final SslSocketFactory clientSslSocketFactory;
 	private final Configuration configuration;
 	private final Logger logger;
 	private final Routes routes;
-	private final Rules rules;	
+	private RuleContext ruleContext;
+	private final Rules rules;
 	private final AtomicInteger totalWorkerCount;
 	
 	protected Worker(final Socket clientSock) {
 		this.applicableRule = null;
+		this.belowAllowLimitRule = null;
 		this.clientFacingDtlsDatagramSocketFactory = null;
 		this.clientSocket = clientSock;
 		this.clientSslSocketFactory = null;
 		this.configuration = null;
 		this.logger = LoggerFactory.getLogger(this.getClass());
 		this.routes = null;
+		this.ruleContext = null;
 		this.rules = null;
 		this.totalWorkerCount = null;
 	}
@@ -70,6 +70,7 @@ public class Worker implements Runnable {
 			final AtomicInteger workerCount,
 			final Configuration config) {
 		this.applicableRule = null;
+		this.belowAllowLimitRule = null;
 		this.clientFacingDtlsDatagramSocketFactory = 
 				DtlsDatagramSocketFactoryImpl.isDtlsEnabled(config) ? 
 						new DtlsDatagramSocketFactoryImpl(config) : null;
@@ -80,56 +81,49 @@ public class Worker implements Runnable {
 		this.configuration = config;
 		this.logger = LoggerFactory.getLogger(Worker.class);
 		this.routes = Routes.newInstance(config);
+		this.ruleContext = null;
 		this.rules = Rules.newInstance(config);
 		this.totalWorkerCount = workerCount;
 	}
 	
-	private boolean canAllowClientSocket(
-			final Rule rule,
-			final RuleContext clientRuleContext,
-			final RuleHolder belowAllowLimitRuleHolder) {
-		if (rule == null) {
-			return false;
-		}
-		FirewallAction firewallAction = rule.getLastRuleResultValue(
-				GeneralRuleResultSpecConstants.FIREWALL_ACTION);
+	private boolean canAllowClientSocket() {
+		FirewallAction firewallAction = 
+				this.applicableRule.getLastRuleResultValue(
+						GeneralRuleResultSpecConstants.FIREWALL_ACTION);
 		if (firewallAction == null) {
 			return false;
 		}
-		LogAction firewallActionLogAction = rule.getLastRuleResultValue(
-				GeneralRuleResultSpecConstants.FIREWALL_ACTION_LOG_ACTION);
+		LogAction firewallActionLogAction = 
+				this.applicableRule.getLastRuleResultValue(
+						GeneralRuleResultSpecConstants.FIREWALL_ACTION_LOG_ACTION);
 		if (firewallAction.equals(FirewallAction.ALLOW)) {
-			if (!this.canAllowClientSocketWithinLimit(
-					rule, clientRuleContext, belowAllowLimitRuleHolder)) {
+			if (!this.canAllowClientSocketWithinLimit()) {
 				return false;
 			}
 			if (firewallActionLogAction != null) {
 				firewallActionLogAction.invoke(String.format(
 						"Client allowed based on the following rule and "
 						+ "context: rule: %s context: %s",
-						rule,
-						clientRuleContext));
+						this.applicableRule,
+						this.ruleContext));
 			}
 		} else if (firewallAction.equals(FirewallAction.DENY)
 				&& firewallActionLogAction != null) {
 			firewallActionLogAction.invoke(String.format(
 					"Client denied based on the following rule and context: "
 					+ "rule: %s context: %s",
-					rule,
-					clientRuleContext));				
+					this.applicableRule,
+					this.ruleContext));				
 		}
 		return FirewallAction.ALLOW.equals(firewallAction);
 	}
 	
-	private boolean canAllowClientSocketWithinLimit(
-			final Rule rule,
-			final RuleContext clientRuleContext,
-			final RuleHolder belowAllowLimitRuleHolder) {
+	private boolean canAllowClientSocketWithinLimit() {
 		NonnegativeIntegerLimit firewallActionAllowLimit =
-				rule.getLastRuleResultValue(
+				this.applicableRule.getLastRuleResultValue(
 						GeneralRuleResultSpecConstants.FIREWALL_ACTION_ALLOW_LIMIT);
 		LogAction firewallActionAllowLimitReachedLogAction =
-				rule.getLastRuleResultValue(
+				this.applicableRule.getLastRuleResultValue(
 						GeneralRuleResultSpecConstants.FIREWALL_ACTION_ALLOW_LIMIT_REACHED_LOG_ACTION);
 		if (firewallActionAllowLimit != null) {
 			if (!firewallActionAllowLimit.tryIncrementCurrentCount()) {
@@ -139,12 +133,12 @@ public class Worker implements Runnable {
 									"Allowed limit has been reached based on "
 									+ "the following rule and context: rule: "
 									+ "%s context: %s",
-									rule,
-									clientRuleContext));
+									this.applicableRule,
+									this.ruleContext));
 				}
 				return false;
 			}
-			belowAllowLimitRuleHolder.rule = rule;
+			this.belowAllowLimitRule = applicableRule;
 		}		
 		return true;
 	}
@@ -169,10 +163,45 @@ public class Worker implements Runnable {
 		return true;
 	}
 	
+	private Routes getClientRoutes() {
+		List<Route> rtes = this.applicableRule.getRuleResultValues(
+				GeneralRuleResultSpecConstants.SELECTABLE_ROUTE_ID)
+				.stream()
+				.map(rteId -> this.routes.get(rteId))
+				.filter(rte -> rte != null)
+				.collect(Collectors.toList());
+		if (rtes.size() > 0) {
+			return Routes.newInstance(rtes);
+		}
+		return this.routes;
+	}
+	
+	
+	private LogAction getClientRouteSelectionLogAction() {
+		LogAction routeSelectionLogAction = 
+				this.applicableRule.getLastRuleResultValue(
+						GeneralRuleResultSpecConstants.ROUTE_SELECTION_LOG_ACTION);
+		if (routeSelectionLogAction != null) {
+			return routeSelectionLogAction;
+		}
+		return this.configuration.getSettings().getLastValue(
+				GeneralSettingSpecConstants.ROUTE_SELECTION_LOG_ACTION);
+	}
+	
+	private SelectionStrategy getClientRouteSelectionStrategy() {
+		SelectionStrategy routeSelectionStrategy =
+				this.applicableRule.getLastRuleResultValue(
+						GeneralRuleResultSpecConstants.ROUTE_SELECTION_STRATEGY);
+		if (routeSelectionStrategy != null) {
+			return routeSelectionStrategy;
+		}
+		return this.configuration.getSettings().getLastValue(
+				GeneralSettingSpecConstants.ROUTE_SELECTION_STRATEGY);
+	}
+	
 	protected final Socket getClientSocket() {
 		return this.clientSocket;
 	}
-	
 	
 	private SocketSettings getClientSocketSettings() {
 		List<SocketSetting<Object>> socketSettings = 
@@ -197,41 +226,6 @@ public class Worker implements Runnable {
 		socketSttngs = settings.getLastValue(
 				GeneralSettingSpecConstants.SOCKET_SETTINGS);
 		return socketSttngs;
-	}
-	
-	private Routes getRoutes() {
-		List<Route> rtes = this.applicableRule.getRuleResultValues(
-				GeneralRuleResultSpecConstants.SELECTABLE_ROUTE_ID)
-				.stream()
-				.map(rteId -> this.routes.get(rteId))
-				.filter(rte -> rte != null)
-				.collect(Collectors.toList());
-		if (rtes.size() > 0) {
-			return Routes.newInstance(rtes);
-		}
-		return this.routes;
-	}
-	
-	private LogAction getRouteSelectionLogAction() {
-		LogAction routeSelectionLogAction = 
-				this.applicableRule.getLastRuleResultValue(
-						GeneralRuleResultSpecConstants.ROUTE_SELECTION_LOG_ACTION);
-		if (routeSelectionLogAction != null) {
-			return routeSelectionLogAction;
-		}
-		return this.configuration.getSettings().getLastValue(
-				GeneralSettingSpecConstants.ROUTE_SELECTION_LOG_ACTION);
-	}
-	
-	private SelectionStrategy getRouteSelectionStrategy() {
-		SelectionStrategy routeSelectionStrategy =
-				this.applicableRule.getLastRuleResultValue(
-						GeneralRuleResultSpecConstants.ROUTE_SELECTION_STRATEGY);
-		if (routeSelectionStrategy != null) {
-			return routeSelectionStrategy;
-		}
-		return this.configuration.getSettings().getLastValue(
-				GeneralSettingSpecConstants.ROUTE_SELECTION_STRATEGY);
 	}
 	
 	protected final void logClientIoException(
@@ -276,13 +270,17 @@ public class Worker implements Runnable {
 					this, 
 					"Started. Total Worker count: %s",
 					this.totalWorkerCount.incrementAndGet()));
-			RuleContext clientRuleContext = this.newClientRuleContext();
-			this.applicableRule = this.rules.firstAppliesTo(clientRuleContext);
-			RuleHolder belowAllowLimitRuleHolder = new RuleHolder();
-			if (!this.canAllowClientSocket(
-					this.applicableRule, 
-					clientRuleContext, 
-					belowAllowLimitRuleHolder)) {
+			this.ruleContext = this.newClientRuleContext();
+			this.applicableRule = this.rules.firstAppliesTo(this.ruleContext);
+			if (this.applicableRule == null) {
+				this.logger.error(ObjectLogMessageHelper.objectLogMessage(
+						this, 
+						"No applicable rule found based on the following "
+						+ "context: %s",
+						this.ruleContext));
+				return;
+			}
+			if (!this.canAllowClientSocket()) {
 				return;
 			}
 			Socket clientSocket = this.getClientSocket();
@@ -313,14 +311,12 @@ public class Worker implements Runnable {
 					this.rules,
 					this.routes,
 					this.clientFacingDtlsDatagramSocketFactory);
-			Rule belowAllowLimitRule = belowAllowLimitRuleHolder.rule;
-			if (belowAllowLimitRule != null) {
-				workerContext.addBelowAllowLimitRule(belowAllowLimitRule);
+			if (this.belowAllowLimitRule != null) {
+				workerContext.addBelowAllowLimitRule(this.belowAllowLimitRule);
 			}
 			workerContext.setApplicableRule(this.applicableRule);
-			Route selectedRoute = this.selectRoute(
-					this.applicableRule, clientRuleContext);
-			workerContext.setSelectedRoute(selectedRoute);
+			workerContext.setRuleContext(this.ruleContext);
+			workerContext.setSelectedRoute(this.selectClientRoute());
 			if (version.byteValue() == Version.V5.byteValue()) {
 				Socks5Worker socks5Worker = new Socks5Worker(
 						this.getClientSocket(),
@@ -339,7 +335,7 @@ public class Worker implements Runnable {
 					t);
 		} finally {
 			if (workerContext != null) {
-				workerContext.decrementCurrentAllowCounts();
+				workerContext.decrementAllCurrentAllowedCounts();
 			}
 			if (!this.getClientSocket().isClosed()) {
 				try {
@@ -361,20 +357,20 @@ public class Worker implements Runnable {
 		}
 	}
 	
-	private Route selectRoute(
-			final Rule rule, final RuleContext clientRuleContext) {
+	private Route selectClientRoute() {
 		SelectionStrategy rteSelectionStrategy = 
-				this.getRouteSelectionStrategy();
-		Routes rtes = this.getRoutes();
-		LogAction rteSelectionLogAction = this.getRouteSelectionLogAction();
+				this.getClientRouteSelectionStrategy();
+		Routes rtes = this.getClientRoutes();
+		LogAction rteSelectionLogAction = 
+				this.getClientRouteSelectionLogAction();
 		Route selectedRte = rteSelectionStrategy.selectFrom(
 				rtes.toMap().values().stream().collect(Collectors.toList()));
 		if (rteSelectionLogAction != null) {
-			if (rule.hasRuleResult(
+			if (this.applicableRule.hasRuleResult(
 					GeneralRuleResultSpecConstants.ROUTE_SELECTION_LOG_ACTION)
-					|| rule.hasRuleResult(
+					|| this.applicableRule.hasRuleResult(
 							GeneralRuleResultSpecConstants.ROUTE_SELECTION_STRATEGY)
-					|| rule.hasRuleResult(
+					|| this.applicableRule.hasRuleResult(
 							GeneralRuleResultSpecConstants.SELECTABLE_ROUTE_ID)) {
 				rteSelectionLogAction.invoke(
 						ObjectLogMessageHelper.objectLogMessage(
@@ -382,8 +378,8 @@ public class Worker implements Runnable {
 								"Route '%s' selected based on the following "
 								+ "rule and context: rule: %s context: %s",
 								selectedRte.getId(),
-								rule,
-								clientRuleContext));
+								this.applicableRule,
+								this.ruleContext));
 			} else {
 				rteSelectionLogAction.invoke(
 						ObjectLogMessageHelper.objectLogMessage(

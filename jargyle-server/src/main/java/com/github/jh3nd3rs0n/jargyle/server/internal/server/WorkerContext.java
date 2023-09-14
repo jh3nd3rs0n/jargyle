@@ -11,6 +11,7 @@ import com.github.jh3nd3rs0n.jargyle.server.FirewallAction;
 import com.github.jh3nd3rs0n.jargyle.server.GeneralRuleResultSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.NonnegativeIntegerLimit;
 import com.github.jh3nd3rs0n.jargyle.server.Rule;
+import com.github.jh3nd3rs0n.jargyle.server.RuleContext;
 import com.github.jh3nd3rs0n.jargyle.server.Settings;
 
 public class WorkerContext {
@@ -20,6 +21,7 @@ public class WorkerContext {
 	private final DtlsDatagramSocketFactory clientFacingDtlsDatagramSocketFactory;
 	private final Configuration configuration;
 	private final Routes routes;
+	private RuleContext ruleContext;
 	private final Rules rules;
 	private Route selectedRoute;	
 	private final WorkerContext workerContext;
@@ -38,6 +40,7 @@ public class WorkerContext {
 				clientFacingDtlsDatagramSockFactory;
 		this.configuration = config;
 		this.routes = rtes;
+		this.ruleContext = null;
 		this.rules = rls;
 		this.selectedRoute = null;		
 		this.workerContext = null;
@@ -50,6 +53,7 @@ public class WorkerContext {
 		this.clientFacingDtlsDatagramSocketFactory = null;
 		this.configuration = null;
 		this.routes = null;
+		this.ruleContext = null;
 		this.rules = null;
 		this.selectedRoute = null;		
 		this.workerContext = context;
@@ -81,9 +85,9 @@ public class WorkerContext {
 				belowAllowLimitRl));
 	}
 	
-	public final void decrementCurrentAllowCounts() {
+	public final void decrementAllCurrentAllowedCounts() {
 		if (this.workerContext != null) {
-			this.workerContext.decrementCurrentAllowCounts();
+			this.workerContext.decrementAllCurrentAllowedCounts();
 			return;
 		}
 		for (Rule belowAllowLimitRule : this.belowAllowLimitRules) {
@@ -136,6 +140,13 @@ public class WorkerContext {
 		return this.routes;
 	}
 
+	public final RuleContext getRuleContext() {
+		if (this.workerContext != null) {
+			return this.workerContext.getRuleContext();
+		}
+		return this.ruleContext;
+	}
+	
 	public final Rules getRules() {
 		if (this.workerContext != null) {
 			return this.workerContext.getRules();
@@ -163,6 +174,14 @@ public class WorkerContext {
 			return;
 		}
 		this.applicableRule = Objects.requireNonNull(applicableRl);
+	}
+	
+	public final void setRuleContext(final RuleContext rlContext) {
+		if (this.workerContext != null) {
+			this.workerContext.setRuleContext(rlContext);
+			return;
+		}
+		this.ruleContext = Objects.requireNonNull(rlContext);
 	}
 	
 	public final void setSelectedRoute(final Route selectedRte) {

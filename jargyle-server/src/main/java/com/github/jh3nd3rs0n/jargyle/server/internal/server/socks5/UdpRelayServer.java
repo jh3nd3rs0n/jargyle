@@ -124,11 +124,8 @@ final class UdpRelayServer {
 		}
 		
 		private boolean canAllowDatagramPacket(
-				final Rule rule, final RuleContext inboundRuleContext) {
-			if (rule == null) {
-				return false;
-			}
-			if (!this.hasInboundRule(rule)) {
+				final Rule rule, final RuleContext ruleContext) {
+			if (!this.hasInboundRuleCondition(rule)) {
 				return true;
 			}
 			FirewallAction firewallAction = rule.getLastRuleResultValue(
@@ -147,7 +144,7 @@ final class UdpRelayServer {
 								+ "following rule and context: rule: %s "
 								+ "context: %s",
 								rule,
-								inboundRuleContext));				
+								ruleContext));				
 			} else if (firewallAction.equals(FirewallAction.DENY)
 					&& firewallActionLogAction != null) {
 				firewallActionLogAction.invoke(
@@ -157,7 +154,7 @@ final class UdpRelayServer {
 								+ "following rule and context: rule: %s "
 								+ "context: %s",
 								rule,
-								inboundRuleContext));				
+								ruleContext));				
 			}
 			return FirewallAction.ALLOW.equals(firewallAction);
 		}
@@ -168,7 +165,7 @@ final class UdpRelayServer {
 					&& this.packetsWorkerContext.getClientPort() != 0;
 		}
 
-		private boolean hasInboundRule(final Rule rule) {
+		private boolean hasInboundRuleCondition(final Rule rule) {
 			if (rule.hasRuleCondition(
 					Socks5RuleConditionSpecConstants.SOCKS5_UDP_INBOUND_DESIRED_DESTINATION_ADDRESS)) {
 				return true;
@@ -210,11 +207,12 @@ final class UdpRelayServer {
 		}
 		
 		private RuleContext newInboundRuleContext(
+				final RuleContext rlContext,
 				final String peerAddr,
 				final int peerPrt,
-				final String clientAddr,
+				final String clientAddr, 
 				final int clientPrt) {
-			RuleContext inboundRuleContext = new RuleContext(this.ruleContext);
+			RuleContext inboundRuleContext = new RuleContext(rlContext);
 			inboundRuleContext.putRuleArgValue(
 					Socks5RuleArgSpecConstants.SOCKS5_UDP_INBOUND_DESIRED_DESTINATION_ADDRESS, 
 					clientAddr);
@@ -294,12 +292,22 @@ final class UdpRelayServer {
 							"Packet data received: %s byte(s)",
 							packet.getLength()));
 					RuleContext inboundRuleContext = this.newInboundRuleContext(
+							this.ruleContext,
 							packet.getAddress().getHostAddress(),
 							packet.getPort(),
-							this.packetsWorkerContext.getClientAddress(),
+							this.packetsWorkerContext.getClientAddress(), 
 							this.packetsWorkerContext.getClientPort());
 					Rule applicableRule = this.rules.firstAppliesTo(
 							inboundRuleContext);
+					if (applicableRule == null) {
+						this.logger.error(
+								ObjectLogMessageHelper.objectLogMessage(
+										this,
+										"No applicable rule found based on "
+										+ "the following context: %s",
+										inboundRuleContext));
+						continue;
+					}
 					if (!this.canAllowDatagramPacket(
 							applicableRule, inboundRuleContext)) {
 						continue;
@@ -407,11 +415,8 @@ final class UdpRelayServer {
 		}
 		
 		private boolean canAllowDatagramPacket(
-				final Rule rule, final RuleContext outboundRuleContext) {
-			if (rule == null) {
-				return false;
-			}
-			if (!this.hasOutboundRule(rule)) {
+				final Rule rule, final RuleContext ruleContext) {
+			if (!this.hasOutboundRuleCondition(rule)) {
 				return true;
 			}
 			FirewallAction firewallAction =	rule.getLastRuleResultValue(
@@ -430,7 +435,7 @@ final class UdpRelayServer {
 								+ "following rule and context: rule: %s "
 								+ "context: %s",
 								rule,
-								outboundRuleContext));				
+								ruleContext));				
 			} else if (firewallAction.equals(FirewallAction.DENY)
 					&& firewallActionLogAction != null) {
 				firewallActionLogAction.invoke(
@@ -440,12 +445,12 @@ final class UdpRelayServer {
 								+ "following rule and context: rule: %s "
 								+ "context: %s",
 								rule,
-								outboundRuleContext));				
+								ruleContext));				
 			}
 			return FirewallAction.ALLOW.equals(firewallAction);
 		}
 		
-		private boolean hasOutboundRule(final Rule rule) {
+		private boolean hasOutboundRuleCondition(final Rule rule) {
 			if (rule.hasRuleCondition(
 					Socks5RuleConditionSpecConstants.SOCKS5_UDP_OUTBOUND_DESIRED_DESTINATION_ADDRESS)) {
 				return true;
@@ -487,11 +492,12 @@ final class UdpRelayServer {
 		}
 		
 		private RuleContext newOutboundRuleContext(
+				final RuleContext rlContext,
 				final String clientAddr,
 				final int clientPrt,
-				final String peerAddr,
+				final String peerAddr, 
 				final int peerPrt) {
-			RuleContext outboundRuleContext = new RuleContext(this.ruleContext);
+			RuleContext outboundRuleContext = new RuleContext(rlContext);
 			outboundRuleContext.putRuleArgValue(
 					Socks5RuleArgSpecConstants.SOCKS5_UDP_OUTBOUND_DESIRED_DESTINATION_ADDRESS, 
 					peerAddr);
@@ -589,12 +595,22 @@ final class UdpRelayServer {
 					}
 					RuleContext outboundRuleContext =
 							this.newOutboundRuleContext(
+									this.ruleContext,
 									this.packetsWorkerContext.getClientAddress(),
 									this.packetsWorkerContext.getClientPort(),
-									header.getDesiredDestinationAddress(),
+									header.getDesiredDestinationAddress(), 
 									header.getDesiredDestinationPort());
 					Rule applicableRule = this.rules.firstAppliesTo(
 							outboundRuleContext);
+					if (applicableRule == null) {
+						this.logger.error(
+								ObjectLogMessageHelper.objectLogMessage(
+										this,
+										"No applicable rule found based on "
+										+ "the following context: %s",
+										outboundRuleContext));
+						continue;
+					}					
 					if (!this.canAllowDatagramPacket(
 							applicableRule,	outboundRuleContext)) {
 						continue;

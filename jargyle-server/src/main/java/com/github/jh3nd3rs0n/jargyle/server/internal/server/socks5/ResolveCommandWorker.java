@@ -47,7 +47,6 @@ final class ResolveCommandWorker extends CommandWorker {
 		HostResolver hostResolver =	this.netObjectFactory.newHostResolver();
 		InetAddress inetAddress = null;
 		Socks5Reply socks5Rep = null;		
-		Rule applicableRule = this.commandWorkerContext.getApplicableRule();
 		try {
 			inetAddress = hostResolver.resolve(this.desiredDestinationAddress);
 		} catch (UnknownHostException e) {
@@ -74,10 +73,23 @@ final class ResolveCommandWorker extends CommandWorker {
 				Reply.SUCCEEDED, 
 				serverBoundAddress, 
 				serverBoundPort);
-		RuleContext socks5ReplyRuleContext = this.newSocks5ReplyRuleContext(
-				socks5Rep);
-		applicableRule = this.rules.firstAppliesTo(socks5ReplyRuleContext);
-		if (!this.canAllowSocks5Reply(applicableRule, socks5ReplyRuleContext)) {
+		RuleContext ruleContext = this.newSocks5ReplyRuleContext(socks5Rep);
+		this.commandWorkerContext.setRuleContext(ruleContext);
+		Rule applicableRule = this.rules.firstAppliesTo(
+				this.commandWorkerContext.getRuleContext());
+		if (applicableRule == null) {
+			this.logger.error(ObjectLogMessageHelper.objectLogMessage(
+					this, 
+					"No applicable rule found based on the following "
+					+ "context: %s",
+					this.commandWorkerContext.getRuleContext()));				
+			socks5Rep = Socks5Reply.newFailureInstance(
+					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
+			this.sendSocks5Reply(socks5Rep);
+			return;
+		}		
+		this.commandWorkerContext.setApplicableRule(applicableRule);
+		if (!this.canAllowSocks5Reply()) {
 			return;
 		}		
 		this.sendSocks5Reply(socks5Rep);			

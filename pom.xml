@@ -12,6 +12,8 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.javadoc.skippedModules>
 			echo,jargyle-cli,jargyle-cli-test,jargyle-internal,jargyle-server-test,test-help</maven.javadoc.skippedModules>
+		<sonar.organization>jh3nd3rs0n</sonar.organization>
+		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -132,10 +134,10 @@
 		<module>jargyle-transport</module>
 		<module>jargyle-client</module>
 		<module>jargyle-server</module>
-		<module>jargyle-server-test</module>		
+		<module>jargyle-server-test</module>
 		<module>echo</module>
 		<module>jargyle-cli</module>
-		<module>jargyle-cli-test</module>		
+		<module>jargyle-cli-test</module>
 		<module>jargyle-distribution</module>
 	</modules>
 </project>

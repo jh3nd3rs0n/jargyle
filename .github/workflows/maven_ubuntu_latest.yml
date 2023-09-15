@@ -23,11 +23,19 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: ${{ matrix.java }}
+      - name: Cache SonarCloud packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
       - name: Cache Maven packages
         uses: actions/cache@v3
         with:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
-      - name: Test with Maven
-        run: mvn --batch-mode --file=pom.xml --update-snapshots --projects=\!jargyle-distribution verify
+      - name: Test with Maven and Analyze
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: mvn --batch-mode --file=pom.xml --update-snapshots --projects=\!jargyle-distribution verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=jh3nd3rs0n_jargyle

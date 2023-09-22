@@ -69,7 +69,18 @@ public abstract class SettingSpec<V> {
 		return new Setting<V>(this, this.valueType.cast(value));
 	}
 	
+	public final Setting<V> newSetting(final V value, final String doc) {
+		Setting<V> setting = this.newSetting(value);
+		return new Setting<V>(setting.getSettingSpec(), setting.getValue(), doc);
+	}
+	
 	public abstract Setting<V> newSettingOfParsableValue(final String value);
+	
+	public final Setting<V> newSettingOfParsableValue(
+			final String value, final String doc) {
+		Setting<V> setting = this.newSettingOfParsableValue(value);
+		return new Setting<V>(setting.getSettingSpec(), setting.getValue(), doc);
+	}
 	
 	@Override
 	public final String toString() {

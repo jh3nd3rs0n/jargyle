@@ -74,7 +74,7 @@ public final class SocketSetting<V> {
 		this(spec, val, null);
 	}
 	
-	private SocketSetting(
+	SocketSetting(
 			final SocketSettingSpec<V> spec, final V val, final String d) {
 		V v = spec.getValueType().cast(val);
 		this.name = spec.getName();

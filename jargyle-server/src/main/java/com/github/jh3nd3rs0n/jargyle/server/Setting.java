@@ -61,7 +61,7 @@ public final class Setting<V> {
 		this(spec, val, null);
 	}
 	
-	private Setting(final SettingSpec<V> spec, final V val, final String d) {
+	Setting(final SettingSpec<V> spec, final V val, final String d) {
 		V v = spec.getValueType().cast(val);
 		this.name = spec.getName();
 		this.settingSpec = spec;

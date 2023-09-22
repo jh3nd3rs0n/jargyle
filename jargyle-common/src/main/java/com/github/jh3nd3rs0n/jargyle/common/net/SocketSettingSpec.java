@@ -84,10 +84,29 @@ public abstract class SocketSettingSpec<V> {
 	public final SocketSetting<V> newSocketSetting(final V value) {
 		return new SocketSetting<V>(this, this.valueType.cast(value));
 	}
+	
+	public final SocketSetting<V> newSocketSetting(
+			final V value, final String doc) {
+		SocketSetting<V> socketSetting = this.newSocketSetting(value);
+		return new SocketSetting<V>(
+				socketSetting.getSocketSettingSpec(),
+				socketSetting.getValue(),
+				doc);
+	}
 
 	public abstract SocketSetting<V> newSocketSettingOfParsableValue(
 			final String value);
 
+	public final SocketSetting<V> newSocketSettingOfParsableValue(
+			final String value, final String doc) {
+		SocketSetting<V> socketSetting = this.newSocketSettingOfParsableValue(
+				value);
+		return new SocketSetting<V>(
+				socketSetting.getSocketSettingSpec(),
+				socketSetting.getValue(),
+				doc);
+	}
+	
 	@Override
 	public final String toString() {
 		StringBuilder builder = new StringBuilder();

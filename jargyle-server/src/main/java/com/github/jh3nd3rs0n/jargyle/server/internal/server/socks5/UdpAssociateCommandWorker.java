@@ -5,7 +5,6 @@ import java.net.BindException;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.Socket;
 import java.net.SocketException;
 import java.util.Iterator;
 import java.util.List;
@@ -28,51 +27,25 @@ import com.github.jh3nd3rs0n.jargyle.server.GeneralRuleResultSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.GeneralSettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.Rule;
 import com.github.jh3nd3rs0n.jargyle.server.RuleContext;
-import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5RuleResultSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.internal.net.BandwidthLimitedDatagramSocket;
-import com.github.jh3nd3rs0n.jargyle.server.internal.server.Rules;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Reply;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Reply;
+import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Request;
 
 final class UdpAssociateCommandWorker extends CommandWorker {
 
 	private static final int HALF_SECOND = 500;
 
-	private final CommandWorkerContext commandWorkerContext;
-	private final DtlsDatagramSocketFactory clientFacingDtlsDatagramSocketFactory;
-	private final String desiredDestinationAddress;
-	private final int desiredDestinationPort;
 	private final Logger logger;
-	private final MethodSubnegotiationResults methodSubnegotiationResults;	
-	private final NetObjectFactory netObjectFactory;
-	private final Rules rules;
-	private final Settings settings;
 	
 	public UdpAssociateCommandWorker(
-			final Socket clientSocket, final CommandWorkerContext context) {
-		super(clientSocket, context);
-		DtlsDatagramSocketFactory clientFacingDtlsDatagramSockFactory =
-				context.getClientFacingDtlsDatagramSocketFactory();
-		String desiredDestinationAddr =	context.getDesiredDestinationAddress();
-		int desiredDestinationPrt = context.getDesiredDestinationPort();
-		MethodSubnegotiationResults methSubnegotiationResults =
-				context.getMethodSubnegotiationResults();		
-		NetObjectFactory netObjFactory = 
-				context.getSelectedRoute().getNetObjectFactory();
-		Rules rls = context.getRules();
-		Settings sttngs = context.getSettings();
-		this.commandWorkerContext = context;
-		this.clientFacingDtlsDatagramSocketFactory = 
-				clientFacingDtlsDatagramSockFactory;
-		this.desiredDestinationAddress = desiredDestinationAddr;
-		this.desiredDestinationPort = desiredDestinationPrt;
+			final Socks5Worker socks5Worker, 
+			final MethodSubnegotiationResults methSubnegotiationResults, 
+			final Socks5Request socks5Req) {
+		super(socks5Worker, methSubnegotiationResults, socks5Req);
 		this.logger = LoggerFactory.getLogger(UdpAssociateCommandWorker.class);
-		this.methodSubnegotiationResults = methSubnegotiationResults;		
-		this.netObjectFactory = netObjFactory;
-		this.rules = rls;
-		this.settings = sttngs;
 	}
 	
 	private boolean configureClientFacingDatagramSocket(
@@ -134,7 +107,7 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 	}
 	
 	private Host getClientFacingBindHost() {
-		Rule applicableRule = this.commandWorkerContext.getApplicableRule();
+		Rule applicableRule = this.getApplicableRule();
 		Host host = applicableRule.getLastRuleResultValue(
 				Socks5RuleResultSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_CLIENT_FACING_BIND_HOST);
 		if (host != null) {
@@ -160,33 +133,33 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 		if (host != null) {
 			return host;
 		}
-		host = this.settings.getLastValue(
+		host = this.getSettings().getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_CLIENT_FACING_BIND_HOST);
 		if (host != null) {
 			return host;
 		}
-		host = this.settings.getLastValue(
+		host = this.getSettings().getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_INTERNAL_FACING_BIND_HOST);
 		if (host != null) {
 			return host;
 		}
-		host = this.settings.getLastValue(
+		host = this.getSettings().getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_BIND_HOST);
 		if (host != null) {
 			return host;
 		}
-		host = this.settings.getLastValue(
+		host = this.getSettings().getLastValue(
 				GeneralSettingSpecConstants.INTERNAL_FACING_BIND_HOST);
 		if (host != null) {
 			return host;
 		}
-		host = this.settings.getLastValue(
+		host = this.getSettings().getLastValue(
 				GeneralSettingSpecConstants.BIND_HOST);
 		return host;
 	}
 	
 	private PortRanges getClientFacingBindPortRanges() {
-		Rule applicableRule = this.commandWorkerContext.getApplicableRule();
+		Rule applicableRule = this.getApplicableRule();
 		List<PortRange> portRanges = applicableRule.getRuleResultValues(
 				Socks5RuleResultSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_CLIENT_FACING_BIND_PORT_RANGE);
 		if (portRanges.size() > 0) {
@@ -212,33 +185,33 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 		if (portRanges.size() > 0) {
 			return PortRanges.newInstance(portRanges);
 		}
-		PortRanges prtRanges = this.settings.getLastValue(
+		PortRanges prtRanges = this.getSettings().getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_CLIENT_FACING_BIND_PORT_RANGES);
 		if (prtRanges.toList().size() > 0) {
 			return prtRanges;
 		}
-		prtRanges = this.settings.getLastValue(
+		prtRanges = this.getSettings().getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_INTERNAL_FACING_BIND_UDP_PORT_RANGES);
 		if (prtRanges.toList().size() > 0) {
 			return prtRanges;
 		}
-		prtRanges = this.settings.getLastValue(
+		prtRanges = this.getSettings().getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_BIND_UDP_PORT_RANGES);
 		if (prtRanges.toList().size() > 0) {
 			return prtRanges;
 		}
-		prtRanges = this.settings.getLastValue(
+		prtRanges = this.getSettings().getLastValue(
 				GeneralSettingSpecConstants.INTERNAL_FACING_BIND_UDP_PORT_RANGES);
 		if (prtRanges.toList().size() > 0) {
 			return prtRanges;
 		}
-		prtRanges = this.settings.getLastValue(
+		prtRanges = this.getSettings().getLastValue(
 				GeneralSettingSpecConstants.BIND_UDP_PORT_RANGES);
 		return prtRanges;
 	}
 	
 	private SocketSettings getClientFacingSocketSettings() {
-		Rule applicableRule = this.commandWorkerContext.getApplicableRule();
+		Rule applicableRule = this.getApplicableRule();
 		List<SocketSetting<Object>> socketSettings =
 				applicableRule.getRuleResultValues(
 						Socks5RuleResultSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_CLIENT_FACING_SOCKET_SETTING);
@@ -270,33 +243,33 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 			return SocketSettings.newInstance(
 					socketSettings.stream().collect(Collectors.toList()));
 		}
-		SocketSettings socketSttngs = this.settings.getLastValue(
+		SocketSettings socketSttngs = this.getSettings().getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_CLIENT_FACING_SOCKET_SETTINGS);
 		if (socketSttngs.toMap().size() > 0) {
 			return socketSttngs;
 		}
-		socketSttngs = this.settings.getLastValue(
+		socketSttngs = this.getSettings().getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_INTERNAL_FACING_SOCKET_SETTINGS);
 		if (socketSttngs.toMap().size() > 0) {
 			return socketSttngs;
 		}
-		socketSttngs = this.settings.getLastValue(
+		socketSttngs = this.getSettings().getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_SOCKET_SETTINGS);
 		if (socketSttngs.toMap().size() > 0) {
 			return socketSttngs;
 		}
-		socketSttngs = this.settings.getLastValue(
+		socketSttngs = this.getSettings().getLastValue(
 				GeneralSettingSpecConstants.INTERNAL_FACING_SOCKET_SETTINGS);
 		if (socketSttngs.toMap().size() > 0) {
 			return socketSttngs;
 		}
-		socketSttngs = this.settings.getLastValue(
+		socketSttngs = this.getSettings().getLastValue(
 				GeneralSettingSpecConstants.SOCKET_SETTINGS);
 		return socketSttngs;
 	}
 	
 	private Host getPeerFacingBindHost() {
-		Rule applicableRule = this.commandWorkerContext.getApplicableRule();
+		Rule applicableRule = this.getApplicableRule();
 		Host host = applicableRule.getLastRuleResultValue(
 				Socks5RuleResultSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_PEER_FACING_BIND_HOST);
 		if (host != null) {
@@ -322,33 +295,33 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 		if (host != null) {
 			return host;
 		}
-		host = this.settings.getLastValue(
+		host = this.getSettings().getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_PEER_FACING_BIND_HOST);
 		if (host != null) {
 			return host;
 		}
-		host = this.settings.getLastValue(
+		host = this.getSettings().getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_EXTERNAL_FACING_BIND_HOST);
 		if (host != null) {
 			return host;
 		}
-		host = this.settings.getLastValue(
+		host = this.getSettings().getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_BIND_HOST);
 		if (host != null) {
 			return host;
 		}
-		host = this.settings.getLastValue(
+		host = this.getSettings().getLastValue(
 				GeneralSettingSpecConstants.EXTERNAL_FACING_BIND_HOST);
 		if (host != null) {
 			return host;
 		}
-		host = this.settings.getLastValue(
+		host = this.getSettings().getLastValue(
 				GeneralSettingSpecConstants.BIND_HOST);
 		return host;
 	}
 	
 	private PortRanges getPeerFacingBindPortRanges() {
-		Rule applicableRule = this.commandWorkerContext.getApplicableRule();
+		Rule applicableRule = this.getApplicableRule();
 		List<PortRange> portRanges = applicableRule.getRuleResultValues(
 				Socks5RuleResultSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_PEER_FACING_BIND_PORT_RANGE);
 		if (portRanges.size() > 0) {
@@ -374,33 +347,33 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 		if (portRanges.size() > 0) {
 			return PortRanges.newInstance(portRanges);
 		}
-		PortRanges prtRanges = this.settings.getLastValue(
+		PortRanges prtRanges = this.getSettings().getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_PEER_FACING_BIND_PORT_RANGES);
 		if (prtRanges.toList().size() > 0) {
 			return prtRanges;
 		}
-		prtRanges = this.settings.getLastValue(
+		prtRanges = this.getSettings().getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_EXTERNAL_FACING_BIND_UDP_PORT_RANGES);
 		if (prtRanges.toList().size() > 0) {
 			return prtRanges;
 		}
-		prtRanges = this.settings.getLastValue(
+		prtRanges = this.getSettings().getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_BIND_UDP_PORT_RANGES);
 		if (prtRanges.toList().size() > 0) {
 			return prtRanges;
 		}
-		prtRanges = this.settings.getLastValue(
+		prtRanges = this.getSettings().getLastValue(
 				GeneralSettingSpecConstants.EXTERNAL_FACING_BIND_UDP_PORT_RANGES);
 		if (prtRanges.toList().size() > 0) {
 			return prtRanges;
 		}
-		prtRanges = this.settings.getLastValue(
+		prtRanges = this.getSettings().getLastValue(
 				GeneralSettingSpecConstants.BIND_UDP_PORT_RANGES);
 		return prtRanges;
 	}
 	
 	private SocketSettings getPeerFacingSocketSettings() {
-		Rule applicableRule = this.commandWorkerContext.getApplicableRule();
+		Rule applicableRule = this.getApplicableRule();
 		List<SocketSetting<Object>> socketSettings =
 				applicableRule.getRuleResultValues(
 						Socks5RuleResultSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_PEER_FACING_SOCKET_SETTING);
@@ -432,33 +405,33 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 			return SocketSettings.newInstance(
 					socketSettings.stream().collect(Collectors.toList()));
 		}
-		SocketSettings socketSttngs = this.settings.getLastValue(
+		SocketSettings socketSttngs = this.getSettings().getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_PEER_FACING_SOCKET_SETTINGS);
 		if (socketSttngs.toMap().size() > 0) {
 			return socketSttngs;
 		}
-		socketSttngs = this.settings.getLastValue(
+		socketSttngs = this.getSettings().getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_EXTERNAL_FACING_SOCKET_SETTINGS);
 		if (socketSttngs.toMap().size() > 0) {
 			return socketSttngs;
 		}
-		socketSttngs = this.settings.getLastValue(
+		socketSttngs = this.getSettings().getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_SOCKET_SETTINGS);
 		if (socketSttngs.toMap().size() > 0) {
 			return socketSttngs;
 		}
-		socketSttngs = this.settings.getLastValue(
+		socketSttngs = this.getSettings().getLastValue(
 				GeneralSettingSpecConstants.EXTERNAL_FACING_SOCKET_SETTINGS);
 		if (socketSttngs.toMap().size() > 0) {
 			return socketSttngs;
 		}
-		socketSttngs = this.settings.getLastValue(
+		socketSttngs = this.getSettings().getLastValue(
 				GeneralSettingSpecConstants.SOCKET_SETTINGS);
 		return socketSttngs;
 	}
 	
 	private int getRelayBufferSize() {
-		Rule applicableRule = this.commandWorkerContext.getApplicableRule();
+		Rule applicableRule = this.getApplicableRule();
 		PositiveInteger relayBufferSize =
 				applicableRule.getLastRuleResultValue(
 						Socks5RuleResultSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_RELAY_BUFFER_SIZE);
@@ -470,18 +443,18 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 		if (relayBufferSize != null) {
 			return relayBufferSize.intValue();
 		}
-		relayBufferSize = this.settings.getLastValue(
+		relayBufferSize = this.getSettings().getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_RELAY_BUFFER_SIZE);
 		if (relayBufferSize != null) {
 			return relayBufferSize.intValue();
 		}
-		relayBufferSize = this.settings.getLastValue(
+		relayBufferSize = this.getSettings().getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_RELAY_BUFFER_SIZE);
 		return relayBufferSize.intValue();
 	}
 	
 	private int getRelayIdleTimeout() {
-		Rule applicableRule = this.commandWorkerContext.getApplicableRule();
+		Rule applicableRule = this.getApplicableRule();
 		PositiveInteger relayIdleTimeout =
 				applicableRule.getLastRuleResultValue(
 						Socks5RuleResultSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_RELAY_IDLE_TIMEOUT);
@@ -493,18 +466,18 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 		if (relayIdleTimeout != null) {
 			return relayIdleTimeout.intValue();
 		}
-		relayIdleTimeout = this.settings.getLastValue(
+		relayIdleTimeout = this.getSettings().getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_RELAY_IDLE_TIMEOUT);
 		if (relayIdleTimeout != null) {
 			return relayIdleTimeout.intValue();
 		}
-		relayIdleTimeout = this.settings.getLastValue(
+		relayIdleTimeout = this.getSettings().getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_RELAY_IDLE_TIMEOUT);
 		return relayIdleTimeout.intValue();
 	}
 	
 	private Integer getRelayInboundBandwidthLimit() {
-		Rule applicableRule = this.commandWorkerContext.getApplicableRule();
+		Rule applicableRule = this.getApplicableRule();
 		PositiveInteger relayInboundBandwidthLimit =
 				applicableRule.getLastRuleResultValue(
 						Socks5RuleResultSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_RELAY_INBOUND_BANDWIDTH_LIMIT);
@@ -516,12 +489,12 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 		if (relayInboundBandwidthLimit != null) {
 			return Integer.valueOf(relayInboundBandwidthLimit.intValue());
 		}
-		relayInboundBandwidthLimit = this.settings.getLastValue(
+		relayInboundBandwidthLimit = this.getSettings().getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_RELAY_INBOUND_BANDWIDTH_LIMIT);
 		if (relayInboundBandwidthLimit != null) {
 			return Integer.valueOf(relayInboundBandwidthLimit.intValue());
 		}
-		relayInboundBandwidthLimit = this.settings.getLastValue(
+		relayInboundBandwidthLimit = this.getSettings().getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_RELAY_INBOUND_BANDWIDTH_LIMIT);
 		if (relayInboundBandwidthLimit != null) {
 			return Integer.valueOf(relayInboundBandwidthLimit.intValue());
@@ -530,7 +503,7 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 	}
 	
 	private Integer getRelayOutboundBandwidthLimit() {
-		Rule applicableRule = this.commandWorkerContext.getApplicableRule();
+		Rule applicableRule = this.getApplicableRule();
 		PositiveInteger relayOutboundBandwidthLimit =
 				applicableRule.getLastRuleResultValue(
 						Socks5RuleResultSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_RELAY_OUTBOUND_BANDWIDTH_LIMIT);
@@ -543,12 +516,12 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 		if (relayOutboundBandwidthLimit != null) {
 			return Integer.valueOf(relayOutboundBandwidthLimit.intValue());
 		}
-		relayOutboundBandwidthLimit = this.settings.getLastValue(
+		relayOutboundBandwidthLimit = this.getSettings().getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_RELAY_OUTBOUND_BANDWIDTH_LIMIT);
 		if (relayOutboundBandwidthLimit != null) {
 			return Integer.valueOf(relayOutboundBandwidthLimit.intValue());
 		}
-		relayOutboundBandwidthLimit = this.settings.getLastValue(
+		relayOutboundBandwidthLimit = this.getSettings().getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_RELAY_OUTBOUND_BANDWIDTH_LIMIT);
 		if (relayOutboundBandwidthLimit != null) {
 			return Integer.valueOf(relayOutboundBandwidthLimit.intValue());
@@ -676,6 +649,8 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 		Host bindHost = this.getPeerFacingBindHost();
 		InetAddress bindInetAddress = bindHost.toInetAddress();
 		PortRanges bindPortRanges = this.getPeerFacingBindPortRanges();
+		NetObjectFactory netObjectFactory = 
+				this.getSelectedRoute().getNetObjectFactory();
 		DatagramSocket peerFacingDatagramSock = null;
 		boolean peerFacingDatagramSockBound = false;
 		for (Iterator<PortRange> iterator = bindPortRanges.toList().iterator();
@@ -685,8 +660,8 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 					!peerFacingDatagramSockBound && iter.hasNext();) {
 				Port bindPort = iter.next();
 				try {
-					peerFacingDatagramSock = 
-							this.netObjectFactory.newDatagramSocket(null);
+					peerFacingDatagramSock =
+							netObjectFactory.newDatagramSocket(null);
 				} catch (SocketException e) {
 					this.logger.error( 
 							ObjectLogMessageHelper.objectLogMessage(
@@ -803,21 +778,21 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 					serverBoundPort);
 			RuleContext ruleContext = this.newSocks5ReplyRuleContext(
 					socks5Rep);
-			this.commandWorkerContext.setRuleContext(ruleContext);
-			Rule applicableRule = this.rules.firstAppliesTo(
-					this.commandWorkerContext.getRuleContext());
+			this.setRuleContext(ruleContext);
+			Rule applicableRule = this.getRules().firstAppliesTo(
+					this.getRuleContext());
 			if (applicableRule == null) {
 				this.logger.error(ObjectLogMessageHelper.objectLogMessage(
 						this, 
 						"No applicable rule found based on the following "
 						+ "context: %s",
-						this.commandWorkerContext.getRuleContext()));				
+						this.getRuleContext()));				
 				socks5Rep = Socks5Reply.newFailureInstance(
 						Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
 				this.sendSocks5Reply(socks5Rep);
 				return;
 			}			
-			this.commandWorkerContext.setApplicableRule(applicableRule);
+			this.setApplicableRule(applicableRule);
 			if (!this.canAllowSocks5Reply()) {
 				return;
 			}			
@@ -841,15 +816,17 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 				return;
 			}
 			UdpRelayServer.Builder builder = new UdpRelayServer.Builder(
-					this.desiredDestinationAddress, 
-					this.desiredDestinationPort,
+					this.getDesiredDestinationAddress(), 
+					this.getDesiredDestinationPort(),
 					clientFacingDatagramSock, 
 					peerFacingDatagramSock);
 			builder.bufferSize(this.getRelayBufferSize());
-			builder.hostResolver(this.netObjectFactory.newHostResolver());
+			NetObjectFactory netObjectFactory = 
+					this.getSelectedRoute().getNetObjectFactory();
+			builder.hostResolver(netObjectFactory.newHostResolver());
 			builder.idleTimeout(this.getRelayIdleTimeout());
-			builder.ruleContext(this.commandWorkerContext.getRuleContext());
-			builder.rules(this.rules);
+			builder.ruleContext(this.getRuleContext());
+			builder.rules(this.getRules());
 			UdpRelayServer udpRelayServer = builder.build();
 			try {
 				this.passPackets(udpRelayServer);
@@ -874,10 +851,12 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 	private DatagramSocket wrapClientFacingDatagramSocket(
 			final DatagramSocket clientFacingDatagramSock) {
 		DatagramSocket clientFacingDatagramSck = clientFacingDatagramSock;
-		if (this.clientFacingDtlsDatagramSocketFactory != null) {
+		DtlsDatagramSocketFactory clientFacingDtlsDatagramSocketFactory =
+				this.getClientFacingDtlsDatagramSocketFactory();
+		if (clientFacingDtlsDatagramSocketFactory != null) {
 			try {
 				clientFacingDatagramSck = 
-						this.clientFacingDtlsDatagramSocketFactory.newDatagramSocket(
+						clientFacingDtlsDatagramSocketFactory.newDatagramSocket(
 								clientFacingDatagramSck);
 			} catch (IOException e) {
 				this.logger.error( 
@@ -893,7 +872,7 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 		}
 		try {
 			clientFacingDatagramSck = 
-					this.methodSubnegotiationResults.getDatagramSocket(
+					this.getMethodSubnegotiationResults().getDatagramSocket(
 							clientFacingDatagramSck);
 		} catch (IOException e) {
 			this.logger.error( 

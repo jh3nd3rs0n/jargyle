@@ -1,11 +1,11 @@
 package com.github.jh3nd3rs0n.jargyle.server.internal.server.socks5;
 
-import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Command;
+import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Request;
 
 abstract class CommandWorkerFactory {
 
@@ -18,8 +18,11 @@ abstract class CommandWorkerFactory {
 		
 		@Override
 		public CommandWorker newCommandWorker(
-				final Socket clientSocket, final CommandWorkerContext context) {
-			return new BindCommandWorker(clientSocket, context);
+				final Socks5Worker socks5Worker, 
+				final MethodSubnegotiationResults methSubnegotiationResults, 
+				final Socks5Request socks5Req) {
+			return new BindCommandWorker(
+					socks5Worker, methSubnegotiationResults, socks5Req);
 		}
 		
 	}
@@ -33,8 +36,11 @@ abstract class CommandWorkerFactory {
 		
 		@Override
 		public CommandWorker newCommandWorker(
-				final Socket clientSocket, final CommandWorkerContext context) {
-			return new ConnectCommandWorker(clientSocket, context);
+				final Socks5Worker socks5Worker, 
+				final MethodSubnegotiationResults methSubnegotiationResults, 
+				final Socks5Request socks5Req) {
+			return new ConnectCommandWorker(
+					socks5Worker, methSubnegotiationResults, socks5Req);
 		}
 		
 	}
@@ -48,8 +54,11 @@ abstract class CommandWorkerFactory {
 		
 		@Override
 		public CommandWorker newCommandWorker(
-				final Socket clientSocket, final CommandWorkerContext context) {
-			return new ResolveCommandWorker(clientSocket, context);
+				final Socks5Worker socks5Worker, 
+				final MethodSubnegotiationResults methSubnegotiationResults, 
+				final Socks5Request socks5Req) {
+			return new ResolveCommandWorker(
+					socks5Worker, methSubnegotiationResults, socks5Req);
 		}
 		
 	}
@@ -63,8 +72,11 @@ abstract class CommandWorkerFactory {
 		
 		@Override
 		public CommandWorker newCommandWorker(
-				final Socket clientSocket, final CommandWorkerContext context) {
-			return new UdpAssociateCommandWorker(clientSocket, context);
+				final Socks5Worker socks5Worker, 
+				final MethodSubnegotiationResults methSubnegotiationResults, 
+				final Socks5Request socks5Req) {
+			return new UdpAssociateCommandWorker(
+					socks5Worker, methSubnegotiationResults, socks5Req);
 		}
 		
 	}
@@ -123,6 +135,8 @@ abstract class CommandWorkerFactory {
 	}
 	
 	public abstract CommandWorker newCommandWorker(
-			final Socket clientSocket, final CommandWorkerContext context);
+			final Socks5Worker socks5Worker, 
+			final MethodSubnegotiationResults methSubnegotiationResults, 
+			final Socks5Request socks5Req);
 	
 }

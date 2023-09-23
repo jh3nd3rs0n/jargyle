@@ -118,8 +118,8 @@ final class UdpRelayServer {
 		
 		private final Logger logger;
 		
-		public InboundPacketsWorker(final PacketsWorkerContext context) {
-			super(context);
+		public InboundPacketsWorker(final UdpRelayServer server) {
+			super(server);
 			this.logger = LoggerFactory.getLogger(InboundPacketsWorker.class);
 		}
 		
@@ -161,8 +161,8 @@ final class UdpRelayServer {
 		
 		private boolean canSendDatagramPacket() {
 			return !AddressHelper.isAllZerosAddress(
-					this.packetsWorkerContext.getClientAddress())
-					&& this.packetsWorkerContext.getClientPort() != 0;
+					this.udpRelayServer.getClientAddress())
+					&& this.udpRelayServer.getClientPort() != 0;
 		}
 
 		private boolean hasInboundRuleCondition(final Rule rule) {
@@ -191,7 +191,7 @@ final class UdpRelayServer {
 			InetAddress inetAddress = null;
 			try {
 				inetAddress = InetAddress.getByName(
-						this.packetsWorkerContext.getClientAddress());
+						this.udpRelayServer.getClientAddress());
 			} catch (IOException e) {
 				this.logger.error( 
 						ObjectLogMessageHelper.objectLogMessage(
@@ -201,7 +201,7 @@ final class UdpRelayServer {
 						e);
 				return null;
 			}
-			int inetPort = this.packetsWorkerContext.getClientPort();
+			int inetPort = this.udpRelayServer.getClientPort();
 			return new DatagramPacket(
 					headerBytes, headerBytes.length, inetAddress, inetPort);
 		}
@@ -253,7 +253,7 @@ final class UdpRelayServer {
 					IOException ioe = null;
 					try {
 						this.peerFacingDatagramSocket.receive(packet);
-						this.packetsWorkerContext.setIdleStartTime(
+						this.udpRelayServer.setIdleStartTime(
 								System.currentTimeMillis());
 					} catch (IOException e) {
 						ioe = e;
@@ -266,7 +266,7 @@ final class UdpRelayServer {
 						} else if (ThrowableHelper.isOrHasInstanceOf(
 								ioe, SocketTimeoutException.class)) {
 							long idleStartTime = 
-									this.packetsWorkerContext.getIdleStartTime();
+									this.udpRelayServer.getIdleStartTime();
 							long timeSinceIdleStartTime = 
 									System.currentTimeMillis() - idleStartTime;
 							if (timeSinceIdleStartTime >= this.idleTimeout) {
@@ -295,8 +295,8 @@ final class UdpRelayServer {
 							this.ruleContext,
 							packet.getAddress().getHostAddress(),
 							packet.getPort(),
-							this.packetsWorkerContext.getClientAddress(), 
-							this.packetsWorkerContext.getClientPort());
+							this.udpRelayServer.getClientAddress(), 
+							this.udpRelayServer.getClientPort());
 					Rule applicableRule = this.rules.firstAppliesTo(
 							inboundRuleContext);
 					if (applicableRule == null) {
@@ -361,17 +361,17 @@ final class UdpRelayServer {
 		
 		private final Logger logger;
 		
-		public OutboundPacketsWorker(final PacketsWorkerContext context) {
-			super(context);
+		public OutboundPacketsWorker(final UdpRelayServer server) {
+			super(server);
 			this.logger = LoggerFactory.getLogger(OutboundPacketsWorker.class);
 		}
 		
 		private boolean canAcceptDatagramPacket(final DatagramPacket packet) {
 			String address = packet.getAddress().getHostAddress();
 			int port = packet.getPort();
-			String clientAddr = this.packetsWorkerContext.getClientAddress();
+			String clientAddr = this.udpRelayServer.getClientAddress();
 			if (AddressHelper.isAllZerosAddress(clientAddr)) {
-				this.packetsWorkerContext.setClientAddress(address);
+				this.udpRelayServer.setClientAddress(address);
 			} else {
 				InetAddress clientInetAddr = null;
 				try {
@@ -403,9 +403,9 @@ final class UdpRelayServer {
 					return false;
 				}
 			}
-			int clientPrt = this.packetsWorkerContext.getClientPort();
+			int clientPrt = this.udpRelayServer.getClientPort();
 			if (clientPrt == 0) {
-				this.packetsWorkerContext.setClientPort(port);
+				this.udpRelayServer.setClientPort(port);
 			} else {
 				if (clientPrt != port) {
 					return false;
@@ -543,7 +543,7 @@ final class UdpRelayServer {
 					IOException ioe = null;
 					try {
 						this.clientFacingDatagramSocket.receive(packet);
-						this.packetsWorkerContext.setIdleStartTime(
+						this.udpRelayServer.setIdleStartTime(
 								System.currentTimeMillis());
 					} catch (IOException e) {
 						ioe = e;
@@ -556,7 +556,7 @@ final class UdpRelayServer {
 						} else if (ThrowableHelper.isOrHasInstanceOf(
 								ioe, SocketTimeoutException.class)) {
 							long idleStartTime = 
-									this.packetsWorkerContext.getIdleStartTime();
+									this.udpRelayServer.getIdleStartTime();
 							long timeSinceIdleStartTime = 
 									System.currentTimeMillis() - idleStartTime;
 							if (timeSinceIdleStartTime >= this.idleTimeout) {
@@ -596,8 +596,8 @@ final class UdpRelayServer {
 					RuleContext outboundRuleContext =
 							this.newOutboundRuleContext(
 									this.ruleContext,
-									this.packetsWorkerContext.getClientAddress(),
-									this.packetsWorkerContext.getClientPort(),
+									this.udpRelayServer.getClientAddress(),
+									this.udpRelayServer.getClientPort(),
 									header.getDesiredDestinationAddress(), 
 									header.getDesiredDestinationPort());
 					Rule applicableRule = this.rules.firstAppliesTo(
@@ -660,104 +660,20 @@ final class UdpRelayServer {
 		protected final DatagramSocket clientFacingDatagramSocket;
 		protected final HostResolver hostResolver;
 		protected final int idleTimeout;
-		protected final PacketsWorkerContext packetsWorkerContext;
 		protected final DatagramSocket peerFacingDatagramSocket;
 		protected final RuleContext ruleContext;
 		protected final Rules rules;
 		protected final UdpRelayServer udpRelayServer;
 
-		public PacketsWorker(final PacketsWorkerContext context) {
-			this.bufferSize = context.getBufferSize();
-			this.clientFacingDatagramSocket = 
-					context.getClientFacingDatagramSocket();
-			this.hostResolver = context.getHostResolver();
-			this.idleTimeout = context.getIdleTimeout();
-			this.packetsWorkerContext = context;
-			this.peerFacingDatagramSocket = 
-					context.getPeerFacingDatagramSocket();
-			this.ruleContext = context.getRuleContext();
-			this.rules = context.getRules();
-			this.udpRelayServer = context.getUdpRelayServer();
-		}
-
-		@Override
-		public final String toString() {
-			StringBuilder builder = new StringBuilder();
-			builder.append(this.getClass().getSimpleName())
-				.append(" [packetsWorkerContext=")
-				.append(this.packetsWorkerContext)
-				.append("]");
-			return builder.toString();
-		}
-		
-	}
-	
-	private static final class PacketsWorkerContext {
-		
-		private final DatagramSocket clientFacingDatagramSocket;
-		private final DatagramSocket peerFacingDatagramSocket;
-		private final UdpRelayServer udpRelayServer;
-		
-		public PacketsWorkerContext(final UdpRelayServer server) {
+		public PacketsWorker(final UdpRelayServer server) {
+			this.bufferSize = server.bufferSize;
 			this.clientFacingDatagramSocket = server.clientFacingDatagramSocket;
-			this.peerFacingDatagramSocket = server.peerFacingDatagramSocket;
+			this.hostResolver = server.hostResolver;
+			this.idleTimeout = server.idleTimeout;
+			this.peerFacingDatagramSocket = server.peerFacingDatagramSocket;			
+			this.ruleContext = server.ruleContext;
+			this.rules = server.rules;
 			this.udpRelayServer = server;
-		}
-		
-		public final int getBufferSize() {
-			return this.udpRelayServer.bufferSize;
-		}
-		
-		public final String getClientAddress() {
-			return this.udpRelayServer.getClientAddress();
-		}
-		
-		public final DatagramSocket getClientFacingDatagramSocket() {
-			return this.clientFacingDatagramSocket;
-		}
-		
-		public final int getClientPort() {
-			return this.udpRelayServer.getClientPort();
-		}
-		
-		public final HostResolver getHostResolver() {
-			return this.udpRelayServer.hostResolver;
-		}
-		
-		public final long getIdleStartTime() {
-			return this.udpRelayServer.getIdleStartTime();
-		}
-		
-		public final int getIdleTimeout() {
-			return this.udpRelayServer.idleTimeout;
-		}
-		
-		public final DatagramSocket getPeerFacingDatagramSocket() {
-			return this.peerFacingDatagramSocket;
-		}
-		
-		public final RuleContext getRuleContext() {
-			return this.udpRelayServer.ruleContext;
-		}
-		
-		public final Rules getRules() {
-			return this.udpRelayServer.rules;
-		}
-		
-		public final UdpRelayServer getUdpRelayServer() {
-			return this.udpRelayServer;
-		}
-		
-		public final void setClientAddress(final String address) {
-			this.udpRelayServer.setClientAddress(address);
-		}
-		
-		public final void setClientPort(final int port) {
-			this.udpRelayServer.setClientPort(port);
-		}
-		
-		public final void setIdleStartTime(final long time) {
-			this.udpRelayServer.setIdleStartTime(time);
 		}
 
 		@Override
@@ -773,6 +689,7 @@ final class UdpRelayServer {
 		}
 		
 	}
+	
 	
 	public static enum State {
 		
@@ -844,10 +761,8 @@ final class UdpRelayServer {
 		}
 		this.idleStartTime.set(System.currentTimeMillis());
 		this.executor = ExecutorHelper.newExecutor();
-		this.executor.execute(new InboundPacketsWorker(
-				new PacketsWorkerContext(this)));
-		this.executor.execute(new OutboundPacketsWorker(
-				new PacketsWorkerContext(this)));
+		this.executor.execute(new InboundPacketsWorker(this));
+		this.executor.execute(new OutboundPacketsWorker(this));
 	}
 	
 	public void stop() {

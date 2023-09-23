@@ -67,21 +67,26 @@ public final class Relay {
 	private static abstract class DataWorker implements Runnable {
 		
 		private final int bufferSize;
-		private final DataWorkerContext dataWorkerContext;
-		private final int idleTimeout;		
+		private final int idleTimeout;
+		private final Socket inputSocket;
 		private final InputStream inputStream;
 		private final Logger logger;
+		private final Socket outputSocket;
 		private final OutputStream outputStream;
 		private final Relay relay;
 				
-		public DataWorker(final DataWorkerContext context) throws IOException {
-			this.bufferSize = context.getBufferSize();
-			this.dataWorkerContext = context;
-			this.idleTimeout = context.getIdleTimeout();			
-			this.inputStream = context.getInputSocketInputStream();
+		public DataWorker(
+				final Relay rly,
+				final Socket inputSock,
+				final Socket outputSock) throws IOException {
+			this.bufferSize = rly.bufferSize;
+			this.idleTimeout = rly.idleTimeout;
+			this.inputSocket = inputSock;
+			this.inputStream = inputSock.getInputStream();
 			this.logger = LoggerFactory.getLogger(this.getClass());
-			this.outputStream = context.getOutputSocketOutputStream();
-			this.relay = context.getRelay();
+			this.outputSocket = outputSock;
+			this.outputStream = outputSock.getOutputStream();
+			this.relay = rly;
 		}
 		
 		@Override
@@ -93,7 +98,7 @@ public final class Relay {
 					IOException ioe = null;
 					try {
 						bytesRead = this.inputStream.read(buffer);
-						this.dataWorkerContext.setIdleStartTime(
+						this.relay.setIdleStartTime(
 								System.currentTimeMillis());
 						this.logger.trace(ObjectLogMessageHelper.objectLogMessage(
 								this, 
@@ -128,8 +133,7 @@ public final class Relay {
 						break;
 					}
 					if (bytesRead == 0) {
-						long idleStartTime = 
-								this.dataWorkerContext.getIdleStartTime();
+						long idleStartTime = this.relay.getIdleStartTime();
 						long timeSinceIdleStartTime = 
 								System.currentTimeMillis() - idleStartTime;
 						if (timeSinceIdleStartTime >= this.idleTimeout) {
@@ -200,61 +204,6 @@ public final class Relay {
 		public final String toString() {
 			StringBuilder builder = new StringBuilder();
 			builder.append(this.getClass().getSimpleName())
-				.append(" [dataWorkerContext=")
-				.append(this.dataWorkerContext)
-				.append("]");
-			return builder.toString();
-		}
-		
-	}
-	
-	private static abstract class DataWorkerContext {
-		
-		private final Socket inputSocket;
-		private final Socket outputSocket;
-		private final Relay relay;
-		
-		public DataWorkerContext(
-				final Relay rly,
-				final Socket inputSock,
-				final Socket outputSock) {
-			this.inputSocket = inputSock;
-			this.outputSocket = outputSock;
-			this.relay = rly;
-		}
-		
-		public final int getBufferSize() {
-			return this.relay.bufferSize;
-		}
-		
-		public final long getIdleStartTime() {
-			return this.relay.getIdleStartTime();
-		}
-		
-		public final int getIdleTimeout() {
-			return this.relay.idleTimeout;
-		}
-		
-		public final InputStream getInputSocketInputStream() throws IOException {
-			return this.inputSocket.getInputStream();
-		}
-		
-		public final OutputStream getOutputSocketOutputStream() throws IOException {
-			return this.outputSocket.getOutputStream();
-		}
-		
-		public final Relay getRelay() {
-			return this.relay;
-		}
-		
-		public final void setIdleStartTime(final long time) {
-			this.relay.setIdleStartTime(time);
-		}
-
-		@Override
-		public String toString() {
-			StringBuilder builder = new StringBuilder();
-			builder.append(this.getClass().getSimpleName())
 				.append(" [inputSocket=")
 				.append(this.inputSocket)
 				.append(", outputSocket=")
@@ -267,17 +216,7 @@ public final class Relay {
 	
 	private static final class InboundDataWorker extends DataWorker {
 
-		public InboundDataWorker(
-				final InboundDataWorkerContext context) throws IOException {
-			super(context);
-		}
-		
-	}
-	
-	private static final class InboundDataWorkerContext
-		extends DataWorkerContext {
-		
-		public InboundDataWorkerContext(final Relay rly) {
+		public InboundDataWorker(final Relay rly) throws IOException {
 			super(rly, rly.externalSocket, rly.clientSocket);
 		}
 		
@@ -285,17 +224,7 @@ public final class Relay {
 	
 	private static final class OutboundDataWorker extends DataWorker {
 
-		public OutboundDataWorker(
-				final OutboundDataWorkerContext context) throws IOException {
-			super(context);
-		}
-		
-	}
-	
-	private static final class OutboundDataWorkerContext 
-		extends DataWorkerContext {
-		
-		public OutboundDataWorkerContext(final Relay rly) {
+		public OutboundDataWorker(final Relay rly) throws IOException {
 			super(rly, rly.clientSocket, rly.externalSocket);
 		}
 		
@@ -345,10 +274,8 @@ public final class Relay {
 		}
 		this.idleStartTime.set(System.currentTimeMillis());
 		this.executor = ExecutorHelper.newExecutor();
-		this.executor.execute(new InboundDataWorker(
-				new InboundDataWorkerContext(this)));
-		this.executor.execute(new OutboundDataWorker(
-				new OutboundDataWorkerContext(this)));
+		this.executor.execute(new InboundDataWorker(this));
+		this.executor.execute(new OutboundDataWorker(this));
 	}
 	
 	public void stop() {

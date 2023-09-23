@@ -49,12 +49,12 @@ public class Worker implements Runnable {
 	private final SslSocketFactory clientSslSocketFactory;
 	private final Configuration configuration;
 	private final Logger logger;
-	private final Worker otherWorker;	
 	private final Routes routes;
 	private RuleContext ruleContext;
 	private final Rules rules;
 	private Route selectedRoute;	
 	private final AtomicInteger totalWorkerCount;
+	private final Worker worker;
 	
 	Worker(
 			final Socket clientSock, 
@@ -71,7 +71,7 @@ public class Worker implements Runnable {
 						new SslSocketFactoryImpl(config) : null;
 		this.configuration = config;
 		this.logger = LoggerFactory.getLogger(Worker.class);
-		this.otherWorker = null;
+		this.worker = null;
 		this.routes = Routes.newInstance(config);
 		this.ruleContext = null;
 		this.rules = Rules.newInstance(config);
@@ -79,7 +79,7 @@ public class Worker implements Runnable {
 		this.totalWorkerCount = workerCount;
 	}
 	
-	protected Worker(final Worker other) {
+	protected Worker(final Worker wrkr) {
 		this.applicableRule = null;
 		this.belowAllowLimitRules = null;
 		this.clientFacingDtlsDatagramSocketFactory = null;
@@ -87,17 +87,17 @@ public class Worker implements Runnable {
 		this.clientSslSocketFactory = null;
 		this.configuration = null;
 		this.logger = LoggerFactory.getLogger(this.getClass());
-		this.otherWorker = other;
 		this.routes = null;
 		this.ruleContext = null;
 		this.rules = null;
 		this.selectedRoute = null;
 		this.totalWorkerCount = null;
+		this.worker = wrkr;
 	}
 	
 	protected final void addBelowAllowLimitRule(final Rule belowAllowLimitRl) {
-		if (this.otherWorker != null) {
-			this.otherWorker.addBelowAllowLimitRule(belowAllowLimitRl);
+		if (this.worker != null) {
+			this.worker.addBelowAllowLimitRule(belowAllowLimitRl);
 			return;
 		}
 		FirewallAction firewallAction = 
@@ -216,22 +216,22 @@ public class Worker implements Runnable {
 	}
 	
 	protected final Rule getApplicableRule() {
-		if (this.otherWorker != null) {
-			return this.otherWorker.getApplicableRule();
+		if (this.worker != null) {
+			return this.worker.getApplicableRule();
 		}
 		return this.applicableRule;
 	}
 	
 	protected final Set<Rule> getBelowAllowLimitRules() {
-		if (this.otherWorker != null) {
-			return this.otherWorker.getBelowAllowLimitRules();
+		if (this.worker != null) {
+			return this.worker.getBelowAllowLimitRules();
 		}
 		return Collections.unmodifiableSet(this.belowAllowLimitRules);
 	}
 	
 	protected final DtlsDatagramSocketFactory getClientFacingDtlsDatagramSocketFactory() {
-		if (this.otherWorker != null) {
-			return this.otherWorker.getClientFacingDtlsDatagramSocketFactory();
+		if (this.worker != null) {
+			return this.worker.getClientFacingDtlsDatagramSocketFactory();
 		}
 		return this.clientFacingDtlsDatagramSocketFactory;
 	}
@@ -272,8 +272,8 @@ public class Worker implements Runnable {
 	}
 	
 	protected final Socket getClientSocket() {
-		if (this.otherWorker != null) {
-			return this.otherWorker.getClientSocket();
+		if (this.worker != null) {
+			return this.worker.getClientSocket();
 		}
 		return this.clientSocket;
 	}
@@ -304,43 +304,43 @@ public class Worker implements Runnable {
 	}
 	
 	protected final Configuration getConfiguration() {
-		if (this.otherWorker != null) {
-			return this.otherWorker.getConfiguration();
+		if (this.worker != null) {
+			return this.worker.getConfiguration();
 		}
 		return this.configuration;
 	}
 	
 	protected final Routes getRoutes() {
-		if (this.otherWorker != null) {
-			return this.otherWorker.getRoutes();
+		if (this.worker != null) {
+			return this.worker.getRoutes();
 		}
 		return this.routes;
 	}
 	
 	protected final RuleContext getRuleContext() {
-		if (this.otherWorker != null) {
-			return this.otherWorker.getRuleContext();
+		if (this.worker != null) {
+			return this.worker.getRuleContext();
 		}
 		return this.ruleContext;
 	}
 	
 	protected final Rules getRules() {
-		if (this.otherWorker != null) {
-			return this.otherWorker.getRules();
+		if (this.worker != null) {
+			return this.worker.getRules();
 		}
 		return this.rules;
 	}
 	
 	protected final Route getSelectedRoute() {
-		if (this.otherWorker != null) {
-			return this.otherWorker.getSelectedRoute();
+		if (this.worker != null) {
+			return this.worker.getSelectedRoute();
 		}
 		return this.selectedRoute;
 	}
 	
 	protected final Settings getSettings() {
-		if (this.otherWorker != null) {
-			return this.otherWorker.getSettings();
+		if (this.worker != null) {
+			return this.worker.getSettings();
 		}
 		return this.configuration.getSettings();
 	}
@@ -495,8 +495,8 @@ public class Worker implements Runnable {
 
 	protected final void sendToClient(
 			final byte[] b) throws IOException {
-		if (this.otherWorker != null) {
-			this.otherWorker.sendToClient(b);
+		if (this.worker != null) {
+			this.worker.sendToClient(b);
 			return;
 		}
 		OutputStream clientFacingOutputStream = 
@@ -506,32 +506,32 @@ public class Worker implements Runnable {
 	}
 	
 	protected final void setApplicableRule(final Rule applicableRl) {
-		if (this.otherWorker != null) {
-			this.otherWorker.setApplicableRule(applicableRl);
+		if (this.worker != null) {
+			this.worker.setApplicableRule(applicableRl);
 			return;
 		}
 		this.applicableRule = Objects.requireNonNull(applicableRl);
 	}
 	
 	protected final void setClientSocket(final Socket clientSock) {
-		if (this.otherWorker != null) {
-			this.otherWorker.setClientSocket(clientSock);
+		if (this.worker != null) {
+			this.worker.setClientSocket(clientSock);
 			return;
 		}
 		this.clientSocket = clientSock;
 	}
 	
 	protected final void setRuleContext(final RuleContext rlContext) {
-		if (this.otherWorker != null) {
-			this.otherWorker.setRuleContext(rlContext);
+		if (this.worker != null) {
+			this.worker.setRuleContext(rlContext);
 			return;
 		}
 		this.ruleContext = Objects.requireNonNull(rlContext);
 	}
 	
 	protected final void setSelectedRoute(final Route selectedRte) {
-		if (this.otherWorker != null) {
-			this.otherWorker.setSelectedRoute(selectedRte);
+		if (this.worker != null) {
+			this.worker.setSelectedRoute(selectedRte);
 			return;
 		}
 		this.selectedRoute = Objects.requireNonNull(selectedRte);

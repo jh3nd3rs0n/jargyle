@@ -27,6 +27,7 @@ import com.github.jh3nd3rs0n.jargyle.server.GeneralRuleResultSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.GeneralSettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.Rule;
 import com.github.jh3nd3rs0n.jargyle.server.RuleContext;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5RuleResultSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.internal.net.BandwidthLimitedDatagramSocket;
@@ -133,27 +134,28 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 		if (host != null) {
 			return host;
 		}
-		host = this.getSettings().getLastValue(
+		Settings settings = this.getSettings();
+		host = settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_CLIENT_FACING_BIND_HOST);
 		if (host != null) {
 			return host;
 		}
-		host = this.getSettings().getLastValue(
+		host = settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_INTERNAL_FACING_BIND_HOST);
 		if (host != null) {
 			return host;
 		}
-		host = this.getSettings().getLastValue(
+		host = settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_BIND_HOST);
 		if (host != null) {
 			return host;
 		}
-		host = this.getSettings().getLastValue(
+		host = settings.getLastValue(
 				GeneralSettingSpecConstants.INTERNAL_FACING_BIND_HOST);
 		if (host != null) {
 			return host;
 		}
-		host = this.getSettings().getLastValue(
+		host = settings.getLastValue(
 				GeneralSettingSpecConstants.BIND_HOST);
 		return host;
 	}
@@ -185,27 +187,28 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 		if (portRanges.size() > 0) {
 			return PortRanges.newInstance(portRanges);
 		}
-		PortRanges prtRanges = this.getSettings().getLastValue(
+		Settings settings = this.getSettings();
+		PortRanges prtRanges = settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_CLIENT_FACING_BIND_PORT_RANGES);
 		if (prtRanges.toList().size() > 0) {
 			return prtRanges;
 		}
-		prtRanges = this.getSettings().getLastValue(
+		prtRanges = settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_INTERNAL_FACING_BIND_UDP_PORT_RANGES);
 		if (prtRanges.toList().size() > 0) {
 			return prtRanges;
 		}
-		prtRanges = this.getSettings().getLastValue(
+		prtRanges = settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_BIND_UDP_PORT_RANGES);
 		if (prtRanges.toList().size() > 0) {
 			return prtRanges;
 		}
-		prtRanges = this.getSettings().getLastValue(
+		prtRanges = settings.getLastValue(
 				GeneralSettingSpecConstants.INTERNAL_FACING_BIND_UDP_PORT_RANGES);
 		if (prtRanges.toList().size() > 0) {
 			return prtRanges;
 		}
-		prtRanges = this.getSettings().getLastValue(
+		prtRanges = settings.getLastValue(
 				GeneralSettingSpecConstants.BIND_UDP_PORT_RANGES);
 		return prtRanges;
 	}
@@ -243,27 +246,28 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 			return SocketSettings.newInstance(
 					socketSettings.stream().collect(Collectors.toList()));
 		}
-		SocketSettings socketSttngs = this.getSettings().getLastValue(
+		Settings settings = this.getSettings();
+		SocketSettings socketSttngs = settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_CLIENT_FACING_SOCKET_SETTINGS);
 		if (socketSttngs.toMap().size() > 0) {
 			return socketSttngs;
 		}
-		socketSttngs = this.getSettings().getLastValue(
+		socketSttngs = settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_INTERNAL_FACING_SOCKET_SETTINGS);
 		if (socketSttngs.toMap().size() > 0) {
 			return socketSttngs;
 		}
-		socketSttngs = this.getSettings().getLastValue(
+		socketSttngs = settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_SOCKET_SETTINGS);
 		if (socketSttngs.toMap().size() > 0) {
 			return socketSttngs;
 		}
-		socketSttngs = this.getSettings().getLastValue(
+		socketSttngs = settings.getLastValue(
 				GeneralSettingSpecConstants.INTERNAL_FACING_SOCKET_SETTINGS);
 		if (socketSttngs.toMap().size() > 0) {
 			return socketSttngs;
 		}
-		socketSttngs = this.getSettings().getLastValue(
+		socketSttngs = settings.getLastValue(
 				GeneralSettingSpecConstants.SOCKET_SETTINGS);
 		return socketSttngs;
 	}
@@ -295,27 +299,28 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 		if (host != null) {
 			return host;
 		}
-		host = this.getSettings().getLastValue(
+		Settings settings = this.getSettings();
+		host = settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_PEER_FACING_BIND_HOST);
 		if (host != null) {
 			return host;
 		}
-		host = this.getSettings().getLastValue(
+		host = settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_EXTERNAL_FACING_BIND_HOST);
 		if (host != null) {
 			return host;
 		}
-		host = this.getSettings().getLastValue(
+		host = settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_BIND_HOST);
 		if (host != null) {
 			return host;
 		}
-		host = this.getSettings().getLastValue(
+		host = settings.getLastValue(
 				GeneralSettingSpecConstants.EXTERNAL_FACING_BIND_HOST);
 		if (host != null) {
 			return host;
 		}
-		host = this.getSettings().getLastValue(
+		host = settings.getLastValue(
 				GeneralSettingSpecConstants.BIND_HOST);
 		return host;
 	}
@@ -347,27 +352,28 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 		if (portRanges.size() > 0) {
 			return PortRanges.newInstance(portRanges);
 		}
-		PortRanges prtRanges = this.getSettings().getLastValue(
+		Settings settings = this.getSettings();
+		PortRanges prtRanges = settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_PEER_FACING_BIND_PORT_RANGES);
 		if (prtRanges.toList().size() > 0) {
 			return prtRanges;
 		}
-		prtRanges = this.getSettings().getLastValue(
+		prtRanges = settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_EXTERNAL_FACING_BIND_UDP_PORT_RANGES);
 		if (prtRanges.toList().size() > 0) {
 			return prtRanges;
 		}
-		prtRanges = this.getSettings().getLastValue(
+		prtRanges = settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_BIND_UDP_PORT_RANGES);
 		if (prtRanges.toList().size() > 0) {
 			return prtRanges;
 		}
-		prtRanges = this.getSettings().getLastValue(
+		prtRanges = settings.getLastValue(
 				GeneralSettingSpecConstants.EXTERNAL_FACING_BIND_UDP_PORT_RANGES);
 		if (prtRanges.toList().size() > 0) {
 			return prtRanges;
 		}
-		prtRanges = this.getSettings().getLastValue(
+		prtRanges = settings.getLastValue(
 				GeneralSettingSpecConstants.BIND_UDP_PORT_RANGES);
 		return prtRanges;
 	}
@@ -410,22 +416,23 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 		if (socketSttngs.toMap().size() > 0) {
 			return socketSttngs;
 		}
-		socketSttngs = this.getSettings().getLastValue(
+		Settings settings = this.getSettings();
+		socketSttngs = settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_EXTERNAL_FACING_SOCKET_SETTINGS);
 		if (socketSttngs.toMap().size() > 0) {
 			return socketSttngs;
 		}
-		socketSttngs = this.getSettings().getLastValue(
+		socketSttngs = settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_SOCKET_SETTINGS);
 		if (socketSttngs.toMap().size() > 0) {
 			return socketSttngs;
 		}
-		socketSttngs = this.getSettings().getLastValue(
+		socketSttngs = settings.getLastValue(
 				GeneralSettingSpecConstants.EXTERNAL_FACING_SOCKET_SETTINGS);
 		if (socketSttngs.toMap().size() > 0) {
 			return socketSttngs;
 		}
-		socketSttngs = this.getSettings().getLastValue(
+		socketSttngs = settings.getLastValue(
 				GeneralSettingSpecConstants.SOCKET_SETTINGS);
 		return socketSttngs;
 	}
@@ -443,12 +450,13 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 		if (relayBufferSize != null) {
 			return relayBufferSize.intValue();
 		}
-		relayBufferSize = this.getSettings().getLastValue(
+		Settings settings = this.getSettings();
+		relayBufferSize = settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_RELAY_BUFFER_SIZE);
 		if (relayBufferSize != null) {
 			return relayBufferSize.intValue();
 		}
-		relayBufferSize = this.getSettings().getLastValue(
+		relayBufferSize = settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_RELAY_BUFFER_SIZE);
 		return relayBufferSize.intValue();
 	}
@@ -466,12 +474,13 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 		if (relayIdleTimeout != null) {
 			return relayIdleTimeout.intValue();
 		}
-		relayIdleTimeout = this.getSettings().getLastValue(
+		Settings settings = this.getSettings();
+		relayIdleTimeout = settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_RELAY_IDLE_TIMEOUT);
 		if (relayIdleTimeout != null) {
 			return relayIdleTimeout.intValue();
 		}
-		relayIdleTimeout = this.getSettings().getLastValue(
+		relayIdleTimeout = settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_RELAY_IDLE_TIMEOUT);
 		return relayIdleTimeout.intValue();
 	}
@@ -489,12 +498,13 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 		if (relayInboundBandwidthLimit != null) {
 			return Integer.valueOf(relayInboundBandwidthLimit.intValue());
 		}
-		relayInboundBandwidthLimit = this.getSettings().getLastValue(
+		Settings settings = this.getSettings();
+		relayInboundBandwidthLimit = settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_RELAY_INBOUND_BANDWIDTH_LIMIT);
 		if (relayInboundBandwidthLimit != null) {
 			return Integer.valueOf(relayInboundBandwidthLimit.intValue());
 		}
-		relayInboundBandwidthLimit = this.getSettings().getLastValue(
+		relayInboundBandwidthLimit = settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_RELAY_INBOUND_BANDWIDTH_LIMIT);
 		if (relayInboundBandwidthLimit != null) {
 			return Integer.valueOf(relayInboundBandwidthLimit.intValue());
@@ -516,12 +526,13 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 		if (relayOutboundBandwidthLimit != null) {
 			return Integer.valueOf(relayOutboundBandwidthLimit.intValue());
 		}
-		relayOutboundBandwidthLimit = this.getSettings().getLastValue(
+		Settings settings = this.getSettings();
+		relayOutboundBandwidthLimit = settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_RELAY_OUTBOUND_BANDWIDTH_LIMIT);
 		if (relayOutboundBandwidthLimit != null) {
 			return Integer.valueOf(relayOutboundBandwidthLimit.intValue());
 		}
-		relayOutboundBandwidthLimit = this.getSettings().getLastValue(
+		relayOutboundBandwidthLimit = settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_RELAY_OUTBOUND_BANDWIDTH_LIMIT);
 		if (relayOutboundBandwidthLimit != null) {
 			return Integer.valueOf(relayOutboundBandwidthLimit.intValue());
@@ -584,45 +595,13 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 					!clientFacingDatagramSockBound && iter.hasNext();) {
 				Port bindPort = iter.next();
 				try {
-					clientFacingDatagramSock = new DatagramSocket(null);
-				} catch (SocketException e) {
-					this.logger.error( 
-							ObjectLogMessageHelper.objectLogMessage(
-									this, 
-									"Error in creating the client-facing UDP "
-									+ "socket"), 
-							e);
-					Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
-							Reply.GENERAL_SOCKS_SERVER_FAILURE);
-					this.sendSocks5Reply(socks5Rep);
-					if (clientFacingDatagramSock != null 
-							&& !clientFacingDatagramSock.isClosed()) {
-						clientFacingDatagramSock.close();
-					}
-					return null;
-				}
-				if (!this.configureClientFacingDatagramSocket(
-						clientFacingDatagramSock)) {
-					clientFacingDatagramSock.close();
-					return null;
-				}
-				try {
-					clientFacingDatagramSock.bind(new InetSocketAddress(
-							bindInetAddress, bindPort.intValue()));
+					clientFacingDatagramSock =
+							this.newClientFacingDatagramSocket(
+									bindInetAddress, bindPort);
 				} catch (BindException e) {
-					clientFacingDatagramSock.close();
 					continue;
-				} catch (SocketException e) {
-					this.logger.error( 
-							ObjectLogMessageHelper.objectLogMessage(
-									this, 
-									"Error in binding the client-facing UDP "
-									+ "socket"), 
-							e);
-					Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
-							Reply.GENERAL_SOCKS_SERVER_FAILURE);
-					this.sendSocks5Reply(socks5Rep);
-					clientFacingDatagramSock.close();
+				}
+				if (clientFacingDatagramSock == null) {
 					return null;
 				}
 				clientFacingDatagramSockBound = true;
@@ -645,12 +624,55 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 		return clientFacingDatagramSock;
 	}
 	
+	private DatagramSocket newClientFacingDatagramSocket(
+			final InetAddress bindInetAddress,
+			final Port bindPort) throws BindException {
+		DatagramSocket clientFacingDatagramSock = null;
+		try {
+			clientFacingDatagramSock = new DatagramSocket(null);
+		} catch (SocketException e) {
+			this.logger.error( 
+					ObjectLogMessageHelper.objectLogMessage(
+							this, 
+							"Error in creating the client-facing UDP "
+							+ "socket"), 
+					e);
+			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
+					Reply.GENERAL_SOCKS_SERVER_FAILURE);
+			this.sendSocks5Reply(socks5Rep);
+			return null;
+		}
+		if (!this.configureClientFacingDatagramSocket(
+				clientFacingDatagramSock)) {
+			clientFacingDatagramSock.close();
+			return null;
+		}
+		try {
+			clientFacingDatagramSock.bind(new InetSocketAddress(
+					bindInetAddress, bindPort.intValue()));
+		} catch (BindException e) {
+			clientFacingDatagramSock.close();
+			throw e;
+		} catch (SocketException e) {
+			this.logger.error( 
+					ObjectLogMessageHelper.objectLogMessage(
+							this, 
+							"Error in binding the client-facing UDP "
+							+ "socket"), 
+					e);
+			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
+					Reply.GENERAL_SOCKS_SERVER_FAILURE);
+			this.sendSocks5Reply(socks5Rep);
+			clientFacingDatagramSock.close();
+			return null;
+		}
+		return clientFacingDatagramSock;
+	}
+	
 	private DatagramSocket newPeerFacingDatagramSocket() {
 		Host bindHost = this.getPeerFacingBindHost();
 		InetAddress bindInetAddress = bindHost.toInetAddress();
 		PortRanges bindPortRanges = this.getPeerFacingBindPortRanges();
-		NetObjectFactory netObjectFactory = 
-				this.getSelectedRoute().getNetObjectFactory();
 		DatagramSocket peerFacingDatagramSock = null;
 		boolean peerFacingDatagramSockBound = false;
 		for (Iterator<PortRange> iterator = bindPortRanges.toList().iterator();
@@ -660,46 +682,13 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 					!peerFacingDatagramSockBound && iter.hasNext();) {
 				Port bindPort = iter.next();
 				try {
-					peerFacingDatagramSock =
-							netObjectFactory.newDatagramSocket(null);
-				} catch (SocketException e) {
-					this.logger.error( 
-							ObjectLogMessageHelper.objectLogMessage(
-									this, 
-									"Error in creating the peer-facing UDP "
-									+ "socket"), 
-							e);
-					Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
-							Reply.GENERAL_SOCKS_SERVER_FAILURE);
-					this.sendSocks5Reply(socks5Rep);
-					if (peerFacingDatagramSock != null 
-							&& !peerFacingDatagramSock.isClosed()) {
-						peerFacingDatagramSock.close();
-					}
-					return null;
-				}
-				if (!this.configurePeerFacingDatagramSocket(
-						peerFacingDatagramSock)) {
-					peerFacingDatagramSock.close();
-					return null;
-				}
-				try {
-					peerFacingDatagramSock.bind(new InetSocketAddress(
-							bindInetAddress, bindPort.intValue()));
+					peerFacingDatagramSock = 
+							this.newPeerFacingDatagramSocket(
+									bindInetAddress, bindPort);
 				} catch (BindException e) {
-					peerFacingDatagramSock.close();
 					continue;
-				} catch (SocketException e) {
-					this.logger.error( 
-							ObjectLogMessageHelper.objectLogMessage(
-									this, 
-									"Error in binding the peer-facing UDP "
-									+ "socket"), 
-							e);
-					Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
-							Reply.GENERAL_SOCKS_SERVER_FAILURE);
-					this.sendSocks5Reply(socks5Rep);
-					peerFacingDatagramSock.close();
+				}
+				if (peerFacingDatagramSock == null) {
 					return null;
 				}
 				peerFacingDatagramSockBound = true;
@@ -717,6 +706,54 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 					Reply.GENERAL_SOCKS_SERVER_FAILURE);
 			this.sendSocks5Reply(socks5Rep);
 			return null;			
+		}
+		return peerFacingDatagramSock;
+	}
+	
+	private DatagramSocket newPeerFacingDatagramSocket(
+			final InetAddress bindInetAddress,
+			final Port bindPort) throws BindException {
+		NetObjectFactory netObjectFactory = 
+				this.getSelectedRoute().getNetObjectFactory();
+		DatagramSocket peerFacingDatagramSock = null;
+		try {
+			peerFacingDatagramSock =
+					netObjectFactory.newDatagramSocket(null);
+		} catch (SocketException e) {
+			this.logger.error( 
+					ObjectLogMessageHelper.objectLogMessage(
+							this, 
+							"Error in creating the peer-facing UDP "
+							+ "socket"), 
+					e);
+			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
+					Reply.GENERAL_SOCKS_SERVER_FAILURE);
+			this.sendSocks5Reply(socks5Rep);
+			return null;
+		}
+		if (!this.configurePeerFacingDatagramSocket(
+				peerFacingDatagramSock)) {
+			peerFacingDatagramSock.close();
+			return null;
+		}
+		try {
+			peerFacingDatagramSock.bind(new InetSocketAddress(
+					bindInetAddress, bindPort.intValue()));
+		} catch (BindException e) {
+			peerFacingDatagramSock.close();
+			throw e;
+		} catch (SocketException e) {
+			this.logger.error( 
+					ObjectLogMessageHelper.objectLogMessage(
+							this, 
+							"Error in binding the peer-facing UDP "
+							+ "socket"), 
+					e);
+			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
+					Reply.GENERAL_SOCKS_SERVER_FAILURE);
+			this.sendSocks5Reply(socks5Rep);
+			peerFacingDatagramSock.close();
+			return null;
 		}
 		return peerFacingDatagramSock;
 	}

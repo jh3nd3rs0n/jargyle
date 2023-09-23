@@ -34,6 +34,7 @@ import com.github.jh3nd3rs0n.jargyle.server.LogAction;
 import com.github.jh3nd3rs0n.jargyle.server.NonnegativeIntegerLimit;
 import com.github.jh3nd3rs0n.jargyle.server.Rule;
 import com.github.jh3nd3rs0n.jargyle.server.RuleContext;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5RuleArgSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5RuleConditionSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5RuleResultSpecConstants;
@@ -230,17 +231,18 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 			return SocketSettings.newInstance(
 					socketSettings.stream().collect(Collectors.toList()));
 		}
-		SocketSettings socketSttngs = this.getSettings().getLastValue(
+		Settings settings = this.getSettings();
+		SocketSettings socketSttngs = settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_BIND_INBOUND_SOCKET_SETTINGS);
 		if (socketSttngs.toMap().size() > 0) {
 			return socketSttngs;
 		}
-		socketSttngs = this.getSettings().getLastValue(
+		socketSttngs = settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_SOCKET_SETTINGS);
 		if (socketSttngs.toMap().size() > 0) {
 			return socketSttngs;
 		}
-		socketSttngs = this.getSettings().getLastValue(
+		socketSttngs = settings.getLastValue(
 				GeneralSettingSpecConstants.SOCKET_SETTINGS);
 		return socketSttngs;
 	}
@@ -272,27 +274,28 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 		if (host != null) {
 			return host;
 		}
-		host = this.getSettings().getLastValue(
+		Settings settings = this.getSettings();
+		host = settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_BIND_LISTEN_BIND_HOST);
 		if (host != null) {
 			return host;
 		}
-		host = this.getSettings().getLastValue(
+		host = settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_EXTERNAL_FACING_BIND_HOST);
 		if (host != null) {
 			return host;
 		}
-		host = this.getSettings().getLastValue(
+		host = settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_BIND_HOST);
 		if (host != null) {
 			return host;
 		}
-		host = this.getSettings().getLastValue(
+		host = settings.getLastValue(
 				GeneralSettingSpecConstants.EXTERNAL_FACING_BIND_HOST);
 		if (host != null) {
 			return host;
 		}
-		host = this.getSettings().getLastValue(
+		host = settings.getLastValue(
 				GeneralSettingSpecConstants.BIND_HOST);
 		return host;
 	}
@@ -324,27 +327,28 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 		if (portRanges.size() > 0) {
 			return PortRanges.newInstance(portRanges);
 		}
-		PortRanges prtRanges = this.getSettings().getLastValue(
+		Settings settings = this.getSettings();
+		PortRanges prtRanges = settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_BIND_LISTEN_BIND_PORT_RANGES);
 		if (prtRanges.toList().size() > 0) {
 			return prtRanges;
 		}
-		prtRanges = this.getSettings().getLastValue(
+		prtRanges = settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_EXTERNAL_FACING_BIND_TCP_PORT_RANGES);
 		if (prtRanges.toList().size() > 0) {
 			return prtRanges;
 		}
-		prtRanges = this.getSettings().getLastValue(
+		prtRanges = settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_BIND_TCP_PORT_RANGES);
 		if (prtRanges.toList().size() > 0) {
 			return prtRanges;
 		}
-		prtRanges = this.getSettings().getLastValue(
+		prtRanges = settings.getLastValue(
 				GeneralSettingSpecConstants.EXTERNAL_FACING_BIND_TCP_PORT_RANGES);
 		if (prtRanges.toList().size() > 0) {
 			return prtRanges;
 		}
-		prtRanges = this.getSettings().getLastValue(
+		prtRanges = settings.getLastValue(
 				GeneralSettingSpecConstants.BIND_TCP_PORT_RANGES);
 		return prtRanges;
 	}
@@ -382,27 +386,28 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 			return SocketSettings.newInstance(
 					socketSettings.stream().collect(Collectors.toList()));
 		}
-		SocketSettings socketSttngs = this.getSettings().getLastValue(
+		Settings settings = this.getSettings();
+		SocketSettings socketSttngs = settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_BIND_LISTEN_SOCKET_SETTINGS);
 		if (socketSttngs.toMap().size() > 0) {
 			return socketSttngs;
 		}
-		socketSttngs = this.getSettings().getLastValue(
+		socketSttngs = settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_EXTERNAL_FACING_SOCKET_SETTINGS);
 		if (socketSttngs.toMap().size() > 0) {
 			return socketSttngs;
 		}
-		socketSttngs = this.getSettings().getLastValue(
+		socketSttngs = settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_SOCKET_SETTINGS);
 		if (socketSttngs.toMap().size() > 0) {
 			return socketSttngs;
 		}
-		socketSttngs = this.getSettings().getLastValue(
+		socketSttngs = settings.getLastValue(
 				GeneralSettingSpecConstants.EXTERNAL_FACING_SOCKET_SETTINGS);
 		if (socketSttngs.toMap().size() > 0) {
 			return socketSttngs;
 		}
-		socketSttngs = this.getSettings().getLastValue(
+		socketSttngs = settings.getLastValue(
 				GeneralSettingSpecConstants.SOCKET_SETTINGS);
 		return socketSttngs;
 	}
@@ -420,12 +425,13 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 		if (relayBufferSize != null) {
 			return relayBufferSize.intValue();
 		}
-		relayBufferSize = this.getSettings().getLastValue(
+		Settings settings = this.getSettings();
+		relayBufferSize = settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_BIND_RELAY_BUFFER_SIZE);
 		if (relayBufferSize != null) {
 			return relayBufferSize.intValue();
 		}
-		relayBufferSize = this.getSettings().getLastValue(
+		relayBufferSize = settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_RELAY_BUFFER_SIZE);
 		return relayBufferSize.intValue();
 	}
@@ -443,12 +449,13 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 		if (relayIdleTimeout != null) {
 			return relayIdleTimeout.intValue();
 		}
-		relayIdleTimeout = this.getSettings().getLastValue(
+		Settings settings = this.getSettings();
+		relayIdleTimeout = settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_BIND_RELAY_IDLE_TIMEOUT);
 		if (relayIdleTimeout != null) {
 			return relayIdleTimeout.intValue();
 		}
-		relayIdleTimeout = this.getSettings().getLastValue(
+		relayIdleTimeout = settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_RELAY_IDLE_TIMEOUT);
 		return relayIdleTimeout.intValue();
 	}
@@ -466,12 +473,13 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 		if (relayInboundBandwidthLimit != null) {
 			return Integer.valueOf(relayInboundBandwidthLimit.intValue());
 		}
-		relayInboundBandwidthLimit = this.getSettings().getLastValue(
+		Settings settings = this.getSettings();
+		relayInboundBandwidthLimit = settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_BIND_RELAY_INBOUND_BANDWIDTH_LIMIT);
 		if (relayInboundBandwidthLimit != null) {
 			return Integer.valueOf(relayInboundBandwidthLimit.intValue());
 		}
-		relayInboundBandwidthLimit = this.getSettings().getLastValue(
+		relayInboundBandwidthLimit = settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_RELAY_INBOUND_BANDWIDTH_LIMIT);
 		if (relayInboundBandwidthLimit != null) {
 			return Integer.valueOf(relayInboundBandwidthLimit.intValue());
@@ -493,12 +501,13 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 		if (relayOutboundBandwidthLimit != null) {
 			return Integer.valueOf(relayOutboundBandwidthLimit.intValue());
 		}
-		relayOutboundBandwidthLimit = this.getSettings().getLastValue(
+		Settings settings = this.getSettings();
+		relayOutboundBandwidthLimit = settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_BIND_RELAY_OUTBOUND_BANDWIDTH_LIMIT);
 		if (relayOutboundBandwidthLimit != null) {
 			return Integer.valueOf(relayOutboundBandwidthLimit.intValue());
 		}
-		relayOutboundBandwidthLimit = this.getSettings().getLastValue(
+		relayOutboundBandwidthLimit = settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_RELAY_OUTBOUND_BANDWIDTH_LIMIT);
 		if (relayOutboundBandwidthLimit != null) {
 			return Integer.valueOf(relayOutboundBandwidthLimit.intValue());
@@ -554,8 +563,6 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 				this.getListenBindPortRanges() : PortRanges.newInstance(
 						PortRange.newInstance(Port.newInstance(
 								desiredDestinationPort)));
-		NetObjectFactory netObjectFactory = 
-				this.getSelectedRoute().getNetObjectFactory();
 		ServerSocket listenSocket = null;
 		boolean listenSocketBound = false;
 		for (Iterator<PortRange> iterator = bindPortRanges.toList().iterator();
@@ -565,50 +572,12 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 					!listenSocketBound && iter.hasNext();) {
 				Port bindPort = iter.next();
 				try {
-					listenSocket = netObjectFactory.newServerSocket();
-				} catch (IOException e) {
-					this.logger.error( 
-							ObjectLogMessageHelper.objectLogMessage(
-									this, 
-									"Error in creating the listen socket"), 
-							e);
-					socks5Rep = Socks5Reply.newFailureInstance(
-							Reply.GENERAL_SOCKS_SERVER_FAILURE);
-					this.sendSocks5Reply(socks5Rep);
-					return null;
-				}
-				if (!this.configureListenSocket(listenSocket)) {
-					try {
-						listenSocket.close();
-					} catch (IOException e) {
-						throw new AssertionError(e);
-					}
-					return null;
-				}
-				try {
-					listenSocket.bind(new InetSocketAddress(
-							bindInetAddress, bindPort.intValue()));
+					listenSocket = this.newListenSocket(
+							bindInetAddress, bindPort);
 				} catch (BindException e) {
-					try {
-						listenSocket.close();
-					} catch (IOException ex) {
-						throw new AssertionError(ex);
-					}
 					continue;
-				} catch (IOException e) {
-					this.logger.error( 
-							ObjectLogMessageHelper.objectLogMessage(
-									this, 
-									"Error in binding the listen socket"), 
-							e);
-					socks5Rep = Socks5Reply.newFailureInstance(
-							Reply.GENERAL_SOCKS_SERVER_FAILURE);
-					this.sendSocks5Reply(socks5Rep);
-					try {
-						listenSocket.close();
-					} catch (IOException ex) {
-						throw new AssertionError(ex);
-					}
+				}
+				if (listenSocket == null) {
 					return null;
 				}
 				listenSocketBound = true;
@@ -625,6 +594,63 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 			socks5Rep = Socks5Reply.newFailureInstance(
 					Reply.GENERAL_SOCKS_SERVER_FAILURE);
 			this.sendSocks5Reply(socks5Rep);
+			return null;
+		}
+		return listenSocket;
+	}
+	
+	private ServerSocket newListenSocket(
+			final InetAddress bindInetAddress,
+			final Port bindPort) throws BindException {
+		Socks5Reply socks5Rep = null;
+		NetObjectFactory netObjectFactory = 
+				this.getSelectedRoute().getNetObjectFactory();
+		ServerSocket listenSocket = null;
+		try {
+			listenSocket = netObjectFactory.newServerSocket();
+		} catch (IOException e) {
+			this.logger.error( 
+					ObjectLogMessageHelper.objectLogMessage(
+							this, 
+							"Error in creating the listen socket"), 
+					e);
+			socks5Rep = Socks5Reply.newFailureInstance(
+					Reply.GENERAL_SOCKS_SERVER_FAILURE);
+			this.sendSocks5Reply(socks5Rep);
+			return null;
+		}
+		if (!this.configureListenSocket(listenSocket)) {
+			try {
+				listenSocket.close();
+			} catch (IOException e) {
+				throw new AssertionError(e);
+			}
+			return null;
+		}
+		try {
+			listenSocket.bind(new InetSocketAddress(
+					bindInetAddress, bindPort.intValue()));
+		} catch (BindException e) {
+			try {
+				listenSocket.close();
+			} catch (IOException ex) {
+				throw new AssertionError(ex);
+			}
+			throw e;
+		} catch (IOException e) {
+			this.logger.error( 
+					ObjectLogMessageHelper.objectLogMessage(
+							this, 
+							"Error in binding the listen socket"), 
+					e);
+			socks5Rep = Socks5Reply.newFailureInstance(
+					Reply.GENERAL_SOCKS_SERVER_FAILURE);
+			this.sendSocks5Reply(socks5Rep);
+			try {
+				listenSocket.close();
+			} catch (IOException ex) {
+				throw new AssertionError(ex);
+			}
 			return null;
 		}
 		return listenSocket;

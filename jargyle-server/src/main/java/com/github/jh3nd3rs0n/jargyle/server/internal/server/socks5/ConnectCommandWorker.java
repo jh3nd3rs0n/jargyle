@@ -30,6 +30,7 @@ import com.github.jh3nd3rs0n.jargyle.server.GeneralRuleResultSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.GeneralSettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.Rule;
 import com.github.jh3nd3rs0n.jargyle.server.RuleContext;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5RuleResultSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.internal.net.BandwidthLimitedSocket;
@@ -101,12 +102,13 @@ final class ConnectCommandWorker extends TcpBasedCommandWorker {
 		if (relayBufferSize != null) {
 			return relayBufferSize.intValue();
 		}
-		relayBufferSize = this.getSettings().getLastValue(
+		Settings settings = this.getSettings();
+		relayBufferSize = settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_CONNECT_RELAY_BUFFER_SIZE);
 		if (relayBufferSize != null) {
 			return relayBufferSize.intValue();
 		}
-		relayBufferSize = this.getSettings().getLastValue(
+		relayBufferSize = settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_RELAY_BUFFER_SIZE);
 		return relayBufferSize.intValue();
 	}
@@ -124,12 +126,13 @@ final class ConnectCommandWorker extends TcpBasedCommandWorker {
 		if (relayIdleTimeout != null) {
 			return relayIdleTimeout.intValue();
 		}
-		relayIdleTimeout = this.getSettings().getLastValue(
+		Settings settings = this.getSettings();
+		relayIdleTimeout = settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_CONNECT_RELAY_IDLE_TIMEOUT);
 		if (relayIdleTimeout != null) {
 			return relayIdleTimeout.intValue();
 		}
-		relayIdleTimeout = this.getSettings().getLastValue(
+		relayIdleTimeout = settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_RELAY_IDLE_TIMEOUT);
 		return relayIdleTimeout.intValue();
 	}
@@ -147,12 +150,13 @@ final class ConnectCommandWorker extends TcpBasedCommandWorker {
 		if (relayInboundBandwidthLimit != null) {
 			return Integer.valueOf(relayInboundBandwidthLimit.intValue());
 		}
-		relayInboundBandwidthLimit = this.getSettings().getLastValue(
+		Settings settings = this.getSettings();
+		relayInboundBandwidthLimit = settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_CONNECT_RELAY_INBOUND_BANDWIDTH_LIMIT);
 		if (relayInboundBandwidthLimit != null) {
 			return Integer.valueOf(relayInboundBandwidthLimit.intValue());
 		}
-		relayInboundBandwidthLimit = this.getSettings().getLastValue(
+		relayInboundBandwidthLimit = settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_RELAY_INBOUND_BANDWIDTH_LIMIT);
 		if (relayInboundBandwidthLimit != null) {
 			return Integer.valueOf(relayInboundBandwidthLimit.intValue());
@@ -173,13 +177,14 @@ final class ConnectCommandWorker extends TcpBasedCommandWorker {
 						Socks5RuleResultSpecConstants.SOCKS5_ON_COMMAND_RELAY_OUTBOUND_BANDWIDTH_LIMIT);
 		if (relayOutboundBandwidthLimit != null) {
 			return Integer.valueOf(relayOutboundBandwidthLimit.intValue());
-		}		
-		relayOutboundBandwidthLimit = this.getSettings().getLastValue(
+		}
+		Settings settings = this.getSettings();
+		relayOutboundBandwidthLimit = settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_CONNECT_RELAY_OUTBOUND_BANDWIDTH_LIMIT);
 		if (relayOutboundBandwidthLimit != null) {
 			return Integer.valueOf(relayOutboundBandwidthLimit.intValue());
 		}
-		relayOutboundBandwidthLimit = this.getSettings().getLastValue(
+		relayOutboundBandwidthLimit = settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_RELAY_OUTBOUND_BANDWIDTH_LIMIT);
 		if (relayOutboundBandwidthLimit != null) {
 			return Integer.valueOf(relayOutboundBandwidthLimit.intValue());
@@ -214,27 +219,28 @@ final class ConnectCommandWorker extends TcpBasedCommandWorker {
 		if (host != null) {
 			return host;
 		}
-		host = this.getSettings().getLastValue(
+		Settings settings = this.getSettings();
+		host = settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_CONNECT_SERVER_FACING_BIND_HOST);
 		if (host != null) {
 			return host;
 		}
-		host = this.getSettings().getLastValue(
+		host = settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_EXTERNAL_FACING_BIND_HOST);
 		if (host != null) {
 			return host;
 		}
-		host = this.getSettings().getLastValue(
+		host = settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_BIND_HOST);
 		if (host != null) {
 			return host;
 		}
-		host = this.getSettings().getLastValue(
+		host = settings.getLastValue(
 				GeneralSettingSpecConstants.EXTERNAL_FACING_BIND_HOST);
 		if (host != null) {
 			return host;
 		}
-		host = this.getSettings().getLastValue(
+		host = settings.getLastValue(
 				GeneralSettingSpecConstants.BIND_HOST);
 		return host;
 	}
@@ -266,27 +272,28 @@ final class ConnectCommandWorker extends TcpBasedCommandWorker {
 		if (portRanges.size() > 0) {
 			return PortRanges.newInstance(portRanges);
 		}
-		PortRanges prtRanges = this.getSettings().getLastValue(
+		Settings settings = this.getSettings();
+		PortRanges prtRanges = settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_CONNECT_SERVER_FACING_BIND_PORT_RANGES);
 		if (prtRanges.toList().size() > 0) {
 			return prtRanges;
 		}
-		prtRanges = this.getSettings().getLastValue(
+		prtRanges = settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_EXTERNAL_FACING_BIND_TCP_PORT_RANGES);
 		if (prtRanges.toList().size() > 0) {
 			return prtRanges;
 		}
-		prtRanges = this.getSettings().getLastValue(
+		prtRanges = settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_BIND_TCP_PORT_RANGES);
 		if (prtRanges.toList().size() > 0) {
 			return prtRanges;
 		}
-		prtRanges = this.getSettings().getLastValue(
+		prtRanges = settings.getLastValue(
 				GeneralSettingSpecConstants.EXTERNAL_FACING_BIND_TCP_PORT_RANGES);
 		if (prtRanges.toList().size() > 0) {
 			return prtRanges;
 		}
-		prtRanges = this.getSettings().getLastValue(
+		prtRanges = settings.getLastValue(
 				GeneralSettingSpecConstants.BIND_TCP_PORT_RANGES);
 		return prtRanges;
 	}
@@ -337,27 +344,28 @@ final class ConnectCommandWorker extends TcpBasedCommandWorker {
 			return SocketSettings.newInstance(
 					socketSettings.stream().collect(Collectors.toList()));
 		}
-		SocketSettings socketSttngs = this.getSettings().getLastValue(
+		Settings settings = this.getSettings();
+		SocketSettings socketSttngs = settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_CONNECT_SERVER_FACING_SOCKET_SETTINGS);
 		if (socketSttngs.toMap().size() > 0) {
 			return socketSttngs;
 		}
-		socketSttngs = this.getSettings().getLastValue(
+		socketSttngs = settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_EXTERNAL_FACING_SOCKET_SETTINGS);
 		if (socketSttngs.toMap().size() > 0) {
 			return socketSttngs;
 		}
-		socketSttngs = this.getSettings().getLastValue(
+		socketSttngs = settings.getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_COMMAND_SOCKET_SETTINGS);
 		if (socketSttngs.toMap().size() > 0) {
 			return socketSttngs;
 		}
-		socketSttngs = this.getSettings().getLastValue(
+		socketSttngs = settings.getLastValue(
 				GeneralSettingSpecConstants.EXTERNAL_FACING_SOCKET_SETTINGS);
 		if (socketSttngs.toMap().size() > 0) {
 			return socketSttngs;
 		}
-		return this.getSettings().getLastValue(
+		return settings.getLastValue(
 				GeneralSettingSpecConstants.SOCKET_SETTINGS);
 	}
 
@@ -380,11 +388,65 @@ final class ConnectCommandWorker extends TcpBasedCommandWorker {
 	}
 	
 	private Socket newExtemporaneousServerFacingSocket(
-			final InetAddress bindInetAddress, 
-			final PortRanges bindPortRanges) {
+			final InetAddress bindInetAddress,
+			final Port bindPort) throws BindException {
 		Socks5Reply socks5Rep = null;
 		NetObjectFactory netObjectFactory = 
 				this.getSelectedRoute().getNetObjectFactory();
+		Socket serverFacingSocket = null;
+		try {
+			serverFacingSocket = netObjectFactory.newSocket(
+					this.getDesiredDestinationAddress(), 
+					this.getDesiredDestinationPort(), 
+					bindInetAddress, 
+					bindPort.intValue());
+		} catch (UnknownHostException e) {
+			this.logger.error( 
+					ObjectLogMessageHelper.objectLogMessage(
+							this, 
+							"Error in creating the server-facing "
+							+ "socket"), 
+					e);
+			socks5Rep = Socks5Reply.newFailureInstance(
+					Reply.HOST_UNREACHABLE);
+			this.sendSocks5Reply(socks5Rep);
+			return null;
+		} catch (IOException e) {
+			if (ThrowableHelper.isOrHasInstanceOf(
+					e, BindException.class)) {
+				throw new BindException();
+			}
+			if (ThrowableHelper.isOrHasInstanceOf(
+					e, SocketException.class)) {
+				this.logger.error( 
+						ObjectLogMessageHelper.objectLogMessage(
+								this, 
+								"Error in connecting the server-facing "
+								+ "socket"), 
+						e);
+				socks5Rep = Socks5Reply.newFailureInstance(
+						Reply.NETWORK_UNREACHABLE);
+				this.sendSocks5Reply(socks5Rep);
+				return null;						
+			}
+			this.logger.error( 
+					ObjectLogMessageHelper.objectLogMessage(
+							this, 
+							"Error in connecting the server-facing "
+							+ "socket"), 
+					e);
+			socks5Rep = Socks5Reply.newFailureInstance(
+					Reply.GENERAL_SOCKS_SERVER_FAILURE);
+			this.sendSocks5Reply(socks5Rep);
+			return null;
+		}
+		return serverFacingSocket;
+	}
+	
+	private Socket newExtemporaneousServerFacingSocket(
+			final InetAddress bindInetAddress, 
+			final PortRanges bindPortRanges) {
+		Socks5Reply socks5Rep = null;
 		Socket serverFacingSocket = null;
 		boolean serverFacingSocketBound = false;
 		for (Iterator<PortRange> iterator = bindPortRanges.toList().iterator();
@@ -394,49 +456,13 @@ final class ConnectCommandWorker extends TcpBasedCommandWorker {
 					!serverFacingSocketBound && iter.hasNext();) {
 				Port bindPort = iter.next();
 				try {
-					serverFacingSocket = netObjectFactory.newSocket(
-							this.getDesiredDestinationAddress(), 
-							this.getDesiredDestinationPort(), 
-							bindInetAddress, 
-							bindPort.intValue());
-				} catch (UnknownHostException e) {
-					this.logger.error( 
-							ObjectLogMessageHelper.objectLogMessage(
-									this, 
-									"Error in creating the server-facing "
-									+ "socket"), 
-							e);
-					socks5Rep = Socks5Reply.newFailureInstance(
-							Reply.HOST_UNREACHABLE);
-					this.sendSocks5Reply(socks5Rep);
-					return null;
-				} catch (IOException e) {
-					if (ThrowableHelper.isOrHasInstanceOf(
-							e, BindException.class)) {
-						continue;
-					}
-					if (ThrowableHelper.isOrHasInstanceOf(
-							e, SocketException.class)) {
-						this.logger.error( 
-								ObjectLogMessageHelper.objectLogMessage(
-										this, 
-										"Error in connecting the server-facing "
-										+ "socket"), 
-								e);
-						socks5Rep = Socks5Reply.newFailureInstance(
-								Reply.NETWORK_UNREACHABLE);
-						this.sendSocks5Reply(socks5Rep);
-						return null;						
-					}
-					this.logger.error( 
-							ObjectLogMessageHelper.objectLogMessage(
-									this, 
-									"Error in connecting the server-facing "
-									+ "socket"), 
-							e);
-					socks5Rep = Socks5Reply.newFailureInstance(
-							Reply.GENERAL_SOCKS_SERVER_FAILURE);
-					this.sendSocks5Reply(socks5Rep);
+					serverFacingSocket = 
+							this.newExtemporaneousServerFacingSocket(
+									bindInetAddress, bindPort);
+				} catch (BindException e) {
+					continue;
+				}
+				if (serverFacingSocket == null) {
 					return null;
 				}
 				serverFacingSocketBound = true;
@@ -460,7 +486,7 @@ final class ConnectCommandWorker extends TcpBasedCommandWorker {
 	
 	private Socket newPreparedServerFacingSocket(
 			final InetAddress bindInetAddress, 
-			final PortRanges bindPortRanges) {
+			final Port bindPort) throws SocketException {
 		Socks5Reply socks5Rep = null;
 		InetAddress desiredDestinationInetAddress = 
 				this.resolveDesiredDestinationAddress(
@@ -470,7 +496,100 @@ final class ConnectCommandWorker extends TcpBasedCommandWorker {
 		}
 		NetObjectFactory netObjectFactory = 
 				this.getSelectedRoute().getNetObjectFactory();
-		int connectTimeout = this.getServerFacingConnectTimeout();
+		Socket serverFacingSocket = null;
+		int connectTimeout = this.getServerFacingConnectTimeout();		
+		serverFacingSocket = netObjectFactory.newSocket();
+		if (!this.configureServerFacingSocket(serverFacingSocket)) {
+			try {
+				serverFacingSocket.close();
+			} catch (IOException e) {
+				throw new AssertionError(e);
+			}
+			return null;
+		}
+		try {
+			serverFacingSocket.bind(new InetSocketAddress(
+					bindInetAddress, bindPort.intValue()));
+		} catch (SocketException e) {
+			try {
+				serverFacingSocket.close();
+			} catch (IOException ex) {
+				throw new AssertionError(ex);
+			}
+			throw e;
+		} catch (IOException e) {
+			this.logger.error( 
+					ObjectLogMessageHelper.objectLogMessage(
+							this, 
+							"Error in binding the server-facing "
+							+ "socket"), 
+					e);
+			socks5Rep = Socks5Reply.newFailureInstance(
+					Reply.GENERAL_SOCKS_SERVER_FAILURE);
+			this.sendSocks5Reply(socks5Rep);
+			try {
+				serverFacingSocket.close();
+			} catch (IOException ex) {
+				throw new AssertionError(ex);
+			}					
+			return null;
+		}				
+		try {
+			serverFacingSocket.connect(new InetSocketAddress(
+					desiredDestinationInetAddress,
+					this.getDesiredDestinationPort()),
+					connectTimeout);
+		} catch (IOException e) {
+			if (ThrowableHelper.isOrHasInstanceOf(
+					e, BindException.class)) {
+				try {
+					serverFacingSocket.close();
+				} catch (IOException ex) {
+					throw new AssertionError(ex);
+				}
+				throw new BindException();
+			}
+			if (ThrowableHelper.isOrHasInstanceOf(
+					e, SocketException.class)) {
+				this.logger.error( 
+						ObjectLogMessageHelper.objectLogMessage(
+								this, 
+								"Error in connecting the server-facing "
+								+ "socket"), 
+						e);
+				socks5Rep = Socks5Reply.newFailureInstance(
+						Reply.NETWORK_UNREACHABLE);
+				this.sendSocks5Reply(socks5Rep);
+				try {
+					serverFacingSocket.close();
+				} catch (IOException ex) {
+					throw new AssertionError(ex);
+				}						
+				return null;						
+			}
+			this.logger.error( 
+					ObjectLogMessageHelper.objectLogMessage(
+							this, 
+							"Error in connecting the server-facing "
+							+ "socket"), 
+					e);
+			socks5Rep = Socks5Reply.newFailureInstance(
+					Reply.GENERAL_SOCKS_SERVER_FAILURE);
+			this.sendSocks5Reply(socks5Rep);
+			try {
+				serverFacingSocket.close();
+			} catch (IOException ex) {
+				throw new AssertionError(ex);
+			}
+			return null;
+		}
+		return serverFacingSocket;
+	}
+	
+	private Socket newPreparedServerFacingSocket(
+			final InetAddress bindInetAddress, 
+			final PortRanges bindPortRanges) {
+		Socks5Reply socks5Rep = null;
 		Socket serverFacingSocket = null;
 		boolean serverFacingSocketBound = false;
 		for (Iterator<PortRange> iterator = bindPortRanges.toList().iterator();
@@ -479,91 +598,15 @@ final class ConnectCommandWorker extends TcpBasedCommandWorker {
 			for (Iterator<Port> iter = bindPortRange.iterator();
 					!serverFacingSocketBound && iter.hasNext();) {
 				Port bindPort = iter.next();
-				serverFacingSocket = netObjectFactory.newSocket();
-				if (!this.configureServerFacingSocket(serverFacingSocket)) {
-					try {
-						serverFacingSocket.close();
-					} catch (IOException e) {
-						throw new AssertionError(e);
-					}
+				try {
+					serverFacingSocket = this.newPreparedServerFacingSocket(
+							bindInetAddress, bindPort);
+				} catch (SocketException e) {
+					continue;
+				}
+				if (serverFacingSocket == null) {
 					return null;
 				}
-				try {
-					serverFacingSocket.bind(new InetSocketAddress(
-							bindInetAddress, bindPort.intValue()));
-				} catch (SocketException e) {
-					try {
-						serverFacingSocket.close();
-					} catch (IOException ex) {
-						throw new AssertionError(ex);
-					}
-					continue;
-				} catch (IOException e) {
-					this.logger.error( 
-							ObjectLogMessageHelper.objectLogMessage(
-									this, 
-									"Error in binding the server-facing "
-									+ "socket"), 
-							e);
-					socks5Rep = Socks5Reply.newFailureInstance(
-							Reply.GENERAL_SOCKS_SERVER_FAILURE);
-					this.sendSocks5Reply(socks5Rep);
-					try {
-						serverFacingSocket.close();
-					} catch (IOException ex) {
-						throw new AssertionError(ex);
-					}					
-					return null;
-				}				
-				try {
-					serverFacingSocket.connect(new InetSocketAddress(
-							desiredDestinationInetAddress,
-							this.getDesiredDestinationPort()),
-							connectTimeout);
-				} catch (IOException e) {
-					if (ThrowableHelper.isOrHasInstanceOf(
-							e, BindException.class)) {
-						try {
-							serverFacingSocket.close();
-						} catch (IOException ex) {
-							throw new AssertionError(ex);
-						}
-						continue;
-					}
-					if (ThrowableHelper.isOrHasInstanceOf(
-							e, SocketException.class)) {
-						this.logger.error( 
-								ObjectLogMessageHelper.objectLogMessage(
-										this, 
-										"Error in connecting the server-facing "
-										+ "socket"), 
-								e);
-						socks5Rep = Socks5Reply.newFailureInstance(
-								Reply.NETWORK_UNREACHABLE);
-						this.sendSocks5Reply(socks5Rep);
-						try {
-							serverFacingSocket.close();
-						} catch (IOException ex) {
-							throw new AssertionError(ex);
-						}						
-						return null;						
-					}
-					this.logger.error( 
-							ObjectLogMessageHelper.objectLogMessage(
-									this, 
-									"Error in connecting the server-facing "
-									+ "socket"), 
-							e);
-					socks5Rep = Socks5Reply.newFailureInstance(
-							Reply.GENERAL_SOCKS_SERVER_FAILURE);
-					this.sendSocks5Reply(socks5Rep);
-					try {
-						serverFacingSocket.close();
-					} catch (IOException ex) {
-						throw new AssertionError(ex);
-					}
-					return null;
-				}				
 				serverFacingSocketBound = true;
 			}
 		}

@@ -129,6 +129,72 @@ public abstract class SocksClient {
 		socketSettings.applyTo(clientSocket);
 	}
 	
+	private Socket getBoundConnectedClientSocket(
+			final Socket clientSocket, 
+			final ClientSocketConnectParams params,
+			final InetAddress socksServerUriHostInetAddress,
+			final int socksServerUriPort,
+			final int connectTimeout) throws IOException {
+		InetAddress clientBindHostInetAddress =
+				this.properties.getValue(
+						GeneralPropertySpecConstants.CLIENT_BIND_HOST).toInetAddress();
+		PortRanges clientBindPortRanges = this.properties.getValue(
+				GeneralPropertySpecConstants.CLIENT_BIND_PORT_RANGES);
+		NetObjectFactory netObjFactory = params.getNetObjectFactory();
+		if (netObjFactory == null) {
+			netObjFactory = this.netObjectFactory;
+		}
+		SocketSettings socketSttngs = params.getSocketSettings();
+		if (socketSttngs == null) {
+			socketSttngs = this.properties.getValue(
+					GeneralPropertySpecConstants.CLIENT_SOCKET_SETTINGS);
+		}
+		Socket clientSock = clientSocket;
+		boolean clientSocketBound = false;
+		for (Iterator<PortRange> iterator = clientBindPortRanges.toList().iterator();
+				!clientSocketBound && iterator.hasNext();) {
+			PortRange clientBindPortRange = iterator.next();
+			for (Iterator<Port> iter = clientBindPortRange.iterator();
+					!clientSocketBound && iter.hasNext();) {
+				Port clientBindPort = iter.next();
+				try {
+					clientSock.bind(new InetSocketAddress(
+							clientBindHostInetAddress, 
+							clientBindPort.intValue()));
+				} catch (SocketException e) {
+					clientSock.close();
+					clientSock = netObjFactory.newSocket();
+					socketSttngs.applyTo(clientSock);
+					continue;
+				}
+				try {
+					clientSock.connect(new InetSocketAddress(
+							socksServerUriHostInetAddress,
+							socksServerUriPort), 
+							connectTimeout);
+				} catch (IOException e) {
+					if (ThrowableHelper.isOrHasInstanceOf(
+							e, BindException.class)) {
+						clientSock.close();
+						clientSock = netObjFactory.newSocket();
+						socketSttngs.applyTo(clientSock);
+						continue;
+					}
+					throw e;
+				}
+				clientSocketBound = true;
+			}
+		}
+		if (!clientSocketBound) {
+			throw new BindException(String.format(
+					"unable to bind to the following address and port "
+					+ "(range(s)): %s %s",
+					clientBindHostInetAddress,
+					clientBindPortRanges));
+		}
+		return clientSock;
+	}
+	
 	public final SocksClient getChainedSocksClient() {
 		return this.chainedSocksClient;
 	}
@@ -148,62 +214,12 @@ public abstract class SocksClient {
 			InetAddress socksServerUriHostInetAddress =	this.resolve(
 					socksServerUriHost);
 			if (params.getMustBindBeforeConnect()) {
-				InetAddress clientBindHostInetAddress =
-						this.properties.getValue(
-								GeneralPropertySpecConstants.CLIENT_BIND_HOST).toInetAddress();
-				PortRanges clientBindPortRanges = this.properties.getValue(
-						GeneralPropertySpecConstants.CLIENT_BIND_PORT_RANGES);
-				NetObjectFactory netObjFactory = params.getNetObjectFactory();
-				if (netObjFactory == null) {
-					netObjFactory = this.netObjectFactory;
-				}
-				SocketSettings socketSttngs = params.getSocketSettings();
-				if (socketSttngs == null) {
-					socketSttngs = this.properties.getValue(
-							GeneralPropertySpecConstants.CLIENT_SOCKET_SETTINGS);
-				}
-				boolean clientSocketBound = false;
-				for (Iterator<PortRange> iterator = clientBindPortRanges.toList().iterator();
-						!clientSocketBound && iterator.hasNext();) {
-					PortRange clientBindPortRange = iterator.next();
-					for (Iterator<Port> iter = clientBindPortRange.iterator();
-							!clientSocketBound && iter.hasNext();) {
-						Port clientBindPort = iter.next();
-						try {
-							clientSock.bind(new InetSocketAddress(
-									clientBindHostInetAddress, 
-									clientBindPort.intValue()));
-						} catch (SocketException e) {
-							clientSock.close();
-							clientSock = netObjFactory.newSocket();
-							socketSttngs.applyTo(clientSock);
-							continue;
-						}
-						try {
-							clientSock.connect(new InetSocketAddress(
-									socksServerUriHostInetAddress,
-									socksServerUriPort), 
-									connectTimeout);
-						} catch (IOException e) {
-							if (ThrowableHelper.isOrHasInstanceOf(
-									e, BindException.class)) {
-								clientSock.close();
-								clientSock = netObjFactory.newSocket();
-								socketSttngs.applyTo(clientSock);
-								continue;
-							}
-							throw e;
-						}
-						clientSocketBound = true;
-					}
-				}
-				if (!clientSocketBound) {
-					throw new BindException(String.format(
-							"unable to bind to the following address and port "
-							+ "ranges: %s %s",
-							clientBindHostInetAddress,
-							clientBindPortRanges));
-				}
+				clientSock = this.getBoundConnectedClientSocket(
+						clientSock, 
+						params, 
+						socksServerUriHostInetAddress, 
+						socksServerUriPort, 
+						connectTimeout);
 			} else {
 				clientSock.connect(
 						new InetSocketAddress(
@@ -270,8 +286,8 @@ public abstract class SocksClient {
 		}
 		if (!clientSocketBound) {
 			throw new BindException(String.format(
-					"unable to bind to the following address and port ranges: "
-					+ "%s %s",
+					"unable to bind to the following address and port "
+					+ "(range(s)): %s %s",
 					clientBindHostInetAddress,
 					clientBindPortRanges));			
 		}

@@ -71,12 +71,12 @@ public class Worker implements Runnable {
 						new SslSocketFactoryImpl(config) : null;
 		this.configuration = config;
 		this.logger = LoggerFactory.getLogger(Worker.class);
-		this.worker = null;
 		this.routes = Routes.newInstance(config);
 		this.ruleContext = null;
 		this.rules = Rules.newInstance(config);
 		this.selectedRoute = null;
 		this.totalWorkerCount = workerCount;
+		this.worker = null;
 	}
 	
 	protected Worker(final Worker wrkr) {

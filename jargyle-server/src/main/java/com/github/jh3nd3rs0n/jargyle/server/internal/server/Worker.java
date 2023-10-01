@@ -48,34 +48,34 @@ public class Worker implements Runnable {
 	private Socket clientSocket;
 	private final SslSocketFactory clientSslSocketFactory;
 	private final Configuration configuration;
+	private final AtomicInteger currentWorkerCount;	
 	private final Logger logger;
 	private final Routes routes;
 	private RuleContext ruleContext;
 	private final Rules rules;
 	private Route selectedRoute;	
-	private final AtomicInteger totalWorkerCount;
 	private final Worker worker;
 	
 	Worker(
 			final Socket clientSock, 
 			final AtomicInteger workerCount,
-			final Configuration config) {
+			final ConfiguredWorkerParamsProvider configuredWorkerParamsProvider) {
+		ConfiguredWorkerParams configuredWorkerParams = 
+				configuredWorkerParamsProvider.getConfiguredWorkerParams();
 		this.applicableRule = null;
 		this.belowAllowLimitRules = new HashSet<Rule>();
 		this.clientFacingDtlsDatagramSocketFactory = 
-				DtlsDatagramSocketFactoryImpl.isDtlsEnabled(config) ? 
-						new DtlsDatagramSocketFactoryImpl(config) : null;
+				configuredWorkerParams.getClientFacingDtlsDatagramSocketFactory();
 		this.clientSocket = clientSock;
-		this.clientSslSocketFactory =
-				SslSocketFactoryImpl.isSslEnabled(config) ?
-						new SslSocketFactoryImpl(config) : null;
-		this.configuration = config;
+		this.clientSslSocketFactory = 
+				configuredWorkerParams.getClientSslSocketFactory();
+		this.configuration = configuredWorkerParams.getConfiguration();
+		this.currentWorkerCount = workerCount;		
 		this.logger = LoggerFactory.getLogger(Worker.class);
-		this.routes = Routes.newInstance(config);
+		this.routes = configuredWorkerParams.getRoutes();
 		this.ruleContext = null;
-		this.rules = Rules.newInstance(config);
+		this.rules = configuredWorkerParams.getRules();
 		this.selectedRoute = null;
-		this.totalWorkerCount = workerCount;
 		this.worker = null;
 	}
 	
@@ -86,12 +86,12 @@ public class Worker implements Runnable {
 		this.clientSocket = null;
 		this.clientSslSocketFactory = null;
 		this.configuration = null;
+		this.currentWorkerCount = null;		
 		this.logger = LoggerFactory.getLogger(this.getClass());
 		this.routes = null;
 		this.ruleContext = null;
 		this.rules = null;
 		this.selectedRoute = null;
-		this.totalWorkerCount = null;
 		this.worker = wrkr;
 	}
 	
@@ -384,8 +384,8 @@ public class Worker implements Runnable {
 		try {
 			this.logger.debug(ObjectLogMessageHelper.objectLogMessage(
 					this, 
-					"Started. Total Worker count: %s",
-					this.totalWorkerCount.incrementAndGet()));
+					"Started. Current Worker count: %s",
+					this.currentWorkerCount.incrementAndGet()));
 			this.ruleContext = this.newClientRuleContext();
 			this.applicableRule = this.rules.firstAppliesTo(this.ruleContext);
 			if (this.applicableRule == null) {
@@ -453,9 +453,9 @@ public class Worker implements Runnable {
 			}
 			this.logger.debug(ObjectLogMessageHelper.objectLogMessage(
 					this, 
-					"Finished in %s ms. Total Worker count: %s",
+					"Finished in %s ms. Current Worker count: %s",
 					System.currentTimeMillis() - startTime,
-					this.totalWorkerCount.decrementAndGet()));
+					this.currentWorkerCount.decrementAndGet()));
 		}
 	}
 

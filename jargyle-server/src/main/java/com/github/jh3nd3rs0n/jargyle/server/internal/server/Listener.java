@@ -16,17 +16,18 @@ import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.internal.concurrent.ExecutorHelper;
 
 public final class Listener implements Runnable {
-	
-	private final Configuration configuration;
+
+	private final ConfiguredWorkerParamsProvider configuredWorkerParamsProvider;
+	private final AtomicInteger currentWorkerCount;	
 	private final Logger logger;
 	private final ServerSocket serverSocket;
-	private final AtomicInteger totalWorkerCount;
 			
 	public Listener(final ServerSocket serverSock, final Configuration config) {
-		this.configuration = config;
+		this.configuredWorkerParamsProvider = 
+				new ConfiguredWorkerParamsProvider(config);		
+		this.currentWorkerCount = new AtomicInteger(0);
 		this.logger = LoggerFactory.getLogger(Listener.class);
 		this.serverSocket = serverSock;
-		this.totalWorkerCount = new AtomicInteger(0);
 	}
 	
 	public void run() {
@@ -36,9 +37,8 @@ public final class Listener implements Runnable {
 				Socket clientSocket = this.serverSocket.accept();
 				executor.execute(new Worker(
 						clientSocket,
-						this.totalWorkerCount,
-						Configuration.newUnmodifiableInstance(
-								this.configuration)));
+						this.currentWorkerCount,
+						this.configuredWorkerParamsProvider));
 			} catch (SocketTimeoutException e) {
 				this.logger.error(
 						ObjectLogMessageHelper.objectLogMessage(

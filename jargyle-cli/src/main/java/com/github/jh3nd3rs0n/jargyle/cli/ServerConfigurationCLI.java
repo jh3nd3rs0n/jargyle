@@ -29,7 +29,7 @@ import com.github.jh3nd3rs0n.jargyle.server.GeneralRuleConditionSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.GeneralRuleResultSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.GeneralSettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.LogAction;
-import com.github.jh3nd3rs0n.jargyle.server.SelectionStrategy;
+import com.github.jh3nd3rs0n.jargyle.server.SelectionStrategySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.Setting;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5RuleConditionSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5RuleResultSpecConstants;
@@ -457,7 +457,7 @@ public abstract class ServerConfigurationCLI extends CLI {
 		System.out.println("  SCHEMES:");
 		this.printHelpText(Scheme.class);
 		System.out.println("  SELECTION_STRATEGIES:");
-		this.printHelpText(SelectionStrategy.class);
+		this.printHelpText(SelectionStrategySpecConstants.class);
 		System.out.println("  SOCKET_SETTINGS:");
 		this.printHelpText(StandardSocketSettingSpecConstants.class);
 		System.out.println("  SOCKS5_COMMANDS:");

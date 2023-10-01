@@ -14,8 +14,7 @@ public final class SelectionStrategyRuleResultSpec
 	@Override
 	public RuleResult<SelectionStrategy> newRuleResultOfParsableValue(
 			final String value) {
-		return super.newRuleResult(
-				SelectionStrategy.valueOf(value).newMutableInstance());
+		return super.newRuleResult(SelectionStrategy.newInstance(value));
 	}
 
 }

@@ -189,7 +189,7 @@ public final class GeneralSettingSpecConstants {
 	public static final SettingSpec<SelectionStrategy> ROUTE_SELECTION_STRATEGY =
 			SETTING_SPECS.addThenGet(new SelectionStrategySettingSpec(
 					"routeSelectionStrategy",
-					SelectionStrategy.CYCLICAL.newMutableInstance()));
+					SelectionStrategySpecConstants.CYCLICAL.newSelectionStrategy()));
 	
 	@HelpText(
 			doc = "A rule for the SOCKS server "

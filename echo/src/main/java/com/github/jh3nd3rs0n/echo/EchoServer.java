@@ -24,21 +24,21 @@ public final class EchoServer {
 		}
 	
 		public void run() {
-			ExecutorService executor = ExecutorHelper.newExecutor();
-			while (true) {
-				try {
-					Socket clientSocket = this.serverSocket.accept();
-					executor.execute(new Worker(clientSocket));
-				} catch (IOException e) {
-					if (ThrowableHelper.isOrHasInstanceOf(
-							e, SocketException.class)) {
+			try (ExecutorService executor = ExecutorHelper.newExecutor()) {
+				while (true) {
+					try {
+						Socket clientSocket = this.serverSocket.accept();
+						executor.execute(new Worker(clientSocket));
+					} catch (IOException e) {
+						if (ThrowableHelper.isOrHasInstanceOf(
+								e, SocketException.class)) {
+							break;
+						}
+						e.printStackTrace();
 						break;
 					}
-					e.printStackTrace();
-					break;
 				}
 			}
-			executor.shutdownNow();
 		}
 	}
 

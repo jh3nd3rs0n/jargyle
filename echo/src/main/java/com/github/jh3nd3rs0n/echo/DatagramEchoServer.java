@@ -19,7 +19,8 @@ public final class DatagramEchoServer {
 		}
 		
 		public void run() {
-			try (ExecutorService executor = ExecutorHelper.newExecutor()) {
+			ExecutorService executor = ExecutorHelper.newExecutor();
+			try {
 				while (true) {
 					try {
 						byte[] buffer = new byte[BUFFER_SIZE];
@@ -34,6 +35,8 @@ public final class DatagramEchoServer {
 						break;
 					}
 				}
+			} finally {
+				executor.shutdownNow();
 			}
 		}
 		

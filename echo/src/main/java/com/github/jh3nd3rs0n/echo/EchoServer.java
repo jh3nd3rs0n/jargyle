@@ -24,7 +24,8 @@ public final class EchoServer {
 		}
 	
 		public void run() {
-			try (ExecutorService executor = ExecutorHelper.newExecutor()) {
+			ExecutorService executor = ExecutorHelper.newExecutor();
+			try {
 				while (true) {
 					try {
 						Socket clientSocket = this.serverSocket.accept();
@@ -38,6 +39,8 @@ public final class EchoServer {
 						break;
 					}
 				}
+			} finally {
+				executor.shutdownNow();
 			}
 		}
 	}

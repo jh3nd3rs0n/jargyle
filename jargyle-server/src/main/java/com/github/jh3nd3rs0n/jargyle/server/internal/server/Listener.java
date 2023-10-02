@@ -31,7 +31,8 @@ public final class Listener implements Runnable {
 	}
 	
 	public void run() {
-		try (ExecutorService executor = ExecutorHelper.newExecutor()) {
+		ExecutorService executor = ExecutorHelper.newExecutor();
+		try {
 			while (true) {
 				try {
 					Socket clientSocket = this.serverSocket.accept();
@@ -58,6 +59,8 @@ public final class Listener implements Runnable {
 					continue;
 				}
 			}
+		} finally {
+			executor.shutdownNow();
 		}
 	}
 

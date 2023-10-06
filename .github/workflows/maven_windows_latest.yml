@@ -38,4 +38,4 @@ jobs:
       - name: Test with Maven and Analyze
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: mvn --batch-mode --file=pom.xml --update-snapshots --projects=!jargyle-distribution verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -D sonar.projectKey=jh3nd3rs0n_jargyle
+        run: mvn --batch-mode --file=pom.xml --update-snapshots --projects=!jargyle-distribution verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -D sonar.projectKey=jh3nd3rs0n_jargyle -P coverage

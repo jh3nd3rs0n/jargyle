@@ -15,7 +15,7 @@
 		<sonar.organization>jh3nd3rs0n</sonar.organization>
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 		<sonar.coverage.jacoco.xmlReportPaths>
-			${project.basedir}/report-aggregate/target/site/jacoco-aggregate/jacoco.xml
+			${project.basedir}/jargyle-report-aggregate/target/site/jacoco-aggregate/jacoco.xml
 		</sonar.coverage.jacoco.xmlReportPaths>
 	</properties>
 	<dependencies>

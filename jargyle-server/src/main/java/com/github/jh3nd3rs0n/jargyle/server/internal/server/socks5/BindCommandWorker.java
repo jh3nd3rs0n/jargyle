@@ -41,6 +41,7 @@ import com.github.jh3nd3rs0n.jargyle.server.Socks5RuleResultSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.internal.net.BandwidthLimitedSocket;
 import com.github.jh3nd3rs0n.jargyle.server.internal.server.Relay;
+import com.github.jh3nd3rs0n.jargyle.transport.socks5.Address;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Reply;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Reply;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Request;
@@ -550,7 +551,7 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 		Socks5Reply socks5Rep = null;
 		InetAddress desiredDestinationInetAddress = 
 				this.resolveDesiredDestinationAddress(
-						this.getDesiredDestinationAddress());
+						this.getDesiredDestinationAddress().toString());
 		if (desiredDestinationInetAddress == null) {
 			return null;
 		}
@@ -558,7 +559,7 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 				desiredDestinationInetAddress.getHostAddress())) ?
 						this.getListenBindHost().toInetAddress() 
 						: desiredDestinationInetAddress;
-		int desiredDestinationPort = this.getDesiredDestinationPort();
+		int desiredDestinationPort = this.getDesiredDestinationPort().intValue();
 		PortRanges bindPortRanges = (desiredDestinationPort == 0) ?
 				this.getListenBindPortRanges() : PortRanges.newInstance(
 						PortRange.newInstance(Port.newInstance(
@@ -662,10 +663,10 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 				this.getRuleContext());
 		secondSocks5ReplyRuleContext.putRuleArgValue(
 				Socks5RuleArgSpecConstants.SOCKS5_SECOND_SERVER_BOUND_ADDRESS, 
-				secondSocks5Rep.getServerBoundAddress());
+				secondSocks5Rep.getServerBoundAddress().toString());
 		secondSocks5ReplyRuleContext.putRuleArgValue(
 				Socks5RuleArgSpecConstants.SOCKS5_SECOND_SERVER_BOUND_PORT, 
-				Port.newInstance(secondSocks5Rep.getServerBoundPort()));		
+				secondSocks5Rep.getServerBoundPort());		
 		return secondSocks5ReplyRuleContext;
 	}
 	
@@ -724,8 +725,8 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 			int serverBoundPort = listenSocket.getLocalPort();
 			socks5Rep = Socks5Reply.newInstance(
 					Reply.SUCCEEDED, 
-					serverBoundAddress, 
-					serverBoundPort);
+					Address.newInstance(serverBoundAddress), 
+					Port.newInstance(serverBoundPort));
 			RuleContext ruleContext = this.newSocks5ReplyRuleContext(socks5Rep);
 			this.setRuleContext(ruleContext);
 			Rule applicableRule = this.getRules().firstAppliesTo(
@@ -772,8 +773,8 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 			serverBoundPort = inboundSocket.getPort();
 			secondSocks5Rep = Socks5Reply.newInstance(
 					Reply.SUCCEEDED, 
-					serverBoundAddress, 
-					serverBoundPort);
+					Address.newInstance(serverBoundAddress), 
+					Port.newInstance(serverBoundPort));
 			ruleContext = this.newSecondSocks5ReplyRuleContext(
 					secondSocks5Rep);
 			this.setRuleContext(ruleContext);

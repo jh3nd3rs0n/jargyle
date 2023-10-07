@@ -9,6 +9,8 @@ import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
 import com.github.jh3nd3rs0n.jargyle.client.Properties;
 import com.github.jh3nd3rs0n.jargyle.client.Socks5PropertySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.client.SocksClient.ClientSocketConnectParams;
+import com.github.jh3nd3rs0n.jargyle.common.net.Port;
+import com.github.jh3nd3rs0n.jargyle.transport.socks5.Address;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.AddressType;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Command;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
@@ -55,8 +57,8 @@ public final class Socks5HostResolver extends HostResolver {
 			sck = methodEncapsulation.getSocket();
 			Socks5Request socks5Req = Socks5Request.newInstance(
 					Command.RESOLVE, 
-					host, 
-					0);
+					Address.newInstance(host), 
+					Port.newInstance(0));
 			this.socks5Client.sendSocks5Request(socks5Req, sck);
 			try {
 				socks5Rep = this.socks5Client.receiveSocks5Reply(sck);
@@ -79,7 +81,8 @@ public final class Socks5HostResolver extends HostResolver {
 				socket.close();
 			}
 		}
-		String serverBoundAddress = socks5Rep.getServerBoundAddress();
+		String serverBoundAddress = 
+				socks5Rep.getServerBoundAddress().toString();
 		addressType = AddressType.valueForString(serverBoundAddress);
 		if (addressType.equals(AddressType.DOMAINNAME)) {
 			throw new Socks5ClientException(

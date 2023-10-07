@@ -35,6 +35,7 @@ import com.github.jh3nd3rs0n.jargyle.server.Socks5RuleResultSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.internal.net.BandwidthLimitedSocket;
 import com.github.jh3nd3rs0n.jargyle.server.internal.server.Relay;
+import com.github.jh3nd3rs0n.jargyle.transport.socks5.Address;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Reply;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Reply;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Request;
@@ -396,8 +397,8 @@ final class ConnectCommandWorker extends TcpBasedCommandWorker {
 		Socket serverFacingSocket = null;
 		try {
 			serverFacingSocket = netObjectFactory.newSocket(
-					this.getDesiredDestinationAddress(), 
-					this.getDesiredDestinationPort(), 
+					this.getDesiredDestinationAddress().toString(), 
+					this.getDesiredDestinationPort().intValue(), 
 					bindInetAddress, 
 					bindPort.intValue());
 		} catch (UnknownHostException e) {
@@ -490,7 +491,7 @@ final class ConnectCommandWorker extends TcpBasedCommandWorker {
 		Socks5Reply socks5Rep = null;
 		InetAddress desiredDestinationInetAddress = 
 				this.resolveDesiredDestinationAddress(
-						this.getDesiredDestinationAddress());
+						this.getDesiredDestinationAddress().toString());
 		if (desiredDestinationInetAddress == null) {
 			return null;
 		}
@@ -537,7 +538,7 @@ final class ConnectCommandWorker extends TcpBasedCommandWorker {
 		try {
 			serverFacingSocket.connect(new InetSocketAddress(
 					desiredDestinationInetAddress,
-					this.getDesiredDestinationPort()),
+					this.getDesiredDestinationPort().intValue()),
 					connectTimeout);
 		} catch (IOException e) {
 			if (ThrowableHelper.isOrHasInstanceOf(
@@ -690,8 +691,8 @@ final class ConnectCommandWorker extends TcpBasedCommandWorker {
 			int serverBoundPort = serverFacingSocket.getPort();
 			socks5Rep = Socks5Reply.newInstance(
 					Reply.SUCCEEDED, 
-					serverBoundAddress, 
-					serverBoundPort);
+					Address.newInstance(serverBoundAddress), 
+					Port.newInstance(serverBoundPort));
 			RuleContext ruleContext = this.newSocks5ReplyRuleContext(
 					socks5Rep);
 			this.setRuleContext(ruleContext);

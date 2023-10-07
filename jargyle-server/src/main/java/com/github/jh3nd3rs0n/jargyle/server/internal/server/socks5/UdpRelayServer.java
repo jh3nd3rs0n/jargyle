@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
+import com.github.jh3nd3rs0n.jargyle.common.lang.UnsignedByte;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.internal.lang.ThrowableHelper;
 import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
@@ -30,6 +31,7 @@ import com.github.jh3nd3rs0n.jargyle.server.Socks5RuleArgSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5RuleConditionSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.internal.concurrent.ExecutorHelper;
 import com.github.jh3nd3rs0n.jargyle.server.internal.server.Rules;
+import com.github.jh3nd3rs0n.jargyle.transport.socks5.Address;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.UdpRequestHeader;
 
 final class UdpRelayServer {
@@ -233,9 +235,9 @@ final class UdpRelayServer {
 			String address = packet.getAddress().getHostAddress();
 			int port = packet.getPort();
 			UdpRequestHeader header = UdpRequestHeader.newInstance(
-					0,
-					address,
-					port,
+					UnsignedByte.newInstance(0),
+					Address.newInstance(address),
+					Port.newInstance(port),
 					Arrays.copyOfRange(
 							packet.getData(), 
 							packet.getOffset(), 
@@ -476,7 +478,7 @@ final class UdpRelayServer {
 			InetAddress inetAddress = null;
 			try {
 				inetAddress = this.hostResolver.resolve(
-						header.getDesiredDestinationAddress());
+						header.getDesiredDestinationAddress().toString());
 			} catch (IOException e) {
 				this.logger.error( 
 						ObjectLogMessageHelper.objectLogMessage(
@@ -486,7 +488,7 @@ final class UdpRelayServer {
 						e);
 				return null;
 			}
-			int inetPort = header.getDesiredDestinationPort();
+			int inetPort = header.getDesiredDestinationPort().intValue();
 			return new DatagramPacket(
 					userData, userData.length, inetAddress, inetPort);
 		}
@@ -590,7 +592,7 @@ final class UdpRelayServer {
 					}
 					this.logger.trace(ObjectLogMessageHelper.objectLogMessage(
 							this, header.toString(), new Object[]{}));
-					if (header.getCurrentFragmentNumber() != 0) {
+					if (header.getCurrentFragmentNumber().intValue() != 0) {
 						continue;
 					}
 					RuleContext outboundRuleContext =
@@ -598,8 +600,8 @@ final class UdpRelayServer {
 									this.ruleContext,
 									this.udpRelayServer.getClientAddress(),
 									this.udpRelayServer.getClientPort(),
-									header.getDesiredDestinationAddress(), 
-									header.getDesiredDestinationPort());
+									header.getDesiredDestinationAddress().toString(), 
+									header.getDesiredDestinationPort().intValue());
 					Rule applicableRule = this.rules.firstAppliesTo(
 							outboundRuleContext);
 					if (applicableRule == null) {

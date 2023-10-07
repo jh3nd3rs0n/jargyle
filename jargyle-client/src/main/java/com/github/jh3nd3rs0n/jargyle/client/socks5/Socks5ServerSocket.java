@@ -26,6 +26,7 @@ import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.common.net.StandardSocketSettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.internal.net.AllZerosAddressConstants;
 import com.github.jh3nd3rs0n.jargyle.internal.net.FilterSocket;
+import com.github.jh3nd3rs0n.jargyle.transport.socks5.Address;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.AddressType;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Command;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
@@ -296,8 +297,9 @@ public final class Socks5ServerSocket extends ServerSocket {
 			try {
 				Socks5Reply socks5Rep = this.socks5Client.receiveSocks5Reply(
 						this.socket);
-				String serverBoundAddress = socks5Rep.getServerBoundAddress();
-				int serverBoundPort = socks5Rep.getServerBoundPort();
+				String serverBoundAddress = 
+						socks5Rep.getServerBoundAddress().toString();
+				int serverBoundPort = socks5Rep.getServerBoundPort().intValue();
 				AddressType addressType = AddressType.valueForString(
 						serverBoundAddress);
 				if (addressType.equals(AddressType.DOMAINNAME)) {
@@ -309,15 +311,6 @@ public final class Socks5ServerSocket extends ServerSocket {
 									+ "is %s", 
 									serverBoundAddress));
 				}
-				if (serverBoundPort < 0 
-						|| serverBoundPort > Port.MAX_INT_VALUE) {
-					throw new Socks5ClientException(
-							this.socks5Client, 
-							String.format(
-									"server bound port is out of range. "
-									+ "actual server bound port is %s", 
-									serverBoundPort));				
-				}				
 				acceptedSocks5Socket = new AcceptedSocks5Socket(
 						new Socks5Socket(this.socks5Client, this.socket),
 						InetAddress.getByName(serverBoundAddress),
@@ -434,12 +427,13 @@ public final class Socks5ServerSocket extends ServerSocket {
 			String address = bAddr.getHostAddress();
 			Socks5Request socks5Req = Socks5Request.newInstance(
 					Command.BIND, 
-					address, 
-					prt);
+					Address.newInstance(address), 
+					Port.newInstance(prt));
 			this.socks5Client.sendSocks5Request(socks5Req, sck);
 			Socks5Reply socks5Rep = this.socks5Client.receiveSocks5Reply(sck);
-			String serverBoundAddress = socks5Rep.getServerBoundAddress();
-			int serverBoundPort = socks5Rep.getServerBoundPort();
+			String serverBoundAddress = 
+					socks5Rep.getServerBoundAddress().toString();
+			int serverBoundPort = socks5Rep.getServerBoundPort().intValue();
 			AddressType addressType = AddressType.valueForString(
 					serverBoundAddress);
 			if (addressType.equals(AddressType.DOMAINNAME)) {

@@ -31,6 +31,7 @@ import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5RuleResultSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.internal.net.BandwidthLimitedDatagramSocket;
+import com.github.jh3nd3rs0n.jargyle.transport.socks5.Address;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Reply;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Reply;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Request;
@@ -811,8 +812,8 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 			int serverBoundPort = clientFacingDatagramSock.getLocalPort();
 			socks5Rep = Socks5Reply.newInstance(
 					Reply.SUCCEEDED, 
-					serverBoundAddress, 
-					serverBoundPort);
+					Address.newInstance(serverBoundAddress), 
+					Port.newInstance(serverBoundPort));
 			RuleContext ruleContext = this.newSocks5ReplyRuleContext(
 					socks5Rep);
 			this.setRuleContext(ruleContext);
@@ -853,8 +854,8 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 				return;
 			}
 			UdpRelayServer.Builder builder = new UdpRelayServer.Builder(
-					this.getDesiredDestinationAddress(), 
-					this.getDesiredDestinationPort(),
+					this.getDesiredDestinationAddress().toString(), 
+					this.getDesiredDestinationPort().intValue(),
 					clientFacingDatagramSock, 
 					peerFacingDatagramSock);
 			builder.bufferSize(this.getRelayBufferSize());

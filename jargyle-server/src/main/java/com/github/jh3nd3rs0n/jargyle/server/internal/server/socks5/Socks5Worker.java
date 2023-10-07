@@ -354,10 +354,10 @@ public class Socks5Worker extends Worker {
 				socks5Req.getCommand().toString());
 		socks5RequestRuleContext.putRuleArgValue(
 				Socks5RuleArgSpecConstants.SOCKS5_DESIRED_DESTINATION_ADDRESS, 
-				socks5Req.getDesiredDestinationAddress());
+				socks5Req.getDesiredDestinationAddress().toString());
 		socks5RequestRuleContext.putRuleArgValue(
 				Socks5RuleArgSpecConstants.SOCKS5_DESIRED_DESTINATION_PORT, 
-				Port.newInstance(socks5Req.getDesiredDestinationPort()));
+				socks5Req.getDesiredDestinationPort());
 		return socks5RequestRuleContext;
 	}
 	
@@ -368,7 +368,7 @@ public class Socks5Worker extends Worker {
 		if (address != null) {
 			req = Socks5Request.newInstance(
 					req.getCommand(), 
-					address.toString(), 
+					address, 
 					req.getDesiredDestinationPort());
 		}
 		Port port = this.getDesiredDestinationPortRedirect();
@@ -376,7 +376,7 @@ public class Socks5Worker extends Worker {
 			req = Socks5Request.newInstance(
 					req.getCommand(), 
 					req.getDesiredDestinationAddress(), 
-					port.intValue());
+					port);
 		}
 		LogAction logAction = this.getDesiredDestinationRedirectLogAction();
 		if ((address != null || port != null) && logAction != null) {

@@ -15,6 +15,7 @@ import java.util.Set;
 
 import com.github.jh3nd3rs0n.jargyle.client.SocksClient.ClientSocketConnectParams;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
+import com.github.jh3nd3rs0n.jargyle.transport.socks5.Address;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.AddressType;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Command;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
@@ -95,8 +96,8 @@ public final class Socks5Socket extends Socket {
 			Socket connectedSock = methodEncapsulation.getSocket();
 			Socks5Request socks5Req = Socks5Request.newInstance(
 					Command.CONNECT, 
-					address, 
-					port);
+					Address.newInstance(address), 
+					Port.newInstance(port));
 			this.socks5Client.sendSocks5Request(socks5Req, connectedSock);
 			Socks5Reply socks5Rep = null;
 			try {
@@ -109,8 +110,9 @@ public final class Socks5Socket extends Socket {
 					throw e;
 				}
 			}
-			String serverBoundAddress = socks5Rep.getServerBoundAddress();
-			int serverBoundPort = socks5Rep.getServerBoundPort();
+			String serverBoundAddress = 
+					socks5Rep.getServerBoundAddress().toString();
+			int serverBoundPort = socks5Rep.getServerBoundPort().intValue();
 			AddressType addressType = AddressType.valueForString(
 					serverBoundAddress);
 			if (addressType.equals(AddressType.DOMAINNAME)) {
@@ -120,14 +122,6 @@ public final class Socks5Socket extends Socket {
 								"server bound address is not an IP address. "
 								+ "actual server bound address is %s", 
 								serverBoundAddress));
-			}
-			if (serverBoundPort < 0 || serverBoundPort > Port.MAX_INT_VALUE) {
-				throw new Socks5ClientException(
-						this.socks5Client, 
-						String.format(
-								"server bound port is out of range. "
-								+ "actual server bound port is %s", 
-								serverBoundPort));				
 			}
 			this.connected = true;
 			this.remoteInetAddress = InetAddress.getByName(serverBoundAddress);

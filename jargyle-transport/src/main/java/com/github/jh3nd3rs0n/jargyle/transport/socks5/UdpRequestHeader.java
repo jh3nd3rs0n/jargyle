@@ -6,23 +6,21 @@ import java.io.IOException;
 import java.util.Arrays;
 
 import com.github.jh3nd3rs0n.jargyle.common.lang.UnsignedByte;
+import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.internal.lang.UnsignedShort;
 
 public final class UdpRequestHeader {
 
 	private static final class Params {
-		private int currentFragmentNumber;
+		private UnsignedByte currentFragmentNumber;
 		private AddressType addressType;
-		private String desiredDestinationAddress;
-		private int desiredDestinationPort;
+		private Address desiredDestinationAddress;
+		private Port desiredDestinationPort;
 		private int userDataStartIndex;
 		private byte[] byteArray;
 	}
 	
 	private static final int RSV = 0x0000;
-	
-	private static final int MIN_DST_ADDR_LENGTH = 1;
-	private static final int MAX_DST_ADDR_LENGTH = 255;
 	
 	public static UdpRequestHeader newInstance(final byte[] byteArray) {
 		ByteArrayInputStream in = new ByteArrayInputStream(byteArray);
@@ -54,27 +52,26 @@ public final class UdpRequestHeader {
 		}
 		dataStartIndex++;
 		out.write(frag.intValue());
-		Address addr;
+		Address dstAddr;
 		try {
-			addr = Address.newInstanceFrom(in);
+			dstAddr = Address.newInstanceFrom(in);
 		} catch (IOException e) {
 			throw new IllegalArgumentException(
 					"expected desired destination address type and address", e);
 		}
-		AddressType atyp = addr.getAddressType();
+		AddressType atyp = dstAddr.getAddressType();
 		dataStartIndex++;
 		out.write(UnsignedByte.newInstance(atyp.byteValue()).intValue());
-		bytes = addr.toByteArray();
-		String dstAddr = addr.toString(); 
+		bytes = dstAddr.toByteArray();
 		dataStartIndex += bytes.length;
 		try {
 			out.write(bytes);
 		} catch (IOException e) {
 			throw new AssertionError(e);
 		}
-		UnsignedShort dstPort;
+		Port dstPort;
 		try {
-			dstPort = UnsignedShort.newInstanceFrom(in);
+			dstPort = Port.newInstanceFrom(in);
 		} catch (IOException e) {
 			throw new IllegalArgumentException(
 					"expected desired destination port", e);
@@ -101,30 +98,20 @@ public final class UdpRequestHeader {
 			throw new AssertionError(e);
 		}
 		Params params = new Params();
-		params.currentFragmentNumber = frag.intValue();
+		params.currentFragmentNumber = frag;
 		params.addressType = atyp;
 		params.desiredDestinationAddress = dstAddr;
-		params.desiredDestinationPort = dstPort.intValue();
+		params.desiredDestinationPort = dstPort;
 		params.userDataStartIndex = dataStartIndex;
 		params.byteArray = out.toByteArray();
 		return new UdpRequestHeader(params);
 	}
 	
 	public static UdpRequestHeader newInstance(
-			final int currentFragmentNumber,
-			final String desiredDestinationAddress,
-			final int desiredDestinationPort,
+			final UnsignedByte currentFragmentNumber,
+			final Address desiredDestinationAddress,
+			final Port desiredDestinationPort,
 			final byte[] userData) {
-		if (currentFragmentNumber < UnsignedByte.MIN_INT_VALUE 
-				|| currentFragmentNumber > UnsignedByte.MAX_INT_VALUE) {
-			throw new IllegalArgumentException(String.format(
-					"current fragment number must be no less than %s and no "
-					+ "more than %s",
-					UnsignedByte.MIN_INT_VALUE,
-					UnsignedByte.MAX_INT_VALUE));
-		}
-		validateDesiredDestinationAddress(desiredDestinationAddress);
-		validateDesiredDestinationPort(desiredDestinationPort);
 		int dataStartIndex = -1;
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		byte[] rsv = UnsignedShort.newInstance(RSV).toByteArray();
@@ -135,20 +122,18 @@ public final class UdpRequestHeader {
 			throw new AssertionError(e);
 		}
 		dataStartIndex++;
-		out.write(currentFragmentNumber);
-		Address address = Address.newInstance(desiredDestinationAddress);
-		AddressType addressType = address.getAddressType();
+		out.write(currentFragmentNumber.intValue());
+		AddressType addressType = desiredDestinationAddress.getAddressType();
 		dataStartIndex++;
 		out.write(UnsignedByte.newInstance(addressType.byteValue()).intValue());
-		byte[] bytes = address.toByteArray();
+		byte[] bytes = desiredDestinationAddress.toByteArray();
 		dataStartIndex += bytes.length;
 		try {
 			out.write(bytes);
 		} catch (IOException e) {
 			throw new AssertionError(e);
 		}
-		byte[] port = UnsignedShort.newInstance(
-				desiredDestinationPort).toByteArray();
+		byte[] port = desiredDestinationPort.toByteArray();
 		dataStartIndex += port.length;
 		try {
 			out.write(port);
@@ -171,36 +156,10 @@ public final class UdpRequestHeader {
 		return new UdpRequestHeader(params);
 	}
 	
-	public static void validateDesiredDestinationAddress(
-			final String desiredDestinationAddress) {
-		byte[] desiredDestinationAddressBytes = 
-				desiredDestinationAddress.getBytes();
-		if (desiredDestinationAddressBytes.length < MIN_DST_ADDR_LENGTH
-				|| desiredDestinationAddressBytes.length > MAX_DST_ADDR_LENGTH) {
-			throw new IllegalArgumentException(String.format(
-					"desired destination address must be no less than %s "
-					+ "byte(s) and no more than %s byte(s)", 
-					MIN_DST_ADDR_LENGTH,
-					MAX_DST_ADDR_LENGTH));
-		}
-	}
-	
-	public static void validateDesiredDestinationPort(
-			final int desiredDestinationPort) {
-		if (desiredDestinationPort < UnsignedShort.MIN_INT_VALUE 
-				|| desiredDestinationPort > UnsignedShort.MAX_INT_VALUE) {
-			throw new IllegalArgumentException(String.format(
-					"desired destination port must be no less than %s and no "
-					+ "more than %s", 
-					UnsignedShort.MIN_INT_VALUE,
-					UnsignedShort.MAX_INT_VALUE));
-		}
-	}
-	
-	private final int currentFragmentNumber;
+	private final UnsignedByte currentFragmentNumber;
 	private final AddressType addressType;
-	private final String desiredDestinationAddress;
-	private final int desiredDestinationPort;
+	private final Address desiredDestinationAddress;
+	private final Port desiredDestinationPort;
 	private final int userDataStartIndex;
 	private final byte[] byteArray;
 	
@@ -235,15 +194,15 @@ public final class UdpRequestHeader {
 		return this.addressType;
 	}
 
-	public int getCurrentFragmentNumber() {
+	public UnsignedByte getCurrentFragmentNumber() {
 		return this.currentFragmentNumber;
 	}
 
-	public String getDesiredDestinationAddress() {
+	public Address getDesiredDestinationAddress() {
 		return this.desiredDestinationAddress;
 	}
 
-	public int getDesiredDestinationPort() {
+	public Port getDesiredDestinationPort() {
 		return this.desiredDestinationPort;
 	}
 	

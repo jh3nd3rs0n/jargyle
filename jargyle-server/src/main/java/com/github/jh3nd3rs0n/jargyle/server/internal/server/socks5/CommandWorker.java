@@ -12,6 +12,7 @@ import com.github.jh3nd3rs0n.jargyle.server.Rule;
 import com.github.jh3nd3rs0n.jargyle.server.RuleContext;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5RuleArgSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5RuleConditionSpecConstants;
+import com.github.jh3nd3rs0n.jargyle.transport.socks5.Address;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Command;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Reply;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Reply;
@@ -117,11 +118,11 @@ class CommandWorker extends Socks5Worker {
 		return this.socks5Request.getCommand();
 	}
 	
-	protected final String getDesiredDestinationAddress() {
+	protected final Address getDesiredDestinationAddress() {
 		return this.socks5Request.getDesiredDestinationAddress();
 	}
 	
-	protected final int getDesiredDestinationPort() {
+	protected final Port getDesiredDestinationPort() {
 		return this.socks5Request.getDesiredDestinationPort();
 	}
 	
@@ -152,10 +153,10 @@ class CommandWorker extends Socks5Worker {
 				this.getRuleContext());
 		socks5ReplyRuleContext.putRuleArgValue(
 				Socks5RuleArgSpecConstants.SOCKS5_SERVER_BOUND_ADDRESS, 
-				socks5Rep.getServerBoundAddress());
+				socks5Rep.getServerBoundAddress().toString());
 		socks5ReplyRuleContext.putRuleArgValue(
 				Socks5RuleArgSpecConstants.SOCKS5_SERVER_BOUND_PORT, 
-				Port.newInstance(socks5Rep.getServerBoundPort()));
+				socks5Rep.getServerBoundPort());
 		return socks5ReplyRuleContext;
 	}
 	

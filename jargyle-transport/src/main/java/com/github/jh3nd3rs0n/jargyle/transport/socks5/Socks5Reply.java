@@ -7,7 +7,7 @@ import java.io.InputStream;
 import java.util.Arrays;
 
 import com.github.jh3nd3rs0n.jargyle.common.lang.UnsignedByte;
-import com.github.jh3nd3rs0n.jargyle.internal.lang.UnsignedShort;
+import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.internal.net.AllZerosAddressConstants;
 
 public final class Socks5Reply {
@@ -16,15 +16,12 @@ public final class Socks5Reply {
 		private Version version;
 		private Reply reply;
 		private AddressType addressType;
-		private String serverBoundAddress;
-		private int serverBoundPort;
+		private Address serverBoundAddress;
+		private Port serverBoundPort;
 		private byte[] byteArray;
 	}
 	
 	private static final int RSV = 0x00;
-	
-	private static final int MIN_BND_ADDR_LENGTH = 1;
-	private static final int MAX_BND_ADDR_LENGTH = 255;
 	
 	public static Socks5Reply newFailureInstance(final Reply reply) {
 		if (reply.equals(Reply.SUCCEEDED)) {
@@ -32,8 +29,8 @@ public final class Socks5Reply {
 		}
 		return newInstance(
 				reply, 
-				AllZerosAddressConstants.IPV4_ADDRESS,
-				0);
+				Address.newInstance(AllZerosAddressConstants.IPV4_ADDRESS),
+				Port.newInstance(0));
 	}
 	
 	public static Socks5Reply newInstance(final byte[] b) {
@@ -48,40 +45,22 @@ public final class Socks5Reply {
 	
 	public static Socks5Reply newInstance(
 			final Reply reply,
-			final String serverBoundAddress,
-			final int serverBoundPort) {
-		byte[] serverBoundAddressBytes = serverBoundAddress.getBytes();
-		if (serverBoundAddressBytes.length < MIN_BND_ADDR_LENGTH
-				|| serverBoundAddressBytes.length > MAX_BND_ADDR_LENGTH) {
-			throw new IllegalArgumentException(String.format(
-					"server bound address must be no less than %s byte(s) and "
-					+ "no more than %s byte(s)", 
-					MIN_BND_ADDR_LENGTH,
-					MAX_BND_ADDR_LENGTH));
-		}
-		if (serverBoundPort < UnsignedShort.MIN_INT_VALUE 
-				|| serverBoundPort > UnsignedShort.MAX_INT_VALUE) {
-			throw new IllegalArgumentException(String.format(
-					"server bound port must be no less than %s and no more "
-					+ "than %s", 
-					UnsignedShort.MIN_INT_VALUE,
-					UnsignedShort.MAX_INT_VALUE));
-		}
+			final Address serverBoundAddress,
+			final Port serverBoundPort) {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		Version version = Version.V5;
 		out.write(UnsignedByte.newInstance(version.byteValue()).intValue());
 		out.write(UnsignedByte.newInstance(reply.byteValue()).intValue());
 		out.write(RSV);
-		Address address = Address.newInstance(serverBoundAddress);
-		AddressType addressType = address.getAddressType();
+		AddressType addressType = serverBoundAddress.getAddressType();
 		out.write(UnsignedByte.newInstance(addressType.byteValue()).intValue());
 		try {
-			out.write(address.toByteArray());
+			out.write(serverBoundAddress.toByteArray());
 		} catch (IOException e) {
 			throw new AssertionError(e);
 		}
 		try {
-			out.write(UnsignedShort.newInstance(serverBoundPort).toByteArray());
+			out.write(serverBoundPort.toByteArray());
 		} catch (IOException e) {
 			throw new AssertionError(e);
 		}
@@ -109,19 +88,18 @@ public final class Socks5Reply {
 					RSV, rsv.intValue()));
 		}
 		out.write(rsv.intValue());
-		Address addr = Address.newInstanceFrom(in);
-		AddressType atyp = addr.getAddressType(); 
+		Address bndAddr = Address.newInstanceFrom(in);
+		AddressType atyp = bndAddr.getAddressType(); 
 		out.write(UnsignedByte.newInstance(atyp.byteValue()).intValue());
-		String bndAddr = addr.toString();
-		out.write(addr.toByteArray());
-		UnsignedShort bndPort = UnsignedShort.newInstanceFrom(in);
+		out.write(bndAddr.toByteArray());
+		Port bndPort = Port.newInstanceFrom(in);
 		out.write(bndPort.toByteArray());
 		Params params = new Params();
 		params.version = ver;
 		params.reply = rep;
 		params.addressType = atyp;
 		params.serverBoundAddress = bndAddr;
-		params.serverBoundPort = bndPort.intValue();
+		params.serverBoundPort = bndPort;
 		params.byteArray = out.toByteArray();
 		return new Socks5Reply(params);
 	}
@@ -129,8 +107,8 @@ public final class Socks5Reply {
 	private final Version version;
 	private final Reply reply;
 	private final AddressType addressType;
-	private final String serverBoundAddress;
-	private final int serverBoundPort;
+	private final Address serverBoundAddress;
+	private final Port serverBoundPort;
 	private final byte[] byteArray;
 	
 	private Socks5Reply(final Params params) {
@@ -168,11 +146,11 @@ public final class Socks5Reply {
 		return this.reply;
 	}
 
-	public String getServerBoundAddress() {
+	public Address getServerBoundAddress() {
 		return this.serverBoundAddress;
 	}
 
-	public int getServerBoundPort() {
+	public Port getServerBoundPort() {
 		return this.serverBoundPort;
 	}
 

@@ -1,47 +1,54 @@
 package com.github.jh3nd3rs0n.jargyle.common.net;
 
+import java.io.IOException;
+import java.io.InputStream;
+
+import com.github.jh3nd3rs0n.jargyle.internal.lang.UnsignedShort;
+
 public final class Port implements Comparable<Port> {
 
-	public static final int MAX_INT_VALUE = 0xffff;
-	public static final int MIN_INT_VALUE = 0;
+	public static final int MAX_INT_VALUE = UnsignedShort.MAX_INT_VALUE;
+	public static final int MIN_INT_VALUE = UnsignedShort.MIN_INT_VALUE;
+	
+	public static Port newInstance(final byte[] b) {
+		return new Port(UnsignedShort.newInstance(b));
+	}
 	
 	public static Port newInstance(final int i) {
-		if (i < MIN_INT_VALUE || i > MAX_INT_VALUE) {
-			throw new IllegalArgumentException(String.format(
-					"expected an integer between %s and %s (inclusive). "
-					+ "actual value is %s", 
-					MIN_INT_VALUE,
-					MAX_INT_VALUE,
-					i));
-		}
-		return new Port(i);
+		return new Port(UnsignedShort.newInstance(i));
+	}
+	
+	public static Port newInstance(final short s) {
+		return new Port(UnsignedShort.newInstance(s));
 	}
 	
 	public static Port newInstance(final String s) {
-		int i;
-		try {
-			i = Integer.parseInt(s);
-		} catch (NumberFormatException e) {
-			throw new IllegalArgumentException(String.format(
-					"expected an integer between %s and %s (inclusive). "
-					+ "actual value is %s", 
-					MIN_INT_VALUE,
-					MAX_INT_VALUE,
-					s),
-					e);
-		}
-		return newInstance(i);
+		return new Port(UnsignedShort.newInstance(s));
 	}
 	
-	private final int intValue;
+	public static Port newInstanceFrom(
+			final InputStream in) throws IOException {
+		return new Port(UnsignedShort.newInstanceFrom(in));
+	}
 	
-	private Port(final int i) {
-		this.intValue = i;
+	public static Port nullableFrom(
+			final InputStream in) throws IOException {
+		UnsignedShort s = UnsignedShort.nullableFrom(in);
+		if (s == null) {
+			return null;
+		}
+		return new Port(s);
+	}
+	
+	private final UnsignedShort unsignedShortValue;
+	
+	private Port(final UnsignedShort unsignedShortVal) {
+		this.unsignedShortValue = unsignedShortVal;
 	}
 	
 	@Override
 	public int compareTo(final Port other) {
-		return this.intValue - other.intValue;
+		return this.unsignedShortValue.intValue() - other.unsignedShortValue.intValue();
 	}
 
 	@Override
@@ -56,7 +63,11 @@ public final class Port implements Comparable<Port> {
 			return false;
 		}
 		Port other = (Port) obj;
-		if (this.intValue != other.intValue) {
+		if (this.unsignedShortValue == null) {
+			if (other.unsignedShortValue != null) {
+				return false;
+			}
+		} else if (!this.unsignedShortValue.equals(other.unsignedShortValue)) {
 			return false;
 		}
 		return true;
@@ -66,15 +77,25 @@ public final class Port implements Comparable<Port> {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + this.intValue;
+		result = prime * result + ((this.unsignedShortValue == null) ? 
+				0 : this.unsignedShortValue.hashCode());
 		return result;
 	}
 
 	public int intValue() {
-		return this.intValue;
+		return this.unsignedShortValue.intValue();
+	}
+	
+	public short shortValue() {
+		return this.unsignedShortValue.shortValue();
+	}
+	
+	public byte[] toByteArray() {
+		return this.unsignedShortValue.toByteArray();
 	}
 	
 	public String toString() {
-		return Integer.toString(this.intValue);
+		return this.unsignedShortValue.toString();
 	}
+	
 }

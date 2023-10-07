@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+import com.github.jh3nd3rs0n.jargyle.common.net.Port;
+import com.github.jh3nd3rs0n.jargyle.transport.socks5.Address;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Command;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Request;
 
@@ -13,8 +15,8 @@ public class Socks5RequestTest {
 	public void testNewInstanceCommandStringInt01() {
 		Socks5Request socks5Request1 = Socks5Request.newInstance(
 				Command.CONNECT, 
-				"12.216.103.24", 
-				0);
+				Address.newInstance("12.216.103.24"), 
+				Port.newInstance(0));
 		Socks5Request socks5Request2 = Socks5Request.newInstance(socks5Request1.toByteArray());
 		assertEquals(socks5Request1, socks5Request2);
 	}
@@ -23,8 +25,8 @@ public class Socks5RequestTest {
 	public void testNewInstanceCommandStringInt02() {
 		Socks5Request socks5Request1 = Socks5Request.newInstance(
 				Command.BIND, 
-				"google.com", 
-				1234);
+				Address.newInstance("google.com"), 
+				Port.newInstance(1234));
 		Socks5Request socks5Request2 = Socks5Request.newInstance(socks5Request1.toByteArray());
 		assertEquals(socks5Request1, socks5Request2);
 	}
@@ -33,8 +35,8 @@ public class Socks5RequestTest {
 	public void testNewInstanceCommandStringInt03() {
 		Socks5Request socks5Request1 = Socks5Request.newInstance(
 				Command.UDP_ASSOCIATE, 
-				"abcd:1234:ef56:abcd:789e:f123:456a:b789", 
-				0xffff);
+				Address.newInstance("abcd:1234:ef56:abcd:789e:f123:456a:b789"), 
+				Port.newInstance(0xffff));
 		Socks5Request socks5Request2 = Socks5Request.newInstance(socks5Request1.toByteArray());
 		assertEquals(socks5Request1, socks5Request2);
 	}

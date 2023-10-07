@@ -19,9 +19,11 @@ import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
 import com.github.jh3nd3rs0n.jargyle.client.Properties;
 import com.github.jh3nd3rs0n.jargyle.client.Socks5PropertySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.client.SocksClient.ClientSocketConnectParams;
+import com.github.jh3nd3rs0n.jargyle.common.lang.UnsignedByte;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.internal.net.AddressHelper;
 import com.github.jh3nd3rs0n.jargyle.internal.net.AllZerosAddressConstants;
+import com.github.jh3nd3rs0n.jargyle.transport.socks5.Address;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.AddressType;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Command;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
@@ -131,8 +133,8 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			}
 			byte[] userData = header.getUserData();
 			InetAddress inetAddress = InetAddress.getByName(
-					header.getDesiredDestinationAddress());
-			int inetPort = header.getDesiredDestinationPort();
+					header.getDesiredDestinationAddress().toString());
+			int inetPort = header.getDesiredDestinationPort().intValue();
 			p.setData(userData, 0, userData.length);
 			p.setLength(userData.length);
 			p.setAddress(inetAddress);
@@ -159,9 +161,9 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			String address = p.getAddress().getHostAddress();
 			int port = p.getPort();
 			byte[] headerBytes = UdpRequestHeader.newInstance(
-					0,
-					address,
-					port,
+					UnsignedByte.newInstance(0),
+					Address.newInstance(address),
+					Port.newInstance(port),
 					Arrays.copyOfRange(
 							p.getData(), 
 							p.getOffset(), 
@@ -193,12 +195,13 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			}
 			Socks5Request socks5Req = Socks5Request.newInstance(
 					Command.UDP_ASSOCIATE, 
-					address, 
-					port);
+					Address.newInstance(address), 
+					Port.newInstance(port));
 			this.socks5Client.sendSocks5Request(socks5Req, sck);
 			Socks5Reply socks5Rep = this.socks5Client.receiveSocks5Reply(sck);
-			String serverBoundAddress = socks5Rep.getServerBoundAddress();
-			int serverBoundPort = socks5Rep.getServerBoundPort();
+			String serverBoundAddress = 
+					socks5Rep.getServerBoundAddress().toString();
+			int serverBoundPort = socks5Rep.getServerBoundPort().intValue();
 			AddressType addressType = AddressType.valueForString(
 					serverBoundAddress);
 			if (addressType.equals(AddressType.DOMAINNAME)) {
@@ -208,14 +211,6 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 								"server bound address is not an IP address. "
 								+ "actual server bound address is %s", 
 								serverBoundAddress));
-			}
-			if (serverBoundPort < 0 || serverBoundPort > Port.MAX_INT_VALUE) {
-				throw new Socks5ClientException(
-						this.socks5Client, 
-						String.format(
-								"server bound port is out of range. "
-								+ "actual server bound port is %s", 
-								serverBoundPort));				
 			}
 			if (AddressHelper.isAllZerosAddress(serverBoundAddress)) {
 				serverBoundAddress = 

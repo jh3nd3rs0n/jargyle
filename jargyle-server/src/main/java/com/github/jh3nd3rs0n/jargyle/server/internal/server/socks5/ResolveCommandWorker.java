@@ -8,9 +8,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
+import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
 import com.github.jh3nd3rs0n.jargyle.server.Rule;
 import com.github.jh3nd3rs0n.jargyle.server.RuleContext;
+import com.github.jh3nd3rs0n.jargyle.transport.socks5.Address;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Reply;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Reply;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Request;
@@ -35,7 +37,7 @@ final class ResolveCommandWorker extends CommandWorker {
 		Socks5Reply socks5Rep = null;		
 		try {
 			inetAddress = hostResolver.resolve(
-					this.getDesiredDestinationAddress());
+					this.getDesiredDestinationAddress().toString());
 		} catch (UnknownHostException e) {
 			this.logger.error( 
 					ObjectLogMessageHelper.objectLogMessage(
@@ -55,10 +57,10 @@ final class ResolveCommandWorker extends CommandWorker {
 			return;
 		}
 		String serverBoundAddress = inetAddress.getHostAddress();
-		int serverBoundPort = this.getDesiredDestinationPort();
+		Port serverBoundPort = this.getDesiredDestinationPort();
 		socks5Rep = Socks5Reply.newInstance(
 				Reply.SUCCEEDED, 
-				serverBoundAddress, 
+				Address.newInstance(serverBoundAddress), 
 				serverBoundPort);
 		RuleContext ruleContext = this.newSocks5ReplyRuleContext(socks5Rep);
 		this.setRuleContext(ruleContext);

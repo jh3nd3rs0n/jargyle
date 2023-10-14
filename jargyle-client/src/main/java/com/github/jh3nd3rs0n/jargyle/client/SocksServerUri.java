@@ -21,7 +21,7 @@ public abstract class SocksServerUri {
 		if (schemeProperty == null) {
 			return null;
 		}
-		Scheme scheme = Scheme.valueOfString(schemeProperty);
+		Scheme scheme = SchemeConstants.valueOfString(schemeProperty);
 		String hostProperty = System.getProperty("socksServerUri.host");
 		if (hostProperty == null) {
 			return null;
@@ -52,7 +52,7 @@ public abstract class SocksServerUri {
 		if (scheme == null) {
 			throw new IllegalArgumentException(message);
 		}
-		Scheme schm = Scheme.valueOfString(scheme);
+		Scheme schm = SchemeConstants.valueOfString(scheme);
 		String host = uri.getHost();
 		if (host == null) {
 			throw new IllegalArgumentException(message);

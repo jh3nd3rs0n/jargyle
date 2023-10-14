@@ -13,7 +13,7 @@ import com.github.jh3nd3rs0n.argmatey.ArgMatey.OptionType;
 import com.github.jh3nd3rs0n.argmatey.ArgMatey.OptionUsageParams;
 import com.github.jh3nd3rs0n.argmatey.ArgMatey.OptionUsageProvider;
 import com.github.jh3nd3rs0n.argmatey.ArgMatey.TerminationRequestedException;
-import com.github.jh3nd3rs0n.jargyle.client.Scheme;
+import com.github.jh3nd3rs0n.jargyle.client.SchemeConstants;
 import com.github.jh3nd3rs0n.jargyle.common.net.StandardSocketSettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.HelpText;
@@ -455,7 +455,7 @@ public abstract class ServerConfigurationCLI extends CLI {
 		System.out.println("  LOG_ACTIONS:");
 		this.printHelpText(LogAction.class);
 		System.out.println("  SCHEMES:");
-		this.printHelpText(Scheme.class);
+		this.printHelpText(SchemeConstants.class);
 		System.out.println("  SELECTION_STRATEGIES:");
 		this.printHelpText(SelectionStrategySpecConstants.class);
 		System.out.println("  SOCKET_SETTINGS:");

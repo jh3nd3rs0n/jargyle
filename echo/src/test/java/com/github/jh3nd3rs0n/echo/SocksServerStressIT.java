@@ -10,7 +10,7 @@ import org.junit.Test;
 import com.github.jh3nd3rs0n.jargyle.client.DtlsPropertySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
 import com.github.jh3nd3rs0n.jargyle.client.Properties;
-import com.github.jh3nd3rs0n.jargyle.client.Scheme;
+import com.github.jh3nd3rs0n.jargyle.client.SchemeConstants;
 import com.github.jh3nd3rs0n.jargyle.client.Socks5PropertySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
 import com.github.jh3nd3rs0n.jargyle.client.SslPropertySpecConstants;
@@ -143,7 +143,7 @@ public class SocksServerStressIT {
 	}
 	
 	private static SocksClient newSocks5Client() {
-		return Scheme.SOCKS5.newSocksServerUri(
+		return SchemeConstants.SOCKS5.newSocksServerUri(
 				InetAddress.getLoopbackAddress().getHostAddress(), 
 				Integer.valueOf(SOCKS_SERVER_PORT))
 				.newSocksClient(Properties.newInstance());
@@ -159,7 +159,7 @@ public class SocksServerStressIT {
 						username),
 				Socks5PropertySpecConstants.SOCKS5_USERPASSAUTH_PASSWORD.newProperty(
 						EncryptedPassword.newInstance(password)));
-		return Scheme.SOCKS5.newSocksServerUri(
+		return SchemeConstants.SOCKS5.newSocksServerUri(
 				InetAddress.getLoopbackAddress().getHostAddress(), 
 				Integer.valueOf(SOCKS_SERVER_PORT_USING_SOCKS5_USERPASSAUTH))
 				.newSocksClient(properties);		
@@ -179,7 +179,7 @@ public class SocksServerStressIT {
 						TestResourceConstants.ECHO_SOCKS_SERVER_KEY_STORE_FILE.getFile()),
 				SslPropertySpecConstants.SSL_TRUST_STORE_PASSWORD.newPropertyOfParsableValue(
 						TestResourceConstants.ECHO_SOCKS_SERVER_KEY_STORE_PASSWORD_FILE.getContentAsString()));
-		return Scheme.SOCKS5.newSocksServerUri(
+		return SchemeConstants.SOCKS5.newSocksServerUri(
 				InetAddress.getLoopbackAddress().getHostAddress(), 
 				Integer.valueOf(SOCKS_SERVER_PORT_USING_SSL))
 				.newSocksClient(properties);
@@ -207,7 +207,7 @@ public class SocksServerStressIT {
 						username),
 				Socks5PropertySpecConstants.SOCKS5_USERPASSAUTH_PASSWORD.newProperty(
 						EncryptedPassword.newInstance(password)));
-		return Scheme.SOCKS5.newSocksServerUri(
+		return SchemeConstants.SOCKS5.newSocksServerUri(
 				InetAddress.getLoopbackAddress().getHostAddress(), 
 				Integer.valueOf(SOCKS_SERVER_PORT_USING_SSL_AND_SOCKS5_USERPASSAUTH))
 				.newSocksClient(properties);		

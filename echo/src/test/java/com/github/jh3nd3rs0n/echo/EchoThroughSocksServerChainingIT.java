@@ -15,7 +15,7 @@ import org.junit.Test;
 
 import com.github.jh3nd3rs0n.jargyle.client.DtlsPropertySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.client.Properties;
-import com.github.jh3nd3rs0n.jargyle.client.Scheme;
+import com.github.jh3nd3rs0n.jargyle.client.SchemeConstants;
 import com.github.jh3nd3rs0n.jargyle.client.Socks5PropertySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
 import com.github.jh3nd3rs0n.jargyle.client.SslPropertySpecConstants;
@@ -80,14 +80,14 @@ public class EchoThroughSocksServerChainingIT {
 						GeneralSettingSpecConstants.PORT.newSetting(
 								Port.newInstance(CHAINED_SOCKS_SERVER_PORT_1)),
 						ChainingGeneralSettingSpecConstants.CHAINING_SOCKS_SERVER_URI.newSetting(
-								Scheme.SOCKS5.newSocksServerUri(
+								SchemeConstants.SOCKS5.newSocksServerUri(
 										InetAddress.getLoopbackAddress().getHostAddress(), 
 										Integer.valueOf(CHAINED_SOCKS_SERVER_PORT_2))))),
 				Configuration.newUnmodifiableInstance(Settings.newInstance(
 						GeneralSettingSpecConstants.PORT.newSetting(
 								Port.newInstance(CHAINED_SOCKS_SERVER_PORT_2)),
 						ChainingGeneralSettingSpecConstants.CHAINING_SOCKS_SERVER_URI.newSetting(
-								Scheme.SOCKS5.newSocksServerUri(
+								SchemeConstants.SOCKS5.newSocksServerUri(
 										InetAddress.getLoopbackAddress().getHostAddress(), 
 										Integer.valueOf(CHAINED_SOCKS_SERVER_PORT_3))))),
 				Configuration.newUnmodifiableInstance(Settings.newInstance(
@@ -106,7 +106,7 @@ public class EchoThroughSocksServerChainingIT {
 								new StringSourceUserRepository(
 										"Aladdin:opensesame")),
 						ChainingGeneralSettingSpecConstants.CHAINING_SOCKS_SERVER_URI.newSetting(
-								Scheme.SOCKS5.newSocksServerUri(
+								SchemeConstants.SOCKS5.newSocksServerUri(
 										InetAddress.getLoopbackAddress().getHostAddress(), 
 										Integer.valueOf(CHAINED_SOCKS_SERVER_PORT_2_USING_SOCKS5_USERPASSAUTH))),
 						ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_METHODS.newSetting(
@@ -124,7 +124,7 @@ public class EchoThroughSocksServerChainingIT {
 								new StringSourceUserRepository(
 										"Jasmine:mission%3Aimpossible")),
 						ChainingGeneralSettingSpecConstants.CHAINING_SOCKS_SERVER_URI.newSetting(
-								Scheme.SOCKS5.newSocksServerUri(
+								SchemeConstants.SOCKS5.newSocksServerUri(
 										InetAddress.getLoopbackAddress().getHostAddress(), 
 										Integer.valueOf(CHAINED_SOCKS_SERVER_PORT_3_USING_SOCKS5_USERPASSAUTH))),
 						ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_METHODS.newSetting(
@@ -149,7 +149,7 @@ public class EchoThroughSocksServerChainingIT {
 						GeneralSettingSpecConstants.PORT.newSetting(
 								Port.newInstance(CHAINED_SOCKS_SERVER_PORT_1_USING_SSL)),
 						ChainingGeneralSettingSpecConstants.CHAINING_SOCKS_SERVER_URI.newSetting(
-								Scheme.SOCKS5.newSocksServerUri(
+								SchemeConstants.SOCKS5.newSocksServerUri(
 										InetAddress.getLoopbackAddress().getHostAddress(), 
 										Integer.valueOf(CHAINED_SOCKS_SERVER_PORT_2_USING_SSL))),
 						ChainingDtlsSettingSpecConstants.CHAINING_DTLS_ENABLED.newSetting(Boolean.TRUE),
@@ -178,15 +178,15 @@ public class EchoThroughSocksServerChainingIT {
 	}
 	
 	private static SocksClient newChainedSocks5ClientToConfigurations() {
-		SocksClient client1 = Scheme.SOCKS5.newSocksServerUri(
+		SocksClient client1 = SchemeConstants.SOCKS5.newSocksServerUri(
 				InetAddress.getLoopbackAddress().getHostAddress(), 
 				Integer.valueOf(SOCKS_SERVER_PORT_1))
 				.newSocksClient(Properties.newInstance());
-		SocksClient client2 = Scheme.SOCKS5.newSocksServerUri(
+		SocksClient client2 = SchemeConstants.SOCKS5.newSocksServerUri(
 				InetAddress.getLoopbackAddress().getHostAddress(), 
 				Integer.valueOf(SOCKS_SERVER_PORT_2))
 				.newSocksClient(Properties.newInstance(), client1);
-		SocksClient client3 = Scheme.SOCKS5.newSocksServerUri(
+		SocksClient client3 = SchemeConstants.SOCKS5.newSocksServerUri(
 				InetAddress.getLoopbackAddress().getHostAddress(), 
 				Integer.valueOf(SOCKS_SERVER_PORT_3))
 				.newSocksClient(Properties.newInstance(), client2);
@@ -194,7 +194,7 @@ public class EchoThroughSocksServerChainingIT {
 	}
 	
 	private static SocksClient newChainedSocks5ClientToConfigurationsUsingSocks5Userpassauth() {
-		SocksClient client1 = Scheme.SOCKS5.newSocksServerUri(
+		SocksClient client1 = SchemeConstants.SOCKS5.newSocksServerUri(
 				InetAddress.getLoopbackAddress().getHostAddress(), 
 				Integer.valueOf(SOCKS_SERVER_PORT_1_USING_SOCKS5_USERPASSAUTH))
 				.newSocksClient(Properties.newInstance(
@@ -205,7 +205,7 @@ public class EchoThroughSocksServerChainingIT {
 						Socks5PropertySpecConstants.SOCKS5_USERPASSAUTH_PASSWORD.newProperty(
 								EncryptedPassword.newInstance(
 										"opensesame".toCharArray()))));
-		SocksClient client2 = Scheme.SOCKS5.newSocksServerUri(
+		SocksClient client2 = SchemeConstants.SOCKS5.newSocksServerUri(
 				InetAddress.getLoopbackAddress().getHostAddress(), 
 				Integer.valueOf(SOCKS_SERVER_PORT_2_USING_SOCKS5_USERPASSAUTH))
 				.newSocksClient(Properties.newInstance(
@@ -217,7 +217,7 @@ public class EchoThroughSocksServerChainingIT {
 								EncryptedPassword.newInstance(
 										"mission:impossible".toCharArray()))), 
 						client1);
-		SocksClient client3 = Scheme.SOCKS5.newSocksServerUri(
+		SocksClient client3 = SchemeConstants.SOCKS5.newSocksServerUri(
 				InetAddress.getLoopbackAddress().getHostAddress(), 
 				Integer.valueOf(SOCKS_SERVER_PORT_3_USING_SOCKS5_USERPASSAUTH))
 				.newSocksClient(Properties.newInstance(
@@ -233,11 +233,11 @@ public class EchoThroughSocksServerChainingIT {
 	}
 	
 	private static SocksClient newChainedSocks5ClientToConfigurationsUsingSsl() {
-		SocksClient client1 = Scheme.SOCKS5.newSocksServerUri(
+		SocksClient client1 = SchemeConstants.SOCKS5.newSocksServerUri(
 				InetAddress.getLoopbackAddress().getHostAddress(), 
 				Integer.valueOf(SOCKS_SERVER_PORT_1_USING_SSL))
 				.newSocksClient(Properties.newInstance());
-		SocksClient client2 = Scheme.SOCKS5.newSocksServerUri(
+		SocksClient client2 = SchemeConstants.SOCKS5.newSocksServerUri(
 				InetAddress.getLoopbackAddress().getHostAddress(), 
 				Integer.valueOf(SOCKS_SERVER_PORT_2_USING_SSL))
 				.newSocksClient(Properties.newInstance(
@@ -319,14 +319,14 @@ public class EchoThroughSocksServerChainingIT {
 	}
 	
 	private static SocksClient newSocks5ClientToChainedConfigurations() {
-		return Scheme.SOCKS5.newSocksServerUri(
+		return SchemeConstants.SOCKS5.newSocksServerUri(
 				InetAddress.getLoopbackAddress().getHostAddress(), 
 				Integer.valueOf(CHAINED_SOCKS_SERVER_PORT_1))
 				.newSocksClient(Properties.newInstance());
 	}
 	
 	private static SocksClient newSocks5ClientToChainedConfigurationsUsingSocks5Userpassauth() {
-		return Scheme.SOCKS5.newSocksServerUri(
+		return SchemeConstants.SOCKS5.newSocksServerUri(
 				InetAddress.getLoopbackAddress().getHostAddress(), 
 				Integer.valueOf(CHAINED_SOCKS_SERVER_PORT_1_USING_SOCKS5_USERPASSAUTH))
 				.newSocksClient(Properties.newInstance(
@@ -340,7 +340,7 @@ public class EchoThroughSocksServerChainingIT {
 	}
 	
 	private static SocksClient newSocks5ClientToChainedConfigurationsUsingSsl() {
-		return Scheme.SOCKS5.newSocksServerUri(
+		return SchemeConstants.SOCKS5.newSocksServerUri(
 				InetAddress.getLoopbackAddress().getHostAddress(), 
 				Integer.valueOf(CHAINED_SOCKS_SERVER_PORT_1_USING_SSL))
 				.newSocksClient(Properties.newInstance());

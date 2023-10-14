@@ -11,7 +11,7 @@ import org.junit.Test;
 
 import com.github.jh3nd3rs0n.jargyle.client.DtlsPropertySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.client.Properties;
-import com.github.jh3nd3rs0n.jargyle.client.Scheme;
+import com.github.jh3nd3rs0n.jargyle.client.SchemeConstants;
 import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
 import com.github.jh3nd3rs0n.jargyle.client.SslPropertySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
@@ -126,7 +126,7 @@ public class EchoThroughSocksServerUsingSslIT {
 						TestResourceConstants.ECHO_SOCKS_SERVER_KEY_STORE_FILE.getFile()),
 				SslPropertySpecConstants.SSL_TRUST_STORE_PASSWORD.newPropertyOfParsableValue(
 						TestResourceConstants.ECHO_SOCKS_SERVER_KEY_STORE_PASSWORD_FILE.getContentAsString()));
-		return Scheme.SOCKS5.newSocksServerUri(
+		return SchemeConstants.SOCKS5.newSocksServerUri(
 				InetAddress.getLoopbackAddress().getHostAddress(), 
 				SOCKS_SERVER_PORT_USING_SSL)
 				.newSocksClient(properties);
@@ -153,7 +153,7 @@ public class EchoThroughSocksServerUsingSslIT {
 						TestResourceConstants.ECHO_SOCKS_SERVER_KEY_STORE_FILE.getFile()),
 				SslPropertySpecConstants.SSL_TRUST_STORE_PASSWORD.newPropertyOfParsableValue(
 						TestResourceConstants.ECHO_SOCKS_SERVER_KEY_STORE_PASSWORD_FILE.getContentAsString()));
-		return Scheme.SOCKS5.newSocksServerUri(
+		return SchemeConstants.SOCKS5.newSocksServerUri(
 				InetAddress.getLoopbackAddress().getHostAddress(), 
 				SOCKS_SERVER_PORT_USING_SSL_AND_REQUESTED_CLIENT_AUTH)
 				.newSocksClient(properties);
@@ -180,7 +180,7 @@ public class EchoThroughSocksServerUsingSslIT {
 						TestResourceConstants.ECHO_SOCKS_SERVER_KEY_STORE_FILE.getFile()),
 				SslPropertySpecConstants.SSL_TRUST_STORE_PASSWORD.newPropertyOfParsableValue(
 						TestResourceConstants.ECHO_SOCKS_SERVER_KEY_STORE_PASSWORD_FILE.getContentAsString()));
-		return Scheme.SOCKS5.newSocksServerUri(
+		return SchemeConstants.SOCKS5.newSocksServerUri(
 				InetAddress.getLoopbackAddress().getHostAddress(), 
 				SOCKS_SERVER_PORT_USING_SSL_AND_REQUIRED_CLIENT_AUTH)
 				.newSocksClient(properties);

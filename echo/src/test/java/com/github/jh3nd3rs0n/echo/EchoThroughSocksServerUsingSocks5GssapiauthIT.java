@@ -16,7 +16,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.github.jh3nd3rs0n.jargyle.client.Properties;
-import com.github.jh3nd3rs0n.jargyle.client.Scheme;
+import com.github.jh3nd3rs0n.jargyle.client.SchemeConstants;
 import com.github.jh3nd3rs0n.jargyle.client.Socks5PropertySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
@@ -97,7 +97,7 @@ public class EchoThroughSocksServerUsingSocks5GssapiauthIT {
 						protectionLevels),
 				Socks5PropertySpecConstants.SOCKS5_GSSAPIAUTH_NEC_REFERENCE_IMPL.newProperty(
 						Boolean.valueOf(false)));
-		return Scheme.SOCKS5.newSocksServerUri(
+		return SchemeConstants.SOCKS5.newSocksServerUri(
 				InetAddress.getLoopbackAddress().getHostAddress(), 
 				SOCKS_SERVER_PORT_USING_SOCKS5_GSSAPIAUTH)
 				.newSocksClient(properties);		
@@ -114,7 +114,7 @@ public class EchoThroughSocksServerUsingSocks5GssapiauthIT {
 						protectionLevels),
 				Socks5PropertySpecConstants.SOCKS5_GSSAPIAUTH_NEC_REFERENCE_IMPL.newProperty(
 						Boolean.valueOf(true)));
-		return Scheme.SOCKS5.newSocksServerUri(
+		return SchemeConstants.SOCKS5.newSocksServerUri(
 				InetAddress.getLoopbackAddress().getHostAddress(), 
 				SOCKS_SERVER_PORT_USING_SOCKS5_GSSAPIAUTH_NEC_REFERENCE_IMPL)
 				.newSocksClient(properties);		

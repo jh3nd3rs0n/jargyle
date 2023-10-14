@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -196,6 +197,25 @@ abstract class MethodSubnegotiator {
 		}
 		
 	}
+	
+	private static final class MethodSubnegotiators {
+		
+		private final Map<Method, MethodSubnegotiator> methodSubnegotiatorsMap;
+		
+		public MethodSubnegotiators() {
+			this.methodSubnegotiatorsMap = 
+					new HashMap<Method, MethodSubnegotiator>();
+		}
+		
+		public void add(final MethodSubnegotiator value) {
+			this.methodSubnegotiatorsMap.put(value.getMethod(), value);
+		}
+		
+		public Map<Method, MethodSubnegotiator> toMap() {
+			return Collections.unmodifiableMap(this.methodSubnegotiatorsMap);
+		}
+		
+	}
 
 	private static final class NoAcceptableMethodsMethodSubnegotiator 
 		extends MethodSubnegotiator {
@@ -269,39 +289,26 @@ abstract class MethodSubnegotiator {
 		
 	}
 	
-	private static final Map<Method, MethodSubnegotiator> METHOD_SUBNEGOTIATOR_MAP;
+	private static final Map<Method, MethodSubnegotiator> METHOD_SUBNEGOTIATORS_MAP;
 	
 	static {
-		METHOD_SUBNEGOTIATOR_MAP = new HashMap<Method, MethodSubnegotiator>();
-		MethodSubnegotiator gssapiMethodSubnegotiator = 
-				new GssapiMethodSubnegotiator();
-		METHOD_SUBNEGOTIATOR_MAP.put(
-				gssapiMethodSubnegotiator.getMethod(), 
-				gssapiMethodSubnegotiator);
-		MethodSubnegotiator noAcceptableMethodsMethodSubnegotiator =
-				new NoAcceptableMethodsMethodSubnegotiator();
-		METHOD_SUBNEGOTIATOR_MAP.put(
-				noAcceptableMethodsMethodSubnegotiator.getMethod(),
-				noAcceptableMethodsMethodSubnegotiator);
-		MethodSubnegotiator noAuthenticationRequiredMethodSubnegotiator =
-				new NoAuthenticationRequiredMethodSubnegotiator();
-		METHOD_SUBNEGOTIATOR_MAP.put(
-				noAuthenticationRequiredMethodSubnegotiator.getMethod(),
-				noAuthenticationRequiredMethodSubnegotiator);
-		MethodSubnegotiator usernamePasswordMethodSubnegotiator =
-				new UsernamePasswordMethodSubnegotiator();
-		METHOD_SUBNEGOTIATOR_MAP.put(
-				usernamePasswordMethodSubnegotiator.getMethod(),
-				usernamePasswordMethodSubnegotiator);
+		MethodSubnegotiators methodSubnegotiators = new MethodSubnegotiators();
+		methodSubnegotiators.add(new GssapiMethodSubnegotiator());
+		methodSubnegotiators.add(new NoAcceptableMethodsMethodSubnegotiator());
+		methodSubnegotiators.add(
+				new NoAuthenticationRequiredMethodSubnegotiator());
+		methodSubnegotiators.add(new UsernamePasswordMethodSubnegotiator());
+		METHOD_SUBNEGOTIATORS_MAP = new HashMap<Method, MethodSubnegotiator>(
+				methodSubnegotiators.toMap());
 	}
 	
 	public static MethodSubnegotiator getInstance(final Method meth) {
-		MethodSubnegotiator methodSubnegotiator = METHOD_SUBNEGOTIATOR_MAP.get(
+		MethodSubnegotiator methodSubnegotiator = METHOD_SUBNEGOTIATORS_MAP.get(
 				meth);
 		if (methodSubnegotiator != null) {
 			return methodSubnegotiator;
 		}
-		String str = METHOD_SUBNEGOTIATOR_MAP.keySet().stream()
+		String str = METHOD_SUBNEGOTIATORS_MAP.keySet().stream()
 				.map(Method::toString)
 				.collect(Collectors.joining(", "));
 		throw new IllegalArgumentException(String.format(

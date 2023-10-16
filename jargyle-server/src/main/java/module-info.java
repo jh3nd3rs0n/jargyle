@@ -14,4 +14,6 @@ module com.github.jh3nd3rs0n.jargyle.server {
 	// export Pbkdf2WithHmacSha256HashedPassword to Pbkdf2WithHmacSha256HashedPasswordTest
 	exports com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.internal.hashedpass.impl to com.github.jh3nd3rs0n.jargyle.server.test.socks5.userpassauth.internal.hashedpass.impl;
 	exports com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.userrepo.impl;
+	// export UsersCsvTableConversionHelper to UsersCsvTableConversionHelperTest
+	exports com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.userrepo.impl.internal.users.csv.bind to com.github.jh3nd3rs0n.jargyle.server.test.socks5.userpassauth.userrepo.impl.internal.users.csv.bind;
 }

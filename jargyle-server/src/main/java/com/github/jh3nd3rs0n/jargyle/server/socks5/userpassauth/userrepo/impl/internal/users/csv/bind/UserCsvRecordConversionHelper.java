@@ -10,7 +10,7 @@ final class UserCsvRecordConversionHelper {
 	
 	public static User newUserFrom(
 			final CsvFileReader csvFileReader) throws IOException {
-		List<String> fields = csvFileReader.nextRecord();
+		List<String> fields = csvFileReader.readRecord();
 		if (fields.size() == 0) {
 			return null;
 		}

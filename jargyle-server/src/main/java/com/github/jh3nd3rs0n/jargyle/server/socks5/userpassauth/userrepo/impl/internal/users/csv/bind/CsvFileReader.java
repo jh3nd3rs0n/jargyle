@@ -33,14 +33,6 @@ final class CsvFileReader {
 		}
 	}
 	
-	public String getField() {
-		return this.field;
-	}
-	
-	public String getLineSeparator() {
-		return this.lineSeparator;
-	}
-	
 	private void initialize() {
 		this.chr = -1;
 		this.escapedTextEndIndex = -1;
@@ -54,46 +46,6 @@ final class CsvFileReader {
 		this.isWithinNonescapedTextOrImmediatelyAfterEscapedText = false;
 		this.lineSeparator = null;
 		this.stringBuilder = null;
-	}
-	
-	public void next() throws IOException {
-		this.initialize();
-		while ((this.chr = this.reader.read()) != -1) {
-			this.createStringBuilderIfNotCreated();
-			this.index++;
-			this.updateConditions();
-			char ch = (char) this.chr;
-			if (ch == ',' && this.isWithinNonescapedTextOrImmediatelyAfterEscapedText) {
-				this.onNonescapedCommaCharacter();
-				return;
-			} else if (ch == '\r' && this.isWithinNonescapedTextOrImmediatelyAfterEscapedText) {
-				this.onNonescapedCarriageReturnCharacter();
-				return;
-			} else if (ch == '\n' && this.isWithinNonescapedTextOrImmediatelyAfterEscapedText) {
-				this.onNonescapedLineFeedCharacter();
-				return;
-			} else {
-				if (ch == '\"') {
-					this.onDoubleQuoteCharacter();
-				}
-				this.stringBuilder.append(ch);
-			}
-		}
-		this.onEndOfReader();		
-	}
-	
-	public List<String> nextRecord() throws IOException {
-		List<String> fields = new ArrayList<String>();
-		while (true) {
-			this.next();
-			if (this.field != null) {
-				fields.add(this.field);
-			}
-			if (this.field == null || this.lineSeparator != null) {
-				break;
-			}
-		}
-		return Collections.unmodifiableList(fields);
 	}
 	
 	private void onDoubleQuoteCharacter() throws IOException {
@@ -152,7 +104,7 @@ final class CsvFileReader {
 			char c = (char) this.chr;
 			if (c == '\n') {
 				this.lineSeparator = new String(new char[] { ch, c });
-				this.removeEnclosedDoubleQuoteCharacters();						
+				this.removeEnclosingDoubleQuoteCharacters();						
 				this.field = this.stringBuilder.toString();
 				this.stringBuilder.delete(0, this.stringBuilder.length());
 				this.stringBuilder = null;
@@ -168,7 +120,7 @@ final class CsvFileReader {
 	
 	private void onNonescapedCommaCharacter() throws IOException {
 		this.lineSeparator = null;
-		this.removeEnclosedDoubleQuoteCharacters();
+		this.removeEnclosingDoubleQuoteCharacters();
 		this.field = this.stringBuilder.toString();
 		this.stringBuilder.delete(0, this.stringBuilder.length());
 	}
@@ -176,14 +128,50 @@ final class CsvFileReader {
 	private void onNonescapedLineFeedCharacter() throws IOException {
 		char ch = (char) this.chr;
 		this.lineSeparator = new String(new char[] { ch });
-		this.removeEnclosedDoubleQuoteCharacters();						
+		this.removeEnclosingDoubleQuoteCharacters();						
 		this.field = this.stringBuilder.toString();
 		this.stringBuilder.delete(0, this.stringBuilder.length());
 		this.stringBuilder = null;
-		return;
 	}
 	
-	private void removeEnclosedDoubleQuoteCharacters() {
+	private void read() throws IOException {
+		this.initialize();
+		while ((this.chr = this.reader.read()) != -1) {
+			this.createStringBuilderIfNotCreated();
+			this.index++;
+			this.updateConditions();
+			char ch = (char) this.chr;
+			if (ch == ',' && this.isWithinNonescapedTextOrImmediatelyAfterEscapedText) {
+				this.onNonescapedCommaCharacter();
+				return;
+			} else if (ch == '\r' && this.isWithinNonescapedTextOrImmediatelyAfterEscapedText) {
+				this.onNonescapedCarriageReturnCharacter();
+				return;
+			} else if (ch == '\n' && this.isWithinNonescapedTextOrImmediatelyAfterEscapedText) {
+				this.onNonescapedLineFeedCharacter();
+				return;
+			} else {
+				if (ch == '\"') {
+					this.onDoubleQuoteCharacter();
+				}
+				this.stringBuilder.append(ch);
+			}
+		}
+		this.onEndOfReader();		
+	}
+	
+	public List<String> readRecord() throws IOException {
+		List<String> fields = new ArrayList<String>();
+		do {
+			this.read();
+			if (this.field != null) {
+				fields.add(this.field);
+			}
+		} while (this.field != null && this.lineSeparator == null);
+		return Collections.unmodifiableList(fields);
+	}
+	
+	private void removeEnclosingDoubleQuoteCharacters() {
 		if (this.isImmediatelyAfterEscapedText) {
 			String substring = this.stringBuilder.substring(
 					this.escapedTextStartIndex + 1, this.escapedTextEndIndex);

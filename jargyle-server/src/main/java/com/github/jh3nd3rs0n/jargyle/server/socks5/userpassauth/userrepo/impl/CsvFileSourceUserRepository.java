@@ -25,7 +25,7 @@ import com.github.jh3nd3rs0n.jargyle.server.internal.io.FileStatusListener;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.User;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.UserRepository;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.Users;
-import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.userrepo.impl.internal.users.csv.bind.UsersCsvTableConversionHelper;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.userrepo.impl.internal.users.csv.bind.UsersCsvFileConversionHelper;
 
 public final class CsvFileSourceUserRepository extends UserRepository {
 	
@@ -96,7 +96,7 @@ public final class CsvFileSourceUserRepository extends UserRepository {
 		Users users = null;
 		try {
 			reader = new InputStreamReader(new FileInputStream(csvFile));
-			users = UsersCsvTableConversionHelper.newUsersFrom(reader);
+			users = UsersCsvFileConversionHelper.newUsersFrom(reader);
 		} catch (FileNotFoundException e) {
 			throw new UncheckedIOException(e);
 		} catch (IOException e) {
@@ -121,7 +121,7 @@ public final class CsvFileSourceUserRepository extends UserRepository {
 		Writer writer = null;
 		try {
 			writer = new OutputStreamWriter(new FileOutputStream(tempCsvFile));
-			UsersCsvTableConversionHelper.toCsvTable(users, writer);
+			UsersCsvFileConversionHelper.toCsvFile(users, writer);
 		} catch (FileNotFoundException e) {
 			throw new UncheckedIOException(e);
 		} catch (IOException e) {

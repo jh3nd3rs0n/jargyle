@@ -10,9 +10,9 @@ import org.junit.Test;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.HashedPassword;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.User;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.Users;
-import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.userrepo.impl.internal.users.csv.bind.UsersCsvTableConversionHelper;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.userrepo.impl.internal.users.csv.bind.UsersCsvFileConversionHelper;
 
-public class UsersCsvTableConversionHelperTest {
+public class UsersCsvFileConversionHelperTest {
 
 	@Test
 	public void test() throws IOException {
@@ -28,22 +28,40 @@ public class UsersCsvTableConversionHelperTest {
 				User.newInstance("Abu", HashedPassword.newInstance("com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.internal.hashedpass.impl.Pbkdf2WithHmacSha256HashedPassword:ycdKuXCehif76Kv4a5TC9tYun5DdibqTOjKmqNv7bJU=;SaTI6PwS6WE=")),
 				User.newInstance("Jafar", HashedPassword.newInstance("com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.internal.hashedpass.impl.Pbkdf2WithHmacSha256HashedPassword:Qaht9FcEqjEtwbBADurB5Swt5eKg6LNQ9Hl9FnUT4kw=;jIBPXJxqlMk=")));
 		StringReader reader = new StringReader(string);
-		Users actualUsers = UsersCsvTableConversionHelper.newUsersFrom(reader);
+		Users actualUsers = UsersCsvFileConversionHelper.newUsersFrom(reader);
 		assertEquals(expectedUsers, actualUsers);
+	}
+	
+	@Test
+	public void testWithDifferentLineEndings() throws IOException {
+		String string = new StringBuilder()
+				.append("Aladdin,com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.internal.hashedpass.impl.Pbkdf2WithHmacSha256HashedPassword:bTORKdLBo2nUSOSaQXi5tIKFvxeurm+Bzm6F/VwQERo=;mGvQZmPl/q4=\r\n")
+				.append("Jasmine,com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.internal.hashedpass.impl.Pbkdf2WithHmacSha256HashedPassword:c5/RXb2EC0eqVWP5kAIuS0d78Z7O3K49OfxcerMupuo=;K+aacLMX4TQ=\n")
+				.append("Abu,com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.internal.hashedpass.impl.Pbkdf2WithHmacSha256HashedPassword:ycdKuXCehif76Kv4a5TC9tYun5DdibqTOjKmqNv7bJU=;SaTI6PwS6WE=\r\n")
+				.append("Jafar,com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.internal.hashedpass.impl.Pbkdf2WithHmacSha256HashedPassword:Qaht9FcEqjEtwbBADurB5Swt5eKg6LNQ9Hl9FnUT4kw=;jIBPXJxqlMk=\n")
+				.toString();
+		Users expectedUsers = Users.newInstance(
+				User.newInstance("Aladdin", HashedPassword.newInstance("com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.internal.hashedpass.impl.Pbkdf2WithHmacSha256HashedPassword:bTORKdLBo2nUSOSaQXi5tIKFvxeurm+Bzm6F/VwQERo=;mGvQZmPl/q4=")),
+				User.newInstance("Jasmine", HashedPassword.newInstance("com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.internal.hashedpass.impl.Pbkdf2WithHmacSha256HashedPassword:c5/RXb2EC0eqVWP5kAIuS0d78Z7O3K49OfxcerMupuo=;K+aacLMX4TQ=")),
+				User.newInstance("Abu", HashedPassword.newInstance("com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.internal.hashedpass.impl.Pbkdf2WithHmacSha256HashedPassword:ycdKuXCehif76Kv4a5TC9tYun5DdibqTOjKmqNv7bJU=;SaTI6PwS6WE=")),
+				User.newInstance("Jafar", HashedPassword.newInstance("com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.internal.hashedpass.impl.Pbkdf2WithHmacSha256HashedPassword:Qaht9FcEqjEtwbBADurB5Swt5eKg6LNQ9Hl9FnUT4kw=;jIBPXJxqlMk=")));
+		StringReader reader = new StringReader(string);
+		Users actualUsers = UsersCsvFileConversionHelper.newUsersFrom(reader);
+		assertEquals(expectedUsers, actualUsers);		
 	}
 	
 	@Test(expected = IOException.class)
 	public void testWithFieldContainingNonescapedCarriageReturnCharacter() throws IOException {
 		String string = "Jafar,com.\rgithub.jh3nd3rs0n.jargyle.server.socks5.userpassauth.internal.hashedpass.impl.Pbkdf2WithHmacSha256HashedPassword:Qaht9FcEqjEtwbBADurB5Swt5eKg6LNQ9Hl9FnUT4kw=;jIBPXJxqlMk=";
 		StringReader reader = new StringReader(string);
-		UsersCsvTableConversionHelper.newUsersFrom(reader);		
+		UsersCsvFileConversionHelper.newUsersFrom(reader);		
 	}
 	
 	@Test(expected = IOException.class)
-	public void testWithFieldContainingNonescapedLineFeedCharacter() throws IOException {
-		String string = "Jaf\nar,com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.internal.hashedpass.impl.Pbkdf2WithHmacSha256HashedPassword:Qaht9FcEqjEtwbBADurB5Swt5eKg6LNQ9Hl9FnUT4kw=;jIBPXJxqlMk=";
+	public void testWithFieldContainingNonescapedDoubleQuoteCharacter() throws IOException {
+		String string = "Jafar\",com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.internal.hashedpass.impl.Pbkdf2WithHmacSha256HashedPassword:Qaht9FcEqjEtwbBADurB5Swt5eKg6LNQ9Hl9FnUT4kw=;jIBPXJxqlMk=";
 		StringReader reader = new StringReader(string);
-		UsersCsvTableConversionHelper.newUsersFrom(reader);
+		UsersCsvFileConversionHelper.newUsersFrom(reader);		
 	}
 	
 	@Test
@@ -52,7 +70,7 @@ public class UsersCsvTableConversionHelperTest {
 		Users expectedUsers = Users.newInstance(
 				User.newInstance("Alad\"din", HashedPassword.newInstance("com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.internal.hashedpass.impl.Pbkdf2WithHmacSha256HashedPassword:bTORKdLBo2nUSOSaQXi5tIKFvxeurm+Bzm6F/VwQERo=;mGvQZmPl/q4=")));
 		StringReader reader = new StringReader(string);
-		Users actualUsers = UsersCsvTableConversionHelper.newUsersFrom(reader);
+		Users actualUsers = UsersCsvFileConversionHelper.newUsersFrom(reader);
 		assertEquals(expectedUsers, actualUsers);
 	}
 	
@@ -70,7 +88,7 @@ public class UsersCsvTableConversionHelperTest {
 				User.newInstance("Abu", HashedPassword.newInstance("com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.internal.hashedpass.impl.Pbkdf2WithHmacSha256HashedPassword:ycdKuXCehif76Kv4a5TC9tYun5DdibqTOjKmqNv7bJU=;SaTI6PwS6WE=")),
 				User.newInstance("Jafar", HashedPassword.newInstance("com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.internal.hashedpass.impl.Pbkdf2WithHmacSha256HashedPassword:Qaht9FcEqjEtwbBADurB5Swt5eKg6LNQ9Hl9FnUT4kw=;jIBPXJxqlMk=")));
 		StringReader reader = new StringReader(string);
-		Users actualUsers = UsersCsvTableConversionHelper.newUsersFrom(reader);
+		Users actualUsers = UsersCsvFileConversionHelper.newUsersFrom(reader);
 		assertEquals(expectedUsers, actualUsers);
 		
 	}
@@ -89,7 +107,7 @@ public class UsersCsvTableConversionHelperTest {
 				User.newInstance("Ab\r\nu", HashedPassword.newInstance("com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.internal.hashedpass.impl.Pbkdf2WithHmacSha256HashedPassword:ycdKuXCehif76Kv4a5TC9tYun5DdibqTOjKmqNv7bJU=;SaTI6PwS6WE=")),
 				User.newInstance("J\r\nafar", HashedPassword.newInstance("com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.internal.hashedpass.impl.Pbkdf2WithHmacSha256HashedPassword:Qaht9FcEqjEtwbBADurB5Swt5eKg6LNQ9Hl9FnUT4kw=;jIBPXJxqlMk=")));
 		StringReader reader = new StringReader(string);
-		Users actualUsers = UsersCsvTableConversionHelper.newUsersFrom(reader);
+		Users actualUsers = UsersCsvFileConversionHelper.newUsersFrom(reader);
 		assertEquals(expectedUsers, actualUsers);
 		
 	}
@@ -98,7 +116,7 @@ public class UsersCsvTableConversionHelperTest {
 	public void testWithIncompleteEscapedField() throws IOException {
 		String string = "Jafar,\"com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.internal.hashedpass.impl.Pbkdf2WithHmacSha256HashedPassword:Qaht9FcEqjEtwbBADurB5Swt5eKg6LNQ9Hl9FnUT4kw=;jIBPXJxqlMk=";
 		StringReader reader = new StringReader(string);
-		UsersCsvTableConversionHelper.newUsersFrom(reader);
+		UsersCsvFileConversionHelper.newUsersFrom(reader);
 	}
 	
 	@Test
@@ -115,7 +133,7 @@ public class UsersCsvTableConversionHelperTest {
 				User.newInstance("Abu", HashedPassword.newInstance("com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.internal.hashedpass.impl.Pbkdf2WithHmacSha256HashedPassword:ycdKuXCehif76Kv4a5TC9tYun5DdibqTOjKmqNv7bJU=;SaTI6PwS6WE=")),
 				User.newInstance("Jafar", HashedPassword.newInstance("com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.internal.hashedpass.impl.Pbkdf2WithHmacSha256HashedPassword:Qaht9FcEqjEtwbBADurB5Swt5eKg6LNQ9Hl9FnUT4kw=;jIBPXJxqlMk=")));
 		StringReader reader = new StringReader(string);
-		Users actualUsers = UsersCsvTableConversionHelper.newUsersFrom(reader);
+		Users actualUsers = UsersCsvFileConversionHelper.newUsersFrom(reader);
 		assertEquals(expectedUsers, actualUsers);		
 	}
 

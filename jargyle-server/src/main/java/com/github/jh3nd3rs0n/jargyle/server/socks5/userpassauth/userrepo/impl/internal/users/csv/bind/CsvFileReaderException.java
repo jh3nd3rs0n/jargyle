@@ -2,11 +2,11 @@ package com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.userrepo.impl.i
 
 import java.io.IOException;
 
-class CsvParserException extends IOException {
+class CsvFileReaderException extends IOException {
 
 	private static final long serialVersionUID = 1L;
 
-	public CsvParserException(String message) {
+	public CsvFileReaderException(String message) {
 		super(message);
 	}
 

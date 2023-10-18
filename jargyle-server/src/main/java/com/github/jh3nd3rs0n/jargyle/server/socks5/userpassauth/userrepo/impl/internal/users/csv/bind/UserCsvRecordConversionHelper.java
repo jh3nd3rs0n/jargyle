@@ -19,27 +19,12 @@ final class UserCsvRecordConversionHelper {
 				fields.get(1));
 		return User.newInstance(name, hashedPassword);
 	}
-
-	private static String toCsvField(final String value) {
-		String field = value;
-		if (field.indexOf('\"') > -1) {
-			field = field.replace("\"", "\"\"");
-		}
-		if (field.indexOf('\"') > -1 
-				|| field.indexOf(',') > -1
-				|| field.indexOf('\r') > -1
-				|| field.indexOf('\n') > -1) {
-			field = String.format("\"%s\"", field);
-		}
-		return field;
-	}
 	
-	public static String toCsvRecord(final User user) {
-		StringBuilder sb = new StringBuilder();
-		sb.append(toCsvField(user.getName()));
-		sb.append(',');
-		sb.append(toCsvField(user.getHashedPassword().toString()));
-		return sb.toString();
+	public static void toCsvRecord(
+			final User user, final CsvFileWriter csvFileWriter) 
+			throws IOException {
+		csvFileWriter.writeRecord(
+				user.getName(), user.getHashedPassword().toString());
 	}
 	
 	private UserCsvRecordConversionHelper() { }

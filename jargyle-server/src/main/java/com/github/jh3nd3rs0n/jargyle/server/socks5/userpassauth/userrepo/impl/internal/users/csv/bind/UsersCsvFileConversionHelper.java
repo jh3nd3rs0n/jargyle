@@ -24,11 +24,9 @@ public final class UsersCsvFileConversionHelper {
 	
 	public static void toCsvFile(
 			final Users users, final Writer writer) throws IOException {
-		String lineSeparator = System.getProperty("line.separator");
+		CsvFileWriter csvFileWriter = new CsvFileWriter(writer);
 		for (User user : users.toMap().values()) {
-			writer.write(UserCsvRecordConversionHelper.toCsvRecord(user));
-			writer.write(lineSeparator);
-			writer.flush();
+			UserCsvRecordConversionHelper.toCsvRecord(user, csvFileWriter);
 		}
 	}
 	

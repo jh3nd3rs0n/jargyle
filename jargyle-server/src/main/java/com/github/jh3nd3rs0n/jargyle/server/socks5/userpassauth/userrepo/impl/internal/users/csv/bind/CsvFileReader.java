@@ -134,7 +134,7 @@ final class CsvFileReader {
 		this.stringBuilder = null;
 	}
 	
-	private void read() throws IOException {
+	private void readField() throws IOException {
 		this.initialize();
 		while ((this.chr = this.reader.read()) != -1) {
 			this.createStringBuilderIfNotCreated();
@@ -163,7 +163,7 @@ final class CsvFileReader {
 	public List<String> readRecord() throws IOException {
 		List<String> fields = new ArrayList<String>();
 		do {
-			this.read();
+			this.readField();
 			if (this.field != null) {
 				fields.add(this.field);
 			}

@@ -48,6 +48,18 @@ final class CsvFileReader {
 		this.stringBuilder = null;
 	}
 	
+	private void onAnyOtherCharacter() throws IOException {
+		if (this.isImmediatelyAfterEscapedText) {
+			throw new CsvFileReaderException(
+					"field containing a double quote character ('\"') "
+					+ "must be escaped in double quotes and the double "
+					+ "quote character inside the field must be escaped by "
+					+ "preceding it with another double quote character");			
+		}
+		char ch = (char) this.chr;
+		this.stringBuilder.append(ch);
+	}
+	
 	private void onDoubleQuoteCharacter() throws IOException {
 		if (this.isWithinNonescapedText && this.index > 0) {
 			throw new CsvFileReaderException(
@@ -154,7 +166,7 @@ final class CsvFileReader {
 				if (ch == '\"') {
 					this.onDoubleQuoteCharacter();
 				}
-				this.stringBuilder.append(ch);
+				this.onAnyOtherCharacter();
 			}
 		}
 		this.onEndOfReader();		

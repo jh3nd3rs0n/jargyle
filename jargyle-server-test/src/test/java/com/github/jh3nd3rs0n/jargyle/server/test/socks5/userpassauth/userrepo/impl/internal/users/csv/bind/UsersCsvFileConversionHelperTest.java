@@ -51,6 +51,20 @@ public class UsersCsvFileConversionHelperTest {
 	}
 	
 	@Test(expected = IOException.class)
+	public void testWithEscapedAndNonEscapedField1() throws IOException {
+		String string = "Jafar,\"com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.internal.hashedpass.impl.Pbkdf2WithHmacSha256HashedPassword\":Qaht9FcEqjEtwbBADurB5Swt5eKg6LNQ9Hl9FnUT4kw=;jIBPXJxqlMk=";
+		StringReader reader = new StringReader(string);
+		UsersCsvFileConversionHelper.newUsersFrom(reader);
+	}
+	
+	@Test(expected = IOException.class)
+	public void testWithEscapedAndNonEscapedField2() throws IOException {
+		String string = "Jafar,com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.internal.hashedpass.impl.Pbkdf2WithHmacSha256HashedPassword:\"Qaht9FcEqjEtwbBADurB5Swt5eKg6LNQ9Hl9FnUT4kw=;jIBPXJxqlMk=\"";
+		StringReader reader = new StringReader(string);
+		UsersCsvFileConversionHelper.newUsersFrom(reader);
+	}
+	
+	@Test(expected = IOException.class)
 	public void testWithFieldContainingNonescapedCarriageReturnCharacter() throws IOException {
 		String string = "Jafar,com.\rgithub.jh3nd3rs0n.jargyle.server.socks5.userpassauth.internal.hashedpass.impl.Pbkdf2WithHmacSha256HashedPassword:Qaht9FcEqjEtwbBADurB5Swt5eKg6LNQ9Hl9FnUT4kw=;jIBPXJxqlMk=";
 		StringReader reader = new StringReader(string);

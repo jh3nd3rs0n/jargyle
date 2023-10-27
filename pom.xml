@@ -7,17 +7,26 @@
 	<artifactId>jargyle</artifactId>
 	<version>5.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	<name>jargyle</name>
+	<name>Jargyle</name>
+	<url>https://jh3nd3rs0n.github.io/jargyle</url>
+	<description>Java SOCKS5 server</description>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.javadoc.skippedModules>
-			echo,jargyle-cli,jargyle-cli-test,jargyle-internal,jargyle-server-test,test-help</maven.javadoc.skippedModules>
+			echo,jargyle-cli,jargyle-cli-test,jargyle-server-test,test-help</maven.javadoc.skippedModules>
 		<sonar.organization>jh3nd3rs0n</sonar.organization>
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 		<sonar.coverage.jacoco.xmlReportPaths>
 			${project.basedir}/jargyle-report-aggregate/target/site/jacoco-aggregate/jacoco.xml
 		</sonar.coverage.jacoco.xmlReportPaths>
+		<docsDirectory>${project.basedir}${file.separator}docs</docsDirectory>
 	</properties>
+	<distributionManagement>
+		<site>
+			<id>docs</id>
+			<url>file://${docsDirectory}</url>
+		</site>
+	</distributionManagement>
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
@@ -132,10 +141,11 @@
 				<plugin>
 					<artifactId>maven-site-plugin</artifactId>
 					<version>3.7.1</version>
-				</plugin>
-				<plugin>
-					<artifactId>maven-project-info-reports-plugin</artifactId>
-					<version>3.0.0</version>
+					<!-- TODO: Remove when documentation is complete -->
+					<configuration>
+						<generateProjectInfo>false</generateProjectInfo>
+						<generateReports>false</generateReports>
+					</configuration>
 				</plugin>
 			</plugins>
 		</pluginManagement>
@@ -146,6 +156,8 @@
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<version>3.5.0</version>
 				<reportSets>
+					<!-- TODO: Uncomment when documentation is complete -->
+					<!--
 					<reportSet>
 						<id>aggregate</id>
 						<inherited>false</inherited>
@@ -153,6 +165,7 @@
 							<report>aggregate</report>
 						</reports>
 					</reportSet>
+					-->
 					<reportSet>
 						<id>default</id>
 						<reports>
@@ -161,12 +174,23 @@
 					</reportSet>
 				</reportSets>
 			</plugin>
+			<plugin>
+				<artifactId>maven-project-info-reports-plugin</artifactId>
+				<version>3.0.0</version>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>index</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
 		</plugins>
 	</reporting>
 	<modules>
+		<module>test-help</module>
 		<module>jargyle-internal</module>
 		<module>jargyle-common</module>
-		<module>test-help</module>
 		<module>jargyle-transport</module>
 		<module>jargyle-client</module>
 		<module>jargyle-server</module>

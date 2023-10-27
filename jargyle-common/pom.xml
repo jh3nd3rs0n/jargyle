@@ -10,6 +10,10 @@
 	</parent>
 	<artifactId>jargyle-common</artifactId>
 	<name>jargyle-common</name>
+	<description></description>
+	<properties>
+		<docsDirectory>${project.basedir}${file.separator}..${file.separator}docs</docsDirectory>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>com.github.jh3nd3rs0n</groupId>
@@ -17,4 +21,31 @@
 			<version>${project.parent.version}</version>
 		</dependency>
 	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-site-plugin</artifactId>
+				<!-- TODO: Remove when documentation and deployment for this module is complete --> 
+				<configuration>
+					<skip>true</skip>
+					<skipDeploy>true</skipDeploy>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	<reporting>
+		<plugins>
+			<plugin>
+				<artifactId>maven-project-info-reports-plugin</artifactId>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>dependencies</report>
+							<report>dependency-info</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
+		</plugins>
+	</reporting>
 </project>

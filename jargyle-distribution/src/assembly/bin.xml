@@ -16,7 +16,6 @@
 			<includes>
 				<include>LICENSE</include>
 				<include>LICENSE_3RD_PARTY</include>
-				<include>README.md</include>
 			</includes>
 		</fileSet>
 		<fileSet>

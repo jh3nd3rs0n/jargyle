@@ -140,9 +140,9 @@
 				</plugin>
 				<plugin>
 					<artifactId>maven-site-plugin</artifactId>
-					<version>3.7.1</version>
-					<!-- TODO: Remove when documentation is complete -->
+					<version>4.0.0-M11</version>
 					<configuration>
+						<!-- TODO: Remove when documentation is complete -->
 						<generateProjectInfo>false</generateProjectInfo>
 						<generateReports>false</generateReports>
 					</configuration>

@@ -1,4 +1,9 @@
-<project>
+<site>
+	<skin>
+		<groupId>org.apache.maven.skins</groupId>
+		<artifactId>maven-fluido-skin</artifactId>
+		<version>2.0.0-M8</version>
+	</skin>
 	<body>
 		<menu name="Overview">
 			<item name="Introduction" href="index.html" />
@@ -14,4 +19,4 @@
 			<item name="Reference" href="reference.html" />
 		</menu>
 	</body>
-</project>
+</site>

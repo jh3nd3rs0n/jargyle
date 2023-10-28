@@ -2,10 +2,10 @@
 
 ## Page Contents
 
--   [String Value Syntaxes](reference.html#String_Value_Syntaxes)
-    -   [Address Range](reference.html#Address_Range)
-    -   [Port Range](reference.html#Port_Range)
--   [The SOCKS5 RESOLVE Command](reference.html#The_SOCKS5_RESOLVE_Command)
+-   [String Value Syntaxes](#string-value-syntaxes)
+    -   [Address Range](#address-range)
+    -   [Port Range](#port-range)
+-   [The SOCKS5 RESOLVE Command](#the-socks5-resolve-command)
 
 ## String Value Syntaxes
 

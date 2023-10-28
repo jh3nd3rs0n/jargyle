@@ -2,32 +2,32 @@
 
 ## Page Contents
 
--   [Enabling SSL/TLS for TCP Traffic Between the Server and Its Clients](server_configuration.html#Enabling_SSL.2FTLS_for_TCP_Traffic_Between_the_Server_and_Its_Clients)
--   [Enabling DTLS for UDP Traffic Between the Server and Its Clients](server_configuration.html#Enabling_DTLS_for_UDP_Traffic_Between_the_Server_and_Its_Clients)
--   [Using SOCKS5 Authentication](server_configuration.html#Using_SOCKS5_Authentication)
-    -   [Using No Authentication](server_configuration.html#Using_No_Authentication)
-    -   [Using Username Password Authentication](server_configuration.html#Using_Username_Password_Authentication)
-    -   [Using GSS-API Authentication](server_configuration.html#Using_GSS-API_Authentication)
--   [Chaining to Another SOCKS Server](server_configuration.html#Chaining_to_Another_SOCKS_Server)
-    -   [Enabling SSL/TLS for TCP Traffic Between the Server and the Other SOCKS Server](server_configuration.html#Enabling_SSL.2FTLS_for_TCP_Traffic_Between_the_Server_and_the_Other_SOCKS_Server)
-    -   [Enabling DTLS for UDP Traffic Between the Server and the Other SOCKS Server](server_configuration.html#Enabling_DTLS_for_UDP_Traffic_Between_the_Server_and_the_Other_SOCKS_Server)
-    -   [Chaining to the Other SOCKS Server Using SOCKS5 Authentication](server_configuration.html#Chaining_to_the_Other_SOCKS_Server_Using_SOCKS5_Authentication)
-        -   [Chaining to the Other SOCKS Server Using No Authentication](server_configuration.html#Chaining_to_the_Other_SOCKS_Server_Using_No_Authentication)
-        -   [Chaining to the Other SOCKS Server Using Username Password Authentication](server_configuration.html#Chaining_to_the_Other_SOCKS_Server_Using_Username_Password_Authentication)
-        -   [Chaining to the Other SOCKS Server Using GSS-API Authentication](server_configuration.html#Chaining_to_the_Other_SOCKS_Server_Using_GSS-API_Authentication)
-    -   [Resolving Host Names From the Other SOCKS5 Server](server_configuration.html#Resolving_Host_Names_From_the_Other_SOCKS5_Server)
--   [Chaining to a Specified Chain of Other SOCKS Servers](server_configuration.html#Chaining_to_a_Specified_Chain_of_Other_SOCKS_Servers)
--   [Chaining to Multiple Specified Chains of Other SOCKS Servers](server_configuration.html#Chaining_to_Multiple_Specified_Chains_of_Other_SOCKS_Servers)
--   [Using Rules to Manage Traffic](server_configuration.html#Using_Rules_to_Manage_Traffic)
-    -   [Rule Conditions](server_configuration.html#Rule_Conditions)
-    -   [Rule Results](server_configuration.html#Rule_Results)
-    -   [Allowing or Denying Traffic](server_configuration.html#Allowing_or_Denying_Traffic)
-    -   [Allowing a Limited Number of Simultaneous Instances of Traffic](server_configuration.html#Allowing_a_Limited_Number_of_Simultaneous_Instances_of_Traffic)
-    -   [Routing Traffic](server_configuration.html#Routing_Traffic)
-    -   [Redirecting the Desired Destination](server_configuration.html#Redirecting_the_Desired_Destination)
-    -   [Configuring Sockets](server_configuration.html#Configuring_Sockets)
-    -   [Configuring Relay Settings](server_configuration.html#Configuring_Relay_Settings)
-    -   [Limiting Relay Bandwidth](server_configuration.html#Limiting_Relay_Bandwidth)
+-   [Enabling SSL/TLS for TCP Traffic Between the Server and Its Clients](#enabling-ssl-tls-for-tcp-traffic-between-the-server-and-its-clients)
+-   [Enabling DTLS for UDP Traffic Between the Server and Its Clients](#enabling-dtls-for-udp-traffic-between-the-server-and-its-clients)
+-   [Using SOCKS5 Authentication](#using-socks5-authentication)
+    -   [Using No Authentication](#using-no-authentication)
+    -   [Using Username Password Authentication](#using-username-password-authentication)
+    -   [Using GSS-API Authentication](#using-gss-api-authentication)
+-   [Chaining to Another SOCKS Server](#chaining-to-another-socks-server)
+    -   [Enabling SSL/TLS for TCP Traffic Between the Server and the Other SOCKS Server](#enabling-ssl-tls-for-tcp-traffic-between-the-server-and-the-other-socks-server)
+    -   [Enabling DTLS for UDP Traffic Between the Server and the Other SOCKS Server](#enabling-dtls-for-udp-traffic-between-the-server-and-the-other-socks-server)
+    -   [Chaining to the Other SOCKS Server Using SOCKS5 Authentication](#chaining-to-the-other-socks-server-using-socks5-authentication)
+        -   [Chaining to the Other SOCKS Server Using No Authentication](#chaining-to-the-other-socks-server-using-no-authentication)
+        -   [Chaining to the Other SOCKS Server Using Username Password Authentication](#chaining-to-the-other-socks-server-using-username-password-authentication)
+        -   [Chaining to the Other SOCKS Server Using GSS-API Authentication](#chaining-to-the-other-socks-server-using-gss-api-authentication)
+    -   [Resolving Host Names From the Other SOCKS5 Server](#resolving-host-names-from-the-other-socks5-server)
+-   [Chaining to a Specified Chain of Other SOCKS Servers](#chaining-to-a-specified-chain-of-other-socks-servers)
+-   [Chaining to Multiple Specified Chains of Other SOCKS Servers](#chaining-to-multiple-specified-chains-of-other-socks-servers)
+-   [Using Rules to Manage Traffic](#using-rules-to-manage-traffic)
+    -   [Rule Conditions](#rule-conditions)
+    -   [Rule Results](#rule-results)
+    -   [Allowing or Denying Traffic](#allowing-or-denying-traffic)
+    -   [Allowing a Limited Number of Simultaneous Instances of Traffic](#allowing-a-limited-number-of-simultaneous-instances-of-traffic)
+    -   [Routing Traffic](#routing-traffic)
+    -   [Redirecting the Desired Destination](#redirecting-the-desired-destination)
+    -   [Configuring Sockets](#configuring-sockets)
+    -   [Configuring Relay Settings](#configuring-relay-settings)
+    -   [Limiting Relay Bandwidth](#limiting-relay-bandwidth)
 
 ## Enabling SSL/TLS for TCP Traffic Between the Server and Its Clients
 
@@ -466,7 +466,7 @@ file are loaded onto memory. Because of this, you will need at least as much
 memory as the size of the CSV file. If the CSV file does not exist, it will be 
 created and used. If the CSV file does exist, the existing CSV file will be 
 used. To manage SOCKS5 users under a user repository, see 
-[Managing SOCKS5 Users](cli.html#Managing_SOCKS5_Users).
+[Managing SOCKS5 Users](cli.html#managing-socks5-users).
 
 Command line example:
 
@@ -1271,7 +1271,7 @@ this UDP socket is called the peer-facing UDP socket.
 
 The server also uses a host resolver to resolve host names for the 
 aforementioned sockets and for 
-[the RESOLVE command](reference.html#The_SOCKS5_RESOLVE_Command).
+[the RESOLVE command](reference.html#the-socks5-resolve-command).
 
 When the server is chained to another SOCKS5 server, the aforementioned sockets 
 that the server uses become SOCKS5-enabled, meaning that their traffic is routed 
@@ -1472,9 +1472,8 @@ You can have the server chained to multiple specified chains of other SOCKS
 servers, meaning that its traffic can be routed through one of the specified 
 chains of other SOCKS servers. To have the server chained to multiple specified 
 chains of other SOCKS servers, you will need to have a route ID assigned at the 
-end of each 
-[chain](server_configuration.html#Chaining_to_a_Specified_Chain_of_Other_SOCKS_Servers) 
-by using the setting `chaining.routeId`
+end of each [chain](#chaining-to-a-specified-chain-of-other-socks-servers) by 
+using the setting `chaining.routeId`
 
 Command line example:
 
@@ -1922,8 +1921,8 @@ In the server configuration file, a rule is expressed as a `<rule/>` XML
 element with a `<ruleConditions/>` XML element and a `<ruleResults/>` XML 
 element. 
 
-See [Rule Conditions](server_configuration.html#Rule_Conditions) and 
-[Rule Results](server_configuration.html#Rule_Results) for more information.
+See [Rule Conditions](#rule-conditions) and [Rule Results](#rule-results) for 
+more information.
 
 To specify a rule, you would need to have the setting `rule` specify the rule. 
 
@@ -2119,7 +2118,7 @@ Partial server configuration file examples:
 ```
 
 A complete listing of rule conditions can be found in the 
-[settings help](cli.html#Settings_Help) under `SETTING VALUE SYNTAXES` > 
+[settings help](cli.html#settings-help) under `SETTING VALUE SYNTAXES` > 
 `GENERAL_RULE_CONDITIONS` and `SETTING VALUE SYNTAXES` > 
 `SOCKS5_RULE_CONDITIONS`.
 
@@ -2162,7 +2161,7 @@ once in the space separated list or in the `<ruleResults/>` XML element, then
 only the last rule result of the same name is recognized.
 
 A complete listing of rule results can be found in the 
-[settings help](cli.html#Settings_Help) under `SETTING VALUE SYNTAXES` > 
+[settings help](cli.html#settings-help) under `SETTING VALUE SYNTAXES` > 
 `GENERAL_RULE_RESULTS` and `SETTING VALUE SYNTAXES` > 
 `SOCKS5_RULE_RESULTS`.
 
@@ -2368,9 +2367,9 @@ To route traffic, you can use the following rule results:
 route (This rule result is optional. If this rule result is not specified, the 
 setting `routeSelectionStrategy` is used.)
 -   `selectableRouteId`: Specifies the ID for a selectable 
-[route](server_configuration.html#Chaining_to_Multiple_Specified_Chains_of_Other_SOCKS_Servers) 
-(This rule result is optional. This rule result can be specified multiple times 
-with each rule result specifying another ID for a selectable route. If this rule 
+[route](#chaining-to-multiple-specified-chains-of-other-socks-servers) (This 
+rule result is optional. This rule result can be specified multiple times with 
+each rule result specifying another ID for a selectable route. If this rule 
 result is not specified, all of the routes defined by the settings 
 `chaining.routeId` and `lastRouteId` are selectable.)
 
@@ -2615,11 +2614,11 @@ To configure the sockets, you will need any of the following rule results:
 
 -   `bindHost`: Specifies the binding host name or address for all sockets 
 -   `bindTcpPortRange`: Specifies a binding 
-[port range](reference.html#Port_Range) for all TCP sockets (This rule result 
+[port range](reference.html#port-range) for all TCP sockets (This rule result 
 can be specified multiple times with each rule result specifying another port 
 range)
 -   `bindUdpPortRange`: Specifies a binding 
-[port range](reference.html#Port_Range) for all UDP sockets (This rule result 
+[port range](reference.html#port-range) for all UDP sockets (This rule result 
 can be specified multiple times with each rule result specifying another port 
 range)
 -   `clientSocketSetting`: Specifies a socket setting for the client socket 
@@ -2628,11 +2627,11 @@ specifying another socket setting)
 -   `externalFacingBindHost`: Specifies the binding host name or address for 
 all external-facing sockets 
 -   `externalFacingBindTcpPortRange`: Specifies a binding 
-[port range](reference.html#Port_Range) for all external-facing TCP sockets 
+[port range](reference.html#port-range) for all external-facing TCP sockets 
 (This rule result can be specified multiple times with each rule result 
 specifying another port range)
 -   `externalFacingBindUdpPortRange`: Specifies a binding 
-[port range](reference.html#Port_Range) for all external-facing UDP sockets 
+[port range](reference.html#port-range) for all external-facing UDP sockets 
 (This rule result can be specified multiple times with each rule result 
 specifying another port range)
 -   `externalFacingSocketSetting`: Specifies a socket setting for all 
@@ -2641,11 +2640,11 @@ each rule result specifying another socket setting)
 -   `internalFacingBindHost`: Specifies the binding host name or address for 
 all internal-facing sockets
 -   `internalFacingBindTcpPortRange`: Specifies a binding 
-[port range](reference.html#Port_Range) for all internal-facing TCP sockets 
+[port range](reference.html#port-range) for all internal-facing TCP sockets 
 (This rule result can be specified multiple times with each rule result 
 specifying another port range)
 -   `internalFacingBindUdpPortRange`: Specifies a binding 
-[port range](reference.html#Port_Range) for all internal-facing UDP sockets 
+[port range](reference.html#port-range) for all internal-facing UDP sockets 
 (This rule result can be specified multiple times with each rule result 
 specifying another port range)
 -   `internalFacingSocketSetting`: Specifies a socket setting for all 
@@ -2660,7 +2659,7 @@ rule result specifying another socket setting)
 -   `socks5.onBind.listenBindHost`: Specifies the binding host name or 
 address for the listen socket if the provided host address is all zeros
 -   `socks5.onBind.listenBindPortRange`: Specifies a binding 
-[port range](reference.html#Port_Range) for the listen socket if the provided 
+[port range](reference.html#port-range) for the listen socket if the provided 
 port is zero (This rule result can be specified multiple times with each rule 
 result specifying another port range)
 -   `socks5.onBind.listenSocketSetting`: Specifies a socket setting for 
@@ -2669,21 +2668,21 @@ rule result specifying another socket setting)
 -   `socks5.onCommand.bindHost`: Specifies the binding host name or address 
 for all sockets 
 -   `socks5.onCommand.bindTcpPortRange`: Specifies a binding 
-[port range](reference.html#Port_Range) for all TCP sockets (This rule result 
+[port range](reference.html#port-range) for all TCP sockets (This rule result 
 can be specified multiple times with each rule result specifying another port 
 range)
 -   `socks5.onCommand.bindUdpPortRange`: Specifies a binding 
-[port range](reference.html#Port_Range) for all UDP sockets (This rule result 
+[port range](reference.html#port-range) for all UDP sockets (This rule result 
 can be specified multiple times with each rule result specifying another port 
 range)
 -   `socks5.onCommand.externalFacingBindHost`: Specifies the binding host 
 name or address for all external-facing sockets 
 -   `socks5.onCommand.externalFacingBindTcpPortRange`: Specifies a 
-binding [port range](reference.html#Port_Range) for all external-facing TCP 
+binding [port range](reference.html#port-range) for all external-facing TCP 
 sockets (This rule result can be specified multiple times with each rule result 
 specifying another port range)
 -   `socks5.onCommand.externalFacingBindUdpPortRange`: Specifies a 
-binding [port range](reference.html#Port_Range) for all external-facing UDP 
+binding [port range](reference.html#port-range) for all external-facing UDP 
 sockets (This rule result can be specified multiple times with each rule result 
 specifying another port range)
 -   `socks5.onCommand.externalFacingSocketSetting`: Specifies a socket 
@@ -2692,11 +2691,11 @@ multiple times with each rule result specifying another socket setting)
 -   `socks5.onCommand.internalFacingBindHost`: Specifies the binding 
 host name or address for all internal-facing sockets
 -   `socks5.onCommand.internalFacingBindTcpPortRange`: Specifies a 
-binding [port range](reference.html#Port_Range) for all internal-facing TCP 
+binding [port range](reference.html#port-range) for all internal-facing TCP 
 sockets (This rule result can be specified multiple times with each rule result 
 specifying another port range)
 -   `socks5.onCommand.internalFacingBindUdpPortRange`: Specifies a 
-binding [port range](reference.html#Port_Range) for all internal-facing UDP 
+binding [port range](reference.html#port-range) for all internal-facing UDP 
 sockets (This rule result can be specified multiple times with each rule result 
 specifying another port range)
 -   `socks5.onCommand.internalFacingSocketSetting`: Specifies a socket 
@@ -2712,7 +2711,7 @@ target host name, and setting the specified timeout on waiting to connect)
 -   `socks5.onConnect.serverFacingBindHost`: Specifies the binding host 
 name or address for the server-facing socket
 -   `socks5.onConnect.serverFacingBindPortRange`: Specifies a binding 
-[port range](reference.html#Port_Range) for the server-facing socket (This rule 
+[port range](reference.html#port-range) for the server-facing socket (This rule 
 result can be specified multiple times with each rule result specifying another 
 port range)
 -   `socks5.onConnect.serverFacingConnectTimeout`: Specifies the timeout 
@@ -2724,7 +2723,7 @@ times with each rule result specifying another socket setting)
 -   `socks5.onUdpAssociate.clientFacingBindHost`: Specifies the binding 
 host name or address for the client-facing UDP socket
 -   `socks5.onUdpAssociate.clientFacingBindPortRange`: Specifies a 
-binding [port range](reference.html#Port_Range) for the client-facing UDP socket 
+binding [port range](reference.html#port-range) for the client-facing UDP socket 
 (This rule result can be specified multiple times with each rule result 
 specifying another port range)
 -   `socks5.onUdpAssociate.clientFacingSocketSetting`: Specifies a 
@@ -2734,7 +2733,7 @@ setting)
 -   `socks5.onUdpAssociate.peerFacingBindHost`: Specifies the binding 
 host name or address for the peer-facing UDP socket
 -   `socks5.onUdpAssociate.peerFacingBindPortRange`: Specifies a 
-binding [port range](reference.html#Port_Range) for the peer-facing UDP socket 
+binding [port range](reference.html#port-range) for the peer-facing UDP socket 
 (This rule result can be specified multiple times with each rule result 
 specifying another port range)
 -   `socks5.onUdpAssociate.peerFacingSocketSetting`: Specifies a socket 

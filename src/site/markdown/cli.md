@@ -2,28 +2,28 @@
 
 ## Page Contents
 
--   [Environment Variables](cli.html#Environment_Variables)
--   [Usage](cli.html#Usage)
-    -   [manage-socks5-users Usage](cli.html#manage-socks5-users_Usage)
-    -   [new-server-config-file Usage](cli.html#new-server-config-file_Usage)
-    -   [start-server Usage](cli.html#start-server_Usage)
-    -   [Settings Help](cli.html#Settings_Help)
--   [Managing SOCKS5 Users](cli.html#Managing_SOCKS5_Users)
-    -   [Adding SOCKS5 Users](cli.html#Adding_SOCKS5_Users)
-    -   [List All SOCKS5 Users](cli.html#List_All_SOCKS5_Users)
-    -   [Removing a SOCKS5 User](cli.html#Removing_a_SOCKS5_User)
--   [Creating a Server Configuration File](cli.html#Creating_a_Server_Configuration_File)
-    -   [Creating a Server Configuration File Supplemented With Command Line Options](cli.html#Creating_a_Server_Configuration_File_Supplemented_With_Command_Line_Options)
-    -   [Creating a Server Configuration File Combined From Server Configuration Files](cli.html#Creating_a_Server_Configuration_File_Combined_From_Server_Configuration_Files)
-    -   [The Doc XML Element](cli.html#The_Doc_XML_Element)
--   [Starting the Server](cli.html#Starting_the_Server)
-    -   [Starting the Server With a Monitored Server Configuration File](cli.html#Starting_the_Server_With_a_Monitored_Server_Configuration_File)
+-   [Environment Variables](#environment-variables)
+-   [Usage](#usage)
+    -   [manage-socks5-users Usage](#manage-socks5-users-usage)
+    -   [new-server-config-file Usage](#new-server-config-file-usage)
+    -   [start-server Usage](#start-server-usage)
+    -   [Settings Help](#settings-help)
+-   [Managing SOCKS5 Users](#managing-socks5-users)
+    -   [Adding SOCKS5 Users](#adding-socks5-users)
+    -   [List All SOCKS5 Users](#list-all-socks5-users)
+    -   [Removing a SOCKS5 User](#removing-a-socks5-user)
+-   [Creating a Server Configuration File](#creating-a-server-configuration-file)
+    -   [Creating a Server Configuration File Supplemented With Command Line Options](#creating-a-server-configuration-file-supplemented-with-command-line-options)
+    -   [Creating a Server Configuration File Combined From Server Configuration Files](#creating-a-server-configuration-file-combined-from-server-configuration-files)
+    -   [The Doc XML Element](#the-doc-xml-element)
+-   [Starting the Server](#starting-the-server)
+    -   [Starting the Server With a Monitored Server Configuration File](#starting-the-server-with-a-monitored-server-configuration-file)
 
 ## Environment Variables
 
 The following are required environment variables Jargyle uses:
 
-`JAVA_HOME`: Java&#8482; home directory
+`JAVA_HOME`: Java home directory
 
 The following are optional environment variables Jargyle uses:
 
@@ -958,7 +958,7 @@ Where `USER_REPOSITORY_CLASS_NAME` is the name of the class that extends
 `com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.UserRepository`,
  `INITIALIZATION_STRING` is the initialization string value, and `COMMAND` 
  is the name of the command described in the 
-[command line help](cli.html#manage-socks5-users_Usage) for the command 
+[command line help](#manage-socks5-users-usage) for the command 
 `manage-socks5-users`.
 
 The following is one provided class you can use for 
@@ -1078,7 +1078,7 @@ To create a server configuration file, you would run the following command:
 ```
 
 Where `[OPTIONS]` are optional command line options described in the 
-[command line help](cli.html#new-server-config-file_Usage) for the command 
+[command line help](#new-server-config-file-usage) for the command 
 `new-server-config-file` and `FILE` is the new server configuration file.
 
 As an example, the following command creates an empty configuration file:

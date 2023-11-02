@@ -15,7 +15,7 @@
 -   [Creating a Server Configuration File](#creating-a-server-configuration-file)
     -   [Creating a Server Configuration File Supplemented With Command Line Options](#creating-a-server-configuration-file-supplemented-with-command-line-options)
     -   [Creating a Server Configuration File Combined From Server Configuration Files](#creating-a-server-configuration-file-combined-from-server-configuration-files)
-    -   [The Doc XML Element](#the-doc-xml-element)
+    -   [The Doc Setting and the Doc XML Element](#the-doc-setting-and-the-doc-xml-element)
 -   [Starting the Server](#starting-the-server)
     -   [Starting the Server With a Monitored Server Configuration File](#starting-the-server-with-a-monitored-server-configuration-file)
 
@@ -190,6 +190,9 @@ SETTINGS:
 
     clientSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[ ...]]]
         The space separated list of socket settings for the client socket
+
+    doc=TEXT
+        A documentation setting
 
     externalFacingBindHost=HOST
         The default binding host name or address for all external-facing sockets
@@ -943,7 +946,6 @@ SETTING VALUE SYNTAXES:
     socks5.onUdpAssociate.relayOutboundBandwidthLimit=INTEGER_BETWEEN_1_AND_2147483647
         Specifies the upper limit on bandwidth in bytes per second of receiving outbound data to be relayed
 
-
 ```
 
 ## Managing SOCKS5 Users
@@ -1081,7 +1083,7 @@ Where `[OPTIONS]` are optional command line options described in the
 [command line help](#new-server-config-file-usage) for the command 
 `new-server-config-file` and `FILE` is the new server configuration file.
 
-As an example, the following command creates an empty configuration file:
+As an example, the following command creates an empty server configuration file:
 
 ```
 ./bin/jargyle new-server-config-file empty_configuration.xml
@@ -1246,14 +1248,20 @@ Although the redundant settings in the combined server configuration file are
 unnecessary, the result server configuration file is for demonstration purposes 
 only.
 
-### The Doc XML Element
+### The Doc Setting and the Doc XML Element
 
 When using an existing server configuration file to create a new server 
 configuration file, any XML comments from the existing server configuration 
 file cannot be transferred to the new server configuration file. To preserve 
 XML comments from one server configuration file to the next server 
-configuration file, the `<doc/>` XML element can be used in the following XML 
-elements:
+configuration file, you can use either or both of the following: the setting 
+`doc` and the `<doc/>` XML element.
+
+The setting `doc` can be used for documentation purposes. It can be specified 
+multiple times.
+
+The `<doc/>` XML element can also be used for documentation purposes. It can be 
+used in the following XML elements:
 
 -   `<setting/>`
 -   `<socketSetting/>`
@@ -1264,6 +1272,10 @@ Server configuration file example:
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <configuration>
     <settings>
+        <setting>
+            <name>doc</name>
+            <value>Start of settings</value>
+        </setting>
         <setting>
             <name>backlog</name>
             <value>100</value>
@@ -1278,6 +1290,10 @@ Server configuration file example:
                     <doc>No timeout in waiting for a connection from a client</doc>
                 </socketSetting>
             </socketSettings>
+        </setting>
+        <setting>
+            <name>doc</name>
+            <value>End of settings</value>
         </setting>
     </settings>
 </configuration>

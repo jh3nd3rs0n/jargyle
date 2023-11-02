@@ -74,6 +74,15 @@ public final class GeneralSettingSpecConstants {
 					SocketSettings.newInstance()));
 	
 	@HelpText(
+			doc = "A documentation setting", 
+			usage = "doc=TEXT"
+	)
+	public static final SettingSpec<String> DOC =
+			SETTING_SPECS.addThenGet(new StringSettingSpec(
+					"doc",
+					null));
+	
+	@HelpText(
 			doc = "The default binding host name or address for all "
 					+ "external-facing sockets",
 			usage = "externalFacingBindHost=HOST"

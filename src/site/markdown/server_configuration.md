@@ -2141,7 +2141,7 @@ XML element with zero to many `<ruleResult/>` XML elements. Each
 the rule result and the `<value/>` XML element of the value assigned to the 
 rule result.
 
-Partial configuration file example:
+Partial server configuration file example:
 
 ```
 <ruleResults>

@@ -77,10 +77,9 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			this.udpRelayServerPort = -1;
 			try {
 				this.socket.close();
+			} catch (SocksClientIOException e) {
+				throw new UncheckedIOException(e);
 			} catch (IOException e) {
-				if (e instanceof SocksClientIOException) {
-					throw new UncheckedIOException(e);
-				}
 				throw new UncheckedIOException(new SocksClientIOException(
 						this.socks5Client, e));
 			}

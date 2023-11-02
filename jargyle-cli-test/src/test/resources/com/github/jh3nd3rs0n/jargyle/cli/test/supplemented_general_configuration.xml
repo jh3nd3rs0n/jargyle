@@ -10,12 +10,6 @@
             <value>100</value>
         </setting>
         <setting>
-            <name>socks5.methods</name>
-            <socks5.methods>
-                <socks5.method>NO_AUTHENTICATION_REQUIRED</socks5.method>
-            </socks5.methods>
-        </setting>
-        <setting>
             <name>socksServerSocketSettings</name>
             <socketSettings>
                 <socketSetting>

@@ -1099,18 +1099,16 @@ As an example, the following command creates an empty server configuration file:
 ```
 
 As an example, the following command creates a server configuration file with 
-the port number, the number of allowed backlogged incoming client connections, 
-and no SOCKS5 authentication required:
+the port number and the number of allowed backlogged incoming client connections:
 
 ```
 ./bin/jargyle new-server-config-file \
     --setting=port=1234 \
     --setting=backlog=100 \
-    --setting=socks5.methods=NO_AUTHENTICATION_REQUIRED \
-    configuration.xml
+    general_configuration.xml
 ```
 
-`configuration.xml`:
+`general_configuration.xml`:
 
 ```
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -1123,12 +1121,6 @@ and no SOCKS5 authentication required:
         <setting>
             <name>backlog</name>
             <value>100</value>
-        </setting>
-        <setting>
-            <name>socks5.methods</name>
-            <socks5.methods>
-                <socks5.method>NO_AUTHENTICATION_REQUIRED</socks5.method>
-            </socks5.methods>
         </setting>
     </settings>
 </configuration>
@@ -1139,17 +1131,17 @@ and no SOCKS5 authentication required:
 You can supplement an existing server configuration file with command line 
 options.
 
-As an example, the following command adds one command line option after the 
-earlier server configuration file:
+As an example, the following command creates another server configuration file 
+by adding one command line option after an earlier server configuration file:
 
 ```
 ./bin/jargyle new-server-config-file \
-    --config-file=configuration.xml \
+    --config-file=general_configuration.xml \
     --setting=socksServerSocketSettings=SO_TIMEOUT=0 \
-    supplemented_configuration.xml
+    supplemented_general_configuration.xml
 ```
 
-`supplemented_configuration.xml`:
+`supplemented_general_configuration.xml`:
 
 ```
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -1162,12 +1154,6 @@ earlier server configuration file:
         <setting>
             <name>backlog</name>
             <value>100</value>
-        </setting>
-        <setting>
-            <name>socks5.methods</name>
-            <socks5.methods>
-                <socks5.method>NO_AUTHENTICATION_REQUIRED</socks5.method>
-            </socks5.methods>
         </setting>
         <setting>
             <name>socksServerSocketSettings</name>
@@ -1187,14 +1173,34 @@ earlier server configuration file:
 You can combine multiple server configuration files into one server 
 configuration file.
 
-As an example, the following command combines the two earlier server 
-configuration files into one:
+As an example, the following commands create another server configuration file 
+and then combine an earlier server configuration file with the new server 
+configuration file into one:
 
 ```
 ./bin/jargyle new-server-config-file \
-    --config-file=configuration.xml \
-    --config-file=supplemented_configuration.xml \
+    --setting=socks5.methods=NO_AUTHENTICATION_REQUIRED \
+    socks5_configuration.xml
+./bin/jargyle new-server-config-file \
+    --config-file=supplemented_general_configuration.xml \
+    --config-file=socks5_configuration.xml \
     combined_configuration.xml
+```
+
+`socks5_configuration.xml`:
+
+```
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configuration>
+    <settings>
+        <setting>
+            <name>socks5.methods</name>
+            <socks5.methods>
+                <socks5.method>NO_AUTHENTICATION_REQUIRED</socks5.method>
+            </socks5.methods>
+        </setting>
+    </settings>
+</configuration>
 ```
 
 `combined_configuration.xml`:
@@ -1212,26 +1218,6 @@ configuration files into one:
             <value>100</value>
         </setting>
         <setting>
-            <name>socks5.methods</name>
-            <socks5.methods>
-                <socks5.method>NO_AUTHENTICATION_REQUIRED</socks5.method>
-            </socks5.methods>
-        </setting>
-        <setting>
-            <name>port</name>
-            <value>1234</value>
-        </setting>
-        <setting>
-            <name>backlog</name>
-            <value>100</value>
-        </setting>
-        <setting>
-            <name>socks5.methods</name>
-            <socks5.methods>
-                <socks5.method>NO_AUTHENTICATION_REQUIRED</socks5.method>
-            </socks5.methods>
-        </setting>
-        <setting>
             <name>socksServerSocketSettings</name>
             <socketSettings>
                 <socketSetting>
@@ -1240,13 +1226,15 @@ configuration files into one:
                 </socketSetting>
             </socketSettings>
         </setting>
+        <setting>
+            <name>socks5.methods</name>
+            <socks5.methods>
+                <socks5.method>NO_AUTHENTICATION_REQUIRED</socks5.method>
+            </socks5.methods>
+        </setting>
     </settings>
 </configuration>
 ```
-
-Although the redundant settings in the combined server configuration file are 
-unnecessary, the result server configuration file is for demonstration purposes 
-only.
 
 ### The Doc Setting and the Doc XML Element
 
@@ -1260,13 +1248,22 @@ configuration file, you can use either or both of the following: the setting
 The setting `doc` can be used for documentation purposes. It can be specified 
 multiple times.
 
-The `<doc/>` XML element can also be used for documentation purposes. It can be 
-used in the following XML elements:
+As an example, the following command creates a new server configuration file by 
+combining earlier server configuration files each supplemented by command line 
+options that document the start and end of a configuration:
 
--   `<setting/>`
--   `<socketSetting/>`
+```
+./bin/jargyle new-server-config-file \
+    "--setting=doc=Start of general settings" \
+    --config-file=supplemented_general_configuration.xml \
+    "--setting=doc=End of general settings" \
+    "--setting=doc=Start of SOCKS5 settings" \
+    --config-file=socks5_configuration.xml \
+    "--setting=doc=End of SOCKS5 settings" \
+    documented_combined_configuration.xml
+```
 
-Server configuration file example:
+`documented_combined_configuration.xml`:
 
 ```
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -1274,7 +1271,69 @@ Server configuration file example:
     <settings>
         <setting>
             <name>doc</name>
-            <value>Start of settings</value>
+            <value>Start of general settings</value>
+        </setting>
+        <setting>
+            <name>port</name>
+            <value>1234</value>
+        </setting>
+        <setting>
+            <name>backlog</name>
+            <value>100</value>
+        </setting>
+        <setting>
+            <name>socksServerSocketSettings</name>
+            <socketSettings>
+                <socketSetting>
+                    <name>SO_TIMEOUT</name>
+                    <value>0</value>
+                </socketSetting>
+            </socketSettings>
+        </setting>
+        <setting>
+            <name>doc</name>
+            <value>End of general settings</value>
+        </setting>
+        <setting>
+            <name>doc</name>
+            <value>Start of SOCKS5 settings</value>
+        </setting>
+        <setting>
+            <name>socks5.methods</name>
+            <socks5.methods>
+                <socks5.method>NO_AUTHENTICATION_REQUIRED</socks5.method>
+            </socks5.methods>
+        </setting>
+        <setting>
+            <name>doc</name>
+            <value>End of SOCKS5 settings</value>
+        </setting>
+    </settings>
+</configuration>
+```
+
+The `<doc/>` XML element can also be used for documentation purposes. It can be 
+used in the following XML elements:
+
+-   `<setting/>`
+-   `<socketSetting/>`
+
+The `<doc/>` XML element can only be added in the aforementioned XML elements 
+by editing the server configuration file to include it.
+
+`documented_combined_configuration.xml`:
+
+```
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configuration>
+    <settings>
+        <setting>
+            <name>doc</name>
+            <value>Start of general settings</value>
+        </setting>
+        <setting>
+            <name>port</name>
+            <value>1234</value>
         </setting>
         <setting>
             <name>backlog</name>
@@ -1293,7 +1352,21 @@ Server configuration file example:
         </setting>
         <setting>
             <name>doc</name>
-            <value>End of settings</value>
+            <value>End of general settings</value>
+        </setting>
+        <setting>
+            <name>doc</name>
+            <value>Start of SOCKS5 settings</value>
+        </setting>
+        <setting>
+            <name>socks5.methods</name>
+            <socks5.methods>
+                <socks5.method>NO_AUTHENTICATION_REQUIRED</socks5.method>
+            </socks5.methods>
+        </setting>
+        <setting>
+            <name>doc</name>
+            <value>End of SOCKS5 settings</value>
         </setting>
     </settings>
 </configuration>
@@ -1314,6 +1387,15 @@ The aforementioned command will start the server on port 1080 at address
 Supplemental command line options including multiple server configuration files 
 provided by the command line options `--config-file` can be included.
 
+As an example, the following command starts the server with earlier server 
+configuration files:
+
+```
+./bin/jargyle start-server \
+    --config-file=supplemented_general_configuration.xml \
+    --config-file=socks5_configuration.xml
+```
+
 ### Starting the Server With a Monitored Server Configuration File
 
 You can start the server with a server configuration file to be monitored for 
@@ -1329,9 +1411,16 @@ the following command:
 Where `[MONITORED_CONFIG_FILE]` is the optional server configuration file 
 to be monitored for any changes to be applied to the running configuration.
 
-When a monitored server configuration file is provided, supplemental command line 
-options including multiple server configuration files provided by the command 
-line options `--config-file` will be ignored.
+As an example, the following command starts the server with an earlier server 
+configuration file as the monitored server configuration file:
+
+```
+./bin/jargyle start-server combined_configuration.xml
+```
+
+When a monitored server configuration file is provided, any supplemental command 
+line options including multiple server configuration files provided by the 
+command line options `--config-file` will be ignored.
 
 The following are the settings in the monitored server configuration file that 
 will have no effect if changed during the running configuration:

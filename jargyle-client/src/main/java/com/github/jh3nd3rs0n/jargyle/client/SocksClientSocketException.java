@@ -2,7 +2,7 @@ package com.github.jh3nd3rs0n.jargyle.client;
 
 import java.net.SocketException;
 
-public class SocksClientSocketException extends SocketException {
+public final class SocksClientSocketException extends SocketException {
 
 	/**
 	 * 

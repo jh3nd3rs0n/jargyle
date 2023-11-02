@@ -2,6 +2,10 @@
 <configuration>
     <settings>
         <setting>
+            <name>doc</name>
+            <value>Start of general settings</value>
+        </setting>
+        <setting>
             <name>port</name>
             <value>1234</value>
         </setting>
@@ -19,10 +23,22 @@
             </socketSettings>
         </setting>
         <setting>
+            <name>doc</name>
+            <value>End of general settings</value>
+        </setting>
+        <setting>
+            <name>doc</name>
+            <value>Start of SOCKS5 settings</value>
+        </setting>
+        <setting>
             <name>socks5.methods</name>
             <socks5.methods>
                 <socks5.method>NO_AUTHENTICATION_REQUIRED</socks5.method>
             </socks5.methods>
+        </setting>
+        <setting>
+            <name>doc</name>
+            <value>End of SOCKS5 settings</value>
         </setting>
     </settings>
 </configuration>

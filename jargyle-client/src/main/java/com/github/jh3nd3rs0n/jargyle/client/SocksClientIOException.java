@@ -2,14 +2,14 @@ package com.github.jh3nd3rs0n.jargyle.client;
 
 import java.io.IOException;
 
-public class SocksClientException extends IOException {
+public class SocksClientIOException extends IOException {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private static String getMessage(
+	static String getMessage(
 			final SocksClient client, 
 			final String message, 
 			final Throwable cause) {
@@ -27,13 +27,13 @@ public class SocksClientException extends IOException {
 	
 	private final SocksClient socksClient;
 
-	public SocksClientException(
+	public SocksClientIOException(
 			final SocksClient client, final String message) {
 		super(getMessage(client, message, null));
 		this.socksClient = client;
 	}
 
-	public SocksClientException(
+	public SocksClientIOException(
 			final SocksClient client, final Throwable cause) {
 		super(getMessage(client, null, cause), cause);
 		this.socksClient = client;

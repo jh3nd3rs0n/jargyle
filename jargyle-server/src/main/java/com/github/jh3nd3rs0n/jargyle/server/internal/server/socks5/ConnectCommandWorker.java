@@ -418,6 +418,19 @@ final class ConnectCommandWorker extends TcpBasedCommandWorker {
 				throw new BindException();
 			}
 			if (ThrowableHelper.isOrHasInstanceOf(
+					e, UnknownHostException.class)) {
+				this.logger.error( 
+						ObjectLogMessageHelper.objectLogMessage(
+								this, 
+								"Error in creating the server-facing "
+								+ "socket"), 
+						e);
+				socks5Rep = Socks5Reply.newFailureInstance(
+						Reply.HOST_UNREACHABLE);
+				this.sendSocks5Reply(socks5Rep);
+				return null;				
+			}
+			if (ThrowableHelper.isOrHasInstanceOf(
 					e, SocketException.class)) {
 				this.logger.error( 
 						ObjectLogMessageHelper.objectLogMessage(
@@ -519,6 +532,14 @@ final class ConnectCommandWorker extends TcpBasedCommandWorker {
 			}
 			throw e;
 		} catch (IOException e) {
+			if (ThrowableHelper.isOrHasInstanceOf(e, SocketException.class)) {
+				try {
+					serverFacingSocket.close();
+				} catch (IOException ex) {
+					throw new AssertionError(ex);
+				}
+				throw new SocketException();
+			}
 			this.logger.error( 
 					ObjectLogMessageHelper.objectLogMessage(
 							this, 
@@ -661,6 +682,20 @@ final class ConnectCommandWorker extends TcpBasedCommandWorker {
 			this.sendSocks5Reply(socks5Rep);
 			return null;
 		} catch (IOException e) {
+			if (ThrowableHelper.isOrHasInstanceOf(
+					e, UnknownHostException.class)) {
+				this.logger.error( 
+						ObjectLogMessageHelper.objectLogMessage(
+								this, 
+								"Unable to resolve the desired destination "
+								+ "address for the server-facing socket: %s",
+								desiredDestinationAddress), 
+						e);
+				socks5Rep = Socks5Reply.newFailureInstance(
+						Reply.HOST_UNREACHABLE);
+				this.sendSocks5Reply(socks5Rep);
+				return null;				
+			}
 			this.logger.error( 
 					ObjectLogMessageHelper.objectLogMessage(
 							this, 

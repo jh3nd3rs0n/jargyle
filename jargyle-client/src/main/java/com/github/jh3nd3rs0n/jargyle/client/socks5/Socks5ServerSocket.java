@@ -18,6 +18,8 @@ import java.util.Objects;
 import java.util.Set;
 
 import com.github.jh3nd3rs0n.jargyle.client.SocksClient.ClientSocketConnectParams;
+import com.github.jh3nd3rs0n.jargyle.client.internal.client.SocksClientIOExceptionThrowingHelper;
+import com.github.jh3nd3rs0n.jargyle.client.internal.client.SocksClientSocketExceptionThrowingHelper;
 import com.github.jh3nd3rs0n.jargyle.common.lang.NonnegativeInteger;
 import com.github.jh3nd3rs0n.jargyle.common.lang.PositiveInteger;
 import com.github.jh3nd3rs0n.jargyle.common.net.PerformancePreferences;
@@ -131,6 +133,34 @@ public final class Socks5ServerSocket extends ServerSocket {
 	
 	private static abstract class ServerSocketOptionHelper<T> {
 		
+		private static final class ServerSocketOptionHelpers {
+			
+			private final Map<SocketOption<?>, ServerSocketOptionHelper<?>> serverSocketOptionHelpersMap;
+			private final Set<SocketOption<?>> supportedSocketOptions;
+			
+			public ServerSocketOptionHelpers() {
+				this.serverSocketOptionHelpersMap = 
+						new HashMap<SocketOption<?>, ServerSocketOptionHelper<?>>();
+				this.supportedSocketOptions = new HashSet<SocketOption<?>>();
+			}
+			
+			public void add(final ServerSocketOptionHelper<?> value) {
+				SocketOption<?> valueSocketOption = value.getSocketOption();
+				this.serverSocketOptionHelpersMap.put(
+						valueSocketOption, value);
+				this.supportedSocketOptions.add(valueSocketOption);
+			}
+			
+			public Set<SocketOption<?>> getSupportedSocketOptions() {
+				return Collections.unmodifiableSet(this.supportedSocketOptions);
+			}
+			
+			public Map<SocketOption<?>, ServerSocketOptionHelper<?>> toMap() {
+				return Collections.unmodifiableMap(
+						this.serverSocketOptionHelpersMap);
+			}
+		}
+		
 		private static final class SoRcvbufServerSocketOptionHelper 
 			extends ServerSocketOptionHelper<Integer> {
 			
@@ -177,28 +207,20 @@ public final class Socks5ServerSocket extends ServerSocket {
 			
 		}
 		
-		private static final Map<SocketOption<?>, ServerSocketOptionHelper<?>> SERVER_SOCKET_OPTION_HELPER_MAP;
+		private static final Map<SocketOption<?>, ServerSocketOptionHelper<?>> SERVER_SOCKET_OPTION_HELPERS_MAP;
 		
 		private static final Set<SocketOption<?>> SUPPORTED_SOCKET_OPTIONS;
 		
 		static {
-			SERVER_SOCKET_OPTION_HELPER_MAP =
-					new HashMap<SocketOption<?>, ServerSocketOptionHelper<?>>();
-			SUPPORTED_SOCKET_OPTIONS = new HashSet<SocketOption<?>>();
-			ServerSocketOptionHelper<Integer> soRcvbufServerSocketOptionHelper =
-					new SoRcvbufServerSocketOptionHelper();
-			SERVER_SOCKET_OPTION_HELPER_MAP.put(
-					soRcvbufServerSocketOptionHelper.getSocketOption(), 
-					soRcvbufServerSocketOptionHelper);
-			SUPPORTED_SOCKET_OPTIONS.add(
-					soRcvbufServerSocketOptionHelper.getSocketOption());
-			ServerSocketOptionHelper<Boolean> soReuseaddrServerSocketOptionHelper =
-					new SoReuseaddrServerSocketOptionHelper();
-			SERVER_SOCKET_OPTION_HELPER_MAP.put(
-					soReuseaddrServerSocketOptionHelper.getSocketOption(), 
-					soReuseaddrServerSocketOptionHelper);
-			SUPPORTED_SOCKET_OPTIONS.add(
-					soReuseaddrServerSocketOptionHelper.getSocketOption());
+			ServerSocketOptionHelpers serverSocketOptionHelpers = 
+					new ServerSocketOptionHelpers(); 
+			serverSocketOptionHelpers.add(
+					new SoRcvbufServerSocketOptionHelper());
+			serverSocketOptionHelpers.add(
+					new SoReuseaddrServerSocketOptionHelper());
+			SERVER_SOCKET_OPTION_HELPERS_MAP = serverSocketOptionHelpers.toMap();
+			SUPPORTED_SOCKET_OPTIONS = 
+					serverSocketOptionHelpers.getSupportedSocketOptions();
 		}
 		
 		public static <T> T getSocketOption(
@@ -206,7 +228,7 @@ public final class Socks5ServerSocket extends ServerSocket {
 				final ServerSocket serverSocket) throws IOException {
 			Objects.requireNonNull(name);
 			ServerSocketOptionHelper<?> serverSocketOptionHelper =
-					SERVER_SOCKET_OPTION_HELPER_MAP.get(name);
+					SERVER_SOCKET_OPTION_HELPERS_MAP.get(name);
 			if (serverSocketOptionHelper == null) {
 				throw new UnsupportedOperationException();
 			}
@@ -222,7 +244,7 @@ public final class Socks5ServerSocket extends ServerSocket {
 				final ServerSocket serverSocket) throws IOException {
 			Objects.requireNonNull(name);
 			ServerSocketOptionHelper<?> serverSocketOptionHelper =
-					SERVER_SOCKET_OPTION_HELPER_MAP.get(name);
+					SERVER_SOCKET_OPTION_HELPERS_MAP.get(name);
 			if (serverSocketOptionHelper == null) {
 				throw new UnsupportedOperationException();
 			}
@@ -269,8 +291,7 @@ public final class Socks5ServerSocket extends ServerSocket {
 		private boolean socks5Bound;
 		private final Socks5Client socks5Client;
 		
-		public Socks5ServerSocketImpl(
-				final Socks5Client client) throws IOException {
+		public Socks5ServerSocketImpl(final Socks5Client client) {
 			Socket sock = client.newClientSocket();
 			this.bound = false;
 			this.closed = false;
@@ -303,7 +324,7 @@ public final class Socks5ServerSocket extends ServerSocket {
 				AddressType addressType = AddressType.valueForString(
 						serverBoundAddress);
 				if (addressType.equals(AddressType.DOMAINNAME)) {
-					throw new Socks5ClientException(
+					throw new Socks5ClientIOException(
 							this.socks5Client, 
 							String.format(
 									"server bound address is not an IP "
@@ -437,7 +458,7 @@ public final class Socks5ServerSocket extends ServerSocket {
 			AddressType addressType = AddressType.valueForString(
 					serverBoundAddress);
 			if (addressType.equals(AddressType.DOMAINNAME)) {
-				throw new Socks5ClientException(
+				throw new Socks5ClientIOException(
 						this.socks5Client, 
 						String.format(
 								"server bound address is not an IP address. "
@@ -445,7 +466,7 @@ public final class Socks5ServerSocket extends ServerSocket {
 								serverBoundAddress));
 			}
 			if (serverBoundPort < 0 || serverBoundPort > Port.MAX_INT_VALUE) {
-				throw new Socks5ClientException(
+				throw new Socks5ClientIOException(
 						this.socks5Client, 
 						String.format(
 								"server bound port is out of range. "
@@ -474,38 +495,71 @@ public final class Socks5ServerSocket extends ServerSocket {
 
 	Socks5ServerSocket(
 			final Socks5Client client, final int port) throws IOException {
+		Socks5ServerSocketImpl impl = new Socks5ServerSocketImpl(client);
+		try {
+			impl.socks5Bind(port, null);
+		} catch (IOException e) {
+			SocksClientIOExceptionThrowingHelper.throwAsSocksClientIOException(
+					e, client);
+		}
 		this.socks5Client = client;
-		this.socks5ServerSocketImpl = new Socks5ServerSocketImpl(client);
-		this.socks5ServerSocketImpl.socks5Bind(port, null);
+		this.socks5ServerSocketImpl = impl;
 	}
 
 	Socks5ServerSocket(
 			final Socks5Client client, 
 			final int port, 
 			final InetAddress bindAddr) throws IOException {
+		Socks5ServerSocketImpl impl = new Socks5ServerSocketImpl(client);
+		try {
+			impl.socks5Bind(port, bindAddr);
+		} catch (IOException e) {
+			SocksClientIOExceptionThrowingHelper.throwAsSocksClientIOException(
+					e, client);			
+		}
 		this.socks5Client = client;
-		this.socks5ServerSocketImpl = new Socks5ServerSocketImpl(client);
-		this.socks5ServerSocketImpl.socks5Bind(port, bindAddr);
+		this.socks5ServerSocketImpl = impl;
 	}
 	
 	@Override
 	public Socket accept() throws IOException {
-		return this.socks5ServerSocketImpl.accept();
+		try {
+			return this.socks5ServerSocketImpl.accept();
+		} catch (IOException e) {
+			SocksClientIOExceptionThrowingHelper.throwAsSocksClientIOException(
+					e, this.socks5Client);			
+		}
+		return null;
 	}
 
 	@Override
 	public void bind(SocketAddress endpoint) throws IOException {
-		this.socks5ServerSocketImpl.bind(endpoint);
+		try {
+			this.socks5ServerSocketImpl.bind(endpoint);
+		} catch (IOException e) {
+			SocksClientIOExceptionThrowingHelper.throwAsSocksClientIOException(
+					e, this.socks5Client);
+		}
 	}
 
 	@Override
 	public void bind(SocketAddress endpoint, int backlog) throws IOException {
-		this.socks5ServerSocketImpl.bind(endpoint, backlog);
+		try {
+			this.socks5ServerSocketImpl.bind(endpoint, backlog);
+		} catch (IOException e) {
+			SocksClientIOExceptionThrowingHelper.throwAsSocksClientIOException(
+					e, this.socks5Client);
+		}
 	}
 
 	@Override
 	public synchronized void close() throws IOException {
-		this.socks5ServerSocketImpl.close();
+		try {
+			this.socks5ServerSocketImpl.close();
+		} catch (IOException e) {
+			SocksClientIOExceptionThrowingHelper.throwAsSocksClientIOException(
+					e, this.socks5Client);
+		}
 	}
 
 	@Override
@@ -530,17 +584,35 @@ public final class Socks5ServerSocket extends ServerSocket {
 
 	@Override
 	public <T> T getOption(SocketOption<T> name) throws IOException {
-		return ServerSocketOptionHelper.getSocketOption(name, this);
+		try {
+			return ServerSocketOptionHelper.getSocketOption(name, this);			
+		} catch (IOException e) {
+			SocksClientIOExceptionThrowingHelper.throwAsSocksClientIOException(
+					e, this.socks5Client);
+		}
+		return null;
 	}
 
 	@Override
 	public synchronized int getReceiveBufferSize() throws SocketException {
-		return this.socks5ServerSocketImpl.getReceiveBufferSize();
+		try {
+			return this.socks5ServerSocketImpl.getReceiveBufferSize();			
+		} catch (SocketException e) {
+			SocksClientSocketExceptionThrowingHelper.throwAsSocksClientSocketException(
+					e, this.socks5Client);
+		}
+		return 0;
 	}
 
 	@Override
 	public boolean getReuseAddress() throws SocketException {
-		return this.socks5ServerSocketImpl.getReuseAddress();
+		try {
+			return this.socks5ServerSocketImpl.getReuseAddress();			
+		} catch (SocketException e) {
+			SocksClientSocketExceptionThrowingHelper.throwAsSocksClientSocketException(
+					e, this.socks5Client);
+		}
+		return false;
 	}
 	
 	public Socks5Client getSocks5Client() {
@@ -549,7 +621,13 @@ public final class Socks5ServerSocket extends ServerSocket {
 
 	@Override
 	public synchronized int getSoTimeout() throws IOException {
-		return this.socks5ServerSocketImpl.getSoTimeout();
+		try {
+			return this.socks5ServerSocketImpl.getSoTimeout();			
+		} catch (IOException e) {
+			SocksClientIOExceptionThrowingHelper.throwAsSocksClientIOException(
+					e, this.socks5Client);
+		}
+		return 0;
 	}
 
 	@Override
@@ -565,7 +643,13 @@ public final class Socks5ServerSocket extends ServerSocket {
 	@Override
 	public <T> ServerSocket setOption(
 			SocketOption<T> name, T value) throws IOException {
-		return ServerSocketOptionHelper.setSocketOption(name, value, this);
+		try {
+			return ServerSocketOptionHelper.setSocketOption(name, value, this);			
+		} catch (IOException e) {
+			SocksClientIOExceptionThrowingHelper.throwAsSocksClientIOException(
+					e, this.socks5Client);
+		}
+		return null;
 	}
 
 	@Override
@@ -578,17 +662,32 @@ public final class Socks5ServerSocket extends ServerSocket {
 	@Override
 	public synchronized void setReceiveBufferSize(
 			int size) throws SocketException {
-		this.socks5ServerSocketImpl.setReceiveBufferSize(size);
+		try {
+			this.socks5ServerSocketImpl.setReceiveBufferSize(size);			
+		} catch (SocketException e) {
+			SocksClientSocketExceptionThrowingHelper.throwAsSocksClientSocketException(
+					e, this.socks5Client);
+		}
 	}
 
 	@Override
 	public void setReuseAddress(boolean on) throws SocketException {
-		this.socks5ServerSocketImpl.setReuseAddress(on);
+		try {
+			this.socks5ServerSocketImpl.setReuseAddress(on);			
+		} catch (SocketException e) {
+			SocksClientSocketExceptionThrowingHelper.throwAsSocksClientSocketException(
+					e, this.socks5Client);
+		}		
 	}
 
 	@Override
 	public synchronized void setSoTimeout(int timeout) throws SocketException {
-		this.socks5ServerSocketImpl.setSoTimeout(timeout);
+		try {
+			this.socks5ServerSocketImpl.setSoTimeout(timeout);			
+		} catch (SocketException e) {
+			SocksClientSocketExceptionThrowingHelper.throwAsSocksClientSocketException(
+					e, this.socks5Client);
+		}
 	}
 
 	@Override

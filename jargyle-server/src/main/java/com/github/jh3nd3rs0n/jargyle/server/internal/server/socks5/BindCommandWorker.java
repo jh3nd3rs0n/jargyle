@@ -25,6 +25,7 @@ import com.github.jh3nd3rs0n.jargyle.common.net.PortRange;
 import com.github.jh3nd3rs0n.jargyle.common.net.PortRanges;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSetting;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
+import com.github.jh3nd3rs0n.jargyle.internal.lang.ThrowableHelper;
 import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
 import com.github.jh3nd3rs0n.jargyle.internal.net.AddressHelper;
 import com.github.jh3nd3rs0n.jargyle.server.FirewallAction;
@@ -639,6 +640,14 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 			}
 			throw e;
 		} catch (IOException e) {
+			if (ThrowableHelper.isOrHasInstanceOf(e, BindException.class)) {
+				try {
+					listenSocket.close();
+				} catch (IOException ex) {
+					throw new AssertionError(ex);
+				}
+				throw new BindException();
+			}
 			this.logger.error( 
 					ObjectLogMessageHelper.objectLogMessage(
 							this, 
@@ -693,6 +702,20 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 			this.sendSocks5Reply(socks5Rep);
 			return null;
 		} catch (IOException e) {
+			if (ThrowableHelper.isOrHasInstanceOf(
+					e, UnknownHostException.class)) {
+				this.logger.error( 
+						ObjectLogMessageHelper.objectLogMessage(
+								this, 
+								"Unable to resolve the desired destination "
+								+ "address for the listen socket: %s",
+								desiredDestinationAddress), 
+						e);
+				socks5Rep = Socks5Reply.newFailureInstance(
+						Reply.HOST_UNREACHABLE);
+				this.sendSocks5Reply(socks5Rep);
+				return null;				
+			}
 			this.logger.error( 
 					ObjectLogMessageHelper.objectLogMessage(
 							this, 

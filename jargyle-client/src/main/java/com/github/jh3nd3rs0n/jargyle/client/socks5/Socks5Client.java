@@ -3,7 +3,6 @@ package com.github.jh3nd3rs0n.jargyle.client.socks5;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.UncheckedIOException;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -13,9 +12,6 @@ import com.github.jh3nd3rs0n.jargyle.client.Properties;
 import com.github.jh3nd3rs0n.jargyle.client.Socks5PropertySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
 import com.github.jh3nd3rs0n.jargyle.client.SocksNetObjectFactory;
-import com.github.jh3nd3rs0n.jargyle.client.internal.client.SocksClientExceptionThrowingDatagramSocket;
-import com.github.jh3nd3rs0n.jargyle.client.internal.client.SocksClientExceptionThrowingHelper;
-import com.github.jh3nd3rs0n.jargyle.client.internal.client.socks5.SocksClientExceptionThrowingMethodEncapsulation;
 import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.DtlsDatagramSocketFactory;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.ClientMethodSelectionMessage;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
@@ -56,16 +52,7 @@ public final class Socks5Client extends SocksClient {
 			final Socket connectedClientSocket) throws IOException {
 		MethodSubnegotiator methodSubnegotiator =
 				MethodSubnegotiator.getInstance(method);
-		MethodEncapsulation methodEncapsulation = null;
-		try {
-			methodEncapsulation = methodSubnegotiator.subnegotiate(
-					connectedClientSocket, this);
-		} catch (IOException e) {
-			SocksClientExceptionThrowingHelper.throwAsSocksClientException(
-					e, this);
-		}
-		return new SocksClientExceptionThrowingMethodEncapsulation(
-				this, methodEncapsulation);
+		return methodSubnegotiator.subnegotiate(connectedClientSocket, this);
 	}
 
 	protected DatagramSocket getConnectedClientDatagramSocket(
@@ -73,28 +60,15 @@ public final class Socks5Client extends SocksClient {
 			final String udpRelayServerHost,
 			final int udpRelayServerPort) throws IOException {
 		DatagramSocket clientDatagramSock = clientDatagramSocket;
-		try {
-			InetAddress udpRelayServerHostInetAddress = InetAddress.getByName(
-					udpRelayServerHost); 
-			clientDatagramSock.connect(
-					udpRelayServerHostInetAddress, udpRelayServerPort);
-			if (this.dtlsDatagramSocketFactory == null) {
-				return new SocksClientExceptionThrowingDatagramSocket(
-						this, clientDatagramSock);
-			}
-			clientDatagramSock = 
-					this.dtlsDatagramSocketFactory.newDatagramSocket(
-							clientDatagramSock);
-			clientDatagramSock = 
-					new SocksClientExceptionThrowingDatagramSocket(
-							this, clientDatagramSock);
-		} catch (UncheckedIOException e) {
-			SocksClientExceptionThrowingHelper.throwAsSocksClientException(
-					e, this);			
-		} catch (IOException e) {
-			SocksClientExceptionThrowingHelper.throwAsSocksClientException(
-					e, this);
+		InetAddress udpRelayServerHostInetAddress = InetAddress.getByName(
+				udpRelayServerHost); 
+		clientDatagramSock.connect(
+				udpRelayServerHostInetAddress, udpRelayServerPort);
+		if (this.dtlsDatagramSocketFactory == null) {
+			return clientDatagramSock;
 		}
+		clientDatagramSock = this.dtlsDatagramSocketFactory.newDatagramSocket(
+				clientDatagramSock);
 		return clientDatagramSock;
 	}
 	
@@ -111,21 +85,14 @@ public final class Socks5Client extends SocksClient {
 				Socks5PropertySpecConstants.SOCKS5_METHODS);
 		ClientMethodSelectionMessage cmsm = 
 				ClientMethodSelectionMessage.newInstance(methods);
-		Method method = null;
-		try {
-			InputStream inputStream = connectedClientSocket.getInputStream();
-			OutputStream outputStream = 
-					connectedClientSocket.getOutputStream();
-			outputStream.write(cmsm.toByteArray());
-			outputStream.flush();
-			ServerMethodSelectionMessage smsm =
-					ServerMethodSelectionMessage.newInstanceFrom(inputStream);
-			method = smsm.getMethod();
-		} catch (IOException e) {
-			SocksClientExceptionThrowingHelper.throwAsSocksClientException(
-					e, this);
-		}
-		return method;		
+		InputStream inputStream = connectedClientSocket.getInputStream();
+		OutputStream outputStream = 
+				connectedClientSocket.getOutputStream();
+		outputStream.write(cmsm.toByteArray());
+		outputStream.flush();
+		ServerMethodSelectionMessage smsm =
+				ServerMethodSelectionMessage.newInstanceFrom(inputStream);
+		return smsm.getMethod();
 	}
 	
 	@Override
@@ -152,14 +119,8 @@ public final class Socks5Client extends SocksClient {
 	
 	protected Socks5Reply receiveSocks5Reply(
 			final Socket connectedClientSocket) throws IOException {
-		Socks5Reply socks5Rep = null;
-		try {
-			InputStream inputStream = connectedClientSocket.getInputStream();
-			socks5Rep = Socks5Reply.newInstanceFrom(inputStream);
-		} catch (IOException e) {
-			SocksClientExceptionThrowingHelper.throwAsSocksClientException(
-					e, this);
-		}
+		InputStream inputStream = connectedClientSocket.getInputStream();
+		Socks5Reply socks5Rep = Socks5Reply.newInstanceFrom(inputStream);
 		Reply reply = socks5Rep.getReply();
 		if (!reply.equals(Reply.SUCCEEDED)) {
 			throw new FailureSocks5ReplyException(this, socks5Rep);			
@@ -175,15 +136,9 @@ public final class Socks5Client extends SocksClient {
 	protected void sendSocks5Request(
 			final Socks5Request socks5Req, 
 			final Socket connectedClientSocket) throws IOException {
-		try {
-			OutputStream outputStream = 
-					connectedClientSocket.getOutputStream();
-			outputStream.write(socks5Req.toByteArray());
-			outputStream.flush();
-		} catch (IOException e) {
-			SocksClientExceptionThrowingHelper.throwAsSocksClientException(
-					e, this);
-		}
+		OutputStream outputStream = connectedClientSocket.getOutputStream();
+		outputStream.write(socks5Req.toByteArray());
+		outputStream.flush();
 	}
 	
 }

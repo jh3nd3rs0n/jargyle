@@ -1,5 +1,7 @@
 package com.github.jh3nd3rs0n.jargyle.client.socks5;
 
+import java.io.FilterInputStream;
+import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -14,6 +16,8 @@ import java.nio.channels.SocketChannel;
 import java.util.Set;
 
 import com.github.jh3nd3rs0n.jargyle.client.SocksClient.ClientSocketConnectParams;
+import com.github.jh3nd3rs0n.jargyle.client.internal.client.SocksClientIOExceptionThrowingHelper;
+import com.github.jh3nd3rs0n.jargyle.client.internal.client.SocksClientSocketExceptionThrowingHelper;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Address;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.AddressType;
@@ -29,6 +33,8 @@ public final class Socks5Socket extends Socket {
 	private static final class Socks5SocketImpl {
 		
 		private boolean connected;
+		private InputStream inputStream;
+		private OutputStream outputStream;
 		private InetAddress remoteInetAddress;
 		private int remotePort;
 		private SocketAddress remoteSocketAddress;
@@ -37,6 +43,8 @@ public final class Socks5Socket extends Socket {
 		
 		public Socks5SocketImpl(final Socks5Client client, final Socket sock) {
 			this.connected = sock.isConnected();
+			this.inputStream = null;
+			this.outputStream = null;
 			this.remoteInetAddress = sock.getInetAddress();
 			this.remotePort = sock.getPort();
 			this.remoteSocketAddress = sock.getRemoteSocketAddress();
@@ -72,6 +80,22 @@ public final class Socks5Socket extends Socket {
 					timeout);
 		}
 
+		public InputStream getInputStream() throws IOException {
+			if (this.inputStream == null) {
+				this.inputStream = new Socks5SocketInputStream(
+						this.socks5Client, this.socket.getInputStream());
+			}
+			return this.inputStream;
+		}
+		
+		public OutputStream getOutputStream() throws IOException {
+			if (this.outputStream == null) {
+				this.outputStream = new Socks5SocketOutputStream(
+						this.socks5Client, this.socket.getOutputStream());
+			}
+			return this.outputStream;
+		}
+		
 		public void socks5Connect(
 				final InetAddress inetAddress,
 				final int port,
@@ -116,7 +140,7 @@ public final class Socks5Socket extends Socket {
 			AddressType addressType = AddressType.valueForString(
 					serverBoundAddress);
 			if (addressType.equals(AddressType.DOMAINNAME)) {
-				throw new Socks5ClientException(
+				throw new Socks5ClientIOException(
 						this.socks5Client, 
 						String.format(
 								"server bound address is not an IP address. "
@@ -129,9 +153,143 @@ public final class Socks5Socket extends Socket {
 			this.remoteSocketAddress = new InetSocketAddress(
 					this.remoteInetAddress,
 					this.remotePort);
-			this.socket = connectedSock;			
+			this.socket = connectedSock;
+			this.inputStream = new Socks5SocketInputStream(
+					this.socks5Client, this.socket.getInputStream());
+			this.outputStream = new Socks5SocketOutputStream(
+					this.socks5Client, this.socket.getOutputStream());
 		}
 		
+	}
+	
+	private static final class Socks5SocketInputStream extends FilterInputStream {
+		
+		private final Socks5Client socks5Client;
+		
+		public Socks5SocketInputStream(
+				final Socks5Client client, final InputStream inStream) {
+			super(inStream);
+			this.socks5Client = client;			
+		}
+
+		@Override
+		public int available() throws IOException {
+			int available = 0;
+			try {
+				available = this.in.available();
+			} catch (IOException e) {
+				SocksClientIOExceptionThrowingHelper.throwAsSocksClientIOException(
+						e, this.socks5Client);
+			}
+			return available;
+		}
+		
+		@Override
+		public void close() throws IOException {
+			try {
+				this.in.close();
+			} catch (IOException e) {
+				SocksClientIOExceptionThrowingHelper.throwAsSocksClientIOException(
+						e, this.socks5Client);
+			}		
+		}
+		
+		@Override
+		public int read() throws IOException {
+			int b = -1;
+			try {
+				b = this.in.read();
+			} catch (IOException e) {
+				SocksClientIOExceptionThrowingHelper.throwAsSocksClientIOException(
+						e, this.socks5Client);
+			}
+			return b;
+		}
+		
+		@Override
+		public int read(byte[] b) throws IOException {
+			int bytesRead = -1;
+			try {
+				bytesRead = this.in.read(b);
+			} catch (IOException e) {
+				SocksClientIOExceptionThrowingHelper.throwAsSocksClientIOException(
+						e, this.socks5Client);
+			}
+			return bytesRead;
+		}
+		
+		@Override
+		public int read(byte[] b, int off, int len) throws IOException {
+			int bytesRead = -1;
+			try {
+				bytesRead = this.in.read(b, off, len);
+			} catch (IOException e) {
+				SocksClientIOExceptionThrowingHelper.throwAsSocksClientIOException(
+						e, this.socks5Client);
+			}
+			return bytesRead;
+		}
+	}
+	
+	private static final class Socks5SocketOutputStream extends FilterOutputStream {
+		
+		private final Socks5Client socks5Client;
+		
+		public Socks5SocketOutputStream(
+				final Socks5Client client, final OutputStream outStream) {
+			super(outStream);
+			this.socks5Client = client;			
+		}
+
+		@Override
+		public synchronized void close() throws IOException {
+			try {
+				this.out.close();
+			} catch (IOException e) {
+				SocksClientIOExceptionThrowingHelper.throwAsSocksClientIOException(
+						e, this.socks5Client);
+			}
+		}
+		
+		@Override
+		public void flush() throws IOException {
+			try {
+				this.out.flush();
+			} catch (IOException e) {
+				SocksClientIOExceptionThrowingHelper.throwAsSocksClientIOException(
+						e, this.socks5Client);
+			}
+		}
+		
+		@Override
+		public void write(byte[] b) throws IOException {
+			try {
+				this.out.write(b);
+			} catch (IOException e) {
+				SocksClientIOExceptionThrowingHelper.throwAsSocksClientIOException(
+						e, this.socks5Client);
+			}
+		}
+		
+		@Override
+		public void write(byte[] b, int off, int len) throws IOException {
+			try {
+				this.out.write(b, off, len);
+			} catch (IOException e) {
+				SocksClientIOExceptionThrowingHelper.throwAsSocksClientIOException(
+						e, this.socks5Client);
+			}			
+		}
+		
+		@Override
+		public void write(final int b) throws IOException {
+			try {
+				this.out.write(b);
+			} catch (IOException e) {
+				SocksClientIOExceptionThrowingHelper.throwAsSocksClientIOException(
+						e, this.socks5Client);
+			}
+		}
 	}
 	
 	private final Socks5Client socks5Client;
@@ -147,10 +305,16 @@ public final class Socks5Socket extends Socket {
 			final Socks5Client client, 
 			final InetAddress address, 
 			final int port) throws IOException {
-		this.socks5Client = client;
-		this.socks5SocketImpl = new Socks5SocketImpl(
+		Socks5SocketImpl impl = new Socks5SocketImpl(
 				client, client.newClientSocket());
-		this.socks5SocketImpl.socks5Connect(address, port, 0);
+		try {
+			impl.socks5Connect(address, port, 0);
+		} catch (IOException e) {
+			SocksClientIOExceptionThrowingHelper.throwAsSocksClientIOException(
+					e, client);
+		}
+		this.socks5Client = client;
+		this.socks5SocketImpl = impl;
 	}
 	
 	Socks5Socket(
@@ -159,12 +323,17 @@ public final class Socks5Socket extends Socket {
 			final int port, 
 			final InetAddress localAddr, 
 			final int localPort) throws IOException {
-		this.socks5Client = client;
-		this.socks5SocketImpl = new Socks5SocketImpl(
+		Socks5SocketImpl impl = new Socks5SocketImpl(
 				client, client.newClientSocket());
-		this.socks5SocketImpl.socket.bind(
-				new InetSocketAddress(localAddr, localPort));
-		this.socks5SocketImpl.socks5Connect(address, port, 0);
+		try {
+			impl.socket.bind(new InetSocketAddress(localAddr, localPort));
+			impl.socks5Connect(address, port, 0);
+		} catch (IOException e) {
+			SocksClientIOExceptionThrowingHelper.throwAsSocksClientIOException(
+					e, client);
+		}
+		this.socks5Client = client;
+		this.socks5SocketImpl = impl;
 	}
 
 	Socks5Socket(final Socks5Client client, final Socket sock) {
@@ -176,12 +345,17 @@ public final class Socks5Socket extends Socket {
 			final Socks5Client client, 
 			final String host, 
 			final int port) throws UnknownHostException, IOException {
-		Socket connectedInternalSocket = client.newConnectedClientSocket();
+		Socks5SocketImpl impl = null;
+		try {
+			Socket connectedInternalSocket = client.newConnectedClientSocket();
+			impl = new Socks5SocketImpl(client, connectedInternalSocket);
+			impl.socks5Connect(connectedInternalSocket, host, port);
+		} catch (IOException e) {
+			SocksClientIOExceptionThrowingHelper.throwAsSocksClientIOException(
+					e, client);
+		}
 		this.socks5Client = client;
-		this.socks5SocketImpl = new Socks5SocketImpl(
-				client, connectedInternalSocket);
-		this.socks5SocketImpl.socks5Connect(
-				connectedInternalSocket, host, port);
+		this.socks5SocketImpl = impl;
 	}
 
 	Socks5Socket(
@@ -190,33 +364,58 @@ public final class Socks5Socket extends Socket {
 			final int port, 
 			final InetAddress localAddr, 
 			final int localPort) throws IOException {
-		Socket connectedInternalSocket = client.newConnectedClientSocket(
-				localAddr, localPort);
+		Socks5SocketImpl impl = null;
+		try {
+			Socket connectedInternalSocket = client.newConnectedClientSocket(
+					localAddr, localPort);
+			impl = new Socks5SocketImpl(client, connectedInternalSocket);
+			impl.socks5Connect(connectedInternalSocket, host, port);
+		} catch (IOException e) {
+			SocksClientIOExceptionThrowingHelper.throwAsSocksClientIOException(
+					e, client);
+		}
 		this.socks5Client = client;
-		this.socks5SocketImpl = new Socks5SocketImpl(
-				client, connectedInternalSocket);
-		this.socks5SocketImpl.socks5Connect(
-				connectedInternalSocket, host, port);
+		this.socks5SocketImpl = impl;
 	}
 	
 	@Override
 	public void bind(SocketAddress bindpoint) throws IOException {
-		this.socks5SocketImpl.socket.bind(bindpoint);
+		try {
+			this.socks5SocketImpl.socket.bind(bindpoint);
+		} catch (IOException e) {
+			SocksClientIOExceptionThrowingHelper.throwAsSocksClientIOException(
+					e, this.socks5Client);
+		}
 	}
 
 	@Override
 	public synchronized void close() throws IOException {
-		this.socks5SocketImpl.close();
+		try {
+			this.socks5SocketImpl.close();
+		} catch (IOException e) {
+			SocksClientIOExceptionThrowingHelper.throwAsSocksClientIOException(
+					e, this.socks5Client);			
+		}
 	}
 
 	@Override
 	public void connect(SocketAddress endpoint) throws IOException {
-		this.socks5SocketImpl.connect(endpoint);
+		try {
+			this.socks5SocketImpl.connect(endpoint);
+		} catch (IOException e) {
+			SocksClientIOExceptionThrowingHelper.throwAsSocksClientIOException(
+					e, this.socks5Client);
+		}
 	}
 
 	@Override
 	public void connect(SocketAddress endpoint, int timeout) throws IOException {
-		this.socks5SocketImpl.connect(endpoint, timeout);
+		try {
+			this.socks5SocketImpl.connect(endpoint, timeout);
+		} catch (IOException e) {
+			SocksClientIOExceptionThrowingHelper.throwAsSocksClientIOException(
+					e, this.socks5Client);			
+		}
 	}
 
 	@Override
@@ -231,12 +430,24 @@ public final class Socks5Socket extends Socket {
 
 	@Override
 	public InputStream getInputStream() throws IOException {
-		return this.socks5SocketImpl.socket.getInputStream();
+		try {
+			return this.socks5SocketImpl.getInputStream();
+		} catch (IOException e) {
+			SocksClientIOExceptionThrowingHelper.throwAsSocksClientIOException(
+					e, this.socks5Client);
+		}
+		return null;
 	}
 
 	@Override
 	public boolean getKeepAlive() throws SocketException {
-		return this.socks5SocketImpl.socket.getKeepAlive();
+		try {
+			return this.socks5SocketImpl.socket.getKeepAlive();
+		} catch (SocketException e) {
+			SocksClientSocketExceptionThrowingHelper.throwAsSocksClientSocketException(
+					e, this.socks5Client);
+		}
+		return false;
 	}
 
 	@Override
@@ -256,17 +467,35 @@ public final class Socks5Socket extends Socket {
 
 	@Override
 	public boolean getOOBInline() throws SocketException {
-		return this.socks5SocketImpl.socket.getOOBInline();
+		try {
+			return this.socks5SocketImpl.socket.getOOBInline();
+		} catch (SocketException e) {
+			SocksClientSocketExceptionThrowingHelper.throwAsSocksClientSocketException(
+					e, this.socks5Client);
+		}
+		return false;
 	}
 
 	@Override
 	public <T> T getOption(SocketOption<T> name) throws IOException {
-		return this.socks5SocketImpl.socket.getOption(name);
+		try {
+			return this.socks5SocketImpl.socket.getOption(name);
+		} catch (IOException e) {
+			SocksClientIOExceptionThrowingHelper.throwAsSocksClientIOException(
+					e, this.socks5Client);
+		}
+		return null;
 	}
 
 	@Override
 	public OutputStream getOutputStream() throws IOException {
-		return this.socks5SocketImpl.socket.getOutputStream();
+		try {
+			return this.socks5SocketImpl.getOutputStream();
+		} catch (IOException e) {
+			SocksClientIOExceptionThrowingHelper.throwAsSocksClientIOException(
+					e, this.socks5Client);
+		}
+		return null;
 	}
 
 	@Override
@@ -276,7 +505,13 @@ public final class Socks5Socket extends Socket {
 
 	@Override
 	public synchronized int getReceiveBufferSize() throws SocketException {
-		return this.socks5SocketImpl.socket.getReceiveBufferSize();
+		try {
+			return this.socks5SocketImpl.socket.getReceiveBufferSize();
+		} catch (SocketException e) {
+			SocksClientSocketExceptionThrowingHelper.throwAsSocksClientSocketException(
+					e, this.socks5Client);
+		}
+		return 0;
 	}
 
 	@Override
@@ -286,12 +521,24 @@ public final class Socks5Socket extends Socket {
 
 	@Override
 	public boolean getReuseAddress() throws SocketException {
-		return this.socks5SocketImpl.socket.getReuseAddress();
+		try {
+			return this.socks5SocketImpl.socket.getReuseAddress();
+		} catch (SocketException e) {
+			SocksClientSocketExceptionThrowingHelper.throwAsSocksClientSocketException(
+					e, this.socks5Client);
+		}
+		return false;
 	}
 	
 	@Override
 	public synchronized int getSendBufferSize() throws SocketException {
-		return this.socks5SocketImpl.socket.getSendBufferSize();
+		try {
+			return this.socks5SocketImpl.socket.getSendBufferSize();
+		} catch (SocketException e) {
+			SocksClientSocketExceptionThrowingHelper.throwAsSocksClientSocketException(
+					e, this.socks5Client);
+		}
+		return 0;
 	}
 
 	public Socks5Client getSocks5Client() {
@@ -300,22 +547,46 @@ public final class Socks5Socket extends Socket {
 
 	@Override
 	public int getSoLinger() throws SocketException {
-		return this.socks5SocketImpl.socket.getSoLinger();
+		try {
+			return this.socks5SocketImpl.socket.getSoLinger();
+		} catch (SocketException e) {
+			SocksClientSocketExceptionThrowingHelper.throwAsSocksClientSocketException(
+					e, this.socks5Client);
+		}
+		return 0;
 	}
 
 	@Override
 	public synchronized int getSoTimeout() throws SocketException {
-		return this.socks5SocketImpl.socket.getSoTimeout();
+		try {
+			return this.socks5SocketImpl.socket.getSoTimeout();
+		} catch (SocketException e) {
+			SocksClientSocketExceptionThrowingHelper.throwAsSocksClientSocketException(
+					e, this.socks5Client);
+		}
+		return 0;
 	}
 
 	@Override
 	public boolean getTcpNoDelay() throws SocketException {
-		return this.socks5SocketImpl.socket.getTcpNoDelay();
+		try {
+			return this.socks5SocketImpl.socket.getTcpNoDelay();
+		} catch (SocketException e) {
+			SocksClientSocketExceptionThrowingHelper.throwAsSocksClientSocketException(
+					e, this.socks5Client);
+		}
+		return false;
 	}
 
 	@Override
 	public int getTrafficClass() throws SocketException {
-		return this.socks5SocketImpl.socket.getTrafficClass();
+		try {
+			return this.socks5SocketImpl.socket.getTrafficClass();
+		} catch (SocketException e) {
+			SocksClientSocketExceptionThrowingHelper.throwAsSocksClientSocketException(
+					e, this.socks5Client);
+		}
+		return 0;
 	}
 
 	@Override
@@ -345,25 +616,44 @@ public final class Socks5Socket extends Socket {
 
 	@Override
 	public void sendUrgentData(int data) throws IOException {
-		this.socks5SocketImpl.socket.sendUrgentData(data);
+		try {
+			this.socks5SocketImpl.socket.sendUrgentData(data);
+		} catch (IOException e) {
+			SocksClientIOExceptionThrowingHelper.throwAsSocksClientIOException(
+					e, this.socks5Client);
+		}
 	}
 
 	@Override
 	public void setKeepAlive(boolean on) throws SocketException {
-		this.socks5SocketImpl.socket.setKeepAlive(on);
-
+		try {
+			this.socks5SocketImpl.socket.setKeepAlive(on);			
+		} catch (SocketException e) {
+			SocksClientSocketExceptionThrowingHelper.throwAsSocksClientSocketException(
+					e, this.socks5Client);
+		}
 	}
 
 	@Override
 	public void setOOBInline(boolean on) throws SocketException {
-		this.socks5SocketImpl.socket.setOOBInline(on);
+		try {
+			this.socks5SocketImpl.socket.setOOBInline(on);			
+		} catch (SocketException e) {
+			SocksClientSocketExceptionThrowingHelper.throwAsSocksClientSocketException(
+					e, this.socks5Client);
+		}
 	}
 
 	@Override
 	public <T> Socket setOption(
 			SocketOption<T> name, T value) throws IOException {
-		this.socks5SocketImpl.socket.setOption(name, value);
-		return this;
+		try {
+			return this.socks5SocketImpl.socket.setOption(name, value);
+		} catch (IOException e) {
+			SocksClientIOExceptionThrowingHelper.throwAsSocksClientIOException(
+					e, this.socks5Client);
+		}
+		return null;
 	}
 
 	@Override
@@ -375,48 +665,92 @@ public final class Socks5Socket extends Socket {
 
 	@Override
 	public synchronized void setReceiveBufferSize(int size) throws SocketException {
-		this.socks5SocketImpl.socket.setReceiveBufferSize(size);
+		try {
+			this.socks5SocketImpl.socket.setReceiveBufferSize(size);			
+		} catch (SocketException e) {
+			SocksClientSocketExceptionThrowingHelper.throwAsSocksClientSocketException(
+					e, this.socks5Client);
+		}
 	}
 
 	@Override
 	public void setReuseAddress(boolean on) throws SocketException {
-		this.socks5SocketImpl.socket.setReuseAddress(on);
-
+		try {
+			this.socks5SocketImpl.socket.setReuseAddress(on);			
+		} catch (SocketException e) {
+			SocksClientSocketExceptionThrowingHelper.throwAsSocksClientSocketException(
+					e, this.socks5Client);
+		}
 	}
 
 	@Override
 	public synchronized void setSendBufferSize(int size) throws SocketException {
-		this.socks5SocketImpl.socket.setSendBufferSize(size);
+		try {
+			this.socks5SocketImpl.socket.setSendBufferSize(size);			
+		} catch (SocketException e) {
+			SocksClientSocketExceptionThrowingHelper.throwAsSocksClientSocketException(
+					e, this.socks5Client);
+		}
 	}
 
 	@Override
 	public void setSoLinger(boolean on, int linger) throws SocketException {
-		this.socks5SocketImpl.socket.setSoLinger(on, linger);
+		try {
+			this.socks5SocketImpl.socket.setSoLinger(on, linger);			
+		} catch (SocketException e) {
+			SocksClientSocketExceptionThrowingHelper.throwAsSocksClientSocketException(
+					e, this.socks5Client);
+		}
 	}
 
 	@Override
 	public synchronized void setSoTimeout(int timeout) throws SocketException {
-		this.socks5SocketImpl.socket.setSoTimeout(timeout);
+		try {
+			this.socks5SocketImpl.socket.setSoTimeout(timeout);			
+		} catch (SocketException e) {
+			SocksClientSocketExceptionThrowingHelper.throwAsSocksClientSocketException(
+					e, this.socks5Client);
+		}
 	}
 
 	@Override
 	public void setTcpNoDelay(boolean on) throws SocketException {
-		this.socks5SocketImpl.socket.setTcpNoDelay(on);
+		try {
+			this.socks5SocketImpl.socket.setTcpNoDelay(on);			
+		} catch (SocketException e) {
+			SocksClientSocketExceptionThrowingHelper.throwAsSocksClientSocketException(
+					e, this.socks5Client);
+		}
 	}
 
 	@Override
 	public void setTrafficClass(int tc) throws SocketException {
-		this.socks5SocketImpl.socket.setTrafficClass(tc);
+		try {
+			this.socks5SocketImpl.socket.setTrafficClass(tc);			
+		} catch (SocketException e) {
+			SocksClientSocketExceptionThrowingHelper.throwAsSocksClientSocketException(
+					e, this.socks5Client);
+		}
 	}
 
 	@Override
 	public void shutdownInput() throws IOException {
-		this.socks5SocketImpl.socket.shutdownInput();
+		try {
+			this.socks5SocketImpl.socket.shutdownInput();
+		} catch (IOException e) {
+			SocksClientIOExceptionThrowingHelper.throwAsSocksClientIOException(
+					e, this.socks5Client);
+		}
 	}
 
 	@Override
 	public void shutdownOutput() throws IOException {
-		this.socks5SocketImpl.socket.shutdownOutput();
+		try {
+			this.socks5SocketImpl.socket.shutdownOutput();			
+		} catch (IOException e) {
+			SocksClientIOExceptionThrowingHelper.throwAsSocksClientIOException(
+					e, this.socks5Client);
+		}
 	}
 
 	@Override

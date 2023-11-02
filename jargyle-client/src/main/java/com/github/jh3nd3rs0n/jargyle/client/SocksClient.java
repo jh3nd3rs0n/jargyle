@@ -11,8 +11,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
-import com.github.jh3nd3rs0n.jargyle.client.internal.client.SocksClientExceptionThrowingHelper;
-import com.github.jh3nd3rs0n.jargyle.client.internal.client.SocksClientExceptionThrowingSocket;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.common.net.PortRange;
 import com.github.jh3nd3rs0n.jargyle.common.net.PortRanges;
@@ -210,38 +208,30 @@ public abstract class SocksClient {
 			connectTimeout = Integer.valueOf(this.properties.getValue(
 					GeneralPropertySpecConstants.CLIENT_CONNECT_TIMEOUT).intValue());
 		}
-		try {
-			InetAddress socksServerUriHostInetAddress =	this.resolve(
-					socksServerUriHost);
-			if (params.getMustBindBeforeConnect()) {
-				clientSock = this.getBoundConnectedClientSocket(
-						clientSock, 
-						params, 
-						socksServerUriHostInetAddress, 
-						socksServerUriPort, 
-						connectTimeout);
-			} else {
-				clientSock.connect(
-						new InetSocketAddress(
-								socksServerUriHostInetAddress, 
-								socksServerUriPort), 
-						connectTimeout);
-			}
-			if (this.sslSocketFactory == null) {
-				return new SocksClientExceptionThrowingSocket(
-						this, clientSock);
-			}
-			clientSock = this.sslSocketFactory.newSocket(
+		InetAddress socksServerUriHostInetAddress =	this.resolve(
+				socksServerUriHost);
+		if (params.getMustBindBeforeConnect()) {
+			clientSock = this.getBoundConnectedClientSocket(
 					clientSock, 
-					socksServerUriHost, 
+					params, 
+					socksServerUriHostInetAddress, 
 					socksServerUriPort, 
-					true);
-			clientSock = new SocksClientExceptionThrowingSocket(
-					this, clientSock);
-		} catch (IOException e) {
-			SocksClientExceptionThrowingHelper.throwAsSocksClientException(
-					e, this);
+					connectTimeout);
+		} else {
+			clientSock.connect(
+					new InetSocketAddress(
+							socksServerUriHostInetAddress, 
+							socksServerUriPort), 
+					connectTimeout);
 		}
+		if (this.sslSocketFactory == null) {
+			return clientSock;
+		}
+		clientSock = this.sslSocketFactory.newSocket(
+				clientSock, 
+				socksServerUriHost, 
+				socksServerUriPort, 
+				true);
 		return clientSock;		
 	}
 	
@@ -299,28 +289,19 @@ public abstract class SocksClient {
 			final int localPort) throws IOException {
 		String socksServerUriHost = this.socksServerUri.getHost();
 		int socksServerUriPort = this.socksServerUri.getPort();
-		Socket clientSocket = null;
-		try {
-			clientSocket = this.netObjectFactory.newSocket(
-					socksServerUriHost, 
-					socksServerUriPort, 
-					localAddr, 
-					localPort);
-			if (this.sslSocketFactory == null) {
-				return new SocksClientExceptionThrowingSocket(
-						this, clientSocket);
-			}
-			clientSocket = this.sslSocketFactory.newSocket(
-					clientSocket, 
-					socksServerUriHost, 
-					socksServerUriPort, 
-					true);
-			clientSocket = new SocksClientExceptionThrowingSocket(
-					this, clientSocket);
-		} catch (IOException e) {
-			SocksClientExceptionThrowingHelper.throwAsSocksClientException(
-					e, this);
+		Socket clientSocket = this.netObjectFactory.newSocket(
+				socksServerUriHost, 
+				socksServerUriPort, 
+				localAddr, 
+				localPort);
+		if (this.sslSocketFactory == null) {
+			return clientSocket;
 		}
+		clientSocket = this.sslSocketFactory.newSocket(
+				clientSocket, 
+				socksServerUriHost, 
+				socksServerUriPort, 
+				true);
 		return clientSocket;
 	}
 	

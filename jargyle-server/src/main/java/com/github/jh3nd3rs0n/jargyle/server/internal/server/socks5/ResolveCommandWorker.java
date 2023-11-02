@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
+import com.github.jh3nd3rs0n.jargyle.internal.lang.ThrowableHelper;
 import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
 import com.github.jh3nd3rs0n.jargyle.server.Rule;
 import com.github.jh3nd3rs0n.jargyle.server.RuleContext;
@@ -47,6 +48,17 @@ final class ResolveCommandWorker extends CommandWorker {
 			this.sendSocks5Reply(socks5Rep);
 			return;			
 		} catch (IOException e) {
+			if (ThrowableHelper.isOrHasInstanceOf(
+					e, UnknownHostException.class)) {
+				this.logger.error( 
+						ObjectLogMessageHelper.objectLogMessage(
+								this, "Error in resolving the hostname"), 
+						e);
+				socks5Rep = Socks5Reply.newFailureInstance(
+						Reply.HOST_UNREACHABLE);
+				this.sendSocks5Reply(socks5Rep);
+				return;				
+			}
 			this.logger.error( 
 					ObjectLogMessageHelper.objectLogMessage(
 							this, "Error in resolving the hostname"), 

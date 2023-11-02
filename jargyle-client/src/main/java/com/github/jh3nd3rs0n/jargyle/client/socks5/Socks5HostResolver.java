@@ -9,6 +9,7 @@ import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
 import com.github.jh3nd3rs0n.jargyle.client.Properties;
 import com.github.jh3nd3rs0n.jargyle.client.Socks5PropertySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.client.SocksClient.ClientSocketConnectParams;
+import com.github.jh3nd3rs0n.jargyle.client.internal.client.SocksClientIOExceptionThrowingHelper;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Address;
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.AddressType;
@@ -70,6 +71,9 @@ public final class Socks5HostResolver extends HostResolver {
 					throw e;
 				}
 			}
+		} catch (IOException e) {
+			SocksClientIOExceptionThrowingHelper.throwAsSocksClientIOException(
+					e, this.socks5Client);			
 		} finally {
 			if (sck != null && !sck.isClosed()) {
 				sck.close();
@@ -85,7 +89,7 @@ public final class Socks5HostResolver extends HostResolver {
 				socks5Rep.getServerBoundAddress().toString();
 		addressType = AddressType.valueForString(serverBoundAddress);
 		if (addressType.equals(AddressType.DOMAINNAME)) {
-			throw new Socks5ClientException(
+			throw new Socks5ClientIOException(
 					this.socks5Client, 
 					String.format(
 							"server bound address is not an IP address. "

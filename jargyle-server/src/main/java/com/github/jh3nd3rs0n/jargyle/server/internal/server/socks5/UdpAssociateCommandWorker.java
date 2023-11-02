@@ -21,6 +21,7 @@ import com.github.jh3nd3rs0n.jargyle.common.net.PortRange;
 import com.github.jh3nd3rs0n.jargyle.common.net.PortRanges;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSetting;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
+import com.github.jh3nd3rs0n.jargyle.internal.lang.ThrowableHelper;
 import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
 import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.DtlsDatagramSocketFactory;
 import com.github.jh3nd3rs0n.jargyle.server.GeneralRuleResultSpecConstants;
@@ -655,6 +656,10 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 			clientFacingDatagramSock.close();
 			throw e;
 		} catch (SocketException e) {
+			if (ThrowableHelper.isOrHasInstanceOf(e, BindException.class)) {
+				clientFacingDatagramSock.close();
+				throw new BindException();
+			}
 			this.logger.error( 
 					ObjectLogMessageHelper.objectLogMessage(
 							this, 
@@ -744,6 +749,10 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 			peerFacingDatagramSock.close();
 			throw e;
 		} catch (SocketException e) {
+			if (ThrowableHelper.isOrHasInstanceOf(e, BindException.class)) {
+				peerFacingDatagramSock.close();
+				throw new BindException();
+			}
 			this.logger.error( 
 					ObjectLogMessageHelper.objectLogMessage(
 							this, 

@@ -2,7 +2,7 @@ package com.github.jh3nd3rs0n.jargyle.client.socks5;
 
 import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Reply;
 
-public final class FailureSocks5ReplyException extends Socks5ClientException {
+public final class FailureSocks5ReplyException extends Socks5ClientIOException {
 
 	/**
 	 * 

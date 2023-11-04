@@ -13,8 +13,8 @@ import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.Socks5Use
 import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.Socks5UserpassauthUsernamePropertySpec;
 import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.StringPropertySpec;
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.Methods;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.gssapiauth.ProtectionLevels;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Methods;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapiauth.ProtectionLevels;
 
 public final class Socks5PropertySpecConstants {
 

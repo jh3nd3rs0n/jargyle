@@ -24,6 +24,10 @@ import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.internal.lang.ThrowableHelper;
 import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
 import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.DtlsDatagramSocketFactory;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Address;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Reply;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Socks5Reply;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Socks5Request;
 import com.github.jh3nd3rs0n.jargyle.server.GeneralRuleResultSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.GeneralSettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.Rule;
@@ -32,10 +36,6 @@ import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5RuleResultSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.internal.net.BandwidthLimitedDatagramSocket;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.Address;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.Reply;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Reply;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Request;
 
 final class UdpAssociateCommandWorker extends CommandWorker {
 

@@ -28,13 +28,13 @@ import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.common.net.StandardSocketSettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.internal.net.AllZerosAddressConstants;
 import com.github.jh3nd3rs0n.jargyle.internal.net.FilterSocket;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.Address;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.AddressType;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.Command;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.MethodEncapsulation;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Reply;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Request;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Address;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.AddressType;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Command;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Method;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.MethodEncapsulation;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Socks5Reply;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Socks5Request;
 
 public final class Socks5ServerSocket extends ServerSocket {
 

@@ -1,8 +1,8 @@
 package com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl;
 
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapiauth.ProtectionLevels;
 import com.github.jh3nd3rs0n.jargyle.server.Setting;
 import com.github.jh3nd3rs0n.jargyle.server.SettingSpec;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.gssapiauth.ProtectionLevels;
 
 public final class Socks5GssapiauthProtectionLevelsSettingSpec 
 	extends SettingSpec<ProtectionLevels> {

@@ -1,8 +1,8 @@
 package com.github.jh3nd3rs0n.jargyle.server.internal.ruleresultspec.impl;
 
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Address;
 import com.github.jh3nd3rs0n.jargyle.server.RuleResult;
 import com.github.jh3nd3rs0n.jargyle.server.RuleResultSpec;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.Address;
 
 public final class AddressRuleResultSpec extends RuleResultSpec<Address> {
 

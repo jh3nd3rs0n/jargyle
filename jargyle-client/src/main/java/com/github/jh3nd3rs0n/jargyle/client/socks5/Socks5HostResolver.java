@@ -11,14 +11,14 @@ import com.github.jh3nd3rs0n.jargyle.client.Socks5PropertySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.client.SocksClient.ClientSocketConnectParams;
 import com.github.jh3nd3rs0n.jargyle.client.internal.client.SocksClientIOExceptionThrowingHelper;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.Address;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.AddressType;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.Command;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.MethodEncapsulation;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.Reply;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Reply;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Request;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Address;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.AddressType;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Command;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Method;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.MethodEncapsulation;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Reply;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Socks5Reply;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Socks5Request;
 
 public final class Socks5HostResolver extends HostResolver {
 

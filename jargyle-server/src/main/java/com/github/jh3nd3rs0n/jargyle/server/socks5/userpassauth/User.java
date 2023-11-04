@@ -4,7 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.Objects;
 
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.userpassauth.UsernamePasswordRequest;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.userpassauth.UsernamePasswordRequest;
 
 public final class User {
 

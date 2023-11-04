@@ -17,6 +17,9 @@ import com.github.jh3nd3rs0n.jargyle.client.SchemeConstants;
 import com.github.jh3nd3rs0n.jargyle.common.net.StandardSocketSettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.HelpText;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Command;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Method;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapiauth.ProtectionLevel;
 import com.github.jh3nd3rs0n.jargyle.server.ChainingDtlsSettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.ChainingGeneralSettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.ChainingSocks5SettingSpecConstants;
@@ -35,9 +38,6 @@ import com.github.jh3nd3rs0n.jargyle.server.Socks5RuleConditionSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5RuleResultSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.SslSettingSpecConstants;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.Command;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.gssapiauth.ProtectionLevel;
 
 public abstract class ServerConfigurationCLI extends CLI {
 	

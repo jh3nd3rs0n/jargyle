@@ -1,8 +1,8 @@
 package com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl;
 
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Methods;
 import com.github.jh3nd3rs0n.jargyle.server.Setting;
 import com.github.jh3nd3rs0n.jargyle.server.SettingSpec;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.Methods;
 
 public final class Socks5MethodsSettingSpec extends SettingSpec<Methods> {
 

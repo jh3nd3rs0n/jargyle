@@ -8,6 +8,8 @@ import org.ietf.jgss.Oid;
 import com.github.jh3nd3rs0n.jargyle.client.Socks5PropertySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.HelpText;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Methods;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapiauth.ProtectionLevels;
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.BooleanSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.OidSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.Socks5GssapiauthProtectionLevelsSettingSpec;
@@ -15,8 +17,6 @@ import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.Socks5Meth
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.Socks5UserpassauthEncryptedPasswordSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.Socks5UserpassauthUsernameSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.StringSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.Methods;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.gssapiauth.ProtectionLevels;
 
 public final class ChainingSocks5SettingSpecConstants {
 

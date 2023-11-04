@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.net.DatagramSocket;
 import java.net.Socket;
 
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.MethodEncapsulation;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Method;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.MethodEncapsulation;
 
 final class MethodSubnegotiationResults {
 

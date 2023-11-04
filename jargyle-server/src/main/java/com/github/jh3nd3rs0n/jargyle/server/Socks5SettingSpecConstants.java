@@ -8,6 +8,8 @@ import com.github.jh3nd3rs0n.jargyle.common.net.Host;
 import com.github.jh3nd3rs0n.jargyle.common.net.PortRanges;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.HelpText;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Methods;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapiauth.ProtectionLevels;
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.BooleanSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.HostSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.PortRangesSettingSpec;
@@ -17,8 +19,6 @@ import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.Socks5Gssa
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.Socks5MethodsSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.Socks5UserpassauthUserRepositorySettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.UserRepository;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.Methods;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.gssapiauth.ProtectionLevels;
 
 public final class Socks5SettingSpecConstants {
 

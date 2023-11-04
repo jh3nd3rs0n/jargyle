@@ -26,15 +26,15 @@
 			<groupId>com.github.jh3nd3rs0n</groupId>
 			<artifactId>jargyle-internal</artifactId>
 			<version>${project.parent.version}</version>
-		</dependency>		
+		</dependency>
 		<dependency>
 			<groupId>com.github.jh3nd3rs0n</groupId>
-			<artifactId>jargyle-server</artifactId>
+			<artifactId>jargyle-protocolbase</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.github.jh3nd3rs0n</groupId>
-			<artifactId>jargyle-transport</artifactId>
+			<artifactId>jargyle-server</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>

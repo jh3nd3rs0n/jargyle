@@ -25,6 +25,8 @@ import com.github.jh3nd3rs0n.jargyle.internal.lang.ThrowableHelper;
 import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
 import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.DtlsDatagramSocketFactory;
 import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.SslSocketFactory;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.SocksException;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Version;
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.FirewallAction;
 import com.github.jh3nd3rs0n.jargyle.server.GeneralRuleArgSpecConstants;
@@ -37,8 +39,6 @@ import com.github.jh3nd3rs0n.jargyle.server.RuleContext;
 import com.github.jh3nd3rs0n.jargyle.server.SelectionStrategy;
 import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.internal.server.socks5.Socks5Worker;
-import com.github.jh3nd3rs0n.jargyle.transport.SocksException;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.Version;
 
 public class Worker implements Runnable {
 	

@@ -27,7 +27,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.github.jh3nd3rs0n</groupId>
-			<artifactId>jargyle-transport</artifactId>
+			<artifactId>jargyle-protocolbase</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 	</dependencies>

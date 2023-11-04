@@ -26,15 +26,15 @@ import com.github.jh3nd3rs0n.jargyle.common.lang.UnsignedByte;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.internal.net.AddressHelper;
 import com.github.jh3nd3rs0n.jargyle.internal.net.AllZerosAddressConstants;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.Address;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.AddressType;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.Command;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.MethodEncapsulation;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Exception;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Reply;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Request;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.UdpRequestHeader;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Address;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.AddressType;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Command;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Method;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.MethodEncapsulation;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Socks5Exception;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Socks5Reply;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Socks5Request;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.UdpRequestHeader;
 
 public final class Socks5DatagramSocket extends DatagramSocket {
 

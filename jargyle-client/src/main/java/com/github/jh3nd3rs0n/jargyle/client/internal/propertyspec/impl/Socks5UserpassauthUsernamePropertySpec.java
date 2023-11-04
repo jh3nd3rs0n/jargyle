@@ -2,7 +2,7 @@ package com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl;
 
 import com.github.jh3nd3rs0n.jargyle.client.Property;
 import com.github.jh3nd3rs0n.jargyle.client.PropertySpec;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.userpassauth.UsernamePasswordRequest;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.userpassauth.UsernamePasswordRequest;
 
 public final class Socks5UserpassauthUsernamePropertySpec extends PropertySpec<String> {
 

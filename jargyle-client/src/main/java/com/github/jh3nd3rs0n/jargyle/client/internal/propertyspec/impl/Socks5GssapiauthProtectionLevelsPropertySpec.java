@@ -2,7 +2,7 @@ package com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl;
 
 import com.github.jh3nd3rs0n.jargyle.client.Property;
 import com.github.jh3nd3rs0n.jargyle.client.PropertySpec;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.gssapiauth.ProtectionLevels;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapiauth.ProtectionLevels;
 
 public final class Socks5GssapiauthProtectionLevelsPropertySpec 
 	extends PropertySpec<ProtectionLevels> {

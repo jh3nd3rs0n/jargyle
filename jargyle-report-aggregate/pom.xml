@@ -44,17 +44,17 @@
 		</dependency>
 		<dependency>
 			<groupId>com.github.jh3nd3rs0n</groupId>
+			<artifactId>jargyle-protocolbase</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.jh3nd3rs0n</groupId>
 			<artifactId>jargyle-server</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.github.jh3nd3rs0n</groupId>
 			<artifactId>jargyle-server-test</artifactId>
-			<version>${project.parent.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.github.jh3nd3rs0n</groupId>
-			<artifactId>jargyle-transport</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 	</dependencies>

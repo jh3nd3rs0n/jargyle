@@ -17,21 +17,21 @@ import org.ietf.jgss.GSSException;
 import org.ietf.jgss.GSSManager;
 import org.ietf.jgss.MessageProp;
 
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Method;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.MethodEncapsulation;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.MethodSubnegotiationException;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapiauth.GssapiMethodEncapsulation;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapiauth.Message;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapiauth.MessageType;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapiauth.ProtectionLevel;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapiauth.ProtectionLevels;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.userpassauth.UsernamePasswordRequest;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.userpassauth.UsernamePasswordResponse;
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.HashedPassword;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.User;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.UserRepository;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.Method;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.MethodEncapsulation;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.MethodSubnegotiationException;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.gssapiauth.GssapiMethodEncapsulation;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.gssapiauth.Message;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.gssapiauth.MessageType;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.gssapiauth.ProtectionLevel;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.gssapiauth.ProtectionLevels;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.userpassauth.UsernamePasswordRequest;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.userpassauth.UsernamePasswordResponse;
 
 abstract class MethodSubnegotiator {
 	

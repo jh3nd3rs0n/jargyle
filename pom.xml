@@ -191,7 +191,7 @@
 		<module>test-help</module>
 		<module>jargyle-internal</module>
 		<module>jargyle-common</module>
-		<module>jargyle-transport</module>
+		<module>jargyle-protocolbase</module>
 		<module>jargyle-client</module>
 		<module>jargyle-server</module>
 		<module>jargyle-server-test</module>

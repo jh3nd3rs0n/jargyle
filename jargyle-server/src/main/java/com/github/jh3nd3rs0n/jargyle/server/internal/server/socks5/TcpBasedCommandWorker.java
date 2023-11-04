@@ -2,8 +2,8 @@ package com.github.jh3nd3rs0n.jargyle.server.internal.server.socks5;
 
 import java.io.IOException;
 
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Socks5Request;
 import com.github.jh3nd3rs0n.jargyle.server.internal.server.Relay;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.Socks5Request;
 
 class TcpBasedCommandWorker extends CommandWorker {
 

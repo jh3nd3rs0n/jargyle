@@ -9,6 +9,7 @@ import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.common.net.PortRange;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSetting;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.HelpText;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Address;
 import com.github.jh3nd3rs0n.jargyle.server.internal.ruleresultspec.impl.AddressRuleResultSpec;
 import com.github.jh3nd3rs0n.jargyle.server.internal.ruleresultspec.impl.BooleanRuleResultSpec;
 import com.github.jh3nd3rs0n.jargyle.server.internal.ruleresultspec.impl.HostRuleResultSpec;
@@ -17,7 +18,6 @@ import com.github.jh3nd3rs0n.jargyle.server.internal.ruleresultspec.impl.PortRan
 import com.github.jh3nd3rs0n.jargyle.server.internal.ruleresultspec.impl.PortRuleResultSpec;
 import com.github.jh3nd3rs0n.jargyle.server.internal.ruleresultspec.impl.PositiveIntegerRuleResultSpec;
 import com.github.jh3nd3rs0n.jargyle.server.internal.ruleresultspec.impl.SocketSettingRuleResultSpec;
-import com.github.jh3nd3rs0n.jargyle.transport.socks5.Address;
 
 public final class Socks5RuleResultSpecConstants {
 

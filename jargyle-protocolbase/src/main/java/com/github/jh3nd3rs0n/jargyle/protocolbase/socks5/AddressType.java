@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import com.github.jh3nd3rs0n.jargyle.common.lang.UnsignedByte;
-import com.github.jh3nd3rs0n.jargyle.internal.net.AddressHelper;
+import com.github.jh3nd3rs0n.jargyle.internal.net.InetAddressHelper;
 
 public enum AddressType {
 
@@ -22,7 +22,7 @@ public enum AddressType {
 		
 		@Override
 		public boolean isValueForString(final String string) {
-			return AddressHelper.isIpv4Address(string);
+			return InetAddressHelper.isIpv4Address(string);
 		}
 
 		@Override
@@ -75,7 +75,7 @@ public enum AddressType {
 		
 		@Override
 		public boolean isValueForString(final String string) {
-			return AddressHelper.isDomainname(string);
+			return InetAddressHelper.isDomainname(string);
 		}
 
 		@Override
@@ -133,7 +133,7 @@ public enum AddressType {
 		
 		@Override
 		public boolean isValueForString(final String string) {
-			return AddressHelper.isIpv6Address(string);
+			return InetAddressHelper.isIpv6Address(string);
 		}
 
 		@Override

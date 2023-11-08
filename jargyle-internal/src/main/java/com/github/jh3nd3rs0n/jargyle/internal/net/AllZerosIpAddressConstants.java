@@ -3,7 +3,7 @@ package com.github.jh3nd3rs0n.jargyle.internal.net;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-public final class AllZerosAddressConstants {
+public final class AllZerosIpAddressConstants {
 
 	public static final String IPV4_ADDRESS_AS_1_PART = "0";
 	
@@ -47,6 +47,6 @@ public final class AllZerosAddressConstants {
 		return inet6Address;
 	}
 	
-	private AllZerosAddressConstants() { }
+	private AllZerosIpAddressConstants() { }
 	
 }

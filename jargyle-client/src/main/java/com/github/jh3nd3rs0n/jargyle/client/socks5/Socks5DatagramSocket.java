@@ -24,8 +24,8 @@ import com.github.jh3nd3rs0n.jargyle.client.internal.client.SocksClientIOExcepti
 import com.github.jh3nd3rs0n.jargyle.client.internal.client.SocksClientSocketExceptionThrowingHelper;
 import com.github.jh3nd3rs0n.jargyle.common.lang.UnsignedByte;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
-import com.github.jh3nd3rs0n.jargyle.internal.net.AddressHelper;
-import com.github.jh3nd3rs0n.jargyle.internal.net.AllZerosAddressConstants;
+import com.github.jh3nd3rs0n.jargyle.internal.net.InetAddressHelper;
+import com.github.jh3nd3rs0n.jargyle.internal.net.AllZerosIpAddressConstants;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Address;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.AddressType;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Command;
@@ -196,7 +196,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			Properties properties = this.socks5Client.getProperties();
 			if (properties.getValue(
 					Socks5PropertySpecConstants.SOCKS5_CLIENT_UDP_ADDRESS_AND_PORT_UNKNOWN).booleanValue()) {
-				address = AllZerosAddressConstants.IPV4_ADDRESS;
+				address = AllZerosIpAddressConstants.IPV4_ADDRESS;
 				port = 0;
 			}
 			Socks5Request socks5Req = Socks5Request.newInstance(
@@ -218,7 +218,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 								+ "actual server bound address is %s", 
 								serverBoundAddress));
 			}
-			if (AddressHelper.isAllZerosAddress(serverBoundAddress)) {
+			if (InetAddressHelper.isAllZerosIpAddress(serverBoundAddress)) {
 				serverBoundAddress = 
 						this.socks5Client.getSocksServerUri().getHost();
 			}

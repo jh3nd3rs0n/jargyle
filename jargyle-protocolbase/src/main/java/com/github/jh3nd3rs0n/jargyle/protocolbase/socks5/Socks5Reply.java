@@ -8,7 +8,7 @@ import java.util.Arrays;
 
 import com.github.jh3nd3rs0n.jargyle.common.lang.UnsignedByte;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
-import com.github.jh3nd3rs0n.jargyle.internal.net.AllZerosAddressConstants;
+import com.github.jh3nd3rs0n.jargyle.internal.net.AllZerosIpAddressConstants;
 
 public final class Socks5Reply {
 
@@ -29,7 +29,7 @@ public final class Socks5Reply {
 		}
 		return newInstance(
 				reply, 
-				Address.newInstance(AllZerosAddressConstants.IPV4_ADDRESS),
+				Address.newInstance(AllZerosIpAddressConstants.IPV4_ADDRESS),
 				Port.newInstance(0));
 	}
 	

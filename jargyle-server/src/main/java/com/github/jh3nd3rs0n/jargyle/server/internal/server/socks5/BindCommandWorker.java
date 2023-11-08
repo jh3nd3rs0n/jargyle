@@ -27,7 +27,7 @@ import com.github.jh3nd3rs0n.jargyle.common.net.SocketSetting;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.internal.lang.ThrowableHelper;
 import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
-import com.github.jh3nd3rs0n.jargyle.internal.net.AddressHelper;
+import com.github.jh3nd3rs0n.jargyle.internal.net.InetAddressHelper;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Address;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Reply;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Socks5Reply;
@@ -556,7 +556,7 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 		if (desiredDestinationInetAddress == null) {
 			return null;
 		}
-		InetAddress bindInetAddress = (AddressHelper.isAllZerosAddress(
+		InetAddress bindInetAddress = (InetAddressHelper.isAllZerosIpAddress(
 				desiredDestinationInetAddress.getHostAddress())) ?
 						this.getListenBindHost().toInetAddress() 
 						: desiredDestinationInetAddress;

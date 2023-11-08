@@ -3,18 +3,18 @@ package com.github.jh3nd3rs0n.jargyle.server.internal.addressrange.impl;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-import com.github.jh3nd3rs0n.jargyle.internal.net.AddressHelper;
-import com.github.jh3nd3rs0n.jargyle.internal.net.AddressRegexConstants;
+import com.github.jh3nd3rs0n.jargyle.internal.net.InetAddressHelper;
+import com.github.jh3nd3rs0n.jargyle.internal.net.InetAddressRegexConstants;
 import com.github.jh3nd3rs0n.jargyle.internal.regex.RegexHelper;
 import com.github.jh3nd3rs0n.jargyle.server.AddressRange;
 
 public final class Ipv6AddressRange extends AddressRange {
 
 	private static final String ADDRESS_IN_COMPRESSED_FORM_REGEX =
-			AddressRegexConstants.IPV6_ADDRESS_IN_COMPRESSED_FORM_REGEX;
+			InetAddressRegexConstants.IPV6_ADDRESS_IN_COMPRESSED_FORM_REGEX;
 	
 	private static final String ADDRESS_IN_FULL_FORM_REGEX =
-			AddressRegexConstants.IPV6_ADDRESS_IN_FULL_FORM_REGEX;
+			InetAddressRegexConstants.IPV6_ADDRESS_IN_FULL_FORM_REGEX;
 	
 	private static final String FROM_ADDRESS_IN_COMPRESSED_FORM_TO_ADDRESS_IN_COMPRESSED_FORM_REGEX =
 			new StringBuilder()
@@ -45,7 +45,7 @@ public final class Ipv6AddressRange extends AddressRange {
 			.toString();
 
 	public static boolean isIpv6AddressRange(final String s) {
-		return AddressHelper.isIpv6Address(s)
+		return InetAddressHelper.isIpv6Address(s)
 				|| s.matches(RegexHelper.getRegexWithInputBoundaries(
 						FROM_ADDRESS_IN_COMPRESSED_FORM_TO_ADDRESS_IN_COMPRESSED_FORM_REGEX))
 				|| s.matches(RegexHelper.getRegexWithInputBoundaries(
@@ -114,7 +114,7 @@ public final class Ipv6AddressRange extends AddressRange {
 	
 	@Override
 	public boolean contains(final String address) {
-		if (!AddressHelper.isIpv6Address(address)) {
+		if (!InetAddressHelper.isIpv6Address(address)) {
 			return false;
 		}
 		InetAddress inetAddress = null;

@@ -3,24 +3,24 @@ package com.github.jh3nd3rs0n.jargyle.server.internal.addressrange.impl;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-import com.github.jh3nd3rs0n.jargyle.internal.net.AddressHelper;
-import com.github.jh3nd3rs0n.jargyle.internal.net.AddressRegexConstants;
+import com.github.jh3nd3rs0n.jargyle.internal.net.InetAddressHelper;
+import com.github.jh3nd3rs0n.jargyle.internal.net.InetAddressRegexConstants;
 import com.github.jh3nd3rs0n.jargyle.internal.regex.RegexHelper;
 import com.github.jh3nd3rs0n.jargyle.server.AddressRange;
 
 public final class Ipv4AddressRange extends AddressRange {
 	
 	private static final String ADDRESS_AS_1_PART_REGEX =
-			AddressRegexConstants.IPV4_ADDRESS_AS_1_PART_REGEX;
+			InetAddressRegexConstants.IPV4_ADDRESS_AS_1_PART_REGEX;
 	
 	private static final String ADDRESS_AS_2_PARTS_REGEX =
-			AddressRegexConstants.IPV4_ADDRESS_AS_2_PARTS_REGEX;
+			InetAddressRegexConstants.IPV4_ADDRESS_AS_2_PARTS_REGEX;
 	
 	private static final String ADDRESS_AS_3_PARTS_REGEX = 
-			AddressRegexConstants.IPV4_ADDRESS_AS_3_PARTS_REGEX;
+			InetAddressRegexConstants.IPV4_ADDRESS_AS_3_PARTS_REGEX;
 	
 	private static final String ADDRESS_AS_4_PARTS_REGEX =
-			AddressRegexConstants.IPV4_ADDRESS_AS_4_PARTS_REGEX;
+			InetAddressRegexConstants.IPV4_ADDRESS_AS_4_PARTS_REGEX;
 	
 	private static final String FROM_ADDRESS_AS_1_PART_TO_ADDRESS_AS_1_PART_REGEX = 
 			new StringBuilder()
@@ -135,7 +135,7 @@ public final class Ipv4AddressRange extends AddressRange {
 			.toString();
 
 	public static boolean isIpv4AddressRange(final String s) {
-		return AddressHelper.isIpv4Address(s)
+		return InetAddressHelper.isIpv4Address(s)
 				|| s.matches(RegexHelper.getRegexWithInputBoundaries(
 						FROM_ADDRESS_AS_1_PART_TO_ADDRESS_AS_1_PART_REGEX))
 				|| s.matches(RegexHelper.getRegexWithInputBoundaries(
@@ -228,7 +228,7 @@ public final class Ipv4AddressRange extends AddressRange {
 	
 	@Override
 	public boolean contains(final String address) {
-		if (!AddressHelper.isIpv4Address(address)) {
+		if (!InetAddressHelper.isIpv4Address(address)) {
 			return false;
 		}
 		InetAddress inetAddress = null;

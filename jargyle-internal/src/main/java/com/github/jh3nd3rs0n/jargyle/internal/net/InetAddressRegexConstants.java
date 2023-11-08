@@ -1,6 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.internal.net;
 
-public final class AddressRegexConstants {
+public final class InetAddressRegexConstants {
 
 	public static final String DOMAINNAME_REGEX = 
 			"([a-z0-9]|[a-z0-9][a-z0-9-_]*[a-z0-9])"
@@ -23,6 +23,6 @@ public final class AddressRegexConstants {
 	public static final String IPV6_ADDRESS_IN_FULL_FORM_REGEX = 
 			"[a-fA-F0-9]{1,4}(:[a-fA-F0-9]{1,4}){7}+";
 
-	private AddressRegexConstants() { }
+	private InetAddressRegexConstants() { }
 	
 }

@@ -21,7 +21,7 @@ import com.github.jh3nd3rs0n.jargyle.common.lang.UnsignedByte;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.internal.lang.ThrowableHelper;
 import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
-import com.github.jh3nd3rs0n.jargyle.internal.net.AddressHelper;
+import com.github.jh3nd3rs0n.jargyle.internal.net.InetAddressHelper;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Address;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.UdpRequestHeader;
 import com.github.jh3nd3rs0n.jargyle.server.FirewallAction;
@@ -162,7 +162,7 @@ final class UdpRelayServer {
 		}
 		
 		private boolean canSendDatagramPacket() {
-			return !AddressHelper.isAllZerosAddress(
+			return !InetAddressHelper.isAllZerosIpAddress(
 					this.udpRelayServer.getClientAddress())
 					&& this.udpRelayServer.getClientPort() != 0;
 		}
@@ -372,7 +372,7 @@ final class UdpRelayServer {
 			String address = packet.getAddress().getHostAddress();
 			int port = packet.getPort();
 			String clientAddr = this.udpRelayServer.getClientAddress();
-			if (AddressHelper.isAllZerosAddress(clientAddr)) {
+			if (InetAddressHelper.isAllZerosIpAddress(clientAddr)) {
 				this.udpRelayServer.setClientAddress(address);
 			} else {
 				InetAddress clientInetAddr = null;

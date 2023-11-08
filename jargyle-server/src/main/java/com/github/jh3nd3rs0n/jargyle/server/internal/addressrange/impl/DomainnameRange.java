@@ -3,15 +3,15 @@ package com.github.jh3nd3rs0n.jargyle.server.internal.addressrange.impl;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.github.jh3nd3rs0n.jargyle.internal.net.AddressHelper;
-import com.github.jh3nd3rs0n.jargyle.internal.net.AddressRegexConstants;
+import com.github.jh3nd3rs0n.jargyle.internal.net.InetAddressHelper;
+import com.github.jh3nd3rs0n.jargyle.internal.net.InetAddressRegexConstants;
 import com.github.jh3nd3rs0n.jargyle.internal.regex.RegexHelper;
 import com.github.jh3nd3rs0n.jargyle.server.AddressRange;
 
 public final class DomainnameRange extends AddressRange {
 
 	private static final String DOMAINNAME_REGEX =
-			AddressRegexConstants.DOMAINNAME_REGEX;
+			InetAddressRegexConstants.DOMAINNAME_REGEX;
 	
 	private static final String DOMAINNAME_REGEX_REGEX = "regex:(?<regex>.*)";
 	
@@ -52,7 +52,7 @@ public final class DomainnameRange extends AddressRange {
 	
 	@Override
 	public boolean contains(final String address) {
-		if (!AddressHelper.isDomainname(address)) {
+		if (!InetAddressHelper.isDomainname(address)) {
 			return false;
 		}
 		if (this.hasRegularExpression) {

@@ -44,9 +44,9 @@ public final class GeneralSettingSpecConstants {
 					Host.getAllZerosInet4Instance()));
 	
 	@HelpText(
-			doc = "The space separated list of default binding port ranges "
+			doc = "The comma separated list of default binding port ranges "
 					+ "for all TCP sockets (default is 0)",
-			usage = "bindTcpPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]"
+			usage = "bindTcpPortRanges=[PORT_RANGE1[,PORT_RANGE2[...]]]"
 	)
 	public static final SettingSpec<PortRanges> BIND_TCP_PORT_RANGES =
 			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
@@ -54,9 +54,9 @@ public final class GeneralSettingSpecConstants {
 					PortRanges.getDefault()));
 	
 	@HelpText(
-			doc = "The space separated list of default binding port ranges "
+			doc = "The comma separated list of default binding port ranges "
 					+ "for all UDP sockets (default is 0)",
-			usage = "bindUdpPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]"
+			usage = "bindUdpPortRanges=[PORT_RANGE1[,PORT_RANGE2[...]]]"
 	)
 	public static final SettingSpec<PortRanges> BIND_UDP_PORT_RANGES =
 			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
@@ -64,9 +64,9 @@ public final class GeneralSettingSpecConstants {
 					PortRanges.getDefault()));
 	
 	@HelpText(
-			doc = "The space separated list of socket settings for the "
+			doc = "The comma separated list of socket settings for the "
 					+ "client socket", 
-			usage = "clientSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[ ...]]]"
+			usage = "clientSocketSettings=[SOCKET_SETTING1[,SOCKET_SETTING2[...]]]"
 	)
 	public static final SettingSpec<SocketSettings> CLIENT_SOCKET_SETTINGS = 
 			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
@@ -93,9 +93,9 @@ public final class GeneralSettingSpecConstants {
 					null));
 	
 	@HelpText(
-			doc = "The space separated list of default binding port ranges "
+			doc = "The comma separated list of default binding port ranges "
 					+ "for all external-facing TCP sockets",
-			usage = "externalFacingBindTcpPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]"
+			usage = "externalFacingBindTcpPortRanges=[PORT_RANGE1[,PORT_RANGE2[...]]]"
 	)
 	public static final SettingSpec<PortRanges> EXTERNAL_FACING_BIND_TCP_PORT_RANGES =
 			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
@@ -103,9 +103,9 @@ public final class GeneralSettingSpecConstants {
 					PortRanges.newInstance()));
 			
 	@HelpText(
-			doc = "The space separated list of default binding port ranges "
+			doc = "The comma separated list of default binding port ranges "
 					+ "for all external-facing UDP sockets",
-			usage = "externalFacingBindUdpPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]"
+			usage = "externalFacingBindUdpPortRanges=[PORT_RANGE1[,PORT_RANGE2[...]]]"
 	)
 	public static final SettingSpec<PortRanges> EXTERNAL_FACING_BIND_UDP_PORT_RANGES =
 			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
@@ -113,9 +113,9 @@ public final class GeneralSettingSpecConstants {
 					PortRanges.newInstance()));
 	
 	@HelpText(
-			doc = "The space separated list of default socket settings for all "
+			doc = "The comma separated list of default socket settings for all "
 					+ "external-facing sockets",
-			usage = "externalFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[ ...]]]"
+			usage = "externalFacingSocketSettings=[SOCKET_SETTING1[,SOCKET_SETTING2[...]]]"
 	)
 	public static final SettingSpec<SocketSettings> EXTERNAL_FACING_SOCKET_SETTINGS =
 			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
@@ -133,9 +133,9 @@ public final class GeneralSettingSpecConstants {
 					null));
 	
 	@HelpText(
-			doc = "The space separated list of default binding port ranges "
+			doc = "The comma separated list of default binding port ranges "
 					+ "for all internal-facing TCP sockets",
-			usage = "internalFacingBindTcpPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]"
+			usage = "internalFacingBindTcpPortRanges=[PORT_RANGE1[,PORT_RANGE2[...]]]"
 	)
 	public static final SettingSpec<PortRanges> INTERNAL_FACING_BIND_TCP_PORT_RANGES =
 			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
@@ -143,9 +143,9 @@ public final class GeneralSettingSpecConstants {
 					PortRanges.newInstance()));
 			
 	@HelpText(
-			doc = "The space separated list of default binding port ranges "
+			doc = "The comma separated list of default binding port ranges "
 					+ "for all internal-facing UDP sockets",
-			usage = "internalFacingBindUdpPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]"
+			usage = "internalFacingBindUdpPortRanges=[PORT_RANGE1[,PORT_RANGE2[...]]]"
 	)
 	public static final SettingSpec<PortRanges> INTERNAL_FACING_BIND_UDP_PORT_RANGES =
 			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
@@ -153,9 +153,9 @@ public final class GeneralSettingSpecConstants {
 					PortRanges.newInstance()));
 	
 	@HelpText(
-			doc = "The space separated list of default socket settings for all "
+			doc = "The comma separated list of default socket settings for all "
 					+ "internal-facing sockets",
-			usage = "internalFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[ ...]]]"
+			usage = "internalFacingSocketSettings=[SOCKET_SETTING1[,SOCKET_SETTING2[...]]]"
 	)
 	public static final SettingSpec<SocketSettings> INTERNAL_FACING_SOCKET_SETTINGS =
 			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
@@ -203,7 +203,7 @@ public final class GeneralSettingSpecConstants {
 	@HelpText(
 			doc = "A rule for the SOCKS server "
 					+ "(default is firewallAction=ALLOW)", 
-			usage = "rule=[RULE_CONDITION1[ RULE_CONDITION2[ ...]]] [RULE_RESULT1[ RULE_RESULT2[ ...]]]"
+			usage = "rule=[RULE_CONDITION1,[RULE_CONDITION2,[...]]]RULE_RESULT1[,RULE_RESULT2[...]]"
 	)	
 	public static final SettingSpec<Rule> RULE = 
 			SETTING_SPECS.addThenGet(new RuleSettingSpec(
@@ -211,9 +211,9 @@ public final class GeneralSettingSpecConstants {
 					Rule.getDefault()));
 	
 	@HelpText(
-			doc = "The space separated list of default socket settings for all "
+			doc = "The comma separated list of default socket settings for all "
 					+ "sockets", 
-			usage = "socketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[ ...]]]"
+			usage = "socketSettings=[SOCKET_SETTING1[,SOCKET_SETTING2[...]]]"
 	)
 	public static final SettingSpec<SocketSettings> SOCKET_SETTINGS = 
 			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
@@ -231,9 +231,9 @@ public final class GeneralSettingSpecConstants {
 					null));
 	
 	@HelpText(
-			doc = "The space separated list of binding port ranges for the "
+			doc = "The comma separated list of binding port ranges for the "
 					+ "SOCKS server socket",
-			usage = "socksServerBindPortRanges[PORT_RANGE1[ PORT_RANGE2[ ...]]]"
+			usage = "socksServerBindPortRanges[PORT_RANGE1[,PORT_RANGE2[...]]]"
 	)
 	public static final SettingSpec<PortRanges> SOCKS_SERVER_BIND_PORT_RANGES =
 			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
@@ -241,9 +241,9 @@ public final class GeneralSettingSpecConstants {
 					PortRanges.newInstance()));
 	
 	@HelpText(
-			doc = "The space separated list of socket settings for the SOCKS "
+			doc = "The comma separated list of socket settings for the SOCKS "
 					+ "server socket",
-			usage = "socksServerSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[ ...]]]"
+			usage = "socksServerSocketSettings=[SOCKET_SETTING1[,SOCKET_SETTING2[...]]]"
 	)
 	public static final SettingSpec<SocketSettings> SOCKS_SERVER_SOCKET_SETTINGS =
 			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(

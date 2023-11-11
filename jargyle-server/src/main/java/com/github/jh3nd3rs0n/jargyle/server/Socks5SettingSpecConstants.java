@@ -37,12 +37,12 @@ public final class Socks5SettingSpecConstants {
 					Boolean.FALSE));
 	
 	@HelpText(
-			doc = "The space separated list of acceptable protection levels "
+			doc = "The comma separated list of acceptable protection levels "
 					+ "after GSS-API authentication (The first is preferred "
 					+ "if the client does not provide a protection level that "
 					+ "is acceptable.) (default is REQUIRED_INTEG_AND_CONF "
 					+ "REQUIRED_INTEG NONE)", 
-			usage = "socks5.gssapiauth.protectionLevels=SOCKS5_GSSAPIAUTH_PROTECTION_LEVEL1[ SOCKS5_GSSAPIAUTH_PROTECTION_LEVEL2[ ...]]"
+			usage = "socks5.gssapiauth.protectionLevels=SOCKS5_GSSAPIAUTH_PROTECTION_LEVEL1[,SOCKS5_GSSAPIAUTH_PROTECTION_LEVEL2[...]]"
 	)
 	public static final SettingSpec<ProtectionLevels> SOCKS5_GSSAPIAUTH_PROTECTION_LEVELS = 
 			SETTING_SPECS.addThenGet(new Socks5GssapiauthProtectionLevelsSettingSpec(
@@ -50,10 +50,10 @@ public final class Socks5SettingSpecConstants {
 					ProtectionLevels.getDefault()));
 	
 	@HelpText(
-			doc = "The space separated list of acceptable authentication "
+			doc = "The comma separated list of acceptable authentication "
 					+ "methods in order of preference (default is "
 					+ "NO_AUTHENTICATION_REQUIRED)", 
-			usage = "socks5.methods=[SOCKS5_METHOD1[ SOCKS5_METHOD2[ ...]]]"
+			usage = "socks5.methods=[SOCKS5_METHOD1[,SOCKS5_METHOD2[...]]]"
 	)
 	public static final SettingSpec<Methods> SOCKS5_METHODS = 
 			SETTING_SPECS.addThenGet(new Socks5MethodsSettingSpec(
@@ -61,9 +61,9 @@ public final class Socks5SettingSpecConstants {
 					Methods.getDefault()));
 	
 	@HelpText(
-			doc = "The space separated list of socket settings for the inbound "
+			doc = "The comma separated list of socket settings for the inbound "
 					+ "socket", 
-			usage = "socks5.onBind.inboundSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[ ...]]]"
+			usage = "socks5.onBind.inboundSocketSettings=[SOCKET_SETTING1[,SOCKET_SETTING2[...]]]"
 	)
 	public static final SettingSpec<SocketSettings> SOCKS5_ON_BIND_INBOUND_SOCKET_SETTINGS = 
 			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
@@ -81,9 +81,9 @@ public final class Socks5SettingSpecConstants {
 					null));
 	
 	@HelpText(
-			doc = "The space separated list of binding port ranges for the "
+			doc = "The comma separated list of binding port ranges for the "
 					+ "listen socket if the provided port is zero",
-			usage = "socks5.onBind.listenBindPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]"
+			usage = "socks5.onBind.listenBindPortRanges=[PORT_RANGE1[,PORT_RANGE2[...]]]"
 	)
 	public static final SettingSpec<PortRanges> SOCKS5_ON_BIND_LISTEN_BIND_PORT_RANGES =
 			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
@@ -91,9 +91,9 @@ public final class Socks5SettingSpecConstants {
 					PortRanges.newInstance()));
 	
 	@HelpText(
-			doc = "The space separated list of socket settings for the listen "
+			doc = "The comma separated list of socket settings for the listen "
 					+ "socket", 
-			usage = "socks5.onBind.listenSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[ ...]]]"
+			usage = "socks5.onBind.listenSocketSettings=[SOCKET_SETTING1[,SOCKET_SETTING2[...]]]"
 	)
 	public static final SettingSpec<SocketSettings> SOCKS5_ON_BIND_LISTEN_SOCKET_SETTINGS = 
 			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
@@ -148,9 +148,9 @@ public final class Socks5SettingSpecConstants {
 					null));
 	
 	@HelpText(
-			doc = "The space separated list of binding port ranges for all TCP "
+			doc = "The comma separated list of binding port ranges for all TCP "
 					+ "sockets",
-			usage = "socks5.onCommand.bindTcpPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]"
+			usage = "socks5.onCommand.bindTcpPortRanges=[PORT_RANGE1[,PORT_RANGE2[...]]]"
 	)
 	public static final SettingSpec<PortRanges> SOCKS5_ON_COMMAND_BIND_TCP_PORT_RANGES =
 			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
@@ -158,9 +158,9 @@ public final class Socks5SettingSpecConstants {
 					PortRanges.newInstance()));
 			
 	@HelpText(
-			doc = "The space separated list of binding port ranges for all UDP "
+			doc = "The comma separated list of binding port ranges for all UDP "
 					+ "sockets",
-			usage = "socks5.onCommand.bindUdpPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]"
+			usage = "socks5.onCommand.bindUdpPortRanges=[PORT_RANGE1[,PORT_RANGE2[...]]]"
 	)
 	public static final SettingSpec<PortRanges> SOCKS5_ON_COMMAND_BIND_UDP_PORT_RANGES =
 			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
@@ -178,9 +178,9 @@ public final class Socks5SettingSpecConstants {
 					null));
 	
 	@HelpText(
-			doc = "The space separated list of binding port ranges for all "
+			doc = "The comma separated list of binding port ranges for all "
 					+ "external-facing TCP sockets",
-			usage = "socks5.onCommand.externalFacingBindTcpPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]"
+			usage = "socks5.onCommand.externalFacingBindTcpPortRanges=[PORT_RANGE1[,PORT_RANGE2[...]]]"
 	)
 	public static final SettingSpec<PortRanges> SOCKS5_ON_COMMAND_EXTERNAL_FACING_BIND_TCP_PORT_RANGES =
 			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
@@ -188,9 +188,9 @@ public final class Socks5SettingSpecConstants {
 					PortRanges.newInstance()));
 			
 	@HelpText(
-			doc = "The space separated list of binding port ranges for all "
+			doc = "The comma separated list of binding port ranges for all "
 					+ "external-facing UDP sockets",
-			usage = "socks5.onCommand.externalFacingBindUdpPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]"
+			usage = "socks5.onCommand.externalFacingBindUdpPortRanges=[PORT_RANGE1[,PORT_RANGE2[...]]]"
 	)
 	public static final SettingSpec<PortRanges> SOCKS5_ON_COMMAND_EXTERNAL_FACING_BIND_UDP_PORT_RANGES =
 			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
@@ -198,9 +198,9 @@ public final class Socks5SettingSpecConstants {
 					PortRanges.newInstance()));
 	
 	@HelpText(
-			doc = "The space separated list of socket settings for all "
+			doc = "The comma separated list of socket settings for all "
 					+ "external-facing sockets",
-			usage = "socks5.onCommand.externalFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[ ...]]]"
+			usage = "socks5.onCommand.externalFacingSocketSettings=[SOCKET_SETTING1[,SOCKET_SETTING2[...]]]"
 	)
 	public static final SettingSpec<SocketSettings> SOCKS5_ON_COMMAND_EXTERNAL_FACING_SOCKET_SETTINGS =
 			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
@@ -218,9 +218,9 @@ public final class Socks5SettingSpecConstants {
 					null));
 	
 	@HelpText(
-			doc = "The space separated list of binding port ranges for all "
+			doc = "The comma separated list of binding port ranges for all "
 					+ "internal-facing TCP sockets",
-			usage = "socks5.onCommand.internalFacingBindTcpPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]"
+			usage = "socks5.onCommand.internalFacingBindTcpPortRanges=[PORT_RANGE1[,PORT_RANGE2[...]]]"
 	)
 	public static final SettingSpec<PortRanges> SOCKS5_ON_COMMAND_INTERNAL_FACING_BIND_TCP_PORT_RANGES =
 			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
@@ -228,9 +228,9 @@ public final class Socks5SettingSpecConstants {
 					PortRanges.newInstance()));
 			
 	@HelpText(
-			doc = "The space separated list of binding port ranges for all "
+			doc = "The comma separated list of binding port ranges for all "
 					+ "internal-facing UDP sockets",
-			usage = "socks5.onCommand.internalFacingBindUdpPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]"
+			usage = "socks5.onCommand.internalFacingBindUdpPortRanges=[PORT_RANGE1[,PORT_RANGE2[...]]]"
 	)
 	public static final SettingSpec<PortRanges> SOCKS5_ON_COMMAND_INTERNAL_FACING_BIND_UDP_PORT_RANGES =
 			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
@@ -238,9 +238,9 @@ public final class Socks5SettingSpecConstants {
 					PortRanges.newInstance()));
 	
 	@HelpText(
-			doc = "The space separated list of socket settings for all "
+			doc = "The comma separated list of socket settings for all "
 					+ "internal-facing sockets",
-			usage = "socks5.onCommand.internalFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[ ...]]]"
+			usage = "socks5.onCommand.internalFacingSocketSettings=[SOCKET_SETTING1[,SOCKET_SETTING2[...]]]"
 	)
 	public static final SettingSpec<SocketSettings> SOCKS5_ON_COMMAND_INTERNAL_FACING_SOCKET_SETTINGS =
 			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
@@ -288,8 +288,8 @@ public final class Socks5SettingSpecConstants {
 					null));	
 	
 	@HelpText(
-			doc = "The space separated list of socket settings for all sockets",
-			usage = "socks5.onCommand.socketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[ ...]]]"
+			doc = "The comma separated list of socket settings for all sockets",
+			usage = "socks5.onCommand.socketSettings=[SOCKET_SETTING1[,SOCKET_SETTING2[...]]]"
 	)
 	public static final SettingSpec<SocketSettings> SOCKS5_ON_COMMAND_SOCKET_SETTINGS =
 			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
@@ -358,9 +358,9 @@ public final class Socks5SettingSpecConstants {
 					null));
 	
 	@HelpText(
-			doc = "The space separated list of binding port ranges for the "
+			doc = "The comma separated list of binding port ranges for the "
 					+ "server-facing socket", 
-			usage = "socks5.onConnect.serverFacingBindPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]"
+			usage = "socks5.onConnect.serverFacingBindPortRanges=[PORT_RANGE1[,PORT_RANGE2[...]]]"
 	)	
 	public static final SettingSpec<PortRanges> SOCKS5_ON_CONNECT_SERVER_FACING_BIND_PORT_RANGES =
 			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
@@ -378,9 +378,9 @@ public final class Socks5SettingSpecConstants {
 					PositiveInteger.newInstance(60000)));
 	
 	@HelpText(
-			doc = "The space separated list of socket settings for the "
+			doc = "The comma separated list of socket settings for the "
 					+ "server-facing socket", 
-			usage = "socks5.onConnect.serverFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[ ...]]]"
+			usage = "socks5.onConnect.serverFacingSocketSettings=[SOCKET_SETTING1[,SOCKET_SETTING2[...]]]"
 	)
 	public static final SettingSpec<SocketSettings> SOCKS5_ON_CONNECT_SERVER_FACING_SOCKET_SETTINGS = 
 			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
@@ -398,9 +398,9 @@ public final class Socks5SettingSpecConstants {
 					null));
 	
 	@HelpText(
-			doc = "The space separated list of binding port ranges for the "
+			doc = "The comma separated list of binding port ranges for the "
 					+ "client-facing UDP socket", 
-			usage = "socks5.onUdpAssociate.clientFacingBindPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]"
+			usage = "socks5.onUdpAssociate.clientFacingBindPortRanges=[PORT_RANGE1[,PORT_RANGE2[...]]]"
 	)	
 	public static final SettingSpec<PortRanges> SOCKS5_ON_UDP_ASSOCIATE_CLIENT_FACING_BIND_PORT_RANGES =
 			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
@@ -408,9 +408,9 @@ public final class Socks5SettingSpecConstants {
 					PortRanges.newInstance()));
 	
 	@HelpText(
-			doc = "The space separated list of socket settings for the "
+			doc = "The comma separated list of socket settings for the "
 					+ "client-facing UDP socket", 
-			usage = "socks5.onUdpAssociate.clientFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[ ...]]]"
+			usage = "socks5.onUdpAssociate.clientFacingSocketSettings=[SOCKET_SETTING1[,SOCKET_SETTING2[...]]]"
 	)
 	public static final SettingSpec<SocketSettings> SOCKS5_ON_UDP_ASSOCIATE_CLIENT_FACING_SOCKET_SETTINGS = 
 			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
@@ -428,9 +428,9 @@ public final class Socks5SettingSpecConstants {
 					null));
 	
 	@HelpText(
-			doc = "The space separated list of binding port ranges for the "
+			doc = "The comma separated list of binding port ranges for the "
 					+ "peer-facing UDP socket", 
-			usage = "socks5.onUdpAssociate.peerFacingBindPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]"
+			usage = "socks5.onUdpAssociate.peerFacingBindPortRanges=[PORT_RANGE1[,PORT_RANGE2[...]]]"
 	)	
 	public static final SettingSpec<PortRanges> SOCKS5_ON_UDP_ASSOCIATE_PEER_FACING_BIND_PORT_RANGES =
 			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
@@ -438,9 +438,9 @@ public final class Socks5SettingSpecConstants {
 					PortRanges.newInstance()));
 	
 	@HelpText(
-			doc = "The space separated list of socket settings for the "
+			doc = "The comma separated list of socket settings for the "
 					+ "peer-facing UDP socket", 
-			usage = "socks5.onUdpAssociate.peerFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[ ...]]]"
+			usage = "socks5.onUdpAssociate.peerFacingSocketSettings=[SOCKET_SETTING1[,SOCKET_SETTING2[...]]]"
 	)
 	public static final SettingSpec<SocketSettings> SOCKS5_ON_UDP_ASSOCIATE_PEER_FACING_SOCKET_SETTINGS = 
 			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
@@ -486,8 +486,9 @@ public final class Socks5SettingSpecConstants {
 					null));
 	
 	@HelpText(
-			doc = "The user repository used for username password authentication", 
-			usage = "socks5.userpassauth.userRepository=CLASS_NAME:INITIALIZATION_STRING"
+			doc = "The user repository used for username password "
+					+ "authentication (default is StringSourceUserRepository:)", 
+			usage = "socks5.userpassauth.userRepository=SOCKS5_USERPASSAUTH_USER_REPOSITORY"
 	)	
 	public static final SettingSpec<UserRepository> SOCKS5_USERPASSAUTH_USER_REPOSITORY = 
 			SETTING_SPECS.addThenGet(new Socks5UserpassauthUserRepositorySettingSpec(

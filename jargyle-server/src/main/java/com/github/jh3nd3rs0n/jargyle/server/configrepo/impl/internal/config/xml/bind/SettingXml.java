@@ -2,10 +2,10 @@ package com.github.jh3nd3rs0n.jargyle.server.configrepo.impl.internal.config.xml
 
 import java.util.Objects;
 
-import com.github.jh3nd3rs0n.jargyle.common.lang.Strings;
 import com.github.jh3nd3rs0n.jargyle.common.net.PortRanges;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
+import com.github.jh3nd3rs0n.jargyle.common.string.CommaSeparatedValues;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Methods;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapiauth.ProtectionLevels;
 import com.github.jh3nd3rs0n.jargyle.server.Rule;
@@ -24,6 +24,9 @@ class SettingXml {
 	
 	private static ValueXml newValueXml(final Object val) {
 		Objects.requireNonNull(val);
+		if (val instanceof CommaSeparatedValues) {
+			return new ValuesXml((CommaSeparatedValues) val);
+		}
 		if (val instanceof EncryptedPassword) {
 			return new EncryptedPasswordXml((EncryptedPassword) val);
 		}
@@ -41,9 +44,6 @@ class SettingXml {
 		}
 		if (val instanceof SocketSettings) {
 			return new SocketSettingsXml((SocketSettings) val);
-		}
-		if (val instanceof Strings) {
-			return new ValuesXml((Strings) val);
 		}
 		if (val instanceof UserRepository) {
 			return new Socks5UserpassauthUserRepositoryXml((UserRepository) val);

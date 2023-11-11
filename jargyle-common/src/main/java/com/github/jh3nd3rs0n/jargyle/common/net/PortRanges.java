@@ -28,7 +28,7 @@ public final class PortRanges {
 		if (s.isEmpty()) {
 			return newInstance(prtRanges);
 		}
-		String[] sElements = s.split(" ");
+		String[] sElements = s.split(",");
 		for (String sElement : sElements) {
 			PortRange prtRange = PortRange.newInstance(sElement);
 			prtRanges.add(prtRange);
@@ -89,7 +89,7 @@ public final class PortRanges {
 	public String toString() {
 		return this.portRanges.stream()
 				.map(PortRange::toString)
-				.collect(Collectors.joining(" "));
+				.collect(Collectors.joining(","));
 	}
 	
 }

@@ -3,8 +3,8 @@ package com.github.jh3nd3rs0n.jargyle.protocolbase.socks5;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public final class Methods {
 	
@@ -28,7 +28,7 @@ public final class Methods {
 		if (s.isEmpty()) {
 			return new Methods(methods);
 		}
-		String[] sElements = s.split(" ");
+		String[] sElements = s.split(",");
 		for (String sElement : sElements) {
 			methods.add(Method.valueOfString(sElement));
 		}
@@ -82,16 +82,9 @@ public final class Methods {
 
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		for (Iterator<Method> iterator = this.methods.iterator(); 
-				iterator.hasNext();) {
-			Method method = iterator.next();
-			builder.append(method.toString());
-			if (iterator.hasNext()) {
-				builder.append(' ');
-			}
-		}
-		return builder.toString();
+		return this.methods.stream()
+				.map(Method::toString)
+				.collect(Collectors.joining(","));
 	}
 
 }

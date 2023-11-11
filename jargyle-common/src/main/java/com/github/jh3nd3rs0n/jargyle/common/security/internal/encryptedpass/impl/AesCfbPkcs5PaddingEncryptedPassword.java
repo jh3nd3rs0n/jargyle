@@ -27,6 +27,7 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
+import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPasswordSpec;
 
 public final class AesCfbPkcs5PaddingEncryptedPassword extends EncryptedPassword {
 
@@ -35,6 +36,7 @@ public final class AesCfbPkcs5PaddingEncryptedPassword extends EncryptedPassword
 	private static final String SECRET_KEY_SPEC_ALGORITHM = "AES";
 
 	private static AesCfbPkcs5PaddingEncryptedPassword newInstance(
+			final EncryptedPasswordSpec encryptedPasswordSpec,
 			final byte[] secret) {
 		KeyGenerator keyGenerator = null;
 		try {
@@ -73,22 +75,26 @@ public final class AesCfbPkcs5PaddingEncryptedPassword extends EncryptedPassword
 			throw new AssertionError(e);
 		}
 		return new AesCfbPkcs5PaddingEncryptedPassword(
+				encryptedPasswordSpec,
 				secretKey.getEncoded(), 
 				encrypted, 
 				ivParameterSpec.getIV());
 	}
 	
 	public static AesCfbPkcs5PaddingEncryptedPassword newInstance(
+			final EncryptedPasswordSpec encryptedPasswordSpec,
 			final byte[] encodedKey,
 			final byte[] encrypted,
 			final byte[] initializationVector) {
 		return new AesCfbPkcs5PaddingEncryptedPassword(
+				encryptedPasswordSpec,
 				encodedKey,
 				encrypted,
 				initializationVector);
 	}
 
 	public static AesCfbPkcs5PaddingEncryptedPassword newInstance(
+			final EncryptedPasswordSpec encryptedPasswordSpec,
 			final char[] password) {
 		ByteArrayOutputStream byteArrayOutputStream = 
 				new ByteArrayOutputStream();
@@ -106,19 +112,20 @@ public final class AesCfbPkcs5PaddingEncryptedPassword extends EncryptedPassword
 			throw new AssertionError(e);
 		}
 		byte[] secret = byteArrayOutputStream.toByteArray();
-		return newInstance(secret);
+		return newInstance(encryptedPasswordSpec, secret);
 	}
 	
 	public static AesCfbPkcs5PaddingEncryptedPassword newInstance(
+			final EncryptedPasswordSpec encryptedPasswordSpec,
 			final String argumentsString) {
 		String message = String.format(
 				"arguments string must be in the following format: " 
-				+ "ENCODED_KEY_BASE_64_STRING;"
-				+ "ENCRYPTED_BASE_64_STRING;"
+				+ "ENCODED_KEY_BASE_64_STRING,"
+				+ "ENCRYPTED_BASE_64_STRING,"
 				+ "INITIALIZATION_VECTOR_BASE_64_STRING "
 				+ "actual arguments string is %s",
 				argumentsString);
-		String[] arguments = argumentsString.split(";", 3);
+		String[] arguments = argumentsString.split(",");
 		if (arguments.length != 3) {
 			throw new IllegalArgumentException(message);
 		}
@@ -145,7 +152,11 @@ public final class AesCfbPkcs5PaddingEncryptedPassword extends EncryptedPassword
 		} catch (IllegalArgumentException e) {
 			throw new IllegalArgumentException(message, e);
 		}
-		return newInstance(encodedKey, encrypted, initializationVector);
+		return newInstance(
+				encryptedPasswordSpec, 
+				encodedKey, 
+				encrypted, 
+				initializationVector);
 	}
 	
 	private final byte[] encodedKey;
@@ -153,9 +164,11 @@ public final class AesCfbPkcs5PaddingEncryptedPassword extends EncryptedPassword
 	private final byte[] initializationVector;
 
 	private AesCfbPkcs5PaddingEncryptedPassword(
+			final EncryptedPasswordSpec encryptedPasswordSpec,
 			final byte[] key, 
 			final byte[] enc, 
 			final byte[] iv) {
+		super(encryptedPasswordSpec);
 		this.encodedKey = Arrays.copyOf(key, key.length);
 		this.encrypted = Arrays.copyOf(enc, enc.length);
 		this.initializationVector = Arrays.copyOf(iv, iv.length);
@@ -191,7 +204,7 @@ public final class AesCfbPkcs5PaddingEncryptedPassword extends EncryptedPassword
 	public String getArgumentsString() {
 		Encoder encoder = Base64.getEncoder();
 		return String.format(
-				"%s;%s;%s", 
+				"%s,%s,%s", 
 				encoder.encodeToString(this.encodedKey),
 				encoder.encodeToString(this.encrypted),
 				encoder.encodeToString(this.initializationVector));

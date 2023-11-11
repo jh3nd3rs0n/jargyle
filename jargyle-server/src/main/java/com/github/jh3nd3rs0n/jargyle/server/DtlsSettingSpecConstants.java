@@ -5,15 +5,15 @@ import java.util.List;
 import java.util.Map;
 
 import com.github.jh3nd3rs0n.jargyle.common.lang.PositiveInteger;
-import com.github.jh3nd3rs0n.jargyle.common.lang.Strings;
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
+import com.github.jh3nd3rs0n.jargyle.common.string.CommaSeparatedValues;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.HelpText;
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.BooleanSettingSpec;
+import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.CommaSeparatedValuesSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.EncryptedPasswordSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.FileSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.PositiveIntegerSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.StringSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.StringsSettingSpec;
 
 public final class DtlsSettingSpecConstants {
 
@@ -30,24 +30,24 @@ public final class DtlsSettingSpecConstants {
 					Boolean.FALSE));
 
 	@HelpText(
-			doc = "The space separated list of acceptable cipher suites "
+			doc = "The comma separated list of acceptable cipher suites "
 					+ "enabled for DTLS connections to the SOCKS server",
-			usage = "dtls.enabledCipherSuites=[DTLS_CIPHER_SUITE1[ DTLS_CIPHER_SUITE2[ ...]]]"
+			usage = "dtls.enabledCipherSuites=[DTLS_CIPHER_SUITE1[,DTLS_CIPHER_SUITE2[...]]]"
 	)	
-	public static final SettingSpec<Strings> DTLS_ENABLED_CIPHER_SUITES = 
-			SETTING_SPECS.addThenGet(new StringsSettingSpec(
+	public static final SettingSpec<CommaSeparatedValues> DTLS_ENABLED_CIPHER_SUITES = 
+			SETTING_SPECS.addThenGet(new CommaSeparatedValuesSettingSpec(
 					"dtls.enabledCipherSuites", 
-					Strings.newInstance(new String[] { })));
+					CommaSeparatedValues.newInstance(new String[] { })));
 	
 	@HelpText(
-			doc = "The space separated list of acceptable protocol versions "
+			doc = "The comma separated list of acceptable protocol versions "
 					+ "enabled for DTLS connections to the SOCKS server",
-			usage = "dtls.enabledProtocols=[DTLS_PROTOCOL1[ DTLS_PROTOCOL2[ ...]]]"
+			usage = "dtls.enabledProtocols=[DTLS_PROTOCOL1[,DTLS_PROTOCOL2[...]]]"
 	)	
-	public static final SettingSpec<Strings> DTLS_ENABLED_PROTOCOLS = 
-			SETTING_SPECS.addThenGet(new StringsSettingSpec(
+	public static final SettingSpec<CommaSeparatedValues> DTLS_ENABLED_PROTOCOLS = 
+			SETTING_SPECS.addThenGet(new CommaSeparatedValuesSettingSpec(
 					"dtls.enabledProtocols", 
-					Strings.newInstance(new String[] { })));
+					CommaSeparatedValues.newInstance(new String[] { })));
 	
 	@HelpText(
 			doc = "The key store file for the DTLS connections to the SOCKS "

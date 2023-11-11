@@ -5,14 +5,14 @@ import java.util.List;
 import java.util.Map;
 
 import com.github.jh3nd3rs0n.jargyle.client.SslPropertySpecConstants;
-import com.github.jh3nd3rs0n.jargyle.common.lang.Strings;
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
+import com.github.jh3nd3rs0n.jargyle.common.string.CommaSeparatedValues;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.HelpText;
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.BooleanSettingSpec;
+import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.CommaSeparatedValuesSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.EncryptedPasswordSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.FileSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.StringSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.StringsSettingSpec;
 
 public final class ChainingSslSettingSpecConstants {
 
@@ -29,24 +29,24 @@ public final class ChainingSslSettingSpecConstants {
 					SslPropertySpecConstants.SSL_ENABLED.getDefaultProperty().getValue()));
 
 	@HelpText(
-			doc = "The space separated list of acceptable cipher suites "
+			doc = "The comma separated list of acceptable cipher suites "
 					+ "enabled for SSL/TLS connections to the other SOCKS "
 					+ "server",
-			usage = "chaining.ssl.enabledCipherSuites=[SSL_CIPHER_SUITE1[ SSL_CIPHER_SUITE2[ ...]]]"
+			usage = "chaining.ssl.enabledCipherSuites=[SSL_CIPHER_SUITE1[,SSL_CIPHER_SUITE2[...]]]"
 	)
-	public static final SettingSpec<Strings> CHAINING_SSL_ENABLED_CIPHER_SUITES = 
-			SETTING_SPECS.addThenGet(new StringsSettingSpec(
+	public static final SettingSpec<CommaSeparatedValues> CHAINING_SSL_ENABLED_CIPHER_SUITES = 
+			SETTING_SPECS.addThenGet(new CommaSeparatedValuesSettingSpec(
 					"chaining.ssl.enabledCipherSuites", 
 					SslPropertySpecConstants.SSL_ENABLED_CIPHER_SUITES.getDefaultProperty().getValue()));
 	
 	@HelpText(
-			doc = "The space separated list of acceptable protocol versions "
+			doc = "The comma separated list of acceptable protocol versions "
 					+ "enabled for SSL/TLS connections to the other SOCKS "
 					+ "server",
-			usage = "chaining.ssl.enabledProtocols=[SSL_PROTOCOL1[ SSL_PROTOCOL2[ ...]]]"
+			usage = "chaining.ssl.enabledProtocols=[SSL_PROTOCOL1[,SSL_PROTOCOL2[...]]]"
 	)	
-	public static final SettingSpec<Strings> CHAINING_SSL_ENABLED_PROTOCOLS = 
-			SETTING_SPECS.addThenGet(new StringsSettingSpec(
+	public static final SettingSpec<CommaSeparatedValues> CHAINING_SSL_ENABLED_PROTOCOLS = 
+			SETTING_SPECS.addThenGet(new CommaSeparatedValuesSettingSpec(
 					"chaining.ssl.enabledProtocols", 
 					SslPropertySpecConstants.SSL_ENABLED_PROTOCOLS.getDefaultProperty().getValue()));
 	

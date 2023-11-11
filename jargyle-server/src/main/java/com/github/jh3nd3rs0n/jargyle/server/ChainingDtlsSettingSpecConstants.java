@@ -6,15 +6,15 @@ import java.util.Map;
 
 import com.github.jh3nd3rs0n.jargyle.client.DtlsPropertySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.common.lang.PositiveInteger;
-import com.github.jh3nd3rs0n.jargyle.common.lang.Strings;
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
+import com.github.jh3nd3rs0n.jargyle.common.string.CommaSeparatedValues;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.HelpText;
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.BooleanSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.EncryptedPasswordSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.FileSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.PositiveIntegerSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.StringSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.StringsSettingSpec;
+import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.CommaSeparatedValuesSettingSpec;
 
 public final class ChainingDtlsSettingSpecConstants {
 
@@ -31,24 +31,24 @@ public final class ChainingDtlsSettingSpecConstants {
 					DtlsPropertySpecConstants.DTLS_ENABLED.getDefaultProperty().getValue()));
 
 	@HelpText(
-			doc = "The space separated list of acceptable cipher suites "
+			doc = "The comma separated list of acceptable cipher suites "
 					+ "enabled for DTLS connections to the other SOCKS "
 					+ "server",
-			usage = "chaining.dtls.enabledCipherSuites=[DTLS_CIPHER_SUITE1[ DTLS_CIPHER_SUITE2[ ...]]]"
+			usage = "chaining.dtls.enabledCipherSuites=[DTLS_CIPHER_SUITE1[,DTLS_CIPHER_SUITE2[...]]]"
 	)
-	public static final SettingSpec<Strings> CHAINING_DTLS_ENABLED_CIPHER_SUITES = 
-			SETTING_SPECS.addThenGet(new StringsSettingSpec(
+	public static final SettingSpec<CommaSeparatedValues> CHAINING_DTLS_ENABLED_CIPHER_SUITES = 
+			SETTING_SPECS.addThenGet(new CommaSeparatedValuesSettingSpec(
 					"chaining.dtls.enabledCipherSuites", 
 					DtlsPropertySpecConstants.DTLS_ENABLED_CIPHER_SUITES.getDefaultProperty().getValue()));
 	
 	@HelpText(
-			doc = "The space separated list of acceptable protocol versions "
+			doc = "The comma separated list of acceptable protocol versions "
 					+ "enabled for DTLS connections to the other SOCKS "
 					+ "server",
-			usage = "chaining.dtls.enabledProtocols=[DTLS_PROTOCOL1[ DTLS_PROTOCOL2[ ...]]]"
+			usage = "chaining.dtls.enabledProtocols=[DTLS_PROTOCOL1[,DTLS_PROTOCOL2[...]]]"
 	)	
-	public static final SettingSpec<Strings> CHAINING_DTLS_ENABLED_PROTOCOLS = 
-			SETTING_SPECS.addThenGet(new StringsSettingSpec(
+	public static final SettingSpec<CommaSeparatedValues> CHAINING_DTLS_ENABLED_PROTOCOLS = 
+			SETTING_SPECS.addThenGet(new CommaSeparatedValuesSettingSpec(
 					"chaining.dtls.enabledProtocols", 
 					DtlsPropertySpecConstants.DTLS_ENABLED_PROTOCOLS.getDefaultProperty().getValue()));
 	

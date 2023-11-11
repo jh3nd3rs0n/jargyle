@@ -44,7 +44,7 @@ Usage: jargyle COMMAND
        jargyle --version
 
 COMMANDS:
-  manage-socks5-users USER_REPOSITORY_CLASS_NAME:INITIALIZATION_STRING COMMAND
+  manage-socks5-users USER_REPOSITORY_TYPE_NAME:INITIALIZATION_STRING COMMAND
       Manage SOCKS5 users
   new-server-config-file [OPTIONS] FILE
       Create a new server configuration file based on the provided options
@@ -65,7 +65,7 @@ The following is the command line help for the command `manage-socks5-users`
 (displayed when using the command `manage-socks5-users --help`):
 
 ```
-Usage: jargyle manage-socks5-users USER_REPOSITORY_CLASS_NAME:INITIALIZATION_STRING COMMAND
+Usage: jargyle manage-socks5-users USER_REPOSITORY_TYPE_NAME:INITIALIZATION_STRING COMMAND
        jargyle manage-socks5-users --help
 
 COMMANDS:
@@ -182,14 +182,14 @@ SETTINGS:
     bindHost=HOST
         The default binding host name or address for all sockets (default is 0.0.0.0)
 
-    bindTcpPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]
-        The space separated list of default binding port ranges for all TCP sockets (default is 0)
+    bindTcpPortRanges=[PORT_RANGE1[,PORT_RANGE2[...]]]
+        The comma separated list of default binding port ranges for all TCP sockets (default is 0)
 
-    bindUdpPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]
-        The space separated list of default binding port ranges for all UDP sockets (default is 0)
+    bindUdpPortRanges=[PORT_RANGE1[,PORT_RANGE2[...]]]
+        The comma separated list of default binding port ranges for all UDP sockets (default is 0)
 
-    clientSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[ ...]]]
-        The space separated list of socket settings for the client socket
+    clientSocketSettings=[SOCKET_SETTING1[,SOCKET_SETTING2[...]]]
+        The comma separated list of socket settings for the client socket
 
     doc=TEXT
         A documentation setting
@@ -197,26 +197,26 @@ SETTINGS:
     externalFacingBindHost=HOST
         The default binding host name or address for all external-facing sockets
 
-    externalFacingBindTcpPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]
-        The space separated list of default binding port ranges for all external-facing TCP sockets
+    externalFacingBindTcpPortRanges=[PORT_RANGE1[,PORT_RANGE2[...]]]
+        The comma separated list of default binding port ranges for all external-facing TCP sockets
 
-    externalFacingBindUdpPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]
-        The space separated list of default binding port ranges for all external-facing UDP sockets
+    externalFacingBindUdpPortRanges=[PORT_RANGE1[,PORT_RANGE2[...]]]
+        The comma separated list of default binding port ranges for all external-facing UDP sockets
 
-    externalFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[ ...]]]
-        The space separated list of default socket settings for all external-facing sockets
+    externalFacingSocketSettings=[SOCKET_SETTING1[,SOCKET_SETTING2[...]]]
+        The comma separated list of default socket settings for all external-facing sockets
 
     internalFacingBindHost=HOST
         The default binding host name or address for all internal-facing sockets
 
-    internalFacingBindTcpPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]
-        The space separated list of default binding port ranges for all internal-facing TCP sockets
+    internalFacingBindTcpPortRanges=[PORT_RANGE1[,PORT_RANGE2[...]]]
+        The comma separated list of default binding port ranges for all internal-facing TCP sockets
 
-    internalFacingBindUdpPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]
-        The space separated list of default binding port ranges for all internal-facing UDP sockets
+    internalFacingBindUdpPortRanges=[PORT_RANGE1[,PORT_RANGE2[...]]]
+        The comma separated list of default binding port ranges for all internal-facing UDP sockets
 
-    internalFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[ ...]]]
-        The space separated list of default socket settings for all internal-facing sockets
+    internalFacingSocketSettings=[SOCKET_SETTING1[,SOCKET_SETTING2[...]]]
+        The comma separated list of default socket settings for all internal-facing sockets
 
     lastRouteId=ROUTE_ID
         The ID for the last and unassigned route (default is lastRoute)
@@ -230,34 +230,34 @@ SETTINGS:
     routeSelectionStrategy=SELECTION_STRATEGY
         The selection strategy for the next route (default is CYCLICAL)
 
-    rule=[RULE_CONDITION1[ RULE_CONDITION2[ ...]]] [RULE_RESULT1[ RULE_RESULT2[ ...]]]
+    rule=[RULE_CONDITION1,[RULE_CONDITION2,[...]]]RULE_RESULT1[,RULE_RESULT2[...]]
         A rule for the SOCKS server (default is firewallAction=ALLOW)
 
-    socketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[ ...]]]
-        The space separated list of default socket settings for all sockets
+    socketSettings=[SOCKET_SETTING1[,SOCKET_SETTING2[...]]]
+        The comma separated list of default socket settings for all sockets
 
     socksServerBindHost=HOST
         The binding host name or address for the SOCKS server socket
 
-    socksServerBindPortRanges[PORT_RANGE1[ PORT_RANGE2[ ...]]]
-        The space separated list of binding port ranges for the SOCKS server socket
+    socksServerBindPortRanges[PORT_RANGE1[,PORT_RANGE2[...]]]
+        The comma separated list of binding port ranges for the SOCKS server socket
 
-    socksServerSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[ ...]]]
-        The space separated list of socket settings for the SOCKS server socket
+    socksServerSocketSettings=[SOCKET_SETTING1[,SOCKET_SETTING2[...]]]
+        The comma separated list of socket settings for the SOCKS server socket
 
   CHAINING GENERAL SETTINGS:
 
     chaining.clientBindHost=HOST
         The binding host name or address for the client socket that is used to connect to the other SOCKS server (used for the SOCKS5 commands RESOLVE, BIND and UDP ASSOCIATE) (default is 0.0.0.0)
 
-    chaining.clientBindPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]
-        The space separated list of binding port ranges for the client socket that is used to connect to the other SOCKS server (used for the SOCKS5 commands RESOLVE, BIND and UDP ASSOCIATE) (default is 0)
+    chaining.clientBindPortRanges=[PORT_RANGE1[,PORT_RANGE2[...]]]
+        The comma separated list of binding port ranges for the client socket that is used to connect to the other SOCKS server (used for the SOCKS5 commands RESOLVE, BIND and UDP ASSOCIATE) (default is 0)
 
     chaining.clientConnectTimeout=INTEGER_BETWEEN_1_AND_2147483647
         The timeout in milliseconds on waiting for the client socket to connect to the other SOCKS server (used for the SOCKS5 commands RESOLVE, BIND and UDP ASSOCIATE) (default is 60000)
 
-    chaining.clientSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[ ...]]]
-        The space separated list of socket settings for the client socket that is used to connect to the other SOCKS server (used for the SOCKS5 command RESOLVE and UDP ASSOCIATE)
+    chaining.clientSocketSettings=[SOCKET_SETTING1[,SOCKET_SETTING2[...]]]
+        The comma separated list of socket settings for the client socket that is used to connect to the other SOCKS server (used for the SOCKS5 command RESOLVE and UDP ASSOCIATE)
 
     chaining.routeId=ROUTE_ID
         The ID for a route through a chain of other SOCKS servers. This setting also marks the current other SOCKS server as the last SOCKS server in the chain of other SOCKS servers
@@ -270,11 +270,11 @@ SETTINGS:
     chaining.dtls.enabled=true|false
         The boolean value to indicate if DTLS connections to the other SOCKS server are enabled (default is false)
 
-    chaining.dtls.enabledCipherSuites=[DTLS_CIPHER_SUITE1[ DTLS_CIPHER_SUITE2[ ...]]]
-        The space separated list of acceptable cipher suites enabled for DTLS connections to the other SOCKS server
+    chaining.dtls.enabledCipherSuites=[DTLS_CIPHER_SUITE1[,DTLS_CIPHER_SUITE2[...]]]
+        The comma separated list of acceptable cipher suites enabled for DTLS connections to the other SOCKS server
 
-    chaining.dtls.enabledProtocols=[DTLS_PROTOCOL1[ DTLS_PROTOCOL2[ ...]]]
-        The space separated list of acceptable protocol versions enabled for DTLS connections to the other SOCKS server
+    chaining.dtls.enabledProtocols=[DTLS_PROTOCOL1[,DTLS_PROTOCOL2[...]]]
+        The comma separated list of acceptable protocol versions enabled for DTLS connections to the other SOCKS server
 
     chaining.dtls.keyStoreFile=FILE
         The key store file for the DTLS connections to the other SOCKS server
@@ -311,14 +311,14 @@ SETTINGS:
     chaining.socks5.gssapiauth.necReferenceImpl=true|false
         The boolean value to indicate if the exchange of the GSS-API protection level negotiation must be unprotected should the other SOCKS5 server use the NEC reference implementation (default is false)
 
-    chaining.socks5.gssapiauth.protectionLevels=SOCKS5_GSSAPIAUTH_PROTECTION_LEVEL1[ SOCKS5_GSSAPIAUTH_PROTECTION_LEVEL2[ ...]]
-        The space separated list of acceptable protection levels after GSS-API authentication with the other SOCKS5 server (The first is preferred. The remaining are acceptable if the server does not accept the first.) (default is REQUIRED_INTEG_AND_CONF REQUIRED_INTEG NONE)
+    chaining.socks5.gssapiauth.protectionLevels=SOCKS5_GSSAPIAUTH_PROTECTION_LEVEL1[,SOCKS5_GSSAPIAUTH_PROTECTION_LEVEL2[...]]
+        The comma separated list of acceptable protection levels after GSS-API authentication with the other SOCKS5 server (The first is preferred. The remaining are acceptable if the server does not accept the first.) (default is REQUIRED_INTEG_AND_CONF REQUIRED_INTEG NONE)
 
     chaining.socks5.gssapiauth.serviceName=SOCKS5_GSSAPIAUTH_SERVICE_NAME
         The GSS-API service name for the other SOCKS5 server
 
-    chaining.socks5.methods=[SOCKS5_METHOD1[ SOCKS5_METHOD2[ ...]]]
-        The space separated list of acceptable authentication methods to the other SOCKS5 server (default is NO_AUTHENTICATION_REQUIRED)
+    chaining.socks5.methods=[SOCKS5_METHOD1[,SOCKS5_METHOD2[...]]]
+        The comma separated list of acceptable authentication methods to the other SOCKS5 server (default is NO_AUTHENTICATION_REQUIRED)
 
     chaining.socks5.useResolveCommand=true|false
         The boolean value to indicate that the RESOLVE command is to be used on the other SOCKS5 server for resolving host names (default is false)
@@ -334,11 +334,11 @@ SETTINGS:
     chaining.ssl.enabled=true|false
         The boolean value to indicate if SSL/TLS connections to the other SOCKS server are enabled (default is false)
 
-    chaining.ssl.enabledCipherSuites=[SSL_CIPHER_SUITE1[ SSL_CIPHER_SUITE2[ ...]]]
-        The space separated list of acceptable cipher suites enabled for SSL/TLS connections to the other SOCKS server
+    chaining.ssl.enabledCipherSuites=[SSL_CIPHER_SUITE1[,SSL_CIPHER_SUITE2[...]]]
+        The comma separated list of acceptable cipher suites enabled for SSL/TLS connections to the other SOCKS server
 
-    chaining.ssl.enabledProtocols=[SSL_PROTOCOL1[ SSL_PROTOCOL2[ ...]]]
-        The space separated list of acceptable protocol versions enabled for SSL/TLS connections to the other SOCKS server
+    chaining.ssl.enabledProtocols=[SSL_PROTOCOL1[,SSL_PROTOCOL2[...]]]
+        The comma separated list of acceptable protocol versions enabled for SSL/TLS connections to the other SOCKS server
 
     chaining.ssl.keyStoreFile=FILE
         The key store file for the SSL/TLS connections to the other SOCKS server
@@ -366,11 +366,11 @@ SETTINGS:
     dtls.enabled=true|false
         The boolean value to indicate if DTLS connections to the SOCKS server are enabled (default is false)
 
-    dtls.enabledCipherSuites=[DTLS_CIPHER_SUITE1[ DTLS_CIPHER_SUITE2[ ...]]]
-        The space separated list of acceptable cipher suites enabled for DTLS connections to the SOCKS server
+    dtls.enabledCipherSuites=[DTLS_CIPHER_SUITE1[,DTLS_CIPHER_SUITE2[...]]]
+        The comma separated list of acceptable cipher suites enabled for DTLS connections to the SOCKS server
 
-    dtls.enabledProtocols=[DTLS_PROTOCOL1[ DTLS_PROTOCOL2[ ...]]]
-        The space separated list of acceptable protocol versions enabled for DTLS connections to the SOCKS server
+    dtls.enabledProtocols=[DTLS_PROTOCOL1[,DTLS_PROTOCOL2[...]]]
+        The comma separated list of acceptable protocol versions enabled for DTLS connections to the SOCKS server
 
     dtls.keyStoreFile=FILE
         The key store file for the DTLS connections to the SOCKS server
@@ -407,23 +407,23 @@ SETTINGS:
     socks5.gssapiauth.necReferenceImpl=true|false
         The boolean value to indicate if the exchange of the GSS-API protection level negotiation must be unprotected according to the NEC reference implementation (default is false)
 
-    socks5.gssapiauth.protectionLevels=SOCKS5_GSSAPIAUTH_PROTECTION_LEVEL1[ SOCKS5_GSSAPIAUTH_PROTECTION_LEVEL2[ ...]]
-        The space separated list of acceptable protection levels after GSS-API authentication (The first is preferred if the client does not provide a protection level that is acceptable.) (default is REQUIRED_INTEG_AND_CONF REQUIRED_INTEG NONE)
+    socks5.gssapiauth.protectionLevels=SOCKS5_GSSAPIAUTH_PROTECTION_LEVEL1[,SOCKS5_GSSAPIAUTH_PROTECTION_LEVEL2[...]]
+        The comma separated list of acceptable protection levels after GSS-API authentication (The first is preferred if the client does not provide a protection level that is acceptable.) (default is REQUIRED_INTEG_AND_CONF REQUIRED_INTEG NONE)
 
-    socks5.methods=[SOCKS5_METHOD1[ SOCKS5_METHOD2[ ...]]]
-        The space separated list of acceptable authentication methods in order of preference (default is NO_AUTHENTICATION_REQUIRED)
+    socks5.methods=[SOCKS5_METHOD1[,SOCKS5_METHOD2[...]]]
+        The comma separated list of acceptable authentication methods in order of preference (default is NO_AUTHENTICATION_REQUIRED)
 
-    socks5.onBind.inboundSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[ ...]]]
-        The space separated list of socket settings for the inbound socket
+    socks5.onBind.inboundSocketSettings=[SOCKET_SETTING1[,SOCKET_SETTING2[...]]]
+        The comma separated list of socket settings for the inbound socket
 
     socks5.onBind.listenBindHost=HOST
         The binding host name or address for the listen socket if the provided host address is all zeros
 
-    socks5.onBind.listenBindPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]
-        The space separated list of binding port ranges for the listen socket if the provided port is zero
+    socks5.onBind.listenBindPortRanges=[PORT_RANGE1[,PORT_RANGE2[...]]]
+        The comma separated list of binding port ranges for the listen socket if the provided port is zero
 
-    socks5.onBind.listenSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[ ...]]]
-        The space separated list of socket settings for the listen socket
+    socks5.onBind.listenSocketSettings=[SOCKET_SETTING1[,SOCKET_SETTING2[...]]]
+        The comma separated list of socket settings for the listen socket
 
     socks5.onBind.relayBufferSize=INTEGER_BETWEEN_1_AND_2147483647
         The buffer size in bytes for relaying the data
@@ -440,35 +440,35 @@ SETTINGS:
     socks5.onCommand.bindHost=HOST
         The binding host name or address for all sockets
 
-    socks5.onCommand.bindTcpPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]
-        The space separated list of binding port ranges for all TCP sockets
+    socks5.onCommand.bindTcpPortRanges=[PORT_RANGE1[,PORT_RANGE2[...]]]
+        The comma separated list of binding port ranges for all TCP sockets
 
-    socks5.onCommand.bindUdpPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]
-        The space separated list of binding port ranges for all UDP sockets
+    socks5.onCommand.bindUdpPortRanges=[PORT_RANGE1[,PORT_RANGE2[...]]]
+        The comma separated list of binding port ranges for all UDP sockets
 
     socks5.onCommand.externalFacingBindHost=HOST
         The binding host name or address for all external-facing sockets
 
-    socks5.onCommand.externalFacingBindTcpPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]
-        The space separated list of binding port ranges for all external-facing TCP sockets
+    socks5.onCommand.externalFacingBindTcpPortRanges=[PORT_RANGE1[,PORT_RANGE2[...]]]
+        The comma separated list of binding port ranges for all external-facing TCP sockets
 
-    socks5.onCommand.externalFacingBindUdpPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]
-        The space separated list of binding port ranges for all external-facing UDP sockets
+    socks5.onCommand.externalFacingBindUdpPortRanges=[PORT_RANGE1[,PORT_RANGE2[...]]]
+        The comma separated list of binding port ranges for all external-facing UDP sockets
 
-    socks5.onCommand.externalFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[ ...]]]
-        The space separated list of socket settings for all external-facing sockets
+    socks5.onCommand.externalFacingSocketSettings=[SOCKET_SETTING1[,SOCKET_SETTING2[...]]]
+        The comma separated list of socket settings for all external-facing sockets
 
     socks5.onCommand.internalFacingBindHost=HOST
         The binding host name or address for all internal-facing sockets
 
-    socks5.onCommand.internalFacingBindTcpPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]
-        The space separated list of binding port ranges for all internal-facing TCP sockets
+    socks5.onCommand.internalFacingBindTcpPortRanges=[PORT_RANGE1[,PORT_RANGE2[...]]]
+        The comma separated list of binding port ranges for all internal-facing TCP sockets
 
-    socks5.onCommand.internalFacingBindUdpPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]
-        The space separated list of binding port ranges for all internal-facing UDP sockets
+    socks5.onCommand.internalFacingBindUdpPortRanges=[PORT_RANGE1[,PORT_RANGE2[...]]]
+        The comma separated list of binding port ranges for all internal-facing UDP sockets
 
-    socks5.onCommand.internalFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[ ...]]]
-        The space separated list of socket settings for all internal-facing sockets
+    socks5.onCommand.internalFacingSocketSettings=[SOCKET_SETTING1[,SOCKET_SETTING2[...]]]
+        The comma separated list of socket settings for all internal-facing sockets
 
     socks5.onCommand.relayBufferSize=INTEGER_BETWEEN_1_AND_2147483647
         The buffer size in bytes for relaying the data (default is 1024)
@@ -482,8 +482,8 @@ SETTINGS:
     socks5.onCommand.relayOutboundBandwidthLimit=INTEGER_BETWEEN_1_AND_2147483647
         The upper limit on bandwidth in bytes per second of receiving outbound data to be relayed
 
-    socks5.onCommand.socketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[ ...]]]
-        The space separated list of socket settings for all sockets
+    socks5.onCommand.socketSettings=[SOCKET_SETTING1[,SOCKET_SETTING2[...]]]
+        The comma separated list of socket settings for all sockets
 
     socks5.onConnect.prepareServerFacingSocket=true|false
         The boolean value to indicate if the server-facing socket is to be prepared before connecting (involves applying the specified socket settings, resolving the target host name, and setting the specified timeout on waiting to connect) (default is false)
@@ -503,32 +503,32 @@ SETTINGS:
     socks5.onConnect.serverFacingBindHost=HOST
         The binding host name or address for the server-facing socket
 
-    socks5.onConnect.serverFacingBindPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]
-        The space separated list of binding port ranges for the server-facing socket
+    socks5.onConnect.serverFacingBindPortRanges=[PORT_RANGE1[,PORT_RANGE2[...]]]
+        The comma separated list of binding port ranges for the server-facing socket
 
     socks5.onConnect.serverFacingConnectTimeout=INTEGER_BETWEEN_1_AND_2147483647
         The timeout in milliseconds on waiting for the server-facing socket to connect (default is 60000)
 
-    socks5.onConnect.serverFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[ ...]]]
-        The space separated list of socket settings for the server-facing socket
+    socks5.onConnect.serverFacingSocketSettings=[SOCKET_SETTING1[,SOCKET_SETTING2[...]]]
+        The comma separated list of socket settings for the server-facing socket
 
     socks5.onUdpAssociate.clientFacingBindHost=HOST
         The binding host name or address for the client-facing UDP socket
 
-    socks5.onUdpAssociate.clientFacingBindPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]
-        The space separated list of binding port ranges for the client-facing UDP socket
+    socks5.onUdpAssociate.clientFacingBindPortRanges=[PORT_RANGE1[,PORT_RANGE2[...]]]
+        The comma separated list of binding port ranges for the client-facing UDP socket
 
-    socks5.onUdpAssociate.clientFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[ ...]]]
-        The space separated list of socket settings for the client-facing UDP socket
+    socks5.onUdpAssociate.clientFacingSocketSettings=[SOCKET_SETTING1[,SOCKET_SETTING2[...]]]
+        The comma separated list of socket settings for the client-facing UDP socket
 
     socks5.onUdpAssociate.peerFacingBindHost=HOST
         The binding host name or address for the peer-facing UDP socket
 
-    socks5.onUdpAssociate.peerFacingBindPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]
-        The space separated list of binding port ranges for the peer-facing UDP socket
+    socks5.onUdpAssociate.peerFacingBindPortRanges=[PORT_RANGE1[,PORT_RANGE2[...]]]
+        The comma separated list of binding port ranges for the peer-facing UDP socket
 
-    socks5.onUdpAssociate.peerFacingSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[ ...]]]
-        The space separated list of socket settings for the peer-facing UDP socket
+    socks5.onUdpAssociate.peerFacingSocketSettings=[SOCKET_SETTING1[,SOCKET_SETTING2[...]]]
+        The comma separated list of socket settings for the peer-facing UDP socket
 
     socks5.onUdpAssociate.relayBufferSize=INTEGER_BETWEEN_1_AND_2147483647
         The buffer size in bytes for relaying the data
@@ -542,19 +542,19 @@ SETTINGS:
     socks5.onUdpAssociate.relayOutboundBandwidthLimit=INTEGER_BETWEEN_1_AND_2147483647
         The upper limit on bandwidth in bytes per second of receiving outbound data to be relayed
 
-    socks5.userpassauth.userRepository=CLASS_NAME:INITIALIZATION_STRING
-        The user repository used for username password authentication
+    socks5.userpassauth.userRepository=SOCKS5_USERPASSAUTH_USER_REPOSITORY
+        The user repository used for username password authentication (default is StringSourceUserRepository:)
 
   SSL SETTINGS:
 
     ssl.enabled=true|false
         The boolean value to indicate if SSL/TLS connections to the SOCKS server are enabled (default is false)
 
-    ssl.enabledCipherSuites=[SSL_CIPHER_SUITE1[ SSL_CIPHER_SUITE2[ ...]]]
-        The space separated list of acceptable cipher suites enabled for SSL/TLS connections to the SOCKS server
+    ssl.enabledCipherSuites=[SSL_CIPHER_SUITE1[,SSL_CIPHER_SUITE2[...]]]
+        The comma separated list of acceptable cipher suites enabled for SSL/TLS connections to the SOCKS server
 
-    ssl.enabledProtocols=[SSL_PROTOCOL1[ SSL_PROTOCOL2[ ...]]]
-        The space separated list of acceptable protocol versions enabled for SSL/TLS connections to the SOCKS server
+    ssl.enabledProtocols=[SSL_PROTOCOL1[,SSL_PROTOCOL2[...]]]
+        The comma separated list of acceptable protocol versions enabled for SSL/TLS connections to the SOCKS server
 
     ssl.keyStoreFile=FILE
         The key store file for the SSL/TLS connections to the SOCKS server
@@ -946,6 +946,14 @@ SETTING VALUE SYNTAXES:
     socks5.onUdpAssociate.relayOutboundBandwidthLimit=INTEGER_BETWEEN_1_AND_2147483647
         Specifies the upper limit on bandwidth in bytes per second of receiving outbound data to be relayed
 
+  SOCKS5_USERPASSAUTH_USER_REPOSITORIES:
+
+    FileSourceUserRepository:FILE
+        User repository that handles the storage of the users from a provided file of a list of URL encoded username password pairs (If the file does not exist, it will be created and used.)
+
+    StringSourceUserRepository:[USERNAME1:PASSWORD1[,USERNAME2:PASSWORD2[...]]]
+        User repository that handles the storage of the users from a provided string of a comma separated list of URL encoded username password pairs
+
 ```
 
 ## Managing SOCKS5 Users
@@ -953,37 +961,35 @@ SETTING VALUE SYNTAXES:
 To manage SOCKS5 users, you would run the following command:
 
 ```
-./bin/jargyle manage-socks5-users USER_REPOSITORY_CLASS_NAME:INITIALIZATION_STRING COMMAND
+./bin/jargyle manage-socks5-users USER_REPOSITORY_TYPE_NAME:INITIALIZATION_STRING COMMAND
 ```
 
-Where `USER_REPOSITORY_CLASS_NAME` is the name of the class that extends 
-`com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.UserRepository`,
+Where `USER_REPOSITORY_TYPE_NAME` is the type name of the user repository,
  `INITIALIZATION_STRING` is the initialization string value, and `COMMAND` 
  is the name of the command described in the 
 [command line help](#manage-socks5-users-usage) for the command 
 `manage-socks5-users`.
 
-The following is one provided class you can use for 
-`USER_REPOSITORY_CLASS_NAME`:
+The following is one provided type name you can use for 
+`USER_REPOSITORY_TYPE_NAME`:
 
--   `com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.userrepo.impl.CsvFileSourceUserRepository`: 
-This class handles the storage of the SOCKS5 users from a CSV file whose name is 
-provided as an initialization string value. The SOCKS5 users from the CSV file 
-are loaded onto memory. Because of this, you will need at least as much memory 
-as the size of the CSV file. If the CSV file does not exist, it will be created 
-and used. If the CSV file does exist, the existing CSV file will be used. 
+-   `FileSourceUserRepository`: This user repository handles the storage of 
+the SOCKS5 users from a file whose name is provided as an initialization string 
+value. The SOCKS5 users from the file are loaded onto memory. Because of this, 
+you will need at least as much memory as the size of the file. If the file does 
+not exist, it will be created and used. If the file does exist, the existing 
+file will be used. 
 
 ### Adding SOCKS5 Users
 
 To add SOCKS5 users to a user repository, you would run the following command:
 
 ```
-./bin/jargyle manage-socks5-users USER_REPOSITORY_CLASS_NAME:INITIALIZATION_STRING add
+./bin/jargyle manage-socks5-users USER_REPOSITORY_TYPE_NAME:INITIALIZATION_STRING add
 ```
 
-Where `USER_REPOSITORY_CLASS_NAME` is the name of the class that extends 
-`com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.UserRepository` 
-and `INITIALIZATION_STRING` is the initialization string value.
+Where `USER_REPOSITORY_TYPE_NAME` is the the type name of the user 
+repository and `INITIALIZATION_STRING` is the initialization string value.
 
 Once you have run the command, an interactive prompt will ask you for the new 
 SOCKS5 user's name, password, and re-typed password. It will repeat the 
@@ -994,7 +1000,7 @@ users will be saved.
 Command line example:
 
 ```
-./bin/jargyle manage-socks5-users com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.userrepo.impl.CsvFileSourceUserRepository:users.csv add
+./bin/jargyle manage-socks5-users FileSourceUserRepository:users add
 User
 Name: Aladdin
 Password: 
@@ -1027,11 +1033,10 @@ To list all SOCKS5 users from a user repository, you would run the following
 command:
 
 ```
-./bin/jargyle manage-socks5-users USER_REPOSITORY_CLASS_NAME:INITIALIZATION_STRING list
+./bin/jargyle manage-socks5-users USER_REPOSITORY_TYPE_NAME:INITIALIZATION_STRING list
 ```
 
-Where `USER_REPOSITORY_CLASS_NAME` is the name of the class that extends 
-`com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.UserRepository` 
+Where `USER_REPOSITORY_TYPE_NAME` is the type name of the user repository 
 and `INITIALIZATION_STRING` is the initialization string value.
 
 Once you have run the command, it will list all the SOCKS5 users from the user 
@@ -1040,7 +1045,7 @@ repository.
 Command line example:
 
 ```
-./bin/jargyle manage-socks5-users com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.userrepo.impl.CsvFileSourceUserRepository:users.csv list
+./bin/jargyle manage-socks5-users FileSourceUserRepository:users list
 Aladdin
 Jasmine
 Abu
@@ -1053,13 +1058,12 @@ To remove a SOCKS5 user from a user repository, you would run the following
 command:
 
 ```
-./bin/jargyle manage-socks5-users USER_REPOSITORY_CLASS_NAME:INITIALIZATION_STRING remove NAME
+./bin/jargyle manage-socks5-users USER_REPOSITORY_TYPE_NAME:INITIALIZATION_STRING remove NAME
 ```
 
-Where `USER_REPOSITORY_CLASS_NAME` is the name of the class that extends 
-`com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.UserRepository`,
- `INITIALIZATION_STRING` is the initialization string value, and `NAME` 
- is the specified name of the SOCKS5 user to be removed from the user repository.
+Where `USER_REPOSITORY_TYPE_NAME` is the type name of the user repository, 
+`INITIALIZATION_STRING` is the initialization string value, and `NAME` is 
+the specified name of the SOCKS5 user to be removed from the user repository.
 
 Once you have run the command, the SOCKS5 user of the specified name will be 
 removed from the user repository.
@@ -1067,7 +1071,7 @@ removed from the user repository.
 Command line example:
 
 ```
-./bin/jargyle manage-socks5-users com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.userrepo.impl.CsvFileSourceUserRepository:users.csv remove Jafar
+./bin/jargyle manage-socks5-users FileSourceUserRepository:users remove Jafar
 User 'Jafar' removed
 ```
 

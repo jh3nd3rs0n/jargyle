@@ -34,11 +34,11 @@ public final class ChainingGeneralSettingSpecConstants {
 					GeneralPropertySpecConstants.CLIENT_BIND_HOST.getDefaultProperty().getValue()));
 
 	@HelpText(
-			doc = "The space separated list of binding port ranges for the "
+			doc = "The comma separated list of binding port ranges for the "
 					+ "client socket that is used to connect to the other "
 					+ "SOCKS server (used for the SOCKS5 commands RESOLVE, "
 					+ "BIND and UDP ASSOCIATE) (default is 0)", 
-			usage = "chaining.clientBindPortRanges=[PORT_RANGE1[ PORT_RANGE2[ ...]]]"
+			usage = "chaining.clientBindPortRanges=[PORT_RANGE1[,PORT_RANGE2[...]]]"
 	)
 	public static final SettingSpec<PortRanges> CHAINING_CLIENT_BIND_PORT_RANGES =
 			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
@@ -58,11 +58,11 @@ public final class ChainingGeneralSettingSpecConstants {
 					GeneralPropertySpecConstants.CLIENT_CONNECT_TIMEOUT.getDefaultProperty().getValue()));
 	
 	@HelpText(
-			doc = "The space separated list of socket settings for the "
+			doc = "The comma separated list of socket settings for the "
 					+ "client socket that is used to connect to the other "
 					+ "SOCKS server (used for the SOCKS5 command RESOLVE and "
 					+ "UDP ASSOCIATE)", 
-			usage = "chaining.clientSocketSettings=[SOCKET_SETTING1[ SOCKET_SETTING2[ ...]]]"
+			usage = "chaining.clientSocketSettings=[SOCKET_SETTING1[,SOCKET_SETTING2[...]]]"
 	)
 	public static final SettingSpec<SocketSettings> CHAINING_CLIENT_SOCKET_SETTINGS = 
 			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(

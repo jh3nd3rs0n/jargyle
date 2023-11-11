@@ -22,7 +22,7 @@ import com.github.jh3nd3rs0n.jargyle.server.GeneralSettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
-import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.userrepo.impl.StringSourceUserRepository;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.UserRepositorySpecConstants;
 import com.github.jh3nd3rs0n.test.help.TestStringConstants;
 import com.github.jh3nd3rs0n.test.help.ThreadHelper;
 
@@ -37,8 +37,8 @@ public class EchoThroughSocksServerUsingSocks5UserpassauthIT {
 	
 	private static Configuration newConfigurationUsingSocks5Userpassauth() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("Aladdin:opensesame ");
-		sb.append("Jasmine:mission%3Aimpossible ");
+		sb.append("Aladdin:opensesame,");
+		sb.append("Jasmine:mission%3Aimpossible,");
 		sb.append("Abu:safeDriversSave40%25");
 		return Configuration.newUnmodifiableInstance(Settings.newInstance(
 				GeneralSettingSpecConstants.PORT.newSetting(
@@ -47,7 +47,8 @@ public class EchoThroughSocksServerUsingSocks5UserpassauthIT {
 				Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
 						Methods.newInstance(Method.USERNAME_PASSWORD)),
 				Socks5SettingSpecConstants.SOCKS5_USERPASSAUTH_USER_REPOSITORY.newSetting(
-						new StringSourceUserRepository(sb.toString()))));
+						UserRepositorySpecConstants.STRING_SOURCE_USER_REPOSITORY.newUserRepository(
+								sb.toString()))));
 	}
 	
 	private static SocksClient newSocks5ClientUsingSocks5Userpassauth(

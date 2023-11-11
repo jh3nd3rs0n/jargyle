@@ -11,25 +11,25 @@ import jakarta.xml.bind.annotation.XmlType;
 @XmlType(name = "socks5.userpassauth.userRepository", propOrder = { }) 
 class Socks5UserpassauthUserRepositoryXml extends ValueXml {
 
-	@XmlElement(name = "className", required = true)
-	protected String className;
+	@XmlElement(name = "typeName", required = true)
+	protected String typeName;
 	@XmlElement(name = "initializationString", required = true)
 	protected String initializationString;
 	
 	public Socks5UserpassauthUserRepositoryXml() {
-		this.className = null;
+		this.typeName = null;
 		this.initializationString = null;
 	}
 	
 	public Socks5UserpassauthUserRepositoryXml(
 			final UserRepository userRepository) {
-		this.className = userRepository.getClass().getName();
+		this.typeName = userRepository.getTypeName();
 		this.initializationString = userRepository.getInitializationString();
 	}
 
 	public UserRepository toUserRepository() {
 		return UserRepository.newInstance(
-				this.className, this.initializationString);
+				this.typeName, this.initializationString);
 	}
 	
 	@Override

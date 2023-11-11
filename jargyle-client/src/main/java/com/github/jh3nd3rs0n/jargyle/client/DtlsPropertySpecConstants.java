@@ -5,14 +5,14 @@ import java.util.List;
 import java.util.Map;
 
 import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.BooleanPropertySpec;
+import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.CommaSeparatedValuesPropertySpec;
 import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.EncryptedPasswordPropertySpec;
 import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.FilePropertySpec;
 import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.PositiveIntegerPropertySpec;
 import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.StringPropertySpec;
-import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.StringsPropertySpec;
 import com.github.jh3nd3rs0n.jargyle.common.lang.PositiveInteger;
-import com.github.jh3nd3rs0n.jargyle.common.lang.Strings;
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
+import com.github.jh3nd3rs0n.jargyle.common.string.CommaSeparatedValues;
 
 public final class DtlsPropertySpecConstants {
 
@@ -23,15 +23,15 @@ public final class DtlsPropertySpecConstants {
 					"socksClient.dtls.enabled",
 					Boolean.FALSE));
 
-	public static final PropertySpec<Strings> DTLS_ENABLED_CIPHER_SUITES = 
-			PROPERTY_SPECS.addThenGet(new StringsPropertySpec(
+	public static final PropertySpec<CommaSeparatedValues> DTLS_ENABLED_CIPHER_SUITES = 
+			PROPERTY_SPECS.addThenGet(new CommaSeparatedValuesPropertySpec(
 					"socksClient.dtls.enabledCipherSuites",
-					Strings.newInstance(new String[] { })));
+					CommaSeparatedValues.newInstance(new String[] { })));
 	
-	public static final PropertySpec<Strings> DTLS_ENABLED_PROTOCOLS = 
-			PROPERTY_SPECS.addThenGet(new StringsPropertySpec(
+	public static final PropertySpec<CommaSeparatedValues> DTLS_ENABLED_PROTOCOLS = 
+			PROPERTY_SPECS.addThenGet(new CommaSeparatedValuesPropertySpec(
 					"socksClient.dtls.enabledProtocols",
-					Strings.newInstance(new String[] { })));
+					CommaSeparatedValues.newInstance(new String[] { })));
 	
 	public static final PropertySpec<File> DTLS_KEY_STORE_FILE = 
 			PROPERTY_SPECS.addThenGet(new FilePropertySpec(

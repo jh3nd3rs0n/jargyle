@@ -35,7 +35,7 @@ public final class SocketSettings {
 		if (s.isEmpty()) {
 			return newInstance(socketSettings);
 		}
-		String[] sElements = s.split(" ");
+		String[] sElements = s.split(",");
 		for (String sElement : sElements) {
 			SocketSetting<Object> socketSetting = SocketSetting.newInstance(
 					sElement);
@@ -169,6 +169,6 @@ public final class SocketSettings {
 	public String toString() {
 		return this.socketSettings.values().stream()
 				.map(SocketSetting::toString)
-				.collect(Collectors.joining(" "));
+				.collect(Collectors.joining(","));
 	}
 }

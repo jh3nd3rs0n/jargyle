@@ -5,4 +5,5 @@ module com.github.jh3nd3rs0n.jargyle.common {
 	exports com.github.jh3nd3rs0n.jargyle.common.net;
 	exports com.github.jh3nd3rs0n.jargyle.common.security;
 	exports com.github.jh3nd3rs0n.jargyle.common.security.internal.encryptedpass.impl to com.github.jh3nd3rs0n.jargyle.common.test;
+	exports com.github.jh3nd3rs0n.jargyle.common.string;
 }

@@ -17,7 +17,7 @@ public class RuleTest {
 	@Test
 	public void testNewInstanceString01() {
 		Rule expectedRule = Rule.newInstance(new StringBuilder()
-				.append("clientAddress=127.0.0.1 ")
+				.append("clientAddress=127.0.0.1,")
 				.append("firewallAction=ALLOW")
 				.toString());
 		Rule actualRule = new Rule.Builder()
@@ -30,8 +30,8 @@ public class RuleTest {
 	@Test
 	public void testNewInstanceString02() {
 		Rule expectedRule = Rule.newInstance(new StringBuilder()
-				.append("socks5.command=BIND ")
-				.append("socks5.command=UDP_ASSOCIATE ")
+				.append("socks5.command=BIND,")
+				.append("socks5.command=UDP_ASSOCIATE,")
 				.append("firewallAction=DENY")
 				.toString());
 		Rule actualRule = new Rule.Builder()
@@ -45,8 +45,8 @@ public class RuleTest {
 	@Test
 	public void testNewInstanceString03() {
 		Rule expectedRule = Rule.newInstance(new StringBuilder()
-				.append("socks5.serverBoundAddress=127.0.0.1 ")
-				.append("firewallAction=DENY ")
+				.append("socks5.serverBoundAddress=127.0.0.1,")
+				.append("firewallAction=DENY,")
 				.append("firewallActionLogAction=LOG_AS_WARNING")
 				.toString());
 		Rule actualRule = new Rule.Builder()

@@ -38,6 +38,7 @@ import com.github.jh3nd3rs0n.jargyle.server.Socks5RuleConditionSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5RuleResultSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.SslSettingSpecConstants;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.UserRepositorySpecConstants;
 
 public abstract class ServerConfigurationCLI extends CLI {
 	
@@ -470,6 +471,8 @@ public abstract class ServerConfigurationCLI extends CLI {
 		this.printHelpText(Socks5RuleConditionSpecConstants.class);		
 		System.out.println("  SOCKS5_RULE_RESULTS:");
 		this.printHelpText(Socks5RuleResultSpecConstants.class);
+		System.out.println("  SOCKS5_USERPASSAUTH_USER_REPOSITORIES:");
+		this.printHelpText(UserRepositorySpecConstants.class);
 	}
 	
 	private EncryptedPassword readEncryptedPassword(final String prompt) {

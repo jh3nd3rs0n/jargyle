@@ -298,13 +298,13 @@ The server has the following SOCKS5 authentication methods to choose from:
 -   `USERNAME_PASSWORD`: Username password authentication
 
 On the command line, you can have one or more of the aforementioned 
-authentication methods set in the setting `socks5.methods` as a space 
+authentication methods set in the setting `socks5.methods` as a comma 
 separated list. 
 
 Command line example:
 
 ```
-./bin/jargyle start-server "--setting=socks5.methods=NO_AUTHENTICATION_REQUIRED GSSAPI"
+./bin/jargyle start-server --setting=socks5.methods=NO_AUTHENTICATION_REQUIRED,GSSAPI
 ```
 
 In the server configuration file, you can have one or more of the aforementioned 
@@ -345,7 +345,7 @@ included in the setting `socks5.methods`
 Command line example:
 
 ```
-./bin/jargyle start-server "--setting=socks5.methods=NO_AUTHENTICATION_REQUIRED GSSAPI USERNAME_PASSWORD"
+./bin/jargyle start-server --setting=socks5.methods=NO_AUTHENTICATION_REQUIRED,GSSAPI,USERNAME_PASSWORD
 ```
 
 Server configuration file example:
@@ -393,26 +393,66 @@ Server configuration file example:
 </configuration>
 ```
 
-Also, you will need to have the setting `socks5.userpassauth.userRepository` to specify the name of the class that extends `com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.UserRepository` along with an initialization string value.
+Also, you will need to have the setting `socks5.userpassauth.userRepository` 
+to specify the type name of the user repository along with an initialization 
+string value.
 
-The following are two provided classes you can use:
+The following are two type names you can use:
 
--   `com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.userrepo.impl.StringSourceUserRepository`
--   `com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.userrepo.impl.CsvFileSourceUserRepository`
+-   `FileSourceUserRepository`
+-   `StringSourceUserRepository`
 
-`com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.userrepo.impl.StringSourceUserRepository`:
-This class handles the storage of the SOCKS5 users from the initialization 
-string value of a space separated list of username password values.
+`FileSourceUserRepository`: This user repository handles the storage of the 
+SOCKS5 users from a file whose name is provided as an initialization string 
+value. The SOCKS5 users from the file are loaded onto memory. Because of this, 
+you will need at least as much memory as the size of the file. If the file does 
+not exist, it will be created and used. If the file does exist, the existing 
+file will be used. To manage SOCKS5 users under a user repository, see 
+[Managing SOCKS5 Users](cli.html#managing-socks5-users).
 
-Each username password value in the space separated list must be of the 
+Command line example:
+
+```
+./bin/jargyle start-server \
+    --setting=socks5.methods=USERNAME_PASSWORD \
+    --setting=socks5.userpassauth.userRepository=FileSourceUserRepository:users
+```
+
+Server configuration file example:
+
+```
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configuration>
+    <settings>
+        <setting>
+            <name>socks5.methods</name>
+            <socks5.methods>
+                <socks5.method>USERNAME_PASSWORD</socks5.method>
+            </socks5.methods>
+        </setting>
+        <setting>
+            <name>socks5.userpassauth.userRepository</name>
+            <socks5.userpassauth.userRepository>
+                <typeName>FileSourceUserRepository</typeName>
+                <initializationString>users</initializationString>
+            </socks5.userpassauth.userRepository>
+        </setting>
+    </settings>
+</configuration>
+```
+
+`StringSourceUserRepository`: This user repository handles the storage of 
+the SOCKS5 users from the initialization string value of a comma separated list 
+of URL encoded username password values.
+
+Each username password value in the comma separated list must be of the 
 following format:
 
 ```
 USERNAME:PASSWORD
 ```
 
-Where `USERNAME` is the username and `PASSWORD` is the password. Both the 
-username and password can be URL encoded.
+Where `USERNAME` is the username and `PASSWORD` is the password.
 
 If the username or the password contains a colon character (`:`), then each 
 colon character must be replaced with the URL encoding character `%3A`.
@@ -433,7 +473,7 @@ Command line example:
 ```
 ./bin/jargyle start-server \
     --setting=socks5.methods=USERNAME_PASSWORD \
-    "--setting=socks5.userpassauth.userRepository=com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.userrepo.impl.StringSourceUserRepository:Aladdin:opensesame Jasmine:mission%3Aimpossible"
+    --setting=socks5.userpassauth.userRepository=StringSourceUserRepository:Aladdin:opensesame,Jasmine:mission%3Aimpossible
 ```
 
 Server configuration file example:
@@ -451,48 +491,8 @@ Server configuration file example:
         <setting>
             <name>socks5.userpassauth.userRepository</name>
             <socks5.userpassauth.userRepository>
-                <className>com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.userrepo.impl.StringSourceUserRepository</className>
-                <initializationString>Aladdin:opensesame Jasmine:mission%3Aimpossible</initializationString>
-            </socks5.userpassauth.userRepository>
-        </setting>
-    </settings>
-</configuration>
-```
-
-`com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.userrepo.impl.CsvFileSourceUserRepository`: 
-This class handles the storage of the SOCKS5 users from a CSV file whose name 
-is provided as an initialization string value. The SOCKS5 users from the CSV 
-file are loaded onto memory. Because of this, you will need at least as much 
-memory as the size of the CSV file. If the CSV file does not exist, it will be 
-created and used. If the CSV file does exist, the existing CSV file will be 
-used. To manage SOCKS5 users under a user repository, see 
-[Managing SOCKS5 Users](cli.html#managing-socks5-users).
-
-Command line example:
-
-```
-./bin/jargyle start-server \
-    --setting=socks5.methods=USERNAME_PASSWORD \
-    --setting=socks5.userpassauth.userRepository=com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.userrepo.impl.CsvFileSourceUserRepository:users.csv
-```
-
-Server configuration file example:
-
-```
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<configuration>
-    <settings>
-        <setting>
-            <name>socks5.methods</name>
-            <socks5.methods>
-                <socks5.method>USERNAME_PASSWORD</socks5.method>
-            </socks5.methods>
-        </setting>
-        <setting>
-            <name>socks5.userpassauth.userRepository</name>
-            <socks5.userpassauth.userRepository>
-                <className>com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.userrepo.impl.CsvFileSourceUserRepository</className>
-                <initializationString>users.csv</initializationString>
+                <typeName>StringSourceUserRepository</typeName>
+                <initializationString>Aladdin:opensesame,Jasmine:mission%3Aimpossible</initializationString>
             </socks5.userpassauth.userRepository>
         </setting>
     </settings>
@@ -941,14 +941,14 @@ chaining to the other SOCKS5 server:
 
 On the command line, you can have one or more of the aforementioned 
 authentication methods set in the setting `chaining.socks5.methods` as a 
-space separated list. 
+comma separated list. 
 
 Command line example:
 
 ```
 ./bin/jargyle start-server \
     --setting=chaining.socksServerUri=socks5://127.0.0.1:23456 \
-    "--setting=chaining.socks5.methods=NO_AUTHENTICATION_REQUIRED GSSAPI"
+    --setting=chaining.socks5.methods=NO_AUTHENTICATION_REQUIRED,GSSAPI
 ```
 
 In the configuration file, you can have one or more of the aforementioned 
@@ -996,7 +996,7 @@ Command line example:
 ```
 ./bin/jargyle start-server \
     --setting=chaining.socksServerUri=socks5://127.0.0.1:23456 \
-    "--setting=chaining.socks5.methods=NO_AUTHENTICATION_REQUIRED GSSAPI USERNAME_PASSWORD"
+    --setting=chaining.socks5.methods=NO_AUTHENTICATION_REQUIRED,GSSAPI,USERNAME_PASSWORD
 ```
 
 Server configuration file example:
@@ -1914,7 +1914,7 @@ specific instance of traffic
 -   Rule results: fields that are applied if the aforementioned rule conditions 
 evaluate as true for matching a specific instance of traffic
 
-On the command line, a rule consists of a space separated list of both rule 
+On the command line, a rule consists of a comma separated list of both rule 
 conditions and rule results. 
 
 In the server configuration file, a rule is expressed as a `<rule/>` XML 
@@ -1962,8 +1962,8 @@ Command line example:
 
 ```
 ./bin/jargyle start-server \
-    "--setting=rule=socks5.command=CONNECT socks5.desiredDestinationPort=80 socks5.desiredDestinationPort=443 firewallAction=ALLOW" \
-    "--setting=rule=socks5.command=CONNECT firewallAction=DENY" \
+    --setting=rule=socks5.command=CONNECT,socks5.desiredDestinationPort=80,socks5.desiredDestinationPort=443,firewallAction=ALLOW \
+    --setting=rule=socks5.command=CONNECT,firewallAction=DENY \
     --setting=rule=firewallAction=ALLOW
 ```
 
@@ -2040,7 +2040,7 @@ specific rules specified first and have less specific rules specified last.
 
 ### Rule Conditions
 
-On the command line, rule conditions consist of a space separated list of rule 
+On the command line, rule conditions consist of a comma separated list of rule 
 conditions. Each rule condition consists of the syntax of `NAME=VALUE` where 
 `NAME` is expressed as the name of the rule condition and `VALUE` is expressed 
 as the value assigned to the rule condition. 
@@ -2048,7 +2048,7 @@ as the value assigned to the rule condition.
 Partial command line example:
 
 ```
-clientAddress=127.0.0.1 clientAddress=0:0:0:0:0:0:0:1
+clientAddress=127.0.0.1,clientAddress=0:0:0:0:0:0:0:1
 ```
 
 In the server configuration file, rule conditions are expressed in a 
@@ -2124,7 +2124,7 @@ A complete listing of rule conditions can be found in the
 
 ### Rule Results
 
-On the command line, rule results consist of a space separated list of rule 
+On the command line, rule results consist of a comma separated list of rule 
 results. Each rule result consists of the syntax of `NAME=VALUE` where `NAME` 
 is expressed as the name of the rule result and `VALUE` is expressed as the 
 value assigned to the rule result. 
@@ -2132,7 +2132,7 @@ value assigned to the rule result.
 Partial command line example:
 
 ```
-firewallAction=ALLOW firewallActionLogAction=LOG_AS_INFO
+firewallAction=ALLOW,firewallActionLogAction=LOG_AS_INFO
 ```
 
 In the server configuration file, rule result are expressed in a `<ruleResults/>` 
@@ -2157,7 +2157,7 @@ Partial server configuration file example:
 ```
 
 Unless otherwise stated, if a rule result of the same name appears more than 
-once in the space separated list or in the `<ruleResults/>` XML element, then 
+once in the comma separated list or in the `<ruleResults/>` XML element, then 
 only the last rule result of the same name is recognized.
 
 A complete listing of rule results can be found in the 
@@ -2213,7 +2213,7 @@ Command line example:
 
 ```
 ./bin/jargyle start-server \
-    "--setting=rule=socks5.command=BIND socks5.command=UDP_ASSOCIATE firewallAction=DENY firewallActionLogAction=LOG_AS_WARNING" \
+    --setting=rule=socks5.command=BIND,socks5.command=UDP_ASSOCIATE,firewallAction=DENY,firewallActionLogAction=LOG_AS_WARNING \
     --setting=rule=firewallAction=ALLOW
 ```
 
@@ -2302,7 +2302,7 @@ Command line example:
 
 ```
 ./bin/jargyle start-server \
-    "--setting=rule=socks5.method=USERNAME_PASSWORD socks5.user=guest firewallAction=ALLOW firewallActionAllowLimit=50 firewallActionAllowLimitReachedLogAction=LOG_AS_INFO" \
+    --setting=rule=socks5.method=USERNAME_PASSWORD,socks5.user=guest,firewallAction=ALLOW,firewallActionAllowLimit=50,firewallActionAllowLimitReachedLogAction=LOG_AS_INFO \
     --setting=rule=firewallAction=ALLOW
 ```
 
@@ -2407,8 +2407,8 @@ Command line example:
     --setting=chaining.socksServerUri=socks5://127.0.0.1:33332 \
     --setting=chaining.socksServerUri=socks5://127.0.0.1:33333 \
     --setting=lastRouteId=omega \
-    "--setting=rule=socks5.command=CONNECT firewallAction=ALLOW routeSelectionStrategy=RANDOM selectableRouteId=alpha selectableRouteId=beta routeSelectionLogAction=LOG_AS_INFO" \
-    "--setting=rule=firewallAction=ALLOW routeSelectionStrategy=CYCLICAL selectableRouteId=omega"
+    --setting=rule=socks5.command=CONNECT,firewallAction=ALLOW,routeSelectionStrategy=RANDOM,selectableRouteId=alpha,selectableRouteId=beta,routeSelectionLogAction=LOG_AS_INFO \
+    --setting=rule=firewallAction=ALLOW,routeSelectionStrategy=CYCLICAL,selectableRouteId=omega
 ```
 
 Server configuration file example:
@@ -2555,7 +2555,7 @@ Command line example:
 
 ```
 ./bin/jargyle start-server \
-    "--setting=rule=socks5.desiredDestinationAddress=discontinuedserver.com firewallAction=ALLOW socks5.desiredDestinationAddressRedirect=newserver.com socks5.desiredDestinationRedirectLogAction=LOG_AS_INFO" \
+    --setting=rule=socks5.desiredDestinationAddress=discontinuedserver.com,firewallAction=ALLOW,socks5.desiredDestinationAddressRedirect=newserver.com,socks5.desiredDestinationRedirectLogAction=LOG_AS_INFO \
     --setting=rule=firewallAction=ALLOW
 ```
 
@@ -2760,7 +2760,7 @@ Command line example:
 
 ```
 ./bin/jargyle start-server \
-    "--setting=rule=socks5.command=CONNECT socks5.desiredDestinationAddress=specialserver.com firewallAction=ALLOW socks5.onConnect.prepareServerFacingSocket=true socks5.onConnect.serverFacingSocketSetting=SO_RCVBUF=256 socks5.onConnect.serverFacingSocketSetting=SO_SNDBUF=256" \
+    --setting=rule=socks5.command=CONNECT,socks5.desiredDestinationAddress=specialserver.com,firewallAction=ALLOW,socks5.onConnect.prepareServerFacingSocket=true,socks5.onConnect.serverFacingSocketSetting=SO_RCVBUF=256,socks5.onConnect.serverFacingSocketSetting=SO_SNDBUF=256 \
     --setting=rule=firewallAction=ALLOW
 ```
 
@@ -2874,7 +2874,7 @@ Command line example:
 
 ```
 ./bin/jargyle start-server \
-    "--setting=rule=socks5.command=CONNECT socks5.desiredDestinationAddress=intermittent-idling-server.com firewallAction=ALLOW socks5.onConnect.relayIdleTimeout=1024000" \
+    --setting=rule=socks5.command=CONNECT,socks5.desiredDestinationAddress=intermittent-idling-server.com,firewallAction=ALLOW,socks5.onConnect.relayIdleTimeout=1024000 \
     --setting=rule=firewallAction=ALLOW
 ```
 
@@ -2971,7 +2971,7 @@ Command line example:
 
 ```
 ./bin/jargyle start-server \
-    "--setting=rule=socks5.command=CONNECT socks5.desiredDestinationAddress=streamingwebsite.com firewallAction=ALLOW socks5.onConnect.relayInboundBandwidthLimit=1024000 socks5.onConnect.relayOutboundBandwidthLimit=1024000" \
+    --setting=rule=socks5.command=CONNECT,socks5.desiredDestinationAddress=streamingwebsite.com,firewallAction=ALLOW,socks5.onConnect.relayInboundBandwidthLimit=1024000,socks5.onConnect.relayOutboundBandwidthLimit=1024000 \
     --setting=rule=firewallAction=ALLOW
 ```
 

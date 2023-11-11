@@ -26,7 +26,7 @@ import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
 import com.github.jh3nd3rs0n.jargyle.server.SslSettingSpecConstants;
-import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.userrepo.impl.StringSourceUserRepository;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.UserRepositorySpecConstants;
 import com.github.jh3nd3rs0n.test.help.TestStringConstants;
 import com.github.jh3nd3rs0n.test.help.constants.TestResourceConstants;
 
@@ -99,7 +99,8 @@ public class SocksServerStressIT {
 				Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
 						Methods.newInstance(Method.USERNAME_PASSWORD)),
 				Socks5SettingSpecConstants.SOCKS5_USERPASSAUTH_USER_REPOSITORY.newSetting(
-						new StringSourceUserRepository(SOCKS5_USERS))));
+						UserRepositorySpecConstants.STRING_SOURCE_USER_REPOSITORY.newUserRepository(
+								SOCKS5_USERS))));
 	}
 	
 	private static Configuration newConfigurationUsingSsl() {
@@ -139,7 +140,8 @@ public class SocksServerStressIT {
 				Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
 						Methods.newInstance(Method.USERNAME_PASSWORD)),
 				Socks5SettingSpecConstants.SOCKS5_USERPASSAUTH_USER_REPOSITORY.newSetting(
-						new StringSourceUserRepository(SOCKS5_USERS))));
+						UserRepositorySpecConstants.STRING_SOURCE_USER_REPOSITORY.newUserRepository(
+								SOCKS5_USERS))));
 	}
 	
 	private static SocksClient newSocks5Client() {

@@ -5,12 +5,12 @@ import java.util.List;
 import java.util.Map;
 
 import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.BooleanPropertySpec;
+import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.CommaSeparatedValuesPropertySpec;
 import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.EncryptedPasswordPropertySpec;
 import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.FilePropertySpec;
 import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.StringPropertySpec;
-import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.StringsPropertySpec;
-import com.github.jh3nd3rs0n.jargyle.common.lang.Strings;
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
+import com.github.jh3nd3rs0n.jargyle.common.string.CommaSeparatedValues;
 
 public final class SslPropertySpecConstants {
 
@@ -21,15 +21,15 @@ public final class SslPropertySpecConstants {
 					"socksClient.ssl.enabled",
 					Boolean.FALSE));
 
-	public static final PropertySpec<Strings> SSL_ENABLED_CIPHER_SUITES = 
-			PROPERTY_SPECS.addThenGet(new StringsPropertySpec(
+	public static final PropertySpec<CommaSeparatedValues> SSL_ENABLED_CIPHER_SUITES = 
+			PROPERTY_SPECS.addThenGet(new CommaSeparatedValuesPropertySpec(
 					"socksClient.ssl.enabledCipherSuites",
-					Strings.newInstance(new String[] { })));
+					CommaSeparatedValues.newInstance(new String[] { })));
 	
-	public static final PropertySpec<Strings> SSL_ENABLED_PROTOCOLS = 
-			PROPERTY_SPECS.addThenGet(new StringsPropertySpec(
+	public static final PropertySpec<CommaSeparatedValues> SSL_ENABLED_PROTOCOLS = 
+			PROPERTY_SPECS.addThenGet(new CommaSeparatedValuesPropertySpec(
 					"socksClient.ssl.enabledProtocols",
-					Strings.newInstance(new String[] { })));
+					CommaSeparatedValues.newInstance(new String[] { })));
 	
 	public static final PropertySpec<File> SSL_KEY_STORE_FILE = 
 			PROPERTY_SPECS.addThenGet(new FilePropertySpec(

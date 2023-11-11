@@ -10,6 +10,32 @@
 	<name>Jargyle</name>
 	<url>https://jh3nd3rs0n.github.io/jargyle</url>
 	<description>Java SOCKS5 server</description>
+	<licenses>
+		<license>
+			<name>MIT License</name>
+			<url>https://github.com/jh3nd3rs0n/jargyle/blob/master/LICENSE</url>
+		</license>
+	</licenses>
+	<organization>
+		<name>jh3nd3rs0n</name>
+		<url>https://github.com/jh3nd3rs0n</url>
+	</organization>
+	<developers>
+		<developer>
+			<id>jh3nd3rs0n</id>
+			<name>Jonathan Henderson</name>
+			<email>j0n4th4n.h3nd3rs0n@gmail.com</email>
+			<organization>jh3nd3rs0n</organization>
+			<organizationUrl>https://github.com/jh3nd3rs0n</organizationUrl>
+		</developer>
+	</developers>
+	<issueManagement>
+		<system>GitHub</system>
+		<url>https://github.com/jh3nd3rs0n/jargyle/issues</url>
+	</issueManagement>
+	<prerequisites>
+		<maven>3.3.9</maven>
+	</prerequisites>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.javadoc.skippedModules>

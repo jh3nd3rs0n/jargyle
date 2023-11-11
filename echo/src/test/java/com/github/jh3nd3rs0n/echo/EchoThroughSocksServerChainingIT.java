@@ -34,7 +34,7 @@ import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
 import com.github.jh3nd3rs0n.jargyle.server.SslSettingSpecConstants;
-import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.userrepo.impl.StringSourceUserRepository;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.UserRepositorySpecConstants;
 import com.github.jh3nd3rs0n.test.help.TestStringConstants;
 import com.github.jh3nd3rs0n.test.help.ThreadHelper;
 import com.github.jh3nd3rs0n.test.help.constants.TestResourceConstants;
@@ -103,7 +103,7 @@ public class EchoThroughSocksServerChainingIT {
 						Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
 								Methods.newInstance(Method.USERNAME_PASSWORD)),
 						Socks5SettingSpecConstants.SOCKS5_USERPASSAUTH_USER_REPOSITORY.newSetting(
-								new StringSourceUserRepository(
+								UserRepositorySpecConstants.STRING_SOURCE_USER_REPOSITORY.newUserRepository(
 										"Aladdin:opensesame")),
 						ChainingGeneralSettingSpecConstants.CHAINING_SOCKS_SERVER_URI.newSetting(
 								SchemeConstants.SOCKS5.newSocksServerUri(
@@ -121,7 +121,7 @@ public class EchoThroughSocksServerChainingIT {
 						Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
 								Methods.newInstance(Method.USERNAME_PASSWORD)),
 						Socks5SettingSpecConstants.SOCKS5_USERPASSAUTH_USER_REPOSITORY.newSetting(
-								new StringSourceUserRepository(
+								UserRepositorySpecConstants.STRING_SOURCE_USER_REPOSITORY.newUserRepository(
 										"Jasmine:mission%3Aimpossible")),
 						ChainingGeneralSettingSpecConstants.CHAINING_SOCKS_SERVER_URI.newSetting(
 								SchemeConstants.SOCKS5.newSocksServerUri(
@@ -139,7 +139,7 @@ public class EchoThroughSocksServerChainingIT {
 						Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
 								Methods.newInstance(Method.USERNAME_PASSWORD)),
 						Socks5SettingSpecConstants.SOCKS5_USERPASSAUTH_USER_REPOSITORY.newSetting(
-								new StringSourceUserRepository(
+								UserRepositorySpecConstants.STRING_SOURCE_USER_REPOSITORY.newUserRepository(
 										"Abu:safeDriversSave40%25")))));
 	}
 	
@@ -278,7 +278,7 @@ public class EchoThroughSocksServerChainingIT {
 						Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
 								Methods.newInstance(Method.USERNAME_PASSWORD)),
 						Socks5SettingSpecConstants.SOCKS5_USERPASSAUTH_USER_REPOSITORY.newSetting(
-								new StringSourceUserRepository(
+								UserRepositorySpecConstants.STRING_SOURCE_USER_REPOSITORY.newUserRepository(
 										"Aladdin:opensesame")))),
 				Configuration.newUnmodifiableInstance(Settings.newInstance(
 						GeneralSettingSpecConstants.PORT.newSetting(
@@ -286,7 +286,7 @@ public class EchoThroughSocksServerChainingIT {
 						Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
 								Methods.newInstance(Method.USERNAME_PASSWORD)),
 						Socks5SettingSpecConstants.SOCKS5_USERPASSAUTH_USER_REPOSITORY.newSetting(
-								new StringSourceUserRepository(
+								UserRepositorySpecConstants.STRING_SOURCE_USER_REPOSITORY.newUserRepository(
 										"Jasmine:mission%3Aimpossible")))),
 				Configuration.newUnmodifiableInstance(Settings.newInstance(
 						GeneralSettingSpecConstants.PORT.newSetting(
@@ -294,7 +294,7 @@ public class EchoThroughSocksServerChainingIT {
 						Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
 								Methods.newInstance(Method.USERNAME_PASSWORD)),
 						Socks5SettingSpecConstants.SOCKS5_USERPASSAUTH_USER_REPOSITORY.newSetting(
-								new StringSourceUserRepository(
+								UserRepositorySpecConstants.STRING_SOURCE_USER_REPOSITORY.newUserRepository(
 										"Abu:safeDriversSave40%25")))));
 	}
 	

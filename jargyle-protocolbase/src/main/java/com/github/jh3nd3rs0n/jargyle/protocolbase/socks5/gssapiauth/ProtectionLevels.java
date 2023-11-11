@@ -3,8 +3,8 @@ package com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapiauth;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public final class ProtectionLevels {
 
@@ -36,7 +36,7 @@ public final class ProtectionLevels {
 	public static ProtectionLevels newInstance(final String s) {
 		List<ProtectionLevel> protectionLevels = 
 				new ArrayList<ProtectionLevel>();
-		String[] sElements = s.split(" ");
+		String[] sElements = s.split(",");
 		for (String sElement : sElements) {
 			protectionLevels.add(ProtectionLevel.valueOfString(sElement));
 		}
@@ -87,17 +87,9 @@ public final class ProtectionLevels {
 	
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		for (Iterator<ProtectionLevel> iterator = 
-				this.protectionLevels.iterator();
-				iterator.hasNext();) {
-			ProtectionLevel protectionLevel = iterator.next();
-			builder.append(protectionLevel);
-			if (iterator.hasNext()) {
-				builder.append(' ');
-			}
-		}
-		return builder.toString();
+		return this.protectionLevels.stream()
+				.map(ProtectionLevel::toString)
+				.collect(Collectors.joining(","));
 	}
 	
 }

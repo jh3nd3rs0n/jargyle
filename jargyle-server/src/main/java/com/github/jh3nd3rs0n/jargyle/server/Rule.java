@@ -51,11 +51,11 @@ public final class Rule {
 	}
 	
 	public static Rule newInstance(final String s) {
-		String[] words = s.split(" ");
+		String[] entries = s.split(",");
 		Builder builder = new Builder();
-		for (String word : words) {
-			String[] wordElements = word.split("=", 2);
-			String name = wordElements[0];
+		for (String entry : entries) {
+			String[] entryElements = entry.split("=", 2);
+			String name = entryElements[0];
 			IllegalArgumentException ex = null;
 			try {
 				RuleConditionSpecConstants.valueOfName(name);
@@ -63,7 +63,7 @@ public final class Rule {
 				ex = e;
 			}
 			if (ex == null) {
-				builder.addRuleCondition(RuleCondition.newInstance(word));
+				builder.addRuleCondition(RuleCondition.newInstance(entry));
 				continue;
 			}
 			ex = null;
@@ -73,7 +73,7 @@ public final class Rule {
 				ex = e;
 			}
 			if (ex == null) {
-				builder.addRuleResult(RuleResult.newInstance(word));
+				builder.addRuleResult(RuleResult.newInstance(entry));
 				continue;
 			}
 			throw new IllegalArgumentException(String.format(
@@ -231,7 +231,7 @@ public final class Rule {
 		list.addAll(this.ruleResults);
 		return list.stream()
 				.map(Object::toString)
-				.collect(Collectors.joining(" "));
+				.collect(Collectors.joining(","));
 	}
 	
 }

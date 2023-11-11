@@ -232,7 +232,7 @@ public final class Socks5UserManagerCLI extends CLI {
 		ArgMatey.Option helpOption = this.getOptionGroups().get(
 				HELP_OPTION_GROUP_ORDINAL).get(0);
 		System.out.printf("Usage: %s "
-				+ "USER_REPOSITORY_CLASS_NAME:INITIALIZATION_STRING COMMAND%n", 
+				+ "USER_REPOSITORY_TYPE_NAME:INITIALIZATION_STRING COMMAND%n", 
 				this.programBeginningUsage);
 		System.out.printf("       %s %s%n", 
 				this.programBeginningUsage, 

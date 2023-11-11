@@ -13,6 +13,7 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
 import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.HashedPassword;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.HashedPasswordSpec;
 
 public final class Pbkdf2WithHmacSha256HashedPassword extends HashedPassword {
 
@@ -24,17 +25,23 @@ public final class Pbkdf2WithHmacSha256HashedPassword extends HashedPassword {
 	private static final SecureRandom SECURE_RANDOM = new SecureRandom();
 	
 	public static Pbkdf2WithHmacSha256HashedPassword newInstance(
-			final byte[] hash, final byte[] salt) {
-		return new Pbkdf2WithHmacSha256HashedPassword(hash, salt); 
+			final HashedPasswordSpec hashedPasswordSpec,
+			final byte[] hash, 
+			final byte[] salt) {
+		return new Pbkdf2WithHmacSha256HashedPassword(
+				hashedPasswordSpec, hash, salt); 
 	}
 	
 	public static Pbkdf2WithHmacSha256HashedPassword newInstance(
+			final HashedPasswordSpec hashedPasswordSpec,
 			final char[] password) {
-		return newInstance(password, newSalt());
+		return newInstance(hashedPasswordSpec, password, newSalt());
 	}
 	
 	public static Pbkdf2WithHmacSha256HashedPassword newInstance(
-			final char[] password, final byte[] salt) {
+			final HashedPasswordSpec hashedPasswordSpec,
+			final char[] password, 
+			final byte[] salt) {
 		char[] psswrd = Arrays.copyOf(password, password.length);
 		byte[] slt = Arrays.copyOf(salt, salt.length);
 		KeySpec keySpec = new PBEKeySpec(
@@ -51,17 +58,19 @@ public final class Pbkdf2WithHmacSha256HashedPassword extends HashedPassword {
 		} catch (InvalidKeySpecException e) {
 			throw new AssertionError(e);
 		}
-		return new Pbkdf2WithHmacSha256HashedPassword(hsh, slt);
+		return new Pbkdf2WithHmacSha256HashedPassword(
+				hashedPasswordSpec, hsh, slt);
 	}
 	
 	public static Pbkdf2WithHmacSha256HashedPassword newInstance(
+			final HashedPasswordSpec hashedPasswordSpec,
 			final String argumentsString) {
 		String message = String.format(
 				"arguments string must be in the following format: "
-				+ "HASH_BASE_64_STRING;SALT_BASE_64_STRING "
+				+ "HASH_BASE_64_STRING,SALT_BASE_64_STRING "
 				+ "actual arguments string is %s",
 				argumentsString);
-		String[] arguments = argumentsString.split(";", 2);
+		String[] arguments = argumentsString.split(",");
 		if (arguments.length != 2) {
 			throw new IllegalArgumentException(message);
 		}
@@ -80,7 +89,8 @@ public final class Pbkdf2WithHmacSha256HashedPassword extends HashedPassword {
 		} catch (IllegalArgumentException e) {
 			throw new IllegalArgumentException(message, e);
 		}
-		return Pbkdf2WithHmacSha256HashedPassword.newInstance(hash, salt);		
+		return Pbkdf2WithHmacSha256HashedPassword.newInstance(
+				hashedPasswordSpec, hash, salt);		
 	}
 	
 	private static byte[] newSalt() {
@@ -97,7 +107,10 @@ public final class Pbkdf2WithHmacSha256HashedPassword extends HashedPassword {
 	private final byte[] salt;
 	
 	private Pbkdf2WithHmacSha256HashedPassword(
-			final byte[] hsh, final byte[] slt) {
+			final HashedPasswordSpec hashedPasswordSpec,
+			final byte[] hsh, 
+			final byte[] slt) {
+		super(hashedPasswordSpec);
 		this.hash = Arrays.copyOf(hsh, hsh.length);
 		this.salt = Arrays.copyOf(slt, slt.length);
 	}
@@ -128,7 +141,7 @@ public final class Pbkdf2WithHmacSha256HashedPassword extends HashedPassword {
 	public String getArgumentsString() {
 		Encoder encoder = Base64.getEncoder();
 		return String.format(
-				"%s;%s", 
+				"%s,%s", 
 				encoder.encodeToString(this.hash),
 				encoder.encodeToString(this.salt));		
 	}
@@ -154,7 +167,7 @@ public final class Pbkdf2WithHmacSha256HashedPassword extends HashedPassword {
 	public boolean passwordEquals(final char[] password) {
 		Pbkdf2WithHmacSha256HashedPassword other = 
 				Pbkdf2WithHmacSha256HashedPassword.newInstance(
-						password, this.salt); 
+						this.getHashedPasswordSpec(), password, this.salt); 
 		return this.equals(other);
 	}
 	

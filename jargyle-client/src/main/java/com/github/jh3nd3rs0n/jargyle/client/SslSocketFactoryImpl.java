@@ -14,7 +14,7 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.TrustManager;
 
-import com.github.jh3nd3rs0n.jargyle.common.lang.Strings;
+import com.github.jh3nd3rs0n.jargyle.common.string.CommaSeparatedValues;
 import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.KeyManagerHelper;
 import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.SslContextHelper;
 import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.SslSocketFactory;
@@ -104,13 +104,13 @@ final class SslSocketFactoryImpl extends SslSocketFactory {
 		SSLSocket sslSocket = (SSLSocket) factory.newSocket(
 				socket, host, port,	autoClose);
 		Properties properties = this.socksClient.getProperties();
-		Strings enabledCipherSuites = properties.getValue(
+		CommaSeparatedValues enabledCipherSuites = properties.getValue(
 				SslPropertySpecConstants.SSL_ENABLED_CIPHER_SUITES);
 		String[] cipherSuites = enabledCipherSuites.toArray();
 		if (cipherSuites.length > 0) {
 			sslSocket.setEnabledCipherSuites(cipherSuites);
 		}
-		Strings enabledProtocols = properties.getValue(
+		CommaSeparatedValues enabledProtocols = properties.getValue(
 				SslPropertySpecConstants.SSL_ENABLED_PROTOCOLS);
 		String[] protocols = enabledProtocols.toArray();
 		if (protocols.length > 0) {

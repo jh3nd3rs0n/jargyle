@@ -11,24 +11,24 @@ import jakarta.xml.bind.annotation.XmlType;
 @XmlType(name = "encryptedPassword", propOrder = { })
 class EncryptedPasswordXml extends ValueXml { 
 
-	@XmlElement(name = "className", required = true)
-	protected String className;
+	@XmlElement(name = "typeName", required = true)
+	protected String typeName;
 	@XmlElement(name = "argumentsString", required = true)
 	protected String argumentsString;
 	
 	public EncryptedPasswordXml() {
-		this.className = null;
+		this.typeName = null;
 		this.argumentsString = null;
 	}
 	
 	public EncryptedPasswordXml(final EncryptedPassword encryptedPassword) {
-		this.className = encryptedPassword.getClass().getName();
+		this.typeName = encryptedPassword.getTypeName();
 		this.argumentsString = encryptedPassword.getArgumentsString();
 	}
 	
 	public EncryptedPassword toEncryptedPassword() {
 		return EncryptedPassword.newInstance(
-				this.className, this.argumentsString);
+				this.typeName, this.argumentsString);
 	}
 	
 	@Override

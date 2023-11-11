@@ -57,6 +57,6 @@ public final class HashedPasswordSpecConstants {
 		return VALUES_MAP;
 	}
 	
-	public HashedPasswordSpecConstants() { }
+	private HashedPasswordSpecConstants() { }
 
 }

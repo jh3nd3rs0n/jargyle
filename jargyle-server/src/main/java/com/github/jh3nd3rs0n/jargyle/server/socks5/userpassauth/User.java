@@ -14,27 +14,6 @@ public final class User {
 	public static final int MAX_PASSWORD_LENGTH = 
 			UsernamePasswordRequest.MAX_PASSWD_LENGTH;
 	
-	public static User newInstance(final String s) {
-		String[] sElements = s.split(":");
-		if (sElements.length != 2) {
-			throw new IllegalArgumentException(
-					"user must be in the following format: NAME:PASSWORD");
-		}
-		String userName = null;
-		try {
-			userName = URLDecoder.decode(sElements[0], "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			throw new AssertionError(e);
-		}
-		String userPassword = null;
-		try {
-			userPassword = URLDecoder.decode(sElements[1], "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			throw new AssertionError(e);
-		}
-		return newInstance(userName, userPassword.toCharArray());
-	}
-	
 	public static User newInstance(final String name, final char[] password) {
 		Objects.requireNonNull(name, "name must not be null");
 		Objects.requireNonNull(password, "password must not be null");
@@ -46,6 +25,50 @@ public final class User {
 	public static User newInstance(
 			final String name, final HashedPassword hashedPassword) {
 		return new User(name, hashedPassword);
+	}
+	
+	public static User newInstanceOfStringContainingHashedPassword(
+			final String s) {
+		String[] sElements = s.split(":");
+		if (sElements.length != 2) {
+			throw new IllegalArgumentException(
+					"user must be in the following format: NAME:HASHED_PASSWORD");
+		}
+		String name = null;
+		try {
+			name = URLDecoder.decode(sElements[0], "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			throw new AssertionError(e);
+		}
+		String hashedPassword = null;
+		try {
+			hashedPassword = URLDecoder.decode(sElements[1], "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			throw new AssertionError(e);
+		}
+		return newInstance(name, HashedPassword.newInstance(hashedPassword));
+	}
+	
+	public static User newInstanceOfStringContainingPlaintextPassword(
+			final String s) {
+		String[] sElements = s.split(":");
+		if (sElements.length != 2) {
+			throw new IllegalArgumentException(
+					"user must be in the following format: NAME:PASSWORD");
+		}
+		String name = null;
+		try {
+			name = URLDecoder.decode(sElements[0], "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			throw new AssertionError(e);
+		}
+		String password = null;
+		try {
+			password = URLDecoder.decode(sElements[1], "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			throw new AssertionError(e);
+		}
+		return newInstance(name, password.toCharArray());
 	}
 	
 	public static void validateName(final String name) {

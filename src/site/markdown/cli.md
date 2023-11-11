@@ -949,10 +949,10 @@ SETTING VALUE SYNTAXES:
   SOCKS5_USERPASSAUTH_USER_REPOSITORIES:
 
     FileSourceUserRepository:FILE
-        User repository that handles the storage of the users from a provided file of a list of URL encoded username password pairs (If the file does not exist, it will be created and used.)
+        User repository that handles the storage of the users from a provided file of a list of URL encoded username and hashed password pairs (If the file does not exist, it will be created and used.)
 
     StringSourceUserRepository:[USERNAME1:PASSWORD1[,USERNAME2:PASSWORD2[...]]]
-        User repository that handles the storage of the users from a provided string of a comma separated list of URL encoded username password pairs
+        User repository that handles the storage of the users from a provided string of a comma separated list of URL encoded username and password pairs
 
 ```
 

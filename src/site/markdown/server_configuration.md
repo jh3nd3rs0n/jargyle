@@ -443,9 +443,9 @@ Server configuration file example:
 
 `StringSourceUserRepository`: This user repository handles the storage of 
 the SOCKS5 users from the initialization string value of a comma separated list 
-of URL encoded username password values.
+of URL encoded username and password pairs.
 
-Each username password value in the comma separated list must be of the 
+Each username and password pair in the comma separated list must be of the 
 following format:
 
 ```

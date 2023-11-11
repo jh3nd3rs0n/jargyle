@@ -15,9 +15,9 @@ public final class UserRepositorySpecConstants {
 
 	@HelpText(
 			doc = "User repository that handles the storage of the users from "
-					+ "a provided file of a list of URL encoded username "
-					+ "password pairs (If the file does not exist, it will be "
-					+ "created and used.)", 
+					+ "a provided file of a list of URL encoded username and "
+					+ "hashed password pairs (If the file does not exist, it "
+					+ "will be created and used.)", 
 			usage = "FileSourceUserRepository:FILE"
 	)
 	public static final UserRepositorySpec FILE_SOURCE_USER_REPOSITORY = USER_REPOSITORY_SPECS.addThenGet(new UserRepositorySpec(
@@ -35,7 +35,7 @@ public final class UserRepositorySpecConstants {
 	@HelpText(
 			doc = "User repository that handles the storage of the users from "
 					+ "a provided string of a comma separated list of URL "
-					+ "encoded username password pairs", 
+					+ "encoded username and password pairs", 
 			usage = "StringSourceUserRepository:[USERNAME1:PASSWORD1[,USERNAME2:PASSWORD2[...]]]"
 	)
 	public static final UserRepositorySpec STRING_SOURCE_USER_REPOSITORY = USER_REPOSITORY_SPECS.addThenGet(new UserRepositorySpec(

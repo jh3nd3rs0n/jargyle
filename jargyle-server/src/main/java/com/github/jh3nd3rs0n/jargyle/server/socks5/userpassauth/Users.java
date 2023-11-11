@@ -14,25 +14,42 @@ public final class Users {
 		return new Users(users);
 	}
 	
-	public static Users newInstance(final String s) {
-		List<User> users = new ArrayList<User>();
-		if (s.isEmpty()) {
-			return newInstance(users);
-		}
-		String[] sElements = s.split(",");
-		for (String sElement : sElements) {
-			User user = User.newInstance(sElement);
-			users.add(user);
-		}
-		return newInstance(users);
-	}
-	
 	public static Users newInstance(final User... users) {
 		return newInstance(Arrays.asList(users));
 	}
 	
 	public static Users newInstance(final Users users) {
 		return new Users(users);
+	}
+	
+	public static Users newInstanceOfStringContainingHashedPasswords(
+			final String s) {
+		List<User> users = new ArrayList<User>();
+		if (s.isEmpty()) {
+			return newInstance(users);
+		}
+		String[] sElements = s.split(",");
+		for (String sElement : sElements) {
+			User user = User.newInstanceOfStringContainingHashedPassword(
+					sElement);
+			users.add(user);
+		}
+		return newInstance(users);
+	}
+	
+	public static Users newInstanceOfStringContainingPlaintextPasswords(
+			final String s) {
+		List<User> users = new ArrayList<User>();
+		if (s.isEmpty()) {
+			return newInstance(users);
+		}
+		String[] sElements = s.split(",");
+		for (String sElement : sElements) {
+			User user = User.newInstanceOfStringContainingPlaintextPassword(
+					sElement);
+			users.add(user);
+		}
+		return newInstance(users);
 	}
 
 	private final Map<String, User> users;

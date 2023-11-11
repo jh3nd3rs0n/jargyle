@@ -26,7 +26,7 @@ public class FileSourceUserRepositoryIT {
 	@Before
 	public void setUp() throws Exception {
 		this.baseDir = Files.createTempDirectory("com.github.jh3nd3rs0n.jargyle-");
-		this.usersFile = this.baseDir.resolve("users.csv");
+		this.usersFile = this.baseDir.resolve("users");
 	}
 
 	@After

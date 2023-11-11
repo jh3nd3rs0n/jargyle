@@ -11,6 +11,6 @@ public final class ConfigurationFileSchemaHelper {
 		ConfigurationXmlFileSchemaHelper.writeSchemaTo(out);
 	}
 	
-	public ConfigurationFileSchemaHelper() { }
+	private ConfigurationFileSchemaHelper() { }
 
 }

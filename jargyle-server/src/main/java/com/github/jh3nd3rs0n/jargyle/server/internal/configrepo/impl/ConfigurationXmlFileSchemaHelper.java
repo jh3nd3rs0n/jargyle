@@ -11,6 +11,6 @@ public final class ConfigurationXmlFileSchemaHelper {
 		ConfigurationXsdHelper.writeXsdTo(out);
 	}
 	
-	public ConfigurationXmlFileSchemaHelper() { }
+	private ConfigurationXmlFileSchemaHelper() { }
 
 }

@@ -29,7 +29,7 @@ final class RuleResultSpecConstants {
 			return VALUES_MAP.get(name);
 		}
 		throw new IllegalArgumentException(String.format(
-				"unknown rule result spec: %s", name));
+				"unknown rule result name: %s", name));
 	}
 	
 	public static List<RuleResultSpec<Object>> values() {

@@ -14,13 +14,8 @@ public final class Setting<V> {
 	}
 	
 	public static <V> Setting<V> newInstance(final String name, final V value) {
-		SettingSpec<Object> settingSpec = null;
-		try {
-			settingSpec = SettingSpecConstants.valueOfName(name); 
-		} catch (IllegalArgumentException e) {
-			throw new IllegalArgumentException(String.format(
-					"unknown setting: %s", name), e);
-		}
+		SettingSpec<Object> settingSpec = SettingSpecConstants.valueOfName(
+				name);
 		@SuppressWarnings("unchecked")
 		Setting<V> setting = (Setting<V>) settingSpec.newSetting(value);
 		return setting;
@@ -35,13 +30,8 @@ public final class Setting<V> {
 	
 	public static Setting<Object> newInstanceOfParsableValue(
 			final String name, final String value) {
-		SettingSpec<Object> settingSpec = null;
-		try {
-			settingSpec = SettingSpecConstants.valueOfName(name); 
-		} catch (IllegalArgumentException e) {
-			throw new IllegalArgumentException(String.format(
-					"unknown setting: %s", name), e);
-		}		
+		SettingSpec<Object> settingSpec = SettingSpecConstants.valueOfName(
+				name);
 		return settingSpec.newSettingOfParsableValue(value);
 	}
 	

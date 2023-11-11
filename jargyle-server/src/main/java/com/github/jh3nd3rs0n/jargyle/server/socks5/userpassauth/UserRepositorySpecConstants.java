@@ -64,8 +64,8 @@ public final class UserRepositorySpecConstants {
 				.map(UserRepositorySpec::getTypeName)
 				.collect(Collectors.joining(", "));
 		throw new IllegalArgumentException(String.format(
-				"expected user repository spec must be one of the following "
-				+ "values: %s. actual value is %s",
+				"expected user repository type name must be one of the "
+				+ "following values: %s. actual value is %s",
 				str,
 				typeName));
 	}

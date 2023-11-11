@@ -30,7 +30,7 @@ final class RuleConditionSpecConstants {
 			return VALUES_MAP.get(name);
 		}
 		throw new IllegalArgumentException(String.format(
-				"unknown rule condition spec: %s", name)); 
+				"unknown rule condition name: %s", name)); 
 	}
 	
 	public static List<RuleConditionSpec<Object, Object>> values() {

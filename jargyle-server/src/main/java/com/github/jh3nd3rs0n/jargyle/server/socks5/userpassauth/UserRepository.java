@@ -1,7 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth;
 
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 public abstract class UserRepository {
 
@@ -23,20 +22,8 @@ public abstract class UserRepository {
 	
 	public static UserRepository newInstance(
 			final String typeName, final String initializationString) {
-		UserRepositorySpec userRepositorySpec = null;
-		try {
-			userRepositorySpec = UserRepositorySpecConstants.valueOfTypeName(
-					typeName);
-		} catch (IllegalArgumentException e) {
-			String str = UserRepositorySpecConstants.values().stream()
-					.map(UserRepositorySpec::getTypeName)
-					.collect(Collectors.joining(", "));
-			throw new IllegalArgumentException(String.format(
-					"expected user repository type name must be one of the "
-					+ "following values: %s. actual value is %s",
-					str,
-					typeName));			
-		}
+		UserRepositorySpec userRepositorySpec = 
+				UserRepositorySpecConstants.valueOfTypeName(typeName);
 		return userRepositorySpec.newUserRepository(initializationString);
 	}
 

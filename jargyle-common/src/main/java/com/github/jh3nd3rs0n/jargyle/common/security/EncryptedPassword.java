@@ -1,7 +1,5 @@
 package com.github.jh3nd3rs0n.jargyle.common.security;
 
-import java.util.stream.Collectors;
-
 public abstract class EncryptedPassword {
 	
 	public static EncryptedPassword newInstance(final char[] password) {
@@ -23,20 +21,8 @@ public abstract class EncryptedPassword {
 	
 	public static EncryptedPassword newInstance(
 			final String typeName, final String argumentsString) {
-		EncryptedPasswordSpec encryptedPasswordSpec = null;
-		try {
-			encryptedPasswordSpec = 
-					EncryptedPasswordSpecConstants.valueOfTypeName(typeName);
-		} catch (IllegalArgumentException e) {
-			String str = EncryptedPasswordSpecConstants.values().stream()
-					.map(EncryptedPasswordSpec::getTypeName)
-					.collect(Collectors.joining(", "));
-			throw new IllegalArgumentException(String.format(
-					"expected encrypted password type name must be one of the "
-					+ "following values: %s. actual value is %s",
-					str,
-					typeName));			
-		}
+		EncryptedPasswordSpec encryptedPasswordSpec = 
+				EncryptedPasswordSpecConstants.valueOfTypeName(typeName);
 		return encryptedPasswordSpec.newEncryptedPassword(argumentsString);		
 	}
 

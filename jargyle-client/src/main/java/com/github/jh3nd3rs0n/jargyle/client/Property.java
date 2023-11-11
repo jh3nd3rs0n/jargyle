@@ -4,13 +4,8 @@ public final class Property<V> {
 	
 	public static <V> Property<V> newInstance(
 			final String name, final V value) {
-		PropertySpec<Object> propertySpec = null;
-		try {
-			propertySpec = PropertySpecConstants.valueOfName(name); 
-		} catch (IllegalArgumentException e) {
-			throw new IllegalArgumentException(String.format(
-					"unknown property: %s", name), e);
-		}
+		PropertySpec<Object> propertySpec = PropertySpecConstants.valueOfName(
+				name);
 		@SuppressWarnings("unchecked")
 		Property<V> property = (Property<V>) propertySpec.newProperty(value);
 		return property;
@@ -18,13 +13,8 @@ public final class Property<V> {
 	
 	public static Property<Object> newInstanceOfParsableValue(
 			final String name, final String value) {
-		PropertySpec<Object> propertySpec = null;
-		try {
-			propertySpec = PropertySpecConstants.valueOfName(name); 
-		} catch (IllegalArgumentException e) {
-			throw new IllegalArgumentException(String.format(
-					"unknown property: %s", name), e);
-		}		
+		PropertySpec<Object> propertySpec = PropertySpecConstants.valueOfName(
+				name);
 		return propertySpec.newPropertyOfParsableValue(value);
 	}
 	

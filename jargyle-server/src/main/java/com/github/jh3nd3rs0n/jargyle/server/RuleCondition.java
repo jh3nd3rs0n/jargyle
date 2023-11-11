@@ -15,13 +15,8 @@ public final class RuleCondition<V1, V2> {
 	
 	public static <V1, V2> RuleCondition<V1, V2> newInstance(
 			final String name, final V1 value) {
-		RuleConditionSpec<Object, Object> ruleConditionSpec = null;
-		try {
-			ruleConditionSpec = RuleConditionSpecConstants.valueOfName(name); 
-		} catch (IllegalArgumentException e) {
-			throw new IllegalArgumentException(String.format(
-					"unknown rule condition: %s", name), e);
-		}
+		RuleConditionSpec<Object, Object> ruleConditionSpec = 
+				RuleConditionSpecConstants.valueOfName(name);
 		@SuppressWarnings("unchecked")
 		RuleCondition<V1, V2> ruleCondition = 
 				(RuleCondition<V1, V2>) ruleConditionSpec.newRuleCondition(
@@ -31,13 +26,8 @@ public final class RuleCondition<V1, V2> {
 	
 	public static RuleCondition<Object, Object> newInstanceOfParsableValue(
 			final String name, final String value) {
-		RuleConditionSpec<Object, Object> ruleConditionSpec = null;
-		try {
-			ruleConditionSpec = RuleConditionSpecConstants.valueOfName(name); 
-		} catch (IllegalArgumentException e) {
-			throw new IllegalArgumentException(String.format(
-					"unknown rule condition: %s", name), e);
-		}
+		RuleConditionSpec<Object, Object> ruleConditionSpec = 
+				RuleConditionSpecConstants.valueOfName(name);
 		return ruleConditionSpec.newRuleConditionOfParsableValue(value);
 	}
 	

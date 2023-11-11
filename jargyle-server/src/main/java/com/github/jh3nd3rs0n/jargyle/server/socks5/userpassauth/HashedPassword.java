@@ -1,7 +1,5 @@
 package com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth;
 
-import java.util.stream.Collectors;
-
 public abstract class HashedPassword {
 
 	public static HashedPassword newInstance(final char[] password) {
@@ -18,20 +16,8 @@ public abstract class HashedPassword {
 		}
 		String typeName = sElements[0];
 		String argumentsString = sElements[1];
-		HashedPasswordSpec hashedPasswordSpec = null;
-		try {
-			hashedPasswordSpec = HashedPasswordSpecConstants.valueOfTypeName(
-					typeName);
-		} catch (IllegalArgumentException e) {
-			String str = HashedPasswordSpecConstants.values().stream()
-					.map(HashedPasswordSpec::getTypeName)
-					.collect(Collectors.joining(", "));
-			throw new IllegalArgumentException(String.format(
-					"expected hashed password type name must be one of the "
-					+ "following values: %s. actual value is %s",
-					str,
-					typeName));			
-		}
+		HashedPasswordSpec hashedPasswordSpec = 
+				HashedPasswordSpecConstants.valueOfTypeName(typeName);
 		return hashedPasswordSpec.newHashedPassword(argumentsString);		
 	}
 

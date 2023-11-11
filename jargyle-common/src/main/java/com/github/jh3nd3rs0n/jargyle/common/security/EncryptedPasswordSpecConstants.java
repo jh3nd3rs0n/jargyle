@@ -44,8 +44,8 @@ public final class EncryptedPasswordSpecConstants {
 				.map(EncryptedPasswordSpec::getTypeName)
 				.collect(Collectors.joining(", "));
 		throw new IllegalArgumentException(String.format(
-				"expected encrypted password spec must be one of the following "
-				+ "values: %s. actual value is %s",
+				"expected encrypted password type name must be one of the "
+				+ "following values: %s. actual value is %s",
 				str,
 				typeName));
 	}

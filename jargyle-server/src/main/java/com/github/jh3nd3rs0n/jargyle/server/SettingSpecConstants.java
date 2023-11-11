@@ -40,7 +40,7 @@ final class SettingSpecConstants {
 			return VALUES_MAP.get(name);
 		}
 		throw new IllegalArgumentException(String.format(
-				"unknown setting spec: %s", name));		
+				"unknown setting name: %s", name));		
 	}
 	
 	public static List<SettingSpec<Object>> values() {

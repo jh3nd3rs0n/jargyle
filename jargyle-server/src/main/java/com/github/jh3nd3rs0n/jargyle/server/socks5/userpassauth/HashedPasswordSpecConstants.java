@@ -43,8 +43,8 @@ public final class HashedPasswordSpecConstants {
 				.map(HashedPasswordSpec::getTypeName)
 				.collect(Collectors.joining(", "));
 		throw new IllegalArgumentException(String.format(
-				"expected hashed password spec must be one of the following "
-				+ "values: %s. actual value is %s",
+				"expected hashed password type name must be one of the "
+				+ "following values: %s. actual value is %s",
 				str,
 				typeName));
 	}

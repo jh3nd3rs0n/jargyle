@@ -1,11 +1,10 @@
-package com.github.jh3nd3rs0n.jargyle.server.configrepo.impl;
+package com.github.jh3nd3rs0n.jargyle.server.internal.configrepo.impl;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
@@ -21,7 +20,7 @@ import org.slf4j.LoggerFactory;
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.ConfigurationRepository;
 import com.github.jh3nd3rs0n.jargyle.server.Settings;
-import com.github.jh3nd3rs0n.jargyle.server.configrepo.impl.internal.config.xml.bind.ConfigurationXml;
+import com.github.jh3nd3rs0n.jargyle.server.internal.configrepo.impl.config.xml.bind.ConfigurationXml;
 import com.github.jh3nd3rs0n.jargyle.server.internal.io.FileMonitor;
 import com.github.jh3nd3rs0n.jargyle.server.internal.io.FileStatusListener;
 
@@ -144,11 +143,6 @@ public final class XmlFileSourceConfigurationRepository
 		} catch (IOException e) {
 			throw new UncheckedIOException(e);
 		}
-	}
-	
-	public static void writeXsdTo(final OutputStream out) throws IOException {
-		ConfigurationXml.writeXsdTo(out);
-		return;
 	}
 	
 	private volatile Configuration configuration;

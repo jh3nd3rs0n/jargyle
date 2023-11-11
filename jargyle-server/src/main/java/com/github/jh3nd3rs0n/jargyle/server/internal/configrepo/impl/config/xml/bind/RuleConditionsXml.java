@@ -1,4 +1,4 @@
-package com.github.jh3nd3rs0n.jargyle.server.configrepo.impl.internal.config.xml.bind;
+package com.github.jh3nd3rs0n.jargyle.server.internal.configrepo.impl.config.xml.bind;
 
 import java.util.ArrayList;
 import java.util.Collections;

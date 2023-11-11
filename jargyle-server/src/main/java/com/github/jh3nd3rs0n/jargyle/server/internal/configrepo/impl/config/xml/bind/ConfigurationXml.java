@@ -1,11 +1,8 @@
-package com.github.jh3nd3rs0n.jargyle.server.configrepo.impl.internal.config.xml.bind;
+package com.github.jh3nd3rs0n.jargyle.server.internal.configrepo.impl.config.xml.bind;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
-import javax.xml.transform.Result;
-import javax.xml.transform.stream.StreamResult;
 
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 
@@ -13,7 +10,6 @@ import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Marshaller;
 import jakarta.xml.bind.PropertyException;
-import jakarta.xml.bind.SchemaOutputResolver;
 import jakarta.xml.bind.Unmarshaller;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -51,27 +47,6 @@ public class ConfigurationXml {
 		} catch (JAXBException e) {
 			throw new IOException(e);
 		}
-	}
-	
-	public static void writeXsdTo(final OutputStream out) throws IOException {
-		JAXBContext jaxbContext = null;
-		try {
-			jaxbContext = JAXBContext.newInstance(ConfigurationXml.class);
-		} catch (JAXBException e) {
-			throw new AssertionError(e);
-		}
-		jaxbContext.generateSchema(new SchemaOutputResolver() {
-
-			@Override
-			public Result createOutput(
-					final String namespaceUri, 
-					final String suggestedFileName) throws IOException {
-				StreamResult result = new StreamResult(out);
-				result.setSystemId(suggestedFileName);
-				return result;
-			}
-			
-		});		
 	}
 	
 	@XmlElement(name = "settings")

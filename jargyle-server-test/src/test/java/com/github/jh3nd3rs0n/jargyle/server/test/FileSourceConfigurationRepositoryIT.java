@@ -1,4 +1,4 @@
-package com.github.jh3nd3rs0n.jargyle.server.test.configrepo.impl;
+package com.github.jh3nd3rs0n.jargyle.server.test;
 
 import static org.junit.Assert.assertEquals;
 
@@ -14,18 +14,18 @@ import org.junit.Test;
 import com.github.jh3nd3rs0n.jargyle.common.lang.NonnegativeInteger;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
+import com.github.jh3nd3rs0n.jargyle.server.ConfigurationRepository;
 import com.github.jh3nd3rs0n.jargyle.server.GeneralSettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.Settings;
-import com.github.jh3nd3rs0n.jargyle.server.configrepo.impl.XmlFileSourceConfigurationRepository;
 import com.github.jh3nd3rs0n.test.help.IoHelper;
 import com.github.jh3nd3rs0n.test.help.ThreadHelper;
 import com.github.jh3nd3rs0n.test.help.constants.TestResourceConstants;
 
-public class XmlFileSourceConfigurationRepositoryIT {
+public class FileSourceConfigurationRepositoryIT {
 	
 	private Path baseDir = null;
 	private Path configurationFile = null;
-	private XmlFileSourceConfigurationRepository xmlFileSourceConfigurationRepository = null;
+	private ConfigurationRepository xmlFileSourceConfigurationRepository = null;
 
 	@Before
 	public void setUp() throws Exception {
@@ -52,12 +52,12 @@ public class XmlFileSourceConfigurationRepositoryIT {
 	public void testForUpdatedConfigurationFile01() throws IOException {
 		File configFile = this.configurationFile.toFile();
 		IoHelper.writeStringToFile(
-				TestResourceConstants.JARGYLE_SERVER_TEST_CONFIGREPO_IMPL_EMPTY_CONFIGURATION_FILE.getContentAsString(), 
+				TestResourceConstants.JARGYLE_SERVER_TEST_EMPTY_CONFIGURATION_FILE.getContentAsString(), 
 				configFile);
 		this.xmlFileSourceConfigurationRepository = 
-				XmlFileSourceConfigurationRepository.newInstance(configFile);
+				ConfigurationRepository.newFileSourceInstance(configFile);
 		IoHelper.writeStringToFile(
-				TestResourceConstants.JARGYLE_SERVER_TEST_CONFIGREPO_IMPL_CONFIGURATION_FILE.getContentAsString(), 
+				TestResourceConstants.JARGYLE_SERVER_TEST_CONFIGURATION_FILE.getContentAsString(), 
 				configFile);
 		ThreadHelper.sleepForThreeSeconds();
 		/* 
@@ -79,12 +79,12 @@ public class XmlFileSourceConfigurationRepositoryIT {
 	public void testForUpdatedConfigurationFile02() throws IOException {
 		File configFile = this.configurationFile.toFile();
 		IoHelper.writeStringToFile(
-				TestResourceConstants.JARGYLE_SERVER_TEST_CONFIGREPO_IMPL_EMPTY_CONFIGURATION_FILE.getContentAsString(), 
+				TestResourceConstants.JARGYLE_SERVER_TEST_EMPTY_CONFIGURATION_FILE.getContentAsString(), 
 				configFile);
 		this.xmlFileSourceConfigurationRepository = 
-				XmlFileSourceConfigurationRepository.newInstance(configFile);
+				ConfigurationRepository.newFileSourceInstance(configFile);
 		IoHelper.writeStringToFile(
-				TestResourceConstants.JARGYLE_SERVER_TEST_CONFIGREPO_IMPL_CONFIGURATION_FILE.getContentAsString(), 
+				TestResourceConstants.JARGYLE_SERVER_TEST_CONFIGURATION_FILE.getContentAsString(), 
 				configFile);
 		ThreadHelper.sleepForThreeSeconds();
 		/* 

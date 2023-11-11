@@ -403,11 +403,12 @@ The following are two type names you can use:
 -   `StringSourceUserRepository`
 
 `FileSourceUserRepository`: This user repository handles the storage of the 
-SOCKS5 users from a file whose name is provided as an initialization string 
-value. The SOCKS5 users from the file are loaded onto memory. Because of this, 
-you will need at least as much memory as the size of the file. If the file does 
-not exist, it will be created and used. If the file does exist, the existing 
-file will be used. To manage SOCKS5 users under a user repository, see 
+SOCKS5 users from an initialization string value of a provided file of a list of 
+URL encoded username and hashed password pairs. The SOCKS5 users from the file 
+are loaded onto memory. Because of this, you will need at least as much memory 
+as the size of the file. If the file does not exist, it will be created and 
+used. If the file does exist, the existing file will be used. To manage SOCKS5 
+users under a user repository, see 
 [Managing SOCKS5 Users](cli.html#managing-socks5-users).
 
 Command line example:
@@ -442,7 +443,7 @@ Server configuration file example:
 ```
 
 `StringSourceUserRepository`: This user repository handles the storage of 
-the SOCKS5 users from the initialization string value of a comma separated list 
+the SOCKS5 users from an initialization string value of a comma separated list 
 of URL encoded username and password pairs.
 
 Each username and password pair in the comma separated list must be of the 
@@ -457,12 +458,8 @@ Where `USERNAME` is the username and `PASSWORD` is the password.
 If the username or the password contains a colon character (`:`), then each 
 colon character must be replaced with the URL encoding character `%3A`.
 
-If the username or the password contains a space character, then each space 
-character must be replaced with the URL encoding character `+` or `%20`.
-
-If the username or the password contains a plus sign character (`+`) not used 
-for URL encoding, then each plus sign character not used for URL encoding must 
-be replaced with the URL encoding character `%2B`.
+If the username or the password contains a comma character (`,`), then each 
+comma character must be replaced with the URL encoding character `%2C`.
 
 If the username or the password contains a percent sign character (`%`) not 
 used for URL encoding, then each percent sign character not used for URL 

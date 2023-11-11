@@ -4,6 +4,26 @@ import java.util.Objects;
 
 public abstract class UserRepository {
 
+	public static UserRepository newExternalSourceInstance(final String s) {
+		String[] sElements = s.split(":", 2);
+		if (sElements.length != 2) {
+			throw new IllegalArgumentException(
+					"user repository must be in the following format: "
+					+ "TYPE_NAME:INITIALIZATION_STRING");
+		}
+		String typeName = sElements[0];
+		String initializationString = sElements[1];
+		return newExternalSourceInstance(typeName, initializationString);		
+	}
+	
+	public static UserRepository newExternalSourceInstance(
+			final String typeName, final String initializationString) {
+		UserRepositorySpec userRepositorySpec = 
+				ExternalSourceUserRepositorySpecConstants.valueOfTypeName(
+						typeName);
+		return userRepositorySpec.newUserRepository(initializationString);		
+	}
+	
 	public static UserRepository newInstance() {
 		return UserRepositorySpecConstants.STRING_SOURCE_USER_REPOSITORY.newUserRepository("");
 	}

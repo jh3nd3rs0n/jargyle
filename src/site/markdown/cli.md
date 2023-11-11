@@ -44,7 +44,7 @@ Usage: jargyle COMMAND
        jargyle --version
 
 COMMANDS:
-  manage-socks5-users USER_REPOSITORY_TYPE_NAME:INITIALIZATION_STRING COMMAND
+  manage-socks5-users USER_REPOSITORY COMMAND
       Manage SOCKS5 users
   new-server-config-file [OPTIONS] FILE
       Create a new server configuration file based on the provided options
@@ -65,10 +65,16 @@ The following is the command line help for the command `manage-socks5-users`
 (displayed when using the command `manage-socks5-users --help`):
 
 ```
-Usage: jargyle manage-socks5-users USER_REPOSITORY_TYPE_NAME:INITIALIZATION_STRING COMMAND
+Usage: jargyle manage-socks5-users USER_REPOSITORY COMMAND
        jargyle manage-socks5-users --help
 
+USER_REPOSITORIES:
+
+  FileSourceUserRepository:FILE
+      User repository that handles the storage of the users from a provided file of a list of URL encoded username and hashed password pairs (If the file does not exist, it will be created and used.)
+
 COMMANDS:
+
   add
       Add user(s) through an interactive prompt
   list
@@ -961,35 +967,33 @@ SETTING VALUE SYNTAXES:
 To manage SOCKS5 users, you would run the following command:
 
 ```
-./bin/jargyle manage-socks5-users USER_REPOSITORY_TYPE_NAME:INITIALIZATION_STRING COMMAND
+./bin/jargyle manage-socks5-users USER_REPOSITORY COMMAND
 ```
 
-Where `USER_REPOSITORY_TYPE_NAME` is the type name of the user repository,
- `INITIALIZATION_STRING` is the initialization string value, and `COMMAND` 
- is the name of the command described in the 
+Where `USER_REPOSITORY` is the user repository and `COMMAND` is the name of 
+the command. Both are described in the 
 [command line help](#manage-socks5-users-usage) for the command 
 `manage-socks5-users`.
 
-The following is one provided type name you can use for 
-`USER_REPOSITORY_TYPE_NAME`:
+The following is one provided user repository you can use for 
+`USER_REPOSITORY`:
 
--   `FileSourceUserRepository`: This user repository handles the storage of 
-the SOCKS5 users from a file whose name is provided as an initialization string 
-value. The SOCKS5 users from the file are loaded onto memory. Because of this, 
-you will need at least as much memory as the size of the file. If the file does 
-not exist, it will be created and used. If the file does exist, the existing 
-file will be used. 
+-   `FileSourceUserRepository:FILE`: This user repository handles the 
+storage of the SOCKS5 users from `FILE`: a provided file of a list of URL 
+encoded username and hashed password pairs. The SOCKS5 users from the file are 
+loaded onto memory. Because of this, you will need at least as much memory as 
+the size of the file. If the file does not exist, it will be created and used. 
+If the file does exist, the existing file will be used. 
 
 ### Adding SOCKS5 Users
 
 To add SOCKS5 users to a user repository, you would run the following command:
 
 ```
-./bin/jargyle manage-socks5-users USER_REPOSITORY_TYPE_NAME:INITIALIZATION_STRING add
+./bin/jargyle manage-socks5-users USER_REPOSITORY add
 ```
 
-Where `USER_REPOSITORY_TYPE_NAME` is the the type name of the user 
-repository and `INITIALIZATION_STRING` is the initialization string value.
+Where `USER_REPOSITORY` is the the user repository.
 
 Once you have run the command, an interactive prompt will ask you for the new 
 SOCKS5 user's name, password, and re-typed password. It will repeat the 
@@ -1033,11 +1037,10 @@ To list all SOCKS5 users from a user repository, you would run the following
 command:
 
 ```
-./bin/jargyle manage-socks5-users USER_REPOSITORY_TYPE_NAME:INITIALIZATION_STRING list
+./bin/jargyle manage-socks5-users USER_REPOSITORY list
 ```
 
-Where `USER_REPOSITORY_TYPE_NAME` is the type name of the user repository 
-and `INITIALIZATION_STRING` is the initialization string value.
+Where `USER_REPOSITORY` is the user repository.
 
 Once you have run the command, it will list all the SOCKS5 users from the user 
 repository.
@@ -1058,12 +1061,11 @@ To remove a SOCKS5 user from a user repository, you would run the following
 command:
 
 ```
-./bin/jargyle manage-socks5-users USER_REPOSITORY_TYPE_NAME:INITIALIZATION_STRING remove NAME
+./bin/jargyle manage-socks5-users USER_REPOSITORY remove NAME
 ```
 
-Where `USER_REPOSITORY_TYPE_NAME` is the type name of the user repository, 
-`INITIALIZATION_STRING` is the initialization string value, and `NAME` is 
-the specified name of the SOCKS5 user to be removed from the user repository.
+Where `USER_REPOSITORY` is the user repository and `NAME` is the specified 
+name of the SOCKS5 user to be removed from the user repository.
 
 Once you have run the command, the SOCKS5 user of the specified name will be 
 removed from the user repository.

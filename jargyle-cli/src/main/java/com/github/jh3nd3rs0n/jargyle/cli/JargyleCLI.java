@@ -20,7 +20,7 @@ public final class JargyleCLI extends CLI {
 		
 		@HelpText(
 				doc = "Manage SOCKS5 users", 
-				usage = "manage-socks5-users USER_REPOSITORY_TYPE_NAME:INITIALIZATION_STRING COMMAND"
+				usage = "manage-socks5-users USER_REPOSITORY COMMAND"
 		)
 		MANAGE_SOCKS5_USERS("manage-socks5-users") {
 			

@@ -14,6 +14,7 @@ import com.github.jh3nd3rs0n.argmatey.ArgMatey.CLI;
 import com.github.jh3nd3rs0n.argmatey.ArgMatey.OptionType;
 import com.github.jh3nd3rs0n.argmatey.ArgMatey.TerminationRequestedException;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.HelpText;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.ExternalSourceUserRepositorySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.User;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.UserRepository;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.Users;
@@ -231,24 +232,17 @@ public final class Socks5UserManagerCLI extends CLI {
 	protected void displayProgramHelp() throws TerminationRequestedException {
 		ArgMatey.Option helpOption = this.getOptionGroups().get(
 				HELP_OPTION_GROUP_ORDINAL).get(0);
-		System.out.printf("Usage: %s "
-				+ "USER_REPOSITORY_TYPE_NAME:INITIALIZATION_STRING COMMAND%n", 
+		System.out.printf("Usage: %s USER_REPOSITORY COMMAND%n", 
 				this.programBeginningUsage);
 		System.out.printf("       %s %s%n", 
 				this.programBeginningUsage, 
 				helpOption.getUsage());
 		System.out.println();
+		System.out.println("USER_REPOSITORIES:");
+		this.printHelpText(ExternalSourceUserRepositorySpecConstants.class);
+		System.out.println();
 		System.out.println("COMMANDS:");
-		Field[] fields = Command.class.getDeclaredFields();
-		for (Field field : fields) {
-			HelpText helpText = field.getAnnotation(HelpText.class);
-			if (helpText != null) {
-				System.out.print("  ");
-				System.out.println(helpText.usage());
-				System.out.print("      ");
-				System.out.println(helpText.doc());
-			}
-		}
+		this.printHelpText(Command.class);
 		System.out.println();
 		System.out.println("OPTIONS:");
 		this.getOptionGroups().printHelpText();
@@ -264,7 +258,8 @@ public final class Socks5UserManagerCLI extends CLI {
 	@Override
 	protected void handleNonparsedArg(
 			final String nonparsedArg) throws TerminationRequestedException {
-		this.userRepository = UserRepository.newInstance(nonparsedArg);
+		this.userRepository = UserRepository.newExternalSourceInstance(
+				nonparsedArg);
 		if (!this.hasNext()) {
 			System.err.printf(
 					"%s: command must be provided%n", 
@@ -294,6 +289,20 @@ public final class Socks5UserManagerCLI extends CLI {
 		System.err.println(this.suggestion);
 		t.printStackTrace(System.err);
 		throw new TerminationRequestedException(-1);
+	}
+	
+	private void printHelpText(final Class<?> cls) {
+		System.out.println();
+		Field[] fields = cls.getDeclaredFields();
+		for (Field field : fields) {
+			HelpText helpText = field.getAnnotation(HelpText.class);
+			if (helpText != null) {
+				System.out.print("  ");
+				System.out.println(helpText.usage());
+				System.out.print("      ");
+				System.out.println(helpText.doc());
+			}
+		}
 	}
 	
 }

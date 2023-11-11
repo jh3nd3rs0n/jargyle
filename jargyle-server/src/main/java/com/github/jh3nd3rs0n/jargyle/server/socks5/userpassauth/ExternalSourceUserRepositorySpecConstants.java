@@ -5,9 +5,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.HelpText;
-import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.internal.userrepo.impl.StringSourceUserRepository;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.internal.userrepo.impl.FileSourceUserRepository;
 
-public final class UserRepositorySpecConstants {
+public final class ExternalSourceUserRepositorySpecConstants {
 
 	private static final UserRepositorySpecs USER_REPOSITORY_SPECS =
 			new UserRepositorySpecs();
@@ -19,22 +19,13 @@ public final class UserRepositorySpecConstants {
 					+ "will be created and used.)", 
 			usage = "FileSourceUserRepository:FILE"
 	)
-	public static final UserRepositorySpec FILE_SOURCE_USER_REPOSITORY = USER_REPOSITORY_SPECS.addThenGet(
-			ExternalSourceUserRepositorySpecConstants.FILE_SOURCE_USER_REPOSITORY);
-	
-	@HelpText(
-			doc = "User repository that handles the storage of the users from "
-					+ "a provided string of a comma separated list of URL "
-					+ "encoded username and password pairs", 
-			usage = "StringSourceUserRepository:[USERNAME1:PASSWORD1[,USERNAME2:PASSWORD2[...]]]"
-	)
-	public static final UserRepositorySpec STRING_SOURCE_USER_REPOSITORY = USER_REPOSITORY_SPECS.addThenGet(new UserRepositorySpec(
-			"StringSourceUserRepository") {
+	public static final UserRepositorySpec FILE_SOURCE_USER_REPOSITORY = USER_REPOSITORY_SPECS.addThenGet(new UserRepositorySpec(
+			"FileSourceUserRepository") {
 
 				@Override
 				public UserRepository newUserRepository(
 						final String initializationString) {
-					return new StringSourceUserRepository(
+					return FileSourceUserRepository.newInstance(
 							this, initializationString);
 				}
 		
@@ -68,6 +59,6 @@ public final class UserRepositorySpecConstants {
 		return VALUES_MAP;
 	}
 	
-	private UserRepositorySpecConstants() { }
+	private ExternalSourceUserRepositorySpecConstants() { }
 
 }

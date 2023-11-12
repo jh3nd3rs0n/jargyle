@@ -8,9 +8,9 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 
 import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
-import com.github.jh3nd3rs0n.jargyle.common.lang.NonnegativeInteger;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.common.net.StandardSocketSettingSpecConstants;
+import com.github.jh3nd3rs0n.jargyle.common.number.NonnegativeInteger;
 
 public final class EchoClient {
 	

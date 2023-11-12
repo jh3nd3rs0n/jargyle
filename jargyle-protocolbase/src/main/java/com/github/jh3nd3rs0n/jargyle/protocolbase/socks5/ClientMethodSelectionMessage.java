@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.github.jh3nd3rs0n.jargyle.common.lang.UnsignedByte;
+import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
 
 public final class ClientMethodSelectionMessage {
 	

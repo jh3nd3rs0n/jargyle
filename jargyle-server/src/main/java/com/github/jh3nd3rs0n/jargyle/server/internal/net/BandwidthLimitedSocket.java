@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
 
-import com.github.jh3nd3rs0n.jargyle.common.lang.UnsignedByte;
+import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
 import com.github.jh3nd3rs0n.jargyle.internal.net.FilterSocket;
 
 public final class BandwidthLimitedSocket extends FilterSocket {

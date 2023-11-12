@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 
 import org.ietf.jgss.MessageProp;
 
-import com.github.jh3nd3rs0n.jargyle.common.lang.UnsignedByte;
+import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.HelpText;
 
 public enum ProtectionLevel {

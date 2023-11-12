@@ -3,7 +3,7 @@ package com.github.jh3nd3rs0n.jargyle.server;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.github.jh3nd3rs0n.jargyle.common.lang.NonnegativeInteger;
+import com.github.jh3nd3rs0n.jargyle.common.number.NonnegativeInteger;
 
 public final class NonnegativeIntegerLimit {
 

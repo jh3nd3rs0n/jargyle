@@ -3,7 +3,7 @@ package com.github.jh3nd3rs0n.jargyle.common.net;
 import java.io.IOException;
 import java.io.InputStream;
 
-import com.github.jh3nd3rs0n.jargyle.internal.lang.UnsignedShort;
+import com.github.jh3nd3rs0n.jargyle.internal.number.UnsignedShort;
 
 public final class Port implements Comparable<Port> {
 

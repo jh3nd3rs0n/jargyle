@@ -22,8 +22,8 @@ import com.github.jh3nd3rs0n.jargyle.client.SocksClient.ClientSocketConnectParam
 import com.github.jh3nd3rs0n.jargyle.client.SocksClientIOException;
 import com.github.jh3nd3rs0n.jargyle.client.internal.client.SocksClientIOExceptionThrowingHelper;
 import com.github.jh3nd3rs0n.jargyle.client.internal.client.SocksClientSocketExceptionThrowingHelper;
-import com.github.jh3nd3rs0n.jargyle.common.lang.UnsignedByte;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
+import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
 import com.github.jh3nd3rs0n.jargyle.internal.net.InetAddressHelper;
 import com.github.jh3nd3rs0n.jargyle.internal.net.AllZerosIpAddressConstants;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Address;

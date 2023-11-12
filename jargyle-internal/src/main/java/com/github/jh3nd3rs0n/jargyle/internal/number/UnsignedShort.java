@@ -1,4 +1,4 @@
-package com.github.jh3nd3rs0n.jargyle.internal.lang;
+package com.github.jh3nd3rs0n.jargyle.internal.number;
 
 import java.io.IOException;
 import java.io.InputStream;

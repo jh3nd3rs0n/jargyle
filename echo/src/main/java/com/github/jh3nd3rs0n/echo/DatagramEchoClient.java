@@ -6,9 +6,9 @@ import java.net.DatagramSocket;
 import java.util.Arrays;
 
 import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
-import com.github.jh3nd3rs0n.jargyle.common.lang.NonnegativeInteger;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.common.net.StandardSocketSettingSpecConstants;
+import com.github.jh3nd3rs0n.jargyle.common.number.NonnegativeInteger;
 
 public final class DatagramEchoClient {
 	

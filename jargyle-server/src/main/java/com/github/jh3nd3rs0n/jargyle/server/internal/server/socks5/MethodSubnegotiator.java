@@ -20,18 +20,18 @@ import org.ietf.jgss.MessageProp;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Method;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.MethodEncapsulation;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.MethodSubnegotiationException;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapiauth.GssapiMethodEncapsulation;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapiauth.Message;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapiauth.MessageType;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapiauth.ProtectionLevel;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapiauth.ProtectionLevels;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.userpassauth.UsernamePasswordRequest;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.userpassauth.UsernamePasswordResponse;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod.GssapiMethodEncapsulation;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod.Message;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod.MessageType;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod.ProtectionLevel;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod.ProtectionLevels;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.userpassmethod.UsernamePasswordRequest;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.userpassmethod.UsernamePasswordResponse;
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
-import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.HashedPassword;
-import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.User;
-import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.UserRepository;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassmethod.HashedPassword;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassmethod.User;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassmethod.UserRepository;
 
 abstract class MethodSubnegotiator {
 	
@@ -98,7 +98,7 @@ abstract class MethodSubnegotiator {
 								socket));
 			}
 			boolean necReferenceImpl = configuration.getSettings().getLastValue(
-					Socks5SettingSpecConstants.SOCKS5_GSSAPIAUTH_NEC_REFERENCE_IMPL).booleanValue();
+					Socks5SettingSpecConstants.SOCKS5_GSSAPIMETHOD_NEC_REFERENCE_IMPL).booleanValue();
 			byte[] token = message.getToken();
 			MessageProp prop = null;
 			if (!necReferenceImpl) {
@@ -122,7 +122,7 @@ abstract class MethodSubnegotiator {
 			}
 			ProtectionLevels protectionLevels = 
 					configuration.getSettings().getLastValue(
-							Socks5SettingSpecConstants.SOCKS5_GSSAPIAUTH_PROTECTION_LEVELS);
+							Socks5SettingSpecConstants.SOCKS5_GSSAPIMETHOD_PROTECTION_LEVELS);
 			List<ProtectionLevel> protectionLevelList = 
 					protectionLevels.toList();
 			ProtectionLevel protectionLevelChoice = protectionLevel;
@@ -287,7 +287,7 @@ abstract class MethodSubnegotiator {
 				password = usernamePasswordReq.getPassword();
 				UserRepository userRepository = 
 						configuration.getSettings().getLastValue(
-								Socks5SettingSpecConstants.SOCKS5_USERPASSAUTH_USER_REPOSITORY);
+								Socks5SettingSpecConstants.SOCKS5_USERPASSMETHOD_USER_REPOSITORY);
 				User user = userRepository.get(username);
 				if (user == null) {
 					usernamePasswordResp = UsernamePasswordResponse.newInstance(

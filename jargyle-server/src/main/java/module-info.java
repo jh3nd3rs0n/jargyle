@@ -8,5 +8,5 @@ module com.github.jh3nd3rs0n.jargyle.server {
 	requires org.slf4j;	
 	exports com.github.jh3nd3rs0n.jargyle.server;
 	exports com.github.jh3nd3rs0n.jargyle.server.internal.server to com.github.jh3nd3rs0n.server.test;
-	exports com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth;
+	exports com.github.jh3nd3rs0n.jargyle.server.socks5.userpassmethod;
 }

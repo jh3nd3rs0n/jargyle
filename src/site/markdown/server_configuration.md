@@ -393,7 +393,7 @@ Server configuration file example:
 </configuration>
 ```
 
-Also, you will need to have the setting `socks5.userpassauth.userRepository` 
+Also, you will need to have the setting `socks5.userpassmethod.userRepository` 
 to specify the type name of the user repository along with an initialization 
 string value.
 
@@ -416,7 +416,7 @@ Command line example:
 ```
 ./bin/jargyle start-server \
     --setting=socks5.methods=USERNAME_PASSWORD \
-    --setting=socks5.userpassauth.userRepository=FileSourceUserRepository:users
+    --setting=socks5.userpassmethod.userRepository=FileSourceUserRepository:users
 ```
 
 Server configuration file example:
@@ -432,11 +432,11 @@ Server configuration file example:
             </socks5.methods>
         </setting>
         <setting>
-            <name>socks5.userpassauth.userRepository</name>
-            <socks5.userpassauth.userRepository>
+            <name>socks5.userpassmethod.userRepository</name>
+            <socks5.userpassmethod.userRepository>
                 <typeName>FileSourceUserRepository</typeName>
                 <initializationString>users</initializationString>
-            </socks5.userpassauth.userRepository>
+            </socks5.userpassmethod.userRepository>
         </setting>
     </settings>
 </configuration>
@@ -470,7 +470,7 @@ Command line example:
 ```
 ./bin/jargyle start-server \
     --setting=socks5.methods=USERNAME_PASSWORD \
-    --setting=socks5.userpassauth.userRepository=StringSourceUserRepository:Aladdin:opensesame,Jasmine:mission%3Aimpossible
+    --setting=socks5.userpassmethod.userRepository=StringSourceUserRepository:Aladdin:opensesame,Jasmine:mission%3Aimpossible
 ```
 
 Server configuration file example:
@@ -486,11 +486,11 @@ Server configuration file example:
             </socks5.methods>
         </setting>
         <setting>
-            <name>socks5.userpassauth.userRepository</name>
-            <socks5.userpassauth.userRepository>
+            <name>socks5.userpassmethod.userRepository</name>
+            <socks5.userpassmethod.userRepository>
                 <typeName>StringSourceUserRepository</typeName>
                 <initializationString>Aladdin:opensesame,Jasmine:mission%3Aimpossible</initializationString>
-            </socks5.userpassauth.userRepository>
+            </socks5.userpassmethod.userRepository>
         </setting>
     </settings>
 </configuration>
@@ -1053,8 +1053,8 @@ Server configuration file example:
 ```
 
 Also, you will need to have the settings 
-`chaining.socks5.userpassauth.username` and 
-`chaining.socks5.userpassauth.password` respectively specify the username 
+`chaining.socks5.userpassmethod.username` and 
+`chaining.socks5.userpassmethod.password` respectively specify the username 
 and password for the other SOCKS5 server.
 
 Command line example:
@@ -1063,8 +1063,8 @@ Command line example:
 ./bin/jargyle start-server \
     --setting=chaining.socksServerUri=socks5://127.0.0.1:23456 \
     --setting=chaining.socks5.methods=USERNAME_PASSWORD \
-    --setting=chaining.socks5.userpassauth.username=Aladdin \
-    --setting=chaining.socks5.userpassauth.password=opensesame
+    --setting=chaining.socks5.userpassmethod.username=Aladdin \
+    --setting=chaining.socks5.userpassmethod.password=opensesame
     
 ```
 
@@ -1085,11 +1085,11 @@ Server configuration file example:
             </socks5.methods>
         </setting>
         <setting>
-            <name>chaining.socks5.userpassauth.username</name>
+            <name>chaining.socks5.userpassmethod.username</name>
             <value>Aladdin</value>
         </setting>
         <setting>
-            <name>chaining.socks5.userpassauth.password</name>
+            <name>chaining.socks5.userpassmethod.password</name>
             <value>opensesame</value>
             <doc>If this configuration file was created by new-server-config-file, the password would be encrypted</doc>
         </setting>
@@ -1099,7 +1099,7 @@ Server configuration file example:
 
 If you do not want to have the password appear in any script or in any part of 
 the command line history for security reasons, you can use the command line 
-option `--enter-chaining-socks5-userpassauth-pass` instead. It will 
+option `--enter-chaining-socks5-userpassmethod-pass` instead. It will 
 provide an interactive prompt for you to enter the password.
 
 Command line example:
@@ -1108,8 +1108,8 @@ Command line example:
 ./bin/jargyle start-server \
     --setting=chaining.socksServerUri=socks5://127.0.0.1:23456 \
     --setting=chaining.socks5.methods=USERNAME_PASSWORD \
-    --setting=chaining.socks5.userpassauth.username=Aladdin \
-    --enter-chaining-socks5-userpassauth-pass
+    --setting=chaining.socks5.userpassmethod.username=Aladdin \
+    --enter-chaining-socks5-userpassmethod-pass
 ```
 
 #### Chaining to the Other SOCKS Server Using GSS-API Authentication
@@ -1159,7 +1159,7 @@ export JARGYLE_OPTS="-Djavax.security.auth.useSubjectCredsOnly=false -Djava.secu
 ./bin/jargyle start-server \
     --setting=chaining.socksServerUri=socks5://127.0.0.1:23456 \
     --setting=chaining.socks5.methods=GSSAPI \
-    --setting=chaining.socks5.gssapiauth.serviceName=rcmd/127.0.0.1 
+    --setting=chaining.socks5.gssapimethod.serviceName=rcmd/127.0.0.1 
 ```
 
 Server configuration file example:
@@ -1183,7 +1183,7 @@ export JARGYLE_OPTS="-Djavax.security.auth.useSubjectCredsOnly=false -Djava.secu
             </socks5.methods>
         </setting>
         <setting>
-            <name>chaining.socks5.gssapiauth.serviceName</name>
+            <name>chaining.socks5.gssapimethod.serviceName</name>
             <value>rcmd/127.0.0.1</value>
         </setting>
     </settings>
@@ -1244,7 +1244,7 @@ the machine of where the KDC resides. Also, in a production environment, the
 realm `EXAMPLE.COM` should be replaced by an actual realm provided by a 
 Kerberos administrator.)
 
-The setting `chaining.socks5.gssapiauth.serviceName` with the value 
+The setting `chaining.socks5.gssapimethod.serviceName` with the value 
 `rcmd/127.0.0.1` is the GSS-API service name (or the Kerberos service 
 principal) for the other SOCKS server residing at the address `127.0.0.1`. (In 
 a production environment, the address `127.0.0.1` should be replaced by the 
@@ -1396,11 +1396,11 @@ Command line example:
 ./bin/jargyle start-server \
     --setting=chaining.socksServerUri=socks5://127.0.0.1:23456 \
     --setting=chaining.socks5.methods=GSSAPI \
-    --setting=chaining.socks5.gssapiauth.serviceName=rcmd/127.0.0.1 \
+    --setting=chaining.socks5.gssapimethod.serviceName=rcmd/127.0.0.1 \
     --setting=chaining.socksServerUri=socks5://127.0.0.1:65432 \
     --setting=chaining.socks5.methods=USERNAME_PASSWORD \
-    --setting=chaining.socks5.userpassauth.username=Aladdin \
-    --setting=chaining.socks5.userpassauth.password=opensesame \
+    --setting=chaining.socks5.userpassmethod.username=Aladdin \
+    --setting=chaining.socks5.userpassmethod.password=opensesame \
     --setting=chaining.socksServerUri=socks5://127.0.0.1:34567 \
     --setting=chaining.socks5.useResolveCommand=true
     
@@ -1423,7 +1423,7 @@ Server configuration file example:
             </socks5.methods>
         </setting>
         <setting>
-            <name>chaining.socks5.gssapiauth.serviceName</name>
+            <name>chaining.socks5.gssapimethod.serviceName</name>
             <value>rcmd/127.0.0.1</value>
         </setting>
         <setting>
@@ -1437,11 +1437,11 @@ Server configuration file example:
             </socks5.methods>
         </setting>
         <setting>
-            <name>chaining.socks5.userpassauth.username</name>
+            <name>chaining.socks5.userpassmethod.username</name>
             <value>Aladdin</value>
         </setting>
         <setting>
-            <name>chaining.socks5.userpassauth.password</name>
+            <name>chaining.socks5.userpassmethod.password</name>
             <value>opensesame</value>
             <doc>If this configuration file was created by new-server-config-file, the password would be encrypted</doc>
         </setting>

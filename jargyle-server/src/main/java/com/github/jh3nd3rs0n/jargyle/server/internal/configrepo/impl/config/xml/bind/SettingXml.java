@@ -7,10 +7,10 @@ import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
 import com.github.jh3nd3rs0n.jargyle.common.string.CommaSeparatedValues;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Methods;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapiauth.ProtectionLevels;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod.ProtectionLevels;
 import com.github.jh3nd3rs0n.jargyle.server.Rule;
 import com.github.jh3nd3rs0n.jargyle.server.Setting;
-import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.UserRepository;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassmethod.UserRepository;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -37,7 +37,7 @@ class SettingXml {
 			return new PortRangesXml((PortRanges) val);
 		}
 		if (val instanceof ProtectionLevels) {
-			return new Socks5GssapiauthProtectionLevelsXml((ProtectionLevels) val);
+			return new Socks5GssapiMethodProtectionLevelsXml((ProtectionLevels) val);
 		}
 		if (val instanceof Rule) {
 			return new RuleXml((Rule) val);
@@ -46,7 +46,7 @@ class SettingXml {
 			return new SocketSettingsXml((SocketSettings) val);
 		}
 		if (val instanceof UserRepository) {
-			return new Socks5UserpassauthUserRepositoryXml((UserRepository) val);
+			return new Socks5UserpassMethodUserRepositoryXml((UserRepository) val);
 		}
 		throw new IllegalArgumentException(String.format(
 				"no %s for %s", 
@@ -75,17 +75,17 @@ class SettingXml {
 				required = true, 
 				type = SocketSettingsXml.class),
 		@XmlElement(
-				name = "socks5.gssapiauth.protectionLevels", 
+				name = "socks5.gssapimethod.protectionLevels", 
 				required = true, 
-				type = Socks5GssapiauthProtectionLevelsXml.class),
+				type = Socks5GssapiMethodProtectionLevelsXml.class),
 		@XmlElement(
 				name = "socks5.methods", 
 				required = true, 
 				type = Socks5MethodsXml.class),
 		@XmlElement(
-				name = "socks5.userpassauth.userRepository", 
+				name = "socks5.userpassmethod.userRepository", 
 				required = true, 
-				type = Socks5UserpassauthUserRepositoryXml.class),
+				type = Socks5UserpassMethodUserRepositoryXml.class),
 		@XmlElement(
 				name = "value", 
 				required = true, 

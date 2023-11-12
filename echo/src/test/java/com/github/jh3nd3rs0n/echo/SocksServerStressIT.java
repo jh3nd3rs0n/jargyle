@@ -26,7 +26,7 @@ import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
 import com.github.jh3nd3rs0n.jargyle.server.SslSettingSpecConstants;
-import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.UserRepositorySpecConstants;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassmethod.UserRepositorySpecConstants;
 import com.github.jh3nd3rs0n.test.help.TestStringConstants;
 import com.github.jh3nd3rs0n.test.help.constants.TestResourceConstants;
 
@@ -73,9 +73,9 @@ public class SocksServerStressIT {
 	private static final int ECHO_CLIENT_THREAD_COUNT = 100;
 	
 	private static final int SOCKS_SERVER_PORT = 6789;
-	private static final int SOCKS_SERVER_PORT_USING_SOCKS5_USERPASSAUTH = 7890;
+	private static final int SOCKS_SERVER_PORT_USING_SOCKS5_USERPASSMETHOD = 7890;
 	private static final int SOCKS_SERVER_PORT_USING_SSL = 8900;
-	private static final int SOCKS_SERVER_PORT_USING_SSL_AND_SOCKS5_USERPASSAUTH = 9000;
+	private static final int SOCKS_SERVER_PORT_USING_SSL_AND_SOCKS5_USERPASSMETHOD = 9000;
 	private static final String SOCKS5_USERS = new StringBuilder()
 			.append("Aladdin:opensesame ")
 			.append("Jasmine:mission%3Aimpossible ")
@@ -90,15 +90,15 @@ public class SocksServerStressIT {
 						NonnegativeInteger.newInstance(BACKLOG))));
 	}
 	
-	private static Configuration newConfigurationUsingSocks5Userpassauth() {
+	private static Configuration newConfigurationUsingSocks5UserpassMethod() {
 		return Configuration.newUnmodifiableInstance(Settings.newInstance(
 				GeneralSettingSpecConstants.PORT.newSetting(
-						Port.newInstance(SOCKS_SERVER_PORT_USING_SOCKS5_USERPASSAUTH)),
+						Port.newInstance(SOCKS_SERVER_PORT_USING_SOCKS5_USERPASSMETHOD)),
 				GeneralSettingSpecConstants.BACKLOG.newSetting(
 						NonnegativeInteger.newInstance(BACKLOG)),
 				Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
 						Methods.newInstance(Method.USERNAME_PASSWORD)),
-				Socks5SettingSpecConstants.SOCKS5_USERPASSAUTH_USER_REPOSITORY.newSetting(
+				Socks5SettingSpecConstants.SOCKS5_USERPASSMETHOD_USER_REPOSITORY.newSetting(
 						UserRepositorySpecConstants.STRING_SOURCE_USER_REPOSITORY.newUserRepository(
 								SOCKS5_USERS))));
 	}
@@ -121,10 +121,10 @@ public class SocksServerStressIT {
 						TestResourceConstants.ECHO_SOCKS_SERVER_KEY_STORE_PASSWORD_FILE.getContentAsString())));
 	}
 	
-	private static Configuration newConfigurationUsingSslAndSocks5Userpassauth() {
+	private static Configuration newConfigurationUsingSslAndSocks5UserpassMethod() {
 		return Configuration.newUnmodifiableInstance(Settings.newInstance(
 				GeneralSettingSpecConstants.PORT.newSetting(
-						Port.newInstance(SOCKS_SERVER_PORT_USING_SSL_AND_SOCKS5_USERPASSAUTH)),
+						Port.newInstance(SOCKS_SERVER_PORT_USING_SSL_AND_SOCKS5_USERPASSMETHOD)),
 				GeneralSettingSpecConstants.BACKLOG.newSetting(
 						NonnegativeInteger.newInstance(BACKLOG)),
 				DtlsSettingSpecConstants.DTLS_ENABLED.newSetting(Boolean.TRUE),
@@ -139,7 +139,7 @@ public class SocksServerStressIT {
 						TestResourceConstants.ECHO_SOCKS_SERVER_KEY_STORE_PASSWORD_FILE.getContentAsString()),
 				Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
 						Methods.newInstance(Method.USERNAME_PASSWORD)),
-				Socks5SettingSpecConstants.SOCKS5_USERPASSAUTH_USER_REPOSITORY.newSetting(
+				Socks5SettingSpecConstants.SOCKS5_USERPASSMETHOD_USER_REPOSITORY.newSetting(
 						UserRepositorySpecConstants.STRING_SOURCE_USER_REPOSITORY.newUserRepository(
 								SOCKS5_USERS))));
 	}
@@ -151,19 +151,19 @@ public class SocksServerStressIT {
 				.newSocksClient(Properties.newInstance());
 	}
 	
-	private static SocksClient newSocks5ClientUsingSocks5Userpassauth(
+	private static SocksClient newSocks5ClientUsingSocks5UserpassMethod(
 			final String username,
 			final char[] password) {
 		Properties properties = Properties.newInstance(
 				Socks5PropertySpecConstants.SOCKS5_METHODS.newProperty(
 						Methods.newInstance(Method.USERNAME_PASSWORD)),
-				Socks5PropertySpecConstants.SOCKS5_USERPASSAUTH_USERNAME.newProperty(
+				Socks5PropertySpecConstants.SOCKS5_USERPASSMETHOD_USERNAME.newProperty(
 						username),
-				Socks5PropertySpecConstants.SOCKS5_USERPASSAUTH_PASSWORD.newProperty(
+				Socks5PropertySpecConstants.SOCKS5_USERPASSMETHOD_PASSWORD.newProperty(
 						EncryptedPassword.newInstance(password)));
 		return SchemeConstants.SOCKS5.newSocksServerUri(
 				InetAddress.getLoopbackAddress().getHostAddress(), 
-				Integer.valueOf(SOCKS_SERVER_PORT_USING_SOCKS5_USERPASSAUTH))
+				Integer.valueOf(SOCKS_SERVER_PORT_USING_SOCKS5_USERPASSMETHOD))
 				.newSocksClient(properties);		
 	}	
 	
@@ -187,7 +187,7 @@ public class SocksServerStressIT {
 				.newSocksClient(properties);
 	}
 	
-	private static SocksClient newSocks5ClientUsingSslAndSocks5Userpassauth(
+	private static SocksClient newSocks5ClientUsingSslAndSocks5UserpassMethod(
 			final String username,
 			final char[] password) {
 		Properties properties = Properties.newInstance(
@@ -205,13 +205,13 @@ public class SocksServerStressIT {
 						TestResourceConstants.ECHO_SOCKS_SERVER_KEY_STORE_PASSWORD_FILE.getContentAsString()),
 				Socks5PropertySpecConstants.SOCKS5_METHODS.newProperty(
 						Methods.newInstance(Method.USERNAME_PASSWORD)),
-				Socks5PropertySpecConstants.SOCKS5_USERPASSAUTH_USERNAME.newProperty(
+				Socks5PropertySpecConstants.SOCKS5_USERPASSMETHOD_USERNAME.newProperty(
 						username),
-				Socks5PropertySpecConstants.SOCKS5_USERPASSAUTH_PASSWORD.newProperty(
+				Socks5PropertySpecConstants.SOCKS5_USERPASSMETHOD_PASSWORD.newProperty(
 						EncryptedPassword.newInstance(password)));
 		return SchemeConstants.SOCKS5.newSocksServerUri(
 				InetAddress.getLoopbackAddress().getHostAddress(), 
-				Integer.valueOf(SOCKS_SERVER_PORT_USING_SSL_AND_SOCKS5_USERPASSAUTH))
+				Integer.valueOf(SOCKS_SERVER_PORT_USING_SSL_AND_SOCKS5_USERPASSMETHOD))
 				.newSocksClient(properties);		
 	}
 	
@@ -244,18 +244,18 @@ public class SocksServerStressIT {
 	
 	//@org.junit.Ignore
 	@Test
-	public void testDatagramEchoClientsBehindSocks5ServerUsingSocks5Userpassauth() throws IOException {
+	public void testDatagramEchoClientsBehindSocks5ServerUsingSocks5UserpassMethod() throws IOException {
 		System.out.printf("Running %s%n", Thread.currentThread().getStackTrace()[1].getMethodName());
-		SocksServer socksServerUsingSocks5Userpassauth = new SocksServer(
-				newConfigurationUsingSocks5Userpassauth());
+		SocksServer socksServerUsingSocks5UserpassMethod = new SocksServer(
+				newConfigurationUsingSocks5UserpassMethod());
 		DatagramEchoServer datagramEchoServer = new DatagramEchoServer();
 		try {
-			socksServerUsingSocks5Userpassauth.start();			
+			socksServerUsingSocks5UserpassMethod.start();			
 			datagramEchoServer.start();			
 			IoStressor ioStressor = new IoStressor(DATAGRAM_ECHO_CLIENT_THREAD_COUNT);
 			IoStressor.Stats stats = ioStressor.executeForEachThread(() -> {
 				DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
-						newSocks5ClientUsingSocks5Userpassauth(
+						newSocks5ClientUsingSocks5UserpassMethod(
 								"Aladdin",
 								"opensesame".toCharArray()).newSocksNetObjectFactory()); 
 				datagramEchoClient.echo(TestStringConstants.STRING_01);
@@ -266,8 +266,8 @@ public class SocksServerStressIT {
 			if (!datagramEchoServer.getState().equals(DatagramEchoServer.State.STOPPED)) {
 				datagramEchoServer.stop();
 			}
-			if (!socksServerUsingSocks5Userpassauth.getState().equals(SocksServer.State.STOPPED)) {
-				socksServerUsingSocks5Userpassauth.stop();
+			if (!socksServerUsingSocks5UserpassMethod.getState().equals(SocksServer.State.STOPPED)) {
+				socksServerUsingSocks5UserpassMethod.stop();
 			}
 		}
 	}
@@ -302,18 +302,18 @@ public class SocksServerStressIT {
 	
 	//@org.junit.Ignore
 	@Test
-	public void testDatagramEchoClientsBehindSocks5ServerUsingSslAndSocks5Userpassauth() throws IOException {
+	public void testDatagramEchoClientsBehindSocks5ServerUsingSslAndSocks5UserpassMethod() throws IOException {
 		System.out.printf("Running %s%n", Thread.currentThread().getStackTrace()[1].getMethodName());
-		SocksServer socksServerUsingSslAndSocks5Userpassauth = new SocksServer(
-				newConfigurationUsingSslAndSocks5Userpassauth());
+		SocksServer socksServerUsingSslAndSocks5UserpassMethod = new SocksServer(
+				newConfigurationUsingSslAndSocks5UserpassMethod());
 		DatagramEchoServer datagramEchoServer = new DatagramEchoServer();
 		try {
-			socksServerUsingSslAndSocks5Userpassauth.start();
+			socksServerUsingSslAndSocks5UserpassMethod.start();
 			datagramEchoServer.start();
 			IoStressor ioStressor = new IoStressor(DATAGRAM_ECHO_CLIENT_THREAD_COUNT);
 			IoStressor.Stats stats = ioStressor.executeForEachThread(() -> {
 				DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
-						newSocks5ClientUsingSslAndSocks5Userpassauth(
+						newSocks5ClientUsingSslAndSocks5UserpassMethod(
 								"Aladdin",
 								"opensesame".toCharArray()).newSocksNetObjectFactory()); 
 				datagramEchoClient.echo(TestStringConstants.STRING_01);
@@ -324,8 +324,8 @@ public class SocksServerStressIT {
 			if (!datagramEchoServer.getState().equals(DatagramEchoServer.State.STOPPED)) {
 				datagramEchoServer.stop();
 			}
-			if (!socksServerUsingSslAndSocks5Userpassauth.getState().equals(SocksServer.State.STOPPED)) {
-				socksServerUsingSslAndSocks5Userpassauth.stop();
+			if (!socksServerUsingSslAndSocks5UserpassMethod.getState().equals(SocksServer.State.STOPPED)) {
+				socksServerUsingSslAndSocks5UserpassMethod.stop();
 			}
 		}
 		
@@ -365,10 +365,10 @@ public class SocksServerStressIT {
 	
 	//@org.junit.Ignore
 	@Test
-	public void testEchoClientsBehindSocks5ServerUsingSocks5Userpassauth() throws IOException {
+	public void testEchoClientsBehindSocks5ServerUsingSocks5UserpassMethod() throws IOException {
 		System.out.printf("Running %s%n", Thread.currentThread().getStackTrace()[1].getMethodName());
-		SocksServer socksServerUsingSocks5Userpassauth = new SocksServer(
-				newConfigurationUsingSocks5Userpassauth());
+		SocksServer socksServerUsingSocks5UserpassMethod = new SocksServer(
+				newConfigurationUsingSocks5UserpassMethod());
 		EchoServer echoServer = new EchoServer(
 				NetObjectFactory.getDefault(), 
 				EchoServer.PORT, 
@@ -376,12 +376,12 @@ public class SocksServerStressIT {
 				EchoServer.INET_ADDRESS,
 				EchoServer.SOCKET_SETTINGS);
 		try {
-			socksServerUsingSocks5Userpassauth.start();
+			socksServerUsingSocks5UserpassMethod.start();
 			echoServer.start();			
 			IoStressor ioStressor = new IoStressor(ECHO_CLIENT_THREAD_COUNT);			
 			IoStressor.Stats stats = ioStressor.executeForEachThread(() -> {
 				EchoClient echoClient = new EchoClient(
-						newSocks5ClientUsingSocks5Userpassauth(
+						newSocks5ClientUsingSocks5UserpassMethod(
 								"Aladdin",
 								"opensesame".toCharArray()).newSocksNetObjectFactory()); 
 				echoClient.echo(TestStringConstants.STRING_01);
@@ -392,8 +392,8 @@ public class SocksServerStressIT {
 			if (!echoServer.getState().equals(EchoServer.State.STOPPED)) {
 				echoServer.stop();
 			}
-			if (!socksServerUsingSocks5Userpassauth.getState().equals(SocksServer.State.STOPPED)) {
-				socksServerUsingSocks5Userpassauth.stop();
+			if (!socksServerUsingSocks5UserpassMethod.getState().equals(SocksServer.State.STOPPED)) {
+				socksServerUsingSocks5UserpassMethod.stop();
 			}
 		}
 	}
@@ -433,10 +433,10 @@ public class SocksServerStressIT {
 	
 	//@org.junit.Ignore
 	@Test
-	public void testEchoClientsBehindSocks5ServerUsingSslAndSocks5Userpassauth() throws IOException {
+	public void testEchoClientsBehindSocks5ServerUsingSslAndSocks5UserpassMethod() throws IOException {
 		System.out.printf("Running %s%n", Thread.currentThread().getStackTrace()[1].getMethodName());
-		SocksServer socksServerUsingSslAndSocks5Userpassauth = new SocksServer(
-				newConfigurationUsingSslAndSocks5Userpassauth());
+		SocksServer socksServerUsingSslAndSocks5UserpassMethod = new SocksServer(
+				newConfigurationUsingSslAndSocks5UserpassMethod());
 		EchoServer echoServer = new EchoServer(
 				NetObjectFactory.getDefault(), 
 				EchoServer.PORT, 
@@ -444,12 +444,12 @@ public class SocksServerStressIT {
 				EchoServer.INET_ADDRESS,
 				EchoServer.SOCKET_SETTINGS);
 		try {
-			socksServerUsingSslAndSocks5Userpassauth.start();
+			socksServerUsingSslAndSocks5UserpassMethod.start();
 			echoServer.start();			
 			IoStressor ioStressor = new IoStressor(ECHO_CLIENT_THREAD_COUNT);			
 			IoStressor.Stats stats = ioStressor.executeForEachThread(() -> {
 				EchoClient echoClient = new EchoClient(
-						newSocks5ClientUsingSslAndSocks5Userpassauth(
+						newSocks5ClientUsingSslAndSocks5UserpassMethod(
 								"Aladdin",
 								"opensesame".toCharArray()).newSocksNetObjectFactory()); 
 				echoClient.echo(TestStringConstants.STRING_01);
@@ -460,8 +460,8 @@ public class SocksServerStressIT {
 			if (!echoServer.getState().equals(EchoServer.State.STOPPED)) {
 				echoServer.stop();
 			}
-			if (!socksServerUsingSslAndSocks5Userpassauth.getState().equals(SocksServer.State.STOPPED)) {
-				socksServerUsingSslAndSocks5Userpassauth.stop();
+			if (!socksServerUsingSslAndSocks5UserpassMethod.getState().equals(SocksServer.State.STOPPED)) {
+				socksServerUsingSslAndSocks5UserpassMethod.stop();
 			}
 		}
 	}

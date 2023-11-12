@@ -19,7 +19,7 @@ import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.HelpText;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Command;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Method;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapiauth.ProtectionLevel;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod.ProtectionLevel;
 import com.github.jh3nd3rs0n.jargyle.server.ChainingDtlsSettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.ChainingGeneralSettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.ChainingSocks5SettingSpecConstants;
@@ -38,7 +38,7 @@ import com.github.jh3nd3rs0n.jargyle.server.Socks5RuleConditionSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5RuleResultSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.SslSettingSpecConstants;
-import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.UserRepositorySpecConstants;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassmethod.UserRepositorySpecConstants;
 
 public abstract class ServerConfigurationCLI extends CLI {
 	
@@ -65,7 +65,7 @@ public abstract class ServerConfigurationCLI extends CLI {
 	private static final int CONFIG_FILE_OPTION_GROUP_ORDINAL = 0;
 	private static final int ENTER_CHAINING_DTLS_KEY_STORE_PASS_OPTION_GROUP_ORDINAL = 1;
 	private static final int ENTER_CHAINING_DTLS_TRUST_STORE_PASS_OPTION_GROUP_ORDINAL = 2;
-	private static final int ENTER_CHAINING_SOCKS5_USERPASSAUTH_PASS_OPTION_GROUP_ORDINAL = 3;
+	private static final int ENTER_CHAINING_SOCKS5_USERPASSMETHOD_PASS_OPTION_GROUP_ORDINAL = 3;
 	private static final int ENTER_CHAINING_SSL_KEY_STORE_PASS_OPTION_GROUP_ORDINAL = 4;
 	private static final int ENTER_CHAINING_SSL_TRUST_STORE_PASS_OPTION_GROUP_ORDINAL = 5;	
 	private static final int ENTER_DTLS_KEY_STORE_PASS_OPTION_GROUP_ORDINAL = 6;
@@ -228,16 +228,16 @@ public abstract class ServerConfigurationCLI extends CLI {
 	@Option(
 			doc = "Enter through an interactive prompt the password to be "
 					+ "used to access the other SOCKS5 server",
-			name = "enter-chaining-socks5-userpassauth-pass",
+			name = "enter-chaining-socks5-userpassmethod-pass",
 			type = OptionType.GNU_LONG
 	)
-	@Ordinal(ENTER_CHAINING_SOCKS5_USERPASSAUTH_PASS_OPTION_GROUP_ORDINAL)
-	protected void enterChainingSocks5UserpassauthPassword() {
+	@Ordinal(ENTER_CHAINING_SOCKS5_USERPASSMETHOD_PASS_OPTION_GROUP_ORDINAL)
+	protected void enterChainingSocks5UserpassMethodPassword() {
 		String prompt = "Please enter the password to be used to access the "
 				+ "other SOCKS server: ";
 		EncryptedPassword encryptedPassword = readEncryptedPassword(prompt);
 		Setting<EncryptedPassword> setting = 
-				ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_USERPASSAUTH_PASSWORD.newSetting(
+				ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_USERPASSMETHOD_PASSWORD.newSetting(
 						encryptedPassword);
 		this.configuration.addSetting(setting);		
 	}
@@ -463,7 +463,7 @@ public abstract class ServerConfigurationCLI extends CLI {
 		this.printHelpText(StandardSocketSettingSpecConstants.class);
 		System.out.println("  SOCKS5_COMMANDS:");
 		this.printHelpText(Command.class);
-		System.out.println("  SOCKS5_GSSAPIAUTH_PROTECTION_LEVELS:");
+		System.out.println("  SOCKS5_GSSAPIMETHOD_PROTECTION_LEVELS:");
 		this.printHelpText(ProtectionLevel.class);
 		System.out.println("  SOCKS5_METHODS:");
 		this.printHelpText(Method.class);
@@ -471,7 +471,7 @@ public abstract class ServerConfigurationCLI extends CLI {
 		this.printHelpText(Socks5RuleConditionSpecConstants.class);		
 		System.out.println("  SOCKS5_RULE_RESULTS:");
 		this.printHelpText(Socks5RuleResultSpecConstants.class);
-		System.out.println("  SOCKS5_USERPASSAUTH_USER_REPOSITORIES:");
+		System.out.println("  SOCKS5_USERPASSMETHOD_USER_REPOSITORIES:");
 		this.printHelpText(UserRepositorySpecConstants.class);
 	}
 	

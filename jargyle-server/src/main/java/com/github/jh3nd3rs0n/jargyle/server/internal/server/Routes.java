@@ -139,21 +139,21 @@ public final class Routes {
 				new SettingToPropertyConverter(
 						Socks5PropertySpecConstants.SOCKS5_CLIENT_UDP_ADDRESS_AND_PORT_UNKNOWN));
 		SETTING_CONVERTER_MAP.put(
-				ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_GSSAPIAUTH_MECHANISM_OID, 
+				ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_GSSAPIMETHOD_MECHANISM_OID, 
 				new SettingToPropertyConverter(
-						Socks5PropertySpecConstants.SOCKS5_GSSAPIAUTH_MECHANISM_OID));
+						Socks5PropertySpecConstants.SOCKS5_GSSAPIMETHOD_MECHANISM_OID));
 		SETTING_CONVERTER_MAP.put(
-				ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_GSSAPIAUTH_NEC_REFERENCE_IMPL, 
+				ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_GSSAPIMETHOD_NEC_REFERENCE_IMPL, 
 				new SettingToPropertyConverter(
-						Socks5PropertySpecConstants.SOCKS5_GSSAPIAUTH_NEC_REFERENCE_IMPL));
+						Socks5PropertySpecConstants.SOCKS5_GSSAPIMETHOD_NEC_REFERENCE_IMPL));
 		SETTING_CONVERTER_MAP.put(
-				ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_GSSAPIAUTH_PROTECTION_LEVELS, 
+				ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_GSSAPIMETHOD_PROTECTION_LEVELS, 
 				new SettingToPropertyConverter(
-						Socks5PropertySpecConstants.SOCKS5_GSSAPIAUTH_PROTECTION_LEVELS));
+						Socks5PropertySpecConstants.SOCKS5_GSSAPIMETHOD_PROTECTION_LEVELS));
 		SETTING_CONVERTER_MAP.put(
-				ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_GSSAPIAUTH_SERVICE_NAME, 
+				ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_GSSAPIMETHOD_SERVICE_NAME, 
 				new SettingToPropertyConverter(
-						Socks5PropertySpecConstants.SOCKS5_GSSAPIAUTH_SERVICE_NAME));
+						Socks5PropertySpecConstants.SOCKS5_GSSAPIMETHOD_SERVICE_NAME));
 		SETTING_CONVERTER_MAP.put(
 				ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_METHODS, 
 				new SettingToPropertyConverter(
@@ -163,13 +163,13 @@ public final class Routes {
 				new SettingToPropertyConverter(
 						Socks5PropertySpecConstants.SOCKS5_USE_RESOLVE_COMMAND));
 		SETTING_CONVERTER_MAP.put(
-				ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_USERPASSAUTH_PASSWORD, 
+				ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_USERPASSMETHOD_PASSWORD, 
 				new SettingToPropertyConverter(
-						Socks5PropertySpecConstants.SOCKS5_USERPASSAUTH_PASSWORD));
+						Socks5PropertySpecConstants.SOCKS5_USERPASSMETHOD_PASSWORD));
 		SETTING_CONVERTER_MAP.put(
-				ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_USERPASSAUTH_USERNAME, 
+				ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_USERPASSMETHOD_USERNAME, 
 				new SettingToPropertyConverter(
-						Socks5PropertySpecConstants.SOCKS5_USERPASSAUTH_USERNAME));
+						Socks5PropertySpecConstants.SOCKS5_USERPASSMETHOD_USERNAME));
 		SETTING_CONVERTER_MAP.put(
 				ChainingSslSettingSpecConstants.CHAINING_SSL_ENABLED, 
 				new SettingToPropertyConverter(

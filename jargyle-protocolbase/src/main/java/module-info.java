@@ -4,6 +4,6 @@ module com.github.jh3nd3rs0n.jargyle.protocolbase {
 	requires transitive java.security.jgss;
 	exports com.github.jh3nd3rs0n.jargyle.protocolbase;
 	exports com.github.jh3nd3rs0n.jargyle.protocolbase.socks5;
-	exports com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapiauth;
-	exports com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.userpassauth;
+	exports com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod;
+	exports com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.userpassmethod;
 }

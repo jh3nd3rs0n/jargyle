@@ -9,16 +9,16 @@ import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.HelpText;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Methods;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapiauth.ProtectionLevels;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod.ProtectionLevels;
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.BooleanSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.HostSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.PortRangesSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.PositiveIntegerSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.SocketSettingsSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.Socks5GssapiauthProtectionLevelsSettingSpec;
+import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.Socks5GssapiMethodProtectionLevelsSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.Socks5MethodsSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.Socks5UserpassauthUserRepositorySettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauth.UserRepository;
+import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.Socks5UserpassMethodUserRepositorySettingSpec;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassmethod.UserRepository;
 
 public final class Socks5SettingSpecConstants {
 
@@ -29,11 +29,11 @@ public final class Socks5SettingSpecConstants {
 					+ "GSS-API protection level negotiation must be "
 					+ "unprotected according to the NEC reference "
 					+ "implementation (default is false)", 
-			usage = "socks5.gssapiauth.necReferenceImpl=true|false"
+			usage = "socks5.gssapimethod.necReferenceImpl=true|false"
 	)
-	public static final SettingSpec<Boolean> SOCKS5_GSSAPIAUTH_NEC_REFERENCE_IMPL = 
+	public static final SettingSpec<Boolean> SOCKS5_GSSAPIMETHOD_NEC_REFERENCE_IMPL = 
 			SETTING_SPECS.addThenGet(new BooleanSettingSpec(
-					"socks5.gssapiauth.necReferenceImpl", 
+					"socks5.gssapimethod.necReferenceImpl", 
 					Boolean.FALSE));
 	
 	@HelpText(
@@ -42,11 +42,11 @@ public final class Socks5SettingSpecConstants {
 					+ "if the client does not provide a protection level that "
 					+ "is acceptable.) (default is REQUIRED_INTEG_AND_CONF "
 					+ "REQUIRED_INTEG NONE)", 
-			usage = "socks5.gssapiauth.protectionLevels=SOCKS5_GSSAPIAUTH_PROTECTION_LEVEL1[,SOCKS5_GSSAPIAUTH_PROTECTION_LEVEL2[...]]"
+			usage = "socks5.gssapimethod.protectionLevels=SOCKS5_GSSAPIMETHOD_PROTECTION_LEVEL1[,SOCKS5_GSSAPIMETHOD_PROTECTION_LEVEL2[...]]"
 	)
-	public static final SettingSpec<ProtectionLevels> SOCKS5_GSSAPIAUTH_PROTECTION_LEVELS = 
-			SETTING_SPECS.addThenGet(new Socks5GssapiauthProtectionLevelsSettingSpec(
-					"socks5.gssapiauth.protectionLevels", 
+	public static final SettingSpec<ProtectionLevels> SOCKS5_GSSAPIMETHOD_PROTECTION_LEVELS = 
+			SETTING_SPECS.addThenGet(new Socks5GssapiMethodProtectionLevelsSettingSpec(
+					"socks5.gssapimethod.protectionLevels", 
 					ProtectionLevels.getDefault()));
 	
 	@HelpText(
@@ -488,11 +488,11 @@ public final class Socks5SettingSpecConstants {
 	@HelpText(
 			doc = "The user repository used for username password "
 					+ "authentication (default is StringSourceUserRepository:)", 
-			usage = "socks5.userpassauth.userRepository=SOCKS5_USERPASSAUTH_USER_REPOSITORY"
+			usage = "socks5.userpassmethod.userRepository=SOCKS5_USERPASSMETHOD_USER_REPOSITORY"
 	)	
-	public static final SettingSpec<UserRepository> SOCKS5_USERPASSAUTH_USER_REPOSITORY = 
-			SETTING_SPECS.addThenGet(new Socks5UserpassauthUserRepositorySettingSpec(
-					"socks5.userpassauth.userRepository",
+	public static final SettingSpec<UserRepository> SOCKS5_USERPASSMETHOD_USER_REPOSITORY = 
+			SETTING_SPECS.addThenGet(new Socks5UserpassMethodUserRepositorySettingSpec(
+					"socks5.userpassmethod.userRepository",
 					UserRepository.newInstance()));
 	
 	public static List<SettingSpec<Object>> values() {

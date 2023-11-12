@@ -22,13 +22,13 @@ import com.github.jh3nd3rs0n.jargyle.client.Socks5PropertySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Method;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.MethodEncapsulation;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.MethodSubnegotiationException;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapiauth.GssapiMethodEncapsulation;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapiauth.Message;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapiauth.MessageType;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapiauth.ProtectionLevel;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapiauth.ProtectionLevels;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.userpassauth.UsernamePasswordRequest;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.userpassauth.UsernamePasswordResponse;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod.GssapiMethodEncapsulation;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod.Message;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod.MessageType;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod.ProtectionLevel;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod.ProtectionLevels;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.userpassmethod.UsernamePasswordRequest;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.userpassmethod.UsernamePasswordResponse;
 
 abstract class MethodSubnegotiator {
 	
@@ -77,10 +77,10 @@ abstract class MethodSubnegotiator {
 			InputStream inStream = socket.getInputStream();
 			OutputStream outStream = socket.getOutputStream();
 			boolean necReferenceImpl = socks5Client.getProperties().getValue(
-					Socks5PropertySpecConstants.SOCKS5_GSSAPIAUTH_NEC_REFERENCE_IMPL).booleanValue();
+					Socks5PropertySpecConstants.SOCKS5_GSSAPIMETHOD_NEC_REFERENCE_IMPL).booleanValue();
 			ProtectionLevels protectionLevels =
 					socks5Client.getProperties().getValue(
-							Socks5PropertySpecConstants.SOCKS5_GSSAPIAUTH_PROTECTION_LEVELS);
+							Socks5PropertySpecConstants.SOCKS5_GSSAPIMETHOD_PROTECTION_LEVELS);
 			List<ProtectionLevel> protectionLevelList =
 					protectionLevels.toList(); 
 			ProtectionLevel firstProtectionLevel = protectionLevelList.get(0);
@@ -145,10 +145,10 @@ abstract class MethodSubnegotiator {
 				final Socks5Client socks5Client) throws GSSException {
 			GSSManager manager = GSSManager.getInstance();
 			String server = socks5Client.getProperties().getValue(
-					Socks5PropertySpecConstants.SOCKS5_GSSAPIAUTH_SERVICE_NAME);
+					Socks5PropertySpecConstants.SOCKS5_GSSAPIMETHOD_SERVICE_NAME);
 			GSSName serverName = manager.createName(server, null);
 			Oid mechanismOid = socks5Client.getProperties().getValue(
-					Socks5PropertySpecConstants.SOCKS5_GSSAPIAUTH_MECHANISM_OID);
+					Socks5PropertySpecConstants.SOCKS5_GSSAPIMETHOD_MECHANISM_OID);
 			GSSContext context = manager.createContext(
 					serverName, 
 					mechanismOid,
@@ -267,9 +267,9 @@ abstract class MethodSubnegotiator {
 				InputStream inputStream = socket.getInputStream();
 				OutputStream outputStream = socket.getOutputStream();
 				String username = socks5Client.getProperties().getValue(
-						Socks5PropertySpecConstants.SOCKS5_USERPASSAUTH_USERNAME);
+						Socks5PropertySpecConstants.SOCKS5_USERPASSMETHOD_USERNAME);
 				password = socks5Client.getProperties().getValue(
-						Socks5PropertySpecConstants.SOCKS5_USERPASSAUTH_PASSWORD).getPassword();
+						Socks5PropertySpecConstants.SOCKS5_USERPASSMETHOD_PASSWORD).getPassword();
 				UsernamePasswordRequest usernamePasswordReq = 
 						UsernamePasswordRequest.newInstance(username, password);
 				outputStream.write(usernamePasswordReq.toByteArray());

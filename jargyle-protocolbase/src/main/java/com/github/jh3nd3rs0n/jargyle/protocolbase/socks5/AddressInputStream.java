@@ -31,6 +31,9 @@ final class AddressInputStream extends Socks5InputStream {
 		case IPV6:
 			address = this.readIpv6Address();
 			break;
+		default:
+			throw new AddressTypeNotSupportedException(UnsignedByte.newInstance(
+					addressType.byteValue()));
 		}
 		return address;
 	}

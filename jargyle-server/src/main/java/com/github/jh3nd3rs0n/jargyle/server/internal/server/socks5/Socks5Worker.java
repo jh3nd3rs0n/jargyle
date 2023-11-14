@@ -2,6 +2,7 @@ package com.github.jh3nd3rs0n.jargyle.server.internal.server.socks5;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.SequenceInputStream;
 import java.io.UncheckedIOException;
 import java.net.Socket;
@@ -45,7 +46,7 @@ import com.github.jh3nd3rs0n.jargyle.server.internal.server.Worker;
 
 public class Socks5Worker extends Worker {
 
-	private Socks5RequestInputStream clientInputStream;
+	private InputStream clientInputStream;
 	private final Logger logger;
 	
 	public Socks5Worker(final Worker worker) {
@@ -308,7 +309,8 @@ public class Socks5Worker extends Worker {
 	private Socks5Request newSocks5Request() {
 		Socks5Request socks5Request = null;
 		try {
-			socks5Request = this.clientInputStream.readSocks5Request();
+			socks5Request = new Socks5RequestInputStream(
+					this.clientInputStream).readSocks5Request();
 		} catch (AddressTypeNotSupportedException e) {
 			this.logger.debug( 
 					ObjectLogMessageHelper.objectLogMessage(
@@ -396,16 +398,14 @@ public class Socks5Worker extends Worker {
 	@Override
 	public void run() {
 		try {
-			this.clientInputStream = new Socks5RequestInputStream(
-					this.getClientSocket().getInputStream());
+			this.clientInputStream = this.getClientSocket().getInputStream();
 			Method method = this.negotiateMethod();
 			if (method == null) { return; } 
 			MethodSubnegotiationResults methodSubnegotiationResults = 
 					this.doMethodSubnegotiation(method);
 			if (methodSubnegotiationResults == null) { return; }
 			Socket socket = methodSubnegotiationResults.getSocket();
-			this.clientInputStream = new Socks5RequestInputStream(
-					socket.getInputStream());
+			this.clientInputStream = socket.getInputStream();
 			this.setClientSocket(socket);
 			Socks5Request socks5Request = this.newSocks5Request();
 			if (socks5Request == null) { return; }

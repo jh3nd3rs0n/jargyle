@@ -14,10 +14,12 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        java: [ '11', '16', '17', '18', '19', '20' ]
+        java: [ '11', '16', '17', '18', '19', '20', '21' ]
     name: Java ${{ matrix.java }}
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:

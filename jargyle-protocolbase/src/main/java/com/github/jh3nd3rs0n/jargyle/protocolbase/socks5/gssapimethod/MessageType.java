@@ -1,12 +1,9 @@
 package com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Socks5Exception;
 
 public enum MessageType {
 
@@ -34,18 +31,6 @@ public enum MessageType {
 				+ "%s. actual value is %s",
 				str,
 				Integer.toHexString(UnsignedByte.newInstance(b).intValue())));
-	}
-	
-	public static MessageType valueOfByteFrom(
-			final InputStream in) throws IOException {
-		UnsignedByte b = UnsignedByte.newInstanceFrom(in);
-		MessageType messageType = null;
-		try {
-			messageType = valueOfByte(b.byteValue());
-		} catch (IllegalArgumentException e) {
-			throw new Socks5Exception(e);
-		}
-		return messageType;
 	}
 	
 	private final byte byteValue;

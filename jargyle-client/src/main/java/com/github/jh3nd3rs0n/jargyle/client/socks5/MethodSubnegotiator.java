@@ -1,7 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.client.socks5;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Arrays;
@@ -23,12 +22,14 @@ import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Method;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.MethodEncapsulation;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.MethodSubnegotiationException;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod.GssapiMethodEncapsulation;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod.MessageInputStream;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod.Message;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod.MessageType;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod.ProtectionLevel;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod.ProtectionLevels;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.userpassmethod.UsernamePasswordRequest;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.userpassmethod.UsernamePasswordResponse;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.userpassmethod.UsernamePasswordResponseInputStream;
 
 abstract class MethodSubnegotiator {
 	
@@ -42,7 +43,8 @@ abstract class MethodSubnegotiator {
 		private void establishContext(
 				final Socket socket, final GSSContext context) 
 				throws IOException, GSSException {
-			InputStream inStream = socket.getInputStream();
+			MessageInputStream inStream = new MessageInputStream(
+					socket.getInputStream());
 			OutputStream outStream = socket.getOutputStream();
 			byte[] token = new byte[] { };
 			while (!context.isEstablished()) {
@@ -57,7 +59,7 @@ abstract class MethodSubnegotiator {
 					outStream.flush();
 				}
 				if (!context.isEstablished()) {
-					Message message = Message.newInstanceFrom(inStream);
+					Message message = inStream.readMessage();
 					if (message.getMessageType().equals(MessageType.ABORT)) {
 						throw new MethodSubnegotiationException(
 								this.getMethod(), 
@@ -74,7 +76,8 @@ abstract class MethodSubnegotiator {
 				final GSSContext context,
 				final Socks5Client socks5Client) 
 				throws IOException, GSSException {
-			InputStream inStream = socket.getInputStream();
+			MessageInputStream inStream = new MessageInputStream(
+					socket.getInputStream());
 			OutputStream outStream = socket.getOutputStream();
 			boolean necReferenceImpl = socks5Client.getProperties().getValue(
 					Socks5PropertySpecConstants.SOCKS5_GSSAPIMETHOD_NEC_REFERENCE_IMPL).booleanValue();
@@ -103,7 +106,7 @@ abstract class MethodSubnegotiator {
 					MessageType.PROTECTION_LEVEL_NEGOTIATION, 
 					token).toByteArray());
 			outStream.flush();
-			Message message = Message.newInstanceFrom(inStream);
+			Message message = inStream.readMessage();
 			if (message.getMessageType().equals(MessageType.ABORT)) {
 				throw new MethodSubnegotiationException(
 						this.getMethod(), 
@@ -264,7 +267,9 @@ abstract class MethodSubnegotiator {
 			byte status = 1;
 			char[] password = null;
 			try {
-				InputStream inputStream = socket.getInputStream();
+				UsernamePasswordResponseInputStream inputStream = 
+						new UsernamePasswordResponseInputStream(
+								socket.getInputStream());
 				OutputStream outputStream = socket.getOutputStream();
 				String username = socks5Client.getProperties().getValue(
 						Socks5PropertySpecConstants.SOCKS5_USERPASSMETHOD_USERNAME);
@@ -275,7 +280,7 @@ abstract class MethodSubnegotiator {
 				outputStream.write(usernamePasswordReq.toByteArray());
 				outputStream.flush();
 				UsernamePasswordResponse usernamePasswordResp = 
-						UsernamePasswordResponse.newInstanceFrom(inputStream);
+						inputStream.readUsernamePasswordResponse();
 				status = usernamePasswordResp.getStatus();
 			} finally {
 				if (password != null) { Arrays.fill(password, '\0'); }

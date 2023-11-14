@@ -7,104 +7,30 @@ import java.util.Arrays;
 
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
-import com.github.jh3nd3rs0n.jargyle.internal.number.UnsignedShort;
+import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedShort;
 
 public final class UdpRequestHeader {
 
-	private static final class Params {
-		private UnsignedByte currentFragmentNumber;
-		private AddressType addressType;
-		private Address desiredDestinationAddress;
-		private Port desiredDestinationPort;
-		private int userDataStartIndex;
-		private byte[] byteArray;
+	static final class Params {
+		UnsignedByte currentFragmentNumber;
+		AddressType addressType;
+		Address desiredDestinationAddress;
+		Port desiredDestinationPort;
+		int userDataStartIndex;
+		byte[] byteArray;
 	}
 	
-	private static final int RSV = 0x0000;
+	static final int RSV = 0x0000;
 	
-	public static UdpRequestHeader newInstance(final byte[] byteArray) {
-		ByteArrayInputStream in = new ByteArrayInputStream(byteArray);
-		int dataStartIndex = -1;
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		UnsignedShort rsv;
+	public static UdpRequestHeader newInstance(final byte[] b) {
+		UdpRequestHeader udpRequestHeader = null;
 		try {
-			rsv = UnsignedShort.newInstanceFrom(in);
+			udpRequestHeader = new UdpRequestHeaderInputStream(
+					new ByteArrayInputStream(b)).readUdpRequestHeader();
 		} catch (IOException e) {
-			throw new IllegalArgumentException("expected RSV", e);
+			throw new IllegalArgumentException(e);
 		}
-		if (rsv.intValue() != RSV) {
-			 throw new IllegalArgumentException(String.format(
-					 "expected RSV is %s, actual RSV is %s", 
-					 RSV, rsv.intValue()));
-		}
-		byte[] bytes = rsv.toByteArray();
-		dataStartIndex += bytes.length;
-		try {
-			out.write(rsv.toByteArray());
-		} catch (IOException e) {
-			throw new AssertionError(e);
-		}
-		UnsignedByte frag;
-		try {
-			frag = UnsignedByte.newInstanceFrom(in);
-		} catch (IOException e) {
-			throw new IllegalArgumentException("expected fragment number", e);
-		}
-		dataStartIndex++;
-		out.write(frag.intValue());
-		Address dstAddr;
-		try {
-			dstAddr = Address.newInstanceFrom(in);
-		} catch (IOException e) {
-			throw new IllegalArgumentException(
-					"expected desired destination address type and address", e);
-		}
-		AddressType atyp = dstAddr.getAddressType();
-		dataStartIndex++;
-		out.write(UnsignedByte.newInstance(atyp.byteValue()).intValue());
-		bytes = dstAddr.toByteArray();
-		dataStartIndex += bytes.length;
-		try {
-			out.write(bytes);
-		} catch (IOException e) {
-			throw new AssertionError(e);
-		}
-		Port dstPort;
-		try {
-			dstPort = Port.newInstanceFrom(in);
-		} catch (IOException e) {
-			throw new IllegalArgumentException(
-					"expected desired destination port", e);
-		}
-		bytes = dstPort.toByteArray();
-		dataStartIndex += bytes.length;
-		try {
-			out.write(bytes);
-		} catch (IOException e) {
-			throw new AssertionError(e);
-		}
-		dataStartIndex++;
-		bytes = new byte[byteArray.length - dataStartIndex + 1];
-		int bytesRead;
-		try {
-			bytesRead = in.read(bytes);
-		} catch (IOException e) {
-			throw new AssertionError(e);
-		}
-		bytes = Arrays.copyOf(bytes, bytesRead);
-		try {
-			out.write(bytes);
-		} catch (IOException e) {
-			throw new AssertionError(e);
-		}
-		Params params = new Params();
-		params.currentFragmentNumber = frag;
-		params.addressType = atyp;
-		params.desiredDestinationAddress = dstAddr;
-		params.desiredDestinationPort = dstPort;
-		params.userDataStartIndex = dataStartIndex;
-		params.byteArray = out.toByteArray();
-		return new UdpRequestHeader(params);
+		return udpRequestHeader;
 	}
 	
 	public static UdpRequestHeader newInstance(
@@ -121,11 +47,8 @@ public final class UdpRequestHeader {
 		} catch (IOException e) {
 			throw new AssertionError(e);
 		}
-		dataStartIndex++;
+		dataStartIndex += 2;
 		out.write(currentFragmentNumber.intValue());
-		AddressType addressType = desiredDestinationAddress.getAddressType();
-		dataStartIndex++;
-		out.write(UnsignedByte.newInstance(addressType.byteValue()).intValue());
 		byte[] bytes = desiredDestinationAddress.toByteArray();
 		dataStartIndex += bytes.length;
 		try {
@@ -140,7 +63,6 @@ public final class UdpRequestHeader {
 		} catch (IOException e) {
 			throw new AssertionError(e);
 		}
-		dataStartIndex++;
 		try {
 			out.write(userData);
 		} catch (IOException e) {
@@ -148,7 +70,7 @@ public final class UdpRequestHeader {
 		}
 		Params params = new Params();
 		params.currentFragmentNumber = currentFragmentNumber;
-		params.addressType = addressType;
+		params.addressType = desiredDestinationAddress.getAddressType();
 		params.desiredDestinationAddress = desiredDestinationAddress;
 		params.desiredDestinationPort = desiredDestinationPort;
 		params.userDataStartIndex = dataStartIndex;
@@ -163,7 +85,7 @@ public final class UdpRequestHeader {
 	private final int userDataStartIndex;
 	private final byte[] byteArray;
 	
-	private UdpRequestHeader(final Params params) {
+	UdpRequestHeader(final Params params) {
 		this.currentFragmentNumber = params.currentFragmentNumber;
 		this.addressType = params.addressType;
 		this.desiredDestinationAddress = params.desiredDestinationAddress;

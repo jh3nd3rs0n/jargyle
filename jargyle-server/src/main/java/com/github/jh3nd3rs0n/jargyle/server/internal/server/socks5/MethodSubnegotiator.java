@@ -1,7 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.server.internal.server.socks5;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Arrays;
@@ -21,12 +20,14 @@ import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Method;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.MethodEncapsulation;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.MethodSubnegotiationException;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod.GssapiMethodEncapsulation;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod.MessageInputStream;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod.Message;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod.MessageType;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod.ProtectionLevel;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod.ProtectionLevels;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.userpassmethod.UsernamePasswordRequest;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.userpassmethod.UsernamePasswordResponse;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.userpassmethod.UsernamePasswordRequestInputStream;
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassmethod.HashedPassword;
@@ -45,11 +46,12 @@ abstract class MethodSubnegotiator {
 		private void establishContext(
 				final Socket socket, final GSSContext context) 
 				throws IOException, GSSException {
-			InputStream inStream = socket.getInputStream();
+			MessageInputStream inStream = new MessageInputStream(
+					socket.getInputStream());
 			OutputStream outStream = socket.getOutputStream();
 			byte[] token = null;
 			while (!context.isEstablished()) {
-				Message message = Message.newInstanceFrom(inStream);
+				Message message = inStream.readMessage();
 				if (message.getMessageType().equals(MessageType.ABORT)) {
 					throw new MethodSubnegotiationException(
 							this.getMethod(), 
@@ -87,9 +89,10 @@ abstract class MethodSubnegotiator {
 				final GSSContext context,
 				final Configuration configuration) 
 				throws IOException, GSSException {
-			InputStream inStream = socket.getInputStream();
+			MessageInputStream inStream = new MessageInputStream(
+					socket.getInputStream());
 			OutputStream outStream = socket.getOutputStream();
-			Message message = Message.newInstanceFrom(inStream);
+			Message message = inStream.readMessage();
 			if (message.getMessageType().equals(MessageType.ABORT)) {
 				throw new MethodSubnegotiationException(
 						this.getMethod(), 
@@ -278,10 +281,12 @@ abstract class MethodSubnegotiator {
 			String username = null;
 			char[] password = null;
 			try {
-				InputStream inputStream = socket.getInputStream();
+				UsernamePasswordRequestInputStream inputStream = 
+						new UsernamePasswordRequestInputStream(
+								socket.getInputStream());
 				OutputStream outputStream = socket.getOutputStream();
 				UsernamePasswordRequest usernamePasswordReq = 
-						UsernamePasswordRequest.newInstanceFrom(inputStream);
+						inputStream.readUsernamePasswordRequest();
 				UsernamePasswordResponse usernamePasswordResp = null;
 				username = usernamePasswordReq.getUsername();
 				password = usernamePasswordReq.getPassword();

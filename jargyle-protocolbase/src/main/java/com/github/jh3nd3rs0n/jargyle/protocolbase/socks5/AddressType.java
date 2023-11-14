@@ -1,11 +1,7 @@
 package com.github.jh3nd3rs0n.jargyle.protocolbase.socks5;
 
 import java.io.ByteArrayOutputStream;
-import java.io.EOFException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.Inet4Address;
-import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Arrays;
@@ -17,8 +13,6 @@ import com.github.jh3nd3rs0n.jargyle.internal.net.InetAddressHelper;
 public enum AddressType {
 
 	IPV4((byte) 0x01) {
-		
-		private static final int ADDRESS_LENGTH = 4;
 		
 		@Override
 		public boolean isValueForString(final String string) {
@@ -37,36 +31,14 @@ public enum AddressType {
 			} catch (UnknownHostException e) {
 				throw new IllegalArgumentException(e);
 			}
-			return new Address(this, inetAddress.getAddress(), string);
-		}
-
-		@Override
-		public Address newAddressFrom(final InputStream in) throws IOException {
-			byte[] bytes = new byte[ADDRESS_LENGTH];
-			int bytesRead = in.read(bytes);
-			if (bytesRead != ADDRESS_LENGTH) { 
-				throw new EOFException(String.format(
-						"expected address length is %s. "
-						+ "actual address length is %s", 
-						ADDRESS_LENGTH, 
-						bytesRead));
-			}
-			bytes = Arrays.copyOf(bytes, bytesRead);
-			InetAddress inetAddress = null;
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			out.write(UnsignedByte.newInstance(this.byteValue()).intValue());
 			try {
-				inetAddress = InetAddress.getByAddress(bytes);
-			} catch (UnknownHostException e) {
-				throw new Socks5Exception(String.format(
-						"expected address length is %s. "
-						+ "actual address length is %s", 
-						ADDRESS_LENGTH, 
-						bytesRead));
+				out.write(inetAddress.getAddress());
+			} catch (IOException e) {
+				throw new AssertionError(e);
 			}
-			if (!(inetAddress instanceof Inet4Address)) {
-				throw new Socks5Exception(String.format(
-						"raw IP address (%s) not IPv4", inetAddress));
-			}
-			return new Address(this, bytes, inetAddress.getHostAddress());
+			return new Address(this, out.toByteArray(), string);
 		}
 		
 	},
@@ -97,39 +69,19 @@ public enum AddressType {
 			for (int i = 1; i < b.length; i++) {
 				b[i] = bytes[i - 1];
 			}
-			return new Address(this, b, string);
-		}
-
-		@Override
-		public Address newAddressFrom(final InputStream in) throws IOException {
-			UnsignedByte octetCount = UnsignedByte.newInstanceFrom(in);
-			byte[] bytes = new byte[octetCount.intValue()];
-			int bytesRead = in.read(bytes);
-			if (octetCount.intValue() != bytesRead) {
-				throw new EOFException(String.format(
-						"expected address length is %s. "
-						+ "actual address length is %s", 
-						octetCount.intValue(), 
-						bytesRead));
-			}
-			bytes = Arrays.copyOf(bytes, bytes.length);
-			String string = new String(bytes);
-			if (!this.isValueForString(string)) {
-				throw new Socks5Exception(String.format(
-						"invalid address: %s", string));
-			}
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			out.write(UnsignedByte.newInstance(
-					octetCount.byteValue()).intValue());
-			out.write(bytes);
+			out.write(UnsignedByte.newInstance(this.byteValue()).intValue());
+			try {
+				out.write(b);
+			} catch (IOException e) {
+				throw new AssertionError(e);
+			}
 			return new Address(this, out.toByteArray(), string);
 		}
 		
 	},
 	
 	IPV6((byte) 0x04) {
-		
-		private static final int ADDRESS_LENGTH = 16;
 		
 		@Override
 		public boolean isValueForString(final String string) {
@@ -148,36 +100,14 @@ public enum AddressType {
 			} catch (UnknownHostException e) {
 				throw new IllegalArgumentException(e);
 			}
-			return new Address(this, inetAddress.getAddress(), string);
-		}
-
-		@Override
-		public Address newAddressFrom(final InputStream in) throws IOException {
-			byte[] bytes = new byte[ADDRESS_LENGTH];
-			int bytesRead = in.read(bytes);
-			if (bytesRead != ADDRESS_LENGTH) { 
-				throw new EOFException(String.format(
-						"expected address length is %s. "
-						+ "actual address length is %s", 
-						ADDRESS_LENGTH, 
-						bytesRead));
-			}
-			bytes = Arrays.copyOf(bytes, bytes.length);
-			InetAddress inetAddress = null;
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			out.write(UnsignedByte.newInstance(this.byteValue()).intValue());
 			try {
-				inetAddress = InetAddress.getByAddress(bytes);
-			} catch (UnknownHostException e) {
-				throw new Socks5Exception(String.format(
-						"expected address length is %s. "
-						+ "actual address length is %s", 
-						ADDRESS_LENGTH, 
-						bytesRead));
+				out.write(inetAddress.getAddress());
+			} catch (IOException e) {
+				throw new AssertionError(e);
 			}
-			if (!(inetAddress instanceof Inet6Address)) {
-				throw new Socks5Exception(String.format(
-						"raw IP address (%s) not IPv6", inetAddress));
-			}
-			return new Address(this, bytes, inetAddress.getHostAddress());
+			return new Address(this, out.toByteArray(), string);
 		}
 		
 	};
@@ -215,18 +145,6 @@ public enum AddressType {
 				Integer.toHexString(UnsignedByte.newInstance(b).intValue())));
 	}
 	
-	public static AddressType valueOfByteFrom(
-			final InputStream in) throws IOException {
-		UnsignedByte b = UnsignedByte.newInstanceFrom(in);
-		AddressType addressType = null;
-		try {
-			addressType = valueOfByte(b.byteValue());
-		} catch (IllegalArgumentException e) {
-			throw new AddressTypeNotSupportedException(b);
-		}
-		return addressType;
-	}
-	
 	private final byte byteValue;
 	
 	private AddressType(final byte bValue) {
@@ -240,7 +158,4 @@ public enum AddressType {
 	public abstract boolean isValueForString(final String string);
 	
 	public abstract Address newAddress(final String string);
-	
-	public abstract Address newAddressFrom(
-			final InputStream in) throws IOException;
 }

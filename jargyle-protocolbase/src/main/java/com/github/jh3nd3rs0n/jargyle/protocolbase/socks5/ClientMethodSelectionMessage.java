@@ -3,8 +3,6 @@ package com.github.jh3nd3rs0n.jargyle.protocolbase.socks5;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -12,16 +10,18 @@ import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
 
 public final class ClientMethodSelectionMessage {
 	
-	private static final class Params {
-		private Version version;
-		private Methods methods;
-		private byte[] byteArray;
+	static final class Params {
+		Version version;
+		Methods methods;
+		byte[] byteArray;
 	}
 	
 	public static ClientMethodSelectionMessage newInstance(final byte[] b) {
-		ClientMethodSelectionMessage cmsm;
+		ClientMethodSelectionMessage cmsm = null;
 		try {
-			cmsm = newInstanceFrom(new ByteArrayInputStream(b));
+			cmsm = new ClientMethodSelectionMessageInputStream(
+					new ByteArrayInputStream(
+							b)).readClientMethodSelectionMessage();
 		} catch (IOException e) {
 			throw new IllegalArgumentException(e);
 		}
@@ -50,38 +50,11 @@ public final class ClientMethodSelectionMessage {
 		return new ClientMethodSelectionMessage(params);
 	}
 	
-	public static ClientMethodSelectionMessage newInstanceFrom(
-			final InputStream in) throws IOException {
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		Version ver = Version.valueOfByteFrom(in);
-		out.write(UnsignedByte.newInstance(ver.byteValue()).intValue());
-		UnsignedByte methodCount = UnsignedByte.newInstanceFrom(in);
-		List<Method> meths = new ArrayList<Method>();
-		for (int i = 0; i < methodCount.intValue(); i++) {
-			Method meth = null;
-			try {
-				meth = Method.valueOfByteFrom(in);
-			} catch (Socks5Exception e) {
-				continue;
-			}
-			meths.add(meth);
-		}
-		out.write(meths.size());
-		for (Method meth : meths) {
-			out.write(UnsignedByte.newInstance(meth.byteValue()).intValue());
-		}
-		Params params = new Params();
-		params.version = ver;
-		params.methods = Methods.newInstance(meths);
-		params.byteArray = out.toByteArray();
-		return new ClientMethodSelectionMessage(params);
-	}
-	
 	private final Version version;
 	private final Methods methods;
 	private final byte[] byteArray;
 	
-	private ClientMethodSelectionMessage(final Params params) {
+	ClientMethodSelectionMessage(final Params params) {
 		this.version = params.version;
 		this.methods = params.methods;
 		this.byteArray = params.byteArray;

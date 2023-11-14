@@ -3,17 +3,16 @@ package com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.userpassmethod;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Arrays;
 
 import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
 
 public final class UsernamePasswordResponse {
 
-	private static final class Params {
-		private Version version;
-		private byte status;
-		private byte[] byteArray;
+	static final class Params {
+		Version version;
+		byte status;
+		byte[] byteArray;
 	}
 	
 	public static final byte STATUS_SUCCESS = 0x0;
@@ -32,35 +31,21 @@ public final class UsernamePasswordResponse {
 	}
 	
 	public static UsernamePasswordResponse newInstance(final byte[] b) {
-		UsernamePasswordResponse usernamePasswordResponse;
+		UsernamePasswordResponse response = null;
 		try {
-			usernamePasswordResponse = newInstanceFrom(
-					new ByteArrayInputStream(b));
+			response = new UsernamePasswordResponseInputStream(
+					new ByteArrayInputStream(b)).readUsernamePasswordResponse();
 		} catch (IOException e) {
 			throw new IllegalArgumentException(e);
 		}
-		return usernamePasswordResponse;
-	}
-	
-	public static UsernamePasswordResponse newInstanceFrom(
-			final InputStream in) throws IOException {
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		Version ver = Version.valueOfByteFrom(in);
-		out.write(UnsignedByte.newInstance(ver.byteValue()).intValue());
-		UnsignedByte status = UnsignedByte.newInstanceFrom(in); 
-		out.write(status.intValue());
-		Params params = new Params();
-		params.version = ver;
-		params.status = status.byteValue();
-		params.byteArray = out.toByteArray();
-		return new UsernamePasswordResponse(params);
+		return response;
 	}
 	
 	private final Version version;
 	private final byte status;
 	private final byte[] byteArray;
 	
-	private UsernamePasswordResponse(final Params params) {
+	UsernamePasswordResponse(final Params params) {
 		this.version = params.version;
 		this.status = params.status;
 		this.byteArray = params.byteArray;

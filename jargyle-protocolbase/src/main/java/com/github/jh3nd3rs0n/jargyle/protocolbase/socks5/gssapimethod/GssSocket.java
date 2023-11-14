@@ -62,11 +62,11 @@ final class GssSocket extends FilterSocket {
 					this.closed = true;
 					return b;
 				}
-				Message message = Message.newInstanceFrom(
+				Message message = new MessageInputStream(
 						new SequenceInputStream(
 								new ByteArrayInputStream(
 										new byte[] { (byte) b }),
-								this.in));
+								this.in)).readMessage();
 				byte[] token = message.getToken();
 				MessageProp prop = new MessageProp(0, false);
 				try {

@@ -2,22 +2,20 @@ package com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.EOFException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Objects;
 
 import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
-import com.github.jh3nd3rs0n.jargyle.internal.number.UnsignedShort;
+import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedShort;
 
 public final class Message {
 
-	private static final class Params {
-		private Version version;
-		private MessageType messageType;
-		private int tokenStartIndex;
-		private byte[] byteArray;
+	static final class Params {
+		Version version;
+		MessageType messageType;
+		int tokenStartIndex;
+		byte[] byteArray;
 	}
 	
 	public static final int MAX_HEADER_LENGTH = 4;
@@ -27,9 +25,10 @@ public final class Message {
 	public static final int MAX_LENGTH = MAX_HEADER_LENGTH + MAX_TOKEN_LENGTH;
 	
 	public static Message newInstance(final byte[] b) {
-		Message message;
+		Message message = null;
 		try {
-			message = newInstanceFrom(new ByteArrayInputStream(b));
+			message = new MessageInputStream(new ByteArrayInputStream(
+					b)).readMessage();
 		} catch (IOException e) {
 			throw new IllegalArgumentException(e);
 		}
@@ -79,49 +78,12 @@ public final class Message {
 		return new Message(params);
 	}
 	
-	public static Message newInstanceFrom(
-			final InputStream in) throws IOException {
-		int tknStartIndex = -1;
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		Version ver = Version.valueOfByteFrom(in);
-		tknStartIndex++;
-		out.write(UnsignedByte.newInstance(ver.byteValue()).intValue());
-		MessageType mType = MessageType.valueOfByteFrom(in);
-		tknStartIndex++;
-		out.write(UnsignedByte.newInstance(mType.byteValue()).intValue());
-		if (mType.equals(MessageType.ABORT)) {
-			tknStartIndex++;
-		} else {
-			UnsignedShort len = UnsignedShort.newInstanceFrom(in);
-			byte[] bytes = len.toByteArray();
-			tknStartIndex += bytes.length;
-			out.write(bytes);
-			bytes = new byte[len.intValue()];
-			int bytesRead = in.read(bytes);
-			if (bytesRead != len.intValue()) {
-				throw new EOFException(String.format(
-						"expected token length is %s byte(s). "
-						+ "actual token length is %s byte(s)", 
-						len.intValue(), bytesRead));				
-			}
-			bytes = Arrays.copyOf(bytes, bytesRead);
-			tknStartIndex++;
-			out.write(bytes);
-		}
-		Params params = new Params();
-		params.version = ver;
-		params.messageType = mType;
-		params.tokenStartIndex = tknStartIndex;
-		params.byteArray = out.toByteArray();
-		return new Message(params);
-	}
-	
 	private final Version version;
 	private final MessageType messageType;
 	private final int tokenStartIndex;
 	private final byte[] byteArray;
 	
-	private Message(final Params params) {
+	Message(final Params params) {
 		this.version = params.version;
 		this.messageType = params.messageType;
 		this.tokenStartIndex = params.tokenStartIndex;

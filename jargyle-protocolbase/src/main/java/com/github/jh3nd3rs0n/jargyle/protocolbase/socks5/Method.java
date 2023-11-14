@@ -1,7 +1,5 @@
 package com.github.jh3nd3rs0n.jargyle.protocolbase.socks5;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
@@ -37,18 +35,6 @@ public enum Method {
 				+ "actual value is %s",
 				str,
 				Integer.toHexString(UnsignedByte.newInstance(b).intValue())));
-	}
-	
-	public static Method valueOfByteFrom(
-			final InputStream in) throws IOException {
-		UnsignedByte b = UnsignedByte.newInstanceFrom(in);
-		Method method = null;
-		try {
-			method = valueOfByte(b.byteValue());
-		} catch (IllegalArgumentException e) {
-			throw new Socks5Exception(e);
-		}
-		return method;
 	}
 	
 	public static Method valueOfString(final String s) {

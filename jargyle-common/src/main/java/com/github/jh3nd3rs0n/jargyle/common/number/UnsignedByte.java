@@ -1,9 +1,5 @@
 package com.github.jh3nd3rs0n.jargyle.common.number;
 
-import java.io.EOFException;
-import java.io.IOException;
-import java.io.InputStream;
-
 public final class UnsignedByte {
 
 	public static final int MAX_INT_VALUE = 0xff;
@@ -39,24 +35,6 @@ public final class UnsignedByte {
 					e);
 		}
 		return newInstance(i);
-	}
-	
-	public static UnsignedByte newInstanceFrom(
-			final InputStream in) throws IOException {
-		UnsignedByte b = nullableFrom(in);
-		if (b == null) {
-			throw new EOFException("the end of the input stream is reached");
-		}
-		return b;
-	}
-	
-	public static UnsignedByte nullableFrom(
-			final InputStream in) throws IOException {
-		int b = in.read();
-		if (b == -1) {
-			return null;
-		}
-		return newInstance(b);
 	}
 	
 	private final int intValue;

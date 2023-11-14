@@ -1,7 +1,5 @@
-package com.github.jh3nd3rs0n.jargyle.internal.number;
+package com.github.jh3nd3rs0n.jargyle.common.number;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.nio.ByteBuffer;
 
 public final class UnsignedShort {
@@ -53,25 +51,6 @@ public final class UnsignedShort {
 					e);
 		}
 		return newInstance(i);
-	}
-	
-	public static UnsignedShort newInstanceFrom(
-			final InputStream in) throws IOException {
-		UnsignedShort s = nullableFrom(in);
-		if (s == null) {
-			throw new IOException("the end of the input stream is reached");
-		}
-		return s;
-	}
-	
-	public static UnsignedShort nullableFrom(
-			final InputStream in) throws IOException {
-		byte[] b = new byte[BYTE_ARRAY_LENGTH];
-		int length = in.read(b);
-		if (length != BYTE_ARRAY_LENGTH) {
-			return null;
-		}
-		return newInstance(b);
 	}
 	
 	private final int intValue;

@@ -1,25 +1,23 @@
 package com.github.jh3nd3rs0n.jargyle.protocolbase.socks5;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Arrays;
-
-import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
 
 public final class ServerMethodSelectionMessage {
 
-	private static final class Params {
-		private Version version;
-		private Method method;
-		private byte[] byteArray;
+	static final class Params {
+		Version version;
+		Method method;
+		byte[] byteArray;
 	}
 	
 	public static ServerMethodSelectionMessage newInstance(final byte[] b) {
-		ServerMethodSelectionMessage smsm;
+		ServerMethodSelectionMessage smsm = null;
 		try {
-			smsm = newInstanceFrom(new ByteArrayInputStream(b));
+			smsm = new ServerMethodSelectionMessageInputStream(
+					new ByteArrayInputStream(
+							b)).readServerMethodSelectionMessage();
 		} catch (IOException e) {
 			throw new IllegalArgumentException(e);
 		}
@@ -36,25 +34,11 @@ public final class ServerMethodSelectionMessage {
 		return new ServerMethodSelectionMessage(params);
 	}
 	
-	public static ServerMethodSelectionMessage newInstanceFrom(
-			final InputStream in) throws IOException {
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		Version ver = Version.valueOfByteFrom(in);
-		out.write(UnsignedByte.newInstance(ver.byteValue()).intValue());
-		Method meth = Method.valueOfByteFrom(in);
-		out.write(UnsignedByte.newInstance(meth.byteValue()).intValue());
-		Params params = new Params();
-		params.version = ver;
-		params.method = meth;
-		params.byteArray = out.toByteArray();
-		return new ServerMethodSelectionMessage(params);
-	}
-	
 	private final Version version;
 	private final Method method;
 	private final byte[] byteArray;
 	
-	private ServerMethodSelectionMessage(final Params params) {
+	ServerMethodSelectionMessage(final Params params) {
 		this.version = params.version;
 		this.method = params.method;
 		this.byteArray = params.byteArray;

@@ -20,7 +20,6 @@ import org.slf4j.LoggerFactory;
 
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSetting;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
-import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
 import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
 import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.DtlsDatagramSocketFactory;
 import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.SslSocketFactory;
@@ -410,9 +409,9 @@ public class Worker implements Runnable {
 			this.setClientSocket(clientSocket);
 			InputStream clientInputStream =	
 					this.getClientSocket().getInputStream();
-			UnsignedByte version = null;
+			int version = -1;
 			try {
-				version = UnsignedByte.newInstanceFrom(clientInputStream);
+				version = clientInputStream.read();
 			} catch (IOException e) {
 				this.logClientIoException(
 						ObjectLogMessageHelper.objectLogMessage(
@@ -422,15 +421,24 @@ public class Worker implements Runnable {
 						e);
 				return;
 			}
+			if (version == -1) {
+				this.logClientIoException(
+						ObjectLogMessageHelper.objectLogMessage(
+								this, 
+								"Unable to get the SOCKS version from the "
+								+ "client (Client closed the connection)"), 
+						new EOFException());
+				return;				
+			}
 			this.selectedRoute = this.selectClientRoute();
-			if (version.byteValue() == Version.V5.byteValue()) {
+			if ((byte) version == Version.V5.byteValue()) {
 				Socks5Worker socks5Worker = new Socks5Worker(this);
 				socks5Worker.run();
 			} else {
 				this.logger.error(ObjectLogMessageHelper.objectLogMessage(
 						this, 
 						"Unknown SOCKS version: %s",
-						version.intValue()));
+						version));
 			}
 		} catch (Throwable t) {
 			this.logger.error(

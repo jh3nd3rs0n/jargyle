@@ -1,7 +1,5 @@
 package com.github.jh3nd3rs0n.jargyle.protocolbase.socks5;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
@@ -52,18 +50,6 @@ public enum Command {
 				+ "actual value is %s",
 				str,
 				Integer.toHexString(UnsignedByte.newInstance(b).intValue())));
-	}
-	
-	public static Command valueOfByteFrom(
-			final InputStream in) throws IOException {
-		UnsignedByte b = UnsignedByte.newInstanceFrom(in);
-		Command command = null;
-		try {
-			command = valueOfByte(b.byteValue());
-		} catch (IllegalArgumentException e) {
-			throw new CommandNotSupportedException(b);
-		}
-		return command;
 	}
 	
 	public static Command valueOfString(final String s) {

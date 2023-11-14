@@ -1,9 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.common.net;
 
-import java.io.IOException;
-import java.io.InputStream;
-
-import com.github.jh3nd3rs0n.jargyle.internal.number.UnsignedShort;
+import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedShort;
 
 public final class Port implements Comparable<Port> {
 
@@ -26,17 +23,7 @@ public final class Port implements Comparable<Port> {
 		return new Port(UnsignedShort.newInstance(s));
 	}
 	
-	public static Port newInstanceFrom(
-			final InputStream in) throws IOException {
-		return new Port(UnsignedShort.newInstanceFrom(in));
-	}
-	
-	public static Port nullableFrom(
-			final InputStream in) throws IOException {
-		UnsignedShort s = UnsignedShort.nullableFrom(in);
-		if (s == null) {
-			return null;
-		}
+	public static Port newInstance(final UnsignedShort s) {
 		return new Port(s);
 	}
 	
@@ -96,6 +83,10 @@ public final class Port implements Comparable<Port> {
 	
 	public String toString() {
 		return this.unsignedShortValue.toString();
+	}
+	
+	public UnsignedShort toUnsignedShort() {
+		return this.unsignedShortValue;
 	}
 	
 }

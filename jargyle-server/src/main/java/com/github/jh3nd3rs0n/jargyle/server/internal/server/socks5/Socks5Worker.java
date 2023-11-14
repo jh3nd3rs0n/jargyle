@@ -2,7 +2,6 @@ package com.github.jh3nd3rs0n.jargyle.server.internal.server.socks5;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.SequenceInputStream;
 import java.io.UncheckedIOException;
 import java.net.Socket;
@@ -19,12 +18,14 @@ import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.AddressTypeNotSupported
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.ClientMethodSelectionMessage;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.CommandNotSupportedException;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Method;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.ClientMethodSelectionMessageInputStream;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.MethodSubnegotiationException;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Methods;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Reply;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.ServerMethodSelectionMessage;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Socks5Reply;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Socks5Request;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Socks5RequestInputStream;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Version;
 import com.github.jh3nd3rs0n.jargyle.server.FirewallAction;
 import com.github.jh3nd3rs0n.jargyle.server.GeneralRuleResultSpecConstants;
@@ -44,7 +45,7 @@ import com.github.jh3nd3rs0n.jargyle.server.internal.server.Worker;
 
 public class Socks5Worker extends Worker {
 
-	private InputStream clientInputStream;
+	private Socks5RequestInputStream clientInputStream;
 	private final Logger logger;
 	
 	public Socks5Worker(final Worker worker) {
@@ -250,12 +251,15 @@ public class Socks5Worker extends Worker {
 	}
 	
 	private Method negotiateMethod() {
-		InputStream in = new SequenceInputStream(new ByteArrayInputStream(
-				new byte[] { Version.V5.byteValue() }),
-				this.clientInputStream);
+		ClientMethodSelectionMessageInputStream in = 
+				new ClientMethodSelectionMessageInputStream(
+						new SequenceInputStream(
+								new ByteArrayInputStream(
+										new byte[] { Version.V5.byteValue() }),
+								this.clientInputStream));
 		ClientMethodSelectionMessage cmsm = null;
 		try {
-			cmsm = ClientMethodSelectionMessage.newInstanceFrom(in);
+			cmsm = in.readClientMethodSelectionMessage();
 		} catch (IOException e) {
 			this.logClientIoException(
 					ObjectLogMessageHelper.objectLogMessage(
@@ -304,8 +308,7 @@ public class Socks5Worker extends Worker {
 	private Socks5Request newSocks5Request() {
 		Socks5Request socks5Request = null;
 		try {
-			socks5Request = Socks5Request.newInstanceFrom(
-					this.clientInputStream);
+			socks5Request = this.clientInputStream.readSocks5Request();
 		} catch (AddressTypeNotSupportedException e) {
 			this.logger.debug( 
 					ObjectLogMessageHelper.objectLogMessage(
@@ -393,14 +396,16 @@ public class Socks5Worker extends Worker {
 	@Override
 	public void run() {
 		try {
-			this.clientInputStream = this.getClientSocket().getInputStream();
+			this.clientInputStream = new Socks5RequestInputStream(
+					this.getClientSocket().getInputStream());
 			Method method = this.negotiateMethod();
 			if (method == null) { return; } 
 			MethodSubnegotiationResults methodSubnegotiationResults = 
 					this.doMethodSubnegotiation(method);
 			if (methodSubnegotiationResults == null) { return; }
 			Socket socket = methodSubnegotiationResults.getSocket();
-			this.clientInputStream = socket.getInputStream();
+			this.clientInputStream = new Socks5RequestInputStream(
+					socket.getInputStream());
 			this.setClientSocket(socket);
 			Socks5Request socks5Request = this.newSocks5Request();
 			if (socks5Request == null) { return; }

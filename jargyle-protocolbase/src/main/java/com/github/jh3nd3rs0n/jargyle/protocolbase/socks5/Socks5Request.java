@@ -3,7 +3,6 @@ package com.github.jh3nd3rs0n.jargyle.protocolbase.socks5;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Arrays;
 
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
@@ -11,21 +10,22 @@ import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
 
 public final class Socks5Request {
 
-	private static final class Params {
-		private Version version;
-		private Command command;
-		private AddressType addressType;
-		private Address desiredDestinationAddress;
-		private Port desiredDestinationPort;
-		private byte[] byteArray;
+	static final class Params {
+		Version version;
+		Command command;
+		AddressType addressType;
+		Address desiredDestinationAddress;
+		Port desiredDestinationPort;
+		byte[] byteArray;
 	}
 	
-	private static final int RSV = 0x00;
+	static final int RSV = 0x00;
 	
 	public static Socks5Request newInstance(final byte[] b) {
-		Socks5Request socks5Request;
+		Socks5Request socks5Request = null;
 		try {
-			socks5Request = newInstanceFrom(new ByteArrayInputStream(b));
+			socks5Request = new Socks5RequestInputStream(new ByteArrayInputStream(
+					b)).readSocks5Request();
 		} catch (IOException e) {
 			throw new IllegalArgumentException(e);
 		}
@@ -41,8 +41,6 @@ public final class Socks5Request {
 		out.write(UnsignedByte.newInstance(version.byteValue()).intValue());
 		out.write(UnsignedByte.newInstance(command.byteValue()).intValue());
 		out.write(RSV);
-		AddressType addressType = desiredDestinationAddress.getAddressType();
-		out.write(UnsignedByte.newInstance(addressType.byteValue()).intValue());
 		try {
 			out.write(desiredDestinationAddress.toByteArray());
 		} catch (IOException e) {
@@ -56,39 +54,9 @@ public final class Socks5Request {
 		Params params = new Params();
 		params.version = version;
 		params.command = command;
-		params.addressType = addressType;
+		params.addressType = desiredDestinationAddress.getAddressType();
 		params.desiredDestinationAddress = desiredDestinationAddress;
 		params.desiredDestinationPort = desiredDestinationPort;
-		params.byteArray = out.toByteArray();
-		return new Socks5Request(params);
-	}
-	
-	public static Socks5Request newInstanceFrom(
-			final InputStream in) throws IOException {
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		Version ver = Version.valueOfByteFrom(in);
-		out.write(UnsignedByte.newInstance(ver.byteValue()).intValue());
-		Command cmd = Command.valueOfByteFrom(in);
-		out.write(UnsignedByte.newInstance(cmd.byteValue()).intValue());
-		UnsignedByte rsv = UnsignedByte.newInstanceFrom(in);
-		if (rsv.intValue() != RSV) {
-			throw new Socks5Exception(String.format(
-					"expected RSV is %s, actual RSV is %s", 
-					RSV, rsv.intValue()));
-		}
-		out.write(rsv.intValue());
-		Address dstAddr = Address.newInstanceFrom(in);
-		AddressType atyp = dstAddr.getAddressType(); 
-		out.write(UnsignedByte.newInstance(atyp.byteValue()).intValue());
-		out.write(dstAddr.toByteArray());
-		Port dstPort = Port.newInstanceFrom(in);
-		out.write(dstPort.toByteArray());
-		Params params = new Params();
-		params.version = ver;
-		params.command = cmd;
-		params.addressType = atyp;
-		params.desiredDestinationAddress = dstAddr;
-		params.desiredDestinationPort = dstPort;
 		params.byteArray = out.toByteArray();
 		return new Socks5Request(params);
 	}
@@ -100,7 +68,7 @@ public final class Socks5Request {
 	private final Port desiredDestinationPort;
 	private final byte[] byteArray;
 	
-	private Socks5Request(final Params params) {
+	Socks5Request(final Params params) {
 		this.version = params.version;
 		this.command = params.command;
 		this.addressType = params.addressType;

@@ -1,20 +1,25 @@
 package com.github.jh3nd3rs0n.jargyle.protocolbase.socks5;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Arrays;
 
 public final class Address {
 
+	public static Address newInstance(final byte[] b) {
+		Address address = null;
+		try {
+			address = new AddressInputStream(new ByteArrayInputStream(
+					b)).readAddress();
+		} catch (IOException e) {
+			throw new IllegalArgumentException(e);
+		}
+		return address;
+	}
+	
 	public static Address newInstance(final String string) {
 		AddressType addressType = AddressType.valueForString(string);
 		return addressType.newAddress(string);
-	}
-	
-	public static Address newInstanceFrom(
-			final InputStream in) throws IOException {
-		AddressType addressType = AddressType.valueOfByteFrom(in);
-		return addressType.newAddressFrom(in);
 	}
 	
 	private final AddressType addressType;

@@ -12,32 +12,35 @@ import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Socks5Request;
 public class Socks5RequestTest {
 
 	@Test
-	public void testNewInstanceCommandStringInt01() {
+	public void testNewInstanceCommandAddressPort01() {
 		Socks5Request socks5Request1 = Socks5Request.newInstance(
 				Command.CONNECT, 
 				Address.newInstance("12.216.103.24"), 
 				Port.newInstance(0));
-		Socks5Request socks5Request2 = Socks5Request.newInstance(socks5Request1.toByteArray());
+		Socks5Request socks5Request2 = Socks5Request.newInstance(
+				socks5Request1.toByteArray());
 		assertEquals(socks5Request1, socks5Request2);
 	}
 
 	@Test
-	public void testNewInstanceCommandStringInt02() {
+	public void testNewInstanceCommandAddressPort02() {
 		Socks5Request socks5Request1 = Socks5Request.newInstance(
 				Command.BIND, 
 				Address.newInstance("google.com"), 
 				Port.newInstance(1234));
-		Socks5Request socks5Request2 = Socks5Request.newInstance(socks5Request1.toByteArray());
+		Socks5Request socks5Request2 = Socks5Request.newInstance(
+				socks5Request1.toByteArray());
 		assertEquals(socks5Request1, socks5Request2);
 	}
 
 	@Test
-	public void testNewInstanceCommandStringInt03() {
+	public void testNewInstanceCommandAddressPort03() {
 		Socks5Request socks5Request1 = Socks5Request.newInstance(
 				Command.UDP_ASSOCIATE, 
 				Address.newInstance("abcd:1234:ef56:abcd:789e:f123:456a:b789"), 
 				Port.newInstance(0xffff));
-		Socks5Request socks5Request2 = Socks5Request.newInstance(socks5Request1.toByteArray());
+		Socks5Request socks5Request2 = Socks5Request.newInstance(
+				socks5Request1.toByteArray());
 		assertEquals(socks5Request1, socks5Request2);
 	}
 

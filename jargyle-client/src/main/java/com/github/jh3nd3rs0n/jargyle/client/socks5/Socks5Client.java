@@ -1,7 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.client.socks5;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -16,9 +15,11 @@ import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.DtlsDatagramSocketFactory;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.ClientMethodSelectionMessage;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Method;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.MethodEncapsulation;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.ServerMethodSelectionMessageInputStream;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Methods;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Reply;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.ServerMethodSelectionMessage;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Socks5ReplyInputStream;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Socks5Reply;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Socks5Request;
 
@@ -85,13 +86,15 @@ public final class Socks5Client extends SocksClient {
 				Socks5PropertySpecConstants.SOCKS5_METHODS);
 		ClientMethodSelectionMessage cmsm = 
 				ClientMethodSelectionMessage.newInstance(methods);
-		InputStream inputStream = connectedClientSocket.getInputStream();
+		ServerMethodSelectionMessageInputStream inputStream = 
+				new ServerMethodSelectionMessageInputStream(
+						connectedClientSocket.getInputStream());
 		OutputStream outputStream = 
 				connectedClientSocket.getOutputStream();
 		outputStream.write(cmsm.toByteArray());
 		outputStream.flush();
 		ServerMethodSelectionMessage smsm =
-				ServerMethodSelectionMessage.newInstanceFrom(inputStream);
+				inputStream.readServerMethodSelectionMessage();
 		return smsm.getMethod();
 	}
 	
@@ -119,8 +122,9 @@ public final class Socks5Client extends SocksClient {
 	
 	protected Socks5Reply receiveSocks5Reply(
 			final Socket connectedClientSocket) throws IOException {
-		InputStream inputStream = connectedClientSocket.getInputStream();
-		Socks5Reply socks5Rep = Socks5Reply.newInstanceFrom(inputStream);
+		Socks5ReplyInputStream inputStream = new Socks5ReplyInputStream(
+				connectedClientSocket.getInputStream());
+		Socks5Reply socks5Rep = inputStream.readSocks5Reply();
 		Reply reply = socks5Rep.getReply();
 		if (!reply.equals(Reply.SUCCEEDED)) {
 			throw new FailureSocks5ReplyException(this, socks5Rep);			

@@ -104,7 +104,7 @@ public class ClientMethodSelectionMessageTest {
 				ClientMethodSelectionMessage.newInstance(
 						Methods.newInstance(
 								Method.NO_AUTHENTICATION_REQUIRED));
-		ClientMethodSelectionMessage cmsm2 =
+		ClientMethodSelectionMessage cmsm2 = 
 				ClientMethodSelectionMessage.newInstance(cmsm1.toByteArray());
 		assertEquals(cmsm1, cmsm2);
 	}
@@ -116,7 +116,7 @@ public class ClientMethodSelectionMessageTest {
 						Methods.newInstance(
 								Method.NO_AUTHENTICATION_REQUIRED,
 								Method.USERNAME_PASSWORD));
-		ClientMethodSelectionMessage cmsm2 =
+		ClientMethodSelectionMessage cmsm2 = 
 				ClientMethodSelectionMessage.newInstance(cmsm1.toByteArray());
 		assertEquals(cmsm1, cmsm2);
 	}
@@ -129,7 +129,7 @@ public class ClientMethodSelectionMessageTest {
 								Method.NO_AUTHENTICATION_REQUIRED,
 								Method.GSSAPI,
 								Method.USERNAME_PASSWORD));
-		ClientMethodSelectionMessage cmsm2 =
+		ClientMethodSelectionMessage cmsm2 = 
 				ClientMethodSelectionMessage.newInstance(cmsm1.toByteArray());
 		assertEquals(cmsm1, cmsm2);
 	}
@@ -138,7 +138,7 @@ public class ClientMethodSelectionMessageTest {
 	public void testNewInstanceMethods04() {
 		ClientMethodSelectionMessage cmsm1 = 
 				ClientMethodSelectionMessage.newInstance(Methods.newInstance());
-		ClientMethodSelectionMessage cmsm2 =
+		ClientMethodSelectionMessage cmsm2 = 
 				ClientMethodSelectionMessage.newInstance(cmsm1.toByteArray());
 		assertEquals(cmsm1, cmsm2);		
 	}
@@ -151,7 +151,7 @@ public class ClientMethodSelectionMessageTest {
 								Method.NO_AUTHENTICATION_REQUIRED,
 								Method.GSSAPI,
 								Method.NO_AUTHENTICATION_REQUIRED));
-		ClientMethodSelectionMessage cmsm2 =
+		ClientMethodSelectionMessage cmsm2 = 
 				ClientMethodSelectionMessage.newInstance(cmsm1.toByteArray());
 		assertEquals(cmsm1, cmsm2);		
 	}
@@ -164,7 +164,7 @@ public class ClientMethodSelectionMessageTest {
 								Method.GSSAPI,
 								Method.GSSAPI,
 								Method.USERNAME_PASSWORD));
-		ClientMethodSelectionMessage cmsm2 =
+		ClientMethodSelectionMessage cmsm2 = 
 				ClientMethodSelectionMessage.newInstance(cmsm1.toByteArray());
 		assertEquals(cmsm1, cmsm2);		
 	}
@@ -177,7 +177,7 @@ public class ClientMethodSelectionMessageTest {
 								Method.NO_AUTHENTICATION_REQUIRED,
 								Method.USERNAME_PASSWORD,
 								Method.USERNAME_PASSWORD));
-		ClientMethodSelectionMessage cmsm2 =
+		ClientMethodSelectionMessage cmsm2 = 
 				ClientMethodSelectionMessage.newInstance(cmsm1.toByteArray());
 		assertEquals(cmsm1, cmsm2);		
 	}
@@ -190,7 +190,7 @@ public class ClientMethodSelectionMessageTest {
 								Method.NO_AUTHENTICATION_REQUIRED,
 								Method.NO_AUTHENTICATION_REQUIRED,
 								Method.NO_AUTHENTICATION_REQUIRED));
-		ClientMethodSelectionMessage cmsm2 =
+		ClientMethodSelectionMessage cmsm2 = 
 				ClientMethodSelectionMessage.newInstance(cmsm1.toByteArray());
 		assertEquals(cmsm1, cmsm2);		
 	}

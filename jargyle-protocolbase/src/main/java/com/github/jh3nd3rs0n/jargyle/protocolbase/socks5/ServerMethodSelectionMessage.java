@@ -15,9 +15,8 @@ public final class ServerMethodSelectionMessage {
 	public static ServerMethodSelectionMessage newInstance(final byte[] b) {
 		ServerMethodSelectionMessage smsm = null;
 		try {
-			smsm = new ServerMethodSelectionMessageInputStream(
-					new ByteArrayInputStream(
-							b)).readServerMethodSelectionMessage();
+			smsm = ServerMethodSelectionMessageInputHelper.readServerMethodSelectionMessageFrom(
+					new ByteArrayInputStream(b));
 		} catch (IOException e) {
 			throw new IllegalArgumentException(e);
 		}

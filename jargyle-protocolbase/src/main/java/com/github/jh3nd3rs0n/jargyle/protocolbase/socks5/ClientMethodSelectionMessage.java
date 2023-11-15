@@ -19,9 +19,8 @@ public final class ClientMethodSelectionMessage {
 	public static ClientMethodSelectionMessage newInstance(final byte[] b) {
 		ClientMethodSelectionMessage cmsm = null;
 		try {
-			cmsm = new ClientMethodSelectionMessageInputStream(
-					new ByteArrayInputStream(
-							b)).readClientMethodSelectionMessage();
+			cmsm = ClientMethodSelectionMessageInputHelper.readClientMethodSelectionMessageFrom(
+					new ByteArrayInputStream(b));
 		} catch (IOException e) {
 			throw new IllegalArgumentException(e);
 		}

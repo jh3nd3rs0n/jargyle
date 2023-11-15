@@ -8,33 +8,32 @@ import java.util.Arrays;
 
 import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
 import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedShort;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.internal.UnsignedByteInputHelper;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.internal.UnsignedShortInputHelper;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Socks5Exception;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Socks5InputStream;
 
-public final class MessageInputStream extends Socks5InputStream {
-
-	public MessageInputStream(final InputStream in) {
-		super(in);
-	}
+public final class MessageInputHelper {
 	
-	public Message readMessage() throws IOException {
+	public static Message readMessageFrom(
+			final InputStream in) throws IOException {
 		int tknStartIndex = -1;
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		Version ver = this.readVersion();
+		Version ver = readVersionFrom(in);
 		tknStartIndex++;
 		out.write(UnsignedByte.newInstance(ver.byteValue()).intValue());
-		MessageType mType = this.readMessageType();
+		MessageType mType = readMessageTypeFrom(in);
 		tknStartIndex++;
 		out.write(UnsignedByte.newInstance(mType.byteValue()).intValue());
 		if (mType.equals(MessageType.ABORT)) {
 			tknStartIndex++;
 		} else {
-			UnsignedShort len = this.readUnsignedShort();
+			UnsignedShort len = UnsignedShortInputHelper.readUnsignedShortFrom(
+					in);
 			byte[] bytes = len.toByteArray();
 			tknStartIndex += bytes.length;
 			out.write(bytes);
 			bytes = new byte[len.intValue()];
-			int bytesRead = this.in.read(bytes);
+			int bytesRead = in.read(bytes);
 			if (bytesRead != len.intValue()) {
 				throw new EOFException(String.format(
 						"expected token length is %s byte(s). "
@@ -53,8 +52,9 @@ public final class MessageInputStream extends Socks5InputStream {
 		return new Message(params);		
 	}
 	
-	private MessageType readMessageType() throws IOException {
-		UnsignedByte b = this.readUnsignedByte();
+	private static MessageType readMessageTypeFrom(
+			final InputStream in) throws IOException {
+		UnsignedByte b = UnsignedByteInputHelper.readUnsignedByteFrom(in);
 		MessageType messageType = null;
 		try {
 			messageType = MessageType.valueOfByte(b.byteValue());
@@ -64,8 +64,9 @@ public final class MessageInputStream extends Socks5InputStream {
 		return messageType;		
 	}
 	
-	private Version readVersion() throws IOException {
-		UnsignedByte b = this.readUnsignedByte();
+	private static Version readVersionFrom(
+			final InputStream in) throws IOException {
+		UnsignedByte b = UnsignedByteInputHelper.readUnsignedByteFrom(in);
 		Version version = null;
 		try {
 			version = Version.valueOfByte(b.byteValue());
@@ -74,5 +75,7 @@ public final class MessageInputStream extends Socks5InputStream {
 		}
 		return version;		
 	}
+	
+	private MessageInputHelper() { }
 
 }

@@ -4,16 +4,13 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.internal.UnsignedByteInputHelper;
 
-public class MethodSelectionMessageInputStream 
-	extends Socks5MessageInputStream {
-
-	MethodSelectionMessageInputStream(final InputStream in) {
-		super(in);
-	}
+final class MethodInputHelper {
 	
-	final Method readMethod() throws IOException {
-		UnsignedByte b = this.readUnsignedByte();
+	public static Method readMethodFrom(
+			final InputStream in) throws IOException {
+		UnsignedByte b = UnsignedByteInputHelper.readUnsignedByteFrom(in);
 		Method method = null;
 		try {
 			method = Method.valueOfByte(b.byteValue());
@@ -22,5 +19,7 @@ public class MethodSelectionMessageInputStream
 		}
 		return method;		
 	}
-
+	
+	private MethodInputHelper() { }
+	
 }

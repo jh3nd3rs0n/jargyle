@@ -33,8 +33,9 @@ public final class UsernamePasswordResponse {
 	public static UsernamePasswordResponse newInstance(final byte[] b) {
 		UsernamePasswordResponse response = null;
 		try {
-			response = new UsernamePasswordResponseInputStream(
-					new ByteArrayInputStream(b)).readUsernamePasswordResponse();
+			response = 
+					UsernamePasswordResponseInputHelper.readUsernamePasswordResponseFrom(
+							new ByteArrayInputStream(b));
 		} catch (IOException e) {
 			throw new IllegalArgumentException(e);
 		}

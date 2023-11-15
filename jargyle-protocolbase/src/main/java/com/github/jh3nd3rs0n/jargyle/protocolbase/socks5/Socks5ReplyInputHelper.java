@@ -6,16 +6,13 @@ import java.io.InputStream;
 
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.internal.UnsignedByteInputHelper;
 
-public final class Socks5ReplyInputStream 
-	extends PostMethodSubnegotiationMessageInputStream {
-
-	public Socks5ReplyInputStream(final InputStream in) {
-		super(in);
-	}
+public final class Socks5ReplyInputHelper {
 	
-	private Reply readReply() throws IOException {
-		UnsignedByte b = this.readUnsignedByte();
+	private static Reply readReplyFrom(
+			final InputStream in) throws IOException {
+		UnsignedByte b = UnsignedByteInputHelper.readUnsignedByteFrom(in);
 		Reply reply = null;
 		try {
 			reply = Reply.valueOfByte(b.byteValue());
@@ -25,22 +22,23 @@ public final class Socks5ReplyInputStream
 		return reply;
 	}
 	
-	public Socks5Reply readSocks5Reply() throws IOException {
+	public static Socks5Reply readSocks5ReplyFrom(
+			final InputStream in) throws IOException {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		Version ver = this.readVersion();
+		Version ver = VersionInputHelper.readVersionFrom(in);
 		out.write(UnsignedByte.newInstance(ver.byteValue()).intValue());
-		Reply rep = this.readReply();
+		Reply rep = readReplyFrom(in);
 		out.write(UnsignedByte.newInstance(rep.byteValue()).intValue());
-		UnsignedByte rsv = this.readUnsignedByte();
+		UnsignedByte rsv = UnsignedByteInputHelper.readUnsignedByteFrom(in);
 		if (rsv.intValue() != Socks5Reply.RSV) {
 			throw new Socks5Exception(String.format(
 					"expected RSV is %s, actual RSV is %s", 
 					Socks5Reply.RSV, rsv.intValue()));
 		}
 		out.write(rsv.intValue());
-		Address bndAddr = this.readAddress();
+		Address bndAddr = AddressInputHelper.readAddressFrom(in);
 		out.write(bndAddr.toByteArray());
-		Port bndPort = this.readPort();
+		Port bndPort = PortInputHelper.readPortFrom(in);
 		out.write(bndPort.toByteArray());
 		Socks5Reply.Params params = new Socks5Reply.Params();
 		params.version = ver;
@@ -51,5 +49,7 @@ public final class Socks5ReplyInputStream
 		params.byteArray = out.toByteArray();
 		return new Socks5Reply(params);		
 	}
+	
+	private Socks5ReplyInputHelper() { }
 
 }

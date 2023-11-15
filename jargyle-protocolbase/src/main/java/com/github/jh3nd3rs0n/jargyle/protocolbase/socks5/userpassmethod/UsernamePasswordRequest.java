@@ -59,8 +59,9 @@ public final class UsernamePasswordRequest {
 	public static UsernamePasswordRequest newInstance(final byte[] b) {
 		UsernamePasswordRequest request = null;
 		try {
-			request = new UsernamePasswordRequestInputStream(
-					new ByteArrayInputStream(b)).readUsernamePasswordRequest();
+			request = 
+					UsernamePasswordRequestInputHelper.readUsernamePasswordRequestFrom(
+							new ByteArrayInputStream(b));
 		} catch (IOException e) {
 			throw new IllegalArgumentException(e);
 		}

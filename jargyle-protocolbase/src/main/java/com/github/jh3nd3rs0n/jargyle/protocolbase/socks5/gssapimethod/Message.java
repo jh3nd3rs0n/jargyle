@@ -27,8 +27,8 @@ public final class Message {
 	public static Message newInstance(final byte[] b) {
 		Message message = null;
 		try {
-			message = new MessageInputStream(new ByteArrayInputStream(
-					b)).readMessage();
+			message = MessageInputHelper.readMessageFrom(
+					new ByteArrayInputStream(b));
 		} catch (IOException e) {
 			throw new IllegalArgumentException(e);
 		}

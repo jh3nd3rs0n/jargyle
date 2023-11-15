@@ -35,8 +35,8 @@ public final class Socks5Reply {
 	public static Socks5Reply newInstance(final byte[] b) {
 		Socks5Reply socks5Reply = null;
 		try {
-			socks5Reply = new Socks5ReplyInputStream(new ByteArrayInputStream(
-					b)).readSocks5Reply();
+			socks5Reply = Socks5ReplyInputHelper.readSocks5ReplyFrom(
+					new ByteArrayInputStream(b));
 		} catch (IOException e) {
 			throw new IllegalArgumentException(e);
 		}

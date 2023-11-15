@@ -10,22 +10,19 @@ import java.io.Reader;
 import java.util.Arrays;
 
 import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.internal.UnsignedByteInputHelper;
 
-public final class UsernamePasswordRequestInputStream 
-	extends UsernamePasswordMessageInputStream {
-
-	public UsernamePasswordRequestInputStream(final InputStream in) {
-		super(in);
-	}
+public final class UsernamePasswordRequestInputHelper {
 	
-	public UsernamePasswordRequest readUsernamePasswordRequest() throws IOException {
+	public static UsernamePasswordRequest readUsernamePasswordRequestFrom(
+			final InputStream in) throws IOException {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		Version ver = this.readVersion();
+		Version ver = VersionInputHelper.readVersionFrom(in);
 		out.write(UnsignedByte.newInstance(ver.byteValue()).intValue());
-		UnsignedByte ulen = this.readUnsignedByte();
+		UnsignedByte ulen = UnsignedByteInputHelper.readUnsignedByteFrom(in);
 		out.write(ulen.intValue());
 		byte[] bytes = new byte[ulen.intValue()];
-		int bytesRead = this.in.read(bytes);
+		int bytesRead = in.read(bytes);
 		if (bytesRead != ulen.intValue()) {
 			throw new EOFException(String.format(
 					"expected username length is %s byte(s). "
@@ -35,10 +32,10 @@ public final class UsernamePasswordRequestInputStream
 		bytes = Arrays.copyOf(bytes, bytesRead);
 		String uname = new String(bytes);
 		out.write(bytes);
-		UnsignedByte plen = this.readUnsignedByte(); 
+		UnsignedByte plen = UnsignedByteInputHelper.readUnsignedByteFrom(in); 
 		out.write(plen.intValue());
 		bytes = new byte[plen.intValue()];
-		bytesRead = this.in.read(bytes);
+		bytesRead = in.read(bytes);
 		if (bytesRead != plen.intValue()) {
 			throw new EOFException(String.format(
 					"expected password length is %s byte(s). "
@@ -72,4 +69,6 @@ public final class UsernamePasswordRequestInputStream
 		return new UsernamePasswordRequest(params);		
 	}
 
+	private UsernamePasswordRequestInputHelper() { }
+	
 }

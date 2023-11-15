@@ -6,18 +6,14 @@ import java.io.InputStream;
 
 import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
 
-public final class ServerMethodSelectionMessageInputStream 
-	extends MethodSelectionMessageInputStream {
-
-	public ServerMethodSelectionMessageInputStream(InputStream in) {
-		super(in);
-	}
+public final class ServerMethodSelectionMessageInputHelper {
 	
-	public ServerMethodSelectionMessage readServerMethodSelectionMessage() throws IOException {
+	public static ServerMethodSelectionMessage readServerMethodSelectionMessageFrom(
+			final InputStream in) throws IOException {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		Version ver = this.readVersion();
+		Version ver = VersionInputHelper.readVersionFrom(in);
 		out.write(UnsignedByte.newInstance(ver.byteValue()).intValue());
-		Method meth = this.readMethod();
+		Method meth = MethodInputHelper.readMethodFrom(in);
 		out.write(UnsignedByte.newInstance(meth.byteValue()).intValue());
 		ServerMethodSelectionMessage.Params params = 
 				new ServerMethodSelectionMessage.Params();
@@ -26,5 +22,7 @@ public final class ServerMethodSelectionMessageInputStream
 		params.byteArray = out.toByteArray();
 		return new ServerMethodSelectionMessage(params);		
 	}
+	
+	private ServerMethodSelectionMessageInputHelper() { }
 
 }

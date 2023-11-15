@@ -25,8 +25,9 @@ public final class UdpRequestHeader {
 	public static UdpRequestHeader newInstance(final byte[] b) {
 		UdpRequestHeader udpRequestHeader = null;
 		try {
-			udpRequestHeader = new UdpRequestHeaderInputStream(
-					new ByteArrayInputStream(b)).readUdpRequestHeader();
+			udpRequestHeader = 
+					UdpRequestHeaderInputHelper.readUdpRequestHeaderFrom(
+							new ByteArrayInputStream(b));
 		} catch (IOException e) {
 			throw new IllegalArgumentException(e);
 		}

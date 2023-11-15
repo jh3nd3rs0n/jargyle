@@ -4,15 +4,13 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.internal.UnsignedByteInputHelper;
 
-public class Socks5MessageInputStream extends Socks5InputStream {
-
-	Socks5MessageInputStream(final InputStream in) {
-		super(in);
-	}
+final class VersionInputHelper {
 	
-	final Version readVersion() throws IOException {
-		UnsignedByte b = this.readUnsignedByte();
+	public static Version readVersionFrom(
+			final InputStream in) throws IOException {
+		UnsignedByte b = UnsignedByteInputHelper.readUnsignedByteFrom(in);
 		Version version = null;
 		try {
 			version = Version.valueOfByte(b.byteValue());
@@ -21,5 +19,7 @@ public class Socks5MessageInputStream extends Socks5InputStream {
 		}
 		return version;
 	}
-
+	
+	private VersionInputHelper() { }
+	
 }

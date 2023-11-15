@@ -11,25 +11,23 @@ import java.net.UnknownHostException;
 import java.util.Arrays;
 
 import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.internal.UnsignedByteInputHelper;
 
-final class AddressInputStream extends Socks5InputStream {
-
-	public AddressInputStream(final InputStream in) {
-		super(in);
-	}
+final class AddressInputHelper {
 	
-	public Address readAddress() throws IOException {
-		AddressType addressType = this.readAddressType();
+	public static Address readAddressFrom(
+			final InputStream in) throws IOException {
+		AddressType addressType = readAddressTypeFrom(in);
 		Address address = null;
 		switch (addressType) {
 		case IPV4:
-			address = this.readIpv4Address();
+			address = readIpv4AddressFrom(in);
 			break;
 		case DOMAINNAME:
-			address = this.readDomainnameAddress();
+			address = readDomainnameAddressFrom(in);
 			break;
 		case IPV6:
-			address = this.readIpv6Address();
+			address = readIpv6AddressFrom(in);
 			break;
 		default:
 			throw new AddressTypeNotSupportedException(UnsignedByte.newInstance(
@@ -38,8 +36,9 @@ final class AddressInputStream extends Socks5InputStream {
 		return address;
 	}
 	
-	private AddressType readAddressType() throws IOException {
-		UnsignedByte b = this.readUnsignedByte();
+	private static AddressType readAddressTypeFrom(
+			final InputStream in) throws IOException {
+		UnsignedByte b = UnsignedByteInputHelper.readUnsignedByteFrom(in);
 		AddressType addressType = null;
 		try {
 			addressType = AddressType.valueOfByte(b.byteValue());
@@ -49,10 +48,12 @@ final class AddressInputStream extends Socks5InputStream {
 		return addressType;
 	}
 	
-	private Address readDomainnameAddress() throws IOException {
-		UnsignedByte octetCount = this.readUnsignedByte();
+	private static Address readDomainnameAddressFrom(
+			final InputStream in) throws IOException {
+		UnsignedByte octetCount = UnsignedByteInputHelper.readUnsignedByteFrom(
+				in);
 		byte[] bytes = new byte[octetCount.intValue()];
-		int bytesRead = this.in.read(bytes);
+		int bytesRead = in.read(bytes);
 		if (octetCount.intValue() != bytesRead) {
 			throw new EOFException(String.format(
 					"expected address length is %s. "
@@ -75,10 +76,11 @@ final class AddressInputStream extends Socks5InputStream {
 		return new Address(AddressType.DOMAINNAME, out.toByteArray(), string);		
 	}
 	
-	private Address readIpv4Address() throws IOException {
+	private static Address readIpv4AddressFrom(
+			final InputStream in) throws IOException {
 		final int ADDRESS_LENGTH = 4;
 		byte[] bytes = new byte[ADDRESS_LENGTH];
-		int bytesRead = this.in.read(bytes);
+		int bytesRead = in.read(bytes);
 		if (bytesRead != ADDRESS_LENGTH) { 
 			throw new EOFException(String.format(
 					"expected address length is %s. "
@@ -111,10 +113,11 @@ final class AddressInputStream extends Socks5InputStream {
 				inetAddress.getHostAddress());
 	}
 	
-	private Address readIpv6Address() throws IOException {
+	private static Address readIpv6AddressFrom(
+			final InputStream in) throws IOException {
 		final int ADDRESS_LENGTH = 16;
 		byte[] bytes = new byte[ADDRESS_LENGTH];
-		int bytesRead = this.in.read(bytes);
+		int bytesRead = in.read(bytes);
 		if (bytesRead != ADDRESS_LENGTH) { 
 			throw new EOFException(String.format(
 					"expected address length is %s. "
@@ -146,5 +149,7 @@ final class AddressInputStream extends Socks5InputStream {
 				out.toByteArray(), 
 				inetAddress.getHostAddress());		
 	}
+	
+	private AddressInputHelper() { }
 
 }

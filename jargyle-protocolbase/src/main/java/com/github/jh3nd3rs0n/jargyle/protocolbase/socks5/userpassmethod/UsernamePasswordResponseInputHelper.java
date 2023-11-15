@@ -5,19 +5,16 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.internal.UnsignedByteInputHelper;
 
-public final class UsernamePasswordResponseInputStream 
-	extends UsernamePasswordMessageInputStream {
-
-	public UsernamePasswordResponseInputStream(final InputStream in) {
-		super(in);
-	}
+public final class UsernamePasswordResponseInputHelper {
 	
-	public UsernamePasswordResponse readUsernamePasswordResponse() throws IOException {
+	public static UsernamePasswordResponse readUsernamePasswordResponseFrom(
+			final InputStream in) throws IOException {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		Version ver = this.readVersion();
+		Version ver = VersionInputHelper.readVersionFrom(in);
 		out.write(UnsignedByte.newInstance(ver.byteValue()).intValue());
-		UnsignedByte status = this.readUnsignedByte(); 
+		UnsignedByte status = UnsignedByteInputHelper.readUnsignedByteFrom(in); 
 		out.write(status.intValue());
 		UsernamePasswordResponse.Params params = 
 				new UsernamePasswordResponse.Params();
@@ -26,5 +23,7 @@ public final class UsernamePasswordResponseInputStream
 		params.byteArray = out.toByteArray();
 		return new UsernamePasswordResponse(params);		
 	}
-
+	
+	private UsernamePasswordResponseInputHelper() { }
+	
 }

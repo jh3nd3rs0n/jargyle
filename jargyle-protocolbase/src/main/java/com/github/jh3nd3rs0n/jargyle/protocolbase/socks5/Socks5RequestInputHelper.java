@@ -6,16 +6,13 @@ import java.io.InputStream;
 
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.internal.UnsignedByteInputHelper;
 
-public final class Socks5RequestInputStream 
-	extends PostMethodSubnegotiationMessageInputStream {
-
-	public Socks5RequestInputStream(final InputStream in) {
-		super(in);
-	}
+public final class Socks5RequestInputHelper {
 	
-	private Command readCommand() throws IOException {
-		UnsignedByte b = this.readUnsignedByte();
+	private static Command readCommandFrom(
+			final InputStream in) throws IOException {
+		UnsignedByte b = UnsignedByteInputHelper.readUnsignedByteFrom(in);
 		Command command = null;
 		try {
 			command = Command.valueOfByte(b.byteValue());
@@ -25,22 +22,23 @@ public final class Socks5RequestInputStream
 		return command;		
 	}
 	
-	public Socks5Request readSocks5Request() throws IOException {
+	public static Socks5Request readSocks5RequestFrom(
+			final InputStream in) throws IOException {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		Version ver = this.readVersion();
+		Version ver = VersionInputHelper.readVersionFrom(in);
 		out.write(UnsignedByte.newInstance(ver.byteValue()).intValue());
-		Command cmd = this.readCommand();
+		Command cmd = readCommandFrom(in);
 		out.write(UnsignedByte.newInstance(cmd.byteValue()).intValue());
-		UnsignedByte rsv = this.readUnsignedByte();
+		UnsignedByte rsv = UnsignedByteInputHelper.readUnsignedByteFrom(in);
 		if (rsv.intValue() != Socks5Request.RSV) {
 			throw new Socks5Exception(String.format(
 					"expected RSV is %s, actual RSV is %s", 
 					Socks5Request.RSV, rsv.intValue()));
 		}
 		out.write(rsv.intValue());
-		Address dstAddr = this.readAddress();
+		Address dstAddr = AddressInputHelper.readAddressFrom(in);
 		out.write(dstAddr.toByteArray());
-		Port dstPort = this.readPort();
+		Port dstPort = PortInputHelper.readPortFrom(in);
 		out.write(dstPort.toByteArray());
 		Socks5Request.Params params = new Socks5Request.Params();
 		params.version = ver;
@@ -51,5 +49,7 @@ public final class Socks5RequestInputStream
 		params.byteArray = out.toByteArray();
 		return new Socks5Request(params);		
 	}
+	
+	private Socks5RequestInputHelper() { }
 
 }

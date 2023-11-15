@@ -421,15 +421,7 @@ public class Worker implements Runnable {
 						e);
 				return;
 			}
-			if (version == -1) {
-				this.logClientIoException(
-						ObjectLogMessageHelper.objectLogMessage(
-								this, 
-								"Unable to get the SOCKS version from the "
-								+ "client (Client closed the connection)"), 
-						new EOFException());
-				return;				
-			}
+			if (version == -1) { return; }
 			this.selectedRoute = this.selectClientRoute();
 			if ((byte) version == Version.V5.byteValue()) {
 				Socks5Worker socks5Worker = new Socks5Worker(this);

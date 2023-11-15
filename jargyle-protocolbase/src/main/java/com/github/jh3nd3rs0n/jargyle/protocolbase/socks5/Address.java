@@ -9,8 +9,8 @@ public final class Address {
 	public static Address newInstance(final byte[] b) {
 		Address address = null;
 		try {
-			address = new AddressInputStream(new ByteArrayInputStream(
-					b)).readAddress();
+			address = AddressInputHelper.readAddressFrom(
+					new ByteArrayInputStream(b));
 		} catch (IOException e) {
 			throw new IllegalArgumentException(e);
 		}

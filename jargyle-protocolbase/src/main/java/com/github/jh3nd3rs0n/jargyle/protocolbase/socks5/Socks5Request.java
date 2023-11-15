@@ -24,8 +24,8 @@ public final class Socks5Request {
 	public static Socks5Request newInstance(final byte[] b) {
 		Socks5Request socks5Request = null;
 		try {
-			socks5Request = new Socks5RequestInputStream(new ByteArrayInputStream(
-					b)).readSocks5Request();
+			socks5Request = Socks5RequestInputHelper.readSocks5RequestFrom(
+					new ByteArrayInputStream(b));
 		} catch (IOException e) {
 			throw new IllegalArgumentException(e);
 		}

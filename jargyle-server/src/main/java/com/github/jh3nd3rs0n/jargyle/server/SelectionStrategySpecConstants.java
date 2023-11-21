@@ -55,7 +55,7 @@ public final class SelectionStrategySpecConstants {
 				.map(SelectionStrategySpec::getName)
 				.collect(Collectors.joining(", "));
 		throw new IllegalArgumentException(String.format(
-				"expected selection strategy spec must be one of the "
+				"expected selection strategy name must be one of the "
 				+ "following values: %s. actual value is %s",
 				str,
 				name));

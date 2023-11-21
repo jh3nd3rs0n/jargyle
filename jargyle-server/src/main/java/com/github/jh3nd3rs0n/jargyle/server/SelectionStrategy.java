@@ -1,25 +1,12 @@
 package com.github.jh3nd3rs0n.jargyle.server;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public abstract class SelectionStrategy {
 	
 	public static SelectionStrategy newInstance(final String s) {
-		SelectionStrategySpec selectionStrategySpec = null;
-		try {
-			selectionStrategySpec = 
-					SelectionStrategySpecConstants.valueOfName(s);
-		} catch (IllegalArgumentException e) {
-			String str = SelectionStrategySpecConstants.values().stream()
-					.map(SelectionStrategySpec::getName)
-					.collect(Collectors.joining(", "));
-			throw new IllegalArgumentException(String.format(
-					"expected selection strategy must be one of the following "
-					+ "values: %s. actual value is %s",
-					str,
-					s));			
-		}
+		SelectionStrategySpec selectionStrategySpec = 
+				SelectionStrategySpecConstants.valueOfName(s);
 		return selectionStrategySpec.newSelectionStrategy();
 	}
 	

@@ -22,7 +22,7 @@ public final class Users {
 		return new Users(users);
 	}
 	
-	public static Users newInstanceFromUsersWithHashedPasswords(
+	public static Users newInstanceFromUsernameHashedPasswordPairs(
 			final String s) {
 		List<User> users = new ArrayList<User>();
 		if (s.isEmpty()) {
@@ -30,21 +30,21 @@ public final class Users {
 		}
 		String[] sElements = s.split(",");
 		for (String sElement : sElements) {
-			User user = User.newInstanceFromUserWithHashedPassword(sElement);
+			User user = User.newInstanceFromUsernameHashedPasswordPair(
+					sElement);
 			users.add(user);
 		}
 		return newInstance(users);
 	}
 	
-	public static Users newInstanceFromUsersWithPlaintextPasswords(
-			final String s) {
+	public static Users newInstanceFromUsernamePasswordPairs(final String s) {
 		List<User> users = new ArrayList<User>();
 		if (s.isEmpty()) {
 			return newInstance(users);
 		}
 		String[] sElements = s.split(",");
 		for (String sElement : sElements) {
-			User user = User.newInstanceFromUserWithPlaintextPassword(sElement);
+			User user = User.newInstanceFromUsernamePasswordPair(sElement);
 			users.add(user);
 		}
 		return newInstance(users);

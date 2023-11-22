@@ -27,7 +27,7 @@ public final class User {
 		return new User(name, hashedPassword);
 	}
 	
-	public static User newInstanceFromUserWithHashedPassword(
+	public static User newInstanceFromUsernameHashedPasswordPair(
 			final String s) {
 		String[] sElements = s.split(":");
 		if (sElements.length != 2) {
@@ -49,8 +49,7 @@ public final class User {
 		return newInstance(name, HashedPassword.newInstance(hashedPassword));
 	}
 	
-	public static User newInstanceFromUserWithPlaintextPassword(
-			final String s) {
+	public static User newInstanceFromUsernamePasswordPair(final String s) {
 		String[] sElements = s.split(":");
 		if (sElements.length != 2) {
 			throw new IllegalArgumentException(

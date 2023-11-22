@@ -14,7 +14,7 @@ final class UserLineConversionHelper {
 		if (line == null) {
 			return null;
 		}
-		return User.newInstanceFromUserWithHashedPassword(line);
+		return User.newInstanceFromUsernameHashedPasswordPair(line);
 	}
 	
 	public static void toLine(

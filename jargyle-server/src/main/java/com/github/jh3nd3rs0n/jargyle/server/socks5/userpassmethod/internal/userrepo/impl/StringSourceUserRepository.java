@@ -17,7 +17,7 @@ public final class StringSourceUserRepository extends UserRepository {
 			final String initializationStr) {
 		super(userRepositorySpec, initializationStr);
 		this.lock = new ReentrantLock();
-		this.users = Users.newInstanceOfStringContainingPlaintextPasswords(
+		this.users = Users.newInstanceFromUsersWithPlaintextPasswords(
 				initializationStr);
 	}
 

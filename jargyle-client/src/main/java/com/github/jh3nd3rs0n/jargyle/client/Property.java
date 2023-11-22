@@ -11,11 +11,11 @@ public final class Property<V> {
 		return property;
 	}
 	
-	public static Property<Object> newInstanceOfParsableValue(
+	public static Property<Object> newInstanceWithParsableValue(
 			final String name, final String value) {
 		PropertySpec<Object> propertySpec = PropertySpecConstants.valueOfName(
 				name);
-		return propertySpec.newPropertyOfParsableValue(value);
+		return propertySpec.newPropertyWithParsableValue(value);
 	}
 	
 	private final String name;

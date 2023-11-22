@@ -94,12 +94,12 @@ public abstract class SocketSettingSpec<V> {
 				doc);
 	}
 
-	public abstract SocketSetting<V> newSocketSettingOfParsableValue(
+	public abstract SocketSetting<V> newSocketSettingWithParsableValue(
 			final String value);
 
-	public final SocketSetting<V> newSocketSettingOfParsableValue(
+	public final SocketSetting<V> newSocketSettingWithParsableValue(
 			final String value, final String doc) {
-		SocketSetting<V> socketSetting = this.newSocketSettingOfParsableValue(
+		SocketSetting<V> socketSetting = this.newSocketSettingWithParsableValue(
 				value);
 		return new SocketSetting<V>(
 				socketSetting.getSocketSettingSpec(),

@@ -22,7 +22,7 @@ public final class Users {
 		return new Users(users);
 	}
 	
-	public static Users newInstanceOfStringContainingHashedPasswords(
+	public static Users newInstanceFromUsersWithHashedPasswords(
 			final String s) {
 		List<User> users = new ArrayList<User>();
 		if (s.isEmpty()) {
@@ -30,14 +30,13 @@ public final class Users {
 		}
 		String[] sElements = s.split(",");
 		for (String sElement : sElements) {
-			User user = User.newInstanceOfStringContainingHashedPassword(
-					sElement);
+			User user = User.newInstanceFromUserWithHashedPassword(sElement);
 			users.add(user);
 		}
 		return newInstance(users);
 	}
 	
-	public static Users newInstanceOfStringContainingPlaintextPasswords(
+	public static Users newInstanceFromUsersWithPlaintextPasswords(
 			final String s) {
 		List<User> users = new ArrayList<User>();
 		if (s.isEmpty()) {
@@ -45,8 +44,7 @@ public final class Users {
 		}
 		String[] sElements = s.split(",");
 		for (String sElement : sElements) {
-			User user = User.newInstanceOfStringContainingPlaintextPassword(
-					sElement);
+			User user = User.newInstanceFromUserWithPlaintextPassword(sElement);
 			users.add(user);
 		}
 		return newInstance(users);

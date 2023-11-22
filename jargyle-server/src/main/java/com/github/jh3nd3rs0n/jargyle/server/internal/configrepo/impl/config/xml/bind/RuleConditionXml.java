@@ -28,7 +28,7 @@ class RuleConditionXml {
 	}
 	
 	public RuleCondition<Object, Object> toRuleCondition() {
-		return RuleCondition.newInstanceOfParsableValue(this.name, this.value);
+		return RuleCondition.newInstanceWithParsableValue(this.name, this.value);
 	}
 
 }

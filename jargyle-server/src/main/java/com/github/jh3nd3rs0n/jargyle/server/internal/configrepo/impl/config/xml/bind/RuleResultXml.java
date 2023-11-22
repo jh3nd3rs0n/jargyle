@@ -67,7 +67,7 @@ class RuleResultXml {
 			return RuleResult.newInstance(this.name, newVal.toValue());
 		}
 		String newVal = (String) val;
-		return RuleResult.newInstanceOfParsableValue(this.name, newVal);
+		return RuleResult.newInstanceWithParsableValue(this.name, newVal);
 	}
 	
 }

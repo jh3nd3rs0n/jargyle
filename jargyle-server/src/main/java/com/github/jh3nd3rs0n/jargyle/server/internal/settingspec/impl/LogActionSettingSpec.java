@@ -11,7 +11,7 @@ public final class LogActionSettingSpec extends SettingSpec<LogAction> {
 	}
 
 	@Override
-	public Setting<LogAction> newSettingOfParsableValue(final String value) {
+	public Setting<LogAction> newSettingWithParsableValue(final String value) {
 		return super.newSetting(LogAction.valueOfString(value));
 	}
 

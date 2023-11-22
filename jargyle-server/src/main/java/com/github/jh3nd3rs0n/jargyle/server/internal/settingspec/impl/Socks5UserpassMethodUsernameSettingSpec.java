@@ -22,7 +22,7 @@ public final class Socks5UserpassMethodUsernameSettingSpec extends SettingSpec<S
 	}
 	
 	@Override
-	public Setting<String> newSettingOfParsableValue(final String value) {
+	public Setting<String> newSettingWithParsableValue(final String value) {
 		return super.newSetting(getValidatedUsername(value));
 	}
 

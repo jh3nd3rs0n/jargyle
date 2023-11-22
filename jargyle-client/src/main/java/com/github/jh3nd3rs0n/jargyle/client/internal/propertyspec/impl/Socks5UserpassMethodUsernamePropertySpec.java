@@ -22,7 +22,7 @@ public final class Socks5UserpassMethodUsernamePropertySpec extends PropertySpec
 	}
 
 	@Override
-	public Property<String> newPropertyOfParsableValue(final String value) {
+	public Property<String> newPropertyWithParsableValue(final String value) {
 		return super.newProperty(getValidatedUsername(value));
 	}
 

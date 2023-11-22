@@ -10,7 +10,7 @@ public final class RuleResult<V> {
 		}
 		String name = sElements[0];
 		String value = sElements[1];
-		return newInstanceOfParsableValue(name, value);		
+		return newInstanceWithParsableValue(name, value);		
 	}
 	
 	public static <V> RuleResult<V> newInstance(
@@ -23,11 +23,11 @@ public final class RuleResult<V> {
 		return ruleResult;
 	}
 	
-	public static RuleResult<Object> newInstanceOfParsableValue(
+	public static RuleResult<Object> newInstanceWithParsableValue(
 			final String name, final String value) {
 		RuleResultSpec<Object> ruleResultSpec = 
 				RuleResultSpecConstants.valueOfName(name);
-		return ruleResultSpec.newRuleResultOfParsableValue(value);
+		return ruleResultSpec.newRuleResultWithParsableValue(value);
 	}
 	
 	private final String name;

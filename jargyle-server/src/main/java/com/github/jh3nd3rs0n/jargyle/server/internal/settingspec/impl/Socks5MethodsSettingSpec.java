@@ -11,7 +11,7 @@ public final class Socks5MethodsSettingSpec extends SettingSpec<Methods> {
 	}
 
 	@Override
-	public Setting<Methods> newSettingOfParsableValue(final String value) {
+	public Setting<Methods> newSettingWithParsableValue(final String value) {
 		return super.newSetting(Methods.newInstance(value));
 	}
 	

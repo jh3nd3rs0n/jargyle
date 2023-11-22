@@ -13,7 +13,7 @@ public final class HostPropertySpec extends PropertySpec<Host> {
 	}
 
 	@Override
-	public Property<Host> newPropertyOfParsableValue(final String value) {
+	public Property<Host> newPropertyWithParsableValue(final String value) {
 		Host host = null;
 		try {
 			host = Host.newInstance(value);

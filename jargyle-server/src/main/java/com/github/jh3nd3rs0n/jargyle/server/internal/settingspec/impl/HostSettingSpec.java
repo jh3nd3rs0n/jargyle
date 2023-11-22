@@ -13,7 +13,7 @@ public final class HostSettingSpec extends SettingSpec<Host> {
 	}
 
 	@Override
-	public Setting<Host> newSettingOfParsableValue(final String value) {
+	public Setting<Host> newSettingWithParsableValue(final String value) {
 		Host host = null;
 		try {
 			host = Host.newInstance(value);

@@ -12,7 +12,7 @@ public final class PositiveIntegerRuleResultSpec
 	}
 
 	@Override
-	public RuleResult<PositiveInteger> newRuleResultOfParsableValue(
+	public RuleResult<PositiveInteger> newRuleResultWithParsableValue(
 			final String value) {
 		return super.newRuleResult(PositiveInteger.newInstance(value));
 	}

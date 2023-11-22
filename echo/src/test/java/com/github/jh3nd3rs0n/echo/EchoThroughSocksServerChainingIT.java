@@ -155,12 +155,12 @@ public class EchoThroughSocksServerChainingIT {
 						ChainingDtlsSettingSpecConstants.CHAINING_DTLS_ENABLED.newSetting(Boolean.TRUE),
 						ChainingDtlsSettingSpecConstants.CHAINING_DTLS_TRUST_STORE_FILE.newSetting(
 								TestResourceConstants.ECHO_SOCKS_SERVER_KEY_STORE_FILE.getFile()),
-						ChainingDtlsSettingSpecConstants.CHAINING_DTLS_TRUST_STORE_PASSWORD.newSettingOfParsableValue(
+						ChainingDtlsSettingSpecConstants.CHAINING_DTLS_TRUST_STORE_PASSWORD.newSettingWithParsableValue(
 								TestResourceConstants.ECHO_SOCKS_SERVER_KEY_STORE_PASSWORD_FILE.getContentAsString()),				
 						ChainingSslSettingSpecConstants.CHAINING_SSL_ENABLED.newSetting(Boolean.TRUE),
 						ChainingSslSettingSpecConstants.CHAINING_SSL_TRUST_STORE_FILE.newSetting(
 								TestResourceConstants.ECHO_SOCKS_SERVER_KEY_STORE_FILE.getFile()),
-						ChainingSslSettingSpecConstants.CHAINING_SSL_TRUST_STORE_PASSWORD.newSettingOfParsableValue(
+						ChainingSslSettingSpecConstants.CHAINING_SSL_TRUST_STORE_PASSWORD.newSettingWithParsableValue(
 								TestResourceConstants.ECHO_SOCKS_SERVER_KEY_STORE_PASSWORD_FILE.getContentAsString()))),
 				Configuration.newUnmodifiableInstance(Settings.newInstance(
 						GeneralSettingSpecConstants.PORT.newSetting(
@@ -168,12 +168,12 @@ public class EchoThroughSocksServerChainingIT {
 						DtlsSettingSpecConstants.DTLS_ENABLED.newSetting(Boolean.TRUE),
 						DtlsSettingSpecConstants.DTLS_KEY_STORE_FILE.newSetting(
 								TestResourceConstants.ECHO_SOCKS_SERVER_KEY_STORE_FILE.getFile()),
-						DtlsSettingSpecConstants.DTLS_KEY_STORE_PASSWORD.newSettingOfParsableValue(
+						DtlsSettingSpecConstants.DTLS_KEY_STORE_PASSWORD.newSettingWithParsableValue(
 								TestResourceConstants.ECHO_SOCKS_SERVER_KEY_STORE_PASSWORD_FILE.getContentAsString()),				
 						SslSettingSpecConstants.SSL_ENABLED.newSetting(Boolean.TRUE),
 						SslSettingSpecConstants.SSL_KEY_STORE_FILE.newSetting(
 								TestResourceConstants.ECHO_SOCKS_SERVER_KEY_STORE_FILE.getFile()),
-						SslSettingSpecConstants.SSL_KEY_STORE_PASSWORD.newSettingOfParsableValue(
+						SslSettingSpecConstants.SSL_KEY_STORE_PASSWORD.newSettingWithParsableValue(
 								TestResourceConstants.ECHO_SOCKS_SERVER_KEY_STORE_PASSWORD_FILE.getContentAsString()))));		
 	}
 	
@@ -245,13 +245,13 @@ public class EchoThroughSocksServerChainingIT {
 								Boolean.TRUE),
 						DtlsPropertySpecConstants.DTLS_TRUST_STORE_FILE.newProperty(
 								TestResourceConstants.ECHO_SOCKS_SERVER_KEY_STORE_FILE.getFile()),
-						DtlsPropertySpecConstants.DTLS_TRUST_STORE_PASSWORD.newPropertyOfParsableValue(
+						DtlsPropertySpecConstants.DTLS_TRUST_STORE_PASSWORD.newPropertyWithParsableValue(
 								TestResourceConstants.ECHO_SOCKS_SERVER_KEY_STORE_PASSWORD_FILE.getContentAsString()),				
 						SslPropertySpecConstants.SSL_ENABLED.newProperty(
 								Boolean.TRUE),
 						SslPropertySpecConstants.SSL_TRUST_STORE_FILE.newProperty(
 								TestResourceConstants.ECHO_SOCKS_SERVER_KEY_STORE_FILE.getFile()),
-						SslPropertySpecConstants.SSL_TRUST_STORE_PASSWORD.newPropertyOfParsableValue(
+						SslPropertySpecConstants.SSL_TRUST_STORE_PASSWORD.newPropertyWithParsableValue(
 								TestResourceConstants.ECHO_SOCKS_SERVER_KEY_STORE_PASSWORD_FILE.getContentAsString())), 
 						client1);
 		return client2;
@@ -309,12 +309,12 @@ public class EchoThroughSocksServerChainingIT {
 						DtlsSettingSpecConstants.DTLS_ENABLED.newSetting(Boolean.TRUE),
 						DtlsSettingSpecConstants.DTLS_KEY_STORE_FILE.newSetting(
 								TestResourceConstants.ECHO_SOCKS_SERVER_KEY_STORE_FILE.getFile()),
-						DtlsSettingSpecConstants.DTLS_KEY_STORE_PASSWORD.newSettingOfParsableValue(
+						DtlsSettingSpecConstants.DTLS_KEY_STORE_PASSWORD.newSettingWithParsableValue(
 								TestResourceConstants.ECHO_SOCKS_SERVER_KEY_STORE_PASSWORD_FILE.getContentAsString()),				
 						SslSettingSpecConstants.SSL_ENABLED.newSetting(Boolean.TRUE),
 						SslSettingSpecConstants.SSL_KEY_STORE_FILE.newSetting(
 								TestResourceConstants.ECHO_SOCKS_SERVER_KEY_STORE_FILE.getFile()),
-						SslSettingSpecConstants.SSL_KEY_STORE_PASSWORD.newSettingOfParsableValue(
+						SslSettingSpecConstants.SSL_KEY_STORE_PASSWORD.newSettingWithParsableValue(
 								TestResourceConstants.ECHO_SOCKS_SERVER_KEY_STORE_PASSWORD_FILE.getContentAsString()))));
 	}
 	

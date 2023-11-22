@@ -18,7 +18,7 @@ public final class AddressRangeContainsAddressRuleConditionSpec
 	}
 
 	@Override
-	public RuleCondition<AddressRange, String> newRuleConditionOfParsableValue(
+	public RuleCondition<AddressRange, String> newRuleConditionWithParsableValue(
 			final String value) {
 		return super.newRuleCondition(AddressRange.newInstance(value));
 	}

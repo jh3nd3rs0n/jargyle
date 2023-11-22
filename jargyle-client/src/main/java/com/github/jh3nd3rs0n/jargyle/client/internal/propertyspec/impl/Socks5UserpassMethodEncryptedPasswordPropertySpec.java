@@ -33,7 +33,7 @@ public final class Socks5UserpassMethodEncryptedPasswordPropertySpec
 	}
 
 	@Override
-	public Property<EncryptedPassword> newPropertyOfParsableValue(
+	public Property<EncryptedPassword> newPropertyWithParsableValue(
 			final String value) {
 		return super.newProperty(getValidatedEncryptedPassword(
 				EncryptedPassword.newInstance(value.toCharArray())));

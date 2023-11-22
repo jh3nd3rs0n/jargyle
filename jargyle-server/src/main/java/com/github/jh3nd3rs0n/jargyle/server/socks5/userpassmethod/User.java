@@ -27,7 +27,7 @@ public final class User {
 		return new User(name, hashedPassword);
 	}
 	
-	public static User newInstanceOfStringContainingHashedPassword(
+	public static User newInstanceFromUserWithHashedPassword(
 			final String s) {
 		String[] sElements = s.split(":");
 		if (sElements.length != 2) {
@@ -49,7 +49,7 @@ public final class User {
 		return newInstance(name, HashedPassword.newInstance(hashedPassword));
 	}
 	
-	public static User newInstanceOfStringContainingPlaintextPassword(
+	public static User newInstanceFromUserWithPlaintextPassword(
 			final String s) {
 		String[] sElements = s.split(":");
 		if (sElements.length != 2) {

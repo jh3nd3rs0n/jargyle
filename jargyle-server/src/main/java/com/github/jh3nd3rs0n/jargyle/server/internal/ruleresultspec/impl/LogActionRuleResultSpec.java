@@ -11,7 +11,7 @@ public final class LogActionRuleResultSpec extends RuleResultSpec<LogAction> {
 	}
 
 	@Override
-	public RuleResult<LogAction> newRuleResultOfParsableValue(
+	public RuleResult<LogAction> newRuleResultWithParsableValue(
 			final String value) {
 		return super.newRuleResult(LogAction.valueOfString(value));
 	}

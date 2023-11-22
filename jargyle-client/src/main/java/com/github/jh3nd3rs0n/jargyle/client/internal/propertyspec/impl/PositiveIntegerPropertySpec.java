@@ -13,7 +13,7 @@ public final class PositiveIntegerPropertySpec
 	}
 
 	@Override
-	public Property<PositiveInteger> newPropertyOfParsableValue(
+	public Property<PositiveInteger> newPropertyWithParsableValue(
 			final String value) {
 		return super.newProperty(PositiveInteger.newInstance(value));
 	}

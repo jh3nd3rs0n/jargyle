@@ -12,7 +12,7 @@ public final class FirewallActionRuleResultSpec
 	}
 
 	@Override
-	public RuleResult<FirewallAction> newRuleResultOfParsableValue(
+	public RuleResult<FirewallAction> newRuleResultWithParsableValue(
 			final String value) {
 		return super.newRuleResult(FirewallAction.valueOfString(value));
 	}

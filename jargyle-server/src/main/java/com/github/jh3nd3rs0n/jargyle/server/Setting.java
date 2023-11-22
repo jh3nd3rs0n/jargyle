@@ -10,7 +10,7 @@ public final class Setting<V> {
 		}
 		String name = sElements[0];
 		String value = sElements[1];
-		return newInstanceOfParsableValue(name, value);
+		return newInstanceWithParsableValue(name, value);
 	}
 	
 	public static <V> Setting<V> newInstance(final String name, final V value) {
@@ -28,16 +28,16 @@ public final class Setting<V> {
 				setting.getSettingSpec(), setting.getValue(), doc);
 	}
 	
-	public static Setting<Object> newInstanceOfParsableValue(
+	public static Setting<Object> newInstanceWithParsableValue(
 			final String name, final String value) {
 		SettingSpec<Object> settingSpec = SettingSpecConstants.valueOfName(
 				name);
-		return settingSpec.newSettingOfParsableValue(value);
+		return settingSpec.newSettingWithParsableValue(value);
 	}
 	
-	public static Setting<Object> newInstanceOfParsableValue(
+	public static Setting<Object> newInstanceWithParsableValue(
 			final String name, final String value, final String doc) {
-		Setting<Object> setting = newInstanceOfParsableValue(name, value);
+		Setting<Object> setting = newInstanceWithParsableValue(name, value);
 		return new Setting<Object>(
 				setting.getSettingSpec(), setting.getValue(), doc);
 	}

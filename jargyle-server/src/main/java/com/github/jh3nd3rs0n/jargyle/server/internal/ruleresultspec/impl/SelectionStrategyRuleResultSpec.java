@@ -12,7 +12,7 @@ public final class SelectionStrategyRuleResultSpec
 	}
 
 	@Override
-	public RuleResult<SelectionStrategy> newRuleResultOfParsableValue(
+	public RuleResult<SelectionStrategy> newRuleResultWithParsableValue(
 			final String value) {
 		return super.newRuleResult(SelectionStrategy.newInstance(value));
 	}

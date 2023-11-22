@@ -41,7 +41,7 @@ public final class StandardSocketSettingSpecConstants {
 		}
 	
 		@Override
-		public SocketSetting<UnsignedByte> newSocketSettingOfParsableValue(
+		public SocketSetting<UnsignedByte> newSocketSettingWithParsableValue(
 				final String value) {
 			return super.newSocketSetting(UnsignedByte.newInstance(value));
 		}
@@ -74,7 +74,7 @@ public final class StandardSocketSettingSpecConstants {
 		}
 	
 		@Override
-		public SocketSetting<PerformancePreferences> newSocketSettingOfParsableValue(
+		public SocketSetting<PerformancePreferences> newSocketSettingWithParsableValue(
 				final String value) {
 			return super.newSocketSetting(PerformancePreferences.newInstance(value));
 		}
@@ -97,7 +97,7 @@ public final class StandardSocketSettingSpecConstants {
 		}
 	
 		@Override
-		public SocketSetting<Boolean> newSocketSettingOfParsableValue(
+		public SocketSetting<Boolean> newSocketSettingWithParsableValue(
 				final String value) {
 			return super.newSocketSetting(Boolean.valueOf(value));
 		}
@@ -121,7 +121,7 @@ public final class StandardSocketSettingSpecConstants {
 		}
 	
 		@Override
-		public SocketSetting<Boolean> newSocketSettingOfParsableValue(
+		public SocketSetting<Boolean> newSocketSettingWithParsableValue(
 				final String value) {
 			return super.newSocketSetting(Boolean.valueOf(value));
 		}
@@ -144,7 +144,7 @@ public final class StandardSocketSettingSpecConstants {
 		}
 	
 		@Override
-		public SocketSetting<NonnegativeInteger> newSocketSettingOfParsableValue(
+		public SocketSetting<NonnegativeInteger> newSocketSettingWithParsableValue(
 				final String value) {
 			return super.newSocketSetting(NonnegativeInteger.newInstance(value));
 		}
@@ -167,7 +167,7 @@ public final class StandardSocketSettingSpecConstants {
 		}
 	
 		@Override
-		public SocketSetting<Boolean> newSocketSettingOfParsableValue(
+		public SocketSetting<Boolean> newSocketSettingWithParsableValue(
 				final String value) {
 			return super.newSocketSetting(Boolean.valueOf(value));
 		}
@@ -204,7 +204,7 @@ public final class StandardSocketSettingSpecConstants {
 		}
 	
 		@Override
-		public SocketSetting<PositiveInteger> newSocketSettingOfParsableValue(
+		public SocketSetting<PositiveInteger> newSocketSettingWithParsableValue(
 				final String value) {
 			return super.newSocketSetting(PositiveInteger.newInstance(value));
 		}
@@ -241,7 +241,7 @@ public final class StandardSocketSettingSpecConstants {
 		}
 	
 		@Override
-		public SocketSetting<Boolean> newSocketSettingOfParsableValue(
+		public SocketSetting<Boolean> newSocketSettingWithParsableValue(
 				final String value) {
 			return super.newSocketSetting(Boolean.valueOf(value));
 		}
@@ -271,7 +271,7 @@ public final class StandardSocketSettingSpecConstants {
 		}
 	
 		@Override
-		public SocketSetting<PositiveInteger> newSocketSettingOfParsableValue(
+		public SocketSetting<PositiveInteger> newSocketSettingWithParsableValue(
 				final String value) {
 			return super.newSocketSetting(PositiveInteger.newInstance(value));
 		}
@@ -308,7 +308,7 @@ public final class StandardSocketSettingSpecConstants {
 		}
 	
 		@Override
-		public SocketSetting<NonnegativeInteger> newSocketSettingOfParsableValue(
+		public SocketSetting<NonnegativeInteger> newSocketSettingWithParsableValue(
 				final String value) {
 			return super.newSocketSetting(NonnegativeInteger.newInstance(value));
 		}
@@ -331,7 +331,7 @@ public final class StandardSocketSettingSpecConstants {
 		}
 	
 		@Override
-		public SocketSetting<Boolean> newSocketSettingOfParsableValue(
+		public SocketSetting<Boolean> newSocketSettingWithParsableValue(
 				final String value) {
 			return super.newSocketSetting(Boolean.valueOf(value));
 		}

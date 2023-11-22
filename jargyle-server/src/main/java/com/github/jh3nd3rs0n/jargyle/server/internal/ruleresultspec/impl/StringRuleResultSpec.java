@@ -10,7 +10,7 @@ public final class StringRuleResultSpec extends RuleResultSpec<String> {
 	}
 
 	@Override
-	public RuleResult<String> newRuleResultOfParsableValue(final String value) {
+	public RuleResult<String> newRuleResultWithParsableValue(final String value) {
 		return super.newRuleResult(value);
 	}
 

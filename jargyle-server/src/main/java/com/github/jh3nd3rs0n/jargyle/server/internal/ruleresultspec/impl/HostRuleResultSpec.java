@@ -13,7 +13,7 @@ public final class HostRuleResultSpec extends RuleResultSpec<Host> {
 	}
 
 	@Override
-	public RuleResult<Host> newRuleResultOfParsableValue(final String value) {
+	public RuleResult<Host> newRuleResultWithParsableValue(final String value) {
 		Host host = null;
 		try {
 			host = Host.newInstance(value);

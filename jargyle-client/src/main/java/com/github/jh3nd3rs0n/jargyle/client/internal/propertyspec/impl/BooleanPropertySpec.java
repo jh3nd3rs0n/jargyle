@@ -10,7 +10,7 @@ public final class BooleanPropertySpec extends PropertySpec<Boolean> {
 	}
 
 	@Override
-	public Property<Boolean> newPropertyOfParsableValue(final String value) {
+	public Property<Boolean> newPropertyWithParsableValue(final String value) {
 		return super.newProperty(Boolean.valueOf(value));
 	}
 

@@ -13,7 +13,7 @@ public final class CommaSeparatedValuesSettingSpec
 	}
 
 	@Override
-	public Setting<CommaSeparatedValues> newSettingOfParsableValue(
+	public Setting<CommaSeparatedValues> newSettingWithParsableValue(
 			final String value) {
 		return super.newSetting(CommaSeparatedValues.newInstance(value));
 	}

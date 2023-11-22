@@ -13,7 +13,7 @@ public final class CommaSeparatedValuesPropertySpec
 	}
 
 	@Override
-	public Property<CommaSeparatedValues> newPropertyOfParsableValue(
+	public Property<CommaSeparatedValues> newPropertyWithParsableValue(
 			final String value) {
 		return super.newProperty(CommaSeparatedValues.newInstance(value));
 	}

@@ -19,7 +19,7 @@ public final class PortRangeContainsPortRuleConditionSpec
 	}
 
 	@Override
-	public RuleCondition<PortRange, Port> newRuleConditionOfParsableValue(
+	public RuleCondition<PortRange, Port> newRuleConditionWithParsableValue(
 			final String value) {
 		return super.newRuleCondition(PortRange.newInstance(value));
 	}

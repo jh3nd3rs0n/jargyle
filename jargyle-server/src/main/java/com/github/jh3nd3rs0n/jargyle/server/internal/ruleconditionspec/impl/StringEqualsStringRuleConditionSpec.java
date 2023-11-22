@@ -17,7 +17,7 @@ public final class StringEqualsStringRuleConditionSpec
 	}
 
 	@Override
-	public RuleCondition<String, String> newRuleConditionOfParsableValue(
+	public RuleCondition<String, String> newRuleConditionWithParsableValue(
 			final String value) {
 		return super.newRuleCondition(value);
 	}

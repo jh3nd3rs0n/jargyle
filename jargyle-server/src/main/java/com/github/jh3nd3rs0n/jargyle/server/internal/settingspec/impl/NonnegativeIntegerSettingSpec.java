@@ -13,7 +13,7 @@ public final class NonnegativeIntegerSettingSpec
 	}
 
 	@Override
-	public Setting<NonnegativeInteger> newSettingOfParsableValue(
+	public Setting<NonnegativeInteger> newSettingWithParsableValue(
 			final String value) {
 		return super.newSetting(NonnegativeInteger.newInstance(value));
 	}

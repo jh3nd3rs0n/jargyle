@@ -16,7 +16,7 @@ public final class SocketSetting<V> {
 		}
 		String socketSettingSpecString = sElements[0];
 		String value = sElements[1];
-		return newInstanceOfParsableValue(socketSettingSpecString, value);
+		return newInstanceWithParsableValue(socketSettingSpecString, value);
 	}
 	
 	public static <V> SocketSetting<V> newInstance(
@@ -43,7 +43,7 @@ public final class SocketSetting<V> {
 				doc);
 	}
 	
-	public static SocketSetting<Object> newInstanceOfParsableValue(
+	public static SocketSetting<Object> newInstanceWithParsableValue(
 			final String name, final String value) {
 		SocketSettingSpec<Object> socketSettingSpec = null;
 		try {
@@ -52,12 +52,12 @@ public final class SocketSetting<V> {
 			throw new IllegalArgumentException(String.format(
 					"unknown socket setting: %s", name), e);
 		}		
-		return socketSettingSpec.newSocketSettingOfParsableValue(value);
+		return socketSettingSpec.newSocketSettingWithParsableValue(value);
 	}
 	
-	public static SocketSetting<Object> newInstanceOfParsableValue(
+	public static SocketSetting<Object> newInstanceWithParsableValue(
 			final String name, final String value, final String doc) {
-		SocketSetting<Object> socketSetting = newInstanceOfParsableValue(
+		SocketSetting<Object> socketSetting = newInstanceWithParsableValue(
 				name, value);
 		return new SocketSetting<Object>(
 				socketSetting.getSocketSettingSpec(), 

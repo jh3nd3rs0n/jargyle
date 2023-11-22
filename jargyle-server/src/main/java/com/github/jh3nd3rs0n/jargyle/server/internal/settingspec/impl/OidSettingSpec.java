@@ -13,7 +13,7 @@ public final class OidSettingSpec extends SettingSpec<Oid> {
 	}
 
 	@Override
-	public Setting<Oid> newSettingOfParsableValue(final String value) {
+	public Setting<Oid> newSettingWithParsableValue(final String value) {
 		Oid oid = null;
 		try {
 			oid = new Oid(value);

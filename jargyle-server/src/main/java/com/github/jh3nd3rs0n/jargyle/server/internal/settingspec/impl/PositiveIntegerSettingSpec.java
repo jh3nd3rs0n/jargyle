@@ -13,7 +13,7 @@ public final class PositiveIntegerSettingSpec
 	}
 
 	@Override
-	public Setting<PositiveInteger> newSettingOfParsableValue(
+	public Setting<PositiveInteger> newSettingWithParsableValue(
 			final String value) {
 		return super.newSetting(PositiveInteger.newInstance(value));
 	}

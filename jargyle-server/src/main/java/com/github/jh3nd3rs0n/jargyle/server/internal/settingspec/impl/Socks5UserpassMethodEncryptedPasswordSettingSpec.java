@@ -33,7 +33,7 @@ public final class Socks5UserpassMethodEncryptedPasswordSettingSpec
 	}
 	
 	@Override
-	public Setting<EncryptedPassword> newSettingOfParsableValue(
+	public Setting<EncryptedPassword> newSettingWithParsableValue(
 			final String value) {
 		return super.newSetting(getValidatedEncryptedPassword(
 				EncryptedPassword.newInstance(value.toCharArray())));

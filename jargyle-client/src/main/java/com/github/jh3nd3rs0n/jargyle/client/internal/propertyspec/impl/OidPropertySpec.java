@@ -23,7 +23,7 @@ public final class OidPropertySpec extends PropertySpec<Oid> {
 	}
 
 	@Override
-	public Property<Oid> newPropertyOfParsableValue(final String value) {
+	public Property<Oid> newPropertyWithParsableValue(final String value) {
 		return super.newProperty(newOid(value));
 	}
 

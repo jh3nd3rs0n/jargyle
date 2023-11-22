@@ -11,7 +11,7 @@ public final class RuleSettingSpec extends SettingSpec<Rule> {
 	}
 
 	@Override
-	public Setting<Rule> newSettingOfParsableValue(final String value) {
+	public Setting<Rule> newSettingWithParsableValue(final String value) {
 		return super.newSetting(Rule.newInstance(value));
 	}
 

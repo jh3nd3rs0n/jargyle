@@ -24,7 +24,7 @@ public final class SocketSettingRuleResultSpec
 	}
 
 	@Override
-	public RuleResult<SocketSetting<Object>> newRuleResultOfParsableValue(
+	public RuleResult<SocketSetting<Object>> newRuleResultWithParsableValue(
 			final String value) {
 		return super.newRuleResult(SocketSetting.newInstance(value));
 	}

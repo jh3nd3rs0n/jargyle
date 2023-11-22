@@ -112,12 +112,12 @@ public class SocksServerStressIT {
 				DtlsSettingSpecConstants.DTLS_ENABLED.newSetting(Boolean.TRUE),
 				DtlsSettingSpecConstants.DTLS_KEY_STORE_FILE.newSetting(
 						TestResourceConstants.ECHO_SOCKS_SERVER_KEY_STORE_FILE.getFile()),
-				DtlsSettingSpecConstants.DTLS_KEY_STORE_PASSWORD.newSettingOfParsableValue(
+				DtlsSettingSpecConstants.DTLS_KEY_STORE_PASSWORD.newSettingWithParsableValue(
 						TestResourceConstants.ECHO_SOCKS_SERVER_KEY_STORE_PASSWORD_FILE.getContentAsString()),				
 				SslSettingSpecConstants.SSL_ENABLED.newSetting(Boolean.TRUE),
 				SslSettingSpecConstants.SSL_KEY_STORE_FILE.newSetting(
 						TestResourceConstants.ECHO_SOCKS_SERVER_KEY_STORE_FILE.getFile()),
-				SslSettingSpecConstants.SSL_KEY_STORE_PASSWORD.newSettingOfParsableValue(
+				SslSettingSpecConstants.SSL_KEY_STORE_PASSWORD.newSettingWithParsableValue(
 						TestResourceConstants.ECHO_SOCKS_SERVER_KEY_STORE_PASSWORD_FILE.getContentAsString())));
 	}
 	
@@ -130,12 +130,12 @@ public class SocksServerStressIT {
 				DtlsSettingSpecConstants.DTLS_ENABLED.newSetting(Boolean.TRUE),
 				DtlsSettingSpecConstants.DTLS_KEY_STORE_FILE.newSetting(
 						TestResourceConstants.ECHO_SOCKS_SERVER_KEY_STORE_FILE.getFile()),
-				DtlsSettingSpecConstants.DTLS_KEY_STORE_PASSWORD.newSettingOfParsableValue(
+				DtlsSettingSpecConstants.DTLS_KEY_STORE_PASSWORD.newSettingWithParsableValue(
 						TestResourceConstants.ECHO_SOCKS_SERVER_KEY_STORE_PASSWORD_FILE.getContentAsString()),				
 				SslSettingSpecConstants.SSL_ENABLED.newSetting(Boolean.TRUE),
 				SslSettingSpecConstants.SSL_KEY_STORE_FILE.newSetting(
 						TestResourceConstants.ECHO_SOCKS_SERVER_KEY_STORE_FILE.getFile()),
-				SslSettingSpecConstants.SSL_KEY_STORE_PASSWORD.newSettingOfParsableValue(
+				SslSettingSpecConstants.SSL_KEY_STORE_PASSWORD.newSettingWithParsableValue(
 						TestResourceConstants.ECHO_SOCKS_SERVER_KEY_STORE_PASSWORD_FILE.getContentAsString()),
 				Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
 						Methods.newInstance(Method.USERNAME_PASSWORD)),
@@ -173,13 +173,13 @@ public class SocksServerStressIT {
 						Boolean.TRUE),
 				DtlsPropertySpecConstants.DTLS_TRUST_STORE_FILE.newProperty(
 						TestResourceConstants.ECHO_SOCKS_SERVER_KEY_STORE_FILE.getFile()),
-				DtlsPropertySpecConstants.DTLS_TRUST_STORE_PASSWORD.newPropertyOfParsableValue(
+				DtlsPropertySpecConstants.DTLS_TRUST_STORE_PASSWORD.newPropertyWithParsableValue(
 						TestResourceConstants.ECHO_SOCKS_SERVER_KEY_STORE_PASSWORD_FILE.getContentAsString()),				
 				SslPropertySpecConstants.SSL_ENABLED.newProperty(
 						Boolean.TRUE),
 				SslPropertySpecConstants.SSL_TRUST_STORE_FILE.newProperty(
 						TestResourceConstants.ECHO_SOCKS_SERVER_KEY_STORE_FILE.getFile()),
-				SslPropertySpecConstants.SSL_TRUST_STORE_PASSWORD.newPropertyOfParsableValue(
+				SslPropertySpecConstants.SSL_TRUST_STORE_PASSWORD.newPropertyWithParsableValue(
 						TestResourceConstants.ECHO_SOCKS_SERVER_KEY_STORE_PASSWORD_FILE.getContentAsString()));
 		return SchemeConstants.SOCKS5.newSocksServerUri(
 				InetAddress.getLoopbackAddress().getHostAddress(), 
@@ -195,13 +195,13 @@ public class SocksServerStressIT {
 						Boolean.TRUE),
 				DtlsPropertySpecConstants.DTLS_TRUST_STORE_FILE.newProperty(
 						TestResourceConstants.ECHO_SOCKS_SERVER_KEY_STORE_FILE.getFile()),
-				DtlsPropertySpecConstants.DTLS_TRUST_STORE_PASSWORD.newPropertyOfParsableValue(
+				DtlsPropertySpecConstants.DTLS_TRUST_STORE_PASSWORD.newPropertyWithParsableValue(
 						TestResourceConstants.ECHO_SOCKS_SERVER_KEY_STORE_PASSWORD_FILE.getContentAsString()),				
 				SslPropertySpecConstants.SSL_ENABLED.newProperty(
 						Boolean.TRUE),
 				SslPropertySpecConstants.SSL_TRUST_STORE_FILE.newProperty(
 						TestResourceConstants.ECHO_SOCKS_SERVER_KEY_STORE_FILE.getFile()),
-				SslPropertySpecConstants.SSL_TRUST_STORE_PASSWORD.newPropertyOfParsableValue(
+				SslPropertySpecConstants.SSL_TRUST_STORE_PASSWORD.newPropertyWithParsableValue(
 						TestResourceConstants.ECHO_SOCKS_SERVER_KEY_STORE_PASSWORD_FILE.getContentAsString()),
 				Socks5PropertySpecConstants.SOCKS5_METHODS.newProperty(
 						Methods.newInstance(Method.USERNAME_PASSWORD)),

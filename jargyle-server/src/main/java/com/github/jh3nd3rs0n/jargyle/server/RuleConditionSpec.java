@@ -79,7 +79,7 @@ public abstract class RuleConditionSpec<V1, V2> {
 				this.ruleArgSpec);
 	}
 
-	public abstract RuleCondition<V1, V2> newRuleConditionOfParsableValue(
+	public abstract RuleCondition<V1, V2> newRuleConditionWithParsableValue(
 			final String value);
 	
 	@Override

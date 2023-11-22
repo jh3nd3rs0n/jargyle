@@ -10,7 +10,7 @@ public final class RuleCondition<V1, V2> {
 		}
 		String name = sElements[0];
 		String value = sElements[1];
-		return newInstanceOfParsableValue(name, value);
+		return newInstanceWithParsableValue(name, value);
 	}
 	
 	public static <V1, V2> RuleCondition<V1, V2> newInstance(
@@ -24,11 +24,11 @@ public final class RuleCondition<V1, V2> {
 		return ruleCondition;
 	}
 	
-	public static RuleCondition<Object, Object> newInstanceOfParsableValue(
+	public static RuleCondition<Object, Object> newInstanceWithParsableValue(
 			final String name, final String value) {
 		RuleConditionSpec<Object, Object> ruleConditionSpec = 
 				RuleConditionSpecConstants.valueOfName(name);
-		return ruleConditionSpec.newRuleConditionOfParsableValue(value);
+		return ruleConditionSpec.newRuleConditionWithParsableValue(value);
 	}
 	
 	private final String name;

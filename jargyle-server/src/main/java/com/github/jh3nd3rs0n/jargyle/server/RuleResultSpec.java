@@ -57,7 +57,7 @@ public abstract class RuleResultSpec<V> {
 		return new RuleResult<V>(this, this.valueType.cast(value));
 	}
 	
-	public abstract RuleResult<V> newRuleResultOfParsableValue(
+	public abstract RuleResult<V> newRuleResultWithParsableValue(
 			final String value);
 	
 	@Override

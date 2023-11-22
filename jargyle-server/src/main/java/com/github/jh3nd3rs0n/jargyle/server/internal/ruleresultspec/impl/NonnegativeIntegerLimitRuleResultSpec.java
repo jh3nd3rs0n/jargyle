@@ -12,7 +12,7 @@ public final class NonnegativeIntegerLimitRuleResultSpec
 	}
 
 	@Override
-	public RuleResult<NonnegativeIntegerLimit> newRuleResultOfParsableValue(
+	public RuleResult<NonnegativeIntegerLimit> newRuleResultWithParsableValue(
 			final String value) {
 		return super.newRuleResult(NonnegativeIntegerLimit.newInstance(value));
 	}

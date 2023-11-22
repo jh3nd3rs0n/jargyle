@@ -11,7 +11,7 @@ public final class PortRangeRuleResultSpec extends RuleResultSpec<PortRange> {
 	}
 
 	@Override
-	public RuleResult<PortRange> newRuleResultOfParsableValue(
+	public RuleResult<PortRange> newRuleResultWithParsableValue(
 			final String value) {
 		return super.newRuleResult(PortRange.newInstance(value));
 	}

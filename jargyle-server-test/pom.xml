@@ -8,8 +8,8 @@
 		<version>5.0.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>jargyle-server-test</artifactId>
-	<name>jargyle-server-test</name>
-	<description></description>
+	<name>Jargyle Server Test</name>
+	<description>Tests for the SOCKS server API (No website available for this module.)</description>
 	<dependencies>
 		<dependency>
 			<groupId>com.github.jh3nd3rs0n</groupId>

@@ -9,8 +9,8 @@
 	</parent>
 	<artifactId>jargyle-distribution</artifactId>
 	<packaging>pom</packaging>
-	<name>jargyle-distribution</name>
-	<description></description>
+	<name>Jargyle Distribution</name>
+	<description>Creates the binary distribution (No website available for this module.)</description>
 	<dependencies>
 		<dependency>
 			<groupId>com.github.jh3nd3rs0n</groupId>

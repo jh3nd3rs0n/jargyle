@@ -9,8 +9,8 @@
 		<version>5.0.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>jargyle-protocolbase</artifactId>
-	<name>jargyle-protocolbase</name>
-	<description></description>
+	<name>Jargyle Protocolbase</name>
+	<description>Foundational API for the SOCKS client and server API</description>
 	<properties>
 		<docsDirectory>${project.basedir}${file.separator}..${file.separator}docs</docsDirectory>
 	</properties>

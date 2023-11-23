@@ -9,8 +9,8 @@
 		<version>5.0.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>jargyle-internal</artifactId>
-	<name>jargyle-internal</name>
-	<description></description>
+	<name>Jargyle Internal</name>
+	<description>Internal API used by all modules</description>
 	<properties>
 		<docsDirectory>${project.basedir}${file.separator}..${file.separator}docs</docsDirectory>
 	</properties>

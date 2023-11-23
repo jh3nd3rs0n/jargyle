@@ -1,3 +1,6 @@
+/**
+ * Defines the SOCKS server API.
+ */
 module com.github.jh3nd3rs0n.jargyle.server {
 	requires transitive com.github.jh3nd3rs0n.jargyle.client;
 	requires transitive com.github.jh3nd3rs0n.jargyle.common;

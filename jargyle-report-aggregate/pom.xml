@@ -9,8 +9,8 @@
 	</parent>
 	<artifactId>jargyle-report-aggregate</artifactId>
 	<packaging>pom</packaging>
-	<name>jargyle-report-aggregate</name>
-	<description></description>
+	<name>Jargyle Report Aggregate</name>
+	<description>Generates the aggregated test coverage reports (No website available for this module.)</description>
 	<dependencies>
 		<dependency>
 			<groupId>com.github.jh3nd3rs0n</groupId>

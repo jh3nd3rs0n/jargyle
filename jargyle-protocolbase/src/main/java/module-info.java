@@ -1,3 +1,6 @@
+/**
+ * Defines the foundational API for the SOCKS client and server API.
+ */
 module com.github.jh3nd3rs0n.jargyle.protocolbase {
 	requires transitive com.github.jh3nd3rs0n.jargyle.common;
 	requires com.github.jh3nd3rs0n.jargyle.internal;

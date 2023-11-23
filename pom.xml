@@ -9,7 +9,7 @@
 	<packaging>pom</packaging>
 	<name>Jargyle</name>
 	<url>https://jh3nd3rs0n.github.io/jargyle</url>
-	<description>Java SOCKS5 server</description>
+	<description>SOCKS5 library and server</description>
 	<licenses>
 		<license>
 			<name>MIT License</name>

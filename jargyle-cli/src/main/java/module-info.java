@@ -1,3 +1,6 @@
+/**
+ * Defines the Jargyle command line interface API.
+ */
 module com.github.jh3nd3rs0n.jargyle.cli {
 	requires com.github.jh3nd3rs0n.jargyle.client;
 	requires com.github.jh3nd3rs0n.jargyle.common;

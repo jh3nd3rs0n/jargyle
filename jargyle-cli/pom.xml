@@ -9,8 +9,8 @@
 		<version>5.0.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>jargyle-cli</artifactId>
-	<name>jargyle-cli</name>
-	<description></description>
+	<name>Jargyle CLI</name>
+	<description>Jargyle command line interface API (No website available for this module.)</description>
 	<dependencies>
 		<dependency>
 			<groupId>com.github.jh3nd3rs0n</groupId>

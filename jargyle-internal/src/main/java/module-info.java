@@ -1,3 +1,6 @@
+/**
+ * Defines the internal API used by all modules.
+ */
 module com.github.jh3nd3rs0n.jargyle.internal {
 	requires org.slf4j;	
 	exports com.github.jh3nd3rs0n.jargyle.internal.annotation to 

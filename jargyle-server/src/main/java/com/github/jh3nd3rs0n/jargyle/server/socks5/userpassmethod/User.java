@@ -32,7 +32,8 @@ public final class User {
 		String[] sElements = s.split(":");
 		if (sElements.length != 2) {
 			throw new IllegalArgumentException(
-					"user must be in the following format: NAME:HASHED_PASSWORD");
+					"username hashed password pair must be in the following "
+					+ "format: USERNAME:HASHED_PASSWORD");
 		}
 		String name = null;
 		try {
@@ -53,7 +54,8 @@ public final class User {
 		String[] sElements = s.split(":");
 		if (sElements.length != 2) {
 			throw new IllegalArgumentException(
-					"user must be in the following format: NAME:PASSWORD");
+					"username password pair must be in the following format: "
+					+ "USERNAME:PASSWORD");
 		}
 		String name = null;
 		try {

@@ -6,6 +6,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -585,8 +586,22 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 	}
 	
 	private DatagramSocket newClientFacingDatagramSocket() {
-		Host bindHost = this.getClientFacingBindHost();
-		InetAddress bindInetAddress = bindHost.toInetAddress();
+		Host clientFacingBindHost = this.getClientFacingBindHost();
+		InetAddress bindInetAddress = null;
+		try {
+			bindInetAddress = clientFacingBindHost.toInetAddress();
+		} catch (UnknownHostException e) {
+			this.logger.error( 
+					ObjectLogMessageHelper.objectLogMessage(
+							this, 
+							"Unable to bind the client-facing UDP socket to "
+							+ "the following host: %s",
+							clientFacingBindHost));
+			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
+					Reply.GENERAL_SOCKS_SERVER_FAILURE);
+			this.sendSocks5Reply(socks5Rep);
+			return null;
+		}
 		PortRanges bindPortRanges = this.getClientFacingBindPortRanges();
 		DatagramSocket clientFacingDatagramSock = null;
 		boolean clientFacingDatagramSockBound = false;
@@ -676,8 +691,22 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 	}
 	
 	private DatagramSocket newPeerFacingDatagramSocket() {
-		Host bindHost = this.getPeerFacingBindHost();
-		InetAddress bindInetAddress = bindHost.toInetAddress();
+		Host peerFacingBindHost = this.getPeerFacingBindHost();
+		InetAddress bindInetAddress = null;
+		try {
+			bindInetAddress = peerFacingBindHost.toInetAddress();
+		} catch (UnknownHostException e) {
+			this.logger.error( 
+					ObjectLogMessageHelper.objectLogMessage(
+							this, 
+							"Unable to bind the peer-facing UDP socket to "
+							+ "the following host: %s",
+							peerFacingBindHost));
+			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
+					Reply.GENERAL_SOCKS_SERVER_FAILURE);
+			this.sendSocks5Reply(socks5Rep);
+			return null;
+		}
 		PortRanges bindPortRanges = this.getPeerFacingBindPortRanges();
 		DatagramSocket peerFacingDatagramSock = null;
 		boolean peerFacingDatagramSockBound = false;

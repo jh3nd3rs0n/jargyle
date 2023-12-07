@@ -1,5 +1,9 @@
 package com.github.jh3nd3rs0n.jargyle.client;
 
+import static com.github.jh3nd3rs0n.jargyle.client.SocksServerUriPropertySpecConstants.HOST;
+import static com.github.jh3nd3rs0n.jargyle.client.SocksServerUriPropertySpecConstants.PORT;
+import static com.github.jh3nd3rs0n.jargyle.client.SocksServerUriPropertySpecConstants.SCHEME;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -7,7 +11,14 @@ import java.net.URLDecoder;
 import java.util.Objects;
 
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
+import com.github.jh3nd3rs0n.jargyle.internal.annotation.SingleValueTypeDoc;
 
+@SingleValueTypeDoc(
+		description = "",
+		name = "SOCKS Server URI",
+		syntax = "SCHEME://HOST[:PORT]",
+		syntaxName = "SOCKS_SERVER_URI"
+)
 public abstract class SocksServerUri {
 
 	public static final int DEFAULT_PORT = 1080;
@@ -17,22 +28,24 @@ public abstract class SocksServerUri {
 	public static final int MIN_PORT = 1;
 	
 	public static SocksServerUri newInstance() {
-		String schemeProperty = System.getProperty("socksServerUri.scheme");
+		String schemeProperty = System.getProperty(SCHEME.getName());
 		if (schemeProperty == null) {
 			return null;
 		}
-		Scheme scheme = SchemeConstants.valueOfString(schemeProperty);
-		String hostProperty = System.getProperty("socksServerUri.host");
+		Scheme scheme = SCHEME.newPropertyWithParsableValue(
+				schemeProperty).getValue();
+		String hostProperty = System.getProperty(HOST.getName());
 		if (hostProperty == null) {
 			return null;
 		}
-		String host = hostProperty;
-		String portProperty = System.getProperty("socksServerUri.port");
-		Integer port = null;
-		if (portProperty != null) {
-			port = Integer.valueOf(portProperty);
-		}
-		return scheme.newSocksServerUri(host, port);
+		String host = HOST.newPropertyWithParsableValue(
+				hostProperty).getValue().toString();
+		String portProperty = System.getProperty(PORT.getName());
+		int port = (portProperty == null) ?
+				PORT.getDefaultProperty().getValue().intValue()
+				: PORT.newPropertyWithParsableValue(
+						portProperty).getValue().intValue();
+		return scheme.newSocksServerUri(host, Integer.valueOf(port));
 	}
 	
 	public static SocksServerUri newInstance(final String s) {
@@ -52,7 +65,7 @@ public abstract class SocksServerUri {
 		if (scheme == null) {
 			throw new IllegalArgumentException(message);
 		}
-		Scheme schm = SchemeConstants.valueOfString(scheme);
+		Scheme schm = Scheme.valueOfString(scheme);
 		String host = uri.getHost();
 		if (host == null) {
 			throw new IllegalArgumentException(message);

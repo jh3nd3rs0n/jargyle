@@ -6,13 +6,20 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.jh3nd3rs0n.jargyle.internal.annotation.HelpText;
+import com.github.jh3nd3rs0n.jargyle.internal.annotation.EnumValueDoc;
+import com.github.jh3nd3rs0n.jargyle.internal.annotation.EnumValueTypeDoc;
 
+@EnumValueTypeDoc(
+		description = "",
+		name = "Log Action",
+		syntax = "LOG_AS_WARNING|LOG_AS_INFO",
+		syntaxName = "LOG_ACTION"
+)
 public enum LogAction {
 	
-	@HelpText(
-			doc = "Log message as a warning message",
-			usage = "LOG_AS_WARNING"
+	@EnumValueDoc(
+			description = "Log message as a warning message",
+			value = "LOG_AS_WARNING"
 	)
 	LOG_AS_WARNING {
 		
@@ -23,9 +30,9 @@ public enum LogAction {
 		
 	},
 	
-	@HelpText(
-			doc = "Log message as an informational message",
-			usage = "LOG_AS_INFO"
+	@EnumValueDoc(
+			description = "Log message as an informational message",
+			value = "LOG_AS_INFO"
 	)
 	LOG_AS_INFO {
 		

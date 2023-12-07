@@ -10,17 +10,24 @@ import java.util.Map;
 import com.github.jh3nd3rs0n.jargyle.common.number.NonnegativeInteger;
 import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
 import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
-import com.github.jh3nd3rs0n.jargyle.internal.annotation.HelpText;
+import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueSpecDoc;
+import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueSpecsDoc;
 
+@NameValuePairValueSpecsDoc(
+		description = "",
+		name = "Standard Socket Settings"
+)
 public final class StandardSocketSettingSpecConstants {
 
 	private static final SocketSettingSpecs SOCKET_SETTING_SPECS = 
 			new SocketSettingSpecs();
 	
-	@HelpText(
-			doc = "The type-of-service or traffic class field in the IP "
-					+ "header for a TCP or UDP socket", 
-			usage = "IP_TOS=INTEGER_BETWEEN_0_AND_255"
+	@NameValuePairValueSpecDoc(
+			description = "The type-of-service or traffic class field in the "
+					+ "IP header for a TCP or UDP socket",
+			name = "IP_TOS",
+			syntax = "IP_TOS=UNSIGNED_BYTE",
+			valueType = UnsignedByte.class
 	)
 	public static final SocketSettingSpec<UnsignedByte> IP_TOS = SOCKET_SETTING_SPECS.addThenGet(new SocketSettingSpec<UnsignedByte>(
 			"IP_TOS", 
@@ -48,15 +55,17 @@ public final class StandardSocketSettingSpecConstants {
 		
 	});
 	
-	@HelpText(
-			doc = "Performance preferences for a TCP socket described by "
-					+ "three digits whose values indicate the relative "
+	@NameValuePairValueSpecDoc(
+			description = "Performance preferences for a TCP socket described "
+					+ "by three digits whose values indicate the relative "
 					+ "importance of short connection time, low latency, and "
-					+ "high bandwidth", 
-			usage = "PERF_PREF=3_DIGITS_EACH_BETWEEN_0_AND_2"
+					+ "high bandwidth",
+			name = "PERF_PREFS",
+			syntax = "PERF_PREFS=PERFORMANCE_PREFERENCES",
+			valueType = PerformancePreferences.class
 	)
-	public static final SocketSettingSpec<PerformancePreferences> PERF_PREF = SOCKET_SETTING_SPECS.addThenGet(new SocketSettingSpec<PerformancePreferences>(
-			"PERF_PREF", 
+	public static final SocketSettingSpec<PerformancePreferences> PERF_PREFS = SOCKET_SETTING_SPECS.addThenGet(new SocketSettingSpec<PerformancePreferences>(
+			"PERF_PREFS", 
 			PerformancePreferences.class) {
 		
 		@Override
@@ -81,9 +90,11 @@ public final class StandardSocketSettingSpecConstants {
 		
 	});
 	
-	@HelpText(
-			doc = "Can send broadcast datagrams", 
-			usage = "SO_BROADCAST=true|false"
+	@NameValuePairValueSpecDoc(
+			description = "Can send broadcast datagrams",
+			name = "SO_BROADCAST",
+			syntax = "SO_BROADCAST=true|false",
+			valueType = Boolean.class
 	)
 	public static final SocketSettingSpec<Boolean> SO_BROADCAST = SOCKET_SETTING_SPECS.addThenGet(new SocketSettingSpec<Boolean>(
 			"SO_BROADCAST", 
@@ -104,10 +115,12 @@ public final class StandardSocketSettingSpecConstants {
 		
 	});
 	
-	@HelpText(
-			doc = "Keeps a TCP socket alive when no data has been exchanged "
-					+ "in either direction", 
-			usage = "SO_KEEPALIVE=true|false"
+	@NameValuePairValueSpecDoc(
+			description = "Keeps a TCP socket alive when no data has been "
+					+ "exchanged in either direction",
+			name = "SO_KEEPALIVE",
+			syntax = "SO_KEEPALIVE=true|false",
+			valueType = Boolean.class
 	)
 	public static final SocketSettingSpec<Boolean> SO_KEEPALIVE = SOCKET_SETTING_SPECS.addThenGet(new SocketSettingSpec<Boolean>(
 			"SO_KEEPALIVE", 
@@ -128,9 +141,11 @@ public final class StandardSocketSettingSpecConstants {
 		
 	});
 	
-	@HelpText(
-			doc = "Linger on closing the TCP socket in seconds", 
-			usage = "SO_LINGER=INTEGER_BETWEEN_0_AND_2147483647"
+	@NameValuePairValueSpecDoc(
+			description = "Linger on closing the TCP socket in seconds",
+			name = "SO_LINGER",
+			syntax = "SO_LINGER=NONNEGATIVE_INTEGER",
+			valueType = NonnegativeInteger.class
 	)
 	public static final SocketSettingSpec<NonnegativeInteger> SO_LINGER = SOCKET_SETTING_SPECS.addThenGet(new SocketSettingSpec<NonnegativeInteger>(
 			"SO_LINGER", 
@@ -151,9 +166,11 @@ public final class StandardSocketSettingSpecConstants {
 		
 	});
 	
-	@HelpText(
-			doc = "Can receive TCP urgent data", 
-			usage = "SO_OOBINLINE=true|false"
+	@NameValuePairValueSpecDoc(
+			description = "Can receive TCP urgent data",
+			name = "SO_OOBINLINE",
+			syntax = "SO_OOBINLINE=true|false",
+			valueType = Boolean.class
 	)
 	public static final SocketSettingSpec<Boolean> SO_OOBINLINE = SOCKET_SETTING_SPECS.addThenGet(new SocketSettingSpec<Boolean>(
 			"SO_OOBINLINE", 
@@ -174,9 +191,11 @@ public final class StandardSocketSettingSpecConstants {
 	
 	});
 	
-	@HelpText(
-			doc = "The receive buffer size", 
-			usage = "SO_RCVBUF=INTEGER_BETWEEN_1_AND_2147483647"
+	@NameValuePairValueSpecDoc(
+			description = "The receive buffer size",
+			name = "SO_RCVBUF",
+			syntax = "SO_RCVBUF=POSITIVE_INTEGER",
+			valueType = PositiveInteger.class
 	)
 	public static final SocketSettingSpec<PositiveInteger> SO_RCVBUF = SOCKET_SETTING_SPECS.addThenGet(new SocketSettingSpec<PositiveInteger>(
 			"SO_RCVBUF", 
@@ -211,9 +230,11 @@ public final class StandardSocketSettingSpecConstants {
 		
 	});
 	
-	@HelpText(
-			doc = "Can reuse socket address and port", 
-			usage = "SO_REUSEADDR=true|false"
+	@NameValuePairValueSpecDoc(
+			description = "Can reuse socket address and port",
+			name = "SO_REUSEADDR",
+			syntax = "SO_REUSEADDR=true|false",
+			valueType = Boolean.class
 	)
 	public static final SocketSettingSpec<Boolean> SO_REUSEADDR = SOCKET_SETTING_SPECS.addThenGet(new SocketSettingSpec<Boolean>(
 			"SO_REUSEADDR", 
@@ -248,9 +269,11 @@ public final class StandardSocketSettingSpecConstants {
 	
 	});
 	
-	@HelpText(
-			doc = "The send buffer size", 
-			usage = "SO_SNDBUF=INTEGER_BETWEEN_1_AND_2147483647"
+	@NameValuePairValueSpecDoc(
+			description = "The send buffer size",
+			name = "SO_SNDBUF",
+			syntax = "SO_SNDBUF=POSITIVE_INTEGER",
+			valueType = PositiveInteger.class
 	)
 	public static final SocketSettingSpec<PositiveInteger> SO_SNDBUF = SOCKET_SETTING_SPECS.addThenGet(new SocketSettingSpec<PositiveInteger>(
 			"SO_SNDBUF", 
@@ -278,9 +301,12 @@ public final class StandardSocketSettingSpecConstants {
 		
 	});
 	
-	@HelpText(
-			doc = "The timeout in milliseconds on waiting for an idle socket", 
-			usage = "SO_TIMEOUT=INTEGER_BETWEEN_0_AND_2147483647"
+	@NameValuePairValueSpecDoc(
+			description = "The timeout in milliseconds on waiting for an idle "
+					+ "socket",
+			name = "SO_TIMEOUT",
+			syntax = "SO_TIMEOUT=NONNEGATIVE_INTEGER",
+			valueType = NonnegativeInteger.class
 	)
 	public static final SocketSettingSpec<NonnegativeInteger> SO_TIMEOUT = SOCKET_SETTING_SPECS.addThenGet(new SocketSettingSpec<NonnegativeInteger>(
 			"SO_TIMEOUT", 
@@ -315,9 +341,11 @@ public final class StandardSocketSettingSpecConstants {
 		
 	});
 	
-	@HelpText(
-			doc = "Disables Nagle's algorithm", 
-			usage = "TCP_NODELAY=true|false"
+	@NameValuePairValueSpecDoc(
+			description = "Disables Nagle's algorithm",
+			name = "TCP_NODELAY",
+			syntax = "TCP_NODELAY=true|false",
+			valueType = Boolean.class
 	)
 	public static final SocketSettingSpec<Boolean> TCP_NODELAY = SOCKET_SETTING_SPECS.addThenGet(new SocketSettingSpec<Boolean>(
 			"TCP_NODELAY", 

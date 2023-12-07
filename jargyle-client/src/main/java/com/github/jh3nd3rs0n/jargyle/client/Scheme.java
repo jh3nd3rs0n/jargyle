@@ -1,42 +1,51 @@
 package com.github.jh3nd3rs0n.jargyle.client;
 
-public abstract class Scheme {
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
+import com.github.jh3nd3rs0n.jargyle.client.socks5.Socks5ServerUri;
+import com.github.jh3nd3rs0n.jargyle.internal.annotation.EnumValueDoc;
+import com.github.jh3nd3rs0n.jargyle.internal.annotation.EnumValueTypeDoc;
+
+@EnumValueTypeDoc(
+		description = "",
+		name = "Scheme",
+		syntax = "socks5",
+		syntaxName = "SCHEME"
+)
+public enum Scheme {
+	
+	@EnumValueDoc(description = "SOCKS5 protocol version 5", value = "socks5")
+	SOCKS5("socks5") {
+	
+		@Override
+		public SocksServerUri newSocksServerUri(
+				final String host, final Integer port) {
+			return new Socks5ServerUri(host, port);
+		}
+	
+	};
+
+	public static Scheme valueOfString(final String string) {
+		for (Scheme scheme : Scheme.values()) {
+			if (scheme.toString().equals(string)) {
+				return scheme;
+			}
+		}
+		String str = Arrays.stream(Scheme.values())
+				.map(Scheme::toString)
+				.collect(Collectors.joining(", "));
+		throw new IllegalArgumentException(String.format(
+				"expected scheme must be one of the following values: %s. "
+				+ "actual value is %s",
+				str,
+				string));			
+	}
 	
 	private final String string;
 	
-	Scheme(final String str) {
+	private Scheme(final String str) {
 		this.string = str;
-	}
-	
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (this.getClass() != obj.getClass()) {
-			return false;
-		}
-		Scheme other = (Scheme) obj;
-		if (this.string == null) {
-			if (other.string != null) {
-				return false;
-			}
-		} else if (!this.string.equals(other.string)) {
-			return false;
-		}
-		return true;
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((this.string == null) ? 
-				0 : this.string.hashCode());
-		return result;
 	}
 
 	public abstract SocksServerUri newSocksServerUri(

@@ -7,6 +7,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.github.jh3nd3rs0n.jargyle.internal.annotation.SingleValueTypeDoc;
+
+@SingleValueTypeDoc(
+		description = "",
+		name = "Rule",
+		syntax = "[RULE_CONDITION1,[RULE_CONDITION2,[...]]]RULE_RESULT1[,RULE_RESULT2[...]]",
+		syntaxName = "RULE"
+)
 public final class Rule {
 
 	public static final class Builder {

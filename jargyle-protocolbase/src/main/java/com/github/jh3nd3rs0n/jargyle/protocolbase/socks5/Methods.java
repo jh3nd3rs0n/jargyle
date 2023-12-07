@@ -6,6 +6,15 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.github.jh3nd3rs0n.jargyle.internal.annotation.ValuesValueTypeDoc;
+
+@ValuesValueTypeDoc(
+		description = "",
+		elementValueType = Method.class,
+		name = "SOCKS5 Methods",
+		syntax = "[SOCKS5_METHOD1[,SOCKS5_METHOD2[...]]]",
+		syntaxName = "SOCKS5_METHODS"
+)
 public final class Methods {
 	
 	private static final Methods DEFAULT_INSTANCE = new Methods(

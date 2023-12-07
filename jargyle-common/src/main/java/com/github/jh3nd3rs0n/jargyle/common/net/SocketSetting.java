@@ -5,6 +5,17 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 
+import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueTypeDoc;
+
+@NameValuePairValueTypeDoc(
+		description = "",
+		name = "Socket Setting",
+		nameValuePairValueSpecs = {
+				StandardSocketSettingSpecConstants.class
+		},
+		syntax = "NAME=VALUE",
+		syntaxName = "SOCKET_SETTING"
+)
 public final class SocketSetting<V> {
 
 	public static SocketSetting<Object> newInstance(final String s) {

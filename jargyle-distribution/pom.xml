@@ -11,6 +11,10 @@
 	<packaging>pom</packaging>
 	<name>Jargyle Distribution</name>
 	<description>Creates the binary distribution (No website available for this module.)</description>
+	<properties>
+		<maven.site.skip>true</maven.site.skip>
+		<maven.deploy.skip>true</maven.deploy.skip>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>com.github.jh3nd3rs0n</groupId>
@@ -20,7 +24,7 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-jdk14</artifactId>
-			<version>1.7.28</version>
+			<version>${slf4j.version}</version>
 		</dependency>
 	</dependencies>
 	<build>
@@ -41,13 +45,6 @@
 						</configuration>
 					</execution>
 				</executions>
-			</plugin>
-			<plugin>
-				<artifactId>maven-site-plugin</artifactId>
-				<configuration>
-					<skip>true</skip>
-					<skipDeploy>true</skipDeploy>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>

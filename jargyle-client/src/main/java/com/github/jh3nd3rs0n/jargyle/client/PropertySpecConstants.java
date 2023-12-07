@@ -14,16 +14,12 @@ final class PropertySpecConstants {
 	static {
 		List<PropertySpec<Object>> values = 
 				new ArrayList<PropertySpec<Object>>();
-		values.addAll(DtlsPropertySpecConstants.values());
-		values.addAll(GeneralPropertySpecConstants.values());
-		values.addAll(Socks5PropertySpecConstants.values());
-		values.addAll(SslPropertySpecConstants.values());
+		values.addAll(SocksServerUriPropertySpecConstants.values());
+		values.addAll(SocksClientPropertySpecConstants.values());
 		Map<String, PropertySpec<Object>> valuesMap = 
 				new HashMap<String, PropertySpec<Object>>();
-		valuesMap.putAll(DtlsPropertySpecConstants.valuesMap());
-		valuesMap.putAll(GeneralPropertySpecConstants.valuesMap());
-		valuesMap.putAll(Socks5PropertySpecConstants.valuesMap());
-		valuesMap.putAll(SslPropertySpecConstants.valuesMap());		
+		valuesMap.putAll(SocksServerUriPropertySpecConstants.valuesMap());
+		valuesMap.putAll(SocksClientPropertySpecConstants.valuesMap());
 		VALUES = values;
 		VALUES_MAP = valuesMap;
 	}

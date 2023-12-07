@@ -1,9 +1,16 @@
 package com.github.jh3nd3rs0n.jargyle.server;
 
+import com.github.jh3nd3rs0n.jargyle.internal.annotation.SingleValueTypeDoc;
 import com.github.jh3nd3rs0n.jargyle.server.internal.addressrange.impl.DomainnameRange;
 import com.github.jh3nd3rs0n.jargyle.server.internal.addressrange.impl.Ipv4AddressRange;
 import com.github.jh3nd3rs0n.jargyle.server.internal.addressrange.impl.Ipv6AddressRange;
 
+@SingleValueTypeDoc(
+		description = "",
+		name = "Address Range",
+		syntax = "ADDRESS|IP_ADDRESS1-IP_ADDRESS2|regex:REGULAR_EXPRESSION",
+		syntaxName = "ADDRESS_RANGE"
+)
 public abstract class AddressRange {
 
 	public static AddressRange newInstance(final String s) {

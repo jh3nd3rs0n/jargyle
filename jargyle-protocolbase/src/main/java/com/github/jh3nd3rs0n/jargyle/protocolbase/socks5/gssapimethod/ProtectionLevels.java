@@ -6,6 +6,15 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.github.jh3nd3rs0n.jargyle.internal.annotation.ValuesValueTypeDoc;
+
+@ValuesValueTypeDoc(
+		description = "",
+		elementValueType = ProtectionLevel.class,
+		name = "SOCKS5 GSS-API Method Protection Levels",
+		syntax = "SOCKS5_GSSAPIMETHOD_PROTECTION_LEVEL1[,SOCKS5_GSSAPIMETHOD_PROTECTION_LEVEL2[...]]",
+		syntaxName = "SOCKS5_GSSAPIMETHOD_PROTECTION_LEVELS"
+)
 public final class ProtectionLevels {
 
 	private static final ProtectionLevels DEFAULT_INSTANCE =

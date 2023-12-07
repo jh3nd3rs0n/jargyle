@@ -12,6 +12,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.github.jh3nd3rs0n.jargyle.internal.annotation.ValuesValueTypeDoc;
+
+@ValuesValueTypeDoc(
+		description = "",
+		elementValueType = SocketSetting.class,
+		name = "Socket Settings",
+		syntax = "[SOCKET_SETTING1[,SOCKET_SETTING2[...]]]",
+		syntaxName = "SOCKET_SETTINGS"
+)
 public final class SocketSettings {
 
 	public static SocketSettings newInstance(

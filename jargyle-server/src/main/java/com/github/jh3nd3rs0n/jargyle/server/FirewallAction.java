@@ -3,20 +3,21 @@ package com.github.jh3nd3rs0n.jargyle.server;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-import com.github.jh3nd3rs0n.jargyle.internal.annotation.HelpText;
+import com.github.jh3nd3rs0n.jargyle.internal.annotation.EnumValueDoc;
+import com.github.jh3nd3rs0n.jargyle.internal.annotation.EnumValueTypeDoc;
 
+@EnumValueTypeDoc(
+		description = "",
+		name = "Firewall Action",
+		syntax = "ALLOW|DENY",
+		syntaxName = "FIREWALL_ACTION"
+)
 public enum FirewallAction {
 
-	@HelpText(
-			doc = "",
-			usage = "ALLOW"
-	)
+	@EnumValueDoc(description = "", value = "ALLOW")
 	ALLOW,
 	
-	@HelpText(
-			doc = "",
-			usage = "DENY"
-	)	
+	@EnumValueDoc(description = "", value = "DENY")	
 	DENY;
 
 	public static FirewallAction valueOfString(final String s) {

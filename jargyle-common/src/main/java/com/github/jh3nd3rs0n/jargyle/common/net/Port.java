@@ -1,7 +1,14 @@
 package com.github.jh3nd3rs0n.jargyle.common.net;
 
 import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedShort;
+import com.github.jh3nd3rs0n.jargyle.internal.annotation.SingleValueTypeDoc;
 
+@SingleValueTypeDoc(
+		description = "",
+		name = "Port",
+		syntax = "0-65535",
+		syntaxName = "PORT"
+)
 public final class Port implements Comparable<Port> {
 
 	public static final int MAX_INT_VALUE = UnsignedShort.MAX_INT_VALUE;

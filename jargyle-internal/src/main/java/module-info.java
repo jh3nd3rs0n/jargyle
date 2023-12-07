@@ -1,5 +1,5 @@
 /**
- * Defines the internal API used by all modules.
+ * Defines the internal API used by all modules. Nothing to see here.
  */
 module com.github.jh3nd3rs0n.jargyle.internal {
 	requires org.slf4j;	

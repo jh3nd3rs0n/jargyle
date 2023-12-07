@@ -15,6 +15,12 @@
 			<outputDirectory></outputDirectory>
 			<includes>
 				<include>LICENSE</include>
+			</includes>
+		</fileSet>
+		<fileSet>
+			<directory>${project.basedir}</directory>
+			<outputDirectory></outputDirectory>
+			<includes>
 				<include>LICENSE_3RD_PARTY</include>
 			</includes>
 		</fileSet>

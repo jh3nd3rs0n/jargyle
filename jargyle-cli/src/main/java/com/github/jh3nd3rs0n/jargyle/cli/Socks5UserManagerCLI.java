@@ -13,7 +13,7 @@ import com.github.jh3nd3rs0n.argmatey.ArgMatey.Annotations.Ordinal;
 import com.github.jh3nd3rs0n.argmatey.ArgMatey.CLI;
 import com.github.jh3nd3rs0n.argmatey.ArgMatey.OptionType;
 import com.github.jh3nd3rs0n.argmatey.ArgMatey.TerminationRequestedException;
-import com.github.jh3nd3rs0n.jargyle.internal.annotation.HelpText;
+import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueSpecDoc;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassmethod.ExternalSourceUserRepositorySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassmethod.User;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassmethod.UserRepository;
@@ -239,10 +239,30 @@ public final class Socks5UserManagerCLI extends CLI {
 				helpOption.getUsage());
 		System.out.println();
 		System.out.println("USER_REPOSITORIES:");
-		this.printHelpText(ExternalSourceUserRepositorySpecConstants.class);
+		System.out.println();
+		for (Field field : 
+			ExternalSourceUserRepositorySpecConstants.class.getDeclaredFields()) {
+			NameValuePairValueSpecDoc nameValuePairValueSpecDoc = field.getAnnotation(
+					NameValuePairValueSpecDoc.class);
+			if (nameValuePairValueSpecDoc != null) {
+				System.out.print("  ");
+				System.out.println(nameValuePairValueSpecDoc.syntax());
+				System.out.print("      ");
+				System.out.println(nameValuePairValueSpecDoc.description());
+			}
+		}		
 		System.out.println();
 		System.out.println("COMMANDS:");
-		this.printHelpText(Command.class);
+		System.out.println();
+		for (Field field : Command.class.getDeclaredFields()) {
+			HelpText helpText = field.getAnnotation(HelpText.class);
+			if (helpText != null) {
+				System.out.print("  ");
+				System.out.println(helpText.usage());
+				System.out.print("      ");
+				System.out.println(helpText.doc());
+			}
+		}
 		System.out.println();
 		System.out.println("OPTIONS:");
 		this.getOptionGroups().printHelpText();
@@ -291,6 +311,7 @@ public final class Socks5UserManagerCLI extends CLI {
 		throw new TerminationRequestedException(-1);
 	}
 	
+	/*
 	private void printHelpText(final Class<?> cls) {
 		System.out.println();
 		Field[] fields = cls.getDeclaredFields();
@@ -304,5 +325,6 @@ public final class Socks5UserManagerCLI extends CLI {
 			}
 		}
 	}
+	*/
 	
 }

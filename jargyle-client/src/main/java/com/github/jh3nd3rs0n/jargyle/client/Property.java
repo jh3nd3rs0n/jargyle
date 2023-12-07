@@ -1,5 +1,20 @@
 package com.github.jh3nd3rs0n.jargyle.client;
 
+import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueTypeDoc;
+
+@NameValuePairValueTypeDoc(
+		description = "",
+		name = "Property",
+		nameValuePairValueSpecs = {
+				SocksServerUriPropertySpecConstants.class,
+				GeneralPropertySpecConstants.class,
+				DtlsPropertySpecConstants.class,
+				Socks5PropertySpecConstants.class,
+				SslPropertySpecConstants.class
+		},
+		syntax = "NAME=VALUE",
+		syntaxName = "PROPERTY"
+)
 public final class Property<V> {
 	
 	public static <V> Property<V> newInstance(

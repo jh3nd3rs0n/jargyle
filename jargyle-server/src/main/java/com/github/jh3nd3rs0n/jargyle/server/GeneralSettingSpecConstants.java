@@ -8,7 +8,8 @@ import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.common.net.PortRanges;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.common.number.NonnegativeInteger;
-import com.github.jh3nd3rs0n.jargyle.internal.annotation.HelpText;
+import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueSpecDoc;
+import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueSpecsDoc;
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.HostSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.LogActionSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.NonnegativeIntegerSettingSpec;
@@ -19,231 +20,281 @@ import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.SelectionS
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.SocketSettingsSettingSpec;
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.StringSettingSpec;
 
+@NameValuePairValueSpecsDoc(
+		description = "",
+		name = "General Settings"
+)
 public final class GeneralSettingSpecConstants {
 
 	private static final SettingSpecs SETTING_SPECS = new SettingSpecs();
 
-	@HelpText(
-			doc = "The maximum length of the queue of incoming client "
-					+ "connections to the SOCKS server (default is 50)", 
-			usage = "backlog=INTEGER_BETWEEN_0_AND_2147483647"
+	@NameValuePairValueSpecDoc(
+			description = "The maximum length of the queue of incoming client "
+					+ "connections to the SOCKS server (default is 50)",
+			name = "backlog",
+			syntax = "backlog=NONNEGATIVE_INTEGER",
+			valueType = NonnegativeInteger.class
 	)
 	public static final SettingSpec<NonnegativeInteger> BACKLOG = 
 			SETTING_SPECS.addThenGet(new NonnegativeIntegerSettingSpec(
 					"backlog", 
 					NonnegativeInteger.newInstance(50)));
 	
-	@HelpText(
-			doc = "The default binding host name or address for all sockets "
-					+ "(default is 0.0.0.0)",
-			usage = "bindHost=HOST"
+	@NameValuePairValueSpecDoc(
+			description = "The default binding host name or address for all "
+					+ "sockets (default is 0.0.0.0)",
+			name = "bindHost",
+			syntax = "bindHost=HOST",
+			valueType = Host.class
 	)
 	public static final SettingSpec<Host> BIND_HOST =
 			SETTING_SPECS.addThenGet(new HostSettingSpec(
 					"bindHost", 
-					Host.getAllZerosInet4Instance()));
+					Host.getAllZerosIpv4AddressInstance()));
 	
-	@HelpText(
-			doc = "The comma separated list of default binding port ranges "
-					+ "for all TCP sockets (default is 0)",
-			usage = "bindTcpPortRanges=[PORT_RANGE1[,PORT_RANGE2[...]]]"
+	@NameValuePairValueSpecDoc(
+			description = "The comma separated list of default binding port "
+					+ "ranges for all TCP sockets (default is 0)",
+			name = "bindTcpPortRanges",
+			syntax = "bindTcpPortRanges=PORT_RANGES",
+			valueType = PortRanges.class
 	)
 	public static final SettingSpec<PortRanges> BIND_TCP_PORT_RANGES =
 			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
 					"bindTcpPortRanges",
 					PortRanges.getDefault()));
 	
-	@HelpText(
-			doc = "The comma separated list of default binding port ranges "
-					+ "for all UDP sockets (default is 0)",
-			usage = "bindUdpPortRanges=[PORT_RANGE1[,PORT_RANGE2[...]]]"
+	@NameValuePairValueSpecDoc(
+			description = "The comma separated list of default binding port "
+					+ "ranges for all UDP sockets (default is 0)",
+			name = "bindUdpPortRanges",
+			syntax = "bindUdpPortRanges=PORT_RANGES",
+			valueType = PortRanges.class
 	)
 	public static final SettingSpec<PortRanges> BIND_UDP_PORT_RANGES =
 			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
 					"bindUdpPortRanges",
 					PortRanges.getDefault()));
 	
-	@HelpText(
-			doc = "The comma separated list of socket settings for the "
-					+ "client socket", 
-			usage = "clientSocketSettings=[SOCKET_SETTING1[,SOCKET_SETTING2[...]]]"
+	@NameValuePairValueSpecDoc(
+			description = "The comma separated list of socket settings for the "
+					+ "client socket",
+			name = "clientSocketSettings",
+			syntax = "clientSocketSettings=SOCKET_SETTINGS",
+			valueType = SocketSettings.class
 	)
 	public static final SettingSpec<SocketSettings> CLIENT_SOCKET_SETTINGS = 
 			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
 					"clientSocketSettings", 
 					SocketSettings.newInstance()));
 	
-	@HelpText(
-			doc = "A documentation setting", 
-			usage = "doc=TEXT"
+	@NameValuePairValueSpecDoc(
+			description = "A documentation setting",
+			name = "doc",
+			syntax = "doc=TEXT",
+			valueType = String.class
 	)
 	public static final SettingSpec<String> DOC =
 			SETTING_SPECS.addThenGet(new StringSettingSpec(
 					"doc",
 					null));
 	
-	@HelpText(
-			doc = "The default binding host name or address for all "
+	@NameValuePairValueSpecDoc(
+			description = "The default binding host name or address for all "
 					+ "external-facing sockets",
-			usage = "externalFacingBindHost=HOST"
+			name = "externalFacingBindHost",
+			syntax = "externalFacingBindHost=HOST",
+			valueType = Host.class
 	)
 	public static final SettingSpec<Host> EXTERNAL_FACING_BIND_HOST =
 			SETTING_SPECS.addThenGet(new HostSettingSpec(
 					"externalFacingBindHost",
 					null));
 	
-	@HelpText(
-			doc = "The comma separated list of default binding port ranges "
-					+ "for all external-facing TCP sockets",
-			usage = "externalFacingBindTcpPortRanges=[PORT_RANGE1[,PORT_RANGE2[...]]]"
+	@NameValuePairValueSpecDoc(
+			description = "The comma separated list of default binding port "
+					+ "ranges for all external-facing TCP sockets",
+			name = "externalFacingBindTcpPortRanges",
+			syntax = "externalFacingBindTcpPortRanges=PORT_RANGES",
+			valueType = PortRanges.class
 	)
 	public static final SettingSpec<PortRanges> EXTERNAL_FACING_BIND_TCP_PORT_RANGES =
 			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
 					"externalFacingBindTcpPortRanges",
 					PortRanges.newInstance()));
 			
-	@HelpText(
-			doc = "The comma separated list of default binding port ranges "
-					+ "for all external-facing UDP sockets",
-			usage = "externalFacingBindUdpPortRanges=[PORT_RANGE1[,PORT_RANGE2[...]]]"
+	@NameValuePairValueSpecDoc(
+			description = "The comma separated list of default binding port "
+					+ "ranges for all external-facing UDP sockets",
+			name = "externalFacingBindUdpPortRanges",
+			syntax = "externalFacingBindUdpPortRanges=PORT_RANGES",
+			valueType = PortRanges.class
 	)
 	public static final SettingSpec<PortRanges> EXTERNAL_FACING_BIND_UDP_PORT_RANGES =
 			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
 					"externalFacingBindUdpPortRanges",
 					PortRanges.newInstance()));
 	
-	@HelpText(
-			doc = "The comma separated list of default socket settings for all "
-					+ "external-facing sockets",
-			usage = "externalFacingSocketSettings=[SOCKET_SETTING1[,SOCKET_SETTING2[...]]]"
+	@NameValuePairValueSpecDoc(
+			description = "The comma separated list of default socket settings "
+					+ "for all external-facing sockets",
+			name = "externalFacingSocketSettings",
+			syntax = "externalFacingSocketSettings=SOCKET_SETTINGS",
+			valueType = SocketSettings.class
 	)
 	public static final SettingSpec<SocketSettings> EXTERNAL_FACING_SOCKET_SETTINGS =
 			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
 					"externalFacingSocketSettings", 
 					SocketSettings.newInstance()));
 
-	@HelpText(
-			doc = "The default binding host name or address for all "
+	@NameValuePairValueSpecDoc(
+			description = "The default binding host name or address for all "
 					+ "internal-facing sockets",
-			usage = "internalFacingBindHost=HOST"
+			name = "internalFacingBindHost",
+			syntax = "internalFacingBindHost=HOST",
+			valueType = Host.class
 	)
 	public static final SettingSpec<Host> INTERNAL_FACING_BIND_HOST =
 			SETTING_SPECS.addThenGet(new HostSettingSpec(
 					"internalFacingBindHost",
 					null));
 	
-	@HelpText(
-			doc = "The comma separated list of default binding port ranges "
-					+ "for all internal-facing TCP sockets",
-			usage = "internalFacingBindTcpPortRanges=[PORT_RANGE1[,PORT_RANGE2[...]]]"
+	@NameValuePairValueSpecDoc(
+			description = "The comma separated list of default binding port "
+					+ "ranges for all internal-facing TCP sockets",
+			name = "internalFacingBindTcpPortRanges",
+			syntax = "internalFacingBindTcpPortRanges=PORT_RANGES",
+			valueType = PortRanges.class
 	)
 	public static final SettingSpec<PortRanges> INTERNAL_FACING_BIND_TCP_PORT_RANGES =
 			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
 					"internalFacingBindTcpPortRanges",
 					PortRanges.newInstance()));
 			
-	@HelpText(
-			doc = "The comma separated list of default binding port ranges "
-					+ "for all internal-facing UDP sockets",
-			usage = "internalFacingBindUdpPortRanges=[PORT_RANGE1[,PORT_RANGE2[...]]]"
+	@NameValuePairValueSpecDoc(
+			description = "The comma separated list of default binding port "
+					+ "ranges for all internal-facing UDP sockets",
+			name = "internalFacingBindUdpPortRanges",
+			syntax = "internalFacingBindUdpPortRanges=PORT_RANGES",
+			valueType = PortRanges.class
 	)
 	public static final SettingSpec<PortRanges> INTERNAL_FACING_BIND_UDP_PORT_RANGES =
 			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
 					"internalFacingBindUdpPortRanges",
 					PortRanges.newInstance()));
 	
-	@HelpText(
-			doc = "The comma separated list of default socket settings for all "
-					+ "internal-facing sockets",
-			usage = "internalFacingSocketSettings=[SOCKET_SETTING1[,SOCKET_SETTING2[...]]]"
+	@NameValuePairValueSpecDoc(
+			description = "The comma separated list of default socket settings "
+					+ "for all internal-facing sockets",
+			name = "internalFacingSocketSettings",
+			syntax = "internalFacingSocketSettings=SOCKET_SETTINGS",
+			valueType = SocketSettings.class
 	)
 	public static final SettingSpec<SocketSettings> INTERNAL_FACING_SOCKET_SETTINGS =
 			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
 					"internalFacingSocketSettings", 
 					SocketSettings.newInstance()));
 	
-	@HelpText(
-			doc = "The ID for the last and unassigned route "
-					+ "(default is lastRoute)", 
-			usage = "lastRouteId=ROUTE_ID"
+	@NameValuePairValueSpecDoc(
+			description = "The ID for the last and unassigned route "
+					+ "(default is lastRoute)",
+			name = "lastRouteId",
+			syntax = "lastRouteId=ROUTE_ID",
+			valueType = String.class
 	)	
 	public static final SettingSpec<String> LAST_ROUTE_ID = 
 			SETTING_SPECS.addThenGet(new StringSettingSpec(
 					"lastRouteId",
 					"lastRoute"));
 	
-	@HelpText(
-			doc = "The port for the SOCKS server", 
-			usage = "port=INTEGER_BETWEEN_0_AND_65535"
+	@NameValuePairValueSpecDoc(
+			description = "The port for the SOCKS server",
+			name = "port",
+			syntax = "port=PORT",
+			valueType = Port.class
 	)
 	public static final SettingSpec<Port> PORT = 
 			SETTING_SPECS.addThenGet(new PortSettingSpec(
 					"port", 
 					null));
 
-	@HelpText(
-			doc = "The logging action to take if a route is selected", 
-			usage = "routeSelectionLogAction=LOG_ACTION"
+	@NameValuePairValueSpecDoc(
+			description = "The logging action to take if a route is selected",
+			name = "routeSelectionLogAction",
+			syntax = "routeSelectionLogAction=LOG_ACTION",
+			valueType = LogAction.class
 	)	
 	public static final SettingSpec<LogAction> ROUTE_SELECTION_LOG_ACTION =
 			SETTING_SPECS.addThenGet(new LogActionSettingSpec(
 					"routeSelectionLogAction",
 					null));
 	
-	@HelpText(
-			doc = "The selection strategy for the next route "
-					+ "(default is CYCLICAL)", 
-			usage = "routeSelectionStrategy=SELECTION_STRATEGY"
+	@NameValuePairValueSpecDoc(
+			description = "The selection strategy for the next route "
+					+ "(default is CYCLICAL)",
+			name = "routeSelectionStrategy",
+			syntax = "routeSelectionStrategy=SELECTION_STRATEGY",
+			valueType = SelectionStrategy.class
 	)
 	public static final SettingSpec<SelectionStrategy> ROUTE_SELECTION_STRATEGY =
 			SETTING_SPECS.addThenGet(new SelectionStrategySettingSpec(
 					"routeSelectionStrategy",
 					SelectionStrategySpecConstants.CYCLICAL.newSelectionStrategy()));
 	
-	@HelpText(
-			doc = "A rule for the SOCKS server "
-					+ "(default is firewallAction=ALLOW)", 
-			usage = "rule=[RULE_CONDITION1,[RULE_CONDITION2,[...]]]RULE_RESULT1[,RULE_RESULT2[...]]"
+	@NameValuePairValueSpecDoc(
+			description = "A rule for the SOCKS server "
+					+ "(default is firewallAction=ALLOW)",
+			name = "rule",
+			syntax = "rule=RULE",
+			valueType = Rule.class
 	)	
 	public static final SettingSpec<Rule> RULE = 
 			SETTING_SPECS.addThenGet(new RuleSettingSpec(
 					"rule",
 					Rule.getDefault()));
 	
-	@HelpText(
-			doc = "The comma separated list of default socket settings for all "
-					+ "sockets", 
-			usage = "socketSettings=[SOCKET_SETTING1[,SOCKET_SETTING2[...]]]"
+	@NameValuePairValueSpecDoc(
+			description = "The comma separated list of default socket settings "
+					+ "for all sockets",
+			name = "socketSettings",
+			syntax = "socketSettings=SOCKET_SETTINGS",
+			valueType = SocketSettings.class
 	)
 	public static final SettingSpec<SocketSettings> SOCKET_SETTINGS = 
 			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
 					"socketSettings", 
 					SocketSettings.newInstance()));
 	
-	@HelpText(
-			doc = "The binding host name or address for the SOCKS server "
-					+ "socket",
-			usage = "socksServerBindHost=HOST"
+	@NameValuePairValueSpecDoc(
+			description = "The binding host name or address for the SOCKS "
+					+ "server socket",
+			name = "socksServerBindHost",
+			syntax = "socksServerBindHost=HOST",
+			valueType = Host.class
 	)
 	public static final SettingSpec<Host> SOCKS_SERVER_BIND_HOST =
 			SETTING_SPECS.addThenGet(new HostSettingSpec(
 					"socksServerBindHost",
 					null));
 	
-	@HelpText(
-			doc = "The comma separated list of binding port ranges for the "
-					+ "SOCKS server socket",
-			usage = "socksServerBindPortRanges[PORT_RANGE1[,PORT_RANGE2[...]]]"
+	@NameValuePairValueSpecDoc(
+			description = "The comma separated list of binding port ranges for "
+					+ "the SOCKS server socket",
+			name = "socksServerBindPortRanges",
+			syntax = "socksServerBindPortRangesPORT_RANGES",
+			valueType = PortRanges.class
 	)
 	public static final SettingSpec<PortRanges> SOCKS_SERVER_BIND_PORT_RANGES =
 			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
 					"socksServerBindPortRanges",
 					PortRanges.newInstance()));
 	
-	@HelpText(
-			doc = "The comma separated list of socket settings for the SOCKS "
-					+ "server socket",
-			usage = "socksServerSocketSettings=[SOCKET_SETTING1[,SOCKET_SETTING2[...]]]"
+	@NameValuePairValueSpecDoc(
+			description = "The comma separated list of socket settings for the "
+					+ "SOCKS server socket",
+			name = "socksServerSocketSettings",
+			syntax = "socksServerSocketSettings=SOCKET_SETTINGS",
+			valueType = SocketSettings.class
 	)
 	public static final SettingSpec<SocketSettings> SOCKS_SERVER_SOCKET_SETTINGS =
 			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(

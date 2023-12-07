@@ -2,6 +2,17 @@ package com.github.jh3nd3rs0n.jargyle.server.socks5.userpassmethod;
 
 import java.util.Objects;
 
+import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueTypeDoc;
+
+@NameValuePairValueTypeDoc(
+		description = "",
+		name = "SOCKS5 Username Password Method User Repository",
+		nameValuePairValueSpecs = {
+				UserRepositorySpecConstants.class
+		},
+		syntax = "TYPE_NAME:INITIALIZATION_STRING",
+		syntaxName = "SOCKS5_USERPASSMETHOD_USER_REPOSITORY"
+)
 public abstract class UserRepository {
 
 	public static UserRepository newExternalSourceInstance(final String s) {

@@ -4,17 +4,33 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
-import com.github.jh3nd3rs0n.jargyle.internal.annotation.HelpText;
+import com.github.jh3nd3rs0n.jargyle.internal.annotation.EnumValueDoc;
+import com.github.jh3nd3rs0n.jargyle.internal.annotation.EnumValueTypeDoc;
 
+@EnumValueTypeDoc(
+		description = "",
+		name = "SOCKS5 Method",
+		syntax = "NO_AUTHENTICATION_REQUIRED|GSSAPI|USERNAME_PASSWORD",
+		syntaxName = "SOCKS5_METHOD"
+)
 public enum Method {
 
-	@HelpText(doc = "No authentication required", usage = "NO_AUTHENTICATION_REQUIRED")
+	@EnumValueDoc(
+			description = "No authentication required", 
+			value = "NO_AUTHENTICATION_REQUIRED"
+	)
 	NO_AUTHENTICATION_REQUIRED((byte) 0x00),
 	
-	@HelpText(doc = "GSS-API authentication", usage = "GSSAPI")
+	@EnumValueDoc(
+			description = "GSS-API authentication", 
+			value = "GSSAPI"
+	)
 	GSSAPI((byte) 0x01),
 	
-	@HelpText(doc = "Username password authentication", usage = "USERNAME_PASSWORD")
+	@EnumValueDoc(
+			description = "Username password authentication", 
+			value = "USERNAME_PASSWORD"
+	)
 	USERNAME_PASSWORD((byte) 0x02),
 	
 	NO_ACCEPTABLE_METHODS((byte) 0xff);

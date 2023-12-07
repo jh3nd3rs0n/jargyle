@@ -6,6 +6,15 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.github.jh3nd3rs0n.jargyle.internal.annotation.ValuesValueTypeDoc;
+
+@ValuesValueTypeDoc(
+		description = "", 
+		elementValueType = PortRange.class,
+		name = "Port Ranges",
+		syntax = "[PORT_RANGE1[,PORT_RANGE2[...]]]",
+		syntaxName = "PORT_RANGES"
+)
 public final class PortRanges {
 
 	private static final PortRanges DEFAULT_INSTANCE = PortRanges.newInstance(

@@ -4,6 +4,14 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Arrays;
 
+import com.github.jh3nd3rs0n.jargyle.internal.annotation.SingleValueTypeDoc;
+
+@SingleValueTypeDoc(
+		description = "",
+		name = "SOCKS5 Address",
+		syntax = "DOMAINNAME|IPV4_ADDRESS|IPV6_ADDRESS",
+		syntaxName = "SOCKS5_ADDRESS"
+)
 public final class Address {
 
 	public static Address newInstance(final byte[] b) {

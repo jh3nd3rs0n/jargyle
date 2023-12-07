@@ -2,6 +2,17 @@ package com.github.jh3nd3rs0n.jargyle.server;
 
 import java.util.List;
 
+import com.github.jh3nd3rs0n.jargyle.internal.annotation.SingleValueTypeDoc;
+
+@SingleValueTypeDoc(
+		description = "",
+		name = "Selection Strategy",
+		singleValueSpecs = {
+				SelectionStrategySpecConstants.class
+		},
+		syntax = "CYCLICAL|RANDOM",
+		syntaxName = "SELECTION_STRATEGY"
+)
 public abstract class SelectionStrategy {
 	
 	public static SelectionStrategy newInstance(final String s) {

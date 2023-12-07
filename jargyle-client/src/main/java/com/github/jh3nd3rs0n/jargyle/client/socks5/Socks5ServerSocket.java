@@ -24,6 +24,7 @@ import com.github.jh3nd3rs0n.jargyle.common.net.PerformancePreferences;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.common.net.StandardSocketSettingSpecConstants;
+import com.github.jh3nd3rs0n.jargyle.common.number.Digit;
 import com.github.jh3nd3rs0n.jargyle.common.number.NonnegativeInteger;
 import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
 import com.github.jh3nd3rs0n.jargyle.internal.net.AllZerosIpAddressConstants;
@@ -398,11 +399,13 @@ public final class Socks5ServerSocket extends ServerSocket {
 				int connectionTime, int latency, int bandwidth) {
 			if (!this.bound) {
 				PerformancePreferences pp = PerformancePreferences.newInstance(
-						connectionTime, latency, bandwidth);
+						Digit.newInstance(connectionTime), 
+						Digit.newInstance(bandwidth), 
+						Digit.newInstance(latency));
 				this.socket.setPerformancePreferences(
 						connectionTime, latency, bandwidth);
 				this.socketSettings.putValue(
-						StandardSocketSettingSpecConstants.PERF_PREF, pp);
+						StandardSocketSettingSpecConstants.PERF_PREFS, pp);
 			}
 		}
 		

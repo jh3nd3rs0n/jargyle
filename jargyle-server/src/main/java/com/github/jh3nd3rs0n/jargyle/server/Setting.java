@@ -1,5 +1,23 @@
 package com.github.jh3nd3rs0n.jargyle.server;
 
+import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueTypeDoc;
+
+@NameValuePairValueTypeDoc(
+		description = "",
+		name = "Setting",
+		nameValuePairValueSpecs = {
+				GeneralSettingSpecConstants.class,
+				ChainingGeneralSettingSpecConstants.class,
+				ChainingDtlsSettingSpecConstants.class,
+				ChainingSocks5SettingSpecConstants.class,
+				ChainingSslSettingSpecConstants.class,
+				DtlsSettingSpecConstants.class,
+				Socks5SettingSpecConstants.class,
+				SslSettingSpecConstants.class
+		},
+		syntax = "NAME=VALUE",
+		syntaxName = "SETTING"
+)
 public final class Setting<V> {
 	
 	public static Setting<Object> newInstance(final String s) {

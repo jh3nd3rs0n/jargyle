@@ -3,6 +3,15 @@ package com.github.jh3nd3rs0n.jargyle.common.string;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
+import com.github.jh3nd3rs0n.jargyle.internal.annotation.ValuesValueTypeDoc;
+
+@ValuesValueTypeDoc(
+		description = "",
+		elementValueType = String.class,		
+		name = "Comma Separated Values",
+		syntax = "[VALUE1[,VALUE2[...]]]",
+		syntaxName = "COMMA_SEPARATED_VALUES"
+)
 public final class CommaSeparatedValues {
 
 	public static CommaSeparatedValues newInstance(final String s) {

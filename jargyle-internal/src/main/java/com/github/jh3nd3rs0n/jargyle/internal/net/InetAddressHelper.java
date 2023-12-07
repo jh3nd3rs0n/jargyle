@@ -25,6 +25,10 @@ public final class InetAddressHelper {
 				InetAddressRegexConstants.DOMAINNAME_REGEX));
 	}
 
+	public static boolean isInetAddress(final String string) {
+		return isDomainname(string) || isIpv4Address(string) || isIpv6Address(string);
+	}
+	
 	public static boolean isIpv4Address(final String string) {
 		return string.matches(RegexHelper.getRegexWithInputBoundaries(
 				InetAddressRegexConstants.IPV4_ADDRESS_AS_1_PART_REGEX))

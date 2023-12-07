@@ -1,5 +1,17 @@
 package com.github.jh3nd3rs0n.jargyle.server;
 
+import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueTypeDoc;
+
+@NameValuePairValueTypeDoc(
+		description = "",
+		name = "Rule Condition",
+		nameValuePairValueSpecs = {
+				GeneralRuleConditionSpecConstants.class,
+				Socks5RuleConditionSpecConstants.class
+		},
+		syntax = "NAME=VALUE",
+		syntaxName = "RULE_CONDITION"
+)
 public final class RuleCondition<V1, V2> {
 
 	public static RuleCondition<Object, Object> newInstance(final String s) {

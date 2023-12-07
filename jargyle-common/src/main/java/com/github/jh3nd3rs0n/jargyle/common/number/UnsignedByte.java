@@ -1,5 +1,13 @@
 package com.github.jh3nd3rs0n.jargyle.common.number;
 
+import com.github.jh3nd3rs0n.jargyle.internal.annotation.SingleValueTypeDoc;
+
+@SingleValueTypeDoc(
+		description = "",
+		name = "Unsigned Byte",
+		syntax = "0-255",
+		syntaxName = "UNSIGNED_BYTE"
+)
 public final class UnsignedByte {
 
 	public static final int MAX_INT_VALUE = 0xff;

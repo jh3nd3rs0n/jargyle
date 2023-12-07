@@ -3,39 +3,44 @@ package com.github.jh3nd3rs0n.jargyle.common.net;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+import com.github.jh3nd3rs0n.jargyle.internal.annotation.SingleValueTypeDoc;
 import com.github.jh3nd3rs0n.jargyle.internal.net.AllZerosIpAddressConstants;
+import com.github.jh3nd3rs0n.jargyle.internal.net.InetAddressHelper;
 
+@SingleValueTypeDoc(
+		description = "",
+		name = "Host",
+		syntax = "HOST_NAME|HOST_ADDRESS",
+		syntaxName = "HOST"
+)
 public final class Host {
 	
-	private static final Host ALL_ZEROS_INET4_INSTANCE = Host.newInstance(
-			AllZerosIpAddressConstants.getInet4Address());
+	private static final Host ALL_ZEROS_IPV4_ADDRESS_INSTANCE = Host.newInstance(
+			AllZerosIpAddressConstants.IPV4_ADDRESS);
 	
-	private static final Host ALL_ZEROS_INET6_INSTANCE = Host.newInstance(
-			AllZerosIpAddressConstants.getInet6Address());
+	private static final Host ALL_ZEROS_IPV6_ADDRESS_INSTANCE = Host.newInstance(
+			AllZerosIpAddressConstants.IPV6_ADDRESS);
 	
-	public static final Host getAllZerosInet4Instance() {
-		return ALL_ZEROS_INET4_INSTANCE;
+	public static final Host getAllZerosIpv4AddressInstance() {
+		return ALL_ZEROS_IPV4_ADDRESS_INSTANCE;
 	}
 	
-	public static final Host getAllZerosInet6Instance() {
-		return ALL_ZEROS_INET6_INSTANCE;
+	public static final Host getAllZerosIpv6AddressInstance() {
+		return ALL_ZEROS_IPV6_ADDRESS_INSTANCE;
 	}
 	
-	private static Host newInstance(final InetAddress inetAddress) {
-		return new Host(inetAddress, inetAddress.getHostAddress());
+	public static Host newInstance(final String s) {
+		if (!InetAddressHelper.isInetAddress(s)) {
+			throw new IllegalArgumentException(String.format(
+					"invalid host name or address: %s", 
+					s));
+		}
+		return new Host(s);
 	}
-	
-	public static Host newInstance(final String s) throws UnknownHostException {
-		InetAddress inetAddress = InetAddress.getByName(s);
-		return new Host(inetAddress, s);
-	}
-
-	private final InetAddress inetAddress;
 
 	private final String string;
 	
-	private Host(final InetAddress inetAddr, final String str) {
-		this.inetAddress = inetAddr;
+	private Host(final String str) {
 		this.string = str;
 	}
 	
@@ -69,8 +74,8 @@ public final class Host {
 		return result;
 	}
 	
-	public InetAddress toInetAddress() {
-		return this.inetAddress;
+	public InetAddress toInetAddress() throws UnknownHostException {
+		return InetAddress.getByName(string);
 	}
 	
 	@Override

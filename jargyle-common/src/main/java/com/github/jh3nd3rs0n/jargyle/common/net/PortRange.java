@@ -3,6 +3,15 @@ package com.github.jh3nd3rs0n.jargyle.common.net;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import com.github.jh3nd3rs0n.jargyle.internal.annotation.ValuesValueTypeDoc;
+
+@ValuesValueTypeDoc(
+		description = "", 
+		elementValueType = Port.class,
+		name = "Port Range",
+		syntax = "PORT|PORT1-PORT2",
+		syntaxName = "PORT_RANGE"
+)
 public final class PortRange implements Iterable<Port> {
 	
 	private static final PortRange DEFAULT_INSTANCE = PortRange.newInstance(

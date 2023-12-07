@@ -9,11 +9,12 @@
 	<packaging>pom</packaging>
 	<name>Jargyle</name>
 	<url>https://jh3nd3rs0n.github.io/jargyle</url>
-	<description>SOCKS5 library and server</description>
+	<description>SOCKS5 API and server</description>
 	<licenses>
 		<license>
 			<name>MIT License</name>
-			<url>https://github.com/jh3nd3rs0n/jargyle/blob/master/LICENSE</url>
+			<url>
+				https://raw.githubusercontent.com/jh3nd3rs0n/jargyle/master/LICENSE</url>
 		</license>
 	</licenses>
 	<organization>
@@ -35,29 +36,29 @@
 	</issueManagement>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<junit.version>4.13.1</junit.version>
+		<slf4j.version>1.7.28</slf4j.version>
 		<maven.javadoc.skippedModules>
-			echo,jargyle-cli,jargyle-cli-test,jargyle-server-test,test-help</maven.javadoc.skippedModules>
+			echo,echo-test,jargyle-cli,jargyle-cli-test,jargyle-common-test,jargyle-protocolbase-test,jargyle-server-test,test-help
+		</maven.javadoc.skippedModules>
+		<docsDirectory>${project.basedir}${file.separator}docs</docsDirectory>
 		<sonar.organization>jh3nd3rs0n</sonar.organization>
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 		<sonar.coverage.jacoco.xmlReportPaths>
 			${project.basedir}/jargyle-report-aggregate/target/site/jacoco-aggregate/jacoco.xml
 		</sonar.coverage.jacoco.xmlReportPaths>
-		<docsDirectory>${project.basedir}${file.separator}docs</docsDirectory>
 	</properties>
 	<distributionManagement>
 		<site>
 			<id>docs</id>
 			<url>file://${docsDirectory}</url>
 		</site>
+		<repository>
+			<id>github-jh3nd3rs0n-jargyle</id>
+			<name>GitHub jh3nd3rs0n Apache Maven Packages for Jargyle</name>
+			<url>https://maven.pkg.github.com/jh3nd3rs0n/jargyle</url>
+		</repository>
 	</distributionManagement>
-	<dependencies>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.13.1</version>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
 	<profiles>
 		<profile>
 			<id>coverage</id>
@@ -184,11 +185,6 @@
 				<plugin>
 					<artifactId>maven-site-plugin</artifactId>
 					<version>4.0.0-M11</version>
-					<configuration>
-						<!-- TODO: Remove when documentation is complete -->
-						<generateProjectInfo>false</generateProjectInfo>
-						<generateReports>false</generateReports>
-					</configuration>
 				</plugin>
 			</plugins>
 		</pluginManagement>
@@ -199,8 +195,6 @@
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<version>3.5.0</version>
 				<reportSets>
-					<!-- TODO: Uncomment when documentation is complete -->
-					<!--
 					<reportSet>
 						<id>aggregate</id>
 						<inherited>false</inherited>
@@ -208,7 +202,6 @@
 							<report>aggregate</report>
 						</reports>
 					</reportSet>
-					-->
 					<reportSet>
 						<id>default</id>
 						<reports>
@@ -219,11 +212,16 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-project-info-reports-plugin</artifactId>
-				<version>3.0.0</version>
+				<version>3.5.0</version>
 				<reportSets>
 					<reportSet>
 						<reports>
 							<report>index</report>
+							<report>summary</report>
+							<report>licenses</report>
+							<report>dependency-info</report>
+							<report>issue-management</report>
+							<report>dependencies</report>
 						</reports>
 					</reportSet>
 				</reportSets>
@@ -234,11 +232,14 @@
 		<module>test-help</module>
 		<module>jargyle-internal</module>
 		<module>jargyle-common</module>
+		<module>jargyle-common-test</module>
 		<module>jargyle-protocolbase</module>
+		<module>jargyle-protocolbase-test</module>
 		<module>jargyle-client</module>
 		<module>jargyle-server</module>
 		<module>jargyle-server-test</module>
 		<module>echo</module>
+		<module>echo-test</module>
 		<module>jargyle-cli</module>
 		<module>jargyle-cli-test</module>
 		<module>jargyle-report-aggregate</module>

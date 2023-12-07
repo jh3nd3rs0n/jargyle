@@ -10,6 +10,10 @@
 	<artifactId>echo</artifactId>
 	<name>Echo</name>
 	<description>API of clients and servers that send/receive data and receive/send the same data (For testing purposes only. No website available for this module.)</description>
+	<properties>
+		<maven.site.skip>true</maven.site.skip>
+		<maven.deploy.skip>true</maven.deploy.skip>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>com.github.jh3nd3rs0n</groupId>
@@ -22,45 +26,9 @@
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.github.jh3nd3rs0n</groupId>
-			<artifactId>jargyle-server</artifactId>
-			<version>${project.parent.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.github.jh3nd3rs0n</groupId>
-			<artifactId>test-help</artifactId>
-			<version>${project.parent.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.kerby</groupId>
-			<artifactId>kerb-client-api-all</artifactId>
-			<version>2.0.0</version>
-			<scope>test</scope>			
-		</dependency>
-		<dependency>
-			<groupId>org.apache.kerby</groupId>
-			<artifactId>kerb-server-api-all</artifactId>
-			<version>2.0.0</version>
-			<scope>test</scope>			
-		</dependency>
-		<dependency>
-			<groupId>org.apache.kerby</groupId>
-			<artifactId>kerb-simplekdc</artifactId>
-			<version>2.0.0</version>
-			<scope>test</scope>			
-		</dependency>
-		<dependency>
-			<groupId>org.apache.kerby</groupId>
-			<artifactId>kerby-asn1</artifactId>
-			<version>2.0.0</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
-			<version>1.7.28</version>
+			<version>${slf4j.version}</version>
 		</dependency>
 	</dependencies>
 	<build>
@@ -73,15 +41,6 @@
 							<Automatic-Module-Name>com.github.jh3nd3rs0n.echo</Automatic-Module-Name>
 						</manifestEntries>
 					</archive>
-				</configuration>
-			</plugin>
-			<plugin>
-				<artifactId>maven-failsafe-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<artifactId>maven-site-plugin</artifactId>
-				<configuration>
-					<skip>true</skip>
 				</configuration>
 			</plugin>
 		</plugins>

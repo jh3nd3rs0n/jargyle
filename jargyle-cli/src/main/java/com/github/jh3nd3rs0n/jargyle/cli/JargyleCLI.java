@@ -11,12 +11,29 @@ import com.github.jh3nd3rs0n.argmatey.ArgMatey.Annotations.Ordinal;
 import com.github.jh3nd3rs0n.argmatey.ArgMatey.CLI;
 import com.github.jh3nd3rs0n.argmatey.ArgMatey.OptionType;
 import com.github.jh3nd3rs0n.argmatey.ArgMatey.TerminationRequestedException;
-import com.github.jh3nd3rs0n.jargyle.internal.annotation.HelpText;
 import com.github.jh3nd3rs0n.jargyle.server.ConfigurationFileSchemaHelper;
 
 public final class JargyleCLI extends CLI {
 
 	private static enum Command {
+		
+		GENERATE_REFERENCE("generate-reference") {
+
+			@Override
+			public void invoke(
+					final String progName, 
+					final String progBeginningUsage, 
+					final String[] args, 
+					final boolean posixCorrect)
+					throws TerminationRequestedException {
+				try {
+					new ReferenceGenerator().generateReference();
+				} catch (IOException e) {
+					throw new AssertionError(e);
+				}
+			}
+			
+		},
 		
 		@HelpText(
 				doc = "Manage SOCKS5 users", 

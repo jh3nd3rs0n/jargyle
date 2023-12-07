@@ -3,19 +3,26 @@ package com.github.jh3nd3rs0n.jargyle.common.net;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import com.github.jh3nd3rs0n.jargyle.common.number.Digit;
+import com.github.jh3nd3rs0n.jargyle.internal.annotation.ValuesValueTypeDoc;
+import com.github.jh3nd3rs0n.jargyle.internal.regex.RegexHelper;
+
+@ValuesValueTypeDoc(
+		description = "",
+		elementValueType = Digit.class,
+		name = "Performance Preferences",
+		syntax = "DIGITDIGITDIGIT",
+		syntaxName = "PERFORMANCE_PREFERENCES"
+)
 public final class PerformancePreferences {
 	
-	public static final int MAX_IMPORTANCE_VALUE = 2;
-	
-	public static final int MIN_IMPORTANCE_VALUE = 0;
-	
-	private static final String REGEX = String.format(
-			"^[%1$s-%2$s][%1$s-%2$s][%1$s-%2$s]$", 
-			MIN_IMPORTANCE_VALUE, 
-			MAX_IMPORTANCE_VALUE);
+	private static final String REGEX = RegexHelper.getRegexWithInputBoundaries(
+			"\\d\\d\\d");
 	
 	public static PerformancePreferences newInstance(
-			final int connectionTime, final int latency, final int bandwidth) {
+			final Digit connectionTime, 
+			final Digit latency, 
+			final Digit bandwidth) {
 		return new PerformancePreferences(connectionTime, latency, bandwidth);
 	}
 	
@@ -26,48 +33,24 @@ public final class PerformancePreferences {
 	
 	public static PerformancePreferences newInstance(final String s) {
 		if (!s.matches(REGEX)) {
-			throw new IllegalArgumentException(String.format(
-					"must be a string consisting of 3 digits each "
-					+ "between %s and %s (inclusive)", 
-					MIN_IMPORTANCE_VALUE,
-					MAX_IMPORTANCE_VALUE));
+			throw new IllegalArgumentException(
+					"must be a string consisting of 3 digits");
 		}
 		char[] sChars = s.toCharArray();
-		int connectionTime = Integer.parseInt(Character.toString(sChars[0]));
-		int latency = Integer.parseInt(Character.toString(sChars[1]));
-		int bandwidth = Integer.parseInt(Character.toString(sChars[2]));
+		Digit connectionTime = Digit.newInstance(Character.toString(sChars[0]));
+		Digit latency = Digit.newInstance(Character.toString(sChars[1]));
+		Digit bandwidth = Digit.newInstance(Character.toString(sChars[2]));
 		return new PerformancePreferences(connectionTime, latency, bandwidth);
 	}
 	
-	private final int bandwidthImportance;
-	private final int connectionTimeImportance;
-	private final int latencyImportance;
+	private final Digit bandwidthImportance;
+	private final Digit connectionTimeImportance;
+	private final Digit latencyImportance;
 	
 	private PerformancePreferences(
-			final int connectionTime, final int latency, final int bandwidth) {
-		if (connectionTime < MIN_IMPORTANCE_VALUE 
-				|| connectionTime > MAX_IMPORTANCE_VALUE) {
-			throw new IllegalArgumentException(String.format(
-					"connection time importance must be between "
-					+ "%s and %s (inclusive)", 
-					MIN_IMPORTANCE_VALUE,
-					MAX_IMPORTANCE_VALUE));
-		}
-		if (latency < MIN_IMPORTANCE_VALUE || latency > MAX_IMPORTANCE_VALUE) {
-			throw new IllegalArgumentException(String.format(
-					"latency importance must be between "
-					+ "%s and %s (inclusive)", 
-					MIN_IMPORTANCE_VALUE,
-					MAX_IMPORTANCE_VALUE));
-		}
-		if (bandwidth < MIN_IMPORTANCE_VALUE 
-				|| bandwidth > MAX_IMPORTANCE_VALUE) {
-			throw new IllegalArgumentException(String.format(
-					"bandwidth importance must be between "
-					+ "%s and %s (inclusive)", 
-					MIN_IMPORTANCE_VALUE,
-					MAX_IMPORTANCE_VALUE));
-		}
+			final Digit connectionTime, 
+			final Digit latency, 
+			final Digit bandwidth) {
 		this.connectionTimeImportance = connectionTime;
 		this.latencyImportance = latency;
 		this.bandwidthImportance = bandwidth;
@@ -81,15 +64,15 @@ public final class PerformancePreferences {
 	
 	public void applyTo(final ServerSocket serverSocket) {
 		serverSocket.setPerformancePreferences(
-				this.connectionTimeImportance, 
-				this.latencyImportance, 
-				this.bandwidthImportance);
+				this.connectionTimeImportance.intValue(), 
+				this.latencyImportance.intValue(), 
+				this.bandwidthImportance.intValue());
 	}
-	public void applyTo(final Socket Socket) {
-		Socket.setPerformancePreferences(
-				this.connectionTimeImportance, 
-				this.latencyImportance, 
-				this.bandwidthImportance);
+	public void applyTo(final Socket socket) {
+		socket.setPerformancePreferences(
+				this.connectionTimeImportance.intValue(), 
+				this.latencyImportance.intValue(), 
+				this.bandwidthImportance.intValue());
 	}
 	
 	@Override
@@ -100,31 +83,45 @@ public final class PerformancePreferences {
 		if (obj == null) {
 			return false;
 		}
-		if (this.getClass() != obj.getClass()) {
+		if (getClass() != obj.getClass()) {
 			return false;
 		}
 		PerformancePreferences other = (PerformancePreferences) obj;
-		if (this.bandwidthImportance != other.bandwidthImportance) {
+		if (this.bandwidthImportance == null) {
+			if (other.bandwidthImportance != null) {
+				return false;
+			}
+		} else if (!this.bandwidthImportance.equals(
+				other.bandwidthImportance)) {
 			return false;
 		}
-		if (this.connectionTimeImportance != other.connectionTimeImportance) {
+		if (this.connectionTimeImportance == null) {
+			if (other.connectionTimeImportance != null) {
+				return false;
+			}
+		} else if (!this.connectionTimeImportance.equals(
+				other.connectionTimeImportance)) {
 			return false;
 		}
-		if (this.latencyImportance != other.latencyImportance) {
+		if (this.latencyImportance == null) {
+			if (other.latencyImportance != null) {
+				return false;
+			}
+		} else if (!this.latencyImportance.equals(other.latencyImportance)) {
 			return false;
 		}
 		return true;
 	}
-	
-	public int getBandwidthImportance() {
+
+	public Digit getBandwidthImportance() {
 		return this.bandwidthImportance;
 	}
-	
-	public int getConnectionTimeImportance() {
+
+	public Digit getConnectionTimeImportance() {
 		return this.connectionTimeImportance;
 	}
 	
-	public int getLatencyImportance() {
+	public Digit getLatencyImportance() {
 		return this.latencyImportance;
 	}
 	
@@ -132,9 +129,12 @@ public final class PerformancePreferences {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + this.bandwidthImportance;
-		result = prime * result + this.connectionTimeImportance;
-		result = prime * result + this.latencyImportance;
+		result = prime * result + ((this.bandwidthImportance == null) ? 
+				0 : this.bandwidthImportance.hashCode());
+		result = prime * result + ((this.connectionTimeImportance == null) ? 
+				0 : this.connectionTimeImportance.hashCode());
+		result = prime * result + ((this.latencyImportance == null) ? 
+				0 : this.latencyImportance.hashCode());
 		return result;
 	}
 	

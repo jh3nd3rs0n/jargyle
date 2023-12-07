@@ -1,16 +1,148 @@
-# Jargyle 
+# About Jargyle 
 
-Jargyle is a Java SOCKS5 server that has the following features:
+Jargyle is a Java SOCKS5 API and server.
 
--   Chain to multiple specified chains of SOCKS servers
--   Use SSL/TLS and DTLS for TCP and UDP traffic from clients and SOCKS servers
--   Resolve host names from an additional SOCKS5 command called RESOLVE
+-   [Client API Example](#client-api-example)
+-   [Server API Example](#server-api-example)
+-   [Command Line Example](#command-line-example)
+-   [Features](#features)
 
-It also has a rule system that allows you to manage traffic in the following ways:
+## Client API Example
+
+```java
+/*
+ * Configure the SOCKS client through system properties.
+ */
+/*
+ * Set the URI of the SOCKS server for the SOCKS client to connect.
+ */
+System.setProperty("socksServerUri.scheme", "socks5");
+System.setProperty("socksServerUri.host", "jargyle.net");
+System.setProperty("socksServerUri.port", "8080");
+/*
+ * Enable SSL/TLS for TCP traffic between the SOCKS client and the 
+ * SOCKS server.
+ */
+System.setProperty("socksClient.ssl.enabled", "true");
+System.setProperty("socksClient.ssl.trustStoreFile", "jargyle.jks");
+System.setProperty("socksClient.ssl.trustStorePassword", "password");
+/*
+ * Enable DTLS for UDP traffic between the SOCKS client and the 
+ * SOCKS server.
+ */
+System.setProperty("socksClient.dtls.enabled", "true");
+System.setProperty("socksClient.dtls.trustStoreFile", "jargyle.jks");
+System.setProperty("socksClient.dtls.trustStorePassword", "password");
+/*
+ * Use only the SOCKS5 username password authentication method as 
+ * the SOCKS5 authentication method of choice.
+ */
+System.setProperty("socksClient.socks5.methods", "USERNAME_PASSWORD");
+System.setProperty("socksClient.socks5.userpassmethod.username", "Aladdin");
+System.setProperty("socksClient.socks5.userpassmethod.password", "opensesame");
+/*
+ * Have the HostResolver to send the RESOLVE command to the SOCKS 
+ * server to resolve host names instead of having the HostResolver 
+ * resolve host names from the local system.
+ */
+System.setProperty("socksClient.socks5.useResolveCommand", "true");
+
+/*
+ * Create SOCKS enabled networking objects based on the system 
+ * properties above. If no system properties for configuring the 
+ * SOCKS client were provided, the created networking objects would 
+ * be ordinary networking objects.
+ */
+NetObjectFactory netObjectFactory = NetObjectFactory.newInstance();
+Socket socket = netObjectFactory.newSocket();
+ServerSocket serverSocket = netObjectFactory.newServerSocket();
+DatagramSocket datagramSocket = netObjectFactory.newDatagramSocket();
+HostResolver hostResolver = netObjectFactory.newHostResolver();
+
+/*
+ * Use the created networking objects as if they were ordinary 
+ * networking objects.
+ */
+// ...
+```
+
+## Server API Example
+
+```java
+new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
+    Setting.newInstanceWithParsableValue(
+        "port", "8080"),
+    /*
+     * Enable SSL/TLS for TCP traffic between the SOCKS server and 
+     * the clients.
+     */
+    Setting.newInstanceWithParsableValue(
+        "ssl.enabled", "true"),
+    Setting.newInstanceWithParsableValue(
+        "ssl.keyStoreFile", "server.jks"),
+    Setting.newInstanceWithParsableValue(
+        "ssl.keyStorePassword", "drowssap"),
+    /*
+     * Enable DTLS for UDP traffic between the SOCKS server and the 
+     * clients.
+     */
+    Setting.newInstanceWithParsableValue(
+        "dtls.enabled", "true"),
+    Setting.newInstanceWithParsableValue(
+        "dtls.keyStoreFile", "server.jks"),
+    Setting.newInstanceWithParsableValue(
+        "dtls.keyStorePassword", "drowssap"),
+    /*
+     * Use only the SOCKS5 username password authentication method 
+     * as the SOCKS5 authentication method of choice.
+     */
+    Setting.newInstanceWithParsableValue(
+        "socks5.methods", "USERNAME_PASSWORD"),
+    Setting.newInstanceWithParsableValue(
+        "socks5.userpassmethod.userRepository",
+        "StringSourceUserRepository:Aladdin:opensesame")
+))).start();    
+```
+
+## Command Line Example
+
+```bash
+jargyle start-server \
+    --setting=port=8080 \
+    --setting=ssl.enabled=true \
+    --setting=ssl.keyStoreFile=server.jks \
+    --setting=ssl.keyStorePassword=drowssap \
+    --setting=dtls.enabled=true \
+    --setting=dtls.keyStoreFile=server.jks \
+    --setting=dtls.keyStorePassword=drowssap \
+    --setting=socks5.methods=USERNAME_PASSWORD \
+    --setting=socks5.userpassmethod.userRepository=StringSourceUserRepository:Aladdin:opensesame
+```
+
+## Features
+
+The client API has the following features:
+
+-   Route traffic through a specified chain of SOCKS servers
+-   Use SSL/TLS for TCP traffic to and from SOCKS servers
+-   Use DTLS for UDP traffic to and from SOCKS servers
+-   Resolve host names from SOCKS5 servers
+
+The server API and the server have the following features:
+
+-   Route traffic through multiple specified chains of SOCKS servers
+-   Use SSL/TLS for TCP traffic to and from clients
+-   Use DTLS for UDP traffic to and from clients
+-   Use SSL/TLS for TCP traffic to and from SOCKS servers
+-   Use DTLS for UDP traffic to and from SOCKS servers
+-   Resolve host names for clients from the local system or from SOCKS5 servers
+
+The server API and the server also have a rule system that allows you to manage 
+traffic in the following ways:
 
 -   Allow or deny traffic
 -   Allow a limited number of simultaneous instances of traffic
--   Route traffic through multiple selectable routes
+-   Route traffic through a selection of multiple specified chains of SOCKS servers
 -   Redirect the desired destination
 -   Configure sockets
 -   Configure relay settings

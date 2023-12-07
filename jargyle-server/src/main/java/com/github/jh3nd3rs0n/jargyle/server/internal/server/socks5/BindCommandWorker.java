@@ -556,10 +556,25 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 		if (desiredDestinationInetAddress == null) {
 			return null;
 		}
-		InetAddress bindInetAddress = (InetAddressHelper.isAllZerosIpAddress(
-				desiredDestinationInetAddress.getHostAddress())) ?
-						this.getListenBindHost().toInetAddress() 
-						: desiredDestinationInetAddress;
+		InetAddress bindInetAddress = desiredDestinationInetAddress;
+		if (InetAddressHelper.isAllZerosIpAddress(
+				desiredDestinationInetAddress.getHostAddress())) {
+			Host listenBindHost = this.getListenBindHost();
+			try {
+				bindInetAddress = listenBindHost.toInetAddress();
+			} catch (UnknownHostException e) {
+				this.logger.error( 
+						ObjectLogMessageHelper.objectLogMessage(
+								this, 
+								"Unable to bind the listen socket to the "
+								+ "following host: %s",
+								listenBindHost));
+				socks5Rep = Socks5Reply.newFailureInstance(
+						Reply.GENERAL_SOCKS_SERVER_FAILURE);
+				this.sendSocks5Reply(socks5Rep);
+				return null;
+			}
+		}
 		int desiredDestinationPort = this.getDesiredDestinationPort().intValue();
 		PortRanges bindPortRanges = (desiredDestinationPort == 0) ?
 				this.getListenBindPortRanges() : PortRanges.newInstance(

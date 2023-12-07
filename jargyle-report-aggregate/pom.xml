@@ -11,6 +11,10 @@
 	<packaging>pom</packaging>
 	<name>Jargyle Report Aggregate</name>
 	<description>Generates the aggregated test coverage reports (No website available for this module.)</description>
+	<properties>
+		<maven.site.skip>true</maven.site.skip>
+		<maven.deploy.skip>true</maven.deploy.skip>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>com.github.jh3nd3rs0n</groupId>
@@ -73,13 +77,6 @@
 						</goals>
 					</execution>
 				</executions>
-			</plugin>
-			<plugin>
-				<artifactId>maven-site-plugin</artifactId>
-				<configuration>
-					<skip>true</skip>
-					<skipDeploy>true</skipDeploy>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>

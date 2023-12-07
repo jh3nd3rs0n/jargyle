@@ -4,33 +4,43 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
-import com.github.jh3nd3rs0n.jargyle.internal.annotation.HelpText;
+import com.github.jh3nd3rs0n.jargyle.internal.annotation.EnumValueDoc;
+import com.github.jh3nd3rs0n.jargyle.internal.annotation.EnumValueTypeDoc;
 
+@EnumValueTypeDoc(
+		description = "",
+		name = "SOCKS5 Command",
+		syntax = "CONNECT|BIND|UDP_ASSOCIATE|RESOLVE",
+		syntaxName = "SOCKS5_COMMAND"
+)
 public enum Command {
 	
-	@HelpText(
-			doc = "A request to the SOCKS server to connect to another server",
-			usage = "CONNECT"
+	@EnumValueDoc(
+			description = "A request to the SOCKS server to connect to another "
+					+ "server",
+			value = "CONNECT"
 	)
 	CONNECT((byte) 0x01),
 	
-	@HelpText(
-			doc = "A request to the SOCKS server to bind to another address "
-					+ "and port in order to receive an inbound connection",
-			usage = "BIND"
+	@EnumValueDoc(
+			description = "A request to the SOCKS server to bind to another "
+					+ "address and port in order to receive an inbound "
+					+ "connection",
+			value = "BIND"
 	)	
 	BIND((byte) 0x02),
 	
-	@HelpText(
-			doc = "A request to the SOCKS server to associate a UDP socket for "
-					+ "sending and receiving datagrams",
-			usage = "UDP_ASSOCIATE"
+	@EnumValueDoc(
+			description = "A request to the SOCKS server to associate a UDP "
+					+ "socket for sending and receiving datagrams",
+			value = "UDP_ASSOCIATE"
 	)	
 	UDP_ASSOCIATE((byte) 0x03),
 	
-	@HelpText(
-			doc = "A request to the SOCKS server to resolve a host name",
-			usage = "RESOLVE"
+	@EnumValueDoc(
+			description = "A request to the SOCKS server to resolve a host "
+					+ "name",
+			value = "RESOLVE"
 	)
 	RESOLVE((byte) 0x04);
 	

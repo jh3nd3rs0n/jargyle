@@ -1,5 +1,13 @@
 package com.github.jh3nd3rs0n.jargyle.common.number;
 
+import com.github.jh3nd3rs0n.jargyle.internal.annotation.SingleValueTypeDoc;
+
+@SingleValueTypeDoc(
+		description = "",
+		name = "Non-negative Integer",
+		syntax = "0-2147483647",
+		syntaxName = "NONNEGATIVE_INTEGER"
+)
 public final class NonnegativeInteger {
 
 	public static final int MAX_INT_VALUE = Integer.MAX_VALUE;

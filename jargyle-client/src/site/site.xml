@@ -1,0 +1,20 @@
+<site>
+	<skin>
+		<groupId>org.apache.maven.skins</groupId>
+		<artifactId>maven-fluido-skin</artifactId>
+		<version>2.0.0-M8</version>
+	</skin>
+	<body>
+		<menu name="Overview">
+			<item name="Introduction" href="index.html" />
+			<item name="Licenses" href="licenses.html" />
+		</menu>
+		<menu name="API Documentation">
+			<item name="Javadoc" href="apidocs/index.html" />
+		</menu>
+		<menu ref="reports" />
+		<menu name="Parent Project">
+			<item name="Jargyle" href="../index.html" />
+		</menu>
+	</body>
+</site>

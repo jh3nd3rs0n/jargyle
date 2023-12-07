@@ -649,8 +649,22 @@ final class ConnectCommandWorker extends TcpBasedCommandWorker {
 	}
 	
 	private Socket newServerFacingSocket() {
-		Host bindHost = this.getServerFacingBindHost();
-		InetAddress bindInetAddress = bindHost.toInetAddress();
+		Host serverFacingBindHost = this.getServerFacingBindHost();
+		InetAddress bindInetAddress = null;
+		try {
+			bindInetAddress = serverFacingBindHost.toInetAddress();
+		} catch (UnknownHostException e) {
+			this.logger.error( 
+					ObjectLogMessageHelper.objectLogMessage(
+							this, 
+							"Unable to bind the server-facing socket to the "
+							+ "following host: %s",
+							serverFacingBindHost));
+			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
+					Reply.GENERAL_SOCKS_SERVER_FAILURE);
+			this.sendSocks5Reply(socks5Rep);
+			return null;
+		}
 		PortRanges bindPortRanges = this.getServerFacingBindPortRanges();
 		return this.canPrepareServerFacingSocket() ? 
 				this.newPreparedServerFacingSocket(

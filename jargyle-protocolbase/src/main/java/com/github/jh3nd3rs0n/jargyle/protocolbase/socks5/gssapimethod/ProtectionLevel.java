@@ -6,11 +6,18 @@ import java.util.stream.Collectors;
 import org.ietf.jgss.MessageProp;
 
 import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
-import com.github.jh3nd3rs0n.jargyle.internal.annotation.HelpText;
+import com.github.jh3nd3rs0n.jargyle.internal.annotation.EnumValueDoc;
+import com.github.jh3nd3rs0n.jargyle.internal.annotation.EnumValueTypeDoc;
 
+@EnumValueTypeDoc(
+		description = "",
+		name = "SOCKS5 GSS-API Method Protection Level",
+		syntax = "NONE|REQUIRED_INTEG|REQUIRED_INTEG_AND_CONF",
+		syntaxName = "SOCKS5_GSSAPIMETHOD_PROTECTION_LEVEL"
+)
 public enum ProtectionLevel {
 	
-	@HelpText(doc = "No protection", usage = "NONE")
+	@EnumValueDoc(description = "No protection", value = "NONE")
 	NONE((byte) 0x00) {
 		
 		@Override
@@ -20,7 +27,10 @@ public enum ProtectionLevel {
 		
 	},
 	
-	@HelpText(doc = "Required per-message integrity", usage = "REQUIRED_INTEG")
+	@EnumValueDoc(
+			description = "Required per-message integrity", 
+			value = "REQUIRED_INTEG"
+	)
 	REQUIRED_INTEG((byte) 0x01) {
 		
 		@Override
@@ -30,9 +40,9 @@ public enum ProtectionLevel {
 		
 	},
 	
-	@HelpText(
-			doc = "Required per-message integrity and confidentiality", 
-			usage = "REQUIRED_INTEG_AND_CONF"
+	@EnumValueDoc(
+			description = "Required per-message integrity and confidentiality", 
+			value = "REQUIRED_INTEG_AND_CONF"
 	)	
 	REQUIRED_INTEG_AND_CONF((byte) 0x02) {
 		

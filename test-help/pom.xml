@@ -10,6 +10,10 @@
 	<artifactId>test-help</artifactId>
 	<name>Test Help</name>
 	<description>Test help API (No website available for this module.)</description>
+	<properties>
+		<maven.site.skip>true</maven.site.skip>
+		<maven.deploy.skip>true</maven.deploy.skip>
+	</properties>
 	<build>
 		<plugins>
 			<plugin>
@@ -20,13 +24,6 @@
 							<Automatic-Module-Name>com.github.jh3nd3rs0n.test.help</Automatic-Module-Name>
 						</manifestEntries>
 					</archive>
-				</configuration>
-			</plugin>
-			<plugin>
-				<artifactId>maven-site-plugin</artifactId>
-				<configuration>
-					<skip>true</skip>
-					<skipDeploy>true</skipDeploy>
 				</configuration>
 			</plugin>
 		</plugins>

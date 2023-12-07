@@ -1,32 +1,42 @@
 package com.github.jh3nd3rs0n.jargyle.server.socks5.userpassmethod;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.github.jh3nd3rs0n.jargyle.internal.annotation.HelpText;
+import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueSpecDoc;
+import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueSpecsDoc;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassmethod.internal.userrepo.impl.StringSourceUserRepository;
 
+@NameValuePairValueSpecsDoc(
+		description = "",
+		name = "SOCKS5 Username Password Method User Repositories"
+)
 public final class UserRepositorySpecConstants {
 
 	private static final UserRepositorySpecs USER_REPOSITORY_SPECS =
 			new UserRepositorySpecs();
 
-	@HelpText(
-			doc = "User repository that handles the storage of the users from "
-					+ "a provided file of a list of URL encoded username and "
-					+ "hashed password pairs (If the file does not exist, it "
-					+ "will be created and used.)", 
-			usage = "FileSourceUserRepository:FILE"
+	@NameValuePairValueSpecDoc(
+			description = "User repository that handles the storage of the "
+					+ "users from a provided file of a list of URL encoded "
+					+ "username and hashed password pairs (If the file does not "
+					+ "exist, it will be created and used.)",
+			name = "FileSourceUserRepository",
+			syntax = "FileSourceUserRepository:FILE",
+			valueType = File.class
 	)
 	public static final UserRepositorySpec FILE_SOURCE_USER_REPOSITORY = USER_REPOSITORY_SPECS.addThenGet(
 			ExternalSourceUserRepositorySpecConstants.FILE_SOURCE_USER_REPOSITORY);
 	
-	@HelpText(
-			doc = "User repository that handles the storage of the users from "
-					+ "a provided string of a comma separated list of URL "
-					+ "encoded username and password pairs", 
-			usage = "StringSourceUserRepository:[USERNAME1:PASSWORD1[,USERNAME2:PASSWORD2[...]]]"
+	@NameValuePairValueSpecDoc(
+			description = "User repository that handles the storage of the "
+					+ "users from a provided string of a comma separated list "
+					+ "of URL encoded username and password pairs",
+			name = "StringSourceUserRepository",
+			syntax = "StringSourceUserRepository:[USERNAME1:PASSWORD1[,USERNAME2:PASSWORD2[...]]]",
+			valueType = String.class
 	)
 	public static final UserRepositorySpec STRING_SOURCE_USER_REPOSITORY = USER_REPOSITORY_SPECS.addThenGet(new UserRepositorySpec(
 			"StringSourceUserRepository") {

@@ -1,5 +1,13 @@
 package com.github.jh3nd3rs0n.jargyle.common.number;
 
+import com.github.jh3nd3rs0n.jargyle.internal.annotation.SingleValueTypeDoc;
+
+@SingleValueTypeDoc(
+		description = "",
+		name = "Positive Integer",
+		syntax = "1-2147483647",
+		syntaxName = "POSITIVE_INTEGER"
+)
 public final class PositiveInteger {
 
 	public static final int MAX_INT_VALUE = Integer.MAX_VALUE;

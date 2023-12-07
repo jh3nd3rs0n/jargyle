@@ -75,8 +75,8 @@ public abstract class SocksClient {
 			List<Property<? extends Object>> properties = 
 					new ArrayList<Property<? extends Object>>();
 			for (PropertySpec<Object> propertySpec 
-					: PropertySpecConstants.values()) {
-				String property = System.getProperty(propertySpec.toString());
+					: SocksClientPropertySpecConstants.values()) {
+				String property = System.getProperty(propertySpec.getName());
 				if (property != null) {
 					properties.add(propertySpec.newPropertyWithParsableValue(
 							property));

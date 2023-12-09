@@ -2,6 +2,7 @@ package com.github.jh3nd3rs0n.jargyle.cli;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.lang.reflect.Field;
 import java.util.Map;
@@ -17,6 +18,7 @@ import com.github.jh3nd3rs0n.jargyle.internal.annotation.SingleValueSpecDoc;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.SingleValueSpecsDoc;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.SingleValueTypeDoc;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.ValuesValueTypeDoc;
+import com.github.jh3nd3rs0n.jargyle.server.ConfigurationFileSchemaHelper;
 import com.github.jh3nd3rs0n.jargyle.server.RuleCondition;
 import com.github.jh3nd3rs0n.jargyle.server.RuleResult;
 import com.github.jh3nd3rs0n.jargyle.server.Setting;
@@ -39,6 +41,9 @@ final class ReferenceGenerator {
 		String ruleResultsFilename = "rule-results.md";
 		String serverConfigurationSettingsFilename = 
 				"server-configuration-settings.md";
+		String serverConfigurationFileSchemaFilename = 
+				"server-configuration-file-schema.md";
+		String cliHelpInfoFilename = "cli-help-info.md";
 		System.out.printf("Creating '%s'...", valueSyntaxesFilename);
 		PrintWriter valueSyntaxesWriter = new PrintWriter(
 				new File(valueSyntaxesFilename), "UTF-8");
@@ -88,7 +93,27 @@ final class ReferenceGenerator {
 		} finally {
 			serverConfigurationSettingsWriter.close();
 		}		
-		System.out.println("Done.");		
+		System.out.println("Done.");
+		System.out.printf(
+				"Creating '%s'...", serverConfigurationFileSchemaFilename);
+		PrintStream serverConfigurationFileSchemaStream = new PrintStream(
+				new File(serverConfigurationFileSchemaFilename), "UTF-8");
+		try {
+			this.printServerConfigurationFileSchema(
+					serverConfigurationFileSchemaStream);
+		} finally {
+			serverConfigurationFileSchemaStream.close();
+		}
+		System.out.println("Done.");
+		System.out.printf("Creating '%s'...", cliHelpInfoFilename);
+		PrintWriter cliHelpInfoWriter = new PrintWriter(
+				new File(cliHelpInfoFilename), "UTF-8");
+		try {
+			this.printCliHelpInfo(cliHelpInfoWriter);
+		} finally {
+			cliHelpInfoWriter.close();
+		}
+		System.out.println("Done.");
 	}
 	
 	private String getLink(final String header, final String filename) {
@@ -136,6 +161,58 @@ final class ReferenceGenerator {
 		pw.println();
 		this.printContentFromRootNameValuePairValueType(
 				Property.class, valueSyntaxesFilename, pw);
+	}
+	
+	private void printCliHelpInfo(final PrintWriter pw) {
+		pw.println("# Command Line Interface Help Information");
+		pw.println();
+		pw.println("## Page Contents");
+		pw.println();
+		pw.println("-   [Help Information](#help-information)");
+		pw.println("    -   [Help Information for manage-socks5-users](#help-information-for-manage-socks5-users)");
+		pw.println("    -   [Help Information for new-server-config-file](#help-information-for-new-server-config-file)");
+		pw.println("    -   [Help Information for start-server](#help-information-for-start-server-usage)");
+		pw.println();
+		pw.println("## Help Information");
+		pw.println();
+		pw.println("```text");
+		new JargyleCLI(
+				"jargyle", 
+				"jargyle", 
+				new String[] { "--help" }, 
+				false).printProgramHelp(pw);
+		pw.println("```");
+		pw.println();
+		pw.println("### Help Information for manage-socks5-users");
+		pw.println();
+		pw.println("```text");
+		new Socks5UserManagerCLI(
+				"manage-socks5-users", 
+				"jargyle manage-socks5-users", 
+				new String[] { "--help" }, 
+				false).printProgramHelp(pw);
+		pw.println("```");
+		pw.println();
+		pw.println("### Help Information for new-server-config-file");
+		pw.println();
+		pw.println("```text");
+		new ServerConfigurationFileCreatorCLI(
+				"new-server-config-file", 
+				"jargyle new-server-config-file", 
+				new String[] { "--help" }, 
+				false).printProgramHelp(pw);
+		pw.println("```");
+		pw.println();
+		pw.println("### Help Information for start-server");
+		pw.println();
+		pw.println("```text");
+		new ServerStarterCLI(
+				"start-server", 
+				"jargyle start-server", 
+				new String[] { "--help" }, 
+				false).printProgramHelp(pw);
+		pw.println("```");
+		pw.println();
 	}
 	
 	private void printContentFrom(
@@ -403,7 +480,7 @@ final class ReferenceGenerator {
 			this.printContentFrom(valuesValueTypeDoc, cls, pw);
 		}
 	}
-
+	
 	private void printRuleConditions(
 			final String valueSyntaxesFilename, final PrintWriter pw) {
 		pw.println("# Rule Conditions");
@@ -416,7 +493,7 @@ final class ReferenceGenerator {
 		this.printContentFromRootNameValuePairValueType(
 				RuleCondition.class, valueSyntaxesFilename, pw);
 	}
-	
+
 	private void printRuleResults(
 			final String valueSyntaxesFilename, final PrintWriter pw) {
 		pw.println("# Rule Results");
@@ -428,6 +505,16 @@ final class ReferenceGenerator {
 		pw.println();
 		this.printContentFromRootNameValuePairValueType(
 				RuleResult.class, valueSyntaxesFilename, pw);
+	}
+	
+	private void printServerConfigurationFileSchema(
+			final PrintStream ps) throws IOException {
+		ps.println("# Server Configuration File Schema");
+		ps.println();
+		ps.println("```xml");
+		ConfigurationFileSchemaHelper.writeSchemaTo(ps);
+		ps.println("```");
+		ps.println();
 	}
 	
 	private void printServerConfigurationSettings(

@@ -1,5 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.cli;
 
+import java.io.PrintWriter;
 import java.io.UncheckedIOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -230,43 +231,7 @@ public final class Socks5UserManagerCLI extends CLI {
 	@Ordinal(HELP_OPTION_GROUP_ORDINAL)
 	@Override
 	protected void displayProgramHelp() throws TerminationRequestedException {
-		ArgMatey.Option helpOption = this.getOptionGroups().get(
-				HELP_OPTION_GROUP_ORDINAL).get(0);
-		System.out.printf("Usage: %s USER_REPOSITORY COMMAND%n", 
-				this.programBeginningUsage);
-		System.out.printf("       %s %s%n", 
-				this.programBeginningUsage, 
-				helpOption.getUsage());
-		System.out.println();
-		System.out.println("USER_REPOSITORIES:");
-		System.out.println();
-		for (Field field : 
-			ExternalSourceUserRepositorySpecConstants.class.getDeclaredFields()) {
-			NameValuePairValueSpecDoc nameValuePairValueSpecDoc = field.getAnnotation(
-					NameValuePairValueSpecDoc.class);
-			if (nameValuePairValueSpecDoc != null) {
-				System.out.print("  ");
-				System.out.println(nameValuePairValueSpecDoc.syntax());
-				System.out.print("      ");
-				System.out.println(nameValuePairValueSpecDoc.description());
-			}
-		}		
-		System.out.println();
-		System.out.println("COMMANDS:");
-		System.out.println();
-		for (Field field : Command.class.getDeclaredFields()) {
-			HelpText helpText = field.getAnnotation(HelpText.class);
-			if (helpText != null) {
-				System.out.print("  ");
-				System.out.println(helpText.usage());
-				System.out.print("      ");
-				System.out.println(helpText.doc());
-			}
-		}
-		System.out.println();
-		System.out.println("OPTIONS:");
-		this.getOptionGroups().printHelpText();
-		System.out.println();
+		this.printProgramHelp(new PrintWriter(System.out, true));
 		throw new TerminationRequestedException(0);
 	}
 	
@@ -311,20 +276,44 @@ public final class Socks5UserManagerCLI extends CLI {
 		throw new TerminationRequestedException(-1);
 	}
 	
-	/*
-	private void printHelpText(final Class<?> cls) {
-		System.out.println();
-		Field[] fields = cls.getDeclaredFields();
-		for (Field field : fields) {
+	void printProgramHelp(final PrintWriter pw) {
+		ArgMatey.Option helpOption = this.getOptionGroups().get(
+				HELP_OPTION_GROUP_ORDINAL).get(0);
+		pw.printf("Usage: %s USER_REPOSITORY COMMAND%n", 
+				this.programBeginningUsage);
+		pw.printf("       %s %s%n", 
+				this.programBeginningUsage, 
+				helpOption.getUsage());
+		pw.println();
+		pw.println("USER_REPOSITORIES:");
+		pw.println();
+		for (Field field : 
+			ExternalSourceUserRepositorySpecConstants.class.getDeclaredFields()) {
+			NameValuePairValueSpecDoc nameValuePairValueSpecDoc = field.getAnnotation(
+					NameValuePairValueSpecDoc.class);
+			if (nameValuePairValueSpecDoc != null) {
+				pw.print("  ");
+				pw.println(nameValuePairValueSpecDoc.syntax());
+				pw.print("      ");
+				pw.println(nameValuePairValueSpecDoc.description());
+			}
+		}		
+		pw.println();
+		pw.println("COMMANDS:");
+		pw.println();
+		for (Field field : Command.class.getDeclaredFields()) {
 			HelpText helpText = field.getAnnotation(HelpText.class);
 			if (helpText != null) {
-				System.out.print("  ");
-				System.out.println(helpText.usage());
-				System.out.print("      ");
-				System.out.println(helpText.doc());
+				pw.print("  ");
+				pw.println(helpText.usage());
+				pw.print("      ");
+				pw.println(helpText.doc());
 			}
 		}
+		pw.println();
+		pw.println("OPTIONS:");
+		this.getOptionGroups().printHelpText(pw);
+		pw.println();		
 	}
-	*/
 	
 }

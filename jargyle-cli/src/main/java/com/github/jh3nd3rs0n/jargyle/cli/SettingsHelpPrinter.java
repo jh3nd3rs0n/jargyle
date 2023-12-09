@@ -190,13 +190,12 @@ final class SettingsHelpPrinter {
 		}
 	}
 	
-	public void printSettingsHelp() {
+	public void printSettingsHelp(final PrintWriter pw) {
 		Map<String, Class<?>> valueTypeMap = new TreeMap<String, Class<?>>();
 		this.putFromRootNameValuePairValueType(valueTypeMap, Setting.class);
 		this.putFromValueType(valueTypeMap, RuleCondition.class);
 		this.putFromValueType(valueTypeMap, RuleResult.class);
 		this.putFromValueType(valueTypeMap, Scheme.class);
-		PrintWriter pw = new PrintWriter(System.out, true);
 		pw.println("SETTINGS:");
 		pw.println();
 		this.printFromRootNameValuePairValueType(Setting.class, pw);

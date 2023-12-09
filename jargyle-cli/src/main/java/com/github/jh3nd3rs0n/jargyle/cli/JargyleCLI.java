@@ -1,6 +1,7 @@
 package com.github.jh3nd3rs0n.jargyle.cli;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +12,6 @@ import com.github.jh3nd3rs0n.argmatey.ArgMatey.Annotations.Ordinal;
 import com.github.jh3nd3rs0n.argmatey.ArgMatey.CLI;
 import com.github.jh3nd3rs0n.argmatey.ArgMatey.OptionType;
 import com.github.jh3nd3rs0n.argmatey.ArgMatey.TerminationRequestedException;
-import com.github.jh3nd3rs0n.jargyle.server.ConfigurationFileSchemaHelper;
 
 public final class JargyleCLI extends CLI {
 
@@ -79,24 +79,6 @@ public final class JargyleCLI extends CLI {
 						posixCorrect);
 				cli.handleArgs();
 			}
-		},
-		
-		SERVER_CONFIG_FILE_SCHEMA("server-config-file-schema") {
-			
-			@Override
-			public void invoke(
-					final String progName, 
-					final String progBeginningUsage, 
-					final String[] args, 
-					final boolean posixCorrect)
-					throws TerminationRequestedException {
-				try {
-					ConfigurationFileSchemaHelper.writeSchemaTo(System.out);
-				} catch (IOException e) {
-					throw new AssertionError(e);
-				}
-			}
-			
 		},
 		
 		@HelpText(
@@ -227,33 +209,7 @@ public final class JargyleCLI extends CLI {
 	@Ordinal(HELP_OPTION_GROUP_ORDINAL)
 	@Override
 	protected void displayProgramHelp() throws TerminationRequestedException {
-		ArgMatey.Option helpOption = this.getOptionGroups().get(
-				HELP_OPTION_GROUP_ORDINAL).get(0);
-		ArgMatey.Option versionOption = this.getOptionGroups().get(
-				VERSION_OPTION_GROUP_ORDINAL).get(0);
-		System.out.printf("Usage: %s COMMAND%n", this.programBeginningUsage);
-		System.out.printf("       %s %s%n", 
-				this.programBeginningUsage, 
-				helpOption.getUsage());
-		System.out.printf("       %s %s%n", 
-				this.programBeginningUsage, 
-				versionOption.getUsage());
-		System.out.println();
-		System.out.println("COMMANDS:");
-		Field[] fields = Command.class.getDeclaredFields();
-		for (Field field : fields) {
-			HelpText helpText = field.getAnnotation(HelpText.class);
-			if (helpText != null) {
-				System.out.print("  ");
-				System.out.println(helpText.usage());
-				System.out.print("      ");
-				System.out.println(helpText.doc());
-			}
-		}		
-		System.out.println();
-		System.out.println("OPTIONS:");
-		this.getOptionGroups().printHelpText();
-		System.out.println();
+		this.printProgramHelp(new PrintWriter(System.out, true));
 		throw new TerminationRequestedException(0);
 	}
 	
@@ -303,6 +259,36 @@ public final class JargyleCLI extends CLI {
 		System.err.println(this.suggestion);
 		t.printStackTrace(System.err);
 		throw new TerminationRequestedException(-1);
+	}
+	
+	void printProgramHelp(final PrintWriter pw) {
+		ArgMatey.Option helpOption = this.getOptionGroups().get(
+				HELP_OPTION_GROUP_ORDINAL).get(0);
+		ArgMatey.Option versionOption = this.getOptionGroups().get(
+				VERSION_OPTION_GROUP_ORDINAL).get(0);
+		pw.printf("Usage: %s COMMAND%n", this.programBeginningUsage);
+		pw.printf("       %s %s%n", 
+				this.programBeginningUsage, 
+				helpOption.getUsage());
+		pw.printf("       %s %s%n", 
+				this.programBeginningUsage, 
+				versionOption.getUsage());
+		pw.println();
+		pw.println("COMMANDS:");
+		Field[] fields = Command.class.getDeclaredFields();
+		for (Field field : fields) {
+			HelpText helpText = field.getAnnotation(HelpText.class);
+			if (helpText != null) {
+				pw.print("  ");
+				pw.println(helpText.usage());
+				pw.print("      ");
+				pw.println(helpText.doc());
+			}
+		}		
+		pw.println();
+		pw.println("OPTIONS:");
+		this.getOptionGroups().printHelpText(pw);
+		pw.println();		
 	}
 	
 }

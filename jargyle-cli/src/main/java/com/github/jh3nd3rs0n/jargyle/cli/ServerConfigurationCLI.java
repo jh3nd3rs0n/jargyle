@@ -1,6 +1,7 @@
 package com.github.jh3nd3rs0n.jargyle.cli;
 
 import java.io.File;
+import java.io.PrintWriter;
 
 import com.github.jh3nd3rs0n.argmatey.ArgMatey;
 import com.github.jh3nd3rs0n.argmatey.ArgMatey.Annotations.Option;
@@ -141,27 +142,7 @@ public abstract class ServerConfigurationCLI extends CLI {
 	@Ordinal(HELP_OPTION_GROUP_ORDINAL)
 	@Override
 	protected void displayProgramHelp() throws TerminationRequestedException {
-		String progOperandsUsage = this.getProgramOperandsUsage();
-		ArgMatey.Option helpOption = this.getOptionGroups().get(
-				HELP_OPTION_GROUP_ORDINAL).get(0);
-		ArgMatey.Option settingsHelpOption = this.getOptionGroups().get(
-				SETTINGS_HELP_OPTION_GROUP_ORDINAL).get(0);
-		System.out.printf("Usage: %s [OPTIONS]", 
-				this.programBeginningUsage);
-		if (progOperandsUsage != null && !progOperandsUsage.isEmpty()) {
-			System.out.printf(" %s", progOperandsUsage);
-		}
-		System.out.println();
-		System.out.printf("       %s %s%n", 
-				this.programBeginningUsage, 
-				helpOption.getUsage());
-		System.out.printf("       %s %s%n", 
-				this.programBeginningUsage, 
-				settingsHelpOption.getUsage());
-		System.out.println();
-		System.out.println("OPTIONS:");
-		this.getOptionGroups().printHelpText();
-		System.out.println();
+		this.printProgramHelp(new PrintWriter(System.out, true));
 		throw new TerminationRequestedException(0);
 	}
 	
@@ -169,6 +150,22 @@ public abstract class ServerConfigurationCLI extends CLI {
 	protected void displayProgramVersion() 
 			throws TerminationRequestedException { 
 		throw new UnsupportedOperationException("not implemented");
+	}
+	
+	@Option(
+			doc = "Print the list of available settings for the SOCKS "
+					+ "server and exit",
+			name = "settings-help",
+			type = OptionType.GNU_LONG
+	)
+	@Option(
+			name = "H",
+			type = OptionType.POSIX
+	)
+	@Ordinal(SETTINGS_HELP_OPTION_GROUP_ORDINAL)
+	protected void displaySettingsHelp() throws TerminationRequestedException {
+		this.printSettingsHelp(new PrintWriter(System.out, true));
+		throw new TerminationRequestedException(0);
 	}
 	
 	@Option(
@@ -241,7 +238,7 @@ public abstract class ServerConfigurationCLI extends CLI {
 						encryptedPassword);
 		this.configuration.addSetting(setting);
 	}
-
+	
 	@Option(
 			doc = "Enter through an interactive prompt the password for the "
 					+ "trust store for the SSL/TLS connections to the other "
@@ -259,7 +256,7 @@ public abstract class ServerConfigurationCLI extends CLI {
 						encryptedPassword);
 		this.configuration.addSetting(setting);
 	}
-		
+
 	@Option(
 			doc = "Enter through an interactive prompt the password for the "
 					+ "key store for the DTLS connections to the SOCKS "
@@ -277,7 +274,7 @@ public abstract class ServerConfigurationCLI extends CLI {
 						encryptedPassword);
 		this.configuration.addSetting(setting);		
 	}
-	
+		
 	@Option(
 			doc = "Enter through an interactive prompt the password for the "
 					+ "trust store for the DTLS connections to the SOCKS "
@@ -295,7 +292,7 @@ public abstract class ServerConfigurationCLI extends CLI {
 						encryptedPassword);
 		this.configuration.addSetting(setting);		
 	}
-		
+	
 	@Option(
 			doc = "Enter through an interactive prompt the password for the "
 					+ "key store for the SSL/TLS connections to the SOCKS "
@@ -313,7 +310,7 @@ public abstract class ServerConfigurationCLI extends CLI {
 						encryptedPassword);
 		this.configuration.addSetting(setting);		
 	}
-	
+		
 	@Option(
 			doc = "Enter through an interactive prompt the password for the "
 					+ "trust store for the SSL/TLS connections to the SOCKS "
@@ -370,20 +367,32 @@ public abstract class ServerConfigurationCLI extends CLI {
 		throw new TerminationRequestedException(-1);
 	}
 	
-	@Option(
-			doc = "Print the list of available settings for the SOCKS "
-					+ "server and exit",
-			name = "settings-help",
-			type = OptionType.GNU_LONG
-	)
-	@Option(
-			name = "H",
-			type = OptionType.POSIX
-	)
-	@Ordinal(SETTINGS_HELP_OPTION_GROUP_ORDINAL)
-	protected void printSettingsHelp() throws TerminationRequestedException {
-		new SettingsHelpPrinter().printSettingsHelp();
-		throw new TerminationRequestedException(0);
+	final void printProgramHelp(final PrintWriter pw) {
+		String progOperandsUsage = this.getProgramOperandsUsage();
+		ArgMatey.Option helpOption = this.getOptionGroups().get(
+				HELP_OPTION_GROUP_ORDINAL).get(0);
+		ArgMatey.Option settingsHelpOption = this.getOptionGroups().get(
+				SETTINGS_HELP_OPTION_GROUP_ORDINAL).get(0);
+		pw.printf("Usage: %s [OPTIONS]", 
+				this.programBeginningUsage);
+		if (progOperandsUsage != null && !progOperandsUsage.isEmpty()) {
+			pw.printf(" %s", progOperandsUsage);
+		}
+		pw.println();
+		pw.printf("       %s %s%n", 
+				this.programBeginningUsage, 
+				helpOption.getUsage());
+		pw.printf("       %s %s%n", 
+				this.programBeginningUsage, 
+				settingsHelpOption.getUsage());
+		pw.println();
+		pw.println("OPTIONS:");
+		this.getOptionGroups().printHelpText(pw);
+		pw.println();
+	}
+	
+	void printSettingsHelp(final PrintWriter pw) {
+		new SettingsHelpPrinter().printSettingsHelp(pw);
 	}
 	
 	private EncryptedPassword readEncryptedPassword(final String prompt) {

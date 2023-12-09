@@ -165,5 +165,3 @@
   </xs:complexType>
 </xs:schema>
 
-
-```

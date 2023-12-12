@@ -100,7 +100,6 @@
     -   [socks5.onCommand.externalFacingBindUdpPortRanges](#socks5-oncommand-externalfacingbindudpportranges)
     -   [socks5.onCommand.externalFacingSocketSettings](#socks5-oncommand-externalfacingsocketsettings)
     -   [socks5.onCommand.internalFacingBindHost](#socks5-oncommand-internalfacingbindhost)
-    -   [socks5.onCommand.internalFacingBindTcpPortRanges](#socks5-oncommand-internalfacingbindtcpportranges)
     -   [socks5.onCommand.internalFacingBindUdpPortRanges](#socks5-oncommand-internalfacingbindudpportranges)
     -   [socks5.onCommand.internalFacingSocketSettings](#socks5-oncommand-internalfacingsocketsettings)
     -   [socks5.onCommand.relayBufferSize](#socks5-oncommand-relaybuffersize)
@@ -1429,20 +1428,6 @@ socks5.onCommand.internalFacingBindHost=HOST
 The binding host name or address for all internal-facing sockets
 
 **Value:** [Host](value-syntaxes.md#host)
-
-### socks5.onCommand.internalFacingBindTcpPortRanges
-
-**Syntax:**
-
-```text
-socks5.onCommand.internalFacingBindTcpPortRanges=PORT_RANGES
-```
-
-**Description:**
-
-The comma separated list of binding port ranges for all internal-facing TCP sockets
-
-**Value:** [Port Ranges](value-syntaxes.md#port-ranges)
 
 ### socks5.onCommand.internalFacingBindUdpPortRanges
 

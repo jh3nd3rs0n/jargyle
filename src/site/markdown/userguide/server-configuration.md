@@ -331,7 +331,7 @@ public class ServerApp {
             Setting.newInstanceWithParsableValue(
                 "dtls.keyStoreFile", "server.jks"),
             Setting.newInstanceWithParsableValue(
-                "dtls.keyStorePassword", "password")
+                "dtls.keyStorePassword", "password"),
             Setting.newInstanceWithParsableValue(
                 "dtls.needClientAuth", "true"),
             Setting.newInstanceWithParsableValue(
@@ -550,7 +550,7 @@ are loaded onto memory. Because of this, you will need at least as much memory
 as the size of the file. If the file does not exist, it will be created and 
 used. If the file does exist, the existing file will be used. To manage SOCKS5 
 users under a user repository, see 
-[Managing SOCKS5 Users](userguide/cli.md#managing-socks5-users).
+[Managing SOCKS5 Users](cli.md#managing-socks5-users).
 
 API example:
 
@@ -1827,9 +1827,11 @@ Server configuration file example:
         <setting>
             <name>chaining.socksServerUri</name>
             <value>socks5://127.0.0.1:23456</value>
+        </setting>
         <setting>
             <name>chaining.socksServerUri</name>
             <value>socks5://127.0.0.1:65432</value>
+        </setting>
         <setting>
             <name>chaining.socksServerUri</name>
             <value>socks5://127.0.0.1:34567</value>
@@ -3620,9 +3622,6 @@ external-facing sockets (This rule result can be specified multiple times with
 each rule result specifying another socket setting)
 -   `internalFacingBindHost`: Specifies the binding host name or address for 
 all internal-facing sockets
--   `internalFacingBindTcpPortRange`: Specifies a binding 
-port range for all internal-facing TCP sockets (This rule result can be 
-specified multiple times with each rule result specifying another port range)
 -   `internalFacingBindUdpPortRange`: Specifies a binding 
 port range for all internal-facing UDP 
 sockets (This rule result can be specified multiple times with each rule result 
@@ -3666,9 +3665,6 @@ setting for all external-facing sockets (This rule result can be specified
 multiple times with each rule result specifying another socket setting)
 -   `socks5.onCommand.internalFacingBindHost`: Specifies the binding 
 host name or address for all internal-facing sockets
--   `socks5.onCommand.internalFacingBindTcpPortRange`: Specifies a 
-binding port range for all internal-facing TCP sockets (This rule result can be 
-specified multiple times with each rule result specifying another port range)
 -   `socks5.onCommand.internalFacingBindUdpPortRange`: Specifies a 
 binding port range for all internal-facing UDP sockets (This rule result can be 
 specified multiple times with each rule result specifying another port range)

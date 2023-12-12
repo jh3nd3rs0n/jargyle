@@ -16,7 +16,6 @@
     -   [firewallActionAllowLimitReachedLogAction](#firewallactionallowlimitreachedlogaction)
     -   [firewallActionLogAction](#firewallactionlogaction)
     -   [internalFacingBindHost](#internalfacingbindhost)
-    -   [internalFacingBindTcpPortRange](#internalfacingbindtcpportrange)
     -   [internalFacingBindUdpPortRange](#internalfacingbindudpportrange)
     -   [internalFacingSocketSetting](#internalfacingsocketsetting)
     -   [routeSelectionLogAction](#routeselectionlogaction)
@@ -43,7 +42,6 @@
     -   [socks5.onCommand.externalFacingBindUdpPortRange](#socks5-oncommand-externalfacingbindudpportrange)
     -   [socks5.onCommand.externalFacingSocketSetting](#socks5-oncommand-externalfacingsocketsetting)
     -   [socks5.onCommand.internalFacingBindHost](#socks5-oncommand-internalfacingbindhost)
-    -   [socks5.onCommand.internalFacingBindTcpPortRange](#socks5-oncommand-internalfacingbindtcpportrange)
     -   [socks5.onCommand.internalFacingBindUdpPortRange](#socks5-oncommand-internalfacingbindudpportrange)
     -   [socks5.onCommand.internalFacingSocketSetting](#socks5-oncommand-internalfacingsocketsetting)
     -   [socks5.onCommand.relayBufferSize](#socks5-oncommand-relaybuffersize)
@@ -254,20 +252,6 @@ internalFacingBindHost=HOST
 Specifies the binding host name or address for all internal-facing sockets
 
 **Value:** [Host](value-syntaxes.md#host)
-
-### internalFacingBindTcpPortRange
-
-**Syntax:**
-
-```text
-internalFacingBindTcpPortRange=PORT_RANGE
-```
-
-**Description:**
-
-Specifies a binding port range for all internal-facing TCP sockets (can be specified multiple times with each rule result specifying another port range)
-
-**Value:** [Port Range](value-syntaxes.md#port-range)
 
 ### internalFacingBindUdpPortRange
 
@@ -620,20 +604,6 @@ socks5.onCommand.internalFacingBindHost=HOST
 Specifies the binding host name or address for all internal-facing sockets
 
 **Value:** [Host](value-syntaxes.md#host)
-
-### socks5.onCommand.internalFacingBindTcpPortRange
-
-**Syntax:**
-
-```text
-socks5.onCommand.internalFacingBindTcpPortRange=PORT_RANGE
-```
-
-**Description:**
-
-Specifies a binding port range for all internal-facing TCP sockets (can be specified multiple times with each rule result specifying another port range)
-
-**Value:** [Port Range](value-syntaxes.md#port-range)
 
 ### socks5.onCommand.internalFacingBindUdpPortRange
 

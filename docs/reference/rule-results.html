@@ -103,7 +103,6 @@
 <li><a href="#firewallactionallowlimitreachedlogaction">firewallActionAllowLimitReachedLogAction</a></li>
 <li><a href="#firewallactionlogaction">firewallActionLogAction</a></li>
 <li><a href="#internalfacingbindhost">internalFacingBindHost</a></li>
-<li><a href="#internalfacingbindtcpportrange">internalFacingBindTcpPortRange</a></li>
 <li><a href="#internalfacingbindudpportrange">internalFacingBindUdpPortRange</a></li>
 <li><a href="#internalfacingsocketsetting">internalFacingSocketSetting</a></li>
 <li><a href="#routeselectionlogaction">routeSelectionLogAction</a></li>
@@ -133,7 +132,6 @@
 <li><a href="#socks5-oncommand-externalfacingbindudpportrange">socks5.onCommand.externalFacingBindUdpPortRange</a></li>
 <li><a href="#socks5-oncommand-externalfacingsocketsetting">socks5.onCommand.externalFacingSocketSetting</a></li>
 <li><a href="#socks5-oncommand-internalfacingbindhost">socks5.onCommand.internalFacingBindHost</a></li>
-<li><a href="#socks5-oncommand-internalfacingbindtcpportrange">socks5.onCommand.internalFacingBindTcpPortRange</a></li>
 <li><a href="#socks5-oncommand-internalfacingbindudpportrange">socks5.onCommand.internalFacingBindUdpPortRange</a></li>
 <li><a href="#socks5-oncommand-internalfacingsocketsetting">socks5.onCommand.internalFacingSocketSetting</a></li>
 <li><a href="#socks5-oncommand-relaybuffersize">socks5.onCommand.relayBufferSize</a></li>
@@ -280,15 +278,6 @@
 <p><strong>Description:</strong></p>
 <p>Specifies the binding host name or address for all internal-facing sockets</p>
 <p><strong>Value:</strong> <a href="value-syntaxes.html#host">Host</a></p></section><section>
-<h3>internalFacingBindTcpPortRange</h3>
-<p><strong>Syntax:</strong></p>
-
-<div class="verbatim">
-<pre><code class="language-text">internalFacingBindTcpPortRange=PORT_RANGE
-</code></pre></div>
-<p><strong>Description:</strong></p>
-<p>Specifies a binding port range for all internal-facing TCP sockets (can be specified multiple times with each rule result specifying another port range)</p>
-<p><strong>Value:</strong> <a href="value-syntaxes.html#port-range">Port Range</a></p></section><section>
 <h3>internalFacingBindUdpPortRange</h3>
 <p><strong>Syntax:</strong></p>
 
@@ -515,15 +504,6 @@
 <p><strong>Description:</strong></p>
 <p>Specifies the binding host name or address for all internal-facing sockets</p>
 <p><strong>Value:</strong> <a href="value-syntaxes.html#host">Host</a></p></section><section>
-<h3>socks5.onCommand.internalFacingBindTcpPortRange</h3>
-<p><strong>Syntax:</strong></p>
-
-<div class="verbatim">
-<pre><code class="language-text">socks5.onCommand.internalFacingBindTcpPortRange=PORT_RANGE
-</code></pre></div>
-<p><strong>Description:</strong></p>
-<p>Specifies a binding port range for all internal-facing TCP sockets (can be specified multiple times with each rule result specifying another port range)</p>
-<p><strong>Value:</strong> <a href="value-syntaxes.html#port-range">Port Range</a></p></section><section>
 <h3>socks5.onCommand.internalFacingBindUdpPortRange</h3>
 <p><strong>Syntax:</strong></p>
 

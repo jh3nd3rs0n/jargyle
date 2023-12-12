@@ -259,19 +259,7 @@ public final class Socks5SettingSpecConstants {
 			SETTING_SPECS.addThenGet(new HostSettingSpec(
 					"socks5.onCommand.internalFacingBindHost",
 					null));
-	
-	@NameValuePairValueSpecDoc(
-			description = "The comma separated list of binding port ranges for "
-					+ "all internal-facing TCP sockets",
-			name = "socks5.onCommand.internalFacingBindTcpPortRanges",
-			syntax = "socks5.onCommand.internalFacingBindTcpPortRanges=PORT_RANGES",
-			valueType = PortRanges.class
-	)
-	public static final SettingSpec<PortRanges> SOCKS5_ON_COMMAND_INTERNAL_FACING_BIND_TCP_PORT_RANGES =
-			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
-					"socks5.onCommand.internalFacingBindTcpPortRanges",
-					PortRanges.newInstance()));
-			
+
 	@NameValuePairValueSpecDoc(
 			description = "The comma separated list of binding port ranges for "
 					+ "all internal-facing UDP sockets",

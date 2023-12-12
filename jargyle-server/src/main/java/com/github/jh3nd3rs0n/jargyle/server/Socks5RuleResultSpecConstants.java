@@ -227,19 +227,7 @@ public final class Socks5RuleResultSpecConstants {
 	)
 	public static final RuleResultSpec<Host> SOCKS5_ON_COMMAND_INTERNAL_FACING_BIND_HOST = RULE_RESULT_SPECS.addThenGet(new HostRuleResultSpec(
 			"socks5.onCommand.internalFacingBindHost"));
-	
-	@NameValuePairValueSpecDoc(
-			description = "Specifies a binding port range for all "
-					+ "internal-facing TCP sockets (can be specified multiple "
-					+ "times with each rule result specifying another port "
-					+ "range)",
-			name = "socks5.onCommand.internalFacingBindTcpPortRange",
-			syntax = "socks5.onCommand.internalFacingBindTcpPortRange=PORT_RANGE",
-			valueType = PortRange.class
-	)
-	public static final RuleResultSpec<PortRange> SOCKS5_ON_COMMAND_INTERNAL_FACING_BIND_TCP_PORT_RANGE = RULE_RESULT_SPECS.addThenGet(new PortRangeRuleResultSpec(
-			"socks5.onCommand.internalFacingBindTcpPortRange"));
-	
+
 	@NameValuePairValueSpecDoc(
 			description = "Specifies a binding port range for all "
 					+ "internal-facing UDP sockets (can be specified multiple "

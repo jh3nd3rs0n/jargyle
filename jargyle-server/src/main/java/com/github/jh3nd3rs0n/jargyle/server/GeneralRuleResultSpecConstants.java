@@ -164,19 +164,7 @@ public final class GeneralRuleResultSpecConstants {
 	)
 	public static final RuleResultSpec<Host> INTERNAL_FACING_BIND_HOST = RULE_RESULT_SPECS.addThenGet(new HostRuleResultSpec(
 			"internalFacingBindHost"));
-	
-	@NameValuePairValueSpecDoc(
-			description = "Specifies a binding port range for all "
-					+ "internal-facing TCP sockets (can be specified multiple "
-					+ "times with each rule result specifying another port "
-					+ "range)",
-			name = "internalFacingBindTcpPortRange",
-			syntax = "internalFacingBindTcpPortRange=PORT_RANGE",
-			valueType = PortRange.class
-	)
-	public static final RuleResultSpec<PortRange> INTERNAL_FACING_BIND_TCP_PORT_RANGE = RULE_RESULT_SPECS.addThenGet(new PortRangeRuleResultSpec(
-			"internalFacingBindTcpPortRange"));
-	
+
 	@NameValuePairValueSpecDoc(
 			description = "Specifies a binding port range for all "
 					+ "internal-facing UDP sockets (can be specified multiple "

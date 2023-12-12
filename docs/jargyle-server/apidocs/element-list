@@ -1,0 +1,4 @@
+module:com.github.jh3nd3rs0n.jargyle.server
+com.github.jh3nd3rs0n.jargyle.server
+com.github.jh3nd3rs0n.jargyle.server.internal.server
+com.github.jh3nd3rs0n.jargyle.server.socks5.userpassmethod

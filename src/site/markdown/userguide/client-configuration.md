@@ -15,16 +15,509 @@ The following are topics for configuring the client from the client API.
 
 ## Enabling SSL/TLS for TCP Traffic Between the Client and the SOCKS Server
 
+You can enable SSL/TLS for TCP traffic between the client and the SOCKS server 
+under the following condition: 
+
+-   The SOCKS server accepts SSL/TLS connections.
+
+By default SSL/TLS for TCP traffic between the client and the SOCKS server is 
+disabled. To enable SSL/TLS for TCP traffic between the client and the SOCKS 
+server, you will need to have the property `socksClient.ssl.enabled` set 
+to `true`. In addition, you will need to have the property 
+`socksClient.ssl.trustStoreFile` to specify the SOCKS server's key store 
+file used as a trust store (this file would need to be created by Java's keytool 
+utility). Also, you will need to have the property 
+`socksClient.ssl.trustStorePassword` to specify the password for the 
+SOCKS server's trust store file.
+
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
+import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
+
+import java.io.IOException;
+
+import java.net.DatagramSocket;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class ClientApp {
+    public static void main(String[] args) throws IOException {
+        System.setProperty("socksServerUri.scheme", "socks5");
+        System.setProperty("socksServerUri.host", "jargyle.net");
+        System.setProperty("socksServerUri.port", "1234");
+        System.setProperty("socksClient.ssl.enabled", "true");
+        System.setProperty("socksClient.ssl.trustStoreFile", "jargyle.jks");
+        System.setProperty("socksClient.ssl.trustStorePassword", "password");
+        NetObjectFactory netObjectFactory = NetObjectFactory.newInstance();
+        // ...
+    }
+}
+```
+
+If the SOCKS server wants the client to authenticate using SSL/TLS, you will 
+need to have the property `socksClient.ssl.keyStoreFile` to specify the 
+client's key store file (this file would need to be created by Java's keytool 
+utility). Also, you will need to have the property 
+`socksClient.ssl.keyStorePassword` to specify the password for the 
+client's key store file.
+
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
+import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
+
+import java.io.IOException;
+
+import java.net.DatagramSocket;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class ClientApp {
+    public static void main(String[] args) throws IOException {
+        System.setProperty("socksServerUri.scheme", "socks5");
+        System.setProperty("socksServerUri.host", "jargyle.net");
+        System.setProperty("socksServerUri.port", "1234");
+        System.setProperty("socksClient.ssl.enabled", "true");
+        System.setProperty("socksClient.ssl.keyStoreFile", "client.jks");
+        System.setProperty("socksClient.ssl.keyStorePassword", "drowssap");
+        System.setProperty("socksClient.ssl.trustStoreFile", "jargyle.jks");
+        System.setProperty("socksClient.ssl.trustStorePassword", "password");
+        NetObjectFactory netObjectFactory = NetObjectFactory.newInstance();
+        // ...
+    }
+}
+```
+
 ## Enabling DTLS for UDP Traffic Between the Client and the SOCKS Server
+
+You can enable DTLS for UDP traffic between the client and the SOCKS server 
+under the following condition: 
+
+-   The SOCKS server accepts DTLS connections.
+
+By default DTLS for UDP traffic between the client and the SOCKS server is 
+disabled. To enable DTLS for UDP traffic between the client and the SOCKS 
+server, you will need to have the property `socksClient.dtls.enabled` set 
+to `true`. In addition, you will need to have the property 
+`socksClient.dtls.trustStoreFile` to specify the SOCKS server's key store 
+file used as a trust store (this file would need to be created by Java's keytool 
+utility). Also, you will need to have the property 
+`socksClient.dtls.trustStorePassword` to specify the password for the 
+SOCKS server's trust store file.
+
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
+import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
+
+import java.io.IOException;
+
+import java.net.DatagramSocket;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class ClientApp {
+    public static void main(String[] args) throws IOException {
+        System.setProperty("socksServerUri.scheme", "socks5");
+        System.setProperty("socksServerUri.host", "jargyle.net");
+        System.setProperty("socksServerUri.port", "1234");
+        System.setProperty("socksClient.dtls.enabled", "true");
+        System.setProperty("socksClient.dtls.trustStoreFile", "jargyle.jks");
+        System.setProperty("socksClient.dtls.trustStorePassword", "password");
+        NetObjectFactory netObjectFactory = NetObjectFactory.newInstance();
+        // ...
+    }
+}
+```
+
+If the SOCKS server wants the client to authenticate using DTLS, you will need 
+to have the property `socksClient.dtls.keyStoreFile` to specify the 
+client's key store file (this file would need to be created by Java's keytool 
+utility). Also, you will need to have the property 
+`socksClient.dtls.keyStorePassword` to specify the password for the 
+client's key store file.
+
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
+import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
+
+import java.io.IOException;
+
+import java.net.DatagramSocket;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class ClientApp {
+    public static void main(String[] args) throws IOException {
+        System.setProperty("socksServerUri.scheme", "socks5");
+        System.setProperty("socksServerUri.host", "jargyle.net");
+        System.setProperty("socksServerUri.port", "1234");
+        System.setProperty("socksClient.dtls.enabled", "true");
+        System.setProperty("socksClient.dtls.keyStoreFile", "client.jks");
+        System.setProperty("socksClient.dtls.keyStorePassword", "drowssap");
+        System.setProperty("socksClient.dtls.trustStoreFile", "jargyle.jks");
+        System.setProperty("socksClient.dtls.trustStorePassword", "password");
+        NetObjectFactory netObjectFactory = NetObjectFactory.newInstance();
+        // ...
+    }
+}
+```
 
 ## Accessing the SOCKS Server Using SOCKS5 Authentication
 
+The client has the following SOCKS5 authentication methods to choose from when 
+accessing the SOCKS5 server:
+
+-   `NO_AUTHENTICATION_REQUIRED`: No authentication required
+-   `GSSAPI`: GSS-API authentication
+-   `USERNAME_PASSWORD`: Username password authentication
+
+From the API, you can have one or more of the aforementioned authentication 
+methods set in the property `socksClient.socks5.methods` as a comma 
+separated list. 
+
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
+import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
+
+import java.io.IOException;
+
+import java.net.DatagramSocket;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class ClientApp {
+    public static void main(String[] args) throws IOException {
+        System.setProperty("socksServerUri.scheme", "socks5");
+        System.setProperty("socksServerUri.host", "jargyle.net");
+        System.setProperty("socksServerUri.port", "1234");
+        System.setProperty(
+            "socksClient.socks5.methods", 
+            "NO_AUTHENTICATION_REQUIRED,GSSAPI");
+        NetObjectFactory netObjectFactory = NetObjectFactory.newInstance();
+        // ...
+    }
+}
+```
+
+If not set, the default value for the property `socksClient.socks5.methods` 
+is set to `NO_AUTHENTICATION_REQUIRED`.
+
 ### Accessing the SOCKS Server Using No Authentication
+
+Because the default value for the property `socksClient.socks5.methods` is 
+set to `NO_AUTHENTICATION_REQUIRED`, it is not required for 
+`NO_AUTHENTICATION_REQUIRED` to be included in the property 
+`socksClient.socks5.methods`.
+
+However, if other authentication methods are to be used in addition to 
+`NO_AUTHENTICATION_REQUIRED`, `NO_AUTHENTICATION_REQUIRED` must be 
+included in the property `socksClient.socks5.methods`
+
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
+import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
+
+import java.io.IOException;
+
+import java.net.DatagramSocket;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class ClientApp {
+    public static void main(String[] args) throws IOException {
+        System.setProperty("socksServerUri.scheme", "socks5");
+        System.setProperty("socksServerUri.host", "jargyle.net");
+        System.setProperty("socksServerUri.port", "1234");
+        System.setProperty(
+            "socksClient.socks5.methods", 
+            "NO_AUTHENTICATION_REQUIRED,GSSAPI,USERNAME_PASSWORD");
+        NetObjectFactory netObjectFactory = NetObjectFactory.newInstance();
+        // ...
+    }
+}
+```
 
 ### Accessing the SOCKS Server Using Username Password Authentication
 
+To access the SOCKS server using username password authentication, you 
+will need to have the property `socksClient.socks5.methods` to have 
+`USERNAME_PASSWORD` included. You will also need to have the properties 
+`socksClient.socks5.userpassmethod.username` and 
+`socksClient.socks5.userpassmethod.password` respectively specify the 
+username and password for the SOCKS5 server.
+
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
+import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
+
+import java.io.IOException;
+
+import java.net.DatagramSocket;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class ClientApp {
+    public static void main(String[] args) throws IOException {
+        System.setProperty("socksServerUri.scheme", "socks5");
+        System.setProperty("socksServerUri.host", "jargyle.net");
+        System.setProperty("socksServerUri.port", "1234");
+        System.setProperty(
+            "socksClient.socks5.methods", "USERNAME_PASSWORD");
+        System.setProperty(
+            "socksClient.socks5.userpassmethod.username", 
+            "Aladdin");
+        System.setProperty(
+            "socksClient.socks5.userpassmethod.password",
+            "opensesame");
+        NetObjectFactory netObjectFactory = NetObjectFactory.newInstance();
+        // ...
+    }
+}
+```
+
 ### Accessing the SOCKS Server Using GSS-API Authentication
+
+To access the SOCKS server using GSS-API authentication, you will need to have 
+the property `socksClient.socks5.methods` to have `GSSAPI` included. You 
+will also need to specify Java system properties to use a security mechanism 
+that implements the GSS-API (for example, Kerberos is a security mechanism that 
+implements the GSS-API) and you will also need to specify the GSS-API service 
+name for the SOCKS5 server.
+
+The following is a sufficient example of using the Kerberos security mechanism:
+
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
+import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
+
+import java.io.IOException;
+
+import java.net.DatagramSocket;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class ClientApp {
+    public static void main(String[] args) throws IOException {
+        System.setProperty(
+            "javax.security.auth.useSubjectCredsOnly", "false");
+        System.setProperty(
+            "java.security.auth.login.config", "login.conf");
+        System.setProperty("java.security.krb5.conf", "krb5.conf");
+        System.setProperty("socksServerUri.scheme", "socks5");
+        System.setProperty("socksServerUri.host", "jargyle.net");
+        System.setProperty("socksServerUri.port", "1234");
+        System.setProperty("socksClient.socks5.methods", "GSSAPI");
+        System.setProperty(
+            "socksClient.socks5.gssapimethod.serviceName",
+            "rcmd/jargyle.net");
+        NetObjectFactory netObjectFactory = NetObjectFactory.newInstance();
+        // ...
+    }
+}
+```
+
+The Java system property `javax.security.auth.useSubjectCredsOnly` with 
+the value `false` disables JAAS-based authentication to obtain the credentials 
+directly and lets the underlying security mechanism obtain them instead.
+
+The Java system property `java.security.auth.login.config` with the value 
+`login.conf` provides a JAAS configuration file for the underlying security 
+mechanism.
+
+`login.conf`:
+
+```text
+com.sun.security.jgss.initiate {
+  com.sun.security.auth.module.Krb5LoginModule required
+  principal="alice"
+  useKeyTab=true
+  keyTab="alice.keytab"
+  storeKey=true;
+};
+```
+
+In `login.conf`, `alice` is a principal that is created by a Kerberos 
+administrator. 
+
+Also in `login.conf`, `alice.keytab` is a keytab file also created by a 
+Kerberos administrator that contains the aforementioned principal and its 
+respective encrypted key.  
+
+The Java system property `java.security.krb5.conf` with the value 
+`krb5.conf` provides the Kerberos configuration file that points to the 
+Kerberos Key Distribution Center (KDC) for authentication.   
+
+`krb5.conf`:
+
+```text
+[libdefaults]
+    kdc_realm = JARGYLE.NET
+    default_realm = JARGYLE.NET
+    udp_preference_limit = 4096
+    kdc_tcp_port = 4444
+    kdc_udp_port = 4444
+
+[realms]
+    JARGYLE.NET = {
+        kdc = jargyle.net:4444
+    }
+```
+
+In `krb5.conf`, a KDC is defined as running at the address `jargyle.net` on 
+port `4444` with its realm as `JARGYLE.NET`. (In a production environment, 
+the address `jargyle.net` should be replaced by the actual address or name of 
+the machine of where the KDC resides. Also, in a production environment, the 
+realm `JARGYLE.NET` should be replaced by an actual realm provided by a 
+Kerberos administrator.)
+
+The property `socksClient.socks5.gssapimethod.serviceName` with the value 
+`rcmd/jargyle.net` is the GSS-API service name (or the Kerberos service 
+principal) for the SOCKS server residing at the address `jargyle.net`. (In 
+a production environment, the address `jargyle.net` should be replaced by the 
+name of the machine of where the SOCKS server resides.)
 
 ## Resolving Host Names From the SOCKS5 Server
 
+By default, host name resolution from the SOCKS5 server occurs only when a 
+`Socket` is created with a host name and port number.
+
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
+import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
+
+import java.io.IOException;
+
+import java.net.DatagramSocket;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class ClientApp {
+    public static void main(String[] args) throws IOException {
+        System.setProperty("socksServerUri.scheme", "socks5");
+        System.setProperty("socksServerUri.host", "jargyle.net");
+        System.setProperty("socksServerUri.port", "1234");
+        NetObjectFactory netObjectFactory = NetObjectFactory.newInstance();
+        Socket socket = netObjectFactory.newSocket("google.com", 443);
+        // ...
+    }
+}
+```
+
+The client API comes with a `HostResolver` object to resolve host names. By 
+default the `HostResolver` object resolves host names through the local 
+system. To enable the `HostResolver` object to have the host names resolved 
+from the SOCKS5 server instead, you would need to set the property 
+`socksClient.socks5.useResolveCommand` set to `true`. This property can 
+only be used if the SOCKS5 server supports the SOCKS5 RESOLVE command.
+
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
+import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
+
+import java.io.IOException;
+
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class ClientApp {
+    public static void main(String[] args) throws IOException {
+        System.setProperty("socksServerUri.scheme", "socks5");
+        System.setProperty("socksServerUri.host", "jargyle.net");
+        System.setProperty("socksServerUri.port", "1234");
+        NetObjectFactory netObjectFactory = NetObjectFactory.newInstance();
+        HostResolver hostResolver = netObjectFactory.newHostResolver();
+        InetAddress inetAddress = hostResolver.resolve("google.com");
+        Socket socket = netObjectFactory.newSocket(inetAddress, 443);
+        // ...
+    }
+}
+```
+
 ## Chaining to a Specified Chain of SOCKS Servers
+
+You can have the client chained to a specified chain of SOCKS servers, meaning 
+that the traffic can be routed through the specified chain of SOCKS servers. To 
+do this, you will need to create a chain of `SocksClient` objects with each 
+`SocksClient` object specifying a SOCKS server.
+
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
+import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
+import com.github.jh3nd3rs0n.jargyle.client.Properties;
+import com.github.jh3nd3rs0n.jargyle.client.Scheme;
+import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
+
+import java.io.IOException;
+
+import java.net.DatagramSocket;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class ClientApp {
+    public static void main(String[] args) throws IOException {
+        SocksClient socksClient1 = Scheme.SOCKS5
+            .newSocksServerUri("betabeta.net", "3456")
+            .newSocksClient(Properties.newInstance());
+        SocksClient socksClient2 = Scheme.SOCKS5
+            .newSocksServerUri("alphaalpha.net", "2345")
+            .newSocksClient(Properties.newInstance(), socksClient1);
+        SocksClient socksClient3 = Scheme.SOCKS5
+            .newSocksServerUri("jargyle.net", "1234")
+            .newSocksClient(Properties.newInstance(), socksClient2);
+        NetObjectFactory netObjectFactory = 
+            socksClient3.newSocksNetObjectFactory();
+        // ...
+    }
+}
+```
+
+The known limitations of chaining to a specified chain of SOCKS servers include 
+the following:
+
+-   Only TCP traffic can be routed through the chain. The client will attempt to 
+route any UDP traffic through the last SOCKS server of the chain.

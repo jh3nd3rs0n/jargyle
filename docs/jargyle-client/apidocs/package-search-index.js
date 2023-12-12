@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"m":"com.github.jh3nd3rs0n.jargyle.client","l":"com.github.jh3nd3rs0n.jargyle.client"},{"m":"com.github.jh3nd3rs0n.jargyle.client","l":"com.github.jh3nd3rs0n.jargyle.client.socks5"}];updateSearchResults();

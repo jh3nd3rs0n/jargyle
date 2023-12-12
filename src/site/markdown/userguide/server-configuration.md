@@ -50,11 +50,12 @@ package com.example;
 
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
 
 import java.io.IOException;
 
-public class App {
+public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
             Setting.newInstanceWithParsableValue(
@@ -129,11 +130,12 @@ package com.example;
 
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
 
 import java.io.IOException;
 
-public class App {
+public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
             Setting.newInstanceWithParsableValue(
@@ -236,11 +238,12 @@ package com.example;
 
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
 
 import java.io.IOException;
 
-public class App {
+public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
             Setting.newInstanceWithParsableValue(
@@ -315,11 +318,12 @@ package com.example;
 
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
 
 import java.io.IOException;
 
-public class App {
+public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
             Setting.newInstanceWithParsableValue(
@@ -423,11 +427,12 @@ package com.example;
 
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
 
 import java.io.IOException;
 
-public class App {
+public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
             Setting.newInstanceWithParsableValue(
@@ -486,11 +491,12 @@ package com.example;
 
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
 
 import java.io.IOException;
 
-public class App {
+public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
             Setting.newInstanceWithParsableValue(
@@ -553,11 +559,12 @@ package com.example;
 
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
 
 import java.io.IOException;
 
-public class App {
+public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
             Setting.newInstanceWithParsableValue(
@@ -612,7 +619,7 @@ following format:
 USERNAME:PASSWORD
 ```
 
-Where `USERNAME` is the username and `PASSWORD` is the password.
+`USERNAME` is the username and `PASSWORD` is the password.
 
 If the username or the password contains a colon character (`:`), then each 
 colon character must be replaced with the URL encoding character `%3A`.
@@ -631,11 +638,12 @@ package com.example;
 
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
 
 import java.io.IOException;
 
-public class App {
+public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
             Setting.newInstanceWithParsableValue(
@@ -695,18 +703,18 @@ package com.example;
 
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
 
 import java.io.IOException;
 
-public class App {
+public class ServerApp {
     public static void main(String[] args) throws IOException {
         System.setProperty(
             "javax.security.auth.useSubjectCredsOnly", "true");
         System.setProperty(
             "java.security.auth.login.config", "login.conf");
-        System.setProperty(
-            "java.security.krb5.conf", "krb5.conf");
+        System.setProperty("java.security.krb5.conf", "krb5.conf");
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
             Setting.newInstanceWithParsableValue(
                 "socks5.methods", "GSSAPI")
@@ -813,11 +821,12 @@ package com.example;
 
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
 
 import java.io.IOException;
 
-public class App {
+public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
             Setting.newInstanceWithParsableValue(
@@ -879,11 +888,12 @@ package com.example;
 
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
 
 import java.io.IOException;
 
-public class App {
+public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
             Setting.newInstanceWithParsableValue(
@@ -966,11 +976,12 @@ package com.example;
 
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
 
 import java.io.IOException;
 
-public class App {
+public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
             Setting.newInstanceWithParsableValue(
@@ -1080,11 +1091,12 @@ package com.example;
 
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
 
 import java.io.IOException;
 
-public class App {
+public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
             Setting.newInstanceWithParsableValue(
@@ -1166,11 +1178,12 @@ package com.example;
 
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
 
 import java.io.IOException;
 
-public class App {
+public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
             Setting.newInstanceWithParsableValue(
@@ -1276,11 +1289,12 @@ package com.example;
 
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
 
 import java.io.IOException;
 
-public class App {
+public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
             Setting.newInstanceWithParsableValue(
@@ -1329,7 +1343,7 @@ Server configuration file example:
 ```
 
 If not set, the default value for the setting `chaining.socks5.methods` is 
-set to `NO_AUTHENTICATION_REQUIRED`
+set to `NO_AUTHENTICATION_REQUIRED`.
 
 #### Chaining to the Other SOCKS Server Using No Authentication
 
@@ -1349,11 +1363,12 @@ package com.example;
 
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
 
 import java.io.IOException;
 
-public class App {
+public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
             Setting.newInstanceWithParsableValue(
@@ -1413,11 +1428,12 @@ package com.example;
 
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
 
 import java.io.IOException;
 
-public class App {
+public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
             Setting.newInstanceWithParsableValue(
@@ -1508,19 +1524,19 @@ package com.example;
 
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
 
 import java.io.IOException;
 
-public class App {
+public class ServerApp {
     public static void main(String[] args) throws IOException {
+        System.setProperty(
+            "javax.security.auth.useSubjectCredsOnly", "false");
+        System.setProperty(
+            "java.security.auth.login.config", "login.conf");
+        System.setProperty("java.security.krb5.conf", "krb5.conf");
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
-            System.setProperty(
-                "javax.security.auth.useSubjectCredsOnly", "false");
-            System.setProperty(
-                "java.security.auth.login.config", "login.conf");
-            System.setProperty(
-                "java.security.krb5.conf", "krb5.conf");
             Setting.newInstanceWithParsableValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:23456"),
@@ -1712,11 +1728,12 @@ package com.example;
 
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
 
 import java.io.IOException;
 
-public class App {
+public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
             Setting.newInstanceWithParsableValue(
@@ -1770,11 +1787,12 @@ package com.example;
 
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
 
 import java.io.IOException;
 
-public class App {
+public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
             Setting.newInstanceWithParsableValue(
@@ -1831,11 +1849,12 @@ package com.example;
 
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
 
 import java.io.IOException;
 
-public class App {
+public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
             Setting.newInstanceWithParsableValue(
@@ -1955,11 +1974,12 @@ package com.example;
 
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
 
 import java.io.IOException;
 
-public class App {
+public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
             Setting.newInstanceWithParsableValue(
@@ -2102,11 +2122,12 @@ package com.example;
 
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
 
 import java.io.IOException;
 
-public class App {
+public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
             Setting.newInstanceWithParsableValue(
@@ -2238,11 +2259,12 @@ package com.example;
 
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
 
 import java.io.IOException;
 
-public class App {
+public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
             Setting.newInstanceWithParsableValue(
@@ -2369,11 +2391,12 @@ package com.example;
 
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
 
 import java.io.IOException;
 
-public class App {
+public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
             Setting.newInstanceWithParsableValue(
@@ -2507,11 +2530,12 @@ package com.example;
 
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
 
 import java.io.IOException;
 
-public class App {
+public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
             Setting.newInstanceWithParsableValue(
@@ -2670,11 +2694,12 @@ package com.example;
 
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
 
 import java.io.IOException;
 
-public class App {
+public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
             /*
@@ -2725,11 +2750,12 @@ package com.example;
 
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
 
 import java.io.IOException;
 
-public class App {
+public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
             /*
@@ -2996,11 +3022,12 @@ package com.example;
 
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
 
 import java.io.IOException;
 
-public class App {
+public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
             /*
@@ -3117,11 +3144,12 @@ package com.example;
 
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
 
 import java.io.IOException;
 
-public class App {
+public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
             /*
@@ -3246,11 +3274,12 @@ package com.example;
 
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
 
 import java.io.IOException;
 
-public class App {
+public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
             Setting.newInstanceWithParsableValue(
@@ -3478,11 +3507,12 @@ package com.example;
 
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
 
 import java.io.IOException;
 
-public class App {
+public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
             /*
@@ -3566,25 +3596,23 @@ Server configuration file example:
 To configure the sockets, you will need any of the following rule results:
 
 -   `bindHost`: Specifies the binding host name or address for all sockets 
--   `bindTcpPortRange`: Specifies a binding 
-[port range](../reference/value-syntaxes.md#port-range) for all TCP sockets (This 
-rule result can be specified multiple times with each rule result specifying 
-another port range)
--   `bindUdpPortRange`: Specifies a binding 
-[port range](../reference/value-syntaxes.md#port-range) for all UDP sockets (This 
-rule result can be specified multiple times with each rule result specifying 
-another port range)
+-   `bindTcpPortRange`: Specifies a binding port range for all TCP sockets 
+(This rule result can be specified multiple times with each rule result 
+specifying another port range)
+-   `bindUdpPortRange`: Specifies a binding port range for all UDP sockets 
+(This rule result can be specified multiple times with each rule result 
+specifying another port range)
 -   `clientSocketSetting`: Specifies a socket setting for the client socket 
 (This rule result can be specified multiple times with each rule result 
 specifying another socket setting)
 -   `externalFacingBindHost`: Specifies the binding host name or address 
 for all external-facing sockets 
 -   `externalFacingBindTcpPortRange`: Specifies a binding 
-[port range](../reference/value-syntaxes.md#port-range) for all external-facing TCP 
+port range for all external-facing TCP 
 sockets (This rule result can be specified multiple times with each rule result 
 specifying another port range)
 -   `externalFacingBindUdpPortRange`: Specifies a binding 
-[port range](../reference/value-syntaxes.md#port-range) for all external-facing UDP 
+port range for all external-facing UDP 
 sockets (This rule result can be specified multiple times with each rule result 
 specifying another port range)
 -   `externalFacingSocketSetting`: Specifies a socket setting for all 
@@ -3593,11 +3621,10 @@ each rule result specifying another socket setting)
 -   `internalFacingBindHost`: Specifies the binding host name or address for 
 all internal-facing sockets
 -   `internalFacingBindTcpPortRange`: Specifies a binding 
-[port range](../reference/value-syntaxes.md#port-range) for all internal-facing TCP 
-sockets (This rule result can be specified multiple times with each rule result 
-specifying another port range)
+port range for all internal-facing TCP sockets (This rule result can be 
+specified multiple times with each rule result specifying another port range)
 -   `internalFacingBindUdpPortRange`: Specifies a binding 
-[port range](../reference/value-syntaxes.md#port-range) for all internal-facing UDP 
+port range for all internal-facing UDP 
 sockets (This rule result can be specified multiple times with each rule result 
 specifying another port range)
 -   `internalFacingSocketSetting`: Specifies a socket setting for all 
@@ -3612,45 +3639,39 @@ rule result specifying another socket setting)
 -   `socks5.onBind.listenBindHost`: Specifies the binding host name or 
 address for the listen socket if the provided host address is all zeros
 -   `socks5.onBind.listenBindPortRange`: Specifies a binding 
-[port range](../reference/value-syntaxes.md#port-range) for the listen socket if the 
-provided port is zero (This rule result can be specified multiple times with 
-each rule result specifying another port range)
+port range for the listen socket if the provided port is zero (This rule 
+result can be specified multiple times with each rule result specifying another 
+port range)
 -   `socks5.onBind.listenSocketSetting`: Specifies a socket setting for 
 the listen socket (This rule result can be specified multiple times with each 
 rule result specifying another socket setting)
 -   `socks5.onCommand.bindHost`: Specifies the binding host name or address 
 for all sockets 
 -   `socks5.onCommand.bindTcpPortRange`: Specifies a binding 
-[port range](../reference/value-syntaxes.md#port-range) for all TCP sockets (This 
-rule result can be specified multiple times with each rule result specifying 
-another port range)
+port range for all TCP sockets (This rule result can be specified multiple 
+times with each rule result specifying another port range)
 -   `socks5.onCommand.bindUdpPortRange`: Specifies a binding 
-[port range](../reference/value-syntaxes.md#port-range) for all UDP sockets (This 
-rule result can be specified multiple times with each rule result specifying 
-another port range)
+port range for all UDP sockets (This rule result can be specified multiple 
+times with each rule result specifying another port range)
 -   `socks5.onCommand.externalFacingBindHost`: Specifies the binding host 
 name or address for all external-facing sockets 
 -   `socks5.onCommand.externalFacingBindTcpPortRange`: Specifies a 
-binding [port range](../reference/value-syntaxes.md#port-range) for all 
-external-facing TCP sockets (This rule result can be specified multiple times 
-with each rule result specifying another port range)
+binding port range for all external-facing TCP sockets (This rule result can be 
+specified multiple times with each rule result specifying another port range)
 -   `socks5.onCommand.externalFacingBindUdpPortRange`: Specifies a 
-binding [port range](../reference/value-syntaxes.md#port-range) for all 
-external-facing UDP sockets (This rule result can be specified multiple times 
-with each rule result specifying another port range)
+binding port range for all external-facing UDP sockets (This rule result can be 
+specified multiple times with each rule result specifying another port range)
 -   `socks5.onCommand.externalFacingSocketSetting`: Specifies a socket 
 setting for all external-facing sockets (This rule result can be specified 
 multiple times with each rule result specifying another socket setting)
 -   `socks5.onCommand.internalFacingBindHost`: Specifies the binding 
 host name or address for all internal-facing sockets
 -   `socks5.onCommand.internalFacingBindTcpPortRange`: Specifies a 
-binding [port range](../reference/value-syntaxes.md#port-range) for all 
-internal-facing TCP sockets (This rule result can be specified multiple times 
-with each rule result specifying another port range)
+binding port range for all internal-facing TCP sockets (This rule result can be 
+specified multiple times with each rule result specifying another port range)
 -   `socks5.onCommand.internalFacingBindUdpPortRange`: Specifies a 
-binding [port range](../reference/value-syntaxes.md#port-range) for all 
-internal-facing UDP sockets (This rule result can be specified multiple times 
-with each rule result specifying another port range)
+binding port range for all internal-facing UDP sockets (This rule result can be 
+specified multiple times with each rule result specifying another port range)
 -   `socks5.onCommand.internalFacingSocketSetting`: Specifies a socket 
 setting for all internal-facing sockets (This rule result can be specified 
 multiple times with each rule result specifying another socket setting)
@@ -3664,7 +3685,7 @@ target host name, and setting the specified timeout on waiting to connect)
 -   `socks5.onConnect.serverFacingBindHost`: Specifies the binding host 
 name or address for the server-facing socket
 -   `socks5.onConnect.serverFacingBindPortRange`: Specifies a binding 
-[port range](../reference/value-syntaxes.md#port-range) for the server-facing socket 
+port range for the server-facing socket 
 (This rule result can be specified multiple times with each rule result 
 specifying another port range)
 -   `socks5.onConnect.serverFacingConnectTimeout`: Specifies the timeout 
@@ -3676,9 +3697,8 @@ times with each rule result specifying another socket setting)
 -   `socks5.onUdpAssociate.clientFacingBindHost`: Specifies the binding 
 host name or address for the client-facing UDP socket
 -   `socks5.onUdpAssociate.clientFacingBindPortRange`: Specifies a 
-binding [port range](../reference/value-syntaxes.md#port-range) for the 
-client-facing UDP socket (This rule result can be specified multiple times with 
-each rule result specifying another port range)
+binding port range for the client-facing UDP socket (This rule result can be 
+specified multiple times with each rule result specifying another port range)
 -   `socks5.onUdpAssociate.clientFacingSocketSetting`: Specifies a 
 socket setting for the client-facing UDP socket (This rule result can be 
 specified multiple times with each rule result specifying another socket 
@@ -3686,9 +3706,8 @@ setting)
 -   `socks5.onUdpAssociate.peerFacingBindHost`: Specifies the binding 
 host name or address for the peer-facing UDP socket
 -   `socks5.onUdpAssociate.peerFacingBindPortRange`: Specifies a 
-binding [port range](../reference/value-syntaxes.md#port-range) for the peer-facing 
-UDP socket (This rule result can be specified multiple times with each rule 
-result specifying another port range)
+binding port range for the peer-facing UDP socket (This rule result can be 
+specified multiple times with each rule result specifying another port range)
 -   `socks5.onUdpAssociate.peerFacingSocketSetting`: Specifies a socket 
 setting for the peer-facing UDP socket (This rule result can be specified 
 multiple times with each rule result specifying another socket setting)
@@ -3716,11 +3735,12 @@ package com.example;
 
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
 
 import java.io.IOException;
 
-public class App {
+public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
             /*
@@ -3865,11 +3885,12 @@ package com.example;
 
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
 
 import java.io.IOException;
 
-public class App {
+public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
             /*
@@ -3995,11 +4016,12 @@ package com.example;
 
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
 
 import java.io.IOException;
 
-public class App {
+public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
             /*

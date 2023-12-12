@@ -171,7 +171,7 @@ final class ReferenceGenerator {
 		pw.println("-   [Help Information](#help-information)");
 		pw.println("    -   [Help Information for manage-socks5-users](#help-information-for-manage-socks5-users)");
 		pw.println("    -   [Help Information for new-server-config-file](#help-information-for-new-server-config-file)");
-		pw.println("    -   [Help Information for start-server](#help-information-for-start-server-usage)");
+		pw.println("    -   [Help Information for start-server](#help-information-for-start-server)");
 		pw.println();
 		pw.println("## Help Information");
 		pw.println();

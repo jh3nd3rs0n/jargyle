@@ -5,7 +5,7 @@
 -   [Help Information](#help-information)
     -   [Help Information for manage-socks5-users](#help-information-for-manage-socks5-users)
     -   [Help Information for new-server-config-file](#help-information-for-new-server-config-file)
-    -   [Help Information for start-server](#help-information-for-start-server-usage)
+    -   [Help Information for start-server](#help-information-for-start-server)
 
 ## Help Information
 

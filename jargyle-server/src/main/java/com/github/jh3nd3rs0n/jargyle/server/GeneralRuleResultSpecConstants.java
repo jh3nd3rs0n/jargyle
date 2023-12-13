@@ -6,7 +6,6 @@ import java.util.Map;
 import com.github.jh3nd3rs0n.jargyle.common.net.Host;
 import com.github.jh3nd3rs0n.jargyle.common.net.PortRange;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSetting;
-import com.github.jh3nd3rs0n.jargyle.common.net.StandardSocketSettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.common.number.NonnegativeInteger;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueSpecDoc;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueSpecsDoc;
@@ -65,7 +64,7 @@ public final class GeneralRuleResultSpecConstants {
 					+ "specifying another socket setting)",
 			name = "clientSocketSetting",
 			syntax = "clientSocketSetting=SOCKET_SETTING",
-			valueType = StandardSocketSettingSpecConstants.class
+			valueType = SocketSetting.class
 	)	
 	public static final RuleResultSpec<SocketSetting<Object>> CLIENT_SOCKET_SETTING = RULE_RESULT_SPECS.addThenGet(new SocketSettingRuleResultSpec(
 			"clientSocketSetting"));
@@ -110,7 +109,7 @@ public final class GeneralRuleResultSpecConstants {
 					+ "result specifying another socket setting)",
 			name = "externalFacingSocketSetting",
 			syntax = "externalFacingSocketSetting=SOCKET_SETTING",
-			valueType = StandardSocketSettingSpecConstants.class
+			valueType = SocketSetting.class
 	)
 	public static final RuleResultSpec<SocketSetting<Object>> EXTERNAL_FACING_SOCKET_SETTING = RULE_RESULT_SPECS.addThenGet(new SocketSettingRuleResultSpec(
 			"externalFacingSocketSetting"));
@@ -183,7 +182,7 @@ public final class GeneralRuleResultSpecConstants {
 					+ "result specifying another socket setting)",
 			name = "internalFacingSocketSetting",
 			syntax = "internalFacingSocketSetting=SOCKET_SETTING",
-			valueType = StandardSocketSettingSpecConstants.class
+			valueType = SocketSetting.class
 	)
 	public static final RuleResultSpec<SocketSetting<Object>> INTERNAL_FACING_SOCKET_SETTING = RULE_RESULT_SPECS.addThenGet(new SocketSettingRuleResultSpec(
 			"internalFacingSocketSetting"));
@@ -225,7 +224,7 @@ public final class GeneralRuleResultSpecConstants {
 					+ "specifying another socket setting)",
 			name = "socketSetting",
 			syntax = "socketSetting=SOCKET_SETTING",
-			valueType = StandardSocketSettingSpecConstants.class
+			valueType = SocketSetting.class
 	)
 	public static final RuleResultSpec<SocketSetting<Object>> SOCKET_SETTING = RULE_RESULT_SPECS.addThenGet(new SocketSettingRuleResultSpec(
 			"socketSetting"));

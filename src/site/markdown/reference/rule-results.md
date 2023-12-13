@@ -125,7 +125,7 @@ clientSocketSetting=SOCKET_SETTING
 
 Specifies a socket setting for the client socket (can be specified multiple times with each rule result specifying another socket setting)
 
-**Value:** com.github.jh3nd3rs0n.jargyle.common.net.StandardSocketSettingSpecConstants
+**Value:** [Socket Setting](value-syntaxes.md#socket-setting)
 
 ### externalFacingBindHost
 
@@ -181,7 +181,7 @@ externalFacingSocketSetting=SOCKET_SETTING
 
 Specifies a socket setting for all external-facing sockets (can be specified multiple times with each rule result specifying another socket setting)
 
-**Value:** com.github.jh3nd3rs0n.jargyle.common.net.StandardSocketSettingSpecConstants
+**Value:** [Socket Setting](value-syntaxes.md#socket-setting)
 
 ### firewallAction
 
@@ -279,7 +279,7 @@ internalFacingSocketSetting=SOCKET_SETTING
 
 Specifies a socket setting for all internal-facing sockets (can be specified multiple times with each rule result specifying another socket setting)
 
-**Value:** com.github.jh3nd3rs0n.jargyle.common.net.StandardSocketSettingSpecConstants
+**Value:** [Socket Setting](value-syntaxes.md#socket-setting)
 
 ### routeSelectionLogAction
 
@@ -335,7 +335,7 @@ socketSetting=SOCKET_SETTING
 
 Specifies a socket setting for all sockets (can be specified multiple times with each rule result specifying another socket setting)
 
-**Value:** com.github.jh3nd3rs0n.jargyle.common.net.StandardSocketSettingSpecConstants
+**Value:** [Socket Setting](value-syntaxes.md#socket-setting)
 
 ## SOCKS5 Rule Results
 
@@ -393,7 +393,7 @@ socks5.onBind.inboundSocketSetting=SOCKET_SETTING
 
 Specifies a socket setting for the inbound socket (can be specified multiple times with each rule result specifying another socket setting)
 
-**Value:** com.github.jh3nd3rs0n.jargyle.common.net.StandardSocketSettingSpecConstants
+**Value:** [Socket Setting](value-syntaxes.md#socket-setting)
 
 ### socks5.onBind.listenBindHost
 
@@ -435,7 +435,7 @@ socks5.onBind.listenSocketSetting=SOCKET_SETTING
 
 Specifies a socket setting for the listen socket (can be specified multiple times with each rule result specifying another socket setting)
 
-**Value:** com.github.jh3nd3rs0n.jargyle.common.net.StandardSocketSettingSpecConstants
+**Value:** [Socket Setting](value-syntaxes.md#socket-setting)
 
 ### socks5.onBind.relayBufferSize
 
@@ -589,7 +589,7 @@ socks5.onCommand.externalFacingSocketSetting=SOCKET_SETTING
 
 Specifies a socket setting for all external-facing sockets (can be specified multiple times with each rule result specifying another socket setting)
 
-**Value:** com.github.jh3nd3rs0n.jargyle.common.net.StandardSocketSettingSpecConstants
+**Value:** [Socket Setting](value-syntaxes.md#socket-setting)
 
 ### socks5.onCommand.internalFacingBindHost
 
@@ -631,7 +631,7 @@ socks5.onCommand.internalFacingSocketSetting=SOCKET_SETTING
 
 Specifies a socket setting for all internal-facing sockets (can be specified multiple times with each rule result specifying another socket setting)
 
-**Value:** com.github.jh3nd3rs0n.jargyle.common.net.StandardSocketSettingSpecConstants
+**Value:** [Socket Setting](value-syntaxes.md#socket-setting)
 
 ### socks5.onCommand.relayBufferSize
 
@@ -701,7 +701,7 @@ socks5.onCommand.socketSetting=SOCKET_SETTING
 
 Specifies a socket setting for all sockets (can be specified multiple times with each rule result specifying another socket setting)
 
-**Value:** com.github.jh3nd3rs0n.jargyle.common.net.StandardSocketSettingSpecConstants
+**Value:** [Socket Setting](value-syntaxes.md#socket-setting)
 
 ### socks5.onConnect.prepareServerFacingSocket
 
@@ -827,7 +827,7 @@ socks5.onConnect.serverFacingSocketSetting=SOCKET_SETTING
 
 Specifies a socket setting for the server-facing socket (can be specified multiple times with each rule result specifying another socket setting)
 
-**Value:** com.github.jh3nd3rs0n.jargyle.common.net.StandardSocketSettingSpecConstants
+**Value:** [Socket Setting](value-syntaxes.md#socket-setting)
 
 ### socks5.onUdpAssociate.clientFacingBindHost
 
@@ -869,7 +869,7 @@ socks5.onUdpAssociate.clientFacingSocketSetting=SOCKET_SETTING
 
 Specifies a socket setting for the client-facing UDP socket (can be specified multiple times with each rule result specifying another socket setting)
 
-**Value:** com.github.jh3nd3rs0n.jargyle.common.net.StandardSocketSettingSpecConstants
+**Value:** [Socket Setting](value-syntaxes.md#socket-setting)
 
 ### socks5.onUdpAssociate.peerFacingBindHost
 
@@ -911,7 +911,7 @@ socks5.onUdpAssociate.peerFacingSocketSetting=SOCKET_SETTING
 
 Specifies a socket setting for the peer-facing UDP socket (can be specified multiple times with each rule result specifying another socket setting)
 
-**Value:** com.github.jh3nd3rs0n.jargyle.common.net.StandardSocketSettingSpecConstants
+**Value:** [Socket Setting](value-syntaxes.md#socket-setting)
 
 ### socks5.onUdpAssociate.relayBufferSize
 

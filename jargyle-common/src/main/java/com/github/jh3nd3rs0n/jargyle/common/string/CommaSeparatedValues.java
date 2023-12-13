@@ -16,12 +16,12 @@ public final class CommaSeparatedValues {
 
 	public static CommaSeparatedValues newInstance(final String s) {
 		if (s.isEmpty()) {
-			return newInstance(new String[] { });
+			return of(new String[] { });
 		}
-		return newInstance(s.split(","));
+		return of(s.split(","));
 	}
 	
-	public static CommaSeparatedValues newInstance(final String... vals) {
+	public static CommaSeparatedValues of(final String... vals) {
 		return new CommaSeparatedValues(vals);
 	}
 	

@@ -46,7 +46,7 @@ public final class DtlsSettingSpecConstants {
 	public static final SettingSpec<CommaSeparatedValues> DTLS_ENABLED_CIPHER_SUITES = 
 			SETTING_SPECS.addThenGet(new CommaSeparatedValuesSettingSpec(
 					"dtls.enabledCipherSuites", 
-					CommaSeparatedValues.newInstance(new String[] { })));
+					CommaSeparatedValues.of(new String[] { })));
 	
 	@NameValuePairValueSpecDoc(
 			description = "The comma separated list of acceptable protocol "
@@ -59,7 +59,7 @@ public final class DtlsSettingSpecConstants {
 	public static final SettingSpec<CommaSeparatedValues> DTLS_ENABLED_PROTOCOLS = 
 			SETTING_SPECS.addThenGet(new CommaSeparatedValuesSettingSpec(
 					"dtls.enabledProtocols", 
-					CommaSeparatedValues.newInstance(new String[] { })));
+					CommaSeparatedValues.of(new String[] { })));
 	
 	@NameValuePairValueSpecDoc(
 			description = "The key store file for the DTLS connections to the "

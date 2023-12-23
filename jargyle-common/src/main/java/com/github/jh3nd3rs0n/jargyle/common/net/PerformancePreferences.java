@@ -1,11 +1,10 @@
 package com.github.jh3nd3rs0n.jargyle.common.net;
 
-import java.net.ServerSocket;
-import java.net.Socket;
-
 import com.github.jh3nd3rs0n.jargyle.common.number.Digit;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.ValuesValueTypeDoc;
-import com.github.jh3nd3rs0n.jargyle.internal.regex.RegexHelper;
+
+import java.net.ServerSocket;
+import java.net.Socket;
 
 @ValuesValueTypeDoc(
 		description = "",
@@ -16,8 +15,7 @@ import com.github.jh3nd3rs0n.jargyle.internal.regex.RegexHelper;
 )
 public final class PerformancePreferences {
 	
-	private static final String REGEX = RegexHelper.getRegexWithInputBoundaries(
-			"\\d\\d\\d");
+	private static final String REGEX = "\\A\\d\\d\\d\\z";
 	
 	public static PerformancePreferences newInstance(
 			final Digit connectionTime, 

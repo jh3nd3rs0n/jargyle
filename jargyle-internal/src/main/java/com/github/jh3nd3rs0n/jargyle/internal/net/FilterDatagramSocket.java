@@ -1,195 +1,211 @@
 package com.github.jh3nd3rs0n.jargyle.internal.net;
 
 import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.SocketAddress;
-import java.net.SocketException;
-import java.net.SocketOption;
+import java.net.*;
 import java.nio.channels.DatagramChannel;
+import java.util.Objects;
 import java.util.Set;
 
+/**
+ * A {@code DatagramSocket} that contains some other {@code DatagramSocket}
+ * used as a source of data, possibly transforming the data along the way or
+ * providing additional functionality. The class {@code FilterDatagramSocket}
+ * itself simply overrides all methods of {@code DatagramSocket} with versions
+ * that pass all requests to the contained {@code DatagramSocket}. Subclasses
+ * of {@code FilterDatagramSocket} may further override some of these methods
+ * and may also provide additional methods and fields.
+ */
 public class FilterDatagramSocket extends DatagramSocket {
 
-	protected DatagramSocket datagramSocket;
-	
-	public FilterDatagramSocket(
-			final DatagramSocket datagramSock) throws SocketException {
-		super((SocketAddress) null);
-		this.datagramSocket = datagramSock;
-	}
+    /**
+     * The {@code DatagramSocket} to be filtered.
+     */
+    protected DatagramSocket datagramSocket;
 
-	@Override
-	public synchronized void bind(SocketAddress addr) throws SocketException {
-		this.datagramSocket.bind(addr);
-	}
+    /**
+     * Constructs an unbound {@code FilterDatagramSocket} with the provided
+     * {@code DatagramSocket} to be filtered.
+     *
+     * @param datagramSock the provided {@code DatagramSocket} to be filtered
+     * @throws SocketException if the {@code FilterDatagramSocket} can not be
+     *                         opened, or the {@code FilterDatagramSocket} could not bind to the
+     *                         specified local port (which in either case will not happen since the
+     *                         {@code FilterDatagramSocket} is neither opened nor bound)
+     */
+    public FilterDatagramSocket(
+            final DatagramSocket datagramSock) throws SocketException {
+        super((SocketAddress) null);
+        this.datagramSocket = Objects.requireNonNull(datagramSock);
+    }
 
-	@Override
-	public void close() {
-		this.datagramSocket.close();
-	}
+    @Override
+    public synchronized void bind(SocketAddress addr) throws SocketException {
+        this.datagramSocket.bind(addr);
+    }
 
-	@Override
-	public void connect(InetAddress address, int port) {
-		this.datagramSocket.connect(address, port);
-	}
+    @Override
+    public void close() {
+        this.datagramSocket.close();
+    }
 
-	@Override
-	public void connect(SocketAddress addr) throws SocketException {
-		this.datagramSocket.connect(addr);
-	}
+    @Override
+    public void connect(InetAddress address, int port) {
+        this.datagramSocket.connect(address, port);
+    }
 
-	@Override
-	public void disconnect() {
-		this.datagramSocket.disconnect();
-	}
+    @Override
+    public void connect(SocketAddress addr) throws SocketException {
+        this.datagramSocket.connect(addr);
+    }
 
-	@Override
-	public synchronized boolean getBroadcast() throws SocketException {
-		return this.datagramSocket.getBroadcast();
-	}
+    @Override
+    public void disconnect() {
+        this.datagramSocket.disconnect();
+    }
 
-	@Override
-	public DatagramChannel getChannel() {
-		return this.datagramSocket.getChannel();
-	}
+    @Override
+    public synchronized boolean getBroadcast() throws SocketException {
+        return this.datagramSocket.getBroadcast();
+    }
 
-	@Override
-	public InetAddress getInetAddress() {
-		return this.datagramSocket.getInetAddress();
-	}
+    @Override
+    public synchronized void setBroadcast(boolean on) throws SocketException {
+        this.datagramSocket.setBroadcast(on);
+    }
 
-	@Override
-	public InetAddress getLocalAddress() {
-		return this.datagramSocket.getLocalAddress();
-	}
+    @Override
+    public DatagramChannel getChannel() {
+        return this.datagramSocket.getChannel();
+    }
 
-	@Override
-	public int getLocalPort() {
-		return this.datagramSocket.getLocalPort();
-	}
+    @Override
+    public InetAddress getInetAddress() {
+        return this.datagramSocket.getInetAddress();
+    }
 
-	@Override
-	public SocketAddress getLocalSocketAddress() {
-		return this.datagramSocket.getLocalSocketAddress();
-	}
+    @Override
+    public InetAddress getLocalAddress() {
+        return this.datagramSocket.getLocalAddress();
+    }
 
-	@Override
-	public <T> T getOption(SocketOption<T> name) throws IOException {
-		return this.datagramSocket.getOption(name);
-	}
+    @Override
+    public int getLocalPort() {
+        return this.datagramSocket.getLocalPort();
+    }
 
-	@Override
-	public int getPort() {
-		return this.datagramSocket.getPort();
-	}
+    @Override
+    public SocketAddress getLocalSocketAddress() {
+        return this.datagramSocket.getLocalSocketAddress();
+    }
 
-	@Override
-	public synchronized int getReceiveBufferSize() throws SocketException {
-		return this.datagramSocket.getReceiveBufferSize();
-	}
+    @Override
+    public <T> T getOption(SocketOption<T> name) throws IOException {
+        return this.datagramSocket.getOption(name);
+    }
 
-	@Override
-	public SocketAddress getRemoteSocketAddress() {
-		return this.datagramSocket.getRemoteSocketAddress();
-	}
+    @Override
+    public int getPort() {
+        return this.datagramSocket.getPort();
+    }
 
-	@Override
-	public synchronized boolean getReuseAddress() throws SocketException {
-		return this.datagramSocket.getReuseAddress();
-	}
+    @Override
+    public synchronized int getReceiveBufferSize() throws SocketException {
+        return this.datagramSocket.getReceiveBufferSize();
+    }
 
-	@Override
-	public synchronized int getSendBufferSize() throws SocketException {
-		return this.datagramSocket.getSendBufferSize();
-	}
+    @Override
+    public synchronized void setReceiveBufferSize(int size) throws SocketException {
+        this.datagramSocket.setReceiveBufferSize(size);
+    }
 
-	@Override
-	public synchronized int getSoTimeout() throws SocketException {
-		return this.datagramSocket.getSoTimeout();
-	}
+    @Override
+    public SocketAddress getRemoteSocketAddress() {
+        return this.datagramSocket.getRemoteSocketAddress();
+    }
 
-	@Override
-	public synchronized int getTrafficClass() throws SocketException {
-		return this.datagramSocket.getTrafficClass();
-	}
+    @Override
+    public synchronized boolean getReuseAddress() throws SocketException {
+        return this.datagramSocket.getReuseAddress();
+    }
 
-	@Override
-	public boolean isBound() {
-		return this.datagramSocket.isBound();
-	}
+    @Override
+    public synchronized void setReuseAddress(boolean on) throws SocketException {
+        this.datagramSocket.setReuseAddress(on);
+    }
 
-	@Override
-	public boolean isClosed() {
-		return this.datagramSocket.isClosed();
-	}
+    @Override
+    public synchronized int getSendBufferSize() throws SocketException {
+        return this.datagramSocket.getSendBufferSize();
+    }
 
-	@Override
-	public boolean isConnected() {
-		return this.datagramSocket.isConnected();
-	}
+    @Override
+    public synchronized void setSendBufferSize(int size) throws SocketException {
+        this.datagramSocket.setSendBufferSize(size);
+    }
 
-	@Override
-	public synchronized void receive(DatagramPacket p) throws IOException {
-		this.datagramSocket.receive(p);
-	}
+    @Override
+    public synchronized int getSoTimeout() throws SocketException {
+        return this.datagramSocket.getSoTimeout();
+    }
 
-	@Override
-	public void send(DatagramPacket p) throws IOException {
-		this.datagramSocket.send(p);
-	}
+    @Override
+    public synchronized void setSoTimeout(int timeout) throws SocketException {
+        this.datagramSocket.setSoTimeout(timeout);
+    }
 
-	@Override
-	public synchronized void setBroadcast(boolean on) throws SocketException {
-		this.datagramSocket.setBroadcast(on);
-	}
+    @Override
+    public synchronized int getTrafficClass() throws SocketException {
+        return this.datagramSocket.getTrafficClass();
+    }
 
-	@Override
-	public <T> DatagramSocket setOption(
-			SocketOption<T> name, T value) throws IOException {
-		this.datagramSocket.setOption(name, value);
-		return this;
-	}
+    @Override
+    public synchronized void setTrafficClass(int tc) throws SocketException {
+        this.datagramSocket.setTrafficClass(tc);
+    }
 
-	@Override
-	public synchronized void setReceiveBufferSize(int size) throws SocketException {
-		this.datagramSocket.setReceiveBufferSize(size);
-	}
+    @Override
+    public boolean isBound() {
+        return this.datagramSocket.isBound();
+    }
 
-	@Override
-	public synchronized void setReuseAddress(boolean on) throws SocketException {
-		this.datagramSocket.setReuseAddress(on);
-	}
+    @Override
+    public boolean isClosed() {
+        return this.datagramSocket.isClosed();
+    }
 
-	@Override
-	public synchronized void setSendBufferSize(int size) throws SocketException {
-		this.datagramSocket.setSendBufferSize(size);
-	}
+    @Override
+    public boolean isConnected() {
+        return this.datagramSocket.isConnected();
+    }
 
-	@Override
-	public synchronized void setSoTimeout(int timeout) throws SocketException {
-		this.datagramSocket.setSoTimeout(timeout);
-	}
+    @Override
+    public synchronized void receive(DatagramPacket p) throws IOException {
+        this.datagramSocket.receive(p);
+    }
 
-	@Override
-	public synchronized void setTrafficClass(int tc) throws SocketException {
-		this.datagramSocket.setTrafficClass(tc);
-	}
+    @Override
+    public void send(DatagramPacket p) throws IOException {
+        this.datagramSocket.send(p);
+    }
 
-	@Override
-	public Set<SocketOption<?>> supportedOptions() {
-		return this.datagramSocket.supportedOptions();
-	}
+    @Override
+    public <T> DatagramSocket setOption(
+            SocketOption<T> name, T value) throws IOException {
+        this.datagramSocket.setOption(name, value);
+        return this;
+    }
 
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append(this.getClass().getSimpleName())
-			.append(" [datagramSocket=")
-			.append(this.datagramSocket)
-			.append("]");
-		return builder.toString();
-	}
-	
+    @Override
+    public Set<SocketOption<?>> supportedOptions() {
+        return this.datagramSocket.supportedOptions();
+    }
+
+    @Override
+    public String toString() {
+        return this.getClass().getSimpleName() +
+                " [datagramSocket=" +
+                this.datagramSocket +
+                "]";
+    }
+
 }

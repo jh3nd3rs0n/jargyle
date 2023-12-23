@@ -10,6 +10,8 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Arrays;
 
+import com.github.jh3nd3rs0n.jargyle.common.net.Host;
+import com.github.jh3nd3rs0n.jargyle.common.net.HostName;
 import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.internal.UnsignedByteInputHelper;
 
@@ -63,7 +65,7 @@ final class AddressInputHelper {
 		}
 		bytes = Arrays.copyOf(bytes, bytes.length);
 		String string = new String(bytes);
-		if (!AddressType.DOMAINNAME.isValueForString(string)) {
+		if (!(Host.newInstance(string) instanceof HostName)) {
 			throw new Socks5Exception(String.format(
 					"invalid address: %s", string));
 		}

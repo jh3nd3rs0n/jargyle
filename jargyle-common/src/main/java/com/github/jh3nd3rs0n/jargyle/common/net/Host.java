@@ -4,8 +4,6 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.SingleValueTypeDoc;
-import com.github.jh3nd3rs0n.jargyle.internal.net.AllZerosIpAddressConstants;
-import com.github.jh3nd3rs0n.jargyle.internal.net.InetAddressHelper;
 
 @SingleValueTypeDoc(
 		description = "",
@@ -13,39 +11,38 @@ import com.github.jh3nd3rs0n.jargyle.internal.net.InetAddressHelper;
 		syntax = "HOST_NAME|HOST_ADDRESS",
 		syntaxName = "HOST"
 )
-public final class Host {
-	
-	private static final Host ALL_ZEROS_IPV4_ADDRESS_INSTANCE = Host.newInstance(
-			AllZerosIpAddressConstants.IPV4_ADDRESS);
-	
-	private static final Host ALL_ZEROS_IPV6_ADDRESS_INSTANCE = Host.newInstance(
-			AllZerosIpAddressConstants.IPV6_ADDRESS);
-	
-	public static final Host getAllZerosIpv4AddressInstance() {
-		return ALL_ZEROS_IPV4_ADDRESS_INSTANCE;
-	}
-	
-	public static final Host getAllZerosIpv6AddressInstance() {
-		return ALL_ZEROS_IPV6_ADDRESS_INSTANCE;
-	}
-	
-	public static Host newInstance(final String s) {
-		if (!InetAddressHelper.isInetAddress(s)) {
-			throw new IllegalArgumentException(String.format(
-					"invalid host name or address: %s", 
-					s));
-		}
-		return new Host(s);
+public abstract class Host {
+
+	static interface InetAddressFactory {
+
+		InetAddress getInetAddress() throws UnknownHostException;
+
 	}
 
+	public static Host newInstance(final String s) {
+		try {
+			return HostAddress.newHostAddress(s);
+		} catch (IllegalArgumentException ignored) {
+		}
+		try {
+			return HostName.newHostName(s);
+		} catch (IllegalArgumentException ignored) {
+		}
+		throw new IllegalArgumentException(String.format(
+				"invalid host name or address: %s",
+				s));
+    }
+
+	private final InetAddressFactory inetAddressFactory;
 	private final String string;
-	
-	private Host(final String str) {
+
+	Host(final String str, final InetAddressFactory inetAddrFactory) {
+		this.inetAddressFactory = inetAddrFactory;
 		this.string = str;
 	}
-	
+
 	@Override
-	public boolean equals(Object obj) {
+	public final boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
 		}
@@ -65,22 +62,22 @@ public final class Host {
 		}
 		return true;
 	}
-	
+
 	@Override
-	public int hashCode() {
+	public final int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((this.string == null) ? 0 : this.string.hashCode());
 		return result;
 	}
-	
-	public InetAddress toInetAddress() throws UnknownHostException {
-		return InetAddress.getByName(string);
+
+	public final InetAddress toInetAddress() throws UnknownHostException {
+		return this.inetAddressFactory.getInetAddress();
 	}
-	
+
 	@Override
-	public String toString() {
+	public final String toString() {
 		return this.string;
 	}
-	
+
 }

@@ -8,6 +8,7 @@ import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.PortRange
 import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.PositiveIntegerPropertySpec;
 import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.SocketSettingsPropertySpec;
 import com.github.jh3nd3rs0n.jargyle.common.net.Host;
+import com.github.jh3nd3rs0n.jargyle.common.net.HostIpv4Address;
 import com.github.jh3nd3rs0n.jargyle.common.net.PortRanges;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
@@ -34,7 +35,7 @@ public final class GeneralPropertySpecConstants {
 	public static final PropertySpec<Host> CLIENT_BIND_HOST = 
 			PROPERTY_SPECS.addThenGet(new HostPropertySpec(
 					"socksClient.clientBindHost",
-					Host.getAllZerosIpv4AddressInstance()));
+					HostIpv4Address.getAllZerosInstance()));
 	
 	@NameValuePairValueSpecDoc(
 			description = "The comma separated list of binding port ranges for "

@@ -14,17 +14,20 @@ import com.github.jh3nd3rs0n.jargyle.server.internal.addressrange.impl.Ipv6Addre
 public abstract class AddressRange {
 
 	public static AddressRange newInstance(final String s) {
-		if (Ipv4AddressRange.isIpv4AddressRange(s)) {
+		try {
 			return Ipv4AddressRange.newInstance(s);
+		} catch (IllegalArgumentException ignored) {
 		}
-		if (Ipv6AddressRange.isIpv6AddressRange(s)) {
+		try {
 			return Ipv6AddressRange.newInstance(s);
+		} catch (IllegalArgumentException ignored) {
 		}
-		if (DomainnameRange.isDomainnameRange(s)) {
+		try {
 			return DomainnameRange.newInstance(s);
+		} catch (IllegalArgumentException ignored) {
 		}
 		throw new IllegalArgumentException(String.format(
-				"unknown address range: %s", s));
+				"invalid address range: %s", s));
 	}
 	
 	public abstract boolean contains(final String address);

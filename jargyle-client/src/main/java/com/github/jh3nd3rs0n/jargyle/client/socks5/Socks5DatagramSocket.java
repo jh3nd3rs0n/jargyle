@@ -22,10 +22,10 @@ import com.github.jh3nd3rs0n.jargyle.client.SocksClient.ClientSocketConnectParam
 import com.github.jh3nd3rs0n.jargyle.client.SocksClientIOException;
 import com.github.jh3nd3rs0n.jargyle.client.internal.client.SocksClientIOExceptionThrowingHelper;
 import com.github.jh3nd3rs0n.jargyle.client.internal.client.SocksClientSocketExceptionThrowingHelper;
+import com.github.jh3nd3rs0n.jargyle.common.net.HostAddress;
+import com.github.jh3nd3rs0n.jargyle.common.net.HostIpv4Address;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
-import com.github.jh3nd3rs0n.jargyle.internal.net.InetAddressHelper;
-import com.github.jh3nd3rs0n.jargyle.internal.net.AllZerosIpAddressConstants;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Address;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.AddressType;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Command;
@@ -55,7 +55,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 		
 		public Socks5DatagramSocketImpl(
 				final Socks5Client client) throws SocketException {
-			DatagramSocket datagramSock = new DatagramSocket(null);
+			DatagramSocket datagramSock = new DatagramSocket((SocketAddress) null);
 			Socket sock = new Socket();
 			client.configureClientSocket(sock);
 			this.associated = false;
@@ -196,7 +196,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			Properties properties = this.socks5Client.getProperties();
 			if (properties.getValue(
 					Socks5PropertySpecConstants.SOCKS5_CLIENT_UDP_ADDRESS_AND_PORT_UNKNOWN).booleanValue()) {
-				address = AllZerosIpAddressConstants.IPV4_ADDRESS;
+				address = HostIpv4Address.ALL_ZEROS_IPV4_ADDRESS;
 				port = 0;
 			}
 			Socks5Request socks5Req = Socks5Request.newInstance(
@@ -208,8 +208,8 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			String serverBoundAddress = 
 					socks5Rep.getServerBoundAddress().toString();
 			int serverBoundPort = socks5Rep.getServerBoundPort().intValue();
-			AddressType addressType = AddressType.valueForString(
-					serverBoundAddress);
+			AddressType addressType =
+					socks5Rep.getServerBoundAddress().getAddressType();
 			if (addressType.equals(AddressType.DOMAINNAME)) {
 				throw new Socks5ClientIOException(
 						this.socks5Client, 
@@ -218,7 +218,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 								+ "actual server bound address is %s", 
 								serverBoundAddress));
 			}
-			if (InetAddressHelper.isAllZerosIpAddress(serverBoundAddress)) {
+			if (HostAddress.isAllZerosHostAddress(serverBoundAddress)) {
 				serverBoundAddress = 
 						this.socks5Client.getSocksServerUri().getHost();
 			}

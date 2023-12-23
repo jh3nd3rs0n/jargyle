@@ -20,6 +20,7 @@ import java.util.Set;
 import com.github.jh3nd3rs0n.jargyle.client.SocksClient.ClientSocketConnectParams;
 import com.github.jh3nd3rs0n.jargyle.client.internal.client.SocksClientIOExceptionThrowingHelper;
 import com.github.jh3nd3rs0n.jargyle.client.internal.client.SocksClientSocketExceptionThrowingHelper;
+import com.github.jh3nd3rs0n.jargyle.common.net.HostIpv4Address;
 import com.github.jh3nd3rs0n.jargyle.common.net.PerformancePreferences;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
@@ -27,7 +28,6 @@ import com.github.jh3nd3rs0n.jargyle.common.net.StandardSocketSettingSpecConstan
 import com.github.jh3nd3rs0n.jargyle.common.number.Digit;
 import com.github.jh3nd3rs0n.jargyle.common.number.NonnegativeInteger;
 import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
-import com.github.jh3nd3rs0n.jargyle.internal.net.AllZerosIpAddressConstants;
 import com.github.jh3nd3rs0n.jargyle.internal.net.FilterSocket;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Address;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.AddressType;
@@ -75,7 +75,7 @@ public final class Socks5ServerSocket extends ServerSocket {
 		@Override
 		public synchronized void close() throws IOException {
 			super.close();
-			this.localInetAddress = AllZerosIpAddressConstants.getInet4Address();
+			this.localInetAddress = HostIpv4Address.getAllZerosInetAddress();
 			this.localPort = -1;
 			this.localSocketAddress = null;
 			this.remoteInetAddress = null;
@@ -322,8 +322,8 @@ public final class Socks5ServerSocket extends ServerSocket {
 				String serverBoundAddress = 
 						socks5Rep.getServerBoundAddress().toString();
 				int serverBoundPort = socks5Rep.getServerBoundPort().intValue();
-				AddressType addressType = AddressType.valueForString(
-						serverBoundAddress);
+				AddressType addressType =
+						socks5Rep.getServerBoundAddress().getAddressType();
 				if (addressType.equals(AddressType.DOMAINNAME)) {
 					throw new Socks5ClientIOException(
 							this.socks5Client, 
@@ -446,7 +446,7 @@ public final class Socks5ServerSocket extends ServerSocket {
 			}
 			InetAddress bAddr = bindAddr;
 			if (bAddr == null) {
-				bAddr = AllZerosIpAddressConstants.getInet4Address();
+				bAddr = HostIpv4Address.getAllZerosInetAddress();
 			}
 			String address = bAddr.getHostAddress();
 			Socks5Request socks5Req = Socks5Request.newInstance(
@@ -458,8 +458,8 @@ public final class Socks5ServerSocket extends ServerSocket {
 			String serverBoundAddress = 
 					socks5Rep.getServerBoundAddress().toString();
 			int serverBoundPort = socks5Rep.getServerBoundPort().intValue();
-			AddressType addressType = AddressType.valueForString(
-					serverBoundAddress);
+			AddressType addressType =
+					socks5Rep.getServerBoundAddress().getAddressType();
 			if (addressType.equals(AddressType.DOMAINNAME)) {
 				throw new Socks5ClientIOException(
 						this.socks5Client, 

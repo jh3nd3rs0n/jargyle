@@ -3,59 +3,12 @@ package com.github.jh3nd3rs0n.jargyle.server.internal.addressrange.impl;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-import com.github.jh3nd3rs0n.jargyle.internal.net.InetAddressHelper;
-import com.github.jh3nd3rs0n.jargyle.internal.net.InetAddressRegexConstants;
-import com.github.jh3nd3rs0n.jargyle.internal.regex.RegexHelper;
+import com.github.jh3nd3rs0n.jargyle.common.net.Host;
+import com.github.jh3nd3rs0n.jargyle.common.net.HostIpv6Address;
 import com.github.jh3nd3rs0n.jargyle.server.AddressRange;
 
 public final class Ipv6AddressRange extends AddressRange {
 
-	private static final String ADDRESS_IN_COMPRESSED_FORM_REGEX =
-			InetAddressRegexConstants.IPV6_ADDRESS_IN_COMPRESSED_FORM_REGEX;
-	
-	private static final String ADDRESS_IN_FULL_FORM_REGEX =
-			InetAddressRegexConstants.IPV6_ADDRESS_IN_FULL_FORM_REGEX;
-	
-	private static final String FROM_ADDRESS_IN_COMPRESSED_FORM_TO_ADDRESS_IN_COMPRESSED_FORM_REGEX =
-			new StringBuilder()
-			.append(ADDRESS_IN_COMPRESSED_FORM_REGEX)
-			.append('-')
-			.append(ADDRESS_IN_COMPRESSED_FORM_REGEX)
-			.toString();
-	
-	private static final String FROM_ADDRESS_IN_COMPRESSED_FORM_TO_ADDRESS_IN_FULL_FORM_REGEX =
-			new StringBuilder()
-			.append(ADDRESS_IN_COMPRESSED_FORM_REGEX)
-			.append('-')
-			.append(ADDRESS_IN_FULL_FORM_REGEX)
-			.toString();
-
-	private static final String FROM_ADDRESS_IN_FULL_FORM_TO_ADDRESS_IN_COMPRESSED_FORM_REGEX =
-			new StringBuilder()
-			.append(ADDRESS_IN_FULL_FORM_REGEX)
-			.append('-')
-			.append(ADDRESS_IN_COMPRESSED_FORM_REGEX)
-			.toString();
-
-	private static final String FROM_ADDRESS_IN_FULL_FORM_TO_ADDRESS_IN_FULL_FORM_REGEX =
-			new StringBuilder()
-			.append(ADDRESS_IN_FULL_FORM_REGEX)
-			.append('-')
-			.append(ADDRESS_IN_FULL_FORM_REGEX)
-			.toString();
-
-	public static boolean isIpv6AddressRange(final String s) {
-		return InetAddressHelper.isIpv6Address(s)
-				|| s.matches(RegexHelper.getRegexWithInputBoundaries(
-						FROM_ADDRESS_IN_COMPRESSED_FORM_TO_ADDRESS_IN_COMPRESSED_FORM_REGEX))
-				|| s.matches(RegexHelper.getRegexWithInputBoundaries(
-						FROM_ADDRESS_IN_COMPRESSED_FORM_TO_ADDRESS_IN_FULL_FORM_REGEX))
-				|| s.matches(RegexHelper.getRegexWithInputBoundaries(
-						FROM_ADDRESS_IN_FULL_FORM_TO_ADDRESS_IN_COMPRESSED_FORM_REGEX))
-				|| s.matches(RegexHelper.getRegexWithInputBoundaries(
-						FROM_ADDRESS_IN_FULL_FORM_TO_ADDRESS_IN_FULL_FORM_REGEX));
-	}
-	
 	public static Ipv6AddressRange newInstance(final String s) {
 		String message = "IPv6 address range must be in the following formats: "
 				+ "IPV6_ADDRESS, "
@@ -67,6 +20,9 @@ public final class Ipv6AddressRange extends AddressRange {
 		}
 		if (sElements.length == 1) {
 			String address = sElements[0];
+			if (!(Host.newInstance(address) instanceof HostIpv6Address)) {
+				throw new IllegalArgumentException(message);
+			}
 			Ipv6AddressRange ipv4AddressRange = null;
 			try {
 				ipv4AddressRange = new Ipv6AddressRange(address, address);
@@ -77,6 +33,10 @@ public final class Ipv6AddressRange extends AddressRange {
 		}
 		String startingAddress = sElements[0];
 		String endingAddress = sElements[1];
+		if (!(Host.newInstance(startingAddress) instanceof HostIpv6Address)
+				|| !(Host.newInstance(endingAddress) instanceof HostIpv6Address)) {
+			throw new IllegalArgumentException(message);
+		}
 		return new Ipv6AddressRange(startingAddress, endingAddress);
 	}
 	
@@ -114,14 +74,15 @@ public final class Ipv6AddressRange extends AddressRange {
 	
 	@Override
 	public boolean contains(final String address) {
-		if (!InetAddressHelper.isIpv6Address(address)) {
+		Host host = Host.newInstance(address);
+		if (!(host instanceof HostIpv6Address)) {
 			return false;
 		}
 		InetAddress inetAddress = null;
 		try {
-			inetAddress = InetAddress.getByName(address);
+			inetAddress = host.toInetAddress();
 		} catch (UnknownHostException e) {
-			throw new IllegalArgumentException(e);
+			throw new AssertionError(e);
 		}
 		return InetAddressComparator.INSTANCE.compare(
 				this.startingInetAddress, inetAddress) <= 0	

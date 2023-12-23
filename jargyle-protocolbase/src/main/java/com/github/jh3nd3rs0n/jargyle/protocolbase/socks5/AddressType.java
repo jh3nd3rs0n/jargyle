@@ -7,29 +7,28 @@ import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
+import com.github.jh3nd3rs0n.jargyle.common.net.Host;
+import com.github.jh3nd3rs0n.jargyle.common.net.HostIpv4Address;
+import com.github.jh3nd3rs0n.jargyle.common.net.HostIpv6Address;
+import com.github.jh3nd3rs0n.jargyle.common.net.HostName;
 import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
-import com.github.jh3nd3rs0n.jargyle.internal.net.InetAddressHelper;
 
 public enum AddressType {
 
 	IPV4((byte) 0x01) {
-		
-		@Override
-		public boolean isValueForString(final String string) {
-			return InetAddressHelper.isIpv4Address(string);
-		}
 
 		@Override
-		public Address newAddress(final String string) {
-			if (!this.isValueForString(string)) {
+		public Address implNewAddress(final String string) {
+			Host host = Host.newInstance(string);
+			if (!(host instanceof HostIpv4Address)) {
 				throw new IllegalArgumentException(String.format(
 						"invalid address: %s", string));
 			}
 			InetAddress inetAddress = null;
 			try {
-				inetAddress = InetAddress.getByName(string);
+				inetAddress = host.toInetAddress();
 			} catch (UnknownHostException e) {
-				throw new IllegalArgumentException(e);
+				throw new AssertionError(e);
 			}
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			out.write(UnsignedByte.newInstance(this.byteValue()).intValue());
@@ -44,15 +43,11 @@ public enum AddressType {
 	},
 	
 	DOMAINNAME((byte) 0x03) {
-		
-		@Override
-		public boolean isValueForString(final String string) {
-			return InetAddressHelper.isDomainname(string);
-		}
 
 		@Override
-		public Address newAddress(final String string) {
-			if (!this.isValueForString(string)) {
+		public Address implNewAddress(final String string) {
+			Host host = Host.newInstance(string);
+			if (!(host instanceof HostName)) {
 				throw new IllegalArgumentException(String.format(
 						"invalid address: %s", string));
 			}
@@ -82,23 +77,19 @@ public enum AddressType {
 	},
 	
 	IPV6((byte) 0x04) {
-		
-		@Override
-		public boolean isValueForString(final String string) {
-			return InetAddressHelper.isIpv6Address(string);
-		}
 
 		@Override
-		public Address newAddress(final String string) {
-			if (!this.isValueForString(string)) {
+		public Address implNewAddress(final String string) {
+			Host host = Host.newInstance(string);
+			if (!(host instanceof HostIpv6Address)) {
 				throw new IllegalArgumentException(String.format(
 						"invalid address: %s", string));
 			}
 			InetAddress inetAddress = null;
 			try {
-				inetAddress = InetAddress.getByName(string);
+				inetAddress = host.toInetAddress();
 			} catch (UnknownHostException e) {
-				throw new IllegalArgumentException(e);
+				throw new AssertionError(e);
 			}
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			out.write(UnsignedByte.newInstance(this.byteValue()).intValue());
@@ -111,22 +102,25 @@ public enum AddressType {
 		}
 		
 	};
-	
-	public static AddressType valueForString(final String string) {
+
+	public static Address newAddress(final String address) {
 		for (AddressType addressType : AddressType.values()) {
-			if (!addressType.equals(DOMAINNAME) 
-					&& addressType.isValueForString(string)) {
-				return addressType;
+			if (!addressType.equals(DOMAINNAME)) {
+				try {
+					return addressType.implNewAddress(address);
+				} catch (IllegalArgumentException ignored) {
+				}
 			}
 		}
-		if (DOMAINNAME.isValueForString(string)) {
-			return DOMAINNAME;
+		try {
+			return DOMAINNAME.implNewAddress(address);
+		} catch (IllegalArgumentException ignored) {
 		}
 		throw new IllegalArgumentException(String.format(
 				"unable to determine address type for the specified address: %s",
-				string));
+				address));
 	}
-	
+
 	public static AddressType valueOfByte(final byte b) {
 		for (AddressType addressType : AddressType.values()) {
 			if (addressType.byteValue() == b) {
@@ -154,8 +148,7 @@ public enum AddressType {
 	public byte byteValue() {
 		return this.byteValue;
 	}
-	
-	public abstract boolean isValueForString(final String string);
-	
-	public abstract Address newAddress(final String string);
+
+	public abstract Address implNewAddress(final String string);
+
 }

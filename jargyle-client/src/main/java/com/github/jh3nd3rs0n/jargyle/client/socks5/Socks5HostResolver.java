@@ -10,6 +10,8 @@ import com.github.jh3nd3rs0n.jargyle.client.Properties;
 import com.github.jh3nd3rs0n.jargyle.client.Socks5PropertySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.client.SocksClient.ClientSocketConnectParams;
 import com.github.jh3nd3rs0n.jargyle.client.internal.client.SocksClientIOExceptionThrowingHelper;
+import com.github.jh3nd3rs0n.jargyle.common.net.Host;
+import com.github.jh3nd3rs0n.jargyle.common.net.HostName;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Address;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.AddressType;
@@ -38,8 +40,8 @@ public final class Socks5HostResolver extends HostResolver {
 			return InetAddress.getLoopbackAddress();
 		}
 		Properties properties = this.socks5Client.getProperties();
-		AddressType addressType = AddressType.valueForString(host);
-		if (!addressType.equals(AddressType.DOMAINNAME) || !properties.getValue(
+		Host hst = Host.newInstance(host);
+		if (!(hst instanceof HostName) || !properties.getValue(
 				Socks5PropertySpecConstants.SOCKS5_USE_RESOLVE_COMMAND).booleanValue()) {
 			return InetAddress.getByName(host);
 		}
@@ -87,7 +89,8 @@ public final class Socks5HostResolver extends HostResolver {
 		}
 		String serverBoundAddress = 
 				socks5Rep.getServerBoundAddress().toString();
-		addressType = AddressType.valueForString(serverBoundAddress);
+		AddressType addressType =
+				socks5Rep.getServerBoundAddress().getAddressType();
 		if (addressType.equals(AddressType.DOMAINNAME)) {
 			throw new Socks5ClientIOException(
 					this.socks5Client, 

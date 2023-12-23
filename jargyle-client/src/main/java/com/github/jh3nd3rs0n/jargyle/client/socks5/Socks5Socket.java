@@ -137,8 +137,8 @@ public final class Socks5Socket extends Socket {
 			String serverBoundAddress = 
 					socks5Rep.getServerBoundAddress().toString();
 			int serverBoundPort = socks5Rep.getServerBoundPort().intValue();
-			AddressType addressType = AddressType.valueForString(
-					serverBoundAddress);
+			AddressType addressType =
+					socks5Rep.getServerBoundAddress().getAddressType();
 			if (addressType.equals(AddressType.DOMAINNAME)) {
 				throw new Socks5ClientIOException(
 						this.socks5Client, 

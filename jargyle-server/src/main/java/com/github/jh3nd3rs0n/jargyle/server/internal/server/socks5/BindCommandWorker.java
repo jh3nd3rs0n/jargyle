@@ -13,20 +13,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.github.jh3nd3rs0n.jargyle.common.net.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
 import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
-import com.github.jh3nd3rs0n.jargyle.common.net.Host;
-import com.github.jh3nd3rs0n.jargyle.common.net.Port;
-import com.github.jh3nd3rs0n.jargyle.common.net.PortRange;
-import com.github.jh3nd3rs0n.jargyle.common.net.PortRanges;
-import com.github.jh3nd3rs0n.jargyle.common.net.SocketSetting;
-import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
 import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
-import com.github.jh3nd3rs0n.jargyle.internal.net.InetAddressHelper;
 import com.github.jh3nd3rs0n.jargyle.internal.throwable.ThrowableHelper;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Address;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Reply;
@@ -557,7 +551,7 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 			return null;
 		}
 		InetAddress bindInetAddress = desiredDestinationInetAddress;
-		if (InetAddressHelper.isAllZerosIpAddress(
+		if (HostAddress.isAllZerosHostAddress(
 				desiredDestinationInetAddress.getHostAddress())) {
 			Host listenBindHost = this.getListenBindHost();
 			try {

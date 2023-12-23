@@ -5,9 +5,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 
+import com.github.jh3nd3rs0n.jargyle.common.net.HostIpv4Address;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
-import com.github.jh3nd3rs0n.jargyle.internal.net.AllZerosIpAddressConstants;
 
 public final class Socks5Reply {
 
@@ -28,7 +28,7 @@ public final class Socks5Reply {
 		}
 		return newInstance(
 				reply, 
-				Address.newInstance(AllZerosIpAddressConstants.IPV4_ADDRESS),
+				Address.newInstance(HostIpv4Address.ALL_ZEROS_IPV4_ADDRESS),
 				Port.newInstance(0));
 	}
 	

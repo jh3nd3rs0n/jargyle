@@ -3,10 +3,7 @@ package com.github.jh3nd3rs0n.jargyle.server;
 import java.util.List;
 import java.util.Map;
 
-import com.github.jh3nd3rs0n.jargyle.common.net.Host;
-import com.github.jh3nd3rs0n.jargyle.common.net.Port;
-import com.github.jh3nd3rs0n.jargyle.common.net.PortRanges;
-import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
+import com.github.jh3nd3rs0n.jargyle.common.net.*;
 import com.github.jh3nd3rs0n.jargyle.common.number.NonnegativeInteger;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueSpecDoc;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueSpecsDoc;
@@ -50,7 +47,7 @@ public final class GeneralSettingSpecConstants {
 	public static final SettingSpec<Host> BIND_HOST =
 			SETTING_SPECS.addThenGet(new HostSettingSpec(
 					"bindHost", 
-					Host.getAllZerosIpv4AddressInstance()));
+					HostIpv4Address.getAllZerosInstance()));
 	
 	@NameValuePairValueSpecDoc(
 			description = "The comma separated list of default binding port "

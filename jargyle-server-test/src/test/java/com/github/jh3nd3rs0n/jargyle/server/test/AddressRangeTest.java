@@ -45,12 +45,12 @@ public class AddressRangeTest {
 
 	@Test
 	public void testContains08() {
-		assertTrue(AddressRange.newInstance("regex:.*google.com\\z").contains("google.com"));
+		assertTrue(AddressRange.newInstance("regex:.*google\\.com\\z").contains("google.com"));
 	}
 
 	@Test
 	public void testContains09() {
-		assertTrue(AddressRange.newInstance("regex:.*google.com\\z").contains("anothergoogle.com"));
+		assertTrue(AddressRange.newInstance("regex:.*google\\.com\\z").contains("anothergoogle.com"));
 	}
 
 }

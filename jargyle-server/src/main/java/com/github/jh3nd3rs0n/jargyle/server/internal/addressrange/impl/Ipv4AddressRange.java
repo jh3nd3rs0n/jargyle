@@ -3,173 +3,12 @@ package com.github.jh3nd3rs0n.jargyle.server.internal.addressrange.impl;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-import com.github.jh3nd3rs0n.jargyle.internal.net.InetAddressHelper;
-import com.github.jh3nd3rs0n.jargyle.internal.net.InetAddressRegexConstants;
-import com.github.jh3nd3rs0n.jargyle.internal.regex.RegexHelper;
+import com.github.jh3nd3rs0n.jargyle.common.net.Host;
+import com.github.jh3nd3rs0n.jargyle.common.net.HostIpv4Address;
 import com.github.jh3nd3rs0n.jargyle.server.AddressRange;
 
 public final class Ipv4AddressRange extends AddressRange {
-	
-	private static final String ADDRESS_AS_1_PART_REGEX =
-			InetAddressRegexConstants.IPV4_ADDRESS_AS_1_PART_REGEX;
-	
-	private static final String ADDRESS_AS_2_PARTS_REGEX =
-			InetAddressRegexConstants.IPV4_ADDRESS_AS_2_PARTS_REGEX;
-	
-	private static final String ADDRESS_AS_3_PARTS_REGEX = 
-			InetAddressRegexConstants.IPV4_ADDRESS_AS_3_PARTS_REGEX;
-	
-	private static final String ADDRESS_AS_4_PARTS_REGEX =
-			InetAddressRegexConstants.IPV4_ADDRESS_AS_4_PARTS_REGEX;
-	
-	private static final String FROM_ADDRESS_AS_1_PART_TO_ADDRESS_AS_1_PART_REGEX = 
-			new StringBuilder()
-			.append(ADDRESS_AS_1_PART_REGEX)
-			.append('-')
-			.append(ADDRESS_AS_1_PART_REGEX)
-			.toString();
-	
-	private static final String FROM_ADDRESS_AS_1_PART_TO_ADDRESS_AS_2_PARTS_REGEX = 
-			new StringBuilder()
-			.append(ADDRESS_AS_1_PART_REGEX)
-			.append('-')
-			.append(ADDRESS_AS_2_PARTS_REGEX)
-			.toString();
-	
-	private static final String FROM_ADDRESS_AS_1_PART_TO_ADDRESS_AS_3_PARTS_REGEX = 
-			new StringBuilder()
-			.append(ADDRESS_AS_1_PART_REGEX)
-			.append('-')
-			.append(ADDRESS_AS_3_PARTS_REGEX)
-			.toString();
-	
-	private static final String FROM_ADDRESS_AS_1_PART_TO_ADDRESS_AS_4_PARTS_REGEX = 
-			new StringBuilder()
-			.append(ADDRESS_AS_1_PART_REGEX)
-			.append('-')
-			.append(ADDRESS_AS_4_PARTS_REGEX)
-			.toString();
-	
-	private static final String FROM_ADDRESS_AS_2_PARTS_TO_ADDRESS_AS_1_PART_REGEX = 
-			new StringBuilder()
-			.append(ADDRESS_AS_2_PARTS_REGEX)
-			.append('-')
-			.append(ADDRESS_AS_1_PART_REGEX)
-			.toString();
-	
-	private static final String FROM_ADDRESS_AS_2_PARTS_TO_ADDRESS_AS_2_PARTS_REGEX = 
-			new StringBuilder()
-			.append(ADDRESS_AS_2_PARTS_REGEX)
-			.append('-')
-			.append(ADDRESS_AS_2_PARTS_REGEX)
-			.toString();
-	
-	private static final String FROM_ADDRESS_AS_2_PARTS_TO_ADDRESS_AS_3_PARTS_REGEX = 
-			new StringBuilder()
-			.append(ADDRESS_AS_2_PARTS_REGEX)
-			.append('-')
-			.append(ADDRESS_AS_3_PARTS_REGEX)
-			.toString();
-	
-	private static final String FROM_ADDRESS_AS_2_PARTS_TO_ADDRESS_AS_4_PARTS_REGEX = 
-			new StringBuilder()
-			.append(ADDRESS_AS_2_PARTS_REGEX)
-			.append('-')
-			.append(ADDRESS_AS_4_PARTS_REGEX)
-			.toString(); 
-	
-	private static final String FROM_ADDRESS_AS_3_PARTS_TO_ADDRESS_AS_1_PART_REGEX = 
-			new StringBuilder()
-			.append(ADDRESS_AS_3_PARTS_REGEX)
-			.append('-')
-			.append(ADDRESS_AS_1_PART_REGEX)
-			.toString();
-	
-	private static final String FROM_ADDRESS_AS_3_PARTS_TO_ADDRESS_AS_2_PARTS_REGEX = 
-			new StringBuilder()
-			.append(ADDRESS_AS_3_PARTS_REGEX)
-			.append('-')
-			.append(ADDRESS_AS_2_PARTS_REGEX)
-			.toString();
-	
-	private static final String FROM_ADDRESS_AS_3_PARTS_TO_ADDRESS_AS_3_PARTS_REGEX = 
-			new StringBuilder()
-			.append(ADDRESS_AS_3_PARTS_REGEX)
-			.append('-')
-			.append(ADDRESS_AS_3_PARTS_REGEX)
-			.toString();
-	
-	private static final String FROM_ADDRESS_AS_3_PARTS_TO_ADDRESS_AS_4_PARTS_REGEX = 
-			new StringBuilder()
-			.append(ADDRESS_AS_3_PARTS_REGEX)
-			.append('-')
-			.append(ADDRESS_AS_4_PARTS_REGEX)
-			.toString();
-	
-	private static final String FROM_ADDRESS_AS_4_PARTS_TO_ADDRESS_AS_1_PART_REGEX = 
-			new StringBuilder()
-			.append(ADDRESS_AS_4_PARTS_REGEX)
-			.append('-')
-			.append(ADDRESS_AS_1_PART_REGEX)
-			.toString(); 
-	
-	private static final String FROM_ADDRESS_AS_4_PARTS_TO_ADDRESS_AS_2_PARTS_REGEX = 
-			new StringBuilder()
-			.append(ADDRESS_AS_4_PARTS_REGEX)
-			.append('-')
-			.append(ADDRESS_AS_2_PARTS_REGEX)
-			.toString();
-	
-	private static final String FROM_ADDRESS_AS_4_PARTS_TO_ADDRESS_AS_3_PARTS_REGEX = 
-			new StringBuilder()
-			.append(ADDRESS_AS_4_PARTS_REGEX)
-			.append('-')
-			.append(ADDRESS_AS_3_PARTS_REGEX)
-			.toString();
-	
-	private static final String FROM_ADDRESS_AS_4_PARTS_TO_ADDRESS_AS_4_PARTS_REGEX = 
-			new StringBuilder()
-			.append(ADDRESS_AS_4_PARTS_REGEX)
-			.append('-')
-			.append(ADDRESS_AS_4_PARTS_REGEX)
-			.toString();
 
-	public static boolean isIpv4AddressRange(final String s) {
-		return InetAddressHelper.isIpv4Address(s)
-				|| s.matches(RegexHelper.getRegexWithInputBoundaries(
-						FROM_ADDRESS_AS_1_PART_TO_ADDRESS_AS_1_PART_REGEX))
-				|| s.matches(RegexHelper.getRegexWithInputBoundaries(
-						FROM_ADDRESS_AS_1_PART_TO_ADDRESS_AS_2_PARTS_REGEX))
-				|| s.matches(RegexHelper.getRegexWithInputBoundaries(
-						FROM_ADDRESS_AS_1_PART_TO_ADDRESS_AS_3_PARTS_REGEX))
-				|| s.matches(RegexHelper.getRegexWithInputBoundaries(
-						FROM_ADDRESS_AS_1_PART_TO_ADDRESS_AS_4_PARTS_REGEX))
-				|| s.matches(RegexHelper.getRegexWithInputBoundaries(
-						FROM_ADDRESS_AS_2_PARTS_TO_ADDRESS_AS_1_PART_REGEX))
-				|| s.matches(RegexHelper.getRegexWithInputBoundaries(
-						FROM_ADDRESS_AS_2_PARTS_TO_ADDRESS_AS_2_PARTS_REGEX))
-				|| s.matches(RegexHelper.getRegexWithInputBoundaries(
-						FROM_ADDRESS_AS_2_PARTS_TO_ADDRESS_AS_3_PARTS_REGEX))
-				|| s.matches(RegexHelper.getRegexWithInputBoundaries(
-						FROM_ADDRESS_AS_2_PARTS_TO_ADDRESS_AS_4_PARTS_REGEX))
-				|| s.matches(RegexHelper.getRegexWithInputBoundaries(
-						FROM_ADDRESS_AS_3_PARTS_TO_ADDRESS_AS_1_PART_REGEX))
-				|| s.matches(RegexHelper.getRegexWithInputBoundaries(
-						FROM_ADDRESS_AS_3_PARTS_TO_ADDRESS_AS_2_PARTS_REGEX))
-				|| s.matches(RegexHelper.getRegexWithInputBoundaries(
-						FROM_ADDRESS_AS_3_PARTS_TO_ADDRESS_AS_3_PARTS_REGEX))
-				|| s.matches(RegexHelper.getRegexWithInputBoundaries(
-						FROM_ADDRESS_AS_3_PARTS_TO_ADDRESS_AS_4_PARTS_REGEX))
-				|| s.matches(RegexHelper.getRegexWithInputBoundaries(
-						FROM_ADDRESS_AS_4_PARTS_TO_ADDRESS_AS_1_PART_REGEX))
-				|| s.matches(RegexHelper.getRegexWithInputBoundaries(
-						FROM_ADDRESS_AS_4_PARTS_TO_ADDRESS_AS_2_PARTS_REGEX))
-				|| s.matches(RegexHelper.getRegexWithInputBoundaries(
-						FROM_ADDRESS_AS_4_PARTS_TO_ADDRESS_AS_3_PARTS_REGEX))
-				|| s.matches(RegexHelper.getRegexWithInputBoundaries(
-						FROM_ADDRESS_AS_4_PARTS_TO_ADDRESS_AS_4_PARTS_REGEX)); 
-	}
-	
 	public static Ipv4AddressRange newInstance(final String s) {
 		String message = "IPv4 address range must be in the following formats: "
 				+ "IPV4_ADDRESS, "
@@ -181,6 +20,9 @@ public final class Ipv4AddressRange extends AddressRange {
 		}
 		if (sElements.length == 1) {
 			String address = sElements[0];
+			if (!(Host.newInstance(address) instanceof HostIpv4Address)) {
+				throw new IllegalArgumentException(message);
+			}
 			Ipv4AddressRange ipv4AddressRange = null;
 			try {
 				ipv4AddressRange = new Ipv4AddressRange(address, address);
@@ -191,6 +33,10 @@ public final class Ipv4AddressRange extends AddressRange {
 		}
 		String startingAddress = sElements[0];
 		String endingAddress = sElements[1];
+		if (!(Host.newInstance(startingAddress) instanceof HostIpv4Address)
+				|| !(Host.newInstance(endingAddress) instanceof HostIpv4Address)) {
+			throw new IllegalArgumentException(message);
+		}
 		return new Ipv4AddressRange(startingAddress, endingAddress);
 	}
 	
@@ -228,14 +74,15 @@ public final class Ipv4AddressRange extends AddressRange {
 	
 	@Override
 	public boolean contains(final String address) {
-		if (!InetAddressHelper.isIpv4Address(address)) {
+		Host host = Host.newInstance(address);
+		if (!(host instanceof HostIpv4Address)) {
 			return false;
 		}
 		InetAddress inetAddress = null;
 		try {
-			inetAddress = InetAddress.getByName(address);
+			inetAddress = host.toInetAddress();
 		} catch (UnknownHostException e) {
-			throw new IllegalArgumentException(e);
+			throw new AssertionError(e);
 		}
 		return InetAddressComparator.INSTANCE.compare(
 				this.startingInetAddress, inetAddress) <= 0	

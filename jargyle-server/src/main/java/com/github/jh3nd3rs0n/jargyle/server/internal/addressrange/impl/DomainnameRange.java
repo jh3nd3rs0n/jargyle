@@ -3,38 +3,26 @@ package com.github.jh3nd3rs0n.jargyle.server.internal.addressrange.impl;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.github.jh3nd3rs0n.jargyle.internal.net.InetAddressHelper;
-import com.github.jh3nd3rs0n.jargyle.internal.net.InetAddressRegexConstants;
-import com.github.jh3nd3rs0n.jargyle.internal.regex.RegexHelper;
+import com.github.jh3nd3rs0n.jargyle.common.net.Host;
+import com.github.jh3nd3rs0n.jargyle.common.net.HostName;
 import com.github.jh3nd3rs0n.jargyle.server.AddressRange;
 
 public final class DomainnameRange extends AddressRange {
 
-	private static final String DOMAINNAME_REGEX =
-			InetAddressRegexConstants.DOMAINNAME_REGEX;
-	
-	private static final String DOMAINNAME_REGEX_REGEX = "regex:(?<regex>.*)";
-	
-	public static boolean isDomainnameRange(final String s) {
-		return s.matches(RegexHelper.getRegexWithInputBoundaries(
-				DOMAINNAME_REGEX))
-				|| s.matches(RegexHelper.getRegexWithInputBoundaries(
-						DOMAINNAME_REGEX_REGEX));
-	}
-	
+	private static final String REGEX_PREFIX = "regex:";
+
 	public static DomainnameRange newInstance(final String s) {
-		String message = "domainname range must be either of the following "
-				+ "formats: DOMAINNAME, regex:REGULAR_EXPRESSION";
-		if (!isDomainnameRange(s)) {
-			throw new IllegalArgumentException(message);
-		}
-		String expression = s; 
+		String expression = s;
 		boolean hasRegularExpression = false;
-		Pattern pattern = Pattern.compile(DOMAINNAME_REGEX_REGEX);
-		Matcher matcher = pattern.matcher(s);
-		if (matcher.matches()) {
-			expression = matcher.group("regex");
+		if (s.startsWith(REGEX_PREFIX)) {
+			expression = s.substring(REGEX_PREFIX.length());
 			hasRegularExpression = true;
+		} else {
+			if (!(Host.newInstance(s) instanceof HostName)) {
+				throw new IllegalArgumentException(
+						"domainname range must be either of the following "
+						+ "formats: DOMAINNAME, regex:REGULAR_EXPRESSION");
+			}
 		}
 		return new DomainnameRange(expression, hasRegularExpression, s);
 	}
@@ -52,7 +40,7 @@ public final class DomainnameRange extends AddressRange {
 	
 	@Override
 	public boolean contains(final String address) {
-		if (!InetAddressHelper.isDomainname(address)) {
+		if (!(Host.newInstance(address) instanceof HostName)) {
 			return false;
 		}
 		if (this.hasRegularExpression) {

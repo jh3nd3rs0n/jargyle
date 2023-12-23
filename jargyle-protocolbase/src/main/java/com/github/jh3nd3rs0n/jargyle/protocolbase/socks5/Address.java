@@ -26,8 +26,7 @@ public final class Address {
 	}
 	
 	public static Address newInstance(final String string) {
-		AddressType addressType = AddressType.valueForString(string);
-		return addressType.newAddress(string);
+		return AddressType.newAddress(string);
 	}
 	
 	private final AddressType addressType;

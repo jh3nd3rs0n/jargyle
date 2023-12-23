@@ -13,6 +13,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 
+import com.github.jh3nd3rs0n.jargyle.common.net.HostAddress;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,7 +21,6 @@ import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
 import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
-import com.github.jh3nd3rs0n.jargyle.internal.net.InetAddressHelper;
 import com.github.jh3nd3rs0n.jargyle.internal.throwable.ThrowableHelper;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Address;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.UdpRequestHeader;
@@ -162,7 +162,7 @@ final class UdpRelayServer {
 		}
 		
 		private boolean canSendDatagramPacket() {
-			return !InetAddressHelper.isAllZerosIpAddress(
+			return !HostAddress.isAllZerosHostAddress(
 					this.udpRelayServer.getClientAddress())
 					&& this.udpRelayServer.getClientPort() != 0;
 		}
@@ -372,7 +372,7 @@ final class UdpRelayServer {
 			String address = packet.getAddress().getHostAddress();
 			int port = packet.getPort();
 			String clientAddr = this.udpRelayServer.getClientAddress();
-			if (InetAddressHelper.isAllZerosIpAddress(clientAddr)) {
+			if (HostAddress.isAllZerosHostAddress(clientAddr)) {
 				this.udpRelayServer.setClientAddress(address);
 			} else {
 				InetAddress clientInetAddr = null;

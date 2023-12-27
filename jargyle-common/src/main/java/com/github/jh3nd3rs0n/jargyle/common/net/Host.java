@@ -1,83 +1,77 @@
 package com.github.jh3nd3rs0n.jargyle.common.net;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.SingleValueTypeDoc;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.Objects;
+
+/**
+ * A name or address of a node of a network.
+ */
 @SingleValueTypeDoc(
-		description = "",
-		name = "Host",
-		syntax = "HOST_NAME|HOST_ADDRESS",
-		syntaxName = "HOST"
+        description = "A name or address of a node of a network",
+        name = "Host",
+        syntax = "HOST_NAME|HOST_ADDRESS",
+        syntaxName = "HOST"
 )
 public abstract class Host {
 
-	static interface InetAddressFactory {
+    /**
+     * The {@code String} representation of this {@code Host}.
+     */
+    final String string;
 
-		InetAddress getInetAddress() throws UnknownHostException;
-
-	}
-
-	public static Host newInstance(final String s) {
-		try {
-			return HostAddress.newHostAddress(s);
-		} catch (IllegalArgumentException ignored) {
-		}
-		try {
-			return HostName.newHostName(s);
-		} catch (IllegalArgumentException ignored) {
-		}
-		throw new IllegalArgumentException(String.format(
-				"invalid host name or address: %s",
-				s));
+    /**
+     * Constructs a {@code Host} with the provided name or address.
+     *
+     * @param str the provided name or address
+     */
+    Host(final String str) {
+        this.string = Objects.requireNonNull(str);
     }
 
-	private final InetAddressFactory inetAddressFactory;
-	private final String string;
+    /**
+     * Returns a new {@code Host} with the provided name or address. A
+     * {@code IllegalArgumentException} is thrown if the provided name or
+     * address is invalid.
+     *
+     * @param s the provided name or address
+     * @return a new {@code Host} with the provided name or address
+     */
+    public static Host newInstance(final String s) {
+        try {
+            return HostAddress.newHostAddress(s);
+        } catch (IllegalArgumentException ignored) {
+        }
+        try {
+            return HostName.newHostName(s);
+        } catch (IllegalArgumentException ignored) {
+        }
+        throw new IllegalArgumentException(String.format(
+                "invalid host name or address: %s",
+                s));
+    }
 
-	Host(final String str, final InetAddressFactory inetAddrFactory) {
-		this.inetAddressFactory = inetAddrFactory;
-		this.string = str;
-	}
+    @Override
+    public abstract boolean equals(final Object obj);
 
-	@Override
-	public final boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (this.getClass() != obj.getClass()) {
-			return false;
-		}
-		Host other = (Host) obj;
-		if (this.string == null) {
-			if (other.string != null) {
-				return false;
-			}
-		} else if (!this.string.equals(other.string)) {
-			return false;
-		}
-		return true;
-	}
+    @Override
+    public abstract int hashCode();
 
-	@Override
-	public final int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((this.string == null) ? 0 : this.string.hashCode());
-		return result;
-	}
+    /**
+     * Returns an {@code InetAddress} of this {@code Host}.
+     *
+     * @return an {@code InetAddress} of this {@code Host}
+     * @throws UnknownHostException if the IP address cannot be determined
+     *                              from the {@code String} representation of
+	 *                              this {@code Host}
+     */
+    public abstract InetAddress toInetAddress() throws UnknownHostException;
 
-	public final InetAddress toInetAddress() throws UnknownHostException {
-		return this.inetAddressFactory.getInetAddress();
-	}
-
-	@Override
-	public final String toString() {
-		return this.string;
-	}
+    @Override
+    public final String toString() {
+        return this.string;
+    }
 
 }

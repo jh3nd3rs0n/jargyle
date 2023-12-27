@@ -39,9 +39,10 @@
 		<junit.version>4.13.2</junit.version>
 		<slf4j.version>1.7.28</slf4j.version>
 		<maven.javadoc.skippedModules>
-			echo,echo-test,jargyle-cli,jargyle-cli-test,jargyle-common-test,jargyle-internal-test,jargyle-protocolbase-test,jargyle-server-test,test-help
+			echo,echo-integration-test,jargyle-cli,jargyle-cli-integration-test,jargyle-server-integration-test,test-help
 		</maven.javadoc.skippedModules>
 		<docsDirectory>${project.basedir}${file.separator}docs</docsDirectory>
+		<jacoco.skip>true</jacoco.skip>
 		<sonar.organization>jh3nd3rs0n</sonar.organization>
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 		<sonar.coverage.jacoco.xmlReportPaths>
@@ -62,6 +63,9 @@
 	<profiles>
 		<profile>
 			<id>coverage</id>
+			<properties>
+				<jacoco.skip>false</jacoco.skip>
+			</properties>
 			<build>
 				<plugins>
 					<plugin>
@@ -76,9 +80,26 @@
 								</goals>
 							</execution>
 							<execution>
+								<id>prepare-agent-integration</id>
+								<goals>
+									<goal>prepare-agent-integration</goal>
+								</goals>
+							</execution>
+							<execution>
 								<id>report</id>
 								<goals>
 									<goal>report</goal>
+								</goals>
+								<configuration>
+									<formats>
+										<format>XML</format>
+									</formats>
+								</configuration>
+							</execution>
+							<execution>
+								<id>report-integration</id>
+								<goals>
+									<goal>report-integration</goal>
 								</goals>
 								<configuration>
 									<formats>
@@ -231,18 +252,15 @@
 	<modules>
 		<module>test-help</module>
 		<module>jargyle-internal</module>
-		<module>jargyle-internal-test</module>
 		<module>jargyle-common</module>
-		<module>jargyle-common-test</module>
 		<module>jargyle-protocolbase</module>
-		<module>jargyle-protocolbase-test</module>
 		<module>jargyle-client</module>
 		<module>jargyle-server</module>
-		<module>jargyle-server-test</module>
+		<module>jargyle-server-integration-test</module>
 		<module>echo</module>
-		<module>echo-test</module>
+		<module>echo-integration-test</module>
 		<module>jargyle-cli</module>
-		<module>jargyle-cli-test</module>
+		<module>jargyle-cli-integration-test</module>
 		<module>jargyle-report-aggregate</module>
 		<module>jargyle-distribution</module>
     </modules>

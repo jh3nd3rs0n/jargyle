@@ -18,7 +18,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.github.jh3nd3rs0n</groupId>
-			<artifactId>echo</artifactId>
+			<artifactId>echo-integration-test</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
@@ -28,7 +28,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.github.jh3nd3rs0n</groupId>
-			<artifactId>jargyle-cli-test</artifactId>
+			<artifactId>jargyle-cli-integration-test</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
@@ -58,7 +58,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.github.jh3nd3rs0n</groupId>
-			<artifactId>jargyle-server-test</artifactId>
+			<artifactId>jargyle-server-integration-test</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 	</dependencies>
@@ -70,7 +70,14 @@
 				<version>0.8.7</version>
 				<executions>
 					<execution>
-						<id>report-aggregate</id>
+						<id>report-aggregate-for-test</id>
+						<phase>test</phase>
+						<goals>
+							<goal>report-aggregate</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>report-aggregate-for-verify</id>
 						<phase>verify</phase>
 						<goals>
 							<goal>report-aggregate</goal>

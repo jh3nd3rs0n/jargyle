@@ -97,7 +97,7 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
             final DatagramSocket datagramSock,
             final SSLContext dtlsCntxt) throws SocketException {
         super(datagramSock);
-        this.dtlsContext = dtlsCntxt;
+        this.dtlsContext = Objects.requireNonNull(dtlsCntxt);
         this.connections = new HashMap<>();
         this.enabledCipherSuites = new AtomicReferenceArray<>(0);
         this.enabledProtocols = new AtomicReferenceArray<>(0);
@@ -457,6 +457,8 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
         public Connection(
                 final DtlsDatagramSocket dtlsDatagramSock,
                 final SocketAddress peerSocketAddr) {
+            Objects.requireNonNull(dtlsDatagramSock);
+            Objects.requireNonNull(peerSocketAddr);
             InetSocketAddress peerSockAddr = (InetSocketAddress) peerSocketAddr;
             SSLEngine engine = dtlsDatagramSock.dtlsContext.createSSLEngine(
                     peerSockAddr.getHostString(),

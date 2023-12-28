@@ -3,6 +3,5 @@ com.github.jh3nd3rs0n.jargyle.internal.annotation
 com.github.jh3nd3rs0n.jargyle.internal.logging
 com.github.jh3nd3rs0n.jargyle.internal.net
 com.github.jh3nd3rs0n.jargyle.internal.net.ssl
-com.github.jh3nd3rs0n.jargyle.internal.regex
 com.github.jh3nd3rs0n.jargyle.internal.security
 com.github.jh3nd3rs0n.jargyle.internal.throwable

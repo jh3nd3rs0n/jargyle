@@ -11,7 +11,6 @@ com.github.jh3nd3rs0n.jargyle.internal.annotation
 com.github.jh3nd3rs0n.jargyle.internal.logging
 com.github.jh3nd3rs0n.jargyle.internal.net
 com.github.jh3nd3rs0n.jargyle.internal.net.ssl
-com.github.jh3nd3rs0n.jargyle.internal.regex
 com.github.jh3nd3rs0n.jargyle.internal.security
 com.github.jh3nd3rs0n.jargyle.internal.throwable
 module:com.github.jh3nd3rs0n.jargyle.protocolbase
@@ -21,5 +20,4 @@ com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod
 com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.userpassmethod
 module:com.github.jh3nd3rs0n.jargyle.server
 com.github.jh3nd3rs0n.jargyle.server
-com.github.jh3nd3rs0n.jargyle.server.internal.server
 com.github.jh3nd3rs0n.jargyle.server.socks5.userpassmethod

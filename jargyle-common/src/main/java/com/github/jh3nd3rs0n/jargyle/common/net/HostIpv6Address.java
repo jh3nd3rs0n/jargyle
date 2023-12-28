@@ -10,15 +10,16 @@ import java.net.UnknownHostException;
 public final class HostIpv6Address extends HostAddress {
 
     /**
-     * An all zeros IPv6 address in compressed form.
+     * The regular expression for an all zeros IPv6 address in compressed form.
      */
-    public static final String ALL_ZEROS_IPV6_ADDRESS_IN_COMPRESSED_FORM = "::";
+    private static final String ALL_ZEROS_IPV6_ADDRESS_IN_COMPRESSED_FORM_REGEX =
+            "\\A(0{0,4}:){1,7}(:0{0,4}){1,7}\\z";
 
     /**
-     * An all zeros IPv6 address in full form.
+     * The regular expression for an all zeros IPv6 address in full form.
      */
-    public static final String ALL_ZEROS_IPV6_ADDRESS_IN_FULL_FORM =
-            "0:0:0:0:0:0:0:0";
+    private static final String ALL_ZEROS_IPV6_ADDRESS_IN_FULL_FORM_REGEX =
+            "\\A0{1,4}(:0{1,4}){7}+\\z";
 
     /**
      * The regular expression for an IPv6 address in compressed form.
@@ -52,8 +53,8 @@ public final class HostIpv6Address extends HostAddress {
      * IPv6 address is an IPv6 address of all zeros
      */
     public static boolean isAllZerosIpv6Address(final String string) {
-        return ALL_ZEROS_IPV6_ADDRESS_IN_COMPRESSED_FORM.equals(string)
-                || ALL_ZEROS_IPV6_ADDRESS_IN_FULL_FORM.equals(string);
+        return string.matches(ALL_ZEROS_IPV6_ADDRESS_IN_FULL_FORM_REGEX)
+                || string.matches(ALL_ZEROS_IPV6_ADDRESS_IN_COMPRESSED_FORM_REGEX);
     }
 
     /**

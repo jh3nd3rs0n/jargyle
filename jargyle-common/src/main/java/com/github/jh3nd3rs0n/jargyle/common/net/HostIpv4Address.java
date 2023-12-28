@@ -10,29 +10,33 @@ import java.net.UnknownHostException;
 public final class HostIpv4Address extends HostAddress {
 
     /**
-     * An all zeros IPv4 address as 1 part.
+     * The all zeros IPv4 address (as 4 parts).
      */
-    public static final String ALL_ZEROS_IPV4_ADDRESS_AS_1_PART = "0";
+    public static final String ALL_ZEROS_IPV4_ADDRESS = "0.0.0.0";
 
     /**
-     * An all zeros IPv4 address as 2 parts.
+     * The regular expression for an all zeros IPv4 address as 1 part.
      */
-    public static final String ALL_ZEROS_IPV4_ADDRESS_AS_2_PARTS = "0.0";
+    private static final String ALL_ZEROS_IPV4_ADDRESS_AS_1_PART_REGEX =
+            "\\A0{1,10}\\z";
 
     /**
-     * An all zeros IPv4 address as 3 parts.
+     * The regular expression for an all zeros IPv4 address as 2 parts.
      */
-    public static final String ALL_ZEROS_IPV4_ADDRESS_AS_3_PARTS = "0.0.0";
+    private static final String ALL_ZEROS_IPV4_ADDRESS_AS_2_PARTS_REGEX =
+            "\\A0{1,3}\\.0{1,8}\\z";
 
     /**
-     * An all zeros IPv4 address as 4 parts.
+     * The regular expression for an all zeros IPv4 address as 3 parts.
      */
-    public static final String ALL_ZEROS_IPV4_ADDRESS_AS_4_PARTS = "0.0.0.0";
+    private static final String ALL_ZEROS_IPV4_ADDRESS_AS_3_PARTS_REGEX =
+            "\\A0{1,3}\\.0{1,3}\\.0{1,5}\\z";
 
     /**
-     * The default all zeros IPv4 address (as 4 parts).
+     * The regular expression for an all zeros IPv4 address as 4 parts.
      */
-    public static final String ALL_ZEROS_IPV4_ADDRESS = ALL_ZEROS_IPV4_ADDRESS_AS_4_PARTS;
+    private static final String ALL_ZEROS_IPV4_ADDRESS_AS_4_PARTS_REGEX =
+            "\\A0{1,3}(\\.0{1,3}){3}+\\z";
 
     /**
      * The regular expression for an IPv4 address as 1 part.
@@ -116,10 +120,10 @@ public final class HostIpv4Address extends HostAddress {
      * IPv4 address is an IPv4 address of all zeros
      */
     public static boolean isAllZerosIpv4Address(final String string) {
-        return ALL_ZEROS_IPV4_ADDRESS_AS_4_PARTS.equals(string)
-                || ALL_ZEROS_IPV4_ADDRESS_AS_3_PARTS.equals(string)
-                || ALL_ZEROS_IPV4_ADDRESS_AS_2_PARTS.equals(string)
-                || ALL_ZEROS_IPV4_ADDRESS_AS_1_PART.equals(string);
+        return string.matches(ALL_ZEROS_IPV4_ADDRESS_AS_4_PARTS_REGEX)
+                || string.matches(ALL_ZEROS_IPV4_ADDRESS_AS_3_PARTS_REGEX)
+                || string.matches(ALL_ZEROS_IPV4_ADDRESS_AS_2_PARTS_REGEX)
+                || string.matches(ALL_ZEROS_IPV4_ADDRESS_AS_1_PART_REGEX);
     }
 
     /**

@@ -252,7 +252,7 @@ Requirements:
 -   Java 9 or higher
 -   Apache Maven 3.3.9 or higher
 
-Once you have installed the requirements for the binary distribution, be sure
+Once you have installed the requirements for the source distribution, be sure
 to have the environment variable `JAVA_HOME` set to the Java home directory.
 
 Releases for the source distribution can be found

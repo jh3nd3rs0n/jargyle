@@ -13,9 +13,9 @@ public final class PositiveIntegerPropertySpec
 	}
 
 	@Override
-	public Property<PositiveInteger> newPropertyWithParsableValue(
+	public Property<PositiveInteger> newPropertyWithParsedValue(
 			final String value) {
-		return super.newProperty(PositiveInteger.newInstance(value));
+		return super.newProperty(PositiveInteger.newInstanceOf(value));
 	}
 
 }

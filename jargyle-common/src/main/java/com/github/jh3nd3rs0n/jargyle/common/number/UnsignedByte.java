@@ -13,11 +13,11 @@ public final class UnsignedByte {
 	public static final int MAX_INT_VALUE = 0xff;
 	public static final int MIN_INT_VALUE = 0;
 	
-	public static UnsignedByte newInstance(final byte b) {
-		return newInstance(b & MAX_INT_VALUE);
+	public static UnsignedByte newInstanceOf(final byte b) {
+		return newInstanceOf(b & MAX_INT_VALUE);
 	}
 	
-	public static UnsignedByte newInstance(final int i) {
+	public static UnsignedByte newInstanceOf(final int i) {
 		if (i < MIN_INT_VALUE || i > MAX_INT_VALUE) {
 			throw new IllegalArgumentException(String.format(
 					"expected an integer between %s and %s (inclusive). "
@@ -29,7 +29,7 @@ public final class UnsignedByte {
 		return new UnsignedByte(i);
 	}
 	
-	public static UnsignedByte newInstance(final String s) {
+	public static UnsignedByte newInstanceOf(final String s) {
 		int i;
 		try {
 			i = Integer.parseInt(s);
@@ -42,7 +42,7 @@ public final class UnsignedByte {
 					s),
 					e);
 		}
-		return newInstance(i);
+		return newInstanceOf(i);
 	}
 	
 	private final int intValue;

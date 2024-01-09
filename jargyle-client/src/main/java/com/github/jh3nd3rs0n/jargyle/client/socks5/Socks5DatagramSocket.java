@@ -167,9 +167,9 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			String address = p.getAddress().getHostAddress();
 			int port = p.getPort();
 			byte[] headerBytes = UdpRequestHeader.newInstance(
-					UnsignedByte.newInstance(0),
+					UnsignedByte.newInstanceOf(0),
 					Address.newInstance(address),
-					Port.newInstance(port),
+					Port.newInstanceOf(port),
 					Arrays.copyOfRange(
 							p.getData(), 
 							p.getOffset(), 
@@ -202,7 +202,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			Socks5Request socks5Req = Socks5Request.newInstance(
 					Command.UDP_ASSOCIATE, 
 					Address.newInstance(address), 
-					Port.newInstance(port));
+					Port.newInstanceOf(port));
 			this.socks5Client.sendSocks5Request(socks5Req, sck);
 			Socks5Reply socks5Rep = this.socks5Client.receiveSocks5Reply(sck);
 			String serverBoundAddress = 

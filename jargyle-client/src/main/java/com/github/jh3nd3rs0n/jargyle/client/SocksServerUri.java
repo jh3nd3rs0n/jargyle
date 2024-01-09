@@ -32,23 +32,23 @@ public abstract class SocksServerUri {
 		if (schemeProperty == null) {
 			return null;
 		}
-		Scheme scheme = SCHEME.newPropertyWithParsableValue(
+		Scheme scheme = SCHEME.newPropertyWithParsedValue(
 				schemeProperty).getValue();
 		String hostProperty = System.getProperty(HOST.getName());
 		if (hostProperty == null) {
 			return null;
 		}
-		String host = HOST.newPropertyWithParsableValue(
+		String host = HOST.newPropertyWithParsedValue(
 				hostProperty).getValue().toString();
 		String portProperty = System.getProperty(PORT.getName());
 		int port = (portProperty == null) ?
 				PORT.getDefaultProperty().getValue().intValue()
-				: PORT.newPropertyWithParsableValue(
+				: PORT.newPropertyWithParsedValue(
 						portProperty).getValue().intValue();
 		return scheme.newSocksServerUri(host, Integer.valueOf(port));
 	}
 	
-	public static SocksServerUri newInstance(final String s) {
+	public static SocksServerUri newInstanceOf(final String s) {
 		URI uri = null;
 		try {
 			uri = new URI(s);

@@ -7,7 +7,7 @@ public abstract class EncryptedPassword {
 				password);
 	}
 	
-	public static EncryptedPassword newInstance(final String s) {
+	public static EncryptedPassword newInstanceOf(final String s) {
 		String[] sElements = s.split(":", 2);
 		if (sElements.length != 2) {
 			throw new IllegalArgumentException(

@@ -13,9 +13,9 @@ public final class PositiveIntegerSettingSpec
 	}
 
 	@Override
-	public Setting<PositiveInteger> newSettingWithParsableValue(
+	public Setting<PositiveInteger> newSettingWithParsedValue(
 			final String value) {
-		return super.newSetting(PositiveInteger.newInstance(value));
+		return super.newSetting(PositiveInteger.newInstanceOf(value));
 	}
 	
 }

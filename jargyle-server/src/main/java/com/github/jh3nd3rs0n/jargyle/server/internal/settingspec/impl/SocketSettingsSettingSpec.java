@@ -13,9 +13,9 @@ public final class SocketSettingsSettingSpec
 	}
 
 	@Override
-	public Setting<SocketSettings> newSettingWithParsableValue(
+	public Setting<SocketSettings> newSettingWithParsedValue(
 			final String value) {
-		return super.newSetting(SocketSettings.newInstance(value));
+		return super.newSetting(SocketSettings.newInstanceOf(value));
 	}
 	
 }

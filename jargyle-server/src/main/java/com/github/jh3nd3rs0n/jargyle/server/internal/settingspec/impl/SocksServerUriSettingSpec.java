@@ -13,9 +13,9 @@ public final class SocksServerUriSettingSpec
 	}
 
 	@Override
-	public Setting<SocksServerUri> newSettingWithParsableValue(
+	public Setting<SocksServerUri> newSettingWithParsedValue(
 			final String value) {
-		return super.newSetting(SocksServerUri.newInstance(value));
+		return super.newSetting(SocksServerUri.newInstanceOf(value));
 	}
 
 }

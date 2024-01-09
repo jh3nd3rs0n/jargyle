@@ -13,7 +13,7 @@ public final class UsernamePasswordResponseInputHelper {
 			final InputStream in) throws IOException {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		Version ver = VersionInputHelper.readVersionFrom(in);
-		out.write(UnsignedByte.newInstance(ver.byteValue()).intValue());
+		out.write(UnsignedByte.newInstanceOf(ver.byteValue()).intValue());
 		UnsignedByte status = UnsignedByteInputHelper.readUnsignedByteFrom(in); 
 		out.write(status.intValue());
 		UsernamePasswordResponse.Params params = 

@@ -46,7 +46,7 @@ public class EchoThroughSocksServerUsingSocks5UserpassMethodIT {
 		sb.append("Abu:safeDriversSave40%25");
 		return Configuration.newUnmodifiableInstance(Settings.newInstance(
 				GeneralSettingSpecConstants.PORT.newSetting(
-						Port.newInstance(
+						Port.newInstanceOf(
 								SOCKS_SERVER_PORT_USING_SOCKS5_USERPASSMETHOD)),
 				Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
 						Methods.newInstance(Method.USERNAME_PASSWORD)),

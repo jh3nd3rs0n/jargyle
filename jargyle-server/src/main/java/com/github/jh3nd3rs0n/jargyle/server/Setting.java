@@ -20,7 +20,7 @@ import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueTypeD
 )
 public final class Setting<V> {
 	
-	public static Setting<Object> newInstance(final String s) {
+	public static Setting<Object> newInstanceOf(final String s) {
 		String[] sElements = s.split("=", 2);
 		if (sElements.length != 2) {
 			throw new IllegalArgumentException(
@@ -28,7 +28,7 @@ public final class Setting<V> {
 		}
 		String name = sElements[0];
 		String value = sElements[1];
-		return newInstanceWithParsableValue(name, value);
+		return newInstanceWithParsedValue(name, value);
 	}
 	
 	public static <V> Setting<V> newInstance(final String name, final V value) {
@@ -46,16 +46,16 @@ public final class Setting<V> {
 				setting.getSettingSpec(), setting.getValue(), doc);
 	}
 	
-	public static Setting<Object> newInstanceWithParsableValue(
+	public static Setting<Object> newInstanceWithParsedValue(
 			final String name, final String value) {
 		SettingSpec<Object> settingSpec = SettingSpecConstants.valueOfName(
 				name);
-		return settingSpec.newSettingWithParsableValue(value);
+		return settingSpec.newSettingWithParsedValue(value);
 	}
 	
-	public static Setting<Object> newInstanceWithParsableValue(
+	public static Setting<Object> newInstanceWithParsedValue(
 			final String name, final String value, final String doc) {
-		Setting<Object> setting = newInstanceWithParsableValue(name, value);
+		Setting<Object> setting = newInstanceWithParsedValue(name, value);
 		return new Setting<Object>(
 				setting.getSettingSpec(), setting.getValue(), doc);
 	}

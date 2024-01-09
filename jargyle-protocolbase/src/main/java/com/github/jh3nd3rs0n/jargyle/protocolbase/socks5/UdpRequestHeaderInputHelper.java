@@ -33,7 +33,7 @@ final class UdpRequestHeaderInputHelper {
 		dataStartIndex += bytes.length;
 		out.write(bytes);		
 		Port dstPort = PortInputHelper.readPortFrom(in);
-		bytes = dstPort.toByteArray();
+		bytes = dstPort.toUnsignedShort().toByteArray();
 		dataStartIndex += bytes.length;
 		out.write(bytes);
 		int b = -1;

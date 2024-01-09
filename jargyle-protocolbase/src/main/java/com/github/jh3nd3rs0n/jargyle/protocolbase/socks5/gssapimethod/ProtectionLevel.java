@@ -70,14 +70,14 @@ public enum ProtectionLevel {
 		}
 		String str = Arrays.stream(ProtectionLevel.values())
 				.map(ProtectionLevel::byteValue)
-				.map(bv -> UnsignedByte.newInstance(bv).intValue())
+				.map(bv -> UnsignedByte.newInstanceOf(bv).intValue())
 				.map(i -> Integer.toHexString(i))
 				.collect(Collectors.joining(", "));
 		throw new IllegalArgumentException(String.format(
 				"expected protection level must be one of the following "
 				+ "values: %s. actual value is %s",
 				str,
-				Integer.toHexString(UnsignedByte.newInstance(b).intValue())));
+				Integer.toHexString(UnsignedByte.newInstanceOf(b).intValue())));
 	}
 	
 	public static ProtectionLevel valueOfString(final String s) {

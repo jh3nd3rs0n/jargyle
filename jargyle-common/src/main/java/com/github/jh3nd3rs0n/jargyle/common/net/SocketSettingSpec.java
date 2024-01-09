@@ -6,115 +6,214 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.Objects;
 
+/**
+ * The specification of a {@code SocketSetting} of the specified value type.
+ *
+ * @param <V> the specified value type
+ */
 public abstract class SocketSettingSpec<V> {
-	
-	private final String name;
-	private final Class<V> valueType;
-		
-	SocketSettingSpec(final String n, final Class<V> valType) {
-		Objects.requireNonNull(n);
-		Objects.requireNonNull(valType);
-		this.name = n;
-		this.valueType = valType;
-	}
-	
-	public void apply(
-			final V value,
-			final DatagramSocket datagramSocket) throws SocketException {
-		throw new UnsupportedOperationException(String.format(
-				"socket setting spec %s does not support application to a %s", 
-				this.name, DatagramSocket.class.getName()));
-	}
-	
-	public void apply(
-			final V value, 
-			final ServerSocket serverSocket) throws SocketException {
-		throw new UnsupportedOperationException(String.format(
-				"socket setting spec %s does not support application to a %s", 
-				this.name, ServerSocket.class.getName()));
-	}
-	
-	public void apply(
-			final V value, 
-			final Socket socket) throws SocketException {
-		throw new UnsupportedOperationException(String.format(
-				"socket setting spec %s does not support application to a %s", 
-				this.name, Socket.class.getName()));
-	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (this.getClass() != obj.getClass()) {
-			return false;
-		}
-		SocketSettingSpec<?> other = (SocketSettingSpec<?>) obj;
-		if (this.name == null) {
-			if (other.name != null) {
-				return false;
-			}
-		} else if (!this.name.equals(other.name)) {
-			return false;
-		}
-		return true;
-	}
-	
-	public final String getName() {
-		return this.name;
-	}
-	
-	public final Class<V> getValueType() {
-		return this.valueType;
-	}
-	
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((this.name == null) ? 
-				0 : this.name.hashCode());
-		return result;
-	}
-	
-	public final SocketSetting<V> newSocketSetting(final V value) {
-		return new SocketSetting<V>(this, this.valueType.cast(value));
-	}
-	
-	public final SocketSetting<V> newSocketSetting(
-			final V value, final String doc) {
-		SocketSetting<V> socketSetting = this.newSocketSetting(value);
-		return new SocketSetting<V>(
-				socketSetting.getSocketSettingSpec(),
-				socketSetting.getValue(),
-				doc);
-	}
+    /**
+     * The name of the {@code SocketSetting}.
+     */
+    private final String name;
 
-	public abstract SocketSetting<V> newSocketSettingWithParsableValue(
-			final String value);
+    /**
+     * The value type of the {@code SocketSetting}.
+     */
+    private final Class<V> valueType;
 
-	public final SocketSetting<V> newSocketSettingWithParsableValue(
-			final String value, final String doc) {
-		SocketSetting<V> socketSetting = this.newSocketSettingWithParsableValue(
-				value);
-		return new SocketSetting<V>(
-				socketSetting.getSocketSettingSpec(),
-				socketSetting.getValue(),
-				doc);
-	}
-	
-	@Override
-	public final String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append(this.getClass().getSimpleName())
-			.append(" [name=")
-			.append(this.name)
-			.append("]");
-		return builder.toString();
-	}
-	
+    /**
+     * Constructs a {@code SocketSettingSpec} with the provided name of the
+     * {@code SocketSetting} and the provided value type of the
+     * {@code SocketSetting}.
+     *
+     * @param n       the provided name of the {@code SocketSetting}
+     * @param valType the provided value type of the {@code SocketSetting}
+     */
+    SocketSettingSpec(final String n, final Class<V> valType) {
+        Objects.requireNonNull(n);
+        Objects.requireNonNull(valType);
+        this.name = n;
+        this.valueType = valType;
+    }
+
+    /**
+     * Applies the provided value to the provided {@code DatagramSocket}. An
+     * {@code UnsupportedOperationException} is thrown if this
+     * {@code SocketSettingSpec} does not support application to the provided
+     * {@code DatagramSocket}.
+     *
+     * @param value          the provided value
+     * @param datagramSocket the provided {@code DatagramSocket}
+     * @throws SocketException if an error occurs in applying the value to the
+     *                         provided {@code DatagramSocket}
+     */
+    public void apply(
+            final V value,
+            final DatagramSocket datagramSocket) throws SocketException {
+        throw new UnsupportedOperationException(String.format(
+                "socket setting spec %s does not support application to a %s",
+                this.name, DatagramSocket.class.getName()));
+    }
+
+    /**
+     * Applies the provided value to the provided {@code ServerSocket}. An
+     * {@code UnsupportedOperationException} is thrown if this
+     * {@code SocketSettingSpec} does not support application to the provided
+     * {@code ServerSocket}.
+     *
+     * @param value        the provided value
+     * @param serverSocket the provided {@code ServerSocket}
+     * @throws SocketException if an error occurs in applying the value to the
+     *                         provided {@code ServerSocket}
+     */
+    public void apply(
+            final V value,
+            final ServerSocket serverSocket) throws SocketException {
+        throw new UnsupportedOperationException(String.format(
+                "socket setting spec %s does not support application to a %s",
+                this.name, ServerSocket.class.getName()));
+    }
+
+    /**
+     * Applies the provided value to the provided {@code Socket}. An
+     * {@code UnsupportedOperationException} is thrown if this
+     * {@code SocketSettingSpec} does not support application to the provided
+     * {@code Socket}.
+     *
+     * @param value  the provided value
+     * @param socket the provided {@code Socket}
+     * @throws SocketException if an error occurs in applying the value to the
+     *                         provided {@code Socket}
+     */
+    public void apply(
+            final V value,
+            final Socket socket) throws SocketException {
+        throw new UnsupportedOperationException(String.format(
+                "socket setting spec %s does not support application to a %s",
+                this.name, Socket.class.getName()));
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (this.getClass() != obj.getClass()) {
+            return false;
+        }
+        SocketSettingSpec<?> other = (SocketSettingSpec<?>) obj;
+        if (!this.name.equals(other.name)) {
+            return false;
+        }
+        return this.valueType == other.valueType;
+    }
+
+    /**
+     * Returns the name of the {@code SocketSetting}.
+     *
+     * @return the name of the {@code SocketSetting}
+     */
+    public final String getName() {
+        return this.name;
+    }
+
+    /**
+     * Returns the value type of the {@code SocketSetting}.
+     *
+     * @return the value type of the {@code SocketSetting}
+     */
+    public final Class<V> getValueType() {
+        return this.valueType;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + this.name.hashCode();
+        result = prime * result + this.valueType.hashCode();
+        return result;
+    }
+
+    /**
+     * Returns a new {@code SocketSetting} with the provided value.
+     *
+     * @param value the provided value
+     * @return a new {@code SocketSetting} with the provided value
+     */
+    public final SocketSetting<V> newSocketSetting(final V value) {
+        return new SocketSetting<>(this, this.valueType.cast(value));
+    }
+
+    /**
+     * Returns a new {@code SocketSetting} with the provided value and the
+     * optionally provided documentation.
+     *
+     * @param value the provided value
+     * @param doc   the optionally provided documentation (can be {@code null})
+     * @return a new {@code SocketSetting} with the provided value and the
+     * optionally provided documentation
+     */
+    public final SocketSetting<V> newSocketSetting(
+            final V value, final String doc) {
+        SocketSetting<V> socketSetting = this.newSocketSetting(value);
+        return new SocketSetting<>(
+                socketSetting.getSocketSettingSpec(),
+                socketSetting.getValue(),
+                doc);
+    }
+
+    /**
+     * Returns a new {@code SocketSetting} with the parsed value from the
+     * provided {@code String}. An {@code IllegalArgumentException} is thrown
+     * if the provided {@code String} is invalid.
+     *
+     * @param value the provided {@code String}
+     * @return a new {@code SocketSetting} with the parsed value from the
+     * provided {@code String}
+     */
+    public abstract SocketSetting<V> newSocketSettingWithParsedValue(
+            final String value);
+
+    /**
+     * Returns a new {@code SocketSetting} with the parsed value from the
+     * provided {@code String} and the optionally provided documentation. An
+     * {@code IllegalArgumentException} is thrown if the provided
+     * {@code String} is invalid.
+     *
+     * @param value the provided {@code String}
+     * @param doc   the optionally provided documentation (can be {@code null})
+     * @return a new {@code SocketSetting} with the parsed value from the
+     * provided {@code String} and the optionally provided documentation
+     */
+    public final SocketSetting<V> newSocketSettingWithParsedValue(
+            final String value, final String doc) {
+        SocketSetting<V> socketSetting = this.newSocketSettingWithParsedValue(
+                value);
+        return new SocketSetting<>(
+                socketSetting.getSocketSettingSpec(),
+                socketSetting.getValue(),
+                doc);
+    }
+
+    /**
+     * Returns the {@code String} representation of this
+     * {@code SocketSettingSpec}.
+     *
+     * @return the {@code String} representation of this
+     * {@code SocketSettingSpec}
+     */
+    @Override
+    public final String toString() {
+        return this.getClass().getSimpleName() +
+                " [name=" +
+                this.name +
+                "]";
+    }
+
 }

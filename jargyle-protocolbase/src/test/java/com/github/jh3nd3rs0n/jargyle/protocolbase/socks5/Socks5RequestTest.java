@@ -11,7 +11,7 @@ public class Socks5RequestTest {
 		Socks5Request socks5Request1 = Socks5Request.newInstance(
 				Command.CONNECT, 
 				Address.newInstance("12.216.103.24"), 
-				Port.newInstance(0));
+				Port.newInstanceOf(0));
 		Socks5Request socks5Request2 = Socks5Request.newInstance(
 				socks5Request1.toByteArray());
 		Assert.assertEquals(socks5Request1, socks5Request2);
@@ -22,7 +22,7 @@ public class Socks5RequestTest {
 		Socks5Request socks5Request1 = Socks5Request.newInstance(
 				Command.BIND, 
 				Address.newInstance("google.com"), 
-				Port.newInstance(1234));
+				Port.newInstanceOf(1234));
 		Socks5Request socks5Request2 = Socks5Request.newInstance(
 				socks5Request1.toByteArray());
 		Assert.assertEquals(socks5Request1, socks5Request2);
@@ -33,7 +33,7 @@ public class Socks5RequestTest {
 		Socks5Request socks5Request1 = Socks5Request.newInstance(
 				Command.UDP_ASSOCIATE, 
 				Address.newInstance("abcd:1234:ef56:abcd:789e:f123:456a:b789"), 
-				Port.newInstance(0xffff));
+				Port.newInstanceOf(0xffff));
 		Socks5Request socks5Request2 = Socks5Request.newInstance(
 				socks5Request1.toByteArray());
 		Assert.assertEquals(socks5Request1, socks5Request2);

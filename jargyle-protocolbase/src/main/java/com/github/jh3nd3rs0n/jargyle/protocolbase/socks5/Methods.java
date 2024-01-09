@@ -32,7 +32,7 @@ public final class Methods {
 		return newInstance(Arrays.asList(meths));
 	}
 	
-	public static Methods newInstance(final String s) {
+	public static Methods newInstanceOf(final String s) {
 		List<Method> methods = new ArrayList<Method>();
 		if (s.isEmpty()) {
 			return new Methods(methods);

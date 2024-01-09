@@ -70,7 +70,7 @@ public abstract class PropertySpec<V> {
 		return new Property<V>(this, this.valueType.cast(value));
 	}
 
-	public abstract Property<V> newPropertyWithParsableValue(final String value);
+	public abstract Property<V> newPropertyWithParsedValue(final String value);
 	
 	@Override
 	public final String toString() {

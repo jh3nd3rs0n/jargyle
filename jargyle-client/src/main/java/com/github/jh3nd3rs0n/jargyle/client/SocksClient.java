@@ -78,7 +78,7 @@ public abstract class SocksClient {
 					: SocksClientPropertySpecConstants.values()) {
 				String property = System.getProperty(propertySpec.getName());
 				if (property != null) {
-					properties.add(propertySpec.newPropertyWithParsableValue(
+					properties.add(propertySpec.newPropertyWithParsedValue(
 							property));
 				}
 			}			

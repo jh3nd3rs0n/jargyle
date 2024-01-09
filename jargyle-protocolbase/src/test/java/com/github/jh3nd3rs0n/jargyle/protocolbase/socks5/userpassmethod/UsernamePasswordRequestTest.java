@@ -6,7 +6,7 @@ import org.junit.Test;
 public class UsernamePasswordRequestTest {
 
 	@Test
-	public void testNewInstanceStringCharArray01() {
+	public void testNewInstanceOfStringCharArray01() {
 		UsernamePasswordRequest usernamePasswordRequest1 = 
 				UsernamePasswordRequest.newInstance(
 						"Aladdin", 
@@ -18,7 +18,7 @@ public class UsernamePasswordRequestTest {
 	}
 
 	@Test
-	public void testNewInstanceStringCharArray02() {
+	public void testNewInstanceOfStringCharArray02() {
 		UsernamePasswordRequest usernamePasswordRequest1 = 
 				UsernamePasswordRequest.newInstance(
 						"Jasmine", 
@@ -30,7 +30,7 @@ public class UsernamePasswordRequestTest {
 	}
 
 	@Test
-	public void testNewInstanceStringCharArray03() {
+	public void testNewInstanceOfStringCharArray03() {
 		UsernamePasswordRequest usernamePasswordRequest1 = 
 				UsernamePasswordRequest.newInstance(
 						"Monkey", 

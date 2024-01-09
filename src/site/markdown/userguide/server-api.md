@@ -30,7 +30,7 @@ public class ServerApp {
     public static void main(String[] args) throws IOException {
         
         Setting<Object> setting = 
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "port", "1234");
         
         Settings settings = Settings.newInstance(setting);
@@ -48,7 +48,7 @@ public class ServerApp {
 ## The Setting Object and the Settings Object
 
 The simplest way to create a `Setting` object is to use the method 
-`Setting.newInstanceWithParsableValue(String, String)`. The first 
+`Setting.newInstanceWithParsedValue(String, String)`. The first 
 `String` parameter would be the name of the setting. The second `String` 
 parameter would be the parsable value of the setting.
 
@@ -68,14 +68,14 @@ public class ServerApp {
     public static void main(String[] args) throws IOException {
         
         Setting<Object> port = 
-            Setting.newInstanceWithParsableValue("port", "1234");
+            Setting.newInstanceWithParsedValue("port", "1234");
         
         Setting<Object> backlog = 
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "backlog", "100");
         
         Setting<Object> socksServerSocketSettings = 
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "socksServerSocketSettings", "SO_TIMEOUT=0");
         
         // ...
@@ -105,15 +105,15 @@ import java.io.IOException;
 public class ServerApp {
     public static void main(String[] args) throws IOException {
         
-        Setting<Object> port = Setting.newInstanceWithParsableValue(
+        Setting<Object> port = Setting.newInstanceWithParsedValue(
             "port", "1234");
         
         Setting<Object> backlog = 
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "backlog", "100");
         
         Setting<Object> socksServerSocketSettings = 
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "socksServerSocketSettings", "SO_TIMEOUT=0");
         
         Settings settings = Settings.newInstance(
@@ -154,15 +154,15 @@ import java.io.IOException;
 public class ServerApp {
     public static void main(String[] args) throws IOException {
         
-        Setting<Object> port = Setting.newInstanceWithParsableValue(
+        Setting<Object> port = Setting.newInstanceWithParsedValue(
             "port", "1234");
         
         Setting<Object> backlog = 
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "backlog", "100");
         
         Setting<Object> socksServerSocketSettings = 
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "socksServerSocketSettings", "SO_TIMEOUT=0");
         
         Settings settings = Settings.newInstance(
@@ -196,15 +196,15 @@ import java.io.IOException;
 public class ServerApp {
     public static void main(String[] args) throws IOException {
         
-        Setting<Object> port = Setting.newInstanceWithParsableValue(
+        Setting<Object> port = Setting.newInstanceWithParsedValue(
             "port", "1234");
         
         Setting<Object> backlog = 
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "backlog", "100");
         
         Setting<Object> socksServerSocketSettings = 
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "socksServerSocketSettings", "SO_TIMEOUT=0");
         
         Settings settings = Settings.newInstance(
@@ -249,15 +249,15 @@ import java.io.IOException;
 public class ServerApp {
     public static void main(String[] args) throws IOException {
         
-        Setting<Object> port = Setting.newInstanceWithParsableValue(
+        Setting<Object> port = Setting.newInstanceWithParsedValue(
             "port", "1234");
         
         Setting<Object> backlog = 
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "backlog", "100");
         
         Setting<Object> socksServerSocketSettings = 
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "socksServerSocketSettings", "SO_TIMEOUT=0");
         
         Settings settings = Settings.newInstance(

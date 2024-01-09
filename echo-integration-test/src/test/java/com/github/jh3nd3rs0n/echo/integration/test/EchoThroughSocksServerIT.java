@@ -36,7 +36,7 @@ public class EchoThroughSocksServerIT {
 	private static Configuration newConfiguration() {
 		return Configuration.newUnmodifiableInstance(Settings.newInstance(
 				GeneralSettingSpecConstants.PORT.newSetting(
-						Port.newInstance(SOCKS_SERVER_PORT))));
+						Port.newInstanceOf(SOCKS_SERVER_PORT))));
 	}
 	
 	private static SocksClient newSocks5Client() {

@@ -10,7 +10,7 @@ public final class BooleanRuleResultSpec extends RuleResultSpec<Boolean> {
 	}
 
 	@Override
-	public RuleResult<Boolean> newRuleResultWithParsableValue(
+	public RuleResult<Boolean> newRuleResultWithParsedValue(
 			final String value) {
 		return super.newRuleResult(Boolean.valueOf(value));
 	}

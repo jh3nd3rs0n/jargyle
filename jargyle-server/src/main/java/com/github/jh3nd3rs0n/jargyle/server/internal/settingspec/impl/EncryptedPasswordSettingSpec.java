@@ -13,7 +13,7 @@ public final class EncryptedPasswordSettingSpec
 	}
 
 	@Override
-	public Setting<EncryptedPassword> newSettingWithParsableValue(
+	public Setting<EncryptedPassword> newSettingWithParsedValue(
 			final String value) {
 		return super.newSetting(EncryptedPassword.newInstance(
 				value.toCharArray()));

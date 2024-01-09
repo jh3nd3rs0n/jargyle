@@ -142,7 +142,7 @@ public class ClientApp {
 ### The Property Object and the Properties Object
 
 The simplest way to create a `Property` object is to use the method 
-`Property.newInstanceWithParsableValue(String, String)`. The first 
+`Property.newInstanceWithParsedValue(String, String)`. The first 
 `String` parameter would be the name of the property. The second `String` 
 parameter would be the parsable value of the property.
 
@@ -168,16 +168,16 @@ public class ClientApp {
     public static void main(String[] args) throws IOException {
         
         Property<Object> socks5Methods = 
-            Property.newInstanceWithParsableValue(
+            Property.newInstanceWithParsedValue(
                 "socksClient.socks5.methods", "USERNAME_PASSWORD");
                 
         Property<Object> username =
-            Property.newInstanceWithParsableValue(
+            Property.newInstanceWithParsedValue(
                 "socksClient.socks5.userpassmethod.username", 
                 "Aladdin");
                 
         Property<Object> password =
-            Property.newInstanceWithParsableValue(
+            Property.newInstanceWithParsedValue(
                 "socksClient.socks5.userpassmethod.password", 
                 "opensesame");
         
@@ -215,16 +215,16 @@ public class ClientApp {
     public static void main(String[] args) throws IOException {
         
         Property<Object> socks5Methods = 
-            Property.newInstanceWithParsableValue(
+            Property.newInstanceWithParsedValue(
                 "socksClient.socks5.methods", "USERNAME_PASSWORD");
                 
         Property<Object> username =
-            Property.newInstanceWithParsableValue(
+            Property.newInstanceWithParsedValue(
                 "socksClient.socks5.userpassmethod.username", 
                 "Aladdin");
                 
         Property<Object> password =
-            Property.newInstanceWithParsableValue(
+            Property.newInstanceWithParsedValue(
                 "socksClient.socks5.userpassmethod.password", 
                 "opensesame");
                 

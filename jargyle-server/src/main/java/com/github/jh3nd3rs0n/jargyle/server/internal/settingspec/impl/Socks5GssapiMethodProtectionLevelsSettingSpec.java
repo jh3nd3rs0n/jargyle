@@ -13,9 +13,9 @@ public final class Socks5GssapiMethodProtectionLevelsSettingSpec
 	}
 
 	@Override
-	public Setting<ProtectionLevels> newSettingWithParsableValue(
+	public Setting<ProtectionLevels> newSettingWithParsedValue(
 			final String value) {
-		return super.newSetting(ProtectionLevels.newInstance(value));
+		return super.newSetting(ProtectionLevels.newInstanceOf(value));
 	}
 
 }

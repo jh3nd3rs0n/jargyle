@@ -32,7 +32,7 @@ final class AddressInputHelper {
 			address = readIpv6AddressFrom(in);
 			break;
 		default:
-			throw new AddressTypeNotSupportedException(UnsignedByte.newInstance(
+			throw new AddressTypeNotSupportedException(UnsignedByte.newInstanceOf(
 					addressType.byteValue()));
 		}
 		return address;
@@ -65,14 +65,14 @@ final class AddressInputHelper {
 		}
 		bytes = Arrays.copyOf(bytes, bytes.length);
 		String string = new String(bytes);
-		if (!(Host.newInstance(string) instanceof HostName)) {
+		if (!(Host.newInstanceOf(string) instanceof HostName)) {
 			throw new Socks5Exception(String.format(
 					"invalid address: %s", string));
 		}
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		out.write(UnsignedByte.newInstance(
+		out.write(UnsignedByte.newInstanceOf(
 				AddressType.DOMAINNAME.byteValue()).intValue());
-		out.write(UnsignedByte.newInstance(
+		out.write(UnsignedByte.newInstanceOf(
 				octetCount.byteValue()).intValue());
 		out.write(bytes);
 		return new Address(AddressType.DOMAINNAME, out.toByteArray(), string);		
@@ -106,7 +106,7 @@ final class AddressInputHelper {
 					"raw IP address (%s) not IPv4", inetAddress));
 		}
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		out.write(UnsignedByte.newInstance(
+		out.write(UnsignedByte.newInstanceOf(
 				AddressType.IPV4.byteValue()).intValue());
 		out.write(bytes);
 		return new Address(
@@ -143,7 +143,7 @@ final class AddressInputHelper {
 					"raw IP address (%s) not IPv6", inetAddress));
 		}
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		out.write(UnsignedByte.newInstance(
+		out.write(UnsignedByte.newInstanceOf(
 				AddressType.IPV6.byteValue()).intValue());
 		out.write(bytes);
 		return new Address(

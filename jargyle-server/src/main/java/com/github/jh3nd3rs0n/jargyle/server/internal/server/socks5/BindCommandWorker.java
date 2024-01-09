@@ -572,7 +572,7 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 		int desiredDestinationPort = this.getDesiredDestinationPort().intValue();
 		PortRanges bindPortRanges = (desiredDestinationPort == 0) ?
 				this.getListenBindPortRanges() : PortRanges.newInstance(
-						PortRange.newInstance(Port.newInstance(
+						PortRange.newInstance(Port.newInstanceOf(
 								desiredDestinationPort)));
 		ServerSocket listenSocket = null;
 		boolean listenSocketBound = false;
@@ -758,7 +758,7 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 			socks5Rep = Socks5Reply.newInstance(
 					Reply.SUCCEEDED, 
 					Address.newInstance(serverBoundAddress), 
-					Port.newInstance(serverBoundPort));
+					Port.newInstanceOf(serverBoundPort));
 			RuleContext ruleContext = this.newSocks5ReplyRuleContext(socks5Rep);
 			this.setRuleContext(ruleContext);
 			Rule applicableRule = this.getRules().firstAppliesTo(
@@ -806,7 +806,7 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 			secondSocks5Rep = Socks5Reply.newInstance(
 					Reply.SUCCEEDED, 
 					Address.newInstance(serverBoundAddress), 
-					Port.newInstance(serverBoundPort));
+					Port.newInstanceOf(serverBoundPort));
 			ruleContext = this.newSecondSocks5ReplyRuleContext(
 					secondSocks5Rep);
 			this.setRuleContext(ruleContext);

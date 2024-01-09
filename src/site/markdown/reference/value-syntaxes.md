@@ -27,7 +27,6 @@
         -   [SO_BROADCAST](#so_broadcast)
         -   [SO_KEEPALIVE](#so_keepalive)
         -   [SO_LINGER](#so_linger)
-        -   [SO_OOBINLINE](#so_oobinline)
         -   [SO_RCVBUF](#so_rcvbuf)
         -   [SO_REUSEADDR](#so_reuseaddr)
         -   [SO_SNDBUF](#so_sndbuf)
@@ -95,6 +94,10 @@ ALLOW|DENY
 HOST_NAME|HOST_ADDRESS
 ```
 
+**Description:**
+
+A name or address of a node of a network
+
 ## Log Action
 
 **Syntax:**
@@ -125,6 +128,10 @@ LOG_AS_WARNING|LOG_AS_INFO
 DIGITDIGITDIGIT
 ```
 
+**Description:**
+
+Performance preferences for a TCP socket described by three digits whose values indicate the relative importance of short connection time, low latency, and high bandwidth
+
 **Element value:** [Digit](#digit)
 
 ## Port
@@ -135,6 +142,10 @@ DIGITDIGITDIGIT
 0-65535
 ```
 
+**Description:**
+
+An integer between 0 and 65535 (inclusive) that is assigned to uniquely identify a connection endpoint and to direct data to a host
+
 ## Port Range
 
 **Syntax:**
@@ -142,6 +153,10 @@ DIGITDIGITDIGIT
 ```text
 PORT|PORT1-PORT2
 ```
+
+**Description:**
+
+A range of port numbers between the provided minimum port number and the maximum port number (inclusive). A port range can also be one port number.
 
 **Element value:** [Port](#port)
 
@@ -152,6 +167,10 @@ PORT|PORT1-PORT2
 ```text
 [PORT_RANGE1[,PORT_RANGE2[...]]]
 ```
+
+**Description:**
+
+A comma separated list of port ranges.
 
 **Element value:** [Port Range](#port-range)
 
@@ -225,7 +244,15 @@ Select the next at random
 NAME=VALUE
 ```
 
+**Description:**
+
+A setting to be applied to a socket
+
 ### Standard Socket Settings
+
+**Description:**
+
+Standard settings applied to a socket
 
 #### IP_TOS
 
@@ -296,20 +323,6 @@ SO_LINGER=NONNEGATIVE_INTEGER
 Linger on closing the TCP socket in seconds
 
 **Value:** [Non-negative Integer](#non-negative-integer)
-
-#### SO_OOBINLINE
-
-**Syntax:**
-
-```text
-SO_OOBINLINE=true|false
-```
-
-**Description:**
-
-Can receive TCP urgent data
-
-**Value:** java.lang.Boolean
 
 #### SO_RCVBUF
 
@@ -388,6 +401,10 @@ Disables Nagle's algorithm
 ```text
 [SOCKET_SETTING1[,SOCKET_SETTING2[...]]]
 ```
+
+**Description:**
+
+A comma separated list of socket settings.
 
 **Element value:** [Socket Setting](#socket-setting)
 

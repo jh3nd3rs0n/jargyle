@@ -9,7 +9,7 @@ public final class UnsignedShort {
 	public static final int MAX_INT_VALUE = 0xffff;
 	public static final int MIN_INT_VALUE = 0x0000;
 	
-	public static UnsignedShort newInstance(final byte[] b) {
+	public static UnsignedShort newInstanceOf(final byte[] b) {
 		if (b.length != BYTE_ARRAY_LENGTH) {
 			throw new IllegalArgumentException(String.format(
 					"expected a byte array of a length of %s. "
@@ -18,10 +18,10 @@ public final class UnsignedShort {
 					b.length));
 		}
 		ByteBuffer bb = ByteBuffer.wrap(new byte[] { b[0], b[1] });
-		return newInstance(bb.getShort());
+		return newInstanceOf(bb.getShort() & MAX_INT_VALUE);
 	}
 	
-	public static UnsignedShort newInstance(final int i) {
+	public static UnsignedShort newInstanceOf(final int i) {
 		if (i < MIN_INT_VALUE || i > MAX_INT_VALUE) {
 			throw new IllegalArgumentException(String.format(
 					"expected an integer between %s and %s (inclusive). "
@@ -32,12 +32,8 @@ public final class UnsignedShort {
 		}
 		return new UnsignedShort(i);
 	}
-	
-	public static UnsignedShort newInstance(final short s) {
-		return newInstance(s & MAX_INT_VALUE);
-	}
-	
-	public static UnsignedShort newInstance(final String s) {
+
+	public static UnsignedShort newInstanceOf(final String s) {
 		int i;
 		try {
 			i = Integer.parseInt(s);
@@ -50,7 +46,7 @@ public final class UnsignedShort {
 					s),
 					e);
 		}
-		return newInstance(i);
+		return newInstanceOf(i);
 	}
 	
 	private final int intValue;
@@ -88,11 +84,7 @@ public final class UnsignedShort {
 	public int intValue() {
 		return this.intValue;
 	}
-	
-	public short shortValue() {
-		return (short) this.intValue;
-	}
-	
+
 	public byte[] toByteArray() {
 		ByteBuffer bb = ByteBuffer.allocate(BYTE_ARRAY_LENGTH);
 		bb.putShort((short) this.intValue);

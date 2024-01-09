@@ -27,7 +27,7 @@ public final class FileSettingSpec extends SettingSpec<File> {
 	}
 
 	@Override
-	public Setting<File> newSettingWithParsableValue(final String value) {
+	public Setting<File> newSettingWithParsedValue(final String value) {
 		return newSetting(new File(value));
 	}
 

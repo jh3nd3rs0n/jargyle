@@ -294,7 +294,7 @@ public final class Socks5SettingSpecConstants {
 	public static final SettingSpec<PositiveInteger> SOCKS5_ON_COMMAND_RELAY_BUFFER_SIZE =
 			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
 					"socks5.onCommand.relayBufferSize",
-					PositiveInteger.newInstance(1024)));
+					PositiveInteger.newInstanceOf(1024)));
 	
 	@NameValuePairValueSpecDoc(
 			description = "The timeout in milliseconds on relaying no data "
@@ -306,7 +306,7 @@ public final class Socks5SettingSpecConstants {
 	public static final SettingSpec<PositiveInteger> SOCKS5_ON_COMMAND_RELAY_IDLE_TIMEOUT =
 			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
 					"socks5.onCommand.relayIdleTimeout",
-					PositiveInteger.newInstance(60000)));
+					PositiveInteger.newInstanceOf(60000)));
 	
 	@NameValuePairValueSpecDoc(
 			description = "The upper limit on bandwidth in bytes per second of "
@@ -439,7 +439,7 @@ public final class Socks5SettingSpecConstants {
 	public static final SettingSpec<PositiveInteger> SOCKS5_ON_CONNECT_SERVER_FACING_CONNECT_TIMEOUT = 
 			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
 					"socks5.onConnect.serverFacingConnectTimeout", 
-					PositiveInteger.newInstance(60000)));
+					PositiveInteger.newInstanceOf(60000)));
 	
 	@NameValuePairValueSpecDoc(
 			description = "The comma separated list of socket settings for the "

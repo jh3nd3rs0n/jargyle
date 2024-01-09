@@ -23,7 +23,7 @@ public abstract class Host {
     final String string;
 
     /**
-     * Constructs a {@code Host} with the provided name or address.
+     * Constructs a {@code Host} of the provided name or address.
      *
      * @param str the provided name or address
      */
@@ -32,20 +32,20 @@ public abstract class Host {
     }
 
     /**
-     * Returns a new {@code Host} with the provided name or address. A
+     * Returns a new {@code Host} of the provided name or address. A
      * {@code IllegalArgumentException} is thrown if the provided name or
      * address is invalid.
      *
      * @param s the provided name or address
-     * @return a new {@code Host} with the provided name or address
+     * @return a new {@code Host} of the provided name or address
      */
-    public static Host newInstance(final String s) {
+    public static Host newInstanceOf(final String s) {
         try {
-            return HostAddress.newHostAddress(s);
+            return HostAddress.newHostAddressOf(s);
         } catch (IllegalArgumentException ignored) {
         }
         try {
-            return HostName.newHostName(s);
+            return HostName.newHostNameOf(s);
         } catch (IllegalArgumentException ignored) {
         }
         throw new IllegalArgumentException(String.format(
@@ -65,10 +65,16 @@ public abstract class Host {
      * @return an {@code InetAddress} of this {@code Host}
      * @throws UnknownHostException if the IP address cannot be determined
      *                              from the {@code String} representation of
-	 *                              this {@code Host}
+     *                              this {@code Host}
      */
     public abstract InetAddress toInetAddress() throws UnknownHostException;
 
+    /**
+     * Returns the {@code String} representation of this {@code Host}. The
+     * {@code String} representation is the provided name or address.
+     *
+     * @return the {@code String} representation of this {@code Host}
+     */
     @Override
     public final String toString() {
         return this.string;

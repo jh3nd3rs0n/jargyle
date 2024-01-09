@@ -28,7 +28,7 @@ public final class SocksServer {
 	}
 	
 	public static final int DEFAULT_PORT_INT_VALUE = 1080;
-	public static final Port DEFAULT_PORT = Port.newInstance(
+	public static final Port DEFAULT_PORT = Port.newInstanceOf(
 			DEFAULT_PORT_INT_VALUE);
 	
 	private final Configuration configuration;
@@ -189,7 +189,7 @@ public final class SocksServer {
 				socketSettings,
 				backlog);
 		this.host = bindHost;
-		this.port = Port.newInstance(this.serverSocket.getLocalPort());
+		this.port = Port.newInstanceOf(this.serverSocket.getLocalPort());
 		this.executor = Executors.newSingleThreadExecutor();
 		this.executor.execute(new Listener(
 				this.serverSocket, this.configuration));

@@ -13,7 +13,7 @@ public final class Digit {
 	public static final int MAX_INT_VALUE = 9;
 	public static final int MIN_INT_VALUE = 0;
 
-	public static Digit newInstance(final int i) {
+	public static Digit newInstanceOf(final int i) {
 		if (i < MIN_INT_VALUE || i > MAX_INT_VALUE) {
 			throw new IllegalArgumentException(String.format(
 					"expected an integer between %s and %s (inclusive). "
@@ -25,7 +25,7 @@ public final class Digit {
 		return new Digit(i);
 	}
 	
-	public static Digit newInstance(final String s) {
+	public static Digit newInstanceOf(final String s) {
 		int i;
 		try {
 			i = Integer.parseInt(s);
@@ -38,9 +38,9 @@ public final class Digit {
 					s),
 					e);
 		}
-		return newInstance(i);
+		return newInstanceOf(i);
 	}
-	
+
 	private final int intValue;
 	
 	private Digit(final int i) {

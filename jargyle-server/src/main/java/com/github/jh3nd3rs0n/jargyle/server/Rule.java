@@ -58,7 +58,7 @@ public final class Rule {
 		return DEFAULT_INSTANCE;
 	}
 	
-	public static Rule newInstance(final String s) {
+	public static Rule newInstanceOf(final String s) {
 		String[] entries = s.split(",");
 		Builder builder = new Builder();
 		for (String entry : entries) {
@@ -71,7 +71,7 @@ public final class Rule {
 				ex = e;
 			}
 			if (ex == null) {
-				builder.addRuleCondition(RuleCondition.newInstance(entry));
+				builder.addRuleCondition(RuleCondition.newInstanceOf(entry));
 				continue;
 			}
 			ex = null;
@@ -81,7 +81,7 @@ public final class Rule {
 				ex = e;
 			}
 			if (ex == null) {
-				builder.addRuleResult(RuleResult.newInstance(entry));
+				builder.addRuleResult(RuleResult.newInstanceOf(entry));
 				continue;
 			}
 			throw new IllegalArgumentException(String.format(

@@ -1,6 +1,5 @@
 package com.github.jh3nd3rs0n.jargyle.common.net;
 
-import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
@@ -34,11 +33,12 @@ public final class HostIpv6Address extends HostAddress {
             "\\A[a-fA-F0-9]{1,4}(:[a-fA-F0-9]{1,4}){7}+\\z";
 
     /**
-     * Constructs a {@code HostIpv6Address} with the provided IPv6 address
-     * and the provided {@code InetAddress}.
+     * Constructs a {@code HostIpv6Address} of the provided IPv6 address
+     * and the provided {@code InetAddress} of the provided IPv6 address.
      *
      * @param str      the provided IPv6 address
-     * @param inetAddr the provided {@code InetAddress}
+     * @param inetAddr the provided {@code InetAddress} of the provided
+     *                 IPv6 address
      */
     HostIpv6Address(final String str, final InetAddress inetAddr) {
         super(str, inetAddr);
@@ -54,23 +54,27 @@ public final class HostIpv6Address extends HostAddress {
      */
     public static boolean isAllZerosIpv6Address(final String string) {
         return string.matches(ALL_ZEROS_IPV6_ADDRESS_IN_FULL_FORM_REGEX)
-                || string.matches(ALL_ZEROS_IPV6_ADDRESS_IN_COMPRESSED_FORM_REGEX);
+                || (string.matches(ALL_ZEROS_IPV6_ADDRESS_IN_COMPRESSED_FORM_REGEX)
+                && string.split("::").length <= 2
+                && string.split(":").length <= 8);
     }
 
     /**
-     * Returns a new {@code HostIpv6Address} with the provided IPv6 address.
+     * Returns a new {@code HostIpv6Address} of the provided IPv6 address.
      * An {@code IllegalArgumentException} is thrown if the provided
      * IPv6 address is invalid.
      *
      * @param string the provided IPv6 address
-     * @return a new {@code HostIpv6Address} with the provided IPv6 address
+     * @return a new {@code HostIpv6Address} of the provided IPv6 address
      */
-    public static HostIpv6Address newHostIpv6Address(final String string) {
+    public static HostIpv6Address newHostIpv6AddressOf(final String string) {
         String message = String.format(
                 "invalid IPv6 address: %s",
                 string);
-        if (!(string.matches(IPV6_ADDRESS_IN_COMPRESSED_FORM_REGEX)
-                || string.matches(IPV6_ADDRESS_IN_FULL_FORM_REGEX))) {
+        if (!(string.matches(IPV6_ADDRESS_IN_FULL_FORM_REGEX)
+                || (string.matches(IPV6_ADDRESS_IN_COMPRESSED_FORM_REGEX)
+                && string.split("::").length <= 2
+                && string.split(":").length <= 8))) {
             throw new IllegalArgumentException(message);
         }
         InetAddress inetAddress;
@@ -78,9 +82,6 @@ public final class HostIpv6Address extends HostAddress {
             inetAddress = InetAddress.getByName(string);
         } catch (UnknownHostException e) {
             throw new IllegalArgumentException(message, e);
-        }
-        if (!(inetAddress instanceof Inet6Address)) {
-            throw new IllegalArgumentException(message);
         }
         return new HostIpv6Address(string, inetAddress);
     }

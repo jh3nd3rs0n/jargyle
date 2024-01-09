@@ -45,7 +45,7 @@ public final class SslPropertySpecConstants {
 	public static final PropertySpec<CommaSeparatedValues> SSL_ENABLED_CIPHER_SUITES = 
 			PROPERTY_SPECS.addThenGet(new CommaSeparatedValuesPropertySpec(
 					"socksClient.ssl.enabledCipherSuites",
-					CommaSeparatedValues.of(new String[] { })));
+					CommaSeparatedValues.newInstance(new String[] { })));
 	
 	@NameValuePairValueSpecDoc(
 			description = "The comma separated list of acceptable protocol "
@@ -58,7 +58,7 @@ public final class SslPropertySpecConstants {
 	public static final PropertySpec<CommaSeparatedValues> SSL_ENABLED_PROTOCOLS = 
 			PROPERTY_SPECS.addThenGet(new CommaSeparatedValuesPropertySpec(
 					"socksClient.ssl.enabledProtocols",
-					CommaSeparatedValues.of(new String[] { })));
+					CommaSeparatedValues.newInstance(new String[] { })));
 	
 	@NameValuePairValueSpecDoc(
 			description = "The key store file for the SSL/TLS connections to "

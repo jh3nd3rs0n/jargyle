@@ -27,7 +27,7 @@ public final class FilePropertySpec extends PropertySpec<File> {
 	}
 
 	@Override
-	public Property<File> newPropertyWithParsableValue(final String value) {
+	public Property<File> newPropertyWithParsedValue(final String value) {
 		return newProperty(new File(value));
 	}
 

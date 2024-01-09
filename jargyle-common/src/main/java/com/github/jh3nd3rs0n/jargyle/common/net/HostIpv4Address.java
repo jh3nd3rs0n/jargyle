@@ -1,6 +1,5 @@
 package com.github.jh3nd3rs0n.jargyle.common.net;
 
-import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
@@ -72,11 +71,12 @@ public final class HostIpv4Address extends HostAddress {
     private static HostIpv4Address allZerosInstance;
 
     /**
-     * Constructs a {@code HostIpv4Address} with the provided IPv4 address
-     * and the provided {@code InetAddress}.
+     * Constructs a {@code HostIpv4Address} of the provided IPv4 address
+     * and the provided {@code InetAddress} of the provided IPv4 address.
      *
      * @param str      the provided IPv4 address
-     * @param inetAddr the provided {@code InetAddress}
+     * @param inetAddr the provided {@code InetAddress} of the provided
+     *                 IPv4 address
      */
     HostIpv4Address(final String str, final InetAddress inetAddr) {
         super(str, inetAddr);
@@ -127,14 +127,14 @@ public final class HostIpv4Address extends HostAddress {
     }
 
     /**
-     * Returns a new {@code HostIpv4Address} with the provided IPv4 address.
+     * Returns a new {@code HostIpv4Address} of the provided IPv4 address.
      * An {@code IllegalArgumentException} is thrown if the provided
      * IPv4 address is invalid.
      *
      * @param string the provided IPv4 address
-     * @return a new {@code HostIpv4Address} with the provided IPv4 address
+     * @return a new {@code HostIpv4Address} of the provided IPv4 address
      */
-    public static HostIpv4Address newHostIpv4Address(final String string) {
+    public static HostIpv4Address newHostIpv4AddressOf(final String string) {
         String message = String.format(
                 "invalid IPv4 address: %s",
                 string);
@@ -149,9 +149,6 @@ public final class HostIpv4Address extends HostAddress {
             inetAddress = InetAddress.getByName(string);
         } catch (UnknownHostException e) {
             throw new IllegalArgumentException(message, e);
-        }
-        if (!(inetAddress instanceof Inet4Address)) {
-            throw new IllegalArgumentException(message);
         }
         return new HostIpv4Address(string, inetAddress);
     }

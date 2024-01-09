@@ -6,72 +6,72 @@ import org.junit.Test;
 public class HostAddressTest {
 
     @Test
-    public void isAllZerosHostAddressString01() {
+    public void testIsAllZerosHostAddressString01() {
         Assert.assertTrue(HostAddress.isAllZerosHostAddress("0"));
     }
 
     @Test
-    public void isAllZerosHostAddressString02() {
+    public void testIsAllZerosHostAddressString02() {
         Assert.assertTrue(HostAddress.isAllZerosHostAddress("0.0"));
     }
 
     @Test
-    public void isAllZerosHostAddressString03() {
+    public void testIsAllZerosHostAddressString03() {
         Assert.assertTrue(HostAddress.isAllZerosHostAddress("0.0.0"));
     }
 
     @Test
-    public void isAllZerosHostAddressString04() {
+    public void testIsAllZerosHostAddressString04() {
         Assert.assertTrue(HostAddress.isAllZerosHostAddress("0.0.0.0"));
     }
 
     @Test
-    public void isAllZerosHostAddressString05() {
+    public void testIsAllZerosHostAddressString05() {
         Assert.assertTrue(HostAddress.isAllZerosHostAddress("::"));
     }
 
     @Test
-    public void isAllZerosHostAddressString06() {
+    public void testIsAllZerosHostAddressString06() {
         Assert.assertTrue(HostAddress.isAllZerosHostAddress(
                 "0:0:0:0:0:0:0:0"));
     }
 
     @Test
-    public void isAllZerosHostAddressString07() {
+    public void testIsAllZerosHostAddressString07() {
         Assert.assertFalse(HostAddress.isAllZerosHostAddress(
                 "zero zero zero"));
     }
 
     @Test
-    public void isAllZerosHostAddressString08() {
+    public void testIsAllZerosHostAddressString08() {
         Assert.assertFalse(HostAddress.isAllZerosHostAddress(
                 "nada nada nada"));
     }
 
     @Test
-    public void isAllZerosHostAddressString09() {
+    public void testIsAllZerosHostAddressString09() {
         Assert.assertFalse(HostAddress.isAllZerosHostAddress(
                 "zilch zilch zilch"));
     }
 
     @Test
-    public void newHostAddressString01() {
-        Assert.assertNotNull(HostAddress.newHostAddress("127.0.0.1"));
+    public void testNewHostAddressString01() {
+        Assert.assertNotNull(HostAddress.newHostAddressOf("127.0.0.1"));
     }
 
     @Test
-    public void newHostAddressString02() {
-        Assert.assertNotNull(HostAddress.newHostAddress("::1"));
+    public void testNewHostAddressString02() {
+        Assert.assertNotNull(HostAddress.newHostAddressOf("::1"));
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void newHostAddressStringForIllegalArgumentException01() {
-        HostAddress.newHostAddress("localhost");
+    public void testNewHostAddressStringForIllegalArgumentException01() {
+        HostAddress.newHostAddressOf("localhost");
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void newHostAddressStringForIllegalArgumentException02() {
-        HostAddress.newHostAddress("999.999.999.999");
+    public void testNewHostAddressStringForIllegalArgumentException02() {
+        HostAddress.newHostAddressOf("999.999.999.999");
     }
 
 }

@@ -10,7 +10,7 @@ public final class StringPropertySpec extends PropertySpec<String> {
 	}
 
 	@Override
-	public Property<String> newPropertyWithParsableValue(final String value) {
+	public Property<String> newPropertyWithParsedValue(final String value) {
 		return super.newProperty(value);
 	}
 

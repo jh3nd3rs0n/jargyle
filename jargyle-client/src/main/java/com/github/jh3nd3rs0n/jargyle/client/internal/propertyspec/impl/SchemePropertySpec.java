@@ -11,7 +11,7 @@ public final class SchemePropertySpec extends PropertySpec<Scheme> {
 	}
 
 	@Override
-	public Property<Scheme> newPropertyWithParsableValue(final String value) {
+	public Property<Scheme> newPropertyWithParsedValue(final String value) {
 		return this.newProperty(Scheme.valueOfString(value));
 	}
 

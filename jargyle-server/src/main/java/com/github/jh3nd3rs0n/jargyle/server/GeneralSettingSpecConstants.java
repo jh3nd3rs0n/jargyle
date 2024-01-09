@@ -35,7 +35,7 @@ public final class GeneralSettingSpecConstants {
 	public static final SettingSpec<NonnegativeInteger> BACKLOG = 
 			SETTING_SPECS.addThenGet(new NonnegativeIntegerSettingSpec(
 					"backlog", 
-					NonnegativeInteger.newInstance(50)));
+					NonnegativeInteger.newInstanceOf(50)));
 	
 	@NameValuePairValueSpecDoc(
 			description = "The default binding host name or address for all "

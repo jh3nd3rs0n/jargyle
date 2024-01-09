@@ -31,7 +31,7 @@ class SocketSettingXml extends ValueXml {
 	}
 	
 	public SocketSetting<Object> toSocketSetting() {
-		return SocketSetting.newInstanceWithParsableValue(
+		return SocketSetting.newInstanceWithParsedValue(
 				this.name, this.value, this.doc);
 	}
 

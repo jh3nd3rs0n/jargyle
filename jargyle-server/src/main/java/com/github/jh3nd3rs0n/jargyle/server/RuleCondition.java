@@ -14,7 +14,7 @@ import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueTypeD
 )
 public final class RuleCondition<V1, V2> {
 
-	public static RuleCondition<Object, Object> newInstance(final String s) {
+	public static RuleCondition<Object, Object> newInstanceOf(final String s) {
 		String[] sElements = s.split("=", 2);
 		if (sElements.length != 2) {
 			throw new IllegalArgumentException(
@@ -22,7 +22,7 @@ public final class RuleCondition<V1, V2> {
 		}
 		String name = sElements[0];
 		String value = sElements[1];
-		return newInstanceWithParsableValue(name, value);
+		return newInstanceWithParsedValue(name, value);
 	}
 	
 	public static <V1, V2> RuleCondition<V1, V2> newInstance(
@@ -36,11 +36,11 @@ public final class RuleCondition<V1, V2> {
 		return ruleCondition;
 	}
 	
-	public static RuleCondition<Object, Object> newInstanceWithParsableValue(
+	public static RuleCondition<Object, Object> newInstanceWithParsedValue(
 			final String name, final String value) {
 		RuleConditionSpec<Object, Object> ruleConditionSpec = 
 				RuleConditionSpecConstants.valueOfName(name);
-		return ruleConditionSpec.newRuleConditionWithParsableValue(value);
+		return ruleConditionSpec.newRuleConditionWithParsedValue(value);
 	}
 	
 	private final String name;

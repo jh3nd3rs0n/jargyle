@@ -37,10 +37,10 @@ public final class ClientMethodSelectionMessage {
 		}
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		Version version = Version.V5;
-		out.write(UnsignedByte.newInstance(version.byteValue()).intValue());
+		out.write(UnsignedByte.newInstanceOf(version.byteValue()).intValue());
 		out.write(methodsList.size());
 		for (Method method : methodsList) {
-			out.write(UnsignedByte.newInstance(method.byteValue()).intValue());
+			out.write(UnsignedByte.newInstanceOf(method.byteValue()).intValue());
 		}
 		Params params = new Params();
 		params.version = version;

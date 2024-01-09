@@ -63,7 +63,7 @@ public final class GeneralPropertySpecConstants {
 	public static final PropertySpec<PositiveInteger> CLIENT_CONNECT_TIMEOUT = 
 			PROPERTY_SPECS.addThenGet(new PositiveIntegerPropertySpec(
 					"socksClient.clientConnectTimeout",
-					PositiveInteger.newInstance(60000))); // 1 minute
+					PositiveInteger.newInstanceOf(60000))); // 1 minute
 	
 	@NameValuePairValueSpecDoc(
 			description = "The comma separated list of socket settings for the "

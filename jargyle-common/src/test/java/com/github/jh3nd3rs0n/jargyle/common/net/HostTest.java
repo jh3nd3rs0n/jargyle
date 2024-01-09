@@ -3,44 +3,47 @@ package com.github.jh3nd3rs0n.jargyle.common.net;
 import org.junit.Assert;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
 public class HostTest {
 
     @Test
-    public void newInstanceString01() {
-        Assert.assertNotNull(Host.newInstance("127.0.0.1"));
+    public void testNewInstanceOfString01() {
+        Assert.assertNotNull(Host.newInstanceOf("127.0.0.1"));
     }
 
     @Test
-    public void newInstanceString02() {
-        Assert.assertNotNull(Host.newInstance("::1"));
+    public void testNewInstanceOfString02() {
+        Assert.assertNotNull(Host.newInstanceOf("::1"));
     }
 
     @Test
-    public void newInstanceString03() {
-        Assert.assertNotNull(Host.newInstance("localhost"));
+    public void testNewInstanceOfString03() {
+        Assert.assertNotNull(Host.newInstanceOf("localhost"));
     }
 
     @Test
-    public void newInstanceString04() {
-        Assert.assertNotNull(Host.newInstance("google.com"));
+    public void testNewInstanceOfString04() {
+        Assert.assertNotNull(Host.newInstanceOf("google.com"));
     }
 
     @Test
-    public void newInstanceString05() {
-        Assert.assertNotNull(Host.newInstance("jh3nd3rs0n.github.io"));
+    public void testNewInstanceOfString05() {
+        Assert.assertNotNull(Host.newInstanceOf("jh3nd3rs0n.github.io"));
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void newInstanceStringForIllegalArgumentException01() {
-        Host.newInstance("@#$*()@#");
+    public void testNewInstanceOfStringForIllegalArgumentException01() {
+        Host.newInstanceOf("@#$*()@#");
     }
 
-
     @Test(expected = IllegalArgumentException.class)
-    public void newInstanceStringForIllegalArgumentException02() {
-        Host.newInstance("LOCALHOST");
+    public void testNewInstanceOfStringForIllegalArgumentException02() {
+        Host.newInstanceOf("LOCALHOST");
+    }
+
+    @Test
+    public void testToString() {
+        Host host = Host.newInstanceOf("localhost");
+        Assert.assertEquals("localhost", host.toString());
     }
 
 }

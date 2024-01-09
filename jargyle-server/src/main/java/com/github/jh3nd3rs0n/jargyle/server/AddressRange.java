@@ -13,17 +13,17 @@ import com.github.jh3nd3rs0n.jargyle.server.internal.addressrange.impl.Ipv6Addre
 )
 public abstract class AddressRange {
 
-	public static AddressRange newInstance(final String s) {
+	public static AddressRange newInstanceOf(final String s) {
 		try {
-			return Ipv4AddressRange.newInstance(s);
+			return Ipv4AddressRange.newInstanceOf(s);
 		} catch (IllegalArgumentException ignored) {
 		}
 		try {
-			return Ipv6AddressRange.newInstance(s);
+			return Ipv6AddressRange.newInstanceOf(s);
 		} catch (IllegalArgumentException ignored) {
 		}
 		try {
-			return DomainnameRange.newInstance(s);
+			return DomainnameRange.newInstanceOf(s);
 		} catch (IllegalArgumentException ignored) {
 		}
 		throw new IllegalArgumentException(String.format(

@@ -121,7 +121,7 @@ public final class Socks5Socket extends Socket {
 			Socks5Request socks5Req = Socks5Request.newInstance(
 					Command.CONNECT, 
 					Address.newInstance(address), 
-					Port.newInstance(port));
+					Port.newInstanceOf(port));
 			this.socks5Client.sendSocks5Request(socks5Req, connectedSock);
 			Socks5Reply socks5Rep = null;
 			try {

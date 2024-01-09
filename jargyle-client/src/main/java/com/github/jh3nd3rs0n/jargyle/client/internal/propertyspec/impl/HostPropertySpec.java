@@ -11,8 +11,8 @@ public final class HostPropertySpec extends PropertySpec<Host> {
 	}
 
 	@Override
-	public Property<Host> newPropertyWithParsableValue(final String value) {
-		return super.newProperty(Host.newInstance(value));
+	public Property<Host> newPropertyWithParsedValue(final String value) {
+		return super.newProperty(Host.newInstanceOf(value));
 	}
 
 }

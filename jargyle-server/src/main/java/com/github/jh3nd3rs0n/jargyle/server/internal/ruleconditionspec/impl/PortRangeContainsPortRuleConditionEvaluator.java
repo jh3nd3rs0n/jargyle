@@ -9,7 +9,7 @@ public final class PortRangeContainsPortRuleConditionEvaluator
 
 	@Override
 	public boolean evaluate(final PortRange value1, final Port value2) {
-		return value1.contains(value2);
+		return value1.has(value2);
 	}
 
 }

@@ -851,7 +851,7 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 			socks5Rep = Socks5Reply.newInstance(
 					Reply.SUCCEEDED, 
 					Address.newInstance(serverBoundAddress), 
-					Port.newInstance(serverBoundPort));
+					Port.newInstanceOf(serverBoundPort));
 			RuleContext ruleContext = this.newSocks5ReplyRuleContext(
 					socks5Rep);
 			this.setRuleContext(ruleContext);

@@ -9,7 +9,7 @@ import com.github.jh3nd3rs0n.jargyle.server.AddressRange;
 
 public final class Ipv4AddressRange extends AddressRange {
 
-	public static Ipv4AddressRange newInstance(final String s) {
+	public static Ipv4AddressRange newInstanceOf(final String s) {
 		String message = "IPv4 address range must be in the following formats: "
 				+ "IPV4_ADDRESS, "
 				+ "IPV4_ADDRESS1-IPV4_ADDRESS2";
@@ -20,7 +20,7 @@ public final class Ipv4AddressRange extends AddressRange {
 		}
 		if (sElements.length == 1) {
 			String address = sElements[0];
-			if (!(Host.newInstance(address) instanceof HostIpv4Address)) {
+			if (!(Host.newInstanceOf(address) instanceof HostIpv4Address)) {
 				throw new IllegalArgumentException(message);
 			}
 			Ipv4AddressRange ipv4AddressRange = null;
@@ -33,8 +33,8 @@ public final class Ipv4AddressRange extends AddressRange {
 		}
 		String startingAddress = sElements[0];
 		String endingAddress = sElements[1];
-		if (!(Host.newInstance(startingAddress) instanceof HostIpv4Address)
-				|| !(Host.newInstance(endingAddress) instanceof HostIpv4Address)) {
+		if (!(Host.newInstanceOf(startingAddress) instanceof HostIpv4Address)
+				|| !(Host.newInstanceOf(endingAddress) instanceof HostIpv4Address)) {
 			throw new IllegalArgumentException(message);
 		}
 		return new Ipv4AddressRange(startingAddress, endingAddress);
@@ -74,7 +74,7 @@ public final class Ipv4AddressRange extends AddressRange {
 	
 	@Override
 	public boolean contains(final String address) {
-		Host host = Host.newInstance(address);
+		Host host = Host.newInstanceOf(address);
 		if (!(host instanceof HostIpv4Address)) {
 			return false;
 		}

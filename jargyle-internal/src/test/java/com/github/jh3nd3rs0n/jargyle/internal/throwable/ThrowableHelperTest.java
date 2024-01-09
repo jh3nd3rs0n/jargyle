@@ -1,12 +1,11 @@
 package com.github.jh3nd3rs0n.jargyle.internal.throwable;
 
-import com.github.jh3nd3rs0n.jargyle.internal.throwable.ThrowableHelper;
 import org.junit.Test;
 
 import javax.net.ssl.SSLException;
-
 import java.io.IOException;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class ThrowableHelperTest {
@@ -21,6 +20,12 @@ public class ThrowableHelperTest {
     public void testIsOrHasInstanceOfThrowableClass02() {
         assertTrue(ThrowableHelper.isOrHasInstanceOf(
                 new IOException(new IOException(new SSLException(""))), SSLException.class));
+    }
+
+    @Test
+    public void testIsOrHasInstanceOfThrowableClass03() {
+        assertFalse(ThrowableHelper.isOrHasInstanceOf(
+                new IOException(new IOException()), SSLException.class));
     }
 
     @Test(expected = NullPointerException.class)

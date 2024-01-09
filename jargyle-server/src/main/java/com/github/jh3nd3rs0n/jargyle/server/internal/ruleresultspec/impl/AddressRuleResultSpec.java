@@ -11,7 +11,7 @@ public final class AddressRuleResultSpec extends RuleResultSpec<Address> {
 	}
 
 	@Override
-	public RuleResult<Address> newRuleResultWithParsableValue(
+	public RuleResult<Address> newRuleResultWithParsedValue(
 			final String value) {
 		return super.newRuleResult(Address.newInstance(value));
 	}

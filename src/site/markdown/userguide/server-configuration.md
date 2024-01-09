@@ -58,11 +58,11 @@ import java.io.IOException;
 public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "ssl.enabled", "true"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "ssl.keyStoreFile", "server.jks"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "ssl.keyStorePassword", "password")
         ))).start();
     }
@@ -138,17 +138,17 @@ import java.io.IOException;
 public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "ssl.enabled", "true"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "ssl.keyStoreFile", "server.jks"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "ssl.keyStorePassword", "password"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "ssl.needClientAuth", "true"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "ssl.trustStoreFile", "client.jks"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "ssl.trustStorePassword", "drowssap")
         ))).start();
     }
@@ -246,11 +246,11 @@ import java.io.IOException;
 public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "dtls.enabled", "true"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "dtls.keyStoreFile", "server.jks"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "dtls.keyStorePassword", "password")
         ))).start();
     }
@@ -326,17 +326,17 @@ import java.io.IOException;
 public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "dtls.enabled", "true"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "dtls.keyStoreFile", "server.jks"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "dtls.keyStorePassword", "password"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "dtls.needClientAuth", "true"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "dtls.trustStoreFile", "client.jks"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "dtls.trustStorePassword", "drowssap")
         ))).start();
     }
@@ -435,7 +435,7 @@ import java.io.IOException;
 public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "socks5.methods", 
                 "NO_AUTHENTICATION_REQUIRED,GSSAPI")
         ))).start();
@@ -499,7 +499,7 @@ import java.io.IOException;
 public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "socks5.methods", 
                 "NO_AUTHENTICATION_REQUIRED,GSSAPI,USERNAME_PASSWORD")
         ))).start();
@@ -567,9 +567,9 @@ import java.io.IOException;
 public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "socks5.methods", "USERNAME_PASSWORD"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "socks5.userpassmethod.userRepository", 
                 "FileSourceUserRepository:users")
         ))).start();
@@ -646,9 +646,9 @@ import java.io.IOException;
 public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "socks5.methods", "USERNAME_PASSWORD"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "socks5.userpassmethod.userRepository",
                 "StringSourceUserRepository:Aladdin:opensesame,Jasmine:mission%3Aimpossible")
         ))).start();
@@ -716,7 +716,7 @@ public class ServerApp {
             "java.security.auth.login.config", "login.conf");
         System.setProperty("java.security.krb5.conf", "krb5.conf");
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "socks5.methods", "GSSAPI")
         ))).start();
     }
@@ -829,7 +829,7 @@ import java.io.IOException;
 public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:23456")
         ))).start();
@@ -896,14 +896,14 @@ import java.io.IOException;
 public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:23456"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.ssl.enabled", "true"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.ssl.trustStoreFile", "server.jks"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.ssl.trustStorePassword", "password")
         ))).start();
     }
@@ -984,18 +984,18 @@ import java.io.IOException;
 public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:23456"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.ssl.enabled", "true"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.ssl.keyStoreFile", "client.jks"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.ssl.keyStorePassword", "drowssap"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.ssl.trustStoreFile", "server.jks"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.ssl.trustStorePassword", "password")
         ))).start();
     }
@@ -1099,14 +1099,14 @@ import java.io.IOException;
 public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:23456"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.dtls.enabled", "true"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.dtls.trustStoreFile", "server.jks"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.dtls.trustStorePassword", "password")
         ))).start();
     }
@@ -1186,18 +1186,18 @@ import java.io.IOException;
 public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:23456"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.dtls.enabled", "true"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.dtls.keyStoreFile", "client.jks"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.dtls.keyStorePassword", "drowssap"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.dtls.trustStoreFile", "server.jks"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.dtls.trustStorePassword", "password")
         ))).start();
     }
@@ -1297,10 +1297,10 @@ import java.io.IOException;
 public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:23456"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socks5.methods",
                 "NO_AUTHENTICATION_REQUIRED,GSSAPI")
         ))).start();
@@ -1371,10 +1371,10 @@ import java.io.IOException;
 public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:23456"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socks5.methods",
                 "NO_AUTHENTICATION_REQUIRED,GSSAPI,USERNAME_PASSWORD")
         ))).start();
@@ -1436,15 +1436,15 @@ import java.io.IOException;
 public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:23456"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socks5.methods", "USERNAME_PASSWORD"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socks5.userpassmethod.username",
                 "Aladdin"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socks5.userpassmethod.password",
                 "opensesame")
         ))).start();
@@ -1537,12 +1537,12 @@ public class ServerApp {
             "java.security.auth.login.config", "login.conf");
         System.setProperty("java.security.krb5.conf", "krb5.conf");
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:23456"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socks5.methods", "GSSAPI"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socks5.gssapimethod.serviceName",
                 "rcmd/127.0.0.1")
         ))).start();
@@ -1736,10 +1736,10 @@ import java.io.IOException;
 public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:23456"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socks5.useResolveCommand", "true")
         ))).start();
     }
@@ -1795,13 +1795,13 @@ import java.io.IOException;
 public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:23456"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:65432"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:34567")
         ))).start();
@@ -1859,29 +1859,29 @@ import java.io.IOException;
 public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:23456"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socks5.methods", "GSSAPI"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socks5.gssapimethod.serviceName",
                 "rcmd/127.0.0.1"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:65432"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socks5.methods", "USERNAME_PASSWORD"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socks5.userpassmethod.username",
                 "Aladdin"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socks5.userpassmethod.password",
                 "opensesame"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:34567"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socks5.useResolveCommand", "true")
         ))).start();
     }
@@ -1984,38 +1984,38 @@ import java.io.IOException;
 public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:11111"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:11112"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:11113"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.routeId", "alpha"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:22221"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:22222"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:22223"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.routeId", "beta"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:33331"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:33332"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:33333"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.routeId", "delta")
         ))).start();
     }
@@ -2132,35 +2132,35 @@ import java.io.IOException;
 public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:11111"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:11112"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:11113"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.routeId", "alpha"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:22221"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:22222"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:22223"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.routeId", "beta"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:33331"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:33332"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:33333")
         ))).start();
@@ -2269,38 +2269,38 @@ import java.io.IOException;
 public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:11111"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:11112"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:11113"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.routeId", "alpha"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:22221"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:22222"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:22223"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.routeId", "beta"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:33331"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:33332"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:33333"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "lastRouteId", "omega")
         ))).start();
     }
@@ -2401,40 +2401,40 @@ import java.io.IOException;
 public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:11111"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:11112"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:11113"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.routeId", "alpha"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:22221"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:22222"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:22223"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.routeId", "beta"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:33331"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:33332"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:33333"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "lastRouteId", "omega"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "routeSelectionStrategy", "RANDOM")
         ))).start();
     }
@@ -2540,42 +2540,42 @@ import java.io.IOException;
 public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:11111"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:11112"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:11113"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.routeId", "alpha"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:22221"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:22222"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:22223"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.routeId", "beta"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:33331"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:33332"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:33333"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "lastRouteId", "omega"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "routeSelectionStrategy", "RANDOM"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "routeSelectionLogAction", "LOG_AS_INFO")
         ))).start();
     }
@@ -2707,7 +2707,7 @@ public class ServerApp {
             /*
              * Allows all forms of traffic
              */
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "rule", "firewallAction=ALLOW")
         ))).start();
     }
@@ -2764,7 +2764,7 @@ public class ServerApp {
              * Allows the CONNECT command to any server on port 80 
              * or 443
              */
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "rule", 
                 "socks5.command=CONNECT,"
                 + "socks5.desiredDestinationPort=80,"
@@ -2774,13 +2774,13 @@ public class ServerApp {
              * Denies the CONNECT command to any server on any 
              * other port
              */
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "rule", 
                 "socks5.command=CONNECT,firewallAction=DENY"),
             /*
              * Allow anything else
              */
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "rule", "firewallAction=ALLOW")
         ))).start();
     }
@@ -3036,7 +3036,7 @@ public class ServerApp {
              * Deny any BIND or UDP ASSOCIATE commands and log as 
              * a warning message if they are denied
              */
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "rule",
                  "socks5.command=BIND,"
                  + "socks5.command=UDP_ASSOCIATE,"
@@ -3045,7 +3045,7 @@ public class ServerApp {
             /*
              * Allow anything else
              */
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "rule", "firewallAction=ALLOW")
         ))).start();
     }
@@ -3160,7 +3160,7 @@ public class ServerApp {
              * as an informational message that the limit has been 
              * reached
              */
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "rule", 
                 "socks5.method=USERNAME_PASSWORD,"
                 + "socks5.user=guest,"
@@ -3170,7 +3170,7 @@ public class ServerApp {
             /*
              * Allow anything else
              */
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "rule", "firewallAction=ALLOW")
         ))).start();
     }
@@ -3284,38 +3284,38 @@ import java.io.IOException;
 public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:11111"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:11112"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:11113"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.routeId", "alpha"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:22221"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:22222"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:22223"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.routeId", "beta"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:33331"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:33332"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:33333"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "lastRouteId", "omega"),
             /*
              * Randomly select either route 'alpha' or 'beta' when 
@@ -3323,7 +3323,7 @@ public class ServerApp {
              * informational message the route that has been 
              * selected
              */
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "rule",
                 "socks5.command=CONNECT,"
                 + "firewallAction=ALLOW,"
@@ -3334,7 +3334,7 @@ public class ServerApp {
             /*
              * Allow anything else to go through route 'omega'
              */
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "rule",
                 "firewallAction=ALLOW,"
                 + "routeSelectionStrategy=CYCLICAL,"
@@ -3522,7 +3522,7 @@ public class ServerApp {
              * to 'newserver.com' and log as an informational 
              * message the redirection
              */
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "rule", 
                 "socks5.desiredDestinationAddress=discontinuedserver.com,"
                 + "firewallAction=ALLOW,"
@@ -3531,7 +3531,7 @@ public class ServerApp {
             /*
              * Allow anything else
              */
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "rule", "firewallAction=ALLOW")
         ))).start();
     }
@@ -3744,7 +3744,7 @@ public class ServerApp {
              * 'specialserver.com' and configure the server-facing 
              * socket for the CONNECT command
              */
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "rule", 
                 "socks5.command=CONNECT,"
                 + "socks5.desiredDestinationAddress=specialserver.com,"
@@ -3755,7 +3755,7 @@ public class ServerApp {
             /*
              * Allow anything else
              */
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "rule", "firewallAction=ALLOW")
         ))).start();
     }
@@ -3894,7 +3894,7 @@ public class ServerApp {
              * 'intermittent-idling-server.com' with a relay idle 
              * timeout of 1024000 milliseconds (1024 seconds)
              */
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "rule", 
                 "socks5.command=CONNECT,"
                 + "socks5.desiredDestinationAddress=intermittent-idling-server.com,"
@@ -3903,7 +3903,7 @@ public class ServerApp {
             /*
              * Allow anything else
              */
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "rule", "firewallAction=ALLOW")
         ))).start();
     }
@@ -4026,7 +4026,7 @@ public class ServerApp {
              * relay inbound and outbound bandwidth of 1024000 
              * bytes per second
              */
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "rule", 
                 "socks5.command=CONNECT,"
                 + "socks5.desiredDestinationAddress=streamingwebsite.com,"
@@ -4036,7 +4036,7 @@ public class ServerApp {
             /*
              * Allow anything else
              */
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "rule", "firewallAction=ALLOW")
         ))).start();
     }

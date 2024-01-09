@@ -27,7 +27,7 @@ class ValuesXml extends ValueXml {
 	}
 	
 	public CommaSeparatedValues toCommaSeparatedValues() {
-		return CommaSeparatedValues.of(this.values.toArray(
+		return CommaSeparatedValues.newInstance(this.values.toArray(
 				new String[this.values.size()]));
 	}
 	

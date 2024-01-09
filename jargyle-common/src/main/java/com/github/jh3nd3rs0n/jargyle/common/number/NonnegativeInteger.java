@@ -13,7 +13,7 @@ public final class NonnegativeInteger {
 	public static final int MAX_INT_VALUE = Integer.MAX_VALUE;
 	public static final int MIN_INT_VALUE = 0;
 	
-	public static NonnegativeInteger newInstance(final int i) {
+	public static NonnegativeInteger newInstanceOf(final int i) {
 		if (i < MIN_INT_VALUE || i > MAX_INT_VALUE) {
 			throw new IllegalArgumentException(String.format(
 					"expected an integer between %s and %s (inclusive). "
@@ -25,7 +25,7 @@ public final class NonnegativeInteger {
 		return new NonnegativeInteger(i);
 	}
 	
-	public static NonnegativeInteger newInstance(final String s) {
+	public static NonnegativeInteger newInstanceOf(final String s) {
 		int i;
 		try {
 			i = Integer.parseInt(s);
@@ -38,7 +38,7 @@ public final class NonnegativeInteger {
 					s),
 					e);
 		}
-		return newInstance(i);
+		return newInstanceOf(i);
 	}
 	
 	private final int intValue;

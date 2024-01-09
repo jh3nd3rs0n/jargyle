@@ -101,35 +101,35 @@ import java.io.IOException;
 public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "port", "8080"),
             /*
              * Enable SSL/TLS for TCP traffic between the SOCKS 
              * server and the clients.
              */
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "ssl.enabled", "true"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "ssl.keyStoreFile", "server.jks"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "ssl.keyStorePassword", "drowssap"),
             /*
              * Enable DTLS for UDP traffic between the SOCKS server 
              * and the clients.
              */
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "dtls.enabled", "true"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "dtls.keyStoreFile", "server.jks"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "dtls.keyStorePassword", "drowssap"),
             /*
              * Use only the SOCKS5 username password authentication 
              * method as the SOCKS5 authentication method of choice.
              */
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "socks5.methods", "USERNAME_PASSWORD"),
-            Setting.newInstanceWithParsableValue(
+            Setting.newInstanceWithParsedValue(
                 "socks5.userpassmethod.userRepository",
                 "StringSourceUserRepository:Aladdin:opensesame")
         ))).start();

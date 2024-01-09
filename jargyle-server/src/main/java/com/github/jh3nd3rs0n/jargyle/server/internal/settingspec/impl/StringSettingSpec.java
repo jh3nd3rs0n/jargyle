@@ -10,7 +10,7 @@ public final class StringSettingSpec extends SettingSpec<String> {
 	}
 
 	@Override
-	public Setting<String> newSettingWithParsableValue(final String value) {
+	public Setting<String> newSettingWithParsedValue(final String value) {
 		return super.newSetting(value);
 	}
 	

@@ -9,7 +9,7 @@ import com.github.jh3nd3rs0n.jargyle.server.AddressRange;
 
 public final class Ipv6AddressRange extends AddressRange {
 
-	public static Ipv6AddressRange newInstance(final String s) {
+	public static Ipv6AddressRange newInstanceOf(final String s) {
 		String message = "IPv6 address range must be in the following formats: "
 				+ "IPV6_ADDRESS, "
 				+ "IPV6_ADDRESS1-IPV6_ADDRESS2";
@@ -20,7 +20,7 @@ public final class Ipv6AddressRange extends AddressRange {
 		}
 		if (sElements.length == 1) {
 			String address = sElements[0];
-			if (!(Host.newInstance(address) instanceof HostIpv6Address)) {
+			if (!(Host.newInstanceOf(address) instanceof HostIpv6Address)) {
 				throw new IllegalArgumentException(message);
 			}
 			Ipv6AddressRange ipv4AddressRange = null;
@@ -33,8 +33,8 @@ public final class Ipv6AddressRange extends AddressRange {
 		}
 		String startingAddress = sElements[0];
 		String endingAddress = sElements[1];
-		if (!(Host.newInstance(startingAddress) instanceof HostIpv6Address)
-				|| !(Host.newInstance(endingAddress) instanceof HostIpv6Address)) {
+		if (!(Host.newInstanceOf(startingAddress) instanceof HostIpv6Address)
+				|| !(Host.newInstanceOf(endingAddress) instanceof HostIpv6Address)) {
 			throw new IllegalArgumentException(message);
 		}
 		return new Ipv6AddressRange(startingAddress, endingAddress);
@@ -74,7 +74,7 @@ public final class Ipv6AddressRange extends AddressRange {
 	
 	@Override
 	public boolean contains(final String address) {
-		Host host = Host.newInstance(address);
+		Host host = Host.newInstanceOf(address);
 		if (!(host instanceof HostIpv6Address)) {
 			return false;
 		}

@@ -15,11 +15,12 @@ public abstract class HostAddress extends Host {
     private final InetAddress inetAddress;
 
     /**
-     * Constructs a {@code HostAddress} with the provided address and
-     * the provided {@code InetAddress}.
+     * Constructs a {@code HostAddress} of the provided address and
+     * the provided {@code InetAddress} of the provided address.
      *
      * @param str      the provided address
-     * @param inetAddr the provided {@code InetAddress}
+     * @param inetAddr the provided {@code InetAddress} of the provided
+     *                 address
      */
     HostAddress(final String str, final InetAddress inetAddr) {
         super(str);
@@ -40,20 +41,20 @@ public abstract class HostAddress extends Host {
     }
 
     /**
-     * Returns a new {@code HostAddress} with the provided address. An
+     * Returns a new {@code HostAddress} of the provided address. An
      * {@code IllegalArgumentException} is thrown if the provided
      * address is invalid.
      *
      * @param string the provided address
-     * @return a new {@code HostAddress} with the provided address
+     * @return a new {@code HostAddress} of the provided address
      */
-    public static HostAddress newHostAddress(final String string) {
+    public static HostAddress newHostAddressOf(final String string) {
         try {
-            return HostIpv4Address.newHostIpv4Address(string);
+            return HostIpv4Address.newHostIpv4AddressOf(string);
         } catch (IllegalArgumentException ignored) {
         }
         try {
-            return HostIpv6Address.newHostIpv6Address(string);
+            return HostIpv6Address.newHostIpv6AddressOf(string);
         } catch (IllegalArgumentException ignored) {
         }
         throw new IllegalArgumentException(String.format(

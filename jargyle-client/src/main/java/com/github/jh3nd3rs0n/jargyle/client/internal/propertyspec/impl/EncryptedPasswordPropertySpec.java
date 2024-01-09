@@ -13,7 +13,7 @@ public final class EncryptedPasswordPropertySpec
 	}
 
 	@Override
-	public Property<EncryptedPassword> newPropertyWithParsableValue(
+	public Property<EncryptedPassword> newPropertyWithParsedValue(
 			final String value) {
 		return super.newProperty(EncryptedPassword.newInstance(
 				value.toCharArray()));

@@ -42,7 +42,7 @@ public final class ProtectionLevels {
 		return newInstance(protectionLvl, Arrays.asList(protectionLvls));
 	}
 	
-	public static ProtectionLevels newInstance(final String s) {
+	public static ProtectionLevels newInstanceOf(final String s) {
 		List<ProtectionLevel> protectionLevels = 
 				new ArrayList<ProtectionLevel>();
 		String[] sElements = s.split(",");

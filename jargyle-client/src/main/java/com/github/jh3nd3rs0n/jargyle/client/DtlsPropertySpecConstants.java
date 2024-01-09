@@ -46,7 +46,7 @@ public final class DtlsPropertySpecConstants {
 	public static final PropertySpec<CommaSeparatedValues> DTLS_ENABLED_CIPHER_SUITES = 
 			PROPERTY_SPECS.addThenGet(new CommaSeparatedValuesPropertySpec(
 					"socksClient.dtls.enabledCipherSuites",
-					CommaSeparatedValues.of(new String[] { })));
+					CommaSeparatedValues.newInstance(new String[] { })));
 	
 	@NameValuePairValueSpecDoc(
 			description = "The comma separated list of acceptable protocol "
@@ -59,7 +59,7 @@ public final class DtlsPropertySpecConstants {
 	public static final PropertySpec<CommaSeparatedValues> DTLS_ENABLED_PROTOCOLS = 
 			PROPERTY_SPECS.addThenGet(new CommaSeparatedValuesPropertySpec(
 					"socksClient.dtls.enabledProtocols",
-					CommaSeparatedValues.of(new String[] { })));
+					CommaSeparatedValues.newInstance(new String[] { })));
 	
 	@NameValuePairValueSpecDoc(
 			description = "The key store file for the DTLS connections to the "
@@ -107,7 +107,7 @@ public final class DtlsPropertySpecConstants {
 	public static final PropertySpec<PositiveInteger> DTLS_MAX_PACKET_SIZE = 
 			PROPERTY_SPECS.addThenGet(new PositiveIntegerPropertySpec(
 					"socksClient.dtls.maxPacketSize",
-					PositiveInteger.newInstance(32768)));
+					PositiveInteger.newInstanceOf(32768)));
 	
 	@NameValuePairValueSpecDoc(
 			description = "The protocol version for the DTLS connections to "

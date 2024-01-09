@@ -13,9 +13,9 @@ public final class Socks5GssapiMethodProtectionLevelsPropertySpec
 	}
 
 	@Override
-	public Property<ProtectionLevels> newPropertyWithParsableValue(
+	public Property<ProtectionLevels> newPropertyWithParsedValue(
 			final String value) {
-		return super.newProperty(ProtectionLevels.newInstance(value));
+		return super.newProperty(ProtectionLevels.newInstanceOf(value));
 	}
 
 }

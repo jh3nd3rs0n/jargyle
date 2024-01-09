@@ -16,7 +16,7 @@ public final class HostName extends Host {
                     + "(\\.([a-z0-9]|[a-z0-9][a-z0-9-_]*[a-z0-9]))*\\z";
 
     /**
-     * Constructs a {@code HostName} with the provided host name.
+     * Constructs a {@code HostName} of the provided host name.
      *
      * @param str the provided host name
      */
@@ -25,14 +25,14 @@ public final class HostName extends Host {
     }
 
     /**
-     * Returns a new {@code HostName} with the provided host name. An
+     * Returns a new {@code HostName} of the provided host name. An
      * {@code IllegalArgumentException} is thrown if the provided host name is
      * invalid.
      *
      * @param string the provided host name
-     * @return a new {@code HostName} with the provided host name
+     * @return a new {@code HostName} of the provided host name
      */
-    public static HostName newHostName(final String string) {
+    public static HostName newHostNameOf(final String string) {
         if (!string.matches(HOST_NAME_REGEX)) {
             throw new IllegalArgumentException(String.format(
                     "invalid host name: %s",

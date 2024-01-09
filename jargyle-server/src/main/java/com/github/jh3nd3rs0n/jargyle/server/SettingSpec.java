@@ -74,11 +74,11 @@ public abstract class SettingSpec<V> {
 		return new Setting<V>(setting.getSettingSpec(), setting.getValue(), doc);
 	}
 	
-	public abstract Setting<V> newSettingWithParsableValue(final String value);
+	public abstract Setting<V> newSettingWithParsedValue(final String value);
 	
-	public final Setting<V> newSettingWithParsableValue(
+	public final Setting<V> newSettingWithParsedValue(
 			final String value, final String doc) {
-		Setting<V> setting = this.newSettingWithParsableValue(value);
+		Setting<V> setting = this.newSettingWithParsedValue(value);
 		return new Setting<V>(setting.getSettingSpec(), setting.getValue(), doc);
 	}
 	

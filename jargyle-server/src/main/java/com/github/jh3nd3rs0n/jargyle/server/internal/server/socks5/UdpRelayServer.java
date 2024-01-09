@@ -220,13 +220,13 @@ final class UdpRelayServer {
 					clientAddr);
 			inboundRuleContext.putRuleArgValue(
 					Socks5RuleArgSpecConstants.SOCKS5_UDP_INBOUND_DESIRED_DESTINATION_PORT, 
-					Port.newInstance(clientPrt));
+					Port.newInstanceOf(clientPrt));
 			inboundRuleContext.putRuleArgValue(
 					Socks5RuleArgSpecConstants.SOCKS5_UDP_INBOUND_SOURCE_ADDRESS, 
 					peerAddr);
 			inboundRuleContext.putRuleArgValue(
 					Socks5RuleArgSpecConstants.SOCKS5_UDP_INBOUND_SOURCE_PORT, 
-					Port.newInstance(peerPrt));
+					Port.newInstanceOf(peerPrt));
 			return inboundRuleContext;
 		}
 		
@@ -235,9 +235,9 @@ final class UdpRelayServer {
 			String address = packet.getAddress().getHostAddress();
 			int port = packet.getPort();
 			UdpRequestHeader header = UdpRequestHeader.newInstance(
-					UnsignedByte.newInstance(0),
+					UnsignedByte.newInstanceOf(0),
 					Address.newInstance(address),
-					Port.newInstance(port),
+					Port.newInstanceOf(port),
 					Arrays.copyOfRange(
 							packet.getData(), 
 							packet.getOffset(), 
@@ -505,13 +505,13 @@ final class UdpRelayServer {
 					peerAddr);
 			outboundRuleContext.putRuleArgValue(
 					Socks5RuleArgSpecConstants.SOCKS5_UDP_OUTBOUND_DESIRED_DESTINATION_PORT, 
-					Port.newInstance(peerPrt));
+					Port.newInstanceOf(peerPrt));
 			outboundRuleContext.putRuleArgValue(
 					Socks5RuleArgSpecConstants.SOCKS5_UDP_OUTBOUND_SOURCE_ADDRESS, 
 					clientAddr);
 			outboundRuleContext.putRuleArgValue(
 					Socks5RuleArgSpecConstants.SOCKS5_UDP_OUTBOUND_SOURCE_PORT, 
-					Port.newInstance(clientPrt));
+					Port.newInstanceOf(clientPrt));
 			return outboundRuleContext;
 		}
 		

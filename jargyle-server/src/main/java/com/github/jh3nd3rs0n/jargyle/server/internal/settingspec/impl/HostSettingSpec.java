@@ -11,8 +11,8 @@ public final class HostSettingSpec extends SettingSpec<Host> {
 	}
 
 	@Override
-	public Setting<Host> newSettingWithParsableValue(final String value) {
-		return super.newSetting(Host.newInstance(value));
+	public Setting<Host> newSettingWithParsedValue(final String value) {
+		return super.newSetting(Host.newInstanceOf(value));
 	}
 
 }

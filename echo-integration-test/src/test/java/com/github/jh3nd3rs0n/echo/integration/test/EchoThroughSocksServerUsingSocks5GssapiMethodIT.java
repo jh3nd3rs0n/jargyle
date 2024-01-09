@@ -74,7 +74,7 @@ public class EchoThroughSocksServerUsingSocks5GssapiMethodIT {
 	private static Configuration newConfigurationUsingSocks5GssapiMethod() {
 		return Configuration.newUnmodifiableInstance(Settings.newInstance(
 				GeneralSettingSpecConstants.PORT.newSetting(
-						Port.newInstance(SOCKS_SERVER_PORT_USING_SOCKS5_GSSAPIMETHOD)),
+						Port.newInstanceOf(SOCKS_SERVER_PORT_USING_SOCKS5_GSSAPIMETHOD)),
 				Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
 						Methods.newInstance(Method.GSSAPI))));
 	}
@@ -82,7 +82,7 @@ public class EchoThroughSocksServerUsingSocks5GssapiMethodIT {
 	private static Configuration newConfigurationUsingSocks5GssapiMethodNecReferenceImpl() {
 		return Configuration.newUnmodifiableInstance(Settings.newInstance(
 				GeneralSettingSpecConstants.PORT.newSetting(
-						Port.newInstance(
+						Port.newInstanceOf(
 								SOCKS_SERVER_PORT_USING_SOCKS5_GSSAPIMETHOD_NEC_REFERENCE_IMPL)),
 				Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
 						Methods.newInstance(Method.GSSAPI)),

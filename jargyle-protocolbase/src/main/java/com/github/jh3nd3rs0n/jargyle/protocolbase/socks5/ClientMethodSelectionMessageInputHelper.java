@@ -15,7 +15,7 @@ public final class ClientMethodSelectionMessageInputHelper {
 			final InputStream in) throws IOException {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		Version ver = VersionInputHelper.readVersionFrom(in);
-		out.write(UnsignedByte.newInstance(ver.byteValue()).intValue());
+		out.write(UnsignedByte.newInstanceOf(ver.byteValue()).intValue());
 		UnsignedByte methodCount = UnsignedByteInputHelper.readUnsignedByteFrom(
 				in);
 		List<Method> meths = new ArrayList<Method>();
@@ -30,7 +30,7 @@ public final class ClientMethodSelectionMessageInputHelper {
 		}
 		out.write(meths.size());
 		for (Method meth : meths) {
-			out.write(UnsignedByte.newInstance(meth.byteValue()).intValue());
+			out.write(UnsignedByte.newInstanceOf(meth.byteValue()).intValue());
 		}
 		ClientMethodSelectionMessage.Params params = 
 				new ClientMethodSelectionMessage.Params();

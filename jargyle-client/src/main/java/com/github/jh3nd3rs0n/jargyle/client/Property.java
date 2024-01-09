@@ -26,11 +26,11 @@ public final class Property<V> {
 		return property;
 	}
 	
-	public static Property<Object> newInstanceWithParsableValue(
+	public static Property<Object> newInstanceWithParsedValue(
 			final String name, final String value) {
 		PropertySpec<Object> propertySpec = PropertySpecConstants.valueOfName(
 				name);
-		return propertySpec.newPropertyWithParsableValue(value);
+		return propertySpec.newPropertyWithParsedValue(value);
 	}
 	
 	private final String name;

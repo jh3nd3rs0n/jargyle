@@ -12,9 +12,9 @@ public final class PositiveIntegerRuleResultSpec
 	}
 
 	@Override
-	public RuleResult<PositiveInteger> newRuleResultWithParsableValue(
+	public RuleResult<PositiveInteger> newRuleResultWithParsedValue(
 			final String value) {
-		return super.newRuleResult(PositiveInteger.newInstance(value));
+		return super.newRuleResult(PositiveInteger.newInstanceOf(value));
 	}
 
 }

@@ -21,8 +21,8 @@ public final class UsernamePasswordResponse {
 			final byte status) {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		Version version = Version.V1;
-		out.write(UnsignedByte.newInstance(version.byteValue()).intValue());
-		out.write(UnsignedByte.newInstance(status).intValue());
+		out.write(UnsignedByte.newInstanceOf(version.byteValue()).intValue());
+		out.write(UnsignedByte.newInstanceOf(status).intValue());
 		Params params = new Params();
 		params.version = version;
 		params.status = status;

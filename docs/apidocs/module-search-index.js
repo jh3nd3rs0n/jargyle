@@ -1,1 +1,0 @@
-moduleSearchIndex = [{"l":"com.github.jh3nd3rs0n.jargyle.client"},{"l":"com.github.jh3nd3rs0n.jargyle.common"},{"l":"com.github.jh3nd3rs0n.jargyle.internal"},{"l":"com.github.jh3nd3rs0n.jargyle.protocolbase"},{"l":"com.github.jh3nd3rs0n.jargyle.server"}];updateSearchResults();

@@ -7,13 +7,13 @@ import com.github.jh3nd3rs0n.jargyle.common.number.NonnegativeInteger;
 
 public final class NonnegativeIntegerLimit {
 
-	public static NonnegativeIntegerLimit newInstance(
+	public static NonnegativeIntegerLimit newInstanceOf(
 			final NonnegativeInteger value) {
 		return new NonnegativeIntegerLimit(value);
 	}
 	
-	public static NonnegativeIntegerLimit newInstance(final String s) {
-		return newInstance(NonnegativeInteger.newInstance(s));
+	public static NonnegativeIntegerLimit newInstanceOf(final String s) {
+		return newInstanceOf(NonnegativeInteger.newInstanceOf(s));
 	}
 	
 	private final AtomicInteger currentCount;

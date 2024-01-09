@@ -10,7 +10,7 @@ public final class BooleanSettingSpec extends SettingSpec<Boolean> {
 	}
 
 	@Override
-	public Setting<Boolean> newSettingWithParsableValue(final String value) {
+	public Setting<Boolean> newSettingWithParsedValue(final String value) {
 		return super.newSetting(Boolean.valueOf(value));
 	}	
 

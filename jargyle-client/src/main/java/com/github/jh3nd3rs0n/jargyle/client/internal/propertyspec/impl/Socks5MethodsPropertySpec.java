@@ -11,8 +11,8 @@ public final class Socks5MethodsPropertySpec extends PropertySpec<Methods> {
 	}
 
 	@Override
-	public Property<Methods> newPropertyWithParsableValue(final String value) {
-		return super.newProperty(Methods.newInstance(value));
+	public Property<Methods> newPropertyWithParsedValue(final String value) {
+		return super.newProperty(Methods.newInstanceOf(value));
 	}
 
 }

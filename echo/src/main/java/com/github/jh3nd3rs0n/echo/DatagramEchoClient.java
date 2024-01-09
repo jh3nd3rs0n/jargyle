@@ -15,7 +15,7 @@ public final class DatagramEchoClient {
 	private static final int SO_TIMEOUT = 60000;
 	private static final SocketSettings SOCKET_SETTINGS = SocketSettings.newInstance(
 			StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
-					NonnegativeInteger.newInstance(SO_TIMEOUT)));
+					NonnegativeInteger.newInstanceOf(SO_TIMEOUT)));
 	
 	private final NetObjectFactory netObjectFactory;
 	private final SocketSettings socketSettings;

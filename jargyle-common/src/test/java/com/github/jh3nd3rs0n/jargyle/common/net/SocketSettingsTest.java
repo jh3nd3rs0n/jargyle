@@ -15,24 +15,24 @@ public class SocketSettingsTest {
     @Test
     public void testNewInstanceSocketSettingVarargs() {
         Assert.assertNotNull(SocketSettings.newInstance(
-                SocketSetting.newInstanceOf("SO_TIMEOUT=1000"),
-                SocketSetting.newInstanceOf("SO_SNDBUF=256"),
-                SocketSetting.newInstanceOf("SO_RCVBUF=256")));
+                SocketSetting.newInstanceOf("SO_TIMEOUT=3000"),
+                SocketSetting.newInstanceOf("SO_SNDBUF=3000"),
+                SocketSetting.newInstanceOf("SO_RCVBUF=3000")));
     }
 
     @Test
     public void testNewInstanceSocketSettings() {
         Assert.assertNotNull(SocketSettings.newInstance(
                 SocketSettings.newInstance(
-                        SocketSetting.newInstanceOf("SO_TIMEOUT=1000"),
-                        SocketSetting.newInstanceOf("SO_SNDBUF=256"),
-                        SocketSetting.newInstanceOf("SO_RCVBUF=256"))));
+                        SocketSetting.newInstanceOf("SO_TIMEOUT=3000"),
+                        SocketSetting.newInstanceOf("SO_SNDBUF=3000"),
+                        SocketSetting.newInstanceOf("SO_RCVBUF=3000"))));
     }
 
     @Test
     public void testNewInstanceOfString01() {
         Assert.assertNotNull(SocketSettings.newInstanceOf(
-                "SO_TIMEOUT=1000,SO_SNDBUF=256,SO_RCVBUF=256"));
+                "SO_TIMEOUT=3000,SO_SNDBUF=3000,SO_RCVBUF=3000"));
     }
 
     @Test
@@ -68,11 +68,11 @@ public class SocketSettingsTest {
     public void testApplyToServerSocket() throws IOException {
         SocketSettings socketSettings = SocketSettings.newInstance(
                 SocketSetting.newInstanceOf("SO_TIMEOUT=3000"),
-                SocketSetting.newInstanceOf("SO_RCVBUF=2000"));
+                SocketSetting.newInstanceOf("SO_RCVBUF=3000"));
         ServerSocket serverSocket = new ServerSocket();
         socketSettings.applyTo(serverSocket);
         Assert.assertEquals(3000, serverSocket.getSoTimeout());
-        Assert.assertEquals(2000, serverSocket.getReceiveBufferSize());
+        Assert.assertEquals(3000, serverSocket.getReceiveBufferSize());
     }
 
     @Test(expected = UnsupportedOperationException.class)
@@ -87,11 +87,11 @@ public class SocketSettingsTest {
     public void testApplyToSocket() throws SocketException {
         SocketSettings socketSettings = SocketSettings.newInstance(
                 SocketSetting.newInstanceOf("SO_TIMEOUT=3000"),
-                SocketSetting.newInstanceOf("SO_SNDBUF=2000"));
+                SocketSetting.newInstanceOf("SO_SNDBUF=3000"));
         Socket socket = new Socket();
         socketSettings.applyTo(socket);
         Assert.assertEquals(3000, socket.getSoTimeout());
-        Assert.assertEquals(2000, socket.getSendBufferSize());
+        Assert.assertEquals(3000, socket.getSendBufferSize());
     }
 
     @Test(expected = UnsupportedOperationException.class)
@@ -105,27 +105,27 @@ public class SocketSettingsTest {
     @Test
     public void testEqualsObject01() {
         SocketSettings socketSettings = SocketSettings.newInstance(
-                SocketSetting.newInstanceOf("SO_TIMEOUT=1000"),
-                SocketSetting.newInstanceOf("SO_SNDBUF=256"),
-                SocketSetting.newInstanceOf("SO_RCVBUF=256"));
+                SocketSetting.newInstanceOf("SO_TIMEOUT=3000"),
+                SocketSetting.newInstanceOf("SO_SNDBUF=3000"),
+                SocketSetting.newInstanceOf("SO_RCVBUF=3000"));
         Assert.assertEquals(socketSettings, socketSettings);
     }
 
     @Test
     public void testEqualsObject02() {
         SocketSettings socketSettings = SocketSettings.newInstance(
-                SocketSetting.newInstanceOf("SO_TIMEOUT=1000"),
-                SocketSetting.newInstanceOf("SO_SNDBUF=256"),
-                SocketSetting.newInstanceOf("SO_RCVBUF=256"));
+                SocketSetting.newInstanceOf("SO_TIMEOUT=3000"),
+                SocketSetting.newInstanceOf("SO_SNDBUF=3000"),
+                SocketSetting.newInstanceOf("SO_RCVBUF=3000"));
         Assert.assertNotEquals(socketSettings, null);
     }
 
     @Test
     public void testEqualsObject03() {
         Object obj1 = SocketSettings.newInstance(
-                SocketSetting.newInstanceOf("SO_TIMEOUT=1000"),
-                SocketSetting.newInstanceOf("SO_SNDBUF=256"),
-                SocketSetting.newInstanceOf("SO_RCVBUF=256"));
+                SocketSetting.newInstanceOf("SO_TIMEOUT=3000"),
+                SocketSetting.newInstanceOf("SO_SNDBUF=3000"),
+                SocketSetting.newInstanceOf("SO_RCVBUF=3000"));
         Object obj2 = new Object();
         Assert.assertNotEquals(obj1, obj2);
     }
@@ -133,9 +133,9 @@ public class SocketSettingsTest {
     @Test
     public void testEqualsObject04() {
         SocketSettings socketSettings1 = SocketSettings.newInstance(
-                SocketSetting.newInstanceOf("SO_TIMEOUT=1000"),
-                SocketSetting.newInstanceOf("SO_SNDBUF=256"),
-                SocketSetting.newInstanceOf("SO_RCVBUF=256"));
+                SocketSetting.newInstanceOf("SO_TIMEOUT=3000"),
+                SocketSetting.newInstanceOf("SO_SNDBUF=3000"),
+                SocketSetting.newInstanceOf("SO_RCVBUF=3000"));
         SocketSettings socketSettings2 = SocketSettings.newInstance(
                 SocketSetting.newInstanceOf("SO_BROADCAST=true"),
                 SocketSetting.newInstanceOf("SO_TIMEOUT=3000"));
@@ -145,20 +145,20 @@ public class SocketSettingsTest {
     @Test
     public void testEqualsObject05() {
         SocketSettings socketSettings1 = SocketSettings.newInstance(
-                SocketSetting.newInstanceOf("SO_TIMEOUT=1000"),
-                SocketSetting.newInstanceOf("SO_SNDBUF=256"),
-                SocketSetting.newInstanceOf("SO_RCVBUF=256"));
+                SocketSetting.newInstanceOf("SO_TIMEOUT=3000"),
+                SocketSetting.newInstanceOf("SO_SNDBUF=3000"),
+                SocketSetting.newInstanceOf("SO_RCVBUF=3000"));
         SocketSettings socketSettings2 = SocketSettings.newInstance(
-                SocketSetting.newInstanceOf("SO_TIMEOUT=1000"),
-                SocketSetting.newInstanceOf("SO_SNDBUF=256"),
-                SocketSetting.newInstanceOf("SO_RCVBUF=256"));
+                SocketSetting.newInstanceOf("SO_TIMEOUT=3000"),
+                SocketSetting.newInstanceOf("SO_SNDBUF=3000"),
+                SocketSetting.newInstanceOf("SO_RCVBUF=3000"));
         Assert.assertEquals(socketSettings1, socketSettings2);
     }
 
     @Test
     public void getValueSocketSettingSpec01() {
         SocketSettings socketSettings = SocketSettings.newInstance(
-                SocketSetting.newInstanceOf("SO_TIMEOUT=1000"),
+                SocketSetting.newInstanceOf("SO_TIMEOUT=3000"),
                 SocketSetting.newInstanceOf("SO_REUSEADDR=true")
         );
         Assert.assertEquals(Boolean.TRUE, socketSettings.getValue(
@@ -168,7 +168,7 @@ public class SocketSettingsTest {
     @Test
     public void getValueSocketSettingSpec02() {
         SocketSettings socketSettings = SocketSettings.newInstance(
-                SocketSetting.newInstanceOf("SO_TIMEOUT=1000"),
+                SocketSetting.newInstanceOf("SO_TIMEOUT=3000"),
                 SocketSetting.newInstanceOf("SO_REUSEADDR=true"));
         Assert.assertNull(socketSettings.getValue(
                 StandardSocketSettingSpecConstants.IP_TOS));
@@ -177,13 +177,13 @@ public class SocketSettingsTest {
     @Test
     public void testHashCode01() {
         SocketSettings socketSettings1 = SocketSettings.newInstance(
-                SocketSetting.newInstanceOf("SO_TIMEOUT=1000"),
-                SocketSetting.newInstanceOf("SO_SNDBUF=256"),
-                SocketSetting.newInstanceOf("SO_RCVBUF=256"));
+                SocketSetting.newInstanceOf("SO_TIMEOUT=3000"),
+                SocketSetting.newInstanceOf("SO_SNDBUF=3000"),
+                SocketSetting.newInstanceOf("SO_RCVBUF=3000"));
         SocketSettings socketSettings2 = SocketSettings.newInstance(
-                SocketSetting.newInstanceOf("SO_TIMEOUT=1000"),
-                SocketSetting.newInstanceOf("SO_SNDBUF=256"),
-                SocketSetting.newInstanceOf("SO_RCVBUF=256"));
+                SocketSetting.newInstanceOf("SO_TIMEOUT=3000"),
+                SocketSetting.newInstanceOf("SO_SNDBUF=3000"),
+                SocketSetting.newInstanceOf("SO_RCVBUF=3000"));
         Assert.assertEquals(
                 socketSettings1.hashCode(), socketSettings2.hashCode());
     }
@@ -191,9 +191,9 @@ public class SocketSettingsTest {
     @Test
     public void testHashCode02() {
         SocketSettings socketSettings1 = SocketSettings.newInstance(
-                SocketSetting.newInstanceOf("SO_TIMEOUT=1000"),
-                SocketSetting.newInstanceOf("SO_SNDBUF=256"),
-                SocketSetting.newInstanceOf("SO_RCVBUF=256"));
+                SocketSetting.newInstanceOf("SO_TIMEOUT=3000"),
+                SocketSetting.newInstanceOf("SO_SNDBUF=3000"),
+                SocketSetting.newInstanceOf("SO_RCVBUF=3000"));
         SocketSettings socketSettings2 = SocketSettings.newInstance(
                 SocketSetting.newInstanceOf("SO_BROADCAST=true"),
                 SocketSetting.newInstanceOf("SO_TIMEOUT=3000"));
@@ -277,10 +277,10 @@ public class SocketSettingsTest {
                 StandardSocketSettingSpecConstants.SO_REUSEADDR.newSocketSetting(
                         Boolean.TRUE),
                 StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
-                        NonnegativeInteger.newInstanceOf(1000))
+                        NonnegativeInteger.newInstanceOf(3000))
         );
         Assert.assertEquals(
-                "SO_REUSEADDR=true,SO_TIMEOUT=1000",
+                "SO_REUSEADDR=true,SO_TIMEOUT=3000",
                 socketSettings.toString());
     }
 

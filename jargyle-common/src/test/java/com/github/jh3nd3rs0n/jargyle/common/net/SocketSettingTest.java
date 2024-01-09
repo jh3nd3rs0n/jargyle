@@ -91,8 +91,10 @@ public class SocketSettingTest {
 
     @Test
     public void testApplyToDatagramSocket() throws SocketException {
+        DatagramSocket datagramSocket = new DatagramSocket(null);
         StandardSocketSettingSpecConstants.SO_BROADCAST.newSocketSetting(
-                Boolean.TRUE).applyTo(new DatagramSocket(null));
+                Boolean.TRUE).applyTo(datagramSocket);
+        Assert.assertTrue(datagramSocket.getBroadcast());
     }
 
     @Test(expected = UnsupportedOperationException.class)
@@ -103,8 +105,10 @@ public class SocketSettingTest {
 
     @Test
     public void testApplyToServerSocket() throws IOException {
+        ServerSocket serverSocket = new ServerSocket();
         StandardSocketSettingSpecConstants.SO_REUSEADDR.newSocketSetting(
-                Boolean.TRUE).applyTo(new ServerSocket());
+                Boolean.TRUE).applyTo(serverSocket);
+        Assert.assertTrue(serverSocket.getReuseAddress());
     }
 
     @Test(expected = UnsupportedOperationException.class)
@@ -115,8 +119,10 @@ public class SocketSettingTest {
 
     @Test
     public void testApplyToSocket() throws SocketException {
+        Socket socket = new Socket();
         StandardSocketSettingSpecConstants.TCP_NODELAY.newSocketSetting(
-                Boolean.TRUE).applyTo(new Socket());
+                Boolean.TRUE).applyTo(socket);
+        Assert.assertTrue(socket.getTcpNoDelay());
     }
 
     @Test(expected = UnsupportedOperationException.class)

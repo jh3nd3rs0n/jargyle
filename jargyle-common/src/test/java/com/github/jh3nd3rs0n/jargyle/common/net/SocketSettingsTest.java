@@ -17,8 +17,7 @@ public class SocketSettingsTest {
         Assert.assertNotNull(SocketSettings.newInstance(
                 SocketSetting.newInstanceOf("SO_TIMEOUT=1000"),
                 SocketSetting.newInstanceOf("SO_SNDBUF=256"),
-                SocketSetting.newInstanceOf("SO_RCVBUF=256")
-        ));
+                SocketSetting.newInstanceOf("SO_RCVBUF=256")));
     }
 
     @Test
@@ -50,17 +49,18 @@ public class SocketSettingsTest {
     public void testApplyToDatagramSocket() throws SocketException {
         SocketSettings socketSettings = SocketSettings.newInstance(
                 SocketSetting.newInstanceOf("SO_BROADCAST=true"),
-                SocketSetting.newInstanceOf("SO_TIMEOUT=3000")
-        );
-        socketSettings.applyTo(new DatagramSocket(null));
+                SocketSetting.newInstanceOf("SO_TIMEOUT=3000"));
+        DatagramSocket datagramSocket = new DatagramSocket(null);
+        socketSettings.applyTo(datagramSocket);
+        Assert.assertTrue(datagramSocket.getBroadcast());
+        Assert.assertEquals(3000, datagramSocket.getSoTimeout());
     }
 
     @Test(expected = UnsupportedOperationException.class)
     public void testApplyToDatagramSocketForUnsupportedOperationException() throws SocketException {
         SocketSettings socketSettings = SocketSettings.newInstance(
                 SocketSetting.newInstanceOf("SO_BROADCAST=true"),
-                SocketSetting.newInstanceOf("TCP_NODELAY=true")
-        );
+                SocketSetting.newInstanceOf("TCP_NODELAY=true"));
         socketSettings.applyTo(new DatagramSocket(null));
     }
 
@@ -68,17 +68,18 @@ public class SocketSettingsTest {
     public void testApplyToServerSocket() throws IOException {
         SocketSettings socketSettings = SocketSettings.newInstance(
                 SocketSetting.newInstanceOf("SO_TIMEOUT=3000"),
-                SocketSetting.newInstanceOf("SO_RCVBUF=256")
-        );
-        socketSettings.applyTo(new ServerSocket());
+                SocketSetting.newInstanceOf("SO_RCVBUF=2000"));
+        ServerSocket serverSocket = new ServerSocket();
+        socketSettings.applyTo(serverSocket);
+        Assert.assertEquals(3000, serverSocket.getSoTimeout());
+        Assert.assertEquals(2000, serverSocket.getReceiveBufferSize());
     }
 
     @Test(expected = UnsupportedOperationException.class)
     public void testApplyToServerSocketForUnsupportedOperationException() throws IOException {
         SocketSettings socketSettings = SocketSettings.newInstance(
                 SocketSetting.newInstanceOf("SO_TIMEOUT=3000"),
-                SocketSetting.newInstanceOf("SO_BROADCAST=true")
-        );
+                SocketSetting.newInstanceOf("SO_BROADCAST=true"));
         socketSettings.applyTo(new ServerSocket());
     }
 
@@ -86,17 +87,18 @@ public class SocketSettingsTest {
     public void testApplyToSocket() throws SocketException {
         SocketSettings socketSettings = SocketSettings.newInstance(
                 SocketSetting.newInstanceOf("SO_TIMEOUT=3000"),
-                SocketSetting.newInstanceOf("SO_SNDBUF=256")
-        );
-        socketSettings.applyTo(new Socket());
+                SocketSetting.newInstanceOf("SO_SNDBUF=2000"));
+        Socket socket = new Socket();
+        socketSettings.applyTo(socket);
+        Assert.assertEquals(3000, socket.getSoTimeout());
+        Assert.assertEquals(2000, socket.getSendBufferSize());
     }
 
     @Test(expected = UnsupportedOperationException.class)
     public void testApplyToSocketForUnsupportedOperationException() throws SocketException {
         SocketSettings socketSettings = SocketSettings.newInstance(
                 SocketSetting.newInstanceOf("SO_TIMEOUT=3000"),
-                SocketSetting.newInstanceOf("SO_BROADCAST=true")
-        );
+                SocketSetting.newInstanceOf("SO_BROADCAST=true"));
         socketSettings.applyTo(new Socket());
     }
 
@@ -167,8 +169,7 @@ public class SocketSettingsTest {
     public void getValueSocketSettingSpec02() {
         SocketSettings socketSettings = SocketSettings.newInstance(
                 SocketSetting.newInstanceOf("SO_TIMEOUT=1000"),
-                SocketSetting.newInstanceOf("SO_REUSEADDR=true")
-        );
+                SocketSetting.newInstanceOf("SO_REUSEADDR=true"));
         Assert.assertNull(socketSettings.getValue(
                 StandardSocketSettingSpecConstants.IP_TOS));
     }

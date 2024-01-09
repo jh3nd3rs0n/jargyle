@@ -28,9 +28,11 @@ public class StandardSocketSettingSpecSoLingerTest {
 
     @Test
     public void testApplyValueSocket() throws SocketException {
+        Socket socket = new Socket();
         StandardSocketSettingSpecConstants.SO_LINGER.apply(
                 NonnegativeInteger.newInstanceOf(234),
-                new Socket());
+                socket);
+        Assert.assertEquals(234, socket.getSoLinger());
     }
 
     @Test

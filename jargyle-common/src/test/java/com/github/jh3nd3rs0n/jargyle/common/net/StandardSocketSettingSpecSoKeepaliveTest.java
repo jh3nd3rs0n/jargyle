@@ -25,8 +25,10 @@ public class StandardSocketSettingSpecSoKeepaliveTest {
 
     @Test
     public void testApplyValueSocket() throws SocketException {
+        Socket socket = new Socket();
         StandardSocketSettingSpecConstants.SO_KEEPALIVE.apply(
-                Boolean.TRUE, new Socket());
+                Boolean.TRUE, socket);
+        Assert.assertTrue(socket.getKeepAlive());
     }
 
     @Test

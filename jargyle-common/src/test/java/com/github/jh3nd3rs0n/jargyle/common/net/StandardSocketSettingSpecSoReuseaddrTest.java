@@ -13,20 +13,26 @@ public class StandardSocketSettingSpecSoReuseaddrTest {
 
     @Test
     public void testApplyValueDatagramSocket() throws SocketException {
+        DatagramSocket datagramSocket = new DatagramSocket(null);
         StandardSocketSettingSpecConstants.SO_REUSEADDR.apply(
-                Boolean.TRUE, new DatagramSocket(null));
+                Boolean.TRUE, datagramSocket);
+        Assert.assertTrue(datagramSocket.getReuseAddress());
     }
 
     @Test
     public void testApplyValueServerSocket() throws IOException {
+        ServerSocket serverSocket = new ServerSocket();
         StandardSocketSettingSpecConstants.SO_REUSEADDR.apply(
-                Boolean.TRUE, new ServerSocket());
+                Boolean.TRUE, serverSocket);
+        Assert.assertTrue(serverSocket.getReuseAddress());
     }
 
     @Test
     public void testApplyValueSocket() throws SocketException {
+        Socket socket = new Socket();
         StandardSocketSettingSpecConstants.SO_REUSEADDR.apply(
-                Boolean.TRUE, new Socket());
+                Boolean.TRUE, socket);
+        Assert.assertTrue(socket.getReuseAddress());
     }
 
     @Test

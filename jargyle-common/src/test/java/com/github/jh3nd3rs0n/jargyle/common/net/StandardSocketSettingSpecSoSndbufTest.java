@@ -14,9 +14,11 @@ public class StandardSocketSettingSpecSoSndbufTest {
 
     @Test
     public void testApplyValueDatagramSocket() throws SocketException {
+        DatagramSocket datagramSocket = new DatagramSocket(null);
         StandardSocketSettingSpecConstants.SO_SNDBUF.apply(
                 PositiveInteger.newInstanceOf(7240),
-                new DatagramSocket(null));
+                datagramSocket);
+        Assert.assertEquals(7240, datagramSocket.getSendBufferSize());
     }
 
     @Test(expected = UnsupportedOperationException.class)
@@ -28,9 +30,11 @@ public class StandardSocketSettingSpecSoSndbufTest {
 
     @Test
     public void testApplyValueSocket() throws SocketException {
+        Socket socket = new Socket();
         StandardSocketSettingSpecConstants.SO_SNDBUF.apply(
                 PositiveInteger.newInstanceOf(7240),
-                new Socket());
+                socket);
+        Assert.assertEquals(7240, socket.getSendBufferSize());
     }
 
     @Test

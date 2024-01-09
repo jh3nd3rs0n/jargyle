@@ -14,23 +14,29 @@ public class StandardSocketSettingSpecSoTimeoutTest {
 
     @Test
     public void testApplyValueDatagramSocket() throws SocketException {
+        DatagramSocket datagramSocket = new DatagramSocket(null);
         StandardSocketSettingSpecConstants.SO_TIMEOUT.apply(
                 NonnegativeInteger.newInstanceOf(1000),
-                new DatagramSocket(null));
+                datagramSocket);
+        Assert.assertEquals(1000, datagramSocket.getSoTimeout());
     }
 
     @Test
     public void testApplyValueServerSocket() throws IOException {
+        ServerSocket serverSocket = new ServerSocket();
         StandardSocketSettingSpecConstants.SO_TIMEOUT.apply(
                 NonnegativeInteger.newInstanceOf(1000),
-                new ServerSocket());
+                serverSocket);
+        Assert.assertEquals(1000, serverSocket.getSoTimeout());
     }
 
     @Test
     public void testApplyValueSocket() throws SocketException {
+        Socket socket = new Socket();
         StandardSocketSettingSpecConstants.SO_TIMEOUT.apply(
                 NonnegativeInteger.newInstanceOf(1000),
-                new Socket());
+                socket);
+        Assert.assertEquals(1000, socket.getSoTimeout());
     }
 
     @Test

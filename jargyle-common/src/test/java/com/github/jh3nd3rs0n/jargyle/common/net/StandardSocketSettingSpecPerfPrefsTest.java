@@ -20,14 +20,28 @@ public class StandardSocketSettingSpecPerfPrefsTest {
 
     @Test
     public void testApplyValueServerSocket() throws IOException {
-        StandardSocketSettingSpecConstants.PERF_PREFS.apply(
-                PerformancePreferences.newInstanceOf("321"), new ServerSocket());
+        ServerSocket serverSocket = new ServerSocket();
+        SocketException socketException = null;
+        try {
+            StandardSocketSettingSpecConstants.PERF_PREFS.apply(
+                    PerformancePreferences.newInstanceOf("321"), serverSocket);
+        } catch (SocketException e) {
+            socketException = e;
+        }
+        Assert.assertNull(socketException);
     }
 
     @Test
-    public void testApplyValueSocket() throws SocketException {
-        StandardSocketSettingSpecConstants.PERF_PREFS.apply(
-                PerformancePreferences.newInstanceOf("213"), new Socket());
+    public void testApplyValueSocket() {
+        Socket socket = new Socket();
+        SocketException socketException = null;
+        try {
+            StandardSocketSettingSpecConstants.PERF_PREFS.apply(
+                    PerformancePreferences.newInstanceOf("213"), socket);
+        } catch (SocketException e) {
+            socketException = e;
+        }
+        Assert.assertNull(socketException);
     }
 
     @Test

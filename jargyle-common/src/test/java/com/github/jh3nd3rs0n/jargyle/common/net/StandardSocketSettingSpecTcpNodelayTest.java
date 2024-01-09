@@ -25,8 +25,10 @@ public class StandardSocketSettingSpecTcpNodelayTest {
 
     @Test
     public void testApplyValueSocket() throws SocketException {
+        Socket socket = new Socket();
         StandardSocketSettingSpecConstants.TCP_NODELAY.apply(
-                Boolean.TRUE, new Socket());
+                Boolean.TRUE, socket);
+        Assert.assertTrue(socket.getTcpNoDelay());
     }
 
     @Test

@@ -13,8 +13,10 @@ public class StandardSocketSettingSpecSoBroadcastTest {
 
     @Test
     public void testApplyValueDatagramSocket() throws SocketException {
+        DatagramSocket datagramSocket = new DatagramSocket(null);
         StandardSocketSettingSpecConstants.SO_BROADCAST.apply(
-                Boolean.TRUE, new DatagramSocket(null));
+                Boolean.TRUE, datagramSocket);
+        Assert.assertTrue(datagramSocket.getBroadcast());
     }
 
     @Test(expected = UnsupportedOperationException.class)

@@ -1,0 +1,5 @@
+module:com.github.jh3nd3rs0n.jargyle.common
+com.github.jh3nd3rs0n.jargyle.common.net
+com.github.jh3nd3rs0n.jargyle.common.number
+com.github.jh3nd3rs0n.jargyle.common.security
+com.github.jh3nd3rs0n.jargyle.common.string

@@ -1,6 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.common.net;
 
-import com.github.jh3nd3rs0n.jargyle.common.number.NonnegativeInteger;
+import com.github.jh3nd3rs0n.jargyle.common.number.NonNegativeInteger;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -53,7 +53,7 @@ public class SocketSettingSpecTest {
         SocketSettingSpec<?> socketSettingSpec2 =
                 new SocketSettingSpecImpl<>(
                         "Integer",
-                        NonnegativeInteger.class,
+                        NonNegativeInteger.class,
                         new NonnegativeIntegerStringConverter());
         Assert.assertNotEquals(socketSettingSpec1, socketSettingSpec2);
     }
@@ -89,7 +89,7 @@ public class SocketSettingSpecTest {
                         new IntegerStringConverter()).hashCode(),
                 new SocketSettingSpecImpl<>(
                         "Integer",
-                        NonnegativeInteger.class,
+                        NonNegativeInteger.class,
                         new NonnegativeIntegerStringConverter()).hashCode());
 
     }
@@ -164,26 +164,11 @@ public class SocketSettingSpecTest {
                         null));
     }
 
-    interface StringConverter<T> {
-
-        T convert(final String value);
-
-    }
-
     static final class BooleanStringConverter implements StringConverter<Boolean> {
 
         @Override
         public Boolean convert(String value) {
             return Boolean.valueOf(value);
-        }
-
-    }
-
-    static final class VoidStringConverter implements StringConverter<Void> {
-
-        @Override
-        public Void convert(String value) {
-            return null;
         }
 
     }
@@ -198,11 +183,11 @@ public class SocketSettingSpecTest {
     }
 
     static final class NonnegativeIntegerStringConverter
-            implements StringConverter<NonnegativeInteger> {
+            implements StringConverter<NonNegativeInteger> {
 
         @Override
-        public NonnegativeInteger convert(String value) {
-            return NonnegativeInteger.newInstanceOf(value);
+        public NonNegativeInteger convert(String value) {
+            return NonNegativeInteger.valueOf(value);
         }
 
     }
@@ -222,6 +207,21 @@ public class SocketSettingSpecTest {
         @Override
         public SocketSetting<V> newSocketSettingWithParsedValue(String value) {
             return this.newSocketSetting(this.stringConverter.convert(value));
+        }
+
+    }
+
+    interface StringConverter<T> {
+
+        T convert(final String value);
+
+    }
+
+    static final class VoidStringConverter implements StringConverter<Void> {
+
+        @Override
+        public Void convert(String value) {
+            return null;
         }
 
     }

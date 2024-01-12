@@ -20,7 +20,7 @@ public final class AddressRangeContainsAddressRuleConditionSpec
 	@Override
 	public RuleCondition<AddressRange, String> newRuleConditionWithParsedValue(
 			final String value) {
-		return super.newRuleCondition(AddressRange.newInstanceOf(value));
+		return super.newRuleCondition(AddressRange.newInstanceFrom(value));
 	}
 
 }

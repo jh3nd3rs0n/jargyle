@@ -9,31 +9,6 @@ import java.net.UnknownHostException;
 public class HostNameTest {
 
     @Test
-    public void testNewHostNameString01() {
-        Assert.assertNotNull(HostName.newHostNameOf("localhost"));
-    }
-
-    @Test
-    public void testNewHostNameString02() {
-        Assert.assertNotNull(HostName.newHostNameOf("google.com"));
-    }
-
-    @Test
-    public void testNewHostNameString03() {
-        Assert.assertNotNull(HostName.newHostNameOf("jh3nd3rs0n.github.io"));
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testNewHostNameStringForIllegalArgumentException01() {
-        HostName.newHostNameOf("LOCALHOST");
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testNewHostNameStringForIllegalArgumentException02() {
-        HostName.newHostNameOf("@#$%^&");
-    }
-
-    @Test
     public void testEqualsObject01() {
         HostName hostName = HostName.newHostNameOf("localhost");
         Assert.assertEquals(hostName, hostName);
@@ -78,6 +53,31 @@ public class HostNameTest {
         HostName hostName1 = HostName.newHostNameOf("localhost");
         HostName hostName2 = HostName.newHostNameOf("google.com");
         Assert.assertNotEquals(hostName1.hashCode(), hostName2.hashCode());
+    }
+
+    @Test
+    public void testNewHostNameOfString01() {
+        Assert.assertNotNull(HostName.newHostNameOf("localhost"));
+    }
+
+    @Test
+    public void testNewHostNameOfString02() {
+        Assert.assertNotNull(HostName.newHostNameOf("google.com"));
+    }
+
+    @Test
+    public void testNewHostNameOfString03() {
+        Assert.assertNotNull(HostName.newHostNameOf("jh3nd3rs0n.github.io"));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testNewHostNameOfStringForIllegalArgumentException01() {
+        HostName.newHostNameOf("LOCALHOST");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testNewHostNameOfStringForIllegalArgumentException02() {
+        HostName.newHostNameOf("@#$%^&");
     }
 
     @Test

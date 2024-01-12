@@ -34,7 +34,7 @@ public final class BandwidthLimitedSocket extends FilterSocket {
 			if (newLength == -1) {
 				return -1;
 			}
-			return UnsignedByte.newInstanceOf(b[0]).intValue();
+			return UnsignedByte.valueOf(b[0]).intValue();
 		}
 
 		@Override

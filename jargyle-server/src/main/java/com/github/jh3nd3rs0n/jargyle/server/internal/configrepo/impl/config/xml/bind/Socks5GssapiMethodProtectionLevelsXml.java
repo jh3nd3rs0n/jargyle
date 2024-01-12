@@ -39,7 +39,7 @@ class Socks5GssapiMethodProtectionLevelsXml extends ValueXml {
 			protectionLevels.add(ProtectionLevel.valueOfString(
 					socks5GssapiMethodProtectionLevel));
 		}
-		return ProtectionLevels.newInstance(
+		return ProtectionLevels.of(
 				protectionLevels.get(0), 
 				protectionLevels.subList(1, protectionLevels.size()));
 	}

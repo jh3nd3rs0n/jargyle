@@ -12,8 +12,8 @@ final class SocketSettingSpecConstants {
      * The {@code Map} of all {@code SocketSettingSpec} constants each
      * associated by the name they specify for their {@code SocketSetting}.
      */
-    private static final Map<String, SocketSettingSpec<Object>> VALUES_MAP = new HashMap<>(
-            StandardSocketSettingSpecConstants.valuesMap());
+    private static final Map<String, SocketSettingSpec<Object>> VALUES_MAP =
+            new HashMap<>(StandardSocketSettingSpecConstants.valuesMap());
 
     /**
      * Prevents the construction of unnecessary instances.

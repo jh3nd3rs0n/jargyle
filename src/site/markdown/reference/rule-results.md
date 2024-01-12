@@ -202,7 +202,7 @@ Specifies the firewall action to take
 **Syntax:**
 
 ```text
-firewallActionAllowLimit=NONNEGATIVE_INTEGER
+firewallActionAllowLimit=NON_NEGATIVE_INTEGER
 ```
 
 **Description:**

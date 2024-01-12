@@ -14,7 +14,7 @@ public class StandardSocketSettingSpecPerfPrefsTest {
     @Test(expected = UnsupportedOperationException.class)
     public void testApplyValueDatagramSocketForUnsupportedOperationException() throws SocketException {
         StandardSocketSettingSpecConstants.PERF_PREFS.apply(
-                PerformancePreferences.newInstanceOf("123"),
+                PerformancePreferences.newInstanceFrom("123"),
                 new DatagramSocket(null));
     }
 
@@ -24,7 +24,7 @@ public class StandardSocketSettingSpecPerfPrefsTest {
         SocketException socketException = null;
         try {
             StandardSocketSettingSpecConstants.PERF_PREFS.apply(
-                    PerformancePreferences.newInstanceOf("321"), serverSocket);
+                    PerformancePreferences.newInstanceFrom("321"), serverSocket);
         } catch (SocketException e) {
             socketException = e;
         }
@@ -37,7 +37,7 @@ public class StandardSocketSettingSpecPerfPrefsTest {
         SocketException socketException = null;
         try {
             StandardSocketSettingSpecConstants.PERF_PREFS.apply(
-                    PerformancePreferences.newInstanceOf("213"), socket);
+                    PerformancePreferences.newInstanceFrom("213"), socket);
         } catch (SocketException e) {
             socketException = e;
         }

@@ -16,7 +16,7 @@ public class StandardSocketSettingSpecSoSndbufTest {
     public void testApplyValueDatagramSocket() throws SocketException {
         DatagramSocket datagramSocket = new DatagramSocket(null);
         StandardSocketSettingSpecConstants.SO_SNDBUF.apply(
-                PositiveInteger.newInstanceOf(7240),
+                PositiveInteger.valueOf(7240),
                 datagramSocket);
         Assert.assertEquals(7240, datagramSocket.getSendBufferSize());
     }
@@ -24,7 +24,7 @@ public class StandardSocketSettingSpecSoSndbufTest {
     @Test(expected = UnsupportedOperationException.class)
     public void testApplyValueServerSocket() throws IOException {
         StandardSocketSettingSpecConstants.SO_SNDBUF.apply(
-                PositiveInteger.newInstanceOf(7240),
+                PositiveInteger.valueOf(7240),
                 new ServerSocket());
     }
 
@@ -32,7 +32,7 @@ public class StandardSocketSettingSpecSoSndbufTest {
     public void testApplyValueSocket() throws SocketException {
         Socket socket = new Socket();
         StandardSocketSettingSpecConstants.SO_SNDBUF.apply(
-                PositiveInteger.newInstanceOf(7240),
+                PositiveInteger.valueOf(7240),
                 socket);
         Assert.assertEquals(7240, socket.getSendBufferSize());
     }

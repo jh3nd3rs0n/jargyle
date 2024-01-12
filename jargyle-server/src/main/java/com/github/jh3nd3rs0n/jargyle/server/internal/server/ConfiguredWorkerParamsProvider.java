@@ -31,8 +31,8 @@ final class ConfiguredWorkerParamsProvider {
 						SslSocketFactoryImpl.isSslEnabled(config) ?
 								new SslSocketFactoryImpl(config) : null,
 						config,
-						Routes.newInstance(config),
-						Rules.newInstance(config));
+						Routes.newInstanceFrom(config),
+						Rules.newInstanceFrom(config));
 				this.lastConfiguration = config;
 			}
 		} finally {

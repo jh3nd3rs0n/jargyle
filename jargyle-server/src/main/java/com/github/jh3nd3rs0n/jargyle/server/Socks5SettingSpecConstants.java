@@ -81,7 +81,7 @@ public final class Socks5SettingSpecConstants {
 	public static final SettingSpec<SocketSettings> SOCKS5_ON_BIND_INBOUND_SOCKET_SETTINGS = 
 			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
 					"socks5.onBind.inboundSocketSettings", 
-					SocketSettings.newInstance()));
+					SocketSettings.of()));
 	
 	@NameValuePairValueSpecDoc(
 			description = "The binding host name or address for the listen "
@@ -105,7 +105,7 @@ public final class Socks5SettingSpecConstants {
 	public static final SettingSpec<PortRanges> SOCKS5_ON_BIND_LISTEN_BIND_PORT_RANGES =
 			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
 					"socks5.onBind.listenBindPortRanges",
-					PortRanges.newInstance()));
+					PortRanges.of()));
 	
 	@NameValuePairValueSpecDoc(
 			description = "The comma separated list of socket settings for the "
@@ -117,7 +117,7 @@ public final class Socks5SettingSpecConstants {
 	public static final SettingSpec<SocketSettings> SOCKS5_ON_BIND_LISTEN_SOCKET_SETTINGS = 
 			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
 					"socks5.onBind.listenSocketSettings", 
-					SocketSettings.newInstance()));
+					SocketSettings.of()));
 	
 	@NameValuePairValueSpecDoc(
 			description = "The buffer size in bytes for relaying the data",
@@ -186,7 +186,7 @@ public final class Socks5SettingSpecConstants {
 	public static final SettingSpec<PortRanges> SOCKS5_ON_COMMAND_BIND_TCP_PORT_RANGES =
 			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
 					"socks5.onCommand.bindTcpPortRanges",
-					PortRanges.newInstance()));
+					PortRanges.of()));
 			
 	@NameValuePairValueSpecDoc(
 			description = "The comma separated list of binding port ranges for "
@@ -198,7 +198,7 @@ public final class Socks5SettingSpecConstants {
 	public static final SettingSpec<PortRanges> SOCKS5_ON_COMMAND_BIND_UDP_PORT_RANGES =
 			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
 					"socks5.onCommand.bindUdpPortRanges",
-					PortRanges.newInstance()));
+					PortRanges.of()));
 
 	@NameValuePairValueSpecDoc(
 			description = "The binding host name or address for all "
@@ -222,7 +222,7 @@ public final class Socks5SettingSpecConstants {
 	public static final SettingSpec<PortRanges> SOCKS5_ON_COMMAND_EXTERNAL_FACING_BIND_TCP_PORT_RANGES =
 			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
 					"socks5.onCommand.externalFacingBindTcpPortRanges",
-					PortRanges.newInstance()));
+					PortRanges.of()));
 			
 	@NameValuePairValueSpecDoc(
 			description = "The comma separated list of binding port ranges for "
@@ -234,7 +234,7 @@ public final class Socks5SettingSpecConstants {
 	public static final SettingSpec<PortRanges> SOCKS5_ON_COMMAND_EXTERNAL_FACING_BIND_UDP_PORT_RANGES =
 			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
 					"socks5.onCommand.externalFacingBindUdpPortRanges",
-					PortRanges.newInstance()));
+					PortRanges.of()));
 	
 	@NameValuePairValueSpecDoc(
 			description = "The comma separated list of socket settings for all "
@@ -246,7 +246,7 @@ public final class Socks5SettingSpecConstants {
 	public static final SettingSpec<SocketSettings> SOCKS5_ON_COMMAND_EXTERNAL_FACING_SOCKET_SETTINGS =
 			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
 					"socks5.onCommand.externalFacingSocketSettings", 
-					SocketSettings.newInstance()));
+					SocketSettings.of()));
 
 	@NameValuePairValueSpecDoc(
 			description = "The binding host name or address for all "
@@ -270,7 +270,7 @@ public final class Socks5SettingSpecConstants {
 	public static final SettingSpec<PortRanges> SOCKS5_ON_COMMAND_INTERNAL_FACING_BIND_UDP_PORT_RANGES =
 			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
 					"socks5.onCommand.internalFacingBindUdpPortRanges",
-					PortRanges.newInstance()));
+					PortRanges.of()));
 	
 	@NameValuePairValueSpecDoc(
 			description = "The comma separated list of socket settings for all "
@@ -282,7 +282,7 @@ public final class Socks5SettingSpecConstants {
 	public static final SettingSpec<SocketSettings> SOCKS5_ON_COMMAND_INTERNAL_FACING_SOCKET_SETTINGS =
 			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
 					"socks5.onCommand.internalFacingSocketSettings", 
-					SocketSettings.newInstance()));
+					SocketSettings.of()));
 	
 	@NameValuePairValueSpecDoc(
 			description = "The buffer size in bytes for relaying the data "
@@ -294,7 +294,7 @@ public final class Socks5SettingSpecConstants {
 	public static final SettingSpec<PositiveInteger> SOCKS5_ON_COMMAND_RELAY_BUFFER_SIZE =
 			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
 					"socks5.onCommand.relayBufferSize",
-					PositiveInteger.newInstanceOf(1024)));
+					PositiveInteger.valueOf(1024)));
 	
 	@NameValuePairValueSpecDoc(
 			description = "The timeout in milliseconds on relaying no data "
@@ -306,7 +306,7 @@ public final class Socks5SettingSpecConstants {
 	public static final SettingSpec<PositiveInteger> SOCKS5_ON_COMMAND_RELAY_IDLE_TIMEOUT =
 			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
 					"socks5.onCommand.relayIdleTimeout",
-					PositiveInteger.newInstanceOf(60000)));
+					PositiveInteger.valueOf(60000)));
 	
 	@NameValuePairValueSpecDoc(
 			description = "The upper limit on bandwidth in bytes per second of "
@@ -342,7 +342,7 @@ public final class Socks5SettingSpecConstants {
 	public static final SettingSpec<SocketSettings> SOCKS5_ON_COMMAND_SOCKET_SETTINGS =
 			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
 					"socks5.onCommand.socketSettings", 
-					SocketSettings.newInstance()));
+					SocketSettings.of()));
 	
 	@NameValuePairValueSpecDoc(
 			description = "The boolean value to indicate if the server-facing "
@@ -427,7 +427,7 @@ public final class Socks5SettingSpecConstants {
 	public static final SettingSpec<PortRanges> SOCKS5_ON_CONNECT_SERVER_FACING_BIND_PORT_RANGES =
 			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
 					"socks5.onConnect.serverFacingBindPortRanges",
-					PortRanges.newInstance()));
+					PortRanges.of()));
 	
 	@NameValuePairValueSpecDoc(
 			description = "The timeout in milliseconds on waiting for the "
@@ -439,7 +439,7 @@ public final class Socks5SettingSpecConstants {
 	public static final SettingSpec<PositiveInteger> SOCKS5_ON_CONNECT_SERVER_FACING_CONNECT_TIMEOUT = 
 			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
 					"socks5.onConnect.serverFacingConnectTimeout", 
-					PositiveInteger.newInstanceOf(60000)));
+					PositiveInteger.valueOf(60000)));
 	
 	@NameValuePairValueSpecDoc(
 			description = "The comma separated list of socket settings for the "
@@ -451,7 +451,7 @@ public final class Socks5SettingSpecConstants {
 	public static final SettingSpec<SocketSettings> SOCKS5_ON_CONNECT_SERVER_FACING_SOCKET_SETTINGS = 
 			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
 					"socks5.onConnect.serverFacingSocketSettings", 
-					SocketSettings.newInstance()));
+					SocketSettings.of()));
 	
 	@NameValuePairValueSpecDoc(
 			description = "The binding host name or address for the "
@@ -475,7 +475,7 @@ public final class Socks5SettingSpecConstants {
 	public static final SettingSpec<PortRanges> SOCKS5_ON_UDP_ASSOCIATE_CLIENT_FACING_BIND_PORT_RANGES =
 			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
 					"socks5.onUdpAssociate.clientFacingBindPortRanges",
-					PortRanges.newInstance()));
+					PortRanges.of()));
 	
 	@NameValuePairValueSpecDoc(
 			description = "The comma separated list of socket settings for the "
@@ -487,7 +487,7 @@ public final class Socks5SettingSpecConstants {
 	public static final SettingSpec<SocketSettings> SOCKS5_ON_UDP_ASSOCIATE_CLIENT_FACING_SOCKET_SETTINGS = 
 			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
 					"socks5.onUdpAssociate.clientFacingSocketSettings", 
-					SocketSettings.newInstance()));
+					SocketSettings.of()));
 
 	@NameValuePairValueSpecDoc(
 			description = "The binding host name or address for the peer-facing "
@@ -511,7 +511,7 @@ public final class Socks5SettingSpecConstants {
 	public static final SettingSpec<PortRanges> SOCKS5_ON_UDP_ASSOCIATE_PEER_FACING_BIND_PORT_RANGES =
 			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
 					"socks5.onUdpAssociate.peerFacingBindPortRanges",
-					PortRanges.newInstance()));
+					PortRanges.of()));
 	
 	@NameValuePairValueSpecDoc(
 			description = "The comma separated list of socket settings for the "
@@ -523,7 +523,7 @@ public final class Socks5SettingSpecConstants {
 	public static final SettingSpec<SocketSettings> SOCKS5_ON_UDP_ASSOCIATE_PEER_FACING_SOCKET_SETTINGS = 
 			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
 					"socks5.onUdpAssociate.peerFacingSocketSettings", 
-					SocketSettings.newInstance()));
+					SocketSettings.of()));
 	
 	@NameValuePairValueSpecDoc(
 			description = "The buffer size in bytes for relaying the data",

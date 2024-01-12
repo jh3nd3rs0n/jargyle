@@ -35,7 +35,7 @@ public class FilterSocket extends Socket {
     }
 
     @Override
-    public void bind(SocketAddress bindpoint) throws IOException {
+    public void bind(final SocketAddress bindpoint) throws IOException {
         this.socket.bind(bindpoint);
     }
 
@@ -45,12 +45,14 @@ public class FilterSocket extends Socket {
     }
 
     @Override
-    public void connect(SocketAddress endpoint) throws IOException {
+    public void connect(final SocketAddress endpoint) throws IOException {
         this.socket.connect(endpoint);
     }
 
     @Override
-    public void connect(SocketAddress endpoint, int timeout) throws IOException {
+    public void connect(
+            final SocketAddress endpoint,
+            final int timeout) throws IOException {
         this.socket.connect(endpoint, timeout);
     }
 
@@ -75,7 +77,7 @@ public class FilterSocket extends Socket {
     }
 
     @Override
-    public void setKeepAlive(boolean on) throws SocketException {
+    public void setKeepAlive(final boolean on) throws SocketException {
         this.socket.setKeepAlive(on);
     }
 
@@ -100,7 +102,7 @@ public class FilterSocket extends Socket {
     }
 
     @Override
-    public void setOOBInline(boolean on) throws SocketException {
+    public void setOOBInline(final boolean on) throws SocketException {
         this.socket.setOOBInline(on);
     }
 
@@ -125,7 +127,8 @@ public class FilterSocket extends Socket {
     }
 
     @Override
-    public synchronized void setReceiveBufferSize(int size) throws SocketException {
+    public synchronized void setReceiveBufferSize(
+            final int size) throws SocketException {
         this.socket.setReceiveBufferSize(size);
     }
 
@@ -140,7 +143,7 @@ public class FilterSocket extends Socket {
     }
 
     @Override
-    public void setReuseAddress(boolean on) throws SocketException {
+    public void setReuseAddress(final boolean on) throws SocketException {
         this.socket.setReuseAddress(on);
     }
 
@@ -150,7 +153,8 @@ public class FilterSocket extends Socket {
     }
 
     @Override
-    public synchronized void setSendBufferSize(int size) throws SocketException {
+    public synchronized void setSendBufferSize(
+            final int size) throws SocketException {
         this.socket.setSendBufferSize(size);
     }
 
@@ -165,7 +169,8 @@ public class FilterSocket extends Socket {
     }
 
     @Override
-    public synchronized void setSoTimeout(int timeout) throws SocketException {
+    public synchronized void setSoTimeout(
+            final int timeout) throws SocketException {
         this.socket.setSoTimeout(timeout);
     }
 
@@ -175,7 +180,7 @@ public class FilterSocket extends Socket {
     }
 
     @Override
-    public void setTcpNoDelay(boolean on) throws SocketException {
+    public void setTcpNoDelay(final boolean on) throws SocketException {
         this.socket.setTcpNoDelay(on);
     }
 
@@ -185,7 +190,7 @@ public class FilterSocket extends Socket {
     }
 
     @Override
-    public void setTrafficClass(int tc) throws SocketException {
+    public void setTrafficClass(final int tc) throws SocketException {
         this.socket.setTrafficClass(tc);
     }
 
@@ -215,23 +220,28 @@ public class FilterSocket extends Socket {
     }
 
     @Override
-    public void sendUrgentData(int data) throws IOException {
+    public void sendUrgentData(final int data) throws IOException {
         this.socket.sendUrgentData(data);
     }
 
     @Override
-    public <T> Socket setOption(SocketOption<T> name, T value) throws IOException {
+    public <T> Socket setOption(
+            final SocketOption<T> name, final T value) throws IOException {
         this.socket.setOption(name, value);
         return this;
     }
 
     @Override
-    public void setPerformancePreferences(int connectionTime, int latency, int bandwidth) {
+    public void setPerformancePreferences(
+            final int connectionTime,
+            final int latency,
+            final int bandwidth) {
         this.socket.setPerformancePreferences(connectionTime, latency, bandwidth);
     }
 
     @Override
-    public void setSoLinger(boolean on, int linger) throws SocketException {
+    public void setSoLinger(
+            final boolean on, final int linger) throws SocketException {
         this.socket.setSoLinger(on, linger);
     }
 

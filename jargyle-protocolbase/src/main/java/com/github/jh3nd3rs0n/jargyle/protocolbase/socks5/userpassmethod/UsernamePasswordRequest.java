@@ -76,7 +76,7 @@ public final class UsernamePasswordRequest {
 		byte[] passwdBytes = getValidatedPasswordBytes(passwd);
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		Version version = Version.V1;
-		out.write(UnsignedByte.newInstanceOf(version.byteValue()).intValue());
+		out.write(UnsignedByte.valueOf(version.byteValue()).intValue());
 		out.write(usernameBytes.length);
 		try {
 			out.write(usernameBytes);

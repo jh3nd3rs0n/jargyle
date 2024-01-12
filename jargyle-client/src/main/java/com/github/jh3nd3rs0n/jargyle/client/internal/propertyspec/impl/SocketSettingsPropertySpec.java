@@ -15,7 +15,7 @@ public final class SocketSettingsPropertySpec
 	@Override
 	public Property<SocketSettings> newPropertyWithParsedValue(
 			final String value) {
-		return super.newProperty(SocketSettings.newInstanceOf(value));
+		return super.newProperty(SocketSettings.newInstanceFrom(value));
 	}
 
 }

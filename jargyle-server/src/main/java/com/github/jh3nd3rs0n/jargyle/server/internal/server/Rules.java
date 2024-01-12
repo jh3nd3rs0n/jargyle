@@ -13,16 +13,16 @@ import com.github.jh3nd3rs0n.jargyle.server.RuleContext;
 
 public final class Rules {
 	
-	public static Rules newInstance(final Configuration configuration) {
-		return Rules.newInstance(configuration.getSettings().getValues(
+	public static Rules newInstanceFrom(final Configuration configuration) {
+		return Rules.of(configuration.getSettings().getValues(
 				GeneralSettingSpecConstants.RULE));
 	}
 	
-	public static Rules newInstance(final List<Rule> rls) {
+	public static Rules of(final List<Rule> rls) {
 		return new Rules(rls);
 	}
 	
-	public static Rules newInstance(final Rule... rls) {
+	public static Rules of(final Rule... rls) {
 		return new Rules(Arrays.asList(rls));
 	}
 	

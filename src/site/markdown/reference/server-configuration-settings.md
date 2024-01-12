@@ -148,7 +148,7 @@
 **Syntax:**
 
 ```text
-backlog=NONNEGATIVE_INTEGER
+backlog=NON_NEGATIVE_INTEGER
 ```
 
 **Description:**

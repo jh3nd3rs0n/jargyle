@@ -82,7 +82,7 @@ public final class EchoServer {
 	public static final int BACKLOG = 50;
 	public static final InetAddress INET_ADDRESS = InetAddress.getLoopbackAddress();
 	public static final int PORT = 1084;
-	public static final SocketSettings SOCKET_SETTINGS = SocketSettings.newInstance();
+	public static final SocketSettings SOCKET_SETTINGS = SocketSettings.of();
 	
 	private final int backlog;
 	private final InetAddress bindInetAddress;

@@ -48,7 +48,7 @@ public abstract class SocksServerUri {
 		return scheme.newSocksServerUri(host, Integer.valueOf(port));
 	}
 	
-	public static SocksServerUri newInstanceOf(final String s) {
+	public static SocksServerUri newInstanceFrom(final String s) {
 		URI uri = null;
 		try {
 			uri = new URI(s);

@@ -43,9 +43,9 @@ public class EchoThroughSocksServerUsingSslIT {
 	private static SocksServer socksServerUsingSslAndRequiredClientAuth;
 	
 	private static Configuration newConfigurationUsingSsl() {
-		return Configuration.newUnmodifiableInstance(Settings.newInstance(
+		return Configuration.newUnmodifiableInstance(Settings.of(
 				GeneralSettingSpecConstants.PORT.newSetting(
-						Port.newInstanceOf(SOCKS_SERVER_PORT_USING_SSL)),
+						Port.valueOf(SOCKS_SERVER_PORT_USING_SSL)),
 				DtlsSettingSpecConstants.DTLS_ENABLED.newSetting(Boolean.TRUE),
 				DtlsSettingSpecConstants.DTLS_KEY_STORE_FILE.newSetting(
 						TestResourceConstants.ECHO_INTEGRATION_TEST_SOCKS_SERVER_KEY_STORE_FILE.getFile()),
@@ -59,9 +59,9 @@ public class EchoThroughSocksServerUsingSslIT {
 	}
 	
 	private static Configuration newConfigurationUsingSslAndRequestedClientAuth() {
-		return Configuration.newUnmodifiableInstance(Settings.newInstance(
+		return Configuration.newUnmodifiableInstance(Settings.of(
 				GeneralSettingSpecConstants.PORT.newSetting(
-						Port.newInstanceOf(
+						Port.valueOf(
 								SOCKS_SERVER_PORT_USING_SSL_AND_REQUESTED_CLIENT_AUTH)),
 				DtlsSettingSpecConstants.DTLS_ENABLED.newSetting(Boolean.TRUE),
 				DtlsSettingSpecConstants.DTLS_KEY_STORE_FILE.newSetting(
@@ -88,9 +88,9 @@ public class EchoThroughSocksServerUsingSslIT {
 	}
 	
 	private static Configuration newConfigurationUsingSslAndRequiredClientAuth() {
-		return Configuration.newUnmodifiableInstance(Settings.newInstance(
+		return Configuration.newUnmodifiableInstance(Settings.of(
 				GeneralSettingSpecConstants.PORT.newSetting(
-						Port.newInstanceOf(
+						Port.valueOf(
 								SOCKS_SERVER_PORT_USING_SSL_AND_REQUIRED_CLIENT_AUTH)),
 				DtlsSettingSpecConstants.DTLS_ENABLED.newSetting(Boolean.TRUE),
 				DtlsSettingSpecConstants.DTLS_KEY_STORE_FILE.newSetting(
@@ -117,7 +117,7 @@ public class EchoThroughSocksServerUsingSslIT {
 	}
 
 	private static SocksClient newSocks5ClientUsingSsl() {
-		Properties properties = Properties.newInstance(
+		Properties properties = Properties.of(
 				DtlsPropertySpecConstants.DTLS_ENABLED.newProperty(
 						Boolean.TRUE),
 				DtlsPropertySpecConstants.DTLS_TRUST_STORE_FILE.newProperty(
@@ -137,7 +137,7 @@ public class EchoThroughSocksServerUsingSslIT {
 	}
 
 	private static SocksClient newSocks5ClientUsingSslAndRequestedClientAuth() {
-		Properties properties = Properties.newInstance(
+		Properties properties = Properties.of(
 				DtlsPropertySpecConstants.DTLS_ENABLED.newProperty(
 						Boolean.TRUE),
 				DtlsPropertySpecConstants.DTLS_KEY_STORE_FILE.newProperty(
@@ -164,7 +164,7 @@ public class EchoThroughSocksServerUsingSslIT {
 	}
 	
 	private static SocksClient newSocks5ClientUsingSslAndRequiredClientAuth() {
-		Properties properties = Properties.newInstance(
+		Properties properties = Properties.of(
 				DtlsPropertySpecConstants.DTLS_ENABLED.newProperty(
 						Boolean.TRUE),
 				DtlsPropertySpecConstants.DTLS_KEY_STORE_FILE.newProperty(

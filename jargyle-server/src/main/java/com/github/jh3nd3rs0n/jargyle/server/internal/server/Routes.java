@@ -212,7 +212,7 @@ public final class Routes {
 						SslPropertySpecConstants.SSL_TRUST_STORE_TYPE));		
 	}
 	
-	public static Routes newInstance(final Configuration configuration) {
+	public static Routes newInstanceFrom(final Configuration configuration) {
 		List<Route> routes = new ArrayList<Route>();
 		Settings settings = configuration.getSettings();
 		SocksServerUri socksServerUri = null;
@@ -237,7 +237,7 @@ public final class Routes {
 				SocksServerUri serverUri = (SocksServerUri) obj;
 				if (socksServerUri != null) {
 					chainedSocksClient = socksServerUri.newSocksClient(
-							Properties.newInstance(properties), 
+							Properties.of(properties),
 							chainedSocksClient);
 					properties.clear();
 					if (routeId != null) {
@@ -263,7 +263,7 @@ public final class Routes {
 			routes.add(new Route(lastRouteId, NetObjectFactory.getInstance()));
 		} else {
 			SocksClient socksClient = socksServerUri.newSocksClient(
-					Properties.newInstance(properties), chainedSocksClient);
+					Properties.of(properties), chainedSocksClient);
 			if (routeId == null) {
 				routes.add(new Route(
 						lastRouteId, socksClient.newSocksNetObjectFactory()));
@@ -274,14 +274,14 @@ public final class Routes {
 						lastRouteId, NetObjectFactory.getInstance()));				
 			}
 		}
-		return newInstance(routes);
+		return of(routes);
 	}
 	
-	public static Routes newInstance(final List<Route> rtes) {
+	public static Routes of(final List<Route> rtes) {
 		return new Routes(rtes);
 	}
 	
-	public static Routes newInstance(final Routes other) {
+	public static Routes of(final Routes other) {
 		return new Routes(other);
 	}
 	

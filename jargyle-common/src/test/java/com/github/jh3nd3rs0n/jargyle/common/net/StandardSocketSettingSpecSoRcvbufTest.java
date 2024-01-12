@@ -16,7 +16,7 @@ public class StandardSocketSettingSpecSoRcvbufTest {
     public void testApplyValueDatagramSocket() throws SocketException {
         DatagramSocket datagramSocket = new DatagramSocket(null);
         StandardSocketSettingSpecConstants.SO_RCVBUF.apply(
-                PositiveInteger.newInstanceOf(4000),
+                PositiveInteger.valueOf(4000),
                 datagramSocket);
         Assert.assertEquals(4000, datagramSocket.getReceiveBufferSize());
     }
@@ -25,7 +25,7 @@ public class StandardSocketSettingSpecSoRcvbufTest {
     public void testApplyValueServerSocket() throws IOException {
         ServerSocket serverSocket = new ServerSocket();
         StandardSocketSettingSpecConstants.SO_RCVBUF.apply(
-                PositiveInteger.newInstanceOf(4000),
+                PositiveInteger.valueOf(4000),
                 serverSocket);
         Assert.assertEquals(4000, serverSocket.getReceiveBufferSize());
     }
@@ -34,7 +34,7 @@ public class StandardSocketSettingSpecSoRcvbufTest {
     public void testApplyValueSocket() throws SocketException {
         Socket socket = new Socket();
         StandardSocketSettingSpecConstants.SO_RCVBUF.apply(
-                PositiveInteger.newInstanceOf(4000),
+                PositiveInteger.valueOf(4000),
                 socket);
         Assert.assertEquals(4000, socket.getReceiveBufferSize());
     }

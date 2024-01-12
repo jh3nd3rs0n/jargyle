@@ -63,7 +63,7 @@ public final class GeneralPropertySpecConstants {
 	public static final PropertySpec<PositiveInteger> CLIENT_CONNECT_TIMEOUT = 
 			PROPERTY_SPECS.addThenGet(new PositiveIntegerPropertySpec(
 					"socksClient.clientConnectTimeout",
-					PositiveInteger.newInstanceOf(60000))); // 1 minute
+					PositiveInteger.valueOf(60000))); // 1 minute
 	
 	@NameValuePairValueSpecDoc(
 			description = "The comma separated list of socket settings for the "
@@ -77,7 +77,7 @@ public final class GeneralPropertySpecConstants {
 	public static final PropertySpec<SocketSettings> CLIENT_SOCKET_SETTINGS = 
 			PROPERTY_SPECS.addThenGet(new SocketSettingsPropertySpec(
 					"socksClient.clientSocketSettings",
-					SocketSettings.newInstance()));
+					SocketSettings.of()));
 	
 	public static List<PropertySpec<Object>> values() {
 		return PROPERTY_SPECS.toList();

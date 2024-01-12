@@ -17,14 +17,14 @@ public enum Version {
 		}
 		String str = Arrays.stream(Version.values())
 				.map(Version::byteValue)
-				.map(bv -> UnsignedByte.newInstanceOf(bv).intValue())
+				.map(bv -> UnsignedByte.valueOf(bv).intValue())
 				.map(i -> Integer.toHexString(i))
 				.collect(Collectors.joining(", "));
 		throw new IllegalArgumentException(String.format(
 				"expected version must be one of the following values: %s. "
 				+ "actual value is %s",
 				str,
-				Integer.toHexString(UnsignedByte.newInstanceOf(b).intValue())));
+				Integer.toHexString(UnsignedByte.valueOf(b).intValue())));
 	}
 	
 	private final byte byteValue;

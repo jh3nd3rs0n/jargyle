@@ -28,9 +28,11 @@ public class FilterDatagramSocket extends DatagramSocket {
      *
      * @param datagramSock the provided {@code DatagramSocket} to be filtered
      * @throws SocketException if the {@code FilterDatagramSocket} can not be
-     *                         opened, or the {@code FilterDatagramSocket} could not bind to the
-     *                         specified local port (which in either case will not happen since the
-     *                         {@code FilterDatagramSocket} is neither opened nor bound)
+     *                         opened, or the {@code FilterDatagramSocket}
+     *                         could not bind to the specified local port
+     *                         (which in either case will not happen since the
+     *                         {@code FilterDatagramSocket} is neither opened
+     *                         nor bound)
      */
     public FilterDatagramSocket(
             final DatagramSocket datagramSock) throws SocketException {
@@ -39,7 +41,8 @@ public class FilterDatagramSocket extends DatagramSocket {
     }
 
     @Override
-    public synchronized void bind(SocketAddress addr) throws SocketException {
+    public synchronized void bind(
+            final SocketAddress addr) throws SocketException {
         this.datagramSocket.bind(addr);
     }
 
@@ -49,12 +52,12 @@ public class FilterDatagramSocket extends DatagramSocket {
     }
 
     @Override
-    public void connect(InetAddress address, int port) {
+    public void connect(final InetAddress address, final int port) {
         this.datagramSocket.connect(address, port);
     }
 
     @Override
-    public void connect(SocketAddress addr) throws SocketException {
+    public void connect(final SocketAddress addr) throws SocketException {
         this.datagramSocket.connect(addr);
     }
 
@@ -69,7 +72,8 @@ public class FilterDatagramSocket extends DatagramSocket {
     }
 
     @Override
-    public synchronized void setBroadcast(boolean on) throws SocketException {
+    public synchronized void setBroadcast(
+            final boolean on) throws SocketException {
         this.datagramSocket.setBroadcast(on);
     }
 
@@ -99,7 +103,7 @@ public class FilterDatagramSocket extends DatagramSocket {
     }
 
     @Override
-    public <T> T getOption(SocketOption<T> name) throws IOException {
+    public <T> T getOption(final SocketOption<T> name) throws IOException {
         return this.datagramSocket.getOption(name);
     }
 
@@ -114,7 +118,8 @@ public class FilterDatagramSocket extends DatagramSocket {
     }
 
     @Override
-    public synchronized void setReceiveBufferSize(int size) throws SocketException {
+    public synchronized void setReceiveBufferSize(
+            final int size) throws SocketException {
         this.datagramSocket.setReceiveBufferSize(size);
     }
 
@@ -129,7 +134,8 @@ public class FilterDatagramSocket extends DatagramSocket {
     }
 
     @Override
-    public synchronized void setReuseAddress(boolean on) throws SocketException {
+    public synchronized void setReuseAddress(
+            final boolean on) throws SocketException {
         this.datagramSocket.setReuseAddress(on);
     }
 
@@ -139,7 +145,8 @@ public class FilterDatagramSocket extends DatagramSocket {
     }
 
     @Override
-    public synchronized void setSendBufferSize(int size) throws SocketException {
+    public synchronized void setSendBufferSize(
+            final int size) throws SocketException {
         this.datagramSocket.setSendBufferSize(size);
     }
 
@@ -149,7 +156,8 @@ public class FilterDatagramSocket extends DatagramSocket {
     }
 
     @Override
-    public synchronized void setSoTimeout(int timeout) throws SocketException {
+    public synchronized void setSoTimeout(
+            final int timeout) throws SocketException {
         this.datagramSocket.setSoTimeout(timeout);
     }
 
@@ -159,7 +167,8 @@ public class FilterDatagramSocket extends DatagramSocket {
     }
 
     @Override
-    public synchronized void setTrafficClass(int tc) throws SocketException {
+    public synchronized void setTrafficClass(
+            final int tc) throws SocketException {
         this.datagramSocket.setTrafficClass(tc);
     }
 
@@ -179,18 +188,19 @@ public class FilterDatagramSocket extends DatagramSocket {
     }
 
     @Override
-    public synchronized void receive(DatagramPacket p) throws IOException {
+    public synchronized void receive(
+            final DatagramPacket p) throws IOException {
         this.datagramSocket.receive(p);
     }
 
     @Override
-    public void send(DatagramPacket p) throws IOException {
+    public void send(final DatagramPacket p) throws IOException {
         this.datagramSocket.send(p);
     }
 
     @Override
     public <T> DatagramSocket setOption(
-            SocketOption<T> name, T value) throws IOException {
+            final SocketOption<T> name, final T value) throws IOException {
         this.datagramSocket.setOption(name, value);
         return this;
     }

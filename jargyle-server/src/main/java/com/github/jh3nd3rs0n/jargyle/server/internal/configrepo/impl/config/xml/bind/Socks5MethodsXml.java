@@ -34,7 +34,7 @@ class Socks5MethodsXml extends ValueXml {
 		for (String socks5Method : this.socks5Methods) {
 			methods.add(Method.valueOfString(socks5Method));
 		}
-		return Methods.newInstance(methods);
+		return Methods.of(methods);
 	}
 	
 	@Override

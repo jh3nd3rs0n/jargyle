@@ -12,84 +12,6 @@ import java.net.SocketException;
 public class SocketSettingTest {
 
     @Test
-    public void testNewInstanceOfString() {
-        Assert.assertNotNull(SocketSetting.newInstanceOf("SO_TIMEOUT=1000"));
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testNewInstanceOfStringForIllegalArgumentException01() {
-        SocketSetting.newInstanceOf("SO_TIMEOUT:1000");
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testNewInstanceOfStringForIllegalArgumentException02() {
-        SocketSetting.newInstanceOf("so_timeout=1000");
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testNewInstanceOfStringForIllegalArgumentException03() {
-        SocketSetting.newInstanceOf("SO_TIMEOUT=1_000");
-    }
-
-    @Test
-    public void testNewInstanceOfStringType() {
-        Assert.assertNotNull(SocketSetting.newInstance(
-                "SO_REUSEADDR", Boolean.TRUE));
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testNewInstanceOfStringTypeForIllegalArgumentException() {
-        Assert.assertNotNull(SocketSetting.newInstance(
-                "so_reuseaddr", Boolean.TRUE));
-    }
-
-    @Test
-    public void testNewInstanceOfStringTypeString() {
-        Assert.assertNotNull(SocketSetting.newInstance(
-                "TCP_NODELAY", Boolean.TRUE, "Disable Nagle's algorithm"));
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testNewInstanceOfStringTypeStringForIllegalArgumentException() {
-        Assert.assertNotNull(SocketSetting.newInstance(
-                "tcp_no_delay", Boolean.TRUE, "Disable Nagle's algorithm"));
-    }
-
-    @Test
-    public void testNewInstanceWithParsedValueStringString() {
-        Assert.assertNotNull(SocketSetting.newInstanceWithParsedValue(
-                "SO_SNDBUF", "2000"));
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testNewInstanceWithParsedValueStringStringForIllegalArgumentException01() {
-        SocketSetting.newInstanceWithParsedValue("so_sndbuf", "2000");
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testNewInstanceWithParsedValueStringStringForIllegalArgumentException02() {
-        SocketSetting.newInstanceWithParsedValue("SO_SNDBUF", "2_000");
-    }
-
-    @Test
-    public void testNewInstanceWithParsedValueStringStringString() {
-        Assert.assertNotNull(SocketSetting.newInstanceWithParsedValue(
-                "SO_RCVBUF", "3000", "Set receive buffer to 3000"));
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testNewInstanceWithParsedValueStringStringStringForIllegalArgumentException01() {
-        SocketSetting.newInstanceWithParsedValue(
-                "so_rcvbuf", "3000", "Set receive buffer to 3000");
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testNewInstanceWithParsedValueStringStringStringForIllegalArgumentException02() {
-        SocketSetting.newInstanceWithParsedValue(
-                "SO_RCVBUF", "-3000", "Set receive buffer to -3000");
-    }
-
-    @Test
     public void testApplyToDatagramSocket() throws SocketException {
         DatagramSocket datagramSocket = new DatagramSocket(null);
         StandardSocketSettingSpecConstants.SO_BROADCAST.newSocketSetting(
@@ -133,57 +55,57 @@ public class SocketSettingTest {
 
     @Test
     public void testEqualsObject01() {
-        SocketSetting<Object> socketSetting = SocketSetting.newInstanceOf(
+        SocketSetting<Object> socketSetting = SocketSetting.newInstanceFrom(
                 "SO_TIMEOUT=1000");
         Assert.assertEquals(socketSetting, socketSetting);
     }
 
     @Test
     public void testEqualsObject02() {
-        SocketSetting<Object> socketSetting = SocketSetting.newInstanceOf(
+        SocketSetting<Object> socketSetting = SocketSetting.newInstanceFrom(
                 "SO_TIMEOUT=1000");
         Assert.assertNotEquals(socketSetting, null);
     }
 
     @Test
     public void testEqualsObject03() {
-        Object obj1 = SocketSetting.newInstanceOf("SO_TIMEOUT=1000");
+        Object obj1 = SocketSetting.newInstanceFrom("SO_TIMEOUT=1000");
         Object obj2 = new Object();
         Assert.assertNotEquals(obj1, obj2);
     }
 
     @Test
     public void testEqualsObject04() {
-        SocketSetting<Object> socketSetting1 = SocketSetting.newInstanceOf(
+        SocketSetting<Object> socketSetting1 = SocketSetting.newInstanceFrom(
                 "SO_TIMEOUT=1000");
-        SocketSetting<Object> socketSetting2 = SocketSetting.newInstanceOf(
+        SocketSetting<Object> socketSetting2 = SocketSetting.newInstanceFrom(
                 "SO_SNDBUF=1000");
         Assert.assertNotEquals(socketSetting1, socketSetting2);
     }
 
     @Test
     public void testEqualsObject05() {
-        SocketSetting<Object> socketSetting1 = SocketSetting.newInstanceOf(
+        SocketSetting<Object> socketSetting1 = SocketSetting.newInstanceFrom(
                 "SO_TIMEOUT=1000");
-        SocketSetting<Object> socketSetting2 = SocketSetting.newInstanceOf(
+        SocketSetting<Object> socketSetting2 = SocketSetting.newInstanceFrom(
                 "SO_TIMEOUT=2000");
         Assert.assertNotEquals(socketSetting1, socketSetting2);
     }
 
     @Test
     public void testEqualsObject06() {
-        SocketSetting<Object> socketSetting1 = SocketSetting.newInstanceOf(
+        SocketSetting<Object> socketSetting1 = SocketSetting.newInstanceFrom(
                 "SO_TIMEOUT=1000");
-        SocketSetting<Object> socketSetting2 = SocketSetting.newInstanceOf(
+        SocketSetting<Object> socketSetting2 = SocketSetting.newInstanceFrom(
                 "SO_TIMEOUT=1000");
         Assert.assertEquals(socketSetting1, socketSetting2);
     }
 
     @Test
     public void testHashCode01() {
-        SocketSetting<Object> socketSetting1 = SocketSetting.newInstanceOf(
+        SocketSetting<Object> socketSetting1 = SocketSetting.newInstanceFrom(
                 "SO_TIMEOUT=1000");
-        SocketSetting<Object> socketSetting2 = SocketSetting.newInstanceOf(
+        SocketSetting<Object> socketSetting2 = SocketSetting.newInstanceFrom(
                 "SO_TIMEOUT=1000");
         Assert.assertEquals(
                 socketSetting1.hashCode(), socketSetting2.hashCode());
@@ -191,12 +113,90 @@ public class SocketSettingTest {
 
     @Test
     public void testHashCode02() {
-        SocketSetting<Object> socketSetting1 = SocketSetting.newInstanceOf(
+        SocketSetting<Object> socketSetting1 = SocketSetting.newInstanceFrom(
                 "SO_TIMEOUT=1000");
-        SocketSetting<Object> socketSetting2 = SocketSetting.newInstanceOf(
+        SocketSetting<Object> socketSetting2 = SocketSetting.newInstanceFrom(
                 "SO_TIMEOUT=2000");
         Assert.assertNotEquals(
                 socketSetting1.hashCode(), socketSetting2.hashCode());
+    }
+
+    @Test
+    public void testNewInstanceFromString() {
+        Assert.assertNotNull(SocketSetting.newInstanceFrom("SO_TIMEOUT=1000"));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testNewInstanceFromStringForIllegalArgumentException01() {
+        SocketSetting.newInstanceFrom("SO_TIMEOUT:1000");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testNewInstanceFromStringForIllegalArgumentException02() {
+        SocketSetting.newInstanceFrom("so_timeout=1000");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testNewInstanceFromStringForIllegalArgumentException03() {
+        SocketSetting.newInstanceFrom("SO_TIMEOUT=1_000");
+    }
+
+    @Test
+    public void testNewInstanceFromStringType() {
+        Assert.assertNotNull(SocketSetting.newInstance(
+                "SO_REUSEADDR", Boolean.TRUE));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testNewInstanceFromStringTypeForIllegalArgumentException() {
+        Assert.assertNotNull(SocketSetting.newInstance(
+                "so_reuseaddr", Boolean.TRUE));
+    }
+
+    @Test
+    public void testNewInstanceFromStringTypeString() {
+        Assert.assertNotNull(SocketSetting.newInstance(
+                "TCP_NODELAY", Boolean.TRUE, "Disable Nagle's algorithm"));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testNewInstanceFromStringTypeStringForIllegalArgumentException() {
+        Assert.assertNotNull(SocketSetting.newInstance(
+                "tcp_no_delay", Boolean.TRUE, "Disable Nagle's algorithm"));
+    }
+
+    @Test
+    public void testNewInstanceWithParsedValueStringString() {
+        Assert.assertNotNull(SocketSetting.newInstanceWithParsedValue(
+                "SO_SNDBUF", "2000"));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testNewInstanceWithParsedValueStringStringForIllegalArgumentException01() {
+        SocketSetting.newInstanceWithParsedValue("so_sndbuf", "2000");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testNewInstanceWithParsedValueStringStringForIllegalArgumentException02() {
+        SocketSetting.newInstanceWithParsedValue("SO_SNDBUF", "2_000");
+    }
+
+    @Test
+    public void testNewInstanceWithParsedValueStringStringString() {
+        Assert.assertNotNull(SocketSetting.newInstanceWithParsedValue(
+                "SO_RCVBUF", "3000", "Set receive buffer to 3000"));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testNewInstanceWithParsedValueStringStringStringForIllegalArgumentException01() {
+        SocketSetting.newInstanceWithParsedValue(
+                "so_rcvbuf", "3000", "Set receive buffer to 3000");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testNewInstanceWithParsedValueStringStringStringForIllegalArgumentException02() {
+        SocketSetting.newInstanceWithParsedValue(
+                "SO_RCVBUF", "-3000", "Set receive buffer to -3000");
     }
 
     @Test

@@ -36,7 +36,7 @@ class SettingsXml {
 		for (SettingXml settingXml : this.settingsXml) {
 			settings.add(settingXml.toSetting());
 		}
-		return Settings.newInstance(settings);
+		return Settings.of(settings);
 	}
 	
 }

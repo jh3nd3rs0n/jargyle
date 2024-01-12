@@ -124,7 +124,7 @@ public class ClientApp {
                 socksServerHost, socksServerPort);
         
         SocksClient socksClient = socksServerUri.newSocksClient(
-            Properties.newInstance());
+            Properties.of());
                 
         NetObjectFactory netObjectFactory = 
             socksClient.newSocksNetObjectFactory();
@@ -190,7 +190,7 @@ Again, a complete listing of the properties can be found
 [here](../reference/client-properties.md).
 
 A `Properties` object can be created by using the method 
-`Properties.newInstance(Property...)`. The parameter is a varargs 
+`Properties.of(Property...)`. The parameter is a varargs 
 parameter of `Property` objects.
 
 Client API example:
@@ -228,7 +228,7 @@ public class ClientApp {
                 "socksClient.socks5.userpassmethod.password", 
                 "opensesame");
                 
-        Properties properties = Properties.newInstance(
+        Properties properties = Properties.of(
             socks5Methods, username, password);
         
         String socksServerHost = "jargyle.net";

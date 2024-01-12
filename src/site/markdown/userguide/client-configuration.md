@@ -502,13 +502,13 @@ public class ClientApp {
     public static void main(String[] args) throws IOException {
         SocksClient socksClient1 = Scheme.SOCKS5
             .newSocksServerUri("betabeta.net", "3456")
-            .newSocksClient(Properties.newInstance());
+            .newSocksClient(Properties.of());
         SocksClient socksClient2 = Scheme.SOCKS5
             .newSocksServerUri("alphaalpha.net", "2345")
-            .newSocksClient(Properties.newInstance(), socksClient1);
+            .newSocksClient(Properties.of(), socksClient1);
         SocksClient socksClient3 = Scheme.SOCKS5
             .newSocksServerUri("jargyle.net", "1234")
-            .newSocksClient(Properties.newInstance(), socksClient2);
+            .newSocksClient(Properties.of(), socksClient2);
         NetObjectFactory netObjectFactory = 
             socksClient3.newSocksNetObjectFactory();
         // ...

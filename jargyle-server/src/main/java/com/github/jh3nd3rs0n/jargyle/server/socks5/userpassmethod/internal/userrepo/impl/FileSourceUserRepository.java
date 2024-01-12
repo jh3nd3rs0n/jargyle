@@ -93,7 +93,7 @@ public final class FileSourceUserRepository extends UserRepository {
 	
 	private static Users readUsersFrom(final File file) {
 		if (!file.exists()) {
-			return Users.newInstance();
+			return Users.of();
 		}
 		Reader reader = null;
 		Users users = null;
@@ -186,7 +186,7 @@ public final class FileSourceUserRepository extends UserRepository {
 		Users usrs = null;
 		this.lock.lock();
 		try {
-			usrs = Users.newInstance(this.users);
+			usrs = Users.of(this.users);
 		} finally {
 			this.lock.unlock();
 		}
@@ -197,7 +197,7 @@ public final class FileSourceUserRepository extends UserRepository {
 	public void put(final User user) {
 		this.lock.lock();
 		try {
-			Users usrs = Users.newInstance(this.users);
+			Users usrs = Users.of(this.users);
 			usrs.put(user);
 			this.updateFileFrom(usrs);
 			this.updateUsersFrom(usrs);			
@@ -210,7 +210,7 @@ public final class FileSourceUserRepository extends UserRepository {
 	public void putAll(final Users users) {
 		this.lock.lock();
 		try {
-			Users usrs = Users.newInstance(this.users);
+			Users usrs = Users.of(this.users);
 			usrs.putAll(users);
 			this.updateFileFrom(usrs);
 			this.updateUsersFrom(usrs);			
@@ -223,7 +223,7 @@ public final class FileSourceUserRepository extends UserRepository {
 	public void remove(final String name) {
 		this.lock.lock();
 		try {
-			Users usrs = Users.newInstance(this.users);
+			Users usrs = Users.of(this.users);
 			usrs.remove(name);
 			this.updateFileFrom(usrs);
 			this.updateUsersFrom(usrs);			

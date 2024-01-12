@@ -3,26 +3,26 @@ package com.github.jh3nd3rs0n.jargyle.server;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.github.jh3nd3rs0n.jargyle.common.number.NonnegativeInteger;
+import com.github.jh3nd3rs0n.jargyle.common.number.NonNegativeInteger;
 
-public final class NonnegativeIntegerLimit {
+public final class NonNegativeIntegerLimit {
 
-	public static NonnegativeIntegerLimit newInstanceOf(
-			final NonnegativeInteger value) {
-		return new NonnegativeIntegerLimit(value);
+	public static NonNegativeIntegerLimit newInstanceFrom(
+			final NonNegativeInteger value) {
+		return new NonNegativeIntegerLimit(value);
 	}
 	
-	public static NonnegativeIntegerLimit newInstanceOf(final String s) {
-		return newInstanceOf(NonnegativeInteger.newInstanceOf(s));
+	public static NonNegativeIntegerLimit newInstanceFrom(final String s) {
+		return newInstanceFrom(NonNegativeInteger.valueOf(s));
 	}
 	
 	private final AtomicInteger currentCount;
-	private final NonnegativeInteger nonnegativeIntegerValue;
+	private final NonNegativeInteger nonNegativeIntegerValue;
 	private final Semaphore semaphore;
 	
-	private NonnegativeIntegerLimit(final NonnegativeInteger value) {
+	private NonNegativeIntegerLimit(final NonNegativeInteger value) {
 		this.currentCount = new AtomicInteger(0);
-		this.nonnegativeIntegerValue = value;
+		this.nonNegativeIntegerValue = value;
 		this.semaphore = new Semaphore(value.intValue(), true);
 	}
 	
@@ -50,13 +50,13 @@ public final class NonnegativeIntegerLimit {
 		if (this.getClass() != obj.getClass()) {
 			return false;
 		}
-		NonnegativeIntegerLimit other = (NonnegativeIntegerLimit) obj;
-		if (this.nonnegativeIntegerValue == null) {
-			if (other.nonnegativeIntegerValue != null) {
+		NonNegativeIntegerLimit other = (NonNegativeIntegerLimit) obj;
+		if (this.nonNegativeIntegerValue == null) {
+			if (other.nonNegativeIntegerValue != null) {
 				return false;
 			}
-		} else if (!this.nonnegativeIntegerValue.equals(
-				other.nonnegativeIntegerValue)) {
+		} else if (!this.nonNegativeIntegerValue.equals(
+				other.nonNegativeIntegerValue)) {
 			return false;
 		}
 		return true;
@@ -66,18 +66,18 @@ public final class NonnegativeIntegerLimit {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((this.nonnegativeIntegerValue == null) ? 
-				0 : this.nonnegativeIntegerValue.hashCode());
+		result = prime * result + ((this.nonNegativeIntegerValue == null) ?
+				0 : this.nonNegativeIntegerValue.hashCode());
 		return result;
 	}
 
-	public NonnegativeInteger nonnegativeIntegerValue() {
-		return this.nonnegativeIntegerValue;
+	public NonNegativeInteger nonNegativeIntegerValue() {
+		return this.nonNegativeIntegerValue;
 	}
 	
 	@Override
 	public String toString() {
-		return this.nonnegativeIntegerValue.toString();
+		return this.nonNegativeIntegerValue.toString();
 	}
 
 	public boolean tryIncrementCurrentCount() {

@@ -8,7 +8,7 @@ public final class DomainnameRange extends AddressRange {
 
 	private static final String REGEX_PREFIX = "regex:";
 
-	public static DomainnameRange newInstanceOf(final String s) {
+	public static DomainnameRange newInstanceFrom(final String s) {
 		String expression = s;
 		boolean hasRegularExpression = false;
 		if (s.startsWith(REGEX_PREFIX)) {
@@ -36,7 +36,7 @@ public final class DomainnameRange extends AddressRange {
 	}
 	
 	@Override
-	public boolean contains(final String address) {
+	public boolean has(final String address) {
 		if (!(Host.newInstanceOf(address) instanceof HostName)) {
 			return false;
 		}

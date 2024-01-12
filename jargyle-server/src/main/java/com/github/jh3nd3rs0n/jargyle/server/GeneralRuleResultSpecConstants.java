@@ -6,7 +6,7 @@ import java.util.Map;
 import com.github.jh3nd3rs0n.jargyle.common.net.Host;
 import com.github.jh3nd3rs0n.jargyle.common.net.PortRange;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSetting;
-import com.github.jh3nd3rs0n.jargyle.common.number.NonnegativeInteger;
+import com.github.jh3nd3rs0n.jargyle.common.number.NonNegativeInteger;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueSpecDoc;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueSpecsDoc;
 import com.github.jh3nd3rs0n.jargyle.server.internal.ruleresultspec.impl.FirewallActionRuleResultSpec;
@@ -127,10 +127,10 @@ public final class GeneralRuleResultSpecConstants {
 			description = "Specifies the limit on the number of simultaneous "
 					+ "instances of the rule's firewall action ALLOW",
 			name = "firewallActionAllowLimit",
-			syntax = "firewallActionAllowLimit=NONNEGATIVE_INTEGER",
-			valueType = NonnegativeInteger.class
+			syntax = "firewallActionAllowLimit=NON_NEGATIVE_INTEGER",
+			valueType = NonNegativeInteger.class
 	)
-	public static final RuleResultSpec<NonnegativeIntegerLimit> FIREWALL_ACTION_ALLOW_LIMIT = RULE_RESULT_SPECS.addThenGet(new NonnegativeIntegerLimitRuleResultSpec(
+	public static final RuleResultSpec<NonNegativeIntegerLimit> FIREWALL_ACTION_ALLOW_LIMIT = RULE_RESULT_SPECS.addThenGet(new NonnegativeIntegerLimitRuleResultSpec(
 			"firewallActionAllowLimit"));
 	
 	@NameValuePairValueSpecDoc(

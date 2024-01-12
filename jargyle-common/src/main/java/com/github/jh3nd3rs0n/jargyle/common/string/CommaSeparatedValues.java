@@ -14,14 +14,14 @@ import com.github.jh3nd3rs0n.jargyle.internal.annotation.ValuesValueTypeDoc;
 )
 public final class CommaSeparatedValues {
 
-	public static CommaSeparatedValues newInstanceOf(final String s) {
+	public static CommaSeparatedValues newInstanceFrom(final String s) {
 		if (s.isEmpty()) {
-			return newInstance(new String[] { });
+			return of(new String[] { });
 		}
-		return newInstance(s.split(","));
+		return of(s.split(","));
 	}
 	
-	public static CommaSeparatedValues newInstance(final String... vals) {
+	public static CommaSeparatedValues of(final String... vals) {
 		return new CommaSeparatedValues(vals);
 	}
 	

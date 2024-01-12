@@ -26,7 +26,7 @@ import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.common.net.StandardSocketSettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.common.number.Digit;
-import com.github.jh3nd3rs0n.jargyle.common.number.NonnegativeInteger;
+import com.github.jh3nd3rs0n.jargyle.common.number.NonNegativeInteger;
 import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
 import com.github.jh3nd3rs0n.jargyle.internal.net.FilterSocket;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Address;
@@ -300,7 +300,7 @@ public final class Socks5ServerSocket extends ServerSocket {
 			this.localPort = -1;
 			this.localSocketAddress = null;
 			this.socket = sock;
-			this.socketSettings = SocketSettings.newInstance();
+			this.socketSettings = SocketSettings.of();
 			this.socks5Client = client;
 			this.socks5Bound = false;
 		}
@@ -398,10 +398,10 @@ public final class Socks5ServerSocket extends ServerSocket {
 		public void setPerformancePreferences(
 				int connectionTime, int latency, int bandwidth) {
 			if (!this.bound) {
-				PerformancePreferences pp = PerformancePreferences.newInstance(
-						Digit.newInstanceOf(connectionTime),
-						Digit.newInstanceOf(bandwidth),
-						Digit.newInstanceOf(latency));
+				PerformancePreferences pp = PerformancePreferences.of(
+						Digit.valueOf(connectionTime),
+						Digit.valueOf(bandwidth),
+						Digit.valueOf(latency));
 				this.socket.setPerformancePreferences(
 						connectionTime, latency, bandwidth);
 				this.socketSettings.putValue(
@@ -410,7 +410,7 @@ public final class Socks5ServerSocket extends ServerSocket {
 		}
 		
 		public void setReceiveBufferSize(int size) throws SocketException {
-			PositiveInteger i = PositiveInteger.newInstanceOf(size);
+			PositiveInteger i = PositiveInteger.valueOf(size);
 			this.socket.setReceiveBufferSize(size);
 			this.socketSettings.putValue(
 					StandardSocketSettingSpecConstants.SO_RCVBUF, i);
@@ -424,7 +424,7 @@ public final class Socks5ServerSocket extends ServerSocket {
 		}
 
 		public void setSoTimeout(int timeout) throws SocketException {
-			NonnegativeInteger i = NonnegativeInteger.newInstanceOf(timeout);
+			NonNegativeInteger i = NonNegativeInteger.valueOf(timeout);
 			this.socket.setSoTimeout(timeout);
 			this.socketSettings.putValue(
 					StandardSocketSettingSpecConstants.SO_TIMEOUT, i);
@@ -452,7 +452,7 @@ public final class Socks5ServerSocket extends ServerSocket {
 			Socks5Request socks5Req = Socks5Request.newInstance(
 					Command.BIND, 
 					Address.newInstance(address), 
-					Port.newInstanceOf(prt));
+					Port.valueOf(prt));
 			this.socks5Client.sendSocks5Request(socks5Req, sck);
 			Socks5Reply socks5Rep = this.socks5Client.receiveSocks5Reply(sck);
 			String serverBoundAddress = 

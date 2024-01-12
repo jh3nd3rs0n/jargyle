@@ -24,15 +24,15 @@ public final class Methods {
 		return DEFAULT_INSTANCE;
 	}
 	
-	public static Methods newInstance(final List<Method> meths) {
+	public static Methods of(final List<Method> meths) {
 		return new Methods(meths);
 	}
 	
-	public static Methods newInstance(final Method... meths) {
-		return newInstance(Arrays.asList(meths));
+	public static Methods of(final Method... meths) {
+		return of(Arrays.asList(meths));
 	}
 	
-	public static Methods newInstanceOf(final String s) {
+	public static Methods newInstanceFrom(final String s) {
 		List<Method> methods = new ArrayList<Method>();
 		if (s.isEmpty()) {
 			return new Methods(methods);

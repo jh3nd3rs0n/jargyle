@@ -32,7 +32,7 @@ import com.github.jh3nd3rs0n.jargyle.server.GeneralRuleArgSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.GeneralRuleResultSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.GeneralSettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.LogAction;
-import com.github.jh3nd3rs0n.jargyle.server.NonnegativeIntegerLimit;
+import com.github.jh3nd3rs0n.jargyle.server.NonNegativeIntegerLimit;
 import com.github.jh3nd3rs0n.jargyle.server.Rule;
 import com.github.jh3nd3rs0n.jargyle.server.RuleContext;
 import com.github.jh3nd3rs0n.jargyle.server.SelectionStrategy;
@@ -108,7 +108,7 @@ public class Worker implements Runnable {
 					"rule must have a rule result of a firewall action of %s", 
 					FirewallAction.ALLOW));
 		}
-		NonnegativeIntegerLimit firewallActionAllowLimit =
+		NonNegativeIntegerLimit firewallActionAllowLimit =
 				belowAllowLimitRl.getLastRuleResultValue(
 						GeneralRuleResultSpecConstants.FIREWALL_ACTION_ALLOW_LIMIT);
 		if (firewallActionAllowLimit == null) {
@@ -153,7 +153,7 @@ public class Worker implements Runnable {
 	}
 	
 	private boolean canAllowClientSocketWithinLimit() {
-		NonnegativeIntegerLimit firewallActionAllowLimit =
+		NonNegativeIntegerLimit firewallActionAllowLimit =
 				this.applicableRule.getLastRuleResultValue(
 						GeneralRuleResultSpecConstants.FIREWALL_ACTION_ALLOW_LIMIT);
 		LogAction firewallActionAllowLimitReachedLogAction =
@@ -203,7 +203,7 @@ public class Worker implements Runnable {
 			FirewallAction firewallAction = 
 					belowAllowLimitRule.getLastRuleResultValue(
 							GeneralRuleResultSpecConstants.FIREWALL_ACTION);
-			NonnegativeIntegerLimit firewallActionAllowLimit =
+			NonNegativeIntegerLimit firewallActionAllowLimit =
 					belowAllowLimitRule.getLastRuleResultValue(
 							GeneralRuleResultSpecConstants.FIREWALL_ACTION_ALLOW_LIMIT);
 			if (firewallAction != null 
@@ -243,7 +243,7 @@ public class Worker implements Runnable {
 				.filter(rte -> rte != null)
 				.collect(Collectors.toList());
 		if (rtes.size() > 0) {
-			return Routes.newInstance(rtes);
+			return Routes.of(rtes);
 		}
 		return this.routes;
 	}
@@ -282,13 +282,13 @@ public class Worker implements Runnable {
 				this.applicableRule.getRuleResultValues(
 						GeneralRuleResultSpecConstants.CLIENT_SOCKET_SETTING);
 		if (socketSettings.size() > 0) {
-			return SocketSettings.newInstance(
+			return SocketSettings.of(
 					socketSettings.stream().collect(Collectors.toList()));
 		}
 		socketSettings = this.applicableRule.getRuleResultValues(
 				GeneralRuleResultSpecConstants.SOCKET_SETTING);
 		if (socketSettings.size() > 0) {
-			return SocketSettings.newInstance(
+			return SocketSettings.of(
 					socketSettings.stream().collect(Collectors.toList()));
 		}
 		Settings settings = this.configuration.getSettings();

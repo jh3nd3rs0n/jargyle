@@ -54,7 +54,8 @@ public final class HostIpv6Address extends HostAddress {
      */
     public static boolean isAllZerosIpv6Address(final String string) {
         return string.matches(ALL_ZEROS_IPV6_ADDRESS_IN_FULL_FORM_REGEX)
-                || (string.matches(ALL_ZEROS_IPV6_ADDRESS_IN_COMPRESSED_FORM_REGEX)
+                || (string.matches(
+                        ALL_ZEROS_IPV6_ADDRESS_IN_COMPRESSED_FORM_REGEX)
                 && string.split("::").length <= 2
                 && string.split(":").length <= 8);
     }

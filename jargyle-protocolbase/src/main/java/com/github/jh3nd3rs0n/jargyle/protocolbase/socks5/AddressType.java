@@ -31,7 +31,7 @@ public enum AddressType {
 				throw new AssertionError(e);
 			}
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			out.write(UnsignedByte.newInstanceOf(this.byteValue()).intValue());
+			out.write(UnsignedByte.valueOf(this.byteValue()).intValue());
 			try {
 				out.write(inetAddress.getAddress());
 			} catch (IOException e) {
@@ -65,7 +65,7 @@ public enum AddressType {
 				b[i] = bytes[i - 1];
 			}
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			out.write(UnsignedByte.newInstanceOf(this.byteValue()).intValue());
+			out.write(UnsignedByte.valueOf(this.byteValue()).intValue());
 			try {
 				out.write(b);
 			} catch (IOException e) {
@@ -92,7 +92,7 @@ public enum AddressType {
 				throw new AssertionError(e);
 			}
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			out.write(UnsignedByte.newInstanceOf(this.byteValue()).intValue());
+			out.write(UnsignedByte.valueOf(this.byteValue()).intValue());
 			try {
 				out.write(inetAddress.getAddress());
 			} catch (IOException e) {
@@ -129,14 +129,14 @@ public enum AddressType {
 		}
 		String str = Arrays.stream(AddressType.values())
 				.map(AddressType::byteValue)
-				.map(bv -> UnsignedByte.newInstanceOf(bv).intValue())
+				.map(bv -> UnsignedByte.valueOf(bv).intValue())
 				.map(i -> Integer.toHexString(i))
 				.collect(Collectors.joining(", "));
 		throw new IllegalArgumentException(String.format(
 				"expected address type must be one of the following values: "
 				+ "%s. actual value is %s",
 				str,
-				Integer.toHexString(UnsignedByte.newInstanceOf(b).intValue())));
+				Integer.toHexString(UnsignedByte.valueOf(b).intValue())));
 	}
 	
 	private final byte byteValue;

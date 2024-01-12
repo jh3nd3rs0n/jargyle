@@ -41,7 +41,7 @@ public final class UdpRequestHeader {
 			final byte[] userData) {
 		int dataStartIndex = -1;
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		byte[] rsv = UnsignedShort.newInstanceOf(RSV).toByteArray();
+		byte[] rsv = UnsignedShort.valueOf(RSV).toByteArray();
 		dataStartIndex += rsv.length;
 		try {
 			out.write(rsv);
@@ -57,7 +57,7 @@ public final class UdpRequestHeader {
 		} catch (IOException e) {
 			throw new AssertionError(e);
 		}
-		byte[] port = desiredDestinationPort.toUnsignedShort().toByteArray();
+		byte[] port = desiredDestinationPort.unsignedShortValue().toByteArray();
 		dataStartIndex += port.length;
 		try {
 			out.write(port);

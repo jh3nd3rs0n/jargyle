@@ -18,7 +18,7 @@ public class StandardSocketSettingSpecIpTosTest {
         int trafficClass = datagramSocket.getTrafficClass();
         try {
             StandardSocketSettingSpecConstants.IP_TOS.apply(
-                    UnsignedByte.newInstanceOf(2), datagramSocket);
+                    UnsignedByte.valueOf(2), datagramSocket);
         } catch (SocketException e) {
             Assert.assertNotNull(e);
             return;
@@ -34,7 +34,7 @@ public class StandardSocketSettingSpecIpTosTest {
     @Test(expected = UnsupportedOperationException.class)
     public void testApplyValueServerSocketForUnsupportedOperationException() throws IOException {
         StandardSocketSettingSpecConstants.IP_TOS.apply(
-                UnsignedByte.newInstanceOf(24), new ServerSocket());
+                UnsignedByte.valueOf(24), new ServerSocket());
     }
 
     @Test
@@ -43,7 +43,7 @@ public class StandardSocketSettingSpecIpTosTest {
         int trafficClass = socket.getTrafficClass();
         try {
             StandardSocketSettingSpecConstants.IP_TOS.apply(
-                    UnsignedByte.newInstanceOf(2), socket);
+                    UnsignedByte.valueOf(2), socket);
         } catch (SocketException e) {
             Assert.assertNotNull(e);
             return;

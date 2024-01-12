@@ -12,7 +12,7 @@ public final class PortRangesSettingSpec extends SettingSpec<PortRanges> {
 
 	@Override
 	public Setting<PortRanges> newSettingWithParsedValue(final String value) {
-		return super.newSetting(PortRanges.newInstanceOf(value));
+		return super.newSetting(PortRanges.newInstanceFrom(value));
 	}
 
 }

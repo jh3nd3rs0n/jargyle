@@ -12,7 +12,7 @@ public final class PortPropertySpec extends PropertySpec<Port> {
 
 	@Override
 	public Property<Port> newPropertyWithParsedValue(final String value) {
-		return this.newProperty(Port.newInstanceOf(value));
+		return this.newProperty(Port.valueOf(value));
 	}
 
 }

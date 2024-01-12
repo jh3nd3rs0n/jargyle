@@ -61,7 +61,7 @@ public final class Socks5HostResolver extends HostResolver {
 			Socks5Request socks5Req = Socks5Request.newInstance(
 					Command.RESOLVE, 
 					Address.newInstance(host), 
-					Port.newInstanceOf(0));
+					Port.valueOf(0));
 			this.socks5Client.sendSocks5Request(socks5Req, sck);
 			try {
 				socks5Rep = this.socks5Client.receiveSocks5Reply(sck);

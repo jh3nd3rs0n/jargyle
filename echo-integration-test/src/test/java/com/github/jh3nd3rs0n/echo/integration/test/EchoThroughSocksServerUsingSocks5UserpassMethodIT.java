@@ -44,12 +44,12 @@ public class EchoThroughSocksServerUsingSocks5UserpassMethodIT {
 		sb.append("Aladdin:opensesame,");
 		sb.append("Jasmine:mission%3Aimpossible,");
 		sb.append("Abu:safeDriversSave40%25");
-		return Configuration.newUnmodifiableInstance(Settings.newInstance(
+		return Configuration.newUnmodifiableInstance(Settings.of(
 				GeneralSettingSpecConstants.PORT.newSetting(
-						Port.newInstanceOf(
+						Port.valueOf(
 								SOCKS_SERVER_PORT_USING_SOCKS5_USERPASSMETHOD)),
 				Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
-						Methods.newInstance(Method.USERNAME_PASSWORD)),
+						Methods.of(Method.USERNAME_PASSWORD)),
 				Socks5SettingSpecConstants.SOCKS5_USERPASSMETHOD_USER_REPOSITORY.newSetting(
 						UserRepositorySpecConstants.STRING_SOURCE_USER_REPOSITORY.newUserRepository(
 								sb.toString()))));
@@ -58,9 +58,9 @@ public class EchoThroughSocksServerUsingSocks5UserpassMethodIT {
 	private static SocksClient newSocks5ClientUsingSocks5UserpassMethod(
 			final String username, 
 			final char[] password) {
-		Properties properties = Properties.newInstance(
+		Properties properties = Properties.of(
 				Socks5PropertySpecConstants.SOCKS5_METHODS.newProperty(
-						Methods.newInstance(Method.USERNAME_PASSWORD)),
+						Methods.of(Method.USERNAME_PASSWORD)),
 				Socks5PropertySpecConstants.SOCKS5_USERPASSMETHOD_USERNAME.newProperty(
 						username),
 				Socks5PropertySpecConstants.SOCKS5_USERPASSMETHOD_PASSWORD.newProperty(

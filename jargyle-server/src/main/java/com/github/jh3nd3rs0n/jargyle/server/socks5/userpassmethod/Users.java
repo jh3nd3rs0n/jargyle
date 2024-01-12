@@ -10,15 +10,15 @@ import java.util.stream.Collectors;
 
 public final class Users {
 	
-	public static Users newInstance(final List<User> users) {
+	public static Users of(final List<User> users) {
 		return new Users(users);
 	}
 	
-	public static Users newInstance(final User... users) {
-		return newInstance(Arrays.asList(users));
+	public static Users of(final User... users) {
+		return of(Arrays.asList(users));
 	}
 	
-	public static Users newInstance(final Users users) {
+	public static Users of(final Users users) {
 		return new Users(users);
 	}
 	
@@ -26,7 +26,7 @@ public final class Users {
 			final String s) {
 		List<User> users = new ArrayList<User>();
 		if (s.isEmpty()) {
-			return newInstance(users);
+			return of(users);
 		}
 		String[] sElements = s.split(",");
 		for (String sElement : sElements) {
@@ -34,20 +34,20 @@ public final class Users {
 					sElement);
 			users.add(user);
 		}
-		return newInstance(users);
+		return of(users);
 	}
 	
 	public static Users newInstanceFromUsernamePasswordPairs(final String s) {
 		List<User> users = new ArrayList<User>();
 		if (s.isEmpty()) {
-			return newInstance(users);
+			return of(users);
 		}
 		String[] sElements = s.split(",");
 		for (String sElement : sElements) {
 			User user = User.newInstanceFromUsernamePasswordPair(sElement);
 			users.add(user);
 		}
-		return newInstance(users);
+		return of(users);
 	}
 
 	private final Map<String, User> users;

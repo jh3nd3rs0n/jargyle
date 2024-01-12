@@ -83,7 +83,7 @@ public abstract class SocksClient {
 				}
 			}			
 			socksClient = socksServerUri.newSocksClient(
-					Properties.newInstance(properties));
+					Properties.of(properties));
 		}
 		return socksClient;
 	}

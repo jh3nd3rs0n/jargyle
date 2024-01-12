@@ -57,7 +57,7 @@ import java.io.IOException;
 
 public class ServerApp {
     public static void main(String[] args) throws IOException {
-        new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
             Setting.newInstanceWithParsedValue(
                 "ssl.enabled", "true"),
             Setting.newInstanceWithParsedValue(
@@ -137,7 +137,7 @@ import java.io.IOException;
 
 public class ServerApp {
     public static void main(String[] args) throws IOException {
-        new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
             Setting.newInstanceWithParsedValue(
                 "ssl.enabled", "true"),
             Setting.newInstanceWithParsedValue(
@@ -245,7 +245,7 @@ import java.io.IOException;
 
 public class ServerApp {
     public static void main(String[] args) throws IOException {
-        new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
             Setting.newInstanceWithParsedValue(
                 "dtls.enabled", "true"),
             Setting.newInstanceWithParsedValue(
@@ -325,7 +325,7 @@ import java.io.IOException;
 
 public class ServerApp {
     public static void main(String[] args) throws IOException {
-        new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
             Setting.newInstanceWithParsedValue(
                 "dtls.enabled", "true"),
             Setting.newInstanceWithParsedValue(
@@ -434,7 +434,7 @@ import java.io.IOException;
 
 public class ServerApp {
     public static void main(String[] args) throws IOException {
-        new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
             Setting.newInstanceWithParsedValue(
                 "socks5.methods", 
                 "NO_AUTHENTICATION_REQUIRED,GSSAPI")
@@ -498,7 +498,7 @@ import java.io.IOException;
 
 public class ServerApp {
     public static void main(String[] args) throws IOException {
-        new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
             Setting.newInstanceWithParsedValue(
                 "socks5.methods", 
                 "NO_AUTHENTICATION_REQUIRED,GSSAPI,USERNAME_PASSWORD")
@@ -566,7 +566,7 @@ import java.io.IOException;
 
 public class ServerApp {
     public static void main(String[] args) throws IOException {
-        new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
             Setting.newInstanceWithParsedValue(
                 "socks5.methods", "USERNAME_PASSWORD"),
             Setting.newInstanceWithParsedValue(
@@ -645,7 +645,7 @@ import java.io.IOException;
 
 public class ServerApp {
     public static void main(String[] args) throws IOException {
-        new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
             Setting.newInstanceWithParsedValue(
                 "socks5.methods", "USERNAME_PASSWORD"),
             Setting.newInstanceWithParsedValue(
@@ -715,7 +715,7 @@ public class ServerApp {
         System.setProperty(
             "java.security.auth.login.config", "login.conf");
         System.setProperty("java.security.krb5.conf", "krb5.conf");
-        new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
             Setting.newInstanceWithParsedValue(
                 "socks5.methods", "GSSAPI")
         ))).start();
@@ -828,7 +828,7 @@ import java.io.IOException;
 
 public class ServerApp {
     public static void main(String[] args) throws IOException {
-        new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
             Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:23456")
@@ -895,7 +895,7 @@ import java.io.IOException;
 
 public class ServerApp {
     public static void main(String[] args) throws IOException {
-        new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
             Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:23456"),
@@ -983,7 +983,7 @@ import java.io.IOException;
 
 public class ServerApp {
     public static void main(String[] args) throws IOException {
-        new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
             Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:23456"),
@@ -1098,7 +1098,7 @@ import java.io.IOException;
 
 public class ServerApp {
     public static void main(String[] args) throws IOException {
-        new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
             Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:23456"),
@@ -1185,7 +1185,7 @@ import java.io.IOException;
 
 public class ServerApp {
     public static void main(String[] args) throws IOException {
-        new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
             Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:23456"),
@@ -1296,7 +1296,7 @@ import java.io.IOException;
 
 public class ServerApp {
     public static void main(String[] args) throws IOException {
-        new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
             Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:23456"),
@@ -1370,7 +1370,7 @@ import java.io.IOException;
 
 public class ServerApp {
     public static void main(String[] args) throws IOException {
-        new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
             Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:23456"),
@@ -1435,7 +1435,7 @@ import java.io.IOException;
 
 public class ServerApp {
     public static void main(String[] args) throws IOException {
-        new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
             Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:23456"),
@@ -1536,7 +1536,7 @@ public class ServerApp {
         System.setProperty(
             "java.security.auth.login.config", "login.conf");
         System.setProperty("java.security.krb5.conf", "krb5.conf");
-        new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
             Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:23456"),
@@ -1735,7 +1735,7 @@ import java.io.IOException;
 
 public class ServerApp {
     public static void main(String[] args) throws IOException {
-        new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
             Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:23456"),
@@ -1794,7 +1794,7 @@ import java.io.IOException;
 
 public class ServerApp {
     public static void main(String[] args) throws IOException {
-        new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
             Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:23456"),
@@ -1858,7 +1858,7 @@ import java.io.IOException;
 
 public class ServerApp {
     public static void main(String[] args) throws IOException {
-        new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
             Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:23456"),
@@ -1983,7 +1983,7 @@ import java.io.IOException;
 
 public class ServerApp {
     public static void main(String[] args) throws IOException {
-        new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
             Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:11111"),
@@ -2131,7 +2131,7 @@ import java.io.IOException;
 
 public class ServerApp {
     public static void main(String[] args) throws IOException {
-        new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
             Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:11111"),
@@ -2268,7 +2268,7 @@ import java.io.IOException;
 
 public class ServerApp {
     public static void main(String[] args) throws IOException {
-        new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
             Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:11111"),
@@ -2400,7 +2400,7 @@ import java.io.IOException;
 
 public class ServerApp {
     public static void main(String[] args) throws IOException {
-        new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
             Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:11111"),
@@ -2539,7 +2539,7 @@ import java.io.IOException;
 
 public class ServerApp {
     public static void main(String[] args) throws IOException {
-        new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
             Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:11111"),
@@ -2703,7 +2703,7 @@ import java.io.IOException;
 
 public class ServerApp {
     public static void main(String[] args) throws IOException {
-        new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
             /*
              * Allows all forms of traffic
              */
@@ -2759,7 +2759,7 @@ import java.io.IOException;
 
 public class ServerApp {
     public static void main(String[] args) throws IOException {
-        new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
             /*
              * Allows the CONNECT command to any server on port 80 
              * or 443
@@ -3031,7 +3031,7 @@ import java.io.IOException;
 
 public class ServerApp {
     public static void main(String[] args) throws IOException {
-        new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
             /*
              * Deny any BIND or UDP ASSOCIATE commands and log as 
              * a warning message if they are denied
@@ -3153,7 +3153,7 @@ import java.io.IOException;
 
 public class ServerApp {
     public static void main(String[] args) throws IOException {
-        new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
             /*
              * Allow the user 'guest' from username password 
              * authentication 50 simultaneous connections and log 
@@ -3283,7 +3283,7 @@ import java.io.IOException;
 
 public class ServerApp {
     public static void main(String[] args) throws IOException {
-        new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
             Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:11111"),
@@ -3516,7 +3516,7 @@ import java.io.IOException;
 
 public class ServerApp {
     public static void main(String[] args) throws IOException {
-        new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
             /*
              * Redirect desired destination 'discontinuedserver.com' 
              * to 'newserver.com' and log as an informational 
@@ -3738,7 +3738,7 @@ import java.io.IOException;
 
 public class ServerApp {
     public static void main(String[] args) throws IOException {
-        new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
             /*
              * Allow the CONNECT command to connect to 
              * 'specialserver.com' and configure the server-facing 
@@ -3888,7 +3888,7 @@ import java.io.IOException;
 
 public class ServerApp {
     public static void main(String[] args) throws IOException {
-        new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
             /*
              * Allow the CONNECT command to connect to 
              * 'intermittent-idling-server.com' with a relay idle 
@@ -4019,7 +4019,7 @@ import java.io.IOException;
 
 public class ServerApp {
     public static void main(String[] args) throws IOException {
-        new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
             /*
              * Allow the CONNECT command to connect to 
              * 'streamingwebsite.com' with an upper limit on the 

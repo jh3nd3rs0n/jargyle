@@ -9,7 +9,7 @@ import com.github.jh3nd3rs0n.jargyle.server.AddressRange;
 
 public final class Ipv6AddressRange extends AddressRange {
 
-	public static Ipv6AddressRange newInstanceOf(final String s) {
+	public static Ipv6AddressRange newInstanceFrom(final String s) {
 		String message = "IPv6 address range must be in the following formats: "
 				+ "IPV6_ADDRESS, "
 				+ "IPV6_ADDRESS1-IPV6_ADDRESS2";
@@ -73,7 +73,7 @@ public final class Ipv6AddressRange extends AddressRange {
 	}
 	
 	@Override
-	public boolean contains(final String address) {
+	public boolean has(final String address) {
 		Host host = Host.newInstanceOf(address);
 		if (!(host instanceof HostIpv6Address)) {
 			return false;

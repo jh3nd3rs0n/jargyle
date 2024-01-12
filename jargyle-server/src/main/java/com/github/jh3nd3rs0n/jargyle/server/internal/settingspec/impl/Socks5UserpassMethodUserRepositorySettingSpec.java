@@ -15,7 +15,7 @@ public final class Socks5UserpassMethodUserRepositorySettingSpec
 	@Override
 	public Setting<UserRepository> newSettingWithParsedValue(
 			final String value) {
-		return super.newSetting(UserRepository.newInstanceOf(value));
+		return super.newSetting(UserRepository.newInstanceFrom(value));
 	}
 
 }

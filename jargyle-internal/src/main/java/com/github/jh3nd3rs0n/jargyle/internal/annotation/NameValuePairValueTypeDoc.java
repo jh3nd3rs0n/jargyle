@@ -45,7 +45,8 @@ public @interface NameValuePairValueTypeDoc {
     String syntax();
 
     /**
-     * The syntax name of the name value pair value to be used in other syntaxes.
+     * The syntax name of the name value pair value to be used in other
+     * syntaxes.
      *
      * @return the syntax name of the name value pair value to be used in other
      * syntaxes

@@ -9,7 +9,7 @@ import com.github.jh3nd3rs0n.jargyle.server.AddressRange;
 
 public final class Ipv4AddressRange extends AddressRange {
 
-	public static Ipv4AddressRange newInstanceOf(final String s) {
+	public static Ipv4AddressRange newInstanceFrom(final String s) {
 		String message = "IPv4 address range must be in the following formats: "
 				+ "IPV4_ADDRESS, "
 				+ "IPV4_ADDRESS1-IPV4_ADDRESS2";
@@ -73,7 +73,7 @@ public final class Ipv4AddressRange extends AddressRange {
 	}
 	
 	@Override
-	public boolean contains(final String address) {
+	public boolean has(final String address) {
 		Host host = Host.newInstanceOf(address);
 		if (!(host instanceof HostIpv4Address)) {
 			return false;

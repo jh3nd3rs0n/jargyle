@@ -34,16 +34,16 @@ public class EchoThroughSocksServerIT {
 	private static SocksServer socksServer;
 	
 	private static Configuration newConfiguration() {
-		return Configuration.newUnmodifiableInstance(Settings.newInstance(
+		return Configuration.newUnmodifiableInstance(Settings.of(
 				GeneralSettingSpecConstants.PORT.newSetting(
-						Port.newInstanceOf(SOCKS_SERVER_PORT))));
+						Port.valueOf(SOCKS_SERVER_PORT))));
 	}
 	
 	private static SocksClient newSocks5Client() {
 		return Scheme.SOCKS5.newSocksServerUri(
 				InetAddress.getLoopbackAddress().getHostAddress(), 
 				Integer.valueOf(SOCKS_SERVER_PORT))
-				.newSocksClient(Properties.newInstance());
+				.newSocksClient(Properties.of());
 	}
 	
 	@BeforeClass

@@ -32,7 +32,7 @@ import com.github.jh3nd3rs0n.jargyle.server.FirewallAction;
 import com.github.jh3nd3rs0n.jargyle.server.GeneralRuleResultSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.GeneralSettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.LogAction;
-import com.github.jh3nd3rs0n.jargyle.server.NonnegativeIntegerLimit;
+import com.github.jh3nd3rs0n.jargyle.server.NonNegativeIntegerLimit;
 import com.github.jh3nd3rs0n.jargyle.server.Rule;
 import com.github.jh3nd3rs0n.jargyle.server.RuleContext;
 import com.github.jh3nd3rs0n.jargyle.server.SelectionStrategy;
@@ -107,7 +107,7 @@ public class Socks5Worker extends Worker {
 	private boolean canAllowSocks5RequestWithinLimit() {
 		Rule applicableRule = this.getApplicableRule();
 		RuleContext ruleContext = this.getRuleContext();
-		NonnegativeIntegerLimit firewallActionAllowLimit =
+		NonNegativeIntegerLimit firewallActionAllowLimit =
 				applicableRule.getLastRuleResultValue(
 						GeneralRuleResultSpecConstants.FIREWALL_ACTION_ALLOW_LIMIT);
 		LogAction firewallActionAllowLimitReachedLogAction =
@@ -199,7 +199,7 @@ public class Socks5Worker extends Worker {
 				.filter(rte -> rte != null)
 				.collect(Collectors.toList());
 		if (rtes.size() > 0) {
-			return Routes.newInstance(rtes);
+			return Routes.of(rtes);
 		}
 		return routes;
 	}

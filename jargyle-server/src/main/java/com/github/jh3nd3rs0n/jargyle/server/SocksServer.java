@@ -28,7 +28,7 @@ public final class SocksServer {
 	}
 	
 	public static final int DEFAULT_PORT_INT_VALUE = 1080;
-	public static final Port DEFAULT_PORT = Port.newInstanceOf(
+	public static final Port DEFAULT_PORT = Port.valueOf(
 			DEFAULT_PORT_INT_VALUE);
 	
 	private final Configuration configuration;
@@ -73,7 +73,7 @@ public final class SocksServer {
 		Settings settings = this.configuration.getSettings();
 		Port port = settings.getLastValue(GeneralSettingSpecConstants.PORT);
 		if (port != null) {
-			return PortRanges.newInstance(PortRange.newInstance(port));
+			return PortRanges.of(PortRange.of(port));
 		}
 		PortRanges portRanges = settings.getLastValue(
 				GeneralSettingSpecConstants.SOCKS_SERVER_BIND_PORT_RANGES);
@@ -88,7 +88,7 @@ public final class SocksServer {
 		portRanges = settings.getLastValue(
 				GeneralSettingSpecConstants.BIND_TCP_PORT_RANGES);
 		if (portRanges.equals(PortRanges.getDefault())) {
-			return PortRanges.newInstance(PortRange.newInstance(DEFAULT_PORT));
+			return PortRanges.of(PortRange.of(DEFAULT_PORT));
 		}
 		return portRanges;
 	}
@@ -189,7 +189,7 @@ public final class SocksServer {
 				socketSettings,
 				backlog);
 		this.host = bindHost;
-		this.port = Port.newInstanceOf(this.serverSocket.getLocalPort());
+		this.port = Port.valueOf(this.serverSocket.getLocalPort());
 		this.executor = Executors.newSingleThreadExecutor();
 		this.executor.execute(new Listener(
 				this.serverSocket, this.configuration));

@@ -14,7 +14,7 @@ public final class PositiveIntegerRuleResultSpec
 	@Override
 	public RuleResult<PositiveInteger> newRuleResultWithParsedValue(
 			final String value) {
-		return super.newRuleResult(PositiveInteger.newInstanceOf(value));
+		return super.newRuleResult(PositiveInteger.valueOf(value));
 	}
 
 }

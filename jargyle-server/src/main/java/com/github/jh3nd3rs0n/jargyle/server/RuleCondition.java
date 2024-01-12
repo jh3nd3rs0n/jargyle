@@ -14,7 +14,7 @@ import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueTypeD
 )
 public final class RuleCondition<V1, V2> {
 
-	public static RuleCondition<Object, Object> newInstanceOf(final String s) {
+	public static RuleCondition<Object, Object> newInstanceFrom(final String s) {
 		String[] sElements = s.split("=", 2);
 		if (sElements.length != 2) {
 			throw new IllegalArgumentException(

@@ -70,14 +70,6 @@ public class HostIpv6AddressTest {
     }
 
     @Test
-    public void testToInetAddress() throws UnknownHostException {
-        InetAddress inetAddress1 = HostIpv6Address.newHostIpv6AddressOf(
-                "::1").toInetAddress();
-        InetAddress inetAddress2 = InetAddress.getByName("0:0:0:0:0:0:0:1");
-        Assert.assertEquals(inetAddress1, inetAddress2);
-    }
-
-    @Test
     public void testIsAllZerosIpv6AddressString01() {
         Assert.assertTrue(HostIpv6Address.isAllZerosIpv6Address("::"));
     }
@@ -129,29 +121,37 @@ public class HostIpv6AddressTest {
     }
 
     @Test
-    public void testNewHostIpv6AddressString01() {
+    public void testNewHostIpv6AddressOfString01() {
         Assert.assertNotNull(HostIpv6Address.newHostIpv6AddressOf("::1"));
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testNewHostIpv6AddressStringForIllegalArgumentException01() {
+    public void testNewHostIpv6AddressOfStringForIllegalArgumentException01() {
         HostIpv6Address.newHostIpv6AddressOf("localhost");
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testNewHostIpv6AddressStringForIllegalArgumentException02() {
+    public void testNewHostIpv6AddressOfStringForIllegalArgumentException02() {
         HostIpv6Address.newHostIpv6AddressOf("127.0.0.1");
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testNewHostIpv6AddressStringForIllegalArgumentException06() {
+    public void testNewHostIpv6AddressOfStringForIllegalArgumentException06() {
         HostIpv6Address.newHostIpv6AddressOf(
                 "0000:0000:0000:0000:0000:0000:0000::0000:0000:0000:0000:0000:0000:0000");
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testNewHostIpv6AddressStringForIllegalArgumentException07() {
+    public void testNewHostIpv6AddressOfStringForIllegalArgumentException07() {
         HostIpv6Address.newHostIpv6AddressOf(":::::::");
+    }
+
+    @Test
+    public void testToInetAddress() throws UnknownHostException {
+        InetAddress inetAddress1 = HostIpv6Address.newHostIpv6AddressOf(
+                "::1").toInetAddress();
+        InetAddress inetAddress2 = InetAddress.getByName("0:0:0:0:0:0:0:1");
+        Assert.assertEquals(inetAddress1, inetAddress2);
     }
 
 }

@@ -43,9 +43,9 @@ public final class Message {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		tknStartIndex++;
 		Version version = Version.V1;
-		out.write(UnsignedByte.newInstanceOf(version.byteValue()).intValue());
+		out.write(UnsignedByte.valueOf(version.byteValue()).intValue());
 		tknStartIndex++;
-		out.write(UnsignedByte.newInstanceOf(messageType.byteValue()).intValue());
+		out.write(UnsignedByte.valueOf(messageType.byteValue()).intValue());
 		if (messageType.equals(MessageType.ABORT)) {
 			tknStartIndex++;
 		} else {
@@ -55,7 +55,7 @@ public final class Message {
 				throw new IllegalArgumentException(String.format(
 						"token must be no more than %s bytes", MAX_TOKEN_LENGTH));
 			}
-			byte[] bytes = UnsignedShort.newInstanceOf(tokenLength).toByteArray();
+			byte[] bytes = UnsignedShort.valueOf(tokenLength).toByteArray();
 			tknStartIndex += bytes.length;
 			try {
 				out.write(bytes);

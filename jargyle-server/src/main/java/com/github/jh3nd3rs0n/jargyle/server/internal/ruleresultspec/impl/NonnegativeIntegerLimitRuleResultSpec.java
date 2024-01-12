@@ -1,20 +1,20 @@
 package com.github.jh3nd3rs0n.jargyle.server.internal.ruleresultspec.impl;
 
-import com.github.jh3nd3rs0n.jargyle.server.NonnegativeIntegerLimit;
+import com.github.jh3nd3rs0n.jargyle.server.NonNegativeIntegerLimit;
 import com.github.jh3nd3rs0n.jargyle.server.RuleResult;
 import com.github.jh3nd3rs0n.jargyle.server.RuleResultSpec;
 
 public final class NonnegativeIntegerLimitRuleResultSpec 
-	extends RuleResultSpec<NonnegativeIntegerLimit> {
+	extends RuleResultSpec<NonNegativeIntegerLimit> {
 
 	public NonnegativeIntegerLimitRuleResultSpec(final String n) {
-		super(n, NonnegativeIntegerLimit.class);
+		super(n, NonNegativeIntegerLimit.class);
 	}
 
 	@Override
-	public RuleResult<NonnegativeIntegerLimit> newRuleResultWithParsedValue(
+	public RuleResult<NonNegativeIntegerLimit> newRuleResultWithParsedValue(
 			final String value) {
-		return super.newRuleResult(NonnegativeIntegerLimit.newInstanceOf(value));
+		return super.newRuleResult(NonNegativeIntegerLimit.newInstanceFrom(value));
 	}
 
 }

@@ -1,6 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.common.net;
 
-import com.github.jh3nd3rs0n.jargyle.common.number.NonnegativeInteger;
+import com.github.jh3nd3rs0n.jargyle.common.number.NonNegativeInteger;
 import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
 import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueSpecDoc;
@@ -42,9 +42,10 @@ public final class StandardSocketSettingSpecConstants {
             syntax = "IP_TOS=UNSIGNED_BYTE",
             valueType = UnsignedByte.class
     )
-    public static final SocketSettingSpec<UnsignedByte> IP_TOS = SOCKET_SETTING_SPECS.addThenGet(new SocketSettingSpec<>(
-            "IP_TOS",
-            UnsignedByte.class) {
+    public static final SocketSettingSpec<UnsignedByte> IP_TOS =
+            SOCKET_SETTING_SPECS.addThenGet(new SocketSettingSpec<>(
+                    "IP_TOS",
+                    UnsignedByte.class) {
 
         @Override
         public void apply(
@@ -63,7 +64,7 @@ public final class StandardSocketSettingSpecConstants {
         @Override
         public SocketSetting<UnsignedByte> newSocketSettingWithParsedValue(
                 final String value) {
-            return super.newSocketSetting(UnsignedByte.newInstanceOf(value));
+            return super.newSocketSetting(UnsignedByte.valueOf(value));
         }
 
     });
@@ -84,9 +85,10 @@ public final class StandardSocketSettingSpecConstants {
             syntax = "PERF_PREFS=PERFORMANCE_PREFERENCES",
             valueType = PerformancePreferences.class
     )
-    public static final SocketSettingSpec<PerformancePreferences> PERF_PREFS = SOCKET_SETTING_SPECS.addThenGet(new SocketSettingSpec<>(
-            "PERF_PREFS",
-            PerformancePreferences.class) {
+    public static final SocketSettingSpec<PerformancePreferences> PERF_PREFS =
+            SOCKET_SETTING_SPECS.addThenGet(new SocketSettingSpec<>(
+                    "PERF_PREFS",
+                    PerformancePreferences.class) {
 
         @Override
         public void apply(
@@ -104,7 +106,8 @@ public final class StandardSocketSettingSpecConstants {
         @Override
         public SocketSetting<PerformancePreferences> newSocketSettingWithParsedValue(
                 final String value) {
-            return super.newSocketSetting(PerformancePreferences.newInstanceOf(value));
+            return super.newSocketSetting(PerformancePreferences.newInstanceFrom(
+                    value));
         }
 
     });
@@ -121,9 +124,10 @@ public final class StandardSocketSettingSpecConstants {
             syntax = "SO_BROADCAST=true|false",
             valueType = Boolean.class
     )
-    public static final SocketSettingSpec<Boolean> SO_BROADCAST = SOCKET_SETTING_SPECS.addThenGet(new SocketSettingSpec<>(
-            "SO_BROADCAST",
-            Boolean.class) {
+    public static final SocketSettingSpec<Boolean> SO_BROADCAST =
+            SOCKET_SETTING_SPECS.addThenGet(new SocketSettingSpec<>(
+                    "SO_BROADCAST",
+                    Boolean.class) {
 
         @Override
         public void apply(
@@ -154,9 +158,10 @@ public final class StandardSocketSettingSpecConstants {
             syntax = "SO_KEEPALIVE=true|false",
             valueType = Boolean.class
     )
-    public static final SocketSettingSpec<Boolean> SO_KEEPALIVE = SOCKET_SETTING_SPECS.addThenGet(new SocketSettingSpec<>(
-            "SO_KEEPALIVE",
-            Boolean.class) {
+    public static final SocketSettingSpec<Boolean> SO_KEEPALIVE =
+            SOCKET_SETTING_SPECS.addThenGet(new SocketSettingSpec<>(
+                    "SO_KEEPALIVE",
+                    Boolean.class) {
 
         @Override
         public void apply(
@@ -175,31 +180,32 @@ public final class StandardSocketSettingSpecConstants {
 
     /**
      * {@code SocketSettingSpec} constant for {@code SO_LINGER}: a
-     * {@code NonnegativeInteger} of the number of seconds of lingering on
+     * {@code NonNegativeInteger} of the number of seconds of lingering on
      * closing the TCP socket. The {@code SocketSetting} can only be applied
      * on the following objects: {@code Socket}.
      */
     @NameValuePairValueSpecDoc(
             description = "Linger on closing the TCP socket in seconds",
             name = "SO_LINGER",
-            syntax = "SO_LINGER=NONNEGATIVE_INTEGER",
-            valueType = NonnegativeInteger.class
+            syntax = "SO_LINGER=NON_NEGATIVE_INTEGER",
+            valueType = NonNegativeInteger.class
     )
-    public static final SocketSettingSpec<NonnegativeInteger> SO_LINGER = SOCKET_SETTING_SPECS.addThenGet(new SocketSettingSpec<>(
-            "SO_LINGER",
-            NonnegativeInteger.class) {
+    public static final SocketSettingSpec<NonNegativeInteger> SO_LINGER =
+            SOCKET_SETTING_SPECS.addThenGet(new SocketSettingSpec<>(
+                    "SO_LINGER",
+                    NonNegativeInteger.class) {
 
         @Override
         public void apply(
-                final NonnegativeInteger value,
+                final NonNegativeInteger value,
                 final Socket socket) throws SocketException {
             socket.setSoLinger(true, value.intValue());
         }
 
         @Override
-        public SocketSetting<NonnegativeInteger> newSocketSettingWithParsedValue(
+        public SocketSetting<NonNegativeInteger> newSocketSettingWithParsedValue(
                 final String value) {
-            return super.newSocketSetting(NonnegativeInteger.newInstanceOf(value));
+            return super.newSocketSetting(NonNegativeInteger.valueOf(value));
         }
 
     });
@@ -216,9 +222,10 @@ public final class StandardSocketSettingSpecConstants {
             syntax = "SO_RCVBUF=POSITIVE_INTEGER",
             valueType = PositiveInteger.class
     )
-    public static final SocketSettingSpec<PositiveInteger> SO_RCVBUF = SOCKET_SETTING_SPECS.addThenGet(new SocketSettingSpec<>(
-            "SO_RCVBUF",
-            PositiveInteger.class) {
+    public static final SocketSettingSpec<PositiveInteger> SO_RCVBUF =
+            SOCKET_SETTING_SPECS.addThenGet(new SocketSettingSpec<>(
+                    "SO_RCVBUF",
+                    PositiveInteger.class) {
 
         @Override
         public void apply(
@@ -244,7 +251,7 @@ public final class StandardSocketSettingSpecConstants {
         @Override
         public SocketSetting<PositiveInteger> newSocketSettingWithParsedValue(
                 final String value) {
-            return super.newSocketSetting(PositiveInteger.newInstanceOf(value));
+            return super.newSocketSetting(PositiveInteger.valueOf(value));
         }
 
     });
@@ -261,9 +268,10 @@ public final class StandardSocketSettingSpecConstants {
             syntax = "SO_REUSEADDR=true|false",
             valueType = Boolean.class
     )
-    public static final SocketSettingSpec<Boolean> SO_REUSEADDR = SOCKET_SETTING_SPECS.addThenGet(new SocketSettingSpec<>(
-            "SO_REUSEADDR",
-            Boolean.class) {
+    public static final SocketSettingSpec<Boolean> SO_REUSEADDR =
+            SOCKET_SETTING_SPECS.addThenGet(new SocketSettingSpec<>(
+                    "SO_REUSEADDR",
+                    Boolean.class) {
 
         @Override
         public void apply(
@@ -306,9 +314,10 @@ public final class StandardSocketSettingSpecConstants {
             syntax = "SO_SNDBUF=POSITIVE_INTEGER",
             valueType = PositiveInteger.class
     )
-    public static final SocketSettingSpec<PositiveInteger> SO_SNDBUF = SOCKET_SETTING_SPECS.addThenGet(new SocketSettingSpec<>(
-            "SO_SNDBUF",
-            PositiveInteger.class) {
+    public static final SocketSettingSpec<PositiveInteger> SO_SNDBUF =
+            SOCKET_SETTING_SPECS.addThenGet(new SocketSettingSpec<>(
+                    "SO_SNDBUF",
+                    PositiveInteger.class) {
 
         @Override
         public void apply(
@@ -327,14 +336,14 @@ public final class StandardSocketSettingSpecConstants {
         @Override
         public SocketSetting<PositiveInteger> newSocketSettingWithParsedValue(
                 final String value) {
-            return super.newSocketSetting(PositiveInteger.newInstanceOf(value));
+            return super.newSocketSetting(PositiveInteger.valueOf(value));
         }
 
     });
 
     /**
      * {@code SocketSettingSpec} constant for {@code SO_TIMEOUT}: a
-     * {@code NonnegativeInteger} of the timeout in milliseconds on waiting
+     * {@code NonNegativeInteger} of the timeout in milliseconds on waiting
      * for an idle socket. The {@code SocketSetting} can only be applied to
      * the following objects: {@code DatagramSocket}, {@code ServerSocket},
      * {@code Socket}.
@@ -343,38 +352,39 @@ public final class StandardSocketSettingSpecConstants {
             description = "The timeout in milliseconds on waiting for an idle "
                     + "socket",
             name = "SO_TIMEOUT",
-            syntax = "SO_TIMEOUT=NONNEGATIVE_INTEGER",
-            valueType = NonnegativeInteger.class
+            syntax = "SO_TIMEOUT=NON_NEGATIVE_INTEGER",
+            valueType = NonNegativeInteger.class
     )
-    public static final SocketSettingSpec<NonnegativeInteger> SO_TIMEOUT = SOCKET_SETTING_SPECS.addThenGet(new SocketSettingSpec<>(
-            "SO_TIMEOUT",
-            NonnegativeInteger.class) {
+    public static final SocketSettingSpec<NonNegativeInteger> SO_TIMEOUT =
+            SOCKET_SETTING_SPECS.addThenGet(new SocketSettingSpec<>(
+                    "SO_TIMEOUT",
+                    NonNegativeInteger.class) {
 
         @Override
         public void apply(
-                final NonnegativeInteger value,
+                final NonNegativeInteger value,
                 final DatagramSocket datagramSocket) throws SocketException {
             datagramSocket.setSoTimeout(value.intValue());
         }
 
         @Override
         public void apply(
-                final NonnegativeInteger value,
+                final NonNegativeInteger value,
                 final ServerSocket serverSocket) throws SocketException {
             serverSocket.setSoTimeout(value.intValue());
         }
 
         @Override
         public void apply(
-                final NonnegativeInteger value,
+                final NonNegativeInteger value,
                 final Socket socket) throws SocketException {
             socket.setSoTimeout(value.intValue());
         }
 
         @Override
-        public SocketSetting<NonnegativeInteger> newSocketSettingWithParsedValue(
+        public SocketSetting<NonNegativeInteger> newSocketSettingWithParsedValue(
                 final String value) {
-            return super.newSocketSetting(NonnegativeInteger.newInstanceOf(value));
+            return super.newSocketSetting(NonNegativeInteger.valueOf(value));
         }
 
     });
@@ -391,9 +401,10 @@ public final class StandardSocketSettingSpecConstants {
             syntax = "TCP_NODELAY=true|false",
             valueType = Boolean.class
     )
-    public static final SocketSettingSpec<Boolean> TCP_NODELAY = SOCKET_SETTING_SPECS.addThenGet(new SocketSettingSpec<>(
-            "TCP_NODELAY",
-            Boolean.class) {
+    public static final SocketSettingSpec<Boolean> TCP_NODELAY =
+            SOCKET_SETTING_SPECS.addThenGet(new SocketSettingSpec<>(
+                    "TCP_NODELAY",
+                    Boolean.class) {
 
         @Override
         public void apply(

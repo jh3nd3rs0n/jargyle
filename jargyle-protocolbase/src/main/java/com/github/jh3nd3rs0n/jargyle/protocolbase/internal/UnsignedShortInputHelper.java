@@ -14,7 +14,7 @@ public final class UnsignedShortInputHelper {
 		if (length != UnsignedShort.BYTE_ARRAY_LENGTH) {
 			throw new IOException("the end of the input stream is reached");
 		}
-		return UnsignedShort.newInstanceOf(b);
+		return UnsignedShort.valueOf(b);
 	}
 	
 	private UnsignedShortInputHelper() { }

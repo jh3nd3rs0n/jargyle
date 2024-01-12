@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.github.jh3nd3rs0n.jargyle.common.net.*;
-import com.github.jh3nd3rs0n.jargyle.common.number.NonnegativeInteger;
+import com.github.jh3nd3rs0n.jargyle.common.number.NonNegativeInteger;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueSpecDoc;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueSpecsDoc;
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.HostSettingSpec;
@@ -29,13 +29,13 @@ public final class GeneralSettingSpecConstants {
 			description = "The maximum length of the queue of incoming client "
 					+ "connections to the SOCKS server (default is 50)",
 			name = "backlog",
-			syntax = "backlog=NONNEGATIVE_INTEGER",
-			valueType = NonnegativeInteger.class
+			syntax = "backlog=NON_NEGATIVE_INTEGER",
+			valueType = NonNegativeInteger.class
 	)
-	public static final SettingSpec<NonnegativeInteger> BACKLOG = 
+	public static final SettingSpec<NonNegativeInteger> BACKLOG =
 			SETTING_SPECS.addThenGet(new NonnegativeIntegerSettingSpec(
 					"backlog", 
-					NonnegativeInteger.newInstanceOf(50)));
+					NonNegativeInteger.valueOf(50)));
 	
 	@NameValuePairValueSpecDoc(
 			description = "The default binding host name or address for all "
@@ -83,7 +83,7 @@ public final class GeneralSettingSpecConstants {
 	public static final SettingSpec<SocketSettings> CLIENT_SOCKET_SETTINGS = 
 			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
 					"clientSocketSettings", 
-					SocketSettings.newInstance()));
+					SocketSettings.of()));
 	
 	@NameValuePairValueSpecDoc(
 			description = "A documentation setting",
@@ -118,7 +118,7 @@ public final class GeneralSettingSpecConstants {
 	public static final SettingSpec<PortRanges> EXTERNAL_FACING_BIND_TCP_PORT_RANGES =
 			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
 					"externalFacingBindTcpPortRanges",
-					PortRanges.newInstance()));
+					PortRanges.of()));
 			
 	@NameValuePairValueSpecDoc(
 			description = "The comma separated list of default binding port "
@@ -130,7 +130,7 @@ public final class GeneralSettingSpecConstants {
 	public static final SettingSpec<PortRanges> EXTERNAL_FACING_BIND_UDP_PORT_RANGES =
 			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
 					"externalFacingBindUdpPortRanges",
-					PortRanges.newInstance()));
+					PortRanges.of()));
 	
 	@NameValuePairValueSpecDoc(
 			description = "The comma separated list of default socket settings "
@@ -142,7 +142,7 @@ public final class GeneralSettingSpecConstants {
 	public static final SettingSpec<SocketSettings> EXTERNAL_FACING_SOCKET_SETTINGS =
 			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
 					"externalFacingSocketSettings", 
-					SocketSettings.newInstance()));
+					SocketSettings.of()));
 
 	@NameValuePairValueSpecDoc(
 			description = "The default binding host name or address for all "
@@ -166,7 +166,7 @@ public final class GeneralSettingSpecConstants {
 	public static final SettingSpec<PortRanges> INTERNAL_FACING_BIND_TCP_PORT_RANGES =
 			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
 					"internalFacingBindTcpPortRanges",
-					PortRanges.newInstance()));
+					PortRanges.of()));
 			
 	@NameValuePairValueSpecDoc(
 			description = "The comma separated list of default binding port "
@@ -178,7 +178,7 @@ public final class GeneralSettingSpecConstants {
 	public static final SettingSpec<PortRanges> INTERNAL_FACING_BIND_UDP_PORT_RANGES =
 			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
 					"internalFacingBindUdpPortRanges",
-					PortRanges.newInstance()));
+					PortRanges.of()));
 	
 	@NameValuePairValueSpecDoc(
 			description = "The comma separated list of default socket settings "
@@ -190,7 +190,7 @@ public final class GeneralSettingSpecConstants {
 	public static final SettingSpec<SocketSettings> INTERNAL_FACING_SOCKET_SETTINGS =
 			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
 					"internalFacingSocketSettings", 
-					SocketSettings.newInstance()));
+					SocketSettings.of()));
 	
 	@NameValuePairValueSpecDoc(
 			description = "The ID for the last and unassigned route "
@@ -260,7 +260,7 @@ public final class GeneralSettingSpecConstants {
 	public static final SettingSpec<SocketSettings> SOCKET_SETTINGS = 
 			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
 					"socketSettings", 
-					SocketSettings.newInstance()));
+					SocketSettings.of()));
 	
 	@NameValuePairValueSpecDoc(
 			description = "The binding host name or address for the SOCKS "
@@ -284,7 +284,7 @@ public final class GeneralSettingSpecConstants {
 	public static final SettingSpec<PortRanges> SOCKS_SERVER_BIND_PORT_RANGES =
 			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
 					"socksServerBindPortRanges",
-					PortRanges.newInstance()));
+					PortRanges.of()));
 	
 	@NameValuePairValueSpecDoc(
 			description = "The comma separated list of socket settings for the "
@@ -296,7 +296,7 @@ public final class GeneralSettingSpecConstants {
 	public static final SettingSpec<SocketSettings> SOCKS_SERVER_SOCKET_SETTINGS =
 			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
 					"socksServerSocketSettings",
-					SocketSettings.newInstance()));
+					SocketSettings.of()));
 	
 	public static List<SettingSpec<Object>> values() {
 		return SETTING_SPECS.toList();

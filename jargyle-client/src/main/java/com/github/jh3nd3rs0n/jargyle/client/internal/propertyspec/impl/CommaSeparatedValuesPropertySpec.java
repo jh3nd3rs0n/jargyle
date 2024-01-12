@@ -15,7 +15,7 @@ public final class CommaSeparatedValuesPropertySpec
 	@Override
 	public Property<CommaSeparatedValues> newPropertyWithParsedValue(
 			final String value) {
-		return super.newProperty(CommaSeparatedValues.newInstanceOf(value));
+		return super.newProperty(CommaSeparatedValues.newInstanceFrom(value));
 	}
 
 }

@@ -14,7 +14,7 @@ public final class UnsignedByteInputHelper {
 		if (b == -1) {
 			throw new EOFException("the end of the input stream is reached");
 		}
-		return UnsignedByte.newInstanceOf(b);
+		return UnsignedByte.valueOf(b);
 	}
 	
 	private UnsignedByteInputHelper() { }

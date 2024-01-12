@@ -16,7 +16,7 @@ public final class Settings {
 		return EMPTY_INSTANCE;
 	}
 	
-	public static Settings newInstance(
+	public static Settings of(
 			final List<Setting<? extends Object>> settings) {
 		List<Setting<Object>> sttngs = new ArrayList<Setting<Object>>();
 		for (Setting<? extends Object> setting : settings) {
@@ -28,9 +28,9 @@ public final class Settings {
 	}
 	
 	@SafeVarargs
-	public static Settings newInstance(
+	public static Settings of(
 			final Setting<? extends Object>... settings) {
-		return newInstance(Arrays.asList(settings));
+		return of(Arrays.asList(settings));
 	}
 	
 	private final Map<SettingSpec<Object>, List<Setting<Object>>> settingListMap;

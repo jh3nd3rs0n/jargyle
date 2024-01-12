@@ -32,7 +32,7 @@ final class AddressInputHelper {
 			address = readIpv6AddressFrom(in);
 			break;
 		default:
-			throw new AddressTypeNotSupportedException(UnsignedByte.newInstanceOf(
+			throw new AddressTypeNotSupportedException(UnsignedByte.valueOf(
 					addressType.byteValue()));
 		}
 		return address;
@@ -70,9 +70,9 @@ final class AddressInputHelper {
 					"invalid address: %s", string));
 		}
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		out.write(UnsignedByte.newInstanceOf(
+		out.write(UnsignedByte.valueOf(
 				AddressType.DOMAINNAME.byteValue()).intValue());
-		out.write(UnsignedByte.newInstanceOf(
+		out.write(UnsignedByte.valueOf(
 				octetCount.byteValue()).intValue());
 		out.write(bytes);
 		return new Address(AddressType.DOMAINNAME, out.toByteArray(), string);		
@@ -106,7 +106,7 @@ final class AddressInputHelper {
 					"raw IP address (%s) not IPv4", inetAddress));
 		}
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		out.write(UnsignedByte.newInstanceOf(
+		out.write(UnsignedByte.valueOf(
 				AddressType.IPV4.byteValue()).intValue());
 		out.write(bytes);
 		return new Address(
@@ -143,7 +143,7 @@ final class AddressInputHelper {
 					"raw IP address (%s) not IPv6", inetAddress));
 		}
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		out.write(UnsignedByte.newInstanceOf(
+		out.write(UnsignedByte.valueOf(
 				AddressType.IPV6.byteValue()).intValue());
 		out.write(bytes);
 		return new Address(

@@ -28,7 +28,7 @@ public final class SocketSettings {
     private final Map<SocketSettingSpec<Object>, SocketSetting<Object>> socketSettings;
 
     /**
-     * Constructs a {@code SocketSettings} with the provided {@code List} of
+     * Constructs a {@code SocketSettings} of the provided {@code List} of
      * {@code SocketSetting}s.
      *
      * @param socketSttngs the provided {@code List} of {@code SocketSetting}s
@@ -42,15 +42,15 @@ public final class SocketSettings {
                     (SocketSettingSpec<Object>) socketSttng.getSocketSettingSpec();
             map.remove(socketSttngSpec);
             @SuppressWarnings("unchecked")
-            SocketSetting<Object> sockSttng = (SocketSetting<Object>) socketSttng;
+            SocketSetting<Object> sockSttng =
+                    (SocketSetting<Object>) socketSttng;
             map.put(socketSttngSpec, sockSttng);
         }
         this.socketSettings = map;
     }
 
     /**
-     * Constructs a {@code SocketSettings} based off another
-     * {@code SocketSettings}.
+     * Constructs a {@code SocketSettings} of another {@code SocketSettings}.
      *
      * @param other the other {@code SocketSettings}
      */
@@ -59,45 +59,41 @@ public final class SocketSettings {
     }
 
     /**
-     * Returns a new {@code SocketSettings} with the provided {@code List} of
+     * Returns a {@code SocketSettings} of the provided {@code List} of
      * {@code SocketSetting}s.
      *
      * @param socketSttngs the provided {@code List} of {@code SocketSetting}s
-     * @return a new {@code SocketSettings} with the provided {@code List} of
+     * @return a {@code SocketSettings} of the provided {@code List} of
      * {@code SocketSetting}s
      */
-    public static SocketSettings newInstance(
+    public static SocketSettings of(
             final List<SocketSetting<?>> socketSttngs) {
         return new SocketSettings(socketSttngs);
     }
 
     /**
-     * Returns a new {@code SocketSettings} with the provided
-     * {@code SocketSetting}s.
+     * Returns a {@code SocketSettings} of the provided {@code SocketSetting}s.
      *
      * @param socketSttngs the provided {@code SocketSetting}s
-     * @return a new {@code SocketSettings} with the provided
-     * {@code SocketSetting}s
+     * @return a {@code SocketSettings} of the provided {@code SocketSetting}s
      */
-    public static SocketSettings newInstance(
+    public static SocketSettings of(
             final SocketSetting<?>... socketSttngs) {
-        return newInstance(Arrays.asList(socketSttngs));
+        return of(Arrays.asList(socketSttngs));
     }
 
     /**
-     * Returns a new {@code SocketSettings} based off another
-     * {@code SocketSettings}.
+     * Returns a {@code SocketSettings} of another {@code SocketSettings}.
      *
      * @param other the other {@code SocketSettings}
-     * @return a new {@code SocketSettings} based off another
-     * {@code SocketSettings}
+     * @return a {@code SocketSettings} of another {@code SocketSettings}
      */
-    public static SocketSettings newInstance(final SocketSettings other) {
+    public static SocketSettings of(final SocketSettings other) {
         return new SocketSettings(other);
     }
 
     /**
-     * Returns a new {@code SocketSettings} of the provided {@code String}.
+     * Returns a new {@code SocketSettings} from the provided {@code String}.
      * The provided {@code String} must be a comma separated list of
      * {@code String} representations of {@code SocketSetting}s. The provided
      * {@code String} can also be empty which would result in an empty
@@ -105,20 +101,20 @@ public final class SocketSettings {
      * if the provided {@code String} is invalid.
      *
      * @param s the provided {@code String}
-     * @return a new {@code SocketSettings} of the provided {@code String}
+     * @return a new {@code SocketSettings} from the provided {@code String}
      */
-    public static SocketSettings newInstanceOf(final String s) {
+    public static SocketSettings newInstanceFrom(final String s) {
         List<SocketSetting<?>> socketSettings = new ArrayList<>();
         if (s.isEmpty()) {
-            return newInstance(socketSettings);
+            return of(socketSettings);
         }
         String[] sElements = s.split(",");
         for (String sElement : sElements) {
-            SocketSetting<Object> socketSetting = SocketSetting.newInstanceOf(
-                    sElement);
+            SocketSetting<Object> socketSetting =
+                    SocketSetting.newInstanceFrom(sElement);
             socketSettings.add(socketSetting);
         }
-        return newInstance(socketSettings);
+        return of(socketSettings);
     }
 
     /**
@@ -178,7 +174,7 @@ public final class SocketSettings {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (this == obj) {
             return true;
         }
@@ -303,4 +299,5 @@ public final class SocketSettings {
                 .map(SocketSetting::toString)
                 .collect(Collectors.joining(","));
     }
+
 }

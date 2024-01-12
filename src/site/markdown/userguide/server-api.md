@@ -33,7 +33,7 @@ public class ServerApp {
             Setting.newInstanceWithParsedValue(
                 "port", "1234");
         
-        Settings settings = Settings.newInstance(setting);
+        Settings settings = Settings.of(setting);
         
         Configuration configuration = 
             Configuration.newUnmodifiableInstance(settings);
@@ -87,7 +87,7 @@ A complete listing of the settings can be found
 [here](../reference/server-configuration-settings.md).
 
 A `Settings` object can be created by using the method 
-`Settings.newInstance(Setting...)`. The parameter is a varargs parameter 
+`Settings.of(Setting...)`. The parameter is a varargs parameter 
 of `Setting` objects.
 
 Server API example:
@@ -116,7 +116,7 @@ public class ServerApp {
             Setting.newInstanceWithParsedValue(
                 "socksServerSocketSettings", "SO_TIMEOUT=0");
         
-        Settings settings = Settings.newInstance(
+        Settings settings = Settings.of(
             port, backlog, socksServerSocketSettings);
         
         // ...
@@ -165,7 +165,7 @@ public class ServerApp {
             Setting.newInstanceWithParsedValue(
                 "socksServerSocketSettings", "SO_TIMEOUT=0");
         
-        Settings settings = Settings.newInstance(
+        Settings settings = Settings.of(
             port, backlog, socksServerSocketSettings);
         
         Configuration configuration =
@@ -207,7 +207,7 @@ public class ServerApp {
             Setting.newInstanceWithParsedValue(
                 "socksServerSocketSettings", "SO_TIMEOUT=0");
         
-        Settings settings = Settings.newInstance(
+        Settings settings = Settings.of(
             port, backlog, socksServerSocketSettings);
         
         Configuration configuration =
@@ -260,7 +260,7 @@ public class ServerApp {
             Setting.newInstanceWithParsedValue(
                 "socksServerSocketSettings", "SO_TIMEOUT=0");
         
-        Settings settings = Settings.newInstance(
+        Settings settings = Settings.of(
             port, backlog, socksServerSocketSettings);
         
         Configuration configuration =

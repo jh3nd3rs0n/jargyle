@@ -12,7 +12,7 @@ public final class PortSettingSpec extends SettingSpec<Port> {
 
 	@Override
 	public Setting<Port> newSettingWithParsedValue(final String value) {
-		return super.newSetting(Port.newInstanceOf(value));
+		return super.newSetting(Port.valueOf(value));
 	}
 	
 }

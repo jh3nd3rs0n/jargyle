@@ -32,9 +32,9 @@ class PortRangesXml extends ValueXml {
 	public PortRanges toPortRanges() {
 		List<PortRange> prtRanges = new ArrayList<PortRange>();
 		for (String portRange : this.portRanges) {
-			prtRanges.add(PortRange.newInstanceOf(portRange));
+			prtRanges.add(PortRange.newInstanceFrom(portRange));
 		}
-		return PortRanges.newInstance(prtRanges);
+		return PortRanges.of(prtRanges);
 	}
 	
 	@Override

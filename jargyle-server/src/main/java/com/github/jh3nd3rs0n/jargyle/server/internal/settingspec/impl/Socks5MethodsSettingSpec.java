@@ -12,7 +12,7 @@ public final class Socks5MethodsSettingSpec extends SettingSpec<Methods> {
 
 	@Override
 	public Setting<Methods> newSettingWithParsedValue(final String value) {
-		return super.newSetting(Methods.newInstanceOf(value));
+		return super.newSetting(Methods.newInstanceFrom(value));
 	}
 	
 }

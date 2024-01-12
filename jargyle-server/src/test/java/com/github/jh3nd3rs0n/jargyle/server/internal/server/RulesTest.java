@@ -14,7 +14,7 @@ public class RulesTest {
 				.addRuleCondition(Socks5RuleConditionSpecConstants.SOCKS5_COMMAND.newRuleCondition(Command.UDP_ASSOCIATE.toString()))
 				.addRuleResult(GeneralRuleResultSpecConstants.FIREWALL_ACTION.newRuleResult(FirewallAction.DENY))
 				.build(); 
-		Rules rules = Rules.newInstance(
+		Rules rules = Rules.of(
 				new Rule.Builder()
 				.addRuleCondition(GeneralRuleConditionSpecConstants.CLIENT_ADDRESS.newRuleConditionWithParsedValue("127.0.0.1"))
 				.addRuleResult(GeneralRuleResultSpecConstants.FIREWALL_ACTION.newRuleResult(FirewallAction.ALLOW))

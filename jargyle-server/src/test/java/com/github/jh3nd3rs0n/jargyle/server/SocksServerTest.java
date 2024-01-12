@@ -35,7 +35,7 @@ public class SocksServerTest {
 		try {
 			socksServer.start();
 			configuration.addSetting(GeneralSettingSpecConstants.PORT.newSetting(
-					Port.newInstanceOf(3000)));
+					Port.valueOf(3000)));
 			Port expectedPort = SocksServer.DEFAULT_PORT;
 			Port actualPort = socksServer.getPort();
 			Assert.assertEquals(expectedPort, actualPort);

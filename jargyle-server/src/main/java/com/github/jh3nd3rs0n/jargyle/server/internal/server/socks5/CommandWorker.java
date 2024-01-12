@@ -12,7 +12,7 @@ import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Socks5Request;
 import com.github.jh3nd3rs0n.jargyle.server.FirewallAction;
 import com.github.jh3nd3rs0n.jargyle.server.GeneralRuleResultSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.LogAction;
-import com.github.jh3nd3rs0n.jargyle.server.NonnegativeIntegerLimit;
+import com.github.jh3nd3rs0n.jargyle.server.NonNegativeIntegerLimit;
 import com.github.jh3nd3rs0n.jargyle.server.Rule;
 import com.github.jh3nd3rs0n.jargyle.server.RuleContext;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5RuleArgSpecConstants;
@@ -86,7 +86,7 @@ class CommandWorker extends Socks5Worker {
 	private boolean canAllowSocks5ReplyWithinLimit() {
 		Rule applicableRule = this.getApplicableRule();
 		RuleContext ruleContext = this.getRuleContext();
-		NonnegativeIntegerLimit firewallActionAllowLimit =
+		NonNegativeIntegerLimit firewallActionAllowLimit =
 				applicableRule.getLastRuleResultValue(
 						GeneralRuleResultSpecConstants.FIREWALL_ACTION_ALLOW_LIMIT);
 		LogAction firewallActionAllowLimitReachedLogAction =

@@ -75,17 +75,17 @@ public final class SocketSetting<V> {
 
     /**
      * Returns a new {@code SocketSetting} of the {@code Object} value type
-     * of the provided {@code String}. The provided {@code String} must be
+     * from the provided {@code String}. The provided {@code String} must be
      * the name of the {@code SocketSetting} followed by an equal sign (=)
      * followed by the value that can be parsed for the {@code SocketSetting}.
      * An {@code IllegalArgumentException} is thrown if any part of the provided
      * {@code String} is invalid.
      *
      * @param s the provided {@code String}
-     * @return a new {@code SocketSetting} of value type {@code Object} of
+     * @return a new {@code SocketSetting} from value type {@code Object} of
      * the provided {@code String}
      */
-    public static SocketSetting<Object> newInstanceOf(final String s) {
+    public static SocketSetting<Object> newInstanceFrom(final String s) {
         String[] sElements = s.split("=", 2);
         if (sElements.length != 2) {
             throw new IllegalArgumentException(
@@ -270,7 +270,7 @@ public final class SocketSetting<V> {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (this == obj) {
             return true;
         }

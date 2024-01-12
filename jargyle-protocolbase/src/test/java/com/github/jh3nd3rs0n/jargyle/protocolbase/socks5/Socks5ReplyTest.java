@@ -11,7 +11,7 @@ public class Socks5ReplyTest {
 		Socks5Reply socks5Reply1 = Socks5Reply.newInstance(
 				Reply.SUCCEEDED, 
 				Address.newInstance("12.216.103.24"), 
-				Port.newInstanceOf(0));
+				Port.valueOf(0));
 		Socks5Reply socks5Reply2 = Socks5Reply.newInstance(
 				socks5Reply1.toByteArray());
 		Assert.assertEquals(socks5Reply1, socks5Reply2);
@@ -22,7 +22,7 @@ public class Socks5ReplyTest {
 		Socks5Reply socks5Reply1 = Socks5Reply.newInstance(
 				Reply.GENERAL_SOCKS_SERVER_FAILURE, 
 				Address.newInstance("google.com"), 
-				Port.newInstanceOf(1234));
+				Port.valueOf(1234));
 		Socks5Reply socks5Reply2 = Socks5Reply.newInstance(
 				socks5Reply1.toByteArray());
 		Assert.assertEquals(socks5Reply1, socks5Reply2);
@@ -33,7 +33,7 @@ public class Socks5ReplyTest {
 		Socks5Reply socks5Reply1 = Socks5Reply.newInstance(
 				Reply.COMMAND_NOT_SUPPORTED, 
 				Address.newInstance("abcd:1234:ef56:abcd:789e:f123:456a:b789"), 
-				Port.newInstanceOf(0xffff));
+				Port.valueOf(0xffff));
 		Socks5Reply socks5Reply2 = Socks5Reply.newInstance(
 				socks5Reply1.toByteArray());
 		Assert.assertEquals(socks5Reply1, socks5Reply2);

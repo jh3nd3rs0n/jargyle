@@ -103,7 +103,8 @@ public final class HostIpv4Address extends HostAddress {
     public static InetAddress getAllZerosInetAddress() {
         if (allZerosInetAddress == null) {
             try {
-                allZerosInetAddress = InetAddress.getByName(ALL_ZEROS_IPV4_ADDRESS);
+                allZerosInetAddress = InetAddress.getByName(
+                        ALL_ZEROS_IPV4_ADDRESS);
             } catch (UnknownHostException e) {
                 throw new AssertionError(e);
             }

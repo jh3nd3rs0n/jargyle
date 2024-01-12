@@ -12,7 +12,7 @@ public final class RuleSettingSpec extends SettingSpec<Rule> {
 
 	@Override
 	public Setting<Rule> newSettingWithParsedValue(final String value) {
-		return super.newSetting(Rule.newInstanceOf(value));
+		return super.newSetting(Rule.newInstanceFrom(value));
 	}
 
 }

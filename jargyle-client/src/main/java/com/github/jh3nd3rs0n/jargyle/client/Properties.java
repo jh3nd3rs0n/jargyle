@@ -8,15 +8,15 @@ import java.util.Map;
 
 public final class Properties {
 
-	public static Properties newInstance(
+	public static Properties of(
 			final List<Property<? extends Object>> properties) {
 		return new Properties(properties);
 	}
 	
 	@SafeVarargs
-	public static Properties newInstance(
+	public static Properties of(
 			final Property<? extends Object>... properties) {
-		return newInstance(Arrays.asList(properties));
+		return of(Arrays.asList(properties));
 	}
 	
 	private final Map<PropertySpec<Object>, Property<Object>> properties;

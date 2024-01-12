@@ -251,27 +251,27 @@ final class ConnectCommandWorker extends TcpBasedCommandWorker {
 		List<PortRange> portRanges = applicableRule.getRuleResultValues(
 				Socks5RuleResultSpecConstants.SOCKS5_ON_CONNECT_SERVER_FACING_BIND_PORT_RANGE);
 		if (portRanges.size() > 0) {
-			return PortRanges.newInstance(portRanges);
+			return PortRanges.of(portRanges);
 		}
 		portRanges = applicableRule.getRuleResultValues(
 				Socks5RuleResultSpecConstants.SOCKS5_ON_COMMAND_EXTERNAL_FACING_BIND_TCP_PORT_RANGE);
 		if (portRanges.size() > 0) {
-			return PortRanges.newInstance(portRanges);
+			return PortRanges.of(portRanges);
 		}
 		portRanges = applicableRule.getRuleResultValues(
 				Socks5RuleResultSpecConstants.SOCKS5_ON_COMMAND_BIND_TCP_PORT_RANGE);
 		if (portRanges.size() > 0) {
-			return PortRanges.newInstance(portRanges);
+			return PortRanges.of(portRanges);
 		}
 		portRanges = applicableRule.getRuleResultValues(
 				GeneralRuleResultSpecConstants.EXTERNAL_FACING_BIND_TCP_PORT_RANGE);
 		if (portRanges.size() > 0) {
-			return PortRanges.newInstance(portRanges);
+			return PortRanges.of(portRanges);
 		}
 		portRanges = applicableRule.getRuleResultValues(
 				GeneralRuleResultSpecConstants.BIND_TCP_PORT_RANGE);
 		if (portRanges.size() > 0) {
-			return PortRanges.newInstance(portRanges);
+			return PortRanges.of(portRanges);
 		}
 		Settings settings = this.getSettings();
 		PortRanges prtRanges = settings.getLastValue(
@@ -318,31 +318,31 @@ final class ConnectCommandWorker extends TcpBasedCommandWorker {
 				applicableRule.getRuleResultValues(
 						Socks5RuleResultSpecConstants.SOCKS5_ON_CONNECT_SERVER_FACING_SOCKET_SETTING);
 		if (socketSettings.size() > 0) {
-			return SocketSettings.newInstance(
+			return SocketSettings.of(
 					socketSettings.stream().collect(Collectors.toList()));
 		}
 		socketSettings = applicableRule.getRuleResultValues(
 				Socks5RuleResultSpecConstants.SOCKS5_ON_COMMAND_EXTERNAL_FACING_SOCKET_SETTING);
 		if (socketSettings.size() > 0) {
-			return SocketSettings.newInstance(
+			return SocketSettings.of(
 					socketSettings.stream().collect(Collectors.toList()));
 		}
 		socketSettings = applicableRule.getRuleResultValues(
 				Socks5RuleResultSpecConstants.SOCKS5_ON_COMMAND_SOCKET_SETTING);
 		if (socketSettings.size() > 0) {
-			return SocketSettings.newInstance(
+			return SocketSettings.of(
 					socketSettings.stream().collect(Collectors.toList()));
 		}
 		socketSettings = applicableRule.getRuleResultValues(
 				GeneralRuleResultSpecConstants.EXTERNAL_FACING_SOCKET_SETTING);
 		if (socketSettings.size() > 0) {
-			return SocketSettings.newInstance(
+			return SocketSettings.of(
 					socketSettings.stream().collect(Collectors.toList()));
 		}
 		socketSettings = applicableRule.getRuleResultValues(
 				GeneralRuleResultSpecConstants.SOCKET_SETTING);
 		if (socketSettings.size() > 0) {
-			return SocketSettings.newInstance(
+			return SocketSettings.of(
 					socketSettings.stream().collect(Collectors.toList()));
 		}
 		Settings settings = this.getSettings();
@@ -741,7 +741,7 @@ final class ConnectCommandWorker extends TcpBasedCommandWorker {
 			socks5Rep = Socks5Reply.newInstance(
 					Reply.SUCCEEDED, 
 					Address.newInstance(serverBoundAddress), 
-					Port.newInstanceOf(serverBoundPort));
+					Port.valueOf(serverBoundPort));
 			RuleContext ruleContext = this.newSocks5ReplyRuleContext(
 					socks5Rep);
 			this.setRuleContext(ruleContext);

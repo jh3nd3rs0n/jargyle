@@ -44,37 +44,37 @@ public final class Port implements Comparable<Port> {
     }
 
     /**
-     * Returns a new {@code Port} of the provided {@code int} value. An
+     * Returns a {@code Port} of the provided {@code int} value. An
      * {@code IllegalArgumentException} is thrown if the provided {@code int}
      * value is not an {@code int} value between 0 and 65535.
      *
      * @param i the provided {@code int} value
-     * @return a new {@code Port} of the provided {@code int} value
+     * @return a {@code Port} of the provided {@code int} value
      */
-    public static Port newInstanceOf(final int i) {
-        return new Port(UnsignedShort.newInstanceOf(i));
+    public static Port valueOf(final int i) {
+        return new Port(UnsignedShort.valueOf(i));
     }
 
     /**
-     * Returns a new {@code Port} of the provided {@code String}. The
+     * Returns a {@code Port} of the provided {@code String}. The
      * provided {@code String} must be an integer between 0 and 65535
      * (inclusive). An {@code IllegalArgumentException} is thrown if the
      * provided {@code String} is not valid.
      *
      * @param s the provided {@code String}
-     * @return a new {@code Port} of the provided {@code String}
+     * @return a {@code Port} of the provided {@code String}
      */
-    public static Port newInstanceOf(final String s) {
-        return new Port(UnsignedShort.newInstanceOf(s));
+    public static Port valueOf(final String s) {
+        return new Port(UnsignedShort.valueOf(s));
     }
 
     /**
-     * Returns a new {@code Port} of the provided {@code UnsignedShort}.
+     * Returns a {@code Port} of the provided {@code UnsignedShort}.
      *
      * @param s the provided {@code UnsignedShort}
-     * @return a new {@code Port} of the provided {@code UnsignedShort}
+     * @return a {@code Port} of the provided {@code UnsignedShort}
      */
-    public static Port newInstanceOf(final UnsignedShort s) {
+    public static Port valueOf(final UnsignedShort s) {
         return new Port(s);
     }
 
@@ -94,7 +94,7 @@ public final class Port implements Comparable<Port> {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (this == obj) {
             return true;
         }
@@ -140,7 +140,7 @@ public final class Port implements Comparable<Port> {
      *
      * @return the {@code UnsignedShort} value of this {@code Port}
      */
-    public UnsignedShort toUnsignedShort() {
+    public UnsignedShort unsignedShortValue() {
         return this.unsignedShortValue;
     }
 

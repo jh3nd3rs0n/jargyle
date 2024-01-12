@@ -23,7 +23,7 @@ public final class PortRanges {
     /**
      * The default {@code PortRanges} (0).
      */
-    private static final PortRanges DEFAULT_INSTANCE = PortRanges.newInstance(
+    private static final PortRanges DEFAULT_INSTANCE = PortRanges.of(
             PortRange.getDefault());
 
     /**
@@ -51,29 +51,29 @@ public final class PortRanges {
     }
 
     /**
-     * Returns a new {@code PortRanges} with the provided {@code List} of
+     * Returns a {@code PortRanges} of the provided {@code List} of
      * {@code PortRange}s.
      *
      * @param prtRanges the provided {@code List} of {@code PortRange}s
-     * @return a new {@code PortRanges} with the provided {@code List} of
+     * @return a {@code PortRanges} of the provided {@code List} of
      * {@code PortRange}s
      */
-    public static PortRanges newInstance(final List<PortRange> prtRanges) {
+    public static PortRanges of(final List<PortRange> prtRanges) {
         return new PortRanges(prtRanges);
     }
 
     /**
-     * Returns a new {@code PortRanges} with the provided {@code PortRange}s.
+     * Returns a {@code PortRanges} of the provided {@code PortRange}s.
      *
      * @param prtRanges the provided {@code PortRange}s
-     * @return a new {@code PortRanges} with the provided {@code PortRange}s
+     * @return a {@code PortRanges} of the provided {@code PortRange}s
      */
-    public static PortRanges newInstance(final PortRange... prtRanges) {
-        return newInstance(Arrays.asList(prtRanges));
+    public static PortRanges of(final PortRange... prtRanges) {
+        return of(Arrays.asList(prtRanges));
     }
 
     /**
-     * Returns a new {@code PortRanges} of the provided {@code String}. The
+     * Returns a new {@code PortRanges} from the provided {@code String}. The
      * provided {@code String} must be a comma separated list of
      * {@code String} representations of {@code PortRange}s. The provided
      * {@code String} can also be empty which would result in an empty
@@ -81,19 +81,19 @@ public final class PortRanges {
      * the provided {@code String} is invalid.
      *
      * @param s the provided {@code String}
-     * @return a new {@code PortRanges} of the provided {@code String}
+     * @return a new {@code PortRanges} from the provided {@code String}
      */
-    public static PortRanges newInstanceOf(final String s) {
+    public static PortRanges newInstanceFrom(final String s) {
         List<PortRange> prtRanges = new ArrayList<>();
         if (s.isEmpty()) {
-            return newInstance(prtRanges);
+            return of(prtRanges);
         }
         String[] sElements = s.split(",");
         for (String sElement : sElements) {
-            PortRange prtRange = PortRange.newInstanceOf(sElement);
+            PortRange prtRange = PortRange.newInstanceFrom(sElement);
             prtRanges.add(prtRange);
         }
-        return newInstance(prtRanges);
+        return of(prtRanges);
     }
 
     /**
@@ -114,7 +114,7 @@ public final class PortRanges {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (this == obj) {
             return true;
         }

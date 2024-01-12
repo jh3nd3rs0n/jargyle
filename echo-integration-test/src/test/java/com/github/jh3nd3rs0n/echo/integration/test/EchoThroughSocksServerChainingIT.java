@@ -80,32 +80,32 @@ public class EchoThroughSocksServerChainingIT {
 	
 	private static List<Configuration> newChainedConfigurations() {
 		return Arrays.asList(
-				Configuration.newUnmodifiableInstance(Settings.newInstance(
+				Configuration.newUnmodifiableInstance(Settings.of(
 						GeneralSettingSpecConstants.PORT.newSetting(
-								Port.newInstanceOf(CHAINED_SOCKS_SERVER_PORT_1)),
+								Port.valueOf(CHAINED_SOCKS_SERVER_PORT_1)),
 						ChainingGeneralSettingSpecConstants.CHAINING_SOCKS_SERVER_URI.newSetting(
 								Scheme.SOCKS5.newSocksServerUri(
 										InetAddress.getLoopbackAddress().getHostAddress(), 
 										Integer.valueOf(CHAINED_SOCKS_SERVER_PORT_2))))),
-				Configuration.newUnmodifiableInstance(Settings.newInstance(
+				Configuration.newUnmodifiableInstance(Settings.of(
 						GeneralSettingSpecConstants.PORT.newSetting(
-								Port.newInstanceOf(CHAINED_SOCKS_SERVER_PORT_2)),
+								Port.valueOf(CHAINED_SOCKS_SERVER_PORT_2)),
 						ChainingGeneralSettingSpecConstants.CHAINING_SOCKS_SERVER_URI.newSetting(
 								Scheme.SOCKS5.newSocksServerUri(
 										InetAddress.getLoopbackAddress().getHostAddress(), 
 										Integer.valueOf(CHAINED_SOCKS_SERVER_PORT_3))))),
-				Configuration.newUnmodifiableInstance(Settings.newInstance(
+				Configuration.newUnmodifiableInstance(Settings.of(
 						GeneralSettingSpecConstants.PORT.newSetting(
-								Port.newInstanceOf(CHAINED_SOCKS_SERVER_PORT_3)))));
+								Port.valueOf(CHAINED_SOCKS_SERVER_PORT_3)))));
 	}
 	
 	private static List<Configuration> newChainedConfigurationsUsingSocks5UserpassMethod() {
 		return Arrays.asList(
-				Configuration.newUnmodifiableInstance(Settings.newInstance(
+				Configuration.newUnmodifiableInstance(Settings.of(
 						GeneralSettingSpecConstants.PORT.newSetting(
-								Port.newInstanceOf(CHAINED_SOCKS_SERVER_PORT_1_USING_SOCKS5_USERPASSMETHOD)),
+								Port.valueOf(CHAINED_SOCKS_SERVER_PORT_1_USING_SOCKS5_USERPASSMETHOD)),
 						Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
-								Methods.newInstance(Method.USERNAME_PASSWORD)),
+								Methods.of(Method.USERNAME_PASSWORD)),
 						Socks5SettingSpecConstants.SOCKS5_USERPASSMETHOD_USER_REPOSITORY.newSetting(
 								UserRepositorySpecConstants.STRING_SOURCE_USER_REPOSITORY.newUserRepository(
 										"Aladdin:opensesame")),
@@ -114,16 +114,16 @@ public class EchoThroughSocksServerChainingIT {
 										InetAddress.getLoopbackAddress().getHostAddress(), 
 										Integer.valueOf(CHAINED_SOCKS_SERVER_PORT_2_USING_SOCKS5_USERPASSMETHOD))),
 						ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_METHODS.newSetting(
-								Methods.newInstance(Method.USERNAME_PASSWORD)),
+								Methods.of(Method.USERNAME_PASSWORD)),
 						ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_USERPASSMETHOD_USERNAME.newSetting(
 								"Jasmine"),
 						ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_USERPASSMETHOD_PASSWORD.newSetting(
 								EncryptedPassword.newInstance("mission:impossible".toCharArray())))),
-				Configuration.newUnmodifiableInstance(Settings.newInstance(
+				Configuration.newUnmodifiableInstance(Settings.of(
 						GeneralSettingSpecConstants.PORT.newSetting(
-								Port.newInstanceOf(CHAINED_SOCKS_SERVER_PORT_2_USING_SOCKS5_USERPASSMETHOD)),
+								Port.valueOf(CHAINED_SOCKS_SERVER_PORT_2_USING_SOCKS5_USERPASSMETHOD)),
 						Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
-								Methods.newInstance(Method.USERNAME_PASSWORD)),
+								Methods.of(Method.USERNAME_PASSWORD)),
 						Socks5SettingSpecConstants.SOCKS5_USERPASSMETHOD_USER_REPOSITORY.newSetting(
 								UserRepositorySpecConstants.STRING_SOURCE_USER_REPOSITORY.newUserRepository(
 										"Jasmine:mission%3Aimpossible")),
@@ -132,16 +132,16 @@ public class EchoThroughSocksServerChainingIT {
 										InetAddress.getLoopbackAddress().getHostAddress(), 
 										Integer.valueOf(CHAINED_SOCKS_SERVER_PORT_3_USING_SOCKS5_USERPASSMETHOD))),
 						ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_METHODS.newSetting(
-								Methods.newInstance(Method.USERNAME_PASSWORD)),
+								Methods.of(Method.USERNAME_PASSWORD)),
 						ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_USERPASSMETHOD_USERNAME.newSetting(
 								"Abu"),
 						ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_USERPASSMETHOD_PASSWORD.newSetting(
 								EncryptedPassword.newInstance("safeDriversSave40%".toCharArray())))),
-				Configuration.newUnmodifiableInstance(Settings.newInstance(
+				Configuration.newUnmodifiableInstance(Settings.of(
 						GeneralSettingSpecConstants.PORT.newSetting(
-								Port.newInstanceOf(CHAINED_SOCKS_SERVER_PORT_3_USING_SOCKS5_USERPASSMETHOD)),
+								Port.valueOf(CHAINED_SOCKS_SERVER_PORT_3_USING_SOCKS5_USERPASSMETHOD)),
 						Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
-								Methods.newInstance(Method.USERNAME_PASSWORD)),
+								Methods.of(Method.USERNAME_PASSWORD)),
 						Socks5SettingSpecConstants.SOCKS5_USERPASSMETHOD_USER_REPOSITORY.newSetting(
 								UserRepositorySpecConstants.STRING_SOURCE_USER_REPOSITORY.newUserRepository(
 										"Abu:safeDriversSave40%25")))));
@@ -149,9 +149,9 @@ public class EchoThroughSocksServerChainingIT {
 	
 	private static List<Configuration> newChainedConfigurationsUsingSsl() {
 		return Arrays.asList(
-				Configuration.newUnmodifiableInstance(Settings.newInstance(
+				Configuration.newUnmodifiableInstance(Settings.of(
 						GeneralSettingSpecConstants.PORT.newSetting(
-								Port.newInstanceOf(CHAINED_SOCKS_SERVER_PORT_1_USING_SSL)),
+								Port.valueOf(CHAINED_SOCKS_SERVER_PORT_1_USING_SSL)),
 						ChainingGeneralSettingSpecConstants.CHAINING_SOCKS_SERVER_URI.newSetting(
 								Scheme.SOCKS5.newSocksServerUri(
 										InetAddress.getLoopbackAddress().getHostAddress(), 
@@ -166,9 +166,9 @@ public class EchoThroughSocksServerChainingIT {
 								TestResourceConstants.ECHO_INTEGRATION_TEST_SOCKS_SERVER_KEY_STORE_FILE.getFile()),
 						ChainingSslSettingSpecConstants.CHAINING_SSL_TRUST_STORE_PASSWORD.newSettingWithParsedValue(
 								TestResourceConstants.ECHO_INTEGRATION_TEST_SOCKS_SERVER_KEY_STORE_PASSWORD_FILE.getContentAsString()))),
-				Configuration.newUnmodifiableInstance(Settings.newInstance(
+				Configuration.newUnmodifiableInstance(Settings.of(
 						GeneralSettingSpecConstants.PORT.newSetting(
-								Port.newInstanceOf(CHAINED_SOCKS_SERVER_PORT_2_USING_SSL)),
+								Port.valueOf(CHAINED_SOCKS_SERVER_PORT_2_USING_SSL)),
 						DtlsSettingSpecConstants.DTLS_ENABLED.newSetting(Boolean.TRUE),
 						DtlsSettingSpecConstants.DTLS_KEY_STORE_FILE.newSetting(
 								TestResourceConstants.ECHO_INTEGRATION_TEST_SOCKS_SERVER_KEY_STORE_FILE.getFile()),
@@ -185,15 +185,15 @@ public class EchoThroughSocksServerChainingIT {
 		SocksClient client1 = Scheme.SOCKS5.newSocksServerUri(
 				InetAddress.getLoopbackAddress().getHostAddress(), 
 				Integer.valueOf(SOCKS_SERVER_PORT_1))
-				.newSocksClient(Properties.newInstance());
+				.newSocksClient(Properties.of());
 		SocksClient client2 = Scheme.SOCKS5.newSocksServerUri(
 				InetAddress.getLoopbackAddress().getHostAddress(), 
 				Integer.valueOf(SOCKS_SERVER_PORT_2))
-				.newSocksClient(Properties.newInstance(), client1);
+				.newSocksClient(Properties.of(), client1);
 		SocksClient client3 = Scheme.SOCKS5.newSocksServerUri(
 				InetAddress.getLoopbackAddress().getHostAddress(), 
 				Integer.valueOf(SOCKS_SERVER_PORT_3))
-				.newSocksClient(Properties.newInstance(), client2);
+				.newSocksClient(Properties.of(), client2);
 		return client3;
 	}
 	
@@ -201,9 +201,9 @@ public class EchoThroughSocksServerChainingIT {
 		SocksClient client1 = Scheme.SOCKS5.newSocksServerUri(
 				InetAddress.getLoopbackAddress().getHostAddress(), 
 				Integer.valueOf(SOCKS_SERVER_PORT_1_USING_SOCKS5_USERPASSMETHOD))
-				.newSocksClient(Properties.newInstance(
+				.newSocksClient(Properties.of(
 						Socks5PropertySpecConstants.SOCKS5_METHODS.newProperty(
-								Methods.newInstance(Method.USERNAME_PASSWORD)),
+								Methods.of(Method.USERNAME_PASSWORD)),
 						Socks5PropertySpecConstants.SOCKS5_USERPASSMETHOD_USERNAME.newProperty(
 								"Aladdin"),
 						Socks5PropertySpecConstants.SOCKS5_USERPASSMETHOD_PASSWORD.newProperty(
@@ -212,9 +212,9 @@ public class EchoThroughSocksServerChainingIT {
 		SocksClient client2 = Scheme.SOCKS5.newSocksServerUri(
 				InetAddress.getLoopbackAddress().getHostAddress(), 
 				Integer.valueOf(SOCKS_SERVER_PORT_2_USING_SOCKS5_USERPASSMETHOD))
-				.newSocksClient(Properties.newInstance(
+				.newSocksClient(Properties.of(
 						Socks5PropertySpecConstants.SOCKS5_METHODS.newProperty(
-								Methods.newInstance(Method.USERNAME_PASSWORD)),
+								Methods.of(Method.USERNAME_PASSWORD)),
 						Socks5PropertySpecConstants.SOCKS5_USERPASSMETHOD_USERNAME.newProperty(
 								"Jasmine"),
 						Socks5PropertySpecConstants.SOCKS5_USERPASSMETHOD_PASSWORD.newProperty(
@@ -224,9 +224,9 @@ public class EchoThroughSocksServerChainingIT {
 		SocksClient client3 = Scheme.SOCKS5.newSocksServerUri(
 				InetAddress.getLoopbackAddress().getHostAddress(), 
 				Integer.valueOf(SOCKS_SERVER_PORT_3_USING_SOCKS5_USERPASSMETHOD))
-				.newSocksClient(Properties.newInstance(
+				.newSocksClient(Properties.of(
 						Socks5PropertySpecConstants.SOCKS5_METHODS.newProperty(
-								Methods.newInstance(Method.USERNAME_PASSWORD)),
+								Methods.of(Method.USERNAME_PASSWORD)),
 						Socks5PropertySpecConstants.SOCKS5_USERPASSMETHOD_USERNAME.newProperty(
 								"Abu"),
 						Socks5PropertySpecConstants.SOCKS5_USERPASSMETHOD_PASSWORD.newProperty(
@@ -240,11 +240,11 @@ public class EchoThroughSocksServerChainingIT {
 		SocksClient client1 = Scheme.SOCKS5.newSocksServerUri(
 				InetAddress.getLoopbackAddress().getHostAddress(), 
 				Integer.valueOf(SOCKS_SERVER_PORT_1_USING_SSL))
-				.newSocksClient(Properties.newInstance());
+				.newSocksClient(Properties.of());
 		SocksClient client2 = Scheme.SOCKS5.newSocksServerUri(
 				InetAddress.getLoopbackAddress().getHostAddress(), 
 				Integer.valueOf(SOCKS_SERVER_PORT_2_USING_SSL))
-				.newSocksClient(Properties.newInstance(
+				.newSocksClient(Properties.of(
 						DtlsPropertySpecConstants.DTLS_ENABLED.newProperty(
 								Boolean.TRUE),
 						DtlsPropertySpecConstants.DTLS_TRUST_STORE_FILE.newProperty(
@@ -263,40 +263,40 @@ public class EchoThroughSocksServerChainingIT {
 	
 	private static List<Configuration> newConfigurations() {
 		return Arrays.asList(
-				Configuration.newUnmodifiableInstance(Settings.newInstance(
+				Configuration.newUnmodifiableInstance(Settings.of(
 						GeneralSettingSpecConstants.PORT.newSetting(
-								Port.newInstanceOf(SOCKS_SERVER_PORT_1)))),
-				Configuration.newUnmodifiableInstance(Settings.newInstance(
+								Port.valueOf(SOCKS_SERVER_PORT_1)))),
+				Configuration.newUnmodifiableInstance(Settings.of(
 						GeneralSettingSpecConstants.PORT.newSetting(
-								Port.newInstanceOf(SOCKS_SERVER_PORT_2)))),
-				Configuration.newUnmodifiableInstance(Settings.newInstance(
+								Port.valueOf(SOCKS_SERVER_PORT_2)))),
+				Configuration.newUnmodifiableInstance(Settings.of(
 						GeneralSettingSpecConstants.PORT.newSetting(
-								Port.newInstanceOf(SOCKS_SERVER_PORT_3)))));
+								Port.valueOf(SOCKS_SERVER_PORT_3)))));
 	}
 	
 	private static List<Configuration> newConfigurationsUsingSocks5UserpassMethod() {
 		return Arrays.asList(
-				Configuration.newUnmodifiableInstance(Settings.newInstance(
+				Configuration.newUnmodifiableInstance(Settings.of(
 						GeneralSettingSpecConstants.PORT.newSetting(
-								Port.newInstanceOf(SOCKS_SERVER_PORT_1_USING_SOCKS5_USERPASSMETHOD)),
+								Port.valueOf(SOCKS_SERVER_PORT_1_USING_SOCKS5_USERPASSMETHOD)),
 						Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
-								Methods.newInstance(Method.USERNAME_PASSWORD)),
+								Methods.of(Method.USERNAME_PASSWORD)),
 						Socks5SettingSpecConstants.SOCKS5_USERPASSMETHOD_USER_REPOSITORY.newSetting(
 								UserRepositorySpecConstants.STRING_SOURCE_USER_REPOSITORY.newUserRepository(
 										"Aladdin:opensesame")))),
-				Configuration.newUnmodifiableInstance(Settings.newInstance(
+				Configuration.newUnmodifiableInstance(Settings.of(
 						GeneralSettingSpecConstants.PORT.newSetting(
-								Port.newInstanceOf(SOCKS_SERVER_PORT_2_USING_SOCKS5_USERPASSMETHOD)),
+								Port.valueOf(SOCKS_SERVER_PORT_2_USING_SOCKS5_USERPASSMETHOD)),
 						Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
-								Methods.newInstance(Method.USERNAME_PASSWORD)),
+								Methods.of(Method.USERNAME_PASSWORD)),
 						Socks5SettingSpecConstants.SOCKS5_USERPASSMETHOD_USER_REPOSITORY.newSetting(
 								UserRepositorySpecConstants.STRING_SOURCE_USER_REPOSITORY.newUserRepository(
 										"Jasmine:mission%3Aimpossible")))),
-				Configuration.newUnmodifiableInstance(Settings.newInstance(
+				Configuration.newUnmodifiableInstance(Settings.of(
 						GeneralSettingSpecConstants.PORT.newSetting(
-								Port.newInstanceOf(SOCKS_SERVER_PORT_3_USING_SOCKS5_USERPASSMETHOD)),
+								Port.valueOf(SOCKS_SERVER_PORT_3_USING_SOCKS5_USERPASSMETHOD)),
 						Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
-								Methods.newInstance(Method.USERNAME_PASSWORD)),
+								Methods.of(Method.USERNAME_PASSWORD)),
 						Socks5SettingSpecConstants.SOCKS5_USERPASSMETHOD_USER_REPOSITORY.newSetting(
 								UserRepositorySpecConstants.STRING_SOURCE_USER_REPOSITORY.newUserRepository(
 										"Abu:safeDriversSave40%25")))));
@@ -304,12 +304,12 @@ public class EchoThroughSocksServerChainingIT {
 	
 	private static List<Configuration> newConfigurationsUsingSsl() {
 		return Arrays.asList(
-				Configuration.newUnmodifiableInstance(Settings.newInstance(
+				Configuration.newUnmodifiableInstance(Settings.of(
 						GeneralSettingSpecConstants.PORT.newSetting(
-								Port.newInstanceOf(SOCKS_SERVER_PORT_1_USING_SSL)))),
-				Configuration.newUnmodifiableInstance(Settings.newInstance(
+								Port.valueOf(SOCKS_SERVER_PORT_1_USING_SSL)))),
+				Configuration.newUnmodifiableInstance(Settings.of(
 						GeneralSettingSpecConstants.PORT.newSetting(
-								Port.newInstanceOf(SOCKS_SERVER_PORT_2_USING_SSL)),
+								Port.valueOf(SOCKS_SERVER_PORT_2_USING_SSL)),
 						DtlsSettingSpecConstants.DTLS_ENABLED.newSetting(Boolean.TRUE),
 						DtlsSettingSpecConstants.DTLS_KEY_STORE_FILE.newSetting(
 								TestResourceConstants.ECHO_INTEGRATION_TEST_SOCKS_SERVER_KEY_STORE_FILE.getFile()),
@@ -326,16 +326,16 @@ public class EchoThroughSocksServerChainingIT {
 		return Scheme.SOCKS5.newSocksServerUri(
 				InetAddress.getLoopbackAddress().getHostAddress(), 
 				Integer.valueOf(CHAINED_SOCKS_SERVER_PORT_1))
-				.newSocksClient(Properties.newInstance());
+				.newSocksClient(Properties.of());
 	}
 	
 	private static SocksClient newSocks5ClientToChainedConfigurationsUsingSocks5UserpassMethod() {
 		return Scheme.SOCKS5.newSocksServerUri(
 				InetAddress.getLoopbackAddress().getHostAddress(), 
 				Integer.valueOf(CHAINED_SOCKS_SERVER_PORT_1_USING_SOCKS5_USERPASSMETHOD))
-				.newSocksClient(Properties.newInstance(
+				.newSocksClient(Properties.of(
 						Socks5PropertySpecConstants.SOCKS5_METHODS.newProperty(
-								Methods.newInstance(Method.USERNAME_PASSWORD)),
+								Methods.of(Method.USERNAME_PASSWORD)),
 						Socks5PropertySpecConstants.SOCKS5_USERPASSMETHOD_USERNAME.newProperty(
 								"Aladdin"),
 						Socks5PropertySpecConstants.SOCKS5_USERPASSMETHOD_PASSWORD.newProperty(
@@ -347,7 +347,7 @@ public class EchoThroughSocksServerChainingIT {
 		return Scheme.SOCKS5.newSocksServerUri(
 				InetAddress.getLoopbackAddress().getHostAddress(), 
 				Integer.valueOf(CHAINED_SOCKS_SERVER_PORT_1_USING_SSL))
-				.newSocksClient(Properties.newInstance());
+				.newSocksClient(Properties.of());
 	}
 
 	private static List<SocksServer> newStartedSocksServers(

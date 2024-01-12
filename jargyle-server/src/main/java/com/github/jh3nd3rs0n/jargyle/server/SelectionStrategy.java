@@ -15,7 +15,7 @@ import com.github.jh3nd3rs0n.jargyle.internal.annotation.SingleValueTypeDoc;
 )
 public abstract class SelectionStrategy {
 	
-	public static SelectionStrategy newInstanceOf(final String s) {
+	public static SelectionStrategy newInstanceFrom(final String s) {
 		SelectionStrategySpec selectionStrategySpec = 
 				SelectionStrategySpecConstants.valueOfName(s);
 		return selectionStrategySpec.newSelectionStrategy();

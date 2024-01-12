@@ -39,7 +39,7 @@ public abstract class UserRepository {
 		return UserRepositorySpecConstants.STRING_SOURCE_USER_REPOSITORY.newUserRepository("");
 	}
 	
-	public static UserRepository newInstanceOf(final String s) {
+	public static UserRepository newInstanceFrom(final String s) {
 		String[] sElements = s.split(":", 2);
 		if (sElements.length != 2) {
 			throw new IllegalArgumentException(

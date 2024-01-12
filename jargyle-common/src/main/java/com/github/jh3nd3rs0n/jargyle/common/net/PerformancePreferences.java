@@ -47,7 +47,7 @@ public final class PerformancePreferences {
     private final Digit latencyImportance;
 
     /**
-     * Constructs a {@code PerformancePreferences} with the provided relative
+     * Constructs a {@code PerformancePreferences} of the provided relative
      * importance of short connection time, the provided relative importance
      * of low latency, and the provided relative importance of high bandwidth.
      *
@@ -66,7 +66,7 @@ public final class PerformancePreferences {
     }
 
     /**
-     * Constructs a {@code PerformancePreferences} based off another
+     * Constructs a {@code PerformancePreferences} of another
      * {@code PerformancePreferences}.
      *
      * @param other the other {@code PerformancePreferences}
@@ -78,7 +78,7 @@ public final class PerformancePreferences {
     }
 
     /**
-     * Returns a new {@code PerformancePreferences} with the provided relative
+     * Returns a {@code PerformancePreferences} of the provided relative
      * importance of short connection time, the provided relative importance
      * of low latency, and the provided relative importance of high bandwidth.
      *
@@ -86,11 +86,11 @@ public final class PerformancePreferences {
      *                       connection time
      * @param latency        the provided relative importance of low latency
      * @param bandwidth      the provided relative importance of high bandwidth
-     * @return a new {@code PerformancePreferences} with the provided relative
+     * @return a {@code PerformancePreferences} of the provided relative
      * importance of short connection time, the provided relative importance
      * of low latency, and the provided relative importance of high bandwidth
      */
-    public static PerformancePreferences newInstance(
+    public static PerformancePreferences of(
             final Digit connectionTime,
             final Digit latency,
             final Digit bandwidth) {
@@ -98,42 +98,39 @@ public final class PerformancePreferences {
     }
 
     /**
-     * Returns a new {@code PerformancePreferences} based off another
+     * Returns a {@code PerformancePreferences} of another
      * {@code PerformancePreferences}.
      *
      * @param other the other {@code PerformancePreferences}
-     * @return a new {@code PerformancePreferences} based off another
+     * @return a {@code PerformancePreferences} of another
      * {@code PerformancePreferences}
      */
-    public static PerformancePreferences newInstance(
+    public static PerformancePreferences of(
             final PerformancePreferences other) {
         return new PerformancePreferences(other);
     }
 
     /**
-     * Returns a new {@code PerformancePreferences} of the provided
+     * Returns a new {@code PerformancePreferences} from the provided
      * {@code String} of three digits whose values indicate the relative
      * importance of short connection time, low latency, and high bandwidth.
      * An {@code IllegalArgumentException} is thrown if the provided
      * {@code String} is not valid.
      *
      * @param s the provided {@code String} of three digits
-     * @return a new {@code PerformancePreferences} of the provided
+     * @return a new {@code PerformancePreferences} from the provided
      * {@code String} of three digits whose values indicate the relative
      * importance of short connection time, low latency, and high bandwidth
      */
-    public static PerformancePreferences newInstanceOf(final String s) {
+    public static PerformancePreferences newInstanceFrom(final String s) {
         if (!s.matches(REGEX)) {
             throw new IllegalArgumentException(
                     "must be a string of 3 digits");
         }
         char[] sChars = s.toCharArray();
-        Digit connectionTime = Digit.newInstanceOf(
-                Character.toString(sChars[0]));
-        Digit latency = Digit.newInstanceOf(
-                Character.toString(sChars[1]));
-        Digit bandwidth = Digit.newInstanceOf(
-                Character.toString(sChars[2]));
+        Digit connectionTime = Digit.valueOf(Character.toString(sChars[0]));
+        Digit latency = Digit.valueOf(Character.toString(sChars[1]));
+        Digit bandwidth = Digit.valueOf(Character.toString(sChars[2]));
         return new PerformancePreferences(connectionTime, latency, bandwidth);
     }
 
@@ -164,7 +161,7 @@ public final class PerformancePreferences {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (this == obj) {
             return true;
         }

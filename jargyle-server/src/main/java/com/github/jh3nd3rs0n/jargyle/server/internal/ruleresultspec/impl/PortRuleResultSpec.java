@@ -12,7 +12,7 @@ public final class PortRuleResultSpec extends RuleResultSpec<Port> {
 
 	@Override
 	public RuleResult<Port> newRuleResultWithParsedValue(final String value) {
-		return super.newRuleResult(Port.newInstanceOf(value));
+		return super.newRuleResult(Port.valueOf(value));
 	}
 
 }

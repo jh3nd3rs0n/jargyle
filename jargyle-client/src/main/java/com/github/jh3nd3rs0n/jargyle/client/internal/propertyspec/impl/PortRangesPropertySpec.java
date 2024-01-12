@@ -13,7 +13,7 @@ public final class PortRangesPropertySpec extends PropertySpec<PortRanges> {
 
 	@Override
 	public Property<PortRanges> newPropertyWithParsedValue(final String value) {
-		return super.newProperty(PortRanges.newInstanceOf(value));
+		return super.newProperty(PortRanges.newInstanceFrom(value));
 	}
 
 }

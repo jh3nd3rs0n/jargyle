@@ -20,10 +20,10 @@ public final class MessageInputHelper {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		Version ver = readVersionFrom(in);
 		tknStartIndex++;
-		out.write(UnsignedByte.newInstanceOf(ver.byteValue()).intValue());
+		out.write(UnsignedByte.valueOf(ver.byteValue()).intValue());
 		MessageType mType = readMessageTypeFrom(in);
 		tknStartIndex++;
-		out.write(UnsignedByte.newInstanceOf(mType.byteValue()).intValue());
+		out.write(UnsignedByte.valueOf(mType.byteValue()).intValue());
 		if (mType.equals(MessageType.ABORT)) {
 			tknStartIndex++;
 		} else {

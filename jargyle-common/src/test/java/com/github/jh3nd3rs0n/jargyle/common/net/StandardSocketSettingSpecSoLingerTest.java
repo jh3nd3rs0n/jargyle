@@ -1,6 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.common.net;
 
-import com.github.jh3nd3rs0n.jargyle.common.number.NonnegativeInteger;
+import com.github.jh3nd3rs0n.jargyle.common.number.NonNegativeInteger;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -15,14 +15,14 @@ public class StandardSocketSettingSpecSoLingerTest {
     @Test(expected = UnsupportedOperationException.class)
     public void testApplyValueDatagramSocket() throws SocketException {
         StandardSocketSettingSpecConstants.SO_LINGER.apply(
-                NonnegativeInteger.newInstanceOf(234),
+                NonNegativeInteger.valueOf(234),
                 new DatagramSocket(null));
     }
 
     @Test(expected = UnsupportedOperationException.class)
     public void testApplyValueServerSocket() throws IOException {
         StandardSocketSettingSpecConstants.SO_LINGER.apply(
-                NonnegativeInteger.newInstanceOf(234),
+                NonNegativeInteger.valueOf(234),
                 new ServerSocket());
     }
 
@@ -30,7 +30,7 @@ public class StandardSocketSettingSpecSoLingerTest {
     public void testApplyValueSocket() throws SocketException {
         Socket socket = new Socket();
         StandardSocketSettingSpecConstants.SO_LINGER.apply(
-                NonnegativeInteger.newInstanceOf(234),
+                NonNegativeInteger.valueOf(234),
                 socket);
         Assert.assertEquals(234, socket.getSoLinger());
     }

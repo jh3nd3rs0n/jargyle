@@ -21,7 +21,7 @@ public final class PortRangeContainsPortRuleConditionSpec
 	@Override
 	public RuleCondition<PortRange, Port> newRuleConditionWithParsedValue(
 			final String value) {
-		return super.newRuleCondition(PortRange.newInstanceOf(value));
+		return super.newRuleCondition(PortRange.newInstanceFrom(value));
 	}
 
 }

@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import java.io.IOException;
 import java.net.InetAddress;
 
+import com.github.jh3nd3rs0n.jargyle.common.number.NonNegativeInteger;
 import org.junit.Test;
 
 import com.github.jh3nd3rs0n.echo.DatagramEchoClient;
@@ -19,7 +20,6 @@ import com.github.jh3nd3rs0n.jargyle.client.Socks5PropertySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
 import com.github.jh3nd3rs0n.jargyle.client.SslPropertySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
-import com.github.jh3nd3rs0n.jargyle.common.number.NonnegativeInteger;
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Method;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Methods;
@@ -87,32 +87,32 @@ public class SocksServerStressIT {
 			.toString();
 	
 	private static Configuration newConfiguration() {
-		return Configuration.newUnmodifiableInstance(Settings.newInstance(
+		return Configuration.newUnmodifiableInstance(Settings.of(
 				GeneralSettingSpecConstants.PORT.newSetting(
-						Port.newInstanceOf(SOCKS_SERVER_PORT)),
+						Port.valueOf(SOCKS_SERVER_PORT)),
 				GeneralSettingSpecConstants.BACKLOG.newSetting(
-						NonnegativeInteger.newInstanceOf(BACKLOG))));
+						NonNegativeInteger.valueOf(BACKLOG))));
 	}
 	
 	private static Configuration newConfigurationUsingSocks5UserpassMethod() {
-		return Configuration.newUnmodifiableInstance(Settings.newInstance(
+		return Configuration.newUnmodifiableInstance(Settings.of(
 				GeneralSettingSpecConstants.PORT.newSetting(
-						Port.newInstanceOf(SOCKS_SERVER_PORT_USING_SOCKS5_USERPASSMETHOD)),
+						Port.valueOf(SOCKS_SERVER_PORT_USING_SOCKS5_USERPASSMETHOD)),
 				GeneralSettingSpecConstants.BACKLOG.newSetting(
-						NonnegativeInteger.newInstanceOf(BACKLOG)),
+						NonNegativeInteger.valueOf(BACKLOG)),
 				Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
-						Methods.newInstance(Method.USERNAME_PASSWORD)),
+						Methods.of(Method.USERNAME_PASSWORD)),
 				Socks5SettingSpecConstants.SOCKS5_USERPASSMETHOD_USER_REPOSITORY.newSetting(
 						UserRepositorySpecConstants.STRING_SOURCE_USER_REPOSITORY.newUserRepository(
 								SOCKS5_USERS))));
 	}
 	
 	private static Configuration newConfigurationUsingSsl() {
-		return Configuration.newUnmodifiableInstance(Settings.newInstance(
+		return Configuration.newUnmodifiableInstance(Settings.of(
 				GeneralSettingSpecConstants.PORT.newSetting(
-						Port.newInstanceOf(SOCKS_SERVER_PORT_USING_SSL)),
+						Port.valueOf(SOCKS_SERVER_PORT_USING_SSL)),
 				GeneralSettingSpecConstants.BACKLOG.newSetting(
-						NonnegativeInteger.newInstanceOf(BACKLOG)),
+						NonNegativeInteger.valueOf(BACKLOG)),
 				DtlsSettingSpecConstants.DTLS_ENABLED.newSetting(Boolean.TRUE),
 				DtlsSettingSpecConstants.DTLS_KEY_STORE_FILE.newSetting(
 						TestResourceConstants.ECHO_INTEGRATION_TEST_SOCKS_SERVER_KEY_STORE_FILE.getFile()),
@@ -126,11 +126,11 @@ public class SocksServerStressIT {
 	}
 	
 	private static Configuration newConfigurationUsingSslAndSocks5UserpassMethod() {
-		return Configuration.newUnmodifiableInstance(Settings.newInstance(
+		return Configuration.newUnmodifiableInstance(Settings.of(
 				GeneralSettingSpecConstants.PORT.newSetting(
-						Port.newInstanceOf(SOCKS_SERVER_PORT_USING_SSL_AND_SOCKS5_USERPASSMETHOD)),
+						Port.valueOf(SOCKS_SERVER_PORT_USING_SSL_AND_SOCKS5_USERPASSMETHOD)),
 				GeneralSettingSpecConstants.BACKLOG.newSetting(
-						NonnegativeInteger.newInstanceOf(BACKLOG)),
+						NonNegativeInteger.valueOf(BACKLOG)),
 				DtlsSettingSpecConstants.DTLS_ENABLED.newSetting(Boolean.TRUE),
 				DtlsSettingSpecConstants.DTLS_KEY_STORE_FILE.newSetting(
 						TestResourceConstants.ECHO_INTEGRATION_TEST_SOCKS_SERVER_KEY_STORE_FILE.getFile()),
@@ -142,7 +142,7 @@ public class SocksServerStressIT {
 				SslSettingSpecConstants.SSL_KEY_STORE_PASSWORD.newSettingWithParsedValue(
 						TestResourceConstants.ECHO_INTEGRATION_TEST_SOCKS_SERVER_KEY_STORE_PASSWORD_FILE.getContentAsString()),
 				Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
-						Methods.newInstance(Method.USERNAME_PASSWORD)),
+						Methods.of(Method.USERNAME_PASSWORD)),
 				Socks5SettingSpecConstants.SOCKS5_USERPASSMETHOD_USER_REPOSITORY.newSetting(
 						UserRepositorySpecConstants.STRING_SOURCE_USER_REPOSITORY.newUserRepository(
 								SOCKS5_USERS))));
@@ -152,15 +152,15 @@ public class SocksServerStressIT {
 		return Scheme.SOCKS5.newSocksServerUri(
 				InetAddress.getLoopbackAddress().getHostAddress(), 
 				Integer.valueOf(SOCKS_SERVER_PORT))
-				.newSocksClient(Properties.newInstance());
+				.newSocksClient(Properties.of());
 	}
 	
 	private static SocksClient newSocks5ClientUsingSocks5UserpassMethod(
 			final String username,
 			final char[] password) {
-		Properties properties = Properties.newInstance(
+		Properties properties = Properties.of(
 				Socks5PropertySpecConstants.SOCKS5_METHODS.newProperty(
-						Methods.newInstance(Method.USERNAME_PASSWORD)),
+						Methods.of(Method.USERNAME_PASSWORD)),
 				Socks5PropertySpecConstants.SOCKS5_USERPASSMETHOD_USERNAME.newProperty(
 						username),
 				Socks5PropertySpecConstants.SOCKS5_USERPASSMETHOD_PASSWORD.newProperty(
@@ -172,7 +172,7 @@ public class SocksServerStressIT {
 	}	
 	
 	private static SocksClient newSocks5ClientUsingSsl() {
-		Properties properties = Properties.newInstance(
+		Properties properties = Properties.of(
 				DtlsPropertySpecConstants.DTLS_ENABLED.newProperty(
 						Boolean.TRUE),
 				DtlsPropertySpecConstants.DTLS_TRUST_STORE_FILE.newProperty(
@@ -194,7 +194,7 @@ public class SocksServerStressIT {
 	private static SocksClient newSocks5ClientUsingSslAndSocks5UserpassMethod(
 			final String username,
 			final char[] password) {
-		Properties properties = Properties.newInstance(
+		Properties properties = Properties.of(
 				DtlsPropertySpecConstants.DTLS_ENABLED.newProperty(
 						Boolean.TRUE),
 				DtlsPropertySpecConstants.DTLS_TRUST_STORE_FILE.newProperty(
@@ -208,7 +208,7 @@ public class SocksServerStressIT {
 				SslPropertySpecConstants.SSL_TRUST_STORE_PASSWORD.newPropertyWithParsedValue(
 						TestResourceConstants.ECHO_INTEGRATION_TEST_SOCKS_SERVER_KEY_STORE_PASSWORD_FILE.getContentAsString()),
 				Socks5PropertySpecConstants.SOCKS5_METHODS.newProperty(
-						Methods.newInstance(Method.USERNAME_PASSWORD)),
+						Methods.of(Method.USERNAME_PASSWORD)),
 				Socks5PropertySpecConstants.SOCKS5_USERPASSMETHOD_USERNAME.newProperty(
 						username),
 				Socks5PropertySpecConstants.SOCKS5_USERPASSMETHOD_PASSWORD.newProperty(

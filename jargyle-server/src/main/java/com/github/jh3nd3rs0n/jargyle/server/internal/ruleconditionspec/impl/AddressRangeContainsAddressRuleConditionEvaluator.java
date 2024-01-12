@@ -10,7 +10,7 @@ public final class AddressRangeContainsAddressRuleConditionEvaluator
 
 	@Override
 	public boolean evaluate(final AddressRange value1, final String value2) {
-		return value1.contains(value2);
+		return value1.has(value2);
 	}
 
 }

@@ -40,7 +40,7 @@ public final class Socks5UserManagerCLI extends CLI {
 							Arrays.asList(args).stream().collect(
 									Collectors.joining(", "))));
 				}
-				Users users = Users.newInstance();
+				Users users = Users.of();
 				ConsoleWrapper consoleWrapper = new ConsoleWrapper(
 						System.console());
 				boolean addAnotherUser = false;

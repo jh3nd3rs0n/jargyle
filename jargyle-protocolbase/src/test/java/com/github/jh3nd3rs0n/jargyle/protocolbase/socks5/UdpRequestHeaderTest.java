@@ -11,9 +11,9 @@ public class UdpRequestHeaderTest {
 	@Test
 	public void testNewInstanceUnsignedByteAddressPortByteArray01() {
 		UdpRequestHeader udpDatagram1 = UdpRequestHeader.newInstance(
-				UnsignedByte.newInstanceOf(0),
+				UnsignedByte.valueOf(0),
 				Address.newInstance("12.216.103.24"), 
-				Port.newInstanceOf(0),
+				Port.valueOf(0),
 				TestStringConstants.STRING_01.getBytes());
 		UdpRequestHeader udpDatagram2 = UdpRequestHeader.newInstance(
 				udpDatagram1.toByteArray());
@@ -23,9 +23,9 @@ public class UdpRequestHeaderTest {
 	@Test
 	public void testNewInstanceUnsignedByteAddressPortByteArray02() {
 		UdpRequestHeader udpDatagram1 = UdpRequestHeader.newInstance(
-				UnsignedByte.newInstanceOf(1),
+				UnsignedByte.valueOf(1),
 				Address.newInstance("google.com"), 
-				Port.newInstanceOf(1234),
+				Port.valueOf(1234),
 				TestStringConstants.STRING_02.getBytes());
 		UdpRequestHeader udpDatagram2 = UdpRequestHeader.newInstance(
 				udpDatagram1.toByteArray());
@@ -35,9 +35,9 @@ public class UdpRequestHeaderTest {
 	@Test
 	public void testNewInstanceUnsignedByteAddressPortByteArray03() {
 		UdpRequestHeader udpDatagram1 = UdpRequestHeader.newInstance(
-				UnsignedByte.newInstanceOf(255),
+				UnsignedByte.valueOf(255),
 				Address.newInstance("abcd:1234:ef56:abcd:789e:f123:456a:b789"), 
-				Port.newInstanceOf(0xffff),
+				Port.valueOf(0xffff),
 				TestStringConstants.STRING_03.getBytes());
 		UdpRequestHeader udpDatagram2 = UdpRequestHeader.newInstance(
 				udpDatagram1.toByteArray());

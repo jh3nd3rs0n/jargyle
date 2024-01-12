@@ -47,7 +47,7 @@ public final class User {
 		} catch (UnsupportedEncodingException e) {
 			throw new AssertionError(e);
 		}
-		return newInstance(name, HashedPassword.newInstanceOf(hashedPassword));
+		return newInstance(name, HashedPassword.newInstanceFrom(hashedPassword));
 	}
 	
 	public static User newInstanceFromUsernamePasswordPair(final String s) {

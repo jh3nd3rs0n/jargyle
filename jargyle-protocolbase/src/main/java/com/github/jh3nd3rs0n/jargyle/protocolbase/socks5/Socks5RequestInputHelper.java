@@ -26,9 +26,9 @@ public final class Socks5RequestInputHelper {
 			final InputStream in) throws IOException {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		Version ver = VersionInputHelper.readVersionFrom(in);
-		out.write(UnsignedByte.newInstanceOf(ver.byteValue()).intValue());
+		out.write(UnsignedByte.valueOf(ver.byteValue()).intValue());
 		Command cmd = readCommandFrom(in);
-		out.write(UnsignedByte.newInstanceOf(cmd.byteValue()).intValue());
+		out.write(UnsignedByte.valueOf(cmd.byteValue()).intValue());
 		UnsignedByte rsv = UnsignedByteInputHelper.readUnsignedByteFrom(in);
 		if (rsv.intValue() != Socks5Request.RSV) {
 			throw new Socks5Exception(String.format(
@@ -39,7 +39,7 @@ public final class Socks5RequestInputHelper {
 		Address dstAddr = AddressInputHelper.readAddressFrom(in);
 		out.write(dstAddr.toByteArray());
 		Port dstPort = PortInputHelper.readPortFrom(in);
-		out.write(dstPort.toUnsignedShort().toByteArray());
+		out.write(dstPort.unsignedShortValue().toByteArray());
 		Socks5Request.Params params = new Socks5Request.Params();
 		params.version = ver;
 		params.command = cmd;

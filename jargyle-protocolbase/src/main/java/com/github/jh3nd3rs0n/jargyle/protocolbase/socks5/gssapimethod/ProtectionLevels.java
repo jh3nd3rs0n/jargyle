@@ -18,7 +18,7 @@ import com.github.jh3nd3rs0n.jargyle.internal.annotation.ValuesValueTypeDoc;
 public final class ProtectionLevels {
 
 	private static final ProtectionLevels DEFAULT_INSTANCE =
-			ProtectionLevels.newInstance(
+			ProtectionLevels.of(
 					ProtectionLevel.REQUIRED_INTEG_AND_CONF,
 					ProtectionLevel.REQUIRED_INTEG,
 					ProtectionLevel.NONE);
@@ -27,7 +27,7 @@ public final class ProtectionLevels {
 		return DEFAULT_INSTANCE;
 	}
 	
-	public static ProtectionLevels newInstance(
+	public static ProtectionLevels of(
 			final ProtectionLevel protectionLvl,
 			final List<ProtectionLevel> protectionLvls) {
 		List<ProtectionLevel> list = new ArrayList<ProtectionLevel>();
@@ -36,13 +36,13 @@ public final class ProtectionLevels {
 		return new ProtectionLevels(list);
 	}
 	
-	public static ProtectionLevels newInstance(
+	public static ProtectionLevels of(
 			final ProtectionLevel protectionLvl,
 			final ProtectionLevel... protectionLvls) {
-		return newInstance(protectionLvl, Arrays.asList(protectionLvls));
+		return of(protectionLvl, Arrays.asList(protectionLvls));
 	}
 	
-	public static ProtectionLevels newInstanceOf(final String s) {
+	public static ProtectionLevels newInstanceFrom(final String s) {
 		List<ProtectionLevel> protectionLevels = 
 				new ArrayList<ProtectionLevel>();
 		String[] sElements = s.split(",");

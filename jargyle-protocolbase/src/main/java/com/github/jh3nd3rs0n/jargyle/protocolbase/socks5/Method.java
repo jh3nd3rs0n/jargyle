@@ -43,14 +43,14 @@ public enum Method {
 		}
 		String str = Arrays.stream(Method.values())
 				.map(Method::byteValue)
-				.map(bv -> UnsignedByte.newInstanceOf(bv).intValue())
+				.map(bv -> UnsignedByte.valueOf(bv).intValue())
 				.map(i -> Integer.toHexString(i))
 				.collect(Collectors.joining(", "));
 		throw new IllegalArgumentException(String.format(
 				"expected method must be one of the following values: %s. "
 				+ "actual value is %s",
 				str,
-				Integer.toHexString(UnsignedByte.newInstanceOf(b).intValue())));
+				Integer.toHexString(UnsignedByte.valueOf(b).intValue())));
 	}
 	
 	public static Method valueOfString(final String s) {

@@ -14,7 +14,7 @@ import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueTypeD
 )
 public final class RuleResult<V> {
 	
-	public static RuleResult<Object> newInstanceOf(final String s) {
+	public static RuleResult<Object> newInstanceFrom(final String s) {
 		String[] sElements = s.split("=", 2);
 		if (sElements.length != 2) {
 			throw new IllegalArgumentException(

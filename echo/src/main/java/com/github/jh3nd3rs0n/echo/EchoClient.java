@@ -10,14 +10,14 @@ import java.net.Socket;
 import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.common.net.StandardSocketSettingSpecConstants;
-import com.github.jh3nd3rs0n.jargyle.common.number.NonnegativeInteger;
+import com.github.jh3nd3rs0n.jargyle.common.number.NonNegativeInteger;
 
 public final class EchoClient {
 	
 	private static final int SO_TIMEOUT = 60000;
-	private static final SocketSettings SOCKET_SETTINGS = SocketSettings.newInstance(
+	private static final SocketSettings SOCKET_SETTINGS = SocketSettings.of(
 			StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
-					NonnegativeInteger.newInstanceOf(SO_TIMEOUT)));
+					NonNegativeInteger.valueOf(SO_TIMEOUT)));
 	
 	private final NetObjectFactory netObjectFactory;
 	private final SocketSettings socketSettings;

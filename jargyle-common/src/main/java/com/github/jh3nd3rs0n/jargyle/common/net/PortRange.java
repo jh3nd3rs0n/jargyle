@@ -24,8 +24,9 @@ public final class PortRange implements Iterable<Port> {
     /**
      * The default {@code PortRange} (0).
      */
-    private static final PortRange DEFAULT_INSTANCE = PortRange.newInstance(
-            Port.newInstanceOf(0));
+    private static final PortRange DEFAULT_INSTANCE = PortRange.of(
+            Port.valueOf(0));
+
     /**
      * The minimum {@code Port} value.
      */
@@ -36,7 +37,7 @@ public final class PortRange implements Iterable<Port> {
     private final Port maxPort;
 
     /**
-     * Constructs a {@code PortRange} with the provided minimum {@code Port}
+     * Constructs a {@code PortRange} of the provided minimum {@code Port}
      * value and the provided maximum {@code Port} value. An
      * {@code IllegalArgumentException} is thrown if the provided minimum
      * {@code Port} value is greater than the maximum {@code Port} value.
@@ -65,47 +66,48 @@ public final class PortRange implements Iterable<Port> {
     }
 
     /**
-     * Returns a new {@code PortRange} with the provided {@code Port} value as
+     * Returns a {@code PortRange} of the provided {@code Port} value as
      * both the minimum and maximum value.
      *
      * @param prt the provided {@code Port} value
-     * @return a new {@code PortRange} with the provided {@code Port} value as
+     * @return a {@code PortRange} of the provided {@code Port} value as
      * both the minimum and maximum value
      */
-    public static PortRange newInstance(final Port prt) {
-        return newInstance(prt, prt);
+    public static PortRange of(final Port prt) {
+        return of(prt, prt);
     }
 
     /**
-     * Returns a new {@code PortRange} with the provided minimum {@code Port}
+     * Returns a {@code PortRange} of the provided minimum {@code Port}
      * value and the maximum {@code Port} value. An
      * {@code IllegalArgumentException} is thrown if the provided minimum
      * {@code Port} value is greater than the maximum {@code Port} value.
      *
      * @param minPrt the provided minimum {@code Port} value
      * @param maxPrt the provided maximum {@code Port} value
-     * @return a new {@code PortRange} with the provided minimum {@code Port}
+     * @return a {@code PortRange} of the provided minimum {@code Port}
      * value and the maximum {@code Port} value
      */
-    public static PortRange newInstance(final Port minPrt, final Port maxPrt) {
+    public static PortRange of(final Port minPrt, final Port maxPrt) {
         return new PortRange(minPrt, maxPrt);
     }
 
     /**
-     * Returns a new {@code PortRange} of the provided {@code String}. The
+     * Returns a new {@code PortRange} from the provided {@code String}. The
      * provided {@code String} must be a port number followed by a hyphen
      * followed by another port number equal to or greater than the first port
      * number. An {@code IllegalArgumentException} is thrown if the provided
      * {@code String} is not valid.
      *
      * @param s the provided {@code String}
-     * @return a new {@code PortRange} of the provided {@code String}
+     * @return a new {@code PortRange} from the provided {@code String}
      */
-    public static PortRange newInstanceOf(final String s) {
+    public static PortRange newInstanceFrom(final String s) {
         String message = String.format(
                 "port range must be either of the following formats: "
                         + "INTEGER_BETWEEN_%1$s_AND_%2$s, "
-                        + "INTEGER1_BETWEEN_%1$s_AND_%2$s-INTEGER2_BETWEEN_%1$s_AND_%2$s",
+                        + "INTEGER1_BETWEEN_%1$s_AND_%2$s-"
+                        + "INTEGER2_BETWEEN_%1$s_AND_%2$s",
                 Port.MIN_INT_VALUE,
                 Port.MAX_INT_VALUE);
         String[] sElements = s.split("-");
@@ -116,27 +118,27 @@ public final class PortRange implements Iterable<Port> {
             String sElement = sElements[0];
             Port prt;
             try {
-                prt = Port.newInstanceOf(sElement);
+                prt = Port.valueOf(sElement);
             } catch (IllegalArgumentException e) {
                 throw new IllegalArgumentException(message, e);
             }
-            return newInstance(prt);
+            return of(prt);
         }
         String sElement0 = sElements[0];
         String sElement1 = sElements[1];
         Port minPrt;
         try {
-            minPrt = Port.newInstanceOf(sElement0);
+            minPrt = Port.valueOf(sElement0);
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(message, e);
         }
         Port maxPrt;
         try {
-            maxPrt = Port.newInstanceOf(sElement1);
+            maxPrt = Port.valueOf(sElement1);
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(message, e);
         }
-        return newInstance(minPrt, maxPrt);
+        return of(minPrt, maxPrt);
     }
 
     /**
@@ -148,11 +150,12 @@ public final class PortRange implements Iterable<Port> {
      * has the provided {@code Port} value
      */
     public boolean has(final Port port) {
-        return this.minPort.compareTo(port) <= 0 && this.maxPort.compareTo(port) >= 0;
+        return this.minPort.compareTo(port) <= 0
+                && this.maxPort.compareTo(port) >= 0;
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (this == obj) {
             return true;
         }
@@ -214,7 +217,7 @@ public final class PortRange implements Iterable<Port> {
                 if (!this.hasNext()) {
                     throw new NoSuchElementException();
                 }
-                return Port.newInstanceOf(++this.index);
+                return Port.valueOf(++this.index);
             }
 
         };

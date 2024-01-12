@@ -18,7 +18,7 @@ public final class UsernamePasswordRequestInputHelper {
 			final InputStream in) throws IOException {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		Version ver = VersionInputHelper.readVersionFrom(in);
-		out.write(UnsignedByte.newInstanceOf(ver.byteValue()).intValue());
+		out.write(UnsignedByte.valueOf(ver.byteValue()).intValue());
 		UnsignedByte ulen = UnsignedByteInputHelper.readUnsignedByteFrom(in);
 		out.write(ulen.intValue());
 		byte[] bytes = new byte[ulen.intValue()];

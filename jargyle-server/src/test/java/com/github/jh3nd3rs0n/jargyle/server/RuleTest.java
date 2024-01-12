@@ -7,8 +7,8 @@ import org.junit.Test;
 public class RuleTest {
 
 	@Test
-	public void testNewInstanceOfString01() {
-		Rule expectedRule = Rule.newInstanceOf(new StringBuilder()
+	public void testNewInstanceFromString01() {
+		Rule expectedRule = Rule.newInstanceFrom(new StringBuilder()
 				.append("clientAddress=127.0.0.1,")
 				.append("firewallAction=ALLOW")
 				.toString());
@@ -20,8 +20,8 @@ public class RuleTest {
 	}
 
 	@Test
-	public void testNewInstanceOfString02() {
-		Rule expectedRule = Rule.newInstanceOf(new StringBuilder()
+	public void testNewInstanceFromString02() {
+		Rule expectedRule = Rule.newInstanceFrom(new StringBuilder()
 				.append("socks5.command=BIND,")
 				.append("socks5.command=UDP_ASSOCIATE,")
 				.append("firewallAction=DENY")
@@ -35,8 +35,8 @@ public class RuleTest {
 	}
 
 	@Test
-	public void testNewInstanceOfString03() {
-		Rule expectedRule = Rule.newInstanceOf(new StringBuilder()
+	public void testNewInstanceFromString03() {
+		Rule expectedRule = Rule.newInstanceFrom(new StringBuilder()
 				.append("socks5.serverBoundAddress=127.0.0.1,")
 				.append("firewallAction=DENY,")
 				.append("firewallActionLogAction=LOG_AS_WARNING")

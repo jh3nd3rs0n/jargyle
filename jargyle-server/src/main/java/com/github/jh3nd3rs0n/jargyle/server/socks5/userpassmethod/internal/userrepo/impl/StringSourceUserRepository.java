@@ -38,7 +38,7 @@ public final class StringSourceUserRepository extends UserRepository {
 		Users usrs = null;
 		this.lock.lock();
 		try {
-			usrs = Users.newInstance(this.users);
+			usrs = Users.of(this.users);
 		} finally {
 			this.lock.unlock();
 		}

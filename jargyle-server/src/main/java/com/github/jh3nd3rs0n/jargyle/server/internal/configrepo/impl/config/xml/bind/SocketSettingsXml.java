@@ -35,7 +35,7 @@ class SocketSettingsXml extends ValueXml {
 		for (SocketSettingXml socketSettingXml : this.socketSettingsXml) {
 			socketSettings.add(socketSettingXml.toSocketSetting());
 		}
-		return SocketSettings.newInstance(socketSettings);
+		return SocketSettings.of(socketSettings);
 	}
 
 	@Override

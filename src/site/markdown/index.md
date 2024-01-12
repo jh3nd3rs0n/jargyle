@@ -100,7 +100,7 @@ import java.io.IOException;
 
 public class ServerApp {
     public static void main(String[] args) throws IOException {
-        new SocksServer(Configuration.newUnmodifiableInstance(Settings.newInstance(
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
             Setting.newInstanceWithParsedValue(
                 "port", "8080"),
             /*

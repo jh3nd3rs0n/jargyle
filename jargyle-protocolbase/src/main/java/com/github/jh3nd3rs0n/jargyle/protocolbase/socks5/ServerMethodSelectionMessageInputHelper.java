@@ -12,9 +12,9 @@ public final class ServerMethodSelectionMessageInputHelper {
 			final InputStream in) throws IOException {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		Version ver = VersionInputHelper.readVersionFrom(in);
-		out.write(UnsignedByte.newInstanceOf(ver.byteValue()).intValue());
+		out.write(UnsignedByte.valueOf(ver.byteValue()).intValue());
 		Method meth = MethodInputHelper.readMethodFrom(in);
-		out.write(UnsignedByte.newInstanceOf(meth.byteValue()).intValue());
+		out.write(UnsignedByte.valueOf(meth.byteValue()).intValue());
 		ServerMethodSelectionMessage.Params params = 
 				new ServerMethodSelectionMessage.Params();
 		params.version = ver;

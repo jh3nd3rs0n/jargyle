@@ -13,24 +13,24 @@ import com.github.jh3nd3rs0n.jargyle.server.internal.addressrange.impl.Ipv6Addre
 )
 public abstract class AddressRange {
 
-	public static AddressRange newInstanceOf(final String s) {
+	public static AddressRange newInstanceFrom(final String s) {
 		try {
-			return Ipv4AddressRange.newInstanceOf(s);
+			return Ipv4AddressRange.newInstanceFrom(s);
 		} catch (IllegalArgumentException ignored) {
 		}
 		try {
-			return Ipv6AddressRange.newInstanceOf(s);
+			return Ipv6AddressRange.newInstanceFrom(s);
 		} catch (IllegalArgumentException ignored) {
 		}
 		try {
-			return DomainnameRange.newInstanceOf(s);
+			return DomainnameRange.newInstanceFrom(s);
 		} catch (IllegalArgumentException ignored) {
 		}
 		throw new IllegalArgumentException(String.format(
 				"invalid address range: %s", s));
 	}
 	
-	public abstract boolean contains(final String address);
+	public abstract boolean has(final String address);
 	
 	@Override
 	public abstract boolean equals(Object obj);

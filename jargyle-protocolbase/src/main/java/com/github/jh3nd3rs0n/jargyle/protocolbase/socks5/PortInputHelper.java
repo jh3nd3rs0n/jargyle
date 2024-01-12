@@ -11,7 +11,7 @@ final class PortInputHelper {
 	
 	public static Port readPortFrom(final InputStream in) throws IOException {
 		UnsignedShort s = UnsignedShortInputHelper.readUnsignedShortFrom(in);
-		return Port.newInstanceOf(s);
+		return Port.valueOf(s);
 	}
 
 	private PortInputHelper() { }

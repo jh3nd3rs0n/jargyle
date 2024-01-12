@@ -29,7 +29,7 @@ public final class Socks5Reply {
 		return newInstance(
 				reply, 
 				Address.newInstance(HostIpv4Address.ALL_ZEROS_IPV4_ADDRESS),
-				Port.newInstanceOf(0));
+				Port.valueOf(0));
 	}
 	
 	public static Socks5Reply newInstance(final byte[] b) {
@@ -49,8 +49,8 @@ public final class Socks5Reply {
 			final Port serverBoundPort) {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		Version version = Version.V5;
-		out.write(UnsignedByte.newInstanceOf(version.byteValue()).intValue());
-		out.write(UnsignedByte.newInstanceOf(reply.byteValue()).intValue());
+		out.write(UnsignedByte.valueOf(version.byteValue()).intValue());
+		out.write(UnsignedByte.valueOf(reply.byteValue()).intValue());
 		out.write(RSV);
 		try {
 			out.write(serverBoundAddress.toByteArray());
@@ -58,7 +58,7 @@ public final class Socks5Reply {
 			throw new AssertionError(e);
 		}
 		try {
-			out.write(serverBoundPort.toUnsignedShort().toByteArray());
+			out.write(serverBoundPort.unsignedShortValue().toByteArray());
 		} catch (IOException e) {
 			throw new AssertionError(e);
 		}

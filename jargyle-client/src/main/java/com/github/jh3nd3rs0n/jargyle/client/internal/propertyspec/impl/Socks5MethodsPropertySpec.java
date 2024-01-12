@@ -12,7 +12,7 @@ public final class Socks5MethodsPropertySpec extends PropertySpec<Methods> {
 
 	@Override
 	public Property<Methods> newPropertyWithParsedValue(final String value) {
-		return super.newProperty(Methods.newInstanceOf(value));
+		return super.newProperty(Methods.newInstanceFrom(value));
 	}
 
 }

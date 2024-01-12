@@ -7,12 +7,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import com.github.jh3nd3rs0n.jargyle.common.number.NonNegativeInteger;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
-import com.github.jh3nd3rs0n.jargyle.common.number.NonnegativeInteger;
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.ConfigurationRepository;
 import com.github.jh3nd3rs0n.jargyle.server.GeneralSettingSpecConstants;
@@ -69,7 +69,7 @@ public class FileSourceConfigurationRepositoryIT {
 		Configuration configuration = 
 				this.xmlFileSourceConfigurationRepository.get();
 		Settings settings = configuration.getSettings();
-		Port expectedPort = Port.newInstanceOf(1234);
+		Port expectedPort = Port.valueOf(1234);
 		Port actualPort = settings.getLastValue(
 				GeneralSettingSpecConstants.PORT);
 		assertEquals(expectedPort, actualPort);
@@ -96,9 +96,9 @@ public class FileSourceConfigurationRepositoryIT {
 		Configuration configuration = 
 				this.xmlFileSourceConfigurationRepository.get();
 		Settings settings = configuration.getSettings();
-		NonnegativeInteger expectedBacklog = NonnegativeInteger.newInstanceOf(
+		NonNegativeInteger expectedBacklog = NonNegativeInteger.valueOf(
 				100);
-		NonnegativeInteger actualBacklog = settings.getLastValue(
+		NonNegativeInteger actualBacklog = settings.getLastValue(
 				GeneralSettingSpecConstants.BACKLOG);
 		assertEquals(expectedBacklog, actualBacklog);
 	}

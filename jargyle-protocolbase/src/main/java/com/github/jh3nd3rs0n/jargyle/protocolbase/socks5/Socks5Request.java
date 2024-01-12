@@ -38,8 +38,8 @@ public final class Socks5Request {
 			final Port desiredDestinationPort) {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		Version version = Version.V5;
-		out.write(UnsignedByte.newInstanceOf(version.byteValue()).intValue());
-		out.write(UnsignedByte.newInstanceOf(command.byteValue()).intValue());
+		out.write(UnsignedByte.valueOf(version.byteValue()).intValue());
+		out.write(UnsignedByte.valueOf(command.byteValue()).intValue());
 		out.write(RSV);
 		try {
 			out.write(desiredDestinationAddress.toByteArray());
@@ -47,7 +47,7 @@ public final class Socks5Request {
 			throw new AssertionError(e);
 		}
 		try {
-			out.write(desiredDestinationPort.toUnsignedShort().toByteArray());
+			out.write(desiredDestinationPort.unsignedShortValue().toByteArray());
 		} catch (IOException e) {
 			throw new AssertionError(e);
 		}

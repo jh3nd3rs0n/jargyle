@@ -72,6 +72,10 @@ ADDRESS|IP_ADDRESS1-IP_ADDRESS2|regex:REGULAR_EXPRESSION
 0-9
 ```
 
+**Description:**
+
+An integer between 0 and 9 (inclusive)
+
 ## Firewall Action
 
 **Syntax:**
@@ -119,6 +123,10 @@ LOG_AS_WARNING|LOG_AS_INFO
 ```text
 0-2147483647
 ```
+
+**Description:**
+
+An integer between 0 and 2147483647 (inclusive)
 
 ## Performance Preferences
 
@@ -181,6 +189,10 @@ A comma separated list of port ranges.
 ```text
 1-2147483647
 ```
+
+**Description:**
+
+An integer between 1 and 2147483647 (inclusive)
 
 ## Rule
 
@@ -315,7 +327,7 @@ Keeps a TCP socket alive when no data has been exchanged in either direction
 **Syntax:**
 
 ```text
-SO_LINGER=NONNEGATIVE_INTEGER
+SO_LINGER=NON_NEGATIVE_INTEGER
 ```
 
 **Description:**
@@ -371,7 +383,7 @@ The send buffer size
 **Syntax:**
 
 ```text
-SO_TIMEOUT=NONNEGATIVE_INTEGER
+SO_TIMEOUT=NON_NEGATIVE_INTEGER
 ```
 
 **Description:**
@@ -539,4 +551,8 @@ SCHEME://HOST[:PORT]
 ```text
 0-255
 ```
+
+**Description:**
+
+An integer between 0 and 255 (inclusive)
 

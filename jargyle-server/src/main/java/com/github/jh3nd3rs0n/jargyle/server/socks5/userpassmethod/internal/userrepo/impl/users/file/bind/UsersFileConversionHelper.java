@@ -21,7 +21,7 @@ public final class UsersFileConversionHelper {
 				bufferedReader)) != null) {
 			users.add(user);
 		}
-		return Users.newInstance(users);
+		return Users.of(users);
 	}
 	
 	public static void toFile(

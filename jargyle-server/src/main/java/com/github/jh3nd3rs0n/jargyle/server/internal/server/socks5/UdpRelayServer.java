@@ -42,7 +42,7 @@ final class UdpRelayServer {
 		public static final HostResolver DEFAULT_HOST_RESOLVER = new HostResolver();
 		public static final int DEFAULT_IDLE_TIMEOUT = 60000;
 		public static final RuleContext DEFAULT_RULE_CONTEXT = new RuleContext();
-		public static final Rules DEFAULT_RULES = Rules.newInstance(Rule.getDefault());
+		public static final Rules DEFAULT_RULES = Rules.of(Rule.getDefault());
 		
 		private int bufferSize;
 		private final String clientAddress;
@@ -220,13 +220,13 @@ final class UdpRelayServer {
 					clientAddr);
 			inboundRuleContext.putRuleArgValue(
 					Socks5RuleArgSpecConstants.SOCKS5_UDP_INBOUND_DESIRED_DESTINATION_PORT, 
-					Port.newInstanceOf(clientPrt));
+					Port.valueOf(clientPrt));
 			inboundRuleContext.putRuleArgValue(
 					Socks5RuleArgSpecConstants.SOCKS5_UDP_INBOUND_SOURCE_ADDRESS, 
 					peerAddr);
 			inboundRuleContext.putRuleArgValue(
 					Socks5RuleArgSpecConstants.SOCKS5_UDP_INBOUND_SOURCE_PORT, 
-					Port.newInstanceOf(peerPrt));
+					Port.valueOf(peerPrt));
 			return inboundRuleContext;
 		}
 		
@@ -235,9 +235,9 @@ final class UdpRelayServer {
 			String address = packet.getAddress().getHostAddress();
 			int port = packet.getPort();
 			UdpRequestHeader header = UdpRequestHeader.newInstance(
-					UnsignedByte.newInstanceOf(0),
+					UnsignedByte.valueOf(0),
 					Address.newInstance(address),
-					Port.newInstanceOf(port),
+					Port.valueOf(port),
 					Arrays.copyOfRange(
 							packet.getData(), 
 							packet.getOffset(), 
@@ -505,13 +505,13 @@ final class UdpRelayServer {
 					peerAddr);
 			outboundRuleContext.putRuleArgValue(
 					Socks5RuleArgSpecConstants.SOCKS5_UDP_OUTBOUND_DESIRED_DESTINATION_PORT, 
-					Port.newInstanceOf(peerPrt));
+					Port.valueOf(peerPrt));
 			outboundRuleContext.putRuleArgValue(
 					Socks5RuleArgSpecConstants.SOCKS5_UDP_OUTBOUND_SOURCE_ADDRESS, 
 					clientAddr);
 			outboundRuleContext.putRuleArgValue(
 					Socks5RuleArgSpecConstants.SOCKS5_UDP_OUTBOUND_SOURCE_PORT, 
-					Port.newInstanceOf(clientPrt));
+					Port.valueOf(clientPrt));
 			return outboundRuleContext;
 		}
 		

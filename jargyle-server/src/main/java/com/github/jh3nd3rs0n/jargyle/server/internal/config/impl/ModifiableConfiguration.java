@@ -63,7 +63,7 @@ public final class ModifiableConfiguration extends Configuration {
 	public Settings getSettings() {
 		List<Setting<? extends Object>> sttngs = 
 				new ArrayList<Setting<? extends Object>>(this.settings);
-		return Settings.newInstance(sttngs);
+		return Settings.of(sttngs);
 	}
 
 	@Override

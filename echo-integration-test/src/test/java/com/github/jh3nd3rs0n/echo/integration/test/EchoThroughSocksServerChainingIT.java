@@ -8,9 +8,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
 
 import com.github.jh3nd3rs0n.echo.DatagramEchoClient;
@@ -42,6 +44,7 @@ import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassmethod.UserRepository
 import com.github.jh3nd3rs0n.test.help.TestStringConstants;
 import com.github.jh3nd3rs0n.test.help.ThreadHelper;
 import com.github.jh3nd3rs0n.test.help.constants.TestResourceConstants;
+import org.junit.rules.Timeout;
 
 public class EchoThroughSocksServerChainingIT {
 	
@@ -77,7 +80,13 @@ public class EchoThroughSocksServerChainingIT {
 	private static List<SocksServer> socksServers;
 	private static List<SocksServer> socksServersUsingSocks5UserpassMethod;
 	private static List<SocksServer> socksServersUsingSsl;
-	
+
+	@Rule
+	public Timeout globalTimeout = Timeout.builder()
+			.withTimeout(5, TimeUnit.MINUTES)
+			.withLookingForStuckThread(true)
+			.build();
+
 	private static List<Configuration> newChainedConfigurations() {
 		return Arrays.asList(
 				Configuration.newUnmodifiableInstance(Settings.of(

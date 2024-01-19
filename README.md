@@ -14,8 +14,11 @@
 
 Jargyle is a Java SOCKS5 API and server.
 
-**Note:** Although the user guide is complete, the reference and Javadocs are 
-incomplete at this time, but they will be complete in the future.
+**Note:** Currently Jargyle is still in development. Although implementation
+of the features is completed, breaking changes may occur such as the renaming
+of classes and methods for further clarity. Also, although the user guide is
+complete, the reference and Javadocs are incomplete at this time, but they will
+be complete in the future.
 
 -   [Client API Example](#client-api-example)
 -   [Server API Example](#server-api-example)

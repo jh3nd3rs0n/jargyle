@@ -62,6 +62,10 @@ ADDRESS|IP_ADDRESS1-IP_ADDRESS2|regex:REGULAR_EXPRESSION
 [VALUE1[,VALUE2[...]]]
 ```
 
+**Description:**
+
+A comma separated list of values
+
 **Element value:** java.lang.String
 
 ## Digit

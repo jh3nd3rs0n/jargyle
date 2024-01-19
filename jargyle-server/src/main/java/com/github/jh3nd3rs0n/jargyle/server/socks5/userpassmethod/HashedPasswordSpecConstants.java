@@ -1,10 +1,10 @@
 package com.github.jh3nd3rs0n.jargyle.server.socks5.userpassmethod;
 
+import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassmethod.internal.hashedpassvalue.impl.Pbkdf2WithHmacSha256HashedPasswordValue;
+
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassmethod.internal.hashedpass.impl.Pbkdf2WithHmacSha256HashedPassword;
 
 public final class HashedPasswordSpecConstants {
 
@@ -15,16 +15,21 @@ public final class HashedPasswordSpecConstants {
 			"Pbkdf2WithHmacSha256HashedPassword") {
 
 				@Override
-				public HashedPassword newHashedPassword(final char[] password) {
-					return Pbkdf2WithHmacSha256HashedPassword.newInstance(
-							this, password);
+				public HashedPassword newHashedPassword(
+						final char[] password) {
+					return new HashedPassword(
+							this,
+							new Pbkdf2WithHmacSha256HashedPasswordValue(
+									password));
 				}
 
 				@Override
 				public HashedPassword newHashedPassword(
-						final String argumentsString) {
-					return Pbkdf2WithHmacSha256HashedPassword.newInstance(
-							this, argumentsString);
+						final String hashedPasswordValue) {
+					return new HashedPassword(
+							this,
+							new Pbkdf2WithHmacSha256HashedPasswordValue(
+									hashedPasswordValue));
 				}
 		
 	});

@@ -13,22 +13,23 @@ class EncryptedPasswordXml extends ValueXml {
 
 	@XmlElement(name = "typeName", required = true)
 	protected String typeName;
-	@XmlElement(name = "argumentsString", required = true)
-	protected String argumentsString;
+	@XmlElement(name = "encryptedPasswordValue", required = true)
+	protected String encryptedPasswordValue;
 	
 	public EncryptedPasswordXml() {
 		this.typeName = null;
-		this.argumentsString = null;
+		this.encryptedPasswordValue = null;
 	}
 	
 	public EncryptedPasswordXml(final EncryptedPassword encryptedPassword) {
 		this.typeName = encryptedPassword.getTypeName();
-		this.argumentsString = encryptedPassword.getArgumentsString();
+		this.encryptedPasswordValue =
+				encryptedPassword.getEncryptedPasswordValue().toString();
 	}
 	
 	public EncryptedPassword toEncryptedPassword() {
 		return EncryptedPassword.newInstance(
-				this.typeName, this.argumentsString);
+				this.typeName, this.encryptedPasswordValue);
 	}
 	
 	@Override

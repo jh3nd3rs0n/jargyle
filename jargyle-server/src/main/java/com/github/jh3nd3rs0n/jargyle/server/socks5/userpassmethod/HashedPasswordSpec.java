@@ -49,7 +49,7 @@ public abstract class HashedPasswordSpec {
 	public abstract HashedPassword newHashedPassword(final char[] password);
 	
 	public abstract HashedPassword newHashedPassword(
-			final String argumentsString);
+			final String hashedPasswordValue);
 
 	@Override
 	public String toString() {

@@ -41,7 +41,7 @@
       <xs:extension base="value">
         <xs:all>
           <xs:element name="typeName" type="xs:string"/>
-          <xs:element name="argumentsString" type="xs:string"/>
+          <xs:element name="encryptedPasswordValue" type="xs:string"/>
         </xs:all>
       </xs:extension>
     </xs:complexContent>

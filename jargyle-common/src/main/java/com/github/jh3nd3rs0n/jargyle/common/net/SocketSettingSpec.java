@@ -169,27 +169,28 @@ public abstract class SocketSettingSpec<V> {
     }
 
     /**
-     * Returns a new {@code SocketSetting} with the provided {@code String} to
-     * be parsed. An {@code IllegalArgumentException} is thrown if the
-     * provided {@code String} to be parsed is invalid.
+     * Returns a new {@code SocketSetting} with the parsed value from the
+     * provided {@code String} value. An {@code IllegalArgumentException} is
+     * thrown if the provided {@code String} value to be parsed is invalid.
      *
-     * @param value the provided {@code String} to be parsed
-     * @return a new {@code SocketSetting} with the provided {@code String} to
-     * be parsed
+     * @param value the provided {@code String} value to be parsed
+     * @return a new {@code SocketSetting} with the parsed value from the
+     * provided {@code String} value
      */
     public abstract SocketSetting<V> newSocketSettingWithParsedValue(
             final String value);
 
     /**
-     * Returns a new {@code SocketSetting} with the provided {@code String} to
-     * be parsed and the optionally provided documentation. An
-     * {@code IllegalArgumentException} is thrown if the provided
-     * {@code String} to be parsed is invalid.
+     * Returns a new {@code SocketSetting} with the parsed value from the
+     * provided {@code String} value and with the optionally provided
+     * documentation. An {@code IllegalArgumentException} is thrown if the
+     * provided {@code String} value to be parsed is invalid.
      *
-     * @param value the provided {@code String} to be parsed
+     * @param value the provided {@code String} value to be parsed
      * @param doc   the optionally provided documentation (can be {@code null})
-     * @return a new {@code SocketSetting} with the provided {@code String} to
-     * be parsed and the optionally provided documentation
+     * @return a new {@code SocketSetting} with the parsed value from the
+     * provided {@code String} value and with the optionally provided
+     * documentation
      */
     public final SocketSetting<V> newSocketSettingWithParsedValue(
             final String value, final String doc) {

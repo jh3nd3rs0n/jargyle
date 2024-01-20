@@ -66,16 +66,17 @@ public abstract class EncryptedPasswordSpec {
             final char[] password);
 
     /**
-     * Returns a new {@code EncryptedPassword} with the provided
-     * {@code String} to be parsed as an {@code EncryptedPasswordValue}. An
-     * {@code IllegalArgumentException} is thrown if the provided
-     * {@code String} to be parsed as an {@code EncryptedPasswordValue} is
-     * invalid.
+     * Returns a new {@code EncryptedPassword} with the parsed
+     * {@code EncryptedPasswordValue} from the provided {@code String} value.
+     * An {@code IllegalArgumentException} is thrown if the provided
+     * {@code String} value to be parsed as an {@code EncryptedPasswordValue}
+     * is invalid.
      *
-     * @param encryptedPasswordValue the provided {@code String} to be parsed
-     *                               as an {@code EncryptedPasswordValue}
-     * @return a new {@code EncryptedPassword} with the provided
-     * {@code String} to be parsed as an {@code EncryptedPasswordValue}
+     * @param encryptedPasswordValue the provided {@code String} value to be
+     *                               parsed as an
+     *                               {@code EncryptedPasswordValue}
+     * @return a new {@code EncryptedPassword} with the parsed
+     * {@code EncryptedPasswordValue} from the provided {@code String} value
      */
     public abstract EncryptedPassword newEncryptedPassword(
             final String encryptedPasswordValue);

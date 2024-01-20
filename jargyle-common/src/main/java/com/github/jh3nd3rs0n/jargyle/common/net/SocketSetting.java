@@ -100,8 +100,8 @@ public final class SocketSetting<V> {
     /**
      * Returns a new {@code SocketSetting} of the specified value type with
      * the provided name and the provided value. An
-     * {@code IllegalArgumentException} is thrown if the provided name does
-     * not exist.
+     * {@code IllegalArgumentException} is thrown if the provided name is
+     * invalid.
      *
      * @param name  the provided name
      * @param value the provided value
@@ -128,7 +128,7 @@ public final class SocketSetting<V> {
      * Returns a new {@code SocketSetting} of the specified value type with
      * the provided name, the provided value, and the optionally provided
      * documentation. An {@code IllegalArgumentException} is thrown if the
-     * provided name does not exist.
+     * provided name is invalid.
      *
      * @param name  the provided name
      * @param value the provided value
@@ -156,14 +156,16 @@ public final class SocketSetting<V> {
 
     /**
      * Returns a new {@code SocketSetting} of the {@code Object} value type
-     * with the provided name and the provided {@code String} to be parsed. An
-     * {@code IllegalArgumentException} is thrown if the provided name does
-     * not exist or the provided {@code String} to be parsed is invalid.
+     * with the provided name and with the parsed value from the provided
+     * {@code String} value. An {@code IllegalArgumentException} is thrown if
+     * the provided name is invalid or the provided {@code String} value to be
+     * parsed is invalid.
      *
      * @param name  the provided name
-     * @param value the provided {@code String} to be parsed
+     * @param value the provided {@code String} value to be parsed
      * @return a new {@code SocketSetting} of the {@code Object} value type
-     * with the provided name and the provided {@code String} to be parsed
+     * with the provided name and with the parsed value from the provided
+     * {@code String} value
      */
     public static SocketSetting<Object> newInstanceWithParsedValue(
             final String name, final String value) {
@@ -179,17 +181,17 @@ public final class SocketSetting<V> {
 
     /**
      * Returns a new {@code SocketSetting} of the {@code Object} value type
-     * with the provided name, the provided {@code String} to be parsed, and
-     * the optionally provided documentation. An
-     * {@code IllegalArgumentException} is thrown if the provided name does
-     * not exist or the provided {@code String} to be parsed is invalid.
+     * with the provided name, the parsed value from the provided
+     * {@code String} value, and the optionally provided documentation. An
+     * {@code IllegalArgumentException} is thrown if the provided name is
+     * invalid or the provided {@code String} value to be parsed is invalid.
      *
      * @param name  the provided name
-     * @param value the provided {@code String} to be parsed
+     * @param value the provided {@code String} value to be parsed
      * @param doc   the optionally provided documentation (can be {@code null})
      * @return a new {@code SocketSetting} of the {@code Object} value type
-     * with the provided name, the provided {@code String} to be parsed, and
-     * the optionally provided documentation
+     * with the provided name, the parsed value from the provided
+     * {@code String} value, and the optionally provided documentation
      */
     public static SocketSetting<Object> newInstanceWithParsedValue(
             final String name, final String value, final String doc) {

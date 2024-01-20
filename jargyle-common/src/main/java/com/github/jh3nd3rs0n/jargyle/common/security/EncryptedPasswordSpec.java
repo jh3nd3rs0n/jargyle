@@ -3,7 +3,7 @@ package com.github.jh3nd3rs0n.jargyle.common.security;
 import java.util.Objects;
 
 /**
- * The specification of a {@code EncryptedPassword}.
+ * The specification of an {@code EncryptedPassword}.
  */
 public abstract class EncryptedPasswordSpec {
 
@@ -66,14 +66,16 @@ public abstract class EncryptedPasswordSpec {
             final char[] password);
 
     /**
-     * Returns a new {@code EncryptedPassword} with the parsed
-     * {@code EncryptedPasswordValue} from the provided {@code String}. An
+     * Returns a new {@code EncryptedPassword} with the provided
+     * {@code String} to be parsed as an {@code EncryptedPasswordValue}. An
      * {@code IllegalArgumentException} is thrown if the provided
-     * {@code String} is invalid.
+     * {@code String} to be parsed as an {@code EncryptedPasswordValue} is
+     * invalid.
      *
-     * @param encryptedPasswordValue the provided {@code String}
-     * @return a new {@code EncryptedPassword} with the parsed
-     * {@code EncryptedPasswordValue} from the provided {@code String}
+     * @param encryptedPasswordValue the provided {@code String} to be parsed
+     *                               as an {@code EncryptedPasswordValue}
+     * @return a new {@code EncryptedPassword} with the provided
+     * {@code String} to be parsed as an {@code EncryptedPasswordValue}
      */
     public abstract EncryptedPassword newEncryptedPassword(
             final String encryptedPasswordValue);

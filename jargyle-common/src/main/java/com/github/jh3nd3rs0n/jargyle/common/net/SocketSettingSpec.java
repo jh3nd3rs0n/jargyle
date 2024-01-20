@@ -169,27 +169,27 @@ public abstract class SocketSettingSpec<V> {
     }
 
     /**
-     * Returns a new {@code SocketSetting} with the parsed value from the
-     * provided {@code String}. An {@code IllegalArgumentException} is thrown
-     * if the provided {@code String} is invalid.
+     * Returns a new {@code SocketSetting} with the provided {@code String} to
+     * be parsed. An {@code IllegalArgumentException} is thrown if the
+     * provided {@code String} to be parsed is invalid.
      *
-     * @param value the provided {@code String}
-     * @return a new {@code SocketSetting} with the parsed value from the
-     * provided {@code String}
+     * @param value the provided {@code String} to be parsed
+     * @return a new {@code SocketSetting} with the provided {@code String} to
+     * be parsed
      */
     public abstract SocketSetting<V> newSocketSettingWithParsedValue(
             final String value);
 
     /**
-     * Returns a new {@code SocketSetting} with the parsed value from the
-     * provided {@code String} and the optionally provided documentation. An
+     * Returns a new {@code SocketSetting} with the provided {@code String} to
+     * be parsed and the optionally provided documentation. An
      * {@code IllegalArgumentException} is thrown if the provided
-     * {@code String} is invalid.
+     * {@code String} to be parsed is invalid.
      *
-     * @param value the provided {@code String}
+     * @param value the provided {@code String} to be parsed
      * @param doc   the optionally provided documentation (can be {@code null})
-     * @return a new {@code SocketSetting} with the parsed value from the
-     * provided {@code String} and the optionally provided documentation
+     * @return a new {@code SocketSetting} with the provided {@code String} to
+     * be parsed and the optionally provided documentation
      */
     public final SocketSetting<V> newSocketSettingWithParsedValue(
             final String value, final String doc) {

@@ -15,7 +15,7 @@ public final class DomainnameRange extends AddressRange {
 			expression = s.substring(REGEX_PREFIX.length());
 			hasRegularExpression = true;
 		} else {
-			if (!(Host.newInstanceOf(s) instanceof HostName)) {
+			if (!(Host.newInstance(s) instanceof HostName)) {
 				throw new IllegalArgumentException(
 						"domainname range must be either of the following "
 						+ "formats: DOMAINNAME, regex:REGULAR_EXPRESSION");
@@ -37,7 +37,7 @@ public final class DomainnameRange extends AddressRange {
 	
 	@Override
 	public boolean has(final String address) {
-		if (!(Host.newInstanceOf(address) instanceof HostName)) {
+		if (!(Host.newInstance(address) instanceof HostName)) {
 			return false;
 		}
 		if (this.hasRegularExpression) {

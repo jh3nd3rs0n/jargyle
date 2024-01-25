@@ -10,50 +10,50 @@ public class HostIpv6AddressTest {
 
     @Test
     public void testEqualsObject01() {
-        HostIpv6Address hostIpv6Address = HostIpv6Address.newHostIpv6AddressOf(
+        HostIpv6Address hostIpv6Address = HostIpv6Address.newHostIpv6Address(
                 "::1");
         Assert.assertEquals(hostIpv6Address, hostIpv6Address);
     }
 
     @Test
     public void testEqualsObject02() {
-        HostIpv6Address hostIpv6Address = HostIpv6Address.newHostIpv6AddressOf(
+        HostIpv6Address hostIpv6Address = HostIpv6Address.newHostIpv6Address(
                 "::1");
         Assert.assertNotEquals(hostIpv6Address, null);
     }
 
     @Test
     public void testEqualsObject03() {
-        HostAddress hostIpv6Address = HostIpv6Address.newHostIpv6AddressOf(
+        HostAddress hostIpv6Address = HostIpv6Address.newHostIpv6Address(
                 "::1");
-        HostAddress hostIpv4Address = HostIpv4Address.newHostIpv4AddressOf(
+        HostAddress hostIpv4Address = HostIpv4Address.newHostIpv4Address(
                 "127.0.0.1");
         Assert.assertNotEquals(hostIpv6Address, hostIpv4Address);
     }
 
     @Test
     public void testEqualsObject04() {
-        HostIpv6Address hostIpv6Address1 = HostIpv6Address.newHostIpv6AddressOf(
+        HostIpv6Address hostIpv6Address1 = HostIpv6Address.newHostIpv6Address(
                 "::1");
-        HostIpv6Address hostIpv6Address2 = HostIpv6Address.newHostIpv6AddressOf(
+        HostIpv6Address hostIpv6Address2 = HostIpv6Address.newHostIpv6Address(
                 "::");
         Assert.assertNotEquals(hostIpv6Address1, hostIpv6Address2);
     }
 
     @Test
     public void testEqualsObject05() {
-        HostIpv6Address hostIpv6Address1 = HostIpv6Address.newHostIpv6AddressOf(
+        HostIpv6Address hostIpv6Address1 = HostIpv6Address.newHostIpv6Address(
                 "::1");
-        HostIpv6Address hostIpv6Address2 = HostIpv6Address.newHostIpv6AddressOf(
+        HostIpv6Address hostIpv6Address2 = HostIpv6Address.newHostIpv6Address(
                 "::1");
         Assert.assertEquals(hostIpv6Address1, hostIpv6Address2);
     }
 
     @Test
     public void testHashCode01() {
-        HostIpv6Address hostIpv6Address1 = HostIpv6Address.newHostIpv6AddressOf(
+        HostIpv6Address hostIpv6Address1 = HostIpv6Address.newHostIpv6Address(
                 "::1");
-        HostIpv6Address hostIpv6Address2 = HostIpv6Address.newHostIpv6AddressOf(
+        HostIpv6Address hostIpv6Address2 = HostIpv6Address.newHostIpv6Address(
                 "::1");
         Assert.assertEquals(
                 hostIpv6Address1.hashCode(), hostIpv6Address2.hashCode());
@@ -61,9 +61,9 @@ public class HostIpv6AddressTest {
 
     @Test
     public void testHashCode02() {
-        HostIpv6Address hostIpv6Address1 = HostIpv6Address.newHostIpv6AddressOf(
+        HostIpv6Address hostIpv6Address1 = HostIpv6Address.newHostIpv6Address(
                 "::1");
-        HostIpv6Address hostIpv6Address2 = HostIpv6Address.newHostIpv6AddressOf(
+        HostIpv6Address hostIpv6Address2 = HostIpv6Address.newHostIpv6Address(
                 "::");
         Assert.assertNotEquals(
                 hostIpv6Address1.hashCode(), hostIpv6Address2.hashCode());
@@ -122,33 +122,33 @@ public class HostIpv6AddressTest {
 
     @Test
     public void testNewHostIpv6AddressOfString01() {
-        Assert.assertNotNull(HostIpv6Address.newHostIpv6AddressOf("::1"));
+        Assert.assertNotNull(HostIpv6Address.newHostIpv6Address("::1"));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testNewHostIpv6AddressOfStringForIllegalArgumentException01() {
-        HostIpv6Address.newHostIpv6AddressOf("localhost");
+        HostIpv6Address.newHostIpv6Address("localhost");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testNewHostIpv6AddressOfStringForIllegalArgumentException02() {
-        HostIpv6Address.newHostIpv6AddressOf("127.0.0.1");
+        HostIpv6Address.newHostIpv6Address("127.0.0.1");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testNewHostIpv6AddressOfStringForIllegalArgumentException06() {
-        HostIpv6Address.newHostIpv6AddressOf(
+        HostIpv6Address.newHostIpv6Address(
                 "0000:0000:0000:0000:0000:0000:0000::0000:0000:0000:0000:0000:0000:0000");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testNewHostIpv6AddressOfStringForIllegalArgumentException07() {
-        HostIpv6Address.newHostIpv6AddressOf(":::::::");
+        HostIpv6Address.newHostIpv6Address(":::::::");
     }
 
     @Test
     public void testToInetAddress() throws UnknownHostException {
-        InetAddress inetAddress1 = HostIpv6Address.newHostIpv6AddressOf(
+        InetAddress inetAddress1 = HostIpv6Address.newHostIpv6Address(
                 "::1").toInetAddress();
         InetAddress inetAddress2 = InetAddress.getByName("0:0:0:0:0:0:0:1");
         Assert.assertEquals(inetAddress1, inetAddress2);

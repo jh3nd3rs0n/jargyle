@@ -40,7 +40,7 @@ public final class Socks5HostResolver extends HostResolver {
 			return InetAddress.getLoopbackAddress();
 		}
 		Properties properties = this.socks5Client.getProperties();
-		Host hst = Host.newInstanceOf(host);
+		Host hst = Host.newInstance(host);
 		if (!(hst instanceof HostName) || !properties.getValue(
 				Socks5PropertySpecConstants.SOCKS5_USE_RESOLVE_COMMAND).booleanValue()) {
 			return InetAddress.getByName(host);

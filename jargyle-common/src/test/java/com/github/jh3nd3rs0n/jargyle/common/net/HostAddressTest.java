@@ -56,22 +56,22 @@ public class HostAddressTest {
 
     @Test
     public void testNewHostAddressOfString01() {
-        Assert.assertNotNull(HostAddress.newHostAddressOf("127.0.0.1"));
+        Assert.assertNotNull(HostAddress.newHostAddress("127.0.0.1"));
     }
 
     @Test
     public void testNewHostAddressOfString02() {
-        Assert.assertNotNull(HostAddress.newHostAddressOf("::1"));
+        Assert.assertNotNull(HostAddress.newHostAddress("::1"));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testNewHostAddressOfStringForIllegalArgumentException01() {
-        HostAddress.newHostAddressOf("localhost");
+        HostAddress.newHostAddress("localhost");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testNewHostAddressOfStringForIllegalArgumentException02() {
-        HostAddress.newHostAddressOf("999.999.999.999");
+        HostAddress.newHostAddress("999.999.999.999");
     }
 
 }

@@ -32,7 +32,7 @@ public final class HostName extends Host {
      * @param string the provided host name
      * @return a new {@code HostName} of the provided host name
      */
-    public static HostName newHostNameOf(final String string) {
+    public static HostName newHostName(final String string) {
         if (!string.matches(HOST_NAME_REGEX)) {
             throw new IllegalArgumentException(String.format(
                     "invalid host name: %s",

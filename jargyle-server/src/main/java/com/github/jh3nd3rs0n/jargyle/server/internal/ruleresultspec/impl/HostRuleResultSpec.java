@@ -12,7 +12,7 @@ public final class HostRuleResultSpec extends RuleResultSpec<Host> {
 
 	@Override
 	public RuleResult<Host> newRuleResultWithParsedValue(final String value) {
-		return super.newRuleResult(Host.newInstanceOf(value));
+		return super.newRuleResult(Host.newInstance(value));
 	}
 
 }

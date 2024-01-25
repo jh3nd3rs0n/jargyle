@@ -48,13 +48,13 @@ public abstract class HostAddress extends Host {
      * @param string the provided address
      * @return a new {@code HostAddress} of the provided address
      */
-    public static HostAddress newHostAddressOf(final String string) {
+    public static HostAddress newHostAddress(final String string) {
         try {
-            return HostIpv4Address.newHostIpv4AddressOf(string);
+            return HostIpv4Address.newHostIpv4Address(string);
         } catch (IllegalArgumentException ignored) {
         }
         try {
-            return HostIpv6Address.newHostIpv6AddressOf(string);
+            return HostIpv6Address.newHostIpv6Address(string);
         } catch (IllegalArgumentException ignored) {
         }
         throw new IllegalArgumentException(String.format(

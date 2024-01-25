@@ -135,7 +135,7 @@ public final class HostIpv4Address extends HostAddress {
      * @param string the provided IPv4 address
      * @return a new {@code HostIpv4Address} of the provided IPv4 address
      */
-    public static HostIpv4Address newHostIpv4AddressOf(final String string) {
+    public static HostIpv4Address newHostIpv4Address(final String string) {
         String message = String.format(
                 "invalid IPv4 address: %s",
                 string);

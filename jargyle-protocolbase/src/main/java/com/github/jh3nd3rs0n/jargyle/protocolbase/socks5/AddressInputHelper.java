@@ -65,7 +65,7 @@ final class AddressInputHelper {
 		}
 		bytes = Arrays.copyOf(bytes, bytes.length);
 		String string = new String(bytes);
-		if (!(Host.newInstanceOf(string) instanceof HostName)) {
+		if (!(Host.newInstance(string) instanceof HostName)) {
 			throw new Socks5Exception(String.format(
 					"invalid address: %s", string));
 		}

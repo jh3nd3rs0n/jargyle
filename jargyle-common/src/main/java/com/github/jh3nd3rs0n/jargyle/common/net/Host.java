@@ -39,13 +39,13 @@ public abstract class Host {
      * @param s the provided name or address
      * @return a new {@code Host} of the provided name or address
      */
-    public static Host newInstanceOf(final String s) {
+    public static Host newInstance(final String s) {
         try {
-            return HostAddress.newHostAddressOf(s);
+            return HostAddress.newHostAddress(s);
         } catch (IllegalArgumentException ignored) {
         }
         try {
-            return HostName.newHostNameOf(s);
+            return HostName.newHostName(s);
         } catch (IllegalArgumentException ignored) {
         }
         throw new IllegalArgumentException(String.format(

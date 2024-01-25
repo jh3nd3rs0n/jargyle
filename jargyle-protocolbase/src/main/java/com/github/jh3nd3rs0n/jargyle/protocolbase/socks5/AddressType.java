@@ -19,7 +19,7 @@ public enum AddressType {
 
 		@Override
 		public Address implNewAddress(final String string) {
-			Host host = Host.newInstanceOf(string);
+			Host host = Host.newInstance(string);
 			if (!(host instanceof HostIpv4Address)) {
 				throw new IllegalArgumentException(String.format(
 						"invalid address: %s", string));
@@ -46,7 +46,7 @@ public enum AddressType {
 
 		@Override
 		public Address implNewAddress(final String string) {
-			Host host = Host.newInstanceOf(string);
+			Host host = Host.newInstance(string);
 			if (!(host instanceof HostName)) {
 				throw new IllegalArgumentException(String.format(
 						"invalid address: %s", string));
@@ -80,7 +80,7 @@ public enum AddressType {
 
 		@Override
 		public Address implNewAddress(final String string) {
-			Host host = Host.newInstanceOf(string);
+			Host host = Host.newInstance(string);
 			if (!(host instanceof HostIpv6Address)) {
 				throw new IllegalArgumentException(String.format(
 						"invalid address: %s", string));

@@ -12,7 +12,7 @@ public final class HostPropertySpec extends PropertySpec<Host> {
 
 	@Override
 	public Property<Host> newPropertyWithParsedValue(final String value) {
-		return super.newProperty(Host.newInstanceOf(value));
+		return super.newProperty(Host.newInstance(value));
 	}
 
 }

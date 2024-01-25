@@ -20,7 +20,7 @@ public final class Ipv6AddressRange extends AddressRange {
 		}
 		if (sElements.length == 1) {
 			String address = sElements[0];
-			if (!(Host.newInstanceOf(address) instanceof HostIpv6Address)) {
+			if (!(Host.newInstance(address) instanceof HostIpv6Address)) {
 				throw new IllegalArgumentException(message);
 			}
 			Ipv6AddressRange ipv4AddressRange = null;
@@ -33,8 +33,8 @@ public final class Ipv6AddressRange extends AddressRange {
 		}
 		String startingAddress = sElements[0];
 		String endingAddress = sElements[1];
-		if (!(Host.newInstanceOf(startingAddress) instanceof HostIpv6Address)
-				|| !(Host.newInstanceOf(endingAddress) instanceof HostIpv6Address)) {
+		if (!(Host.newInstance(startingAddress) instanceof HostIpv6Address)
+				|| !(Host.newInstance(endingAddress) instanceof HostIpv6Address)) {
 			throw new IllegalArgumentException(message);
 		}
 		return new Ipv6AddressRange(startingAddress, endingAddress);
@@ -74,7 +74,7 @@ public final class Ipv6AddressRange extends AddressRange {
 	
 	@Override
 	public boolean has(final String address) {
-		Host host = Host.newInstanceOf(address);
+		Host host = Host.newInstance(address);
 		if (!(host instanceof HostIpv6Address)) {
 			return false;
 		}

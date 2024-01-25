@@ -68,7 +68,7 @@ public final class HostIpv6Address extends HostAddress {
      * @param string the provided IPv6 address
      * @return a new {@code HostIpv6Address} of the provided IPv6 address
      */
-    public static HostIpv6Address newHostIpv6AddressOf(final String string) {
+    public static HostIpv6Address newHostIpv6Address(final String string) {
         String message = String.format(
                 "invalid IPv6 address: %s",
                 string);

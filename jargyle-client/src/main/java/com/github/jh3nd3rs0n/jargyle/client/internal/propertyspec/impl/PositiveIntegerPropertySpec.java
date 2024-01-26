@@ -1,6 +1,5 @@
 package com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl;
 
-import com.github.jh3nd3rs0n.jargyle.client.Property;
 import com.github.jh3nd3rs0n.jargyle.client.PropertySpec;
 import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
 
@@ -13,9 +12,8 @@ public final class PositiveIntegerPropertySpec
 	}
 
 	@Override
-	public Property<PositiveInteger> newPropertyWithParsedValue(
-			final String value) {
-		return super.newProperty(PositiveInteger.valueOf(value));
+	protected PositiveInteger parse(final String value) {
+		return PositiveInteger.valueOf(value);
 	}
 
 }

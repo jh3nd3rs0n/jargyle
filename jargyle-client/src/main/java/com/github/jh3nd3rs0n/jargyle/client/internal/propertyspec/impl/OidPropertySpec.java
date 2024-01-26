@@ -1,10 +1,8 @@
 package com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl;
 
+import com.github.jh3nd3rs0n.jargyle.client.PropertySpec;
 import org.ietf.jgss.GSSException;
 import org.ietf.jgss.Oid;
-
-import com.github.jh3nd3rs0n.jargyle.client.Property;
-import com.github.jh3nd3rs0n.jargyle.client.PropertySpec;
 
 public final class OidPropertySpec extends PropertySpec<Oid> {
 
@@ -23,8 +21,8 @@ public final class OidPropertySpec extends PropertySpec<Oid> {
 	}
 
 	@Override
-	public Property<Oid> newPropertyWithParsedValue(final String value) {
-		return super.newProperty(newOid(value));
+	protected Oid parse(final String value) {
+		return newOid(value);
 	}
 
 }

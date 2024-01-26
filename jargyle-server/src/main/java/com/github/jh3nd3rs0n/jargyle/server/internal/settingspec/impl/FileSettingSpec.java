@@ -1,9 +1,8 @@
 package com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl;
 
-import java.io.File;
-
-import com.github.jh3nd3rs0n.jargyle.server.Setting;
 import com.github.jh3nd3rs0n.jargyle.server.SettingSpec;
+
+import java.io.File;
 
 public final class FileSettingSpec extends SettingSpec<File> {
 
@@ -12,23 +11,23 @@ public final class FileSettingSpec extends SettingSpec<File> {
 	}
 
 	@Override
-	public Setting<File> newSetting(final File value) {
+	protected File parse(final String value) {
+		return new File(value);
+	}
+
+	@Override
+	protected File validate(final File value) {
 		if (!value.exists()) {
 			throw new IllegalArgumentException(String.format(
-					"file `%s' does not exist", 
+					"file `%s' does not exist",
 					value));
 		}
 		if (!value.isFile()) {
 			throw new IllegalArgumentException(String.format(
-					"file `%s' must be a file", 
+					"file `%s' must be a file",
 					value));
 		}
-		return super.newSetting(value);
-	}
-
-	@Override
-	public Setting<File> newSettingWithParsedValue(final String value) {
-		return newSetting(new File(value));
+		return value;
 	}
 
 }

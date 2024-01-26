@@ -1,6 +1,5 @@
 package com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl;
 
-import com.github.jh3nd3rs0n.jargyle.client.Property;
 import com.github.jh3nd3rs0n.jargyle.client.PropertySpec;
 
 public final class StringPropertySpec extends PropertySpec<String> {
@@ -10,8 +9,8 @@ public final class StringPropertySpec extends PropertySpec<String> {
 	}
 
 	@Override
-	public Property<String> newPropertyWithParsedValue(final String value) {
-		return super.newProperty(value);
+	protected String parse(final String value) {
+		return value;
 	}
 
 }

@@ -1,6 +1,5 @@
 package com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl;
 
-import com.github.jh3nd3rs0n.jargyle.client.Property;
 import com.github.jh3nd3rs0n.jargyle.client.PropertySpec;
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
 
@@ -13,10 +12,8 @@ public final class EncryptedPasswordPropertySpec
 	}
 
 	@Override
-	public Property<EncryptedPassword> newPropertyWithParsedValue(
-			final String value) {
-		return super.newProperty(EncryptedPassword.newInstance(
-				value.toCharArray()));
+	protected EncryptedPassword parse(final String value) {
+		return EncryptedPassword.newInstance(value.toCharArray());
 	}
 
 }

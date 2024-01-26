@@ -3,7 +3,6 @@ package com.github.jh3nd3rs0n.jargyle.server.internal.ruleconditionspec.impl;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.common.net.PortRange;
 import com.github.jh3nd3rs0n.jargyle.server.RuleArgSpec;
-import com.github.jh3nd3rs0n.jargyle.server.RuleCondition;
 import com.github.jh3nd3rs0n.jargyle.server.RuleConditionSpec;
 
 public final class PortRangeContainsPortRuleConditionSpec 
@@ -19,9 +18,8 @@ public final class PortRangeContainsPortRuleConditionSpec
 	}
 
 	@Override
-	public RuleCondition<PortRange, Port> newRuleConditionWithParsedValue(
-			final String value) {
-		return super.newRuleCondition(PortRange.newInstanceFrom(value));
+	protected PortRange parse(final String value) {
+		return PortRange.newInstanceFrom(value);
 	}
 
 }

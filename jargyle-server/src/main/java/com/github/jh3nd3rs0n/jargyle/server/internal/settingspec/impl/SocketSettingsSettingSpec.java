@@ -1,7 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl;
 
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
-import com.github.jh3nd3rs0n.jargyle.server.Setting;
 import com.github.jh3nd3rs0n.jargyle.server.SettingSpec;
 
 public final class SocketSettingsSettingSpec 
@@ -13,9 +12,8 @@ public final class SocketSettingsSettingSpec
 	}
 
 	@Override
-	public Setting<SocketSettings> newSettingWithParsedValue(
-			final String value) {
-		return super.newSetting(SocketSettings.newInstanceFrom(value));
+	protected SocketSettings parse(final String value) {
+		return SocketSettings.newInstanceFrom(value);
 	}
-	
+
 }

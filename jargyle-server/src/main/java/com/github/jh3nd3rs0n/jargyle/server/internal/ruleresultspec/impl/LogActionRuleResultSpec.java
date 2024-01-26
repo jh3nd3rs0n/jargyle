@@ -1,7 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.server.internal.ruleresultspec.impl;
 
 import com.github.jh3nd3rs0n.jargyle.server.LogAction;
-import com.github.jh3nd3rs0n.jargyle.server.RuleResult;
 import com.github.jh3nd3rs0n.jargyle.server.RuleResultSpec;
 
 public final class LogActionRuleResultSpec extends RuleResultSpec<LogAction> {
@@ -11,9 +10,8 @@ public final class LogActionRuleResultSpec extends RuleResultSpec<LogAction> {
 	}
 
 	@Override
-	public RuleResult<LogAction> newRuleResultWithParsedValue(
-			final String value) {
-		return super.newRuleResult(LogAction.valueOfString(value));
+	protected LogAction parse(final String value) {
+		return LogAction.valueOfString(value);
 	}
 
 }

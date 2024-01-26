@@ -1,7 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl;
 
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod.ProtectionLevels;
-import com.github.jh3nd3rs0n.jargyle.server.Setting;
 import com.github.jh3nd3rs0n.jargyle.server.SettingSpec;
 
 public final class Socks5GssapiMethodProtectionLevelsSettingSpec 
@@ -13,9 +12,8 @@ public final class Socks5GssapiMethodProtectionLevelsSettingSpec
 	}
 
 	@Override
-	public Setting<ProtectionLevels> newSettingWithParsedValue(
-			final String value) {
-		return super.newSetting(ProtectionLevels.newInstanceFrom(value));
+	protected ProtectionLevels parse(final String value) {
+		return ProtectionLevels.newInstanceFrom(value);
 	}
 
 }

@@ -1,6 +1,5 @@
 package com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl;
 
-import com.github.jh3nd3rs0n.jargyle.client.Property;
 import com.github.jh3nd3rs0n.jargyle.client.PropertySpec;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 
@@ -11,8 +10,8 @@ public final class PortPropertySpec extends PropertySpec<Port> {
 	}
 
 	@Override
-	public Property<Port> newPropertyWithParsedValue(final String value) {
-		return this.newProperty(Port.valueOf(value));
+	protected Port parse(final String value) {
+		return Port.valueOf(value);
 	}
 
 }

@@ -1,6 +1,5 @@
 package com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl;
 
-import com.github.jh3nd3rs0n.jargyle.client.Property;
 import com.github.jh3nd3rs0n.jargyle.client.PropertySpec;
 
 public final class BooleanPropertySpec extends PropertySpec<Boolean> {
@@ -10,8 +9,8 @@ public final class BooleanPropertySpec extends PropertySpec<Boolean> {
 	}
 
 	@Override
-	public Property<Boolean> newPropertyWithParsedValue(final String value) {
-		return super.newProperty(Boolean.valueOf(value));
+	protected Boolean parse(final String value) {
+		return Boolean.valueOf(value);
 	}
 
 }

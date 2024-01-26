@@ -1,7 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl;
 
 import com.github.jh3nd3rs0n.jargyle.server.Rule;
-import com.github.jh3nd3rs0n.jargyle.server.Setting;
 import com.github.jh3nd3rs0n.jargyle.server.SettingSpec;
 
 public final class RuleSettingSpec extends SettingSpec<Rule> {
@@ -11,8 +10,8 @@ public final class RuleSettingSpec extends SettingSpec<Rule> {
 	}
 
 	@Override
-	public Setting<Rule> newSettingWithParsedValue(final String value) {
-		return super.newSetting(Rule.newInstanceFrom(value));
+	protected Rule parse(final String value) {
+		return Rule.newInstanceFrom(value);
 	}
 
 }

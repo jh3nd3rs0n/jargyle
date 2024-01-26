@@ -1,7 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.server.internal.ruleconditionspec.impl;
 
 import com.github.jh3nd3rs0n.jargyle.server.RuleArgSpec;
-import com.github.jh3nd3rs0n.jargyle.server.RuleCondition;
 import com.github.jh3nd3rs0n.jargyle.server.RuleConditionSpec;
 
 public final class StringEqualsStringRuleConditionSpec 
@@ -17,9 +16,8 @@ public final class StringEqualsStringRuleConditionSpec
 	}
 
 	@Override
-	public RuleCondition<String, String> newRuleConditionWithParsedValue(
-			final String value) {
-		return super.newRuleCondition(value);
+	protected String parse(final String value) {
+		return value;
 	}
 
 }

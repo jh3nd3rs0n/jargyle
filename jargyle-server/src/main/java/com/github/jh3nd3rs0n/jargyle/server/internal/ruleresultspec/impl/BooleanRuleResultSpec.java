@@ -1,6 +1,5 @@
 package com.github.jh3nd3rs0n.jargyle.server.internal.ruleresultspec.impl;
 
-import com.github.jh3nd3rs0n.jargyle.server.RuleResult;
 import com.github.jh3nd3rs0n.jargyle.server.RuleResultSpec;
 
 public final class BooleanRuleResultSpec extends RuleResultSpec<Boolean> {
@@ -10,9 +9,8 @@ public final class BooleanRuleResultSpec extends RuleResultSpec<Boolean> {
 	}
 
 	@Override
-	public RuleResult<Boolean> newRuleResultWithParsedValue(
-			final String value) {
-		return super.newRuleResult(Boolean.valueOf(value));
+	protected Boolean parse(final String value) {
+		return Boolean.valueOf(value);
 	}
 
 }

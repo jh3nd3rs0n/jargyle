@@ -1,7 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl;
 
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Methods;
-import com.github.jh3nd3rs0n.jargyle.server.Setting;
 import com.github.jh3nd3rs0n.jargyle.server.SettingSpec;
 
 public final class Socks5MethodsSettingSpec extends SettingSpec<Methods> {
@@ -11,8 +10,8 @@ public final class Socks5MethodsSettingSpec extends SettingSpec<Methods> {
 	}
 
 	@Override
-	public Setting<Methods> newSettingWithParsedValue(final String value) {
-		return super.newSetting(Methods.newInstanceFrom(value));
+	protected Methods parse(final String value) {
+		return Methods.newInstanceFrom(value);
 	}
-	
+
 }

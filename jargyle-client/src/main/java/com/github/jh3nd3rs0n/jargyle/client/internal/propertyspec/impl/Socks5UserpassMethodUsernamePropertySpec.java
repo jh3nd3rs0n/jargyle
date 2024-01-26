@@ -1,6 +1,5 @@
 package com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl;
 
-import com.github.jh3nd3rs0n.jargyle.client.Property;
 import com.github.jh3nd3rs0n.jargyle.client.PropertySpec;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.userpassmethod.UsernamePasswordRequest;
 
@@ -17,13 +16,13 @@ public final class Socks5UserpassMethodUsernamePropertySpec extends PropertySpec
 	}
 
 	@Override
-	public Property<String> newProperty(final String value) {
-		return super.newProperty(getValidatedUsername(value));
+	protected String parse(final String value) {
+		return value;
 	}
 
 	@Override
-	public Property<String> newPropertyWithParsedValue(final String value) {
-		return super.newProperty(getValidatedUsername(value));
+	protected String validate(final String value) {
+		return getValidatedUsername(value);
 	}
 
 }

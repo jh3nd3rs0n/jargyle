@@ -205,8 +205,8 @@ public class SocketSettingSpecTest {
         }
 
         @Override
-        public SocketSetting<V> newSocketSettingWithParsedValue(String value) {
-            return this.newSocketSetting(this.stringConverter.convert(value));
+        protected V parse(final String value) {
+            return this.stringConverter.convert(value);
         }
 
     }

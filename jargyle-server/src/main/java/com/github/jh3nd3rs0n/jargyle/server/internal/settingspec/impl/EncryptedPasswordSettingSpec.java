@@ -1,7 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl;
 
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
-import com.github.jh3nd3rs0n.jargyle.server.Setting;
 import com.github.jh3nd3rs0n.jargyle.server.SettingSpec;
 
 public final class EncryptedPasswordSettingSpec
@@ -13,10 +12,8 @@ public final class EncryptedPasswordSettingSpec
 	}
 
 	@Override
-	public Setting<EncryptedPassword> newSettingWithParsedValue(
-			final String value) {
-		return super.newSetting(EncryptedPassword.newInstance(
-				value.toCharArray()));
+	protected EncryptedPassword parse(final String value) {
+		return EncryptedPassword.newInstance(value.toCharArray());
 	}
 
 }

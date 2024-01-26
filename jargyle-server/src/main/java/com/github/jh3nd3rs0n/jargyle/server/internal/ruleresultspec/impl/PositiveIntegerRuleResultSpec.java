@@ -1,7 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.server.internal.ruleresultspec.impl;
 
 import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
-import com.github.jh3nd3rs0n.jargyle.server.RuleResult;
 import com.github.jh3nd3rs0n.jargyle.server.RuleResultSpec;
 
 public final class PositiveIntegerRuleResultSpec 
@@ -12,9 +11,8 @@ public final class PositiveIntegerRuleResultSpec
 	}
 
 	@Override
-	public RuleResult<PositiveInteger> newRuleResultWithParsedValue(
-			final String value) {
-		return super.newRuleResult(PositiveInteger.valueOf(value));
+	protected PositiveInteger parse(final String value) {
+		return PositiveInteger.valueOf(value);
 	}
 
 }

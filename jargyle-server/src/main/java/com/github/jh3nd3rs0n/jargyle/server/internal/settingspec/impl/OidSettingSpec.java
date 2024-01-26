@@ -1,10 +1,8 @@
 package com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl;
 
+import com.github.jh3nd3rs0n.jargyle.server.SettingSpec;
 import org.ietf.jgss.GSSException;
 import org.ietf.jgss.Oid;
-
-import com.github.jh3nd3rs0n.jargyle.server.Setting;
-import com.github.jh3nd3rs0n.jargyle.server.SettingSpec;
 
 public final class OidSettingSpec extends SettingSpec<Oid> {
 
@@ -13,14 +11,14 @@ public final class OidSettingSpec extends SettingSpec<Oid> {
 	}
 
 	@Override
-	public Setting<Oid> newSettingWithParsedValue(final String value) {
-		Oid oid = null;
+	protected Oid parse(final String value) {
+		Oid oid;
 		try {
 			oid = new Oid(value);
 		} catch (GSSException e) {
 			throw new IllegalArgumentException(e);
 		}
-		return super.newSetting(oid);
-	}	
-	
+		return oid;
+	}
+
 }

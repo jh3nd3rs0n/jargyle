@@ -71,17 +71,21 @@ public abstract class RuleConditionSpec<V1, V2> {
 		return result;
 	}
 	
-	public RuleCondition<V1, V2> newRuleCondition(final V1 value) {
+	public final RuleCondition<V1, V2> newRuleCondition(final V1 value) {
 		return new RuleCondition<V1, V2>(
 				this, 
-				this.valueType.cast(value), 
+				this.valueType.cast(this.validate(value)),
 				this.ruleConditionEvaluator, 
 				this.ruleArgSpec);
 	}
 
-	public abstract RuleCondition<V1, V2> newRuleConditionWithParsedValue(
-			final String value);
-	
+	public final RuleCondition<V1, V2> newRuleConditionWithParsedValue(
+			final String value) {
+		return this.newRuleCondition(this.parse(value));
+	}
+
+	protected abstract V1 parse(final String value);
+
 	@Override
 	public final String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -91,5 +95,9 @@ public abstract class RuleConditionSpec<V1, V2> {
 			.append("]");
 		return builder.toString();
 	}
-	
+
+	protected V1 validate(final V1 value) {
+		return value;
+	}
+
 }

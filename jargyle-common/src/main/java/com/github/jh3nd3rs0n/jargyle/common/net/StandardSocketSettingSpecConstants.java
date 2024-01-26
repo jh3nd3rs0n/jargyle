@@ -62,9 +62,8 @@ public final class StandardSocketSettingSpecConstants {
         }
 
         @Override
-        public SocketSetting<UnsignedByte> newSocketSettingWithParsedValue(
-                final String value) {
-            return super.newSocketSetting(UnsignedByte.valueOf(value));
+        protected UnsignedByte parse(final String value) {
+            return UnsignedByte.valueOf(value);
         }
 
     });
@@ -104,10 +103,8 @@ public final class StandardSocketSettingSpecConstants {
         }
 
         @Override
-        public SocketSetting<PerformancePreferences> newSocketSettingWithParsedValue(
-                final String value) {
-            return super.newSocketSetting(PerformancePreferences.newInstanceFrom(
-                    value));
+        protected PerformancePreferences parse(final String value) {
+            return PerformancePreferences.newInstanceFrom(value);
         }
 
     });
@@ -137,9 +134,8 @@ public final class StandardSocketSettingSpecConstants {
         }
 
         @Override
-        public SocketSetting<Boolean> newSocketSettingWithParsedValue(
-                final String value) {
-            return super.newSocketSetting(Boolean.valueOf(value));
+        protected Boolean parse(final String value) {
+            return Boolean.valueOf(value);
         }
 
     });
@@ -171,9 +167,8 @@ public final class StandardSocketSettingSpecConstants {
         }
 
         @Override
-        public SocketSetting<Boolean> newSocketSettingWithParsedValue(
-                final String value) {
-            return super.newSocketSetting(Boolean.valueOf(value));
+        protected Boolean parse(final String value) {
+            return Boolean.valueOf(value);
         }
 
     });
@@ -203,9 +198,8 @@ public final class StandardSocketSettingSpecConstants {
         }
 
         @Override
-        public SocketSetting<NonNegativeInteger> newSocketSettingWithParsedValue(
-                final String value) {
-            return super.newSocketSetting(NonNegativeInteger.valueOf(value));
+        protected NonNegativeInteger parse(final String value) {
+            return NonNegativeInteger.valueOf(value);
         }
 
     });
@@ -249,9 +243,8 @@ public final class StandardSocketSettingSpecConstants {
         }
 
         @Override
-        public SocketSetting<PositiveInteger> newSocketSettingWithParsedValue(
-                final String value) {
-            return super.newSocketSetting(PositiveInteger.valueOf(value));
+        protected PositiveInteger parse(final String value) {
+            return PositiveInteger.valueOf(value);
         }
 
     });
@@ -295,9 +288,8 @@ public final class StandardSocketSettingSpecConstants {
         }
 
         @Override
-        public SocketSetting<Boolean> newSocketSettingWithParsedValue(
-                final String value) {
-            return super.newSocketSetting(Boolean.valueOf(value));
+        protected Boolean parse(final String value) {
+            return Boolean.valueOf(value);
         }
 
     });
@@ -334,9 +326,8 @@ public final class StandardSocketSettingSpecConstants {
         }
 
         @Override
-        public SocketSetting<PositiveInteger> newSocketSettingWithParsedValue(
-                final String value) {
-            return super.newSocketSetting(PositiveInteger.valueOf(value));
+        protected PositiveInteger parse(final String value) {
+            return PositiveInteger.valueOf(value);
         }
 
     });
@@ -382,9 +373,8 @@ public final class StandardSocketSettingSpecConstants {
         }
 
         @Override
-        public SocketSetting<NonNegativeInteger> newSocketSettingWithParsedValue(
-                final String value) {
-            return super.newSocketSetting(NonNegativeInteger.valueOf(value));
+        protected NonNegativeInteger parse(final String value) {
+            return NonNegativeInteger.valueOf(value);
         }
 
     });
@@ -414,9 +404,8 @@ public final class StandardSocketSettingSpecConstants {
         }
 
         @Override
-        public SocketSetting<Boolean> newSocketSettingWithParsedValue(
-                final String value) {
-            return super.newSocketSetting(Boolean.valueOf(value));
+        protected Boolean parse(final String value) {
+            return Boolean.valueOf(value);
         }
 
     });

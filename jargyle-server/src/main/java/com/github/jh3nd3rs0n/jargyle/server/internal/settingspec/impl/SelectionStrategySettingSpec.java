@@ -1,7 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl;
 
 import com.github.jh3nd3rs0n.jargyle.server.SelectionStrategy;
-import com.github.jh3nd3rs0n.jargyle.server.Setting;
 import com.github.jh3nd3rs0n.jargyle.server.SettingSpec;
 
 public final class SelectionStrategySettingSpec 
@@ -13,9 +12,8 @@ public final class SelectionStrategySettingSpec
 	}
 
 	@Override
-	public Setting<SelectionStrategy> newSettingWithParsedValue(
-			final String value) {
-		return super.newSetting(SelectionStrategy.newInstanceFrom(value));
+	protected SelectionStrategy parse(final String value) {
+		return SelectionStrategy.newInstanceFrom(value);
 	}
 
 }

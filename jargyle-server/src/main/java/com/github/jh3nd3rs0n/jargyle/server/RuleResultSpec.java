@@ -53,13 +53,19 @@ public abstract class RuleResultSpec<V> {
 		return result;
 	}
 	
-	public RuleResult<V> newRuleResult(final V value) {
-		return new RuleResult<V>(this, this.valueType.cast(value));
+	public final RuleResult<V> newRuleResult(final V value) {
+		return new RuleResult<V>(
+				this,
+				this.valueType.cast(this.validate(value)));
 	}
 	
-	public abstract RuleResult<V> newRuleResultWithParsedValue(
-			final String value);
-	
+	public final RuleResult<V> newRuleResultWithParsedValue(
+			final String value) {
+		return this.newRuleResult(this.parse(value));
+	}
+
+	protected abstract V parse(final String value);
+
 	@Override
 	public final String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -68,6 +74,10 @@ public abstract class RuleResultSpec<V> {
 			.append(this.name)
 			.append("]");
 		return builder.toString();
+	}
+
+	protected V validate(final V value) {
+		return value;
 	}
 
 }

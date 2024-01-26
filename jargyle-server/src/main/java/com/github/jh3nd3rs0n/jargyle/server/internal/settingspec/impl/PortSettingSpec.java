@@ -1,7 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl;
 
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
-import com.github.jh3nd3rs0n.jargyle.server.Setting;
 import com.github.jh3nd3rs0n.jargyle.server.SettingSpec;
 
 public final class PortSettingSpec extends SettingSpec<Port> {
@@ -11,8 +10,8 @@ public final class PortSettingSpec extends SettingSpec<Port> {
 	}
 
 	@Override
-	public Setting<Port> newSettingWithParsedValue(final String value) {
-		return super.newSetting(Port.valueOf(value));
+	protected Port parse(final String value) {
+		return Port.valueOf(value);
 	}
-	
+
 }

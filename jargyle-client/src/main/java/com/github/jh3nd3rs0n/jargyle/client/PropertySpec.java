@@ -66,12 +66,18 @@ public abstract class PropertySpec<V> {
 		return result;
 	}
 
-	public Property<V> newProperty(final V value) {
-		return new Property<V>(this, this.valueType.cast(value));
+	public final Property<V> newProperty(final V value) {
+		return new Property<V>(
+				this,
+				this.valueType.cast(this.validate(value)));
 	}
 
-	public abstract Property<V> newPropertyWithParsedValue(final String value);
-	
+	public final Property<V> newPropertyWithParsedValue(final String value) {
+		return this.newProperty(this.parse(value));
+	}
+
+	protected abstract V parse(final String value);
+
 	@Override
 	public final String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -81,5 +87,9 @@ public abstract class PropertySpec<V> {
 			.append("]");
 		return builder.toString();
 	}
-	
+
+	protected V validate(final V value) {
+		return value;
+	}
+
 }

@@ -1,6 +1,5 @@
 package com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl;
 
-import com.github.jh3nd3rs0n.jargyle.server.Setting;
 import com.github.jh3nd3rs0n.jargyle.server.SettingSpec;
 
 public final class BooleanSettingSpec extends SettingSpec<Boolean> {
@@ -10,8 +9,8 @@ public final class BooleanSettingSpec extends SettingSpec<Boolean> {
 	}
 
 	@Override
-	public Setting<Boolean> newSettingWithParsedValue(final String value) {
-		return super.newSetting(Boolean.valueOf(value));
-	}	
+	protected Boolean parse(final String value) {
+		return Boolean.valueOf(value);
+	}
 
 }

@@ -1,7 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.server.internal.ruleresultspec.impl;
 
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSetting;
-import com.github.jh3nd3rs0n.jargyle.server.RuleResult;
 import com.github.jh3nd3rs0n.jargyle.server.RuleResultSpec;
 
 public final class SocketSettingRuleResultSpec 
@@ -24,9 +23,8 @@ public final class SocketSettingRuleResultSpec
 	}
 
 	@Override
-	public RuleResult<SocketSetting<Object>> newRuleResultWithParsedValue(
-			final String value) {
-		return super.newRuleResult(SocketSetting.newInstanceFrom(value));
+	protected SocketSetting<Object> parse(final String value) {
+		return SocketSetting.newInstanceFrom(value);
 	}
 
 }

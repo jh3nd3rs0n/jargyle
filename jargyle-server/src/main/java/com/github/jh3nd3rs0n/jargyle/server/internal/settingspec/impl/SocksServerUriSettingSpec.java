@@ -1,7 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl;
 
 import com.github.jh3nd3rs0n.jargyle.client.SocksServerUri;
-import com.github.jh3nd3rs0n.jargyle.server.Setting;
 import com.github.jh3nd3rs0n.jargyle.server.SettingSpec;
 
 public final class SocksServerUriSettingSpec 
@@ -13,9 +12,8 @@ public final class SocksServerUriSettingSpec
 	}
 
 	@Override
-	public Setting<SocksServerUri> newSettingWithParsedValue(
-			final String value) {
-		return super.newSetting(SocksServerUri.newInstanceFrom(value));
+	protected SocksServerUri parse(final String value) {
+		return SocksServerUri.newInstanceFrom(value);
 	}
 
 }

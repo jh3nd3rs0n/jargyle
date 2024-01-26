@@ -1,11 +1,10 @@
 package com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl;
 
-import java.util.Arrays;
-
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.userpassmethod.UsernamePasswordRequest;
-import com.github.jh3nd3rs0n.jargyle.server.Setting;
 import com.github.jh3nd3rs0n.jargyle.server.SettingSpec;
+
+import java.util.Arrays;
 
 public final class Socks5UserpassMethodEncryptedPasswordSettingSpec 
 	extends SettingSpec<EncryptedPassword> {
@@ -27,16 +26,13 @@ public final class Socks5UserpassMethodEncryptedPasswordSettingSpec
 	}
 
 	@Override
-	public Setting<EncryptedPassword> newSetting(
-			final EncryptedPassword value) {
-		return super.newSetting(getValidatedEncryptedPassword(value));
+	protected EncryptedPassword parse(final String value) {
+		return EncryptedPassword.newInstance(value.toCharArray());
 	}
-	
+
 	@Override
-	public Setting<EncryptedPassword> newSettingWithParsedValue(
-			final String value) {
-		return super.newSetting(getValidatedEncryptedPassword(
-				EncryptedPassword.newInstance(value.toCharArray())));
+	protected EncryptedPassword validate(final EncryptedPassword value) {
+		return getValidatedEncryptedPassword(value);
 	}
 
 }

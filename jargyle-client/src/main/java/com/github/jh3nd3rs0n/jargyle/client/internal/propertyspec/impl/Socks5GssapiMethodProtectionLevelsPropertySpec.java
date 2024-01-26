@@ -1,6 +1,5 @@
 package com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl;
 
-import com.github.jh3nd3rs0n.jargyle.client.Property;
 import com.github.jh3nd3rs0n.jargyle.client.PropertySpec;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod.ProtectionLevels;
 
@@ -13,9 +12,8 @@ public final class Socks5GssapiMethodProtectionLevelsPropertySpec
 	}
 
 	@Override
-	public Property<ProtectionLevels> newPropertyWithParsedValue(
-			final String value) {
-		return super.newProperty(ProtectionLevels.newInstanceFrom(value));
+	protected ProtectionLevels parse(final String value) {
+		return ProtectionLevels.newInstanceFrom(value);
 	}
 
 }

@@ -1,7 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl;
 
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.userpassmethod.UsernamePasswordRequest;
-import com.github.jh3nd3rs0n.jargyle.server.Setting;
 import com.github.jh3nd3rs0n.jargyle.server.SettingSpec;
 
 public final class Socks5UserpassMethodUsernameSettingSpec extends SettingSpec<String> {
@@ -17,13 +16,13 @@ public final class Socks5UserpassMethodUsernameSettingSpec extends SettingSpec<S
 	}
 
 	@Override
-	public Setting<String> newSetting(final String value) {
-		return super.newSetting(getValidatedUsername(value));
+	protected String parse(final String value) {
+		return value;
 	}
-	
+
 	@Override
-	public Setting<String> newSettingWithParsedValue(final String value) {
-		return super.newSetting(getValidatedUsername(value));
+	protected String validate(final String value) {
+		return getValidatedUsername(value);
 	}
 
 }

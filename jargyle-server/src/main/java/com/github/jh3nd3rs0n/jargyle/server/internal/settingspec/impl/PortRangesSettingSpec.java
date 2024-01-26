@@ -1,7 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl;
 
 import com.github.jh3nd3rs0n.jargyle.common.net.PortRanges;
-import com.github.jh3nd3rs0n.jargyle.server.Setting;
 import com.github.jh3nd3rs0n.jargyle.server.SettingSpec;
 
 public final class PortRangesSettingSpec extends SettingSpec<PortRanges> {
@@ -11,8 +10,8 @@ public final class PortRangesSettingSpec extends SettingSpec<PortRanges> {
 	}
 
 	@Override
-	public Setting<PortRanges> newSettingWithParsedValue(final String value) {
-		return super.newSetting(PortRanges.newInstanceFrom(value));
+	protected PortRanges parse(final String value) {
+		return PortRanges.newInstanceFrom(value);
 	}
 
 }

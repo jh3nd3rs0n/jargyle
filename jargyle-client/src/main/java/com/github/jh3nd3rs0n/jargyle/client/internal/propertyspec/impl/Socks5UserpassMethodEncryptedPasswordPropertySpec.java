@@ -1,11 +1,10 @@
 package com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl;
 
-import java.util.Arrays;
-
-import com.github.jh3nd3rs0n.jargyle.client.Property;
 import com.github.jh3nd3rs0n.jargyle.client.PropertySpec;
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.userpassmethod.UsernamePasswordRequest;
+
+import java.util.Arrays;
 
 public final class Socks5UserpassMethodEncryptedPasswordPropertySpec
 	extends PropertySpec<EncryptedPassword> {
@@ -27,16 +26,13 @@ public final class Socks5UserpassMethodEncryptedPasswordPropertySpec
 	}
 
 	@Override
-	public Property<EncryptedPassword> newProperty(
-			final EncryptedPassword value) {
-		return super.newProperty(getValidatedEncryptedPassword(value));
+	protected EncryptedPassword parse(final String value) {
+		return EncryptedPassword.newInstance(value.toCharArray());
 	}
 
 	@Override
-	public Property<EncryptedPassword> newPropertyWithParsedValue(
-			final String value) {
-		return super.newProperty(getValidatedEncryptedPassword(
-				EncryptedPassword.newInstance(value.toCharArray())));
+	protected EncryptedPassword validate(final EncryptedPassword value) {
+		return getValidatedEncryptedPassword(value);
 	}
 
 }

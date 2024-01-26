@@ -65,23 +65,28 @@ public abstract class SettingSpec<V> {
 		return result;
 	}
 
-	public Setting<V> newSetting(final V value) {
-		return new Setting<V>(this, this.valueType.cast(value));
+	public final Setting<V> newSetting(final V value) {
+		return new Setting<V>(this, this.valueType.cast(this.validate(value)));
 	}
 	
 	public final Setting<V> newSetting(final V value, final String doc) {
-		Setting<V> setting = this.newSetting(value);
-		return new Setting<V>(setting.getSettingSpec(), setting.getValue(), doc);
+		return new Setting<V>(
+				this,
+				this.valueType.cast(this.validate(value)),
+				doc);
 	}
 	
-	public abstract Setting<V> newSettingWithParsedValue(final String value);
+	public final Setting<V> newSettingWithParsedValue(final String value) {
+		return this.newSetting(this.parse(value));
+	}
 	
 	public final Setting<V> newSettingWithParsedValue(
 			final String value, final String doc) {
-		Setting<V> setting = this.newSettingWithParsedValue(value);
-		return new Setting<V>(setting.getSettingSpec(), setting.getValue(), doc);
+		return this.newSetting(this.parse(value), doc);
 	}
-	
+
+	protected abstract V parse(final String value);
+
 	@Override
 	public final String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -90,6 +95,10 @@ public abstract class SettingSpec<V> {
 			.append(this.name)
 			.append("]");
 		return builder.toString();
+	}
+
+	protected V validate(final V value) {
+		return value;
 	}
 	
 }

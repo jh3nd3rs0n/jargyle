@@ -1,7 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl;
 
 import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
-import com.github.jh3nd3rs0n.jargyle.server.Setting;
 import com.github.jh3nd3rs0n.jargyle.server.SettingSpec;
 
 public final class PositiveIntegerSettingSpec 
@@ -13,9 +12,8 @@ public final class PositiveIntegerSettingSpec
 	}
 
 	@Override
-	public Setting<PositiveInteger> newSettingWithParsedValue(
-			final String value) {
-		return super.newSetting(PositiveInteger.valueOf(value));
+	protected PositiveInteger parse(final String value) {
+		return PositiveInteger.valueOf(value);
 	}
-	
+
 }

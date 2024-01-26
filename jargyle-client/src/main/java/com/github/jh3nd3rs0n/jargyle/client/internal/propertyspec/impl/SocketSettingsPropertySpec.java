@@ -1,6 +1,5 @@
 package com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl;
 
-import com.github.jh3nd3rs0n.jargyle.client.Property;
 import com.github.jh3nd3rs0n.jargyle.client.PropertySpec;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 
@@ -13,9 +12,8 @@ public final class SocketSettingsPropertySpec
 	}
 
 	@Override
-	public Property<SocketSettings> newPropertyWithParsedValue(
-			final String value) {
-		return super.newProperty(SocketSettings.newInstanceFrom(value));
+	protected SocketSettings parse(final String value) {
+		return SocketSettings.newInstanceFrom(value);
 	}
 
 }

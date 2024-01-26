@@ -1,7 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.server.internal.ruleresultspec.impl;
 
 import com.github.jh3nd3rs0n.jargyle.server.FirewallAction;
-import com.github.jh3nd3rs0n.jargyle.server.RuleResult;
 import com.github.jh3nd3rs0n.jargyle.server.RuleResultSpec;
 
 public final class FirewallActionRuleResultSpec 
@@ -12,9 +11,8 @@ public final class FirewallActionRuleResultSpec
 	}
 
 	@Override
-	public RuleResult<FirewallAction> newRuleResultWithParsedValue(
-			final String value) {
-		return super.newRuleResult(FirewallAction.valueOfString(value));
+	protected FirewallAction parse(final String value) {
+		return FirewallAction.valueOfString(value);
 	}
 
 }

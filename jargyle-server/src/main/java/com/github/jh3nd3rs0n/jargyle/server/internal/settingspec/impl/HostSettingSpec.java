@@ -1,7 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl;
 
 import com.github.jh3nd3rs0n.jargyle.common.net.Host;
-import com.github.jh3nd3rs0n.jargyle.server.Setting;
 import com.github.jh3nd3rs0n.jargyle.server.SettingSpec;
 
 public final class HostSettingSpec extends SettingSpec<Host> {
@@ -11,8 +10,8 @@ public final class HostSettingSpec extends SettingSpec<Host> {
 	}
 
 	@Override
-	public Setting<Host> newSettingWithParsedValue(final String value) {
-		return super.newSetting(Host.newInstance(value));
+	protected Host parse(final String value) {
+		return Host.newInstance(value);
 	}
 
 }

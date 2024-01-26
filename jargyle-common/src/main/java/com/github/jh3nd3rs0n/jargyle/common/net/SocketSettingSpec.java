@@ -147,7 +147,9 @@ public abstract class SocketSettingSpec<V> {
      * @return a new {@code SocketSetting} with the provided value
      */
     public final SocketSetting<V> newSocketSetting(final V value) {
-        return new SocketSetting<>(this, this.valueType.cast(value));
+        return new SocketSetting<>(
+                this,
+                this.valueType.cast(this.validate(value)));
     }
 
     /**
@@ -161,10 +163,9 @@ public abstract class SocketSettingSpec<V> {
      */
     public final SocketSetting<V> newSocketSetting(
             final V value, final String doc) {
-        SocketSetting<V> socketSetting = this.newSocketSetting(value);
         return new SocketSetting<>(
-                socketSetting.getSocketSettingSpec(),
-                socketSetting.getValue(),
+                this,
+                this.valueType.cast(this.validate(value)),
                 doc);
     }
 
@@ -177,8 +178,10 @@ public abstract class SocketSettingSpec<V> {
      * @return a new {@code SocketSetting} with the parsed value from the
      * provided {@code String} value
      */
-    public abstract SocketSetting<V> newSocketSettingWithParsedValue(
-            final String value);
+    public final SocketSetting<V> newSocketSettingWithParsedValue(
+            final String value) {
+        return this.newSocketSetting(this.parse(value));
+    }
 
     /**
      * Returns a new {@code SocketSetting} with the parsed value from the
@@ -194,13 +197,18 @@ public abstract class SocketSettingSpec<V> {
      */
     public final SocketSetting<V> newSocketSettingWithParsedValue(
             final String value, final String doc) {
-        SocketSetting<V> socketSetting = this.newSocketSettingWithParsedValue(
-                value);
-        return new SocketSetting<>(
-                socketSetting.getSocketSettingSpec(),
-                socketSetting.getValue(),
-                doc);
+        return this.newSocketSetting(this.parse(value), doc);
     }
+
+    /**
+     * Returns the parsed value from the provided {@code String} value. An
+     * {@code IllegalArgumentException} is thrown if the provided
+     * {@code String} value to be parsed is invalid.
+     *
+     * @param value the {@code String} value to be parsed
+     * @return the parsed value from the provided {@code String} value
+     */
+    protected abstract V parse(final String value);
 
     /**
      * Returns the {@code String} representation of this
@@ -215,6 +223,18 @@ public abstract class SocketSettingSpec<V> {
                 " [name=" +
                 this.name +
                 "]";
+    }
+
+    /**
+     * Returns the valid provided value. Implementations can override this
+     * method to throw an {@code IllegalArgumentException} if the provided
+     * value is invalid.
+     *
+     * @param value the provided value
+     * @return the valid provided value
+     */
+    protected V validate(final V value) {
+        return value;
     }
 
 }

@@ -101,7 +101,9 @@ public final class SocketSetting<V> {
      * Returns a new {@code SocketSetting} of the specified value type with
      * the provided name and the provided value. An
      * {@code IllegalArgumentException} is thrown if the provided name is
-     * invalid.
+     * invalid. A {@code ClassCastException} is thrown if the provided value
+     * is not assignable to the value type defined by the
+     * {@code SocketSettingSpec}.
      *
      * @param name  the provided name
      * @param value the provided value
@@ -128,7 +130,9 @@ public final class SocketSetting<V> {
      * Returns a new {@code SocketSetting} of the specified value type with
      * the provided name, the provided value, and the optionally provided
      * documentation. An {@code IllegalArgumentException} is thrown if the
-     * provided name is invalid.
+     * provided name is invalid. A {@code ClassCastException} is thrown if the
+     * provided value is not assignable to the value type defined by the
+     * {@code SocketSettingSpec}.
      *
      * @param name  the provided name
      * @param value the provided value

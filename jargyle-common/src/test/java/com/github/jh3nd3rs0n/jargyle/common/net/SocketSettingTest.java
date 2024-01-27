@@ -142,25 +142,37 @@ public class SocketSettingTest {
     }
 
     @Test
-    public void testNewInstanceFromStringType() {
+    public void testNewInstanceStringType() {
         Assert.assertNotNull(SocketSetting.newInstance(
                 "SO_REUSEADDR", Boolean.TRUE));
     }
 
+    @Test(expected = ClassCastException.class)
+    public void testNewInstanceStringTypeForClassCastException() {
+        Assert.assertNotNull(SocketSetting.newInstance(
+                "SO_REUSEADDR", 0));
+    }
+
     @Test(expected = IllegalArgumentException.class)
-    public void testNewInstanceFromStringTypeForIllegalArgumentException() {
+    public void testNewInstanceStringTypeForIllegalArgumentException() {
         Assert.assertNotNull(SocketSetting.newInstance(
                 "so_reuseaddr", Boolean.TRUE));
     }
 
     @Test
-    public void testNewInstanceFromStringTypeString() {
+    public void testNewInstanceStringTypeString() {
         Assert.assertNotNull(SocketSetting.newInstance(
                 "TCP_NODELAY", Boolean.TRUE, "Disable Nagle's algorithm"));
     }
 
+    @Test(expected = ClassCastException.class)
+    public void testNewInstanceStringTypeStringForClassCastException() {
+        Assert.assertNotNull(SocketSetting.newInstance(
+                "TCP_NODELAY", 't', "Disable Nagle's algorithm"));
+    }
+
     @Test(expected = IllegalArgumentException.class)
-    public void testNewInstanceFromStringTypeStringForIllegalArgumentException() {
+    public void testNewInstanceStringTypeStringForIllegalArgumentException() {
         Assert.assertNotNull(SocketSetting.newInstance(
                 "tcp_no_delay", Boolean.TRUE, "Disable Nagle's algorithm"));
     }

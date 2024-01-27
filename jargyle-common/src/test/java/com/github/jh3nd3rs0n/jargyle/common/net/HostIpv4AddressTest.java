@@ -137,17 +137,17 @@ public class HostIpv4AddressTest {
     }
 
     @Test
-    public void testNewHostIpv4AddressOfString01() {
+    public void testNewHostIpv4AddressString01() {
         Assert.assertNotNull(HostIpv4Address.newHostIpv4Address("127.0.0.1"));
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testNewHostIpv4AddressOfStringForIllegalArgumentException01() {
+    public void testNewHostIpv4AddressStringForIllegalArgumentException01() {
         HostIpv4Address.newHostIpv4Address("localhost");
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testNewHostIpv4AddressOfStringForIllegalArgumentException02() {
+    public void testNewHostIpv4AddressStringForIllegalArgumentException02() {
         HostIpv4Address.newHostIpv4Address("::1");
     }
 

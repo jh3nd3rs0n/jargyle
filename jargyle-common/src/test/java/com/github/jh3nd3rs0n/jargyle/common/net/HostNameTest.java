@@ -56,27 +56,27 @@ public class HostNameTest {
     }
 
     @Test
-    public void testNewHostNameOfString01() {
+    public void testNewHostNameString01() {
         Assert.assertNotNull(HostName.newHostName("localhost"));
     }
 
     @Test
-    public void testNewHostNameOfString02() {
+    public void testNewHostNameString02() {
         Assert.assertNotNull(HostName.newHostName("google.com"));
     }
 
     @Test
-    public void testNewHostNameOfString03() {
+    public void testNewHostNameString03() {
         Assert.assertNotNull(HostName.newHostName("jh3nd3rs0n.github.io"));
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testNewHostNameOfStringForIllegalArgumentException01() {
+    public void testNewHostNameStringForIllegalArgumentException01() {
         HostName.newHostName("LOCALHOST");
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testNewHostNameOfStringForIllegalArgumentException02() {
+    public void testNewHostNameStringForIllegalArgumentException02() {
         HostName.newHostName("@#$%^&");
     }
 

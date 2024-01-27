@@ -121,28 +121,28 @@ public class HostIpv6AddressTest {
     }
 
     @Test
-    public void testNewHostIpv6AddressOfString01() {
+    public void testNewHostIpv6AddressString01() {
         Assert.assertNotNull(HostIpv6Address.newHostIpv6Address("::1"));
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testNewHostIpv6AddressOfStringForIllegalArgumentException01() {
+    public void testNewHostIpv6AddressStringForIllegalArgumentException01() {
         HostIpv6Address.newHostIpv6Address("localhost");
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testNewHostIpv6AddressOfStringForIllegalArgumentException02() {
+    public void testNewHostIpv6AddressStringForIllegalArgumentException02() {
         HostIpv6Address.newHostIpv6Address("127.0.0.1");
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testNewHostIpv6AddressOfStringForIllegalArgumentException06() {
+    public void testNewHostIpv6AddressStringForIllegalArgumentException06() {
         HostIpv6Address.newHostIpv6Address(
                 "0000:0000:0000:0000:0000:0000:0000::0000:0000:0000:0000:0000:0000:0000");
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testNewHostIpv6AddressOfStringForIllegalArgumentException07() {
+    public void testNewHostIpv6AddressStringForIllegalArgumentException07() {
         HostIpv6Address.newHostIpv6Address(":::::::");
     }
 

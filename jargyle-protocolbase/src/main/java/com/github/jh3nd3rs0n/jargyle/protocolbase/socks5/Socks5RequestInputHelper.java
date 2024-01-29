@@ -43,7 +43,6 @@ public final class Socks5RequestInputHelper {
 		Socks5Request.Params params = new Socks5Request.Params();
 		params.version = ver;
 		params.command = cmd;
-		params.addressType = dstAddr.getAddressType();
 		params.desiredDestinationAddress = dstAddr;
 		params.desiredDestinationPort = dstPort;
 		params.byteArray = out.toByteArray();

@@ -14,7 +14,6 @@ public final class Socks5Reply {
 	static final class Params {
 		Version version;
 		Reply reply;
-		AddressType addressType;
 		Address serverBoundAddress;
 		Port serverBoundPort;
 		byte[] byteArray;
@@ -65,7 +64,6 @@ public final class Socks5Reply {
 		Params params = new Params();
 		params.version = version;
 		params.reply = reply;
-		params.addressType = serverBoundAddress.getAddressType();
 		params.serverBoundAddress = serverBoundAddress;
 		params.serverBoundPort = serverBoundPort;
 		params.byteArray = out.toByteArray();
@@ -74,7 +72,6 @@ public final class Socks5Reply {
 	
 	private final Version version;
 	private final Reply reply;
-	private final AddressType addressType;
 	private final Address serverBoundAddress;
 	private final Port serverBoundPort;
 	private final byte[] byteArray;
@@ -82,7 +79,6 @@ public final class Socks5Reply {
 	Socks5Reply(final Params params) {
 		this.version = params.version;
 		this.reply = params.reply;
-		this.addressType = params.addressType;
 		this.serverBoundAddress = params.serverBoundAddress;
 		this.serverBoundPort = params.serverBoundPort;
 		this.byteArray = params.byteArray;
@@ -106,11 +102,7 @@ public final class Socks5Reply {
 		return true;
 	}
 
-	public AddressType getAddressType() {
-		return this.addressType;
-	}
-
-	public Reply getReply() {
+    public Reply getReply() {
 		return this.reply;
 	}
 
@@ -146,8 +138,6 @@ public final class Socks5Reply {
 			.append(this.version)
 			.append(", reply=")
 			.append(this.reply)
-			.append(", addressType=")
-			.append(this.addressType)
 			.append(", serverBoundAddress=")
 			.append(this.serverBoundAddress)
 			.append(", serverBoundPort=")

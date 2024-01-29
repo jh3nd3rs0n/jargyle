@@ -43,7 +43,6 @@ public final class Socks5ReplyInputHelper {
 		Socks5Reply.Params params = new Socks5Reply.Params();
 		params.version = ver;
 		params.reply = rep;
-		params.addressType = bndAddr.getAddressType();
 		params.serverBoundAddress = bndAddr;
 		params.serverBoundPort = bndPort;
 		params.byteArray = out.toByteArray();

@@ -42,7 +42,6 @@ final class UdpRequestHeaderInputHelper {
 		}
 		UdpRequestHeader.Params params = new UdpRequestHeader.Params();
 		params.currentFragmentNumber = frag;
-		params.addressType = dstAddr.getAddressType();
 		params.desiredDestinationAddress = dstAddr;
 		params.desiredDestinationPort = dstPort;
 		params.userDataStartIndex = dataStartIndex;

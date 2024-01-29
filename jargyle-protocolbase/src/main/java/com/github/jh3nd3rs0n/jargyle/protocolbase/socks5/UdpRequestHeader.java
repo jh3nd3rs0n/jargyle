@@ -13,7 +13,6 @@ public final class UdpRequestHeader {
 
 	static final class Params {
 		UnsignedByte currentFragmentNumber;
-		AddressType addressType;
 		Address desiredDestinationAddress;
 		Port desiredDestinationPort;
 		int userDataStartIndex;
@@ -71,7 +70,6 @@ public final class UdpRequestHeader {
 		}
 		Params params = new Params();
 		params.currentFragmentNumber = currentFragmentNumber;
-		params.addressType = desiredDestinationAddress.getAddressType();
 		params.desiredDestinationAddress = desiredDestinationAddress;
 		params.desiredDestinationPort = desiredDestinationPort;
 		params.userDataStartIndex = dataStartIndex;
@@ -80,7 +78,6 @@ public final class UdpRequestHeader {
 	}
 	
 	private final UnsignedByte currentFragmentNumber;
-	private final AddressType addressType;
 	private final Address desiredDestinationAddress;
 	private final Port desiredDestinationPort;
 	private final int userDataStartIndex;
@@ -88,7 +85,6 @@ public final class UdpRequestHeader {
 	
 	UdpRequestHeader(final Params params) {
 		this.currentFragmentNumber = params.currentFragmentNumber;
-		this.addressType = params.addressType;
 		this.desiredDestinationAddress = params.desiredDestinationAddress;
 		this.desiredDestinationPort = params.desiredDestinationPort;
 		this.userDataStartIndex = params.userDataStartIndex;
@@ -113,11 +109,7 @@ public final class UdpRequestHeader {
 		return true;
 	}
 
-	public AddressType getAddressType() {
-		return this.addressType;
-	}
-
-	public UnsignedByte getCurrentFragmentNumber() {
+    public UnsignedByte getCurrentFragmentNumber() {
 		return this.currentFragmentNumber;
 	}
 
@@ -156,8 +148,6 @@ public final class UdpRequestHeader {
 		builder.append(this.getClass().getSimpleName())
 			.append(" [currentFragmentNumber=")
 			.append(this.currentFragmentNumber)
-			.append(", addressType=")
-			.append(this.addressType)
 			.append(", desiredDestinationAddress=")
 			.append(this.desiredDestinationAddress)
 			.append(", desiredDestinationPort=")

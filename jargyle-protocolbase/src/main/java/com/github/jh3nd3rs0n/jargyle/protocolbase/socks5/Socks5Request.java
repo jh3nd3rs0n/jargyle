@@ -13,7 +13,6 @@ public final class Socks5Request {
 	static final class Params {
 		Version version;
 		Command command;
-		AddressType addressType;
 		Address desiredDestinationAddress;
 		Port desiredDestinationPort;
 		byte[] byteArray;
@@ -54,7 +53,6 @@ public final class Socks5Request {
 		Params params = new Params();
 		params.version = version;
 		params.command = command;
-		params.addressType = desiredDestinationAddress.getAddressType();
 		params.desiredDestinationAddress = desiredDestinationAddress;
 		params.desiredDestinationPort = desiredDestinationPort;
 		params.byteArray = out.toByteArray();
@@ -63,7 +61,6 @@ public final class Socks5Request {
 	
 	private final Version version;
 	private final Command command;
-	private final AddressType addressType;
 	private final Address desiredDestinationAddress;
 	private final Port desiredDestinationPort;
 	private final byte[] byteArray;
@@ -71,7 +68,6 @@ public final class Socks5Request {
 	Socks5Request(final Params params) {
 		this.version = params.version;
 		this.command = params.command;
-		this.addressType = params.addressType;
 		this.desiredDestinationAddress = params.desiredDestinationAddress;
 		this.desiredDestinationPort = params.desiredDestinationPort;
 		this.byteArray = params.byteArray;
@@ -95,11 +91,7 @@ public final class Socks5Request {
 		return true;
 	}
 
-	public AddressType getAddressType() {
-		return this.addressType;
-	}
-
-	public Command getCommand() {
+    public Command getCommand() {
 		return this.command;
 	}
 
@@ -135,8 +127,6 @@ public final class Socks5Request {
 			.append(this.version)
 			.append(", command=")
 			.append(this.command)
-			.append(", addressType=")
-			.append(this.addressType)
 			.append(", desiredDestinationAddress=")
 			.append(this.desiredDestinationAddress)
 			.append(", desiredDestinationPort=")

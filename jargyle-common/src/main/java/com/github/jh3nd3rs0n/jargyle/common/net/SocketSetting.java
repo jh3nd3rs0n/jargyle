@@ -99,17 +99,18 @@ public final class SocketSetting<V> {
 
     /**
      * Returns a new {@code SocketSetting} of the specified value type with
-     * the provided name and the provided value. An
-     * {@code IllegalArgumentException} is thrown if the provided name is
-     * invalid. A {@code ClassCastException} is thrown if the provided value
-     * is not assignable to the value type defined by the
-     * {@code SocketSettingSpec}.
+     * the provided name specified by a {@code SocketSettingSpec} and the
+     * provided value. An {@code IllegalArgumentException} is thrown if the
+     * provided name is not specified by any {@code SocketSettingSpec}. A
+     * {@code ClassCastException} is thrown if the provided value is not
+     * assignable to the value type defined by the {@code SocketSettingSpec}.
      *
-     * @param name  the provided name
+     * @param name  the provided name specified by a {@code SocketSettingSpec}
      * @param value the provided value
      * @param <V>   the specified value type
      * @return a new {@code SocketSetting} of the specified value type with
-     * the provided name and the provided value
+     * the provided name specified by a {@code SocketSettingSpec} and the
+     * provided value
      */
     public static <V> SocketSetting<V> newInstance(
             final String name, final V value) {
@@ -128,19 +129,20 @@ public final class SocketSetting<V> {
 
     /**
      * Returns a new {@code SocketSetting} of the specified value type with
-     * the provided name, the provided value, and the optionally provided
-     * documentation. An {@code IllegalArgumentException} is thrown if the
-     * provided name is invalid. A {@code ClassCastException} is thrown if the
-     * provided value is not assignable to the value type defined by the
-     * {@code SocketSettingSpec}.
+     * the provided name specified by a {@code SocketSettingSpec}, the
+     * provided value, and the optionally provided documentation. An
+     * {@code IllegalArgumentException} is thrown if the provided name is not
+     * specified by any {@code SocketSettingSpec}. A
+     * {@code ClassCastException} is thrown if the provided value is not
+     * assignable to the value type defined by the {@code SocketSettingSpec}.
      *
-     * @param name  the provided name
+     * @param name  the provided name specified by a {@code SocketSettingSpec}
      * @param value the provided value
      * @param doc   the optionally provided documentation (can be {@code null})
      * @param <V>   the specified value type
      * @return a new {@code SocketSetting} of the specified value type with
-     * the provided name, the provided value, the optionally provided
-     * documentation
+     * the provided name specified by a {@code SocketSettingSpec}, the
+     * provided value, and the optionally provided documentation
      */
     public static <V> SocketSetting<V> newInstance(
             final String name, final V value, final String doc) {
@@ -160,16 +162,17 @@ public final class SocketSetting<V> {
 
     /**
      * Returns a new {@code SocketSetting} of the {@code Object} value type
-     * with the provided name and with the parsed value from the provided
-     * {@code String} value. An {@code IllegalArgumentException} is thrown if
-     * the provided name is invalid or the provided {@code String} value to be
-     * parsed is invalid.
+     * with the provided name specified by a {@code SocketSettingSpec} and
+     * with the parsed value from the provided {@code String} value. An
+     * {@code IllegalArgumentException} is thrown if
+     * the provided name is not specified by any {@code SocketSettingSpec} or
+     * the provided {@code String} value to be parsed is invalid.
      *
-     * @param name  the provided name
+     * @param name  the provided name specified by a {@code SocketSettingSpec}
      * @param value the provided {@code String} value to be parsed
      * @return a new {@code SocketSetting} of the {@code Object} value type
-     * with the provided name and with the parsed value from the provided
-     * {@code String} value
+     * with the provided name specified by a {@code SocketSettingSpec} and
+     * with the parsed value from the provided {@code String} value
      */
     public static SocketSetting<Object> newInstanceWithParsedValue(
             final String name, final String value) {
@@ -185,17 +188,19 @@ public final class SocketSetting<V> {
 
     /**
      * Returns a new {@code SocketSetting} of the {@code Object} value type
-     * with the provided name, the parsed value from the provided
-     * {@code String} value, and the optionally provided documentation. An
-     * {@code IllegalArgumentException} is thrown if the provided name is
-     * invalid or the provided {@code String} value to be parsed is invalid.
+     * with the provided name specified by a {@code SocketSettingSpec}, the
+     * parsed value from the provided {@code String} value, and the optionally
+     * provided documentation. An {@code IllegalArgumentException} is thrown
+     * if the provided name is not specified by any {@code SocketSettingSpec}
+     * or the provided {@code String} value to be parsed is invalid.
      *
-     * @param name  the provided name
+     * @param name  the provided name specified by a {@code SocketSettingSpec}
      * @param value the provided {@code String} value to be parsed
      * @param doc   the optionally provided documentation (can be {@code null})
      * @return a new {@code SocketSetting} of the {@code Object} value type
-     * with the provided name, the parsed value from the provided
-     * {@code String} value, and the optionally provided documentation
+     * with the provided name specified by a {@code SocketSettingSpec}, the
+     * parsed value from the provided {@code String} value, and the optionally
+     * provided documentation
      */
     public static SocketSetting<Object> newInstanceWithParsedValue(
             final String name, final String value, final String doc) {

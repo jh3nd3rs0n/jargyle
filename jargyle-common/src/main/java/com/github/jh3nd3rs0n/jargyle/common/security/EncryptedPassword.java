@@ -72,20 +72,23 @@ public final class EncryptedPassword {
 
     /**
      * Returns a new {@code EncryptedPassword} with the provided name of the
-     * type of {@code EncryptedPassword} and with the parsed
+     * type of {@code EncryptedPassword} specified by a
+     * {@code EncryptedPasswordSpec} and with the parsed
      * {@code EncryptedPasswordValue} from the provided {@code String} value.
      * An {@code IllegalArgumentException} is thrown if the provided name of
-     * the type of {@code EncryptedPassword} is invalid or the provided
-     * {@code String} value to be parsed as an {@code EncryptedPasswordValue}
-     * is invalid.
+     * the type of {@code EncryptedPassword} is not specified by any
+     * {@code EncryptedPasswordSpec} or the provided {@code String} value to
+     * be parsed as an {@code EncryptedPasswordValue} is invalid.
      *
      * @param typeName               the provided name of the type of
-     *                               {@code EncryptedPassword}
+     *                               {@code EncryptedPassword} specified by a
+     *                               {@code EncryptedPasswordSpec}
      * @param encryptedPasswordValue the provided {@code String} value to be
      *                               parsed as an
      *                               {@code EncryptedPasswordValue}
      * @return a new {@code EncryptedPassword} with the provided name of the
-     * type of {@code EncryptedPassword} and with the parsed
+     * type of {@code EncryptedPassword} specified by a
+     * {@code EncryptedPasswordSpec} and with the parsed
      * {@code EncryptedPasswordValue} from the provided {@code String} value
      */
     public static EncryptedPassword newInstance(

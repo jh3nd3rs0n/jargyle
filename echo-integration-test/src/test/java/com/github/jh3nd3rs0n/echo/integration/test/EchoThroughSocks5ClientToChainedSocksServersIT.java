@@ -152,11 +152,9 @@ public class EchoThroughSocks5ClientToChainedSocksServersIT {
         EchoServer echServer = new EchoServer(
                 newSocks5ClientToChainedSocksServers().newSocksNetObjectFactory(), 0);
         String string = TestStringConstants.STRING_01;
-        EchoServerHelper.startThenExecuteThenStop(echServer, () -> {
-            String returningString = new EchoClient().echo(
-                    string, echServer.getInetAddress(), echServer.getPort());
-            assertEquals(string, returningString);
-        });
+        String returningString = EchoServerHelper.startThenEchoThenStop(
+                echServer, new EchoClient(), string);
+        assertEquals(string, returningString);
     }
 
     @Test
@@ -164,11 +162,9 @@ public class EchoThroughSocks5ClientToChainedSocksServersIT {
         EchoServer echServer = new EchoServer(
                 newSocks5ClientToChainedSocksServers().newSocksNetObjectFactory(), 0);
         String string = TestStringConstants.STRING_02;
-        EchoServerHelper.startThenExecuteThenStop(echServer, () -> {
-            String returningString = new EchoClient().echo(
-                    string, echServer.getInetAddress(), echServer.getPort());
-            assertEquals(string, returningString);
-        });
+        String returningString = EchoServerHelper.startThenEchoThenStop(
+                echServer, new EchoClient(), string);
+        assertEquals(string, returningString);
     }
 
     @Test
@@ -176,11 +172,9 @@ public class EchoThroughSocks5ClientToChainedSocksServersIT {
         EchoServer echServer = new EchoServer(
                 newSocks5ClientToChainedSocksServers().newSocksNetObjectFactory(), 0);
         String string = TestStringConstants.STRING_03;
-        EchoServerHelper.startThenExecuteThenStop(echServer, () -> {
-            String returningString = new EchoClient().echo(
-                    string, echServer.getInetAddress(), echServer.getPort());
-            assertEquals(string, returningString);
-        });
+        String returningString = EchoServerHelper.startThenEchoThenStop(
+                echServer, new EchoClient(), string);
+        assertEquals(string, returningString);
     }
 
 }

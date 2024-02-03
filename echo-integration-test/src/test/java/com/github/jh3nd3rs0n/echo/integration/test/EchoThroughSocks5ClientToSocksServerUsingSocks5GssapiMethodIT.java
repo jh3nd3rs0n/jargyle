@@ -623,11 +623,9 @@ public class EchoThroughSocks5ClientToSocksServerUsingSocks5GssapiMethodIT {
 				newSocks5ClientUsingSocks5GssapiMethod(
 						ProtectionLevels.of(ProtectionLevel.NONE)).newSocksNetObjectFactory(), 0);
 		String string = TestStringConstants.STRING_01;
-		EchoServerHelper.startThenExecuteThenStop(echServer, () -> {
-			String returningString = new EchoClient().echo(
-					string, echServer.getInetAddress(), echServer.getPort());
-			assertEquals(string, returningString);
-		});
+		String returningString = EchoServerHelper.startThenEchoThenStop(
+				echServer, new EchoClient(), string);
+		assertEquals(string, returningString);
 	}
 
 	@Test
@@ -636,11 +634,9 @@ public class EchoThroughSocks5ClientToSocksServerUsingSocks5GssapiMethodIT {
 				newSocks5ClientUsingSocks5GssapiMethod(
 						ProtectionLevels.of(ProtectionLevel.NONE)).newSocksNetObjectFactory(), 0);
 		String string = TestStringConstants.STRING_02;
-		EchoServerHelper.startThenExecuteThenStop(echServer, () -> {
-			String returningString = new EchoClient().echo(
-					string, echServer.getInetAddress(), echServer.getPort());
-			assertEquals(string, returningString);
-		});
+		String returningString = EchoServerHelper.startThenEchoThenStop(
+				echServer, new EchoClient(), string);
+		assertEquals(string, returningString);
 	}
 
 	@Test
@@ -649,11 +645,9 @@ public class EchoThroughSocks5ClientToSocksServerUsingSocks5GssapiMethodIT {
 				newSocks5ClientUsingSocks5GssapiMethod(
 						ProtectionLevels.of(ProtectionLevel.NONE)).newSocksNetObjectFactory(), 0);
 		String string = TestStringConstants.STRING_03;
-		EchoServerHelper.startThenExecuteThenStop(echServer, () -> {
-			String returningString = new EchoClient().echo(
-					string, echServer.getInetAddress(), echServer.getPort());
-			assertEquals(string, returningString);
-		});
+		String returningString = EchoServerHelper.startThenEchoThenStop(
+				echServer, new EchoClient(), string);
+		assertEquals(string, returningString);
 	}
 
 	@Test
@@ -662,11 +656,9 @@ public class EchoThroughSocks5ClientToSocksServerUsingSocks5GssapiMethodIT {
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(ProtectionLevel.NONE)).newSocksNetObjectFactory(), 0);
 		String string = TestStringConstants.STRING_01;
-		EchoServerHelper.startThenExecuteThenStop(echServer, () -> {
-			String returningString = new EchoClient().echo(
-					string, echServer.getInetAddress(), echServer.getPort());
-			assertEquals(string, returningString);
-		});
+		String returningString = EchoServerHelper.startThenEchoThenStop(
+				echServer, new EchoClient(), string);
+		assertEquals(string, returningString);
 	}
 
 	@Test
@@ -675,11 +667,9 @@ public class EchoThroughSocks5ClientToSocksServerUsingSocks5GssapiMethodIT {
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(ProtectionLevel.NONE)).newSocksNetObjectFactory(), 0);
 		String string = TestStringConstants.STRING_02;
-		EchoServerHelper.startThenExecuteThenStop(echServer, () -> {
-			String returningString = new EchoClient().echo(
-					string, echServer.getInetAddress(), echServer.getPort());
-			assertEquals(string, returningString);
-		});
+		String returningString = EchoServerHelper.startThenEchoThenStop(
+				echServer, new EchoClient(), string);
+		assertEquals(string, returningString);
 	}
 
 	@Test
@@ -688,11 +678,9 @@ public class EchoThroughSocks5ClientToSocksServerUsingSocks5GssapiMethodIT {
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(ProtectionLevel.NONE)).newSocksNetObjectFactory(), 0);
 		String string = TestStringConstants.STRING_03;
-		EchoServerHelper.startThenExecuteThenStop(echServer, () -> {
-			String returningString = new EchoClient().echo(
-					string, echServer.getInetAddress(), echServer.getPort());
-			assertEquals(string, returningString);
-		});
+		String returningString = EchoServerHelper.startThenEchoThenStop(
+				echServer, new EchoClient(), string);
+		assertEquals(string, returningString);
 	}
 
 	@Test
@@ -702,11 +690,9 @@ public class EchoThroughSocks5ClientToSocksServerUsingSocks5GssapiMethodIT {
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG_AND_CONF)).newSocksNetObjectFactory(), 0); 
 		String string = TestStringConstants.STRING_01;
-		EchoServerHelper.startThenExecuteThenStop(echServer, () -> {
-			String returningString = new EchoClient().echo(
-					string, echServer.getInetAddress(), echServer.getPort());
-			assertEquals(string, returningString);
-		});
+		String returningString = EchoServerHelper.startThenEchoThenStop(
+				echServer, new EchoClient(), string);
+		assertEquals(string, returningString);
 	}
 
 	@Test
@@ -716,11 +702,9 @@ public class EchoThroughSocks5ClientToSocksServerUsingSocks5GssapiMethodIT {
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG_AND_CONF)).newSocksNetObjectFactory(), 0); 
 		String string = TestStringConstants.STRING_02;
-		EchoServerHelper.startThenExecuteThenStop(echServer, () -> {
-			String returningString = new EchoClient().echo(
-					string, echServer.getInetAddress(), echServer.getPort());
-			assertEquals(string, returningString);
-		});
+		String returningString = EchoServerHelper.startThenEchoThenStop(
+				echServer, new EchoClient(), string);
+		assertEquals(string, returningString);
 	}
 
 	@Test
@@ -730,11 +714,9 @@ public class EchoThroughSocks5ClientToSocksServerUsingSocks5GssapiMethodIT {
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG_AND_CONF)).newSocksNetObjectFactory(), 0); 
 		String string = TestStringConstants.STRING_03;
-		EchoServerHelper.startThenExecuteThenStop(echServer, () -> {
-			String returningString = new EchoClient().echo(
-					string, echServer.getInetAddress(), echServer.getPort());
-			assertEquals(string, returningString);
-		});
+		String returningString = EchoServerHelper.startThenEchoThenStop(
+				echServer, new EchoClient(), string);
+		assertEquals(string, returningString);
 	}
 
 	@Test
@@ -744,11 +726,9 @@ public class EchoThroughSocks5ClientToSocksServerUsingSocks5GssapiMethodIT {
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG)).newSocksNetObjectFactory(), 0); 
 		String string = TestStringConstants.STRING_01;
-		EchoServerHelper.startThenExecuteThenStop(echServer, () -> {
-			String returningString = new EchoClient().echo(
-					string, echServer.getInetAddress(), echServer.getPort());
-			assertEquals(string, returningString);
-		});
+		String returningString = EchoServerHelper.startThenEchoThenStop(
+				echServer, new EchoClient(), string);
+		assertEquals(string, returningString);
 	}
 
 	@Test
@@ -758,11 +738,9 @@ public class EchoThroughSocks5ClientToSocksServerUsingSocks5GssapiMethodIT {
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG)).newSocksNetObjectFactory(), 0); 
 		String string = TestStringConstants.STRING_02;
-		EchoServerHelper.startThenExecuteThenStop(echServer, () -> {
-			String returningString = new EchoClient().echo(
-					string, echServer.getInetAddress(), echServer.getPort());
-			assertEquals(string, returningString);
-		});
+		String returningString = EchoServerHelper.startThenEchoThenStop(
+				echServer, new EchoClient(), string);
+		assertEquals(string, returningString);
 	}
 
 	@Test
@@ -772,11 +750,9 @@ public class EchoThroughSocks5ClientToSocksServerUsingSocks5GssapiMethodIT {
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG)).newSocksNetObjectFactory(), 0); 
 		String string = TestStringConstants.STRING_03;
-		EchoServerHelper.startThenExecuteThenStop(echServer, () -> {
-			String returningString = new EchoClient().echo(
-					string, echServer.getInetAddress(), echServer.getPort());
-			assertEquals(string, returningString);
-		});
+		String returningString = EchoServerHelper.startThenEchoThenStop(
+				echServer, new EchoClient(), string);
+		assertEquals(string, returningString);
 	}
 
 	@Test
@@ -786,11 +762,9 @@ public class EchoThroughSocks5ClientToSocksServerUsingSocks5GssapiMethodIT {
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG_AND_CONF)).newSocksNetObjectFactory(), 0); 
 		String string = TestStringConstants.STRING_01;
-		EchoServerHelper.startThenExecuteThenStop(echServer, () -> {
-			String returningString = new EchoClient().echo(
-					string, echServer.getInetAddress(), echServer.getPort());
-			assertEquals(string, returningString);
-		});
+		String returningString = EchoServerHelper.startThenEchoThenStop(
+				echServer, new EchoClient(), string);
+		assertEquals(string, returningString);
 	}
 
 	@Test
@@ -800,11 +774,9 @@ public class EchoThroughSocks5ClientToSocksServerUsingSocks5GssapiMethodIT {
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG_AND_CONF)).newSocksNetObjectFactory(), 0); 
 		String string = TestStringConstants.STRING_02;
-		EchoServerHelper.startThenExecuteThenStop(echServer, () -> {
-			String returningString = new EchoClient().echo(
-					string, echServer.getInetAddress(), echServer.getPort());
-			assertEquals(string, returningString);
-		});
+		String returningString = EchoServerHelper.startThenEchoThenStop(
+				echServer, new EchoClient(), string);
+		assertEquals(string, returningString);
 	}
 
 	@Test
@@ -814,11 +786,9 @@ public class EchoThroughSocks5ClientToSocksServerUsingSocks5GssapiMethodIT {
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG_AND_CONF)).newSocksNetObjectFactory(), 0); 
 		String string = TestStringConstants.STRING_03;
-		EchoServerHelper.startThenExecuteThenStop(echServer, () -> {
-			String returningString = new EchoClient().echo(
-					string, echServer.getInetAddress(), echServer.getPort());
-			assertEquals(string, returningString);
-		});
+		String returningString = EchoServerHelper.startThenEchoThenStop(
+				echServer, new EchoClient(), string);
+		assertEquals(string, returningString);
 	}
 
 	@Test
@@ -828,11 +798,9 @@ public class EchoThroughSocks5ClientToSocksServerUsingSocks5GssapiMethodIT {
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG)).newSocksNetObjectFactory(), 0); 
 		String string = TestStringConstants.STRING_01;
-		EchoServerHelper.startThenExecuteThenStop(echServer, () -> {
-			String returningString = new EchoClient().echo(
-					string, echServer.getInetAddress(), echServer.getPort());
-			assertEquals(string, returningString);
-		});
+		String returningString = EchoServerHelper.startThenEchoThenStop(
+				echServer, new EchoClient(), string);
+		assertEquals(string, returningString);
 	}
 
 	@Test
@@ -841,11 +809,9 @@ public class EchoThroughSocks5ClientToSocksServerUsingSocks5GssapiMethodIT {
 				ProtectionLevels.of(
 						ProtectionLevel.REQUIRED_INTEG)).newSocksNetObjectFactory(), 0); 
 		String string = TestStringConstants.STRING_02;
-		EchoServerHelper.startThenExecuteThenStop(echServer, () -> {
-			String returningString = new EchoClient().echo(
-					string, echServer.getInetAddress(), echServer.getPort());
-			assertEquals(string, returningString);
-		});
+		String returningString = EchoServerHelper.startThenEchoThenStop(
+				echServer, new EchoClient(), string);
+		assertEquals(string, returningString);
 	}
 
 	@Test
@@ -855,11 +821,9 @@ public class EchoThroughSocks5ClientToSocksServerUsingSocks5GssapiMethodIT {
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG)).newSocksNetObjectFactory(), 0); 
 		String string = TestStringConstants.STRING_03;
-		EchoServerHelper.startThenExecuteThenStop(echServer, () -> {
-			String returningString = new EchoClient().echo(
-					string, echServer.getInetAddress(), echServer.getPort());
-			assertEquals(string, returningString);
-		});
+		String returningString = EchoServerHelper.startThenEchoThenStop(
+				echServer, new EchoClient(), string);
+		assertEquals(string, returningString);
 	}
 	
 }

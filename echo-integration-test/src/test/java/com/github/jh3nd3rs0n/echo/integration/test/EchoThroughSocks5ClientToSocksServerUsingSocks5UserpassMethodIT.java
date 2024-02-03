@@ -136,11 +136,9 @@ public class EchoThroughSocks5ClientToSocksServerUsingSocks5UserpassMethodIT {
 						"Aladdin", 
 						"opensesame".toCharArray()).newSocksNetObjectFactory(), 0); 
 		String string = TestStringConstants.STRING_01;
-		EchoServerHelper.startThenExecuteThenStop(echServer, () -> {
-			String returningString = new EchoClient().echo(
-					string, echServer.getInetAddress(), echServer.getPort());
-			assertEquals(string, returningString);
-		});
+		String returningString = EchoServerHelper.startThenEchoThenStop(
+				echServer, new EchoClient(), string);
+		assertEquals(string, returningString);
 	}
 
 	@Test
@@ -150,11 +148,9 @@ public class EchoThroughSocks5ClientToSocksServerUsingSocks5UserpassMethodIT {
 						"Jasmine", 
 						"mission:impossible".toCharArray()).newSocksNetObjectFactory(), 0); 
 		String string = TestStringConstants.STRING_02;
-		EchoServerHelper.startThenExecuteThenStop(echServer, () -> {
-			String returningString = new EchoClient().echo(
-					string, echServer.getInetAddress(), echServer.getPort());
-			assertEquals(string, returningString);
-		});
+		String returningString = EchoServerHelper.startThenEchoThenStop(
+				echServer, new EchoClient(), string);
+		assertEquals(string, returningString);
 	}
 	
 	@Test
@@ -164,11 +160,9 @@ public class EchoThroughSocks5ClientToSocksServerUsingSocks5UserpassMethodIT {
 						"Abu", 
 						"safeDriversSave40%".toCharArray()).newSocksNetObjectFactory(), 0); 
 		String string = TestStringConstants.STRING_03;
-		EchoServerHelper.startThenExecuteThenStop(echServer, () -> {
-			String returningString = new EchoClient().echo(
-					string, echServer.getInetAddress(), echServer.getPort());
-			assertEquals(string, returningString);
-		});
+		String returningString = EchoServerHelper.startThenEchoThenStop(
+				echServer, new EchoClient(), string);
+		assertEquals(string, returningString);
 	}
 	
 	@Test

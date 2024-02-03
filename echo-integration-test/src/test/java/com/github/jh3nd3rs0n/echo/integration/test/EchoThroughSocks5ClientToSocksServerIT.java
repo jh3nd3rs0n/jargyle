@@ -24,7 +24,7 @@ import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
 import com.github.jh3nd3rs0n.test.help.TestStringConstants;
 import com.github.jh3nd3rs0n.test.help.ThreadHelper;
 
-public class EchoThroughSocksServerIT {
+public class EchoThroughSocks5ClientToSocksServerIT {
 	
 	private static final int SOCKS_SERVER_PORT = 10100;
 	
@@ -71,7 +71,7 @@ public class EchoThroughSocksServerIT {
 	}
 
 	@Test
-	public void testDatagramEchoClientBehindSocks5Server01() throws IOException {
+	public void testDatagramEchoClientUsingSocks5ClientToSocksServer01() throws IOException {
 		DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
 				newSocks5Client().newSocksNetObjectFactory()); 
 		String string = TestStringConstants.STRING_01;
@@ -80,7 +80,7 @@ public class EchoThroughSocksServerIT {
 	}
 	
 	@Test
-	public void testDatagramEchoClientBehindSocks5Server02() throws IOException {
+	public void testDatagramEchoClientUsingSocks5ClientToSocksServer02() throws IOException {
 		DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
 				newSocks5Client().newSocksNetObjectFactory()); 
 		String string = TestStringConstants.STRING_02;
@@ -89,7 +89,7 @@ public class EchoThroughSocksServerIT {
 	}
 
 	@Test
-	public void testDatagramEchoClientBehindSocks5Server03() throws IOException {
+	public void testDatagramEchoClientUsingSocks5ClientToSocksServer03() throws IOException {
 		DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
 				newSocks5Client().newSocksNetObjectFactory()); 
 		String string = TestStringConstants.STRING_03;
@@ -98,7 +98,7 @@ public class EchoThroughSocksServerIT {
 	}
 	
 	@Test
-	public void testEchoClientBehindSocks5Server01() throws IOException {
+	public void testEchoClientUsingSocks5ClientToSocksServer01() throws IOException {
 		EchoClient echoClient = new EchoClient(
 				newSocks5Client().newSocksNetObjectFactory()); 
 		String string = TestStringConstants.STRING_01;
@@ -107,7 +107,7 @@ public class EchoThroughSocksServerIT {
 	}
 	
 	@Test
-	public void testEchoClientBehindSocks5Server02() throws IOException {
+	public void testEchoClientUsingSocks5ClientToSocksServer02() throws IOException {
 		EchoClient echoClient = new EchoClient(
 				newSocks5Client().newSocksNetObjectFactory()); 
 		String string = TestStringConstants.STRING_02;
@@ -116,7 +116,7 @@ public class EchoThroughSocksServerIT {
 	}
 
 	@Test
-	public void testEchoClientBehindSocks5Server03() throws IOException {
+	public void testEchoClientUsingSocks5ClientToSocksServer03() throws IOException {
 		EchoClient echoClient = new EchoClient(
 				newSocks5Client().newSocksNetObjectFactory()); 
 		String string = TestStringConstants.STRING_03;
@@ -125,7 +125,7 @@ public class EchoThroughSocksServerIT {
 	}
 	
 	@Test
-	public void testEchoServerBehindSocks5Server01() throws IOException {
+	public void testEchoServerUsingSocks5ClientToSocksServer01() throws IOException {
 		EchoServer echServer = new EchoServer(
 				newSocks5Client().newSocksNetObjectFactory(), 0); 
 		String string = TestStringConstants.STRING_01;
@@ -137,7 +137,7 @@ public class EchoThroughSocksServerIT {
 	}
 	
 	@Test
-	public void testEchoServerBehindSocks5Server02() throws IOException {
+	public void testEchoServerUsingSocks5ClientToSocksServer02() throws IOException {
 		EchoServer echServer = new EchoServer(
 				newSocks5Client().newSocksNetObjectFactory(), 0); 
 		String string = TestStringConstants.STRING_02;
@@ -149,7 +149,7 @@ public class EchoThroughSocksServerIT {
 	}
 
 	@Test
-	public void testEchoServerBehindSocks5Server03() throws IOException {
+	public void testEchoServerUsingSocks5ClientToSocksServer03() throws IOException {
 		EchoServer echServer = new EchoServer(
 				newSocks5Client().newSocksNetObjectFactory(), 0); 
 		String string = TestStringConstants.STRING_03;

@@ -36,7 +36,7 @@ import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
 import com.github.jh3nd3rs0n.test.help.TestStringConstants;
 import com.github.jh3nd3rs0n.test.help.ThreadHelper;
 
-public class EchoThroughSocksServerUsingSocks5GssapiMethodIT {
+public class EchoThroughSocks5ClientToSocksServerUsingSocks5GssapiMethodIT {
 	
 	private static final String KDC_REALM = "EXAMPLE.COM";
 	private static final String KDC_HOST = 
@@ -234,7 +234,7 @@ public class EchoThroughSocksServerUsingSocks5GssapiMethodIT {
 	}
 	
 	@Test
-	public void testDatagramEchoClientBehindSocks5ServerUsingSocks5GssapiMethod01() throws IOException {
+	public void testDatagramEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethod01() throws IOException {
 		DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
 				newSocks5ClientUsingSocks5GssapiMethod(
 						ProtectionLevels.of(ProtectionLevel.NONE)).newSocksNetObjectFactory());
@@ -244,7 +244,7 @@ public class EchoThroughSocksServerUsingSocks5GssapiMethodIT {
 	}
 
 	@Test
-	public void testDatagramEchoClientBehindSocks5ServerUsingSocks5GssapiMethod02() throws IOException {
+	public void testDatagramEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethod02() throws IOException {
 		DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
 				newSocks5ClientUsingSocks5GssapiMethod(
 						ProtectionLevels.of(ProtectionLevel.NONE)).newSocksNetObjectFactory());
@@ -254,7 +254,7 @@ public class EchoThroughSocksServerUsingSocks5GssapiMethodIT {
 	}
 
 	@Test
-	public void testDatagramEchoClientBehindSocks5ServerUsingSocks5GssapiMethod03() throws IOException {
+	public void testDatagramEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethod03() throws IOException {
 		DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
 				newSocks5ClientUsingSocks5GssapiMethod(
 						ProtectionLevels.of(ProtectionLevel.NONE)).newSocksNetObjectFactory());
@@ -264,7 +264,7 @@ public class EchoThroughSocksServerUsingSocks5GssapiMethodIT {
 	}
 
 	@Test
-	public void testDatagramEchoClientBehindSocks5ServerUsingSocks5GssapiMethodNecReferenceImpl01() throws IOException {
+	public void testDatagramEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImpl01() throws IOException {
 		DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(ProtectionLevel.NONE)).newSocksNetObjectFactory());
@@ -274,7 +274,7 @@ public class EchoThroughSocksServerUsingSocks5GssapiMethodIT {
 	}
 
 	@Test
-	public void testDatagramEchoClientBehindSocks5ServerUsingSocks5GssapiMethodNecReferenceImpl02() throws IOException {
+	public void testDatagramEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImpl02() throws IOException {
 		DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(ProtectionLevel.NONE)).newSocksNetObjectFactory());
@@ -284,7 +284,7 @@ public class EchoThroughSocksServerUsingSocks5GssapiMethodIT {
 	}
 
 	@Test
-	public void testDatagramEchoClientBehindSocks5ServerUsingSocks5GssapiMethodNecReferenceImpl03() throws IOException {
+	public void testDatagramEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImpl03() throws IOException {
 		DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(ProtectionLevel.NONE)).newSocksNetObjectFactory());
@@ -294,7 +294,7 @@ public class EchoThroughSocksServerUsingSocks5GssapiMethodIT {
 	}
 
 	@Test
-	public void testDatagramEchoClientBehindSocks5ServerUsingSocks5GssapiMethodNecReferenceImplWithIntegAndConfProtection01() throws IOException {
+	public void testDatagramEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegAndConfProtection01() throws IOException {
 		DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(
@@ -305,7 +305,7 @@ public class EchoThroughSocksServerUsingSocks5GssapiMethodIT {
 	}
 
 	@Test
-	public void testDatagramEchoClientBehindSocks5ServerUsingSocks5GssapiMethodNecReferenceImplWithIntegAndConfProtection02() throws IOException {
+	public void testDatagramEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegAndConfProtection02() throws IOException {
 		DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(
@@ -316,7 +316,7 @@ public class EchoThroughSocksServerUsingSocks5GssapiMethodIT {
 	}
 
 	@Test
-	public void testDatagramEchoClientBehindSocks5ServerUsingSocks5GssapiMethodNecReferenceImplWithIntegAndConfProtection03() throws IOException {
+	public void testDatagramEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegAndConfProtection03() throws IOException {
 		DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(
@@ -327,7 +327,7 @@ public class EchoThroughSocksServerUsingSocks5GssapiMethodIT {
 	}
 
 	@Test
-	public void testDatagramEchoClientBehindSocks5ServerUsingSocks5GssapiMethodNecReferenceImplWithIntegProtection01() throws IOException {
+	public void testDatagramEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegProtection01() throws IOException {
 		DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(
@@ -338,7 +338,7 @@ public class EchoThroughSocksServerUsingSocks5GssapiMethodIT {
 	}
 
 	@Test
-	public void testDatagramEchoClientBehindSocks5ServerUsingSocks5GssapiMethodNecReferenceImplWithIntegProtection02() throws IOException {
+	public void testDatagramEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegProtection02() throws IOException {
 		DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(
@@ -349,7 +349,7 @@ public class EchoThroughSocksServerUsingSocks5GssapiMethodIT {
 	}
 
 	@Test
-	public void testDatagramEchoClientBehindSocks5ServerUsingSocks5GssapiMethodNecReferenceImplWithIntegProtection03() throws IOException {
+	public void testDatagramEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegProtection03() throws IOException {
 		DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(
@@ -360,7 +360,7 @@ public class EchoThroughSocksServerUsingSocks5GssapiMethodIT {
 	}
 
 	@Test
-	public void testDatagramEchoClientBehindSocks5ServerUsingSocks5GssapiMethodWithIntegAndConfProtection01() throws IOException {
+	public void testDatagramEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegAndConfProtection01() throws IOException {
 		DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
 				newSocks5ClientUsingSocks5GssapiMethod(
 						ProtectionLevels.of(
@@ -371,7 +371,7 @@ public class EchoThroughSocksServerUsingSocks5GssapiMethodIT {
 	}
 
 	@Test
-	public void testDatagramEchoClientBehindSocks5ServerUsingSocks5GssapiMethodWithIntegAndConfProtection02() throws IOException {
+	public void testDatagramEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegAndConfProtection02() throws IOException {
 		DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
 				newSocks5ClientUsingSocks5GssapiMethod(
 						ProtectionLevels.of(
@@ -382,7 +382,7 @@ public class EchoThroughSocksServerUsingSocks5GssapiMethodIT {
 	}
 
 	@Test
-	public void testDatagramEchoClientBehindSocks5ServerUsingSocks5GssapiMethodWithIntegAndConfProtection03() throws IOException {
+	public void testDatagramEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegAndConfProtection03() throws IOException {
 		DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
 				newSocks5ClientUsingSocks5GssapiMethod(
 						ProtectionLevels.of(
@@ -393,7 +393,7 @@ public class EchoThroughSocksServerUsingSocks5GssapiMethodIT {
 	}
 	
 	@Test
-	public void testDatagramEchoClientBehindSocks5ServerUsingSocks5GssapiMethodWithIntegProtection01() throws IOException {
+	public void testDatagramEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegProtection01() throws IOException {
 		DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
 				newSocks5ClientUsingSocks5GssapiMethod(
 						ProtectionLevels.of(
@@ -404,7 +404,7 @@ public class EchoThroughSocksServerUsingSocks5GssapiMethodIT {
 	}
 
 	@Test
-	public void testDatagramEchoClientBehindSocks5ServerUsingSocks5GssapiMethodWithIntegProtection02() throws IOException {
+	public void testDatagramEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegProtection02() throws IOException {
 		DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
 				newSocks5ClientUsingSocks5GssapiMethod(
 						ProtectionLevels.of(
@@ -415,7 +415,7 @@ public class EchoThroughSocksServerUsingSocks5GssapiMethodIT {
 	}
 
 	@Test
-	public void testDatagramEchoClientBehindSocks5ServerUsingSocks5GssapiMethodWithIntegProtection03() throws IOException {
+	public void testDatagramEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegProtection03() throws IOException {
 		DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
 				newSocks5ClientUsingSocks5GssapiMethod(
 						ProtectionLevels.of(
@@ -426,7 +426,7 @@ public class EchoThroughSocksServerUsingSocks5GssapiMethodIT {
 	}
 	
 	@Test
-	public void testEchoClientBehindSocks5ServerUsingSocks5GssapiMethod01() throws IOException {
+	public void testEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethod01() throws IOException {
 		EchoClient echoClient = new EchoClient(
 				newSocks5ClientUsingSocks5GssapiMethod(
 						ProtectionLevels.of(ProtectionLevel.NONE)).newSocksNetObjectFactory());
@@ -436,7 +436,7 @@ public class EchoThroughSocksServerUsingSocks5GssapiMethodIT {
 	}
 
 	@Test
-	public void testEchoClientBehindSocks5ServerUsingSocks5GssapiMethod02() throws IOException {
+	public void testEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethod02() throws IOException {
 		EchoClient echoClient = new EchoClient(
 				newSocks5ClientUsingSocks5GssapiMethod(
 						ProtectionLevels.of(ProtectionLevel.NONE)).newSocksNetObjectFactory());
@@ -446,7 +446,7 @@ public class EchoThroughSocksServerUsingSocks5GssapiMethodIT {
 	}
 
 	@Test
-	public void testEchoClientBehindSocks5ServerUsingSocks5GssapiMethod03() throws IOException {
+	public void testEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethod03() throws IOException {
 		EchoClient echoClient = new EchoClient(
 				newSocks5ClientUsingSocks5GssapiMethod(
 						ProtectionLevels.of(ProtectionLevel.NONE)).newSocksNetObjectFactory());
@@ -456,7 +456,7 @@ public class EchoThroughSocksServerUsingSocks5GssapiMethodIT {
 	}
 
 	@Test
-	public void testEchoClientBehindSocks5ServerUsingSocks5GssapiMethodNecReferenceImpl01() throws IOException {
+	public void testEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImpl01() throws IOException {
 		EchoClient echoClient = new EchoClient(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(ProtectionLevel.NONE)).newSocksNetObjectFactory());
@@ -466,7 +466,7 @@ public class EchoThroughSocksServerUsingSocks5GssapiMethodIT {
 	}
 
 	@Test
-	public void testEchoClientBehindSocks5ServerUsingSocks5GssapiMethodNecReferenceImpl02() throws IOException {
+	public void testEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImpl02() throws IOException {
 		EchoClient echoClient = new EchoClient(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(ProtectionLevel.NONE)).newSocksNetObjectFactory());
@@ -476,7 +476,7 @@ public class EchoThroughSocksServerUsingSocks5GssapiMethodIT {
 	}
 
 	@Test
-	public void testEchoClientBehindSocks5ServerUsingSocks5GssapiMethodNecReferenceImpl03() throws IOException {
+	public void testEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImpl03() throws IOException {
 		EchoClient echoClient = new EchoClient(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(ProtectionLevel.NONE)).newSocksNetObjectFactory());
@@ -486,7 +486,7 @@ public class EchoThroughSocksServerUsingSocks5GssapiMethodIT {
 	}
 	
 	@Test
-	public void testEchoClientBehindSocks5ServerUsingSocks5GssapiMethodNecReferenceImplWithIntegAndConfProtection01() throws IOException {
+	public void testEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegAndConfProtection01() throws IOException {
 		EchoClient echoClient = new EchoClient(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(
@@ -497,7 +497,7 @@ public class EchoThroughSocksServerUsingSocks5GssapiMethodIT {
 	}
 
 	@Test
-	public void testEchoClientBehindSocks5ServerUsingSocks5GssapiMethodNecReferenceImplWithIntegAndConfProtection02() throws IOException {
+	public void testEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegAndConfProtection02() throws IOException {
 		EchoClient echoClient = new EchoClient(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(
@@ -508,7 +508,7 @@ public class EchoThroughSocksServerUsingSocks5GssapiMethodIT {
 	}
 
 	@Test
-	public void testEchoClientBehindSocks5ServerUsingSocks5GssapiMethodNecReferenceImplWithIntegAndConfProtection03() throws IOException {
+	public void testEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegAndConfProtection03() throws IOException {
 		EchoClient echoClient = new EchoClient(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(
@@ -519,7 +519,7 @@ public class EchoThroughSocksServerUsingSocks5GssapiMethodIT {
 	}
 
 	@Test
-	public void testEchoClientBehindSocks5ServerUsingSocks5GssapiMethodNecReferenceImplWithIntegProtection01() throws IOException {
+	public void testEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegProtection01() throws IOException {
 		EchoClient echoClient = new EchoClient(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(
@@ -530,7 +530,7 @@ public class EchoThroughSocksServerUsingSocks5GssapiMethodIT {
 	}
 
 	@Test
-	public void testEchoClientBehindSocks5ServerUsingSocks5GssapiMethodNecReferenceImplWithIntegProtection02() throws IOException {
+	public void testEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegProtection02() throws IOException {
 		EchoClient echoClient = new EchoClient(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(
@@ -541,7 +541,7 @@ public class EchoThroughSocksServerUsingSocks5GssapiMethodIT {
 	}
 
 	@Test
-	public void testEchoClientBehindSocks5ServerUsingSocks5GssapiMethodNecReferenceImplWithIntegProtection03() throws IOException {
+	public void testEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegProtection03() throws IOException {
 		EchoClient echoClient = new EchoClient(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(
@@ -552,7 +552,7 @@ public class EchoThroughSocksServerUsingSocks5GssapiMethodIT {
 	}
 
 	@Test
-	public void testEchoClientBehindSocks5ServerUsingSocks5GssapiMethodWithIntegAndConfProtection01() throws IOException {
+	public void testEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegAndConfProtection01() throws IOException {
 		EchoClient echoClient = new EchoClient(
 				newSocks5ClientUsingSocks5GssapiMethod(
 						ProtectionLevels.of(
@@ -563,7 +563,7 @@ public class EchoThroughSocksServerUsingSocks5GssapiMethodIT {
 	}
 
 	@Test
-	public void testEchoClientBehindSocks5ServerUsingSocks5GssapiMethodWithIntegAndConfProtection02() throws IOException {
+	public void testEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegAndConfProtection02() throws IOException {
 		EchoClient echoClient = new EchoClient(
 				newSocks5ClientUsingSocks5GssapiMethod(
 						ProtectionLevels.of(
@@ -574,7 +574,7 @@ public class EchoThroughSocksServerUsingSocks5GssapiMethodIT {
 	}
 
 	@Test
-	public void testEchoClientBehindSocks5ServerUsingSocks5GssapiMethodWithIntegAndConfProtection03() throws IOException {
+	public void testEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegAndConfProtection03() throws IOException {
 		EchoClient echoClient = new EchoClient(
 				newSocks5ClientUsingSocks5GssapiMethod(
 						ProtectionLevels.of(
@@ -585,7 +585,7 @@ public class EchoThroughSocksServerUsingSocks5GssapiMethodIT {
 	}
 
 	@Test
-	public void testEchoClientBehindSocks5ServerUsingSocks5GssapiMethodWithIntegProtection01() throws IOException {
+	public void testEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegProtection01() throws IOException {
 		EchoClient echoClient = new EchoClient(
 				newSocks5ClientUsingSocks5GssapiMethod(
 						ProtectionLevels.of(
@@ -596,7 +596,7 @@ public class EchoThroughSocksServerUsingSocks5GssapiMethodIT {
 	}
 
 	@Test
-	public void testEchoClientBehindSocks5ServerUsingSocks5GssapiMethodWithIntegProtection02() throws IOException {
+	public void testEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegProtection02() throws IOException {
 		EchoClient echoClient = new EchoClient(
 				newSocks5ClientUsingSocks5GssapiMethod(
 						ProtectionLevels.of(
@@ -607,7 +607,7 @@ public class EchoThroughSocksServerUsingSocks5GssapiMethodIT {
 	}
 
 	@Test
-	public void testEchoClientBehindSocks5ServerUsingSocks5GssapiMethodWithIntegProtection03() throws IOException {
+	public void testEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegProtection03() throws IOException {
 		EchoClient echoClient = new EchoClient(
 				newSocks5ClientUsingSocks5GssapiMethod(
 						ProtectionLevels.of(
@@ -618,7 +618,7 @@ public class EchoThroughSocksServerUsingSocks5GssapiMethodIT {
 	}
 
 	@Test
-	public void testEchoServerBehindSocks5ServerUsingSocks5GssapiMethod01() throws IOException {
+	public void testEchoServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethod01() throws IOException {
 		EchoServer echServer = new EchoServer(
 				newSocks5ClientUsingSocks5GssapiMethod(
 						ProtectionLevels.of(ProtectionLevel.NONE)).newSocksNetObjectFactory(), 0);
@@ -631,7 +631,7 @@ public class EchoThroughSocksServerUsingSocks5GssapiMethodIT {
 	}
 
 	@Test
-	public void testEchoServerBehindSocks5ServerUsingSocks5GssapiMethod02() throws IOException {
+	public void testEchoServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethod02() throws IOException {
 		EchoServer echServer = new EchoServer(
 				newSocks5ClientUsingSocks5GssapiMethod(
 						ProtectionLevels.of(ProtectionLevel.NONE)).newSocksNetObjectFactory(), 0);
@@ -644,7 +644,7 @@ public class EchoThroughSocksServerUsingSocks5GssapiMethodIT {
 	}
 
 	@Test
-	public void testEchoServerBehindSocks5ServerUsingSocks5GssapiMethod03() throws IOException {
+	public void testEchoServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethod03() throws IOException {
 		EchoServer echServer = new EchoServer(
 				newSocks5ClientUsingSocks5GssapiMethod(
 						ProtectionLevels.of(ProtectionLevel.NONE)).newSocksNetObjectFactory(), 0);
@@ -657,7 +657,7 @@ public class EchoThroughSocksServerUsingSocks5GssapiMethodIT {
 	}
 
 	@Test
-	public void testEchoServerBehindSocks5ServerUsingSocks5GssapiMethodNecReferenceImpl01() throws IOException {
+	public void testEchoServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImpl01() throws IOException {
 		EchoServer echServer = new EchoServer(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(ProtectionLevel.NONE)).newSocksNetObjectFactory(), 0);
@@ -670,7 +670,7 @@ public class EchoThroughSocksServerUsingSocks5GssapiMethodIT {
 	}
 
 	@Test
-	public void testEchoServerBehindSocks5ServerUsingSocks5GssapiMethodNecReferenceImpl02() throws IOException {
+	public void testEchoServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImpl02() throws IOException {
 		EchoServer echServer = new EchoServer(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(ProtectionLevel.NONE)).newSocksNetObjectFactory(), 0);
@@ -683,7 +683,7 @@ public class EchoThroughSocksServerUsingSocks5GssapiMethodIT {
 	}
 
 	@Test
-	public void testEchoServerBehindSocks5ServerUsingSocks5GssapiMethodNecReferenceImpl03() throws IOException {
+	public void testEchoServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImpl03() throws IOException {
 		EchoServer echServer = new EchoServer(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(ProtectionLevel.NONE)).newSocksNetObjectFactory(), 0);
@@ -696,7 +696,7 @@ public class EchoThroughSocksServerUsingSocks5GssapiMethodIT {
 	}
 
 	@Test
-	public void testEchoServerBehindSocks5ServerUsingSocks5GssapiMethodNecReferenceImplWithIntegAndConfProtection01() throws IOException {
+	public void testEchoServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegAndConfProtection01() throws IOException {
 		EchoServer echServer = new EchoServer(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(
@@ -710,7 +710,7 @@ public class EchoThroughSocksServerUsingSocks5GssapiMethodIT {
 	}
 
 	@Test
-	public void testEchoServerBehindSocks5ServerUsingSocks5GssapiMethodNecReferenceImplWithIntegAndConfProtection02() throws IOException {
+	public void testEchoServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegAndConfProtection02() throws IOException {
 		EchoServer echServer = new EchoServer(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(
@@ -724,7 +724,7 @@ public class EchoThroughSocksServerUsingSocks5GssapiMethodIT {
 	}
 
 	@Test
-	public void testEchoServerBehindSocks5ServerUsingSocks5GssapiMethodNecReferenceImplWithIntegAndConfProtection03() throws IOException {
+	public void testEchoServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegAndConfProtection03() throws IOException {
 		EchoServer echServer = new EchoServer(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(
@@ -738,7 +738,7 @@ public class EchoThroughSocksServerUsingSocks5GssapiMethodIT {
 	}
 
 	@Test
-	public void testEchoServerBehindSocks5ServerUsingSocks5GssapiMethodNecReferenceImplWithIntegProtection01() throws IOException {
+	public void testEchoServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegProtection01() throws IOException {
 		EchoServer echServer = new EchoServer(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(
@@ -752,7 +752,7 @@ public class EchoThroughSocksServerUsingSocks5GssapiMethodIT {
 	}
 
 	@Test
-	public void testEchoServerBehindSocks5ServerUsingSocks5GssapiMethodNecReferenceImplWithIntegProtection02() throws IOException {
+	public void testEchoServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegProtection02() throws IOException {
 		EchoServer echServer = new EchoServer(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(
@@ -766,7 +766,7 @@ public class EchoThroughSocksServerUsingSocks5GssapiMethodIT {
 	}
 
 	@Test
-	public void testEchoServerBehindSocks5ServerUsingSocks5GssapiMethodNecReferenceImplWithIntegProtection03() throws IOException {
+	public void testEchoServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegProtection03() throws IOException {
 		EchoServer echServer = new EchoServer(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(
@@ -780,7 +780,7 @@ public class EchoThroughSocksServerUsingSocks5GssapiMethodIT {
 	}
 
 	@Test
-	public void testEchoServerBehindSocks5ServerUsingSocks5GssapiMethodWithIntegAndConfProtection01() throws IOException {
+	public void testEchoServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegAndConfProtection01() throws IOException {
 		EchoServer echServer = new EchoServer(
 				newSocks5ClientUsingSocks5GssapiMethod(
 						ProtectionLevels.of(
@@ -794,7 +794,7 @@ public class EchoThroughSocksServerUsingSocks5GssapiMethodIT {
 	}
 
 	@Test
-	public void testEchoServerBehindSocks5ServerUsingSocks5GssapiMethodWithIntegAndConfProtection02() throws IOException {
+	public void testEchoServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegAndConfProtection02() throws IOException {
 		EchoServer echServer = new EchoServer(
 				newSocks5ClientUsingSocks5GssapiMethod(
 						ProtectionLevels.of(
@@ -808,7 +808,7 @@ public class EchoThroughSocksServerUsingSocks5GssapiMethodIT {
 	}
 
 	@Test
-	public void testEchoServerBehindSocks5ServerUsingSocks5GssapiMethodWithIntegAndConfProtection03() throws IOException {
+	public void testEchoServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegAndConfProtection03() throws IOException {
 		EchoServer echServer = new EchoServer(
 				newSocks5ClientUsingSocks5GssapiMethod(
 						ProtectionLevels.of(
@@ -822,7 +822,7 @@ public class EchoThroughSocksServerUsingSocks5GssapiMethodIT {
 	}
 
 	@Test
-	public void testEchoServerBehindSocks5ServerUsingSocks5GssapiMethodWithIntegProtection01() throws IOException {
+	public void testEchoServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegProtection01() throws IOException {
 		EchoServer echServer = new EchoServer(
 				newSocks5ClientUsingSocks5GssapiMethod(
 						ProtectionLevels.of(
@@ -836,7 +836,7 @@ public class EchoThroughSocksServerUsingSocks5GssapiMethodIT {
 	}
 
 	@Test
-	public void testEchoServerBehindSocks5ServerUsingSocks5GssapiMethodWithIntegProtection02() throws IOException {
+	public void testEchoServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegProtection02() throws IOException {
 		EchoServer echServer = new EchoServer(newSocks5ClientUsingSocks5GssapiMethod(
 				ProtectionLevels.of(
 						ProtectionLevel.REQUIRED_INTEG)).newSocksNetObjectFactory(), 0); 
@@ -849,7 +849,7 @@ public class EchoThroughSocksServerUsingSocks5GssapiMethodIT {
 	}
 
 	@Test
-	public void testEchoServerBehindSocks5ServerUsingSocks5GssapiMethodWithIntegProtection03() throws IOException {
+	public void testEchoServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegProtection03() throws IOException {
 		EchoServer echServer = new EchoServer(
 				newSocks5ClientUsingSocks5GssapiMethod(
 						ProtectionLevels.of(

@@ -30,7 +30,7 @@ import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassmethod.UserRepository
 import com.github.jh3nd3rs0n.test.help.TestStringConstants;
 import com.github.jh3nd3rs0n.test.help.ThreadHelper;
 
-public class EchoThroughSocksServerUsingSocks5UserpassMethodIT {
+public class EchoThroughSocks5ClientToSocksServerUsingSocks5UserpassMethodIT {
 
 	private static final int SOCKS_SERVER_PORT_USING_SOCKS5_USERPASSMETHOD = 10200;
 	
@@ -97,7 +97,7 @@ public class EchoThroughSocksServerUsingSocks5UserpassMethodIT {
 	}
 	
 	@Test
-	public void testDatagramEchoClientBehindSocks5ServerUsingSocks5UserpassMethod01() throws IOException {
+	public void testDatagramEchoClientUsingSocks5ClientToSocksServerUsingSocks5UserpassMethod01() throws IOException {
 		DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
 				newSocks5ClientUsingSocks5UserpassMethod(
 						"Aladdin", 
@@ -108,7 +108,7 @@ public class EchoThroughSocksServerUsingSocks5UserpassMethodIT {
 	}
 
 	@Test
-	public void testDatagramEchoClientBehindSocks5ServerUsingSocks5UserpassMethod02() throws IOException {
+	public void testDatagramEchoClientUsingSocks5ClientToSocksServerUsingSocks5UserpassMethod02() throws IOException {
 		DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
 				newSocks5ClientUsingSocks5UserpassMethod(
 						"Jasmine", 
@@ -119,7 +119,7 @@ public class EchoThroughSocksServerUsingSocks5UserpassMethodIT {
 	}
 	
 	@Test
-	public void testDatagramEchoClientBehindSocks5ServerUsingSocks5UserpassMethod03() throws IOException {
+	public void testDatagramEchoClientUsingSocks5ClientToSocksServerUsingSocks5UserpassMethod03() throws IOException {
 		DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
 				newSocks5ClientUsingSocks5UserpassMethod(
 						"Abu", 
@@ -130,7 +130,7 @@ public class EchoThroughSocksServerUsingSocks5UserpassMethodIT {
 	}
 	
 	@Test
-	public void testEchoServerBehindSocks5ServerUsingSocks5UserpassMethod01() throws IOException {
+	public void testEchoServerUsingSocks5ClientToSocksServerUsingSocks5UserpassMethod01() throws IOException {
 		EchoServer echServer = new EchoServer(
 				newSocks5ClientUsingSocks5UserpassMethod(
 						"Aladdin", 
@@ -144,7 +144,7 @@ public class EchoThroughSocksServerUsingSocks5UserpassMethodIT {
 	}
 
 	@Test
-	public void testEchoServerBehindSocks5ServerUsingSocks5UserpassMethod02() throws IOException {
+	public void testEchoServerUsingSocks5ClientToSocksServerUsingSocks5UserpassMethod02() throws IOException {
 		EchoServer echServer = new EchoServer(
 				newSocks5ClientUsingSocks5UserpassMethod(
 						"Jasmine", 
@@ -158,7 +158,7 @@ public class EchoThroughSocksServerUsingSocks5UserpassMethodIT {
 	}
 	
 	@Test
-	public void testEchoServerBehindSocks5ServerUsingSocks5UserpassMethod03() throws IOException {
+	public void testEchoServerUsingSocks5ClientToSocksServerUsingSocks5UserpassMethod03() throws IOException {
 		EchoServer echServer = new EchoServer(
 				newSocks5ClientUsingSocks5UserpassMethod(
 						"Abu", 
@@ -172,7 +172,7 @@ public class EchoThroughSocksServerUsingSocks5UserpassMethodIT {
 	}
 	
 	@Test
-	public void testEchoClientBehindSocks5ServerUsingSocks5UserpassMethod01() throws IOException {
+	public void testEchoClientUsingSocks5ClientToSocksServerUsingSocks5UserpassMethod01() throws IOException {
 		EchoClient echoClient = new EchoClient(
 				newSocks5ClientUsingSocks5UserpassMethod(
 						"Aladdin", 
@@ -183,7 +183,7 @@ public class EchoThroughSocksServerUsingSocks5UserpassMethodIT {
 	}
 
 	@Test
-	public void testEchoClientBehindSocks5ServerUsingSocks5UserpassMethod02() throws IOException {
+	public void testEchoClientUsingSocks5ClientToSocksServerUsingSocks5UserpassMethod02() throws IOException {
 		EchoClient echoClient = new EchoClient(
 				newSocks5ClientUsingSocks5UserpassMethod(
 						"Jasmine", 
@@ -194,7 +194,7 @@ public class EchoThroughSocksServerUsingSocks5UserpassMethodIT {
 	}
 	
 	@Test
-	public void testEchoClientBehindSocks5ServerUsingSocks5UserpassMethod03() throws IOException {
+	public void testEchoClientUsingSocks5ClientToSocksServerUsingSocks5UserpassMethod03() throws IOException {
 		EchoClient echoClient = new EchoClient(
 				newSocks5ClientUsingSocks5UserpassMethod(
 						"Abu", 

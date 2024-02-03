@@ -8,6 +8,9 @@ public final class TestStringConstants {
     public static final String STRING_01 = "Hello, World!";
 
     public static final String STRING_02 =
+            "The quick brown fox jumped over the lazy dog.";
+
+    public static final String STRING_03 =
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed "
                     + "do eiusmod tempor incididunt ut labore et dolore magna "
                     + "aliqua. Ut enim ad minim veniam, quis nostrud exercitation "
@@ -16,8 +19,6 @@ public final class TestStringConstants {
                     + "cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat "
                     + "cupidatat non proident, sunt in culpa qui officia deserunt "
                     + "mollit anim id est laborum.";
-
-    public static final String STRING_03 = "Goodbye, World.";
 
     /**
      * Prevents the construction of unnecessary instances.

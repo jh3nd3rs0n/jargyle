@@ -1,90 +1,83 @@
 package com.github.jh3nd3rs0n.echo.performance.test;
 
 import com.github.jh3nd3rs0n.echo.DatagramEchoServer;
+import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
+import com.github.jh3nd3rs0n.jargyle.server.internal.concurrent.ExecutorHelper;
 
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.ExecutorService;
 
 public final class DatagramEchoServerLoadTestRunner {
 
-    private static final long DEFAULT_TIMEOUT = 1;
-    private static final TimeUnit DEFAULT_TIME_UNIT = TimeUnit.MINUTES;
+    private static final int HALF_SECOND = 500;
 
-    private ConfigurationFactory configurationFactory;
-    private long timeout;
-    private TimeUnit timeUnit;
+    private final Configuration configuration;
+    private final long delayBetweenThreadsStarting;
+    private final DatagramEchoServerTestRunnerFactory datagramEchoServerTestRunnerFactory;
+    private final int threadCount;
+    private final long timeout;
 
-    public DatagramEchoServerLoadTestRunner() {
-        this.configurationFactory = null;
-        this.timeout = DEFAULT_TIMEOUT;
-        this.timeUnit = DEFAULT_TIME_UNIT;
-    }
-
-    public DatagramEchoServerLoadTestRunner setConfigurationFactory(
-            final ConfigurationFactory factory) {
-        this.configurationFactory = factory;
-        return this;
-    }
-
-    public DatagramEchoServerLoadTestRunner setTimeout(final long tmt) {
+    public DatagramEchoServerLoadTestRunner(
+            final Configuration config,
+            final int numberOfThreads,
+            final long delayBetweenThreadsStart,
+            final DatagramEchoServerTestRunnerFactory datagramEchServerTestRunnerFactory,
+            final long tmt) {
+        this.configuration = config;
+        this.delayBetweenThreadsStarting = delayBetweenThreadsStart;
+        this.datagramEchoServerTestRunnerFactory = datagramEchServerTestRunnerFactory;
+        this.threadCount = numberOfThreads;
         this.timeout = tmt;
-        return this;
     }
 
-    public DatagramEchoServerLoadTestRunner setTimeUnit(final TimeUnit unit) {
-        this.timeUnit = unit;
-        return this;
-    }
-
-    public LoadTestRunnerResults run(
-            final DatagramEchoServerTestFactory datagramEchoServerTestFactory,
-            final int initialThreadCount,
-            final int maxThreadCount,
-            final int incrementThreadCount) throws IOException {
-        ThreadsRunnerResults lastSuccessfulThreadsRunnerResults = null;
-        ThreadsRunnerResults unsuccessfulThreadsRunnerResults = null;
-        for (int i = initialThreadCount; i <= maxThreadCount; i += incrementThreadCount) {
-            SocksServer socksServer = (this.configurationFactory == null) ?
-                    null : new SocksServer(this.configurationFactory.newConfiguration());
-            DatagramEchoServer datagramEchoServer = DatagramEchoServerHelper.newDatagramEchoServer();
-            try {
-                String socksServerHostAddress = null;
-                int socksServerPort = -1;
-                if (socksServer != null) {
-                    socksServer.start();
-                    socksServerHostAddress = socksServer.getHost().toString();
-                    socksServerPort = socksServer.getPort().intValue();
-                }
-                datagramEchoServer.start();
-                ThreadsRunnerResults threadsRunnerResults = new ThreadsRunner()
-                        .setTimeout(this.timeout)
-                        .setTimeUnit(this.timeUnit)
-                        .run(datagramEchoServerTestFactory.newDatagramEchoServerTest(
+    public LoadTestRunnerResults run() throws IOException {
+        SocksServer socksServer = (this.configuration == null) ?
+                null : new SocksServer(this.configuration);
+        DatagramEchoServer datagramEchoServer = DatagramEchoServerHelper.newDatagramEchoServer();
+        LoadTestRunnerResults loadTestRunnerResults = new LoadTestRunnerResults(
+                this.threadCount, this.delayBetweenThreadsStarting);
+        ExecutorService executor = ExecutorHelper.newExecutor();
+        try {
+            String socksServerHostAddress = null;
+            int socksServerPort = -1;
+            if (socksServer != null) {
+                socksServer.start();
+                socksServerHostAddress = socksServer.getHost().toString();
+                socksServerPort = socksServer.getPort().intValue();
+            }
+            datagramEchoServer.start();
+            for (int i = 0; i < this.threadCount; i++) {
+                executor.execute(new LoadTestRunnerWorker(
+                        i * this.delayBetweenThreadsStarting,
+                        this.datagramEchoServerTestRunnerFactory.newDatagramEchoServerTestRunner(
                                 datagramEchoServer.getInetAddress(),
                                 datagramEchoServer.getPort(),
                                 socksServerHostAddress,
                                 socksServerPort),
-                                i);
-                if (threadsRunnerResults.getActualSuccessfulThreadCount() == i) {
-                    lastSuccessfulThreadsRunnerResults = threadsRunnerResults;
-                } else {
-                    unsuccessfulThreadsRunnerResults = threadsRunnerResults;
-                    break;
+                        loadTestRunnerResults));
+            }
+            long startWaitTime = System.currentTimeMillis();
+            do {
+                try {
+                    Thread.sleep(HALF_SECOND);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
                 }
-            } finally {
-                if (!datagramEchoServer.getState().equals(
-                        DatagramEchoServer.State.STOPPED)) {
-                    datagramEchoServer.stop();
-                }
-                if (socksServer != null && !socksServer.getState().equals(
-                        SocksServer.State.STOPPED)) {
-                    socksServer.stop();
-                }
+            } while (loadTestRunnerResults.getCompletedThreadCount() < this.threadCount
+                    && System.currentTimeMillis() - startWaitTime < this.timeout);
+        } finally {
+            executor.shutdownNow();
+            if (!datagramEchoServer.getState().equals(
+                    DatagramEchoServer.State.STOPPED)) {
+                datagramEchoServer.stop();
+            }
+            if (socksServer != null && !socksServer.getState().equals(
+                    SocksServer.State.STOPPED)) {
+                socksServer.stop();
             }
         }
-        return new LoadTestRunnerResults(
-                lastSuccessfulThreadsRunnerResults, unsuccessfulThreadsRunnerResults);
+        return loadTestRunnerResults;
     }
-
+    
 }

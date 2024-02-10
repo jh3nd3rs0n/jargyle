@@ -2,7 +2,7 @@ package com.github.jh3nd3rs0n.echo.performance.test;
 
 import java.net.InetAddress;
 
-public abstract class DatagramEchoServerTest implements Runnable {
+public abstract class DatagramEchoServerTestRunner implements Runnable {
 
     protected final InetAddress datagramEchoServerInetAddress;
     protected final int datagramEchoServerPort;
@@ -10,7 +10,7 @@ public abstract class DatagramEchoServerTest implements Runnable {
     protected final String socksServerHostAddress;
     protected final int socksServerPort;
 
-    public DatagramEchoServerTest(
+    public DatagramEchoServerTestRunner(
             final InetAddress datagramEchServerInetAddress,
             final int datagramEchServerPort,
             final String scksServerHostAddress,

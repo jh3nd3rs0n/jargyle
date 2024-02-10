@@ -20,15 +20,12 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.net.InetAddress;
 import java.nio.file.Path;
-import java.util.concurrent.TimeUnit;
 
 public class EchoThroughSocksServerIT {
 
-    private static final int INCREMENT_THREAD_COUNT = 10;
-    private static final int INIT_THREAD_COUNT = 10;
-    private static final int MAX_THREAD_COUNT = 200;
-    private static final long TIMEOUT = 1;
-    private static final TimeUnit TIME_UNIT = TimeUnit.MINUTES;
+    private static final long DELAY_BETWEEN_THREADS_STARTING = 500;
+    private static final int THREAD_COUNT = 100;
+    private static final long TIMEOUT = 60000 * 5;
 
     private static Path performanceReport = null;
 
@@ -58,72 +55,49 @@ public class EchoThroughSocksServerIT {
 
     @Test
     public void testDatagramEchoServerThroughSocksServer() throws IOException {
-        LoadTestRunnerResults results = new DatagramEchoServerLoadTestRunner()
-                .setConfigurationFactory(new ConfigurationFactoryImpl())
-                .setTimeout(TIMEOUT)
-                .setTimeUnit(TIME_UNIT)
-                .run(
-                        new DatagramEchoServerTestFactoryImpl(),
-                        INIT_THREAD_COUNT,
-                        MAX_THREAD_COUNT,
-                        INCREMENT_THREAD_COUNT);
-        ThreadsRunnerResults lastSuccessfulThreadsRunnerResults =
-                results.getLastSuccessfulThreadsRunnerResults();
-        ThreadsRunnerResults unsuccessfulThreadsRunnerResults =
-                results.getUnsuccessfulThreadsRunnerResults();
+        LoadTestRunnerResults results = new DatagramEchoServerLoadTestRunner(
+                newConfiguration(),
+                THREAD_COUNT,
+                DELAY_BETWEEN_THREADS_STARTING,
+                new DatagramEchoServerTestRunnerFactoryImpl(),
+                TIMEOUT)
+                .run();
         String methodName =
                 Thread.currentThread().getStackTrace()[1].getMethodName();
         PerformanceReportHelper.writeToPerformanceReport(
                 performanceReport,
                 "Method " + methodName,
-                lastSuccessfulThreadsRunnerResults,
-                unsuccessfulThreadsRunnerResults);
-        Assert.assertNotNull(lastSuccessfulThreadsRunnerResults);
+                results);
+        Assert.assertNotNull(results);
     }
 
     @Test
     public void testEchoServerThroughSocksServer() throws IOException {
-        LoadTestRunnerResults results = new EchoServerLoadTestRunner()
-                .setConfigurationFactory(new ConfigurationFactoryImpl())
-                .setTimeout(TIMEOUT)
-                .setTimeUnit(TIME_UNIT)
-                .run(
-                        new EchoServerTestFactoryImpl(),
-                        INIT_THREAD_COUNT,
-                        MAX_THREAD_COUNT,
-                        INCREMENT_THREAD_COUNT);
-        ThreadsRunnerResults lastSuccessfulThreadsRunnerResults =
-                results.getLastSuccessfulThreadsRunnerResults();
-        ThreadsRunnerResults unsuccessfulThreadsRunnerResults =
-                results.getUnsuccessfulThreadsRunnerResults();
+        LoadTestRunnerResults results = new EchoServerLoadTestRunner(
+                newConfiguration(),
+                THREAD_COUNT,
+                DELAY_BETWEEN_THREADS_STARTING,
+                new EchoServerTestRunnerFactoryImpl(),
+                TIMEOUT)
+                .run();
         String methodName =
                 Thread.currentThread().getStackTrace()[1].getMethodName();
         PerformanceReportHelper.writeToPerformanceReport(
                 performanceReport,
                 "Method " + methodName,
-                lastSuccessfulThreadsRunnerResults,
-                unsuccessfulThreadsRunnerResults);
-        Assert.assertNotNull(lastSuccessfulThreadsRunnerResults);
+                results);
+        Assert.assertNotNull(results);
     }
 
-    private static final class ConfigurationFactoryImpl extends ConfigurationFactory {
+    private static final class DatagramEchoServerTestRunnerFactoryImpl extends DatagramEchoServerTestRunnerFactory {
 
         @Override
-        public Configuration newConfiguration() {
-            return EchoThroughSocksServerIT.newConfiguration();
-        }
-
-    }
-
-    private static final class DatagramEchoServerTestFactoryImpl extends DatagramEchoServerTestFactory {
-
-        @Override
-        public DatagramEchoServerTest newDatagramEchoServerTest(
+        public DatagramEchoServerTestRunner newDatagramEchoServerTestRunner(
                 InetAddress datagramEchServerInetAddress,
                 int datagramEchServerPort,
                 String scksServerHostAddress,
                 int scksServerPort) {
-            return new DatagramEchoServerTestImpl(
+            return new DatagramEchoServerTestRunnerImpl(
                     datagramEchServerInetAddress,
                     datagramEchServerPort,
                     scksServerHostAddress,
@@ -132,9 +106,9 @@ public class EchoThroughSocksServerIT {
 
     }
 
-    private static final class DatagramEchoServerTestImpl extends DatagramEchoServerTest {
+    private static final class DatagramEchoServerTestRunnerImpl extends DatagramEchoServerTestRunner {
 
-        public DatagramEchoServerTestImpl(
+        public DatagramEchoServerTestRunnerImpl(
                 InetAddress datagramEchServerInetAddress,
                 int datagramEchServerPort,
                 String scksServerHostAddress,
@@ -165,15 +139,15 @@ public class EchoThroughSocksServerIT {
 
     }
 
-    private static final class EchoServerTestFactoryImpl extends EchoServerTestFactory {
+    private static final class EchoServerTestRunnerFactoryImpl extends EchoServerTestRunnerFactory {
 
         @Override
-        public EchoServerTest newEchoServerTest(
+        public EchoServerTestRunner newEchoServerTestRunner(
                 InetAddress echServerInetAddress,
                 int echServerPort,
                 String scksServerHostAddress,
                 int scksServerPort) {
-            return new EchoServerTestImpl(
+            return new EchoServerTestRunnerImpl(
                     echServerInetAddress,
                     echServerPort,
                     scksServerHostAddress,
@@ -182,9 +156,9 @@ public class EchoThroughSocksServerIT {
 
     }
 
-    private static final class EchoServerTestImpl extends EchoServerTest {
+    private static final class EchoServerTestRunnerImpl extends EchoServerTestRunner {
 
-        public EchoServerTestImpl(
+        public EchoServerTestRunnerImpl(
                 InetAddress echServerInetAddress,
                 int echServerPort,
                 String scksServerHostAddress,

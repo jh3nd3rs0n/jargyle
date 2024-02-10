@@ -2,9 +2,9 @@ package com.github.jh3nd3rs0n.echo.performance.test;
 
 import java.net.InetAddress;
 
-public abstract class EchoServerTestFactory {
+public abstract class EchoServerTestRunnerFactory {
 
-    public abstract EchoServerTest newEchoServerTest(
+    public abstract EchoServerTestRunner newEchoServerTestRunner(
             final InetAddress echServerInetAddress,
             final int echServerPort,
             final String scksServerHostAddress,

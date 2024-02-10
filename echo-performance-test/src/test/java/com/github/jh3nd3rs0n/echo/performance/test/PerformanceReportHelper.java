@@ -33,35 +33,38 @@ public final class PerformanceReportHelper {
     }
 
     private static String print(
-            final ThreadsRunnerResults threadsRunnerResults) {
+            final LoadTestRunnerResults loadTestRunnerResults) {
         StringWriter stringWriter = new StringWriter();
         PrintWriter printWriter = new PrintWriter(stringWriter);
-        printWriter.printf("      # of threads: %s%n",
-                threadsRunnerResults.getThreadCount());
-        printWriter.printf("      Actual # of threads: %s%n",
-                threadsRunnerResults.getActualThreadCount());
-        printWriter.printf("      Actual # of successful threads: %s%n",
-                threadsRunnerResults.getActualSuccessfulThreadCount());
-        SortedSet<Throwable> throwables = threadsRunnerResults.getThrowables();
+        printWriter.printf("%n    # of threads: %s",
+                loadTestRunnerResults.getThreadCount());
+        printWriter.printf("%n    # of completed threads: %s",
+                loadTestRunnerResults.getCompletedThreadCount());
+        printWriter.printf("%n    # of successful completed threads: %s",
+                loadTestRunnerResults.getSuccessfulCompletedThreadCount());
+        SortedSet<Throwable> throwables = loadTestRunnerResults.getThrowables();
         if (!throwables.isEmpty()) {
-            printWriter.printf("      Common Throwables:%n");
+            printWriter.printf("%n    Common Throwables:");
             /*
              * Not using the Stream API in order to avoid an intermittent
              * ConcurrentModificationException to be thrown.
              */
-            String indent = "        ";
+            String lineSeparator = System.lineSeparator();
+            String indent = "      ";
             for (Throwable throwable : throwables) {
                 String stackTraceString = ThrowableHelper.toStackTraceString(
                         throwable);
                 String indentedStackTraceString =
-                        indent + stackTraceString.replace(
-                                System.lineSeparator(),
-                                System.lineSeparator() + indent);
-                printWriter.println(indentedStackTraceString);
+                        lineSeparator + indent + stackTraceString.replace(
+                                lineSeparator,
+                                lineSeparator + indent);
+                printWriter.print(indentedStackTraceString);
             }
         }
+        printWriter.printf("%n    Delay between threads starting: %s ms",
+                loadTestRunnerResults.getDelayBetweenThreadsStarting());
         SortedSet<Long> completedTimes =
-                threadsRunnerResults.getCompletedTimes();
+                loadTestRunnerResults.getCompletedTimes();
         int completedTimesCount = completedTimes.size();
         long combinedTime = 0L;
         for (Long completedTime : completedTimes) {
@@ -73,10 +76,9 @@ public final class PerformanceReportHelper {
                 combinedTime / completedTimesCount : 0L;
         long longestTime = (completedTimesCount > 0) ?
                 completedTimes.last() : 0L;
-        printWriter.printf("      Combined time: %s ms%n", combinedTime);
-        printWriter.printf("      Shortest time: %s ms%n", shortestTime);
-        printWriter.printf("      Average time: %s ms%n", averageTime);
-        printWriter.printf("      Longest time: %s ms", longestTime);
+        printWriter.printf("%n    Shortest thread time: %s ms", shortestTime);
+        printWriter.printf("%n    Average thread time: %s ms", averageTime);
+        printWriter.printf("%n    Longest thread time: %s ms", longestTime);
         printWriter.flush();
         return stringWriter.toString();
     }
@@ -84,32 +86,17 @@ public final class PerformanceReportHelper {
     public static void writeToPerformanceReport(
             final Path performanceReport,
             final String header,
-            final ThreadsRunnerResults lastSuccessfulThreadsRunnerResults,
-            final ThreadsRunnerResults unsuccessfulThreadsRunnerResults)
+            final LoadTestRunnerResults loadTestRunnerResults)
             throws IOException {
         Files.write(
                 performanceReport,
                 String.format("%n  %s:", header).getBytes(
                         StandardCharsets.UTF_8),
                 StandardOpenOption.APPEND);
-        if (lastSuccessfulThreadsRunnerResults != null) {
-            Files.write(
-                    performanceReport,
-                    String.format(
-                            "%n    Last successful performance stats:%n%s",
-                            print(lastSuccessfulThreadsRunnerResults)).getBytes(
-                                    StandardCharsets.UTF_8),
-                    StandardOpenOption.APPEND);
-        }
-        if (unsuccessfulThreadsRunnerResults != null) {
-            Files.write(
-                    performanceReport,
-                    String.format(
-                            "%n    Unsuccessful performance stats:%n%s",
-                            print(unsuccessfulThreadsRunnerResults)).getBytes(
-                                    StandardCharsets.UTF_8),
-                    StandardOpenOption.APPEND);
-        }
+        Files.write(
+                performanceReport,
+                print(loadTestRunnerResults).getBytes(StandardCharsets.UTF_8),
+                StandardOpenOption.APPEND);
     }
 
 }

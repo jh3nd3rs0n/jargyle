@@ -2,7 +2,7 @@ package com.github.jh3nd3rs0n.echo.performance.test;
 
 import java.net.InetAddress;
 
-public abstract class EchoServerTest implements Runnable {
+public abstract class EchoServerTestRunner implements Runnable {
 
     protected final InetAddress echoServerInetAddress;
     protected final int echoServerPort;
@@ -10,7 +10,7 @@ public abstract class EchoServerTest implements Runnable {
     protected final String socksServerHostAddress;
     protected final int socksServerPort;
 
-    public EchoServerTest(
+    public EchoServerTestRunner(
             final InetAddress echServerInetAddress,
             final int echServerPort,
             final String scksServerHostAddress,

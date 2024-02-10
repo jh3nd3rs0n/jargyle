@@ -7,12 +7,14 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.server.SimpleKdcServer;
 import org.apache.kerby.kerberos.kerb.server.impl.DefaultInternalKdcServerImpl;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
 
 import com.github.jh3nd3rs0n.echo.DatagramEchoClient;
@@ -35,6 +37,7 @@ import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
 import com.github.jh3nd3rs0n.test.help.TestStringConstants;
 import com.github.jh3nd3rs0n.test.help.ThreadHelper;
+import org.junit.rules.Timeout;
 
 public class EchoThroughSocks5ClientToSocksServerUsingSocks5GssapiMethodIT {
 	
@@ -70,7 +73,13 @@ public class EchoThroughSocks5ClientToSocksServerUsingSocks5GssapiMethodIT {
 
 	private static SocksServer socksServerUsingSocks5GssapiMethod;
 	private static SocksServer socksServerUsingSocks5GssapiMethodNecReferenceImpl;
-	
+
+	@Rule
+	public Timeout globalTimeout = Timeout.builder()
+			.withTimeout(5, TimeUnit.MINUTES)
+			.withLookingForStuckThread(true)
+			.build();
+
 	private static Configuration newConfigurationUsingSocks5GssapiMethod() {
 		return Configuration.newUnmodifiableInstance(Settings.of(
 				GeneralSettingSpecConstants.PORT.newSetting(

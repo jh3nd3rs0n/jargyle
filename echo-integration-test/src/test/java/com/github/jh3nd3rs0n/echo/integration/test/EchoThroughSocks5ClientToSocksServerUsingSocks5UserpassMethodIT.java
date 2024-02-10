@@ -4,9 +4,11 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
 
 import com.github.jh3nd3rs0n.echo.DatagramEchoClient;
@@ -29,6 +31,7 @@ import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassmethod.UserRepositorySpecConstants;
 import com.github.jh3nd3rs0n.test.help.TestStringConstants;
 import com.github.jh3nd3rs0n.test.help.ThreadHelper;
+import org.junit.rules.Timeout;
 
 public class EchoThroughSocks5ClientToSocksServerUsingSocks5UserpassMethodIT {
 
@@ -38,7 +41,13 @@ public class EchoThroughSocks5ClientToSocksServerUsingSocks5UserpassMethodIT {
 	private static EchoServer echoServer;
 	
 	private static SocksServer socksServerUsingSocks5UserpassMethod;
-	
+
+	@Rule
+	public Timeout globalTimeout = Timeout.builder()
+			.withTimeout(5, TimeUnit.MINUTES)
+			.withLookingForStuckThread(true)
+			.build();
+
 	private static Configuration newConfigurationUsingSocks5UserpassMethod() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Aladdin:opensesame,");

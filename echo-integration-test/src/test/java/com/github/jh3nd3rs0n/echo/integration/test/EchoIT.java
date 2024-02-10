@@ -3,9 +3,11 @@ package com.github.jh3nd3rs0n.echo.integration.test;
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
 
 import com.github.jh3nd3rs0n.echo.DatagramEchoClient;
@@ -14,12 +16,19 @@ import com.github.jh3nd3rs0n.echo.EchoClient;
 import com.github.jh3nd3rs0n.echo.EchoServer;
 import com.github.jh3nd3rs0n.test.help.TestStringConstants;
 import com.github.jh3nd3rs0n.test.help.ThreadHelper;
+import org.junit.rules.Timeout;
 
 public class EchoIT {
 
 	private static DatagramEchoServer datagramEchoServer;
-	private static EchoServer echoServer;	
-	
+	private static EchoServer echoServer;
+
+	@Rule
+	public Timeout globalTimeout = Timeout.builder()
+			.withTimeout(5, TimeUnit.MINUTES)
+			.withLookingForStuckThread(true)
+			.build();
+
 	@BeforeClass
 	public static void setUpBeforeClass() throws IOException {
 		datagramEchoServer = new DatagramEchoServer();

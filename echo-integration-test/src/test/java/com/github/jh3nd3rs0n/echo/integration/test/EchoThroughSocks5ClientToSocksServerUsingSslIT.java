@@ -4,9 +4,11 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
 
 import com.github.jh3nd3rs0n.echo.DatagramEchoClient;
@@ -28,6 +30,7 @@ import com.github.jh3nd3rs0n.jargyle.server.SslSettingSpecConstants;
 import com.github.jh3nd3rs0n.test.help.TestStringConstants;
 import com.github.jh3nd3rs0n.test.help.ThreadHelper;
 import com.github.jh3nd3rs0n.test.help.constants.TestResourceConstants;
+import org.junit.rules.Timeout;
 
 public class EchoThroughSocks5ClientToSocksServerUsingSslIT {
 	
@@ -41,7 +44,13 @@ public class EchoThroughSocks5ClientToSocksServerUsingSslIT {
 	private static SocksServer socksServerUsingSsl;
 	private static SocksServer socksServerUsingSslAndRequestedClientAuth;
 	private static SocksServer socksServerUsingSslAndRequiredClientAuth;
-	
+
+	@Rule
+	public Timeout globalTimeout = Timeout.builder()
+			.withTimeout(5, TimeUnit.MINUTES)
+			.withLookingForStuckThread(true)
+			.build();
+
 	private static Configuration newConfigurationUsingSsl() {
 		return Configuration.newUnmodifiableInstance(Settings.of(
 				GeneralSettingSpecConstants.PORT.newSetting(

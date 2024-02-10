@@ -12,14 +12,18 @@ import java.util.concurrent.Executors;
 
 import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class EchoServer {
 
 	private static final class Listener implements Runnable {
-		
+
+		private final Logger logger;
 		private final ServerSocket serverSocket;
 	
 		public Listener(final ServerSocket serverSock) {
+			this.logger = LoggerFactory.getLogger(Listener.class);
 			this.serverSocket = serverSock;
 		}
 	
@@ -35,7 +39,10 @@ public final class EchoServer {
 								e, SocketException.class)) {
 							break;
 						}
-						e.printStackTrace();
+						this.logger.warn(String.format(
+								"%s: An error occurred in waiting for a client socket",
+								this.getClass().getSimpleName()),
+								e);
 						break;
 					}
 				}
@@ -45,7 +52,7 @@ public final class EchoServer {
 		}
 	}
 
-	public static enum State {
+	public enum State {
 		
 		STARTED,
 		
@@ -54,10 +61,12 @@ public final class EchoServer {
 	}
 	
 	private static final class Worker implements Runnable {
-		
+
+		private final Logger logger;
 		private final Socket clientSocket;
 	
 		public Worker(final Socket clientSock) {
+			this.logger = LoggerFactory.getLogger(Worker.class);
 			this.clientSocket = clientSock;
 		}
 	
@@ -68,12 +77,21 @@ public final class EchoServer {
 				byte[] bytes = MeasuredIoHelper.readFrom(in);
 				MeasuredIoHelper.writeThenFlush(bytes, out);
 			} catch (IOException e) {
-				e.printStackTrace();
+				if (!ThrowableHelper.isOrHasInstanceOf(
+						e, SocketException.class)) {
+					this.logger.warn(String.format(
+							"%s: An error occurred receiving or sending data",
+									this.getClass().getSimpleName()),
+							e);
+				}
 			} finally {
 				try {
 					this.clientSocket.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+					this.logger.warn(String.format(
+							"%s: An error occurred in closing the client socket",
+							this.getClass().getSimpleName()),
+							e);
 				}
 			}
 		}

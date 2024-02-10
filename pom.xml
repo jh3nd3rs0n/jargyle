@@ -39,7 +39,7 @@
 		<junit.version>4.13.2</junit.version>
 		<slf4j.version>1.7.28</slf4j.version>
 		<maven.javadoc.skippedModules>
-			echo,echo-integration-test,jargyle-cli,jargyle-cli-integration-test,jargyle-server-integration-test,test-help
+			echo,echo-integration-test,echo-performance-test,jargyle-cli,jargyle-cli-integration-test,jargyle-server-integration-test,test-help
 		</maven.javadoc.skippedModules>
 		<docsDirectory>${project.basedir}${file.separator}docs</docsDirectory>
 		<jacoco.skip>true</jacoco.skip>
@@ -259,9 +259,10 @@
 		<module>jargyle-server-integration-test</module>
 		<module>echo</module>
 		<module>echo-integration-test</module>
+		<module>echo-performance-test</module>
 		<module>jargyle-cli</module>
 		<module>jargyle-cli-integration-test</module>
 		<module>jargyle-report-aggregate</module>
 		<module>jargyle-distribution</module>
-    </modules>
+	</modules>
 </project>

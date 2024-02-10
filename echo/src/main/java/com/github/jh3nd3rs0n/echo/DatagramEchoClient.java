@@ -3,6 +3,7 @@ package com.github.jh3nd3rs0n.echo;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.util.Arrays;
 
 import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
@@ -36,6 +37,13 @@ public final class DatagramEchoClient {
 	}
 	
 	public String echo(final String string) throws IOException {
+		return this.echo(string, DatagramEchoServer.INET_ADDRESS, DatagramEchoServer.PORT);
+	}
+
+	public String echo(
+			final String string,
+			final InetAddress datagramEchoServerInetAddress,
+			final int datagramEchoServerPort) throws IOException {
 		DatagramSocket datagramSocket = null;
 		String returningString = null;
 		try {
@@ -43,13 +51,13 @@ public final class DatagramEchoClient {
 			this.socketSettings.applyTo(datagramSocket);
 			datagramSocket.bind(null);
 			datagramSocket.connect(
-					DatagramEchoServer.INET_ADDRESS, DatagramEchoServer.PORT);
+					datagramEchoServerInetAddress, datagramEchoServerPort);
 			byte[] buffer = string.getBytes();
 			DatagramPacket packet = new DatagramPacket(
-					buffer, 
-					buffer.length, 
-					DatagramEchoServer.INET_ADDRESS, 
-					DatagramEchoServer.PORT);
+					buffer,
+					buffer.length,
+					datagramEchoServerInetAddress,
+					datagramEchoServerPort);
 			datagramSocket.send(packet);
 			buffer = new byte[DatagramEchoServer.BUFFER_SIZE];
 			packet = new DatagramPacket(buffer, buffer.length);
@@ -61,7 +69,7 @@ public final class DatagramEchoClient {
 				datagramSocket.close();
 			}
 		}
-		return returningString;		
+		return returningString;
 	}
 
 }

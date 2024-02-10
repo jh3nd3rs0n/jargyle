@@ -267,7 +267,7 @@ To run automated testing, run the following commands:
 
 ```bash
 cd jargyle
-mvn clean verify
+mvn --projects=\!echo-performance-test clean verify
 ```
 
 ## Building

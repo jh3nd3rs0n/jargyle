@@ -1,5 +1,8 @@
 package com.github.jh3nd3rs0n.echo;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -11,10 +14,12 @@ import java.util.concurrent.Executors;
 public final class DatagramEchoServer {
 
 	private static final class Listener implements Runnable {
-		
+
+		private final Logger logger;
 		private final DatagramSocket serverSocket;
 		
 		public Listener(final DatagramSocket serverSock) {
+			this.logger = LoggerFactory.getLogger(Listener.class);
 			this.serverSocket = serverSock;
 		}
 		
@@ -31,7 +36,10 @@ public final class DatagramEchoServer {
 					} catch (SocketException e) {
 						break;
 					} catch (IOException e) {
-						e.printStackTrace();
+						this.logger.warn(String.format(
+								"%s: An error occurred in waiting for a UDP packet",
+								this.getClass().getSimpleName()),
+								e);
 						break;
 					}
 				}
@@ -42,7 +50,7 @@ public final class DatagramEchoServer {
 		
 	}
 
-	public static enum State {
+	public enum State {
 		
 		STARTED,
 		
@@ -51,13 +59,15 @@ public final class DatagramEchoServer {
 	}
 	
 	private static final class Worker implements Runnable {
-		
+
+		private final Logger logger;
 		private final DatagramPacket packet;
 		private final DatagramSocket serverSocket;
 	
 		public Worker(
 				final DatagramSocket serverSock, 
 				final DatagramPacket pckt) {
+			this.logger = LoggerFactory.getLogger(Worker.class);
 			this.packet = pckt;
 			this.serverSocket = serverSock;
 		}
@@ -65,13 +75,17 @@ public final class DatagramEchoServer {
 		public void run() {
 			try {
 				this.serverSocket.send(new DatagramPacket(
-						this.packet.getData(), 
-						this.packet.getOffset(), 
-						this.packet.getLength(), 
-						this.packet.getAddress(), 
+						this.packet.getData(),
+						this.packet.getOffset(),
+						this.packet.getLength(),
+						this.packet.getAddress(),
 						this.packet.getPort()));
+			} catch (SocketException ignored) {
 			} catch (IOException e) {
-				e.printStackTrace();
+				this.logger.warn(String.format(
+						"%s: An error occurred in sending the UDP packet",
+						this.getClass().getSimpleName()),
+						e);
 			}
 		}
 	
@@ -80,23 +94,43 @@ public final class DatagramEchoServer {
 	public static final int BUFFER_SIZE = 1024;
 	public static final InetAddress INET_ADDRESS = InetAddress.getLoopbackAddress();
 	public static final int PORT = 1081;
-	
+
+	private final InetAddress bindInetAddress;
 	private ExecutorService executor;
+	private int port;
 	private DatagramSocket serverSocket;
+	private final int specifiedPort;
 	private State state;
 
 	public DatagramEchoServer() {
+		this(PORT, INET_ADDRESS);
+	}
+
+	public DatagramEchoServer(final int prt, final InetAddress bindInetAddr) {
+		this.bindInetAddress = bindInetAddr;
 		this.executor = null;
+		this.port = -1;
 		this.serverSocket = null;
+		this.specifiedPort = prt;
 		this.state = State.STOPPED;
 	}
-	
+
+	public InetAddress getInetAddress() {
+		return this.bindInetAddress;
+	}
+
+	public int getPort() {
+		return this.port;
+	}
+
 	public State getState() {
 		return this.state;
 	}
 
 	public void start() throws IOException {
-		this.serverSocket = new DatagramSocket(PORT, INET_ADDRESS);
+		this.serverSocket = new DatagramSocket(
+				this.specifiedPort, this.bindInetAddress);
+		this.port = this.serverSocket.getLocalPort();
 		this.executor = Executors.newSingleThreadExecutor();
 		this.executor.execute(new Listener(this.serverSocket));
 		this.state = State.STARTED;
@@ -105,6 +139,7 @@ public final class DatagramEchoServer {
 	public void stop() throws IOException {
 		this.serverSocket.close();
 		this.serverSocket = null;
+		this.port = -1;
 		this.executor.shutdownNow();
 		this.executor = null;
 		this.state = State.STOPPED;

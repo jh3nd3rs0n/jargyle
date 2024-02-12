@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-final class ExecutorHelper {
+public final class ExecutorHelper {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(
 			ExecutorHelper.class);

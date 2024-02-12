@@ -1,9 +1,9 @@
 package com.github.jh3nd3rs0n.echo.performance.test;
 
 import com.github.jh3nd3rs0n.echo.DatagramEchoServer;
+import com.github.jh3nd3rs0n.echo.ExecutorHelper;
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
-import com.github.jh3nd3rs0n.jargyle.server.internal.concurrent.ExecutorHelper;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;

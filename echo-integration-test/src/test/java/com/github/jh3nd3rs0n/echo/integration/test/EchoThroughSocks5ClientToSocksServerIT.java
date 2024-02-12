@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.util.concurrent.TimeUnit;
 
+import com.github.jh3nd3rs0n.jargyle.common.net.Host;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -44,6 +45,8 @@ public class EchoThroughSocks5ClientToSocksServerIT {
 
 	private static Configuration newConfiguration() {
 		return Configuration.newUnmodifiableInstance(Settings.of(
+				GeneralSettingSpecConstants.INTERNAL_FACING_BIND_HOST.newSetting(
+						Host.newInstance(InetAddress.getLoopbackAddress().getHostAddress())),
 				GeneralSettingSpecConstants.PORT.newSetting(
 						Port.valueOf(SOCKS_SERVER_PORT))));
 	}

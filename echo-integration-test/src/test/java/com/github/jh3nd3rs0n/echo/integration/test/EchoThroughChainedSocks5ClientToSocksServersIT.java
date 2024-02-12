@@ -7,6 +7,7 @@ import com.github.jh3nd3rs0n.echo.EchoServer;
 import com.github.jh3nd3rs0n.jargyle.client.Properties;
 import com.github.jh3nd3rs0n.jargyle.client.Scheme;
 import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
+import com.github.jh3nd3rs0n.jargyle.common.net.Host;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.GeneralSettingSpecConstants;
@@ -67,12 +68,18 @@ public class EchoThroughChainedSocks5ClientToSocksServersIT {
     private static List<Configuration> newConfigurations() {
         return Arrays.asList(
                 Configuration.newUnmodifiableInstance(Settings.of(
+                        GeneralSettingSpecConstants.INTERNAL_FACING_BIND_HOST.newSetting(
+                                Host.newInstance(InetAddress.getLoopbackAddress().getHostAddress())),
                         GeneralSettingSpecConstants.PORT.newSetting(
                                 Port.valueOf(SOCKS_SERVER_PORT_1)))),
                 Configuration.newUnmodifiableInstance(Settings.of(
+                        GeneralSettingSpecConstants.INTERNAL_FACING_BIND_HOST.newSetting(
+                                Host.newInstance(InetAddress.getLoopbackAddress().getHostAddress())),
                         GeneralSettingSpecConstants.PORT.newSetting(
                                 Port.valueOf(SOCKS_SERVER_PORT_2)))),
                 Configuration.newUnmodifiableInstance(Settings.of(
+                        GeneralSettingSpecConstants.INTERNAL_FACING_BIND_HOST.newSetting(
+                                Host.newInstance(InetAddress.getLoopbackAddress().getHostAddress())),
                         GeneralSettingSpecConstants.PORT.newSetting(
                                 Port.valueOf(SOCKS_SERVER_PORT_3)))));
     }

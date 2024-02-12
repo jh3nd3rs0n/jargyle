@@ -7,6 +7,7 @@ import com.github.jh3nd3rs0n.echo.EchoServer;
 import com.github.jh3nd3rs0n.jargyle.client.Properties;
 import com.github.jh3nd3rs0n.jargyle.client.Scheme;
 import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
+import com.github.jh3nd3rs0n.jargyle.common.net.Host;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.server.*;
 import com.github.jh3nd3rs0n.test.help.TestStringConstants;
@@ -47,6 +48,8 @@ public class EchoThroughSocks5ClientToChainedSocksServersUsingSslIT {
     private static List<Configuration> newChainedConfigurationsUsingSsl() {
         return Arrays.asList(
                 Configuration.newUnmodifiableInstance(Settings.of(
+                        GeneralSettingSpecConstants.INTERNAL_FACING_BIND_HOST.newSetting(
+                                Host.newInstance(InetAddress.getLoopbackAddress().getHostAddress())),
                         GeneralSettingSpecConstants.PORT.newSetting(
                                 Port.valueOf(CHAINED_SOCKS_SERVER_PORT_1_USING_SSL)),
                         ChainingGeneralSettingSpecConstants.CHAINING_SOCKS_SERVER_URI.newSetting(
@@ -64,6 +67,8 @@ public class EchoThroughSocks5ClientToChainedSocksServersUsingSslIT {
                         ChainingSslSettingSpecConstants.CHAINING_SSL_TRUST_STORE_PASSWORD.newSettingWithParsedValue(
                                 TestResourceConstants.ECHO_INTEGRATION_TEST_SOCKS_SERVER_KEY_STORE_PASSWORD_FILE.getContentAsString()))),
                 Configuration.newUnmodifiableInstance(Settings.of(
+                        GeneralSettingSpecConstants.INTERNAL_FACING_BIND_HOST.newSetting(
+                                Host.newInstance(InetAddress.getLoopbackAddress().getHostAddress())),
                         GeneralSettingSpecConstants.PORT.newSetting(
                                 Port.valueOf(CHAINED_SOCKS_SERVER_PORT_2_USING_SSL)),
                         DtlsSettingSpecConstants.DTLS_ENABLED.newSetting(Boolean.TRUE),

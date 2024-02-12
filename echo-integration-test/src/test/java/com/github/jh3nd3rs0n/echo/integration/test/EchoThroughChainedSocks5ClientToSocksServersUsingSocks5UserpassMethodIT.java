@@ -8,6 +8,7 @@ import com.github.jh3nd3rs0n.jargyle.client.Properties;
 import com.github.jh3nd3rs0n.jargyle.client.Scheme;
 import com.github.jh3nd3rs0n.jargyle.client.Socks5PropertySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
+import com.github.jh3nd3rs0n.jargyle.common.net.Host;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Method;
@@ -91,6 +92,8 @@ public class EchoThroughChainedSocks5ClientToSocksServersUsingSocks5UserpassMeth
     private static List<Configuration> newConfigurationsUsingSocks5UserpassMethod() {
         return Arrays.asList(
                 Configuration.newUnmodifiableInstance(Settings.of(
+                        GeneralSettingSpecConstants.INTERNAL_FACING_BIND_HOST.newSetting(
+                                Host.newInstance(InetAddress.getLoopbackAddress().getHostAddress())),
                         GeneralSettingSpecConstants.PORT.newSetting(
                                 Port.valueOf(SOCKS_SERVER_PORT_1_USING_SOCKS5_USERPASSMETHOD)),
                         Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
@@ -99,6 +102,8 @@ public class EchoThroughChainedSocks5ClientToSocksServersUsingSocks5UserpassMeth
                                 UserRepositorySpecConstants.STRING_SOURCE_USER_REPOSITORY.newUserRepository(
                                         "Aladdin:opensesame")))),
                 Configuration.newUnmodifiableInstance(Settings.of(
+                        GeneralSettingSpecConstants.INTERNAL_FACING_BIND_HOST.newSetting(
+                                Host.newInstance(InetAddress.getLoopbackAddress().getHostAddress())),
                         GeneralSettingSpecConstants.PORT.newSetting(
                                 Port.valueOf(SOCKS_SERVER_PORT_2_USING_SOCKS5_USERPASSMETHOD)),
                         Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
@@ -107,6 +112,8 @@ public class EchoThroughChainedSocks5ClientToSocksServersUsingSocks5UserpassMeth
                                 UserRepositorySpecConstants.STRING_SOURCE_USER_REPOSITORY.newUserRepository(
                                         "Jasmine:mission%3Aimpossible")))),
                 Configuration.newUnmodifiableInstance(Settings.of(
+                        GeneralSettingSpecConstants.INTERNAL_FACING_BIND_HOST.newSetting(
+                                Host.newInstance(InetAddress.getLoopbackAddress().getHostAddress())),
                         GeneralSettingSpecConstants.PORT.newSetting(
                                 Port.valueOf(SOCKS_SERVER_PORT_3_USING_SOCKS5_USERPASSMETHOD)),
                         Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(

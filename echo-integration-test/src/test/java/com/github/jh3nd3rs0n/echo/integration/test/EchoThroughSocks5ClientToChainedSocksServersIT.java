@@ -7,6 +7,7 @@ import com.github.jh3nd3rs0n.echo.EchoServer;
 import com.github.jh3nd3rs0n.jargyle.client.Properties;
 import com.github.jh3nd3rs0n.jargyle.client.Scheme;
 import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
+import com.github.jh3nd3rs0n.jargyle.common.net.Host;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.server.*;
 import com.github.jh3nd3rs0n.test.help.TestStringConstants;
@@ -47,6 +48,8 @@ public class EchoThroughSocks5ClientToChainedSocksServersIT {
     private static List<Configuration> newChainedConfigurations() {
         return Arrays.asList(
                 Configuration.newUnmodifiableInstance(Settings.of(
+                        GeneralSettingSpecConstants.INTERNAL_FACING_BIND_HOST.newSetting(
+                                Host.newInstance(InetAddress.getLoopbackAddress().getHostAddress())),
                         GeneralSettingSpecConstants.PORT.newSetting(
                                 Port.valueOf(CHAINED_SOCKS_SERVER_PORT_1)),
                         ChainingGeneralSettingSpecConstants.CHAINING_SOCKS_SERVER_URI.newSetting(
@@ -54,6 +57,8 @@ public class EchoThroughSocks5ClientToChainedSocksServersIT {
                                         InetAddress.getLoopbackAddress().getHostAddress(),
                                         Integer.valueOf(CHAINED_SOCKS_SERVER_PORT_2))))),
                 Configuration.newUnmodifiableInstance(Settings.of(
+                        GeneralSettingSpecConstants.INTERNAL_FACING_BIND_HOST.newSetting(
+                                Host.newInstance(InetAddress.getLoopbackAddress().getHostAddress())),
                         GeneralSettingSpecConstants.PORT.newSetting(
                                 Port.valueOf(CHAINED_SOCKS_SERVER_PORT_2)),
                         ChainingGeneralSettingSpecConstants.CHAINING_SOCKS_SERVER_URI.newSetting(
@@ -61,6 +66,8 @@ public class EchoThroughSocks5ClientToChainedSocksServersIT {
                                         InetAddress.getLoopbackAddress().getHostAddress(),
                                         Integer.valueOf(CHAINED_SOCKS_SERVER_PORT_3))))),
                 Configuration.newUnmodifiableInstance(Settings.of(
+                        GeneralSettingSpecConstants.INTERNAL_FACING_BIND_HOST.newSetting(
+                                Host.newInstance(InetAddress.getLoopbackAddress().getHostAddress())),
                         GeneralSettingSpecConstants.PORT.newSetting(
                                 Port.valueOf(CHAINED_SOCKS_SERVER_PORT_3)))));
     }

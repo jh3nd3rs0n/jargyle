@@ -8,6 +8,7 @@ import com.github.jh3nd3rs0n.jargyle.client.Properties;
 import com.github.jh3nd3rs0n.jargyle.client.Scheme;
 import com.github.jh3nd3rs0n.jargyle.client.Socks5PropertySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
+import com.github.jh3nd3rs0n.jargyle.common.net.Host;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Method;
@@ -52,6 +53,8 @@ public class EchoThroughSocks5ClientToChainedSocksServersUsingSocks5UserpassMeth
     private static List<Configuration> newChainedConfigurationsUsingSocks5UserpassMethod() {
         return Arrays.asList(
                 Configuration.newUnmodifiableInstance(Settings.of(
+                        GeneralSettingSpecConstants.INTERNAL_FACING_BIND_HOST.newSetting(
+                                Host.newInstance(InetAddress.getLoopbackAddress().getHostAddress())),
                         GeneralSettingSpecConstants.PORT.newSetting(
                                 Port.valueOf(CHAINED_SOCKS_SERVER_PORT_1_USING_SOCKS5_USERPASSMETHOD)),
                         Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
@@ -70,6 +73,8 @@ public class EchoThroughSocks5ClientToChainedSocksServersUsingSocks5UserpassMeth
                         ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_USERPASSMETHOD_PASSWORD.newSetting(
                                 EncryptedPassword.newInstance("mission:impossible".toCharArray())))),
                 Configuration.newUnmodifiableInstance(Settings.of(
+                        GeneralSettingSpecConstants.INTERNAL_FACING_BIND_HOST.newSetting(
+                                Host.newInstance(InetAddress.getLoopbackAddress().getHostAddress())),
                         GeneralSettingSpecConstants.PORT.newSetting(
                                 Port.valueOf(CHAINED_SOCKS_SERVER_PORT_2_USING_SOCKS5_USERPASSMETHOD)),
                         Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
@@ -88,6 +93,8 @@ public class EchoThroughSocks5ClientToChainedSocksServersUsingSocks5UserpassMeth
                         ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_USERPASSMETHOD_PASSWORD.newSetting(
                                 EncryptedPassword.newInstance("safeDriversSave40%".toCharArray())))),
                 Configuration.newUnmodifiableInstance(Settings.of(
+                        GeneralSettingSpecConstants.INTERNAL_FACING_BIND_HOST.newSetting(
+                                Host.newInstance(InetAddress.getLoopbackAddress().getHostAddress())),
                         GeneralSettingSpecConstants.PORT.newSetting(
                                 Port.valueOf(CHAINED_SOCKS_SERVER_PORT_3_USING_SOCKS5_USERPASSMETHOD)),
                         Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(

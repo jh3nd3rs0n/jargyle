@@ -5,6 +5,7 @@ import com.github.jh3nd3rs0n.echo.DatagramEchoServer;
 import com.github.jh3nd3rs0n.echo.EchoClient;
 import com.github.jh3nd3rs0n.echo.EchoServer;
 import com.github.jh3nd3rs0n.jargyle.client.*;
+import com.github.jh3nd3rs0n.jargyle.common.net.Host;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.server.*;
 import com.github.jh3nd3rs0n.test.help.TestStringConstants;
@@ -70,9 +71,13 @@ public class EchoThroughChainedSocks5ClientToSocksServersUsingSslIT {
     private static List<Configuration> newConfigurationsUsingSsl() {
         return Arrays.asList(
                 Configuration.newUnmodifiableInstance(Settings.of(
+                        GeneralSettingSpecConstants.INTERNAL_FACING_BIND_HOST.newSetting(
+                                Host.newInstance(InetAddress.getLoopbackAddress().getHostAddress())),
                         GeneralSettingSpecConstants.PORT.newSetting(
                                 Port.valueOf(SOCKS_SERVER_PORT_1_USING_SSL)))),
                 Configuration.newUnmodifiableInstance(Settings.of(
+                        GeneralSettingSpecConstants.INTERNAL_FACING_BIND_HOST.newSetting(
+                                Host.newInstance(InetAddress.getLoopbackAddress().getHostAddress())),
                         GeneralSettingSpecConstants.PORT.newSetting(
                                 Port.valueOf(SOCKS_SERVER_PORT_2_USING_SSL)),
                         DtlsSettingSpecConstants.DTLS_ENABLED.newSetting(Boolean.TRUE),

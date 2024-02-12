@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.concurrent.TimeUnit;
 
+import com.github.jh3nd3rs0n.jargyle.common.net.Host;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.server.SimpleKdcServer;
 import org.apache.kerby.kerberos.kerb.server.impl.DefaultInternalKdcServerImpl;
@@ -82,6 +83,8 @@ public class EchoThroughSocks5ClientToSocksServerUsingSocks5GssapiMethodIT {
 
 	private static Configuration newConfigurationUsingSocks5GssapiMethod() {
 		return Configuration.newUnmodifiableInstance(Settings.of(
+				GeneralSettingSpecConstants.INTERNAL_FACING_BIND_HOST.newSetting(
+						Host.newInstance(InetAddress.getLoopbackAddress().getHostAddress())),
 				GeneralSettingSpecConstants.PORT.newSetting(
 						Port.valueOf(SOCKS_SERVER_PORT_USING_SOCKS5_GSSAPIMETHOD)),
 				Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
@@ -90,6 +93,8 @@ public class EchoThroughSocks5ClientToSocksServerUsingSocks5GssapiMethodIT {
 	
 	private static Configuration newConfigurationUsingSocks5GssapiMethodNecReferenceImpl() {
 		return Configuration.newUnmodifiableInstance(Settings.of(
+				GeneralSettingSpecConstants.INTERNAL_FACING_BIND_HOST.newSetting(
+						Host.newInstance(InetAddress.getLoopbackAddress().getHostAddress())),
 				GeneralSettingSpecConstants.PORT.newSetting(
 						Port.valueOf(
 								SOCKS_SERVER_PORT_USING_SOCKS5_GSSAPIMETHOD_NEC_REFERENCE_IMPL)),

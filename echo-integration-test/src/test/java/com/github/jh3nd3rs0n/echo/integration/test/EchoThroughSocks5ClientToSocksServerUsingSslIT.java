@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.util.concurrent.TimeUnit;
 
+import com.github.jh3nd3rs0n.jargyle.common.net.Host;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -53,6 +54,8 @@ public class EchoThroughSocks5ClientToSocksServerUsingSslIT {
 
 	private static Configuration newConfigurationUsingSsl() {
 		return Configuration.newUnmodifiableInstance(Settings.of(
+				GeneralSettingSpecConstants.INTERNAL_FACING_BIND_HOST.newSetting(
+						Host.newInstance(InetAddress.getLoopbackAddress().getHostAddress())),
 				GeneralSettingSpecConstants.PORT.newSetting(
 						Port.valueOf(SOCKS_SERVER_PORT_USING_SSL)),
 				DtlsSettingSpecConstants.DTLS_ENABLED.newSetting(Boolean.TRUE),
@@ -69,6 +72,8 @@ public class EchoThroughSocks5ClientToSocksServerUsingSslIT {
 	
 	private static Configuration newConfigurationUsingSslAndRequestedClientAuth() {
 		return Configuration.newUnmodifiableInstance(Settings.of(
+				GeneralSettingSpecConstants.INTERNAL_FACING_BIND_HOST.newSetting(
+						Host.newInstance(InetAddress.getLoopbackAddress().getHostAddress())),
 				GeneralSettingSpecConstants.PORT.newSetting(
 						Port.valueOf(
 								SOCKS_SERVER_PORT_USING_SSL_AND_REQUESTED_CLIENT_AUTH)),
@@ -98,6 +103,8 @@ public class EchoThroughSocks5ClientToSocksServerUsingSslIT {
 	
 	private static Configuration newConfigurationUsingSslAndRequiredClientAuth() {
 		return Configuration.newUnmodifiableInstance(Settings.of(
+				GeneralSettingSpecConstants.INTERNAL_FACING_BIND_HOST.newSetting(
+						Host.newInstance(InetAddress.getLoopbackAddress().getHostAddress())),
 				GeneralSettingSpecConstants.PORT.newSetting(
 						Port.valueOf(
 								SOCKS_SERVER_PORT_USING_SSL_AND_REQUIRED_CLIENT_AUTH)),

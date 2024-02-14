@@ -39,7 +39,7 @@ public class EchoThroughSocks5ClientToSocksServerIT {
 
 	@Rule
 	public Timeout globalTimeout = Timeout.builder()
-			.withTimeout(5, TimeUnit.MINUTES)
+			.withTimeout(5, TimeUnit.SECONDS)
 			.withLookingForStuckThread(true)
 			.build();
 

@@ -71,7 +71,7 @@
 			<plugin>
 				<artifactId>maven-failsafe-plugin</artifactId>
 				<configuration>
-					<argLine>-Djdk.virtualThreadScheduler.parallelism=4</argLine>
+					<argLine>-Djdk.virtualThreadScheduler.parallelism=10</argLine>
 				</configuration>
 			</plugin>
 		</plugins>

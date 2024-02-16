@@ -55,7 +55,7 @@
             <plugin>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <configuration>
-                    <argLine>-Djdk.virtualThreadScheduler.parallelism=4 -Dperformance.reports.directory=${project.build.directory}${file.separator}performance-reports${file.separator}</argLine>
+                    <argLine>-Djdk.virtualThreadScheduler.parallelism=10 -Dperformance.reports.directory=${project.build.directory}${file.separator}performance-reports${file.separator}</argLine>
                 </configuration>
             </plugin>
         </plugins>

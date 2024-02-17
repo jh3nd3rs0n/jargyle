@@ -9,11 +9,13 @@ import java.net.SocketTimeoutException;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 
 import com.github.jh3nd3rs0n.jargyle.common.net.HostAddress;
+import com.github.jh3nd3rs0n.jargyle.server.internal.concurrent.ThreadFactoryHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +33,6 @@ import com.github.jh3nd3rs0n.jargyle.server.Rule;
 import com.github.jh3nd3rs0n.jargyle.server.RuleContext;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5RuleArgSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5RuleConditionSpecConstants;
-import com.github.jh3nd3rs0n.jargyle.server.internal.concurrent.ExecutorHelper;
 import com.github.jh3nd3rs0n.jargyle.server.internal.server.Rules;
 
 final class UdpRelayServer {
@@ -762,7 +763,8 @@ final class UdpRelayServer {
 			throw new IllegalStateException("UdpRelayServer already started");
 		}
 		this.idleStartTime.set(System.currentTimeMillis());
-		this.executor = ExecutorHelper.newExecutor();
+		this.executor = Executors.newFixedThreadPool(
+				2, ThreadFactoryHelper.getThreadFactory());
 		this.executor.execute(new InboundPacketsWorker(this));
 		this.executor.execute(new OutboundPacketsWorker(this));
 	}

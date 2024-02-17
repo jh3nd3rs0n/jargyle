@@ -9,15 +9,16 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 
+import com.github.jh3nd3rs0n.jargyle.server.internal.concurrent.ThreadFactoryHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
 import com.github.jh3nd3rs0n.jargyle.internal.throwable.ThrowableHelper;
-import com.github.jh3nd3rs0n.jargyle.server.internal.concurrent.ExecutorHelper;
 
 public final class Relay {
 	
@@ -273,7 +274,8 @@ public final class Relay {
 			throw new IllegalStateException("Relay already started");
 		}
 		this.idleStartTime.set(System.currentTimeMillis());
-		this.executor = ExecutorHelper.newExecutor();
+		this.executor = Executors.newFixedThreadPool(
+				2, ThreadFactoryHelper.getThreadFactory());
 		this.executor.execute(new InboundDataWorker(this));
 		this.executor.execute(new OutboundDataWorker(this));
 	}

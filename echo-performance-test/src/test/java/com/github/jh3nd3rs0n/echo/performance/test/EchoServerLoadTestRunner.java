@@ -1,12 +1,13 @@
 package com.github.jh3nd3rs0n.echo.performance.test;
 
 import com.github.jh3nd3rs0n.echo.EchoServer;
-import com.github.jh3nd3rs0n.echo.ExecutorHelper;
+import com.github.jh3nd3rs0n.echo.ThreadFactoryHelper;
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public final class EchoServerLoadTestRunner {
 
@@ -37,7 +38,8 @@ public final class EchoServerLoadTestRunner {
         EchoServer echoServer = EchoServerHelper.newEchoServer();
         LoadTestRunnerResults loadTestRunnerResults = new LoadTestRunnerResults(
                 this.threadCount, this.delayBetweenThreadsStarting);
-        ExecutorService executor = ExecutorHelper.newExecutor();
+        ExecutorService executor = Executors.newCachedThreadPool(
+                ThreadFactoryHelper.getThreadFactory());
         try {
             String socksServerHostAddress = null;
             int socksServerPort = -1;

@@ -6,14 +6,15 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import com.github.jh3nd3rs0n.jargyle.server.internal.concurrent.ThreadFactoryHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
-import com.github.jh3nd3rs0n.jargyle.server.internal.concurrent.ExecutorHelper;
 
 public final class Listener implements Runnable {
 
@@ -31,7 +32,8 @@ public final class Listener implements Runnable {
 	}
 	
 	public void run() {
-		ExecutorService executor = ExecutorHelper.newExecutor();
+		ExecutorService executor = Executors.newCachedThreadPool(
+				ThreadFactoryHelper.getThreadFactory());
 		try {
 			while (true) {
 				try {

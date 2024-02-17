@@ -28,7 +28,8 @@ public final class EchoServer {
 		}
 	
 		public void run() {
-			ExecutorService executor = ExecutorHelper.newExecutor();
+			ExecutorService executor = Executors.newCachedThreadPool(
+					ThreadFactoryHelper.getThreadFactory());
 			try {
 				while (true) {
 					try {

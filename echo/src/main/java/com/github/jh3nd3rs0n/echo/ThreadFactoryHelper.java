@@ -45,7 +45,7 @@ public final class ThreadFactoryHelper {
     }
 
     public static ThreadFactory getThreadFactory() {
-        if (!"true".equals(System.getProperty(
+        if ("false".equals(System.getProperty(
                 USE_VIRTUAL_THREADS_SYSTEM_PROPERTY_NAME))) {
             return Executors.defaultThreadFactory();
         }

@@ -13,7 +13,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 
-import com.github.jh3nd3rs0n.jargyle.server.internal.concurrent.ThreadFactoryHelper;
+import com.github.jh3nd3rs0n.jargyle.server.internal.concurrent.ExecutorsHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -275,7 +275,7 @@ public final class Relay {
 		}
 		this.idleStartTime.set(System.currentTimeMillis());
 		this.executor = Executors.newFixedThreadPool(
-				2, ThreadFactoryHelper.getThreadFactory());
+				2, ExecutorsHelper.possibleVirtualThreadFactory());
 		this.executor.execute(new InboundDataWorker(this));
 		this.executor.execute(new OutboundDataWorker(this));
 	}

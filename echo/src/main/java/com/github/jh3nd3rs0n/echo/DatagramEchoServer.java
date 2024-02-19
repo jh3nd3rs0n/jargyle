@@ -24,8 +24,9 @@ public final class DatagramEchoServer {
 		}
 		
 		public void run() {
-			ExecutorService executor = Executors.newCachedThreadPool(
-					ThreadFactoryHelper.getThreadFactory());
+			ExecutorService executor =
+					ExecutorsHelper.newPossibleVirtualThreadPerTaskExecutor(
+							ExecutorsHelper.DefaultExecutorFactory.CACHED_THREAD_POOL_FACTORY);
 			try {
 				while (true) {
 					try {

@@ -1,5 +1,10 @@
 package com.github.jh3nd3rs0n.echo;
 
+import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
+import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -9,11 +14,6 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
-import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public final class EchoServer {
 
@@ -28,8 +28,9 @@ public final class EchoServer {
 		}
 	
 		public void run() {
-			ExecutorService executor = Executors.newCachedThreadPool(
-					ThreadFactoryHelper.getThreadFactory());
+			ExecutorService executor =
+					ExecutorsHelper.newPossibleVirtualThreadPerTaskExecutor(
+							ExecutorsHelper.DefaultExecutorFactory.CACHED_THREAD_POOL_FACTORY);
 			try {
 				while (true) {
 					try {

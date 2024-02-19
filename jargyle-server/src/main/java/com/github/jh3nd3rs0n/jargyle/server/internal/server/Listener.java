@@ -1,20 +1,18 @@
 package com.github.jh3nd3rs0n.jargyle.server.internal.server;
 
+import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
+import com.github.jh3nd3rs0n.jargyle.server.Configuration;
+import com.github.jh3nd3rs0n.jargyle.server.internal.concurrent.ExecutorsHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import com.github.jh3nd3rs0n.jargyle.server.internal.concurrent.ThreadFactoryHelper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
-import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 
 public final class Listener implements Runnable {
 
@@ -32,8 +30,9 @@ public final class Listener implements Runnable {
 	}
 	
 	public void run() {
-		ExecutorService executor = Executors.newCachedThreadPool(
-				ThreadFactoryHelper.getThreadFactory());
+		ExecutorService executor =
+				ExecutorsHelper.newPossibleVirtualThreadPerTaskExecutor(
+						ExecutorsHelper.DefaultExecutorFactory.CACHED_THREAD_POOL_FACTORY);
 		try {
 			while (true) {
 				try {

@@ -82,82 +82,82 @@ public class PortRangeTest {
     }
 
     @Test
-    public void testHasPort01() {
+    public void testCoversPort01() {
         PortRange portRange = PortRange.of(
                 Port.valueOf(Port.MIN_INT_VALUE),
                 Port.valueOf(Port.MAX_INT_VALUE));
-        Assert.assertTrue(portRange.has(Port.valueOf(Port.MIN_INT_VALUE)));
+        Assert.assertTrue(portRange.covers(Port.valueOf(Port.MIN_INT_VALUE)));
     }
 
     @Test
-    public void testHasPort02() {
+    public void testCoversPort02() {
         PortRange portRange = PortRange.of(
                 Port.valueOf(Port.MIN_INT_VALUE),
                 Port.valueOf(Port.MAX_INT_VALUE));
-        Assert.assertTrue(portRange.has(Port.valueOf(Port.MAX_INT_VALUE)));
+        Assert.assertTrue(portRange.covers(Port.valueOf(Port.MAX_INT_VALUE)));
     }
 
     @Test
-    public void testHasPort03() {
+    public void testCoversPort03() {
         PortRange portRange = PortRange.of(
                 Port.valueOf(Port.MIN_INT_VALUE),
                 Port.valueOf(Port.MAX_INT_VALUE));
-        Assert.assertTrue(portRange.has(Port.valueOf(1080)));
+        Assert.assertTrue(portRange.covers(Port.valueOf(1080)));
     }
 
     @Test
-    public void testHasPort04() {
+    public void testCoversPort04() {
         PortRange portRange = PortRange.of(
                 Port.valueOf(Port.MIN_INT_VALUE));
-        Assert.assertTrue(portRange.has(Port.valueOf(Port.MIN_INT_VALUE)));
+        Assert.assertTrue(portRange.covers(Port.valueOf(Port.MIN_INT_VALUE)));
     }
 
     @Test
-    public void testHasPort05() {
+    public void testCoversPort05() {
         PortRange portRange = PortRange.of(
                 Port.valueOf(Port.MAX_INT_VALUE));
-        Assert.assertTrue(portRange.has(Port.valueOf(Port.MAX_INT_VALUE)));
+        Assert.assertTrue(portRange.covers(Port.valueOf(Port.MAX_INT_VALUE)));
     }
 
     @Test
-    public void testHasPort06() {
+    public void testCoversPort06() {
         PortRange portRange = PortRange.of(Port.valueOf(1080));
-        Assert.assertTrue(portRange.has(Port.valueOf(1080)));
+        Assert.assertTrue(portRange.covers(Port.valueOf(1080)));
     }
 
     @Test
-    public void testHasPort07() {
+    public void testCoversPort07() {
         PortRange portRange = PortRange.of(
                 Port.valueOf(1000), Port.valueOf(2000));
-        Assert.assertTrue(portRange.has(Port.valueOf(1000)));
+        Assert.assertTrue(portRange.covers(Port.valueOf(1000)));
     }
 
     @Test
-    public void testHasPort08() {
+    public void testCoversPort08() {
         PortRange portRange = PortRange.of(
                 Port.valueOf(1000), Port.valueOf(2000));
-        Assert.assertTrue(portRange.has(Port.valueOf(2000)));
+        Assert.assertTrue(portRange.covers(Port.valueOf(2000)));
     }
 
     @Test
-    public void testHasPort09() {
+    public void testCoversPort09() {
         PortRange portRange = PortRange.of(
                 Port.valueOf(1000), Port.valueOf(2000));
-        Assert.assertTrue(portRange.has(Port.valueOf(1080)));
+        Assert.assertTrue(portRange.covers(Port.valueOf(1080)));
     }
 
     @Test
-    public void testHasPort10() {
+    public void testCoversPort10() {
         PortRange portRange = PortRange.of(
                 Port.valueOf(1000), Port.valueOf(2000));
-        Assert.assertFalse(portRange.has(Port.valueOf(999)));
+        Assert.assertFalse(portRange.covers(Port.valueOf(999)));
     }
 
     @Test
-    public void testHasPort11() {
+    public void testCoversPort11() {
         PortRange portRange = PortRange.of(
                 Port.valueOf(1000), Port.valueOf(2000));
-        Assert.assertFalse(portRange.has(Port.valueOf(2001)));
+        Assert.assertFalse(portRange.covers(Port.valueOf(2001)));
     }
 
     @Test

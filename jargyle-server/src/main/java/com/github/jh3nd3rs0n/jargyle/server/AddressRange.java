@@ -30,7 +30,7 @@ public abstract class AddressRange {
 				"invalid address range: %s", s));
 	}
 	
-	public abstract boolean has(final String address);
+	public abstract boolean covers(final String address);
 	
 	@Override
 	public abstract boolean equals(Object obj);

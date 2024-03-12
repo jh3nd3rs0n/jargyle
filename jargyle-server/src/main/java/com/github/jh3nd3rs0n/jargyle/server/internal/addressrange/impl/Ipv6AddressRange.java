@@ -73,7 +73,7 @@ public final class Ipv6AddressRange extends AddressRange {
 	}
 	
 	@Override
-	public boolean has(final String address) {
+	public boolean covers(final String address) {
 		Host host = Host.newInstance(address);
 		if (!(host instanceof HostIpv6Address)) {
 			return false;

@@ -7,47 +7,47 @@ public class AddressRangeTest {
 
 	@Test
 	public void testContains01() {
-		Assert.assertTrue(AddressRange.newInstanceFrom("0.0.0.0").has("0.0.0.0"));
+		Assert.assertTrue(AddressRange.newInstanceFrom("0.0.0.0").covers("0.0.0.0"));
 	}
 
 	@Test
 	public void testContains02() {
-		Assert.assertTrue(AddressRange.newInstanceFrom("0.0.0.0").has("0.0.0"));
+		Assert.assertTrue(AddressRange.newInstanceFrom("0.0.0.0").covers("0.0.0"));
 	}
 
 	@Test
 	public void testContains03() {
-		Assert.assertTrue(AddressRange.newInstanceFrom("0.0.0.0").has("0.0"));
+		Assert.assertTrue(AddressRange.newInstanceFrom("0.0.0.0").covers("0.0"));
 	}
 
 	@Test
 	public void testContains04() {
-		Assert.assertTrue(AddressRange.newInstanceFrom("0.0.0.0").has("0"));
+		Assert.assertTrue(AddressRange.newInstanceFrom("0.0.0.0").covers("0"));
 	}
 
 	@Test
 	public void testContains05() {
-		Assert.assertTrue(AddressRange.newInstanceFrom("126.255.255.2-127.0.0.5").has("127.0.0.1"));
+		Assert.assertTrue(AddressRange.newInstanceFrom("126.255.255.2-127.0.0.5").covers("127.0.0.1"));
 	}
 
 	@Test
 	public void testContains06() {
-		Assert.assertTrue(AddressRange.newInstanceFrom("::-::2").has("::1"));
+		Assert.assertTrue(AddressRange.newInstanceFrom("::-::2").covers("::1"));
 	}
 
 	@Test
 	public void testContains07() {
-		Assert.assertTrue(AddressRange.newInstanceFrom("google.com").has("google.com"));
+		Assert.assertTrue(AddressRange.newInstanceFrom("google.com").covers("google.com"));
 	}
 
 	@Test
 	public void testContains08() {
-		Assert.assertTrue(AddressRange.newInstanceFrom("regex:.*google\\.com\\z").has("google.com"));
+		Assert.assertTrue(AddressRange.newInstanceFrom("regex:.*google\\.com\\z").covers("google.com"));
 	}
 
 	@Test
 	public void testContains09() {
-		Assert.assertTrue(AddressRange.newInstanceFrom("regex:.*google\\.com\\z").has("anothergoogle.com"));
+		Assert.assertTrue(AddressRange.newInstanceFrom("regex:.*google\\.com\\z").covers("anothergoogle.com"));
 	}
 
 }

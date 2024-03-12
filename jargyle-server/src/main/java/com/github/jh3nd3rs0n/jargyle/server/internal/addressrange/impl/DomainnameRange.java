@@ -36,7 +36,7 @@ public final class DomainnameRange extends AddressRange {
 	}
 	
 	@Override
-	public boolean has(final String address) {
+	public boolean covers(final String address) {
 		if (!(Host.newInstance(address) instanceof HostName)) {
 			return false;
 		}

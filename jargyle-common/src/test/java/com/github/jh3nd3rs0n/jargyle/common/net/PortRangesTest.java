@@ -86,57 +86,57 @@ public class PortRangesTest {
     }
 
     @Test
-    public void testHasPort01() {
+    public void testAnyCoversPort01() {
         PortRanges portRanges = PortRanges.of(
                 PortRange.of(
                         Port.valueOf(4000), Port.valueOf(5000)),
                 PortRange.of(Port.valueOf(8000)));
-        Assert.assertTrue(portRanges.has(Port.valueOf(8000)));
+        Assert.assertTrue(portRanges.anyCovers(Port.valueOf(8000)));
     }
 
     @Test
-    public void testHasPort02() {
+    public void testAnyCoversPort02() {
         PortRanges portRanges = PortRanges.of(
                 PortRange.of(
                         Port.valueOf(4000), Port.valueOf(5000)),
                 PortRange.of(Port.valueOf(8000)));
-        Assert.assertTrue(portRanges.has(Port.valueOf(4500)));
+        Assert.assertTrue(portRanges.anyCovers(Port.valueOf(4500)));
     }
 
     @Test
-    public void testHasPort03() {
+    public void testAnyCoversPort03() {
         PortRanges portRanges = PortRanges.of(
                 PortRange.of(
                         Port.valueOf(4000), Port.valueOf(5000)),
                 PortRange.of(Port.valueOf(8000)));
-        Assert.assertTrue(portRanges.has(Port.valueOf(4000)));
+        Assert.assertTrue(portRanges.anyCovers(Port.valueOf(4000)));
     }
 
     @Test
-    public void testHasPort04() {
+    public void testAnyCoversPort04() {
         PortRanges portRanges = PortRanges.of(
                 PortRange.of(
                         Port.valueOf(4000), Port.valueOf(5000)),
                 PortRange.of(Port.valueOf(8000)));
-        Assert.assertTrue(portRanges.has(Port.valueOf(5000)));
+        Assert.assertTrue(portRanges.anyCovers(Port.valueOf(5000)));
     }
 
     @Test
-    public void testHasPort05() {
+    public void testAnyCoversPort05() {
         PortRanges portRanges = PortRanges.of(
                 PortRange.of(
                         Port.valueOf(4000), Port.valueOf(5000)),
                 PortRange.of(Port.valueOf(8000)));
-        Assert.assertFalse(portRanges.has(Port.valueOf(3999)));
+        Assert.assertFalse(portRanges.anyCovers(Port.valueOf(3999)));
     }
 
     @Test
-    public void testHasPort06() {
+    public void testAnyCoversPort06() {
         PortRanges portRanges = PortRanges.of(
                 PortRange.of(
                         Port.valueOf(4000), Port.valueOf(5000)),
                 PortRange.of(Port.valueOf(8000)));
-        Assert.assertFalse(portRanges.has(Port.valueOf(5001)));
+        Assert.assertFalse(portRanges.anyCovers(Port.valueOf(5001)));
     }
 
     @Test

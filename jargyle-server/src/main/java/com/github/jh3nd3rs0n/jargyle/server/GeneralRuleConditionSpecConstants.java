@@ -5,7 +5,7 @@ import java.util.Map;
 
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueSpecDoc;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueSpecsDoc;
-import com.github.jh3nd3rs0n.jargyle.server.internal.ruleconditionspec.impl.AddressRangeContainsAddressRuleConditionSpec;
+import com.github.jh3nd3rs0n.jargyle.server.internal.ruleconditionspec.impl.AddressRangeCoversAddressRuleConditionSpec;
 
 @NameValuePairValueSpecsDoc(
 		description = "",
@@ -21,7 +21,7 @@ public final class GeneralRuleConditionSpecConstants {
 			syntax = "clientAddress=ADDRESS_RANGE",
 			valueType = AddressRange.class
 	)	
-	public static final RuleConditionSpec<AddressRange, String> CLIENT_ADDRESS = RULE_CONDITION_SPECS.addThenGet(new AddressRangeContainsAddressRuleConditionSpec(
+	public static final RuleConditionSpec<AddressRange, String> CLIENT_ADDRESS = RULE_CONDITION_SPECS.addThenGet(new AddressRangeCoversAddressRuleConditionSpec(
 			"clientAddress",
 			GeneralRuleArgSpecConstants.CLIENT_ADDRESS));
 	
@@ -32,7 +32,7 @@ public final class GeneralRuleConditionSpecConstants {
 			syntax = "socksServerAddress=ADDRESS_RANGE",
 			valueType = AddressRange.class
 	)	
-	public static final RuleConditionSpec<AddressRange, String> SOCKS_SERVER_ADDRESS = RULE_CONDITION_SPECS.addThenGet(new AddressRangeContainsAddressRuleConditionSpec(
+	public static final RuleConditionSpec<AddressRange, String> SOCKS_SERVER_ADDRESS = RULE_CONDITION_SPECS.addThenGet(new AddressRangeCoversAddressRuleConditionSpec(
 			"socksServerAddress",
 			GeneralRuleArgSpecConstants.SOCKS_SERVER_ADDRESS));
 	

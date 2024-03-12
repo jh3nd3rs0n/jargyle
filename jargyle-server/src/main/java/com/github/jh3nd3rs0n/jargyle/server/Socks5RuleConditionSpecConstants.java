@@ -9,8 +9,8 @@ import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueSpecD
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueSpecsDoc;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Command;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Method;
-import com.github.jh3nd3rs0n.jargyle.server.internal.ruleconditionspec.impl.AddressRangeContainsAddressRuleConditionSpec;
-import com.github.jh3nd3rs0n.jargyle.server.internal.ruleconditionspec.impl.PortRangeContainsPortRuleConditionSpec;
+import com.github.jh3nd3rs0n.jargyle.server.internal.ruleconditionspec.impl.AddressRangeCoversAddressRuleConditionSpec;
+import com.github.jh3nd3rs0n.jargyle.server.internal.ruleconditionspec.impl.PortRangeCoversPortRuleConditionSpec;
 import com.github.jh3nd3rs0n.jargyle.server.internal.ruleconditionspec.impl.StringEqualsStringRuleConditionSpec;
 
 @NameValuePairValueSpecsDoc(
@@ -37,7 +37,7 @@ public final class Socks5RuleConditionSpecConstants {
 			syntax = "socks5.desiredDestinationAddress=ADDRESS_RANGE",
 			valueType = AddressRange.class
 	)	
-	public static final RuleConditionSpec<AddressRange, String> SOCKS5_DESIRED_DESTINATION_ADDRESS = RULE_CONDITION_SPECS.addThenGet(new AddressRangeContainsAddressRuleConditionSpec(
+	public static final RuleConditionSpec<AddressRange, String> SOCKS5_DESIRED_DESTINATION_ADDRESS = RULE_CONDITION_SPECS.addThenGet(new AddressRangeCoversAddressRuleConditionSpec(
 			"socks5.desiredDestinationAddress",
 			Socks5RuleArgSpecConstants.SOCKS5_DESIRED_DESTINATION_ADDRESS));
 	
@@ -47,7 +47,7 @@ public final class Socks5RuleConditionSpecConstants {
 			syntax = "socks5.desiredDestinationPort=PORT_RANGE",
 			valueType = PortRange.class
 	)	
-	public static final RuleConditionSpec<PortRange, Port> SOCKS5_DESIRED_DESTINATION_PORT = RULE_CONDITION_SPECS.addThenGet(new PortRangeContainsPortRuleConditionSpec(
+	public static final RuleConditionSpec<PortRange, Port> SOCKS5_DESIRED_DESTINATION_PORT = RULE_CONDITION_SPECS.addThenGet(new PortRangeCoversPortRuleConditionSpec(
 			"socks5.desiredDestinationPort",
 			Socks5RuleArgSpecConstants.SOCKS5_DESIRED_DESTINATION_PORT));
 	
@@ -67,7 +67,7 @@ public final class Socks5RuleConditionSpecConstants {
 			syntax = "socks5.secondServerBoundAddress=ADDRESS_RANGE",
 			valueType = AddressRange.class
 	)	
-	public static final RuleConditionSpec<AddressRange, String> SOCKS5_SECOND_SERVER_BOUND_ADDRESS = RULE_CONDITION_SPECS.addThenGet(new AddressRangeContainsAddressRuleConditionSpec(
+	public static final RuleConditionSpec<AddressRange, String> SOCKS5_SECOND_SERVER_BOUND_ADDRESS = RULE_CONDITION_SPECS.addThenGet(new AddressRangeCoversAddressRuleConditionSpec(
 			"socks5.secondServerBoundAddress",
 			Socks5RuleArgSpecConstants.SOCKS5_SECOND_SERVER_BOUND_ADDRESS));
 
@@ -77,7 +77,7 @@ public final class Socks5RuleConditionSpecConstants {
 			syntax = "socks5.secondServerBoundPort=PORT_RANGE",
 			valueType = PortRange.class
 	)	
-	public static final RuleConditionSpec<PortRange, Port> SOCKS5_SECOND_SERVER_BOUND_PORT = RULE_CONDITION_SPECS.addThenGet(new PortRangeContainsPortRuleConditionSpec(
+	public static final RuleConditionSpec<PortRange, Port> SOCKS5_SECOND_SERVER_BOUND_PORT = RULE_CONDITION_SPECS.addThenGet(new PortRangeCoversPortRuleConditionSpec(
 			"socks5.secondServerBoundPort",
 			Socks5RuleArgSpecConstants.SOCKS5_SECOND_SERVER_BOUND_PORT));	
 	
@@ -87,7 +87,7 @@ public final class Socks5RuleConditionSpecConstants {
 			syntax = "socks5.serverBoundAddress=ADDRESS_RANGE",
 			valueType = AddressRange.class
 	)	
-	public static final RuleConditionSpec<AddressRange, String> SOCKS5_SERVER_BOUND_ADDRESS = RULE_CONDITION_SPECS.addThenGet(new AddressRangeContainsAddressRuleConditionSpec(
+	public static final RuleConditionSpec<AddressRange, String> SOCKS5_SERVER_BOUND_ADDRESS = RULE_CONDITION_SPECS.addThenGet(new AddressRangeCoversAddressRuleConditionSpec(
 			"socks5.serverBoundAddress",
 			Socks5RuleArgSpecConstants.SOCKS5_SERVER_BOUND_ADDRESS));
 	
@@ -97,7 +97,7 @@ public final class Socks5RuleConditionSpecConstants {
 			syntax = "socks5.serverBoundPort=PORT_RANGE",
 			valueType = PortRange.class
 	)	
-	public static final RuleConditionSpec<PortRange, Port> SOCKS5_SERVER_BOUND_PORT = RULE_CONDITION_SPECS.addThenGet(new PortRangeContainsPortRuleConditionSpec(
+	public static final RuleConditionSpec<PortRange, Port> SOCKS5_SERVER_BOUND_PORT = RULE_CONDITION_SPECS.addThenGet(new PortRangeCoversPortRuleConditionSpec(
 			"socks5.serverBoundPort",
 			Socks5RuleArgSpecConstants.SOCKS5_SERVER_BOUND_PORT));
 
@@ -107,7 +107,7 @@ public final class Socks5RuleConditionSpecConstants {
 			syntax = "socks5.udp.inbound.desiredDestinationAddress=ADDRESS_RANGE",
 			valueType = AddressRange.class
 	)
-	public static final RuleConditionSpec<AddressRange, String> SOCKS5_UDP_INBOUND_DESIRED_DESTINATION_ADDRESS = RULE_CONDITION_SPECS.addThenGet(new AddressRangeContainsAddressRuleConditionSpec(
+	public static final RuleConditionSpec<AddressRange, String> SOCKS5_UDP_INBOUND_DESIRED_DESTINATION_ADDRESS = RULE_CONDITION_SPECS.addThenGet(new AddressRangeCoversAddressRuleConditionSpec(
 			"socks5.udp.inbound.desiredDestinationAddress",
 			Socks5RuleArgSpecConstants.SOCKS5_UDP_INBOUND_DESIRED_DESTINATION_ADDRESS));	
 	
@@ -117,7 +117,7 @@ public final class Socks5RuleConditionSpecConstants {
 			syntax = "socks5.udp.inbound.desiredDestinationPort=PORT_RANGE",
 			valueType = PortRange.class
 	)
-	public static final RuleConditionSpec<PortRange, Port> SOCKS5_UDP_INBOUND_DESIRED_DESTINATION_PORT = RULE_CONDITION_SPECS.addThenGet(new PortRangeContainsPortRuleConditionSpec(
+	public static final RuleConditionSpec<PortRange, Port> SOCKS5_UDP_INBOUND_DESIRED_DESTINATION_PORT = RULE_CONDITION_SPECS.addThenGet(new PortRangeCoversPortRuleConditionSpec(
 			"socks5.udp.inbound.desiredDestinationPort",
 			Socks5RuleArgSpecConstants.SOCKS5_UDP_INBOUND_DESIRED_DESTINATION_PORT));
 	
@@ -127,7 +127,7 @@ public final class Socks5RuleConditionSpecConstants {
 			syntax = "socks5.udp.inbound.sourceAddress=ADDRESS_RANGE",
 			valueType = AddressRange.class
 	)
-	public static final RuleConditionSpec<AddressRange, String> SOCKS5_UDP_INBOUND_SOURCE_ADDRESS = RULE_CONDITION_SPECS.addThenGet(new AddressRangeContainsAddressRuleConditionSpec(
+	public static final RuleConditionSpec<AddressRange, String> SOCKS5_UDP_INBOUND_SOURCE_ADDRESS = RULE_CONDITION_SPECS.addThenGet(new AddressRangeCoversAddressRuleConditionSpec(
 			"socks5.udp.inbound.sourceAddress",
 			Socks5RuleArgSpecConstants.SOCKS5_UDP_INBOUND_SOURCE_ADDRESS));
 	
@@ -137,7 +137,7 @@ public final class Socks5RuleConditionSpecConstants {
 			syntax = "socks5.udp.inbound.sourcePort=PORT_RANGE",
 			valueType = PortRange.class
 	)
-	public static final RuleConditionSpec<PortRange, Port> SOCKS5_UDP_INBOUND_SOURCE_PORT = RULE_CONDITION_SPECS.addThenGet(new PortRangeContainsPortRuleConditionSpec(
+	public static final RuleConditionSpec<PortRange, Port> SOCKS5_UDP_INBOUND_SOURCE_PORT = RULE_CONDITION_SPECS.addThenGet(new PortRangeCoversPortRuleConditionSpec(
 			"socks5.udp.inbound.sourcePort",
 			Socks5RuleArgSpecConstants.SOCKS5_UDP_INBOUND_SOURCE_PORT));
 	
@@ -147,7 +147,7 @@ public final class Socks5RuleConditionSpecConstants {
 			syntax = "socks5.udp.outbound.desiredDestinationAddress=ADDRESS_RANGE",
 			valueType = AddressRange.class
 	)
-	public static final RuleConditionSpec<AddressRange, String> SOCKS5_UDP_OUTBOUND_DESIRED_DESTINATION_ADDRESS = RULE_CONDITION_SPECS.addThenGet(new AddressRangeContainsAddressRuleConditionSpec(
+	public static final RuleConditionSpec<AddressRange, String> SOCKS5_UDP_OUTBOUND_DESIRED_DESTINATION_ADDRESS = RULE_CONDITION_SPECS.addThenGet(new AddressRangeCoversAddressRuleConditionSpec(
 			"socks5.udp.outbound.desiredDestinationAddress",
 			Socks5RuleArgSpecConstants.SOCKS5_UDP_OUTBOUND_DESIRED_DESTINATION_ADDRESS));	
 	
@@ -157,7 +157,7 @@ public final class Socks5RuleConditionSpecConstants {
 			syntax = "socks5.udp.outbound.desiredDestinationPort=PORT_RANGE",
 			valueType = PortRange.class
 	)
-	public static final RuleConditionSpec<PortRange, Port> SOCKS5_UDP_OUTBOUND_DESIRED_DESTINATION_PORT = RULE_CONDITION_SPECS.addThenGet(new PortRangeContainsPortRuleConditionSpec(
+	public static final RuleConditionSpec<PortRange, Port> SOCKS5_UDP_OUTBOUND_DESIRED_DESTINATION_PORT = RULE_CONDITION_SPECS.addThenGet(new PortRangeCoversPortRuleConditionSpec(
 			"socks5.udp.outbound.desiredDestinationPort",
 			Socks5RuleArgSpecConstants.SOCKS5_UDP_OUTBOUND_DESIRED_DESTINATION_PORT));
 	
@@ -167,7 +167,7 @@ public final class Socks5RuleConditionSpecConstants {
 			syntax = "socks5.udp.outbound.sourceAddress=ADDRESS_RANGE",
 			valueType = AddressRange.class
 	)
-	public static final RuleConditionSpec<AddressRange, String> SOCKS5_UDP_OUTBOUND_SOURCE_ADDRESS = RULE_CONDITION_SPECS.addThenGet(new AddressRangeContainsAddressRuleConditionSpec(
+	public static final RuleConditionSpec<AddressRange, String> SOCKS5_UDP_OUTBOUND_SOURCE_ADDRESS = RULE_CONDITION_SPECS.addThenGet(new AddressRangeCoversAddressRuleConditionSpec(
 			"socks5.udp.outbound.sourceAddress",
 			Socks5RuleArgSpecConstants.SOCKS5_UDP_OUTBOUND_SOURCE_ADDRESS));
 	
@@ -177,7 +177,7 @@ public final class Socks5RuleConditionSpecConstants {
 			syntax = "socks5.udp.outbound.sourcePort=PORT_RANGE",
 			valueType = PortRange.class
 	)
-	public static final RuleConditionSpec<PortRange, Port> SOCKS5_UDP_OUTBOUND_SOURCE_PORT = RULE_CONDITION_SPECS.addThenGet(new PortRangeContainsPortRuleConditionSpec(
+	public static final RuleConditionSpec<PortRange, Port> SOCKS5_UDP_OUTBOUND_SOURCE_PORT = RULE_CONDITION_SPECS.addThenGet(new PortRangeCoversPortRuleConditionSpec(
 			"socks5.udp.outbound.sourcePort",
 			Socks5RuleArgSpecConstants.SOCKS5_UDP_OUTBOUND_SOURCE_PORT));
 

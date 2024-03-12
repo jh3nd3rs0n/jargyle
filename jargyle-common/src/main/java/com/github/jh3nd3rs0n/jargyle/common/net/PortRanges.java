@@ -98,15 +98,15 @@ public final class PortRanges {
 
     /**
      * Returns a {@code boolean} value to indicate if this {@code PortRanges}
-     * has the provided {@code Port} value.
+     * has any {@code PortRange} that covers the provided {@code Port} value.
      *
      * @param port the provided {@code Port} value
      * @return a {@code boolean} value to indicate if this {@code PortRanges}
-     * has the provided {@code Port} value
+     * has any {@code PortRange} that covers the provided {@code Port} value
      */
-    public boolean has(final Port port) {
+    public boolean anyCovers(final Port port) {
         for (PortRange portRange : this.portRanges) {
-            if (portRange.has(port)) {
+            if (portRange.covers(port)) {
                 return true;
             }
         }

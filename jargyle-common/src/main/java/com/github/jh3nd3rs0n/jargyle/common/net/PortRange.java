@@ -143,13 +143,13 @@ public final class PortRange implements Iterable<Port> {
 
     /**
      * Returns a {@code boolean} value to indicate if this {@code PortRange}
-     * has the provided {@code Port} value.
+     * covers the provided {@code Port} value.
      *
      * @param port the provided {@code Port} value
      * @return a {@code boolean} value to indicate if this {@code PortRange}
-     * has the provided {@code Port} value
+     * covers the provided {@code Port} value
      */
-    public boolean has(final Port port) {
+    public boolean covers(final Port port) {
         return this.minPort.compareTo(port) <= 0
                 && this.maxPort.compareTo(port) >= 0;
     }

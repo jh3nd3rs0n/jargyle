@@ -87,18 +87,6 @@ public final class Routes {
 				new SettingToPropertyConverter(
 						DtlsPropertySpecConstants.DTLS_ENABLED_PROTOCOLS));
 		SETTING_CONVERTER_MAP.put(
-				ChainingDtlsSettingSpecConstants.CHAINING_DTLS_KEY_STORE_FILE, 
-				new SettingToPropertyConverter(
-						DtlsPropertySpecConstants.DTLS_KEY_STORE_FILE));
-		SETTING_CONVERTER_MAP.put(
-				ChainingDtlsSettingSpecConstants.CHAINING_DTLS_KEY_STORE_PASSWORD, 
-				new SettingToPropertyConverter(
-						DtlsPropertySpecConstants.DTLS_KEY_STORE_PASSWORD));
-		SETTING_CONVERTER_MAP.put(
-				ChainingDtlsSettingSpecConstants.CHAINING_DTLS_KEY_STORE_TYPE, 
-				new SettingToPropertyConverter(
-						DtlsPropertySpecConstants.DTLS_KEY_STORE_TYPE));
-		SETTING_CONVERTER_MAP.put(
 				ChainingDtlsSettingSpecConstants.CHAINING_DTLS_MAX_PACKET_SIZE, 
 				new SettingToPropertyConverter(
 						DtlsPropertySpecConstants.DTLS_MAX_PACKET_SIZE));

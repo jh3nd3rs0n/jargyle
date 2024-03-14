@@ -65,23 +65,11 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
     private volatile boolean inUse;
 
     /**
-     * The {@code boolean} value to indicate that client authentication is
-     * required.
-     */
-    private volatile boolean needClientAuth;
-
-    /**
      * The {@code boolean} value to indicate that this
      * {@code DtlsDatagramSocket} will operate in client mode, meaning it will
      * initiate the communication with the peer.
      */
     private volatile boolean useClientMode;
-
-    /**
-     * The {@code boolean} value to indicate that client authentication is
-     * requested.
-     */
-    private volatile boolean wantClientAuth;
 
     /**
      * Constructs a {@code DtlsDatagramSocket} with the existing
@@ -104,9 +92,7 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
         this.establishedConnectionCount = new AtomicInteger(0);
         this.inUse = false;
         this.maximumPacketSize = new AtomicInteger(0);
-        this.needClientAuth = false;
         this.useClientMode = false;
-        this.wantClientAuth = false;
     }
 
     /**
@@ -213,33 +199,6 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
     }
 
     /**
-     * Returns the {@code boolean} value to indicate that client authentication
-     * is required.
-     *
-     * @return the {@code boolean} value to indicate that client authentication
-     * is required
-     */
-    public boolean getNeedClientAuth() {
-        return this.needClientAuth;
-    }
-
-    /**
-     * Sets the {@code boolean} value to indicate that client authentication
-     * is required with the provided {@code boolean} value. An
-     * {@code IllegalStateException} is thrown if this
-     * {@code DtlsDatagramSocket} is in use (sending and/or receiving packets).
-     *
-     * @param need the provided {@code boolean} value to indicate that client
-     *             authentication is required
-     */
-    public void setNeedClientAuth(final boolean need) {
-        if (this.inUse) {
-            throw new IllegalStateException("DtlsDatagramSocket in use");
-        }
-        this.needClientAuth = need;
-    }
-
-    /**
      * Returns the {@code boolean} value to indicate that this
      * {@code DtlsDatagramSocket} will operate in client mode, meaning it will
      * initiate the communication with the peer.
@@ -267,33 +226,6 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
             throw new IllegalStateException("DtlsDatagramSocket in use");
         }
         this.useClientMode = mode;
-    }
-
-    /**
-     * Returns the {@code boolean} value to indicate that client authentication
-     * is requested.
-     *
-     * @return the {@code boolean} value to indicate that client authentication
-     * is requested
-     */
-    public boolean getWantClientAuth() {
-        return this.wantClientAuth;
-    }
-
-    /**
-     * Sets the {@code boolean} value to indicate that client authentication is
-     * requested with the provided {@code boolean} value. An
-     * {@code IllegalStateException} is thrown if this
-     * {@code DtlsDatagramSocket} is in use (sending and/or receiving packets).
-     *
-     * @param want the provided {@code boolean} value to indicate that client
-     *             authentication is requested
-     */
-    public void setWantClientAuth(final boolean want) {
-        if (this.inUse) {
-            throw new IllegalStateException("DtlsDatagramSocket in use");
-        }
-        this.wantClientAuth = want;
     }
 
     @Override
@@ -472,9 +404,7 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
             if (enabledProtocols.length > 0) {
                 engine.setEnabledProtocols(enabledProtocols);
             }
-            engine.setNeedClientAuth(dtlsDatagramSock.getNeedClientAuth());
             engine.setUseClientMode(dtlsDatagramSock.getUseClientMode());
-            engine.setWantClientAuth(dtlsDatagramSock.getWantClientAuth());
             int maxPacketSize = dtlsDatagramSock.getMaximumPacketSize();
             SSLParameters sslParameters = new SSLParameters();
             sslParameters.setMaximumPacketSize(maxPacketSize);

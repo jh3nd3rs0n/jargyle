@@ -43,7 +43,6 @@ final class DtlsDatagramSocketFactoryImpl extends DtlsDatagramSocketFactory {
 	
 	private SSLContext getDtlsContext() throws IOException {
 		KeyManager[] keyManagers = null;
-		TrustManager[] trustManagers = null;
 		Settings settings = this.configuration.getSettings();
 		File keyStoreFile = settings.getLastValue(
 				DtlsSettingSpecConstants.DTLS_KEY_STORE_FILE);
@@ -56,24 +55,13 @@ final class DtlsDatagramSocketFactoryImpl extends DtlsDatagramSocketFactory {
 					keyStoreFile, keyStorePassword,	keyStoreType);
 			Arrays.fill(keyStorePassword, '\0');
 		}
-		File trustStoreFile = settings.getLastValue(
-				DtlsSettingSpecConstants.DTLS_TRUST_STORE_FILE);
-		if (trustStoreFile != null) {
-			char[] trustStorePassword = settings.getLastValue(
-					DtlsSettingSpecConstants.DTLS_TRUST_STORE_PASSWORD).getPassword();
-			String trustStoreType = settings.getLastValue(
-					DtlsSettingSpecConstants.DTLS_TRUST_STORE_TYPE);			
-			trustManagers = TrustManagerHelper.getTrustManagers(
-					trustStoreFile,	trustStorePassword,	trustStoreType);
-			Arrays.fill(trustStorePassword, '\0');
-		}
 		SSLContext context = null;
 		try {
 			context = SslContextHelper.getSslContext(
 					settings.getLastValue(
 							DtlsSettingSpecConstants.DTLS_PROTOCOL), 
 					keyManagers, 
-					trustManagers);
+					null);
 		} catch (KeyManagementException e) {
 			throw new IOException(e);
 		} catch (NoSuchAlgorithmException e) {
@@ -114,14 +102,6 @@ final class DtlsDatagramSocketFactoryImpl extends DtlsDatagramSocketFactory {
 		PositiveInteger maxPacketSize = settings.getLastValue(
 				DtlsSettingSpecConstants.DTLS_MAX_PACKET_SIZE);
 		dtlsDatagramSocket.setMaximumPacketSize(maxPacketSize.intValue());
-		if (settings.getLastValue(
-				DtlsSettingSpecConstants.DTLS_NEED_CLIENT_AUTH).booleanValue()) {
-			dtlsDatagramSocket.setNeedClientAuth(true);
-		}
-		if (settings.getLastValue(
-				DtlsSettingSpecConstants.DTLS_WANT_CLIENT_AUTH).booleanValue()) {
-			dtlsDatagramSocket.setWantClientAuth(true);
-		}		
 		return dtlsDatagramSocket;
 	}
 

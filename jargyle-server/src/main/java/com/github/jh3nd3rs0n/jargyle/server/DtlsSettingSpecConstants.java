@@ -108,20 +108,7 @@ public final class DtlsSettingSpecConstants {
 			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
 					"dtls.maxPacketSize", 
 					PositiveInteger.valueOf(32768)));
-	
-	@NameValuePairValueSpecDoc(
-			description = "The boolean value to indicate that client "
-					+ "authentication is required for DTLS connections to the "
-					+ "SOCKS server (default is false)",
-			name = "dtls.needClientAuth",
-			syntax = "dtls.needClientAuth=true|false",
-			valueType = Boolean.class
-	)	
-	public static final SettingSpec<Boolean> DTLS_NEED_CLIENT_AUTH = 
-			SETTING_SPECS.addThenGet(new BooleanSettingSpec(
-					"dtls.needClientAuth", 
-					Boolean.FALSE));
-	
+
 	@NameValuePairValueSpecDoc(
 			description = "The protocol version for the DTLS connections to the "
 					+ "SOCKS server (default is DTLSv1.2)",
@@ -133,56 +120,7 @@ public final class DtlsSettingSpecConstants {
 			SETTING_SPECS.addThenGet(new StringSettingSpec(
 					"dtls.protocol", 
 					"DTLSv1.2"));
-	
-	@NameValuePairValueSpecDoc(
-			description = "The trust store file for the DTLS connections to the "
-					+ "SOCKS server",
-			name = "dtls.trustStoreFile",
-			syntax = "dtls.trustStoreFile=FILE",
-			valueType = File.class
-	)	
-	public static final SettingSpec<File> DTLS_TRUST_STORE_FILE = 
-			SETTING_SPECS.addThenGet(new FileSettingSpec(
-					"dtls.trustStoreFile", 
-					null));
-	
-	@NameValuePairValueSpecDoc(
-			description = "The password for the trust store for the DTLS "
-					+ "connections to the SOCKS server",
-			name = "dtls.trustStorePassword",
-			syntax = "dtls.trustStorePassword=PASSWORD",
-			valueType = String.class
-	)	
-	public static final SettingSpec<EncryptedPassword> DTLS_TRUST_STORE_PASSWORD = 
-			SETTING_SPECS.addThenGet(new EncryptedPasswordSettingSpec(
-					"dtls.trustStorePassword", 
-					EncryptedPassword.newInstance(new char[] { })));
-	
-	@NameValuePairValueSpecDoc(
-			description = "The type of trust store file for the DTLS "
-					+ "connections to the SOCKS server (default is PKCS12)",
-			name = "dtls.trustStoreType",
-			syntax = "dtls.trustStoreType=TYPE",
-			valueType = String.class
-	)		
-	public static final SettingSpec<String> DTLS_TRUST_STORE_TYPE = 
-			SETTING_SPECS.addThenGet(new StringSettingSpec(
-					"dtls.trustStoreType", 
-					"PKCS12"));
-	
-	@NameValuePairValueSpecDoc(
-			description = "The boolean value to indicate that client "
-					+ "authentication is requested for DTLS connections to the "
-					+ "SOCKS server (default is false)",
-			name = "dtls.wantClientAuth",
-			syntax = "dtls.wantClientAuth=true|false",
-			valueType = Boolean.class
-	)	
-	public static final SettingSpec<Boolean> DTLS_WANT_CLIENT_AUTH = 
-			SETTING_SPECS.addThenGet(new BooleanSettingSpec(
-					"dtls.wantClientAuth", 
-					Boolean.FALSE));
-	
+
 	public static List<SettingSpec<Object>> values() {
 		return SETTING_SPECS.toList();
 	}

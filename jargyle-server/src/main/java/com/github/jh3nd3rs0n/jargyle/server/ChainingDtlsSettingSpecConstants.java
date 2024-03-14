@@ -62,43 +62,7 @@ public final class ChainingDtlsSettingSpecConstants {
 			SETTING_SPECS.addThenGet(new CommaSeparatedValuesSettingSpec(
 					"chaining.dtls.enabledProtocols", 
 					DtlsPropertySpecConstants.DTLS_ENABLED_PROTOCOLS.getDefaultProperty().getValue()));
-	
-	@NameValuePairValueSpecDoc(
-			description = "The key store file for the DTLS connections to the "
-					+ "other SOCKS server",
-			name = "chaining.dtls.keyStoreFile",
-			syntax = "chaining.dtls.keyStoreFile=FILE",
-			valueType = File.class
-	)
-	public static final SettingSpec<File> CHAINING_DTLS_KEY_STORE_FILE = 
-			SETTING_SPECS.addThenGet(new FileSettingSpec(
-					"chaining.dtls.keyStoreFile", 
-					DtlsPropertySpecConstants.DTLS_KEY_STORE_FILE.getDefaultProperty().getValue()));
-	
-	@NameValuePairValueSpecDoc(
-			description = "The password for the key store for the DTLS "
-					+ "connections to the other SOCKS server",
-			name = "chaining.dtls.keyStorePassword",
-			syntax = "chaining.dtls.keyStorePassword=PASSWORD",
-			valueType = String.class
-	)
-	public static final SettingSpec<EncryptedPassword> CHAINING_DTLS_KEY_STORE_PASSWORD = 
-			SETTING_SPECS.addThenGet(new EncryptedPasswordSettingSpec(
-					"chaining.dtls.keyStorePassword", 
-					DtlsPropertySpecConstants.DTLS_KEY_STORE_PASSWORD.getDefaultProperty().getValue()));
-	
-	@NameValuePairValueSpecDoc(
-			description = "The type of key store file for the DTLS connections "
-					+ "to the other SOCKS server (default is PKCS12)",
-			name = "chaining.dtls.keyStoreType",
-			syntax = "chaining.dtls.keyStoreType=TYPE",
-			valueType = String.class
-	)	
-	public static final SettingSpec<String> CHAINING_DTLS_KEY_STORE_TYPE = 
-			SETTING_SPECS.addThenGet(new StringSettingSpec(
-					"chaining.dtls.keyStoreType", 
-					DtlsPropertySpecConstants.DTLS_KEY_STORE_TYPE.getDefaultProperty().getValue()));
-	
+
 	@NameValuePairValueSpecDoc(
 			description = "The maximum packet size for the DTLS connections to "
 					+ "the other SOCKS server (default is 32768)",

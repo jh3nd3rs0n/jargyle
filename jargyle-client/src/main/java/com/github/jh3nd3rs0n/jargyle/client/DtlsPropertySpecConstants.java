@@ -60,43 +60,7 @@ public final class DtlsPropertySpecConstants {
 			PROPERTY_SPECS.addThenGet(new CommaSeparatedValuesPropertySpec(
 					"socksClient.dtls.enabledProtocols",
 					CommaSeparatedValues.of(new String[] { })));
-	
-	@NameValuePairValueSpecDoc(
-			description = "The key store file for the DTLS connections to the "
-					+ "SOCKS server",
-			name = "socksClient.dtls.keyStoreFile",
-			syntax = "socksClient.dtls.keyStoreFile=FILE",
-			valueType = File.class
-	)	
-	public static final PropertySpec<File> DTLS_KEY_STORE_FILE = 
-			PROPERTY_SPECS.addThenGet(new FilePropertySpec(
-					"socksClient.dtls.keyStoreFile",
-					null));
-	
-	@NameValuePairValueSpecDoc(
-			description = "The password for the key store for the DTLS "
-					+ "connections to the SOCKS server",
-			name = "socksClient.dtls.keyStorePassword",
-			syntax = "socksClient.dtls.keyStorePassword=PASSWORD",
-			valueType = String.class
-	)	
-	public static final PropertySpec<EncryptedPassword> DTLS_KEY_STORE_PASSWORD = 
-			PROPERTY_SPECS.addThenGet(new EncryptedPasswordPropertySpec(
-					"socksClient.dtls.keyStorePassword",
-					EncryptedPassword.newInstance(new char[] { })));
-	
-	@NameValuePairValueSpecDoc(
-			description = "The type of key store file for the DTLS connections "
-					+ "to the SOCKS server (default is PKCS12)",
-			name = "socksClient.dtls.keyStoreType",
-			syntax = "socksClient.dtls.keyStoreType=TYPE",
-			valueType = String.class
-	)	
-	public static final PropertySpec<String> DTLS_KEY_STORE_TYPE = 
-			PROPERTY_SPECS.addThenGet(new StringPropertySpec(
-					"socksClient.dtls.keyStoreType",
-					"PKCS12"));
-	
+
 	@NameValuePairValueSpecDoc(
 			description = "The maximum packet size for the DTLS connections to "
 					+ "the SOCKS server (default is 32768)",

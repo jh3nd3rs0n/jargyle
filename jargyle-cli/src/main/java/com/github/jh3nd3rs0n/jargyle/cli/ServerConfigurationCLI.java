@@ -46,18 +46,16 @@ public abstract class ServerConfigurationCLI extends CLI {
 	}
 	
 	private static final int CONFIG_FILE_OPTION_GROUP_ORDINAL = 0;
-	private static final int ENTER_CHAINING_DTLS_KEY_STORE_PASS_OPTION_GROUP_ORDINAL = 1;
-	private static final int ENTER_CHAINING_DTLS_TRUST_STORE_PASS_OPTION_GROUP_ORDINAL = 2;
-	private static final int ENTER_CHAINING_SOCKS5_USERPASSMETHOD_PASS_OPTION_GROUP_ORDINAL = 3;
-	private static final int ENTER_CHAINING_SSL_KEY_STORE_PASS_OPTION_GROUP_ORDINAL = 4;
-	private static final int ENTER_CHAINING_SSL_TRUST_STORE_PASS_OPTION_GROUP_ORDINAL = 5;	
-	private static final int ENTER_DTLS_KEY_STORE_PASS_OPTION_GROUP_ORDINAL = 6;
-	private static final int ENTER_DTLS_TRUST_STORE_PASS_OPTION_GROUP_ORDINAL = 7;
-	private static final int ENTER_SSL_KEY_STORE_PASS_OPTION_GROUP_ORDINAL = 8;
-	private static final int ENTER_SSL_TRUST_STORE_PASS_OPTION_GROUP_ORDINAL = 9;
-	private static final int HELP_OPTION_GROUP_ORDINAL = 10;
-	private static final int SETTING_OPTION_GROUP_ORDINAL = 11;
-	private static final int SETTINGS_HELP_OPTION_GROUP_ORDINAL = 12;
+	private static final int ENTER_CHAINING_DTLS_TRUST_STORE_PASS_OPTION_GROUP_ORDINAL = 1;
+	private static final int ENTER_CHAINING_SOCKS5_USERPASSMETHOD_PASS_OPTION_GROUP_ORDINAL = 2;
+	private static final int ENTER_CHAINING_SSL_KEY_STORE_PASS_OPTION_GROUP_ORDINAL = 3;
+	private static final int ENTER_CHAINING_SSL_TRUST_STORE_PASS_OPTION_GROUP_ORDINAL = 4;
+	private static final int ENTER_DTLS_KEY_STORE_PASS_OPTION_GROUP_ORDINAL = 5;
+	private static final int ENTER_SSL_KEY_STORE_PASS_OPTION_GROUP_ORDINAL = 6;
+	private static final int ENTER_SSL_TRUST_STORE_PASS_OPTION_GROUP_ORDINAL = 7;
+	private static final int HELP_OPTION_GROUP_ORDINAL = 8;
+	private static final int SETTING_OPTION_GROUP_ORDINAL = 9;
+	private static final int SETTINGS_HELP_OPTION_GROUP_ORDINAL = 10;
 	
 	private Configuration configuration;
 	private final String programBeginningUsage;
@@ -167,25 +165,7 @@ public abstract class ServerConfigurationCLI extends CLI {
 		this.printSettingsHelp(new PrintWriter(System.out, true));
 		throw new TerminationRequestedException(0);
 	}
-	
-	@Option(
-			doc = "Enter through an interactive prompt the password for the "
-					+ "key store for the DTLS connections to the other "
-					+ "SOCKS server",
-			name = "enter-chaining-dtls-key-store-pass",
-			type = OptionType.GNU_LONG
-	)	
-	@Ordinal(ENTER_CHAINING_DTLS_KEY_STORE_PASS_OPTION_GROUP_ORDINAL)
-	protected void enterChainingDtlsKeyStorePassword() {
-		String prompt = "Please enter the password for the key store for the "
-				+ "DTLS connections to the other SOCKS server: ";
-		EncryptedPassword encryptedPassword = readEncryptedPassword(prompt);
-		Setting<EncryptedPassword> setting = 
-				ChainingDtlsSettingSpecConstants.CHAINING_DTLS_KEY_STORE_PASSWORD.newSetting(
-						encryptedPassword);
-		this.configuration.addSetting(setting);
-	}
-	
+
 	@Option(
 			doc = "Enter through an interactive prompt the password for the "
 					+ "trust store for the DTLS connections to the other "
@@ -274,25 +254,7 @@ public abstract class ServerConfigurationCLI extends CLI {
 						encryptedPassword);
 		this.configuration.addSetting(setting);		
 	}
-		
-	@Option(
-			doc = "Enter through an interactive prompt the password for the "
-					+ "trust store for the DTLS connections to the SOCKS "
-					+ "server",
-			name = "enter-dtls-trust-store-pass",
-			type = OptionType.GNU_LONG
-	)	
-	@Ordinal(ENTER_DTLS_TRUST_STORE_PASS_OPTION_GROUP_ORDINAL)
-	protected void enterDtlsTrustStorePassword() {
-		String prompt = "Please enter the password for the trust store for the "
-				+ "DTLS connections to the SOCKS server: ";
-		EncryptedPassword encryptedPassword = readEncryptedPassword(prompt);
-		Setting<EncryptedPassword> setting = 
-				DtlsSettingSpecConstants.DTLS_TRUST_STORE_PASSWORD.newSetting(
-						encryptedPassword);
-		this.configuration.addSetting(setting);		
-	}
-	
+
 	@Option(
 			doc = "Enter through an interactive prompt the password for the "
 					+ "key store for the SSL/TLS connections to the SOCKS "

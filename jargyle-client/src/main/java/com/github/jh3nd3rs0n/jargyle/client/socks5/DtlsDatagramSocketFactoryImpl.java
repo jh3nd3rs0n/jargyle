@@ -1,17 +1,5 @@
 package com.github.jh3nd3rs0n.jargyle.client.socks5;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.DatagramSocket;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
-import java.util.concurrent.locks.ReentrantLock;
-
-import javax.net.ssl.KeyManager;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-
 import com.github.jh3nd3rs0n.jargyle.client.DtlsPropertySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.client.Properties;
 import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
@@ -19,9 +7,18 @@ import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
 import com.github.jh3nd3rs0n.jargyle.common.string.CommaSeparatedValues;
 import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.DtlsDatagramSocket;
 import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.DtlsDatagramSocketFactory;
-import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.KeyManagerHelper;
 import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.SslContextHelper;
 import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.TrustManagerHelper;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import java.io.File;
+import java.io.IOException;
+import java.net.DatagramSocket;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
+import java.util.concurrent.locks.ReentrantLock;
 
 final class DtlsDatagramSocketFactoryImpl extends DtlsDatagramSocketFactory {
 	
@@ -41,20 +38,8 @@ final class DtlsDatagramSocketFactoryImpl extends DtlsDatagramSocketFactory {
 	}
 	
 	private SSLContext getDtlsContext() throws IOException {
-		KeyManager[] keyManagers = null;
 		TrustManager[] trustManagers = null;
 		Properties properties = this.socksClient.getProperties();
-		File keyStoreFile = properties.getValue(
-				DtlsPropertySpecConstants.DTLS_KEY_STORE_FILE);
-		if (keyStoreFile != null) {
-			char[] keyStorePassword = properties.getValue(
-					DtlsPropertySpecConstants.DTLS_KEY_STORE_PASSWORD).getPassword();
-			String keyStoreType = properties.getValue(
-					DtlsPropertySpecConstants.DTLS_KEY_STORE_TYPE);
-			keyManagers = KeyManagerHelper.getKeyManagers(
-					keyStoreFile, keyStorePassword,	keyStoreType);
-			Arrays.fill(keyStorePassword, '\0');
-		}
 		File trustStoreFile = properties.getValue(
 				DtlsPropertySpecConstants.DTLS_TRUST_STORE_FILE);
 		if (trustStoreFile != null) {
@@ -71,7 +56,7 @@ final class DtlsDatagramSocketFactoryImpl extends DtlsDatagramSocketFactory {
 			context = SslContextHelper.getSslContext(
 					properties.getValue(
 							DtlsPropertySpecConstants.DTLS_PROTOCOL), 
-					keyManagers, 
+					null,
 					trustManagers);
 		} catch (KeyManagementException e) {
 			throw new IOException(e);

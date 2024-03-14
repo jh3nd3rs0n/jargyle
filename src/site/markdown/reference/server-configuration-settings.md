@@ -37,9 +37,6 @@
     -   [chaining.dtls.enabled](#chaining-dtls-enabled)
     -   [chaining.dtls.enabledCipherSuites](#chaining-dtls-enabledciphersuites)
     -   [chaining.dtls.enabledProtocols](#chaining-dtls-enabledprotocols)
-    -   [chaining.dtls.keyStoreFile](#chaining-dtls-keystorefile)
-    -   [chaining.dtls.keyStorePassword](#chaining-dtls-keystorepassword)
-    -   [chaining.dtls.keyStoreType](#chaining-dtls-keystoretype)
     -   [chaining.dtls.maxPacketSize](#chaining-dtls-maxpacketsize)
     -   [chaining.dtls.protocol](#chaining-dtls-protocol)
     -   [chaining.dtls.trustStoreFile](#chaining-dtls-truststorefile)
@@ -74,12 +71,7 @@
     -   [dtls.keyStorePassword](#dtls-keystorepassword)
     -   [dtls.keyStoreType](#dtls-keystoretype)
     -   [dtls.maxPacketSize](#dtls-maxpacketsize)
-    -   [dtls.needClientAuth](#dtls-needclientauth)
     -   [dtls.protocol](#dtls-protocol)
-    -   [dtls.trustStoreFile](#dtls-truststorefile)
-    -   [dtls.trustStorePassword](#dtls-truststorepassword)
-    -   [dtls.trustStoreType](#dtls-truststoretype)
-    -   [dtls.wantClientAuth](#dtls-wantclientauth)
 -   [SOCKS5 Settings](#socks5-settings)
     -   [socks5.gssapimethod.necReferenceImpl](#socks5-gssapimethod-necreferenceimpl)
     -   [socks5.gssapimethod.protectionLevels](#socks5-gssapimethod-protectionlevels)
@@ -595,48 +587,6 @@ The comma separated list of acceptable protocol versions enabled for DTLS connec
 
 **Value:** [Comma Separated Values](value-syntaxes.md#comma-separated-values)
 
-### chaining.dtls.keyStoreFile
-
-**Syntax:**
-
-```text
-chaining.dtls.keyStoreFile=FILE
-```
-
-**Description:**
-
-The key store file for the DTLS connections to the other SOCKS server
-
-**Value:** java.io.File
-
-### chaining.dtls.keyStorePassword
-
-**Syntax:**
-
-```text
-chaining.dtls.keyStorePassword=PASSWORD
-```
-
-**Description:**
-
-The password for the key store for the DTLS connections to the other SOCKS server
-
-**Value:** java.lang.String
-
-### chaining.dtls.keyStoreType
-
-**Syntax:**
-
-```text
-chaining.dtls.keyStoreType=TYPE
-```
-
-**Description:**
-
-The type of key store file for the DTLS connections to the other SOCKS server (default is PKCS12)
-
-**Value:** java.lang.String
-
 ### chaining.dtls.maxPacketSize
 
 **Syntax:**
@@ -1077,20 +1027,6 @@ The maximum packet size for the DTLS connections to the SOCKS server (default is
 
 **Value:** [Positive Integer](value-syntaxes.md#positive-integer)
 
-### dtls.needClientAuth
-
-**Syntax:**
-
-```text
-dtls.needClientAuth=true|false
-```
-
-**Description:**
-
-The boolean value to indicate that client authentication is required for DTLS connections to the SOCKS server (default is false)
-
-**Value:** java.lang.Boolean
-
 ### dtls.protocol
 
 **Syntax:**
@@ -1104,62 +1040,6 @@ dtls.protocol=PROTOCOL
 The protocol version for the DTLS connections to the SOCKS server (default is DTLSv1.2)
 
 **Value:** java.lang.String
-
-### dtls.trustStoreFile
-
-**Syntax:**
-
-```text
-dtls.trustStoreFile=FILE
-```
-
-**Description:**
-
-The trust store file for the DTLS connections to the SOCKS server
-
-**Value:** java.io.File
-
-### dtls.trustStorePassword
-
-**Syntax:**
-
-```text
-dtls.trustStorePassword=PASSWORD
-```
-
-**Description:**
-
-The password for the trust store for the DTLS connections to the SOCKS server
-
-**Value:** java.lang.String
-
-### dtls.trustStoreType
-
-**Syntax:**
-
-```text
-dtls.trustStoreType=TYPE
-```
-
-**Description:**
-
-The type of trust store file for the DTLS connections to the SOCKS server (default is PKCS12)
-
-**Value:** java.lang.String
-
-### dtls.wantClientAuth
-
-**Syntax:**
-
-```text
-dtls.wantClientAuth=true|false
-```
-
-**Description:**
-
-The boolean value to indicate that client authentication is requested for DTLS connections to the SOCKS server (default is false)
-
-**Value:** java.lang.Boolean
 
 ## SOCKS5 Settings
 

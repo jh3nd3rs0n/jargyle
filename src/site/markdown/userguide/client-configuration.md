@@ -140,43 +140,6 @@ public class ClientApp {
 }
 ```
 
-If the SOCKS server wants the client to authenticate using DTLS, you will need 
-to have the property `socksClient.dtls.keyStoreFile` to specify the 
-client's key store file (this file would need to be created by Java's keytool 
-utility). Also, you will need to have the property 
-`socksClient.dtls.keyStorePassword` to specify the password for the 
-client's key store file.
-
-API example:
-
-```java
-package com.example;
-
-import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
-import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
-
-import java.io.IOException;
-
-import java.net.DatagramSocket;
-import java.net.ServerSocket;
-import java.net.Socket;
-
-public class ClientApp {
-    public static void main(String[] args) throws IOException {
-        System.setProperty("socksServerUri.scheme", "socks5");
-        System.setProperty("socksServerUri.host", "jargyle.net");
-        System.setProperty("socksServerUri.port", "1234");
-        System.setProperty("socksClient.dtls.enabled", "true");
-        System.setProperty("socksClient.dtls.keyStoreFile", "client.jks");
-        System.setProperty("socksClient.dtls.keyStorePassword", "drowssap");
-        System.setProperty("socksClient.dtls.trustStoreFile", "jargyle.jks");
-        System.setProperty("socksClient.dtls.trustStorePassword", "password");
-        NetObjectFactory netObjectFactory = NetObjectFactory.newInstance();
-        // ...
-    }
-}
-```
-
 ## Accessing the SOCKS Server Using SOCKS5 Authentication
 
 The client has the following SOCKS5 authentication methods to choose from when 

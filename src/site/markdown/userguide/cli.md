@@ -6,6 +6,7 @@ The following are topics for using the command line interface.
 
 -   [Environment Variables](#environment-variables)
 -   [Running the Command Line Interface](#running-the-command-line-interface)
+-   [Generating Reference Documentation](#generating-reference-documentation)
 -   [Managing SOCKS5 Users](#managing-socks5-users)
     -   [Adding SOCKS5 Users](#adding-socks5-users)
     -   [List All SOCKS5 Users](#list-all-socks5-users)
@@ -42,6 +43,17 @@ jargyle COMMAND
 `COMMAND` is the name of one of the commands described in the 
 [help information](../reference/cli-help-info.md#help-information) for 
 `jargyle`.
+
+## Generating Reference Documentation
+
+To generate reference documentation, you would run the following command:
+
+```text
+jargyle generate-reference-docs
+```
+
+This command will generate reference documentation as markdown files in 
+the present working directory.
 
 ## Managing SOCKS5 Users
 

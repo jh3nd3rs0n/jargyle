@@ -15,6 +15,8 @@ Usage: jargyle COMMAND
        jargyle --version
 
 COMMANDS:
+  generate-reference-docs
+      Generate reference documents
   manage-socks5-users USER_REPOSITORY COMMAND
       Manage SOCKS5 users
   new-server-config-file [OPTIONS] FILE
@@ -66,8 +68,6 @@ Usage: jargyle new-server-config-file [OPTIONS] FILE
 OPTIONS:
   --config-file=FILE, -f FILE
       A configuration file
-  --enter-chaining-dtls-key-store-pass
-      Enter through an interactive prompt the password for the key store for the DTLS connections to the other SOCKS server
   --enter-chaining-dtls-trust-store-pass
       Enter through an interactive prompt the password for the trust store for the DTLS connections to the other SOCKS server
   --enter-chaining-socks5-userpassmethod-pass
@@ -78,8 +78,6 @@ OPTIONS:
       Enter through an interactive prompt the password for the trust store for the SSL/TLS connections to the other SOCKS server
   --enter-dtls-key-store-pass
       Enter through an interactive prompt the password for the key store for the DTLS connections to the SOCKS server
-  --enter-dtls-trust-store-pass
-      Enter through an interactive prompt the password for the trust store for the DTLS connections to the SOCKS server
   --enter-ssl-key-store-pass
       Enter through an interactive prompt the password for the key store for the SSL/TLS connections to the SOCKS server
   --enter-ssl-trust-store-pass
@@ -103,8 +101,6 @@ Usage: jargyle start-server [OPTIONS] [MONITORED_CONFIG_FILE]
 OPTIONS:
   --config-file=FILE, -f FILE
       A configuration file
-  --enter-chaining-dtls-key-store-pass
-      Enter through an interactive prompt the password for the key store for the DTLS connections to the other SOCKS server
   --enter-chaining-dtls-trust-store-pass
       Enter through an interactive prompt the password for the trust store for the DTLS connections to the other SOCKS server
   --enter-chaining-socks5-userpassmethod-pass
@@ -115,8 +111,6 @@ OPTIONS:
       Enter through an interactive prompt the password for the trust store for the SSL/TLS connections to the other SOCKS server
   --enter-dtls-key-store-pass
       Enter through an interactive prompt the password for the key store for the DTLS connections to the SOCKS server
-  --enter-dtls-trust-store-pass
-      Enter through an interactive prompt the password for the trust store for the DTLS connections to the SOCKS server
   --enter-ssl-key-store-pass
       Enter through an interactive prompt the password for the key store for the SSL/TLS connections to the SOCKS server
   --enter-ssl-trust-store-pass

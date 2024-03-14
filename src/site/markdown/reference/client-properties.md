@@ -15,9 +15,6 @@
     -   [socksClient.dtls.enabled](#socksclient-dtls-enabled)
     -   [socksClient.dtls.enabledCipherSuites](#socksclient-dtls-enabledciphersuites)
     -   [socksClient.dtls.enabledProtocols](#socksclient-dtls-enabledprotocols)
-    -   [socksClient.dtls.keyStoreFile](#socksclient-dtls-keystorefile)
-    -   [socksClient.dtls.keyStorePassword](#socksclient-dtls-keystorepassword)
-    -   [socksClient.dtls.keyStoreType](#socksclient-dtls-keystoretype)
     -   [socksClient.dtls.maxPacketSize](#socksclient-dtls-maxpacketsize)
     -   [socksClient.dtls.protocol](#socksclient-dtls-protocol)
     -   [socksClient.dtls.trustStoreFile](#socksclient-dtls-truststorefile)
@@ -190,48 +187,6 @@ socksClient.dtls.enabledProtocols=COMMA_SEPARATED_VALUES
 The comma separated list of acceptable protocol versions enabled for DTLS connections to the SOCKS server
 
 **Value:** [Comma Separated Values](value-syntaxes.md#comma-separated-values)
-
-### socksClient.dtls.keyStoreFile
-
-**Syntax:**
-
-```text
-socksClient.dtls.keyStoreFile=FILE
-```
-
-**Description:**
-
-The key store file for the DTLS connections to the SOCKS server
-
-**Value:** java.io.File
-
-### socksClient.dtls.keyStorePassword
-
-**Syntax:**
-
-```text
-socksClient.dtls.keyStorePassword=PASSWORD
-```
-
-**Description:**
-
-The password for the key store for the DTLS connections to the SOCKS server
-
-**Value:** java.lang.String
-
-### socksClient.dtls.keyStoreType
-
-**Syntax:**
-
-```text
-socksClient.dtls.keyStoreType=TYPE
-```
-
-**Description:**
-
-The type of key store file for the DTLS connections to the SOCKS server (default is PKCS12)
-
-**Value:** java.lang.String
 
 ### socksClient.dtls.maxPacketSize
 

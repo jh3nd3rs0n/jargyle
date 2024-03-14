@@ -16,18 +16,21 @@ import com.github.jh3nd3rs0n.argmatey.ArgMatey.TerminationRequestedException;
 public final class JargyleCLI extends CLI {
 
 	private static enum Command {
-		
-		GENERATE_REFERENCE("generate-reference") {
+
+		@HelpText(
+				doc = "Generate reference documents",
+				usage = "generate-reference-docs"
+		)
+		GENERATE_REFERENCE_DOCS("generate-reference-docs") {
 
 			@Override
 			public void invoke(
 					final String progName, 
 					final String progBeginningUsage, 
 					final String[] args, 
-					final boolean posixCorrect)
-					throws TerminationRequestedException {
+					final boolean posixCorrect) {
 				try {
-					new ReferenceGenerator().generateReference();
+					new ReferenceDocsGenerator().generateReferenceDocs();
 				} catch (IOException e) {
 					throw new AssertionError(e);
 				}

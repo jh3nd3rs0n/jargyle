@@ -23,11 +23,11 @@ import com.github.jh3nd3rs0n.jargyle.server.RuleCondition;
 import com.github.jh3nd3rs0n.jargyle.server.RuleResult;
 import com.github.jh3nd3rs0n.jargyle.server.Setting;
 
-final class ReferenceGenerator {
+final class ReferenceDocsGenerator {
 
-	public ReferenceGenerator() { }
+	public ReferenceDocsGenerator() { }
 	
-	public void generateReference() throws IOException {
+	public void generateReferenceDocs() throws IOException {
 		Map<String, Class<?>> valueTypeMap = new TreeMap<String, Class<?>>(
 				(x, y) -> x.compareToIgnoreCase(y));
 		this.putFromRootNameValuePairValueType(valueTypeMap, Property.class);

@@ -1,9 +1,9 @@
 package com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.userpassmethod;
 
+import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
+
 import java.util.Arrays;
 import java.util.stream.Collectors;
-
-import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
 
 public enum Version {
 

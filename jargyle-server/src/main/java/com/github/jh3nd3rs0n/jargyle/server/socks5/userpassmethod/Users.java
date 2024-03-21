@@ -1,12 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.server.socks5.userpassmethod;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.*;
 
 public final class Users {
 	
@@ -20,34 +14,6 @@ public final class Users {
 	
 	public static Users of(final Users users) {
 		return new Users(users);
-	}
-	
-	public static Users newInstanceFromUsernameHashedPasswordPairs(
-			final String s) {
-		List<User> users = new ArrayList<User>();
-		if (s.isEmpty()) {
-			return of(users);
-		}
-		String[] sElements = s.split(",");
-		for (String sElement : sElements) {
-			User user = User.newInstanceFromUsernameHashedPasswordPair(
-					sElement);
-			users.add(user);
-		}
-		return of(users);
-	}
-	
-	public static Users newInstanceFromUsernamePasswordPairs(final String s) {
-		List<User> users = new ArrayList<User>();
-		if (s.isEmpty()) {
-			return of(users);
-		}
-		String[] sElements = s.split(",");
-		for (String sElement : sElements) {
-			User user = User.newInstanceFromUsernamePasswordPair(sElement);
-			users.add(user);
-		}
-		return of(users);
 	}
 
 	private final Map<String, User> users;
@@ -126,8 +92,11 @@ public final class Users {
 
 	@Override
 	public String toString() {
-		return this.users.values().stream()
-				.map(User::toString)
-				.collect(Collectors.joining(","));
+		StringBuilder builder = new StringBuilder();
+		builder.append(this.getClass().getSimpleName())
+				.append(" [users=")
+				.append(this.users)
+				.append("]");
+		return builder.toString();
 	}	
 }

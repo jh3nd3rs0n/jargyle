@@ -1,20 +1,5 @@
 package com.github.jh3nd3rs0n.jargyle.client.socks5;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.net.SocketAddress;
-import java.net.SocketException;
-import java.net.SocketOption;
-import java.net.SocketTimeoutException;
-import java.nio.channels.DatagramChannel;
-import java.util.Arrays;
-import java.util.Set;
-
 import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
 import com.github.jh3nd3rs0n.jargyle.client.Properties;
 import com.github.jh3nd3rs0n.jargyle.client.Socks5PropertySpecConstants;
@@ -26,15 +11,14 @@ import com.github.jh3nd3rs0n.jargyle.common.net.HostAddress;
 import com.github.jh3nd3rs0n.jargyle.common.net.HostIpv4Address;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Address;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.AddressType;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Command;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Method;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.MethodEncapsulation;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Socks5Exception;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Socks5Reply;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Socks5Request;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.UdpRequestHeader;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.*;
+
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.net.*;
+import java.nio.channels.DatagramChannel;
+import java.util.Arrays;
+import java.util.Set;
 
 public final class Socks5DatagramSocket extends DatagramSocket {
 
@@ -131,8 +115,9 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			this.datagramSocket.receive(p);
 			UdpRequestHeader header = null; 
 			try {
-				header = UdpRequestHeader.newInstance(Arrays.copyOfRange(
-						p.getData(), p.getOffset(), p.getLength()));
+				header = UdpRequestHeader.newInstanceFrom(
+						Arrays.copyOfRange(
+								p.getData(), p.getOffset(), p.getLength()));
 			} catch (IllegalArgumentException e) {
 				throw new Socks5Exception(
 						"error in parsing UDP header request", e);
@@ -171,8 +156,8 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 					Address.newInstance(address),
 					Port.valueOf(port),
 					Arrays.copyOfRange(
-							p.getData(), 
-							p.getOffset(), 
+							p.getData(),
+							p.getOffset(),
 							p.getLength())).toByteArray();
 			p.setData(headerBytes, 0, headerBytes.length);
 			p.setLength(headerBytes.length);

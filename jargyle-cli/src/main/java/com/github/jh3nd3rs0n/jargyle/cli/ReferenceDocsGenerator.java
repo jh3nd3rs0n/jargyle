@@ -1,5 +1,12 @@
 package com.github.jh3nd3rs0n.jargyle.cli;
 
+import com.github.jh3nd3rs0n.jargyle.client.Property;
+import com.github.jh3nd3rs0n.jargyle.internal.annotation.*;
+import com.github.jh3nd3rs0n.jargyle.server.ConfigurationSchema;
+import com.github.jh3nd3rs0n.jargyle.server.RuleCondition;
+import com.github.jh3nd3rs0n.jargyle.server.RuleResult;
+import com.github.jh3nd3rs0n.jargyle.server.Setting;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -7,21 +14,6 @@ import java.io.PrintWriter;
 import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.TreeMap;
-
-import com.github.jh3nd3rs0n.jargyle.client.Property;
-import com.github.jh3nd3rs0n.jargyle.internal.annotation.EnumValueDoc;
-import com.github.jh3nd3rs0n.jargyle.internal.annotation.EnumValueTypeDoc;
-import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueSpecDoc;
-import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueSpecsDoc;
-import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueTypeDoc;
-import com.github.jh3nd3rs0n.jargyle.internal.annotation.SingleValueSpecDoc;
-import com.github.jh3nd3rs0n.jargyle.internal.annotation.SingleValueSpecsDoc;
-import com.github.jh3nd3rs0n.jargyle.internal.annotation.SingleValueTypeDoc;
-import com.github.jh3nd3rs0n.jargyle.internal.annotation.ValuesValueTypeDoc;
-import com.github.jh3nd3rs0n.jargyle.server.ConfigurationFileSchemaHelper;
-import com.github.jh3nd3rs0n.jargyle.server.RuleCondition;
-import com.github.jh3nd3rs0n.jargyle.server.RuleResult;
-import com.github.jh3nd3rs0n.jargyle.server.Setting;
 
 final class ReferenceDocsGenerator {
 
@@ -512,7 +504,7 @@ final class ReferenceDocsGenerator {
 		ps.println("# Server Configuration File Schema");
 		ps.println();
 		ps.println("```xml");
-		ConfigurationFileSchemaHelper.writeSchemaTo(ps);
+		ConfigurationSchema.newGeneratedInstance().toOutput(ps);
 		ps.println("```");
 		ps.println();
 	}

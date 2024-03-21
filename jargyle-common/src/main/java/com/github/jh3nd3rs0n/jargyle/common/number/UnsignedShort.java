@@ -1,16 +1,9 @@
 package com.github.jh3nd3rs0n.jargyle.common.number;
 
-import java.nio.ByteBuffer;
-
 /**
  * An integer between 0 and 65535 (inclusive).
  */
 public final class UnsignedShort {
-
-    /**
-     * The length of a byte array of an unsigned short.
-     */
-    public static final int BYTE_ARRAY_LENGTH = 2;
 
     /**
      * The maximum {@code int} value of an unsigned short.
@@ -37,26 +30,6 @@ public final class UnsignedShort {
     }
 
     /**
-     * Returns a {@code UnsignedShort} of the provided byte array. An
-     * {@code IllegalArgumentException} is thrown if the length of the
-     * provided byte array is not 2.
-     *
-     * @param b the provided byte array
-     * @return a {@code UnsignedShort} of the provided byte array
-     */
-    public static UnsignedShort valueOf(final byte[] b) {
-        if (b.length != BYTE_ARRAY_LENGTH) {
-            throw new IllegalArgumentException(String.format(
-                    "expected a byte array of a length of %s. "
-                            + "actual byte array length is %s",
-                    BYTE_ARRAY_LENGTH,
-                    b.length));
-        }
-        ByteBuffer bb = ByteBuffer.wrap(new byte[]{b[0], b[1]});
-        return valueOf(bb.getShort() & MAX_INT_VALUE);
-    }
-
-    /**
      * Returns a {@code UnsignedShort} of the provided {@code int} value.
      * An {@code IllegalArgumentException} is thrown if the provided
      * {@code int} value is less than 0 or greater than 65535.
@@ -74,6 +47,16 @@ public final class UnsignedShort {
                     i));
         }
         return new UnsignedShort(i);
+    }
+
+    /**
+     * Returns a {@code UnsignedShort} of the provided {@code short} value.
+     *
+     * @param s the provided {@code short} value
+     * @return a {@code UnsignedShort} of the provided {@code short} value
+     */
+    public static UnsignedShort valueOf(final short s) {
+        return valueOf(s & MAX_INT_VALUE);
     }
 
     /**
@@ -133,14 +116,12 @@ public final class UnsignedShort {
     }
 
     /**
-     * Returns the byte array of this {@code UnsignedShort}.
+     * Returns the {@code short} value of this {@code UnsignedShort}.
      *
-     * @return the byte array of this {@code UnsignedShort}
+     * @return the {@code short} value of this {@code UnsignedShort}
      */
-    public byte[] toByteArray() {
-        ByteBuffer bb = ByteBuffer.allocate(BYTE_ARRAY_LENGTH);
-        bb.putShort((short) this.intValue);
-        return bb.array();
+    public short shortValue() {
+        return (short) this.intValue;
     }
 
     /**

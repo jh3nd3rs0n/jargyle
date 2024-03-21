@@ -59,59 +59,15 @@ public class UnsignedShortTest {
     }
 
     @Test
-    public void testToByteArray01() {
-        UnsignedShort unsignedShort = UnsignedShort.valueOf(0);
-        Assert.assertArrayEquals(
-                new byte[]{0x00, 0x00}, unsignedShort.toByteArray());
-    }
-
-    @Test
-    public void testToByteArray02() {
-        UnsignedShort unsignedShort = UnsignedShort.valueOf(255);
-        Assert.assertArrayEquals(
-                new byte[]{0x00, (byte) 0xff}, unsignedShort.toByteArray());
-    }
-
-    @Test
-    public void testToByteArray03() {
-        UnsignedShort unsignedShort = UnsignedShort.valueOf(65535);
-        Assert.assertArrayEquals(
-                new byte[]{(byte) 0xff, (byte) 0xff},
-                unsignedShort.toByteArray());
+    public void testShortValue() {
+        UnsignedShort unsignedShort = UnsignedShort.valueOf("1024");
+        Assert.assertEquals((short) 1024, unsignedShort.shortValue());
     }
 
     @Test
     public void testToString() {
         UnsignedShort unsignedShort = UnsignedShort.valueOf(65535);
         Assert.assertEquals("65535", unsignedShort.toString());
-    }
-
-    @Test
-    public void testValueOfByteArray01() {
-        Assert.assertNotNull(UnsignedShort.valueOf(
-                new byte[]{0x00, 0x00}));
-    }
-
-    @Test
-    public void testValueOfByteArray02() {
-        Assert.assertNotNull(UnsignedShort.valueOf(
-                new byte[]{0x00, (byte) 0xff}));
-    }
-
-    @Test
-    public void testValueOfByteArray03() {
-        Assert.assertNotNull(UnsignedShort.valueOf(
-                new byte[]{(byte) 0xff, (byte) 0xff}));
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testValueOfByteArrayForIllegalArgumentException01() {
-        UnsignedShort.valueOf(new byte[]{0x00, 0x00, 0x00});
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testValueOfByteArrayForIllegalArgumentException02() {
-        UnsignedShort.valueOf(new byte[]{0x00});
     }
 
     @Test
@@ -137,6 +93,21 @@ public class UnsignedShortTest {
     @Test(expected = IllegalArgumentException.class)
     public void testValueOfIntForIllegalArgumentException02() {
         UnsignedShort.valueOf(65536);
+    }
+
+    @Test
+    public void testValueOfShort01() {
+        Assert.assertNotNull(UnsignedShort.valueOf((short) 0));
+    }
+
+    @Test
+    public void testValueOfShort02() {
+        Assert.assertNotNull(UnsignedShort.valueOf((short) 255));
+    }
+
+    @Test
+    public void testValueOfShort03() {
+        Assert.assertNotNull(UnsignedShort.valueOf((short) 65535));
     }
 
     @Test

@@ -1,5 +1,12 @@
 package com.github.jh3nd3rs0n.jargyle.client.socks5;
 
+import com.github.jh3nd3rs0n.jargyle.client.Properties;
+import com.github.jh3nd3rs0n.jargyle.client.Socks5PropertySpecConstants;
+import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
+import com.github.jh3nd3rs0n.jargyle.client.SocksNetObjectFactory;
+import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.DtlsDatagramSocketFactory;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.*;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -7,22 +14,6 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
-
-import com.github.jh3nd3rs0n.jargyle.client.Properties;
-import com.github.jh3nd3rs0n.jargyle.client.Socks5PropertySpecConstants;
-import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
-import com.github.jh3nd3rs0n.jargyle.client.SocksNetObjectFactory;
-import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.DtlsDatagramSocketFactory;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.ClientMethodSelectionMessage;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Method;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.MethodEncapsulation;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.ServerMethodSelectionMessageInputHelper;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Methods;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Reply;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.ServerMethodSelectionMessage;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Socks5ReplyInputHelper;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Socks5Reply;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Socks5Request;
 
 public final class Socks5Client extends SocksClient {
 
@@ -92,7 +83,7 @@ public final class Socks5Client extends SocksClient {
 		outputStream.write(cmsm.toByteArray());
 		outputStream.flush();
 		ServerMethodSelectionMessage smsm =
-				ServerMethodSelectionMessageInputHelper.readServerMethodSelectionMessageFrom(
+				ServerMethodSelectionMessage.newInstanceFrom(
 						inputStream);
 		return smsm.getMethod();
 	}
@@ -122,7 +113,7 @@ public final class Socks5Client extends SocksClient {
 	protected Socks5Reply receiveSocks5Reply(
 			final Socket connectedClientSocket) throws IOException {
 		InputStream inputStream = connectedClientSocket.getInputStream();
-		Socks5Reply socks5Rep = Socks5ReplyInputHelper.readSocks5ReplyFrom(
+		Socks5Reply socks5Rep = Socks5Reply.newInstanceFrom(
 				inputStream);
 		Reply reply = socks5Rep.getReply();
 		if (!reply.equals(Reply.SUCCEEDED)) {

@@ -1,32 +1,22 @@
 package com.github.jh3nd3rs0n.jargyle.server.socks5.userpassmethod.internal.userrepo.impl;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.Reader;
-import java.io.UncheckedIOException;
-import java.io.Writer;
+import com.github.jh3nd3rs0n.jargyle.server.internal.io.FileMonitor;
+import com.github.jh3nd3rs0n.jargyle.server.internal.io.FileStatusListener;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassmethod.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.*;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.ReentrantLock;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.github.jh3nd3rs0n.jargyle.server.internal.io.FileMonitor;
-import com.github.jh3nd3rs0n.jargyle.server.internal.io.FileStatusListener;
-import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassmethod.User;
-import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassmethod.UserRepository;
-import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassmethod.UserRepositorySpec;
-import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassmethod.Users;
-import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassmethod.internal.userrepo.impl.users.file.bind.UsersFileConversionHelper;
 
 public final class FileSourceUserRepository extends UserRepository {
 	
@@ -81,6 +71,29 @@ public final class FileSourceUserRepository extends UserRepository {
 		
 	}
 
+	private static User newUserFrom(
+			final String s) {
+		String[] sElements = s.split(":");
+		if (sElements.length != 2) {
+			throw new IllegalArgumentException(
+					"username hashed password pair must be in the following "
+							+ "format: USERNAME:HASHED_PASSWORD");
+		}
+		String name;
+		try {
+			name = URLDecoder.decode(sElements[0], "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			throw new AssertionError(e);
+		}
+		String hashedPassword;
+		try {
+			hashedPassword = URLDecoder.decode(sElements[1], "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			throw new AssertionError(e);
+		}
+		return User.newInstance(name, HashedPassword.newInstanceFrom(hashedPassword));
+	}
+
 	public static FileSourceUserRepository newInstance(
 			final UserRepositorySpec userRepositorySpec,
 			final String initializationStr) {
@@ -90,16 +103,34 @@ public final class FileSourceUserRepository extends UserRepository {
 		fileSourceUserRepository.startMonitoringFile();
 		return fileSourceUserRepository;
 	}
-	
+
+	private static Users readUsersFrom(
+			final InputStream in) throws IOException {
+		BufferedReader bufferedReader = new BufferedReader(
+				new InputStreamReader(in));
+		List<User> users = new ArrayList<User>();
+		String line;
+		while ((line = bufferedReader.readLine()) != null) {
+			User user;
+			try {
+				user = newUserFrom(line);
+			} catch (IllegalArgumentException e) {
+				throw new IOException(e);
+			}
+			users.add(user);
+		}
+		return Users.of(users);
+	}
+
 	private static Users readUsersFrom(final File file) {
 		if (!file.exists()) {
 			return Users.of();
 		}
-		Reader reader = null;
+		FileInputStream fileInputStream = null;
 		Users users = null;
 		try {
-			reader = new InputStreamReader(new FileInputStream(file));
-			users = UsersFileConversionHelper.newUsersFrom(reader);
+			fileInputStream = new FileInputStream(file);
+			users = readUsersFrom(fileInputStream);
 		} catch (FileNotFoundException e) {
 			throw new UncheckedIOException(e);
 		} catch (IOException e) {
@@ -107,9 +138,9 @@ public final class FileSourceUserRepository extends UserRepository {
 		} catch (IllegalArgumentException e) {
 			throw new UncheckedIOException(new IOException(e));
 		} finally {
-			if (reader != null) {
+			if (fileInputStream != null) {
 				try {
-					reader.close();
+					fileInputStream.close();
 				} catch (IOException e) {
 					throw new UncheckedIOException(e);
 				}
@@ -117,13 +148,25 @@ public final class FileSourceUserRepository extends UserRepository {
 		}
 		return users;
 	}
-	
+
+	private static void writeUsersTo(
+			final OutputStream out, final Users users) throws IOException {
+		try (BufferedWriter bufferedWriter = new BufferedWriter(
+				new OutputStreamWriter(out))) {
+			for (User user : users.toMap().values()) {
+				bufferedWriter.write(toString(user));
+				bufferedWriter.newLine();
+				bufferedWriter.flush();
+			}
+		}
+	}
+
 	private static void writeUsersTo(final File file, final Users users) {
 		File tempFile = new File(file.toString().concat(".tmp"));
-		Writer writer = null;
+		FileOutputStream fileOutputStream = null;
 		try {
-			writer = new OutputStreamWriter(new FileOutputStream(tempFile));
-			UsersFileConversionHelper.toFile(users, writer);
+			fileOutputStream = new FileOutputStream(tempFile);
+			writeUsersTo(fileOutputStream, users);
 		} catch (FileNotFoundException e) {
 			throw new UncheckedIOException(e);
 		} catch (IOException e) {
@@ -131,9 +174,9 @@ public final class FileSourceUserRepository extends UserRepository {
 		} catch (IllegalArgumentException e) {
 			throw new UncheckedIOException(new IOException(e));
 		} finally {
-			if (writer != null) {
+			if (fileOutputStream != null) {
 				try {
-					writer.close();
+					fileOutputStream.close();
 				} catch (IOException e) {
 					throw new UncheckedIOException(e);
 				}
@@ -149,7 +192,27 @@ public final class FileSourceUserRepository extends UserRepository {
 			throw new UncheckedIOException(e);
 		}
 	}
-	
+
+	private static String toString(final User user) {
+		String encodedName;
+		try {
+			encodedName = URLEncoder.encode(user.getName(), "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			throw new AssertionError(e);
+		}
+		String encodedHashedPassword;
+		try {
+			encodedHashedPassword = URLEncoder.encode(
+					user.getHashedPassword().toString(), "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			throw new AssertionError(e);
+		}
+		return String.format(
+				"%s:%s",
+				encodedName,
+				encodedHashedPassword);
+	}
+
 	private ExecutorService executor;
 	private final File file;
 	private final AtomicLong lastUpdated;

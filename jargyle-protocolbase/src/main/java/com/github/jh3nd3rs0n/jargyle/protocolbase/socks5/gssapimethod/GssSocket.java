@@ -1,20 +1,14 @@
 package com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.SequenceInputStream;
-import java.net.Socket;
-import java.nio.channels.SocketChannel;
-import java.util.Objects;
-
+import com.github.jh3nd3rs0n.jargyle.internal.net.FilterSocket;
 import org.ietf.jgss.GSSContext;
 import org.ietf.jgss.GSSException;
 import org.ietf.jgss.MessageProp;
 
-import com.github.jh3nd3rs0n.jargyle.internal.net.FilterSocket;
+import java.io.*;
+import java.net.Socket;
+import java.nio.channels.SocketChannel;
+import java.util.Objects;
 
 final class GssSocket extends FilterSocket {
 
@@ -62,7 +56,7 @@ final class GssSocket extends FilterSocket {
 					this.closed = true;
 					return b;
 				}
-				Message message = MessageInputHelper.readMessageFrom(
+				Message message = Message.newInstanceFrom(
 						new SequenceInputStream(
 								new ByteArrayInputStream(
 										new byte[] { (byte) b }),

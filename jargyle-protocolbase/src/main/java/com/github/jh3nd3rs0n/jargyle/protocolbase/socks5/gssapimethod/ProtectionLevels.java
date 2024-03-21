@@ -1,12 +1,12 @@
 package com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod;
 
+import com.github.jh3nd3rs0n.jargyle.internal.annotation.ValuesValueTypeDoc;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import com.github.jh3nd3rs0n.jargyle.internal.annotation.ValuesValueTypeDoc;
 
 @ValuesValueTypeDoc(
 		description = "",

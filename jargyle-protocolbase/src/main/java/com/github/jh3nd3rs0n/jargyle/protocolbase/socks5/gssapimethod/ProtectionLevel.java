@@ -1,13 +1,12 @@
 package com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod;
 
-import java.util.Arrays;
-import java.util.stream.Collectors;
-
-import org.ietf.jgss.MessageProp;
-
 import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.EnumValueDoc;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.EnumValueTypeDoc;
+import org.ietf.jgss.MessageProp;
+
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 @EnumValueTypeDoc(
 		description = "",

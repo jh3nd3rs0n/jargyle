@@ -6,32 +6,32 @@ import org.junit.Test;
 public class UsernamePasswordResponseTest {
 
 	@Test
-	public void testNewInstanceByte01() {
+	public void testToByteArray01() {
 		UsernamePasswordResponse usernamePasswordResponse1 =
 				UsernamePasswordResponse.newInstance(
 						UsernamePasswordResponse.STATUS_SUCCESS);
-		UsernamePasswordResponse usernamePasswordResponse2 = 
-				UsernamePasswordResponse.newInstance(
+		UsernamePasswordResponse usernamePasswordResponse2 =
+				UsernamePasswordResponse.newInstanceFrom(
 						usernamePasswordResponse1.toByteArray());
 		Assert.assertEquals(usernamePasswordResponse1, usernamePasswordResponse2);
 	}
 	
 	@Test
-	public void testNewInstanceByte02() {
+	public void testToByteArray02() {
 		UsernamePasswordResponse usernamePasswordResponse1 =
 				UsernamePasswordResponse.newInstance((byte) 0x01);
-		UsernamePasswordResponse usernamePasswordResponse2 = 
-				UsernamePasswordResponse.newInstance(
+		UsernamePasswordResponse usernamePasswordResponse2 =
+				UsernamePasswordResponse.newInstanceFrom(
 						usernamePasswordResponse1.toByteArray());
 		Assert.assertEquals(usernamePasswordResponse1, usernamePasswordResponse2);
 	}
 
 	@Test
-	public void testNewInstanceByte03() {
+	public void testToByteArray03() {
 		UsernamePasswordResponse usernamePasswordResponse1 =
 				UsernamePasswordResponse.newInstance((byte) 0xff);
-		UsernamePasswordResponse usernamePasswordResponse2 = 
-				UsernamePasswordResponse.newInstance(
+		UsernamePasswordResponse usernamePasswordResponse2 =
+				UsernamePasswordResponse.newInstanceFrom(
 						usernamePasswordResponse1.toByteArray());
 		Assert.assertEquals(usernamePasswordResponse1, usernamePasswordResponse2);
 	}

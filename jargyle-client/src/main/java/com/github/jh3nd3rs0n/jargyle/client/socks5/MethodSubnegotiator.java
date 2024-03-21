@@ -1,36 +1,20 @@
 package com.github.jh3nd3rs0n.jargyle.client.socks5;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.Socket;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import org.ietf.jgss.GSSContext;
-import org.ietf.jgss.GSSException;
-import org.ietf.jgss.GSSManager;
-import org.ietf.jgss.GSSName;
-import org.ietf.jgss.MessageProp;
-import org.ietf.jgss.Oid;
-
 import com.github.jh3nd3rs0n.jargyle.client.Socks5PropertySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Method;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.MethodEncapsulation;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.MethodSubnegotiationException;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod.GssapiMethodEncapsulation;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod.MessageInputHelper;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod.Message;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod.MessageType;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod.ProtectionLevel;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod.ProtectionLevels;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod.*;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.userpassmethod.UsernamePasswordRequest;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.userpassmethod.UsernamePasswordResponse;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.userpassmethod.UsernamePasswordResponseInputHelper;
+import org.ietf.jgss.*;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.Socket;
+import java.util.*;
+import java.util.stream.Collectors;
 
 abstract class MethodSubnegotiator {
 	
@@ -59,7 +43,7 @@ abstract class MethodSubnegotiator {
 					outStream.flush();
 				}
 				if (!context.isEstablished()) {
-					Message message = MessageInputHelper.readMessageFrom(
+					Message message = Message.newInstanceFrom(
 							inStream);
 					if (message.getMessageType().equals(MessageType.ABORT)) {
 						throw new MethodSubnegotiationException(
@@ -97,7 +81,7 @@ abstract class MethodSubnegotiator {
 				} catch (GSSException e) {
 					outStream.write(Message.newInstance(
 							MessageType.ABORT, 
-							null).toByteArray());
+							new byte[]{}).toByteArray());
 					outStream.flush();
 					throw e;
 				}
@@ -106,7 +90,7 @@ abstract class MethodSubnegotiator {
 					MessageType.PROTECTION_LEVEL_NEGOTIATION, 
 					token).toByteArray());
 			outStream.flush();
-			Message message = MessageInputHelper.readMessageFrom(inStream);
+			Message message = Message.newInstanceFrom(inStream);
 			if (message.getMessageType().equals(MessageType.ABORT)) {
 				throw new MethodSubnegotiationException(
 						this.getMethod(), 
@@ -121,7 +105,7 @@ abstract class MethodSubnegotiator {
 				} catch (GSSException e) {
 					outStream.write(Message.newInstance(
 							MessageType.ABORT, 
-							null).toByteArray());
+							new byte[]{}).toByteArray());
 					outStream.flush();
 					throw e;
 				}
@@ -278,7 +262,7 @@ abstract class MethodSubnegotiator {
 				outputStream.write(usernamePasswordReq.toByteArray());
 				outputStream.flush();
 				UsernamePasswordResponse usernamePasswordResp = 
-						UsernamePasswordResponseInputHelper.readUsernamePasswordResponseFrom(
+						UsernamePasswordResponse.newInstanceFrom(
 								inputStream);
 				status = usernamePasswordResp.getStatus();
 			} finally {

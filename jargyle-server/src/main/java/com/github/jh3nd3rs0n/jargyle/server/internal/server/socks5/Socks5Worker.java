@@ -1,48 +1,19 @@
 package com.github.jh3nd3rs0n.jargyle.server.internal.server.socks5;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.SequenceInputStream;
-import java.io.UncheckedIOException;
-import java.net.Socket;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Address;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.AddressTypeNotSupportedException;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.ClientMethodSelectionMessage;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.CommandNotSupportedException;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Method;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.ClientMethodSelectionMessageInputHelper;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.MethodSubnegotiationException;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Methods;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Reply;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.ServerMethodSelectionMessage;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Socks5Reply;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Socks5Request;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Socks5RequestInputHelper;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Version;
-import com.github.jh3nd3rs0n.jargyle.server.FirewallAction;
-import com.github.jh3nd3rs0n.jargyle.server.GeneralRuleResultSpecConstants;
-import com.github.jh3nd3rs0n.jargyle.server.GeneralSettingSpecConstants;
-import com.github.jh3nd3rs0n.jargyle.server.LogAction;
-import com.github.jh3nd3rs0n.jargyle.server.NonNegativeIntegerLimit;
-import com.github.jh3nd3rs0n.jargyle.server.Rule;
-import com.github.jh3nd3rs0n.jargyle.server.RuleContext;
-import com.github.jh3nd3rs0n.jargyle.server.SelectionStrategy;
-import com.github.jh3nd3rs0n.jargyle.server.Socks5RuleArgSpecConstants;
-import com.github.jh3nd3rs0n.jargyle.server.Socks5RuleConditionSpecConstants;
-import com.github.jh3nd3rs0n.jargyle.server.Socks5RuleResultSpecConstants;
-import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.*;
+import com.github.jh3nd3rs0n.jargyle.server.*;
 import com.github.jh3nd3rs0n.jargyle.server.internal.server.Route;
 import com.github.jh3nd3rs0n.jargyle.server.internal.server.Routes;
 import com.github.jh3nd3rs0n.jargyle.server.internal.server.Worker;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.*;
+import java.net.Socket;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Socks5Worker extends Worker {
 
@@ -257,7 +228,7 @@ public class Socks5Worker extends Worker {
 				this.clientInputStream);
 		ClientMethodSelectionMessage cmsm = null;
 		try {
-			cmsm = ClientMethodSelectionMessageInputHelper.readClientMethodSelectionMessageFrom(
+			cmsm = ClientMethodSelectionMessage.newInstanceFrom(
 					in);
 		} catch (IOException e) {
 			this.logClientIoException(
@@ -307,7 +278,7 @@ public class Socks5Worker extends Worker {
 	private Socks5Request newSocks5Request() {
 		Socks5Request socks5Request = null;
 		try {
-			socks5Request = Socks5RequestInputHelper.readSocks5RequestFrom(
+			socks5Request = Socks5Request.newInstanceFrom(
 					this.clientInputStream);
 		} catch (AddressTypeNotSupportedException e) {
 			this.logger.debug( 

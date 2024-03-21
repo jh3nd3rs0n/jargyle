@@ -1,11 +1,11 @@
 package com.github.jh3nd3rs0n.jargyle.protocolbase.socks5;
 
-import java.util.Arrays;
-import java.util.stream.Collectors;
-
 import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.EnumValueDoc;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.EnumValueTypeDoc;
+
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 @EnumValueTypeDoc(
 		description = "",

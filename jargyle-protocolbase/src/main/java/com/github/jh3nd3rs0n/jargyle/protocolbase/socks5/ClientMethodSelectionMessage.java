@@ -1,65 +1,66 @@
 package com.github.jh3nd3rs0n.jargyle.protocolbase.socks5;
 
+import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.internal.UnsignedByteIoHelper;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
-
-import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
+import java.util.Objects;
 
 public final class ClientMethodSelectionMessage {
-	
-	static final class Params {
-		Version version;
-		Methods methods;
-		byte[] byteArray;
+
+	private final Version version;
+	private final Methods methods;
+
+	private ClientMethodSelectionMessage(final Methods meths) {
+		this.version = Version.V5;
+		this.methods = meths;
 	}
-	
-	public static ClientMethodSelectionMessage newInstance(final byte[] b) {
-		ClientMethodSelectionMessage cmsm = null;
+
+	public static ClientMethodSelectionMessage newInstance(
+			final Methods meths) {
+		List<Method> methsList = Objects.requireNonNull(meths).toList();
+		if (methsList.size() > UnsignedByte.MAX_INT_VALUE) {
+			throw new IllegalArgumentException(String.format(
+					"number of methods must be no more than %s",
+					UnsignedByte.MAX_INT_VALUE));
+		}
+		return new ClientMethodSelectionMessage(meths);
+	}
+
+	public static ClientMethodSelectionMessage newInstanceFrom(
+			final byte[] b) {
+		ClientMethodSelectionMessage cmsm;
 		try {
-			cmsm = ClientMethodSelectionMessageInputHelper.readClientMethodSelectionMessageFrom(
-					new ByteArrayInputStream(b));
+			cmsm = newInstanceFrom(new ByteArrayInputStream(b));
 		} catch (IOException e) {
 			throw new IllegalArgumentException(e);
 		}
 		return cmsm;
 	}
-	
-	public static ClientMethodSelectionMessage newInstance(
-			final Methods methods) {
-		List<Method> methodsList = methods.toList();
-		if (methodsList.size() > UnsignedByte.MAX_INT_VALUE) {
-			throw new IllegalArgumentException(String.format(
-					"number of methods must be no more than %s",
-					UnsignedByte.MAX_INT_VALUE));
-		}
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		Version version = Version.V5;
-		out.write(UnsignedByte.valueOf(version.byteValue()).intValue());
-		out.write(methodsList.size());
-		for (Method method : methodsList) {
-			out.write(UnsignedByte.valueOf(method.byteValue()).intValue());
-		}
-		Params params = new Params();
-		params.version = version;
-		params.methods = methods;
-		params.byteArray = out.toByteArray();
-		return new ClientMethodSelectionMessage(params);
-	}
-	
-	private final Version version;
-	private final Methods methods;
-	private final byte[] byteArray;
-	
-	ClientMethodSelectionMessage(final Params params) {
-		this.version = params.version;
-		this.methods = params.methods;
-		this.byteArray = params.byteArray;
-	}
+    public static ClientMethodSelectionMessage newInstanceFrom(
+            final InputStream in) throws IOException {
+        VersionIoHelper.readVersionFrom(in);
+        UnsignedByte methodCount = UnsignedByteIoHelper.readUnsignedByteFrom(
+                in);
+        List<Method> meths = new ArrayList<Method>();
+        for (int i = 0; i < methodCount.intValue(); i++) {
+            Method meth;
+            try {
+                meth = MethodIoHelper.readMethodFrom(in);
+            } catch (Socks5Exception e) {
+                continue;
+            }
+            meths.add(meth);
+        }
+        return newInstance(Methods.of(meths));
+    }
 
-	@Override
+    @Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
@@ -71,7 +72,7 @@ public final class ClientMethodSelectionMessage {
 			return false;
 		}
 		ClientMethodSelectionMessage other = (ClientMethodSelectionMessage) obj;
-		if (!Arrays.equals(this.byteArray, other.byteArray)) {
+		if (!this.methods.equals(other.methods)) {
 			return false;
 		}
 		return true;
@@ -89,12 +90,19 @@ public final class ClientMethodSelectionMessage {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + Arrays.hashCode(this.byteArray);
+		result = prime * result + this.methods.hashCode();
 		return result;
 	}
 
 	public byte[] toByteArray() {
-		return Arrays.copyOf(this.byteArray, this.byteArray.length);
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		out.write(UnsignedByte.valueOf(this.version.byteValue()).intValue());
+		List<Method> methodsList = this.methods.toList();
+		out.write(methodsList.size());
+		for (Method method : methodsList) {
+			out.write(UnsignedByte.valueOf(method.byteValue()).intValue());
+		}
+		return out.toByteArray();
 	}
 
 	@Override

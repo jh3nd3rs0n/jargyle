@@ -1,11 +1,8 @@
 package com.github.jh3nd3rs0n.jargyle.server.socks5.userpassmethod;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.util.Objects;
-
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.userpassmethod.UsernamePasswordRequest;
+
+import java.util.Objects;
 
 public final class User {
 
@@ -26,52 +23,7 @@ public final class User {
 			final String name, final HashedPassword hashedPassword) {
 		return new User(name, hashedPassword);
 	}
-	
-	public static User newInstanceFromUsernameHashedPasswordPair(
-			final String s) {
-		String[] sElements = s.split(":");
-		if (sElements.length != 2) {
-			throw new IllegalArgumentException(
-					"username hashed password pair must be in the following "
-					+ "format: USERNAME:HASHED_PASSWORD");
-		}
-		String name = null;
-		try {
-			name = URLDecoder.decode(sElements[0], "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			throw new AssertionError(e);
-		}
-		String hashedPassword = null;
-		try {
-			hashedPassword = URLDecoder.decode(sElements[1], "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			throw new AssertionError(e);
-		}
-		return newInstance(name, HashedPassword.newInstanceFrom(hashedPassword));
-	}
-	
-	public static User newInstanceFromUsernamePasswordPair(final String s) {
-		String[] sElements = s.split(":");
-		if (sElements.length != 2) {
-			throw new IllegalArgumentException(
-					"username password pair must be in the following format: "
-					+ "USERNAME:PASSWORD");
-		}
-		String name = null;
-		try {
-			name = URLDecoder.decode(sElements[0], "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			throw new AssertionError(e);
-		}
-		String password = null;
-		try {
-			password = URLDecoder.decode(sElements[1], "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			throw new AssertionError(e);
-		}
-		return newInstance(name, password.toCharArray());
-	}
-	
+
 	public static void validateName(final String name) {
 		UsernamePasswordRequest.validateUsername(name);
 	}
@@ -129,22 +81,13 @@ public final class User {
 
 	@Override
 	public String toString() {
-		String encodedName = null;
-		try {
-			encodedName = URLEncoder.encode(this.name, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			throw new AssertionError(e);
-		}
-		String encodedHashedPassword = null;
-		try {
-			encodedHashedPassword = URLEncoder.encode(
-					this.hashedPassword.toString(), "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			throw new AssertionError(e);
-		}
-		return String.format(
-				"%s:%s", 
-				encodedName,
-				encodedHashedPassword);
+		StringBuilder builder = new StringBuilder();
+		builder.append(this.getClass().getSimpleName())
+				.append(" [name=")
+				.append(this.name)
+				.append(", hashedPassword=")
+				.append(this.hashedPassword)
+				.append("]");
+		return builder.toString();
 	}
 }

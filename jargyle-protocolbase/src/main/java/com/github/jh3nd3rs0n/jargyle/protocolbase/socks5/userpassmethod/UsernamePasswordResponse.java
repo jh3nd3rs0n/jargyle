@@ -1,58 +1,48 @@
 package com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.userpassmethod;
 
+import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.internal.UnsignedByteIoHelper;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
-
-import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
+import java.io.InputStream;
 
 public final class UsernamePasswordResponse {
 
-	static final class Params {
-		Version version;
-		byte status;
-		byte[] byteArray;
-	}
-	
 	public static final byte STATUS_SUCCESS = 0x0;
-	
-	public static UsernamePasswordResponse newInstance(
-			final byte status) {
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		Version version = Version.V1;
-		out.write(UnsignedByte.valueOf(version.byteValue()).intValue());
-		out.write(UnsignedByte.valueOf(status).intValue());
-		Params params = new Params();
-		params.version = version;
-		params.status = status;
-		params.byteArray = out.toByteArray();
-		return new UsernamePasswordResponse(params);
+
+	private final Version version;
+	private final byte status;
+
+	private UsernamePasswordResponse(final byte stat) {
+		this.version = Version.V1;
+		this.status = stat;
 	}
-	
-	public static UsernamePasswordResponse newInstance(final byte[] b) {
-		UsernamePasswordResponse response = null;
+
+	public static UsernamePasswordResponse newInstance(final byte stat) {
+		return new UsernamePasswordResponse(stat);
+	}
+
+	public static UsernamePasswordResponse newInstanceFrom(
+			final byte[] b) {
+		UsernamePasswordResponse response;
 		try {
-			response = 
-					UsernamePasswordResponseInputHelper.readUsernamePasswordResponseFrom(
-							new ByteArrayInputStream(b));
+			response = newInstanceFrom(new ByteArrayInputStream(b));
 		} catch (IOException e) {
 			throw new IllegalArgumentException(e);
 		}
 		return response;
 	}
-	
-	private final Version version;
-	private final byte status;
-	private final byte[] byteArray;
-	
-	UsernamePasswordResponse(final Params params) {
-		this.version = params.version;
-		this.status = params.status;
-		this.byteArray = params.byteArray;
-	}
 
-	@Override
+    public static UsernamePasswordResponse newInstanceFrom(
+            final InputStream in) throws IOException {
+        VersionIoHelper.readVersionFrom(in);
+        UnsignedByte status = UnsignedByteIoHelper.readUnsignedByteFrom(in);
+        return newInstance(status.byteValue());
+    }
+
+    @Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
@@ -64,7 +54,7 @@ public final class UsernamePasswordResponse {
 			return false;
 		}
 		UsernamePasswordResponse other = (UsernamePasswordResponse) obj;
-		if (!Arrays.equals(this.byteArray, other.byteArray)) {
+		if (this.status != other.status) {
 			return false;
 		}
 		return true;
@@ -82,12 +72,16 @@ public final class UsernamePasswordResponse {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + Arrays.hashCode(this.byteArray);
+		result = prime * result + this.status;
 		return result;
 	}
 
 	public byte[] toByteArray() {
-		return Arrays.copyOf(this.byteArray, this.byteArray.length);
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		out.write(UnsignedByte.valueOf(
+				this.version.byteValue()).intValue());
+		out.write(UnsignedByte.valueOf(this.status).intValue());
+		return out.toByteArray();
 	}
 
 	@Override

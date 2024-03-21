@@ -1,11 +1,21 @@
 package com.github.jh3nd3rs0n.jargyle.server.internal.server.socks5;
 
+import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
+import com.github.jh3nd3rs0n.jargyle.common.net.HostAddress;
+import com.github.jh3nd3rs0n.jargyle.common.net.Port;
+import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
+import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
+import com.github.jh3nd3rs0n.jargyle.internal.throwable.ThrowableHelper;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Address;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.UdpRequestHeader;
+import com.github.jh3nd3rs0n.jargyle.server.*;
+import com.github.jh3nd3rs0n.jargyle.server.internal.concurrent.ExecutorsHelper;
+import com.github.jh3nd3rs0n.jargyle.server.internal.server.Rules;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.SocketException;
-import java.net.SocketTimeoutException;
+import java.net.*;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
@@ -13,27 +23,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
-
-import com.github.jh3nd3rs0n.jargyle.common.net.HostAddress;
-import com.github.jh3nd3rs0n.jargyle.server.internal.concurrent.ExecutorsHelper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
-import com.github.jh3nd3rs0n.jargyle.common.net.Port;
-import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
-import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
-import com.github.jh3nd3rs0n.jargyle.internal.throwable.ThrowableHelper;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Address;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.UdpRequestHeader;
-import com.github.jh3nd3rs0n.jargyle.server.FirewallAction;
-import com.github.jh3nd3rs0n.jargyle.server.GeneralRuleResultSpecConstants;
-import com.github.jh3nd3rs0n.jargyle.server.LogAction;
-import com.github.jh3nd3rs0n.jargyle.server.Rule;
-import com.github.jh3nd3rs0n.jargyle.server.RuleContext;
-import com.github.jh3nd3rs0n.jargyle.server.Socks5RuleArgSpecConstants;
-import com.github.jh3nd3rs0n.jargyle.server.Socks5RuleConditionSpecConstants;
-import com.github.jh3nd3rs0n.jargyle.server.internal.server.Rules;
 
 final class UdpRelayServer {
 	
@@ -520,10 +509,11 @@ final class UdpRelayServer {
 				final DatagramPacket packet) {
 			UdpRequestHeader header = null; 
 			try {
-				header = UdpRequestHeader.newInstance(Arrays.copyOfRange(
-						packet.getData(), 
-						packet.getOffset(), 
-						packet.getLength()));
+				header = UdpRequestHeader.newInstanceFrom(
+						Arrays.copyOfRange(
+								packet.getData(),
+								packet.getOffset(),
+								packet.getLength()));
 			} catch (IllegalArgumentException e) {
 				this.logger.error( 
 						ObjectLogMessageHelper.objectLogMessage(

@@ -1,18 +1,7 @@
 package com.github.jh3nd3rs0n.jargyle.server.integration.test;
 
-import static org.junit.Assert.assertEquals;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-
-import com.github.jh3nd3rs0n.jargyle.common.number.NonNegativeInteger;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
+import com.github.jh3nd3rs0n.jargyle.common.number.NonNegativeInteger;
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.ConfigurationRepository;
 import com.github.jh3nd3rs0n.jargyle.server.GeneralSettingSpecConstants;
@@ -20,12 +9,22 @@ import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.test.help.IoHelper;
 import com.github.jh3nd3rs0n.test.help.ThreadHelper;
 import com.github.jh3nd3rs0n.test.help.constants.TestResourceConstants;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
+import static org.junit.Assert.assertEquals;
 
 public class FileSourceConfigurationRepositoryIT {
 	
 	private Path baseDir = null;
 	private Path configurationFile = null;
-	private ConfigurationRepository xmlFileSourceConfigurationRepository = null;
+	private ConfigurationRepository fileSourceConfigurationRepository = null;
 
 	@Before
 	public void setUp() throws Exception {
@@ -35,8 +34,8 @@ public class FileSourceConfigurationRepositoryIT {
 
 	@After
 	public void tearDown() throws Exception {
-		if (this.xmlFileSourceConfigurationRepository != null) {
-			this.xmlFileSourceConfigurationRepository = null;
+		if (this.fileSourceConfigurationRepository != null) {
+			this.fileSourceConfigurationRepository = null;
 		}
 		if (this.configurationFile != null) {
 			Files.deleteIfExists(this.configurationFile);
@@ -54,7 +53,7 @@ public class FileSourceConfigurationRepositoryIT {
 		IoHelper.writeStringToFile(
 				TestResourceConstants.JARGYLE_SERVER_INTEGRATION_TEST_EMPTY_CONFIGURATION_FILE.getContentAsString(),
 				configFile);
-		this.xmlFileSourceConfigurationRepository = 
+		this.fileSourceConfigurationRepository =
 				ConfigurationRepository.newFileSourceInstance(configFile);
 		IoHelper.writeStringToFile(
 				TestResourceConstants.JARGYLE_SERVER_INTEGRATION_TEST_CONFIGURATION_FILE.getContentAsString(),
@@ -67,7 +66,7 @@ public class FileSourceConfigurationRepositoryIT {
 		configFile.setLastModified(System.currentTimeMillis());
 		ThreadHelper.sleepForThreeSeconds();
 		Configuration configuration = 
-				this.xmlFileSourceConfigurationRepository.get();
+				this.fileSourceConfigurationRepository.get();
 		Settings settings = configuration.getSettings();
 		Port expectedPort = Port.valueOf(1234);
 		Port actualPort = settings.getLastValue(
@@ -81,7 +80,7 @@ public class FileSourceConfigurationRepositoryIT {
 		IoHelper.writeStringToFile(
 				TestResourceConstants.JARGYLE_SERVER_INTEGRATION_TEST_EMPTY_CONFIGURATION_FILE.getContentAsString(),
 				configFile);
-		this.xmlFileSourceConfigurationRepository = 
+		this.fileSourceConfigurationRepository =
 				ConfigurationRepository.newFileSourceInstance(configFile);
 		IoHelper.writeStringToFile(
 				TestResourceConstants.JARGYLE_SERVER_INTEGRATION_TEST_CONFIGURATION_FILE.getContentAsString(),
@@ -94,7 +93,7 @@ public class FileSourceConfigurationRepositoryIT {
 		configFile.setLastModified(System.currentTimeMillis());		
 		ThreadHelper.sleepForThreeSeconds();
 		Configuration configuration = 
-				this.xmlFileSourceConfigurationRepository.get();
+				this.fileSourceConfigurationRepository.get();
 		Settings settings = configuration.getSettings();
 		NonNegativeInteger expectedBacklog = NonNegativeInteger.valueOf(
 				100);

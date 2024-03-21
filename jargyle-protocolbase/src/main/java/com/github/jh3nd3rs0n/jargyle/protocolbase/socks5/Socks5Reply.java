@@ -1,90 +1,93 @@
 package com.github.jh3nd3rs0n.jargyle.protocolbase.socks5;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.Arrays;
-
 import com.github.jh3nd3rs0n.jargyle.common.net.HostIpv4Address;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.internal.UnsignedByteIoHelper;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Objects;
 
 public final class Socks5Reply {
 
-	static final class Params {
-		Version version;
-		Reply reply;
-		Address serverBoundAddress;
-		Port serverBoundPort;
-		byte[] byteArray;
+    private static final int RSV = 0x00;
+
+	private final Version version;
+	private final Reply reply;
+	private final Address serverBoundAddress;
+	private final Port serverBoundPort;
+
+	private Socks5Reply(
+			final Reply rply,
+			final Address serverBoundAddr,
+			final Port serverBoundPrt) {
+		this.version = Version.V5;
+		this.reply = Objects.requireNonNull(rply);
+		this.serverBoundAddress = Objects.requireNonNull(serverBoundAddr);
+		this.serverBoundPort = Objects.requireNonNull(serverBoundPrt);
 	}
-	
-	static final int RSV = 0x00;
-	
+
 	public static Socks5Reply newFailureInstance(final Reply reply) {
 		if (reply.equals(Reply.SUCCEEDED)) {
 			throw new IllegalArgumentException("reply must be of a failure");
 		}
 		return newInstance(
-				reply, 
+				reply,
 				Address.newInstance(HostIpv4Address.ALL_ZEROS_IPV4_ADDRESS),
 				Port.valueOf(0));
 	}
-	
-	public static Socks5Reply newInstance(final byte[] b) {
-		Socks5Reply socks5Reply = null;
-		try {
-			socks5Reply = Socks5ReplyInputHelper.readSocks5ReplyFrom(
-					new ByteArrayInputStream(b));
-		} catch (IOException e) {
-			throw new IllegalArgumentException(e);
-		}
-		return socks5Reply;
-	}
-	
+
 	public static Socks5Reply newInstance(
-			final Reply reply,
-			final Address serverBoundAddress,
-			final Port serverBoundPort) {
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		Version version = Version.V5;
-		out.write(UnsignedByte.valueOf(version.byteValue()).intValue());
-		out.write(UnsignedByte.valueOf(reply.byteValue()).intValue());
-		out.write(RSV);
-		try {
-			out.write(serverBoundAddress.toByteArray());
-		} catch (IOException e) {
-			throw new AssertionError(e);
-		}
-		try {
-			out.write(serverBoundPort.unsignedShortValue().toByteArray());
-		} catch (IOException e) {
-			throw new AssertionError(e);
-		}
-		Params params = new Params();
-		params.version = version;
-		params.reply = reply;
-		params.serverBoundAddress = serverBoundAddress;
-		params.serverBoundPort = serverBoundPort;
-		params.byteArray = out.toByteArray();
-		return new Socks5Reply(params);
-	}
-	
-	private final Version version;
-	private final Reply reply;
-	private final Address serverBoundAddress;
-	private final Port serverBoundPort;
-	private final byte[] byteArray;
-	
-	Socks5Reply(final Params params) {
-		this.version = params.version;
-		this.reply = params.reply;
-		this.serverBoundAddress = params.serverBoundAddress;
-		this.serverBoundPort = params.serverBoundPort;
-		this.byteArray = params.byteArray;
+			final Reply rply,
+			final Address serverBoundAddr,
+			final Port serverBoundPrt) {
+		return new Socks5Reply(
+				Objects.requireNonNull(rply),
+				Objects.requireNonNull(serverBoundAddr),
+				Objects.requireNonNull(serverBoundPrt));
 	}
 
-	@Override
+    public static Socks5Reply newInstanceFrom(final byte[] b) {
+        Socks5Reply socks5Reply;
+        try {
+            socks5Reply = newInstanceFrom(new ByteArrayInputStream(b));
+        } catch (IOException e) {
+            throw new IllegalArgumentException(e);
+        }
+        return socks5Reply;
+    }
+
+    public static Socks5Reply newInstanceFrom(
+            final InputStream in) throws IOException {
+        VersionIoHelper.readVersionFrom(in);
+        Reply rep = readReplyFrom(in);
+        UnsignedByte rsv = UnsignedByteIoHelper.readUnsignedByteFrom(in);
+        if (rsv.intValue() != RSV) {
+            throw new Socks5Exception(String.format(
+                    "expected RSV is %s, actual RSV is %s",
+                    RSV, rsv.intValue()));
+        }
+        Address bndAddr = AddressHelper.readAddressFrom(in);
+        Port bndPort = PortIoHelper.readPortFrom(in);
+        return newInstance(rep, bndAddr, bndPort);
+    }
+
+    private static Reply readReplyFrom(
+			final InputStream in) throws IOException {
+        UnsignedByte b = UnsignedByteIoHelper.readUnsignedByteFrom(in);
+        Reply reply;
+        try {
+            reply = Reply.valueOfByte(b.byteValue());
+        } catch (IllegalArgumentException e) {
+            throw new Socks5Exception(e);
+        }
+        return reply;
+    }
+
+    @Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
@@ -96,7 +99,13 @@ public final class Socks5Reply {
 			return false;
 		}
 		Socks5Reply other = (Socks5Reply) obj;
-		if (!Arrays.equals(this.byteArray, other.byteArray)) {
+		if (!this.reply.equals(other.reply)) {
+			return false;
+		}
+		if (!this.serverBoundAddress.equals(other.serverBoundAddress)) {
+			return false;
+		}
+		if (!this.serverBoundPort.equals(other.serverBoundPort)) {
 			return false;
 		}
 		return true;
@@ -122,12 +131,30 @@ public final class Socks5Reply {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + Arrays.hashCode(this.byteArray);
+		result = prime * result + this.reply.hashCode();
+		result = prime * result + this.serverBoundAddress.hashCode();
+		result = prime * result + this.serverBoundPort.hashCode();
 		return result;
 	}
 
 	public byte[] toByteArray() {
-		return Arrays.copyOf(this.byteArray, this.byteArray.length);
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		out.write(UnsignedByte.valueOf(
+				this.version.byteValue()).intValue());
+		out.write(UnsignedByte.valueOf(
+				this.reply.byteValue()).intValue());
+		out.write(RSV);
+		try {
+			out.write(AddressHelper.toByteArray(this.serverBoundAddress));
+		} catch (IOException e) {
+			throw new AssertionError(e);
+		}
+		try {
+			out.write(PortIoHelper.toByteArray(this.serverBoundPort));
+		} catch (IOException e) {
+			throw new AssertionError(e);
+		}
+		return out.toByteArray();
 	}
 
 	@Override

@@ -1,97 +1,80 @@
 package com.github.jh3nd3rs0n.jargyle.protocolbase.socks5;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.Arrays;
-
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
 import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedShort;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.internal.UnsignedByteIoHelper;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.internal.UnsignedShortIoHelper;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Arrays;
+import java.util.Objects;
 
 public final class UdpRequestHeader {
 
-	static final class Params {
-		UnsignedByte currentFragmentNumber;
-		Address desiredDestinationAddress;
-		Port desiredDestinationPort;
-		int userDataStartIndex;
-		byte[] byteArray;
-	}
-	
-	static final int RSV = 0x0000;
-	
-	public static UdpRequestHeader newInstance(final byte[] b) {
-		UdpRequestHeader udpRequestHeader = null;
-		try {
-			udpRequestHeader = 
-					UdpRequestHeaderInputHelper.readUdpRequestHeaderFrom(
-							new ByteArrayInputStream(b));
-		} catch (IOException e) {
-			throw new IllegalArgumentException(e);
-		}
-		return udpRequestHeader;
-	}
-	
-	public static UdpRequestHeader newInstance(
-			final UnsignedByte currentFragmentNumber,
-			final Address desiredDestinationAddress,
-			final Port desiredDestinationPort,
-			final byte[] userData) {
-		int dataStartIndex = -1;
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		byte[] rsv = UnsignedShort.valueOf(RSV).toByteArray();
-		dataStartIndex += rsv.length;
-		try {
-			out.write(rsv);
-		} catch (IOException e) {
-			throw new AssertionError(e);
-		}
-		dataStartIndex += 2;
-		out.write(currentFragmentNumber.intValue());
-		byte[] bytes = desiredDestinationAddress.toByteArray();
-		dataStartIndex += bytes.length;
-		try {
-			out.write(bytes);
-		} catch (IOException e) {
-			throw new AssertionError(e);
-		}
-		byte[] port = desiredDestinationPort.unsignedShortValue().toByteArray();
-		dataStartIndex += port.length;
-		try {
-			out.write(port);
-		} catch (IOException e) {
-			throw new AssertionError(e);
-		}
-		try {
-			out.write(userData);
-		} catch (IOException e) {
-			throw new AssertionError(e);
-		}
-		Params params = new Params();
-		params.currentFragmentNumber = currentFragmentNumber;
-		params.desiredDestinationAddress = desiredDestinationAddress;
-		params.desiredDestinationPort = desiredDestinationPort;
-		params.userDataStartIndex = dataStartIndex;
-		params.byteArray = out.toByteArray();
-		return new UdpRequestHeader(params);
-	}
-	
-	private final UnsignedByte currentFragmentNumber;
+    private static final int RSV = 0x0000;
+
+    private final UnsignedByte currentFragmentNumber;
 	private final Address desiredDestinationAddress;
 	private final Port desiredDestinationPort;
-	private final int userDataStartIndex;
-	private final byte[] byteArray;
+	private final byte[] userData;
 	
-	UdpRequestHeader(final Params params) {
-		this.currentFragmentNumber = params.currentFragmentNumber;
-		this.desiredDestinationAddress = params.desiredDestinationAddress;
-		this.desiredDestinationPort = params.desiredDestinationPort;
-		this.userDataStartIndex = params.userDataStartIndex;
-		this.byteArray = params.byteArray;
+	private UdpRequestHeader(
+			final UnsignedByte currentFragNumber,
+			final Address desiredDestinationAddr,
+			final Port desiredDestinationPrt,
+			final byte[] usrData) {
+		this.currentFragmentNumber = currentFragNumber;
+		this.desiredDestinationAddress = desiredDestinationAddr;
+		this.desiredDestinationPort = desiredDestinationPrt;
+		this.userData = Arrays.copyOf(usrData, usrData.length);
 	}
 
-	@Override
+	public static UdpRequestHeader newInstance(
+			final UnsignedByte currentFragNumber,
+			final Address desiredDestinationAddr,
+			final Port desiredDestinationPrt,
+			final byte[] usrData) {
+		return new UdpRequestHeader(
+				Objects.requireNonNull(currentFragNumber),
+				Objects.requireNonNull(desiredDestinationAddr),
+				Objects.requireNonNull(desiredDestinationPrt),
+				Objects.requireNonNull(usrData));
+	}
+
+    public static UdpRequestHeader newInstanceFrom(final byte[] b) {
+        UdpRequestHeader udpRequestHeader;
+        try {
+            udpRequestHeader = newInstanceFrom(new ByteArrayInputStream(b));
+        } catch (IOException e) {
+            throw new IllegalArgumentException(e);
+        }
+        return udpRequestHeader;
+    }
+
+    private static UdpRequestHeader newInstanceFrom(
+            final InputStream in) throws IOException {
+        UnsignedShort rsv = UnsignedShortIoHelper.readUnsignedShortFrom(in);
+        if (rsv.intValue() != RSV) {
+             throw new IllegalArgumentException(String.format(
+                     "expected RSV is %s, actual RSV is %s",
+                     RSV, rsv.intValue()));
+        }
+        UnsignedByte frag = UnsignedByteIoHelper.readUnsignedByteFrom(in);
+        Address dstAddr = AddressHelper.readAddressFrom(in);
+        Port dstPort = PortIoHelper.readPortFrom(in);
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        int b;
+        while ((b = in.read()) != -1) {
+            out.write(b);
+        }
+        return newInstance(frag, dstAddr, dstPort, out.toByteArray());
+    }
+
+    @Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
@@ -103,7 +86,18 @@ public final class UdpRequestHeader {
 			return false;
 		}
 		UdpRequestHeader other = (UdpRequestHeader) obj;
-		if (!Arrays.equals(this.byteArray, other.byteArray)) {
+		if (!this.currentFragmentNumber.equals(other.currentFragmentNumber)) {
+			return false;
+		}
+		if (!this.desiredDestinationAddress.equals(
+				other.desiredDestinationAddress)) {
+			return false;
+		}
+		if (!this.desiredDestinationPort.equals(
+				other.desiredDestinationPort)) {
+			return false;
+		}
+		if (!Arrays.equals(this.userData, other.userData)) {
 			return false;
 		}
 		return true;
@@ -122,24 +116,47 @@ public final class UdpRequestHeader {
 	}
 	
 	public byte[] getUserData() {
-		return Arrays.copyOfRange(
-				this.byteArray, this.userDataStartIndex, this.byteArray.length);
-	}
-
-	public int getUserDataStartIndex() {
-		return this.userDataStartIndex;
+		return Arrays.copyOf(this.userData, this.userData.length);
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + Arrays.hashCode(this.byteArray);
+		result = prime * result + this.currentFragmentNumber.hashCode();
+		result = prime * result + this.desiredDestinationAddress.hashCode();
+		result = prime * result + this.desiredDestinationPort.hashCode();
+		result = prime * result + Arrays.hashCode(this.userData);
 		return result;
 	}
 
 	public byte[] toByteArray() {
-		return Arrays.copyOf(this.byteArray, this.byteArray.length);
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		try {
+			out.write(UnsignedShortIoHelper.toByteArray(
+					UnsignedShort.valueOf(RSV)));
+		} catch (IOException e) {
+			throw new AssertionError(e);
+		}
+		out.write(this.currentFragmentNumber.intValue());
+		try {
+			out.write(AddressHelper.toByteArray(
+					this.desiredDestinationAddress));
+		} catch (IOException e) {
+			throw new AssertionError(e);
+		}
+		try {
+			out.write(PortIoHelper.toByteArray(
+					this.desiredDestinationPort));
+		} catch (IOException e) {
+			throw new AssertionError(e);
+		}
+		try {
+			out.write(this.userData);
+		} catch (IOException e) {
+			throw new AssertionError(e);
+		}
+		return out.toByteArray();
 	}
 
 	@Override
@@ -155,6 +172,5 @@ public final class UdpRequestHeader {
 			.append("]");
 		return builder.toString();
 	}
-	
-	
+
 }

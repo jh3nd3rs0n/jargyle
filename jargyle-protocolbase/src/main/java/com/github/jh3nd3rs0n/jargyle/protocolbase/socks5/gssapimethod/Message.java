@@ -1,96 +1,92 @@
 package com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
+import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedShort;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.internal.UnsignedByteIoHelper;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.internal.UnsignedShortIoHelper;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Socks5Exception;
+
+import java.io.*;
 import java.util.Arrays;
 import java.util.Objects;
 
-import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
-import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedShort;
-
 public final class Message {
 
-	static final class Params {
-		Version version;
-		MessageType messageType;
-		int tokenStartIndex;
-		byte[] byteArray;
-	}
-	
-	public static final int MAX_HEADER_LENGTH = 4;
-	
 	public static final int MAX_TOKEN_LENGTH = 65535;
-	
-	public static final int MAX_LENGTH = MAX_HEADER_LENGTH + MAX_TOKEN_LENGTH;
-	
-	public static Message newInstance(final byte[] b) {
-		Message message = null;
-		try {
-			message = MessageInputHelper.readMessageFrom(
-					new ByteArrayInputStream(b));
-		} catch (IOException e) {
-			throw new IllegalArgumentException(e);
-		}
-		return message;
-	}
-	
-	public static Message newInstance(
-			final MessageType messageType,
-			final byte[] token) {
-		Objects.requireNonNull(messageType, "message type must not be null");
-		int tknStartIndex = -1;
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		tknStartIndex++;
-		Version version = Version.V1;
-		out.write(UnsignedByte.valueOf(version.byteValue()).intValue());
-		tknStartIndex++;
-		out.write(UnsignedByte.valueOf(messageType.byteValue()).intValue());
-		if (messageType.equals(MessageType.ABORT)) {
-			tknStartIndex++;
-		} else {
-			Objects.requireNonNull(token, "token must not be null");
-			int tokenLength = token.length;
-			if (tokenLength > MAX_TOKEN_LENGTH) {
-				throw new IllegalArgumentException(String.format(
-						"token must be no more than %s bytes", MAX_TOKEN_LENGTH));
-			}
-			byte[] bytes = UnsignedShort.valueOf(tokenLength).toByteArray();
-			tknStartIndex += bytes.length;
-			try {
-				out.write(bytes);
-			} catch (IOException e) {
-				throw new AssertionError(e);
-			}
-			byte[] tkn = Arrays.copyOf(token, tokenLength);
-			tknStartIndex++;
-			try {
-				out.write(tkn);
-			} catch (IOException e) {
-				throw new AssertionError(e);
-			}
-		}
-		Params params = new Params();
-		params.version = version;
-		params.messageType = messageType;
-		params.tokenStartIndex = tknStartIndex;
-		params.byteArray = out.toByteArray();
-		return new Message(params);
-	}
-	
+
 	private final Version version;
 	private final MessageType messageType;
-	private final int tokenStartIndex;
-	private final byte[] byteArray;
+	private final byte[] token;
 	
-	Message(final Params params) {
-		this.version = params.version;
-		this.messageType = params.messageType;
-		this.tokenStartIndex = params.tokenStartIndex;
-		this.byteArray = params.byteArray;
+	private Message(final MessageType mType, final byte[] tkn) {
+		this.version = Version.V1;
+		this.messageType = mType;
+		this.token = Arrays.copyOf(tkn, tkn.length);
 	}
 
-	@Override
+    public static Message newInstance(
+            final MessageType mType, final byte[] tkn) {
+        if (tkn.length > MAX_TOKEN_LENGTH) {
+            throw new IllegalArgumentException(String.format(
+                    "token must be no more than %s bytes",
+                    MAX_TOKEN_LENGTH));
+        }
+        return new Message(Objects.requireNonNull(mType), tkn);
+    }
+
+    public static Message newInstanceFrom(final byte[] b) {
+        Message message;
+        try {
+            message = newInstanceFrom(new ByteArrayInputStream(b));
+        } catch (IOException e) {
+            throw new IllegalArgumentException(e);
+        }
+        return message;
+    }
+
+    public static Message newInstanceFrom(
+            final InputStream in) throws IOException {
+        readVersionFrom(in);
+        MessageType mType = readMessageTypeFrom(in);
+        if (mType.equals(MessageType.ABORT)) {
+            return newInstance(mType, new byte[]{});
+        }
+        UnsignedShort len = UnsignedShortIoHelper.readUnsignedShortFrom(
+                in);
+        byte[] token = new byte[len.intValue()];
+        int bytesRead = in.read(token);
+        if (bytesRead != len.intValue()) {
+            throw new EOFException(String.format(
+                    "expected token length is %s byte(s). "
+                            + "actual token length is %s byte(s)",
+                    len.intValue(), bytesRead));
+        }
+        return newInstance(mType, token);
+    }
+
+    private static MessageType readMessageTypeFrom(
+            final InputStream in) throws IOException {
+        UnsignedByte b = UnsignedByteIoHelper.readUnsignedByteFrom(in);
+        MessageType messageType;
+        try {
+            messageType = MessageType.valueOfByte(b.byteValue());
+        } catch (IllegalArgumentException e) {
+            throw new Socks5Exception(e);
+        }
+        return messageType;
+    }
+
+    private static void readVersionFrom(
+            final InputStream in) throws IOException {
+        UnsignedByte b = UnsignedByteIoHelper.readUnsignedByteFrom(in);
+        try {
+            Version.valueOfByte(b.byteValue());
+        } catch (IllegalArgumentException e) {
+            throw new Socks5Exception(e);
+        }
+    }
+
+    @Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
@@ -102,7 +98,10 @@ public final class Message {
 			return false;
 		}
 		Message other = (Message) obj;
-		if (!Arrays.equals(this.byteArray, other.byteArray)) {
+		if (!this.messageType.equals(other.messageType)) {
+			return false;
+		}
+		if (!Arrays.equals(this.token, other.token)) {
 			return false;
 		}
 		return true;
@@ -113,12 +112,7 @@ public final class Message {
 	}
 	
 	public byte[] getToken() {
-		return Arrays.copyOfRange(
-				this.byteArray, this.tokenStartIndex, this.byteArray.length);
-	}
-
-	public int getTokenStartIndex() {
-		return this.tokenStartIndex;
+		return Arrays.copyOf(this.token, this.token.length);
 	}
 
 	public Version getVersion() {
@@ -129,13 +123,34 @@ public final class Message {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + Arrays.hashCode(this.byteArray);
+		result = prime * result + this.messageType.hashCode();
+		result = prime * result + Arrays.hashCode(this.token);
 		return result;
 	}
 
-	public byte[] toByteArray() {
-		return Arrays.copyOf(this.byteArray, this.byteArray.length);
-	}
+    public byte[] toByteArray() {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        out.write(UnsignedByte.valueOf(
+                this.version.byteValue()).intValue());
+        out.write(UnsignedByte.valueOf(
+                this.messageType.byteValue()).intValue());
+        if (this.messageType.equals(MessageType.ABORT)) {
+            return out.toByteArray();
+        }
+        int tokenLength = this.token.length;
+        try {
+            out.write(UnsignedShortIoHelper.toByteArray(
+                    UnsignedShort.valueOf(tokenLength)));
+        } catch (IOException e) {
+            throw new AssertionError(e);
+        }
+        try {
+            out.write(this.token);
+        } catch (IOException e) {
+            throw new AssertionError(e);
+        }
+        return out.toByteArray();
+    }
 
 	@Override
 	public String toString() {
@@ -145,10 +160,6 @@ public final class Message {
 			.append(this.version)
 			.append(", messageType=")
 			.append(this.messageType)
-			.append(", tokenStartIndex=")
-			.append(this.tokenStartIndex)
-			.append(", token=")
-			.append(Arrays.toString(this.getToken()))
 			.append("]");
 		return builder.toString();
 	}

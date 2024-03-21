@@ -1,10 +1,8 @@
 package com.github.jh3nd3rs0n.jargyle.protocolbase.socks5;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.util.Arrays;
-
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.SingleValueTypeDoc;
+
+import java.util.Objects;
 
 @SingleValueTypeDoc(
 		description = "",
@@ -14,29 +12,16 @@ import com.github.jh3nd3rs0n.jargyle.internal.annotation.SingleValueTypeDoc;
 )
 public final class Address {
 
-	public static Address newInstance(final byte[] b) {
-		Address address = null;
-		try {
-			address = AddressInputHelper.readAddressFrom(
-					new ByteArrayInputStream(b));
-		} catch (IOException e) {
-			throw new IllegalArgumentException(e);
-		}
-		return address;
-	}
-	
 	public static Address newInstance(final String string) {
-		return AddressType.newAddress(string);
+		return AddressHelper.newAddress(string);
 	}
 	
 	private final AddressType addressType;
-	private final byte[] byteArray;
 	private final String string;
 	
-	Address(final AddressType type, final byte[] bytes, final String str) {
-		this.addressType = type;
-		this.byteArray = Arrays.copyOf(bytes, bytes.length);
-		this.string = str;
+	Address(final AddressType type, final String str) {
+		this.addressType = Objects.requireNonNull(type);
+		this.string = Objects.requireNonNull(str);
 	}
 
 	@Override
@@ -51,10 +36,10 @@ public final class Address {
 			return false;
 		}
 		Address other = (Address) obj;
-		if (this.addressType != other.addressType) {
+		if (!this.addressType.equals(other.addressType)) {
 			return false;
 		}
-		if (!Arrays.equals(this.byteArray, other.byteArray)) {
+		if (!this.string.equals(other.string)) {
 			return false;
 		}
 		return true;
@@ -68,16 +53,11 @@ public final class Address {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((this.addressType == null) ? 
-				0 : this.addressType.hashCode());
-		result = prime * result + Arrays.hashCode(this.byteArray);
+		result = prime * result + this.addressType.hashCode();
+		result = prime * result + this.string.hashCode();
 		return result;
 	}
-	
-	public byte[] toByteArray() {
-		return Arrays.copyOf(this.byteArray, this.byteArray.length);
-	}
-	
+
 	@Override
 	public String toString() {
 		return this.string;

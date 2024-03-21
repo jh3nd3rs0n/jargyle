@@ -1,5 +1,10 @@
 package com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod;
 
+import com.github.jh3nd3rs0n.jargyle.internal.net.FilterDatagramSocket;
+import org.ietf.jgss.GSSContext;
+import org.ietf.jgss.GSSException;
+import org.ietf.jgss.MessageProp;
+
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.net.DatagramPacket;
@@ -7,12 +12,6 @@ import java.net.DatagramSocket;
 import java.net.SocketException;
 import java.nio.channels.DatagramChannel;
 import java.util.Arrays;
-
-import org.ietf.jgss.GSSContext;
-import org.ietf.jgss.GSSException;
-import org.ietf.jgss.MessageProp;
-
-import com.github.jh3nd3rs0n.jargyle.internal.net.FilterDatagramSocket;
 
 final class GssDatagramSocket extends FilterDatagramSocket {
 
@@ -76,7 +75,7 @@ final class GssDatagramSocket extends FilterDatagramSocket {
 		if (this.messageProp != null) {
 			byte[] data = Arrays.copyOfRange(
 					p.getData(), p.getOffset(), p.getLength());
-			Message message = Message.newInstance(data);
+			Message message = Message.newInstanceFrom(data);
 			byte[] token = message.getToken();
 			MessageProp prop = new MessageProp(0, false);
 			try {

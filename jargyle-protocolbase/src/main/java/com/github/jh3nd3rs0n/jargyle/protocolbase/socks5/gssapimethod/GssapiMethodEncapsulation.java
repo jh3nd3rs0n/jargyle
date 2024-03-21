@@ -1,13 +1,12 @@
 package com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod;
 
-import java.io.IOException;
-import java.net.DatagramSocket;
-import java.net.Socket;
-
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.MethodEncapsulation;
 import org.ietf.jgss.GSSContext;
 import org.ietf.jgss.MessageProp;
 
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.MethodEncapsulation;
+import java.io.IOException;
+import java.net.DatagramSocket;
+import java.net.Socket;
 
 public final class GssapiMethodEncapsulation extends MethodEncapsulation {
 	

@@ -2,48 +2,42 @@ package com.github.jh3nd3rs0n.jargyle.protocolbase.socks5;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.Arrays;
+import java.io.InputStream;
+import java.util.Objects;
 
 public final class ServerMethodSelectionMessage {
 
-	static final class Params {
-		Version version;
-		Method method;
-		byte[] byteArray;
-	}
-	
-	public static ServerMethodSelectionMessage newInstance(final byte[] b) {
-		ServerMethodSelectionMessage smsm = null;
-		try {
-			smsm = ServerMethodSelectionMessageInputHelper.readServerMethodSelectionMessageFrom(
-					new ByteArrayInputStream(b));
-		} catch (IOException e) {
-			throw new IllegalArgumentException(e);
-		}
-		return smsm;
-	}
-	
-	public static ServerMethodSelectionMessage newInstance(
-			final Method method) {
-		Params params = new Params();
-		Version version = Version.V5;
-		params.version = version;
-		params.method = method;
-		params.byteArray = new byte[] { version.byteValue(), method.byteValue() };
-		return new ServerMethodSelectionMessage(params);
-	}
-	
 	private final Version version;
 	private final Method method;
-	private final byte[] byteArray;
-	
-	ServerMethodSelectionMessage(final Params params) {
-		this.version = params.version;
-		this.method = params.method;
-		this.byteArray = params.byteArray;
+
+	private ServerMethodSelectionMessage(final Method meth) {
+		this.version = Version.V5;
+		this.method = meth;
 	}
 
-	@Override
+	public static ServerMethodSelectionMessage newInstance(final Method meth) {
+		return new ServerMethodSelectionMessage(Objects.requireNonNull(meth));
+	}
+
+    public static ServerMethodSelectionMessage newInstanceFrom(
+            final byte[] b) {
+        ServerMethodSelectionMessage smsm;
+        try {
+            smsm = newInstanceFrom(new ByteArrayInputStream(b));
+        } catch (IOException e) {
+            throw new IllegalArgumentException(e);
+        }
+        return smsm;
+    }
+
+    public static ServerMethodSelectionMessage newInstanceFrom(
+            final InputStream in) throws IOException {
+        VersionIoHelper.readVersionFrom(in);
+        Method meth = MethodIoHelper.readMethodFrom(in);
+        return newInstance(meth);
+    }
+
+    @Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
@@ -55,7 +49,7 @@ public final class ServerMethodSelectionMessage {
 			return false;
 		}
 		ServerMethodSelectionMessage other = (ServerMethodSelectionMessage) obj;
-		if (!Arrays.equals(this.byteArray, other.byteArray)) {
+		if (!this.method.equals(other.method)) {
 			return false;
 		}
 		return true;
@@ -73,12 +67,12 @@ public final class ServerMethodSelectionMessage {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + Arrays.hashCode(this.byteArray);
+		result = prime * result + this.method.hashCode();
 		return result;
 	}
 
 	public byte[] toByteArray() {
-		return Arrays.copyOf(this.byteArray, this.byteArray.length);
+		return new byte[] { this.version.byteValue(), this.method.byteValue() };
 	}
 
 	@Override

@@ -1,6 +1,13 @@
 # About Jargyle 
 
-Jargyle is a Java SOCKS5 API and server.
+Jargyle is a Java SOCKS5 API and server that can route traffic through
+multiple SOCKS5 servers, can use SSL/TLS for TCP traffic between itself and 
+clients and between itself and SOCKS5 servers, and can use DTLS for UDP 
+traffic between itself and clients and between itself and SOCKS5 servers. 
+Its inspiration comes from [JSocks](https://jsocks.sourceforge.net/),
+[SocksLib](https://github.com/fengyouchao/sockslib),
+[Esocks](https://github.com/fengyouchao/esocks) and
+[Dante](https://www.inet.no/dante/index.html).
 
 **Warning:** Jargyle is not production ready. The user guide is complete, but
 the reference documentation and the Javadocs are incomplete. Breaking changes
@@ -158,18 +165,18 @@ jargyle start-server \
 
 The client API has the following features:
 
--   Route traffic through a specified chain of SOCKS servers
--   Use SSL/TLS for TCP traffic to and from SOCKS servers
--   Use DTLS for UDP traffic to and from SOCKS servers
+-   Route traffic through a specified chain of SOCKS5 servers
+-   Use SSL/TLS for TCP traffic between itself and SOCKS5 servers
+-   Use DTLS for UDP traffic between itself and SOCKS5 servers
 -   Resolve host names from SOCKS5 servers
 
 The server API and the server have the following features:
 
 -   Route traffic through multiple specified chains of SOCKS servers
--   Use SSL/TLS for TCP traffic to and from clients
--   Use DTLS for UDP traffic to and from clients
--   Use SSL/TLS for TCP traffic to and from SOCKS servers
--   Use DTLS for UDP traffic to and from SOCKS servers
+-   Use SSL/TLS for TCP traffic between itself and clients
+-   Use DTLS for UDP traffic between itself and clients
+-   Use SSL/TLS for TCP traffic between itself and SOCKS5 servers
+-   Use DTLS for UDP traffic between itself and SOCKS5 servers
 -   Resolve host names for clients from the local system or from SOCKS5 servers
 
 The server API and the server also have a rule system that allows you to manage 

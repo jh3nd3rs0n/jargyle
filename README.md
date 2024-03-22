@@ -1,285 +1,145 @@
+[![CodeQL](https://github.com/jh3nd3rs0n/jargyle/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/jh3nd3rs0n/jargyle/actions/workflows/codeql-analysis.yml) [![Java CI with Maven (Mac OS Latest)](https://github.com/jh3nd3rs0n/jargyle/actions/workflows/maven_macos_latest.yml/badge.svg)](https://github.com/jh3nd3rs0n/jargyle/actions/workflows/maven_macos_latest.yml) [![Java CI with Maven (Ubuntu Latest)](https://github.com/jh3nd3rs0n/jargyle/actions/workflows/maven_ubuntu_latest.yml/badge.svg)](https://github.com/jh3nd3rs0n/jargyle/actions/workflows/maven_ubuntu_latest.yml) [![Java CI with Maven (Windows Latest)](https://github.com/jh3nd3rs0n/jargyle/actions/workflows/maven_windows_latest.yml/badge.svg)](https://github.com/jh3nd3rs0n/jargyle/actions/workflows/maven_windows_latest.yml) [![Codacy Badge](https://app.codacy.com/project/badge/Grade/581706f82bf945df84bc397da4cecee5)](https://www.codacy.com/gh/jh3nd3rs0n/jargyle/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=jh3nd3rs0n/jargyle&amp;utm_campaign=Badge_Grade)
+
 # Jargyle
 
-[![CodeQL](https://github.com/jh3nd3rs0n/jargyle/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/jh3nd3rs0n/jargyle/actions/workflows/codeql-analysis.yml) [![Java CI with Maven (Mac OS Latest)](https://github.com/jh3nd3rs0n/jargyle/actions/workflows/maven_macos_latest.yml/badge.svg)](https://github.com/jh3nd3rs0n/jargyle/actions/workflows/maven_macos_latest.yml) [![Java CI with Maven (Ubuntu Latest)](https://github.com/jh3nd3rs0n/jargyle/actions/workflows/maven_ubuntu_latest.yml/badge.svg)](https://github.com/jh3nd3rs0n/jargyle/actions/workflows/maven_ubuntu_latest.yml) [![Java CI with Maven (Windows Latest)](https://github.com/jh3nd3rs0n/jargyle/actions/workflows/maven_windows_latest.yml/badge.svg)](https://github.com/jh3nd3rs0n/jargyle/actions/workflows/maven_windows_latest.yml) [![Codacy Badge](https://app.codacy.com/project/badge/Grade/581706f82bf945df84bc397da4cecee5)](https://www.codacy.com/gh/jh3nd3rs0n/jargyle/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=jh3nd3rs0n/jargyle&amp;utm_campaign=Badge_Grade)
+Jargyle is a Java SOCKS5 API and server that can route traffic through
+multiple SOCKS5 servers, can use SSL/TLS for TCP traffic between itself and
+clients and between itself and SOCKS5 servers, and can use DTLS for UDP
+traffic between itself and clients and between itself and SOCKS5 servers.
+Its inspiration comes from [JSocks](https://jsocks.sourceforge.net/),
+[SocksLib](https://github.com/fengyouchao/sockslib),
+[Esocks](https://github.com/fengyouchao/esocks) and
+[Dante](https://www.inet.no/dante/index.html).
+
+You can find more information about Jargyle 
+[here](https://jh3nd3rs0n.github.io/jargyle).
 
 ## Contents
 
--   [Introduction](#introduction)
 -   [License](#license)
--   [Releases](#releases)
--   [Automated Testing](#automated-testing)
--   [Building](#building)
-
-## Introduction
-
-Jargyle is a Java SOCKS5 API and server.
-
-**Warning:** Jargyle is not production ready. The user guide is complete, but 
-the reference documentation and the Javadocs are incomplete. Breaking changes 
-may occur, but any existing documentation will be updated to reflect the 
-changes.
-
--   [Client API Example](#client-api-example)
--   [Server API Example](#server-api-example)
--   [Command Line Example](#command-line-example)
--   [Features](#features)
-
-### Client API Example:
-
-```java
-package com.example;
-
-import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
-import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
-
-import java.io.IOException;
-
-import java.net.DatagramSocket;
-import java.net.ServerSocket;
-import java.net.Socket;
-
-public class ClientApp {
-    public static void main(String[] args) throws IOException {
-        /*
-         * Configure the SOCKS client through system properties.
-         */
-        /*
-         * Set the URI of the SOCKS server for the SOCKS client to 
-         * connect.
-         */
-        System.setProperty("socksServerUri.scheme", "socks5");
-        System.setProperty("socksServerUri.host", "jargyle.net");
-        System.setProperty("socksServerUri.port", "8080");
-        /*
-         * Enable SSL/TLS for TCP traffic between the SOCKS client 
-         * and the SOCKS server.
-         */
-        System.setProperty("socksClient.ssl.enabled", "true");
-        System.setProperty("socksClient.ssl.trustStoreFile", "jargyle.jks");
-        System.setProperty("socksClient.ssl.trustStorePassword", "password");
-        /*
-         * Enable DTLS for UDP traffic between the SOCKS client and 
-         * the SOCKS server.
-         */
-        System.setProperty("socksClient.dtls.enabled", "true");
-        System.setProperty("socksClient.dtls.trustStoreFile", "jargyle.jks");
-        System.setProperty("socksClient.dtls.trustStorePassword", "password");
-        /*
-         * Use only the SOCKS5 username password authentication 
-         * method as the SOCKS5 authentication method of choice.
-         */
-        System.setProperty("socksClient.socks5.methods", "USERNAME_PASSWORD");
-        System.setProperty("socksClient.socks5.userpassmethod.username", "Aladdin");
-        System.setProperty("socksClient.socks5.userpassmethod.password", "opensesame");
-        /*
-         * Have the HostResolver to send the RESOLVE command to the 
-         * SOCKS server to resolve host names instead of having the 
-         * HostResolver resolve host names from the local system.
-         */
-        System.setProperty("socksClient.socks5.useResolveCommand", "true");
-        
-        /*
-         * Create networking objects whose traffic would be routed 
-         * through the SOCKS server based on the system properties 
-         * above. If no system properties for configuring the SOCKS 
-         * client were provided, the created networking objects 
-         * would be ordinary networking objects.
-         */
-        NetObjectFactory netObjectFactory = NetObjectFactory.newInstance();
-        Socket socket = netObjectFactory.newSocket();
-        ServerSocket serverSocket = netObjectFactory.newServerSocket();
-        DatagramSocket datagramSocket = netObjectFactory.newDatagramSocket();
-        HostResolver hostResolver = netObjectFactory.newHostResolver();
-        
-        /*
-         * Use the created networking objects as if they were 
-         * ordinary networking objects.
-         */
-        // ...
-    }
-}
-```
-
-### Server API Example:
-
-```java
-package com.example;
-
-import com.github.jh3nd3rs0n.jargyle.server.Configuration;
-import com.github.jh3nd3rs0n.jargyle.server.Setting;
-import com.github.jh3nd3rs0n.jargyle.server.Settings;
-import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
-
-import java.io.IOException;
-
-public class ServerApp {
-    public static void main(String[] args) throws IOException {
-        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
-            Setting.newInstanceWithParsedValue(
-                "port", "8080"),
-            /*
-             * Enable SSL/TLS for TCP traffic between the SOCKS 
-             * server and the clients.
-             */
-            Setting.newInstanceWithParsedValue(
-                "ssl.enabled", "true"),
-            Setting.newInstanceWithParsedValue(
-                "ssl.keyStoreFile", "server.jks"),
-            Setting.newInstanceWithParsedValue(
-                "ssl.keyStorePassword", "drowssap"),
-            /*
-             * Enable DTLS for UDP traffic between the SOCKS server 
-             * and the clients.
-             */
-            Setting.newInstanceWithParsedValue(
-                "dtls.enabled", "true"),
-            Setting.newInstanceWithParsedValue(
-                "dtls.keyStoreFile", "server.jks"),
-            Setting.newInstanceWithParsedValue(
-                "dtls.keyStorePassword", "drowssap"),
-            /*
-             * Use only the SOCKS5 username password authentication 
-             * method as the SOCKS5 authentication method of choice.
-             */
-            Setting.newInstanceWithParsedValue(
-                "socks5.methods", "USERNAME_PASSWORD"),
-            Setting.newInstanceWithParsedValue(
-                "socks5.userpassmethod.userRepository",
-                "StringSourceUserRepository:Aladdin:opensesame")
-        ))).start();
-    }
-}
-```
-
-### Command Line Example:
-
-```bash
-jargyle start-server \
-    --setting=port=8080 \
-    --setting=ssl.enabled=true \
-    --setting=ssl.keyStoreFile=server.jks \
-    --setting=ssl.keyStorePassword=drowssap \
-    --setting=dtls.enabled=true \
-    --setting=dtls.keyStoreFile=server.jks \
-    --setting=dtls.keyStorePassword=drowssap \
-    --setting=socks5.methods=USERNAME_PASSWORD \
-    --setting=socks5.userpassmethod.userRepository=StringSourceUserRepository:Aladdin:opensesame
-```
-
-### Features
-
-The client API has the following features:
-
--   Route traffic through a specified chain of SOCKS servers
--   Use SSL/TLS for TCP traffic to and from SOCKS servers
--   Use DTLS for UDP traffic to and from SOCKS servers
--   Resolve host names from SOCKS5 servers
-
-The server API and the server have the following features:
-
--   Route traffic through multiple specified chains of SOCKS servers
--   Use SSL/TLS for TCP traffic to and from clients
--   Use DTLS for UDP traffic to and from clients
--   Use SSL/TLS for TCP traffic to and from SOCKS servers
--   Use DTLS for UDP traffic to and from SOCKS servers
--   Resolve host names for clients from the local system or from SOCKS5 servers
-
-The server API and the server also have a rule system that allows you to manage 
-traffic in the following ways:
-
--   Allow or deny traffic
--   Allow a limited number of simultaneous instances of traffic
--   Route traffic through a selection of multiple specified chains of SOCKS servers
--   Redirect the desired destination
--   Configure sockets
--   Configure relay settings
--   Limit relay bandwidth
+-   [Contributing](#contributing)
+-   [Directory Overview](#directory-overview) 
+-   [Build Requirements](#build-requirements)
+-   [Frequently Used Maven Commands](#frequently-used-maven-commands)
 
 ## License
 
-Jargyle is licensed under the 
-[MIT license](https://github.com/jh3nd3rs0n/jargyle/blob/master/LICENSE).
+Jargyle is licensed under the [MIT license](LICENSE).
 
-## Releases
+## Contributing Guidelines
 
-The following are the types of releases:
+The contribution guidelines can be found [here](CONTRIBUTING.md).
 
--   [Build System Dependency](#build-system-dependency)
--   [Binary distribution](#binary-distribution)
--   [Source distribution](#source-distribution)
+## Directory Overview
 
-### Build System Dependency
+The following is a simple overview of the directory.
 
-The build system dependency provides both the client API and the server API.
+`.github`: Contains GitHub workflow files that perform tests and analysis
+when a push has been made to the GitHub repository
 
-Requirements:
+`docs`: Contains the website/documentation
 
--   Java 9 or higher
+`echo`: Maven module for an API of clients and servers that send/receive
+data and receive/send the same data (This module is used internally for
+integration testing the Jargyle client and server API)
 
-To declare the dependency in your build system, the definition to declare the 
-dependency can be found 
-[here](https://jh3nd3rs0n.github.io/jargyle/dependency-info.html). 
+`echo-integration-test`: Maven module for integration tests for the echo
+API and the Jargyle client and server API
 
-To declare the dependency in your build system for only the client API, the 
-definition to declare the dependency can be found 
-[here](https://jh3nd3rs0n.github.io/jargyle/jargyle-client/dependency-info.html).
+`echo-performance-test`: Maven module for performance tests for the echo
+API and the Jargyle client and server API (The results can be found in
+`echo-performance-test/target/performance-results`)
 
-To declare the dependency in your build system for only the server API, the 
-definition to declare the dependency can be found 
-[here](https://jh3nd3rs0n.github.io/jargyle/jargyle-server/dependency-info.html). 
+`jargyle-cli`: Maven module for the Jargyle command line interface API
 
-### Binary Distribution
+`jargyle-cli-integration-test`: Maven module for integration tests for the
+Jargyle command line interface API
 
-The binary distribution contains the files to run Jargyle from the command 
-line. The JAR files included in the distribution can also be used as an API for
-your project.
+`jargyle-client`: Maven module for the SOCKS client API
 
-Requirements:
+`jargyle-common`: Maven module for the public API used by all modules
 
--   Java 9 or higher
+`jargyle-distribution`: Maven module for creating the binary distribution
 
-Once you have installed the requirements for the binary distribution, be sure 
-to have the environment variable `JAVA_HOME` set to the Java home directory.
+`jargyle-internal`: Maven module for the internal API used by all modules
 
-Releases for the binary distribution can be found
-[here](https://github.com/jh3nd3rs0n/jargyle/releases).
+`jargyle-protocolbase`: Maven module for the foundational API for the
+SOCKS client and server API
 
-### Source Distribution
+`jargyle-report-aggregate`: Maven module for generating the aggregated
+test coverage reports
 
-The source distribution contains the files to run automated testing and to 
-build the binary distribution.
+`jargyle-server`: Maven module for the SOCKS server API
 
-Requirements:
+`jargyle-server-integration-test`: Maven module for integration tests for
+the SOCKS server API
 
--   Java 9 or higher
+`src/site`: Contains files used to generate the `docs` directory
+
+`test-help`: Maven module for the test help API (This module is used
+internally for testing)
+
+`.gitignore`: Lists of directories and files for Git to ignore such as
+Eclipse and IntelliJ IDEA project directories and files
+
+`CODE_OF_CONDUCT.md`: Code of conduct for contributing to this project
+
+`CONTRIBUTING.md`: Contributing guidelines
+
+`LICENSE`: The license for this project
+
+`pom.xml`: The Maven POM file for this project
+
+`README.md`: This README file
+
+## Build Requirements
+
+You will need the following to build Jargyle:
+
+-   JDK 9 or higher
 -   Apache Maven 3.3.9 or higher
 
-Once you have installed the requirements for the source distribution, be sure
-to have the environment variable `JAVA_HOME` set to the Java home directory.
+Once you have installed the requirements, be sure to have the environment 
+variable `JAVA_HOME` set to the Java home directory.
 
-Releases for the source distribution can be found
-[here](https://github.com/jh3nd3rs0n/jargyle/releases).
+## Frequently Used Maven Commands
 
-## Automated Testing
+The following are Maven commands that are frequently used for this project.
+These commands are to be executed at the top directory of Jargyle.
 
-To run automated testing, run the following commands:
+`mvn clean`: Deletes directories and files created by this project.
+
+`mvn clean compile site:site site:stage site:deploy -DskipTests=true`: Performs
+a clean build and produces the website/documentation while skipping all tests.
+The website/documentation can be found in `docs/`. Markdown files in 
+`src/site/markdown/reference/` are used in generating reference documentation. 
+These files are generated manually from Jargyle. Should a change in the source 
+code become different from the existing reference documentation, you will need 
+to run the following commands before running the above command:
 
 ```bash
-cd jargyle
-mvn --projects=\!echo-performance-test clean verify
+# This command is necessary if the binary distribution is not built
+mvn clean package -DskipTests=true
+# Change to the directory of Markdown files used in generating reference documentation
+cd src/site/markdown/reference/
+# Run Jargyle to generate Markdown reference documents in the present directory 
+../../../../jargyle-distribution/target/jargyle-distribution-5.0.0-SNAPSHOT-bin/bin/jargyle generate-reference-docs
+# Change back to the top directory of Jargyle
+cd ../../../../
 ```
 
-## Building
+`mvn clean package -DskipTests=true`: Performs a clean build of the binary 
+distribution while skipping all tests. The built binary distribution can be 
+found as a directory and in multiple archive formats in 
+`jargyle-distribution/target/`.
 
-To build and package the binary distribution, run the following command:
+`mvn clean integration-test -Pcoverage`: Performs a clean build and 
+execution of all tests including integration tests and also produces test 
+coverage reports. The test coverage reports can be found in 
+`jargyle-report-aggregate/target/`. The option `-Pcoverage` can be removed if 
+you do not want test coverage reports produced.
 
-```bash
-mvn clean package
-```
-
-After running the aforementioned command, the built binary distribution can be 
-found as a directory and in multiple archive formats in the following path:
-
-```text
-jargyle-distribution/target/
-```
+`mvn clean test -Pcoverage`: Performs a clean build and execution of all tests 
+except integration tests and also produces test coverage reports. The test 
+coverage reports can be found in `jargyle-report-aggregate/target/`. The option 
+`-Pcoverage` can be removed if you do not want test coverage reports produced.

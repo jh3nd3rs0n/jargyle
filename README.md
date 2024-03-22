@@ -17,7 +17,7 @@ You can find more information about Jargyle
 ## Contents
 
 -   [License](#license)
--   [Contributing](#contributing)
+-   [Contributing Guidelines](#contributing-guidelines)
 -   [Directory Overview](#directory-overview) 
 -   [Build Requirements](#build-requirements)
 -   [Frequently Used Maven Commands](#frequently-used-maven-commands)
@@ -79,7 +79,7 @@ the SOCKS server API
 `test-help`: Maven module for the test help API (This module is used
 internally for testing)
 
-`.gitignore`: Lists of directories and files for Git to ignore such as
+`.gitignore`: List of directories and files for Git to ignore such as
 Eclipse and IntelliJ IDEA project directories and files
 
 `CODE_OF_CONDUCT.md`: Code of conduct for contributing to this project
@@ -109,13 +109,13 @@ These commands are to be executed at the top directory of Jargyle.
 
 `mvn clean`: Deletes directories and files created by this project.
 
-`mvn clean compile site:site site:stage site:deploy -DskipTests=true`: Performs
-a clean build and produces the website/documentation while skipping all tests.
-The website/documentation can be found in `docs/`. Markdown files in 
-`src/site/markdown/reference/` are used in generating reference documentation. 
-These files are generated manually from Jargyle. Should a change in the source 
-code become different from the existing reference documentation, you will need 
-to run the following commands before running the above command:
+`mvn clean compile site:site site:stage site:deploy`: Performs a clean build 
+and produces the website/documentation. The website/documentation can be found 
+in `docs/`. Markdown files in `src/site/markdown/reference/` are used in 
+generating reference documentation. These files are generated manually from 
+Jargyle. Should a change in the source code become different from the existing 
+reference documentation, you will need to run the following commands before 
+running the above command:
 
 ```bash
 # This command is necessary if the binary distribution is not built

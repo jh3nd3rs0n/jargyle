@@ -131,7 +131,7 @@ public class ServerApp {
 <p>The simplest way to create a <code>Setting</code> object is to use the method
 <code>Setting.newInstanceWithParsedValue(String, String)</code>. The first
 <code>String</code> parameter would be the name of the setting. The second <code>String</code>
-parameter would be the parsable value of the setting.</p>
+parameter would be the value of the setting to be parsed.</p>
 <p>Server API example:</p>
 
 <div class="verbatim">
@@ -299,10 +299,10 @@ public class ServerApp {
 this <code>SocksServer</code> object</li>
 <li><code>getHost()</code>: Returns the <code>Host</code> object that this <code>SocksServer</code> object
 is bound to when the state of this <code>SocksServer</code> is set to <code>STARTED</code>.
-Otherwise it returns <code>null</code></li>
+Otherwise, it returns <code>null</code></li>
 <li><code>getPort()</code>: Returns the <code>Port</code> object that this <code>SocksServer</code> object
 is bound to when the state of this <code>SocksServer</code> is set to <code>STARTED</code>.
-Otherwise it returns <code>null</code></li>
+Otherwise, it returns <code>null</code></li>
 <li><code>getState()</code>: Returns the state of this <code>SocksServer</code> object</li>
 <li><code>start()</code>: Starts the <code>SocksServer</code> object</li>
 <li><code>stop()</code>: Stops the <code>SocksServer</code> object</li>

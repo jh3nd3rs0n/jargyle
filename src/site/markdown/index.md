@@ -1,8 +1,7 @@
 # About Jargyle 
 
-Jargyle is a Java SOCKS5 API and server that can route traffic through
-multiple SOCKS5 servers and can use SSL/TLS and DTLS between clients and
-SOCKS5 servers. It is inspired by [JSocks](https://jsocks.sourceforge.net/),
+Jargyle is a Java SOCKS5 API and server that uses SSL/TLS, DTLS, and SOCKS5 
+server chaining. It is inspired by [JSocks](https://jsocks.sourceforge.net/),
 [SocksLib](https://github.com/fengyouchao/sockslib),
 [Esocks](https://github.com/fengyouchao/esocks) and
 [Dante](https://www.inet.no/dante/index.html).
@@ -163,26 +162,29 @@ jargyle start-server \
 
 The client API has the following features:
 
--   Route traffic through a specified chain of SOCKS5 servers
 -   Use SSL/TLS for TCP traffic between itself and SOCKS5 servers
 -   Use DTLS for UDP traffic between itself and SOCKS5 servers
--   Resolve host names from SOCKS5 servers
+-   Resolve host names from SOCKS5 servers that implement the
+[SOCKS5 RESOLVE command](reference/socks5-resolve-command.md)
+-   Route traffic through a specified chain of SOCKS5 servers 
 
 The server API and the server have the following features:
 
--   Route traffic through multiple specified chains of SOCKS servers
 -   Use SSL/TLS for TCP traffic between itself and clients
 -   Use DTLS for UDP traffic between itself and clients
+-   Chain to specified chains of SOCKS servers
 -   Use SSL/TLS for TCP traffic between itself and SOCKS5 servers
 -   Use DTLS for UDP traffic between itself and SOCKS5 servers
--   Resolve host names for clients from the local system or from SOCKS5 servers
+-   Resolve host names for clients from the local system or from SOCKS5 
+servers that implement the 
+[SOCKS5 RESOLVE command](reference/socks5-resolve-command.md)
 
 The server API and the server also have a rule system that allows you to manage 
 traffic in the following ways:
 
 -   Allow or deny traffic
 -   Allow a limited number of simultaneous instances of traffic
--   Route traffic through a selection of multiple specified chains of SOCKS servers
+-   Route traffic through a selection of specified chains of SOCKS servers
 -   Redirect the desired destination
 -   Configure sockets
 -   Configure relay settings

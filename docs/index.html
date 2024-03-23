@@ -91,9 +91,8 @@
         <main id="bodyColumn" class="span10">
 <section>
 <h1>About Jargyle</h1>
-<p>Jargyle is a Java SOCKS5 API and server that can route traffic through
-multiple SOCKS5 servers and can use SSL/TLS and DTLS between clients and
-SOCKS5 servers. It is inspired by <a href="https://jsocks.sourceforge.net/" class="externalLink">JSocks</a>,
+<p>Jargyle is a Java SOCKS5 API and server that uses SSL/TLS, DTLS, and SOCKS5
+server chaining. It is inspired by <a href="https://jsocks.sourceforge.net/" class="externalLink">JSocks</a>,
 <a href="https://github.com/fengyouchao/sockslib" class="externalLink">SocksLib</a>,
 <a href="https://github.com/fengyouchao/esocks" class="externalLink">Esocks</a> and
 <a href="https://www.inet.no/dante/index.html" class="externalLink">Dante</a>.</p>
@@ -251,20 +250,23 @@ public class ServerApp {
 <p>The client API has the following features:</p>
 <ul>
 
-<li>Route traffic through a specified chain of SOCKS5 servers</li>
 <li>Use SSL/TLS for TCP traffic between itself and SOCKS5 servers</li>
 <li>Use DTLS for UDP traffic between itself and SOCKS5 servers</li>
-<li>Resolve host names from SOCKS5 servers</li>
+<li>Resolve host names from SOCKS5 servers that implement the
+<a href="reference/socks5-resolve-command.html">SOCKS5 RESOLVE command</a></li>
+<li>Route traffic through a specified chain of SOCKS5 servers</li>
 </ul>
 <p>The server API and the server have the following features:</p>
 <ul>
 
-<li>Route traffic through multiple specified chains of SOCKS servers</li>
 <li>Use SSL/TLS for TCP traffic between itself and clients</li>
 <li>Use DTLS for UDP traffic between itself and clients</li>
+<li>Chain to specified chains of SOCKS servers</li>
 <li>Use SSL/TLS for TCP traffic between itself and SOCKS5 servers</li>
 <li>Use DTLS for UDP traffic between itself and SOCKS5 servers</li>
-<li>Resolve host names for clients from the local system or from SOCKS5 servers</li>
+<li>Resolve host names for clients from the local system or from SOCKS5
+servers that implement the
+<a href="reference/socks5-resolve-command.html">SOCKS5 RESOLVE command</a></li>
 </ul>
 <p>The server API and the server also have a rule system that allows you to manage
 traffic in the following ways:</p>
@@ -272,7 +274,7 @@ traffic in the following ways:</p>
 
 <li>Allow or deny traffic</li>
 <li>Allow a limited number of simultaneous instances of traffic</li>
-<li>Route traffic through a selection of multiple specified chains of SOCKS servers</li>
+<li>Route traffic through a selection of specified chains of SOCKS servers</li>
 <li>Redirect the desired destination</li>
 <li>Configure sockets</li>
 <li>Configure relay settings</li>

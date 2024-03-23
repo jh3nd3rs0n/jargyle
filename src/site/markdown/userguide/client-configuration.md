@@ -4,14 +4,14 @@ The following are topics for configuring the client from the client API.
 
 ## Page Contents
 
--   [Enabling SSL/TLS for TCP Traffic Between the Client and the SOCKS Server](#enabling-ssl-tls-for-tcp-traffic-between-the-client-and-the-socks-server)
+-   [Enabling SSL/TLS for TCP Traffic Between the Client and the SOCKS Server](#enabling-ssltls-for-tcp-traffic-between-the-client-and-the-socks-server)
 -   [Enabling DTLS for UDP Traffic Between the Client and the SOCKS Server](#enabling-dtls-for-udp-traffic-between-the-client-and-the-socks-server)
 -   [Accessing the SOCKS Server Using SOCKS5 Authentication](#accessing-the-socks-server-using-socks5-authentication)
     -   [Accessing the SOCKS Server Using No Authentication](#accessing-the-socks-server-using-no-authentication)
     -   [Accessing the SOCKS Server Using Username Password Authentication](#accessing-the-socks-server-using-username-password-authentication)
     -   [Accessing the SOCKS Server Using GSS-API Authentication](#accessing-the-socks-server-using-gss-api-authentication)
 -   [Resolving Host Names From the SOCKS5 Server](#resolving-host-names-from-the-socks5-server)
--   [Chaining to a Specified Chain of SOCKS Servers](#chaining-to-a-specified-chain-of-socks-servers)
+-   [Routing Traffic Through a Specified Chain of SOCKS Servers](#routing-traffic-through-a-specified-chain-of-socks-servers)
 
 ## Enabling SSL/TLS for TCP Traffic Between the Client and the SOCKS Server
 
@@ -20,7 +20,7 @@ under the following condition:
 
 -   The SOCKS server accepts SSL/TLS connections.
 
-By default SSL/TLS for TCP traffic between the client and the SOCKS server is 
+By default, SSL/TLS for TCP traffic between the client and the SOCKS server is 
 disabled. To enable SSL/TLS for TCP traffic between the client and the SOCKS 
 server, you will need to have the property `socksClient.ssl.enabled` set 
 to `true`. In addition, you will need to have the property 
@@ -102,7 +102,7 @@ under the following condition:
 
 -   The SOCKS server accepts DTLS connections.
 
-By default DTLS for UDP traffic between the client and the SOCKS server is 
+By default, DTLS for UDP traffic between the client and the SOCKS server is 
 disabled. To enable DTLS for UDP traffic between the client and the SOCKS 
 server, you will need to have the property `socksClient.dtls.enabled` set 
 to `true`. In addition, you will need to have the property 
@@ -402,7 +402,7 @@ public class ClientApp {
 ```
 
 The client API comes with a `HostResolver` object to resolve host names. By 
-default the `HostResolver` object resolves host names through the local 
+default, the `HostResolver` object resolves host names through the local 
 system. To enable the `HostResolver` object to have the host names resolved 
 from the SOCKS5 server instead, you would need to set the property 
 `socksClient.socks5.useResolveCommand` set to `true`. This property can 
@@ -437,12 +437,11 @@ public class ClientApp {
 }
 ```
 
-## Chaining to a Specified Chain of SOCKS Servers
+## Routing Traffic Through a Specified Chain of SOCKS Servers
 
-You can have the client chained to a specified chain of SOCKS servers, meaning 
-that the traffic can be routed through the specified chain of SOCKS servers. To 
-do this, you will need to create a chain of `SocksClient` objects with each 
-`SocksClient` object specifying a SOCKS server.
+You can have the client route traffic through a specified chain of SOCKS 
+servers. To do this, you will need to create a chain of `SocksClient` objects 
+with each `SocksClient` object specifying a SOCKS server.
 
 API example:
 
@@ -479,8 +478,8 @@ public class ClientApp {
 }
 ```
 
-The known limitations of chaining to a specified chain of SOCKS servers include 
-the following:
+The known limitations of routing traffic through a specified chain of SOCKS 
+servers include the following:
 
 -   Only TCP traffic can be routed through the chain. The client will attempt to 
 route any UDP traffic through the last SOCKS server of the chain.

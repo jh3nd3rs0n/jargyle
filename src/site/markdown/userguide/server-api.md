@@ -50,7 +50,7 @@ public class ServerApp {
 The simplest way to create a `Setting` object is to use the method 
 `Setting.newInstanceWithParsedValue(String, String)`. The first 
 `String` parameter would be the name of the setting. The second `String` 
-parameter would be the parsable value of the setting.
+parameter would be the value of the setting to be parsed.
 
 Server API example:
 
@@ -226,10 +226,10 @@ The `SocksServer` object has the following methods:
 this `SocksServer` object
 -   `getHost()`: Returns the `Host` object that this `SocksServer` object 
 is bound to when the state of this `SocksServer` is set to `STARTED`. 
-Otherwise it returns `null`
+Otherwise, it returns `null`
 -   `getPort()`: Returns the `Port` object that this `SocksServer` object 
 is bound to when the state of this `SocksServer` is set to `STARTED`. 
-Otherwise it returns `null`
+Otherwise, it returns `null`
 -   `getState()`: Returns the state of this `SocksServer` object
 -   `start()`: Starts the `SocksServer` object
 -   `stop()`: Stops the `SocksServer` object

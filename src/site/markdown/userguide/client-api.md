@@ -144,7 +144,7 @@ public class ClientApp {
 The simplest way to create a `Property` object is to use the method 
 `Property.newInstanceWithParsedValue(String, String)`. The first 
 `String` parameter would be the name of the property. The second `String` 
-parameter would be the parsable value of the property.
+parameter would be the value of the property to be parsed.
 
 Client API example:
 

@@ -2,9 +2,8 @@
 
 # Jargyle
 
-Jargyle is a Java SOCKS5 API and server that can route traffic through
-multiple SOCKS5 servers and can use SSL/TLS and DTLS between clients and 
-SOCKS5 servers. It is inspired by [JSocks](https://jsocks.sourceforge.net/),
+Jargyle is a Java SOCKS5 API and server that uses SSL/TLS, DTLS, and SOCKS5
+server chaining. It is inspired by [JSocks](https://jsocks.sourceforge.net/),
 [SocksLib](https://github.com/fengyouchao/sockslib),
 [Esocks](https://github.com/fengyouchao/esocks) and
 [Dante](https://www.inet.no/dante/index.html).

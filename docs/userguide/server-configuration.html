@@ -89,7 +89,7 @@ the command line.</p><section>
 <h2>Page Contents</h2>
 <ul>
 
-<li><a href="#enabling-ssl-tls-for-tcp-traffic-between-the-server-and-its-clients">Enabling SSL/TLS for TCP Traffic Between the Server and Its Clients</a></li>
+<li><a href="#enabling-ssltls-for-tcp-traffic-between-the-server-and-its-clients">Enabling SSL/TLS for TCP Traffic Between the Server and Its Clients</a></li>
 <li><a href="#enabling-dtls-for-udp-traffic-between-the-server-and-its-clients">Enabling DTLS for UDP Traffic Between the Server and Its Clients</a></li>
 <li><a href="#using-socks5-authentication">Using SOCKS5 Authentication</a>
 <ul>
@@ -101,7 +101,7 @@ the command line.</p><section>
 <li><a href="#chaining-to-another-socks-server">Chaining to Another SOCKS Server</a>
 <ul>
 
-<li><a href="#enabling-ssl-tls-for-tcp-traffic-between-the-server-and-the-other-socks-server">Enabling SSL/TLS for TCP Traffic Between the Server and the Other SOCKS Server</a></li>
+<li><a href="#enabling-ssltls-for-tcp-traffic-between-the-server-and-the-other-socks-server">Enabling SSL/TLS for TCP Traffic Between the Server and the Other SOCKS Server</a></li>
 <li><a href="#enabling-dtls-for-udp-traffic-between-the-server-and-the-other-socks-server">Enabling DTLS for UDP Traffic Between the Server and the Other SOCKS Server</a></li>
 <li><a href="#chaining-to-the-other-socks-server-using-socks5-authentication">Chaining to the Other SOCKS Server Using SOCKS5 Authentication</a>
 <ul>
@@ -113,7 +113,7 @@ the command line.</p><section>
 <li><a href="#resolving-host-names-from-the-other-socks5-server">Resolving Host Names From the Other SOCKS5 Server</a></li>
 </ul></li>
 <li><a href="#chaining-to-a-specified-chain-of-other-socks-servers">Chaining to a Specified Chain of Other SOCKS Servers</a></li>
-<li><a href="#chaining-to-multiple-specified-chains-of-other-socks-servers">Chaining to Multiple Specified Chains of Other SOCKS Servers</a></li>
+<li><a href="#chaining-to-specified-chains-of-other-socks-servers">Chaining to Specified Chains of Other SOCKS Servers</a></li>
 <li><a href="#using-rules-to-manage-traffic">Using Rules to Manage Traffic</a>
 <ul>
 
@@ -121,7 +121,7 @@ the command line.</p><section>
 <li><a href="#rule-results">Rule Results</a></li>
 <li><a href="#allowing-or-denying-traffic">Allowing or Denying Traffic</a></li>
 <li><a href="#allowing-a-limited-number-of-simultaneous-instances-of-traffic">Allowing a Limited Number of Simultaneous Instances of Traffic</a></li>
-<li><a href="#routing-traffic-through-a-selection-of-multiple-specified-chains-of-socks-servers">Routing Traffic Through a Selection of Multiple Specified Chains of SOCKS Servers</a></li>
+<li><a href="#routing-traffic-through-a-selection-of-specified-chains-of-socks-servers">Routing Traffic Through a Selection of Specified Chains of SOCKS Servers</a></li>
 <li><a href="#redirecting-the-desired-destination">Redirecting the Desired Destination</a></li>
 <li><a href="#configuring-sockets">Configuring Sockets</a></li>
 <li><a href="#configuring-relay-settings">Configuring Relay Settings</a></li>
@@ -130,7 +130,7 @@ the command line.</p><section>
 </ul></section><section>
 <h2>Enabling SSL/TLS for TCP Traffic Between the Server and Its Clients</h2>
 <p>You can enable SSL/TLS for TCP traffic between the server and its clients. By
-default SSL/TLS for TCP traffic between the server and its clients is disabled.
+default, SSL/TLS for TCP traffic between the server and its clients is disabled.
 To enable SSL/TLS for TCP traffic between the server and its clients, you will
 need to have the setting <code>ssl.enabled</code> set to <code>true</code>. In addition, you will
 need to have the setting <code>ssl.keyStoreFile</code> to specify the server's key store
@@ -305,7 +305,7 @@ interactive prompt for you to enter the password.</p>
 </code></pre></div></section><section>
 <h2>Enabling DTLS for UDP Traffic Between the Server and Its Clients</h2>
 <p>You can enable DTLS for UDP traffic between the server and its clients. By
-default DTLS for UDP traffic between the server and its clients is disabled. To
+default, DTLS for UDP traffic between the server and its clients is disabled. To
 enable DTLS for UDP traffic between the server and its clients, you will need to
 have the setting <code>dtls.enabled</code> set to <code>true</code>. In addition, you will need to
 have the setting <code>dtls.keyStoreFile</code> to specify the server's key store file
@@ -796,7 +796,7 @@ server under the following condition:</p>
 
 <li>The other SOCKS server accepts SSL/TLS connections.</li>
 </ul>
-<p>By default SSL/TLS for TCP traffic between the server and the other SOCKS server
+<p>By default, SSL/TLS for TCP traffic between the server and the other SOCKS server
 is disabled. To enable SSL/TLS for TCP traffic between the server and the other
 SOCKS server, you will need to have the setting <code>chaining.ssl.enabled</code> set
 to <code>true</code>. In addition, you will need to have the setting
@@ -1714,13 +1714,14 @@ include the following:</p>
 <li>Only TCP traffic can be routed through the chain. The server will attempt to
 route any UDP traffic through the last SOCKS server of the chain.</li>
 </ul></section><section>
-<h2>Chaining to Multiple Specified Chains of Other SOCKS Servers</h2>
-<p>You can have the server chained to multiple specified chains of other SOCKS
-servers, meaning that its traffic can be routed through one of the specified
-chains of other SOCKS servers. To have the server chained to multiple specified
-chains of other SOCKS servers, you will need to have a route ID assigned at the
-end of each <a href="#chaining-to-a-specified-chain-of-other-socks-servers">chain</a> by
-using the setting <code>chaining.routeId</code></p>
+<h2>Chaining to Specified Chains of Other SOCKS Servers</h2>
+<p>You can have the server chained to specified chains of other SOCKS servers,
+meaning that its traffic can be routed through one of the specified chains of
+other SOCKS servers at a time. To have the server chained to multiple
+specified chains of other SOCKS servers, you will need to have a route ID
+assigned at the end of each
+<a href="#chaining-to-a-specified-chain-of-other-socks-servers">chain</a> by using the
+setting <code>chaining.routeId</code></p>
 <p>API example:</p>
 
 <div class="verbatim">
@@ -2406,7 +2407,7 @@ public class ServerApp {
 <p>A rule consists of the following:</p>
 <ul>
 
-<li>Rule conditions: fields that altogether evaluate as true if they match a
+<li>Rule conditions: fields that altogether evaluates as true if they match a
 specific instance of traffic</li>
 <li>Rule results: fields that are applied if the aforementioned rule conditions
 evaluate as true for matching a specific instance of traffic</li>
@@ -2584,8 +2585,9 @@ public class ServerApp {
 &lt;/configuration&gt;
 </code></pre></div>
 <p>When a specific instance of traffic is matched by the first rule, that rule is
-applied and the rest of the rules are ignored. Therefore it is best to have more
-specific rules specified first and have less specific rules specified last.</p><section>
+applied and the rest of the rules are ignored. Therefore, it is best to have
+more specific rules specified first and have less specific rules specified
+last.</p><section>
 <h3>Rule Conditions</h3>
 <p>From the API and from the command line, rule conditions consist of a comma
 separated list of rule conditions. Each rule condition consists of the syntax
@@ -2615,11 +2617,11 @@ the value assigned to the rule condition.</p>
     &lt;/ruleCondition&gt;
 &lt;/ruleConditions&gt;
 </code></pre></div>
-<p>Rule conditions within a rule are evaluated as true if each group of one or more
-rule conditions with the same name is evaluated as true. A group of one or more
-rule conditions with the same name is evaluated as true if at least one of the
-rule conditions within that group is evaluated as true. Zero rule conditions
-within a rule are evaluated as true.</p>
+<p>All rule conditions together are evaluated as true if each group of one or
+more rule conditions with the same name is evaluated as true. Within a group
+of one or more rule conditions with the same name, all rule conditions
+together are evaluated as true if at least one of the rule conditions within
+that group is evaluated as true. Zero rule conditions is evaluated as true.</p>
 <p>Partial API examples:</p>
 
 <div class="verbatim">
@@ -2938,20 +2940,20 @@ public class ServerApp {
     &lt;/settings&gt;
 &lt;/configuration&gt;
 </code></pre></div></section><section>
-<h3>Routing Traffic Through a Selection of Multiple Specified Chains of SOCKS Servers</h3>
-<p>To route traffic through a selection of multiple specified chains of SOCKS
-servers, you can use the following rule results:</p>
+<h3>Routing Traffic Through a Selection of Specified Chains of SOCKS Servers</h3>
+<p>To route traffic through a selection of specified chains of SOCKS servers, you
+can use the following rule results:</p>
 <ul>
 
 <li><code>routeSelectionStrategy</code>: Specifies the selection strategy for the next
 route (This rule result is optional. If this rule result is not specified, the
 setting <code>routeSelectionStrategy</code> is used.)</li>
 <li><code>selectableRouteId</code>: Specifies the ID for a selectable
-<a href="#chaining-to-multiple-specified-chains-of-other-socks-servers">route</a> (This
-rule result is optional. This rule result can be specified multiple times with
-each rule result specifying another ID for a selectable route. If this rule
-result is not specified, all of the routes defined by the settings
-<code>chaining.routeId</code> and <code>lastRouteId</code> are selectable.)</li>
+<a href="#chaining-to-specified-chains-of-other-socks-servers">route</a> (This rule
+result is optional. This rule result can be specified multiple times with each
+rule result specifying another ID for a selectable route. If this rule result
+is not specified, all the routes defined by the settings <code>chaining.routeId</code>
+and <code>lastRouteId</code> are selectable.)</li>
 </ul>
 <p>These rule results can be used with the following rule conditions:</p>
 <ul>

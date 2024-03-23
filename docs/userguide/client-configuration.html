@@ -88,7 +88,7 @@
 <h2>Page Contents</h2>
 <ul>
 
-<li><a href="#enabling-ssl-tls-for-tcp-traffic-between-the-client-and-the-socks-server">Enabling SSL/TLS for TCP Traffic Between the Client and the SOCKS Server</a></li>
+<li><a href="#enabling-ssltls-for-tcp-traffic-between-the-client-and-the-socks-server">Enabling SSL/TLS for TCP Traffic Between the Client and the SOCKS Server</a></li>
 <li><a href="#enabling-dtls-for-udp-traffic-between-the-client-and-the-socks-server">Enabling DTLS for UDP Traffic Between the Client and the SOCKS Server</a></li>
 <li><a href="#accessing-the-socks-server-using-socks5-authentication">Accessing the SOCKS Server Using SOCKS5 Authentication</a>
 <ul>
@@ -98,7 +98,7 @@
 <li><a href="#accessing-the-socks-server-using-gss-api-authentication">Accessing the SOCKS Server Using GSS-API Authentication</a></li>
 </ul></li>
 <li><a href="#resolving-host-names-from-the-socks5-server">Resolving Host Names From the SOCKS5 Server</a></li>
-<li><a href="#chaining-to-a-specified-chain-of-socks-servers">Chaining to a Specified Chain of SOCKS Servers</a></li>
+<li><a href="#routing-traffic-through-a-specified-chain-of-socks-servers">Routing Traffic Through a Specified Chain of SOCKS Servers</a></li>
 </ul></section><section>
 <h2>Enabling SSL/TLS for TCP Traffic Between the Client and the SOCKS Server</h2>
 <p>You can enable SSL/TLS for TCP traffic between the client and the SOCKS server
@@ -107,7 +107,7 @@ under the following condition:</p>
 
 <li>The SOCKS server accepts SSL/TLS connections.</li>
 </ul>
-<p>By default SSL/TLS for TCP traffic between the client and the SOCKS server is
+<p>By default, SSL/TLS for TCP traffic between the client and the SOCKS server is
 disabled. To enable SSL/TLS for TCP traffic between the client and the SOCKS
 server, you will need to have the property <code>socksClient.ssl.enabled</code> set
 to <code>true</code>. In addition, you will need to have the property
@@ -185,7 +185,7 @@ under the following condition:</p>
 
 <li>The SOCKS server accepts DTLS connections.</li>
 </ul>
-<p>By default DTLS for UDP traffic between the client and the SOCKS server is
+<p>By default, DTLS for UDP traffic between the client and the SOCKS server is
 disabled. To enable DTLS for UDP traffic between the client and the SOCKS
 server, you will need to have the property <code>socksClient.dtls.enabled</code> set
 to <code>true</code>. In addition, you will need to have the property
@@ -457,7 +457,7 @@ public class ClientApp {
 }
 </code></pre></div>
 <p>The client API comes with a <code>HostResolver</code> object to resolve host names. By
-default the <code>HostResolver</code> object resolves host names through the local
+default, the <code>HostResolver</code> object resolves host names through the local
 system. To enable the <code>HostResolver</code> object to have the host names resolved
 from the SOCKS5 server instead, you would need to set the property
 <code>socksClient.socks5.useResolveCommand</code> set to <code>true</code>. This property can
@@ -490,11 +490,10 @@ public class ClientApp {
     }
 }
 </code></pre></div></section><section>
-<h2>Chaining to a Specified Chain of SOCKS Servers</h2>
-<p>You can have the client chained to a specified chain of SOCKS servers, meaning
-that the traffic can be routed through the specified chain of SOCKS servers. To
-do this, you will need to create a chain of <code>SocksClient</code> objects with each
-<code>SocksClient</code> object specifying a SOCKS server.</p>
+<h2>Routing Traffic Through a Specified Chain of SOCKS Servers</h2>
+<p>You can have the client route traffic through a specified chain of SOCKS
+servers. To do this, you will need to create a chain of <code>SocksClient</code> objects
+with each <code>SocksClient</code> object specifying a SOCKS server.</p>
 <p>API example:</p>
 
 <div class="verbatim">
@@ -529,8 +528,8 @@ public class ClientApp {
     }
 }
 </code></pre></div>
-<p>The known limitations of chaining to a specified chain of SOCKS servers include
-the following:</p>
+<p>The known limitations of routing traffic through a specified chain of SOCKS
+servers include the following:</p>
 <ul>
 
 <li>Only TCP traffic can be routed through the chain. The client will attempt to

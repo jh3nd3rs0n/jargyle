@@ -3,10 +3,8 @@
 # Jargyle
 
 Jargyle is a Java SOCKS5 API and server that can route traffic through
-multiple SOCKS5 servers, can use SSL/TLS for TCP traffic between itself and
-clients and between itself and SOCKS5 servers, and can use DTLS for UDP
-traffic between itself and clients and between itself and SOCKS5 servers.
-Its inspiration comes from [JSocks](https://jsocks.sourceforge.net/),
+multiple SOCKS5 servers and can use SSL/TLS and DTLS between clients and 
+SOCKS5 servers. It is inspired by [JSocks](https://jsocks.sourceforge.net/),
 [SocksLib](https://github.com/fengyouchao/sockslib),
 [Esocks](https://github.com/fengyouchao/esocks) and
 [Dante](https://www.inet.no/dante/index.html).
@@ -17,18 +15,20 @@ You can find more information about Jargyle
 ## Contents
 
 -   [License](#license)
--   [Contributing Guidelines](#contributing-guidelines)
+-   [Contributing Guidelines](#contributing-guidelines) 
 -   [Directory Overview](#directory-overview) 
 -   [Build Requirements](#build-requirements)
 -   [Frequently Used Maven Commands](#frequently-used-maven-commands)
 
 ## License
 
-Jargyle is licensed under the [MIT license](LICENSE).
+Jargyle is licensed under the
+[MIT license](https://opensource.org/licenses/MIT).
+Its license can be found [here](LICENSE).
 
 ## Contributing Guidelines
 
-The contribution guidelines can be found [here](CONTRIBUTING.md).
+The contributing guidelines can be found [here](CONTRIBUTING.md).
 
 ## Directory Overview
 
@@ -41,14 +41,14 @@ when a push has been made to the GitHub repository
 
 `echo`: Maven module for an API of clients and servers that send/receive
 data and receive/send the same data (This module is used internally for
-integration testing the Jargyle client and server API)
+performing integration testing on the SOCKS client and server API)
 
 `echo-integration-test`: Maven module for integration tests for the echo
-API and the Jargyle client and server API
+API and the SOCKS client and server API
 
 `echo-performance-test`: Maven module for performance tests for the echo
-API and the Jargyle client and server API (The results can be found in
-`echo-performance-test/target/performance-results`)
+API and the SOCKS client and server API (The results can be found in
+`echo-performance-test/target/performance-results/`)
 
 `jargyle-cli`: Maven module for the Jargyle command line interface API
 
@@ -74,10 +74,10 @@ test coverage reports
 `jargyle-server-integration-test`: Maven module for integration tests for
 the SOCKS server API
 
-`src/site`: Contains files used to generate the `docs` directory
+`src/site`: Contains files used to generate `docs/`
 
 `test-help`: Maven module for the test help API (This module is used
-internally for testing)
+internally to help with testing)
 
 `.gitignore`: List of directories and files for Git to ignore such as
 Eclipse and IntelliJ IDEA project directories and files
@@ -133,13 +133,13 @@ distribution while skipping all tests. The built binary distribution can be
 found as a directory and in multiple archive formats in 
 `jargyle-distribution/target/`.
 
-`mvn clean integration-test -Pcoverage`: Performs a clean build and 
-execution of all tests including integration tests and also produces test 
-coverage reports. The test coverage reports can be found in 
-`jargyle-report-aggregate/target/`. The option `-Pcoverage` can be removed if 
-you do not want test coverage reports produced.
-
 `mvn clean test -Pcoverage`: Performs a clean build and execution of all tests 
 except integration tests and also produces test coverage reports. The test 
 coverage reports can be found in `jargyle-report-aggregate/target/`. The option 
 `-Pcoverage` can be removed if you do not want test coverage reports produced.
+
+`mvn clean verify -Pcoverage`: Performs a clean build and
+execution of all tests including integration tests and also produces test
+coverage reports. The test coverage reports can be found in
+`jargyle-report-aggregate/target/`. The option `-Pcoverage` can be removed if
+you do not want test coverage reports produced.

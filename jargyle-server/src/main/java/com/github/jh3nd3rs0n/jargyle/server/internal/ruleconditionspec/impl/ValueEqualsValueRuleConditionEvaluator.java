@@ -8,8 +8,8 @@ public final class ValueEqualsValueRuleConditionEvaluator<V>
 	public ValueEqualsValueRuleConditionEvaluator() {	}
 
 	@Override
-	public boolean evaluate(final V value1, final V value2) {
-		return value1.equals(value2);
+	public boolean evaluate(final V conditionValue, final V argValue) {
+		return conditionValue.equals(argValue);
 	}
 
 }

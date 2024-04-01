@@ -2,18 +2,18 @@ package com.github.jh3nd3rs0n.jargyle.server;
 
 import java.util.Objects;
 
-public abstract class RuleConditionSpec<V1, V2> {
+public abstract class RuleConditionSpec<C, A> {
 
 	private final String name;
-	private final RuleArgSpec<V2> ruleArgSpec;
-	private final RuleConditionEvaluator<V1, V2> ruleConditionEvaluator;
-	private final Class<V1> valueType;
+	private final RuleArgSpec<A> ruleArgSpec;
+	private final RuleConditionEvaluator<C, A> ruleConditionEvaluator;
+	private final Class<C> valueType;
 		
 	public RuleConditionSpec(
 			final String n, 
-			final Class<V1> valType, 
-			final RuleConditionEvaluator<V1, V2> evaluator,
-			final RuleArgSpec<V2> rlArgSpec) {
+			final Class<C> valType,
+			final RuleConditionEvaluator<C, A> evaluator,
+			final RuleArgSpec<A> rlArgSpec) {
 		Objects.requireNonNull(n);
 		Objects.requireNonNull(valType);
 		Objects.requireNonNull(evaluator);
@@ -50,15 +50,15 @@ public abstract class RuleConditionSpec<V1, V2> {
 		return this.name;
 	}
 	
-	public final RuleArgSpec<V2> getRuleArgSpec() {
+	public final RuleArgSpec<A> getRuleArgSpec() {
 		return this.ruleArgSpec;
 	}
 	
-	public final RuleConditionEvaluator<V1, V2> getRuleConditionEvaluator() {
+	public final RuleConditionEvaluator<C, A> getRuleConditionEvaluator() {
 		return this.ruleConditionEvaluator;
 	}
 	
-	public final Class<V1> getValueType() {
+	public final Class<C> getValueType() {
 		return this.valueType;
 	}
 	
@@ -71,20 +71,20 @@ public abstract class RuleConditionSpec<V1, V2> {
 		return result;
 	}
 	
-	public final RuleCondition<V1, V2> newRuleCondition(final V1 value) {
-		return new RuleCondition<V1, V2>(
+	public final RuleCondition<C, A> newRuleCondition(final C value) {
+		return new RuleCondition<C, A>(
 				this, 
 				this.valueType.cast(this.validate(value)),
 				this.ruleConditionEvaluator, 
 				this.ruleArgSpec);
 	}
 
-	public final RuleCondition<V1, V2> newRuleConditionWithParsedValue(
+	public final RuleCondition<C, A> newRuleConditionWithParsedValue(
 			final String value) {
 		return this.newRuleCondition(this.parse(value));
 	}
 
-	protected abstract V1 parse(final String value);
+	protected abstract C parse(final String value);
 
 	@Override
 	public final String toString() {
@@ -96,7 +96,7 @@ public abstract class RuleConditionSpec<V1, V2> {
 		return builder.toString();
 	}
 
-	protected V1 validate(final V1 value) {
+	protected C validate(final C value) {
 		return value;
 	}
 

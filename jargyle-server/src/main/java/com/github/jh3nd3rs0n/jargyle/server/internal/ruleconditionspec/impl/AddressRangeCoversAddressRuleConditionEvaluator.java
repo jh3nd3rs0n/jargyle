@@ -9,8 +9,8 @@ public final class AddressRangeCoversAddressRuleConditionEvaluator
 	public AddressRangeCoversAddressRuleConditionEvaluator() { }
 
 	@Override
-	public boolean evaluate(final AddressRange value1, final String value2) {
-		return value1.covers(value2);
+	public boolean evaluate(final AddressRange conditionValue, final String argValue) {
+		return conditionValue.covers(argValue);
 	}
 
 }

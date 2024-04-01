@@ -8,8 +8,8 @@ public final class PortRangeCoversPortRuleConditionEvaluator
 	extends RuleConditionEvaluator<PortRange, Port> {
 
 	@Override
-	public boolean evaluate(final PortRange value1, final Port value2) {
-		return value1.covers(value2);
+	public boolean evaluate(final PortRange conditionValue, final Port argValue) {
+		return conditionValue.covers(argValue);
 	}
 
 }

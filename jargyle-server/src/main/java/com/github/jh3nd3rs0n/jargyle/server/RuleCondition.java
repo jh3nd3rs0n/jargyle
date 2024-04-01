@@ -12,7 +12,7 @@ import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueTypeD
 		syntax = "NAME=VALUE",
 		syntaxName = "RULE_CONDITION"
 )
-public final class RuleCondition<V1, V2> {
+public final class RuleCondition<C, A> {
 
 	public static RuleCondition<Object, Object> newInstanceFrom(final String s) {
 		String[] sElements = s.split("=", 2);
@@ -44,17 +44,17 @@ public final class RuleCondition<V1, V2> {
 	}
 	
 	private final String name;
-	private final RuleArgSpec<V2> ruleArgSpec;	
-	private final RuleConditionEvaluator<V1, V2> ruleConditionEvaluator;
-	private final RuleConditionSpec<V1, V2> ruleConditionSpec;
-	private final V1 value;
+	private final RuleArgSpec<A> ruleArgSpec;
+	private final RuleConditionEvaluator<C, A> ruleConditionEvaluator;
+	private final RuleConditionSpec<C, A> ruleConditionSpec;
+	private final C value;
 			
 	RuleCondition(
-			final RuleConditionSpec<V1, V2> spec, 
-			final V1 val,
-			final RuleConditionEvaluator<V1, V2> evaluator, 
-			final RuleArgSpec<V2> rlArgSpec) {
-		V1 v = spec.getValueType().cast(val);
+			final RuleConditionSpec<C, A> spec,
+			final C val,
+			final RuleConditionEvaluator<C, A> evaluator,
+			final RuleArgSpec<A> rlArgSpec) {
+		C v = spec.getValueType().cast(val);
 		this.name = spec.getName();
 		this.ruleArgSpec = rlArgSpec;		
 		this.ruleConditionEvaluator = evaluator;
@@ -103,19 +103,19 @@ public final class RuleCondition<V1, V2> {
 		return this.name;
 	}
 	
-	public RuleArgSpec<V2> getRuleArgSpec() {
+	public RuleArgSpec<A> getRuleArgSpec() {
 		return this.ruleArgSpec;
 	}
 	
-	public RuleConditionEvaluator<V1, V2> getRuleConditionEvaluator() {
+	public RuleConditionEvaluator<C, A> getRuleConditionEvaluator() {
 		return this.ruleConditionEvaluator;
 	}
 	
-	public RuleConditionSpec<V1, V2> getRuleConditionSpec() {
+	public RuleConditionSpec<C, A> getRuleConditionSpec() {
 		return this.ruleConditionSpec;
 	}
 
-	public V1 getValue() {
+	public C getValue() {
 		return this.value;
 	}
 

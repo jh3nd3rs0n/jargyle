@@ -2,7 +2,7 @@ package com.github.jh3nd3rs0n.jargyle.server.internal.server.socks5;
 
 import java.io.IOException;
 
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Socks5Request;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Request;
 import com.github.jh3nd3rs0n.jargyle.server.internal.server.Relay;
 
 class TcpBasedCommandWorker extends CommandWorker {
@@ -11,9 +11,9 @@ class TcpBasedCommandWorker extends CommandWorker {
 
 	protected TcpBasedCommandWorker(
 			final Socks5Worker socks5Worker, 
-			final MethodSubnegotiationResults methSubnegotiationResults, 
-			final Socks5Request socks5Req) {
-		super(socks5Worker, methSubnegotiationResults, socks5Req);
+			final MethodSubNegotiationResults methSubNegotiationResults, 
+			final Request req) {
+		super(socks5Worker, methSubNegotiationResults, req);
 	}
 
 	protected final void passData(final Relay relay) throws IOException {

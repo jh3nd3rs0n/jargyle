@@ -11,7 +11,7 @@ public final class AddressRuleResultSpec extends RuleResultSpec<Address> {
 
 	@Override
 	protected Address parse(final String value) {
-		return Address.newInstance(value);
+		return Address.newInstanceFrom(value);
 	}
 
 }

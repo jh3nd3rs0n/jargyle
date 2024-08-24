@@ -39,12 +39,10 @@ Usage: jargyle manage-socks5-users USER_REPOSITORY COMMAND
        jargyle manage-socks5-users --help
 
 USER_REPOSITORIES:
-
   FileSourceUserRepository:FILE
       User repository that handles the storage of the users from a provided file of a list of URL encoded username and hashed password pairs (If the file does not exist, it will be created and used.)
 
 COMMANDS:
-
   add
       Add user(s) through an interactive prompt
   list

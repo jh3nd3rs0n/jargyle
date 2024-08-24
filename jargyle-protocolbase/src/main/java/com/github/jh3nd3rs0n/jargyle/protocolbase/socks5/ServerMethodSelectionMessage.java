@@ -1,35 +1,58 @@
 package com.github.jh3nd3rs0n.jargyle.protocolbase.socks5;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
 
+/**
+ * A method selection message from the server.
+ */
 public final class ServerMethodSelectionMessage {
 
-	private final Version version;
-	private final Method method;
+    /**
+     * The {@code Version} for this {@code ServerMethodSelectionMessage}.
+     */
+    private final Version version;
 
-	private ServerMethodSelectionMessage(final Method meth) {
-		this.version = Version.V5;
-		this.method = meth;
-	}
+    /**
+     * The {@code Method} for this {@code ServerMethodSelectionMessage}.
+     */
+    private final Method method;
 
-	public static ServerMethodSelectionMessage newInstance(final Method meth) {
-		return new ServerMethodSelectionMessage(Objects.requireNonNull(meth));
-	}
-
-    public static ServerMethodSelectionMessage newInstanceFrom(
-            final byte[] b) {
-        ServerMethodSelectionMessage smsm;
-        try {
-            smsm = newInstanceFrom(new ByteArrayInputStream(b));
-        } catch (IOException e) {
-            throw new IllegalArgumentException(e);
-        }
-        return smsm;
+    /**
+     * Constructs a {@code ServerMethodSelectionMessage} with the provided
+     * {@code Method}.
+     *
+     * @param meth the provided {@code Method}
+     */
+    private ServerMethodSelectionMessage(final Method meth) {
+        this.version = Version.V5;
+        this.method = meth;
     }
 
+    /**
+     * Returns a new {@code ServerMethodSelectionMessage} with the provided
+     * {@code Method}.
+     *
+     * @param meth the provided {@code Method}
+     * @return a new {@code ServerMethodSelectionMessage} with the provided
+     * {@code Method}
+     */
+    public static ServerMethodSelectionMessage newInstance(final Method meth) {
+        return new ServerMethodSelectionMessage(Objects.requireNonNull(meth));
+    }
+
+    /**
+     * Returns a new {@code ServerMethodSelectionMessage} from the provided
+     * {@code InputStream}. An {@code EOFException} is thrown if the end of
+     * the provided {@code InputStream} is reached.
+     *
+     * @param in the provided {@code InputStream}
+     * @return a new {@code ServerMethodSelectionMessage}
+     * @throws IOException if the end of the provided {@code InputStream}
+     *                     is reached ({@code EOFException}) or if an I/O
+     *                     error occurs
+     */
     public static ServerMethodSelectionMessage newInstanceFrom(
             final InputStream in) throws IOException {
         VersionIoHelper.readVersionFrom(in);
@@ -38,53 +61,77 @@ public final class ServerMethodSelectionMessage {
     }
 
     @Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (this.getClass() != obj.getClass()) {
-			return false;
-		}
-		ServerMethodSelectionMessage other = (ServerMethodSelectionMessage) obj;
-		if (!this.method.equals(other.method)) {
-			return false;
-		}
-		return true;
-	}
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (this.getClass() != obj.getClass()) {
+            return false;
+        }
+        ServerMethodSelectionMessage other = (ServerMethodSelectionMessage) obj;
+        return this.method.equals(other.method);
+    }
 
-	public Method getMethod() {
-		return this.method;
-	}
-	
-	public Version getVersion() {
-		return this.version;
-	}
+    /**
+     * Returns the {@code Method} of this
+     * {@code ServerMethodSelectionMessage}.
+     *
+     * @return the {@code Method} of this
+     * {@code ServerMethodSelectionMessage}
+     */
+    public Method getMethod() {
+        return this.method;
+    }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + this.method.hashCode();
-		return result;
-	}
+    /**
+     * Returns the {@code Version} of this
+     * {@code ServerMethodSelectionMessage}.
+     *
+     * @return the {@code Version} of this
+     * {@code ServerMethodSelectionMessage}
+     */
+    public Version getVersion() {
+        return this.version;
+    }
 
-	public byte[] toByteArray() {
-		return new byte[] { this.version.byteValue(), this.method.byteValue() };
-	}
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + this.version.hashCode();
+        result = prime * result + this.method.hashCode();
+        return result;
+    }
 
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append(this.getClass().getSimpleName())
-			.append(" [version=")
-			.append(this.version)
-			.append(", method=")
-			.append(this.method)
-			.append("]");
-		return builder.toString();
-	}
-	
+    /**
+     * Returns the {@code byte} array of this
+     * {@code ServerMethodSelectionMessage}.
+     *
+     * @return the {@code byte} array of this
+     * {@code ServerMethodSelectionMessage}
+     */
+    public byte[] toByteArray() {
+        return new byte[]{this.version.byteValue(), this.method.byteValue()};
+    }
+
+    /**
+     * Returns the {@code String} representation of this
+     * {@code ServerMethodSelectionMessage}.
+     *
+     * @return the {@code String} representation of this
+     * {@code ServerMethodSelectionMessage}
+     */
+    @Override
+    public String toString() {
+        return this.getClass().getSimpleName() +
+                " [version=" +
+                this.version +
+                ", method=" +
+                this.method +
+                "]";
+    }
+
 }

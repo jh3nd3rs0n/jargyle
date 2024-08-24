@@ -16,6 +16,7 @@ com.github.jh3nd3rs0n.jargyle.internal.throwable
 module:com.github.jh3nd3rs0n.jargyle.protocolbase
 com.github.jh3nd3rs0n.jargyle.protocolbase
 com.github.jh3nd3rs0n.jargyle.protocolbase.socks5
+com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.address.impl
 com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod
 com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.userpassmethod
 module:com.github.jh3nd3rs0n.jargyle.server

@@ -132,6 +132,8 @@ public final class UnsignedByte {
         return this.intValue;
     }
 
+
+
     /**
      * Returns the {@code String} representation of this {@code UnsignedByte}.
      * The {@code String} representation is an integer between 0 and 255

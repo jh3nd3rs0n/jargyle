@@ -19,14 +19,8 @@ import com.github.jh3nd3rs0n.jargyle.client.SocksClient.ClientSocketConnectParam
 import com.github.jh3nd3rs0n.jargyle.client.internal.client.SocksClientIOExceptionThrowingHelper;
 import com.github.jh3nd3rs0n.jargyle.client.internal.client.SocksClientSocketExceptionThrowingHelper;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Address;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.AddressType;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Command;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Method;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.MethodEncapsulation;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Reply;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Socks5Reply;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Socks5Request;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.*;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.address.impl.DomainName;
 
 public final class Socks5Socket extends Socket {
 
@@ -118,28 +112,26 @@ public final class Socks5Socket extends Socket {
 					this.socks5Client.doMethodSubnegotiation(
 							method, connectedSocket);
 			Socket connectedSock = methodEncapsulation.getSocket();
-			Socks5Request socks5Req = Socks5Request.newInstance(
+			Request req = Request.newInstance(
 					Command.CONNECT, 
-					Address.newInstance(address), 
+					Address.newInstanceFrom(address),
 					Port.valueOf(port));
-			this.socks5Client.sendSocks5Request(socks5Req, connectedSock);
-			Socks5Reply socks5Rep = null;
+			this.socks5Client.sendRequest(req, connectedSock);
+			Reply rep = null;
 			try {
-				socks5Rep = this.socks5Client.receiveSocks5Reply(connectedSock);
-			} catch (FailureSocks5ReplyException e) {
-				Reply reply = e.getFailureSocks5Reply().getReply();
-				if (reply.equals(Reply.HOST_UNREACHABLE)) {
+				rep = this.socks5Client.receiveReply(connectedSock);
+			} catch (FailureReplyException e) {
+				ReplyCode replyCode = e.getFailureReply().getReplyCode();
+				if (replyCode.equals(ReplyCode.HOST_UNREACHABLE)) {
 					throw new UnknownHostException(address);
 				} else {
 					throw e;
 				}
 			}
 			String serverBoundAddress = 
-					socks5Rep.getServerBoundAddress().toString();
-			int serverBoundPort = socks5Rep.getServerBoundPort().intValue();
-			AddressType addressType =
-					socks5Rep.getServerBoundAddress().getAddressType();
-			if (addressType.equals(AddressType.DOMAINNAME)) {
+					rep.getServerBoundAddress().toString();
+			int serverBoundPort = rep.getServerBoundPort().intValue();
+			if (rep.getServerBoundAddress() instanceof DomainName) {
 				throw new Socks5ClientIOException(
 						this.socks5Client, 
 						String.format(

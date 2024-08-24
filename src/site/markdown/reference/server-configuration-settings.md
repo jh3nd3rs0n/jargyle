@@ -48,6 +48,8 @@
     -   [chaining.socks5.gssapimethod.necReferenceImpl](#chaining-socks5-gssapimethod-necreferenceimpl)
     -   [chaining.socks5.gssapimethod.protectionLevels](#chaining-socks5-gssapimethod-protectionlevels)
     -   [chaining.socks5.gssapimethod.serviceName](#chaining-socks5-gssapimethod-servicename)
+    -   [chaining.socks5.gssapimethod.suggestedConf](#chaining-socks5-gssapimethod-suggestedconf)
+    -   [chaining.socks5.gssapimethod.suggestedInteg](#chaining-socks5-gssapimethod-suggestedinteg)
     -   [chaining.socks5.methods](#chaining-socks5-methods)
     -   [chaining.socks5.useResolveCommand](#chaining-socks5-useresolvecommand)
     -   [chaining.socks5.userpassmethod.password](#chaining-socks5-userpassmethod-password)
@@ -75,6 +77,8 @@
 -   [SOCKS5 Settings](#socks5-settings)
     -   [socks5.gssapimethod.necReferenceImpl](#socks5-gssapimethod-necreferenceimpl)
     -   [socks5.gssapimethod.protectionLevels](#socks5-gssapimethod-protectionlevels)
+    -   [socks5.gssapimethod.suggestedConf](#socks5-gssapimethod-suggestedconf)
+    -   [socks5.gssapimethod.suggestedInteg](#socks5-gssapimethod-suggestedinteg)
     -   [socks5.methods](#socks5-methods)
     -   [socks5.onBind.inboundSocketSettings](#socks5-onbind-inboundsocketsettings)
     -   [socks5.onBind.listenBindHost](#socks5-onbind-listenbindhost)
@@ -729,6 +733,34 @@ The GSS-API service name for the other SOCKS5 server
 
 **Value:** java.lang.String
 
+### chaining.socks5.gssapimethod.suggestedConf
+
+**Syntax:**
+
+```text
+chaining.socks5.gssapimethod.suggestedConf=true|false
+```
+
+**Description:**
+
+The suggested privacy (i.e. confidentiality) state for GSS-API messages sent after GSS-API authentication with the other SOCKS5 server (applicable if the negotiated protection level is SELECTIVE_INTEG_OR_CONF) (default is true)
+
+**Value:** java.lang.Boolean
+
+### chaining.socks5.gssapimethod.suggestedInteg
+
+**Syntax:**
+
+```text
+chaining.socks5.gssapimethod.suggestedInteg=-2147483648-2147483647
+```
+
+**Description:**
+
+The suggested quality-of-protection (i.e. integrity) value for GSS-API messages sent after GSS-API authentication with the other SOCKS5 server (applicable if the negotiated protection level is SELECTIVE_INTEG_OR_CONF) (default is 0)
+
+**Value:** java.lang.Integer
+
 ### chaining.socks5.methods
 
 **Syntax:**
@@ -1070,6 +1102,34 @@ socks5.gssapimethod.protectionLevels=SOCKS5_GSSAPIMETHOD_PROTECTION_LEVELS
 The comma separated list of acceptable protection levels after GSS-API authentication (The first is preferred if the client does not provide a protection level that is acceptable.) (default is REQUIRED_INTEG_AND_CONF,REQUIRED_INTEG,NONE)
 
 **Value:** [SOCKS5 GSS-API Method Protection Levels](value-syntaxes.md#socks5-gss-api-method-protection-levels)
+
+### socks5.gssapimethod.suggestedConf
+
+**Syntax:**
+
+```text
+socks5.gssapimethod.suggestedConf=true|false
+```
+
+**Description:**
+
+The suggested privacy (i.e. confidentiality) state for GSS-API messages sent after GSS-API authentication (applicable if the negotiated protection level is SELECTIVE_INTEG_OR_CONF) (default is true)
+
+**Value:** java.lang.Boolean
+
+### socks5.gssapimethod.suggestedInteg
+
+**Syntax:**
+
+```text
+socks5.gssapimethod.suggestedInteg=-2147483648-2147483647
+```
+
+**Description:**
+
+The suggested quality-of-protection (i.e. integrity) value for GSS-API messages sent after GSS-API authentication (applicable if the negotiated protection level is SELECTIVE_INTEG_OR_CONF) (default is 0)
+
+**Value:** java.lang.Integer
 
 ### socks5.methods
 

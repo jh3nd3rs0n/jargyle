@@ -286,8 +286,7 @@ public final class Socks5UserManagerCLI extends CLI {
 				helpOption.getUsage());
 		pw.println();
 		pw.println("USER_REPOSITORIES:");
-		pw.println();
-		for (Field field : 
+		for (Field field :
 			ExternalSourceUserRepositorySpecConstants.class.getDeclaredFields()) {
 			NameValuePairValueSpecDoc nameValuePairValueSpecDoc = field.getAnnotation(
 					NameValuePairValueSpecDoc.class);
@@ -300,7 +299,6 @@ public final class Socks5UserManagerCLI extends CLI {
 		}		
 		pw.println();
 		pw.println("COMMANDS:");
-		pw.println();
 		for (Field field : Command.class.getDeclaredFields()) {
 			HelpText helpText = field.getAnnotation(HelpText.class);
 			if (helpText != null) {

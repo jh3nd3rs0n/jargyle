@@ -108,7 +108,7 @@ public final class SocketSettings {
         if (s.isEmpty()) {
             return of(socketSettings);
         }
-        String[] sElements = s.split(",");
+        String[] sElements = s.split(",", -1);
         for (String sElement : sElements) {
             SocketSetting<Object> socketSetting =
                     SocketSetting.newInstanceFrom(sElement);

@@ -3,51 +3,74 @@ package com.github.jh3nd3rs0n.jargyle.protocolbase.socks5;
 import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.internal.UnsignedByteIoHelper;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
+/**
+ * A method selection message sent from the client.
+ */
 public final class ClientMethodSelectionMessage {
 
-	private final Version version;
-	private final Methods methods;
+    /**
+     * The {@code Version} of this {@code ClientMethodSelectionMessage}.
+     */
+    private final Version version;
 
-	private ClientMethodSelectionMessage(final Methods meths) {
-		this.version = Version.V5;
-		this.methods = meths;
-	}
+    /**
+     * The {@code Methods} of this {@code ClientMethodSelectionMessage}.
+     */
+    private final Methods methods;
 
-	public static ClientMethodSelectionMessage newInstance(
-			final Methods meths) {
-		List<Method> methsList = Objects.requireNonNull(meths).toList();
-		if (methsList.size() > UnsignedByte.MAX_INT_VALUE) {
-			throw new IllegalArgumentException(String.format(
-					"number of methods must be no more than %s",
-					UnsignedByte.MAX_INT_VALUE));
-		}
-		return new ClientMethodSelectionMessage(meths);
-	}
+    /**
+     * Constructs a {@code ClientMethodSelectionMessage} with the provided
+     * {@code Methods}.
+     *
+     * @param meths the provided {@code Methods}
+     */
+    private ClientMethodSelectionMessage(final Methods meths) {
+        this.version = Version.V5;
+        this.methods = meths;
+    }
 
-	public static ClientMethodSelectionMessage newInstanceFrom(
-			final byte[] b) {
-		ClientMethodSelectionMessage cmsm;
-		try {
-			cmsm = newInstanceFrom(new ByteArrayInputStream(b));
-		} catch (IOException e) {
-			throw new IllegalArgumentException(e);
-		}
-		return cmsm;
-	}
+    /**
+     * Returns a new {@code ClientMethodSelectionMessage} with the provided
+     * {@code Methods}. An {@code IllegalArgumentException} is thrown if the
+     * provided {@code Methods} has a size greater than 255.
+     *
+     * @param meths the provided {@code Methods}
+     * @return a new {@code ClientMethodSelectionMessage} with the provided
+     * {@code Methods}
+     */
+    public static ClientMethodSelectionMessage newInstance(
+            final Methods meths) {
+        List<Method> methsList = meths.toList();
+        if (methsList.size() > UnsignedByte.MAX_INT_VALUE) {
+            throw new IllegalArgumentException(String.format(
+                    "number of methods must be no more than %s",
+                    UnsignedByte.MAX_INT_VALUE));
+        }
+        return new ClientMethodSelectionMessage(meths);
+    }
+
+    /**
+     * Returns a new {@code ClientMethodSelectionMessage} from the provided
+     * {@code InputStream}. An {@code EOFException} is thrown if the end of
+     * the provided {@code InputStream} is reached.
+     *
+     * @param in the provided {@code InputStream}
+     * @return a new {@code ClientMethodSelectionMessage}
+     * @throws IOException if the end of the provided {@code InputStream}
+     *                     is reached ({@code EOFException}) or if an I/O
+     *                     error occurs
+     */
     public static ClientMethodSelectionMessage newInstanceFrom(
             final InputStream in) throws IOException {
         VersionIoHelper.readVersionFrom(in);
         UnsignedByte methodCount = UnsignedByteIoHelper.readUnsignedByteFrom(
                 in);
-        List<Method> meths = new ArrayList<Method>();
+        List<Method> meths = new ArrayList<>();
         for (int i = 0; i < methodCount.intValue(); i++) {
             Method meth;
             try {
@@ -61,60 +84,85 @@ public final class ClientMethodSelectionMessage {
     }
 
     @Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (this.getClass() != obj.getClass()) {
-			return false;
-		}
-		ClientMethodSelectionMessage other = (ClientMethodSelectionMessage) obj;
-		if (!this.methods.equals(other.methods)) {
-			return false;
-		}
-		return true;
-	}
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (this.getClass() != obj.getClass()) {
+            return false;
+        }
+        ClientMethodSelectionMessage other = (ClientMethodSelectionMessage) obj;
+        return this.methods.equals(other.methods);
+    }
 
-	public Methods getMethods() {
-		return this.methods;
-	}
-	
-	public Version getVersion() {
-		return this.version;
-	}
+    /**
+     * Returns the {@code Methods} of this
+     * {@code ClientMethodSelectionMessage}.
+     *
+     * @return the {@code Methods} of this
+     * {@code ClientMethodSelectionMessage}
+     */
+    public Methods getMethods() {
+        return this.methods;
+    }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + this.methods.hashCode();
-		return result;
-	}
+    /**
+     * Returns the {@code Version} of this
+     * {@code ClientMethodSelectionMessage}.
+     *
+     * @return the {@code Version} of this
+     * {@code ClientMethodSelectionMessage}
+     */
+    public Version getVersion() {
+        return this.version;
+    }
 
-	public byte[] toByteArray() {
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		out.write(UnsignedByte.valueOf(this.version.byteValue()).intValue());
-		List<Method> methodsList = this.methods.toList();
-		out.write(methodsList.size());
-		for (Method method : methodsList) {
-			out.write(UnsignedByte.valueOf(method.byteValue()).intValue());
-		}
-		return out.toByteArray();
-	}
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + this.version.hashCode();
+        result = prime * result + this.methods.hashCode();
+        return result;
+    }
 
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append(this.getClass().getSimpleName())
-			.append(" [version=")
-			.append(this.version)
-			.append(", methods=")
-			.append(this.methods)
-			.append("]");
-		return builder.toString();
-	}
-	
+    /**
+     * Returns the {@code byte} array of this
+     * {@code ClientMethodSelectionMessage}.
+     *
+     * @return the {@code byte} array of this
+     * {@code ClientMethodSelectionMessage}
+     */
+    public byte[] toByteArray() {
+        List<Method> methodsList = this.methods.toList();
+        byte[] arr = new byte[2 + methodsList.size()];
+        arr[0] = this.version.byteValue();
+        arr[1] = UnsignedByte.valueOf(methodsList.size()).byteValue();
+        int i = 1;
+        for (Method method : methodsList) {
+            arr[++i] = method.byteValue();
+        }
+        return arr;
+    }
+
+    /**
+     * Returns the {@code String} representation of this
+     * {@code ClientMethodSelectionMessage}.
+     *
+     * @return the {@code String} representation of this
+     * {@code ClientMethodSelectionMessage}
+     */
+    @Override
+    public String toString() {
+        return this.getClass().getSimpleName() +
+                " [version=" +
+                this.version +
+                ", methods=" +
+                this.methods +
+                "]";
+    }
+
 }

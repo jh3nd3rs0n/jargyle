@@ -3,6 +3,7 @@ package com.github.jh3nd3rs0n.jargyle.server;
 import java.util.List;
 import java.util.Map;
 
+import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.*;
 import org.ietf.jgss.Oid;
 
 import com.github.jh3nd3rs0n.jargyle.client.Socks5PropertySpecConstants;
@@ -11,13 +12,6 @@ import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueSpecD
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueSpecsDoc;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Methods;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod.ProtectionLevels;
-import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.BooleanSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.OidSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.Socks5GssapiMethodProtectionLevelsSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.Socks5MethodsSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.Socks5UserpassMethodEncryptedPasswordSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.Socks5UserpassMethodUsernameSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.StringSettingSpec;
 
 @NameValuePairValueSpecsDoc(
 		description = "",
@@ -92,7 +86,37 @@ public final class ChainingSocks5SettingSpecConstants {
 			SETTING_SPECS.addThenGet(new StringSettingSpec(
 					"chaining.socks5.gssapimethod.serviceName", 
 					Socks5PropertySpecConstants.SOCKS5_GSSAPIMETHOD_SERVICE_NAME.getDefaultProperty().getValue()));
-	
+
+	@NameValuePairValueSpecDoc(
+			description = "The suggested privacy (i.e. confidentiality) state "
+					+ "for GSS-API messages sent after GSS-API authentication "
+					+ "with the other SOCKS5 server (applicable if the "
+					+ "negotiated protection level is SELECTIVE_INTEG_OR_CONF) "
+					+ "(default is true)",
+			name = "chaining.socks5.gssapimethod.suggestedConf",
+			syntax = "chaining.socks5.gssapimethod.suggestedConf=true|false",
+			valueType = Boolean.class
+	)
+	public static final SettingSpec<Boolean> CHAINING_SOCKS5_GSSAPIMETHOD_SUGGESTED_CONF =
+			SETTING_SPECS.addThenGet(new BooleanSettingSpec(
+					"chaining.socks5.gssapimethod.suggestedConf",
+					Socks5PropertySpecConstants.SOCKS5_GSSAPIMETHOD_SUGGESTED_CONF.getDefaultProperty().getValue()));
+
+	@NameValuePairValueSpecDoc(
+			description = "The suggested quality-of-protection "
+					+ "(i.e. integrity) value for GSS-API messages sent after "
+					+ "GSS-API authentication with the other SOCKS5 server "
+					+ "(applicable if the negotiated protection level is "
+					+ "SELECTIVE_INTEG_OR_CONF) (default is 0)",
+			name = "chaining.socks5.gssapimethod.suggestedInteg",
+			syntax = "chaining.socks5.gssapimethod.suggestedInteg=-2147483648-2147483647",
+			valueType = Integer.class
+	)
+	public static final SettingSpec<Integer> CHAINING_SOCKS5_GSSAPIMETHOD_SUGGESTED_INTEG =
+			SETTING_SPECS.addThenGet(new IntegerSettingSpec(
+					"chaining.socks5.gssapimethod.suggestedInteg",
+					Socks5PropertySpecConstants.SOCKS5_GSSAPIMETHOD_SUGGESTED_INTEG.getDefaultProperty().getValue()));
+
 	@NameValuePairValueSpecDoc(
 			description = "The comma separated list of acceptable "
 					+ "authentication methods to the other SOCKS5 server "

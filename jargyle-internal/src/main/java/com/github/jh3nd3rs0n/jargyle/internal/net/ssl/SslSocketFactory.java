@@ -12,6 +12,12 @@ import java.net.Socket;
 public abstract class SslSocketFactory {
 
     /**
+     * Allows the construction of subclass instances.
+     */
+    public SslSocketFactory() {
+    }
+
+    /**
      * Returns a new default {@code SslSocketFactory} with the provided
      * {@code SSLContext}.
      *

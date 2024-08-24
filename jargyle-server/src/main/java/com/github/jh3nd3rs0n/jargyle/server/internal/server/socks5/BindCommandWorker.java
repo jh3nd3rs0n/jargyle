@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.github.jh3nd3rs0n.jargyle.common.net.*;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.ReplyCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,8 +25,7 @@ import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
 import com.github.jh3nd3rs0n.jargyle.internal.throwable.ThrowableHelper;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Address;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Reply;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Socks5Reply;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Socks5Request;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Request;
 import com.github.jh3nd3rs0n.jargyle.server.FirewallAction;
 import com.github.jh3nd3rs0n.jargyle.server.GeneralRuleResultSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.GeneralSettingSpecConstants;
@@ -47,14 +47,13 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 		
 	public BindCommandWorker(
 			final Socks5Worker socks5Worker, 
-			final MethodSubnegotiationResults methSubnegotiationResults, 
-			final Socks5Request socks5Req) {
-		super(socks5Worker, methSubnegotiationResults, socks5Req);
+			final MethodSubNegotiationResults methSubNegotiationResults,
+			final Request req) {
+		super(socks5Worker, methSubNegotiationResults, req);
 		this.logger = LoggerFactory.getLogger(BindCommandWorker.class);
 	}
 	
 	private Socket acceptInboundSocketFrom(final ServerSocket listenSocket) {
-		Socks5Reply socks5Rep = null;
 		Socket inboundSocket = null;
 		try {
 			inboundSocket = listenSocket.accept();
@@ -64,33 +63,31 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 							this, 
 							"Error in waiting for an inbound socket"), 
 					e);
-			socks5Rep = Socks5Reply.newFailureInstance(
-					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			this.sendSocks5Reply(socks5Rep);
+			this.sendReply(
+					Reply.newFailureInstance(ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
 			return null;
 		}
 		return inboundSocket;
 	}
 	
-	private boolean canAllowSecondSocks5Reply() {
+	private boolean canAllowSecondReply() {
 		Rule applicableRule = this.getApplicableRule();
 		RuleContext ruleContext = this.getRuleContext();
-		if (!this.hasSecondSocks5ReplyRuleCondition()) {
+		if (!this.hasSecondReplyRuleCondition()) {
 			return true;
 		}
 		FirewallAction firewallAction = applicableRule.getLastRuleResultValue(
 				GeneralRuleResultSpecConstants.FIREWALL_ACTION);
 		if (firewallAction == null) {
-			Socks5Reply rep = Socks5Reply.newFailureInstance(
-					Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
-			this.sendSocks5Reply(rep);
+			this.sendReply(
+					Reply.newFailureInstance(ReplyCode.CONNECTION_NOT_ALLOWED_BY_RULESET));
 			return false;
 		}
 		LogAction firewallActionLogAction = 
 				applicableRule.getLastRuleResultValue(
 						GeneralRuleResultSpecConstants.FIREWALL_ACTION_LOG_ACTION);
 		if (firewallAction.equals(FirewallAction.ALLOW)) {
-			if (!this.canAllowSecondSocks5ReplyWithinLimit()) {
+			if (!this.canAllowSecondReplyWithinLimit()) {
 				return false;
 			}
 			if (firewallActionLogAction != null) {
@@ -117,13 +114,12 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 		if (FirewallAction.ALLOW.equals(firewallAction)) {
 			return true;
 		}
-		Socks5Reply rep = Socks5Reply.newFailureInstance(
-				Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
-		this.sendSocks5Reply(rep);
+		this.sendReply(
+				Reply.newFailureInstance(ReplyCode.CONNECTION_NOT_ALLOWED_BY_RULESET));
 		return false;
 	}
 	
-	private boolean canAllowSecondSocks5ReplyWithinLimit() {
+	private boolean canAllowSecondReplyWithinLimit() {
 		Rule applicableRule = this.getApplicableRule();
 		RuleContext ruleContext = this.getRuleContext();
 		NonNegativeIntegerLimit firewallActionAllowLimit =
@@ -144,9 +140,8 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 									applicableRule,
 									ruleContext));
 				}
-				Socks5Reply rep = Socks5Reply.newFailureInstance(
-						Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
-				this.sendSocks5Reply(rep);
+				this.sendReply(
+						Reply.newFailureInstance(ReplyCode.CONNECTION_NOT_ALLOWED_BY_RULESET));
 				return false;				
 			}
 			this.addBelowAllowLimitRule(applicableRule);
@@ -158,52 +153,32 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 		SocketSettings socketSettings = this.getInboundSocketSettings();
 		try {
 			socketSettings.applyTo(inboundSocket);
-		} catch (UnsupportedOperationException e) {
+		} catch (UnsupportedOperationException | SocketException e) {
 			this.logger.error( 
 					ObjectLogMessageHelper.objectLogMessage(
 							this, "Error in setting the inbound socket"), 
 					e);
-			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
-					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			this.sendSocks5Reply(socks5Rep);
+			this.sendReply(
+					Reply.newFailureInstance(ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
 			return false;			
-		} catch (SocketException e) {
-			this.logger.error( 
-					ObjectLogMessageHelper.objectLogMessage(
-							this, "Error in setting the inbound socket"), 
-					e);
-			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
-					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			this.sendSocks5Reply(socks5Rep);
-			return false;
 		}
-		return true;
+        return true;
 	}
 	
 	private boolean configureListenSocket(final ServerSocket listenSocket) {
 		SocketSettings socketSettings = this.getListenSocketSettings();
 		try {
 			socketSettings.applyTo(listenSocket);
-		} catch (UnsupportedOperationException e) {
+		} catch (UnsupportedOperationException | SocketException e) {
 			this.logger.error( 
 					ObjectLogMessageHelper.objectLogMessage(
 							this, "Error in setting the listen socket"), 
 					e);
-			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
-					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			this.sendSocks5Reply(socks5Rep);
+			this.sendReply(
+					Reply.newFailureInstance(ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
 			return false;			
-		} catch (SocketException e) {
-			this.logger.error( 
-					ObjectLogMessageHelper.objectLogMessage(
-							this, "Error in setting the listen socket"), 
-					e);
-			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
-					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			this.sendSocks5Reply(socks5Rep);
-			return false;
 		}
-		return true;
+        return true;
 	}
 
 	private SocketSettings getInboundSocketSettings() {
@@ -511,14 +486,14 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 		return null;
 	}
 	
-	private boolean hasSecondSocks5ReplyRuleCondition() {
+	private boolean hasSecondReplyRuleCondition() {
 		Rule applicableRule = this.getApplicableRule();
 		if (applicableRule.hasRuleCondition(
-				Socks5RuleConditionSpecConstants.SOCKS5_SECOND_SERVER_BOUND_ADDRESS)) {
+				Socks5RuleConditionSpecConstants.SOCKS5_SECOND_REPLY_SERVER_BOUND_ADDRESS)) {
 			return true;
 		}
 		if (applicableRule.hasRuleCondition(
-				Socks5RuleConditionSpecConstants.SOCKS5_SECOND_SERVER_BOUND_PORT)) {
+				Socks5RuleConditionSpecConstants.SOCKS5_SECOND_REPLY_SERVER_BOUND_PORT)) {
 			return true;
 		}
 		return false;
@@ -543,8 +518,7 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 	}
 	
 	private ServerSocket newListenSocket() {
-		Socks5Reply socks5Rep = null;
-		InetAddress desiredDestinationInetAddress = 
+		InetAddress desiredDestinationInetAddress =
 				this.resolveDesiredDestinationAddress(
 						this.getDesiredDestinationAddress().toString());
 		if (desiredDestinationInetAddress == null) {
@@ -563,9 +537,8 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 								"Unable to bind the listen socket to the "
 								+ "following host: %s",
 								listenBindHost));
-				socks5Rep = Socks5Reply.newFailureInstance(
-						Reply.GENERAL_SOCKS_SERVER_FAILURE);
-				this.sendSocks5Reply(socks5Rep);
+				this.sendReply(
+						Reply.newFailureInstance(ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
 				return null;
 			}
 		}
@@ -602,9 +575,8 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 							+ "following address and port (range(s)): %s %s",
 							bindInetAddress,
 							bindPortRanges));
-			socks5Rep = Socks5Reply.newFailureInstance(
-					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			this.sendSocks5Reply(socks5Rep);
+			this.sendReply(
+					Reply.newFailureInstance(ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
 			return null;
 		}
 		return listenSocket;
@@ -613,8 +585,7 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 	private ServerSocket newListenSocket(
 			final InetAddress bindInetAddress,
 			final Port bindPort) throws BindException {
-		Socks5Reply socks5Rep = null;
-		NetObjectFactory netObjectFactory = 
+		NetObjectFactory netObjectFactory =
 				this.getSelectedRoute().getNetObjectFactory();
 		ServerSocket listenSocket = null;
 		try {
@@ -625,9 +596,8 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 							this, 
 							"Error in creating the listen socket"), 
 					e);
-			socks5Rep = Socks5Reply.newFailureInstance(
-					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			this.sendSocks5Reply(socks5Rep);
+			this.sendReply(
+					Reply.newFailureInstance(ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
 			return null;
 		}
 		if (!this.configureListenSocket(listenSocket)) {
@@ -662,9 +632,8 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 							this, 
 							"Error in binding the listen socket"), 
 					e);
-			socks5Rep = Socks5Reply.newFailureInstance(
-					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			this.sendSocks5Reply(socks5Rep);
+			this.sendReply(
+					Reply.newFailureInstance(ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
 			try {
 				listenSocket.close();
 			} catch (IOException ex) {
@@ -675,23 +644,22 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 		return listenSocket;
 	}
 	
-	private RuleContext newSecondSocks5ReplyRuleContext(
-			final Socks5Reply secondSocks5Rep) {
-		RuleContext secondSocks5ReplyRuleContext = new RuleContext(
+	private RuleContext newSecondReplyRuleContext(
+			final Reply secondRep) {
+		RuleContext secondReplyRuleContext = new RuleContext(
 				this.getRuleContext());
-		secondSocks5ReplyRuleContext.putRuleArgValue(
-				Socks5RuleArgSpecConstants.SOCKS5_SECOND_SERVER_BOUND_ADDRESS, 
-				secondSocks5Rep.getServerBoundAddress().toString());
-		secondSocks5ReplyRuleContext.putRuleArgValue(
-				Socks5RuleArgSpecConstants.SOCKS5_SECOND_SERVER_BOUND_PORT, 
-				secondSocks5Rep.getServerBoundPort());		
-		return secondSocks5ReplyRuleContext;
+		secondReplyRuleContext.putRuleArgValue(
+				Socks5RuleArgSpecConstants.SOCKS5_SECOND_REPLY_SERVER_BOUND_ADDRESS,
+				secondRep.getServerBoundAddress().toString());
+		secondReplyRuleContext.putRuleArgValue(
+				Socks5RuleArgSpecConstants.SOCKS5_SECOND_REPLY_SERVER_BOUND_PORT,
+				secondRep.getServerBoundPort());		
+		return secondReplyRuleContext;
 	}
 	
 	private InetAddress resolveDesiredDestinationAddress(
 			final String desiredDestinationAddress) {
-		Socks5Reply socks5Rep = null;
-		NetObjectFactory netObjectFactory = 
+		NetObjectFactory netObjectFactory =
 				this.getSelectedRoute().getNetObjectFactory();
 		HostResolver hostResolver =	netObjectFactory.newHostResolver();
 		InetAddress desiredDestinationInetAddress = null;
@@ -706,9 +674,7 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 							+ "address for the listen socket: %s",
 							desiredDestinationAddress), 
 					e);
-			socks5Rep = Socks5Reply.newFailureInstance(
-					Reply.HOST_UNREACHABLE);
-			this.sendSocks5Reply(socks5Rep);
+			this.sendReply(Reply.newFailureInstance(ReplyCode.HOST_UNREACHABLE));
 			return null;
 		} catch (IOException e) {
 			if (ThrowableHelper.isOrHasInstanceOf(
@@ -720,9 +686,7 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 								+ "address for the listen socket: %s",
 								desiredDestinationAddress), 
 						e);
-				socks5Rep = Socks5Reply.newFailureInstance(
-						Reply.HOST_UNREACHABLE);
-				this.sendSocks5Reply(socks5Rep);
+				this.sendReply(Reply.newFailureInstance(ReplyCode.HOST_UNREACHABLE));
 				return null;				
 			}
 			this.logger.error( 
@@ -732,9 +696,7 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 							+ "address for the listen socket: %s",
 							desiredDestinationAddress), 
 					e);
-			socks5Rep = Socks5Reply.newFailureInstance(
-					Reply.HOST_UNREACHABLE);
-			this.sendSocks5Reply(socks5Rep);
+			this.sendReply(Reply.newFailureInstance(ReplyCode.HOST_UNREACHABLE));
 			return null;
 		}
 		return desiredDestinationInetAddress;
@@ -743,10 +705,10 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 	@Override
 	public void run() {
 		ServerSocket listenSocket = null;
-		Socks5Reply socks5Rep = null;
+		Reply rep = null;
 		Socket inboundSocket = null;
 		Socket clientSocket = this.getClientSocket();
-		Socks5Reply secondSocks5Rep = null;
+		Reply secondRep = null;
 		try {
 			listenSocket = this.newListenSocket();
 			if (listenSocket == null) {
@@ -755,11 +717,10 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 			InetAddress inetAddress = listenSocket.getInetAddress();
 			String serverBoundAddress =	inetAddress.getHostAddress();
 			int serverBoundPort = listenSocket.getLocalPort();
-			socks5Rep = Socks5Reply.newInstance(
-					Reply.SUCCEEDED, 
-					Address.newInstance(serverBoundAddress), 
+			rep = Reply.newSuccessInstance(
+					Address.newInstanceFrom(serverBoundAddress),
 					Port.valueOf(serverBoundPort));
-			RuleContext ruleContext = this.newSocks5ReplyRuleContext(socks5Rep);
+			RuleContext ruleContext = this.newReplyRuleContext(rep);
 			this.setRuleContext(ruleContext);
 			Rule applicableRule = this.getRules().firstAppliesTo(
 					this.getRuleContext());
@@ -769,16 +730,15 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 						"No applicable rule found based on the following "
 						+ "context: %s",
 						this.getRuleContext()));				
-				socks5Rep = Socks5Reply.newFailureInstance(
-						Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
-				this.sendSocks5Reply(socks5Rep);
+				this.sendReply(
+						Reply.newFailureInstance(ReplyCode.CONNECTION_NOT_ALLOWED_BY_RULESET));
 				return;
 			}			
 			this.setApplicableRule(applicableRule);
-			if (!this.canAllowSocks5Reply()) {
+			if (!this.canAllowReply()) {
 				return;
 			}
-			if (!this.sendSocks5Reply(socks5Rep)) {
+			if (!this.sendReply(rep)) {
 				return;
 			}
 			inboundSocket = this.acceptInboundSocketFrom(listenSocket);
@@ -789,9 +749,8 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 						ObjectLogMessageHelper.objectLogMessage(
 								this, "Error in closing the listen socket"), 
 						e);
-				secondSocks5Rep = Socks5Reply.newFailureInstance(
-						Reply.GENERAL_SOCKS_SERVER_FAILURE);
-				this.sendSocks5Reply(secondSocks5Rep);
+				this.sendReply(
+						Reply.newFailureInstance(ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
 				return;
 			}
 			if (inboundSocket == null) {
@@ -803,12 +762,11 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 			serverBoundAddress = 
 					inboundSocket.getInetAddress().getHostAddress();
 			serverBoundPort = inboundSocket.getPort();
-			secondSocks5Rep = Socks5Reply.newInstance(
-					Reply.SUCCEEDED, 
-					Address.newInstance(serverBoundAddress), 
+			secondRep = Reply.newSuccessInstance(
+					Address.newInstanceFrom(serverBoundAddress),
 					Port.valueOf(serverBoundPort));
-			ruleContext = this.newSecondSocks5ReplyRuleContext(
-					secondSocks5Rep);
+			ruleContext = this.newSecondReplyRuleContext(
+					secondRep);
 			this.setRuleContext(ruleContext);
 			applicableRule = this.getRules().firstAppliesTo(
 					this.getRuleContext());
@@ -818,16 +776,15 @@ final class BindCommandWorker extends TcpBasedCommandWorker {
 						"No applicable rule found based on the following "
 						+ "context: %s",
 						this.getRuleContext()));				
-				secondSocks5Rep = Socks5Reply.newFailureInstance(
-						Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
-				this.sendSocks5Reply(secondSocks5Rep);
+				this.sendReply(
+						Reply.newFailureInstance(ReplyCode.CONNECTION_NOT_ALLOWED_BY_RULESET));
 				return;
 			}			
 			this.setApplicableRule(applicableRule);
-			if (!this.canAllowSecondSocks5Reply()) {
+			if (!this.canAllowSecondReply()) {
 				return;
 			}
-			if (!this.sendSocks5Reply(secondSocks5Rep)) {
+			if (!this.sendReply(secondRep)) {
 				return;
 			}
 			inboundSocket = this.limitInboundSocket(inboundSocket);

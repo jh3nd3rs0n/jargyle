@@ -8,7 +8,6 @@ import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.common.number.NonNegativeInteger;
 import com.github.jh3nd3rs0n.jargyle.server.*;
 import com.github.jh3nd3rs0n.test.help.TestStringConstants;
-import com.github.jh3nd3rs0n.test.help.constants.TestResourceConstants;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;

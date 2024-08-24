@@ -132,7 +132,7 @@ public final class AesCfbPkcs5PaddingEncryptedPasswordValue
                         + "INITIALIZATION_VECTOR_BASE_64_STRING "
                         + "actual encrypted password value is %s",
                 s);
-        String[] sElements = s.split(",");
+        String[] sElements = s.split(",", -1);
         if (sElements.length != 3) {
             throw new IllegalArgumentException(message);
         }

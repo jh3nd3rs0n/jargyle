@@ -12,6 +12,7 @@ import com.github.jh3nd3rs0n.jargyle.common.net.HostIpv4Address;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.*;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.address.impl.DomainName;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -113,19 +114,19 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			 */
 			this.waitForCompleteAssociation();
 			this.datagramSocket.receive(p);
-			UdpRequestHeader header = null; 
+			UdpRequest udpRequest = null;
 			try {
-				header = UdpRequestHeader.newInstanceFrom(
+				udpRequest = UdpRequest.newInstanceFrom(
 						Arrays.copyOfRange(
 								p.getData(), p.getOffset(), p.getLength()));
 			} catch (IllegalArgumentException e) {
 				throw new Socks5Exception(
-						"error in parsing UDP header request", e);
+						"error in parsing UDP request", e);
 			}
-			byte[] userData = header.getUserData();
+			byte[] userData = udpRequest.getUserData();
 			InetAddress inetAddress = InetAddress.getByName(
-					header.getDesiredDestinationAddress().toString());
-			int inetPort = header.getDesiredDestinationPort().intValue();
+					udpRequest.getDesiredDestinationAddress().toString());
+			int inetPort = udpRequest.getDesiredDestinationPort().intValue();
 			p.setData(userData, 0, userData.length);
 			p.setLength(userData.length);
 			p.setAddress(inetAddress);
@@ -151,16 +152,16 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			}
 			String address = p.getAddress().getHostAddress();
 			int port = p.getPort();
-			byte[] headerBytes = UdpRequestHeader.newInstance(
+			byte[] udpRequestBytes = UdpRequest.newInstance(
 					UnsignedByte.valueOf(0),
-					Address.newInstance(address),
+					Address.newInstanceFrom(address),
 					Port.valueOf(port),
 					Arrays.copyOfRange(
 							p.getData(),
 							p.getOffset(),
 							p.getLength())).toByteArray();
-			p.setData(headerBytes, 0, headerBytes.length);
-			p.setLength(headerBytes.length);
+			p.setData(udpRequestBytes, 0, udpRequestBytes.length);
+			p.setLength(udpRequestBytes.length);
 			p.setAddress(this.udpRelayServerInetAddress);
 			p.setPort(this.udpRelayServerPort);
 			this.datagramSocket.send(p);
@@ -184,18 +185,16 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 				address = HostIpv4Address.ALL_ZEROS_IPV4_ADDRESS;
 				port = 0;
 			}
-			Socks5Request socks5Req = Socks5Request.newInstance(
+			Request req = Request.newInstance(
 					Command.UDP_ASSOCIATE, 
-					Address.newInstance(address), 
+					Address.newInstanceFrom(address),
 					Port.valueOf(port));
-			this.socks5Client.sendSocks5Request(socks5Req, sck);
-			Socks5Reply socks5Rep = this.socks5Client.receiveSocks5Reply(sck);
+			this.socks5Client.sendRequest(req, sck);
+			Reply rep = this.socks5Client.receiveReply(sck);
 			String serverBoundAddress = 
-					socks5Rep.getServerBoundAddress().toString();
-			int serverBoundPort = socks5Rep.getServerBoundPort().intValue();
-			AddressType addressType =
-					socks5Rep.getServerBoundAddress().getAddressType();
-			if (addressType.equals(AddressType.DOMAINNAME)) {
+					rep.getServerBoundAddress().toString();
+			int serverBoundPort = rep.getServerBoundPort().intValue();
+			if (rep.getServerBoundAddress() instanceof DomainName) {
 				throw new Socks5ClientIOException(
 						this.socks5Client, 
 						String.format(

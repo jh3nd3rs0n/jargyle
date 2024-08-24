@@ -23,9 +23,6 @@
     -   [selectableRouteId](#selectablerouteid)
     -   [socketSetting](#socketsetting)
 -   [SOCKS5 Rule Results](#socks5-rule-results)
-    -   [socks5.desiredDestinationAddressRedirect](#socks5-desireddestinationaddressredirect)
-    -   [socks5.desiredDestinationPortRedirect](#socks5-desireddestinationportredirect)
-    -   [socks5.desiredDestinationRedirectLogAction](#socks5-desireddestinationredirectlogaction)
     -   [socks5.onBind.inboundSocketSetting](#socks5-onbind-inboundsocketsetting)
     -   [socks5.onBind.listenBindHost](#socks5-onbind-listenbindhost)
     -   [socks5.onBind.listenBindPortRange](#socks5-onbind-listenbindportrange)
@@ -68,6 +65,9 @@
     -   [socks5.onUdpAssociate.relayIdleTimeout](#socks5-onudpassociate-relayidletimeout)
     -   [socks5.onUdpAssociate.relayInboundBandwidthLimit](#socks5-onudpassociate-relayinboundbandwidthlimit)
     -   [socks5.onUdpAssociate.relayOutboundBandwidthLimit](#socks5-onudpassociate-relayoutboundbandwidthlimit)
+    -   [socks5.request.desiredDestinationAddressRedirect](#socks5-request-desireddestinationaddressredirect)
+    -   [socks5.request.desiredDestinationPortRedirect](#socks5-request-desireddestinationportredirect)
+    -   [socks5.request.desiredDestinationRedirectLogAction](#socks5-request-desireddestinationredirectlogaction)
 
 ## General Rule Results
 
@@ -338,48 +338,6 @@ Specifies a socket setting for all sockets (can be specified multiple times with
 **Value:** [Socket Setting](value-syntaxes.md#socket-setting)
 
 ## SOCKS5 Rule Results
-
-### socks5.desiredDestinationAddressRedirect
-
-**Syntax:**
-
-```text
-socks5.desiredDestinationAddressRedirect=SOCKS5_ADDRESS
-```
-
-**Description:**
-
-Specifies the desired destination address redirect
-
-**Value:** [SOCKS5 Address](value-syntaxes.md#socks5-address)
-
-### socks5.desiredDestinationPortRedirect
-
-**Syntax:**
-
-```text
-socks5.desiredDestinationPortRedirect=PORT
-```
-
-**Description:**
-
-Specifies the desired destination port redirect
-
-**Value:** [Port](value-syntaxes.md#port)
-
-### socks5.desiredDestinationRedirectLogAction
-
-**Syntax:**
-
-```text
-socks5.desiredDestinationRedirectLogAction=LOG_ACTION
-```
-
-**Description:**
-
-Specifies the logging action to take if the desired destination is redirected
-
-**Value:** [Log Action](value-syntaxes.md#log-action)
 
 ### socks5.onBind.inboundSocketSetting
 
@@ -968,4 +926,46 @@ socks5.onUdpAssociate.relayOutboundBandwidthLimit=POSITIVE_INTEGER
 Specifies the upper limit on bandwidth in bytes per second of receiving outbound data to be relayed
 
 **Value:** [Positive Integer](value-syntaxes.md#positive-integer)
+
+### socks5.request.desiredDestinationAddressRedirect
+
+**Syntax:**
+
+```text
+socks5.request.desiredDestinationAddressRedirect=SOCKS5_ADDRESS
+```
+
+**Description:**
+
+Specifies the desired destination address redirect for the request
+
+**Value:** [SOCKS5 Address](value-syntaxes.md#socks5-address)
+
+### socks5.request.desiredDestinationPortRedirect
+
+**Syntax:**
+
+```text
+socks5.request.desiredDestinationPortRedirect=PORT
+```
+
+**Description:**
+
+Specifies the desired destination port redirect for the request
+
+**Value:** [Port](value-syntaxes.md#port)
+
+### socks5.request.desiredDestinationRedirectLogAction
+
+**Syntax:**
+
+```text
+socks5.request.desiredDestinationRedirectLogAction=LOG_ACTION
+```
+
+**Description:**
+
+Specifies the logging action to take if the desired destination of the request is redirected
+
+**Value:** [Log Action](value-syntaxes.md#log-action)
 

@@ -40,7 +40,7 @@ public final class StringSourceUserRepository extends UserRepository {
 		if (s.isEmpty()) {
 			return Users.of(users);
 		}
-		String[] sElements = s.split(",");
+		String[] sElements = s.split(",", -1);
 		for (String sElement : sElements) {
 			User user = newUserFrom(sElement);
 			users.add(user);

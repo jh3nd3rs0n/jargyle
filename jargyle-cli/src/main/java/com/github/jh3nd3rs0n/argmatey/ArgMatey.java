@@ -2768,7 +2768,7 @@ public final class ArgMatey {
 				return null;
 			}
 			List<String> optArgs = Arrays.asList(optionArg.split(
-					this.separator));
+					this.separator, -1));
 			if (optArgs.size() == 1) {
 				Object objectValue = this.stringConverter.convert(optionArg);
 				return new OptionArg(optionArg, objectValue);

@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Command;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Socks5Request;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Request;
 
 abstract class CommandWorkerFactory {
 
@@ -19,10 +19,10 @@ abstract class CommandWorkerFactory {
 		@Override
 		public CommandWorker newCommandWorker(
 				final Socks5Worker socks5Worker, 
-				final MethodSubnegotiationResults methSubnegotiationResults, 
-				final Socks5Request socks5Req) {
+				final MethodSubNegotiationResults methSubNegotiationResults, 
+				final Request req) {
 			return new BindCommandWorker(
-					socks5Worker, methSubnegotiationResults, socks5Req);
+					socks5Worker, methSubNegotiationResults, req);
 		}
 		
 	}
@@ -37,10 +37,10 @@ abstract class CommandWorkerFactory {
 		@Override
 		public CommandWorker newCommandWorker(
 				final Socks5Worker socks5Worker, 
-				final MethodSubnegotiationResults methSubnegotiationResults, 
-				final Socks5Request socks5Req) {
+				final MethodSubNegotiationResults methSubNegotiationResults, 
+				final Request req) {
 			return new ConnectCommandWorker(
-					socks5Worker, methSubnegotiationResults, socks5Req);
+					socks5Worker, methSubNegotiationResults, req);
 		}
 		
 	}
@@ -55,10 +55,10 @@ abstract class CommandWorkerFactory {
 		@Override
 		public CommandWorker newCommandWorker(
 				final Socks5Worker socks5Worker, 
-				final MethodSubnegotiationResults methSubnegotiationResults, 
-				final Socks5Request socks5Req) {
+				final MethodSubNegotiationResults methSubNegotiationResults, 
+				final Request req) {
 			return new ResolveCommandWorker(
-					socks5Worker, methSubnegotiationResults, socks5Req);
+					socks5Worker, methSubNegotiationResults, req);
 		}
 		
 	}
@@ -73,10 +73,10 @@ abstract class CommandWorkerFactory {
 		@Override
 		public CommandWorker newCommandWorker(
 				final Socks5Worker socks5Worker, 
-				final MethodSubnegotiationResults methSubnegotiationResults, 
-				final Socks5Request socks5Req) {
+				final MethodSubNegotiationResults methSubNegotiationResults, 
+				final Request req) {
 			return new UdpAssociateCommandWorker(
-					socks5Worker, methSubnegotiationResults, socks5Req);
+					socks5Worker, methSubNegotiationResults, req);
 		}
 		
 	}
@@ -136,7 +136,7 @@ abstract class CommandWorkerFactory {
 	
 	public abstract CommandWorker newCommandWorker(
 			final Socks5Worker socks5Worker, 
-			final MethodSubnegotiationResults methSubnegotiationResults, 
-			final Socks5Request socks5Req);
+			final MethodSubNegotiationResults methSubNegotiationResults, 
+			final Request req);
 	
 }

@@ -42,17 +42,11 @@ when a push has been made to the GitHub repository
 data and receive/send the same data (This module is used internally for
 performing integration testing on the SOCKS client and server API)
 
-`echo-integration-test`: Maven module for integration tests for the echo
-API and the SOCKS client and server API
-
 `echo-performance-test`: Maven module for performance tests for the echo
 API and the SOCKS client and server API (The results can be found in
 `echo-performance-test/target/performance-results/`)
 
 `jargyle-cli`: Maven module for the Jargyle command line interface API
-
-`jargyle-cli-integration-test`: Maven module for integration tests for the
-Jargyle command line interface API
 
 `jargyle-client`: Maven module for the SOCKS client API
 
@@ -69,9 +63,6 @@ SOCKS client and server API
 test coverage reports
 
 `jargyle-server`: Maven module for the SOCKS server API
-
-`jargyle-server-integration-test`: Maven module for integration tests for
-the SOCKS server API
 
 `src/site`: Contains files used to generate `docs/`
 
@@ -110,16 +101,18 @@ These commands are to be executed at the top directory of Jargyle.
 
 `mvn clean compile site:site site:stage site:deploy`: Performs a clean build 
 and produces the website/documentation. The website/documentation can be found 
-in `docs/`. Markdown files in `src/site/markdown/reference/` are used in 
-generating reference documentation. These files are generated manually from 
-Jargyle. Should a change in the source code become different from the existing 
-reference documentation, you will need to run the following commands before 
-running the above command:
+in `docs/`. 
+
+Included in the website/documentation is the reference documentation. The 
+reference documentation was generated from special annotations within in the 
+source code. Should any of these special annotations in the source code be 
+added, changed, moved, or removed, you will need to run the following commands 
+before running the above command:
 
 ```bash
 # This command is necessary if the binary distribution is not built
 mvn clean package -DskipTests=true
-# Change to the directory of Markdown files used in generating reference documentation
+# Change to the directory of Markdown reference documentation
 cd src/site/markdown/reference/
 # Run Jargyle to generate Markdown reference documents in the present directory 
 ../../../../jargyle-distribution/target/jargyle-distribution-5.0.0-SNAPSHOT-bin/bin/jargyle generate-reference-docs

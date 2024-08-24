@@ -59,7 +59,7 @@ public final class Rule {
 	}
 	
 	public static Rule newInstanceFrom(final String s) {
-		String[] entries = s.split(",");
+		String[] entries = s.split(",", -1);
 		Builder builder = new Builder();
 		for (String entry : entries) {
 			String[] entryElements = entry.split("=", 2);

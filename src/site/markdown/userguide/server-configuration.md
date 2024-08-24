@@ -2558,9 +2558,9 @@ public class ServerApp {
              */
             Setting.newInstanceWithParsedValue(
                 "rule", 
-                "socks5.command=CONNECT,"
-                + "socks5.desiredDestinationPort=80,"
-                + "socks5.desiredDestinationPort=443,"
+                "socks5.request.command=CONNECT,"
+                + "socks5.request.desiredDestinationPort=80,"
+                + "socks5.request.desiredDestinationPort=443,"
                 + "firewallAction=ALLOW"),
             /*
              * Denies the CONNECT command to any server on any 
@@ -2568,7 +2568,7 @@ public class ServerApp {
              */
             Setting.newInstanceWithParsedValue(
                 "rule", 
-                "socks5.command=CONNECT,firewallAction=DENY"),
+                "socks5.request.command=CONNECT,firewallAction=DENY"),
             /*
              * Allow anything else
              */
@@ -2583,8 +2583,8 @@ Command line example:
 
 ```bash
 jargyle start-server \
-    --setting=rule=socks5.command=CONNECT,socks5.desiredDestinationPort=80,socks5.desiredDestinationPort=443,firewallAction=ALLOW \
-    --setting=rule=socks5.command=CONNECT,firewallAction=DENY \
+    --setting=rule=socks5.request.command=CONNECT,socks5.request.desiredDestinationPort=80,socks5.request.desiredDestinationPort=443,firewallAction=ALLOW \
+    --setting=rule=socks5.request.command=CONNECT,firewallAction=DENY \
     --setting=rule=firewallAction=ALLOW
 ```
 
@@ -2599,15 +2599,15 @@ Server configuration file example:
             <rule>
                 <ruleConditions>
                     <ruleCondition>
-                        <name>socks5.command</name>
+                        <name>socks5.request.command</name>
                         <value>CONNECT</value>
                     </ruleCondition>
                     <ruleCondition>
-                        <name>socks5.desiredDestinationPort</name>
+                        <name>socks5.request.desiredDestinationPort</name>
                         <value>80</value>
                     </ruleCondition>
                     <ruleCondition>
-                        <name>socks5.desiredDestinationPort</name>
+                        <name>socks5.request.desiredDestinationPort</name>
                         <value>443</value>
                     </ruleCondition>
                 </ruleConditions>
@@ -2624,7 +2624,7 @@ Server configuration file example:
             <rule>
                 <ruleConditions>
                     <ruleCondition>
-                        <name>socks5.command</name>
+                        <name>socks5.request.command</name>
                         <value>CONNECT</value>
                     </ruleCondition>
                 </ruleConditions>
@@ -2781,14 +2781,14 @@ The value given to the rule result must be either of the following values:
 This rule result can be used with the following rule conditions:
 
 -   `clientAddress`
--   `socks5.command`
--   `socks5.desiredDestinationAddress`
--   `socks5.desiredDestinationPort`
 -   `socks5.method`
--   `socks5.secondServerBoundAddress`
--   `socks5.secondServerBoundPort`
--   `socks5.serverBoundAddress`
--   `socks5.serverBoundPort`
+-   `socks5.reply.serverBoundAddress`
+-   `socks5.reply.serverBoundPort`
+-   `socks5.request.command`
+-   `socks5.request.desiredDestinationAddress`
+-   `socks5.request.desiredDestinationPort`
+-   `socks5.secondReply.serverBoundAddress`
+-   `socks5.secondReply.serverBoundPort`
 -   `socks5.udp.inbound.desiredDestinationAddress`
 -   `socks5.udp.inbound.desiredDestinationPort`
 -   `socks5.udp.inbound.sourceAddress`
@@ -2831,8 +2831,8 @@ public class ServerApp {
              */
             Setting.newInstanceWithParsedValue(
                 "rule",
-                 "socks5.command=BIND,"
-                 + "socks5.command=UDP_ASSOCIATE,"
+                 "socks5.request.command=BIND,"
+                 + "socks5.request.command=UDP_ASSOCIATE,"
                  + "firewallAction=DENY,"
                  + "firewallActionLogAction=LOG_AS_WARNING"),
             /*
@@ -2849,7 +2849,7 @@ Command line example:
 
 ```bash
 jargyle start-server \
-    --setting=rule=socks5.command=BIND,socks5.command=UDP_ASSOCIATE,firewallAction=DENY,firewallActionLogAction=LOG_AS_WARNING \
+    --setting=rule=socks5.request.command=BIND,socks5.request.command=UDP_ASSOCIATE,firewallAction=DENY,firewallActionLogAction=LOG_AS_WARNING \
     --setting=rule=firewallAction=ALLOW
 ```
 
@@ -2864,11 +2864,11 @@ Server configuration file example:
             <rule>
                 <ruleConditions>
                     <ruleCondition>
-                        <name>socks5.command</name>
+                        <name>socks5.request.command</name>
                         <value>BIND</value>
                     </ruleCondition>
                     <ruleCondition>
-                        <name>socks5.command</name>
+                        <name>socks5.request.command</name>
                         <value>UDP_ASSOCIATE</value>
                     </ruleCondition>
                 </ruleConditions>
@@ -2913,14 +2913,14 @@ The value given to the rule result must be an integer between 0 (inclusive) and
 This rule result can be used with the following rule conditions:
 
 -   `clientAddress`
--   `socks5.command`
--   `socks5.desiredDestinationAddress`
--   `socks5.desiredDestinationPort`
 -   `socks5.method`
--   `socks5.secondServerBoundAddress`
--   `socks5.secondServerBoundPort`
--   `socks5.serverBoundAddress`
--   `socks5.serverBoundPort`
+-   `socks5.reply.serverBoundAddress`
+-   `socks5.reply.serverBoundPort`
+-   `socks5.request.command`
+-   `socks5.request.desiredDestinationAddress`
+-   `socks5.request.desiredDestinationPort`
+-   `socks5.secondReply.serverBoundAddress`
+-   `socks5.secondReply.serverBoundPort`
 -   `socks5.user`
 -   `socksServerAddress`
 
@@ -3047,10 +3047,10 @@ and `lastRouteId` are selectable.)
 These rule results can be used with the following rule conditions:
 
 -   `clientAddress`
--   `socks5.command`
--   `socks5.desiredDestinationAddress`
--   `socks5.desiredDestinationPort`
--   `socks5.method`
+-   `socks5.method` 
+-   `socks5.request.command`
+-   `socks5.request.desiredDestinationAddress`
+-   `socks5.request.desiredDestinationPort`
 -   `socks5.user`
 -   `socksServerAddress`
 
@@ -3118,7 +3118,7 @@ public class ServerApp {
              */
             Setting.newInstanceWithParsedValue(
                 "rule",
-                "socks5.command=CONNECT,"
+                "socks5.request.command=CONNECT,"
                 + "firewallAction=ALLOW,"
                 + "routeSelectionStrategy=RANDOM,"
                 + "selectableRouteId=alpha,"
@@ -3153,7 +3153,7 @@ jargyle start-server \
     --setting=chaining.socksServerUri=socks5://127.0.0.1:33332 \
     --setting=chaining.socksServerUri=socks5://127.0.0.1:33333 \
     --setting=lastRouteId=omega \
-    --setting=rule=socks5.command=CONNECT,firewallAction=ALLOW,routeSelectionStrategy=RANDOM,selectableRouteId=alpha,selectableRouteId=beta,routeSelectionLogAction=LOG_AS_INFO \
+    --setting=rule=socks5.request.command=CONNECT,firewallAction=ALLOW,routeSelectionStrategy=RANDOM,selectableRouteId=alpha,selectableRouteId=beta,routeSelectionLogAction=LOG_AS_INFO \
     --setting=rule=firewallAction=ALLOW,routeSelectionStrategy=CYCLICAL,selectableRouteId=omega
 ```
 
@@ -3216,7 +3216,7 @@ Server configuration file example:
             <rule>
                 <ruleConditions>
                     <ruleCondition>
-                        <name>socks5.command</name>
+                        <name>socks5.request.command</name>
                         <value>CONNECT</value>
                     </ruleCondition>
                 </ruleConditions>
@@ -3273,27 +3273,27 @@ Server configuration file example:
 To redirect the desired destination, you will need either or both of the 
 following rule results:
 
--   `socks5.desiredDestinationAddressRedirect`: Specifies the desired 
+-   `socks5.request.desiredDestinationAddressRedirect`: Specifies the desired 
 destination address redirect
--   `socks5.desiredDestinationPortRedirect`: Specifies the desired 
+-   `socks5.request.desiredDestinationPortRedirect`: Specifies the desired 
 destination port redirect
 
 These rule results can be used with the following rule conditions:
 
 -   `clientAddress`
--   `socks5.command`
--   `socks5.desiredDestinationAddress`
--   `socks5.desiredDestinationPort`
--   `socks5.method`
+-   `socks5.method` 
+-   `socks5.request.command`
+-   `socks5.request.desiredDestinationAddress`
+-   `socks5.request.desiredDestinationPort`
 -   `socks5.user`
 -   `socksServerAddress`
 
 You can also specify the logging action to take if the desired destination is 
 redirected by adding the following rule result:
 
--   `socks5.desiredDestinationRedirectLogAction`
+-   `socks5.request.desiredDestinationRedirectLogAction`
 
-The rule result `socks5.desiredDestinationRedirectLogAction` is optional.
+The rule result `socks5.request.desiredDestinationRedirectLogAction` is optional.
 
 API example:
 
@@ -3317,10 +3317,10 @@ public class ServerApp {
              */
             Setting.newInstanceWithParsedValue(
                 "rule", 
-                "socks5.desiredDestinationAddress=discontinuedserver.com,"
+                "socks5.request.desiredDestinationAddress=discontinuedserver.com,"
                 + "firewallAction=ALLOW,"
-                + "socks5.desiredDestinationAddressRedirect=newserver.com,"
-                + "socks5.desiredDestinationRedirectLogAction=LOG_AS_INFO"),
+                + "socks5.request.desiredDestinationAddressRedirect=newserver.com,"
+                + "socks5.request.desiredDestinationRedirectLogAction=LOG_AS_INFO"),
             /*
              * Allow anything else
              */
@@ -3335,7 +3335,7 @@ Command line example:
 
 ```bash
 jargyle start-server \
-    --setting=rule=socks5.desiredDestinationAddress=discontinuedserver.com,firewallAction=ALLOW,socks5.desiredDestinationAddressRedirect=newserver.com,socks5.desiredDestinationRedirectLogAction=LOG_AS_INFO \
+    --setting=rule=socks5.request.desiredDestinationAddress=discontinuedserver.com,firewallAction=ALLOW,socks5.request.desiredDestinationAddressRedirect=newserver.com,socks5.request.desiredDestinationRedirectLogAction=LOG_AS_INFO \
     --setting=rule=firewallAction=ALLOW
 ```
 
@@ -3350,7 +3350,7 @@ Server configuration file example:
             <rule>
                 <ruleConditions>
                     <ruleCondition>
-                        <name>socks5.desiredDestinationAddress</name>
+                        <name>socks5.request.desiredDestinationAddress</name>
                         <value>discontinuedserver.com</value>
                     </ruleCondition>
                 </ruleConditions>
@@ -3360,11 +3360,11 @@ Server configuration file example:
                         <value>ALLOW</value>
                     </ruleResult>
                     <ruleResult>
-                        <name>socks5.desiredDestinationAddressRedirect</name>
+                        <name>socks5.request.desiredDestinationAddressRedirect</name>
                         <value>newserver.com</value>
                     </ruleResult>
                     <ruleResult>
-                        <name>socks5.desiredDestinationRedirectLogAction</name>
+                        <name>socks5.request.desiredDestinationRedirectLogAction</name>
                         <value>LOG_AS_INFO</value>
                     </ruleResult>
                 </ruleResults>
@@ -3504,18 +3504,18 @@ multiple times with each rule result specifying another socket setting)
 These rule results can be used with the following rule conditions:
 
 -   `clientAddress`
--   `socks5.command`
--   `socks5.desiredDestinationAddress`
--   `socks5.desiredDestinationPort`
--   `socks5.method`
+-   `socks5.method` 
+-   `socks5.request.command`
+-   `socks5.request.desiredDestinationAddress`
+-   `socks5.request.desiredDestinationPort`
 -   `socks5.user`
 -   `socksServerAddress`
 
 The rule result `socks5.onBind.inboundSocketSetting` can also be used with 
 the following rule conditions:
 
--   `socks5.serverBoundAddress`
--   `socks5.serverBoundPort`
+-   `socks5.reply.serverBoundAddress`
+-   `socks5.reply.serverBoundPort`
 
 API example:
 
@@ -3539,8 +3539,8 @@ public class ServerApp {
              */
             Setting.newInstanceWithParsedValue(
                 "rule", 
-                "socks5.command=CONNECT,"
-                + "socks5.desiredDestinationAddress=specialserver.com,"
+                "socks5.request.command=CONNECT,"
+                + "socks5.request.desiredDestinationAddress=specialserver.com,"
                 + "firewallAction=ALLOW,"
                 + "socks5.onConnect.prepareServerFacingSocket=true,"
                 + "socks5.onConnect.serverFacingSocketSetting=SO_RCVBUF=256,"
@@ -3559,7 +3559,7 @@ Command line example:
 
 ```bash
 jargyle start-server \
-    --setting=rule=socks5.command=CONNECT,socks5.desiredDestinationAddress=specialserver.com,firewallAction=ALLOW,socks5.onConnect.prepareServerFacingSocket=true,socks5.onConnect.serverFacingSocketSetting=SO_RCVBUF=256,socks5.onConnect.serverFacingSocketSetting=SO_SNDBUF=256 \
+    --setting=rule=socks5.request.command=CONNECT,socks5.request.desiredDestinationAddress=specialserver.com,firewallAction=ALLOW,socks5.onConnect.prepareServerFacingSocket=true,socks5.onConnect.serverFacingSocketSetting=SO_RCVBUF=256,socks5.onConnect.serverFacingSocketSetting=SO_SNDBUF=256 \
     --setting=rule=firewallAction=ALLOW
 ```
 
@@ -3574,11 +3574,11 @@ Server configuration file example:
             <rule>
                 <ruleConditions>
                     <ruleCondition>
-                        <name>socks5.command</name>
+                        <name>socks5.request.command</name>
                         <value>CONNECT</value>
                     </ruleCondition>            
                     <ruleCondition>
-                        <name>socks5.desiredDestinationAddress</name>
+                        <name>socks5.request.desiredDestinationAddress</name>
                         <value>specialserver.com</value>
                     </ruleCondition>
                 </ruleConditions>
@@ -3656,14 +3656,14 @@ and 2147483647 (inclusive))
 These rule results can be used with the following rule conditions:
 
 -   `clientAddress`
--   `socks5.command`
--   `socks5.desiredDestinationAddress`
--   `socks5.desiredDestinationPort`
 -   `socks5.method`
--   `socks5.secondServerBoundAddress`
--   `socks5.secondServerBoundPort`
--   `socks5.serverBoundAddress`
--   `socks5.serverBoundPort`
+-   `socks5.reply.serverBoundAddress`
+-   `socks5.reply.serverBoundPort`
+-   `socks5.request.command`
+-   `socks5.request.desiredDestinationAddress`
+-   `socks5.request.desiredDestinationPort`
+-   `socks5.secondReply.serverBoundAddress`
+-   `socks5.secondReply.serverBoundPort`
 -   `socks5.user`
 -   `socksServerAddress`
 
@@ -3689,8 +3689,8 @@ public class ServerApp {
              */
             Setting.newInstanceWithParsedValue(
                 "rule", 
-                "socks5.command=CONNECT,"
-                + "socks5.desiredDestinationAddress=intermittent-idling-server.com,"
+                "socks5.request.command=CONNECT,"
+                + "socks5.request.desiredDestinationAddress=intermittent-idling-server.com,"
                 + "firewallAction=ALLOW,"
                 + "socks5.onConnect.relayIdleTimeout=1024000"),
             /*
@@ -3707,7 +3707,7 @@ Command line example:
 
 ```bash
 jargyle start-server \
-    --setting=rule=socks5.command=CONNECT,socks5.desiredDestinationAddress=intermittent-idling-server.com,firewallAction=ALLOW,socks5.onConnect.relayIdleTimeout=1024000 \
+    --setting=rule=socks5.request.command=CONNECT,socks5.request.desiredDestinationAddress=intermittent-idling-server.com,firewallAction=ALLOW,socks5.onConnect.relayIdleTimeout=1024000 \
     --setting=rule=firewallAction=ALLOW
 ```
 
@@ -3722,11 +3722,11 @@ Server configuration file example:
             <rule>
                 <ruleConditions>
                     <ruleCondition>
-                        <name>socks5.command</name>
+                        <name>socks5.request.command</name>
                         <value>CONNECT</value>
                     </ruleCondition>            
                     <ruleCondition>
-                        <name>socks5.desiredDestinationAddress</name>
+                        <name>socks5.request.desiredDestinationAddress</name>
                         <value>intermittent-idling-server.com</value>
                     </ruleCondition>
                 </ruleConditions>
@@ -3787,14 +3787,14 @@ The value given to any of the rule results must be an integer between 1
 These rule results can be used with the following rule conditions:
 
 -   `clientAddress`
--   `socks5.command`
--   `socks5.desiredDestinationAddress`
--   `socks5.desiredDestinationPort`
--   `socks5.method`
--   `socks5.secondServerBoundAddress`
--   `socks5.secondServerBoundPort`
--   `socks5.serverBoundAddress`
--   `socks5.serverBoundPort`
+-   `socks5.method` 
+-   `socks5.reply.serverBoundAddress`
+-   `socks5.reply.serverBoundPort`
+-   `socks5.request.command`
+-   `socks5.request.desiredDestinationAddress`
+-   `socks5.request.desiredDestinationPort`
+-   `socks5.secondReply.serverBoundAddress`
+-   `socks5.secondReply.serverBoundPort`
 -   `socks5.user`
 -   `socksServerAddress`
 
@@ -3821,8 +3821,8 @@ public class ServerApp {
              */
             Setting.newInstanceWithParsedValue(
                 "rule", 
-                "socks5.command=CONNECT,"
-                + "socks5.desiredDestinationAddress=streamingwebsite.com,"
+                "socks5.request.command=CONNECT,"
+                + "socks5.request.desiredDestinationAddress=streamingwebsite.com,"
                 + "firewallAction=ALLOW,"
                 + "socks5.onConnect.relayInboundBandwidthLimit=1024000,"
                 + "socks5.onConnect.relayOutboundBandwidthLimit=1024000"),
@@ -3840,7 +3840,7 @@ Command line example:
 
 ```bash
 jargyle start-server \
-    --setting=rule=socks5.command=CONNECT,socks5.desiredDestinationAddress=streamingwebsite.com,firewallAction=ALLOW,socks5.onConnect.relayInboundBandwidthLimit=1024000,socks5.onConnect.relayOutboundBandwidthLimit=1024000 \
+    --setting=rule=socks5.request.command=CONNECT,socks5.request.desiredDestinationAddress=streamingwebsite.com,firewallAction=ALLOW,socks5.onConnect.relayInboundBandwidthLimit=1024000,socks5.onConnect.relayOutboundBandwidthLimit=1024000 \
     --setting=rule=firewallAction=ALLOW
 ```
 
@@ -3855,11 +3855,11 @@ Server configuration file example:
             <rule>
                 <ruleConditions>
                     <ruleCondition>
-                        <name>socks5.command</name>
+                        <name>socks5.request.command</name>
                         <value>CONNECT</value>
                     </ruleCondition>            
                     <ruleCondition>
-                        <name>socks5.desiredDestinationAddress</name>
+                        <name>socks5.request.desiredDestinationAddress</name>
                         <value>streamingwebsite.com</value>
                     </ruleCondition>
                 </ruleConditions>

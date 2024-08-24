@@ -88,7 +88,7 @@ public final class PortRanges {
         if (s.isEmpty()) {
             return of(prtRanges);
         }
-        String[] sElements = s.split(",");
+        String[] sElements = s.split(",", -1);
         for (String sElement : sElements) {
             PortRange prtRange = PortRange.newInstanceFrom(sElement);
             prtRanges.add(prtRange);

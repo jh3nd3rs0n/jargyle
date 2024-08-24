@@ -12,7 +12,7 @@ import java.util.Objects;
 @SingleValueTypeDoc(
         description = "An integer between 0 and 65535 (inclusive) that is " +
                 "assigned to uniquely identify a connection endpoint and to " +
-                "direct data to a host",
+                "direct data to a node of a network",
         name = "Port",
         syntax = "0-65535",
         syntaxName = "PORT"

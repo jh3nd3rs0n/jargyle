@@ -12,7 +12,6 @@ import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Methods;
 import com.github.jh3nd3rs0n.jargyle.server.*;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassmethod.UserRepositorySpecConstants;
 import com.github.jh3nd3rs0n.test.help.TestStringConstants;
-import com.github.jh3nd3rs0n.test.help.constants.TestResourceConstants;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;

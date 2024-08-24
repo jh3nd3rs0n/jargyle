@@ -5,6 +5,12 @@ package com.github.jh3nd3rs0n.jargyle.common.security;
  */
 public abstract class EncryptedPasswordValue {
 
+    /**
+     * Allows the construction of subclass instances.
+     */
+    public EncryptedPasswordValue() {
+    }
+
     @Override
     public abstract boolean equals(final Object obj);
 

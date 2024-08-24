@@ -143,6 +143,14 @@ public final class Routes {
 				new SettingToPropertyConverter(
 						Socks5PropertySpecConstants.SOCKS5_GSSAPIMETHOD_SERVICE_NAME));
 		SETTING_CONVERTER_MAP.put(
+				ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_GSSAPIMETHOD_SUGGESTED_CONF,
+				new SettingToPropertyConverter(
+						Socks5PropertySpecConstants.SOCKS5_GSSAPIMETHOD_SUGGESTED_CONF));
+		SETTING_CONVERTER_MAP.put(
+				ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_GSSAPIMETHOD_SUGGESTED_INTEG,
+				new SettingToPropertyConverter(
+						Socks5PropertySpecConstants.SOCKS5_GSSAPIMETHOD_SUGGESTED_INTEG));
+		SETTING_CONVERTER_MAP.put(
 				ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_METHODS, 
 				new SettingToPropertyConverter(
 						Socks5PropertySpecConstants.SOCKS5_METHODS));

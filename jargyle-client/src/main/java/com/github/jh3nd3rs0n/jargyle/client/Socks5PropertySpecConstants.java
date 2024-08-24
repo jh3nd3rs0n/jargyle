@@ -3,15 +3,9 @@ package com.github.jh3nd3rs0n.jargyle.client;
 import java.util.List;
 import java.util.Map;
 
+import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.*;
 import org.ietf.jgss.Oid;
 
-import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.BooleanPropertySpec;
-import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.OidPropertySpec;
-import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.Socks5GssapiMethodProtectionLevelsPropertySpec;
-import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.Socks5MethodsPropertySpec;
-import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.Socks5UserpassMethodEncryptedPasswordPropertySpec;
-import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.Socks5UserpassMethodUsernamePropertySpec;
-import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.StringPropertySpec;
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueSpecDoc;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueSpecsDoc;
@@ -91,7 +85,37 @@ public final class Socks5PropertySpecConstants {
 			PROPERTY_SPECS.addThenGet(new StringPropertySpec(
 					"socksClient.socks5.gssapimethod.serviceName",
 					null));
-	
+
+	@NameValuePairValueSpecDoc(
+			description = "The suggested privacy (i.e. confidentiality) state "
+					+ "for GSS-API messages sent after GSS-API authentication "
+					+ "with the SOCKS5 server (applicable if the negotiated "
+					+ "protection level is SELECTIVE_INTEG_OR_CONF) (default "
+					+ "is true)",
+			name = "socksClient.socks5.gssapimethod.suggestedConf",
+			syntax = "socksClient.socks5.gssapimethod.suggestedConf=true|false",
+			valueType = Boolean.class
+	)
+	public static final PropertySpec<Boolean> SOCKS5_GSSAPIMETHOD_SUGGESTED_CONF =
+			PROPERTY_SPECS.addThenGet(new BooleanPropertySpec(
+					"socksClient.socks5.gssapimethod.suggestedConf",
+					Boolean.TRUE));
+
+	@NameValuePairValueSpecDoc(
+			description = "The suggested quality-of-protection (i.e. "
+					+ "integrity) value for GSS-API messages sent after "
+					+ "GSS-API authentication with the SOCKS5 server "
+					+ "(applicable if the negotiated protection level is "
+					+ "SELECTIVE_INTEG_OR_CONF) (default is 0)",
+			name = "socksClient.socks5.gssapimethod.suggestedInteg",
+			syntax = "socksClient.socks5.gssapimethod.suggestedInteg=-2147483648-2147483647",
+			valueType = Integer.class
+	)
+	public static final PropertySpec<Integer> SOCKS5_GSSAPIMETHOD_SUGGESTED_INTEG =
+			PROPERTY_SPECS.addThenGet(new IntegerPropertySpec(
+					"socksClient.socks5.gssapimethod.suggestedInteg",
+					Integer.valueOf(0)));
+
 	@NameValuePairValueSpecDoc(
 			description = "The comma separated list of acceptable "
 					+ "authentication methods to the SOCKS5 server (default is "

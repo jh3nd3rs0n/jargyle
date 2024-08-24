@@ -26,6 +26,42 @@
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>com.github.jh3nd3rs0n</groupId>
+			<artifactId>jargyle-server</artifactId>
+			<version>${project.parent.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.github.jh3nd3rs0n</groupId>
+			<artifactId>test-help</artifactId>
+			<version>${project.parent.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.kerby</groupId>
+			<artifactId>kerb-server-api-all</artifactId>
+			<version>2.0.3</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.kerby</groupId>
+			<artifactId>kerb-simplekdc</artifactId>
+			<version>2.0.3</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.kerby</groupId>
+			<artifactId>kerby-asn1</artifactId>
+			<version>2.0.3</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>${slf4j.version}</version>
@@ -41,6 +77,14 @@
 							<Automatic-Module-Name>com.github.jh3nd3rs0n.echo</Automatic-Module-Name>
 						</manifestEntries>
 					</archive>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<configuration>
+					<systemPropertyVariables>
+						<jdk.virtualThreadScheduler.parallelism>10</jdk.virtualThreadScheduler.parallelism>
+					</systemPropertyVariables>
 				</configuration>
 			</plugin>
 		</plugins>

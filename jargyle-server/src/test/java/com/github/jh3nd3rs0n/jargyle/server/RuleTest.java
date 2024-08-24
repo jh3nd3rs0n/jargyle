@@ -22,13 +22,13 @@ public class RuleTest {
 	@Test
 	public void testNewInstanceFromString02() {
 		Rule expectedRule = Rule.newInstanceFrom(new StringBuilder()
-				.append("socks5.command=BIND,")
-				.append("socks5.command=UDP_ASSOCIATE,")
+				.append("socks5.request.command=BIND,")
+				.append("socks5.request.command=UDP_ASSOCIATE,")
 				.append("firewallAction=DENY")
 				.toString());
 		Rule actualRule = new Rule.Builder()
-				.addRuleCondition(Socks5RuleConditionSpecConstants.SOCKS5_COMMAND.newRuleCondition(Command.BIND.toString()))
-				.addRuleCondition(Socks5RuleConditionSpecConstants.SOCKS5_COMMAND.newRuleCondition(Command.UDP_ASSOCIATE.toString()))
+				.addRuleCondition(Socks5RuleConditionSpecConstants.SOCKS5_REQUEST_COMMAND.newRuleCondition(Command.BIND.toString()))
+				.addRuleCondition(Socks5RuleConditionSpecConstants.SOCKS5_REQUEST_COMMAND.newRuleCondition(Command.UDP_ASSOCIATE.toString()))
 				.addRuleResult(GeneralRuleResultSpecConstants.FIREWALL_ACTION.newRuleResult(FirewallAction.DENY))
 				.build();
 		Assert.assertEquals(expectedRule, actualRule);
@@ -37,12 +37,12 @@ public class RuleTest {
 	@Test
 	public void testNewInstanceFromString03() {
 		Rule expectedRule = Rule.newInstanceFrom(new StringBuilder()
-				.append("socks5.serverBoundAddress=127.0.0.1,")
+				.append("socks5.reply.serverBoundAddress=127.0.0.1,")
 				.append("firewallAction=DENY,")
 				.append("firewallActionLogAction=LOG_AS_WARNING")
 				.toString());
 		Rule actualRule = new Rule.Builder()
-				.addRuleCondition(Socks5RuleConditionSpecConstants.SOCKS5_SERVER_BOUND_ADDRESS.newRuleConditionWithParsedValue("127.0.0.1"))
+				.addRuleCondition(Socks5RuleConditionSpecConstants.SOCKS5_REPLY_SERVER_BOUND_ADDRESS.newRuleConditionWithParsedValue("127.0.0.1"))
 				.addRuleResult(GeneralRuleResultSpecConstants.FIREWALL_ACTION.newRuleResult(FirewallAction.DENY))
 				.addRuleResult(GeneralRuleResultSpecConstants.FIREWALL_ACTION_LOG_ACTION.newRuleResult(LogAction.LOG_AS_WARNING))
 				.build();

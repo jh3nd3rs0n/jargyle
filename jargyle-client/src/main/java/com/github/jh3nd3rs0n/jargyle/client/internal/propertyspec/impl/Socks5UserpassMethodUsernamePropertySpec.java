@@ -1,12 +1,12 @@
 package com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl;
 
 import com.github.jh3nd3rs0n.jargyle.client.PropertySpec;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.userpassmethod.UsernamePasswordRequest;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.userpassmethod.Request;
 
 public final class Socks5UserpassMethodUsernamePropertySpec extends PropertySpec<String> {
 
 	private static String getValidatedUsername(final String username) {
-		UsernamePasswordRequest.validateUsername(username);
+		Request.validateUsername(username);
 		return username;
 	}
 	

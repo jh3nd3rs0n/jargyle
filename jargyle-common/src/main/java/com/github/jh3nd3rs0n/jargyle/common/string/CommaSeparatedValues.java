@@ -45,7 +45,7 @@ public final class CommaSeparatedValues {
         if (s.isEmpty()) {
             return of();
         }
-        return of(s.split(","));
+        return of(s.split(",", -1));
     }
 
     /**

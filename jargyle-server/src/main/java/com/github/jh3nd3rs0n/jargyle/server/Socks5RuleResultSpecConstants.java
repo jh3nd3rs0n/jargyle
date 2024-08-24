@@ -29,34 +29,6 @@ public final class Socks5RuleResultSpecConstants {
 	private static final RuleResultSpecs RULE_RESULT_SPECS = new RuleResultSpecs();
 
 	@NameValuePairValueSpecDoc(
-			description = "Specifies the desired destination address redirect",
-			name = "socks5.desiredDestinationAddressRedirect",
-			syntax = "socks5.desiredDestinationAddressRedirect=SOCKS5_ADDRESS",
-			valueType = Address.class
-	)	
-	public static final RuleResultSpec<Address> SOCKS5_DESIRED_DESTINATION_ADDRESS_REDIRECT = RULE_RESULT_SPECS.addThenGet(new AddressRuleResultSpec(
-			"socks5.desiredDestinationAddressRedirect"));
-	
-	@NameValuePairValueSpecDoc(
-			description = "Specifies the desired destination port redirect",
-			name = "socks5.desiredDestinationPortRedirect",
-			syntax = "socks5.desiredDestinationPortRedirect=PORT",
-			valueType = Port.class
-	)	
-	public static final RuleResultSpec<Port> SOCKS5_DESIRED_DESTINATION_PORT_REDIRECT = RULE_RESULT_SPECS.addThenGet(new PortRuleResultSpec(
-			"socks5.desiredDestinationPortRedirect"));
-	
-	@NameValuePairValueSpecDoc(
-			description = "Specifies the logging action to take if the desired "
-					+ "destination is redirected",
-			name = "socks5.desiredDestinationRedirectLogAction",
-			syntax = "socks5.desiredDestinationRedirectLogAction=LOG_ACTION",
-			valueType = LogAction.class
-	)	
-	public static final RuleResultSpec<LogAction> SOCKS5_DESIRED_DESTINATION_REDIRECT_LOG_ACTION = RULE_RESULT_SPECS.addThenGet(new LogActionRuleResultSpec(
-			"socks5.desiredDestinationRedirectLogAction"));
-	
-	@NameValuePairValueSpecDoc(
 			description = "Specifies a socket setting for the inbound socket "
 					+ "(can be specified multiple times with each rule result "
 					+ "specifying another socket setting)",
@@ -499,7 +471,37 @@ public final class Socks5RuleResultSpecConstants {
 	)
 	public static final RuleResultSpec<PositiveInteger> SOCKS5_ON_UDP_ASSOCIATE_RELAY_OUTBOUND_BANDWIDTH_LIMIT = RULE_RESULT_SPECS.addThenGet(new PositiveIntegerRuleResultSpec(
 			"socks5.onUdpAssociate.relayOutboundBandwidthLimit"));
-	
+
+	@NameValuePairValueSpecDoc(
+			description = "Specifies the desired destination address "
+					+ "redirect for the request",
+			name = "socks5.request.desiredDestinationAddressRedirect",
+			syntax = "socks5.request.desiredDestinationAddressRedirect=SOCKS5_ADDRESS",
+			valueType = Address.class
+	)
+	public static final RuleResultSpec<Address> SOCKS5_REQUEST_DESIRED_DESTINATION_ADDRESS_REDIRECT = RULE_RESULT_SPECS.addThenGet(new AddressRuleResultSpec(
+			"socks5.request.desiredDestinationAddressRedirect"));
+
+	@NameValuePairValueSpecDoc(
+			description = "Specifies the desired destination port redirect "
+					+ "for the request",
+			name = "socks5.request.desiredDestinationPortRedirect",
+			syntax = "socks5.request.desiredDestinationPortRedirect=PORT",
+			valueType = Port.class
+	)
+	public static final RuleResultSpec<Port> SOCKS5_REQUEST_DESIRED_DESTINATION_PORT_REDIRECT = RULE_RESULT_SPECS.addThenGet(new PortRuleResultSpec(
+			"socks5.request.desiredDestinationPortRedirect"));
+
+	@NameValuePairValueSpecDoc(
+			description = "Specifies the logging action to take if the desired "
+					+ "destination of the request is redirected",
+			name = "socks5.request.desiredDestinationRedirectLogAction",
+			syntax = "socks5.request.desiredDestinationRedirectLogAction=LOG_ACTION",
+			valueType = LogAction.class
+	)
+	public static final RuleResultSpec<LogAction> SOCKS5_REQUEST_DESIRED_DESTINATION_REDIRECT_LOG_ACTION = RULE_RESULT_SPECS.addThenGet(new LogActionRuleResultSpec(
+			"socks5.request.desiredDestinationRedirectLogAction"));
+
 	public static List<RuleResultSpec<Object>> values() {
 		return RULE_RESULT_SPECS.toList();
 	}

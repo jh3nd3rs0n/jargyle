@@ -8,39 +8,39 @@ import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 public final class Socks5RuleArgSpecConstants {
 	
 	private static final RuleArgSpecs RULE_ARG_SPECS = new RuleArgSpecs();
-	
-	public static final RuleArgSpec<String> SOCKS5_COMMAND = RULE_ARG_SPECS.addThenGet(new RuleArgSpec<String>(
-			"socks5.command", 
-			String.class));
 
-	public static final RuleArgSpec<String> SOCKS5_DESIRED_DESTINATION_ADDRESS = RULE_ARG_SPECS.addThenGet(new RuleArgSpec<String>(
-			"socks5.desiredDestinationAddress", 
-			String.class));
-
-	public static final RuleArgSpec<Port> SOCKS5_DESIRED_DESTINATION_PORT = RULE_ARG_SPECS.addThenGet(new RuleArgSpec<Port>(
-			"socks5.desiredDestinationPort", 
-			Port.class));
-	
 	public static final RuleArgSpec<String> SOCKS5_METHOD = RULE_ARG_SPECS.addThenGet(new RuleArgSpec<String>(
-			"socks5.method", 
+			"socks5.method",
 			String.class));
 
-	public static final RuleArgSpec<String> SOCKS5_SECOND_SERVER_BOUND_ADDRESS = RULE_ARG_SPECS.addThenGet(new RuleArgSpec<String>(
-			"socks5.secondServerBoundAddress", 
+	public static final RuleArgSpec<String> SOCKS5_REPLY_SERVER_BOUND_ADDRESS = RULE_ARG_SPECS.addThenGet(new RuleArgSpec<String>(
+			"socks5.reply.serverBoundAddress",
+			String.class));
+
+	public static final RuleArgSpec<Port> SOCKS5_REPLY_SERVER_BOUND_PORT = RULE_ARG_SPECS.addThenGet(new RuleArgSpec<Port>(
+			"socks5.reply.serverBoundPort",
+			Port.class));
+
+	public static final RuleArgSpec<String> SOCKS5_REQUEST_COMMAND = RULE_ARG_SPECS.addThenGet(new RuleArgSpec<String>(
+			"socks5.request.command", 
+			String.class));
+
+	public static final RuleArgSpec<String> SOCKS5_REQUEST_DESIRED_DESTINATION_ADDRESS = RULE_ARG_SPECS.addThenGet(new RuleArgSpec<String>(
+			"socks5.request.desiredDestinationAddress", 
+			String.class));
+
+	public static final RuleArgSpec<Port> SOCKS5_REQUEST_DESIRED_DESTINATION_PORT = RULE_ARG_SPECS.addThenGet(new RuleArgSpec<Port>(
+			"socks5.request.desiredDestinationPort", 
+			Port.class));
+
+	public static final RuleArgSpec<String> SOCKS5_SECOND_REPLY_SERVER_BOUND_ADDRESS = RULE_ARG_SPECS.addThenGet(new RuleArgSpec<String>(
+			"socks5.secondReply.serverBoundAddress", 
 			String.class));
 	
-	public static final RuleArgSpec<Port> SOCKS5_SECOND_SERVER_BOUND_PORT = RULE_ARG_SPECS.addThenGet(new RuleArgSpec<Port>(
-			"socks5.secondServerBoundPort", 
+	public static final RuleArgSpec<Port> SOCKS5_SECOND_REPLY_SERVER_BOUND_PORT = RULE_ARG_SPECS.addThenGet(new RuleArgSpec<Port>(
+			"socks5.secondReply.serverBoundPort", 
 			Port.class));
-	
-	public static final RuleArgSpec<String> SOCKS5_SERVER_BOUND_ADDRESS = RULE_ARG_SPECS.addThenGet(new RuleArgSpec<String>(
-			"socks5.serverBoundAddress", 
-			String.class));
-	
-	public static final RuleArgSpec<Port> SOCKS5_SERVER_BOUND_PORT = RULE_ARG_SPECS.addThenGet(new RuleArgSpec<Port>(
-			"socks5.serverBoundPort", 
-			Port.class));
-	
+
 	public static final RuleArgSpec<String> SOCKS5_UDP_INBOUND_DESIRED_DESTINATION_ADDRESS = RULE_ARG_SPECS.addThenGet(new RuleArgSpec<String>(
 			"socks5.udp.inbound.desiredDestinationAddress",
 			String.class));

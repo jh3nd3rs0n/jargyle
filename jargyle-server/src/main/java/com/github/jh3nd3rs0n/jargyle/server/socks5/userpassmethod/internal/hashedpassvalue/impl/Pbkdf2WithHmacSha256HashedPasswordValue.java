@@ -113,7 +113,7 @@ public final class Pbkdf2WithHmacSha256HashedPasswordValue
                         + "HASH_BASE_64_STRING,SALT_BASE_64_STRING "
                         + "actual hashed password value is %s",
                 s);
-        String[] sElements = s.split(",");
+        String[] sElements = s.split(",", -1);
         if (sElements.length != 2) {
             throw new IllegalArgumentException(message);
         }

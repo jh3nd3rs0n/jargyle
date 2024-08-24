@@ -34,11 +34,11 @@
         -   [TCP_NODELAY](#tcp_nodelay)
 -   [Socket Settings](#socket-settings)
 -   [SOCKS5 Address](#socks5-address)
--   [SOCKS5 Command](#socks5-command)
 -   [SOCKS5 GSS-API Method Protection Level](#socks5-gss-api-method-protection-level)
 -   [SOCKS5 GSS-API Method Protection Levels](#socks5-gss-api-method-protection-levels)
 -   [SOCKS5 Method](#socks5-method)
 -   [SOCKS5 Methods](#socks5-methods)
+-   [SOCKS5 Request Command](#socks5-request-command)
 -   [SOCKS5 Username Password Method User Repository](#socks5-username-password-method-user-repository)
     -   [SOCKS5 Username Password Method User Repositories](#socks5-username-password-method-user-repositories)
         -   [FileSourceUserRepository](#filesourceuserrepository)
@@ -156,7 +156,7 @@ Performance preferences for a TCP socket described by three digits whose values 
 
 **Description:**
 
-An integer between 0 and 65535 (inclusive) that is assigned to uniquely identify a connection endpoint and to direct data to a host
+An integer between 0 and 65535 (inclusive) that is assigned to uniquely identify a connection endpoint and to direct data to a node of a network
 
 ## Port Range
 
@@ -429,26 +429,12 @@ A comma separated list of socket settings.
 **Syntax:**
 
 ```text
-DOMAINNAME|IPV4_ADDRESS|IPV6_ADDRESS
+DOMAIN_NAME|IPV4_ADDRESS|IPV6_ADDRESS
 ```
 
-## SOCKS5 Command
+**Description:**
 
-**Syntax:**
-
-```text
-CONNECT|BIND|UDP_ASSOCIATE|RESOLVE
-```
-
-**Values:**
-
--   `CONNECT`: A request to the SOCKS server to connect to another server
-
--   `BIND`: A request to the SOCKS server to bind to another address and port in order to receive an inbound connection
-
--   `UDP_ASSOCIATE`: A request to the SOCKS server to associate a UDP socket for sending and receiving datagrams
-
--   `RESOLVE`: A request to the SOCKS server to resolve a host name
+An identifier or a virtual location of a node of a network
 
 ## SOCKS5 GSS-API Method Protection Level
 
@@ -458,13 +444,19 @@ CONNECT|BIND|UDP_ASSOCIATE|RESOLVE
 NONE|REQUIRED_INTEG|REQUIRED_INTEG_AND_CONF
 ```
 
+**Description:**
+
+Security context protection level
+
 **Values:**
 
--   `NONE`: No protection
+-   `NONE`: No per-message protection
 
 -   `REQUIRED_INTEG`: Required per-message integrity
 
 -   `REQUIRED_INTEG_AND_CONF`: Required per-message integrity and confidentiality
+
+-   `SELECTIVE_INTEG_OR_CONF`: Selective per-message integrity or confidentiality based on local client and server configurations
 
 ## SOCKS5 GSS-API Method Protection Levels
 
@@ -473,6 +465,10 @@ NONE|REQUIRED_INTEG|REQUIRED_INTEG_AND_CONF
 ```text
 SOCKS5_GSSAPIMETHOD_PROTECTION_LEVEL1[,SOCKS5_GSSAPIMETHOD_PROTECTION_LEVEL2[...]]
 ```
+
+**Description:**
+
+A comma separated list of security context protection levels
 
 **Element value:** [SOCKS5 GSS-API Method Protection Level](#socks5-gss-api-method-protection-level)
 
@@ -483,6 +479,10 @@ SOCKS5_GSSAPIMETHOD_PROTECTION_LEVEL1[,SOCKS5_GSSAPIMETHOD_PROTECTION_LEVEL2[...
 ```text
 NO_AUTHENTICATION_REQUIRED|GSSAPI|USERNAME_PASSWORD
 ```
+
+**Description:**
+
+Authentication method
 
 **Values:**
 
@@ -500,7 +500,33 @@ NO_AUTHENTICATION_REQUIRED|GSSAPI|USERNAME_PASSWORD
 [SOCKS5_METHOD1[,SOCKS5_METHOD2[...]]]
 ```
 
+**Description:**
+
+A comma-separated list of SOCKS5 authentication methods
+
 **Element value:** [SOCKS5 Method](#socks5-method)
+
+## SOCKS5 Request Command
+
+**Syntax:**
+
+```text
+CONNECT|BIND|UDP_ASSOCIATE|RESOLVE
+```
+
+**Description:**
+
+Type of request to the SOCKS server
+
+**Values:**
+
+-   `CONNECT`: A request to the SOCKS server to connect to another server
+
+-   `BIND`: A request to the SOCKS server to bind to another address and port in order to receive an inbound connection
+
+-   `UDP_ASSOCIATE`: A request to the SOCKS server to associate a UDP socket for sending and receiving datagrams
+
+-   `RESOLVE`: A request to the SOCKS server to resolve a host name
 
 ## SOCKS5 Username Password Method User Repository
 

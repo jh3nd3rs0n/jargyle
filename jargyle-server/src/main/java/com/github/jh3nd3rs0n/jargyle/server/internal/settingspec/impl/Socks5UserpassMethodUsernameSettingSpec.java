@@ -1,12 +1,12 @@
 package com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl;
 
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.userpassmethod.UsernamePasswordRequest;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.userpassmethod.Request;
 import com.github.jh3nd3rs0n.jargyle.server.SettingSpec;
 
 public final class Socks5UserpassMethodUsernameSettingSpec extends SettingSpec<String> {
 
 	private static String getValidatedUsername(final String username) {
-		UsernamePasswordRequest.validateUsername(username);
+		Request.validateUsername(username);
 		return username;
 	}
 

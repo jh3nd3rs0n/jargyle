@@ -1,7 +1,7 @@
 package com.github.jh3nd3rs0n.jargyle.server;
 
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.SingleValueTypeDoc;
-import com.github.jh3nd3rs0n.jargyle.server.internal.addressrange.impl.DomainnameRange;
+import com.github.jh3nd3rs0n.jargyle.server.internal.addressrange.impl.DomainNameRange;
 import com.github.jh3nd3rs0n.jargyle.server.internal.addressrange.impl.Ipv4AddressRange;
 import com.github.jh3nd3rs0n.jargyle.server.internal.addressrange.impl.Ipv6AddressRange;
 
@@ -23,7 +23,7 @@ public abstract class AddressRange {
 		} catch (IllegalArgumentException ignored) {
 		}
 		try {
-			return DomainnameRange.newInstanceFrom(s);
+			return DomainNameRange.newInstanceFrom(s);
 		} catch (IllegalArgumentException ignored) {
 		}
 		throw new IllegalArgumentException(String.format(

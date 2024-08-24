@@ -28,6 +28,7 @@
             <groupId>com.github.jh3nd3rs0n</groupId>
             <artifactId>test-help</artifactId>
             <version>${project.parent.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -55,7 +56,10 @@
             <plugin>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <configuration>
-                    <argLine>-Djdk.virtualThreadScheduler.parallelism=10 -Dperformance.reports.directory=${project.build.directory}${file.separator}performance-reports${file.separator}</argLine>
+                    <systemPropertyVariables>
+                        <jdk.virtualThreadScheduler.parallelism>10</jdk.virtualThreadScheduler.parallelism>
+                        <performance.reports.directory>${project.build.directory}${file.separator}performance-reports${file.separator}</performance.reports.directory>
+                    </systemPropertyVariables>
                 </configuration>
             </plugin>
         </plugins>

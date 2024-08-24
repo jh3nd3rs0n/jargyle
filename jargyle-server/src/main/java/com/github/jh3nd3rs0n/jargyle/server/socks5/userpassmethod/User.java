@@ -1,15 +1,15 @@
 package com.github.jh3nd3rs0n.jargyle.server.socks5.userpassmethod;
 
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.userpassmethod.UsernamePasswordRequest;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.userpassmethod.Request;
 
 import java.util.Objects;
 
 public final class User {
 
 	public static final int MAX_NAME_LENGTH = 
-			UsernamePasswordRequest.MAX_UNAME_LENGTH;
+			Request.MAX_UNAME_LENGTH;
 	public static final int MAX_PASSWORD_LENGTH = 
-			UsernamePasswordRequest.MAX_PASSWD_LENGTH;
+			Request.MAX_PASSWD_LENGTH;
 	
 	public static User newInstance(final String name, final char[] password) {
 		Objects.requireNonNull(name, "name must not be null");
@@ -25,11 +25,11 @@ public final class User {
 	}
 
 	public static void validateName(final String name) {
-		UsernamePasswordRequest.validateUsername(name);
+		Request.validateUsername(name);
 	}
 	
 	public static void validatePassword(final char[] password) {
-		UsernamePasswordRequest.validatePassword(password);
+		Request.validatePassword(password);
 	}
 	
 	private final String name;

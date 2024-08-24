@@ -11,6 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.ReplyCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,8 +28,7 @@ import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.DtlsDatagramSocketFactory;
 import com.github.jh3nd3rs0n.jargyle.internal.throwable.ThrowableHelper;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Address;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Reply;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Socks5Reply;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Socks5Request;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Request;
 import com.github.jh3nd3rs0n.jargyle.server.GeneralRuleResultSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.GeneralSettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.Rule;
@@ -46,9 +46,9 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 	
 	public UdpAssociateCommandWorker(
 			final Socks5Worker socks5Worker, 
-			final MethodSubnegotiationResults methSubnegotiationResults, 
-			final Socks5Request socks5Req) {
-		super(socks5Worker, methSubnegotiationResults, socks5Req);
+			final MethodSubNegotiationResults methSubNegotiationResults, 
+			final Request req) {
+		super(socks5Worker, methSubNegotiationResults, req);
 		this.logger = LoggerFactory.getLogger(UdpAssociateCommandWorker.class);
 	}
 	
@@ -57,28 +57,17 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 		SocketSettings socketSettings = this.getClientFacingSocketSettings();
 		try {
 			socketSettings.applyTo(clientFacingDatagramSock);
-		} catch (UnsupportedOperationException e) {
+		} catch (UnsupportedOperationException | SocketException e) {
 			this.logger.error( 
 					ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Error in setting the client-facing UDP socket"), 
 					e);
-			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
-					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			this.sendSocks5Reply(socks5Rep);
+			this.sendReply(
+					Reply.newFailureInstance(ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
 			return false;			
-		} catch (SocketException e) {
-			this.logger.error( 
-					ObjectLogMessageHelper.objectLogMessage(
-							this, 
-							"Error in setting the client-facing UDP socket"), 
-					e);
-			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
-					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			this.sendSocks5Reply(socks5Rep);
-			return false;
 		}
-		return true;
+        return true;
 	}
 	
 	private boolean configurePeerFacingDatagramSocket(
@@ -86,28 +75,17 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 		SocketSettings socketSettings = this.getPeerFacingSocketSettings();
 		try {
 			socketSettings.applyTo(peerFacingDatagramSock);
-		} catch (UnsupportedOperationException e) {
+		} catch (UnsupportedOperationException | SocketException e) {
 			this.logger.error( 
 					ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Error in setting the peer-facing UDP socket"), 
 					e);
-			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
-					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			this.sendSocks5Reply(socks5Rep);
+			this.sendReply(
+					Reply.newFailureInstance(ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
 			return false;			
-		} catch (SocketException e) {
-			this.logger.error( 
-					ObjectLogMessageHelper.objectLogMessage(
-							this, 
-							"Error in setting the peer-facing UDP socket"), 
-					e);
-			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
-					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			this.sendSocks5Reply(socks5Rep);
-			return false;
 		}
-		return true;
+        return true;
 	}
 	
 	private Host getClientFacingBindHost() {
@@ -597,9 +575,8 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 							"Unable to bind the client-facing UDP socket to "
 							+ "the following host: %s",
 							clientFacingBindHost));
-			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
-					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			this.sendSocks5Reply(socks5Rep);
+			this.sendReply(
+					Reply.newFailureInstance(ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
 			return null;
 		}
 		PortRanges bindPortRanges = this.getClientFacingBindPortRanges();
@@ -633,9 +610,8 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 							+ "%s %s",
 							bindInetAddress,
 							bindPortRanges));
-			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
-					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			this.sendSocks5Reply(socks5Rep);
+			this.sendReply(
+					Reply.newFailureInstance(ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
 			return null;			
 		}
 		return clientFacingDatagramSock;
@@ -654,9 +630,8 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 							"Error in creating the client-facing UDP "
 							+ "socket"), 
 					e);
-			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
-					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			this.sendSocks5Reply(socks5Rep);
+			this.sendReply(
+					Reply.newFailureInstance(ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
 			return null;
 		}
 		if (!this.configureClientFacingDatagramSocket(
@@ -681,9 +656,8 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 							"Error in binding the client-facing UDP "
 							+ "socket"), 
 					e);
-			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
-					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			this.sendSocks5Reply(socks5Rep);
+			this.sendReply(
+					Reply.newFailureInstance(ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
 			clientFacingDatagramSock.close();
 			return null;
 		}
@@ -702,9 +676,8 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 							"Unable to bind the peer-facing UDP socket to "
 							+ "the following host: %s",
 							peerFacingBindHost));
-			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
-					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			this.sendSocks5Reply(socks5Rep);
+			this.sendReply(
+					Reply.newFailureInstance(ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
 			return null;
 		}
 		PortRanges bindPortRanges = this.getPeerFacingBindPortRanges();
@@ -737,9 +710,8 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 							+ "following address and port (range(s)): %s %s",
 							bindInetAddress,
 							bindPortRanges));
-			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
-					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			this.sendSocks5Reply(socks5Rep);
+			this.sendReply(
+					Reply.newFailureInstance(ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
 			return null;			
 		}
 		return peerFacingDatagramSock;
@@ -761,9 +733,8 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 							"Error in creating the peer-facing UDP "
 							+ "socket"), 
 					e);
-			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
-					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			this.sendSocks5Reply(socks5Rep);
+			this.sendReply(
+					Reply.newFailureInstance(ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
 			return null;
 		}
 		if (!this.configurePeerFacingDatagramSocket(
@@ -788,9 +759,8 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 							"Error in binding the peer-facing UDP "
 							+ "socket"), 
 					e);
-			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
-					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			this.sendSocks5Reply(socks5Rep);
+			this.sendReply(
+					Reply.newFailureInstance(ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
 			peerFacingDatagramSock.close();
 			return null;
 		}
@@ -823,7 +793,7 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 	public void run() {
 		DatagramSocket peerFacingDatagramSock = null;
 		DatagramSocket clientFacingDatagramSock = null;		
-		Socks5Reply socks5Rep = null;
+		Reply rep = null;
 		try {
 			peerFacingDatagramSock = this.newPeerFacingDatagramSocket();
 			if (peerFacingDatagramSock == null) {
@@ -848,12 +818,11 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 					clientFacingDatagramSock.getLocalAddress();
 			String serverBoundAddress = inetAddress.getHostAddress();
 			int serverBoundPort = clientFacingDatagramSock.getLocalPort();
-			socks5Rep = Socks5Reply.newInstance(
-					Reply.SUCCEEDED, 
-					Address.newInstance(serverBoundAddress), 
+			rep = Reply.newSuccessInstance(
+					Address.newInstanceFrom(serverBoundAddress),
 					Port.valueOf(serverBoundPort));
-			RuleContext ruleContext = this.newSocks5ReplyRuleContext(
-					socks5Rep);
+			RuleContext ruleContext = this.newReplyRuleContext(
+					rep);
 			this.setRuleContext(ruleContext);
 			Rule applicableRule = this.getRules().firstAppliesTo(
 					this.getRuleContext());
@@ -863,16 +832,15 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 						"No applicable rule found based on the following "
 						+ "context: %s",
 						this.getRuleContext()));				
-				socks5Rep = Socks5Reply.newFailureInstance(
-						Reply.CONNECTION_NOT_ALLOWED_BY_RULESET);
-				this.sendSocks5Reply(socks5Rep);
+				this.sendReply(
+						Reply.newFailureInstance(ReplyCode.CONNECTION_NOT_ALLOWED_BY_RULESET));
 				return;
 			}			
 			this.setApplicableRule(applicableRule);
-			if (!this.canAllowSocks5Reply()) {
+			if (!this.canAllowReply()) {
 				return;
 			}			
-			if (!this.sendSocks5Reply(socks5Rep)) {
+			if (!this.sendReply(rep)) {
 				return;
 			}
 			/*
@@ -940,15 +908,14 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 								this, 
 								"Error in wrapping the client-facing UDP socket"), 
 						e);
-				Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
-						Reply.GENERAL_SOCKS_SERVER_FAILURE);
-				this.sendSocks5Reply(socks5Rep);
+				this.sendReply(
+						Reply.newFailureInstance(ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
 				return null;
 			}
 		}
 		try {
 			clientFacingDatagramSck = 
-					this.getMethodSubnegotiationResults().getDatagramSocket(
+					this.getMethodSubNegotiationResults().getDatagramSocket(
 							clientFacingDatagramSck);
 		} catch (IOException e) {
 			this.logger.error( 
@@ -956,9 +923,8 @@ final class UdpAssociateCommandWorker extends CommandWorker {
 							this, 
 							"Error in wrapping the client-facing UDP socket"), 
 					e);
-			Socks5Reply socks5Rep = Socks5Reply.newFailureInstance(
-					Reply.GENERAL_SOCKS_SERVER_FAILURE);
-			this.sendSocks5Reply(socks5Rep);
+			this.sendReply(
+					Reply.newFailureInstance(ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
 			return null;
 		}
 		return clientFacingDatagramSck;

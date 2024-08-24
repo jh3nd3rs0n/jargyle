@@ -164,6 +164,16 @@ public class PortRangesTest {
         PortRanges.newInstanceFrom("all ports");
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testNewInstanceFromStringForIllegalArgumentException03() {
+        PortRanges.newInstanceFrom("4000-5000,8000,");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testNewInstanceFromStringForIllegalArgumentException04() {
+        PortRanges.newInstanceFrom(",4000-5000,8000");
+    }
+
     @Test
     public void testOfPortRangeVarargs01() {
         Assert.assertNotNull(PortRanges.of());

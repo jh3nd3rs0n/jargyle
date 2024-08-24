@@ -180,8 +180,18 @@ public class SocketSettingsTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testNewInstanceFromStringForIllegalArgumentException() {
+    public void testNewInstanceFromStringForIllegalArgumentException01() {
         SocketSettings.newInstanceFrom("no socket settings here");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testNewInstanceFromStringForIllegalArgumentException02() {
+        SocketSettings.newInstanceFrom("SO_TIMEOUT=3000,SO_SNDBUF=3000,SO_RCVBUF=3000,");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testNewInstanceFromStringForIllegalArgumentException03() {
+        SocketSettings.newInstanceFrom(",SO_TIMEOUT=3000,SO_SNDBUF=3000,SO_RCVBUF=3000");
     }
 
     @Test

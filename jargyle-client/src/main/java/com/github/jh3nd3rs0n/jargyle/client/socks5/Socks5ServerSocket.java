@@ -29,13 +29,8 @@ import com.github.jh3nd3rs0n.jargyle.common.number.Digit;
 import com.github.jh3nd3rs0n.jargyle.common.number.NonNegativeInteger;
 import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
 import com.github.jh3nd3rs0n.jargyle.internal.net.FilterSocket;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Address;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.AddressType;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Command;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Method;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.MethodEncapsulation;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Socks5Reply;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Socks5Request;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.*;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.address.impl.DomainName;
 
 public final class Socks5ServerSocket extends ServerSocket {
 
@@ -317,14 +312,12 @@ public final class Socks5ServerSocket extends ServerSocket {
 			}
 			Socket acceptedSocks5Socket = null;
 			try {
-				Socks5Reply socks5Rep = this.socks5Client.receiveSocks5Reply(
+				Reply rep = this.socks5Client.receiveReply(
 						this.socket);
 				String serverBoundAddress = 
-						socks5Rep.getServerBoundAddress().toString();
-				int serverBoundPort = socks5Rep.getServerBoundPort().intValue();
-				AddressType addressType =
-						socks5Rep.getServerBoundAddress().getAddressType();
-				if (addressType.equals(AddressType.DOMAINNAME)) {
+						rep.getServerBoundAddress().toString();
+				int serverBoundPort = rep.getServerBoundPort().intValue();
+				if (rep.getServerBoundAddress() instanceof DomainName) {
 					throw new Socks5ClientIOException(
 							this.socks5Client, 
 							String.format(
@@ -449,18 +442,16 @@ public final class Socks5ServerSocket extends ServerSocket {
 				bAddr = HostIpv4Address.getAllZerosInetAddress();
 			}
 			String address = bAddr.getHostAddress();
-			Socks5Request socks5Req = Socks5Request.newInstance(
+			Request req = Request.newInstance(
 					Command.BIND, 
-					Address.newInstance(address), 
+					Address.newInstanceFrom(address),
 					Port.valueOf(prt));
-			this.socks5Client.sendSocks5Request(socks5Req, sck);
-			Socks5Reply socks5Rep = this.socks5Client.receiveSocks5Reply(sck);
+			this.socks5Client.sendRequest(req, sck);
+			Reply rep = this.socks5Client.receiveReply(sck);
 			String serverBoundAddress = 
-					socks5Rep.getServerBoundAddress().toString();
-			int serverBoundPort = socks5Rep.getServerBoundPort().intValue();
-			AddressType addressType =
-					socks5Rep.getServerBoundAddress().getAddressType();
-			if (addressType.equals(AddressType.DOMAINNAME)) {
+					rep.getServerBoundAddress().toString();
+			int serverBoundPort = rep.getServerBoundPort().intValue();
+			if (rep.getServerBoundAddress() instanceof DomainName) {
 				throw new Socks5ClientIOException(
 						this.socks5Client, 
 						String.format(

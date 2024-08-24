@@ -43,9 +43,9 @@ public final class Socks5Client extends SocksClient {
 	protected MethodEncapsulation doMethodSubnegotiation(
 			final Method method,
 			final Socket connectedClientSocket) throws IOException {
-		MethodSubnegotiator methodSubnegotiator =
-				MethodSubnegotiator.getInstance(method);
-		return methodSubnegotiator.subnegotiate(connectedClientSocket, this);
+		MethodSubNegotiator methodSubnegotiator =
+				MethodSubNegotiator.getInstance(method);
+		return methodSubnegotiator.subNegotiate(connectedClientSocket, this);
 	}
 
 	protected DatagramSocket getConnectedClientDatagramSocket(
@@ -110,16 +110,16 @@ public final class Socks5Client extends SocksClient {
 		return new Socks5NetObjectFactory(this);
 	}
 	
-	protected Socks5Reply receiveSocks5Reply(
+	protected Reply receiveReply(
 			final Socket connectedClientSocket) throws IOException {
 		InputStream inputStream = connectedClientSocket.getInputStream();
-		Socks5Reply socks5Rep = Socks5Reply.newInstanceFrom(
+		Reply rep = Reply.newInstanceFrom(
 				inputStream);
-		Reply reply = socks5Rep.getReply();
-		if (!reply.equals(Reply.SUCCEEDED)) {
-			throw new FailureSocks5ReplyException(this, socks5Rep);			
+		ReplyCode replyCode = rep.getReplyCode();
+		if (!replyCode.equals(ReplyCode.SUCCEEDED)) {
+			throw new FailureReplyException(this, rep);			
 		}
-		return socks5Rep;		
+		return rep;		
 	}
 	
 	@Override
@@ -127,11 +127,11 @@ public final class Socks5Client extends SocksClient {
 		return super.resolve(host);
 	}
 	
-	protected void sendSocks5Request(
-			final Socks5Request socks5Req, 
+	protected void sendRequest(
+			final Request req, 
 			final Socket connectedClientSocket) throws IOException {
 		OutputStream outputStream = connectedClientSocket.getOutputStream();
-		outputStream.write(socks5Req.toByteArray());
+		outputStream.write(req.toByteArray());
 		outputStream.flush();
 	}
 	

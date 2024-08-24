@@ -36,14 +36,15 @@
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.sun.xml.bind</groupId>
-			<artifactId>jaxb-impl</artifactId>
-			<version>3.0.0</version>
+			<groupId>com.github.jh3nd3rs0n</groupId>
+			<artifactId>test-help</artifactId>
+			<version>${project.parent.version}</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>jakarta.xml.bind</groupId>
 			<artifactId>jakarta.xml.bind-api</artifactId>
-			<version>3.0.0</version>
+			<version>4.0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
@@ -52,9 +53,28 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
+			<groupId>org.glassfish.jaxb</groupId>
+			<artifactId>jaxb-runtime</artifactId>
+			<version>4.0.5</version>
+		</dependency>
+		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>${slf4j.version}</version>
 		</dependency>
 	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-failsafe-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+	<repositories>
+		<repository>
+			<id>maven_central</id>
+			<name>Maven Central</name>
+			<url>https://repo.maven.apache.org/maven2/</url>
+		</repository>
+	</repositories>
 </project>

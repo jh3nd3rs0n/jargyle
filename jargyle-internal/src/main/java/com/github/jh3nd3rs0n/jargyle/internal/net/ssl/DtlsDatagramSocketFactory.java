@@ -10,6 +10,12 @@ import java.net.DatagramSocket;
 public abstract class DtlsDatagramSocketFactory {
 
     /**
+     * Allows the construction of subclass instances.
+     */
+    public DtlsDatagramSocketFactory() {
+    }
+
+    /**
      * Returns a new default {@code DtlsDatagramSocketFactory} with the
      * provided {@code SSLContext} as DTLS context.
      *

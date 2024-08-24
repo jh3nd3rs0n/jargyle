@@ -7,7 +7,7 @@ import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
 import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
 import com.github.jh3nd3rs0n.jargyle.internal.throwable.ThrowableHelper;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Address;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.UdpRequestHeader;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.UdpRequest;
 import com.github.jh3nd3rs0n.jargyle.server.*;
 import com.github.jh3nd3rs0n.jargyle.server.internal.concurrent.ExecutorsHelper;
 import com.github.jh3nd3rs0n.jargyle.server.internal.server.Rules;
@@ -178,7 +178,7 @@ final class UdpRelayServer {
 		}
 		
 		private DatagramPacket newDatagramPacket(
-				final UdpRequestHeader header) {
+				final UdpRequest header) {
 			byte[] headerBytes = header.toByteArray();
 			InetAddress inetAddress = null;
 			try {
@@ -220,19 +220,18 @@ final class UdpRelayServer {
 			return inboundRuleContext;
 		}
 		
-		private UdpRequestHeader newUdpRequestHeader(
+		private UdpRequest newUdpRequest(
 				final DatagramPacket packet) {
 			String address = packet.getAddress().getHostAddress();
 			int port = packet.getPort();
-			UdpRequestHeader header = UdpRequestHeader.newInstance(
+            return UdpRequest.newInstance(
 					UnsignedByte.valueOf(0),
-					Address.newInstance(address),
+					Address.newInstanceFrom(address),
 					Port.valueOf(port),
 					Arrays.copyOfRange(
-							packet.getData(), 
-							packet.getOffset(), 
+							packet.getData(),
+							packet.getOffset(),
 							packet.getLength()));
-			return header;
 		}
 		
 		@Override
@@ -307,10 +306,10 @@ final class UdpRelayServer {
 					if (!this.canSendDatagramPacket()) {
 						continue;
 					}
-					UdpRequestHeader header = this.newUdpRequestHeader(packet);
+					UdpRequest udpRequest = this.newUdpRequest(packet);
 					this.logger.trace(ObjectLogMessageHelper.objectLogMessage(
-							this, header.toString()));
-					packet = this.newDatagramPacket(header);
+							this, udpRequest.toString()));
+					packet = this.newDatagramPacket(udpRequest);
 					if (packet == null) {
 						continue;
 					}
@@ -463,12 +462,12 @@ final class UdpRelayServer {
 		}
 		
 		private DatagramPacket newDatagramPacket(
-				final UdpRequestHeader header) {
-			byte[] userData = header.getUserData();
+				final UdpRequest udpRequest) {
+			byte[] userData = udpRequest.getUserData();
 			InetAddress inetAddress = null;
 			try {
 				inetAddress = this.hostResolver.resolve(
-						header.getDesiredDestinationAddress().toString());
+						udpRequest.getDesiredDestinationAddress().toString());
 			} catch (IOException e) {
 				this.logger.error( 
 						ObjectLogMessageHelper.objectLogMessage(
@@ -478,7 +477,7 @@ final class UdpRelayServer {
 						e);
 				return null;
 			}
-			int inetPort = header.getDesiredDestinationPort().intValue();
+			int inetPort = udpRequest.getDesiredDestinationPort().intValue();
 			return new DatagramPacket(
 					userData, userData.length, inetAddress, inetPort);
 		}
@@ -505,11 +504,11 @@ final class UdpRelayServer {
 			return outboundRuleContext;
 		}
 		
-		private UdpRequestHeader newUdpRequestHeader(
+		private UdpRequest newUdpRequest(
 				final DatagramPacket packet) {
-			UdpRequestHeader header = null; 
+			UdpRequest udpRequest = null;
 			try {
-				header = UdpRequestHeader.newInstanceFrom(
+				udpRequest = UdpRequest.newInstanceFrom(
 						Arrays.copyOfRange(
 								packet.getData(),
 								packet.getOffset(),
@@ -518,12 +517,12 @@ final class UdpRelayServer {
 				this.logger.error( 
 						ObjectLogMessageHelper.objectLogMessage(
 								this, 
-								"Error in parsing the UDP header request from "
+								"Error in parsing the UDP request from "
 								+ "the client"), 
 						e);
 				return null;
 			}
-			return header;
+			return udpRequest;
 		}
 		
 		@Override
@@ -577,13 +576,13 @@ final class UdpRelayServer {
 					if (!this.canAcceptDatagramPacket(packet)) {
 						continue;
 					}
-					UdpRequestHeader header = this.newUdpRequestHeader(packet);
-					if (header == null) {
+					UdpRequest udpRequest = this.newUdpRequest(packet);
+					if (udpRequest == null) {
 						continue;
 					}
 					this.logger.trace(ObjectLogMessageHelper.objectLogMessage(
-							this, header.toString(), new Object[]{}));
-					if (header.getCurrentFragmentNumber().intValue() != 0) {
+							this, udpRequest.toString(), new Object[]{}));
+					if (udpRequest.getCurrentFragmentNumber().intValue() != 0) {
 						continue;
 					}
 					RuleContext outboundRuleContext =
@@ -591,8 +590,8 @@ final class UdpRelayServer {
 									this.ruleContext,
 									this.udpRelayServer.getClientAddress(),
 									this.udpRelayServer.getClientPort(),
-									header.getDesiredDestinationAddress().toString(), 
-									header.getDesiredDestinationPort().intValue());
+									udpRequest.getDesiredDestinationAddress().toString(),
+									udpRequest.getDesiredDestinationPort().intValue());
 					Rule applicableRule = this.rules.firstAppliesTo(
 							outboundRuleContext);
 					if (applicableRule == null) {
@@ -608,7 +607,7 @@ final class UdpRelayServer {
 							applicableRule,	outboundRuleContext)) {
 						continue;
 					}
-					packet = this.newDatagramPacket(header);
+					packet = this.newDatagramPacket(udpRequest);
 					if (packet == null) {
 						continue;
 					}

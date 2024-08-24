@@ -2,7 +2,7 @@ package com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl;
 
 import com.github.jh3nd3rs0n.jargyle.client.PropertySpec;
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.userpassmethod.UsernamePasswordRequest;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.userpassmethod.Request;
 
 import java.util.Arrays;
 
@@ -12,7 +12,7 @@ public final class Socks5UserpassMethodEncryptedPasswordPropertySpec
 	private static EncryptedPassword getValidatedEncryptedPassword(
 			final EncryptedPassword encryptedPassword) {
 		char[] password = encryptedPassword.getPassword();
-		UsernamePasswordRequest.validatePassword(password);
+		Request.validatePassword(password);
 		Arrays.fill(password, '\0');
 		return encryptedPassword;
 	}

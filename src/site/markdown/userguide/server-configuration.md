@@ -3635,17 +3635,17 @@ for relaying the data (Value must be an integer between 1 (inclusive) and
 -   `socks5.onBindRequest.relayIdleTimeout`: Specifies the timeout in 
 milliseconds on relaying no data (Value must be an integer between 1 (inclusive) 
 and 2147483647 (inclusive))
--   `socks5.onRequest.relayBufferSize`: Specifies the buffer size in bytes 
-for relaying the data (Value must be an integer between 1 (inclusive) and 
-2147483647 (inclusive))
--   `socks5.onRequest.relayIdleTimeout`: Specifies the timeout in 
-milliseconds on relaying no data (Value must be an integer between 1 (inclusive) 
-and 2147483647 (inclusive))
 -   `socks5.onConnectRequest.relayBufferSize`: Specifies the buffer size in bytes 
 for relaying the data (Value must be an integer between 1 (inclusive) and 
 2147483647 (inclusive))
 -   `socks5.onConnectRequest.relayIdleTimeout`: Specifies the timeout in 
 milliseconds on relaying no data (Value must be an integer between 1 (inclusive) 
+and 2147483647 (inclusive))
+-   `socks5.onRequest.relayBufferSize`: Specifies the buffer size in bytes
+for relaying the data (Value must be an integer between 1 (inclusive) and
+2147483647 (inclusive))
+-   `socks5.onRequest.relayIdleTimeout`: Specifies the timeout in
+milliseconds on relaying no data (Value must be an integer between 1 (inclusive)
 and 2147483647 (inclusive))
 -   `socks5.onUdpAssociateRequest.relayBufferSize`: Specifies the buffer size in 
 bytes for relaying the data (Value must be an integer between 1 (inclusive) and 
@@ -3767,13 +3767,13 @@ To limit the relay bandwidth, you will need any of the following rule results:
 limit on bandwidth in bytes per second of receiving inbound data to be relayed
 -   `socks5.onBindRequest.relayOutboundBandwidthLimit`: Specifies the upper 
 limit on bandwidth in bytes per second of receiving outbound data to be relayed
--   `socks5.onRequest.relayInboundBandwidthLimit`: Specifies the upper 
-limit on bandwidth in bytes per second of receiving inbound data to be relayed
--   `socks5.onRequest.relayOutboundBandwidthLimit`: Specifies the upper 
-limit on bandwidth in bytes per second of receiving outbound data to be relayed
 -   `socks5.onConnectRequest.relayInboundBandwidthLimit`: Specifies the upper 
 limit on bandwidth in bytes per second of receiving inbound data to be relayed
 -   `socks5.onConnectRequest.relayOutboundBandwidthLimit`: Specifies the upper 
+limit on bandwidth in bytes per second of receiving outbound data to be relayed
+-   `socks5.onRequest.relayInboundBandwidthLimit`: Specifies the upper
+limit on bandwidth in bytes per second of receiving inbound data to be relayed
+-   `socks5.onRequest.relayOutboundBandwidthLimit`: Specifies the upper
 limit on bandwidth in bytes per second of receiving outbound data to be relayed
 -   `socks5.onUdpAssociateRequest.relayInboundBandwidthLimit`: Specifies the 
 upper limit on bandwidth in bytes per second of receiving inbound data to be 
